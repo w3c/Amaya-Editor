@@ -175,7 +175,7 @@ char               *label;
 {
    /* Confirm form */
    TtaNewForm (BaseCSSDialog + CSSFormConfirm, TtaGetViewFrame (document, view),
-	       0, 0, TtaGetMessage (LIB, LIB_CONFIRM), TRUE, 2, 'L', D_DONE);
+	       0, 0, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 2, 'L', D_DONE);
    TtaNewLabel (BaseCSSDialog + CSSTextConfirm, BaseCSSDialog + CSSFormConfirm, label);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseCSSDialog + CSSFormConfirm, FALSE);
@@ -327,11 +327,11 @@ char               *url;
    TtaNewForm (BaseCSSDialog + CSSFormSauver, TtaGetViewFrame (doc, view), 0, 0,
 	       TtaGetMessage (AMAYA, AM_SAVE_LOCAL), TRUE, 2, 'L', D_DONE);
    TtaListDirectory (CSSDirectoryName, BaseCSSDialog + CSSFormSauver,
-		     TtaGetMessage (LIB, DOC_DIR),
+		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseCSSDialog + CSSSauvDir, "css",
 	       TtaGetMessage (AMAYA, AM_FILES), BaseCSSDialog + CSSSauvDoc);
    TtaNewTextForm (BaseCSSDialog + CSSNomURL, BaseCSSDialog + CSSFormSauver,
-		   TtaGetMessage (LIB, DOCUMENT_NAME), 50, 1, TRUE);
+		   TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), 50, 1, TRUE);
    TtaSetTextForm (BaseCSSDialog + CSSNomURL, URL);
    TtaShowDialogue (BaseCSSDialog + CSSFormSauver, FALSE);
 }
@@ -586,7 +586,7 @@ char               *data;
 	     }
 	     TtaSetTextForm (BaseCSSDialog + CSSNomURL, CSSDirectoryName);
 	     TtaListDirectory (CSSDirectoryName, BaseCSSDialog + CSSFormSauver,
-			       TtaGetMessage (LIB, DOC_DIR),
+			       TtaGetMessage (LIB, TMSG_DOC_DIR),
 			       BaseCSSDialog + CSSSauvDir, "css",
 	       TtaGetMessage (AMAYA, AM_FILES), BaseCSSDialog + CSSSauvDoc);
 	     CSSDocumentName[0] = EOS;
@@ -616,7 +616,7 @@ char               *data;
 		if (CSSBrowseState == CSS_BROWSE_SaveAll) {
 		   if (ThotFile_exist (tempfile)) {
 		      /* ask confirmation */
-		      sprintf (tempname, TtaGetMessage (LIB, FILE_EXIST), tempfile);
+		      sprintf (tempname, TtaGetMessage (LIB, TMSG_FILE_EXIST), tempfile);
 		      CSSConfirm (currentDocument, 1, tempname);
 		      if (CSSUserAnswer) {
 			 /* save the local document */
@@ -674,7 +674,7 @@ char               *data;
 		CSSDocumentName[0] = EOS;
 		/* reinitialize directories and document lists */
 		TtaListDirectory (CSSDirectoryName, BaseCSSDialog + CSSFormSauver,
-				  TtaGetMessage (LIB, DOC_DIR), BaseCSSDialog + CSSSauvDir,
+				  TtaGetMessage (LIB, TMSG_DOC_DIR), BaseCSSDialog + CSSSauvDir,
 				  ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseCSSDialog + CSSSauvDoc);
 	     } else {
 		if (IsW3Path (data)) {
@@ -685,7 +685,7 @@ char               *data;
 		   strcat (tempfile, tempname);
 		   /* reinitialize directories and document lists */
 		   TtaListDirectory (CSSDirectoryName, BaseCSSDialog + CSSFormSauver,
-				     TtaGetMessage (LIB, DOC_DIR), BaseCSSDialog + CSSSauvDir,
+				     TtaGetMessage (LIB, TMSG_DOC_DIR), BaseCSSDialog + CSSSauvDir,
 				     ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseCSSDialog + CSSSauvDoc);
 		   TtaSetTextForm (BaseCSSDialog + CSSNomURL, tempfile);
 		} else

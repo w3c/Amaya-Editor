@@ -233,7 +233,7 @@ PtrDocument         document;
 	/* Flushing the dictionary FILE  */
       if (d < MaxDictionaries)	
 	{
-	  TtaDisplayMessage (INFO, TtaGetMessage(LIB, ERR_LOADING_DICO),
+	  TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_ERR_LOADING_DICO),
 			     dictTable[d]->DictNom);
 	  ReleaseDictionary (&dictTable[d]);
 	  
@@ -421,7 +421,7 @@ PtrDict             dict;
 	else if (nbGotten != -1)	/* not the end of the dictionary */
 	      {
 		/* impossible to load the dictionary */
-		TtaDisplayMessage (INFO, TtaGetMessage(LIB, ERR_LOADING_DICO),
+		TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_ERR_LOADING_DICO),
 				   dict->DictNom);
 		/* Release the dictionary */
 		ReleaseDictionary (&dict);	/* => dict = nil */
@@ -486,13 +486,13 @@ boolean             toTreat;
 	if (ThotFile_exist (tempbuffer) != 0)
 	  {
 	     dictFile = fopen (tempbuffer, "rw");	/* updating the dictionary */
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, DICO), dictName);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_DICO), dictName);
 	  }
 	else
 	  {
 	     new = TRUE;
 	     dictFile = fopen (tempbuffer, "w+");	/* new dictionary*/
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, NEW_DICO), dictName);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_NEW_DICO), dictName);
 	  }
      }
    else
@@ -502,7 +502,7 @@ boolean             toTreat;
 	   dictFile = BIOreadOpen (tempbuffer);
 	else
 	   dictFile = fopen (tempbuffer, "r");
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, DICO), dictName);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_DICO), dictName);
      }
 
    if (dictFile == NULL)
@@ -560,7 +560,7 @@ boolean             toTreat;
 		       /* -> one go to the begenning of the file */
 		       /* fseek(dictFile, 0L, 0); */
 		       /* impossible to load this dictionary */
-		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, ERR_LOADING_DICO), dictName);
+		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_ERR_LOADING_DICO), dictName);
 		       /* Release the dictionary */
 		       ReleaseDictionary (pDictionary);
 		       *pDictionary = NULL;
@@ -584,7 +584,7 @@ boolean             toTreat;
    if (GetStringInDict (pDictionary, readonly) == -1)
      {
 	/* Not enough memory to open this dictionary */
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_NO_LOAD), dictName);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_NO_LOAD), dictName);
 	/* Release the allocated dictionary */
 	ReleaseDictionary (pDictionary);
 	*pDictionary = NULL;
@@ -766,11 +766,11 @@ void                Dict_Init ()
    if (dictPath == NULL)
      {
 	/* The environment variable DICOPAR does not exist */
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, MISSING_DICOPAR), "DICOPAR");
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_MISSING_DICOPAR), "DICOPAR");
      }
    alphabetLoaded = Corr_alphabet ();
    if (alphabetLoaded == FALSE)
-      TtaDisplaySimpleMessage (INFO, LIB, MISSING_ALPHABET);
+      TtaDisplaySimpleMessage (INFO, LIB, TMSG_MISSING_ALPHABET);
 }				/* end proc Dict_Init */
 
 

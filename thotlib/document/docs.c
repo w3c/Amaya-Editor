@@ -208,14 +208,14 @@ char               *fileName;
      {
 	/* on ouvre le document en chargeant temporairement les documents */
 	/* externes qui contiennent les elements inclus dans notre document */
-	TtaDisplaySimpleMessage (INFO, LIB, READING_DOC);
+	TtaDisplaySimpleMessage (INFO, LIB, TMSG_READING_DOC);
 	ok = OpenDocument (DefaultDocumentName, *pDoc, TRUE, FALSE, NULL, TRUE);
 	/* restaure le path des documents s'il a ete ecrase */
 	if (directoryBuffer[0] != '\0')
 	   strncpy (DocumentPath, directoryBuffer, MAX_PATH);
 	if (!ok)
 	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, OPEN_DOC_IMP), DefaultDocumentName);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_OPEN_DOC_IMP), DefaultDocumentName);
 	     UnloadDocument (pDoc);
 	     *pDoc = NULL;
 	  }
@@ -297,7 +297,7 @@ PathBuffer          directory;
 	     {
 		strncpy (fileNameBuffer, docType, MAX_NAME_LENGTH);
 		strcat (fileNameBuffer, ".STR");
-		TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND), fileNameBuffer);
+		TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_SCHEMA_NOT_FIND), fileNameBuffer);
 	     }
 	   else
 	     {
@@ -843,7 +843,7 @@ char               *extension;
      }
    else
      {
-	TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, WRITING_IMP), buf);
+	TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, TMSG_WRITING_IMP), buf);
 	return FALSE;
      }
 }
@@ -901,7 +901,7 @@ boolean             move;
 	     ok = FileWriteAccess (tempName) == 0;
 	     if (ok)
 	       {
-		  TtaDisplaySimpleMessage (INFO, LIB, WRITING);
+		  TtaDisplaySimpleMessage (INFO, LIB, TMSG_WRITING);
 		  ok = simpleSave (pDoc, tempName, FALSE);
 	       }
 	     if (ok)
@@ -911,7 +911,7 @@ boolean             move;
 	  {
 	     /* on indique un nom connu de l'utilisateur... */
 	     FindCompleteName (docName, "PIV", dirName, buf, &i);
-	     TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, WRITING_IMP),
+	     TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, TMSG_WRITING_IMP),
 					    buf);
 	     status = FALSE;
 	  }
@@ -935,7 +935,7 @@ boolean             move;
 		/* detruit l'ancienne sauvegarde */
 	       {
 		  RemoveFile (bakName);
-		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DOC_WRITTEN),
+		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_DOC_WRITTEN),
 						 pivName);
 		  /* c'est trop tot pour perdre l'ancien nom du fichier et son */
 		  /* directory d'origine. */
@@ -1040,9 +1040,9 @@ boolean             ask;
    status = FALSE;
    if (pDoc->DocReadOnly)
       /* on ne sauve pas les documents qui sont en lecture seule */
-      TtaDisplaySimpleMessage (INFO, LIB, RO_DOC_FORBIDDEN);
+      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
    else if (pDoc->DocSSchema == NULL)
-      TtaDisplaySimpleMessage (INFO, LIB, EMPTY_DOC_NOT_WRITTEN);
+      TtaDisplaySimpleMessage (INFO, LIB, TMSG_EMPTY_DOC_NOT_WRITTEN);
    else
      {
 	strncpy (docName, pDoc->DocDName, MAX_NAME_LENGTH);
@@ -1097,7 +1097,7 @@ int                 mode;
 		  case 1:
 		     ok = saveWithExtension (pDoc, "BAK");
 		     if (ok)
-			TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DOC_WRITTEN), pDoc->DocDName);
+			TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_DOC_WRITTEN), pDoc->DocDName);
 		     break;
 		  case 2:
 		     ok = saveWithExtension (pDoc, "BAK");

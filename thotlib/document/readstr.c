@@ -407,7 +407,7 @@ PtrSSchema          pSS;
      {
 	strncpy (buf, fileName, MAX_PATH);
 	strcat (buf, ".STR");
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), buf);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_MISSING_FILE), buf);
 	return FALSE;
      }
    else
@@ -434,7 +434,7 @@ PtrSSchema          pSS;
 	if (!ReadConstants (file, pSS))
 	  {
 	     /* message 'Fichier .STR incorrect ' */
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_STR_FILE),
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_INCORRECT_STR_FILE),
 				fileName);
 	     return FALSE;
 	  }
@@ -447,7 +447,7 @@ PtrSSchema          pSS;
 	   if (!ReadAttribute (file, &pSS->SsAttribute[i]))
 	     {
 		/* message 'Fichier .STR incorrect ' */
-		TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_STR_FILE), fileName);
+		TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_INCORRECT_STR_FILE), fileName);
 		return FALSE;
 	     }
 
@@ -456,7 +456,7 @@ PtrSSchema          pSS;
 	   if (!ReadSRule (file, &pSS->SsRule[i]))
 	     {
 		/* message 'Fichier .STR incorrect ' */
-		TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_STR_FILE), fileName);
+		TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_INCORRECT_STR_FILE), fileName);
 		return FALSE;
 	     }
 	if (pSS->SsExtension)
@@ -472,7 +472,7 @@ PtrSSchema          pSS;
 			   if (!ReadSRule (file, &pSS->SsExtensBlock->EbExtensRule[i]))
 			     {
 				/* message 'Fichier .STR incorrect ' */
-				TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_STR_FILE), fileName);
+				TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_INCORRECT_STR_FILE), fileName);
 				return FALSE;
 			     }
 		  }

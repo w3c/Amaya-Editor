@@ -194,7 +194,7 @@ boolean            *assoc;
 	  }
      }
    if (*viewNum == 0)
-      TtaDisplaySimpleMessage (INFO, LIB, MISSING_VIEW);
+      TtaDisplaySimpleMessage (INFO, LIB, TMSG_MISSING_VIEW);
    else
       *pDoc = pD;
 }
@@ -697,7 +697,7 @@ PtrDocument         pDoc;
       /* echec creation fenetre */
      {
 	UnloadDocument (&pDoc);
-	TtaDisplaySimpleMessage (INFO, LIB, OPENING_NEW_FRAME_IMP);
+	TtaDisplaySimpleMessage (INFO, LIB, TMSG_OPENING_NEW_FRAME_IMP);
      }
    else
      {
@@ -1070,7 +1070,7 @@ int                 height;
    if (frame == 0)
       /* on n'a pas pu creer la fenetre, echec */
      {
-	TtaDisplaySimpleMessage (INFO, LIB, LIB_TOO_MANY_VIEWS);
+	TtaDisplaySimpleMessage (INFO, LIB, TMSG_LIB_TOO_MANY_VIEWS);
 	if (!assoc)
 	   pDoc->DocView[view - 1].DvPSchemaView = 0;
      }

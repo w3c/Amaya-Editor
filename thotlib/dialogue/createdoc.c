@@ -112,7 +112,7 @@ char               *data;
 	       /* le formulaire "Creer un document" lui-meme */
 	       if (NameDocToCreate[0] == '\0')
 		  /* le nom par defaut */
-		  strcpy (NameDocToCreate, TtaGetMessage (LIB, NO_NAME));
+		  strcpy (NameDocToCreate, TtaGetMessage (LIB, TMSG_NO_NAME));
 	       CurrentDialog = NumFormCreateDoc;
 	       if (ClassDocToCreate[0] != '\0' && ((int) data) == 1)
 		 {
@@ -124,13 +124,13 @@ char               *data;
 		    strcat (docName, ".PIV");
 
 		    if (!TtaCheckDirectory (DirectoryDocToCreate))
-		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, MISSING_DIR), DirectoryDocToCreate);
+		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_MISSING_DIR), DirectoryDocToCreate);
 		    else
 		      {
 			 if (ThotFile_exist (docName))
 			   {
 			      /* demande confirmation */
-			      sprintf (BufDir, TtaGetMessage (LIB, FILE_EXIST), docName);
+			      sprintf (BufDir, TtaGetMessage (LIB, TMSG_FILE_EXIST), docName);
 			      TtaNewLabel (NumLabelConfirm, NumFormConfirm, BufDir);
 /*           ClassDocToCreate[0] = '\0'; */
 			      TtaSetDialoguePosition ();
@@ -178,7 +178,7 @@ char               *data;
 				 strcat (DocumentPath, PATH_STR);
 				 strcat (DocumentPath, DirectoryDocToCreate);
 				 BuildPathDocBuffer (BufDir, '\0', &i);
-				 TtaNewSelector (NumZoneDocDirToCreate, NumFormCreateDoc, TtaGetMessage (LIB, DOC_DIR), i, BufDir, 9, NULL, FALSE, TRUE);
+				 TtaNewSelector (NumZoneDocDirToCreate, NumFormCreateDoc, TtaGetMessage (LIB, TMSG_DOC_DIR), i, BufDir, 9, NULL, FALSE, TRUE);
 			      }
 			 }
 		 }
@@ -228,11 +228,11 @@ View                view;
    /* Creation du formulaire Creer document */
    /* +++++++++++++++++++++++++++++++++++++ */
    TtaNewForm (NumFormCreateDoc, 0, 0, 0,
-	  TtaGetMessage (LIB, CREATE_DOC), TRUE, 2, 'L', D_DONE);
+	  TtaGetMessage (LIB, TMSG_CREATE_DOC), TRUE, 2, 'L', D_DONE);
    /* zone de saisie des dossiers documents */
    BuildPathDocBuffer (BufDir, '\0', &nbitem);
    TtaNewSelector (NumZoneDocDirToCreate, NumFormCreateDoc,
-		   TtaGetMessage (LIB, DOC_DIR), nbitem, BufDir, 9, NULL, FALSE, TRUE);
+		   TtaGetMessage (LIB, TMSG_DOC_DIR), nbitem, BufDir, 9, NULL, FALSE, TRUE);
    if (nbitem >= 1)
       TtaSetSelector (NumZoneDocDirToCreate, 0, NULL);
    /* nom du document a creer */
@@ -250,7 +250,7 @@ View                view;
 	     DirectoryDocToCreate[i] = '\0';
 	  }
      }
-   strcpy (NameDocToCreate, TtaGetMessage (LIB, NO_NAME));
+   strcpy (NameDocToCreate, TtaGetMessage (LIB, TMSG_NO_NAME));
    strcpy (docName, DirectoryDocToCreate);
    strcat (docName, DIR_STR);
    strcat (docName, NameDocToCreate);
@@ -267,25 +267,25 @@ View                view;
 	   length = 5;
 	/* cree le selecteur */
 	TtaNewSelector (NumSelDocClassToCreate, NumFormCreateDoc,
-			TtaGetMessage (LIB, DOC_TYPE), nbitem, BufMenu, length, NULL, TRUE, FALSE);
+			TtaGetMessage (LIB, TMSG_DOC_TYPE), nbitem, BufMenu, length, NULL, TRUE, FALSE);
 	/* initialise le selecteur sur sa premiere entree */
 	TtaSetSelector (NumSelDocClassToCreate, 0, "");
      }
    else
       /* on n'a pas cree' de selecteur, on cree une zone de saisie */
       TtaNewTextForm (NumSelDocClassToCreate, NumFormCreateDoc,
-		      TtaGetMessage (LIB, DOC_TYPE), 30, 1, FALSE);
+		      TtaGetMessage (LIB, TMSG_DOC_TYPE), 30, 1, FALSE);
 
    /* zone de saisie du nom du document a creer */
    TtaNewTextForm (NumZoneDocNameToCreate, NumFormCreateDoc,
-		   TtaGetMessage (LIB, DOCUMENT_NAME), 50, 1, TRUE);
+		   TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), 50, 1, TRUE);
    TtaSetTextForm (NumZoneDocNameToCreate, docName);
 
    /* Formulaire Confirmation creation */
    /* ++++++++++++++++++++++++++++++++ */
-   strcpy (BufMenu, TtaGetMessage (LIB, RENAME));
+   strcpy (BufMenu, TtaGetMessage (LIB, TMSG_RENAME));
    i = strlen (BufMenu) + 1;
-   strcpy (&BufMenu[i], TtaGetMessage (LIB, LIB_CONFIRM));
+   strcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    TtaNewDialogSheet (NumFormConfirm, 0, 0, 0, NULL, 2, BufMenu, FALSE, 1, 'L', D_DONE);
 
 /* affichage du formulaire Creer document */

@@ -739,7 +739,7 @@ int                 nr;
    memset (cond, 0, sizeof (Condition));
    if (cond == NULL)
      {
-	TtaDisplaySimpleMessage (FATAL, LIB, NO_MEMORY);
+	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
 	return;
      }
    cond->CoCondition = PcWithin;
@@ -773,7 +773,7 @@ int                 type;
    memset (cond, 0, sizeof (Condition));
    if (cond == NULL)
      {
-	TtaDisplaySimpleMessage (FATAL, LIB, NO_MEMORY);
+	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
 	return;
      }
    cond->CoCondition = PcElemType;
@@ -1069,7 +1069,7 @@ PRuleType           pres;
    GetPresentRule (&new);
    if (new == NULL)
      {
-	TtaDisplaySimpleMessage (FATAL, LIB, NO_MEMORY);
+	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
 	return (NULL);
      }
    new->PrType = pres;

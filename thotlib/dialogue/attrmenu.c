@@ -91,11 +91,11 @@ PtrAttribute        CurrAttr;
 	 strncpy (languageValue, CurrAttr->AeAttrText->BuContent, MAX_NAME_LENGTH);
 
    /* cree le formulaire avec les deux boutons Appliquer et Supprimer */
-   strcpy (BufMenu, TtaGetMessage (LIB, APPLY));
+   strcpy (BufMenu, TtaGetMessage (LIB, TMSG_APPLY));
    i = strlen (BufMenu) + 1;
-   strcpy (&BufMenu[i], TtaGetMessage (LIB, DEL));
+   strcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_DEL));
    TtaNewSheet (NumFormLanguage, 0, 0, 0,
-      TtaGetMessage (LIB, LANGUAGE), 2, BufMenu, FALSE, 2, 'L', D_DONE);
+      TtaGetMessage (LIB, TMSG_LANGUAGE), 2, BufMenu, FALSE, 2, 'L', D_DONE);
    /* construit le selecteur des Langues */
    nbItem = 0;
    ptr = &BufMenu[0];
@@ -117,7 +117,7 @@ PtrAttribute        CurrAttr;
      {
 	/* pas de langue definie, on cree une simple zone de saisie de texte */
 	TtaNewTextForm (NumSelectLanguage, NumFormLanguage,
-			TtaGetMessage (LIB, LANGUAGE), 30, 1, FALSE);
+			TtaGetMessage (LIB, TMSG_LANGUAGE), 30, 1, FALSE);
 	TtaSetTextForm (NumFormLanguage, languageValue);
      }
    else
@@ -128,7 +128,7 @@ PtrAttribute        CurrAttr;
 	else
 	   length = nbItem;
 	TtaNewSelector (NumSelectLanguage, NumFormLanguage,
-	      TtaGetMessage (LIB, LANG_OF_EL), nbItem, BufMenu,
+	      TtaGetMessage (LIB, TMSG_LANG_OF_EL), nbItem, BufMenu,
 			length, NULL, TRUE, FALSE);
 	/* initialise le selecteur sur sa premiere entree */
 	if (languageValue[0] == '\0')
@@ -141,7 +141,7 @@ PtrAttribute        CurrAttr;
      }
 
    /* cherche la valeur heritee de l'attribut Langue */
-   strcpy (Lab, TtaGetMessage (LIB, INHERITED_LANG));
+   strcpy (Lab, TtaGetMessage (LIB, TMSG_INHERITED_LANG));
    pHeritAttr = GetTypedAttrAncestor (firstSel, 1, NULL, &pElAttr);
    if (pHeritAttr != NULL)
       if (pHeritAttr->AeAttrText != NULL)
@@ -181,9 +181,9 @@ int                 view;
 
    doc = (Document) IdentDocument (pDoc);
    /* detruit la feuille de dialogue et la recree */
-   strcpy (BufMenu, TtaGetMessage (LIB, APPLY));
+   strcpy (BufMenu, TtaGetMessage (LIB, TMSG_APPLY));
    i = strlen (BufMenu) + 1;
-   strcpy (&BufMenu[i], TtaGetMessage (LIB, DEL));
+   strcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_DEL));
    if (required)
      {
 	form = NumMenuAttrRequired;
@@ -193,7 +193,7 @@ int                 view;
 	     TtaDestroyDialogue (NumMenuAttrRequired);
 	  }
 	TtaNewForm (NumMenuAttrRequired, TtaGetViewFrame (doc, view), 0, 0,
-		 TtaGetMessage (LIB, ATTR), FALSE, 2, 'L', D_DONE);
+		 TtaGetMessage (LIB, TMSG_ATTR), FALSE, 2, 'L', D_DONE);
 	MandatoryAttrFormExists = TRUE;
      }
    else
@@ -205,7 +205,7 @@ int                 view;
 	     TtaDestroyDialogue (NumMenuAttr);
 	  }
 	TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view), 0, 0,
-		     TtaGetMessage (LIB, ATTR), 2, BufMenu, FALSE, 2, 'L', D_DONE);
+		     TtaGetMessage (LIB, TMSG_ATTR), 2, BufMenu, FALSE, 2, 'L', D_DONE);
 	AttrFormExists = TRUE;
      }
 

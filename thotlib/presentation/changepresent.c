@@ -1805,9 +1805,9 @@ void ModifyColor(colorNum, Background)
   selok = GetCurrentSelection(&SelDoc, &pElFirstSel, &pElLastSel, &firstChar, &lastChar);
   if (!selok)
     /* rien n'est selectionne' */
-    TtaDisplaySimpleMessage (INFO, LIB,SEL_EL);
+    TtaDisplaySimpleMessage (INFO, LIB,TMSG_SEL_EL);
   else if (SelDoc->DocReadOnly)
-    TtaDisplaySimpleMessage (INFO, LIB,RO_DOC_FORBIDDEN);
+    TtaDisplaySimpleMessage (INFO, LIB,TMSG_RO_DOC_FORBIDDEN);
   else
     {
       ClearAllViewSelection();

@@ -1044,7 +1044,7 @@ PtrAttribute         pNewAttr;
 	if (mandatory)
 	  /* suppression d'un attribut obligatoire. Interdit */
 	  {
-	     TtaDisplaySimpleMessage (INFO, LIB, LIB_ATTR_REQUIRED_NOT_DELETED);
+	     TtaDisplaySimpleMessage (INFO, LIB, TMSG_LIB_ATTR_REQUIRED_NOT_DELETED);
 	     return;
 	  }
      }

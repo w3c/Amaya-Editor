@@ -641,7 +641,7 @@ int                 nbitem;
    n++;
    XtSetArg (args[n], XmNfontList, xfont);
    n++;
-   w = XmCreatePushButton (w, TtaGetMessage (LIB, CANCEL), args, n);
+   w = XmCreatePushButton (w, TtaGetMessage (LIB, TMSG_CANCEL), args, n);
    XtManageChild (w);
    XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) FinKbd, (XtPointer) number);
    XmFontListFree (xfont);
@@ -731,12 +731,12 @@ int                 number;
 	 {
 	    case 0:		/* Symboles */
 	       KbFonts[number] = SymbolIcons;	/* Symboles */
-	       CreateKeyboard (number, TtaGetMessage (LIB, MATH_SYMBOLS), SymbolIcons, 3,
+	       CreateKeyboard (number, TtaGetMessage (LIB, TMSG_MATH_SYMBOLS), SymbolIcons, 3,
 		 KbX, KbY, Items_Symb, sizeof (Items_Symb) / sizeof (ITEM));
 	       break;
 	    case 1:		/* Graphiques */
 	       KbFonts[number] = GraphicsIcons;	/* Graphique */
-	       CreateKeyboard (number, TtaGetMessage (LIB, GRAPHICS), GraphicsIcons, 6,
+	       CreateKeyboard (number, TtaGetMessage (LIB, TMSG_GRAPHICS), GraphicsIcons, 6,
 	       KbX, KbY, Items_Graph, sizeof (Items_Graph) / sizeof (ITEM));
 	       break;
 	    case 2:		/* ISO latin 1 */
@@ -745,7 +745,7 @@ int                 number;
 		  pFontAc = FontDialogue;
 	       KbFonts[number] = pFontAc;	/* Latin */
 	       if (pFontAc != NULL)
-		  CreateKeyboard (number, TtaGetMessage (LIB, LATIN_ALPHABET), pFontAc, 13,
+		  CreateKeyboard (number, TtaGetMessage (LIB, TMSG_LATIN_ALPHABET), pFontAc, 13,
 		  KbX, KbY, Items_Isol, sizeof (Items_Isol) / sizeof (ITEM));
 	       break;
 	    case 3:		/* Grec */
@@ -754,7 +754,7 @@ int                 number;
 		  pFontIg = FontDialogue;
 	       if (pFontIg != NULL)
 		  KbFonts[number] = pFontIg;	/* Grec */
-	       CreateKeyboard (number, TtaGetMessage (LIB, GREEK_ALPHABET), pFontIg, 16,
+	       CreateKeyboard (number, TtaGetMessage (LIB, TMSG_GREEK_ALPHABET), pFontIg, 16,
 		 KbX, KbY, Items_Grec, sizeof (Items_Grec) / sizeof (ITEM));
 	       break;
 	 }
@@ -813,7 +813,7 @@ void                KeyboardsLoadResources ()
 	if (SymbolIcons == NULL)
 	  {
 	     /*Fonte 'ivsymb' inaccessible */
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), "ivsymb");
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_MISSING_FILE), "ivsymb");
 	     SymbolIcons = FontDialogue;
 	  }
 
@@ -821,7 +821,7 @@ void                KeyboardsLoadResources ()
 	if (GraphicsIcons == NULL)
 	  {
 	     /*Fonte 'ivgraf' inaccessible */
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), "ivgraf");
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_MISSING_FILE), "ivgraf");
 	     GraphicsIcons = FontDialogue;
 	  }
 

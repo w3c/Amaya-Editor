@@ -1604,7 +1604,7 @@ PtrDocument         pDoc;
 			    else
 			       /* ouverture fichier impossible */
 			      {
-				 TtaDisplayMessage (INFO, TtaGetMessage(LIB, WRITING_IMP), fileName);
+				 TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_WRITING_IMP), fileName);
 				 pRefD = NULL;
 				 pRef = NULL;
 			      }
@@ -1721,7 +1721,7 @@ PathBuffer          fileName;
 		  else
 		     /* ouverture fichier impossible */
 		    {
-		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, WRITING_IMP),
+		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_WRITING_IMP),
 						      fileName);
 		       pRefD = NULL;
 		    }

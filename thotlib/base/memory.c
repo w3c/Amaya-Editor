@@ -152,7 +152,7 @@ unsigned int        n;
       n++;
    res = malloc ((size_t) n);
    if (!res)
-      TtaDisplaySimpleMessage (FATAL, LIB, NOT_ENOUGH_MEMORY);
+      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
    return (res);
 }
 
@@ -236,7 +236,7 @@ unsigned int        n;
       n++;
    res = realloc (ptr, (size_t) n);
    if (!res)			/* Plus de memoire */
-      TtaDisplaySimpleMessage (FATAL, LIB, NOT_ENOUGH_MEMORY);
+      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
    return res;
 }
 

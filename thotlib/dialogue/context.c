@@ -244,9 +244,9 @@ Display            *dpy;
 
    perror ("*** Fatal Error");
    if (errno != EPIPE)
-      TtaDisplayMessage (FATAL, TtaGetMessage(LIB, LIB_X11_ERR), DisplayString (dpy));
+      TtaDisplayMessage (FATAL, TtaGetMessage(LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
    else
-      TtaDisplayMessage (FATAL, TtaGetMessage(LIB, LIB_X11_ERR), DisplayString (dpy));
+      TtaDisplayMessage (FATAL, TtaGetMessage(LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
    return(0);
 }
 #endif /* WWW_XWINDOWS */
@@ -415,16 +415,16 @@ char               *name;
    if (XWhitePixel (TtDisplay, TtScreen) == 0)
      {
 	if (!XAllocNamedColor (TtDisplay, TtCmap, "White", &cwhite, &col))
-	   TtaDisplaySimpleMessage (FATAL, LIB, NOT_ENOUGH_MEMORY);
+	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
 	if (!XAllocNamedColor (TtDisplay, TtCmap, "Black", &cblack, &col))
-	   TtaDisplaySimpleMessage (FATAL, LIB, NOT_ENOUGH_MEMORY);
+	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
      }
    else
      {
 	if (!XAllocNamedColor (TtDisplay, TtCmap, "Black", &cblack, &col))
-	   TtaDisplaySimpleMessage (FATAL, LIB, NOT_ENOUGH_MEMORY);
+	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
 	if (!XAllocNamedColor (TtDisplay, TtCmap, "White", &cwhite, &col))
-	   TtaDisplaySimpleMessage (FATAL, LIB, NOT_ENOUGH_MEMORY);
+	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
      }
 
    /* Initialize colors for the application */

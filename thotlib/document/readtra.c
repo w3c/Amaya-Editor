@@ -1115,7 +1115,7 @@ PtrSSchema        pSS;
      {
 	strncpy (buf, fileName, MAX_PATH);
 	strcat (buf, ".TRA");
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), buf);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_MISSING_FILE), buf);
      }
    else
      {
@@ -1318,7 +1318,7 @@ PtrSSchema        pSS;
      }
    if (error)
      {
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TRA_FILE_INCORRECT),
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_TRA_FILE_INCORRECT),
 			   fileName);
 	if (pTSch != NULL)
 	    FreeTranslationSchema(pTSch, pSS);

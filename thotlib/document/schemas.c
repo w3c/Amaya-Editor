@@ -308,7 +308,7 @@ int                 rule;
    if (!ReadStructureSchema (schName, pNatureSS))
       /* echec */
      {
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND), schName);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_SCHEMA_NOT_FIND), schName);
 	FreeSchStruc (pNatureSS);
 	pSS->SsRule[rule - 1].SrSSchemaNat = NULL;
      }
@@ -346,7 +346,7 @@ int                 rule;
 	if (pNatureSS->SsPSchema == NULL)
 	   /* echec chargement schema */
 	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND),
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_SCHEMA_NOT_FIND),
 				schName);
 	     FreeSchStruc (pNatureSS);
 	     pSS->SsRule[rule - 1].SrSSchemaNat = NULL;
@@ -374,7 +374,7 @@ PtrSSchema        pSS;
    if (pSS->SsNRules >= MAX_RULES_SSCHEMA)
      {
 	/* Table de regles saturee */
-	TtaDisplaySimpleMessage (FATAL, LIB, LIB_RULES_TABLE_FULL);
+	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_LIB_RULES_TABLE_FULL);
 	*ret = 0;
      }
    else
@@ -521,7 +521,7 @@ boolean           extension;
 	GetSchStruct (pSS);
 	if (!ReadStructureSchema (schName, *pSS))
 	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND),
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_SCHEMA_NOT_FIND),
 				schName);
 	     FreeSchStruc (*pSS);
 	  }
@@ -575,7 +575,7 @@ boolean           extension;
 	if ((*pSS)->SsPSchema == NULL)
 	   /* echec chargement schema */
 	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND),
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_SCHEMA_NOT_FIND),
 				schName);
 	     FreeSchStruc (*pSS);
 	     *pSS = NULL;

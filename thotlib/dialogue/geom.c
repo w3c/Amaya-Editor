@@ -363,7 +363,7 @@ PtrTextBuffer      Bbuffer;
    /* need at least 3 points for a valid polyline */
    if (nbpoints < 3)
      {
-	TtaDisplaySimpleMessage (INFO, LIB, TWO_POINTS_IN_POLYLINE_NEEDED);
+	TtaDisplaySimpleMessage (INFO, LIB, TMSG_TWO_POINTS_IN_POLYLINE_NEEDED);
 	return 1;
      }
    else

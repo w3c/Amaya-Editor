@@ -71,19 +71,19 @@ Drawable           *mask1;
        switch (status)
 	 {   
 	 case XpmColorError:
-	   TtaDisplaySimpleMessage (INFO, LIB, COLOR_INCORRECT);
+	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLOR_INCORRECT);
 	   break;
 	 case XpmOpenFailed:
-	   TtaDisplaySimpleMessage (INFO, LIB, XPM_OPEN_ERR);
+	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_XPM_OPEN_ERR);
 	   break;
 	 case XpmFileInvalid:
-	   TtaDisplaySimpleMessage (INFO, LIB, XPM_FILE_INCORRECT);
+	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_XPM_FILE_INCORRECT);
 	   break;
 	 case XpmNoMemory:
-	   TtaDisplaySimpleMessage (INFO, LIB, XPM_NO_MEM);
+	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_XPM_NO_MEM);
 	   break;
 	 case XpmColorFailed:
-	   TtaDisplaySimpleMessage (INFO, LIB, XPM_COLOR_ERR);
+	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_XPM_COLOR_ERR);
 	   break;
 	 }
        return (Drawable) None;

@@ -336,5 +336,5 @@ char               *code;
    char                pBuffer[MAX_CHAR];
 
    strncpy (pBuffer, code, MAX_CHAR);
-   TtaDisplayMessage (INFO, TtaGetMessage(LIB, ERR_PIV), pBuffer);
+   TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_ERR_PIV), pBuffer);
 }

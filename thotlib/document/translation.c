@@ -108,7 +108,7 @@ PtrDocument         pDoc;
    else if (NOutputFiles >= MAX_OUTPUT_FILES)
       /* table saturee */
      {
-	TtaDisplaySimpleMessage (INFO, LIB, TOO_MANY_OUTPUT_FILES);
+	TtaDisplaySimpleMessage (INFO, LIB, TMSG_TOO_MANY_OUTPUT_FILES);
 	return 0;
      }
    else
@@ -116,7 +116,7 @@ PtrDocument         pDoc;
 	OutputFile[NOutputFiles].OfFileDesc = fopen (fName, "w");
 	if (OutputFile[NOutputFiles].OfFileDesc == NULL)
 	  {
-	     TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, CREATE_FILE_IMP),
+	     TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, TMSG_CREATE_FILE_IMP),
 					    fName);
 	     return 0;
 	  }
@@ -2759,7 +2759,7 @@ boolean           *removeEl;
 		 {
 		    newFile = fopen (currentFileName, "w");
 		    if (newFile == NULL)
-		       TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, CREATE_FILE_IMP), currentFileName);
+		       TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, TMSG_CREATE_FILE_IMP), currentFileName);
 		    else
 		       /* on a reussi a ouvrir le nouveau fichier */
 		      {
@@ -2936,7 +2936,7 @@ boolean           *removeEl;
 	       /* ouvre le fichier a inclure */
 	       includedFile = BIOreadOpen (fullName);
 	       if (includedFile == 0)
-		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCLUDE_FILE_IMP), fname);
+		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_INCLUDE_FILE_IMP), fname);
 	       else
 		  /* le fichier a inclure est ouvert */
 		 {
@@ -3298,7 +3298,7 @@ char               *TSchemaName;
    /* cree le fichier de sortie principal */
    outputFile = fopen (fName, "w");
    if (outputFile == NULL)
-      TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, CREATE_FILE_IMP), fName);
+      TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, TMSG_CREATE_FILE_IMP), fName);
    else
       /* le fichier de sortie principal a ete cree' */
      {

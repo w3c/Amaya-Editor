@@ -196,7 +196,7 @@ boolean             nextExtDoc;
 	ok = GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
 	if (!ok)
 	   /* pas de selection, message 'Selectionnez' */
-	   TtaDisplaySimpleMessage (INFO, LIB, SEL_EL);
+	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
 	else
 	   /* cherche le premier element reference' qui englobe la */
 	   /* selection courante */
@@ -288,7 +288,7 @@ void                FindReferredEl ()
 
    /* y-a-t'il une selection au niveau editeur ou mediateur ? */
    if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
-      TtaDisplaySimpleMessage (INFO, LIB, SEL_EL);
+      TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
    else
      {
 	pEl = NULL;
@@ -349,7 +349,7 @@ void                FindReferredEl ()
 		/* il n'y a pas d'element reference' */
 		if (DocIdentIsNull (docIdent) || pDoc != NULL)
 		   /* ce n'est pas une reference externe ou c'est une reference vide */
-		   TtaDisplaySimpleMessage (INFO, LIB, EMPTY_REF);
+		   TtaDisplaySimpleMessage (INFO, LIB, TMSG_EMPTY_REF);
 		else
 		   /* l'element reference' est dans un autre document qui */
 		   /* n'est pas charge' */
@@ -380,7 +380,7 @@ void                FindReferredEl ()
 	       {
 		  pEl = NULL;
 		  /* message 'CsReference vide' */
-		  TtaDisplaySimpleMessage (INFO, LIB, EMPTY_REF);
+		  TtaDisplaySimpleMessage (INFO, LIB, TMSG_EMPTY_REF);
 	       }
 	  }
 	if (pEl != NULL)

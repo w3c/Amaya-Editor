@@ -2778,29 +2778,29 @@ PtrAbstractBox      pAb;
    pLine = NULL;
    /* Pas de pave en parametre */
    if (pAb == NULL)
-      TtaDisplaySimpleMessage (INFO, LIB, EMPTY_VIEW);
+      TtaDisplaySimpleMessage (INFO, LIB, TMSG_EMPTY_VIEW);
    /* Le numero de frame est erronne */
    else if (frame < 1 || frame > MAX_FRAME)
-      TtaDisplaySimpleMessage (INFO, LIB, BAD_FRAME_NB);
+      TtaDisplaySimpleMessage (INFO, LIB, TMSG_BAD_FRAME_NB);
    else
      {
 	pFrame = &ViewFrameTable[frame - 1];
 	/* La vue n'est pas cree a la racine */
 	if (pFrame->FrAbstractBox == NULL && (pAb->AbEnclosing != NULL
 		 || pAb->AbPrevious != NULL || pAb->AbNext != NULL))
-	   TtaDisplaySimpleMessage (INFO, LIB, VIEW_MODIFIED_BEFORE_CREATION);
+	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_VIEW_MODIFIED_BEFORE_CREATION);
 	/* On detruit toute la vue */
 	else if (pAb->AbEnclosing == NULL && pAb->AbDead)
 	  {
 	     if (pAb == pFrame->FrAbstractBox)
 		ClearConcreteImage (frame);
 	     else
-		TtaDisplaySimpleMessage (INFO, LIB, VIEW_MODIFIED_BEFORE_CREATION);
+		TtaDisplaySimpleMessage (INFO, LIB, TMSG_VIEW_MODIFIED_BEFORE_CREATION);
 	  }
 	/* La vue est deja cree */
 	else if (pFrame->FrAbstractBox != NULL && pAb->AbEnclosing == NULL
 		 && pAb->AbNew)
-	   TtaDisplaySimpleMessage (INFO, LIB, OLD_VIEW_NOT_REPLACED);
+	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_OLD_VIEW_NOT_REPLACED);
 	/* Dans les autres cas */
 	else
 	  {

@@ -227,7 +227,7 @@ char               *pathname;
    TtaSetToggleMenu (BaseDialog + SauvToggle, 0, CopyImages);
    TtaSetToggleMenu (BaseDialog + SauvToggle, 1, UpdateURLs);
    TtaListDirectory (DirectoryName, BaseDialog + FormSauver,
-		     TtaGetMessage (LIB, DOC_DIR),	/* std thot msg */
+		     TtaGetMessage (LIB, TMSG_DOC_DIR),	/* std thot msg */
 		     BaseDialog + SauvDir, "",
 		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + SauvDoc);
    TtaNewTextForm (BaseDialog + SauvNom, BaseDialog + FormSauver,
@@ -290,7 +290,7 @@ Boolean             confirm;
 
    if (confirm) {
       TtaNewForm (BaseDialog + SauvConfirm, TtaGetViewFrame (document, view),
-		  0, 0, TtaGetMessage (LIB, LIB_CONFIRM), TRUE, 1, 'L', D_DONE);
+		  0, 0, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_DONE);
       /*strcpy(msg,"Saving will overwrite the following URLs :"); */
       TtaNewLabel (BaseDialog + SauvConfirmLbl, BaseDialog + SauvConfirm, TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
 
@@ -550,7 +550,7 @@ void                DoSaveAs ()
       strcat (tempfile, DocumentName);
       if (ThotFile_exist (tempfile)) {
 	 /* ask confirmation */
-	 sprintf (tempname, TtaGetMessage (LIB, FILE_EXIST), tempfile);
+	 sprintf (tempname, TtaGetMessage (LIB, TMSG_FILE_EXIST), tempfile);
 	 InitConfirm (SavingDocument, 1, tempname);
 	 if (!UserAnswer) {
 	    /* the user has to change the name of the saving file */
@@ -583,7 +583,7 @@ void                DoSaveAs ()
       strcat (tempfile, DocumentName);
       if (ThotFile_exist (tempfile)) {
 	 /* ask confirmation */
-	 sprintf (tempname, TtaGetMessage (LIB, FILE_EXIST), tempfile);
+	 sprintf (tempname, TtaGetMessage (LIB, TMSG_FILE_EXIST), tempfile);
 	 InitConfirm (SavingDocument, 1, tempname);
 	 if (!UserAnswer) {
 	    /* the user has to change the name of the saving file */
@@ -863,7 +863,7 @@ char               *pathname;
    TtaNewForm (BaseDialog + FormSauver, TtaGetViewFrame (document, view), 0, 0,
 	       TtaGetMessage (AMAYA, AM_SAVE_LOCAL), TRUE, 2, 'L', D_DONE);
    TtaListDirectory (DirectoryName, BaseDialog + FormSauver,
-		     TtaGetMessage (LIB, DOC_DIR),	/* std thot msg */
+		     TtaGetMessage (LIB, TMSG_DOC_DIR),	/* std thot msg */
 		     BaseDialog + SauvDir, "",
 		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + SauvDoc);
    /* TtaGetMessage(LIB, DOCUMENT_NAME) */
@@ -909,7 +909,7 @@ void                DoSaveObjectAs ()
    }
    if (ThotFile_exist (tempfile)) {
       /* ask confirmation */
-      sprintf (msg, TtaGetMessage (LIB, FILE_EXIST), tempfile);
+      sprintf (msg, TtaGetMessage (LIB, TMSG_FILE_EXIST), tempfile);
       InitConfirm (SavingObject, 1, msg);
       if (!UserAnswer) {
 	 /* the user has to change the name of the saving file */

@@ -839,7 +839,7 @@ char               *appliname;
    if (!file)
      {
 	/*Fichier inaccessible */
-	TtaDisplaySimpleMessage (INFO, LIB, NO_KBD);
+	TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_KBD);
 	return NULL;
      }
    else

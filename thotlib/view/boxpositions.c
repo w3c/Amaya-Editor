@@ -597,25 +597,25 @@ boolean             vertRef;
 			    && (pChildBox->BxXOrg < 0 || pChildBox->BxXOrg > width))
 			  {
 			     if (HighlightBoxErrors)
-			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_HORIZ_POS), AbsBoxType (pChildAb));
+			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_INCORRECT_HORIZ_POS), AbsBoxType (pChildAb));
 			  }
 			else if (pChildAb->AbVertEnclosing && placeenY
 			       && (pChildBox->BxYOrg < 0 || pChildBox->BxYOrg > height))
 			  {
 			     if (HighlightBoxErrors)
-			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_VERT_POS), AbsBoxType (pChildAb));
+			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_INCORRECT_VERT_POS), AbsBoxType (pChildAb));
 			  }
 			else if (pChildBox->BxWidth < 0)
 			  {
 			     pChildBox->BxWidth = 1;
 			     if (HighlightBoxErrors)
-			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_HORIZ_SIZING), AbsBoxType (pChildAb));
+			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_INCORRECT_HORIZ_SIZING), AbsBoxType (pChildAb));
 			  }
 			else if (pChildBox->BxHeight < 0)
 			  {
 			     pChildBox->BxHeight = 1;
 			     if (HighlightBoxErrors)
-			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_VERT_SIZING), AbsBoxType (pChildAb));
+			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_INCORRECT_VERT_SIZING), AbsBoxType (pChildAb));
 			  }
 		     /* decale la boite positionnee en X dans l'englobante */
 		     if (horizRef && newX)
@@ -647,7 +647,7 @@ boolean             vertRef;
 			      && !pBox->BxHorizFlex)
 			    {
 			       if (HighlightBoxErrors)
-				 TtaDisplayMessage (INFO, TtaGetMessage(LIB, HORIZ_BOX_OVERFLOW), AbsBoxType (pChildAb));
+				 TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_HORIZ_BOX_OVERFLOW), AbsBoxType (pChildAb));
 			    }
 			  /* Decale les boites qui ont des relations hors-structure avec */
 			  /* la boite deplacee et met a jour les dimensions elastiques   */
@@ -737,7 +737,7 @@ boolean             vertRef;
 			      && !pBox->BxVertFlex)
 			    {
 			       if (HighlightBoxErrors)
-				 TtaDisplayMessage (INFO, TtaGetMessage(LIB, VERT_BOX_OVERFLOW), AbsBoxType (pChildAb));
+				 TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_VERT_BOX_OVERFLOW), AbsBoxType (pChildAb));
 			    }
 			  /* Decale les boites qui ont des relations hors-structure avec */
 			  /* la boite deplacee et met a jour les dimensions elastiques   */

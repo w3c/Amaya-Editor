@@ -128,22 +128,22 @@ Name                 name;
 
    /* Formulaire du schema de presentation */
    TtaNewForm (NumFormPresentationSchema, 0, 0, 0,
-	       TtaGetMessage (LIB, PRES), TRUE, 1, 'L', D_DONE);
+	       TtaGetMessage (LIB, TMSG_PRES), TRUE, 1, 'L', D_DONE);
 
    /* zone de saisie du nom du schema de presentation */
    TtaNewTextForm (NumZonePresentationSchema, NumFormPresentationSchema,
-		   TtaGetMessage (LIB, PRES), 30, 1, FALSE);
+		   TtaGetMessage (LIB, TMSG_PRES), 30, 1, FALSE);
 
    /* presentation par defaut */
    if (pSchStr->SsExtension)
       /* c'est une extension de schema, il n'y a pas de regle racine */
-      TtaDisplayMessage (INFO, TtaGetMessage(LIB, ENTER_PRS_SCH),
+      TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_ENTER_PRS_SCH),
 				     pSchStr->SsName);
    else
       /* on prend le nom de la regle racine, qui est traduit dans la */
       /* langue de l'utilisateur, plutot que le nom du schema, qui n'est */
       /* pas traduit */
-      TtaDisplayMessage (INFO, TtaGetMessage(LIB, ENTER_PRS_SCH),
+      TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_ENTER_PRS_SCH),
 		     pSchStr->SsRule[pSchStr->SsRootElem - 1].SrName);
    /* demande un autre nom de fichier a l'utilisateur */
    TtaSetTextForm (NumZonePresentationSchema, name);
@@ -282,10 +282,10 @@ char               *data;
 				 strcat (DocumentPath, DirectoryName);
 				 BuildPathDocBuffer (bufDir, '\0', &i);
 				 TtaNewSelector (NumZoneDirOpenDoc, NumFormOpenDoc,
-						 TtaGetMessage (LIB, DOC_DIR), i, bufDir, 9, NULL, FALSE, TRUE);
+						 TtaGetMessage (LIB, TMSG_DOC_DIR), i, bufDir, 9, NULL, FALSE, TRUE);
 
 				 TtaListDirectory (DirectoryName, NumFormOpenDoc, NULL, -1,
-						   ".PIV", TtaGetMessage (LIB, FILES), NumSelDoc);
+						   ".PIV", TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
 			      }
 			 }
 		 }
@@ -294,7 +294,7 @@ char               *data;
 	       strcpy (DirectoryName, data);
 	       TtaSetTextForm (NumZoneDocNameToOpen, DirectoryName);
 	       TtaListDirectory (data, NumFormOpenDoc, NULL, -1,
-			 ".PIV", TtaGetMessage (LIB, FILES), NumSelDoc);
+			 ".PIV", TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
 	       break;
 	    case NumSelDoc:
 	       if (DirectoryName[0] == '\0')
@@ -367,7 +367,7 @@ char               *data;
 		    MakeCompleteName (DefaultDocumentName, "", DirectoryName, docName, &i);
 		    if (ThotFile_exist (docName) == 0)
 		       /* le fichier n'existe pas */
-		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), DefaultDocumentName);
+		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_MISSING_FILE), DefaultDocumentName);
 		    else
 		       /* le fichier existe ; c'est sans doute une importation */
 		       /* demande le schema de structure d'importation */
@@ -413,11 +413,11 @@ View                view;
      }
    /* Creation du Formulaire Ouvrir */
    TtaNewForm (NumFormOpenDoc, 0, 0, 0,
-	  TtaGetMessage (LIB, OPEN_DOC), TRUE, 2, 'L', D_CANCEL);
+	  TtaGetMessage (LIB, TMSG_OPEN_DOC), TRUE, 2, 'L', D_CANCEL);
    /* zone de saisie des dossiers documents */
    BuildPathDocBuffer (bufDir, '\0', &nbItems);
    TtaNewSelector (NumZoneDirOpenDoc, NumFormOpenDoc,
-		   TtaGetMessage (LIB, DOC_DIR), nbItems, bufDir, 6, NULL, FALSE, TRUE);
+		   TtaGetMessage (LIB, TMSG_DOC_DIR), nbItems, bufDir, 6, NULL, FALSE, TRUE);
    if (DirectoryName[0] == '\0' && nbItems >= 1)
       /* si pas de dossier courant, on initialise avec le premier de bufDir */
      {
@@ -434,22 +434,22 @@ View                view;
 	strcpy (DefaultDocumentName, docName);
      }
    /* liste des fichiers existants */
-   TtaListDirectory (DirectoryName, NumFormOpenDoc, NULL, -1, ".PIV", TtaGetMessage (LIB, FILES), NumSelDoc);
+   TtaListDirectory (DirectoryName, NumFormOpenDoc, NULL, -1, ".PIV", TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
    /* zone de saisie du nom du document a ouvrir */
    TtaNewTextForm (NumZoneDocNameToOpen, NumFormOpenDoc,
-		   TtaGetMessage (LIB, DOCUMENT_NAME), 50, 1, TRUE);
+		   TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), 50, 1, TRUE);
    TtaSetTextForm (NumZoneDocNameToOpen, DefaultDocumentName);
 
    /* Formulaire Classe du document a importer */
    TtaNewForm (NumFormImportClass, 0, 0, 0,
-	   TtaGetMessage (LIB, IMPORT_DOC_TYPE), FALSE, 1, 'L', D_DONE);
+	   TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), FALSE, 1, 'L', D_DONE);
    /* selecteur ou zone de saisie Classe du document a importer */
    nbItems = ConfigMakeImportMenu (bufMenu);
    if (nbItems == 0)
       /* pas d'import defini dans le fichier de langue, */
       /* on cree une simple zone de saisie de texte */
       TtaNewTextForm (NumSelectImportClass, NumFormImportClass,
-		    TtaGetMessage (LIB, IMPORT_DOC_TYPE), 30, 1, FALSE);
+		    TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), 30, 1, FALSE);
    else
       /* on cree un selecteur */
      {
@@ -458,7 +458,7 @@ View                view;
 	else
 	   length = nbItems;
 	TtaNewSelector (NumSelectImportClass, NumFormImportClass,
-			TtaGetMessage (LIB, IMPORT_DOC_TYPE), nbItems, bufMenu, length, NULL, TRUE, FALSE);
+			TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), nbItems, bufMenu, length, NULL, TRUE, FALSE);
 	/* initialise le selecteur sur sa premiere entree */
 	TtaSetSelector (NumSelectImportClass, 0, "");
      }

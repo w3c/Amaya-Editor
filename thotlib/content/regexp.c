@@ -1948,25 +1948,25 @@ char               *expression;
 	switch (compilResult)
 	      {
 		 case 1:
-		    TtaDisplaySimpleMessage (INFO, LIB, INCORRECT_REG_EXP);
+		    TtaDisplaySimpleMessage (INFO, LIB, TMSG_INCORRECT_REG_EXP);
 		    break;
 		 case 2:
-		    TtaDisplaySimpleMessage (INFO, LIB, UNMATCHED_LEFT);
+		    TtaDisplaySimpleMessage (INFO, LIB, TMSG_UNMATCHED_LEFT);
 		    break;
 		 case 3:
-		    TtaDisplaySimpleMessage (INFO, LIB, UNMATCHED_RIGHT);
+		    TtaDisplaySimpleMessage (INFO, LIB, TMSG_UNMATCHED_RIGHT);
 		    break;
 		 case 4:
-		    TtaDisplaySimpleMessage (INFO, LIB, PREMATURE_END_REG_EXP);
+		    TtaDisplaySimpleMessage (INFO, LIB, TMSG_PREMATURE_END_REG_EXP);
 		    break;
 		 case 5:
-		    TtaDisplaySimpleMessage (INFO, LIB, LIB_NESTING_TOO_DEEP);
+		    TtaDisplaySimpleMessage (INFO, LIB, TMSG_LIB_NESTING_TOO_DEEP);
 		    break;
 		 case 6:
-		    TtaDisplaySimpleMessage (INFO, LIB, REG_EXP_TOO_BIG);
+		    TtaDisplaySimpleMessage (INFO, LIB, TMSG_REG_EXP_TOO_BIG);
 		    break;
 		 case 7:
-		    TtaDisplaySimpleMessage (INFO, LIB, NO_MEMORY);
+		    TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_MEMORY);
 		    break;
 	      }
 	return TRUE;
@@ -2053,7 +2053,7 @@ char               *expression;
 	     /* Propagate error indication if worse than mere failure.  */
 	     if (val == -2)
 	       {
-		  TtaDisplaySimpleMessage (INFO, LIB, NO_MEMORY);
+		  TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_MEMORY);
 		  return (TRUE);
 	       }
 	     if (val == 1)

@@ -94,7 +94,7 @@ PtrSSchema          pSS;
    if (pSS->SsNRules >= MAX_RULES_SSCHEMA)
      {
 	/* Table de regles saturee */
-	TtaDisplaySimpleMessage (FATAL, LIB, LIB_RULES_TABLE_FULL);
+	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_LIB_RULES_TABLE_FULL);
 	*ret = 0;
      }
    else

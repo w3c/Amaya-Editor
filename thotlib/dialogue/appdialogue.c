@@ -160,11 +160,11 @@ int                 number;
 	     }
      }
 #ifdef NEW_WILLOWS
-   TtaInitDialogueWindows (servername, TtaGetMessage (LIB, LIB_CONFIRM),
-		    TtaGetMessage (LIB, CANCEL));
+   TtaInitDialogueWindows (servername, TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
+		    TtaGetMessage (LIB, TMSG_CANCEL));
 #else  /* NEW_WILLOWS */
-   TtaInitDialogue (servername, TtaGetMessage (LIB, LIB_CONFIRM),
-		    TtaGetMessage (LIB, CANCEL), TtaGetMessage (LIB, DONE), &app_cont, &Dp);
+   TtaInitDialogue (servername, TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
+		    TtaGetMessage (LIB, TMSG_CANCEL), TtaGetMessage (LIB, TMSG_DONE), &app_cont, &Dp);
    if (!RootShell)
      {
 	/* Connection au serveur X impossible */

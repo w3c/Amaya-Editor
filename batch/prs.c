@@ -6123,7 +6123,7 @@ char              **argv;
    int                 i;
 
    TtaInitializeAppRegistry (argv[0]);
-   i = TtaGetMessageTable ("libdialogue", LIB_MSG_MAX);
+   i = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
    COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
    PRS = TtaGetMessageTable ("prsdialogue", PRS_MSG_MAX);
 

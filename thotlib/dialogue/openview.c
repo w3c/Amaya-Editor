@@ -88,7 +88,7 @@ View                view;
 	/* construit le menus des vues que l'on peut ouvrir */
 	BuildViewList (pDoc, buf, &nbItems);
 	if (nbItems == 0)
-	   TtaDisplaySimpleMessage (INFO, LIB, ALL_VIEWS_ALREADY_CREATED);
+	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_ALL_VIEWS_ALREADY_CREATED);
 	else
 	  {
 	     ViewToOpenNumber = -1;
@@ -104,7 +104,7 @@ View                view;
 		  dest += l + 1;
 		  src += l + 1;
 	       }
-	     TtaNewPopup (NumMenuViewsToOpen, 0, TtaGetMessage (LIB, VIEWS), nbItems,
+	     TtaNewPopup (NumMenuViewsToOpen, 0, TtaGetMessage (LIB, TMSG_VIEWS), nbItems,
 			  bufMenu, NULL, 'L');
 	     TtaShowDialogue (NumMenuViewsToOpen, FALSE);
 	  }

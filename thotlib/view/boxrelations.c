@@ -1164,7 +1164,7 @@ boolean             horizRef;
 	       {
 		  /* Il y a une erreur de dimension */
 		  /* Erreur sur le schema de presentation */
-		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, BAD_HORIZ_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
+		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_BAD_HORIZ_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
 		  pAb->AbWidth.DimIsPosition = FALSE;
 		  pAb->AbWidth.DimAbRef = NULL;
 		  pAb->AbWidth.DimValue = 20;	/* largeur fixe */
@@ -1202,7 +1202,7 @@ boolean             horizRef;
 	       {
 		  /* Il y a une erreur de dimension */
 		  /* Erreur sur le schema de presentation */
-		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, BAD_VERT_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
+		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_BAD_VERT_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
 		  pAb->AbHeight.DimIsPosition = FALSE;
 		  pAb->AbHeight.DimAbRef = NULL;
 		  pAb->AbHeight.DimValue = 20;	/* hauteur fixe */
@@ -1496,9 +1496,9 @@ boolean             horizRef;
 					   /* Il y a une erreur de dimension */
 					   /* Erreur sur le schema de presentation */
 					   if (horizRef)
-					      TtaDisplayMessage (INFO, TtaGetMessage(LIB, BAD_HORIZ_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
+					      TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_BAD_HORIZ_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
 					   else
-					      TtaDisplayMessage (INFO, TtaGetMessage(LIB, BAD_VERT_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
+					      TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_BAD_VERT_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
 
 					}
 				      InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox, pDimAb->DimSameDimension, horizRef);

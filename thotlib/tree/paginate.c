@@ -542,12 +542,12 @@ static	void DisplayPageMsg (pDoc, pRootEl, pEl, schView, Assoc, firstPage)
   if (*firstPage)
     {
       /* Affiche un message normal pour la 1ere fois */
-      TtaDisplayMessage(INFO, TtaGetMessage(LIB, PAGE), name, (char *) pEl->ElPageNumber);
+      TtaDisplayMessage(INFO, TtaGetMessage(LIB, TMSG_PAGE), name, (char *) pEl->ElPageNumber);
       *firstPage = FALSE;
     }
   else
     /* Sinon ecrase le message precedent */
-    TtaDisplayMessage(OVERHEAD, TtaGetMessage(LIB, PAGE), name, (char *) pEl->ElPageNumber);
+    TtaDisplayMessage(OVERHEAD, TtaGetMessage(LIB, TMSG_PAGE), name, (char *) pEl->ElPageNumber);
 }
 #endif /* PAGINEETIMPRIME */
 

@@ -248,7 +248,7 @@ Name                 schName;
    if (!found)
      {
 	/* on n'a pas trouve' de regle USE pour cette nature */
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, EL_NOT_TRANSLATED),
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_EL_NOT_TRANSLATED),
 			   schName);
 	schName[0] = '\0';
      }

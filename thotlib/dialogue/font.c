@@ -829,7 +829,7 @@ boolean             increase;
      {
 	/* Check for table font overflow */
 	if (i >= MAX_FONT)
-	   TtaDisplayMessage (INFO, TtaGetMessage(LIB, NO_PLACE_FOR_FONT), textX);
+	   TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_NO_PLACE_FOR_FONT), textX);
 	else
 	  {
 	     strcpy (&TtFontName[i * MAX_FONTNAME], text);
@@ -860,7 +860,7 @@ boolean             increase;
 		  else if (index >= MaxNumberOfSizes)
 		     ptfont = LoadNearestFont (alphabet, family, highlight, MaxNumberOfSizes, FALSE, frame, FALSE);
 		  if (ptfont == NULL)
-		     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), textX);
+		     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_MISSING_FILE), textX);
 	       }
 
 	  }
@@ -1052,7 +1052,7 @@ char               *name;
      {
 	FontDialogue = ThotLoadFont ('L', 'l', 0, MenuSize, UnPoint, 0);
 	if (FontDialogue == NULL)
-	   TtaDisplaySimpleMessage (FATAL, LIB, MISSING_FONT);
+	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_MISSING_FONT);
      }
 
    IFontDialogue = ThotLoadFont ('L', 't', 2, MenuSize, UnPoint, 0);
