@@ -388,10 +388,10 @@ PtrAbstractBox      pAb;
                break;
           case UnPixel:
 #              ifdef _WINDOWS
-			   if (TtPrinterDC)
-				   dist = (val * PrinterDPI + PrinterDPI / 2) / ScreenDPI;
-			   else
-                   dist = val;
+			  if (TtPrinterDC)
+                      dist = (val * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
+			  else
+                  dist = val;
 #              else  /* _WINDOWS */
                dist = val;
 #              endif /* _WINDOWS */

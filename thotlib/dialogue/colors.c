@@ -742,7 +742,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 
 			   doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
                                           WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                          115, 340, 50, 20, hwnd, 
+                                          95, 340, 80, 20, hwnd, 
                                           (HMENU) _IDDONE_, hInstance, NULL) ;
                ShowWindow (doneButton, SW_SHOWNORMAL);
                UpdateWindow (doneButton);
