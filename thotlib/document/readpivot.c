@@ -1539,7 +1539,7 @@ PtrDocument         pDoc;
 
 
 /*----------------------------------------------------------------------
-   ReadAttr lit dans le fichier pivFile un attribut qui est sous   
+   ReadAttributePiv lit dans le fichier pivFile un attribut qui est sous   
    forme pivot. Le fichier doit etre positionne' juste apres       
    la Marque-Attribut (qui a deja ete lue). Au retour, le fichier  
    est positionne' sur le premier octet qui suit l'attribut        
@@ -1548,14 +1548,14 @@ PtrDocument         pDoc;
    saute' dans le fichier.                                         
    Si create est vrai, un attribut est cree' et  est retourne'     
    dans pReadAttr.                                                 
-   ATTENTION: ReadAttr utilise la table des natures du document    
+   ATTENTION: ReadAttributePiv utilise la table des natures du document    
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ReadAttr (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, boolean create, PtrAttribute * pReadAttr, PtrAttribute * pAttr)
+void                ReadAttributePiv (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, boolean create, PtrAttribute * pReadAttr, PtrAttribute * pAttr)
 
 #else  /* __STDC__ */
-void                ReadAttr (pivFile, pEl, pDoc, create, pReadAttr, pAttr)
+void                ReadAttributePiv (pivFile, pEl, pDoc, create, pReadAttr, pAttr)
 BinFile             pivFile;
 PtrElement          pEl;
 PtrDocument         pDoc;
@@ -1747,7 +1747,7 @@ PtrAttribute        *pAttr;
 
 
 /*----------------------------------------------------------------------
-   ReadAttributePiv lit dans le fichier pivFile un attribut qui est   
+   ReadAttribute lit dans le fichier pivFile un attribut qui est   
    sous forme pivot. Le fichier doit etre positionne' juste apres  
    la Marque-Attribut (qui a deja ete lue). Au retour, le fichier  
    est positionne' sur le premier octet qui suit l'attribut        
@@ -1757,14 +1757,14 @@ PtrAttribute        *pAttr;
    Si create est vrai, un attribut est cree' et attache' a l'element 
    pointe' par pEl; un pointeur sur cet attribut est retourne'     
    dans pReadAttr.                                                 
-   ATTENTION: ReadAttributePiv utilise la table des natures du document  
+   ATTENTION: ReadAttribute utilise la table des natures du document  
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void         ReadAttributePiv (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, boolean create, PtrAttribute * pReadAttr)
+void         ReadAttribute (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, boolean create, PtrAttribute * pReadAttr)
 
 #else  /* __STDC__ */
-void         ReadAttributePiv (pivFile, pEl, pDoc, create, pReadAttr)
+void         ReadAttribute (pivFile, pEl, pDoc, create, pReadAttr)
 BinFile             pivFile;
 PtrElement          pEl;
 PtrDocument         pDoc;
@@ -2481,7 +2481,7 @@ boolean             createDesc;
 	/* lit les attributs de l'element s'il y en a */
 	while (*tag == (char) C_PIV_ATTR && !error)
 	  {
-	     ReadAttributePiv (pivFile, pEl, pDoc, create, &pAttr);
+	     ReadAttribute (pivFile, pEl, pDoc, create, &pAttr);
 	     if (!error)
 		if (!BIOreadByte (pivFile, tag))
 		   PivotError (pivFile);
