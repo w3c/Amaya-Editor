@@ -1932,8 +1932,7 @@ View                view;
       if (DocumentMeta[doc]->method == CE_TEMPLATE)
 	{
 	  DocumentMeta[doc]->method = CE_ABSOLUTE;
-	  TtaFreeMemory (DocumentMeta[doc]->form_data);
-	  DocumentMeta[doc]->form_data = NULL;
+	  DocumentMetaClear (DocumentMeta[doc]);
 	}
       TtaSetDocumentUnmodified (doc);
       /* switch Amaya buttons and menus */
@@ -2682,8 +2681,7 @@ void                DoSaveAs ()
 	      if (DocumentMeta[doc]->method == CE_TEMPLATE)
 		{
 		  DocumentMeta[doc]->method = CE_ABSOLUTE;
-		  TtaFreeMemory (DocumentMeta[doc]->form_data);
-		  DocumentMeta[doc]->form_data = NULL;
+		  DocumentMetaClear (DocumentMeta[doc]);
 		}
 	      TtaSetDocumentUnmodified (doc);
 	      /* switch Amaya buttons and menus */

@@ -252,6 +252,7 @@ typedef struct _GETHTMLDocument_context {
   ThotBool   local_link;
   CHAR_T*    target;
   CHAR_T*    documentname;
+  CHAR_T*    initial_pathname;
   CHAR_T*     form_data;
   ClickEvent method;
   CHAR_T*    tempdocument;
@@ -273,6 +274,32 @@ typedef struct _RELOAD_context {
 
 
 /*----------------------------------------------------------------------
+   DocumentMetaClear
+   Clears the dynamically allocated memory associated to a metadata
+   element. Doesn't free the element or clears any of its other elements.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DocumentMetaClear (DocumentMetaDataElement *me)
+#else
+void                DocumentMetaClear (me)
+DocumentMetaDataElement *me;
+
+#endif
+{
+  if (me->form_data)
+    {
+      TtaFreeMemory (me->form_data);
+      me->form_data = NULL;
+    }
+  if (me->initial_pathname)
+    {
+      TtaFreeMemory (me->initial_pathname);
+      me->initial_pathname = NULL;
+    }
+}
+
+
+/*----------------------------------------------------------------------
    IsDocumentLoaded returns the document identification if the        
    corresponding document is already loaded or 0.          
   ----------------------------------------------------------------------*/
@@ -285,20 +312,11 @@ CHAR_T*              form_data;
 
 #endif
 {
-  CHAR_T            otherURL[MAX_LENGTH];
   int               i;
   ThotBool          found;
 
   if (!documentURL)
     return ((Document) None);
-
-  if (IsW3Path (documentURL))
-    {
-      ustrcpy (otherURL, documentURL);
-      ustrcat (otherURL, WC_URL_STR);
-    }
-  else
-    otherURL[0] = WC_EOS;
 
   i = 1;
   found = FALSE;
@@ -309,7 +327,7 @@ CHAR_T*              form_data;
 	{
 	  /* compare the url */
 	  found = (!ustrcmp (documentURL, DocumentURLs[i]) ||
-		   !ustrcmp (otherURL, DocumentURLs[i]));
+		   (DocumentMeta[i]->initial_pathname && !ustrcmp (documentURL, DocumentMeta[i]->initial_pathname)));
 	  /* compare the form_data */
 	  if (found && (!((!form_data && !DocumentMeta[i]->form_data) ||
 		 (form_data && DocumentMeta[i]->form_data &&
@@ -2115,12 +2133,13 @@ CHAR_T* documentname;
   contains the current copy of the remote file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Document     LoadHTMLDocument (Document doc, CHAR_T* pathname, CHAR_T* form_data, int method, CHAR_T* tempfile, CHAR_T* documentname, AHTHeaders *http_headers, ThotBool history)
+static Document     LoadHTMLDocument (Document doc, CHAR_T* pathname, CHAR_T* form_data, CHAR_T* initial_pathname, int method, CHAR_T* tempfile, CHAR_T* documentname, AHTHeaders *http_headers, ThotBool history)
 #else
-static Document     LoadHTMLDocument (doc, pathname, form_data, method, tempfile, documentname, http_headers, history)
+static Document     LoadHTMLDocument (doc, pathname, form_data, initial_pathname, method, tempfile, documentname, http_headers, history)
 Document            doc;
 CHAR_T*             pathname;
 CHAR_T*             form_data;
+CHAR_T*             initial_pathname;
 int                 method;
 CHAR_T*             tempfile;
 CHAR_T*             documentname;
@@ -2331,7 +2350,8 @@ ThotBool            history;
 		docType = docAnnot;
 	      method = CE_RELATIVE;
 	      newdoc = doc;
-	      /* we are not currently able to use the XML parser for annotations */
+	      /* @@ IV: we are not currently able to use the XML parser for 
+		 annotations */
 	      isXML = FALSE;
 	    }
 #endif /* ANNOTATIONS */
@@ -2432,10 +2452,14 @@ ThotBool            history;
       DocumentURLs[newdoc] = s;
       /* save the document's formdata into the document table */
       if (DocumentMeta[newdoc] != NULL)
-	  TtaFreeMemory (DocumentMeta[newdoc]->form_data);
+	  DocumentMetaClear (DocumentMeta[newdoc]);
       else
 	DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
       DocumentMeta[newdoc]->form_data = TtaWCSdup (form_data);
+      if (initial_pathname && ustrcmp (pathname, initial_pathname))
+	DocumentMeta[newdoc]->initial_pathname = TtaWCSdup (initial_pathname);
+      else
+	DocumentMeta[newdoc]->initial_pathname = NULL;
       DocumentMeta[newdoc]->method = (ClickEvent) method;
       DocumentMeta[newdoc]->put_default_name = FALSE;
       DocumentMeta[newdoc]->xmlformat = isXML;
@@ -2570,6 +2594,7 @@ void *context;
   CHAR_T* tempfile;
   CHAR_T* documentname;
   CHAR_T* form_data;
+  CHAR_T* initial_pathname;
   ClickEvent method;
   Document res;
   Element el;
@@ -2587,13 +2612,23 @@ void *context;
 
   pathname = TtaAllocString (MAX_LENGTH);
   ustrcpy (pathname, urlName);
-
+  
   if (status == 0)
      {
        TtaSetCursorWatch (0, 0);
-       /* do we need to control the last slash here? */
-       res = LoadHTMLDocument (newdoc, pathname, form_data, method, tempfile, 
-			       documentname, http_headers, FALSE);
+
+       /* a bit of acrobatics so that we can retain the initial_pathname
+	  without reallocating memory */
+       initial_pathname = DocumentMeta[doc]->initial_pathname;
+       DocumentMeta[doc]->initial_pathname = NULL;
+
+       /* parse and display the document */
+       res = LoadHTMLDocument (newdoc, pathname, form_data, NULL, method,
+			       tempfile, documentname, http_headers, FALSE);
+
+       /* restore the initial_pathname */
+       DocumentMeta[doc]->initial_pathname = initial_pathname;
+
 	W3Loading = 0;		/* loading is complete now */
 	TtaHandlePendingEvents ();
 	/* fetch and display all images referred by the document */
@@ -2885,6 +2920,7 @@ View                view;
 	 DocumentURLs[sourceDoc] = s;
 	 DocumentMeta[sourceDoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
 	 DocumentMeta[sourceDoc]->form_data = NULL;
+	 DocumentMeta[sourceDoc]->initial_pathname = NULL;
 	 DocumentMeta[sourceDoc]->method = CE_ABSOLUTE;
 	 DocumentMeta[sourceDoc]->put_default_name =
 	                            DocumentMeta[document]->put_default_name;
@@ -3172,6 +3208,7 @@ void*     context;
    CHAR_T*             tempfile;
    CHAR_T*             target;
    CHAR_T*             pathname;
+   CHAR_T*             initial_pathname;
    CHAR_T*             documentname;
    CHAR_T*             form_data;
    ClickEvent          method;
@@ -3198,6 +3235,7 @@ void*     context;
    history = ctx->history;
    target = ctx->target;
    documentname = ctx->documentname;
+   initial_pathname = ctx->initial_pathname;
    form_data = ctx->form_data;
    method = ctx->method;
    tempdocument = ctx->tempdocument;
@@ -3225,9 +3263,10 @@ void*     context;
 	 {
 	   if (IsW3Path (pathname))
 	     NormalizeURL (pathname, 0, tempdocument, documentname, NULL);
-
-	   /* do we need to control the last slash here? */
-	   res = LoadHTMLDocument (newdoc, pathname, form_data, method,
+	   
+	   /* parse and display the document */
+	   res = LoadHTMLDocument (newdoc, pathname, form_data, 
+				   initial_pathname, method,
 				   tempfile, documentname,
 				   http_headers, history);
 	   W3Loading = 0;		/* loading is complete now */
@@ -3255,10 +3294,14 @@ void*     context;
 	       TtaSetTextZone (newdoc, 1, 1, s);
 	       /* save the document's formdata into the document table */
 	       if (DocumentMeta[newdoc])
-		   TtaFreeMemory (DocumentMeta[(int) newdoc]->form_data);
+		   DocumentMetaClear (DocumentMeta[(int) newdoc]);
 	       else
 		 DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
 	       DocumentMeta[newdoc]->form_data = TtaWCSdup (form_data);
+	       if (ustrcmp (pathname, initial_pathname))
+		 DocumentMeta[newdoc]->initial_pathname = TtaWCSdup (initial_pathname);
+	       else
+		 DocumentMeta[newdoc]->initial_pathname = NULL;
 	       DocumentMeta[newdoc]->method = method;
 	       DocumentMeta[newdoc]->put_default_name = FALSE;
 	       DocumentMeta[newdoc]->xmlformat = FALSE;
@@ -3301,6 +3344,7 @@ void*     context;
 
    TtaFreeMemory (target);
    TtaFreeMemory (documentname);
+   TtaFreeMemory (initial_pathname);
    TtaFreeMemory (pathname);
    TtaFreeMemory (tempfile);
    TtaFreeMemory (tempdocument);
@@ -3408,30 +3452,46 @@ void               *ctx_cbf;
 	 tempfile[0] = WC_EOS;
        }
 
-   if (parameters[0] == WC_EOS)
+   /* check if the user is already browsing the document in another window */
+   if (CE_event == CE_FORM_GET || CE_event == CE_FORM_POST)
      {
        newdoc = IsDocumentLoaded (pathname, form_data);
-       if (newdoc != 0)
+       /* we don't concatenate the new parameters as we give preference
+	  to the form data */
+     }
+   else
+     {
+       /* concatenate the parameters before making the test */
+       if (parameters[0] != WC_EOS)
 	 {
+	   ustrcat (pathname, TEXT("?"));
+	   ustrcat (pathname, parameters);
+	 }
+       newdoc = IsDocumentLoaded (pathname, NULL);
+     }
+
+   if (newdoc != 0)
+     /* the document is already loaded */
+     {
+
+       if (newdoc == doc)
+	 /* it's a move in the same document */
+	 {
+	   if (history)
+	     /* record the current position in the history */
+	     AddDocHistory (newdoc, DocumentURLs[newdoc], 
+			    DocumentMeta[newdoc]->form_data,
+			    DocumentMeta[newdoc]->method);
+	 }
+       else
+	 /* following the link to another open window */
+	 {
+	   /* raise its window */
 	   TtaRaiseView (newdoc, 1);
 	   /* don't add it to the doc's historic */
 	   history = FALSE;
 	 }
      }
-   else
-     {
-       /* we need to ask the server */
-       newdoc = 0;
-       ustrcat (pathname, TEXT("?"));
-       ustrcat (pathname, parameters);
-     }
-
-   if (ok && newdoc != 0 && history)
-     /* it's just a move in the same document */
-     /* record the current position in the history */
-     AddDocHistory (newdoc, DocumentURLs[newdoc], 
-		    DocumentMeta[newdoc]->form_data,
-		    DocumentMeta[newdoc]->method);
 
    if (ok)
      {
@@ -3443,6 +3503,7 @@ void               *ctx_cbf;
        ctx->history = history;
        ctx->target = target;
        ctx->documentname = documentname;
+       ctx->initial_pathname = TtaWCSdup (pathname);
        if (form_data)
           ctx->form_data = TtaWCSdup (form_data);
        else
@@ -3485,8 +3546,9 @@ void               *ctx_cbf;
 #ifdef ANNOTATIONS
        else if (CE_event == CE_ANNOT)
 	 {
-	   /* need to create a new window for the document */
-	   newdoc = InitDocView (doc, documentname, docAnnot, 0);
+	   if (newdoc == 0)
+	     /* need to create a new window for the document */
+	     newdoc = InitDocView (doc, documentname, docAnnot, 0);
 	   /* we're downloading an annotation, fix the accept_header
 	      (thru the content_type variable) to application/rdf */
 	   content_type = TEXT("application/rdf");
@@ -3577,6 +3639,7 @@ void               *ctx_cbf;
      {
        if (ctx->form_data)
 	 TtaFreeMemory (ctx->form_data);
+       TtaFreeMemory (ctx->initial_pathname);
        if (ctx)
 	 TtaFreeMemory (ctx);
        if (cbf)
@@ -3586,7 +3649,6 @@ void               *ctx_cbf;
        TtaFreeMemory (documentname);
        TtaFreeMemory (tempdocument);
      }
-
    TtaFreeMemory (parameters);
    TtaFreeMemory (tempfile);
    TtaFreeMemory (pathname);
@@ -4284,7 +4346,7 @@ DocumentType     docType;
 	      http_headers.content_type = NULL;
 	  /* we don't know yet how to recover the charset */
 	  http_headers.charset = NULL;
-	  LoadHTMLDocument (newdoc, docname, NULL, CE_ABSOLUTE, 
+	  LoadHTMLDocument (newdoc, docname, NULL, NULL, CE_ABSOLUTE, 
 			    tempdoc, DocumentName, &http_headers, FALSE);
 	}
       else
@@ -4292,7 +4354,7 @@ DocumentType     docType;
 	  /* it's a local file */
 	  tempfile[0] = EOS;
 	  /* load the temporary file */
-	  LoadHTMLDocument (newdoc, tempdoc, NULL, CE_ABSOLUTE,
+	  LoadHTMLDocument (newdoc, tempdoc, NULL, NULL, CE_ABSOLUTE,
 			    tempfile, DocumentName, NULL, FALSE);
 	  /* change its URL */
 	  TtaFreeMemory (DocumentURLs[newdoc]);

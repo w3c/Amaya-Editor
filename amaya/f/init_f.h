@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern Document IsDocumentLoaded ( CHAR_T* documentURL,
                                    CHAR_T* form_data );
 extern ThotBool CanReplaceCurrentDocument ( Document document,
@@ -157,6 +158,7 @@ extern void AmayaClose ( Document document,
 
 #else /* __STDC__ */
 
+extern void DocumentMetaClear (/* DocumentMetaDataElement *me */);
 extern Document IsDocumentLoaded (/* CHAR_T* documentURL,
                                      CHAR_T* form_data */);
 extern ThotBool CanReplaceCurrentDocument (/* Document document,

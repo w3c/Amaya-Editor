@@ -1125,10 +1125,9 @@ Document       doc;
       DocumentURLs[doc] = NULL;
       if (DocumentMeta[doc])
 	{
-        if (DocumentMeta[doc]->form_data)
-	  TtaFreeMemory (DocumentMeta[doc]->form_data);
-        TtaFreeMemory (DocumentMeta[doc]);
-        DocumentMeta[doc] = NULL;
+	  DocumentMetaClear (DocumentMeta[doc]);
+	  TtaFreeMemory (DocumentMeta[doc]);
+	  DocumentMeta[doc] = NULL;
 	}
 #ifdef ANNOTATIONS
        LINK_DelMetaFromMemory (doc);
