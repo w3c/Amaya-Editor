@@ -1748,7 +1748,7 @@ CHAR_T*             appArgv0;
    usprintf (app_home, TEXT("%s%c.%s"), ptr, WC_DIR_SEP, AppNameW); 
 #endif _WINDOWS
    /* store the value of APP_HOME in the registry */
-   AddRegisterEntry (AppRegistryEntryAppli, "APP_HOME", app_home, REGISTRY_SYSTEM, TRUE);
+   AddRegisterEntry (AppRegistryEntryAppli, "APP_HOME", app_home, REGISTRY_SYSTEM, FALSE);
 
    /* set the default APP_TMPDIR */
 #ifdef _WINDOWS
