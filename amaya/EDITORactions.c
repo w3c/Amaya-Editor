@@ -1808,7 +1808,7 @@ void                CreatePasswordInput (Document doc, View view)
   ----------------------------------------------------------------------*/
 void                CreateTextArea (Document doc, View view)
 {
-   CreateInputElement (doc, view, HTML_EL_Text_Input);
+   CreateInputElement (doc, view, HTML_EL_Text_Area);
 }
 
 
