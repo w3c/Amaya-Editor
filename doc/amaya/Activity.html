@@ -3,27 +3,7 @@
 <html>
 <head>
   <title>Amaya Activity</title>
-  <style type="text/css">  body {
-    margin-left: 10%;
-    margin-right: 10%;
-    font-family: Trebuchet, Arial, sans-serif
-  }
-  h1 { margin-left: -8% }
-  h2,h3,h4,h5,h6 { margin-left: -4% }
-  h2 { color: #006699 }
-  h3 { color: black }
-  h4 { color:#006699 }
-  pre { color:  #003366}
-  em {color:blue; background: yellow}
-  strong { text-transform: uppercase; font-weight: bold }
-  b { color:#006699 }
-  caption { text-decoration: underline; margin-top: 1em }
-  p.splash { color: #006699 }
-  p.banner { margin-left: -4% }
-  blockquote { color: #003366; font-style:italic }
-  pre { font-family: monospace }
-  div.disclaimer {margin-left: -8%}
-  .comment { background-color: #FFc0c0}</style>
+  <link href="/StyleSheets/activity.css" type="text/css" rel="stylesheet">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 
@@ -31,8 +11,9 @@
 <p class="banner"><a href="http://www.w3.org/"><img alt="W3C" width="72"
 height="48" border="0" src="http://www.w3.org/Icons/w3c_home.gif"></a> <a
 href="http://www.w3.org/UI/"><img src="http://www.w3.org/Icons/ui.gif"
-border="0" width="212" height="48" alt="User Interface Domain"></a> <img
-src="Icons/w3c-amaya.gif" alt="W3C-Amaya"></p>
+border="0" width="212" height="48" alt="User Interface Domain"><img
+src="http://www.w3.org/Icons/ActivityStatement.gif" alt="Activity
+Statement"></a></p>
 
 <h1>Amaya<br>
 <b>Activity Statement</b></h1>
@@ -55,23 +36,23 @@ with many specialized features including multiple views, where the internal
 structural model of the document can be displayed alongside the browser's view
 of how it should be presented on the screen. Amaya has a counterpart called <a
 href="http://www.w3.org/pub/WWW/Jigsaw/">Jigsaw</a> which plays a similar role
-on the server side. Amaya is a complete web browsing and authoring environment
+on the server side. Amaya is a complete Web browsing and authoring environment
 and comes equipped with a WYSIWYG style of interface, similar to that of the
 more popular commercial browsers.</p>
 
 <p>An important benefit of Amaya is that it implements the W3C specifications
-very carefully so that you can sure that the mark-up you produce follows W3C
-Recommendations correctly, making for more efficient mark-up which is easy to
+very carefully so that you can sure that the markup you produce follows W3C
+Recommendations correctly, making for more efficient markup which is easy to
 maintain or re-purpose for other devices.</p>
 
 <p>Amaya maintains a consistent internal document model adhering to the
 Document Type Definition (DTD), meaning that it handles the relationships
 between various document components: paragraphs, headings, lists and so on, as
 laid down in the relevant W3C HTML Recommendation. Amaya has been extended to
-demonstrate many features in HTML 4.0, the current recommendation for the
+demonstrate many features in HTML 4.01, the current recommendation for the
 language and XHTML, the next generation of HTML.</p>
 
-<p><img src="amaya-ui.gif" alt="Amaya-UI"></p>
+<p align="center"><img src="amaya-ui.gif" alt="Amaya-UI"></p>
 
 <h2><a name="role">Amaya at W3C</a></h2>
 
@@ -80,59 +61,55 @@ Guétari, José Kahan, Vincent Quint. Used by other groups within the consortium
 to demonstrate work and to act as an experimental platform Amaya has played an
 important role in the areas of:</p>
 <ul>
-  <li><b>HTML:</b> As an editor, Amaya is guaranteed to produce HTML 4
+  <li><b>HTML:</b> As an editor, Amaya is guaranteed to produce HTML 4.01
     compliant code. The way it handles documents strictly follows the HTML
     DTD, the Document Type Definition.</li>
   <li><b>XHTML:</b> Amaya can also handle documents in XHTML, i.e. using the
     XML syntax. Due to namespaces, it can seamlessly integrate and manipulate
     structured objects such as mathematical expressions and vector
   graphics.</li>
-  <li><b>HTTP protocol:</b> In its basic version, Amaya implements many web
+  <li><b>HTTP protocol:</b> In its basic version, Amaya implements many Web
     protocols and formats: it accesses remote sites by means of HTTP 1.1, as
     implemented in <a href="http://www.w3.org/pub/WWW/Library/">libwww</a>.
     Amaya takes advantage of the most advanced features of HTTP, such as
     content negotiation to retrieve, for instance, the most appropriate
     picture format, keep alive connections to save bandwidth and
     authentication to allow secure remote publishing.</li>
-  <li><p><b>Math on the Web:</b> Amaya demonstrates an implementation of <a
-    href="../TR/WD-math/">MathML</a> which allows users to browse and edit web
+  <li><b>Math on the Web:</b> Amaya demonstrates an implementation of <a
+    href="../TR/WD-math/">MathML</a> which allows users to browse and edit Web
     pages containing mathematical expressions. The screen below shows the way
     that you can display equations on the screen side by side the MathML model
-    used by Amaya.</p>
-  </li>
+    used by Amaya.</li>
 </ul>
 
-<p><img width="540" height="614" src="amaya-math.gif" alt="Amaya screen with
+<p align="center"><img src="amaya-math.gif" alt="Amaya screen with
 equations"></p>
 <ul>
-  <li><p><b>Graphics:</b> Amaya displays images in the PNG format,  which is a
+  <li><b>Graphics:</b> Amaya displays images in the PNG format,  which is a
     more powerful graphics format than GIF and more suited to the needs of the
     Web. A CGM plug-in developed by Rutherford Appleton Laboratories was first
     demonstrated at EITC'97 in Brussels and in many other events. An
     experiment with 2D vector graphics was made in Amaya, to prepare the work
     on Scalable Vector Graphics (<a
     href="http://www.w3.org/Graphics/SVG/">SVG</a>). The graphics are written
-    in XML and may be mixed freely with HTML and MathML.</p>
-  </li>
-  <li><p><b>Style sheets:</b> Amaya has extensive support for the W3C style
-    sheet language CSS and offers <a href="User/CSS.html">a simple-to-use
+    in XML and may be mixed freely with HTML and MathML.</li>
+  <li><b>Style sheets:</b> Amaya has extensive support for the W3C style sheet
+    language CSS and offers <a href="User/CSS.html">a simple-to-use
     interface</a> enabling users to write style sheets for Web documents
     without having to know the details of the syntax associated with style
     sheet rules and properties. You can create colored text, change the font,
     set the background color and control other presentational effects. CSS
     style sheets may also be used to alter the look of graphics or
-    mathematical expressions.</p>
-  </li>
-  <li><p><b>DOM:</b> Amaya is used to experiment with the Java API developed
-    by the Document Object Model (<a href="/DOM/Activity">DOM</a>)
-    activity.</p>
-  </li>
-  <li><p><b>Internationalization:</b> It is now possible to launch Amaya so
-    that the user dialogs are in various languages such as English, German or
-    French. Other languages may be added by users. Amaya can also handle
+    mathematical expressions.</li>
+  <li><b>DOM:</b> Amaya is used to experiment with the Java API developed by
+    the Document Object Model (<a href="/DOM/Activity">DOM</a>) activity.</li>
+  <li><b>Internationalization:</b> It is now possible to launch Amaya so that
+    the user dialogs are in various languages such as English, German, Italian
+    or French. Other languages may be added by users. Amaya can also handle
     multilingual documents and it takes the current language into account when
-    spell-checking or hyphenating.</p>
-  </li>
+    spell-checking or hyphenating. Tha Amaya team works also on the Unicode
+    support and the demonstrator of the first Unicode Amaya version is
+    available for Windows NT/2000.</li>
 </ul>
 
 <h2><a name="current">Current Situation</a></h2>
@@ -145,7 +122,7 @@ href="Overview.html#L347">downloaded</a> from the W3C site.</p>
 
 <p>Documentation is provided at every level, catering for the beginner right
 through to the developer wanting to extend the software for their own
-purposes. There is also an active and very useful mailing lists, <a
+purposes. There are also active and very useful mailing lists, <a
 href="http://lists.w3.org/Archives/Public/www-amaya/">www-amaya@w3.org</a> and
 <a
 href="http://lists.w3.org/Archives/Public/www-amaya-dev/">www-amaya-dev@w3.org</a>
@@ -160,7 +137,7 @@ developers.</p>
 <ul>
   <li>A better support of CSS: margin, border, and padding rules are now
     supported.</li>
-  <li>The support of MathML 2.0 attributes and the improvement of the maths
+  <li>The support of MathML 2.0 attributes and the improvement of  math
     editing.</li>
   <li>The improvement of the table formatter.</li>
   <li>The unicodification of the Amaya code.</li>
@@ -168,7 +145,7 @@ developers.</p>
 
 <p>but also these interesting features:</p>
 <ul>
-  <li>Support for HTML 4.0 &amp; XHTML 1.0</li>
+  <li>Support for HTML 4.01 &amp; XHTML 1.0</li>
   <li>Facilities for creating documents from templates</li>
   <li>Source code can be displayed and edited in sync with the formatted
     document</li>
