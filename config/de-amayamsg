@@ -49,15 +49,11 @@
 48 Umwandlung fehlerhaft
 49 Sytaxfehler in der HTML-Datei, Zeile %s
 50 Hinzufügen
-51 Anzeigen
-52 Browsen
+51 **Remove
+52 **Re-parse
 53 Formel
 54 Grafiken
-55 Löschen
-56 Speichern
-57 Speichern unter
-58 Neu laden
-59 Neu
+55 Speichern unter
 60 CSS
 61 Speichern überschreibt die folgenden URL:
 62 Speichern der URL fehlerhaft

@@ -60,15 +60,12 @@ int                 AMAYA;
 #define AM_TRANS_FAILED		       48
 #define AM_TRANS_PARSE_ERROR	       49
 #define AM_ADD                         50
-#define AM_SHOW                        51
+#define AM_REMOVE                      51
 #define AM_BROWSE                      52
 #define AM_BUTTON_MATH                 53
 #define AM_BUTTON_GRAPHICS             54
-#define AM_DELETE                      55
-#define AM_SAVE                        56
-#define AM_SAVE_AS                     57
-#define AM_RELOAD                      58
-#define AM_NEW                         59
+#define AM_SAVE_AS                     55
+
 #define AM_CSS                         60
 #define AM_WARNING_SAVE_OVERWRITE      61
 #define AM_URL_SAVE_FAILED             62

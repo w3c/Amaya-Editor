@@ -49,15 +49,11 @@
 48 La transformation a echou\351
 49 HTML.trans erreur de syntaxe ligne %s
 50 Ajouter
-51 Visualiser
-52 Traiter
+51 Supprimer
+52 Reappliquer
 53 Maths
 54 Graphique
-55 Supprimer
-56 Sauvegarder
-57 Sauvegarder sous
-58 Recharger
-59 Nouveau
+55 Sauvegarder sous
 60 CSS
 61 La sauvegarde entrainera \351craser les URLs suivantes :
 62 Erreur de sauvegarde de l'URL 

@@ -19,7 +19,10 @@ Extensions 1.5a:
   now interpreted.
 
 * Amaya is now able to load, edit, print  and save CSS files or simple Text
-  files.
+  files.It's now possible to open any CSS file linked to a document from the
+  menu entry "Style Sheets". At the same time a displayed CSS file can be
+  linked to a new document by a simple click when the element LINK is created.
+  As soon as the CSS file is linked, CSS rules are applied to the new document.
 
 * Publication thru the net now uses the HTTP/1.1 etags and conditional
   headers to avoid the lost updates problem.

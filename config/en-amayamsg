@@ -49,15 +49,11 @@
 48 Transformation failed 
 49 syntax error in file HTML.trans line %s
 50 Add
-51 Show
-52 Browse
+51 Remove
+52 Re-parse
 53 Maths
 54 Graphics
-55 Delete
-56 Save
-57 Save as
-58 Reload
-59 New
+55 Save as
 60 CSS
 61 Saving will overwrite the following URLs:
 62 Failed to save to URL

@@ -703,7 +703,7 @@ int                *len;
 {
   ElementType          elType;
 
-  if ((buf == NULL) || (len == NULL) || (*len <= 0))
+  if (buf == NULL || len == NULL || *len <= 0)
     return;
 
   /*
@@ -4241,6 +4241,9 @@ boolean             withUndo;
       CSSbuffer[CSSindex] = c;
       switch (c)
 	{
+	case '\r':
+	  c = EOS;
+	  break;
 	case '@':
 	  /* perhaps an import primitive */
 	  import = CSSindex;

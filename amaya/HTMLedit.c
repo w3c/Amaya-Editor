@@ -84,6 +84,41 @@ Attribute           attrNAME;
 
 
 /*----------------------------------------------------------------------
+   RemoveLink: destroy the link element and remove CSS rules when the
+   link points to a CSS file.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                RemoveLink (Element el, Document doc)
+#else
+void                RemoveLink (el, doc)
+Element             el;
+Document            doc;
+#endif
+{
+   ElementType	       elType;
+   AttributeType       attrType;
+   Attribute           attr;
+   STRING              buffer;
+   int                 length;
+
+   /* Search the refered image */
+   elType = TtaGetElementType (el);
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = HTML_ATTR_HREF_;
+   attr = TtaGetAttribute (el, attrType);
+   if (attr != 0)
+     {
+       /* get a buffer for the attribute value */
+       length = TtaGetTextAttributeLength (attr);
+       buffer = TtaGetMemory (length + 1);
+       /* copy the HREF attribute into the buffer */
+       TtaGiveTextAttributeValue (attr, buffer, &length);
+       if (IsCSSName (buffer))
+	 RemoveStyleSheet (buffer, doc);
+     }
+  return FALSE;		/* let Thot perform normal operation */
+}
+/*----------------------------------------------------------------------
    DeleteLink                                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -94,27 +129,7 @@ NotifyElement      *event;
 
 #endif
 {
-   ElementType	       elType;
-   AttributeType       attrType;
-   Attribute           attr;
-   STRING              buffer;
-   int                 length;
-
-   /* Search the refered image */
-   elType = TtaGetElementType (event->element);
-   attrType.AttrSSchema = elType.ElSSchema;
-   attrType.AttrTypeNum = HTML_ATTR_HREF_;
-   attr = TtaGetAttribute (event->element, attrType);
-   if (attr != 0)
-     {
-       /* get a buffer for the attribute value */
-       length = TtaGetTextAttributeLength (attr);
-       buffer = TtaGetMemory (length + 1);
-       /* copy the HREF attribute into the buffer */
-       TtaGiveTextAttributeValue (attr, buffer, &length);
-       if (IsCSSName (buffer))
-	 RemoveStyleSheet (buffer, event->document);
-     }
+  RemoveLink (event->element, event->document);
   return FALSE;		/* let Thot perform normal operation */
 }
 

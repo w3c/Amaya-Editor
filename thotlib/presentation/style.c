@@ -1734,7 +1734,7 @@ PtrPRule                   rule;
       break;
     }
 
-  if (value % 10)
+  if (value % 10 && unit != STYLE_UNIT_INVALID)
     {
       real = TRUE;
       value *= 1000;

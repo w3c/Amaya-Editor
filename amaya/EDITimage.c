@@ -433,7 +433,7 @@ View                view;
    i += ustrlen (&s[i]) + 1;
    ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
 
-   TtaNewSheet (BaseImage + FormImage, TtaGetViewFrame (document, view),  TtaGetMessage (AMAYA, AM_OPEN_URL),
+   TtaNewSheet (BaseImage + FormImage, TtaGetViewFrame (document, view), TtaGetMessage (AMAYA, AM_BUTTON_IMG),
 		3, s, TRUE, 2, 'L', D_CANCEL);
    TtaNewTextForm (BaseImage + ImageURL, BaseImage + FormImage,
 		   TtaGetMessage (AMAYA, AM_OPEN_URL), 50, 1, TRUE);
@@ -442,7 +442,7 @@ View                view;
 		   TtaGetMessage (AMAYA, AM_ALT), 50, 1, TRUE);
    TtaNewLabel (BaseImage + ImageLabel2, BaseImage + FormImage, " ");
    TtaListDirectory (DirectoryImage, BaseImage + FormImage,
-		     TtaGetMessage (LIB, TMSG_DOC_DIR),
+		     TtaGetMessage (AMAYA, AM_IMAGES_LOCATION),
 		     BaseImage + ImageDir, ImgFilter,
 		     TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
    if (LastURLImage[0] != EOS)

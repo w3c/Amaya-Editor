@@ -3320,7 +3320,7 @@ boolean      on;
       if (pDoc->DocView[view].DvPSchemaView > 0)
 	{
 	  frame = pDoc->DocViewFrame[view];
-	  if (ref != -1 && FrameTable[frame].MenuRedo != -1)
+	  if (frame != 0 && FrameTable[frame].MenuRedo != -1)
 	    {
 	      ref = FrameTable[frame].MenuRedo;
 	      item = FrameTable[frame].EntryRedo;

@@ -26,6 +26,7 @@
 
 static int         BaseCSS;
 static STRING      CSSpath;
+static Document    DocCSS;
 
 #include "AHTURLTools_f.h"
 #include "UIcss_f.h"
@@ -53,7 +54,19 @@ STRING              data;
     case CSSForm:
       TtaDestroyDialogue (ref);
       if (val == 1 && CSSpath != NULL)
+	/* display the CSS file */
 	GetHTMLDocument (CSSpath, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
+      else if (val == 2)
+	/* re-parse the CSS file */
+	  ;
+      else if (val == 3)
+	{
+	  /* remove the link to this file */
+	  ;
+	}
+      else if (val == 4)
+	/* add a new link to a CSS file */
+	CreateLinkInHead (DocCSS, 1);
       /* clean CSSpath */
       TtaFreeMemory (CSSpath);
       CSSpath = NULL;
@@ -96,9 +109,12 @@ View                view;
   CSSInfoPtr          css;
   CHAR                buf[400];
   STRING              ptr;
+  CHAR                s[MAX_LENGTH];
+  int                 i;
   int                 len, nb;
   int                 index, size;
 
+  DocCSS = doc;
   css = CSSList;
   buf[0] = 0;
   index = 0;
@@ -108,12 +124,21 @@ View                view;
     {
       if (css->category != CSS_DOCUMENT_STYLE && css->documents[doc])
 	{
-#  ifndef _WINDOWS
 	  if (nb == 0)
-	    /* create the form */
-	    TtaNewForm (BaseCSS + CSSForm, TtaGetViewFrame (doc, 1), 
-			TtaGetMessage (AMAYA, AM_CSS), FALSE, 2, 'L', D_DONE);
+	    {
+#  ifndef _WINDOWS
+	      /* create the form */
+	      i = 0;
+	      ustrcpy (&s[i], TtaGetMessage (LIB, TMSG_OPEN));
+	      i += ustrlen (&s[i]) + 1;
+	      ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
+	      i += ustrlen (&s[i]) + 1;
+	      ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_REMOVE));
+	      i += ustrlen (&s[i]) + 1;
+	      ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_ADD));
+	      TtaNewSheet (BaseCSS + CSSForm, TtaGetViewFrame (doc, 1), TtaGetMessage (AMAYA, AM_CSS), 4, s, TRUE, 2, 'L', D_DONE);
 #  endif /* !_WINDOWS */
+	    }
 	  /* build the CSS list */
 	  if (css->url == NULL)
 	    ptr = css->localName;

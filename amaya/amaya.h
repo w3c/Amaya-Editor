@@ -113,13 +113,11 @@ typedef enum _ClickEvent {
 #define About3		437
 #define Version		438
 #define AboutForm      	439
-#define CSSForm         440
-#define CSSSelect       441
-#define TableForm       442
-#define TableRows       443
-#define TableCols       444
-#define TableBorder     445
-#define MAX_REF         446
+#define TableForm       440
+#define TableRows       441
+#define TableCols       442
+#define TableBorder     443
+#define MAX_REF         444
 
 /* The possible GET/POST/PUT request modes */
 
