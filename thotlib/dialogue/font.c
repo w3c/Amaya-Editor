@@ -2257,14 +2257,11 @@ void InitDialogueFonts (char *name)
     sscanf (value, "%d", &MenuSize);
   f3 = MenuSize + 2;
 
-#if defined(_WX)
-  /* TODO : a faire si on desir porter la version non opengl avec wxwindows */  
-#endif /* _WX */
 #ifdef _GTK
   if (!Printing)
     {
       fontpath = TtaGetEnvString ("THOTFONT");
-      if (fontpath)
+      if (fontpath && TtaDirExists (fontpath))
 	{
 	  strcpy (FONT_PATH, fontpath);
 	  strcat (FONT_PATH, "/");
@@ -2295,6 +2292,7 @@ void InitDialogueFonts (char *name)
 	      bcopy (currentlist, dirlist, ncurrent * sizeof (char*));
 #endif /* SYSV */
 	      dirlist[ncurrent] = FONT_PATH;
+	      
 	      XSetFontPath (TtDisplay, dirlist, ndir);
 	      TtaFreeMemory (dirlist);
 	    }
