@@ -6,14 +6,11 @@
 
 @VPATHOPT@= @srcdir@
 THOTDIR = @top_srcdir@
-CC	= @CC@
-CFLAGS	= @CFLAGS@
-AR	= @AR@ rc
-RANLIB	= @RANLIB@
-INSTALL = @INSTALL@
+
+include ../Options
+
 INCLUDES= -DHAVE_CONFIG_H -I.. -I@srcdir@/f -I@top_srcdir@/amaya \
           -I@top_srcdir@/amaya/f @THOTINCLUDES@ @X_CFLAGS@
-RM	= @RM@ -f
 
 OPTIONS	= @AMAYA_OPTIONS@ @PLUGIN_OPTIONS@ \
           -I@top_srcdir@/w3c-libwww-5.0a/Library/src

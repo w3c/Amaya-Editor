@@ -8,16 +8,11 @@
 
 @VPATHOPT@= @srcdir@
 THOTDIR = @top_srcdir@
-CC	= @CC@
-CFLAGS	= @CFLAGS@
-LD	= @CC@
-LDFLAGS	= @LDFLAGS@
+
+include ../Options
+
 LIBS	= ../thotlib/libThotKernel.a @LIBS@
-INSTALL = @INSTALL@
 INCLUDES= -DHAVE_CONFIG_H -I.. -I@srcdir@/f @THOTINCLUDES@ @X_CFLAGS@
-RM	= @RM@
-MKDIR	= @MKDIR@
-ECHO	= @ECHO@
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@

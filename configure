@@ -6027,17 +6027,27 @@ fi
 
 
 EXTRA_MAKEFILE_IN=
-make_output="Makefile tools/Makefile tools/dns_daemon/Makefile \
+make_output="Makefile Options.orig:Options.in tools/Makefile \
        libjpeg/Makefile libpng/Makefile libpng/zlib/Makefile \
-       tools/mkdep/Makefile tools/javastub/Makefile \
+       tools/mkdep/Makefile \
        tools/cextract-1.7/Makefile thotlib/Makefile \
        thotlib/include/Makefile batch/Makefile tablelib/Makefile \
-       drawlib/Makefile indexlib/Makefile \
-       javalib/Makefile pluginlib/Makefile"
+       drawlib/Makefile indexlib/Makefile"
 
 if test "$build_amaya" = "yes" ; then
-    make_output="$make_output amaya/Makefile"
-    EXTRA_MAKEFILE_IN="$srcdir/amaya/Makefile.in $srcdir/amaya/Makefile.libwww"
+
+    make_output="$make_output amaya/Makefile \
+tools/javastub/Makefile tools/dns_daemon/Makefile javalib/Makefile \
+pluginlib/Makefile"
+
+    EXTRA_MAKEFILE_IN="$srcdir/amaya/Makefile.in \
+$srcdir/amaya/Makefile.libwww \
+$srcdir/tools/javastub/Makefile.in \
+$srcdir/tools/dns_daemon/Makefile.in \
+$srcdir/javalib/Makefile.in \
+$srcdir/pluginlib/Makefile.in \
+$srcdir/pluginlib/Makefile.plugin"
+
 fi
 
 if test "$build_thot" = "yes" ; then

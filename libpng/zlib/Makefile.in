@@ -6,13 +6,10 @@
 
 @VPATHOPT@= @srcdir@
 THOTDIR = @top_srcdir@
-CC	= @CC@
-CFLAGS	= @CFLAGS@
-AR	= @AR@ rc
-RANLIB	= @RANLIB@
-INSTALL = @INSTALL@
+
+include ../../Options
+
 INCLUDES= -I../.. -I@srcdir@
-RM	= @RM@ -f
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@

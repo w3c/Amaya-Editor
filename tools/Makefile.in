@@ -4,8 +4,8 @@
 # Daniel Veillard, 1997
 #
 @VPATHOPT@= @srcdir@
-CC	= @CC@
-CFLAGS	= @CFLAGS@
+
+include ../Options
 
 SUBDIRS = mkdep dns_daemon javastub cextract-1.7
 

@@ -6,14 +6,10 @@
 
 @VPATHOPT@= @srcdir@
 THOTDIR = @top_srcdir@
-CC	= @CC@
-CFLAGS	= @CFLAGS@
-AR	= @AR@ rc
-RANLIB	= @RANLIB@
-INSTALL = @INSTALL@
+
+include ../Options
+
 INCLUDES= -DHAVE_CONFIG_H -I@srcdir@ -I.. -I. -I@srcdir@/f @THOTINCLUDES@ @X_CFLAGS@
-RM	= @RM@ -f
-ECHO	= @ECHO@
 
 JAVASTUB= ../tools/javastub/javastub
 JAVAC	= ../bin/javac

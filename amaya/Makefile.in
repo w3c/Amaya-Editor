@@ -6,19 +6,13 @@
 
 @VPATHOPT@= @srcdir@
 THOTDIR = @top_srcdir@
-CC	= @CC@
-CFLAGS	= @CFLAGS@
-AR	= @AR@ rc
-RANLIB	= @RANLIB@
-INSTALL = @INSTALL@
+
+include ../Options
+
 INCLUDES= -DHAVE_CONFIG_H $(AMAYA_INCLUDES) @X_CFLAGS@
-LDFLAGS = @LDFLAGS@ -L../tablelib -L../thotlib -L..
-LIBS	= -lThotTable -lThotEditor @IMGLIBS@ $(AMAYA_OPTION_LIBS) \
+LDFLAGS = $(LDFLAGS) -L../tablelib -L../thotlib -L..
+LIBS	= -lThotTable -lThotEditor $(IMGLIBS) $(AMAYA_OPTION_LIBS) \
           @X_LIBS@ -lXm -lXt -lXext @X_PRE_LIBS@ -lX11 @X_EXTRA_LIBS@ @LIBS@ -lm
-RM	= @RM@ -f
-CP	= @CP@
-MKDIR	= @MKDIR@
-ECHO	= @ECHO@
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@

@@ -5,14 +5,10 @@
 #
 @VPATHOPT@= @srcdir@
 THOTDIR = @top_srcdir@
-CC	= @CC@
-CFLAGS	= @CFLAGS@
-LD	= @CC@
-LDFLAGS	= @LDFLAGS@
+
+include ../../Options
+
 LIBS	= @LIBS@
-INSTALL = @INSTALL@
-RM	= @RM@
-MKDIR	= @MKDIR@
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@

@@ -8,17 +8,12 @@
 
 @VPATHOPT@= @srcdir@
 THOTDIR = @top_srcdir@
-CC	= @CC@
-CFLAGS	= @CFLAGS@
-AR	= @AR@ rc
-RANLIB	= @RANLIB@
-MKDIR	= @MKDIR@
-INSTALL = @INSTALL@
+
+include ../Options
+
 INCLUDES= -DHAVE_CONFIG_H -I.. @THOTINCLUDES@ @X_CFLAGS@
-RM	= @RM@ -f
-LDFLAGS = @LDFLAGS@ -L../tablelib -L. -L..
-LIBS	= @IMGLIBS@ @X_LIBS@ -lXext @X_PRE_LIBS@ -lX11 @X_EXTRA_LIBS@ @LIBS@ -lm 
-ECHO	= @ECHO@
+LIBS	= -L../tablelib -L. -L.. @IMGLIBS@ @X_LIBS@ -lXext @X_PRE_LIBS@ \
+          -lX11 @X_EXTRA_LIBS@ @LIBS@ -lm 
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@

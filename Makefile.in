@@ -7,17 +7,10 @@
 @VPATHOPT@= @srcdir@
 THOTDIR = @top_srcdir@
 
-CC	= @CC@
-CFLAGS	= @CFLAGS@
-CP	= @CP@
-MV	= @MV@
-RM	= @RM@ -f
-LN_S	= @LN_S@
-MKDIR	= @MKDIR@
-ECHO	= @ECHO@
+include Options
 
-LIBWWW	= w3c-libwww-@LIBWWW_VER@
-KAFFE	= kaffe-@KAFFE_VER@
+LIBWWW	= w3c-libwww-$(LIBWWW_VER)
+KAFFE	= kaffe-$(KAFFE_VER)
 LIBJPEG	= libjpeg
 LIBPNG	= libpng
 LIBZ	= libz
@@ -30,6 +23,9 @@ srcdir	= @top_srcdir@
 @SET_MAKE@
 
 default : amaya thot
+
+Options:
+	@CP@ Options.orig Options
 
 force :
 
@@ -193,6 +189,7 @@ kaffe : kaffe_get kaffe_clean kaffe_config kaffe_make kaffe_install
 
 MAKEFILE_IN= \
 @EXTRA_MAKEFILE_IN@ \
+@top_srcdir@/Options.in \
 @top_srcdir@/configure.in \
 @top_srcdir@/Makefile.in \
 @top_srcdir@/libjpeg/Makefile.in \
@@ -203,16 +200,10 @@ MAKEFILE_IN= \
 @top_srcdir@/drawlib/Makefile.in \
 @top_srcdir@/indexlib/Makefile.in \
 @top_srcdir@/tablelib/Makefile.in \
-@top_srcdir@/javalib/Makefile.in \
-@top_srcdir@/javalib/Makefile.java \
-@top_srcdir@/pluginlib/Makefile.in \
-@top_srcdir@/pluginlib/Makefile.plugin \
 @top_srcdir@/thotlib/Makefile.in \
 @top_srcdir@/thotlib/include/Makefile.in \
 @top_srcdir@/tools/Makefile.in \
-@top_srcdir@/tools/dns_daemon/Makefile.in \
 @top_srcdir@/tools/mkdep/Makefile.in \
-@top_srcdir@/tools/javastub/Makefile.in \
 @top_srcdir@/tools/cextract-1.7/Makefile.in
 
 rebuild : tools/mkdep/mkdep Makefile
