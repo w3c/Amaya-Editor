@@ -1991,7 +1991,9 @@ void CellPasted (NotifyElement * event)
    else
      rowspanType.AttrTypeNum = HTML_ATTR_rowspan_;
    attr = TtaGetAttribute (cell, rowspanType);
-   if (attr)
+   if (!attr)
+     span = 1;
+   else
      {
        span = TtaGetAttributeValue (attr);
        if (span < 0)
