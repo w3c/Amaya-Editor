@@ -65,22 +65,235 @@ typedef struct _FollowTheLink_context {
 extern boolean HTMLErrorsFound;
 
 /*----------------------------------------------------------------------
+   ResetFontOrPhraseOnText: The text element elem should
+   not be any longer within an element of type notType.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         ResetFontOrPhraseOnText (Document document, Element elem, int notType)
+#else  /* __STDC__ */
+static void         ResetFontOrPhraseOnText (document, elem, notType)
+Document            document;
+Element             elem;
+int                 notType;
+
+#endif /* __STDC__ */
+{
+   ElementType         elType, parentType;
+   Element             elFont, parent, prev, next, added, child, last;
+
+   elType.ElSSchema = TtaGetSSchema ("HTML", document);
+   elType.ElTypeNum = notType;
+   /* is this element already within an element of the requested type? */
+   elFont = TtaGetTypedAncestor (elem, elType);
+   if (elFont != NULL)
+     {
+	do
+	  {
+	     parent = TtaGetParent (elem);
+	     parentType = TtaGetElementType (parent);
+	     prev = elem;
+	     TtaPreviousSibling (&prev);
+	     next = elem;
+	     TtaNextSibling (&next);
+	     if (prev != NULL)
+	       {
+		  added = TtaNewElement (document, parentType);
+		  TtaInsertSibling (added, parent, TRUE, document);
+		  child = prev;
+		  TtaPreviousSibling (&prev);
+		  TtaRemoveTree (child, document);
+		  TtaInsertFirstChild (&child, added, document);
+		  while (prev != NULL)
+		    {
+		       last = child;
+		       child = prev;
+		       TtaPreviousSibling (&prev);
+		       TtaRemoveTree (child, document);
+		       TtaInsertSibling (child, last, TRUE, document);
+		    }
+	       }
+	     if (next != NULL)
+	       {
+		  added = TtaNewElement (document, parentType);
+		  TtaInsertSibling (added, parent, FALSE, document);
+		  child = next;
+		  TtaNextSibling (&next);
+		  TtaRemoveTree (child, document);
+		  TtaInsertFirstChild (&child, added, document);
+		  while (next != NULL)
+		    {
+		       last = child;
+		       child = next;
+		       TtaNextSibling (&next);
+		       TtaRemoveTree (child, document);
+		       TtaInsertSibling (child, last, FALSE, document);
+		    }
+	       }
+	     elem = parent;
+	  }
+	while (elFont != elem);
+	child = TtaGetFirstChild (elem);
+	TtaRemoveTree (child, document);
+	TtaInsertSibling (child, elem, TRUE, document);
+	TtaDeleteTree (elem, document);
+	TtaSetDocumentModified (document);
+     }
+}
+
+
+/*----------------------------------------------------------------------
+   SetFontOrPhraseOnText: The text element *elem should be 
+   within an element of type newtype.              
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         SetFontOrPhraseOnText (Document document, Element * elem,
+				int * firstChar, int newtype)
+#else  /* __STDC__ */
+static void         SetFontOrPhraseOnText (document, elem, firstChar, newtype)
+Document            document;
+Element            *elem;
+int		   *firstChar;
+int                 newtype;
+
+#endif /* __STDC__ */
+{
+   ElementType         elType, siblingType;
+   Element             prev, next, child, added, parent;
+   int		       length;
+
+   *firstChar = 0;
+   elType.ElSSchema = TtaGetSSchema ("HTML", document);
+   elType.ElTypeNum = newtype;
+   /* is this element already within an element of the requested type? */
+   if (TtaGetTypedAncestor (*elem, elType) == NULL)
+     {
+	/* it is not within an element of type newtype */
+	prev = *elem;
+	TtaPreviousSibling (&prev);
+	if (prev != NULL)
+	  {
+	     siblingType = TtaGetElementType (prev);
+	     if (siblingType.ElTypeNum == newtype)
+	       {
+		  child = TtaGetLastChild (prev);
+		  if (child != NULL)
+		    {
+		       if (TtaCanInsertSibling (TtaGetElementType (*elem), child, FALSE,
+						document))
+			 {
+			    TtaRemoveTree (*elem, document);
+			    TtaInsertSibling (*elem, child, FALSE, document);
+			    siblingType = TtaGetElementType (child);
+			    if (siblingType.ElTypeNum == HTML_EL_TEXT_UNIT)
+			      {
+				 length = TtaGetTextLength (child);
+				 TtaMergeText (child, document);
+				 *elem = child;
+				 *firstChar = length + 1;
+			      }
+			    TtaSetDocumentModified (document);
+			 }
+		    }
+		  else
+		    {
+		       if (TtaCanInsertFirstChild (TtaGetElementType (*elem), prev, document))
+			 {
+			    TtaRemoveTree (*elem, document);
+			    TtaInsertFirstChild (elem, prev, document);
+			    TtaSetDocumentModified (document);
+			 }
+		    }
+	       }
+	     else
+	       {
+		  if (TtaCanInsertSibling (elType, prev, FALSE, document))
+		    {
+		       added = TtaNewElement (document, elType);
+		       TtaRemoveTree (*elem, document);
+		       TtaInsertSibling (added, prev, FALSE, document);
+		       TtaInsertFirstChild (elem, added, document);
+		       TtaSetDocumentModified (document);
+		    }
+	       }
+	  }
+	else
+	  {
+	     next = *elem;
+	     TtaNextSibling (&next);
+	     if (next != NULL)
+	       {
+		  siblingType = TtaGetElementType (next);
+		  if (siblingType.ElTypeNum == newtype)
+		    {
+		       child = TtaGetFirstChild (next);
+		       if (child != NULL)
+			 {
+			    if (TtaCanInsertSibling (TtaGetElementType (*elem), child, TRUE, document))
+			      {
+				 TtaRemoveTree (*elem, document);
+				 TtaInsertSibling (*elem, child, TRUE, document);
+				 TtaSetDocumentModified (document);
+			      }
+			 }
+		       else
+			 {
+			    if (TtaCanInsertFirstChild (TtaGetElementType (*elem), next, document))
+			      {
+				 TtaRemoveTree (*elem, document);
+				 TtaInsertFirstChild (elem, next, document);
+				 TtaSetDocumentModified (document);
+			      }
+			 }
+		    }
+		  else
+		    {
+		       if (TtaCanInsertSibling (elType, next, TRUE, document))
+			 {
+			    TtaRemoveTree (*elem, document);
+			    added = TtaNewElement (document, elType);
+			    TtaInsertSibling (added, next, TRUE, document);
+			    TtaInsertFirstChild (elem, added, document);
+			    TtaSetDocumentModified (document);
+			 }
+		    }
+	       }
+	     else
+	       {
+		  parent = TtaGetParent (*elem);
+		  if (TtaCanInsertFirstChild (elType, parent, document))
+		    {
+		       TtaRemoveTree (*elem, document);
+		       added = TtaNewElement (document, elType);
+		       TtaInsertFirstChild (&added, parent, document);
+		       TtaInsertFirstChild (elem, added, document);
+		       TtaSetDocumentModified (document);
+		    }
+	       }
+	  }
+     }
+}
+
+
+/*----------------------------------------------------------------------
    SetFontOrPhraseOnElement                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetFontOrPhraseOnElement (Document document, Element elem,
-					      int eltype, boolean remove)
+					      int elemtype, boolean remove, Element* firstSel, int* firstSelChar)
 #else  /* __STDC__ */
-static void         SetFontOrPhraseOnElement (document, elem, eltype, remove)
+static void         SetFontOrPhraseOnElement (document, elem, elemtype, remove, firstSel, firstSelChar)
 Document            document;
 Element             elem;
-int                 eltype;
+int                 elemtype;
 boolean             remove;
+Element		    *firstSel;
+int		    *firstSelChar;
 
 #endif /* __STDC__ */
 {
-   Element             child, next;
+   Element             child, next, prev;
    ElementType         elType;
+   int		       length;
 
    child = TtaGetFirstChild (elem);
    if (child == NULL)
@@ -101,11 +314,34 @@ boolean             remove;
 	elType = TtaGetElementType (child);
 	if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
 	   if (remove)
-	      ResetFontOrPhraseOnText (document, child, eltype);
+	      {
+	      ResetFontOrPhraseOnText (document, child, elemtype);
+	      if (firstSel)
+		 *firstSel = child;
+	      prev = child;
+	      TtaPreviousSibling (&prev);
+	      if (prev)
+		 {
+		 elType = TtaGetElementType (prev);
+		 if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+		    {
+		    if (firstSel)
+			length = TtaGetTextLength (prev);
+		    TtaMergeText (prev, document);
+		    if (firstSel)
+		       {
+		       *firstSel = prev;
+		       if (firstSelChar)
+		          *firstSelChar = length + 1;
+		       }
+		    }
+		 }
+	      }
 	   else
-	      SetFontOrPhraseOnText (document, &child, eltype);
+	      SetFontOrPhraseOnText (document, &child, &length, elemtype);
 	else if (!TtaIsLeaf (elType))
-	   SetFontOrPhraseOnElement (document, child, eltype, remove);
+	   SetFontOrPhraseOnElement (document, child, elemtype, remove,
+				     firstSel, firstSelChar);
 	child = next;
      }
 }
@@ -1203,17 +1439,17 @@ NotifyOnElementType * event;
    SetCharFontOrPhrase                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SetCharFontOrPhrase (int document, int eltype)
+void                SetCharFontOrPhrase (int document, int elemtype)
 #else  /* __STDC__ */
-void                SetCharFontOrPhrase (document, eltype)
+void                SetCharFontOrPhrase (document, elemtype)
 int                 document;
-int                 eltype;
+int                 elemtype;
 
 #endif /* __STDC__ */
 {
    Element             selectedEl, elem, firstSelectedElem, lastSelectedElem,
-                       child, next, elFont;
-   ElementType         elType, selType;
+                       child, next, elFont, prev;
+   ElementType         elType, selType, elType1;
    DisplayMode         dispMode;
    int                 firstChar, nextFirstChar, lastChar, nextLastChar,
                        length, firstSelectedChar, lastSelectedChar;
@@ -1241,27 +1477,39 @@ int                 eltype;
    /* be any longer within an element of that type */
    /* else, they should all be within an element of that type */
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = eltype;
+   elType.ElTypeNum = elemtype;
    remove = (TtaGetTypedAncestor (elem, elType) != NULL);
 
    /* process all selected elements */
    firstSelectedElem = selectedEl;
    firstSelectedChar = firstChar;
    TtaClearViewSelections ();
+   elem = NULL;
    while (selectedEl != NULL)
      {
 	/* get the element to be processed after the current element: the */
 	/* current element may change during processing */
 	next = selectedEl;
-	TtaGiveNextSelectedElement (document, &next, &nextFirstChar, &nextLastChar);
+	TtaGiveNextSelectedElement (document, &next, &nextFirstChar,
+				    &nextLastChar);
 	lastSelectedElem = selectedEl;
 	lastSelectedChar = lastChar;
 	selType = TtaGetElementType (selectedEl);
 	if (!TtaIsLeaf (selType))
 	  {
-	    /* this selected element is not a leaf. Process all text leaves of */
-	    /* that element */
-	    SetFontOrPhraseOnElement ((Document) document, selectedEl, eltype, remove);
+	    /* this selected element is not a leaf. Process all text leaves */
+	    /* of that element */
+	    if (selectedEl == firstSelectedElem)
+	       {
+	       SetFontOrPhraseOnElement ((Document) document, selectedEl,
+		     elemtype, remove, &firstSelectedElem, &firstSelectedChar);
+	       lastSelectedElem = firstSelectedElem;
+	       lastSelectedChar = 0;
+	       }
+	    else
+	       SetFontOrPhraseOnElement ((Document) document, selectedEl,
+		     elemtype, remove, &lastSelectedElem, NULL);
+	    elem = lastSelectedElem;
 	    toset = FALSE;
 	  }
 	else if (selType.ElTypeNum == HTML_EL_TEXT_UNIT)
@@ -1289,9 +1537,7 @@ int                 eltype;
 		    {
 		       TtaSplitText (elem, firstChar - 1, document);
 		       TtaNextSibling (&elem);
-		       selectedEl = elem;
-		       if (lastChar != 0 && lastChar <= length)
-			  lastSelectedElem = elem;
+		       lastSelectedElem = elem;
 		       firstSelectedElem = elem;
 		       firstSelectedChar = 1;
 		       if (lastChar > 0)
@@ -1299,12 +1545,39 @@ int                 eltype;
 		    }
 		  /* process the text leaf */
 		  if (remove)
-		     ResetFontOrPhraseOnText (document, elem, eltype);
+		     {
+		     ResetFontOrPhraseOnText (document, elem, elemtype);
+		     prev = elem;
+		     TtaPreviousSibling (&prev);
+		     if (prev)
+			{
+			elType1 = TtaGetElementType (prev);
+			if (elType1.ElTypeNum == HTML_EL_TEXT_UNIT)
+			   {
+			   length = TtaGetTextLength (prev);
+			   TtaMergeText (prev, document);
+			   if (firstSelectedElem == elem)
+			      {
+			      firstSelectedElem = prev;
+			      firstSelectedChar += length;
+			      }
+			   lastSelectedElem = prev;
+			   if (lastSelectedChar > 0)
+			      lastSelectedChar += length;
+			   elem = prev;
+			   }
+			}		     
+		     }
 		  else
 		    {
-		       SetFontOrPhraseOnText (document, &elem, eltype);
+		       SetFontOrPhraseOnText (document, &elem, &length, elemtype);
 		       if (elem != lastSelectedElem)
 			 {
+			    if (firstSelectedElem == lastSelectedElem)
+			       {
+			       firstSelectedElem = elem;
+			       firstSelectedChar = length;
+			       }
 			    lastSelectedElem = elem;
 			    lastSelectedChar = 0;
 			 }
@@ -1316,6 +1589,29 @@ int                 eltype;
 	firstChar = nextFirstChar;
 	lastChar = nextLastChar;
      }
+
+   if (elem)
+      {
+      length = TtaGetTextLength (elem);
+      if (lastSelectedElem == elem);
+	 if (lastSelectedChar == 0)
+	    lastSelectedChar = length;
+      next = elem;
+      TtaNextSibling (&next);
+      if (next)
+	{
+	elType1 = TtaGetElementType (next);
+	if (elType1.ElTypeNum == HTML_EL_TEXT_UNIT)
+	   {
+	   TtaMergeText (elem, document);
+	   if (lastSelectedElem == next)
+	      {
+	      lastSelectedElem = elem;
+	      lastSelectedChar += length;
+	      }
+	   }
+	}
+      }
 
    TtaSetDisplayMode (document, dispMode);
    if (firstSelectedElem == lastSelectedElem)
@@ -1336,7 +1632,7 @@ int                 eltype;
    UpdateContextSensitiveMenus (document);
    if (toset)
      {
-       switch (eltype)
+       switch (elemtype)
 	 {
 	    case HTML_EL_Emphasis:
 	       SelectionInEM = !remove;

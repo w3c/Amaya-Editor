@@ -75,8 +75,10 @@ Element             selectedElement;
    DisplayMode         dispMode;
 
    UserErrorCode = 0;
+   if (selectedElement && ((PtrElement) selectedElement)->ElParent == NULL)
+      TtaError (ERR_invalid_parameter);
    /* Checks the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
+   else if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
@@ -218,6 +220,8 @@ int                 lastCharacter;
    UserErrorCode = 0;
    if (element == NULL)
       TtaError (ERR_invalid_parameter);
+   else if (((PtrElement) element)->ElParent == NULL)
+      TtaError (ERR_invalid_parameter);
    /* Checks the parameter document */
    else if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
@@ -285,6 +289,8 @@ Element             element;
 
    UserErrorCode = 0;
    if (element == NULL)
+      TtaError (ERR_invalid_parameter);
+   else if (((PtrElement) element)->ElParent == NULL)
       TtaError (ERR_invalid_parameter);
    /* Checks the parameter document */
    else if (document < 1 || document > MAX_DOCUMENTS)

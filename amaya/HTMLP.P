@@ -5288,7 +5288,7 @@ BOXES
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
 
@@ -5300,7 +5300,7 @@ BOXES
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
 

@@ -40,12 +40,6 @@ extern void UpdateAttrIntItemStyle ( NotifyAttribute * event );
 extern void AttrItemStyle ( NotifyAttribute * event );
 extern boolean GlobalAttrInMenu ( NotifyAttribute * event );
 extern boolean AttrNAMEinMenu ( NotifyAttribute * event );
-extern void ResetFontOrPhraseOnText ( Document document,
-                                      Element elem,
-                                      int notType );
-extern void SetFontOrPhraseOnText ( Document document,
-                                    Element * elem,
-                                    int newtype );
 extern void CreateElemEmphasis ( Document document,
                                  View view );
 extern void CreateElemStrong ( Document document,
@@ -132,12 +126,6 @@ extern void UpdateAttrIntItemStyle (/* NotifyAttribute * event */);
 extern void AttrItemStyle (/* NotifyAttribute * event */);
 extern boolean GlobalAttrInMenu (/* NotifyAttribute * event */);
 extern boolean AttrNAMEinMenu (/* NotifyAttribute * event */);
-extern void ResetFontOrPhraseOnText (/* Document document,
-                                        Element elem,
-                                        int notType */);
-extern void SetFontOrPhraseOnText (/* Document document,
-                                      Element * elem,
-                                      int newtype */);
 extern void CreateElemEmphasis (/* Document document,
                                    View view */);
 extern void CreateElemStrong (/* Document document,
