@@ -147,7 +147,7 @@ Table: DL{(DT|DD)+};
 
 Numbered List:TABLE{?CAPTION,(block:*{(TR{(TD|TH),?(TD2:TD|TH2:TH)+})+})+};
   	{
-	CAPTION > :P.STRONG;
+	CAPTION > :OL.LI.STRONG;
 	block > :OL;
 	TR > OL:LI;
 	TD > OL.LI:;
@@ -158,7 +158,7 @@ Numbered List:TABLE{?CAPTION,(block:*{(TR{(TD|TH),?(TD2:TD|TH2:TH)+})+})+};
 
 Bulleted List:TABLE{?CAPTION,(block:*{(TR{(TD|TH),?(TD2:TD|TH2:TH)+})+})+};
 	{
-	CAPTION > :P.STRONG;
+	CAPTION > :UL.LI.STRONG;
 	block > :UL;
 	TR > UL:LI;
 	TD > UL.LI:;
