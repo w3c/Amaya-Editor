@@ -43,6 +43,23 @@ extern void MathMLScriptShift ( Document doc,
                                 Element el,
                                 char *value,
                                 int attr );
+extern void HandleRowalignAttribute ( Attribute attr,
+                                      Element el,
+                                      Document doc,
+                                      ThotBool delete );
+extern void HandleColalignAttribute ( Attribute attr,
+                                      Element el,
+                                      Document doc,
+                                      ThotBool delete,
+                                      ThotBool allRows );
+extern void HandleRowlinesAttribute ( Attribute attr,
+				      Element el,
+				      Document doc,
+				      ThotBool delete );
+extern void HandleColumnlinesAttribute ( Attribute attr,
+					 Element el,
+					 Document doc,
+					 ThotBool delete );
 extern void MathMLElementComplete ( ParserData *context,
                                     Element el,
                                     int *error );
@@ -115,6 +132,23 @@ extern void MathMLScriptShift (/* Document doc,
                                   Element el,
                                   char *value,
                                   int attr */);
+extern void HandleRowalignAttribute (/* Attribute attr,
+                                        Element el,
+                                        Document doc,
+                                        ThotBool delete */);
+extern void HandleColalignAttribute (/* Attribute attr,
+                                        Element el,
+                                        Document doc,
+                                        ThotBool delete,
+                                        ThotBool allRows */);
+extern void HandleRowlinesAttribute (/* Attribute attr,
+					Element el,
+					Document doc,
+					ThotBool delete */);
+extern void HandleColumnlinesAttribute (/* Attribute attr,
+					   Element el,
+					   Document doc,
+					   ThotBool delete */);
 extern void MathMLElementComplete (/* ParserData *context,
                                       Element el,
                                       int *error */);

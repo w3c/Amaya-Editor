@@ -443,6 +443,59 @@ BOXES
 		Visibility: 0;
 	END;
 
+ SolidColumnLine: BEGIN
+	HorizPos: Left = Creator . Right;
+	VertPos: Top = Enclosing . Top;
+	Height: Enclosing . Height;
+	LineWeight: 1 pt;
+        Width: 1 px;
+	Content: Graphics 'v';	{ vertical bar }
+	LineStyle: Solid;
+	Background: Creator =;
+	Foreground: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+ DashedColumnLine: BEGIN
+	HorizPos: Left = Creator . Right;
+	VertPos: Top = Enclosing . Top;
+	Height: Enclosing . Height;
+	LineWeight: 1 pt;
+        Width: 1 px;
+	Content: Graphics 'v';	{ vertical bar }
+	LineStyle: Dotted;
+	Background: Creator =;
+	Foreground: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+ SolidRowLine: BEGIN
+	HorizPos: Left = Creator . Left;
+	VertPos: Bottom = Enclosing . Bottom;
+	Height: 1 pt;
+	LineWeight: 1 pt;
+        Width: Creator . Width;
+	Content: Graphics 'h';	{ horizontal bar }
+	LineStyle: Solid;
+	Background: Creator =;
+	Foreground: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+ DashedRowLine: BEGIN
+	HorizPos: Left = Creator . Left;
+	VertPos: Bottom = Enclosing . Bottom;
+	Height: 1 pt;
+	LineWeight: 1 pt;
+        Width: Creator . Width;
+	Content: Graphics 'h';	{ horizontal bar }
+	LineStyle: Dotted;
+	Background: Creator =;
+	Foreground: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+
 RULES
 
    Document:
@@ -1159,7 +1212,7 @@ RULES
    MColumn_head:
         BEGIN
         HorizRef: * . Top;
-        HorizPos: Left = Previous . Right + 0.6;
+        HorizPos: Left = Previous . Right;
         VertPos: Top = Enclosing . Top;
         Width: 2 px;
         END;
@@ -1189,7 +1242,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Previous . Bottom + 0.2;
+	VertPos: Top = Previous . Bottom;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -1202,7 +1255,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Previous . Bottom + 1 ex;
+	VertPos: Top = Previous . Bottom;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -1235,10 +1288,18 @@ RULES
 	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
+	PaddingRight: 0.4;
+	PaddingLeft: 0.4;
+	PaddingTop: 0.5 ex;
+	PaddingBottom: 0.5 ex;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		PaddingRight: 0;
+		PaddingLeft: 0;
+		PaddingTop: 0;
+		PaddingBottom: 0;
 		END;		
 	END;
 
@@ -2316,10 +2377,10 @@ ATTRIBUTES
 	BorderRightStyle: Solid;
 	BorderBottomStyle: Solid;
 	BorderLeftStyle: Solid;
-	PaddingTop: 0.2;
-	PaddingRight: 0.3;
-	PaddingBottom: 0.2;
-	PaddingLeft: 0.3;
+	PaddingTop: 0.5 ex;
+	PaddingBottom: 0.5 ex;
+	PaddingRight: 0.4;
+	PaddingLeft: 0.4;
 	END;
   frame = dashed\240:
 	BEGIN
@@ -2332,10 +2393,10 @@ ATTRIBUTES
 	BorderRightStyle: Dashed;
 	BorderBottomStyle: Dashed;
 	BorderLeftStyle: Dashed;
-	PaddingTop: 0.2;
-	PaddingRight: 0.3;
-	PaddingBottom: 0.2;
-	PaddingLeft: 0.3;
+	PaddingTop: 0.5 ex;
+	PaddingBottom: 0.5 ex;
+	PaddingRight: 0.4;
+	PaddingLeft: 0.4;
 	END;
 
   framespacing:
@@ -2693,5 +2754,14 @@ ATTRIBUTES
 		VertOverflow: No;
 		END;	
 	END;
+
+ MLineBelow = solid_:
+        createafter (SolidRowLine);
+ MLineBelow = dashed_:
+        createafter (DashedRowLine);
+ MLineOnTheRight = solid_:
+ 	createafter (SolidColumnLine);
+ MLineOnTheRight = dashed_:
+ 	createafter (DashedColumnLine);
 
 END

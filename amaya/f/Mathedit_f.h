@@ -98,23 +98,18 @@ extern void AttrSeparatorsChanged ( NotifyAttribute *event );
 extern void AttrScriptShiftCreated ( NotifyAttribute *event );
 extern ThotBool AttrScriptShiftDelete ( NotifyAttribute *event );
 extern void AttrAltModified ( NotifyAttribute *event );
-extern void HandleRowalignAttribute ( Attribute attr,
-                                      Element el,
-                                      Document doc,
-                                      ThotBool delete );
 extern void AttrRowAlignCreated ( NotifyAttribute *event );
 extern void AttrRowAlignDeleted ( NotifyAttribute *event );
 extern void AttrRowAlignMtrCreated ( NotifyAttribute *event );
 extern void AttrRowAlignMtrDeleted ( NotifyAttribute *event );
-extern void HandleColalignAttribute ( Attribute attr,
-                                      Element el,
-                                      Document doc,
-                                      ThotBool delete,
-                                      ThotBool allRows );
 extern void AttrColAlignCreated ( NotifyAttribute *event );
 extern void AttrColAlignDeleted ( NotifyAttribute *event );
 extern void AttrColAlignMtdCreated ( NotifyAttribute *event );
 extern void AttrColAlignMtdDeleted ( NotifyAttribute *event );
+extern void AttrRowlinesCreated ( NotifyAttribute *event );
+extern void AttrRowlinesDeleted ( NotifyAttribute *event );
+extern void AttrColumnlinesCreated ( NotifyAttribute *event );
+extern void AttrColumnlinesDeleted ( NotifyAttribute *event );
 extern void HandleColAndRowAlignAttributes ( Element row,
                                              Document doc );
 
@@ -212,23 +207,18 @@ extern void AttrSeparatorsChanged (/* NotifyAttribute *event */);
 extern void AttrScriptShiftCreated (/* NotifyAttribute *event */);
 extern ThotBool AttrScriptShiftDelete (/* NotifyAttribute *event */);
 extern void AttrAltModified (/* NotifyAttribute *event */);
-extern void HandleRowalignAttribute (/* Attribute attr,
-                                        Element el,
-                                        Document doc,
-                                        ThotBool delete */);
 extern void AttrRowAlignCreated (/* NotifyAttribute *event */);
 extern void AttrRowAlignDeleted (/* NotifyAttribute *event */);
 extern void AttrRowAlignMtrCreated (/* NotifyAttribute *event */);
 extern void AttrRowAlignMtrDeleted (/* NotifyAttribute *event */);
-extern void HandleColalignAttribute (/* Attribute attr,
-                                        Element el,
-                                        Document doc,
-                                        ThotBool delete,
-                                        ThotBool allRows */);
 extern void AttrColAlignCreated (/* NotifyAttribute *event */);
 extern void AttrColAlignDeleted (/* NotifyAttribute *event */);
 extern void AttrColAlignMtdCreated (/* NotifyAttribute *event */);
 extern void AttrColAlignMtdDeleted (/* NotifyAttribute *event */);
+extern void AttrRowlinesCreated (/* NotifyAttribute *event */);
+extern void AttrRowlinesDeleted (/* NotifyAttribute *event */);
+extern void AttrColumnlinesCreated (/* NotifyAttribute *event */);
+extern void AttrColumnlinesDeleted (/* NotifyAttribute *event */);
 extern void HandleColAndRowAlignAttributes (/* Element row,
                                                Document doc */);
 

@@ -402,9 +402,10 @@ STRUCT
 		rowspan\240;
 		columnspan;
 		MRef_column = REFERENCE(MColumn_head);   { for internal use }
-                MColExt = REFERENCE(MColumn_head);         { for internal use }
-                MRowExt = REFERENCE(TableRow))           { for internal use }
-	
+                MColExt = REFERENCE(MColumn_head);       { for internal use }
+                MRowExt = REFERENCE(TableRow);           { for internal use } 
+	        MLineBelow = solid_, dashed_;            { for internal use }
+	        MLineOnTheRight = solid_, dashed_)       { for internal use }
 	  = BEGIN
 	    CellWrapper = LIST OF (Construct);
 	    END + (MALIGNGROUP, MALIGNMARK);
@@ -498,4 +499,6 @@ EXCEPT
    MRef_column:		ColRef, Invisible;
    MColExt:             Invisible;
    MRowExt:             Invisible;
+   MLineBelow:	        Invisible;
+   MLineOnTheRight:	Invisible;
 END
