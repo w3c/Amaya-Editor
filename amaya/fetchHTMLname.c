@@ -39,7 +39,7 @@ CHAR_T          *gi;
 {
   int        i;
 
-  for (i = 0; GI[i] != WC_EOS; i++)
+  for (i = 0; GI[i] != WC_EOS && i < MaxTypeNameLength-1; i++)
     {
       if (GI[i] >= TEXT('A') && GI[i] <= TEXT('Z'))
 	gi[i] = (CHAR_T) ((int) GI[i] + 32);

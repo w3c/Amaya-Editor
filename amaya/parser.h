@@ -19,7 +19,7 @@
 #define L_Strict       2
 #define L_Transitional 3
 
-#define MaxTypeNameLength 16
+#define MaxTypeNameLength 30
 #define DummyAttribute    500
 typedef CHAR_T typeName[MaxTypeNameLength];
 
