@@ -4934,7 +4934,6 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 		     char *charsetname, DocumentType *thotType)
 {
   gzFile      stream;
-  char        file_name[MAX_LENGTH];
   char       *ptr, *end;
   int         res, i, j, k;
   ThotBool    endOfSniffedFile, beginning;
@@ -4946,8 +4945,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
   *parsingLevel = L_Other;
   *charset = UNDEFINED_CHARSET;
   *thotType = docHTML;
-  wc2iso_strcpy (file_name, fileName);
-  stream = gzopen (file_name, "r");
+  stream = gzopen (fileName, "r");
   if (stream != 0)
     {
       InputText = NULL;
@@ -5196,14 +5194,12 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
 {
   gzFile     stream;
-  char       file_name[MAX_LENGTH];
   char      *ptr, *end, *end2,*meta, *content, *body, *http;
   int        res, i, j, k;
   ThotBool   endOfSniffedFile;
 
   *charset = UNDEFINED_CHARSET;
-  wc2iso_strcpy (file_name, fileName);
-  stream = gzopen (file_name, "r");
+  stream = gzopen (fileName, "r");
   if (stream != 0)
     {
       InputText = NULL;
@@ -6414,20 +6410,19 @@ void            ParseSubTree (char* HTMLbuf, Element lastelem,
    The parameter pathURL gives the original (local or
    distant) path or URL of the html document.
   ----------------------------------------------------------------------*/
-void              StartParser (Document doc, char* htmlFileName,
-			       char* documentName, char* documentDirectory,
-			       char* pathURL, ThotBool plainText)
+void StartParser (Document doc, char *fileName,
+		  char *documentName, char* documentDirectory,
+		  char *pathURL, ThotBool plainText)
 {
   Element         el, oldel;
   AttributeType   attrType;
   Attribute       attr;
-  char*           s;
+  char           *s;
   char            tempname[MAX_LENGTH];
   char            temppath[MAX_LENGTH];
   int             length;
-  ThotBool        isHTML;
-  char            www_file_name[MAX_LENGTH];
   char           *profile;
+  ThotBool        isHTML;
 
   HTMLcontext.doc = doc;
   FirstElemToBeChecked = NULL;
@@ -6449,8 +6444,7 @@ void              StartParser (Document doc, char* htmlFileName,
   HTMLErrorsFoundInProfile = FALSE;
 
   HTMLcontext.encoding = TtaGetDocumentCharset (doc);
-  wc2iso_strcpy (www_file_name, htmlFileName);
-  stream = gzopen (www_file_name, "r");
+  stream = gzopen (fileName, "r");
   if (stream != 0)
     {
       FileBuffer[0] = EOS;
@@ -6471,16 +6465,16 @@ void              StartParser (Document doc, char* htmlFileName,
       /* the Thot document has been successfully created */
       {
 	length = strlen (pathURL);
-	if (strcmp (pathURL, htmlFileName) == 0)
+	if (strcmp (pathURL, fileName) == 0)
 	  {
 	    docURL = TtaGetMemory (length + 1);
 	    strcpy (docURL, pathURL);
 	  }
 	else
 	  {
-	    length += strlen (htmlFileName) + 20;
+	    length += strlen (fileName) + 20;
 	    docURL = TtaGetMemory (length+1);
-	    sprintf (docURL, "%s temp file: %s", pathURL, htmlFileName);
+	    sprintf (docURL, "%s temp file: %s", pathURL, fileName);
 	  }
 	/* do not check the Thot abstract tree against the structure */
 	/* schema while building the Thot document. */

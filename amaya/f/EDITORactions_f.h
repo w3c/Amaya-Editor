@@ -178,6 +178,8 @@ extern void MoveAnnotationXPtr ( Document document,
                                  View view );
 extern void MoveAnnotationSel ( Document document,
                                 View view );
+extern void ReplyToAnnotation ( Document document,
+                                View view );
 extern void CustomQuery ( Document document,
                           View view );
 
@@ -354,6 +356,8 @@ extern void FilterAnnot (/* Document document,
 extern void MoveAnnotationXPtr (/* Document document,
                                    View view */);
 extern void MoveAnnotationSel (/* Document document,
+                                  View view */);
+extern void ReplyToAnnotation (/* Document document,
                                   View view */);
 extern void CustomQuery (/* Document document,
                             View view */);

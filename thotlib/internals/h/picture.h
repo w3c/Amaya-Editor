@@ -52,7 +52,7 @@ typedef struct
   char          *PicFileName; 
   Pixmap         PicPixmap;
   Pixmap         PicAlpha;
-#ifndef _WINDOWS
+#ifdef _WINDOWS
   int            PicMask;        /* Mask color */
 #else /* _WINDOWS */
   Pixmap         PicMask;        /* Mask bitmap */

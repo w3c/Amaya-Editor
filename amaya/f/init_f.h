@@ -24,9 +24,9 @@ extern void ActiveTransfer ( Document document );
 extern void SetStopButton ( Document document );
 extern void DocStatusUpdate ( Document document,
                               ThotBool modified );
-extern void ChangeToEditorMode ( Document document );
-extern void ChangeToBrowserMode ( Document document );
-extern void SetBrowserEditor ( Document document );
+extern void ChangeToEditorMode ( Document doc );
+extern void ChangeToBrowserMode ( Document doc );
+extern void SetBrowserEditor ( Document doc );
 extern void UpdateTransfer ( Document document );
 extern void StopTransfer ( Document document,
                            View view );
@@ -192,9 +192,9 @@ extern void ActiveTransfer (/* Document document */);
 extern void SetStopButton (/* Document document */);
 extern void DocStatusUpdate (/* Document document,
                                 ThotBool modified */);
-extern void ChangeToEditorMode (/* Document document */);
-extern void ChangeToBrowserMode (/* Document document */);
-extern void SetBrowserEditor (/* Document document */);
+extern void ChangeToEditorMode (/* Document doc */);
+extern void ChangeToBrowserMode (/* Document doc */);
+extern void SetBrowserEditor (/* Document doc */);
 extern void UpdateTransfer (/* Document document */);
 extern void StopTransfer (/* Document document,
                              View view */);

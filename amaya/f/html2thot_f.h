@@ -56,10 +56,10 @@ extern void ParseSubTree ( char* HTMLbuf,
                            ThotBool isclosed,
                            Document doc );
 extern void StartParser ( Document doc,
-                          char* htmlFileName,
-                          char* documentName,
+                          char *fileName,
+                          char *documentName,
                           char* documentDirectory,
-                          char* pathURL,
+                          char *pathURL,
                           ThotBool plainText );
 
 #else /* __STDC__ */
@@ -114,10 +114,10 @@ extern void ParseSubTree (/* char* HTMLbuf,
                              ThotBool isclosed,
                              Document doc */);
 extern void StartParser (/* Document doc,
-                            char* htmlFileName,
-                            char* documentName,
+                            char *fileName,
+                            char *documentName,
                             char* documentDirectory,
-                            char* pathURL,
+                            char *pathURL,
                             ThotBool plainText */);
 
 #endif /* __STDC__ */

@@ -116,7 +116,7 @@ char *EscapeURL (const char *url)
               status = TtaRealloc (buffer, sizeof (char) 
 				   * (buffer_len + buffer_free_mem + 1));
               if (status)
-                buffer = (STRING) status;
+                buffer = (char *) status;
               else
 		{
 		  /* @@ maybe we should do some other behavior here, like
