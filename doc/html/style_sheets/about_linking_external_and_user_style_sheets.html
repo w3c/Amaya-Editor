@@ -16,24 +16,25 @@
 <p>A document can link to several external style sheets that are downloaded
 with the document and applied to it.</p>
 
-<p>One external style sheet can apply to multiple documents. When the same
+<p>An external style sheet can apply to multiple documents. When the same
 style sheet applies to several displayed documents, Amaya loads only one
 instance of the style sheet.</p>
 
 <p>Any user can define a specific style sheet that applies to all documents
-loaded on their system. This style sheet is called the user's style sheet. It
-is stored in the user's local environment, in the <span
-class="Link0">AmayaHome directory</span> as the local file amaya.css.</p>
+loaded on their system. This style sheet is called the <b>user's</b> style
+sheet. It is stored in the user's local environment, in the <span
+class="Link0"><code>AmayaHome</code> directory</span> as the local file
+<code>amaya.css</code>.</p>
 
 <p>For example, if you prefer to display documents in Helvetica on your
-screen and print them in small size, you can create a User's style sheet with
+screen and print them in small size, you can create a user's style sheet with
 following CSS rules:</p>
 
 <p><code>@media print {<br>
-        BODY {font-size: 10pt}<br>
-        }<br>
+BODY {font-size: 10pt}<br>
+}<br>
 @media screen {<br>
-        BODY {font-family: Helvetica}<br>
-        }</code></p>
+BODY {font-family: Helvetica}<br>
+}</code></p>
 </body>
 </html>

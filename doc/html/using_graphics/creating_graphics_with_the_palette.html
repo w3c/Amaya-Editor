@@ -14,23 +14,24 @@
 <h1>Creating Graphics with the Palette</h1>
 
 <p>To create a new SVG element in a document, move the insertion point to the
-position where you want to insert it, and then click the Graphics button. The
-Graphics button displays a palette that stays on the screen until you click
-the Done button.</p>
+position where you want to insert it, and then click the
+<strong>Graphics</strong> button. The <strong>Graphics</strong> button ()
+displays a palette that stays on the screen until you click
+<strong>Done</strong> on the palette.</p>
 
 <p>The available graphics elements are:</p>
 <ul>
-  <li>A line,<code>line</code> in SVG,</li>
+  <li>A line, <code>line</code> in SVG</li>
   <li>A rectangle, <code>rect</code> in SVG with no <code>rx</code> or
-    <code>ry</code> attributes,</li>
-  <li>A rectangle with rounded corners, <code>rect</code> in SVG,</li>
-  <li>A circle, <code>circle</code> in SVG,</li>
-  <li>An ellipse, <code>ellipse</code> in SVG,</li>
-  <li>A polyline, <code>polyline</code> in SVG,</li>
-  <li>A polygon, <code>polygon</code> in SVG,</li>
-  <li>An open curve, <code>path</code> in SVG,</li>
-  <li>A closed curve, <code>path</code> in SVG,</li>
-  <li>An embedded HTML fragment, <code>foreignObject</code> in SVG,</li>
+    <code>ry</code> attributes</li>
+  <li>A rectangle with rounded corners, <code>rect</code> in SVG</li>
+  <li>A circle, <code>circle</code> in SVG</li>
+  <li>An ellipse, <code>ellipse</code> in SVG</li>
+  <li>A polyline, <code>polyline</code> in SVG</li>
+  <li>A polygon, <code>polygon</code> in SVG</li>
+  <li>An open curve, <code>path</code> in SVG</li>
+  <li>A closed curve, <code>path</code> in SVG</li>
+  <li>An embedded HTML fragment, <code>foreignObject</code> in SVG</li>
   <li>First item</li>
   <li>Second item</li>
   <li>A SVG text, textin SVGA character <code>string</code> in SVG</li>
@@ -40,25 +41,29 @@ the Done button.</p>
 
 <p>When you select a shape in the palette and the selection is in the HTML
 structure of the document, Amaya creates a new SVG element just at the
-beginning of the current selection and the selected shape into this new SVG.
-Amaya generates SVG drawings as blocks, between paragraphs. If you wish to
-display a drawing inline, today you have let Amaya creates it between
-paragrahs then edit the source code to move it.</p>
+beginning of the current selection and inserts the selected shape into this
+new SVG. Amaya generates SVG drawings as blocks, between paragraphs. To
+display a drawing inline, you must create it between paragraphs then edit the
+source code to move it.</p>
 
 <p>When the current selected element is a SVG element, the new shape is added
-to the current SVG drawing. The new created shape is added after and then can
-overlap previous ones.</p>
+to the current SVG drawing. The new shape is added after and can overlap
+previous shapes.</p>
 
-<p>The creation of a shape needs some direct interactions with the user:</p>
+<p>The creation of a shape requires direct interaction:</p>
 <ul>
-  <li>To create a rectangle, you must first select the position of the left
-    corner by pressing the left mouse button. Keep the button pressed down
-    and move to the position of the opposite corner, then release the button.
-    The shape is now defined.</li>
-  <li>To create a circle or an ellipse, you must first select the position of
-    the center by pressing the left mouse button. Keep the button pressed
-    down and move right and/or bottom, then release the button. The shape is
-    now defined.</li>
+  <li>To create a rectangle, you first select the position of the left corner
+    by pressing the left mouse button. While holding down the button, move
+    the mouse to the position of the opposite corner, then release the
+    button. The shape is now defined.
+    <p></p>
+  </li>
+  <li>To create a circle or an ellipse, you first select the position of the
+    center by pressing the left mouse button. While holding down the button,
+    move the mouse to the right and/or bottom of the shape, then release the
+    button. The shape is now defined.
+    <p></p>
+  </li>
   <li>For a polyline and polygon, enter each point by clicking the
     corresponding position with the left mouse button. To indicate the last
     point, click with the middle or right button.</li>
@@ -66,12 +71,13 @@ overlap previous ones.</p>
 
 <h2>Inserting an Image</h2>
 
-<p>You can insert an image within a SVG drawing. Choose Image from the Types
-menu or click on the image button from the button bar and proceed in the same
-way as in HTML.</p>
+<p>You can insert an image within a SVG drawing. Choose
+<strong>Image</strong> from the <strong>Types</strong> menu or click the
+<strong>Insert Image</strong> button from the button bar and proceed in the
+same way as in HTML.</p>
 
-<p>For inserting a mathematical expression into a SVG drawing, you have just
-to click in the Math palette when the selection in within a SVG. Amaya will
+<p>To insert a mathematical expression into a SVG drawing, click  the
+<strong>Math</strong> palette when the selection is within an SVG. Amaya will
 generate a SVG <code>foreignObject</code> to embed the MathML markup.</p>
 
 <h2>See Also:</h2>
