@@ -203,7 +203,7 @@ void AmayaPanel::RefreshToolTips()
 void AmayaPanel::OpenSubPanel( int panel_type )
 {
   if (panel_type >= WXAMAYA_PANEL_TYPE_NB || panel_type < 0 || m_aPanelList[panel_type] == NULL )
-    return;  
+    return;
   AmayaSubPanelManager::GetInstance()->Expand( m_aPanelList[panel_type] );
 }
 

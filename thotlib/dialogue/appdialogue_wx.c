@@ -148,6 +148,52 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
   WindowTable[window_id].FrHeight = p_window->GetSize().GetHeight();
   WindowTable[window_id].WdStatus = p_window->GetStatusBar();
 
+  // setup window panel
+  AmayaPanel * p_panel = p_window->GetAmayaPanel();
+  if (p_panel)
+    {
+      /* init default panel states */
+      TtaSetEnvBoolean("OPEN_PANEL", TRUE, FALSE);
+      TtaSetEnvBoolean("OPEN_PANEL_XHTML", TRUE, FALSE);
+      TtaSetEnvBoolean("OPEN_PANEL_ATTRIBUTE", TRUE, FALSE);
+      TtaSetEnvBoolean("OPEN_PANEL_COLORS", TRUE, FALSE);
+      TtaSetEnvBoolean("OPEN_PANEL_CHARSTYLE", TRUE, FALSE);
+      TtaSetEnvBoolean("OPEN_PANEL_FORMAT", TRUE, FALSE);
+      
+      /* open or close panels */
+      ThotBool value;
+      TtaGetEnvBoolean ("OPEN_PANEL", &value);
+      if (value)
+	p_window->OpenPanel();
+      else
+	p_window->ClosePanel();
+      TtaGetEnvBoolean ("OPEN_PANEL_XHTML", &value);
+      if (value)
+	p_panel->OpenSubPanel( WXAMAYA_PANEL_XHTML );
+      else
+	p_panel->CloseSubPanel( WXAMAYA_PANEL_XHTML );
+      TtaGetEnvBoolean ("OPEN_PANEL_ATTRIBUTE", &value);
+      if (value)
+	p_panel->OpenSubPanel( WXAMAYA_PANEL_ATTRIBUTE );
+      else
+	p_panel->CloseSubPanel( WXAMAYA_PANEL_ATTRIBUTE );
+      TtaGetEnvBoolean ("OPEN_PANEL_COLORS", &value);
+      if (value)
+	p_panel->OpenSubPanel( WXAMAYA_PANEL_COLORS );
+      else
+	p_panel->CloseSubPanel( WXAMAYA_PANEL_COLORS );
+      TtaGetEnvBoolean ("OPEN_PANEL_CHARSTYLE", &value);
+      if (value)
+	p_panel->OpenSubPanel( WXAMAYA_PANEL_CHARSTYLE );
+      else
+	p_panel->CloseSubPanel( WXAMAYA_PANEL_CHARSTYLE );
+      TtaGetEnvBoolean ("OPEN_PANEL_FORMAT", &value);
+      if (value)
+	p_panel->OpenSubPanel( WXAMAYA_PANEL_FORMAT );
+      else
+	p_panel->CloseSubPanel( WXAMAYA_PANEL_FORMAT );
+    }
+
   // show the window if not already shown
   TtaShowWindow( window_id, TRUE );
 

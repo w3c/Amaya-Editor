@@ -63,7 +63,7 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
   AmayaWindow( window_id, p_parent_window, pos, size, WXAMAYAWINDOW_NORMAL ),
   m_pURLBar( NULL ),
   m_pDummyMenuBar( NULL ),
-  m_SlashPos( 180 )
+  m_SlashPos( 190 )
 {
   // Create a background panel to contain everything : better look on windows
   wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
@@ -103,14 +103,8 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
       m_pPanel,
       m_pNotebookPanel,
       m_SlashPos );  
-
-  // by default close the side panel 
-  ClosePanel();
-  m_pPanel->CloseSubPanel( WXAMAYA_PANEL_XHTML );
-  m_pPanel->CloseSubPanel( WXAMAYA_PANEL_ATTRIBUTE );
-  m_pPanel->CloseSubPanel( WXAMAYA_PANEL_COLORS );
-  m_pPanel->CloseSubPanel( WXAMAYA_PANEL_CHARSTYLE );
-  m_pPanel->CloseSubPanel( WXAMAYA_PANEL_FORMAT );
+  // do not split the panel by default
+  m_pSplitterWindow->Unsplit( m_pPanel );
 
   // Creation of frame sizer to contains differents frame areas
   wxBoxSizer * p_SizerFrame = new wxBoxSizer ( wxHORIZONTAL );
@@ -788,6 +782,8 @@ void AmayaNormalWindow::ClosePanel()
 
       // refresh the corresponding menu item state
       RefreshShowPanelToggleMenu();
+
+      TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
     }
 }
 
@@ -814,6 +810,8 @@ void AmayaNormalWindow::OpenPanel()
 
       // refresh the corresponding menu item state
       RefreshShowPanelToggleMenu();
+
+      TtaSetEnvBoolean("OPEN_PANEL", IsPanelOpened(), TRUE);
     }
 }
 

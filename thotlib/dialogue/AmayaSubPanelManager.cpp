@@ -1,5 +1,33 @@
 #ifdef _WX
 
+#include "wx/wx.h"
+
+#include "thot_gui.h"
+#include "thot_sys.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "appdialogue.h"
+#include "dialog.h"
+#include "selection.h"
+#include "application.h"
+#include "dialog.h"
+#include "document.h"
+#include "message.h"
+#include "libmsg.h"
+#include "frame.h"
+#include "view.h"
+
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
+#include "attrmenu_f.h"
+#include "frame_tv.h"
+
+#include "message_wx.h"
+#include "registry_wx.h"
+#include "paneltypes_wx.h"
+#include "appdialogue_wx.h"
+#include "appdialogue_wx_f.h"
+
 #include "AmayaSubPanelManager.h"
 #include "AmayaNormalWindow.h"
 #include "AmayaPanel.h"
@@ -229,6 +257,8 @@ void AmayaSubPanelManager::UnExpand( AmayaSubPanel * p_panel )
   p_panel->UnExpand();
   p_panel->DoUpdate();
   p_panel->GetParent()->FitInside();
+
+  SaveSubPanelState(p_panel);
 }
 
 /*
@@ -250,6 +280,8 @@ void AmayaSubPanelManager::Expand( AmayaSubPanel * p_panel )
   p_panel->Expand();
   p_panel->DoUpdate();
   p_panel->GetParent()->FitInside();
+
+  SaveSubPanelState(p_panel);
 }
 
 /*
@@ -401,6 +433,36 @@ void AmayaSubPanelManager::CheckForDoUpdate( int panel_type )
       AmayaSubPanel * current = node->GetData();
       if ( current->GetPanelType() == panel_type || panel_type == WXAMAYA_PANEL_UNKNOWN )
 	current->DoUpdate();
+    }
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanelManager
+ *      Method:  SaveSubPanelState
+ * Description:  save into registry subpanel expanded state
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaSubPanelManager::SaveSubPanelState( AmayaSubPanel * p_panel )
+{
+  ThotBool value = p_panel->IsExpanded();
+  switch (p_panel->GetPanelType())
+    {
+    case WXAMAYA_PANEL_XHTML:
+      TtaSetEnvBoolean("OPEN_PANEL_XHTML", value, TRUE);
+      break;
+    case WXAMAYA_PANEL_ATTRIBUTE:
+      TtaSetEnvBoolean("OPEN_PANEL_ATTRIBUTE", value, TRUE);
+      break;
+    case WXAMAYA_PANEL_COLORS:
+      TtaSetEnvBoolean("OPEN_PANEL_COLORS", value, TRUE);
+      break;
+    case WXAMAYA_PANEL_CHARSTYLE:
+      TtaSetEnvBoolean("OPEN_PANEL_CHARSTYLE", value, TRUE);
+      break;
+    case WXAMAYA_PANEL_FORMAT:
+      TtaSetEnvBoolean("OPEN_PANEL_FORMAT", value, TRUE);
+      break;
     }
 }
 

@@ -50,7 +50,8 @@ class AmayaSubPanelManager
 
   bool IsActive( int panel_type );
   void ShouldBeUpdated( int panel_type, bool should_update = true );
-  void AmayaSubPanelManager::CheckForDoUpdate( int panel_type = WXAMAYA_PANEL_UNKNOWN );
+  void CheckForDoUpdate( int panel_type = WXAMAYA_PANEL_UNKNOWN );
+  void SaveSubPanelState( AmayaSubPanel * p_panel );
 
  protected:
   bool CanChangeState( AmayaSubPanel * p_panel, unsigned int new_state );
