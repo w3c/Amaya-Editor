@@ -27,23 +27,22 @@ authoring tool. It has been designed with the primary purpose of being a
 testbed for experimenting and demonstrating new specifications and extensions
 of Web protocols and standards.</p>
 <p>
-Its main features include WYSIWYG editing, support for <a href="../Style/"
-name="L223">Cascading Style Sheets</a>, full implementation of <a
-href="../MarkUp/Wilbur/">HTML 3.2</a>, access to remote documents through <a
-href="../Library/" name="L250">libwww</a>, and publishing on HTTP servers
-using the standard  PUT method. You can find a more detailed description of
-Amaya and of its features in the W3C Note "<a
-href="../TR/NOTE-amaya-970220.html">An Introduction to Amaya</a>."</p>
+Its main features include WYSIWYG editing for  <a href="#HTML">HTML</a>
+documents including <a href="#MathML">MathML</a> elements,  access to remote
+documents and <a href="#Publishing">publishing</a> on <a href="#HTTP">HTTP</a>
+servers, support and editing for <a href="#Cascading" name="L223">Cascading
+Style Sheets</a>. You can find a more detailed description of Amaya and of its
+features in the W3C Note "<a href="../TR/NOTE-amaya-970220.html">An
+Introduction to Amaya</a>."</p>
 
 <h2><img border="0" src="../Icons/WWW/relnotes48x" alt="NEWS">
  &nbsp;<a name="L347">News and Updates</a></h2>
 <ul>
 <li>
 <img border="0" src="../Icons/WWW/new_red" alt="NEW!" align=top>
- July 11, 1997: <a href="member/User/SourceDist.html">Source code</a> and <a
-href="member/User/BinDist.html">precompiled binary</a> member releases of version 1.1
-Beta. It includes the first Alpha version for PC/Windows. This release will be
-made available to the public by end of August 1997. 
+ September 4, 1997: <a href="member/User/SourceDist.html">Source code</a> and
+<a href="member/User/BinDist.html">precompiled binary</a> public releases of
+version 1.1a Beta. It includes the Alpha version for PC/Windows.
 <li>
 May 21, 1997: <a href="User/SourceDist.html">Source code</a> and <a
 href="User/BinDist.html">precompiled binary</a> public releases of version
@@ -91,14 +90,14 @@ href="User/Overview.html#L113">developers</a>.</p>
 
 <h2 align=left><a href="../Mail/Lists.html#subscribe"><img
 src="../Icons/WWW/mail48x" alt="Mail" border="0">
- </a>&nbsp;<a name="L362">Mailing lists</a></h2>
+ </a>&nbsp;<a name="L362">Mailing list</a></h2>
 <p>
-<strong>Amaya</strong> has the following set of mailing lists that you are
-more than welcome to use! Before you send mail to the lists, please check out
-the archives - they often contain good information about how to solve
-problems. Please do not send mail directly to the authors - the mail load is
-already rather high and you will most probably get a better response time by
-using one of the following mailing lists. See the <a
+<strong>Amaya</strong> has the following mailing list that you are more than
+welcome to use! Before you send mail to the list, please check out the
+archives - they often contain good information about how to solve problems.
+Please do not send mail directly to the authors - the mail load is already
+rather high and you will most probably get a better response time by using the
+following mailing list. See the <a
 href="../Mail/Lists.html#subscribe">information on mailing lists</a> for
 details on how to subscribe.</p>
 <dl>
@@ -111,14 +110,6 @@ is available at the following URL:
 <code>http://opera.inrialpes.fr/amaya/messages/</code></p>
 <p>
 </p>
-</dd>
-<dt><b>www-amaya-developers@w3.org</b></dt>
-<dd>
-A public mailing list for ideas and  remarks concerning the Amaya source code.
-An <a href="http://opera.inrialpes.fr/amaya/messages/developers/"> archive</a>
-is available at the following URL: 
-<p>
-<code>http://opera.inrialpes.fr/amaya/messages/developers/</code></p>
 </dd>
 </dl>
 
@@ -176,7 +167,7 @@ behaves also like a browser, with the usual user interface. Browsing and
 editing are integrated seamlessly. 
 </dd>
 <dl>
-<dt>HTML</dt>
+<dt><a name="HTML">HTML</a></dt>
 <dd>
 supports the whole <a href="../MarkUp/Wilbur/">HTML 3.2</a> specification,
 including tables, forms, divisions, client side image maps, etc. 
@@ -186,20 +177,20 @@ In the latest version, some extensions from <a href="../TR/WD-html40/">HTML
 </dd>
 </dl>
 <dl>
-<dt><a href="../Style/" name="L558">Cascading Style Sheets</a></dt>
+<dt><a href="../Style/" name="Cascading">Cascading Style Sheets</a></dt>
 <dd>
 Document are displayed according to the style specification they contain
 (<code>STYLE</code> elements in the <code>HEAD</code>) and to the style sheets
 they refer to (<code>LINK REL=STYLESHEET</code>). Style elements and style
 sheets can be edited with <strong>Amaya</strong>. 
 </dd>
-<dt>MathML</dt>
+<dt><a name="MathML">MathML</a></dt>
 <dd>
 Amaya supports a subset of the <a href="../TR/WD-math/">MathML</a>
 specification, which makes possible to browse and edit web pages containing
 mathematical expressions. 
 </dd>
-<dt>HTTP</dt>
+<dt><a name="HTTP">HTTP</a></dt>
 <dd>
 Access to remote servers is handled either by the latest version of the <a
 href="../Library/" name="L552">W3C sample HTTP library</a> (libwww 5.0a),
@@ -207,7 +198,7 @@ using either HTTP/1.0 or HTTP/1.1 or by the Java implementation of HTTP from
 <a href="../Jigsaw">Jigsaw</a>. The later version is still experimental but
 it's already distributed in binary version. 
 </dd>
-<dt>Publishing</dt>
+<dt><a name="Publishing">Publishing</a></dt>
 <dd>
 The PUT method of HTTP is used to write documents on remote servers. Links are
 updated according to the location of the document in the server. 

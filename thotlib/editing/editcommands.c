@@ -2559,7 +2559,7 @@ int                 keyboard;
     nat = LtText;
   /* recupere la selection est active */
   SetInsert (&pAb, &frame, nat, toDelete);
-  
+
   /* Ou se trouve la marque d'insertion ? */
   if (frame > 0)
     {
@@ -2590,6 +2590,7 @@ int                 keyboard;
 	      return;
 	    }
 
+	  LoadedDocument[FrameTable[frame].FrDoc - 1]->DocModified = TRUE; 
 	  switch (pAb->AbLeafType)
 	    {
 	    case LtText:

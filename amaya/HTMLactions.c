@@ -1116,6 +1116,7 @@ Element             el;
 	     TtaGiveTextAttributeValue (attrHREF, buffer, &length);
 #            ifndef _WINDOWS
 	     /* initialise the text field in the dialogue box */
+	     strcpy (AttrHREFvalue, buffer);
 	     TtaSetTextForm (BaseDialog + AttrHREFText, buffer);
 #            else  /* _WINDOWS */
              CreateLinkDlgWindow (currentWindow, BaseDialog + AttrHREFForm);
