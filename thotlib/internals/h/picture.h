@@ -54,7 +54,6 @@ typedef struct
   boolean  (*Match_Format) ();
 } PictureHandler;
 
-char *SuffixImage[] ={".xbm", ".eps", ".xpm", ".gif", ".jpg", ".png"};
 
 
 

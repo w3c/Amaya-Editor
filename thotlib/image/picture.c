@@ -46,6 +46,7 @@ THOT_VInfo             THOT_vInfo;
 XVisualInfo            *vptr;
 Visual                 *theVisual;
 #endif
+char *SuffixImage[] ={".xbm", ".eps", ".xpm", ".gif", ".jpg", ".png"};
 
 
 /* ---------------------------------------------------------------------- */
