@@ -162,10 +162,10 @@
 </p>
 
 <div>
-<p>Hola<strong>Amaya</strong> es un cliente Web que actúa como navegador y como
-editor. Ha sido diseñado por el <a href="http://www.w3.org/">World Wide Web
-Consortium (<acronym title="World Wide Web Consortium">W3C</acronym>)</a> con
-el principal objetivo de demostrar nuevas tecnologías Web en un entorno
+<p>Hola <strong>Amaya</strong> es un cliente Web que actúa como navegador y
+como editor. Ha sido diseñado por el <a href="http://www.w3.org/">World Wide
+Web Consortium (<acronym title="World Wide Web Consortium">W3C</acronym>)</a>
+con el principal objetivo de demostrar nuevas tecnologías Web en un entorno
 <acronym>WYSIWYG</acronym> (What You See Is What You Get = Lo Que Ves Es Lo
 Que Obtienes). La versión actual implementa <acronym>HTML</acronym>
 (Hypertext Markup Language = Lenguaje de Marcas de Hipertexto),
@@ -173,9 +173,18 @@ Que Obtienes). La versión actual implementa <acronym>HTML</acronym>
 Extensible de Marcas de Hipertexto), <acronym>MathML</acronym> (Mathematical
 Markup Language = Lenguage Matemático de Marcas), <acronym>SVG</acronym>
 (Scalable Vector Graphics = Gráficos Vectoriales Escalables),
-<acronym >CSS</acronym> (Cascading Style Sheets = Hojas de Estilo en Cascada)
-y <acronym title="HyperText Transfer Protocol">HTTP</acronym> (HyperText Transfer Protocol = Protocolo de
-Transferencia de HiperTexto).</p>
+<acronym>CSS</acronym> (Cascading Style Sheets = Hojas de Estilo en Cascada)
+y <acronym title="HyperText Transfer Protocol">HTTP</acronym> (HyperText
+Transfer Protocol = Protocolo de Transferencia de HiperTexto).</p>
+
+<h3>Novedades</h3>
+
+<p>Las versiones OpenGL permiten incluir transformaciones, transparencia y
+animaciones SMIL en los elementos SVG. Puesto que Amaya admite documentos
+compuestos, estas nuevas propiedades se aplican también a los elementos XHTML
+y MathML incluidos. Puedes ver <a href="Amaya.svg">una demostración de una
+animación</a> descargando una versión OpenGL de Amaya. Esta versión admite
+también la propiedad CSS float.</p>
 </div>
 
 <div>
@@ -236,4 +245,3 @@ realices.</p>
 </div>
 </body>
 </html>
-
