@@ -626,9 +626,6 @@ int                 shadow;
       if (lgboite != 0)
           SameBox = 0;
    }
-   SelectObject (TtPrinterDC, hOldFont);
-   DeleteObject (currentActiveFont);
-   currentActiveFont = (HFONT)0;
 #  else  /* _WINDOWS */
        if (bl > 0)
 	 {
