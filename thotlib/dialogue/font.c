@@ -487,8 +487,10 @@ int CharacterHeight (int c, PtrFont font)
     l = gl_font_char_height (font, (CHAR_T *) &c);
 #else /*_GL*/
 #ifdef _WINDOWS
+  else if (font->FiFirstChar <= c && font->FiLastChar >= c)
+	  l = font->FiHeights[c - font->FiFirstChar];
   else
-    l = font->FiHeights[c];
+	  l = font->FiHeight;
 #else  /* _WINDOWS */
 #ifdef _GTK
   else
