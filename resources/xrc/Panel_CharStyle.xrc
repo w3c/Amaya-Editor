@@ -65,7 +65,7 @@
                                       </object>
                                     </object>
                                     <object class="sizeritem">
-                                      <object class="wxComboBox" name="wxID_COMBO_FONTFAMILY">
+                                      <object class="wxChoice" name="wxID_CHOICE_FONTFAMILY">
                                         <content>
                                           <item>*Times*</item>
                                           <item>*Helvetica*</item>
@@ -88,7 +88,7 @@
                                       </object>
                                     </object>
                                     <object class="sizeritem">
-                                      <object class="wxComboBox" name="wxID_COMBO_UNDERLINE">
+                                      <object class="wxChoice" name="wxID_CHOICE_UNDERLINE">
                                         <content>
                                           <item>*Normal*</item>
                                           <item>*Underline*</item>
@@ -112,7 +112,7 @@
                                       </object>
                                     </object>
                                     <object class="sizeritem">
-                                      <object class="wxComboBox" name="wxID_COMBO_BODYSIZE">
+                                      <object class="wxChoice" name="wxID_CHOICE_BODYSIZE">
                                         <content>
                                           <item>*6 pt*</item>
                                           <item>*8 pt*</item>
@@ -136,7 +136,7 @@
                                       </object>
                                     </object>
                                     <object class="sizeritem">
-                                      <object class="wxComboBox" name="wxID_COMBO_CHARSTYLE">
+                                      <object class="wxChoice" name="wxID_CHOICE_CHARSTYLE">
                                         <content>
                                           <item>*Normal*</item>
                                           <item>*Italic*</item>
@@ -159,7 +159,7 @@
                                       </object>
                                     </object>
                                     <object class="sizeritem">
-                                      <object class="wxComboBox" name="wxID_COMBO_BOLDNESS">
+                                      <object class="wxChoice" name="wxID_CHOICE_BOLDNESS">
                                         <content>
                                           <item>*Normal*</item>
                                           <item>*Bold*</item>

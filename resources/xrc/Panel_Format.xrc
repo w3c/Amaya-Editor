@@ -63,6 +63,14 @@
                                       <object class="wxBoxSizer">
                                         <orient>wxHORIZONTAL</orient>
                                         <object class="sizeritem">
+                                          <object class="wxBitmapButton" name="wxID_DEFAULT_FORMAT">
+                                            <bitmap>../icons/delete.gif</bitmap>
+                                            <tooltip>*DeFault*</tooltip>
+                                          </object>
+                                          <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+                                          <border>4</border>
+                                        </object>
+                                        <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_BMPBUTTON_FORMATLEFT">
                                             <bitmap>../icons/format_left.gif</bitmap>
                                             <tooltip>*LeFt*</tooltip>
@@ -88,6 +96,7 @@
                                           </object>
                                         </object>
                                       </object>
+                                      <flag>wxEXPAND</flag>
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxBoxSizer">
@@ -96,15 +105,35 @@
                                           <object class="wxStaticText" name="wxID_LABEL_FORMATINDENT">
                                             <label>*Indentation :*</label>
                                           </object>
-                                          <flag>wxRIGHT|wxALIGN_CENTRE</flag>
-                                          <border>4</border>
                                         </object>
                                         <object class="sizeritem">
-                                          <object class="wxSpinCtrl" name="wxID_SPIN_FORMATINDENT">
-                                            <value>0</value>
-                                            <min>0</min>
+                                          <object class="wxBoxSizer">
+                                            <orient>wxHORIZONTAL</orient>
+                                            <object class="sizeritem">
+                                              <object class="wxBitmapButton" name="wxID_DEFAULT_FI">
+                                                <bitmap>../icons/delete.gif</bitmap>
+                                                <tooltip>*DeFault*</tooltip>
+                                              </object>
+                                              <flag>wxRIGHT|wxALIGN_CENTRE</flag>
+                                              <border>4</border>
+                                            </object>
+                                            <object class="sizeritem">
+                                              <object class="wxSpinCtrl" name="wxID_SPIN_FORMATINDENT">
+                                                <value>0</value>
+                                                <min>0</min>
+                                                <size>40,-1</size>
+                                              </object>
+                                              <option>1</option>
+                                              <flag>wxEXPAND</flag>
+                                            </object>
+                                            <object class="sizeritem">
+                                              <object class="wxBitmapButton" name="wxID_APPLY_FI">
+                                                <bitmap stock_id="wxART_TICK_MARK"></bitmap>
+                                                <tooltip>*Apply*</tooltip>
+                                              </object>
+                                              <flag>wxLEFT|wxALIGN_CENTRE_VERTICAL</flag>
+                                            </object>
                                           </object>
-                                          <option>1</option>
                                           <flag>wxEXPAND</flag>
                                         </object>
                                       </object>
@@ -118,39 +147,40 @@
                                           <object class="wxStaticText" name="wxID_LABEL_FORMATLINESPACE">
                                             <label>*Line spacing :*</label>
                                           </object>
-                                          <flag>wxRIGHT|wxALIGN_CENTRE</flag>
-                                          <border>4</border>
                                         </object>
                                         <object class="sizeritem">
-                                          <object class="wxSpinCtrl" name="wxID_SPIN_FORMATLINESPACE">
-                                            <value>0</value>
-                                            <min>0</min>
+                                          <object class="wxBoxSizer">
+                                            <orient>wxHORIZONTAL</orient>
+                                            <object class="sizeritem">
+                                              <object class="wxBitmapButton" name="wxID_DEFAULT_LS">
+                                                <bitmap>../icons/delete.gif</bitmap>
+                                                <tooltip>*DeFault*</tooltip>
+                                              </object>
+                                              <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+                                              <border>4</border>
+                                            </object>
+                                            <object class="sizeritem">
+                                              <object class="wxSpinCtrl" name="wxID_SPIN_FORMATLINESPACE">
+                                                <value>0</value>
+                                                <min>0</min>
+                                                <size>40,-1</size>
+                                              </object>
+                                              <option>1</option>
+                                              <flag>wxEXPAND</flag>
+                                            </object>
+                                            <object class="sizeritem">
+                                              <object class="wxBitmapButton" name="wxID_APPLY_LS">
+                                                <bitmap stock_id="wxART_TICK_MARK"></bitmap>
+                                                <tooltip>*Apply*</tooltip>
+                                              </object>
+                                              <flag>wxLEFT|wxALIGN_CENTRE_VERTICAL</flag>
+                                            </object>
                                           </object>
-                                          <option>1</option>
                                           <flag>wxEXPAND</flag>
                                         </object>
                                       </object>
                                       <flag>wxTOP|wxEXPAND</flag>
                                       <border>2</border>
-                                    </object>
-                                  </object>
-                                  <flag>wxALL|wxEXPAND</flag>
-                                  <border>4</border>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxBoxSizer">
-                                    <orient>wxHORIZONTAL</orient>
-                                    <object class="sizeritem">
-                                      <object class="wxBitmapButton">
-                                        <bitmap stock_id="wxART_MISSING_IMAGE"></bitmap>
-                                      </object>
-                                      <flag>wxRIGHT|wxALIGN_CENTRE</flag>
-                                      <border>4</border>
-                                    </object>
-                                    <object class="sizeritem">
-                                      <object class="wxButton" name="wxID_APPLY">
-                                        <label>*Apply*</label>
-                                      </object>
                                     </object>
                                   </object>
                                   <flag>wxALL|wxEXPAND</flag>
