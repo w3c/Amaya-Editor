@@ -4,7 +4,7 @@
 #
 #       amaya-$MACH-$AMAYAVERSION.tgz
 # 
-AMAYAVERSION=2.5
+AMAYAVERSION=3.0
 #THOTDIR=/tahiti/diffusion/Amaya
 THOTDIR=$PWD/../..
 DEST=/tahiti/thottape

@@ -8,7 +8,7 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tgz
 #
-AMAYAVERSION=2.5
+AMAYAVERSION=3.0
 #THOTDIR=/tahiti/diffusion
 THOTDIR=$PWD/../..
 DEST=/tahiti/thottape
@@ -139,29 +139,8 @@ Amaya/batch/*.rc \
 Amaya/batch/resource.h \
 Amaya/batch/comp_ico.ico \
 Amaya/batch/comp_toolbar.bmp \
-Amaya/batch/app.c \
-Amaya/batch/grammar.c \
-Amaya/batch/parser.c \
-Amaya/batch/printstr.c \
-Amaya/batch/prs.c \
-Amaya/batch/str.c \
-Amaya/batch/tra.c \
-Amaya/batch/rescandialogue.c \
-Amaya/batch/writeapp.c \
-Amaya/batch/writeprs.c \
-Amaya/batch/writestr.c \
-Amaya/batch/writetra.c \
-Amaya/batch/winthotcompilers.c \
-Amaya/batch/f/app_f.h \
-Amaya/batch/f/grammar_f.h \
-Amaya/batch/f/parser_f.h \
-Amaya/batch/f/prs_f.h \
-Amaya/batch/f/str_f.h \
-Amaya/batch/f/tra_f.h \
-Amaya/batch/f/writeapp_f.h \
-Amaya/batch/f/writeprs_f.h \
-Amaya/batch/f/writestr_f.h \
-Amaya/batch/f/writetra_f.h \
+Amaya/batch/*.c \
+Amaya/batch/f/*.h \
 Amaya/doc/amaya/Access.html \
 Amaya/doc/amaya/Attributes.html \
 Amaya/doc/amaya/Browsing.html \
