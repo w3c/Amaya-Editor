@@ -90,7 +90,7 @@ my $i;
 			elsif ( $value =~ /^\d/ ) {
 #	recopy from the old base what necessary if it's possible, and treat the lakes
 				unless (search_and_recopy_a_label ( $base,$ref_name )) { #if nothing's found 
-					print "the label $ref_name never exist befor, it don't have a translate yet\n";
+					print "the label $ref_name never exists before, it don't have a translate yet\n";
 					print OUT "<label define=\"$ref_name\"></label>\n";				
 				}
 			}
@@ -110,7 +110,7 @@ my $i;
   
 
 
-	print "\t\tEnd of reformationconf\n";
+	print "\t\tEnd of forcing the base with EDITOR.h\n";
 
 }################
 ## end main

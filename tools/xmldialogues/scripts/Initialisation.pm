@@ -34,7 +34,7 @@ sub create_base {
 	
 	my $base_directory = shift;
 	my $base_name = shift;
-	my $out_basename = $base_directory . "/" . $base_name ;
+	my $out_basename = $base_directory . $base_name ;
 
 # to avoid pb with %label if 2 call to this function 	
 	%label = ();

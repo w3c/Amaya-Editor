@@ -23,6 +23,7 @@ BEGIN {
 						
 						$in_textdirectory
 						$in_textsufix
+						$encodage
 						);
 	
 }	
@@ -30,6 +31,7 @@ use vars  qw(		$in_labelfile
 						$basefile
 						$in_textdirectory
 						$in_textsufix
+						$encodage
 						);
 
 
@@ -40,7 +42,9 @@ use vars  qw(		$in_labelfile
 	chomp ($date);
 
 # $debug is a boolean used during the typing and used for tests
-	my $debug = 1;
+	my $debug = 0;
+	
+	
 # declaration static of the files used 
 	my $language_code ;
 	my $in_textfile ;
@@ -51,11 +55,11 @@ use vars  qw(		$in_labelfile
 	my %texts;	#references (=key) and their text
 	my $current_label;	#to notice the current label occured ,in which we are
 	my $current_tag; #to notice in which tag we are
-	my $old_text;
+	my $english_text = "";
 	my $found = 0; #boolean used during the parse of a whole label to treat the new adds
 	my $modification_necessary = 0; #boolean used during the parse of a whole label to treat the updating
 	my @list_of_lang_occur = () ;
-	my $encodage = ""; #to load the encoding type of the messages
+	 $encodage = ""; #to load the encoding type of the messages
 	
 ################################################################################
 ##							sub exported
@@ -113,7 +117,7 @@ sub import_a_language {
 	if ($debug) {
 		print "il y a ",$encodage = @list_of_lang_occur,"langues presentes:\n" ;
 		foreach ( @list_of_lang_occur ) {
-			print ;
+			print $_ . " ";
 		}
 	}
 	
@@ -269,7 +273,10 @@ sub inittext {
 			}
 		}
 		else { # there isn't a line that mention the encoding
-			ask_for_encoding ();
+			if ( !defined ($encodage) #because encodage can be force when $encodage is exported
+				|| ($encodage ne "utf8" && $encodage ne "latin1") ) { #no good encoding
+				ask_for_encoding ();
+			}
 			addtext ($line, $line_count);
 		}	
 	
@@ -355,6 +362,10 @@ sub start_hndl {
 				}
 			}
 
+		}
+		if ($attributes[0] eq "xml::lang"  # to have the english version when updating 
+			&& $attributes[1] eq "en") {
+				$english_text = "OK";
 		}
 		print OUT "\t";	
 		addbegintag ( $element,$numberparam, @attributes );					
@@ -451,6 +462,7 @@ sub end_hndl { #	do the modification if necessary
 				}
 			}	
 		}
+		$english_text = "";
 	}
 	elsif ($end_tag eq "control") { 
 #	if we add a new language, we have to mention it	
@@ -524,9 +536,12 @@ sub default_hndl {	#for all the cases of an invalid xml document
 				if ($data ne $texts{ $labels{$current_label}}) {	
 					my $choice = 0 ;
 					do {
-						print "L'ancienne valeur est $data\n";
-						print "La nouvelle est " . $texts{ $labels{$current_label}} . "\n";
-						print "Si vous voulez effectuer lamise a jour tapez 1,\nsinon 0\n"; 
+						print "L'ancienne valeur est :$data\n";
+						if ($english_text ne "" && $english_text ne "OK") {
+							print "La version anglaise donne :$english_text\n";
+						}
+						print "La nouvelle serait :" . $texts{ $labels{$current_label}} . "\n";
+						print "Si vous voulez effectuer la mise a jour tapez 1,\nsinon 0\n"; 
 						$choice = <STDIN>;
 					}
 					while ( $choice eq "" || $choice =~ /^\D/ || $choice < 0 || $choice >= 2 ) ;
@@ -535,6 +550,9 @@ sub default_hndl {	#for all the cases of an invalid xml document
 					}
 				}	
 				$modification_necessary = 0;			
+			}
+			if ($english_text eq "OK") {					
+				$english_text = $data;
 			}
 			
 		}

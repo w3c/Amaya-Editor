@@ -64,16 +64,16 @@ my %index =qw ( 	1	dia
 {
 #load the different modules needed
 use Initialisation qw(	&create_base );
-
-use Import_am_msg qw( &import_a_language
+use Import_am_msg qw( 	&import_a_language
 								$in_labelfile
 								$basefile
 								$in_textdirectory
 								$in_textsufix
-							);
-use Export_am_msg qw ( &export );
-use Forcer qw ( &forcer);
-
+								$encodage );
+use Export_am_msg qw ( 	&export );
+use Forcer 			qw ( 	&forcer );
+use Dial_tool_box qw ( 	&add_label
+								&remove_label );
 
 
 
@@ -86,7 +86,7 @@ sub menu {
 						"Amaya dialogue",
 						"Amayamsg",
 						"libdialogue",
-						"corrdialogue") ;
+						"corrdialogue");
 	my $count = 0;
 	my $choice = 0;
 
@@ -120,12 +120,15 @@ sub menu1 {
 	my $last_choice = shift ;
 	my $count;
 	my $choice;
+	my $special; 
 	my @list = ( 
-		"Rien", 
-		"Initialiser la base" ,
-		"Ajouter/ Mettre a jour une langue", 
-		"Editer les fichiers de dialogue") ;		
-	if ($last_choice == 1 )	{
+		"Rien", 											#0
+		"Initialiser la base" ,						#1
+		"Ajouter/ Mettre a jour une langue", 	#2
+		"Editer les fichiers de dialogue",		#3
+		"Ajouter une etiquette",					#4
+		"Supprimer une etiquette");				#5
+	if ($last_choice == 1 )	{						#6 
 		push (@list,"Forcer la base a se mettre en conformite avec \"EDITOR.h\"" ); 
 	}	
 	my $lang = "";
@@ -145,17 +148,30 @@ sub menu1 {
 	print "\n";
 	
 	if ($choice == 1) {
-		Initialisation::create_base ( $head_dir{ $index{ $last_choice} }, 
-												$head_name{ $index{ $last_choice} },
-												$OUT_PUT_directory, 
-												$base_name { $index{ $last_choice} });
-		# to initialise with english
-		print "Remplissage de la base avec l'anglais par default\n";
-		$Import_am_msg::in_labelfile = $head_dir{ $index{ $last_choice}} . $head_name{ $index{ $last_choice}};
-		$Import_am_msg::basefile = $OUT_PUT_directory . $base_name { $index{ $last_choice}};
-		$Import_am_msg::in_textdirectory = $lang_dir { $index{ $last_choice}};
-		$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};
-		Import_am_msg::import_a_language ("en") ;
+		do {
+			print "Etes vous certain de vouloir ecraser l'ancienne base?(Oui/Non) \n";
+			$_ = <STDIN>;
+			chomp;
+		}
+		while ($_ !~ /^o/i
+				&& $_ !~ /^n/i					
+				&& $_ !~ /^oui/i					
+				&& $_ !~ /^non/i					
+		);
+		if ( /^o/i || /^oui/i ) {
+			Initialisation::create_base ( $head_dir{ $index{ $last_choice} }, 
+													$head_name{ $index{ $last_choice} },
+													$OUT_PUT_directory, 
+													$base_name { $index{ $last_choice} });
+			# to initialise with english
+			print "Remplissage de la base avec l'anglais par default\n";
+			$Import_am_msg::in_labelfile = $head_dir{ $index{ $last_choice}} . $head_name{ $index{ $last_choice}};
+			$Import_am_msg::basefile = $OUT_PUT_directory . $base_name { $index{ $last_choice}};
+			$Import_am_msg::in_textdirectory = $lang_dir { $index{ $last_choice}};
+			$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};
+			$Import_am_msg::encodage = "latin1";
+			Import_am_msg::import_a_language ("en") ;
+		}
 
 	}
 	elsif ($choice == 2) {
@@ -178,8 +194,16 @@ sub menu1 {
 										$head_name{ $index{ $last_choice}}
 										);
 	}
-	elsif ($choice == 4) { # n'arrive que si last_choice = 1
-		Forcer::forcer ( 
+	elsif ($choice == 4) {
+	}
+	elsif ($choice == 5) {
+	}
+	elsif ($choice == 6) { # n'arrive que si last_choice = 1
+		#en principe ne reprend que EDITOR.h
+		Forcer::forcer ( 	$OUT_PUT_directory,
+								$base_name{ $index{ $last_choice}},
+								$head_dir{ $index{ $last_choice}},
+								$head_name{ $index{ $last_choice}}
 							);
 	
 	}	
@@ -187,7 +211,9 @@ sub menu1 {
 }
 
 #-------------------------------------------------------------------------------
+#################################################################################
 ######################### for configuration ####################################
+#################################################################################
 #-------------------------------------------------------------------------------
  sub rep_amaya {# to load configuration parameter "amaya_rep"
 	my $name = "notOK";
@@ -274,6 +300,7 @@ sub menu1 {
 	}
 	return $name;
 } 
+#----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
 sub rep_obj { # to load configuration parameter "obj_rep"
 	my $name = "notOK";
