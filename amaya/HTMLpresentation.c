@@ -162,10 +162,14 @@ static void  AttrToSpan (elem, attr, doc)
 	span = parent;
       if (span != NULL)
         {
-		  oldValue = (char*) TtaGetMemory (sizeof (char) * ATTRLEN);
+	  oldValue = (char*) TtaGetMemory (sizeof (char) * ATTRLEN);
 	  TtaGiveAttributeType (attr, &attrType, &kind);
-	  newAttr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (span, newAttr, doc);
+	  newAttr = TtaGetAttribute (span, attrType);
+	  if (newAttr == NULL)
+	     {
+	     newAttr = TtaNewAttribute (attrType);
+	     TtaAttachAttribute (span, newAttr, doc);
+	     }
 	  len = ATTRLEN - 1;
 	  TtaGiveTextAttributeValue (attr, oldValue, &len);
 	  TtaRemoveAttribute (elem, attr, doc);
