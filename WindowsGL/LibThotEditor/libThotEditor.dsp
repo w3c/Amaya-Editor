@@ -519,6 +519,10 @@ SOURCE=..\..\thotlib\presentation\style.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\view\tesse.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\editing\textcommands.c
 # End Source File
 # Begin Source File
