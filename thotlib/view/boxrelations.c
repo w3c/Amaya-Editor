@@ -501,6 +501,30 @@ void     ComputeRadius (PtrAbstractBox pAb, int frame, ThotBool horizRef)
     }
 }
 
+
+/*----------------------------------------------------------------------
+  CleanAutoMargins cleans up all auto margins.
+  ----------------------------------------------------------------------*/
+void CleanAutoMargins (PtrAbstractBox pAb)
+{
+  PtrBox              box;
+
+  if (pAb && pAb->AbBox)
+    {
+      box = pAb->AbBox;
+      if (pAb->AbLeftMarginUnit == UnAuto)
+	{
+	  box->BxWidth -= box->BxLMargin;
+	  box->BxLMargin = 0;
+	}
+      if (pAb->AbRightMarginUnit == UnAuto)
+	{
+	  box->BxWidth -= box->BxRMargin;
+	  box->BxRMargin = 0;
+	}
+    }
+}
+
 /*----------------------------------------------------------------------
   ComputeMBP applies margin, padding, and border rules.
   Relation between values:
