@@ -1757,7 +1757,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
   int                 width, breakWidth;
   int                 boxLength, nSpaces;
   int                 newIndex, wordWidth;
-  int                 xi, floatWidth;
+  int                 xi;
   int                 maxLength, minWidth;
   ThotBool            still;
   ThotBool            toCut;
@@ -1771,7 +1771,6 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
   still = FALSE;
   minWidth = 0;
   wordWidth = 0;
-  floatWidth = 0;
   xi = 0;
   ascent = 0;
   descent = 0;
@@ -1863,7 +1862,6 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	  if (pNextBox->BxAbstractBox->AbFloat != 'N')
 	    {
 	      /* skip over the box */
-	      floatWidth += pNextBox->BxWidth;
 	      lastbox = pNextBox;
 	      pNextBox = GetNextBox (lastbox->BxAbstractBox);
 	      if (lastbox == pLine->LiFirstBox)
@@ -2263,7 +2261,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
   /* Calcule la hauteur et la base de la ligne */
   pLine->LiHeight = descent + ascent;
   pLine->LiHorizRef = ascent;
-  return (minWidth + floatWidth);
+  return minWidth;
 }
 
 
