@@ -2532,6 +2532,8 @@ int                 frame;
    Menu_Ctl           *ptrmenu;
    Item_Ctl           *ptr;
 
+   if (ThotLocalActions[T_stopinsert] != NULL)
+     (*ThotLocalActions[T_stopinsert]) ();
    w = FrameTable[frame].WdFrame;
    if (w != 0)
      {

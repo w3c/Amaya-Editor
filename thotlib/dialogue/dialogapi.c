@@ -5214,7 +5214,7 @@ int                 cattype;
 	n++;
 	XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
 	n++;
-	XtSetArg (args[n], XmNpacking, XmPACK_TIGHT /*XmPACK_COLUMN */ );
+	XtSetArg (args[n], XmNpacking, /*XmPACK_TIGHT*/XmPACK_COLUMN);
 	n++;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
