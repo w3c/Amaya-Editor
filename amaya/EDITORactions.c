@@ -2003,6 +2003,8 @@ void CreateTable (Document document, View view)
 	  if (!UserAnswer)
 	    return;
 	}
+      else
+	TBorder = 1;
       /* ctreate the table or 
 	  try to transform the current selection if the selection is not empty */
 	  DoTableCreation (document);
