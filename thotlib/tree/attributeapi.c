@@ -573,8 +573,8 @@ void TtaSetAttributeText (Attribute attribute, char* buffer,
 			  Element element, Document document)
 {
   int                 lg;
-  PtrAttribute        pAttr;
-  Language	       lang;
+  PtrAttribute        pAttr, pPrevAttr, pA;
+  Language	      lang;
 
   UserErrorCode = 0;
   pAttr = (PtrAttribute) attribute;
@@ -586,8 +586,34 @@ void TtaSetAttributeText (Attribute attribute, char* buffer,
     {
 #ifndef NODISPLAY
       if (element != NULL)
-	UndisplayInheritedAttributes ((PtrElement) element, pAttr, document,
-				      FALSE);
+	{
+	  /* detach temporarily attribute from element */
+	  pPrevAttr = NULL;
+          pA = ((PtrElement) element)->ElFirstAttr;
+	  while (pA && pA != pAttr)
+	    {
+	      pPrevAttr = pA;
+	      pA = pA->AeNext;
+	    }
+	  if (pA)
+	    {
+	      if (pPrevAttr)
+		pPrevAttr->AeNext = pA->AeNext;
+	      else
+		((PtrElement) element)->ElFirstAttr = pA->AeNext;
+	    }
+          /* de-apply all presentation rules related to the attribute */
+	  UndisplayInheritedAttributes ((PtrElement) element, pAttr, document,
+					TRUE);
+	  /* reattach attribute to element */
+	  if (pA)
+	    {
+	      if (pPrevAttr)
+		pPrevAttr->AeNext = pAttr;
+	      else
+		((PtrElement) element)->ElFirstAttr = pAttr;
+	    }
+	}
 #endif
       if (pAttr->AeAttrText == NULL)
 	GetTextBuffer (&pAttr->AeAttrText);
