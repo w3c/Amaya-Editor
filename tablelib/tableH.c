@@ -619,20 +619,21 @@ int             frame;
 
 /*----------------------------------------------------------------------
   CheckTableWidths
-  Test the coherence between 
-  t.
+  Test the coherence between min, max, width constraint and the current
+  width.
+  The parameter freely lets know that the width can be increased.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void     CheckTableWidths (PtrAbstractBox table, int frame)
+static void     CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 #else
-static void     CheckTableWidths (table, frame)
+static void     CheckTableWidths (table, frame, freely)
 PtrAbstractBox  table;
 int             cNumber;
 PtrAbstractBox *colBox;
 int            *colWidth;
 int            *colPercent;
 int             frame;
-ThotBool         force;
+ThotBool        freely;
 #endif
 {
   PtrAbstractBox      pCell;
@@ -818,7 +819,7 @@ printf ("Width[%d]=%d\n", cRef, box->BxWidth);
 #endif
 	}
     }
-  else if (min + sum + sumPercent >= width && pCell == NULL)
+  else if (min + sum + sumPercent >= width && (freely || pCell == NULL))
     {
       /* assign the minimum width, or the percent, or the width */
       width = min + sum + sumPercent;
@@ -974,7 +975,7 @@ int             frame;
   else
     {
       /* Now check the table size */
-      CheckTableWidths (table, frame);
+      CheckTableWidths (table, frame, FALSE);
       CheckRowHeights (table, frame);
     }
 }
@@ -1461,6 +1462,7 @@ int             frame;
 	  if (cell)
 	    {
 	      /* propagate changes to the enclosing table */
+	      CheckTableWidths (table, frame, TRUE);
 	      row = SearchEnclosingType (cell, BoRow);
 	      if (row  && row->AbBox)
 		table = (PtrAbstractBox) row->AbBox->BxTable;
@@ -1590,7 +1592,7 @@ int              frame;
 	      if (SetCellWidths (cell, table, frame))
 		{
 		  /* Now check the table size */
-		  CheckTableWidths (table, frame);
+		  CheckTableWidths (table, frame, TRUE);
 		  CheckRowHeights (table, frame);
 		}
 	    }
@@ -1665,7 +1667,7 @@ int              frame;
 	  if (SetTableWidths (table, frame))
 	    {
 	      /* Now check the table size */
-	      CheckTableWidths (table, frame);
+	      CheckTableWidths (table, frame, TRUE);
 	      CheckRowHeights (table, frame);
 	    }
 	}
@@ -1833,7 +1835,7 @@ static void    UnlockTableFormatting ()
 	      if (table && table->AbElement)
 		{
 		  /*pLockRel->LockRTable[i] = NULL;*/
-		  CheckTableWidths (table, pLockRel->LockRFrame[i]);
+		  CheckTableWidths (table, pLockRel->LockRFrame[i], FALSE);
 		  /* need to propagate to enclosing boxes */
 		  ComputeEnclosing (pLockRel->LockRFrame[i]);
 		}
