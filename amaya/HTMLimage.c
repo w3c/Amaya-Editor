@@ -343,7 +343,10 @@ char               *imageName;
   /* if the document was not modified before this update reset it unmodified */
   if (!modified)
     TtaSetDocumentUnmodified (doc);
+  /* the image is loaded */
+  TtaSetStatus (doc, 1, " ", NULL);
 }
+
 
 /*----------------------------------------------------------------------
    HandleImageLoaded is the callback procedure when the image is loaded	

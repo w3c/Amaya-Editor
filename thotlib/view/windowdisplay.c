@@ -326,9 +326,9 @@ int                 fg;
   Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 DrawString (char *buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int debutbloc, int RO, int active, int fg)
+int                 DrawString (char *buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int debutbloc, int RO, int active, int fg, int shadow)
 #else  /* __STDC__ */
-int                 DrawString (buff, i, lg, frame, x, y, font, lgboite, bl, hyphen, debutbloc, RO, active, fg)
+int                 DrawString (buff, i, lg, frame, x, y, font, lgboite, bl, hyphen, debutbloc, RO, active, fg, shadow)
 char               *buff;
 int                 i;
 int                 lg;
@@ -343,7 +343,7 @@ int                 debutbloc;
 int                 RO;
 int                 active;
 int                 fg;
-
+int                 shadow;
 #endif /* __STDC__ */
 {
    ThotWindow          w;
@@ -351,17 +351,15 @@ int                 fg;
    int                 width;
 #  ifndef _WINDOWS
    register int        j;
-#  endif /* !_WINDOWS */
-
-#  ifdef _WINDOWS
+#  else /* _WINDOWS */
    SIZE                size;
    RECT                rect;
    HFONT               hOldFont;
-#  endif
+#  endif /* !_WINDOWS */
 
    w = FrRef[frame];
-
-   if (lg > 0 && w != None) {
+   if (lg > 0 && w != None)
+     {
       ptcar = &buff[i - 1];
       /* Dealing with BR tag for windows */
 #     ifdef _WINDOWS
@@ -377,21 +375,33 @@ int                 fg;
       width = 0;
       j = 0;
       while (j < lg)
-            width += CharacterWidth (ptcar[j++], font);
+	width += CharacterWidth (ptcar[j++], font);
 #     endif /* !_WINDOWS */
 
 #     ifndef _WINDOWS 
       LoadColor (0, RO, active, fg);
 #     else /* _WINDOWS */
-	  WinLoadGC (TtDisplay, fg, RO);
+      WinLoadGC (TtDisplay, fg, RO);
 #     endif /* _WINDOWS */
 
-      if (!ShowSpace) {
+      if (!ShowSpace || shadow)
+	{
          /* draw the spaces */
          ptcar = TtaGetMemory (lg + 1);
-         strncpy (ptcar, &buff[i - 1], lg);
-         ptcar[lg] = EOS;
+	 if (shadow)
+	   {
+	     /* replace each character by a star */
+	     j = 0;
+	     while (j < lg)
+	       ptcar[j++] = '*';
+	     ptcar[lg] = EOS;
+	   }
+	 else
+	   {
+	     strncpy (ptcar, &buff[i - 1], lg);
+	     ptcar[lg] = EOS;
 	     SpaceToChar (ptcar);	/* substitute spaces */
+	   }
 #        ifdef _WINDOWS
          GetClientRect (TtDisplay, &rect);
          TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (unsigned char*) ptcar, lg);
@@ -399,21 +409,27 @@ int                 fg;
          XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
 #        endif /* _WINDOWS */
          TtaFreeMemory (ptcar);
-      } else {
-           if (ptcar[0] == '\212') {
-              /* skip the Control return char */
-              ptcar++;
-             lg--;
-           }
-           if (lg != 0) {
+	}
+      else
+	{
+           if (ptcar[0] == '\212')
+	     {
+	       /* skip the Control return char */
+	       ptcar++;
+	       lg--;
+	     }
+           if (lg != 0)
+	     {
 #             ifdef _WINDOWS
               TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (unsigned char*) ptcar, lg);
 #             else  /* _WINDOWS */
-	          XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
+	      XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
 #             endif /* _WINDOWS */
-           }
-      }
-      if (hyphen) {
+	     }
+	}
+
+      if (hyphen)
+	{
          /* draw the hyphen */
 #        ifdef _WINDOWS
          TextOut (TtDisplay, x + width + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, "\255", 1);
@@ -421,16 +437,17 @@ int                 fg;
          XDrawString (TtDisplay, w, TtLineGC, x + width + FrameTable[frame].FrLeftMargin,
          y + FrameTable[frame].FrTopMargin + FontBase (font), "\255", 1);
 #        endif /* _WINDOWS */
-      }
+	}
       FinishDrawing (0, RO, active);
 #     ifdef _WINDOWS
-	  SelectObject (TtDisplay, hOldFont);
+      SelectObject (TtDisplay, hOldFont);
       WIN_ReleaseDeviceContext ();
 #     endif /* _WINDOWS */
 
       return (width);
-   } else
-         return (0);
+     }
+   else
+     return (0);
 }
 
 /*----------------------------------------------------------------------

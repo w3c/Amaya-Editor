@@ -136,7 +136,7 @@ number
 	                 'HighlightChildren' / 'ExtendedSelection' /
 			 'ReturnCreateNL' / 'IsTable' / 'IsRow' /
 			 'IsColHead' / 'IsCell' / 'NewPercentWidth' /
-			 'ColRef' / 'ColSpan' / 'RowSpan' /
+			 'ColRef' / 'ColSpan' / 'RowSpan' / 'Shadow' /
 			 ExceptNum .
    52	ExceptNum =	 NUMBER .
 	
@@ -250,7 +250,8 @@ code  key-word      numbers of rules using the key-word
 1173  ColRef               51
 1174  ColSpan              51
 1175  RowSpan              51
-1176  Root                 54
+1176  Shadow               51
+1177  Root                 54
 
 
 

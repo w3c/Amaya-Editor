@@ -71,6 +71,8 @@ void RestoreDocumentStatus (event)
      NotifyOnTarget *event;
 #endif /* __STDC__*/
 {
+  if (!documentStatus)
+    TtaSetDocumentUnmodified (event->document);
 }
  
  

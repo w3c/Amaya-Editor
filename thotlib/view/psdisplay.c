@@ -411,9 +411,9 @@ ptrfont             font;
    Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 DrawString (char *buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int StartOfCurrentBlock, int RO, int active, int fg)
+int                 DrawString (char *buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int StartOfCurrentBlock, int RO, int active, int fg, int shadow)
 #else  /* __STDC__ */
-int                 DrawString (buff, i, lg, frame, x, y, font, lgboite, bl, hyphen, StartOfCurrentBlock, RO, active, fg)
+int                 DrawString (buff, i, lg, frame, x, y, font, lgboite, bl, hyphen, StartOfCurrentBlock, RO, active, fg, shadow)
 char               *buff;
 int                 i;
 int                 lg;
@@ -428,6 +428,7 @@ int                 StartOfCurrentBlock;
 int                 RO;
 int                 active;
 int                 fg;
+int                 shadow;
 #endif /* __STDC__ */
 {
    char               *ptcar;
@@ -438,24 +439,22 @@ int                 fg;
    unsigned short      red, green, blue;
    HFONT               hOldFont;
    SIZE                size;
-#  endif /* _WINDOWS */
 
-#  ifdef _WINDOWS
    if (TtPrinterDC == NULL)
       fout = (FILE *) FrRef[frame];
 #  else  /* _WINDOWS */
    fout = (FILE *) FrRef[frame];
 #  endif /* _WINDOWS */
-   encoding = 0;		/* BUG */
+   encoding = 0;
    if (y < 0)
       return 0;
    /* NonJustifiedWhiteSp is > 0 if writing a fixed lenght is needed */
    /* and equal to 0 if a justified space is to be printed */
 
    NonJustifiedWhiteSp = StartOfCurrentBlock;
-
    /* Is this a new box ? */
-   if (SameBox == 0) {
+   if (SameBox == 0)
+     {
       /* Beginning of a new box */
       SameBox = 1;
       X = PixelToPoint (x);
@@ -464,11 +463,13 @@ int                 fg;
 
       /* Do we need to change the current color ? */
 #     ifdef _WINDOWS  
-      if (TtPrinterDC) {
-         TtaGiveThotRGB (fg, &red, &green, &blue);
-         SetTextColor (TtPrinterDC, RGB (red, green, blue));
-	  } else
-           CurrentColor (fout, fg);
+      if (TtPrinterDC)
+	{
+	  TtaGiveThotRGB (fg, &red, &green, &blue);
+	  SetTextColor (TtPrinterDC, RGB (red, green, blue));
+	}
+      else
+	CurrentColor (fout, fg);
 #     else  /* _WINDOWS */
       CurrentColor (fout, fg);
 #     endif /* _WINDOWS */
@@ -476,122 +477,114 @@ int                 fg;
       /* Do we need to change the current font ? */
 #     ifdef _WINDOWS
       if (TtPrinterDC)
-         hOldFont = SelectObject (TtPrinterDC, font->FiFont);
-      else {
+	hOldFont = SelectObject (TtPrinterDC, font->FiFont);
+      else
+	{
           encoding = CurrentFont (fout, font);
           fprintf (fout, "(");
-	  }
+	}
 #     else  /* _WINDOWS */
       encoding = CurrentFont (fout, font);
       fprintf (fout, "(");
 #     endif /* _WINDOWS */
    }
 
+   if (shadow)
+     {
+       /* replace each character by a star */
+       j = 0;
+       ptcar = TtaGetMemory (lg + 1);
+       while (j < lg)
+	 ptcar[j++] = '*';
+       ptcar[lg] = EOS;
+     }
+   else
+     ptcar = &buff[i - 1];
+
    /* Add the justified white space */
 #  ifdef _WINDOWS
-   if (TtPrinterDC) {
-      ptcar = &buff[i - 1];
-      SetMapperFlags (TtPrinterDC, 1);
-      GetTextExtentPoint (TtPrinterDC, ptcar, lg, &size);
-      width = size.cx;
-      if (ptcar[0] == '\212') {
-         /* skip the Control return char */
-         ptcar++;
-         lg--;
-      }
-      if (lg != 0)
+   if (TtPrinterDC)
+     {
+       SetMapperFlags (TtPrinterDC, 1);
+       GetTextExtentPoint (TtPrinterDC, ptcar, lg, &size);
+       width = size.cx;
+       if (ptcar[0] == '\212')
+	 {
+	   /* skip the Control return char */
+	   ptcar++;
+	   lg--;
+	 }
+
+       if (lg != 0)
          /* if (!TextOut (TtPrinterDC, X, Y, (unsigned char*) ptcar, lg)) */
          if (!TextOut (TtPrinterDC, x, y, (unsigned char*) ptcar, lg))
-            WinErrorBox (NULL);
-      if (hyphen) /* draw the hyphen */
+	   WinErrorBox (NULL);
+
+       if (hyphen) /* draw the hyphen */
          if (!TextOut (TtPrinterDC, X + width, Y, "\255", 1))
-            WinErrorBox (NULL);
-      if (lgboite != 0)
+	   WinErrorBox (NULL);
+       if (lgboite != 0)
          SameBox = 0;
-   } else {
-        if (bl > 0) {
-           NbWhiteSp++;
-           Transcode (fout, encoding, ' ');
-		}
+     }
+   else
+     {
+ #  endif  /* _WINDOWS */
+       if (bl > 0)
+	 {
+	   NbWhiteSp++;
+	   Transcode (fout, encoding, ' ');
+	 }
 
-        /* Emit the chars */
-        ptcar = &buff[i - 1];
-        for (j = 0; j < lg; j++) {
-            /* enumerate the white spaces */
-            if (ptcar[j] == ' ')
-               if (NonJustifiedWhiteSp == 0) {
-                  /* write a justified white space */
-                  NbWhiteSp++;
-                  Transcode (fout, encoding, ptcar[j]);
-			   } else /* write a fixed lenght white space */
-                    fputs ("\\240", fout);
-            else {
-               NonJustifiedWhiteSp = 0;
-               Transcode (fout, encoding, ptcar[j]);
-			}
-		}
+       /* Emit the chars */
+       for (j = 0; j < lg; j++)
+	 {
+	   /* enumerate the white spaces */
+	   if (ptcar[j] == ' ')
+	     if (NonJustifiedWhiteSp == 0)
+	       {
+		 /* write a justified white space */
+		 NbWhiteSp++;
+		 Transcode (fout, encoding, ptcar[j]);
+	       }
+	     else /* write a fixed lenght white space */
+	       fputs ("\\240", fout);
+	   else
+	     {
+	       NonJustifiedWhiteSp = 0;
+	       Transcode (fout, encoding, ptcar[j]);
+	     }
+	 }
 
-        /* Is an hyphen needed ? */
-        if (hyphen)
-           Transcode (fout, encoding, '\255');
+       /* Is an hyphen needed ? */
+       if (hyphen)
+	 Transcode (fout, encoding, '\255');
 
-        /* is this the end of the box */
-        if (lgboite != 0) {
-           lgboite = PixelToPoint (lgboite);
-           /* Is justification needed ? */
-           if (NbWhiteSp == 0)
-              fprintf (fout, ") %d %d -%d s\n", lgboite, X, Y);
-           else
-              fprintf (fout, ") %d %d %d -%d j\n", NbWhiteSp, lgboite, X, Y);
-           SameBox = 0;
-		}
-   }
-#  else  /* _WINDOWS */
-   if (bl > 0) {
-      NbWhiteSp++;
-      Transcode (fout, encoding, ' ');
-   }
-
-   /* Emit the chars */
-   ptcar = &buff[i - 1];
-   for (j = 0; j < lg; j++) {
-       /* enumerate the white spaces */
-       if (ptcar[j] == ' ')
-          if (NonJustifiedWhiteSp == 0) {
-             /* write a justified white space */
-             NbWhiteSp++;
-             Transcode (fout, encoding, ptcar[j]);
-		  } else /* write a fixed lenght white space */
-               fputs ("\\240", fout);
-       else {
-          NonJustifiedWhiteSp = 0;
-          Transcode (fout, encoding, ptcar[j]);
-	   }
-   }
-
-   /* Is an hyphen needed ? */
-   if (hyphen)
-      Transcode (fout, encoding, '\255');
-
-   /* is this the end of the box */
-   if (lgboite != 0) {
-      lgboite = PixelToPoint (lgboite);
-      /* Is justification needed ? */
-      if (NbWhiteSp == 0)
-         fprintf (fout, ") %d %d -%d s\n", lgboite, X, Y);
-      else
-         fprintf (fout, ") %d %d %d -%d j\n", NbWhiteSp, lgboite, X, Y);
-      SameBox = 0;
-   }
+       /* is this the end of the box */
+       if (lgboite != 0)
+	 {
+	   lgboite = PixelToPoint (lgboite);
+	   /* Is justification needed ? */
+	   if (NbWhiteSp == 0)
+	     fprintf (fout, ") %d %d -%d s\n", lgboite, X, Y);
+	   else
+	     fprintf (fout, ") %d %d %d -%d j\n", NbWhiteSp, lgboite, X, Y);
+	   SameBox = 0;
+	 }
+#  ifdef _WINDOWS
+     }
 #  endif /* _WINDOWS */
-   if (lg > 0) {
-      /* compute the width of the string */
-      width = 0;
-      j = 0;
-      while (j < lg)
-            width += CharacterWidth (ptcar[j++], font);
-      return (width);
-   } 
+   if (lg > 0)
+     {
+       /* compute the width of the string */
+       width = 0;
+       j = 0;
+       while (j < lg)
+	 width += CharacterWidth (ptcar[j++], font);
+       return (width);
+     } 
+
+   if (shadow)
+     TtaFreeMemory (ptcar);
    return (0);
 }
 

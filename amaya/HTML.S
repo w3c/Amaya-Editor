@@ -768,6 +768,7 @@ EXCEPT
 	Term:		ParagraphBreak;
 	MAP:		IsDraw;
 	AREA:		MoveResize;
+	Password_Input: Shadow;
 	Preformatted:	ReturnCreateNL;
 	STYLE_:		ReturnCreateNL;
 	SCRIPT:		ReturnCreateNL;

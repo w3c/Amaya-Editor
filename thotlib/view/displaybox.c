@@ -837,6 +837,7 @@ int                 frame;
    int                 bg;
    int                 RO;
    int                 op;
+   int                 shadow;
    int                 width;
    boolean             blockbegin;
    boolean             withbackground;
@@ -857,6 +858,12 @@ int                 frame;
 	   while (mbox->BxType == BoGhost && mbox->BxAbstractBox->AbEnclosing != NULL)
 	      mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
      }
+
+   /* do we have to display stars instead of characters? */
+   if (pBox->BxAbstractBox->AbBox->BxShadow)
+     shadow = 1;
+   else
+     shadow = 0;
 
    /* Is this bos the first of a lines block of isolated text */
    if (mbox == pBox)
@@ -986,9 +993,12 @@ int                 frame;
 			     /* display the last chars handled */
 			     dc = indbuff - nbcar;
 			     x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y,
-			     pBox->BxFont, 0, bl, 0, blockbegin, RO, op, fg);
+			     pBox->BxFont, 0, bl, 0, blockbegin, RO, op, fg, shadow);
 
-			     if (!ShowSpace)
+			     if (shadow &&
+				 (car == _SPACE_ || car == THIN_SPACE || car == HALF_EM || UNBREAKABLE_SPACE))
+			       DrawChar ('*', frame, x, y, pBox->BxFont, RO, op, fg);
+			     else if (!ShowSpace)
 			       {
 				  /* Show the space chars */
 				  if (car == _SPACE_)
@@ -1031,7 +1041,7 @@ int                 frame;
 		     {
 			/* Finished */
 			x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont,
-			width, bl, withline, blockbegin, RO, op, fg);
+			width, bl, withline, blockbegin, RO, op, fg, shadow);
 			if (pBox->BxUnderline != 0)
 			   DisplayUnderline (frame, x, y, pBox->BxFont, pBox->BxUnderline,
 			        pBox->BxThickness, pBox->BxWidth, RO, op, fg);
@@ -1044,7 +1054,7 @@ int                 frame;
 		   else
 		     {
 			x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y,
-			    pBox->BxFont, 0, bl, 0, blockbegin, RO, op, fg);
+			    pBox->BxFont, 0, bl, 0, blockbegin, RO, op, fg, shadow);
 			bl = 0;
 			/* Skip to next buffer */
 			if (adbuff->BuNext == NULL)

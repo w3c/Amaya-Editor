@@ -455,6 +455,9 @@ int                 Num;
 	    case ExcIsCell:
 	       printf ("IsCell");
 	       break;
+	    case ExcShadow:
+	       printf ("Shadow");
+	       break;
 	    case ExcNewPercentWidth:
 	       printf ("NewPercentWidth");
 	       break;

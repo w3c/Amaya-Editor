@@ -1315,6 +1315,18 @@ int                *carIndex;
 	     *carIndex += pAb->AbVolume;
 	  }
 
+	/* manage shadow exception */
+	if (pAb->AbPresentationBox)
+	  pCurrentBox->BxShadow = FALSE;
+	else if (TypeHasException (ExcShadow, pAb->AbElement->ElTypeNumber, pSS))
+	  pCurrentBox->BxShadow = TRUE;
+	else if (pCurrentBox->BxAbstractBox->AbEnclosing != NULL &&
+		 pCurrentBox->BxAbstractBox->AbEnclosing->AbBox != NULL &&
+		 pCurrentBox->BxAbstractBox->AbEnclosing->AbBox->BxShadow)
+	  pCurrentBox->BxShadow = TRUE;
+	else
+	  pCurrentBox->BxShadow = FALSE;
+
 	/* Evaluation du contenu de la boite */
 	switch (pAb->AbLeafType)
 	      {

@@ -3647,11 +3647,12 @@ BOXES
 
 #ifdef PAGE
  HR_Print: BEGIN
-	Content: Graphics 'b';
+	Content: Graphics 'h';
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top;
 	Width: Enclosing . Width;
-	Height: 0.5;
+	Height: Enclosed . Height;
+	{Height: 0.5;}
 	Foreground: Black;
 	LineWeight: Creator =;
 	Visibility: Creator =;

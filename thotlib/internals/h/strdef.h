@@ -94,7 +94,8 @@
 #define KWD_ColRef 	1173
 #define KWD_ColSpan 	1174
 #define KWD_RowSpan 	1175
-#define KWD_Root 	1176
+#define KWD_Shadow 	1176
+#define KWD_Root 	1177
 
 /*  RULES  */
 

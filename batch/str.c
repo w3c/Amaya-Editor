@@ -1673,6 +1673,9 @@ SyntRuleNum         pr;
 	       case KWD_IsCell:
 		  ExceptionNum (ExcIsCell, True, False, False, wi);
 		  break;
+	       case KWD_Shadow:
+		  ExceptionNum (ExcShadow, True, False, False, wi);
+		  break;
 	       case KWD_NoCreate:
 		  ExceptionNum (ExcNoCreate, True, False, False, wi);
 		  break;

@@ -19,7 +19,8 @@ extern int DrawString ( char *buff,
                         int StartOfCurrentBlock,
                         int RO,
                         int active,
-                        int fg );
+                        int fg,
+			int shadow );
 extern void DisplayUnderline ( int frame,
                                int x,
                                int y,
@@ -337,7 +338,8 @@ extern int DrawString (/* char *buff,
                           int StartOfCurrentBlock,
                           int RO,
                           int active,
-                          int fg */);
+                          int fg,
+			  int shadow */);
 extern void DisplayUnderline (/* int frame,
                                  int x,
                                  int y,

@@ -1467,7 +1467,11 @@ FILE               *fileDescriptor;
 	     else
 		fprintf (fileDescriptor, " Content-Height:");
 	     wrnumber (pBox->BxRuleHeigth, fileDescriptor);
-	     fprintf (fileDescriptor, " Base:");
+
+	     fprintf (fileDescriptor, "\n");
+	     for (j = 1; j <= Indent; j++)
+		fprintf (fileDescriptor, " ");
+	     fprintf (fileDescriptor, "Base:");
 	     wrnumber (pBox->BxHorizRef, fileDescriptor);
 	     fprintf (fileDescriptor, " Axis:");
 	     wrnumber (pBox->BxVertRef, fileDescriptor);
@@ -1481,6 +1485,8 @@ FILE               *fileDescriptor;
 		wrnumber (pBox->BxNexChild->BxYOrg, fileDescriptor);
 	     else
 		wrnumber (pBox->BxYOrg, fileDescriptor);
+	     if (pBox->BxShadow)
+	       fprintf (fileDescriptor, " Shadow:Y");
 
 	     fprintf (fileDescriptor, "\n");
 	     for (j = 1; j <= Indent; j++)

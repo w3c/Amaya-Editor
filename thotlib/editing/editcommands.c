@@ -1165,7 +1165,10 @@ PtrBox              pBox;
    fg = pBox->BxAbstractBox->AbForeground;
    linkStatus = (int) pBox->BxAbstractBox->AbSensitive;
    readOnlyStatus = (int) pBox->BxAbstractBox->AbReadOnly;
-   DrawChar (c, frame, xd, yd, font, readOnlyStatus, linkStatus, fg);
+   if (pBox->BxAbstractBox->AbBox->BxShadow)
+     DrawChar ('*', frame, xd, yd, font, readOnlyStatus, linkStatus, fg);
+   else
+     DrawChar (c, frame, xd, yd, font, readOnlyStatus, linkStatus, fg);
    DisplayUnderline (frame, xd + CharacterWidth (c, font), yd, font, pBox->BxUnderline, pBox->BxThickness, CharacterWidth (c, font), readOnlyStatus, linkStatus, fg);
    /* Affichage effectue */
    DefClip (frame, 0, 0, 0, 0);
@@ -2768,7 +2771,6 @@ int                 keyboard;
 	      return;
 	    }
 
-	  LoadedDocument[FrameTable[frame].FrDoc - 1]->DocModified = TRUE; 
 	  switch (pAb->AbLeafType)
 	    {
 	    case LtText:
@@ -3304,6 +3306,7 @@ int                 keyboard;
 		TtaDisplaySimpleMessage (INFO, LIB, TMSG_INSERTING_IMP);
 	      break;
 	    }
+	  LoadedDocument[FrameTable[frame].FrDoc - 1]->DocModified = TRUE; 
 	}
     }
 }

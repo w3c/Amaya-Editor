@@ -182,6 +182,7 @@ typedef struct _Box
   boolean	  BxNew;	        /* Newly displayed box */
   boolean	  BxContentHeight;	/* Real height is the content height */
   boolean	  BxContentWidth;	/* Real width is the content width */
+  boolean         BxShadow;		/* Characters are showed as a set of '*' */
   int		  BxRuleHeigth;         /* Content height or minimum */
   int		  BxRuleWidth;	        /* Content width or minimum */
   PtrTextBuffer   BxBuffer;	        /* Pointer on the buffer list */

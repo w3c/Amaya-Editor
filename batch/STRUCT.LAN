@@ -130,7 +130,7 @@ ExceptVal =	 'NoCut' / 'NoCreate' / 'NoHMove' / 'NoVMove' /
                  'HighlightChildren' / 'ExtendedSelection' /
 		 'ReturnCreateNL' / 'IsTable' / 'IsRow' /
 		 'IsColHead' / 'IsCell' / 'NewPercentWidth' /
-		 'ColRef' / 'ColSpan' / 'RowSpan' /
+		 'ColRef' / 'ColSpan' / 'RowSpan' / 'Shadow' /
 		 ExceptNum .
 ExceptNum =	 NUMBER .
 
