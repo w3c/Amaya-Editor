@@ -265,4 +265,22 @@ ATTRIBUTES
         AttrDelete.Post -> AttrColAlignMtdDeleted;
         END;
 
+   columnspan:
+	BEGIN
+	AttrCreate.Post -> ColspanCreated;
+	AttrModify.Pre ->  RegisterColspan;
+	AttrModify.Post -> ColspanModified;
+	AttrDelete.Pre ->  RegisterColspan;
+	AttrDelete.Post -> ColspanDeleted;
+	END;
+
+   rowspan\240:
+	BEGIN
+	AttrCreate.Post -> RowspanCreated;
+	AttrModify.Pre ->  RegisterRowspan;
+	AttrModify.Post -> RowspanModified;
+	AttrDelete.Pre ->  RegisterRowspan;
+	AttrDelete.Post -> RowspanDeleted;
+	END;
+
 END

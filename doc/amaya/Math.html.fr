@@ -409,7 +409,7 @@ suivant sont pris en compte dans le formatage : <code>alttext</code>,
 (<code>mspace</code> only), <code>height</code> (<code>mspace</code> only),
 <code>depth</code> (<code>mspace</code> only), <code>align</code>,
 <code>rowalign</code>, <code>columnalign</code>, <code>frame</code>,
-<code>side</code>.</p>
+<code>side</code>, <code>rowspan</code>, <code>columnspan</code>.</p>
 
 <p>Les attributs <code>class</code>, <code>id</code> et <code>style</code>
 sont utilisables, avec la même sémantique que dans HTML : vous pouvez <a

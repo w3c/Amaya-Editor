@@ -5076,4 +5076,28 @@ ATTRIBUTES
                 END;	
 	END;
 
+ MColExt:
+	BEGIN
+	Width: Right = Referred . Right;
+	IN Structure_view
+		Width: Enclosing . Width;
+	IN Alternate_view BEGIN
+		Width: Right = Enclosing . Right;
+		HorizPos: Left = Previous . Left + STRUCT_INDENT;
+		END;
+	END;
+
+ MRowExt:
+	BEGIN
+	VertOverflow: Yes;
+	IN Structure_view BEGIN
+		Height : Enclosed . Height;
+		VertOverflow: No;
+		END;	
+	IN Alternate_view BEGIN
+		Height : Enclosed . Height;
+		VertOverflow: No;
+		END;	
+	END;
+
 END

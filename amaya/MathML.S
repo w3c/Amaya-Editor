@@ -382,7 +382,10 @@ STRUCT
 		groupalign;
 		rowspan\240 = INTEGER;
 		columnspan = INTEGER;
-		MRef_column = REFERENCE(MColumn_head))	{ for internal use }
+		MRef_column = REFERENCE(MColumn_head);   { for internal use }
+                MColExt = REFERENCE(MColumn_head);         { for internal use }
+                MRowExt = REFERENCE(TableRow))           { for internal use }
+	
 	  = BEGIN
 	    CellWrapper = LIST OF (Construct);
 	    END + (MALIGNGROUP, MALIGNMARK);
@@ -463,6 +466,9 @@ EXCEPT
    IntVertStretch:  	Invisible;
    IntRowAlign:	        Invisible;
    IntColAlign:	        Invisible;
+   rowspan\240:	        RowSpan;
+   columnspan:          ColSpan;
    MRef_column:		ColRef, Invisible;
-
+   MColExt:             Invisible;
+   MRowExt:             Invisible;
 END

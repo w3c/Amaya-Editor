@@ -158,7 +158,8 @@ ATTRIBUTES
 	AttrCreate.Post -> ColspanCreated;
 	AttrModify.Pre ->  RegisterColspan;
 	AttrModify.Post -> ColspanModified;
-	AttrDelete.Pre ->  ColspanDelete;
+	AttrDelete.Pre ->  RegisterColspan;
+	AttrDelete.Post -> ColspanDeleted;
 	END;
 
    rowspan_:
@@ -166,7 +167,8 @@ ATTRIBUTES
 	AttrCreate.Post -> RowspanCreated;
 	AttrModify.Pre ->  RegisterRowspan;
 	AttrModify.Post -> RowspanModified;
-	AttrDelete.Pre ->  RowspanDelete;
+	AttrDelete.Pre ->  RegisterRowspan;
+	AttrDelete.Post -> RowspanDeleted;
 	END;
 
    NAME:
