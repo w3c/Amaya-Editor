@@ -4,9 +4,7 @@ STRUCTURE Topics;
 
 DEFPRES TopicsP;
 
-ATTR
- 
-  { global attributes for all Topic elements}
+
 
 STRUCT
 
@@ -42,11 +40,23 @@ STRUCT
 		END;
 
 EXCEPT 
-        { Bookmarks }
-	Topics:		NoMove, NoResize;
+	Topics:		NoMove, NoResize, NoCut;
+	Item:		Hidden;
 
 	{ topics }
 	Topic_item:     NoCut;
+	Topic_title:	NoSelect, Hidden;
+	Topic_content:	NoSelect, Hidden;
 
-
+        { Bookmarks }
+	Bookmark_item:  Nocut;
+	Bookmark_title: NoSelect, Hidden;
 END
+
+
+
+
+
+
+
+

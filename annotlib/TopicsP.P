@@ -18,7 +18,7 @@ PRINT
 #define RDF_BgColor Yellow
 #define THREADSEL_FgColor Yellow
 #define THREADSEL_BgColor Red
-#define THREAD_INDENT 0.5
+#define THREAD_INDENT 1.0
 #define THREAD_ITEM_INDENT 1
 #define POINT_INDENT 1
 #define Thread_visibility 5
@@ -89,17 +89,19 @@ Bookmark_point_box: BEGIN
 	END;
 
  Topic_open_icon_box: BEGIN
-	Visibility: 5;
+	Height: 0.8;
+	Width: 0.8;
 	Content: Picture 'open.png';
         VertPos: Bottom = Creator . HRef + 0.2;
-	HorizPos: Left = Enclosing . Left;
+	HorizPos: Left = Enclosing . Left - 0.8;
 	END;
 
  Topic_closed_icon_box: BEGIN
-	Visibility: 5;
+	Height: 0.8;
+	Width: 0.8;
 	Content: Picture 'closed.png';
         VertPos: Bottom = Creator . HRef;
-        HorizPos: Left = Enclosing . Left;
+        HorizPos: Left = Enclosing . Left - 0.7;
 	END;
 
 RULES
@@ -132,8 +134,8 @@ RULES
  Topic_item:
         BEGIN
 	VertPos: Top = Previous AnyElem . Bottom + 0.2;
-	HorizPos: Left = Enclosing . Left + 0.8;
-	Width: Enclosing . width - 0.3;
+	HorizPos: Left = Enclosing . Left + 0.3;
+	Width: Enclosing . width - 0.8;
         END;
 
  Topic_title:
@@ -175,7 +177,6 @@ ATTRIBUTES
  Open_:
 	 BEGIN
 	 CreateBefore (Topic_open_icon_box);
- 	 Foreground: Red;
 	 END;
 
  Closed_:
