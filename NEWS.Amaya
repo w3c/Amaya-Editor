@@ -56,6 +56,11 @@ Fixed bugs 2.5:
   - The editor generated unneeded mrow elements in some cases (for instance
     within a mtd or a msqrt).
 
+* Windows
+  - Save as Dialog transforms '/' into '\' while saving on a remote server
+    and if the output file format is modified
+   
+
 =============================================================
 2.4
 =============================================================
