@@ -2669,7 +2669,7 @@ void *context;
 			       tempfile, documentname, http_headers, FALSE);
 
        /* restore the initial_url */
-       DocumentMeta[doc]->initial_url = initial_url;
+       DocumentMeta[newdoc]->initial_url = initial_url;
 
 	W3Loading = 0;		/* loading is complete now */
 	TtaHandlePendingEvents ();
