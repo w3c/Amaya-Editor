@@ -1265,6 +1265,7 @@ LPARAM lParam;
       SetWindowText (GetDlgItem (hwnDlg, IDC_URLMESSAGE), TEXT("Type the URI or push the button Browse"));
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), TEXT("Clear"));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 
       EditURLWnd = GetDlgItem (hwnDlg, IDC_GETURL);
@@ -1319,6 +1320,13 @@ LPARAM lParam;
 	    EndDialog (hwnDlg, ID_CONFIRM);
 	    ThotCallback (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
 	  }
+	break;
+
+      case IDC_CLEAR:
+	ThotCallback (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 3);
+	tmpDocName[0] = WC_EOS;
+	SetDlgItemText (hwnDlg, IDC_GETURL, tmpDocName);
+	EndDialog (hwnDlg, IDC_CLEAR);
 	break;
       
       case IDCANCEL:
