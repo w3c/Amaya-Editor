@@ -1622,11 +1622,11 @@
 	<message xml:lang="es">Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log</message>
 </label>
 <label define="AM_UNKNOWN_ENCODING">
-	<message xml:lang="en">The encoding of this document is not supported by Amaya. If you edit it, you may loose some information</message>
-	<message xml:lang="fr">Le codage de ce document n'est pas supporté par Amaya. Si vous l'éditez, vous pouvez perdre des informations.</message>
-	<message xml:lang="it">La codifica per questo documento non e` supportata da Amaya. Se lo editi, potresti perdere delle informazioni</message>
-	<message xml:lang="de">Die Codierung dieses Dokuments wird von Amaya nicht unterstützt. Wenn Sie es editieren, verlieren Sie unter Umständen Informationen</message>
-	<message xml:lang="es">La codificación de este documento no está soportada por Amaya. Si la edita, puede perder información</message>
+	<message xml:lang="en">The encoding of this document is not supported by Amaya</message>
+	<message xml:lang="fr">Le codage de ce document n'est pas supporté par Amaya</message>
+	<message xml:lang="it">La codifica per questo documento non e` supportata da Amaya</message>
+	<message xml:lang="de">Die Codierung dieses Dokuments wird von Amaya nicht unterstützt</message>
+	<message xml:lang="es">La codificación de este documento no está soportada por Amaya</message>
 </label>
 <label define="AM_UNDEFINED_ENCODING">
 	<message xml:lang="en">This document has no encoding declaration</message>

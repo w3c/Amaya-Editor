@@ -149,28 +149,28 @@ static PtrParserCtxt parserCtxtStack[MAX_STACK_HEIGHT];
 static int           stackLevel = 0;
 
                         /*  */
-static gzFile      stream = 0;
+static gzFile        stream = 0;
                         /* path or URL of the document */
-static CHAR_T*     docURL = NULL;
+static CHAR_T*       docURL = NULL;
 
 /* information about the Thot document under construction */
                         /* Document structure schema */
-static SSchema      DocumentSSchema = NULL;
+static SSchema       DocumentSSchema = NULL;
                         /* root element of the document */
-static Element      rootElement;
+static Element       rootElement;
                         /* type of the root element */
-static ElementType  rootElType;
+static ElementType   rootElType;
                         /* name of the root element */
-static CHAR_T       XMLrootName[100];
+static CHAR_T        XMLrootName[100];
                         /* root element is closed */
-static ThotBool	    XMLrootClosed = FALSE;
+static ThotBool	     XMLrootClosed = FALSE;
                         /* the last start tag encountered is invalid */
-static ThotBool     UnknownTag = FALSE;
+static ThotBool      UnknownTag = FALSE;
                         /* last attribute created */
-static Attribute    currentAttribute = NULL;
+static Attribute     currentAttribute = NULL;
                         /* element with which the last */
                         /* attribute has been associated */
-static Element      lastAttrElement = NULL;
+static Element       lastAttrElement = NULL;
                         /* entry in the AttributeMappingTable */
 		        /* of the attribute being created */
 static AttributeMapping* lastMappedAttr = NULL;
@@ -181,6 +181,7 @@ static ThotBool	    HTMLStyleAttribute = FALSE;
 static ThotBool	    XMLSpaceAttribute = FALSE;
 static CHAR_T	    currentElementContent = ' ';
 static CHAR_T	    currentElementName[40];
+static ThotBool     XMLUnknownEncoding;
 
 /* Global variable to handle white-space in XML documents */
 static ThotBool     RemoveLineBreak = FALSE;
@@ -306,12 +307,12 @@ STRING      tagName;
    Create the chain of parser contexts decribing all recognized XML DTDs
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void            InitXmlParserContexts (void)
+static void    InitXmlParserContexts (void)
 #else
-static void            InitXmlParserContexts ()
+static void    InitXmlParserContexts ()
 #endif
 {
-   PtrParserCtxt	ctxt, prevCtxt;
+   PtrParserCtxt   ctxt, prevCtxt;
 
    firstParserCtxt = NULL;
    prevCtxt = NULL;
@@ -491,7 +492,6 @@ int         line;
 #else  /* !_I18N_ */
    unsigned char*  mbcsMsg = msg;
 #endif /* _I18N_ */
-
    if (!ErrFile)
      {
        usprintf (ErrFileName, TEXT("%s%c%d%cPARSING.ERR"),
@@ -511,6 +511,7 @@ int         line;
      {
      case errorEncoding: 
        fprintf (ErrFile, "  %s\n", mbcsMsg);
+       XMLNotWellFormed = TRUE;
        break;
      case errorNotWellFormed:
        if (line == 0)
@@ -3101,7 +3102,7 @@ int              length;
 	   if (fallback[0] == '?')
 	     {
 	       /* The character is not found in the fallback table */
-	       /* create a symbol leaf */
+	       /* Create a symbol leaf */
 	       elType = TtaGetElementType (XMLcontext.lastElement);
 	       elType.ElTypeNum = 3;
 	       elLeaf = TtaNewElement (XMLcontext.doc, elType);
@@ -3113,11 +3114,13 @@ int              length;
 	       TtaSetGraphicsShape (elLeaf, fallback[0], XMLcontext.doc);
 	       /* Changes the wide char code associated with that symbol */
 	       TtaSetSymbolCode (elLeaf, wcharRead, XMLcontext.doc);
+	       /* Make that leaf read-only */
+	       TtaSetAccessRight (elLeaf, ReadOnly, XMLcontext.doc);
 	     }
 	   else
 	     {
 	       /* The character is not found in the fallback table */
-	       /* create a new text leaf */
+	       /* Create a new text leaf */
 	       elType = TtaGetElementType (XMLcontext.lastElement);
 	       elType.ElTypeNum = 1;
 	       elLeaf = TtaNewElement (XMLcontext.doc, elType);
@@ -3764,21 +3767,49 @@ static void         FreeExpatParser ()
    Specific initialization for expat
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InitializeExpatParser ()
+static void     InitializeExpatParser (CHARSET charset)
 #else  /* __STDC__ */
-static void         InitializeExpatParser ()
+static void     InitializeExpatParser (charset)
+CHARSET  charset;
 #endif  /* __STDC__ */
 
 {  
   int    paramEntityParsing;
 
-  /*  Enable parsing of parameter entities */
+  /* Enable parsing of parameter entities */
   paramEntityParsing = XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE;
 
   /* Construct a new parser with namespace processing */
-  /*  parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP); */
-  parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
- 
+  /* accordingly to the document encoding */
+  /* If that encoding is unknown, we don''t parse the document */
+  if (charset == UNDEFINED_CHARSET)
+    /* Defalut encoding for XML documents */
+    parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
+  else if (charset == UTF_8 || charset == UTF_16 || charset == US_ASCII)
+    /* These encoding are automatically recognized by Expat */
+    parser = XML_ParserCreateNS (NULL, NS_SEP);
+  else if (charset == ISO_8859_1)
+    /* ISO_8859_1 may has been set for a HTML document with no encoding */
+    /* In this case, the default encoding is ISO_8859_1, not UTF-8 */
+    parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
+  else if (charset == ISO_8859_2   || charset == ISO_8859_3   ||
+	   charset == ISO_8859_4   || charset == ISO_8859_5   ||
+	   charset == ISO_8859_6   || charset == ISO_8859_6_E ||
+	   charset == ISO_8859_6_I || charset == ISO_8859_7   ||
+	   charset == ISO_8859_8   || charset == ISO_8859_8_E ||
+	   charset == ISO_8859_8_I || charset == ISO_8859_9   ||
+	   charset == ISO_8859_10  || charset == ISO_8859_15  ||
+	   charset == ISO_8859_supp)
+    parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
+  else
+    {
+      XMLUnknownEncoding = TRUE;
+      XmlParseError (errorEncoding,
+		     TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING), -1);
+      parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
+      return;
+    }
+
   /* Define the user data pointer that gets passed to handlers */
   /* (not use  Amaya actually) */
   /* XML_SetUserData (parser, (void*) doc); */
@@ -3889,6 +3920,7 @@ ThotBool   isSubTree;
   XMLrootClosed = FALSE;
 
   XMLNotWellFormed = FALSE;
+  XMLUnknownEncoding = FALSE;
   htmlLineRead = 0;
   htmlCharRead = 0;
   
@@ -3924,6 +3956,7 @@ Language   lang;
   CHAR_T      *schemaName;
   ElementType  elType;
   Element      parent;
+  CHARSET      charset;
 
   if (xmlBuffer == NULL)
     return FALSE;
@@ -3937,7 +3970,11 @@ Language   lang;
   DocumentSSchema = TtaGetDocumentSSchema (doc);
 
   /* Expat initialization */
-  InitializeExpatParser ();
+  charset = TtaGetDocumentCharset (doc);
+  /* For HTML documents, the default charset is ISO_8859_1 */
+  if (charset == UNDEFINED_CHARSET && !DocumentMeta[doc]->xmlformat)
+    charset = ISO_8859_1;
+  InitializeExpatParser (charset);
 
   /* Initialize all parser contexts */
   if (firstParserCtxt == NULL)
@@ -4054,6 +4091,7 @@ Language  lang;
   ElementType  elType;
   CHAR_T      *schemaName;
   CHAR_T      *tmpBuffer = NULL;
+  CHARSET      charset;
 
   if (infile == NULL && htmlBuffer == NULL)
     return TRUE;
@@ -4078,7 +4116,11 @@ Language  lang;
   htmlCharRead = *nbCharRead;
 
   /* Expat initialization */
-  InitializeExpatParser ();
+  charset = TtaGetDocumentCharset (doc);
+  /* For HTML documents, the default charset is ISO_8859_1 */
+  if (charset == UNDEFINED_CHARSET)
+    charset = ISO_8859_1;
+  InitializeExpatParser (charset);
 
   /* initialize all parser contexts */
   if (firstParserCtxt == NULL)
@@ -4336,8 +4378,6 @@ ThotBool    xmlDoctype;
   int             length, error;
   ThotBool        isXHTML;
   CHARSET         charset;
-  ThotBool        XMLUnknownEncoding;
-  ThotBool        XMLUndefinedEncoding;
 
   /* General initialization */
   rootElement = TtaGetMainRoot (doc);
@@ -4347,8 +4387,6 @@ ThotBool    xmlDoctype;
   /* Specific Initialization */
   XMLcontext.language = TtaGetDefaultLanguage ();
   DocumentSSchema = TtaGetDocumentSSchema (doc);
-  XMLUnknownEncoding = FALSE;
-  XMLUndefinedEncoding = FALSE;
   XMLErrorsFoundInProfile = FALSE;
   XMLErrorsFound = FALSE;
 
@@ -4451,31 +4489,9 @@ ThotBool    xmlDoctype;
 
       /* Gets the document charset */
       charset = TtaGetDocumentCharset (doc);
-      if (charset == UNDEFINED_CHARSET)
-	{
-	  XmlParseError (errorEncoding,
-			 TtaGetMessage (AMAYA, AM_UNDEFINED_ENCODING), -1);
-	  XMLUndefinedEncoding = TRUE;
-	}
-      else 
-	{
-	  if (charset != US_ASCII &&
-	      charset != ISO_8859_1   && charset !=  ISO_8859_2   &&
-	      charset != ISO_8859_3   && charset !=  ISO_8859_4   &&
-	      charset != ISO_8859_5   && charset !=  ISO_8859_6   &&
-	      charset != ISO_8859_6_E && charset !=  ISO_8859_6_I &&
-	      charset != ISO_8859_7   && charset !=  ISO_8859_8   &&
-	      charset != ISO_8859_8_E && charset !=  ISO_8859_8_I &&
-	      charset != ISO_8859_9   && charset !=  ISO_8859_10  &&
-	       charset != ISO_8859_15  && charset !=  ISO_8859_supp)
-	    {
-	      XmlParseError (errorEncoding,
-			     TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING), -1);
-	      XMLUnknownEncoding = TRUE;
-	    }
-	}
+
       /* Specific initialization for expat */
-      InitializeExpatParser ();
+      InitializeExpatParser (charset);
 	
       /* Parse the input file and build the Thot document */
       XmlParse (stream, &xmlDec, &xmlDoctype);
@@ -4486,7 +4502,8 @@ ThotBool    xmlDoctype;
 	  el = XMLcontext.lastElement;
 	  while (el != NULL)
 	    {
-		(*(currentParserCtxt->ElementComplete)) (el, XMLcontext.doc, &error);
+		(*(currentParserCtxt->ElementComplete))
+		  (el, XMLcontext.doc, &error);
 		el = TtaGetParent (el);
 	    }
 	}
@@ -4516,26 +4533,12 @@ ThotBool    xmlDoctype;
    /* Display a warning if an error was found */
    /* and set the document in read-only access mode */
 
-   if (!XMLErrorsFound && !XMLErrorsFoundInProfile && !XMLNotWellFormed)
+   if (XMLUnknownEncoding)
      {
-       if (XMLUnknownEncoding || XMLUndefinedEncoding)
-	 {
-	   /* There is "only" an encoding warning */
-	   if (XMLUnknownEncoding)
-	     {
-	       InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING));
-	       ChangeToBrowserMode (doc);
-	     }
-	   else
-	     {
-	       InitConfirm (doc, 1,
-			    TtaGetMessage (AMAYA, AM_UNDEFINED_ENCODING_CONFIRM));
-	       if (UserAnswer)
-		 TtaSetDocumentCharset (doc, ISO_8859_1);
-	       else
-		 ChangeToBrowserMode (doc);
-	     }
-	 }
+       InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING));
+       ChangeToBrowserMode (doc);
+       XMLNotWellFormed = FALSE;
+       XMLErrorsFound = TRUE;
      }
    else
      {
@@ -4551,8 +4554,6 @@ ThotBool    xmlDoctype;
 	 {
 	   /* Some elements or attributes are not supported */
 	   InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR));
-	   if (XMLUnknownEncoding || XMLUndefinedEncoding)
-	     ChangeToBrowserMode (doc);	     
 	 }
        else if (XMLErrorsFoundInProfile)
 	 {
@@ -4563,8 +4564,6 @@ ThotBool    xmlDoctype;
 	     profile = TEXT("");
 	   InitConfirm3L (XMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
 			  profile, TtaGetMessage (AMAYA, AM_XML_ERROR), FALSE);
-	   if (XMLUnknownEncoding || XMLUndefinedEncoding)
-	     ChangeToBrowserMode (doc);
 	   XMLErrorsFound = TRUE;
 	   XMLErrorsFoundInProfile = FALSE;    
 	 }
