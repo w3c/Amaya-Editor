@@ -2,16 +2,16 @@ This file lists the bugs that have been fixed and the extensions that
 have been introduced in Amaya and Thot since version 1.4 of Amaya.
  
 =============================================================
-2.3
+2.4
 =============================================================
 
-Compatibility changes 2.3:
+Compatibility changes 2.4:
 --------------------------
 
   - If you had defined your own profiles in your amaya user directory, the 
     function TtcCloseDocument must be replaced by CloseDocument.
 
-Extensions 2.3:
+Extensions 2.4:
 ---------------
 
 * HTML:
@@ -21,6 +21,7 @@ Extensions 2.3:
     generated instead of &eacute; for instance). When saving a document,
     a META element is added in the document HEAD to specify Content-Type
     and Charset.
+  - Support of the latest version of XHTML 1.0 (10 December, 1999)
 
 * MathML:
   - When saving entities Amaya keeps the names that were read at downloading.
@@ -69,7 +70,7 @@ Extensions 2.3:
     user actions are disabled.
     See Autoconf.html for more info on how to build this version.
 
-Fixed bugs 2.3:
+Fixed bugs 2.4:
 ---------------
 
 * Many memory leaks and resource leaks are fixed in the Windows version.
@@ -99,6 +100,12 @@ Fixed bugs 2.3:
 
 * Cache:
   - Spaces in the cache directory path were being ignored.
+
+=============================================================
+2.3
+=============================================================
+
+Non-announced pre-release version.
 
 =============================================================
 2.2
