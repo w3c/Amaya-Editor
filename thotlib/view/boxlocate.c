@@ -60,6 +60,10 @@
 #define Y_RATIO 200		/* penalisation en Y */
 #define ANCHOR_SIZE 3		/* taille des ancres */
 
+#ifdef _WINDOWS
+extern int currentFrame;
+#endif /* _WINDOWS */
+
 
 /*----------------------------------------------------------------------
   LocateSelectionInView finds out the selected Abstract Box and if it's
