@@ -561,18 +561,20 @@ fi
 if test "$with_gl" = "yes" ; then
   	AC_MSG_CHECKING([OpenGL])
 	for ac_dir in               		\
-		/usr/include/GL			\
 		/usr/include 			\
-		/usr/X11R6/include/GL   	\
 		/usr/X11R6/include 		\
 		/usr/local/include		\
-		/usr/local/include/GL		\
 		; \
-	do  if test -r "$ac_dir/gl.h" ; then
+	do  if test -r "$ac_dir/GL/gl.h" ; then
                 gl_inc="yes"
+		GL_INC_I="$ac_dir"
+		if test "$ac_dir" != "/usr/include" ; then
+		   GL_INCLUDES="-I$ac_dir"
+		fi
        	 	break	
     	    fi
-	done		
+	done	
+  	AC_MSG_CHECKING([GLU])	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -583,9 +585,16 @@ if test "$with_gl" = "yes" ; then
 		; \
 	do  if test -r "$ac_dir/glu.h" ; then
                 glu_inc="yes"
+		GL_INC_II="$ac_dir"
+		if test "$ac_dir" != "/usr/include" ; then
+			if test "$ac_dir" != "$GL_INC_I" ; then
+		   	    GL_INCLUDES="$GL_INCLUDES -I$ac_dir"
+			fi
+		fi
        	 	break	
     	    fi
 	done	
+  	AC_MSG_CHECKING([GTKGLAREA])	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -596,9 +605,28 @@ if test "$with_gl" = "yes" ; then
 		; \
 	do  if test -r "$ac_dir/gtkgl/gtkglarea.h" ; then
                 gtkgl_inc="yes"
+		if test "$ac_dir" != "/usr/include" ; then
+			if test "$ac_dir" != "$GL_INC_II" ; then
+				if test "$ac_dir" != "$GL_INC_I" ; then
+		   			GL_INCLUDES="$GL_INCLUDES -I$ac_dir"
+				fi
+			fi
+		fi
        	 	break	
     	    fi
 	done	
+  	AC_MSG_CHECKING([freetype])	
+	for ac_dir in               		\
+		/usr/include 			\
+		/usr/X11R6/include 		\
+		/usr/local/include		\
+		; \
+	do  if test -r "$ac_dir/ft2build.h" ; then
+                freetype_inc="yes"
+		GL_INCLUDES="$GL_INCLUDES `freetype-config --cflags`"
+       	 	break	
+    	    fi
+	done		
 	if test "$gl_inc" = "" ; then
 	 	AC_MSG_WARN(Opengl headers (gl.h) not found !!)
 	   	AC_MSG_WARN(Disabling opengl build !)
@@ -623,13 +651,22 @@ if test "$with_gl" = "yes" ; then
 	        GL_INCLUDES=	
 		GL_LIBRARIES=
 	fi
+	if test "$freetype_inc" = "" ; then
+	 	AC_MSG_WARN(Freetype 2 headers (ft2build.h) not found !!)
+	   	AC_MSG_WARN(Disabling opengl build !)
+	   	with_gl="no"
+	    	GL_OPTIONS=	
+	        GL_INCLUDES=
+		GL_LIBRARIES=
+	fi
 	if test "$gl_inc" = "yes" ; then
 		if test "$glu_inc" = "yes" ; then
 			if test "$gtkgl_inc" = "yes" ; then
-				GL_INCLUDES="-I$ac_dir "
-				GL_LIBRARIES=" -lXmu -lXft -lGL -lGLU -lgtkgl "
+	                    if test "$freetype_inc" = "yes" ; then	
+				GL_LIBRARIES=" -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl "
 				GL_OPTIONS=-D_GL 
 	  			no_motif=yes
+			    fi
 			fi
 		fi
 	fi
