@@ -996,7 +996,7 @@ static char *     GetNumber (char *ptr, int* number)
 void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 			      ThotBool delete)
 {
-   int                  length, a, b, c, d, e, f, x, y;
+   int                  length, a, b, c, d, e, f, x, y, angle;
    char                *text, *ptr;
    PresentationValue    pval;
    PresentationContext  ctxt;
@@ -1088,9 +1088,9 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 	     }
 	   else if (!strncmp (ptr, "translate", 9))
 	     {
+	       x = 0;  y = 0;
 	       ptr += 9;
 	       ptr = TtaSkipBlanks (ptr);
-	       x = 0;  y = 0;
 	       pval.typed_data.value = 0;
 	       pval.typed_data.unit = STYLE_UNIT_PX;
 	       pval.typed_data.real = FALSE;
@@ -1126,7 +1126,117 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		   TtaFreeMemory (ctxt);
 		 }
 	     }
-	   /**** add scale, rotate, skewX, skewY ****/
+	   else if (!strncmp (ptr, "scale", 5))
+	     {
+	       ptr += 5;
+	       ptr = TtaSkipBlanks (ptr);
+	       if (*ptr != '(')
+		 error = TRUE;
+	       else
+		 {
+		   ptr++;
+		   ptr = TtaSkipBlanks (ptr);
+		   ptr = GetNumber (ptr, &x);
+		   if (*ptr == ')')
+		     y = 0;
+		   else
+		     {
+		       if (*ptr == ',')
+			 {
+			   ptr++;
+			   ptr = TtaSkipBlanks (ptr);
+			 }
+		       ptr = GetNumber (ptr, &y);
+		     }
+		   if (*ptr == ')')
+		     {
+		       ptr++;
+		       /****** process x and y ******/
+		     }
+		   else
+		     error = TRUE;
+		 }
+	     }
+	   else if (!strncmp (ptr, "rotate", 6))
+	     {
+	       ptr += 6;
+	       ptr = TtaSkipBlanks (ptr);
+	       if (*ptr != '(')
+		 error = TRUE;
+	       else
+		 {
+		   ptr++;
+		   ptr = TtaSkipBlanks (ptr);
+		   ptr = GetNumber (ptr, &angle);
+		   if (*ptr == ')')
+		     {
+		       x = 0;
+		       y = 0;
+		     }
+		   else
+		     {
+		       if (*ptr == ',')
+			 {
+			   ptr++;
+			   ptr = TtaSkipBlanks (ptr);
+			 }
+		       ptr = GetNumber (ptr, &x);
+		       if (*ptr == ',')
+			 {
+			   ptr++;
+			   ptr = TtaSkipBlanks (ptr);
+			 }
+		       ptr = GetNumber (ptr, &y);
+		     }
+		   if (*ptr == ')')
+		     {
+		       ptr++;
+		       /****** process angle, x and y ******/
+		     }
+		   else
+		     error = TRUE;
+		 }
+	     }
+	   else if (!strncmp (ptr, "skewX", 5))
+	     {
+	       ptr += 5;
+	       ptr = TtaSkipBlanks (ptr);
+	       if (*ptr != '(')
+		 error = TRUE;
+	       else
+		 {
+		   ptr++;
+		   ptr = TtaSkipBlanks (ptr);
+		   ptr = GetNumber (ptr, &x);
+		   if (*ptr == ')')
+		     {
+		       ptr++;
+		       /****** process x ******/
+		     }
+		   else
+		     error = TRUE;
+		 }
+	     }
+	   else if (!strncmp (ptr, "skewY", 5))
+	     {
+	       ptr += 5;
+	       ptr = TtaSkipBlanks (ptr);
+	       if (*ptr != '(')
+		 error = TRUE;
+	       else
+		 {
+		   ptr++;
+		   ptr = TtaSkipBlanks (ptr);
+		   ptr = GetNumber (ptr, &y);
+		   if (*ptr == ')')
+		     {
+		       ptr++;
+		       /****** process y ******/
+		     }
+		   else
+		     error = TRUE;
+		 }
+	     }
 	   else
 	     /* unexpected token, ignore the rest */
 	     error = TRUE;
