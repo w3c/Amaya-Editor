@@ -1069,7 +1069,9 @@ ThotBool ThotInput (int frame, unsigned char *string, unsigned int nb,
       if (command > 0)
 	{
 	  if (command != CMD_DeletePrevChar &&
-	      command != CMD_DeleteSelection)
+	      command != CMD_DeleteSelection &&
+	      command != CMD_PasteFromClipboard &&
+	      command != CMD_Paste)
 	    /* It's not a delete, close the current insertion */
 	    CloseInsertion ();
 

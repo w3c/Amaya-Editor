@@ -327,7 +327,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	  else
 	    pAb = NULL;
 
-	  CloseInsertion ();
+	  /*CloseInsertion ();*/
 	  FrameToView (frame, &doc, &view);
 	  if (pAb)
 	    {

@@ -900,12 +900,11 @@ void RedisplayNewContent (PtrElement pEl, PtrDocument pDoc, int dVol,
 }
 
 /*----------------------------------------------------------------------
-   NewContent        Prend en compte les modifications faites par    
-   l'utilisateur dans les buffers de texte ou les symboles, images	
-   elements graphiques.                                            
-   pAb: pointeur sur le pave texte dont le contenu a ete modifie.	
-   Ce pave contient deja les nouvelles valeurs du volume et du     
-   pointeur sur le 1er buffer texte.                               
+  NewContent
+  Transmit the content (text, symbol, image) change of the element or
+  the attribute.
+  The parameter pAb gets the modified abstract box. This abstract box
+  gets the new volume and the new set of text buffers.
   ----------------------------------------------------------------------*/
 void NewContent (PtrAbstractBox pAb)
 {
@@ -922,7 +921,7 @@ void NewContent (PtrAbstractBox pAb)
   if (pAb->AbPresentationBox && pAb->AbCanBeModified)
     /* c'est un pave' affichant la valeur d'un attribut */
     {
-      if (pAb->AbCreatorAttr != NULL)
+      if (pAb->AbCreatorAttr)
 	{
 	  /* check if that attribute is selected */
 	  selInAttr = (pAb == AbsBoxSelectedAttr);

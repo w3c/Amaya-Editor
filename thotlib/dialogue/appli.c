@@ -2456,12 +2456,11 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   switch (ev->type)
     {
     case ButtonPress:
-      /*_____________________________________________________*/
-      /* Termine l'insertion courante s'il y en a une */
-      CloseInsertion ();
       switch (ev->xbutton.button)
 	{
 	case Button1:
+	  /* stop any current insertion of text */
+	  CloseInsertion ();
 	  /* ==========LEFT BUTTON========== */	  
 	  /* Est-ce que la touche modifieur de geometrie est active ? */
 	  if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
@@ -2602,6 +2601,8 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	    }
 	  break;
 	case Button3:
+	  /* stop any current insertion of text */
+	  CloseInsertion ();
 	  /* ==========RIGHT BUTTON========== */
 	  if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
 	    {
@@ -2653,9 +2654,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   switch (event->type)
     {
     case GDK_BUTTON_PRESS:
-      /*_____________________________________________________*/
-      /* Termine l'insertion courante s'il y en a une */
-      CloseInsertion ();
       /* drag is finished */
       if (timer != None)
 	{
@@ -2665,8 +2663,10 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	} 
       switch (event->button)
 	{
-	  /* ==========LEFT BUTTON========== */
+	/* ==========LEFT BUTTON========== */
 	case 1:
+	  /* stop any current insertion of text */
+	  CloseInsertion ();
 	  /* Est-ce que la touche modifieur de geometrie est active ? */
 	
 	  if ((event->state & GDK_CONTROL_MASK ) == GDK_CONTROL_MASK)

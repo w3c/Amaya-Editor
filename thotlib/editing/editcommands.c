@@ -297,10 +297,11 @@ static void GiveInsertPoint (PtrAbstractBox pAb, int frame, PtrBox *pBox,
 
 /*----------------------------------------------------------------------
   CloseTextInsertionWithControl: finish the text insertion.
-  Return TRUE if the current context could be modified by external
-  application.
+  The parameter toNotify is TRUE when the fuction can notify changes
+  to the external application.
+  Return TRUE when current changes are notfied.
   ----------------------------------------------------------------------*/
-static ThotBool CloseTextInsertionWithControl ()
+static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
 {
   PtrElement          pEl;
   PtrBox              pBox;
@@ -464,17 +465,21 @@ static ThotBool CloseTextInsertionWithControl ()
 	     
 	  if (LastInsertElText)
 	    {
-	      /* Notify the end of text insertion */
+	      /* end of text insertion */
 	      pEl = LastInsertElText;
 	      LastInsertElText = NULL;
-	      APPtextModify (pEl, frame, FALSE);
-	      notified = TRUE;
+	      if (toNotify)
+		{
+		  /* notify the change */
+		  APPtextModify (pEl, frame, FALSE);
+		  notified = TRUE;
+		}
 	      if (SelectedDocument)
 		CloseHistorySequence (SelectedDocument);
 	    }
 	  else if (LastInsertAttr)
 	    {
-	      /* Notify the end of attribute change */
+	      /* end of attribute change */
 	      LastInsertAttr = NULL;
 	      LastInsertAttrElem = NULL;
 	      /* the notification was already done by NewContent */
@@ -575,7 +580,7 @@ static void SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool d
 		  !pSelAb->AbReadOnly && pSelAb->AbLeafType == natureToCreate)
 		{
 		  moveSelection = TRUE;
-		  notified = CloseTextInsertionWithControl ();
+		  notified = CloseTextInsertionWithControl (TRUE);
 		  if (!notified)
 		    {
 		      i = pSelAb->AbVolume + 1;
@@ -609,7 +614,7 @@ static void SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool d
 		  before = TRUE;
 		  pSiblingAb = pSelAb->AbPrevious;
 		}
-	      notified = CloseTextInsertionWithControl ();
+	      notified = CloseTextInsertionWithControl (TRUE);
 	      if (pSiblingAb == NULL)
 		/* no sibling. Create a new leaf */
 		*pAb = CreateALeaf (*pAb, frame, natureToCreate, before);
@@ -825,6 +830,9 @@ static void StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox,
 	       RegisterInHistory (LastInsertElText, NULL, frame,
 				  FirstSelectedChar, LastSelectedChar);
 	  }
+	else if (SelectedDocument && !SelectedDocument->DocEditSequence)
+	  RegisterInHistory (LastInsertElText, NULL, frame,
+			     FirstSelectedChar, LastSelectedChar);
 
 	/* Memorize  the enclosing cell */
 	LastInsertCell = GetParentCell (pBox);
@@ -991,7 +999,7 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
   if (pSelAb->AbLeafType == LtText)
     if (plang != language && plang != 0)
       {
-	notification = CloseTextInsertionWithControl ();
+	notification = CloseTextInsertionWithControl (TRUE);
 	if (!notification)
 	  {
 	    /* the selection could be modified by the application */
@@ -1121,7 +1129,7 @@ void CloseTextInsertion ()
 {
   ThotBool withAppliControl;
 
-  withAppliControl = CloseTextInsertionWithControl ();
+  withAppliControl = CloseTextInsertionWithControl (TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -3710,7 +3718,7 @@ void TtcCutSelection (Document doc, View view)
        for (ndx = 0; ndx < ClipboardLength; ndx++)
 	 *ptrData++ = *pBuff++;
        *ptrData = 0;
-
+       
        GlobalUnlock (hMem);
        SetClipboardData (CF_TEXT, hMem);
        /* add Unicode clipboard here (CF_UNICODETEXT) */
@@ -3882,35 +3890,42 @@ void TtcInclude (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-   TtcPastefromX                                                      
+   TtcPastefromX
   ----------------------------------------------------------------------*/
-void TtcPasteFromClipboard (Document document, View view)
+void TtcPasteFromClipboard (Document doc, View view)
 {
+#ifndef _WINDOWS
    DisplayMode         dispMode;
    int                 frame;
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifndef _GTK
    int                 i;
    ThotWindow          w, wind;
-#endif /* _WINDOWS && _GTK */
-   ThotBool            lock = TRUE;
+#endif /* _GTK */
 
-   if (document == 0)
+   if (doc == 0)
       return;
-   /* avoid to redisplay step by step */
-   dispMode = TtaGetDisplayMode (document);
-   if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (document, DeferredDisplay);
-   /* lock tables formatting */
-   if (ThotLocalActions[T_islock])
-     {
-       (*ThotLocalActions[T_islock]) (&lock);
-       if (!lock)
-	 /* table formatting is not loked, lock it now */
-	 (*ThotLocalActions[T_lock]) ();
-     }
 
-   frame = GetWindowNumber (document, view);
-#ifndef _WINDOWS
+   frame = GetWindowNumber (doc, view);
+   if (frame != ActiveFrame)
+     {
+       if (ActiveFrame > 0 && FrameTable[ActiveFrame].FrDoc != doc)
+	 return;
+       else
+	 {
+	   CloseTextInsertion ();
+	   /* use the right frame */
+	   ActiveFrame = frame;
+	 }
+     }
+   else
+     /* close previous changes without notification */
+     CloseTextInsertionWithControl (FALSE);
+
+   /* avoid to redisplay step by step */
+   dispMode = TtaGetDisplayMode (doc);
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DeferredDisplay);
+
 #ifdef _GTK
    if (Xbuffer)
      PasteXClipboard (Xbuffer, strlen(Xbuffer)); 
@@ -3919,7 +3934,7 @@ void TtcPasteFromClipboard (Document document, View view)
    wind = FrRef[frame];
    if (w == None)
      {
-	/* Pas de selection courante -> on regarde s'il y a un cutbuffer */
+	/* it concerns a thot window -> paste the cutbuffer */
 	Xbuffer = XFetchBytes (TtDisplay, &i);
 	if (Xbuffer)
 	   PasteXClipboard (Xbuffer, i);
@@ -3928,20 +3943,16 @@ void TtcPasteFromClipboard (Document document, View view)
       XConvertSelection (TtDisplay, XA_PRIMARY, XA_STRING, XA_CUT_BUFFER0,
 			 wind, CurrentTime);
 #endif /* _GTK*/
-#endif /* _WINDOWS */
-   if (!lock)
-     /* unlock table formatting */
-     (*ThotLocalActions[T_unlock]) ();
    if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (document, dispMode);
-   /*TtcPaste (document, view);*/
+     TtaSetDisplayMode (doc, dispMode);
+#endif /* _WINDOWS */
 }
 
 
 /*----------------------------------------------------------------------
    TtcInsert                                                          
   ----------------------------------------------------------------------*/
-void TtcInsert (Document document, View view)
+void TtcInsert (Document doc, View view)
 {
    ContentEditing (TEXT_INSERT);
 }
@@ -4018,27 +4029,32 @@ void TtcPaste (Document doc, View view)
   int                 frame;
   ThotBool            lock = TRUE;
 
-  if (doc != 0)
+  if (doc > 0)
     {
       frame = GetWindowNumber (doc, view);
-      CloseTextInsertion ();
       if (frame != ActiveFrame)
 	{
 	  if (ActiveFrame > 0 && FrameTable[ActiveFrame].FrDoc != doc)
 	    return;
 	  else
-	    /* use the right frame */
-	    ActiveFrame = frame;
-	  /* work in the right document
-	     frame = ActiveFrame;
-	     doc =  FrameTable[ActiveFrame].FrDoc;*/
+	    {
+	      CloseTextInsertion ();
+	      /* use the right frame */
+	      ActiveFrame = frame;
+	    }
 	}
+      else
+	/* close insertion without notification */
+	CloseTextInsertionWithControl (FALSE);
 
       pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
       /* start the undo sequence */
       GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar, &lastChar);
       if (pDoc)
 	{
+	  if (pDoc->DocEditSequence)
+	    /* close the previous history sequence */
+	    
 	  /* avoid to redisplay step by step */
 	  dispMode = TtaGetDisplayMode (doc);
 	  if (dispMode == DisplayImmediately)
@@ -4077,23 +4093,23 @@ void TtcPaste (Document doc, View view)
 	  OpenClipboard (FrRef [frame]);
 	  /* check if the clipboard comes from Amaya */
 	  if (hMem = GetClipboardData (CF_UNICODETEXT))
-	    {			
+	    {
 	      wchar_t* lpData = (wchar_t*) GlobalLock (hMem);
-		  char *dest;
-		  lpDatalength = wcslen (lpData);
-		  dest = TtaConvertWCToByte (lpData, UTF_8);
-		  if (Xbuffer == NULL || dest == NULL || strncmp (Xbuffer, dest, 100))
+	      char *dest;
+	      lpDatalength = wcslen (lpData);
+	      dest = TtaConvertWCToByte (lpData, UTF_8);
+	      if (Xbuffer == NULL || dest == NULL || strncmp (Xbuffer, dest, 100))
   	        PasteXClipboardW (lpData, lpDatalength);
 	      else 
 	        ContentEditing (TEXT_PASTE);
-		  TtaFreeMemory (dest);
+	      TtaFreeMemory (dest);
 	      GlobalUnlock (hMem);
 	    }
 	  else if (hMem = GetClipboardData (CF_TEXT))
 	    {
 	      lpData = GlobalLock (hMem);
 	      lpDatalength = strlen (lpData);	      
-		  if (Xbuffer == NULL || strcmp (Xbuffer, lpData)) /****/
+	      if (Xbuffer == NULL || strcmp (Xbuffer, lpData)) /****/
  	        PasteXClipboard (lpData, lpDatalength);
 	      else 
 	        ContentEditing (TEXT_PASTE);
