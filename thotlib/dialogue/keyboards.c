@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -21,6 +21,9 @@
 #include "appdialogue.h"
 #include "dialog.h"
 #include "message.h"
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -387,15 +390,7 @@ static ITEM         Items_Graph[] =
 #include "font_f.h"
 #include "structselect_f.h"
 #include "textcommands_f.h"
-#include "windowdisplay_f.h"
-
-#ifdef _WINDOWS
-#ifdef __STDC__
-extern void CreateGreekKeyboardDlgWindow (HWND);
-#else /* __STDC__ */
-extern void CreateGreekKeyboardDlgWindow ();
-#endif /* __STDC__ */
-#endif /* _WINDOWS */
+#include "xwindowdisplay_f.h"
 
 /*----------------------------------------------------------------------
    WChar
@@ -403,20 +398,8 @@ extern void CreateGreekKeyboardDlgWindow ();
    policy font.
    Function func indicates if it's an active box (1) or not (0).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         WChar (ThotWindow w, CHAR_T ch, int x, int y, int func, ptrfont font, int disp, ThotGC GClocal)
-#else  /* __STDC__ */
-static void         WChar (w, ch, x, y, func, font, disp, GClocal)
-ThotWindow          w;
-CHAR_T                ch;
-int                 x;
-int                 y;
-int                 func;
-ptrfont             font;
-int                 disp;
-ThotGC              GClocal;
-
-#endif /* __STDC__ */
+static void WChar (ThotWindow w, CHAR_T ch, int x, int y, int func,
+		   ptrfont font, int disp, ThotGC GClocal)
 {
 #ifndef _GTK
    int                 length;
@@ -436,16 +419,7 @@ ThotGC              GClocal;
    KbdEndDisplay
    Ends the display of a keyboard.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         KbdEndDisplay (ThotWidget w, int index, caddr_t call_d)
-
-#else  /* __STDC__ */
-static void         KbdEndDisplay (w, index, call_d)
-ThotWidget          w;
-int                 index;
-caddr_t             call_d;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -458,15 +432,7 @@ caddr_t             call_d;
    KbdCallbackHandler
    handles the keyboard keys.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         KbdCallbackHandler (ThotWidget w, int param, caddr_t call_d)
-#else  /* __STDC__ */
-void         KbdCallbackHandler (w, param, call_d)
-ThotWidget          w;
-int                 param;
-caddr_t             call_d;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    UCHAR_T       car;
@@ -476,11 +442,11 @@ caddr_t             call_d;
    /* Recupere la table des items */
    car = (UCHAR_T) param % 256;
    /* Recupere le widget de la palette */
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    wp=XtParent(XtParent(XtParent(XtParent(w))));
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    wp = GetParent (GetParent (GetParent (GetParent (w))));
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    /* met a jour l'indicateur de palette */
    if(Keyboards[KeyboardMode] != wp)
      {
@@ -501,15 +467,7 @@ caddr_t             call_d;
    ExposeKbd
    displays the keyboard keys
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ExposeKbd (ThotWidget w, int param, XmDrawnButtonCallbackStruct * infos)
-#else  /* __STDC__ */
-static void         ExposeKbd (w, param, infos)
-ThotWidget          w;
-int                 param;
-XmDrawnButtonCallbackStruct *infos;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    int                 y;
@@ -519,22 +477,22 @@ XmDrawnButtonCallbackStruct *infos;
    /* Recupere la table des items */
    kb = param / 256;
    switch (kb)
-	 {
-	    case 0:
-	       it = Items_Symb;
-	       break;
-	    case 1:
-	       it = Items_Graph;
-	       break;
-	    case 2:
-	       it = Items_Isol;
-	       break;
-	    case 4:
-	       it = Items_Grec;
-	       break;
-	    default:
-	       return;
-	 }
+     {
+     case 0:
+       it = Items_Symb;
+       break;
+     case 1:
+       it = Items_Graph;
+       break;
+     case 2:
+       it = Items_Isol;
+       break;
+     case 4:
+       it = Items_Grec;
+       break;
+     default:
+       return;
+     }
    y = 4;
    i = param % 256;		/* indice dans la table des items */
    it = (ITEM *) ((int) it + (sizeof (ITEM) * i));
@@ -552,20 +510,8 @@ XmDrawnButtonCallbackStruct *infos;
    CreateKeyboard
    creates a keyboard.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CreateKeyboard (int number, STRING title, ptrfont pFont, int col, int x, int y, ITEM * items, int nbitem)
-#else  /* __STDC__ */
-static void         CreateKeyboard (number, title, font, col, x, y, items, nbitem)
-int                 number;
-STRING              title;
-ptrfont             pFont;
-int                 col;
-int                 x;
-int                 y;
-ITEM               *items;
-int                 nbitem;
-
-#endif /* __STDC__ */
+static void CreateKeyboard (int number, STRING title, ptrfont pFont,
+			    int col, int x, int y, ITEM * items, int nbitem)
 {
 #ifndef _GTK
    int                 n;
@@ -756,12 +702,7 @@ int                 nbitem;
    LoadKbd
    loads a keyboard.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         LoadKbd (int number)
-#else  /* __STDC__ */
-static void         LoadKbd (number)
-int                 number;
-#endif /* __STDC__ */
 {
 #ifndef _GTK
   ptrfont             pFontAc;
@@ -817,13 +758,7 @@ int                 number;
    KeyboardMap
    maps a keyboard.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                KeyboardMap (int kb)
-#else  /* __STDC__ */
-void                KeyboardMap (kb)
-int                 kb;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -866,9 +801,9 @@ void                GraphicsLoadResources ()
 	   SmallFontDialogue = FontDialogue;
      }
 
-#   ifndef _WINDOWS
+#ifndef _WINDOWS
    GraphicsIcons = LoadFont ("ivgraf");
-#   endif /* _WINDOWS */
+#endif /* _WINDOWS */
    if (GraphicsIcons == NULL)
      {
        /*Fonte 'ivgraf' inaccessible */
@@ -885,32 +820,31 @@ void                GraphicsLoadResources ()
 void                KeyboardsLoadResources ()
 {
 #ifndef _GTK
-   int                 i;
+  int                 i;
 
-   if (ThotLocalActions[T_keyboard] == NULL)
-     {
-	TteConnectAction (T_keyboard, (Proc) KeyboardMap);
+  if (ThotLocalActions[T_keyboard] == NULL)
+    {
+      TteConnectAction (T_keyboard, (Proc) KeyboardMap);
+      /* Initialise la table des claviers */
+      for (i = 0; i < MAX_KEYBOARD; i++)
+	Keyboards[i] = 0;
+      GraphicsIcons = NULL;
 
-	/* Initialise la table des claviers */
-	for (i = 0; i < MAX_KEYBOARD; i++)
-	   Keyboards[i] = 0;
-	GraphicsIcons = NULL;
+      if (SmallFontDialogue == NULL)
+	SmallFontDialogue = ReadFont ('L', 'H', 0, 9, UnPoint);
+      if (SmallFontDialogue == NULL)
+	SmallFontDialogue = FontDialogue;
+    }
 
-	if (SmallFontDialogue == NULL)
-	   SmallFontDialogue = ReadFont ('L', 'H', 0, 9, UnPoint);
-	if (SmallFontDialogue == NULL)
-	   SmallFontDialogue = FontDialogue;
-     }
-
-#   ifndef _WINDOWS
-    SymbolIcons = LoadFont ("ivsymb");
-    if (SymbolIcons == NULL) {
-       /*Fonte 'ivsymb' inaccessible */
-       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), "ivsymb");
-       SymbolIcons = FontDialogue;
-	} 
-#   endif /* _WINDOWS */
-
+#ifndef _WINDOWS
+  SymbolIcons = LoadFont ("ivsymb");
+  if (SymbolIcons == NULL)
+    {
+      /*Fonte 'ivsymb' inaccessible */
+      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), "ivsymb");
+      SymbolIcons = FontDialogue;
+    } 
+#endif /* _WINDOWS */
 #endif /* _GTK */
 }
 
@@ -919,22 +853,14 @@ void                KeyboardsLoadResources ()
    TtcDisplayMathKeyboard
    displays the math keyboard
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcDisplayMathKeyboard (Document document, View view)
-
-#else  /* __STDC__ */
-void                TtcDisplayMathKeyboard (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    TtaSetDialoguePosition ();
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
    TtaSetCurrentKeyboard (0);
 #endif /* _GTK */
 }
@@ -944,22 +870,14 @@ View                view;
    TtcDisplayGraphicsKeyboard
    displays the graphics keyboard
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcDisplayGraphicsKeyboard (Document document, View view)
-
-#else  /* __STDC__ */
-void                TtcDisplayGraphicsKeyboard (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    TtaSetDialoguePosition ();
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
    TtaSetCurrentKeyboard (1);
 #endif /* _GTK */
 }
@@ -969,22 +887,14 @@ View                view;
    TtcDisplayLatinKeyboard
    displays the latin keyboard
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcDisplayLatinKeyboard (Document document, View view)
-
-#else  /* __STDC__ */
-void                TtcDisplayLatinKeyboard (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
-#  ifndef _WINDOWS 
+#ifndef _WINDOWS 
    TtaSetDialoguePosition ();
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
    TtaSetCurrentKeyboard (2);
 #endif /* _GTK */
 }
@@ -993,25 +903,17 @@ View                view;
    TtcDisplayGreekKeyboard
    displays the greek keyboard 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcDisplayGreekKeyboard (Document document, View view)
-
-#else  /* __STDC__ */
-void                TtcDisplayGreekKeyboard (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
-#  ifndef _WINDOWS 
+#ifndef _WINDOWS 
    TtaSetDialoguePosition ();
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
    TtaSetCurrentKeyboard (3);
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    CreateGreekKeyboardDlgWindow (NULL);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 #endif /* _GTK */
 }

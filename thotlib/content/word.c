@@ -35,26 +35,24 @@ static int          lastCharInitialSelection;
   ----------------------------------------------------------------------*/
 UCHAR_T NextCharacter (PtrTextBuffer *buffer, int *rank)
 {
-
-   if (*buffer == NULL)
-      return (WC_EOS);
-   else
-     {
-	(*rank)++;
-
-	if (*rank >= (*buffer)->BuLength)
-	  {
-	     /* get next buffer in the same Text element */
-	     *rank = 0;
-	     *buffer = (*buffer)->BuNext;
-	     if (*buffer == NULL)
-		return (0);
-	     else
-		return ((*buffer)->BuContent[*rank]);
-	  }
-	else
-	   return ((*buffer)->BuContent[*rank]);
-     }
+  if (*buffer == NULL)
+    return (WC_EOS);
+  else
+    {
+      (*rank)++;
+      if (*rank >= (*buffer)->BuLength)
+	{
+	  /* get next buffer in the same Text element */
+	  *rank = 0;
+	  *buffer = (*buffer)->BuNext;
+	  if (*buffer == NULL)
+	    return (0);
+	  else
+	    return ((*buffer)->BuContent[*rank]);
+	}
+      else
+	return ((*buffer)->BuContent[*rank]);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -65,27 +63,27 @@ UCHAR_T NextCharacter (PtrTextBuffer *buffer, int *rank)
   ----------------------------------------------------------------------*/
 UCHAR_T PreviousCharacter (PtrTextBuffer *buffer, int *rank)
 {
-   if (*buffer == NULL)
-      return (WC_EOS);
-   else
-     {
-	(*rank)--;
-	if (*rank < 0)
-	  {
-	     /* get previous buffer in the same Text element */
-	     *rank = 0;
-	     *buffer = (*buffer)->BuPrevious;
-	     if (*buffer == NULL)
-		return (0);
-	     else
-	       {
-		  *rank = (*buffer)->BuLength - 1;
-		  return ((*buffer)->BuContent[*rank]);
-	       }
-	  }
-	else
-	   return ((*buffer)->BuContent[*rank]);
-     }
+  if (*buffer == NULL)
+    return (WC_EOS);
+  else
+    {
+      (*rank)--;
+      if (*rank < 0)
+	{
+	  /* get previous buffer in the same Text element */
+	  *rank = 0;
+	  *buffer = (*buffer)->BuPrevious;
+	  if (*buffer == NULL)
+	    return (0);
+	  else
+	    {
+	      *rank = (*buffer)->BuLength - 1;
+	      return ((*buffer)->BuContent[*rank]);
+	    }
+	}
+      else
+	return ((*buffer)->BuContent[*rank]);
+    }
 }
 
 
@@ -304,144 +302,139 @@ ThotBool NextTree (PtrElement * pEl, int *charIndx, PtrSearchContext context)
 ThotBool SearchNextWord (PtrElement * curEl, int *beginning, int *end,
 			 CHAR_T word[MAX_WORD_LEN], PtrSearchContext context)
 {
-   PtrElement          pEl, endEl;
-   PtrElement          pAncestor;
-   int                 iChar, endChar;
-   int                 len;
-   int                 index;
-   PtrTextBuffer       pBuf;
-   UCHAR_T             charact;
+  PtrElement          pEl, endEl;
+  PtrElement          pAncestor;
+  PtrTextBuffer       pBuf;
+  UCHAR_T             charact;
+  int                 iChar, endChar;
+  int                 len;
+  int                 index;
 
-   pEl = *curEl;
-   iChar = *end;
-   word[0] = EOS;
+  pEl = *curEl;
+  iChar = *end;
+  *beginning = iChar;
+  word[0] = EOS;
 
-   if (pEl == NULL && context != NULL)
-     {
-	/* search start */
-	pEl = context->SStartElement;
-	iChar = context->SStartChar;
-	if (pEl == NULL && context->SDocument != NULL)
-	   pEl = context->SDocument->DocRootElement;
-     }
+  if (pEl == NULL && context != NULL)
+    {
+      /* search start */
+      pEl = context->SStartElement;
+      iChar = context->SStartChar;
+      if (pEl == NULL && context->SDocument != NULL)
+	pEl = context->SDocument->DocRootElement;
+    }
 
-   /* Check that element is a Text element and that the research does */
-   /* not start on the last character */
-   if (pEl != NULL)
-     {
+  /* Check that element is a Text element and that the research does */
+  /* not start on the last character */
+  if (pEl != NULL)
+    {
       if (pEl->ElTypeNumber != CharString + 1 ||
 	  iChar + 1 >= pEl->ElTextLength)
 	{
-	   /* there is no buffer */
-	   pBuf = NULL;
-	   iChar = 0;
+	  /* there is no buffer */
+	  pBuf = NULL;
+	  iChar = 0;
 	}
       else
-	 /* first buffer of element */
-	 pBuf = pEl->ElText;
-     }
+	/* first buffer of element */
+	pBuf = pEl->ElText;
+    }
 
-   /* looks for the end of the research domain */
-   if (context == NULL)
-     {
-	endEl = NULL;
-	endChar = 0;
-     }
-   else
-     {
-	endEl = context->SEndElement;
-	endChar = context->SEndChar;
-     }
+  /* looks for the end of the research domain */
+  if (context == NULL)
+    {
+      endEl = NULL;
+      endChar = 0;
+    }
+  else
+    {
+      endEl = context->SEndElement;
+      endChar = context->SEndChar;
+    }
 
-   while (pBuf == NULL && pEl != NULL)
-     {
-	/* Search the first non-empty and non-protected element */
-	pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
-	iChar = 0;
-	if (pEl != NULL)
+  while (pBuf == NULL && pEl != NULL)
+    {
+      /* Search the first non-empty and non-protected element */
+      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
+      iChar = 0;
+      if (pEl != NULL)
+	{
+	  if (endEl != NULL && ElemIsBefore (endEl, pEl))
+	    /* the element found is after the end of the domain */
+	    pEl = NULL;
+	}
+      else if (context != NULL)
+	if (context->SWholeDocument)
 	  {
-	     if (endEl != NULL)
-		if (ElemIsBefore (endEl, pEl))
-		   /* the element found is after the end of the domain */
-		   pEl = NULL;
-	  }
-	else if (context != NULL)
-	   if (context->SWholeDocument)
-	     {
-		/* get the next tree to process */
-		if (NextTree (&pEl, &iChar, context))
-		   if (pEl->ElTypeNumber != CharString + 1)
-		      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
-	     }
-
-	if (pEl != NULL)
-	   /* on verifie que cet element ne fait pas partie d'une inclusion et */
-	   /* n'est pas cache' a l'utilisateur */
-	  {
-	     pAncestor = pEl;
-	     while (pAncestor->ElParent != NULL && pAncestor->ElSource == NULL)
-		pAncestor = pAncestor->ElParent;
-	     if (pAncestor->ElSource == NULL)
-		/* on n'est pas dans une inclusion */
-		if (!ElementIsHidden (pEl))
-		   /* l'element n'est pas cache' */
-		   /* On saute les elements vides */
-		   if (pEl->ElTextLength != 0)
-		      pBuf = pEl->ElText;
-	  }
-     }
-
-   if (pEl == NULL)
-      return (FALSE);
-   else if (pEl == endEl && iChar >= endChar)
-      /* On est arrive a la fin du domaine de recherche */
-      return (FALSE);
-   else
-     {
-
-	/* Calcule l'index de depart de la recherche */
-	len = iChar;
-	while (len >= pBuf->BuLength)
-	  {
-	     /* On passe au buffer suivant */
-	     len -= pBuf->BuLength;
-	     pBuf = pBuf->BuNext;
-	  }
-	index = len;
-	charact = pBuf->BuContent[index];
-	/* On se place au debut du mot */
-	while (charact != WC_EOS && IsSeparatorChar (charact) &&
-	       (pEl != endEl || iChar < endChar))
-	  {
-	     charact = NextCharacter (&pBuf, &index);
-	     iChar++;
+	    /* get the next tree to process */
+	    if (NextTree (&pEl, &iChar, context) && pEl->ElTypeNumber != CharString + 1)
+	      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
 	  }
 
-	/* Recherche le premier separateur apres le mot */
-	/* On verifie que l'on ne depasse pas la fin du domaine de recherche */
-	len = 0;
-	*beginning = iChar;
-	while (len < MAX_WORD_LEN-1 && charact != WC_EOS &&
-	       !IsSeparatorChar (charact) &&
-	       (pEl != endEl || iChar < endChar))
-	  {
-	     word[len++] = charact;
-	     charact = NextCharacter (&pBuf, &index);
-	     iChar++;
-	  }
+      if (pEl != NULL)
+	/* on verifie que cet element ne fait pas partie d'une inclusion et */
+	/* n'est pas cache' a l'utilisateur */
+	{
+	  pAncestor = pEl;
+	  while (pAncestor->ElParent != NULL && pAncestor->ElSource == NULL)
+	    pAncestor = pAncestor->ElParent;
+	  if (pAncestor->ElSource == NULL && !ElementIsHidden (pEl) &&
+	      pEl->ElTextLength != 0)
+	    /* on n'est pas dans une inclusion et l'element n'est pas cache' */
+	    /* On saute les elements vides */
+	    pBuf = pEl->ElText;
+	}
+    }
 
-	/* positionne les valeurs de retour */
-	word[len] = EOS;
-	*curEl = pEl;
-	*end = iChar;
-	/* Si on a trouve effectivement un mot */
-	if (len > 0)
-	   return (TRUE);
-	else
-	   /* On peut etre en fin de feuille qui se termine par un espace */
-	   /* On continue la recherche */
-	   return (SearchNextWord (curEl, beginning, end, word, context));
-     }
+  if (pEl == NULL)
+    return (FALSE);
+  else if (pEl == endEl && iChar >= endChar)
+    /* On est arrive a la fin du domaine de recherche */
+    return (FALSE);
+  else
+    {
+      /* Calcule l'index de depart de la recherche */
+      len = iChar;
+      while (len >= pBuf->BuLength)
+	{
+	  /* On passe au buffer suivant */
+	  len -= pBuf->BuLength;
+	  pBuf = pBuf->BuNext;
+	}
+      index = len;
+      charact = pBuf->BuContent[index];
+      /* On se place au debut du mot */
+      while (charact != WC_EOS && IsSeparatorChar (charact) &&
+	     (pEl != endEl || iChar < endChar))
+	{
+	  charact = NextCharacter (&pBuf, &index);
+	  iChar++;
+	}
+
+      /* Recherche le premier separateur apres le mot */
+      /* On verifie que l'on ne depasse pas la fin du domaine de recherche */
+      len = 0;
+      *beginning = iChar;
+      while (len < MAX_WORD_LEN-1 && charact != WC_EOS && !IsSeparatorChar (charact) &&
+	     (pEl != endEl || iChar < endChar))
+	{
+	  word[len++] = charact;
+	  charact = NextCharacter (&pBuf, &index);
+	  iChar++;
+	}
+
+      /* positionne les valeurs de retour */
+      word[len] = EOS;
+      *curEl = pEl;
+      *end = iChar;
+      /* Si on a trouve effectivement un mot */
+      if (len > 0)
+	return (TRUE);
+      else
+	/* On peut etre en fin de feuille qui se termine par un espace */
+	/* On continue la recherche */
+	return (SearchNextWord (curEl, beginning, end, word, context));
+    }
 }
 
 
@@ -454,156 +447,151 @@ ThotBool SearchNextWord (PtrElement * curEl, int *beginning, int *end,
 ThotBool SearchPreviousWord (PtrElement * curEl, int *beginning, int *end,
 			     CHAR_T word[MAX_WORD_LEN], PtrSearchContext context)
 {
-   PtrElement          pEl, endEl;
-   PtrElement          pAncestor;
-   int                 iChar, endChar, j;
-   int                 len;
-   int                 index;
-   PtrTextBuffer       pBuf;
-   UCHAR_T             charact;
-   CHAR_T              reverse[MAX_WORD_LEN];
+  PtrElement          pEl, endEl;
+  PtrElement          pAncestor;
+  PtrTextBuffer       pBuf;
+  UCHAR_T             charact;
+  CHAR_T              reverse[MAX_WORD_LEN];
+  int                 iChar, endChar, j;
+  int                 len;
+  int                 index;
 
-   pEl = *curEl;
-   iChar = *beginning;
-   word[0] = EOS;
+  pEl = *curEl;
+  iChar = *beginning;
+  *end = iChar;
+  word[0] = EOS;
+  if (pEl == NULL)
+    {
+      /* C'est le debut de la recherche */
+      pEl = context->SEndElement;
+      iChar = context->SEndChar;
+      if (iChar > 2)
+	/* La fin de selection pointe toujours sur un caratere plus loin */
+	iChar--;
+    }
+  iChar--;
 
-   if (pEl == NULL)
-     {
-	/* C'est le debut de la recherche */
-	pEl = context->SEndElement;
-	iChar = context->SEndChar;
-	if (iChar > 2)
-	   /* La fin de selection pointe toujours sur un caratere plus loin */
-	   iChar--;
-     }
-   iChar--;
+  /* Verifie que l'element est de type texte */
+  /* et que la recherche ne debute pas sur le dernier caractere */
+  if (pEl->ElTypeNumber != CharString + 1 || iChar <= 0)
+    {
+      /* On n'a pas trouve de buffer */
+      pBuf = NULL;
+      iChar = 0;
+    }
+  else
+    /* 1er Buffer de l'element */
+    pBuf = pEl->ElText;
 
-   /* Verifie que l'element est de type texte */
-   /* et que la recherche ne debute pas sur le dernier caractere */
-   if (pEl->ElTypeNumber != CharString + 1 || iChar <= 0)
-     {
-	/* On n'a pas trouve de buffer */
-	pBuf = NULL;
-	iChar = 0;
-     }
-   else
-     {
-	/* 1er Buffer de l'element */
-	pBuf = pEl->ElText;
-     }
+  /* Determine l'element limite du contexte de recherche */
+  if (context == NULL)
+    {
+      endEl = NULL;
+      endChar = 0;
+    }
+  else
+    {
+      endEl = context->SStartElement;
+      endChar = context->SStartChar;
+    }
 
-   /* Determine l'element limite du contexte de recherche */
-   if (context == NULL)
-     {
-	endEl = NULL;
-	endChar = 0;
-     }
-   else
-     {
-	endEl = context->SStartElement;
-	endChar = context->SStartChar;
-     }
-
-   while (pBuf == NULL && pEl != NULL)
-     {
-	/* Recherche le premier element texte non vide */
-	pEl = BackSearchTypedElem (pEl, CharString + 1, NULL);
-	if (pEl != NULL)
+  while (pBuf == NULL && pEl != NULL)
+    {
+      /* Recherche le premier element texte non vide */
+      pEl = BackSearchTypedElem (pEl, CharString + 1, NULL);
+      if (pEl != NULL)
+	{
+	  if (endEl != NULL && ElemIsBefore (pEl, endEl))
+	    /* l'element trouve' est avant l'element de debut, */
+	    /* on fait comme si on n'avait pas trouve' */
+	    pEl = NULL;
+	}
+      else if (context != NULL)
+	/* Si on recherche dans tout le document on change d'arbre */
+	if (context->SWholeDocument)
 	  {
-	     if (endEl != NULL)
-		if (ElemIsBefore (pEl, endEl))
-		   /* l'element trouve' est avant l'element de debut, */
-		   /* on fait comme si on n'avait pas trouve' */
-		   pEl = NULL;
-	  }
-	else if (context != NULL)
-	   /* Si on recherche dans tout le document on change d'arbre */
-	   if (context->SWholeDocument)
-	     {
-		/* cherche l'arbre a traiter avant celui ou` on n'a pas trouve' */
-		if (NextTree (&pEl, &iChar, context))
-		   /* Il se peut que l'element rendu soit de type texte */
-		   if (pEl->ElTypeNumber != CharString + 1)
-		      pEl = BackSearchTypedElem (pEl, CharString + 1, NULL);
-	     }
-
-	/* On saute les elements vides */
-	if (pEl != NULL)
-	   /* on verifie que cet element ne fait pas partie d'une inclusion et */
-	   /* n'est pas cache' a l'utilisateur */
-	  {
-	     pAncestor = pEl;
-	     while (pAncestor->ElParent != NULL && pAncestor->ElSource == NULL)
-		pAncestor = pAncestor->ElParent;
-	     if (pAncestor->ElSource == NULL)
-		/* on n'est pas dans une inclusion */
-		if (!ElementIsHidden (pEl))
-		   /* l'element n'est pas cache' */
-		   if (pEl->ElTextLength != 0)
-		     {
-			iChar = pEl->ElTextLength - 1;
-			pBuf = pEl->ElText;
-		     }
-	  }
-     }
-
-   if (pEl == NULL)
-      return (FALSE);
-   else if (pEl == endEl && iChar < endChar)
-      /* On est arrive a la fin du domaine de recherche */
-      return (FALSE);
-   else
-     {
-	/* Calcule l'index de depart de la recherche */
-	len = iChar;
-	while (len >= pBuf->BuLength)
-	  {
-	     /* On passe au buffer suivant */
-	     len -= pBuf->BuLength;
-	     pBuf = pBuf->BuNext;
+	    /* cherche l'arbre a traiter avant celui ou` on n'a pas trouve' */
+	    if (NextTree (&pEl, &iChar, context) &&
+	      /* Il se peut que l'element rendu soit de type texte */
+		pEl->ElTypeNumber != CharString + 1)
+	      pEl = BackSearchTypedElem (pEl, CharString + 1, NULL);
 	  }
 
-	index = len;
-	charact = pBuf->BuContent[index];
-	/* On se place a la fin du mot */
-	while (charact != WC_EOS && iChar >= 0 && IsSeparatorChar (charact) &&
-	       (pEl != endEl || iChar >= endChar))
-	  {
-	     charact = PreviousCharacter (&pBuf, &index);
-	     iChar--;
-	  }
+      /* On saute les elements vides */
+      if (pEl != NULL)
+	/* on verifie que cet element ne fait pas partie d'une inclusion et */
+	/* n'est pas cache' a l'utilisateur */
+	{
+	  pAncestor = pEl;
+	  while (pAncestor->ElParent != NULL && pAncestor->ElSource == NULL)
+	    pAncestor = pAncestor->ElParent;
+	  if (pAncestor->ElSource == NULL && !ElementIsHidden (pEl) &&
+	      pEl->ElTextLength != 0)
+	    {
+	      /* on n'est pas dans une inclusion et l'element n'est pas cache' */
+	      iChar = pEl->ElTextLength - 1;
+	      pBuf = pEl->ElText;
+	    }
+	}
+    }
+  
+  if (pEl == NULL)
+    return (FALSE);
+  else if (pEl == endEl && iChar < endChar)
+    /* On est arrive a la fin du domaine de recherche */
+    return (FALSE);
+  else
+    {
+      /* Calcule l'index de depart de la recherche */
+      len = iChar;
+      while (len >= pBuf->BuLength)
+	{
+	  /* On passe au buffer suivant */
+	  len -= pBuf->BuLength;
+	  pBuf = pBuf->BuNext;
+	}
 
-	/* On se place au debut du mot et recupere le mot a l'envers */
-	len = 0;
-	*end = iChar;
-	while (len < MAX_WORD_LEN-1 && charact != WC_EOS && iChar >= 0 &&
-	       !IsSeparatorChar (charact) &&
-	       (pEl != endEl || iChar >= endChar))
-	  {
-	     reverse[len++] = charact;
-	     charact = PreviousCharacter (&pBuf, &index);
-	     iChar--;
-	  }
+      index = len;
+      charact = pBuf->BuContent[index];
+      /* On se place a la fin du mot */
+      while (charact != WC_EOS && iChar >= 0 && IsSeparatorChar (charact) &&
+	     (pEl != endEl || iChar >= endChar))
+	{
+	  charact = PreviousCharacter (&pBuf, &index);
+	  iChar--;
+	}
 
-	/* Recopie le mot a l'endroit */
-	iChar++;
-	j = 0;
-	while (j < len)
-	  {
-	     word[j] = reverse[len - 1 - j];
-	     j++;
-	  }
+      /* On se place au debut du mot et recupere le mot a l'envers */
+      len = 0;
+      while (len < MAX_WORD_LEN-1 && charact != WC_EOS && iChar >= 0 &&
+	     !IsSeparatorChar (charact) &&
+	     (pEl != endEl || iChar >= endChar))
+	{
+	  reverse[len++] = charact;
+	  charact = PreviousCharacter (&pBuf, &index);
+	  iChar--;
+	}
 
-	/* positionne les valeurs de retour */
-	word[len] = EOS;
-	*curEl = pEl;
-	*beginning = iChar;
-	/* Si on a trouve effectivement un mot */
-	if (len > 0)
-	   return (TRUE);
-	else
-	   /* On peut etre en fin de feuille qui se termine par un espace */
-	   /* On continue la recherche */
-	   return (SearchPreviousWord (curEl, beginning, end, word, context));
-     }
+      /* Recopie le mot a l'endroit */
+      iChar++;
+      j = 0;
+      while (j < len)
+	{
+	  word[j] = reverse[len - 1 - j];
+	  j++;
+	}
+
+      /* positionne les valeurs de retour */
+      word[len] = EOS;
+      *curEl = pEl;
+      *beginning = iChar;
+      *end = iChar + len;
+      /* Si on a trouve effectivement un mot */
+      if (len > 0)
+	return (TRUE);
+      else
+	/* On peut etre en fin de feuille qui se termine par un espace */
+	/* On continue la recherche */
+	return (SearchPreviousWord (curEl, beginning, end, word, context));
+    }
 }

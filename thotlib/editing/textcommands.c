@@ -60,6 +60,7 @@ static Func     MathMoveBackwardCursorFunction = NULL;
 #include "editcommands_f.h"
 #include "font_f.h"
 #include "geom_f.h"
+#include "hyphen_f.h"
 #include "memory_f.h"
 #include "picture_f.h"
 #include "scroll_f.h"
@@ -385,7 +386,8 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	     }
 	   else if (!RightExtended && !LeftExtended)
 	     {
-	       if (FirstSelectedElement == FixedElement && FirstSelectedChar == FixedChar)
+	       if (FirstSelectedElement == FixedElement &&
+		   FirstSelectedChar == FixedChar)
 		 {
 		   RightExtended = TRUE;
 		   LeftExtended = FALSE;
@@ -660,7 +662,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	   if (RightExtended)
 	     {
 	       /* shrink the current selection */
-	       first = LastSelectedChar - 1;
+	       first = LastSelectedChar;
 	       pEl = LastSelectedElement;
 	     }
 	   else
@@ -670,14 +672,31 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	       pEl = FirstSelectedElement;
 	     }
 	   done = SearchPreviousWord (&pEl, &first, &last, word, &WordSearchContext);
-	   if ((RightExtended && last == LastSelectedChar - 1) ||
-	       (LeftExtended && last == FirstSelectedChar - 1))
+	   if ((RightExtended && last >= LastSelectedChar) ||
+	       (LeftExtended && first == FirstSelectedChar - 1))
 	     /* It was not the beginning of the next word */
-	     done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
+	     done = SearchPreviousWord (&pEl, &first, &last, word, &WordSearchContext);
 	   if (extendSel)
-	     ChangeSelection (frame, pEl->ElAbstractBox[view - 1], last, TRUE, TRUE, FALSE, FALSE);
+	     {
+	       if (RightExtended && FirstSelectedElement == FixedElement &&
+		   last <= FixedChar)
+		 {
+		 /* change the extension direction */
+		   RightExtended = FALSE;
+		   LeftExtended = TRUE;
+		 }
+	       if (LeftExtended)
+		 i = first + 1;
+	       else
+		 i = last;
+	       ChangeSelection (frame, pEl->ElAbstractBox[view - 1], i, TRUE, TRUE, FALSE, FALSE);
+	     }
 	   else
-	     SelectString (LoadedDocument[doc - 1], pEl, first + 1, first);
+	     {
+	       SelectString (LoadedDocument[doc - 1], pEl, first + 1, first);
+	       /* remove the extension direction */
+	       LeftExtended = FALSE;
+	     }
 	   break;
 	   
 	 case 10:	/* Next word (^->) */
@@ -697,13 +716,30 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	     }
 	   done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
 	   if ((RightExtended && first == LastSelectedChar) ||
-	       (LeftExtended && first == FirstSelectedChar))
+	       (LeftExtended && first >= FirstSelectedChar))
 	     /* It was not the beginning of the next word */
 	     done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
 	   if (extendSel)
-	     ChangeSelection (frame, pEl->ElAbstractBox[view - 1], last, TRUE, TRUE, FALSE, FALSE);
+	     {
+	       if (LeftExtended && FirstSelectedElement == FixedElement &&
+		   first >= FixedChar)
+		 {
+		 /* change the extension direction */
+		   RightExtended = TRUE;
+		   LeftExtended = FALSE;
+		 }
+	       if (LeftExtended)
+		 i = first + 1;
+	       else
+		 i = last;
+	       ChangeSelection (frame, pEl->ElAbstractBox[view - 1], i, TRUE, TRUE, FALSE, FALSE);
+	     }
 	   else
-	     SelectString (LoadedDocument[doc - 1], pEl, first + 1, first);
+	     {
+	       SelectString (LoadedDocument[doc - 1], pEl, first + 1, first);
+	       /* remove the extension direction */
+	       LeftExtended = FALSE;
+	     }
 	   break;
 	 }
        Moving = FALSE;
@@ -995,9 +1031,7 @@ static int          CopyXClipboard (USTRING *buffer, View view)
   ----------------------------------------------------------------------*/
 void                TtcCopyToClipboard (Document document, View view)
 {
-#ifdef _WINDOWS
-   ClipboardLength = CopyXClipboard (&Xbuffer, view);
-#else /* _WINDOWS */
+#ifndef _WINDOWS
    int                 frame;
 
    ThotWindow          w, wind;
@@ -1029,9 +1063,127 @@ void                TtcCopyToClipboard (Document document, View view)
 	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_X_BUF_UNMODIFIED);
      }
 
+#endif /* _WINDOWS */
    /* Recopie la selection courante */
    ClipboardLength = CopyXClipboard (&Xbuffer, view);
+#ifndef _WINDOWS
    /* Annule le cutbuffer courant */
    XStoreBuffer (TtDisplay, Xbuffer, ClipboardLength, 0);
 #endif /* _WINDOWS */
+}
+
+
+/*----------------------------------------------------------------------
+  SelectCurrentWord
+  selects the word at the current position.
+  The current position is given by the current box, the current buffer
+  and the index in the buffer.
+  ----------------------------------------------------------------------*/
+void SelectCurrentWord (int frame, PtrBox pBox, int pos, int index,
+			PtrTextBuffer pBuffer, ThotBool inClipboard)
+{
+  PtrTextBuffer       buffer;
+  PtrDocument         pDoc;
+  PtrAbstractBox      pAb;
+  UCHAR_T              c;
+  int                 first, last;
+  int                 doc, i;
+  ThotBool            isSep;
+
+  doc = FrameTable[frame].FrDoc;
+  pAb = pBox->BxAbstractBox;
+  if (frame >= 1 && doc > 0 && index > 0)
+    {
+      /* check if a leaf box is selected */
+      index--;
+      c = pBuffer->BuContent[index];
+      if (c != WC_SPACE && c != WC_EOS)
+	{
+	  /* look for the beginning of the word */
+	  buffer = pBuffer;
+	  first = pos;
+	  i = index;
+	  c = PreviousCharacter (&buffer, &i);
+	  isSep = IsSeparatorChar (c);
+	  while (first > 1 && !isSep && c != WC_EOS)
+	    {
+	      first--;
+	      c = PreviousCharacter (&buffer, &i);
+	      isSep = IsSeparatorChar (c);
+	    }
+	  /* look for the beginning of the word */
+	  buffer = pBuffer;
+	  last = pos;
+	  i = index - 1;
+	  c = NextCharacter (&buffer, &i);
+	  isSep = IsSeparatorChar (c);
+	  while (!isSep && c != WC_EOS)
+	    {
+	      last++;
+	      c = NextCharacter (&buffer, &i);
+	      isSep = IsSeparatorChar (c);
+	    }
+	  /*while (c == WC_SPACE)
+	    {
+	    last++;
+	    c = NextCharacter (&buffer, &i);
+	    }*/
+	  if (isSep)
+	    last--;
+	  pDoc = LoadedDocument[doc - 1];
+	  SelectString (pDoc, pAb->AbElement, first, last);
+	  if (inClipboard)
+	    ClipboardLength = CopyXClipboard (&Xbuffer, pAb->AbDocView);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  TtaSelectWord selects the word around the current point in an element
+  ----------------------------------------------------------------------*/
+void TtaSelectWord (Element element, int pos, Document doc, View view)
+{
+  PtrElement       pEl = (PtrElement)element;
+  PtrAbstractBox   pAb;
+  PtrBox           pBox;
+  PtrTextBuffer    pBuffer;
+  int              v, index;
+  int              frame, i;
+
+  if (pEl->ElTerminal && pEl->ElLeafType == LtText)
+    {
+      /* get the abstract box of the element */
+      if (view > 100)
+	v = 0;
+      else
+	v = view - 1;
+      pAb = pEl->ElAbstractBox[v];
+      if (pAb && pAb->AbBox)
+	{
+	  /* look for the box, the buffer and the index in the buffer */
+	  pBox = pAb->AbBox;
+	  i = pos;
+	  if (pBox->BxType == BoSplit)
+	    {
+	      pBox = pBox->BxNexChild;
+	      while (pBox && pBox->BxNChars < i && pBox->BxNexChild)
+		{
+		  i = i - pBox->BxNChars;
+		  /* remove the delta between two boxes */
+		  i = i - pBox->BxNexChild->BxIndChar + pBox->BxNChars + pBox->BxIndChar;
+		  pBox = pBox->BxNexChild;
+		}
+	    }
+	  pBuffer = pBox->BxBuffer;
+	  index =  pBox->BxFirstChar;
+	  while (i > pBuffer->BuLength - index + 1)
+	    {
+	      i = i - pBuffer->BuLength + index - 1;
+	      index = 1;
+	      pBuffer = pBuffer->BuNext;
+	    }
+	  frame = GetWindowNumber (doc, view);
+	  SelectCurrentWord (frame, pBox, pos, i, pBuffer, FALSE);
+	}
+    }
 }

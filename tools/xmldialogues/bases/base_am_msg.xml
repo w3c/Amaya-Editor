@@ -1758,15 +1758,23 @@
 </label>
 <label define="AM_ACCESSKEY">
 	<message xml:lang="en">Access keys</message>
-	<message xml:lang="fr">Les accés rapides</message>
+	<message xml:lang="fr">Accés rapides</message>
+	<message xml:lang="es">Access keys</message>
 </label>
 <label define="AM_NONE">
 	<message xml:lang="en">Ignore</message>
 	<message xml:lang="fr">Ignorer</message>
+	<message xml:lang="es">Ignorar</message>
 </label>
 <label define="AM_LOCAL_CSS">
 	<message xml:lang="en">Style element</message>
 	<message xml:lang="fr">Elément Style</message>
+	<message xml:lang="es">Elemento Style</message>
+</label>
+<label define="AM_NO_XPOINTER">
+	<message xml:lang="en">Cannot create an XPointer</message>
+	<message xml:lang="fr">Impossible de crléer un XPointer</message>
+	<message xml:lang="es">No pude crear un XPointer</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

@@ -74,7 +74,7 @@ void                CreateTextBuffer (PtrElement pEl)
    	DeleteTextBuffer  supprime un buffer de texte dont le pointeur est	
    	passe' en parametre.						
   ----------------------------------------------------------------------*/
-void                DeleteTextBuffer (PtrTextBuffer * pBuf)
+void                DeleteTextBuffer (PtrTextBuffer *pBuf)
 {
    if (*pBuf != NULL)
      {
@@ -99,7 +99,9 @@ void                DeleteTextBuffer (PtrTextBuffer * pBuf)
 	pSecondPart: l'element de texte correspondant a la partie
 		     apres la coupure.
   ----------------------------------------------------------------------*/
-void                SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc, ThotBool withAppEvent, PtrElement *pSecondPart, ThotBool elBreak)
+void SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc,
+		       ThotBool withAppEvent, PtrElement *pSecondPart,
+		       ThotBool elBreak)
 {
    PtrTextBuffer       pBuf;
    int                 i, len;
@@ -257,230 +259,223 @@ void                SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc
 
 
 /*--------------------------------------------------------------------
-   	MergeTextElements   si l'element pEl est une feuille de texte et si	
-   	son suivant est egalement une feuille de texte dans le meme	
-   	alphabet, reunit les deux elements sucessifs en un seul.	
-   	Le deuxieme element, devenu vide, n'est pas libere' et un	
-   	pointeur sur cet element est retourne dans pFreeEl.
-	Le parametre booleen removeAbsBox indique s'il faut liberer les
-        paves de l'element qui va etre detruit.
-
-        Cette fonction retourne TRUE si la fusion a lieu,
-                                FALSE sinon.
+  MergeTextElements   si l'element pEl est une feuille de texte et si
+  son suivant est egalement une feuille de texte dans le meme
+  alphabet, reunit les deux elements sucessifs en un seul.
+  Le deuxieme element, devenu vide, n'est pas libere' et un
+  pointeur sur cet element est retourne dans pFreeEl.
+  Le parametre booleen removeAbsBox indique s'il faut liberer les
+  paves de l'element qui va etre detruit.
+  Cette fonction retourne TRUE si la fusion a lieu, FALSE sinon.
   ----------------------------------------------------------------------*/
-ThotBool            MergeTextElements (PtrElement pEl, PtrElement * pFreeEl, PtrDocument pDoc,
-				       ThotBool withAppEvent, ThotBool removeAbsBox)
+ThotBool MergeTextElements (PtrElement pEl, PtrElement *pFreeEl, PtrDocument pDoc,
+			    ThotBool withAppEvent, ThotBool removeAbsBox)
 {
-   PtrElement          pEl1, pEl2;
-   PtrElement          pSibling;
-   PtrElement          pAsc;
-   PtrTextBuffer       pBuf1, pBuf2;
-   PtrReference        pRef1, pRef2;
-   NotifyElement       notifyEl;
-   NotifyOnTarget      notifyTxt;
-   int                 i;
-   int                 nSiblings;
-   ThotBool            merge;
+  PtrElement          pEl1, pEl2;
+  PtrElement          pSibling;
+  PtrElement          pAsc;
+  PtrTextBuffer       pBuf1, pBuf2;
+  PtrReference        pRef1, pRef2;
+  NotifyElement       notifyEl;
+  NotifyOnTarget      notifyTxt;
+  int                 i;
+  int                 nSiblings;
+  ThotBool            merge;
 
-   merge = FALSE;
-
-   *pFreeEl = NULL;
-   if (pEl != NULL)
-     {
-	pEl1 = pEl;
-	pEl2 = pEl1->ElNext;
-
-        if ((ElementIsReadOnly (pEl1)) ||
-            (ElementIsReadOnly (pEl2)))
-           /*** One or both elements are protected! ***/
-           return FALSE;
-
-	if (pEl2 != NULL && pEl1->ElLeafType == LtText && pEl1->ElTerminal)
-	   if (pEl2->ElLeafType == LtText && pEl2->ElTerminal)
-	      if (pEl2->ElLanguage == pEl->ElLanguage)
-		 if (pEl1->ElSource == NULL && pEl2->ElSource == NULL)
-		    if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct != CsConstant)
-		       if (pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
-			 {
-			    merge = TRUE;
-			    if (withAppEvent)
-			      {
-				 /* envoie l'evenement ElemDelete.Pre et demande a */
-				 /* l'application si elle est d'accord pour detruire le 2eme element */
-				 notifyEl.event = TteElemDelete;
-				 notifyEl.document = (Document) IdentDocument (pDoc);
-				 notifyEl.element = (Element) pEl2;
-				 notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
-				 notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElStructSchema);
-				 notifyEl.position = TTE_MERGE_DELETE_ITEM;
-				 notifyEl.info = 0;
-				 if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-				    /* l'application refuse la destruction, on ne fait rien */
-				    merge = FALSE;
-				 else
-				   {
-				      /* envoie l'evenement ElemTextModify.Pre a l'element */
-				      /* de texte qui sera conserve' et a ses englobants */
-				      pAsc = pEl;
-				      while (pAsc != NULL && merge)
-					{
-					   notifyTxt.event = TteElemTextModify;
-					   notifyTxt.document = (Document) IdentDocument (pDoc);
-					   notifyTxt.element = (Element) pAsc;
-					   notifyTxt.target = (Element) pEl1;
-					   notifyTxt.targetdocument = (Document) IdentDocument (pDoc);
-					   merge = !CallEventType ((NotifyEvent *) & notifyTxt, TRUE);
-					   pAsc = pAsc->ElParent;
-					}
-				   }
-			      }
-			    if (merge && pEl1->ElText != NULL 
-				&& pEl2->ElText != NULL)
-			      {
+  merge = FALSE;
+  *pFreeEl = NULL;
+  if (pEl != NULL)
+    {
+      pEl1 = pEl;
+      pEl2 = pEl1->ElNext;
+      
+      if ((ElementIsReadOnly (pEl1)) || (ElementIsReadOnly (pEl2)))
+	/*** One or both elements are protected! ***/
+	return FALSE;
+      
+      if (pEl2 != NULL && pEl1->ElLeafType == LtText && pEl1->ElTerminal &&
+	  pEl2->ElLeafType == LtText && pEl2->ElTerminal &&
+	  pEl2->ElLanguage == pEl->ElLanguage &&
+	  pEl1->ElSource == NULL && pEl2->ElSource == NULL &&
+	  pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct != CsConstant &&
+	  pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
+	{
+	  merge = TRUE;
+	  if (withAppEvent)
+	    {
+	      /* envoie l'evenement ElemDelete.Pre et demande a */
+	      /* l'application si elle est d'accord pour detruire le 2eme element */
+	      notifyEl.event = TteElemDelete;
+	      notifyEl.document = (Document) IdentDocument (pDoc);
+	      notifyEl.element = (Element) pEl2;
+	      notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
+	      notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElStructSchema);
+	      notifyEl.position = TTE_MERGE_DELETE_ITEM;
+	      notifyEl.info = 0;
+	      if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		/* l'application refuse la destruction, on ne fait rien */
+		merge = FALSE;
+	      else
+		{
+		  /* envoie l'evenement ElemTextModify.Pre a l'element */
+		  /* de texte qui sera conserve' et a ses englobants */
+		  pAsc = pEl;
+		  while (pAsc != NULL && merge)
+		    {
+		      notifyTxt.event = TteElemTextModify;
+		      notifyTxt.document = (Document) IdentDocument (pDoc);
+		      notifyTxt.element = (Element) pAsc;
+		      notifyTxt.target = (Element) pEl1;
+		      notifyTxt.targetdocument = (Document) IdentDocument (pDoc);
+		      merge = !CallEventType ((NotifyEvent *) & notifyTxt, TRUE);
+		      pAsc = pAsc->ElParent;
+		    }
+		}
+	    }
+	  if (merge && pEl1->ElText != NULL 
+	      && pEl2->ElText != NULL)
+	    {
 #ifndef NODISPLAY
-                                 /* Si l'element est selectionne, alors annule la selection */
-				 if ((pEl2 == FirstSelectedElement) ||
-				     (pEl2 == LastSelectedElement))
-                                    TtaClearViewSelections ();
-
-                                 /* Detruit eventuellement les paves du 2ieme element */
-                                 if (removeAbsBox)
-                                    DestroyAbsBoxes (pEl2, pDoc, FALSE);
+	      /* Si l'element est selectionne, alors annule la selection */
+	      if ((pEl2 == FirstSelectedElement) ||
+		  (pEl2 == LastSelectedElement))
+		TtaClearViewSelections ();
+	      
+	      /* Detruit eventuellement les paves du 2ieme element */
+	      if (removeAbsBox)
+		DestroyAbsBoxes (pEl2, pDoc, FALSE);
 #endif
-				 /* cherche le dernier buffer de texte du premier element */
-				 pBuf1 = pEl1->ElText;
-				 while (pBuf1->BuNext != NULL)
-				    pBuf1 = pBuf1->BuNext;
-				 /* premier buffer du deuxieme element */
-				 pBuf2 = pEl2->ElText;
-				 if (pBuf1->BuLength + pBuf2->BuLength < THOT_MAX_CHAR)
-
-				    /* copie le contenu du premier buffer du 2eme element */
-				    /* a la fin du dernier buffer du 1er element */
-				   {
-				      i = 0;
-				      do
-					{
-					   i++;
-					   pBuf1->BuContent[pBuf1->BuLength + i - 1] = pBuf2->BuContent
-					      [i - 1];
-					}
-				      while (pBuf2->BuContent[i - 1] != EOS);
-				      pBuf1->BuLength += pBuf2->BuLength;
-				      /* libere le buffer vide */
-				      pBuf1->BuNext = pBuf2->BuNext;
-				      if (pBuf1->BuNext != NULL)
-					 pBuf1->BuNext->BuPrevious = pBuf1;
-				      FreeTextBuffer (pBuf2);
-				      pBuf2 = pBuf1->BuNext;
-				   }
-				 else
-				    /* chaine les deux buffers */
-				   {
-				      pBuf1->BuNext = pBuf2;
-				      pBuf2->BuPrevious = pBuf1;
-				   }
-				 /* met a jour les pointeurs d'element de la 2eme partie */
-				 while (pBuf2 != NULL)
-				    pBuf2 = pBuf2->BuNext;
-				 /* met a jour la longueur du premier element */
-				 pEl1->ElTextLength += pEl2->ElTextLength;
-				 pEl1->ElVolume = pEl1->ElTextLength;
-
-				 /* reporte les references au 2eme element sur le premier */
-				 if (pEl2->ElReferredDescr != NULL)
-				   {
-				    /* le 2eme element est reference */
-				    if (pEl1->ElReferredDescr == NULL)
-				       /* le premier element n'est pas reference' */
-				       /* on met le descripteur d'element reference' du 2eme */
-				       /* element sur le premier */
-				      {
-					 pEl1->ElReferredDescr = pEl2->ElReferredDescr;
-					 if (!pEl1->ElReferredDescr->ReExternalRef)
-					    pEl1->ElReferredDescr->ReReferredElem = pEl;
-					 pEl2->ElReferredDescr = NULL;
-				      }
-				    else
-				       /* le premier element est deja reference' */
-				      {
-					 pRef2 = pEl2->ElReferredDescr->ReFirstReference;
-					 /* dechaine et libere le descripteur d'element */
-					 /* reference' du 2eme element */
-					 pEl2->ElReferredDescr->ReFirstReference = NULL;
-					 DeleteAllReferences (pEl2);
-					 /* ajoute les references du 2eme element a la suite
-					    de celles du 1er */
-					 pRef1 = pEl1->ElReferredDescr->ReFirstReference;
-					 if (pRef1 != NULL)
-					   {
-					      while (pRef1->RdNext != NULL)
-						 pRef1 = pRef1->RdNext;
-					      pRef1->RdNext = pRef2;
-					      pRef2->RdPrevious = pRef1;
-					   }
-					 else
-					    pEl1->ElReferredDescr->ReFirstReference = pRef2;
-					 while (pRef2 != NULL)
-					   {
-					      pRef2->RdReferred = pEl1->ElReferredDescr;
-					      pRef2 = pRef2->RdNext;
-					   }
-				      }
-				   }
-				 pEl2->ElText = NULL;
-				 *pFreeEl = pEl2;
-				 pEl2->ElVolume = 0;
-				 if (withAppEvent)
-				   {
-				      /* prepare l'evenement ElemDelete.Post pour le 2eme elem. */
-				      notifyEl.event = TteElemDelete;
-				      notifyEl.document = (Document) IdentDocument (pDoc);
-				      notifyEl.element = (Element) (pEl2->ElParent);
-				      notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
-				      notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElStructSchema);
-				      nSiblings = 0;
-				      pSibling = pEl2;
-				      while (pSibling->ElPrevious != NULL)
-					{
-					   nSiblings++;
-					   pSibling = pSibling->ElPrevious;
-					}
-				      notifyEl.position = nSiblings;
-				      notifyEl.info = 0;
-				   }
-				 /* dechaine le 2eme element */
-				 RemoveElement (pEl2);
-
-				 if (withAppEvent)
-				    {
-				    /* envoie l'evenement ElemTextModify.Post a qui le demande */
-				    pAsc = pEl1;
-				    while (pAsc != NULL)
-					{
-					   notifyTxt.event = TteElemTextModify;
-					   notifyTxt.document = (Document) IdentDocument (pDoc);
-					   notifyTxt.element = (Element) pAsc;
-					   notifyTxt.target = (Element) pEl1;
-					   notifyTxt.targetdocument = (Document) IdentDocument (pDoc);
-					   CallEventType ((NotifyEvent *) & notifyTxt, FALSE);
-					   pAsc = pAsc->ElParent;
-					}
-				    /* envoie l'evenement ElemDelete.Post pour le 2eme elem. */
-				    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-				    }
-				 /* modifie la selection si l'element retire' constitue l'une */
-				 /* des extremites de cette selection */
-				 if (pEl2 == FirstSelectedElement)
-				    FirstSelectedElement = pEl;
-				 if (pEl2 == LastSelectedElement)
-				    LastSelectedElement = pEl;
-			      }
-			 }
-     }
-
-     return merge;
-
+	      /* cherche le dernier buffer de texte du premier element */
+	      pBuf1 = pEl1->ElText;
+	      while (pBuf1->BuNext != NULL)
+		pBuf1 = pBuf1->BuNext;
+	      /* premier buffer du deuxieme element */
+	      pBuf2 = pEl2->ElText;
+	      if (pBuf1->BuLength + pBuf2->BuLength < THOT_MAX_CHAR)
+		/* copie le contenu du premier buffer du 2eme element */
+		/* a la fin du dernier buffer du 1er element */
+		{
+		  i = 0;
+		  do
+		    {
+		      i++;
+		      pBuf1->BuContent[pBuf1->BuLength + i - 1] = pBuf2->BuContent
+			[i - 1];
+		    }
+		  while (pBuf2->BuContent[i - 1] != EOS);
+		  pBuf1->BuLength += pBuf2->BuLength;
+		  /* libere le buffer vide */
+		  pBuf1->BuNext = pBuf2->BuNext;
+		  if (pBuf1->BuNext != NULL)
+		    pBuf1->BuNext->BuPrevious = pBuf1;
+		  FreeTextBuffer (pBuf2);
+		  pBuf2 = pBuf1->BuNext;
+		}
+	      else
+		/* chaine les deux buffers */
+		{
+		  pBuf1->BuNext = pBuf2;
+		  pBuf2->BuPrevious = pBuf1;
+		}
+	      /* met a jour les pointeurs d'element de la 2eme partie */
+	      while (pBuf2 != NULL)
+		pBuf2 = pBuf2->BuNext;
+	      /* met a jour la longueur du premier element */
+	      pEl1->ElTextLength += pEl2->ElTextLength;
+	      pEl1->ElVolume = pEl1->ElTextLength;
+	      
+	      /* reporte les references au 2eme element sur le premier */
+	      if (pEl2->ElReferredDescr != NULL)
+		{
+		  /* le 2eme element est reference */
+		  if (pEl1->ElReferredDescr == NULL)
+		    /* le premier element n'est pas reference' */
+		    /* on met le descripteur d'element reference' du 2eme */
+		    /* element sur le premier */
+		    {
+		      pEl1->ElReferredDescr = pEl2->ElReferredDescr;
+		      if (!pEl1->ElReferredDescr->ReExternalRef)
+			pEl1->ElReferredDescr->ReReferredElem = pEl;
+		      pEl2->ElReferredDescr = NULL;
+		    }
+		  else
+		    /* le premier element est deja reference' */
+		    {
+		      pRef2 = pEl2->ElReferredDescr->ReFirstReference;
+		      /* dechaine et libere le descripteur d'element */
+		      /* reference' du 2eme element */
+		      pEl2->ElReferredDescr->ReFirstReference = NULL;
+		      DeleteAllReferences (pEl2);
+		      /* ajoute les references du 2eme element a la suite
+			 de celles du 1er */
+		      pRef1 = pEl1->ElReferredDescr->ReFirstReference;
+		      if (pRef1 != NULL)
+			{
+			  while (pRef1->RdNext != NULL)
+			    pRef1 = pRef1->RdNext;
+			  pRef1->RdNext = pRef2;
+			  pRef2->RdPrevious = pRef1;
+			}
+		      else
+			pEl1->ElReferredDescr->ReFirstReference = pRef2;
+		      while (pRef2 != NULL)
+			{
+			  pRef2->RdReferred = pEl1->ElReferredDescr;
+			  pRef2 = pRef2->RdNext;
+			}
+		    }
+		}
+	      pEl2->ElText = NULL;
+	      *pFreeEl = pEl2;
+	      pEl2->ElVolume = 0;
+	      if (withAppEvent)
+		{
+		  /* prepare l'evenement ElemDelete.Post pour le 2eme elem. */
+		  notifyEl.event = TteElemDelete;
+		  notifyEl.document = (Document) IdentDocument (pDoc);
+		  notifyEl.element = (Element) (pEl2->ElParent);
+		  notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
+		  notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElStructSchema);
+		  nSiblings = 0;
+		  pSibling = pEl2;
+		  while (pSibling->ElPrevious != NULL)
+		    {
+		      nSiblings++;
+		      pSibling = pSibling->ElPrevious;
+		    }
+		  notifyEl.position = nSiblings;
+		  notifyEl.info = 0;
+		}
+	      /* dechaine le 2eme element */
+	      RemoveElement (pEl2);
+	      
+	      if (withAppEvent)
+		{
+		  /* envoie l'evenement ElemTextModify.Post a qui le demande */
+		  pAsc = pEl1;
+		  while (pAsc != NULL)
+		    {
+		      notifyTxt.event = TteElemTextModify;
+		      notifyTxt.document = (Document) IdentDocument (pDoc);
+		      notifyTxt.element = (Element) pAsc;
+		      notifyTxt.target = (Element) pEl1;
+		      notifyTxt.targetdocument = (Document) IdentDocument (pDoc);
+		      CallEventType ((NotifyEvent *) & notifyTxt, FALSE);
+		      pAsc = pAsc->ElParent;
+		    }
+		  /* envoie l'evenement ElemDelete.Post pour le 2eme elem. */
+		  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+		}
+	      /* modifie la selection si l'element retire' constitue l'une */
+	      /* des extremites de cette selection */
+	      if (pEl2 == FirstSelectedElement)
+		FirstSelectedElement = pEl;
+	      if (pEl2 == LastSelectedElement)
+		LastSelectedElement = pEl;
+	    }
+	}
+    }
+  return merge;
 }
 
 

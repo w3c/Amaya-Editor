@@ -38,6 +38,16 @@ extern void TtcNextSelWord ( Document document,
                              View view );
 extern void TtcCopyToClipboard ( Document document,
                                  View view );
+extern void SelectCurrentWord ( int frame,
+                                PtrBox pBox,
+                                int pos,
+                                int index,
+                                PtrTextBuffer pBuffer,
+                                ThotBool inClipboard );
+extern void TtaSelectWord ( Element element,
+                            int pos,
+                            Document doc,
+                            View view );
 
 #else /* __STDC__ */
 
@@ -73,6 +83,16 @@ extern void TtcNextSelWord (/* Document document,
                                View view */);
 extern void TtcCopyToClipboard (/* Document document,
                                    View view */);
+extern void SelectCurrentWord (/* int frame,
+                                  PtrBox pBox,
+                                  int pos,
+                                  int index,
+                                  PtrTextBuffer pBuffer,
+                                  ThotBool inClipboard */);
+extern void TtaSelectWord (/* Element element,
+                              int pos,
+                              Document doc,
+                              View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

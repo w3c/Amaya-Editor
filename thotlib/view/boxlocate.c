@@ -59,82 +59,6 @@
 #define Y_RATIO 200		/* penalisation en Y */
 #define ANCHOR_SIZE 3		/* taille des ancres */
 
-
-/*----------------------------------------------------------------------
-  SelectCurrentWord
-  selects the word at the current position.
-  The current position is given by the current box, the current buffer
-  and the index in the buffer.
-  ----------------------------------------------------------------------*/
-static void SelectCurrentWord (int frame, PtrBox pBox, int pos,
-			       PtrTextBuffer pBuffer, int index)
-{
-  PtrTextBuffer       buffer;
-  PtrDocument         pDoc;
-  PtrAbstractBox      pAb;
-  UCHAR_T              c;
-  int                 first, last;
-  int                 doc, i;
-  ThotBool            isSep;
-
-  doc = FrameTable[frame].FrDoc;
-  pAb = pBox->BxAbstractBox;
-  if (frame >= 1 && doc > 0 && index > 0)
-    {
-      /* check if a leaf box is selected */
-      index--;
-      c = pBuffer->BuContent[index];
-      if (c != WC_SPACE && c != WC_EOS)
-	{
-	  /* look for the beginning of the word */
-	  buffer = pBuffer;
-	  first = pos;
-	  i = index;
-	  c = PreviousCharacter (&buffer, &i);
-	  isSep = IsSeparatorChar (c);
-	  while (first > 1 && !isSep && c != WC_EOS)
-	    {
-	      first--;
-	      c = PreviousCharacter (&buffer, &i);
-	      isSep = IsSeparatorChar (c);
-	    }
-	  /* look for the beginning of the word */
-	  buffer = pBuffer;
-	  last = pos;
-	  i = index;
-	  c = NextCharacter (&buffer, &i);
-	  isSep = IsSeparatorChar (c);
-	  while (!isSep && c != WC_EOS)
-	    {
-	      last++;
-	      c = NextCharacter (&buffer, &i);
-	      isSep = IsSeparatorChar (c);
-	    }
-	  while (c == WC_SPACE)
-	    {
-	      last++;
-	      c = NextCharacter (&buffer, &i);
-	    }
-	  pDoc = LoadedDocument[doc - 1];
-	  SelectString (pDoc, pAb->AbElement, first, last);
-	}
-    }
-}
-
-/*----------------------------------------------------------------------
-  TtaSelectWord selects the word around the current point in an element
-  ----------------------------------------------------------------------*/
-void TtaSelectWord (Element element, int c, Document doc, View view)
-{
-  /*********
-  PtrElement    pEl = (PtrElement)element;
-
-  if (pEl->ElTypeNumber == 1)
-    {
-    }
-  ******/
-}
-
 /*----------------------------------------------------------------------
   LocateSelectionInView finds out the selected Abstract Box and if it's
   a TEXT element the selected character(s).
@@ -204,7 +128,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	      if (!ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, TRUE, FALSE) &&
 		  pAb->AbLeafType == LtText &&
 		  (!pAb->AbPresentationBox || pAb->AbCanBeModified))
-		SelectCurrentWord (frame, pBox, charsNumber, pBuffer, index);
+		SelectCurrentWord (frame, pBox, charsNumber, index, pBuffer, TRUE);
 	    }
 	  else if (button == 2)
 	    ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, FALSE, FALSE);

@@ -1110,7 +1110,10 @@ void            DoAction (Document doc, View view)
 
    TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &lastChar);
    if (firstSel)
-     ActivateElement (firstSel, doc);
+     {
+       if (!ActivateElement (firstSel, doc))
+	 TtaSelectWord (firstSel, firstChar, doc, view);
+     }
 }
 
 /*----------------------------------------------------------------------

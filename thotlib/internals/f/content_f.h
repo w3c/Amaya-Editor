@@ -8,7 +8,7 @@
 
 extern PtrTextBuffer NewTextBuffer ( PtrTextBuffer pBuf );
 extern void CreateTextBuffer ( PtrElement pEl );
-extern void DeleteTextBuffer ( PtrTextBuffer * pBuf );
+extern void DeleteTextBuffer ( PtrTextBuffer *pBuf );
 extern void SplitTextElement ( PtrElement pEl,
                                int rank,
                                PtrDocument pDoc,
@@ -16,7 +16,7 @@ extern void SplitTextElement ( PtrElement pEl,
                                PtrElement *pSecondPart,
                                ThotBool elBreak );
 extern ThotBool MergeTextElements ( PtrElement pEl,
-                                    PtrElement * pFreeEl,
+                                    PtrElement *pFreeEl,
                                     PtrDocument pDoc,
                                     ThotBool withAppEvent,
                                     ThotBool removeAbsBox );
@@ -57,7 +57,7 @@ extern void TtaGiveTextContent ( Element element,
 
 extern PtrTextBuffer NewTextBuffer (/* PtrTextBuffer pBuf */);
 extern void CreateTextBuffer (/* PtrElement pEl */);
-extern void DeleteTextBuffer (/* PtrTextBuffer * pBuf */);
+extern void DeleteTextBuffer (/* PtrTextBuffer *pBuf */);
 extern void SplitTextElement (/* PtrElement pEl,
                                  int rank,
                                  PtrDocument pDoc,
@@ -65,7 +65,7 @@ extern void SplitTextElement (/* PtrElement pEl,
                                  PtrElement *pSecondPart,
                                  ThotBool elBreak */);
 extern ThotBool MergeTextElements (/* PtrElement pEl,
-                                      PtrElement * pFreeEl,
+                                      PtrElement *pFreeEl,
                                       PtrDocument pDoc,
                                       ThotBool withAppEvent,
                                       ThotBool removeAbsBox */);
