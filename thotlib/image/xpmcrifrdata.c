@@ -1,6 +1,5 @@
-
 /*
- * Copyright (C) 1989-94 GROUPE BULL
+ * Copyright (C) 1989-95 GROUPE BULL
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -24,107 +23,98 @@
  * in this Software without prior written authorization from GROUPE BULL.
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
-
 /*****************************************************************************\
-* XpmCrIFrData.c:                                                             *
+*  CrIFrData.c:                                                               *
 *                                                                             *
 *  XPM library                                                                *
-*  Parse an Xpm array and create the image and possibly its PicMask              *
+*  Parse an Xpm array and create the image and possibly its mask              *
 *                                                                             *
 *  Developed by Arnaud Le Hors                                                *
 \*****************************************************************************/
 
-#include "thot_gui.h"
-#include "thot_sys.h"
+#include "XpmI.h"
 
-#ifdef __STDC__
-#include "xpmP.h"
+LFUNC(OpenArray, void, (char **data, xpmData *mdata));
 
 int
-                    XpmCreateImageFromData (Display * display, char **data, XImage ** image_return, XImage ** shapeimage_return, XpmAttributes * attributes)
-
-#else  /* __STDC__ */
-#include "xpmP.h"
-
-int
-                    XpmCreateImageFromData (display, data, image_return, shapeimage_return, attributes)
-Display            *display;
-char              **data;
-XImage            **image_return;
-XImage            **shapeimage_return;
-XpmAttributes      *attributes;
-
-#endif /* __STDC__ */
-
+XpmCreateImageFromData(display, data, image_return,
+		       shapeimage_return, attributes)
+    Display *display;
+    char **data;
+    XImage **image_return;
+    XImage **shapeimage_return;
+    XpmAttributes *attributes;
 {
-   XpmImage            image;
-   XpmInfo             info;
-   int                 ErrorStatus;
+    XpmImage image;
+    XpmInfo info;
+    int ErrorStatus;
+    xpmData mdata;
 
-   /* create an XpmImage from the file */
-   if (attributes)
-     {
-	xpmInitAttributes (attributes);
-	xpmSetInfoMask (&info, attributes);
-	ErrorStatus = XpmCreateXpmImageFromData (data, &image, &info);
-     }
-   else
-      ErrorStatus = XpmCreateXpmImageFromData (data, &image, NULL);
+    xpmInitXpmImage(&image);
+    xpmInitXpmInfo(&info);
 
-   if (ErrorStatus != XpmSuccess)
-      return (ErrorStatus);
+    /* open data */
+    OpenArray(data, &mdata);
 
-   /* create the related ximages */
-   ErrorStatus = XpmCreateImageFromXpmImage (display, &image,
-					     image_return, shapeimage_return,
-					     attributes);
-   if (attributes)
-     {
-	if (ErrorStatus >= 0)	/* no fatal error */
-	   xpmSetAttributes (attributes, &image, &info);
-	XpmFreeXpmInfo (&info);
-     }
-   XpmFreeXpmImage (&image);
+    /* create an XpmImage from the file */
+    if (attributes) {
+	xpmInitAttributes(attributes);
+	xpmSetInfoMask(&info, attributes);
+	ErrorStatus = xpmParseDataAndCreate(display, &mdata,
+					    image_return, shapeimage_return,
+					    &image, &info, attributes);
+    } else
+	ErrorStatus = xpmParseDataAndCreate(display, &mdata,
+					    image_return, shapeimage_return,
+					    &image, NULL, attributes);
+    if (attributes) {
+	if (ErrorStatus >= 0)		/* no fatal error */
+	    xpmSetAttributes(attributes, &image, &info);
+	XpmFreeXpmInfo(&info);
+    }
 
-   return (ErrorStatus);
+    /* free the XpmImage */
+    XpmFreeXpmImage(&image);
+
+    return (ErrorStatus);
 }
 
-#ifdef __STDC__
 int
-                    XpmCreateXpmImageFromData (char **data, XpmImage * image, XpmInfo * info)
-
-#else  /* __STDC__ */
-int
-                    XpmCreateXpmImageFromData (data, image, info)
-char              **data;
-XpmImage           *image;
-XpmInfo            *info;
-
-#endif /* __STDC__ */
-
+XpmCreateXpmImageFromData(data, image, info)
+    char **data;
+    XpmImage *image;
+    XpmInfo *info;
 {
-   xpmData             mdata;
-   int                 ErrorStatus;
+    xpmData mdata;
+    int ErrorStatus;
 
-   /* init returned values */
-   xpmInitXpmImage (image);
-   xpmInitXpmInfo (info);
+    /* init returned values */
+    xpmInitXpmImage(image);
+    xpmInitXpmInfo(info);
 
-   /* open data */
-   xpmOpenArray (data, &mdata);
+    /* open data */
+    OpenArray(data, &mdata);
 
-   /* create the XpmImage from the XpmData */
-   ErrorStatus = xpmParseData (&mdata, image, info);
+    /* create the XpmImage from the XpmData */
+    ErrorStatus = xpmParseData(&mdata, image, info);
 
-   xpmDataClose (&mdata);
+    return (ErrorStatus);
+}
 
-   return (ErrorStatus);
+/*
+ * open the given array to be read or written as an xpmData which is returned
+ */
+static void
+OpenArray(data, mdata)
+    char **data;
+    xpmData *mdata;
+{
+    mdata->type = XPMARRAY;
+    mdata->stream.data = data;
+    mdata->cptr = *data;
+    mdata->line = 0;
+    mdata->CommentLength = 0;
+    mdata->Bcmt = mdata->Ecmt = NULL;
+    mdata->Bos = mdata->Eos = '\0';
+    mdata->format = 0;			/* this can only be Xpm 2 or 3 */
 }

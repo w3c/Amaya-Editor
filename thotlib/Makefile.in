@@ -132,23 +132,19 @@ EDITOR_OBJ = \
 	image/picturebase.o \
 	image/xpmhandler.o \
 	image/pnghandler.o \
-	image/xpmcrbuffri.o\
-	image/xpmcrbuffrp.o\
-	image/xpmcrdatafri.o\
-	image/xpmcrdatafrp.o\
+	image/xpmattrib.o\
 	image/xpmcreate.o\
-	image/xpmcrifrbuf.o\
 	image/xpmcrifrdata.o\
-	image/xpmcrpfrbuf.o\
 	image/xpmcrpfrdata.o\
+	image/xpmcrpfri.o\
 	image/xpmdata.o\
-	image/xpmhashtable.o\
+	image/xpmhashtab.o\
+	image/xpmimage.o\
+	image/xpminfo.o\
 	image/xpmmisc.o\
 	image/xpmparse.o\
-	image/xpmrdftodata.o\
 	image/xpmrdftoi.o\
 	image/xpmrdftop.o\
-	image/xpmrgb.o\
 	base/alloca.o \
 	base/config.o \
 	base/thotmsg.o \

@@ -24,52 +24,38 @@
  */
 
 /*****************************************************************************\
-*  RdFToP.c:                                                                  *
+*  Image.c:                                                                   *
 *                                                                             *
 *  XPM library                                                                *
-*  Parse an XPM file and create the pixmap and possibly its mask              *
+*  Functions to init and free the XpmImage structure.                         *
 *                                                                             *
 *  Developed by Arnaud Le Hors                                                *
 \*****************************************************************************/
 
 #include "XpmI.h"
 
-int
-XpmReadFileToPixmap(display, d, filename, pixmap_return,
-		    shapemask_return, attributes)
-    Display *display;
-    Drawable d;
-    char *filename;
-    Pixmap *pixmap_return;
-    Pixmap *shapemask_return;
-    XpmAttributes *attributes;
+/*
+ * Init returned data to free safely later on
+ */
+void
+xpmInitXpmImage(image)
+    XpmImage *image;
 {
-    XImage *ximage, *shapeimage;
-    int ErrorStatus;
+    image->ncolors = 0;
+    image->colorTable = NULL;
+    image->data = NULL;
+}
 
-    /* initialize return values */
-    if (pixmap_return)
-	*pixmap_return = 0;
-    if (shapemask_return)
-	*shapemask_return = 0;
-
-    /* create the images */
-    ErrorStatus = XpmReadFileToImage(display, filename,
-				     (pixmap_return ? &ximage : NULL),
-				     (shapemask_return ? &shapeimage : NULL),
-				     attributes);
-
-    if (ErrorStatus < 0)		/* fatal error */
-	return (ErrorStatus);
-
-    /* create the pixmaps and destroy images */
-    if (pixmap_return && ximage) {
-	xpmCreatePixmapFromImage(display, d, ximage, pixmap_return);
-	XDestroyImage(ximage);
-    }
-    if (shapemask_return && shapeimage) {
-	xpmCreatePixmapFromImage(display, d, shapeimage, shapemask_return);
-	XDestroyImage(shapeimage);
-    }
-    return (ErrorStatus);
+/*
+ * Free the XpmImage data which have been allocated
+ */
+void
+XpmFreeXpmImage(image)
+    XpmImage *image;
+{
+    if (image->colorTable)
+	xpmFreeColorTable(image->colorTable, image->ncolors);
+    if (image->data)
+	XpmFree(image->data);
+    image->data = NULL;
 }

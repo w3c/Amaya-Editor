@@ -1,6 +1,5 @@
-
 /*
- * Copyright (C) 1989-94 GROUPE BULL
+ * Copyright (C) 1989-95 GROUPE BULL
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -24,65 +23,37 @@
  * in this Software without prior written authorization from GROUPE BULL.
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
-
 /*****************************************************************************\
-* XpmRdFToData.c:                                                             *
+*  CrPFrI.c:                                                                  *
 *                                                                             *
 *  XPM library                                                                *
-*  Parse an XPM file and create an array of strings corresponding to it.      *
+*  Create the Pixmap related to the given XImage.                             *
 *                                                                             *
-*  Developed by Dan Greening dgreen@cs.ucla.edu / dgreen@sti.com              *
+*  Developed by Arnaud Le Hors                                                *
 \*****************************************************************************/
 
-#include "thot_gui.h"
-#include "thot_sys.h"
+#include "XpmI.h"
 
-#ifdef __STDC__
-#include "xpmP.h"
-
-int
-                    XpmReadFileToData (char *filename, char ***data_return)
-
-#else  /* __STDC__ */
-#include "xpmP.h"
-
-int
-                    XpmReadFileToData (filename, data_return)
-char               *filename;
-char             ***data_return;
-
-#endif /* __STDC__ */
-
+void
+xpmCreatePixmapFromImage(display, d, ximage, pixmap_return)
+    Display *display;
+    Drawable d;
+    XImage *ximage;
+    Pixmap *pixmap_return;
 {
-   XpmImage            image;
-   XpmInfo             info;
-   int                 ErrorStatus;
+    GC gc;
+    XGCValues values;
 
-   info.valuemask = XpmReturnComments | XpmReturnExtensions;
+    *pixmap_return = XCreatePixmap(display, d, ximage->width,
+				   ximage->height, ximage->depth);
+    /* set fg and bg in case we have an XYBitmap */
+    values.foreground = 1;
+    values.background = 0;
+    gc = XCreateGC(display, *pixmap_return,
+		   GCForeground | GCBackground, &values);
 
-   /*
-    * initialize return value
-    */
-   if (data_return)
-      *data_return = NULL;
+    XPutImage(display, *pixmap_return, gc, ximage, 0, 0, 0, 0,
+	      ximage->width, ximage->height);
 
-   ErrorStatus = XpmReadFileToXpmImage (filename, &image, &info);
-   if (ErrorStatus != XpmSuccess)
-      return (ErrorStatus);
-
-   ErrorStatus =
-      XpmCreateDataFromXpmImage (data_return, &image, &info);
-
-   XpmFreeXpmImage (&image);
-   XpmFreeXpmInfo (&info);
-
-   return (ErrorStatus);
+    XFreeGC(display, gc);
 }
