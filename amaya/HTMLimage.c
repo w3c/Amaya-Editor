@@ -378,6 +378,7 @@ void *context;
    FetchImage_context  *FetchImage_ctx;
    LoadedImageDesc    *desc;
    char               *base_url;
+   char               *ptr;
    ElemImage          *ctxEl, *ctxPrev;
    ElementType         elType;
 
@@ -412,13 +413,31 @@ void *context;
 	tempfile = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
 	/* rename the local file of the image */
 	strcpy (tempfile, desc->localName);
-	TtaFileUnlink (tempfile);
+	
+	/* If this is an image document, point to the correct files */
+	if (DocumentTypes[doc] == docImage)
+	  {
+	    ptr = strrchr (tempfile, '.');
+	    if (ptr) 
+	      {
+		ptr++;
+		strcpy (ptr, "html");
+	      }
+	    else
+	      strcat (tempfile, ".html");
+	    TtaFreeMemory (desc->localName);
+	    desc->localName = TtaStrdup (tempfile);
+	  }
+	else
+	  {
+	    TtaFileUnlink (tempfile);	
 #   ifndef _WINDOWS
-	rename (outputfile, tempfile);
+	    rename (outputfile, tempfile);
 #   else /* _WINDOWS */
-	if (rename (outputfile, tempfile) != 0)
-		sprintf (tempfile, "%s", outputfile); 
+	    if (rename (outputfile, tempfile) != 0)
+	      sprintf (tempfile, "%s", outputfile); 
 #   endif /* _WINDOWS */
+	  }
 
 	/* save pathname */
 	TtaFreeMemory (desc->originalName);

@@ -2237,6 +2237,15 @@ char 	     *content_type;
        return HT_ERROR;
      }
 
+   /* if it's a 'docImage', we have already downloaded it */
+   if (!strncmp ("internal:", urlName, 9)) 
+     {
+       strcpy (outputfile, urlName);
+       InvokeGetObjectWWW_callback (docid, urlName, outputfile,
+				    terminate_cbf, context_tcbf, HT_OK);
+       return HT_OK;
+     }
+
    /* do we support this protocol? */
    if (IsValidProtocol (urlName) == NO) 
      {

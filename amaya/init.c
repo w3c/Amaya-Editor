@@ -1240,6 +1240,66 @@ boolean             logFile;
 }
 
 /*----------------------------------------------------------------------
+  CreateHTMLContainer creates an HTML container for an image
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void CreateHTMLContainer (char *pathname, char *docname, char *tempfile,
+				 boolean local)
+#else
+static void CreateHTMLContainer (pathname, docname, tempfile, local)
+char *pathname;
+char *docname;
+char *tempfile;
+boolean local;
+#endif 
+{
+  FILE *file;
+  char *tempfile_new;
+  char *ptr;
+
+  if (!local)
+    {
+      /* Rename the current downloaded file (an image) so that we can
+	 find it easily next time around. 
+	 The convention is to change the image's extension to 'html',
+	 and give the HTML's container the image's extension */
+      tempfile_new = TtaGetMemory (strlen (tempfile) + strlen (docname) 
+				   + 10);
+      strcpy (tempfile_new, tempfile);
+      ptr = strrchr (tempfile_new, DIR_SEP);
+      ptr++;
+      strcpy (ptr, docname);
+      ptr = strrchr (tempfile_new, '.');
+      if (ptr)
+	{
+	  ptr++;
+	  strcpy (ptr, "html");
+	}
+      else
+	strcat (ptr, ".html");
+      TtaFileUnlink (tempfile_new);
+#   ifndef _WINDOWS
+      rename (tempfile, tempfile_new);
+#   else /* _WINDOWS */
+      if (rename (tempfile, tempfile_new)  != 0)
+	sprintf (tempfile_new, "%s", tempfile); 
+#   endif /* _WINDOWS */
+      rename (tempfile, tempfile_new);
+      TtaFreeMemory (tempfile_new);
+    }
+  /* create a temporary file for the container and make Amaya think
+     that it is the current downloaded file */
+  file = fopen (tempfile, "w");
+  if (local)
+    fprintf (file, "<html><head></head><body>"
+	     "<img src=\"%s\"></body></html>", pathname);
+  else
+    fprintf (file, "<html><head></head><body>"
+	     "<img src=\"internal:%s\"></body></html>", pathname);
+  fclose (file);
+}
+
+/*----------------------------------------------------------------------
   LoadHTMLDocument parses of the new document and stores its path (or
   URL) into the document table.
   For a local loading tempfile must be an empty string, for a remote loading
@@ -1266,9 +1326,12 @@ boolean		    history;
   int                 i, j;
   boolean	       PlainText;
   boolean	       HTMLfile;
+  boolean	       IMAGEfile;
 
   PlainText = FALSE;
   HTMLfile = FALSE;
+  IMAGEfile = FALSE;
+
   tempdir = tempdocument = NULL;
   if (content_type == NULL || content_type[0] == EOS)
     /* no content type */
@@ -1310,6 +1373,41 @@ boolean		    history;
 	     }
 	 }
      }
+
+  /* Is the document an image */
+  if (!PlainText && !HTMLfile)
+    {
+      if (content_type && !strcmp (content_type, "image") 
+	  && tempfile[0] != EOS)
+	{
+	  /* get a pointer to the type ('/' substituted with an EOS
+	     earlier in this function */
+	  i = 0;
+	  while (content_type[i])
+	    i++;
+	  i++;
+	  /* if Amaya can display the image, then create an HTML
+	     container */
+	  if (IsImageType (&content_type[i]))
+	    {
+	      CreateHTMLContainer (pathname, documentname, tempfile, FALSE);
+	      HTMLfile = 1;
+	      IMAGEfile = 1;
+	    }
+	}
+      else
+	if (IsImageName (pathname) && tempfile[0] == EOS)
+	  {
+	    /* It's a local image file, so we create a temporary container */
+	    sprintf (tempfile, "%s%c%d%c%s", 
+		     TempFileDirectory, DIR_SEP, 0, DIR_SEP, "contain.html");
+	    CreateHTMLContainer (pathname, documentname, tempfile, TRUE);
+	    /* make amayua think that the container is the image */
+	    HTMLfile = 1;
+	    IMAGEfile = 1;
+	  }
+    }
+
   if (!PlainText && !HTMLfile && tempfile[0] != EOS)
     {
       /* The document is not an HTML file and cannot be parsed */
@@ -1343,9 +1441,12 @@ boolean		    history;
 	  /* free the previous document */
 	  newdoc = InitDocView (doc, pathname, FALSE);
 	}
-      else
-	newdoc = doc;
-      
+      else 
+	  newdoc = doc;
+
+      if (IMAGEfile)
+	DocumentTypes[newdoc] = docImage;
+
       /* what we have to do if doc and targetDocument are different */
       if (tempfile[0] != EOS)
 	{
@@ -2126,7 +2227,7 @@ void *context;
    GETHTMLDocument_context *ctx;
    TTcbf              *cbf;
    void               *ctx_cbf;
-
+   
    /* restore GETHTMLDocument's context */  
    ctx = (GETHTMLDocument_context *) context;
 

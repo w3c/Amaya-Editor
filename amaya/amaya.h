@@ -228,7 +228,8 @@ typedef enum
 {
   docHTML,
   docHelp,
-  docText
+  docText,
+  docImage
 } DocumentType;
 
 

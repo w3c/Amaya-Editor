@@ -304,6 +304,38 @@ const char         *path;
 }
 
 /*----------------------------------------------------------------------
+  IsImageType                                
+  returns TRUE if type points to an image resource.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             IsImageType (const char *type)
+#else  /* __STDC__ */
+boolean             IsImageType (type)
+const char         *type;
+#endif /* __STDC__ */
+{
+   char                temptype[MAX_LENGTH];
+   int                 i;
+
+   if (!type)
+      return (FALSE);
+
+   strcpy (temptype, type);
+   /* Normalize the type */
+   i = 0;
+   while (temptype[i] != EOS)
+     {
+       temptype[i] = tolower (temptype[i]);
+       i++;
+     }
+   if ((!strcmp (temptype, "gif")) || (!strcmp (temptype, "x-xbitmap")) ||
+       (!strcmp (temptype, "x-xpixmap")) || (!strcmp (temptype, "jpeg")) ||
+       (!strcmp (temptype, "png")))
+      return (TRUE);
+   return (FALSE);
+}
+
+/*----------------------------------------------------------------------
   IsTextName                                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -371,9 +403,10 @@ const char         *path;
    if (!path)
       return FALSE;
 
-   if (strncmp (path, "http:", 5) != 0)
-      return FALSE;
-   return TRUE;
+   if ((!strncmp (path, "http:", 5) != 0)
+       || !strncmp (path, "internal:", 9))
+      return TRUE;
+   return FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -431,9 +464,10 @@ boolean             IsValidProtocol (url)
 const char         *url;
 #endif /* __STDC__ */
 {
-   if (!strncmp (url, "http:", 5))
+   if (!strncmp (url, "http:", 5)
+      || !strncmp (url, "internal:", 9))
        /* experimental */
-      /***  || !strncmp (url, "ftp:", 4)) ***/
+      /***  || !strncmp (url, "ftp:", 4) ***/
      /*** || !strncmp (path, "news:", 5)***/ 
       return (TRUE);
    else
