@@ -1431,7 +1431,7 @@ static void           AHTAcceptTypesInit (HTList *c)
    /* Register additional bindings */
    HTBind_add("htm", "text/html",  NULL, "8bit", NULL, 1.0);
    HTBind_add("tgz", "application/gnutar",  NULL, "binary", NULL, 1.0);
-   HTBind_add("mml", "text/xml",  NULL, "8bit", NULL, 1.0);
+   HTBind_add("mml", "application/mathml+xml",  NULL, "8bit", NULL, 1.0);
    HTBind_add("svg", "image/svg+xml",  NULL, "8bit", NULL, 1.0);
    HTBind_add("xsl", "text/xml",  NULL, "8bit", NULL, 1.0);
    /* Don't do any case distinction */

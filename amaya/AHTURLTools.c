@@ -557,7 +557,7 @@ ThotBool IsMathMLName (const char *path)
 
 /*----------------------------------------------------------------------
   IsSVGName                                                         
-  returns TRUE if path points to an MathML resource.
+  returns TRUE if path points to an SVG resource.
   ----------------------------------------------------------------------*/
 ThotBool IsSVGName (const char *path)
 {

@@ -1497,20 +1497,21 @@ void InitMimeType (Document document, View view, char *url, char *status)
       mimetypes_list = "image/png\0"
 	"image/jpeg\0"
 	"image/gif\0"
-	"application/x-bitmap\0";
-      nbmimetypes = 3;
+	"image/x-bitmap\0"
+	"image/x-xpicmap\0";
+      nbmimetypes = 5;
     }
   else if (DocumentTypes[document] == docSVG)
     {
-      mimetypes_list = "text/xml+svg\0"
-	"image/svg\0";
+      mimetypes_list = "image/svg+xml\0"
+	"text/xml\0";
       nbmimetypes = 2;
     }
   else 
     {
       mimetypes_list = "text/html\0"
 	"text/xml\0"
-	"text/xml+mathml\0"
+	"application/mathml+xml\0"
 	"text/plain\0"
 	"text/css\0";
       nbmimetypes = 5;
@@ -2492,9 +2493,9 @@ static Document LoadDocument (Document doc, char *pathname,
 	}
       /* Assign a content type to that local document */
       if (docType == docMath)
-	strcpy (local_content_type , "text/mathml+xml");
+	strcpy (local_content_type , "application/mathml+xml");
       else if (docType == docSVG)
-	strcpy (local_content_type , "image/svg");
+	strcpy (local_content_type , "image/svg+xml");
       else if (docType == docXml)
 	strcpy (local_content_type , "text/xml");
       else if (docType == docText || docType == docCSS ||
