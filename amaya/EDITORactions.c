@@ -528,7 +528,10 @@ static void CreateOrChangeDoctype (Document doc, View view, int profile)
   /* Ask confirmation */
   if (TtaIsDocumentModified (doc))
     {
-      ConfirmError (doc, 1, TtaGetMessage (AMAYA, AM_CHANGE_DOCTYPE), 0, "Confirm");
+      InitConfirm3L (doc, view,
+		     TtaGetMessage (AMAYA, AM_CHANGE_DOCTYPE1),
+		     TtaGetMessage (AMAYA, AM_CHANGE_DOCTYPE2),
+		     NULL, TRUE);
       if (!UserAnswer)
 	return;
     } 
@@ -578,6 +581,9 @@ static void CreateOrChangeDoctype (Document doc, View view, int profile)
   TtaExtractName (tempdocument, tempdir, documentname);
   RestartParser (doc, tempdocument, tempdir, documentname);
   TtaSetDocumentModified (doc);
+
+  /* Clear all editing operations registered in the editing history of the document */
+  TtaClearUndoHistory (doc);
 
   /* Clear the current selection */
   TtaClearViewSelections ();

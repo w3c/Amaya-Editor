@@ -2252,12 +2252,19 @@
 	<message xml:lang="de">Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)</message>
 	<message xml:lang="pt">Salvar esta instância pode causar um problema de perda de atualização</message>
 </label>
-<label define="AM_CHANGE_DOCTYPE">
-	<message xml:lang="en">Creating or Changing the doctype causes the document to be reparsed. Pending modifications won't be undone.</message>
-	<message xml:lang="fr">Le document sera réanalysé pour prendre en compte le doctype. Les modifications en cours ne pourront être défaites</message>
-	<message xml:lang="it">Creare o cambiare il doctype fa riparsificare il documento. Le modifiche non potranno venire annullate.</message>
-	<message xml:lang="de">Beim Einfügen oder Ändern des Dokumenttyps wird das Dokument neu geparst. Nicht gespeicherte Änderungen bleiben dabei erhalten.</message>
-	<message xml:lang="es">Crear o cambiar el tipo de documento provoca que el documento sea reanalizado. No se desharán las modificaciones pendientes.</message>
+<label define="AM_CHANGE_DOCTYPE1">
+	<message xml:lang="en">Creating or Changing the doctype causes the document to be reparsed.</message>
+	<message xml:lang="fr">Le document sera réanalysé pour prendre en compte le doctype.</message>
+	<message xml:lang="it">Creare o cambiare il doctype fa riparsificare il documento.</message>
+	<message xml:lang="de">Beim Einfügen oder Ändern des Dokumenttyps wird das Dokument neu geparst.</message>
+	<message xml:lang="es">Crear o cambiar el tipo de documento provoca que el documento sea reanalizado.</message>
+</label>
+<label define="AM_CHANGE_DOCTYPE2">
+	<message xml:lang="en">Pending modifications won't be undone.</message>
+	<message xml:lang="fr">Les modifications en cours ne pourront être défaites.</message>
+	<message xml:lang="it">Le modifiche non potranno venire annullate.</message>
+	<message xml:lang="de">Nicht gespeicherte Änderungen bleiben dabei erhalten.</message>
+	<message xml:lang="es">No se desharán las modificaciones pendientes.</message>
 </label>
 <label define="AM_USE_XHTML_MIMETYPE">
 	<message xml:lang="en">Use the application/xhtml+xml MIME type for XHTML documents</message>

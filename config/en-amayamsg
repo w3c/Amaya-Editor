@@ -264,5 +264,6 @@
 262 Styles are ignored - see Views/Show parsing errors
 263 This document is already loaded in another Window
 264 Saving that instance may cause a lost update problem
-265 Creating or Changing the doctype causes the document to be reparsed. Pending modifications won't be undone.
-266 Use the application/xhtml+xml MIME type for XHTML documents
+265 Creating or Changing the doctype causes the document to be reparsed.
+266 Pending modifications won't be undone.
+267 Use the application/xhtml+xml MIME type for XHTML documents

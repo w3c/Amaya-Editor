@@ -264,5 +264,6 @@
 262 Se ignoran estilos - vea Vistas/Mostrar fichero log
 263 Este documento ya está cargado en otra ventana
 264 Guardar la copia puede originar un problema de pérdida de actualización
-265 Crear o cambiar el tipo de documento provoca que el documento sea reanalizado. No se desharán las modificaciones pendientes.
-266 Para documentos XHTML utilice el tipo MIME de la aplicación xhtml+xml
+265 Crear o cambiar el tipo de documento provoca que el documento sea reanalizado.
+266 No se desharán las modificaciones pendientes.
+267 Para documentos XHTML utilice el tipo MIME de la aplicación xhtml+xml

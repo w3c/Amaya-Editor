@@ -264,5 +264,6 @@
 262 I stili sono ignorati - vedi Viste/Mostra le errore
 263 Questo documento è già caricato in un'altra finestra
 264 Salvare questa istanza può fare perdere degli aggiornamenti
-265 Creare o cambiare il doctype fa riparsificare il documento. Le modifiche non potranno venire annullate.
-266 Per un documento XHTML, usa il MIME type application/xhtml+xml
+265 Creare o cambiare il doctype fa riparsificare il documento.
+266 Le modifiche non potranno venire annullate.
+267 Per un documento XHTML, usa il MIME type application/xhtml+xml
