@@ -372,9 +372,19 @@ void ANNOT_Quit ()
 static void ANNOT_FreeAnnotResource (Document source_doc, Element annotEl, 
 				AnnotMeta *annot)
 {
+  XPointerContextPtr ctx;
+
   /* remove the annotation link in the source document */
   if (annotEl)
-    LINK_RemoveLinkFromSource (source_doc, annotEl);
+    {
+      LINK_RemoveLinkFromSource (source_doc, annotEl);
+      /* we relesct the region that was annotated */
+      if (TtaGetSelectedDocument () == source_doc)
+	TtaUnselect (source_doc);
+      ctx = XPointer_parse (source_doc, annot->xptr);
+      XPointer_select (ctx);
+      XPointer_free (ctx);
+    }
 #if 0
   /* remove the annotation from the filters */
   AnnotFilter_delete (&(AnnotMetaData[source_doc].authors), annot, 
@@ -471,6 +481,7 @@ void ANNOT_FreeDocumentResource (Document doc)
 
       if (annot)
 	{
+	  
 	  annotEl = SearchAnnotation (source_doc, annot->name);
 	  /* remove the annotation metadata and the annotation icon */
 	  ANNOT_FreeAnnotResource (source_doc, annotEl, annot);
