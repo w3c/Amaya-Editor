@@ -33,6 +33,7 @@ RULES
   DOCTYPE declaration is no longer generated
 	Create HtmlDTD;
 }
+	Create PI;
 #ifdef XML
 	Create '<html xmlns="http://www.w3.org/1999/xhtml"';
 	{*** Create Namespaces; ***}

@@ -45,7 +45,7 @@ STRUCT
 
   HTML								{ HTML }
      (ATTR SectionNumbering = Yes_; ShowAreas = Yes_;
-	   PrintURL = Yes_; HtmlDTD = Text;
+	   PrintURL = Yes_; PI = Text;
 	   Namespaces = Text; RealLang = Yes_; Charset = Text) =
 	BEGIN
 	HEAD;
@@ -938,7 +938,7 @@ EXCEPT
 	Namespaces:	Invisible;
 	RealLang:	Invisible;
 	Charset:	Invisible;
-	HtmlDTD:	Invisible;
+	PI:     	Invisible;
 	shape:		Invisible;
 	Data_cell:	IsCell, NoMove, NoResize;
 	Heading_cell:	IsCell, NoMove, NoResize;
