@@ -23,10 +23,6 @@
      0     0   View          int        jint
      0     0   Language      char       jint
      0     0   Pixel         int        jint
-#  These are structs { SSchema + int } packed in a 64 bit Java long
-#  Shame :-o
-     0     0   ElementType   long       jlong    yes
-     0     0   AttributeType long       jlong    yes
 #  Tricky : interfacing directy with objects when using
 #  pointer to objects.
      1     1   int           IntPtr     "struct Hthotlib_IntPtr*" yes
@@ -39,5 +35,3 @@
      1     1   PRule         PRule      "struct Hthotlib_PRule*" yes
      1     1   Language      Language   "struct Hthotlib_Language*" yes
      1     1   Element       Element    "struct Hthotlib_Element*" yes
-#problem of returning string in preallocated buffers :-)
-#       2       char          String     "struct Hjava_lang_String*" yes

@@ -19,7 +19,6 @@ extern void TtaSetAttributeReference(Attribute attribute, Element element, Docum
 extern void TtaCopyAttributeReference(Attribute attribute, Element element, Attribute source);
 extern void TtaUpdateInclusionElements(Document document, boolean loadExternalDoc, boolean removeExclusions);
 extern void TtaGiveReferredElement(Element element, /*OUT*/ Element *target, /*OUT*/ char *targetDocumentName, /*OUT*/ Document *targetDocument);
-extern int TtaIsElementTypeReference(ElementType elementType);
 extern int TtaSameReferences(Element element1, Element element2);
 extern void TtaGiveReferenceAttributeValue(Attribute attribute, /*OUT*/ Element *target, /*OUT*/ char *targetDocumentName, /*OUT*/ Document *targetDocument);
 extern int TtaIsElementReferred(Element element);

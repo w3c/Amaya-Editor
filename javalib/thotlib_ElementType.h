@@ -11,7 +11,8 @@ extern "C" {
 /* Header for class thotlib_ElementType */
 
 typedef struct Classthotlib_ElementType {
-  jlong elementType;
+  jlong sschema;
+  jint type;
 } Classthotlib_ElementType;
 HandleTo(thotlib_ElementType);
 

@@ -192,28 +192,6 @@ thotlib_APIReference_TtaGiveReferredElement(struct Hthotlib_APIReference* none, 
 }
 
 /*
- * Java to C function TtaIsElementTypeReference stub.
- */
-jint
-thotlib_APIReference_TtaIsElementTypeReference(struct Hthotlib_APIReference* none, jlong jelementType)
-{
-	int res;
-	ElementType elementType;
-
-	/* convert arg jlong jelementType to ElementType elementType */
-	Javalong2CElementType(jelementType,&elementType);
-
-	thotlib_APIReference_LOCK();
-
-	res = TtaIsElementTypeReference((ElementType ) elementType);
-
-	thotlib_APIReference_UNLOCK();
-
-
-	return((jint) res);
-}
-
-/*
  * Java to C function TtaSameReferences stub.
  */
 jint
@@ -414,7 +392,6 @@ void register_thotlib_APIReference_stubs(void)
 	addNativeMethod("thotlib_APIReference_TtaCopyAttributeReference", thotlib_APIReference_TtaCopyAttributeReference);
 	addNativeMethod("thotlib_APIReference_TtaUpdateInclusionElements", thotlib_APIReference_TtaUpdateInclusionElements);
 	addNativeMethod("thotlib_APIReference_TtaGiveReferredElement", thotlib_APIReference_TtaGiveReferredElement);
-	addNativeMethod("thotlib_APIReference_TtaIsElementTypeReference", thotlib_APIReference_TtaIsElementTypeReference);
 	addNativeMethod("thotlib_APIReference_TtaSameReferences", thotlib_APIReference_TtaSameReferences);
 	addNativeMethod("thotlib_APIReference_TtaGiveReferenceAttributeValue", thotlib_APIReference_TtaGiveReferenceAttributeValue);
 	addNativeMethod("thotlib_APIReference_TtaIsElementReferred", thotlib_APIReference_TtaIsElementReferred);

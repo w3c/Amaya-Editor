@@ -151,6 +151,31 @@ PtrSSchema          schStruct;
 	       }
 	  }
      }
+   else if (userFuncEvent == NULL)
+     {
+	eventsSet = EditorEvents;
+	if (eventsSet != NULL)
+	  {
+	     /* take the concerned actions list */
+	     pActEvent = eventsSet->EvSList[event];
+	     while (pActEvent != NULL)
+	       {
+		  if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
+		    {
+		       if (pre) {
+			  userFuncEvent = pActEvent->AEvAction->ActUser;
+			  userFuncArg = pActEvent->AEvAction->ActArg;
+		       } else {
+			  userProcEvent = pActEvent->AEvAction->ActUser;
+			  userProcArg = pActEvent->AEvAction->ActArg;
+		       }
+		       pActEvent = NULL;	/* end of research */
+		    }
+		  else
+		     pActEvent = pActEvent->AEvNext;
+	       }
+	  }
+     }
 
    status = FALSE;
    if ((funcEvent != NULL) || (procEvent != NULL) ||

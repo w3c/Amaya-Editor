@@ -4,26 +4,7 @@
  */
 
 #include "JavaTypes.h"
-
-/*
- * convert 2 * 32 structs <=> Java long
- */
-void Javalong2CElementType(jlong in, ElementType *out)
-{
-    memcpy(out, &in, sizeof(ElementType));
-}
-void Javalong2CAttributeType(jlong in, AttributeType *out)
-{
-    memcpy(out, &in, sizeof(AttributeType));
-}
-void CElementType2Javalong(ElementType in, jlong *out)
-{
-    memcpy(out, &in, sizeof(jlong));
-}
-void CAttributeType2Javalong(AttributeType in, jlong *out)
-{
-    memcpy(out, &in, sizeof(jlong));
-}
+#include "JavaTypes_f.h"
 
 /*
  * C object <=> Java object content
@@ -46,11 +27,22 @@ void CElementPtr2JavaElement(Element *in, struct Hthotlib_Element** out)
 
 void JavaElementType2CElementTypePtr(struct Hthotlib_ElementType* in, ElementType **out)
 {
-    *out = (ElementType *) &(unhand(in)->elementType);
+    *out = (ElementType *) malloc(sizeof(ElementType));
+    (*out)->ElSSchema = (SSchema) (unhand(in)->sschema);
+    (*out)->ElTypeNum = (int) (unhand(in)->type);
 }
 void CElementTypePtr2JavaElementType(ElementType *in, struct Hthotlib_ElementType** out)
 {
+    unhand(*out)->sschema = (jlong) in->ElSSchema;
+    unhand(*out)->type = (jint) in->ElTypeNum;
+    free(in);
 }
+void CElementType2JavaElementType(ElementType in, struct Hthotlib_ElementType* out)
+{
+    unhand(out)->sschema = (jlong) in.ElSSchema;
+    unhand(out)->type = (jint) in.ElTypeNum;
+}
+
 
 void JavaDocument2CDocumentPtr(struct Hthotlib_Document* in, Document **out)
 {
@@ -86,10 +78,15 @@ void CPRulePtr2JavaPRule(PRule *in, struct Hthotlib_PRule** out)
 
 void JavaAttributeType2CAttributeTypePtr(struct Hthotlib_AttributeType* in, AttributeType **out)
 {
-    *out = (AttributeType *) &(unhand(in)->attributeType);
+    *out = (AttributeType *) malloc(sizeof(AttributeType));
+    (*out)->AttrSSchema = (SSchema) (unhand(in)->sschema);
+    (*out)->AttrTypeNum = (int) (unhand(in)->type);
 }
 void CAttributeTypePtr2JavaAttributeType(AttributeType *in, struct Hthotlib_AttributeType** out)
 {
+    unhand(*out)->sschema = (jlong) in->AttrSSchema;
+    unhand(*out)->type = (jint) in->AttrTypeNum;
+    free(in);
 }
 
 void JavaIntPtr2CintPtr(struct Hthotlib_IntPtr* in, int **out)

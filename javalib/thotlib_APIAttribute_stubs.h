@@ -12,21 +12,16 @@
 #include "attribute.h"
 
 
-extern Attribute TtaNewAttribute(AttributeType attributeType);
 extern void TtaAttachAttribute(Element element, Attribute attribute, Document document);
 extern void TtaRemoveAttribute(Element element, Attribute attribute, Document document);
 extern void TtaSetAttributeValue(Attribute attribute, int value, Element element, Document document);
 extern void TtaSetAttributeText(Attribute attribute, char *buffer, Element element, Document document);
 extern void TtaNextAttribute(Element element, /*INOUT*/ Attribute *attribute);
-extern Attribute TtaGetAttribute(Element element, AttributeType attributeType);
 extern void TtaGiveAttributeType(Attribute attribute, /*OUT*/ AttributeType *attributeType, /*OUT*/ int *attrKind);
 extern void TtaGiveAttributeTypeFromName(char *name, Element element, /*OUT*/ AttributeType *attributeType, /*OUT*/ int *attrKind);
-extern char *TtaGetAttributeName(AttributeType attributeType);
-extern int TtaSameAttributeTypes(AttributeType type1, AttributeType type2);
 extern int TtaGetAttributeValue(Attribute attribute);
 extern int TtaGetTextAttributeLength(Attribute attribute);
 extern void TtaGiveTextAttributeValue(Attribute attribute, /*OUT*/ char *buffer, /*INOUT*/ int *length);
-extern void TtaSearchAttribute(AttributeType searchedAttribute, SearchDomain scope, Element element, /*OUT*/ Element *elementFound, /*OUT*/ Attribute *attributeFound);
 extern void register_thotlib_APIAttribute_stubs(void);
 
 #endif /* _Included_thotlib_APIAttribute_stub_h */

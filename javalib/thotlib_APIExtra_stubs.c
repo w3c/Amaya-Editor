@@ -63,7 +63,9 @@ thotlib_Extra_JavaStartApplet(struct Hthotlib_Extra* none,
     javaString2CString(class, classname, sizeof(classname));
     javaString2CString(signature, sig, sizeof(sig));
 
-    if (!strncmp(sig, "(I)", 3))
+    if (!strncmp(sig, "(I[Ljava/lang/String;)", 22))
+	res = do_execute_java_class_method(classname, "main", sig, doc, args);
+    else if (!strncmp(sig, "(I)", 3))
 	res = do_execute_java_class_method(classname, "main", sig, doc);
     else
 	res = do_execute_java_class_method(classname, "main", sig, args);
@@ -93,7 +95,7 @@ thotlib_Extra_JavaXFlush(struct Hthotlib_Extra* none)
 static int
 thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
 {
-    jword res;
+    jword res = 0;
 
     JavaThotlibRelease();
     if ((arg == NULL) || (event == NULL)) return(0);
@@ -201,6 +203,8 @@ thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
 	    break;
 	}
 	case TteNull:
+	case TteElemFetchInclude:
+	case TteDocTmpOpen:
 	    res = 0;
 	    break;
     }
@@ -343,6 +347,163 @@ thotlib_Extra_AddSSchemaActionEvent(struct Hthotlib_Extra* none,
     JavaThotlibRelease();
 }
 
+void
+thotlib_Extra_TtaGetElementType(struct Hthotlib_Extra* none,
+		struct Hthotlib_ElementType* elType, jlong el) {
+    ElementType et;
+
+    JavaThotlibLock();
+    et = TtaGetElementType((Element) el);
+    JavaThotlibRelease();
+    CElementType2JavaElementType(et, elType);
+}
+
+struct Hjava_lang_String*
+thotlib_Extra_TtaGetElementTypeName(struct Hthotlib_Extra* none,
+		jlong sschema, jint type) {
+    char *res;
+    ElementType et;
+
+    et.ElSSchema = (SSchema) sschema;
+    et.ElTypeNum = (int) type;
+    JavaThotlibLock();
+    res = TtaGetElementTypeName(et);
+    JavaThotlibRelease();
+    if (res == NULL)
+        return(NULL);
+    else
+        return(makeJavaString(res, strlen(res)));
+}
+
+jlong
+thotlib_Extra_TtaNewAttribute(struct Hthotlib_Extra* none,
+		struct Hthotlib_AttributeType* atType) {
+    AttributeType att;
+    Attribute at;
+
+    att.AttrSSchema = (SSchema) (unhand(atType)->sschema);
+    att.AttrTypeNum = (int) (unhand(atType)->type);
+    JavaThotlibLock();
+    at = TtaNewAttribute(att);
+    JavaThotlibRelease();
+    return((jlong) at);
+}
+
+jlong
+thotlib_Extra_TtaGetAttribute(struct Hthotlib_Extra* none,
+		jlong element, struct Hthotlib_AttributeType* atType) {
+    AttributeType att;
+    Attribute at;
+
+    att.AttrSSchema = (SSchema) (unhand(atType)->sschema);
+    att.AttrTypeNum = (int) (unhand(atType)->type);
+    JavaThotlibLock();
+    at = TtaGetAttribute((Element) element, att);
+    JavaThotlibRelease();
+    return((jlong) at);
+}
+
+void
+thotlib_Extra_TtaSearchAttribute(struct Hthotlib_Extra* none,
+		struct Hthotlib_AttributeType* atType, jint scope,
+		jlong element, struct Hthotlib_Element* el,
+		struct Hthotlib_Attribute* at) {
+    AttributeType att;
+    Attribute lat;
+    Element lel;
+
+    att.AttrSSchema = (SSchema) (unhand(atType)->sschema);
+    att.AttrTypeNum = (int) (unhand(atType)->type);
+    JavaThotlibLock();
+    TtaSearchAttribute(att, (SearchDomain) scope, (Element) element, &lel, &lat);
+    JavaThotlibRelease();
+    unhand(at)->attribute = (jlong) lat;
+    unhand(el)->element = (jlong) lel;
+}
+
+jlong
+thotlib_Extra_TtaSearchTypedElement(struct Hthotlib_Extra* none,
+		struct Hthotlib_ElementType* elType, jint scope,
+		struct Hthotlib_Element* el) {
+    ElementType lelt;
+    Element lel;
+
+    lelt.ElSSchema = (SSchema) (unhand(elType)->sschema);
+    lelt.ElTypeNum = (int) (unhand(elType)->type);
+    lel = (Element) (unhand(el)->element);
+    JavaThotlibLock();
+    lel = TtaSearchTypedElement(lelt, (SearchDomain) scope, lel);
+    JavaThotlibRelease();
+    return((jlong) lel);
+}
+
+jlong
+thotlib_Extra_TtaNewElement(struct Hthotlib_Extra* none,
+		jint document, struct Hthotlib_ElementType* elType) {
+    ElementType elt;
+    Element el;
+
+    elt.ElSSchema = (SSchema) (unhand(elType)->sschema);
+    elt.ElTypeNum = (int) (unhand(elType)->type);
+    JavaThotlibLock();
+    el = TtaNewElement((Document) document, elt);
+    JavaThotlibRelease();
+    return((jlong) el);
+}
+
+jlong
+thotlib_Extra_TtaNewTree(struct Hthotlib_Extra* none,
+		jint document, struct Hthotlib_ElementType* elType,
+		struct Hjava_lang_String* jlabel) {
+    ElementType elt;
+    Element el;
+    char label[1024];
+    char *label_ptr = &label[0];
+
+    if (jlabel != NULL)
+        javaString2CString(jlabel, label_ptr, sizeof(label));
+    else
+        label_ptr = NULL;
+
+    elt.ElSSchema = (SSchema) (unhand(elType)->sschema);
+    elt.ElTypeNum = (int) (unhand(elType)->type);
+    JavaThotlibLock();
+    el = TtaNewTree((Document) document, elt, label_ptr);
+    JavaThotlibRelease();
+    return((jlong) el);
+}
+
+jlong
+thotlib_Extra_TtaCreateDescent(struct Hthotlib_Extra* none,
+		jint document, jlong element,
+		struct Hthotlib_ElementType* elType) {
+    ElementType elt;
+    Element el;
+
+    elt.ElSSchema = (SSchema) (unhand(elType)->sschema);
+    elt.ElTypeNum = (int) (unhand(elType)->type);
+    JavaThotlibLock();
+    el = TtaCreateDescent((Document) document, (Element) element, elt);
+    JavaThotlibRelease();
+    return((jlong) el);
+}
+
+jlong
+thotlib_Extra_TtaCreateDescentWithContent(struct Hthotlib_Extra* none,
+		jint document, jlong element,
+		struct Hthotlib_ElementType* elType) {
+    ElementType elt;
+    Element el;
+
+    elt.ElSSchema = (SSchema) (unhand(elType)->sschema);
+    elt.ElTypeNum = (int) (unhand(elType)->type);
+    JavaThotlibLock();
+    el = TtaCreateDescentWithContent((Document) document, (Element) element, elt);
+    JavaThotlibRelease();
+    return((jlong) el);
+}
+
+
 /*
  * Java to C function Ttaxxx stub.
 xxx
@@ -378,6 +539,27 @@ void register_thotlib_Extra_stubs(void)
 	                thotlib_Extra_AddEditorActionEvent);
 	addNativeMethod("thotlib_Extra_AddSSchemaActionEvent",
 	                thotlib_Extra_AddSSchemaActionEvent);
+        addNativeMethod("thotlib_Extra_TtaGetElementType",
+	                thotlib_Extra_TtaGetElementType);
+        addNativeMethod("thotlib_Extra_TtaGetElementTypeName",
+	                thotlib_Extra_TtaGetElementTypeName);
+        addNativeMethod("thotlib_Extra_TtaNewAttribute",
+	                thotlib_Extra_TtaNewAttribute);
+        addNativeMethod("thotlib_Extra_TtaSearchTypedElement",
+	                thotlib_Extra_TtaSearchTypedElement);
+        addNativeMethod("thotlib_Extra_TtaGetAttribute",
+	                thotlib_Extra_TtaGetAttribute);
+        addNativeMethod("thotlib_Extra_TtaSearchAttribute",
+	                thotlib_Extra_TtaSearchAttribute);
+        addNativeMethod("thotlib_Extra_TtaNewElement",
+	                thotlib_Extra_TtaNewElement);
+        addNativeMethod("thotlib_Extra_TtaNewTree",
+	                thotlib_Extra_TtaNewTree);
+        addNativeMethod("thotlib_Extra_TtaCreateDescent",
+	                thotlib_Extra_TtaCreateDescent);
+        addNativeMethod("thotlib_Extra_TtaCreateDescentWithContent",
+	                thotlib_Extra_TtaCreateDescentWithContent);
+
 /*
 	addNativeMethod("thotlib_Extra_Ttaxxx", thotlib_Extra_Ttaxxx);
  */

@@ -23,31 +23,6 @@
 #endif /* thotlib_APIAttribute_UNLOCK */
 
 /*
- * Java to C function TtaNewAttribute stub.
- */
-jlong
-thotlib_APIAttribute_TtaNewAttribute(struct Hthotlib_APIAttribute* none, jlong jattributeType)
-{
-	jlong result;
-	Attribute res;
-	AttributeType attributeType;
-
-	/* convert arg jlong jattributeType to AttributeType attributeType */
-	Javalong2CAttributeType(jattributeType,&attributeType);
-
-	thotlib_APIAttribute_LOCK();
-
-	res = TtaNewAttribute((AttributeType ) attributeType);
-
-	thotlib_APIAttribute_UNLOCK();
-
-	/* convert Attribute res to jlong result */
-	CAttribute2Javalong(res, &result);
-
-	return(result);
-}
-
-/*
  * Java to C function TtaAttachAttribute stub.
  */
 void
@@ -166,34 +141,6 @@ thotlib_APIAttribute_TtaNextAttribute(struct Hthotlib_APIAttribute* none, jlong 
 }
 
 /*
- * Java to C function TtaGetAttribute stub.
- */
-jlong
-thotlib_APIAttribute_TtaGetAttribute(struct Hthotlib_APIAttribute* none, jlong jelement, jlong jattributeType)
-{
-	jlong result;
-	Attribute res;
-	Element element;
-	AttributeType attributeType;
-
-	/* convert arg jlong jelement to Element element */
-	Javalong2CElement(jelement,&element);
-	/* convert arg jlong jattributeType to AttributeType attributeType */
-	Javalong2CAttributeType(jattributeType,&attributeType);
-
-	thotlib_APIAttribute_LOCK();
-
-	res = TtaGetAttribute((Element ) element, (AttributeType ) attributeType);
-
-	thotlib_APIAttribute_UNLOCK();
-
-	/* convert Attribute res to jlong result */
-	CAttribute2Javalong(res, &result);
-
-	return(result);
-}
-
-/*
  * Java to C function TtaGiveAttributeType stub.
  */
 void
@@ -255,56 +202,6 @@ thotlib_APIAttribute_TtaGiveAttributeTypeFromName(struct Hthotlib_APIAttribute* 
 	CAttributeTypePtr2JavaAttributeType(attributeType,&jattributeType);
 	/* convert int *attrKind to arg struct Hthotlib_IntPtr* jattrKind */
 	CintPtr2JavaIntPtr(attrKind,&jattrKind);
-}
-
-/*
- * Java to C function TtaGetAttributeName stub.
- */
-struct Hjava_lang_String*
-thotlib_APIAttribute_TtaGetAttributeName(struct Hthotlib_APIAttribute* none, jlong jattributeType)
-{
-	char *res;
-	AttributeType attributeType;
-
-	/* convert arg jlong jattributeType to AttributeType attributeType */
-	Javalong2CAttributeType(jattributeType,&attributeType);
-
-	thotlib_APIAttribute_LOCK();
-
-	res = TtaGetAttributeName((AttributeType ) attributeType);
-
-	thotlib_APIAttribute_UNLOCK();
-
-
-	if (res == NULL)
-		return(NULL);
-	else;
-		return(makeJavaString(res, strlen(res)));
-}
-
-/*
- * Java to C function TtaSameAttributeTypes stub.
- */
-jint
-thotlib_APIAttribute_TtaSameAttributeTypes(struct Hthotlib_APIAttribute* none, jlong jtype1, jlong jtype2)
-{
-	int res;
-	AttributeType type1;
-	AttributeType type2;
-
-	/* convert arg jlong jtype1 to AttributeType type1 */
-	Javalong2CAttributeType(jtype1,&type1);
-	/* convert arg jlong jtype2 to AttributeType type2 */
-	Javalong2CAttributeType(jtype2,&type2);
-
-	thotlib_APIAttribute_LOCK();
-
-	res = TtaSameAttributeTypes((AttributeType ) type1, (AttributeType ) type2);
-
-	thotlib_APIAttribute_UNLOCK();
-
-
-	return((jint) res);
 }
 
 /*
@@ -381,56 +278,19 @@ thotlib_APIAttribute_TtaGiveTextAttributeValue(struct Hthotlib_APIAttribute* non
 }
 
 /*
- * Java to C function TtaSearchAttribute stub.
- */
-void
-thotlib_APIAttribute_TtaSearchAttribute(struct Hthotlib_APIAttribute* none, jlong jsearchedAttribute, jint scope, jlong jelement, struct Hthotlib_Element* jelementFound, struct Hthotlib_Attribute* jattributeFound)
-{
-	AttributeType searchedAttribute;
-	Element element;
-	Element *elementFound;
-	Attribute *attributeFound;
-
-	/* convert arg jlong jsearchedAttribute to AttributeType searchedAttribute */
-	Javalong2CAttributeType(jsearchedAttribute,&searchedAttribute);
-	/* convert arg jlong jelement to Element element */
-	Javalong2CElement(jelement,&element);
-	/* convert arg struct Hthotlib_Element* jelementFound to Element *elementFound */
-	JavaElement2CElementPtr(jelementFound,&elementFound);
-	/* convert arg struct Hthotlib_Attribute* jattributeFound to Attribute *attributeFound */
-	JavaAttribute2CAttributePtr(jattributeFound,&attributeFound);
-
-	thotlib_APIAttribute_LOCK();
-
-	TtaSearchAttribute((AttributeType ) searchedAttribute, (SearchDomain ) scope, (Element ) element, (Element *) elementFound, (Attribute *) attributeFound);
-
-	thotlib_APIAttribute_UNLOCK();
-
-	/* convert Element *elementFound to arg struct Hthotlib_Element* jelementFound */
-	CElementPtr2JavaElement(elementFound,&jelementFound);
-	/* convert Attribute *attributeFound to arg struct Hthotlib_Attribute* jattributeFound */
-	CAttributePtr2JavaAttribute(attributeFound,&jattributeFound);
-}
-
-/*
  * Function to register all thotlib_APIAttribute stubs.
  */
 void register_thotlib_APIAttribute_stubs(void)
 {
-	addNativeMethod("thotlib_APIAttribute_TtaNewAttribute", thotlib_APIAttribute_TtaNewAttribute);
 	addNativeMethod("thotlib_APIAttribute_TtaAttachAttribute", thotlib_APIAttribute_TtaAttachAttribute);
 	addNativeMethod("thotlib_APIAttribute_TtaRemoveAttribute", thotlib_APIAttribute_TtaRemoveAttribute);
 	addNativeMethod("thotlib_APIAttribute_TtaSetAttributeValue", thotlib_APIAttribute_TtaSetAttributeValue);
 	addNativeMethod("thotlib_APIAttribute_TtaSetAttributeText", thotlib_APIAttribute_TtaSetAttributeText);
 	addNativeMethod("thotlib_APIAttribute_TtaNextAttribute", thotlib_APIAttribute_TtaNextAttribute);
-	addNativeMethod("thotlib_APIAttribute_TtaGetAttribute", thotlib_APIAttribute_TtaGetAttribute);
 	addNativeMethod("thotlib_APIAttribute_TtaGiveAttributeType", thotlib_APIAttribute_TtaGiveAttributeType);
 	addNativeMethod("thotlib_APIAttribute_TtaGiveAttributeTypeFromName", thotlib_APIAttribute_TtaGiveAttributeTypeFromName);
-	addNativeMethod("thotlib_APIAttribute_TtaGetAttributeName", thotlib_APIAttribute_TtaGetAttributeName);
-	addNativeMethod("thotlib_APIAttribute_TtaSameAttributeTypes", thotlib_APIAttribute_TtaSameAttributeTypes);
 	addNativeMethod("thotlib_APIAttribute_TtaGetAttributeValue", thotlib_APIAttribute_TtaGetAttributeValue);
 	addNativeMethod("thotlib_APIAttribute_TtaGetTextAttributeLength", thotlib_APIAttribute_TtaGetTextAttributeLength);
 	addNativeMethod("thotlib_APIAttribute_TtaGiveTextAttributeValue", thotlib_APIAttribute_TtaGiveTextAttributeValue);
-	addNativeMethod("thotlib_APIAttribute_TtaSearchAttribute", thotlib_APIAttribute_TtaSearchAttribute);
 }
 
