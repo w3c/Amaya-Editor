@@ -203,32 +203,32 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
 
       if (!strcmp (lan, "hu") || !strcmp (lan, "pl") || !strcmp (lan, "zh"))
 	/* Central Europe */
-#ifdef _WINGUI
+#ifdef _WINDOWS
 	DialogCharset = WINDOWS_1250;
-#else /* _WINGUI */
+#else /* _WINDOWS */
 	DialogCharset = ISO_8859_2;
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
       else if (!strcmp (lan, "fi"))
 	/* Baltic RIM */
-#ifdef _WINGUI
+#ifdef _WINDOWS
 	DialogCharset = WINDOWS_1257;
-#else /* _WINGUI */
+#else /* _WINDOWS */
 	DialogCharset = ISO_8859_4;
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
       else if (!strcmp (lan, "tr"))
 	/* Turkish */
-#ifdef _WINGUI
+#ifdef _WINDOWS
 	DialogCharset = WINDOWS_1254;
-#else /* _WINGUI */
+#else /* _WINDOWS */
 	DialogCharset = ISO_8859_9;
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
       else
 	/* Latin 1 */
-#ifdef _WINGUI
+#ifdef _WINDOWS
 	DialogCharset = WINDOWS_1252;
-#else /* _WINGUI */
+#else /* _WINDOWS */
 	DialogCharset = ISO_8859_1;
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 
       /* Load messages */
       while (fscanf (file, "%d %[^#\r\n]", &num, pBuff) != EOF &&

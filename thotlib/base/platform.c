@@ -25,7 +25,7 @@
 int TtaDirExists (CONST char *dirpath)
 {
   int         status = 0;
-#ifdef _WINGUI
+#ifdef _WINDOWS
   DWORD       attribs;
 
   attribs = GetFileAttributes ((LPCTSTR)dirpath);
@@ -35,14 +35,14 @@ int TtaDirExists (CONST char *dirpath)
     status = 1;
   else
     status = 0;
-#else /* _WINGUI */
+#else /* _WINDOWS */
   struct stat buf;
 #ifdef _WINDOWS /* SG TODO : a valider */
   status = stat(dirpath, &buf) == 0 && (((buf.st_mode)&S_IFMT) == S_IFDIR);
 #else /* #ifdef _WINDOWS */
   status = stat(dirpath, &buf) == 0 && S_ISDIR (buf.st_mode);
 #endif /* #ifdef _WINDOWS */
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
   return status;
 }
 
@@ -54,7 +54,7 @@ int TtaDirExists (CONST char *dirpath)
 int TtaFileExist (CONST char *filename)
 {
   int         status = 0;
-#ifdef _WINGUI
+#ifdef _WINDOWS
   DWORD       attribs;
 
   attribs = GetFileAttributes ((LPCTSTR)filename);
@@ -64,7 +64,7 @@ int TtaFileExist (CONST char *filename)
     status = 0;
   else
     status = 1;
-#else /* _WINGUI */
+#else /* _WINDOWS */
 
   int         filedes;
   struct stat statinfo;
@@ -84,7 +84,7 @@ int TtaFileExist (CONST char *filename)
         }
       close (filedes);
     }
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
   return status;
 }
 
@@ -106,7 +106,7 @@ ThotFileHandle TtaFileOpen (CONST char *name, ThotFileMode mode)
 {
    ThotFileHandle      ret;
 
-#if defined(_WINGUI) && !defined(__GNUC__)
+#if defined(_WINDOWS) && !defined(__GNUC__)
    DWORD               access = 0;	/* access (read-write) mode  */
 
    SECURITY_ATTRIBUTES secAttribs;
@@ -130,7 +130,7 @@ ThotFileHandle TtaFileOpen (CONST char *name, ThotFileMode mode)
    else
       creation = OPEN_EXISTING;
    ret = CreateFile (name, access, FILE_SHARE_READ, &secAttribs, creation, FILE_ATTRIBUTE_NORMAL, NULL);
-#else  /* _WINGUI && !__GNUC__ */
+#else  /* _WINDOWS && !__GNUC__ */
 #ifdef _WINDOWS
    ret = open (name, mode | _O_BINARY, 0777);
 #else
@@ -147,11 +147,11 @@ int TtaFileClose (ThotFileHandle handle)
 {
    int                 ret;
 
-#if defined(_WINGUI) && !defined(__GNUC__)
+#if defined(_WINDOWS) && !defined(__GNUC__)
    ret = CloseHandle (handle);
-#else  /* _WINGUI && !__GNUC__ */
+#else  /* _WINDOWS && !__GNUC__ */
    ret = close (handle) == 0;
-#endif /* _WINGUI && !__GNUC__ */
+#endif /* _WINDOWS && !__GNUC__ */
    return ret;
 }
 
@@ -162,7 +162,7 @@ int TtaFileRead (ThotFileHandle handle, void *buffer, unsigned int count)
 {
    int                 ret;
 
-#if defined(_WINGUI) && !defined(__GNUC__)
+#if defined(_WINDOWS) && !defined(__GNUC__)
    DWORD               red;
 
    /* OK as long as we don't open for overlapped IO */
@@ -171,9 +171,9 @@ int TtaFileRead (ThotFileHandle handle, void *buffer, unsigned int count)
       ret = (int) red;
    else
       ret = -1;
-#else  /* _WINGUI && !__GNUC__ */
+#else  /* _WINDOWS && !__GNUC__ */
    ret = read (handle, buffer, count);
-#endif /* _WINGUI && !__GNUC__ */
+#endif /* _WINDOWS && !__GNUC__ */
    return ret;
 }
 
@@ -184,7 +184,7 @@ int TtaFileWrite (ThotFileHandle handle, void *buffer, unsigned int count)
 {
    int                 ret;
 
-#if defined(_WINGUI) && !defined(__GNUC__)
+#if defined(_WINDOWS) && !defined(__GNUC__)
    DWORD               writ;
 
    /* OK as long as we don't open for overlapped IO */
@@ -193,9 +193,9 @@ int TtaFileWrite (ThotFileHandle handle, void *buffer, unsigned int count)
       ret = (int) writ;
    else
       ret = -1;
-#else  /* _WINGUI && !__GNUC__ */
+#else  /* _WINDOWS && !__GNUC__ */
    ret = write (handle, buffer, count);
-#endif /* _WINGUI && !__GNUC__ */
+#endif /* _WINDOWS && !__GNUC__ */
    return ret;
 }
 
@@ -207,11 +207,11 @@ ThotFileOffset TtaFileSeek (ThotFileHandle handle, ThotFileOffset offset,
 {
    ThotFileOffset      ret;
 
-#if defined(_WINGUI) && !defined(__GNUC__)
+#if defined(_WINDOWS) && !defined(__GNUC__)
    ret = SetFilePointer (handle, offset, 0, origin);
-#else  /* _WINGUI && !__GNUC__ */
+#else  /* _WINDOWS && !__GNUC__ */
    ret = lseek (handle, offset, origin);
-#endif /* _WINGUI && !__GNUC__ */
+#endif /* _WINDOWS && !__GNUC__ */
    return ret;
 }
 
@@ -222,7 +222,7 @@ int TtaFileStat (ThotFileHandle handle, ThotFileInfo *pInfo)
 {
    ThotFileOffset      ret;
 
-#if defined(_WINGUI) && !defined(__GNUC__)
+#if defined(_WINDOWS) && !defined(__GNUC__)
    BY_HANDLE_FILE_INFORMATION info;
 
    ret = GetFileInformationByHandle (handle, &info);
@@ -231,7 +231,7 @@ int TtaFileStat (ThotFileHandle handle, ThotFileInfo *pInfo)
 	pInfo->atime = info.ftLastAccessTime;
 	pInfo->size = info.nFileSizeLow;
      }
-#else  /* _WINGUI && !__GNUC__ */
+#else  /* _WINDOWS && !__GNUC__ */
    struct stat         buf;
 
    ret = fstat (handle, &buf) == 0;
@@ -240,7 +240,7 @@ int TtaFileStat (ThotFileHandle handle, ThotFileInfo *pInfo)
 	pInfo->atime = buf.st_atime;
 	pInfo->size = buf.st_size;
      }
-#endif /* _WINGUI && !__GNUC__ */
+#endif /* _WINDOWS && !__GNUC__ */
    return ret;
 }
 
