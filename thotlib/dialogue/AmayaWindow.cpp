@@ -640,7 +640,7 @@ bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
        thot_keysym == WXK_RIGHT  ||
        thot_keysym == WXK_UP     ||
        thot_keysym == WXK_DOWN   ||
-       thot_keysym == WXK_ESCAPE ||
+       /*thot_keysym == WXK_ESCAPE ||*/
        thot_keysym == WXK_BACK   ||
        thot_keysym == WXK_RETURN ||
        thot_keysym == WXK_TAB );
@@ -707,7 +707,7 @@ bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
 {
   if ( event.ControlDown() || event.AltDown() )
     {
-      wxChar thot_keysym = event.GetUnicodeKey();  
+      wxChar thot_keysym = event.GetKeyCode();  
 
 #ifdef _WINDOWS
 	  /* on windows, shortcuts values are not managed like on gtk, the keysym rang is 0-26*/
@@ -732,7 +732,7 @@ bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
 	  wxString s(thot_keysym);
 	  if (s.IsAscii())
 	    {
-	      wxLogDebug( _T("AmayaTextGraber::OnKeyDown : thot_keysym=%x s=")+s, thot_keysym );
+	      wxLogDebug( _T("AmayaWindow::CheckShortcutKey : thot_keysym=%x s=")+s, thot_keysym );
 	      s.MakeLower();
 	      thot_keysym = s.GetChar(0);
 	    }
