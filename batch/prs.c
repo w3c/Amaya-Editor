@@ -6258,9 +6258,9 @@ int*                Y;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
 #ifdef __STDC__
-void                main (int argc, char **argv)
+int                 main (int argc, char **argv)
 #else  /* __STDC__ */
-void                main (argc, argv)
+int                 main (argc, argv)
 int                 argc;
 char              **argv;
 #endif /* __STDC__ */
