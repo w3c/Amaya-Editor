@@ -39,12 +39,17 @@
 
 /* for Marc.Baudoin@hsc.fr (Marc Baudoin) */
 #ifdef _WINDOWS
-#define THOT_RC_FILENAME	"thot.ini"
+#define THOT_RC_FILENAME	"thot.rc"
 #else /* !_WINDOWS */
 #define THOT_RC_FILENAME	".thotrc"
 #endif /* ! _WINDOWS */
 
-#define THOT_INI_FILENAME	"thot.ini"
+#ifdef _WINDOWS
+#      define THOT_INI_FILENAME "thot.rc"
+#else  /* _WINDOWS */
+#      define THOT_INI_FILENAME "thot.ini"
+#endif /* _WINDOWS */
+
 #define THOT_CONFIG_FILENAME    "config"
 #define THOT_BIN_FILENAME	"bin"
 #define THOT_LIB_DEFAULTNAME	"thot_lib"
