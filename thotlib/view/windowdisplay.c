@@ -2126,7 +2126,7 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
 			  PtrPathSeg path, int fg, int bg, int pattern)
 {
   PtrPathSeg          pPa;
-  float               x1, y1, cx1, cy1, x2, y2;
+  int                 x1, y1, cx1, cy1, x2, y2, firstx, firsty;
   HDC                 display;
   Pixmap              pat;
   HPEN                hPen;
@@ -2138,7 +2138,6 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
 
   if (fg < 0)
      thick = 0;
-
   if (thick > 0 || bg >= 0)
     {
 #ifdef _WIN_PRINT
@@ -2146,15 +2145,16 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
 #else  /* _WIN_PRINT */
       WIN_GetDeviceContext (frame);
       display = TtDisplay;
+      SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
       pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
-	  logBrush.lbColor = ColorPixel (bg);
+      logBrush.lbColor = ColorPixel (bg);
       if (pat == NULL)
-	    logBrush.lbStyle = BS_NULL;
-	  else
-	    logBrush.lbStyle = BS_SOLID;
-	  hBrush = CreateBrushIndirect (&logBrush); 
-	  hOldBrush = SelectObject (display, hBrush);
+	logBrush.lbStyle = BS_NULL;
+      else
+	logBrush.lbStyle = BS_SOLID;
+      hBrush = CreateBrushIndirect (&logBrush); 
+      hOldBrush = SelectObject (display, hBrush);
       if (thick <= 0)
 	hPen = CreatePen (PS_NULL, 0, ColorPixel (fg));
       else
@@ -2180,52 +2180,60 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
 	  if (pPa->PaNewSubpath || !pPa->PaPrevious)
 	    /* this path segment starts a new subpath */
 	    {
-	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
+	      x1 = x + PixelValue (pPa->XStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      y1 = y + PixelValue (pPa->YStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
 	      MoveToEx (display, x1, y1, NULL);
+	      if (!pPa->PaPrevious)
+		/* remember first point of the path */
+		{
+		  firstx = x1;
+		  firsty = y1;
+		}
 	    }
 
 	  switch (pPa->PaShape)
 	    {
 	    case PtLine:
-	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
+	      x2 = x + PixelValue (pPa->XEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      y2 = y + PixelValue (pPa->YEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
 	      LineTo (display, x2, y2);
 	      break;
 
 	    case PtCubicBezier:
-	      ptCurve[0].x = (float) (x + PixelValue (pPa->XCtrlStart, UnPixel,
-			     NULL, ViewFrameTable[frame - 1].FrMagnification));
-	      ptCurve[0].y = (float) (y + PixelValue (pPa->YCtrlStart, UnPixel,
-			     NULL, ViewFrameTable[frame - 1].FrMagnification));
-	      ptCurve[1].x = (float) (x + PixelValue (pPa->XCtrlEnd, UnPixel,
-			     NULL, ViewFrameTable[frame - 1].FrMagnification));
-	      ptCurve[1].y = (float) (y + PixelValue (pPa->YCtrlEnd, UnPixel,
-                             NULL, ViewFrameTable[frame - 1].FrMagnification));
-	      ptCurve[2].x = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      ptCurve[2].y = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
+	      ptCurve[0].x = x + PixelValue (pPa->XCtrlStart, UnPixel, NULL,
+				    ViewFrameTable[frame - 1].FrMagnification);
+	      ptCurve[0].y = y + PixelValue (pPa->YCtrlStart, UnPixel, NULL,
+				    ViewFrameTable[frame - 1].FrMagnification);
+	      ptCurve[1].x = x + PixelValue (pPa->XCtrlEnd, UnPixel, NULL,
+			            ViewFrameTable[frame - 1].FrMagnification);
+	      ptCurve[1].y = y + PixelValue (pPa->YCtrlEnd, UnPixel, NULL,
+                                    ViewFrameTable[frame - 1].FrMagnification);
+	      ptCurve[2].x = x + PixelValue (pPa->XEnd, UnPixel, NULL,
+				    ViewFrameTable[frame - 1].FrMagnification);
+	      ptCurve[2].y = y + PixelValue (pPa->YEnd, UnPixel, NULL,
+				    ViewFrameTable[frame - 1].FrMagnification);
+	      x2 = ptCurve[2].x;
+              y2 = ptCurve[2].y;
 	      PolyBezierTo (display, &ptCurve[0], 3);
 	      break;
 
 	    case PtQuadraticBezier:
-	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      cx1 = (float) (x + PixelValue (pPa->XCtrlStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      cy1 = (float) (y + PixelValue (pPa->YCtrlStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
+	      x1 = x + PixelValue (pPa->XStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      y1 = y + PixelValue (pPa->YStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      cx1 = x + PixelValue (pPa->XCtrlStart, UnPixel, NULL,
+				    ViewFrameTable[frame - 1].FrMagnification);
+	      cy1 = y + PixelValue (pPa->YCtrlStart, UnPixel, NULL,
+				    ViewFrameTable[frame - 1].FrMagnification);
+	      x2 = x + PixelValue (pPa->XEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      y2 = y + PixelValue (pPa->YEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
 	      ptCurve[0].x = x1+((2*(cx1-x1))/3);
 	      ptCurve[0].y = y1+((2*(cy1-y1))/3);
 	      ptCurve[1].x = x2+((2*(cx1-x2))/3);
@@ -2236,8 +2244,20 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
 	      break;
 
 	    case PtEllipticalArc:
+	      x2 = x + PixelValue (pPa->XEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      y2 = y + PixelValue (pPa->YEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
 	      /**** to do ****/
 	      break;
+	    }
+	  if (!pPa->PaNext)
+	    /* end of path */
+	    {
+	      /* move to the first point in the path to avoid closing
+		 an open path */
+	      if (x2 != firstx || y2 != firsty)
+		MoveToEx (display, firstx, firsty, NULL);
 	    }
 	  pPa = pPa->PaNext;
 	}

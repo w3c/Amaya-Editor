@@ -95,7 +95,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
       extend = (button == 0 || button == 1);
       /* get the selected box */
       if (ThotLocalActions[T_selecbox] != NULL)
-	(*ThotLocalActions[T_selecbox]) (&pBox, pAb, frame, x, y, &charsNumber);
+	(*ThotLocalActions[T_selecbox]) (&pBox, pAb, frame, x, y,&charsNumber);
       /* When it's an extended selection, avoid to extend to the
 	 enclosing box */
       if (extend)
@@ -110,9 +110,10 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	  if (pAb->AbLeafType == LtText &&
 	      (!pAb->AbPresentationBox || pAb->AbCanBeModified))
 	    {
-	      pos = x - pBox->BxXOrg - pBox->BxLMargin - pBox->BxLBorder - pBox->BxLPadding;
-	      LocateClickedChar (pBox, extend, &pBuffer, &pos, &index, &charsNumber,
-				 &spacesNumber);
+	      pos = x - pBox->BxXOrg - pBox->BxLMargin - pBox->BxLBorder
+		    - pBox->BxLPadding;
+	      LocateClickedChar (pBox, extend, &pBuffer, &pos, &index,
+				 &charsNumber, &spacesNumber);
 	      charsNumber = pBox->BxIndChar + charsNumber + 1;
 	    }
 	}
@@ -125,16 +126,19 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	  /* Initialization of the selection */
 	  if (button == 3)
 	    {
-	      if (!ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, TRUE, FALSE) &&
+	      if (!ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE,
+				    TRUE, FALSE) &&
 		  pAb->AbLeafType == LtText &&
 		  (!pAb->AbPresentationBox || pAb->AbCanBeModified))
-		SelectCurrentWord (frame, pBox, charsNumber, index, pBuffer, TRUE);
+		SelectCurrentWord (frame, pBox, charsNumber, index, pBuffer,
+				   TRUE);
 	    }
 	  else if (button == 2)
-	    ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, FALSE, FALSE);
+	    ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, FALSE,
+			     FALSE);
 	  /* Extension of selection */
 	  else if (button == 0)
-	    ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, FALSE);
+	    ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE,FALSE);
 	  else if (button == 1)
 	    ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, TRUE);
 	  else /* button == 4 */
@@ -153,7 +157,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		  notifyEl.document = FrameTable[frame].FrDoc;
 		  notifyEl.element = (Element) el;
 		  notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
-		  notifyEl.elementType.ElSSchema = (SSchema) (el->ElStructSchema);
+		  notifyEl.elementType.ElSSchema = (SSchema)(el->ElStructSchema);
 		  notifyEl.position = 0;
 		  if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 		    /* the application asks Thot to do nothing */
@@ -165,7 +169,6 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	}
     }
 }
-
 
 /*----------------------------------------------------------------------
   GetDistance returns 0 if value is between -delta and +delta.
@@ -180,7 +183,6 @@ static int          GetDistance (int value, int delta)
    else
       return (0);
 }
-
 
 /*----------------------------------------------------------------------
   GetBoxDistance computes the distance of a point xRef, yRef to a box
@@ -202,14 +204,14 @@ int    GetBoxDistance (int xRef, int yRef, int x, int y, int width, int height)
 }
 
 /*----------------------------------------------------------------------
-  IsOnPolyline checks if the point x, y is on the segment x1, y1 to
+  IsOnSegment checks if the point x, y is on the segment x1, y1 to
   x2, y2 with DELTA_SEL precision.
-  Check if the point is included by the widen rectangle of DELTA_SEL
+  Check if the segment is included by a rectangle of width DELTA_SEL
   around the line.
-  The check is performed after a rotation that provides an horizontal
+  Checking is performed after a rotation that provides an horizontal
   rectangle.
   ----------------------------------------------------------------------*/
-static ThotBool     IsOnPolyline (int x, int y, int x1, int y1, int x2, int y2)
+static ThotBool     IsOnSegment (int x, int y, int x1, int y1, int x2, int y2)
 {
    int                 dX, dY, nX, nY;
    double              ra, cs, ss;
@@ -232,6 +234,7 @@ static ThotBool     IsOnPolyline (int x, int y, int x1, int y1, int x2, int y2)
 	   && nX >= -DELTA_SEL
 	   && nX <= ra + DELTA_SEL);
 }
+
 /*----------------------------------------------------------------------
   CrossLine returns the next cross value
   ----------------------------------------------------------------------*/
@@ -255,7 +258,6 @@ static int     CrossLine (int x, int y, int prevX, int prevY, int nextX, int nex
   return i;
 }
 
-
 /*----------------------------------------------------------------------
   InPolyline returns TRUE if the point x, y is within the polyline.
   ----------------------------------------------------------------------*/
@@ -277,7 +279,7 @@ static ThotBool     InPolyline (PtrAbstractBox pAb, int x, int y, int frame)
       /* no space within polyline */
       return (FALSE);
 
-   /* first and last oints of the polyline */
+   /* first and last points of the polyline */
    pLastBuffer = buff = box->BxBuffer;
    i = 1;
    while (pLastBuffer->BuNext != NULL)
@@ -365,6 +367,25 @@ static ThotBool     InPolyline (PtrAbstractBox pAb, int x, int y, int frame)
    return (ok);
 }
 
+/*----------------------------------------------------------------------
+  WithinPath returns TRUE if the point x, y is within the path.
+  ----------------------------------------------------------------------*/
+static ThotBool     WithinPath (PtrAbstractBox pAb, int x, int y, int frame)
+{
+   PtrTextBuffer       buff, pLastBuffer;
+   int                 cross;
+   int                 i;
+   int                 prevX, prevY;
+   int                 nextX, nextY;
+   PtrBox              box;
+   ThotBool            ok;
+
+   box = pAb->AbBox;
+   x -= box->BxXOrg;
+   y -= box->BxYOrg;
+   return (FALSE);
+   /*********/
+}
 
 /*----------------------------------------------------------------------
   GetPolylinePoint teste qu'un point x,y est sur un segment de la    
@@ -373,83 +394,132 @@ static ThotBool     InPolyline (PtrAbstractBox pAb, int x, int y, int frame)
    point de contro^le se'lectionne' (0 pour toute la boi^te).      
    sinon, la valeur NULL.                                          
   ----------------------------------------------------------------------*/
-static PtrBox  GetPolylinePoint (PtrAbstractBox pAb, int x, int y, int frame, int *pointselect)
+static PtrBox  GetPolylinePoint (PtrAbstractBox pAb, int x, int y, int frame,
+				 int *pointselect)
 {
-   int                 i, j, nb;
-   int                 X1, Y1;
-   int                 X2, Y2;
-   PtrTextBuffer       adbuff;
-   PtrBox              box;
-   ThotBool            OK;
+  int                 i, j, nb;
+  int                 X1, Y1;
+  int                 X2, Y2;
+  PtrTextBuffer       adbuff;
+  PtrBox              box;
+  ThotBool            OK;
 
-   Y1 = 0;
-   box = pAb->AbBox;
-   nb = box->BxNChars;
-   if (nb < 3)
-      /* il n'y a pas au moins un segment defini */
-      return (NULL);
+  Y1 = 0;
+  box = pAb->AbBox;
+  nb = box->BxNChars;
+  if (nb < 3)
+    /* il n'y a pas au moins un segment defini */
+    return (NULL);
 
-   /* On calcule le point de controle de la polyline le plus proche */
-   adbuff = box->BxBuffer;
-   x -= box->BxXOrg;
-   y -= box->BxYOrg;
-   X1 = -1;			/* Pas de point X1, Y1 au depart */
-   X2 = -1;
-   *pointselect = 0;
-   j = 1;
-   for (i = 1; i < nb; i++)
-     {
-	if (j >= adbuff->BuLength &&
-	    adbuff->BuNext != NULL)
-	  {
-	    /* Changement de buffer */
-	    adbuff = adbuff->BuNext;
-	    j = 0;
-	  }
+  /* On calcule le point de controle de la polyline le plus proche */
+  adbuff = box->BxBuffer;
+  x -= box->BxXOrg;
+  y -= box->BxYOrg;
+  X1 = -1;			/* Pas de point X1, Y1 au depart */
+  X2 = -1;
+  *pointselect = 0;
+  j = 1;
+  for (i = 1; i < nb; i++)
+    {
+      if (j >= adbuff->BuLength &&
+	  adbuff->BuNext != NULL)
+	{
+	  /* Changement de buffer */
+	  adbuff = adbuff->BuNext;
+	  j = 0;
+	}
 
-	/* Teste si le point est sur ce segment */
-	X2 = PixelValue (adbuff->BuPoints[j].XCoord,
-			 UnPixel, NULL,
-			 ViewFrameTable[frame - 1].FrMagnification);
-	Y2 = PixelValue (adbuff->BuPoints[j].YCoord,
-			 UnPixel, NULL,
-			 ViewFrameTable[frame - 1].FrMagnification);
-	if (x >= X2 - DELTA_SEL && x <= X2 + DELTA_SEL &&
-	    y >= Y2 - DELTA_SEL && y <= Y2 + DELTA_SEL)
-	  {
-	     /* La selection porte sur un point de controle particulier */
-	     *pointselect = i;
-	     return (box);
-	  }
-	else if (X1 == -1)
-	   OK = FALSE;
-	else
-	   OK = IsOnPolyline (x, y, X1, Y1, X2, Y2);
+      /* Teste si le point est sur ce segment */
+      X2 = PixelValue (adbuff->BuPoints[j].XCoord, UnPixel, NULL,
+		       ViewFrameTable[frame - 1].FrMagnification);
+      Y2 = PixelValue (adbuff->BuPoints[j].YCoord, UnPixel, NULL,
+		       ViewFrameTable[frame - 1].FrMagnification);
+      if (x >= X2 - DELTA_SEL && x <= X2 + DELTA_SEL &&
+	  y >= Y2 - DELTA_SEL && y <= Y2 + DELTA_SEL)
+	{
+	  /* La selection porte sur un point de controle particulier */
+	  *pointselect = i;
+	  return (box);
+	}
+      else if (X1 == -1)
+	OK = FALSE;
+      else
+	OK = IsOnSegment (x, y, X1, Y1, X2, Y2);
 
-	if (OK)
-	   /* Le point est sur ce segment -> le test est fini */
-	   return (box);
-	else
-	  {
-	     j++;
-	     X1 = X2;
-	     Y1 = Y2;
-	  }
-     }
-   /* traite le cas particulier des polylines fermees */
-   if (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's')
-     {
-	X2 = PixelValue (box->BxBuffer->BuPoints[1].XCoord,
-			 UnPixel, NULL,
-			 ViewFrameTable[frame - 1].FrMagnification);
-	Y2 = PixelValue (box->BxBuffer->BuPoints[1].YCoord,
-			 UnPixel, NULL,
-			 ViewFrameTable[frame - 1].FrMagnification);
-	OK = IsOnPolyline (x, y, X1, Y1, X2, Y2);
-	if (OK)
-	   return (box);
-     }
-   return (NULL);
+      if (OK)
+	/* Le point est sur ce segment -> le test est fini */
+	return (box);
+      else
+	{
+	  j++;
+	  X1 = X2;
+	  Y1 = Y2;
+	}
+    }
+  /* traite le cas particulier des polylines fermees */
+  if (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's')
+    {
+      X2 = PixelValue (box->BxBuffer->BuPoints[1].XCoord, UnPixel, NULL,
+		       ViewFrameTable[frame - 1].FrMagnification);
+      Y2 = PixelValue (box->BxBuffer->BuPoints[1].YCoord, UnPixel, NULL,
+		       ViewFrameTable[frame - 1].FrMagnification);
+      OK = IsOnSegment (x, y, X1, Y1, X2, Y2);
+      if (OK)
+	return (box);
+    }
+  return (NULL);
+}
+
+/*----------------------------------------------------------------------
+   GetPointInPath check if pont x,y is on the path represented by
+   abstract box pAb.
+   Si oui, retourne l'adresse de la boi^te correspondante et le    
+   point de contro^le se'lectionne' (0 pour toute la boi^te).      
+   sinon, la valeur NULL.                                          
+  ----------------------------------------------------------------------*/
+static PtrBox  GetPointInPath (PtrAbstractBox pAb, int x, int y, int frame,
+			       int *pointselect)
+{
+  int                 X1, Y1, X2, Y2, i;
+  PtrPathSeg          pPa;
+  PtrBox              box;
+  ThotBool            OK;
+
+  box = pAb->AbBox;
+  x -= box->BxXOrg;
+  y -= box->BxYOrg;
+  *pointselect = 0;
+  i = 0;
+  pPa = pAb->AbFirstPathSeg;
+  OK = FALSE;
+  while (pPa && !OK)
+    {
+      i++;
+      /* Teste si le point est sur ce segment */
+      X1 = PixelValue (pPa->XStart, UnPixel, NULL,
+		       ViewFrameTable[frame - 1].FrMagnification);
+      Y1 = PixelValue (pPa->YStart, UnPixel, NULL,
+		       ViewFrameTable[frame - 1].FrMagnification);
+      X2 = PixelValue (pPa->XEnd, UnPixel, NULL,
+		       ViewFrameTable[frame - 1].FrMagnification);
+      Y2 = PixelValue (pPa->YEnd, UnPixel, NULL,
+		       ViewFrameTable[frame - 1].FrMagnification);
+      if (x >= X2 - DELTA_SEL && x <= X2 + DELTA_SEL &&
+	  y >= Y2 - DELTA_SEL && y <= Y2 + DELTA_SEL)
+	{
+	  /* La selection porte sur un point de controle particulier */
+	  *pointselect = i;
+	  return (box);
+	}
+      else
+	{
+	  if (IsOnSegment (x, y, X1, Y1, X2, Y2))
+	    return (box);
+	}
+      if (!OK)
+	pPa = pPa->PaNext;
+    }
+  return (NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -687,31 +757,31 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
     case TEXT('6'):
     case TEXT('7'):
     case TEXT('8'):
-      if (IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0) ||
-	  IsOnPolyline (x, y, 0, pBox->BxHeight, pBox->BxWidth,
+      if (IsOnSegment (x, y, 0, 0, pBox->BxWidth, 0) ||
+	  IsOnSegment (x, y, 0, pBox->BxHeight, pBox->BxWidth,
 			pBox->BxHeight) ||
-	  IsOnPolyline (x, y, 0, 0, 0, pBox->BxHeight) ||
-	  IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
+	  IsOnSegment (x, y, 0, 0, 0, pBox->BxHeight) ||
+	  IsOnSegment (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
 	return (pBox);
       break;
     case 'L':
-      if (IsOnPolyline (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth / 2, 0) ||
-	  IsOnPolyline (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth / 2,
+      if (IsOnSegment (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth / 2, 0) ||
+	  IsOnSegment (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth / 2,
 			pBox->BxHeight) ||
-	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight / 2,
+	  IsOnSegment (x, y, pBox->BxWidth, pBox->BxHeight / 2,
 			pBox->BxWidth / 2, 0) ||
-	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight / 2,
+	  IsOnSegment (x, y, pBox->BxWidth, pBox->BxHeight / 2,
 			pBox->BxWidth / 2, pBox->BxHeight))
 	return (pBox);
       break;
     case 'C':
     case 'P':
       arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
-      if (IsOnPolyline (x, y, arc, 0, pBox->BxWidth - arc, 0) ||
-	  IsOnPolyline (x, y, 0, arc, 0, pBox->BxHeight - arc) ||
-	  IsOnPolyline (x, y, arc, pBox->BxHeight, pBox->BxWidth - arc,
+      if (IsOnSegment (x, y, arc, 0, pBox->BxWidth - arc, 0) ||
+	  IsOnSegment (x, y, 0, arc, 0, pBox->BxHeight - arc) ||
+	  IsOnSegment (x, y, arc, pBox->BxHeight, pBox->BxWidth - arc,
 			pBox->BxHeight) ||
-	  IsOnPolyline (x, y, pBox->BxWidth, arc, pBox->BxWidth,
+	  IsOnSegment (x, y, pBox->BxWidth, arc, pBox->BxWidth,
 			pBox->BxHeight - arc))
 	return (pBox);
       break;
@@ -724,78 +794,78 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
       break;
     case 'W':
       if (controlPoint == 1 || controlPoint == 3 || controlPoint == 5 ||
-	  IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0) ||
-	  IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
+	  IsOnSegment (x, y, 0, 0, pBox->BxWidth, 0) ||
+	  IsOnSegment (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
 	return (pBox);
       break;
     case 'X':
       if (controlPoint == 3 || controlPoint == 5 || controlPoint == 7 ||
-	  IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth,
+	  IsOnSegment (x, y, pBox->BxWidth, 0, pBox->BxWidth,
 			pBox->BxHeight) ||
-	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0,pBox->BxHeight))
+	  IsOnSegment (x, y, pBox->BxWidth, pBox->BxHeight, 0,pBox->BxHeight))
 	return (pBox);
       break;
     case 'Y':
       if (controlPoint == 1 || controlPoint == 5 || controlPoint == 7 ||
-	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0,
+	  IsOnSegment (x, y, pBox->BxWidth, pBox->BxHeight, 0,
 			pBox->BxHeight) ||
-	  IsOnPolyline (x, y, 0, pBox->BxHeight, 0, 0))
+	  IsOnSegment (x, y, 0, pBox->BxHeight, 0, 0))
 	return (pBox);
       break;
     case 'Z':
       if (controlPoint == 1 || controlPoint == 3 || controlPoint == 7 ||
-	  IsOnPolyline (x, y, 0, pBox->BxHeight, 0, 0) ||
-	  IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0))
+	  IsOnSegment (x, y, 0, pBox->BxHeight, 0, 0) ||
+	  IsOnSegment (x, y, 0, 0, pBox->BxWidth, 0))
 	return (pBox);
       break;
     case 'h':
     case '<':
     case '>':
       if (controlPoint == 4 || controlPoint == 8 ||
-	  IsOnPolyline (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth,
+	  IsOnSegment (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth,
 			pBox->BxHeight / 2))
 	return (pBox);
       break;
     case 't':
       if (controlPoint == 1 || controlPoint == 2 || controlPoint == 3 ||
-	  IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0))
+	  IsOnSegment (x, y, 0, 0, pBox->BxWidth, 0))
 	return (pBox);
       break;
     case 'b':
       if (controlPoint == 5 || controlPoint == 6 || controlPoint == 7 ||
-	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0,pBox->BxHeight))
+	  IsOnSegment (x, y, pBox->BxWidth, pBox->BxHeight, 0,pBox->BxHeight))
 	return (pBox);
       break;
     case 'v':
     case '^':
     case 'V':
       if (controlPoint == 2 || controlPoint == 6 ||
-	  IsOnPolyline (x, y, pBox->BxWidth / 2, 0, pBox->BxWidth / 2,
+	  IsOnSegment (x, y, pBox->BxWidth / 2, 0, pBox->BxWidth / 2,
 			pBox->BxHeight))
 	return (pBox);
       break;
     case 'l':
       if (controlPoint == 1 || controlPoint == 7 || controlPoint == 8 ||
-	  IsOnPolyline (x, y, 0, pBox->BxHeight, 0, 0))
+	  IsOnSegment (x, y, 0, pBox->BxHeight, 0, 0))
 	return (pBox);
       break;
     case 'r':
       if (controlPoint == 3 || controlPoint == 4 || controlPoint == 5 ||
-	  IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
+	  IsOnSegment (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
 	return (pBox);
       break;
     case '\\':
     case 'O':
     case 'e':
       if (controlPoint == 1 || controlPoint == 5 ||
-	  IsOnPolyline (x, y, 0, 0, pBox->BxWidth, pBox->BxHeight))
+	  IsOnSegment (x, y, 0, 0, pBox->BxWidth, pBox->BxHeight))
 	return (pBox);
       break;
     case '/':
     case 'o':
     case 'E':
       if (controlPoint == 3 || controlPoint == 7 ||
-	  IsOnPolyline (x, y, 0, pBox->BxHeight, pBox->BxWidth, 0))
+	  IsOnSegment (x, y, 0, pBox->BxHeight, pBox->BxWidth, 0))
 	return (pBox);
       break;
     case 'g':
@@ -810,7 +880,7 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 	      *selpoint = controlPoint;
 	      return (pBox);
 	    }
-	  else  if (IsOnPolyline (x, y, 0, 0, pBox->BxWidth, pBox->BxHeight))
+	  else  if (IsOnSegment (x, y, 0, 0, pBox->BxWidth, pBox->BxHeight))
 	    return (pBox);
 	}
       else
@@ -821,7 +891,7 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 	      *selpoint = controlPoint;
 	      return (pBox);
 	    }
-	  else  if (IsOnPolyline (x, y, 0, pBox->BxHeight, pBox->BxWidth, 0))
+	  else  if (IsOnSegment (x, y, 0, pBox->BxHeight, pBox->BxWidth, 0))
 	    return (pBox);
 	}
       break;
@@ -863,7 +933,9 @@ PtrAbstractBox      GetClickedAbsBox (int frame, int xRef, int yRef)
   box pAb.
   Returns the box address or NULL.
   ----------------------------------------------------------------------*/
-PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX, int lowerX, int y, int frame, int *pointselect)
+PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
+					int lowerX, int y, int frame,
+					int *pointselect)
 {
   PtrBox              pBox;
 
@@ -896,12 +968,12 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX, int low
 	/* it's also a dummy box */
 	return (NULL);
       /* If the box includes the point */
-      else if (pBox->BxXOrg <= lowerX
-	       && pBox->BxXOrg + pBox->BxWidth >= higherX
-	       && pBox->BxYOrg <= y
-	       && pBox->BxYOrg + pBox->BxHeight >= y)
-	/* If it's a graphic */
+      else if (pBox->BxXOrg <= lowerX &&
+	       pBox->BxXOrg + pBox->BxWidth >= higherX &&
+	       pBox->BxYOrg <= y &&
+	       pBox->BxYOrg + pBox->BxHeight >= y)
 	if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
+	  /* It's a simple graphic shape */
 	  {
 	    pBox = IsOnShape (pAb, lowerX, y, pointselect);
 	    if (pBox != NULL)
@@ -914,13 +986,25 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX, int low
 	  }
 	else if (pAb->AbLeafType == LtPolyLine && pAb->AbVolume > 2)
 	  {
-	    /* the polyline includes at least one segment */
+	    /* the polyline contains at least one segment */
 	    pBox = GetPolylinePoint (pAb, lowerX, y, frame, pointselect);
 	    if (pBox != NULL)
 	      return (pBox);
-	    /* the point doesn't belong to the box segments */
-	    if ((pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's')
-		&& InPolyline (pAb, lowerX, y, frame))
+	    /* the point doesn't belong to a segment */
+	    if ((pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's') &&
+		/* it's a closed shape. Is the point within the line? */
+		InPolyline (pAb, lowerX, y, frame))
+	      return (pAb->AbBox);
+	    else
+	      return (pBox);
+	  }
+	else if (pAb->AbLeafType == LtPath && pAb->AbFirstPathSeg)
+	  {
+	    pBox = GetPointInPath (pAb, lowerX, y, frame, pointselect);
+	    if (pBox != NULL)
+	      return (pBox);
+	    /* the point is not on the path. Is it within the path ? */
+	    if (WithinPath (pAb, lowerX, y, frame))
 	      return (pAb->AbBox);
 	    else
 	      return (pBox);
@@ -982,12 +1066,12 @@ PtrBox         GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y, int xDe
 	  if (pBox == NULL)
 	    pBox = pSourceBox;
 	  else if (TypeHasException (ExcNoSelect,
-				     pBox->BxAbstractBox->AbElement->ElTypeNumber,
-				     pBox->BxAbstractBox->AbElement->ElStructSchema))
+			     pBox->BxAbstractBox->AbElement->ElTypeNumber,
+			     pBox->BxAbstractBox->AbElement->ElStructSchema))
 	    pBox = pSourceBox;
 	  else if (TypeHasException (ExcSelectParent,
-				     pBox->BxAbstractBox->AbElement->ElTypeNumber,
-				     pBox->BxAbstractBox->AbElement->ElStructSchema) &&
+			     pBox->BxAbstractBox->AbElement->ElTypeNumber,
+			     pBox->BxAbstractBox->AbElement->ElStructSchema) &&
 		   pBox->BxAbstractBox->AbEnclosing)
 	    pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
 	  if (pBox == pSourceBox || pBox->BxAbstractBox->AbBox == pSourceBox ||
@@ -1065,7 +1149,7 @@ PtrBox         GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y, int xDe
 	  else if (pBox->BxAbstractBox->AbLeafType != LtText &&
 		   pBox->BxNChars != 0)
 	    {
-	      /* the box doesn't match, skip over */
+	      /* the box doesn't match, skip it */
 	      if (xDelta > 0)
 		*x = pBox->BxXOrg + pBox->BxWidth;
 	      else if (xDelta < 0)
@@ -1088,7 +1172,8 @@ PtrBox         GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y, int xDe
   We apply a ratio to vertical distances to give a preference to the
   horizontal proximity.
   ----------------------------------------------------------------------*/
-static int          GetGetMinimumDistance (int xRef, int yRef, int x, int y, int dist)
+static int          GetGetMinimumDistance (int xRef, int yRef, int x, int y,
+					   int dist)
 {
   int                 value;
 
@@ -1107,118 +1192,141 @@ static int          GetGetMinimumDistance (int xRef, int yRef, int x, int y, int
   This selection takes only laf boxes into account.
   Returns the distance.
   ----------------------------------------------------------------------*/
-int                 GetShapeDistance (int xRef, int yRef, PtrBox pBox, int value)
+int                 GetShapeDistance (int xRef, int yRef, PtrBox pBox,
+				      int value)
 {
-   int                 distance;
-   int                 x, y, width, height;
+  int                 distance;
+  int                 x, y, width, height;
 
-   /* centrer la boite */
-   width = pBox->BxWidth / 2;
-   x = pBox->BxXOrg + width;
-   height = pBox->BxHeight / 2;
-   y = pBox->BxYOrg + height;
-   distance = 1000;
+  /* centrer la boite */
+  width = pBox->BxWidth / 2;
+  x = pBox->BxXOrg + width;
+  height = pBox->BxHeight / 2;
+  y = pBox->BxYOrg + height;
+  distance = 1000;
 
-   switch (value)
-	 {
-	    case 1:		/* root .. */
-	       distance = GetGetMinimumDistance (xRef, yRef, x - width + height / 3, y + height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x - width + (2 * height) / 3, y - height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height, distance);
-	       break;
+  switch (value)
+    {
+    case 1:		/* root .. */
+      distance = GetGetMinimumDistance (xRef, yRef, x - width + height / 3,
+					y + height, distance);
+      distance = GetGetMinimumDistance (xRef, yRef,
+					x - width + (2 * height) / 3,
+					y - height, distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height,
+					distance);
+      break;
 
-	    case 'c':		/* circle */
-	       if (width < height)
-		  height = width;
-	       else
-		  width = height;
-	       /* Warning: continue as a circle is also an ellipse */
-	    case 'C':		/* ellipse */
-	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x, y - height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x, y + height, distance);
-	       height = (71 * height) / 100;
-	       width = (71 * width) / 100;
-	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height, distance);
-	       break;
+    case 'c':		/* circle */
+      if (width < height)
+	height = width;
+      else
+	width = height;
+      /* Warning: continue as a circle is also an ellipse */
+    case 'C':		/* ellipse */
+      distance = GetGetMinimumDistance (xRef, yRef, x - width, y, distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x + width, y, distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x, y - height, distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x, y + height, distance);
+      height = (71 * height) / 100;
+      width = (71 * width) / 100;
+      distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height,
+					distance);
+      break;
 
-	    case 'L':		/* losange */
-	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x, y - height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x, y + height, distance);
-	       break;
+    case 'L':		/* losange */
+      distance = GetGetMinimumDistance (xRef, yRef, x - width, y, distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x + width, y, distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x, y - height, distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x, y + height, distance);
+      break;
 
-	    case 't':		/* top line */
-	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x, y - height, distance);
-	       break;
+    case 't':		/* top line */
+      distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x, y - height, distance);
+      break;
 
-	    case 'b':		/* bottom line */
-	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x, y + height, distance);
-	       break;
+    case 'b':		/* bottom line */
+      distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x, y + height, distance);
+      break;
 
-	    case 'h':		/* middle line or arrow */
-	    case '<':
-	    case '>':
-	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x, y, distance);
-	       break;
+    case 'h':		/* middle line or arrow */
+    case '<':
+    case '>':
+      distance = GetGetMinimumDistance (xRef, yRef, x - width, y, distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x + width, y, distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x, y, distance);
+      break;
 
-	    case 'v':
-	    case 'V':		/* centerd line or arrow (^) */
-	    case '^':
-	       distance = GetGetMinimumDistance (xRef, yRef, x, y - height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x, y + height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x, y, distance);
-	       break;
+    case 'v':
+    case 'V':		/* centerd line or arrow (^) */
+    case '^':
+      distance = GetGetMinimumDistance (xRef, yRef, x, y - height, distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x, y + height, distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x, y, distance);
+      break;
 
-	    case 'l':		/* left line */
-	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y, distance);
-	       break;
-	    case 'r':		/* right line */
-	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y, distance);
-	       break;
+    case 'l':		/* left line */
+      distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x - width, y, distance);
+      break;
+    case 'r':		/* right line */
+      distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x + width, y, distance);
+      break;
 
-	    case '/':		/* diagonal (/) or arrow */
-	    case 'E':
-	    case 'o':
-	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x, y, distance);
-	       break;
+    case '/':		/* diagonal (/) or arrow */
+    case 'E':
+    case 'o':
+      distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x, y, distance);
+      break;
 
-	    case '\\':		/* diagonal (\) or arrow */
-	    case 'e':
-	    case 'O':
-	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x, y, distance);
-	       break;
-	    default:
-	      /* rectangle or other cases */
-	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height, distance);
-	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height, distance);
-	       break;
-	 }
-   return (distance);
+    case '\\':		/* diagonal (\) or arrow */
+    case 'e':
+    case 'O':
+      distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x, y, distance);
+      break;
+    default:
+      /* rectangle or other cases */
+      distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height,
+					distance);
+      distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height,
+					distance);
+      break;
+    }
+  return (distance);
 }
-
-
 
 /*----------------------------------------------------------------------
   GetClickedLeafBox looks for a leaf box located at a reference point
@@ -1226,88 +1334,91 @@ int                 GetShapeDistance (int xRef, int yRef, PtrBox pBox, int value
   ----------------------------------------------------------------------*/
 PtrBox              GetClickedLeafBox (int frame, int xRef, int yRef)
 {
-   PtrAbstractBox      pAb;
-   PtrBox              pSelBox, pBox;
-   PtrBox              pCurrentBox;
-   int                 max;
-   int                 pointIndex;
-   int                 d;
-   ViewFrame          *pFrame;
+  PtrAbstractBox      pAb;
+  PtrBox              pSelBox, pBox;
+  PtrBox              pCurrentBox;
+  int                 max;
+  int                 pointIndex;
+  int                 d;
+  ViewFrame          *pFrame;
 
-   pBox = NULL;
-   pSelBox = NULL;
-   /* au-dela de max, on n'accepte pas la selection */
-   max = 2000;
-   pFrame = &ViewFrameTable[frame - 1];
+  pBox = NULL;
+  pSelBox = NULL;
+  /* au-dela de max, on n'accepte pas la selection */
+  max = 2000;
+  pFrame = &ViewFrameTable[frame - 1];
 
-   if (pFrame->FrAbstractBox != NULL)
-      pBox = pFrame->FrAbstractBox->AbBox;
-   if (pBox != NULL)
-     {
-	pBox = pBox->BxNext;
-	while (pBox != NULL)
-	  {
-	     pAb = pBox->BxAbstractBox;
-	     if (pAb->AbVisibility >= pFrame->FrVisibility
-		 && (!pAb->AbPresentationBox || pAb->AbCanBeModified))
-	       {
-		  if (pAb->AbLeafType == LtGraphics ||
-		      pAb->AbLeafType == LtPolyLine)
-		    {
-		       pCurrentBox = GetEnclosingClickedBox (pAb, xRef, xRef,
-						     yRef, frame, &pointIndex);
-		       if (pCurrentBox == NULL)
-			  d = max + 1;
-		       else
-			  d = 0;
-		    }
-		  else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
-		     /* glitch for the root symbol */
-		     d = GetShapeDistance (xRef, yRef, pBox, 1);
-		  else if (pAb->AbLeafType == LtText ||
-			   pAb->AbLeafType == LtSymbol ||
-			   pAb->AbLeafType == LtPicture ||
-			   /* empty or compound box */
-			   (pAb->AbLeafType == LtCompound &&
-			    pAb->AbVolume == 0))
-		     d = GetBoxDistance (xRef, yRef, pBox->BxXOrg,
-				 pBox->BxYOrg, pBox->BxWidth, pBox->BxHeight);
+  if (pFrame->FrAbstractBox != NULL)
+    pBox = pFrame->FrAbstractBox->AbBox;
+  if (pBox != NULL)
+    {
+      pBox = pBox->BxNext;
+      while (pBox != NULL)
+	{
+	  pAb = pBox->BxAbstractBox;
+	  if (pAb->AbVisibility >= pFrame->FrVisibility &&
+	      (!pAb->AbPresentationBox || pAb->AbCanBeModified))
+	    {
+	      if (pAb->AbLeafType == LtGraphics ||
+		  pAb->AbLeafType == LtPolyLine ||
+		  pAb->AbLeafType == LtPath)
+		{
+		  pCurrentBox = GetEnclosingClickedBox (pAb, xRef, xRef, yRef,
+							frame, &pointIndex);
+		  if (pCurrentBox == NULL)
+		    d = max + 1;
 		  else
-		     d = max + 1;
+		    d = 0;
+		}
+	      else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
+		/* glitch for the root symbol */
+		d = GetShapeDistance (xRef, yRef, pBox, 1);
+	      else if (pAb->AbLeafType == LtText ||
+		       pAb->AbLeafType == LtSymbol ||
+		       pAb->AbLeafType == LtPicture ||
+		       /* empty or compound box */
+		       (pAb->AbLeafType == LtCompound &&
+			pAb->AbVolume == 0))
+		d = GetBoxDistance (xRef, yRef, pBox->BxXOrg, pBox->BxYOrg,
+				    pBox->BxWidth, pBox->BxHeight);
+	      else
+		d = max + 1;
 
-		  /* get the closest element */
-		  if (d < max)
+	      /* get the closest element */
+	      if (d < max)
+		{
+		  max = d;
+		  pSelBox = pBox;
+		}
+	      else if (d == max)
+		{
+		  /* If it's the first found box */
+		  if (pSelBox == NULL)
 		    {
-		       max = d;
-		       pSelBox = pBox;
+		      max = d;
+		      pSelBox = pBox;
 		    }
-		  else if (d == max)
+		  /* If the box is over the previous selected box */
+		  else if (pSelBox->BxAbstractBox->AbDepth >=
+			                         pBox->BxAbstractBox->AbDepth)
 		    {
-		       /* If it's the first found box */
-		       if (pSelBox == NULL)
-			 {
-			    max = d;
-			    pSelBox = pBox;
-			 }
-		       /* If the box is over the previous selected box */
-		       else if (pSelBox->BxAbstractBox->AbDepth >= pBox->BxAbstractBox->AbDepth)
-			 {
-			    max = d;
-			    pSelBox = pBox;
-			 }
+		      max = d;
+		      pSelBox = pBox;
 		    }
-	       }
-	     pBox = pBox->BxNext;
-	  }
-     }
-   return pSelBox;
+		}
+	    }
+	  pBox = pBox->BxNext;
+	}
+    }
+  return pSelBox;
 }
 
 
 /*----------------------------------------------------------------------
   GiveMovingArea get limits of the box moving.
   ----------------------------------------------------------------------*/
-static void         GiveMovingArea (PtrAbstractBox pAb, int frame, ThotBool horizRef, int *min, int *max)
+static void         GiveMovingArea (PtrAbstractBox pAb, int frame,
+				    ThotBool horizRef, int *min, int *max)
 {
 #ifdef IV
    PtrAbstractBox      pParentAb;
@@ -1413,124 +1524,129 @@ static void         GiveMovingArea (PtrAbstractBox pAb, int frame, ThotBool hori
    (X ou Y), et si oui, rend les positions extremes        
    de la boite.                                            
   ----------------------------------------------------------------------*/
-static ThotBool     CanBeTranslated (PtrAbstractBox pAb, int frame, ThotBool horizRef, int *min, int *max)
+static ThotBool     CanBeTranslated (PtrAbstractBox pAb, int frame,
+				     ThotBool horizRef, int *min, int *max)
 {
-   PtrAbstractBox      pParentAb;
-   PtrBox              pBox;
-   PtrElement          pEl;
-   PtrDocument         pDoc;
-   ThotBool            ok, found;
+  PtrAbstractBox      pParentAb;
+  PtrBox              pBox;
+  PtrElement          pEl;
+  PtrDocument         pDoc;
+  ThotBool            ok, found;
 
-   pBox = pAb->AbBox;
-   pParentAb = pAb->AbEnclosing;
-   pEl = pAb->AbElement;
-   pDoc = DocumentOfElement (pEl);
+  pBox = pAb->AbBox;
+  pParentAb = pAb->AbEnclosing;
+  pEl = pAb->AbElement;
+  pDoc = DocumentOfElement (pEl);
 
-   /* Deplacement nul si ok est faux */
-   if (horizRef)
-      *min = pBox->BxXOrg;
-   else
-      *min = pBox->BxYOrg;
+  /* Deplacement nul si ok est faux */
+  if (horizRef)
+    *min = pBox->BxXOrg;
+  else
+    *min = pBox->BxYOrg;
 
-   *max = *min;
-   ok = TRUE;
-   if (pDoc->DocReadOnly)
-      ok = FALSE;
-   else if (pEl->ElIsCopy)
-      ok = FALSE;
-   else if (ElementIsReadOnly (pEl))
-      ok = FALSE;
-   else if (pAb->AbPresentationBox)
-      /* presentation box */
-      ok = FALSE;
-   else if (horizRef && pAb->AbWidth.DimIsPosition)
-      /* stretchable box */
-      ok = FALSE;
-   else if (!horizRef && pAb->AbHeight.DimIsPosition)
-      /* stretchable box */
-      ok = FALSE;
-   else if (horizRef && pAb->AbWidth.DimAbRef == pParentAb)
-     /* box width linked with its parent */
-      ok = FALSE;
-   else if (!horizRef && pAb->AbHeight.DimAbRef == pParentAb)
-     /* box height linked with its parent */
-      ok = FALSE;
-   else if (horizRef && pAb->AbHorizPos.PosAbRef == NULL)
-      /* no position rule */
-      ok = FALSE;
-   else if (!horizRef && pAb->AbVertPos.PosAbRef == NULL)
-      /* no position rule */
-      ok = FALSE;
-   else if (pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost)
-     /* box displayed in block of lines */
-      ok = FALSE;
-   else
-     {
-       /* search the first rule Move or NoMove */
-       found = FALSE;
-       while (!found && ok && pEl != NULL)
-	 {
-	   if (TypeHasException (ExcNoMove, pEl->ElTypeNumber, pEl->ElStructSchema))
-	     ok = FALSE;
-	   else if (horizRef && TypeHasException (ExcNoHMove, pEl->ElTypeNumber, pEl->ElStructSchema))
-	     ok = FALSE;
-	   else if (!horizRef && TypeHasException (ExcNoVMove, pEl->ElTypeNumber, pEl->ElStructSchema))
-	     ok = FALSE;
-	   else if (TypeHasException (ExcMoveResize, pEl->ElTypeNumber, pEl->ElStructSchema))
-	       found = TRUE;
-	   /* if no directive is done, see the parent */
-	   pEl = pEl->ElParent;
-	 }
-
-       if (!found && ok && pParentAb != NULL)
-	 {
-	   /* it's not the root box */
-	   if (horizRef
-	       /* et le pParentAb ne depend pas de son contenu */
-	       && pParentAb->AbBox->BxContentWidth
-	       && !pParentAb->AbWidth.DimIsPosition
-	       && !pParentAb->AbWidth.DimMinimum
-	       && pAb->AbHorizPos.PosAbRef == pParentAb
-	       && pAb->AbHorizPos.PosRefEdge != Left)
-	     ok = FALSE;
-	   else if (!horizRef
-		    /* et le pParentAb ne depend pas de son contenu */
-		    && pParentAb->AbBox->BxContentHeight
-		    && !pParentAb->AbHeight.DimIsPosition
-		    && !pParentAb->AbHeight.DimMinimum
-		    && pAb->AbVertPos.PosAbRef == pParentAb
-		    && pAb->AbVertPos.PosRefEdge != Top)
-	     ok = FALSE;
-	 }
-     }
-
-   if (horizRef)
-      if (ok)
+  *max = *min;
+  ok = TRUE;
+  if (pDoc->DocReadOnly)
+    ok = FALSE;
+  else if (pEl->ElIsCopy)
+    ok = FALSE;
+  else if (ElementIsReadOnly (pEl))
+    ok = FALSE;
+  else if (pAb->AbPresentationBox)
+    /* presentation box */
+    ok = FALSE;
+  else if (horizRef && pAb->AbWidth.DimIsPosition)
+    /* stretchable box */
+    ok = FALSE;
+  else if (!horizRef && pAb->AbHeight.DimIsPosition)
+    /* stretchable box */
+    ok = FALSE;
+  else if (horizRef && pAb->AbWidth.DimAbRef == pParentAb)
+    /* box width linked with its parent */
+    ok = FALSE;
+  else if (!horizRef && pAb->AbHeight.DimAbRef == pParentAb)
+    /* box height linked with its parent */
+    ok = FALSE;
+  else if (horizRef && pAb->AbHorizPos.PosAbRef == NULL)
+    /* no position rule */
+    ok = FALSE;
+  else if (!horizRef && pAb->AbVertPos.PosAbRef == NULL)
+    /* no position rule */
+    ok = FALSE;
+  else if (pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost)
+    /* box displayed in block of lines */
+    ok = FALSE;
+  else
+    {
+      /* search the first rule Move or NoMove */
+      found = FALSE;
+      while (!found && ok && pEl != NULL)
 	{
-	   GiveMovingArea (pAb, frame, horizRef, min, max);
-	   /* La boite est-elle bloquee dans l'englobante ? */
-	   if (*min == pBox->BxXOrg && *max == *min + pBox->BxWidth)
-	      ok = FALSE;
+	  if (TypeHasException (ExcNoMove, pEl->ElTypeNumber,
+				pEl->ElStructSchema))
+	    ok = FALSE;
+	  else if (horizRef && TypeHasException (ExcNoHMove, pEl->ElTypeNumber,
+						 pEl->ElStructSchema))
+	    ok = FALSE;
+	  else if (!horizRef && TypeHasException (ExcNoVMove,pEl->ElTypeNumber,
+						  pEl->ElStructSchema))
+	    ok = FALSE;
+	  else if (TypeHasException (ExcMoveResize, pEl->ElTypeNumber,
+				     pEl->ElStructSchema))
+	    found = TRUE;
+	  /* if no directive is done, see the parent */
+	  pEl = pEl->ElParent;
 	}
-      else
+
+      if (!found && ok && pParentAb != NULL)
 	{
-	   *min = pBox->BxXOrg;
-	   *max = *min + pBox->BxWidth;
+	  /* it's not the root box */
+	  if (horizRef &&
+	      /* et le pParentAb ne depend pas de son contenu */
+	      pParentAb->AbBox->BxContentWidth &&
+	      !pParentAb->AbWidth.DimIsPosition &&
+	      !pParentAb->AbWidth.DimMinimum &&
+	      pAb->AbHorizPos.PosAbRef == pParentAb &&
+	      pAb->AbHorizPos.PosRefEdge != Left)
+	    ok = FALSE;
+	  else if (!horizRef &&
+		   /* et le pParentAb ne depend pas de son contenu */
+		   pParentAb->AbBox->BxContentHeight &&
+		   !pParentAb->AbHeight.DimIsPosition &&
+		   !pParentAb->AbHeight.DimMinimum &&
+		   pAb->AbVertPos.PosAbRef == pParentAb &&
+		   pAb->AbVertPos.PosRefEdge != Top)
+	    ok = FALSE;
 	}
-   else if (ok)
-     {
+    }
+
+  if (horizRef)
+    if (ok)
+      {
 	GiveMovingArea (pAb, frame, horizRef, min, max);
 	/* La boite est-elle bloquee dans l'englobante ? */
-	if (*min == pBox->BxYOrg && *max == *min + pBox->BxHeight)
-	   ok = FALSE;
-     }
-   else
-     {
-	*min = pBox->BxYOrg;
-	*max = *min + pBox->BxHeight;
-     }
+	if (*min == pBox->BxXOrg && *max == *min + pBox->BxWidth)
+	  ok = FALSE;
+      }
+    else
+      {
+	*min = pBox->BxXOrg;
+	*max = *min + pBox->BxWidth;
+      }
+  else if (ok)
+    {
+      GiveMovingArea (pAb, frame, horizRef, min, max);
+      /* La boite est-elle bloquee dans l'englobante ? */
+      if (*min == pBox->BxYOrg && *max == *min + pBox->BxHeight)
+	ok = FALSE;
+    }
+  else
+    {
+      *min = pBox->BxYOrg;
+      *max = *min + pBox->BxHeight;
+    }
 
-   return ok;
+  return ok;
 }
 
 /*----------------------------------------------------------------------
@@ -1568,7 +1684,8 @@ ThotBool          APPgraphicModify (PtrElement pEl, int value, int frame, ThotBo
     {
       if (((pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtSymbol) &&
 	   pEl->ElGraph != '\0') ||
-	  (pEl->ElLeafType == LtPolyLine && pEl->ElPolyLineType != '\0'))
+	  (pEl->ElLeafType == LtPolyLine && pEl->ElPolyLineType != '\0') ||
+	  (pEl->ElLeafType == LtPath))
 	{
 	  if (ThotLocalActions[T_openhistory] != NULL)
 	    (*ThotLocalActions[T_openhistory]) (pDoc, pEl, pEl, 0, 0);
@@ -1699,7 +1816,8 @@ void              ApplyDirectTranslate (int frame, int xm, int ym)
 			  still = (pAb->AbPolyLineShape == 'p' ||
 				   pAb->AbPolyLineShape == 's');
 			  PolyLineModification (frame, &x, &y, pBox,
-						pBox->BxNChars, pointselect, still);
+						pBox->BxNChars, pointselect,
+						still);
 			  NewContent (pAb);
 			}
 		      /* redisplay the box */
@@ -1717,7 +1835,8 @@ void              ApplyDirectTranslate (int frame, int xm, int ym)
 		      ymin -= pFrame->FrYOrg;
 		      ymax -= pFrame->FrYOrg;
 		      /* execute the interaction */
-		      GeometryMove (frame, &x, &y, width, height, pBox, xmin, xmax, ymin, ymax, xm, ym);
+		      GeometryMove (frame, &x, &y, width, height, pBox, xmin,
+				    xmax, ymin, ymax, xm, ym);
 		      /* get back changes */
 		      x += pFrame->FrXOrg;
 		      y += pFrame->FrYOrg;
@@ -1765,104 +1884,111 @@ void              ApplyDirectTranslate (int frame, int xm, int ym)
 /*----------------------------------------------------------------------
    CanBeResized teste si un pave est modifiable en Dimension.       
   ----------------------------------------------------------------------*/
-static ThotBool   CanBeResized (PtrAbstractBox pAb, int frame, ThotBool horizRef, int *min, int *max)
+static ThotBool   CanBeResized (PtrAbstractBox pAb, int frame,
+				ThotBool horizRef, int *min, int *max)
 {
-   PtrBox              pBox;
-   PtrAbstractBox      pParentAb;
-   PtrElement          pEl;
-   PtrDocument         pDoc;
-   ThotBool            ok, found;
+  PtrBox              pBox;
+  PtrAbstractBox      pParentAb;
+  PtrElement          pEl;
+  PtrDocument         pDoc;
+  ThotBool            ok, found;
 
-   pBox = pAb->AbBox;
-   pParentAb = pAb->AbEnclosing;
-   pEl = pAb->AbElement;
-   pDoc = DocumentOfElement (pEl);
+  pBox = pAb->AbBox;
+  pParentAb = pAb->AbEnclosing;
+  pEl = pAb->AbElement;
+  pDoc = DocumentOfElement (pEl);
 
-   if (horizRef)
-      *min = pBox->BxXOrg;
-   else
-      *min = pBox->BxYOrg;
+  if (horizRef)
+    *min = pBox->BxXOrg;
+  else
+    *min = pBox->BxYOrg;
 
-   *max = *min;
-   ok = TRUE;
-   if (pDoc->DocReadOnly)
-      ok = FALSE;
-   else if (pEl->ElIsCopy)
-      ok = FALSE;
-   else if (ElementIsReadOnly (pEl))
-      ok = FALSE;
-   else if (pAb->AbPresentationBox)
-      /* presentation box */
-      ok = FALSE;
-   else if (horizRef && pAb->AbWidth.DimIsPosition)
-      /* stretchable box */
-      ok = FALSE;
-   else if (!horizRef && pAb->AbHeight.DimIsPosition)
-      /* stretchable box */
-      ok = FALSE;
-   else if (pAb->AbLeafType == LtText
-	    && (pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost))
-     /* text box displayed in block of lines */
-      ok = FALSE;
-   /* Il est impossible de modifier la dimension du contenu */
-   /* d'une boite construite ou de type texte                  */
-   /*****else if (pAb->AbLeafType == LtCompound || pAb->AbLeafType == LtText)
-     {
-       if (horizRef && pBox->BxContentWidth && !pAb->AbWidth.DimMinimum)
-	 ok = FALSE;
-       else if (!horizRef && pBox->BxContentHeight && !pAb->AbHeight.DimMinimum)
-	 ok = FALSE;
-	 }********/
-   else if (horizRef && pAb->AbWidth.DimAbRef == pParentAb)
-     /* box width linked with its parent */
-      ok = FALSE;
-   else if (!horizRef && pAb->AbHeight.DimAbRef == pParentAb)
-     /* box height linked with its parent */
-      ok = FALSE;
-   else
-     {
-       /* search the first rule Move or NoMove */
-       found = FALSE;
-       while (!found && ok && pEl != NULL)
-	 {
-	   if (TypeHasException (ExcNoResize, pEl->ElTypeNumber, pEl->ElStructSchema))
-	     ok = FALSE;
-	   else if (horizRef && TypeHasException (ExcNoHResize, pEl->ElTypeNumber, pEl->ElStructSchema))
-	     ok = FALSE;
-	   else if (!horizRef && TypeHasException (ExcNoVResize, pEl->ElTypeNumber, pEl->ElStructSchema))
-	     ok = FALSE;
-	   else if (TypeHasException (ExcMoveResize, pEl->ElTypeNumber, pEl->ElStructSchema))
-	     found = TRUE;
-	   /* if no directive is done, see the parent */
-	   pEl = pEl->ElParent;
-	 }
-
-       if (!found && ok && pParentAb != NULL)
-	 {
-	   /* it's not the root box */
-	   if ((horizRef && pAb->AbWidth.DimValue < 0)
-	       || (!horizRef && pAb->AbHeight.DimValue < 0))
-	     ok = FALSE;
-	 }
-     }
-
-   if (horizRef)
-      if (ok)
-	 GiveMovingArea (pAb, frame, horizRef, min, max);
-      else
+  *max = *min;
+  ok = TRUE;
+  if (pDoc->DocReadOnly)
+    ok = FALSE;
+  else if (pEl->ElIsCopy)
+    ok = FALSE;
+  else if (ElementIsReadOnly (pEl))
+    ok = FALSE;
+  else if (pAb->AbPresentationBox)
+    /* presentation box */
+    ok = FALSE;
+  else if (horizRef && pAb->AbWidth.DimIsPosition)
+    /* stretchable box */
+    ok = FALSE;
+  else if (!horizRef && pAb->AbHeight.DimIsPosition)
+    /* stretchable box */
+    ok = FALSE;
+  else if (pAb->AbLeafType == LtText &&
+	   (pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost))
+    /* text box displayed in block of lines */
+    ok = FALSE;
+  /* Il est impossible de modifier la dimension du contenu */
+  /* d'une boite construite ou de type texte                  */
+  /*****else if (pAb->AbLeafType == LtCompound || pAb->AbLeafType == LtText)
+    {
+      if (horizRef && pBox->BxContentWidth && !pAb->AbWidth.DimMinimum)
+        ok = FALSE;
+      else if (!horizRef && pBox->BxContentHeight && !pAb->AbHeight.DimMinimum)
+        ok = FALSE;
+    }********/
+  else if (horizRef && pAb->AbWidth.DimAbRef == pParentAb)
+    /* box width linked with its parent */
+    ok = FALSE;
+  else if (!horizRef && pAb->AbHeight.DimAbRef == pParentAb)
+    /* box height linked with its parent */
+    ok = FALSE;
+  else
+    {
+      /* search the first rule Move or NoMove */
+      found = FALSE;
+      while (!found && ok && pEl != NULL)
 	{
-	   *min = pBox->BxXOrg;
-	   *max = *min + pBox->BxWidth;
+	  if (TypeHasException (ExcNoResize, pEl->ElTypeNumber,
+				pEl->ElStructSchema))
+	    ok = FALSE;
+	  else if (horizRef && TypeHasException (ExcNoHResize,
+						 pEl->ElTypeNumber,
+						 pEl->ElStructSchema))
+	    ok = FALSE;
+	  else if (!horizRef && TypeHasException (ExcNoVResize,
+						  pEl->ElTypeNumber,
+						  pEl->ElStructSchema))
+	    ok = FALSE;
+	  else if (TypeHasException (ExcMoveResize, pEl->ElTypeNumber,
+				     pEl->ElStructSchema))
+	    found = TRUE;
+	  /* if no directive is done, see the parent */
+	  pEl = pEl->ElParent;
 	}
-   else if (ok)
-      GiveMovingArea (pAb, frame, horizRef, min, max);
-   else
-     {
-	*min = pBox->BxYOrg;
-	*max = *min + pBox->BxHeight;
-     }
 
-   return ok;
+      if (!found && ok && pParentAb != NULL)
+	{
+	  /* it's not the root box */
+	  if ((horizRef && pAb->AbWidth.DimValue < 0) ||
+	      (!horizRef && pAb->AbHeight.DimValue < 0))
+	    ok = FALSE;
+	}
+    }
+
+  if (horizRef)
+    if (ok)
+      GiveMovingArea (pAb, frame, horizRef, min, max);
+    else
+      {
+	*min = pBox->BxXOrg;
+	*max = *min + pBox->BxWidth;
+      }
+  else if (ok)
+    GiveMovingArea (pAb, frame, horizRef, min, max);
+  else
+    {
+      *min = pBox->BxYOrg;
+      *max = *min + pBox->BxHeight;
+    }
+
+  return ok;
 }
 
 
@@ -1872,129 +1998,130 @@ static ThotBool   CanBeResized (PtrAbstractBox pAb, int frame, ThotBool horizRef
   ----------------------------------------------------------------------*/
 void                ApplyDirectResize (int frame, int xm, int ym)
 {
-   PtrBox              pBox;
-   PtrAbstractBox      pAb;
-   ViewFrame          *pFrame;
-   int                 x, width;
-   int                 y, height;
-   int                 xmin, xmax;
-   int                 ymin, ymax;
-   int                 percentW, percentH;
-   int                 pointselect;
-   ThotBool            still, okH, okV;
+  PtrBox              pBox;
+  PtrAbstractBox      pAb;
+  ViewFrame          *pFrame;
+  int                 x, width;
+  int                 y, height;
+  int                 xmin, xmax;
+  int                 ymin, ymax;
+  int                 percentW, percentH;
+  int                 pointselect;
+  ThotBool            still, okH, okV;
 
-   okH = FALSE;
-   okV = FALSE;
-   pFrame = &ViewFrameTable[frame - 1];
-   if (pFrame->FrAbstractBox != NULL)
-     {
-	/* On note les coordonnees par rapport a l'image concrete */
-	x = xm + pFrame->FrXOrg;
-	y = ym + pFrame->FrYOrg;
+  okH = FALSE;
+  okV = FALSE;
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pFrame->FrAbstractBox != NULL)
+    {
+      /* On note les coordonnees par rapport a l'image concrete */
+      x = xm + pFrame->FrXOrg;
+      y = ym + pFrame->FrYOrg;
 
-	/* On recherche la boite englobant le point designe */
-	/* designation style Grenoble */
-	if (ThotLocalActions[T_selecbox] != NULL)
-	   (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame, x, y,
-					    &pointselect);
-	if (pBox == NULL)
-	   pAb = NULL;
-	else
-	   pAb = pBox->BxAbstractBox;
+      /* On recherche la boite englobant le point designe */
+      /* designation style Grenoble */
+      if (ThotLocalActions[T_selecbox] != NULL)
+	(*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame,
+					 x, y, &pointselect);
+      if (pBox == NULL)
+	pAb = NULL;
+      else
+	pAb = pBox->BxAbstractBox;
 
-	/* ctrlClick */
-	still = TRUE;
-	/* On boucle tant que l'on ne trouve pas une boite modifiable */
-	while (still)
-	  {
-	     if (pAb == NULL)
-		pBox = NULL;
-	     else
-		pBox = pAb->AbBox;
+      /* ctrlClick */
+      still = TRUE;
+      /* On boucle tant que l'on ne trouve pas une boite modifiable */
+      while (still)
+	{
+	  if (pAb == NULL)
+	    pBox = NULL;
+	  else
+	    pBox = pAb->AbBox;
 
-	     if (pBox == NULL)
-		still = FALSE;	/* Il n'y a pas de boite */
-	     /* On regarde si les modifications sont autorisees */
-	     else
-	       {
-		  okH = CanBeResized (pAb, frame, TRUE, &xmin, &xmax);
-		  okV = CanBeResized (pAb, frame, FALSE, &ymin, &ymax);
-		  if (okH || okV)
-		     still = FALSE;
-	       }
+	  if (pBox == NULL)
+	    still = FALSE;	/* Il n'y a pas de boite */
+	  /* On regarde si les modifications sont autorisees */
+	  else
+	    {
+	      okH = CanBeResized (pAb, frame, TRUE, &xmin, &xmax);
+	      okV = CanBeResized (pAb, frame, FALSE, &ymin, &ymax);
+	      if (okH || okV)
+		still = FALSE;
+	    }
 
-	     /* Si on n'a pas trouve, il faut remonter */
-	     if (still)
-	       {
-		 /* On passe a la boite englobante */
-		 if (pAb != NULL)
-		   pAb = pAb->AbEnclosing;
-		 else
-		   {
-		     pBox = NULL;
-		     still = FALSE;
-		   }
-	       }
-	  }
+	  /* Si on n'a pas trouve, il faut remonter */
+	  if (still)
+	    {
+	      /* On passe a la boite englobante */
+	      if (pAb != NULL)
+		pAb = pAb->AbEnclosing;
+	      else
+		{
+		  pBox = NULL;
+		  still = FALSE;
+		}
+	    }
+	}
 
-	/* Est-ce que l'on a trouve une boite ? */
-	if (pBox != NULL)
-	  {
-	     x = pBox->BxXOrg - pFrame->FrXOrg;
-	     y = pBox->BxYOrg - pFrame->FrYOrg;
-	     width = pBox->BxWidth;
-	     height = pBox->BxHeight;
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MODIFYING_BOX), AbsBoxType (pBox->BxAbstractBox, FALSE));
-	     /* On retablit les positions par rapport a la fenetre */
-	     xmin -= pFrame->FrXOrg;
-	     if (okH)
-		xmax -= pFrame->FrXOrg;
-	     else
-		xmax = xmin;
-	     ymin -= pFrame->FrYOrg;
-	     if (okV)
-		ymax -= pFrame->FrYOrg;
-	     else
-		ymax = ymin;
-	     /* On initialise la boite fantome */
-	     percentW = 0;
-	     percentH = 0;
-	     pAb = pBox->BxAbstractBox;
-	     if (!pAb->AbWidth.DimUserSpecified &&
-		 !pAb->AbWidth.DimIsPosition &&
-		 !pAb->AbWidth.DimSameDimension &&
-		 pAb->AbWidth.DimAbRef == pAb)
-	       {
-		 if (pAb->AbWidth.DimUnit == UnPercent)
-		   percentW = pAb->AbWidth.DimValue;
-		 else if (pAb->AbWidth.DimValue == 0)
-		   percentW = 100;
-	       }
-	     else if (!pAb->AbHeight.DimUserSpecified &&
-		      !pAb->AbHeight.DimIsPosition &&
-		      !pAb->AbHeight.DimSameDimension &&
-		      pAb->AbHeight.DimAbRef == pAb)
-	       {
-		 if (pAb->AbHeight.DimUnit == UnPercent)
-		   percentH = pAb->AbHeight.DimValue;
-		 else if (pAb->AbHeight.DimValue == 0)
-		   percentH = 100;
-	       }
-	     GeometryResize (frame, x, y, &width, &height, pBox,
-				 xmin, xmax, ymin, ymax, xm, ym,
-				 percentW, percentH);
-	     /* Notify changes */
-	     if (percentW)
-	       NewDimension (pAb, 0, height, frame, TRUE);
-	     else if (percentH)
-	       NewDimension (pAb, width, 0, frame, TRUE);
-	     else
-	       NewDimension (pAb, width, height, frame, TRUE);
-	  }
-	else
-	   /* On n'a pas trouve de boite modifiable */
-	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_MODIFYING_BOX_IMP);
-     }
+      /* Est-ce que l'on a trouve une boite ? */
+      if (pBox != NULL)
+	{
+	  x = pBox->BxXOrg - pFrame->FrXOrg;
+	  y = pBox->BxYOrg - pFrame->FrYOrg;
+	  width = pBox->BxWidth;
+	  height = pBox->BxHeight;
+	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MODIFYING_BOX),
+			     AbsBoxType (pBox->BxAbstractBox, FALSE));
+	  /* On retablit les positions par rapport a la fenetre */
+	  xmin -= pFrame->FrXOrg;
+	  if (okH)
+	    xmax -= pFrame->FrXOrg;
+	  else
+	    xmax = xmin;
+	  ymin -= pFrame->FrYOrg;
+	  if (okV)
+	    ymax -= pFrame->FrYOrg;
+	  else
+	    ymax = ymin;
+	  /* On initialise la boite fantome */
+	  percentW = 0;
+	  percentH = 0;
+	  pAb = pBox->BxAbstractBox;
+	  if (!pAb->AbWidth.DimUserSpecified &&
+	      !pAb->AbWidth.DimIsPosition &&
+	      !pAb->AbWidth.DimSameDimension &&
+	      pAb->AbWidth.DimAbRef == pAb)
+	    {
+	      if (pAb->AbWidth.DimUnit == UnPercent)
+		percentW = pAb->AbWidth.DimValue;
+	      else if (pAb->AbWidth.DimValue == 0)
+		percentW = 100;
+	    }
+	  else if (!pAb->AbHeight.DimUserSpecified &&
+		   !pAb->AbHeight.DimIsPosition &&
+		   !pAb->AbHeight.DimSameDimension &&
+		   pAb->AbHeight.DimAbRef == pAb)
+	    {
+	      if (pAb->AbHeight.DimUnit == UnPercent)
+		percentH = pAb->AbHeight.DimValue;
+	      else if (pAb->AbHeight.DimValue == 0)
+		percentH = 100;
+	    }
+	  GeometryResize (frame, x, y, &width, &height, pBox,
+			  xmin, xmax, ymin, ymax, xm, ym,
+			  percentW, percentH);
+	  /* Notify changes */
+	  if (percentW)
+	    NewDimension (pAb, 0, height, frame, TRUE);
+	  else if (percentH)
+	    NewDimension (pAb, width, 0, frame, TRUE);
+	  else
+	    NewDimension (pAb, width, height, frame, TRUE);
+	}
+      else
+	/* On n'a pas trouve de boite modifiable */
+	TtaDisplaySimpleMessage (INFO, LIB, TMSG_MODIFYING_BOX_IMP);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2003,160 +2130,161 @@ void                ApplyDirectResize (int frame, int xm, int ym)
   ----------------------------------------------------------------------*/
 void                DirectCreation (PtrBox pBox, int frame)
 {
-   ViewFrame          *pFrame;
-   PtrAbstractBox      pAb;
-   PtrDocument         pDoc;
-   int                 x, y, xref, yref;
-   int                 width, height;
-   int                 xmin, xmax;
-   int                 Ymin, Ymax;
-   int                 percentW, percentH;
-   ThotBool            modPosition, modDimension;
-   ThotBool            histOpen;
+  ViewFrame          *pFrame;
+  PtrAbstractBox      pAb;
+  PtrDocument         pDoc;
+  int                 x, y, xref, yref;
+  int                 width, height;
+  int                 xmin, xmax;
+  int                 Ymin, Ymax;
+  int                 percentW, percentH;
+  ThotBool            modPosition, modDimension;
+  ThotBool            histOpen;
 
-   /* Il ne faut realiser qu'une seule creation interactive a la fois */
-   if (BoxCreating)
-      return;
-   else
-      BoxCreating = TRUE;
+  /* Il ne faut realiser qu'une seule creation interactive a la fois */
+  if (BoxCreating)
+    return;
+  else
+    BoxCreating = TRUE;
 
-   pFrame = &ViewFrameTable[frame - 1];
-   /* Il faut verifier que la boite reste visible dans la fenetre */
-   GetSizesFrame (frame, &width, &height);
-   if (pBox->BxXOrg < pFrame->FrXOrg)
-      x = 0;
-   else if (pBox->BxXOrg > pFrame->FrXOrg + width)
-      x = width;
-   else
-      x = pBox->BxXOrg - pFrame->FrXOrg;
+  pFrame = &ViewFrameTable[frame - 1];
+  /* Il faut verifier que la boite reste visible dans la fenetre */
+  GetSizesFrame (frame, &width, &height);
+  if (pBox->BxXOrg < pFrame->FrXOrg)
+    x = 0;
+  else if (pBox->BxXOrg > pFrame->FrXOrg + width)
+    x = width;
+  else
+    x = pBox->BxXOrg - pFrame->FrXOrg;
 
-   if (pBox->BxYOrg < pFrame->FrYOrg)
-      y = 0;
-   else if (pBox->BxYOrg > pFrame->FrYOrg + height)
-      y = height;
-   else
-      y = pBox->BxYOrg - pFrame->FrYOrg;
-   width = pBox->BxWidth;
-   height = pBox->BxHeight;
-   pAb = pBox->BxAbstractBox;
-   modPosition = (CanBeTranslated (pAb, frame, TRUE, &xmin, &xmax)
-		  || CanBeTranslated (pAb, frame, FALSE, &Ymin, &Ymax));
-   if (!modPosition)
-     {
-	pAb->AbHorizPos.PosUserSpecified = FALSE;
-	pAb->AbVertPos.PosUserSpecified = FALSE;
-     }
-   modDimension = (CanBeResized (pAb, frame, TRUE, &xmin, &xmax)
-		   || CanBeResized (pAb, frame, FALSE, &Ymin, &Ymax));
-   if (!modDimension)
-     {
-	pAb->AbWidth.DimUserSpecified = FALSE;
-	pAb->AbHeight.DimUserSpecified = FALSE;
-     }
-   if (modPosition || modDimension)
-     {
-	/* Determine les limites de deplacement de la boite */
-	GiveMovingArea (pAb, frame, TRUE, &xmin, &xmax);
-	GiveMovingArea (pAb, frame, FALSE, &Ymin, &Ymax);
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_CREATING_BOX), AbsBoxType (pAb, FALSE));
-	/* On retablit les positions par rapport a la fenetre */
-	xmin -= pFrame->FrXOrg;
-	xmax -= pFrame->FrXOrg;
-	Ymin -= pFrame->FrYOrg;
-	Ymax -= pFrame->FrYOrg;
-	/*
-	  calcule les rapports largeur sur hauteur et hauteur sur
-	  largeur si une des deux dimensions depend de l'autre
-	  percentW = 0 si la largeur ne depend pas de la hauteur
-	  percentH = 0 si la hauteur ne depend pas de la largeur
-	  */
-	percentW = 0;
-	percentH = 0;
-	if (!pAb->AbWidth.DimUserSpecified &&
-	    !pAb->AbWidth.DimIsPosition &&
-	    !pAb->AbWidth.DimSameDimension &&
-	    pAb->AbWidth.DimAbRef == pAb)
-	  {
-	    if (pAb->AbWidth.DimUnit == UnPercent)
-	      percentW = pAb->AbWidth.DimValue;
-	    else if (pAb->AbWidth.DimValue == 0)
-	      percentW = 100;
-	  }
-	else if (!pAb->AbHeight.DimUserSpecified &&
-	    !pAb->AbHeight.DimIsPosition &&
-	    !pAb->AbHeight.DimSameDimension &&
-	    pAb->AbHeight.DimAbRef == pAb)
-	  {
-	    if (pAb->AbHeight.DimUnit == UnPercent)
-	      percentH = pAb->AbHeight.DimValue;
-	    else if (pAb->AbHeight.DimValue == 0)
-	      percentH = 100;
-	  }
-	GeometryCreate (frame, &x, &y, &width, &height,
-			xmin, xmax, Ymin, Ymax, pBox,
-			pAb->AbHorizPos.PosUserSpecified,
-			pAb->AbVertPos.PosUserSpecified,
-			pAb->AbWidth.DimUserSpecified,
-			pAb->AbHeight.DimUserSpecified,
-			percentW, percentH);
+  if (pBox->BxYOrg < pFrame->FrYOrg)
+    y = 0;
+  else if (pBox->BxYOrg > pFrame->FrYOrg + height)
+    y = height;
+  else
+    y = pBox->BxYOrg - pFrame->FrYOrg;
+  width = pBox->BxWidth;
+  height = pBox->BxHeight;
+  pAb = pBox->BxAbstractBox;
+  modPosition = (CanBeTranslated (pAb, frame, TRUE, &xmin, &xmax) ||
+		 CanBeTranslated (pAb, frame, FALSE, &Ymin, &Ymax));
+  if (!modPosition)
+    {
+      pAb->AbHorizPos.PosUserSpecified = FALSE;
+      pAb->AbVertPos.PosUserSpecified = FALSE;
+    }
+  modDimension = (CanBeResized (pAb, frame, TRUE, &xmin, &xmax) ||
+		  CanBeResized (pAb, frame, FALSE, &Ymin, &Ymax));
+  if (!modDimension)
+    {
+      pAb->AbWidth.DimUserSpecified = FALSE;
+      pAb->AbHeight.DimUserSpecified = FALSE;
+    }
+  if (modPosition || modDimension)
+    {
+      /* Determine les limites de deplacement de la boite */
+      GiveMovingArea (pAb, frame, TRUE, &xmin, &xmax);
+      GiveMovingArea (pAb, frame, FALSE, &Ymin, &Ymax);
+      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_CREATING_BOX),
+			 AbsBoxType (pAb, FALSE));
+      /* On retablit les positions par rapport a la fenetre */
+      xmin -= pFrame->FrXOrg;
+      xmax -= pFrame->FrXOrg;
+      Ymin -= pFrame->FrYOrg;
+      Ymax -= pFrame->FrYOrg;
+      /*
+	calcule les rapports largeur sur hauteur et hauteur sur
+	largeur si une des deux dimensions depend de l'autre
+	percentW = 0 si la largeur ne depend pas de la hauteur
+	percentH = 0 si la hauteur ne depend pas de la largeur
+      */
+      percentW = 0;
+      percentH = 0;
+      if (!pAb->AbWidth.DimUserSpecified &&
+	  !pAb->AbWidth.DimIsPosition &&
+	  !pAb->AbWidth.DimSameDimension &&
+	  pAb->AbWidth.DimAbRef == pAb)
+	{
+	  if (pAb->AbWidth.DimUnit == UnPercent)
+	    percentW = pAb->AbWidth.DimValue;
+	  else if (pAb->AbWidth.DimValue == 0)
+	    percentW = 100;
+	}
+      else if (!pAb->AbHeight.DimUserSpecified &&
+	       !pAb->AbHeight.DimIsPosition &&
+	       !pAb->AbHeight.DimSameDimension &&
+	       pAb->AbHeight.DimAbRef == pAb)
+	{
+	  if (pAb->AbHeight.DimUnit == UnPercent)
+	    percentH = pAb->AbHeight.DimValue;
+	  else if (pAb->AbHeight.DimValue == 0)
+	    percentH = 100;
+	}
+      GeometryCreate (frame, &x, &y, &width, &height,
+		      xmin, xmax, Ymin, Ymax, pBox,
+		      pAb->AbHorizPos.PosUserSpecified,
+		      pAb->AbVertPos.PosUserSpecified,
+		      pAb->AbWidth.DimUserSpecified,
+		      pAb->AbHeight.DimUserSpecified,
+		      percentW, percentH);
 
-	/* Notification of the new created box */
-	x = x + pFrame->FrXOrg;
-	y = y + pFrame->FrYOrg;
-	/* get the position of reference point */
-	switch (pBox->BxHorizEdge)
-	  {
-	  case Right:
-	    xref = width;
-	    break;
-	  case VertMiddle:
-	    xref = width / 2;
-	    break;
-	  case VertRef:
-	    xref = pBox->BxVertRef;
-	    break;
-	  default:
-	    xref = 0;
-	    break;
-	  }
-	switch (pBox->BxVertEdge)
-	  {
-	  case Bottom:
-	    yref = height;
-	    break;
-	  case HorizMiddle:
-	    yref = height / 2;
-	    break;
-	  case HorizRef:
-	    yref = pBox->BxHorizRef;
-	    break;
-	  default:
-	    yref = 0;
-	    break;
-	  }
-	pDoc = DocumentOfElement (pAb->AbElement);
-	histOpen = pDoc->DocEditSequence;
-	if (!histOpen)
-	  OpenHistorySequence (pDoc, pAb->AbElement, pAb->AbElement, 0, 0);
-	NewPosition (pAb, x, xref, y, yref, frame, TRUE);
-	if (percentW)
-	  NewDimension (pAb, 0, height, frame, TRUE);
-	else if (percentH)
-	  NewDimension (pAb, width, 0, frame, TRUE);
-	else
-	  NewDimension (pAb, width, height, frame, TRUE);
-	DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-		 pBox->BxXOrg + width, pBox->BxYOrg + height);
-	pAb->AbHorizPos.PosUserSpecified = FALSE;
-	pAb->AbVertPos.PosUserSpecified = FALSE;
-	pAb->AbWidth.DimUserSpecified = FALSE;
-	pAb->AbHeight.DimUserSpecified = FALSE;
-	if (!histOpen)
-	  CloseHistorySequence (pDoc);	  
-     }
+      /* Notification of the new created box */
+      x = x + pFrame->FrXOrg;
+      y = y + pFrame->FrYOrg;
+      /* get the position of reference point */
+      switch (pBox->BxHorizEdge)
+	{
+	case Right:
+	  xref = width;
+	  break;
+	case VertMiddle:
+	  xref = width / 2;
+	  break;
+	case VertRef:
+	  xref = pBox->BxVertRef;
+	  break;
+	default:
+	  xref = 0;
+	  break;
+	}
+      switch (pBox->BxVertEdge)
+	{
+	case Bottom:
+	  yref = height;
+	  break;
+	case HorizMiddle:
+	  yref = height / 2;
+	  break;
+	case HorizRef:
+	  yref = pBox->BxHorizRef;
+	  break;
+	default:
+	  yref = 0;
+	  break;
+	}
+      pDoc = DocumentOfElement (pAb->AbElement);
+      histOpen = pDoc->DocEditSequence;
+      if (!histOpen)
+	OpenHistorySequence (pDoc, pAb->AbElement, pAb->AbElement, 0, 0);
+      NewPosition (pAb, x, xref, y, yref, frame, TRUE);
+      if (percentW)
+	NewDimension (pAb, 0, height, frame, TRUE);
+      else if (percentH)
+	NewDimension (pAb, width, 0, frame, TRUE);
+      else
+	NewDimension (pAb, width, height, frame, TRUE);
+      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+	       pBox->BxXOrg + width, pBox->BxYOrg + height);
+      pAb->AbHorizPos.PosUserSpecified = FALSE;
+      pAb->AbVertPos.PosUserSpecified = FALSE;
+      pAb->AbWidth.DimUserSpecified = FALSE;
+      pAb->AbHeight.DimUserSpecified = FALSE;
+      if (!histOpen)
+	CloseHistorySequence (pDoc);	  
+    }
 
-   /* Traitement de la creation interactive termine */
-   BoxCreating = FALSE;
+  /* Traitement de la creation interactive termine */
+  BoxCreating = FALSE;
 }
 
 /*----------------------------------------------------------------------
