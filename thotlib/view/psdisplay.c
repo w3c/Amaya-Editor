@@ -1618,12 +1618,12 @@ int                 pattern;
 }
 
 /*----------------------------------------------------------------------
-   DrawCorner draw a corner.
+   DrawCorner draw two contiguous edges of a rectangle.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawCorner (int frame, int thick, int style, int x, int y, int l, int h, int coin, int RO, int func, int fg)
+void                DrawCorner (int frame, int thick, int style, int x, int y, int l, int h, int corner, int RO, int func, int fg)
 #else  /* __STDC__ */
-void                DrawCorner (frame, thick, style, x, y, l, h, coin, RO, func, fg)
+void                DrawCorner (frame, thick, style, x, y, l, h, corner, RO, func, fg)
 int                 frame;
 int                 thick;
 int                 style;
@@ -1631,7 +1631,7 @@ int                 x;
 int                 y;
 int                 l;
 int                 h;
-int                 coin;
+int                 corner;
 int                 RO;
 int                 func;
 int                 fg;
@@ -1653,7 +1653,7 @@ int                 fg;
    x = PixelToPoint (x);
    y = PixelToPoint (y);
 
-   switch (coin)
+   switch (corner)
 	 {
 	    case 0:		/* Top Right */
 	       fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n", x, y, xf, y, xf, yf, style, thick, 3);
@@ -1905,14 +1905,17 @@ int                 fg;
 {
    int                 xcour, ycour;	/*encoding */
    FILE               *fout;
+   ptrfont             font;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
 
+   font = (ptrfont) ThotLoadFont ('L', 't', 0, 6, UnPoint, frame);
    if (lgboite > 0)
      {
 	fout = (FILE *) FrRef[frame];
 	/* Load the current font */
+	/*encoding = CurrentFont(fout,font); */
 	xcour = PixelToPoint (x);
 	ycour = PixelToPoint (y);
 
