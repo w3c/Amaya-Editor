@@ -396,12 +396,15 @@ int                 JavaPollLoop ()
 
   The point where events arriving from the X-Windows socket as well as
   the network sockets are fetched and dispatched to the correct handlers.
+  The loop may be called recursively (introduced for ILU), and the current
+  level must break as soon as *stop is set to 0.
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                JavaEventLoop ()
+void                JavaEventLoop (int *stop)
 #else
-void                JavaEventLoop ()
+void                JavaEventLoop (stop)
+int *stop;
 #endif
 {
    int status;
@@ -427,8 +430,7 @@ void                JavaEventLoop ()
    JavaThotlibRelease();
 
    /* Loop waiting for the events */
-   while (1)
-     {
+   while (*stop != 0) {
         while (XWindowSocketWaitValue > 0) {
 	    /*
 	     * Don't block appplication thread reading events.
@@ -451,7 +453,28 @@ void                JavaEventLoop ()
 	JavaThotlibLock();
         JavaHandleOneEvent (&ev);
         JavaThotlibRelease();
-     }
+    }
+}
+
+/*----------------------------------------------------------------------
+  JavaStartEventLoop
+
+  the lowest Event loop (May be cascading them).
+
+  ----------------------------------------------------------------------*/
+
+int JavaEventLoopStop;
+
+#ifdef __STDC__
+void                JavaStartEventLoop ()
+#else
+void                JavaStartEventLoop ()
+#endif
+{
+    while (1) {
+        JavaEventLoopStop = 1;
+	JavaEventLoop(&JavaEventLoopStop);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -461,7 +484,7 @@ void                JavaEventLoop ()
   ----------------------------------------------------------------------*/
 void                JavaLoadResources ()
 {
-   TtaSetMainLoop (InitJavaEventLoop, JavaEventLoop,
+   TtaSetMainLoop (InitJavaEventLoop, JavaStartEventLoop,
 		   JavaFetchEvent, JavaFetchAvailableEvent);
 }
 

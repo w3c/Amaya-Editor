@@ -21,7 +21,7 @@
 
 #include "css_f.h"
 #include "init_f.h"
-#ifndef AMAYA_JAVA
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 #include "query_f.h"
 #endif
 #include "AHTURLTools_f.h"
@@ -476,9 +476,12 @@ Document       doc;
 	     /* now exit the application */
 #ifdef AMAYA_JAVA
              CloseJava ();
-#else /* !AMAYA_JAVA */
+#else
+#ifdef AMAYA_ILU
+#else
 	     QueryClose ();
-#endif /* !AMAYA_JAVA */
+#endif
+#endif
 	     CloseCSS ();
 	     TtaQuit ();
 	  }

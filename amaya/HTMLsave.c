@@ -46,7 +46,7 @@ static int          SRC_attr_tab[] = {
 #include "HTMLimage_f.h"
 #include "HTMLsave_f.h"
 #include "init_f.h"
-#ifndef AMAYA_JAVA
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 #include "query_f.h"
 #endif
 
@@ -542,22 +542,22 @@ DBG(fprintf(stderr, "Image %s modified\n", pImage->localName);)
 					   pImage->originalName, imageType);
 		  if (res)
 		    {
-#ifndef AMAYA_JAVA
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 		      DocNetworkStatus[document] |= AMAYA_NET_ERROR;
-#endif /* AMAYA_JAVA */
+#endif /* AMAYA_JAVA  || AMAYA_ILU */
 		       ResetStop (document);
-#ifdef AMAYA_JAVA
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 		       sprintf (msg, "%s %s \n%s",
 		                TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
 				pImage->originalName, 
 				TtaGetMessage (AMAYA, AM_SAVE_DISK));
-#else /* AMAYA_JAVA */
+#else /* AMAYA_JAVA || AMAYA_ILU */
 		       sprintf (msg, "%s %s \n%s\n%s",
 		                TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
 				pImage->originalName, 
 				AmayaLastHTTPErrorMsg,
 				TtaGetMessage (AMAYA, AM_SAVE_DISK));
-#endif /* AMAYA_JAVA */
+#endif /* AMAYA_JAVA || AMAYA_ILU */
 		       InitConfirm (document, view, msg);
 		       /* erase the last status message */
 		       TtaSetStatus (document, view, "", NULL);
@@ -583,22 +583,22 @@ DBG(fprintf(stderr, "Saving HTML document %s\n", tempname);)
 
    if (res)
      {
-#ifndef AMAYA_JAVA
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
        DocNetworkStatus[document] |= AMAYA_NET_ERROR;
-#endif /* AMAYA_JAVA */
+#endif /* AMAYA_JAVA || AMAYA_ILU */
         ResetStop (document);
-#ifdef AMAYA_JAVA
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 	sprintf (msg, "%s %s \n%s",
 		 TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
 		 DocumentURLs[document],
 		 TtaGetMessage (AMAYA, AM_SAVE_DISK));
-#else /* AMAYA_JAVA */
+#else /* AMAYA_JAVA || AMAYA_ILU */
 	sprintf (msg, "%s %s \n%s\n%s",
 		 TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
 		 DocumentURLs[document],
 		 AmayaLastHTTPErrorMsg,
 		 TtaGetMessage (AMAYA, AM_SAVE_DISK));
-#endif /* AMAYA_JAVA */
+#endif /* AMAYA_JAVA || AMAYA_ILU */
 	InitConfirm (document, view, msg);
 	/* JK: to erase the last status message */
 	TtaSetStatus (document, view, "", NULL);

@@ -19,7 +19,7 @@
 
 
 #include "init_f.h"
-#ifndef AMAYA_JAVA
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 #include "query_f.h"
 #endif
 #include "AHTURLTools_f.h"
@@ -215,7 +215,7 @@ void *context;
    ElemImage          *ctxEl, *ctxPrev;
    ElementType         elType;
 
-#ifdef AMAYA_JAVA
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
    FilesLoading[doc]--;
 #endif
    if (DocumentURLs[doc] != NULL)
@@ -252,7 +252,7 @@ void *context;
      }
 }
 
-#ifndef AMAYA_JAVA
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 /*----------------------------------------------------------------------
    libWWWImageLoaded is the libWWW callback procedure when the image
                 is loaded from the web.
@@ -363,19 +363,19 @@ void               *extra;
 	      ctxEl->callback = callback;
 	      ctxEl->extra = extra;
 	      update = FALSE;	/* the image is not loaded yet */
-#ifdef AMAYA_JAVA
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 	      FilesLoading[doc]++;
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 		                AMAYA_ASYNC | flags, NULL, NULL,
 				(void *) HandleImageLoaded,
 				(void *) desc, NO);
-#else /* !AMAYA_JAVA */
+#else /* !AMAYA_JAVA && !AMAYA_ILU */
 	      UpdateTransfer(doc);
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 	                        AMAYA_ASYNC, NULL, NULL,
 				(void *) libWWWImageLoaded,
 				(void *) desc, NO);
-#endif /* !AMAYA_JAVA */
+#endif /* !AMAYA_JAVA && !AMAYA_ILU */
 	      if (i != -1) 
 		desc->status = IMAGE_LOADED;
 	      else
@@ -455,7 +455,7 @@ int                 flags;
    Element             el, elFound;
    ElementType         elType;
 
-#ifdef AMAYA_JAVA
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
    if (FilesLoading[doc] == 0)
      {
 #else 
@@ -465,7 +465,7 @@ int                 flags;
        /* transfer interrupted */
        TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_LOAD_ABORT), NULL);
        DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
-#endif  /* AMAYA_JAVA */
+#endif  /* AMAYA_JAVA || AMAYA_ILU */
        return;
      }
 
@@ -476,7 +476,7 @@ int                 flags;
    /* prepare the attribute to be searched */
    attrType.AttrSSchema = elType.ElSSchema;
    attrType.AttrTypeNum = HTML_ATTR_SRC;
-#ifndef AMAYA_JAVA
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
    /* We are currently fetching images for this document */
    /* during this time LoadImage has not to stop transfer */
 #endif
@@ -485,7 +485,7 @@ int                 flags;
      {
 	TtaHandlePendingEvents ();
 	/* verify if StopTransfer is called */
-#ifndef AMAYA_JAVA
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 	if (DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
 	   return;
 #endif

@@ -130,9 +130,9 @@ static Pixmap       iconJava;
 #include "HTMLhistory_f.h"
 #include "html2thot_f.h"
 #include "init_f.h"
-#ifndef AMAYA_JAVA
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 #include "query_f.h"
-#endif /* !AMAYA_JAVA */
+#endif /* !AMAYA_JAVA  && !AMAYA_ILU */
 #include "trans_f.h"
 #include "AHTURLTools_f.h"
 #include "EDITORactions_f.h"
@@ -346,7 +346,7 @@ Document            document;
    if (FilesLoading[document] != 0)
      {
        FilesLoading[document]--;
-#ifndef AMAYA_JAVA
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
        if (FilesLoading[document] == 0)
 	 /* The last object associated to the document has been loaded */
 	 {
@@ -378,11 +378,11 @@ Document            doc;
 
 #endif
 {
-#ifndef AMAYA_JAVA
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
   DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
 #endif
   FilesLoading[document] = 1;
-#ifndef AMAYA_JAVA
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
   if (TtaGetViewFrame (document, 1) != 0)
     /* this document is displayed */
     TtaChangeButton (document, 1, 1, stopR);
@@ -415,10 +415,17 @@ View                view;
 
 #endif
 {
-#ifdef AMAYA_JAVA
+#if defined(AMAYA_JAVA)
   if (FilesLoading[document] != 0)
     {
       StopRequest (document);
+    }
+#else 
+#if defined(AMAYA_ILU)
+  if (FilesLoading[document] != 0)
+    {
+      StopRequest (document);
+      FilesLoading[document] = 0;
     }
 #else
 #ifndef _WINDOWS
@@ -438,7 +445,8 @@ View                view;
       DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
     }
 #endif /* !_WINDOWS */
-#endif /* AMAYA_JAVA */
+#endif /* !AMAYA_ILU */
+#endif /* !AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -1090,7 +1098,7 @@ View                view;
    W3Loading = document;	/* this document is currently in load */
    newdoc = InitDocView (document, pathname);
 
-#ifdef AMAYA_JAVA
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
    /*
     * Check against concurrent loading on the same frame.
     */
@@ -1483,7 +1491,7 @@ DoubleClickEvent    DC_event;
 
 	       }
 
-#ifdef AMAYA_JAVA
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
              /* Check against concurrent loading on the same frame */
 	     if (FilesLoading[newdoc])
 	       return(0);
@@ -2119,8 +2127,11 @@ NotifyEvent        *event;
    /* initialize parser mapping table and HTLib */
    InitMapping ();
 
-#ifndef AMAYA_JAVA
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
    QueryInit ();
+#endif
+#ifdef AMAYA_ILU
+   ILUserver_Initialize();
 #endif
 
    AMAYA = TtaGetMessageTable ("amayamsg", AMAYA_MSG_MAX);
