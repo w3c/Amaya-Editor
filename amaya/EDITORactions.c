@@ -245,6 +245,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   DocumentMeta[doc]->form_data = NULL;
   DocumentMeta[doc]->initial_url = NULL;
   DocumentMeta[doc]->method = CE_ABSOLUTE;
+  DocumentMeta[doc]->xmlformat = FALSE;
   DocumentSource[doc] = 0;
 
   /* store the document profile */
@@ -440,6 +441,10 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       TtaSelectElement (doc, el);
       SelectionDoc = doc;
     }
+
+  /* Update the Doctype menu */
+  UpdateDoctypeMenu (doc);
+  
   /* the document should be saved */
   TtaSetDocumentModified (doc);
 }
