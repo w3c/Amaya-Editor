@@ -1687,7 +1687,8 @@ void ElementPasted (NotifyElement * event)
       TtaGiveTextContent (child, value, &length, &lang);
       /* parse the content */
       css = AddCSS (doc, doc, CSS_DOCUMENT_STYLE, NULL, NULL);
-      ReadCSSRules (doc, css, value, FALSE);
+      ReadCSSRules (doc, css, value,
+		    TtaGetElementLineNumber (child), FALSE);
       TtaFreeMemory (value);
     }
   else if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)

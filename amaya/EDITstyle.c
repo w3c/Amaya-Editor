@@ -1122,7 +1122,7 @@ static void         UpdateClass (Document doc)
       }
     TtaInsertTextContent (child, len, stylestring, doc);
     /* parse and apply this new CSS to the current document */
-    ReadCSSRules (doc, NULL, stylestring, TRUE);
+    ReadCSSRules (doc, NULL, stylestring,  TtaGetElementLineNumber (child), TRUE);
     }
 
   if (!found)

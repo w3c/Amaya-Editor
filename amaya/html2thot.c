@@ -893,28 +893,18 @@ static ThotBool     Within (int ThotType, SSchema ThotSSchema)
 }
 
 /*----------------------------------------------------------------------
-   ParseHTMLError  print the error message msg on stderr.
+   HTMLParseError  print the error message msg on stderr.
   ----------------------------------------------------------------------*/
-void               ParseHTMLError (Document doc, char* msg)
+void HTMLParseError (Document doc, char* msg)
 {
-#ifdef _I18N_
-   unsigned char   mbcsMsg [MAX_TXT_LEN * 2];
-   unsigned char*  ptrMbcsMas = &mbcsMsg[0];
-#else  /* !_I18N_ */
-   unsigned char*  mbcsMsg = msg;
-#endif /* _I18N_ */
-
-#ifdef _I18N_
-   TtaWCS2MBS (&msg, &ptrMbcsMas, UTF_8 /* ISO_8859_1 */);
-   /* wcstombs (mbcsMsg, msg, MAX_TXT_LEN * 2); */
-#endif /* _I18N_ */
+  char       fileName [100];
 
    HTMLErrorsFound = TRUE;
    if (!ErrFile)
      {
-      sprintf (ErrFileName, "%s%c%d%cPARSING.ERR", TempFileDirectory,
+      sprintf (fileName, "%s%c%d%cPARSING.ERR", TempFileDirectory,
 		DIR_SEP, doc, DIR_SEP);
-      if ((ErrFile = fopen (ErrFileName, "w")) == NULL)
+      if ((ErrFile = fopen (fileName, "w")) == NULL)
          return;
      }
 
@@ -930,11 +920,11 @@ void               ParseHTMLError (Document doc, char* msg)
 	 }
        /* print the line number and character number before the message */
        fprintf (ErrFile, "   line %d, char %d: %s\n", NumberOfLinesRead,
-		NumberOfCharRead, mbcsMsg);
+		NumberOfCharRead, msg);
      }
    else
      /* print only the error message */
-     fprintf (ErrFile, "%s\n", mbcsMsg);
+     fprintf (ErrFile, "%s\n", msg);
 }
 
 /*----------------------------------------------------------------------
@@ -1190,9 +1180,7 @@ static void         PutInBuffer (unsigned char c)
 	      TruncatedAttrValue = FALSE;
 	    }
 	  else
-	    ParseHTMLError (HTMLcontext.doc,
-			    "Buffer overflow");
-	  
+	    HTMLParseError (HTMLcontext.doc, "Buffer overflow");
 	  LgBuffer = 0;
 	}
 
@@ -1896,7 +1884,8 @@ static void            ElementComplete (Element el)
 	   text = GetStyleContents (el);
 	   if (text)
 	     {
-	       ReadCSSRules (HTMLcontext.doc, NULL, text, FALSE);
+	       ReadCSSRules (HTMLcontext.doc, NULL, text,
+			     TtaGetElementLineNumber (el), FALSE);
 	       TtaFreeMemory (text);
 	     }
 	   HTMLcontext.parsingCSS = FALSE;
@@ -2716,7 +2705,7 @@ static void           ProcessStartGI (char* GIname)
 	  if (strlen (GIname) > MaxMsgLength - 20)
 	    GIname[MaxMsgLength - 20] = EOS;
 	  sprintf (msgBuffer, "warning - unknown tag <%s>", GIname);
-	  ParseHTMLError (HTMLcontext.doc, msgBuffer);
+	  HTMLParseError (HTMLcontext.doc, msgBuffer);
 	  UnknownTag = TRUE;
 	  /* create an Invalid_element */
 	  sprintf (msgBuffer, "<%s", GIname);
@@ -2736,7 +2725,7 @@ static void           ProcessStartGI (char* GIname)
 	  sprintf (msgBuffer,
 		   "Invalid start element <%s> for the current profile",
 		   GIname);
-	  ParseHTMLError (HTMLcontext.doc, msgBuffer);
+	  HTMLParseError (HTMLcontext.doc, msgBuffer);
 	  HTMLErrorsFoundInProfile = TRUE;
 	  UnknownTag = TRUE;
 	}
@@ -2755,7 +2744,7 @@ static void           ProcessStartGI (char* GIname)
 	    /* element not allowed in the current structural context */
 	    {
 	      sprintf (msgBuffer, "Tag <%s> is not allowed here", GIname);
-	      ParseHTMLError (HTMLcontext.doc, msgBuffer);
+	      HTMLParseError (HTMLcontext.doc, msgBuffer);
 	      UnknownTag = TRUE;
 	      /* create an Invalid_element */
 	      sprintf (msgBuffer, "<%s", GIname);
@@ -2856,7 +2845,7 @@ static void     EndOfStartGI (char c)
 	  (HTMLcontext.lastElement == rootElement))
          /* an element after the tag </html>, ignore it */
          {
-         ParseHTMLError (HTMLcontext.doc, "Element after tag </html>. Ignored");
+         HTMLParseError (HTMLcontext.doc, "Element after tag </html>. Ignored");
          return;
          }
       if (!strcmp (theGI, "math") ||
@@ -2989,7 +2978,7 @@ static void        EndOfEndTag (char c)
         if (strlen (inputBuffer) > MaxMsgLength - 20)
 	   inputBuffer[MaxMsgLength - 20] = EOS;
 	sprintf (msgBuffer, "warning - unknown tag </%s>", inputBuffer);
-	ParseHTMLError (HTMLcontext.doc, msgBuffer);
+	HTMLParseError (HTMLcontext.doc, msgBuffer);
 	/* create an Invalid_element */
 	sprintf (msgBuffer, "</%s", inputBuffer);
 	InsertInvalidEl (msgBuffer, FALSE);
@@ -3004,7 +2993,7 @@ static void        EndOfEndTag (char c)
 	  sprintf (msgBuffer,
 		   "Invalid end element <%s> for the current profile",
 		   inputBuffer);
-	  ParseHTMLError (HTMLcontext.doc, msgBuffer);
+	  HTMLParseError (HTMLcontext.doc, msgBuffer);
 	  HTMLErrorsFoundInProfile = TRUE;
 	}
       else if (!CloseElement (entry, -1, FALSE))
@@ -3012,7 +3001,7 @@ static void        EndOfEndTag (char c)
         {
 	/* print an error message... */
 	sprintf (msgBuffer, "Unexpected end tag </%s>", inputBuffer);
-	ParseHTMLError (HTMLcontext.doc, msgBuffer);
+	HTMLParseError (HTMLcontext.doc, msgBuffer);
 	/* ... and try to recover */
 	if ((inputBuffer[0] == 'H' || inputBuffer[0] == 'h') &&
 	    inputBuffer[1] >= '1' && inputBuffer[1] <= '6' &&
@@ -3133,7 +3122,7 @@ static void            EndOfAttrName (char c)
 	       if (strlen (inputBuffer) > MaxMsgLength - 30)
 		 inputBuffer[MaxMsgLength - 30] = EOS;
 	       sprintf (msgBuffer, "Invalid attribute \"%s\"", inputBuffer);
-	       ParseHTMLError (HTMLcontext.doc, msgBuffer);
+	       HTMLParseError (HTMLcontext.doc, msgBuffer);
 	       /* attach an Invalid_attribute to the current element */
 	       tableEntry = &pHTMLAttributeMapping[0];
 	       schema = DocumentSSchema;
@@ -3148,7 +3137,7 @@ static void            EndOfAttrName (char c)
 	   sprintf (msgBuffer,
 		    "Invalid attribut \"%s\" for the current profile",
 		    inputBuffer);
-	   ParseHTMLError (HTMLcontext.doc, msgBuffer);
+	   HTMLParseError (HTMLcontext.doc, msgBuffer);
 	   HTMLErrorsFoundInProfile = TRUE;
 	   UnknownAttr = TRUE;
 	   lastAttrEntry = NULL;
@@ -3557,7 +3546,7 @@ static void      EndOfEntity (char c)
        PutInBuffer (';');
        /* print an error message */
        sprintf (msgBuffer, "Entity not supported\"&%s;\"", EntityName);
-       ParseHTMLError (HTMLcontext.doc, msgBuffer);
+       HTMLParseError (HTMLcontext.doc, msgBuffer);
      }
    LgEntityName = 0;
 }
@@ -3618,7 +3607,7 @@ static void      EntityChar (unsigned char c)
 	     PutInBuffer ((char)(XhtmlEntityTable[EntityTableEntry].charCode));
 	   if (c != SPACE)
 	     /* print an error message */
-	     ParseHTMLError (HTMLcontext.doc, "Missing semicolon");
+	     HTMLParseError (HTMLcontext.doc, "Missing semicolon");
 	   /* next state is the return state from the entity subautomaton, not
 	      the state computed by the automaton. In addition the character read
 	      has not been processed yet */
@@ -3669,7 +3658,7 @@ static void      EntityChar (unsigned char c)
 	       EntityName[LgEntityName++] = c;
 	       EntityName[LgEntityName++] = EOS;
 	       sprintf (msgBuffer, "Entity not supported\"&%s\"", EntityName);
-	       ParseHTMLError (HTMLcontext.doc, msgBuffer);
+	       HTMLParseError (HTMLcontext.doc, msgBuffer);
 	     }
 	   /* next state is the return state from the entity subautomaton,
 	      not the state computed by the automaton.
@@ -3740,7 +3729,7 @@ static void     DecEntityChar (char c)
 		PutInBuffer (EntityName[i]);
 	      LgEntityName = 0;
 	      /* error message */
-	      ParseHTMLError (HTMLcontext.doc, "Invalid decimal entity");
+	      HTMLParseError (HTMLcontext.doc, "Invalid decimal entity");
 	    }
 	  /* next state is state 0, not the state computed by the automaton */
 	  /* and the character read has not been processed yet */
@@ -3813,7 +3802,7 @@ static void     HexEntityChar (char c)
 		PutInBuffer (EntityName[i]);
 	      LgEntityName = 0;
 	      /* error message */
-	    ParseHTMLError (HTMLcontext.doc, "Invalid hexadecimal entity");
+	    HTMLParseError (HTMLcontext.doc, "Invalid hexadecimal entity");
 	    }
 	  /* next state is state 0, not the state computed by the automaton */
 	  /* and the character read has not been processed yet */
@@ -4755,11 +4744,6 @@ static void        HTMLparse (FILE * infile, char* HTMLbuf)
       EndOfDocument ();
    HTMLrootClosingTag = NULL;
    HTMLrootClosed = FALSE;
-   if (ErrFile)
-      {
-      fclose (ErrFile);
-      ErrFile = (FILE*) 0;
-      } 
 }
 
 /*----------------------------------------------------------------------
@@ -6313,10 +6297,6 @@ static void     InitializeHTMLParser (Element lastelem, ThotBool isclosed, Docum
    AfterTagPRE = FALSE;
    HTMLcontext.parsingCSS = FALSE;
    CurrentBufChar = 0;
-
-   /* initialize the error file */
-   ErrFile = (FILE*) 0;
-   ErrFileName[0] = EOS;
  }
 
 /*----------------------------------------------------------------------
@@ -6350,36 +6330,26 @@ void ParseIncludedHTML (Element elem, char *closingTag)
    ParseSubTree
    
   ----------------------------------------------------------------------*/
-void            ParseSubTree (char* HTMLbuf, Element lastelem,
-			      ThotBool isclosed, Document doc)
+void ParseSubTree (char* HTMLbuf, Element lastelem, ThotBool isclosed,
+		   Document doc)
 {
    ElementType  elType;
-   char*      schemaName;
-#ifdef _I18N_
-   char         html_buff [4 * MAX_TXT_LEN];
-   char*        ptrHTMLbuf = html_buff;
-#else  /* !_I18N_ */
-   char*        html_buff = HTMLbuf;
-#endif /* !_I18N_ */
-
+   char        *schemaName;
 
    docURL = NULL;
    elType = TtaGetElementType (lastelem);
    schemaName = TtaGetSSchemaName(elType.ElSSchema);
-#ifdef _I18N_
-   TtaWCS2MBS (&HTMLbuf, &ptrHTMLbuf, HTMLcontext.encoding);
-#endif /* _I18N_ */
    if (strcmp (schemaName, "HTML") == 0)
      /* parse an HTML subtree */
      {
        InitializeHTMLParser (lastelem, isclosed, doc);
        /* We set number line with 0 when we are parsing a sub-tree */
        NumberOfLinesRead = 0;
-       HTMLparse (NULL, html_buff);
+       HTMLparse (NULL, HTMLbuf);
      }
    else
      {
-       InputText = html_buff; 
+       InputText = HTMLbuf; 
        /* InputText = HTMLbuf; */
        CurrentBufChar = 0;
 #ifdef OLD_XML_PARSER

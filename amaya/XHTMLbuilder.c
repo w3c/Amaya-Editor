@@ -346,7 +346,7 @@ void             XhtmlEntityCreated (int         entityValue,
   Complete Xhtml elements.
   Check its attributes and its contents.
   ----------------------------------------------------------------------*/
-void              XhtmlElementComplete (Element el, Document doc, int *error)
+void XhtmlElementComplete (Element el, Document doc, int *error)
 
 {
    ElementType    elType, newElType, childType;
@@ -607,7 +607,8 @@ void              XhtmlElementComplete (Element el, Document doc, int *error)
 	   text = GetStyleContents (el);
 	   if (text)
 	     {
-	       ReadCSSRules (doc, NULL, text, FALSE);
+	       ReadCSSRules (doc, NULL, text,
+			     TtaGetElementLineNumber (el), FALSE);
 	       TtaFreeMemory (text);
 	     }
 	   SetParsingCSS (FALSE);
@@ -861,7 +862,7 @@ void               HTMLTypeAttrValue (char     *val,
       if (strlen (val) > MaxMsgLength - 40)
          val[MaxMsgLength - 40] = EOS;
       sprintf (msgBuffer, "Unknown attribute value \"type = %s\"", val);
-      ParseHTMLError (context->doc, msgBuffer);
+      HTMLParseError (context->doc, msgBuffer);
       attrType.AttrSSchema = TtaGetDocumentSSchema (context->doc);
       attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
       sprintf (msgBuffer, "type=%s", val);
@@ -1040,7 +1041,7 @@ void              CreateAttrWidthPercentPxl (char *buffer, Element el,
     if (strlen (buffer) > MaxMsgLength - 30)
         buffer[MaxMsgLength - 30] = EOS;
     sprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
-    ParseHTMLError (doc, msgBuffer);
+    HTMLParseError (doc, msgBuffer);
     }
   if (isImage)
     UpdateImageMap (el, doc, oldWidth, -1);
@@ -1103,7 +1104,7 @@ void              CreateAttrIntSize (char *buffer,
        if (strlen (buffer) > MaxMsgLength - 30)
          buffer[MaxMsgLength - 30] = EOS;
        sprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
-       ParseHTMLError (doc, msgBuffer);
+       HTMLParseError (doc, msgBuffer);
      }
 }
 /*----------------------------------------------------------------------
@@ -1190,7 +1191,7 @@ void               EndOfHTMLAttributeValue (char     *attrValue,
 		       if (isXML)
 			 XmlParseError (errorParsing, msgBuffer, 0);
 		       else
-			 ParseHTMLError (context->doc, msgBuffer);
+			 HTMLParseError (context->doc, msgBuffer);
 
 		       /* remove the attribute and replace it by an */
 		       /* Invalid_attribute */
@@ -1237,7 +1238,7 @@ void               EndOfHTMLAttributeValue (char     *attrValue,
 		       if (isXML)
 			 XmlParseError (errorParsing, msgBuffer, 0);
 		       else
-			 ParseHTMLError (context->doc, msgBuffer);
+			 HTMLParseError (context->doc, msgBuffer);
 		     }
 		   break;
 		 case 2:	/* text */
@@ -1257,7 +1258,7 @@ void               EndOfHTMLAttributeValue (char     *attrValue,
 			       if (isXML)
 				 XmlParseError (errorParsing, msgBuffer, 0);
 			       else
-				 ParseHTMLError (context->doc, msgBuffer);
+				 HTMLParseError (context->doc, msgBuffer);
 			     }
 			   else
 			     {

@@ -569,7 +569,8 @@ void GraphMLElementComplete (Element el, Document doc, int *error)
 	     text = GetStyleContents (el);
 	     if (text)
 	       {
-		 ReadCSSRules (doc, NULL, text, FALSE);
+		 ReadCSSRules (doc, NULL, text,
+			       TtaGetElementLineNumber (el), FALSE);
 		 TtaFreeMemory (text);
 	       }
 	   }

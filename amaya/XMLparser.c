@@ -247,14 +247,6 @@ void XMLElementComplete (Element el, Document doc)
 	 if (ctxt->ElementComplete)
 	    (*(ctxt->ElementComplete)) (el, doc, &error);
       }
-   if (error)
-      {
-      if (error == 1)
-	 {
-         ParseHTMLError (doc, "Invalid number of children");
-	 /* XMLabort = TRUE;  should we abort??? */
-	 }
-      }
 }
 
 /*----------------------------------------------------------------------
@@ -338,8 +330,6 @@ static void         PutInBuffer (unsigned char c)
 	{
 	  if (currentState == 0)
 	    XMLTextToDocument ();
-	  else
-	    ParseHTMLError (currentDocument, "Panic: XML buffer overflow");
 	  bufferLength = 0;
 	}
       if (len == 1)
@@ -461,8 +451,6 @@ static void         EndOfXMLEndTag (char c)
 static void EndOfStartTag (char c)
 {
   char	          DTDname[100];
-  unsigned char   msgBuffer[MAX_BUFFER_LENGTH];
-  unsigned char  *s;
 
   if (currentElementContent == 'X' && c != '/')
      /* the current element will contain elements from another DTD */
@@ -482,17 +470,7 @@ static void EndOfStartTag (char c)
 	}
      else
 	{
-        if (DTDname[0] == EOS)
-	   {
-	   if (XMLelementType[stackLevel - 1])
-	     s = XMLelementType[stackLevel - 1];
-	   else
-	     s = inputBuffer;
-	   sprintf (msgBuffer,
-		     "Don't know what DTD to use for element %s", s);
-	   ParseHTMLError (currentDocument, msgBuffer);
-	   }
-        else
+        if (DTDname[0] != EOS)
            /* Parse the content of this element according to the new DTD */
            ChangeParserContext (DTDname);
 	}
@@ -534,62 +512,61 @@ static void         EndOfEmptyTag (char c)
   ----------------------------------------------------------------------*/
 static void EndOfStartGI (char c)
 {
-   Element		newElement;
-   ElementType		elType;
-   int			i;
-   char                *mappedName;
-   unsigned char        msgBuffer[MAX_BUFFER_LENGTH];
+  Element		newElement;
+  ElementType		elType;
+  char                 *mappedName;
+  unsigned char         msgBuffer[MAX_BUFFER_LENGTH];
+  int			i;
 
-   /* close the input buffer */
-   inputBuffer[bufferLength] = EOS;
-
-   if (currentElement == NULL)
-       ParseHTMLError (currentDocument, "XML parser error 1");
-   else if (stackLevel == MAX_STACK_HEIGHT)
-     {
-       ParseHTMLError (currentDocument, "**FATAL** Too many XML levels");
-       normalTransition = FALSE;
-       XMLabort = TRUE;
-     }
-   else
-     {
-       /* look for a colon in the element name (namespaces) and ignore the
-	  prefix if there is one */
-       for (i = 0; i < bufferLength && inputBuffer[i] != ':'; i++);
-       if (inputBuffer[i] == ':')
-	  i++;
-       else
-	  i = 0;
-       elType.ElSSchema = NULL;
-       elType.ElTypeNum = 0;
-       GetXMLElementType (&inputBuffer[i], &elType, &mappedName,
-			  &currentElementContent, currentDocument);
-       if (elType.ElTypeNum <= 0)
-	  {
-	  sprintf (msgBuffer, "Unknown XML element %s", inputBuffer);
-	  ParseHTMLError (currentDocument, msgBuffer);
-	  XMLelementType[stackLevel] = NULL;
-	  elementStack[stackLevel] = NULL;
-	  }
-       else
-	  {
-	  newElement = TtaNewElement (currentDocument, elType);
-	  SetElemLineNumber (newElement);
-	  XMLInsertElement (newElement);
-          currentElementClosed = FALSE;
-	  XMLelementType[stackLevel] = mappedName;
-	  elementStack[stackLevel] = newElement;
-	  }
-       currentAttribute = NULL;
-       HTMLStyleAttribute = FALSE;
-       languageStack[stackLevel] = currentLanguage;
-       /* save the current parser context */
-       parserCtxtStack[stackLevel] = currentParserCtxt;
-       stackLevel++;
-     }
- 
-   /* the input buffer is now empty */
-   bufferLength = 0;
+  /* close the input buffer */
+  inputBuffer[bufferLength] = EOS;
+  if (currentElement != NULL)
+    {
+      if (stackLevel == MAX_STACK_HEIGHT)
+	{
+	  normalTransition = FALSE;
+	  XMLabort = TRUE;
+	}
+      else
+	{
+	  /* look for a colon in the element name (namespaces) and ignore the
+	     prefix if there is one */
+	  for (i = 0; i < bufferLength && inputBuffer[i] != ':'; i++);
+	  if (inputBuffer[i] == ':')
+	    i++;
+	  else
+	    i = 0;
+	  elType.ElSSchema = NULL;
+	  elType.ElTypeNum = 0;
+	  GetXMLElementType (&inputBuffer[i], &elType, &mappedName,
+			     &currentElementContent, currentDocument);
+	  if (elType.ElTypeNum <= 0)
+	    {
+	      sprintf (msgBuffer, "Unknown XML element %s", inputBuffer);
+	      HTMLParseError (currentDocument, msgBuffer);
+	      XMLelementType[stackLevel] = NULL;
+	      elementStack[stackLevel] = NULL;
+	    }
+	  else
+	    {
+	      newElement = TtaNewElement (currentDocument, elType);
+	      SetElemLineNumber (newElement);
+	      XMLInsertElement (newElement);
+	      currentElementClosed = FALSE;
+	      XMLelementType[stackLevel] = mappedName;
+	      elementStack[stackLevel] = newElement;
+	    }
+	  currentAttribute = NULL;
+	  HTMLStyleAttribute = FALSE;
+	  languageStack[stackLevel] = currentLanguage;
+	  /* save the current parser context */
+	  parserCtxtStack[stackLevel] = currentParserCtxt;
+	  stackLevel++;
+	}
+    }
+  
+  /* the input buffer is now empty */
+  bufferLength = 0;
 }
 
 /*----------------------------------------------------------------------
@@ -608,7 +585,7 @@ static void         EndOfStartGIandTag (char c)
    An element name has been read in a closing tag.
    Check that it closes the right element.
   ----------------------------------------------------------------------*/
-static void         EndOfClosingTagName (char c)
+static void EndOfClosingTagName (char c)
 {
   int		    i;
   unsigned char             msgBuffer[MAX_BUFFER_LENGTH];
@@ -633,7 +610,7 @@ static void         EndOfClosingTagName (char c)
 	sprintf (msgBuffer,
 		  "Unexpected XML end tag </%s> instead of </%s>",
 		  inputBuffer, XMLelementType[stackLevel - 1]);
-	ParseHTMLError (currentDocument, msgBuffer);
+	HTMLParseError (currentDocument, msgBuffer);
 	normalTransition = FALSE;
 	XMLabort = TRUE;
       }
@@ -646,7 +623,7 @@ static void         EndOfClosingTagName (char c)
    EndOfNameAndClosingTag
    An element name followed by a '>' has been read in a closing tag.
   ----------------------------------------------------------------------*/
-static void         EndOfNameAndClosingTag (char c)
+static void EndOfNameAndClosingTag (char c)
 {
    EndOfClosingTagName (c);
    EndOfXMLEndTag (c);
@@ -662,7 +639,6 @@ static void         EndOfAttrName (char c)
   Attribute	attr;
   AttributeType	attrType;
   int		i;
-  unsigned char       msgBuffer[MAX_BUFFER_LENGTH];
   ThotBool      level;
 
   /* close the input buffer */
@@ -725,12 +701,7 @@ static void         EndOfAttrName (char c)
 	MapHTMLAttribute (&inputBuffer[i], &attrType,
 			  XMLelementType[stackLevel-1],
 			  &level, currentDocument);
-     if (attrType.AttrTypeNum <= 0)
-        {
-        sprintf (msgBuffer, "Unknown XML attribute %s", inputBuffer);
-        ParseHTMLError (currentDocument, msgBuffer);
-        }
-     else
+     if (attrType.AttrTypeNum > 0)
         {
 	if (strcasecmp (&inputBuffer[i], "style") == 0)
 	   HTMLStyleAttribute = TRUE;
@@ -768,7 +739,6 @@ static void         EndOfAttrValue (char c)
 {
    AttributeType	attrType;
    int			attrKind, val;
-   unsigned char                msgBuffer[MAX_BUFFER_LENGTH];
 
    /* close the input buffer */
    inputBuffer[bufferLength] = EOS;
@@ -788,13 +758,7 @@ static void         EndOfAttrValue (char c)
 	      if (currentParserCtxt->MapAttributeValue)
 	         (*(currentParserCtxt->MapAttributeValue)) (inputBuffer,
 							    attrType, &val);
-	   if (val <= 0)
-	      {
-	      sprintf (msgBuffer, "Unknown XML attribute value: %s",
-			inputBuffer);
-	      ParseHTMLError (currentDocument, msgBuffer);	
-	      }
-	   else
+	   if (val > 0)
 	      TtaSetAttributeValue (currentAttribute, val, currentElement,
 				    currentDocument);
 	   break;
@@ -847,7 +811,6 @@ static void         StartOfEntity (char c)
 static void         EndOfEntity (char c)
 {
    int		i;
-   unsigned char	msgBuffer[MAX_BUFFER_LENGTH];
    unsigned char	entityValue[MAX_ENTITY_LENGTH];	
    char	alphabet;
    Language	lang;
@@ -875,9 +838,6 @@ static void         EndOfEntity (char c)
 	 {
          entityValue[0] = EOS;
 	 lang = -1;
-	 /* print an error message */
-	 sprintf (msgBuffer, "Unknown XML entity \"&%s;\"", entityName);
-	 ParseHTMLError (currentDocument, msgBuffer);
 	 }
       else
 	 if (entityValue[0] != EOS)
@@ -901,17 +861,15 @@ static void         EndOfEntity (char c)
    EntityChar
    A character belonging to an XML entity has been read.
   ----------------------------------------------------------------------*/
-static void         EntityChar (unsigned char c)
+static void EntityChar (unsigned char c)
 {
    int                 i;
 
    if (entityNameLength < MAX_ENTITY_LENGTH - 1)
       entityName[entityNameLength++] = c;
    else
-      /* entity too long */
       {
-      /* error message */
-      ParseHTMLError (currentDocument, "XML entity too long");
+      /* entity too long */
       /* consider the entity name read so far as ordinary text */
       PutInBuffer ('&');
       for (i = 0; i < entityNameLength; i++)
@@ -966,7 +924,7 @@ static void         EndOfDecEntity (char c)
    A character belonging to a decimal entity has been read.
    Put that character in the entity buffer.
   ----------------------------------------------------------------------*/
-static void         DecEntityChar (char c)
+static void DecEntityChar (char c)
 {
    int		i;
 
@@ -989,7 +947,7 @@ static void         DecEntityChar (char c)
 	 normalTransition = FALSE;
 	 currentState = 0;
 	 /* error message */
-	 ParseHTMLError (currentDocument, "Invalid decimal entity");
+	 HTMLParseError (currentDocument, "Invalid decimal entity");
 	 normalTransition = FALSE;
 	 XMLabort = TRUE;
 	 }
@@ -1062,7 +1020,7 @@ static void         HexEntityChar (char c)
 	 normalTransition = FALSE;
 	 currentState = 0;
 	 /* error message */
-	 ParseHTMLError (currentDocument, "Invalid hexadecimal entity");
+	 HTMLParseError (currentDocument, "Invalid hexadecimal entity");
 	 normalTransition = FALSE;
 	 XMLabort = TRUE;
 	 }
@@ -1075,7 +1033,7 @@ static void         HexEntityChar (char c)
   ----------------------------------------------------------------------*/
 static void         XMLerror (char c)
 {
-   ParseHTMLError (currentDocument, "Invalid XML syntax");
+   HTMLParseError (currentDocument, "Invalid XML syntax");
    normalTransition = FALSE;
    XMLabort = TRUE;
 
@@ -1112,7 +1070,7 @@ static void         StartOfComment (char c)
    if (elType.ElTypeNum <= 0)
      {
        sprintf (msgBuffer, "Unknown XML element %s", inputBuffer);
-       ParseHTMLError (currentDocument, msgBuffer);
+       HTMLParseError (currentDocument, msgBuffer);
      }
    else
      {
@@ -1249,7 +1207,7 @@ static void         EndOfPI (char c)
    inputBuffer[bufferLength] = EOS;
    if (bufferLength < 1 || inputBuffer[bufferLength-1] != '?')
      {
-      ParseHTMLError (currentDocument, "Missing question mark");
+      HTMLParseError (currentDocument, "Missing question mark");
       normalTransition = FALSE;
       XMLabort = TRUE;
      }

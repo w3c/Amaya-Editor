@@ -970,6 +970,13 @@ static void RestartParser (Document doc, char *localFile, char *tempdir,
   /* clean up previous log file */
   HTMLErrorsFound = FALSE;
   XMLErrorsFound = FALSE;
+  CSSErrorsFound = FALSE;
+  /* close the error file */
+  if (ErrFile)
+    {
+      fclose (ErrFile);
+      ErrFile = NULL;
+    }
   /* remove the log file */
   sprintf (htmlErrFile, "%s%c%d%cPARSING.ERR",
 	    TempFileDirectory, DIR_SEP, doc, DIR_SEP);
@@ -1008,10 +1015,19 @@ static void RestartParser (Document doc, char *localFile, char *tempdir,
     StartParser (doc, localFile, documentname, tempdir, localFile, FALSE);
 
   /* check parsing errors */
-  if (HTMLErrorsFound || XMLErrorsFound)
-    TtaSetItemOn (doc, 1, Views, BShowLogFile);
+  if ((HTMLErrorsFound || XMLErrorsFound || CSSErrorsFound) &&
+      ErrFile)
+    {
+      /* Some errors are detected */
+      fclose (ErrFile);
+      ErrFile = NULL;
+      TtaSetItemOn (doc, 1, Views, BShowLogFile);
+     }
   else
     TtaSetItemOff (doc, 1, Views, BShowLogFile);
+  HTMLErrorsFound = FALSE;
+  XMLErrorsFound = FALSE;
+  CSSErrorsFound = FALSE;
 
   /* fetch and display all images referred by the document */
   DocNetworkStatus[doc] = AMAYA_NET_ACTIVE;

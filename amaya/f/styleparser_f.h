@@ -7,7 +7,6 @@
 #ifdef __STDC__
 
 extern char *SkipBlanksAndComments ( char *ptr );
-extern char *SkipProperty ( char *ptr );
 extern char *ParseNumber ( char *cssRule,
                            PresentationValue *pval );
 extern char *ParseCSSUnit ( char *cssRule,
@@ -60,12 +59,12 @@ extern void ApplyCSSRules ( Element el,
 extern char ReadCSSRules ( Document docRef,
                            CSSInfoPtr css,
                            char *buffer,
+                           int numberOfLinesRead,
                            ThotBool withUndo );
 
 #else /* __STDC__ */
 
 extern char *SkipBlanksAndComments (/* char *ptr */);
-extern char *SkipProperty (/* char *ptr */);
 extern char *ParseNumber (/* char *cssRule,
                              PresentationValue *pval */);
 extern char *ParseCSSUnit (/* char *cssRule,
@@ -118,6 +117,7 @@ extern void ApplyCSSRules (/* Element el,
 extern char ReadCSSRules (/* Document docRef,
                              CSSInfoPtr css,
                              char *buffer,
+                             int numberOfLinesRead,
                              ThotBool withUndo */);
 
 #endif /* __STDC__ */

@@ -361,11 +361,11 @@ THOT_EXPORT ThotBool   SelectionInQuote;
 THOT_EXPORT ThotBool   SelectionInBDO;
 THOT_EXPORT ThotBool   HTMLErrorsFound;
 THOT_EXPORT ThotBool   XMLErrorsFound;
+THOT_EXPORT ThotBool   CSSErrorsFound;
 THOT_EXPORT ThotBool   XMLErrorsFoundInProfile;
 THOT_EXPORT ThotBool   XMLNotWellFormed;
 THOT_EXPORT ThotBool   IdApplyToSelection; /* used in the Make ID menu */
 THOT_EXPORT FILE      *ErrFile;
-THOT_EXPORT char       ErrFileName [80];
 typedef enum
 {
   docHTML,

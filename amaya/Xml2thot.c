@@ -74,7 +74,7 @@ static int          NoTextChild[] =
 /* ---------------------- static variables ---------------------- */
 
 /* Expat parser identifier */
-static XML_Parser  parser = NULL;
+static XML_Parser  Parser = NULL;
 
 /* global data used by the HTML parser */
 static ParserData  XMLcontext = {0, UTF_8, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
@@ -473,7 +473,7 @@ void XmlSetElemLineNumber (Element el)
   if (ParsingSubTree)
     lineNumber = 0;
   else
-    lineNumber = XML_GetCurrentLineNumber (parser) + htmlLineRead - extraLineRead;
+    lineNumber = XML_GetCurrentLineNumber (Parser) + htmlLineRead - extraLineRead;
   TtaSetElementLineNumber (el, lineNumber);
 }
 
@@ -484,11 +484,13 @@ void XmlSetElemLineNumber (Element el)
   ----------------------------------------------------------------------*/
 void  XmlParseError (ErrorType type, unsigned char *msg, int line)
 {
+  char       fileName [100];
+
    if (!ErrFile)
      {
-       sprintf (ErrFileName, "%s%c%d%cPARSING.ERR",
+       sprintf (fileName, "%s%c%d%cPARSING.ERR",
 		TempFileDirectory, DIR_SEP, XMLcontext.doc, DIR_SEP);
-       if ((ErrFile = fopen (ErrFileName, "w")) == NULL)
+       if ((ErrFile = fopen (fileName, "w")) == NULL)
          return;
      }
 
@@ -509,8 +511,8 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
        if (line == 0)
 	 {
 	   fprintf (ErrFile, "  line %d, char %d: %s\n",
-		    XML_GetCurrentLineNumber (parser) + htmlLineRead -  extraLineRead,
-		    XML_GetCurrentColumnNumber (parser),
+		    XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
+		    XML_GetCurrentColumnNumber (Parser),
 		    msg);
 	 }
        else
@@ -521,8 +523,8 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
        if (line == 0)
 	 {
 	   fprintf (ErrFile, "  line %d, char %d: %s\n",
-		    XML_GetCurrentLineNumber (parser) + htmlLineRead -  extraLineRead,
-		    XML_GetCurrentColumnNumber (parser),
+		    XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
+		    XML_GetCurrentColumnNumber (Parser),
 		    msg);
 	 }
        else
@@ -533,8 +535,8 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
        if (line == 0)
 	 {
 	   fprintf (ErrFile, "  line %d, char %d: %s\n",
-		    XML_GetCurrentLineNumber (parser) + htmlLineRead -  extraLineRead,
-		    XML_GetCurrentColumnNumber (parser),
+		    XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
+		    XML_GetCurrentColumnNumber (Parser),
 		    msg);
 	 }
        else
@@ -545,8 +547,8 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
        if (line == 0)
 	 {
 	   fprintf (ErrFile, "  line %d, char %d: %s\n",
-		    XML_GetCurrentLineNumber (parser) + htmlLineRead -  extraLineRead,
-		    XML_GetCurrentColumnNumber (parser),
+		    XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
+		    XML_GetCurrentColumnNumber (Parser),
 		    msg);
 	 }
        else
@@ -3519,20 +3521,20 @@ static void    DisableExpatParser ()
   int    paramEntityParsing;
 
   paramEntityParsing = XML_PARAM_ENTITY_PARSING_NEVER;
-  XML_SetCdataSectionHandler (parser, NULL, NULL);
-  XML_SetCharacterDataHandler (parser, NULL);
-  XML_SetCommentHandler (parser, NULL);
-  XML_SetDefaultHandlerExpand (parser, NULL);
-  XML_SetDoctypeDeclHandler (parser, NULL, NULL);
-  XML_SetElementHandler (parser, NULL, NULL);
-  XML_SetExternalEntityRefHandler (parser, NULL);
-  XML_SetNamespaceDeclHandler (parser, NULL, NULL);
-  XML_SetNotationDeclHandler (parser, NULL);
-  XML_SetNotStandaloneHandler (parser, NULL);
-  XML_SetParamEntityParsing (parser, paramEntityParsing);
-  XML_SetProcessingInstructionHandler (parser, NULL);
-  XML_SetUnknownEncodingHandler (parser, NULL, 0);
-  XML_SetUnparsedEntityDeclHandler (parser, NULL);
+  XML_SetCdataSectionHandler (Parser, NULL, NULL);
+  XML_SetCharacterDataHandler (Parser, NULL);
+  XML_SetCommentHandler (Parser, NULL);
+  XML_SetDefaultHandlerExpand (Parser, NULL);
+  XML_SetDoctypeDeclHandler (Parser, NULL, NULL);
+  XML_SetElementHandler (Parser, NULL, NULL);
+  XML_SetExternalEntityRefHandler (Parser, NULL);
+  XML_SetNamespaceDeclHandler (Parser, NULL, NULL);
+  XML_SetNotationDeclHandler (Parser, NULL);
+  XML_SetNotStandaloneHandler (Parser, NULL);
+  XML_SetParamEntityParsing (Parser, paramEntityParsing);
+  XML_SetProcessingInstructionHandler (Parser, NULL);
+  XML_SetUnknownEncodingHandler (Parser, NULL, 0);
+  XML_SetUnparsedEntityDeclHandler (Parser, NULL);
 }
 /*----------------------------------------------------------------------
    FreeExpatParser
@@ -3541,8 +3543,8 @@ static void     FreeExpatParser ()
 
 {  
   DisableExpatParser ();
-  XML_ParserFree (parser);
-  parser = NULL;
+  XML_ParserFree (Parser);
+  Parser = NULL;
 }
 
 
@@ -3568,7 +3570,7 @@ static void  InitializeExpatParser (CHARSET charset)
   if (charset == UNDEFINED_CHARSET)
     {
       /* Defalut encoding for XML documents */
-      parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
+      Parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
       /* Display a warning message */
       sprintf (msgBuffer,
 		"No encoding specified, assuming UTF-8");
@@ -3578,14 +3580,14 @@ static void  InitializeExpatParser (CHARSET charset)
     }
   else if (charset == UTF_8 || charset == UTF_16)
     /* These encoding are automatically recognized by Expat */
-    parser = XML_ParserCreateNS (NULL, NS_SEP);
+    Parser = XML_ParserCreateNS (NULL, NS_SEP);
   else if (charset == US_ASCII)
     /* US-ASCII may has been set for us-ascii or ascii */
-    parser = XML_ParserCreateNS ("US-ASCII", NS_SEP);
+    Parser = XML_ParserCreateNS ("US-ASCII", NS_SEP);
   else if (charset == ISO_8859_1)
     /* ISO_8859_1 may has been set for a HTML document with no encoding */
     /* In this case, the default encoding is ISO_8859_1, not UTF-8 */
-    parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
+    Parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
   else if (charset == ISO_8859_2   || charset == ISO_8859_3   ||
 	   charset == ISO_8859_4   || charset == ISO_8859_5   ||
 	   charset == ISO_8859_6   || charset == ISO_8859_6_E ||
@@ -3594,88 +3596,88 @@ static void  InitializeExpatParser (CHARSET charset)
 	   charset == ISO_8859_8_I || charset == ISO_8859_9   ||
 	   charset == ISO_8859_10  || charset == ISO_8859_15  ||
 	   charset == ISO_8859_supp)
-    parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
+    Parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
   /* Consider WINDOWS_1252 (Windows Latin 1) as ISO_8859_1 */
   else if (charset == WINDOWS_1252)
-    parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
+    Parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
   else
     {
       XMLUnknownEncoding = TRUE;
       XmlParseError (errorEncoding,
 		     TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING), -1);
-      parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
+      Parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
       return;
     }
 
   /* Define the user data pointer that gets passed to handlers */
   /* (not use  Amaya actually) */
-  /* XML_SetUserData (parser, (void*) doc); */
+  /* XML_SetUserData (Parser, (void*) doc); */
   
   /* Set handlers that get called at the beginning 
      and end of a CDATA section */
-  XML_SetCdataSectionHandler (parser,
+  XML_SetCdataSectionHandler (Parser,
 			      Hndl_CdataStart,
 			      Hndl_CdataEnd);
     
   /* Set a text handler */
-  XML_SetCharacterDataHandler (parser,
+  XML_SetCharacterDataHandler (Parser,
 			       Hndl_CharacterData);
   
   /* Set a handler for comments */
-  XML_SetCommentHandler (parser,
+  XML_SetCommentHandler (Parser,
 			 Hndl_Comment);
   
   /* Set default handler with no expansion of internal entity references */
   /*
-  XML_SetDefaultHandler (parser,
+  XML_SetDefaultHandler (Parser,
 			 Hndl_Default);
   */
   
   /* Set a default handler with expansion of internal entity references */
-  XML_SetDefaultHandlerExpand (parser,
+  XML_SetDefaultHandlerExpand (Parser,
 			       Hndl_DefaultExpand);
 
   /* Set a handler for DOCTYPE declaration */
-  XML_SetDoctypeDeclHandler (parser,
+  XML_SetDoctypeDeclHandler (Parser,
 			     Hndl_DoctypeStart,
 			     Hndl_DoctypeEnd); 
 
   /* Set handlers for start and end tags */
-  XML_SetElementHandler (parser,
+  XML_SetElementHandler (Parser,
 			 Hndl_ElementStart,
 			 Hndl_ElementEnd);
  
   /* Set an external entity reference handler */
-  XML_SetExternalEntityRefHandler (parser,
+  XML_SetExternalEntityRefHandler (Parser,
 				   Hndl_ExternalEntityRef);
   
   /* Set handlers for namespace declarations */
-  XML_SetNamespaceDeclHandler (parser,
+  XML_SetNamespaceDeclHandler (Parser,
 			       Hndl_NameSpaceStart,
 			       Hndl_NameSpaceEnd);
   
   /* Set a handler for notation declarations */
-  XML_SetNotationDeclHandler (parser,
+  XML_SetNotationDeclHandler (Parser,
 			      Hndl_Notation);
   
   /* Set a handler for no 'standalone' document */
-  XML_SetNotStandaloneHandler (parser,
+  XML_SetNotStandaloneHandler (Parser,
 			       Hndl_NotStandalone);
 
   /* Controls parsing of parameter entities */
-  XML_SetParamEntityParsing (parser,
+  XML_SetParamEntityParsing (Parser,
 			     paramEntityParsing);
   
   /* Set a handler for processing instructions */
-  XML_SetProcessingInstructionHandler (parser,
+  XML_SetProcessingInstructionHandler (Parser,
 				       Hndl_PI);
   
   /* Set a handler to deal with encodings other than the built in */
-  XML_SetUnknownEncodingHandler (parser,
+  XML_SetUnknownEncodingHandler (Parser,
 				 Hndl_UnknownEncoding, 0);
   
   /* Set a handler that receives declarations of unparsed entities */
-  XML_SetUnparsedEntityDeclHandler (parser,
+  XML_SetUnparsedEntityDeclHandler (Parser,
 				    Hndl_UnparsedEntity);
 }
 
@@ -3777,9 +3779,9 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
     }
 
   /* Parse virtual DOCTYPE */
-  if (!XML_Parse (parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
+  if (!XML_Parse (Parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
     XmlParseError (errorNotWellFormed,
-		   (char *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+		   (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
 
   /* Parse the input XML buffer and complete the Thot document */
   if (!XMLNotWellFormed)
@@ -3797,11 +3799,11 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
       strcat (transBuffer, ">");
       tmpLen = strlen (transBuffer);
 
-      if (!XML_Parse (parser, transBuffer, tmpLen, 1))
+      if (!XML_Parse (Parser, transBuffer, tmpLen, 1))
 	{
 	  if (!XMLrootClosed)
 	    XmlParseError (errorNotWellFormed,
-			   (char *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+			   (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
 	}
       if (transBuffer != NULL)   
 	TtaFreeMemory (transBuffer);   
@@ -3892,13 +3894,13 @@ ThotBool ParseIncludedXml (FILE     *infile,
     }
 
   /* Parse virtual DOCTYPE */
-  if (!XML_Parse (parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
+  if (!XML_Parse (Parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
     XmlParseError (errorNotWellFormed,
-		   (char *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+		   (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
   else
     {
-      extraLineRead = XML_GetCurrentLineNumber (parser);
-      extraOffset = XML_GetCurrentByteIndex (parser);
+      extraLineRead = XML_GetCurrentLineNumber (Parser);
+      extraOffset = XML_GetCurrentByteIndex (Parser);
     }
 
   /* Parse the input file or HTML buffer and complete the Thot document */
@@ -3912,11 +3914,11 @@ ThotBool ParseIncludedXml (FILE     *infile,
       tmpBuffer = TtaGetMemory (tmpLen);
       for (i = 0; i < tmpLen; i++)
 	tmpBuffer[i] = htmlBuffer[*index + i];	  
-      if (!XML_Parse (parser, tmpBuffer, tmpLen, 1))
+      if (!XML_Parse (Parser, tmpBuffer, tmpLen, 1))
 	{
 	  if (!XMLrootClosed)
 	    XmlParseError (errorNotWellFormed,
-			   (char *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+			   (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
 	}
     }
   else
@@ -3962,13 +3964,13 @@ ThotBool ParseIncludedXml (FILE     *infile,
 	      for (i = 0; i < tmpLen; i++)
 		tmpBuffer[i] = infileBuffer[*index + i];	  
 	    }
-	  if (!XML_Parse (parser, tmpBuffer, tmpLen, endOfParsing))
+	  if (!XML_Parse (Parser, tmpBuffer, tmpLen, endOfParsing))
 	    {
 	      if (XMLrootClosed)
 		endOfParsing = TRUE;
 	      else
 		XmlParseError (errorNotWellFormed,
-			       (char *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+			       (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
 	    }
 	  else
 	    {
@@ -3981,19 +3983,19 @@ ThotBool ParseIncludedXml (FILE     *infile,
   /* return char/lines read */
   if (htmlBuffer == NULL)
     {
-      if (XML_GetCurrentLineNumber (parser) - extraLineRead <= 0)
+      if (XML_GetCurrentLineNumber (Parser) - extraLineRead <= 0)
 	/* We stay on the same line */
-	*nbCharRead += XML_GetCurrentColumnNumber (parser);
+	*nbCharRead += XML_GetCurrentColumnNumber (Parser);
       else
 	{
 	  /* We read at least one new line */
-	  *nbLineRead = *nbLineRead + XML_GetCurrentLineNumber (parser) - extraLineRead;
-	  *nbCharRead = XML_GetCurrentColumnNumber (parser);
+	  *nbLineRead = *nbLineRead + XML_GetCurrentLineNumber (Parser) - extraLineRead;
+	  *nbCharRead = XML_GetCurrentColumnNumber (Parser);
 	}
     }
 
   /* We look for the '>' character of the XML end tag */
-  offset = XML_GetCurrentByteIndex (parser) - extraOffset - 1;
+  offset = XML_GetCurrentByteIndex (Parser) - extraOffset - 1;
   found = FALSE;
   i = offset;
   while (i >= 0 && !found)
@@ -4073,9 +4075,9 @@ static void   XmlParse (FILE     *infile,
 	       if (i < res)
 		 {
 		   i++;
-		   if (!XML_Parse (parser, bufferRead, i, FALSE))
+		   if (!XML_Parse (Parser, bufferRead, i, FALSE))
 		     XmlParseError (errorNotWellFormed,
-				    (char *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+				    (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
 		   res = res - i;
 		 }
 	     }
@@ -4083,29 +4085,23 @@ static void   XmlParse (FILE     *infile,
 	   /* Virtual DOCTYPE Declaration */
 	   if (!XMLNotWellFormed)
 	     {
-	       tmpLineRead = XML_GetCurrentLineNumber (parser);
-	       if (!XML_Parse (parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
+	       tmpLineRead = XML_GetCurrentLineNumber (Parser);
+	       if (!XML_Parse (Parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
 		 XmlParseError (errorNotWellFormed,
-				(char *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+				(char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
 	       *xmlDoctype = TRUE;
-	       extraLineRead = XML_GetCurrentLineNumber (parser) - tmpLineRead;
+	       extraLineRead = XML_GetCurrentLineNumber (Parser) - tmpLineRead;
 	     }
 	 }
 
        /* Standard EXPAT processing */
        if (!XMLNotWellFormed)
 	 {
-	   if (!XML_Parse (parser, &bufferRead[i], res, endOfFile))
+	   if (!XML_Parse (Parser, &bufferRead[i], res, endOfFile))
 	     XmlParseError (errorNotWellFormed,
-			    (char *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+			    (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
 	 }
      }
-   
-   if (ErrFile)
-     {
-       fclose (ErrFile);
-       ErrFile = NULL;
-     } 
 }
 
 /*----------------------------------------------------------------------
@@ -4225,19 +4221,12 @@ void StartXmlParser (Document doc, char *fileName,
       	ChangeXmlParserContextDTD ("HTML");
 #endif /* XML_GEN */
 
-      /* Initialize the error file */
-      ErrFile = (FILE*) 0;
-      ErrFileName[0] = EOS;
-
       /* Gets the document charset */
       charset = TtaGetDocumentCharset (doc);
-
       /* Specific initialization for expat */
       InitializeExpatParser (charset);
-	
       /* Parse the input file and build the Thot tree */
       XmlParse (stream, &xmlDec, &xmlDoctype);
-      
       /* Completes all unclosed elements */
       if (currentParserCtxt != NULL)
 	{
@@ -4249,16 +4238,12 @@ void StartXmlParser (Document doc, char *fileName,
 		el = TtaGetParent (el);
 	    }
 	}
-      
       /* Check the Thot abstract tree for XHTML documents*/
       if (isXHTML)
 	CheckAbstractTree (pathURL, XMLcontext.doc);
-      
       FreeExpatParser ();
       FreeXmlParserContexts ();
-
       gzclose (stream);
-
       if (docURL != NULL)
 	{
 	  TtaFreeMemory (docURL);

@@ -85,6 +85,10 @@ static struct unit_def CSSUnitNames[] =
 };
 
 #define NB_UNITS (sizeof(CSSUnitNames) / sizeof(struct unit_def))
+static char         *DocURL = NULL; /* The parsed CSS file */
+static Document      ParsedDoc; /* The document to which CSS are to be applied */
+static int           LineNumber = -1; /* The line where the error occurs */
+
 
 /*----------------------------------------------------------------------
    SkipWord:                                                  
@@ -161,12 +165,75 @@ static char *SkipQuotedString (char *ptr, char quote)
 }
 
 /*----------------------------------------------------------------------
+   CSSParseError
+   print the error message msg on stderr.
+   When the line is 0 ask to expat the current line number
+  ----------------------------------------------------------------------*/
+static void  CSSParseError (char *msg, char *value)
+{
+  char       fileName [100];
+
+  if (!TtaIsPrinting () && ParsedDoc > 0)
+    {
+      if (!ErrFile)
+	{
+	  sprintf (fileName, "%s%c%d%cPARSING.ERR",
+		   TempFileDirectory, DIR_SEP, ParsedDoc, DIR_SEP);
+	  if ((ErrFile = fopen (fileName, "w")) == NULL)
+	    return;
+	}
+
+      if (DocURL != NULL)
+	{
+	  fprintf (ErrFile, "*** CSS Errors/Warnings in %s\n", DocURL);
+	  /* set to NULL as long as the CSS file doesn't change */
+	  DocURL = NULL;
+	  CSSErrorsFound = TRUE;
+	}
+      if (LineNumber < 0)
+	fprintf (ErrFile, "  In Style attribute %s %s\n", msg, value);
+      else
+	fprintf (ErrFile, "  line %d: %s %s\n", LineNumber, msg, value);
+    }
+}
+
+/*----------------------------------------------------------------------
    SkipProperty:                                                  
   ----------------------------------------------------------------------*/
-char *SkipProperty (char *ptr)
+static char *SkipProperty (char *ptr)
 {
+  char       *deb;
+  char        c;
+
+  deb = ptr;
   while (*ptr != EOS && *ptr != ';' && *ptr != '}')
     ptr++;
+  /* print the skipped proerty */
+  c = *ptr;
+  *ptr = EOS;
+  if (*deb != EOS)
+  CSSParseError ("Unknown property", deb);
+  *ptr = c;
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
+   SkipProperty:                                                  
+  ----------------------------------------------------------------------*/
+static char *SkipValue (char *ptr)
+{
+  char       *deb;
+  char        c;
+
+  deb = ptr;
+  while (*ptr != EOS && *ptr != ';' && *ptr != '}')
+    ptr++;
+  /* print the skipped proerty */
+  c = *ptr;
+  *ptr = EOS;
+  if (*deb != EOS && *deb != ',')
+  CSSParseError ("Unknown value", deb);
+  *ptr = c;
   return (ptr);
 }
 
@@ -385,7 +452,7 @@ static char *ParseCSSColor (char *cssRule, PresentationValue * val)
   ptr = TtaGiveRGB (cssRule, &redval, &greenval, &blueval);
   if (ptr == cssRule)
     {
-      cssRule = SkipProperty (cssRule);
+      cssRule = SkipValue (cssRule);
       val->typed_data.value = 0;
       val->typed_data.unit = STYLE_UNIT_INVALID;
     }
@@ -824,7 +891,7 @@ static char *ParseCSSBorderTop (Element element, PSchema tsch,
 	cssRule = ParseCSSBorderColorTop (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
 	/* rule not found */
-	cssRule = SkipProperty (cssRule);
+	cssRule = SkipValue (cssRule);
       cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
@@ -851,7 +918,7 @@ static char *ParseCSSBorderLeft (Element element, PSchema tsch,
 	cssRule = ParseCSSBorderColorLeft (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
 	/* rule not found */
-	cssRule = SkipProperty (cssRule);
+	cssRule = SkipValue (cssRule);
       cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
@@ -878,7 +945,7 @@ static char *ParseCSSBorderBottom (Element element, PSchema tsch,
 	cssRule = ParseCSSBorderColorBottom (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
 	/* rule not found */
-	cssRule = SkipProperty (cssRule);
+	cssRule = SkipValue (cssRule);
       cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
@@ -905,7 +972,7 @@ static char *ParseCSSBorderRight (Element element, PSchema tsch,
 	cssRule = ParseCSSBorderColorRight (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
 	/* rule not found */
-	cssRule = SkipProperty (cssRule);
+	cssRule = SkipValue (cssRule);
       cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
@@ -943,7 +1010,7 @@ static char *ParseCSSClear (Element element, PSchema tsch,
 			    PresentationContext context, char *cssRule,
 			    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipProperty (cssRule);
+  cssRule = SkipValue (cssRule);
   return (cssRule);
 }
 
@@ -978,9 +1045,9 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
 	cssRule = SkipWord (cssRule);
      }
    else if (!strncasecmp (cssRule, "list-item", 9))
-     cssRule = SkipProperty (cssRule);
+     cssRule = SkipValue (cssRule);
    else
-     fprintf (stderr, "invalid display value %s\n", cssRule);
+     CSSParseError ("Invalid display value", cssRule);
 
    return (cssRule);
 }
@@ -992,7 +1059,7 @@ static char *ParseCSSFloat (Element element, PSchema tsch,
 			    PresentationContext context, char *cssRule,
 			    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipProperty (cssRule);
+  cssRule = SkipValue (cssRule);
   return (cssRule);
 }
 
@@ -1004,7 +1071,7 @@ static char *ParseCSSLetterSpacing (Element element, PSchema tsch,
 				    PresentationContext context, char *cssRule,
 				    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipProperty (cssRule);
+  cssRule = SkipValue (cssRule);
   return (cssRule);
 }
 
@@ -1016,7 +1083,7 @@ static char *ParseCSSListStyleType (Element element, PSchema tsch,
 				    PresentationContext context, char *cssRule,
 				    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipProperty (cssRule);
+  cssRule = SkipValue (cssRule);
   return (cssRule);
 }
 
@@ -1028,7 +1095,7 @@ static char *ParseCSSListStyleImage (Element element, PSchema tsch,
 				     PresentationContext context, char *cssRule,
 				     CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipProperty (cssRule);
+  cssRule = SkipValue (cssRule);
   return (cssRule);
 }
 
@@ -1041,7 +1108,7 @@ static char *ParseCSSListStylePosition (Element element, PSchema tsch,
 					char *cssRule, CSSInfoPtr css,
 					ThotBool isHTML)
 {
-  cssRule = SkipProperty (cssRule);
+  cssRule = SkipValue (cssRule);
   return (cssRule);
 }
 
@@ -1053,7 +1120,7 @@ static char *ParseCSSListStyle (Element element, PSchema tsch,
 				PresentationContext context, char *cssRule,
 				CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipProperty (cssRule);
+  cssRule = SkipValue (cssRule);
   return (cssRule);
 }
 
@@ -1094,7 +1161,7 @@ static char *ParseCSSTextAlign (Element element, PSchema tsch,
      }
    else
      {
-	fprintf (stderr, "invalid align value\n");
+	CSSParseError ("Invalid align value", cssRule);
 	return (cssRule);
      }
 
@@ -1133,7 +1200,7 @@ static char *ParseCSSTextTransform (Element element, PSchema tsch,
 				    PresentationContext context, char *cssRule,
 				    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipProperty (cssRule);
+  cssRule = SkipValue (cssRule);
   return (cssRule);
 }
 
@@ -1145,7 +1212,7 @@ static char *ParseCSSVerticalAlign (Element element, PSchema tsch,
 				    PresentationContext context, char *cssRule,
 				    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipProperty (cssRule);
+  cssRule = SkipValue (cssRule);
   return (cssRule);
 }
 
@@ -1175,7 +1242,7 @@ static char *ParseCSSWordSpacing (Element element, PSchema tsch,
 				  PresentationContext context, char *cssRule,
 				  CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipProperty (cssRule);
+  cssRule = SkipValue (cssRule);
   return (cssRule);
 }
 
@@ -1340,37 +1407,59 @@ static char *ParseCSSFontFamily (Element element, PSchema tsch,
      quoteChar = EOS;
 
   if (!strncasecmp (cssRule, "times", 5))
+    {
       font.typed_data.value = STYLE_FONT_TIMES;
+      cssRule += 5;
+    }
   else if (!strncasecmp (cssRule, "serif", 5))
+    {
       font.typed_data.value = STYLE_FONT_TIMES;
-  else if (!strncasecmp (cssRule, "helvetica", 9) ||
-           !strncasecmp (cssRule, "verdana", 7))
+      cssRule += 5;
+    }
+  else if (!strncasecmp (cssRule, "helvetica", 9))
+    {
+     font.typed_data.value = STYLE_FONT_HELVETICA;
+      cssRule += 9;
+    }
+  else if (!strncasecmp (cssRule, "verdana", 7))
+    {
       font.typed_data.value = STYLE_FONT_HELVETICA;
+      cssRule += 7;
+    }
   else if (!strncasecmp (cssRule, "sans-serif", 10))
+    {
       font.typed_data.value = STYLE_FONT_HELVETICA;
+      cssRule += 10;
+    }
   else if (!strncasecmp (cssRule, "courier", 7))
+    {
       font.typed_data.value = STYLE_FONT_COURIER;
+      cssRule += 7;
+    }
   else if (!strncasecmp (cssRule, "monospace", 9))
+    {
       font.typed_data.value = STYLE_FONT_COURIER;
+      cssRule += 9;
+    }
   else
     /* unknown font name.  Skip it */
     {
-      if (quoteChar) {
+      if (quoteChar)
          cssRule = SkipQuotedString (cssRule, quoteChar);
-      } else
+      else
          cssRule = SkipWord (cssRule);
       cssRule = SkipBlanksAndComments (cssRule);
       if (*cssRule == ',')
 	{
-	cssRule++;
-	cssRule = ParseCSSFontFamily (element, tsch, context, cssRule, css, isHTML);
-        return (cssRule);
+	  cssRule++;
+	  cssRule = ParseCSSFontFamily (element, tsch, context, cssRule, css, isHTML);
+	  return (cssRule);
 	}
     }
 
   if (font.typed_data.value != 0)
      {
-     cssRule = SkipProperty (cssRule);
+     cssRule = SkipValue (cssRule);
      /* install the new presentation */
      TtaSetStylePresentation (PRFont, element, tsch, context, font);
      }
@@ -1668,7 +1757,7 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
      }
    else
      {
-	fprintf (stderr, "invalid text decoration\n");
+	CSSParseError ("Invalid text decoration", cssRule);
 	return (cssRule);
      }
 
@@ -1686,7 +1775,7 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
    ParseCSSHeight: parse a CSS height attribute
   ----------------------------------------------------------------------*/
 static char *ParseCSSHeight (Element element, PSchema tsch,
-				 PresentationContext context, char *cssRule, CSSInfoPtr css, ThotBool isHTML)
+			     PresentationContext context, char *cssRule, CSSInfoPtr css, ThotBool isHTML)
 {
    cssRule = SkipBlanksAndComments (cssRule);
 
@@ -1698,7 +1787,7 @@ static char *ParseCSSHeight (Element element, PSchema tsch,
 	return (cssRule);
      }
    else
-     cssRule = SkipProperty (cssRule);
+     cssRule = SkipValue (cssRule);
    return (cssRule);
 }
 
@@ -1719,7 +1808,7 @@ static char *ParseCSSWidth (Element element, PSchema tsch,
 	return (cssRule);
      }
    else
-     cssRule = SkipProperty (cssRule);
+     cssRule = SkipValue (cssRule);
    return (cssRule);
 }
 
@@ -2835,7 +2924,7 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 	  lg = strlen (CSSProperties[i].name);
 	  if (!strncasecmp (cssRule, CSSProperties[i].name, lg))
 	    {
-	      cssRule += lg;
+	      p = cssRule + lg;
 	      found = TRUE;
 	      i--;
 	    }
@@ -2846,16 +2935,16 @@ static void  ParseCSSRule (Element element, PSchema tsch,
       else
 	{
 	  /* update index and skip the ":" indicator if present */
-	  cssRule = SkipBlanksAndComments (cssRule);
-	  if (*cssRule == ':')
+	  p = SkipBlanksAndComments (p);
+	  if (*p == ':')
 	    {
-	      cssRule++;
-	      cssRule = SkipBlanksAndComments (cssRule);
+	      p++;
+	      p = SkipBlanksAndComments (p);
 	      /* try to parse the value associated with this property */
 	      if (CSSProperties[i].parsing_function != NULL)
 		{
 		  p = CSSProperties[i].parsing_function (element, tsch, context,
-							 cssRule, css, isHTML);
+							 p, css, isHTML);
 		  /* update index and skip the ";" separator if present */
 		  cssRule = p;
 		}
@@ -3186,6 +3275,8 @@ void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
 
    /*  A rule applying to BODY is really meant to address HTML */
    elType = TtaGetElementType (el);
+   /* store the current line for eventually reported errors */
+   LineNumber = TtaGetElementLineNumber (el);
    isHTML = (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
    /* create the context of the Specific presentation driver */
    context = TtaGetSpecificStyleContext (doc);
@@ -3284,11 +3375,13 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		 *selector != '.' && *selector != ':' &&
 		 !TtaIsBlank (selector))
 	    *cur++ = *selector++;
-	  /* point to the class in sel[] if it's valid name */
-	  if (deb[0] > 64)
-	    classes[0] = deb;
 	  /* close the word */
 	  *cur++ = EOS;
+	  /* point to the class in sel[] if it's valid name */
+	  if (deb[0] <= 64)
+	    CSSParseError ("Invalid class", deb);
+	  else
+	    classes[0] = deb;
 	}
       else if (*selector == ':')
 	{
@@ -3297,11 +3390,13 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
              *selector != '.' && *selector != ':' &&
              !TtaIsBlank (selector))
             *cur++ = *selector++;
-	  /* point to the pseudoclass in sel[] if it's valid name */
-	  if (deb[0] > 64)
-	    pseudoclasses[0]= deb;
 	  /* close the word */
 	  *cur++ = EOS;
+	  /* point to the pseudoclass in sel[] if it's valid name */
+	  if (deb[0] <= 64)
+	    CSSParseError ("Invalid pseudoclass", deb);
+	  else
+	    pseudoclasses[0]= deb;
 	}
       else if (*selector == '#')
 	{
@@ -3310,11 +3405,13 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
              *selector != '.' && *selector != ':' &&
              !TtaIsBlank (selector))
             *cur++ = *selector++;
-	  /* point to the attribute in sel[] if it's valid name */
-	  if (deb[0] > 64)
-	    ids[0] = deb;
 	  /* close the word */
 	  *cur++ = EOS;
+	  /* point to the attribute in sel[] if it's valid name */
+	  if (deb[0] <= 64)
+	    CSSParseError ("Invalid id", deb);
+	  else
+	    ids[0] = deb;
 	}
       else if (*selector == '[')
 	{
@@ -3322,18 +3419,22 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	  while (*selector != EOS && *selector != ']' &&
 		 *selector != '=' && *selector != '~')
 	    *cur++ = *selector++;
-	  /* point to the attribute in sel[] if it's valid name */
-	  if (deb[0] > 64)
-	    attrs[0] = deb;
 	  /* close the word */
-	      *cur++ = EOS;
+	  *cur++ = EOS;
+	  /* point to the attribute in sel[] if it's valid name */
+	  if (deb[0] <= 64)
+	    CSSParseError ("Invalid attribute", deb);
+	  else
+	    attrs[0] = deb;
 	  if (*selector == '=')
 	    {
 	      /* look for a value "xxxx" */
 	      while (*selector != EOS && *selector != ']' && *selector != '"')
 		*cur++ = *selector++;
 	      /* there is a value */
-	      if (*selector != EOS)
+	      if (*selector == EOS)
+		CSSParseError ("Invalid attribute value", deb);
+	      else
 		{
 		  /* we are now parsing the attribute value */
 		  attrvals[0] = cur;
@@ -3514,7 +3615,10 @@ static void  ParseStyleDeclaration (Element el, char *cssRule, Document doc,
   while (*decl_end != EOS && *decl_end != '{')
     decl_end++;
   if (*decl_end == EOS)
-    return;
+    {
+      CSSParseError ("Invalid selector", cssRule);
+      return;
+    }
   /* verify and clean the selector string */
   sel_end = decl_end - 1;
   while (*sel_end == SPACE || *sel_end == BSPACE ||
@@ -3532,7 +3636,7 @@ static void  ParseStyleDeclaration (Element el, char *cssRule, Document doc,
     decl_end++;
   if (*decl_end == EOS)
     {
-      fprintf (stderr, "Invalid STYLE declaration: %s\n", cssRule);
+      CSSParseError ("Invalid selector", cssRule);
       return;
     }
   saved2 = *decl_end;
@@ -3778,10 +3882,13 @@ void ApplyCSSRules (Element el, char *cssRule, Document doc, ThotBool destroy)
    This function uses the current css context or creates it. It's able
    to work on the given buffer or call GetNextChar to read the parsed
    file.
+   Parameter numberOfLinesRead indicates the number of lines already
+   read in the file.
    Parameter withUndo indicates whether the changes made in the document
    structure and content have to be registered in the Undo queue or not
   ----------------------------------------------------------------------*/
-char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, ThotBool withUndo)
+char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
+		   int numberOfLinesRead, ThotBool withUndo)
 {
   DisplayMode         dispMode;
   char                c;
@@ -3819,6 +3926,14 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, ThotBool withU
   if (css == NULL)
     css = AddCSS (docRef, docRef, CSS_DOCUMENT_STYLE, NULL, NULL);
 
+  /* register parsed CSS file and the document to which CSS are to be applied */
+  ParsedDoc = docRef;
+  if (css->url)
+    DocURL = css->url;
+  else
+    /* the CSS source in within the document itself */
+    DocURL = DocumentURLs[docRef];
+  LineNumber = numberOfLinesRead + 1;
   while (CSSindex < MAX_CSS_LENGTH && c != EOS && !eof)
     {
       c = buffer[index++];
@@ -3924,6 +4039,8 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, ThotBool withU
 		toParse = TRUE;
 	      break;
 	    default:
+	      if (c == EOL)
+		LineNumber++;
 	      break;
 	    }
         }
@@ -3989,5 +4106,9 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, ThotBool withU
   /* restore the display mode */
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (docRef, dispMode);
+
+  /* Prepare the context for style attributes */
+  DocURL = DocumentURLs[docRef];
+  LineNumber = -1;
   return (c);
 }

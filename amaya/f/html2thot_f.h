@@ -12,7 +12,7 @@ extern void ParseAreaCoords ( Element element,
                               Document document );
 extern void SetLanguagInHTMLStack ( Language lang );
 extern void InitMapping ( void );
-extern void ParseHTMLError ( Document doc,
+extern void HTMLParseError ( Document doc,
                              char* msg );
 extern ThotBool IsCharacterLevelElement ( Element el );
 extern ThotBool IsBlockElement ( Element el );
@@ -70,7 +70,7 @@ extern void ParseAreaCoords (/* Element element,
                                 Document document */);
 extern void SetLanguagInHTMLStack (/* Language lang */);
 extern void InitMapping (/* void */);
-extern void ParseHTMLError (/* Document doc,
+extern void HTMLParseError (/* Document doc,
                                char* msg */);
 extern ThotBool IsCharacterLevelElement (/* Element el */);
 extern ThotBool IsBlockElement (/* Element el */);

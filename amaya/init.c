@@ -2143,6 +2143,12 @@ void LatinReading (Document document, View view)
    /* clean up previous log file */
    HTMLErrorsFound = FALSE;
    XMLErrorsFound = FALSE;
+   /* close the error file */
+   if (ErrFile)
+     {
+       fclose (ErrFile);
+       ErrFile = NULL;
+     }
    /* remove the log file */
    sprintf (htmlErrFile, "%s%c%d%cPARSING.ERR",
 	     TempFileDirectory, DIR_SEP, document, DIR_SEP);
@@ -2161,10 +2167,19 @@ void LatinReading (Document document, View view)
 		   tempdocument, xmlDec, withDoctype);
 
    /* check parsing errors */
-   if (HTMLErrorsFound || XMLErrorsFound)
-     TtaSetItemOn (document, 1, Views, BShowLogFile);
+   if ((HTMLErrorsFound || XMLErrorsFound || CSSErrorsFound) &&
+       ErrFile)
+     {
+       /* Some errors are detected */
+       fclose (ErrFile);
+       ErrFile = NULL;
+       TtaSetItemOn (document, 1, Views, BShowLogFile);
+     }
    else
      TtaSetItemOff (document, 1, Views, BShowLogFile);
+   HTMLErrorsFound = FALSE;
+   XMLErrorsFound = FALSE;
+   CSSErrorsFound = FALSE;
    
    /* fetch and display all images referred by the document */
    DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
@@ -2688,15 +2703,21 @@ static Document LoadDocument (Document doc, char *pathname,
 
       if (!plainText)
 	{
-	if (HTMLErrorsFound || XMLErrorsFound)
+	if ((HTMLErrorsFound || XMLErrorsFound || CSSErrorsFound) &&
+	    ErrFile)
 	  {
+	    /* Some errors are detected */
+	    fclose (ErrFile);
+	    ErrFile = NULL;
 	    TtaSetItemOn (newdoc, 1, Views, BShowLogFile);
-	    HTMLErrorsFound = FALSE;
-	    XMLErrorsFound = FALSE;
 	  }
 	else
 	  TtaSetItemOff (newdoc, 1, Views, BShowLogFile);
+	HTMLErrorsFound = FALSE;
+	XMLErrorsFound = FALSE;
+	CSSErrorsFound = FALSE;
 	}
+
       if (InNewWindow || newdoc != doc)
 	/* the document is displayed in a different window */
 	/* reset the history of the new window */
@@ -4957,6 +4978,8 @@ void                InitAmaya (NotifyEvent * event)
    SelectionInSMALL = FALSE;
    HTMLErrorsFound = FALSE;
    XMLErrorsFound = FALSE;
+   CSSErrorsFound = FALSE;
+   ErrFile = NULL;
    LinkAsCSS = FALSE; /* we're not linking an external CSS */
 
    /* initialize icons */

@@ -7,7 +7,7 @@
  body {font-family: helvetica, arial, sans-serif; color: black; background-color: #C0C0C0}
  h1 {font-size: 200%; font-weight: bold; font-style: italic; color: #488B9B;
  margin-bottom: 0}
- h2 {marging-top: 0; margin-bottom: .4em; font-style:italic;  color: #488B9B;}
+ h2 {margin-top: 0; margin-bottom: .4em; font-style:italic;  color: #488B9B;}
  h3 {border: solid 1px #488B9B; padding: 4px; margin-bottom: .2em;  color: #488B9B }
  div p {text-align: justify}
  div {margin-top: 0}
