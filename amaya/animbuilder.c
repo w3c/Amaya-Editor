@@ -43,7 +43,7 @@
 #ifdef _GL
 static ThotIcon   iconAnim;
 static ThotIcon   iconAnimNo;
-static int      AnimButton;
+static int        AnimButton;
 #ifndef _WINGUI
 #include "xpm/animplay.xpm"
 #include "xpm/animstop.xpm"

@@ -436,10 +436,10 @@ void InitSVGAnim ()
 #ifdef _SVG
   int k;
 
-#  ifndef _WINGUI
+#ifdef _GTK
   iconAnim = TtaCreatePixmapLogo (Anim_xpm);
   iconAnimNo = TtaCreatePixmapLogo (AnimNo_xpm);
-#  endif /* _WINGUI */  
+#endif /* _GTK */  
 #ifdef _GL
   TtaRegisterTimeEvent (&Set_slider_position_from_doc);
 #endif /* _GL */

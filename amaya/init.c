@@ -128,47 +128,6 @@ static ThotBool     WelcomePage = FALSE;
    document view twice */
 static int          Loading_method = CE_INIT;
 
-#if defined(_NOGUI)
-static ThotIcon       stopR;
-static ThotIcon       stopN;
-static ThotIcon       iconSave;
-static ThotIcon       iconSaveNo;
-static ThotIcon       iconFind;
-static ThotIcon       iconReload;
-static ThotIcon       iconI;
-static ThotIcon       iconINo;
-static ThotIcon       iconB;
-static ThotIcon       iconBNo;
-static ThotIcon       iconT;
-static ThotIcon       iconTNo;
-static ThotIcon       iconImage;
-static ThotIcon       iconImageNo;
-static ThotIcon       iconBack;
-static ThotIcon       iconBackNo;
-static ThotIcon       iconForward;
-static ThotIcon       iconForwardNo;
-static ThotIcon       iconH1;
-static ThotIcon       iconH1No;
-static ThotIcon       iconH2;
-static ThotIcon       iconH2No;
-static ThotIcon       iconH3;
-static ThotIcon       iconH3No;
-static ThotIcon       iconPrint;
-static ThotIcon       iconBullet;
-static ThotIcon       iconBulletNo;
-static ThotIcon       iconNum;
-static ThotIcon       iconNumNo;
-static ThotIcon       iconDL;
-static ThotIcon       iconDLNo;
-static ThotIcon       iconLink;
-static ThotIcon       iconLinkNo;
-static ThotIcon       iconTable;
-static ThotIcon       iconTableNo;
-static ThotIcon       iconBrowser;
-static ThotIcon       iconEditor;
-static ThotIcon       iconHome;
-#endif /* #ifdef _NOGUI */
-
 #if defined(_GTK) || defined(_WX)
 static ThotIcon       stopR;
 static ThotIcon       stopN;
@@ -6824,48 +6783,8 @@ void InitAmaya (NotifyEvent * event)
    LinkAsXmlCSS = FALSE;
 
    /* initialize icons */
-#if defined(_NOGUI) && !defined(_WX) // TODO "&& !defined(_WX)" a virer a la fin de la migration wxWindows
-   stopR = (ThotIcon) 0;
-   stopN = (ThotIcon) 0;
-   iconSave = (ThotIcon) 0;
-   iconSaveNo = (ThotIcon) 0;
-   iconFind = (ThotIcon) 0;
-   iconReload = (ThotIcon) 0;
-   iconHome = (ThotIcon) 0;
-   iconI = (ThotIcon) 0;
-   iconINo = (ThotIcon) 0;
-   iconB = (ThotIcon) 0;
-   iconBNo = (ThotIcon) 0;
-   iconT = (ThotIcon) 0;
-   iconTNo = (ThotIcon) 0;
-   iconBack = (ThotIcon) 0;
-   iconBackNo = (ThotIcon) 0;
-   iconForward = (ThotIcon) 0;
-   iconForwardNo = (ThotIcon) 0;
-   iconH1 = (ThotIcon) 0;
-   iconH1No = (ThotIcon) 0;
-   iconH2 = (ThotIcon) 0;
-   iconH2No = (ThotIcon) 0;
-   iconH3 = (ThotIcon) 0;
-   iconH3No = (ThotIcon) 0;
-   iconPrint = (ThotIcon) 0;
-   iconBullet = (ThotIcon) 0;
-   iconBulletNo = (ThotIcon) 0;
-   iconNum = (ThotIcon) 0;
-   iconNumNo = (ThotIcon) 0;
-   iconImage = (ThotIcon) 0;
-   iconImageNo = (ThotIcon) 0;
-   iconDL = (ThotIcon) 0;
-   iconDLNo = (ThotIcon) 0;
-   iconLink = (ThotIcon) 0;
-   iconLinkNo = (ThotIcon) 0;
-   iconTable = (ThotIcon) 0;
-   iconTableNo = (ThotIcon) 0;
-#endif /* #ifdef _NOGUI */
-
 #ifdef _WX
    wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
-
    stopR         = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/stop.png") );
    stopN         = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/stop.png") );
    iconSave      = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/save.png") );
@@ -6903,8 +6822,7 @@ void InitAmaya (NotifyEvent * event)
    iconTable = (ThotIcon) 0;
    iconTableNo = (ThotIcon) 0;
 #endif /* _WX */
-
-#if defined(_GTK)
+#ifdef _GTK
    stopR = (ThotIcon) TtaCreatePixmapLogo (stopR_xpm);
    stopN = (ThotIcon) TtaCreatePixmapLogo (stopN_xpm);
    iconSave = (ThotIcon) TtaCreatePixmapLogo (save_xpm);
@@ -7125,24 +7043,17 @@ void InitAmaya (NotifyEvent * event)
 #ifdef BOOKMARKS
    BM_Init ();
 #endif /* BOOKMARKS */
-
 #ifdef _WINGUI
-   sprintf (LostPicturePath, "%s\\amaya\\lost.gif",
-	     TtaGetEnvString ("THOTDIR"));
+   sprintf (LostPicturePath, "%s\\amaya\\lost.gif", TtaGetEnvString ("THOTDIR"));
 #endif /* _WINGUI */
-   
 #ifdef _GTK
-   sprintf (LostPicturePath, "%s/amaya/lost.gif",
-	     TtaGetEnvString ("THOTDIR"));   
+   sprintf (LostPicturePath, "%s/amaya/lost.gif", TtaGetEnvString ("THOTDIR"));   
 #endif /* _GTK */
-
    InitMathML ();
 #ifdef _SVG
    InitSVG ();
-   /*
    InitSVGAnim ();
-   InitSVGLibraryManagerStructure ();
-   */
+   /*InitSVGLibraryManagerStructure ();*/
    InitLibrary();
 #endif /* _SVG */
 /* MKP: disable "Cooperation" menu if DAV is not defined or
