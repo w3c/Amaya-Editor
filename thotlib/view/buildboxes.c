@@ -3812,8 +3812,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  pCell = GetParentCell (pBox);
 		  if (pCell && width && ThotLocalActions[T_checkcolumn])
 		    (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+		  result = TRUE;
 		}
-	      result = TRUE;
+	      else
+		result = FALSE;
 	    }
 
 	  if (pAb->AbChange)
@@ -3862,8 +3864,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		}
 	      
 	      /* Change the width of the contents */
+	      result = width != pBox->BxWidth;
 	      ChangeDefaultWidth (pBox, NULL, width, 0, frame);
-	      result = TRUE;
 	    }
 	  else
 	    /* the box width doesn't depend on the contents */
@@ -3927,8 +3929,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		}
 
 	      /* Change the height of the contents */
+	      /* Change the width of the contents */
+	      result = height != pBox->BxHeight;
 	      ChangeDefaultHeight (pBox, NULL, height, frame);
-	      result = TRUE;
 	    }
 	  else
 	    /* the box height doesn't depend on the contents */
@@ -4172,6 +4175,7 @@ void RebuildConcreteImage (int frame)
    int                 position = 0;
    ThotBool            condition;
    ThotBool            status;
+   ThotBool            lock = TRUE;
 
    pFrame = &ViewFrameTable[frame - 1];
    if (pFrame->FrAbstractBox)
@@ -4197,6 +4201,14 @@ void RebuildConcreteImage (int frame)
 	   else
 	     pVisibleAb = NULL;
        
+	   /* lock tables formatting */
+	   if (ThotLocalActions[T_islock])
+	     {
+	       (*ThotLocalActions[T_islock]) (&lock);
+	       if (!lock)
+		 /* table formatting is not loked, lock it now */
+		 (*ThotLocalActions[T_lock]) ();
+	     }
 	   pBox = pAb->AbBox;
 	   status = pFrame->FrReady;
 	   pFrame->FrReady = FALSE;	/* lock the frame */
@@ -4226,6 +4238,10 @@ void RebuildConcreteImage (int frame)
 	   /* check constraints */
 	   ComputePosRelation (pAb->AbHorizPos, pBox, frame, TRUE);
 	   ComputePosRelation (pAb->AbVertPos, pBox, frame, FALSE);
+
+	   if (!lock)
+	     /* unlock table formatting */
+	     (*ThotLocalActions[T_unlock]) ();
 	   
 	   /* On elimine le scroll horizontal */
 	   GetSizesFrame (frame, &width, &height);

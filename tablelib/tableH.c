@@ -40,6 +40,8 @@ typedef struct _LockRelations
 } LockRelations;
 
 static PtrLockRelations  DifferedChecks = NULL;
+static PtrAbstractBox    CheckedTable = NULL;
+static ThotBool          CheckOneTable = FALSE;
 static ThotBool          Lock = FALSE;
 
 #include "attributes_f.h"
@@ -628,6 +630,8 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   if (table->AbBox->BxCycles != 0)
     /* the table formatting is currently in process */
     return;
+  if (CheckOneTable && table != CheckedTable)
+    return;
 
   /* get the number of columns */
   pBox = table->AbBox;
@@ -759,7 +763,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 	sumPercent = minOfPercent;
     }
 #ifdef TAB_DEBUG
-printf ("\nCheckTableWidths (%s)\n", table->AbElement->ElLabel);
+printf ("\nCheckTableWidths (%s) %d cols\n", table->AbElement->ElLabel, cNumber);
 #endif
 
   /* now update real widths */
@@ -1798,6 +1802,7 @@ static void    UnlockTableFormatting ()
       */
       first = DifferedChecks;
       DifferedChecks = NULL;
+      CheckOneTable = TRUE;
       pLockRel = first;
       while (pLockRel->LockRNext != NULL)
 	pLockRel = pLockRel->LockRNext;
@@ -1847,6 +1852,7 @@ static void    UnlockTableFormatting ()
 	      if (table && table->AbElement)
 		{
 		  /*pLockRel->LockRTable[i] = NULL;*/
+		  CheckedTable = table;
 		  CheckTableWidths (table, pLockRel->LockRFrame[i], FALSE);
 		  /* need to propagate to enclosing boxes */
 		  ComputeEnclosing (pLockRel->LockRFrame[i]);
@@ -1857,6 +1863,8 @@ static void    UnlockTableFormatting ()
 	  /* next block */
 	  pLockRel = pLockRel->LockRNext;
 	}
+      CheckOneTable = FALSE;
+      CheckedTable = NULL;
 
       /*
 	Then, check all table heighs form the most embedded to the enclosing table
