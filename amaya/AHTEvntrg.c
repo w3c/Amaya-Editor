@@ -1,42 +1,24 @@
 /*				    				    AHTEvntrg.c
-**	EVENT MANAGER
-**
-**	(c) COPYRIGHT MIT 1995.
-**	Please first read the full copyright statement in the file COPYRIGH.
-**	@(#) $Id$
-**
-**	Updated HTEvent module 
-**	This new module combines the functions of the old HTEvent module and 
-**	the HTThread module. We retain the old HTThread module, but it
-**	consists of calls to the HTEvent interfaces
-**
-** Authors:
-**	HFN	Henrik Frystyk <frystyk@w3.org>
-**	CLB    	Charlie Brooks <cbrooks@osf.org>
-** Bugs
+**	Amaya EVENT MANAGER
 **
 */
 
-/*   WSAAsyncSelect and windows app stuff need the following definitions:
- *   WWW_WIN_ASYNC - enable WSAAsyncSelect instead of select
- *   _WIN23 - win32 libararies - may be window or console app
- *   _WINSOCKAPI_ - using WINSOCK.DLL - not necessarily the async routines.
- *   _CONSOLE - the console app for NT
- *
- * first pass: EGP - 10/26/95
- */
+#ifndef AMAYA_JAVA
 
-#include <assert.h>			/* @@@ Should be in sysdep.h @@@ */
+/* Amaya includes  */
+#define THOT_EXPORT extern
 
 /* Implementation dependent include files */
-#include "sysdep.h"
-#include "HTEvntrg.h"					 /* Implemented here */
+#include "amaya.h"
+#include "AHTBridge_f.h"
+#include <assert.h>			/* @@@ Should be in sysdep.h @@@ */
+#include <fcntl.h>
 
-#ifdef WWW_WIN_ASYNC
-#define TIMEOUT	1 /* WM_TIMER id */
+extern LRESULT CALLBACK AsyncWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
+);
+
 static HWND HTSocketWin;
 static unsigned long HTwinMsg;
-#endif
 
 /* Type definitions and global variables etc. local to this module */
 
@@ -56,61 +38,12 @@ typedef struct rq_t RQ;
 ** version)
 */
 
-typedef struct action_t  { 
-    HTRequest * rq ;    				/* request structure */
-    SockOps ops ;         			     /* requested operations */
-    HTEventCallback *cbf;      		     /* callback function to execute */
-    HTPriority p;         	     /* priority associated with this socket */
-} ACTION ;
-
-struct rq_t { 
-    RQ * next ;	  
-    SOCKET s ;		 	/* our socket */
-    BOOL unregister;		/* notify app when completely unregistered */
-    ACTION actions[1];
-};
-
 #ifndef WWW_MSWINDOWS 
 typedef void * HANDLE ;
 #endif
 
+
 /* ------------------------------------------------------------------------- */
-
-#ifdef WWW_WIN_ASYNC
-/*	HTEventrg_get/setWinHandle
-**	--------------------------
-**	Managing the windows handle on Windows
-*/
-PUBLIC BOOL HTEventrg_setWinHandle (HWND window, unsigned long message)
-{
-    HTSocketWin = window;
-    HTwinMsg = message;
-    return YES;
-}
-
-PUBLIC HWND HTEventrg_getWinHandle (unsigned long * pMessage)
-{
-    if (pMessage)
-        *pMessage = HTwinMsg;
-    return (HTSocketWin);
-}
-#else
-#ifdef WWW_WIN_DLL
-/*
-**	By having these dummy definitions we can keep the same def file
-*/
-PUBLIC BOOL HTEventrg_setWinHandle (HWND window, unsigned long message)
-{
-    return YES;
-}
-
-PUBLIC HWND HTEventrg_getWinHandle (unsigned long * pMessage)
-{
-    return (HWND) 0;
-}
-#endif /* WWW_WIN_DLL */
-#endif /* WWW_WIN_ASYNC */
-
 
 /*  HTEventrg_loop
 **  ------------
@@ -121,28 +54,23 @@ PUBLIC HWND HTEventrg_getWinHandle (unsigned long * pMessage)
 **  to use async I/O on windows, and the other is if you want to use normal
 **  Unix setup with sockets
 */
-#ifdef WWW_WIN_ASYNC
+
 /* only responsible for WM_TIMER and WSA_AsyncSelect */    	
-LRESULT CALLBACK AmayaAsyncWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+PUBLIC LRESULT CALLBACK AmayaAsyncWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     WORD event;
     SOCKET sock;
-
-    /* timeout stuff */
-    if (uMsg == WM_TIMER) {
-	if (seltime.tcbf && (seltime.always || HTNet_isIdle())) {
-	    if (THD_TRACE)
-		HTTrace("Event Loop.. calling timeout cbf\n");
-	    (*(seltime.tcbf))(seltime.request);
-	}
-	return (0);
-    }
+    HTEventCallback    *cbf;
+	HTRequest *rqp;
 
     if (uMsg != HTwinMsg)	/* not our async message */
     	return (DefWindowProc(hwnd, uMsg, wParam, lParam));
 
     event = LOWORD(lParam);
     sock = (SOCKET)wParam;
+
+    cbf = (HTEventCallback *) __RetrieveCBF (sock, FD_WRITE, &rqp);
+
     if (event & (FD_READ | FD_ACCEPT))
     	if (HTEventrg_dispatch((int)sock, FD_READ) != HT_OK) {
 	    HTEndLoop = -1;
@@ -158,17 +86,16 @@ LRESULT CALLBACK AmayaAsyncWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARA
 	    HTEndLoop = -1;
 	    return 0;
 	}
-    if (event & FD_CLOSE) /* delete this event */ 
-      WSAAsyncSelect( (int)sock, HTSocketWin, HTwinMsg, 0);
-
+    if (event & FD_CLOSE) {
+	  	WSAAsyncSelect(sock, HTSocketWin, 0, 0);
+	}
     return (0);
 }
 
-#endif
 
-bool AHTEventInit (void)
+
+boolean AHTEventInit (void)
 {
-#ifdef WWW_WIN_ASYNC
     /*
     **	We are here starting a hidden window to take care of events from
     **  the async select() call in the async version of the event loop in
@@ -207,8 +134,7 @@ bool AHTEventInit (void)
     	return NO;
     }
     HTwinMsg = WM_USER;  /* use first available message since app uses none */
-#endif /* WWW_WIN_ASYNC */
-
+    HTEventrg_setWinHandle  (HTSocketWin, HTwinMsg);
 #ifdef _WINSOCKAPI_
     /*
     ** Initialise WinSock DLL. This must also be shut down! PMH
@@ -233,8 +159,8 @@ bool AHTEventInit (void)
     }
 #endif /* _WINSOCKAPI_ */
 
-    HTEvent_setRegisterCallback(HTEventrg_register);
-    HTEvent_setUnregisterCallback(HTEventrg_unregister);
+    HTEvent_setRegisterCallback(AHTEvent_register);
+	HTEvent_setUnregisterCallback (AHTEvent_unregister);
     return YES;
 }
 
@@ -244,13 +170,11 @@ PUBLIC BOOL AHTEventTerminate (void)
     WSACleanup();
 #endif
 
-#ifdef WWW_WIN_ASYNC
     DestroyWindow(HTSocketWin);
-#endif
     return YES;
 }
-
-
+		 
+#endif /* !_AMAYA_JAVA */
 
 
 

@@ -8,6 +8,7 @@
 /*
  *
  * Author: D. Veillard
+ *         R. Guetari (W3C/INRIA) Windows NT/95
  *
  */
 
@@ -72,19 +73,19 @@ Document            doc;
    Element             cour;
    Attribute           at;
    AttributeType       atType;
-   char               *class = CurrentAClass;
+   char               *a_class = CurrentAClass;
 
 #ifdef DEBUG_STYLES
    fprintf (stderr, "ApplyClassChange(%d,%s)\n", doc, CurrentAClass);
 #endif
 
-   if (!class)
+   if (!a_class)
       return;
 
    /* remove any leading dot in a class definition. */
-   if (*class == '.')
-      class++;
-   if (*class == 0)
+   if (*a_class == '.')
+      a_class++;
+   if (*a_class == 0)
       return;
 
    /* class default : suppress all specific presentation. */
@@ -154,7 +155,7 @@ Document            doc;
    AttributeType       atType;
    int                 len, base;
    char                stylestring[1000];
-   char               *class;
+   char               *a_class;
 
    /* create a string containing the new CSS definition. */
    strcpy (&stylestring[0], CurrentClass);
@@ -171,9 +172,9 @@ Document            doc;
    atType.AttrSSchema = TtaGetDocumentSSchema (doc);
    if (!IsImplicitClassName (CurrentClass, doc))
      {
-	class = &CurrentClass[0];
-	if (*class == '.')
-	   class++;
+	a_class = &CurrentClass[0];
+	if (*a_class == '.')
+	   a_class++;
 	atType.AttrTypeNum = HTML_ATTR_Class;
 	at = TtaGetAttribute (ClassReference, atType);
 	if (!at)
@@ -181,7 +182,7 @@ Document            doc;
 	     at = TtaNewAttribute (atType);
 	     TtaAttachAttribute (ClassReference, at, doc);
 	  }
-	TtaSetAttributeText (at, class, ClassReference, doc);
+	TtaSetAttributeText (at, a_class, ClassReference, doc);
      }
    /* parse and apply this new CSS to the current document. */
    ParseHTMLStyleHeader (NULL, &stylestring[0], doc, TRUE);
@@ -294,7 +295,7 @@ View                view;
    Attribute           at;
    AttributeType       atType;
    int                 firstSelectedChar, lastSelectedChar, i, j;
-   char                class[50];
+   char                a_class[50];
    int                 len;
    char               *elHtmlName;
    Element             last_elem;
@@ -321,12 +322,16 @@ View                view;
    /* updating the class name selector. */
    elHtmlName = GetHTML3Name (ClassReference, doc);
 
+#  ifndef _WINDOWS
    TtaNewForm (BaseDialog + ClassForm, TtaGetViewFrame (doc, 1), 
 	       TtaGetMessage (AMAYA, AM_DEF_CLASS), FALSE, 2, 'L', D_DONE);
+#  endif /* !_WINDOWS */
    NbClass = BuildClassList (doc, ClassList, sizeof (ClassList), elHtmlName);
+#  ifndef _WINDOWS
    TtaNewSelector (BaseDialog + ClassSelect, BaseDialog + ClassForm,
 		   TtaGetMessage (AMAYA, AM_SEL_CLASS),
 		   NbClass, ClassList, 5, NULL, TRUE, TRUE);
+#  endif /* !_WINDOWS */
 
    /* preselect the entry corresponding to the class of the element. */
    atType.AttrSSchema = TtaGetDocumentSSchema (doc);
@@ -336,18 +341,26 @@ View                view;
    if (at)
      {
 	len = 50;
-	TtaGiveTextAttributeValue (at, class, &len);
-	TtaSetSelector (BaseDialog + ClassSelect, -1, class);
-	strcpy (CurrentClass, class);
+	TtaGiveTextAttributeValue (at, a_class, &len);
+#   ifndef _WINDOWS
+	TtaSetSelector (BaseDialog + ClassSelect, -1, a_class);
+#   endif /* _WINDOWS */
+	strcpy (CurrentClass, a_class);
      }
    else
      {
+#   ifndef _WINDOWS
 	TtaSetSelector (BaseDialog + ClassSelect, 0, NULL);
+#   endif /* _WINDOWS */
 	strcpy (CurrentClass, elHtmlName);
      }
 
    /* pop-up the dialogue box. */
+#  ifndef _WINDOWS
    TtaShowDialogue (BaseDialog + ClassForm, TRUE);
+#  else  /* _WINDOWS */
+   CreateCreateRuleDlgWindow (TtaGetViewFrame (doc, 1), BaseDialog, ClassForm, ClassSelect, NbClass, ClassList);
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -367,7 +380,7 @@ View                view;
    AttributeType       atType;
    int                 firstSelectedChar, lastSelectedChar, i, j;
    Element             cour, parent;
-   char                class[50];
+   char                a_class[50];
    int                 len;
 
    ADocReference = doc;
@@ -439,12 +452,16 @@ View                view;
    }
 
    /* updating the class name selector. */
+#  ifndef _WINDOWS
    TtaNewForm (BaseDialog + AClassForm, TtaGetViewFrame (doc, 1), 
 	       TtaGetMessage (AMAYA, AM_APPLY_CLASS), TRUE, 2, 'L', D_DONE);
+#  endif /* !_WINDOWS */
    NbAClass = BuildClassList (doc, AClassList, sizeof (AClassList), "default");
+#  ifndef _WINDOWS
    TtaNewSelector (BaseDialog + AClassSelect, BaseDialog + AClassForm,
 		   TtaGetMessage (AMAYA, AM_SEL_CLASS),
 		   NbAClass, AClassList, 5, NULL, FALSE, TRUE);
+#  endif /* !_WINDOWS */
 
    /* preselect the entry corresponding to the class of the element. */
    atType.AttrSSchema = TtaGetDocumentSSchema (doc);
@@ -454,9 +471,9 @@ View                view;
    if (at)
      {
 	len = 50;
-	TtaGiveTextAttributeValue (at, class, &len);
-	TtaSetSelector (BaseDialog + AClassSelect, -1, class);
-	strcpy (CurrentAClass, class);
+	TtaGiveTextAttributeValue (at, a_class, &len);
+	TtaSetSelector (BaseDialog + AClassSelect, -1, a_class);
+	strcpy (CurrentAClass, a_class);
      }
    else
      {
@@ -465,7 +482,11 @@ View                view;
      }
 
    /* pop-up the dialogue box. */
+#  ifndef _WINDOWS
    TtaShowDialogue (BaseDialog + AClassForm, TRUE);
+#  else  /* _WINDOWS */
+   CreateApplyClassDlgWindow (TtaGetViewFrame (doc, 1), BaseDialog, AClassForm, AClassSelect, NbAClass, AClassList);
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

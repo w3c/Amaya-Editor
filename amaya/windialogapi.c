@@ -27,38 +27,89 @@
 #       undef  APPFILENAMEFILTER
 #endif  /* APPFILENAMEFILTER */
 
+#ifndef MAX_PROPOSAL_CHKR
+#       define MAX_PROPOSAL_CHKR 10
+#endif /* MAX_PROPOSAL_CHKR */
+
+#ifndef MAX_WORD_LEN
+#       define MAX_WORD_LEN 30
+#endif /* MAX_WORD_LEN */
+
 #define APPFILENAMEFILTER   "HTML Files (*.html)\0*.html\0HTML Files (*.htm)\0*.htm\0Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
+#define MAX_BUFF 4096
+#define IDC_WORDBUTTON 20000
+#define IDC_EDITRULE   20001
+#define IDC_LANGEDIT   20002
 
 extern HINSTANCE hInstance;
 extern char*     AttrHREFvalue;
+extern char      ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
 
 static char   urlToOpen [256];
 static char   message [300];
+static char   message2 [300];
 static char   wndTitle [100];
+static char   currentLabel [100];
+static char   currentRejectedchars [100];
+static char   currentPathName [100];
 
 static int          currentDoc ;
 static int          currentView ;
 static int          currentRef;
+static int          currentParentRef;
+static int          SpellingBase; 
+static int          ChkrSelectProp; 
+static int          ChkrMenuOR; 
+static int          ChkrFormCorrect;
+static int          nbClass;
+static int          nbItem;
+static int          classForm;
+static int          classSelect;
+static int          baseDlg;
+static int          saveForm;
+static int          dirSave;
+static int          nameSave;
+static int          imgSave;
+static int          toggleSave;
+static char*        classList;
+static char*        langList;
 static BOOL	        saveBeforeClose ;
 static BOOL         closeDontSave ;
 static OPENFILENAME OpenFileName;
 
+HWND wordButton;
+HWND hwnListWords;
+
 #ifdef __STDC__
 LRESULT CALLBACK LinkDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK PrintDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK AlignDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SearchDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK SaveAsDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK OpenDocDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK CloseDocDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK LanguageDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK CharacterDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK CreateRuleDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK ApplyClassDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK SpellCheckDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK InitConfirmDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK ChangeFormatDlgProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* !__STDC__ */
 LRESULT CALLBACK LinkDlgProc ();
 LRESULT CALLBACK PrintDlgProc ();
+LRESULT CALLBACK AlignDlgProc ();
 LRESULT CALLBACK SearchDlgProc ();
+LRESULT CALLBACK SaveAsDlgProc ();
 LRESULT CALLBACK OpenDocDlgProc ();
 LRESULT CALLBACK CloseDocDlgProc ();
+LRESULT CALLBACK LanguageDlgProc ();
 LRESULT CALLBACK CharacterDlgProc ();
+LRESULT CALLBACK CreateRuleDlgProc ();
+LRESULT CALLBACK ApplyClassDlgProc ();
+LRESULT CALLBACK SpellCheckDlgProc ();
 LRESULT CALLBACK InitConfirmDlgProc ();
+LRESULT CALLBACK ChangeFormatDlgProc ();
 #endif /* __STDC__ */
 
 /*-----------------------------------------------------------------------
@@ -90,6 +141,19 @@ HWND      parent;
 }
 
 /*-----------------------------------------------------------------------
+ CreateAlignDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateAlignDlgWindow (HWND parent)
+#else  /* !__STDC__ */
+void CreateAlignDlgWindow (parent)
+HWND      parent;
+#endif /* __STDC__ */
+{  
+	DialogBox (hInstance, MAKEINTRESOURCE (ALIGNDIALOG), parent, (DLGPROC) AlignDlgProc);
+}
+
+/*-----------------------------------------------------------------------
  CreateSearchDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -100,6 +164,34 @@ HWND      parent;
 #endif /* __STDC__ */
 {  
 	DialogBox (hInstance, MAKEINTRESOURCE (SEARCHDIALOG), parent, (DLGPROC) SearchDlgProc);
+}
+
+/*-----------------------------------------------------------------------
+ CreateSaveAsDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateSaveAsDlgWindow (HWND parent, char* path_name, int base_dlg, int save_form, int dir_save, int name_save, int img_save, int toggle_save)
+#else  /* !__STDC__ */
+void CreateSaveAsDlgWindow (parent, path_name, base_dlg, save_form, dir_save, name_save, img_save, toggle_save)
+HWND  parent;
+char* path_name;
+int   base_dlg; 
+int   save_form; 
+int   dir_save; 
+int   name_save;
+int   img_save;
+int   toggle_save;
+#endif /* __STDC__ */
+{  
+	baseDlg          = base_dlg;
+	saveForm         = save_form;
+	dirSave          = dir_save;
+	nameSave         = name_save;
+	imgSave          = img_save;
+	toggleSave       = toggle_save;
+	currentParentRef = baseDlg + saveForm;
+	sprintf (currentPathName, path_name);
+	DialogBox (hInstance, MAKEINTRESOURCE (SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -139,6 +231,30 @@ BOOL* close_dont_save;
 }
 
 /*-----------------------------------------------------------------------
+ CreateLanguageDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateLanguageDlgWindow (HWND parent, char* title, char* msg1, int nb_item, char* lang_list, char* msg2)
+#else  /* !__STDC__ */
+void CreateLanguageDlgWindow (parent, title, msg1, nb_item, lang_list, msg2)
+HWND  parent;
+char* title;
+char* msg1;
+int   nb_item;
+char* lang_list;
+char* msg2;
+#endif /* __STDC__ */
+{  
+	sprintf (wndTitle, title);
+	sprintf (message, msg1);
+	sprintf (message2, msg2);
+	langList = lang_list;
+	nbItem   = nb_item;
+
+	DialogBox (hInstance, MAKEINTRESOURCE (LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
+}
+
+/*-----------------------------------------------------------------------
  CreateCharacterDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -152,13 +268,87 @@ HWND  parent;
 }
 
 /*-----------------------------------------------------------------------
+ CreateCreateRuleDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateCreateRuleDlgWindow (HWND parent, int base_dlg, int class_form, int class_select, int nb_class, char* class_list)
+#else  /* !__STDC__ */
+void CreateCreateRuleDlgWindow (parent, nb_class, class_list)
+HWND  parent;
+int   nb_class;
+char* class_list;
+#endif /* __STDC__ */
+{  
+	nbClass     = nb_class;
+	classList   = class_list;
+	baseDlg     = base_dlg;
+	classForm   = class_form;
+	classSelect = class_select;
+
+	DialogBox (hInstance, MAKEINTRESOURCE (CREATERULEDIALOG), parent, (DLGPROC) CreateRuleDlgProc);
+}
+
+/*-----------------------------------------------------------------------
+ CreateApplyClassDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateApplyClassDlgWindow (HWND parent, int base_dlg, int class_form, int class_select, int nb_class, char* class_list)
+#else  /* !__STDC__ */
+void CreateApplyClassDlgWindow (parent, nb_class, class_list)
+HWND  parent;
+int   nb_class;
+char* class_list;
+#endif /* __STDC__ */
+{  
+	nbClass     = nb_class;
+	classList   = class_list;
+	baseDlg     = base_dlg;
+	classForm   = class_form;
+	classSelect = class_select;
+
+	DialogBox (hInstance, MAKEINTRESOURCE (APPLYCLASSDIALOG), parent, (DLGPROC) ApplyClassDlgProc);
+}
+
+/*-----------------------------------------------------------------------
+ CreateSpellCheckDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateSpellCheckDlgWindow (HWND parent, char* label, char* rejectedChars,
+								int spellingBase, int chkrSelectProp, int chkrMenuOR, 
+							    int chkrFormCorrect)
+#else  /* !__STDC__ */
+void CreateSpellCheckDlgWindow (parent, label, rejectedChars, spellingBase, 
+								chkrSelectProp, chkrMenuOR, chkrFormCorrect)
+HWND  parent;
+char* label;
+char* rejectedChars;
+int   spellingBase; 
+int   chkrSelectProp; 
+int   chkrMenuOR; 
+int   chkrFormCorrect;
+#endif /* __STDC__ */
+{  
+	SpellingBase    = spellingBase; 
+	ChkrSelectProp  = chkrSelectProp;
+	ChkrMenuOR      = chkrMenuOR ;
+	ChkrFormCorrect = chkrFormCorrect;
+
+	sprintf (currentLabel, label);
+	sprintf (currentRejectedchars, rejectedChars);
+
+	DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), parent, (DLGPROC) SpellCheckDlgProc);
+}
+
+/*-----------------------------------------------------------------------
  CreateInitConfirmDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
 void CreateInitConfirmDlgWindow (HWND parent, int ref, char* title, char* msg)
 #else  /* !__STDC__ */
-void CreateInitConfirmDlgWindow (parent, title, msg)
+void CreateInitConfirmDlgWindow (parent, ref, title, msg)
 HWND  parent;
+int   ref;
+char* title;
 char* msg;
 #endif /* __STDC__ */
 {  
@@ -166,6 +356,19 @@ char* msg;
 	sprintf (wndTitle, title);
 	currentRef = ref;
 	DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
+}
+
+/*-----------------------------------------------------------------------
+ CreateChangeFormatDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateChangeFormatDlgWindow (HWND parent)
+#else  /* !__STDC__ */
+void CreateChangeFormatDlgWindow (parent)
+HWND  parent;
+#endif /* __STDC__ */
+{  
+	DialogBox (hInstance, MAKEINTRESOURCE (FORMATDIALOG), parent, (DLGPROC) ChangeFormatDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -208,7 +411,7 @@ LPARAM lParam;
     }
 	return TRUE;
 }
-
+	
 /*-----------------------------------------------------------------------
  PrintDlgProc
  ------------------------------------------------------------------------*/
@@ -237,6 +440,65 @@ LPARAM lParam;
 							break;
 				}
 				break;
+				default: return FALSE;
+	}
+	return TRUE ;
+}
+
+/*-----------------------------------------------------------------------
+ AlignDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK AlignDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK AlignDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+	static int iLocation;
+    switch (msg) {
+		   case WM_COMMAND:
+			    switch (LOWORD (wParam)) {
+				       case IDC_TOP:
+						    iLocation = 0;
+							break;
+
+					   case IDC_MIDDLE:
+						    iLocation = 1;
+							break;
+
+					   case IDC_BOTTOM:
+						    iLocation = 2;
+							break;
+
+					   case IDC_LEFT:
+						    iLocation = 3;
+							break;
+
+					   case IDC_RIGHT:
+						    iLocation = 4;
+							break;
+
+				       case ID_APPLY:
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 1);
+							break;
+
+					   case ID_DELETE:
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2);
+							break;
+
+					   case ID_DONE:
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0);
+					 	    EndDialog (hwnDlg, IDCANCEL);
+							break;
+				}
+				break;
+
 				default: return FALSE;
 	}
 	return TRUE ;
@@ -356,6 +618,85 @@ LPARAM lParam;
 }
 
 /*-----------------------------------------------------------------------
+ SaveAsDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK SaveAsDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK SaveAsDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+	HWND chkButton;
+	static char txt [500];
+    switch (msg) {
+	       case WM_INITDIALOG:
+			    SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
+				CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_HTML);
+				CheckRadioButton (hwnDlg, IDC_COPYIMG, IDC_COPYIMG, IDC_COPYIMG);
+				chkButton = FindWindow (NULL, "Copy images");
+				break;
+
+		   case WM_COMMAND:
+			    if (HIWORD (wParam) == EN_UPDATE) {
+				   if (LOWORD (wParam) == IDC_EDITDOCSAVE) {
+					  GetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, urlToOpen, sizeof (urlToOpen) - 1);
+					  ThotCallback (baseDlg + nameSave, STRING_DATA, urlToOpen);
+				   } else if (LOWORD (wParam) == IDC_EDITIMGSAVE) {
+					      GetDlgItemText (hwnDlg, IDC_EDITIMGSAVE, urlToOpen, sizeof (urlToOpen) - 1);
+					      ThotCallback (baseDlg + imgSave, STRING_DATA, urlToOpen);
+				   }
+				}
+			    switch (LOWORD (wParam)) {
+				       case IDC_HTML:
+						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (char*) 0);
+						    break;
+
+					   case IDC_TEXT:
+						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (char*) 1);
+						    break;
+
+					   case IDC_COPYIMG:
+						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (char*) 3);
+						    break;
+
+					   case IDC_TRANSFORMURL:
+						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (char*) 4);
+						    break;
+
+				       case ID_CLEAR:
+						    SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, "");
+							SetDlgItemText (hwnDlg, IDC_EDITIMGSAVE, "");
+							ThotCallback (baseDlg + saveForm, INTEGER_DATA, (char*) 2);
+							break;
+
+					   case IDC_BROWSE:
+						    WIN_ListSaveDirectory (currentParentRef, urlToOpen);
+							SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, urlToOpen);
+							ThotCallback (baseDlg + nameSave, STRING_DATA, urlToOpen);
+							break;
+
+					   case IDCANCEL:
+						    ThotCallback (baseDlg + saveForm, INTEGER_DATA, (char*) 0);
+					        EndDialog (hwnDlg, IDCANCEL);
+							break;
+
+				       case ID_CONFIRM:
+						    ThotCallback (baseDlg + saveForm, INTEGER_DATA, (char*) 1);
+					        EndDialog (hwnDlg, ID_CONFIRM);
+							break;
+				}
+				break;
+
+				default: return FALSE;
+	}
+	return TRUE ;
+}
+
+/*-----------------------------------------------------------------------
  CloseDocDlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -442,7 +783,85 @@ LPARAM lParam;
 }
 
 /*-----------------------------------------------------------------------
- CloseDocDlgProc
+ LanguageDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK LanguageDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK LanguageDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+	int  index = 0;
+	int  i = 0;
+
+	HWND wndLangEdit;
+	HWND wndMessage1;
+	HWND wndMessage2;
+
+	static HWND wndLangList;
+	static int itemIndex; 
+	static char szBuffer [MAX_BUFF];
+
+    switch (msg) {
+	       case WM_INITDIALOG:
+			    SetWindowText (hwnDlg, wndTitle);
+				wndMessage1 = CreateWindow ("STATIC", message, WS_CHILD | WS_VISIBLE | SS_LEFT,
+					                        10, 10, 200, 20, hwnDlg, (HMENU) 99, hInstance, NULL);
+
+				wndLangList = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+					                         10, 40, 240, 200, hwnDlg, (HMENU) 1, hInstance, NULL);
+
+	            SendMessage (wndLangList, LB_RESETCONTENT, 0, 0);
+	            while (i < nbItem && langList[index] != '\0') {
+	                  SendMessage (wndLangList, LB_INSERTSTRING, i, &langList[index]);  
+	                  index += strlen (&langList[index]) + 1;	/* Longueur de l'intitule */
+					  i++;
+				}
+
+				wndLangEdit	= CreateWindow ("EDIT", NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+					                         10, 250, 240, 30, hwnDlg, (HMENU) IDC_LANGEDIT, hInstance, NULL);
+
+				wndMessage2 = CreateWindow ("STATIC", message2, WS_CHILD | WS_VISIBLE | SS_LEFT,
+					                        10, 280, 200, 20, hwnDlg, (HMENU) 99, hInstance, NULL);
+				break;
+
+		   case WM_COMMAND:
+				if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE) {
+				   itemIndex = SendMessage (wndLangList, LB_GETCURSEL, 0, 0);
+				   itemIndex = SendMessage (wndLangList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
+			       SetDlgItemText (hwnDlg, IDC_LANGEDIT, szBuffer);
+				}
+
+			    switch (LOWORD (wParam)) {
+				       case ID_APPLY:
+						    ThotCallback (NumSelectLanguage, STRING_DATA, szBuffer);
+							ThotCallback (NumFormLanguage, INTEGER_DATA, (char*) 1);
+							EndDialog (hwnDlg, ID_APPLY);
+							break;
+
+				       case ID_DELETE:
+						    ThotCallback (NumSelectLanguage, STRING_DATA, szBuffer);
+							ThotCallback (NumFormLanguage, INTEGER_DATA, (char*) 2);
+					        EndDialog (hwnDlg, ID_DELETE);
+							break;
+
+				       case ID_DONE:
+							ThotCallback (NumFormLanguage, INTEGER_DATA, (char*) 0);
+					        EndDialog (hwnDlg, ID_DONE);
+							break;
+				}
+				break;
+				default: return FALSE;
+	}
+	return TRUE ;
+}
+
+/*-----------------------------------------------------------------------
+ CharacterDlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
 LRESULT CALLBACK CharacterDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -589,6 +1008,216 @@ LPARAM lParam;
 }
 
 /*-----------------------------------------------------------------------
+ CreateRuleDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK CreateRuleDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK CreateRuleDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+	int  index = 0;
+	int  i = 0;
+
+	static HWND wndListRule;
+	static HWND wndEditRule;
+	static int  itemIndex;
+	static char szBuffer [MAX_BUFF];
+
+    switch (msg) {
+	       case WM_INITDIALOG:
+				wndListRule = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+					                         10, 10, 200, 130, hwnDlg, (HMENU) 1, 
+											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+
+	            SendMessage (wndListRule, LB_RESETCONTENT, 0, 0);
+	            while (i < nbClass && classList[index] != '\0') {
+	                  SendMessage (wndListRule, LB_INSERTSTRING, i, &classList[index]);  
+	                  index += strlen (&classList[index]) + 1;	/* Longueur de l'intitule */
+					  i++;
+				}
+
+				wndEditRule	= CreateWindow ("EDIT", NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+					                        10, 150, 200, 30, hwnDlg, (HMENU) IDC_EDITRULE, hInstance, NULL);
+
+			    SetDlgItemText (hwnDlg, IDC_EDITRULE, classList);
+				break;
+
+		   case WM_COMMAND:
+				if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE) {
+				   itemIndex = SendMessage (wndListRule, LB_GETCURSEL, 0, 0);
+				   itemIndex = SendMessage (wndListRule, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
+			       SetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer);
+				   ThotCallback (baseDlg + classSelect, STRING_DATA, szBuffer);
+				}
+
+			    switch (LOWORD (wParam)) {
+				       case ID_CONFIRM:
+						    ThotCallback (baseDlg + classForm, INTEGER_DATA, (char*) 1);
+						    EndDialog (hwnDlg, ID_CONFIRM);
+							break;
+
+				       case ID_DONE:
+						    ThotCallback (baseDlg + classForm, INTEGER_DATA, (char*) 0);
+						    EndDialog (hwnDlg, ID_DONE);
+							break;
+
+				}
+				break;
+				default: return FALSE;
+	}
+	return TRUE ;
+}
+
+/*-----------------------------------------------------------------------
+ ApplyClassDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK ApplyClassDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK ApplyClassDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+	int  index = 0;
+	int  i = 0;
+
+	static HWND wndListRule;
+	static int  itemIndex;
+	static char szBuffer [MAX_BUFF];
+
+    switch (msg) {
+	       case WM_INITDIALOG:
+				wndListRule = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+					                         10, 10, 200, 130, hwnDlg, (HMENU) 1, 
+											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+
+	            SendMessage (wndListRule, LB_RESETCONTENT, 0, 0);
+	            while (i < nbClass && classList[index] != '\0') {
+	                  SendMessage (wndListRule, LB_INSERTSTRING, i, &classList[index]);  
+	                  index += strlen (&classList[index]) + 1;	/* Longueur de l'intitule */
+					  i++;
+				}
+				break;
+
+		   case WM_COMMAND:
+				if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE) {
+				   itemIndex = SendMessage (wndListRule, LB_GETCURSEL, 0, 0);
+				   itemIndex = SendMessage (wndListRule, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
+			       SetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer);
+				   ThotCallback (baseDlg + classSelect, STRING_DATA, szBuffer);
+				}
+
+			    switch (LOWORD (wParam)) {
+				       case ID_CONFIRM:
+						    ThotCallback (baseDlg + classForm, INTEGER_DATA, (char*) 1);
+						    EndDialog (hwnDlg, ID_CONFIRM);
+							break;
+
+				       case ID_DONE:
+						    ThotCallback (baseDlg + classForm, INTEGER_DATA, (char*) 0);
+						    EndDialog (hwnDlg, ID_DONE);
+							break;
+
+				}
+				break;
+				default: return FALSE;
+	}
+	return TRUE ;
+}
+
+/*-----------------------------------------------------------------------
+ SpellCheckDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK SpellCheckDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK SpellCheckDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+	HWND wndLabel;
+
+	static int iLocation;
+	static int iIgnore;
+
+    switch (msg) {
+	       case WM_INITDIALOG:
+			    wndLabel = CreateWindow ("STATIC", currentLabel, WS_CHILD | WS_VISIBLE | SS_LEFT,
+					                     90, 20, 160, 20, hwnDlg, (HMENU) 99, hInstance, NULL);
+
+			    wordButton = CreateWindow ("BUTTON", NULL, WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+                                            90, 45, 160, 30, hwnDlg, IDC_WORDBUTTON, hInstance, NULL);
+
+				hwnListWords = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+					                         90, 80, 160, 110, hwnDlg, (HMENU) 1, hInstance, NULL);
+
+				CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+			    SetDlgItemInt (hwnDlg, IDC_EDITPROPOSALS, 3, FALSE);
+				SetDlgItemText (hwnDlg, IDC_EDITIGNORE, currentRejectedchars); 
+				iLocation = 3;
+				WIN_DisplayWords ();
+			    break;
+
+		   case WM_COMMAND:
+			    switch (LOWORD (wParam)) {
+				       case IDC_BEFORE:
+						    iLocation = 0;
+						    break;
+					   case IDC_WITHIN:
+						    iLocation = 1;
+						    break;
+					   case IDC_AFTER:
+						    iLocation = 2;
+						    break;
+					   case IDC_WHOLEDOC:
+						    iLocation = 3;
+						    break;
+					   case IDC_IGNORE1:
+						    break;
+					   case IDC_IGNORE2:
+						    break;
+					   case IDC_IGNORE3: 
+						    break;
+					   case IDC_IGNORE4:
+						    break;
+					   case ID_SKIPNEXT:
+						    if (strcmp (ChkrCorrection[1], "$") != 0)
+						       ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, ChkrCorrection[1]);
+							else 
+						       ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, "");
+							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (char*) iLocation);
+							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (char*) 1);
+						    break;
+					   case ID_SKIPDIC:
+						    break;
+					   case ID_REPLACENEXT:
+						    break;
+					   case ID_REPLACEDIC:
+						    break;
+					   case IDC_WORDBUTTON:
+						    break;
+					   case ID_DONE:
+						    EndDialog (hwnDlg, ID_DONE);
+							break;
+				}
+				break;
+		   default: return FALSE;
+	}
+	return TRUE;
+}
+
+/*-----------------------------------------------------------------------
  CloseDocDlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -619,6 +1248,101 @@ LPARAM lParam;
 		               case IDCANCEL:
 			                EndDialog (hwnDlg, IDCANCEL);
 				            break;
+				}
+				break;
+
+				default: return FALSE;
+	}
+	return TRUE;
+}
+
+/*-----------------------------------------------------------------------
+ ChangeFormatDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK ChangeFormatDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK ChangeFormatDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+    switch (msg) {
+	       case WM_INITDIALOG:
+			    break;
+
+		   case WM_COMMAND:
+			    switch (LOWORD (wParam)) {
+					   /* Alignement menu */
+				       case ID_APPLY:
+						    ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1);
+							break;
+
+					   case ID_DONE:
+						    ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 0);
+						    EndDialog (hwnDlg, ID_DONE);
+							break;
+
+					   case IDC_LEFT:
+						    ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 0);
+							break;
+
+					   case IDC_RIGHT:
+						    ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 1);
+							break;
+
+					   case IDC_CENTER:
+						    ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 2);
+							break;
+
+					   case IDC_DEFAULTALIGN:
+						    ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 3);
+							break;
+
+					   /* Jusitification menu */
+					   case IDC_JUSTIFYES:
+						    ThotCallback (NumMenuJustification, INTEGER_DATA, (char*) 0);
+							break;
+
+					   case IDC_JUSTIFNO:
+						    ThotCallback (NumMenuJustification, INTEGER_DATA, (char*) 1);
+							break;
+
+					   case IDC_JUSTIFDEFAULT:
+						    ThotCallback (NumMenuJustification, INTEGER_DATA, (char*) 2);
+							break;
+
+					   /* Indent Menu */ 
+					   case IDC_INDENT1:
+						    ThotCallback (NumMenuRecessSense, INTEGER_DATA, (char*) 0);
+							break;
+
+					   case IDC_INDENT2:
+						    ThotCallback (NumMenuRecessSense, INTEGER_DATA, (char*) 1);
+							break;
+
+					   case IDC_INDENTDEFAULT:
+						    ThotCallback (NumMenuRecessSense, INTEGER_DATA, (char*) 2);
+							break;
+
+					   /* Line spacing menu */
+					   case IDC_SSMALL:
+						    ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (char*) 0);
+							break;
+
+					   case IDC_SMEDIUM:
+						    ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (char*) 1);
+							break;
+
+					   case IDC_SLARGE:
+						    ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (char*) 2);
+							break;
+
+					   case IDC_SPACINGDEFAULT:
+						    ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (char*) 3);
+							break;
 				}
 				break;
 

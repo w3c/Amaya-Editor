@@ -18,6 +18,7 @@
 #include "css.h"
 #include "trans.h"
 
+#ifndef _WINDOWS
 #include "stopN.xpm"
 #include "stopR.xpm"
 #include "save.xpm"
@@ -39,33 +40,35 @@
 #include "DL.xpm"
 #include "Link.xpm"
 #include "Table.xpm"
+#endif /* !_WINDOWS */
+
 #ifdef _WINDOWS
 #include "resource.h"
 #endif /* _WINDOWS */
+
 #ifdef AMAYA_PLUGIN
 #include "plugin.h"
 #include "Plugin.xpm"
 #endif /* AMAYA_PLUGIN */
+
 #ifdef AMAYA_JAVA
 #include "Java.xpm"
 #endif /* AMAYA_JAVA */
 
 #ifdef _WINDOWS
+/*
 #ifndef __GNUC__
 #include <direct.h>
-#endif /* __GNUC__ */
+#endif 
+*/
 char docToOpen [256];
 #endif /* _WINDOWS */
 
+#define AMAYA_PAGE "http://www.w3.org/Amaya/User"
 
-#ifdef WITH_SOCKS
-char                __res = 0;
-#endif
-#define AMAYA_PAGE "http://www.w3.org/Amaya/User/"
-/*
-#define AMAYA_PAGE "http://tuvalu.inrialpes.fr:3030/aa/test.html"
-*/
 static int          AmayaInitialized = 0;
+
+#ifndef _WINDOWS
 static Pixmap       stopR;
 static Pixmap       stopN;
 static Pixmap       iconSave;
@@ -93,6 +96,31 @@ static Pixmap       iconPlugin;
 #ifdef AMAYA_JAVA
 static Pixmap       iconJava;
 #endif /* AMAYA_JAVA */
+#endif /* _WINDOWS */
+
+#ifdef _WINDOWS
+#define stopR        0
+#define stopN        0
+#define iconBack     1
+#define iconForward  2
+#define inconReload  3
+#define inconSave    4
+#define iconPrint    5
+#define iconFind     6
+#define inconI       7
+#define inconB       8
+#define iconT        9
+#define iconCSS     10
+#define inconImage  11
+#define iconH1      12
+#define iconH2      13
+#define iconH3      14
+#define iconBullet  15
+#define iconNum     16
+#define	iconDL      17
+#define iconLink    18
+#define iconTable   19
+#endif /* _WINDOWS */
 
 #include "css_f.h"
 #include "HTMLhistory_f.h"
@@ -325,7 +353,9 @@ Document            document;
 		  (DocNetworkStatus[document] & AMAYA_NET_ACTIVE))
 		 /* if there was no error message, display the LOADED message */
 		 TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+#        ifndef _WINDOWS
 	       TtaChangeButton (document, 1, 1, stopN);
+#        endif /* _WINDOWS */
 	     }
 	   DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
 	 }
@@ -714,6 +744,9 @@ char               *pathname;
    Document            old_doc;
    boolean             opened;
    int                 x, y, w, h;
+#  ifdef _WINDOWS
+   int                 indexButton = 0;
+#  endif /* _WINDOWS */
 
    old_doc = doc;		/* previous document */
    if (doc != 0 && !TtaIsDocumentModified (doc))
@@ -853,37 +886,39 @@ char               *pathname;
 
 #        else /* _WINDOWS */
 
-	     TtaAddButton (doc, 1, 0, StopTransfer, TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT));
-	     TtaAddButton (doc, 1, 0, GotoPreviousHTML, TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS));
-	     TtaAddButton (doc, 1, 0, GotoNextHTML, TtaGetMessage (AMAYA, AM_BUTTON_NEXT));
-	     TtaAddButton (doc, 1, STD_REDOW, Reload, TtaGetMessage (AMAYA, AM_BUTTON_RELOAD));
+	     TtaAddButton (doc, 1, stopR, StopTransfer, TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT));
+	     TtaAddButton (doc, 1, iconBack, GotoPreviousHTML, TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS));
+	     TtaAddButton (doc, 1, iconForward, GotoNextHTML, TtaGetMessage (AMAYA, AM_BUTTON_NEXT));
+	     TtaAddButton (doc, 1, inconReload, Reload, TtaGetMessage (AMAYA, AM_BUTTON_RELOAD));
 	     TtaAddButton (doc, 1, 0, NULL, NULL); /* SEPARATOR */
 
-	     TtaAddButton (doc, 1, STD_FILESAVE, SaveDocument, TtaGetMessage (AMAYA, AM_BUTTON_SAVE));
-	     TtaAddButton (doc, 1, STD_PRINT, TtcPrint, TtaGetMessage (AMAYA, AM_BUTTON_PRINT));
-	     TtaAddButton (doc, 1, STD_FIND, TtcSearchText,	TtaGetMessage (AMAYA, AM_BUTTON_SEARCH));
+	     TtaAddButton (doc, 1, inconSave, SaveDocument, TtaGetMessage (AMAYA, AM_BUTTON_SAVE));
+	     TtaAddButton (doc, 1, iconPrint, TtcPrint, TtaGetMessage (AMAYA, AM_BUTTON_PRINT));
+	     TtaAddButton (doc, 1, iconFind, TtcSearchText,	TtaGetMessage (AMAYA, AM_BUTTON_SEARCH));
 	     TtaAddButton (doc, 1, 0, NULL, NULL);  /* SEPARATOR */
 
-	     IButton =  TtaAddButton (doc, 1, 0, SetCharEmphasis, TtaGetMessage (AMAYA, AM_BUTTON_ITALICS));
-	     BButton =  TtaAddButton (doc, 1, 0, SetCharStrong, TtaGetMessage (AMAYA, AM_BUTTON_BOLD));
-	     TTButton = TtaAddButton (doc, 1, 0, SetCharCode, TtaGetMessage (AMAYA, AM_BUTTON_CODE));
-	     TtaAddButton (doc, 1, 0, InitCSSDialog, TtaGetMessage (AMAYA, AM_BUTTON_CSS));
+	     IButton =  TtaAddButton (doc, 1, inconI, SetCharEmphasis, TtaGetMessage (AMAYA, AM_BUTTON_ITALICS));
+	     BButton =  TtaAddButton (doc, 1, inconB, SetCharStrong, TtaGetMessage (AMAYA, AM_BUTTON_BOLD));
+	     TTButton = TtaAddButton (doc, 1, iconT, SetCharCode, TtaGetMessage (AMAYA, AM_BUTTON_CODE));
+	     TtaAddButton (doc, 1, iconCSS, InitCSSDialog, TtaGetMessage (AMAYA, AM_BUTTON_CSS));
 	     TtaAddButton (doc, 1, 0, NULL, NULL);  /* SEPARATOR */
 
-	     TtaAddButton (doc, 1, 0, CreateImage, TtaGetMessage (AMAYA, AM_BUTTON_IMG));
-	     TtaAddButton (doc, 1, 0, CreateHeading1, TtaGetMessage (AMAYA, AM_BUTTON_H1));
-	     TtaAddButton (doc, 1, 0, CreateHeading2, TtaGetMessage (AMAYA, AM_BUTTON_H2));
-	     TtaAddButton (doc, 1, 0, CreateHeading3, TtaGetMessage (AMAYA, AM_BUTTON_H3));
-	     TtaAddButton (doc, 1, 0, CreateList, TtaGetMessage (AMAYA, AM_BUTTON_UL));
-	     TtaAddButton (doc, 1, 0, CreateNumberedList, TtaGetMessage (AMAYA, AM_BUTTON_OL));
-	     TtaAddButton (doc, 1, 0, CreateDefinitionList, TtaGetMessage (AMAYA, AM_BUTTON_DL));
-	     TtaAddButton (doc, 1, 0, CreateOrChangeLink, TtaGetMessage (AMAYA, AM_BUTTON_LINK));
-	     TtaAddButton (doc, 1, 0, CreateTable, TtaGetMessage (AMAYA, AM_BUTTON_TABLE));
+	     TtaAddButton (doc, 1, inconImage, CreateImage, TtaGetMessage (AMAYA, AM_BUTTON_IMG));
+	     TtaAddButton (doc, 1, iconH1, CreateHeading1, TtaGetMessage (AMAYA, AM_BUTTON_H1));
+	     TtaAddButton (doc, 1, iconH2, CreateHeading2, TtaGetMessage (AMAYA, AM_BUTTON_H2));
+	     TtaAddButton (doc, 1, iconH3, CreateHeading3, TtaGetMessage (AMAYA, AM_BUTTON_H3));
+	     TtaAddButton (doc, 1, iconBullet, CreateList, TtaGetMessage (AMAYA, AM_BUTTON_UL));
+	     TtaAddButton (doc, 1, iconNum, CreateNumberedList, TtaGetMessage (AMAYA, AM_BUTTON_OL));
+	     TtaAddButton (doc, 1, iconDL, CreateDefinitionList, TtaGetMessage (AMAYA, AM_BUTTON_DL));
+	     TtaAddButton (doc, 1, iconLink, CreateOrChangeLink, TtaGetMessage (AMAYA, AM_BUTTON_LINK));
+	     TtaAddButton (doc, 1, iconTable, CreateTable, TtaGetMessage (AMAYA, AM_BUTTON_TABLE));
 #        endif /* _WINDOWS */
-#ifdef AMAYA_PLUGIN 
+
+#        ifdef AMAYA_PLUGIN 
 	     TtaAddButton (doc, 1, iconPlugin, TtaCreateFormPlugin,
 			   TtaGetMessage (AMAYA, AM_BUTTON_PLUGIN));
-#endif /* AMAYA_PLUGIN */
+#        endif /* AMAYA_PLUGIN */
+
 #ifdef AMAYA_JAVA
 	     TtaAddButton (doc, 1, iconJava, CreateFormJava,
 			   TtaGetMessage (AMAYA, AM_BUTTON_JAVA));
@@ -1981,6 +2016,7 @@ NotifyEvent        *event;
    SelectionInBIG = FALSE;
    SelectionInSMALL = FALSE;
    /* initialize icons */
+#  ifndef _WINDOWS
    stopR = TtaCreatePixmapLogo (stopR_xpm);
    TtaRegisterPixmap("stopR", stopR);
    stopN = TtaCreatePixmapLogo (stopN_xpm);
@@ -2025,11 +2061,12 @@ NotifyEvent        *event;
 #  ifdef AMAYA_PLUGIN
    iconPlugin = TtaCreatePixmapLogo (Plugin_xpm);
    TtaRegisterPixmap("Plugin", iconPlugin);
-#  endif
-#ifdef AMAYA_JAVA
+#  endif /* AMAYA_PLUGIN */
+#  ifdef AMAYA_JAVA
    iconJava = TtaCreatePixmapLogo (Java_xpm);
    TtaRegisterPixmap("Java", iconJava);
-#endif
+#  endif /* AMAYA_JAVA */
+#  endif /* !_WINDOWS */
 #ifdef MATHML
    InitMathML ();
 # endif /* MATHML */

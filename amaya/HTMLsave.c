@@ -9,6 +9,7 @@
  * Amaya saving functions.
  *
  * Authors: D. Veillard, I. Vatton
+ *          R. Guetari (W3C/INRIA): Windows NT/95
  *
  */
 
@@ -165,7 +166,8 @@ char               *pathname;
    TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 #  else /* _WINDOWS */
-   WIN_ListSaveDirectory (BaseDialog + DirSave, BaseDialog + SaveForm, DirectoryName, ScanFilter);
+   CreateSaveAsDlgWindow (TtaGetViewFrame (document, view), pathname, BaseDialog, SaveForm, DirSave, NameSave, ImgDirSave, ToggleSave);
+   /* WIN_ListSaveDirectory (BaseDialog + DirSave, BaseDialog + SaveForm, DirectoryName, ScanFilter); */
 #  endif /* _WINDOWS */
 }
 

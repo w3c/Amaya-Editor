@@ -61,6 +61,7 @@ static const SockOps ReadBits = FD_READ | FD_ACCEPT | FD_CLOSE;
 static const SockOps WriteBits = FD_WRITE | FD_CONNECT;
 static const SockOps ExceptBits = FD_OOB;
 
+
 /* Private functions */
 
 /*--------------------------------------------------------------------
@@ -159,6 +160,7 @@ XtInputId          *id;
    /* first we change the status of the request, to say it
       has entered a critical section */
 
+   /* JK: Clean this up */
    if ((HTRequest_outputStream(me->request) == (HTStream *) NULL))
       fprintf(stderr,"\n **ERROR** opening %s\n\n",me->urlName);
 
@@ -385,6 +387,13 @@ HTPriority          p;
 
    /* get the request associated to the socket number */
 
+/*
+#ifdef _WINDOWS
+     if (me->reqStatus == HT_NEW) {
+			HTEventrg_unregister (sock, ops);
+	 }
+#endif
+*/
 
    if ((status = HTEventrg_register (sock, rqp, ops,
 				     cbf, p)) != HT_OK)
@@ -449,7 +458,7 @@ HTPriority          p;
    return (status);
 }
 
-#ifdef _WINDOWS
+
 /*----------------------------------------------------------------------
   AHTEvent_unregister
   callback called by libwww each time a request is unregistered. This
@@ -475,48 +484,8 @@ SockOps             ops;
       **  for this function call */
 
    HTEventCallback    *cbf = (HTEventCallback *) __RetrieveCBF (sock, (SockOps) NULL, &rqp);
-
-   if (cbf)	{
-      	if (rqp) {
-	        me = HTRequest_context (rqp);
- 	        status = HTEventrg_unregister (sock, ops);
-			if (me->reqStatus == HT_END)
-				AHTReqContext_delete (me);
-		}
-   }
-   return (status);
-}
-
-#endif /* !WINDOWS */
 
 #ifndef _WINDOWS
-
-/*----------------------------------------------------------------------
-  AHTEvent_unregister
-  callback called by libwww each time a request is unregistered. This
-  function takes care of unregistering the pertinent Xt events
-  associated with the request's socket. In addition, it unregisters
-  the request from libwww.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 AHTEvent_unregister (SOCKET sock, SockOps ops)
-#else
-int                 AHTEvent_unregister (sock, ops)
-SOCKET              sock;
-SockOps             ops;
-
-#endif /* __STDC__ */
-{
-   int                 status;
-
-   HTRequest          *rqp = NULL;
-   AHTReqContext      *me;
-
-   /* Libwww 5.0a does not take into account the third parameter
-      **  for this function call */
-
-   HTEventCallback    *cbf = (HTEventCallback *) __RetrieveCBF (sock, (SockOps) NULL, &rqp);
-
    if (cbf)
      {
 	if (rqp)
@@ -534,9 +503,14 @@ SockOps             ops;
 	  }
      }
 
+#endif _WINDOWS
+
    status = HTEventrg_unregister (sock, ops);
+
    return (status);
 }
+
+#ifndef _WINDOWS
 
 /*----------------------------------------------------------------------
   RequestKillAllXtevents
