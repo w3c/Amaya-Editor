@@ -1027,7 +1027,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  /* almost one character is selected */
 		  if (pBox == pFrame->FrSelectionBegin.VsBox)
 		    left = pFrame->FrSelectionBegin.VsXPos;
-		  if (pBox == pFrame->FrSelectionEnd.VsBox)
+		  if (pBox == pFrame->FrSelectionEnd.VsBox &&
+		      pFrame->FrSelectionEnd.VsXPos != 0)
 		    right = pFrame->FrSelectionEnd.VsXPos;
 		  else
 		    right = pBox->BxWidth;
@@ -1188,7 +1189,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   DisplayBorders displays the box borders.
   Parameters x, y, w, h give the clipping region.
   ----------------------------------------------------------------------*/
-void                  DisplayBorders (PtrBox box, int frame, int x, int y, int w, int h) 
+void DisplayBorders (PtrBox box, int frame, int x, int y, int w, int h) 
 {
   PtrAbstractBox      pAb;
   int                 color;
@@ -1413,7 +1414,7 @@ void                  DisplayBorders (PtrBox box, int frame, int x, int y, int w
 /*----------------------------------------------------------------------
   DisplayBox display a box depending on its content.
   ----------------------------------------------------------------------*/
-void                DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
+void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 {
   ViewFrame         *pFrame;
   PtrBox             mbox;

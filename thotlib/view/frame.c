@@ -233,14 +233,13 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
     return;
   if (pAb == pFrame->FrAbstractBox)
     {
-	  width = w + 1;
-	  height = h + 1;
+      width = w + 1;
+      height = h + 1;
       if (pBox->BxFill
-#ifdef _WINDOWS
-		  )
-#else /*_WINDOWS */
-		  && Printing)
+#ifndef _WINDOWS
+	  && Printing
 #endif /* _WINDOWS */
+	  ) /****/
 	{
 	  /* draw the box background */
 	  xd = xmin - pFrame->FrXOrg;
@@ -267,8 +266,8 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
       /* clipping on the origin */
       if (xd < x)
 	  {
-        width = width - x + xd;
-        xd = x;
+	    width = width - x + xd;
+	    xd = x;
 	  }
       if (yd < y)
       {
@@ -281,78 +280,78 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
       /* clipping on the height */
       if (yd + height > ymax)
         height = ymax - yd + 1; 
-  if (yd + height >= ymin && yd <= ymax &&
-      (pAb == pFrame->FrAbstractBox ||
+      if (yd + height >= ymin && yd <= ymax &&
+	  (pAb == pFrame->FrAbstractBox ||
 	   xd + width >= xmin && xd <= xmax))
-    {
-      DisplayBorders (pBox, frame, xd - x, yd - y, width, height);
-      /* draw over the padding */
-      if (pAb == pFrame->FrAbstractBox)
-	  {
-      xd = pBox->BxXOrg;
-      yd = pBox->BxYOrg;
-	  /* fill the whole window surface */
-      width = w + 1 - xd;
-      height = h + 1 - yd;
-	  }
-	  else
-	  {
-        xd =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder;
-        yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder;
-        width = pBox->BxW + pBox->BxLPadding + pBox->BxRPadding;
-        height = pBox->BxH + pBox->BxTPadding + pBox->BxBPadding;
-        /* clipping on the origin */
-        if (xd < x)
-		{
-	    width = width - x + xd;
-	    xd = x;
-		}
-        if (yd < y)
-		{
-	    height = height - y + yd;
-	    yd = y;
-		}
-        /* clipping on the width */
-        if (xd + width > xmax)
-          width = xmax - xd + 1;
-        /* clipping on the height */
-        if (yd + height > ymax)
-          height = ymax - yd + 1;
-	  }
-      imageDesc = (PictInfo *) pAb->AbPictBackground;
-      if (pAb->AbSelected)
-		{
-	  /* draw the box selection */
-	  if (pAb->AbVolume == 0 && pBox->BxWidth <= 2)
-	    DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, InsertColor, 2);
-	  else
-	    DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, SelColor, 2);
-	}
-      else
 	{
-	  if (pAb != pFrame->FrAbstractBox && pBox->BxFill)
-	    /* draw the box background */
-	    DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height,
-			   pAb->AbForeground, pAb->AbBackground,
-			   pAb->AbFillPattern);
-	  if (imageDesc)
+	  DisplayBorders (pBox, frame, xd - x, yd - y, width, height);
+	  /* draw over the padding */
+	  if (pAb == pFrame->FrAbstractBox)
 	    {
-	      /* draw the background image the default presentation is repeat */
-	      picPresent = imageDesc->PicPresent;
-	      if (picPresent == DefaultPres)
-		picPresent = FillFrame;
-	      if (picPresent == YRepeat || picPresent == FillFrame ||
-		  (picPresent == XRepeat && !pAb->AbTruncatedHead))
-		DrawPicture (pBox, imageDesc, frame,  xd - x, yd - y, width, height);
-	      else if (!pAb->AbTruncatedHead)
-		/* the clipping will work automatically */
-		DrawPicture (pBox, imageDesc, frame,
-			     pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - x,
-			     pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding + FrameTable[frame].FrTopMargin - y,
-			     pBox->BxW, pBox->BxH);
+	      xd = pBox->BxXOrg;
+	      yd = pBox->BxYOrg;
+	      /* fill the whole window surface */
+	      width = w + 1 - xd;
+	      height = h + 1 - yd;
+	    }
+	  else
+	    {
+	      xd =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder;
+	      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder;
+	      width = pBox->BxW + pBox->BxLPadding + pBox->BxRPadding;
+	      height = pBox->BxH + pBox->BxTPadding + pBox->BxBPadding;
+	      /* clipping on the origin */
+	      if (xd < x)
+		{
+		  width = width - x + xd;
+		  xd = x;
+		}
+	      if (yd < y)
+		{
+		  height = height - y + yd;
+		  yd = y;
+		}
+	      /* clipping on the width */
+	      if (xd + width > xmax)
+		width = xmax - xd + 1;
+	      /* clipping on the height */
+	      if (yd + height > ymax)
+		height = ymax - yd + 1;
+	    }
+	  imageDesc = (PictInfo *) pAb->AbPictBackground;
+	  if (pAb->AbSelected)
+	    {
+	      /* draw the box selection */
+	      if (pAb->AbVolume == 0 && pBox->BxWidth <= 2)
+		DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, InsertColor, 2);
+	      else
+		DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, SelColor, 2);
+	    }
+	  else
+	    {
+	      if (pAb != pFrame->FrAbstractBox && pBox->BxFill)
+		/* draw the box background */
+		DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height,
+			       pAb->AbForeground, pAb->AbBackground,
+			       pAb->AbFillPattern);
+	      if (imageDesc)
+		{
+		  /* draw the background image the default presentation is repeat */
+		  picPresent = imageDesc->PicPresent;
+		  if (picPresent == DefaultPres)
+		    picPresent = FillFrame;
+		  if (picPresent == YRepeat || picPresent == FillFrame ||
+		      (picPresent == XRepeat && !pAb->AbTruncatedHead))
+		    DrawPicture (pBox, imageDesc, frame,  xd - x, yd - y, width, height);
+		  else if (!pAb->AbTruncatedHead)
+		    /* the clipping will work automatically */
+		    DrawPicture (pBox, imageDesc, frame,
+				 pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - x,
+				 pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding + FrameTable[frame].FrTopMargin - y,
+				 pBox->BxW, pBox->BxH);
+		}
 	    }
 	}
-    }
 }
 
 
@@ -366,7 +365,7 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
   on the bottom of the window.
   ----------------------------------------------------------------------*/
 PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
-						PtrBox *create, int *tVol, int *bVol)
+			PtrBox *create, int *tVol, int *bVol)
 {
   PtrAbstractBox      pAb, specAb;
   PtrBox              pBox, box;
