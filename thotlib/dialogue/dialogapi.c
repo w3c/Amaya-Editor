@@ -8852,8 +8852,7 @@ void TtaWaitShowProcDialogue ()
    ThotEvent              event;
 
    /* wait until the user selects something */
-   /*while (GetMessage (&event, NULL, 0, 0))*/
-   while (GetMessageW (&event, NULL, 0, 0)) // force unicode version
+   while (GetMessage (&event, NULL, 0, 0))
       {
 	TranslateMessage (&event);
 	DispatchMessage (&event);
@@ -8872,8 +8871,7 @@ void TtaWaitShowDialogue ()
   ThotEvent              event;
 
 #ifdef _WINDOWS
-  /*GetMessage (&event, NULL, 0, 0);*/
-  GetMessageW (&event, NULL, 0, 0); // force unicode version
+  GetMessage (&event, NULL, 0, 0);
   TranslateMessage (&event);
   DispatchMessage (&event);
 #else  /* _WINDOWS */

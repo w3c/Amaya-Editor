@@ -404,8 +404,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   while (ret == 0)
     {
 #ifdef _WINDOWS
-/*      GetMessage (&event, NULL, 0, 0);*/
-      GetMessageW (&event, NULL, 0, 0); // force unicode version
+      GetMessage (&event, NULL, 0, 0);
 	  SetCursor (cross);
       if (event.message == WM_MOUSEMOVE)
 	{
@@ -1015,8 +1014,7 @@ static void MoveApoint (PtrBox box, int frame, int x, int y, int x1, int y1, int
 	  /*SetCursorPos (newx, newy);*/
 	}
 	  
-      /*GetMessage (&event, NULL, 0, 0);*/
-	  GetMessageW (&event, NULL, 0, 0); // force unicode version
+      GetMessage (&event, NULL, 0, 0);
 	  SetCursor (cross);
       switch (event.message)
 	{
@@ -1798,8 +1796,7 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
   while (ret == 0)
     {
 #ifdef _WINDOWS
-      /*GetMessage (&event, NULL, 0, 0);*/
-	  GetMessageW (&event, NULL, 0, 0); // force unicode version
+      GetMessage (&event, NULL, 0, 0);
       switch (event.message)
 	{
 	case WM_LBUTTONUP:

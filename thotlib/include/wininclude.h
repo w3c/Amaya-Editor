@@ -89,5 +89,51 @@ extern ThotWindow GetCurrentWindow ();
 extern void       KbdCallbackHandler (ThotWidget w, unsigned int param, caddr_t call_d);
 extern void       CheckTtCmap ();
 
+/* Override some functions for unicode support */
+#undef  GetMessage
+#define GetMessage						GetMessageW
+
+/* The following macros override some other windows functions */
+/* Uncomment it to enable unicod but take care of side effect */
+/* Look into WINUSER.H for other windows unicode functions */
+/*
+#undef  DispatchMessage
+#define DispatchMessage					DispatchMessageW
+#undef  PeekMessage
+#define PeekMessage						PeekMessageW
+#undef  SendMessage
+#define SendMessage						SendMessageW
+#undef  PostMessage
+#define PostMessage						PostMessageW
+#undef  DefWindowProc
+#define DefWindowProc					DefWindowProcW
+#undef  CallWindowProc
+#define CallWindowProc					CallWindowProcW
+#undef  CreateDialogParam
+#define CreateDialogParam				CreateDialogParamW
+#undef  CreateDialogIndirectParam
+#define CreateDialogIndirectParam		CreateDialogIndirectParamW
+#undef  CreateDialog
+#define CreateDialog					CreateDialogW
+#undef  CreateDialogIndirect
+#define CreateDialogIndirect			CreateDialogIndirectW
+#undef  DialogBoxParam
+#define DialogBoxParam					DialogBoxParamW
+#undef  DialogBoxIndirectParam
+#define DialogBoxIndirectParam			DialogBoxIndirectParamW
+#undef  DialogBox
+#define DialogBox						DialogBoxW
+#undef  DialogBoxIndirect
+#define DialogBoxIndirect				DialogBoxIndirectW
+#undef  CreateWindowEx
+#define CreateWindowEx					CreateWindowExW
+#undef  CreateWindow
+#define CreateWindow					CreateWindowW
+#undef  DrawText
+#define DrawText						DrawTextW
+#undef  MessageBox
+#define MessageBox						MessageBoxW
+*/
+
 #endif /* _WIN_FCT_ */
 
