@@ -422,6 +422,7 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* euro     */ {8364, 2206}, /* euro sign, U+20AC NEW */
 /* image    */ {8465, 193}, /* blackletter capital I = imaginary part,  U+2111 ISOamso */
 /* weierp   */ {8472, 195}, /* script capital P = power set  = Weierstrass p, U+2118 ISOamso */
+/* TM       */ {8482, 1084}, /* TRADE MARK SIGN, U+2122 */
 /* real     */ {8476, 194}, /* blackletter capital R = real part symbol,  U+211C ISOamso */
 /* trade    */ {8482, 212}, /* trade mark sign, U+2122 ISOnum */
 /* alefsym  */ {8501, 192}, /* alef symbol = first transfinite cardinal,  U+2135 NEW */
@@ -1200,7 +1201,7 @@ static Attribute    lastAttrElement = NULL;/* element with which the last
 					     attribute has been associated */
 static AttributeMapping* lastAttrEntry = NULL;  /* entry in the AttributeMappingTable
 					     of the attribute being created */
-static boolean      IgnoreAttr = FALSE;	  /* the last attribute encountered is
+static boolean      UnknownAttr = FALSE;  /* the last attribute encountered is
 					     invalid */
 static Element      CommentText = NULL;	  /* TEXT element of the current
 					     Comment element */
@@ -4298,6 +4299,10 @@ CHAR                c;
 	   lastAttrEntry = NULL;
 	   /**** register this namespace ****/;
 	   }
+	else if (ustrcasecmp (inputBuffer, "xml:lang") == 0)
+	   /* attribute xml:lang is not considered as invalid, but it is
+	      ignored */
+	   lastAttrEntry = NULL;
 	else
 	   {
 	   sprintf (msgBuffer, "Unknown attribute \"%s\"", inputBuffer);
@@ -4305,11 +4310,11 @@ CHAR                c;
 	   /* attach an Invalid_attribute to the current element */
 	   tableEntry = &HTMLAttributeMappingTable[0];
 	   schema = DocumentSSchema;
-	   IgnoreAttr = TRUE;
+	   UnknownAttr = TRUE;
 	   }
      }
    else
-      IgnoreAttr = FALSE;
+      UnknownAttr = FALSE;
    if (tableEntry != NULL && lastElement != NULL &&
        (!lastElementClosed || (lastElement != rootElement)))
      {
@@ -4402,7 +4407,7 @@ CHAR                c;
 
 #endif
 {
-   if (IgnoreAttr)
+   if (UnknownAttr)
       /* this is the value of an unknown attribute. keep the quote */
       /* in the input buffer for copying it in the current */
       /* Invalid_attribute */
@@ -4602,7 +4607,7 @@ CHAR                c;
    boolean             done;
    UCHAR       msgBuffer[MaxMsgLength];
 
-   if (IgnoreAttr)
+   if (UnknownAttr)
       /* this is the end of value of an invalid attribute. Keep the */
       /* quote character that ends the value for copying it into the */
       /* Invalid_attribute. */
@@ -4702,11 +4707,11 @@ CHAR                c;
 			   }
 		     break;
 		  case 2:	/* text */
-		     if (!IgnoreAttr)
-			{
-			TtaSetAttributeText (lastAttribute, inputBuffer,
+		     if (!UnknownAttr)
+			 {
+			 TtaSetAttributeText (lastAttribute, inputBuffer,
 			      lastAttrElement, theDocument);
-			if (attrType.AttrTypeNum == HTML_ATTR_Langue)
+			 if (attrType.AttrTypeNum == HTML_ATTR_Langue)
 			   /* it's a LANG attribute value */
 			   {
 			   lang = TtaGetLanguageIdFromName (inputBuffer);
@@ -4722,23 +4727,23 @@ CHAR                c;
 			      currentLanguage = lang;
 			      LanguageStack[StackLevel - 1] = currentLanguage;
 			      }
-			   }
-			}
+			    }
+			  }
 		     else
-			/* this is the content of an invalid attribute */
-			/* append it to the current Invalid_attribute */
-		        {
-			length = ustrlen (inputBuffer) + 2;
-			length += TtaGetTextAttributeLength (lastAttribute);
-			buffer = TtaGetMemory (length + 1);
-			TtaGiveTextAttributeValue (lastAttribute, buffer,
-						   &length);
-			ustrcat (buffer, "=");
-			ustrcat (buffer, inputBuffer);
-			TtaSetAttributeText (lastAttribute, buffer,
-					     lastAttrElement, theDocument);
-			TtaFreeMemory (buffer);
-		        }
+			 /* this is the content of an invalid attribute */
+			 /* append it to the current Invalid_attribute */
+		         {
+			 length = ustrlen (inputBuffer) + 2;
+			 length += TtaGetTextAttributeLength (lastAttribute);
+			 buffer = TtaGetMemory (length + 1);
+			 TtaGiveTextAttributeValue (lastAttribute, buffer,
+						    &length);
+			 ustrcat (buffer, "=");
+			 ustrcat (buffer, inputBuffer);
+			 TtaSetAttributeText (lastAttribute, buffer,
+					      lastAttrElement, theDocument);
+			 TtaFreeMemory (buffer);
+		         }
 		     break;
 		  case 3:	/* reference */
 		     break;
@@ -4929,6 +4934,8 @@ int                 code;
       PutInBuffer (',');
    else if (code == 8240)	/* per mille sign */
       PutInBuffer ('\260');
+   else if (code == 8482)	/* Trade Mark sign */
+      PutInBuffer ('\115');
 }
 
 /*----------------------------------------------------------------------
@@ -5093,7 +5100,10 @@ CHAR                c;
 
    EntityName[LgEntityName] = EOS;
    sscanf (EntityName, "%d", &code);
-   PutInBuffer ((CHAR) code);
+   if (code > 255)
+      PutNonISOlatin1Char (code);
+   else
+      PutInBuffer ((CHAR) code);
    LgEntityName = 0;
 }
 
@@ -5391,14 +5401,8 @@ CHAR                c;
 #endif
 {
    CloseBuffer ();
-   if (LgBuffer < 1 || inputBuffer[LgBuffer-1] != '?')
-      ParseHTMLError (theDocument, "Missing question mark");
-   else
-      /* process the Processing Instruction available in inputBuffer */
-      {
-      inputBuffer[LgBuffer-1] = '\0';
-      /* printf ("PI: %s\n", inputBuffer); */
-      }
+   /* process the Processing Instruction available in inputBuffer */
+   /* printf ("PI: %s\n", inputBuffer); */
    InitBuffer ();
 }
 
@@ -7210,7 +7214,7 @@ Document            doc;
    lastAttribute = NULL;
    lastAttrElement = NULL;
    lastAttrEntry = NULL;
-   IgnoreAttr = FALSE;
+   UnknownAttr = FALSE;
    LgEntityName = 0;
    EntityTableEntry = 0;
    CharRank = 0;
@@ -7409,7 +7413,7 @@ boolean	            plainText;
   lastAttribute = NULL;
   lastAttrElement = NULL;
   lastAttrEntry = NULL;
-  IgnoreAttr = FALSE;
+  UnknownAttr = FALSE;
   CommentText = NULL;
   UnknownTag = FALSE;
   ReadingHREF = FALSE;
