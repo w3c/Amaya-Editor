@@ -3423,6 +3423,7 @@ RULES
 	VertPos: Top = Previous not MAP . Bottom;
 	Gather: Yes;
 	IN Structure_view BEGIN
+	        Gather: No;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -4181,6 +4182,7 @@ RULES
 		END;
 	IN Alternate_view BEGIN
 		Visibility: 10;
+	        Gather: No;
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
 		VertPos: Top = Previous . Bottom;

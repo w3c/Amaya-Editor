@@ -172,7 +172,7 @@ ThotBool     ElementNeedsPlaceholder (Element el)
       elType.ElTypeNum == MathML_EL_MACTION)
      ret = TRUE;
   else if (elType.ElTypeNum == MathML_EL_MROW)
-    /* a mrow needs a place holder only if it's not the sole child of
+    /* a mrow needs a place holder only if it's not the only child of
        an element such as Numerator, Denominator, RootBase, Index, etc. */
     {
       ret = TRUE;
@@ -181,6 +181,7 @@ ThotBool     ElementNeedsPlaceholder (Element el)
 	{
 	  sibling = el;  TtaPreviousSibling (&sibling);
 	  if (!sibling)
+	    /* the MROW element has no sibling */
 	    {
 	      parent = TtaGetParent (el);
 	      if (parent)
@@ -200,7 +201,20 @@ ThotBool     ElementNeedsPlaceholder (Element el)
 		      elType.ElTypeNum == MathML_EL_MultiscriptBase ||
 		      elType.ElTypeNum == MathML_EL_MSubscript ||
 		      elType.ElTypeNum == MathML_EL_MSuperscript)
-		    ret = FALSE;
+		    {
+		      /* no place holder required, except if the MROW element
+			 actually represent a prenthesized block */
+		      ret = FALSE;
+		      child = TtaGetFirstChild (el);
+		      if (child != NULL)
+			{
+			  elType = TtaGetElementType (child);
+			  if (elType.ElTypeNum == MathML_EL_MF)
+			    /* the first child of the MROW element is a MF */
+			    /* The MROW element needs a placeholder */
+			    ret = TRUE;
+			}
+		    } 
 		}
 	    }
 	}
