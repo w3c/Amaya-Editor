@@ -125,7 +125,7 @@ static PtrDocument  OldDocMsgSelect;
 #include "views_f.h"
 #include "viewapi_f.h"
 #include "xwindowdisplay_f.h"
-
+#include "appdialogue_wx_f.h"
 
 /* defined into amaya directory ...*/
 extern void ZoomIn (Document document, View view);
@@ -422,7 +422,10 @@ ThotBool KillFrameCallback( int frame )
       return TRUE;
 #endif /* #ifndef _WX */
 
+#ifndef _WX
+  /* this is done into AmayaApp::OnExit */
   TtaQuit();
+#endif /* _WX */
   return FALSE;
 }
 
@@ -784,6 +787,26 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
 #endif /* _WINGUI */
 #endif /* _GL */
 
+#ifdef _GL
+#ifndef _NOSHARELIST
+/*----------------------------------------------------------------------
+  GetSharedContext : get the name of the frame used as shared context
+  ----------------------------------------------------------------------*/
+int GetSharedContext ()
+{
+  return Shared_Context;
+}
+
+/*----------------------------------------------------------------------
+  SetSharedContext : set the name of the frame used as shared context
+  ----------------------------------------------------------------------*/
+void SetSharedContext (int frame)
+{
+  Shared_Context = frame;
+}
+#endif /*_NOSHARELIST*/
+#endif /* _GL */
+
 #ifdef _GTK
 #ifdef _GL
 /*----------------------------------------------------------------------
@@ -821,23 +844,6 @@ gboolean GL_Init (ThotWidget widget, GdkEventExpose *event, gpointer data)
   return TRUE;   
 }
 
-#ifndef _NOSHARELIST
-/*----------------------------------------------------------------------
-  GetSharedContext : get the name of the frame used as shared context
-  ----------------------------------------------------------------------*/
-int GetSharedContext ()
-{
-  return Shared_Context;
-}
-
-/*----------------------------------------------------------------------
-  SetSharedContext : set the name of the frame used as shared context
-  ----------------------------------------------------------------------*/
-void SetSharedContext (int frame)
-{
-  Shared_Context = frame;
-}
-#endif /*_NOSHARELIST*/
 #endif /* _GL */
 
 static ThotBool  FrameResizedGTKInProgress = FALSE;
@@ -1064,7 +1070,7 @@ ThotBool FrameResizedCallback(
 	 FrameTable[frame].FrHeight == new_height)
      )
   {
-    // frame should not be displayed
+    /* frame should not be displayed */
     return FALSE;
   }
 
@@ -1818,16 +1824,20 @@ void InitializeOtherThings ()
   ----------------------------------------------------------------------*/
 void TtaRaiseView (Document document, View view)
 {
-  int                 idwindow;
+  int                 frame_id;
   ThotWidget          w;
 
   UserErrorCode = 0;
-  idwindow = GetWindowNumber (document, view);
-  if (idwindow != 0)
+  frame_id = GetWindowNumber (document, view);
+  if (frame_id != 0)
     {
-#ifndef _WX // TODO      
-      w = FrameTable[idwindow].WdFrame;
-#endif //#ifndef _WX // TODO
+      w = FrameTable[frame_id].WdFrame;
+#ifdef _WX
+      TtaAttachFrame( frame_id,
+		      TtaGetWindowId( document ),
+		      TtaGetPageId( document ),
+		      view > 1 ? 2 : 1 /* TODO: 1=up 2=down ajouter la vue en haut ou en bas, au choix de l'utilisateur */ );
+#endif /* _WX */
       
 #ifdef _MOTIF
       if (w != 0)
@@ -1841,8 +1851,8 @@ void TtaRaiseView (Document document, View view)
 
 #ifdef _WINGUI
       {
-	OpenIcon (FrMainRef[idwindow]);
-	SetForegroundWindow (FrMainRef[idwindow]);
+	OpenIcon (FrMainRef[frame_id]);
+	SetForegroundWindow (FrMainRef[frame_id]);
       }
 #endif /* _WINGUI */
     }
@@ -1901,7 +1911,9 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 	/* try to display in document 1 */
 	frame = GetWindowNumber (1, view);
       if (frame != 0)
+#ifndef _WX
 	if (FrameTable[frame].WdStatus != 0)
+#endif /* _WX */
 	  {
 	    length = strlen (text) + 1;
 	    if (name)
@@ -1952,18 +1964,19 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 
 #ifdef _WX
 	    if (name)
-	    {
 	      /* text est un format */
 	      sprintf (s, text, name);
-	      FrameTable[frame].WdStatus->SetStatusText(
-	        wxString((char *)s, AmayaWindow::conv_ascii) );
-	    }
 	    else
-              FrameTable[frame].WdStatus->SetStatusText(
-                wxString((char *)name, AmayaWindow::conv_ascii) );
+	      strncpy (s, text, length);
+
+	    /* 
+	     * do not use the FrameTable[frame].WdStatus field because it's simplier
+	     * to update only the frame's parent window
+	     */
+	    FrameTable[frame].WdFrame->SetStatusBarText( wxString( s, AmayaWindow::conv_ascii ) );
 #endif /* _WX */
 	    
-      TtaFreeMemory (s);
+	    TtaFreeMemory (s);
 	  }
       
     }
@@ -3016,11 +3029,11 @@ ThotBool FrameMouseWheelCallback(
 
   if (direction > 0)
   {
-    // wheel mice up
+    /* wheel mice up*/
     FrameToView (frame, &document, &view);
     if (thot_mod_mask & THOT_MOD_CTRL)
     {
-      // if CTRL is down then zoom in
+      /* if CTRL is down then zoom in */
       ZoomIn (document, view);
     }
     else
@@ -3030,7 +3043,7 @@ ThotBool FrameMouseWheelCallback(
   }
   else
   {
-    // wheel mice down
+    /* wheel mice down */
     FrameToView (frame, &document, &view); 
     if (thot_mod_mask & THOT_MOD_CTRL)
     {
@@ -3934,7 +3947,6 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
   AmayaFrame * p_frame = FrameTable[frame].WdFrame;
   if ( p_frame )
     {
-      // used to convert text format
       p_frame->SetPageTitle( wxString((const char *)title, AmayaWindow::conv_ascii) );
     }
 #endif /* #if defined(_WX) */
@@ -3970,7 +3982,7 @@ void ChangeSelFrame (int frame)
 #endif /* _MOTIF */
 	}
     }
-#endif //#ifndef _WX // TODO
+#endif /* #ifndef _WX */ // TODO
   
 }
 
@@ -4137,7 +4149,14 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
 		      clipheight); 
 
       if (raz > 0 && GL_prepare (frame))
-	glClear (GL_COLOR_BUFFER_BIT);
+	{
+#ifdef _GL_COLOR_DEBUG
+	  float tmp[4];
+	  glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
+	  printf( "glClearColor=(%f,%f,%f,%f)\n",tmp[0],tmp[1],tmp[2],tmp[3] );
+#endif /* _GL_COLOR_DEBUG */
+	  glClear( GL_COLOR_BUFFER_BIT );
+	}
 #endif /*_GL*/
     }
 }
