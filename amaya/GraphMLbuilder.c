@@ -369,6 +369,7 @@ void             SetGraphicDepths (Document doc, Element el)
   ctxt->cssLevel = 0;
   ctxt->destroy = FALSE;
   pval.typed_data.value = 0; /*TtaGetDepth (el, doc, 1)*/
+  pval.typed_data.unit = STYLE_UNIT_REL;
   pval.typed_data.real = FALSE;
   child = TtaGetLastChild (el);
   while (child)
