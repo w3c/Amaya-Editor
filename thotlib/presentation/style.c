@@ -2974,6 +2974,8 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
     {
       /* get the string instead of the box index */
       cst = setting->value.typed_data.value;
+      if (cst < 0)
+	setting->value.pointer = NULL;
       setting->value.pointer = &pPS->PsConstant[cst-1].PdString[0];
     }
 }
