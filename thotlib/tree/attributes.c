@@ -1545,7 +1545,7 @@ PtrDocument         pDoc;
    SRule              *pSRule;
    PtrSSchema          pSS;
 
-   if (pEl != NULL)
+   if (pEl != NULL && pEl->ElStructSchema != NULL)
      {
 	/* traite d'abord les attributs requis par la regle de structure qui */
 	/* definit l'element */

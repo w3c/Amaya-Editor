@@ -5489,6 +5489,7 @@ RULES
 
  Table_head:
 	BEGIN
+	HorizRef: * . Top;
 	HorizPos: Left = Enclosing . Left;
 	Width: Enclosing . Width;
 	VertPos: nil;
@@ -5502,12 +5503,15 @@ RULES
 
  Column_head:
 	BEGIN
+	HorizRef: * . Top;
 	HorizPos: Left = Previous . Right;
 	VertPos: Top = Enclosing . Top;
+	Height: 1 px;
 	END;
 
  C_Head:
 	BEGIN
+	HorizRef: * . Top;
 	VertPos : Top = Enclosing . Top;
 	Width: 20 px;
 	Height: 1 px;

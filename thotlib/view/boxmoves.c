@@ -930,7 +930,9 @@ boolean             horizRef;
 	       {
 		  oldPosEdge = pAb->AbHorizPos.PosEdge;
 		  /* Met a jour la pile des boites pour ne pas deplacer pSourceBox */
-		  if (pSourceBox->BxMoved != pBox)
+		  if (pSourceBox == NULL)
+		    pBox->BxMoved = pSourceBox;
+		  else if (pSourceBox->BxMoved != pBox)
 		    pBox->BxMoved = pSourceBox;
 	       }
 
@@ -980,7 +982,9 @@ boolean             horizRef;
 	       {
 		  oldPosEdge = pAb->AbVertPos.PosEdge;
 		  /* Met a jour la pile des boites pour ne pas deplacer pSourceBox */
-		  if (pSourceBox->BxMoved != pBox)
+		  if (pSourceBox == NULL)
+		    pBox->BxMoved = pSourceBox;
+		  else if (pSourceBox->BxMoved != pBox)
 		    pBox->BxMoved = pSourceBox;
 	       }
 
@@ -2206,9 +2210,13 @@ int                 frame;
 			 && Propagate == ToSiblings
 			 && pCurrentAb->AbLeafType == LtCompound
 			 && pCurrentAb->AbInLine && !pBox->BxYToCompute)
-		  /* La largeur de la boite mise en lignes est donnee par une */
-		  /* boite suivante, il faut verifier l'englobement vertical */
-		  HeightPack (pAb, pSourceBox, frame);
+		  {
+		    /* La largeur de la boite mise en lignes est donnee par une */
+		    /* boite suivante, il faut verifier l'englobement vertical */
+		    if (!pAb->AbBox->BxType == BoTable)
+		    HeightPack (pAb, pSourceBox, frame);
+		    Propagate = ToSiblings;
+		  }
 	      }
 
 	    if (pBox->BxType == BoTable && pBox->BxCycles == 0 &&
@@ -3375,7 +3383,6 @@ int                 frame;
 	/* colle au cote superieur de la boite englobante et la hauteur */
 	/* de la boite englobante est delimitee par le cote inferieur   */
 	/* le plus bas des boites englobees.                          */
-
 	pChildAb = pAb->AbFirstEnclosed;
 	while (pChildAb != NULL)
 	  {
@@ -3425,8 +3432,8 @@ int                 frame;
 				  i = pChildBox->BxYOrg + pChildBox->BxHeight;
 			    }
 			  else
-			     /* evalue l'encadrement et l'englobement */
 			  if (pChildBox->BxYOrg < y)
+			     /* evalue l'encadrement et l'englobement */
 			     i = y + pChildBox->BxHeight;
 			  else
 			     i = pChildBox->BxYOrg + pChildBox->BxHeight;

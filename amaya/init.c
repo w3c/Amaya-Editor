@@ -1390,6 +1390,11 @@ View                view;
    pathname = TtaGetMemory (MAX_LENGTH);
    documentname = TtaGetMemory (MAX_LENGTH);
    NormalizeURL (DocumentURLs[(int) document], 0, pathname, documentname);
+
+   if (!IsW3Path (pathname) && !TtaFileExist (pathname))
+     /* cannot reload this document */
+     return;
+
    W3Loading = document;	/* this document is currently in load */
    newdoc = InitDocView (document, pathname);
 
@@ -1406,10 +1411,10 @@ View                view;
    tempfile = TtaGetMemory (MAX_LENGTH);
    tempfile[0] = EOS;
    toparse = 0;
-   ActiveTransfer (newdoc);
    if (IsW3Path (pathname))
      {
        /* load the document from the Web */
+       ActiveTransfer (newdoc);
 #ifdef AMAYA_JAVA
        toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, 
 			       AMAYA_SYNC | AMAYA_NOCACHE,
@@ -1422,14 +1427,7 @@ View                view;
 #endif /* AMAYA_JAVA */
      }
    else if (TtaFileExist (pathname))
-     {
-       Reload_callback (newdoc, 0,
-			pathname,
-			tempfile, 
-			NULL,
-			(void *) documentname);
-     }
-
+     Reload_callback (newdoc, 0, pathname, tempfile, NULL, (void *) documentname);
    TtaFreeMemory (tempfile);
    TtaFreeMemory (pathname);
    
