@@ -73,6 +73,7 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* scaron   */ {353, 1115}, /* latin small letter s with caron, U+0161 ISOlat2 */
 /* Yuml     */ {376, 1089}, /* latin capital letter Y with diaeresis, U+0178 ISOlat2 */
 /* fnof     */ {402, 166},  /* latin small f with hook = function = florin, U+0192 ISOtech */
+/* epsilon  */ {603, 101}, /* greek small letter epsilon, U+03B5 ISOgrk3 */
 /* circ     */ {710, 2217}, /* modifier letter circumflex accent, U+02C6 ISOpub */
 /* tilde    */ {732, 1126}, /* small tilde, U+02DC ISOdia */
 /* hat      */ {770, 1094}, /* small tilde, U+02DC ISOdia */
