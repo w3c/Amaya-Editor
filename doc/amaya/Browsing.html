@@ -39,7 +39,7 @@ window. By clicking on that button, you switch the window to browser mode. The
 button is then displayed as <img src="../Icons/Browser.gif" alt="browser-mode"
 /> and you can only browse and fill in forms. This option is also available
 from the Edit menu option <strong>Editor Mode</strong>, and as a keyboard
-shortcut (in linux the default is Shift-Control-asterisk).</p>
+shortcut (the default is <strong>Shift-Control-*</strong>).</p>
 
 <h3><a name="Activating">Activating a link</a></h3>
 
@@ -53,7 +53,10 @@ simple-click. In that case, you cannot easily put the insert point within
 anchors: you have to use the drag and/or arrows to move the insert point
 within an anchor. It is also possible to use the keyboard to activate links,
 as well as form controls. The default keyboard command is
-<strong>Alt-Return</strong>.</p>
+<strong>Alt-Return</strong>. When the author associated an attribute accesskey
+to a link (example <code>accesskey="a"</code>), the command
+<strong>Alt-accesskey</strong> (in the example Alt-a) will activate the
+link.</p>
 
 <p>The document retrieved by this operation normally <em>replaces</em> the
 current document in the same window, in the same mode (editor or browser ).
@@ -67,7 +70,9 @@ changes.</p>
 <img src="../Icons/target.gif" alt=" target " /></a>. These icons are not part
 of the document and can be displayed or hidden just by controlling the
 <strong>Show targets</strong> status of the current window, which is an option
-in the <strong>Views</strong> menu.</p>
+in the <strong>Views</strong> menu. The default keyboard command is
+<strong>Control-v Contol-t</strong> in Unix, <strong>Alt-v Alt-l</strong> in
+Windows.</p>
 
 <p>These icons are associated to <em>target elements</em>, i.e. elements with
 an <code>ID</code> attribute, or <em>target anchors</em>, i.e. anchors with a
@@ -83,7 +88,10 @@ href="Links.html#L245">create links</a> faster.</p>
   <dt>File menu</dt>
     <dd>Two entries from the File menu, <strong>Open Document</strong> and
       <strong>Open in New Window</strong>, allow you to open a new document in
-      the same window or in a new window respectively. Both commands bring up
+      the same window or in a new window respectively. The default keyboard
+      commands are respectively <strong>Control-x Contol-f</strong> and
+      <strong>Control-x Control-o</strong> in Unix, <strong>Control-o</strong>
+      and <strong>Shift-Control-O</strong> in Windows. Both commands bring up
       a dialog box where you can enter either a local file name or an URI. You
       can also select a file from the <strong>Browse</strong> option that
       contains a file browser and helps you to locate local files. 
@@ -100,30 +108,16 @@ href="Links.html#L245">create links</a> faster.</p>
       document.</dd>
 </dl>
 
-<h3><a name="New">New documents</a></h3>
-
-<p>Amaya allows you to create new local or distant documents. Three types of
-document are available : <a href="Creating.html#Creating">XHTML</a>, <a
-href="Math.html#Math">MathML</a> or <a href="SVG.html">SVG.</a></p>
-
-<p>To create a document, choose the <strong>New</strong> option in the
-<strong>File</strong> menu and select the appropriate type. Then, specify the
-URI or the local name of the new document (a default name is assigned to the
-document if no name is specified). After confirmation, Amaya opens a new
-window with the specified document. If this document already exists, Amaya
-loads its current version otherwise. a new document with the correponding root
-element is created.</p>
-
 <h3><a name="Moving">Moving backward and forward</a></h3>
 
 <p>There are several ways to move backward or forward through the history
 list:</p>
 <dl>
   <dt>File menu</dt>
-    <dd>There are entries in the file menu for Forward and Backward.</dd>
-  <dt>Keyboard Shortcut</dt>
-    <dd>The default keyboard shortcuts are Alt-f and Alt-b in linux, and
-      Alt-left-arrow and Alt-right-arrow in windows</dd>
+    <dd>There are entries in the file menu for Forward and Backward. The
+      default keyboard shortcuts are <strong>Alt-b</strong> and
+      <strong>Alt-f</strong> in Unix, and Alt-left-arrow and Alt-right-arrow
+      in Windows</dd>
   <dt>Button bar</dt>
     <dd>Two buttons: <img alt="Back " border="0" src="../Icons/Back.gif"
       align="middle" /> and <img alt="Forward " border="0"
@@ -134,8 +128,9 @@ list:</p>
 <h3><a name="Reloading">Reloading a page</a></h3>
 
 <p>Documents can be reloaded using the <strong>Reload</strong> option in the
-<strong>File</strong> menu, the shortcut key (default is Alt-R) or the <img
-src="../Icons/Reload.png" alt="reload" /> button on the button bar.</p>
+<strong>File</strong> menu, the shortcut <strong>Alt-r</strong> in Unix and
+<strong>Control-r</strong> in Windows, or the <img src="../Icons/Reload.png"
+alt="reload" /> button on the button bar.</p>
 
 <h3><a name="Keyboard">Keyboard control</a></h3>
 

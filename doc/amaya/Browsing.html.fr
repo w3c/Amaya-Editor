@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "DTD/xhtml1-1-transitional.dtd">
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya V3.9" />
+  <meta name="GENERATOR" content="amaya V4.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body>
+<body xml:lang="en" lang="en">
 
 <table border="0" width="100%">
   <tbody>
@@ -24,7 +24,7 @@
   </tbody>
 </table>
 
-<div id="Browsing">
+<div id="Browsing" xml:lang="fr" lang="fr">
 <h2>Naviguer et Éditer</h2>
 
 <p><strong>Amaya</strong> est essentiellement un éditeur ayant des capacités
@@ -40,14 +40,14 @@ bouton, vous faites passer la fenêtre en mode navigation. Le bouton prend
 ainsi cette représentation <img src="../Icons/Browser.gif" alt="browser-mode"
 /> et vous pouvez seulement naviguer et remplir les formulaires. cette option
 est également disponible à partir de l'option <strong>Mode Editeur</strong> du
-menu d'Édition, ou bien par le raccourci clavier (Shift-Control-asterisk par
-défaut pour Linux).</p>
+menu d'Édition, ou bien par le raccourci clavier
+(<strong>Shift-Control-*</strong> par défaut).</p>
 
 <h3><a name="Activating">Activer un lien</a></h3>
 
 <p>Les liens sont habituellement présentés en bleu (ou soulignés en noir et
 blanc). Comme <strong>Amaya</strong> est un éditeur, vous devez effectuer un
-double clic sur un lien pour l'activer. Un simple clic déplace seulement le
+double-clic sur un lien pour l'activer. Un simple-clic déplace seulement le
 point d'insertion et affiche l'URI complète du lien dans la barre d'état de la
 fenêtre principale. Ce comportement par défaut peut être modifié ainsi que
 d'autres paramètres par l'intermédiaire du menu Spécial/Préférences/Générales.
@@ -57,8 +57,10 @@ pas mettre aisément le point d'insertion à l'intérieur des liens : vous devez
 soit utiliser une sélection étendue soit déplacer le point d'insertion à
 l'intérieur des liens à l'aide des flèches. Il est également possible
 d'utiliser le clavier pour activer les liens, ainsi que les formulaires de
-contrôles. La commande au clavier est <strong>Alt-Return</strong> par
-défaut.</p>
+contrôles. La commande au clavier est <strong>Alt-Return</strong> par défaut.
+Si l'auteur du document a associé un attribut accesskey au lien (par exemple
+<code>acceskey="a"</code>), la commande <strong>Alt-accesskey</strong> (par
+exemple Alt-a) va activer le lien.</p>
 
 <p>Le document récupéré par cette opération <em>remplace</em> normalement le
 document courant dans la même fenêtre et conserve le mode (éditeur ou
@@ -73,7 +75,8 @@ de cible <a name="target"><img src="../Icons/target.gif" alt=" target "
 /></a>. Ces icônes ne font pas partie du document et peuvent donc être soit
 visualisées soit cachées juste en modifiant le statut <strong>Montrer les
 cibles</strong> de la fenêtre courante, qui est une option du menu
-<strong>Vues</strong>.</p>
+<strong>Vues</strong>. Par défaut la commande au clavier est <strong>Control-v
+Contol-t</strong> sur Unix, <strong>Alt-v Alt-l</strong> sur Windows.</p>
 
 <p>Ces icônes sont associées aux <em>éléments cibles</em>, i.e. éléments avec
 un attribut <code>ID</code> , ou aux <em>ancres cibles</em>, i.e. ancres avec
@@ -92,11 +95,14 @@ permet de <a href="Links.html.fr#L245">créer des liens</a> plus vite.</p>
     <dd>Deux entrées à partir du menu Fichier, <strong>Ouvrir</strong> et
       <strong>Ouvrir dans nouvelle fenêtre</strong>, vous permettent
       respectivement d'ouvrir un nouveau document dans la même fenêtre ou dans
-      une nouvelle fenêtre. Ces deux commandes font apparaître une boîte de
-      dialogue dans laquelle vous pouvez entrer un nom de fichier local ou une
-      URI. Vous pouvez également choisir un fichier à partir de l'option
-      <strong>Butiner</strong> qui vous propose un sélecteur de fichiers
-      locaux. 
+      une nouvelle fenêtre. Les commandes clavier par défaut sont
+      respectivement <strong>Control-x Contol-f</strong> et <strong>Control-x
+      Control-o</strong> sur Unix, <strong>Control-o</strong> et
+      <strong>Shift-Control-O</strong> sur Windows. Ces deux commandes font
+      apparaître une boîte de dialogue dans laquelle vous pouvez entrer un nom
+      de fichier local ou une URI. Vous pouvez également choisir un fichier à
+      partir de l'option <strong>Butiner</strong> qui vous propose un
+      sélecteur de fichiers locaux. 
       <p>Quand le document est correctement spécifié, cliquez sur le bouton
       <strong>Confirmer</strong>.</p>
     </dd>
@@ -111,31 +117,16 @@ permet de <a href="Links.html.fr#L245">créer des liens</a> plus vite.</p>
       correspondant.</dd>
 </dl>
 
-<h3><a name="New">Nouveaux documents</a></h3>
-
-<p>Amaya vous permet ce créer de nouveaux documents locaux ou distants. Trois
-types de documents sont disponibles : <a
-href="/home/domenon/carcone/w3c/Amaya/doc/amaya/Creating.html.fr#Creating">XHTML</a>,
-<a href="Math.html.fr#Math">MathML</a> ou <a href="SVG.html.fr">SVG.</a></p>
-
-<p>Pour créer un document, aller sur l'entrée <strong>Nouveau</strong> du menu
-<strong>Fichier</strong> et sélectionner le type de document désiré. Amaya
-vous demande alors de spécifier l'URI ou le nom local du document à créer (un
-nom par défaut est affecté si aucun nom n'est spécifié). Après confirmation,
-Amaya ouvre une nouvelle fenêtre contenant le document spécifié. Si ce
-document existe déjà, sa version courante est chargée sinon, Amaya créé un
-nouveau document contenant l'élément racine correspondant au type choisi.</p>
-
 <h3><a name="Moving">Aller en arrière et en avant</a></h3>
 
 <p>Il existe différentes manières de se déplacer dans l'historique des pages
 chargées :</p>
 <dl>
   <dt>Menu Fichier</dt>
-    <dd>Il y a des entrées dans le menu Fichier pour avancer ou reculer.</dd>
-  <dt>Raccourci clavier</dt>
-    <dd>Les raccourcis clavier sont, par défaut, Alt-f et Alt-b pour
-    Linux.</dd>
+    <dd>Il y a des entrées dans le menu Fichier pour avancer ou reculer. Les
+      raccourcis clavier sont par défaut respectivement <strong>Alt-b</strong>
+      et <strong>Alt-f</strong> sur Unix, <strong>Control-b</strong> et
+      <strong>Shift-Control-F</strong> sur Windows.</dd>
   <dt>Barre des boutons</dt>
     <dd>Deux boutons : <img alt="Back " border="0" src="../Icons/Back.gif"
       align="middle" /> et <img alt="Forward " border="0"
@@ -147,10 +138,11 @@ chargées :</p>
 
 <p>Les documents peuvent être rechargés en utilisant l'option
 <strong>Recharger le document</strong> du menu <strong>Fichier</strong>, le
-raccourci clavier (Alt-R par défaut) ou le bouton <img
+raccourci clavier <strong>Alt-r</strong> sur Unix et
+<strong>Control-r</strong> sur Windows, ou le bouton <img
 src="../Icons/Reload.png" alt="reload" /> de la barre des boutons.</p>
 
-<h3><a name="Keyboard">Contrôle clavier</a></h3>
+<h3><a name="Keyboard">Contrôle du clavier</a></h3>
 
 <p>Amaya fournit un contrôle clavier pour de nombreuses fonctions. Les
 commandes clavier par défaut sont fournies à leurs places appropriées dans la

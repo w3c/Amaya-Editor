@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "DTD/xhtml1-1-transitional.dtd">
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
   <title>Créer des éléments</title>
-  <meta name="GENERATOR" content="amaya V4.0" />
+  <meta name="GENERATOR" content="amaya V4.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -28,6 +28,21 @@
 
 <div id="Creating">
 <h2>Créer de nouveaux <span xml:lang="fr" lang="fr">éléments</span></h2>
+
+<h3><a name="New">Nouveaux documents</a></h3>
+
+<p>Amaya vous permet ce créer de nouveaux documents locaux ou distants. Trois
+types de documents sont disponibles : <a
+href="../../../../../domenon/carcone/w3c/Amaya/doc/amaya/Creating.html.fr#Creating">XHTML</a>,
+<a href="Math.html.fr#Math">MathML</a> ou <a href="SVG.html.fr">SVG.</a></p>
+
+<p>Pour créer un document, aller sur l'entrée <strong>Nouveau</strong> du menu
+<strong>Fichier</strong> et sélectionner le type de document désiré. Amaya
+vous demande alors de spécifier l'URI ou le nom local du document à créer (un
+nom par défaut est affecté si aucun nom n'est spécifié). Après confirmation,
+Amaya ouvre une nouvelle fenêtre contenant le document spécifié. Si ce
+document existe déjà, sa version courante est chargée sinon, Amaya créé un
+nouveau document contenant l'élément racine correspondant au type choisi.</p>
 
 <h3><a name="Types">Boutons et menu Eléments</a></h3>
 

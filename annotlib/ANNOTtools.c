@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1999.
+ *  (c) COPYRIGHT MIT and INRIA, 1999-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -162,15 +162,7 @@ int AnnotList_localCount (List *annot_list)
   Changes the show settings for all the filters of 
   a given type.
 ------------------------------------------------------------------*/
-#ifdef __STDC__
 void AnnotFilter_toggleAll (Document doc, SelType selector, ThotBool show)
-#else
-void AnnotFilter_toggleAll (doc, selector, show)
-Document doc;
-SelType selector;
-ThotBool show;
-
-#endif /* __STDC__ */
 {
   List *list_item;
   AnnotFilterData *filter;
@@ -204,14 +196,7 @@ ThotBool show;
 /*-----------------------------------------------------------------------
   AnnotFilter_update
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void AnnotFilter_update (Document source_doc, AnnotMeta *annot)
-#else /* __STDC__*/
-static void AnnotFilter_update (source_doc, annot)
-     Document source_doc;
-     AnnotMeta *annot;
-#endif /* __STDC__*/
 {
   CHAR_T       *tmp;
   CHAR_T       server[MAX_LENGTH];
@@ -645,15 +630,7 @@ AnnotMeta *AnnotList_searchAnnot (List *list, CHAR_T *url, AnnotMetaDataSearch s
    Searches for annotation with URL url and, if found, deletes it
    and returns TRUE. Returns FALSE otherwise.
    ------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool AnnotList_delAnnot (List **list, CHAR_T *url, ThotBool useAnnotUrl)
-#else
-ThotBool AnnotList_delAnnot (list, url, userAnnotUrl)
-List **list;
-CHAR_T *url;
-ThotBool useAnnotUrl;
-
-#endif /* __STDC__ */
 {
   List *item, *prev;
   AnnotMeta *annot = NULL;
@@ -928,13 +905,7 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
    and the annotations HTML body. 
    It returns the name of the RDF file ($APP_TMPDIR/rdf.tmp)
    ------------------------------------------------------------*/
-#ifdef __STDC__
 CHAR_T * ANNOT_PreparePostBody (Document doc)
-#else
-CHAR_T * ANNOT_PreparePostBody (doc)
-Document doc;
-
-#endif /* __STDC__ */
 {
   FILE *fp;
   FILE *fp2;
@@ -1059,11 +1030,7 @@ Document doc;
    Returns a pointer to a memalloc'd string containing the current date.
    It's up to the caller to free this memory.
    ------------------------------------------------------------*/
-#ifdef __STDC__
 CHAR_T *StrdupDate (void)
-#else
-CHAR_T *StrdupDate ()
-#endif /* __STDC__ */
 {
   time_t      curDate;
   struct tm   *localDate;
@@ -1093,14 +1060,7 @@ CHAR_T *StrdupDate ()
    Searches doc and returns the link element that points to annotDoc, or
    NULL if it doesn't exist.
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 Element SearchAnnotation (Document doc, STRING annotDoc)
-#else /* __STDC__*/
-Element SearchAnnotation (doc, annotDoc)
-     Document doc;
-     STRING   annotDoc;
-#endif /* __STDC__*/
 {
   ElementType elType;
   Element     elCour;
@@ -1142,15 +1102,7 @@ Element SearchAnnotation (doc, annotDoc)
    to newAnnotURL.
    If no oldAnnotURL link is found, returns FALSE, otherwise returns TRUE.
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 ThotBool ReplaceLinkToAnnotation (Document doc, STRING annotName, STRING newAnnotURL)
-#else /* __STDC__*/
-ThotBool ReplaceLinkToAnnotation (doc, oldAnnotURL, newAnnotURL)
-     Document doc;
-     STRING   oldAnnotURL;
-     STRING   newAnnotURL;
-#endif /* __STDC__*/
 {
   Element anchor;
   ElementType elType;
@@ -1178,14 +1130,7 @@ ThotBool ReplaceLinkToAnnotation (doc, oldAnnotURL, newAnnotURL)
    Returns the first element of type elTypeNum found in the document
    or NULL if it doesn't exist.
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 Element SearchElementInDoc (Document doc, int elTypeNum)
-#else /* __STDC__*/
-Element SearchElementInDoc (doc, elTypeNum)
-     Document doc;
-     int      elTypeNum;
-#endif /* __STDC__*/
 {
   Element     root;
   ElementType elType;
@@ -1202,17 +1147,8 @@ Element SearchElementInDoc (doc, elTypeNum)
    Returns the value of attribute type attrTypeNum if it exists in the
    document element or NULL otherwise.
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 STRING SearchAttributeInEl (Document doc, Element el, int attrTypeNum, 
 			    CHAR_T *schema)
-#else /* __STDC__*/
-STRING SearchAttributeInEl (doc, el, attrTypeNum, schema)
-     Document doc;
-     Element  el;
-     int      attrTypeNum;
-     CHAR_T  *schema;
-#endif /* __STDC__*/
 {
   AttributeType  attrType;
   Attribute      attr;
@@ -1237,19 +1173,10 @@ STRING SearchAttributeInEl (doc, el, attrTypeNum, schema)
 }
 
 /*-----------------------------------------------------------------------
-   Procedure SubstituteCharInString (buffer, old, new)
-  -----------------------------------------------------------------------
+   SubstituteCharInString
    Substitutes all occurences of old char with new char in string buffer
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void SubstituteCharInString (char *buffer, char old, char new)
-#else
-void SubstituteCharInString (buffer, old, new)
-char *buffer;
-char  old;
-char new;
-#endif /* __STDC__ */
 {
   char *ptr;
 
@@ -1270,13 +1197,7 @@ char new;
   Returns a dynamically allocated string with a tempname. The user
   must free this memory.
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 char *GetTempName (const char *dir, const char *prefix)
-#else
-char *GetTempName (dir, prefix)
-const char *dir;
-const char *prefix;
-#endif /* __STDC__ */
 {
   char *tmpdir;
   char *tmp;
@@ -1327,20 +1248,15 @@ const char *prefix;
 #else
       putenv (tmpdir);
 #endif /* _WINDOWS */
-	   /* Shouldn't be free (see man for putenv ())
+      /* Shouldn't be free (see man for putenv ()) */
       /* TtaFreeMemory (tmpdir); */
     }
   return (name);
 }
 
-#ifdef __STDC__
+/*-----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 void GetServerName (CHAR_T *url, CHAR_T *server)
-#else
-void GetServerName (url, server)
-CHAR_T *url;
-CHAR_T *server;
-
-#endif /* __STDC__ */
 {
   CHAR_T      *scratch_url;
   CHAR_T      *protocol;
@@ -1373,12 +1289,7 @@ CHAR_T *server;
    Returns the HTML title of the given document or NULL if this
    element doesn't exist.
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 CHAR_T *ANNOT_GetHTMLTitle (Document doc)
-#else
-CHAR_T *ANNOT_GetHTMLTitle (doc)
-Document doc;
-#endif /* __STDC__ */
 {
   Element          el;
   int              length;
@@ -1411,13 +1322,7 @@ Document doc;
    Sets the annotation type of annotation document doc to the value of
    type, if type is not empty.
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ANNOT_SetType (Document doc, RDFResourceP type)
-#else
-CHAR_T *ANNOT_SetType (doc, type)
-Document doc;
-RDFResourceP type;
-#endif /* __STDC__ */
 {
   Element          el;
   ElementType      elType;
@@ -1493,12 +1398,7 @@ RDFResourceP type;
    given in input, prefixed by the "file://" URL convention.
    It's up to the caller to free the returned string.
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 CHAR_T * ANNOT_MakeFileURL (const CHAR_T *path)
-#else
-CHAR_T *ANNOT_MakeFileURL (path)
-const CHAR_T *path;
-#endif /* __STDC__ */
 {
   CHAR_T *url;
   /* @@ add the file:// (why it wasn't there before? */
@@ -1515,12 +1415,7 @@ const CHAR_T *path;
    Returns TRUE if it's possible to annotate a given document, FALSE
    otherwise.
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool ANNOT_CanAnnotate (Document doc)
-#else
-ThotBool ANNOT_CanAnnotate (doc)
-Document doc;
-#endif /* __STDC__ */
 {
  DocumentType docType;
  ThotBool result;
@@ -1553,12 +1448,7 @@ Document doc;
   Returns the root element of the HTML body of an annotation document, NULL
   if it's not an annotation document.
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 Element ANNOT_GetHTMLRoot (Document doc)
-#else
-Element ANNOT_GetHTMLRoot (doc)
-Document doc;
-#endif /* __STDC__ */
 {
   ElementType elType;
   Element el;
@@ -1583,12 +1473,7 @@ Document doc;
   Converts a file: URL into a local file system one. Result is stored
   in the memory pointed to by the input argument.
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WWWToLocal (char *url)
-#else
-void WWWToLocal (url)
-char *url;
-#endif /* __STDC__ */
 {
   char *tmp;
   
@@ -1605,12 +1490,7 @@ char *url;
   Converts a local URL into a file: one. Caller has to free the
   returned string.
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 char *LocalToWWW (char *url)
-#else
-char *LocalToWWW (url)
-char *url;
-#endif /* __STDC__ */
 {
   char *tmp;
   
