@@ -2522,7 +2522,7 @@ void SynchronizeSourceView (NotifyElement *event)
        the clicked element */
     {
       if (firstSel)
-	 {
+	{
 	 otherEl = NULL;
 	 /* Get the line number associated with the clicked element */
 	 line = LineNumberOfEl (firstSel);
@@ -2555,8 +2555,9 @@ void SynchronizeSourceView (NotifyElement *event)
 	    }
 	 while (!otherEl && el);
 	 
-	 if (otherEl && otherEl != HighlightElement)
-	   /* element found */
+	 done = (otherEl == HighlightElement);
+	 if (otherEl && !done)
+	   /* different element found */
 	   {
 	     /* If an element is currently highlighted, remove its Highlight
 		attribute */
@@ -2640,8 +2641,9 @@ void SynchronizeSourceView (NotifyElement *event)
 	       }
 	     done = TRUE;
 	   }
-	 }
+	}
     }
+
   if (!done)
     /* If an element is currently highlighted, remove its Highlight
        attribute */

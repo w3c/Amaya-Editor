@@ -1997,7 +1997,9 @@ void Synchronize (Document doc, View view)
 	   /* the other document is now different from the original file. It can
 	      be saved */
 	   TtaSetItemOn (otherDoc, 1, File, BSave);
+#ifdef ANNOTATIONS
 	   ANNOT_Reload (otherDoc, 1);
+#endif /* ANNOTATIONS */
 	 }
        else
 	 {

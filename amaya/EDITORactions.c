@@ -4030,8 +4030,10 @@ void  MoveAnnotationSel (Document document, View view)
   ----------------------------------------------------------------------*/
 void ReplyToAnnotation (Document document, View view)
 {
+#ifdef ANNOTATIONS
   /* for testing threading on the selection */
   ANNOT_Create (document, view, (AnnotMode)(ANNOT_useDocRoot | ANNOT_isReplyTo));
+#endif /* ANNOTATIONS */
 }
 
 /*----------------------------------------------------------------------
