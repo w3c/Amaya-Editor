@@ -143,6 +143,26 @@ static int ThotDirBrowse_copyFile (ThotDirBrowse * me)
 }
 
 /*----------------------------------------------------------------------
+   ThotDirBrowse_next - get next file                                
+  ----------------------------------------------------------------------*/
+int ThotDirBrowse_next (ThotDirBrowse * me)
+{
+#if defined(_WINDOWS) && !defined(__GNUC__)
+   int                 ret;
+
+   do
+     {
+	if (FindNextFile (me->handle, &me->data) != TRUE)
+	   return GetLastError () == ERROR_NO_MORE_FILES ? 0 : -1;
+     }
+   while ((ret = ThotDirBrowse_copyFile (me)) == 0);
+   return ret;
+#else  /* _WINDOWS && !__GNUC__ */
+   return ThotDirBrowse_copyFile (me);
+#endif /* _WINDOWS && !__GNUC__ */
+}
+
+/*----------------------------------------------------------------------
    ThotDirBrowse_first - get first dir/name.ext and setup            
    platform dependent ThotDirBrowse structure                
   ----------------------------------------------------------------------*/
@@ -183,26 +203,6 @@ int ThotDirBrowse_first (ThotDirBrowse *me, char *dir, char *name, char *ext)
    me->ls_stream = NULL;
 #endif /* _WINDOWS && !__GNUC__ */
    return ret;
-}
-
-/*----------------------------------------------------------------------
-   ThotDirBrowse_next - get next file                                
-  ----------------------------------------------------------------------*/
-int ThotDirBrowse_next (ThotDirBrowse * me)
-{
-#if defined(_WINDOWS) && !defined(__GNUC__)
-   int                 ret;
-
-   do
-     {
-	if (FindNextFile (me->handle, &me->data) != TRUE)
-	   return GetLastError () == ERROR_NO_MORE_FILES ? 0 : -1;
-     }
-   while ((ret = ThotDirBrowse_copyFile (me)) == 0);
-   return ret;
-#else  /* _WINDOWS && !__GNUC__ */
-   return ThotDirBrowse_copyFile (me);
-#endif /* _WINDOWS && !__GNUC__ */
 }
 
 /*----------------------------------------------------------------------

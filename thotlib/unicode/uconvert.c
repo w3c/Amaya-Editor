@@ -613,7 +613,7 @@ wchar_t TtaGetUnicodeFromChar (const unsigned char c, CHARSET encoding)
 int TtaWC2MBstring (wchar_t src, unsigned char **dest)
 {
   unsigned char   leadByteMark;
-  unsigned char  *mbcptr = dest;
+  unsigned char  *mbcptr = *dest;
   int             nbBytes = 1;
 
   if (src < 0x80)
@@ -648,11 +648,12 @@ int TtaWC2MBstring (wchar_t src, unsigned char **dest)
     }
   else
     {
-      *dest = '?';
+      *mbcptr = '?';
       return -1;
     }
 
   mbcptr += nbBytes;
+  *dest = mbcptr;
   switch (nbBytes)
     {
     case 6:
