@@ -778,7 +778,7 @@ void                CopyCommand ()
 				  /* coupe le premier element sauve' */
 				 {
 				    SplitTextElement (pCopy, firstChar,
-						      pSelDoc, TRUE);
+						      pSelDoc, FALSE);
 				    pE = pCopy;
 				    pCopy = pCopy->ElNext;
 				    /* supprime la premiere partie */
@@ -794,7 +794,7 @@ void                CopyCommand ()
 				     /* coupe le dernier element sauve' */
 				    {
 				       SplitTextElement (pCopy, lastChar,
-							 pSelDoc, TRUE);
+							 pSelDoc, FALSE);
 				       pE = pCopy->ElNext;
 				       /* supprime la deuxieme partie */
 				       DeleteElement (&pE);
