@@ -282,11 +282,6 @@ ${AMAYADIR}/pluginlib/*.h \
 ${AMAYADIR}/pluginlib/*.c \
 ${AMAYADIR}/pluginlib/*.cpp \
 ${AMAYADIR}/pluginlib/f/*.h \
-${AMAYADIR}/tablelib/Makefile.in \
-${AMAYADIR}/tablelib/COPYRIGHT* \
-${AMAYADIR}/tablelib/*.c \
-${AMAYADIR}/tablelib/*.cpp \
-${AMAYADIR}/tablelib/f/*.h \
 ${AMAYADIR}/thotlib/Makefile.in \
 ${AMAYADIR}/thotlib/include/Makefile.in \
 ${AMAYADIR}/thotlib/base/*.c \
@@ -359,7 +354,6 @@ ${AMAYADIR}/Windows/LibThotKernel/*.dsp \
 ${AMAYADIR}/Windows/app/*.dsp \
 ${AMAYADIR}/Windows/cpp/*.dsp \
 ${AMAYADIR}/Windows/davlib/*.dsp \
-${AMAYADIR}/Windows/libThotTable/*.dsp \
 ${AMAYADIR}/Windows/libjpeg/*.dsp \
 ${AMAYADIR}/Windows/libpng/*.dsp \
 ${AMAYADIR}/Windows/libwww/*.dsp \
@@ -384,7 +378,6 @@ ${AMAYADIR}/WindowsGL/LibThotEditor/*.dsp \
 ${AMAYADIR}/WindowsGL/LibThotKernel/*.dsp \
 ${AMAYADIR}/WindowsGL/app/*.dsp \
 ${AMAYADIR}/WindowsGL/cpp/*.dsp \
-${AMAYADIR}/WindowsGL/libThotTable/*.dsp \
 ${AMAYADIR}/WindowsGL/libjpeg/*.dsp \
 ${AMAYADIR}/WindowsGL/libpng/*.dsp \
 ${AMAYADIR}/WindowsGL/libwww/*.dsp \
