@@ -13,8 +13,6 @@
 /* |   PRS produit un fichier de type .PRS qui sera ensuite utilise     | */
 /* |   par l'Editeur.                                                   | */
 /* |                                                                    | */
-/* |                    V. Quint        Juin 1984                       | */
-/* |                                                                    | */
 /* ====================================================================== */
 
 #include "thot_sys.h"
@@ -4874,7 +4872,7 @@ iline               wi;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    generate        traite le token commencant a la position wi dans| */
+/* |    ProcessToken    traite le token commencant a la position wi dans| */
 /* |    la ligne courante, de longueur wl et de code grammatical c.     | */
 /* |    Si c'est un identificateur, nb contient son rang dans la table  | */
 /* |    des identificateurs. r est le numero de la regle dans laquelle  | */
@@ -4882,10 +4880,10 @@ iline               wi;
 /* |    qui a appele la regle r.                                        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                generate (iline wi, iline wl, grmcode c, grmcode r, int identnum, grmcode pr)
+static void         ProcessToken (iline wi, iline wl, grmcode c, grmcode r, int identnum, grmcode pr)
 
 #else  /* __STDC__ */
-void                generate (wi, wl, c, r, identnum, pr)
+static void         ProcessToken (wi, wl, c, r, identnum, pr)
 iline               wi;
 iline               wl;
 grmcode             c;
@@ -6103,7 +6101,7 @@ static void         CheckAllBoxesUsed ()
 
 
 /* ---------------------------------------------------------------------- */
-/* |    Main                                                            | */
+/* |    main                                                            | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -6121,7 +6119,7 @@ char              **argv;
    boolean             fileOK;
    char                fname[100];
    char                buffer[200];
-   Name                 srceFileName;	/* nom du fichier a compiler */
+   Name                srceFileName;	/* nom du fichier a compiler */
    iline               wi;	/* position du debut du mot courant dans la
 				   ligne en cours */
    iline               wl;	/* longueur du mot courant */
@@ -6209,7 +6207,7 @@ char              **argv;
 				 analword (wi, wl, wn, &c, &r, &nb, &pr);
 				 /* on analyse le mot */
 				 if (!error)
-				    generate (wi, wl, c, r, nb - 1, pr);	/* on le traite */
+				    ProcessToken (wi, wl, c, r, nb - 1, pr);	/* on le traite */
 			      }
 			 }
 		       while (!(wi == 0 || error));

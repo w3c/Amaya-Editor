@@ -1,5 +1,5 @@
 
-/* -- Copyright (c) 1990 - 1996 Inria/CNRS  All rights reserved. -- */
+/* -- Copyright (c) 1996 Inria  -- All rights reserved. -- */
 
 /* ======================================================================= */
 /* |                                                                    | */
@@ -12,11 +12,6 @@
 /* |    Ce fichier .GRM est produit par le programme GRM.               | */
 /* |    TRA produit un fichier de type .TRA qui sera ensuite utilise    | */
 /* |    par le traducteur, pour guider sa traduction.                   | */
-/* |    Ce programme utilise le module ANALSYNT pour l'analyse          | */
-/* |    syntaxique du schema a compiler.                                | */
-/* |                                                                    | */
-/* |                                                                    | */
-/* |                    V. Quint        Janvier 1988                    | */
 /* |                                                                    | */
 /* ======================================================================= */
 
@@ -46,73 +41,67 @@
 #define EXPORT extern
 #include "analsynt.var"
 
-/* Variables locales du compilateur TRA */
 int                 linenb;	/* compteur de lignes */
 
-static PtrSSchema pSchStr;	/* pointeur sur le schema de structure */
-static PtrSSchema pSchStrExt;	/* pointeur sur le schema de structure
-
+static PtrSSchema pSSchema;	/* pointeur sur le schema de structure */
+static PtrSSchema pExtSSchema;	/* pointeur sur le schema de structure
 				   externe */
-static PtrTSchema pSchTra;	/* pointeur sur le schema de traduction */
-static boolean      BuffDcl;	/* on est dans les declarations de buffers */
-static boolean      ConstDcl;	/* on est dans les declaration de constantes */
-static boolean      ComptDcl;	/* on est dans les declarations de compteurs */
-static boolean      VarDcl;	/* on est dans les declarations de variables */
-static boolean      ReglesTypes;	/* on est dans les regles des types */
-static boolean      ReglesAttr;	/* on est dans les regles des attributs */
-static boolean      ReglesPres;	/* on est dans les regles de la presentation */
-static boolean      ChangeBloc;	/* il faut ouvrir un nouveau bloc de regles */
-static boolean      DansBloc;	/* on est dans un bloc conditionnel */
+static PtrTSchema pTSchema;	/* pointeur sur le schema de traduction */
+
+static boolean      BuffDef;	/* on est dans les declarations de buffers */
+static boolean      ConstDef;	/* on est dans les declaration de constantes */
+static boolean      ComptDef;	/* on est dans les declarations de compteurs */
+static boolean      VarDef;	/* on est dans les declarations de variables */
+static boolean      InTypeRules;	/* on est dans les regles des types */
+static boolean      InAttrRules;	/* on est dans les regles des attributs */
+static boolean      InPresRules;	/* on est dans les regles de la presentation */
+static boolean      InCondBlock;	/* on est dans un bloc conditionnel */
+static boolean      InCondition;	/* on analyse une condition 'If...TRuleBlock' */
 static boolean      TextTrans;	/* on est dans les traductions de texte */
 static boolean      SymbTrans;	/* on est dans les traductions de symbole */
 static boolean      GraphTrans;	/* on est dans les traductions de graphique */
-static int          EntreeCour;	/* entree courante de la table de traduction */
 
-				/* de caracteres */
-static int          ConstIndx;	/* indice courant dans le buffer des */
-
-				/* constantes */
 static int          CurType;	/* numero du type d'element courant */
 static int          CurAttr;	/* numero de l'attribut courant */
 static int          CurValAttr;	/* numero de la valeur d'attribut */
 static int          CurPres;	/* numero de la presentation courante */
-static int          CurValPres;	/* numero de la valeur courante de la */
-
-				/* presentation courante */
-static PtrTRuleBlock CurBloc;	/* bloc de regles courant */
-static PtrTRuleBlock BlocPrec;	/* bloc de regles precedent */
-static PtrTRule CurRegle;	/* SRule courante */
-static PtrTRule ReglePrec;	/* SRule precedente */
-static boolean      SchemaExt;	/* TypeIdent est un nom de schema externe */
-static Name          NomGet;	/* TypeIdent dans la regle Get courante */
-static int          DebutNomGet;	/* indice du debut du TypeIdent dans la ligne */
-static boolean      Immediat;	/* condition Immediately Within */
-static boolean      Asterisk;	/* on a rencontre' "*" dans une condition */
-static boolean      SignGreaterOrLess;	/* On a rencontre' un signe > ou < apres */
-
-				/* Within ou FirstWithin dans la condition  */
-				/* courante */
-static Name          NomWithin;	/* TypeIdent dans la condition Within ou */
+static int          CurPresVal;	/* numero de la valeur courante de la
+				   presentation courante */
+static boolean      ChangeRuleBlock;	/* il faut ouvrir un nouveau bloc de regles */
+static PtrTRuleBlock CurBlock;	/* bloc de regles courant */
+static PtrTRule CurTRule;	/* current translation rule */
+static int          CurEntry;	/* entree courante de la table de traduction
+				   de caracteres */
+static int          ConstIndx;	/* indice courant dans le buffer des
+				   constantes */
+static boolean      ExternalSchema;	/* TypeIdent est un nom de schema externe */
+static Name          TypeInGetRule;	/* TypeIdent dans la regle Get courante */
+static int          BeginTypeInGetRule;	/* indice du debut du TypeIdent dans la ligne */
+static Name          TypeWithin;	/* TypeIdent dans la condition Within ou */
 
 				/* First Within en cours d'analyse */
-static int          DebutNomWithin;	/* indice du debut de ce TypeIdent dans la */
+static int          BeginTypeWithin;	/* indice du debut de ce TypeIdent dans la */
 
 				/* ligne en cours de traitement */
-static Name          NomAscend;	/* 1er TypeIdent dans la regle LevelOrType */
-static int          DebutNomAscend;	/* indice du debut de ce TypeIdent dans la */
+static Name          AncestorName;	/* 1er TypeIdent dans la regle LevelOrType */
+static int          BeginAncestorName;	/* indice du debut de ce TypeIdent dans la */
 
 				/* ligne en cours de traitement */
-static boolean      DansCondition;	/* On analyse une condition 'If...TRuleBlock' */
-static int          SigneAttrVal;	/* Signe d'une valeur d'attribut numerique */
-static int          SignePresVal;	/* Signe d'une valeur de presentation */
+static boolean      Immediately;	/* condition Immediately Within */
+static boolean      Asterisk;	/* on a rencontre' "*" dans une condition */
+static boolean      GreaterOrLessSign;	/* On a rencontre' un signe > ou < apres */
+				/* Within ou FirstWithin dans la condition  */
+				/* courante */
+static int          AttrValSign;	/* Signe d'une valeur d'attribut numerique */
+static int          PresValSign;	/* Signe d'une valeur de presentation */
 
 				/* numerique */
-static int          SigneAncetre;	/* signe du dernier niveau d'ancetre */
+static int          AncestorSign;	/* signe du dernier niveau d'ancetre */
 
 				/* rencontre' dans un compteur */
-static boolean      DefVar;
-static boolean      PairePremier;	/* on a rencontre' "First" */
-static boolean      PaireSecond;	/* on a rencontre' "Second" */
+static boolean      VarDefinition;
+static boolean      FirstInPair;	/* on a rencontre' "First" */
+static boolean      SecondInPair;	/* on a rencontre' "Second" */
 
 #include "filesystem.f"
 #include "analsynt.f"
@@ -135,81 +124,78 @@ extern void         TtaSaveAppRegistry ();
 #endif /* __STDC__ */
 
 /* ---------------------------------------------------------------------- */
-/* |    prepare la generation : initialise le schema de traduction      | */
-/* |    en memoire                                                      | */
+/* |    Initialize	initialise le schema de traduction en memoire   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         initgener ()
+static void         Initialize ()
 
 #else  /* __STDC__ */
-static void         initgener ()
+static void         Initialize ()
 #endif				/* __STDC__ */
 
 {
    int                 i;
 
-   BuffDcl = False;
-   ConstDcl = False;
-   ComptDcl = False;
-   VarDcl = False;
-   ReglesTypes = False;
-   ReglesAttr = False;
-   ReglesPres = False;
+   BuffDef = False;
+   ConstDef = False;
+   ComptDef = False;
+   VarDef = False;
+   InTypeRules = False;
+   InAttrRules = False;
+   InPresRules = False;
    TextTrans = False;
    SymbTrans = False;
    GraphTrans = False;
-   ChangeBloc = False;
-   DansBloc = False;
+   ChangeRuleBlock = False;
+   InCondBlock = False;
    ConstIndx = 1;
-   CurBloc = NULL;
-   BlocPrec = NULL;
-   CurRegle = NULL;
-   ReglePrec = NULL;
-   SchemaExt = False;
-   DansCondition = False;
-   SigneAttrVal = 1;
-   SignePresVal = 1;
-   PairePremier = False;
-   PaireSecond = False;
+   CurBlock = NULL;
+   CurTRule = NULL;
+   ExternalSchema = False;
+   InCondition = False;
+   AttrValSign = 1;
+   PresValSign = 1;
+   FirstInPair = False;
+   SecondInPair = False;
    Asterisk = False;
-   NomWithin[0] = '\0';
-   NomAscend[0] = '\0';
-   if ((pSchStrExt = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
+   TypeWithin[0] = '\0';
+   AncestorName[0] = '\0';
+   if ((pExtSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
       TtaDisplaySimpleMessage (TRA, FATAL, TRA_NOT_ENOUGH_MEM);
-   if ((pSchStr = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
+   if ((pSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
       TtaDisplaySimpleMessage (TRA, FATAL, TRA_NOT_ENOUGH_MEM);
-   if ((pSchTra = (PtrTSchema) malloc (sizeof (TranslSchema))) == NULL)
+   if ((pTSchema = (PtrTSchema) malloc (sizeof (TranslSchema))) == NULL)
       TtaDisplaySimpleMessage (TRA, FATAL, TRA_NOT_ENOUGH_MEM);
    /* initialise le schema de traduction */
-   pSchTra->TsLineLength = 0;	/* pas de longueur max des lignes traduites */
-   strcpy (pSchTra->TsEOL, "\n");	/* caractere fin de ligne par
+   pTSchema->TsLineLength = 0;	/* pas de longueur max des lignes traduites */
+   strcpy (pTSchema->TsEOL, "\n");	/* caractere fin de ligne par
 						   defaut */
-   strcpy (pSchTra->TsTranslEOL, "\n");	/* fin de ligne a inserer par
+   strcpy (pTSchema->TsTranslEOL, "\n");	/* fin de ligne a inserer par
 						   defaut */
-   pSchTra->TsNConstants = 0;	/* nombre de constantes */
-   pSchTra->TsNCounters = 0;	/* nombre de compteurs */
-   pSchTra->TsNVariables = 0;	/* nombre de variables de traduction */
-   pSchTra->TsNBuffers = 0;	/* nombre de buffers */
-   pSchTra->TsPictureBuffer = 0;	/* pas de buffer pour les images */
+   pTSchema->TsNConstants = 0;	/* nombre de constantes */
+   pTSchema->TsNCounters = 0;	/* nombre de compteurs */
+   pTSchema->TsNVariables = 0;	/* nombre de variables de traduction */
+   pTSchema->TsNBuffers = 0;	/* nombre de buffers */
+   pTSchema->TsPictureBuffer = 0;	/* pas de buffer pour les images */
    for (i = 0; i < MAX_RULES_SSCHEMA; i++)
      {
-	pSchTra->TsElemTRule[i] = NULL;		/* pointeurs sur le debut de la chaine
+	pTSchema->TsElemTRule[i] = NULL;		/* pointeurs sur le debut de la chaine
 						   de regles de traduction specifiques a chaque type d'element */
-	pSchTra->TsInheritAttr[i] = False;
+	pTSchema->TsInheritAttr[i] = False;
      }
    for (i = 0; i < MAX_TRANSL_PRULE; i++)
-      pSchTra->TsPresTRule[i].RtExist = False;
-   pSchTra->TsNTranslAlphabets = 0;	/* pas de traduction de texte */
-   pSchTra->TsSymbolFirst = 0;	/* indice de la 1ere regle de traduction
+      pTSchema->TsPresTRule[i].RtExist = False;
+   pTSchema->TsNTranslAlphabets = 0;	/* pas de traduction de texte */
+   pTSchema->TsSymbolFirst = 0;	/* indice de la 1ere regle de traduction
 					   de symboles dans la table TsCharTransl */
-   pSchTra->TsSymbolLast = 0;	/* indice de la derniere regle de traduction de
+   pTSchema->TsSymbolLast = 0;	/* indice de la derniere regle de traduction de
 				   symboles dans la meme table */
-   pSchTra->TsGraphicsFirst = 0;	/* indice de la 1ere regle de traduction de
+   pTSchema->TsGraphicsFirst = 0;	/* indice de la 1ere regle de traduction de
 				   graphiques dans la table TsCharTransl */
-   pSchTra->TsGraphicsLast = 0;	/* indice de la derniere regle de traduction
+   pTSchema->TsGraphicsLast = 0;	/* indice de la derniere regle de traduction
 				   de graphiques dans la meme table */
-   pSchTra->TsNCharTransls = 0;	/* nombre total de regles de traduction de
+   pTSchema->TsNCharTransls = 0;	/* nombre total de regles de traduction de
 				   caracteres */
 }
 
@@ -218,44 +204,44 @@ static void         initgener ()
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         initAttr ()
+static void         InitAttrTransl ()
 
 #else  /* __STDC__ */
-static void         initAttr ()
+static void         InitAttrTransl ()
 #endif				/* __STDC__ */
 
 {
    int                 i, j;
-   AttributeTransl      *pRT1;
-   TranslNumAttrCase        *pTC1;
+   AttributeTransl      *pAttTr;
+   TranslNumAttrCase        *pCase;
 
-   for (i = 0; i < pSchStr->SsNAttributes; i++)
+   for (i = 0; i < pSSchema->SsNAttributes; i++)
      {
-	pRT1 = &pSchTra->TsAttrTRule[i];
-	pRT1->AtrElemType = 0;
+	pAttTr = &pTSchema->TsAttrTRule[i];
+	pAttTr->AtrElemType = 0;
 	/* selon le type de l'attribut */
-	switch (pSchStr->SsAttribute[i].AttrType)
+	switch (pSSchema->SsAttribute[i].AttrType)
 	      {
 		 case AtNumAttr:
-		    pRT1->AtrNCases = 0;
+		    pAttTr->AtrNCases = 0;
 		    for (j = 0; j < MAX_TRANSL_ATTR_CASE; j++)
 		      {
-			 pTC1 = &pRT1->AtrCase[j];
-			 pTC1->TaLowerBound = -MAX_INT_ATTR_VAL - 1;	/* - infini */
-			 pTC1->TaUpperBound = MAX_INT_ATTR_VAL + 1;		/* + infini */
-			 pTC1->TaTRuleBlock = NULL;
+			 pCase = &pAttTr->AtrCase[j];
+			 pCase->TaLowerBound = -MAX_INT_ATTR_VAL - 1;	/* - infini */
+			 pCase->TaUpperBound = MAX_INT_ATTR_VAL + 1;		/* + infini */
+			 pCase->TaTRuleBlock = NULL;
 		      }
 		    break;
 		 case AtTextAttr:
-		    pRT1->AtrTextValue[0] = '\0';
-		    pRT1->AtrTxtTRuleBlock = NULL;
+		    pAttTr->AtrTextValue[0] = '\0';
+		    pAttTr->AtrTxtTRuleBlock = NULL;
 		    break;
 		 case AtReferenceAttr:
-		    pRT1->AtrRefTRuleBlock = NULL;
+		    pAttTr->AtrRefTRuleBlock = NULL;
 		    break;
 		 case AtEnumAttr:
 		    for (j = 0; j <= MAX_ATTR_VAL; j++)
-		       pRT1->AtrEnuTRuleBlock[j] = NULL;
+		       pAttTr->AtrEnuTRuleBlock[j] = NULL;
 		    break;
 		 default:
 		    break;
@@ -265,14 +251,14 @@ static void         initAttr ()
 
 /* ---------------------------------------------------------------------- */
 /* |    traite le type d'element indique' dans une condition Within ou  | */
-/* |    FirstWithin Le nom du type se trouve dans la variable NomWithin | */
+/* |    FirstWithin Le nom du type se trouve dans la variable TypeWithin | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         traiteFinCondition (PtrSSchema pSS)
+static void         EndOfContdition (PtrSSchema pSS)
 
 #else  /* __STDC__ */
-static void         traiteFinCondition (pSS)
+static void         EndOfContdition (pSS)
 PtrSSchema        pSS;
 
 #endif /* __STDC__ */
@@ -280,34 +266,34 @@ PtrSSchema        pSS;
 {
    int                 i;
 
-   if (NomWithin[0] != '\0')
+   if (TypeWithin[0] != '\0')
       /* verifie si le type existe dans le schema de structure */
      {
 	i = 0;
-	while (strcmp (NomWithin, pSS->SsRule[i].SrName) != 0 &&
+	while (strcmp (TypeWithin, pSS->SsRule[i].SrName) != 0 &&
 	       i < pSS->SsNRules - 1)
 	   i++;
-	if (strcmp (NomWithin, pSS->SsRule[i].SrName) != 0)
+	if (strcmp (TypeWithin, pSS->SsRule[i].SrName) != 0)
 	   /* type inconnu */
-	   CompilerError (DebutNomWithin, TRA, FATAL, TRA_UNKNOWN_TYPE, inputLine,
+	   CompilerError (BeginTypeWithin, TRA, FATAL, TRA_UNKNOWN_TYPE, inputLine,
 			  linenb);
 	else
 	   /* le type existe, il a le numero i */
-	   CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcElemType = i + 1;
-	NomWithin[0] = '\0';	/* le nom de type a ete traite' */
+	   CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcElemType = i + 1;
+	TypeWithin[0] = '\0';	/* le nom de type a ete traite' */
      }
 }
 
 /* ---------------------------------------------------------------------- */
 /* |    traite le type d'element indique' dans une clause Ancestor      | */
-/* |    Le nom du type se trouve dans la variable NomAscend.            | */
+/* |    Le nom du type se trouve dans la variable AncestorName.         | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         traiteFinElemConcerne (PtrSSchema pSS)
+static void         ProcessAncestorName (PtrSSchema pSS)
 
 #else  /* __STDC__ */
-static void         traiteFinElemConcerne (pSS)
+static void         ProcessAncestorName (pSS)
 PtrSSchema        pSS;
 
 #endif /* __STDC__ */
@@ -315,21 +301,21 @@ PtrSSchema        pSS;
 {
    int                 i;
 
-   if (NomAscend[0] != '\0')
+   if (AncestorName[0] != '\0')
       /* verifie si le type existe dans le schema de structure */
      {
 	i = 0;
-	while (strcmp (NomAscend, pSS->SsRule[i].SrName) != 0 &&
+	while (strcmp (AncestorName, pSS->SsRule[i].SrName) != 0 &&
 	       i < pSS->SsNRules - 1)
 	   i++;
-	if (strcmp (NomAscend, pSS->SsRule[i].SrName) != 0)
+	if (strcmp (AncestorName, pSS->SsRule[i].SrName) != 0)
 	   /* type inconnu */
-	   CompilerError (DebutNomAscend, TRA, FATAL, TRA_UNKNOWN_TYPE, inputLine,
+	   CompilerError (BeginAncestorName, TRA, FATAL, TRA_UNKNOWN_TYPE, inputLine,
 			  linenb);
 	else
 	   /* le type existe, il a le numero i */
-	   CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAscendType = i + 1;
-	NomAscend[0] = '\0';	/* le nom de type a ete traite' */
+	   CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAscendType = i + 1;
+	AncestorName[0] = '\0';	/* le nom de type a ete traite' */
      }
 }
 
@@ -338,10 +324,10 @@ PtrSSchema        pSS;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         nomPres (PRuleType TypeRPres, rnb pr, int wi)
+static void         PresentationName (PRuleType TypeRPres, rnb pr, int wi)
 
 #else  /* __STDC__ */
-static void         nomPres (TypeRPres, pr, wi)
+static void         PresentationName (TypeRPres, pr, wi)
 PRuleType           TypeRPres;
 rnb                 pr;
 int                 wi;
@@ -350,19 +336,19 @@ int                 wi;
 
 {
    int                 i, j;
-   PRuleTransl       *pRT1;
-   TranslNumAttrCase        *pTC1;
+   PRuleTransl       *pPresTrans;
+   TranslNumAttrCase        *pCase;
 
    if (pr == RULE_TransPres)
       /* debut des regles de traduction d'une presentation */
      {
 	CurPres = ord (TypeRPres) + 1;
-	CurValPres = 0;
-	pRT1 = &pSchTra->TsPresTRule[CurPres - 1];
-	if (!pRT1->RtExist)
+	CurPresVal = 0;
+	pPresTrans = &pTSchema->TsPresTRule[CurPres - 1];
+	if (!pPresTrans->RtExist)
 	   /* pas encore rencontre' de regles pour cette presentation */
 	  {
-	     pRT1->RtExist = True;
+	     pPresTrans->RtExist = True;
 	     if (TypeRPres == PtSize
 		 || TypeRPres == PtIndent
 		 || TypeRPres == PtLineSpacing
@@ -372,24 +358,24 @@ int                 wi;
 		 || TypeRPres == PtForeground)
 		/* Presentation a valeur numerique */
 	       {
-		  pRT1->RtNCase = 0;
+		  pPresTrans->RtNCase = 0;
 		  for (j = 0; j < MAX_TRANSL_PRES_CASE; j++)
 		    {
-		       pTC1 = &pRT1->RtCase[j];
-		       pTC1->TaLowerBound = -MAX_INT_ATTR_VAL - 1;	/* - infini */
-		       pTC1->TaUpperBound = MAX_INT_ATTR_VAL + 1;	/* + infini */
-		       pTC1->TaTRuleBlock = NULL;
+		       pCase = &pPresTrans->RtCase[j];
+		       pCase->TaLowerBound = -MAX_INT_ATTR_VAL - 1;	/* - infini */
+		       pCase->TaUpperBound = MAX_INT_ATTR_VAL + 1;	/* + infini */
+		       pCase->TaTRuleBlock = NULL;
 		    }
 	       }
 	     else
 		for (j = 0; j <= MAX_TRANSL_PRES_VAL; j++)
 		  {
-		     pRT1->RtPRuleValue[j] = '\0';
-		     pRT1->RtPRuleValueBlock[j] = NULL;
+		     pPresTrans->RtPRuleValue[j] = '\0';
+		     pPresTrans->RtPRuleValueBlock[j] = NULL;
 		  }
 	  }
-	CurBloc = NULL;
-	CurRegle = NULL;
+	CurBlock = NULL;
+	CurTRule = NULL;
 	if (TypeRPres == PtSize
 	    || TypeRPres == PtIndent
 	    || TypeRPres == PtLineSpacing
@@ -398,33 +384,33 @@ int                 wi;
 	    || TypeRPres == PtBackground
 	    || TypeRPres == PtForeground)
 	   /* Presentation a valeur numerique */
-	   if (pRT1->RtNCase >= MAX_TRANSL_PRES_CASE)
+	   if (pPresTrans->RtNCase >= MAX_TRANSL_PRES_CASE)
 	      /* trop de cas pour cette presentation */
 	      CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_CASES_FOR_THAT_PRES,
 			     inputLine, linenb);
 	   else
-	      pRT1->RtNCase++;	/* un cas de plus */
+	      pPresTrans->RtNCase++;	/* un cas de plus */
      }
    else if (pr == RULE_CondOnAscend)
       /* un nom de presentation dans une condition */
      {
-	traiteFinElemConcerne (pSchStr);
-	i = CurBloc->TbNConditions - 1;
-	CurBloc->TbCondition[i].TcCondition = TcondPRule;
-	CurBloc->TbCondition[i].TcAttr = ord (TypeRPres);
+	ProcessAncestorName (pSSchema);
+	i = CurBlock->TbNConditions - 1;
+	CurBlock->TbCondition[i].TcCondition = TcondPRule;
+	CurBlock->TbCondition[i].TcAttr = ord (TypeRPres);
 	if (TypeRPres == PtSize || TypeRPres == PtIndent ||
 	    TypeRPres == PtLineSpacing || TypeRPres == PtLineWeight ||
 	    TypeRPres == PtFillPattern || TypeRPres == PtBackground ||
 	    TypeRPres == PtForeground)
 	   /* Presentation a valeur numerique */
 	  {
-	     CurBloc->TbCondition[i].TcLowerBound = -MAX_INT_ATTR_VAL - 1;
+	     CurBlock->TbCondition[i].TcLowerBound = -MAX_INT_ATTR_VAL - 1;
 	     /* -infini */
-	     CurBloc->TbCondition[i].TcUpperBound = MAX_INT_ATTR_VAL + 1;
+	     CurBlock->TbCondition[i].TcUpperBound = MAX_INT_ATTR_VAL + 1;
 	     /* infini */
 	  }
 	else
-	   CurBloc->TbCondition[i].TcPresValue = '\0';
+	   CurBlock->TbCondition[i].TcPresValue = '\0';
      }
 }
 
@@ -433,62 +419,62 @@ int                 wi;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         valPres (char CarVal, int wi)
+static void         PresentValue (char value, int wi)
 
 #else  /* __STDC__ */
-static void         valPres (CarVal, wi)
-char                CarVal;
+static void         PresentValue (value, wi)
+char                value;
 int                 wi;
 
 #endif /* __STDC__ */
 
 {
    int                 i;
-   PRuleTransl       *pRT1;
+   PRuleTransl       *pPresTrans;
 
-   if (DansCondition)
+   if (InCondition)
       /* valeur d'une presentation dans une condition */
-      CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcPresValue = CarVal;
+      CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcPresValue = value;
    else
      {
 	/* ajoute une nouvelle valeur pour une presentation */
 	/* cherche la premier entree libre dans les valeurs de la */
 	/* presentation courante */
-	pRT1 = &pSchTra->TsPresTRule[CurPres - 1];
+	pPresTrans = &pTSchema->TsPresTRule[CurPres - 1];
 	i = 0;
-	CurValPres = 0;
+	CurPresVal = 0;
 	do
 	  {
 	     i++;
-	     if (pRT1->RtPRuleValue[i] == CarVal)
+	     if (pPresTrans->RtPRuleValue[i] == value)
 		/* deja des regles pour cette valeur */
 		CompilerError (wi, TRA, FATAL, TRA_RULES_ALREADY_EXIST_FOR_THAT_VALUE,
 			       inputLine, linenb);
-	     else if (pRT1->RtPRuleValue[i] == '\0')
+	     else if (pPresTrans->RtPRuleValue[i] == '\0')
 		/* une entree libre, on la prend */
 	       {
-		  CurValPres = i;
-		  pRT1->RtPRuleValue[i] = CarVal;
+		  CurPresVal = i;
+		  pPresTrans->RtPRuleValue[i] = value;
 	       }
 	  }
-	while (CurValPres == 0 && i <= MAX_TRANSL_PRES_VAL + 1);
+	while (CurPresVal == 0 && i <= MAX_TRANSL_PRES_VAL + 1);
      }
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    superieur                                                       | */
+/* |    SrceStringGreater                                               | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static int          superieur (int framet, int lent, int car, boolean * egal,
+static int          SrceStringGreater (int framet, int lent, int rank, boolean * equal,
 			       SourceString source)
 
 #else  /* __STDC__ */
-static int          superieur (framet, lent, car, egal, source)
+static int          SrceStringGreater (framet, lent, rank, equal, source)
 int                 framet;
 int                 lent;
-int                 car;
-boolean            *egal;
+int                 rank;
+boolean            *equal;
 SourceString            source;
 
 #endif /* __STDC__ */
@@ -499,13 +485,13 @@ SourceString            source;
 
    i = framet;
    eq = False;
-   while (pSchTra->TsCharTransl[i - 1].StSource[car] < source[car] && i <= lent)
+   while (pTSchema->TsCharTransl[i - 1].StSource[rank] < source[rank] && i <= lent)
       i++;
    if (i > lent)
       s = lent + 1;
-   else if (pSchTra->TsCharTransl[i - 1].StSource[car] > source[car])
+   else if (pTSchema->TsCharTransl[i - 1].StSource[rank] > source[rank])
       s = i;
-   else if (source[car] == '\0')
+   else if (source[rank] == '\0')
      {
 	eq = True;
 	s = i;
@@ -513,71 +499,71 @@ SourceString            source;
    else
      {
 	k = i - 1;
-	while (pSchTra->TsCharTransl[k].StSource[car] == source[car])
+	while (pTSchema->TsCharTransl[k].StSource[rank] == source[rank])
 	   k++;
-	s = superieur (i, k, car + 1, &eq, source);
+	s = SrceStringGreater (i, k, rank + 1, &eq, source);
      }
-   *egal = eq;
+   *equal = eq;
    return s;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    NouvTradCar     traite la chaine source d'une nouvelle regle de | */
-/* |    traduction de caracteres.                                       | */
+/* |    NewSourceString   traite la chaine source d'une nouvelle regle  | */
+/* |    de traduction de caracteres.                                    | */
 /* |    indx : index dans inputLine du premier caractere de la chaine,  | */
-/* |    lg est la longueur de la chaine.                                | */
+/* |    len est la longueur de la chaine.                                | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         NouvTradCar (int indx, int lg)
+static void         NewSourceString (int indx, int len)
 
 #else  /* __STDC__ */
-static void         NouvTradCar (indx, lg)
+static void         NewSourceString (indx, len)
 int                 indx;
-int                 lg;
+int                 len;
 
 #endif /* __STDC__ */
 
 {
    int                 k;
-   boolean             egalite;
+   boolean             equal;
    SourceString            source;
-   int                 PremEntree, DerEntree;
-   AlphabetTransl            *pTr1;
+   int                 firstEntry, lastEntry;
+   AlphabetTransl            *pAlphTrans;
 
-   PremEntree = 0;
-   DerEntree = 0;
+   firstEntry = 0;
+   lastEntry = 0;
    if (TextTrans)
       /* on est dans les traductions de texte */
      {
-	pTr1 = &pSchTra->TsTranslAlphabet[pSchTra->TsNTranslAlphabets - 1];
-	PremEntree = pTr1->AlBegin;
-	DerEntree = pTr1->AlEnd;
+	pAlphTrans = &pTSchema->TsTranslAlphabet[pTSchema->TsNTranslAlphabets - 1];
+	firstEntry = pAlphTrans->AlBegin;
+	lastEntry = pAlphTrans->AlEnd;
      }
    else if (SymbTrans)
       /* on est dans les traductions de symbole */
      {
-	PremEntree = pSchTra->TsSymbolFirst;
-	DerEntree = pSchTra->TsSymbolLast;
+	firstEntry = pTSchema->TsSymbolFirst;
+	lastEntry = pTSchema->TsSymbolLast;
      }
    else if (GraphTrans)
       /* on est dans les traductions de graphique */
      {
-	PremEntree = pSchTra->TsGraphicsFirst;
-	DerEntree = pSchTra->TsGraphicsLast;
+	firstEntry = pTSchema->TsGraphicsFirst;
+	lastEntry = pTSchema->TsGraphicsLast;
      }
-   if (DerEntree >= MAX_TRANSL_CHAR)
+   if (lastEntry >= MAX_TRANSL_CHAR)
       /* message 'Table saturee' */
       CompilerError (1, TRA, FATAL, TRA_TRANSLATION_TABLE_FULL, inputLine,
 		     linenb);
    else
       /* recupere le parametre 'source' */
      {
-	for (k = 0; k <= lg - 2; k++)
+	for (k = 0; k <= len - 2; k++)
 	   source[k] = inputLine[indx + k - 1];
-	source[lg - 1] = '\0';
-	EntreeCour = superieur (PremEntree, DerEntree, 0, &egalite, source);
-	if (egalite)
+	source[len - 1] = '\0';
+	CurEntry = SrceStringGreater (firstEntry, lastEntry, 0, &equal, source);
+	if (equal)
 	   /* la chaine source est deja dans la table */
 	   CompilerError (indx, TRA, FATAL, TRA_TRANSLATION_ALREADY_SPECIFIED,
 			  inputLine, linenb);
@@ -585,53 +571,54 @@ int                 lg;
 	   /* la chaine source n'est pas dans la table */
 	  {
 	     /* on l'insere dans la table */
-	     for (k = DerEntree; k >= EntreeCour; k--)
-		pSchTra->TsCharTransl[k] = pSchTra->TsCharTransl[k - 1];
-	     strncpy (pSchTra->TsCharTransl[EntreeCour - 1].StSource, source,
+	     for (k = lastEntry; k >= CurEntry; k--)
+		pTSchema->TsCharTransl[k] = pTSchema->TsCharTransl[k - 1];
+	     strncpy (pTSchema->TsCharTransl[CurEntry - 1].StSource, source,
 		      MAX_SRCE_LEN + 1);
 	     if (TextTrans)
 		/* on est dans les traductions de texte */
 	       {
-		  pTr1 = &pSchTra->TsTranslAlphabet[pSchTra->TsNTranslAlphabets - 1];
-		  pTr1->AlEnd++;
+		  pAlphTrans = &pTSchema->TsTranslAlphabet[pTSchema->TsNTranslAlphabets - 1];
+		  pAlphTrans->AlEnd++;
 	       }
 	     else if (SymbTrans)
 		/* on est dans les traductions de symbole */
-		pSchTra->TsSymbolLast++;
+		pTSchema->TsSymbolLast++;
 	     else if (GraphTrans)
 		/* on est dans les traduc. de graphique */
-		pSchTra->TsGraphicsLast++;
-	     pSchTra->TsNCharTransls++;
+		pTSchema->TsGraphicsLast++;
+	     pTSchema->TsNCharTransls++;
 	  }
      }
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    TradCible traite la chaine cible de la regle de traduction de   | */
-/* |    caracteres en cours de construction.                            | */
-/* |    indx : index dans inputLine du premier caractere de la chaine,  | */
-/* |    lg est la longueur de la chaine.                                | */
+/* |    ProcessTargetString traite la chaine cible de la regle de       | */
+/* |    traduction de caracteres en cours de construction.              | */
+/* |    indx: index dans inputLine du premier caractere de la chaine,   | */
+/* |    len est la longueur de la chaine.                               | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         TradCible (int indx, int lg)
+static void         ProcessTargetString (int indx, int len)
 
 #else  /* __STDC__ */
-static void         TradCible (indx, lg)
+static void         ProcessTargetString (indx, len)
 int                 indx;
-int                 lg;
+int                 len;
 
 #endif /* __STDC__ */
 
 {
    int                 k;
-   TargetString            cible;
+   TargetString            target;
 
-   /* recupere le parametre 'cible' */
-   for (k = 0; k <= lg - 2; k++)
-      cible[k] = inputLine[indx + k - 1];
-   cible[lg - 1] = '\0';
-   strncpy (pSchTra->TsCharTransl[EntreeCour - 1].StTarget, cible, MAX_TARGET_LEN + 1);
+   /* recupere le parametre 'target' */
+   for (k = 0; k <= len - 2; k++)
+      target[k] = inputLine[indx + k - 1];
+   target[len - 1] = '\0';
+   strncpy (pTSchema->TsCharTransl[CurEntry - 1].StTarget, target,
+	    MAX_TARGET_LEN + 1);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -639,44 +626,43 @@ int                 lg;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         nouvbloc ()
+static void         NewRuleBlock ()
 
 #else  /* __STDC__ */
-static void         nouvbloc ()
+static void         NewRuleBlock ()
 #endif				/* __STDC__ */
 
 {
-   PtrTRuleBlock       bloc;
-   AttributeTransl      *pRT1;
-   PRuleTransl       *pRTP1;
-   PtrTRuleBlock       pBl1;
+   PtrTRuleBlock       pBlock;
+   AttributeTransl      *pAttrTrans;
+   PRuleTransl       *pPresTrans;
 
-   ChangeBloc = False;
-   if ((bloc = (PtrTRuleBlock) malloc (sizeof (TRuleBlock))) == NULL)
+   ChangeRuleBlock = False;
+   if ((pBlock = (PtrTRuleBlock) malloc (sizeof (TRuleBlock))) == NULL)
       TtaDisplaySimpleMessage (TRA, FATAL, TRA_NOT_ENOUGH_MEM);
-   /* cree un bloc */
-   if (CurBloc == NULL)
+   /* cree un pBlock */
+   if (CurBlock == NULL)
       /* pas de bloc courant, attache ce bloc au schema de traduction */
-      if (ReglesTypes)
+      if (InTypeRules)
 	 /* bloc de regles associe' a un type d'element */
-	 pSchTra->TsElemTRule[CurType - 1] = bloc;
-      else if (ReglesAttr)
+	 pTSchema->TsElemTRule[CurType - 1] = pBlock;
+      else if (InAttrRules)
 	 /* bloc de regles associe' a un attribut */
 	{
-	   pRT1 = &pSchTra->TsAttrTRule[CurAttr - 1];
-	   switch (pSchStr->SsAttribute[CurAttr - 1].AttrType)
+	   pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
+	   switch (pSSchema->SsAttribute[CurAttr - 1].AttrType)
 		 {
 		    case AtNumAttr:
-		       pRT1->AtrCase[pRT1->AtrNCases - 1].TaTRuleBlock = bloc;
+		       pAttrTrans->AtrCase[pAttrTrans->AtrNCases - 1].TaTRuleBlock = pBlock;
 		       break;
 		    case AtTextAttr:
-		       pRT1->AtrTxtTRuleBlock = bloc;
+		       pAttrTrans->AtrTxtTRuleBlock = pBlock;
 		       break;
 		    case AtReferenceAttr:
-		       pRT1->AtrRefTRuleBlock = bloc;
+		       pAttrTrans->AtrRefTRuleBlock = pBlock;
 		       break;
 		    case AtEnumAttr:
-		       pRT1->AtrEnuTRuleBlock[CurValAttr] = bloc;
+		       pAttrTrans->AtrEnuTRuleBlock[CurValAttr] = pBlock;
 		       break;
 		    default:
 		       break;
@@ -685,7 +671,7 @@ static void         nouvbloc ()
       else
 	 /* bloc de regles associe' a une presentation */
 	{
-	   pRTP1 = &pSchTra->TsPresTRule[CurPres - 1];
+	   pPresTrans = &pTSchema->TsPresTRule[CurPres - 1];
 	   if (CurPres == ord (PtSize) + 1
 	       || CurPres == ord (PtIndent) + 1
 	       || CurPres == ord (PtLineSpacing) + 1
@@ -693,22 +679,21 @@ static void         nouvbloc ()
 	       || CurPres == ord (PtFillPattern) + 1
 	       || CurPres == ord (PtBackground) + 1
 	       || CurPres == ord (PtForeground) + 1)
-	      pRTP1->RtCase[pRTP1->RtNCase - 1].TaTRuleBlock = bloc;
+	      pPresTrans->RtCase[pPresTrans->RtNCase - 1].TaTRuleBlock = pBlock;
 	   else
-	      pRTP1->RtPRuleValueBlock[CurValPres] = bloc;
+	      pPresTrans->RtPRuleValueBlock[CurPresVal] = pBlock;
 	}
    else
       /* il y a un bloc courant, on chaine le nouveau bloc a celui-la */
-      CurBloc->TbNextBlock = bloc;
+      CurBlock->TbNextBlock = pBlock;
    /* le nouveau bloc de regle devient le bloc courant */
-   CurBloc = bloc;
+   CurBlock = pBlock;
    /* il n'y a plus de regle courante */
-   CurRegle = NULL;
+   CurTRule = NULL;
    /* initialise le nouveau bloc */
-   pBl1 = CurBloc;
-   pBl1->TbNextBlock = NULL;
-   pBl1->TbFirstTRule = NULL;
-   pBl1->TbNConditions = 0;
+   CurBlock->TbNextBlock = NULL;
+   CurBlock->TbFirstTRule = NULL;
+   CurBlock->TbNConditions = 0;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -716,104 +701,102 @@ static void         nouvbloc ()
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         nouvregle ()
+static void         NewTransRule ()
 
 #else  /* __STDC__ */
-static void         nouvregle ()
+static void         NewTransRule ()
 #endif				/* __STDC__ */
 
 {
-   PtrTRule        r;
+   PtrTRule        pTRule;
 
-   traiteFinCondition (pSchStr);
-   DansCondition = False;
-   if ((r = (PtrTRule) malloc (sizeof (TranslRule))) == NULL)
+   EndOfContdition (pSSchema);
+   InCondition = False;
+   if ((pTRule = (PtrTRule) malloc (sizeof (TranslRule))) == NULL)
       TtaDisplaySimpleMessage (TRA, FATAL, TRA_NOT_ENOUGH_MEM);
    /* cree une nouvelle regle */
-   if (CurBloc == NULL || ChangeBloc)
+   if (CurBlock == NULL || ChangeRuleBlock)
       /* cree un nouveau bloc de regle pour la nouvelle regle */
-      nouvbloc ();
+      NewRuleBlock ();
    /* chaine la nouvelle regle a la regle courante s'il y en a une, ou au */
    /* bloc de regle courant sinon */
-   if (CurRegle == NULL)
-      CurBloc->TbFirstTRule = r;
+   if (CurTRule == NULL)
+      CurBlock->TbFirstTRule = pTRule;
    else
-      CurRegle->TrNextTRule = r;
+      CurTRule->TrNextTRule = pTRule;
    /* la nouvelle regle devient la regle courante */
-   CurRegle = r;
+   CurTRule = pTRule;
    /* initialise la regle */
-   CurRegle->TrNextTRule = NULL;
-   CurRegle->TrOrder = TBefore;
+   CurTRule->TrNextTRule = NULL;
+   CurTRule->TrOrder = TBefore;
 }
 
 /* ---------------------------------------------------------------------- */
 /* |    traite le type d'element indique' dans une regle Get.           | */
-/* |    Le nom du type se trouve dans la variable NomGet.               | */
+/* |    Le nom du type se trouve dans la variable TypeInGetRule.        | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         traiteTypeIdent (PtrSSchema pSS)
+static void         ProcessTypeName (PtrSSchema pSS)
 
 #else  /* __STDC__ */
-static void         traiteTypeIdent (pSS)
+static void         ProcessTypeName (pSS)
 PtrSSchema        pSS;
 
 #endif /* __STDC__ */
 
 {
    int                 i, j;
-   boolean             trouve;
-   PtrSSchema        pSc1;
-   SRule              *pRe1;
+   boolean             found;
+   SRule              *pSRule;
 
 
-   if (NomGet[0] != '\0')
+   if (TypeInGetRule[0] != '\0')
       /* verifie si le type existe dans le schema de structure */
      {
 	i = 1;
-	while (strcmp (NomGet, pSS->SsRule[i - 1].SrName) != 0 &&
+	while (strcmp (TypeInGetRule, pSS->SsRule[i - 1].SrName) != 0 &&
 	       i < pSS->SsNRules)
 	   i++;
-	if (strcmp (NomGet, pSS->SsRule[i - 1].SrName) != 0)
+	if (strcmp (TypeInGetRule, pSS->SsRule[i - 1].SrName) != 0)
 	   /* type inconnu */
-	   CompilerError (DebutNomGet, TRA, FATAL, TRA_UNKNOWN_TYPE, inputLine,
+	   CompilerError (BeginTypeInGetRule, TRA, FATAL, TRA_UNKNOWN_TYPE, inputLine,
 			  linenb);
 	else
-	   /* le type existe, il a le numero i */ if (CurRegle->TrType == TCreate || CurRegle->TrType == TWrite)
+	   /* le type existe, il a le numero i */ if (CurTRule->TrType == TCreate || CurTRule->TrType == TWrite)
 	  {
-	     CurRegle->TrObject = ToReferredElem;
-	     CurRegle->TrObjectNum = i;
+	     CurTRule->TrObject = ToReferredElem;
+	     CurTRule->TrObjectNum = i;
 	  }
 	else
 	   /* c'est une regle Get ou Copy */
 	   /* s'agit-il d'un element associe' ? */
 	  {
-	     if (CurRegle->TrRelPosition == RpSibling)
+	     if (CurTRule->TrRelPosition == RpSibling)
 	       {
-		  pSc1 = pSS;
 		  j = 0;
-		  trouve = False;
+		  found = False;
 		  do
 		    {
 		       j++;
 		       if (j == i)
-			  if (pSc1->SsRule[j - 1].SrAssocElem)
-			     trouve = True;
+			  if (pSS->SsRule[j - 1].SrAssocElem)
+			     found = True;
 			  else
 			    {
-			       pRe1 = &pSc1->SsRule[j - 1];
-			       if (pRe1->SrConstruct == CsList)
-				  if (pSc1->SsRule[pRe1->SrListItem - 1].SrAssocElem)
-				     trouve = True;
+			       pSRule = &pSS->SsRule[j - 1];
+			       if (pSRule->SrConstruct == CsList)
+				  if (pSS->SsRule[pSRule->SrListItem - 1].SrAssocElem)
+				     found = True;
 			    }
 		    }
-		  while (!(j >= pSc1->SsNRules || trouve));
-		  if (trouve)
-		     CurRegle->TrRelPosition = RpAssoc;
+		  while (!(j >= pSS->SsNRules || found));
+		  if (found)
+		     CurTRule->TrRelPosition = RpAssoc;
 	       }
-	     CurRegle->TrElemType = i;
+	     CurTRule->TrElemType = i;
 	  }
-	NomGet[0] = '\0';
+	TypeInGetRule[0] = '\0';
 	/* le nom de type a ete traite' */
      }
 }
@@ -823,10 +806,10 @@ PtrSSchema        pSS;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         copy (Name n, iline wi, iline wl)
+static void         CopyWord (Name n, iline wi, iline wl)
 
 #else  /* __STDC__ */
-static void         copy (n, wi, wl)
+static void         CopyWord (n, wi, wl)
 Name                 n;
 iline               wi;
 iline               wl;
@@ -848,10 +831,10 @@ iline               wl;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         nouvconst (iline wl, iline wi)
+static void         NewConstant (iline wl, iline wi)
 
 #else  /* __STDC__ */
-static void         nouvconst (wl, wi)
+static void         NewConstant (wl, wi)
 iline               wl;
 iline               wi;
 
@@ -860,7 +843,7 @@ iline               wi;
 {
    int                 i;
 
-   if (pSchTra->TsNConstants >= MAX_TRANSL_CONST)
+   if (pTSchema->TsNConstants >= MAX_TRANSL_CONST)
       /* table des constantes saturee */
       CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_CONSTANTS, inputLine, linenb);
    else
@@ -872,12 +855,12 @@ iline               wi;
    else
       /* FnCopy le texte de la constante */
      {
-	pSchTra->TsNConstants++;
-	pSchTra->TsConstBegin[pSchTra->TsNConstants - 1] = ConstIndx;
+	pTSchema->TsNConstants++;
+	pTSchema->TsConstBegin[pTSchema->TsNConstants - 1] = ConstIndx;
 	for (i = 0; i <= wl - 2; i++)
-	   pSchTra->TsConstant[ConstIndx + i - 1] = inputLine[wi + i - 1];
+	   pTSchema->TsConstant[ConstIndx + i - 1] = inputLine[wi + i - 1];
 	ConstIndx += wl;
-	pSchTra->TsConstant[ConstIndx - 2] = '\0';
+	pTSchema->TsConstant[ConstIndx - 2] = '\0';
      }
 }
 
@@ -886,10 +869,10 @@ iline               wi;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         CrWrAttr (int att, rnb pr, iline wi)
+static void         AttrInCreateOrWrite (int att, rnb pr, iline wi)
 
 #else  /* __STDC__ */
-static void         CrWrAttr (att, pr, wi)
+static void         AttrInCreateOrWrite (att, pr, wi)
 int                 att;
 rnb                 pr;
 iline               wi;
@@ -897,25 +880,25 @@ iline               wi;
 #endif /* __STDC__ */
 
 {
-   SRule              *pRe1;
-   TranslVariable            *pVa1;
+   SRule              *pSRule;
+   TranslVariable            *pTransVar;
    boolean             ok;
    int                 j;
 
    /* on refuse les attributs reference */
-   if (pSchStr->SsAttribute[att - 1].AttrType == AtReferenceAttr)
+   if (pSSchema->SsAttribute[att - 1].AttrType == AtReferenceAttr)
       CompilerError (wi, TRA, FATAL, TRA_REF_ATTR_NOT_ALLOWED, inputLine,
 		     linenb);
    else if (pr == RULE_Token)
      {
-	CurRegle->TrObject = ToAttr;
-	CurRegle->TrObjectNum = att;
+	CurTRule->TrObject = ToAttr;
+	CurTRule->TrObjectNum = att;
      }
    else if (pr == RULE_CountFunction)
       /* un nom d'attribut dans une fonction de comptage, apres le mot-cle' */
       /* INIT. Seuls les attributs numeriques portant sur l'element racine  */
       /* du schema de structure sont autorises ici */
-      if (pSchStr->SsAttribute[att - 1].AttrType != AtNumAttr)
+      if (pSSchema->SsAttribute[att - 1].AttrType != AtNumAttr)
 	 /* ce n'est pas un attribut numerique, erreur */
 	 CompilerError (wi, TRA, FATAL, TRA_NOT_A_NUMERICAL_ATTR, inputLine,
 			linenb);
@@ -923,10 +906,10 @@ iline               wi;
 	 /* cherche si l'attribut est un attribut local de la racine */
 	{
 	   ok = False;
-	   pRe1 = &pSchStr->SsRule[pSchStr->SsRootElem - 1];
+	   pSRule = &pSSchema->SsRule[pSSchema->SsRootElem - 1];
 	   j = 1;
-	   while (j <= pRe1->SrNLocalAttrs && !ok)
-	      if (pRe1->SrLocalAttr[j - 1] == att)
+	   while (j <= pSRule->SrNLocalAttrs && !ok)
+	      if (pSRule->SrLocalAttr[j - 1] == att)
 		 ok = True;
 	      else
 		 j++;
@@ -936,36 +919,36 @@ iline               wi;
 			     inputLine, linenb);
 	   else
 	      /* le compteur courant prendra cet attribut comme valeur initiale */
-	      pSchTra->TsCounter[pSchTra->TsNCounters - 1].TnAttrInit = att;
+	      pTSchema->TsCounter[pTSchema->TsNCounters - 1].TnAttrInit = att;
 	}
    else if (pr == RULE_Function)
       /* un nom d'attribut dans une variable */
      {
-	pVa1 = &pSchTra->TsVariable[pSchTra->TsNVariables - 1];
-	if (pVa1->TrvNItems >= MAX_TRANSL_VAR_ITEM)
+	pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
+	if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 	   /* variable trop longue */
 	   CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_ELEMS_IN_THE_VARIABLE,
 			  inputLine, linenb);
 	else
 	  {
-	     pVa1->TrvNItems++;
-	     pVa1->TrvItem[pVa1->TrvNItems - 1].TvType = VtAttrVal;
-	     pVa1->TrvItem[pVa1->TrvNItems - 1].TvItem = att;
+	     pTransVar->TrvNItems++;
+	     pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvType = VtAttrVal;
+	     pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvItem = att;
 	  }
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    NumeroPattern   retourne le rang du nom n dans le fichier des   | */
-/* |            patterns de Thot.                                       | */
+/* |    PatternNum   retourne le rang du nom n dans le fichier          | */
+/* |            des patterns de Thot.                                   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static int          NumeroPattern (Name n, iline wi)
+static int          PatternNum (Name n, iline wi)
 
 #else  /* __STDC__ */
-static int          NumeroPattern (n, wi)
+static int          PatternNum (n, wi)
 Name                 n;
 iline               wi;
 
@@ -996,15 +979,15 @@ iline               wi;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    NumeroCouleur   retourne le rang du nom n dans le fichier des   | */
-/* |            couleurs de Thot.                                       | */
+/* |    ColorNum   retourne le rang du nom n dans le fichier            | */
+/* |            des couleurs de Thot.                                   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static int          NumeroCouleur (Name n, iline wi)
+static int          ColorNum (Name n, iline wi)
 
 #else  /* __STDC__ */
-static int          NumeroCouleur (n, wi)
+static int          ColorNum (n, wi)
 Name                 n;
 iline               wi;
 
@@ -1023,16 +1006,16 @@ iline               wi;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    NumType si le mot de longueyr wl qui commence a l'indice wi du  | */
-/* |    buffer de lecture est un nom de type d'element, retourne le     | */
-/* |    numero de type correspondant, sinon retourne 0.                 | */
+/* |    ElementTypeNum si le mot de longueyr wl qui commence a l'indice | */
+/* |    wi du buffer de lecture est un nom de type d'element, retourne  | */
+/* |    le numero de type correspondant, sinon retourne 0.              | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static int          NumType (iline wi, iline wl)
+static int          ElementTypeNum (iline wi, iline wl)
 
 #else  /* __STDC__ */
-static int          NumType (wi, wl)
+static int          ElementTypeNum (wi, wl)
 iline               wi;
 iline               wl;
 
@@ -1042,13 +1025,13 @@ iline               wl;
    Name                 n;
    int                 i;
 
-   copy (n, wi, wl);
+   CopyWord (n, wi, wl);
    /* verifie si le type existe dans le schema de structure */
    i = 1;
-   while (strcmp (n, pSchStr->SsRule[i - 1].SrName) != 0
-	  && i < pSchStr->SsNRules)
+   while (strcmp (n, pSSchema->SsRule[i - 1].SrName) != 0
+	  && i < pSSchema->SsNRules)
       i++;
-   if (strcmp (n, pSchStr->SsRule[i - 1].SrName) != 0)
+   if (strcmp (n, pSSchema->SsRule[i - 1].SrName) != 0)
       /* type inconnu */
      {
 	CompilerError (wi, TRA, FATAL, TRA_UNKNOWN_TYPE, inputLine, linenb);
@@ -1056,6 +1039,7 @@ iline               wl;
      }
    return i;
 }
+
 
 /* ---------------------------------------------------------------------- */
 /* |    traite le mot commencant a la position wi dans la ligne courante| */
@@ -1065,10 +1049,10 @@ iline               wl;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                generate (iline wi, iline wl, grmcode c, grmcode r, int nb, rnb pr)
+static void         ProcessToken (iline wi, iline wl, grmcode c, grmcode r, int nb, rnb pr)
 
 #else  /* __STDC__ */
-void                generate (wi, wl, c, r, nb, pr)
+static void         ProcessToken (wi, wl, c, r, nb, pr)
 iline               wi;
 iline               wl;
 grmcode             c;
@@ -1081,14 +1065,14 @@ rnb                 pr;
 {
    int                 i, k;
    Name                 n;
-   boolean             DansRegleUse, DansRegleGet, DansRegleCreateWrite;
-   AlphabetTransl            *pTr1;
-   TranslVariable            *pVa1;
-   TCounter         *pTrCo1;
-   AttributeTransl      *pRT1;
-   TtAttribute           *pAt1;
-   TranslNumAttrCase        *pTC1;
-   PRuleTransl       *pRTP1;
+   boolean             InUseRule, InGetRule, InCreateWriteRule;
+   AlphabetTransl            *pAlphTrans;
+   TranslVariable            *pTransVar;
+   TCounter         *pCntr;
+   AttributeTransl      *pAttrTrans;
+   TtAttribute           *pAttr;
+   TranslNumAttrCase        *pCase;
+   PRuleTransl       *pPresTrans;
 
    i = 1;
    if (c < 1000)
@@ -1103,25 +1087,25 @@ rnb                 pr;
 		       /*  ;  */
 		       if (r == RULE_Rule1)	/* fin d'une regle */
 			 {
-			    if (CurRegle->TrType == TUse)
-			       if (CurType == pSchStr->SsRootElem)
-				  if (CurRegle->TrNature == pSchStr->SsRule[CurType - 1].SrName)
+			    if (CurTRule->TrType == TUse)
+			       if (CurType == pSSchema->SsRootElem)
+				  if (CurTRule->TrNature == pSSchema->SsRule[CurType - 1].SrName)
 				     /* une regle Use pour la racine se termine sans 'For' */
 				     CompilerError (wi, TRA, FATAL, TRA_FOR_PART_MISSING,
 						    inputLine, linenb);
-			    if (CurRegle->TrType == TGet ||
-				CurRegle->TrType == TCopy ||
-				CurRegle->TrType == TCreate ||
-				CurRegle->TrType == TWrite)
+			    if (CurTRule->TrType == TGet ||
+				CurTRule->TrType == TCopy ||
+				CurTRule->TrType == TCreate ||
+				CurTRule->TrType == TWrite)
 			       /* fin d'une regle Get, Copy, Create ou Write */
-			       traiteTypeIdent (pSchStr);
-			    if (!ReglesAttr)
-			       if (CurBloc != NULL)
-				  if (CurBloc->TbNConditions != 0)
-				     if (!DansBloc)
+			       ProcessTypeName (pSSchema);
+			    if (!InAttrRules)
+			       if (CurBlock != NULL)
+				  if (CurBlock->TbNConditions != 0)
+				     if (!InCondBlock)
 					/* fin d'une regle unique dans bloc conditionnel, il */
 					/* faut ouvrir un nouveau bloc pour la regle suivante */
-					ChangeBloc = True;
+					ChangeRuleBlock = True;
 			 }
 		       break;
 
@@ -1136,40 +1120,39 @@ rnb                 pr;
 		    case CHR_40:
 		       /*  (  */
 		       if (r == RULE_Token)
-			  if (!DefVar)
+			  if (!VarDefinition)
 			     /* un nom de schema externe va suivre */
-			     if (CurRegle->TrObject != ToReferredElem)
+			     if (CurTRule->TrObject != ToReferredElem)
 				CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_ELEMS, inputLine,
 					       linenb);
 			     else
-				SchemaExt = True;
+				ExternalSchema = True;
 			  else
 			     /* debut d'une definition de variable */
-			  if (pSchTra->TsNVariables >= MAX_TRANSL_VARIABLE)
+			  if (pTSchema->TsNVariables >= MAX_TRANSL_VARIABLE)
 			     /* table des variables saturee */
 			     CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_VARIABLES,
 					    inputLine, linenb);
 			  else
 			    {
-			       VarDcl = True;
-			       pSchTra->TsNVariables++;
-			       pSchTra->TsVariable[pSchTra->TsNVariables - 1].TrvNItems = 0;
+			       VarDef = True;
+			       pTSchema->TsVariable[pTSchema->TsNVariables++].TrvNItems = 0;
 			       /* la regle courante utilise cette variable */
-			       CurRegle->TrObject = ToVariable;
-			       CurRegle->TrObjectNum = pSchTra->TsNVariables;
+			       CurTRule->TrObject = ToVariable;
+			       CurTRule->TrObjectNum = pTSchema->TsNVariables;
 			    }
 		       else if (r == RULE_Rule1)
-			  SchemaExt = True;
+			  ExternalSchema = True;
 		       else if (r == RULE_CondOnAscend || r == RULE_LevelOrType)
 			  /* On est dans une condition. Un nom de schema externe suit */
-			  SchemaExt = True;
+			  ExternalSchema = True;
 		       break;
 
 		    case CHR_41:
 		       /*  )  */
 		       if (r == RULE_Token)
 			  /* fin d'une definition de variable */
-			  VarDcl = False;
+			  VarDef = False;
 		       break;
 
 		    case CHR_44:
@@ -1180,8 +1163,8 @@ rnb                 pr;
 		       /*  >  */
 		       if (r == RULE_GreaterLess)
 			 {
-			    CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAscendRel = RelGreater;
-			    SignGreaterOrLess = True;
+			    CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAscendRel = RelGreater;
+			    GreaterOrLessSign = True;
 			 }
 		       break;
 
@@ -1189,21 +1172,21 @@ rnb                 pr;
 		       /*  -  */
 		       if (r == RULE_AttrRelat || r == RULE_AttrValue)
 			  /* devant une valeur d'attribut numerique */
-			  SigneAttrVal = -1;
+			  AttrValSign = -1;
 		       else if (r == RULE_PresRelat || r == RULE_PresValue)
 			  /* devant une valeur numerique de presentation */
-			  SignePresVal = -1;
+			  PresValSign = -1;
 		       else if (r == RULE_RelAncestorLevel)
 			  /* devant le niveau relatif d'un ancetre dans un compteur CntrRank */
-			  SigneAncetre = -1;
+			  AncestorSign = -1;
 		       break;
 
 		    case CHR_60:
 		       /*  <  */
 		       if (r == RULE_GreaterLess)
 			 {
-			    CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAscendRel = RelLess;
-			    SignGreaterOrLess = True;
+			    CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAscendRel = RelLess;
+			    GreaterOrLessSign = True;
 			 }
 		       break;
 
@@ -1232,158 +1215,157 @@ rnb                 pr;
 	   switch (c)
 		 {
 		    case KWD_Buffers:	/* Buffers */
-		       BuffDcl = True;	/* on est dans les declarations de buffers */
+		       BuffDef = True;	/* on est dans les declarations de buffers */
 		       break;
 
 		    case KWD_Counters:		/* Counters */
-		       BuffDcl = False;		/* fin des declarations de buffers */
-		       ConstDcl = False;	/* fin des declaration de constantes */
-		       ComptDcl = True;		/* on est dans les declarations de compteur */
+		       BuffDef = False;		/* fin des declarations de buffers */
+		       ConstDef = False;	/* fin des declaration de constantes */
+		       ComptDef = True;		/* on est dans les declarations de compteur */
 		       break;
 
 		    case KWD_Const:	/* Const */
-		       BuffDcl = False;		/* fin des declarations de buffers */
-		       ConstDcl = True;		/* on est dans les declaration de constante */
+		       BuffDef = False;		/* fin des declarations de buffers */
+		       ConstDef = True;		/* on est dans les declaration de constante */
 		       break;
 
 		    case KWD_Var:	/* Var */
-		       BuffDcl = False;		/* fin des declarations de buffers */
-		       ConstDcl = False;	/* fin des declaration de constantes */
-		       ComptDcl = False;	/* fin des declarations de compteurs */
-		       VarDcl = True;	/* on est dans les declarations de variables */
+		       BuffDef = False;		/* fin des declarations de buffers */
+		       ConstDef = False;	/* fin des declaration de constantes */
+		       ComptDef = False;	/* fin des declarations de compteurs */
+		       VarDef = True;	/* on est dans les declarations de variables */
 		       break;
 
 		    case KWD_Rules:	/* Rules */
-		       BuffDcl = False;		/* fin des declarations de buffers */
-		       ConstDcl = False;	/* fin des declaration de constantes */
-		       ComptDcl = False;	/* fin des declarations de compteurs */
-		       VarDcl = False;	/* fin des declarations de variables */
-		       ReglesTypes = True;
+		       BuffDef = False;		/* fin des declarations de buffers */
+		       ConstDef = False;	/* fin des declaration de constantes */
+		       ComptDef = False;	/* fin des declarations de compteurs */
+		       VarDef = False;	/* fin des declarations de variables */
+		       InTypeRules = True;
 		       break;
 
 		    case KWD_Attributes:	/* Attributes */
 		       if (r == RULE_TransSchema)
 			  /* debut des regles de traduction des attributs */
 			 {
-			    ReglesTypes = False;
-			    ReglesAttr = True;
+			    InTypeRules = False;
+			    InAttrRules = True;
 			 }
 		       else if (r == RULE_CondOnAscend)		/* dans une condition */
 			 {
-			    traiteFinElemConcerne (pSchStr);
-			    CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition =
+			    ProcessAncestorName (pSSchema);
+			    CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition =
 			       TcondAttributes;
 			 }
 		       else if (r == RULE_Token)
 			  /* ce qu'il faut generer : les  attributs de l'element */
-			  CurRegle->TrObject = ToAllAttr;
+			  CurTRule->TrObject = ToAllAttr;
 		       break;
 
 		    case KWD_TextTranslate:	/* TextTranslate */
-		       ReglesTypes = False;
-		       ReglesAttr = False;
-		       ReglesPres = False;
+		       InTypeRules = False;
+		       InAttrRules = False;
+		       InPresRules = False;
 		       TextTrans = True;
 		       /* on est dans les traductions de texte */
-		       if (pSchTra->TsNTranslAlphabets >= MAX_TRANSL_ALPHABET)
+		       if (pTSchema->TsNTranslAlphabets >= MAX_TRANSL_ALPHABET)
 			  CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_TEXTTRANSLATE,
 					 inputLine, linenb);
 		       else
 			 {
-			    pSchTra->TsNTranslAlphabets++;
-			    pTr1 = &pSchTra->TsTranslAlphabet[pSchTra->TsNTranslAlphabets - 1];
-			    pTr1->AlAlphabet = 'L';	/* alphabet latin par defaut */
-			    if (pSchTra->TsNTranslAlphabets == 1)
+			    pAlphTrans = &pTSchema->TsTranslAlphabet[pTSchema->TsNTranslAlphabets++];
+			    pAlphTrans->AlAlphabet = 'L';	/* alphabet latin par defaut */
+			    if (pTSchema->TsNTranslAlphabets == 1)
 			      {
-				 pTr1->AlBegin = 1;
-				 pTr1->AlEnd = 0;
+				 pAlphTrans->AlBegin = 1;
+				 pAlphTrans->AlEnd = 0;
 			      }
 			    else
 			      {
-				 pTr1->AlBegin =
-				    pSchTra->TsTranslAlphabet[pSchTra->TsNTranslAlphabets - 2].AlEnd + 1;
-				 pTr1->AlEnd =
-				    pSchTra->TsTranslAlphabet[pSchTra->TsNTranslAlphabets - 2].AlEnd;
+				 pAlphTrans->AlBegin =
+				    pTSchema->TsTranslAlphabet[pTSchema->TsNTranslAlphabets - 2].AlEnd + 1;
+				 pAlphTrans->AlEnd =
+				    pTSchema->TsTranslAlphabet[pTSchema->TsNTranslAlphabets - 2].AlEnd;
 			      }
 			 }
 		       break;
 
 		    case KWD_SymbTranslate:	/* SymbTranslate */
-		       ReglesTypes = False;
-		       ReglesAttr = False;
-		       ReglesPres = False;
+		       InTypeRules = False;
+		       InAttrRules = False;
+		       InPresRules = False;
 		       TextTrans = False;	/* fin des traductions de texte */
 		       SymbTrans = True;	/* on est dans les traductions de symbole */
-		       if (pSchTra->TsNTranslAlphabets == 0)
+		       if (pTSchema->TsNTranslAlphabets == 0)
 			 {
-			    pSchTra->TsSymbolFirst = 1;
-			    pSchTra->TsSymbolLast = 0;
+			    pTSchema->TsSymbolFirst = 1;
+			    pTSchema->TsSymbolLast = 0;
 			 }
 		       else
 			 {
-			    pTr1 = &pSchTra->TsTranslAlphabet[pSchTra->TsNTranslAlphabets - 1];
-			    if (pTr1->AlEnd > 0)
+			    pAlphTrans = &pTSchema->TsTranslAlphabet[pTSchema->TsNTranslAlphabets - 1];
+			    if (pAlphTrans->AlEnd > 0)
 			      {
-				 pSchTra->TsSymbolFirst = pTr1->AlEnd + 1;
-				 pSchTra->TsSymbolLast = pTr1->AlEnd;
+				 pTSchema->TsSymbolFirst = pAlphTrans->AlEnd + 1;
+				 pTSchema->TsSymbolLast = pAlphTrans->AlEnd;
 			      }
 			    else
 			      {
-				 pSchTra->TsSymbolFirst = 1;
-				 pSchTra->TsSymbolLast = 0;
+				 pTSchema->TsSymbolFirst = 1;
+				 pTSchema->TsSymbolLast = 0;
 			      }
 			 }
 		       break;
 
 		    case KWD_GraphTranslate:	/* GraphTranslate */
-		       ReglesTypes = False;
-		       ReglesAttr = False;
-		       ReglesPres = False;
+		       InTypeRules = False;
+		       InAttrRules = False;
+		       InPresRules = False;
 		       TextTrans = False;	/* fin des traductions de texte */
 		       SymbTrans = False;	/* fin des traductions de symbole */
 		       GraphTrans = True;	/* on est dans les traduc. de graphique */
-		       if (pSchTra->TsSymbolLast > 0)
+		       if (pTSchema->TsSymbolLast > 0)
 			 {
-			    pSchTra->TsGraphicsFirst = pSchTra->TsSymbolLast + 1;
-			    pSchTra->TsGraphicsLast = pSchTra->TsSymbolLast;
+			    pTSchema->TsGraphicsFirst = pTSchema->TsSymbolLast + 1;
+			    pTSchema->TsGraphicsLast = pTSchema->TsSymbolLast;
 			 }
-		       else if (pSchTra->TsNTranslAlphabets == 0)
+		       else if (pTSchema->TsNTranslAlphabets == 0)
 			 {
-			    pSchTra->TsGraphicsFirst = 1;
-			    pSchTra->TsGraphicsLast = 0;
+			    pTSchema->TsGraphicsFirst = 1;
+			    pTSchema->TsGraphicsLast = 0;
 			 }
 		       else
 			 {
-			    pTr1 = &pSchTra->TsTranslAlphabet[pSchTra->TsNTranslAlphabets - 1];
-			    if (pTr1->AlEnd > 0)
+			    pAlphTrans = &pTSchema->TsTranslAlphabet[pTSchema->TsNTranslAlphabets - 1];
+			    if (pAlphTrans->AlEnd > 0)
 			      {
-				 pSchTra->TsGraphicsFirst = pTr1->AlEnd + 1;
-				 pSchTra->TsGraphicsLast = pTr1->AlEnd;
+				 pTSchema->TsGraphicsFirst = pAlphTrans->AlEnd + 1;
+				 pTSchema->TsGraphicsLast = pAlphTrans->AlEnd;
 			      }
 			    else
 			      {
-				 pSchTra->TsGraphicsFirst = 1;
-				 pSchTra->TsGraphicsLast = 0;
+				 pTSchema->TsGraphicsFirst = 1;
+				 pTSchema->TsGraphicsLast = 0;
 			      }
 			 }
 		       break;
 
 		    case KWD_End:	/* End */
-		       if (r == RULE_SeqOfRules1 && !ReglesAttr)
+		       if (r == RULE_SeqOfRules1 && !InAttrRules)
 			 {
-			    DansBloc = False;
-			    if (CurBloc != NULL)
-			       if (CurBloc->TbNConditions != 0)
+			    InCondBlock = False;
+			    if (CurBlock != NULL)
+			       if (CurBlock->TbNConditions != 0)
 				  /* fin d'un bloc conditionnel, il faut ouvrir un */
 				  /* nouveau bloc pour la regle suivante */
-				  ChangeBloc = True;
+				  ChangeRuleBlock = True;
 			 }
 		       break;
 
 		    case KWD_Rank:	/* CntrRank */
-		       pSchTra->TsCounter[pSchTra->TsNCounters - 1].TnOperation = TCntrRank;
-		       pSchTra->TsCounter[pSchTra->TsNCounters - 1].TnAcestorLevel = 0;
-		       SigneAncetre = 1;
+		       pTSchema->TsCounter[pTSchema->TsNCounters - 1].TnOperation = TCntrRank;
+		       pTSchema->TsCounter[pTSchema->TsNCounters - 1].TnAcestorLevel = 0;
+		       AncestorSign = 1;
 		       break;
 
 		    case KWD_of:	/* Of */
@@ -1391,22 +1373,22 @@ rnb                 pr;
 		       break;	/* rien */
 
 		    case KWD_Rlevel:	/* CntrRLevel */
-		       pSchTra->TsCounter[pSchTra->TsNCounters - 1].TnOperation = TCntrRLevel;
+		       pTSchema->TsCounter[pTSchema->TsNCounters - 1].TnOperation = TCntrRLevel;
 		       break;
 
 		    case KWD_Set:	/* Set */
 		       if (r == RULE_CountFunction)
 			  /* dans une definition de compteur */
 			 {
-			    pTrCo1 = &pSchTra->TsCounter[pSchTra->TsNCounters - 1];
-			    pTrCo1->TnOperation = TCntrSet;
-			    pTrCo1->TnElemType1 = 0;
+			    pCntr = &pTSchema->TsCounter[pTSchema->TsNCounters - 1];
+			    pCntr->TnOperation = TCntrSet;
+			    pCntr->TnElemType1 = 0;
 			 }
 		       else if (r == RULE_Rule1)
 			  /* instruction de traduction Set */
 			 {
-			    nouvregle ();
-			    CurRegle->TrType = TSetCounter;
+			    NewTransRule ();
+			    CurTRule->TrType = TSetCounter;
 			 }
 		       break;
 
@@ -1418,117 +1400,105 @@ rnb                 pr;
 		       if (r == RULE_Rule1)
 			  /* instruction de traduction Add */
 			 {
-			    nouvregle ();
-			    CurRegle->TrType = TAddCounter;
+			    NewTransRule ();
+			    CurTRule->TrType = TAddCounter;
 			 }
 		       break;
 
 		    case KWD_Picture:	/* Picture */
-		       if (pSchTra->TsPictureBuffer != 0)
+		       if (pTSchema->TsPictureBuffer != 0)
 			  /* un seul buffer image autorise' */
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_ONE_PICTURE_BUFFER_PLEASE, inputLine, linenb);
 		       else	/* c'est le buffer courant qui est le buffer image */
-			  pSchTra->TsPictureBuffer = pSchTra->TsNBuffers;
+			  pTSchema->TsPictureBuffer = pTSchema->TsNBuffers;
 		       break;
 
 		    case KWD_Value:	/* Value */
 		       if (r == RULE_Token)
-			  if (!ReglesPres)
+			  if (!InPresRules)
 			     CompilerError (wi, TRA, FATAL, TRA_ONLY_IN_PRES_PART, inputLine, linenb);
 		       /* seulement dans les regles de la presentation */
 			  else
-			     CurRegle->TrObject = ToPRuleValue;
+			     CurTRule->TrObject = ToPRuleValue;
 		       else if (r == RULE_Function)
 			  /* valeur d'un compteur dans une definition de variable */
 			 {
-			    pVa1 = &pSchTra->TsVariable[pSchTra->TsNVariables - 1];
-			    if (pVa1->TrvNItems >= MAX_TRANSL_VAR_ITEM)
+			    pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
+			    if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 			       /* trop de fonctions */
 			       CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_ELEMS_IN_THE_VARIABLE, inputLine, linenb);
 			    else
-			      {
-				 pVa1->TrvNItems++;
-				 pVa1->TrvItem[pVa1->TrvNItems - 1].TvType = VtCounter;
-			      }
+				 pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtCounter;
 			 }
 		       break;
 
 		    case KWD_FileDir:	/* FileDir */
 		       if (r == RULE_Function)
 			 {
-			    pVa1 = &pSchTra->TsVariable[pSchTra->TsNVariables - 1];
-			    if (pVa1->TrvNItems >= MAX_TRANSL_VAR_ITEM)
+			    pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
+			    if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 			       /* trop de fonctions */
 			       CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_ELEMS_IN_THE_VARIABLE, inputLine, linenb);
 			    else
-			      {
-				 pVa1->TrvNItems++;
-				 pVa1->TrvItem[pVa1->TrvNItems - 1].TvType = VtFileDir;
-			      }
+				 pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtFileDir;
 			 }
 		       else if (r == RULE_Token)
 			  /* generer le nom du directory du fichier de sortie */
-			  CurRegle->TrObject = ToFileDir;
+			  CurTRule->TrObject = ToFileDir;
 		       break;
 
 		    case KWD_FileName:
 		       if (r == RULE_Function)
 			 {
-			    pVa1 = &pSchTra->TsVariable[pSchTra->TsNVariables - 1];
-			    if (pVa1->TrvNItems >= MAX_TRANSL_VAR_ITEM)
+			    pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
+			    if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 			       /* trop de fonctions */
 			       CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_ELEMS_IN_THE_VARIABLE, inputLine, linenb);
 			    else
-			      {
-				 pVa1->TrvNItems++;
-				 pVa1->TrvItem[pVa1->TrvNItems - 1].TvType = VtFileName;
-			      }
+				 pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtFileName;
 			 }
 		       else if (r == RULE_Token)
 			  /* generer le nom du fichier de sortie */
-			  CurRegle->TrObject = ToFileName;
+			  CurTRule->TrObject = ToFileName;
 		       break;
 
 		    case KWD_Extension:
 		       if (r == RULE_Function)
 			 {
-			    pVa1 = &pSchTra->TsVariable[pSchTra->TsNVariables - 1];
-			    if (pVa1->TrvNItems >= MAX_TRANSL_VAR_ITEM)
+			    pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
+			    if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 			       /* trop de fonctions */
 			       CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_ELEMS_IN_THE_VARIABLE, inputLine, linenb);
 			    else
-			      {
-				 pVa1->TrvNItems++;
-				 pVa1->TrvItem[pVa1->TrvNItems - 1].TvType = VtExtension;
-			      }
+				 pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtExtension;
 			 }
 		       else if (r == RULE_Token)
 			  /* generer l'extensiion (suffixe) du fichier de sortie */
-			  CurRegle->TrObject = ToExtension;
+			  CurTRule->TrObject = ToExtension;
 		       break;
 
 		    case KWD_RefId:	/* RefId */
 		       if (r == RULE_Token)
 			  /* generer le label de l'element traduit */
-			  CurRegle->TrObject = ToRefId;
+			  CurTRule->TrObject = ToRefId;
 		       else if (r == RULE_VarOrType)
 			  /* generer le label de l'element reference' */
-			  if ((ReglesTypes && pSchStr->SsRule[CurType - 1].SrConstruct != CsReference) ||
-			      (ReglesAttr && pSchStr->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
+			  if ((InTypeRules && pSSchema->SsRule[CurType - 1].SrConstruct != CsReference) ||
+			      (InAttrRules && pSSchema->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
 			     /* l'element ou l'attribut auquel s'applique la regle */
 			     /* n'est pas une reference, erreur */
 			     CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_REFS, inputLine, linenb);
 			  else
-			     CurRegle->TrObject = ToReferredRefId;
+			     CurTRule->TrObject = ToReferredRefId;
 		       break;
 
 		    case KWD_PairId:	/* PairId */
-		       if (pSchStr->SsRule[CurType - 1].SrConstruct != CsPairedElement)
+		       if (pSSchema->SsRule[CurType - 1].SrConstruct != CsPairedElement)
 			  /* l'element auquel s'applique la regle n'est pas une paire */
 			  CompilerError (wi, TRA, FATAL, TRA_NOT_A_PAIR,
 					 inputLine, linenb);
 		       else
-			  CurRegle->TrObject = ToPairId;
+			  CurTRule->TrObject = ToPairId;
 		       break;
 
 		    case KWD_IN:	/* IN */
@@ -1538,78 +1508,78 @@ rnb                 pr;
 		    case KWD_Begin:	/* Begin */
 		       if (r == RULE_SeqOfRules1)
 			 {
-			    traiteFinCondition (pSchStr);
-			    if (!ReglesAttr)
-			       DansBloc = True;
+			    EndOfContdition (pSSchema);
+			    if (!InAttrRules)
+			       InCondBlock = True;
 			 }
 		       break;
 
 		    case KWD_If:	/* If */
-		       DansCondition = True;
-		       nouvbloc ();
-		       CurBloc->TbNConditions = 1;
-		       CurBloc->TbCondition[0].TcNegativeCond = False;
-		       CurBloc->TbCondition[0].TcTarget = False;
-		       CurBloc->TbCondition[0].TcAscendType = 0;
-		       CurBloc->TbCondition[0].TcAscendNature[0] = '\0';
-		       CurBloc->TbCondition[0].TcAscendRelLevel = 0;
-		       Immediat = False;
+		       InCondition = True;
+		       NewRuleBlock ();
+		       CurBlock->TbNConditions = 1;
+		       CurBlock->TbCondition[0].TcNegativeCond = False;
+		       CurBlock->TbCondition[0].TcTarget = False;
+		       CurBlock->TbCondition[0].TcAscendType = 0;
+		       CurBlock->TbCondition[0].TcAscendNature[0] = '\0';
+		       CurBlock->TbCondition[0].TcAscendRelLevel = 0;
+		       Immediately = False;
 		       Asterisk = False;
 		       break;
 
 		    case KWD_And:	/* And */
-		       if (CurBloc->TbNConditions >= MAX_TRANSL_COND)
+		       if (CurBlock->TbNConditions >= MAX_TRANSL_COND)
 			  /* trop de conditions */
 			  CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_CONDITIONS, inputLine, linenb);
 		       else
 			 {
-			    traiteFinCondition (pSchStr);
-			    i = CurBloc->TbNConditions;
-			    CurBloc->TbNConditions++;
-			    CurBloc->TbCondition[i].TcNegativeCond = False;
-			    CurBloc->TbCondition[i].TcTarget = False;
-			    CurBloc->TbCondition[i].TcAscendType = 0;
-			    CurBloc->TbCondition[i].TcAscendNature[0] = '\0';
-			    CurBloc->TbCondition[i].TcAscendRelLevel = 0;
-			    Immediat = False;
+			    EndOfContdition (pSSchema);
+			    i = CurBlock->TbNConditions;
+			    CurBlock->TbNConditions++;
+			    CurBlock->TbCondition[i].TcNegativeCond = False;
+			    CurBlock->TbCondition[i].TcTarget = False;
+			    CurBlock->TbCondition[i].TcAscendType = 0;
+			    CurBlock->TbCondition[i].TcAscendNature[0] = '\0';
+			    CurBlock->TbCondition[i].TcAscendRelLevel = 0;
+			    Immediately = False;
 			    Asterisk = False;
 			 }
 		       break;
 
 		    case KWD_Not:	/* Not */
-		       CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcNegativeCond = True;
+		       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcNegativeCond = True;
 		       break;
 
 		    case KWD_Target:	/* Target */
-		       if ((ReglesTypes && pSchStr->SsRule[CurType - 1].SrConstruct != CsReference) ||
-			   (ReglesAttr && pSchStr->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
+		       if ((InTypeRules && pSSchema->SsRule[CurType - 1].SrConstruct != CsReference) ||
+			   (InAttrRules && pSSchema->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
 			  /* l'element ou l'attribut auquel s'applique la regle */
 			  /* n'est pas une reference, erreur */
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_REFS, inputLine, linenb);
 		       else
-			  CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcTarget = True;
+			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcTarget = True;
 		       break;
 
 		    case KWD_First:	/* First */
 		       if (r == RULE_FirstSec)
-			  PairePremier = True;
+			  FirstInPair = True;
 		       else
 			 {
-			    traiteFinElemConcerne (pSchStr);
-			    CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondFirst;
+			    ProcessAncestorName (pSSchema);
+			    CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondFirst;
 			 }
 		       break;
 
 		    case KWD_Second:	/* Second */
-		       PaireSecond = True;
+		       SecondInPair = True;
 		       break;
 		    case KWD_Last:	/* Last */
-		       traiteFinElemConcerne (pSchStr);
-		       CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondLast;
+		       ProcessAncestorName (pSSchema);
+		       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondLast;
 		       break;
 		    case KWD_Defined:	/* Defined */
-		       if (pSchStr->SsRule[CurType - 1].SrParamElem)
-			  CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondDefined;
+		       if (pSSchema->SsRule[CurType - 1].SrParamElem)
+			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondDefined;
 		       else
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_PARAMETERS, inputLine, linenb);
 		       break;
@@ -1618,480 +1588,474 @@ rnb                 pr;
 		    case KWD_Referred:		/* Referred */
 		       if (r == RULE_CondOnAscend)	/* dans une condition */
 			 {
-			    traiteFinElemConcerne (pSchStr);
-			    CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondReferred;
+			    ProcessAncestorName (pSSchema);
+			    CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondReferred;
 			    if (!Asterisk)
-			       CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAscendRelLevel = -1;
+			       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAscendRelLevel = -1;
 			 }
-		       else if ((ReglesTypes && pSchStr->SsRule[CurType - 1].SrConstruct != CsReference) ||
-				(ReglesAttr && pSchStr->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
+		       else if ((InTypeRules && pSSchema->SsRule[CurType - 1].SrConstruct != CsReference) ||
+				(InAttrRules && pSSchema->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
 			  /* l'element ou l'attribut auquel s'applique la regle n'est */
 			  /* pas une reference, erreur */
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_REFS, inputLine, linenb);
 		       else if (r == RULE_Token)	/* devant un identificateur de variable */
-			  CurRegle->TrReferredObj = True;
+			  CurTRule->TrReferredObj = True;
 		       else if (r == RULE_RelPosition)	/* dans une position relative */
-			  CurRegle->TrRelPosition = RpReferred;
+			  CurTRule->TrRelPosition = RpReferred;
 		       break;
 
 		    case KWD_FirstRef:		/* FirstRef */
-		       if ((ReglesTypes && pSchStr->SsRule[CurType - 1].SrConstruct != CsReference) ||
-			   (ReglesAttr && pSchStr->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
+		       if ((InTypeRules && pSSchema->SsRule[CurType - 1].SrConstruct != CsReference) ||
+			   (InAttrRules && pSSchema->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
 			  /* l'element ou l'attribut auquel s'applique la regle n'est */
 			  /* pas une reference, erreur */
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_REFS, inputLine, linenb);
 		       else
-			  CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondFirstRef;
+			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondFirstRef;
 		       break;
 
 		    case KWD_LastRef:	/* LastRef */
-		       if ((ReglesTypes && pSchStr->SsRule[CurType - 1].SrConstruct != CsReference) ||
-			   (ReglesAttr && pSchStr->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
+		       if ((InTypeRules && pSSchema->SsRule[CurType - 1].SrConstruct != CsReference) ||
+			   (InAttrRules && pSSchema->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
 			  /* l'element ou l'attribut auquel s'applique la regle n'est */
 			  /* pas une reference, erreur */
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_REFS, inputLine, linenb);
 		       else
-			  CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondLastRef;
+			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondLastRef;
 		       break;
 
 		    case KWD_ExternalRef:	/* ExternalRef */
-		       if ((ReglesTypes && pSchStr->SsRule[CurType - 1].SrConstruct != CsReference) ||
-			   (ReglesAttr && pSchStr->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
+		       if ((InTypeRules && pSSchema->SsRule[CurType - 1].SrConstruct != CsReference) ||
+			   (InAttrRules && pSSchema->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
 			  /* l'element ou l'attribut auquel s'applique la regle n'est */
 			  /* pas une reference, erreur */
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_REFS, inputLine, linenb);
 		       else
-			  CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondExternalRef;
+			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondExternalRef;
 		       break;
 
 		    case KWD_Immediately:
-		       Immediat = True;
+		       Immediately = True;
 		       break;
 
 		    case KWD_Within:	/* Within */
-		       traiteFinElemConcerne (pSchStr);
-		       CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondWithin;
-		       CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcImmediatelyWithin = Immediat;
-		       Immediat = False;
-		       CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAscendRel = RelGreater;
-		       CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAscendLevel = 0;
-		       SignGreaterOrLess = False;
-		       CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcElemNature[0] = '\0';
-		       NomWithin[0] = '\0';
+		       ProcessAncestorName (pSSchema);
+		       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondWithin;
+		       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcImmediatelyWithin = Immediately;
+		       Immediately = False;
+		       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAscendRel = RelGreater;
+		       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAscendLevel = 0;
+		       GreaterOrLessSign = False;
+		       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcElemNature[0] = '\0';
+		       TypeWithin[0] = '\0';
 		       break;
 
 		    case KWD_FirstWithin:	/* FirstWithin */
-		       traiteFinElemConcerne (pSchStr);
-		       CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondFirstWithin;
-		       CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcImmediatelyWithin = False;
-		       Immediat = False;
-		       CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAscendRel = RelGreater;
-		       CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAscendLevel = 0;
-		       SignGreaterOrLess = False;
-		       CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcElemNature[0] = '\0';
-		       NomWithin[0] = '\0';
+		       ProcessAncestorName (pSSchema);
+		       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondFirstWithin;
+		       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcImmediatelyWithin = False;
+		       Immediately = False;
+		       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAscendRel = RelGreater;
+		       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAscendLevel = 0;
+		       GreaterOrLessSign = False;
+		       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcElemNature[0] = '\0';
+		       TypeWithin[0] = '\0';
 		       break;
 
 		    case KWD_Presentation:	/* Presentation */
-		       if (ReglesPres)
+		       if (InPresRules)
 			  CompilerError (wi, TRA, FATAL, TRA_FORBIDDEN_IN_PRES_PART, inputLine, linenb);
 		       else if (r == RULE_TransSchema)
 			  /* debut des regles de traduction de la presentation */
 			 {
-			    ReglesTypes = False;
-			    ReglesAttr = False;
-			    ReglesPres = True;
+			    InTypeRules = False;
+			    InAttrRules = False;
+			    InPresRules = True;
 			 }
 		       else if (r == RULE_CondOnAscend)
 			  /* dans une condition */
 			 {
-			    traiteFinElemConcerne (pSchStr);
-			    CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondPresentation;
+			    ProcessAncestorName (pSSchema);
+			    CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondPresentation;
 			 }
 		       else if (r == RULE_Token)
 			  /* ce qu'il faut generer */
-			  CurRegle->TrObject = ToAllPRules;
+			  CurTRule->TrObject = ToAllPRules;
 		       break;
 
 		    case KWD_Comment:	/* Comment */
 		       if (r == RULE_CondOnAscend)
 			  /* dans une condition */
 			 {
-			    traiteFinElemConcerne (pSchStr);
+			    ProcessAncestorName (pSSchema);
 
-			    CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondComment;
+			    CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondComment;
 			 }
 		       else if (r == RULE_Token)
 			  /* ce qu'il faut generer */
-			  CurRegle->TrObject = ToComment;
+			  CurTRule->TrObject = ToComment;
 		       break;
 
 		    case KWD_DocumentName:	/* DocumentName */
 		       if (r == RULE_Function)
 			 {
-			    pVa1 = &pSchTra->TsVariable[pSchTra->TsNVariables - 1];
-			    if (pVa1->TrvNItems >= MAX_TRANSL_VAR_ITEM)
+			    pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
+			    if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 			       /* trop de fonctions */
 			       CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_ELEMS_IN_THE_VARIABLE, inputLine, linenb);
 			    else
-			      {
-				 pVa1->TrvNItems++;
-				 pVa1->TrvItem[pVa1->TrvNItems - 1].TvType = VtDocumentName;
-			      }
+				 pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtDocumentName;
 			 }
 		       else if (r == RULE_Token)
 			  /* generer le nom du document traduit */
-			  CurRegle->TrObject = ToDocumentName;
+			  CurTRule->TrObject = ToDocumentName;
 		       else if (r == RULE_VarOrType)
 			  /* generer le nom du document reference' */
-			  if ((ReglesTypes && pSchStr->SsRule[CurType - 1].SrConstruct != CsReference) ||
-			      (ReglesAttr && pSchStr->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
+			  if ((InTypeRules && pSSchema->SsRule[CurType - 1].SrConstruct != CsReference) ||
+			      (InAttrRules && pSSchema->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
 			     /* l'element ou l'attribut auquel s'applique la regle */
 			     /* n'est pas une reference, erreur */
 			     CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_REFS, inputLine, linenb);
 			  else
-			     CurRegle->TrObject = ToReferredDocumentName;
+			     CurTRule->TrObject = ToReferredDocumentName;
 		       break;
 
 		    case KWD_DocumentDir:	/* DocumentDir */
 		       if (r == RULE_Function)
 			 {
-			    pVa1 = &pSchTra->TsVariable[pSchTra->TsNVariables - 1];
-			    if (pVa1->TrvNItems >= MAX_TRANSL_VAR_ITEM)
+			    pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
+			    if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 			       /* trop de fonctions */
 			       CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_ELEMS_IN_THE_VARIABLE, inputLine, linenb);
 			    else
-			      {
-				 pVa1->TrvNItems++;
-				 pVa1->TrvItem[pVa1->TrvNItems - 1].TvType = VtDocumentDir;
-			      }
+				 pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtDocumentDir;
 			 }
 		       else if (r == RULE_Token)
 			  /* generer le nom du directory du document traduit */
-			  CurRegle->TrObject = ToDocumentDir;
+			  CurTRule->TrObject = ToDocumentDir;
 		       else if (r == RULE_VarOrType)
 			  /* generer le nom du directory du document reference' */
-			  if ((ReglesTypes && pSchStr->SsRule[CurType - 1].SrConstruct != CsReference) ||
-			      (ReglesAttr && pSchStr->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
+			  if ((InTypeRules && pSSchema->SsRule[CurType - 1].SrConstruct != CsReference) ||
+			      (InAttrRules && pSSchema->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
 			     /* l'element ou l'attribut auquel s'applique la regle */
 			     /* n'est pas une reference, erreur */
 			     CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_REFS, inputLine, linenb);
 			  else
-			     CurRegle->TrObject = ToReferredDocumentDir;
+			     CurTRule->TrObject = ToReferredDocumentDir;
 		       break;
 
 		    case KWD_ARABIC:
-		       pVa1 = &pSchTra->TsVariable[pSchTra->TsNVariables - 1];
-		       pVa1->TrvItem[pVa1->TrvNItems - 1].TvCounterStyle = CntArabic;
+		       pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
+		       pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvCounterStyle = CntArabic;
 		       break;
 
 		    case KWD_UROMAN:
-		       pVa1 = &pSchTra->TsVariable[pSchTra->TsNVariables - 1];
-		       pVa1->TrvItem[pVa1->TrvNItems - 1].TvCounterStyle = CntURoman;
+		       pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
+		       pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvCounterStyle = CntURoman;
 		       break;
 
 		    case KWD_LROMAN:
-		       pVa1 = &pSchTra->TsVariable[pSchTra->TsNVariables - 1];
-		       pVa1->TrvItem[pVa1->TrvNItems - 1].TvCounterStyle = CntLRoman;
+		       pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
+		       pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvCounterStyle = CntLRoman;
 		       break;
 
 		    case KWD_UPPERCASE:
-		       pVa1 = &pSchTra->TsVariable[pSchTra->TsNVariables - 1];
-		       pVa1->TrvItem[pVa1->TrvNItems - 1].TvCounterStyle = CntUppercase;
+		       pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
+		       pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvCounterStyle = CntUppercase;
 		       break;
 
 		    case KWD_LOWERCASE:
-		       pVa1 = &pSchTra->TsVariable[pSchTra->TsNVariables - 1];
-		       pVa1->TrvItem[pVa1->TrvNItems - 1].TvCounterStyle = CntLowercase;
+		       pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
+		       pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvCounterStyle = CntLowercase;
 		       break;
 
 		    case KWD_Alphabet:		/* Alphabet */
 		       if (CurType != ord (CharString) + 1)
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_TEXT_UNITS, inputLine, linenb);
 		       else
-			  CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondAlphabet;
+			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondAlphabet;
 		       break;
 
 		    case KWD_FirstAttr:	/* FirstAttr */
-		       CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondFirstAttr;
+		       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondFirstAttr;
 		       break;
 
 		    case KWD_LastAttr:		/* LastAttr */
-		       CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondLastAttr;
+		       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondLastAttr;
 		       break;
 
 		    case KWD_Create:	/* Create */
-		       nouvregle ();
-		       CurRegle->TrType = TCreate;
-		       CurRegle->TrReferredObj = False;
-		       CurRegle->TrObjectNature[0] = '\0';
-		       CurRegle->TrFileNameVar = 0;
-		       DefVar = True;
+		       NewTransRule ();
+		       CurTRule->TrType = TCreate;
+		       CurTRule->TrReferredObj = False;
+		       CurTRule->TrObjectNature[0] = '\0';
+		       CurTRule->TrFileNameVar = 0;
+		       VarDefinition = True;
 		       break;
 
 		    case KWD_Get:	/* Get */
-		       nouvregle ();
-		       CurRegle->TrType = TGet;
-		       CurRegle->TrElemNature[0] = '\0';
-		       CurRegle->TrRelPosition = RpSibling;
+		       NewTransRule ();
+		       CurTRule->TrType = TGet;
+		       CurTRule->TrElemNature[0] = '\0';
+		       CurTRule->TrRelPosition = RpSibling;
 		       break;
 
 		    case KWD_Copy:	/* Copy */
-		       nouvregle ();
-		       CurRegle->TrType = TCopy;
-		       CurRegle->TrElemNature[0] = '\0';
-		       CurRegle->TrRelPosition = RpSibling;
+		       NewTransRule ();
+		       CurTRule->TrType = TCopy;
+		       CurTRule->TrElemNature[0] = '\0';
+		       CurTRule->TrRelPosition = RpSibling;
 		       break;
 
 		    case KWD_Use:	/* Use */
-		       DansCondition = False;
-		       if (pSchStr->SsRule[CurType - 1].SrConstruct != CsNatureSchema
-			   && CurType != pSchStr->SsRootElem)
+		       InCondition = False;
+		       if (pSSchema->SsRule[CurType - 1].SrConstruct != CsNatureSchema
+			   && CurType != pSSchema->SsRootElem)
 			  /* l'element auquel s'applique la regle n'est pas une */
 			  /* nature ni la regle racine, erreur */
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_A_DIFFERENT_STRUCT_SCHEM, inputLine, linenb);
 		       else
 			 {
-			    nouvregle ();
-			    if (CurBloc->TbNConditions != 0)
+			    NewTransRule ();
+			    if (CurBlock->TbNConditions != 0)
 			       CompilerError (wi, TRA, FATAL, TRA_USE_MUST_BE_UNCONDITIONAL, inputLine, linenb);
 			    else
 			      {
-				 CurRegle->TrType = TUse;
-				 strncpy (CurRegle->TrNature, pSchStr->SsRule[CurType - 1].SrName, MAX_NAME_LENGTH);
+				 CurTRule->TrType = TUse;
+				 strncpy (CurTRule->TrNature, pSSchema->SsRule[CurType - 1].SrName, MAX_NAME_LENGTH);
 			      }
 			 }
 		       break;
 
 		    case KWD_For:	/* For */
-		       if (CurType != pSchStr->SsRootElem)
+		       if (CurType != pSSchema->SsRootElem)
 			  /* FOR n'est acceptable que pour l'element racine */
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_THE_ROOT_ELEM, inputLine, linenb);
 		       break;
 
 		    case KWD_Remove:	/* Remove */
-		       nouvregle ();
-		       CurRegle->TrType = TRemove;
+		       NewTransRule ();
+		       CurTRule->TrType = TRemove;
 		       break;
 
 		    case KWD_Write:	/* Write */
-		       nouvregle ();
-		       CurRegle->TrType = TWrite;
-		       CurRegle->TrReferredObj = False;
-		       CurRegle->TrObjectNature[0] = '\0';
-		       CurRegle->TrFileNameVar = 0;
-		       DefVar = True;
+		       NewTransRule ();
+		       CurTRule->TrType = TWrite;
+		       CurTRule->TrReferredObj = False;
+		       CurTRule->TrObjectNature[0] = '\0';
+		       CurTRule->TrFileNameVar = 0;
+		       VarDefinition = True;
 		       break;
 
 		    case KWD_Read:	/* Read */
-		       nouvregle ();
-		       CurRegle->TrType = TRead;
+		       NewTransRule ();
+		       CurTRule->TrType = TRead;
 		       break;
 
 		    case KWD_Include:	/* Include */
-		       nouvregle ();
-		       CurRegle->TrType = TInclude;
+		       NewTransRule ();
+		       CurTRule->TrType = TInclude;
 		       break;
 
 		    case KWD_NoTranslation:	/* NoTranslation */
-		       nouvregle ();
-		       CurRegle->TrType = TNoTranslation;
+		       NewTransRule ();
+		       CurTRule->TrType = TNoTranslation;
 		       break;
 
 		    case KWD_NoLineBreak:	/* NoLineBreak */
-		       nouvregle ();
-		       CurRegle->TrType = TNoLineBreak;
+		       NewTransRule ();
+		       CurTRule->TrType = TNoLineBreak;
 		       break;
 
 		    case KWD_ChangeMainFile:	/* ChangeMainFile */
-		       nouvregle ();
-		       CurRegle->TrType = TChangeMainFile;
+		       NewTransRule ();
+		       CurTRule->TrType = TChangeMainFile;
 		       break;
 
 		    case KWD_Content:	/* Content */
-		       CurRegle->TrObject = ToContent;
+		       CurTRule->TrObject = ToContent;
 		       break;
 
 		    case KWD_After:	/* After */
-		       CurRegle->TrOrder = TAfter;
+		       CurTRule->TrOrder = TAfter;
 		       break;
 
 		    case KWD_Before:	/* Before */
-		       CurRegle->TrOrder = TBefore;
+		       CurTRule->TrOrder = TBefore;
 		       break;
 
 		    case KWD_Included:		/* Included */
-		       CurRegle->TrRelPosition = RpDescend;
+		       CurTRule->TrRelPosition = RpDescend;
 		       break;
 
 		    case KWD_Size:
-		       nomPres (PtSize, pr, wi);
+		       PresentationName (PtSize, pr, wi);
 		       break;
 
 		    case KWD_Indent:
-		       nomPres (PtIndent, pr, wi);
+		       PresentationName (PtIndent, pr, wi);
 		       break;
 
 		    case KWD_LineSpacing:
-		       nomPres (PtLineSpacing, pr, wi);
+		       PresentationName (PtLineSpacing, pr, wi);
 		       break;
 
 		    case KWD_Adjust:
-		       nomPres (PtAdjust, pr, wi);
+		       PresentationName (PtAdjust, pr, wi);
 		       break;
 
 		    case KWD_Justify:
-		       nomPres (PtJustify, pr, wi);
+		       PresentationName (PtJustify, pr, wi);
 		       break;
 
 		    case KWD_Hyphenate:
-		       nomPres (PtHyphenate, pr, wi);
+		       PresentationName (PtHyphenate, pr, wi);
 		       break;
 
 		    case KWD_Style:
-		       nomPres (PtStyle, pr, wi);
+		       PresentationName (PtStyle, pr, wi);
 		       break;
 
 		    case KWD_Font:
-		       nomPres (PtFont, pr, wi);
+		       PresentationName (PtFont, pr, wi);
 		       break;
 
 		    case KWD_UnderLine:
 		       if (r == RULE_PresRule)
-			  nomPres (PtUnderline, pr, wi);
+			  PresentationName (PtUnderline, pr, wi);
 		       else if (r == RULE_UnderLineVal)
-			  valPres ('U', wi);
+			  PresentValue ('U', wi);
 		       break;
 
 		    case KWD_Thickness:
-		       nomPres (PtThickness, pr, wi);
+		       PresentationName (PtThickness, pr, wi);
 		       break;
 
 		    case KWD_LineStyle:
-		       nomPres (PtLineStyle, pr, wi);
+		       PresentationName (PtLineStyle, pr, wi);
 		       break;
 
 		    case KWD_LineWeight:
-		       nomPres (PtLineWeight, pr, wi);
+		       PresentationName (PtLineWeight, pr, wi);
 		       break;
 
 		    case KWD_FillPattern:
-		       nomPres (PtFillPattern, pr, wi);
+		       PresentationName (PtFillPattern, pr, wi);
 		       break;
 
 		    case KWD_Background:
-		       nomPres (PtBackground, pr, wi);
+		       PresentationName (PtBackground, pr, wi);
 		       break;
 
 		    case KWD_Foreground:
-		       nomPres (PtForeground, pr, wi);
+		       PresentationName (PtForeground, pr, wi);
 		       break;
 
 		    case KWD_Left:
-		       valPres ('L', wi);
+		       PresentValue ('L', wi);
 		       break;
 
 		    case KWD_Right:
-		       valPres ('R', wi);
+		       PresentValue ('R', wi);
 		       break;
 
 		    case KWD_VMiddle:
-		       valPres ('C', wi);
+		       PresentValue ('C', wi);
 		       break;
 
 		    case KWD_LeftWithDots:
-		       valPres ('D', wi);
+		       PresentValue ('D', wi);
 		       break;
 
 		    case KWD_Yes:
-		       valPres ('Y', wi);
+		       PresentValue ('Y', wi);
 		       break;
 
 		    case KWD_No:
 		       if (r == RULE_UnderLineVal)
-			  valPres ('N', wi);
+			  PresentValue ('N', wi);
 		       else
-			  valPres ('N', wi);
+			  PresentValue ('N', wi);
 		       break;
 
 		    case KWD_Bold:
-		       valPres ('B', wi);
+		       PresentValue ('B', wi);
 		       break;
 
 		    case KWD_Italics:
-		       valPres ('I', wi);
+		       PresentValue ('I', wi);
 		       break;
 
 		    case KWD_Roman:
-		       valPres ('R', wi);
+		       PresentValue ('R', wi);
 		       break;
 
 		    case KWD_BoldItalics:
-		       valPres ('G', wi);
+		       PresentValue ('G', wi);
 		       break;
 
 		    case KWD_BoldOblique:
-		       valPres ('Q', wi);
+		       PresentValue ('Q', wi);
 		       break;
 
 		    case KWD_Oblique:
-		       valPres ('O', wi);
+		       PresentValue ('O', wi);
 		       break;
 
 		    case KWD_Times:
-		       valPres ('T', wi);
+		       PresentValue ('T', wi);
 		       break;
 
 		    case KWD_Helvetica:
-		       valPres ('H', wi);
+		       PresentValue ('H', wi);
 		       break;
 
 		    case KWD_Courier:
-		       valPres ('C', wi);
+		       PresentValue ('C', wi);
 		       break;
 
 		    case KWD_NoUnderline:
-		       valPres ('N', wi);
+		       PresentValue ('N', wi);
 		       break;
 
 		    case KWD_Underlined:
-		       valPres ('U', wi);
+		       PresentValue ('U', wi);
 		       break;
 
 		    case KWD_Overlined:
-		       valPres ('O', wi);
+		       PresentValue ('O', wi);
 		       break;
 
 		    case KWD_CrossedOut:
-		       valPres ('C', wi);
+		       PresentValue ('C', wi);
 		       break;
 
 		    case KWD_OverLine:
-		       valPres ('O', wi);
+		       PresentValue ('O', wi);
 		       break;
 
 		    case KWD_StrikeOut:
-		       valPres ('C', wi);
+		       PresentValue ('C', wi);
 		       break;
 
 		    case KWD_Thick:
-		       valPres ('N', wi);
+		       PresentValue ('N', wi);
 		       break;
 
 		    case KWD_Thin:
-		       valPres ('T', wi);
+		       PresentValue ('T', wi);
 		       break;
 
 		    case KWD_Solid:
-		       valPres ('S', wi);
+		       PresentValue ('S', wi);
 		       break;
 
 		    case KWD_Dashed:
-		       valPres ('-', wi);
+		       PresentValue ('-', wi);
 		       break;
 
 		    case KWD_Dotted:
-		       valPres ('.', wi);
+		       PresentValue ('.', wi);
 		       break;
 
 		    case KWD_ComputedPage:
@@ -2100,7 +2064,7 @@ rnb                 pr;
 			  /* erreur */
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_PAGES, inputLine, linenb);
 		       else
-			  CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondComputedPage;
+			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondComputedPage;
 		       break;
 
 		    case KWD_StartPage:
@@ -2109,7 +2073,7 @@ rnb                 pr;
 			  /* erreur */
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_PAGES, inputLine, linenb);
 		       else
-			  CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondStartPage;
+			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondStartPage;
 		       break;
 
 		    case KWD_UserPage:
@@ -2118,7 +2082,7 @@ rnb                 pr;
 			  /* erreur */
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_PAGES, inputLine, linenb);
 		       else
-			  CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondUserPage;
+			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondUserPage;
 		       break;
 
 		    case KWD_ReminderPage:
@@ -2127,13 +2091,13 @@ rnb                 pr;
 			  /* erreur */
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_PAGES, inputLine, linenb);
 		       else
-			  CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondReminderPage;
+			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondReminderPage;
 		       break;
 		    case KWD_Empty:
-		       CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondEmpty;
+		       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondEmpty;
 		       break;
 		    case KWD_Parent:
-		       CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAscendRelLevel = 1;
+		       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAscendRelLevel = 1;
 		       break;
 		    case KWD_Ancestor:
 		       /* rien a faire */
@@ -2154,44 +2118,44 @@ rnb                 pr;
 				      /* nom de la structure generique a laquelle se rapporte */
 				      /* le schema de traduction */
 				     {
-					copy (pSchTra->TsStructName, wi, wl);
+					CopyWord (pTSchema->TsStructName, wi, wl);
 					/* lit le schema de structure compile' */
-					if (!RdSchStruct (pSchTra->TsStructName, pSchStr))
+					if (!RdSchStruct (pTSchema->TsStructName, pSSchema))
 					   TtaDisplaySimpleMessage (TRA, FATAL, TRA_CANNOT_READ_STRUCT_SCHEM);	/* echec lecture du  schema de structure */
-					else if (strcmp (pSchTra->TsStructName, pSchStr->SsName) != 0)
+					else if (strcmp (pTSchema->TsStructName, pSSchema->SsName) != 0)
 					   CompilerError (wi, TRA, FATAL, TRA_STRUCT_SCHEM_DOES_NOT_MATCH, inputLine, linenb);
 					else
 					  {
-					     pSchTra->TsStructCode = pSchStr->SsCode;
-					     initAttr ();
+					     pTSchema->TsStructCode = pSSchema->SsCode;
+					     InitAttrTransl ();
 					  }
 				     }
 				   else if (pr == RULE_CondOnAscend)
 				      /* dans une condition Within ou FirstWithin */
 				     {
-					if (!SchemaExt)
+					if (!ExternalSchema)
 					   /* nom du type d'element dans la condition Within ou */
 					   /* FirstWithin */
 					  {
-					     copy (NomWithin, wi, wl);
-					     DebutNomWithin = wi;
+					     CopyWord (TypeWithin, wi, wl);
+					     BeginTypeWithin = wi;
 					  }
 					else
 					   /* nom d'un schema de structure externe dans la condition */
 					   /* Within ou FirstWithin */
 					  {
-					     SchemaExt = False;
+					     ExternalSchema = False;
 					     /* recupere dans n le nom du schema externe */
-					     copy (n, wi, wl);
+					     CopyWord (n, wi, wl);
 					     /* lit le schema de structure externe */
-					     if (!RdSchStruct (n, pSchStrExt))
+					     if (!RdSchStruct (n, pExtSSchema))
 						CompilerError (wi, TRA, FATAL, TRA_CANNOT_READ_STRUCT_SCHEM, inputLine, linenb);
 					     /* echec lecture du schema */
 					     else
 						/* le schema de structure a ete charge' */
 					       {
-						  strncpy (CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcElemNature, n, MAX_NAME_LENGTH);
-						  traiteFinCondition (pSchStrExt);
+						  strncpy (CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcElemNature, n, MAX_NAME_LENGTH);
+						  EndOfContdition (pExtSSchema);
 					       }
 					  }
 				     }
@@ -2199,152 +2163,152 @@ rnb                 pr;
 				      /* un type d'element dans une condition portant sur */
 				      /* un ascendant */
 				     {
-					if (!SchemaExt)
+					if (!ExternalSchema)
 					   /* nom du type d'element ascendant dans la condition */
 					  {
-					     copy (NomAscend, wi, wl);
-					     DebutNomAscend = wi;
+					     CopyWord (AncestorName, wi, wl);
+					     BeginAncestorName = wi;
 					  }
 					else
 					   /* nom d'un schema de structure externe dans Ascend */
 					  {
-					     SchemaExt = False;
+					     ExternalSchema = False;
 					     /* recupere dans n le nom du schema externe */
-					     copy (n, wi, wl);
+					     CopyWord (n, wi, wl);
 					     /* lit le schema de structure externe */
-					     if (!RdSchStruct (n, pSchStrExt))
+					     if (!RdSchStruct (n, pExtSSchema))
 						CompilerError (wi, TRA, FATAL, TRA_CANNOT_READ_STRUCT_SCHEM, inputLine, linenb);
 					     /* echec lecture du schema */
 					     else
 						/* le schema de    structure a ete charge' */
 					       {
-						  strncpy (CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAscendNature, n, MAX_NAME_LENGTH);
-						  traiteFinElemConcerne (pSchStrExt);
+						  strncpy (CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAscendNature, n, MAX_NAME_LENGTH);
+						  ProcessAncestorName (pExtSSchema);
 					       }
 					  }
 				     }
 				   else
 				     {
-					DansRegleUse = False;
-					DansRegleGet = False;
-					DansRegleCreateWrite = (pr == RULE_Token);
+					InUseRule = False;
+					InGetRule = False;
+					InCreateWriteRule = (pr == RULE_Token);
 					if (pr == RULE_Rule1)
 					  {
-					     if (CurRegle->TrType == TUse)
-						DansRegleUse = True;
-					     if (CurRegle->TrType == TGet || CurRegle->TrType == TCopy)
-						DansRegleGet = True;
+					     if (CurTRule->TrType == TUse)
+						InUseRule = True;
+					     if (CurTRule->TrType == TGet || CurTRule->TrType == TCopy)
+						InGetRule = True;
 					  }
-					if (DansRegleUse)
-					   copy (CurRegle->TrNature, wi, wl);
-					else if (DansRegleGet || DansRegleCreateWrite)
-					   if (SchemaExt)
+					if (InUseRule)
+					   CopyWord (CurTRule->TrNature, wi, wl);
+					else if (InGetRule || InCreateWriteRule)
+					   if (ExternalSchema)
 					      /* nom d'un schema de structure externe */
 					     {
-						SchemaExt = False;
-						copy (n, wi, wl);
+						ExternalSchema = False;
+						CopyWord (n, wi, wl);
 						/* recupere dans n le nom du schema externe */
 						/* lit le schema de structure externe */
-						if (!RdSchStruct (n, pSchStrExt))
+						if (!RdSchStruct (n, pExtSSchema))
 						   CompilerError (wi, TRA, FATAL, TRA_CANNOT_READ_STRUCT_SCHEM, inputLine, linenb);
 						/* echec lecture du schema */
 						else
 						   /* le schema de    structure a ete charge' */
 						  {
-						     if (DansRegleGet)
-							strncpy (CurRegle->TrElemNature, n, MAX_NAME_LENGTH);
+						     if (InGetRule)
+							strncpy (CurTRule->TrElemNature, n, MAX_NAME_LENGTH);
 						     else
-							strncpy (CurRegle->TrObjectNature, n, MAX_NAME_LENGTH);
-						     traiteTypeIdent (pSchStrExt);
+							strncpy (CurTRule->TrObjectNature, n, MAX_NAME_LENGTH);
+						     ProcessTypeName (pExtSSchema);
 						  }
 					     }
 					   else
 					     {
-						copy (NomGet, wi, wl);
-						DebutNomGet = wi;
+						CopyWord (TypeInGetRule, wi, wl);
+						BeginTypeInGetRule = wi;
 					     }
 					else if (pr == RULE_VarOrType)
 					   /* dans une regle Create ou Write, apres Refered */
 					  {
-					     DefVar = False;
-					     copy (NomGet, wi, wl);
-					     DebutNomGet = wi;
+					     VarDefinition = False;
+					     CopyWord (TypeInGetRule, wi, wl);
+					     BeginTypeInGetRule = wi;
 					  }
 					else
 					  {
-					     i = NumType (wi, wl);
+					     i = ElementTypeNum (wi, wl);
 					     if (i > 0)
 						/* le type existe, il a le numero i */
-						if (ComptDcl)	/* dans une declaration de compteur */
+						if (ComptDef)	/* dans une declaration de compteur */
 						  {
-						     pTrCo1 = &pSchTra->TsCounter[pSchTra->TsNCounters - 1];
-						     if (pTrCo1->TnOperation == TCntrSet)
-							if (pTrCo1->TnElemType1 == 0)
-							   pTrCo1->TnElemType1 = i;
+						     pCntr = &pTSchema->TsCounter[pTSchema->TsNCounters - 1];
+						     if (pCntr->TnOperation == TCntrSet)
+							if (pCntr->TnElemType1 == 0)
+							   pCntr->TnElemType1 = i;
 							else
-							   pTrCo1->TnElemType2 = i;
+							   pCntr->TnElemType2 = i;
 						     else
-							pTrCo1->TnElemType1 = i;
+							pCntr->TnElemType1 = i;
 						  }
 						else
 						   /* on n'est pas dans une declaration de compteur */
 						if (pr == RULE_TransType)
 						   /* debut des regles associees a un type */
 						  {
-						     if (pSchStr->SsRule[i - 1].SrConstruct == CsPairedElement)
+						     if (pSSchema->SsRule[i - 1].SrConstruct == CsPairedElement)
 							/* c'est un element CsPairedElement */
-							if (!PaireSecond && !PairePremier)
+							if (!SecondInPair && !FirstInPair)
 							   /* le nom du type n'etait pas precede' de First ou Second */
 							   CompilerError (wi, TRA, FATAL, TRA_MISSING_FIRST_SECOND,
 									  inputLine, linenb);
 							else
 							  {
-							     if (PaireSecond)
+							     if (SecondInPair)
 								/* il s'agit du type suivant */
 								i++;
 							  }
 						     else
 							/* ce n'est pas un element CsPairedElement */
-						     if (PaireSecond || PairePremier)
+						     if (SecondInPair || FirstInPair)
 							/* le nom du type etait precede' de First ou Second, erreur */
 							CompilerError (wi, TRA, FATAL, TRA_NOT_A_PAIR,
 							 inputLine, linenb);
-						     if (pSchTra->TsElemTRule[i - 1] != NULL)
+						     if (pTSchema->TsElemTRule[i - 1] != NULL)
 							CompilerError (wi, TRA, FATAL, TRA_ALREADY_DEFINED,
 							 inputLine, linenb);
 						     else
 						       {
 							  CurType = i;
-							  CurBloc = NULL;
-							  CurRegle = NULL;
+							  CurBlock = NULL;
+							  CurTRule = NULL;
 						       }
-						     PairePremier = False;
-						     PaireSecond = False;
+						     FirstInPair = False;
+						     SecondInPair = False;
 						  }
 
 						else if (pr == RULE_TransAttr)
 						   /* apres un nom d'attribut */
 						  {
-						     pSchTra->TsInheritAttr[i - 1] = True;
-						     pSchTra->TsAttrTRule[CurAttr - 1].AtrElemType = i;
+						     pTSchema->TsInheritAttr[i - 1] = True;
+						     pTSchema->TsAttrTRule[CurAttr - 1].AtrElemType = i;
 						  }
 					  }
 				     }
 				   break;
 
 				case RULE_ConstIdent:	/* ConstIdent */
-				   if (ConstDcl)	/* une definition de constante */
+				   if (ConstDef)	/* une definition de constante */
 				      if (identtable[nb - 1].identdef != 0)
 					 /* nom deja declare' */
 					 CompilerError (wi, TRA, FATAL, TRA_NAME_ALREADY_DECLARED, inputLine, linenb);
-				      else if (pSchTra->TsNConstants >= MAX_TRANSL_CONST)
+				      else if (pTSchema->TsNConstants >= MAX_TRANSL_CONST)
 					 /* table des constantes saturee */
 					 CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_CONSTANTS, inputLine, linenb);
 				      else
 					 /* alloue un nouvelle entree dans la table des constantes */
 					{
-					   pSchTra->TsNConstants++;
-					   identtable[nb - 1].identdef = pSchTra->TsNConstants;
+					   pTSchema->TsNConstants++;
+					   identtable[nb - 1].identdef = pTSchema->TsNConstants;
 					}
 				   else
 				      /* utilisation d'une constante */
@@ -2356,20 +2320,20 @@ rnb                 pr;
 					 /* ce n'est pas un identificateur d'attribut */
 					{
 					   /* copie dans n l'identificateur */
-					   copy (n, wi, wl);
+					   CopyWord (n, wi, wl);
 					   /* verifie si l'attribut existe bien dans le schema */
 					   /* de structure */
 					   i = 1;
-					   while (strcmp (n, pSchStr->SsAttribute[i - 1].AttrName) != 0
-						&& i < pSchStr->SsNAttributes)
+					   while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0
+						&& i < pSSchema->SsNAttributes)
 					      i++;
-					   if (strcmp (n, pSchStr->SsAttribute[i - 1].AttrName) != 0)
+					   if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0)
 					      /* attribut inconnu */
 					      CompilerError (wi, TRA, FATAL, TRA_UNKNOWN_ATTR, inputLine, linenb);
 					   else
 					      /* l'attribut existe, il a le numero i */
 					     {
-						CrWrAttr (i, pr, wi);
+						AttrInCreateOrWrite (i, pr, wi);
 						/* ce nom est maintenant un nom d'attribut */
 						identtable[nb - 1].identtype = RULE_AttrIdent;
 					     }
@@ -2377,48 +2341,48 @@ rnb                 pr;
 				      else
 					 /* constante non definie */
 					 CompilerError (wi, TRA, FATAL, TRA_CONSTANT_NOT_DECLARED, inputLine, linenb);
-				   else if (VarDcl)	/* dans une declaration de variable */
+				   else if (VarDef)	/* dans une declaration de variable */
 				     {
-					pVa1 = &pSchTra->TsVariable[pSchTra->TsNVariables - 1];
-					if (pVa1->TrvNItems >= MAX_TRANSL_VAR_ITEM)
+					pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
+					if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 					   /* trop de fonctions */
 					   CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_ELEMS_IN_THE_VARIABLE, inputLine, linenb);
 					else
 					  {
-					     pVa1->TrvNItems++;
-					     pVa1->TrvItem[pVa1->TrvNItems - 1].TvType =
+					     pTransVar->TrvItem[pTransVar->TrvNItems].TvType =
 						VtText;
-					     pVa1->TrvItem[pVa1->TrvNItems - 1].TvItem =
+					     pTransVar->TrvItem[pTransVar->TrvNItems].TvItem =
 						identtable[nb - 1].identdef;
+					     pTransVar->TrvNItems++;
 					  }
 				     }
 				   else if (pr == RULE_Token)
 				      /* dans une regle Create ou Write */
 				     {
-					CurRegle->TrObject = ToConst;
-					CurRegle->TrObjectNum = identtable[nb - 1].identdef;
+					CurTRule->TrObject = ToConst;
+					CurTRule->TrObjectNum = identtable[nb - 1].identdef;
 				     }
 				   break;
 
 				case RULE_CounterIdent:	/* CounterIdent */
-				   if (ComptDcl)	/* une definition de compteur */
+				   if (ComptDef)	/* une definition de compteur */
 				      if (identtable[nb - 1].identdef != 0)
 					 /* nom deja declare' */
 					 CompilerError (wi, TRA, FATAL, TRA_NAME_ALREADY_DECLARED, inputLine, linenb);
-				      else if (pSchTra->TsNCounters >= MAX_TRANSL_COUNTER)
+				      else if (pTSchema->TsNCounters >= MAX_TRANSL_COUNTER)
 					 /* table des compteurs saturee */
 					 CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_COUNTERS, inputLine, linenb);
 				      else
 					 /* alloue un nouvelle entree dans la table des compteurs */
 					{
-					   pSchTra->TsNCounters++;
-					   identtable[nb - 1].identdef = pSchTra->TsNCounters;
 					   /* a priori ce compteur n'a pas d'operations */
-					   pSchTra->TsCounter[pSchTra->TsNCounters - 1].TnOperation = TCntrNoOp;
+					   pTSchema->TsCounter[pTSchema->TsNCounters].TnOperation = TCntrNoOp;
 					   /* a priori, ce compteur ne sera pas */
 					   /* intialise' par un attribut */
-					   pSchTra->TsCounter[pSchTra->TsNCounters - 1].
+					   pTSchema->TsCounter[pTSchema->TsNCounters].
 					      TnAttrInit = 0;
+					   pTSchema->TsNCounters++;
+					   identtable[nb - 1].identdef = pTSchema->TsNCounters;
 					}
 				   else
 				      /* utilisation d'un compteur */
@@ -2428,85 +2392,84 @@ rnb                 pr;
 				   else if (pr == RULE_Function)
 				      /* dans une declaration de variable */
 				     {
-					pVa1 = &pSchTra->TsVariable[pSchTra->TsNVariables - 1];
-					pVa1->TrvItem[pVa1->TrvNItems - 1].TvItem =
+					pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
+					pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvItem =
 					   identtable[nb - 1].identdef;
-					pVa1->TrvItem[pVa1->TrvNItems - 1].TvLength = 0;
-					pVa1->TrvItem[pVa1->TrvNItems - 1].TvCounterStyle = CntArabic;
+					pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvLength = 0;
+					pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvCounterStyle = CntArabic;
 				     }
 				   else if (pr == RULE_Rule1)
 				      /* un compteur dans une instruction Set ou Add */
-				      if (pSchTra->TsCounter[identtable[nb - 1].identdef - 1].TnOperation != TCntrNoOp)
+				      if (pTSchema->TsCounter[identtable[nb - 1].identdef - 1].TnOperation != TCntrNoOp)
 					 CompilerError (wi, TRA, FATAL, TRA_INVALID_COUNTER, inputLine, linenb);
 				      else
-					 CurRegle->TrCounterNum = identtable[nb - 1].identdef;
+					 CurTRule->TrCounterNum = identtable[nb - 1].identdef;
 				   break;
 
 				case RULE_BufferIdent:		/* BufferIdent */
-				   if (BuffDcl)		/* une definition de  buffer */
+				   if (BuffDef)		/* une definition de  buffer */
 				      if (identtable[nb - 1].identdef != 0)
 					 /* nom deja declare' */
 					 CompilerError (wi, TRA, FATAL, TRA_NAME_ALREADY_DECLARED, inputLine, linenb);
-				      else if (pSchTra->TsNBuffers >= MAX_TRANSL_BUFFER)
+				      else if (pTSchema->TsNBuffers >= MAX_TRANSL_BUFFER)
 					 /* table des buffers saturee */
 					 CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_BUFFERS, inputLine, linenb);
 				      else
 					{
-					   pSchTra->TsNBuffers++;
-					   identtable[nb - 1].identdef = pSchTra->TsNBuffers;
+					   pTSchema->TsNBuffers++;
+					   identtable[nb - 1].identdef = pTSchema->TsNBuffers;
 					}
 				   else
 				      /* utilisation d'un buffer */
 				   if (identtable[nb - 1].identdef == 0)
 				      /* buffer non defini */
 				      CompilerError (wi, TRA, FATAL, TRA_BUFFER_NOT_DECLARED, inputLine, linenb);
-				   else if (VarDcl)
+				   else if (VarDef)
 				      /* dans une declaration de variable */
 				     {
-					pVa1 = &pSchTra->TsVariable[pSchTra->TsNVariables - 1];
-					if (pVa1->TrvNItems >= MAX_TRANSL_VAR_ITEM)
+					pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
+					if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 					   /* trop de fonctions */
 					   CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_ELEMS_IN_THE_VARIABLE, inputLine, linenb);
 					else
 					  {
-					     pVa1->TrvNItems++;
-					     pVa1->TrvItem[pVa1->TrvNItems - 1].TvType = VtBuffer;
-					     pVa1->TrvItem[pVa1->TrvNItems - 1].TvItem =
+					     pTransVar->TrvItem[pTransVar->TrvNItems].TvType = VtBuffer;
+					     pTransVar->TrvItem[pTransVar->TrvNItems].TvItem =
 						identtable[nb - 1].identdef;
+					     pTransVar->TrvNItems++;
 					  }
 				     }
 				   else if (pr == RULE_Rule1)
 				      /* dans une regle Read */
-				      CurRegle->TrBuffer = identtable[nb - 1].identdef;
+				      CurTRule->TrBuffer = identtable[nb - 1].identdef;
 				   else if (pr == RULE_Token)
 
 				      /* dans une regle Create ou Write */
 				     {
-					CurRegle->TrObject = ToBuffer;
-					CurRegle->TrObjectNum = identtable[nb - 1].identdef;
+					CurTRule->TrObject = ToBuffer;
+					CurTRule->TrObjectNum = identtable[nb - 1].identdef;
 				     }
 				   else if (pr == RULE_File)
 				     {
 					/* dans une regle Include */
-					CurRegle->TrBufOrConst = ToBuffer;
-					CurRegle->TrInclFile = identtable[nb - 1].identdef;
+					CurTRule->TrBufOrConst = ToBuffer;
+					CurTRule->TrInclFile = identtable[nb - 1].identdef;
 				     }
 				   break;
 
 				case RULE_VariableIdent:	/* VariableIdent */
-				   if (VarDcl)
+				   if (VarDef)
 				      /* une definition de  variable */
 				      if (identtable[nb - 1].identdef != 0)
 					 /* nom deja declare' */
 					 CompilerError (wi, TRA, FATAL, TRA_NAME_ALREADY_DECLARED, inputLine, linenb);
-				      else if (pSchTra->TsNVariables >= MAX_TRANSL_VARIABLE)
+				      else if (pTSchema->TsNVariables >= MAX_TRANSL_VARIABLE)
 					 /* table des variables saturee */
 					 CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_VARIABLES, inputLine, linenb);
 				      else
 					{
-					   pSchTra->TsNVariables++;
-					   identtable[nb - 1].identdef = pSchTra->TsNVariables;
-					   pSchTra->TsVariable[pSchTra->TsNVariables - 1].TrvNItems = 0;
+					   pTSchema->TsVariable[pTSchema->TsNVariables++].TrvNItems = 0;
+					   identtable[nb - 1].identdef = pTSchema->TsNVariables;
 					}
 				   else if (pr == RULE_Token)
 				      /* dans une regle Create  ou Write */
@@ -2515,50 +2478,50 @@ rnb                 pr;
 					 CompilerError (wi, TRA, FATAL, TRA_VARIABLE_NOT_DECLARED, inputLine, linenb);
 				      else
 					{
-					   CurRegle->TrObject = ToVariable;
-					   CurRegle->TrObjectNum = identtable[nb - 1].identdef;
+					   CurTRule->TrObject = ToVariable;
+					   CurTRule->TrObjectNum = identtable[nb - 1].identdef;
 					}
 				   else if (pr == RULE_VarOrType)
 				      /* dans une regle Create  ou Write */
 				     {
-					DefVar = False;
+					VarDefinition = False;
 					if (identtable[nb - 1].identdef == 0)
 					   /* variable non definie */
 					   /* c'est peut-etre un nom de type d'element */
 					  {
-					     CurRegle->TrObject = ToReferredElem;
-					     copy (NomGet, wi, wl);
-					     DebutNomGet = wi;
+					     CurTRule->TrObject = ToReferredElem;
+					     CopyWord (TypeInGetRule, wi, wl);
+					     BeginTypeInGetRule = wi;
 					  }
 					else
 					   /* la variable est bien definie */
 					  {
-					     CurRegle->TrObject = ToVariable;
-					     CurRegle->TrObjectNum = identtable[nb - 1].identdef;
+					     CurTRule->TrObject = ToVariable;
+					     CurTRule->TrObjectNum = identtable[nb - 1].identdef;
 					  }
 				     }
 				   else if (pr == RULE_Rule1)
 				      if (identtable[nb - 1].identdef == 0)
 					 /* variable non definie */
 					 CompilerError (wi, TRA, FATAL, TRA_VARIABLE_NOT_DECLARED, inputLine, linenb);
-				      else if (CurRegle->TrType == TCreate)
+				      else if (CurTRule->TrType == TCreate)
 					 /* indication du fichier de sortie dans une regle Create */
-					 CurRegle->TrFileNameVar = identtable[nb - 1].identdef;
-				      else if (CurRegle->TrType == TChangeMainFile)
-					 CurRegle->TrNewFileVar = identtable[nb - 1].identdef;
+					 CurTRule->TrFileNameVar = identtable[nb - 1].identdef;
+				      else if (CurTRule->TrType == TChangeMainFile)
+					 CurTRule->TrNewFileVar = identtable[nb - 1].identdef;
 
 				   break;
 
 				case RULE_AttrIdent:	/* AttrIdent */
 				   /* copie dans n l'identificateur de l'attribut */
-				   copy (n, wi, wl);
+				   CopyWord (n, wi, wl);
 				   /* verifie si l'attribut existe bien dans le schema de */
 				   /* structure */
 				   i = 1;
-				   while (strcmp (n, pSchStr->SsAttribute[i - 1].AttrName) != 0
-					  && i < pSchStr->SsNAttributes)
+				   while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0
+					  && i < pSSchema->SsNAttributes)
 				      i++;
-				   if (strcmp (n, pSchStr->SsAttribute[i - 1].AttrName) != 0)
+				   if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0)
 				      /* attribut inconnu */
 				      CompilerError (wi, TRA, FATAL, TRA_UNKNOWN_ATTR, inputLine, linenb);
 				   else
@@ -2569,27 +2532,27 @@ rnb                 pr;
 				     {
 					CurAttr = i;
 					CurValAttr = 0;		/* pas encore rencontre' de valeur */
-					CurBloc = NULL;
-					CurRegle = NULL;
-					pRT1 = &pSchTra->TsAttrTRule[CurAttr - 1];
-					switch (pSchStr->SsAttribute[CurAttr - 1].AttrType)
+					CurBlock = NULL;
+					CurTRule = NULL;
+					pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
+					switch (pSSchema->SsAttribute[CurAttr - 1].AttrType)
 					      {
 						 case AtNumAttr:	/* attribut a valeur numerique */
-						    if (pRT1->AtrNCases >= MAX_TRANSL_ATTR_CASE)
+						    if (pAttrTrans->AtrNCases >= MAX_TRANSL_ATTR_CASE)
 						       /* trop de cas pour cet attribut */
 						       CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_CASES_FOR_THAT_ATTR, inputLine, linenb);
 						    else
-						       pRT1->AtrNCases++;
+						       pAttrTrans->AtrNCases++;
 						    break;
 
 						 case AtTextAttr /* attribut textuel */ :
-						    if (pRT1->AtrTxtTRuleBlock != NULL)
+						    if (pAttrTrans->AtrTxtTRuleBlock != NULL)
 						       /* attribut deja rencontre' */
 						       CompilerError (wi, TRA, FATAL, TRA_RULES_ALREADY_EXIST_FOR_THAT_ATTR, inputLine, linenb);
 						    break;
 
 						 case AtReferenceAttr:
-						    if (pRT1->AtrRefTRuleBlock != NULL)
+						    if (pAttrTrans->AtrRefTRuleBlock != NULL)
 						       /* attribut deja rencontre' */
 						       CompilerError (wi, TRA, FATAL, TRA_RULES_ALREADY_EXIST_FOR_THAT_ATTR, inputLine, linenb);
 						    break;
@@ -2606,27 +2569,27 @@ rnb                 pr;
 				   else if (pr == RULE_CondOnAscend)
 				      /* un nom d'attribut dans une condition */
 				     {
-					traiteFinElemConcerne (pSchStr);
+					ProcessAncestorName (pSSchema);
 					if (!Asterisk)
-					   CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAscendRelLevel = -1;
-					CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcCondition = TcondAttr;
-					CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAttr = i;
-					switch (pSchStr->SsAttribute[i - 1].AttrType)
+					   CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAscendRelLevel = -1;
+					CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondAttr;
+					CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAttr = i;
+					switch (pSSchema->SsAttribute[i - 1].AttrType)
 					      {
 						 case AtNumAttr:
-						    CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcLowerBound = -MAX_INT_ATTR_VAL - 1;
+						    CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcLowerBound = -MAX_INT_ATTR_VAL - 1;
 						    /* -infini */
-						    CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcUpperBound = MAX_INT_ATTR_VAL + 1;
+						    CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcUpperBound = MAX_INT_ATTR_VAL + 1;
 						    /* +infini */
 						    break;
 						 case AtTextAttr:
-						    CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcTextValue[0] = '\0';
+						    CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcTextValue[0] = '\0';
 						    break;
 						 case AtReferenceAttr:
 
 						    break;	/* rien */
 						 case AtEnumAttr:
-						    CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAttrValue = 0;
+						    CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAttrValue = 0;
 						    break;
 						 default:
 						    break;
@@ -2636,41 +2599,41 @@ rnb                 pr;
 				   else if (pr == RULE_Token ||
 					    pr == RULE_CountFunction ||
 					    pr == RULE_Function)
-				      CrWrAttr (i, pr, wi);
+				      AttrInCreateOrWrite (i, pr, wi);
 				   break;
 
 				case RULE_AttrValIdent:	/* AttrValIdent */
-				   copy (n, wi, wl);
+				   CopyWord (n, wi, wl);
 				   /* verifie si cette valeur existe pour l'attribut courant */
-				   if (DansCondition)
-				      k = CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAttr;
+				   if (InCondition)
+				      k = CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAttr;
 				   else
 				      k = CurAttr;
-				   pAt1 = &pSchStr->SsAttribute[k - 1];
-				   if (pAt1->AttrType != AtEnumAttr)
+				   pAttr = &pSSchema->SsAttribute[k - 1];
+				   if (pAttr->AttrType != AtEnumAttr)
 				      /* pas un attribut a valeur enumerees */
 				      CompilerError (wi, TRA, FATAL, TRA_INCOR_ATTR_VALUE, inputLine, linenb);
 				   else
 				     {
 					i = 1;
-					while (strcmp (n, pAt1->AttrEnumValue[i - 1]) != 0
-					       && i < pAt1->AttrNEnumValues)
+					while (strcmp (n, pAttr->AttrEnumValue[i - 1]) != 0
+					       && i < pAttr->AttrNEnumValues)
 					   i++;
-					if (strcmp (n, pAt1->AttrEnumValue[i - 1]) != 0)
+					if (strcmp (n, pAttr->AttrEnumValue[i - 1]) != 0)
 					   /* valeur d'attribut  incorrecte */
 					   CompilerError (wi, TRA, FATAL, TRA_INCOR_ATTR_VALUE, inputLine, linenb);
 					else
 					   /* la valeur est correcte, elle a le numero i */
-					if (!DansCondition)
+					if (!InCondition)
 					   /* debut des regles de traduction d'un attribut */
-					   if (pSchTra->TsAttrTRule[CurAttr - 1].AtrEnuTRuleBlock[i] != NULL)
+					   if (pTSchema->TsAttrTRule[CurAttr - 1].AtrEnuTRuleBlock[i] != NULL)
 					      /* deja des regles pour cette valeur */
 					      CompilerError (wi, TRA, FATAL, TRA_RULES_ALREADY_EXIST_FOR_THAT_VALUE, inputLine, linenb);
 					   else
 					      CurValAttr = i;
 					else
 					   /* un nom d'attribut dans une condition */
-					   CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAttrValue = i;
+					   CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAttrValue = i;
 				     }
 				   break;
 
@@ -2678,41 +2641,41 @@ rnb                 pr;
 				   if (pr == RULE_TSeqOfTransl)
 				      /* Deja des regles de traduction pour cet alphabet ? */
 				     {
-					for (i = 0; i < pSchTra->TsNTranslAlphabets - 1; i++)
-					   if (pSchTra->TsTranslAlphabet[i].AlAlphabet == inputLine[wi - 1])
+					for (i = 0; i < pTSchema->TsNTranslAlphabets - 1; i++)
+					   if (pTSchema->TsTranslAlphabet[i].AlAlphabet == inputLine[wi - 1])
 					      CompilerError (wi, TRA, FATAL, TRA_ALPHABET_ALREADY_DEFINED, inputLine, linenb);
 					if (!error)
-					   pSchTra->TsTranslAlphabet[pSchTra->TsNTranslAlphabets - 1].
+					   pTSchema->TsTranslAlphabet[pTSchema->TsNTranslAlphabets - 1].
 					      AlAlphabet = inputLine[wi - 1];
 				     }
 				   else if (pr == RULE_CondOnSelf)
 				      /* dans une condition */
-				      CurBloc->TbCondition[CurBloc->TbNConditions - 1].
+				      CurBlock->TbCondition[CurBlock->TbNConditions - 1].
 					 TcAlphabet = inputLine[wi - 1];
 				   break;
 
 				case RULE_TrSchema:	/* TrSchema */
-				   copy (CurRegle->TrTranslSchemaName, wi, wl);
+				   CopyWord (CurTRule->TrTranslSchemaName, wi, wl);
 				   break;
 				case RULE_Pattern:	/* Pattern */
 				case RULE_Color:	/* Color */
-				   copy (n, wi, wl);
+				   CopyWord (n, wi, wl);
 				   /* cherche le numero de cette trame ou de cette couleur */
 				   if (r == RULE_Pattern)
-				      k = NumeroPattern (n, wi);
+				      k = PatternNum (n, wi);
 				   else
-				      k = NumeroCouleur (n, wi);
-				   if (DansCondition)
+				      k = ColorNum (n, wi);
+				   if (InCondition)
 				     {
-					CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcUpperBound = k;
-					CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcLowerBound = k;
+					CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcUpperBound = k;
+					CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcLowerBound = k;
 				     }
 				   else
 				     {
-					pRTP1 = &pSchTra->TsPresTRule[CurPres - 1];
-					pTC1 = &pRTP1->RtCase[pRTP1->RtNCase - 1];
-					pTC1->TaUpperBound = k;
-					pTC1->TaLowerBound = k;
+					pPresTrans = &pTSchema->TsPresTRule[CurPres - 1];
+					pCase = &pPresTrans->RtCase[pPresTrans->RtNCase - 1];
+					pCase->TaUpperBound = k;
+					pCase->TaLowerBound = k;
 				     }
 				   break;
 				default:
@@ -2725,256 +2688,256 @@ rnb                 pr;
 		       switch (r)	/* r= numero de regle */
 			     {
 				case RULE_MaxLineLength:	/* MaxLineLength */
-				   pSchTra->TsLineLength = k;
+				   pTSchema->TsLineLength = k;
 				   break;
 				case RULE_AncestorLevel:	/* AncestorLevel */
-				   pSchTra->TsCounter[pSchTra->TsNCounters - 1].TnAcestorLevel =
-				      k * SigneAncetre;
+				   pTSchema->TsCounter[pTSchema->TsNCounters - 1].TnAcestorLevel =
+				      k * AncestorSign;
 				   break;
 				case RULE_RelLevel:	/* RelLevel */
-				   CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAscendLevel = k;
-				   if (!SignGreaterOrLess)
-				      CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAscendRel = RelEquals;
+				   CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAscendLevel = k;
+				   if (!GreaterOrLessSign)
+				      CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAscendRel = RelEquals;
 				   break;
 				case RULE_CondRelLevel:	/* CondRelLevel */
-				   CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAscendRelLevel = k;
+				   CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAscendRelLevel = k;
 				   break;
 				case RULE_InitValue:	/* InitValue */
 				   if (pr == RULE_CountFunction)
 				      /* dans une definition de compteur */
-				      pSchTra->TsCounter[pSchTra->TsNCounters - 1].TnParam1 = k;
+				      pTSchema->TsCounter[pTSchema->TsNCounters - 1].TnParam1 = k;
 				   else if (pr == RULE_Rule1)
 				      /* dans une instruction de traduction Set */
-				      CurRegle->TrCounterParam = k;
+				      CurTRule->TrCounterParam = k;
 				   break;
 
 				case RULE_IncrValue:	/* IncrValue */
 				   if (pr == RULE_CountFunction)
 				      /* dans une definition de compteur */
-				      pSchTra->TsCounter[pSchTra->TsNCounters - 1].TnParam2 = k;
+				      pTSchema->TsCounter[pTSchema->TsNCounters - 1].TnParam2 = k;
 				   else if (pr == RULE_Rule1)
 				      /* dans une instruction de traduction Add */
-				      CurRegle->TrCounterParam = k;
+				      CurTRule->TrCounterParam = k;
 				   break;
 				case RULE_Length:	/* Length */
-				   pVa1 = &pSchTra->TsVariable[pSchTra->TsNVariables - 1];
-				   pVa1->TrvItem[pVa1->TrvNItems - 1].TvLength = k;
+				   pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
+				   pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvLength = k;
 				   break;
 
 				case RULE_MinVal:	/* MinVal */
-				   if (DansCondition)
-				      i = CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAttr;
+				   if (InCondition)
+				      i = CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAttr;
 				   else
 				      i = CurAttr;
-				   if (pSchStr->SsAttribute[i - 1].AttrType != AtNumAttr
+				   if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr
 				       || k >= MAX_INT_ATTR_VAL)
 				      /* ce n'est pas un attribut numerique */
 				      CompilerError (wi, TRA, FATAL, TRA_NOT_A_NUMERICAL_ATTR, inputLine, linenb);
 				   else
 				     {
-					k = k * SigneAttrVal + 1;
-					SigneAttrVal = 1;
+					k = k * AttrValSign + 1;
+					AttrValSign = 1;
 					/* a priori, la prochaine valeur */
 					/* d'attribut numerique sera positive */
-					if (DansCondition)
-					   CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcLowerBound = k;
+					if (InCondition)
+					   CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcLowerBound = k;
 					else
 					  {
-					     pRT1 = &pSchTra->TsAttrTRule[CurAttr - 1];
-					     pRT1->AtrCase[pRT1->AtrNCases - 1].TaLowerBound = k;
+					     pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
+					     pAttrTrans->AtrCase[pAttrTrans->AtrNCases - 1].TaLowerBound = k;
 					  }
 				     }
 				   break;
 
 				case RULE_MaxVal:	/* MaxVal */
-				   if (DansCondition)
-				      i = CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAttr;
+				   if (InCondition)
+				      i = CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAttr;
 				   else
 				      i = CurAttr;
-				   if (pSchStr->SsAttribute[i - 1].AttrType != AtNumAttr
+				   if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr
 				       || k >= MAX_INT_ATTR_VAL)
 				      /* ce n'est pas un attribut numerique */
 				      CompilerError (wi, TRA, FATAL, TRA_NOT_A_NUMERICAL_ATTR, inputLine, linenb);
 				   else
 				     {
-					k = k * SigneAttrVal - 1;
-					SigneAttrVal = 1;
+					k = k * AttrValSign - 1;
+					AttrValSign = 1;
 					/* a priori, la prochaine valeur */
 					/* d'attribut numerique sera positive */
-					if (DansCondition)
-					   CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcUpperBound = k;
+					if (InCondition)
+					   CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcUpperBound = k;
 					else
 					  {
-					     pRT1 = &pSchTra->TsAttrTRule[CurAttr - 1];
-					     pRT1->AtrCase[pRT1->AtrNCases - 1].TaUpperBound = k;
+					     pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
+					     pAttrTrans->AtrCase[pAttrTrans->AtrNCases - 1].TaUpperBound = k;
 					  }
 				     }
 				   break;
 
 				case RULE_MinInterval:		/* MinInterval */
-				   if (DansCondition)
-				      i = CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAttr;
+				   if (InCondition)
+				      i = CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAttr;
 				   else
 				      i = CurAttr;
-				   if (pSchStr->SsAttribute[i - 1].AttrType != AtNumAttr
+				   if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr
 				       || k >= MAX_INT_ATTR_VAL)
 				      /* ce n'est pas un attribut numerique */
 				      CompilerError (wi, TRA, FATAL, TRA_NOT_A_NUMERICAL_ATTR, inputLine, linenb);
 				   else
 				     {
-					k = k * SigneAttrVal;
-					SigneAttrVal = 1;
+					k = k * AttrValSign;
+					AttrValSign = 1;
 					/* a priori, la prochaine valeur */
 					/* d'attribut numerique sera positive */
-					if (DansCondition)
-					   CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcLowerBound = k;
+					if (InCondition)
+					   CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcLowerBound = k;
 					else
 					  {
-					     pRT1 = &pSchTra->TsAttrTRule[CurAttr - 1];
-					     pRT1->AtrCase[pRT1->AtrNCases - 1].TaLowerBound = k;
+					     pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
+					     pAttrTrans->AtrCase[pAttrTrans->AtrNCases - 1].TaLowerBound = k;
 					  }
 				     }
 				   break;
 
 				case RULE_MaxInterval:		/* MaxInterval */
-				   if (DansCondition)
-				      i = CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAttr;
+				   if (InCondition)
+				      i = CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAttr;
 				   else
 				      i = CurAttr;
-				   if (pSchStr->SsAttribute[i - 1].AttrType != AtNumAttr
+				   if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr
 				       || k >= MAX_INT_ATTR_VAL)
 				      /* ce n'est pas un attribut numerique */
 				      CompilerError (wi, TRA, FATAL, TRA_NOT_A_NUMERICAL_ATTR, inputLine, linenb);
 				   else
 				     {
-					k = k * SigneAttrVal;
-					SigneAttrVal = 1;
+					k = k * AttrValSign;
+					AttrValSign = 1;
 					/* a priori, la prochaine valeur */
 					/* d'attribut numerique sera positive */
-					if (DansCondition)
-					   if (CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcLowerBound > k)
+					if (InCondition)
+					   if (CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcLowerBound > k)
 					      CompilerError (wi, TRA, FATAL, TRA_INCONSISTENT_LIMITS, inputLine, linenb);
 					   else
-					      CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcUpperBound = k;
+					      CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcUpperBound = k;
 					else
 					  {
-					     pRT1 = &pSchTra->TsAttrTRule[CurAttr - 1];
-					     if (pRT1->AtrCase[pRT1->AtrNCases - 1].TaLowerBound > k)
+					     pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
+					     if (pAttrTrans->AtrCase[pAttrTrans->AtrNCases - 1].TaLowerBound > k)
 						CompilerError (wi, TRA, FATAL, TRA_INCONSISTENT_LIMITS, inputLine, linenb);
 					     else
-						pRT1->AtrCase[pRT1->AtrNCases - 1].TaUpperBound = k;
+						pAttrTrans->AtrCase[pAttrTrans->AtrNCases - 1].TaUpperBound = k;
 					  }
 				     }
 				   break;
 
 				case RULE_ValEqual:	/* ValEqual */
-				   if (DansCondition)
-				      i = CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcAttr;
+				   if (InCondition)
+				      i = CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAttr;
 				   else
 				      i = CurAttr;
-				   if (pSchStr->SsAttribute[i - 1].AttrType != AtNumAttr || k >= MAX_INT_ATTR_VAL)
+				   if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr || k >= MAX_INT_ATTR_VAL)
 				      /* ce n'est pas un attribut numerique */
 				      CompilerError (wi, TRA, FATAL, TRA_INCONSISTENT_LIMITS, inputLine, linenb);
 				   else
 				     {
-					k = k * SigneAttrVal;
-					SigneAttrVal = 1;
+					k = k * AttrValSign;
+					AttrValSign = 1;
 					/* a priori, la prochaine valeur */
 					/* d'attribut numerique sera positive */
-					if (DansCondition)
+					if (InCondition)
 					  {
-					     CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcUpperBound = k;
-					     CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcLowerBound = k;
+					     CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcUpperBound = k;
+					     CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcLowerBound = k;
 					  }
 					else
 					  {
-					     pRT1 = &pSchTra->TsAttrTRule[CurAttr - 1];
-					     pTC1 = &pRT1->AtrCase[pRT1->AtrNCases - 1];
-					     pTC1->TaUpperBound = k;
-					     pTC1->TaLowerBound = pTC1->TaUpperBound;
+					     pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
+					     pCase = &pAttrTrans->AtrCase[pAttrTrans->AtrNCases - 1];
+					     pCase->TaUpperBound = k;
+					     pCase->TaLowerBound = pCase->TaUpperBound;
 					  }
 				     }
 				   break;
 
 				case RULE_MinimumPres:
-				   k = k * SignePresVal + 1;
-				   SignePresVal = 1;
+				   k = k * PresValSign + 1;
+				   PresValSign = 1;
 				   /* a priori, la prochaine valeur */
 				   /* d'attribut numerique sera positive */
-				   if (DansCondition)
-				      CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcLowerBound = k;
+				   if (InCondition)
+				      CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcLowerBound = k;
 				   else
 				     {
-					pRTP1 = &pSchTra->TsPresTRule[CurPres - 1];
-					pRTP1->RtCase[pRTP1->RtNCase - 1].TaLowerBound = k;
+					pPresTrans = &pTSchema->TsPresTRule[CurPres - 1];
+					pPresTrans->RtCase[pPresTrans->RtNCase - 1].TaLowerBound = k;
 				     }
 				   break;
 
 				case RULE_MaximumPres:
-				   k = k * SignePresVal - 1;
-				   SignePresVal = 1;
+				   k = k * PresValSign - 1;
+				   PresValSign = 1;
 				   /* a priori, la prochaine valeur */
 				   /* d'attribut numerique sera positive */
-				   if (DansCondition)
-				      CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcUpperBound = k;
+				   if (InCondition)
+				      CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcUpperBound = k;
 				   else
 				     {
-					pRTP1 = &pSchTra->TsPresTRule[CurPres - 1];
-					pRTP1->RtCase[pRTP1->RtNCase - 1].TaUpperBound = k;
+					pPresTrans = &pTSchema->TsPresTRule[CurPres - 1];
+					pPresTrans->RtCase[pPresTrans->RtNCase - 1].TaUpperBound = k;
 				     }
 				   break;
 
 				case RULE_MinIntervalPres:
-				   k = k * SignePresVal;
-				   SignePresVal = 1;
+				   k = k * PresValSign;
+				   PresValSign = 1;
 				   /* a priori, la prochaine valeur */
 				   /* d'attribut numerique sera positive */
-				   if (DansCondition)
-				      CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcLowerBound = k;
+				   if (InCondition)
+				      CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcLowerBound = k;
 				   else
 				     {
-					pRTP1 = &pSchTra->TsPresTRule[CurPres - 1];
-					pRTP1->RtCase[pRTP1->RtNCase - 1].TaLowerBound = k;
+					pPresTrans = &pTSchema->TsPresTRule[CurPres - 1];
+					pPresTrans->RtCase[pPresTrans->RtNCase - 1].TaLowerBound = k;
 				     }
 				   break;
 
 				case RULE_MaxIntervalPres:
-				   k = k * SignePresVal;
-				   SignePresVal = 1;
+				   k = k * PresValSign;
+				   PresValSign = 1;
 				   /* a priori, la prochaine valeur */
 				   /* d'attribut numerique sera positive */
-				   if (DansCondition)
-				      if (CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcLowerBound > k)
+				   if (InCondition)
+				      if (CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcLowerBound > k)
 					 /* BorneInf > BorneSup !! */
 					 CompilerError (wi, TRA, FATAL, TRA_INCONSISTENT_LIMITS, inputLine, linenb);
 				      else
-					 CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcUpperBound = k;
+					 CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcUpperBound = k;
 				   else
 				     {
-					pRTP1 = &pSchTra->TsPresTRule[CurPres - 1];
-					if (pRTP1->RtCase[pRTP1->RtNCase - 1].TaLowerBound > k)
+					pPresTrans = &pTSchema->TsPresTRule[CurPres - 1];
+					if (pPresTrans->RtCase[pPresTrans->RtNCase - 1].TaLowerBound > k)
 					   CompilerError (wi, TRA, FATAL, TRA_INCONSISTENT_LIMITS, inputLine, linenb);
 					else
-					   pRTP1->RtCase[pRTP1->RtNCase - 1].TaUpperBound = k;
+					   pPresTrans->RtCase[pPresTrans->RtNCase - 1].TaUpperBound = k;
 				     }
 				   break;
 
 				case RULE_PresVal:
-				   k = k * SignePresVal;
-				   SignePresVal = 1;
+				   k = k * PresValSign;
+				   PresValSign = 1;
 				   /* a priori, la prochaine valeur */
 				   /* d'attribut numerique sera positive */
-				   if (DansCondition)
+				   if (InCondition)
 				     {
-					CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcUpperBound = k;
-					CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcLowerBound = k;
+					CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcUpperBound = k;
+					CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcLowerBound = k;
 				     }
 				   else
 				     {
-					pRTP1 = &pSchTra->TsPresTRule[CurPres - 1];
-					pTC1 = &pRTP1->RtCase[pRTP1->RtNCase - 1];
-					pTC1->TaUpperBound = k;
-					pTC1->TaLowerBound = k;
+					pPresTrans = &pTSchema->TsPresTRule[CurPres - 1];
+					pCase = &pPresTrans->RtCase[pPresTrans->RtNCase - 1];
+					pCase->TaUpperBound = k;
+					pCase->TaLowerBound = k;
 				     }
 				   break;
 
@@ -2993,69 +2956,69 @@ rnb                 pr;
 				   else
 				      /* FnCopy le texte de la constante */
 				     {
-					pSchTra->TsConstBegin[pSchTra->TsNConstants - 1] = ConstIndx;
+					pTSchema->TsConstBegin[pTSchema->TsNConstants - 1] = ConstIndx;
 					for (i = 0; i <= wl - 2; i++)
-					   pSchTra->TsConstant[ConstIndx + i - 1] = inputLine[wi + i - 1];
+					   pTSchema->TsConstant[ConstIndx + i - 1] = inputLine[wi + i - 1];
 					ConstIndx += wl;
-					pSchTra->TsConstant[ConstIndx - 2] = '\0';
+					pTSchema->TsConstant[ConstIndx - 2] = '\0';
 				     }
 				   break;
 
 				case RULE_CharString:	/* CharString */
-				   nouvconst (wl, wi);
+				   NewConstant (wl, wi);
 				   if (!error)
 				      if (pr == RULE_Function)	/* dans une definition de variable */
 					{
-					   pVa1 = &pSchTra->TsVariable[pSchTra->TsNVariables - 1];
-					   if (pVa1->TrvNItems >= MAX_TRANSL_VAR_ITEM)
+					   pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
+					   if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 					      /* trop de fonctions */
 					      CompilerError (wi, TRA, FATAL, TRA_TOO_MANY_ELEMS_IN_THE_VARIABLE, inputLine, linenb);
 					   else
 					     {
-						pVa1->TrvNItems++;
-						pVa1->TrvItem[pVa1->TrvNItems - 1].TvType =
+						pTransVar->TrvItem[pTransVar->TrvNItems].TvType =
 						   VtText;
-						pVa1->TrvItem[pVa1->TrvNItems - 1].TvItem =
-						   pSchTra->TsNConstants;
+						pTransVar->TrvItem[pTransVar->TrvNItems].TvItem =
+						   pTSchema->TsNConstants;
+						pTransVar->TrvNItems++;
 					     }
 					}
 				      else if (pr == RULE_Token)
 					 /* dans une regle Create ou Write */
 					{
-					   CurRegle->TrObject = ToConst;
-					   CurRegle->TrObjectNum = pSchTra->TsNConstants;
+					   CurTRule->TrObject = ToConst;
+					   CurTRule->TrObjectNum = pTSchema->TsNConstants;
 					}
 				   break;
 
 				case RULE_TextEqual:	/* TextEqual */
-				   if (pSchStr->SsAttribute[CurAttr - 1].AttrType != AtTextAttr)
+				   if (pSSchema->SsAttribute[CurAttr - 1].AttrType != AtTextAttr)
 				      /* ce n'est pas un attribut textuel */
 				      CompilerError (wi, TRA, FATAL, TRA_NOT_A_TEXTUAL_ATTR, inputLine, linenb);
 				   else if (wl > MAX_NAME_LENGTH)
 				      /* texte trop long */
 				      CompilerError (wi, TRA, FATAL, TRA_NAME_TOO_LONG, inputLine, linenb);
-				   else if (DansCondition)
+				   else if (InCondition)
 				     {
 					for (i = 0; i < wl - 1; i++)
-					   CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcTextValue[i] =
+					   CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcTextValue[i] =
 					      inputLine[wi + i - 1];
-					CurBloc->TbCondition[CurBloc->TbNConditions - 1].TcTextValue[wl - 1] = '\0';
+					CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcTextValue[wl - 1] = '\0';
 				     }
 				   else
 				     {
-					pRT1 = &pSchTra->TsAttrTRule[CurAttr - 1];
+					pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
 					for (i = 0; i < wl - 1; i++)
-					   pRT1->AtrTextValue[i] = inputLine[wi + i - 1];
-					pRT1->AtrTextValue[wl - 1] = '\0';
+					   pAttrTrans->AtrTextValue[i] = inputLine[wi + i - 1];
+					pAttrTrans->AtrTextValue[wl - 1] = '\0';
 				     }
 				   break;
 
 				case RULE_FileName:	/* FileName */
-				   nouvconst (wl, wi);
+				   NewConstant (wl, wi);
 				   if (!error)
 				     {
-					CurRegle->TrBufOrConst = ToConst;
-					CurRegle->TrInclFile = pSchTra->TsNConstants;
+					CurTRule->TrBufOrConst = ToConst;
+					CurTRule->TrInclFile = pTSchema->TsNConstants;
 				     }
 				   break;
 
@@ -3068,7 +3031,7 @@ rnb                 pr;
 				      /* la chaine source ne peut contenir qu'un caractere */
 				      CompilerError (wi + 1, TRA, FATAL, TRA_ONLY_ONE_CHARACTER, inputLine, linenb);
 				   else
-				      NouvTradCar (wi, wl);
+				      NewSourceString (wi, wl);
 				   break;
 
 				case RULE_Target:	/* Target */
@@ -3076,20 +3039,20 @@ rnb                 pr;
 				      /* chaine cible trop longue */
 				      CompilerError (wi, TRA, FATAL, TRA_STRING_TOO_LONG, inputLine, linenb);
 				   else
-				      TradCible (wi, wl);
+				      ProcessTargetString (wi, wl);
 				   break;
 
 				case RULE_LineEndString:
 				   /* chaine de fin de ligne */
-				   pSchTra->TsEOL[0] = inputLine[wi - 1];
+				   pTSchema->TsEOL[0] = inputLine[wi - 1];
 				   break;
 
 				case RULE_LineEndInsertString:
 				   /* chaine de fin de ligne */
 				   if (wl <= MAX_NAME_LENGTH)
 				      for (i = 0; i < wl - 1; i++)
-					 pSchTra->TsTranslEOL[i] = inputLine[wi + i - 1];
-				   pSchTra->TsTranslEOL[i] = '\0';
+					 pTSchema->TsTranslEOL[i] = inputLine[wi + i - 1];
+				   pTSchema->TsTranslEOL[i] = '\0';
 				   break;
 
 				default:
@@ -3102,7 +3065,7 @@ rnb                 pr;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    Main                                                            | */
+/* |    main                                                            | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -3116,11 +3079,11 @@ char              **argv;
 #endif /* __STDC__ */
 
 {
-   Name                 pfilename;	/* nom du fichier a compiler */
-   BinFile             infile;
+   FILE*               infile;
+   Name                srceFileName;	/* nom du fichier a compiler */
    int                 len, i;
    boolean             fileOK;
-   char                cppFileName[200];
+   char                buffer[200];
    iline               wi;	/* position du debut du mot courant dans la ligne */
    iline               wl;	/* longueur du mot courant */
    nature              wn;	/* nature du mot courant */
@@ -3146,25 +3109,25 @@ char              **argv;
 	   TtaDisplaySimpleMessage (TRA, FATAL, TRA_FILE_NOT_FOUND);
 	else
 	  {
-	     strncpy (pfilename, argv[1], MAX_NAME_LENGTH - 1);
-	     len = strlen (pfilename);
+	     strncpy (srceFileName, argv[1], MAX_NAME_LENGTH - 1);
+	     len = strlen (srceFileName);
 	     /* ajoute le suffixe .SCH */
-	     strcat (pfilename, ".SCH");
+	     strcat (srceFileName, ".SCH");
 
-	     if (FileExist (pfilename) == 0)
+	     if (FileExist (srceFileName) == 0)
 		TtaDisplaySimpleMessage (TRA, FATAL, TRA_FILE_NOT_FOUND);
 	     else
 		/* le fichier d'entree existe, on l'ouvre */
 	       {
-		  infile = BIOreadOpen (pfilename);
+		  infile = BIOreadOpen (srceFileName);
 		  /* supprime le suffixe ".SCH" */
-		  pfilename[len] = '\0';
+		  srceFileName[len] = '\0';
 		  /* acquiert la memoire pour le schema de traduction */
-		  if ((pSchTra = (PtrTSchema) malloc (sizeof (TranslSchema))) == NULL)
+		  if ((pTSchema = (PtrTSchema) malloc (sizeof (TranslSchema))) == NULL)
 		     TtaDisplaySimpleMessage (TRA, FATAL, TRA_NOT_ENOUGH_MEM);
 		  lgidenttable = 0;	/* table des identificateurs vide */
 		  linenb = 0;
-		  initgener ();	/* prepare la generation */
+		  Initialize ();	/* prepare la generation */
 
 		  /* lit tout le fichier et fait l'analyse */
 		  fileOK = True;
@@ -3188,7 +3151,7 @@ char              **argv;
 		       else if (inputLine[0] == '#')
 			  /* cette ligne contient une directive du preprocesseur cpp */
 			 {
-			    sscanf (inputLine, "# %d %s", &linenb, cppFileName);
+			    sscanf (inputLine, "# %d %s", &linenb, buffer);
 			    linenb--;
 			 }
 		       else
@@ -3210,7 +3173,7 @@ char              **argv;
 				      analword (wi, wl, wn, &c, &r, &nb, &pr);
 				      /* on analyse le mot */
 				      if (!error)
-					 generate (wi, wl, c, r, nb, pr);
+					 ProcessToken (wi, wl, c, r, nb, pr);
 				      /* on le traite */
 				   }
 			      }
@@ -3224,14 +3187,14 @@ char              **argv;
 		    {
 		       /* ecrit le schema compile' dans le fichier de sortie */
 		       /* le directory des schemas est le directory courant */
-		       strcat (pfilename, ".TRA");
-		       fileOK = WrSchTrad (pfilename, pSchTra, pSchStr);
+		       strcat (srceFileName, ".TRA");
+		       fileOK = WrSchTrad (srceFileName, pTSchema, pSSchema);
 		       if (!fileOK)
-			  TtaDisplaySimpleMessageString (TRA, FATAL, TRA_CANNOT_WRITE, pfilename);
+			  TtaDisplaySimpleMessageString (TRA, FATAL, TRA_CANNOT_WRITE, srceFileName);
 		    }
-		  free (pSchTra);
-		  free (pSchStr);
-		  free (pSchStrExt);
+		  free (pTSchema);
+		  free (pSSchema);
+		  free (pExtSSchema);
 	       }
 	  }
      }
