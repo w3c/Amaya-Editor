@@ -646,7 +646,6 @@ static int          NoTextChild[] =
    HTML_EL_MAP, HTML_EL_Applet,
    HTML_EL_Object, HTML_EL_IFRAME, HTML_EL_NOFRAMES,
    HTML_EL_Division, HTML_EL_Center, HTML_EL_NOSCRIPT,
-   HTML_EL_Table, HTML_EL_thead, HTML_EL_tbody, HTML_EL_tfoot, HTML_EL_Table_row,
    HTML_EL_Data_cell, HTML_EL_Heading_cell,
 #ifdef GRAPHML
    HTML_EL_XMLGraphics,

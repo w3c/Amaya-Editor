@@ -408,8 +408,8 @@ Document            doc;
 #endif
 {
   Element            *colElement;
-  Element             row, firstrow, colhead;
-  Element             cell, group;
+  Element             row, nextRow, firstrow, colhead;
+  Element             cell, nextCell, group;
   ElementType         elType;
   AttributeType       attrTypeHSpan, attrTypeVSpan, attrType;
   Attribute           attr;
@@ -450,11 +450,16 @@ Document            doc;
       group = TtaGetParent (row);
       while (row != NULL)
 	{
+	nextRow = row;  TtaNextSibling (&nextRow);
+	elType = TtaGetElementType (row);
+	if (elType.ElTypeNum == HTML_EL_Table_row)
+	  {
 	  /* treat all cells in the row */
 	  cRef = 0;
 	  cell = TtaGetFirstChild (row);
 	  while (cell != NULL)
 	    {
+	      nextCell = cell; TtaNextSibling (&nextCell);
 	      elType = TtaGetElementType (cell);
 	      /* process only cell elements */
 	      if (elType.ElTypeNum == HTML_EL_Data_cell ||
@@ -530,7 +535,12 @@ Document            doc;
 			cRef++;
 		    }
 		}
-	      TtaNextSibling (&cell);
+		/* accept comments and invalid elements */
+	      else if (elType.ElTypeNum != HTML_EL_Invalid_element &&
+		       elType.ElTypeNum != HTML_EL_Comment_)
+		/* Delete any other type of element */
+		TtaDeleteTree (cell, doc);
+	      cell = nextCell;
 	    }
 
 	  /* check missing cells */
@@ -543,10 +553,16 @@ Document            doc;
 		AddEmptyCellInRow (row, colElement[cRef], doc);
 	      cRef++;
 	    }
+	  }
+	  /* accept comments and invalid elements instead of rows */
+	else if (elType.ElTypeNum != HTML_EL_Invalid_element &&
+		 elType.ElTypeNum != HTML_EL_Comment_)
+	   /* Delete any other type of element */
+	   TtaDeleteTree (row, doc);
+	row = nextRow;
 
-	  TtaNextSibling (&row);
-	  /* do we have to get a new group of rows */
-	  if (row == NULL)
+	/* do we have to get a new group of rows */
+	if (row == NULL)
 	    {
 	      elType = TtaGetElementType (group);
 	      if (elType.ElTypeNum == HTML_EL_tbody)
