@@ -1505,8 +1505,10 @@ boolean             inTree;
 		   if (pRule->SrConstruct == CsChoice)
 		      ok = FALSE;
 		   else if (pRule->SrConstruct == CsIdentity)
-		      if (EquivalentSRules (pEl->ElTypeNumber, pEl->ElStructSchema,
-					    pEl->ElParent->ElTypeNumber, pEl->ElParent->ElStructSchema, pEl))
+		      if (EquivalentSRules (pEl->ElParent->ElTypeNumber,
+					    pEl->ElParent->ElStructSchema, 
+					    pEl->ElTypeNumber, pEl->ElStructSchema,
+					    pEl))
 			 /* le fils et le pere sont de type equivalent, refus */
 			 ok = FALSE;
 	     }

@@ -1215,29 +1215,10 @@ int                 elInput;
        elType = TtaGetElementType (el);
        if (!withinP)
 	 {
-	   parent = TtaGetParent (el);
-	   elType = TtaGetElementType (parent);
-	   if (elType.ElTypeNum == HTML_EL_Data_cell ||
-	       elType.ElTypeNum == HTML_EL_Heading_cell)
-	     {
-	       /* disable document structure checking */
-	       TtaSetStructureChecking (FALSE, doc);
-	       /* insert a paragraph */
-	       elType.ElTypeNum = HTML_EL_Paragraph;
-	       parent = TtaNewElement (doc, elType);
-	       TtaInsertSibling (parent, el, FALSE, doc);
-	       /* move previous element into this paragraph */
-	       TtaRemoveTree (el, doc);
-	       TtaInsertFirstChild (&el, parent, doc);
-	       TtaSetStructureChecking (TRUE, doc);	       
-	     }
-	   else
-	     {
-	       /* create the paragraph element */
-	       elType.ElTypeNum = HTML_EL_Paragraph;
-	       TtaInsertElement (elType, doc);
-	       TtaGiveFirstSelectedElement (doc, &parent, &firstchar, &lastchar);
-	     }
+	   /* create the paragraph element */
+	   elType.ElTypeNum = HTML_EL_Paragraph;
+	   TtaInsertElement (elType, doc);
+	   TtaGiveFirstSelectedElement (doc, &parent, &firstchar, &lastchar);
 	   /* create the input element */
 	   elType.ElTypeNum = elInput;
 	   input = TtaNewTree (doc, elType, "");
