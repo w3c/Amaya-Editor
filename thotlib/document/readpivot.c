@@ -3318,7 +3318,7 @@ boolean             withEvent;
 		   SendEventAttrRead (p, pDoc);
 		if (!error)
 		  {
-		     /* retire les elements exclus (au sens SGML) */
+		     /* retire les elements exclus */
 		     RemoveExcludedElem (&p);
 		     /* accouple les paires */
 		     AssociatePairs (p);
@@ -3359,7 +3359,7 @@ boolean             withEvent;
 		/* L'arbre a ete lu entierement */
 	       {
 		  pDoc->DocAssocRoot[assoc - 1] = p;
-		  /* On retire les elements exclus (au sens SGML) */
+		  /* retire les elements exclus */
 		  if (p != NULL)
 		    {
 		       RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1]);
@@ -3433,7 +3433,7 @@ boolean             withEvent;
 			      {
 				 /* chaine le 1er elem. associe dans cette liste */
 				 InsertFirstChild (pDoc->DocAssocRoot[assoc - 1], pFirst);
-				 /* retire les elements exclus (au sens SGML) */
+				 /* retire les elements exclus */
 				 RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1]);
 				 /* accouple les paires */
 				 AssociatePairs (pDoc->DocAssocRoot[assoc - 1]);
@@ -3457,7 +3457,7 @@ boolean             withEvent;
 			       InsertFirstChild (pDoc->DocAssocRoot[assoc - 1], s);
 			    else
 			       InsertElementAfter (p, s);
-			    /* retire les elements exclus (au sens SGML) */
+			    /* retire les elements exclus */
 			    RemoveExcludedElem (&s);
 			    /* accouple les paires */
 			    AssociatePairs (s);
@@ -3514,7 +3514,7 @@ boolean             withEvent;
 					     FALSE, TRUE, TRUE, TRUE);
 			     InsertFirstChild (p, s);
 			  }
-			/* traite les elements exclus (au sens SGML) */
+			/* traite les elements exclus */
 			RemoveExcludedElem (&p);
 			/* accouple les paires */
 			AssociatePairs (p);

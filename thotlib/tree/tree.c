@@ -4072,14 +4072,14 @@ PtrDocument         pDoc;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    ReplicateEleme duplique un noeud sans copier ses fils.                 | */
+/* |    ReplicateElement duplique un noeud sans copier ses fils.        | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-PtrElement          ReplicateEleme (PtrElement pEl, PtrDocument pDoc)
+PtrElement          ReplicateElement (PtrElement pEl, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-PtrElement          ReplicateEleme (pEl, pDoc)
+PtrElement          ReplicateElement (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 

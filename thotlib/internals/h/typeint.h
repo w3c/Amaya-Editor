@@ -1,4 +1,3 @@
-
 /*  Structure interne des documents, arbre abstrait, attribut, reference.
     Declarations de types pour la representation 
     interne des documents.
@@ -424,16 +423,16 @@ typedef struct _ChangedReferredEl
 
 /* descripteur d'un fichier .EXT charge' en memoire : liste des elements d'un
 document qui sont reference's par d'autres documents */
-typedef struct EnteringReferences *PtrEnteringReferences;
+typedef struct _EnteringReferences *PtrEnteringReferences;
 
-typedef struct EnteringReferences
+typedef struct _EnteringReferences
 {
 	PtrEnteringReferences	ErNext;	/* descripteur suivant */
 	PtrReferredDescr ErFirstReferredEl;	/* premier element reference' par */
 					/* d'autres documents */
 	DocumentIdentifier	ErDocIdent;	/* identificateur du document */
 	PathBuffer	ErFileName;	/* nom complet du fichier .EXT */
-} RefEntrantes;
+} EnteringReferences;
 
 /* descripteur d'un fichier .REF charge' en memoire : liste des elements
 reference's qui appartenaient a un document qui ont ete detruits ou qui ont

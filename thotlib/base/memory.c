@@ -852,7 +852,7 @@ PtrEnteringReferences    *pRE;
    PtrEnteringReferences     pRe1;
 
    if (PtFree_InputRef == NULL)
-      *pRE = (PtrEnteringReferences) malloc (sizeof (InputRef));
+      *pRE = (PtrEnteringReferences) malloc (sizeof (EnteringReferences));
    else
      {
 	*pRE = PtFree_InputRef;
@@ -861,7 +861,7 @@ PtrEnteringReferences    *pRE;
      }
    NbUsed_InputRef++;
    pRe1 = *pRE;
-   memset (pRe1, 0, sizeof (InputRef));
+   memset (pRe1, 0, sizeof (EnteringReferences));
    pRe1->ErNext = NULL;
    pRe1->ErFirstReferredEl = NULL;
    ClearDocIdent (&pRe1->ErDocIdent);

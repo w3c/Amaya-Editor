@@ -847,7 +847,7 @@ PtrElement          viewRoot;
 		    {
 		       pDoc->DocAssocRoot[assoc - 1] =
 			  NewSubtree (r, pSS, pDoc, assoc, TRUE, TRUE, TRUE, TRUE);
-		       /* supprime les elements exclus (au sens SGML) */
+		       /* supprime les elements exclus */
 		       RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1]);
 		       if (pDoc->DocAssocRoot[assoc - 1] != NULL)
 			 {

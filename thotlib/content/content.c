@@ -167,7 +167,7 @@ boolean             withAppEvent;
 	       }
 	  }
 	/* copie l'element de texte avec attributs et presentation specifique */
-	pEl2 = ReplicateEleme (pEl, pDoc);
+	pEl2 = ReplicateElement (pEl, pDoc);
 	pEl2->ElVolume = 0;
 	/* acquiert un buffer de texte pour la 2eme partie */
 	CreateTextBuffer (pEl2);

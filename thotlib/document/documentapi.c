@@ -142,7 +142,7 @@ char               *documentName;
 		  /* One create the internal representation of an empty document */
 		  pDoc->DocRootElement = NewSubtree (pDoc->DocSSchema->SsRootElem,
 		    pDoc->DocSSchema, pDoc, 0, TRUE, TRUE, TRUE, TRUE);
-		  /* suppress excluded elements (SGML meaning) */
+		  /* suppress excluded elements */
 		  RemoveExcludedElem (&pDoc->DocRootElement);
 		  if (pDoc->DocRootElement == NULL)
 		    {

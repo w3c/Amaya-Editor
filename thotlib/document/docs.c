@@ -322,7 +322,7 @@ PathBuffer          directory;
 			     (*pDoc)->DocRootElement = NewSubtree ((*pDoc)->DocSSchema->SsRootElem,
 				(*pDoc)->DocSSchema, *pDoc, 0, TRUE, TRUE,
 				TRUE, TRUE);
-			     /* supprime les elements exclus (au sens SGML) */
+			     /* supprime les elements exclus */
 			     RemoveExcludedElem (&((*pDoc)->DocRootElement));
 			  }
 		     }
