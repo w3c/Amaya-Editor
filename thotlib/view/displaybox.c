@@ -2110,7 +2110,9 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
   int                xd, yd, width, height;
   int                t, b, l, r;
   ThotBool           selfsel;
+#ifdef _GL
   ThotBool           isOpenList = FALSE;
+#endif  /* _GL */
 
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;

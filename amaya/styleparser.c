@@ -2933,6 +2933,71 @@ static char *ParseCSSBackgroundColor (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
+  ParseCSSUrl: parse an URL
+  ----------------------------------------------------------------------*/
+static char *ParseCSSUrl (char *cssRule, char **url)
+{
+  char                       saved;
+  char                      *base, *ptr;
+
+  cssRule = SkipBlanksAndComments (cssRule);
+  saved = *cssRule;
+  if (*cssRule == '(')
+    {
+      cssRule++;
+      cssRule = SkipBlanksAndComments (cssRule);
+      /*** Escaped quotes are not handled. See function SkipQuotedString */
+      if (*cssRule == '"')
+	{
+	  cssRule++;
+	  base = cssRule;
+	  while (*cssRule != EOS && *cssRule != '"')
+	    cssRule++;
+	}
+      else if (*cssRule == '\'')
+	{
+	  cssRule++;
+	  base = cssRule;
+	  while (*cssRule != EOS && *cssRule != '\'')
+	    cssRule++;
+	}
+      else
+	{
+	  base = cssRule;
+	  while (*cssRule != EOS && *cssRule != ')')
+	    cssRule++;
+	}
+      /* keep the current position */
+      ptr = cssRule;
+      if (saved == ')')
+	{
+	  /* remove extra spaces */
+	  if (cssRule[-1] == SPACE)
+	    {
+	      *cssRule = SPACE;
+	      cssRule--;
+	      while (cssRule[-1] == SPACE)
+		cssRule--;
+	    }
+	}
+      saved = *cssRule;
+      *cssRule = EOS;
+      *url = TtaStrdup (base);
+      *cssRule = saved;
+      if (saved == '"' || saved == '\'')
+	/* we need to skip the quote character and possible spaces */
+	{
+	  cssRule++;
+	  cssRule = SkipBlanksAndComments (cssRule);
+	}
+      else
+	cssRule = ptr;
+    }
+  cssRule++;
+  return cssRule;
+}
+
+/*----------------------------------------------------------------------
   ParseSVGStroke: parse a SVG stroke property
   ----------------------------------------------------------------------*/
 static char *ParseSVGStroke (Element element, PSchema tsch,
@@ -2940,6 +3005,7 @@ static char *ParseSVGStroke (Element element, PSchema tsch,
 			     CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue     best;
+  char                  *url;
 
   best.typed_data.unit = UNIT_INVALID;
   best.typed_data.real = FALSE;
@@ -2954,6 +3020,19 @@ static char *ParseSVGStroke (Element element, PSchema tsch,
 	  TtaSetStylePresentation (PRForeground, element, tsch, context, best);
 	}
       cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "currentColor", 12))
+    {
+      /* **** do something here to inherit color */;
+    }
+  else if (!strncasecmp (cssRule, "url", 3))
+    {  
+      cssRule += 3;
+      cssRule = ParseCSSUrl (cssRule, &url);
+      /* **** do something with the url ***** */;
+      TtaFreeMemory (url);
+      /* **** caution: another color value may follow the uri (in case
+	 the uri could ne be dereferenced) *** */
     }
   else
     {
@@ -2977,6 +3056,7 @@ static char *ParseSVGFill (Element element, PSchema tsch,
 			   CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue     best;
+  char                  *url;
 
   best.typed_data.unit = UNIT_INVALID;
   best.typed_data.real = FALSE;
@@ -2991,6 +3071,19 @@ static char *ParseSVGFill (Element element, PSchema tsch,
 	  TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
 	}
       cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "currentColor", 12))
+    {
+      /* **** do something here to inherit color */;
+    }
+  else if (!strncasecmp (cssRule, "url", 3))
+    {  
+      cssRule += 3;
+      cssRule = ParseCSSUrl (cssRule, &url);
+      /* **** do something with the url ***** */;
+      TtaFreeMemory (url);
+      /* **** caution: another color value may follow the uri (in case
+	 the uri could ne be dereferenced) *** */
     }
   else
     {
@@ -3175,71 +3268,6 @@ void ParseCSSBackgroundImageCallback (Document doc, Element element,
 	      }
 	  }
     }
-}
-
-/*----------------------------------------------------------------------
-  ParseCSSUrl: parse an URL
-  ----------------------------------------------------------------------*/
-static char *ParseCSSUrl (char *cssRule, char **url)
-{
-  char                       saved;
-  char                      *base, *ptr;
-
-  cssRule = SkipBlanksAndComments (cssRule);
-  saved = *cssRule;
-  if (*cssRule == '(')
-    {
-      cssRule++;
-      cssRule = SkipBlanksAndComments (cssRule);
-      /*** Escaped quotes are not handled. See function SkipQuotedString */
-      if (*cssRule == '"')
-	{
-	  cssRule++;
-	  base = cssRule;
-	  while (*cssRule != EOS && *cssRule != '"')
-	    cssRule++;
-	}
-      else if (*cssRule == '\'')
-	{
-	  cssRule++;
-	  base = cssRule;
-	  while (*cssRule != EOS && *cssRule != '\'')
-	    cssRule++;
-	}
-      else
-	{
-	  base = cssRule;
-	  while (*cssRule != EOS && *cssRule != ')')
-	    cssRule++;
-	}
-      /* keep the current position */
-      ptr = cssRule;
-      if (saved == ')')
-	{
-	  /* remove extra spaces */
-	  if (cssRule[-1] == SPACE)
-	    {
-	      *cssRule = SPACE;
-	      cssRule--;
-	      while (cssRule[-1] == SPACE)
-		cssRule--;
-	    }
-	}
-      saved = *cssRule;
-      *cssRule = EOS;
-      *url = TtaStrdup (base);
-      *cssRule = saved;
-      if (saved == '"' || saved == '\'')
-	/* we need to skip the quote character and possible spaces */
-	{
-	  cssRule++;
-	  cssRule = SkipBlanksAndComments (cssRule);
-	}
-      else
-	cssRule = ptr;
-    }
-  cssRule++;
-  return cssRule;
 }
 
 /*----------------------------------------------------------------------
