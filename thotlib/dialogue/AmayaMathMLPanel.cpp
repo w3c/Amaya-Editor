@@ -315,9 +315,12 @@ void AmayaMathMLPanel::DoFilter( int * filtre )
   while ( filtre[element_id] != -1 )
     {
       wxString & entity_name = m_MathMLEntityHash[filtre[element_id]];
-      m_pList->Append( entity_name
-		       + (entity_name.IsEmpty() ? _T("") :_T(" : "))
-		       + wxString((wxChar)filtre[element_id]));
+      if (entity_name.IsEmpty())
+      m_pList->Append( wxString((wxChar)filtre[element_id]) );
+      else
+	m_pList->Append( entity_name
+			 + _T(" : ")
+			 + wxString((wxChar)filtre[element_id]));
       element_id++;
     }
 }
