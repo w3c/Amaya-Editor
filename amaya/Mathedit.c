@@ -27,6 +27,9 @@
 #include "subsup.xpm"
 #include "sup.xpm"
 #include "sub.xpm"
+#include "overunder.xpm"
+#include "over.xpm"
+#include "under.xpm"
 #include "fence.xpm"
 #include "n.xpm"
 #include "o.xpm"
@@ -37,7 +40,7 @@
 #define MAX_MATHS  2
 
 static Pixmap       iconMath;
-static Pixmap       mIcons[11];
+static Pixmap       mIcons[14];
 static int          MathsDialogue;
 static boolean      InitMaths;
 
@@ -143,7 +146,8 @@ char               *data;
 	{
 	  /* the selection concerns an HTML element */
 	  mathSchema = TtaNewNature (docSchema, "MathML", "MathMLP");
-	  if (elType.ElTypeNum != HTML_EL_XML)
+	  if (elType.ElTypeNum != HTML_EL_Math &&
+	      elType.ElTypeNum != HTML_EL_MathDisp)
 	    {
 	      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && c1 > 1)
 		{
@@ -171,7 +175,8 @@ char               *data;
 		  if (el != NULL)
 		    {
 		      newType = TtaGetElementType (el);
-		      if (newType.ElTypeNum == HTML_EL_XML)
+		      if (newType.ElTypeNum == HTML_EL_Math ||
+			  newType.ElTypeNum == HTML_EL_MathDisp)
 			{
 			  /* move to the end of the previous MathML element */
 			  before = FALSE;
@@ -187,7 +192,8 @@ char               *data;
 		  if (el != NULL)
 		    {
 		      newType = TtaGetElementType (el);
-		      if (newType.ElTypeNum == HTML_EL_XML)
+		      if (newType.ElTypeNum == HTML_EL_Math ||
+			  newType.ElTypeNum == HTML_EL_MathDisp)
 			{
 			  /* move at the end of the previous MathML element */
 			  before = TRUE;
@@ -198,7 +204,8 @@ char               *data;
 		}
 	    }
 
-	  if (elType.ElTypeNum == HTML_EL_XML)
+	  if (elType.ElTypeNum == HTML_EL_Math ||
+	      elType.ElTypeNum == HTML_EL_MathDisp)
 	    {
 	      /* search the first MathML element */
 		sibling = TtaGetFirstChild (sibling);
@@ -212,7 +219,7 @@ char               *data;
 	  else
 	    {
 	      /* create the XML element before or after the sibling element */
-	      elType.ElTypeNum = HTML_EL_XML;
+	      elType.ElTypeNum = HTML_EL_Math;
 	      el = TtaNewTree (doc, elType, "");
 	      TtaInsertSibling (el, sibling, before, doc);
 	      sibling = TtaGetFirstChild (el);
@@ -242,21 +249,30 @@ char               *data;
 	  newType.ElTypeNum = MathML_EL_MSUB;
 	  break;
 	case 6:
-	  newType.ElTypeNum = MathML_EL_Block;
+	  newType.ElTypeNum = MathML_EL_MUNDEROVER;
 	  break;
 	case 7:
+	  newType.ElTypeNum = MathML_EL_MOVER;
+	  break;
+	case 8:
+	  newType.ElTypeNum = MathML_EL_MUNDER;
+	  break;
+	case 9:
+	  newType.ElTypeNum = MathML_EL_Block;
+	  break;
+	case 10:
 	  newType.ElTypeNum = MathML_EL_MN;
 	  addConstruction = FALSE;
 	  break;
-	case 8:
+	case 11:
 	  newType.ElTypeNum = MathML_EL_MO;
 	  addConstruction = FALSE;
 	  break;
-	case 9:
+	case 12:
 	  newType.ElTypeNum = MathML_EL_MI;
 	  addConstruction = FALSE;
 	  break;
-	case 10:
+	case 13:
 	  newType.ElTypeNum = MathML_EL_MTEXT;
 	  addConstruction = FALSE;
 	  break;
@@ -367,7 +383,7 @@ View                view;
 		   TtaGetMessage (AMAYA, AM_BUTTON_MATH),
 		   0, NULL, TRUE, 1, 'L', D_DONE);
       TtaNewIconMenu (MathsDialogue + MenuMaths, MathsDialogue + FormMaths, 0,
-		   NULL, 11, mIcons, FALSE);
+		   NULL, 14, mIcons, FALSE);
       TtaSetMenuForm (MathsDialogue + MenuMaths, 0);
       TtaSetDialoguePosition ();
     }
@@ -406,11 +422,62 @@ void                InitMathML ()
    mIcons[3] = TtaCreatePixmapLogo (subsup_xpm);
    mIcons[4] = TtaCreatePixmapLogo (sup_xpm);
    mIcons[5] = TtaCreatePixmapLogo (sub_xpm);
-   mIcons[6] = TtaCreatePixmapLogo (fence_xpm);
-   mIcons[7] = TtaCreatePixmapLogo (n_xpm);
-   mIcons[8] = TtaCreatePixmapLogo (o_xpm);
-   mIcons[9] = TtaCreatePixmapLogo (id_xpm);
-   mIcons[10] = TtaCreatePixmapLogo (txt_xpm);
+   mIcons[6] = TtaCreatePixmapLogo (overunder_xpm);
+   mIcons[7] = TtaCreatePixmapLogo (over_xpm);
+   mIcons[8] = TtaCreatePixmapLogo (under_xpm);
+   mIcons[9] = TtaCreatePixmapLogo (fence_xpm);
+   mIcons[10] = TtaCreatePixmapLogo (n_xpm);
+   mIcons[11] = TtaCreatePixmapLogo (o_xpm);
+   mIcons[12] = TtaCreatePixmapLogo (id_xpm);
+   mIcons[13] = TtaCreatePixmapLogo (txt_xpm);
+}
+
+/*----------------------------------------------------------------------
+   SetFontslantAttr
+   The content of a MI element has been modified.
+   Change attribute fontslant accordingly.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void SetFontslantAttr (Element el, Document doc)
+#else /* __STDC__*/
+void SetFontslantAttr (el, doc)
+  Element	el;
+  Document	doc;
+#endif /* __STDC__*/
+{
+  Element	textEl;
+  ElementType	elType;
+  AttributeType	attrType;
+  Attribute	attr;
+  int		len;
+
+  textEl = TtaGetFirstChild (el);
+  if (textEl != NULL)
+     {
+     /* search the fontslant attribute */
+     elType = TtaGetElementType (el);
+     attrType.AttrSSchema = elType.ElSSchema;
+     attrType.AttrTypeNum = MathML_ATTR_fontslant;
+     attr = TtaGetAttribute (el, attrType);
+     /* get content length */
+     len = TtaGetTextLength (textEl);
+     if (len > 1)
+        /* put an attribute fontslant = plain */
+	{
+	if (attr == NULL)
+	   {
+	   attr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (el, attr, doc);
+	   }
+	TtaSetAttributeValue (attr, MathML_ATTR_fontslant_VAL_plain, el, doc);
+	}
+     else
+	/* remove attribute fontslant if it exists */
+	{
+	if (attr != NULL)
+	   TtaRemoveAttribute (el, attr, doc);
+	}
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -425,14 +492,7 @@ void MImodified(event)
      NotifyOnTarget *event;
 #endif /* __STDC__*/
 {
-  Element	el;
-  Document	doc;
-  AttributeType	attrType;
-  Attribute	attr;
-
-  el = event->element;
-  doc = event->document;
-  /* to be completed */
+  SetFontslantAttr (event->element, event->document);
 }
 
 #endif /* MATHML */

@@ -24,12 +24,14 @@ Comment\240: Comment
 StyleRule: Style rule
 Block_Quote: BLOCKQUOTE
 Address: ADDRESS
+MathDisp: MATHDISP
 Horizontal_Rule: HR
 Basic_Set: element
 Paragraph: P
 Preformatted: PRE
 Anchor: A
 Basic_Elem: element
+Math: MATH
 Italic_text: I
 Bold_text: B
 Teletype_text: TT

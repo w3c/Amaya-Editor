@@ -746,8 +746,17 @@ BOXES
 	END;
 #endif
 #ifdef MATHML
- XML_S: BEGIN
-	Content: Text 'XML';
+ Math_S: BEGIN
+	Content: Text 'MATH';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+ MathDisp_S: BEGIN
+	Content: Text 'MATHDISP';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -4619,8 +4628,8 @@ RULES
 
 #endif
 #ifdef MATHML
- XML: BEGIN
-	CreateBefore(XML_S);
+ Math: BEGIN
+	CreateBefore(Math_S);
 	CreateWith(VerticalLine);
 	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	LineBreak: No;
@@ -4635,6 +4644,21 @@ RULES
 		Visibility: 0;
 	END;
 
+ MathDisp: BEGIN
+	CreateBefore(MathDisp_S);
+	CreateWith(VerticalLine);
+	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	LineBreak: No;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		Visibility: 5;
+		END;	
+	IN Alternate_view
+		Visibility: 0;
+	END;
 #endif
 
  Paragraph: BEGIN

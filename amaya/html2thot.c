@@ -204,7 +204,7 @@ GIMapping;
 
 typedef unsigned char MathEntityName[20];
 typedef struct _MathEntity
-  {			 /* a XML entity representing an operator char */
+  {			 /* a Math entity representing an operator char */
      MathEntityName      MentityName;	/* entity name */
      int                 charCode;	/* decimal code of char */
      char		 alphabet;	/* 'L' = ISO-Latin-1, 'G' = Symbol */
@@ -238,6 +238,7 @@ static GIMapping    MathGIMappingTable[] =
    {"MI", SPACE, MathML_EL_MI, NULL},
    {"MO", SPACE, MathML_EL_MO, NULL},
    {"MN", SPACE, MathML_EL_MN, NULL},
+   {"MOVER", SPACE, MathML_EL_MOVER, NULL},
    {"MROOT", SPACE, MathML_EL_MROOT, NULL},
    {"MROW", SPACE, MathML_EL_MROW, NULL},
    {"MS", SPACE, MathML_EL_MS, NULL},
@@ -246,6 +247,8 @@ static GIMapping    MathGIMappingTable[] =
    {"MSUBSUP", SPACE, MathML_EL_MSUBSUP, NULL},
    {"MSUP", SPACE, MathML_EL_MSUP, NULL},
    {"MTEXT", SPACE, MathML_EL_MTEXT, NULL},
+   {"MUNDER", SPACE, MathML_EL_MUNDER, NULL},
+   {"MUNDEROVER", SPACE, MathML_EL_MUNDEROVER, NULL},
    {"", SPACE, 0, NULL}	/* Last entry. Mandatory */
 };
 
@@ -304,6 +307,10 @@ static GIMapping    GIMappingTable[] =
    {"LINK", 'E', HTML_EL_LINK, NULL},
    {"LISTING", SPACE, HTML_EL_Preformatted, NULL},		/*converted to PRE */
    {"MAP", SPACE, HTML_EL_MAP, NULL},
+#ifdef MATHML
+   {"MATH", SPACE, HTML_EL_Math, NULL},
+   {"MATHDISP", SPACE, HTML_EL_MathDisp, NULL},
+#endif
    {"MENU", SPACE, HTML_EL_Menu, NULL},
    {"META", 'E', HTML_EL_META, NULL},
 #ifdef COUGAR
@@ -340,9 +347,6 @@ static GIMapping    GIMappingTable[] =
    {"U", SPACE, HTML_EL_Underlined_text, NULL},
    {"UL", SPACE, HTML_EL_Unnumbered_List, NULL},
    {"VAR", SPACE, HTML_EL_Variable, NULL},
-#ifdef MATHML
-   {"XML", SPACE, HTML_EL_XML, NULL},
-#endif
    {"XMP", SPACE, HTML_EL_Preformatted, NULL},	/* converted to PRE */
    {"", SPACE, 0, NULL}	/* Last entry. Mandatory */
 };
@@ -2309,27 +2313,33 @@ Element             el;
 		break;
 #endif /* COUGAR */
 #ifdef MATHML
-	    case HTML_EL_XML:
-		/*  it's an XML element. Create a MathML element */
+	    case HTML_EL_Math:
+	    case HTML_EL_MathDisp:
+		/*  it's a Math element. Create a MathML element */
 	        child = TtaGetFirstChild(el);
 	        if (child != NULL)
 		  {
-		  elType.ElSSchema = MathSSchema;
-		  elType.ElTypeNum = MathML_EL_MathML;
-		  new = TtaNewElement (theDocument, elType);
-		  TtaInsertSibling (new, child, TRUE, theDocument);
-		  next = child;
-		  TtaNextSibling (&next);
-		  TtaRemoveTree (child, theDocument);
-		  TtaInsertFirstChild (&child, new, theDocument);
-		  prev = child;
-		  while (next != NULL)
+		  childType = TtaGetElementType (child);
+		  if (childType.ElSSchema != MathSSchema  ||
+		      childType.ElTypeNum != MathML_EL_MathML)
 		     {
-		     child = next;
+		     elType.ElSSchema = MathSSchema;
+		     elType.ElTypeNum = MathML_EL_MathML;
+		     new = TtaNewElement (theDocument, elType);
+		     TtaInsertSibling (new, child, TRUE, theDocument);
+		     next = child;
 		     TtaNextSibling (&next);
 		     TtaRemoveTree (child, theDocument);
-		     TtaInsertSibling (child, prev, FALSE, theDocument);
+		     TtaInsertFirstChild (&child, new, theDocument);
 		     prev = child;
+		     while (next != NULL)
+		        {
+		        child = next;
+		        TtaNextSibling (&next);
+		        TtaRemoveTree (child, theDocument);
+		        TtaInsertSibling (child, prev, FALSE, theDocument);
+		        prev = child;
+		        }
 		     }
 		  }
 		break;
@@ -2669,29 +2679,50 @@ Element                 el;
    
    switch (elType.ElTypeNum)
      {
+     case MathML_EL_MI:
+	SetFontslantAttr (el, theDocument);
+	break;
      case MathML_EL_MROOT:
-	/* end of a Root. Create a Root_index and a Root_exp */
-	CheckMathSubExpressions (el, MathML_EL_Root_index, MathML_EL_Root_exp, 0);
+	/* end of a Root. Create a RootBase and an Index */
+	CheckMathSubExpressions (el, MathML_EL_RootBase, MathML_EL_Index, 0);
 	break;
      case MathML_EL_MSQRT:
-	/* end od a Square Root. Create a Root_exp */
-	CheckMathSubExpressions (el, MathML_EL_Root_exp, 0, 0);
+	/* end od a Square Root. Create a RootBase */
+	CheckMathSubExpressions (el, MathML_EL_RootBase, 0, 0);
 	break;
      case MathML_EL_MFRAC:
 	/* end of a fraction. Create a Numerator and a Denominator */
-	CheckMathSubExpressions (el, MathML_EL_Numerator, MathML_EL_Denominator, 0);
+	CheckMathSubExpressions (el, MathML_EL_Numerator,
+				 MathML_EL_Denominator, 0);
 	break;
      case MathML_EL_MSUBSUP:
-	/* end of a MSUBSUP. Create Base, Sub_exp, and Sup_exp */
-	CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Sub_exp, MathML_EL_Sup_exp);
+	/* end of a MSUBSUP. Create Base, Subscript, and Superscript */
+	CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Subscript,
+				 MathML_EL_Superscript);
 	break;
      case MathML_EL_MSUB:
-	/* end of a MSUB. Create Base and Sub_exp */
-	CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Sub_exp, 0);
+	/* end of a MSUB. Create Base and Subscript */
+	CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Subscript, 0);
 	break;
      case MathML_EL_MSUP:
-	/* end of a MSUP. Create Base and Sub_exp */
-	CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Sup_exp, 0);
+	/* end of a MSUP. Create Base and Superscript */
+	CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Superscript, 0);
+	break;
+     case MathML_EL_MUNDEROVER:
+	/* end of a MUNDEROVER. Create UnderOverBase, Underscript, and
+	   Overscript */
+	CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
+				 MathML_EL_Underscript, MathML_EL_Overscript);
+	break;
+     case MathML_EL_MUNDER:
+	/* end of a MUNDER. Create UnderOverBase, and Underscript */
+	CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
+				 MathML_EL_Underscript, 0);
+	break;
+     case MathML_EL_MOVER:
+	/* end of a MOVER. Create UnderOverBase, and Overscript */
+	CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
+				 MathML_EL_Overscript, 0);
 	break;
      default:
 	break;
@@ -2701,7 +2732,7 @@ Element                 el;
 
 /*----------------------------------------------------------------------
    CloseMathElement
-   End of XML element defined in entry entry of MappingTable.
+   End of MathML element defined in entry entry of MappingTable.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      CloseMathElement (int entry)
@@ -2760,10 +2791,10 @@ int                 entry;
 }
 
 /*----------------------------------------------------------------------
-   ChangeToXML
+   ChangeToMathML
   ----------------------------------------------------------------------*/
 
-static void ChangeToXML ()
+static void ChangeToMathML ()
 {
    WithinMathML = TRUE;
    if (MathSSchema == NULL)
@@ -3153,9 +3184,10 @@ char                c;
    if ((lastElement != NULL) && (lastElemEntry != -1))
      {
 #ifdef MATHML
-	if (!strcmp (GIMappingTable[lastElemEntry].htmlGI, "XML"))
-	   /* <XML> has been read */
-	   ChangeToXML ();
+	if (!strcmp (GIMappingTable[lastElemEntry].htmlGI, "MATH") ||
+	    !strcmp (GIMappingTable[lastElemEntry].htmlGI, "MATHDISP"))
+	   /* <MATH> or <MATHDISP> has been read */
+	   ChangeToMathML ();
 #endif /* MATHML */
 	if (!strcmp (GIMappingTable[lastElemEntry].htmlGI, "PRE"))
 	   /* <PRE> has been read */
@@ -3671,7 +3703,8 @@ char                c;
 #ifdef MATHML
    if (WithinMathML)
 	{
-	if (strcasecmp(inputBuffer, "XML") == 0)
+	if (strcasecmp(inputBuffer, "MATH") == 0 ||
+	    strcasecmp(inputBuffer, "MATHDISP") == 0)
 	   WithinMathML = FALSE;
 	else
 	   {

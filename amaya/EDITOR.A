@@ -8,6 +8,9 @@ USES
 #ifdef AMAYA_JAVA
        , Java
 #endif
+#ifdef MATHML
+       , MathML
+#endif
        ;
 
 DEFAULT

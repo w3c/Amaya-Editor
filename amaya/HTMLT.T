@@ -332,13 +332,21 @@ RULES
 #endif
 
 #ifdef MATHML
- XML: BEGIN
-	Create '<xml';
+ Math: BEGIN
+	Create '<math';
 	Create Attributes;
 	Create '>\12';
         indent +2;
         indent -2 after;
-	Create '</xml>\12' After;	
+	Create '</math>\12' After;	
+	END;
+ MathDisp: BEGIN
+	Create '<mathdisp';
+	Create Attributes;
+	Create '>\12';
+        indent +2;
+        indent -2 after;
+	Create '</mathdisp>\12' After;	
 	END;
  MathML:
         begin

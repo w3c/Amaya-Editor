@@ -176,9 +176,10 @@ ElementType         elementType;
      {
 	element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
 		  LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, TRUE);
-	if (element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
-	   if (!element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
-	      element->ElPairIdent = 0;
+	if (element != NULL)
+	   if (element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
+	      if (!element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
+	         element->ElPairIdent = 0;
      }
    return ((Element) element);
 }

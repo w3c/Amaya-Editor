@@ -74,7 +74,7 @@ STRUCT
 	Object;
 #endif
 #ifdef MATHML
-	XML = MathML;
+	MathDisp = MathML;
 #endif
 	Form;
 	Table;
@@ -131,7 +131,7 @@ STRUCT
 	Object;
 #endif
 #ifdef MATHML
-	XML;
+	Math = MathML;
 #endif
 	SCRIPT;
 	MAP;

@@ -69,6 +69,30 @@ RULES
 	create '</msup>\12' after;
 	end;
 
+   MUNDER :
+	begin
+	create '<munder>\12';
+	indent +2;
+	indent -2 after;
+	create '</munder>\12' after;
+	end;
+
+   MOVER :
+	begin
+	create '<mover>\12';
+	indent +2;
+	indent -2 after;
+	create '</mover>\12' after;
+	end;
+
+   MUNDEROVER :
+	begin
+	create '<munderover>\12';
+	indent +2;
+	indent -2 after;
+	create '</munderover>\12' after;
+	end;
+
    Block :
 	begin
 	create '<mrow>\12';

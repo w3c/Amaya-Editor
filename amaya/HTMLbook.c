@@ -559,7 +559,7 @@ boolean        deleteTree;
       parent = TtaGetParent (elem);
 
       /* insert a DIV element */
-      elType.ElTypeNum = HTML_EL_DIV;
+      elType.ElTypeNum = HTML_EL_Division;
       copy = TtaNewElement (destDoc, elType);
       TtaInsertSibling (copy, elem, TRUE, destDoc);
 

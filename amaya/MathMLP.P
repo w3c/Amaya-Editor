@@ -165,6 +165,42 @@ BOXES
 		END;
 	END;
 
+ MUNDER_S: BEGIN
+	Content: Text 'MUNDER';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		VertPos: Top = Enclosing . Top + 0.5;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MOVER_S: BEGIN
+	Content: Text 'MOVER';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		VertPos: Top = Enclosing . Top + 0.5;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MUNDEROVER_S: BEGIN
+	Content: Text 'MUNDEROVER';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		VertPos: Top = Enclosing . Top + 0.5;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
  MF_S: BEGIN
 	Content: Text 'MF';
 	Visibility: 0;
@@ -349,7 +385,7 @@ RULES
 	CreateFirst(RadicalSymbol);
 	CreateFirst(MROOT_S);
 	CreateWith(VerticalLine);
-	HorizRef: Enclosed Root_exp . HRef ;
+	HorizRef: Enclosed RootBase . HRef ;
 	VertPos: HRef = Previous not MF . HRef;
 	Gather: Yes;
 	IN Math_Structure_view BEGIN
@@ -367,7 +403,7 @@ RULES
 	CreateFirst(RadicalSymbol);
 	CreateFirst(MSQRT_S);
 	CreateWith(VerticalLine);
-	HorizRef: Enclosed Root_exp . HRef ;
+	HorizRef: Enclosed RootBase . HRef ;
 	VertPos: HRef = Previous not MF . HRef;
 	Gather: Yes;
 	IN Math_Structure_view BEGIN
@@ -380,7 +416,7 @@ RULES
 		END;
   	END;
 
-   Root_index:
+   Index:
    	BEGIN
 	HorizRef: * . Top;
    	HorizPos: Left = Enclosing.Left;
@@ -394,7 +430,7 @@ RULES
 		END;
    	END;
 	
-   Root_exp:	
+   RootBase:	
         BEGIN
 	HorizPos: Left = Enclosing . Left + 0.7;
 	VertPos: Top = Enclosing . Top + 0.1;
@@ -441,7 +477,7 @@ RULES
         BEGIN
 	HorizRef: * . Top;
 	HorizPos: VMiddle = Bar . VMiddle;
-	VertPos: Top = Bar . Bottom + 0.2;
+	VertPos: Top = Bar . Bottom + 0.1;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
@@ -513,7 +549,7 @@ RULES
 		END;
 	END;
 
-   Sup_exp:
+   Superscript:
 	BEGIN
 	Size: Enclosing-2 min 0;
 	HorizRef: * . Top;
@@ -527,12 +563,103 @@ RULES
 		END;
 	END;
 
-   Sub_exp:
+   Subscript:
 	BEGIN
 	Size: Enclosing-2 min 0;
 	HorizRef: * . Top;
 	HorizPos: Left = Base . Right;
 	VertPos: Top = Base . Bottom - 0.5;
+	IN Math_Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+
+   MUNDER:
+        BEGIN
+	Gather: Yes;
+	HorizRef: Enclosed UnderOverBase . HRef;
+	CreateFirst(MUNDER_S);
+	CreateWith(VerticalLine);
+	VertPos: HRef = Previous not MF . HRef;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
+		Font: Helvetica;
+		END;
+	END;
+
+   MOVER:
+        BEGIN
+	Gather: Yes;
+	HorizRef: Enclosed UnderOverBase . HRef;
+	CreateFirst(MOVER_S);
+	CreateWith(VerticalLine);
+	VertPos: HRef = Previous not MF . HRef;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
+		Font: Helvetica;
+		END;
+	END;
+
+   MUNDEROVER:
+        BEGIN
+	Gather: Yes;
+	HorizRef: Enclosed UnderOverBase . HRef;
+	CreateFirst(MUNDEROVER_S);
+	CreateWith(VerticalLine);
+	VertPos: HRef = Previous not MF . HRef;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - 1;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + 1;
+		VertPos: Top = Previous . Bottom;
+		Font: Helvetica;
+		END;
+	END;
+
+   UnderOverBase:
+	BEGIN
+	VertPos: NIL;
+	HorizPos: VMiddle = Enclosing . VMiddle;
+	IN Math_Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+
+   Underscript:
+	BEGIN
+	Size: Enclosing-2 min 0;
+	HorizRef: * . Top;
+	HorizPos: VMiddle = Enclosing . VMiddle;
+	VertPos: Top = UnderOverBase . Bottom;
+	IN Math_Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+
+   Overscript:
+	BEGIN
+	Size: Enclosing-2 min 0;
+	HorizRef: * . Top;
+	HorizPos: VMiddle = Enclosing . VMiddle;
+	VertPos: Bottom = UnderOverBase . Top;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
