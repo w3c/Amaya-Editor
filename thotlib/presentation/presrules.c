@@ -116,7 +116,8 @@ PtrAbstractBox     *pAbb;
 
 /*----------------------------------------------------------------------
    	AncestorAbsBox	  rend le premier element pElAsc ascendant de pE
-   			  et qui possede un pave dans la vue view
+   			  et qui possede un pave (non de presentation)
+			  dans la vue view
    			  retourne ce pave dans pAbb ou NULL sinon
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -133,15 +134,16 @@ PtrElement         *pElAsc;
 
    *pElAsc = pE;
    *pAbb = NULL;
-   if ((*pElAsc)->ElParent == NULL)
-      *pAbb = NULL;
-   else
+   if (pE->ElParent != NULL)
       while ((*pElAsc)->ElParent != NULL && *pAbb == NULL)
 	{
 	   *pElAsc = (*pElAsc)->ElParent;
 	   *pAbb = (*pElAsc)->ElAbstractBox[view - 1];
+	   while (*pAbb && (*pAbb)->AbPresentationBox &&
+		           (*pAbb)->AbElement == *pElAsc)
+	      *pAbb = (*pAbb)->AbNext;
 	   if (*pAbb != NULL)
-	      if ((*pAbb)->AbDead)
+	      if ((*pAbb)->AbDead || (*pAbb)->AbElement != *pElAsc)
 		 *pAbb = NULL;
 	}
 }
