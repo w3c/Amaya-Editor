@@ -11,11 +11,6 @@
  * Author: I. Vatton (INRIA)
  *
  */
-
-#ifdef _WX
-  #include "wx/wx.h"
-#endif /* _WX */
-
 #include "thot_gui.h"
 #include "ustring.h"
 #include "thot_sys.h"
@@ -1654,6 +1649,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
   /* relative line positions */
   orgX = 0;
   orgY = 0;
+  t = b = l = r = lbmp = rbmp = 0;
   if (xAbs)
     orgX += pBlock->BxXOrg;
   if (yAbs)
@@ -1699,10 +1695,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 	pAb = NULL;
     } 
   else
-    {
-      pAb = NULL;
-      t = b = l = r = lbmp = rbmp = 0;
-    }
+    pAb = NULL;
 
   /* check if a clear is requested */
   SetClear (pBox, &clearL, &clearR);
@@ -1855,8 +1848,16 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
       else if (pBlock->BxType == BoFloatBlock)
 	{
 	  /* keep the CSS2 minimun of margins and the current shift */
+#ifdef IV
 	  if (pLine->LiXMax > left + pBlock->BxW - pLine->LiXOrg)
 	    pLine->LiXMax = left + pBlock->BxW - pLine->LiXOrg;
+#else
+	  /* keep the CSS2 minimun of margins and the current shift */
+	  if (pLine->LiXOrg + pLine->LiXMax < left + pBlock->BxW - r)
+	    pLine->LiXMax += r;
+	  else
+	    pLine->LiXMax = pBlock->BxW - pLine->LiXOrg;
+#endif
 	}
   
       /* check if there is enough space between left and right floating boxes */
@@ -1887,10 +1888,14 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 		pLine->LiYOrg = bottomL;
 	      else if (floatL == NULL)
 		pLine->LiYOrg = bottomR;
-	      else if (bottomL < bottomR)
-		pLine->LiYOrg = bottomL;
 	      else
-		pLine->LiYOrg = bottomR;
+		{
+		  floatL = floatR = NULL;
+		  if (bottomL < bottomR)
+		    pLine->LiYOrg = bottomL;
+		  else
+		    pLine->LiYOrg = bottomR;
+		}
 	    }
 
 	  if (newFloat)
@@ -1969,6 +1974,8 @@ static ThotBool IsFloatSet (PtrBox box, PtrBox floatBox, PtrBox pBlock)
   Parameters top, bottom, left, and right give the summ of
   margin/border/padding of the block.
   Work with absolute positions when xAbs and yAbs are TRUE.
+  When the parameter extensibleBlock is TRUE, it doesn't tke into account
+  the current max with.
   Returns:
   - the minimum width of the line (the larger word).
   - full = TRUE if the line is full.
@@ -1977,7 +1984,7 @@ static ThotBool IsFloatSet (PtrBox box, PtrBox floatBox, PtrBox pBlock)
   - breakLine = TRUE if the end of the line correspond to a break element.
   ----------------------------------------------------------------------*/
 static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
-		     ThotBool xAbs, ThotBool yAbs,
+		     ThotBool extensibleBlock, ThotBool xAbs, ThotBool yAbs,
 		     ThotBool notComplete, ThotBool *full, ThotBool *adjust,
 		     ThotBool *breakLine, int frame, int indent,
 		     int top, int bottom, int left, int right,
@@ -2103,6 +2110,18 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	    {
 	      /* just to be sure the line structure is coherent */
 	      pLine->LiLastBox = pLine->LiFirstBox;
+#ifndef IV
+	      if (extensibleBlock)
+		{
+		  if (pBlock->BxAbstractBox->AbEnclosing &&
+		      pBlock->BxAbstractBox->AbEnclosing->AbBox &&
+		      pBlock->BxAbstractBox->AbEnclosing->AbBox->BxW)
+		    val = pBlock->BxAbstractBox->AbEnclosing->AbBox->BxW;
+		  else
+		    val = xi;
+		}
+	      else
+#endif
 	      if (pNextBox->BxAbstractBox->AbFloat == 'N')
 		val = pLine->LiXMax;
 	      else
@@ -2174,7 +2193,8 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		    {
 		      pLine->LiRealLength = xi;
 		      /* handle a new floating box and rebuild the line */
-		      return SetFloat (lastbox, pBlock, pLine, pRootAb, xAbs, yAbs,
+		      return SetFloat (lastbox, pBlock, pLine, pRootAb,
+				       extensibleBlock, xAbs, yAbs,
 				       notComplete, full, adjust, breakLine,
 				       frame, indent, top, bottom, left, right,
 				       floatL, floatR);
@@ -2779,7 +2799,7 @@ static void MoveFloatingBoxes (PtrBox pBlock, int y, int delta, int frame)
   boxes in the current block.
   ----------------------------------------------------------------------*/
 int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
-	      ThotBool xAbs, ThotBool yAbs,
+	      ThotBool extensibleBlock, ThotBool xAbs, ThotBool yAbs,
 	      ThotBool notComplete, ThotBool *full, ThotBool *adjust,
 	      ThotBool *breakLine, int frame, int indent,
 	      int top, int bottom, int left, int right,
@@ -2816,6 +2836,10 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if (box->BxAbstractBox->AbFloat == 'L')
     {
       /* left float */
+      if (left > box->BxLMargin)
+	left -= box->BxLMargin;
+      else
+	left = -left + box->BxLMargin;
       x = left + orgX;
       if  (boxPrevR && pLine->LiYOrg + pLine->LiHeight < boxPrevR->BxYOrg &&
 	   y + box->BxHeight > boxPrevR->BxYOrg)
@@ -2826,7 +2850,11 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   else
     {
       /* right float */
-      x = left + pBlock->BxW - box->BxWidth + orgX;
+     if (right > box->BxRMargin)
+	right -= box->BxRMargin;
+      else
+	right = -right + box->BxRMargin;
+      x = pBlock->BxWidth - right - box->BxWidth + orgX;
       if  (boxPrevL && pLine->LiYOrg + pLine->LiHeight < boxPrevL->BxYOrg &&
 	   y + box->BxHeight > boxPrevL->BxYOrg)
 	/* a line can be inserted before a previous float but not
@@ -2902,9 +2930,9 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
     *floatL = box;
   else
     *floatR = box;
-  return FillLine (pLine, pBlock, pRootAb, xAbs, yAbs, notComplete, full,
-		   adjust, breakLine, frame, indent, top, bottom, left, right,
-		   floatL, floatR);
+  return FillLine (pLine, pBlock, pRootAb, extensibleBlock, xAbs, yAbs,
+		   notComplete, full, adjust, breakLine, frame, indent,
+		   top, bottom, left, right, floatL, floatR);
 }
 
 
@@ -3091,11 +3119,9 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
 			    }
 			}
 #ifdef _GL
-#ifdef _WX
-		      wxASSERT_MSG( !ibox1->DisplayList ||
-				    glIsList(ibox1->DisplayList),
-				    _T("GLBUG - RemoveBreaks : glIsList returns false (pose prb sur certaines machines)"));
-#endif /* _WX */
+#ifdef _TRACE_GL_BUGS_GLISLIST
+  if (ibox1->DisplayList) printf ( "GLBUG - RemoveBreaks : glIsList=%s (pose prb sur certaines machines)\n", glIsList (ibox1->DisplayList) ? "yes" : "no" );
+#endif /* _TRACE_GL_BUGS_GLISLIST */
 		      if (glIsList (ibox1->DisplayList))
 			{
 			  glDeleteLists (ibox1->DisplayList, 1);
@@ -3165,7 +3191,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   int                 top, left, right, bottom, spacing;
   ThotBool            toAdjust, breakLine;
   ThotBool            xAbs, yAbs, extensibleBox;
-  ThotBool            full, still, standard;
+  ThotBool            full, still, standard, getMax;
 
   /* avoid any cycle */
   if (pBox->BxCycles > 0)
@@ -3174,7 +3200,6 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       return;
     }
   pBox->BxCycles++;
-
   /* Fill the block box */
   noWrappedWidth = 0;
   pAb = pBox->BxAbstractBox;
@@ -3183,6 +3208,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   width = pBox->BxW;
   extensibleBox = (pBox->BxContentWidth ||
 		   (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum));
+  getMax = FALSE;
  /* what is the maximum width allowed */
   pParent = pAb->AbEnclosing;
   if ((pAb->AbWidth.DimUnit == UnAuto || pBox->BxType == BoFloatBlock) &&
@@ -3191,6 +3217,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       /* limit to the enclosing box */
       if (pAb->AbWidth.DimAbRef == NULL && pAb->AbWidth.DimValue == -1)
 	while (pParent && pParent->AbBox &&
+	       //pParent->AbBox->BxType != BoCell &&
 	       ((pParent->AbWidth.DimAbRef == NULL &&
 		 pParent->AbWidth.DimValue == -1) ||
 		pParent->AbBox->BxType == BoGhost ||
@@ -3205,8 +3232,9 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  /* manage this box as an extensible box */
 	  maxWidth = 30 * DOT_PER_INCH;
 	  extensibleBox = TRUE;
+	  getMax = TRUE;
 	}
-      pBox->BxRuleWidth = maxWidth;
+      pBox->BxRuleWidth = width/*maxWidth*/;
     }
   else
     maxWidth = 30 * DOT_PER_INCH;
@@ -3387,8 +3415,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      pLine->LiFirstBox = pNextBox;
 	      pLine->LiFirstPiece = pBoxToBreak;
 	      /* Fill the line */
-	      minWidth = FillLine (pLine, pBox, pRootAb, xAbs, yAbs,
-				   pAb->AbTruncatedTail,
+	      minWidth = FillLine (pLine, pBox, pRootAb, extensibleBox,
+				   xAbs, yAbs, pAb->AbTruncatedTail,
 				   &full, &toAdjust, &breakLine, frame,
 				   indent, top, bottom, left, right,
 				   &floatL, &floatR);
@@ -3576,8 +3604,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      pLine->LiLastBox = NULL;
 	      pLine->LiLastPiece = NULL;
 	      pLine->LiYOrg = *height;
-	      minWidth = FillLine (pLine, pBox, pRootAb, xAbs, yAbs,
-				   pAb->AbTruncatedTail,
+	      minWidth = FillLine (pLine, pBox, pRootAb, extensibleBox,
+				   xAbs, yAbs, pAb->AbTruncatedTail,
 				   &full, &toAdjust, &breakLine, frame,
 				   0, top, bottom, left, right,
 				   &floatL, &floatR);
@@ -3611,9 +3639,21 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  FreeLine (pLine);
 	  pLine = NULL;
 	}
+      /* restore the initial width */
+      pBox->BxW = width;
     }
-  /* restore the right width */
-  pBox->BxW = width;
+
+  if (getMax)
+    {
+      /* get the current width */
+      if (pBox->BxMaxWidth && width > pBox->BxMaxWidth)
+	pBox->BxW = pBox->BxMaxWidth;
+      else if (width < pBox->BxMinWidth)
+	pBox->BxW = pBox->BxMinWidth;
+      else
+	pBox->BxW = width;
+      pBox->BxRuleWidth = pBox->BxW;
+    }
   /* now add margins, borders and paddings to min and max widths */
   pBox->BxMinWidth += left + right;
   pBox->BxMaxWidth += left + right;
@@ -4598,7 +4638,3 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 	ChangeDefaultHeight (pBlock, pBlock, h, frame);
     }
 }
-
-
-
-

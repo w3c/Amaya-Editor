@@ -1888,6 +1888,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   pCurrentAb = pBox->BxAbstractBox;
   if (pCurrentAb == NULL)
     return;
+
   GetExtraMargins (pBox, NULL, &i, &j, &extraL, &extraR);
   if (!pCurrentAb->AbMBPChange && delta)
     {
@@ -1979,9 +1980,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 
 	  /* inside width */
 	  pBox->BxW += delta;
-#ifdef _GL
-	  /*pBox->BxClipW += delta;*/
-#endif /* _GL */
 	  /* outside width */
 	  pBox->BxWidth = pBox->BxWidth + delta + diff;
 	  pBox->BxXOrg += orgTrans;
