@@ -1161,7 +1161,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
       else
 	{
 	  if (pFirstEl->ElTerminal)
-	    maxLength = pFirstEl->ElVolume - firstChar;    /* volume 1er element */
+	    maxLength = pFirstEl->ElVolume - firstChar + 2;    /* volume 1er element */
 	  pEl = pFirstEl;
 	  while (pEl)
 	    {
@@ -1178,7 +1178,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
 		    maxLength += lastChar;
 		  else
 		    maxLength += pEl->ElVolume;
-		  lg += 2;
+		  lg += 3;
 		}
 	    }
 	}
@@ -1233,10 +1233,14 @@ static int CopyXClipboard (unsigned char **buffer, View view)
 	  if (pEl)
 	    {
 	      pBlock = SearchEnclosingType (pEl->ElAbstractBox[v], BoBlock, BoFloatBlock);
-	      if (i != 0 && pBlock != pOldBlock && pOldBlock)
+	      if (i && pBlock != pOldBlock)
 		{
 		  /* Add new lines */
-		  text[i++] = NEW_LINE;
+		  text[i++] = EOL;
+#ifdef IV /*_WINDOWS*/
+		  if (PasteLineByLine)
+		    text[i++] = __CR__;
+#endif /* _WINDOWS */
 		  text[i] = EOS;
 		}
 	      /* Recopie le texte de l'element */
