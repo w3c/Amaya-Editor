@@ -1630,26 +1630,6 @@ BOXES
 	END;
 #endif
 #ifdef GRAPHML
- GraphML_Frame: BEGIN
-	Content: Graphics 'R';
-	VertPos: Top = Creator . Top;
-	HorizPos: Left = Creator . Left;
-	Width: Creator . Width;
-	Height: Creator . Height;
-	LineWeight: Creator =;
-	Depth: 40;
-	InLine: No;
-	LineBreak: No;
-	PageBreak: No;
-	Visibility: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
  Graph_S: BEGIN
 	Content: Text 'GRAPHICS';
 	Visibility: 0;
@@ -7039,7 +7019,6 @@ RULES
 
  XMLGraphics: BEGIN
 	CreateBefore(Graph_S);
-	CreateLast(GraphML_Frame);
 	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	LineBreak: No;
 	LineWeight: 0;
@@ -8423,10 +8402,6 @@ ATTRIBUTES
 
  ShowAreas (AREA):
 	LineWeight: 2 pt;
-#ifdef GRAPHML
- ShowAreas (XMLGraphics):
-	LineWeight: 2 pt;
-#endif
 
  SectionNumbering (H2):
 	CreateFirst(H2_section_number);
