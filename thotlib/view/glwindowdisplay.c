@@ -1416,7 +1416,6 @@ void GL_ActivateDrawing()
 {
   GL_Modif = TRUE;
 }
-#undef _PCLDEBUG
 /*----------------------------------------------------------------------
  GL_DrawAll : Only function that Really Draw opengl !!
   ----------------------------------------------------------------------*/
@@ -1488,10 +1487,9 @@ void GL_DrawAll (ThotWidget widget, int frame)
 	}
 #endif /*_GTK*/ 
 }
-#define _PCLDEBUG
+
 void SetGlPipelineState ()
-{
- 
+{ 
     Software_Mode = FALSE;
     if (strncmp ("Mesa", (char *)glGetString (GL_RENDERER), 4) == 0
 	|| strncmp ("Microsoft", (char *)glGetString (GL_RENDERER), 8) == 0
@@ -1656,7 +1654,10 @@ void GLResize (int width, int height, int x, int y)
   glMatrixMode (GL_MODELVIEW);
   glLoadIdentity (); 
 }
-
+/*-----------------------------------
+  glMatroxBUG : expose without a drawing 
+  make black swapbuffer...
+------------------------------------*/
 void glMatroxBUG (int frame, int x, int y, int width, int height)
 {
   if (!Software_Mode)
