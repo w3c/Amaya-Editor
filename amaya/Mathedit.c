@@ -668,7 +668,7 @@ int                 construct;
   ElementType        newType, elType;
   SSchema            docSchema, mathSchema;
   STRING             name;
-  int                c1, i, j, len, oldStructureChecking, col;
+  int                c1, i, len, oldStructureChecking, col;
   ThotBool	     before, ParBlock, emptySel, ok, insertSibling,
 		     selectFirstChild, displayTableForm, registered;
 

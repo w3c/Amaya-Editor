@@ -841,7 +841,6 @@ ThotBool            selected;
   int                 nbcar, x, y;
   int                 lgspace;
   int                 fg, bg;
-  int                 pat;
   int                 RO, op;
   int                 shadow;
   int                 width;

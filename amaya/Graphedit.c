@@ -510,7 +510,7 @@ int           value;
 ThotBool      update;
 #endif /* __STDC__*/
 {
-  CHAR_T		buffer[32], unit[32], *ptr;
+  CHAR_T		buffer[32], unit[32];
   Attribute             attr;
   int                   v, e;
   int                   pval, pe, i;

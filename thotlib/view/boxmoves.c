@@ -3186,7 +3186,7 @@ int                 frame;
   AbDimension        *pDimAb;
   AbPosition         *pPosAb;
   int                 val, width;
-  int                 left, right;
+  int                 left;
   int                 x, i, j, k;
   ThotBool            notEmpty;
   ThotBool            toMove;

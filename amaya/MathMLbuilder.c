@@ -2293,8 +2293,6 @@ int             *error;
 {
    ElementType		elType, parentType;
    Element		child, parent, new, prev, next;
-   AttributeType	attrType;
-   Attribute		attr;
    SSchema              MathMLSSchema;
    ThotBool             ok;
 

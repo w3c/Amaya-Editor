@@ -492,9 +492,11 @@ ThotBool	    withUndo;
    AttributeType       attrType;
    STRING              buffer = NULL;
    int                 length;
+#ifndef _WINDOWS
+   int                 i;
+#endif
    ThotBool            isHTML;
    CHAR_T              s[MAX_LENGTH];
-   int                 i;
 
    /* ask the user to select target document and target anchor */
    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SEL_TARGET), NULL);
