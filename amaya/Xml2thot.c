@@ -220,20 +220,24 @@ static ThotBool      VirtualDoctype = FALSE;
 /* maximum size of error messages */
 #define MaxMsgLength 200
 
-static void   StartOfXmlStartElement (char *name);
-static void   DisableExpatParser ();
-static void   XhtmlCheckInsert (Element *el, Element parent, Document doc, ThotBool *inserted);
-static void   XmlCheckInsert (Element *el, Element parent, Document doc, ThotBool *inserted);
-static void   XhtmlCheckContext (char *elName, const ElementType * elType, ThotBool *isAllowed);
-static void   XmlCheckContext (char *elName, const ElementType *elType, ThotBool *isAllowed);
-static void   XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec, ThotBool *xmlDoctype);
+static void StartOfXmlStartElement (char *name);
+static void DisableExpatParser ();
+static void XhtmlCheckInsert (Element *el, Element parent, Document doc,
+			      ThotBool *inserted);
+static void XmlCheckInsert (Element *el, Element parent, Document doc,
+			    ThotBool *inserted);
+static void XhtmlCheckContext (char *elName, const ElementType * elType,
+			       ThotBool *isAllowed);
+static void XmlCheckContext (char *elName, const ElementType *elType,
+			     ThotBool *isAllowed);
+static void XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
+		      ThotBool *xmlDoctype, ThotBool skipDec);
 
 /*----------------------------------------------------------------------
    ChangeXmlParserContextByDTD
    Get the parser context correponding to a given DTD
   ----------------------------------------------------------------------*/
 static void   ChangeXmlParserContextByDTD (char *DTDname)
-
 {
   currentParserCtxt = firstParserCtxt;
   while (currentParserCtxt != NULL &&
@@ -4899,7 +4903,7 @@ void ParseExternalDocument (char     *fileName,
 	      /* Expat initialization */
 	      InitializeExpatParser (charset);
 	      /* Expat parsing */
-	      XmlParse ((FILE *)infile, charset, &xmlDec, &docType);
+	      XmlParse ((FILE *)infile, charset, &xmlDec, &docType, FALSE);
 	      /* Free expat parser */ 
 	      FreeXmlParserContexts ();
 	      FreeExpatParser ();
@@ -5346,9 +5350,10 @@ ThotBool ParseIncludedXml (FILE     *infile,
 /*---------------------------------------------------------------------------
    XmlParse
    Parses the XML file infile and builds the equivalent Thot abstract tree.
+   The parameter skipDec is TRUE when the declaration should be sipped.
   ---------------------------------------------------------------------------*/
-static void   XmlParse (FILE *infile, CHARSET charset,
-			ThotBool *xmlDec, ThotBool *xmlDoctype)
+static void XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
+		      ThotBool *xmlDoctype, ThotBool skipDec)
 {
 #define	 COPY_BUFFER_SIZE	1024
    char        bufferRead[COPY_BUFFER_SIZE + 1];
@@ -5397,28 +5402,30 @@ static void   XmlParse (FILE *infile, CHARSET charset,
 	   beginning = FALSE;
 	 }
 
+       if (*xmlDec)
+	 /* There is a XML declaration */
+	 /* We look for the first '>' character */
+	 {
+	   j = i;
+	   while ((bufferRead[i] != '>') && i < res)
+	     i++;
+	   if (i < res)
+	     {
+	       i++;
+	       if (!skipDec && !XML_Parse (Parser, &bufferRead[j], (i-j), FALSE))
+		 XmlParseError (errorNotWellFormed,
+				(unsigned char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
+	       res = res - (i-j);
+	     }
+	   /* It's now parsed */
+	   *xmlDec = FALSE;
+	 }
+
        if (!*xmlDoctype)
 	 /* There is no DOCTYPE Declaration 
 	    We include a virtual DOCTYPE declaration so that EXPAT parser
 	    doesn't stop processing when it finds an external entity */	  
 	 {
-	   if (*xmlDec)
-	     /* There is a XML declaration */
-	     /* We look for the first '>' character */
-	     {
-	       j = i;
-	       while ((bufferRead[i] != '>') && i < res)
-		 i++;
-	       if (i < res)
-		 {
-		   i++;
-		   if (!XML_Parse (Parser, &bufferRead[j], (i-j), FALSE))
-		     XmlParseError (errorNotWellFormed,
-				    (unsigned char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
-		   res = res - (i-j);
-		 }
-	     }
-
 	   /* Virtual DOCTYPE Declaration */
 	   if (!XMLNotWellFormed)
 	     {
@@ -5427,6 +5434,7 @@ static void   XmlParse (FILE *infile, CHARSET charset,
 	       if (!XML_Parse (Parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
 		 XmlParseError (errorNotWellFormed,
 				(unsigned char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
+	       /* It's now parsed */
 	       *xmlDoctype = TRUE;
 	       extraLineRead = XML_GetCurrentLineNumber (Parser) - tmpLineRead;
 	     }
@@ -5581,7 +5589,7 @@ void StartXmlParser (Document doc, char *fileName,
 	  isXml = TRUE;
 	}
 #else /* XML_GENERIC */
-      	ChangeXmlParserContextByDTD ("HTML");
+      ChangeXmlParserContextByDTD ("HTML");
 #endif /* XML_GENERIC */
 
       /* Gets the document charset */
@@ -5589,7 +5597,12 @@ void StartXmlParser (Document doc, char *fileName,
       /* Specific initialization for Expat */
       InitializeExpatParser (charset);
       /* Parse the input file and build the Thot tree */
-      XmlParse ((FILE*)stream, charset, &xmlDec, &xmlDoctype);
+      if (charset == UNDEFINED_CHARSET)
+	/* could take the charset in the XML declaration */
+	XmlParse ((FILE*)stream, charset, &xmlDec, &xmlDoctype, FALSE);
+      else
+	/* the charset is now known, don't parse the XML declaration */
+	XmlParse ((FILE*)stream, charset, &xmlDec, &xmlDoctype, TRUE);
       /* Load the style sheets for xml documents */
       LoadXmlStyleSheet (doc);
       /* Completes all unclosed elements */
