@@ -4968,6 +4968,10 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	   else if (method == CE_MAKEBOOK)
 	     mode = AMAYA_ASYNC;
 
+	   /* consider that annotation data is never cached */
+	   if (method == CE_ANNOT)
+	     mode = mode | AMAYA_NOCACHE;
+
 	   if (IsW3Path (pathname))
 	     {
 	       css = SearchCSS (0, pathname, NULL);
