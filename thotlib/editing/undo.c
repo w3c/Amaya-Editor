@@ -42,8 +42,9 @@
 /* maximum number of editing operations recorded in the history */
 #define MAX_EDIT_HISTORY_LENGTH 20
 
-#include "appdialogue_f.h"
 #include "actions_f.h"
+#include "appdialogue_f.h"
+#include "attributes_f.h"
 #include "callback_f.h"
 #include "contentapi_f.h"
 #include "memory_f.h"
@@ -158,12 +159,12 @@ PtrDocument pDoc;
       if (pEl)
          {
          /* if the saved selection is in the freed element, cancel it */
-	 /* get the delimiter that contains the selection */
+	 /* first, get the delimiter that contains the selection */
 	 prevOp = editOp;
 	 do
 	    prevOp = prevOp->EoPreviousOp;
 	 while (prevOp && prevOp->EoType != EtDelimiter);
-	 /* check that selection */
+	 /* then, check that selection */
 	 if (prevOp)
 	    {
             if (prevOp->EoFirstSelectedEl)
@@ -571,28 +572,51 @@ int lastSelChar;
 /*----------------------------------------------------------------------
    CloseHistorySequence
    Close a sequence of editing operations in the history.
+   return FALSE if the Sequence is empty.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void CloseHistorySequence (PtrDocument pDoc)
+boolean CloseHistorySequence (PtrDocument pDoc)
 #else  /* __STDC__ */
-void CloseHistorySequence (pDoc)
+boolean CloseHistorySequence (pDoc)
 PtrDocument pDoc;
 
 #endif /* __STDC__ */
 {
+  boolean	result;
 
+  result = FALSE;
   /* error if no sequence open */
-   if (!pDoc->DocEditSequence)
+  if (!pDoc->DocEditSequence)
+     HistError (9);
+  else
      {
-      HistError (9);
-      return;
+     if (pDoc->DocLastEdit->EoType == EtDelimiter)
+        /* empty sequence, remove it */
+        CancelAnEdit (pDoc->DocLastEdit, pDoc);
+     else
+	result = TRUE;
+     /* sequence closed */
+     pDoc->DocEditSequence = FALSE;
      }
-   if (pDoc->DocLastEdit->EoType == EtDelimiter)
-     /* empty sequence, remove it */
-     CancelAnEdit (pDoc->DocLastEdit, pDoc);
-   /* sequence closed */
-   pDoc->DocEditSequence = FALSE;
+  return result;
 }
+
+/*----------------------------------------------------------------------
+   MoveEditToRedoQueue
+   Move the latest undone edit of document pDoc from the Undo queue to
+   the Redo queue.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void MoveEditToRedoQueue (PtrDocument pDoc)
+#else  /* __STDC__ */
+static void MoveEditToRedoQueue (pDoc)
+PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   CancelAnEdit (pDoc->DocLastEdit, pDoc);
+}
+
 
 /*----------------------------------------------------------------------
    TtcUndo
@@ -622,6 +646,9 @@ View                view;
 
    TtaSetDisplayMode (doc, DeferredDisplay);
 
+   /* Start a new sequence in the Redo queue */
+   /***********/
+
    /* Undo all operations belonging to a sequence of editing operations */
    doit = TRUE;
    while (doit)
@@ -631,53 +658,67 @@ View                view;
 	 /* end of undo sequence */
 	 TtaSetDisplayMode (doc, DisplayImmediately);
          /* set the selection that is recorded */
-         if (pDoc->DocLastEdit->EoFirstSelectedEl && pDoc->DocLastEdit->EoLastSelectedEl)
+         if (pDoc->DocLastEdit->EoFirstSelectedEl &&
+	     pDoc->DocLastEdit->EoLastSelectedEl)
 	   {
 	   /* Send events TteElemSelect.Pre */
 	   notifyEl.event = TteElemSelect;
            notifyEl.document = doc;
            notifyEl.element = (Element) (pDoc->DocLastEdit->EoFirstSelectedEl);
-           notifyEl.elementType.ElTypeNum = pDoc->DocLastEdit->EoFirstSelectedEl->ElTypeNumber;
-           notifyEl.elementType.ElSSchema = (SSchema) (pDoc->DocLastEdit->EoFirstSelectedEl->ElStructSchema);
+           notifyEl.elementType.ElTypeNum =
+			    pDoc->DocLastEdit->EoFirstSelectedEl->ElTypeNumber;
+           notifyEl.elementType.ElSSchema =
+	      (SSchema) (pDoc->DocLastEdit->EoFirstSelectedEl->ElStructSchema);
            notifyEl.position = 0;
            CallEventType ((NotifyEvent *) & notifyEl, TRUE);
            if (pDoc->DocLastEdit->EoFirstSelectedChar > 0)
              {
-             if (pDoc->DocLastEdit->EoFirstSelectedEl == pDoc->DocLastEdit->EoLastSelectedEl)
+             if (pDoc->DocLastEdit->EoFirstSelectedEl ==
+					   pDoc->DocLastEdit->EoLastSelectedEl)
    	        i = pDoc->DocLastEdit->EoLastSelectedChar;
              else
    	        i = TtaGetTextLength ((Element)(pDoc->DocLastEdit->EoFirstSelectedEl));
-             TtaSelectString (doc, (Element)(pDoc->DocLastEdit->EoFirstSelectedEl),
+             TtaSelectString (doc,
+			      (Element)(pDoc->DocLastEdit->EoFirstSelectedEl),
 			      pDoc->DocLastEdit->EoFirstSelectedChar, i);
              }
            else
-             TtaSelectElement (doc, (Element)(pDoc->DocLastEdit->EoFirstSelectedEl));
+             TtaSelectElement (doc,
+			      (Element)(pDoc->DocLastEdit->EoFirstSelectedEl));
 	   /* Send events TteElemSelect.Post */
 	   notifyEl.event = TteElemSelect;
            notifyEl.document = doc;
            notifyEl.element = (Element) (pDoc->DocLastEdit->EoFirstSelectedEl);
-           notifyEl.elementType.ElTypeNum = pDoc->DocLastEdit->EoFirstSelectedEl->ElTypeNumber;
-           notifyEl.elementType.ElSSchema = (SSchema) (pDoc->DocLastEdit->EoFirstSelectedEl->ElStructSchema);
+           notifyEl.elementType.ElTypeNum =
+			    pDoc->DocLastEdit->EoFirstSelectedEl->ElTypeNumber;
+           notifyEl.elementType.ElSSchema =
+	      (SSchema) (pDoc->DocLastEdit->EoFirstSelectedEl->ElStructSchema);
            notifyEl.position = 0;
            CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-           if (pDoc->DocLastEdit->EoFirstSelectedEl != pDoc->DocLastEdit->EoLastSelectedEl)
+           if (pDoc->DocLastEdit->EoFirstSelectedEl !=
+					   pDoc->DocLastEdit->EoLastSelectedEl)
 	     {
 	     /* Send event TteElemExtendSelect. Pre */
 	     notifyEl.event = TteElemExtendSelect;
              notifyEl.document = doc;
              notifyEl.element = (Element)(pDoc->DocLastEdit->EoLastSelectedEl);
-             notifyEl.elementType.ElTypeNum = pDoc->DocLastEdit->EoLastSelectedEl->ElTypeNumber;
-             notifyEl.elementType.ElSSchema = (SSchema) (pDoc->DocLastEdit->EoLastSelectedEl->ElStructSchema);
+             notifyEl.elementType.ElTypeNum =
+			     pDoc->DocLastEdit->EoLastSelectedEl->ElTypeNumber;
+             notifyEl.elementType.ElSSchema =
+	       (SSchema) (pDoc->DocLastEdit->EoLastSelectedEl->ElStructSchema);
              notifyEl.position = 0;
              CallEventType ((NotifyEvent *) & notifyEl, TRUE);
-             TtaExtendSelection (doc, (Element)(pDoc->DocLastEdit->EoLastSelectedEl),
-			         pDoc->DocLastEdit->EoLastSelectedChar);
+             TtaExtendSelection (doc,
+				(Element)(pDoc->DocLastEdit->EoLastSelectedEl),
+			        pDoc->DocLastEdit->EoLastSelectedChar);
 	     /* Send event TteElemExtendSelect. Post */
 	     notifyEl.event = TteElemExtendSelect;
              notifyEl.document = doc;
              notifyEl.element = (Element)(pDoc->DocLastEdit->EoLastSelectedEl);
-             notifyEl.elementType.ElTypeNum = pDoc->DocLastEdit->EoLastSelectedEl->ElTypeNumber;
-             notifyEl.elementType.ElSSchema = (SSchema) (pDoc->DocLastEdit->EoLastSelectedEl->ElStructSchema);
+             notifyEl.elementType.ElTypeNum =
+			     pDoc->DocLastEdit->EoLastSelectedEl->ElTypeNumber;
+             notifyEl.elementType.ElSSchema =
+	       (SSchema) (pDoc->DocLastEdit->EoLastSelectedEl->ElStructSchema);
              notifyEl.position = 0;
              CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	     }
@@ -689,35 +730,43 @@ View                view;
 	 notifyAttr.document = doc;
 	 notifyAttr.element = (Element) (pDoc->DocLastEdit->EoElement);
 	 /* delete the attribute that has to be removed from the element */
-	 if (pDoc->DocLastEdit->EoElement && pDoc->DocLastEdit->EoCreatedAttribute)
+	 if (pDoc->DocLastEdit->EoElement &&
+	     pDoc->DocLastEdit->EoCreatedAttribute)
 	    {
 	    /* tell the application that an attribute will be removed */
 	    notifyAttr.event = TteAttrDelete;
-	    notifyAttr.attribute = (Attribute) (pDoc->DocLastEdit->EoCreatedAttribute);
-	    notifyAttr.attributeType.AttrSSchema = (SSchema) (pDoc->DocLastEdit->EoCreatedAttribute->AeAttrSSchema);
-	    notifyAttr.attributeType.AttrTypeNum = pDoc->DocLastEdit->EoCreatedAttribute->AeAttrNum;
+	    notifyAttr.attribute =
+			   (Attribute) (pDoc->DocLastEdit->EoCreatedAttribute);
+	    notifyAttr.attributeType.AttrSSchema =
+	      (SSchema) (pDoc->DocLastEdit->EoCreatedAttribute->AeAttrSSchema);
+	    notifyAttr.attributeType.AttrTypeNum =
+			      pDoc->DocLastEdit->EoCreatedAttribute->AeAttrNum;
 	    CallEventAttribute (&notifyAttr, TRUE);
 	    /* remove the attribute */
 	    TtaRemoveAttribute ((Element) (pDoc->DocLastEdit->EoElement),
-			(Attribute)(pDoc->DocLastEdit->EoCreatedAttribute), doc);
+		     (Attribute)(pDoc->DocLastEdit->EoCreatedAttribute), doc);
 	    notifyAttr.attribute = NULL;
 	    /* tell the application that an attribute has been removed */
 	    CallEventAttribute (&notifyAttr, FALSE);	    
 	    }
 	 /* put the saved attribute (if any) on the element */
-	 if (pDoc->DocLastEdit->EoElement && pDoc->DocLastEdit->EoSavedAttribute)
+	 if (pDoc->DocLastEdit->EoElement &&
+	     pDoc->DocLastEdit->EoSavedAttribute)
 	    {
 	    /* tell the application that an attribute will be created */
 	    notifyAttr.event = TteAttrCreate;
 	    notifyAttr.attribute = NULL;
-	    notifyAttr.attributeType.AttrSSchema = (SSchema) (pDoc->DocLastEdit->EoSavedAttribute->AeAttrSSchema);
-	    notifyAttr.attributeType.AttrTypeNum = pDoc->DocLastEdit->EoSavedAttribute->AeAttrNum;
+	    notifyAttr.attributeType.AttrSSchema =
+		(SSchema) (pDoc->DocLastEdit->EoSavedAttribute->AeAttrSSchema);
+	    notifyAttr.attributeType.AttrTypeNum =
+				pDoc->DocLastEdit->EoSavedAttribute->AeAttrNum;
 	    CallEventAttribute (&notifyAttr, TRUE);
 	    /* put the attribute on the element */
 	    TtaAttachAttribute ((Element)(pDoc->DocLastEdit->EoElement),
-				 (Attribute)(pDoc->DocLastEdit->EoSavedAttribute), doc);
+			(Attribute)(pDoc->DocLastEdit->EoSavedAttribute), doc);
 	    /* tell the application that an attribute has been put */
-	    notifyAttr.attribute = (Attribute) (pDoc->DocLastEdit->EoSavedAttribute);
+	    notifyAttr.attribute =
+			     (Attribute) (pDoc->DocLastEdit->EoSavedAttribute);
 	    CallEventAttribute (&notifyAttr, FALSE);	    
 	    /* the attribute is no longer associated with the history block */
 	    pDoc->DocLastEdit->EoSavedAttribute = NULL;
@@ -731,7 +780,8 @@ View                view;
 	    pEl = pDoc->DocLastEdit->EoCreatedElement;
 	    /* tell the application that an element will be removed from the
 	    abstract tree */
-	    SendEventSubTree (TteElemDelete, pDoc, pEl, TTE_STANDARD_DELETE_LAST_ITEM);
+	    SendEventSubTree (TteElemDelete, pDoc, pEl,
+			      TTE_STANDARD_DELETE_LAST_ITEM);
 	    /* prepare event TteElemDelete to be sent to the application */
 	    notifyEl.event = TteElemDelete;
 	    notifyEl.document = doc;
@@ -758,19 +808,21 @@ View                view;
             {
             if (pDoc->DocLastEdit->EoPreviousSibling)
                TtaInsertSibling ((Element)(pDoc->DocLastEdit->EoSavedElement),
-			  (Element)(pDoc->DocLastEdit->EoPreviousSibling), FALSE, doc);
+			      (Element)(pDoc->DocLastEdit->EoPreviousSibling),
+			      FALSE, doc);
             else
                TtaInsertFirstChild ((Element *)&(pDoc->DocLastEdit->EoSavedElement),
-				    (Element)(pDoc->DocLastEdit->EoParent), doc);
+				  (Element)(pDoc->DocLastEdit->EoParent), doc);
             /* send event ElemPaste.Post to the application */
-            NotifySubTree (TteElemPaste, pDoc, pDoc->DocLastEdit->EoSavedElement, 0);
+            NotifySubTree (TteElemPaste, pDoc,
+			   pDoc->DocLastEdit->EoSavedElement, 0);
             }
          pDoc->DocLastEdit->EoSavedElement = NULL;
 	 }
    
       /* the most recent editing operation in the history has been undone.
-         Remove it from the history */
-      CancelAnEdit (pDoc->DocLastEdit, pDoc);
+         Remove it from the editing history and put it in the Redo queue */
+      MoveEditToRedoQueue (pDoc);
       }
 }
 

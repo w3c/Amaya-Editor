@@ -85,59 +85,42 @@ int lastSelChar;
    Close a sequence of editing operations in the history.
 
    Parameters:
-
    document: the concerned document
+
+   Return value:
+       FALSE if the closed sequence is empty, TRUE otherwise
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void          TtaCloseUndoSequence (Document document)
+boolean       TtaCloseUndoSequence (Document document)
 #else /* __STDC__ */
-void          TtaCloseUndoSequence (document)
+boolean       TtaCloseUndoSequence (document)
 Document document;
 #endif /* __STDC__ */
 
 {
+  boolean	result;
+
+  result = FALSE;
   if (document < 1 || document > MAX_DOCUMENTS)
     {
       TtaError (ERR_invalid_document_parameter);
     }
   else 
     {
-      CloseHistorySequence (LoadedDocument [document - 1]);	     
+      result = CloseHistorySequence (LoadedDocument [document - 1]);	     
     }
+  return result;
 }
 
-/* ----------------------------------------------------------------------
-   TtaRegisterElementReplace
-    
-   Register a single element replacement in the editing history
-   
-   Parameters:
-
-   element: the created element
-   document: the concerned document
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void         TtaRegisterElementReplace (Element element, Document document)
-#else /* __STDC__ */
-void         TtaRegisterElementReplace (element, document)
-Element element;
-Document document;
-#endif /* __STDC__ */
-{
-  AddEditOpInHistory ((PtrElement)element, LoadedDocument [document - 1], 
-		      TRUE,  /* the element has to be saved */ 
-		      TRUE   /* the element have to be removed when undoing */
- 		      );
-}
 /* ----------------------------------------------------------------------
    TtaRegisterElementCreate
     
    Register a single element creation in the editing history
-   The registratration must be performed AFTER the element is inserted
+   Registration must be performed AFTER the element is inserted
 
    Parameters:
 
-   element: the element to be deleted
+   element: the created element
    document: the concerned document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -158,7 +141,7 @@ Document document;
    TtaRegisterElementDelete
     
    Register a single element Deletion in the editing history
-   The registratration must be performed BEFORE the element is actually
+   Registration must be performed BEFORE the element is actually
    removed from the structure.
 
    Parameters:
@@ -177,6 +160,114 @@ Document document;
   AddEditOpInHistory ((PtrElement)element, LoadedDocument [document - 1], 
 		      TRUE, /* the element has to be saved */ 
 		      FALSE  /* the element wont be removed when undoing */
+ 		      );
+}
+
+/* ----------------------------------------------------------------------
+   TtaRegisterElementReplace
+    
+   Register a single element replacement in the editing history
+   Registration must be performed BEFORE the element is actually
+   replaced.
+   
+   Parameters:
+   element: the replaced element
+   document: the concerned document
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         TtaRegisterElementReplace (Element element, Document document)
+#else /* __STDC__ */
+void         TtaRegisterElementReplace (element, document)
+Element element;
+Document document;
+#endif /* __STDC__ */
+{
+  AddEditOpInHistory ((PtrElement)element, LoadedDocument [document - 1], 
+		      TRUE,  /* the element has to be saved */ 
+		      TRUE   /* the element has to be removed when undoing */
+ 		      );
+}
+
+/* ----------------------------------------------------------------------
+   TtaRegisterAttributeCreate
+    
+   Register a single attribute creation in the editing history
+   Registration must be performed AFTER the attribute is inserted
+
+   Parameters:
+   attribute: the created attribute
+   element: the element to which the attribute has been attached
+   document: the concerned document
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         TtaRegisterAttributeCreate (Attribute attribute, Element element, Document document)
+#else /* __STDC__ */
+void         TtaRegisterAttributeCreate (attribute, element, document)
+Attribute attribute;
+Element element;
+Document document;
+#endif /* __STDC__ */
+{
+  AddAttrEditOpInHistory ((PtrAttribute)attribute, (PtrElement)element,
+                      LoadedDocument[document-1], 
+		      FALSE, /* the attribute does not have to be saved */ 
+		      TRUE   /* the attribute will be removed when undoing */
+ 		      );
+}
+
+/* ----------------------------------------------------------------------
+   TtaRegisterAttributeDelete
+    
+   Register a single attribute Deletion in the editing history
+   Registration must be performed BEFORE the attribute is actually
+   removed from the structure.
+
+   Parameters:
+   attribute: the attribute to be deleted
+   element: the element to which this attribute is attached
+   document: the concerned document
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         TtaRegisterAttributeDelete (Attribute attribute, Element element, Document document)
+#else /* __STDC__ */
+void         TtaRegisterAttributeDelete (attribute, element, document)
+Attribute attribute;
+Element element;
+Document document;
+#endif /* __STDC__ */
+{
+  AddAttrEditOpInHistory ((PtrAttribute)attribute, (PtrElement)element,
+                      LoadedDocument[document-1],
+		      TRUE, /* the attribute has to be saved */ 
+		      FALSE  /* the attribute wont be removed when undoing */
+ 		      );
+}
+
+/* ----------------------------------------------------------------------
+   TtaRegisterAttributeReplace
+    
+   Register a single attribute replacement in the editing history
+   Registration must be performed BEFORE the element is actually
+   replaced.
+   
+   Parameters:
+   attribute: the attribute
+   element: the element to which the attribute is attached
+   document: the concerned document
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         TtaRegisterAttributeReplace (Attribute attribute, Element element, Document document)
+#else /* __STDC__ */
+void         TtaRegisterAttributeReplace (attribute, element, document)
+Attribute attribute;
+Element element;
+Document document;
+#endif /* __STDC__ */
+{
+  AddAttrEditOpInHistory ((PtrAttribute)attribute,(PtrElement)element,
+                      LoadedDocument[document-1], 
+		      TRUE,  /* the attribute has to be saved */ 
+		      TRUE   /* the attribute has to be removed when undoing */
  		      );
 }
 

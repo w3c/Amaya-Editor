@@ -17,13 +17,12 @@
    Open a sequence of editing operations in the history.
 
    Parameters:
-
-   document:the concerned document
+   document: the concerned document
    firstSel: indicate the selection that must be set when the operation 
    will be undone. If null, the current selction is recorded.
-   lastSel:indicate the selection that must be set when the operation 
+   lastSel: indicate the selection that must be set when the operation 
    will be undone.
-   firstSelChar:indicate the selection that must be set when the operation 
+   firstSelChar: indicate the selection that must be set when the operation 
    will be undone.
    lastSelChar: indicate the selection that must be set when the operation 
    will be undone.
@@ -36,19 +35,20 @@ extern void          TtaOpenUndoSequence (Document document, Element firstSel,El
    Close a sequence of editing operations in the history.
 
    Parameters:
-
    document: the concerned document
+ 
+   Return value:
+       FALSE if the closed sequence is empty, TRUE otherwise
   ----------------------------------------------------------------------*/
-extern void          TtaCloseUndoSequence (Document document);
+extern boolean      TtaCloseUndoSequence (Document document);
 
 /* ----------------------------------------------------------------------
    TtaRegisterElementCreate
    
    Register a single element creation in the editing history
-   The registratration must be performed AFTER the element is inserted
+   Registration must be performed AFTER the element is inserted
 
    Parameters:
-
    element: the created element
    document: the concerned document
   ----------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ extern void         TtaRegisterElementCreate (Element element, Document document
    TtaRegisterElementDelete
    
    Register a single element Deletion in the editing history
-   The registratration must be performed BEFORE the element is actually
+   Registration must be performed BEFORE the element is actually
    removed from the structure.
 
    Parameters:
@@ -72,13 +72,55 @@ extern void         TtaRegisterElementDelete (Element element, Document document
    TtaRegisterElementReplace
 
    Register a single element replacement in the editing history
+   Registration must be performed BEFORE the element is actually
+   replaced.
 
    Parameters:
-
    element: the created element
    document: the concerned document
   ----------------------------------------------------------------------*/
 extern void        TtaRegisterElementReplace (Element element, Document document);
+
+/* ----------------------------------------------------------------------
+   TtaRegisterAttributeCreate
+ 
+   Register a single attribute creation in the editing history
+   Registration must be performed AFTER the attribute is inserted
+ 
+   Parameters:
+   attribute: the created attribute
+   element: the element to which the attribute has been attached
+   document: the concerned document
+  ----------------------------------------------------------------------*/
+extern void        TtaRegisterAttributeCreate (Attribute attribute, Element element, Document document);
+
+/* ----------------------------------------------------------------------
+   TtaRegisterAttributeDelete
+ 
+   Register a single attribute Deletion in the editing history
+   Registration must be performed BEFORE the attribute is actually
+   removed from the structure.
+ 
+   Parameters:
+   attribute: the attribute to be deleted
+   element: the element to which this attribute is attached
+   document: the concerned document
+  ----------------------------------------------------------------------*/
+extern void         TtaRegisterAttributeDelete (Attribute attribute, Element element, Document document);
+
+/* ----------------------------------------------------------------------
+   TtaRegisterAttributeReplace
+ 
+   Register a single attribute replacement in the editing history
+   Registration must be performed BEFORE the element is actually
+   replaced.
+ 
+   Parameters:
+   attribute: the attribute
+   element: the element to which the attribute is attached
+   document: the concerned document
+  ----------------------------------------------------------------------*/
+extern void         TtaRegisterAttributeReplace (Attribute attribute, Element element, Document document);
 
 /* ----------------------------------------------------------------------
    TtaClearUndoHistory
@@ -89,11 +131,14 @@ extern void        TtaRegisterElementReplace (Element element, Document document
 extern void         TtaClearUndoHistory (Document document);
 
 #else  /* __STDC__ */
-extern void          TtaOpenUndoSequence (/* Document document, Element firstSel,Element lastSel, int firstSelChar, int lastSelChar */);
-extern void          TtaCloseUndoSequence (/* Document document */);
+extern void         TtaOpenUndoSequence (/* Document document, Element firstSel,Element lastSel, int firstSelChar, int lastSelChar */);
+extern boolean      TtaCloseUndoSequence (/* Document document */);
 extern void         TtaRegisterElementCreate (/* Element element, Document document */);
 extern void         TtaRegisterElementDelete (/* Element element, Document document */);
 extern void         TtaRegisterElementReplace (/* Element element, Document document */);
+extern void         TtaRegisterAttributeCreate (/* Attribute attribute, Element element, Document document */);
+extern void         TtaRegisterAttributeDelete (/* Attribute attribute, Element element, Document document */);
+extern void         TtaRegisterAttributeReplace (/* Attribute attribute, Element element, Document document */);
 extern void         TtaClearUndoHistory (/* Document document */);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

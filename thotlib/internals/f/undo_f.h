@@ -22,7 +22,7 @@ extern void OpenHistorySequence ( PtrDocument pDoc,
                                   PtrElement lastSel,
                                   int firstSelChar,
                                   int lastSelChar );
-extern void CloseHistorySequence ( PtrDocument pDoc );
+extern boolean CloseHistorySequence ( PtrDocument pDoc );
 extern void TtcUndo ( Document doc,
                       View view );
 extern void TtcRedo ( Document doc,
@@ -46,7 +46,7 @@ extern void OpenHistorySequence (/* PtrDocument pDoc,
                                     PtrElement lastSel,
                                     int firstSelChar,
                                     int lastSelChar */);
-extern void CloseHistorySequence (/* PtrDocument pDoc */);
+extern boolean CloseHistorySequence (/* PtrDocument pDoc */);
 extern void TtcUndo (/* Document doc,
                         View view */);
 extern void TtcRedo (/* Document doc,
