@@ -745,14 +745,26 @@ void AttrLangCreated(event)
 #endif /* __STDC__*/
 {
   Element	elem;
+  int		len;
+  STRING	value    = (STRING) TtaGetMemory (sizeof (CHAR) * ATTRLEN); 
 
   /* move the LANG attribute to the parent element if all sibling have the
      same attribute with the same value */
   elem = event->element;
   MoveAttrLang (event->attribute, &elem, event->document);
 
-  /* if the LANG attribute is on a text string, create a SPAN element that
-     encloses this text string and move the LANG attribute to that SPAN
-     element */
-  AttrToSpan (elem, event->attribute, event->document);
+  len = ATTRLEN - 1;
+  TtaGiveTextAttributeValue (event->attribute, value, &len);
+  if (ustrcasecmp(value, "Symbol") == 0)
+     /* it's a character string in the Symbol character set, it's not really a language */
+    {
+    TtaRemoveAttribute (elem, event->attribute, event->document);      
+    }
+  else
+    {
+      /* if the LANG attribute is on a text string, create a SPAN element that
+	 encloses this text string and move the LANG attribute to that SPAN
+	 element */
+      AttrToSpan (elem, event->attribute, event->document);
+    }
 }

@@ -16,12 +16,14 @@ RULES
 #ifdef XML
 	if HtmlDTD = Frameset
 	   BEGIN
+	   Create '<?xml version="1.0" ?>\12';
 	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"\12';
 	   Create '                      "xhtml1-frameset.dtd">\12';
 	   Create '<html xmlns="http://www.w3.org/Profiles/xhtml1-frameset"';
 	   END;
 	if not HtmlDTD = Frameset
 	   BEGIN
+	   Create '<?xml version="1.0" ?>\12';
 	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"\12';
 	   Create '                      "xhtml1-transitional.dtd">\12';
 	   Create '<html xmlns="http://www.w3.org/Profiles/xhtml1-transitional"';

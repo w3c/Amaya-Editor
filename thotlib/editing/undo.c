@@ -843,7 +843,6 @@ boolean reverse;
       {
       /* enable structure checking */
       TtaSetStructureChecking (TRUE, doc);
-      /* end of undo sequence */
       TtaSetDisplayMode (doc, DisplayImmediately);
       /* set the selection that is recorded */
       if (editOp->EoFirstSelectedEl && editOp->EoLastSelectedEl)
