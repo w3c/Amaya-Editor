@@ -93,6 +93,10 @@ extern Document InitDocAndView ( Document oldDoc,
                                  ThotBool readOnly,
                                  int profile,
                                  ClickEvent method );
+extern void ReparseAs ( Document doc,
+                        View view,
+                        ThotBool asHTML,
+                        CHARSET charset );
 extern void ParseAsHTML ( Document doc,
                           View view );
 extern void Reload_callback ( int doc,
@@ -260,6 +264,10 @@ extern Document InitDocAndView ( Document oldDoc,
                                    ThotBool readOnly,
                                    int profile,
                                    ClickEvent method );
+extern void ReparseAs ( Document doc,
+                          View view,
+                          ThotBool asHTML,
+                          CHARSET charset );
 extern void ParseAsHTML ( Document doc,
                             View view );
 extern void Reload_callback ( int doc,

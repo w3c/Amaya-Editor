@@ -276,9 +276,9 @@
 274 Annotation détruite!
 275 Impossible de charger l'index des annotations
 276 Erreur
-277 Sélectionner un Charset
+277 Sélectionner un code caractère
 278 Sélectionner un type MIME
-279 Changer Charset
+279 Changer le code caractère
 280 Changer le type MIME
 281 Changer
 282 Ce type de document n'a pas de charset

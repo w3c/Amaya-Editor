@@ -350,14 +350,14 @@
 	<message xml:lang="tr">Eşlemek</message>
 </label>
 <label define="Doctype1">
-	<message xml:lang="en">&amp;Document Type</message>
-	<message xml:lang="fr">&amp;Doctype</message>
-	<message xml:lang="it">Document Type</message>
+	<message xml:lang="en">Change the &amp;Document Type</message>
+	<message xml:lang="fr">Changer le type du &amp;document</message>
+	<message xml:lang="it">Cambia/Crea doctype</message>
 	<message xml:lang="de">DTD ändern</message>
 	<message xml:lang="es">Ca&amp;mbiar doctype</message>
-	<message xml:lang="pt">Document Type</message>
+	<message xml:lang="pt">Alterar Document Type</message>
 	<message xml:lang="fi">Muuta tyyppi</message>
-	<message xml:lang="tr">doctype\'bı düzenle</message>
+	<message xml:lang="tr">Doctype\'bı düzenle</message>
 </label>
 <label define="BRemoveDoctype">
 	<message xml:lang="en">&amp;Remove the doctype</message>
@@ -374,42 +374,43 @@
 	<message xml:lang="fr">&amp;Ajouter un doctype</message>
 </label>
 <label define="BDoctypeXhtml11">
-	<message xml:lang="en">Change doctype to &amp;XHTML 1.1</message>
-	<message xml:lang="fr">Changer le doctype pour &amp;XHTML 1.1</message>
+	<message xml:lang="en">Change to &amp;XHTML 1.1</message>
+	<message xml:lang="fr">Changer pour &amp;XHTML 1.1</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.1</message>
 	<message xml:lang="de">XHTML 1.1</message>
 	<message xml:lang="es">Cambiar doctype a &amp;XHTML 1.1</message>
 	<message xml:lang="pt">Alterar doctype para XHTML 1.1</message>
 	<message xml:lang="fi">Aseta tyypiksi XHTML 1.1</message>
-	<message xml:lang="tr">XHTML 1.1 doctype\'bı değiştir/yarat</message>
+	<message xml:lang="tr">XHTML 1.1 doctype</message>
 </label>
 <label define="BBDoctypeXhtmlTransitional">
-	<message xml:lang="en">Change doctype to XHTML 1.0 &amp;Transitional</message>
-	<message xml:lang="fr">Changer le doctype pour XHTML 1.0 &amp;Transitional</message>
+	<message xml:lang="en">Change to XHTML 1.0 &amp;Transitional</message>
+	<message xml:lang="fr">Changer pour XHTML 1.0 &amp;Transitional</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Transitional</message>
 	<message xml:lang="de">Dokumenttyp XHTML 1.0 Transitional zuweisen</message>
 	<message xml:lang="es">Cambiar/Crear doctype XHTML 1.0 Transicional</message>
 	<message xml:lang="pt">Modificar/Criar doctype XHTML 1.0</message>
+	<message xml:lang="tr">XHTML 1.0 Transitional doctype</message>
 </label>
 <label define="BDoctypeXhtmlStrict">
-	<message xml:lang="en">Change doctype to XHTML 1.0 &amp;Strict</message>
-	<message xml:lang="fr">Changer le doctype pour XHTML 1.0 &amp;Strict</message>
+	<message xml:lang="en">Change to XHTML 1.0 &amp;Strict</message>
+	<message xml:lang="fr">Changer pour XHTML 1.0 &amp;Strict</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Strict</message>
 	<message xml:lang="de">XHTML 1.0 Strict</message>
 	<message xml:lang="es">Cambiar doctype a XHTML 1.0 &amp;Strict</message>
 	<message xml:lang="pt">Alterar doctype para XHTML 1.0 Strict</message>
 	<message xml:lang="fi">Aseta tyypiksi XHTML 1.0 Strict</message>
-	<message xml:lang="tr">XHTML 1.0 Strict doctype\'bı değiştir/yarat</message>
+	<message xml:lang="tr">XHTML 1.0 Strict doctype</message>
 </label>
 <label define="BDoctypeXhtmlBasic">
-	<message xml:lang="en">Change doctype to XHTML 1.0 &amp;Basic</message>
-	<message xml:lang="fr">Changer le doctype pour XHTML 1.0 &amp;Basic</message>
+	<message xml:lang="en">Change to XHTML 1.0 &amp;Basic</message>
+	<message xml:lang="fr">Changer pour XHTML 1.0 &amp;Basic</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Basic</message>
 	<message xml:lang="de">XHTML 1.0 Basic</message>
 	<message xml:lang="es">Cambiar doctype a XHTML 1.0 &amp;Basic</message>
 	<message xml:lang="pt">Alterar doctype para XHTML 1.0 Basic</message>
 	<message xml:lang="fi">Aseta tyypiksi XHTML 1.0 Basic</message>
-	<message xml:lang="tr">XHTML 1.0 Basic doctype\'bı değiştir/yarat</message>
+	<message xml:lang="tr">XHTML 1.0 Basic doctype</message>
 </label>
 <label define="BBDoctypeHtmlTransitional">
 	<message xml:lang="en">Change doctype to &amp;HTML 4.01 Transitional</message>
@@ -420,14 +421,225 @@
 	<message xml:lang="pt">Modificar/Criar doctype HTML 4.01 Transitional</message>
 </label>
 <label define="BDoctypeHtmlStrict">
-	<message xml:lang="en">Change doctype to HTML 4.01 Str&amp;ict</message>
-	<message xml:lang="fr">Changer le doctype pour HTML 4.01 Str&amp;ict</message>
+	<message xml:lang="en">Change to HTML 4.01 Str&amp;ict</message>
+	<message xml:lang="fr">Changer pour HTML 4.01 Str&amp;ict</message>
 	<message xml:lang="it">Cambia/Crea doctype HTML 4.01 Strict</message>
 	<message xml:lang="de">HTML Strict</message>
 	<message xml:lang="es">Cambiar doctype a HTML 4.01 Str&amp;ict</message>
 	<message xml:lang="pt">Alterar doctype para HTML 4.01 Strict</message>
 	<message xml:lang="fi">Aseta tyypiksi HTML 4.01 Strict</message>
-	<message xml:lang="tr">HTML 4.01 Strict doctype\'bı değiştir/yarat</message>
+	<message xml:lang="tr">HTML 4.01 Strict doctype</message>
+</label>
+<label define="Charset1">
+	<message xml:lang="en">Force a Character Coding</message>
+	<message xml:lang="fr">Forcer un code caractère</message>
+</label>
+<label define="BUTF_8">
+	<message xml:lang="en">Unicode (UTF-8)</message>
+	<message xml:lang="fr">Unicode (UTF-8)</message>
+	<message xml:lang="it">Unicode (UTF-8)</message>
+	<message xml:lang="es">Unicode (UTF-8)</message>
+	<message xml:lang="pt">Unicode (UTF-8)</message>
+	<message xml:lang="fi">Unicode (UTF-8)</message>
+	<message xml:lang="tr">Unicode (UTF-8)</message>
+</label>
+<label define="BISO_8859_1">
+	<message xml:lang="en">Western (ISO-8859-1)</message>
+	<message xml:lang="fr">Europe de l'ouest (ISO-8859-1)</message>
+	<message xml:lang="it">Western (ISO-8859-1)</message>
+	<message xml:lang="es">Western (ISO-8859-1)</message>
+	<message xml:lang="pt">Western (ISO-8859-1)</message>
+	<message xml:lang="fi">Western (ISO-8859-1)</message>
+	<message xml:lang="tr">Western (ISO-8859-1)</message>
+</label>
+<label define="BISO_8859_15">
+	<message xml:lang="en">Western (ISO-8859-15)</message>
+	<message xml:lang="fr">Europe de l'ouest (ISO-8859-15)</message>
+	<message xml:lang="it">Western (ISO-8859-15)</message>
+	<message xml:lang="es">Western (ISO-8859-15)</message>
+	<message xml:lang="pt">Western (ISO-8859-15)</message>
+	<message xml:lang="fi">Western (ISO-8859-15)</message>
+	<message xml:lang="tr">Western (ISO-8859-15)</message>
+</label>
+<label define="BWINDOWS_1252">
+	<message xml:lang="en">Western (Windows-1252)</message>
+	<message xml:lang="fr">Europe de l'ouest (Windows-1252)</message>
+	<message xml:lang="it">Western (Windows-1252)</message>
+	<message xml:lang="es">Western (Windows-1252)</message>
+	<message xml:lang="pt">Western (Windows-1252)</message>
+	<message xml:lang="fi">Western (Windows-1252)</message>
+	<message xml:lang="tr">Western (Windows-1252)</message>
+</label>
+<label define="BISO_8859_2">
+	<message xml:lang="en">Central Europe (ISO-8859-2)</message>
+	<message xml:lang="fr">Europe centrale (ISO-8859-2)</message>
+	<message xml:lang="it">Central Europe (ISO-8859-2)</message>
+	<message xml:lang="es">Central Europe (ISO-8859-2)</message>
+	<message xml:lang="pt">Central Europe (ISO-8859-2)</message>
+	<message xml:lang="fi">Central Europe (ISO-8859-2)</message>
+	<message xml:lang="tr">Central Europe (ISO-8859-2)</message>
+</label>
+<label define="BWINDOWS_1250">
+	<message xml:lang="en">Central Europe (Windows-1250)</message>
+	<message xml:lang="fr">Europe centrale (Windows-1250)</message>
+	<message xml:lang="it">Central Europe (Windows-1250)</message>
+	<message xml:lang="es">Central Europe (Windows-1250)</message>
+	<message xml:lang="pt">Central Europe (Windows-1250)</message>
+	<message xml:lang="fi">Central Europe (Windows-1250)</message>
+	<message xml:lang="tr">Central Europe (Windows-1250)</message>
+</label>
+<label define="BISO_8859_3">
+	<message xml:lang="en">South Europe (ISO-8859-3)</message>
+	<message xml:lang="fr">Europe du sud (ISO-8859-3)</message>
+	<message xml:lang="it">South Europe (ISO-8859-3)</message>
+	<message xml:lang="es">South Europe (ISO-8859-3)</message>
+	<message xml:lang="pt">South Europe (ISO-8859-3)</message>
+	<message xml:lang="fi">South Europe (ISO-8859-3)</message>
+	<message xml:lang="tr">South Europe (ISO-8859-3)</message>
+</label>
+<label define="BISO_8859_4">
+	<message xml:lang="en">Baltic (ISO-8859-4)</message>
+	<message xml:lang="fr">Balte (ISO-8859-4)</message>
+	<message xml:lang="it">Baltic (ISO-8859-4)</message>
+	<message xml:lang="es">Baltic (ISO-8859-4)</message>
+	<message xml:lang="pt">Baltic (ISO-8859-4)</message>
+	<message xml:lang="fi">Baltic (ISO-8859-4)</message>
+	<message xml:lang="tr">Baltic (ISO-8859-4)</message>
+</label>
+<label define="BWINDOWS_1257">
+	<message xml:lang="en">Baltic (Windows-1257)</message>
+	<message xml:lang="fr">Baltic (Windows-1257)</message>
+	<message xml:lang="it">Baltic (Windows-1257)</message>
+	<message xml:lang="es">Baltic (Windows-1257)</message>
+	<message xml:lang="pt">Baltic (Windows-1257)</message>
+	<message xml:lang="fi">Baltic (Windows-1257)</message>
+	<message xml:lang="tr">Baltic (Windows-1257)</message>
+</label>
+<label define="BISO_8859_5">
+	<message xml:lang="en">Cyrillic (ISO-8859-5)</message>
+	<message xml:lang="fr">Cyrillique (ISO-8859-5)</message>
+	<message xml:lang="it">Cyrillic (ISO-8859-5)</message>
+	<message xml:lang="es">Cyrillic (ISO-8859-5)</message>
+	<message xml:lang="pt">Cyrillic (ISO-8859-5)</message>
+	<message xml:lang="fi">Cyrillic (ISO-8859-5)</message>
+	<message xml:lang="tr">Cyrillic (ISO-8859-5)</message>
+</label>
+<label define="BWINDOWS_1251">
+	<message xml:lang="en">Cyrillic (Windows-1251)</message>
+	<message xml:lang="fr">Cyrillique (Windows-1251)</message>
+	<message xml:lang="it">Cyrillic (Windows-1251)</message>
+	<message xml:lang="es">Cyrillic (Windows-1251)</message>
+	<message xml:lang="pt">Cyrillic (Windows-1251)</message>
+	<message xml:lang="fi">Cyrillic (Windows-1251)</message>
+	<message xml:lang="tr">Cyrillic (Windows-1251)</message>
+</label>
+<label define="BKOI8_R">
+	<message xml:lang="en">Cyrillic (KOI8-R)</message>
+	<message xml:lang="fr">Cyrillique (KOI8-R)</message>
+	<message xml:lang="it">Cyrillic (KOI8-R)</message>
+	<message xml:lang="es">Cyrillic (KOI8-R)</message>
+	<message xml:lang="pt">Cyrillic (KOI8-R)</message>
+	<message xml:lang="fi">Cyrillic (KOI8-R)</message>
+	<message xml:lang="tr">Cyrillic (KOI8-R)</message>
+</label>
+<label define="BISO_8859_6">
+	<message xml:lang="en">Arabic (ISO-8859-6)</message>
+	<message xml:lang="fr">Arabe (ISO-8859-6)</message>
+	<message xml:lang="it">Arabic (ISO-8859-6)</message>
+	<message xml:lang="es">Arabic (ISO-8859-6)</message>
+	<message xml:lang="pt">Arabic (ISO-8859-6)</message>
+	<message xml:lang="fi">Arabic (ISO-8859-6)</message>
+	<message xml:lang="tr">Arabic (ISO-8859-6)</message>
+</label>
+<label define="BWINDOWS_1256">
+	<message xml:lang="en">Arabic (Windows-1256)</message>
+	<message xml:lang="fr">Arabe (Windows-1256)</message>
+	<message xml:lang="it">Arabic (Windows-1256)</message>
+	<message xml:lang="es">Arabic (Windows-1256)</message>
+	<message xml:lang="pt">Arabic (Windows-1256)</message>
+	<message xml:lang="fi">Arabic (Windows-1256)</message>
+	<message xml:lang="tr">Arabic (Windows-1256)</message>
+</label>
+<label define="BISO_8859_7">
+	<message xml:lang="en">Greek (ISO-8859-7)</message>
+	<message xml:lang="fr">Grec (ISO-8859-7)</message>
+	<message xml:lang="it">Greek (ISO-8859-7)</message>
+	<message xml:lang="es">Greek (ISO-8859-7)</message>
+	<message xml:lang="pt">Greek (ISO-8859-7)</message>
+	<message xml:lang="fi">Greek (ISO-8859-7)</message>
+	<message xml:lang="tr">Greek (ISO-8859-7)</message>
+</label>
+<label define="BWINDOWS_1253">
+	<message xml:lang="en">Greek (Windows-1253)</message>
+	<message xml:lang="fr">Grec (Windows-1253)</message>
+	<message xml:lang="it">Greek (Windows-1253)</message>
+	<message xml:lang="es">Greek (Windows-1253)</message>
+	<message xml:lang="pt">Greek (Windows-1253)</message>
+	<message xml:lang="fi">Greek (Windows-1253)</message>
+	<message xml:lang="tr">Greek (Windows-1253)</message>
+</label>
+<label define="BISO_8859_8">
+	<message xml:lang="en">Hebrew (ISO-8859-8)</message>
+	<message xml:lang="fr">Hébreu (ISO-8859-8)</message>
+	<message xml:lang="it">Hebrew (ISO-8859-8)</message>
+	<message xml:lang="es">Hebrew (ISO-8859-8)</message>
+	<message xml:lang="pt">Hebrew (ISO-8859-8)</message>
+	<message xml:lang="fi">Hebrew (ISO-8859-8)</message>
+	<message xml:lang="tr">Hebrew (ISO-8859-8)</message>
+</label>
+<label define="BWINDOWS_1255">
+	<message xml:lang="en">Hebrew (Windows-1255)</message>
+	<message xml:lang="fr">Hébreu (Windows-1255)</message>
+	<message xml:lang="it">Hebrew (Windows-1255)</message>
+	<message xml:lang="es">Hebrew (Windows-1255)</message>
+	<message xml:lang="pt">Hebrew (Windows-1255)</message>
+	<message xml:lang="fi">Hebrew (Windows-1255)</message>
+	<message xml:lang="tr">Hebrew (Windows-1255)</message>
+</label>
+<label define="BISO_8859_9">
+	<message xml:lang="en">Turkish (ISO-8859-9)</message>
+	<message xml:lang="fr">Turc (ISO-8859-9)</message>
+	<message xml:lang="it">Turkish (ISO-8859-9)</message>
+	<message xml:lang="es">Turkish (ISO-8859-9)</message>
+	<message xml:lang="pt">Turkish (ISO-8859-9)</message>
+	<message xml:lang="fi">Turkish (ISO-8859-9)</message>
+	<message xml:lang="tr">Turkish (ISO-8859-9)</message>
+</label>
+<label define="BWINDOWS_1254">
+	<message xml:lang="en">Turkish (Windows-1254)</message>
+	<message xml:lang="fr">Turc (Windows-125)</message>
+	<message xml:lang="it">Turkish (Windows-125)</message>
+	<message xml:lang="es">Turkish (Windows-125)</message>
+	<message xml:lang="pt">Turkish (Windows-125)</message>
+	<message xml:lang="fi">Turkish (Windows-125)</message>
+	<message xml:lang="tr">Turkish (Windows-125)</message>
+</label>
+<label define="BISO_2022_JP">
+	<message xml:lang="en">Japanese (ISO-2022-JP)</message>
+	<message xml:lang="fr">Japonais (ISO-2022-JP)</message>
+	<message xml:lang="it">Japanese (ISO-2022-JP)</message>
+	<message xml:lang="es">Japanese (ISO-2022-JP)</message>
+	<message xml:lang="pt">Japanese (ISO-2022-JP)</message>
+	<message xml:lang="fi">Japanese (ISO-2022-JP)</message>
+	<message xml:lang="tr">Japanese (ISO-2022-JP)</message>
+</label>
+<label define="BEUC_JP">
+	<message xml:lang="en">Japanese (EUC-JP)</message>
+	<message xml:lang="fr">Japonais (EUC-JP)</message>
+	<message xml:lang="it">Japanese (EUC-JP)</message>
+	<message xml:lang="es">Japanese (EUC-JP)</message>
+	<message xml:lang="pt">Japanese (EUC-JP)</message>
+	<message xml:lang="fi">Japanese (EUC-JP)</message>
+	<message xml:lang="tr">Japanese (EUC-JP)</message>
+</label>
+<label define="BSHIFT_JIS">
+	<message xml:lang="en">Japanese (Shift-JIS)</message>
+	<message xml:lang="fr">Japonais (Shift-JIS)</message>
+	<message xml:lang="it">Japanese (Shift-JIS)</message>
+	<message xml:lang="es">Japanese (Shift-JIS)</message>
+	<message xml:lang="pt">Japanese (Shift-JIS)</message>
+	<message xml:lang="fi">Japanese (Shift-JIS)</message>
+	<message xml:lang="tr">Japanese (Shift-JIS)</message>
 </label>
 <label define="BDocInfo">
 	<message xml:lang="en">Document &amp;Information</message>
@@ -548,6 +760,14 @@
 	<message xml:lang="es">&amp;Borrar</message>
 	<message xml:lang="pt">Apagar</message>
 	<message xml:lang="fi">Poista</message>
+</label>
+<label define="">
+	<message xml:lang="en">&amp;Insert before</message>
+	<message xml:lang="fr">&amp;Insérer avant</message>
+</label>
+<label define="">
+	<message xml:lang="en">Insert &amp;after</message>
+	<message xml:lang="fr">Insérer &amp;après</message>
 </label>
 <label define="TEditMode">
 	<message xml:lang="en">&amp;Editor Mode</message>

@@ -276,9 +276,9 @@
 274 Annotation deleted!
 275 Failed to load the annotation index
 276 Error
-277 Select a Charset
+277 Select a Character Coding
 278 Select a MIME type
-279 Change Charset
+279 Change Character Coding
 280 Change MIME type
 281 Change
 282 This type of document doesn't support charsets

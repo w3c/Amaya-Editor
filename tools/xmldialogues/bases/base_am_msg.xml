@@ -322,12 +322,6 @@
 <label define="AM_DOC_MODIFIED">
 	<message xml:lang="en">Document modified - Do you want to save it?</message>
 	<message xml:lang="fr">Document modifié - Voulez-vous le sauver ?</message>
-	<message xml:lang="de">Alle Änderungen gehen verloren -</message>
-	<message xml:lang="it">Il documento è stato modificato -</message>
-	<message xml:lang="tr">Tüm değişiklikleri kaybedeceksiniz -</message>
-	<message xml:lang="es">Documento modificado -</message>
-	<message xml:lang="pt">Documento modificado -</message>
-	<message xml:lang="fi">Tiedostoa on muutettu -</message>
 </label>
 <label define="AM_RED_FETCHING">
 	<message xml:lang="en">Redirection fetching of %s</message>
@@ -2754,9 +2748,9 @@
 	<message xml:lang="fi">Virhe</message>
 </label>
 <label define="AM_SELECT_CHARSET">
-	<message xml:lang="en">Select a Charset</message>
-	<message xml:lang="fr">Sélectionner un Charset</message>
-	<message xml:lang="it">Seleziona un charset</message>
+	<message xml:lang="en">Select a Character Coding</message>
+	<message xml:lang="fr">Sélectionner un code caractère</message>
+	<message xml:lang="it">Seleziona un Character Coding</message>
 	<message xml:lang="de">Zeichensatz wählen</message>
 	<message xml:lang="es">Seleccionar un juego de caracteres</message>
 	<message xml:lang="pt">Selecionar um conjunto de caracteres (charset)</message>
@@ -2774,9 +2768,9 @@
 	<message xml:lang="tr">MIME tipi seçin</message>
 </label>
 <label define="AM_CHANGE_CHARSET">
-	<message xml:lang="en">Change Charset</message>
-	<message xml:lang="fr">Changer Charset</message>
-	<message xml:lang="it">Cambia charset</message>
+	<message xml:lang="en">Change Character Coding</message>
+	<message xml:lang="fr">Changer le code caractère</message>
+	<message xml:lang="it">Cambia Character Coding</message>
 	<message xml:lang="de">Zeichensatz ändern</message>
 	<message xml:lang="es">Cambiar juego de caracteres</message>
 	<message xml:lang="pt">Mudar conjunto de caracteres (Charset)</message>

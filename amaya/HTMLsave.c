@@ -1868,23 +1868,10 @@ void Synchronize (Document doc, View view)
        otherDoc = xmlDoc;
        if (saveBefore)
 	 {
-#ifdef IV
-	   TtaSetDisplayMode (doc, NoComputedDisplay);
-	   /* save the current selection */
-	   GetCurrentLine (doc, &line, &index);
-#endif /* IV */
 	   /* save the current state of the document into the temporary file */
 	   tempdoc = GetLocalPath (xmlDoc, DocumentURLs[xmlDoc]);
 	   TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "TextFileT");
 	   TtaExtractName (tempdoc, tempdir, docname);
-#ifdef IV
-	   /* These lines update the text coloration but brake undo */
-	   StartParser (doc, tempdoc, docname, tempdir, tempdoc, TRUE);
-	   /* restore the current selection */
-	   GotoLine (doc, line, index, TRUE);
-	   /* Clear the document history because the document is reparsed */
-	   TtaClearUndoHistory (doc);
-#endif /* IV */
 	   RestartParser (xmlDoc, tempdoc, tempdir, docname);
 	   /* the other document is now different from the original file. It can
 	      be saved */

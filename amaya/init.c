@@ -912,6 +912,36 @@ void DocStatusUpdate (Document doc, ThotBool modified)
 }
 
 /*----------------------------------------------------------------------
+  SetCharsetMenuOff sets Off the charset menu in the current view.
+  ----------------------------------------------------------------------*/
+static void SetCharsetMenuOff (Document doc, View view)
+{
+  TtaSetItemOff (doc, view, File, BUTF_8);
+  TtaSetItemOff (doc, view, File, BISO_8859_1);
+  TtaSetItemOff (doc, view, File, BISO_8859_15);
+  TtaSetItemOff (doc, view, File, BWINDOWS_1252);
+  TtaSetItemOff (doc, view, File, BISO_8859_2);
+  TtaSetItemOff (doc, view, File, BWINDOWS_1250);
+  TtaSetItemOff (doc, view, File, BISO_8859_3);
+  TtaSetItemOff (doc, view, File, BISO_8859_4);
+  TtaSetItemOff (doc, view, File, BWINDOWS_1257);
+  TtaSetItemOff (doc, view, File, BISO_8859_5);
+  TtaSetItemOff (doc, view, File, BWINDOWS_1251);
+  TtaSetItemOff (doc, view, File, BKOI8_R);
+  TtaSetItemOff (doc, view, File, BISO_8859_6);
+  TtaSetItemOff (doc, view, File, BWINDOWS_1256);
+  TtaSetItemOff (doc, view, File, BISO_8859_7);
+  TtaSetItemOff (doc, view, File, BWINDOWS_1253);
+  TtaSetItemOff (doc, view, File, BISO_8859_8);
+  TtaSetItemOff (doc, view, File, BWINDOWS_1255);
+  TtaSetItemOff (doc, view, File, BISO_8859_9);
+  TtaSetItemOff (doc, view, File, BWINDOWS_1254);
+  TtaSetItemOff (doc, view, File, BISO_2022_JP);
+  TtaSetItemOff (doc, view, File, BEUC_JP);
+  TtaSetItemOff (doc, view, File, BSHIFT_JIS);
+}
+
+/*----------------------------------------------------------------------
   SetTableMenuOff sets Off the table menu in the current view.
   ----------------------------------------------------------------------*/
 void SetTableMenuOff (Document doc, View view)
@@ -1218,6 +1248,7 @@ void UpdateEditorMenus (Document doc)
 	  if (isXhtml11)
 	    TtaSetMenuOn (doc, view, XMLTypes);
 	  SetTableMenuOff (doc, view); /* no table commands */
+	  SetCharsetMenuOff (doc, view); /* no charset commands */
 	}
       view = TtaGetViewFromName (doc, "Links_view");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -2720,6 +2751,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   TtaSetItemOff (doc, 1, File, BDocInfo);
 	   TtaSetItemOff (doc, 1, File, BSetUpandPrint);
 	   TtaSetItemOff (doc, 1, File, BPrint);
+	   SetCharsetMenuOff (doc, 1); /* no charset commands */
 	   /* invalid the DoctypeMenu */
 	   TtaSetItemOff  (doc, 1, File, BRemoveDoctype);
 	   TtaSetItemOff (doc, 1, File, BAddDoctype);
@@ -3128,13 +3160,17 @@ static void MoveImageFile (Document source_doc, Document dest_doc,
    Load current document considering it's a HTML document and/or
    with a new charset (charset != UNDEFINED_CHARSET).
   ----------------------------------------------------------------------*/
-static void ReparseAs (Document doc, View view, ThotBool asHTML,
+void ReparseAs (Document doc, View view, ThotBool asHTML,
 		       CHARSET charset)
 {
-  char           *tempdocument = NULL;
+  CHARSET         doc_charset;
+  DocumentType    thotType;
+  char           *localFile = NULL;
   char            documentname[MAX_LENGTH];
-  char            tempdir[MAX_LENGTH];
-  int             i;
+  char            s[MAX_LENGTH], charsetname[MAX_LENGTH];
+  int             i, parsingLevel;
+  ThotBool        plaintext;
+  ThotBool        xmlDec, withDoctype, isXML, isKnown;
 
   if (DocumentURLs[doc] == NULL ||
       (asHTML && !DocumentMeta[doc]->xmlformat))
@@ -3144,15 +3180,14 @@ static void ReparseAs (Document doc, View view, ThotBool asHTML,
     /* abort the command */
     return;
 
-  tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
-  TtaExtractName (tempdocument, tempdir, documentname);
   /* Initialize the LogFile variables */
   CleanUpParsingErrors ();
   /* remove the PARSING.ERR file */
   RemoveParsingErrors (doc);
   /* Remove the previous namespaces declaration */
   TtaFreeNamespaceDeclarations (doc);
-
+  localFile = GetLocalPath (doc, DocumentURLs[doc]);
+  TtaExtractName (localFile, s, documentname);
   for (i = 1; i < DocumentTableLength; i++)
     if (DocumentURLs[i] != NULL && DocumentSource[i] == doc)
       {
@@ -3187,11 +3222,20 @@ static void ReparseAs (Document doc, View view, ThotBool asHTML,
     }
   /* parse with the HTML parser */
   if (DocumentMeta[doc]->xmlformat)
-    StartXmlParser (doc, tempdocument, documentname,
-		    tempdir, tempdocument, FALSE, FALSE);
+    {
+      /* check if there is an XML declaration with a charset declaration */
+      charsetname[0] = EOS;
+      CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &isKnown,
+		      &parsingLevel, &doc_charset, charsetname, &thotType);
+      StartXmlParser (doc, localFile, documentname, s, localFile,
+		      xmlDec, withDoctype);
+    }
   else
-    StartParser (doc, tempdocument, documentname, tempdir,
-		 tempdocument, FALSE);
+    {
+      plaintext = (DocumentTypes[doc] == docCSS ||
+		   DocumentTypes[doc] == docText);
+      StartParser (doc, localFile, documentname, s, localFile, plaintext);
+    }
   /* then request to save as XHTML */
   if (asHTML)
     DocumentMeta[doc]->xmlformat = TRUE;
@@ -3202,7 +3246,7 @@ static void ReparseAs (Document doc, View view, ThotBool asHTML,
   DocNetworkStatus[doc] = AMAYA_NET_INACTIVE;
   /* check parsing errors */
   CheckParsingErrors (doc);
-  TtaFreeMemory (tempdocument);
+  TtaFreeMemory (localFile);
 }
 
 /*----------------------------------------------------------------------
@@ -4295,7 +4339,7 @@ void ZoomOut (Document document, View view)
 void ShowSource (Document document, View view)
 {
    CHARSET          charset;
-   char            *tempdocument;
+   char            *localFile;
    char            *s;
    char  	    documentname[MAX_LENGTH];
    char  	    tempdir[MAX_LENGTH];
@@ -4323,35 +4367,35 @@ void ShowSource (Document document, View view)
    else
      {
      /* save the current state of the document into the temporary file */
-     tempdocument = GetLocalPath (document, DocumentURLs[document]);
-     if (TtaIsDocumentModified (document) || !TtaFileExist (tempdocument))
+     localFile = GetLocalPath (document, DocumentURLs[document]);
+     if (TtaIsDocumentModified (document) || !TtaFileExist (localFile))
        {
 	 SetNamespacesAndDTD (document);
 	 if (DocumentTypes[document] == docLibrary ||
 	     DocumentTypes[document] == docHTML)
 	   {
 	     if (TtaGetDocumentProfile (document) == L_Xhtml11)
-	       TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+	       TtaExportDocumentWithNewLineNumbers (document, localFile,
 						    "HTMLT11");
 	     else if (DocumentMeta[document]->xmlformat)
-	       TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+	       TtaExportDocumentWithNewLineNumbers (document, localFile,
 						    "HTMLTX");
 	     else
-	       TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+	       TtaExportDocumentWithNewLineNumbers (document, localFile,
 						    "HTMLT");
 	   }
 	 else if (DocumentTypes[document] == docSVG)
-	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+	   TtaExportDocumentWithNewLineNumbers (document, localFile,
 						"SVGT");
 	 else if (DocumentTypes[document] == docMath)
-	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+	   TtaExportDocumentWithNewLineNumbers (document, localFile,
 						"MathMLT");
 #ifdef XML_GENERIC
 	 else if (DocumentTypes[document] == docXml)
-	   TtaExportDocumentWithNewLineNumbers (document, tempdocument, NULL);
+	   TtaExportDocumentWithNewLineNumbers (document, localFile, NULL);
 #endif /* XML_GENERIC */
        }
-     TtaExtractName (tempdocument, tempdir, documentname);
+     TtaExtractName (localFile, tempdir, documentname);
      /* open a window for the source code */
      sourceDoc = InitDocAndView (document,
                                  FALSE /* replaceOldDoc */,
@@ -4390,8 +4434,8 @@ void ShowSource (Document document, View view)
 	 else
 	   TtaSetDocumentCharset (sourceDoc, charset, FALSE);
 	 DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
-	 StartParser (sourceDoc, tempdocument, documentname, tempdir,
-		      tempdocument, TRUE);
+	 StartParser (sourceDoc, localFile, documentname, tempdir,
+		      localFile, TRUE);
 	 SetWindowTitle (document, sourceDoc, 0);
 	 /* Set the document read-only when needed */
 	 if (ReadOnlyDocument[document])
@@ -4406,7 +4450,7 @@ void ShowSource (Document document, View view)
 	 event.document = document;
 	 SynchronizeSourceView (&event);
        }
-     TtaFreeMemory (tempdocument);
+     TtaFreeMemory (localFile);
      }
 }
 

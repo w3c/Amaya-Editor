@@ -5034,12 +5034,8 @@ void ParseExternalDocument (char     *fileName,
    corresponding Thot abstract tree.
    Return TRUE if the parsing of the buffer has no error.
   ----------------------------------------------------------------------*/
-ThotBool       ParseXmlBuffer (char     *xmlBuffer,
-			       Element   el,
-			       ThotBool  isclosed,
-			       Document  doc,
-			       Language  lang,
-			       char     *typeName)
+ThotBool ParseXmlBuffer (char *xmlBuffer, Element el, ThotBool isclosed,
+			 Document doc, Language lang, char *typeName)
 {
   int          tmpLen = 0;
   char        *transBuffer = NULL;

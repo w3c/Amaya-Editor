@@ -30,7 +30,7 @@
 28 Indirizzo
 29 Titolo
 30 Cambia Titolo...
-31 Il documento è stato modificato -
+31 **Document modified - Do you want to save it?
 32 Redirezione durante il caricamento di %s
 33 Ho rilevato troppe redirezioni
 34 Non posso creare il file locale %s
@@ -276,9 +276,9 @@
 274 Annotazione cancellata!
 275 Non posso caricare l'indice delle annotazioni
 276 Errore
-277 Seleziona un charset
+277 Seleziona un Character Coding
 278 Seleziona un tipo MIME
-279 Cambia charset
+279 Cambia Character Coding
 280 Cambia tipo MIME
 281 Cambia
 282 Questo tipo di documento non supporta i charset

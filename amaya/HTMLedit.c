@@ -57,6 +57,22 @@ static int          OldHeight;
 
 
 /*----------------------------------------------------------------------
+  InsertBefore inserts an empty element before the selection
+  ----------------------------------------------------------------------*/
+void InsertBefore (Document doc, View view)
+{
+  /****** TODO *******/
+}
+
+/*----------------------------------------------------------------------
+  InsertAfter inserts an empty element after the selection
+  ----------------------------------------------------------------------*/
+void InsertAfter (Document doc, View view)
+{
+  /****** TODO *******/
+}
+
+/*----------------------------------------------------------------------
    SetTargetContent
    Set the new value of Target.                  
   ----------------------------------------------------------------------*/

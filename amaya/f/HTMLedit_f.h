@@ -6,6 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void InsertBefore ( Document doc,
+                           View view );
+extern void InsertAfter ( Document doc,
+                          View view );
 extern void SetTargetContent ( Document doc,
                                Attribute attrNAME );
 extern void LinkToPreviousTarget ( Document doc,
@@ -133,6 +137,10 @@ extern void UpdateAtom ( Document doc,
 
 #else /* __STDC__ */
 
+extern void InsertBefore ( Document doc,
+                             View view );
+extern void InsertAfter ( Document doc,
+                            View view );
 extern void SetTargetContent ( Document doc,
                                  Attribute attrNAME );
 extern void LinkToPreviousTarget ( Document doc,
