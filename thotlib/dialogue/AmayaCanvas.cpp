@@ -270,10 +270,10 @@ void AmayaCanvas::OnMouseDbClick( wxMouseEvent& event )
 			     thot_mod_mask,
 			     event.GetX(), event.GetY() );
 
+#ifndef _WINDOWS
   // force the focus because on debian woody, the focus do not come in when clicking on the canvas
   SetFocus();
-
-  event.Skip();
+#endif /* _WINDOWS */
 }
 
 /*
@@ -301,8 +301,6 @@ void AmayaCanvas::OnMouseMove( wxMouseEvent& event )
       // start the timer
       m_MouseMoveTimer.Start( 10, wxTIMER_ONE_SHOT );
     }
-
-  event.Skip();
 }
 
 /*
@@ -322,7 +320,6 @@ void AmayaCanvas::OnTimerMouseMove( wxTimerEvent& event )
 		       m_LastMouseMoveModMask,
 		       m_LastMouseMoveX,
 		       m_LastMouseMoveY );
-  event.Skip();
 }
 
 /*
@@ -366,7 +363,6 @@ void AmayaCanvas::OnMouseWheel( wxMouseEvent& event )
 			   direction,
 			   delta,
 			   event.GetX(), event.GetY() );
-  event.Skip();
 }
 
 /*
@@ -407,10 +403,10 @@ void AmayaCanvas::OnMouseUp( wxMouseEvent& event )
 			 thot_mod_mask,
 			 event.GetX(), event.GetY() );
 
+#ifndef _WINDOWS
   // force the focus because on debian woody, the focus do not come in when clicking on the canvas
   SetFocus();
-
-  event.Skip();
+#endif /* _WINDOWS */
 }
 
 /*
@@ -451,10 +447,10 @@ void AmayaCanvas::OnMouseDown( wxMouseEvent& event )
 			   thot_mod_mask,
 			   event.GetX(), event.GetY() );
 
+#ifndef _WINDOWS
   // force the focus because on debian woody, the focus do not come in when clicking on the canvas
   SetFocus();
-
-  event.Skip();
+#endif /* _WINDOWS */
 }
 
 /*
