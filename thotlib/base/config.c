@@ -1439,25 +1439,15 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
 
 #ifdef _GTK
   tmpw = gtk_widget_get_toplevel (GTK_WIDGET(widget));
+  /* values of w h are not realy exact, there too much pixel (2 or 3) */
   w = tmpw->allocation.width;
   h = tmpw->allocation.height;
-  x = y = 0;
-  while (tmpw) 
-    {
-      switch (GTK_OBJECT_TYPE(tmpw)) 
-	{
-	  /* Ignore the following containers */
-	case 49429:   /* GtkTable */
-	case 46101:   /* GtkHBox */
-	case 40725:   /* GtkVBox */
-	  break;
-	default:
-	  gdk_window_get_position(tmpw->window, &wx, &wy);
-	  x += wx;
-	  y += wy;
-	}
-      tmpw = tmpw->parent;
-    }
+  x = tmpw->allocation.x;
+  y = tmpw->allocation.y;
+  *xmm = x;
+  *ymm = y;
+  *width = w;
+  *height = h;
 #endif /* _GTK */
 
 #ifdef _MOTIF  
@@ -1474,14 +1464,15 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
   XtSetArg (args[n], XmNheight, &h);
   n++;
   XtGetValues (widget, args, n);
-#endif /* _MOTIF */
-  
+
   /* convert the result into mm */
   *xmm = x;
   /* take into account the window manager headband */
   *ymm = y - 18;
   *width = w;
   *height = h;
+#endif /* _MOTIF */
+  
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
 #ifdef _WINGUI
