@@ -94,16 +94,16 @@ ThotBool            isHTML;
     doc = InitDocView (0, documentname, docHTML, FALSE);
   else
     doc = InitDocView (0, documentname, docCSS, FALSE);
-   TtaFreeMemory (documentname);
-   TtaFreeMemory (pathname);
+  TtaFreeMemory (documentname);
+  TtaFreeMemory (pathname);
 
-   /* save the document name into the document table */
-   s = TtaStrdup (url);
-   TtaSetTextZone (doc, 1, 1, url);
-   DocumentURLs[doc] = s;
-   DocumentMeta[doc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
-   DocumentMeta[doc]->form_data = NULL;
-   DocumentMeta[doc]->method = CE_ABSOLUTE;
+  /* save the document name into the document table */
+  s = TtaStrdup (url);
+  TtaSetTextZone (doc, 1, 1, url);
+  DocumentURLs[doc] = s;
+  DocumentMeta[doc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
+  DocumentMeta[doc]->form_data = NULL;
+  DocumentMeta[doc]->method = CE_ABSOLUTE;
  
   ResetStop (doc);
   language = TtaGetDefaultLanguage ();

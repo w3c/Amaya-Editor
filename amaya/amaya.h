@@ -278,9 +278,29 @@ THOT_EXPORT int          FilesLoading[DocumentTableLength];
 THOT_EXPORT int          DocNetworkStatus[DocumentTableLength];
 THOT_EXPORT Document     W3Loading;	/* the document being loaded */
 THOT_EXPORT Document     BackupDocument;	/* the current backup */
-THOT_EXPORT int          IButton;
-THOT_EXPORT int          BButton;
-THOT_EXPORT int          TTButton;
+
+/* button indexes */
+THOT_EXPORT int iStop;
+THOT_EXPORT int iBack;
+THOT_EXPORT int iForward;
+THOT_EXPORT int iReload;
+THOT_EXPORT int iHome;
+THOT_EXPORT int iEditor;
+THOT_EXPORT int iSave;
+THOT_EXPORT int iPrint;
+THOT_EXPORT int iFind;
+THOT_EXPORT int iI;
+THOT_EXPORT int iB;
+THOT_EXPORT int iT;
+THOT_EXPORT int iImage;
+THOT_EXPORT int iH1;
+THOT_EXPORT int iH2;
+THOT_EXPORT int iH3;
+THOT_EXPORT int iBullet;
+THOT_EXPORT int iNum;
+THOT_EXPORT int iDL;
+THOT_EXPORT int iLink;
+THOT_EXPORT int iTable;
 
 #define IMAGE_NOT_LOADED        0
 #define IMAGE_LOCAL		1

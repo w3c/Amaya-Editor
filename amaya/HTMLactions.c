@@ -1058,6 +1058,7 @@ Document       doc;
 
   if (!W3Loading)
     {
+      DocumentTypes[doc] = docHTML;
       /* is it the last loaded document ? */
       i = 1;
       while (i < DocumentTableLength && DocumentURLs[i] == NULL)
@@ -1195,7 +1196,7 @@ Document            doc
      {
 	SelectionInEM = NewSelInElem;
 	TtaSetToggleItem (doc, 1, Style, TEmphasis, NewSelInElem);
-	TtaSwitchButton (doc, 1, IButton);
+	TtaSwitchButton (doc, 1, iI);
      }
 
    if (firstSel == NULL)
@@ -1213,7 +1214,7 @@ Document            doc
      {
 	SelectionInSTRONG = NewSelInElem;
 	TtaSetToggleItem (doc, 1, Style, TStrong, NewSelInElem);
-	TtaSwitchButton (doc, 1, BButton);
+	TtaSwitchButton (doc, 1, iB);
      }
 
    if (firstSel == NULL)
@@ -1333,7 +1334,7 @@ Document            doc
      {
 	SelectionInCODE = NewSelInElem;
 	TtaSetToggleItem (doc, 1, Style, TCode, NewSelInElem);
-	TtaSwitchButton (doc, 1, TTButton);
+	TtaSwitchButton (doc, 1, iT);
      }
 
    if (firstSel == NULL)

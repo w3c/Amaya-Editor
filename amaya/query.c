@@ -1297,7 +1297,7 @@ HTList             *c;
       return;
   
   lang_list = TtaGetEnvString ("ACCEPT_LANGUAGES");
-  s[3] = EOS;
+  s[2] = EOS;
   if (lang_list && *lang_list != EOS)
     {
       /* add the default language first  */

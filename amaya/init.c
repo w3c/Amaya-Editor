@@ -19,29 +19,6 @@
 #include "trans.h"
 #include "zlib.h"
 
-/* button indexes */
-#define iStop 1
-#define iBack 2
-#define iForward 3
-#define iReload 4
-#define iHome 5
-#define iEditor 6
-#define iSave 8
-#define iPrint 9
-#define iFind 10
-#define iI 12
-#define iB 13
-#define iT 14
-#define iImage 16
-#define iH1 17
-#define iH2 18
-#define iH3 19
-#define iBullet 20
-#define iNum 21
-#define iDL 22
-#define iLink 23
-#define iTable 24
-
 #ifdef _WINDOWS
 #include "resource.h"
 #else /* _WINDOWS */
@@ -1297,13 +1274,12 @@ STRING             title;
    ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
 
    TtaNewSheet (BaseDialog + OpenForm, TtaGetViewFrame (document, view),
-		title,
-		3, s, TRUE, 2, 'L', D_CANCEL);
+		title, 3, s, TRUE, 2, 'L', D_CANCEL);
    TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,
 		   TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
    TtaNewLabel (BaseDialog + LocalName, BaseDialog + OpenForm, " ");
    TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
-		     TtaGetMessage (LIB, TMSG_DOC_DIR),		/* std thot msg */
+		     TtaGetMessage (LIB, TMSG_DOC_DIR),	 /* std thot msg */
 		     BaseDialog + DirSelect, ScanFilter,
 		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSelect);
    if (LastURLName[0] != EOS)
@@ -1562,73 +1538,73 @@ ThotBool     logFile;
 #endif /* _WINDOWS */
 
 	   /* Add a button */
-	   TtaAddButton (doc, 1, stopN, StopTransfer,
+	   iStop =TtaAddButton (doc, 1, stopN, StopTransfer,
 			 TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT),
 			 TBSTYLE_BUTTON, FALSE);
-	   TtaAddButton (doc, 1, iconBackNo, GotoPreviousHTML,
+	   iBack = TtaAddButton (doc, 1, iconBackNo, GotoPreviousHTML,
 			 TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS),
 			 TBSTYLE_BUTTON, FALSE);
-	   TtaAddButton (doc, 1, iconForwardNo, GotoNextHTML,
+	   iForward = TtaAddButton (doc, 1, iconForwardNo, GotoNextHTML,
 			 TtaGetMessage (AMAYA, AM_BUTTON_NEXT),
 			 TBSTYLE_BUTTON, FALSE);
-	   TtaAddButton (doc, 1, iconReload, Reload,
+	   iReload = TtaAddButton (doc, 1, iconReload, Reload,
 			 TtaGetMessage (AMAYA, AM_BUTTON_RELOAD),
 			 TBSTYLE_BUTTON, TRUE);
-	   TtaAddButton (doc, 1, iconHome, GoToHome,
+	   iHome = TtaAddButton (doc, 1, iconHome, GoToHome,
 			 TtaGetMessage (AMAYA, AM_BUTTON_HOME),
 			 TBSTYLE_BUTTON, TRUE);
-	   TtaAddButton (doc, 1, iconEditor, SetBrowserEditor,
+	   iEditor = TtaAddButton (doc, 1, iconEditor, SetBrowserEditor,
 			 TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit),
 			 TBSTYLE_BUTTON, TRUE);
 	   /* SEPARATOR */
 	   TtaAddButton (doc, 1, None, NULL, NULL, TBSTYLE_SEP, FALSE);
-	   TtaAddButton (doc, 1, iconSaveNo, SaveDocument,
+	   iSave = TtaAddButton (doc, 1, iconSaveNo, SaveDocument,
 			 TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
 			 TBSTYLE_BUTTON, FALSE);
-	   TtaAddButton (doc, 1, iconPrint, PrintAs,
+	   iPrint = TtaAddButton (doc, 1, iconPrint, PrintAs,
 			 TtaGetMessage (AMAYA, AM_BUTTON_PRINT),
 			 TBSTYLE_BUTTON, TRUE);
-	   TtaAddButton (doc, 1, iconFind, TtcSearchText,
+	   iFind = TtaAddButton (doc, 1, iconFind, TtcSearchText,
 			 TtaGetMessage (AMAYA, AM_BUTTON_SEARCH),
 			 TBSTYLE_BUTTON, TRUE);
 	   /* SEPARATOR */
 	   TtaAddButton (doc, 1, None, NULL, NULL, TBSTYLE_SEP, FALSE);
-	   IButton =  TtaAddButton (doc, 1, iconI, SetCharEmphasis,
+	   iI =  TtaAddButton (doc, 1, iconI, SetCharEmphasis,
 				    TtaGetMessage (AMAYA, AM_BUTTON_ITALICS),
 				    TBSTYLE_CHECK, TRUE);
-	   BButton =  TtaAddButton (doc, 1, iconB, SetCharStrong,
+	   iB =  TtaAddButton (doc, 1, iconB, SetCharStrong,
 				    TtaGetMessage (AMAYA, AM_BUTTON_BOLD),
 				    TBSTYLE_CHECK, TRUE);
-	   TTButton = TtaAddButton (doc, 1, iconT, SetCharCode,
+	   iT = TtaAddButton (doc, 1, iconT, SetCharCode,
 				    TtaGetMessage (AMAYA, AM_BUTTON_CODE),
 				    TBSTYLE_CHECK, TRUE);
 	   /* SEPARATOR */
 	   TtaAddButton (doc, 1, None, NULL, NULL, TBSTYLE_SEP, FALSE);
-	   TtaAddButton (doc, 1, iconImage, CreateImage,
+	   iImage = TtaAddButton (doc, 1, iconImage, CreateImage,
 			 TtaGetMessage (AMAYA, AM_BUTTON_IMG),
 			 TBSTYLE_BUTTON, TRUE);
-	   TtaAddButton (doc, 1, iconH1, CreateHeading1,
+	   iH1 = TtaAddButton (doc, 1, iconH1, CreateHeading1,
 			 TtaGetMessage (AMAYA, AM_BUTTON_H1),
 			 TBSTYLE_BUTTON, TRUE);
-	   TtaAddButton (doc, 1, iconH2, CreateHeading2,
+	   iH2 = TtaAddButton (doc, 1, iconH2, CreateHeading2,
 			 TtaGetMessage (AMAYA, AM_BUTTON_H2),
 			 TBSTYLE_BUTTON, TRUE);
-	   TtaAddButton (doc, 1, iconH3, CreateHeading3,
+	   iH3 = TtaAddButton (doc, 1, iconH3, CreateHeading3,
 			 TtaGetMessage (AMAYA, AM_BUTTON_H3),
 			 TBSTYLE_BUTTON, TRUE);
-	   TtaAddButton (doc, 1, iconBullet, CreateList,
+	   iBullet = TtaAddButton (doc, 1, iconBullet, CreateList,
 			 TtaGetMessage (AMAYA, AM_BUTTON_UL),
 			 TBSTYLE_BUTTON, TRUE);
-	   TtaAddButton (doc, 1, iconNum, CreateNumberedList,
+	   iNum = TtaAddButton (doc, 1, iconNum, CreateNumberedList,
 			 TtaGetMessage (AMAYA, AM_BUTTON_OL),
 			 TBSTYLE_BUTTON, TRUE);
-	   TtaAddButton (doc, 1, iconDL, CreateDefinitionList,
+	   iDL = TtaAddButton (doc, 1, iconDL, CreateDefinitionList,
 			 TtaGetMessage (AMAYA, AM_BUTTON_DL),
 			 TBSTYLE_BUTTON, TRUE);
-	   TtaAddButton (doc, 1, iconLink, CreateOrChangeLink,
+	   iLink = TtaAddButton (doc, 1, iconLink, CreateOrChangeLink,
 			 TtaGetMessage (AMAYA, AM_BUTTON_LINK),
 			 TBSTYLE_BUTTON, TRUE);
-	   TtaAddButton (doc, 1, iconTable, CreateTable,
+	   iTable = TtaAddButton (doc, 1, iconTable, CreateTable,
 			 TtaGetMessage (AMAYA, AM_BUTTON_TABLE),
 			 TBSTYLE_BUTTON, TRUE);
 	   
@@ -1664,6 +1640,8 @@ ThotBool     logFile;
 	   TtaSetToggleItem (doc, 1, Views, TShowTextZone, TRUE);
 	   TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
 	   TtaSetToggleItem (doc, 1, Views, TShowTargets, FALSE);
+	   TtaSetItemOff (doc, 1, Special, BShowLogFile);
+	   TtaSetMenuOff (doc, 1, Attributes_);
 
 	   /* if we open the new document in a new view, control */
 	   /* is transferred from previous document to new document */
