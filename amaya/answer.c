@@ -627,6 +627,12 @@ int status;
       sprintf(AmayaLastHTTPErrorMsg, 
 	      TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED));
     }
+  else if (status == -409)
+    {
+      TtaSetStatus (me->docid, 1,
+		    "Conflict with the current state of the ressource", NULL);
+      sprintf(AmayaLastHTTPErrorMsg, "Conflict with the current state of the ressource");
+    }
   else if (status == -1)
     {
       /*
