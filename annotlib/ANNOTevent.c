@@ -586,11 +586,7 @@ View view;
 	 todo: read the schema asynchronously and delay the loading
 	 of annotations until after the schema has been processed @@ */
 
-      CHAR_T *schemaName = TtaGetEnvString ("ANNOT_SCHEMA");
-
-      if (schemaName)
-	ANNOT_ReadSchema (doc, schemaName);
-
+      SCHEMA_InitSchemas (doc);
       schema_init = TRUE;
     }
 
@@ -681,7 +677,7 @@ View view;
 			      (void *)  RemoteLoad_callback,
 			      (void *) ctx,
 			      NO,
-			      TEXT("application/rdf"));
+			      TEXT("application/xml"));
 	  TtaFreeMemory (annotURL);
 	}
     }
@@ -727,11 +723,7 @@ void ANNOT_Create (doc, view)
 	 todo: read the schema asynchronously and delay the loading
 	 of annotations until after the schema has been processed @@ */
 
-      CHAR_T *schemaName = TtaGetEnvString ("ANNOT_SCHEMA");
-
-      if (schemaName)
-	ANNOT_ReadSchema (doc, schemaName);
-
+      SCHEMA_InitSchemas (doc);
       schema_init = TRUE;
     }
 
@@ -1292,7 +1284,6 @@ void *context;
 	LINK_DeleteLink (source_doc);
     }
    
-  TtaFreeMemory (annot_url);
   if (output_file)
     {
       if (*output_file != EOS)
@@ -1434,10 +1425,13 @@ void ANNOT_Delete (document, view)
 				     annot_url, AM_BODY_URL);
     }
 
+  TtaFreeMemory (annot_url);
+  annot_url = NULL;
+
   ctx = (DELETE_context *) TtaGetMemory (sizeof (DELETE_context));
   ctx->source_doc = source_doc;
   ctx->annot_doc = annot_doc;
-  ctx->annot_url = annot_url;
+  ctx->annot_url = annot->annot_url;
   ctx->annotEl = annotEl;
   ctx->annot = annot;
   ctx->annot_is_remote = annot_is_remote;
@@ -1453,13 +1447,15 @@ void ANNOT_Delete (document, view)
       /* do the post call */
 
       /* find the annotation server by comparition */
+      /* RRS @@ services should become RDF resources and then the
+	 annot structure can simply refer to them, avoiding this loop */
       list_ptr = annotServers;
       annot_server = NULL;
       while (list_ptr)
 	{
 	  annot_server = list_ptr->object;
 	  if (ustrcasecmp (annot_server, TEXT("localhost"))
-	      && !ustrncasecmp (annot_server, annot_url, 
+	      && !ustrncasecmp (annot_server, annot->annot_url, 
 				ustrlen (annot_server)))
 	    break;
 	  list_ptr = list_ptr->next;
@@ -1484,7 +1480,7 @@ void ANNOT_Delete (document, view)
 	  ANNOT_UpdateTransfer (doc);
 	  res = GetObjectWWW (doc,
 #ifdef ANNOT_DELETE
-			      annot_url,
+			      annot->annot_url,
 			      NULL,
 #else
 			      annot_server,

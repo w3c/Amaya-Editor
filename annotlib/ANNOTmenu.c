@@ -981,33 +981,46 @@ static void BuildAnnotTypesSelector ()
 				      ANNOTATION_PROP,
 				      FALSE);
 
+  if (!annotClass)
+    annotClass = ANNOT_FindRDFResource (&annot_schema_list,
+					FALLBACK_ANNOTATION_PROP,
+					TRUE);
+
   if (annotClass && annotClass->class)
     {
-      List *item;
+      List *item = annotClass->class->subClasses;
 
-      for (item=annotClass->class->subClasses; item; item=item->next)
+      if (item)
 	{
-	  RDFClassP subType = (RDFClassP)item->object;
+	  for (; item; item=item->next)
+	    {
+	      RDFClassP subType = (RDFClassP)item->object;
+	      TypeSelector *t = (TypeSelector*)TtaGetMemory (sizeof(TypeSelector));
+
+	      t->type = subType;
+	      t->name = ANNOT_GetLabel(&annot_schema_list, subType);
+	      List_add (&typesList, (void*)t);
+
+	      ustrcpy (&s[i], t->name);
+	      i += ustrlen (&s[i]);
+	      s[i] = WC_EOS;
+	      i++;
+	      nb_entries++;
+	    }
+	}
+      else
+	{
 	  TypeSelector *t = (TypeSelector*)TtaGetMemory (sizeof(TypeSelector));
 
-	  t->type = subType;
-	  t->name = ANNOT_GetLabel(&annot_schema_list, subType);
+	  t->type = annotClass;
+	  t->name = ANNOT_GetLabel(&annot_schema_list, annotClass);
 	  List_add (&typesList, (void*)t);
 
-	  ustrcpy (&s[i], t->name);
-	  i += ustrlen (&s[i]);
+	  ustrcpy (s, t->name);
+	  i = ustrlen (s);
 	  s[i] = WC_EOS;
-	  i++;
-	  nb_entries++;
+	  nb_entries = 1;
 	}
-    }
-  else
-    {
-      /* @@ RRS use the default values */
-      ustrcpy (&s[i], TEXT("positive comment"));
-      i += ustrlen (&s[i]) + 1;
-      ustrcpy (&s[i], TEXT("flame"));
-      nb_entries = 2;
     }
 
 #ifndef _WINDOWS

@@ -392,30 +392,6 @@ void InitAmayaDefEnv ()
   TtaSetDefEnvString ("ANNOT_POST_SERVER", TEXT(""), FALSE);
   TtaSetDefEnvString ("ANNOT_SERVERS", TEXT("localhost"), FALSE);
   TtaSetDefEnvString ("ANNOT_AUTOLOAD", TEXT("no"), FALSE);
-  /* search for the default annotation schema */
-  do
-    {
-      if (ptr)
-	{
-	  /* is it in the config directory? */
-	  usprintf (s, TEXT("file://%s%cconfig%c%s-annotschema"), ptr, DIR_SEP, DIR_SEP, DialogueLang);
-	  if (TtaFileExist (s+7))
-	    {
-	      TtaSetDefEnvString ("ANNOT_SCHEMA", s, FALSE);
-	      break;
-	    }
-
-	  usprintf (s, TEXT("file://%s%cconfig%cen-annotschema"), ptr, DIR_SEP, DIR_SEP);
-	  if (TtaFileExist (s+7))
-	    {
-	      TtaSetDefEnvString ("ANNOT_SCHEMA", s, FALSE);
-	      break;
-	    }
-	}
-      /* give it the default URL */
-      TtaSetDefEnvString ("ANNOT_SCHEMA", TEXT("http://www.w3.org/1999/xx/annotation-ns#"), FALSE);
-    } while (0);
-
 #endif /* ANNOTATIONS */
 
   /* appearance */
@@ -4038,7 +4014,6 @@ static void GetAnnotConf ()
   GetEnvString ("ANNOT_USER", AnnotUser);
   GetEnvString ("ANNOT_POST_SERVER", AnnotPostServer);
   GetEnvString ("ANNOT_SERVERS", AnnotServers);
-  GetEnvString ("ANNOT_SCHEMA", AnnotSchema);
   TtaGetEnvBoolean ("ANNOT_AUTOLOAD", &AnnotAutoLoad);
 }
 
@@ -4055,7 +4030,6 @@ static void SetAnnotConf ()
   TtaSetEnvString ("ANNOT_USER", AnnotUser, TRUE);
   TtaSetEnvString ("ANNOT_POST_SERVER", AnnotPostServer, TRUE);
   TtaSetEnvString ("ANNOT_SERVERS", AnnotServers, TRUE);
-  TtaSetEnvString ("ANNOT_SCHEMA", AnnotSchema, TRUE);
   TtaSetEnvBoolean ("ANNOT_AUTOLOAD", AnnotAutoLoad, TRUE);
 
   TtaSaveAppRegistry ();
@@ -4081,7 +4055,6 @@ static void GetDefaultAnnotConf ()
   GetDefEnvString ("ANNOT_USER", AnnotUser);
   GetDefEnvString ("ANNOT_POST_SERVER", AnnotPostServer);
   GetDefEnvString ("ANNOT_SERVERS", AnnotServers);
-  GetDefEnvString ("ANNOT_SCHEMA", AnnotSchema);
   TtaGetDefEnvBoolean ("ANNOT_AUTOLOAD", &AnnotAutoLoad);
 }
 

@@ -223,13 +223,10 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
   mdate = annot->mdate;
 
   if (annot->type)
-    {
       type = ANNOT_GetLabel(&annot_schema_list, annot->type);
-      if (!type)
-	  type = annot->type->name;
-    }
   else
-      type = TEXT("(comment)");
+      type = TEXT(""); /* All local annotations should have a type, but
+			  a service may forget to give us a type. */
 
   /* save the docid of the annotated document */
   DocumentMeta[docAnnot]->source_doc = doc;

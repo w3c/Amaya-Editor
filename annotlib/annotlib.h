@@ -45,6 +45,8 @@
 #define RDFS_LABEL TEXT("http://www.w3.org/2000/01/rdf-schema#label")
 #define RDFS_SUBCLASSOF TEXT("http://www.w3.org/2000/01/rdf-schema#subClassOf")
 #define ANNOTATION_PROP TEXT("http://www.w3.org/1999/xx/annotation-ns#Annotation")
+#define FALLBACK_ANNOTATION_NS "http://www.w3.org/1999/xx/annotation-ns#"
+#define FALLBACK_ANNOTATION_PROP TEXT(FALLBACK_ANNOTATION_NS "Annotation")
 
 /* Structures and global variables */
 

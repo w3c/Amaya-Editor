@@ -276,6 +276,11 @@ RDFStatementP ANNOT_FindRDFStatement( listP, p )
 
 /*------------------------------------------------------------
    ANNOT_GetLabel
+
+   Return a shared string label for the specified RDF resource.
+   If not rdfs:label property is found for the resource or (if
+   the resource is a class, then) for any of its superclasses,
+   then return the name of the resource.
   ------------------------------------------------------------*/
 #ifdef __STDC__
 char *ANNOT_GetLabel (List **listP, RDFResourceP r)
@@ -292,7 +297,7 @@ char *ANNOT_GetLabel (listP, r)
     labelP = ANNOT_FindRDFResource (listP, RDFS_LABEL, FALSE);
 
   if (!labelP)
-    return NULL;
+    return r->name;
 
   while (!labelS)
     {
@@ -300,7 +305,7 @@ char *ANNOT_GetLabel (listP, r)
 
       if (labelS)
 	{
-	  /* RRS @@ assume object is a literal */
+	  /* RRS @@ assumes object is a literal, doesn't account for lang */
 	  return labelS->object->name;
 	}
 
@@ -316,20 +321,20 @@ char *ANNOT_GetLabel (listP, r)
 	  s = ANNOT_FindRDFStatement (r->statements, subclassOfP);
 
 	  if (!s)
-	    return NULL;	/* unknown parent class */
+	    return r->name;	/* unknown parent class */
 
 	  r = s->object;
 	}
       else
-	return NULL;
+	return r->name;
     }
-  return NULL;
+  return r->name;
 }
 
 
 
 /*------------------------------------------------------------
-   ANNOT_ReadSchema
+   SCHEMA_ReadSchema
   ------------------------------------------------------------
    Parses an RDF schema.
   
@@ -337,9 +342,9 @@ char *ANNOT_GetLabel (listP, r)
      namespace_URI - the name of the Schema to parse
   ------------------------------------------------------------*/
 #ifdef __STDC__
-void ANNOT_ReadSchema (Document doc, char *namespace_URI)
+void SCHEMA_ReadSchema (Document doc, char *namespace_URI)
 #else /* __STDC__ */
-void ANNOT_ReadSchema (doc, namespace_URI)
+void SCHEMA_ReadSchema (doc, namespace_URI)
      Document doc;
      char *namespace_URI;
 #endif /* __STDC__ */
@@ -372,13 +377,152 @@ void ANNOT_ReadSchema (doc, namespace_URI)
 			  (void *) ReadSchema_callback,
 			  (void *) ctx,
 			  NO,
-			  TEXT("application/rdf"));
+			  TEXT("application/xml"));
     }
 
   if (res != HT_OK)
       TtaSetStatus (doc, 1, "Couldn't read schema", NULL); /* @@ */
   else
       TtaSetStatus (doc, 1, "Annotation schema downloaded", NULL); /* @@ */
+}
+
+
+/*------------------------------------------------------------
+   SCHEMA_InitSchemas
+  ------------------------------------------------------------
+   Initializes the annotation schemas from a config file.
+  
+  ------------------------------------------------------------*/
+#ifdef __STDC__
+void SCHEMA_InitSchemas (Document doc)
+#else /* __STDC__ */
+void SCHEMA_InitSchemas (doc)
+     Document doc;
+#endif /* __STDC__ */
+{
+  CHAR_T* thotdir;
+  CHAR_T *app_home;
+  FILE *fp;
+  int len;
+  CHAR_T *buffer;
+
+  thotdir = TtaGetEnvString ("THOTDIR");
+  app_home = TtaGetEnvString ("APP_HOME");
+
+  len = strlen(thotdir) + strlen(app_home) + MAX_LENGTH + 32;
+
+  buffer = TtaGetMemory(len);
+  usprintf (buffer, TEXT("%s%cannot.schemas"), app_home, DIR_SEP);
+
+  if (!TtaFileExist (buffer))
+    {
+      usprintf (buffer, TEXT("%s%cconfig%cannot.schemas"),
+		thotdir, DIR_SEP, DIR_SEP);
+
+      if (!TtaFileExist (buffer))
+	{
+	  /* RRS @@ installation error */
+	  TtaFreeMemory (buffer);
+	  return;
+	}
+    }
+
+  fp = fopen (buffer, "r");
+
+  if (!fp)
+    {
+      /* RRS @@ installation error */
+      return;
+    }
+
+  while (fgets (buffer, len, fp))
+    {
+      char *nsname, *fname, *cp;
+      int l;
+
+      if (buffer[0] == '#')	/* comment lines start with '#' */
+	continue;
+
+      nsname = buffer;
+
+      l = strlen(buffer);
+      while (l-- && (buffer[l] == '\n' || buffer[l] == '\r'))
+	buffer[l] = '\0';
+
+      cp = strchr (buffer, ' ');
+      if (cp)
+	*cp++ = '\0';
+
+      if (!*nsname)		/* line was blank; skip it */
+	continue;
+
+      if (cp)
+	  while (*cp && isspace (*cp)) cp++;
+
+      if (!cp || !*cp)
+	/* only a namespace name was specified; try to fetch a schema
+	   from the Web using the namespace name */
+	{
+	  SCHEMA_ReadSchema (doc, nsname);
+	  continue;
+	}
+
+      /* both namespace name and [local] filename were specified;
+	 read the schema from the specified file */
+      fname = cp;
+      while (*cp && !isspace (*cp)) cp++;
+      *cp = '\0';		/* terminate filename */
+
+      /* expand $THOTDIR and $APP_HOME */
+      if (strncmp (fname, "$THOTDIR", 8) == 0)
+	{
+	  if (strlen (thotdir) > (unsigned) (fname - buffer + 7))
+	    /* no room at beginning of buffer to expand THOTDIR,
+	       so copy the filename elsewhere before concatenating */
+	    {
+	      char *temp = TtaGetMemory(len);
+	      strcpy (temp, fname); /* copy */
+	      strcpy (buffer, thotdir);
+	      strcat (buffer, temp+8);
+	      TtaFreeMemory (temp);
+	    }
+	  else
+	    {
+	      strcpy (buffer, thotdir);
+	      strcat (buffer, fname+8);
+	    }
+	  fname = buffer;
+	}
+      else
+	if (strncmp (fname, "$APP_HOME", 9) == 0)
+	  {
+	    if (strlen (app_home) > (unsigned) (fname - buffer + 8))
+	      /* no room at beginning of buffer to expand APP_HOME,
+		 so copy the filename elsewhere before concatenating */
+	      {
+		char *temp = TtaGetMemory(len);
+		strcpy (temp, fname); /* copy */
+		strcpy (buffer, app_home);
+		strcat (buffer, temp+9);
+		TtaFreeMemory (temp);
+	      }
+	    else
+	      {
+		strcpy (buffer, app_home);
+		strcat (buffer, fname+9);
+	      }
+	    fname = buffer;
+	  }
+
+      if (TtaFileExist (fname))
+	{
+	  HTRDF_parseFile (fname, triple_handler, &annot_schema_list);
+	}
+      /* RRS @@ else config error */
+    }
+
+  fclose (fp);
+  TtaFreeMemory (buffer);
 }
 
 

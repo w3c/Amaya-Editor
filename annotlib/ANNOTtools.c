@@ -649,7 +649,6 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
 	  "<?xml version=\"1.0\" ?>\n" 
 	  "<r:RDF xmlns:r=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
 	  "xmlns:a=\"http://www.w3.org/1999/xx/annotation-ns#\"\n"
-	  "xmlns:xlink=\"http://www.w3.org/1999/xx/xlink#\"\n"
 	  "xmlns:http=\"http://www.w3.org/1999/xx/http#\"\n"
  	  "xmlns:d=\"http://purl.org/dc/elements/1.0/\">\n");
 
@@ -667,7 +666,7 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
 		   "<r:Description>\n");
 
 	  fprintf (fp, 
-		   "<r:type resource=\"http://www.w3.org/1999/xx/annotation-ns#Annotation\" />\n");
+		   "<r:type resource=\"%s\" />\n", FALLBACK_ANNOTATION_PROP);
 
 	  if (annot->type)
 	    fprintf (fp, 
@@ -777,7 +776,7 @@ Document doc;
 	   "<r:Description>\n");
 
 	  fprintf (fp, 
-		   "<r:type resource=\"http://www.w3.org/1999/xx/annotation-ns#Annotation\" />\n");
+		   "<r:type resource=\"%s\" />\n", FALLBACK_ANNOTATION_PROP);
 
 	  if (annot->type)
 	    fprintf (fp, 
@@ -1238,8 +1237,6 @@ RDFResourceP type;
   /* change the text content */
   el = TtaGetFirstChild (el);
   type_name = ANNOT_GetLabel(&annot_schema_list, type);
-  if (!type_name)
-    type_name = type->name;
   TtaSetTextContent (el, type_name,
 		     TtaGetDefaultLanguage (), doc);
 

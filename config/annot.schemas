@@ -1,0 +1,17 @@
+# annot.schemas
+#
+# specifies the RDF schemas to be pre-loaded for Annotations
+#
+# each line beginning with '#' is a comment
+# all other non-empty lines must be in one of two formats:
+# 1. namespacename
+# 2. namespacename filename
+#
+# In case 1, an RDF schema is expected to be found at the namespace URI
+# In case 2, the filename is expected to be a (local) copy of an RDF
+#            schema for the namespace.  The strings $THOTDIR and
+#            $APP_HOME may be used at the beginning of the filename
+#            and will be expanded to the Amaya installation directory
+#            and the user's amaya home directory respectively.
+
+http://www.w3.org/1999/xx/annotation-ns#  $THOTDIR/config/en-annotschema
