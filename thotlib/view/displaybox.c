@@ -991,7 +991,7 @@ int                 frame;
   Parameters x, y, w, h give the clipping region.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplayBorders (PtrBox box, int frame, int x, int y, int w, int h)
+void                  DisplayBorders (PtrBox box, int frame, int x, int y, int w, int h) 
 #else  /* __STDC__ */
 void                DisplayBorders (box, frame, x, y, w, h)
 PtrBox              box;
@@ -1007,8 +1007,6 @@ int                 h;
   int                 t, b, l, r, pos, dim;
   int                 xFrame, yFrame;
 
-  if (x < 0 || y < 0 || w <= 0 || h <= 0)
-    return;
   pAb = box->BxAbstractBox;
   /* position in the frame */
   xFrame = box->BxXOrg - ViewFrameTable[frame - 1].FrXOrg;
