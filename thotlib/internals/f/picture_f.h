@@ -38,7 +38,7 @@ extern ThotBool DisplayGradient ( PtrAbstractBox pAb,
                                   int r );
 extern void FreeAllPicCache ( void );
 extern void FreeAllPicCacheFromFrame ( int frame );
-extern void FreePixmap ( Pixmap pixmap );
+extern void FreePixmap ( ThotPixmap pixmap );
 extern Picture_Report PictureFileOk ( char *fileName,
                                       int *typeImage );
 extern void CreateGifLogo ( void );
@@ -111,7 +111,7 @@ extern ThotBool DisplayGradient (/* PtrAbstractBox pAb,
                                     int r */);
 extern void FreeAllPicCache (/* void */);
 extern void FreeAllPicCacheFromFrame (/* int frame */);
-extern void FreePixmap (/* Pixmap pixmap */);
+extern void FreePixmap (/* ThotPixmap pixmap */);
 extern Picture_Report PictureFileOk (/* char *fileName,
                                         int *typeImage */);
 extern void CreateGifLogo (/* void */);

@@ -42,7 +42,7 @@
   #include "resource.h"
 #endif /* _WINDOWS */
 
-#if defined(_MOTIF) || defined(_GTK)  
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 #include "stopN.xpm"
 #include "stopR.xpm"
 #include "save.xpm"
@@ -81,13 +81,13 @@
 #include "Table.xpm"
 #include "TableNo.xpm"
 #include "home.xpm"
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defned(_GTK) || defined(_WX) */
 
 #ifdef AMAYA_PLUGIN
   #include "plugin.h"
-  #if defined(_MOTIF) || defined(_GTK)
+  #if defined(_MOTIF) || defined(_GTK) || defined(_WX)
     #include "Plugin.xpm"
-  #endif /* #if defined(_MOTIF) || defined(_GTK) */
+  #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 #endif /* AMAYA_PLUGIN */
 
 #include "XPointer_f.h"
@@ -129,7 +129,7 @@ static ThotBool     WelcomePage = FALSE;
    document view twice */
 static int          Loading_method = CE_INIT;
 
-#ifdef _NOGUI
+#if defined(_NOGUI) && !defined(_WX) // TODO "&& !defined(_WX)" a virer a la fin de la migration wxWindows
 static ThotIcon       stopR;
 static ThotIcon       stopN;
 static ThotIcon       iconSave;
@@ -174,7 +174,7 @@ static ThotIcon       iconPlugin;
 #endif /* #ifdef _NOGUI */
 
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 static ThotIcon       stopR;
 static ThotIcon       stopN;
 static ThotIcon       iconSave;
@@ -216,7 +216,7 @@ static ThotIcon       iconHome;
 #ifdef AMAYA_PLUGIN
 static ThotIcon       iconPlugin;
 #endif /* AMAYA_PLUGIN */
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _WINDOWS
 #define stopR          0
@@ -299,7 +299,6 @@ extern char      LostPicturePath [512];
   #include "wininclude.h"
 #endif /* _WINDOWS */
 
-
 #ifdef DAV
 #define WEBDAV_EXPORT extern
 #include "davlib.h"
@@ -307,7 +306,6 @@ extern char      LostPicturePath [512];
 #include "davlibRequests_f.h"
 #include "davlibUI_f.h"
 #endif /* DAV */
-
 
 extern void InitMathML ();
 
@@ -502,7 +500,7 @@ char * DocumentTypeString (Document document)
   ----------------------------------------------------------------------*/
 void DocumentInfo (Document document, View view)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
   char         *content;
 
   /* Main form */
@@ -608,7 +606,7 @@ void DocumentInfo (Document document, View view)
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + DocInfoForm, TRUE);
 
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
    
 #ifdef _WINDOWS
    CreateDocumentInfoDlgWindow (TtaGetViewFrame (document, view),
@@ -1661,7 +1659,7 @@ void SetWindowTitle (Document sourceDoc, Document targetDoc, View view)
 void InitFormAnswer (Document document, View view, const char *auth_realm,
 		     char *server)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
    char *label;
 
    TtaNewForm (BaseDialog + FormAnswer, TtaGetViewFrame (document, view), 
@@ -1708,7 +1706,7 @@ void InitFormAnswer (Document document, View view, const char *auth_realm,
        TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
        TtaWaitShowDialogue ();
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _WINDOWS
    CreateAuthenticationDlgWindow (TtaGetViewFrame (document, view),
@@ -1730,9 +1728,9 @@ void InitInfo (char *label, char *info)
   MessageBox (NULL, info, label, MB_OK);
 #endif /* !_WINDOWS */
 
-#if defined(_MOTIF) || defined(_GTK)  
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
   TtaDisplayMessage (CONFIRM, info, NULL);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -1740,7 +1738,7 @@ void InitInfo (char *label, char *info)
 void ConfirmError (Document document, View view, char *label,
 		   char *extrabutton, char *confirmbutton)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
    char      s[MAX_LENGTH];
    int       i, n;
 
@@ -1813,7 +1811,7 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
    TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
    /* wait for an answer */
    TtaWaitShowDialogue ();
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
    
 #ifdef _WINDOWS
    CreateInitConfirm3LDlgWindow (TtaGetViewFrame (document, view),
@@ -1827,7 +1825,7 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
   ----------------------------------------------------------------------*/
 void InitConfirm (Document document, View view, char *label)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
    /* Confirm form */
 
    /* JK: This widget can't be called twice, but it happens when downloading a
@@ -1862,7 +1860,7 @@ void InitConfirm (Document document, View view, char *label)
   ----------------------------------------------------------------------*/
 void InitCharset (Document document, View view, char *url)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
   char   s[MAX_LENGTH]; /* general purpose buffer */
   int    i;
 
@@ -1891,7 +1889,7 @@ void InitCharset (Document document, View view, char *url)
   TtaShowDialogue (BaseDialog + CharsetForm, FALSE);
   /* wait for an answer */
   TtaWaitShowDialogue ();
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _WINDOWS
   CreateCharsetDlgWindow (TtaGetViewFrame (document, view));
@@ -1953,7 +1951,7 @@ void InitMimeType (Document document, View view, char *url, char *status)
       nbmimetypes = 7;
     }
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
    TtaNewForm (BaseDialog + MimeTypeForm, TtaGetViewFrame (document, view),
 	       TtaGetMessage (AMAYA, AM_SELECT_MIMETYPE),  TRUE, 1, 'L', D_CANCEL);
    /* selector */
@@ -1971,7 +1969,7 @@ void InitMimeType (Document document, View view, char *url, char *status)
    TtaShowDialogue (BaseDialog + MimeTypeForm, FALSE);
    /* wait for an answer */
    TtaWaitShowDialogue ();
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _WINDOWS
    CreateMimeTypeDlgWindow (TtaGetViewFrame (document, view), nbmimetypes,
@@ -1979,13 +1977,13 @@ void InitMimeType (Document document, View view, char *url, char *status)
 #endif /* _WINDOWS */
 }
 
-#if defined(_MOTIF) || defined(_GTK)
 /*-------------------------------------------------------------------------
   BrowserForm
   Initializes a form that ask the URI of the opened or new created document.
   -------------------------------------------------------------------------*/
 static void BrowserForm (Document doc, View view, char *urlname)
 {
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
    char      s[MAX_LENGTH];
    int       i;
    char      tempfile[MAX_LENGTH];
@@ -2062,8 +2060,8 @@ static void BrowserForm (Document doc, View view, char *urlname)
    TtaSetTextForm (BaseDialog + FileBrowserFilter, ScanFilter);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + FileBrowserForm, FALSE);
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
 /*----------------------------------------------------------------------
   InitOpenDocForm initializes a form that ask the URI of the opened or
@@ -2076,7 +2074,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
 {
   char              s[MAX_LENGTH];
   ThotBool          remote;
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
   int               i;
 
   /* Dialogue form for open URL or local */
@@ -2092,7 +2090,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
   TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,
 		  TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
   TtaNewLabel (BaseDialog + LocalName, BaseDialog + OpenForm, " ");
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
   CurrentDocument = doc;
   /* generate the right name and URI */
@@ -2113,7 +2111,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
   else
     {
       /* check if it's the default Welcome page */
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
       if (WelcomePage)
 	{
 	  getcwd (s, MAX_LENGTH);
@@ -2124,7 +2122,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
 	    }
 	}
       else
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
         
       if (name[0] == EOS)
 	{
@@ -2148,11 +2146,11 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
 			  DocSelect, DirSelect, docType);
 #endif /* WINDOWS */
 
-#if defined(_MOTIF) || defined(_GTK)  
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
   TtaSetTextForm (BaseDialog + URLName, s);
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseDialog + OpenForm, TRUE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
   
 }
 
@@ -2789,12 +2787,12 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   TtaChangeButton (doc, 1, iEditor, iconEditor, TRUE);
 #endif /* _WINDOWS */
 
-#if defined(_MOTIF) || defined(_GTK)     
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
 	   iEditor = TtaAddButton (doc, 1, iconEditor, (Proc)SetBrowserEditor,
 				   "SetBrowserEditor",
 				   TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit),
 				   TBSTYLE_BUTTON, TRUE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
      
 	   /* SEPARATOR */
 	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
@@ -2862,12 +2860,12 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   
 #ifdef AMAYA_PLUGIN 
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	   TtaAddButton (doc, 1, iconPlugin, (Proc)TtaCreateFormPlugin,
 			 "TtaCreateFormPlugin",
 			 TtaGetMessage (AMAYA, AM_BUTTON_PLUGIN),
 			 TBSTYLE_BUTTON, TRUE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
      
 #endif /* AMAYA_PLUGIN */
 	   AddMathButton (doc, 1);
@@ -5219,7 +5217,7 @@ static void ChangeDoctype (ThotBool isXml)
   ----------------------------------------------------------------------*/
 static void UpdateSaveAsButtons ()
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
   int	active;
 
   if (SaveAsHTML || SaveAsXML)
@@ -5228,7 +5226,7 @@ static void UpdateSaveAsButtons ()
     active = 0;
   TtaRedrawMenuEntry (BaseDialog + ToggleSave, 0, NULL, -1, active);
   TtaRedrawMenuEntry (BaseDialog + ToggleSave, 1, NULL, -1, active);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -5295,9 +5293,9 @@ static void SetFileSuffix ()
 	 sprintf (DocToOpen, filename);
 #endif /* _WINDOWS */
 
-#if defined(_MOTIF) || defined(_GTK)   
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
 	 TtaSetTextForm (BaseDialog + NameSave, filename);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
    
 	 TtaFreeMemory (filename);
        }
@@ -5313,9 +5311,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
   char              tempname[MAX_LENGTH];
   char              sep, *tmp, *ptr;
   int               val;
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX) 
   int               i;
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX) */
   ThotBool          change, updated;
 
   tmp = NULL;
@@ -5432,10 +5430,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
       else if (val == 2)
 	{
 	  /* Browse button */
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	  WidgetParent = OpenDocBrowser;
 	  BrowserForm (CurrentDocument, 1, &LastURLName[0]);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 	}
       else if (val == 3)
 	{
@@ -5443,9 +5441,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  LastURLName[0] = EOS;
 	  DirectoryName[0] = EOS;
 	  DocumentName[0] = EOS;
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	  TtaSetTextForm (BaseDialog + URLName, LastURLName);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 	}
       else if (NewFile)
 	{
@@ -5495,7 +5493,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
       sprintf (DirectoryName, "%s", data);
 #endif /* _WINDOWS */
       
-#if defined(_MOTIF) || defined(_GTK)      
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
       if (DirectoryName[0] != EOS)
 	{
 	  if (!strcmp (data, ".."))
@@ -5517,7 +5515,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 			    BaseDialog + DocSelect);
 	  DocumentName[0] = EOS;
 	}
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
       
       break;
     case DocSelect:
@@ -5533,9 +5531,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
       strcat (tempfile, DIR_STR);
       strcat (tempfile, DocumentName);
       
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
       TtaSetTextForm (BaseDialog + URLName, tempfile);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
       
       break;
     case ConfirmForm:
@@ -5549,10 +5547,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
       if (strlen (data) <= NAME_LENGTH)
 	strcpy (ScanFilter, data);
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
       else
 	TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
       
       break;
     case FormAnswer:
@@ -5579,7 +5577,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
       break;
     case PasswordText:
 
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX) 
       i = strlen (data);
       if (i < NAME_LENGTH - 1)
 	{
@@ -5601,7 +5599,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	}
       else
 	Answer_password[NAME_LENGTH - 1] = EOS;
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX) */
       
 #ifdef _MOTIF
       if (i > 0)
@@ -5642,11 +5640,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  SaveAsHTML = FALSE;
 	  SaveAsXML = FALSE;
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	  TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
 	  TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
 	  UpdateSaveAsButtons ();
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
     
 	  SetFileSuffix ();
 	  break;
@@ -5687,11 +5685,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		  && (UserMimeType[0] == EOS))
 		{
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 		  TtaNewLabel (BaseDialog + SaveFormStatus,
 			       BaseDialog + SaveForm,
 			       TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _WINDOWS      
 		  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
@@ -5725,13 +5723,13 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	/* "Browse" button */
 	{
     
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	  WidgetParent = DocSaveBrowser;
 	  strcpy (LastURLName, SavePath);
 	  strcat (LastURLName, DIR_STR);
 	  strcat (LastURLName, SaveName);
 	  BrowserForm (SavingDocument, 1, LastURLName);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
     
 	}
       else if (val == 3)
@@ -5743,10 +5741,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      SaveImgsURL[0] = EOS;
 	      SaveName[0] = EOS;
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	      TtaSetTextForm (BaseDialog + NameSave, SaveImgsURL);
 	      TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
         
 	    }
 	}
@@ -5758,10 +5756,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      if (DocumentTypes[SavingDocument] != docImage)
 		{
 		  /* clear the status message */
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 		  TtaNewLabel (BaseDialog + SaveFormStatus,
 			       BaseDialog + SaveForm, " ");
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _WINDOWS      
 		  SaveAsDlgStatus ("");
@@ -5772,21 +5770,21 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		    {
 		      strcpy (UserCharset, SaveFormTmp);
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 		      TtaNewLabel (BaseDialog + CharsetSave,  
 				   BaseDialog + SaveForm, UserCharset);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
         }
 		}
 	      else
 		{
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 		  TtaNewLabel (BaseDialog + SaveFormStatus,
 			       BaseDialog + SaveForm,
 			       TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _WINDOWS
 		  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
@@ -5804,11 +5802,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		{
 		  /* clear the status message */
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 		  TtaNewLabel (BaseDialog + SaveFormStatus,
 			       BaseDialog + SaveForm,
 			       " ");
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _WINDOWS      
 		  SaveAsDlgStatus ("");
@@ -5819,24 +5817,24 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		    {
 		      strcpy (UserMimeType, SaveFormTmp);
 		      
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 		      TtaNewLabel (BaseDialog + MimeTypeSave,  
 				   BaseDialog + SaveForm, UserMimeType);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
           
 		    }
 		}
 	      else
 		{
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 		  TtaNewLabel (BaseDialog + SaveFormStatus,
 			       BaseDialog + SaveForm,
 			       TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _WINDOWS      
 		  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* _WINDOWS */
       
 		}
 	    }
@@ -5916,14 +5914,14 @@ void CallbackDialogue (int ref, int typedata, char *data)
       else if (val == 2)
 	/* Browse button */
 	{
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	  if (LinkAsXmlCSS || LinkAsCSS)
 	    strcpy (ScanFilter, "*.css");
 	  else if (!strcmp (ScanFilter, "*.css"))
 	    strcpy (ScanFilter, "*");
 	  WidgetParent = HrefAttrBrowser;
 	  BrowserForm (AttrHREFdocument, 1, &AttrHREFvalue[0]);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 	}
       else if (val == 3)
 	/* allow one to click the target */
@@ -5933,9 +5931,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  /* Clear button */
 	  AttrHREFvalue[0] = EOS;
     
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	  TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
     
 	}
       else 
@@ -5982,7 +5980,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  /* it's no longer the default Welcome page */
 	  WelcomePage = FALSE;
     
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	  /* this code is only valid under Unix. */
 	  /* In Windows, we're using a system widget */
 	  strcpy (tempfile, DirectoryName);
@@ -6006,7 +6004,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	    }
 	  /* remove the browsing dialogue */
 	  TtaDestroyDialogue (ref);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
     
 	}
       else if (val == 2)
@@ -6015,18 +6013,18 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  if (WidgetParent == OpenDocBrowser)
 	    {
 	      LastURLName[0] = EOS;
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	      TtaSetTextForm (BaseDialog + FileBrowserText, LastURLName);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
         
 	    }
 	  else if (WidgetParent == HrefAttrBrowser)
 	    {
 	      tempname[0] = EOS; 	       
         
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	      TtaSetTextForm (BaseDialog + FileBrowserText, tempname);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
         
 	    }
 	}
@@ -6073,7 +6071,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
       sprintf (DirectoryName, "%s", data);
 #endif /* _WINDOWS */
       
-#if defined(_MOTIF) || defined(_GTK)      
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
       if (DirectoryName[0] != EOS)
 	{
 	  if (!strcmp (data, ".."))
@@ -6101,7 +6099,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 			    BaseDialog + BrowserDocSelect);
 	  DocumentName[0] = EOS;
 	}
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
       break;
       
       /* *********Browser DocSelect*********** */
@@ -6121,9 +6119,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
       strcat (tempfile, DIR_STR);
       strcat (tempfile, DocumentName);
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
       TtaSetTextForm (BaseDialog + FileBrowserText, tempfile);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
       
       break;
       
@@ -6133,10 +6131,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
       if (strlen(data) <= NAME_LENGTH)
 	strcpy (ScanFilter, data);
       
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
       else
 	TtaSetTextForm (BaseDialog + BrowserFilterText, ScanFilter);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
       
       break;
       
@@ -6190,22 +6188,22 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	case 1:
 	  CreateRemoveIDAttribute (IdElemName, IdDoc, TRUE, 
 				   (IdApplyToSelection) ? TRUE: FALSE);
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	  /* and show the status */
 	  TtaNewLabel (BaseDialog + mIdStatus,
 		       BaseDialog + MakeIdMenu,
 		       IdStatus);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 	  break;
 	case 2:
 	  CreateRemoveIDAttribute (IdElemName, IdDoc, FALSE, 
 				   (IdApplyToSelection) ? TRUE: FALSE);
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	  /* and show the status */
 	  TtaNewLabel (BaseDialog + mIdStatus,
 		       BaseDialog + MakeIdMenu,
 		       IdStatus);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 	  break;
 	}
       break;
@@ -6288,10 +6286,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		{
 		  SaveFormTmp[0] = EOS;
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 		  InitMimeType (SavingDocument, 1, SavePath,
 				TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _WINDOWS
       /* the Window dialog won't be closed */
@@ -6733,7 +6731,7 @@ void InitAmaya (NotifyEvent * event)
    LinkAsXmlCSS = FALSE;
 
    /* initialize icons */
-#ifdef _NOGUI
+#if defined(_NOGUI) && !defined(_WX) // TODO "&& !defined(_WX)" a virer a la fin de la migration wxWindows
    stopR = (ThotIcon) 0;
    stopN = (ThotIcon) 0;
    iconSave = (ThotIcon) 0;
@@ -6774,7 +6772,7 @@ void InitAmaya (NotifyEvent * event)
    iconTableNo = (ThotIcon) 0;
 #endif /* #ifdef _NOGUI */
 
-#ifdef _GTK
+#if defined(_GTK) || defined(_WX)
    stopR = (ThotIcon) TtaCreatePixmapLogo (stopR_xpm);
    stopN = (ThotIcon) TtaCreatePixmapLogo (stopN_xpm);
    iconSave = (ThotIcon) TtaCreatePixmapLogo (save_xpm);
@@ -6813,7 +6811,7 @@ void InitAmaya (NotifyEvent * event)
    iconLinkNo = (ThotIcon) TtaCreatePixmapLogo (LinkNo_xpm);
    iconTable = (ThotIcon) TtaCreatePixmapLogo (Table_xpm);
    iconTableNo = (ThotIcon) TtaCreatePixmapLogo (TableNo_xpm);
-#endif /* _GTK */
+#endif /* _GTK  || defined(_WX) */
 
 #ifdef _MOTIF   
    stopR = TtaCreatePixmapLogo (stopR_xpm);
@@ -6893,9 +6891,9 @@ void InitAmaya (NotifyEvent * event)
 	   MessageBox (NULL, TempFileDirectory, "Error", MB_OK);
 #endif /* _WINDOWS */
      
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	   fprintf (stderr, TempFileDirectory);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
      
 	   exit (1);
 	 }
@@ -7124,14 +7122,14 @@ void InitAmaya (NotifyEvent * event)
 	     strcpy (DocumentName, LastURLName);
 #endif /* !_WINDOWS */
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	   if (LastURLName[0] == DIR_SEP)
 	     /* it is an absolute name */
 	     TtaExtractName (LastURLName, DirectoryName, DocumentName);
 	   else
 	     /* it is a relative name */
 	     strcpy (DocumentName, LastURLName);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
      /* start with the local document */
 	   LastURLName[0] = EOS;
@@ -7216,9 +7214,9 @@ void ShowMapAreas (Document doc, View view)
    }
 #endif /* _WINDOWS */
   
-#if defined(_MOTIF) || defined(_GTK)  
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
   MapAreas[doc] = !MapAreas[doc];
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
   
   ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
 }
@@ -7252,9 +7250,9 @@ void ShowButtons (Document doc, View view)
    }
 #endif /* _WINDOWS */
   
-#if defined(_MOTIF) || defined(_GTK)  
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
   SButtons[doc] = !SButtons[doc];
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
   
   TtaSetToggleItem (doc, 1, Views, TShowButtonbar, SButtons[doc]);
   TtcSwitchButtonBar (doc, view);
@@ -7289,9 +7287,9 @@ void ShowAddress (Document doc, View view)
    }
 #endif /* _WINDOWS */
   
-#if defined(_MOTIF) || defined(_GTK)  
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
   SAddress[doc] = !SAddress[doc];
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
   
   TtaSetToggleItem (doc, 1, Views, TShowTextZone, SAddress[doc]);
   TtcSwitchCommands (doc, view);
@@ -7326,10 +7324,10 @@ void SectionNumbering (Document doc, View view)
    }
 #endif /* _WINDOWS */
   
-#if defined(_MOTIF) || defined(_GTK)  
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
   SNumbering[doc] = !SNumbering[doc];
   TtaSetToggleItem (doc, 1, Special, TSectionNumber, SNumbering[doc]);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
   
   ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
 }
@@ -7340,17 +7338,17 @@ void SectionNumbering (Document doc, View view)
   ----------------------------------------------------------------------*/
 void MakeIDMenu (Document doc, View view)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
   int i;
   char    s[MAX_LENGTH];
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
   /* initialize the global variables */
   IdStatus[0] = EOS;
   IdDoc = doc;
 
   /* Create the dialogue form */
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
   i = 0;
   strcpy (&s[i], TtaGetMessage (AMAYA, ADD_ID));
   i += strlen (&s[i]) + 1;
@@ -7382,7 +7380,7 @@ void MakeIDMenu (Document doc, View view)
   TtaSetMenuForm (BaseDialog + mIdUseSelection, IdApplyToSelection);
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseDialog + MakeIdMenu, TRUE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _WINDOWS  
   CreateMakeIDDlgWindow (TtaGetViewFrame (doc, view));
@@ -7506,10 +7504,10 @@ void HelpAmaya (Document document, View view)
    fclose (list);
 #endif /* AMAYA_DEBUG */
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
    TtaNewDialogSheet (BaseDialog + AboutForm, TtaGetViewFrame (document, view),
 		      HTAppName, 1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
-#endif  /* #if defined(_MOTIF) || defined(_GTK) */
+#endif  /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
    
    strcpy (localname, HTAppName);
    strcat (localname, " - ");
@@ -7517,14 +7515,14 @@ void HelpAmaya (Document document, View view)
    strcat (localname, "     ");
    strcat (localname, HTAppDate);
    
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
    TtaNewLabel(BaseDialog + Version, BaseDialog + AboutForm, localname);
    TtaNewLabel(BaseDialog + About1, BaseDialog + AboutForm,
 	       TtaGetMessage(AMAYA, AM_ABOUT1));
    TtaNewLabel(BaseDialog + About2, BaseDialog + AboutForm,
 	       TtaGetMessage(AMAYA, AM_ABOUT2));
    TtaShowDialogue (BaseDialog + AboutForm, FALSE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
    
 #ifdef _WINDOWS
    CreateHelpDlgWindow (TtaGetViewFrame (document, view), localname,

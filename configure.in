@@ -255,13 +255,26 @@ if test "$with_motif" = "yes" -o "$enable_motif" = "yes" ; then
   no_motif=no
 fi
 
+# check if wxWindows gui should be used
+AC_ARG_WITH(wx, [  --with-wx               use wxWindows GUI toolkit (experimental)])
+if test "$with_wx" = "yes" -o "$enable_wx" = "yes" ; then
+  if test "$withval" = "no" ; then
+    with_wx="no"
+  else
+    with_wx="yes"
+  fi
+fi
+
 # Check if a GUI toolkit is enabled
 if test "$with_motif" = "no" -o "$with_motif" = "" ; then
-  if test "$with_gtk" = "no" -o "$with_gtk" = "" ; then
-    # Default GUI toolkits
-    with_motif="no"
-    no_motif=yes
-    with_gtk="yes"
+  if test "$with_wx" = "no" -o "$with_wx" = "" ; then
+    if test "$with_gtk" = "no" -o "$with_gtk" = "" ; then
+      # Default GUI toolkits
+      with_motif="no"
+      with_wx="no"
+      no_motif=yes
+      with_gtk="yes"
+    fi
   fi
 fi
 
@@ -328,18 +341,33 @@ if test "$with_gtk" = "yes" ; then
     fi
   done
 
-GTK_INCLUDES="`gtk-config --cflags`"
-AC_SUBST(GTK_INCLUDES)
-GTK_LIBRARIES="`gtk-config --libs`"
-dnl GL doesn't need the imlib
-if test "${with_gl}" != "yes" ; then
- GTK_LIBRARIES="${GTK_LIBRARIES} -lgdk_imlib"
-fi
+  GTK_INCLUDES="`gtk-config --cflags`"
+  AC_SUBST(GTK_INCLUDES)
+  GTK_LIBRARIES="`gtk-config --libs`"
+  dnl GL doesn't need the imlib
+  if test "${with_gl}" != "yes" ; then
+   GTK_LIBRARIES="${GTK_LIBRARIES} -lgdk_imlib"
+  fi
 
-AC_SUBST(GTK_LIBRARIES)
-GTK_OPTIONS="-D_GTK"
+  AC_SUBST(GTK_LIBRARIES)
+  GTK_OPTIONS="-D_GTK"
   no_motif=yes
   no_graphic=yes
+fi
+
+if test "$with_wx" = "yes" ; then
+  WX_INCLUDES="`wx-config --cxxflags`"
+  AC_SUBST(WX_INCLUDES)
+
+  dnl GL is used ?
+  if test "${with_gl}" == "yes" ; then
+    WX_LIBRARIES="`wx-config --gl-libs`"
+  else
+    WX_LIBRARIES="`wx-config --libs`"
+  fi
+
+  AC_SUBST(WX_LIBRARIES)
+  WX_OPTIONS="-D_WX"
 fi
 
 if test "$with_motif" = "yes" ; then
@@ -1165,8 +1193,8 @@ dnl
 dnl The options for each library or binary
 dnl
 
-THOT_OPTIONS="$I18N_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $NOGUI_OPTIONS"
-AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $NOGUI_OPTIONS"
+THOT_OPTIONS="$I18N_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
+AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
 #PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS $I18N_OPTIONS"
 
@@ -1411,6 +1439,10 @@ if test "$with_motif" = "yes" ; then
       fi
     fi
   fi
+fi
+
+if test "$with_wx" = "yes" ; then
+    echo "Amaya configured with wxWindows (experimental)"
 fi
 
 if test "$with_nogui" = "yes" ; then

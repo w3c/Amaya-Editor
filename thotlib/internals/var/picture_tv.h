@@ -29,7 +29,7 @@ THOT_EXPORT int             InlineHandlers;
 THOT_EXPORT int             HandlersCounter;
 THOT_EXPORT int             currentExtraHandler;
 THOT_EXPORT ThotGC          GCpicture;
-THOT_EXPORT Pixmap          EpsfPictureLogo;
+THOT_EXPORT ThotPixmap      EpsfPictureLogo;
 
 /* bg colors used by Windows */
 #ifdef _WINDOWS

@@ -80,9 +80,9 @@ struct _HTError
   #define CACHE_DIR_NAME "\\libwww-cache\\"
 #endif /* _WINDOWS */
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
   #define CACHE_DIR_NAME "/libwww-cache/"
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX)*/
 
 #ifdef _NOGUI
   #define CACHE_DIR_NAME "/libwww-cache/"
@@ -804,12 +804,14 @@ int                 AHTOpen_file (HTRequest * request)
   fprintf(stderr, "AHTOpen_file: opening output stream for url %s\n", me->urlName);
 #endif /* DEBUG_LIBWWW */      
 
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
   if (!(me->output) && 
       (me->output != stdout) && 
-#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
       (me->output = fopen (me->outputfile, "w")) == NULL)
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
 #ifdef _WINDOWS    
+  if (!(me->output) && 
+      (me->output != stdout) && 
       (me->output = fopen (me->outputfile, "wb")) == NULL)  
 #endif /* _WINDOWS */
       {

@@ -29,6 +29,11 @@
   #include "wininclude.h"
 #endif /* _WINDOWS */
 
+#ifdef _WX
+  #include "AmayaFrame.h"
+//  #include "AmayaMenu.h"
+#endif /* _WX */
+
 #ifdef _GTK
   #include <gdk/gdkx.h>
 #endif /* _GTK */
@@ -155,6 +160,35 @@ static ThotWidget          MainShell, PopShell;
 #include "memory_f.h"
 #include "thotmsg_f.h"
 
+
+/*----------------------------------------------------------------------
+  GetMenuParentNumber:  returns the Thot window number associated to a     
+  given menu.
+  ----------------------------------------------------------------------*/
+static int GetMenuParentNumber (ThotMenu menu)
+{
+  int      menuIndex;
+  int      iframe = 0;
+  int      frame = -1;
+  ThotBool found = FALSE;
+  
+  while (iframe <= MAX_FRAME && !found)
+    {
+      menuIndex = 0;
+      while (menuIndex < MAX_MENU && !found) 
+	if (FrameTable[iframe].WdMenus[menuIndex] == menu)
+	  {
+	    frame = iframe;
+	    found = TRUE;
+	  }
+	else 
+	  menuIndex++;
+      if (!found)
+	iframe++;
+    }
+  return frame;
+}
+  
 #ifdef _WINDOWS
 
 #define MAX_FRAMECAT 50
@@ -192,33 +226,7 @@ UINT subMenuID [MAX_FRAME];
 extern int main (int, char**);
 static struct Cat_Context *CatEntry (int ref);
 
-/*----------------------------------------------------------------------
-  GetMenuParentNumber:  returns the Thot window number associated to a     
-  given menu.
-  ----------------------------------------------------------------------*/
-static int GetMenuParentNumber (ThotMenu menu)
-{
-  int      menuIndex;
-  int      iframe = 0;
-  int      frame = -1;
-  ThotBool found = FALSE;
-  
-  while (iframe <= MAX_FRAME && !found)
-    {
-      menuIndex = 0;
-      while (menuIndex < MAX_MENU && !found) 
-	if (FrameTable[iframe].WdMenus[menuIndex] == menu)
-	  {
-	    frame = iframe;
-	    found = TRUE;
-	  }
-	else 
-	  menuIndex++;
-      if (!found)
-	iframe++;
-    }
-  return frame;
-}
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -2753,10 +2761,10 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
   int                 eindex;
   register int        i;
   ThotBool            rebuilded;
-#if defined (_WINDOWS) || defined (_GTK)
+#if defined (_WINDOWS) || defined (_GTK) || defined(_WX)
   char                menu_item [1024];
   char                equiv_item [255];
-#endif /* _WINDOWS || _GTK */
+#endif /* _WINDOWS || _GTK  || defined(_WX) */
 
 #ifdef _MOTIF
   Arg                 args[MAX_ARGS];
@@ -2772,6 +2780,11 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #if defined (_WINDOWS) || defined (_GTK)
   equiv_item[0] = 0;
 #endif /* _WINDOWS || _GTK */
+ 
+#ifdef _WX
+  /* used to convert text format */
+  wxCSConv conv_ascii(_T("ISO-8859-1"));
+#endif /* _WX */
   
   if (ref == 0)
     {
@@ -2823,6 +2836,12 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 	     se fait avec gtk_menu_set_tearoff_state;
 	  */
 #endif /* _GTK */
+
+#ifdef _WX
+	  menu = parent;
+//	  menu = new wxMenu( wxMENU_TEAROFF );
+#endif /* _WX */
+	  
 	}
       else
 	menu = (ThotMenu) catalogue->Cat_Widget;
@@ -2831,7 +2850,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
       catalogue->Cat_Button = 'L';
       catalogue->Cat_Data = -1;
       catalogue->Cat_Widget = (ThotWidget) menu;
-  	  catalogue->Cat_ParentWidget = parent;
+      catalogue->Cat_ParentWidget = (ThotWidget)parent;
       adbloc = catalogue->Cat_Entries;
 #ifdef _WINDOWS
       if (parent)
@@ -2840,6 +2859,27 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 	/* it's a simple button not a pull-down */
 	return;
 #endif  /* _WINDOWS */
+
+#ifdef _WX
+      int frame           = GetMenuParentNumber( (ThotMenu)menu );
+      AmayaFrame * pFrame = NULL;
+      if ( frame != -1 )
+	pFrame = (AmayaFrame *)FrameTable[frame].WdFrame;
+#endif /* _WX */
+      
+#ifdef _WX 
+      if (number == 0)
+	{
+	  /* it's a simple button not a pull-down */
+	  if (parent)
+	    {
+// TODO	      gtk_widget_show_all (parent);
+// TODO	      ConnectSignalGTK (GTK_OBJECT(parent), "activate",
+// TODO				GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
+	    }
+	  return;
+	}
+#endif /* _WX */
       
 #ifdef _GTK 
       if (number == 0)
@@ -2922,7 +2962,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 	  catalogue->Cat_Entries = adbloc;
 	}
 #ifdef _MOTIF
-      /* Cree les differentes entrees du menu */
       n = 0;
       XtSetArg (args[n], XmNfontList, DefaultFont);
       n++;
@@ -2937,7 +2976,8 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
       if (equiv)
 	n++;
 #endif /* _MOTIF */
-
+      
+      /* Cree les differentes entrees du menu */
       i = 0;
       index = 0;
       eindex = 0;
@@ -2968,20 +3008,25 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		/* Note l'accelerateur */
 		if (equiv)
 		  {
-#ifdef _WINDOWS
-		    if (&equiv[eindex] != EOS)
-		      strcpy (equiv_item, &equiv[eindex]); 
-#endif  /* _WINDOWS */
-
 #ifdef _MOTIF
 		    title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
 		    XtSetArg (args[n - 1], XmNacceleratorText, title_string);
 #endif /* _MOTIF */
 
+#ifdef _WINDOWS
+		    if (&equiv[eindex] != EOS)
+		      strcpy (equiv_item, &equiv[eindex]); 
+#endif  /* _WINDOWS */
+
 #ifdef _GTK
 		    if (&equiv[eindex] != EOS)
 		      strcpy (equiv_item, &equiv[eindex]); 
 #endif /* _GTK */
+
+#ifdef _WX
+		    if (&equiv[eindex] != EOS)
+		      strcpy (equiv_item, &equiv[eindex]); 
+#endif /* _WX */
 		    eindex += strlen (&equiv[eindex]) + 1;
 		  }
 		if (text[index] == 'B')
@@ -2998,7 +3043,38 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		      AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, &text[index + 1]);
 		    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
 #endif  /* _WINDOWS */
-        
+
+#ifdef _WX
+		    sprintf (menu_item, "%s", &text[index + 1]);
+		    
+//		    wxMenuItem * p_menu_item = new wxMenuItem(
+//					menu				/* parent */
+//					,AmayaFrame::MENU_ITEM_START+i	/* id */
+//					,wxString( menu_item, conv_ascii ) /* label */
+//		       			,_T("")				/* help */
+//					,wxITEM_NORMAL );		/* kind [wxITEM_SEPARATOR, wxITEM_NORMAL, wxITEM_CHECK or wxITEM_RADIO]*/
+    		    // TODO : trouver un moyen de mettre equiv_item justifie a droite
+		    // wxString( equiv_item, conv_ascii )
+
+		    /* append menu item */
+//		    menu->Append( p_menu_item );
+//		    menu->Append(
+//		      AmayaFrame::MENU_ITEM_START+i,
+//		      wxString( menu_item, conv_ascii ),
+//		      _T(""),
+//		      wxITEM_NORMAL );		    
+ 
+		    pFrame->appendMenuItem( 
+			menu,					/* parent */
+			i,					/* id */
+			wxString( menu_item, conv_ascii ), 	/* label */
+			_T(""),					/* help */
+			wxITEM_NORMAL,				/* item kind */
+			AmayaCParam() );			/* callback */
+		      
+		    adbloc->E_ThotWidget[ent] = (ThotWidget)i; //p_menu_item;
+#endif /* _WX */
+	    	    
 #ifdef _GTK
 		    sprintf (menu_item, "%s", &text[index + 1]);
 		    /* \t doesn't mean anything to gtk... to we align ourself*/
@@ -3041,6 +3117,35 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		  /*__________________________________________ Creation d'un toggle __*/
 		  {
 		    /* un toggle a faux */
+#ifdef _WX
+		    sprintf (menu_item, "%s", &text[index + 1]);
+		    
+//		    wxMenuItem * p_menu_item = new wxMenuItem(
+//					menu				/* parent */
+//					,i /* id */
+//					,wxString( menu_item, conv_ascii ) /* label */
+//		       			,_T("")				/* help */
+//					,wxITEM_CHECK );		/* kind [wxITEM_SEPARATOR, wxITEM_NORMAL, wxITEM_CHECK or wxITEM_RADIO]*/
+
+		    /* append menu item */
+//		    menu->Append( p_menu_item );
+//		    menu->Append(
+  //    		      AmayaFrame::MENU_ITEM_START+i,
+//		      wxString( menu_item, conv_ascii ),
+//		      _T(""),
+//		      wxITEM_CHECK );		    
+ 
+		    pFrame->appendMenuItem( 
+			menu,					/* parent */
+			i,					/* id */
+			wxString( menu_item, conv_ascii ), 	/* label */
+			_T(""),					/* help */
+			wxITEM_CHECK,				/* item kind */
+			AmayaCParam() );			/* callback */
+
+		    adbloc->E_ThotWidget[ent] = (ThotWidget)i; //p_menu_item;
+#endif /* _WX */
+		    
 #ifdef _WINDOWS
 		    if (equiv_item && equiv_item[0] != EOS)
 		      {
@@ -3099,6 +3204,35 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		  /*_______________________________________ Creation d'un sous-menu __*/
 		  {
 		    /* En attendant le sous-menu on cree un bouton */
+#ifdef _WX
+		    sprintf (menu_item, "%s", &text[index + 1]);
+		    
+//		    wxMenuItem * p_menu_item = new wxMenuItem(
+//					menu				/* parent */
+//					,i     	/* id */
+//					,wxString( menu_item, conv_ascii ) /* label */
+//		       			,_T("")				/* help */
+//					,wxITEM_NORMAL );		/* kind [wxITEM_SEPARATOR, wxITEM_NORMAL, wxITEM_CHECK or wxITEM_RADIO]*/
+
+		    /* append menu item */
+//		    menu->Append( p_menu_item );
+//		    menu->Append(
+//		      AmayaFrame::MENU_ITEM_START+i,
+//		      wxString( menu_item, conv_ascii ),
+//		      _T(""),
+//		      wxITEM_NORMAL );		    
+
+		    pFrame->appendMenuItem( 
+			menu,					/* parent */
+			i,					/* id */
+			wxString( menu_item, conv_ascii ), 	/* label */
+			_T(""),					/* help */
+			wxITEM_NORMAL,				/* item kind */
+			AmayaCParam() );			/* callback */
+		    
+		    adbloc->E_ThotWidget[ent] = (ThotWidget)i; //p_menu_item;
+#endif /* _WX */
+
 #ifdef _WINDOWS
 		    w = (HMENU) CreatePopupMenu ();
 		    subMenuID [currentFrame] = (UINT) w;
@@ -3122,6 +3256,33 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		else if (text[index] == 'S')
 		  /*_________________________________ Creation d'un separateur __*/
 		  {
+#ifdef _WX
+//		   wxMenuItem * p_menu_item = new wxMenuItem(
+//					menu			/* parent */
+//					,wxID_SEPARATOR		/* id */
+//					,_T("")			/* label */
+//		       			,_T("")			/* help */
+//					,wxITEM_SEPARATOR );	/* kind */
+
+		    /* append menu item */
+//		    menu->Append( p_menu_item );
+//		    menu->Append(
+//		      wxID_SEPARATOR,
+//		      _T(""),
+//		      _T(""),
+//		      wxITEM_SEPARATOR );
+
+		    pFrame->appendMenuItem( 
+			menu,					/* parent */
+			wxID_SEPARATOR,				/* id */
+			_T(""), 				/* label */
+			_T(""),					/* help */
+			wxITEM_SEPARATOR,			/* item kind */
+			AmayaCParam() );			/* callback */
+
+		    adbloc->E_ThotWidget[ent] = (ThotWidget)i; //p_menu_item;
+#endif /* _WX */
+		    
 #ifdef _WINDOWS
 		    AppendMenu (menu, MF_SEPARATOR, 0, NULL);
 		    adbloc->E_ThotWidget[ent] = (ThotWidget) 0;
@@ -3163,6 +3324,14 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
       /* Attache le pull-down menu au widget passe en parametre */
       if (parent && !rebuilded)
 	{
+#ifdef _WX
+	  // TODO
+/*	  parent->Append( -1
+	     		  ,_T("&test sub menu")
+			  ,menu
+		          ,_T("Dummy sub menu help") );*/
+#endif /* _WX */
+	  
 #ifdef _GTK
 	  gtk_menu_item_set_submenu (GTK_MENU_ITEM (parent), menu);
 	  gtk_object_set_data (GTK_OBJECT(menu), "MenuItem", (gpointer)parent);
@@ -3421,9 +3590,9 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 	  menu = CreatePopupMenu ();
 #endif /* _WINDOWS */
 
-    catalogue->Cat_Widget = menu;
+          catalogue->Cat_Widget = menu;
 	  catalogue->Cat_Ref = ref;
-	  catalogue->Cat_ParentWidget = parent; /* remember the parent widget for the callback */
+	  catalogue->Cat_ParentWidget = (ThotWidget)parent; /* remember the parent widget for the callback */
 	  catalogue->Cat_Type = CAT_POPUP;
 	  catalogue->Cat_Button = button;
 	  /* Initialisation de la liste des widgets fils */
@@ -3908,7 +4077,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 	button = catalogue->Cat_Button;
     }
   catalogue->Cat_Data = -1;
-  catalogue->Cat_ParentWidget = parent;
+  catalogue->Cat_ParentWidget = (ThotWidget)parent;
 
 #ifdef _WINDOWS
   if (parent)
@@ -4231,7 +4400,7 @@ static ThotWidget AddInFormulary (struct Cat_Context *catalogue, int *index,
    signale' a` l'application.                                         
   ----------------------------------------------------------------------*/
 void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
-		     int number, Pixmap * icons, ThotBool horizontal)
+		     int number, ThotIcon * icons, ThotBool horizontal)
 {
 #if defined(_MOTIF) || defined(_GTK)
    int                 i;
@@ -4454,19 +4623,19 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 }
 
 /*----------------------------------------------------------------------
-   TtaNewSubmenu cre'e un sous-menu :                                 
-   The parameter ref donne la re'fe'rence pour l'application.         
+   TtaNewSubmenu cree un sous-menu :                                 
+   The parameter ref donne la reference pour l'application.         
    The parameter ref_parent identifie le formulaire pe`re.            
-   Le parametre entry de'signe l'entre'e correspondante dans le menu  
-   pe`re. The parameter title donne le titre du catalogue.            
-   The parameter number indique le nombre d'entre'es dans le menu.    
-   The parameter text contient la liste des intitule's du catalogue.  
-   Chaque intitule' commence par un caracte`re qui donne le type de   
-   l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    
-   S'il n'est pas nul, le parame`tre equiv donne les acce'le'rateurs  
-   des entre'es du menu.                                              
-   Quand le parame`tre react est vrai, tout changement de se'lection  
-   dans le sous-menu est imme'diatement signale' a` l'application.    
+   Le parametre entry designe l'entree correspondante dans le menu  
+   pere. The parameter title donne le titre du catalogue.            
+   The parameter number indique le nombre d'entrees dans le menu.    
+   The parameter text contient la liste des intitules du catalogue.  
+   Chaque intitule commence par un caractere qui donne le type de   
+   l'entree et se termine par un caractere de fin de chaine \0.    
+   S'il n'est pas nul, le parametre equiv donne les accelerateurs  
+   des entrees du menu.                                              
+   Quand le parametre react est vrai, tout changement de selection  
+   dans le sous-menu est immediatement signale a l'application.    
   ----------------------------------------------------------------------*/
 void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		    int number, char *text, char* equiv, ThotBool react)
@@ -4589,7 +4758,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 	  else
 	    {
 	      /* Sinon on recupere le widget du menu */
-	      menu = catalogue->Cat_Widget;
+	      menu = (ThotMenu)catalogue->Cat_Widget;
 	      adbloc = catalogue->Cat_Entries;
 	    } 
 	  /*** Cree le titre du sous-menu ***/
@@ -4873,7 +5042,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		}
 	      else
 		{ /* On recupere le widget du menu */
-		  menu = catalogue->Cat_Widget;
+		  menu = (ThotMenu)catalogue->Cat_Widget;
 		  adbloc = catalogue->Cat_Entries;
 		}
 	    }
@@ -5694,9 +5863,9 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 #ifdef _WINDOWS 
 void WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
 #endif  /* _WINDOWS */
-#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
 void TtaSetToggleMenu (int ref, int val, ThotBool on)
-#endif /* #if defined(_MOTIF) || defined(_GTK) || _NOGUI */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || _NOGUI */
 {
 #ifdef _WINDOWS 
   struct Cat_Context *catalogue;

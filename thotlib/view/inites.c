@@ -543,7 +543,7 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
    
    ThotBool            found;
 
-#ifdef _NOGUI
+#if defined(_NOGUI) || defined(_WX) // TODO : a virer apres le portage des couleurs ...
   return 0;
 #endif /* #ifdef _NOGUI */  
    

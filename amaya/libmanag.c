@@ -97,8 +97,8 @@ static int height_box = 0;
 #include  "LibsvgNo.xpm"
 #endif /* _WINDOWS */
 
-static Pixmap   iconLibsvg;
-static Pixmap   iconLibsvgNo;
+static ThotIcon   iconLibsvg;
+static ThotIcon   iconLibsvgNo;
 static int      LibSVGButton;
 
 #ifdef _WINDOWS
@@ -3166,7 +3166,7 @@ void RemoveLibraryModel (Document deletedDoc, Element deletedEl)
 void AddLibraryButton (Document doc, View view)
 {
 #ifdef _SVG
-  LibSVGButton = TtaAddButton (doc, 1, (ThotIcon)iconLibsvg, (Proc)ShowLibrary,
+  LibSVGButton = TtaAddButton (doc, 1, iconLibsvg, (Proc)ShowLibrary,
 			      "ShowLibrary",
 			      TtaGetMessage (AMAYA, AM_BUTTON_SVG_LIBRARY),
 			      TBSTYLE_BUTTON, TRUE);
@@ -3181,9 +3181,9 @@ void SwitchIconLibrary (Document doc, View view, ThotBool state)
 {
 #ifdef _SVG
   if (state)
-    TtaChangeButton (doc, view, LibSVGButton, (ThotIcon)iconLibsvg, state);
+    TtaChangeButton (doc, view, LibSVGButton, iconLibsvg, state);
   else
-    TtaChangeButton (doc, view, LibSVGButton, (ThotIcon)iconLibsvgNo, state);
+    TtaChangeButton (doc, view, LibSVGButton, iconLibsvgNo, state);
 #endif /* _SVG */
 }
 

@@ -43,8 +43,8 @@
 #include "xpm/animNo.xpm"
 #endif /* _WINDOWS */
 
-static Pixmap   iconAnim;
-static Pixmap   iconAnimNo;
+static ThotIcon   iconAnim;
+static ThotIcon   iconAnimNo;
 static int      AnimButton;
 
 #ifdef _WINDOWS
@@ -2931,9 +2931,9 @@ void SwitchIconAnim (Document doc, View view, ThotBool state)
 {
 #ifdef _SVG
   if (state)
-    TtaChangeButton (doc, view, AnimButton, (ThotIcon)iconAnim, state);
+    TtaChangeButton (doc, view, AnimButton, iconAnim, state);
   else
-    TtaChangeButton (doc, view, AnimButton, (ThotIcon)iconAnimNo, state);
+    TtaChangeButton (doc, view, AnimButton, iconAnimNo, state);
 #endif /* _SVG */
 }
 
@@ -2972,7 +2972,7 @@ void ShowTimeLineWindow (Document document, View view)
 void AddAnimButton (Document doc, View view)
 {
 #ifdef _SVG
-  AnimButton = TtaAddButton (doc, 1, (ThotIcon)iconAnim, 
+  AnimButton = TtaAddButton (doc, 1, iconAnim, 
 			     (Proc)ShowTimeLineWindow, "ShowTimeLineWindow",
 			     TtaGetMessage (AMAYA, AM_BUTTON_ANIM),
 			     TBSTYLE_BUTTON, TRUE);

@@ -144,7 +144,7 @@ char*     fileName;
 #ifdef NEW_WILLOWS
   return(NULL);
 #else  /* NEW_WILLOWS */
-  Pixmap  bitmap = None;
+  ThotPixmap  bitmap = None;
   ThotWidget  canvas;
   int     n;
   Arg     arg[10];

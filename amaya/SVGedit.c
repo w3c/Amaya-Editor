@@ -26,7 +26,7 @@
 #include "SVG.h"
 #include "HTML.h"
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 #include "Graph.xpm"
 #include "GraphNo.xpm"
 #include "line.xpm"
@@ -41,17 +41,17 @@
 #include "label.xpm"
 #include "text.xpm"
 #include "group.xpm"
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #include "libmanag_f.h"
 #include "anim_f.h"
 #include "SVGedit_f.h"
 #include "UIcss_f.h"
 
-static Pixmap   iconGraph;
-static Pixmap   iconGraphNo;
+static ThotIcon   iconGraph;
+static ThotIcon   iconGraphNo;
 static int      GraphButton;
-static Pixmap   mIcons[12];
+static ThotIcon   mIcons[12];
 static ThotBool PaletteDisplayed = FALSE;
 static ThotBool InCreation = FALSE;
 
@@ -2117,7 +2117,7 @@ void InitSVG ()
 {
 #ifdef _SVG
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
    iconGraph = TtaCreatePixmapLogo (Graph_xpm);
    iconGraphNo = TtaCreatePixmapLogo (GraphNo_xpm);
    mIcons[0] = TtaCreatePixmapLogo (line_xpm);
@@ -2132,7 +2132,7 @@ void InitSVG ()
    mIcons[9] = TtaCreatePixmapLogo (label_xpm);
    mIcons[10] = TtaCreatePixmapLogo (text_xpm);
    mIcons[11] = TtaCreatePixmapLogo (group_xpm);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
    
    GraphDialogue = TtaSetCallback ((Proc)CallbackGraph, MAX_GRAPH);
 #endif /* _SVG */

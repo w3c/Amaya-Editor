@@ -10,6 +10,7 @@ extern int GetFrameNumber ( ThotWindow win );
 extern void FrameKilled ( int *w,
                           int frame,
                           int *info );
+extern ThotBool KillFrameCallback ( int frame );
 extern void XFlushOutput ( int frame );
 extern void FrameToRedisplay ( ThotWindow w,
                                int frame,
@@ -89,6 +90,7 @@ extern int GetFrameNumber (/* ThotWindow win */);
 extern void FrameKilled (/* int *w,
                             int frame,
                             int *info */);
+extern ThotBool KillFrameCallback (/* int frame */);
 extern void XFlushOutput (/* int frame */);
 extern void FrameToRedisplay (/* ThotWindow w,
                                  int frame,

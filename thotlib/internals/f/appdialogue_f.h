@@ -35,9 +35,18 @@ extern void TteAddMenuItem ( WindowType windowtype,
                              int itemID,
                              char *actionName,
                              char itemType );
+extern void BuildPopdown ( Menu_Ctl *ptrmenu,
+                           int ref,
+                           ThotMenu button,
+                           int frame,
+                           int doc,
+                           ThotBool update,
+                           ThotBool RO );
 extern void TteOpenMainWindow ( char *name,
-                                Pixmap logo,
-                                Pixmap icon );
+                                ThotIcon logo,
+                                ThotPixmap icon );
+extern void ToolBarActionCallback ( int button_id,
+                                    int frame );
 extern int TtaAddButton ( Document document,
                           View view,
                           ThotIcon picture,
@@ -154,9 +163,18 @@ extern void TteAddMenuItem (/* WindowType windowtype,
                                int itemID,
                                char *actionName,
                                char itemType */);
+extern void BuildPopdown (/* Menu_Ctl *ptrmenu,
+                             int ref,
+                             ThotMenu button,
+                             int frame,
+                             int doc,
+                             ThotBool update,
+                             ThotBool RO */);
 extern void TteOpenMainWindow (/* char *name,
-                                  Pixmap logo,
-                                  Pixmap icon */);
+                                  ThotIcon logo,
+                                  ThotPixmap icon */);
+extern void ToolBarActionCallback (/* int button_id,
+                                      int frame */);
 extern int TtaAddButton (/* Document document,
                             View view,
                             ThotIcon picture,

@@ -16,6 +16,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "frame.h"
+#include "picture.h"
 
 #include "xpm.h"
 
@@ -25,6 +26,51 @@
 #include "platform_tv.h"
 
 #include "memory_f.h"
+
+/*----------------------------------------------------------------------
+   TtaCreateBitmap
+   create a bitmap from a file
+   const char * filename : the picture filename
+   ThotPictFormat type   : the picture type (picture.h)
+	XBM_FORMAT =      	0,      X11 BitmapFile format 
+	XPM_FORMAT =     	2,      Xpm XReadFileToPixmap format 
+	GIF_FORMAT =       	3,      gif 
+	PNG_FORMAT =            4,      Png 
+	JPEG_FORMAT =           5,      Jpeg 
+  ----------------------------------------------------------------------*/
+ThotPixmap TtaCreateBitmap( const char * filename, int type )
+{
+#ifdef _WX
+   ThotPixmap pixmap = NULL;
+
+   /* used to convert text format */
+   wxCSConv conv_ascii(_T("ISO-8859-1"));
+
+   /* convert thot picture type to wxwindows picture type */
+   long wx_type = -1;
+   switch ( type )
+    {
+     	case XBM_FORMAT:	/* X11 BitmapFile format */
+	  wx_type = wxBITMAP_TYPE_XBM;
+	case XPM_FORMAT:	/* Xpm XReadFileToPixmap format */
+	  wx_type = wxBITMAP_TYPE_XPM;
+	case GIF_FORMAT:	/* gif */
+	  wx_type = wxBITMAP_TYPE_GIF;
+	case PNG_FORMAT:	/* Png */
+	  wx_type = wxBITMAP_TYPE_PNG;
+	case JPEG_FORMAT:	/* Jpeg */
+	  wx_type = wxBITMAP_TYPE_JPEG;
+	default :
+	  return NULL;
+    }
+
+   /* create the picture form file */
+   pixmap = new wxBitmap( wxString( filename,conv_ascii ), wx_type );
+   return pixmap;
+#endif /* _WX */
+
+   return NULL;
+}
 
 /*----------------------------------------------------------------------
    TtaCreateBitmapLogo
@@ -37,11 +83,13 @@
    Return value:
    The created pixmap for the logo.
   ----------------------------------------------------------------------*/
-Pixmap TtaCreateBitmapLogo (int width, int height, char *bits)
+ThotPixmap TtaCreateBitmapLogo (int width, int height, char *bits)
 {
-#ifdef _NOGUI
-  return 0;
-#endif /* #ifdef _NOGUI */
+#ifdef _WX
+   ThotPixmap pixmap;
+   pixmap = new wxBitmap( bits, wxBITMAP_TYPE_XPM, width, height );
+   return pixmap;
+#endif /* _WX */
   
 #ifdef _MOTIF
    if (bits != NULL)
@@ -56,7 +104,7 @@ Pixmap TtaCreateBitmapLogo (int width, int height, char *bits)
    gdk_color_black (TtCmap, &black);
    gdk_color_white (TtCmap, &white);
    if (bits != NULL)
-     return (Pixmap) gdk_pixmap_create_from_data (DefaultWindow->window,
+     return (ThotPixmap) gdk_pixmap_create_from_data (DefaultWindow->window,
 						  bits,
 						  width,
 						  height,					   
@@ -70,36 +118,42 @@ Pixmap TtaCreateBitmapLogo (int width, int height, char *bits)
 #ifdef _WINDOWS
    return CreateBitmap (width, height, 16, 4, bits);
 #endif /* _WINDOWS */   
+
+#ifdef _NOGUI
+  return 0;
+#endif /* #ifdef _NOGUI */   
 }
 
 /*----------------------------------------------------------------------
    TtaCreatePixmapLogo create a pixmap from an XPM file.           
   ----------------------------------------------------------------------*/
-Pixmap TtaCreatePixmapLogo(char **d)
+ThotIcon TtaCreatePixmapLogo(char **d)
 {
-#if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS)
-  return 0;
-#endif /* #if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS) */
-
+#ifdef _WX
+   ThotIcon pixmap = NULL;
+   pixmap = new wxBitmap( d );
+   return pixmap;
+#endif /* _WX */
+  
 #ifdef _WINDOWS
-   return (Pixmap) NULL;
+   return (ThotIcon) NULL;
 #endif /* _WINDOWS */
    
 #ifdef _GTK
-  _Thot_icon            *icon;
+  ThotIcon	icon;
 
-  icon = (_Thot_icon *)TtaGetMemory (sizeof (_Thot_icon));
+  icon = (ThotIcon)TtaGetMemory (sizeof (_Thot_icon));
   if (d != NULL)
     icon->pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window,
 						 &(icon->mask),
 						 &DefaultWindow->style->bg[GTK_STATE_NORMAL] ,
 						 (gchar **) d); 
-  return ((Pixmap) icon);
+  return icon;
 #endif /* _GTK */
 
 #ifdef _MOTIF  
-   Pixmap              pixmap;
-   Pixmap              pmask;
+   ThotIcon              pixmap;
+   ThotIcon              pmask;
    XpmAttributes       att;
    XpmColorSymbol      cs;
 
@@ -131,5 +185,9 @@ Pixmap TtaCreatePixmapLogo(char **d)
      }
    return (pixmap);
 #endif /* _MOTIF */
+
+#if defined(_NOGUI)
+  return 0;
+#endif /* #if defined(_NOGUI) */   
 }
 

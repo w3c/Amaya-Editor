@@ -143,7 +143,7 @@ void Prof_FreeTable ()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-Pixmap TtaCreatePixmapLogo (char** data)
+ThotIcon TtaCreatePixmapLogo (char** data)
 {
    return None;
 }

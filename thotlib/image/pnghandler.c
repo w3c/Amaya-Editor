@@ -113,7 +113,7 @@ char  *typecouleur[] = {"grayscale", "undefined type", "RGB",
 			"undefined type", "RGB+alpha"};
 
 #if defined(_MOTIF) || defined(_GTK) 
-extern Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
+extern ThotPixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 		 unsigned int bg, int bperpix);
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
@@ -686,7 +686,7 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {
-  Pixmap           pixmap = (Pixmap) NULL;
+  ThotPixmap           pixmap = (ThotPixmap) NULL;
   ThotColorStruct *colrs = NULL;
 #if defined (_WINDOWS) && !defined (_GL)
   unsigned short   red, green, blue;
@@ -788,7 +788,7 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #else /* _GL */
   /* GL buffer are display independant, 
   and already in the good format RGB, or RGBA*/
-  pixmap = (Pixmap) buffer;
+  pixmap = (ThotPixmap) buffer;
 #endif /*_GL*/
   /* free the table of colors */
   TtaFreeMemory (colrs);

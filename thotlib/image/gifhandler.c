@@ -45,6 +45,10 @@
 
 #define	MAXCOLORMAPSIZE		256
 
+#ifdef _WX
+  #define COLORMAPSCALE 65536 / MAXCOLORMAPSIZE;
+#endif /* _WX */
+
 #ifdef _NOGUI
   #define COLORMAPSCALE 65536 / MAXCOLORMAPSIZE;
 #endif /* _NOGUI */
@@ -752,14 +756,14 @@ static int nbbits (unsigned long ul)
   Make a shape  of depth 1 for display from image data.
   The parameter bperpix gives the number of bytes per pixel.
   ----------------------------------------------------------------------*/
-Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
+ThotPixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 		 unsigned int bg, int bperpix)
 {
   XImage             *newmask;
 #ifdef _MOTIF
   ThotGC              tmp_gc;
 #endif /* _MOTIF */
-  Pixmap              pmask;
+  ThotPixmap          pmask;
   unsigned short     *spixels;
   unsigned char      *data_ptr, *max_data;
   unsigned int        col;
@@ -772,7 +776,7 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
   height = h;
   if (bperpix > 2)
     /* no mask generated for RGB descriptor */
-    return (Pixmap) NULL;
+    return (ThotPixmap) NULL;
   newmask = XCreateImage (TtDisplay, theVisual, 1, ZPixmap, 0, 0, width, height, 8, 0);
   bpl = newmask->bytes_per_line;
   newmask->data = (char *) TtaGetMemory (bpl * height);
@@ -932,11 +936,11 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 
 #ifdef _MOTIF
   pmask = XCreatePixmap (TtDisplay, TtRootWindow, w, h, 1);
-  if ((pmask == (Pixmap) None) || (newmask == NULL))
+  if ((pmask == (ThotPixmap) None) || (newmask == NULL))
     {
       if (newmask != NULL)
 	XDestroyImage (newmask);
-      if (pmask != (Pixmap) None)
+      if (pmask != (ThotPixmap) None)
 	XFreePixmap (TtDisplay, pmask);
       pmask = None;
     }
@@ -1451,19 +1455,19 @@ static HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width,
   The parameter bg gives the index of the transparent color in the
   image colormap.
   ----------------------------------------------------------------------*/
-Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
+ThotPixmap DataToPixmap (unsigned char *image_data, int width, int height,
 		     int ncolors, ThotColorStruct *colrs,
 		     ThotBool withAlpha, ThotBool grayScale)
 { 
 #ifdef _MOTIF
-  Pixmap              img;
+  ThotPixmap              img;
   XImage             *image;
   int                 size;
 
   /* find the visual class. */
   size = width * height;
   if (size == 0)
-    return ((Pixmap)NULL); 
+    return ((ThotPixmap)NULL); 
   image = MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs,
 		     ncolors, withAlpha, grayScale); 
   img = XCreatePixmap (TtDisplay, TtRootWindow, width, height, TtWDepth);
@@ -1473,7 +1477,7 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
 #endif /* _MOTIF */
   
 #ifdef _GTK
-  Pixmap              img;
+  ThotPixmap          img;
   unsigned long       FgPixel;
   unsigned long       BgPixel;
   ThotColorStruct     gdkFgPixel;
@@ -1484,7 +1488,7 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
   gdkBgPixel.pixel = gdk_rgb_xpixel_from_rgb (BgPixel);
   /* TODO */
 
-  img = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (const gchar*)image_data, width, height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
+  img = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (const gchar*)image_data, width, height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
   return (img);
 #endif /* !_GTK */
   
@@ -1497,6 +1501,11 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
 #ifdef _NOGUI
   return 0;
 #endif /* #ifdef _NOGUI */  
+
+#ifdef _WX
+  return 0;
+#endif /* #ifdef _WX */  
+
 }
 
 
@@ -1539,7 +1548,7 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {
-  Pixmap              pixmap = (Pixmap) NULL;
+  ThotPixmap              pixmap = (ThotPixmap) NULL;
   ThotColorStruct     colrs[256];
 #ifdef _WINDOWS
 #ifndef _GL
@@ -1633,7 +1642,7 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
     }
   TtaFreeMemory (buffer);
   buffer = cols;
-  pixmap = (Pixmap) buffer;
+  pixmap = (ThotPixmap) buffer;
 #else /* _GL */
   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, FALSE, FALSE);
   if (GifTransparent >= 0)

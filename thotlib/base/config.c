@@ -1399,6 +1399,19 @@ void  ConfigGetViewGeometry (PtrDocument pDoc, char *view, int *x,
 void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
 		     int *height)
 {
+#ifdef _WX
+  int 		frame;
+  ThotFrame	pFrame;
+    
+  frame = GetWindowNumber (doc, view);
+  pFrame = FrameTable[frame].WdFrame;
+
+  if (pFrame)
+    {
+      pFrame->GetPosition( xmm, ymm );
+      pFrame->GetSize( width,height );
+    }
+#endif /* _WX */
   
 #if defined(_MOTIF) || defined(_GTK)
   int                 frame;

@@ -35,7 +35,7 @@
 #ifndef ABS
 #define ABS(x) (x<0?-x:x)
 #endif
-extern Pixmap       EpsfPictureLogo;
+extern ThotPixmap       EpsfPictureLogo;
 
 /*----------------------------------------------------------------------
    Find EPS picture bounding box.      		             

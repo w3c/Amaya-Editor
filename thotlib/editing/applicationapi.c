@@ -171,9 +171,9 @@ ThotWidget TtaGetViewFrame (Document document, View view)
     return (FrMainRef[frame]);
 #endif /* _WINDOWS */
   
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
     return (FrameTable[frame].WdFrame);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _NOGUI
     return 0;
@@ -203,7 +203,11 @@ static void ErrorHandler ()
 #if defined(_GTK) && !defined(NODISPLAY)
      gtk_exit (1);
 #endif /* _GTK && !NODISPLAY */	
+#if defined(_WX) && !defined(NODISPLAY)
+     wxExit();
+#else /* _WX && !defined(NODISPLAY) */     
      exit (1);
+#endif /* _WX && !defined(NODISPLAY) */     
    }
 }
 
@@ -214,23 +218,27 @@ static void ErrorHandler ()
 static void QuitHandler ()
 {
    signal (SIGINT, (void (*)(int))ErrorHandler);
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
    signal (SIGQUIT, SIG_DFL);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
    signal (SIGTERM, (void (*)(int))ErrorHandler);
    if (ThotLocalActions [T_backuponfatal] != NULL)
      (*ThotLocalActions [T_backuponfatal]) ();
    {
-#if defined _GTK && !defined(NODISPLAY)
+#if defined(_GTK) && !defined(NODISPLAY)
      gtk_exit (1);
 #endif /* _GTK && !NODISPLAY */	
+#if defined(_WX) && !defined(NODISPLAY)
+     wxExit();
+#else /* _WX && !defined(NODISPLAY) */     
      exit (1);
+#endif /* _WX && !defined(NODISPLAY) */     
    }
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
    signal (SIGINT, (void (*)(int))QuitHandler);
    signal (SIGQUIT, (void (*)(int))QuitHandler);
    signal (SIGTERM, (void (*)(int))QuitHandler);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -238,11 +246,11 @@ static void QuitHandler ()
   ----------------------------------------------------------------------*/
 void InitErrorHandler ()
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
    signal (SIGBUS, (void (*)(int))ErrorHandler);
    signal (SIGHUP, (void (*)(int))ErrorHandler);
    signal (SIGQUIT, (void (*)(int))QuitHandler);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
    signal (SIGSEGV, (void (*)(int))ErrorHandler);
 #  ifdef SIGABRT
@@ -323,16 +331,24 @@ void TtaInitialize (char *applicationName)
        break;
      case -1:
        fprintf (stderr, "cannot find messages table\n");
-#if defined _GTK && !defined(NODISPLAY)
-	gtk_exit (1);
+#if defined(_GTK) && !defined(NODISPLAY)
+       gtk_exit (1);
 #endif /* _GTK && !NODISPLAY */	
+#if defined(_WX) && !defined(NODISPLAY)
+       wxExit();
+#else /* _WX && !defined(NODISPLAY) */     
        exit (1);
+#endif /* _WX && !defined(NODISPLAY) */     
      default:
        fprintf (stderr, "Previous messages table loaded\n");
-#if defined _GTK && !defined(NODISPLAY)
-	gtk_exit (1);
+#if defined(_GTK) && !defined(NODISPLAY)
+       gtk_exit (1);
 #endif /* _GTK && !NODISPLAY */	
+#if defined(_WX) && !defined(NODISPLAY)
+       wxExit();
+#else /* _WX && !defined(NODISPLAY) */     
        exit (1);
+#endif /* _WX && !defined(NODISPLAY) */     
      }
 
    /* init the system error signal handler */
@@ -408,10 +424,14 @@ void TtaQuit ()
   if (AppClosingFunction)
     (*AppClosingFunction) ();
   {
-#if defined _GTK && !defined(NODISPLAY)
-    gtk_exit (0);
-#endif /* _GTK && !defined(NODISPLAY) */	
-    exit (0);
+#if defined(_GTK) && !defined(NODISPLAY)
+     gtk_exit (1);
+#endif /* _GTK && !NODISPLAY */	
+#if defined(_WX) && !defined(NODISPLAY)
+     wxExit();
+#else /* _WX && !defined(NODISPLAY) */     
+     exit (1);
+#endif /* _WX && !defined(NODISPLAY) */     
   }
 }
 
@@ -588,10 +608,14 @@ void ThotExit (int result)
       ErrorHandler ();
    else
      {
-#if defined _GTK && !defined(NODISPLAY)
-       gtk_exit (result);
-#endif /* _GTK && !NODISPLAY */
-       exit (result);
+#if defined(_GTK) && !defined(NODISPLAY)
+     gtk_exit (result);
+#endif /* _GTK && !NODISPLAY */	
+#if defined(_WX) && !defined(NODISPLAY)
+     wxExit();
+#else /* _WX && !defined(NODISPLAY) */     
+     exit (result);
+#endif /* _WX && !defined(NODISPLAY) */     
      }
 }
 

@@ -16,15 +16,18 @@
 #ifndef _PICTURE_h
 #define _PICTURE_h
 
-#define XBM_FORMAT      	0     /* X11 BitmapFile format */
-#define EPS_FORMAT        	1     /* Postscript  */
-#define XPM_FORMAT      	2     /* Xpm XReadFileToPixmap format */
-#define GIF_FORMAT        	3     /* gif */
-#define PNG_FORMAT              4     /* Png */
-#define JPEG_FORMAT             5     /* Jpeg */
-#define SVG_FORMAT              6     /* SVG Images */
-#define PLUGIN_FORMAT           7     /* Plugin files format */
-#define MAX_PICT_FORMATS        30
+enum ThotPictFormat
+{
+	XBM_FORMAT =      	0,     /* X11 BitmapFile format */
+	EPS_FORMAT =       	1,     /* Postscript  */
+	XPM_FORMAT =     	2,     /* Xpm XReadFileToPixmap format */
+	GIF_FORMAT =       	3,     /* gif */
+	PNG_FORMAT =            4,     /* Png */
+	JPEG_FORMAT =           5,     /* Jpeg */
+	SVG_FORMAT =            6,     /* SVG Images */
+	PLUGIN_FORMAT =         7,     /* Plugin files format */
+	MAX_PICT_FORMATS =      30
+};
 
 /* A few constants */
 
@@ -53,18 +56,18 @@ typedef struct
   char          *PicFileName; 
 #ifndef _GL
 #ifdef _GTK
-  GdkImlibImage *im;
-  GdkPixmap     *PicPixmap;
+  GdkImlibImage *    im;
+  ThotPixmap         PicPixmap;
 #else /* _GTK*/
-  Pixmap         PicPixmap;
+  ThotPixmap         PicPixmap;
 #endif /*_GTK*/
 #ifdef _WINDOWS
   int            PicBgMask;      /* Color Mask */
 #endif /* _WINDOWS */
-  Pixmap         PicMask;        /* Bitmap Mask */
+  ThotPixmap         PicMask;        /* Bitmap Mask */
 #else /*_GL*/
   unsigned int   TextureBind; /* integer name of video card memory pointer*/
-  unsigned char *PicPixmap;
+  ThotPixmap     PicPixmap;
   ThotBool       RGBA;
   float          TexCoordW;
   float          TexCoordH;  

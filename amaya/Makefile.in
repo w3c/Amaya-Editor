@@ -20,7 +20,7 @@ LIBS	=  $(AMAYA_PLUGIN_LIBS) $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS) \
            -L../tablelib -L../thotlib -L.. -lThotTable -lThotEditor \
           $(AMAYA_OPTION_EXTRA_LIBS) $(IMGLIBS) $(EXPAT_LIBRARIES) \
 	  $(AMAYA_LIBWWW_LIBS) \
-	  $(MOTIF_LIBRARIES) $(GTK_LIBRARIES) \
+	  $(MOTIF_LIBRARIES) $(GTK_LIBRARIES) $(WX_LIBRARIES) \
 	  $(XMLIB) $(X_LIBS) -lXt $(X_PRE_LIBS) \
 	  -lXext -lX11 $(X_EXTRA_LIBS) @LIBS@ @EXTRA_LIBS@ -lm $(GL_LIBRARIES)
 
@@ -221,6 +221,7 @@ libCSS.a : $(CSS_OBJ)
 	$(RANLIB) libCSS.a
 
 AMAYA_OBJ = \
+	AmayaApp.o \
 	EDITORAPP.o \
 	HTMLAPP.o \
 	TextFileAPP.o \

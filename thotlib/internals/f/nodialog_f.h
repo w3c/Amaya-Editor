@@ -54,7 +54,7 @@ extern void FetchImage ( Document doc,
                          LoadedImageCallback callback,
                          void *extra );
 extern void Prof_FreeTable ( void );
-extern Pixmap TtaCreatePixmapLogo ( char** data );
+extern ThotIcon TtaCreatePixmapLogo ( char** data );
 extern void TtaHandlePendingEvents ( void );
 extern void ConfigInit ( void );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
@@ -197,7 +197,7 @@ extern void FetchImage (/* Document doc,
                            LoadedImageCallback callback,
                            void *extra */);
 extern void Prof_FreeTable (/* void */);
-extern Pixmap TtaCreatePixmapLogo (/* char** data */);
+extern ThotIcon TtaCreatePixmapLogo (/* char** data */);
 extern void TtaHandlePendingEvents (/* void */);
 extern void ConfigInit (/* void */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);

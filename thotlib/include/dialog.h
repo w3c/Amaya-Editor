@@ -114,7 +114,7 @@ extern void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
    signale' a` l'application.                                         
   ----------------------------------------------------------------------*/
 extern void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
-			    int number, Pixmap * icons, ThotBool horizontal);
+			    int number, ThotIcon * icons, ThotBool horizontal);
 
 /*----------------------------------------------------------------------
    TtaSetMenuForm fixe la selection dans un sous-menu de formulaire : 

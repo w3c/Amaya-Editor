@@ -846,6 +846,10 @@ int CharacterAscent (int c, PtrFont font)
 #ifdef _NOGUI
   return 0;
 #endif /* _NOGUI */
+
+#ifdef _WX
+  return 0;
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -879,7 +883,12 @@ int FontAscent (PtrFont font)
 
 #ifdef _NOGUI
   return 0;
-#endif /* #ifdef _NOGUI */    
+#endif /* #ifdef _NOGUI */   
+
+#ifdef _WX
+  return 0;
+#endif /* _WX */
+ 
 }
 
 /*----------------------------------------------------------------------
@@ -929,7 +938,11 @@ int FontHeight (PtrFont font)
 
 #ifdef _NOGUI
   return 0;
-#endif /* #ifdef _NOGUI */        
+#endif /* #ifdef _NOGUI */       
+
+#ifdef _WX
+  return 0;
+#endif /* _WX */ 
 }
 
 /*----------------------------------------------------------------------
@@ -1477,6 +1490,11 @@ PtrFont ReadFont (char script, int family, int highlight, int size,
 #ifdef _NOGUI
   return NULL;
 #endif /* #ifdef _NOGUI */    
+
+#ifdef _WX
+  return NULL;
+#endif /* _WX */
+  
 }
  
 /*----------------------------------------------------------------------

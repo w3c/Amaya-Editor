@@ -61,6 +61,11 @@ typedef struct _SchemaMenu_Ctl
   struct     _SchemaMenu_Ctl *NextSchema; /* Next association          */
 }SchemaMenu_Ctl;
 
+
+/* variables defined into appdialogue.c */
+extern SchemaMenu_Ctl *	SchemasMenuList;
+extern Menu_Ctl    *	DocumentMenuList;
+
 /*
   Predefined indexes in the internal default Thot actions table.
   This table is used by the Thotlib to accede optional actions. It tests

@@ -137,6 +137,11 @@ THOT_EXPORT Proc	   CurrentCallbackAPI;
   #endif /* _GL */
 #endif /* _WINDOWS */
 
+#ifdef _WX
+  THOT_EXPORT ThotWindow  FrRef[MAX_FRAME + 2];     /* window references */
+  THOT_EXPORT int         TtPatchedFont[MAX_FONT];/* size of the patched font */
+#endif /* _WX */
+    
 #ifdef _NOGUI
   THOT_EXPORT ThotWindow  FrRef[MAX_FRAME + 2];     /* window references */
   THOT_EXPORT int         TtPatchedFont[MAX_FONT];/* size of the patched font */

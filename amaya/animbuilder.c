@@ -38,8 +38,8 @@
 
 
 #ifdef _GL
-static Pixmap   iconAnim;
-static Pixmap   iconAnimNo;
+static ThotIcon   iconAnim;
+static ThotIcon   iconAnimNo;
 static int      AnimButton;
 #ifndef _WINDOWS
 #include "xpm/animplay.xpm"

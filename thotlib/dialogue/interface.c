@@ -43,6 +43,10 @@
   #include <X11/Intrinsic.h>
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
+#ifdef _WX
+  #include <wx/wx.h>
+#endif /* #ifdef _WX */
+
 #include <locale.h>
 
 #define MAX_ARGS 20
@@ -1174,6 +1178,7 @@ void TtaMainLoop ()
   GL_DrawAll ();
 #endif /*_GTK && GL*/
 
+#if defined(_GTK) || defined(_MOTIF) || defined(_WINDOWS)
   /* Loop wainting for the events */
   while (1)
     {
@@ -1199,6 +1204,7 @@ void TtaMainLoop ()
 #endif  /* #if defined(_MOTIF) || defined(_GTK) */
         
     }
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WINDOWS) */
 }
 
 /*----------------------------------------------------------------------

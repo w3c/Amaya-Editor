@@ -82,10 +82,10 @@ static PtrDocument  OldDocMsgSelect;
 #endif /* _GTK */
 
 #ifdef _MOTIF
-  #include "appli_f.h"
   #include "input_f.h"
 #endif /* _MOTIF */
 
+#include "appli_f.h"
 #include "absboxes_f.h"
 #include "appdialogue_f.h"
 #include "applicationapi_f.h"
@@ -359,15 +359,24 @@ void FrameKilled (int *w, int frame, int *info)
 
 /*----------------------------------------------------------------------
   Called when a clique is done on the up right corner cross
-  Kill the current document                             
+  Kill the current document ( GTK version )                            
   ----------------------------------------------------------------------*/
 #ifdef _GTK
 gboolean KillFrameGTK (GtkWidget *widget, GdkEvent *event, gpointer f)
 {
-  PtrDocument         pDoc;
-  int                 view, frame;
+  return KillFrameCallback( (int)f );
+}
+#endif /* _GTK */
 
-  frame = (int) f;
+/*----------------------------------------------------------------------
+  KillFrameCallback (generic way)
+  Called when a clique is done on the up right corner cross
+  Kill the current document ( generic version : called by WX and GTK )
+  ----------------------------------------------------------------------*/
+ThotBool KillFrameCallback( int frame )
+{
+  PtrDocument         pDoc;
+  int                 view;  
   if (frame <= MAX_FRAME)
     {
       GetDocAndView (frame, &pDoc, &view);
@@ -380,7 +389,6 @@ gboolean KillFrameGTK (GtkWidget *widget, GdkEvent *event, gpointer f)
   TtaQuit();
   return FALSE;
 }
-#endif /* _GTK */
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
@@ -3420,6 +3428,16 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
 #endif /* _MOTIF */
     }
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
+
+#if defined(_WX)
+  wxFrame * pFrame = FrameTable[frame].WdFrame;
+  if ( pFrame )
+    {
+      // used to convert text format
+      wxCSConv conv_ascii(_T("ISO-8859-1")); 
+      pFrame->SetTitle( wxString((char *)title,conv_ascii) );
+    }
+#endif /* #if defined(_WX) */
   
   if (title != text)
     TtaFreeMemory (title);

@@ -309,7 +309,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SET_MAKE YACC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX LEX LEXLIB LEX_OUTPUT_ROOT AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CP MV RM MKDIR ECHO CAT CHMOD SED AR DIFF X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS EGREP ALLOCA LIBOBJS GTK_INCLUDES GTK_LIBRARIES MOTIF_INCLUDES MOTIF_LIBRARIES LIBJPEG LIBPNG LIBZ MAKEJPEG MAKEPNG GL_INCLUDES GL_LIBRARIES PRINTIFNOTGL NOPRINT AMAYA_VER CEXTRACT_VER CEXTRACT_FLAGS THOTINCLUDES APIINCLUDES VPATHOPT GTK_OPTIONS THOT_OPTIONS AMAYA_OPTIONS PLUGIN_OPTIONS AMAYA_ANNOT_OPTIONS AMAYA_ANNOT_INCLUDES AMAYA_ANNOT_EXTRA_LIBS IMGLIBS EXTRA_LIBS DAVDIR LIBDAV WITHDAV WWWDAV MAKERAPTOR MAKEREDLAND ANNOTLIB_COMPILE_BM AMAYA_RAPTOR_SRC AMAYA_RAPTOR_LIBS AMAYA_RAPTOR_INCLUDES MAKE_LIBWWW_RDF_PARSER LIBWWW_RDF_PARSER SUBDIRS EXTRA_MAKEFILE_IN LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SET_MAKE YACC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX LEX LEXLIB LEX_OUTPUT_ROOT AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CP MV RM MKDIR ECHO CAT CHMOD SED AR DIFF X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS EGREP ALLOCA LIBOBJS GTK_INCLUDES GTK_LIBRARIES WX_INCLUDES WX_LIBRARIES MOTIF_INCLUDES MOTIF_LIBRARIES LIBJPEG LIBPNG LIBZ MAKEJPEG MAKEPNG GL_INCLUDES GL_LIBRARIES PRINTIFNOTGL NOPRINT AMAYA_VER CEXTRACT_VER CEXTRACT_FLAGS THOTINCLUDES APIINCLUDES VPATHOPT GTK_OPTIONS THOT_OPTIONS AMAYA_OPTIONS PLUGIN_OPTIONS AMAYA_ANNOT_OPTIONS AMAYA_ANNOT_INCLUDES AMAYA_ANNOT_EXTRA_LIBS IMGLIBS EXTRA_LIBS DAVDIR LIBDAV WITHDAV WWWDAV MAKERAPTOR MAKEREDLAND ANNOTLIB_COMPILE_BM AMAYA_RAPTOR_SRC AMAYA_RAPTOR_LIBS AMAYA_RAPTOR_INCLUDES MAKE_LIBWWW_RDF_PARSER LIBWWW_RDF_PARSER SUBDIRS EXTRA_MAKEFILE_IN LTLIBOBJS'
 ac_subst_files='plugin_frag www_frag math_frag svg_frag annot_frag dav_frag'
 
 # Initialize some variables set by options.
@@ -877,6 +877,7 @@ Optional Packages:
   --with-gl               enable Opengl canvas (experimental)
   --with-gtk              use GTK GUI toolkit
   --with-motif            use MOTIF GUI toolkit
+  --with-wx               use wxWindows GUI toolkit (experimental)
   --with-nogui            do not use GUI toolkit
   --with-graphic-libs     use static libjpeg, libpng.
   --without-i18n          disable internationalization support
@@ -14047,13 +14048,31 @@ if test "$with_motif" = "yes" -o "$enable_motif" = "yes" ; then
   no_motif=no
 fi
 
+# check if wxWindows gui should be used
+
+# Check whether --with-wx or --without-wx was given.
+if test "${with_wx+set}" = set; then
+  withval="$with_wx"
+
+fi;
+if test "$with_wx" = "yes" -o "$enable_wx" = "yes" ; then
+  if test "$withval" = "no" ; then
+    with_wx="no"
+  else
+    with_wx="yes"
+  fi
+fi
+
 # Check if a GUI toolkit is enabled
 if test "$with_motif" = "no" -o "$with_motif" = "" ; then
-  if test "$with_gtk" = "no" -o "$with_gtk" = "" ; then
-    # Default GUI toolkits
-    with_motif="no"
-    no_motif=yes
-    with_gtk="yes"
+  if test "$with_wx" = "no" -o "$with_wx" = "" ; then
+    if test "$with_gtk" = "no" -o "$with_gtk" = "" ; then
+      # Default GUI toolkits
+      with_motif="no"
+      with_wx="no"
+      no_motif=yes
+      with_gtk="yes"
+    fi
   fi
 fi
 
@@ -14125,17 +14144,31 @@ if test "$with_gtk" = "yes" ; then
     fi
   done
 
-GTK_INCLUDES="`gtk-config --cflags`"
+  GTK_INCLUDES="`gtk-config --cflags`"
 
-GTK_LIBRARIES="`gtk-config --libs`"
-if test "${with_gl}" != "yes" ; then
- GTK_LIBRARIES="${GTK_LIBRARIES} -lgdk_imlib"
-fi
+  GTK_LIBRARIES="`gtk-config --libs`"
+    if test "${with_gl}" != "yes" ; then
+   GTK_LIBRARIES="${GTK_LIBRARIES} -lgdk_imlib"
+  fi
 
 
-GTK_OPTIONS="-D_GTK"
+  GTK_OPTIONS="-D_GTK"
   no_motif=yes
   no_graphic=yes
+fi
+
+if test "$with_wx" = "yes" ; then
+  WX_INCLUDES="`wx-config --cxxflags`"
+
+
+    if test "${with_gl}" == "yes" ; then
+    WX_LIBRARIES="`wx-config --gl-libs`"
+  else
+    WX_LIBRARIES="`wx-config --libs`"
+  fi
+
+
+  WX_OPTIONS="-D_WX"
 fi
 
 if test "$with_motif" = "yes" ; then
@@ -15014,8 +15047,8 @@ echo "$as_me: WARNING: Disabling WebDAV build !" >&2;}
 fi
 
 
-THOT_OPTIONS="$I18N_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $NOGUI_OPTIONS"
-AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $NOGUI_OPTIONS"
+THOT_OPTIONS="$I18N_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
+AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
 #PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS $I18N_OPTIONS"
 
@@ -15816,6 +15849,8 @@ s,@ALLOCA@,$ALLOCA,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@GTK_INCLUDES@,$GTK_INCLUDES,;t t
 s,@GTK_LIBRARIES@,$GTK_LIBRARIES,;t t
+s,@WX_INCLUDES@,$WX_INCLUDES,;t t
+s,@WX_LIBRARIES@,$WX_LIBRARIES,;t t
 s,@MOTIF_INCLUDES@,$MOTIF_INCLUDES,;t t
 s,@MOTIF_LIBRARIES@,$MOTIF_LIBRARIES,;t t
 s,@LIBJPEG@,$LIBJPEG,;t t
@@ -16476,6 +16511,10 @@ if test "$with_motif" = "yes" ; then
       fi
     fi
   fi
+fi
+
+if test "$with_wx" = "yes" ; then
+    echo "Amaya configured with wxWindows (experimental)"
 fi
 
 if test "$with_nogui" = "yes" ; then

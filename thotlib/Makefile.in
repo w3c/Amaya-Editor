@@ -13,9 +13,9 @@ THOTINCLUDES=@THOTINCLUDES@
 include ../Options
 
 INCLUDES= -DHAVE_CONFIG_H -I.. -I@top_srcdir@/amaya/xpm -I@top_srcdir@/tablelib/f ${THOTINCLUDES} $(X_FLAGS)
-LIBS	= -L../tablelib -L. -L.. $(IMGLIBS) $(GTK_LIBRARIES) \
+LIBS	= -L../tablelib -L. -L.. $(IMGLIBS) $(GTK_LIBRARIES) $(WX_LIBRARIES) \
 	  $(X_LIBS) -lXext $(X_PRE_LIBS) \
-          -lX11 $(X_EXTRA_LIBS) @LIBS@ $(EXTRA_LIBS) -lm  $(GL_LIBRARIES)
+          -lX11 $(X_EXTRA_LIBS) @LIBS@ $(EXTRA_LIBS) -lm  $(GL_LIBRARIES) $(WX_LIBRARIES)
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
@@ -220,6 +220,9 @@ EDITOR_OBJ = \
 	dialogue/quit.o \
 	dialogue/searchmenu.o \
 	dialogue/selectmenu.o \
+	dialogue/AmayaFrame.o \
+	dialogue/AmayaDocument.o \
+	dialogue/AmayaCallback.o \
 	document/pivot.o \
 	document/docs.o \
 	document/views.o \

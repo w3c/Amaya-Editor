@@ -6,17 +6,21 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Pixmap TtaCreateBitmapLogo ( int width,
-                                    int height,
-                                    char *bits );
-extern Pixmap TtaCreatePixmapLogo ( char **d );
+extern ThotPixmap TtaCreateBitmap ( const char * filename,
+                                    int type );
+extern ThotPixmap TtaCreateBitmapLogo ( int width,
+                                        int height,
+                                        char *bits );
+extern ThotIcon TtaCreatePixmapLogo ( char **d );
 
 #else /* __STDC__ */
 
-extern Pixmap TtaCreateBitmapLogo (/* int width,
-                                      int height,
-                                      char *bits */);
-extern Pixmap TtaCreatePixmapLogo (/* char **d */);
+extern ThotPixmap TtaCreateBitmap (/* const char * filename,
+                                      int type */);
+extern ThotPixmap TtaCreateBitmapLogo (/* int width,
+                                          int height,
+                                          char *bits */);
+extern ThotIcon TtaCreatePixmapLogo (/* char **d */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

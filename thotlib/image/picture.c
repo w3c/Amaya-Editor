@@ -79,16 +79,12 @@
 
 static char*    PictureMenu;
 #ifdef _GL
-  static unsigned char *PictureLogo;
+  static ThotPixmap PictureLogo;
 #else /*_GL*/
   
-  #if defined(_WINDOWS) || defined(_MOTIF) || defined(_NOGUI)
-    static Pixmap   PictureLogo;
-  #endif /* #if defined(_WINDOWS) || defined(_MOTIF) */
-  
-  #ifdef _GTK
-    static GdkPixmap *PictureLogo;
-  #endif /*_GTK*/
+  #if defined(_WINDOWS) || defined(_MOTIF) || defined(_WX) || defined(_GTK) || defined(_NOGUI)
+    static ThotPixmap   PictureLogo;
+  #endif /* #if defined(_WINDOWS) || defined(_MOTIF) || defined(_WX) || defined(_GTK) || defined(_NOGUI) */
 
 #endif /*_GL*/
 static ThotGC   tiledGC;
@@ -558,7 +554,7 @@ static void PrintPoscriptImage (PictInfo *Image, int x, int y,
     if (Image->PicPixmap == NULL)
       {
 	xBox = yBox = wBox = hBox = width = height = 0;
-	Image->PicPixmap = (unsigned char *) 
+	Image->PicPixmap = (ThotPixmap) 
 		  (*(PictureHandlerTable[Image->PicType].Produce_Picture)) (
 			(void *)Image->PicFileName,
 			(void *)Image,
@@ -572,11 +568,11 @@ static void PrintPoscriptImage (PictInfo *Image, int x, int y,
 			(void *)0 );
       }
     if (w != Image->PicWidth || h != Image->PicHeight)
-      pixels = ZoomPicture (Image->PicPixmap, 
+      pixels = ZoomPicture ((unsigned char*)Image->PicPixmap, 
 			    Image->PicWidth, Image->PicHeight, 
 			    w, h, (Image->RGBA?4:3));
     else
-      pixels = Image->PicPixmap;
+      pixels = (unsigned char*)Image->PicPixmap;
     if (pixels)
       {
 
@@ -1209,34 +1205,38 @@ static ThotBool Match_Format (int typeImage, char *fileName)
   FreePixmap frees the pixmap allocated in the X server if it is not
   empty and if it is not one of the internal images        
   ----------------------------------------------------------------------*/
-void FreePixmap (Pixmap pixmap)
+void FreePixmap (ThotPixmap pixmap)
 {
-  if (pixmap != None 
-      && pixmap != (Pixmap) PictureLogo 
-      && pixmap != EpsfPictureLogo)
 #ifdef _GL
+  if (pixmap != None 
+      && pixmap != (ThotPixmap) PictureLogo 
+      && pixmap != EpsfPictureLogo)
     TtaFreeMemory ((void *)pixmap);
 #else /*_GL*/
 
 #ifdef _MOTIF
+  if (pixmap != None 
+      && pixmap != (ThotPixmap) PictureLogo 
+      && pixmap != EpsfPictureLogo)
     XFreePixmap (TtDisplay, pixmap);
 #endif /* _MOTIF */
     
 #ifdef _GTK 
-    if (((GdkPixmap *) pixmap) != PictureLogo)
-      gdk_imlib_free_pixmap ((GdkPixmap *) pixmap);
+  if (pixmap != None 
+      && pixmap != (ThotPixmap) PictureLogo 
+      && pixmap != EpsfPictureLogo)  
+    gdk_imlib_free_pixmap ((ThotPixmap) pixmap);
 #endif /* _GTK */
     
 #ifdef _WINDOWS
-  if (!DeleteObject ((HBITMAP)pixmap))
-    WinErrorBox (WIN_Main_Wd, "FreePixmap");
+  if (pixmap != None 
+      && pixmap != (ThotPixmap) PictureLogo 
+      && pixmap != EpsfPictureLogo)
+    if (!DeleteObject ((HBITMAP)pixmap))
+      WinErrorBox (WIN_Main_Wd, "FreePixmap");
 #endif /* _WINDOWS */
 
 #endif /*_GL*/
-
-#ifdef _NOGUI
-  return;
-#endif /* _NOGUI */
 
 }
 
@@ -1324,7 +1324,7 @@ static void SetPictureClipping (int *picWArea, int *picHArea, int wFrame,
   by the drawable.
   if picXOrg or picYOrg are postive, the copy operation is shifted
   ----------------------------------------------------------------------*/
-static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
+static void LayoutPicture (ThotPixmap pixmap, Drawable drawable, int picXOrg,
 			   int picYOrg, int w, int h, int xFrame,
 			   int yFrame, int frame, PictInfo *imageDesc,
 			   PtrBox box)
@@ -1440,15 +1440,15 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	  gdk_gc_set_clip_origin (TtGraphicGC, xFrame - picXOrg, 
 				  yFrame - picYOrg);
 	  gdk_gc_set_clip_mask (TtGraphicGC, 
-				(GdkPixmap *) imageDesc->PicMask);
+				(ThotPixmap) imageDesc->PicMask);
 	}
       gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
-		       (GdkPixmap *) imageDesc->PicPixmap, 
+		       (ThotPixmap) imageDesc->PicPixmap, 
 		       picXOrg, picYOrg, xFrame, yFrame, w, h);
       /*Restablish to normal clip*/
       if (imageDesc->PicMask)
 	{
-	  gdk_gc_set_clip_mask (TtGraphicGC, (GdkPixmap *)None);
+	  gdk_gc_set_clip_mask (TtGraphicGC, (ThotPixmap)None);
 	  gdk_gc_set_clip_origin (TtGraphicGC, 0, 0);
 	}
 #endif /* _GTK */
@@ -1651,7 +1651,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
       /*if (picPresent == RealSize)
 	printf ("Display RealSize x=%d y=%d w=%d+%d h=%d+%d img=%d\n", x, y, clipWidth, dx, clipHeight, dy, imageDesc->PicHArea);*/
       gdk_gc_set_fill (tiledGC, GDK_TILED);
-      gdk_gc_set_tile (tiledGC, (GdkPixmap *) pixmap);
+      gdk_gc_set_tile (tiledGC, (ThotPixmap) pixmap);
       gdk_gc_set_clip_rectangle (tiledGC, (GdkRectangle *) &rect);
       if (h > 0 && w > 0)
 	{
@@ -1811,10 +1811,10 @@ void CreateGifLogo ()
   int                 wBox = 0;
   int                 hBox = 0;
   int                 width = 0, height = 0;
-  Drawable            drw;
+  ThotPixmap          drw;
   
   imageDesc = (PictInfo*)TtaGetMemory (sizeof (PictInfo));
-  drw = (*(PictureHandlerTable[GIF_FORMAT].Produce_Picture)) (
+  drw = (ThotPixmap)(*(PictureHandlerTable[GIF_FORMAT].Produce_Picture)) (
       		(void *)LostPicturePath,
 		(void *)imageDesc,
 		(void *)&xBox,
@@ -1826,7 +1826,7 @@ void CreateGifLogo ()
 		(void *)&height,
 		(void *)0 );
   TtaFreeMemory (imageDesc);
-  PictureLogo = (unsigned char *) drw;
+  PictureLogo = drw;
 #else /* #if defined(_WINDOWS) || defined (_GL)  */
 
 #ifdef _GTK  
@@ -2043,7 +2043,7 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
 {
 #if defined(_MOTIF) || defined(_WINDOWS)
    ThotWindow          drawable;
-   Pixmap              pixmap;
+   ThotPixmap          pixmap;
    float               scaleX, scaleY;
    int                 x, y, w, h, xFrame, yFrame, wFrame, hFrame;
    int                 XOrg, YOrg, picXOrg, picYOrg;
@@ -2346,13 +2346,14 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
 		       	(void *)0 );
 	    }
 	  else
-	    LayoutPicture ((Pixmap) imageDesc->PicPixmap, drawable,
+	    LayoutPicture ((ThotPixmap) imageDesc->PicPixmap, drawable,
 			   picXOrg, picYOrg, w, h, 
 			   x + xTranslate, y + yTranslate, frame,
 			   imageDesc, box);
 	}
     }
   else if (typeImage < InlineHandlers && typeImage > -1)
+   {
     /* for the moment we didn't consider plugin printing */
 #ifdef _WINDOWS
     if (TtPrinterDC)
@@ -2445,7 +2446,8 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
 #endif /* _WIN_PRINT */
       }
 #endif /* _WINDOWS */
-#if defined(_MOTIF) || defined(_GTK)
+    
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
   (*(PictureHandlerTable[typeImage].Produce_Postscript)) (
 	(void *)fileName,
 	(void *)pres,
@@ -2456,21 +2458,18 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
 	(void *)(FILE *) drawable,
 	(void *)bgColor,
 	(void *)0,
-	(void *)0);
-  
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-
-#ifdef _NOGUI
-  return;
-#endif /* _NOGUI */  
+	(void *)0);  
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+   }
 
 #ifdef _GL
-if (PrintingGL)
-{
-PrintingGL = FALSE;
-Printing = TRUE;
-}
+  if (PrintingGL)
+  {
+    PrintingGL = FALSE;
+    Printing = TRUE;
+  }
 #endif /* _GL */
+
 }
 
 /*----------------------------------------------------------------------
@@ -2620,7 +2619,7 @@ void *PutTextureOnImageDesc (unsigned char *pattern, int width, int height)
   imageDesc->PicYArea = 0;
   imageDesc->PicWArea = width;
   imageDesc->PicHArea = height;
-  imageDesc->PicPixmap = pattern;   
+  imageDesc->PicPixmap = (ThotPixmap)pattern;   
   GL_TextureBind (imageDesc, TRUE);
   return (imageDesc);  
 #endif /* _GL */
@@ -2932,7 +2931,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      imageDesc->PicWArea = wBox = w;
 	      imageDesc->PicHArea = hBox = h;
 
-	      imageDesc->PicPixmap = (unsigned char *) 
+	      imageDesc->PicPixmap = (ThotPixmap) 
 		(*(PictureHandlerTable[typeImage].Produce_Picture)) (
 			(void *)frame,
 		       	(void *)imageDesc,
@@ -2964,7 +2963,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		  if(box->BxH != 0)
 		    yBox = h;
 		}
-	      imageDesc->PicPixmap = (unsigned char *) 
+	      imageDesc->PicPixmap = (ThotPixmap) 
 		  (*(PictureHandlerTable[typeImage].Produce_Picture)) (
 		   (void *)fileName,
 		   (void *)imageDesc,
@@ -2978,7 +2977,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		   (void *)ViewFrameTable[frame - 1].FrMagnification );
 	      if  (width == 0 && height == 0)
 		{
-		  imageDesc->PicPixmap = (unsigned char *) 
+		  imageDesc->PicPixmap = (ThotPixmap) 
 		    (*(PictureHandlerTable[typeImage].Produce_Picture)) (
 			(void *)fileName,
 		       	(void *)imageDesc,
@@ -3036,7 +3035,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       strcpy (imageDesc->PicFileName,TtaStrdup (LostPicturePath));
       imageDesc->PicType = 3;
       imageDesc->PicPresent = RealSize;
-      imageDesc->PicPixmap = (unsigned char*) PictureLogo;
+      imageDesc->PicPixmap = PictureLogo;
       typeImage = GIF_FORMAT;
       /*TtaGetMemory (sizeof (unsigned char) * 6400);
 	memcpy (imageDesc->PicPixmap, PictureLogo, sizeof (unsigned char) * 6400);*/
@@ -3135,7 +3134,7 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
 	}
       else
 	{
-	  imageDesc->PicPixmap = (unsigned char*)TtaGetMemory (sizeof (unsigned char) * 
+	  imageDesc->PicPixmap = (ThotPixmap)TtaGetMemory (sizeof (unsigned char) * 
 					       width * height * 4);
 	  glReadPixels (x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, 
 			imageDesc->PicPixmap);
@@ -3147,7 +3146,9 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
     return NULL;
 }
 
-#else /* _GL */
+
+#else /* _GL */    
+
 
 /*----------------------------------------------------------------------
    Requests the picture handlers to get the corresponding pixmaps    
@@ -3159,21 +3160,17 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #ifdef _GTK
   #ifndef _GTK2
     GdkImlibImage      *im = None;
-    GdkPixmap          *drw = None;
+    ThotPixmap		drw = None;
   #else /* _GTK2 */
     GdkPixbuf          *im = None;
     GError             *error=NULL;
   #endif /* _GTK2 */
 #endif /* _GTK */
 
-#if defined(_MOTIF) || defined(_WINDOWS)
-  Drawable            drw = None;
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX) || defined(_NOGUI)
+  ThotPixmap          drw = None;
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX) || defined(_NOGUI) */
 
-#ifdef _NOGUI
-  Drawable            drw = None;
-#endif /* _NOGUI */
-  
   PtrAbstractBox      pAb;
   Picture_Report      status;
   unsigned long       Bgcolor;
@@ -3239,7 +3236,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       imageDesc->PicPresent = pres;
       imageDesc->PicHeight = 40;
       imageDesc->PicWidth = 40;
-      drw = (GdkPixmap *) PictureLogo;
+      drw = (ThotPixmap) PictureLogo;
 #endif /*_GTK*/
 
 #ifdef _MOTIF
@@ -3370,7 +3367,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      im = gdk_imlib_load_image (fileName);
 	      gdk_imlib_render(im, w, h);
 	      drw = gdk_imlib_move_image (im);
-	      imageDesc->PicMask = (Pixmap) gdk_imlib_move_mask (im);
+	      imageDesc->PicMask = (ThotPixmap) gdk_imlib_move_mask (im);
 
 #else /* _GTK2 */
 	      im = gdk_pixbuf_new_from_file(fileName, &error);
@@ -3412,7 +3409,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
         
 #ifdef _GTK
 	      if (typeImage == EPS_FORMAT)
-		drw = (GdkPixmap *) (*(PictureHandlerTable[typeImage].Produce_Picture)) (
+		drw = (ThotPixmap) (*(PictureHandlerTable[typeImage].Produce_Picture)) (
 			(void *)fileName,
 			(void *)imageDesc,
 			(void *)&xBox,
@@ -3454,8 +3451,8 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		    }
 
 		  gdk_imlib_render(im, (gint) xBox, (gint) yBox);
-		  drw = (GdkPixmap *) gdk_imlib_move_image (im);
-		  imageDesc->PicMask = (Pixmap) gdk_imlib_move_mask (im);
+		  drw = (ThotPixmap) gdk_imlib_move_image (im);
+		  imageDesc->PicMask = (ThotPixmap) gdk_imlib_move_mask (im);
 
 		}
 	      width = (gint) wBox;
@@ -3519,7 +3516,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  imageDesc->PicType = 3;
 	  imageDesc->PicPresent = pres;
 	  imageDesc->PicFileName = TtaStrdup (LostPicturePath);
-	  drw = (GdkPixmap *) PictureLogo;
+	  drw = (ThotPixmap) PictureLogo;
 #endif /*_GTK*/
     
 #ifdef _MOTIF

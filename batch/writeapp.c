@@ -300,8 +300,8 @@ static void     WriteAppliInit (char *fname, PtrEventsSet pAppli)
 	fprintf (AppFile, "#include \"logo.xpm\"\n#include \"logo.xbm\"\n#include \"message.h\"\n");
 	fprintf (AppFile, "#ifdef _WINDOWS\n#include \"wininclude.h\"\n#endif\n\n");
 	fprintf (AppFile, "int    appArgc;\nchar** appArgv;\n");
-	fprintf (AppFile, "Pixmap image;  /* logo pixmap */\n");
-	fprintf (AppFile, "Pixmap icon;   /* icon pixmap */\n\n");
+	fprintf (AppFile, "ThotIcon     image;  /* logo pixmap */\n");
+	fprintf (AppFile, "ThotPixmap   icon;   /* icon pixmap */\n\n");	
      }
    fprintf (AppFile, "\n/*----------------------------------------------------------------------\n -----------------------------------------------------------------------*/\n");
    fprintf (AppFile, "void %sApplicationInitialise ()\n", fname);
@@ -530,11 +530,16 @@ static void         WriteActionList (char *fname)
 	  menuAction = menuAction->AppNextName;
 	}
       fprintf (AppFile, "/*################### Main program #########################*/\n");
-      fprintf (AppFile, "#ifdef _WINDOWS\n");
+      fprintf (AppFile, "#if defined(_WINDOWS) || defined(_MOTIF) || defined(_GTK) || defined(_WX)\n");
+      fprintf (AppFile, "#if defined(_WINDOWS) || defined(_MOTIF) || defined(_GTK)\n");
       fprintf (AppFile, "int main (int argc, char** argv)\n");
-      fprintf (AppFile, "#else  /* !_WINDOWS */\n");
+      fprintf (AppFile, "#endif /* #if defined(_WINDOWS) || defined(_MOTIF) || defined(_GTK) */\n");
+      fprintf (AppFile, "#if defined(_WX)\n");
+      fprintf (AppFile, "int amaya_main (int argc, char** argv)\n");
+      fprintf (AppFile, "#endif /* defined(_WX) */\n");
+      fprintf (AppFile, "#else  /* #if defined(_WINDOWS) || defined(_MOTIF) || defined(_GTK) */\n");
       fprintf (AppFile, "int main (int argc, char **argv)\n");
-      fprintf (AppFile, "#endif /* !_WINDOWS */\n");
+      fprintf (AppFile, "#endif /* #if defined(_WINDOWS) || defined(_MOTIF) || defined(_GTK) */\n");
       fprintf (AppFile, "{\n");
       
       fprintf (AppFile, "  int lg; /* identify dialogue messages */\n");
@@ -608,10 +613,15 @@ static void         WriteActionList (char *fname)
       /* if necessary load editing Resources */
       if (editingResource)
 	fprintf (AppFile, "  EditingLoadResources ();\n");
-      fprintf (AppFile, "\n\n  image = TtaCreatePixmapLogo (logo_xpm);\n");
-      fprintf (AppFile, "  icon = TtaCreateBitmapLogo (logo_width, logo_height, (char *)logo_bits);\n");
+
+      fprintf (AppFile, "  image = TtaCreatePixmapLogo (logo_xpm);\n");
+      fprintf (AppFile, "  icon  = TtaCreateBitmapLogo (logo_width, logo_height, (char *)logo_bits);\n");
       fprintf (AppFile, "  TteOpenMainWindow (appName, image, icon);\n");
-      fprintf (AppFile, "  TtaMainLoop ();\n  exit(0);\n");
+
+      fprintf (AppFile, "  TtaMainLoop ();\n");
+      fprintf (AppFile, "#if !defined(_WX)\n");
+      fprintf (AppFile, "  exit(0);\n");
+      fprintf (AppFile, "#endif /* _WX */\n");
       fprintf (AppFile, "}\n\n"); 
     }
 

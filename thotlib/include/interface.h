@@ -230,10 +230,23 @@ extern void TtaHandlePendingEvents ();
    Returns document and element clicked.
   ----------------------------------------------------------------------*/
 extern void TtaClickElement (/*OUT*/ Document *document, /*OUT*/ Element *element);
+  
+/*----------------------------------------------------------------------
+   TtaCreateBitmap
+   create a bitmap from a file
+   const char * filename : the picture filename
+   ThotPictFormat type   : the picture type (picture.h)
+	XBM_FORMAT =      	0,      X11 BitmapFile format 
+	XPM_FORMAT =     	2,      Xpm XReadFileToPixmap format 
+	GIF_FORMAT =       	3,      gif 
+	PNG_FORMAT =            4,      Png 
+	JPEG_FORMAT =           5,      Jpeg 
+  ----------------------------------------------------------------------*/
+extern ThotPixmap TtaCreateBitmap( const char * filename, int type );
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-extern Pixmap TtaCreatePixmapLogo (char **data);
+extern ThotIcon TtaCreatePixmapLogo (char **data);
 
 /*----------------------------------------------------------------------
   TtaCreateBitmapLogo
@@ -245,7 +258,7 @@ extern Pixmap TtaCreatePixmapLogo (char **data);
   Return value:
   The created pixmap for the logo.
   ----------------------------------------------------------------------*/
-extern Pixmap TtaCreateBitmapLogo (int width, int height, char* bits);
+extern ThotPixmap TtaCreateBitmapLogo (int width, int height, char* bits);
 
 extern void TtaSetCursorWatch (Document document, View view);
 extern void TtaResetCursor (Document document, View view);

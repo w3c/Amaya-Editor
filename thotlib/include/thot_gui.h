@@ -73,12 +73,17 @@ typedef FontInfo      *PtrFont;
 
 typedef void          *ThotWidget;
 typedef HWND           ThotWindow;
+typedef ThotWidget 	ThotScrollBar;
+typedef ThotWidget	ThotFrame;
+typedef ThotWidget	ThotStatusBar;
 typedef TBBUTTON      *ThotButton;
+typedef ThotWidget 	ThotMenuBar;
 typedef HMENU          ThotMenu;
+typedef ThotWidget	ThotToolBar;
 typedef HBITMAP        ThotBitmap;
 typedef COLORREF       ThotColor;
 typedef COLORREF       Pixel;
-typedef void          *Pixmap;
+typedef void          *ThotPixmap;
 typedef HCURSOR        ThotCursor;
 #ifndef _GL
 typedef HWND           Drawable;
@@ -109,7 +114,7 @@ typedef XColor    ThotColorStruct;
 
 #endif /* _WINDOWS */
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
 /************************************************************************
  *									*
  * standard Unix interface : based on Motif + Intrinsics + X-Window	*
@@ -170,8 +175,13 @@ typedef XColor    ThotColorStruct;
 
 typedef GtkWidget     *ThotWidget;
 typedef GdkWindow     *ThotWindow;
+typedef ThotWidget 	ThotScrollBar;
+typedef ThotWidget	ThotFrame;
+typedef ThotWidget	ThotStatusBar;
 typedef ThotWidget     ThotButton;
+typedef ThotWidget 	ThotMenuBar;
 typedef ThotWidget     ThotMenu;
+typedef ThotWidget	ThotToolBar;
 typedef GdkBitmap     *ThotBitmap;
 typedef GdkGC         *ThotGC;
 typedef unsigned long  ThotColor;
@@ -202,8 +212,13 @@ typedef GdkPixmap     *ThotPixmap;
 #ifdef _MOTIF
 typedef Widget         ThotWidget;
 typedef Window         ThotWindow;
+typedef ThotWidget 	ThotScrollBar;
+typedef ThotWidget	ThotFrame;
+typedef ThotWidget	ThotStatusBar;
 typedef ThotWidget     ThotButton;
+typedef ThotWidget 	ThotMenuBar;
 typedef ThotWidget     ThotMenu;
+typedef ThotWidget	ThotToolBar;
 typedef Drawable       ThotBitmap;
 typedef GC             ThotGC;
 typedef unsigned long  ThotColor;
@@ -217,13 +232,19 @@ typedef XComposeStatus ThotComposeStatus;
 typedef XtAppContext   ThotAppContext;
 typedef XtTranslations ThotTranslations;
 typedef Pixmap         ThotIcon;
+typedef Pixmap         ThotPixmap;
 #endif /* _MOTIF */
 
-#ifdef _NOGUI
+#if defined(_NOGUI) && !defined(_WX) /* TODO !defined(_WX) a enlever apres la migration de wxWindows */
 typedef void *         ThotWidget;
 typedef void *         ThotWindow;
+typedef ThotWidget 	ThotScrollBar;
+typedef ThotWidget	ThotFrame;
+typedef ThotWidget	ThotStatusBar;
 typedef ThotWidget     ThotButton;
+typedef ThotWidget 	ThotMenuBar;
 typedef ThotWidget     ThotMenu;
+typedef ThotWidget	ThotToolBar;
 typedef int            ThotBitmap;
 typedef int            ThotGC;
 typedef unsigned long  ThotColor;
@@ -238,8 +259,50 @@ typedef void *         ThotKeyEvent;
 typedef void *         ThotComposeStatus;
 typedef void *         ThotAppContext;
 typedef void *         ThotTranslations;
-typedef int         ThotIcon;
+typedef int            ThotIcon;
 #endif /* #ifdef _NOGUI */
+
+#ifdef _WX
+
+#include "wx/wxprec.h"
+
+#ifndef WX_PRECOMP
+    #include "wx/wx.h"
+    #include "wx/toolbar.h"
+#endif
+
+typedef wxObject *	ThotWidget;
+typedef wxScrollBar * 	ThotScrollBar;
+typedef wxFrame	*	ThotFrame;
+typedef wxStatusBar *	ThotStatusBar;
+
+typedef wxWindow *	ThotWindow;
+typedef wxButton * 	ThotButton;
+typedef wxMenuBar *	ThotMenuBar;
+typedef wxMenu *	ThotMenu;
+typedef wxToolBar *	ThotToolBar;
+typedef wxControl *	ThotControl;
+typedef int            ThotBitmap;
+typedef int            ThotGC;
+typedef unsigned long  ThotColor;
+typedef XColor         ThotColorStruct;
+typedef int           *PtrFont;
+typedef void          *ThotCursor;
+
+#ifndef _GL
+  typedef XPoint       ThotPoint;
+#endif /* _GL */
+
+typedef void *         ThotEvent;
+typedef void *         ThotKeyEvent;
+typedef void *         ThotComposeStatus;
+typedef void *         ThotAppContext;
+typedef void *         ThotTranslations;
+
+typedef wxBitmap *     ThotIcon;
+//typedef wxIcon *       ThotIcon;
+typedef wxBitmap *     ThotPixmap;
+#endif /* _WX */
 
 /* button states */
 #define TBSTYLE_BUTTON  0
@@ -248,7 +311,7 @@ typedef int         ThotIcon;
 #define ThotColorNone ((Pixel)-1)
 #define ThotBitmapNone ((ThotBitmap)-1)
 
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
 
 
 #endif /* THOT_GUI_H */

@@ -26,13 +26,13 @@ extern int LWZReadByte ( FILE *fd,
                          int flag,
                          int input_code_size );
 extern int highbit16 ( unsigned long ul );
-extern Pixmap DataToPixmap ( unsigned char *image_data,
-                             int width,
-                             int height,
-                             int ncolors,
-                             ThotColorStruct *colrs,
-                             ThotBool withAlpha,
-                             ThotBool grayScale );
+extern ThotPixmap DataToPixmap ( unsigned char *image_data,
+                                 int width,
+                                 int height,
+                                 int ncolors,
+                                 ThotColorStruct *colrs,
+                                 ThotBool withAlpha,
+                                 ThotBool grayScale );
 extern unsigned char *ReadGifToData ( char *datafile,
                                       int *w,
                                       int *h,
@@ -96,13 +96,13 @@ extern int LWZReadByte (/* FILE *fd,
                            int flag,
                            int input_code_size */);
 extern int highbit16 (/* unsigned long ul */);
-extern Pixmap DataToPixmap (/* unsigned char *image_data,
-                               int width,
-                               int height,
-                               int ncolors,
-                               ThotColorStruct *colrs,
-                               ThotBool withAlpha,
-                               ThotBool grayScale */);
+extern ThotPixmap DataToPixmap (/* unsigned char *image_data,
+                                   int width,
+                                   int height,
+                                   int ncolors,
+                                   ThotColorStruct *colrs,
+                                   ThotBool withAlpha,
+                                   ThotBool grayScale */);
 extern unsigned char *ReadGifToData (/* char *datafile,
                                         int *w,
                                         int *h,

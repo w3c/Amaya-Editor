@@ -95,6 +95,10 @@ static ThotBool IsXLFDName (char *font)
 #ifdef _NOGUI
   return FALSE;
 #endif /* _NOGUI */
+
+#ifdef _WX
+  return FALSE;
+#endif /* _WX */
   
 }
 
@@ -126,6 +130,10 @@ static int IsXLFDPatterneAFont (char *pattern)
 #ifdef _NOGUI
   return 0;
 #endif /* _NOGUI */  
+
+#ifdef _WX
+  return 0;
+#endif /* _WX */
 
 }
 #endif /*_GL*/
