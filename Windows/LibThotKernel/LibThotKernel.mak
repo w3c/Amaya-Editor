@@ -460,7 +460,7 @@ DEP_CPP_APPLI=\
 	"..\..\thotlib\internals\f\structschema_f.h"\
 	"..\..\thotlib\internals\f\structselect_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\win_f.h"\
+	"..\..\thotlib\internals\f\wininclude.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -537,7 +537,7 @@ DEP_CPP_APPLI=\
 	"..\..\thotlib\internals\f\structschema_f.h"\
 	"..\..\thotlib\internals\f\structselect_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\win_f.h"\
+	"..\..\thotlib\internals\f\wininclude.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -4466,7 +4466,7 @@ DEP_CPP_UNITS=\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\win_f.h"\
+	"..\..\thotlib\internals\f\wininclude.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
@@ -4509,7 +4509,7 @@ DEP_CPP_UNITS=\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\win_f.h"\
+	"..\..\thotlib\internals\f\wininclude.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constprs.h"\

@@ -1,7 +1,7 @@
 # Microsoft Developer Studio Generated NMAKE File, Based on libpng.dsp
 !IF "$(CFG)" == ""
 CFG=libpng - Win32 Debug
-!MESSAGE No configuration specified. Defaulting to libpng - Win32 Release.
+!MESSAGE No configuration specified. Defaulting to libpng - Win32 Debug.
 !ENDIF 
 
 !IF "$(CFG)" != "libpng - Win32 Release" && "$(CFG)" != "libpng - Win32 Debug"
@@ -9,7 +9,7 @@ CFG=libpng - Win32 Debug
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "libpng.mak" CFG="libpng - Win32 Release"
+!MESSAGE NMAKE /f "libpng.mak" CFG="libpng - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
@@ -25,6 +25,8 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+
 !IF  "$(CFG)" == "libpng - Win32 Release"
 
 OUTDIR=.\..
@@ -35,11 +37,11 @@ OutDir=.\..\
 
 !IF "$(RECURSE)" == "0" 
 
-ALL : "$(OUTDIR)\Libpng.lib"
+ALL : "$(OUTDIR)\libpng.lib"
 
 !ELSE 
 
-ALL : "zlib - Win32 Release" "$(OUTDIR)\Libpng.lib"
+ALL : "zlib - Win32 Release" "$(OUTDIR)\libpng.lib"
 
 !ENDIF 
 
@@ -64,7 +66,7 @@ CLEAN :
 	-@erase "$(INTDIR)\pngwtran.obj"
 	-@erase "$(INTDIR)\pngwutil.obj"
 	-@erase "$(INTDIR)\vc50.idb"
-	-@erase "$(OUTDIR)\Libpng.lib"
+	-@erase "$(OUTDIR)\libpng.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -72,43 +74,11 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\libpng\zlib" /D "WIN32" /D "NDEBUG"\
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\libpng\zlib" /D "NDEBUG" /D "WIN32"\
  /D "_WINDOWS" /Fp"$(INTDIR)\libpng.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\"\
  /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libpng.bsc" 
 BSC32_SBRS= \
@@ -133,7 +103,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\pngwutil.obj" \
 	"$(OUTDIR)\zlib.lib"
 
-"$(OUTDIR)\Libpng.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
+"$(OUTDIR)\libpng.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
   $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
 <<
@@ -148,11 +118,11 @@ OutDir=.\..\
 
 !IF "$(RECURSE)" == "0" 
 
-ALL : "$(OUTDIR)\Libpng.lib"
+ALL : "$(OUTDIR)\libpng.lib"
 
 !ELSE 
 
-ALL : "zlib - Win32 Debug" "$(OUTDIR)\Libpng.lib"
+ALL : "zlib - Win32 Debug" "$(OUTDIR)\libpng.lib"
 
 !ENDIF 
 
@@ -177,7 +147,7 @@ CLEAN :
 	-@erase "$(INTDIR)\pngwtran.obj"
 	-@erase "$(INTDIR)\pngwutil.obj"
 	-@erase "$(INTDIR)\vc50.idb"
-	-@erase "$(OUTDIR)\Libpng.lib"
+	-@erase "$(OUTDIR)\libpng.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -185,12 +155,41 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
-CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\libpng\zlib" /D "WIN32" /D\
- "_DEBUG" /D "_WINDOWS" /Fp"$(INTDIR)\libpng.pch" /YX /Fo"$(INTDIR)\\"\
+CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\libpng\zlib" /D "_DEBUG" /D\
+ "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\libpng.pch" /YX /Fo"$(INTDIR)\\"\
  /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
+BSC32=bscmake.exe
+BSC32_FLAGS=/nologo /o"$(OUTDIR)\libpng.bsc" 
+BSC32_SBRS= \
+	
+LIB32=link.exe -lib
+LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libpng.lib" 
+LIB32_OBJS= \
+	"$(INTDIR)\png.obj" \
+	"$(INTDIR)\pngerror.obj" \
+	"$(INTDIR)\pngget.obj" \
+	"$(INTDIR)\pngmem.obj" \
+	"$(INTDIR)\pngpread.obj" \
+	"$(INTDIR)\pngread.obj" \
+	"$(INTDIR)\pngrio.obj" \
+	"$(INTDIR)\pngrtran.obj" \
+	"$(INTDIR)\pngrutil.obj" \
+	"$(INTDIR)\pngset.obj" \
+	"$(INTDIR)\pngtrans.obj" \
+	"$(INTDIR)\pngwio.obj" \
+	"$(INTDIR)\pngwrite.obj" \
+	"$(INTDIR)\pngwtran.obj" \
+	"$(INTDIR)\pngwutil.obj" \
+	"$(OUTDIR)\zlib.lib"
+
+"$(OUTDIR)\libpng.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
+    $(LIB32) @<<
+  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
+<<
+
+!ENDIF 
 
 .c{$(CPP_OBJS)}.obj::
    $(CPP) @<<
@@ -222,39 +221,37 @@ CPP_SBRS=.
    $(CPP_PROJ) $< 
 <<
 
-BSC32=bscmake.exe
-BSC32_FLAGS=/nologo /o"$(OUTDIR)\libpng.bsc" 
-BSC32_SBRS= \
-	
-LIB32=link.exe -lib
-LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libpng.lib" 
-LIB32_OBJS= \
-	"$(INTDIR)\png.obj" \
-	"$(INTDIR)\pngerror.obj" \
-	"$(INTDIR)\pngget.obj" \
-	"$(INTDIR)\pngmem.obj" \
-	"$(INTDIR)\pngpread.obj" \
-	"$(INTDIR)\pngread.obj" \
-	"$(INTDIR)\pngrio.obj" \
-	"$(INTDIR)\pngrtran.obj" \
-	"$(INTDIR)\pngrutil.obj" \
-	"$(INTDIR)\pngset.obj" \
-	"$(INTDIR)\pngtrans.obj" \
-	"$(INTDIR)\pngwio.obj" \
-	"$(INTDIR)\pngwrite.obj" \
-	"$(INTDIR)\pngwtran.obj" \
-	"$(INTDIR)\pngwutil.obj" \
-	"$(OUTDIR)\zlib.lib"
 
-"$(OUTDIR)\Libpng.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
-    $(LIB32) @<<
-  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
-<<
+!IF "$(CFG)" == "libpng - Win32 Release" || "$(CFG)" == "libpng - Win32 Debug"
+
+!IF  "$(CFG)" == "libpng - Win32 Release"
+
+"zlib - Win32 Release" : 
+   cd "..\zlib"
+   $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Release" 
+   cd "..\libpng"
+
+"zlib - Win32 ReleaseCLEAN" : 
+   cd "..\zlib"
+   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\zlib.mak CFG="zlib - Win32 Release"\
+ RECURSE=1 
+   cd "..\libpng"
+
+!ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
+
+"zlib - Win32 Debug" : 
+   cd "..\zlib"
+   $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Debug" 
+   cd "..\libpng"
+
+"zlib - Win32 DebugCLEAN" : 
+   cd "..\zlib"
+   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\zlib.mak CFG="zlib - Win32 Debug" RECURSE=1\
+ 
+   cd "..\libpng"
 
 !ENDIF 
 
-
-!IF "$(CFG)" == "libpng - Win32 Release" || "$(CFG)" == "libpng - Win32 Debug"
 SOURCE=..\..\libpng\png.c
 
 !IF  "$(CFG)" == "libpng - Win32 Release"
@@ -762,34 +759,6 @@ DEP_CPP_PNGWU=\
 "$(INTDIR)\pngwutil.obj" : $(SOURCE) $(DEP_CPP_PNGWU) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ENDIF 
-
-!IF  "$(CFG)" == "libpng - Win32 Release"
-
-"zlib - Win32 Release" : 
-   cd "..\zlib"
-   $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Release" 
-   cd "..\libpng"
-
-"zlib - Win32 ReleaseCLEAN" : 
-   cd "..\zlib"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\zlib.mak CFG="zlib - Win32 Release"\
- RECURSE=1 
-   cd "..\libpng"
-
-!ELSEIF  "$(CFG)" == "libpng - Win32 Debug"
-
-"zlib - Win32 Debug" : 
-   cd "..\zlib"
-   $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Debug" 
-   cd "..\libpng"
-
-"zlib - Win32 DebugCLEAN" : 
-   cd "..\zlib"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\zlib.mak CFG="zlib - Win32 Debug" RECURSE=1\
- 
-   cd "..\libpng"
 
 !ENDIF 
 
