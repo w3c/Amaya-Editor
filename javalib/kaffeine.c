@@ -28,6 +28,9 @@
 
 #define BISS_AWT "-Dawt.toolkit=biss.awt.kernel.Toolkit"
 
+/* DEBUG_KAFFE    will print lot of debug messages                      */
+/* DEBUG_SELECT   will do some sanity checking and print debug messages */
+
 /*
  * Kaffe runtime accesses not published in native.h
  */
@@ -42,51 +45,168 @@ static void register_stubs(void);
 static int JavaEventLoopInitialized =0;
 static int x_window_socket;
 
+/************************************************************************
+ *									*
+ *	Taking Control of the Scheduling : Kaffe and External I/O	*
+ *									*
+ ************************************************************************/
+
+#define CLEAR_FD(nb,to) {					\
+    register int i, n = (nb) / sizeof(int);			\
+    register int *t = (int *) (to);				\
+    if (t != NULL) for (i = 0;i <= n; i++) *t++ = 0; }
+
+#define COPY_FD(nb,from,to) {					\
+    register int i, n = (nb) / sizeof(int);			\
+    register int *f = (int *) (from);				\
+    register int *t = (int *) (to);				\
+    if ((t != NULL) && (f != NULL))				\
+        for (i = 0;i <= n; i++) *t++ = *f++; }
+
+#define OR_FD(nb,from,to) {					\
+    register int i, n = (nb) / sizeof(int);			\
+    register int *f = (int *) (from);				\
+    register int *t = (int *) (to);				\
+    if ((t != NULL) && (f != NULL))				\
+        for (i = 0;i <= n; i++) *t++ |= *f++; }
+
+#define AND_FD(nb,from,to) {					\
+    register int i, n = (nb) / sizeof(int);			\
+    register int *f = (int *) (from);				\
+    register int *t = (int *) (to);				\
+    if ((t != NULL) && (f != NULL))				\
+        for (i = 0;i <= n; i++) *t++ &= *f++; }
+
+#define EVENT_READ	1
+#define EVENT_WRITE	2
+#define EVENT_EXCEPT	4
+
+typedef void (* SelectCallback) (int fd, int event);
+
+static int max_extra_fd = 0;
+static fd_set extra_readfds;
+static fd_set extra_writefds;
+static fd_set extra_exceptfds;
+
+static SelectCallback JavaSelectCallback = NULL;
+
+/*
+ * If DoJavaSelectPoll is selected, any JavaSelectCall on the
+ * x-window socket will fail with value -1 if BreakJavaSelectPoll
+ * is non zero. This is needed to do multi filedescriptor polling
+ * without breaking the Kaffe threading model.
+ */
+
+static int DoJavaSelectPoll = 0;
+static int BreakJavaSelectPoll = 0;
 
 /*----------------------------------------------------------------------
-   InitJava
+  InitJavaSelect
 
-   Initialize the Java Interpreter.
+  Initialize all the static data for JavaSelect call.
   ----------------------------------------------------------------------*/
+
+static int NbJavaSelect = 0;
+static int JavaSelectInitialized = 0;
+
 #ifdef __STDC__
-void                InitJava (void)
+void               InitJavaSelect(void)
 #else
-void                InitJava ()
+void               InitJavaSelect()
 #endif
 {
-    object* args;
-    stringClass** str;
-    char initClass[MAX_PATH];
+    NbJavaSelect = 0;
+    max_extra_fd = 0;
+    DoJavaSelectPoll = 0;
+    BreakJavaSelectPoll = 0;
+    FD_ZERO(&extra_readfds);
+    FD_ZERO(&extra_writefds);
+    FD_ZERO(&extra_exceptfds);
+    JavaSelectInitialized = 1;
+}
 
-    char *app_name = TtaGetEnvString ("appname");
+/*----------------------------------------------------------------------
+  JavaSetSelectCallback
 
-    fprintf(stderr, "Initialize Java Runtime\n");
+  Set SelectCallback, ugly !
+  ----------------------------------------------------------------------*/
 
-    /* Initialise */
-    initialiseKaffe();
+#ifdef __STDC__
+void               JavaSetSelectCallback (void *val)
+#else
+void               JavaSetSelectCallback (val)
+void *val;
+#endif
+{
+    if (!JavaSelectInitialized) InitJavaSelect();
+    JavaSelectCallback = (SelectCallback) val;
+}
 
-    /* Register Thotlib stubs */
-    register_stubs();
+/*----------------------------------------------------------------------
+  JavaFdSetState
 
-    fprintf(stderr, "Java Runtime Initialized\n");
+  This routine register an I/O channel, either for Read, Write or
+  Exceptions.  From that point all the Select call will catch the
+  corresponding situations and call the adequate handler.
+  ----------------------------------------------------------------------*/
 
-    /* Build the init class name */
-    sprintf(initClass, "%s/%sInit", app_name, app_name);
+#ifdef __STDC__
+void               JavaFdSetState (int fd, int io)
+#else
+void               JavaFdSetState (fd, io)
+int fd;
+int io;
+#endif
+{
+    if (!JavaSelectInitialized) InitJavaSelect();
+    if (DoJavaSelectPoll) BreakJavaSelectPoll++;
+    if ((fd < 0) || (fd > sizeof(fd_set) * 8)) return;
+    if (fd >= max_extra_fd) max_extra_fd = fd;
+#ifdef DEBUG_SELECT
+    if (io & 1) fprintf(stderr, "adding channel %d for read\n", fd);
+    if (io & 2) fprintf(stderr, "adding channel %d for write\n", fd);
+    if (io & 4) fprintf(stderr, "adding channel %d for exceptions\n", fd);
+#endif
+    if (io & 1) FD_SET(fd, &extra_readfds);
+    if (io & 2) FD_SET(fd, &extra_writefds);
+    if (io & 4) FD_SET(fd, &extra_exceptfds);
+    threadedFileDescriptor(fd);
+}
 
-    /* Build an array of strings as the arguments */
-    args = AllocObjectArray(1, "Ljava/lang/String;");
+/*----------------------------------------------------------------------
+  JavaFdResetState
 
-    /* Build each string and put into the array */
-    str = (stringClass**)(args + 1);
-    str[0] = makeJavaString(app_name, strlen(app_name));
+  This routine unregister an I/O channel, either for Read, Write or
+  Exceptions.
+  ----------------------------------------------------------------------*/
 
-    /* lauch the init class for the application */
-    do_execute_java_class_method(initClass, "main",
-                   "([Ljava/lang/String;)V", args);
-
-    /* Start the application loop of events */
-    do_execute_java_class_method("thotlib.Interface", "main",
-                   "([Ljava/lang/String;)V", args);
+#ifdef __STDC__
+void               JavaFdResetState (int fd, int io)
+#else
+void               JavaFdResetState (fd, io)
+int fd;
+int io;
+#endif
+{
+    int i;
+    int max;
+    if (!JavaSelectInitialized) InitJavaSelect();
+    if (DoJavaSelectPoll) BreakJavaSelectPoll++;
+    if ((fd < 0) || (fd > sizeof(fd_set) * 8)) return;
+#ifdef DEBUG_SELECT
+    if (io & 1) fprintf(stderr, "removing channel %d for read\n", fd);
+    if (io & 2) fprintf(stderr, "removing channel %d for write\n", fd);
+    if (io & 4) fprintf(stderr, "removing channel %d for exceptions\n", fd);
+#endif
+    if (io & 1) FD_CLR(fd, &extra_readfds);
+    if (io & 2) FD_CLR(fd, &extra_writefds);
+    if (io & 4) FD_CLR(fd, &extra_exceptfds);
+    for (i = 0,max = 0;i <= fd;i++) {
+        if ((FD_ISSET(i, &extra_readfds)) || (FD_ISSET(i, &extra_writefds)) ||
+	    (FD_ISSET(i, &extra_exceptfds)))
+	    max = i;
+    }
+    max_extra_fd = max;
 }
 
 /*----------------------------------------------------------------------
@@ -96,8 +216,6 @@ void                InitJava ()
   the various packages (libWWW, Java, X-Windows ...) needing I/O in
   the Java program.
   ----------------------------------------------------------------------*/
-
-static int NbJavaSelect = 0;
 
 #ifdef __STDC__
 int                JavaSelect (int  n,  fd_set  *readfds,  fd_set  *writefds,
@@ -112,14 +230,223 @@ struct timeval *timeout;
 ThotEvent *ev;
 #endif
 {
+    int fd;
+    fd_set full_readfds;
+    fd_set full_writefds;
+    fd_set full_exceptfds;
+    fd_set lextra_readfds;
+    fd_set lextra_writefds;
+    fd_set lextra_exceptfds;
+    struct timeval tm;
+    int nb;
     int res;
+    static int InJavaSelect = 0;
 
+    if (!JavaSelectInitialized) InitJavaSelect();
+    if (InJavaSelect) {
+        char *p = NULL;
+        fprintf(stderr, "JavaSelect reentrancy !\n");
+	/* call debugger ! */
+	*p = 0;
+    }
+
+    /*
+     * Check for extra file descriptor polling.
+     */
+    if ((DoJavaSelectPoll) && (BreakJavaSelectPoll)) {
+        if (((readfds != NULL) && (FD_ISSET(x_window_socket, readfds))) ||
+            ((writefds != NULL) && (FD_ISSET(x_window_socket, writefds))) ||
+            ((exceptfds != NULL) && (FD_ISSET(x_window_socket, exceptfds)))) {
+#ifdef DEBUG_SELECT
+            fprintf(stderr,"JavaSelect : Poll break!\n");
+#endif
+	    errno = EBADF;
+	    return(-1);
+	}
+    }
+#ifdef DEBUG_SELECT
+    fprintf(stderr,"<");
+#endif
+    InJavaSelect = 1;
+
+restart_select:
+    /*
+     * Do a local copy of everything needed later.
+     */
+    nb = (n > (max_extra_fd + 1)? n : (max_extra_fd + 1));
+    COPY_FD(nb, &extra_readfds, &lextra_readfds);
+    COPY_FD(nb, &extra_writefds, &lextra_writefds);
+    COPY_FD(nb, &extra_exceptfds, &lextra_exceptfds);
+    if (timeout != NULL)
+       memcpy(&tm, timeout, sizeof(tm));
+
+#ifdef DEBUG_SELECT
+    /*
+     * Check that Kaffe and External descriptor sets don't overlap.
+     */
+
+    FD_ZERO(&full_readfds); /* CLEAR_FD(nb, &full_readfds); */
+    OR_FD(nb, readfds, &full_readfds);
+    OR_FD(nb, writefds, &full_readfds);
+    OR_FD(nb, exceptfds, &full_readfds);
+
+    FD_ZERO(&full_writefds); /* CLEAR_FD(nb, &full_writefds); */
+    OR_FD(max_extra_fd, &extra_readfds, &full_writefds);
+    OR_FD(max_extra_fd, &extra_writefds, &full_writefds);
+    OR_FD(max_extra_fd, &extra_exceptfds, &full_writefds);
+    
+    AND_FD(nb, &full_writefds, &full_readfds);
+
+    for (fd = 0;fd < nb; fd++) {
+        if (FD_ISSET(fd, &full_readfds))
+	    fprintf(stderr, 
+	      "Kaffe and external conflict on channel %d\n", fd);
+    }
+#endif /* DEBUG_SELECT */
+
+    /*
+     * Create a full descriptor set merging both Kaffe ones and External ones.
+     */
+    FD_ZERO(&full_readfds); /* CLEAR_FD(nb, &full_readfds); */
+    FD_ZERO(&full_writefds); /* CLEAR_FD(nb, &full_writefds); */
+    FD_ZERO(&full_exceptfds); /* CLEAR_FD(nb, &full_exceptfds); */
+
+    COPY_FD(nb, readfds, &full_readfds);
+    COPY_FD(nb, writefds, &full_writefds);
+    COPY_FD(nb, exceptfds, &full_exceptfds);
+
+    OR_FD(nb, &extra_readfds, &full_readfds);
+    OR_FD(nb, &extra_writefds, &full_writefds);
+    OR_FD(nb, &extra_exceptfds, &full_exceptfds);
+
+    /*
+     * Do the select on the merged channels descriptors.
+     */
     NbJavaSelect++;
+    if (timeout != NULL)
+       res = select(nb, &full_readfds, &full_writefds, &full_exceptfds, &tm);
+    else
+       res = select(nb, &full_readfds, &full_writefds, &full_exceptfds, NULL);
 
-    /* Just a test for now ... */
-    if (n <= x_window_socket) n = x_window_socket + 1;
-    res = select(n, readfds, writefds, exceptfds, timeout);
+#ifdef DEBUG_SELECT
+fprintf(stderr,"res:%d nb:%d rd:",res,nb);
+for (fd = 0;fd < nb;fd++)
+    if (FD_ISSET(fd, &full_readfds)) fprintf(stderr,"r");
+    else fprintf(stderr,"-");
+fprintf(stderr," wr:");
+for (fd = 0;fd < nb;fd++)
+    if (FD_ISSET(fd, &full_writefds)) fprintf(stderr,"w");
+    else fprintf(stderr,"-");
+fprintf(stderr,"\n");
+#endif
 
+    /*
+     * Error !
+     */
+    if (res < 0) {
+        AND_FD(nb, &full_readfds, readfds);
+        AND_FD(nb, &full_writefds, writefds);
+        AND_FD(nb, &full_exceptfds, exceptfds);
+	InJavaSelect = 0;
+#ifdef DEBUG_SELECT
+        fprintf(stderr,"X");
+#endif
+        return(res);
+    }
+
+    /*
+     * Timeout, give control back to Kaffe.
+     */
+    if (res == 0) {
+        AND_FD(nb, &full_readfds, readfds);
+        AND_FD(nb, &full_writefds, writefds);
+        AND_FD(nb, &full_exceptfds, exceptfds);
+	InJavaSelect = 0;
+#ifdef DEBUG_SELECT
+        fprintf(stderr,">");
+#endif
+        return(0);
+    }
+
+    /*
+     * the tricky part : analyze which external channels need attention
+     * decrement res accordingly.
+     */
+
+    for (fd = 0;(fd < nb) && (res > 0); fd++) {
+        if (FD_ISSET(fd, &lextra_readfds) && FD_ISSET(fd, &full_readfds)) {
+#ifdef DEBUG_SELECT
+            fprintf(stderr,"reading on channel %d\n", fd);
+#endif
+            JavaSelectCallback(fd, EVENT_READ);
+	    if (DoJavaSelectPoll) {
+#ifdef DEBUG_SELECT
+                fprintf(stderr,"JavaSelect : Register Poll break\n");
+#endif
+                BreakJavaSelectPoll++;
+            }
+	    res--;
+        }
+        if (FD_ISSET(fd, &lextra_writefds) && FD_ISSET(fd, &full_writefds)) {
+#ifdef DEBUG_SELECT
+            fprintf(stderr,"writing on channel %d\n", fd);
+#endif
+            JavaSelectCallback(fd, EVENT_WRITE);
+	    if (DoJavaSelectPoll) {
+#ifdef DEBUG_SELECT
+                fprintf(stderr,"JavaSelect : Register Poll break\n");
+#endif
+                BreakJavaSelectPoll++;
+            }
+	    res--;
+        }
+        if (FD_ISSET(fd, &lextra_exceptfds) && FD_ISSET(fd, &full_exceptfds)) {
+#ifdef DEBUG_SELECT
+            fprintf(stderr,"exception on channel %d\n", fd);
+#endif
+	    if (DoJavaSelectPoll) {
+#ifdef DEBUG_SELECT
+                fprintf(stderr,"JavaSelect : Register Poll break\n");
+#endif
+                BreakJavaSelectPoll++;
+            }
+	    res--;
+        }
+    }
+
+    /*
+     * If no Kaffe file descriptor need attention, loop on select
+     * after updating tm.
+     * !!!!!! update tm
+     */
+    if (res <= 0) {
+#ifdef DEBUG_SELECT
+        fprintf(stderr,"|");
+#endif
+/***************************************
+	if ((DoJavaSelectPoll) && (BreakJavaSelectPoll))  {
+#ifdef DEBUG_SELECT
+            fprintf(stderr,"JavaSelect : Poll break 2!\n");
+#endif
+	    InJavaSelect = 0;
+	    errno = EBADF;
+            return(-1);
+        }
+ ***************************************/
+        goto restart_select;
+    }
+
+    /*
+     * Update Kaffe file descriptor sets.
+     */
+    AND_FD(nb, &full_readfds, readfds);
+    AND_FD(nb, &full_writefds, writefds);
+    AND_FD(nb, &full_exceptfds, exceptfds);
+    /* !!! Do or do not update timeout ??? */
+    InJavaSelect = 0;
+#ifdef DEBUG_SELECT
+    fprintf(stderr,">");
+#endif
     return(res);
 }
 
@@ -148,9 +475,9 @@ ThotEvent *ev;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                JavaFetchEvent (ThotAppContext app_ctxt, ThotEvent *ev)
+int                 JavaFetchEvent (ThotAppContext app_ctxt, ThotEvent *ev)
 #else
-void                JavaFetchEvent (app_ctxt, ev)
+int                 JavaFetchEvent (app_ctxt, ev)
 ThotAppContext app_ctxt;
 ThotEvent *ev;
 #endif
@@ -158,18 +485,20 @@ ThotEvent *ev;
   int status;
 
 #ifdef WWW_XWINDOWS
-
   /*
    * Need to check whether something else has to be scheduled.
-   */
   status = XtAppPending (app_ctxt);
   if (!status) {
      blockOnFile(x_window_socket, 0);
   }
-  XtAppNextEvent (app_ctxt, ev);
+   */
 
+  status = blockOnFile(x_window_socket, 0);
+  if (status < 0) return(status);
+  XtAppNextEvent (app_ctxt, ev);
 #else  /* WWW_XWINDOWS */
 #endif /* !WWW_XWINDOWS */
+  return(0);
 }
 
 /*----------------------------------------------------------------------
@@ -203,6 +532,53 @@ ThotEvent *ev;
 }
 
 /*----------------------------------------------------------------------
+   InitJava
+
+   Initialize the Java Interpreter.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                InitJava (void)
+#else
+void                InitJava ()
+#endif
+{
+    object* args;
+    stringClass** str;
+    char initClass[MAX_PATH];
+
+    char *app_name = TtaGetEnvString ("appname");
+
+    fprintf(stderr, "Initialize Java Runtime\n");
+
+    /* Initialise */
+    initialiseKaffe();
+    /* biss_awt_kernel_NativeLib_initialize(); */
+
+    /* Register Thotlib stubs */
+    register_stubs();
+
+    fprintf(stderr, "Java Runtime Initialized\n");
+
+    /* Build the init class name */
+    sprintf(initClass, "%s/%sInit", app_name, app_name);
+
+    /* Build an array of strings as the arguments */
+    args = AllocObjectArray(1, "Ljava/lang/String;");
+
+    /* Build each string and put into the array */
+    str = (stringClass**)(args + 1);
+    str[0] = makeJavaString(app_name, strlen(app_name));
+
+    /* lauch the init class for the application */
+    do_execute_java_class_method(initClass, "main",
+                   "([Ljava/lang/String;)V", args);
+
+    /* Start the application loop of events */
+    do_execute_java_class_method("thotlib.Interface", "main",
+                   "([Ljava/lang/String;)V", args);
+}
+
+/*----------------------------------------------------------------------
   InitJavaEventLoop
 
   Initialize the JavaEventLoop environment, including the network
@@ -216,6 +592,8 @@ void                InitJavaEventLoop ()
 {
     char *env_value;
     char  new_env[1024];
+
+    if (JavaEventLoopInitialized) return;
 
     /*
      * Everything is initialized BEFORE starting the
@@ -246,7 +624,7 @@ void                InitJavaEventLoop ()
      * Register the X-Window socket as an input channel
      */
     x_window_socket = ConnectionNumber(TtaGetCurrentDisplay());
-    /* threadedFileDescriptor(x_window_socket); */
+    threadedFileDescriptor(x_window_socket);
 
     /*
      * set up our own select call.
@@ -260,6 +638,67 @@ void                InitJavaEventLoop ()
      */
     InitJava();
 
+}
+
+/*----------------------------------------------------------------------
+  JavaPollLoop
+
+  This is the equivalent of the basic event loop except that it will
+  return after any interraction on the extra file descriptors.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 JavaPollLoop (ThotAppContext app_ctxt)
+#else
+int                 JavaPollLoop (app_ctxt)
+ThotAppContext app_ctxt;
+#endif
+{
+#ifndef _WINDOWS
+   ThotEvent           ev;
+   int res;
+#endif /* _WINDOWS */
+#ifdef _WINDOWS
+   MSG                 msg;
+#endif
+
+   /*
+    * initialize the whole context if needed.
+    */
+   if (!JavaEventLoopInitialized) 
+      InitJavaEventLoop();
+
+   /*
+    * We want to jump off the loop if transfers did occurs
+    * on the extra descriptors.
+    */
+   DoJavaSelectPoll = 1;
+   BreakJavaSelectPoll = 0;
+#ifdef DEBUG_SELECT
+   fprintf(stderr,"JavaPollLoop entered\n");
+#endif
+
+   /* Loop waiting for the events */
+   while (1)
+     {
+#ifdef WWW_XWINDOWS
+        res = JavaFetchEvent (app_ctxt, &ev);
+	if (res < 0) {
+	    DoJavaSelectPoll = 0;
+	    BreakJavaSelectPoll = 0;
+#ifdef DEBUG_SELECT
+            fprintf(stderr,"JavaPollLoop stopped\n");
+#endif
+	    return(res);
+	}
+        JavaHandleOneEvent (&ev);
+#else  /* WWW_XWINDOWS */
+	GetMessage (&msg, NULL, 0, 0);
+	TranslateMessage (&msg);
+	TtaHandleOneWindowEvent (&msg);
+#endif /* !WWW_XWINDOWS */
+     }
+   /*ENOTREACHED*/
+   return(0);
 }
 
 /*----------------------------------------------------------------------
@@ -289,11 +728,22 @@ ThotAppContext app_ctxt;
    if (!JavaEventLoopInitialized) 
       InitJavaEventLoop();
 
+   /*
+    * We don't want to jump off the loop if transfers did occurs
+    * on the extra descriptors.
+    */
+   DoJavaSelectPoll = 0;
+   BreakJavaSelectPoll = 0;
+
    /* Loop waiting for the events */
    while (1)
      {
 #ifdef WWW_XWINDOWS
-        JavaFetchEvent (app_ctxt, &ev);
+        if (JavaFetchEvent (app_ctxt, &ev) < 0) {
+	    DoJavaSelectPoll = 0;
+	    BreakJavaSelectPoll = 0;
+	    continue;
+	}
         JavaHandleOneEvent (&ev);
 #else  /* WWW_XWINDOWS */
 	GetMessage (&msg, NULL, 0, 0);
@@ -310,7 +760,8 @@ ThotAppContext app_ctxt;
   ----------------------------------------------------------------------*/
 void                JavaLoadResources ()
 {
-   TtaSetMainLoop (JavaEventLoop, JavaFetchEvent, JavaFetchAvailableEvent);
+   TtaSetMainLoop (InitJavaEventLoop, JavaEventLoop,
+                   JavaFetchEvent, JavaFetchAvailableEvent);
 }
 
 /*
