@@ -40,31 +40,150 @@
 #include "boxselection_f.h"
 #include "structselect_f.h"
 
+
+/* ---------------------------------------------------------------------- */
+/* |	TraiteSArbre							| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void TraiteSArbre(PtrElement pE, PRuleType *TypeR, PtrDocument *pDoc, PtrPRule *pRule, int *vue);
+static void TraiteSArbre(PtrElement pE, PRuleType *ruleType, PtrDocument *pDoc, PtrPRule *pRule, int *view)
 #else /* __STDC__ */
-static void TraiteSArbre();
+static void TraiteSArbre(pE, ruleType, pDoc, pRule, view)
+	PtrElement pE;
+	PRuleType *ruleType;
+	PtrDocument *pDoc;
+	PtrPRule *pRule;
+	int *view;
 #endif /* __STDC__ */
+{
+  boolean         stop;
+  PtrAbstractBox         pP, pPF;
+  PtrPSchema      pSPR;
+  PtrAttribute     pAttr;
+  PtrPRule    pRe1;
+#ifdef __COLPAGE__
+ boolean bool;
+#endif /* __COLPAGE__ */
+  
+  if (pE->ElTerminal)
+    pE = NULL;
+  else
+    pE = pE->ElFirstChild;	/* on passe au premier fils */
+  while (pE != NULL)
+    {
+      pP = pE->ElAbstractBox[*view - 1]; /* 1er pave de l'element dans la view */
+      if (pP != NULL)
+	if (pP->AbDead)
+	  pP = NULL;	/* on ne traite pas les paves morts */
+      if (pP == NULL)
+	/* cet element n'a pas de pave, mais ses descendants en */
+	/* ont peut etre... */
+	TraiteSArbre(pE, ruleType, pDoc, pRule, view);
+      else
+	{
+	  /* il y a un element descendant dont les paves peuvent heriter de pAb. 
+	     On parcourt ses paves dans la view */
+	  stop = FALSE;
+	  while (!stop)
+	    {
+	      *pRule = SearchRulepAb(*pDoc, pP, &pSPR, *ruleType, TRUE, &pAttr);
+	      if (*pRule != NULL)
+		{
+		  pRe1 = *pRule;
+		  if (pRe1->PrPresMode == PresInherit && (pRe1->PrInheritMode == InheritParent ||
+				pRe1->PrInheritMode == InheritGrandFather))
+		    /* la regle de ce pave herite de l'ascendant, */
+		    /* on applique la regle */
+#ifdef __COLPAGE__
+	            if (ApplyRule(*pRule, pSPR, pP, *pDoc, pAttr, &bool))
+#else /* __COLPAGE__ */
+	            if (ApplyRule(*pRule, pSPR, pP, *pDoc, pAttr))
+#endif /* __COLPAGE__ */
+		      {
+			if (*ruleType == PtSize)
+			  pP->AbSizeChange = TRUE;
+			else if (*ruleType == PtDepth || *ruleType == PtLineStyle ||
+				 *ruleType == PtLineWeight || *ruleType == PtFillPattern ||
+				 *ruleType == PtBackground || *ruleType == PtForeground)
+			  pP->AbAspectChange = TRUE;
+			else
+			  pP->AbChange = TRUE;
+			RedispAbsBox(pP, *pDoc);
+			if (!pP->AbPresentationBox)
+			  ApplHerit(*ruleType, pP, *pDoc);
+		      }
+		}
+	      if (!pP->AbPresentationBox)
+		/* c'est le pave principal de l'element, on traite */
+		/* les paves crees par l'element au niveau inferieur */
+		{
+		  pPF = pP->AbFirstEnclosed;
+		  while (pPF != NULL)
+		    {
+		      if (pPF->AbElement == pE)
+			{
+			  *pRule = SearchRulepAb(*pDoc, pPF, &pSPR, *ruleType, TRUE, &pAttr);
+			  if (*pRule != NULL)
+			    {
+			      pRe1 = *pRule;
+			      if (pRe1->PrPresMode == PresInherit 
+				  && pRe1->PrInheritMode == InheritParent)
+#ifdef __COLPAGE__
+	            		if (ApplyRule(*pRule, pSPR, pPF, *pDoc, pAttr, &bool))
+#else /* __COLPAGE__ */
+	            		if (ApplyRule(*pRule, pSPR, pPF, *pDoc, pAttr))
+#endif /* __COLPAGE__ */
+				  {
+				    if (*ruleType == PtSize)
+				      pPF->AbSizeChange = TRUE;
+				    else if (*ruleType == PtDepth ||
+					     *ruleType == PtLineStyle ||
+					     *ruleType == PtLineWeight ||
+					     *ruleType == PtFillPattern ||
+					     *ruleType == PtBackground ||
+					     *ruleType == PtForeground)
+				      pP->AbAspectChange = TRUE;
+				    else
+				      pPF->AbChange = TRUE;
+				    RedispAbsBox(pPF, *pDoc);
+				  }
+			    }
+			}
+		      pPF = pPF->AbNext;
+		    }
+		}
+	      pP = pP->AbNext;	/* passe au pave suivant */
+	      if (pP == NULL)
+		stop = TRUE;	/* pas de pave suivant, on arrete */
+	      else	
+		/* on arrete si le pave suivant n'appartient pas a */
+		/* l'element */
+		stop = pP->AbElement != pE;
+	    }
+	}
+      pE = pE->ElNext;	/* on traite l'element suivant */
+    }
+}
+
 
 /* ---------------------------------------------------------------------- */
 /* |	ApplHerit on vient d'appliquer la regle de presentation de type	| */
-/* |		TypeR au pave pAb. Verifie si les paves environnants	| */
+/* |		ruleType au pave pAb. Verifie si les paves environnants	| */
 /* |		heritent de cette regle et si oui leur applique		| */
 /* |		l'heritage.						| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void ApplHerit(PRuleType TypeR, PtrAbstractBox pAb, PtrDocument pDoc)
+static void ApplHerit(PRuleType ruleType, PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else /* __STDC__ */
-static void ApplHerit(TypeR, pAb, pDoc)
-	PRuleType TypeR;
+static void ApplHerit(ruleType, pAb, pDoc)
+	PRuleType ruleType;
 	PtrAbstractBox pAb;
 	PtrDocument pDoc;
 #endif /* __STDC__ */
 
 {
   PtrElement      pEl;
-  int             vue;
+  int             view;
   PtrAbstractBox         pP;
   PtrPRule    pRule;
   boolean         stop;
@@ -76,7 +195,7 @@ static void ApplHerit(TypeR, pAb, pDoc)
 #endif /* __COLPAGE__ */
   
   pEl = pAb->AbElement;
-  vue = pAb->AbDocView;
+  view = pAb->AbDocView;
   if (pEl->ElNext != NULL)
     {
       /* l'element a un suivant. Celui-ci herite-t-il de son precedent ? */
@@ -84,7 +203,7 @@ static void ApplHerit(TypeR, pAb, pDoc)
       while (pEl->ElNext != NULL && pP == NULL)
 	{
 	  pEl = pEl->ElNext;
-	  pP = pEl->ElAbstractBox[vue - 1];	/* saute les paves de presentation */
+	  pP = pEl->ElAbstractBox[view - 1];	/* saute les paves de presentation */
 	  stop = FALSE;
 	  do
 	    if (pP == NULL)
@@ -101,7 +220,7 @@ static void ApplHerit(TypeR, pAb, pDoc)
       if (pP != NULL)
 	{
 	  /* il y a un element suivant dont le pave pP pourrait heriter de pAb */
-	  pRule = SearchRulepAb(pDoc, pP, &pSchP, TypeR, TRUE, &pAttrib);
+	  pRule = SearchRulepAb(pDoc, pP, &pSchP, ruleType, TRUE, &pAttrib);
 	  if (pRule != NULL)
 	    {
 	      pRe1 = pRule;
@@ -115,15 +234,15 @@ static void ApplHerit(TypeR, pAb, pDoc)
 		if (ApplyRule(pRule, pSchP, pP, pDoc, pAttrib))
 #endif /* __COLPAGE__ */
 		  {
-		    if (TypeR == PtSize)
+		    if (ruleType == PtSize)
 		      pP->AbSizeChange = TRUE;
-		    else if (TypeR == PtDepth || TypeR == PtLineStyle ||
-			     TypeR == PtLineWeight || TypeR == PtFillPattern ||
-			     TypeR == PtBackground || TypeR == PtForeground)
+		    else if (ruleType == PtDepth || ruleType == PtLineStyle ||
+			     ruleType == PtLineWeight || ruleType == PtFillPattern ||
+			     ruleType == PtBackground || ruleType == PtForeground)
 		      pP->AbAspectChange = TRUE;
 		    else
 		      pP->AbChange = TRUE;
-		    ApplHerit(TypeR, pP, pDoc);
+		    ApplHerit(ruleType, pP, pDoc);
 		    RedispAbsBox(pP, pDoc);
 		  }
 	    }
@@ -133,7 +252,7 @@ static void ApplHerit(TypeR, pAb, pDoc)
   if (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
     /* l'element a des descendants. Ceux-ci heritent-t-il de leur */
     /* ascendant ? */
-    TraiteSArbre(pEl, &TypeR, &pDoc, &pRule, &vue);
+    TraiteSArbre(pEl, &ruleType, &pDoc, &pRule, &view);
   if (pEl->ElParent != NULL)
     {
       /* l'element a un ascendant. Celui-ci herite-t-il de son premier */
@@ -142,7 +261,7 @@ static void ApplHerit(TypeR, pAb, pDoc)
       while (pEl->ElParent != NULL && pP == NULL)
 	{
 	  pEl = pEl->ElParent;
-	  pP = pEl->ElAbstractBox[vue - 1];	/* saute les paves de presentation */
+	  pP = pEl->ElAbstractBox[view - 1];	/* saute les paves de presentation */
 	  stop = FALSE;
 	  do
 	    if (pP == NULL)
@@ -160,7 +279,7 @@ static void ApplHerit(TypeR, pAb, pDoc)
 	{
 	  /* il y a un element ascendant dont le pave pP pourrait heriter */
 	  /* de pAb */
-	  pRule = SearchRulepAb(pDoc, pP, &pSchP, TypeR, TRUE, &pAttrib);
+	  pRule = SearchRulepAb(pDoc, pP, &pSchP, ruleType, TRUE, &pAttrib);
 	  pRe1 = pRule;
 	  if (pRule != NULL)
 	    if (pRe1->PrPresMode == PresInherit &&
@@ -173,15 +292,15 @@ static void ApplHerit(TypeR, pAb, pDoc)
 	      if (ApplyRule(pRule, pSchP, pP, pDoc, pAttrib))
 #endif /* __COLPAGE__ */
 		{
-		  if (TypeR == PtSize)
+		  if (ruleType == PtSize)
 		    pP->AbSizeChange = TRUE;
-		  else if (TypeR == PtDepth || TypeR == PtLineStyle ||
-			   TypeR == PtLineWeight || TypeR == PtFillPattern ||
-			   TypeR == PtBackground || TypeR == PtForeground)
+		  else if (ruleType == PtDepth || ruleType == PtLineStyle ||
+			   ruleType == PtLineWeight || ruleType == PtFillPattern ||
+			   ruleType == PtBackground || ruleType == PtForeground)
 		    pP->AbAspectChange = TRUE;
 		  else
 		    pP->AbChange = TRUE;
-		  ApplHerit(TypeR, pP, pDoc);
+		  ApplHerit(ruleType, pP, pDoc);
 		  RedispAbsBox(pP, pDoc);
 		}
 	}
@@ -200,7 +319,7 @@ static void ApplHerit(TypeR, pAb, pDoc)
 	    pP = NULL;
 	else
 	  {
-	    pRule = SearchRulepAb(pDoc, pP, &pSchP, TypeR, TRUE, &pAttrib);
+	    pRule = SearchRulepAb(pDoc, pP, &pSchP, ruleType, TRUE, &pAttrib);
 	    if (pRule != NULL)
 	      if (pRule->PrPresMode == PresInherit && pRule->PrInheritMode == InheritCreator)
 		/* la regle de ce pave herite de son createur, on l'applique */
@@ -210,15 +329,15 @@ static void ApplHerit(TypeR, pAb, pDoc)
 	        if (ApplyRule(pRule, pSchP, pP, pDoc, pAttrib))
 #endif /* __COLPAGE__ */
 		{
-		  if (TypeR == PtSize)
+		  if (ruleType == PtSize)
 		    pP->AbSizeChange = TRUE;
-		  else if (TypeR == PtDepth || TypeR == PtLineStyle ||
-			   TypeR == PtLineWeight || TypeR == PtFillPattern ||
-			   TypeR == PtBackground || TypeR == PtForeground)
+		  else if (ruleType == PtDepth || ruleType == PtLineStyle ||
+			   ruleType == PtLineWeight || ruleType == PtFillPattern ||
+			   ruleType == PtBackground || ruleType == PtForeground)
 		    pP->AbAspectChange = TRUE;
 		  else
 		    pP->AbChange = TRUE;
-		  ApplHerit(TypeR, pP, pDoc);
+		  ApplHerit(ruleType, pP, pDoc);
 		  RedispAbsBox(pP, pDoc);
 		}
 	    /* examine le pave precedent */
@@ -232,7 +351,7 @@ static void ApplHerit(TypeR, pAb, pDoc)
 	    pP = NULL;
 	else
 	  {
-	    pRule = SearchRulepAb(pDoc, pP, &pSchP, TypeR, TRUE, &pAttrib);
+	    pRule = SearchRulepAb(pDoc, pP, &pSchP, ruleType, TRUE, &pAttrib);
 	    if (pRule != NULL)
 	      if (pRule->PrPresMode == PresInherit && pRule->PrInheritMode == InheritCreator)
 		/* la regle de ce pave herite de son createur, on l'applique */
@@ -242,15 +361,15 @@ static void ApplHerit(TypeR, pAb, pDoc)
 	        if (ApplyRule(pRule, pSchP, pP, pDoc, pAttrib))
 #endif /* __COLPAGE__ */
 		{
-		  if (TypeR == PtSize)
+		  if (ruleType == PtSize)
 		    pP->AbSizeChange = TRUE;
-		  else if (TypeR == PtDepth || TypeR == PtLineStyle ||
-			   TypeR == PtLineWeight || TypeR == PtFillPattern ||
-			   TypeR == PtBackground || TypeR == PtForeground)
+		  else if (ruleType == PtDepth || ruleType == PtLineStyle ||
+			   ruleType == PtLineWeight || ruleType == PtFillPattern ||
+			   ruleType == PtBackground || ruleType == PtForeground)
 		    pP->AbAspectChange = TRUE;
 		  else
 		    pP->AbChange = TRUE;
-		  ApplHerit(TypeR, pP, pDoc);
+		  ApplHerit(ruleType, pP, pDoc);
 		  RedispAbsBox(pP, pDoc);
 		}
 	    /* examine le pave suivant */
@@ -263,7 +382,7 @@ static void ApplHerit(TypeR, pAb, pDoc)
 	  if (pP->AbPresentationBox && pP->AbElement == pEl)
 	    /* c'est un pave de presentation de l'element, on le traite */
 	    {
-	    pRule = SearchRulepAb(pDoc, pP, &pSchP, TypeR, TRUE, &pAttrib);
+	    pRule = SearchRulepAb(pDoc, pP, &pSchP, ruleType, TRUE, &pAttrib);
 	    if (pRule != NULL)
 	      if (pRule->PrPresMode == PresInherit && pRule->PrInheritMode == InheritCreator)
 		/* la regle de ce pave herite de son createur, on l'applique */
@@ -273,15 +392,15 @@ static void ApplHerit(TypeR, pAb, pDoc)
 	        if (ApplyRule(pRule, pSchP, pP, pDoc, pAttrib))
 #endif /* __COLPAGE__ */
 		{
-		  if (TypeR == PtSize)
+		  if (ruleType == PtSize)
 		    pP->AbSizeChange = TRUE;
-		  else if (TypeR == PtDepth || TypeR == PtLineStyle ||
-			   TypeR == PtLineWeight || TypeR == PtFillPattern ||
-			   TypeR == PtBackground || TypeR == PtForeground)
+		  else if (ruleType == PtDepth || ruleType == PtLineStyle ||
+			   ruleType == PtLineWeight || ruleType == PtFillPattern ||
+			   ruleType == PtBackground || ruleType == PtForeground)
 		    pP->AbAspectChange = TRUE;
 		  else
 		    pP->AbChange = TRUE;
-		  ApplHerit(TypeR, pP, pDoc);
+		  ApplHerit(ruleType, pP, pDoc);
 		  RedispAbsBox(pP, pDoc);
 		}
             }
@@ -389,26 +508,26 @@ static int NumTypePRuleAPI(tr)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	PRuleMessagePre	On veut ajouter ou modifier (selon nouveau) la	| */
+/* |	PRuleMessagePre	On veut ajouter ou modifier (selon isNew) la	| */
 /* |	regle de presentation specifique pRule a l'element pEl du	| */
 /* |	document pDoc. On envoie le message APP correspondant a		| */
 /* |	l'application et on retourne la reponse de l'application.	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean PRuleMessagePre(PtrElement pEl, PtrPRule pRule, PtrDocument pDoc, boolean nouveau)
+static boolean PRuleMessagePre(PtrElement pEl, PtrPRule pRule, PtrDocument pDoc, boolean isNew)
 #else /* __STDC__ */
-static boolean PRuleMessagePre(pEl, pRule, pDoc, nouveau)
+static boolean PRuleMessagePre(pEl, pRule, pDoc, isNew)
 	PtrElement pEl;
 	PtrPRule pRule;
 	PtrDocument pDoc;
-	boolean nouveau;
+	boolean isNew;
 #endif /* __STDC__ */
 {
 	NotifyPresentation notifyPres;
 	PtrPRule	   pR, pRPrec;
 	boolean		   dontdoit;
 
-	if (nouveau)
+	if (isNew)
 	  {
 	  notifyPres.event = TtePRuleCreate;
 	  notifyPres.pRule = NULL;
@@ -424,7 +543,7 @@ static boolean PRuleMessagePre(pEl, pRule, pDoc, nouveau)
 	dontdoit = CallEventType((NotifyEvent *)&notifyPres, TRUE);
 	if (dontdoit)
 	  /* l'application demande a l'editeur de ne rien faire */
-	  if (nouveau)
+	  if (isNew)
 	     /* supprime la regle de presentation specifique ajoutee */
 	     /* par SearchPresRule */
 	     {
@@ -455,25 +574,25 @@ static boolean PRuleMessagePre(pEl, pRule, pDoc, nouveau)
 
 /* ---------------------------------------------------------------------- */
 /* |	PRuleMessagePost      On vient d'ajouter ou de modifier (selon	| */
-/* |	nouveau) la regle de presentation specifique pRule pour	| */
+/* |	isNew) la regle de presentation specifique pRule pour	| */
 /* |	l'element pEl du document pDoc. On envoie le message APP	| */
 /* |	correspondant a l'application.					| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void PRuleMessagePost(PtrElement pEl, PtrPRule pRule, PtrDocument pDoc, boolean nouveau)
+static void PRuleMessagePost(PtrElement pEl, PtrPRule pRule, PtrDocument pDoc, boolean isNew)
 
 #else /* __STDC__ */
-static void PRuleMessagePost(pEl, pRule, pDoc, nouveau)
+static void PRuleMessagePost(pEl, pRule, pDoc, isNew)
 	PtrElement pEl;
 	PtrPRule pRule;
 	PtrDocument pDoc;
-	boolean nouveau;
+	boolean isNew;
 #endif /* __STDC__ */
 
 {
 	NotifyPresentation notifyPres;
 
-	if (nouveau)
+	if (isNew)
 	  notifyPres.event = TtePRuleCreate;
 	else
 	  notifyPres.event = TtePRuleModify;
@@ -563,25 +682,25 @@ boolean MemesRegleSpecif(pEl1, pEl2)
 
 /* ---------------------------------------------------------------------- */
 /* |	PaveDeElem retourne un pointeur sur le pave de l'element pEl	| */
-/* |		qui appartient a la vue Vue				| */
+/* |		qui appartient a la view view				| */
 /* |		et qui n'est pas un pave de presentation.		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrAbstractBox PaveDeElem(PtrElement pEl, int Vue)
+PtrAbstractBox PaveDeElem(PtrElement pEl, int view)
 #else /* __STDC__ */
-PtrAbstractBox PaveDeElem(pEl, Vue)
+PtrAbstractBox PaveDeElem(pEl, view)
 	PtrElement pEl;
-	int Vue;
+	int view;
 #endif /* __STDC__ */
 {
   PtrAbstractBox         pAb;
   boolean         stop;
   
   pAb = NULL;
-  if (Vue > 0)
-    if (pEl->ElAbstractBox[Vue - 1] != NULL)
-      /* on prend le pave de la vue choisie par l'utilisateur */
-      pAb = pEl->ElAbstractBox[Vue - 1];
+  if (view > 0)
+    if (pEl->ElAbstractBox[view - 1] != NULL)
+      /* on prend le pave de la view choisie par l'utilisateur */
+      pAb = pEl->ElAbstractBox[view - 1];
   /* saute les paves de presentation */
   stop = FALSE;
   do
@@ -707,7 +826,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	boolean Disp;
 #endif /* __STDC__ */
 {
-  boolean         nouveau, reaff, lignes;
+  boolean         isNew, reaff, lignes;
   PtrPRule    pRule, pR, pRStd;
   PtrPSchema      pSPR;
   PtrSSchema	  pSSR;
@@ -718,7 +837,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
   int		  updateframe[MAX_VIEW_DOC];
   int             viewSch;
   boolean         attr;
-  int		  vue;
+  int		  view;
   boolean	  stop;
   PosRule       *pRe1;
   boolean	  doit;
@@ -729,12 +848,12 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 #endif /* __COLPAGE__ */
 
   /* nettoie la table des frames a reafficher */
-  for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
-    updateframe[vue - 1] = 0;
+  for (view = 1; view <= MAX_VIEW_DOC; view++)
+    updateframe[view - 1] = 0;
   reaff = FALSE;  		/* rien a reafficher */
   pEl = pAb->AbElement;	/* l'element auquel correspond le pave */
   pDoc = DocumentOfElement(pEl);	/* le document auquel il appartient */ 
-  /* numero de cette vue */ 
+  /* numero de cette view */ 
   viewSch = AppliedView(pEl, NULL, pDoc, pAb->AbDocView);
   /* le pave est-il dans une mise en lignes ? */
   lignes = FALSE;	/* a priori non */
@@ -815,13 +934,13 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	    {
 	      /* cherche si l'element possede deja une regle de position */
 	      /* verticale specifique */
-	      pRule = SearchPresRule(pEl, PtVertPos, &nouveau, pDoc, pAb->AbDocView);
+	      pRule = SearchPresRule(pEl, PtVertPos, &isNew, pDoc, pAb->AbDocView);
 	      /* envoie un message APP a l'application */
 
-	      doit = !PRuleMessagePre(pEl, pRule, pDoc, nouveau);
+	      doit = !PRuleMessagePre(pEl, pRule, pDoc, isNew);
 	      if (doit)
 	        {
-	        if (nouveau)
+	        if (isNew)
 		  /* l'element n'avait pas de regle de position verticale */
 		  /* specifique */
 		  {
@@ -851,17 +970,17 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	    {
 	    pDoc->DocModified = TRUE;
 	    /* le document est modifie' */
-	    for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
-	      if (pEl->ElAbstractBox[vue -1] != NULL)
-	        /* l'element traite' a un pave dans cette vue */
-	        if (pDoc->DocView[vue - 1].DvSSchema == 
+	    for (view = 1; view <= MAX_VIEW_DOC; view++)
+	      if (pEl->ElAbstractBox[view -1] != NULL)
+	        /* l'element traite' a un pave dans cette view */
+	        if (pDoc->DocView[view - 1].DvSSchema == 
 		    pDoc->DocView[pAb->AbDocView -1].DvSSchema
-		    && pDoc->DocView[vue - 1].DvPSchemaView ==
+		    && pDoc->DocView[view - 1].DvPSchemaView ==
 		    pDoc->DocView[pAb->AbDocView -1].DvPSchemaView)
-		  /* c'est une vue de meme type que la vue traitee, on */
-		  /* traite le pave de l'element dans cette vue */
+		  /* c'est une view de meme type que la view traitee, on */
+		  /* traite le pave de l'element dans cette view */
 		  {
-		  pP = pEl->ElAbstractBox[vue -1];
+		  pP = pEl->ElAbstractBox[view -1];
 		  /* saute les paves de presentation */
 		  stop = FALSE;
 		  do
@@ -887,15 +1006,15 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 			reaff = TRUE;	
 			/* il faut reafficher le pave */
 			if (!AssocView(pEl))
-			  updateframe[vue -1] = pDoc->DocViewFrame[vue -1];
+			  updateframe[view -1] = pDoc->DocViewFrame[view -1];
 			else
-			  updateframe[vue -1] = pDoc->DocAssocFrame[pEl->ElAssocNum -1];
+			  updateframe[view -1] = pDoc->DocAssocFrame[pEl->ElAssocNum -1];
 		      }
 		  }
 	    if (attr)
 	       CallEventAttribute(&notifyAttr, FALSE);
 	    else
-	       PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+	       PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	    }
 	}
     }
@@ -960,12 +1079,12 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	    {
 	      /* cherche si l'element possede deja une regle de position */
 	      /* horizontale specifique */
-	      pRule = SearchPresRule(pEl, PtHorizPos, &nouveau, pDoc, pAb->AbDocView);
+	      pRule = SearchPresRule(pEl, PtHorizPos, &isNew, pDoc, pAb->AbDocView);
 	      /* envoie un message APP a l'application */
-	      doit = !PRuleMessagePre(pEl, pRule, pDoc, nouveau);
+	      doit = !PRuleMessagePre(pEl, pRule, pDoc, isNew);
 	      if (doit)
 		{
-	        if (nouveau)
+	        if (isNew)
 		  /* on a cree' une regle de position horizontale pour l'element */
 		  {
 		  pR = pRule->PrNextPRule;
@@ -994,17 +1113,17 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	  if (doit)
 	    {
 	    pDoc->DocModified = TRUE;	/* le document est modifie' */
-	    for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
-	      if (pEl->ElAbstractBox[vue -1] != NULL)
-	        /* l'element traite' a un pave dans cette vue */
-	        if ((pDoc->DocView[vue - 1].DvSSchema ==
+	    for (view = 1; view <= MAX_VIEW_DOC; view++)
+	      if (pEl->ElAbstractBox[view -1] != NULL)
+	        /* l'element traite' a un pave dans cette view */
+	        if ((pDoc->DocView[view - 1].DvSSchema ==
 		     pDoc->DocView[pAb->AbDocView -1].DvSSchema)
-		    && (pDoc->DocView[vue - 1].DvPSchemaView ==
+		    && (pDoc->DocView[view - 1].DvPSchemaView ==
 		        pDoc->DocView[pAb->AbDocView -1].DvPSchemaView))
-		  /* c'est une vue de meme type que la vue traitee, on */
-		  /* traite le pave de l'element dans cette vue */
+		  /* c'est une view de meme type que la view traitee, on */
+		  /* traite le pave de l'element dans cette view */
 		  {
-		  pP = pEl->ElAbstractBox[vue -1];
+		  pP = pEl->ElAbstractBox[view -1];
 		  /* saute les paves de presentation */
 		  stop = FALSE;
 		  do
@@ -1028,15 +1147,15 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 			RedispAbsBox(pP, pDoc); /* indique le pave a reafficher */
 			reaff = TRUE;	/* il faut reafficher le pave */
 			if (!AssocView(pEl))
-			  updateframe[vue -1] = pDoc->DocViewFrame[vue -1];
+			  updateframe[view -1] = pDoc->DocViewFrame[view -1];
 			else
-			  updateframe[vue -1] = pDoc->DocAssocFrame[pEl->ElAssocNum -1];
+			  updateframe[view -1] = pDoc->DocAssocFrame[pEl->ElAssocNum -1];
 		      }
 		  }
 	    if (attr)
 	       CallEventAttribute(&notifyAttr, FALSE);
 	    else
-	       PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+	       PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	    }
 	}
     }
@@ -1044,16 +1163,16 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
     {
       if (Disp)
 	{
-	for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
-	  if (updateframe[vue -1] > 0)
-	    /* eteint la selection dans la vue traitee */
-	    SwitchSelection(updateframe[vue -1], FALSE);
+	for (view = 1; view <= MAX_VIEW_DOC; view++)
+	  if (updateframe[view -1] > 0)
+	    /* eteint la selection dans la view traitee */
+	    SwitchSelection(updateframe[view -1], FALSE);
         AbstractImageUpdated(pDoc);	/* met a jour l'image abstraite */
         RedisplayDocViews(pDoc);	/* fait reafficher ce qui doit l'etre */
-        for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
-	  if (updateframe[vue -1] > 0)
-	    /* rallume la selection dans la vue traitee */
-	    SwitchSelection(updateframe[vue -1], TRUE);
+        for (view = 1; view <= MAX_VIEW_DOC; view++)
+	  if (updateframe[view -1] > 0)
+	    /* rallume la selection dans la view traitee */
+	    SwitchSelection(updateframe[view -1], TRUE);
 	}
     }
 }
@@ -1079,7 +1198,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 	boolean Disp;
 #endif /* __STDC__ */
 {
-  boolean         nouveau, reaff, ok, imagetrick;
+  boolean         isNew, reaff, ok, imagetrick;
   PtrPRule    pRule, pR, pRStd;
   PtrPSchema      pSPR;
   PtrSSchema	  pSSR;
@@ -1091,7 +1210,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
   int             viewSch;
   boolean         attr;
   PtrAbstractBox         pP;
-  int             vue;
+  int             view;
   boolean         stop;
   boolean	  doit;
   NotifyAttribute notifyAttr;
@@ -1101,12 +1220,12 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 #endif /* __COLPAGE__ */
 
   /* nettoie la table des frames a reafficher */
-  for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
-    updateframe[vue - 1] = 0;
+  for (view = 1; view <= MAX_VIEW_DOC; view++)
+    updateframe[view - 1] = 0;
   reaff = FALSE;		/* rien a reafficher */
   pEl = pAb->AbElement;	/* l'element auquel correspond le pave */
   pDoc = DocumentOfElement(pEl);	/* le document auquel appartient le pave */ 
-  /* numero de cette vue dans le schema de presentation qui la definit */
+  /* numero de cette view dans le schema de presentation qui la definit */
   viewSch = AppliedView(pEl, NULL, pDoc, pAb->AbDocView);
   doit = FALSE;
 
@@ -1150,7 +1269,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 		/* la largeur de la boite est un pourcentage de la largeur */
 		/* de la boite englobante */
 		largeurRef = pAb->AbEnclosing->AbBox->BxWidth;
-	      /* calcule le nouveau rapport (pourcentage) de la boite */
+	      /* calcule le isNew rapport (pourcentage) de la boite */
 	      x = LogicalValue(deltaX+largeur, UnPercent, (PtrAbstractBox)largeurRef);
 	    }
 	  else
@@ -1197,12 +1316,12 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 	    /* de presentation specifique */
 	    {
 	      /* cherche si l'element a deja une regle de largeur specifique */
-	      pRule = SearchPresRule(pEl, PtWidth, &nouveau, pDoc, pAb->AbDocView);
+	      pRule = SearchPresRule(pEl, PtWidth, &isNew, pDoc, pAb->AbDocView);
 	      /* envoie un message APP a l'application */
-	      doit = !PRuleMessagePre(pEl, pRule, pDoc, nouveau);
+	      doit = !PRuleMessagePre(pEl, pRule, pDoc, isNew);
 	      if (doit)
                 {
-		  if (nouveau)
+		  if (isNew)
 		    /* on a cree' une regle de largeur pour l'element */
 		    {
 		      pR = pRule->PrNextPRule;
@@ -1228,15 +1347,15 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 	  if (doit)
 	    {
 	      pDoc->DocModified = TRUE;    /* le document est modifie' */
-	      for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
-		if (pEl->ElAbstractBox[vue -1] != NULL)
-		  /* l'element traite' a un pave dans cette vue */
-		  if (pDoc->DocView[vue - 1].DvSSchema == pDoc->DocView[pAb->AbDocView -1].DvSSchema
-		      && pDoc->DocView[vue - 1].DvPSchemaView == pDoc->DocView[pAb->AbDocView -1].DvPSchemaView)
-		    /* c'est une vue de meme type que la vue traitee, on */
-		    /* traite le pave de l'element dans cette vue */
+	      for (view = 1; view <= MAX_VIEW_DOC; view++)
+		if (pEl->ElAbstractBox[view -1] != NULL)
+		  /* l'element traite' a un pave dans cette view */
+		  if (pDoc->DocView[view - 1].DvSSchema == pDoc->DocView[pAb->AbDocView -1].DvSSchema
+		      && pDoc->DocView[view - 1].DvPSchemaView == pDoc->DocView[pAb->AbDocView -1].DvPSchemaView)
+		    /* c'est une view de meme type que la view traitee, on */
+		    /* traite le pave de l'element dans cette view */
 		    {
-		      pP = pEl->ElAbstractBox[vue -1];
+		      pP = pEl->ElAbstractBox[view -1];
 		      /* saute les paves de presentation */
 		      stop = FALSE;
 		      do
@@ -1261,15 +1380,15 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 			    RedispAbsBox(pP, pDoc); /* indique le pave a reafficher */
 			    reaff = TRUE;   /* il faut reafficher le pave */
 			    if (!AssocView(pEl))
-			      updateframe[vue -1] = pDoc->DocViewFrame[vue -1];
+			      updateframe[view -1] = pDoc->DocViewFrame[view -1];
 			    else
-			      updateframe[vue -1] = pDoc->DocAssocFrame[pEl->ElAssocNum -1];
+			      updateframe[view -1] = pDoc->DocAssocFrame[pEl->ElAssocNum -1];
 			  }
 		    }
 	      if (attr)
 		CallEventAttribute(&notifyAttr, FALSE);
 	      else
-		PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+		PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	    }
 	}
     }
@@ -1313,7 +1432,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 		/* la largeur de la boite est un pourcentage de la largeur */
 		/* de la boite englobante */
 		hauteurRef = pAb->AbEnclosing->AbBox->BxHeight;
-	      /* calcule le nouveau rapport (pourcentage) de la boite */
+	      /* calcule le isNew rapport (pourcentage) de la boite */
 	      y = LogicalValue(deltaY+hauteur, UnPercent, (PtrAbstractBox)hauteurRef);
 	    }
 	  else
@@ -1360,12 +1479,12 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 	    /* de presentation specifique */
 	    {
 	      /* cherche si l'element a deja une regle de hauteur specifique */
-	      pRule = SearchPresRule(pEl, PtHeight, &nouveau, pDoc, pAb->AbDocView);
+	      pRule = SearchPresRule(pEl, PtHeight, &isNew, pDoc, pAb->AbDocView);
 	      /* envoie un message APP a l'application */
-	      doit = !PRuleMessagePre(pEl, pRule, pDoc, nouveau);
+	      doit = !PRuleMessagePre(pEl, pRule, pDoc, isNew);
 	      if (doit)
                 {
-		  if (nouveau)
+		  if (isNew)
 		    /* on a cree' une regle de largeur pour l'element */
 		    {
 		      pR = pRule->PrNextPRule;
@@ -1391,15 +1510,15 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 	  if (doit)
 	    {
 	      pDoc->DocModified = TRUE;    /* le document est modifie' */
-	      for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
-		if (pEl->ElAbstractBox[vue -1] != NULL)
-		  /* l'element traite' a un pave dans cette vue */
-		  if (pDoc->DocView[vue - 1].DvSSchema == pDoc->DocView[pAb->AbDocView -1].DvSSchema
-		      && pDoc->DocView[vue - 1].DvPSchemaView == pDoc->DocView[pAb->AbDocView -1].DvPSchemaView)
-		    /* c'est une vue de meme type que la vue traitee, on */
-		    /* traite le pave de l'element dans cette vue */
+	      for (view = 1; view <= MAX_VIEW_DOC; view++)
+		if (pEl->ElAbstractBox[view -1] != NULL)
+		  /* l'element traite' a un pave dans cette view */
+		  if (pDoc->DocView[view - 1].DvSSchema == pDoc->DocView[pAb->AbDocView -1].DvSSchema
+		      && pDoc->DocView[view - 1].DvPSchemaView == pDoc->DocView[pAb->AbDocView -1].DvPSchemaView)
+		    /* c'est une view de meme type que la view traitee, on */
+		    /* traite le pave de l'element dans cette view */
 		    {
-		      pP = pEl->ElAbstractBox[vue -1];
+		      pP = pEl->ElAbstractBox[view -1];
 		      /* saute les paves de presentation */
 		      stop = FALSE;
 		      do
@@ -1423,15 +1542,15 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 			    RedispAbsBox(pP, pDoc); /* indique le pave a reafficher */
 			    reaff = TRUE;   /* il faut reafficher */
 			    if (!AssocView(pEl))
-			      updateframe[vue -1] = pDoc->DocViewFrame[vue -1];
+			      updateframe[view -1] = pDoc->DocViewFrame[view -1];
 			    else
-			      updateframe[vue -1] = pDoc->DocAssocFrame[pEl->ElAssocNum -1];
+			      updateframe[view -1] = pDoc->DocAssocFrame[pEl->ElAssocNum -1];
 			  }
 		    }
 	      if (attr)
 		CallEventAttribute(&notifyAttr, FALSE);
 	      else
-		PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+		PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	    }
 	}
     }
@@ -1439,16 +1558,16 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
     {
       if (Disp)
 	{
-	  for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
-	    if (updateframe[vue -1] > 0)
-	      /* eteint la selection dans la vue traitee */
-	      SwitchSelection(updateframe[vue -1], FALSE);
+	  for (view = 1; view <= MAX_VIEW_DOC; view++)
+	    if (updateframe[view -1] > 0)
+	      /* eteint la selection dans la view traitee */
+	      SwitchSelection(updateframe[view -1], FALSE);
 	  AbstractImageUpdated(pDoc);     /* mise a jour de l'image abstraite */
 	  RedisplayDocViews(pDoc);  /* reafficher ce qu'il faut */
-	  for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
-	    if (updateframe[vue -1] > 0)
-	      /* rallume la selection dans la vue traitee */
-	      SwitchSelection(updateframe[vue -1], TRUE);
+	  for (view = 1; view <= MAX_VIEW_DOC; view++)
+	    if (updateframe[view -1] > 0)
+	      /* rallume la selection dans la view traitee */
+	      SwitchSelection(updateframe[view -1], TRUE);
 	}
     }
 }
@@ -1471,13 +1590,13 @@ PtrAbstractBox PaveMisEnLigne(pAbb1, pAbb2)
 #endif /* __STDC__ */
 
 {
-  PtrAbstractBox         pPavLignes, pP;
+  PtrAbstractBox         pAbbGroupLines, pP;
   boolean         ok, found, stop;
   PtrAbstractBox         pPa1;
-  PtrAbstractBox         PavEnLigne;
+  PtrAbstractBox         pAbbLine;
 
-  pPavLignes = *pAbb1;
-  pPa1 = pPavLignes;
+  pAbbGroupLines = *pAbb1;
+  pPa1 = pAbbGroupLines;
   if (pPa1->AbLeafType == LtCompound && pPa1->AbInLine)
     found = TRUE;
   else
@@ -1486,8 +1605,8 @@ PtrAbstractBox PaveMisEnLigne(pAbb1, pAbb2)
     {
       /* on considere l'element englobant s'il n'englobe que les elements */
       /* selectionne's et d'eventuels paves de presentation */
-      pPavLignes = (*pAbb1)->AbEnclosing;
-      if (pPavLignes != NULL)
+      pAbbGroupLines = (*pAbb1)->AbEnclosing;
+      if (pAbbGroupLines != NULL)
 	{
 	  ok = TRUE;
 	  pP = *pAbb1;
@@ -1504,13 +1623,13 @@ PtrAbstractBox PaveMisEnLigne(pAbb1, pAbb2)
 	    }
 	  if (ok)
 	    {
-	      pPa1 = pPavLignes;
+	      pPa1 = pAbbGroupLines;
 	      if (pPa1->AbLeafType == LtCompound &&
 		  pPa1->AbInLine)
 		{
 		  found = TRUE;
-		  *pAbb1 = pPavLignes;
-		  *pAbb2 = pPavLignes;
+		  *pAbb1 = pAbbGroupLines;
+		  *pAbb2 = pAbbGroupLines;
 		} 
 	      else
 		found = FALSE;
@@ -1520,24 +1639,24 @@ PtrAbstractBox PaveMisEnLigne(pAbb1, pAbb2)
   if (!found)
     /* on n'a pas found' d'element mis en lignes */
     {
-      pPavLignes = *pAbb1;
+      pAbbGroupLines = *pAbb1;
       /* on considere les elements englobe's du premier pave */
-      while (!found && pPavLignes->AbFirstEnclosed != NULL)
+      while (!found && pAbbGroupLines->AbFirstEnclosed != NULL)
 	{
-	  pPavLignes = pPavLignes->AbFirstEnclosed;
+	  pAbbGroupLines = pAbbGroupLines->AbFirstEnclosed;
 	  /* saute les paves de presentation */
 	  stop = FALSE;
 	  do
-	    if (pPavLignes == NULL)
+	    if (pAbbGroupLines == NULL)
 	      stop = TRUE;
-	    else if (!pPavLignes->AbPresentationBox)
+	    else if (!pAbbGroupLines->AbPresentationBox)
 	      stop = TRUE;
 	    else
-	      pPavLignes = pPavLignes->AbNext;
+	      pAbbGroupLines = pAbbGroupLines->AbNext;
 	  while (!(stop));
-	  if (pPavLignes != NULL)
+	  if (pAbbGroupLines != NULL)
 	    {
-	      pPa1 = pPavLignes;
+	      pPa1 = pAbbGroupLines;
 	      if (pPa1->AbLeafType == LtCompound && pPa1->AbInLine)
 		found = TRUE;
 	      else
@@ -1546,134 +1665,10 @@ PtrAbstractBox PaveMisEnLigne(pAbb1, pAbb2)
 	}
     }
   if (found)
-    PavEnLigne = pPavLignes;
+    pAbbLine = pAbbGroupLines;
   else
-    PavEnLigne = NULL;
-  return PavEnLigne;
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* |	TraiteSArbre							| */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-static void TraiteSArbre(PtrElement pE, PRuleType *TypeR, PtrDocument *pDoc, PtrPRule *pRule, int *vue)
-#else /* __STDC__ */
-static void TraiteSArbre(pE, TypeR, pDoc, pRule, vue)
-	PtrElement pE;
-	PRuleType *TypeR;
-	PtrDocument *pDoc;
-	PtrPRule *pRule;
-	int *vue;
-#endif /* __STDC__ */
-{
-  boolean         stop;
-  PtrAbstractBox         pP, pPF;
-  PtrPSchema      pSPR;
-  PtrAttribute     pAttr;
-  PtrPRule    pRe1;
-#ifdef __COLPAGE__
- boolean bool;
-#endif /* __COLPAGE__ */
-  
-  if (pE->ElTerminal)
-    pE = NULL;
-  else
-    pE = pE->ElFirstChild;	/* on passe au premier fils */
-  while (pE != NULL)
-    {
-      pP = pE->ElAbstractBox[*vue - 1]; /* 1er pave de l'element dans la vue */
-      if (pP != NULL)
-	if (pP->AbDead)
-	  pP = NULL;	/* on ne traite pas les paves morts */
-      if (pP == NULL)
-	/* cet element n'a pas de pave, mais ses descendants en */
-	/* ont peut etre... */
-	TraiteSArbre(pE, TypeR, pDoc, pRule, vue);
-      else
-	{
-	  /* il y a un element descendant dont les paves peuvent heriter de pAb. 
-	     On parcourt ses paves dans la vue */
-	  stop = FALSE;
-	  while (!stop)
-	    {
-	      *pRule = SearchRulepAb(*pDoc, pP, &pSPR, *TypeR, TRUE, &pAttr);
-	      if (*pRule != NULL)
-		{
-		  pRe1 = *pRule;
-		  if (pRe1->PrPresMode == PresInherit && (pRe1->PrInheritMode == InheritParent ||
-				pRe1->PrInheritMode == InheritGrandFather))
-		    /* la regle de ce pave herite de l'ascendant, */
-		    /* on applique la regle */
-#ifdef __COLPAGE__
-	            if (ApplyRule(*pRule, pSPR, pP, *pDoc, pAttr, &bool))
-#else /* __COLPAGE__ */
-	            if (ApplyRule(*pRule, pSPR, pP, *pDoc, pAttr))
-#endif /* __COLPAGE__ */
-		      {
-			if (*TypeR == PtSize)
-			  pP->AbSizeChange = TRUE;
-			else if (*TypeR == PtDepth || *TypeR == PtLineStyle ||
-				 *TypeR == PtLineWeight || *TypeR == PtFillPattern ||
-				 *TypeR == PtBackground || *TypeR == PtForeground)
-			  pP->AbAspectChange = TRUE;
-			else
-			  pP->AbChange = TRUE;
-			RedispAbsBox(pP, *pDoc);
-			if (!pP->AbPresentationBox)
-			  ApplHerit(*TypeR, pP, *pDoc);
-		      }
-		}
-	      if (!pP->AbPresentationBox)
-		/* c'est le pave principal de l'element, on traite */
-		/* les paves crees par l'element au niveau inferieur */
-		{
-		  pPF = pP->AbFirstEnclosed;
-		  while (pPF != NULL)
-		    {
-		      if (pPF->AbElement == pE)
-			{
-			  *pRule = SearchRulepAb(*pDoc, pPF, &pSPR, *TypeR, TRUE, &pAttr);
-			  if (*pRule != NULL)
-			    {
-			      pRe1 = *pRule;
-			      if (pRe1->PrPresMode == PresInherit 
-				  && pRe1->PrInheritMode == InheritParent)
-#ifdef __COLPAGE__
-	            		if (ApplyRule(*pRule, pSPR, pPF, *pDoc, pAttr, &bool))
-#else /* __COLPAGE__ */
-	            		if (ApplyRule(*pRule, pSPR, pPF, *pDoc, pAttr))
-#endif /* __COLPAGE__ */
-				  {
-				    if (*TypeR == PtSize)
-				      pPF->AbSizeChange = TRUE;
-				    else if (*TypeR == PtDepth ||
-					     *TypeR == PtLineStyle ||
-					     *TypeR == PtLineWeight ||
-					     *TypeR == PtFillPattern ||
-					     *TypeR == PtBackground ||
-					     *TypeR == PtForeground)
-				      pP->AbAspectChange = TRUE;
-				    else
-				      pPF->AbChange = TRUE;
-				    RedispAbsBox(pPF, *pDoc);
-				  }
-			    }
-			}
-		      pPF = pPF->AbNext;
-		    }
-		}
-	      pP = pP->AbNext;	/* passe au pave suivant */
-	      if (pP == NULL)
-		stop = TRUE;	/* pas de pave suivant, on arrete */
-	      else	
-		/* on arrete si le pave suivant n'appartient pas a */
-		/* l'element */
-		stop = pP->AbElement != pE;
-	    }
-	}
-      pE = pE->ElNext;	/* on traite l'element suivant */
-    }
+    pAbbLine = NULL;
+  return pAbbLine;
 }
 
 
@@ -1692,22 +1687,22 @@ void ApplNouvRegle(pDoc, pRule, pEl)
 #endif /* __STDC__ */
 {
   PtrAbstractBox        pAb;
-  int            vue;
+  int            view;
   boolean        stop;
 #ifdef __COLPAGE__
  boolean bool;
 #endif /* __COLPAGE__ */
   
     /* parcourt toutes les vues du document */
-    for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
-      if (pEl->ElAbstractBox[vue - 1] != NULL)
-	/* l'element traite' a un pave dans cette vue */
-	if (pDoc->DocView[vue - 1].DvSSchema == pDoc->DocSSchema &&
-	    pDoc->DocView[vue - 1].DvPSchemaView == pRule->PrViewNum)
+    for (view = 1; view <= MAX_VIEW_DOC; view++)
+      if (pEl->ElAbstractBox[view - 1] != NULL)
+	/* l'element traite' a un pave dans cette view */
+	if (pDoc->DocView[view - 1].DvSSchema == pDoc->DocSSchema &&
+	    pDoc->DocView[view - 1].DvPSchemaView == pRule->PrViewNum)
 	  {
-	    /* c'est une vue de meme type que la vue traitee, on */
-	    /* traite le pave de l'element dans cette vue */
-	    pAb = pEl->ElAbstractBox[vue - 1];
+	    /* c'est une view de meme type que la view traitee, on */
+	    /* traite le pave de l'element dans cette view */
+	    pAb = pEl->ElAbstractBox[view - 1];
 	    /* saute les paves de presentation */
 	    stop = FALSE;
 	    do
@@ -1779,13 +1774,13 @@ void ApplNouvRegle(pDoc, pRule, pEl)
 /* |		les graphiques demandes par l'utilisateur.		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void ModifGraphiques(PtrElement pEl, PtrDocument pDoc, int VueTraitee, boolean ChngStyleTrait, char StyleTrait, boolean ChngEpaisTrait, int EpaisTrait, TypeUnit EpaisTraitUnit, boolean ChngTrame, int Trame, boolean ChngCoulFond, int CoulFond, boolean ChngCoulTrace, int CoulTrace)
+void ModifGraphiques(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean ChngStyleTrait, char StyleTrait, boolean ChngEpaisTrait, int EpaisTrait, TypeUnit EpaisTraitUnit, boolean ChngTrame, int Trame, boolean ChngCoulFond, int CoulFond, boolean ChngCoulTrace, int CoulTrace)
 
 #else /* __STDC__ */
-void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpaisTrait, EpaisTrait, EpaisTraitUnit, ChngTrame, Trame, ChngCoulFond, CoulFond, ChngCoulTrace, CoulTrace)
+void ModifGraphiques(pEl, pDoc, viewToApply, ChngStyleTrait, StyleTrait, ChngEpaisTrait, EpaisTrait, EpaisTraitUnit, ChngTrame, Trame, ChngCoulFond, CoulFond, ChngCoulTrace, CoulTrace)
 	PtrElement pEl;
 	PtrDocument pDoc;
-	int VueTraitee;
+	int viewToApply;
 	boolean ChngStyleTrait;
 	char StyleTrait;
 	boolean ChngEpaisTrait;
@@ -1800,18 +1795,18 @@ void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpai
 #endif /* __STDC__ */
 
 {
-	boolean		nouveau;
+	boolean		isNew;
 	PtrPRule	pRule;
 	int		viewSch;
   
-  viewSch = AppliedView(pEl, NULL, pDoc, VueTraitee); /* numero de cette vue */
+  viewSch = AppliedView(pEl, NULL, pDoc, viewToApply); /* numero de cette view */
   /* style des traits dans le graphique */
   if (ChngStyleTrait)
     {
       /*cherche la regle de presentation specifique 'StyleTrait' de l'element*/
       /* ou en cree une nouvelle */
-      pRule = SearchPresRule(pEl, PtLineStyle, &nouveau, pDoc, VueTraitee);
-      if (!PRuleMessagePre(pEl, pRule, pDoc, nouveau))
+      pRule = SearchPresRule(pEl, PtLineStyle, &isNew, pDoc, viewToApply);
+      if (!PRuleMessagePre(pEl, pRule, pDoc, isNew))
         {
         /* met les choix de l'utilisateur dans cette regle */
         pRule->PrType = PtLineStyle;
@@ -1821,7 +1816,7 @@ void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpai
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRule, pEl);
-	PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+	PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	}
     }
   /* epaisseur des traits dans le graphique */
@@ -1829,8 +1824,8 @@ void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpai
     {
       /* cherche la regle de presentation specifique 'Epaisseur Trait' de */
       /* l'element ou en cree une nouvelle */
-      pRule = SearchPresRule(pEl, PtLineWeight, &nouveau, pDoc, VueTraitee);
-      if (!PRuleMessagePre(pEl, pRule, pDoc, nouveau))
+      pRule = SearchPresRule(pEl, PtLineWeight, &isNew, pDoc, viewToApply);
+      if (!PRuleMessagePre(pEl, pRule, pDoc, isNew))
         {
         /* met les choix de l'utilisateur dans cette regle */
         pRule->PrType = PtLineWeight;
@@ -1842,7 +1837,7 @@ void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpai
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRule, pEl);
-	PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+	PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	}
     }
   /* trame de remplissage */
@@ -1850,8 +1845,8 @@ void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpai
     {
       /* cherche la regle de presentation specifique 'Trame' de l'element */
       /* ou en cree une nouvelle */
-      pRule = SearchPresRule(pEl, PtFillPattern, &nouveau, pDoc, VueTraitee);
-      if (!PRuleMessagePre(pEl, pRule, pDoc, nouveau))
+      pRule = SearchPresRule(pEl, PtFillPattern, &isNew, pDoc, viewToApply);
+      if (!PRuleMessagePre(pEl, pRule, pDoc, isNew))
         {
         /* met les choix de l'utilisateur dans cette regle */
         pRule->PrType = PtFillPattern;
@@ -1862,7 +1857,7 @@ void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpai
         pDoc->DocModified = TRUE; /* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRule, pEl);
-	PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+	PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	}
     }
   /* couleur de fond */
@@ -1870,8 +1865,8 @@ void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpai
     {
       /* cherche la regle de presentation specifique 'CouleurFond' de */
       /* l'element ou en cree une nouvelle */
-      pRule = SearchPresRule(pEl, PtBackground, &nouveau, pDoc, VueTraitee);
-      if (!PRuleMessagePre(pEl, pRule, pDoc, nouveau))
+      pRule = SearchPresRule(pEl, PtBackground, &isNew, pDoc, viewToApply);
+      if (!PRuleMessagePre(pEl, pRule, pDoc, isNew))
         {
         /* met les choix de l'utilisateur dans cette regle */
         pRule->PrType = PtBackground;
@@ -1882,7 +1877,7 @@ void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpai
         pDoc->DocModified = TRUE; /* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRule, pEl);
-	PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+	PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	}
     }
   /* couleur du trace' */
@@ -1890,8 +1885,8 @@ void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpai
     {
       /* cherche la regle de presentation specifique 'CouleurTrace' de */
       /* l'element ou en cree une nouvelle */
-      pRule = SearchPresRule(pEl, PtForeground, &nouveau, pDoc, VueTraitee);
-      if (!PRuleMessagePre(pEl, pRule, pDoc, nouveau))
+      pRule = SearchPresRule(pEl, PtForeground, &isNew, pDoc, viewToApply);
+      if (!PRuleMessagePre(pEl, pRule, pDoc, isNew))
         {
         /* met les choix de l'utilisateur dans cette regle */
         pRule->PrType = PtForeground;
@@ -1902,7 +1897,7 @@ void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpai
         pDoc->DocModified = TRUE; /* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRule, pEl);
-	PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+	PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	}
     }
 }
@@ -1913,26 +1908,26 @@ void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpai
 /* |		associees a l'element pEl.				| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void SupprPres(PtrElement pEl, PtrDocument pDoc, RuleSet ERegles, int VueTraitee)
+static void SupprPres(PtrElement pEl, PtrDocument pDoc, RuleSet rules, int viewToApply)
 #else /* __STDC__ */
-static void SupprPres(pEl, pDoc, ERegles, VueTraitee)
+static void SupprPres(pEl, pDoc, rules, viewToApply)
 	PtrElement pEl;
 	PtrDocument pDoc;
-	RuleSet ERegles;
-	int VueTraitee;
+	RuleSet rules;
+	int viewToApply;
 #endif /* __STDC__ */
 {
   PtrPRule    pRule, pR, pRS;
-  PRuleType       TypeRegleP;
+  PRuleType       ruleType;
   int             viewSch;
   NotifyPresentation notifyPres;
 
-  viewSch = AppliedView(pEl, NULL, pDoc, VueTraitee); /* type de cette vue */
+  viewSch = AppliedView(pEl, NULL, pDoc, viewToApply); /* type de cette view */
   pRule = pEl->ElFirstPRule;
   pR = NULL;		
   /* parcourt les regles de presentation specifiques de l'element */
   while (pRule != NULL)
-    if (pRule->PrViewNum != viewSch || !RuleSetIn(pRule->PrType, ERegles))
+    if (pRule->PrViewNum != viewSch || !RuleSetIn(pRule->PrType, rules))
       /* cette regle n'est pas concernee */
       {
 	pR = pRule;
@@ -1940,7 +1935,7 @@ static void SupprPres(pEl, pDoc, ERegles, VueTraitee)
       } 
     else
       {
-	/* la regle concerne la vue traitee */
+	/* la regle concerne la view traitee */
 	/* retire la regle de la chaine des regles de presentation */
 	/* specifique de l'element */
 	pRS = pRule->PrNextPRule;	/* regle a traiter apres */
@@ -1955,19 +1950,19 @@ static void SupprPres(pEl, pDoc, ERegles, VueTraitee)
 	    pEl->ElFirstPRule = pRS;
 	  else
 	    pR->PrNextPRule = pRS;
-	  TypeRegleP = pRule->PrType;	
+	  ruleType = pRule->PrType;	
 	  /* libere la regle */
 	  FreeReglePres(pRule);
 	  pDoc->DocModified = TRUE;	/* le document est modifie' */
 	  /* applique la regle standard de meme type que la regle courante */
 	  /* aux paves de l'element qui existent dans les vues de meme type */
-	  /* que la vue active. */
-	  AppliqueRegleStandard(pEl, pDoc, TypeRegleP, viewSch);
+	  /* que la view active. */
+	  AppliqueRegleStandard(pEl, pDoc, ruleType, viewSch);
 	  notifyPres.event = TtePRuleDelete;
 	  notifyPres.document = (Document)IdentDocument(pDoc);
 	  notifyPres.element = (Element)pEl;
 	  notifyPres.pRule = NULL;
-	  notifyPres.pRuleType = NumTypePRuleAPI(TypeRegleP);
+	  notifyPres.pRuleType = NumTypePRuleAPI(ruleType);
 	  CallEventType((NotifyEvent *)&notifyPres, FALSE);
 	  }
 	/* passe a la regle suivante */
@@ -1982,25 +1977,25 @@ static void SupprPres(pEl, pDoc, ERegles, VueTraitee)
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void ChangeCouleur(int numCouleur, boolean Fond)
+void ChangeCouleur(int colorNum, boolean Fond)
 
 #else /* __STDC__ */
-void ChangeCouleur(numCouleur, Fond)
-	int numCouleur;
+void ChangeCouleur(colorNum, Fond)
+	int colorNum;
 	boolean Fond;
 #endif /* __STDC__ */
 
 {
   PtrDocument	SelDoc;
-  PtrElement	PremSel, DerSel, pEl;
+  PtrElement	pElFirstSel, pElLastSel, pEl;
   PtrAbstractBox	pAb;
-  int		premcar, dercar;
-  boolean	selok, ChangeTrame;
-  int		numTrame;
-  RuleSet       LesRegles;
+  int		firstChar, lastChar;
+  boolean	selok, modifFrame;
+  int		frameNum;
+  RuleSet       rulesS;
 
   /* demande quelle est la selection courante */
-  selok = GetCurrentSelection(&SelDoc, &PremSel, &DerSel, &premcar, &dercar);
+  selok = GetCurrentSelection(&SelDoc, &pElFirstSel, &pElLastSel, &firstChar, &lastChar);
   if (!selok)
     /* rien n'est selectionne' */
     TtaDisplaySimpleMessage (INFO, LIB,SEL_EL);
@@ -2011,10 +2006,10 @@ void ChangeCouleur(numCouleur, Fond)
       ClearAllViewSelection();
       /* Coupe les elements du debut et de la fin de la selection*/
       /* s'ils sont partiellement selectionnes */
-      if (premcar > 1 || dercar > 0)
-        CutSelection(SelDoc, &PremSel, &DerSel, &premcar, &dercar);
+      if (firstChar > 1 || lastChar > 0)
+        CutSelection(SelDoc, &pElFirstSel, &pElLastSel, &firstChar, &lastChar);
       /* parcourt les elements selectionnes */
-      pEl = PremSel;
+      pEl = pElFirstSel;
       while (pEl != NULL)
         {
 	  /* on saute les elements qui sont des copies */
@@ -2024,8 +2019,8 @@ void ChangeCouleur(numCouleur, Fond)
 	      /* on saute les marques de page */
 	      if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
 		{
-		  ChangeTrame = FALSE;
-		  numTrame = 0;
+		  modifFrame = FALSE;
+		  frameNum = 0;
 		  if (Fond)
 		    /* on change la couleur de fond avec la souris */
 		    {
@@ -2035,36 +2030,36 @@ void ChangeCouleur(numCouleur, Fond)
 			  /* on force la trame backgroundcolor si la trame du pave */
 			  /* est nopattern ou foregroundcolor */
 			  {
-			    ChangeTrame = TRUE;
-			    numTrame = 2;
+			    modifFrame = TRUE;
+			    frameNum = 2;
 			  }
 		    }
-		  if (numCouleur == -1)
+		  if (colorNum == -1)
 		    {
 		      /* Couleur standard */
-		      RuleSetClr(LesRegles);
+		      RuleSetClr(rulesS);
 		      if (Fond)
 			{
-			  RuleSetPut(LesRegles, PtFillPattern);
-			  RuleSetPut(LesRegles, PtBackground);
+			  RuleSetPut(rulesS, PtFillPattern);
+			  RuleSetPut(rulesS, PtBackground);
 			}
 		      else
-			RuleSetPut(LesRegles, PtForeground);
-		      SupprPres(pEl, SelDoc, LesRegles, SelectedView);
+			RuleSetPut(rulesS, PtForeground);
+		      SupprPres(pEl, SelDoc, rulesS, SelectedView);
 		    }
 		  else
 		    ModifGraphiques(pEl, SelDoc, SelectedView, FALSE, ' ', FALSE, 0, FALSE,
-				  ChangeTrame, numTrame, Fond, numCouleur, !Fond, numCouleur);
+				  modifFrame, frameNum, Fond, colorNum, !Fond, colorNum);
 		  /* si on est dans un element copie' par inclusion,   */
 		  /* on met a jour les copies de cet element. */
 		  RedisplayCopies(pEl, SelDoc, TRUE);
 		}
 	  /* cherche l'element a traiter ensuite */
-	  pEl = NextInSelection(pEl, DerSel);
+	  pEl = NextInSelection(pEl, pElLastSel);
         }
       /* tente de fusionner les elements voisins et reaffiche les paves */
       /* modifie's et la selection */
-      MergeAndSelect(SelDoc, PremSel, DerSel, premcar, dercar);
+      MergeAndSelect(SelDoc, pElFirstSel, pElLastSel, firstChar, lastChar);
     }
 }
 
@@ -2074,64 +2069,64 @@ void ChangeCouleur(numCouleur, Fond)
 /* |		les caracteres demandes par l'utilisateur.		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void ModifCaracteres(PtrElement pEl, PtrDocument pDoc, int VueTraitee, boolean ChngFamille, char Famille, boolean ChngStyle, int Style, boolean ChngCorps, int Corps, boolean ChngSouligne, int SoulStyle, boolean ChngEpais, int SoulEpais)
+void ModifCaracteres(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifFamily, char family, boolean modifStyle, int charStyle, boolean ChngCorps, int Corps, boolean modifUnderline, int underline, boolean modifThick, int thickUnderline)
 
 #else /* __STDC__ */
-void ModifCaracteres(pEl, pDoc, VueTraitee, ChngFamille, Famille, ChngStyle, Style, ChngCorps, Corps, ChngSouligne, SoulStyle, ChngEpais, SoulEpais)
+void ModifCaracteres(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, charStyle, ChngCorps, Corps, modifUnderline, underline, modifThick, thickUnderline)
 	PtrElement pEl;
 	PtrDocument pDoc;
-	int VueTraitee;
-	boolean ChngFamille;
-	char Famille;
-	boolean ChngStyle;
-	int Style;
+	int viewToApply;
+	boolean modifFamily;
+	char family;
+	boolean modifStyle;
+	int charStyle;
 	boolean ChngCorps;
 	int Corps;
-	boolean ChngSouligne;
-	int SoulStyle;
-	boolean ChngEpais;
-	int SoulEpais;
+	boolean modifUnderline;
+	int underline;
+	boolean modifThick;
+	int thickUnderline;
 #endif /* __STDC__ */
 
 {
-	boolean		nouveau;
+	boolean		isNew;
 	PtrPRule	pRule;
 	int		viewSch;
   
-  viewSch = AppliedView(pEl, NULL, pDoc, VueTraitee); /* numero de cette vue*/
+  viewSch = AppliedView(pEl, NULL, pDoc, viewToApply); /* numero de cette view*/
   /* applique les choix de l'utilisateur */
-  /* Famille de polices de caracteres */
-  if (ChngFamille)
+  /* family de polices de caracteres */
+  if (modifFamily)
     {
       /* cherche la regle de presentation specifique 'Fonte' de l'element */
       /* ou en cree une nouvelle */
-      pRule = SearchPresRule(pEl, PtFont, &nouveau, pDoc, VueTraitee);
-      if (!PRuleMessagePre(pEl, pRule, pDoc, nouveau))
+      pRule = SearchPresRule(pEl, PtFont, &isNew, pDoc, viewToApply);
+      if (!PRuleMessagePre(pEl, pRule, pDoc, isNew))
         {
         /* met les choix de l'utilisateur dans cette regle */
         pRule->PrType = PtFont;
         pRule->PrViewNum = viewSch;
         pRule->PrPresMode = PresImmediate;
-        pRule->PrChrValue = Famille;
+        pRule->PrChrValue = family;
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRule, pEl);
-	PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+	PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	}
     }
-  /* Style de caracteres */
-  if (ChngStyle)
+  /* charStyle de caracteres */
+  if (modifStyle)
     {
-      /* cherche la regle de presentation specifique 'Style' de l'element */
+      /* cherche la regle de presentation specifique 'charStyle' de l'element */
       /* ou en cree une nouvelle */
-      pRule = SearchPresRule(pEl, PtStyle, &nouveau, pDoc, VueTraitee);
-      if (!PRuleMessagePre(pEl, pRule, pDoc, nouveau))
+      pRule = SearchPresRule(pEl, PtStyle, &isNew, pDoc, viewToApply);
+      if (!PRuleMessagePre(pEl, pRule, pDoc, isNew))
         {
         /* met les choix de l'utilisateur dans cette regle */
         pRule->PrType = PtStyle;
         pRule->PrViewNum = viewSch;
         pRule->PrPresMode = PresImmediate;
-        switch (Style)
+        switch (charStyle)
 	  {	
 	case 0:
 	  pRule->PrChrValue = 'R';
@@ -2158,7 +2153,7 @@ void ModifCaracteres(pEl, pDoc, VueTraitee, ChngFamille, Famille, ChngStyle, Sty
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRule, pEl);
-	PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+	PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	}
     }
   /* Corps des caracteres */
@@ -2166,8 +2161,8 @@ void ModifCaracteres(pEl, pDoc, VueTraitee, ChngFamille, Famille, ChngStyle, Sty
     {
       /* cherche la regle de presentation specifique 'Corps' de l'element */
       /* ou en cree une nouvelle */
-      pRule = SearchPresRule(pEl, PtSize, &nouveau, pDoc, VueTraitee);
-      if (!PRuleMessagePre(pEl, pRule, pDoc, nouveau))
+      pRule = SearchPresRule(pEl, PtSize, &isNew, pDoc, viewToApply);
+      if (!PRuleMessagePre(pEl, pRule, pDoc, isNew))
         {
         /* met les choix de l'utilisateur dans cette regle */
         pRule->PrType = PtSize;
@@ -2179,23 +2174,23 @@ void ModifCaracteres(pEl, pDoc, VueTraitee, ChngFamille, Famille, ChngStyle, Sty
         pDoc->DocModified = TRUE; /* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRule, pEl);
-        PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+        PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	}
     }
 
   /* Souligne' */
-  if (ChngSouligne)
+  if (modifUnderline)
     {
       /* cherche la regle de presentation specifique 'Souligne' de l'element */
       /* ou en cree une nouvelle */
-      pRule = SearchPresRule(pEl, PtUnderline, &nouveau, pDoc, VueTraitee);
-      if (!PRuleMessagePre(pEl, pRule, pDoc, nouveau))
+      pRule = SearchPresRule(pEl, PtUnderline, &isNew, pDoc, viewToApply);
+      if (!PRuleMessagePre(pEl, pRule, pDoc, isNew))
         {
         /* met les choix de l'utilisateur dans cette regle */
         pRule->PrType = PtUnderline;
         pRule->PrViewNum = viewSch;
         pRule->PrPresMode = PresImmediate;
-        switch (SoulStyle)
+        switch (underline)
 	  {
 	case 0:
 	  pRule->PrChrValue = 'N'; /* sans souligne */
@@ -2216,22 +2211,22 @@ void ModifCaracteres(pEl, pDoc, VueTraitee, ChngFamille, Famille, ChngStyle, Sty
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRule, pEl);
-	PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+	PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	}
     }
   /* Epaisseur du souligne */
-  if (ChngEpais)
+  if (modifThick)
     {
-      /* cherche la regle de presentation specifique SoulEpais de l'element */
+      /* cherche la regle de presentation specifique thickUnderline de l'element */
       /* ou en cree une nouvelle */
-      pRule = SearchPresRule(pEl, PtThickness, &nouveau, pDoc, VueTraitee);
-      if (!PRuleMessagePre(pEl, pRule, pDoc, nouveau))
+      pRule = SearchPresRule(pEl, PtThickness, &isNew, pDoc, viewToApply);
+      if (!PRuleMessagePre(pEl, pRule, pDoc, isNew))
         {
         /* met les choix de l'utilisateur dans cette regle */
         pRule->PrType = PtThickness;
         pRule->PrViewNum = viewSch;
         pRule->PrPresMode = PresImmediate;
-        switch (SoulEpais)
+        switch (thickUnderline)
 	  {
 	case 0:
 	  pRule->PrChrValue = 'N'; /* souligne mince */
@@ -2246,7 +2241,7 @@ void ModifCaracteres(pEl, pDoc, VueTraitee, ChngFamille, Famille, ChngStyle, Sty
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRule, pEl);
-	PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+	PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	}
     }
 }
@@ -2257,12 +2252,12 @@ void ModifCaracteres(pEl, pDoc, VueTraitee, ChngFamille, Famille, ChngStyle, Sty
 /* |		sur la mise en ligne demandes par l'utilisateur.	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void ModifLignes(PtrElement pEl, PtrDocument pDoc, int VueTraitee, boolean ChngCadr, int Cadr, boolean ChngJustif, boolean Justif, boolean ChngIndent, int ValIndent, boolean ChngInterL, int InterLigne, boolean ChngHyphen, boolean Hyphenate)
+void ModifLignes(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean ChngCadr, int Cadr, boolean ChngJustif, boolean Justif, boolean ChngIndent, int ValIndent, boolean ChngInterL, int InterLigne, boolean ChngHyphen, boolean Hyphenate)
 #else /* __STDC__ */
-void ModifLignes(pEl, pDoc, VueTraitee, ChngCadr, Cadr, ChngJustif, Justif, ChngIndent, ValIndent, ChngInterL, InterLigne, ChngHyphen, Hyphenate)
+void ModifLignes(pEl, pDoc, viewToApply, ChngCadr, Cadr, ChngJustif, Justif, ChngIndent, ValIndent, ChngInterL, InterLigne, ChngHyphen, Hyphenate)
 	PtrElement pEl;
 	PtrDocument pDoc;
-	int VueTraitee;
+	int viewToApply;
 	boolean ChngCadr;
 	int Cadr;
 	boolean ChngJustif;
@@ -2275,16 +2270,16 @@ void ModifLignes(pEl, pDoc, VueTraitee, ChngCadr, Cadr, ChngJustif, Justif, Chng
 	boolean Hyphenate;
 #endif /* __STDC__ */
 {
-  boolean         nouveau;
+  boolean         isNew;
   PtrPRule    pRule;
   int             viewSch;
   
-  viewSch = AppliedView(pEl, NULL, pDoc, VueTraitee); /* Le type de cette vue */
+  viewSch = AppliedView(pEl, NULL, pDoc, viewToApply); /* Le type de cette view */
   /* applique les choix de l'utilisateur */
   if (ChngCadr && Cadr > 0)
     {
-      pRule = SearchPresRule(pEl, PtAdjust, &nouveau, pDoc, VueTraitee);
-      if (!PRuleMessagePre(pEl, pRule, pDoc, nouveau))
+      pRule = SearchPresRule(pEl, PtAdjust, &isNew, pDoc, viewToApply);
+      if (!PRuleMessagePre(pEl, pRule, pDoc, isNew))
         {
         pRule->PrType = PtAdjust;
         pRule->PrViewNum = viewSch;
@@ -2309,14 +2304,14 @@ void ModifLignes(pEl, pDoc, VueTraitee, ChngCadr, Cadr, ChngJustif, Justif, Chng
 	  }
         pDoc->DocModified = TRUE;	 /* le document est modifie' */
         ApplNouvRegle(pDoc, pRule, pEl);
-	PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+	PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	}
     }
   /* Justification */
   if (ChngJustif)
     {
-      pRule = SearchPresRule(pEl, PtJustify, &nouveau, pDoc, VueTraitee);
-      if (!PRuleMessagePre(pEl, pRule, pDoc, nouveau))
+      pRule = SearchPresRule(pEl, PtJustify, &isNew, pDoc, viewToApply);
+      if (!PRuleMessagePre(pEl, pRule, pDoc, isNew))
         {
         pRule->PrType = PtJustify;
         pRule->PrViewNum = viewSch;
@@ -2324,14 +2319,14 @@ void ModifLignes(pEl, pDoc, VueTraitee, ChngCadr, Cadr, ChngJustif, Justif, Chng
         pRule->PrJustify = Justif;
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         ApplNouvRegle(pDoc, pRule, pEl);
-	PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+	PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	}
     }
   /* Coupure des mots */
   if (ChngHyphen)
     {
-      pRule = SearchPresRule(pEl, PtHyphenate, &nouveau, pDoc,VueTraitee);
-      if (!PRuleMessagePre(pEl, pRule, pDoc, nouveau))
+      pRule = SearchPresRule(pEl, PtHyphenate, &isNew, pDoc,viewToApply);
+      if (!PRuleMessagePre(pEl, pRule, pDoc, isNew))
         {
         pRule->PrType = PtHyphenate;
         pRule->PrViewNum = viewSch;
@@ -2339,14 +2334,14 @@ void ModifLignes(pEl, pDoc, VueTraitee, ChngCadr, Cadr, ChngJustif, Justif, Chng
         pRule->PrJustify = Hyphenate;
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         ApplNouvRegle(pDoc, pRule, pEl);
-        PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+        PRuleMessagePost(pEl, pRule, pDoc, isNew);
         }
     }
   /* Renfoncement de la 1ere ligne */
   if (ChngIndent)
     {
-      pRule = SearchPresRule(pEl, PtIndent, &nouveau, pDoc, VueTraitee);
-      if (!PRuleMessagePre(pEl, pRule, pDoc, nouveau))
+      pRule = SearchPresRule(pEl, PtIndent, &isNew, pDoc, viewToApply);
+      if (!PRuleMessagePre(pEl, pRule, pDoc, isNew))
         {
         pRule->PrType = PtIndent;
         pRule->PrViewNum = viewSch;
@@ -2357,14 +2352,14 @@ void ModifLignes(pEl, pDoc, VueTraitee, ChngCadr, Cadr, ChngJustif, Justif, Chng
         pDoc->DocModified = TRUE;	
         /* le document est modifie' */
         ApplNouvRegle(pDoc, pRule, pEl);
-	PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+	PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	}
     }
   /* Interligne */
   if (ChngInterL)
     {
-      pRule = SearchPresRule(pEl, PtLineSpacing, &nouveau, pDoc, VueTraitee);
-      if (!PRuleMessagePre(pEl, pRule, pDoc, nouveau))
+      pRule = SearchPresRule(pEl, PtLineSpacing, &isNew, pDoc, viewToApply);
+      if (!PRuleMessagePre(pEl, pRule, pDoc, isNew))
         {
         pRule->PrType = PtLineSpacing;
         pRule->PrViewNum = viewSch;
@@ -2374,7 +2369,7 @@ void ModifLignes(pEl, pDoc, VueTraitee, ChngCadr, Cadr, ChngJustif, Justif, Chng
         pRule->PrMinValue = InterLigne;
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         ApplNouvRegle(pDoc, pRule, pEl);
-	PRuleMessagePost(pEl, pRule, pDoc, nouveau);
+	PRuleMessagePost(pEl, pRule, pDoc, isNew);
 	}
     }
 }
@@ -2382,16 +2377,16 @@ void ModifLignes(pEl, pDoc, VueTraitee, ChngCadr, Cadr, ChngJustif, Justif, Chng
 
 /* ---------------------------------------------------------------------- */
 /* |	AppliqueRegleStandard	applique a l'element pEl du document	| */
-/* |	pDoc la regle de presentation standard de type TypeRegleP	| */
-/* |	pour la vue viewSch.						| */
+/* |	pDoc la regle de presentation standard de type ruleType	| */
+/* |	pour la view viewSch.						| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void AppliqueRegleStandard(PtrElement pEl, PtrDocument pDoc, PRuleType TypeRegleP, int viewSch)
+void AppliqueRegleStandard(PtrElement pEl, PtrDocument pDoc, PRuleType ruleType, int viewSch)
 #else /* __STDC__ */
-void AppliqueRegleStandard(pEl, pDoc, TypeRegleP, viewSch)
+void AppliqueRegleStandard(pEl, pDoc, ruleType, viewSch)
 	PtrElement pEl;
 	PtrDocument pDoc;
-	PRuleType TypeRegleP;
+	PRuleType ruleType;
 	int viewSch;
 #endif /* __STDC__ */
 {
@@ -2401,28 +2396,28 @@ void AppliqueRegleStandard(pEl, pDoc, TypeRegleP, viewSch)
 	PtrAttribute     pAttr;
 	boolean         stop;
 	PtrAbstractBox         pPa1;
-	int             vue;
+	int             view;
 #ifdef __COLPAGE__
  boolean bool;
 #endif /* __COLPAGE__ */
 
 	/* applique la regle standard de meme type que la regle courante */
 	/* aux paves de l'element qui existent dans les vues de meme type */
-	/* que la vue active. */
+	/* que la view active. */
 	pRP = NULL; 
 	/* on n'a pas encore cherche' la regle standard */
 	if (viewSch > 0)        
-	  /* il y a une vue active */
+	  /* il y a une view active */
 	  /* parcourt toutes les vues du document */
-	  for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
-	    if (pEl->ElAbstractBox[vue -1] != NULL)
-	      /* l'element traite' a un pave dans cette vue */
-	      if (pDoc->DocView[vue - 1].DvSSchema == pDoc->DocSSchema &&
-		  pDoc->DocView[vue - 1].DvPSchemaView == viewSch)
-		/* c'est une vue de meme type que la vue traitee, on */
-		/* traite le pave de l'element dans cette vue */
+	  for (view = 1; view <= MAX_VIEW_DOC; view++)
+	    if (pEl->ElAbstractBox[view -1] != NULL)
+	      /* l'element traite' a un pave dans cette view */
+	      if (pDoc->DocView[view - 1].DvSSchema == pDoc->DocSSchema &&
+		  pDoc->DocView[view - 1].DvPSchemaView == viewSch)
+		/* c'est une view de meme type que la view traitee, on */
+		/* traite le pave de l'element dans cette view */
 		{
-		  pAb = pEl->ElAbstractBox[vue -1];
+		  pAb = pEl->ElAbstractBox[view -1];
 		  /* saute les paves de presentation */
 		  stop = FALSE;
 		  do
@@ -2438,7 +2433,7 @@ void AppliqueRegleStandard(pEl, pDoc, TypeRegleP, viewSch)
 		    {
 		      /* cherche la regle standard si on ne l'a pas encore */
 		      if (pRP == NULL)
-			pRP = SearchRulepAb(pDoc, pAb, &pSPR, TypeRegleP, TRUE, &pAttr);
+			pRP = SearchRulepAb(pDoc, pAb, &pSPR, ruleType, TRUE, &pAttr);
 #ifdef __COLPAGE__
 	              ApplyRule(pRP, pSPR, pAb, pDoc, pAttr, &bool);
 #else /* __COLPAGE__ */
@@ -2446,7 +2441,7 @@ void AppliqueRegleStandard(pEl, pDoc, TypeRegleP, viewSch)
 #endif /* __COLPAGE__ */
 			/* marque que le pave a change' et doit etre reaffiche' */
 			  pPa1 = pAb;
-			  switch (TypeRegleP)
+			  switch (ruleType)
 			    {
 		      case PtVertRef:
 			      pPa1->AbVertRefChange = TRUE;
@@ -2485,7 +2480,7 @@ void AppliqueRegleStandard(pEl, pDoc, TypeRegleP, viewSch)
 			  RedispAbsBox(pAb, pDoc);
 			  /* applique la regle de meme type aux paves environnants */
 			  /* s'ils heritent de ce parametre de presentation */
-			  ApplHerit(TypeRegleP, pAb, pDoc);
+			  ApplHerit(ruleType, pAb, pDoc);
 		    }
 		}
 }
@@ -2496,18 +2491,18 @@ void AppliqueRegleStandard(pEl, pDoc, TypeRegleP, viewSch)
 /* |		sous-arbre de racine pSA				| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void SupprPresSpec(PtrElement pSA, PtrDocument pDoc, RuleSet Regles, int VueTraitee)
+void SupprPresSpec(PtrElement pSA, PtrDocument pDoc, RuleSet Regles, int viewToApply)
 #else /* __STDC__ */
-void SupprPresSpec(pSA, pDoc, Regles, VueTraitee)
+void SupprPresSpec(pSA, pDoc, Regles, viewToApply)
 	PtrElement pSA;
 	PtrDocument pDoc;
 	RuleSet Regles;
-	int VueTraitee;
+	int viewToApply;
 #endif /* __STDC__ */
 {
   PtrElement      pEl;	/* traite la racine du sous-arbre */
   
-  SupprPres(pSA, pDoc, Regles, VueTraitee);
+  SupprPres(pSA, pDoc, Regles, viewToApply);
   if (!pSA->ElTerminal)
     {
       /* passe au premier fils */
@@ -2515,7 +2510,7 @@ void SupprPresSpec(pSA, pDoc, Regles, VueTraitee)
       while (pEl != NULL)
 	{
 	  /* traite le sous-arbre de ce fils */
-	  SupprPresSpec(pEl, pDoc, Regles, VueTraitee);
+	  SupprPresSpec(pEl, pDoc, Regles, viewToApply);
 	  /* passe au fils suivant */
 	  pEl = pEl->ElNext;
 	}
