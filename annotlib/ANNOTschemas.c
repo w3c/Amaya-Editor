@@ -73,11 +73,16 @@ static RDFResourceP _ListSearchResource( List* list, char* name)
   ------------------------------------------------------------*/
 static void _AddStatement( RDFResourceP s, RDFPropertyP p, RDFResourceP o )
 {
-  RDFStatement *statement = (RDFStatement*)TtaGetMemory (sizeof(RDFStatement));
+  RDFStatement *statement;
 
-  statement->predicate = p;
-  statement->object = o;
-  List_add (&s->statements, (void*)statement);
+  if (s && p && o)
+    {
+      statement = (RDFStatement*)TtaGetMemory (sizeof(RDFStatement));
+
+      statement->predicate = p;
+      statement->object = o;
+      List_add (&s->statements, (void*)statement);
+    }
 }
 
 /*------------------------------------------------------------
@@ -217,6 +222,9 @@ RDFResourceP ANNOT_FindRDFResource( listP, name, create )
   static char* last_name = NULL;
   static unsigned int last_length = 0;
   static RDFResourceP resource = NULL;
+
+  if (!name)
+    return NULL;
 
   if (!last_name || strcmp(last_name, name)) {
     /* search for resource in list */
@@ -375,3 +383,30 @@ void ANNOT_ReadSchema (doc, namespace_URI)
   else
       TtaSetStatus (doc, 1, "Reading schema", NULL); /* @@ */
 }
+
+#ifdef DEBUG
+/*------------------------------------------------------------
+   ANNOT_DumpSchema
+  ------------------------------------------------------------
+   Dumps the schema model to stderr for debugging
+  ------------------------------------------------------------*/
+
+int SCHEMA_DumpRDFResources()
+{
+  List* list = annot_schema_list;
+  int entries = 0;
+
+  while (list)
+    {
+      RDFResourceP r = list->object;
+      fprintf (stderr, "%d: 0x%x \"%s\" statements: 0x%x\n",
+	       ++entries,
+	       r,
+	       r->name,
+	       r->statements);
+      list = list->next;
+    }
+
+  return entries;
+}
+#endif /* DEBUG */

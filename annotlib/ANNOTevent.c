@@ -506,6 +506,10 @@ View view;
       init = TRUE;
     }
 
+#ifdef DEBUG
+  SCHEMA_DumpRDFResources();
+#endif /* DEBUG */
+
   /* don't annotate other annotations, text only documents, or
      graphic documents */
   if (!ANNOT_CanAnnotate(doc))
@@ -622,7 +626,6 @@ void ANNOT_Create (doc, view)
   ANNOT_InitDocumentStructure (doc, doc_annot, annot);
 
   LINK_AddLinkToSource (doc, annot);
-  LINK_SaveLink (doc);
 }
 
 /*-----------------------------------------------------------------------
@@ -869,7 +872,10 @@ View                view;
       filename = TtaGetMemory (ustrlen (DocumentURLs[doc_annot]) + 1);
       NormalizeFile (DocumentURLs[doc_annot], filename, AM_CONV_ALL);
       if (ANNOT_LocalSave (doc_annot, filename))
-	TtaSetDocumentUnmodified (doc_annot);
+	{
+	  TtaSetDocumentUnmodified (doc_annot);
+	  LINK_SaveLink (DocumentMeta[doc_annot]->source_doc);
+	}
       TtaFreeMemory (filename); 
     }
 }

@@ -1225,8 +1225,9 @@ View                view;
 	  List *item;
 	  int entry;
 
-	  entry = nb_entries - ReturnOptionMenu - 1;
-	  for (item = typesList; item && (--entry > 0); item=item->next);
+	  /* typesList is sorted in opposite order of the dialogue */
+	  entry = nb_entries - ReturnOption - 1;
+	  for (item = typesList; item && (entry-- > 0); item=item->next);
 	  if (item->object)
 	    result = ((TypeSelector *) item->object)->type;
 	}
