@@ -3466,8 +3466,8 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 
   if (doc != 0)
     {
-      frame = GetWindowNumber (doc, view);
       /* Check if we are changing the active frame */
+      frame = GetWindowNumber (doc, view);
       if (frame != ActiveFrame)
 	{
 	  /* yes close the previous insertion */
@@ -3477,9 +3477,6 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 	  else
 	    /* use the right frame */
 	    ActiveFrame = frame;
-	  /* work in the right document
-	     frame = ActiveFrame;
-	     doc =  FrameTable[ActiveFrame].FrDoc;*/
 	}
       pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
       if (pViewSel->VsBox &&

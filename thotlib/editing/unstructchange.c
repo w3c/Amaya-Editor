@@ -34,6 +34,7 @@
 #include "creation_tv.h"
 #include "modif_tv.h"
 #include "select_tv.h"
+#include "frame_tv.h"
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 
@@ -1024,13 +1025,26 @@ void TtcCreateElement (Document doc, View view)
   PtrDocument         pDoc;
   PtrSSchema          pSS;
   NotifyElement       notifyEl;
-  int                 firstChar, lastChar, NSiblings, typeNum, nComp;
+  int                 firstChar, lastChar, NSiblings;
+  int                 frame, typeNum, nComp;
   ThotBool            ok, replicate, createAfter, selBegin, selEnd, ready;
   ThotBool            empty, list, optional, deleteEmpty, histSeq;
   ThotBool            lock = TRUE;
 
   if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
     return;
+  /* Check if we are changing the active frame */
+  frame = GetWindowNumber (doc, view);
+  if (frame != ActiveFrame)
+    {
+      /* yes close the previous insertion */
+      CloseTextInsertion ();
+      if (ActiveFrame > 0 && FrameTable[ActiveFrame].FrDoc != doc)
+	return;
+      else
+	/* use the right frame */
+	ActiveFrame = frame;
+    }
   if (!ElementIsReadOnly (firstSel) && AscentReturnCreateNL (firstSel))
     /* one of the ancestors of the first selected element says that the
        Return key should generate a "new line" character */
