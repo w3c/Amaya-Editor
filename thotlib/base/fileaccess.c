@@ -268,7 +268,12 @@ union ieee754_float {
   float f;
   /* This is the IEEE 754 float-precision format.  */
   struct {
-#if defined(i386) || defined(__i386)
+#ifdef _WINDOWS
+	unsigned int negative:1;
+    unsigned int exponent:8;
+    unsigned int mantissa:23;
+#else /*_WINDOWS*/
+#if defined(i386) || defined(__i386) || 
 #if     __BYTE_ORDER == __BIG_ENDIAN
     unsigned int negative:1;
     unsigned int exponent:8;
@@ -291,6 +296,7 @@ union ieee754_float {
     unsigned int negative:1;
 #endif
 #endif
+#endif /*_WINDOWS*/
   } ieee;
 };
 
@@ -343,10 +349,7 @@ ThotBool TtaReadFloat (BinFile file, float *sval)
 	      else
 		{
 		  val = (val << 8) + car;
-
-		  *sval = val;
- 
-
+		  *sval = (float) val;
 		  return (TRUE);
 		}
 	    }
