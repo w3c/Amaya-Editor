@@ -211,7 +211,7 @@ void  ProcessTerminateRequest (HTRequest *request, HTResponse *response,
     fprintf (stderr,"ProcessTerminateRequest: processing req %p, url %s,\
  status %d\n", me, me->urlName, me->reqStatus);  
 #endif /* DEBUG_LIBWWW */
-  if (me->reqStatus == HT_END && status >= 0)
+  if (me->reqStatus == HT_END)
     {
       if (AmayaIsAlive ()  && me->terminate_cbf)
 	(*me->terminate_cbf) (me->docid, 0, me->urlName, me->outputfile,
@@ -231,8 +231,7 @@ void  ProcessTerminateRequest (HTRequest *request, HTResponse *response,
 	  me->outputfile[0] = EOS; 
 	} 
     }
-  else if (me->reqStatus == HT_ERR ||
-	   (me->reqStatus == HT_END && status < 0))
+  else if (me->reqStatus == HT_ERR)
     {
       /* there was an error */
       if (AmayaIsAlive && me->terminate_cbf)

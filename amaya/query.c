@@ -1406,16 +1406,11 @@ static int terminate_handler (HTRequest *request, HTResponse *response,
 	       me->error_html == TRUE)
 	       /* there were some errors and we want to print them */
 	     {		
-	       if (me->error_stream_size == 0)/* and the stream is empty */
-		 {
-		   /* if the transfer was interrupted, the file may not be
-		      empty. So, we erase it */
-		   fflush (me->output);
-		   rewind (me->output);
-		   AHTError_MemPrint (request); /* copy errors from 
-						**the error stack 
-						** into the error stream */
-		 }
+	       /* if the transfer was interrupted, the file may not be
+		  empty. So, we erase it */
+	       fflush (me->output);
+	       rewind (me->output);
+
 	       if (me->error_stream)
 		 {	/* if the stream is non-empty */
 		   fprintf (me->output, "%s", me->error_stream);/* output the errors */
@@ -1427,7 +1422,7 @@ static int terminate_handler (HTRequest *request, HTResponse *response,
 		 }
 	     }		        /* if error_stack */
 	 }
-
+       
        /* if != HT_ABORT */
        
 #ifdef DEBUG_LIBWWW       

@@ -40,6 +40,7 @@ typedef char BOOL;
 #endif /* HT_DAV */
 #endif /* DAV */
 
+#include "wwwsys.h"
 #include "WWWLib.h"
 #include "AHTInit.h"
 #include "WWWApp.h"
