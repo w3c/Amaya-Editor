@@ -90,25 +90,25 @@
 #define NumFormClose		64
 #define NumLabelSaveBeforeClosing 65
 #define NumMenuPresNature	66
-#define NbMaxMenuPresNature	67 /* schema de presentation des natures */
-#define NumMenuAttr    68	/* numero de la feuille de dialogue pour la */
+#define NbMaxMenuPresNature	20 /* schema de presentation des natures */
+#define NumMenuAttr    88	/* numero de la feuille de dialogue pour la */
                              	/* saisie des attributs */
-#define NumMenuAttrNumber 69   	/* numero de la zone de saisie de la valeur */
+#define NumMenuAttrNumber 89   	/* numero de la zone de saisie de la valeur */
                              	/* d'un attribut numerique */
-#define NumMenuAttrText 70  	/* numero de la zone de saisie de la valeur */
+#define NumMenuAttrText 90  	/* numero de la zone de saisie de la valeur */
                              	/* d'un attribut textuel */
-#define NumMenuAttrEnum 71	/* numero du menu des valeurs d'un attribut */
+#define NumMenuAttrEnum 91	/* numero du menu des valeurs d'un attribut */
                              	/* enumere' */
 
-#define NumMenuAttrRequired 72	/* numero du menu de saisie des attributs */
+#define NumMenuAttrRequired 92	/* numero du menu de saisie des attributs */
                               	/* obligatoires. */
                                 /* ATTENTION: les 3 numeros suivants sont */
                                 /* reserve's */
-#define NumMenuAttrNumNeeded 73 /* numero de la zone de saisie de la valeur */
-#define NumMenuAttrTextNeeded 74 /* numero de la zone de saisie de la */
+#define NumMenuAttrNumNeeded 93 /* numero de la zone de saisie de la valeur */
+#define NumMenuAttrTextNeeded 94 /* numero de la zone de saisie de la */
                          	/* valeur d'un attribut textuel obligatoire */
-#define NumMenuAttrEnumNeeded 75 /* numero du menu des valeurs d'un */
-#define NumMenuCharacters	76
+#define NumMenuAttrEnumNeeded 95 /* numero du menu des valeurs d'un */
+#define NumMenuCharacters	96
 
 #define NumMenuElChoice		100
 #define NumMenuInsert		102

@@ -296,6 +296,7 @@
 #define TMSG_ERROR_PS_TRANSLATION                    273
 #define TMSG_UNKNOWN_PRINTER                         274
 #define TMSG_CANNOT_CREATE_PS			     275
-#define TMSG_LIB_MSG_MAX			     276
+#define TMSG_GLOBAL_LAYOUT			     276
+#define TMSG_LIB_MSG_MAX			     277
 
 #endif

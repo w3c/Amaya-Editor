@@ -19,11 +19,6 @@ extern void ImportDocument ( Name SSchemaName,
                              PathBuffer directory,
                              Name fileName );
 extern void CloseAllViewsDoc ( PtrDocument pDoc );
-extern void ChangeDocumentPSchema ( PtrDocument pDoc,
-                                    Name newPSchemaName );
-extern void ChangeNaturePSchema ( PtrDocument pDoc,
-                                  PtrSSchema pNatSSchema,
-                                  Name newPSchemaName );
 
 #else /* __STDC__ */
 
@@ -40,11 +35,6 @@ extern void ImportDocument (/* Name SSchemaName,
                                PathBuffer directory,
                                Name fileName */);
 extern void CloseAllViewsDoc (/* PtrDocument pDoc */);
-extern void ChangeDocumentPSchema (/* PtrDocument pDoc,
-                                      Name newPSchemaName */);
-extern void ChangeNaturePSchema (/* PtrDocument pDoc,
-                                    PtrSSchema pNatSSchema,
-                                    Name newPSchemaName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
