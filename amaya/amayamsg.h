@@ -145,5 +145,6 @@ int                 AMAYA;
 #define AM_ABOUT1                     133
 #define AM_ABOUT2                     134
 #define AM_BUTTON_MATH                135
-#define AMAYA_MSG_MAX                 136
+#define AM_TOO_LONG_URL               136
+#define AMAYA_MSG_MAX                 137
 

@@ -1464,6 +1464,13 @@ DoubleClickEvent    DC_event;
    char               *s;
 
    /* Extract parameters if necessary */
+
+   if (strlen (documentPath) > MAX_LENGTH - 1) 
+     {
+       TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL), "512");
+       return (0);
+     }
+
    strcpy (tempdocument, documentPath);
    ExtractParameters (tempdocument, parameters);
    /* Extract the target if necessary */
@@ -1518,8 +1525,10 @@ DoubleClickEvent    DC_event;
 	     else
 	       {
 		  /* stop current transfer for previous document */
-		  StopTransfer (baseDoc, 1);
-		  newdoc = doc;
+		 if (!(DC_event & DC_MAKEBOOK))
+		   StopTransfer (baseDoc, 1);
+		 newdoc = doc;
+
 	       }
 
 #ifdef AMAYA_JAVA

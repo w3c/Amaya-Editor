@@ -52,7 +52,8 @@ typedef enum _DoubleClickEvent
      DC_FALSE = 0,
      DC_TRUE = 1,
      DC_FORM_POST = 2,
-     DC_FORM_GET = 4
+     DC_FORM_GET = 4,
+     DC_MAKEBOOK = 8
   }
 DoubleClickEvent;
 
