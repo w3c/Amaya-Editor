@@ -1446,7 +1446,7 @@ ThotBool     readOnly;
   View                mainView, structView, altView, linksView, tocView;
   Document            old_doc;
   int                 x, y, w, h;
-  ThotBool            opened, reinitialized;
+  ThotBool            isOpen, reinitialized;
   CHAR_T             *tmp;
 #ifdef _WINDOWS
 
@@ -1487,14 +1487,14 @@ ThotBool     readOnly;
 	TtaUnselect (doc);
 	UpdateContextSensitiveMenus (doc);
 	TtaFreeView (doc, 1);
-	opened = TRUE;
+	isOpen = TRUE;
 	old_doc = 0;	/* the previous document doesn't exist any more */
 	/* The toolkit has to do its job now */
 	TtaHandlePendingEvents ();
      }
    else
       /* open the new document in a fresh window */
-      opened = FALSE;
+      isOpen = FALSE;
 
    /* open the document */
    if (docType == docText ||
@@ -1596,7 +1596,7 @@ ThotBool     readOnly;
 	   TtcSwitchButtonBar (doc, 1); /* no button bar */
 	   TtcSwitchCommands (doc, 1); /* no command open */
 	 }
-       else if (!opened)
+       else if (!isOpen)
 	 /* re-use an existing window */
 	 {
 	   /* Create all buttons */
@@ -1699,7 +1699,6 @@ ThotBool     readOnly;
 			 TBSTYLE_BUTTON, TRUE);
 #endif /* !_WINDOWS */
 #endif /* AMAYA_PLUGIN */
-
 	   AddMathButton (doc, 1);
 #ifdef GRAPHML
 	   AddGraphicsButton (doc, 1);
@@ -1733,109 +1732,31 @@ ThotBool     readOnly;
 	 }
      }
 
-   /* store the new document type */
+   /* do we have to redraw buttons and menus? */
    reinitialized = FALSE;
-   if (docType == docLog)           /* -------->log file */
-     DocumentTypes[doc] = docLog;
-   else if (docType == docImage)    /* -------->loading an image */
-     {
-       if (readOnly)                /* -------->loading an image in ReadOnly */
-	 ReadOnlyDocument[doc] = TRUE;
-       else
-	 {
-	   if (ReadOnlyDocument[doc])
-	     {
-	       /* we need to update menus and buttons */
-	       reinitialized = TRUE;
-	       /* document in ReadOnly mode */
-	       ReadOnlyDocument[doc] = TRUE;
-	     }
-	   else
-	     {
-	       /* we need to update menus and buttons */
-	       reinitialized = TRUE;
-	       /* document in ReadWrite mode */
-	       ReadOnlyDocument[doc] = FALSE;
-	     }
-	 }
-       DocumentTypes[doc] = docImage;
-     }
-   else if (docType == docCSS)      /* -------->loading a CSS file */
-     {
-       if (readOnly)                /* -------->loading CSS in ReadOnly */
-	 {
-	   /* document in ReadOnly mode */
-	   DocumentTypes[doc] = docCSS;
-	   ReadOnlyDocument[doc] = TRUE;
-	 }
-       else
-	 {
-	   if (DocumentTypes[doc] == docText)
-	     DocumentTypes[doc] = docCSS;
-	   else if (DocumentTypes[doc] == docHTML ||
-		    DocumentTypes[doc] == docImage)
-	     {
-	       /* we need to update menus and buttons */
-	       reinitialized = TRUE;
-	       /* document in ReadOnly mode */
-	       DocumentTypes[doc] = docCSS;
-	     }
-	 }
-     }
-   else if (docType == docText)      /* -------->loading a Text file */
-     {
-       if (readOnly)                 /* -------->loading TEXT in ReadOnly */
-	 {
-	   /* document in ReadOnly mode */
-	   DocumentTypes[doc] = docText;
-	   ReadOnlyDocument[doc] = TRUE;
-	 }
-       else
-	 {
-	 if (DocumentTypes[doc] == docHTML ||
-	     DocumentTypes[doc] == docImage)
-	   {
-	     /* we need to update menus and buttons */
-	     reinitialized = TRUE;
-	     DocumentTypes[doc] = docText;
-	   }
-	 else if (DocumentTypes[doc] == docCSS)
-	   DocumentTypes[doc] = docText;
-	 }
-     }
-   else if (docType == docHTML && readOnly) /* -------->loading HTML in ReadOnly */
-     {
-       /* document in ReadOnly mode */
-       DocumentTypes[doc] = docType;
-       ReadOnlyDocument[doc] = readOnly;
-     }
-   else if (docType == docSVG   ||   /* -------->loading a SVG document */
-	    docType == docMath  ||   /* -------->loading a MathML document */
+   if ((docType == docHTML || docType == docImage || docType == docSVG ) &&
+       (DocumentTypes[doc] != docHTML || DocumentTypes[doc] != docImage ||
+	DocumentTypes[doc] != docSVG))
+     /* we need to update menus and buttons */
+     reinitialized = TRUE;
+   else if ((docType == docCSS || docType == docText) &&
+	    (DocumentTypes[doc] != docCSS || DocumentTypes[doc] != docText))
+     /* we need to update menus and buttons */
+     reinitialized = TRUE;
+   else if (docType == docMath ||
 #ifdef ANNOTATIONS
-	    docType == docAnnot ||   /* -------->loading an annotation */
+	    docType == docAnnot ||
 #endif /* ANNOTATIONS */
-	    docType == docSource)    /* -------->loading a source document */
-     {
-       if (readOnly)
-         reinitialized = TRUE;
-       DocumentTypes[doc] = docType;
-       ReadOnlyDocument[doc] = readOnly;
-     }
-   else 			/* -------->loading a HTML file */
-     {
-       if (DocumentTypes[doc] == docText ||
-	   DocumentTypes[doc] == docImage ||
-	   DocumentTypes[doc] == docSource ||
-	   DocumentTypes[doc] == docCSS)
-	 {
-	   /* we need to update menus and buttons */
-	   reinitialized = TRUE;
-	   /* Keep ReadOnlyDocument[doc] unchanged */
-	   DocumentTypes[doc] = docHTML;
-	 }
-     }
+	    docType == docSource)
+     reinitialized = TRUE;
+
+   /* store the new document type */
+   DocumentTypes[doc] = docType;
+   /* set the document in Read-Only mode */
+   if (readOnly)
+     ReadOnlyDocument[doc] = TRUE;
    
-   if (reinitialized || !opened)
+   if (reinitialized || !isOpen)
      /* now update menus and buttons according to the document status */
      if ((DocumentTypes[doc] == docText ||
 	  DocumentTypes[doc] == docCSS ||
