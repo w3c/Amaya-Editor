@@ -150,9 +150,9 @@ Multi_Key;
 static Multi_Key    emk_tab[] =
 {
 /* Remaining ISO-latin-1 sequences */
-   {XK_O, XK_e, XK_OE},	/* Oelig */
-   {XK_O, XK_E, XK_OE},	/* Oelig */
-   {XK_o, XK_e, XK_oe},	/* oelig */
+   {XK_O, XK_e, XK_multiply},	/* Oelig */
+   {XK_O, XK_E, XK_multiply},	/* Oelig */
+   {XK_o, XK_e, XK_division},	/* oelig */
 /* <Alt><key>1<key>4 is already used by numbered entry */
    {XK_slash, XK_4, XK_onequarter},	/* onequarter */
    {XK_slash, XK_2, XK_onehalf},	/* onehalf */
