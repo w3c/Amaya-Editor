@@ -75,6 +75,10 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( urlToOpen );
   UpdateDirAndFilenameFromString( urlToOpen );
 
+  // dir separator
+  wxChar dir_sep = DIR_SEP;
+  m_DirSep = wxString(dir_sep);
+
   SetAutoLayout( TRUE );
 }
 
@@ -152,10 +156,13 @@ void OpenDocDlgWX::UpdateComboboxFromDirAndFilename()
       m_LockUpdateFlag = true;
       wxString dir_value      = XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->GetValue();
       wxString filename_value = XRCCTRL(*this, "wxID_FILENAME", wxTextCtrl)->GetValue();
-      if (!dir_value.IsEmpty() && dir_value.Last() == _T('/'))
-	XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( dir_value + filename_value );
-      else
-	XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( dir_value + _T('/')+ filename_value );
+#ifdef _WINDOWS
+      if (dir_value.IsEmpty())
+        dir_value = _T("C:\\");
+#endif /* _WINDOWS */
+	  if (dir_value.Last() != m_DirSep)
+        dir_value += m_DirSep;
+	  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( dir_value + filename_value );
       m_LockUpdateFlag = false;
     }
 }
@@ -172,7 +179,7 @@ void OpenDocDlgWX::UpdateDirAndFilenameFromString( const wxString & full_path )
       m_LockUpdateFlag = true;
       if (!full_path.StartsWith(_T("http")))
 	{
-	  int end_slash_pos = full_path.Find(_T('/'), true);
+	  int end_slash_pos = full_path.Find(DIR_SEP, true);
 	  wxString dir_value = full_path.SubString(0, end_slash_pos);
 	  wxString filename_value = full_path.SubString(end_slash_pos+1, full_path.Length());
 	  XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->SetValue(dir_value);

@@ -53,6 +53,7 @@ private:
   wxString m_Filter;
   bool     m_LockUpdateFlag;
   int *    m_pLastUsedFilter;
+  wxString m_DirSep;
 };
 
 #endif  //__OPENDOCDLGWX_H__
