@@ -2879,6 +2879,17 @@ void ViewBookmarks (Document document, View view)
 #endif /* BOOKMARKS */
 }
 
+/*----------------------------------------------------------------------
+   ImportTopics
+   Imports a topic hierarchy
+  ----------------------------------------------------------------------*/
+void ImportTopics (Document document, View view)
+{
+#ifdef BOOKMARKS
+  BM_ImportTopics (document, view);
+#endif /* BOOKMARKS */
+}
+
 
 /*------------ Begin: WebDAV Modifications by Manuele Kirsch -----------*/
 /* Note: There is no #include "davlib.h" in this file to prevent
