@@ -1,7 +1,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-  <title>La paleta Matemáticas y el menú Xml &gt; Matemáticas</title>
+  <title>La paleta Matemáticas y el menú XML &gt; Matemáticas</title>
   <meta name="GENERATOR" content="amaya 7.1, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
@@ -26,26 +26,26 @@
 </table>
 
 <div id="page_body">
-<h1>La paleta Matemáticas y el menú <strong>Xml &gt; Matemáticas</strong></h1>
+<h1>La paleta Matemáticas y el menú <strong>XML &gt; Matemáticas</strong></h1>
 
 <p>Para crear una expresión matemática en un documento, sitía el cursor en la
 posición en la que quieres insertar una expresión y haz clic en el botón
-<strong>Matemáticas</strong>, o elige el menú <strong>Xml &gt;
+<strong>Matemáticas</strong>, o elige el menú <strong>XML &gt;
 Matemáticas</strong>.</p>
 
 <h2>Acceder a los comandos</h2>
 
 <p>Las expresiones matemáticas pueden insertarse en un documento mediante el
-menú <strong>Xml &gt; Matemámticas</strong> o eligiendo una expresión de la
+menú <strong>XML &gt; Matemámticas</strong> o eligiendo una expresión de la
 paleta <strong>Matemáticas</strong>.</p>
 
 <p>Haz clic en el botón <strong>Matemáticas</strong> <img
 alt="Botón Matemáticas" src="../../images/Math.gif"> de la barra de botones
 para abrir la paleta <strong>Matemáticas</strong>. Cierra la paleta haciendo
-clic en el botón <strong>Hecho</strong>.</p>
+clic en el botón <strong>Aceptar</strong>.</p>
 
 <p>También puedes mostrar el menú <strong>Matemáticas</strong> haciendo clic
-en el menú <strong>Xml &gt; Matemáticas</strong>.</p>
+en el menú <strong>XML &gt; Matemáticas</strong>.</p>
 
 <h2>Menú Matemáticas y comandos de la paleta</h2>
 

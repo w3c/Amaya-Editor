@@ -126,7 +126,7 @@ class="Link0">Amaya/config</span>.</p>
     <code>CreateStyle</code>, <code>CreateComment.</code> 
     <p></p>
   </li>
-  <li>Menú Xhtml: 
+  <li>Menú XHTML: 
     <ul>
       <li>Main Menu: <code>ChangeTitle</code>, <code>CreateAddress</code>
         <code>CreateParagraph</code>, <code>CreateImage</code>,

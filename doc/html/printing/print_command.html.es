@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>El comando imprimir</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -35,8 +36,8 @@ por omisión o con los valores definidos previamente mediante
 <strong>Configurar e imprimir</strong>.</p>
 
 <p>En Windows, la primera vez que ejecutas el comando
-<strong>Imprimir</strong>, se abre la caja de diálogo estándar de Windows
-para que verifiques que la impresora seleccionada es la correcta.</p>
+<strong>Imprimir</strong> se abre la caja de diálogo estándar de Windows para
+que verifiques que la impresora seleccionada es la correcta.</p>
 
 <h2>Ver también:</h2>
 <ul>

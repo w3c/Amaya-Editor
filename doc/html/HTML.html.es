@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>HTML en Amaya</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -31,25 +32,22 @@
 
 <p>En esta sección se tratan los temas siguientes:</p>
 <ul>
-  <li><a href="HTML-elements/infoTypes.html.es"
-    >Tipos de información en HTML</a></li>
-  <li><a href="HTML-elements/structure.html.es"
-    >Estructura de un documento HTML</a></li>
-  <li><a href="HTML-elements/headings.html.es"
-    >Elementos de encabezado</a></li>
-  <li><a href="HTML-elements/lists.html.es"
-    >Elementos de lista</a></li>
-  <li><a href="HTML-elements/address.html.es"
-    >Acerca del autor</a></li>
-  <li><a href="HTML-elements/inline.html.es"
-    >Marcado en línea</a></li>
-  <li><a href="HTML-elements/40styling.html.es"
-    >Elementos de estilo de carácter en HTML</a></li>
+  <li><a href="HTML-elements/infoTypes.html.es">Tipos de información en
+    HTML</a></li>
+  <li><a href="HTML-elements/structure.html.es">Estructura de un documento
+    HTML</a></li>
+  <li><a href="HTML-elements/headings.html.es">Elementos de
+  encabezado</a></li>
+  <li><a href="HTML-elements/lists.html.es">Elementos de lista</a></li>
+  <li><a href="HTML-elements/address.html.es">Acerca del autor</a></li>
+  <li><a href="HTML-elements/inline.html.es">Marcado en línea</a></li>
+  <li><a href="HTML-elements/40styling.html.es">Elementos de estilo de
+    carácter en HTML</a></li>
 </ul>
 
 <p>Amaya reconoce todos los elementos existentes en HTML 4.0 Transitional y
 en HTML 4.0 Frameset, pero únicamente genera elementos de la DTD HTML 4.0
-Strict. La lista siguiente indica los elementos que pueden generar Amaya, y
+Strict. La lista siguiente indica los elementos que puede generar Amaya y
 enlaza con la recomendación HTML de cada elemento. También puedes encontrar
 ayuda en <a href="HTML-elements/infoTypes.html.es">cómo utilizar los
 elementos en Amaya</a>.</p>
@@ -317,10 +315,9 @@ sus atributos.</p>
     <dd>contenedor para el contenido alternativo a un marco</dd>
 </dl>
 
-<p>Amaya bi crea los siguientes elementos desaprobados en HTML Strict does
-not create the following elements which are deprecated in HTML 4.0 Strict (es
-decir, que no deben ser utilizados más). En su lugar pueden utilizarse los
-elementos indicados.</p>
+<p>Amaya no crea los siguientes elementos desaprobados en HTML Strict (es
+decir, aquellos que la recomendación aconseja no utilizar). En su lugar
+pueden utilizarse los elementos indicados.</p>
 <dl>
   <dt>applet</dt>
     <dd>En su lugar debe utilizarse el elemento <a
@@ -353,8 +350,6 @@ elementos indicados.</p>
 src="../images/up.gif" /></a> <a href="HTML-elements/infoTypes.html.es"><img
 alt="siguiente" border="0" src="../images/right.gif" /></a></p>
 <hr />
-
-<p></p>
 </div>
 </body>
 </html>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Utilizar el archivo HTML.trans</title>
-  
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -17,7 +17,8 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="editing_documents/about_merging_elements.html.es"
+      <td><p align="right"><a
+        href="editing_documents/about_merging_elements.html.es"
         accesskey="p"><img alt="anterior" src="../images/left.gif" /></a> <a
         href="Changing.html.es" accesskey="t"><img alt="superior"
         src="../images/up.gif" /></a></p>
@@ -42,7 +43,7 @@ editando un documento.</p>
 
 <p><strong>Atención:</strong> Puesto que la descripción de las
 transformaciones puede incluir etiquetas, <strong>no</strong> edites el
-archivo <code>HTML.trans</code> con Amaya. Puedes utilizar cualqueir otro
+archivo <code>HTML.trans</code> con Amaya. Puedes utilizar cualquier otro
 editor de texto.</p>
 <hr />
 
@@ -172,7 +173,7 @@ Paris, Mayo 1996, por Cécile Roisin y Stéphane Bonhomme.</p>
 <h2><a name="L235" id="L235">Ejemplos</a></h2>
 <ul>
   <li>El primer ejemplo une varias listas no ordenadas (ul) consecutivas en
-    una única lista. 
+    una única lista.
     <pre>Merge Lists: (ul{li+})+;
     { 
     li &gt; ul:li; 
@@ -185,7 +186,7 @@ Paris, Mayo 1996, por Cécile Roisin y Stéphane Bonhomme.</p>
     está vacía, por lo que no existe elemento ul en el que crear el li. Una
     vez se ha cereado el ul, se puede aplicar la regla.</p>
   </li>
-  <li>El segundo ejemplo transforma una lista de definición en una tabla. 
+  <li>El segundo ejemplo transforma una lista de definición en una tabla.
     <pre>Table: dl{(dt|dd)+}; 
    { 
    dt &gt; &lt;table border=1&gt;.tbody:tr.td; 
@@ -202,7 +203,7 @@ Paris, Mayo 1996, por Cécile Roisin y Stéphane Bonhomme.</p>
     </ul>
   </li>
   <li>El tercer ejemplo elimina una tabla, manteniendo su contenido sin
-    cambios, pero fuera de la tabla. 
+    cambios, pero fuera de la tabla.
     <pre>Remove Table:
 table{?caption,?(body:*{(tr{(td{(?cell_content:*)+}|
                              th{(?cell_content:*)+}
@@ -211,7 +212,7 @@ table{?caption,?(body:*{(tr{(td{(?cell_content:*)+}|
      caption&gt;h3; 
      cell_content&gt;:*;
      }</pre>
-    <p>El patrón coincide con cualqueir tabla e identifica el contenido de
+    <p>El patrón coincide con cualquier tabla e identifica el contenido de
     cada celda de la tabla (cell_content).</p>
     <p>La segunda regla significa que el contenido de cada celda se situará
     en el lugar donde se encontraba la tabla original.</p>

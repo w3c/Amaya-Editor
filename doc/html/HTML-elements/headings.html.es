@@ -31,7 +31,7 @@
 
 <p>HTML proporciona 6 niveles de encabezado: <a
 href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-H1"><code>h1,
-h2, h3, h4, h5, y h6</code></a>. Se deben emplear para marcar los encabezados
+h2, h3, h4, h5 y h6</code></a>. Se deben emplear para marcar los encabezados
 de acuerdo con su importancia relativa, siendo <code>h1</code> el más
 importante. Los encabezados son elementos de bloque y sólo pueden crearse
 como hijos de elementos cuyo contenido pueda ser de tipo bloque. Fíjate en
@@ -41,7 +41,7 @@ que las tablas tienen elementos especiales para marcar los encabezados.</p>
 botones mediante los botones <img src="../../images/H1.gif" alt="Botón h1"
 />, <img src="../../images/H2.gif" alt="Botón h2" />, <img
 src="../../images/H3.gif" alt="Botón h3" />. Desde el menú
-<strong>Xhtml</strong>, o mediante atajos de teclado, puede crearse cualquier
+<strong>XHTML</strong>, o mediante atajos de teclado, puede crearse cualquier
 nivel de encabezado. Los atajos de teclado por omisión son
 <kbd>control-1</kbd> para <code>h1</code>, <kbd>control-2</kbd> para
 <code>h2</code>, y así sucesivamente hasta <kbd>control-6</kbd> para

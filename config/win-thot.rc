@@ -16,6 +16,6 @@ NO_PROXY=
 ENABLE_PIPELINING=
 Profiles_File=$(THOTDIR)\config\amaya.profiles
 Profile=Editor
-ACCESSKEY_MOD=Ctrl
+ACCESSKEY_MOD=Alt
 SHOW_ADDRESS=Yes
 SHOW_BUTTONS=Yes

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Crear mapas de imagen cliente</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -36,7 +37,7 @@ uno o múltiples URIs.</p>
 <p class="ProcedureCaption">Para crear un nuevo mapa de imagen</p>
 <ol>
   <li>Inserta una imagen en el documento eligiendo el comando de menú
-    <strong>Xhtml &gt; Imagen</strong>. 
+    <strong>XHTML &gt; Imagen</strong>.
     <p></p>
     <p class="ProcedureNote"><strong>Nota:</strong> También puedes insertar
     una imagen haciendo clic en el icono <img src="../../images/Image.gif"
@@ -45,13 +46,12 @@ uno o múltiples URIs.</p>
     Unix.</p>
     <p></p>
   </li>
-  <li>Elige el comando de menú <strong>Xhtml &gt; área</strong>. A
+  <li>Elige el comando de menú <strong>XHTML &gt; Área</strong>. A
     continuación elige <strong>Círculo</strong>, <strong>Polígono</strong> o
     <strong>Rectángulo</strong>, en función de la forma del área que quieres
     crear en la imagen. La tabla siguiente indica cómo definir el área según
-    la forma elegida. 
-    <p class="TableTitle" style="margin-left:0in"><strong>Tabla 1: Definir
-    formas</strong></p>
+    la forma elegida.
+    <p class="TableTitle"><strong>Tabla 1: Definir formas</strong></p>
 
     <table border="1" cellspacing="0" cellpadding="0">
       <tbody>
@@ -76,7 +76,8 @@ uno o múltiples URIs.</p>
           </td>
           <td><p class="TableText">Haz clic con el botón izquierdo en cada
             punto que quieras que sea un vértice del polígono. Haz clic con
-            el botón derecho para indicar que marcas el último vértice.</p>
+            el botón derecho para indicar que estás marcando el último
+            vértice.</p>
             <p></p>
           </td>
         </tr>
@@ -93,13 +94,13 @@ uno o múltiples URIs.</p>
   </li>
   <li>Cuando termines de definir el área del mapa de imagen, se mostrará una
     caja de diálogo para que escribas su texto alternativo. El texto
-    alternativo es obligatorio en cualquier imagen o mapa de imagen. 
+    alternativo es obligatorio en cualquier imagen o mapa de imagen.
     <p></p>
   </li>
   <li>Haz clic en cualquier punto en el interior del área del mapa de imagen.
     Se abrirá otra caja de diálogo para que escriba el URI o destino al que
     quieres enlazar el área. Escribe el destino o haz clic en
-    <strong>Buscar</strong> para buscar el destino.. 
+    <strong>Buscar</strong> para buscar el destino..
     <p></p>
     <p><b>Consejo:</b> Para ver el contorno de las áreas ya definidas en el
     mapa de imagen, elige el comando de menú <strong>Vistas &gt; Mostrar

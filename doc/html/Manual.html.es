@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Manual de usuario de Amaya</title>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -22,14 +23,14 @@
 <dl>
   <dt><strong>Autores:</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan, Kim Cramer, Kim Nylander,
-      Kathy Rosen, Michael Spinella, and Lori Caldwell LeDoux 
+      Kathy Rosen, Michael Spinella y Lori Caldwell LeDoux
       <p>Actualización de la documentación realizada por <a
       href="http://www.winwriters.com/"
       title="Sitio web de WinWriters">WinWriters</a></p>
     </dd>
   <dt><strong>Colaboradores:</strong></dt>
     <dd>Charles McCathieNevile, John Russell, Marja-Riitta Koivunen, Laurent
-      Carcone, Bartolomé Sintes</dd>
+      Carcone y Bartolomé Sintes</dd>
 </dl>
 
 <p>Este manual presenta el interface de usuario de Amaya en los sistemas
@@ -65,7 +66,7 @@ bienvenida de Amaya.</p>
 <h1>Contenido</h1>
 <ul>
   <li><a href="Browsing.html.es#page_body" rel="subdocument">Navegar con
-    Amaya</a> 
+    Amaya</a>
     <ul>
       <li><a
         href="browsing/working_with_the_amaya_browser_and_editor.html.es#page_body"
@@ -87,7 +88,7 @@ bienvenida de Amaya.</p>
         rel="subdocument">Navegar formularios</a></li>
     </ul>
   </li>
-  <li><a href="Selecting.html.es#page_body" rel="subdocument">Seleccionar</a> 
+  <li><a href="Selecting.html.es#page_body" rel="subdocument">Seleccionar</a>
     <ul>
       <li><a
         href="selecting/selecting_with_keyboard_and_mouse.html.es#page_body"
@@ -99,7 +100,7 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="Views.html.es#page_body" rel="subdocument">Ver documentos en
-    Amaya</a> 
+    Amaya</a>
     <ul>
       <li><a href="viewing/working_with_document_views.html.es#page_body"
         rel="subdocument">Utilizar las Vistas de Documento</a></li>
@@ -112,7 +113,7 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="Document.html.es#page_body" rel="subdocument">Editar
-    Documentos</a> 
+    Documentos</a>
     <ul>
       <li><a
         href="editing_documents/creating_new_documents.html.es#page_body"
@@ -120,10 +121,10 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="Creating.html.es#page_body" rel="subdocument">Crear nuevos
-    elementos</a> 
+    elementos</a>
     <ul>
       <li><a href="elements/buttons_and_types_menu.html.es#page_body"
-        rel="subdocument">Botones y Menús Xhtml y Xml</a></li>
+        rel="subdocument">Botones y Menús XHTML y XML</a></li>
       <li><a href="elements/the_structure_menu.html.es#page_body"
         rel="subdocument">Menú Estructura</a></li>
       <li><a href="elements/the_enter_key.html.es#page_body"
@@ -137,7 +138,7 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="Attributes.html.es#page_body" rel="subdocument">Editar
-    atributos</a> 
+    atributos</a>
     <ul>
       <li><a rel="subdocument"
         href="editing_attributes/working_with_attributes.html.es#page_body">Trabajar
@@ -153,7 +154,7 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="EditChar.html.es#page_body" rel="subdocument">Escribir
-    caracteres Unicode e ISO-Latin</a> 
+    caracteres Unicode e ISO-Latin</a>
     <ul>
       <li><a
         href="editing_iso-latin-1_characters/entering_ISOLatin1_characters_in_amaya.html.es#page_body"
@@ -171,7 +172,7 @@ bienvenida de Amaya.</p>
         rel="subdocument">Acerca de los espacios en blanco</a></li>
     </ul>
   </li>
-  <li><a href="HTML.html.es#page_body" rel="subdocument">Elementos HTML</a> 
+  <li><a href="HTML.html.es#page_body" rel="subdocument">Elementos HTML</a>
     <ul>
       <li><a href="HTML-elements/infoTypes.html.es#page_body"
         rel="subdocument">Tipos de información en HTML</a></li>
@@ -190,7 +191,7 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="Changing.html.es#page_body" rel="subdocument">Reestructurar
-    documentos</a> 
+    documentos</a>
     <ul>
       <li><a
         href="editing_documents/changing_the_document_structure.html.es#page_body"
@@ -207,7 +208,7 @@ bienvenida de Amaya.</p>
         archivo HTML.trans</a></li>
     </ul>
   </li>
-  <li><a href="Links.html.es#page_body" rel="subdocument">Enlazar</a> 
+  <li><a href="Links.html.es#page_body" rel="subdocument">Enlazar</a>
     <ul>
       <li><a href="linking/creating_a_target_anchor.html.es#page_body"
         rel="subdocument">Crear un destino</a></li>
@@ -224,7 +225,7 @@ bienvenida de Amaya.</p>
         rel="subdocument">Eliminar un Enlace o Destino</a></li>
     </ul>
   </li>
-  <li><a href="Tables.html.es#page_body" rel="subdocument">Editar tablas</a> 
+  <li><a href="Tables.html.es#page_body" rel="subdocument">Editar tablas</a>
     <ul>
       <li><a href="editing_tables/working_with_tables.html.es#page_body"
         rel="subdocument">Trabajar con tablas</a></li>
@@ -241,7 +242,7 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="ImageMaps.html.es#page_body" rel="subdocument">Utilizar
-    imágenes y mapas de imagen</a> 
+    imágenes y mapas de imagen</a>
     <ul>
       <li><a
         href="using_image_maps/working_with_image_maps.html.es#page_body"
@@ -266,7 +267,7 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="Math.html.es#page_body" rel="subdocument">Editar
-    matemáticas</a> 
+    matemáticas</a>
     <ul>
       <li><a
         href="editing_mathematics/working_with_math_expressions.html.es#page_body"
@@ -277,7 +278,7 @@ bienvenida de Amaya.</p>
       teclado</a></li>
       <li><a
         href="editing_mathematics/the_math_palette_and_the_types.html.es#page_body"
-        rel="subdocument">La paleta Matemáticas y el menú Xml &gt;
+        rel="subdocument">La paleta Matemáticas y el menú XML &gt;
         Matemáticas</a></li>
       <li><a
         href="editing_mathematics/about_entering_math_characters.html.es#page_body"
@@ -295,7 +296,7 @@ bienvenida de Amaya.</p>
         rel="subdocument">Problemas conocidos en relación con MathML</a></li>
     </ul>
   </li>
-  <li><a href="SVG.html.es#page_body" rel="subdocument">Editar gráficos</a> 
+  <li><a href="SVG.html.es#page_body" rel="subdocument">Editar gráficos</a>
     <ul>
       <li><a href="using_graphics/working_with_graphics.html.es#page_body"
         rel="subdocument">Trabajar con gráficos</a></li>
@@ -309,7 +310,7 @@ bienvenida de Amaya.</p>
       <li><a href="using_graphics/resizing_graphics.html.es#page_body"
         rel="subdocument">Cambiar el tamaño de los gráficos</a></li>
       <li><a href="using_graphics/SVGLibrary.html.es#page_body"
-        rel="subdocument">Gestionar la biblioteca SVG</a> 
+        rel="subdocument">Gestionar la biblioteca SVG</a>
         <ul>
           <li><a href="using_graphics/UseSVGLib.html.es#page_body"
             rel="subdocument">Usar la biblioteca SVG</a></li>
@@ -324,7 +325,7 @@ bienvenida de Amaya.</p>
       </li>
     </ul>
   </li>
-  <li><a href="Xml.html.es#page_body" rel="subdocument">Soporte de XML</a> 
+  <li><a href="Xml.html.es#page_body" rel="subdocument">Soporte de XML</a>
     <ul>
       <li><a href="using_xml/loading_xml_document.html.es#page_body"
         rel="subdocument">Cargar documentos XML</a></li>
@@ -335,7 +336,7 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="StyleSheets.html.es#page_body" rel="subdocument">Hojas de
-    estilo</a> 
+    estilo</a>
     <ul>
       <li><a href="style_sheets/working_with_styles.html.es#page_body"
         rel="subdocument">Trabajar con estilos</a></li>
@@ -363,7 +364,7 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="Searching.html.es#page_body" rel="subdocument">Buscar y
-    reemplazar texto</a> 
+    reemplazar texto</a>
     <ul>
       <li><a
         href="searching_and_replacing_text/searching_and_replacing_text.html.es#page_body"
@@ -371,14 +372,14 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="SpellChecking.html.es#page_body" rel="subdocument">Corrector
-    ortográfico</a> 
+    ortográfico</a>
     <ul>
       <li><a href="spell_checking/spell_checking.html.es#page_body"
         rel="subdocument">Corrector ortográfico</a></li>
     </ul>
   </li>
   <li><a href="Publishing.html.es#page_body" rel="subdocument">Guardar y
-    publicar</a> 
+    publicar</a>
     <ul>
       <li><a
         href="saving_and_publishing_documents/saving_and_publishing_documents.html.es#page_body"
@@ -400,7 +401,7 @@ bienvenida de Amaya.</p>
   <li><a href="WebDAV.html.es#page_body" rel="subdocument">Funciones
     WebDAV</a></li>
   <li><a href="Printing.html.es#page_body" rel="subdocument">Imprimir
-    documentos</a> 
+    documentos</a>
     <ul>
       <li><a href="printing/printing_documents.html.es#page_body"
         rel="subdocument">Imprimir documentos</a></li>
@@ -419,14 +420,14 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="Numbering.html.es#page_body" rel="subdocument">Numeración de
-    secciones</a> 
+    secciones</a>
     <ul>
       <li><a href="numbering_sections/numbering_sections.html.es#page_body"
         rel="subdocument">Numeración de secciones</a></li>
     </ul>
   </li>
   <li><a href="MakeBook.html.es#page_body" rel="subdocument">Unir varios
-    documentos</a> 
+    documentos</a>
     <ul>
       <li><a
         href="using_the_makebook_function/assembling_large_document_collections.html.es#page_body"
@@ -434,7 +435,7 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="Annotations.html.es#page_body"
-    rel="subdocument">Anotaciones</a> 
+    rel="subdocument">Anotaciones</a>
     <ul>
       <li><a
         href="attaching_annotations/what_is_an_annotation.html.es#page_body"
@@ -478,7 +479,7 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="Configure.html.es#page_body" rel="subdocument">Configurar
-    Amaya</a> 
+    Amaya</a>
     <ul>
       <li><a href="configuring_amaya/configuring_amaya.html.es#page_body"
         rel="subdocument">Configurar Amaya</a></li>
@@ -491,7 +492,7 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="ShortCuts.html.es#page_body" rel="subdocument">Atajos de
-    teclado</a> 
+    teclado</a>
     <ul>
       <li><a
         href="configuring_amaya/about_keyboard_shortcuts.html.es#page_body"
@@ -499,7 +500,7 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="Access.html.es#page_body" rel="subdocument">Accesibilidad en
-    Amaya</a> 
+    Amaya</a>
     <ul>
       <li><a
         href="accessibility_in_amaya/accessibility_in_amaya.html.es#page_body"

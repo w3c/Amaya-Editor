@@ -71,7 +71,7 @@ los botones de lista <img src="../../images/OList.gif"
 alt="Lista con boliche" />, <img src="../../images/NumList.gif"
 alt="Lista numerada" />, <img src="../../images/DL.gif"
 alt="Lista de definición" />. Todos los tipos de lista pueden crearse desde
-el menú <strong>Xhtml &gt; Lista</strong> o mediante atajos de teclado. Los
+el menú <strong>XHTML &gt; Lista</strong> o mediante atajos de teclado. Los
 atajos de teclado por omisión en unix son <kbd>control-l control-o</kbd> para
 crear una lista ordenada, <kbd>control-l control-u</kbd> para crear una lista
 no ordenada y <kbd>control-l control-d</kbd> para crear una lista de

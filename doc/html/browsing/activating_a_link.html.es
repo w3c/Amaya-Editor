@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Activar un Enlace</title>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -15,9 +16,9 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="opening_documents.html.es" accesskey="p"><img
-        alt="anterior" src="../../images/left.gif" /></a> <a
-        href="../Browsing.html.es" accesskey="t"><img alt="superior"
+      <td><p align="right"><a href="opening_documents.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../Browsing.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
         href="about_target_anchors.html.es" accesskey="n"><img
         alt="siguiente" src="../../images/right.gif" /></a></p>
@@ -34,8 +35,7 @@ Como Amaya es tanto un navegador como un editor, Amaya se comporta de manera
 distinta según que hagas clic, doble clic o clic derecho en un enlace.</p>
 <ul>
   <li>Haz clic en un enlace para desplazar el cursor a esa posición en el
-    documento. La barra de estado muestra el URI de destino del enlace.status
-    bar displays the expanded URI of the link. 
+    documento. La barra de estado muestra el URI de destino del enlace.
     <p></p>
   </li>
   <li>Haz doble clic en un enlace para activar el enlace y navegar a su
@@ -43,21 +43,20 @@ distinta según que hagas clic, doble clic o clic derecho en un enlace.</p>
     misma ventana y con el mismo modo (editor o navegador) que el documento
     original. Si habías modificado el documento original y todavía no lo
     habías guardado, se mostará un aviso indicándote que "se perderán todos
-    los cambios". 
+    los cambios".
     <p></p>
   </li>
-  <li>Hax clic derecho en un enlace para activar el enlace y abrir el
+  <li>Haz clic derecho en un enlace para activar el enlace y abrir el
     documento destino en una nueva ventana. El documento original permanece
-    abierto en la primera ventana. 
+    abierto en la primera ventana.
     <p></p>
-    <p class="Note"><strong>Nota:</strong> 
-    Puedes modificar este comportamiento en la ventana de diálogo
-    <strong>Navegación</strong> que se abre con la opción de menú
-    <strong>Especial &gt; Preferencias &gt; Navegación</strong>. Desactivando
-    la casilla de verificación <strong>Doble clic activa enlaces</strong>,
-    puedes navegar documentos con un clic como se suele hacer en los
-    navegadores Web. Sin embargo, ya no podrás editar un enlace haciendo clic
-    en él.</p>
+    <p class="Note"><strong>Nota:</strong> Puedes modificar este
+    comportamiento en la ventana de diálogo <strong>Navegación</strong> que
+    se abre con la opción de menú <strong>Especial &gt; Preferencias &gt;
+    Navegación</strong>. Desactivando la casilla de verificación
+    <strong>Doble clic activa enlaces</strong>, puedes navegar documentos con
+    un clic como se suele hacer en los navegadores Web. Sin embargo, ya no
+    podrás editar un enlace haciendo clic en él.</p>
   </li>
 </ul>
 </div>

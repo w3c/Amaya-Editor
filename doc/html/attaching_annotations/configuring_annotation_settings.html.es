@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Configuración de anotaciones</title>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -53,13 +54,13 @@ mismas funciones.</p>
       Puedes especificar uno o más servidores. El nombre reservado
       <strong>localhost</strong> hace que Amaya busque anotaciones locales,
       pero no significa que haya un servidor de anotaciones local en
-      funcionamiento (en ese caso, mostraía su URL completa).</dd>
+      funcionamiento (en ese caso, mostraría su URL completa).</dd>
     <dd>En Unix, los servidores de anotaciones se especifican en forma de una
       lista separada por espacios. En Windows, puedes añadir un nuevo nombre
       de servidor haciendo clic en la lista de servidores de anotaciones,
       pulsando <strong>Intro</strong> y escribiendo a continuación el nombre
       del servidor. Por omisión, la lista inicial está limitada a
-      <code>localhost</code>. 
+      <code>localhost</code>.
       <p></p>
       <p class="ProcedureNote"><strong>Nota:</strong> Para desactivar
       temporalmente un servidor de anotaciones, añade el carácter "-" antes
@@ -70,7 +71,7 @@ mismas funciones.</p>
     <dd>Indica si Amaya debe solicitar las anotciones automáticamente (al
       servidor de anotaciones) cada vez que abres un URL. Si la casilla no
       está marcada, puedes en cualquier momento elegir el comando
-      <strong>Anotaciones &gt; Cargar</strong>. 
+      <strong>Anotaciones &gt; Cargar</strong>.
       <p></p>
       <p class="Note"><strong>Nota:</strong> Si marcas la casilla
       <strong>Autocargar anotaciones remotas</strong>, puedes experimentar
@@ -81,7 +82,7 @@ mismas funciones.</p>
   desconectado)</strong></dt>
     <dd>Indica si Amaya debe reiniciar el valor de la opción
       <strong>Autocargar anotaciones remotas</strong> al iniciar el programa.
-      Está opción puede serte útil si trabajas descoenctado, pero quieres
+      Está opción puede serte útil si trabajas desconectado, pero quieres
       autocargar tanto las anotaciones locales como las remotas.</dd>
 </dl>
 

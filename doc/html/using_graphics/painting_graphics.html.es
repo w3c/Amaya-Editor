@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Colorear gráficos</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -45,7 +46,7 @@ editando el estilo de atributo SVG mediante propiedades CSS.</p>
   <li>Selecciona el atributo que quiers editar.</li>
   <li>En el diálogo, cambia el atributo (por ejemplo, <kbd>fill=" #C8ff95";
     stroke="#000000"</kbd>), haz clic en <strong>Aplicar</strong> y a
-    continuación en <strong>Cerrar</strong>. 
+    continuación en <strong>Cerrar</strong>.
     <p></p>
     <p class="Note"><strong>Nota:</strong> Puedes especificar el color
     mediante valores hexadecimales o utilizando nombres de colores como
@@ -61,7 +62,7 @@ propiedades SVG:</p>
     abrirá la paleta de colores.</li>
   <li>Elige el color deseado de la paleta de colores. Al hacer clic con el
     botón izquierdo, generas la propiedad <kbd>stroke</kbd> y al hacer clic
-    con el botón derecho, generas la propiedad <kbd>fill</kbd>. 
+    con el botón derecho, generas la propiedad <kbd>fill</kbd>.
     <p></p>
     <p class="Note"><strong>Nota:</strong> El texto SVG se considera un
     gráfico, por lo que la propiedad <kbd>fill</kbd> colorea el interior del
@@ -69,7 +70,7 @@ propiedades SVG:</p>
     Amaya aplica la propiedad <kbd>fill</kbd> a los caracteres, pero no la
     propiedad <kbd>stroke</kbd>. Así que el hacer clic con el botón izquierdo
     no tiene un efecto inmediato, mientras que al hacer clic con el botón
-    derecho o central colorea el elemento de texto.</p>
+    derecho o central se colorea el elemento de texto.</p>
   </li>
 </ol>
 </div>

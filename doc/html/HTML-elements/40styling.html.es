@@ -43,7 +43,7 @@ en el menú <strong>XHTML &gt; Elemento carácter</strong>.</p>
       href="inline.html.es#Emphasis">strong y em</a> cuando quieras enfatizar
       una palabra o frase. Existen <a href="infoTypes.html.es">otros
       elementos</a> para indicar encabezados, términos que se están
-      definiendo, y otras situaciones especiales como citas, porciones de
+      definiendo y otras situaciones especiales como citas, porciones de
       programas de ordenador, etc. Si simplemente utilizas esos elementos
       para conseguir un tipo de letra más fuerte, utiliza en su lugar <a
       href="../StyleSheets.html.es">hojas de estilo</a>.</dd>

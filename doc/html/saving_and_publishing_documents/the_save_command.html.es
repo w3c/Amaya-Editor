@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>El comando Guardar</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -38,10 +39,10 @@ Control+s</code> en Unix). La imágenes añadidas se guardan en la misma
 carpeta automáticamente, tan sólo se pide confirmación cuando el nombre del
 documento es desconocido.</p>
 
-<p>También traer un documento de un servidor especificando el nombre del
-servidor. Esto resulta muy útil para navegar, pero no está soportado por el
-método put. En este caso, Amaya detecta que falta el nombre del documento y
-te pide que utilices un nombre por omisión o que completes la petición.</p>
+<p>También puedes traer un documento de un servidor especificando el nombre
+del servidor. Esto resulta muy útil para navegar, pero no está soportado por
+el método put. En este caso, Amaya detecta que falta el nombre del documento
+y te pide que utilices un nombre por omisión o que completes la petición.</p>
 
 <p class="Note"><strong>Nota:</strong> Utiliza el comando <strong>Guardar
 como</strong> para guardar el documento en un lugar distinto.</p>

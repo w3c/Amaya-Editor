@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Insertar imágenes</title>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -15,9 +16,9 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="working_with_image_maps.html.es" accesskey="p"><img
-        alt="anterior" src="../../images/left.gif" /></a> <a
-        href="../ImageMaps.html.es" accesskey="t"><img alt="superior"
+      <td><p align="right"><a href="working_with_image_maps.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../ImageMaps.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
         href="creating_clientside_image_maps.html.es" accesskey="n"><img
         alt="siguiente" src="../../images/right.gif" /></a></p>
@@ -29,7 +30,7 @@
 <div id="page_body">
 <h1>Insertar o sustituir imágenes</h1>
 
-<p>Para <em>insertar</em> una imagen, elige el comando de menú <strong>Xhtml
+<p>Para <em>insertar</em> una imagen, elige el comando de menú <strong>XHTML
 &gt; Imagen</strong>, haz clic en el botón <strong>Gráficos</strong> <img
 src="../../images/Image.gif" alt="Botón Gráficos" />, o utiliza el atajo de
 teclado (<code>Control-t</code> en Windows, <code>Control-i</code> en Unix).
@@ -39,8 +40,8 @@ el texto alternativo es obligatorio. Debes escribir algo en en campo
 correspondiente.</p>
 
 <p>Si está seleccionada una imagen (para seleccionar una imagen, haz clic y
-arrastra el ratón sobre ella) al abrir la caja de diálogo de imagen, la
-imagen seleccioanda se sustituye por la nueva imagen.</p>
+arrastra el ratón sobre ella), al abrir la caja de diálogo de imagen, la
+imagen seleccionada se sustituye por la nueva imagen.</p>
 
 <p>Para suministrar una descripción larga de una imagen que represente una
 información compleja, debes hacerlo en un archivo distinto y enlazarlo

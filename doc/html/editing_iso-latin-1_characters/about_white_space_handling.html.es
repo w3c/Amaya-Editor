@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="generator" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="generator"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Acerca de los espacios en blanco</title>
-  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -28,14 +28,14 @@
 <div id="page_body">
 <h1>Acerca de los espacios en blanco</h1>
 
-<p>Amaya relimina los espacios en blanco no significativos cuando abre un
-documento, a menos de que deban ser explícitamente conservados. Esto ocurre
+<p>Amaya elimina los espacios en blanco no significativos cuando abre un
+documento, a menos que deban ser explícitamente conservados. Esto ocurre
 tanto en los documentos XHTML, MathML y SVG, como en los elementos MathML o
 SVG incluidos en un documento HTML.</p>
 
 <p>Estos espacios en blanco se consideran no significativos:</p>
 <ul>
-  <li>espacios en blanco al final de un línea (<code>#xD</code> and
+  <li>espacios en blanco al final de un línea (<code>#xD</code> y
     <code>#xA</code>)</li>
   <li>tabulaciones (<code>#X9</code>)</li>
   <li>espacios en blanco al principio de un elemento</li>
@@ -52,7 +52,7 @@ válido en documentos XHTML). Los posibles valores del atributo
     de los espacios en blanco de la aplicación es aceptable. En el caso de
     Amaya, el tratamiento por omisión elimina los espacios en blanco no
     significativos en todas las DTD soportadas, como se indica en el primer
-    párrafo. 
+    párrafo.
     <p></p>
   </li>
   <li>El valor <code>preserve</code> significa que la aplicación debe

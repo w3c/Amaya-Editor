@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Crear contenido accesible</title>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -15,9 +16,10 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="about_amayas_accessibility_features.html.es"
-        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
-        <a href="../Access.html.es" accesskey="t"><img alt="superior"
+      <td><p align="right"><a
+        href="about_amayas_accessibility_features.html.es" accesskey="p"><img
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Access.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a></p>
       </td>
     </tr>
@@ -53,14 +55,14 @@ hacer accesibles los sitios Web:</p>
     <code>alt</code> para describir la función de cada elemento visual. Para
     más información ver <span class="Link0"><a
     href="../using_graphics/working_with_graphics.html.es">Trabajar con
-    gráficos</a></span>. 
+    gráficos</a></span>.
     <p></p>
   </li>
   <li><strong>Mapas de imágenes</strong>. Utiliza mapas de imágenes clientes
-    y texto alternativo para las áreas. para más información, ver <span
+    y texto alternativo para las áreas. Para más información, ver <span
     class="Link0"><a
     href="../using_image_maps/working_with_image_maps.html.es">Trabajar con
-    mapas de imagen</a></span>. 
+    mapas de imagen</a></span>.
     <p></p>
   </li>
   <li><strong>Multimedia</strong>. Proporciona capturas y transcripciones del
@@ -68,22 +70,22 @@ hacer accesibles los sitios Web:</p>
     <p></p>
   </li>
   <li><strong>Enlaces de hipertexto</strong>. Utiliza texto que tenga sentido
-    al ser leido fuera de contexto. Por ejemplo, evita utilizar  "haz clic
-    aquí" como texto del enlace. 
+    al ser leido fuera de contexto. Por ejemplo, evita utilizar "haz clic
+    aquí" como texto del enlace.
     <p></p>
   </li>
   <li><strong>Organización de página</strong>. Utiliza encabezados, listas y
     una estructura consistente. Utiliza CSS para el diseño y el estilo
     siempre que sea posible. Para más información ver <span class="Link0"><a
     href="../style_sheets/working_with_styles.html.es">Trabajar con
-    estilos</a></span>. 
+    estilos</a></span>.
     <p></p>
   </li>
   <li><strong>Gráficos y diagramas</strong>. Resume los datos o utiliza el
-    atribute <span class="Link0">longdesc</span>. para más información, ver
+    atribute <span class="Link0">longdesc</span>. Para más información, ver
     <span class="Link0"><a
     href="../using_graphics/working_with_graphics.html.es">Trabajar con
-    gráficos</a></span>. 
+    gráficos</a></span>.
     <p></p>
   </li>
   <li><strong>Scripts, applets y plug-ins</strong>. Proporciona contenido
@@ -94,7 +96,7 @@ hacer accesibles los sitios Web:</p>
   <li><strong>Tablas</strong>. Utiliza tablas para resumir datos. Para más
     información, ver <span class="Link0"><a
     href="../editing_tables/working_with_tables.html.es">Trabajar con
-    tablas</a></span>. 
+    tablas</a></span>.
     <p></p>
   </li>
   <li><strong>Marcos (frames)</strong>. Muestra páginas sin marcos utilizando
@@ -103,9 +105,8 @@ hacer accesibles los sitios Web:</p>
   </li>
   <li><strong>Comprueba tu trabajo</strong>. Valida tus documentos antes de
     <span class="Link0"><a
-    href="../saving_and_publishing_documents/saving_and_publishing_documents.html.es">publicarlo</a></span>.
-    Puedes utilizar las herramientas, consejos y guías del W3C disponibles
-    en: 
+    href="../saving_and_publishing_documents/saving_and_publishing_documents.html.es">publicarlos</a></span>.
+    Puedes utilizar las herramientas, consejos y guías del W3C disponibles en:
     <p><span class="Link0"><a
     href="http://www.w3.org/TR/WAI-WEBCONTENT">http://www.w3.org/TR/WAI-WEBCONTENT.</a></span></p>
   </li>

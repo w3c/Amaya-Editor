@@ -38,7 +38,7 @@
     >Crear expresiones matemáticas con el teclado</a></li>
   <li><a
     href="editing_mathematics/the_math_palette_and_the_types.html.es"
-    >La paleta Matemáticas y el menú <strong>Xml &gt;
+    >La paleta Matemáticas y el menú <strong>XML &gt;
     Matemáticas</strong></a></li>
   <li><a
     href="editing_mathematics/about_entering_math_characters.html.es"

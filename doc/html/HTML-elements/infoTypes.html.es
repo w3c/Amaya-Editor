@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Tipos de información en HTML</title>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -35,10 +36,10 @@ estilo</a> para cambiar la presentación de cualquier elemento. Los tipos de
 información que se pueden representar por elementos HTML son:</p>
 <dl>
   <dt><a href="headings.html.es">Encabezados</a></dt>
-    <dd>En HTML existen seis niveles de encabezaado, que deben usarse para
+    <dd>En HTML existen seis niveles de encabezado, que deben usarse para
       marcar los encabezados de acuerdo con su importancia.</dd>
   <dt><a href="lists.html.es">Listas</a></dt>
-    <dd>En HTML existen dos tipos simples de listas: 
+    <dd>En HTML existen dos tipos simples de listas:
       <ol>
         <li>listas ordenadas (como éstas)</li>
         <li>listas no ordenadas</li>

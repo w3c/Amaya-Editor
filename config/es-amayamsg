@@ -1,6 +1,6 @@
 # encoding= latin1
 0 Archivos
-1 Abrir
+1 Abrir:
 2 Documento XHTML 1.1 nuevo...
 3 Documento XHTML 1.0 Transitional nuevo...
 4 Documento XHTML 1.0 Strict nuevo...
@@ -27,7 +27,7 @@
 25 ¡Terminado!
 26 Seleccionar el destino
 27 Destino inválido
-28 Insertar URI o navegar
+28 Insertar URI o buscar:
 29 Título
 30 Cambiar Título...
 31 Documento modificado. ¡Se perderán todos los cambios! ¿Quiere seguir?
@@ -81,14 +81,14 @@
 79 ¿Guardar en disco?
 80 Copiar imágenes
 81 Transformar URLs
-82 Ubicación de documento
-83 Directorio de imágenes
+82 Ubicación de documento:
+83 Directorio de imágenes:
 84 Ubicación de objeto
 85 Archivos CSS
 86 Abrir CSS
 87 Desactivar CSS
 88 Activar CSS
-89 Eliminar CSS
+89 Borrar enlace a CSS
 90 Editor/Navegador de W3C para la Web
 91 (enviar cuestión a www-amaya@w3.org)
 92 No puedo gestionar URL con más de %s caracteres
@@ -99,14 +99,14 @@
 97 Por favor, introduzca un nombre de usuario:
 98 %d solicitud pendiente
 99 No hay archivo CSS disponible
-100 Transferencia interrumpida
+100 Interrumpir transferencia
 101 Documento anterior
 102 Documento siguiente
 103 Recargar
 104 Guardar
 105 Imprimir
 106 Buscar
-107 Énfasis (emphasis)
+107 Énfasis (em)
 108 Enérgico (strong)
 109 Fuente fija
 110 No repetir (no-repeat)
@@ -114,7 +114,7 @@
 112 Cabecera Nivel 1
 113 Cabecera Nivel 2
 114 Cabecera Nivel 3
-115 Lista con bolos
+115 Lista no numerada
 116 Lista numerada
 117 Lista de definición
 118 Enlace
@@ -165,20 +165,20 @@
 163 Documentos protegidos en la caché
 164 Modo desconectado
 165 Ignorar Expires: cabecera
-166 Directorio caché
-167 Tamaño de caché (Mb)
-168 Límite de tamaño de entrada de caché (Mb)
+166 Directorio caché:
+167 Tamaño de caché (MB):
+168 Tamaño máx. de entrada de caché (MB):
 169 Preferencias de proxy
-170 HTTP proxy (p.e., www.w3.org:1234)
-171 Lista de dominios proxy (p.e., lists.w3.org)
+170 Proxy HTTP (p.e., www.w3.org:1234):
+171 Lista de dominios proxy (p.e., lists.w3.org):
 172 Preferencias generales
-173 Página de inicio
+173 Página de inicio:
 174 Retardo ToolTip (ms)
 175 Retardo Doble clic (ms)
 176 Tamaño fuente de menú
-177 Zoom de fuente
-178 Idioma de diálogo
-179 **Enable line-by-line paste
+177 Zoom de fuente:
+178 Idioma de diálogo:
+179 Activar pegado línea a línea
 180 Mostrar imágenes de fondo
 181 Mostar barra de botones
 182 Mostrar dirección
@@ -191,45 +191,45 @@
 189 Preferencias de publicación
 190 Usar ETAGS y precondiciones
 191 Verificar cada PUT con un GET
-192 El nombre por omisión de URL termina en '/'
+192 El nombre por omisión de URL termina en '/':
 193 Preferencias de geometría
 194 Guardar geometría actual
 195 Restaurar la geometría por omisión
 196 Los cambios serán efectivos cuando abra una nueva ventana.
 197 Preferencias de color
-198 Color del documento
-199 Color del fondo del documento
+198 Color del documento:
+199 Color del fondo del documento:
 200 Color del menú
 201 Color del fondo del menú
 202 No pude iniciar el caché. Puede haber especificado un directorio de caché inválido u otro Amaya está usando el caché.
 203 Inicio
-204 Lista de idiomas preferidos como "es, en, fr":
-205 Ubicación de archivo de definición de perfiles
-206 Selección de perfil
-207 Estos cambios no serán efectivos hasta que se reinicie Amaya
+204 Lista de idiomas preferidos (p.e. "es, en, fr"):
+205 Ubicación del archivo de definición de perfiles:
+206 Perfil elegido:
+207 Estos cambios no serán efectivos hasta que se reinicie Amaya.
 208 Preferencias de perfiles
-209 Introduzca la URL del servidor de plantillas
+209 URL del servidor de plantillas:
 210 Preferencias de plantillas
-211 Permitir redirecciones PUT automáticas en estos dominios
+211 Permitir redirecciones PUT automáticas en los dominios:
 212 Ignorar hojas de estilo
 213 Tipo de transformación
-214 (separar cada entrada con un espacio)
-215 No utilizar proxy es estos dominios
-216 Utilizar proxy sólo en estos dominios
+214 (separar los dominios con un espacio)
+215 No usar proxy es estos dominios
+216 Usar proxy sólo en estos dominios
 217 Nombre de carácter
-218 Directorio de usuario de Amaya
-219 Directorio temporal
+218 Directorio de usuario de Amaya:
+219 Directorio temporal:
 220 Usar paleta
 221 Negociación de idioma
-222 Configuración para anotaciones
-223 Anotación de usuario
-224 Servidor de publicación
-225 Servidores de anotaciones
+222 Configuración de anotaciones
+223 Anotación de usuario:
+224 Servidor de publicación:
+225 Servidores de anotaciones:
 226 Autocargar anotaciones locales
 227 Autocargar anotaciones remotas
 228 Deshabilitar la recarga automática remota en cada inicio (para trabajo sin conexión)
-229 Selección de color
-230 Color del cursor de texto
+229 Color de selección:
+230 Color del cursor de texto:
 231 Orientación
 232 Vertical
 233 Apaisado
@@ -287,7 +287,7 @@
 285 Guardar la copia puede originar un problema de pérdida de actualización
 286 Crear o cambiar el tipo de documento provoca que el documento sea reanalizado.
 287 No se desharán las modificaciones pendientes.
-288 Para documentos XHTML utilice el tipo MIME de la aplicación xhtml+xml
+288 En documentos XHTML usar tipo MIME application/xhtml+xml
 289 ¡Bloqueo conseguido!
 290 ¡Bloqueo fallido!
 291 Bloqueando %s...

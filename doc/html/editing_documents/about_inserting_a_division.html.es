@@ -32,7 +32,7 @@
 
 <p>Puedes agrupar fácilmente un grupo de párrafos, encabezados, listas,
 tablas y otros elementos en una misma división. Para ello, selecciona los
-elementos que quieras agrupar y elige el comando de menú <strong>Xhtml &gt;
+elementos que quieras agrupar y elige el comando de menú <strong>XHTML &gt;
 División (div)</strong><strong>.</strong></p>
 </div>
 </body>

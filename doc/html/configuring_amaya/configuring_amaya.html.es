@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Configurar Amaya</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -29,7 +30,7 @@
 <h1>Configurar Amaya</h1>
 
 <p>Amaya utiliza varioas archivos de configuración para obtener los valores
-iniciales de los parámetros blobales, cajas de diálogo, atajos de teclado,
+iniciales de los parámetros globales, cajas de diálogo, atajos de teclado,
 tamaño y posición de la ventana, hoja de estilo de usuario, etc. Puedes
 cambiar la mayoría de parámetros de configuración con los menús de
 preferencias.</p>

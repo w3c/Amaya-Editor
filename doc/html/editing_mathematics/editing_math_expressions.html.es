@@ -33,7 +33,7 @@
 <p>En Amaya puedes crear y editar matrices de la misma manera que editas
 tablas HTML. Como en las tablas, un comando específico (<strong>Eliminar
 columna de matriz</strong>) elimina una columna de una matriz, aunque no esté
-vacía. Este comando se encuentra al final del menú <strong>Xml &gt;
+vacía. Este comando se encuentra al final del menú <strong>XML &gt;
 Matemáticas</strong>.</p>
 
 <h2>Cambiar la estructura de una expresión</h2>
@@ -52,7 +52,7 @@ mostrará un menú con los cambios posibles.</p>
     href="working_with_math_expressions.html.es">Trabajar con expresiones
     matemáticas</a></span></li>
   <li><span class="Link"><a href="the_math_palette_and_the_types.html.es">La
-    paleta Matemáticas y el menú Xml &gt; Matemáticas</a></span></li>
+    paleta Matemáticas y el menú XML &gt; Matemáticas</a></span></li>
 </ul>
 </div>
 </body>

@@ -4,8 +4,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <title>Crear expresiones matemáticas con el teclado</title>
-  
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/">
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -30,7 +30,7 @@
 <div id="page_body">
 <h1>Crear expresiones matemáticas con el teclado</h1>
 
-<p>No es imprescindible que utilices el menú o la paleta Matmáticas para
+<p>No es imprescindible que utilices el menú o la paleta Matemáticas para
 crear o editar expresiones matemáticas. Puedes escribir expresiones
 matemáticas directamente con el teclado, pues cada elemento del menú
 Matemáticas tiene un atajo de teclado asociado. Los atajos se indican en el

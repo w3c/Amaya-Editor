@@ -29,7 +29,7 @@
 
 <p class="ProcedureCaption">Para editar el título del documento:</p>
 <ul>
-  <li>Abre el menú <strong>Xhtml &gt; Cambiar Título</strong>.</li>
+  <li>Abre el menú <strong>XHTML &gt; Cambiar Título</strong>.</li>
 </ul>
 
 <p class="Note"><strong>Nota:</strong> También puedes editar el título del

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Buscar y reemplazar texto</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -15,8 +16,8 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="../Searching.html.es" accesskey="t"><img alt="superior"
-        src="../../images/up.gif" /></a></p>
+      <td><p align="right"><a href="../Searching.html.es" accesskey="t"><img
+        alt="superior" src="../../images/up.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -36,50 +37,50 @@ atajo de teclado <code>Control-Shift-%</code> en Unix, or
 diferentes criterios:</p>
 <ul type="disc">
   <li>Escribe la cadena de caracteres que quieres buscar en el campo
-    <strong>Buscar</strong>. 
+    <strong>Buscar</strong>.
     <p></p>
   </li>
   <li>Si activas la casilla de verificación
     <strong>MAYÚSCULAS=minúsculas</strong>, en la búsqueda no se distinguirá
     entre mayúsculas y minúsculas; si no, se buscará la cadena tal y como
-    aparece en el campo <strong>Buscar</strong>. 
+    aparece en el campo <strong>Buscar</strong>.
     <p></p>
   </li>
-  <li>Puedes sustituir cadenas al mismo tiempo. Escribe el texto que
-    reemplazará en el campo <strong>Sustituir por</strong> y elige la forma
-    de sustitución en el grupo de opciones <strong>Sustituir</strong>. Las
-    formas de sustitución son: 
+  <li>Para sustituir cadenas, escribe el texto que reemplazará a la cadena
+    buscada en el campo <strong>Reemplazar por</strong> y elige la forma de
+    sustitución en el grupo de opciones <strong>Reemplazar</strong>. Las
+    formas de sustitución son:
     <ul>
-      <li><strong>No sustituir</strong>: No se realiza ninguna sustitutción
-        aunque el campo <strong>Sustituir</strong> contenga una cadena de
-        caracteres. Se realiza simplemente a búsqueda.</li>
-      <li><strong>Sustituir a solicitud</strong>: Cuando se encuentra la
+      <li><strong>No reemplazar</strong>: No se realiza ninguna sustitución
+        aunque el campo <strong>Reemplazar por</strong> contenga una cadena
+        de caracteres. Se realiza simplemente la búsqueda.</li>
+      <li><strong>Reemplazar a solicitud</strong>: Cuando se encuentra la
         cadena, Amaya la selecciona. Puedes entonces hacer clic en uno de los
-        siguientes botones: 
+        siguientes botones:
         <ul>
           <li><strong>Confirmar</strong> para sustituir y repetir la
           búsqueda.</li>
-          <li><strong>No sustituir</strong> para realizar una nueva búsqueda
+          <li><strong>No reemplazar</strong> para realizar una nueva búsqueda
             sin sustituir la cadena encontrada.</li>
         </ul>
       </li>
-      <li><strong>Sustitución automática</strong>: Se realizan todas las
+      <li><strong>Reemplazar automáticamente</strong>: Se realizan todas las
         sustituciones automáticamente en la porción de documento definida por
-        el grupo de opciones <strong>Buscar dónde</strong> 
+        el grupo de opciones <strong>Dónde buscar</strong>
         <p></p>
       </li>
     </ul>
   </li>
-  <li>El grupod e opciones <strong>Buscar dónde</strong> te permite
-    especificar la parte del documento en la que se realizará la búsqueda: 
+  <li>El grupo de opciones <strong>Dónde buscar</strong> te permite
+    especificar la parte del documento en la que se realizará la búsqueda:
     <ul>
-      <li><strong>Antes selección</strong>: La búsqueda comienza al principio
-        de la parte seleccionada y busca hacia atrás hasta el principio del
-        documento.</li>
-      <li><strong>En selección</strong>: La búsqueda se realiza únicamente en
-        al parte seleccionada, desde el principio hasta el final.</li>
-      <li><strong>Tras selección</strong>: La búsqueda empieza al final de la
-        parte seleccionada y busca hacia adelante hasta el final del
+      <li><strong>Antes de la selección</strong>: La búsqueda comienza al
+        principio de la parte seleccionada y busca hacia atrás hasta el
+        principio del documento.</li>
+      <li><strong>En la selección</strong>: La búsqueda se realiza únicamente
+        en la parte seleccionada, desde el principio hasta el final.</li>
+      <li><strong>Tras la selección</strong>: La búsqueda empieza al final de
+        la parte seleccionada y busca hacia adelante hasta el final del
         documento.</li>
       <li><strong>En todo el documento</strong>: La búsqueda se realiza en
         todo el documento desde el principio hasta el final,
@@ -89,14 +90,14 @@ diferentes criterios:</p>
 </ul>
 
 <p>Para empezar la búsqueda, haz clic en el botón <strong>Confirmar</strong>.
-Si Amaya encuentra la cabena buscada, se selecciona y el documento se
+Si Amaya encuentra la cadena buscada, se selecciona y el documento se
 desplaza de manera que la cadena sea visible. Puedes buscar la siguiente
 aparición de la cadena haciendo nuevamente clic en el botón
 <strong>Confirmar</strong>. Si la cadena no se encuentra, Amaya muestra un
 mensaje <strong>No encontrado</strong>.</p>
 
 <p>Puedes dejar de buscar y sustituir en cualquier momento haciendo clic en
-el botón <strong>Hecho</strong>.</p>
+el botón <strong>Aceptar</strong>.</p>
 
 <p>Puedes deshacer las sustituciones eligiendo el comando de menú
 <strong>Editar &gt; Deshacer</strong>, o mediante el atajo de teclado

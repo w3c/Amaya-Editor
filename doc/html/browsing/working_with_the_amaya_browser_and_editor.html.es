@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Trabajar con el Navegador y Editor Amaya</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -35,13 +36,13 @@ Web.</p>
 
 <p>Navegar con Amaya es como navegar con otros navegadores Web. Por ejemplo,
 la barra de botones de Amaya incluye botones stop, atrás, adelante,
-actualizar, home, guardar e imprimir. Pero hay una diferencia importante:
-para abrir un enlace debes hacer doble clic sobre él. Consulta <a
+actualizar, página de inicio, guardar e imprimir. Pero hay una diferencia
+importante: para abrir un enlace debes hacer doble clic sobre él. Consulta <a
 href="activating_a_link.html.es">Activar un enlace</a> para obtener más
 información.</p>
 
 <p>A diferencia de otros navegadores, Amaya proporciona herramientas para la
-edición de páginas web. para obtener más información sobre la edición,
+edición de páginas web. Para obtener más información sobre la edición,
 consulta:</p>
 <ul>
   <li><a href="../Changing.html.es">Editar Documentos</a></li>
@@ -54,18 +55,18 @@ consulta:</p>
 <p>Por omisión, Amaya empieza en modo editor. En este modo puedes editar y
 navegar el documento en la misma ventana.</p>
 
-<p>La barra be botones muestra el botón <img src="../../images/Editor.gif"
+<p>La barra de botones muestra el botón <img src="../../images/Editor.gif"
 alt="Botón Editor" /> cuando la ventana está en modo editor, y el botón <img
 src="../../images/Browser.gif" alt="Botón navegador" /> cuando la ventana
-está en modo navegador. En modo navegador, solamente puedes navegar y
-rellenar formularios.</p>
+está en modo navegador. En modo navegador solamente puedes navegar y rellenar
+formularios.</p>
 
 <p>Para pasar del modo editor al modo navegador, haz clic en el botón <img
 src="../../images/Editor.gif" alt="Botón Editor" />. Haz clic en el botón
 <img src="../../images/Browser.gif" alt="Botón navegador" /> para volver al
 modo editor. También puedes elegir el modo con el comando de menú
-<strong>Editar &gt; Modo Editor</strong>, o con un atajo de teclado (el atajo
-por omisión es <kbd>Shift-Control-*</kbd>).</p>
+<strong>Editar &gt; Modo Edición</strong>, o con un atajo de teclado (el
+atajo por omisión es <kbd>Shift-Control-*</kbd>).</p>
 
 <p class="Note"><strong>Nota:</strong> El modo se puede elegir de forma
 independiente en cada ventana de documento.</p>

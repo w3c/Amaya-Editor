@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Mon Apr 14 11:39:30 CEST 2003" version="55">
+<base last_update="Wed Apr 23 09:57:58 CEST 2003" version="56">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -27,7 +27,7 @@
 	<message xml:lang="de">Adresse:</message>
 	<message xml:lang="it">Apri</message>
 	<message xml:lang="tr">Aç</message>
-	<message xml:lang="es">Abrir</message>
+	<message xml:lang="es">Abrir:</message>
 	<message xml:lang="pt">Abrir</message>
 	<message xml:lang="fi">Avaa</message>
 </label>
@@ -295,7 +295,7 @@
 	<message xml:lang="de">URI</message>
 	<message xml:lang="it">Indirizzo</message>
 	<message xml:lang="tr">Adres</message>
-	<message xml:lang="es">Insertar URI o navegar</message>
+	<message xml:lang="es">Insertar URI o buscar:</message>
 	<message xml:lang="pt">Inserir a URI ou procurar</message>
 	<message xml:lang="fi">Syötä URL tai selaa</message>
 </label>
@@ -833,7 +833,7 @@
 	<message xml:lang="de">Dokument</message>
 	<message xml:lang="it">Collocazione del documento</message>
 	<message xml:lang="tr">Belgenin adresi</message>
-	<message xml:lang="es">Ubicación de documento</message>
+	<message xml:lang="es">Ubicación de documento:</message>
 	<message xml:lang="pt">Localização do documento</message>
 	<message xml:lang="fi">Dokumentin sijainti</message>
 </label>
@@ -843,7 +843,7 @@
 	<message xml:lang="de">Bilder</message>
 	<message xml:lang="it">Directory delle immagini</message>
 	<message xml:lang="tr">Görüntü dizini</message>
-	<message xml:lang="es">Directorio de imágenes</message>
+	<message xml:lang="es">Directorio de imágenes:</message>
 	<message xml:lang="pt">Diretório de imagens</message>
 	<message xml:lang="fi">Kuvahakemisto</message>
 </label>
@@ -902,7 +902,7 @@
 	<message xml:lang="fr">Retirer CSS</message>
 	<message xml:lang="it">Rimuovi CSS</message>
 	<message xml:lang="de">Entfernen CSS</message>
-	<message xml:lang="es">Eliminar CSS</message>
+	<message xml:lang="es">Borrar enlace a CSS</message>
 	<message xml:lang="pt">Remover CSS</message>
 	<message xml:lang="fi">Poista CSS</message>
 	<message xml:lang="tr">Sil CSS</message>
@@ -1013,7 +1013,7 @@
 	<message xml:lang="de">Stop</message>
 	<message xml:lang="it">Interrompi trasferimento</message>
 	<message xml:lang="tr">Aktarımı kes</message>
-	<message xml:lang="es">Transferencia interrumpida</message>
+	<message xml:lang="es">Interrumpir transferencia</message>
 	<message xml:lang="pt">Interromper transferência</message>
 	<message xml:lang="fi">Keskeytä tiedonsiirto</message>
 </label>
@@ -1083,7 +1083,7 @@
 	<message xml:lang="de">Betont</message>
 	<message xml:lang="it">Enfasi</message>
 	<message xml:lang="tr">Vurgu</message>
-	<message xml:lang="es">Énfasis (emphasis)</message>
+	<message xml:lang="es">Énfasis (em)</message>
 	<message xml:lang="pt">Ênfase</message>
 	<message xml:lang="fi">Korosta</message>
 </label>
@@ -1163,7 +1163,7 @@
 	<message xml:lang="de">Ungeordnete Liste</message>
 	<message xml:lang="it">Lista puntata</message>
 	<message xml:lang="tr">Liste</message>
-	<message xml:lang="es">Lista con bolos</message>
+	<message xml:lang="es">Lista no numerada</message>
 	<message xml:lang="pt">Lista com bolinhas</message>
 	<message xml:lang="fi">Pisteellinen luettelo</message>
 </label>
@@ -1672,7 +1672,7 @@
 	<message xml:lang="fr">Répertoire du cache</message>
 	<message xml:lang="de">Verzeichnis</message>
 	<message xml:lang="it">Directory della cache</message>
-	<message xml:lang="es">Directorio caché</message>
+	<message xml:lang="es">Directorio caché:</message>
 	<message xml:lang="pt">Diretório cache</message>
 	<message xml:lang="fi">Välimuistin sijainti</message>
 	<message xml:lang="tr">Gizli bölümün repertuarı</message>
@@ -1682,7 +1682,7 @@
 	<message xml:lang="fr">Taille du cache (Mo)</message>
 	<message xml:lang="de">Cachegröße (MB)</message>
 	<message xml:lang="it">Dimensione della cache (Mb)</message>
-	<message xml:lang="es">Tamaño de caché (Mb)</message>
+	<message xml:lang="es">Tamaño de caché (MB):</message>
 	<message xml:lang="pt">Tamanho de cache (MB)</message>
 	<message xml:lang="fi">Välimuistin koko (Mb)</message>
 	<message xml:lang="tr">Gizli bölümün büyüklüğü (Mb)</message>
@@ -1692,7 +1692,7 @@
 	<message xml:lang="fr">Taille maximale des entrées du cache (Mo)</message>
 	<message xml:lang="de">Eintragsgröße (MB)</message>
 	<message xml:lang="it">Dimensione dell'indice della cache (Mb)</message>
-	<message xml:lang="es">Límite de tamaño de entrada de caché (Mb)</message>
+	<message xml:lang="es">Tamaño máx. de entrada de caché (MB):</message>
 	<message xml:lang="pt">Tamanho limite de entrada de cache (MB)</message>
 	<message xml:lang="fi">Välimuistiin tallennettavan tiedoston kokorajoitus (Mb)</message>
 	<message xml:lang="tr">Gizli bölümün maksimum kapasitesi (Mb)</message>
@@ -1712,7 +1712,7 @@
 	<message xml:lang="fr">Proxy HTTP</message>
 	<message xml:lang="de">HTTP-Proxy</message>
 	<message xml:lang="it">HTTP proxy (es., http://groucho.marx.edu)</message>
-	<message xml:lang="es">HTTP proxy (p.e., www.w3.org:1234)</message>
+	<message xml:lang="es">Proxy HTTP (p.e., www.w3.org:1234):</message>
 	<message xml:lang="pt">Proxy HTTP (por exemplo www.w3.org:1234)</message>
 	<message xml:lang="fi">HTTP välityspalvelin (e.g., www.w3.org:1234)</message>
 	<message xml:lang="tr">HTTP proxy (e.g., www.w3.org:1234)</message>
@@ -1722,7 +1722,7 @@
 	<message xml:lang="fr">Liste des domaines du proxy (e.g., lists.w3.org)</message>
 	<message xml:lang="de">Proxy-Domänen</message>
 	<message xml:lang="it">Domini di proxy (es., www.w3.org)</message>
-	<message xml:lang="es">Lista de dominios proxy (p.e., lists.w3.org)</message>
+	<message xml:lang="es">Lista de dominios proxy (p.e., lists.w3.org):</message>
 	<message xml:lang="pt">Lista de domínios proxy (por exemplo lists.w3.org)</message>
 	<message xml:lang="fi">Välityspalvelimen domain luettelo (e.g., lists.w3.org)</message>
 	<message xml:lang="tr">Proxy\'nin alan listesi (e.g., lists.w3.org)</message>
@@ -1742,7 +1742,7 @@
 	<message xml:lang="fr">Page de démarrage</message>
 	<message xml:lang="de">Startseite</message>
 	<message xml:lang="it">Home Page</message>
-	<message xml:lang="es">Página de inicio</message>
+	<message xml:lang="es">Página de inicio:</message>
 	<message xml:lang="pt">Página principal</message>
 	<message xml:lang="fi">Aloitussivu</message>
 	<message xml:lang="tr">başlangıç sayfası</message>
@@ -1782,7 +1782,7 @@
 	<message xml:lang="fr">Zoom caractères</message>
 	<message xml:lang="de">Schriftzoom</message>
 	<message xml:lang="it">Ingrandimento della fonte</message>
-	<message xml:lang="es">Zoom de fuente</message>
+	<message xml:lang="es">Zoom de fuente:</message>
 	<message xml:lang="pt">Zoom de tipo (font)</message>
 	<message xml:lang="fi">Fonttikoko</message>
 	<message xml:lang="tr">Karakterleri büyüt</message>
@@ -1792,7 +1792,7 @@
 	<message xml:lang="fr">Langue des dialogues</message>
 	<message xml:lang="de">Dialogsprache</message>
 	<message xml:lang="it">Lingua delle finestre di dialogo</message>
-	<message xml:lang="es">Idioma de diálogo</message>
+	<message xml:lang="es">Idioma de diálogo:</message>
 	<message xml:lang="pt">Linguagem de diálogo</message>
 	<message xml:lang="fi">Kielikoodi</message>
 	<message xml:lang="tr">Yazıların dili</message>
@@ -1802,6 +1802,7 @@
 	<message xml:lang="fr">Activer le coller ligne � ligne</message>
 	<message xml:lang="it">Incolla mantenendo le righe originali</message>
 	<message xml:lang="de">Zeilenweises Einfügen aktivieren</message>
+	<message xml:lang="es">Activar pegado línea a línea</message>
 </label>
 <label define="AM_SHOW_BG_IMAGES">
 	<message xml:lang="en">Show background images</message>
@@ -1926,7 +1927,7 @@
 	<message xml:lang="fr">Nom par défaut pour les URLs finissant par un '/'</message>
 	<message xml:lang="de">Dateiname, falls URI mit '/' endet</message>
 	<message xml:lang="it">Nome di default per gli URL che terminano con '/'</message>
-	<message xml:lang="es">El nombre por omisión de URL termina en '/'</message>
+	<message xml:lang="es">El nombre por omisión de URL termina en '/':</message>
 	<message xml:lang="pt">Nome padrão para URLs terminadas em '/'</message>
 	<message xml:lang="fi">Oletus nimi URL:lle jotka päättyvät '/'</message>
 	<message xml:lang="tr">'/'\'le biten URL\'leri öntanımlı isim</message>
@@ -1986,7 +1987,7 @@
 	<message xml:lang="fr">Couleur d'avant-plan des documents</message>
 	<message xml:lang="de">Schrift (Dokument)</message>
 	<message xml:lang="it">Colore in primo piano nei documenti</message>
-	<message xml:lang="es">Color del documento</message>
+	<message xml:lang="es">Color del documento:</message>
 	<message xml:lang="pt">Cor do plano frontal do documento</message>
 	<message xml:lang="fi">Dokumentin piirtoväri</message>
 	<message xml:lang="tr">Belgenin ön-plan rengi</message>
@@ -1996,7 +1997,7 @@
 	<message xml:lang="fr">Couleur d'arrière-plan des documents</message>
 	<message xml:lang="de">Hintergrund(Dokument)</message>
 	<message xml:lang="it">Colore dello sfondo nei documenti</message>
-	<message xml:lang="es">Color del fondo del documento</message>
+	<message xml:lang="es">Color del fondo del documento:</message>
 	<message xml:lang="pt">Cor de fundo do documento</message>
 	<message xml:lang="fi">Dokumentin taustaväri</message>
 	<message xml:lang="tr">Belgenin arka-plan rengi</message>
@@ -2046,7 +2047,7 @@
 	<message xml:lang="fr">Liste des langues préférées comme "fr, en" :</message>
 	<message xml:lang="de">Bevorzugte Sprachen</message>
 	<message xml:lang="it">Lista delle lingue preferite, come "it, en, fr":</message>
-	<message xml:lang="es">Lista de idiomas preferidos como "es, en, fr":</message>
+	<message xml:lang="es">Lista de idiomas preferidos (p.e. "es, en, fr"):</message>
 	<message xml:lang="pt">Lista de idiomas preferidos como "pt, en":</message>
 	<message xml:lang="fi">Luettelo valituista kielistä "fi, en":</message>
 	<message xml:lang="tr">Istenilen dillerin listesi (mesela "en, fr"):</message>
@@ -2056,7 +2057,7 @@
 	<message xml:lang="fr">Emplacement du fichier de définition de profils</message>
 	<message xml:lang="de">Datei der Profildefinitionen</message>
 	<message xml:lang="it">File di definizione dei profili</message>
-	<message xml:lang="es">Ubicación de archivo de definición de perfiles</message>
+	<message xml:lang="es">Ubicación del archivo de definición de perfiles:</message>
 	<message xml:lang="pt">Localização do arquivo de definição de perfís</message>
 	<message xml:lang="fi">Profiilien määrittelytiedoston sijainti</message>
 	<message xml:lang="tr">Profillerin tanımlama dosyanın yeri</message>
@@ -2066,7 +2067,7 @@
 	<message xml:lang="fr">Sélection du profil</message>
 	<message xml:lang="de">Verfügbare Profile</message>
 	<message xml:lang="it">Selezione dei profili</message>
-	<message xml:lang="es">Selección de perfil</message>
+	<message xml:lang="es">Perfil elegido:</message>
 	<message xml:lang="pt">Seleção de perfil</message>
 	<message xml:lang="fi">Profiilin valinta</message>
 	<message xml:lang="tr">Profil seçimi</message>
@@ -2076,7 +2077,7 @@
 	<message xml:lang="fr">Ces changements seront effectifs lors du prochain démarrage.</message>
 	<message xml:lang="de">Änderungen werden erst bei einem Neustart wirksam</message>
 	<message xml:lang="it">Queste modifiche saranno effettive alla prossima esecuzione</message>
-	<message xml:lang="es">Estos cambios no serán efectivos hasta que se reinicie Amaya</message>
+	<message xml:lang="es">Estos cambios no serán efectivos hasta que se reinicie Amaya.</message>
 	<message xml:lang="pt">Estas modificações não serão modificadas até que se reinicialize Amaya.</message>
 	<message xml:lang="fi">Muutokset tulevat voimaan Amayan uudelleenkäynnistämisen jälkeen.</message>
 	<message xml:lang="tr">Bu değişiklikler yeniden Amaya\'yı açtığınız taktirde geçerli olurlar</message>
@@ -2096,7 +2097,7 @@
 	<message xml:lang="fr">Entrez l'URL du serveur de modèles</message>
 	<message xml:lang="de">URI des Schablonen-Servers angeben</message>
 	<message xml:lang="it">Digita l'URL del server dei modelli</message>
-	<message xml:lang="es">Introduzca la URL del servidor de plantillas</message>
+	<message xml:lang="es">URL del servidor de plantillas:</message>
 	<message xml:lang="pt">Introduzir a URL do servidor de gabaritos</message>
 	<message xml:lang="fi">Syötä mallipalvelimen osoite</message>
 	<message xml:lang="tr">Model servörün URL\'ini girin</message>
@@ -2116,7 +2117,7 @@
 	<message xml:lang="fr">Autoriser la redirection automatique du PUT dans ces domaines</message>
 	<message xml:lang="de">PUT automatisch an diese Domäne umleiten</message>
 	<message xml:lang="it">Consenti la redirezione automatica dei PUT su questi domini</message>
-	<message xml:lang="es">Permitir redirecciones PUT automáticas en estos dominios</message>
+	<message xml:lang="es">Permitir redirecciones PUT automáticas en los dominios:</message>
 	<message xml:lang="pt">Permitir redirecionamentos PUT automáticos nestes domínios</message>
 	<message xml:lang="fi">Salli automaattinen PUT-komentojen välitys näissä domaineissa</message>
 	<message xml:lang="tr">Bu alanlarda PUT otomatik olarak yeniden yönlerdirmesini kabul edin</message>
@@ -2146,7 +2147,7 @@
 	<message xml:lang="fr">(séparer chaque entrée avec un espace)</message>
 	<message xml:lang="de">(Einträge durch Leerzeichen trennen)</message>
 	<message xml:lang="it">(separa ogni campo con uno spazio)</message>
-	<message xml:lang="es">(separar cada entrada con un espacio)</message>
+	<message xml:lang="es">(separar los dominios con un espacio)</message>
 	<message xml:lang="pt">(separar cada entrada com um espaço)</message>
 	<message xml:lang="fi">(erota syötteet välilyönnein)</message>
 	<message xml:lang="tr">Her Enter\'ü boşlukla değiştirin</message>
@@ -2156,7 +2157,7 @@
 	<message xml:lang="fr">Ne pas utiliser le proxy dans ces domaines</message>
 	<message xml:lang="de">Ausschließen</message>
 	<message xml:lang="it">Escludi l'utilizzo del proxy su questi domini</message>
-	<message xml:lang="es">No utilizar proxy es estos dominios</message>
+	<message xml:lang="es">No usar proxy es estos dominios</message>
 	<message xml:lang="pt">Não há proxy nestes domínios</message>
 	<message xml:lang="fi">Älä käytä välityspalvelinta näihin domaineihin</message>
 	<message xml:lang="tr">Bu alanlarda Proxy\'yi kullanmayın</message>
@@ -2166,7 +2167,7 @@
 	<message xml:lang="fr">Utiliser le proxy uniquement dans ces domaines</message>
 	<message xml:lang="de">Zulassen</message>
 	<message xml:lang="it">Utilizza il proxy solo su questi domini</message>
-	<message xml:lang="es">Utilizar proxy sólo en estos dominios</message>
+	<message xml:lang="es">Usar proxy sólo en estos dominios</message>
 	<message xml:lang="pt">Somente com proxy estes domínios</message>
 	<message xml:lang="fi">Käytä vain välityspalvelinta näihin domaineihin</message>
 	<message xml:lang="tr">Bu alanlarda sadece Proxy\'yi kullanın</message>
@@ -2186,7 +2187,7 @@
 	<message xml:lang="fr">Repertoire utilisateur</message>
 	<message xml:lang="de">Heimatverzeichnis</message>
 	<message xml:lang="it">Directory dell'utente</message>
-	<message xml:lang="es">Directorio de usuario de Amaya</message>
+	<message xml:lang="es">Directorio de usuario de Amaya:</message>
 	<message xml:lang="pt">Diretório de usuário Amaya</message>
 	<message xml:lang="fi">Amaya käyttäjän hakemisto</message>
 	<message xml:lang="tr">Kullanıyıcı repertuarı</message>
@@ -2196,7 +2197,7 @@
 	<message xml:lang="fr">Repertoire témporaire</message>
 	<message xml:lang="de">Temporärverzeichnis</message>
 	<message xml:lang="it">Directory temporanea</message>
-	<message xml:lang="es">Directorio temporal</message>
+	<message xml:lang="es">Directorio temporal:</message>
 	<message xml:lang="pt">Diretório temporário</message>
 	<message xml:lang="fi">Väliaikaisten tiedostojen hakemisto</message>
 	<message xml:lang="tr">Süreli repertuarı</message>
@@ -2226,7 +2227,7 @@
 	<message xml:lang="fr">Configurer les annotations</message>
 	<message xml:lang="de">Anmerkungen konfigurieren</message>
 	<message xml:lang="it">Configurazione delle annotazioni</message>
-	<message xml:lang="es">Configuración para anotaciones</message>
+	<message xml:lang="es">Configuración de anotaciones</message>
 	<message xml:lang="pt">Configuração para anotações</message>
 	<message xml:lang="fi">Huomautuksien asetukset</message>
 	<message xml:lang="tr">Not ayarları</message>
@@ -2236,7 +2237,7 @@
 	<message xml:lang="fr">Nom de l'utilisateur</message>
 	<message xml:lang="de">Autor</message>
 	<message xml:lang="it">Nome utente</message>
-	<message xml:lang="es">Anotación de usuario</message>
+	<message xml:lang="es">Anotación de usuario:</message>
 	<message xml:lang="pt">Usuário anotador</message>
 	<message xml:lang="fi">Käyttäjän huomautukset</message>
 	<message xml:lang="tr">Kullanıyıcı ismi</message>
@@ -2246,7 +2247,7 @@
 	<message xml:lang="fr">Serveur de publication</message>
 	<message xml:lang="de">Veröffentlichen auf</message>
 	<message xml:lang="it">Server per la pubblicazione</message>
-	<message xml:lang="es">Servidor de publicación</message>
+	<message xml:lang="es">Servidor de publicación:</message>
 	<message xml:lang="pt">Servidor de publicação de anotações</message>
 	<message xml:lang="fi">Postipalvelimen huomautukset</message>
 	<message xml:lang="tr">Dağıtım servörü</message>
@@ -2256,7 +2257,7 @@
 	<message xml:lang="fr">Serveur d'annotations</message>
 	<message xml:lang="de">Laden von</message>
 	<message xml:lang="it">Server per le annotazioni</message>
-	<message xml:lang="es">Servidores de anotaciones</message>
+	<message xml:lang="es">Servidores de anotaciones:</message>
 	<message xml:lang="pt">Servidores de anotações</message>
 	<message xml:lang="fi">Palvelimien merkinnät</message>
 	<message xml:lang="tr">Not servörü</message>
@@ -2296,7 +2297,7 @@
 	<message xml:lang="fr">Couleur de sélection</message>
 	<message xml:lang="de">Markierung</message>
 	<message xml:lang="it">Colore della selezione</message>
-	<message xml:lang="es">Selección de color</message>
+	<message xml:lang="es">Color de selección:</message>
 	<message xml:lang="pt">Cor de seleção</message>
 	<message xml:lang="fi">Valintaväri</message>
 	<message xml:lang="tr">Renk seçimi</message>
@@ -2306,7 +2307,7 @@
 	<message xml:lang="fr">Couleur du curseur d'insertion</message>
 	<message xml:lang="de">Cursor</message>
 	<message xml:lang="it">Colore del cursore</message>
-	<message xml:lang="es">Color del cursor de texto</message>
+	<message xml:lang="es">Color del cursor de texto:</message>
 	<message xml:lang="pt">Cor do cursor de inserção</message>
 	<message xml:lang="fi">Caret väri</message>
 	<message xml:lang="tr">Kürsörün rengi</message>
@@ -2886,7 +2887,7 @@
 	<message xml:lang="fr">Utiliser le type MIME application/xhtml+xml pour les documents XHTML</message>
 	<message xml:lang="de">MIME-Typ application/xhtml+xml für XHTML-Dokumente verwenden</message>
 	<message xml:lang="it">Per un documento XHTML, usa il MIME type application/xhtml+xml</message>
-	<message xml:lang="es">Para documentos XHTML utilice el tipo MIME de la aplicación xhtml+xml</message>
+	<message xml:lang="es">En documentos XHTML usar tipo MIME application/xhtml+xml</message>
 	<message xml:lang="pt">Utilise o tipo MIME application/xhtml+xml para documentos XHTML</message>
 	<message xml:lang="fi">Käytä application/xhtml+xml MIME tyypiä XHTML dokumenttien yhteydessä</message>
 	<message xml:lang="tr">XHTML belgeleri için MIME tipi uygulama/xhtml+xml \'li kullanın</message>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Mover anotaciones</title>
-  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -16,9 +16,9 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="navigating_annotations.html.es" accesskey="p"><img
-        alt="anterior" src="../../images/left.gif" /></a> <a
-        href="../Annotations.html.es" accesskey="t"><img alt="superior"
+      <td><p align="right"><a href="navigating_annotations.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../Annotations.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
         href="replying_to_annotations.html.es" accesskey="n"><img
         alt="siguiente" src="../../images/right.gif" /></a></p>
@@ -53,7 +53,7 @@ sin tener que seleccionar nada.</p>
 
 <h1>Mover anotaciones a una ubicación memorizada previamente</h1>
 
-<p>Pudes almacenar la posición a la que quieres mover una anotación, y a
+<p>Pudes almacenar la posición a la que quieres mover una anotación y a
 continuación moverla ahí. Esta posibilidad es útil para mover varias
 anotaciones al mismo lugar o para situarlas en algún lugar antes de moverlas
 a su sitio.</p>
@@ -64,8 +64,8 @@ a su sitio.</p>
     mover las anotaciones.
     <p></p>
   </li>
-  <li>Elige la opción de menú <strong> Enlaces &gt; Guardar selección como
-    XPointer</strong>para almacenar un Xpointer que represente la selección.
+  <li>Elige la opción de menú <strong>Enlaces &gt; Guardar selección como
+    XPointer</strong> para almacenar un Xpointer que represente la selección.
     <p></p>
   </li>
   <li>En la ventana <strong>Anotaciones</strong>, elige la opción de menú

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Acerca de Destinos</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -15,9 +16,9 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="activating_a_link.html.es" accesskey="p"><img
-        alt="anterior" src="../../images/left.gif" /></a> <a
-        href="../Browsing.html.es" accesskey="t"><img alt="superior"
+      <td><p align="right"><a href="activating_a_link.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../Browsing.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
         href="about_moving_backward_and_forward.html.es" accesskey="n"><img
         alt="siguiente" src="../../images/right.gif" /></a></p>
@@ -34,14 +35,14 @@ name. Identifican posibles destinos de un enlace.</p>
 
 <p>Para poder reconocer fácilmente los destinos, puedes activar la
 visualización de los iconos de destino <img src="../../images/target.gif"
-alt="Icono destino" />. Estos iconos no forman parte del documentos y se
+alt="Icono destino" />. Estos iconos no forman parte del documento y se
 pueden mostrar u ocultar de dos maneras:</p>
 <ul>
   <li>Eligiendo el comando de menú <strong>Vistas &gt; Mostrar
-    destinos</strong> 
+    destinos</strong>
     <p></p>
   </li>
-  <li>utilizando atajos de teclado (por omisión, <kbd>Control-v
+  <li>Utilizando atajos de teclado (por omisión, <kbd>Control-v
     Control-t</kbd> en Unix, <kbd>Alt-v Alt-l</kbd> en Windows).</li>
 </ul>
 

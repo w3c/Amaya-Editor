@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Usar la biblioteca SVG</title>
   <style type="text/css">
   </style>
@@ -17,9 +18,10 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /><img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="SVGLibrary.html.es" accesskey="t"><img alt="top"
-        src="../../images/up.gif" /></a> <a href="AddSVGLib.html.es"
-        accesskey="n"><img src="../../images/right.gif" /></a></p>
+      <td><p align="right"><a href="SVGLibrary.html.es" accesskey="t"><img
+        alt="top" src="../../images/up.gif" /></a> <a
+        href="AddSVGLib.html.es" accesskey="n"><img
+        src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -27,7 +29,7 @@
 
 <div id="page_body">
 <h1>Usar la biblioteca SVG</h1>
-<img alt="Use SVG library" src="../../images/scenario_graphique.png" /> 
+<img alt="Use SVG library" src="../../images/scenario_graphique.png" />
 
 <p>Para pegar en un documento un elemento de la biblioteca SVG tienes que:</p>
 <ol>
@@ -38,8 +40,8 @@
     los elementos gráficos que hay en la biblioteca.</li>
   <li>Elegir el elemento gráfico haciendo clic en la imagen que lo
   ilustra.</li>
-  <li>Seleccionar el modo "Copiar": puede elegir entre copiar o remitirte al
-    elemento gráfico. 
+  <li>Seleccionar el modo "Copiar": puedes elegir entre copiar o remitirte al
+    elemento gráfico.
     <ul>
       <li>En el modo "Copiar selección", pegas en tu documento todos los
         elementos que forman la imagen.</li>

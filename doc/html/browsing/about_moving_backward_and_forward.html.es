@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Acerca de Ir Adelante o Atrás</title>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -15,9 +16,9 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="about_target_anchors.html.es" accesskey="p"><img
-        alt="anterior" src="../../images/left.gif" /></a> <a
-        href="../Browsing.html.es" accesskey="t"><img alt="superior"
+      <td><p align="right"><a href="about_target_anchors.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../Browsing.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="reloading_a_page.html.es"
         accesskey="n"><img alt="siguiente" src="../../images/right.gif"
         /></a></p>
@@ -37,10 +38,10 @@ adelante o atrás en esa lista de varias maneras:</p>
     <tr>
       <td><p>Menú Archivo</p>
       </td>
-      <td><p>Elige <strong>Archivo &gt; Volver</strong> para ver la página
+      <td><p>Elige <strong>Archivo &gt; Atrás</strong> para ver la página
         visitada anteriormente.</p>
 
-        <p>Elige <strong>Archivo &gt; Avanzar</strong> para ver la página
+        <p>Elige <strong>Archivo &gt; Adelante</strong> para ver la página
         visitada posteriormente.</p>
       </td>
     </tr>

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Utilizar las vistas de Documento</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="es" lang="es">
@@ -15,10 +16,10 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="../Views.html.es" accesskey="t"><img alt="superior"
-        src="../../images/up.gif" /></a> <a href="opening_a_view.html.es"
-        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
-        /></a></p>
+      <td><p align="right"><a href="../Views.html.es" accesskey="t"><img
+        alt="superior" src="../../images/up.gif" /></a> <a
+        href="opening_a_view.html.es" accesskey="n"><img alt="siguiente"
+        src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -66,9 +67,9 @@ elegida.</p>
         elemento se representan en forma de árbol mediante una línea vertical
         azul que indica la extensión del elemento.</p>
 
-        <p>Puedes editar directamente cualquier texto negro haciendo clic en
-        él y escribiendo. Debes utilizar los comandos de edición para cambiar
-        el texto azul.</p>
+        <p>Puedes editar directamente cualquier texto en negro haciendo clic
+        en él y escribiendo. Debes utilizar los comandos de edición para
+        cambiar el texto en azul.</p>
 
         <p>La vista Estructura muestra todos los elementos del documento,
         incluso aquellos que no se muestran en la vista Formateada, por

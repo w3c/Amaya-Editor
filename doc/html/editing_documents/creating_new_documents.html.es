@@ -35,7 +35,7 @@ tres tipos de documentos:</p>
 
 <p class="ProcedureCaption">Para crear un documento:</p>
 <ol>
-  <li>Elige el comando de menú <strong>Archivo &gt; Nuevo</strong>, y a
+  <li>Elige el comando de menú <strong>Archivo &gt; Nuevo</strong> y a
     continuación elige el tipo de archivo que quieres crear. 
     <p></p>
   </li>

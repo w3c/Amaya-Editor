@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="generator" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="generator"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>The Intro Key</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -15,9 +16,9 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="the_structure_menu.html.es" accesskey="p"><img
-        alt="anterior" src="../../images/left.gif" /></a> <a
-        href="../Creating.html.es" accesskey="t"><img alt="superior"
+      <td><p align="right"><a href="the_structure_menu.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../Creating.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="exiting_anchors.html.es"
         accesskey="n"><img alt="siguiente" src="../../images/right.gif"
         /></a></p>
@@ -29,14 +30,13 @@
 <div id="page_body">
 <h1>La tecla Intro</h1>
 
-<p>Cuando escribes un nuevo documento o una nueva parte de un documento,
-puedes crear documentos uno detrás de otro pulsando la tecla
-<strong>Intro</strong>. El elemento actual se cierra y se abre uno nuevo
-inmediatamente después.</p>
+<p>Cuando escribes un nuevo elemento o una nueva parte de un elemento, puedes
+crear elemento uno detrás de otro pulsando la tecla <strong>Intro</strong>.
+El elemento actual se cierra y se abre uno nuevo inmediatamente después.</p>
 
 <p>Normalmente el nuevo elemento que se crea es un simple párrafo, sea cual
 sea el tipo del elemento anterior. Puedes cambiar el tipo del elemento
-eligiendo el tipo deseado del menú <strong>Xhtml</strong> o haciendo clic en
+eligiendo el tipo deseado del menú <strong>XHTML</strong> o haciendo clic en
 el botón correspondiente.</p>
 
 <p>Cuando un elemento formateado como <code>&lt;pre&gt;</code> está al final

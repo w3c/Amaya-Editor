@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Botones y Menús Xhtml y Xml</title>
+  <title>Botones y Menús XHTML y XML</title>
   <meta name="generator" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -25,14 +25,14 @@
 </table>
 
 <div id="page_body">
-<h1>Botones y Menús Xhtml y Xml</h1>
+<h1>Botones y Menús XHTML y XML</h1>
 
-<p>Los comandos de los menús <strong>Xhtml</strong> y <strong>Xml</strong> y
+<p>Los comandos de los menús <strong>XHTML</strong> y <strong>XML</strong> y
 los botones correspondientes te permiten crear nuevos elementos en el punto
 de inserción dentro del documento. Para utilizar los comandos de los menús
-<strong>Xhtml</strong> y <strong>Xml</strong>, sitúa el cursor en la posición
-deseada y elige el tipo de elemento del menú <strong>Xhtml</strong> o
-<strong>Xml</strong> .</p>
+<strong>XHTML</strong> y <strong>XML</strong>, sitúa el cursor en la posición
+deseada y elige el tipo de elemento del menú <strong>XHTML</strong> o
+<strong>XML</strong> .</p>
 
 <h2>Puntos de inserción</h2>
 

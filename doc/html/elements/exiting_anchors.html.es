@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Salir de anclas, cadenas con estilo, etc</title>
-  <meta name="generator" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="generator"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -32,7 +33,7 @@
 <p>Cuando un párrafo u otro bloque de texto tiene un estilo asignado (porque
 acaba con un ancla o con una cadena en negrita, itálica u otro estilo
 similar), al desplazar el punto de inserción al final y escribir, el nuevo
-texto se añade al ancla o la cadena con estilo asignado.</p>
+texto se añade al ancla o la cadena con el estilo asignado.</p>
 
 <p>Para salir de un ancla o de un elemento con estilo asignado y poder
 escribir texto sin formato:</p>
@@ -52,14 +53,14 @@ escribir texto sin formato:</p>
     pulsar <b>Intro</b> se crea una nueva línea en el
     <code>&lt;pre&gt;</code>. Para crear otro elemento, por ejemplo un
     párrafo, después del <code>&lt;pre&gt;</code>, utiliza el menú
-    <strong>Xhtml</strong> y elige el tipo de elemento que quieres crear.</li>
+    <strong>XHTML</strong> y elige el tipo de elemento que quieres crear.</li>
   <li>Otra forma de conseguir este resultado consiste en seleccionar todo el
     elemento <code>&lt;pre&gt;</code> pulsando <b>Escape</b> (en Unix) o
     <b>F2</b> (En Windows) y a continuación <b>Intro</b>. Así se creará un
     nuevo párrafo después del elemento <code>&lt;pre&gt;</code>.</li>
 </ul>
 
-<p>Esto también funciona en una tabla: selecciona la tabla entera, y pulsa
+<p>Esto también funciona en una tabla: selecciona la tabla entera y pulsa
 <b>Intro</b> para crear un nuevo párrafo a continuación de la tabla. También
 puedes salir de la tabla pulsando <strong>Intro</strong> hasta salir de la
 tabla.</p>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Mon Apr 14 11:39:30 CEST 2003" version="30">
+<base last_update="Wed Apr 23 09:57:58 CEST 2003" version="31">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -27,7 +27,7 @@
 	<message xml:lang="de">OK</message>
 	<message xml:lang="it">Conferma</message>
 	<message xml:lang="tr">Onayla</message>
-	<message xml:lang="es">Confirme</message>
+	<message xml:lang="es">Confirmar</message>
 	<message xml:lang="pt">Confirme</message>
 	<message xml:lang="fi">Hyväksy</message>
 </label>
@@ -367,7 +367,7 @@
 	<message xml:lang="de">Einrücken</message>
 	<message xml:lang="it">Indentazione</message>
 	<message xml:lang="tr">İçeriden</message>
-	<message xml:lang="es">Sangrar</message>
+	<message xml:lang="es">Sangría</message>
 	<message xml:lang="pt">Indentação</message>
 	<message xml:lang="fi">Sisennys</message>
 </label>
@@ -597,7 +597,7 @@
 	<message xml:lang="de">Einrücken (pt)</message>
 	<message xml:lang="it">Indentazione (pt)</message>
 	<message xml:lang="tr">İçeriden (pt)</message>
-	<message xml:lang="es">Sangrado (pt)</message>
+	<message xml:lang="es">Sangría (pt)</message>
 	<message xml:lang="pt">Indentação (pt)</message>
 	<message xml:lang="fi">Sisennä (pt)</message>
 </label>
@@ -707,7 +707,7 @@
 	<message xml:lang="de">Suchen nach</message>
 	<message xml:lang="it">Cerca</message>
 	<message xml:lang="tr">Metin arama</message>
-	<message xml:lang="es">Buscar</message>
+	<message xml:lang="es">Buscar:</message>
 	<message xml:lang="pt">Buscar</message>
 	<message xml:lang="fi">Etsi</message>
 </label>
@@ -727,7 +727,7 @@
 	<message xml:lang="de">Ersetzen durch</message>
 	<message xml:lang="it">Rimpiazza con</message>
 	<message xml:lang="tr">ile değiştir</message>
-	<message xml:lang="es">Sustituir por</message>
+	<message xml:lang="es">Reemplazar por:</message>
 	<message xml:lang="pt">Substituir por</message>
 	<message xml:lang="fi">Korvaa tällä</message>
 </label>
@@ -737,7 +737,7 @@
 	<message xml:lang="de">Modus</message>
 	<message xml:lang="it">Rimpiazza</message>
 	<message xml:lang="tr">Değiştir</message>
-	<message xml:lang="es">Sustituir</message>
+	<message xml:lang="es">Reemplazar</message>
 	<message xml:lang="pt">Substituir</message>
 	<message xml:lang="fi">Korvaa</message>
 </label>
@@ -747,7 +747,7 @@
 	<message xml:lang="de">Nicht ersetzen</message>
 	<message xml:lang="it">Non rimpiazzare</message>
 	<message xml:lang="tr">Değiştirme</message>
-	<message xml:lang="es">No sustituir</message>
+	<message xml:lang="es">No reemplazar</message>
 	<message xml:lang="pt">Não substituir</message>
 	<message xml:lang="fi">Älä korvaa</message>
 </label>
@@ -757,7 +757,7 @@
 	<message xml:lang="de">Bestätigen</message>
 	<message xml:lang="it">Rimpiazza su richiesta</message>
 	<message xml:lang="tr">İstek üzerine değiştir</message>
-	<message xml:lang="es">Sustituir a solicitud</message>
+	<message xml:lang="es">Reemplazar a solicitud</message>
 	<message xml:lang="pt">Substituir sob demanda</message>
 	<message xml:lang="fi">Korvaa pyynnöstä</message>
 </label>
@@ -767,7 +767,7 @@
 	<message xml:lang="de">Alle ersetzen</message>
 	<message xml:lang="it">Rimpiazzamento automatico</message>
 	<message xml:lang="tr">Otomatik olarak değiştir</message>
-	<message xml:lang="es">Sustitución automática</message>
+	<message xml:lang="es">Reemplazar automáticamente</message>
 	<message xml:lang="pt">Substituição Automática</message>
 	<message xml:lang="fi">Automaattinen korvus</message>
 </label>
@@ -827,7 +827,7 @@
 	<message xml:lang="de">Überspringen</message>
 	<message xml:lang="it">Non rimpiazzare</message>
 	<message xml:lang="tr">Değiştirme</message>
-	<message xml:lang="es">No sustituir</message>
+	<message xml:lang="es">No reemplazar</message>
 	<message xml:lang="pt">Não substituir</message>
 	<message xml:lang="fi">Älä korvaa</message>
 </label>

@@ -54,7 +54,7 @@ clase:</p>
     haz clic en <strong>Confirmar</strong>. El estilo del elemento
     seleccionado se añde al selector elegido y el atributo de estilo se
     elimina del elemento elegido. Su contenido se traslada al elemento
-    <code>style</code> del encabezado (<code>HEAD</code>) del documento, y
+    <code>style</code> del encabezado (<code>HEAD</code>) del documento y
     todos los elementos que coincidan con el selector mostrarán el nuevo
     estilo.</li>
 </ol>

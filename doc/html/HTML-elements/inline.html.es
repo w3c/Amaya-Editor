@@ -52,7 +52,7 @@ modificar el formato de los elementos en línea.</p>
 <p>Puedes marcar las citas insertadas en el texto con el elemento <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-Q"><code>q</code></a>.
 Este elemento se encuentra en el comando de menú <strong>Estilo &gt; Elemento
-carácter &gt; Remarcado (Quotation q)</strong>, y también puedes utilizar el
+carácter &gt; Remarcado (Quotation q)</strong> y también puedes utilizar el
 atajo de teclado Alt-t, Alt-q. Puedes hacer referencia a la fuente dando el
 URI en el atributo <code>cite</code>.</p>
 
@@ -150,7 +150,7 @@ actual.</p>
 un elemento seleccionando el elemento y aplicando el énfasis correspondiente.
 Por ejemplo, sitúa el cursor en el interior de un elemento
 <code>strong</code>, pulsa <kbd>F2</kbd> (Windows) o <kbd>Escape</kbd> (Unix)
-para seleccionar el elemento, y utiliza el atajo de teclado, la opción del
+para seleccionar el elemento y utiliza el atajo de teclado, la opción del
 menú o el botón <img src="../../images/Strong.gif" alt="Strong" /> para
 eliminar el elemento <code>strong</code>.</p>
 

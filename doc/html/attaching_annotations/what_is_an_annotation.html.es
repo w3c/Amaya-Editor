@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>¿Qué es una anotación?</title>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -15,8 +16,8 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="../Annotations.html.es" accesskey="t"><img
-        alt="superior" src="../../images/up.gif" /></a> <a
+      <td><p align="right"><a href="../Annotations.html.es"
+        accesskey="t"><img alt="superior" src="../../images/up.gif" /></a> <a
         href="about_reading_annotations.html.es" accesskey="n"><img
         alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
@@ -31,7 +32,7 @@
 comentarios externos que pueden adjuntarse a un documento Web o an una parte
 de un documento. Puesto que son externos, puedes anotar cualquier documento
 Web, sin necesidad de editarlo. Desde un punto de vista técnico, las
-anotaciones se consideran <strong>metadatoa,</strong> puesto que proporcionan
+anotaciones se consideran <strong>metadatos,</strong> puesto que proporcionan
 información adicional a un dato ya existente. En este proyecto, empleamos un
 <strong><a href="http://www.w3.org/RDF/">esquema de anotaciones
 RDF</a></strong> especial para describir las anotaciones.</p>

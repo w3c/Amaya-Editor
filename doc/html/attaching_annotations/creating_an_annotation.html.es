@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Crear una anotación</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -34,12 +35,12 @@ aplican a todo el documento y anotaciones que se aplican a un punto o
 selección específicos de un documento.</p>
 <ul>
   <li>Para anotar un documento completo, elige el comando de menú
-    <strong>Anotaciones &gt; Anotar documento</strong>. 
+    <strong>Anotaciones &gt; Anotar documento</strong>.
     <p></p>
   </li>
   <li>Para anotar un punto, sitúa el punto de inserción en cualquier lugar
     del documento y elige el comando de menú <strong>Anotaciones &gt; Anotar
-    selección</strong>. 
+    selección</strong>.
     <p></p>
   </li>
   <li>Para anotar una selección, selecciona una porción del documento y elige
@@ -50,29 +51,29 @@ selección específicos de un documento.</p>
 <p>Tras realizar cualquiera de estas acciones, una caja de diálogo muestra
 los metadatos de la anotación y el cuerpo de la anotación.</p>
 
-<p><img src="../../images/annotationwindow-es.png" alt="Ventana de anotaciones"
-/></p>
+<p><img src="../../images/annotationwindow-es.png"
+alt="Ventana de anotaciones" /></p>
 
 <h1>Metadatos de una anotación</h1>
 
 <p>Actualmente, los metadatos consisten en el nombre del autor, el título del
-documento anotado, tipo de la anotación, fecha de creación y fecha de la
-última anotación. Algunos de los campos de metadatos tienen propiedades
+documento anotado, el tipo de la anotación, la fecha de creación y la fecha
+de la última anotación. Algunos de los campos de metadatos tienen propiedades
 especiales:</p>
 <ul>
-  <li>El campo <strong>Documento origen</strong> es también un enlace que
-    apunta al texto anotado. Si el usuario hace doble clic en él, como con
-    cualquier otro enlace en Amaya, el documento anotado se mostrará con el
-    texto anotado resaltado. 
+  <li>El campo <strong>Source document (Documento origen)</strong> es también
+    un enlace que apunta al texto anotado. Si el usuario hace doble clic en
+    él, como con cualquier otro enlace en Amaya, el documento anotado se
+    mostrará con el texto anotado resaltado.
     <p></p>
   </li>
-  <li>El campo <strong>Tipos de anotación</strong> te permite clasificar la
-    anotación y cambiar su tipo. Haz clic en el texto "Tipo de anotación"
-    para ver la lista de tipos disponibles. 
+  <li>El campo <strong>Annotation type (Tipo de anotación)</strong> te
+    permite clasificar la anotación y cambiar su tipo. Haz clic en el texto
+    "Tipo de anotación" para ver la lista de tipos disponibles.
     <p></p>
   </li>
-  <li>El campo <strong>Última modificación</strong> se actualiza
-    automáticamente cada vez que se guarda una anotación.</li>
+  <li>El campo <strong>Las modified (Última modificación)</strong> se
+    actualiza automáticamente cada vez que se guarda una anotación.</li>
 </ul>
 
 <p>Bajo el área de encabezado se encuentra el área del cuerpo de la
@@ -90,7 +91,7 @@ anotaciones remotas se guardan en el servidor de publicación de anotaciones,
 en el que se guardan si el usuario tiene permisos de escritura.</p>
 
 <p>Para convertir una anotación local en compartida, elige el comando de menú
-<strong>Anotaciones &gt; Salvar en el servidor</strong> para guardar la
+<strong>Anotaciones &gt; Enviar al servidor</strong> para guardar la
 anotación en el servidor de publicación definido en la caja de diálogo <span
 class="Link"><strong>Anotaciones &gt; Configurar</strong></span>. Si la
 operación tiene éxito, la anotación local se elimina y los siguientes comando

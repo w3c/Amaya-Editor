@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Seleccionar imágenes</title>
-  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -16,9 +16,10 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="selecting_with_keyboard_and_mouse.html.es"
-        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
-        <a href="../Selecting.html.es" accesskey="t"><img alt="superior"
+      <td><p align="right"><a
+        href="selecting_with_keyboard_and_mouse.html.es" accesskey="p"><img
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Selecting.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
         href="selecting_by_structure.html.es" accesskey="n"><img
         alt="siguiente" src="../../images/right.gif" /></a></p>
@@ -36,8 +37,8 @@ derecha de una imagen, utiliza los procedimientos siguientes:</p>
 <p class="ProcedureCaption">Para seleccionar una imagen completa:</p>
 <ol>
   <li>Haz clic y arrastra el ratón en cualquier lugar de la imagen, y a
-    continuación suelta el botón. Asegurate de no arrastrar fuera de la
-    imagen antes de soltar el botón. 
+    continuación suelta el botón. Asegúrate de no arrastrar fuera de la
+    imagen antes de soltar el botón.
     <p></p>
   </li>
   <li>Utiliza los comandos copiar, cortar y pegar para mover o duplicar el
@@ -49,7 +50,7 @@ la imagen:</p>
 <ul>
   <li>Haz clic en la parte izquierda de una imagen para situar el cursor en
     el borde izquierdo de la imagen. Esto te permite escribir texto antes de
-    la imagen. 
+    la imagen.
     <p></p>
   </li>
   <li>Haz clic en la parte derecha de una imagen para situar el cursor en el
@@ -57,9 +58,9 @@ la imagen:</p>
     imagen.</li>
 </ul>
 
-<p class="ProcedureNote"><strong>Nota:</strong>  Si pulsas las flechas de
+<p class="ProcedureNote"><strong>Nota:</strong> Si pulsas las flechas de
 desplazamiento, el cursor se desplaza de un lado de la imagen a la propia
-imagen (seleccionandola), y a continuación al otro lado.</p>
+imagen (seleccionándola) y a continuación al otro lado.</p>
 </div>
 </body>
 </html>

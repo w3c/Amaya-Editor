@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Utilizar mapas de imagen</title>
+  <title>Utilizar imágenes y mapas de imagen</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -31,24 +31,21 @@
 
 <p>En esta sección se tratan los temas siguientes:</p>
 <ul>
-  <li><a href="using_image_maps/working_with_image_maps.html.es"
-    >Trabajar con mapas de imagen</a></li>
-  <li><a href="using_image_maps/adding_an_image.html.es"
-    >Insertar o sustituir imágenes</a></li>
+  <li><a href="using_image_maps/working_with_image_maps.html.es">Trabajar con
+    mapas de imagen</a></li>
+  <li><a href="using_image_maps/adding_an_image.html.es">Insertar o sustituir
+    imágenes</a></li>
+  <li><a href="using_image_maps/creating_clientside_image_maps.html.es">Crear
+    mapas de imagen cliente</a></li>
+  <li><a href="using_image_maps/using_clientside_image_maps.html.es">Usar
+    mapas de imagen cliente</a></li>
+  <li><a href="using_image_maps/moving_image_map_areas.html.es">Mover áreas
+    de mapas de imagen</a></li>
+  <li><a href="using_image_maps/resizing_image_map_areas.html.es">Cambiar el
+    tamaño de las áreas de mapa de imagen</a></li>
   <li><a
-    href="using_image_maps/creating_clientside_image_maps.html.es"
-    >Crear mapas de imagen cliente</a></li>
-  <li><a
-    href="using_image_maps/using_clientside_image_maps.html.es"
-    >Usar mapas de imagen cliente</a></li>
-  <li><a href="using_image_maps/moving_image_map_areas.html.es"
-    >Mover áreas de mapas de imagen</a></li>
-  <li><a href="using_image_maps/resizing_image_map_areas.html.es"
-    >Cambiar el tamaño de las áreas de mapa de
-  imagen</a></li>
-  <li><a
-    href="using_image_maps/about_alternative_text_and_long_descriptions.html.es"
-    >Texto alternativo y descripciones largas</a></li>
+    href="using_image_maps/about_alternative_text_and_long_descriptions.html.es">Texto
+    alternativo y descripciones largas</a></li>
 </ul>
 </div>
 </body>

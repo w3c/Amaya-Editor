@@ -33,7 +33,7 @@
 <p>En esta sección se tratan los temas siguientes:</p>
 <ul>
   <li><a href="elements/buttons_and_types_menu.html.es"
-    >Botones y Menús Xhtml y Xml</a></li>
+    >Botones y Menús XHTML y XML</a></li>
   <li><a href="elements/the_structure_menu.html.es"
     >Menú Estructura</a></li>
   <li><a href="elements/the_enter_key.html.es" >La

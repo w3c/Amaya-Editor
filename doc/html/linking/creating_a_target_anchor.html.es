@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Crear un Destino</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -15,7 +16,7 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"> <a href="../Links.html.es" accesskey="t"><img
+      <td><p align="right"><a href="../Links.html.es" accesskey="t"><img
         alt="superior" src="../../images/up.gif" /></a> <a
         href="creating_a_target_element.html.es" accesskey="n"><img
         alt="siguiente" src="../../images/right.gif" /></a></p>
@@ -33,24 +34,22 @@ destino.</p>
 
 <p class="ProcedureCaption">Para crear un destino:</p>
 <ol>
-  <li>Haz clic y selecciona la cadena de texto. 
+  <li>Haz clic y selecciona la cadena de texto.
     <p></p>
   </li>
   <li>Elige el comando de menú <strong>Enlaces &gt; Crear destino</strong>.
     El texto seleccionado es ahora un destino. En la vista Formateada, si
     está activada la opción <strong>Vistas &gt; Mostrar destinos</strong>, el
-    texto destino está precedido por un icono. En la vista Enlaces, los
-    iconos que identifican los destinos se muestran siempre. 
+    texto destino estará precedido por un icono. En la vista Enlaces, los
+    iconos que identifican los destinos se muestran siempre.
     <p></p>
   </li>
   <li>Cuando se crea un destino, Amaya genera automáticamente un atributo
-    <code>NAME</code> dándole un valor: 
+    <code>NAME</code> dándole un valor:
     <p></p>
     <ul>
-      <li>Extrayendo una palabra de más de 3 letras del texto destino, 
-        <p>o</p>
-      </li>
-      <li>Generando un número. 
+      <li>Extrayendo una palabra de más de 3 letras del texto destino, o</li>
+      <li>Generando un número.
         <p></p>
       </li>
     </ul>

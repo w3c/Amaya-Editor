@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Problemas conocidos con las anotaciones y los documentos
   modificados</title>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -16,9 +17,9 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="moving_annotations.html.es" accesskey="p"><img
-        alt="anterior" src="../../images/left.gif" /></a> <a
-        href="../Annotations.html.es" accesskey="t"><img alt="superior"
+      <td><p align="right"><a href="moving_annotations.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../Annotations.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="configuring_icons.html.es"
         accesskey="n"><img alt="siguiente" src="../../images/right.gif"
         /></a></p>
@@ -72,7 +73,7 @@ respuesta, se muestra en la misma ventana.</p>
 enviarse. En principio no debería ser posible guardar una respuesta a una
 respuesta en servidores diferentes. De la misma manera, al borrar una
 respuesta se deberían borrar todas las respuestas relacionadas. En caso
-contrario, existitrían fragmentos de hilos de discusión que no podrían
+contrario, existirían fragmentos de hilos de discusión que no podrían
 relacionarse correctamente. Por ejemplo, sea R1 una respuesta a la anotación
 A1 y R2 una respuesta a R1. Si envías R1 y almacenas R2 localmente, al
 consultar A1 desacargando únicamente sus anotaciones locales, sólo verás R2.

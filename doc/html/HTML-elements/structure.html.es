@@ -36,7 +36,7 @@ que se encuentran junto con los párrafos y el resto de elementos de bloque.
 Existe también el elemento <code>div</code> que agrupa varios elementos en
 una misma división. Para definirlo, selecciona la sección (incluyendo su
 encabezado) que quieres que forme parte del grupo y a continuación elige el
-comando de menú <strong>Xhtml &gt; div</strong> (o pulsa el atajo de teclado
+comando de menú <strong>XHTML &gt; div</strong> (o pulsa el atajo de teclado
 <kbd>Ctrl-t, Ctrl-v</kbd> en Unix).</p>
 
 <p>En HTML existe una estructura especial, el enlace, que hace que la Web sea

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Guardar y publicar documentos</title>
-  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -16,10 +16,10 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="../Publishing.html.es" accesskey="t"><img alt="superior"
-        src="../../images/up.gif" /></a> <a
-        href="about_saving_in_html.html.es" accesskey="n"><img alt="siguiente"
-        src="../../images/right.gif" /></a></p>
+      <td><p align="right"><a href="../Publishing.html.es" accesskey="t"><img
+        alt="superior" src="../../images/up.gif" /></a> <a
+        href="about_saving_in_html.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -29,8 +29,8 @@
 <h1>Guardar y publicar documentos</h1>
 
 <p>Amaya te permite guardar documentos tanto en formato HTML como en formato
-texto. Puedes guardar documentos locales o remotos de dos maneras, mediante
-los comandos <span class="Link0"><strong>Guardar</strong></span> y <span
+texto. Puedes guardar documentos locales o remotos mediante los comandos
+<span class="Link0"><strong>Guardar</strong></span> y <span
 class="Link0"><strong>Guardar como</strong></span>.</p>
 
 <p>Además, puedes modificar algunas de las opciones de publicación mediante

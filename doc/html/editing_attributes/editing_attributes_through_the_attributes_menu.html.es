@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editar atributos con el menú Atributos</title>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -37,31 +38,31 @@ atributo.</p>
 <p>Para editar un atributo:</p>
 <ol>
   <li>Selecciona el elemento completo con el ratón o pulsando
-    <strong>Escape</strong> (en Unix) o <strong>F2</strong> (en Windows). 
+    <strong>Escape</strong> (en Unix) o <strong>F2</strong> (en Windows).
     <p></p>
   </li>
   <li>Una vez seleccionado el elemento, elige el atributo a editar en el menú
-    <strong>Atributos</strong>. 
+    <strong>Atributos</strong>.
     <p></p>
   </li>
-  <li>Amaya actúa de acuerdo con el atributo elegido: 
+  <li>Amaya actúa de acuerdo con el atributo elegido:
     <ul>
       <li>En el caso de atributos booleanos (como <code>ismap</code> en una
         imagen), el comando se ejecuta inmediatamente. Si el atributo estaba
-        definido, el atributo se elmina, y si no estaba definido, se crea. 
+        definido, el atributo se elimina, y si no estaba definido, se crea.
         <p></p>
       </li>
       <li>En el caso de atributos con un conjunto limitado de valores
         posibles, (como <code>align</code> en un párrafo o en un encabezado),
-        Amaya muestra un diálogo con los valores posibles y tres botones. 
+        Amaya muestra un diálogo con los valores posibles y tres botones.
         <p></p>
         <ul>
           <li>Para crear el atributo o modificar su valor, elige el valor
-            deseado y haz clic en el botón <strong>Aplicar</strong>. 
+            deseado y haz clic en el botón <strong>Aplicar</strong>.
             <p></p>
           </li>
           <li>Para eliminar el atributo, haz clic en el botón
-            <strong>Eliminar atributos</strong>. 
+            <strong>Eliminar atributos</strong>.
             <p></p>
           </li>
         </ul>

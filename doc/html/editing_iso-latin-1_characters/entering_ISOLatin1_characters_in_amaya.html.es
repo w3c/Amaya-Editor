@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Escribir caracteres</title>
-  
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -16,8 +16,8 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="../EditChar.html.es" accesskey="t"><img alt="superior"
-        src="../../images/up.gif" /></a> <a
+      <td><p align="right"><a href="../EditChar.html.es" accesskey="t"><img
+        alt="superior" src="../../images/up.gif" /></a> <a
         href="about_optional_multikey_support.html.es" accesskey="n"><img
         alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
@@ -39,9 +39,8 @@ están disponibles directamente desde el teclado. Algunos están
 predefinidos:</p>
 <ul>
   <li>Para escribir un carácter nulo, pulsa <code>Control - space</code>.
-    Este carácter se guarda como la entidad de carácter <span
-    class="code"><span
-    style="font-size: 11.0pt;font-family:'Courier New';"><code>&amp;nbsp;</code></span></span>.</li>
+    Este carácter se guarda como la entidad de carácter
+    <code>&amp;nbsp;</code>.</li>
   <li>Para escribir el símbolo de euro (&euro;), pulsa <code>Alt -
   e</code>.</li>
   <li>Para escribir &#x153; (oelig), pulsa <code>Control - o</code> y a

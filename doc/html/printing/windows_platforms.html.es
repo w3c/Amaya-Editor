@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Imprimir en Windows</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -29,7 +30,7 @@
 <div id="page_body">
 <h1>Imprimir en Windows</h1>
 
-<p>En Windows, La primera caja de diálogo que se abre al ejecutar el comando
+<p>En Windows, la primera caja de diálogo que se abre al ejecutar el comando
 <strong>Configurar e imprimir</strong> te permite elegir cosas como:</p>
 <ul>
   <li>generar una tabla de contenidos del documento,</li>

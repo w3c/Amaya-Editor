@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Configurar los iconos de anotación</title>
-  
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -16,9 +16,9 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="replying_to_annotations.html.es" accesskey="p"><img
-        alt="anterior" src="../../images/left.gif" /></a> <a
-        href="../Annotations.html.es" accesskey="t"><img alt="superior"
+      <td><p align="right"><a href="replying_to_annotations.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../Annotations.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="annotation_issues.html.es"
         accesskey="n"><img alt="siguiente" src="../../images/right.gif"
         /></a></p>
@@ -38,8 +38,8 @@ ubicación de una anoación en un documento anotado.</p>
 
 <p>En la versión 6.2, el icono que indica la anotación se elige como
 propiedad del tipo de anotación. Al incluir una propiedad RDF de cada tipo de
-anotación que quieres utilizar, puedes el icono asociado a las anotaciones de
-dicho tipo.</p>
+anotación que quieres utilizar, puedes elegir el icono asociado a las
+anotaciones de dicho tipo.</p>
 
 <p>La configuración de ejemplo incluida en la versión 6.2 asocia los
 siguientes iconos:</p>
@@ -47,20 +47,23 @@ siguientes iconos:</p>
 <table>
   <tbody>
     <tr>
-      <td width="35"><img src="../../../amaya/advice.png" alt="Advice (Consejo)" /></td>
+      <td width="35"><img src="../../../amaya/advice.png"
+        alt="Advice (Consejo)" /></td>
       <td>Advice (Consejo)</td>
     </tr>
     <tr>
-      <td width="35"><img src="../../../amaya/change.png" alt="Change (Cambio)" /></td>
+      <td width="35"><img src="../../../amaya/change.png"
+        alt="Change (Cambio)" /></td>
       <td>Change (Cambio)</td>
     </tr>
     <tr>
-      <td width="35"><img src="../../../amaya/annot.png" alt="Comment (Comentario)" /></td>
+      <td width="35"><img src="../../../amaya/annot.png"
+        alt="Comment (Comentario)" /></td>
       <td>Comment (Comentario)</td>
     </tr>
     <tr>
-      <td width="35"><img src="../../../amaya/example.png" alt="Example (Ejemplo)"
-      /></td>
+      <td width="35"><img src="../../../amaya/example.png"
+        alt="Example (Ejemplo)" /></td>
       <td>Example (Ejemplo)</td>
     </tr>
     <tr>
@@ -69,13 +72,13 @@ siguientes iconos:</p>
       <td>Explanation (Explicación)</td>
     </tr>
     <tr>
-      <td width="35"><img src="../../../amaya/question.png" alt="Question (Pregunta)"
-      /></td>
+      <td width="35"><img src="../../../amaya/question.png"
+        alt="Question (Pregunta)" /></td>
       <td>Question (Pregunta)</td>
     </tr>
     <tr>
-      <td width="35"><img src="../../../amaya/seealso.png" alt="SeeAlso (Ver también)"
-      /></td>
+      <td width="35"><img src="../../../amaya/seealso.png"
+        alt="SeeAlso (Ver también)" /></td>
       <td>See also (VerTambién)</td>
     </tr>
   </tbody>
@@ -95,15 +98,14 @@ escribirías el RDF/XML siguiente en un archivo que Amaya lee al iniciarse:</p>
 &lt;/rdf:Description&gt;
 &lt;/rdf:RDF&gt;</pre>
 
-<p>La forma más sencilla de que Amaya cargue este RDF al iniciarse, es
-incluir este archivo en el archivo config/annot.schemas del directorio de
-Amaya. para conservar este archivo de manera que no se sobreescriba al
-instalar una nueva versión de Amaya, debes copiar el archivo
-config/annot.schemas en tu directorio personal de Amaya;
-~/.amaya/annot.schemas (en Unix) o
-/winnt/profiles/&lt;username&gt;/amaya/annot.schemas (en Microsoft Windows).
-Puedes listas tantos archivos RDF como quieras en annot.schemas. Para obtener
-más detalles, consulta los comentarios incluidos en el propio archivo.</p>
+<p>La forma más sencilla de que Amaya cargue este RDF al iniciarse es incluir
+este archivo en el archivo config/annot.schemas del directorio de Amaya. Para
+conservar este archivo de manera que no se sobreescriba al instalar una nueva
+versión de Amaya, debes copiar el archivo config/annot.schemas en tu
+directorio personal de Amaya; ~/.amaya/annot.schemas (en Unix) o
+/winnt/profiles/&lt;username&gt;/amaya/annot.schemas (en Windows). Puedes
+listas tantos archivos RDF como quieras en annot.schemas. Para obtener más
+detalles, consulta los comentarios incluidos en el propio archivo.</p>
 
 <p>La versión 6.2 incluye un archivo de ejemplo llamado "typeIcon.rdf" que
 declara iconos únicos para cada tipo de anotación declarado en el espacio de
@@ -114,10 +116,10 @@ fácil copiar este archivo typeIcon.rdf en otro directorio y modificarlo.
 Copia annot.schemas en tu directorio raíz de Amaya y cambia la línea situada
 cerca del final para que apunte a tu archivo de icono.</p>
 
-<p>Para volver al comportamiento previo a la versión 6.2, edita el archivo 
+<p>Para volver al comportamiento previo a la versión 6.2, edita el archivo
 config/annot.schemas del directorio de instalación de Amaya y añade un
-carácter de comentario  ("#") al principio de la línea situada cerca del
-final que hace referencia al archivo typeIcon.rdf:</p>
+carácter de comentario ("#") al principio de la línea situada cerca del final
+que hace referencia al archivo typeIcon.rdf:</p>
 <pre>#user-defined icons
 #http://www.w3.org/2001/10/typeIcon# $THOTDIR/config/typeIcon.rdf</pre>
 

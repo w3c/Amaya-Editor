@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Texto alternativo y descripciones largas</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -15,9 +16,9 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="resizing_image_map_areas.html.es" accesskey="p"><img
-        alt="anterior" src="../../images/left.gif" /></a> <a
-        href="../ImageMaps.html.es" accesskey="t"><img alt="superior"
+      <td><p align="right"><a href="resizing_image_map_areas.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../ImageMaps.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a></p>
       </td>
     </tr>
@@ -28,7 +29,7 @@
 <h1>Texto alternativo y descripciones largas</h1>
 
 <p>Sin texto alternativo en las imágenes, muchas páginas web resultan
-difíciles o incluso imposibles de navegar, y lo usuario deben "encontrar su
+difíciles o incluso imposibles de navegar, y los usuario deben "encontrar su
 camino en la oscuridad".</p>
 
 <p>Para evitar este problema, debes incluir texto alternativo para elementos

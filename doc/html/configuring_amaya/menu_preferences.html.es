@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Menú Preferencias</title>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -28,12 +29,13 @@
 <div id="page_body">
 <h1>Menú Preferencias</h1>
 
-<p>Las cajas de diálogo se sencuentran en el menú <strong>Especial &gt;
-Preferencias</strong>. Hay diez cajas de diálogos: <strong>General</strong>,
-<strong>Navegación</strong>, <strong>Publicar</strong>,
-<strong>Cache</strong>, <strong>Proxy</strong>, <strong>Colors</strong>,
-<strong>Geometría de la ventana</strong>, <strong>Negociación de
-idioma</strong>, <strong>Perfiles</strong>, y <strong>Plantillas</strong>.</p>
+<p>Las cajas de diálogo se encuentran en el menú <strong>Especial &gt;
+Preferencias</strong>. Hay diez cajas de diálogos:
+<strong>Generales</strong>, <strong>Navegación</strong>,
+<strong>Publicación</strong>, <strong>Caché</strong>, <strong>Proxy</strong>,
+<strong>Colores</strong>, <strong>Geometría de la ventana</strong>,
+<strong>Negociación de idioma</strong>, <strong>Perfiles</strong> y
+<strong>Plantillas</strong>.</p>
 
 <p>Cada una de estas cajas de diálogo contienen tres botones:</p>
 
@@ -56,12 +58,12 @@ idioma</strong>, <strong>Perfiles</strong>, y <strong>Plantillas</strong>.</p>
       <td><p class="TableText">Por omisión</p>
       </td>
       <td><p class="TableText">Restaura, sin guardar, los valores por
-        omisión. Utiliza el botón <strong>Aplicar</strong> para guardar estas
-        opciones.</p>
+        omisión. Para guardar estas opciones, utiliza a continuación el botón
+        <strong>Aplicar</strong> .</p>
       </td>
     </tr>
     <tr>
-      <td><p class="TableText">Hecho</p>
+      <td><p class="TableText">Aceptar</p>
       </td>
       <td><p class="TableText">Cierra la caja de diálogo.</p>
       </td>
@@ -72,7 +74,7 @@ idioma</strong>, <strong>Perfiles</strong>, y <strong>Plantillas</strong>.</p>
 <h2>Preferencias generales</h2>
 
 <p>Para abrir la caja de diálogo <strong>Preferencias generales</strong>,
-elige el menú <strong>Preferencias &gt; General</strong>.</p>
+elige el menú <strong>Preferencias &gt; Generales</strong>.</p>
 
 <p><img alt="Caja de diálogo Preferencias generales"
 src="../../images/general_preferences-es.png" /></p>
@@ -98,13 +100,13 @@ documento. Si no se especifica, el directorio por omisión es
 
 <p class="Note"><strong>Nota:</strong> Al cambiar el directorio, el
 directorio actual no se borra. Debes borrarlo manualmente. Si la
-<strong>cache</strong> se encontraba en el directorio temporal anterior, se
-creará una nueva cache en el nuevo directorio.</p>
+<strong>caché</strong> se encontraba en el directorio temporal anterior, se
+creará una nueva caché en el nuevo directorio.</p>
 
 <p><strong><br />
-Página principal.</strong> Especifica el URI que Amaya cargará al abrir el
-programa o cuando el usuario haga clic en el botón Principal. Por ejemplo, la
-página principal podría ser: <code><a
+Página de inicio.</strong> Especifica el URI que Amaya cargará al abrir el
+programa o cuando el usuario haga clic en el botón Inicio. Por ejemplo, la
+página de inicio podría ser: <code><a
 href="http://www.w3.org/">http://www.w3.org</a></code></p>
 
 <p class="Note"><strong>Nota:</strong> Debes escribir la URI completa.</p>
@@ -115,7 +117,7 @@ href="http://www.w3.org/">http://www.w3.org</a></code></p>
 haciendo clic en la casilla de verificación que se encuentra a la izquierda
 de cada opción. Una casilla marcada indica que la opción está activada.</p>
 
-<p><strong>Permitir pegar línea a línea</strong>. Esta opción afecta al
+<p><strong>Activar pegado línea a línea</strong>. Esta opción afecta al
 pegado desde un aplicación externa. Cuando está activada, Amaya mantiene la
 separación en líneas de la aplicación original. Si está desactivada, los
 caracteres de <code>salto de línea</code> se sustituyen por espacios.</p>
@@ -143,7 +145,7 @@ ignoren las teclas de acceso definidas en el documento</p>
 
 <h2>Opciones exclusivas de Unix</h2>
 
-<p>Hay dos opciones de la cja de diálogo <strong>Preferencias
+<p>Hay dos opciones de la caja de diálogo <strong>Preferencias
 generales</strong> que sólo están disponibles en Unix: <strong>Tamaño de
 fuente en menús</strong> y <strong>Retardo de doble clic</strong>. Estas
 opciones se explican a continuación.</p>
@@ -197,8 +199,8 @@ el sufijo <em>code</em> es la abreviatura del idioma (por ejemplo,
 <p>Es posible adaptar Amaya a nuevos idiomas ISO-Latin-1 escribiendo los
 archivos de diálogo correspondientes. Estos archivos de diálogo deben
 ubicarse en la misma carpeta (por ejemplo, Amaya/config) y deben utilizar el
-código ISO 639 correcto como prefijo (it- para italiano, de- para alemásm,
-etc.). También debes crear el archivo HTML.code específico.</p>
+código ISO 639 correspondiente como prefijo (it- para italiano, de- para
+alemám, etc.). También debes crear el archivo HTML.code específico.</p>
 
 <h2>Navegación</h2>
 
@@ -220,13 +222,13 @@ Esta opción se utiliza al cargar nuevos documentos.</p>
 <p><strong>Doble clic activa enlaces.</strong> Desde la primera versión de
 Amaya, para activar un enlace hay que hacer doble clic en él. Eso te permite
 elegir entre editar o activar un enlace. Puedes deshabilitar este
-comportamiento desactivarte esta opción.</p>
+comportamiento desactivando esta opción.</p>
 
 <p><strong>Activar FTP.</strong> Permite a Amaya abrir URLs de FTP. Este
-soporte es experimental y todavía tiene errores. Por ejemplo, los URLs de FTP
-que necesitan autentificar al usuario, la información de autentificación no
-se memoriza siempre. Además, si pulsas el botón <strong>Detener</strong>
-durante una descarga FTP puede bloquer a Amaya. Debido a estos problemas,
+soporte es experimental y todavía tiene errores. Por ejemplo, en los URLs de
+FTP que necesitan autentificar al usuario, la información de autentificación
+no se memoriza siempre. Además, si pulsas el botón <strong>Detener</strong>
+durante una descarga FTP Amaya puede bloquearse. Debido a estos problemas,
 esta opción se añadió para que otros desarrolladores pudieran ayudar a
 resolver los problemas. Por omisión, esta opción está desactivada.</p>
 
@@ -235,22 +237,22 @@ resolver los problemas. Por omisión, esta opción está desactivada.</p>
 <p>La caja de diálogo de <strong>Preferencias de publicación</strong> te
 permite establecer las preferencias de ETAGS y precondiciones, tanto para
 verificar cada comando PUT con un comando GET, como para definir el nombre
-por omisión de los URLs que acaban en barra, y permitir redicrecciones PUT en
+por omisión de los URLs que acaban en barra, y permitir redirecciones PUT en
 dominios específicos. Estas opciones se explican a continuación.</p>
 
 <p><img alt="Caja de diálogo Preferencias de publicación"
 src="../../images/publishing_preferences-es.png" /></p>
 
-<p><strong>Para documentos XHTML utilice el tipo MIME
-application/xhtml+xml.</strong> Esta opción, si está activada, asocia el
-nuevo tipo MIME oficial XHTML a todos los documentos XTHML nuevos que se
-publican en la Web. Esta opción está deshabilita por omisión porque no todos
-los servidores pueden gestionar este tipo MIME en el momento de escribir esta
-página. Fíjate en que esta opción requiere un cambio en la configuración del
-servidor, si no está almacenando en algún sitio los metadatos asociados con
-cada documento. Esta opción no modifica el tipo MIME de los documentos ya
-existentes: el mismo tipo MIME que se recibe se utiliza al guardar el
-documento, salvo si <strong>Guardas como</strong>, evidentemente.</p>
+<p><strong>En documentos XHTML usar tipo MIME application/xhtml+xml.</strong>
+Esta opción, si está activada, asocia el nuevo tipo MIME oficial XHTML a
+todos los documentos XTHML nuevos que se publican en la Web. Esta opción está
+deshabilita por omisión porque no todos los servidores pueden gestionar este
+tipo MIME en el momento de escribir esta página. Fíjate en que esta opción
+requiere un cambio en la configuración del servidor, si no está almacenando
+en algún sitio los metadatos asociados con cada documento. Esta opción no
+modifica el tipo MIME de los documentos ya existentes: el mismo tipo MIME que
+se recibe se utiliza al guardar el documento, salvo si <strong>Guardas
+como</strong>, evidentemente.</p>
 
 <p><strong>Usar ETAGS y precondiciones.</strong> HTTP/1.1 introduce nuevos
 encabezados que resuelven el problema de las <a
@@ -293,7 +295,7 @@ src="../../images/cache_preferences-es.png" /></p>
 
 <p><strong>Activar caché.</strong> Activa o desactiva la caché.</p>
 
-<p><strong>Documentos protegidos de la Caché.</strong> Por omisión, los
+<p><strong>Documentos protegidosen la Caché.</strong> Por omisión, los
 documentos protegidos por contraseña se almacenan en la caché. Utiliza esta
 opción para evitarlo.</p>
 
@@ -304,8 +306,8 @@ caché.</p>
 expiran.</p>
 
 <p><strong>Directorio Caché.</strong> Identifica el directorio padre del
-directorio libwww-cache directory. Al cambiar este directorio no se borra el
-contenido del directorio anterior. Debes eliminarlo tú mismo.</p>
+directorio libwww-cache. Al cambiar este directorio no se borra el contenido
+del directorio anterior. Debes eliminarlo tú mismo.</p>
 
 <p class="Note"><strong>Nota:</strong> Los mecanismos de protección de
 archivos impiden el uso de directorios NFS (Network File System) como
@@ -315,22 +317,22 @@ procesadores o usuarios. Utiliza un directorio local para la caché.</p>
 <p><strong>Tamaño de caché.</strong> Indica el tamaño, en megabytes, de la
 caché.</p>
 
-<p><strong>Límite de tamaño de entrada de caché.</strong> Indica el tamaño
+<p><strong>Tamaño máximo de entrada de caché.</strong> Indica el tamaño
 máximo de una entrada de caché.</p>
 
 <h2>Proxy</h2>
 
 <p>En esta caja de diálogo puedes especificar un proxy y un conjunto de
-domuinios en el que el proxy debe o no utilizarse.</p>
+dominios en el que el proxy debe o no utilizarse.</p>
 
 <p><img alt="Caja de diálogo Preferencias de proxy"
 src="../../images/proxy_preferences-es.png" /></p>
 
-<p><strong>HTTP proxy.</strong>Identifies the proxy to be used for HTTP
-requests. You must specify the full name of the server. If the server is
-running in a port other than 80, then, like in a URL, you need to add a ":"
-char to the proxy name, followed by the port number. The table below provides
-two examples.</p>
+<p><strong>Proxy HTTP.</strong> Identifica el proxy a utilizar en las
+peticiones HTTP. Debes especificar el nombre completo del servidor. Si el
+servidor está funcionando en un puerto distinto al puerto 80, debes añadir el
+carácter ":" al nombre del proxy, seguido del número de puerto. La tabla
+siguiente muestra dos ejemplos.</p>
 
 <table border="1">
   <tbody>
@@ -374,7 +376,7 @@ para mostrar la selección actual.</p>
 src="../../images/color_preferences-es.png" /></p>
 <ul>
   <li><strong>Color del cursor</strong> es el color de fondo de la selección
-    cuando ésta se limita al punto de inserción. 
+    cuando ésta se limita al punto de inserción.
     <p></p>
   </li>
   <li><strong>Color de selección</strong> es el color de fondo de la
@@ -383,24 +385,25 @@ src="../../images/color_preferences-es.png" /></p>
 
 <p>La versión Unix también proporciona entradas para modificar los colores
 del menú. Para cambiar los colores del menú en Windows, debes utilizar el
-control estándard de configuración de pantalla que se encuentra en el Panel
-de Control.</p>
+control estándar de configuración de pantalla que se encuentra en el Panel de
+Control.</p>
 
 <p>Los siguientes colores pueden seleccionarse por su nombre, código
 hexadecimal o RGBt:</p>
 <ul>
-  <li>Valid names are: Aqua, Black, Blue, Fuchsia, Gray, Green, Lime, Maroon,
-    Navy, Olive, Purple, Red, Silver, Teal, Yellow, and White. 
+  <li>Los nombres válidos de colores son: Aqua, Black, Blue, Fuchsia, Gray,
+    Green, Lime, Maroon, Navy, Olive, Purple, Red, Silver, Teal, Yellow y
+    White.
     <p></p>
   </li>
-  <li>El formato válido de un código hexadecimal es #FF00F, por ejemplo. 
+  <li>El formato válido de un código hexadecimal es #FF00F, por ejemplo.
     <p></p>
   </li>
   <li>El formato válido de un código RGB es rgb(255, 0, 255), por
   ejemplo.</li>
 </ul>
 
-<p>Si escribes un color invalido, los colores por omisión se utilizan en su
+<p>Si escribes un color inválido, los colores por omisión se utilizan en su
 lugar. En Windows también puedes elegir colores con la paleta de color.</p>
 
 <p class="Note"><strong>Nota:</strong> Los cambios de colroes se harán
@@ -414,7 +417,7 @@ definen en la hoja de estilo Amaya.css.</p>
 
 <p>La caja de diálogo te permite guardar la posición y tamaño actual de las
 distintas ventanas de vistas de un documento (formateada, estructura,
-alternativa, enlaces, and tabla de contenidos) o restaurar los valores por
+alternativa, enlaces y tabla de contenidos) o restaurar los valores por
 omisión.</p>
 
 <p><img alt="Caja de diálogo Preferencias de geometría"
@@ -446,22 +449,22 @@ estas versiones.</p>
 <p>En Amaya, un <em>perfil</em> define el aspecto del interface de usuario.
 Puedes utilizar perfiles para mostrar u ocultar los botones y menús de Amaya.
 Esta caja de diálogo te permite elegir el archivo de definición de perfil y
-seleccionar cualqueira de los perfiles contenidos en el archivo. Amaya
+seleccionar cualquiera de los perfiles contenidos en el archivo. Amaya
 propone dos perfiles de editor (<em>editor y mini-editor)</em> y dos perfiles
 de navegador (<em>browser y mini-browser</em>). Cualquier cambio de perfil se
-tomará en cuenta la próxima que inicies Amaya.</p>
+tomará en cuenta la próxima vez que inicies Amaya.</p>
 
 <p><img alt="Caja de diálogo Preferencias de perfiles"
 src="../../images/profiles_preferences-es.png" /></p>
 
 <h2>Plantillas</h2>
 
-<p>Una <strong>plantilla</strong> es un modelo o esqueleto de un documento,
+<p>Una <strong>plantilla</strong> es un modelo o esqueleto de un documento
 que puedes utilizar para crear tus propios documentos. Esta caja de diálogo
 te permite especificar el URL de un servidor de plantillas, que puede ser
-local en tu ordenador o almacenado en un servidor.</p>
+local en tu ordenador o estar almacenado en un servidor.</p>
 <img alt="Caja de diálogo Preferencias de plantillas"
-src="../../images/templates_preferences-es.png" /> 
+src="../../images/templates_preferences-es.png" />
 
 <p>Debes cerrar Amaya para validar esta opción. Al iniciar Amaya de nuevo, el
 menú Archivo contendrá la opción <strong>Nuevo &gt; Desde plantilla</strong>.

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Acerca de las Teclas de Acceso</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -36,7 +37,7 @@ necesarias o útiles en otras situaciones</p>
 
 <p>En un documento web puedes asociar el atributo <code>accesskey</code> a
 los siguientes elementos: <code>AREA</code>, <code>BUTTON</code>,
-<code>INPUT</code>, <code>LABEL</code>, <code>LEGEND</code>, y
+<code>INPUT</code>, <code>LABEL</code>, <code>LEGEND</code> y
 <code>TEXTAREA</code>.</p>
 
 <p>Por ejemplo, si asocias el atributo <code>accesskey</code> con un enlace
@@ -62,9 +63,9 @@ no podrías utilizar este atajo en las páginas de ayuda de Amaya.</p>
 <p>Por omisión, Amaya utiliza la tecla <kbd>Alt</kbd> como modificador de las
 teclas de acceso. Pero puedes cambiar esta configuración por omisión mediante
 la ventana de diálogo que se abre con la opción de menú <strong>Especial &gt;
-Preferencias &gt; General</strong>. Puedes elegir la tecla <kbd>Control</kbd>
-en lugar de la tecla <kbd>Alt</kbd>, o incluso desactivar los atajos de
-teclado.</p>
+Preferencias &gt; Generales</strong>. Puedes elegir la tecla
+<kbd>Control</kbd> en lugar de la tecla <kbd>Alt</kbd>, o incluso desactivar
+las teclas de acceso.</p>
 </div>
 </body>
 </html>

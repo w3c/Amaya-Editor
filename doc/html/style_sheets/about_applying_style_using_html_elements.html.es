@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Aplicar estilos utilizando elementos HTML</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -31,11 +32,11 @@
 <h1>Aplicar estilos utilizando elementos HTML</h1>
 
 <p>En HTML existen algunos elementos que se aplican a caracteres, por lo que
-pueden asociar estilos con cadenas de caracteres. En el menú
-<strong>Xhtml</strong> existen dos submenús para asignar estos elementos
+puedes asociar estilos con cadenas de caracteres. En el menú
+<strong>XHTML</strong> existen dos submenús para asignar estos elementos
 HTML:</p>
 <ul>
-  <li>Tipo de inofrmación</li>
+  <li>Tipo de información</li>
   <li>Elemento carácter</li>
 </ul>
 

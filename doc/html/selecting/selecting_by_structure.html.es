@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Seleccionar por Estructura</title>
-  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -16,9 +16,9 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="selecting_images.html.es" accesskey="p"><img
-        alt="anterior" src="../../images/left.gif" /></a> <a
-        href="../Selecting.html.es" accesskey="t"><img alt="superior"
+      <td><p align="right"><a href="selecting_images.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../Selecting.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a></p>
       </td>
     </tr>
@@ -60,21 +60,21 @@ texto dentro de una estructura:</p>
 utilizando el teclado:</p>
 <ul>
   <li>En Unix pulsa la tecla <code>Escape</code> y en Windows pulsa la tecla
-    <code>F2</code> para seleccionar el elemento padre. estructura del
+    <code>F2</code> para seleccionar el elemento padre en la estructura del
     documento. Pulsa la tecla varias veces para ir seleccionando los
-    elementos de nivel superior (y todo su contenido) hasta llegar a la raíz. 
+    elementos de nivel superior (y todo su contenido) hasta llegar a la raíz.
     <p></p>
   </li>
   <li>Pulsa <code>Control+-</code> (tecla menos) para seleccionar un elemento
     hijo.
     <p></p>
   </li>
-  <li>Pulsa <code>Control k</code> para seleccionar el siguiente elemento del
+  <li>Pulsa <code>Control+k</code> para seleccionar el siguiente elemento del
     mismo nivel, o del nivel del elemento padre si no hay después o antes un
     elemento hijo del nivel actual.
     <p></p>
   </li>
-  <li>Pulsa <code>Control j</code> para seleccionar el elemento anterior del
+  <li>Pulsa <code>Control+j</code> para seleccionar el elemento anterior del
     mismo nivel, o del nivel del elemento padre si no hay antes un elemento
     hijo del nivel actual.</li>
 </ul>

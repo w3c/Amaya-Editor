@@ -28,7 +28,7 @@
 <h1>Cambiar la estructura del documento</h1>
 
 <p>Las transformaciones estructurales sencillas se pueden conseguir con los
-menús <strong>Xhtml</strong> y <strong>Xml</strong>. Las transformaciones más
+menús <strong>XHTML</strong> y <strong>XML</strong>. Las transformaciones más
 complejas se pueden conseguir de otras maneras.</p>
 
 <h2>Ver también:</h2>
@@ -36,8 +36,8 @@ complejas se pueden conseguir de otras maneras.</p>
   <li><a href="../elements/the_structure_menu.html.es">Menú
   Estructura</a></li>
   <li><span class="Link0"><a
-    href="../elements/buttons_and_types_menu.html.es">Botones y Menús Xhtml y
-    Xml</a></span></li>
+    href="../elements/buttons_and_types_menu.html.es">Botones y Menús XHTML y
+    XML</a></span></li>
   <li><a href="../HTML-elements/infoTypes.html.es">Tipos de información en
     HTML</a></li>
 </ul>

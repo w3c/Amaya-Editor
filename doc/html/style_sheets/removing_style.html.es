@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Eliminar estilos</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -34,23 +35,21 @@ cualquier estilo a una cadena de caracteres.</p>
 <p class="ProcedureCaption">Para eliminar el estilo de una cadena de
 caracteres</p>
 <ol>
-  <li>Selecciona la cadena de caracteres de la que quieres eliminar el
-    estilo. 
+  <li>Selecciona la cadena de caracteres de la que quieres eliminar el estilo.
     <p></p>
   </li>
-  <li>En el submenú <strong>Xhtml &gt; Tipo de información</strong>, elige el
+  <li>En el submenú <strong>XHTML &gt; Tipo de información</strong>, elige el
     estilo que quieres eliminar. Por ejemplo, si deseas eliminar el estilo
     <strong>énfasis</strong> de una cadena de caracteres, elige
-    <strong>énfasis.</strong> 
+    <strong>énfasis.</strong>
     <p class="Note"><strong>Nota:</strong> Puedes elegir también estilos
     mediante atajos de teclado. Los atajos de teclado se muestran en el
-    submenú <strong>Xhtml &gt; Tipo de información</strong> y en la tabla
+    submenú <strong>XHTML &gt; Tipo de información</strong> y en la tabla
     siguiente.</p>
   </li>
 </ol>
 
-<p class="TableTitle" style="margin-left:0in"><strong>Tabla 1: Comandos del
-menú Estilo</strong></p>
+<p class="TableTitle"><strong>Tabla 1: Comandos del menú Estilo</strong></p>
 
 <table class="characters">
   <tbody>
@@ -165,7 +164,7 @@ menú Estilo</strong></p>
 </table>
 
 <p><strong>Nota:</strong> Los atributos de los estilos aplicados una cadena
-de caracteres se eliminan seleccioanr la cadena y volver a aplicar el
+de caracteres se eliminan seleccionando la cadena y volviendo a aplicar el
 estilo.</p>
 </div>
 </body>

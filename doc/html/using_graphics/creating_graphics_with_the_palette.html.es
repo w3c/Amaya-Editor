@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Crear gráficos con la paleta</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -32,7 +33,7 @@ inserción en el lugar en el que quieres insertarlo y haz clic en el botón
 <strong>Gráficos</strong>. El botón <strong>Gráficos</strong> (<img
 src="../../images/Graph.gif" alt="Botón Gráficos" />) muestra una paleta que
 permanece en la pantalla hasta que haces clic en el botón
-<strong>Hecho</strong> de la paleta.</p>
+<strong>Aceptar</strong> de la paleta.</p>
 
 <p>Los elementos gráficos disponibles son:</p>
 <ul>
@@ -139,13 +140,13 @@ con el resto de formas.</p>
   <li>Para crear un rectángulo, elige primero la posición de la esquina
     izquierda apretando el botón izquierdo del ratón. manteniendo pulsado el
     botón, mueve el ratón a la posición de la esquina opuesta y suelta el
-    botón. La forma ya está definida. 
+    botón. La forma ya está definida.
     <p></p>
   </li>
-  <li>Para crear un círculo o una elipse, seleccionad primero la posición del
+  <li>Para crear un círculo o una elipse, selecciona primero la posición del
     centro pulsando el botón izquierdo del ratón. Manteniendo pulsado el
     botón, mueve el ratón hacia la derecha y/o hacia abajo y acontinuación,
-    suelta el ratón. La forma ya está definida. 
+    suelta el ratón. La forma ya está definida.
     <p></p>
   </li>
   <li>Para crear una polilínea o un polígono, crea cada punto haciendo clic
@@ -156,13 +157,13 @@ con el resto de formas.</p>
 <h2>Insertar una imagen</h2>
 
 <p>Puedes insertar una imagen en un dibujo SVG. Elige el comando de menú
-<strong>Xhtml &gt; Imagen</strong> o haz clic en el botón <strong>Insertar
+<strong>XHTML &gt; Imagen</strong> o haz clic en el botón <strong>Insertar
 imagen</strong> de la barra de botones y sigue los mismos pasos que en
 HTML.</p>
 
 <p>para insertar una expresión matemática en un dibujo SVG, haz clic en la
 paleta <strong>Math</strong> cuando la selección está en un SVG. Amaya
-generará una etiqueta <code>foreignObject</code> para incrustar el marcado
+generará una etiqueta <code>foreignObject</code> para incrustar las marcas
 MathML.</p>
 
 <h2>Ver también:</h2>
@@ -171,7 +172,7 @@ MathML.</p>
   <li><a href="../Math.html.es">Editar Matemáticas</a></li>
   <li><a
     href="../editing_mathematics/the_math_palette_and_the_types.html.es">La
-    paleta Matemáticas y el menú Xml &gt; Matemáticas</a></li>
+    paleta Matemáticas y el menú XML &gt; Matemáticas</a></li>
 </ul>
 
 <p>&nbsp;</p>

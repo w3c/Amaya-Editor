@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Crear y actualizar un atributo de estilo</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -37,17 +38,17 @@ seleccionados.</p>
 <ul>
   <li><strong>Estilo de carácter</strong> te permite elegir una familia de
     fuentes, el estilo de carácter, el tamaño de la fuente y el estilo de
-    subrayado. 
+    subrayado.
     <p></p>
   </li>
   <li><strong>Colores</strong> te permite elegir de una paleta de colores el
-    color de fondo y el color del texto. Haz clic con el botón izqueirdo en
-    una celda de la paleta para elegir el color de texto, y haz clic con el
-    botón central para elegir el color de fondo. 
+    color de fondo y el color del texto. Haz clic con el botón izquierdo en
+    una celda de la paleta para elegir el color de texto y haz clic con el
+    botón central para elegir el color de fondo.
     <p></p>
   </li>
-  <li><strong>Formato</strong> te permite elegir la alineación, el sangrado y
-    el espaciado. 
+  <li><strong>Formato</strong> te permite elegir la alineación, la sangría y
+    el espaciado.
     <p></p>
   </li>
   <li><strong>Imagen de fondo</strong> te permite elegir una imagen de fondo
@@ -55,7 +56,7 @@ seleccionados.</p>
 </ul>
 
 <p>En todos estos diálogos, si escoges la opción por omisión se eliminará
-cualqueir información de estilo en los elementos seleccionados.</p>
+cualquier información de estilo en los elementos seleccionados.</p>
 
 <p>Cualquier modificación realizada con estos comandos se muestran
 inmediatamente en las vistas formateada y estructura.</p>

@@ -4,7 +4,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <title>Funciones WebDAV en Amaya</title>
-  <meta name="generator" content="amaya 7.2, see http://www.w3.org/Amaya/">
+  <meta name="generator"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/">
   <link href="style.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -57,11 +58,11 @@ las operaciones de escritura HTTP, como  PUT, POST y DELETE. Esto significa
 que solamente alguien que conozca el bloqueo podrá ejectuar estas
 operaciones. El protocolo WebDAV también define dos <strong>ámbitos de
 bloqueo</strong>: <em>bloqueo exclusivo y bloqueo compartido</em>. Un bloqueo
-exclusivo garantiza que una persona posee el bloqueo, y nadie más podrá
+exclusivo garantiza que una persona posee el bloqueo y que nadie más podrá
 bloquear el recurso (esto no afecta a la lectura del recurso). Un bloqueo
 exclusivo permite a un grupo de usuarios crear sus bloqueos sobre un recurso,
 pero deben confiar unos en otros para prevenir problemas de acceso. Además,
-cada bloqueo tiene una duración límite, y el usuario no puede olvidar que los
+cada bloqueo tiene una duración límite y el usuario no puede olvidar que los
 bloqueos pueden desaparecer en el servidor debido a excepciones en el
 servidor.</p>
 
@@ -84,19 +85,19 @@ recursos bloqueados.</p>
 de usuarios a editar en colaboración sus páginas Web. Para mostrar cómo
 funciona, he aquí un ejemplo; supón que tienes un servidor WebDAV (en
 realidad, <strong>necesitas</strong> un servidor Web que soporte WebDAV para
-trabajar con él) que se llama  <code>servidordav.miempresa.com</code>, y tú y
-tus compañeros queréis editar en colaboración algunos documentos que están en
-la carpeta WebDAV <code>/shared/</code> (las carpetas WebDAV se denominan
-colecciones).</p>
+trabajar con él) que se llama  <code>servidordav.miempresa.com</code>, y que
+tú y tus compañeros queréis editar en colaboración algunos documentos que
+están en la carpeta WebDAV <code>/shared/</code> (las carpetas WebDAV se
+denominan colecciones).</p>
 
 <p>Entonces, imagina que necesitas modificar el documento
 <code>http://servidordav.miempresa.com/shared/Doc1.html</code>. Para ello,
-abres el documento en tu editor Amaya, y a continuación
+abres el documento en tu editor Amaya y a continuación
 <strong>bloqueas</strong> el documento (<em>Bloquear recurso</em> en el <a
 href="#L654">menú Cooperación</a> ver <a href="#L654">Figura 1</a>). Una vez
 has bloqueado el documento, si uno de tus compañeros intenta guardar algún
 cambio en el documento, será avisado de tu bloqueo y las actualizaciones no
-se perderán automáticamente. Mientras  el documento está bloqueado puedes
+se perderán automáticamente. Mientras el documento está bloqueado puedes
 modificarlo, y cuando hayas terminado tu trabajo, al
 <strong>desbloquear</strong> el documento, permitirás que otros compañeros
 puedan bloquearlo y realizar sus modificaciones.</p>
@@ -110,7 +111,7 @@ href="#L654">menú Cooperación</a> para ver todas las propiedades de la página
 o puedes configurar Amaya para que te informe automáticamente cuando se
 bloquee la página. para ello, tendrás que abrir la caja de diálogo
 <em>Cooperación&gt;Preferencias</em>, marcar la opción de <em>Conocimiento
-general</em>, y escribir la dirección de tu carpeta compartida en el campo
+general</em> y escribir la dirección de tu carpeta compartida en el campo
 <em>Lista de recursos WebDAV de usuario</em>
 (<code>http://servidordav.miemmpresa.com/shared/</code>, como muestra la
 Figura 2). Una vez lo hayas hecho, al abrir una página bloqueada por un
@@ -134,8 +135,8 @@ indican los valores por omisión:</p>
   <dt><code>DAV_TIMEOUT= [ <strong>Infinite</strong> | Second-XXXX
   ]</code></dt>
     <dd>Duración del bloqueo. El valor "infinita" significa que el bloqueo no
-      termina nunca, y "Second-xxxx" intentará obtener un bloqueo durante
-      XXXX segundos.</dd>
+      termina nunca y "Second-xxxx" intentará obtener un bloqueo durante XXXX
+      segundos.</dd>
   <dt><code>DAV_LOCK_SCOPE= [ <strong>exclusive</strong> | shared
   ]</code></dt>
     <dd>Ámbito del bloqueo.</dd>

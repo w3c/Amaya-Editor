@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Enlazar hojas de estilo externas y de usuario</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -31,8 +32,8 @@
 <div id="page_body">
 <h1>Enlazar hojas de estilo externas y de usuario</h1>
 
-<p>Un documento pueda enlazar a varias hojas de estilo externas que se
-descargan junto con el documento y se aplican a él.</p>
+<p>Un documento pueda enlazar a varias hojas de estilo externas que se cargan
+junto con el documento y se aplican a él.</p>
 
 <p>Una hoja de estilo externa se puede aplicar a varios documentos. Cuando la
 misma hoja de estilo se aplica a varios documentos, Amaya sólo carga la hoja

@@ -37,10 +37,10 @@
     <p></p>
   </li>
   <li>Haz clic en el botón <b>Tabla</b>, o elige el comando de menú
-    <strong>Xhtml &gt; Tabla</strong>. Se abrirá una caja de diálogo. 
+    <strong>XHTML &gt; Tabla</strong>. Se abrirá una caja de diálogo. 
     <p></p>
   </li>
-  <li>Escribe el número inicial de filas y columnas de la nueva tabla, y
+  <li>Escribe el número inicial de filas y columnas de la nueva tabla y
     especifica el grosor del borde. 
     <p></p>
   </li>

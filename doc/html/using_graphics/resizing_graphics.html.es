@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Cambiar el tamaño de los gráficos</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -49,8 +50,9 @@ atributos</p>
   <li>Selecciona el gráfico</li>
   <li>Abre el menú <strong>Atributos</strong> y elige el atributo el quieres
     editar.</li>
-  <li>En la caja de diálogo, cambia el atributoi, haz clic en
-    <strong>Aplicar</strong> y a continuación en <strong>hecho</strong>.</li>
+  <li>En la caja de diálogo, cambia el atributo, haz clic en
+    <strong>Aplicar</strong> y a continuación en
+  <strong>Aceptar</strong>.</li>
 </ol>
 </div>
 </body>

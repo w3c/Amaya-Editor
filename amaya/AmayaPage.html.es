@@ -6,7 +6,7 @@
       "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Welcome to Amaya</title>
+  <title>Bienvenido a Amaya</title>
   <style type="text/css">
  body {font-family: helvetica, arial, sans-serif; color: black; background-color: #C0C0C0}
  h1 {font-size: 200%; font-weight: bold; font-style: italic; color: #488B9B;
@@ -28,8 +28,7 @@
 <p style="text-align: center"><svg xmlns="http://www.w3.org/2000/svg"
      width="600" height="349">
   <rect x="464" y="4" width="140" height="330" style="fill: #E1E1E1"/>
-  <g style="fill:#dc5b53; font: bold 16px"
-    transform="translate(477,0)">
+  <g style="fill:#dc5b53; font: bold 16px" transform="translate(477,0)">
     <a xlink:href="http://www.w3.org/Amaya">
       <text y="38px" x="0px">Amaya en el W3C
       </text>
@@ -105,7 +104,7 @@
       <use x="380" y="172" xlink:href="#cube" style="fill: #DF8984"/>
       <use x="410" y="172" xlink:href="#cube" style="fill: #DC5B53"/>
     </g>
-<g transform="translate(312,156)"
+    <g transform="translate(312,156)"
       style="font: 24px helvetica; font-weight: bold; fill: #488B9B;">
       <text id="logo">AMAYA
       </text>
@@ -163,22 +162,20 @@
 </p>
 
 <div>
-<p><strong>Amaya</strong> es un cliente Web que actúa como navegador y como
+<p>Hola<strong>Amaya</strong> es un cliente Web que actúa como navegador y como
 editor. Ha sido diseñado por el <a href="http://www.w3.org/">World Wide Web
-Consortium <acronym title="World Wide Web Consortium">(W3C</acronym>)</a> con
+Consortium (<acronym title="World Wide Web Consortium">W3C</acronym>)</a> con
 el principal objetivo de demostrar nuevas tecnologías Web en un entorno
 <acronym>WYSIWYG</acronym> (What You See Is What You Get = Lo Que Ves Es Lo
 Que Obtienes). La versión actual implementa <acronym>HTML</acronym>
 (Hypertext Markup Language = Lenguaje de Marcas de Hipertexto),
-<acronym>XHTML</acronym> (Extensible Hypertext Markup Language = <acronym
-title="Extensible Hypertext Markup Language">Lenguaje Extensible de Marcas de
-Hipertexto),</acronym> <acronym>MathML</acronym> (Mathematical Markup
-Language <acronym title="Mathematical Markup Language">= Lenguage Matemático
-de Marcas</acronym>), <acronym>SVG</acronym> (Scalable Vector Graphics =
-Gráficos Vectoriales Escalables), <acronym>CSS</acronym> (Cascading Style
-Sheets <acronym title="Cascaded Stylesheets">= Hojas de Estilo en
-Cascada</acronym>) y <acronym>HTTP</acronym> (HyperText Transfer Protocol =
-Protocolo de Transferencia de HiperTexto).</p>
+<acronym>XHTML</acronym> (Extensible Hypertext Markup Language = Lenguaje
+Extensible de Marcas de Hipertexto), <acronym>MathML</acronym> (Mathematical
+Markup Language = Lenguage Matemático de Marcas), <acronym>SVG</acronym>
+(Scalable Vector Graphics = Gráficos Vectoriales Escalables),
+<acronym >CSS</acronym> (Cascading Style Sheets = Hojas de Estilo en Cascada)
+y <acronym title="HyperText Transfer Protocol">HTTP</acronym> (HyperText Transfer Protocol = Protocolo de
+Transferencia de HiperTexto).</p>
 </div>
 
 <div>
@@ -195,7 +192,8 @@ documentos <acronym>HTML</acronym>, <acronym>XHTML</acronym>,
 remotos mediante <acronym>HTTP</acronym>. El soporte actual de
 <acronym>XML</acronym> genérico (Extensible Markup Language = Lenguaje
 Extensible de Marcas) te permite mostrar el contenido de cualquier documento
-XML y asociarle una hoja de estilo CSS.</p>
+<acronym>XML</acronym> y asociarle una hoja de estilo
+<acronym>CSS</acronym>.</p>
 
 <p>La navegación y la edición están integradas en Amaya. Puedes navegar y
 editar páginas web al mismo tiempo. Para editar un documento, haz clic en

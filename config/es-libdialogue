@@ -1,6 +1,6 @@
 # encoding= latin1
 0 Error de X11 : %s\n
-1 Confirme
+1 Confirmar
 2 No hay archivo de alfabeto
 3 La nueva vista no puede sustituir la anterior
 4 Esquemas incompatibles. Recompile %s
@@ -34,7 +34,7 @@
 32 Formato
 33 Por omisión
 34 Alineación
-35 Sangrar
+35 Sangría
 36 Imprimir
 37 Alimentación manual
 38 Opciones
@@ -57,7 +57,7 @@
 55 Subrayado
 56 Tachado
 57 Tamaño del cuerpo (pt)
-58 Sangrado (pt)
+58 Sangría (pt)
 59 Interlineado (pt)
 60 Interlineado
 61 Guardar documento
@@ -68,19 +68,19 @@
 66 Salida
 67 Archivo PostScript
 68 Impresora
-69 Buscar
+69 Buscar:
 70 MAYÚSCULAS = minúsculas
-71 Sustituir por
-72 Sustituir
-73 No sustituir
-74 Sustituir a solicitud
-75 Sustitución automática
+71 Reemplazar por:
+72 Reemplazar
+73 No reemplazar
+74 Reemplazar a solicitud
+75 Reemplazar automáticamente
 76 Dónde buscar...
 77 Antes de la selección
 78 En la selección
 79 Tras la selección
 80 En todo el documento
-81 No sustituir
+81 No reemplazar
 82 Colores por omisión
 83 antes de cerrarlo
 84 Cerrar un documento

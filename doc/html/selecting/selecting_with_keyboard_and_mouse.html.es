@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>Seleccionar con el Teclado y el Ratón</title>
-  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -16,9 +16,10 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="../Selecting.html.es" accesskey="t"><img alt="superior"
-        src="../../images/up.gif" /></a> <a href="selecting_images.html.es"
-        accesskey="n"><img alt="siguiente" src="../../images/right.gif" /></a></p>
+      <td><p align="right"><a href="../Selecting.html.es" accesskey="t"><img
+        alt="superior" src="../../images/up.gif" /></a> <a
+        href="selecting_images.html.es" accesskey="n"><img alt="siguiente"
+        src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -39,16 +40,17 @@ del documento es compleja.</p>
 <p>Por ejemplo, al seleccionar una palabra de esta frase, en la barra de
 estado se mostrará:</p>
 
-<p><samp>text \ p \ body \ html \ Document</samp></p>
+<p><samp>text \ p \ div \ body \ html \ Document</samp></p>
 
 <p>lo que significa que lo has elegido es texto contenido en un elemento
-<code>p</code> (que está contenido en el elemento body etc.).</p>
+<code>p</code> (que está contenido en un elemento div, que a su vez está
+contenido en el elemento body etc.).</p>
 
 <p>Al seleccionar <strong>este elemento de estructura</strong> (por ejemplo,
 haciendo clic en la palabra estructura y a continuación pulsando
 <kbd>Escape</kbd> o <kbd>F2</kbd>), en la barra de estado se mostrará</p>
 
-<p><samp>strong \ p \ body \ html \ Document</samp></p>
+<p><samp>strong \ p \ div \ body \ html \ Document</samp></p>
 
 <h2>Seleccionar con el ratón</h2>
 <ul>
@@ -70,7 +72,7 @@ haciendo clic en la palabra estructura y a continuación pulsando
 
 <h2>Seleccionar con el teclado</h2>
 <ul>
-  <li>Para seleccionar elementos de estructura utilizando el teclado 
+  <li>Para seleccionar elementos de estructura utilizando el teclado
     <ul>
       <li>Pulsa la tecla <code>Escape</code> en Unix/Mac o la tecla
         <code>F2</code> en Windows para seleccionar el elemento padre en la
@@ -89,7 +91,7 @@ haciendo clic en la palabra estructura y a continuación pulsando
   </li>
   <li>Para mover el punto de inserción en las cuatro direcciones, utiliza las
     cuatro flechas de desplazamiento (<code>Izquierda</code>,
-    <code>Derecha</code>, <code>Arriba</code>, y <code>Abajo</code>). Si no
+    <code>Derecha</code>, <code>Arriba</code> y <code>Abajo</code>). Si no
     hay ninguna selección visible en la ventana, Amaya crea una nueva
     selección en la esquina superior izquierda de la ventana.<br />
   </li>

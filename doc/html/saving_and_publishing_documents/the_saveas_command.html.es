@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <title>El comando Guardar como</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -30,8 +31,8 @@
 <p>Al elegir el comando de menú <strong>Archivo &gt; Guardar como</strong> se
 abre la caja de diálogo <strong>Guardar como</strong>, con la que puedes:
 guardar el documento como XML, HTML o como archivo de texto en un disco local
-o en un URI remoto; guardar las imágenes incrustadas en la misma carpeta que
-el documento o en otro lugar, y transformar los URIs incrustados.</p>
+o en un URI remoto, guardar las imágenes incrustadas en la misma carpeta que
+el documento o en otro lugar y transformar los URIs incrustados.</p>
 
 <h2>La caja de diálogo Guardar como</h2>
 
@@ -43,13 +44,13 @@ el documento o en otro lugar, y transformar los URIs incrustados.</p>
     muestra cuando guardas SVG, MathML, CSS o cualquier otro tipo de
     documento. Por omisión, Amaya mantiene el formato del documento actual.
     Si eliges <strong>Text</strong> se elimina todo el marcado HTML y se
-    sutituye por espacios, slatos de línea, etc. 
+    sutituye por espacios, slatos de línea, etc.
     <p></p>
   </li>
   <li>El campo <strong>Ubicación de documento</strong> indica dónde se
     guardará el archivo. Puede ser un archivo local (por ejemplo,
     <code>/pub/html/welcome.html</code>) o un URI remoto (por ejemplo,
-    <code>http://www.w3.org/pub/WWW/Welcome.html</code>). 
+    <code>http://www.w3.org/pub/WWW/Welcome.html</code>).
     <p></p>
     <p class="Note"><strong>Nota:</strong> Escribe el camino completo para el
     URL. Asímismo, debes estar seguro de que tiene derecho a ejecutar un
@@ -66,30 +67,29 @@ el documento o en otro lugar, y transformar los URIs incrustados.</p>
     el documento a la nueva ubicación. Normalmente es mejor tener esta
     casilla marcada porque si no no estarías seguro de que las imágenes se
     encontraran al abrir el documento posteriormente. Sin embargo, es útil
-    tener esta casilla desmarcada cuando simplemente as cambiado el texto del
-    documento y vas a guardar el documento en el mismo servidor. Al copiar
-    las imágenes, Amaya actualizará automáticamente todos los atributos
-    <strong>SRC</strong> para que apunten a la nueva ubicación de las
-    imágenes. Las nuevas ubicaciones se escribirán como URIs relativos. 
+    tener esta casilla desmarcada cuando simplemente has cambiado el texto
+    del documento y vas a guardar el documento en el mismo servidor. Al
+    copiar las imágenes, Amaya actualizará automáticamente todos los
+    atributos <strong>SRC</strong> para que apunten a la nueva ubicación de
+    las imágenes. Las nuevas ubicaciones se escribirán como URIs relativos.
     <p></p>
   </li>
   <li>La casilla de verificación <strong>Transformar URIs</strong> transforma
     los URIs actuales en URIs relativos siempre que sea posible. Por
     supuesto, si el documento se guarda en un archivo local y los URIs
-    apuntan a archivos remotos, los URIs serán absolutos. when possible. Of
-    course, if the document is saved in a local file and URIs point to remote
-    files, URIs will be absolute. This ensures that all the links in the
-    document remain correct after the copy. However, if you have several
-    document linked together with relative URIs and you plan to move them to
-    a remote location, you must disable URI conversion to avoid referencing
-    the initial locations. 
+    apuntan a archivos remotos, los URIs serán absolutos. Esto asegura que
+    todos los enlaces del documento permanezcan correctos después de la
+    copia. Sin embargo, si tienes varios documentos enlazados entre sí con
+    URIs relativos y quieres moverlos a una ubicación remota, debes
+    desactivar la conversión de URIs para evitar las referencias a las
+    ubicaciones iniciales.
     <p></p>
   </li>
   <li>El campo <strong>Directorio de imágenes</strong> te permite guardar
     imágenes (si la casilla <strong>Copiar imágenes</strong> está activada)
     en un lugar distinto al del archivo HTML. Este campo debe contener el
     nombre de una carpeta del sistema de archivos local o la ubicación en el
-    servidor remoto. 
+    servidor remoto.
     <p></p>
     <ul>
       <li>Al utilizar caminos relativos, las imágenes se guardan en una
@@ -99,7 +99,7 @@ el documento o en otro lugar, y transformar los URIs incrustados.</p>
         y la ubicación de las imágenes es "Images", la imagen "W3C.png"
         contenida en el documento se almacenaría con el URI <code><a
         href="http://www.w3.org/pub/WWW/Images/W3C.png">http://www.w3.org/pub/WWW/Images/W3C.png</a></code>
-        y el archivo HTML se modificará para que la referencia sea: 
+        y el archivo HTML se modificará para que la referencia sea:
         <p></p>
         <p><code>&lt;img src="Images/W3C.png"&gt;</code></p>
         <p></p>
@@ -112,7 +112,7 @@ el documento o en otro lugar, y transformar los URIs incrustados.</p>
         En el ejemplo previo, si la ubicación especificada de las imágenes es
         <code>http://pub/WWW/Images</code>, la imagen se almacena en
         <code>http://www.w3.org/pub/WWW/Images/W3C.png</code> y el archivo
-        HTML se modificará para que la referencia sea: 
+        HTML se modificará para que la referencia sea:
         <p></p>
         <p><code>&lt;img src="Images/W3C.png"&gt;</code></p>
       </li>
@@ -120,15 +120,15 @@ el documento o en otro lugar, y transformar los URIs incrustados.</p>
   </li>
 </ul>
 
-<p>En la parte inferior hay catro botones:</p>
+<p>En la parte inferior hay cuatro botones:</p>
 <ul>
   <li>Al hacer clic en <strong>Confirmar</strong> se pone en marcha la
     transformación del documento. Una caja de diálogo solicita confirmación
-    en los siguientes casos: 
+    en los siguientes casos:
     <ul>
       <li>El documento debe guardarse en un servidor remoto. Amaya muestra el
         URI completo para que lo compruebes.</li>
-      <li>El documento debe guardarse localmente y el archivo ya existe. 
+      <li>El documento debe guardarse localmente y el archivo ya existe.
         <p></p>
       </li>
     </ul>
@@ -136,37 +136,37 @@ el documento o en otro lugar, y transformar los URIs incrustados.</p>
   <li>Al guardar en una ubicación remota, comprueba que no está activado el
     http_proxy, o que el servidor proxy y el <a
     href="http://www.w3.org/Amaya/User/Put.html">servidor destino están
-    configurados para trabajar con el método PUT</a>. 
+    configurados para trabajar con el método PUT</a>.
     <p></p>
   </li>
   <li>En estos momentos Amaya no contacta con el servidor remoto (en caso de
     ser <code>http://...</code> destino) para comprobar si este documento ya
-    existe. 
+    existe.
     <p></p>
   </li>
   <li>Al hacer clic en <strong>Buscar</strong> puedes seleccionar una carpeta
-    y un nombre de archivo locales: 
+    y un nombre de archivo locales:
     <ul>
       <li>El campo <strong>Directorios de documentos</strong> muestra los
         directorios existentes en el directorio local actual. Debes
         utilizarlo para guardar un archivo en el sistema de archivo
       local.</li>
       <li>El campo <strong>Archivos</strong> muestra los archivos existentes
-        en el directorio local actual. 
+        en el directorio local actual.
         <p></p>
       </li>
     </ul>
   </li>
   <li>Al hacer clic en <strong>Limpiar</strong> eliminas el contenido actual
     del campo <strong>Ubicación del documento</strong> y del campo
-    <strong>Directorio de imágenes</strong>. 
+    <strong>Directorio de imágenes</strong>.
     <p></p>
   </li>
   <li>Al hacer clic en <strong>Cambiar Charset</strong> se abre una caja de
     diálogo en la que puedes cambiar el juego de caracteres del documento.
     Esta opción sólo funciona en los documentos que permiten definir su juego
     de caracteres, como HTML, XML. Esta opción está disponible tanto para
-    guardar archivos remotos como locales. 
+    guardar archivos remotos como locales.
     <p></p>
   </li>
   <li>Al hacer clic en <strong>Cambiar Mime Type</strong> se abre una caja de
@@ -174,7 +174,7 @@ el documento o en otro lugar, y transformar los URIs incrustados.</p>
     tipo MIME que buscas no está en la lista, puedes escribirlo tú mismo.
     Este botón está activo únicamente cuando guardas un documento en un
     servidor (los sistemas de archivo local no almacenan la información de
-    metadatos MIME). 
+    metadatos MIME).
     <p></p>
   </li>
   <li>Al hacer clic en <strong>Cancelar</strong>, anulas el comando.</li>

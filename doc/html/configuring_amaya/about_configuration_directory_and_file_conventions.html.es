@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Directorio de configuración y convenciones de archivo</title>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -15,9 +16,9 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="configuring_amaya.html.es" accesskey="p"><img
-        alt="anterior" src="../../images/left.gif" /></a> <a
-        href="../Configure.html.es" accesskey="t"><img alt="superior"
+      <td><p align="right"><a href="configuring_amaya.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../Configure.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="menu_preferences.html.es"
         accesskey="n"><img alt="siguiente" src="../../images/right.gif"
         /></a></p>
@@ -93,19 +94,18 @@ operativos.</p>
   </tbody>
 </table>
 
-<p>Este diredctorio se conserva incluso cuando se instalan nuevas versiones
-de Amaya. Contiene los siguientes archivos:</p>
+<p>Este directorio se conserva incluso cuando se instalan nuevas versiones de
+Amaya. Contiene los siguientes archivos:</p>
 <ul>
   <li><strong>thot.rc</strong>: Contiene las preferencias de usuario,
-    modificadas a través del menú <strong>Especial &gt;
-    Preferencias</strong>. 
+    modificadas a través del menú <strong>Especial &gt; Preferencias</strong>.
     <p></p>
   </li>
   <li><strong>amaya.keyboard</strong> (Unix) o <strong>amaya.kb</strong>
-    (Windows): Define los atajos de teclado de Amaya. 
+    (Windows): Define los atajos de teclado de Amaya.
     <p></p>
   </li>
-  <li><strong>amaya.css</strong>: Hoja de estilo de usuario. 
+  <li><strong>amaya.css</strong>: Hoja de estilo de usuario.
     <p></p>
   </li>
   <li><strong>dictionary.DCT</strong>: Amaya proporciona un corrector
@@ -117,7 +117,7 @@ de Amaya. Contiene los siguientes archivos:</p>
 </ul>
 
 <p class="Note"><strong>Nota:</strong> Los archivos
-<code>amaya.keyboard</code>, <code>amaya.kb</code>, y <code>amaya.css</code>
+<code>amaya.keyboard</code>, <code>amaya.kb</code> y <code>amaya.css</code>
 files se cargan al iniciar Amaya. Si los cambias, debes cerrar y reiniciar
 Amaya para que los cambios tengan efecto.</p>
 
@@ -154,7 +154,7 @@ en los diferentes sistemas operativos:</p>
 <p>Amaya crea archivos en este directorio al navegar documentos remotos o al
 imprimir un documento. La caché también se guarda en este directorio. Puedes
 modificar los directorios AmayaTemp y caché mediante los menús <span
-class="Link0"><strong>Preferencias &gt; General</strong> y
+class="Link0"><strong>Preferencias &gt; Generales</strong> y
 <strong>Preferencias &gt; Caché</strong></span>.</p>
 
 <p>Amaya siempre intenta borrar los archivos temporales que crea. Sin embargo
