@@ -2621,13 +2621,14 @@ int main (int argc, char **argv)
 	      /* CSS files given in the command line */
 	      argCounter++;
 	      CSSOrigin[cssCounter] = 'a';
+	      /* suppress quotes if necessary */
 	      l = strlen (argv[argCounter]);
-#ifdef _WINDOWS
-	      argv[argCounter][l - 1] = EOS;
-	      CSSName[cssCounter] = TtaStrdup (&(argv[argCounter][1]));
-#else /* _WINDOWS */
-	      CSSName[cssCounter] = TtaStrdup (argv[argCounter]);
-#endif /* _WINDOWS */
+	      if (argv[argCounter][l - 1] == '"')
+		argv[argCounter][l - 1] = EOS;
+	      if (argv[argCounter][0] == '"')
+		CSSName[cssCounter] = TtaStrdup (&(argv[argCounter][1]));
+	      else
+		CSSName[cssCounter] = TtaStrdup (argv[argCounter]);
 	      argCounter++;
 	      cssCounter++;
 	    }
@@ -2636,13 +2637,14 @@ int main (int argc, char **argv)
 	      /* CSS files given in the command line */
 	      argCounter++;
 	      CSSOrigin[cssCounter] = 'u';
+	      /* suppress quotes if necessary */
 	      l = strlen (argv[argCounter]);
-#ifdef _WINDOWS
-	      argv[argCounter][l - 1] = EOS;
-	      CSSName[cssCounter] = TtaStrdup (&(argv[argCounter][1]));
-#else /* _WINDOWS */
-	      CSSName[cssCounter] = TtaStrdup (argv[argCounter]);
-#endif /* _WINDOWS */
+	      if (argv[argCounter][l - 1] == '"')
+		argv[argCounter][l - 1] = EOS;
+	      if (argv[argCounter][0] == '"')
+		CSSName[cssCounter] = TtaStrdup (&(argv[argCounter][1]));
+	      else
+		CSSName[cssCounter] = TtaStrdup (argv[argCounter]);
 	      argCounter++;
 	      cssCounter++;
 	    }
