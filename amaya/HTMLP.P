@@ -6952,13 +6952,7 @@ RULES
 	Adjust: Enclosing =;
 	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom;
-	if NOT within Definition and NOT within List_Item BEGIN
-	    MarginTop: 0.2;
-	    MarginBottom: 0.2;
-	    END;
 	IN Structure_view BEGIN
-		MarginTop: 0;
-		MarginBottom: 0;
 		VertPos: Top = Previous . Bottom;
 		NoLine;
 		END;
@@ -8714,10 +8708,7 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_HEIGHT);
 	CreateBefore(VALUE_HEIGHT);
-{	if PICTURE_UNIT}
-	   Height: Height_ px;
-{	if NOT PICTURE_UNIT
-	   Height: Height_ px min;}
+	Height: Height_ px;
 	IN Structure_view BEGIN
 	   If PICTURE_UNIT
 	        Height: 1 px;
