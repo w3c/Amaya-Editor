@@ -1971,11 +1971,11 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc,
 	{
 #ifdef _GL
 	  if ((!glIsTexture (imageDesc->TextureBind))
- /* || */
-/* 	      (pres == ReScale && */
-/* 	      (imageDesc->PicWArea != w ||  */
-/* 	       imageDesc->PicHArea != h)) */
-)	    
+	      ||
+	      (pres == ReScale &&
+	       (imageDesc->PicWArea != w ||
+		imageDesc->PicHArea != h))
+	      )	    
 #else /*_GL*/
 	  if (imageDesc->PicPixmap == None ||
 	      (pres == ReScale &&
@@ -1985,8 +1985,8 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc,
 	    {
 	      /* need to load or to rescale the picture */
 	      LoadPicture (frame, box, imageDesc);
-	      picWArea = imageDesc->PicWArea;
-	      picHArea = imageDesc->PicHArea;
+	      w = picWArea = imageDesc->PicWArea;
+	      h = picHArea = imageDesc->PicHArea;
 	      SetPictureClipping (&picWArea, &picHArea, 
 				  w, h, imageDesc);
 	    }
@@ -2197,29 +2197,52 @@ unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
   return (epic);
 }
 
-
 /*----------------------------------------------------------------------
    Ratio_Calculate : if one picture dimension is null
     make sure we keep the aspect ratio
   ----------------------------------------------------------------------*/
-static ThotBool Ratio_Calculate (int *width, int *height, 
-		     int imgwidth, int imgheight)
+static ThotBool Ratio_Calculate (PtrAbstractBox pAb,
+				 int *width, int *height, 
+				 int imgwidth, int imgheight)
 {  
+  ThotBool Constrained_Width, Constrained_Height;
+  int      initialw, initialh;
+  
   if (imgwidth && imgheight)
-    {		  
-      if (*width == 0 && *height != 0)
+    {	
+      initialw = *width;      
+      Constrained_Width = TRUE;
+      if (!pAb->AbWidth.DimIsPosition)
+	if (pAb->AbWidth.DimValue == -1 &&
+	    pAb->AbWidth.DimAbRef == NULL)
+	  Constrained_Width = FALSE;
+
+      initialh = *height;     
+      Constrained_Height = TRUE;
+      if (!pAb->AbHeight.DimIsPosition)
+	if (pAb->AbHeight.DimValue == -1 &&
+	    pAb->AbHeight.DimAbRef == NULL)
+	  Constrained_Height = FALSE;
+    
+      if (Constrained_Width == FALSE && 
+	  Constrained_Height == TRUE)
 	{
 	  *width = (imgwidth * *height) / imgheight;
-	  return TRUE;
+	  if ((*width) != initialw)
+	    return TRUE;
+	  else
+	    return FALSE;	  
 	}
-		  
       else 
-	if (*height == 0 && *width != 0)
+	if (Constrained_Width == TRUE && 
+	    Constrained_Height == FALSE)
 	  {			
 	    *height = (imgheight * *width) / imgwidth;
-	    return TRUE;
-	    
-	  }		  
+	    if ((*height) != initialh)
+	      return TRUE;
+	    else
+	      return FALSE;
+	  }
     }
   return FALSE;
 }
@@ -2315,7 +2338,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      imageDesc->PicHArea = h;
 	      width = imageDesc->PicWidth;
 	      height = imageDesc->PicHeight;	      
-	      if (Ratio_Calculate (&w, &h,
+	      if (Ratio_Calculate (pAb, &w, &h,
 				   width, height))
 		{
 		  if (imageDesc->PicWArea == 0)
@@ -2443,28 +2466,37 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		CacheLookupHeightAndWidth (imageDesc,
 					   &width,
 					   &height,
-					   frame); 
+					   frame);
+	      if  (width == 0 && height == 0)
+		{
+		  imageDesc->PicPixmap = (unsigned char *) 
+		    (*(PictureHandlerTable[typeImage].Produce_Picture))
+		    (fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
+		     Bgcolor, &width, &height,
+		     ViewFrameTable[frame - 1].FrMagnification);
+		  imageDesc->TextureBind = 0;
+		}     
 	    }
 	  /* intrinsic width and height */
 	  imageDesc->PicWidth  = width;
 	  imageDesc->PicHeight = height;
 
 
-	      imageDesc->PicWArea = w;
-	      imageDesc->PicHArea = h;
+	  imageDesc->PicWArea = w;
+	  imageDesc->PicHArea = h;
 
-	      if (Ratio_Calculate (&w, &h,
-				   width, height))
-		{
-		  if (imageDesc->PicWArea == 0)
-		    ChangeWidth (box,
-				 box, NULL,
-				 w + left + right, 0, frame);		  
-		  if (imageDesc->PicHArea == 0)
-		    ChangeHeight (box,
-				  box, NULL,
-				  h + top + bottom + top + bottom, frame);
-		}
+	  if (Ratio_Calculate (pAb, &w, &h,
+			       width, height))
+	    {
+	      if (imageDesc->PicWArea == 0)
+		ChangeWidth (box,
+			     box, NULL,
+			     w + left + right, 0, frame);		  
+	      if (imageDesc->PicHArea == 0)
+		ChangeHeight (box,
+			      box, NULL,
+			      h + top + bottom + top + bottom, frame);
+	    }
 	}
     }
 
@@ -2481,16 +2513,16 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       imageDesc->PicType = 3;
       imageDesc->PicPresent = RealSize;
       imageDesc->PicPixmap = (unsigned char*) PictureLogo;
-	  typeImage = GIF_FORMAT;
-		  /*TtaGetMemory (sizeof (unsigned char) * 6400);
-	  memcpy (imageDesc->PicPixmap, PictureLogo, sizeof (unsigned char) * 6400);*/
+      typeImage = GIF_FORMAT;
+      /*TtaGetMemory (sizeof (unsigned char) * 6400);
+	memcpy (imageDesc->PicPixmap, PictureLogo, sizeof (unsigned char) * 6400);*/
 
       /* convert logo into a texture map 
-      GL_w = (GLfloat) Image->PicWidth/p2_w;
-      GL_h = (GLfloat) Image->PicHeight/p2_h; 
-     We give te texture to opengl Pipeline system 
-      GL_MakeTextureSize (Image, p2_w, p2_h);
-	 */
+	 GL_w = (GLfloat) Image->PicWidth/p2_w;
+	 GL_h = (GLfloat) Image->PicHeight/p2_h; 
+	 We give te texture to opengl Pipeline system 
+	 GL_MakeTextureSize (Image, p2_w, p2_h);
+      */
       wBox = w = 40;
       hBox = h = 40;
 	  imageDesc->PicWidth = w;
@@ -2660,11 +2692,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #ifdef _GTK
 #ifndef _GTK2
   GdkImlibImage      *im = None;
-#ifndef _GL
   GdkPixmap          *drw = None;
-#else /* _GL*/
-  unsigned char*  drw = NULL;
-#endif /* _GL */
 #else /* _GTK2 */
   GdkPixbuf          *im = None;
   GError             *error=NULL;
@@ -2683,7 +2711,8 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   int                 w, h;
   int                 width, height;
   int                 left, right, top, bottom;
-
+  ThotBool            Box_Need_Resize = FALSE;
+  
 #ifdef _WINDOWS
   ThotBool            releaseDC = FALSE;
 #endif
@@ -2774,7 +2803,37 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  w = box->BxW;
 	  h = box->BxH;
 	}
+
+
+      if (imageDesc->PicWidth && imageDesc->PicHeight)
+	{
+	  imageDesc->PicWArea = w;
+	  imageDesc->PicHArea = h;
+
+	  if (imageDesc->PicWidth && imageDesc->PicHeight)
+	    {
+	      width = imageDesc->PicWidth;
+	      height = imageDesc->PicHeight;
+
+	      if (Ratio_Calculate (pAb, &wBox, &hBox,
+				   width, height))
+		{
+		if (imageDesc->PicWArea != w)
+		    ChangeWidth (box,
+				 box, NULL,
+				 (w + left + right) - box->BxW, 0, frame);		  
+		  if (imageDesc->PicHArea != h)
+		    ChangeHeight (box,
+				  box, NULL,
+				  (h + top + bottom + top + bottom) - box->BxH, frame);
+
+		  DefClip (frame, box->BxXOrg, box->BxYOrg,
+			   box->BxXOrg + w, box->BxYOrg + h);
+		}	      
+	    }
+	}
       
+
       if (!Printing)
 	{
 #ifndef _WINDOWS
@@ -2825,29 +2884,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      imageDesc->PicHArea = hBox = h;
 #ifndef _GTK2
 	      im = gdk_imlib_load_image (fileName);
-#ifndef _GL
 	      gdk_imlib_render(im, w, h);
 	      drw = gdk_imlib_move_image (im);
 	      imageDesc->PicMask = (Pixmap) gdk_imlib_move_mask (im);
-#else /* _GL */
-	      /* opengl draw in the other way...*/
-	      gdk_imlib_flip_image_vertical (im);
-	      /* opengl texture have size that is a power of 2*/
-#ifndef MESA
-	      /* opengl texture have size that is a power of 2*/
-	      drw = GL_MakeTexture (im->rgb_data, 
-				    im->shape_color.r, 
-				    im->shape_color.g,
-				    im->shape_color.b,
-				    w, h);
-#else /* MESA*/
-	      drw = GL_MakeTransparentRGB (im->rgb_data, 
-					   im->shape_color.r, 
-					   im->shape_color.g,
-					   im->shape_color.b,
-					   w, h);
-#endif/*  MESA */
-#endif /* _GL */
 #else /* _GTK2 */
 	      im = gdk_pixbuf_new_from_file(fileName, &error);
 #endif /* _GTK2 */
@@ -2908,32 +2947,13 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		      if (yBox == 0)
 			yBox = im->rgb_height;
 		    }
-#ifndef _GL
+
 		  gdk_imlib_render(im,
 				   (gint)xBox,
 				   (gint)yBox);
 		  drw = (GdkPixmap *) gdk_imlib_move_image (im);
 		  imageDesc->PicMask = (Pixmap) gdk_imlib_move_mask (im);
-#else /* _GL */
-		  /* opengl draw in the other way...*/
-		  gdk_imlib_flip_image_vertical (im);
-#ifndef MESA
-		  /* opengl texture have size that is a power of 2*/
-		  drw = GL_MakeTexture (im->rgb_data, 
-					im->shape_color.r, 
-					im->shape_color.g,
-					im->shape_color.b,
-					(gint)wBox ,
-					(gint)hBox);
-#else /* MESA*/
-		  drw = GL_MakeTransparentRGB(im->rgb_data, 
-					      im->shape_color.r, 
-					      im->shape_color.g,
-					      im->shape_color.b,
-					      (gint)wBox, 
-					      (gint)hBox);
-#endif/*  MESA */
-#endif /* _GL */
+
 		}
 	      width = (gint) wBox;
 	      height = (gint) hBox;
@@ -2942,27 +2962,29 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      imageDesc->PicWidth  = width;
 	      imageDesc->PicHeight = height;
 
-
 	      imageDesc->PicWArea = w;
 	      imageDesc->PicHArea = h;
 
-	      if (Ratio_Calculate (&w, &h,
+	      if (Ratio_Calculate (pAb, &w, &h,
 				   width, height))
 		{
-		  if (imageDesc->PicWArea == 0)
+		  if (imageDesc->PicWArea != w)
 		    ChangeWidth (box,
 				 box, NULL,
-				 w + left + right, 0, frame);		  
-		  if (imageDesc->PicHArea == 0)
+				 (w + left + right) - box->BxW, 0, frame);		  
+		  if (imageDesc->PicHArea != h)
 		    ChangeHeight (box,
 				  box, NULL,
-				  h + top + bottom + top + bottom, frame);
+				  (h + top + bottom + top + bottom) - box->BxH, frame);
+
+		  DefClip (frame, box->BxXOrg, box->BxYOrg,
+			   box->BxXOrg + w, box->BxYOrg + h);
+	  
 		  /* Force Image rescaling by making box 
 		     size different of image info size*/
 		  w = w / 2;
-		  h = h / 2;		  
+		  h = h / 2;		 
 		}
-
 	    }
 #ifndef _GTK
 	}
@@ -2977,32 +2999,32 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #endif 
 #ifdef _WINDOWS
 #ifdef _WIN_PRINT
-      if (TtDisplay == NULL)
-	{
-	  /* load the device context into TtDisplay */
-	  WIN_GetDeviceContext (frame);
-	  releaseDC = TRUE;
-	}
+	  if (TtDisplay == NULL)
+	    {
+	      /* load the device context into TtDisplay */
+	      WIN_GetDeviceContext (frame);
+	      releaseDC = TRUE;
+	    }
 #else /* _WIN_PRINT */
-      imageDesc->PicType = 3;
-      imageDesc->PicPresent = pres;
-      drw = PictureLogo;
+	  imageDesc->PicType = 3;
+	  imageDesc->PicPresent = pres;
+	  drw = PictureLogo;
 #endif /* _WIN_PRINT */
 #else  /* _WINDOWS */
 #ifdef _GTK 
-      imageDesc->PicType = 3;
-      imageDesc->PicPresent = pres;
-      imageDesc->PicFileName = TtaStrdup (LostPicturePath);
-      drw = (GdkPixmap *) PictureLogo;
+	  imageDesc->PicType = 3;
+	  imageDesc->PicPresent = pres;
+	  imageDesc->PicFileName = TtaStrdup (LostPicturePath);
+	  drw = (GdkPixmap *) PictureLogo;
 #else /*_GTK*/
-      drw = PictureLogo;
-      imageDesc->PicType = -1;
+	  drw = PictureLogo;
+	  imageDesc->PicType = -1;
 #endif /* ! GTK */
 #endif /* _WINDOWS */
-      wBox = w = 40;
-      hBox = h = 40;
+	  wBox = w = 40;
+	  hBox = h = 40;
 	}
-      else if (w == 0 || h == 0)
+      else if (w == 0 || h == 0) 
 	{
 	  /* one of box size is unknown, keep the image size */
 	  if (w == 0)
@@ -3028,9 +3050,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 			   pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
 			   pAb->AbNext == NULL && pAb->AbPrevious == NULL)
 		    /* the parent box should inherit the picture width */
-		    ChangeWidth (pAb->AbEnclosing->AbBox,
-				 pAb->AbEnclosing->AbBox, NULL,
-				 w + left + right, 0, frame);
+		      ChangeWidth (pAb->AbEnclosing->AbBox,
+				   pAb->AbEnclosing->AbBox, NULL,
+				   w + left + right, 0, frame);
 		}
 	      if (!(pAb->AbHeight.DimIsPosition))
 		{
@@ -3041,9 +3063,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 			   pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
 			   pAb->AbNext == NULL && pAb->AbPrevious == NULL)
 		    /* the parent box should inherit the picture height */
-		    ChangeHeight (pAb->AbEnclosing->AbBox,
-				  pAb->AbEnclosing->AbBox, NULL,
-				  h + top + bottom + top + bottom, frame);
+		      ChangeHeight (pAb->AbEnclosing->AbBox,
+				    pAb->AbEnclosing->AbBox, NULL,
+				    h + top + bottom + top + bottom, frame);
 		}
 	    }
 	}

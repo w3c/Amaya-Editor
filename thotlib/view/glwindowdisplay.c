@@ -1944,7 +1944,11 @@ void SetGlPipelineState ()
   /* Bitmap font Text writing (even in texture font)*/
   glPixelStorei (GL_UNPACK_ALIGNMENT, 1); 
   /* Needs to clear buffer after allocating it before drawing*/
+
+  glDisable (GL_SCISSOR_TEST);
   glClear (GL_COLOR_BUFFER_BIT);
+  glEnable (GL_SCISSOR_TEST);  
+
   /*(needed for gradients)*/
   /*glShadeModel (GL_SMOOTH);*/
   /* no gradients for now => */
@@ -2158,6 +2162,9 @@ void GLResize (int width, int height, int x, int y)
   /* Needed for 3d only...*/
   glMatrixMode (GL_MODELVIEW);
   glLoadIdentity (); 
+  glDisable (GL_SCISSOR_TEST);
+  glClear (GL_COLOR_BUFFER_BIT);
+  glEnable (GL_SCISSOR_TEST);  
 }
 
 /*-----------------------------------
