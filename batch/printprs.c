@@ -409,6 +409,19 @@ static void         wrfontstyle (PtrPRule pR)
 		     putchar (pR->PrChrValue);
 		     break;
 	       }
+      else if (pR->PrType == PtDirection)
+	 switch (pR->PrChrValue)
+	       {
+		  case 'L':
+		     printf ("ltr");
+		     break;
+		  case 'R':
+		     printf ("rtl");
+		     break;
+		  default:
+		     putchar (pR->PrChrValue);
+		     break;
+	       }
       else if (pR->PrType == PtLineStyle)
 	 switch (pR->PrChrValue)
 	       {
@@ -1105,6 +1118,10 @@ static void         wrsuiteregles (PtrPRule RP)
 		    break;
 		 case PtThickness:
 		    printf ("Thickness: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtDirection:
+		    printf ("Direction: ");
 		    wrfontstyle (RP);
 		    break;
 		 case PtLineStyle:

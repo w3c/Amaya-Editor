@@ -1328,7 +1328,31 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       break;
     case PtThickness:
+      rule->PrPresMode = PresImmediate;
+      switch (value)
+	{
+	case STYLE_THINUNDERLINE:
+	  rule->PrChrValue = 'N';
+	  break;
+	case STYLE_THICKUNDERLINE:
+	  rule->PrChrValue = 'T';
+	  break;
+	}
+      break;
     case PtLineStyle:
+      rule->PrPresMode = PresImmediate;
+      switch (value)
+	{
+	case STYLE_LINESOLID:
+	  rule->PrChrValue = 'S';
+	  break;
+	case STYLE_LINEDASHED:
+	  rule->PrChrValue = '-';
+	  break;
+	case STYLE_LINEDOTTED:
+	  rule->PrChrValue = '.';
+	  break;
+	}
       break;
     case PtBorderTopStyle:
     case PtBorderRightStyle:
@@ -1434,6 +1458,21 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	default:
 	  rule->PrAdjust = AlignLeft;
 	  break;
+	}
+      break;
+    case PtDirection:
+      rule->PrPresMode = PresImmediate;
+      switch (value)
+	{
+	case STYLE_LEFTTORIGHT:
+	  rule->PrChrValue = 'L';
+	  break;
+	case STYLE_RIGHTTOLEFT:
+	  rule->PrChrValue = 'R';
+	  break;
+	default:
+	  rule->PrChrValue = 'L';
+	  break;	  
 	}
       break;
     case PtHyphenate:
@@ -1742,6 +1781,18 @@ static PresentationValue   PRuleToPresentationValue (PtrPRule rule)
 	  break;
 	case 'T':
 	  value = STYLE_THICKUNDERLINE;
+	  break;
+	}
+      break;
+
+    case PtDirection:
+      switch (rule->PrChrValue)
+	{
+	case 'R':
+	  value = STYLE_RIGHTTOLEFT;
+	  break;
+	case 'L':
+	  value = STYLE_LEFTTORIGHT;
 	  break;
 	}
       break;
@@ -2134,6 +2185,9 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
       break;
     case PRAdjust:
       *intRule = PtAdjust;
+      break;
+    case PRDirection:
+      *intRule = PtDirection;
       break;
     case PRShowBox:
       *intRule = PtFunction;

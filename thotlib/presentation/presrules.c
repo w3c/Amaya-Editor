@@ -418,6 +418,9 @@ static char CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 		    else
 		       val = 'N';
 		    break;
+		 case PtDirection:
+		    val = pAbb->AbDirection;
+		    break;
 		 case PtLineStyle:
 		    val = pAbb->AbLineStyle;
 		    break;
@@ -3336,6 +3339,17 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		  pAb->AbThickness = 0;
 		  break;
 		}
+	    break;
+
+	  case PtDirection:
+	    pAb->AbDirection = CharRule (pPRule, pAb->AbElement,
+					 pAb->AbDocView, &appl);
+	    if (!appl && pAb->AbElement->ElParent == NULL)
+	      {
+		/* initial value: LeftToRight */
+		pAb->AbDirection = 'L';
+		appl = TRUE;
+	      }
 	    break;
 
 	  case PtLineStyle:

@@ -258,6 +258,9 @@ static void         WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
     case PtBreak2:
       fprintf (fileDescriptor, "NoBr2");
       break;
+    case PtDirection:
+      fprintf (fileDescriptor, "Direction");
+      break;
     case PtLineStyle:
       fprintf (fileDescriptor, "LineStyle");
       break;
@@ -1214,7 +1217,20 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
-	fprintf (fileDescriptor, "Indent:%d", pAb->AbIndent);
+	fprintf (fileDescriptor, "Dir:");
+	switch (pAb->AbDirection)
+	       {
+		  case 'L':
+		     fprintf (fileDescriptor, "ltr");
+		     break;
+		  case 'R':
+		     fprintf (fileDescriptor, "rtl");
+		     break;
+	          default:
+		     fprintf (fileDescriptor, "%c", pAb->AbDirection);
+		     break;
+	       }
+	fprintf (fileDescriptor, " Indent:%d", pAb->AbIndent);
 	wrTypeUnit (pAb->AbIndentUnit, fileDescriptor);
 	fprintf (fileDescriptor, " Align:");
 	switch (pAb->AbAdjust)
@@ -2350,6 +2366,19 @@ static void         wrfontstyle (PtrPRule pR, FILE *fileDescriptor)
 		     fprintf (fileDescriptor, "%c", pR->PrChrValue);
 		     break;
 	       }
+      else if (pR->PrType == PtDirection)
+	 switch (pR->PrChrValue)
+	       {
+		  case 'L':
+		     fprintf (fileDescriptor, "ltr");
+		     break;
+		  case 'R':
+		     fprintf (fileDescriptor, "rtl");
+		     break;
+		  default:
+		     fprintf (fileDescriptor, "%c", pR->PrChrValue);
+		     break;
+	       }
       else if (pR->PrType == PtLineStyle ||
 	       pR->PrType == PtBorderTopStyle ||
 	       pR->PrType == PtBorderRightStyle ||
@@ -3138,6 +3167,10 @@ static void         wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
 		 case PtDepth:
 		    fprintf (fileDescriptor, "Depth: ");
 		    wrnbherit (RP, fileDescriptor);
+		    break;
+		 case PtDirection:
+		    fprintf (fileDescriptor, "Direction: ");
+		    wrfontstyle (RP, fileDescriptor);
 		    break;
 		 case PtLineStyle:
 		    fprintf (fileDescriptor, "LineStyle: ");

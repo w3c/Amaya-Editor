@@ -1222,6 +1222,50 @@ static char *ParseCSSTextAlign (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
+   ParseCSSDirection: parse a CSS direction property
+  ----------------------------------------------------------------------*/
+static char *ParseCSSDirection (Element element, PSchema tsch,
+				PresentationContext context, char *cssRule,
+				CSSInfoPtr css, ThotBool isHTML)
+{
+   PresentationValue   direction;
+
+   direction.typed_data.value = 0;
+   direction.typed_data.unit = STYLE_UNIT_REL;
+   direction.typed_data.real = FALSE;
+
+   cssRule = SkipBlanksAndComments (cssRule);
+   if (!strncasecmp (cssRule, "ltr", 3))
+     {
+       direction.typed_data.value = STYLE_LEFTTORIGHT;
+       cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "rtl", 3))
+     {
+       direction.typed_data.value = STYLE_RIGHTTOLEFT;
+       cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "inherit", 7))
+     {
+       /* not implemented */
+       cssRule = SkipWord (cssRule);
+       return (cssRule);
+     }
+   else
+     {
+       CSSParseError ("Invalid direction value", cssRule);
+       return (cssRule);
+     }
+
+   /*
+    * install the new presentation.
+    */
+   if (direction.typed_data.value)
+     TtaSetStylePresentation (PRDirection, element, tsch, context, direction);
+   return (cssRule);
+}
+
+/*----------------------------------------------------------------------
    ParseCSSTextIndent: parse a CSS text-indent          
    attribute string.                                          
   ----------------------------------------------------------------------*/
@@ -2916,6 +2960,8 @@ static CSSProperty CSSProperties[] =
    {"text-indent", ParseCSSTextIndent},
    {"line-height", ParseCSSLineSpacing},
 
+   {"direction", ParseCSSDirection},
+
    {"margin-top", ParseCSSMarginTop},
    {"margin-right", ParseCSSMarginRight},
    {"margin-bottom", ParseCSSMarginBottom},
@@ -3418,6 +3464,17 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	  break;
         case STYLE_ADJUSTJUSTIFY:
 	  strcpy (buffer, "text-align: justify");
+	  break;
+	}
+      break;
+    case PRDirection:
+      switch (settings->value.typed_data.value)
+	{
+	case STYLE_LEFTTORIGHT:
+	  strcpy (buffer, "direction: ltr");
+	  break;
+	case STYLE_RIGHTTOLEFT:
+	  strcpy (buffer, "direction: rtl");
 	  break;
 	}
       break;

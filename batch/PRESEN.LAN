@@ -123,7 +123,8 @@ Rule3 =		  Creation '(' BoxName ')' /
 		  'Page' '(' BoxName ')' /
 		  [ 'Included' ] 'Column' '(' BoxNameList ')' /
 		  'Copy' '(' BoxTypeCopied ')' /
-		  'Depth' ':' NbInherit .
+		  'Depth' ':' NbInherit /
+                  'Direction' ':' DirInherit .
 Rule4 =		  'LineStyle' ':' LineStyleInherit /
 		  'LineWeight' ':' DistInherit /
 		  'FillPattern' ':' NameInherit /
@@ -132,7 +133,6 @@ Rule4 =		  'LineStyle' ':' LineStyleInherit /
 		  'ShowBox' /
 		  'BackgroundPicture' ':' FileName /
 		  'PictureMode' ':' PictMode .
-
 Rule5 =           'MarginTop' ':' MarginWidth /
                   'MarginRight' ':' MarginWidth /
                   'MarginBottom' ':' MarginWidth /
@@ -167,6 +167,8 @@ FontColorName =   NAME .
 
 FileName =	  STRING .
 PictMode =	  'NormalSize' / 'Scale' / 'RepeatXY' / 'RepeatX' / 'RepeatY' .
+
+DirInherit =      Link '=' / 'ltr' / 'rtl' .
 
 LineStyleInherit = Link '=' / 'Solid' / 'Dashed' / 'Dotted' .
 

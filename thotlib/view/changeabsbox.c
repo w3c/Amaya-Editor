@@ -3225,6 +3225,7 @@ static void ApplyInheritPresRule (PtrAbstractBox pAb, PRuleType typeRule,
        || typeRule == PtLineSpacing
        || typeRule == PtAdjust
        || typeRule == PtHyphenate
+       || typeRule == PtDirection
        || typeRule == PtLineStyle
        || typeRule == PtLineWeight
        || typeRule == PtFillPattern

@@ -1321,6 +1321,7 @@ void TtaAttachPRule (Element element, PRule pRule, Document document)
    PRWeight: WeightNormal, WeightBold.
    PRUnderline: NoUnderline, Underline, Overline, CrossOut.
    PRThickness: ThinUnderline, ThickUnderline.
+   PRDirection: LeftToRight, RightToLeft.
    PRLineStyle, PRBorderTopStyle, PRBorderRightStyle, PRBorderBottomStyle,
       PRBorderLeftStyle: SolidLine, DashedLine, DottedLine.
    PRNoBreak1, PRNoBreak2: a positive integer (distance in points).
@@ -1504,6 +1505,25 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
 	       break;
 	     }
 	   break;
+	 case PtDirection:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	     case LeftToRight:
+	       ((PtrPRule) pRule)->PrChrValue = 'L';
+	       break;
+	     case RightToLeft:
+	       ((PtrPRule) pRule)->PrChrValue = 'R';
+	       break;
+	     default:
+#ifndef NODISPLAY
+	       done = FALSE;
+#endif
+	       TtaError (ERR_invalid_parameter);
+	       break;
+	     }
+	   break;
+
 	 case PtLineStyle:
 	 case PtBorderTopStyle:
 	 case PtBorderRightStyle:
@@ -2312,6 +2332,7 @@ int                 TtaGetPRuleType (PRule pRule)
    PRWeight: WeightNormal, WeightBold.
    PRUnderline: NoUnderline, Underline, Overline, CrossOut.
    PRThickness: ThinUnderline, ThickUnderline.
+   PRDirection: LeftToRight, RightToLeft.
    PRLineStyle, PRBorderTopStyle, PRBorderRightStyle, PRBorderBottomStyle,
       PRBorderLeftStyle: SolidLine, DashedLine, DottedLine.
    PRNoBreak1, PRNoBreak2: a positive integer (distance in points).
@@ -2436,6 +2457,21 @@ int                 TtaGetPRuleValue (PRule pRule)
 	    break;
 	  }
 	break;
+      case PtDirection:
+	switch (((PtrPRule) pRule)->PrChrValue)
+	  {
+	  case 'L':
+	    value = LeftToRight;
+	    break;
+	  case 'R':
+	    value = RightToLeft;
+	    break;
+	  default:
+	    TtaError (ERR_invalid_parameter);
+	    break;
+	  }
+	break;
+
       case PtLineStyle:
       case PtBorderTopStyle:
       case PtBorderRightStyle:
@@ -2671,6 +2707,7 @@ int                 TtaSamePRules (PRule pRule1, PRule pRule2)
 			    case PtWeight:
 			    case PtUnderline:
 			    case PtThickness:
+			    case PtDirection:
 			    case PtLineStyle:
 			    case PtBorderTopStyle:
 			    case PtBorderRightStyle:

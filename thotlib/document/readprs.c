@@ -172,6 +172,9 @@ static PRuleType    ReadrdTypeRegle (BinFile file)
 	    case C_PR_DEPTH:
 	       return PtDepth;
 	       break;
+	    case C_PR_DIRECTION:
+	       return PtDirection;
+	       break;
 	    case C_PR_LINESTYLE:
 	       return PtLineStyle;
 	       break;
@@ -1140,6 +1143,7 @@ void      ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule)
 				     case PtWeight:
 				     case PtUnderline:
 				     case PtThickness:
+				     case PtDirection:
 				     case PtLineStyle:
 				     case PtBorderTopStyle:
 			             case PtBorderRightStyle:

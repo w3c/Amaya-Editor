@@ -109,6 +109,7 @@ DEFAULT
 	Underline: Enclosing =;
 	Thickness: Enclosing =;
 	Size: Enclosing =;
+	Direction: Enclosing =;
 	Adjust: Enclosing =;
 	Indent: Enclosing =;
 	Depth: Enclosing =;
@@ -1753,6 +1754,7 @@ RULES
  Document:
 	BEGIN
 	Depth: 0;
+	Direction: ltr;
 	Adjust: Left;
 	Indent: 0;
 	Font: Times;

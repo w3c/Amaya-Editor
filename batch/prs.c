@@ -382,6 +382,9 @@ static void         CreatePRule (PRuleType t, indLine wi)
 	    case PtThickness:
 	       CurRule->PrChrValue = 'N';	/* souligne mince par defaut */
 	       break;
+	    case PtDirection:
+	       CurRule->PrChrValue = 'L';       /* Left to right by default */
+	       break;
 	    case PtLineStyle:
 	    case PtBorderTopStyle:
 	    case PtBorderRightStyle:
@@ -1199,11 +1202,11 @@ static void ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
 
      case CHR_61:
        /*  =  */
-       if (gCode == RULE_InheritVal || gCode == RULE_NameInherit ||
+       if (gCode == RULE_InheritVal   || gCode == RULE_NameInherit ||
 	   gCode == RULE_Color ||
-	   gCode == RULE_BoolInherit || gCode == RULE_InheritDist ||
-	   gCode == RULE_InheritSize || gCode == RULE_AdjustInherit ||
-	   gCode == RULE_LineStyleInherit ||
+	   gCode == RULE_BoolInherit  || gCode == RULE_InheritDist ||
+	   gCode == RULE_InheritSize  || gCode == RULE_AdjustInherit ||
+	   gCode == RULE_DirInherit   || gCode == RULE_LineStyleInherit ||
 	   gCode == RULE_StyleInherit || gCode == RULE_InheritParent)
 	 /* PresInherit */
 	 {
@@ -1883,6 +1886,14 @@ static void         CheckDefaultRules ()
      {
 	CreateDefaultRule ();
 	CurRule->PrType = PtAdjust;
+	InheritRule (InheritParent);
+     }
+   if (GetTypedRule (PtDirection, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle Direction par defaut, on en cree une : */
+      /* Direction: Enclosing =; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtDirection;
 	InheritRule (InheritParent);
      }
    if (GetTypedRule (PtLineStyle, pPSchema->PsFirstDefaultPRule) == NULL)
@@ -2835,6 +2846,10 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	/* Depth */
 	CreatePRule (PtDepth, wi);
 	break;
+      case KWD_Direction:
+	/* Direction */
+	CreatePRule (PtDirection, wi);
+	break;
       case KWD_LineStyle:
 	CreatePRule (PtLineStyle, wi);
 	break;
@@ -3027,6 +3042,14 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
       case KWD_RepeatY:
 	CurRule->PrPresBox[0] = YRepeat;
 	break;
+      case KWD_ltr:
+	/* writing direction */
+	CurRule->PrChrValue = 'L';
+	break;
+      case KWD_rtl:
+	/* writing direction */
+	CurRule->PrChrValue = 'R';
+	break;
       case KWD_nil /* NULL */ :
 	if (CurRule->PrType == PtHeight || CurRule->PrType == PtWidth)
 	  CompilerMessage (wi, PRS, FATAL, FORDBIDDEN_IN_HEIGHT_AND_WIDTH,
@@ -3060,7 +3083,8 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
       case KWD_Enclosed /* Enclosed */ :
 	if (gCode == RULE_Reference)
 	  SetLevel (RlEnclosed, wi);
-	else if (CurRule->PrType == PtVisibility)
+	else if (CurRule->PrType == PtVisibility ||
+		 CurRule->PrType == PtDirection)
 	  CompilerMessage (wi, PRS, FATAL, CANT_INHERIT_FROM_ENCLOSED,
 			   inputLine, LineNum);
 	else
@@ -3079,7 +3103,8 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
       case KWD_Previous /* Previous */ :
 	if (gCode == RULE_Reference)
 	  SetLevel (RlPrevious, wi);
-	else if (CurRule->PrType == PtVisibility)
+	else if (CurRule->PrType == PtVisibility ||
+		 CurRule->PrType == PtDirection)
 	  CompilerMessage (wi, PRS, FATAL, CANT_INHERIT_FROM_PREVIOUS,
 			   inputLine, LineNum);
 	else

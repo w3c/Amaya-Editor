@@ -45,6 +45,7 @@
 #define C_PR_FONT 'F'
 #define C_PR_HEIGHT 'H'
 #define C_PR_LINESPACING 'I'
+#define C_PR_DIRECTION 'J'
 #define C_PR_WIDTH 'L'
 #define C_PR_XRADIUS 'M'
 #define C_PR_YRADIUS 'N'
