@@ -2288,15 +2288,6 @@ void RemoveSignalGTK (ThotWidget w, gchar *signal_name)
   id = (guint)gtk_object_get_data (GTK_OBJECT (w), signal_name);
   gtk_signal_disconnect (GTK_OBJECT (w), id); 
 }
-
-/*----------------------------------------------------------------------
-  DoNotKillWindowGTK is a callback used for delete_event signal
-  it returns TRUE and avoid deleting the widget
-  ----------------------------------------------------------------------*/
-gboolean DoNotKillWindowGTK (ThotWidget w, GdkEvent *event, gpointer data)
-{
-  return TRUE;
-}
 #endif
 
 

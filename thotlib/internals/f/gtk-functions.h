@@ -134,9 +134,6 @@ gboolean ButtonReleaseCallbackGTK (GtkWidget *widget,
 				   GdkEventButton *event,
 				   gpointer user_data);
 
-gboolean DoNotKillWindowGTK (GtkWidget *widget,
-			     GdkEvent *event,
-			     gpointer data);
 gboolean ColorsExposeGTK (GtkWidget *widget, GdkEventExpose *ev);
 gboolean ColorsPressGTK (GtkWidget *widget, GdkEventButton *event, gpointer data);
 void CreateColorSelectionGTK (int x, int y);

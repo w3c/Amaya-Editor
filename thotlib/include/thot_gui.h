@@ -168,7 +168,11 @@ typedef XColor    ThotColorStruct;
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h> /* for keycode */
+#ifndef _GTK2
 #include <gdk_imlib.h>      /* for load image (jpg, gif, tiff...) */
+#else /* _GTK2 */
+#include <gdk/gdkpixbuf.h>  /* for load image (jpg, gif, tiff...) */
+#endif /* !_GTK2 */
 typedef GtkWidget     *ThotWidget;
 typedef GdkWindow     *ThotWindow;
 typedef ThotWidget     ThotButton;

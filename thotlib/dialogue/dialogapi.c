@@ -1138,7 +1138,7 @@ static void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t c
 		}
 		gtk_entry_set_text (GTK_ENTRY (wtext), text);
 		val = strlen (text);
-		gtk_editable_select_region(GTK_EDITABLE(wtext), 0, -1);
+		/*gtk_editable_select_region(GTK_EDITABLE(wtext), 0, -1);*/
 		
 		/* Reactive la procedure de Callback */
 		if (catalogue->Cat_React)
@@ -1568,8 +1568,14 @@ void       TtaInitDialogue (char *server, ThotAppContext *app_context, Display *
    /* initialize everything needed to operate the toolkit and parses some standard command line options */
    if (!gtk_init_check (&appArgc, &appArgv))
      printf ("GUI can't be initialized\n");
+#ifndef _GTK2
    /* initilize the imlib */
    gdk_imlib_init();
+#else /* _GTK2 */
+   /* initilisation for gdk rendering */
+   /* gtkv2.0 dont use imlib , it uses gdkpixbuf */
+   gdk_rgb_init();
+#endif /* !_GTK2 */
 #endif /* _GTK */
 
 #ifdef _WINDOWS
@@ -2057,7 +2063,7 @@ void DisplayConfirmMessage (char *text)
 
 #ifdef _GTK
    /* Create the window message */
-   msgbox = gtk_window_new (GTK_WINDOW_DIALOG);
+   msgbox = gtk_window_new (GTK_WINDOW_TOPLEVEL);
    gtk_widget_realize (GTK_WIDGET(msgbox));
    msgbox->style->font=DefaultFont;
    gtk_window_set_title (GTK_WINDOW (msgbox), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
@@ -2255,9 +2261,11 @@ void DisplayMessage (char *text, int msgType)
 #ifndef _GTK
 		  XmTextSetString (FrameTable[0].WdStatus, buff);
 #else /* _GTK */
+#ifndef _GTK2
 		  if (gtk_text_get_length (GTK_TEXT (FrameTable[0].WdStatus))>0)
 		    gtk_editable_delete_text( GTK_EDITABLE (FrameTable[0].WdStatus), 0, -1);
 		  gtk_text_insert (GTK_TEXT (FrameTable[0].WdStatus), NULL, NULL, NULL, buff, -1);
+#endif /* !_GTK2 */
 #endif /* !_GTK */
 	       }
 	     else
@@ -2268,7 +2276,9 @@ void DisplayMessage (char *text, int msgType)
 #ifndef _GTK	     
 		  XmTextInsert (FrameTable[0].WdStatus, n, buff);
 #else /* _GTK */
+#ifndef _GTK2
 		  gtk_text_insert (GTK_TEXT (FrameTable[0].WdStatus), NULL, NULL, NULL, buff, -1);
+#endif /* !_GTK2 */
 #endif /* !_GTK */
 		  lg += n;
 	       }
@@ -2288,9 +2298,11 @@ void DisplayMessage (char *text, int msgType)
 #ifndef _GTK
 	     XmTextReplace (FrameTable[0].WdStatus, n + 1, strlen (buff), text);
 #else /* _GTK */
+#ifndef _GTK2
 	     if (gtk_text_get_length (GTK_TEXT (FrameTable[0].WdStatus))>0)
 	       gtk_editable_delete_text( GTK_EDITABLE (FrameTable[0].WdStatus), 0, -1);
 	     gtk_text_insert (GTK_TEXT (FrameTable[0].WdStatus), NULL, NULL, NULL, text, -1);
+#endif /* !_GTK2 */
 #endif /* !_GTK */
 	  }
 #ifndef _GTK
@@ -5961,13 +5973,16 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	    n++;
 	    PopShell = XtCreatePopupShell ("", applicationShellWidgetClass, RootShell, args, 0);
 #else /* _GTK */
-	    PopShell = gtk_window_new (GTK_WINDOW_DIALOG);
+	    PopShell = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	    PopShell->style->font=DefaultFont;
 	    gtk_widget_realize (PopShell);
 	    gtk_window_set_title (GTK_WINDOW (PopShell), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
 	    gtk_widget_set_uposition(GTK_WIDGET(PopShell), ShowX, ShowY);
 	    gtk_container_set_border_width (GTK_CONTAINER(PopShell), 5);
-
+	    ConnectSignalGTK (PopShell,
+			      "delete_event",
+			      GTK_SIGNAL_FUNC(gtk_true),
+			      (gpointer)NULL);
 #endif /* !_GTK */
 	  }
 	/*________________________________________________ Feuillet principal __*/
@@ -6026,15 +6041,17 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	  form = PopShell;
 	else
 	{
-	  form = gtk_window_new (GTK_WINDOW_DIALOG);
+	  form = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	  form->style->font=DefaultFont;
 	  /*gtk_widget_realize (GTK_WIDGET(form));	*/
 	  gtk_widget_realize (GTK_WIDGET(form));	
 	  gtk_window_set_title (GTK_WINDOW (form), title);
+	  ConnectSignalGTK (form,
+			    "delete_event",
+			    GTK_SIGNAL_FUNC(gtk_true),
+			    (gpointer)NULL);
 	}
 	gtk_container_set_border_width (GTK_CONTAINER(form), 5);
-	ConnectSignalGTK (form, "destroy_event", GTK_SIGNAL_FUNC(formKill), (gpointer)catalogue);
-      	/*gtk_signal_connect (GTK_OBJECT (form), "expose_event", GTK_SIGNAL_FUNC(CallSheet), catalogue);*/
 	/* On initialise les fonts (le style)*/
 	/*A FAIRE*/
 
@@ -6109,7 +6126,6 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	/* Create the vbox for button & other vbox or hbox*/
 	row = gtk_vbox_new (FALSE,2);
 	gtk_widget_show (row);
-	gtk_widget_set_name (row, "Dialogue");
 	gtk_container_add(GTK_CONTAINER(form), row);
 
 	/* Create hbox or vbox in the row */
@@ -6119,7 +6135,6 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	  w = gtk_hbox_new (FALSE, 2);
        	gtk_widget_show (GTK_WIDGET(w));
 	gtk_box_pack_start (GTK_BOX(row), w,  FALSE, FALSE, 0);
-	gtk_widget_set_name (GTK_WIDGET(w), "Dialogue");
 
 	/* Create hbox or vbox in the last w */
 	catalogue->Cat_in_lines = (int) horizontal;
@@ -6130,7 +6145,6 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	gtk_widget_show (tmpw);
 	gtk_box_pack_start (GTK_BOX(w), tmpw,  FALSE, FALSE, 0);
 	w = tmpw;
-	gtk_widget_set_name (w, "Dialogue");
 #endif /* !_GTK */
 	adbloc->E_ThotWidget[0] = w;
 	adbloc->E_Free[0] = 'X';
@@ -6199,12 +6213,12 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	     XtSetValues (form, argform, 1);
 #else /* _GTK */
 	     w = gtk_button_new_with_label(TtaGetMessage(LIB, TMSG_LIB_CONFIRM));
+	     GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
 	     gtk_widget_show(GTK_WIDGET(w));
 	     gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
 	     ConnectSignalGTK (w, "clicked",
 			       GTK_SIGNAL_FUNC(CallSheet),
 			       (gpointer)catalogue);
-	     GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
 	     gtk_widget_grab_default(GTK_WIDGET(w));
 	     adbloc->E_ThotWidget[1] = w;
 #endif /* !_GTK */
@@ -6233,12 +6247,12 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 		       XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallSheet, catalogue);
 #else /* _GTK */
 		       w = gtk_button_new_with_label(&text[index]);
+		       GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
 		       gtk_widget_show (GTK_WIDGET(w));
 		       gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
 		       ConnectSignalGTK (w, "clicked",
 					 GTK_SIGNAL_FUNC(CallSheet),
 					 (gpointer)catalogue);
-		       GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
 #endif /* !_GTK */
 		       adbloc->E_ThotWidget[ent] = w;
 		    }
@@ -6266,9 +6280,9 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 		       w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_CANCEL), args, n);
 #else /* _GTK */
 		       w = gtk_button_new_with_label(TtaGetMessage (LIB, TMSG_CANCEL));
+		       GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
 		       gtk_widget_show (w);
 		       gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
-		       GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
 #endif /* !_GTK */
 		       break;
 		    case D_DONE:
@@ -6276,9 +6290,9 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 		       w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_DONE), args, n);
 #else /* _GTK */
 		       w = gtk_button_new_with_label(TtaGetMessage (LIB, TMSG_DONE));
+		       GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
 		       gtk_widget_show (w);
 		       gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
-		       GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
 #endif /* !_GTK */
 		       break;
 		 }
@@ -6291,12 +6305,11 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallSheet, catalogue);
 #else /* _GTK */
 	{
-	  w=gtk_button_new_with_label(ptr);
-	  gtk_widget_show (GTK_WIDGET(w));
+	  w = gtk_button_new_with_label(ptr);
 	  GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
+	  gtk_widget_show (GTK_WIDGET(w));
 	  gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
 	}
-
 	gtk_widget_show (GTK_WIDGET (w));
 	ConnectSignalGTK (w, "clicked", GTK_SIGNAL_FUNC(CallSheet), (gpointer)catalogue);
  
@@ -7735,7 +7748,7 @@ void TtaSetTextForm (int ref, char *text)
 	  RemoveSignalGTK (w, "changed");  
 	}
 	gtk_entry_set_text (GTK_ENTRY (w), text);
-	gtk_editable_select_region(GTK_EDITABLE(w), 0, -1);
+	/*gtk_editable_select_region(GTK_EDITABLE(w), 0, -1);*/
         if (catalogue->Cat_React)
 	  ConnectSignalGTK (GTK_OBJECT(w), "changed", GTK_SIGNAL_FUNC(CallTextChangeGTK), (gpointer)catalogue);
 #endif /* !_GTK */
@@ -8038,7 +8051,7 @@ void TtaSetNumberForm (int ref, int val)
 	sprintf (text, "%d", val);
 	gtk_entry_set_text (GTK_ENTRY (wtext), text);
 	lg = strlen (text);
-	gtk_editable_select_region(GTK_EDITABLE(wtext), 0, -1);
+	/*gtk_editable_select_region(GTK_EDITABLE(wtext), 0, -1);*/
 
 	/* Reactive la procedure de Callback */
 	if (catalogue->Cat_React)

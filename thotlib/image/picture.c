@@ -1409,7 +1409,12 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   PictureScaling      pres;
   Drawable            drw = None;
 #ifdef _GTK
+#ifndef _GTK2
   GdkImlibImage      *im = None;
+#else /* _GTK2 */
+  GdkPixbuf          *im = None;
+  GError             *error=NULL;
+#endif /* !_GTK2 */
 #endif /* _GTK */
   PtrAbstractBox      pAb;
   Picture_Report      status;
@@ -1546,10 +1551,14 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #else /* _GTK */
 	      imageDesc->PicWArea = wFrame = w;
 	      imageDesc->PicHArea = hFrame = h;
+#ifndef _GTK2
 	      im = gdk_imlib_load_image (fileName);
 	      gdk_imlib_render(im, w, h);
 	      drw = gdk_imlib_move_image (im);
 	      imageDesc->PicMask = gdk_imlib_move_mask (im);
+#else /* _GTK2 */
+	      im = gdk_pixbuf_new_from_file(fileName, &error);
+#endif /* !_GTK2 */
 #endif /* !_GTK */
 	      xFrame = imageDesc->PicXArea;
 	      yFrame = imageDesc->PicYArea;
