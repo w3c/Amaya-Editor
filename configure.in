@@ -462,7 +462,7 @@ dnl  ***************************************************************
 
 # We don't use our graphic libraries for the pure GTK version (without GL)
 
-echo "with gtk is ${with_gtk}, with gl is ${with_gl}\n"
+dnl echo "with gtk is ${with_gtk}, with gl is ${with_gl}\n"
 
 if test "${with_gtk}" != "yes" -o "${with_gl}" = "yes" ; then
   AC_ARG_WITH(graphic-libs, [  --with-graphic-libs    use static libjpeg, libpng.])
@@ -771,6 +771,7 @@ AC_SUBST(PRINTIFNOTGL)
 AC_ARG_ENABLE(svg,           [  --disable-svg           remove SVG support ])
 AC_ARG_ENABLE(annot,         [  --disable-annot         remove Annotations support ])
 AC_ARG_ENABLE(raptor,        [  --disable-raptor        disable the raptor RDF parser ])
+AC_ARG_ENABLE(bookmarks,     [  --enable-bookmarks      enables experimental bookmark support ])
 AC_ARG_ENABLE(generic-xml,   [  --disable-generic-xml   remove Generic XML support ])
 
 dnl
@@ -821,6 +822,19 @@ if test "$with_raptor" = "" ; then
     fi
 else
     with_raptor="yes"
+fi
+
+dnl
+dnl The bookmarks supportr is disabled by default
+dnl
+if test "$with_bookmarks" = "" ; then
+    if test "$enable_bookmarks" = "yes" ; then
+	with_bookmarks="yes"
+    else
+	with_bookmarks="no"
+    fi
+else
+    with_bookmarks="no"
 fi
 
 dnl
@@ -897,22 +911,38 @@ if test "$build_amaya" = "yes" ; then
 	fi
     fi
 
-    if test "$with_annot" = "yes" -a "$with_raptor" = "yes" ; then
-       if test ! -d "$srcdir/libraptor" ; then
-          AC_MSG_WARN(Raptor source dir not found !!)
-	  AC_MSG_WARN(Disabling raptor build !)
-	  MAKERAPTOR=['#']
-	  with_raptor="no"
-       else
-	   AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DRAPTOR_RDF_PARSER -I\$(THOTDIR)/libraptor"
- 	   AMAYA_RAPTOR_LIBS="../libraptor/.libs/libraptor.a"
-	   AMAYA_RAPTOR_SRC="amaya_comp_libraptor"
-	   AMAYA_RAPTOR_INCLUDES="-I\$(THOTDIR)/libraptor"
-       fi
-    else
+    if test "$with_raptor" = "yes" -a "$with_annot" = "no" ; then
        AC_MSG_WARN(Disabling raptor build as annotations are disabled !)
        MAKERAPTOR=['#']
        with_raptor="no"
+    fi
+
+    if test "$with_raptor" = "yes" -a ! -d "$srcdir/libraptor" ; then
+       AC_MSG_WARN(Raptor source dir not found !!)
+       AC_MSG_WARN(Disabling raptor build !)
+       MAKERAPTOR=['#']
+       with_raptor="no"
+    else
+       AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DRAPTOR_RDF_PARSER -I\$(THOTDIR)/libraptor"
+       AMAYA_RAPTOR_LIBS="../libraptor/.libs/libraptor.a"
+       AMAYA_RAPTOR_SRC="amaya_comp_libraptor"
+       AMAYA_RAPTOR_INCLUDES="-I\$(THOTDIR)/libraptor"
+    fi
+
+    dnl control whether we should build the bookmarks support
+    if test "$with_bookmarks" = "yes" -a "$with_annot" = "no" ; then
+       AC_MSG_WARN(Disabling bookmarks build as annotations are disabled !)
+       with_bookmarks="no"
+    fi
+    if test "$with_bookmarks" = "yes" -a "$with_raptor" = "no" ; then
+       AC_MSG_WARN(Disabling bookmarks build as raptor is disabled !)
+       with_bookmarks="no"
+    fi
+    if test "$with_bookmarks" = "yes" ; then
+	ANNOTLIB_COMPILE_BM=
+	AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DBOOKMARKS"
+    else
+	ANNOTLIB_COMPILE_BM=['#']
     fi
 
     dnl control whether we should use libwww's rdf parser
@@ -1006,6 +1036,7 @@ AC_SUBST(WITHDAV)
 AC_SUBST(WWWDAV)
 
 AC_SUBST(MAKERAPTOR)
+AC_SUBST(ANNOTLIB_COMPILE_BM)
 AC_SUBST(AMAYA_RAPTOR_LIBS)
 AC_SUBST(AMAYA_RAPTOR_SRC)
 AC_SUBST(AMAYA_RAPTOR_INCLUDES)
@@ -1136,6 +1167,9 @@ if test "$build_amaya" = "yes" ; then
     fi
     if test "$with_raptor" = "yes" ; then
 	echo Amaya configured with the Raptor RDF parser
+    fi
+    if test "$with_bookmarks" = "yes" ; then
+	echo Amaya configured with bookmarks support \(experimental\)
     fi
     if test "$with_generic_xml" = "yes" ; then
 	echo Amaya configured with generic XML suppport
