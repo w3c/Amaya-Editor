@@ -303,6 +303,7 @@ Amaya/Windows/libThotTable/*.dsp \
 Amaya/Windows/libjpeg/*.dsp \
 Amaya/Windows/libpng/*.dsp \
 Amaya/Windows/libwww/*.dsp \
+Amaya/Windows/libwww/*.dev \
 Amaya/Windows/printlib/*.dsp \
 Amaya/Windows/libraptor/*.dsp \
 Amaya/Windows/prs/*.dsp \
@@ -310,6 +311,7 @@ Amaya/Windows/str/*.dsp \
 Amaya/Windows/thotprinter/*.dsp \
 Amaya/Windows/tra/*.dsp \
 Amaya/Windows/zlib/*.dsp \
+Amaya/Windows/zlib/*.dev \
 Amaya/WindowsGL/*.mak \
 Amaya/WindowsGL/*.dsp \
 Amaya/WindowsGL/*.dsw \
