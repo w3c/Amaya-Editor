@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Welcome to Amaya</title>
+  <meta name="generator"
+  content="amaya 9.0-pre, see http://www.w3.org/Amaya/" />
+  <link href="amaya.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<div id="logo">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.0" height="150px"
+     width="230px">
+  <title>Amaya logo</title>
+  <ellipse cx="0px" cy="0px" rx="66px" ry="45px"
+        style="fill: #EDF3FF; stroke: #EDF3FF" transform="translate(138,96)">
+    <animateTransform attributeName="transform" attributeType="XML"
+                      type="scale" from=".1" to="1" additive="sum" begin="0s"
+                      dur="6s" fill="freeze"/>
+  </ellipse>
+  <g transform="rotate(-30,100,150)">
+    <polygon points="0,117 66,0 21,117" transform="translate(49,22)"
+             style="fill: #B27700; stroke: #D9E500"/>
+    <polygon points="0,0 9,30 27,41 21,14 12,3" transform="translate(117,25)"
+             style="fill: #00B200; stroke: #00E500"/>
+    <polygon points="0,6 29,0 56,8 32,15 13,19" transform="translate(95,76)"
+             style="fill: #00B200; stroke: #00E500"/>
+    <animateTransform attributeName="transform" attributeType="XML"
+                      type="rotate" from="-30,100,150" to="-20,100,150"
+                      begin="2.5s" dur="0.3s" fill="freeze"/>
+    <animateTransform attributeName="transform" attributeType="XML"
+                      type="rotate" from="-20,100,150" to="-10,100,150"
+                      begin="2.8s" dur="0.2s" fill="freeze"/>
+    <animateTransform attributeName="transform" attributeType="XML"
+                      type="rotate" from="-10,100,150" to="0,100,150"
+                      begin="3s" dur="0.1s" fill="freeze"/>
+  </g>
+  <g transform="translate(118,110)">
+    <polygon points="3,0 5,16 0,16" transform="translate(25,-20)"
+             style="stroke: #E50000; fill: #E50000"/>
+    <polygon
+             points="0,13 10,0 20,1 23,10 29,2 40,1 42,9 45,17 32,17 33,11 30,11 23,15 18,15 12,7 8,7 8,13"
+             stroke="#E50000" fill="#FF9595"/>
+    <!-- M scale -->
+    <animateTransform attributeName="transform" attributeType="XML"
+                      type="scale" from=".1" to="1" additive="sum" begin="0s"
+                      dur="3s" fill="freeze"/>
+    <!-- M translation -->
+    <animateTransform attributeName="transform" attributeType="XML"
+                      type="translate" from="0,0" to="118,110" begin="0s"
+                      dur="3s" fill="freeze"/>
+    <!-- M oscillations -->
+    <!-- Maybe rotation center is not correct... (30,-22)  -->
+    <animateTransform attributeName="transform" attributeType="XML"
+                      type="rotate" from="0,30,-22" to="-30,30,-22"
+                      begin="3s" dur="0.2s" fill="freeze"/>
+    <animateTransform attributeName="transform" attributeType="XML"
+                      type="rotate" from="-30,30,-22" to="25,30,-22"
+                      begin="3.2s" dur="0.4s" fill="freeze"/>
+    <animateTransform attributeName="transform" attributeType="XML"
+                      type="rotate" from="25,30,-22" to="-20,30,-22"
+                      begin="3.6s" dur="0.6s" fill="freeze"/>
+    <animateTransform attributeName="transform" attributeType="XML"
+                      type="rotate" from="-20,30,-22" to="15,30,-22"
+                      begin="4.2s" dur="0.8s" fill="freeze"/>
+    <animateTransform attributeName="transform" attributeType="XML"
+                      type="rotate" from="15,30,-22" to="-10,30,-22"
+                      begin="5s" dur="1s" fill="freeze"/>
+    <animateTransform attributeName="transform" attributeType="XML"
+                      type="rotate" from="-10,30,-22" to="0,30,-22"
+                      begin="6s" dur="0.6s" fill="freeze"/>
+  </g>
+</svg>
+</div>
+
+<h1>Welcome to Amaya 9.0</h1>
+
+<p>Amaya is a Web client that acts both as a browser and as an authoring
+tool. It has been designed by <a onclick="" href="http://www.w3.org/">W3C</a>
+and <a onclick="" href="http://www.inria.fr/">INRIA</a> with the primary
+purpose of demonstrating new Web technologies and helping users to generate
+valid Web pages.<br />
+With Amaya, you can manipulate rich Web pages containing forms, tables, and
+the most advanced features from <acronym
+title="Hypertext Markup Language">XHTML</acronym>. You can create and edit
+complex <a href="../doc/html/Math.html">mathematical expressions</a> within
+Web pages. You can style your documents using Cascading Style Sheets.</p>
+
+<div class="body">
+<p>Did you know?</p>
+<dl>
+  <dt>Amaya is a structured editor</dt>
+    <dd>With the F2 key you can select the enclosing structure, so editing
+      functions (copy, paste, attributes, etc.) will apply to these
+      structured elements.</dd>
+  <dt>Document can be edited throught sychronized views</dt>
+    <dd>The View menu allows you to open Structure view, Source view, etc. A
+      click on the bottom red line opens or closes a second view.</dd>
+  <dt>Document can be published directly on a server</dt>
+    <dd>With the http PUT method you can write on a server provided you're
+      allowed.</dd>
+  <dt>Links can be created by a simple click</dt>
+    <dd>To create a link you can directly click a target (use Show targets to
+      display available targets).</dd>
+  <dt>Amaya provides avanced commands</dt>
+    <dd>Like Section numbering, Generation of table of contents, Insertion of
+      time stamp , Strructure transformation.</dd>
+</dl>
+</div>
+
+<p class="bottom">Permission to use, copy, modify, and distribute this
+software and its documentation for any purpose and without fee or royalty is
+hereby granted, provided that the full text of the <a
+href="http://www.w3.org/Consortium/Legal/copyright-software.html"><acronym
+title="Massachusetts Institute of Technology">MIT</acronym> and INRIA
+Copyright Statement</a> appears with <strong>all</strong> copies of the
+software and documentation or portions thereof, including modifications that
+you make.</p>
+
+<p></p>
+</body>
+</html>
