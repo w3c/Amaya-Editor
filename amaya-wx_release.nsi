@@ -7,7 +7,7 @@
 ;General
 
   ;Name and file
-  !define VERSION "9.0-pre"
+  !define VERSION "9.0-pre2"
   Name "Amaya WX ${VERSION}"
   OutFile "Amaya-WX-${VERSION}.exe"
   
@@ -303,7 +303,9 @@ Section "Uninstall"
 ;    StrCmp $MUI_TEMP $SMPROGRAMS startMenuDeleteLoopDone startMenuDeleteLoop
 ;  startMenuDeleteLoopDone:
 
-  RMDir /r "$SMPROGRAMS\$STARTMENU_FOLDER"
+  Delete "$SMPROGRAMS\$STARTMENU_FOLDER\Amaya.lnk"
+  Delete "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall.lnk"
+  RMDir "$SMPROGRAMS\$STARTMENU_FOLDER"
   Delete "$DESKTOP\AmayaWX.lnk"
 
   DeleteRegKey /ifempty HKCU "Software\AmayaWX"
