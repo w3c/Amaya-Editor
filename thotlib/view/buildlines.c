@@ -1867,13 +1867,23 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	      if (lastbox == pLine->LiFirstBox)
 		pLine->LiFirstBox = pNextBox;
 	      if ((lastbox->BxAbstractBox->AbFloat == 'L' &&
-		   !IsFloatSet (lastbox, *floatL, pBlock)) |
+		   !IsFloatSet (lastbox, *floatL, pBlock)) ||
 		  (lastbox->BxAbstractBox->AbFloat == 'R' &&
 		   !IsFloatSet (lastbox, *floatR, pBlock)))
-		/* handle a new floating box and rebuild the line */
-		return SetFloat (lastbox, pBlock, pLine, pRootAb, xAbs, yAbs,
-				 notComplete, full,
-				 adjust, breakLine, frame, indent, floatL, floatR);
+		{
+		  if (pBlock->BxType == BoFloatBlock &&
+		      pLine->LiFirstBox != pNextBox)
+		    {
+		      /* report the floating box to the next line */
+		      *full = TRUE;
+		      still = FALSE;
+		    }
+		  else
+		    /* handle a new floating box and rebuild the line */
+		    return SetFloat (lastbox, pBlock, pLine, pRootAb, xAbs, yAbs,
+				     notComplete, full, adjust, breakLine,
+				     frame, indent, floatL, floatR);
+		}
 	    }
 	  else if (pNextBox->BxAbstractBox->AbElement->ElTypeNumber == PageBreak + 1 ||
 		   pNextBox->BxAbstractBox->AbDisplay != 'U')

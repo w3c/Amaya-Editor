@@ -75,7 +75,7 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
    int                 width, height;
    int                 xb, xe, yb, ye;
    int                 scrollx, scrolly;
-   
+
    GetSizesFrame (frame, &width, &height);
    if ((xd == xf && xd == 0 && (yd != yf || yd != 0)) ||
        (yd == yf && yd == 0 && (xd != xf || xd != 0)))
@@ -323,7 +323,7 @@ void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
     {
       DisplayBorders (pBox, frame, xd - x, yd - y, width, height);
       /* draw over the padding */
-      if (!setWindow)
+      if (!setWindow || pAb->AbSelected)
 	{
 	  xd =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder;
 	  yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder;
@@ -358,8 +358,6 @@ void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
 	}
       else
 	{
-	  /*if (!setWindow && pBox->BxFill)
-	    printf ("DrawBackground %s\n", pAb->AbElement->ElLabel);*/
 	  if (!setWindow && pBox->BxFill)
 	    /* draw the box background */
 	    DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height,
@@ -369,10 +367,6 @@ void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
 	    {
 	      /* draw the background image the default presentation is repeat */
 	      pres = imageDesc->PicPresent;
-	      if (pres == DefaultPres)
-		pres = FillFrame;
-	      /*if (pres == YRepeat || pres == FillFrame || !pAb->AbTruncatedHead)
-		printf ("DrawPicture %s\n", pAb->AbElement->ElLabel);*/
 	      if (pres == YRepeat || pres == FillFrame || !pAb->AbTruncatedHead)
 		DrawPicture (pBox, imageDesc, frame,  xd - x, yd - y, width, height);
 	    }

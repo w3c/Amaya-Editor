@@ -879,7 +879,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	picPresent = ReScale;
       else
 	/* a background image is repeated */
-	picPresent = FillFrame;
+	picPresent = RealSize;
     }
 
   if ((picPresent == ReScale || picPresent == RealSize) &&
@@ -1061,7 +1061,8 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	    }
 	  else
 	    {
-	      clipHeight = delta;
+	      if (clipHeight > delta)
+		clipHeight = delta;
 	      if (h > delta)
 		h = delta;
 	    }
@@ -1084,7 +1085,8 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	    }
 	  else
 	    {
-	      clipWidth = delta;
+	      if (clipWidth > delta)
+		clipWidth = delta;
 	      if (w > delta)
 		w = delta;
 	    }
