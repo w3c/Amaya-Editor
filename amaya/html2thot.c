@@ -6893,7 +6893,8 @@ char               *HTMLbuf;
 		      {
 		      if (currentState == 6 || currentState == 9)
 			/* within an attribute value between quotes */
-			if (!strcmp (lastAttrEntry->htmlAttribute, "SRC"))
+			if (lastAttrEntry != NULL &&
+			    !strcmp (lastAttrEntry->htmlAttribute, "SRC"))
 			   /* value of an SRC attribute */
 			   /* consider new line as an empty char*/
 			   charRead = EOS;
