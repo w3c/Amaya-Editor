@@ -59,17 +59,17 @@ PtrDocument         pDoc;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    pDocument cherche si le document d'identificateur docIdent est	| */
+/* |    GetPtrDocument cherche si le document d'identificateur docIdent est	| */
 /* |	charge'.							| */
 /* |            Retourne un pointeur sur son contexte, ou NULL s'il	| */
 /* |            n'est pas charge'.                                      | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-PtrDocument         pDocument (DocumentIdentifier docIdent)
+PtrDocument         GetPtrDocument (DocumentIdentifier docIdent)
 
 #else  /* __STDC__ */
-PtrDocument         pDocument (docIdent)
+PtrDocument         GetPtrDocument (docIdent)
 DocumentIdentifier     docIdent;
 
 #endif /* __STDC__ */
@@ -87,7 +87,7 @@ DocumentIdentifier     docIdent;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    OuvreDoc ouvre le fichier document de nom docName et le charge  | */
+/* |    OpenDocument ouvre le fichier document de nom docName et le charge  | */
 /* |            dans pDoc. loadIncludedDoc indique s'il faut charger ou | */
 /* |            non les documents externes dont des parties sont        | */
 /* |            incluses dans le document a` ouvrir. Retourne faux si   | */
@@ -97,10 +97,10 @@ DocumentIdentifier     docIdent;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             OuvreDoc (Name docName, PtrDocument pDoc, boolean loadIncludedDoc, boolean skeleton, PtrSSchema pSS, boolean withAppEvent)
+boolean             OpenDocument (Name docName, PtrDocument pDoc, boolean loadIncludedDoc, boolean skeleton, PtrSSchema pSS, boolean withAppEvent)
 
 #else  /* __STDC__ */
-boolean             OuvreDoc (docName, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent)
+boolean             OpenDocument (docName, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent)
 Name                 docName;
 PtrDocument         pDoc;
 boolean             loadIncludedDoc;
@@ -196,17 +196,17 @@ boolean             withAppEvent;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    SupprDoc supprime les arbres abstraits d'un document et de tous | */
+/* |    DeleteAllTrees supprime les arbres abstraits d'un document et de tous | */
 /* |            ses elements associes et parametres. Les schemas de     | */
 /* |            structure et de presentation utilises par le document   | */
 /* |            ne sont pas liberes...                                  | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                SupprDoc (PtrDocument pDoc)
+void                DeleteAllTrees (PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                SupprDoc (pDoc)
+void                DeleteAllTrees (pDoc)
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */

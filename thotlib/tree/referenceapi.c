@@ -1079,7 +1079,7 @@ char               *referringDocumentName;
 	     while (charge && pDE != NULL)
 	       {
 		  /* verifie si le document est charge' */
-		  charge = (pDocument (pDE->EdDocIdent) != NULL);
+		  charge = (GetPtrDocument (pDE->EdDocIdent) != NULL);
 		  if (charge)
 		     /* document charge', on le saute */
 		     pDE = pDE->EdNext;

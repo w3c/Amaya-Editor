@@ -600,7 +600,7 @@ PtrDocument        *pDoc;
 	     if (DocDeSauve == *pDoc)
 		LibBufEditeur ();
 	     /* liberer tout l'arbre interne */
-	     SupprDoc (*pDoc);
+	     DeleteAllTrees (*pDoc);
 	     /* liberer les schemas : document, natures, presentations */
 	     LibSchemas (*pDoc);
 	     FreeDocument (TabDocuments[d - 1]);
@@ -1683,7 +1683,7 @@ char               *nomfichier;
 	/* on ouvre le document en chargeant temporairement les documents */
 	/* externes qui contiennent les elements inclus dans notre document */
 	TtaDisplaySimpleMessage (INFO, LIB, LIB_READING_THE_DOC);
-	ok = OuvreDoc (NomDocument, *pDoc, TRUE, FALSE, NULL, TRUE);
+	ok = OpenDocument (NomDocument, *pDoc, TRUE, FALSE, NULL, TRUE);
 	/* restaure le path des documents s'il a ete ecrase */
 	if (SaveDirDoc[0] != '\0')
 	   strncpy (DirectoryDoc, SaveDirDoc, MAX_PATH);

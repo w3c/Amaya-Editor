@@ -114,7 +114,7 @@ PtrDocument        *pDoc;
 	     {
 		CopyIdentDoc (docIdent, pRefD1->ReExtDocument);
 		/* le document est-il charge'? */
-		*pDoc = pDocument (pRefD1->ReExtDocument);
+		*pDoc = GetPtrDocument (pRefD1->ReExtDocument);
 		if (*pDoc != NULL)
 		   /* le document est charge' */
 		   /* cherche dans ce document le descripteur d'element */
@@ -264,7 +264,7 @@ boolean             nextExtDoc;
       /* il y a des references a notre element dans le document decrit par pExtDoc */
      {
 	/* ce document est-il charge' ? */
-	pDoc = pDocument ((*pExtDoc)->EdDocIdent);
+	pDoc = GetPtrDocument ((*pExtDoc)->EdDocIdent);
 	if (pDoc == NULL)
 	   /* le document referencant n'est pas charge' */
 	  {
@@ -749,7 +749,7 @@ boolean             new;
 		 /* cette reference est connue du document reference', si le */
 		 /* document reference' est charge' */
 		{
-		   pDocRef = pDocument (pDElemRef->ReExtDocument);
+		   pDocRef = GetPtrDocument (pDElemRef->ReExtDocument);
 		   if (pDocRef != NULL)
 		      /* le document est bien charge', on peut verifier. */
 		      /* On cherche dans ce document le descripteur d'element */

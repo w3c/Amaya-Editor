@@ -3665,7 +3665,7 @@ boolean             WithAPPEvent;
 						    if (TabDocExt[NumDocExt - 1] != NULL)
 						      {
 							 CopyIdentDoc (&TabDocExt[NumDocExt - 1]->DocIdent, IdentDocSource);
-							 ok = OuvreDoc (NULL, TabDocExt[NumDocExt - 1],
+							 ok = OpenDocument (NULL, TabDocExt[NumDocExt - 1],
 									FALSE, FALSE,
 									NULL, FALSE);
 						      }
@@ -3705,7 +3705,7 @@ boolean             WithAPPEvent;
 		for (NumDocExt = 1; NumDocExt <= MaxDocExt; NumDocExt++)
 		   if (TabDocExt[NumDocExt - 1] != NULL)
 		     {
-			SupprDoc (TabDocExt[NumDocExt - 1]);
+			DeleteAllTrees (TabDocExt[NumDocExt - 1]);
 			LibSchemas (TabDocExt[NumDocExt - 1]);
 			/* cherche le document dans la table */
 			/* des documents */

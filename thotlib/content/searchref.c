@@ -383,7 +383,7 @@ void                FindReferredEl ()
 	  {
 	     if (!IdentDocNul (docIdent))
 		/* l'element reference' est dans un autre document */
-		pSelDoc = pDocument (docIdent);
+		pSelDoc = GetPtrDocument (docIdent);
 	     SelectWithAPP (pSelDoc, pEl, TRUE, TRUE);
 	     /* dans le cas ou c'est un element d'une paire de marques, on */
 	     /* selectionne l'intervalle compris entre ces marques. */

@@ -2360,7 +2360,7 @@ boolean             CopieDoc;
 	   /* il s'agit d'un element reference' externe */
 	  {
 	     /* le document contenant cet element externe est-il charge' ? */
-	     pDocExt = pDocument (ElemRef->ReExtDocument);
+	     pDocExt = GetPtrDocument (ElemRef->ReExtDocument);
 	     if (pDocExt != NULL)
 		/* le document externe est charge' */
 	       {
@@ -2581,7 +2581,7 @@ Name                 NouveauNom;
    while (Fich != NULL)		/* parcourt la liste */
      {
 	/* ce document referencant est-il charge' ? */
-	pDocExt = pDocument (Fich->RcDocIdent);
+	pDocExt = GetPtrDocument (Fich->RcDocIdent);
 	if (pDocExt != NULL)
 	   /* le document referencant est charge' */
 	  {

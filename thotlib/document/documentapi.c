@@ -255,7 +255,7 @@ int                 accessMode;
 		   pDoc->DocDName[lg - 4] = '\0';
 	     GetDocIdent (&pDoc->DocIdent, pDoc->DocDName);
 	     strncpy (pDoc->DocDirectory, DirectoryDoc, MAX_PATH);
-	     ok = OuvreDoc (pDoc->DocDName, pDoc, TRUE, FALSE, NULL, FALSE);
+	     ok = OpenDocument (pDoc->DocDName, pDoc, TRUE, FALSE, NULL, FALSE);
 	     if (!ok)
 		/* echec d'acces a l'objet pivot */
 	       {

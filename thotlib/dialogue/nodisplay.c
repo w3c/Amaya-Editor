@@ -219,7 +219,7 @@ PtrDocument        *pDoc;
 	   /* supprime la selection dans ce document */
 	  {
 	     /* liberer tout l'arbre interne */
-	     SupprDoc (*pDoc);
+	     DeleteAllTrees (*pDoc);
 	     /* liberer les schemas : document, natures, presentations */
 	     LibSchemas (*pDoc);
 	     FreeDocument (TabDocuments[d - 1]);
