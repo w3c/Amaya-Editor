@@ -3290,7 +3290,7 @@ static void         EndOfAttrValue (char c)
    EndOfAttrValueAndTag    A ">" has been read. It indicates the
    end of an attribute value and the end of a start tag.
   ----------------------------------------------------------------------*/
-static void         EndOfAttrValueAndTag (char c)
+static void EndOfAttrValueAndTag (char c)
 {
    EndOfAttrValue (c);
    EndOfStartTag (c);
@@ -3299,7 +3299,7 @@ static void         EndOfAttrValueAndTag (char c)
 /*----------------------------------------------------------------------
    StartOfEntity   A character '&' has been encountered in the text.
   ----------------------------------------------------------------------*/
-static void         StartOfEntity (char c)
+static void StartOfEntity (char c)
 {
    LgEntityName = 0;
    EntityTableEntry = 0;
@@ -3307,7 +3307,9 @@ static void         StartOfEntity (char c)
 }
 
 /*----------------------------------------------------------------------
-   GetFallbackCharacter
+  GetFallbackCharacter
+  Parameter lang gives the language of the enclosing element.
+  Returns the fallback string and the language.
   ----------------------------------------------------------------------*/
 void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
 {  
@@ -3330,7 +3332,7 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
       fallback[0]= '?';
     }
 #ifdef _I18N_
-  else if (code < 1023)
+  else if (code < 0x3FF)
     {
       /* get the UTF-8 string of the unicode character */
       ptr = fallback;
@@ -3344,19 +3346,25 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
       if (UnicodeFallbackTable[i].EightbitCode < 255)
 	{
 	  /* Symbol character */
-	  *lang = TtaGetLanguageIdFromScript('G');
+	  if (TtaGetScript (*lang) != 'G')
+	    /* the language must be changed */
+	    *lang = TtaGetLanguageIdFromScript('G');
 	  fallback[0] = UnicodeFallbackTable[i].EightbitCode;
 	}
       else if (UnicodeFallbackTable[i].EightbitCode < 2000)
 	{
 	  /* ISO latin-1 fallback */
-	  *lang = TtaGetLanguageIdFromScript('L');
+	  if (TtaGetScript (*lang) != 'L')
+	    /* the language must be changed */
+	    *lang = TtaGetLanguageIdFromScript('L');
 	  fallback[0]= UnicodeFallbackTable[i].EightbitCode - 1000;
 	}
       else
 	{
 	  /* Symbol fallback */
-	  *lang = TtaGetLanguageIdFromScript('G');
+	  if (TtaGetScript (*lang) != 'G')
+	    /* the language must be changed */
+	    *lang = TtaGetLanguageIdFromScript('G');
 	  fallback[0] = UnicodeFallbackTable[i].EightbitCode - 2000;
 	}
       /* some special cases: add a second character */
@@ -3411,6 +3419,7 @@ static void PutNonISOlatin1Char (int code, char *prefix)
 
    /* try to find a fallback character */
    l = HTMLcontext.language;
+   lang = l;
    GetFallbackCharacter (code, buffer, &lang);
 
    if (buffer[0] == '?' && prefix != EOS)
@@ -3467,7 +3476,7 @@ static void PutNonISOlatin1Char (int code, char *prefix)
    Put an '&' character in the document tree with an attribute
    IntEntity.
   ----------------------------------------------------------------------*/
-static void         PutAmpersandInDoc ()
+static void PutAmpersandInDoc ()
 {
    ElementType      elType;
    Element          elText;
@@ -4576,6 +4585,7 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 		      InitBuffer ();
 		    }
 		  /* Try to find a fallback character */
+		  lang = HTMLcontext.language;
 		  GetFallbackCharacter ((int) wcharRead, fallback, &lang);
 		  if (fallback[0] == '?')
 		    {

@@ -48,7 +48,7 @@
    DocumentOfElement
    returns the document to which a pEl element belongs.
   ----------------------------------------------------------------------*/
-PtrDocument         DocumentOfElement (PtrElement pEl)
+PtrDocument DocumentOfElement (PtrElement pEl)
 {
    PtrElement          pE;
    int                 i;
@@ -3853,14 +3853,15 @@ Element TtaSearchTypedElementInTree (ElementType searchedType,
    Return value:
    element volume.
    ---------------------------------------------------------------------- */
-int                 TtaGetElementVolume (Element element)
+int TtaGetElementVolume (Element element)
 {
-   int                 vol = 0;
+  int                 vol = 0;
 
-   UserErrorCode = 0;
-   if (element == NULL)
-	TtaError (ERR_invalid_parameter);
-   else
-	vol = ((PtrElement) element)->ElVolume;
-   return vol;
+  UserErrorCode = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    vol = ((PtrElement) element)->ElVolume;
+  return vol;
 }
+

@@ -11,6 +11,15 @@
 
 #include "typebase.h"
 
+
+#define Latin_Script    0
+#define Greek_Script    1
+#define Arabic_Script   2
+#define Hebrew_Script   3
+#define Cyrillic_Script 4
+#define CJK_Script      5
+#define FirstUserLang   6
+
 /* document */
 typedef int         Language;
 typedef int        *Dictionary;
@@ -20,8 +29,6 @@ typedef int        *Dictionary;
 
 /*----------------------------------------------------------------------
    TtaNewLanguage
-
-   Not available for TYPO languages.
 
    Declares a new language, its script and optionally the names of the
    principal ans secondary dictionaries. All languages used in a Thot
@@ -50,9 +57,7 @@ extern Language TtaNewLanguage (char *languageName, char languageScript,
    TtaRemoveLanguage
 
    Remove a language from the Thot language table.
-
-   Parameters:
-       language: the language to be removed.
+   language: the language to be removed.
   ----------------------------------------------------------------------*/
 extern void TtaRemoveLanguage (Language language);
 
@@ -60,9 +65,7 @@ extern void TtaRemoveLanguage (Language language);
    TtaGetLanguageIdFromName
 
    Available for TYPO languages.
-
    Returns the identifier of a language that matches a language name.
-   Parameters:
    languageName: name of the language.
    Return value:
    identifier of that language or 0 if the language is unknown.
@@ -90,7 +93,6 @@ extern Language TtaGetDefaultLanguage (void);
 /*----------------------------------------------------------------------
    TtaGetLanguageIdFromScript
 
-   Not available for TYPO languages.
    Returns the identifier of the first language that uses a given script.
    Parameters:
    languageScript: the script of interest (`L' = latin, `G' = greek).
@@ -99,12 +101,21 @@ extern Language TtaGetDefaultLanguage (void);
   ----------------------------------------------------------------------*/
 extern Language TtaGetLanguageIdFromScript (char languageScript);
 
+
+/*----------------------------------------------------------------------
+   TtaGetCharacterScript
+
+   Returns the script of the wide character.
+   Return value:
+   A character that identifies the script
+   'L' = Latin, 'G' = Greek 'A' = Arabic, etc.
+  ----------------------------------------------------------------------*/
+extern char TtaGetCharacterScript (wchar_t c);
+
 /*----------------------------------------------------------------------
    TtaGetScript
 
-   Not available for TYPO languages.
    Returns the script of a language.
-   Parameters:
    languageId: name of the language.
    Return value:
    a character that identifies the script ('L' = latin, 'G' = greek).
@@ -114,13 +125,8 @@ extern char TtaGetScript (Language languageId);
 /*----------------------------------------------------------------------
    TtaGetLanguageName
 
-   Not available for TYPO languages.
-
    Returns the name of a given language.
-
-   Parameters:
    languageId: identifier of the language.
-
    Return value:
    the name of the language.
   ----------------------------------------------------------------------*/
@@ -131,7 +137,6 @@ extern char *TtaGetLanguageName (Language languageId);
 
    Not available for TYPO languages.
    Returns the RFC-1766 code of a given language.
-   Parameters:
    languageId: identifier of the language.
    Return value:
    the code of the language.
@@ -141,7 +146,6 @@ extern char *TtaGetLanguageCode (Language languageId);
 /*----------------------------------------------------------------------
    TtaGetNumberOfLanguages
 
-   Not available for TYPO languages.
    Returns the current number of languages known by Thot.
    Return value:
    the current number of languages.
@@ -156,7 +160,6 @@ extern int TtaGetNumberOfLanguages (void);
    Returns -1 if the mandatory dictionary cann't be loaded.
    0 if no dictionary has been loaded
    1 if the mandatory dictionary is loaded.
-   Parameters:
    languageId: name of the concerned language.
   ----------------------------------------------------------------------*/
 extern ThotBool TtaLoadLanguageDictionaries (Language languageId);
@@ -184,7 +187,6 @@ extern Dictionary TtaGetPrincipalDictionary (Language languageId);
    TtaGetSecondaryDictionary
 
    Returns a pointer to the secondary dictionary associated to a language.
-
    Return value:
    the pointer to that dictionary or NULL if there is no dictionary for
    this language.

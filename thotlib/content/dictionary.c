@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -46,7 +46,7 @@ unsigned char       Code[256];	/* Script characters */
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void           LoadScript ()
+static void LoadAlphabet ()
 {
   FILE*         falpha;
   PathBuffer    alphaName;
@@ -59,7 +59,7 @@ static void           LoadScript ()
     strcpy (alphaName, "");
 
   strcat (alphaName, WC_DIR_STR);
-  strcat (alphaName, "script");
+  strcat (alphaName, "alphabet");
   
   if ((falpha = fopen (alphaName, "r")) != NULL)
     {
@@ -639,7 +639,7 @@ void Dict_Init ()
 
    /* Inititializing of environments needed by dictionarires */
    dictPath = TtaGetEnvString ("DICOPAR");
-   LoadScript ();
+   LoadAlphabet ();
 }
 
 
@@ -656,40 +656,43 @@ void Dict_Init ()
   ----------------------------------------------------------------------*/
 ThotBool TtaLoadLanguageDictionaries (Language languageId)
 {
-   int                 lang;
-   PtrDict             dictPtr;
+  int                 lang;
+  PtrDict             dictPtr;
 
-   /* If the variable dictPath is not loaded -> do nothig */
-   if (dictPath == NULL)
-      return FALSE;
+  /* If the variable dictPath is not loaded -> do nothig */
+  if (dictPath == NULL)
+    return FALSE;
 
-   lang = (int) languageId;
-   /* Verifies if the main dictionary is already loaded */
-   if (LangTable[lang].LangDict[0] == NULL)
-     {
-	/* Loading the main dictionary */
-	if (LangTable[lang].LangPrincipal[0] != EOS && !LangTable[lang].LangDict[0])
-	  {
-         dictPtr = NULL;
-	     LoadTreatedDict (&dictPtr, lang, NULL, LangTable[lang].LangPrincipal, dictPath, TRUE, FALSE);
-	     if (dictPtr != NULL)
-		LangTable[lang].LangDict[0] = (Dictionary) dictPtr;
-	  }
-     }
+  lang = (int) languageId - FirstUserLang;
+  /* Verifies if the main dictionary is already loaded */
+  if (LangTable[lang].LangDict[0] == NULL)
+    {
+      /* Loading the main dictionary */
+      if (LangTable[lang].LangPrincipal[0] != EOS && !LangTable[lang].LangDict[0])
+	{
+	  dictPtr = NULL;
+	  LoadTreatedDict (&dictPtr, lang, NULL, LangTable[lang].LangPrincipal,
+			   dictPath, TRUE, FALSE);
+	  if (dictPtr != NULL)
+	    LangTable[lang].LangDict[0] = (Dictionary) dictPtr;
+	}
+    }
 
-   /* Verifies if the secondary dictionary is already laded */
-   if (LangTable[lang].LangDict[1] == NULL)
-     {
-	/* Loading the secondary dictionary */
-	if (LangTable[lang].LangSecondary[0] != EOS && !LangTable[lang].LangDict[1])
-	  {
-         dictPtr = NULL;
-	     LoadTreatedDict (&dictPtr, lang, NULL, LangTable[lang].LangSecondary, dictPath, TRUE, FALSE);
-	     if (dictPtr != NULL)
-		LangTable[lang].LangDict[1] = (Dictionary) dictPtr;
-	  }
-     }
-   return (LangTable[lang].LangDict[0] != NULL || LangTable[lang].LangDict[1] != NULL);
+  /* Verifies if the secondary dictionary is already laded */
+  if (LangTable[lang].LangDict[1] == NULL)
+    {
+      /* Loading the secondary dictionary */
+      if (LangTable[lang].LangSecondary[0] != EOS && !LangTable[lang].LangDict[1])
+	{
+	  dictPtr = NULL;
+	  LoadTreatedDict (&dictPtr, lang, NULL, LangTable[lang].LangSecondary,
+			   dictPath, TRUE, FALSE);
+	  if (dictPtr != NULL)
+	    LangTable[lang].LangDict[1] = (Dictionary) dictPtr;
+	}
+    }
+  return (LangTable[lang].LangDict[0] != NULL ||
+	  LangTable[lang].LangDict[1] != NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -703,7 +706,7 @@ void TtaUnLoadLanguageDictionaries (Language languageId)
 {
    int                 i, j;
 
-   i = (int) languageId;
+   i = (int) languageId - FirstUserLang;
    j = 0;
    while (LangTable[i].LangDict[j] != NULL && j < MAX_DICTS)
      {
@@ -725,9 +728,9 @@ Dictionary TtaGetPrincipalDictionary (Language languageId)
 {
    int                 i;
 
-   i = (int) languageId;
+   i = (int) languageId - FirstUserLang;
    /* Verification of the parameter */
-   if (i >= FreeEntry)
+   if (i < 0 || i >= FreeEntry)
      {
 	TtaError (ERR_language_not_found);
 	return NULL;
@@ -751,9 +754,9 @@ Dictionary TtaGetSecondaryDictionary (Language languageId)
 {
    int                 i;
 
-   i = (int) languageId;
+   i = (int) languageId - FirstUserLang;
    /* Verification of the parameter */
-   if (i >= FreeEntry)
+   if (i < 0 || i >= FreeEntry)
      {
 	TtaError (ERR_language_not_found);
 	return NULL;

@@ -268,8 +268,6 @@ int CheckWord (unsigned char *word, Language language, PtrDict dict)
 {
   PtrDict             globalDict;
   PtrDict             personalDict;
-  PtrDict             dictsigle;
-  PtrDict             dictname;
   int                 res;
   unsigned char       word1[MAX_WORD_LEN];
 
@@ -294,16 +292,12 @@ int CheckWord (unsigned char *word, Language language, PtrDict dict)
 	  res = WordInDictionary (word1, globalDict);
 	  if (res == -2)
 	    return (-1);	/* PAS de globalDict */
-	  else if (res != -3)
-	    {
-	      /* check extra dictionaries */
-	      dictsigle = (PtrDict) TtaGetPrincipalDictionary (0);
-	      dictname = (PtrDict) TtaGetSecondaryDictionary (0);
-	      if (WordInDictionary (word1, personalDict) == -3 ||
-		  WordInDictionary (word1, dictsigle) == -3 ||
-		  WordInDictionary (word1, dictname) == -3)
-		/* found */
-		res = -3;
+          else if (res != -3)
+            {
+              /* check extra dictionaries */
+              if (WordInDictionary (word1, personalDict) == -3)
+                /* found */
+                res = -3;
 	    }
 	}
       if (res != -3)

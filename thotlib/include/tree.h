@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -929,7 +929,7 @@ extern ThotBool TtaCanInsertFirstChild (ElementType elementType,
    the document containing that element or 0 if the element does not
    belong to any document.
    ---------------------------------------------------------------------- */
-extern Document     TtaGetDocument (Element element);
+extern Document TtaGetDocument (Element element);
 
 /* ----------------------------------------------------------------------
    TtaNextCopiedElement

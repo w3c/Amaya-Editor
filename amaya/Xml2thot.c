@@ -737,6 +737,7 @@ static void XmlGetFallbackCharacter (wchar_t wcharRead, char *entityName,
    unsigned char *ptr;
    int            len, i, j;
 
+   lang = XMLcontext.language;
    GetFallbackCharacter ((int) wcharRead, fallback, &lang);
    if (fallback[0] == '?')
      {

@@ -5,11 +5,12 @@
  *
  */
  
-/*----------------------------------------------------------------------
-   
-   Application Program Interface                     
-   Language management                                          
-  ----------------------------------------------------------------------*/
+/*
+ *
+ * Languages and Scripts
+ *
+ * Author: I. Vatton(W3C/INRIA)
+ */
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -28,14 +29,6 @@ static int          breakPoints[MAX_POINT_COUP];
 static char         StandardLANG[3];
 static char        *dictPath;	/* Environment variable DICOPAR */
 int                 FreeEntry;
-
-#define Latin_Script 0
-#define Greek_Script 1
-#define Arabic_Script 2
-#define Hebrew_Script 3
-#define Japanese_Script 4
-#define Chinese_Script 5
-#define FirstUserLang 6
 
 #include "thotmsg_f.h"
 
@@ -291,7 +284,7 @@ void InitLanguage ()
    i = 1;
    strcpy (LangTable[i].LangName, "Chinese");
    strcpy (LangTable[i].LangCode, "zh");
-   LangTable[i].LangScript = 'Z';
+   LangTable[i].LangScript = 'C';
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
    FreeEntry = 19;
@@ -375,7 +368,7 @@ void InitLanguage ()
    i = 12;
    strcpy (LangTable[i].LangName, "Japanese");
    strcpy (LangTable[i].LangCode, "ja");
-   LangTable[i].LangScript = 'J';
+   LangTable[i].LangScript = 'C';
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
@@ -422,7 +415,6 @@ void InitLanguage ()
 /*----------------------------------------------------------------------
    TtaNewLanguage
 
-   Not available for TYPO languages.
    Declares a new language, its script and optionally the names of the
    principal ans secondary dictionaries. All languages used in a Thot
    document must be explicitely declared, except for predefined languages.
@@ -536,7 +528,6 @@ void TtaRemoveLanguage (Language language)
 
    Available for TYPO languages.
    Returns the identifier of a language that matches a language name.
-   Parameters:
    name: name of the language.
    Return value:
    identifier of that language or 0 if the language is unknown.
@@ -647,10 +638,10 @@ Language TtaGetLanguageIdFromScript (char languageScript)
       return Arabic_Script;
     case 'H':
       return Hebrew_Script;
-    case 'J':
-      return Japanese_Script;
+    case 'C':
+      return Cyrillic_Script;
     case 'Z':
-      return Chinese_Script;
+      return CJK_Script;
     default:
       return Latin_Script;
     }
@@ -658,13 +649,36 @@ Language TtaGetLanguageIdFromScript (char languageScript)
 
 
 /*----------------------------------------------------------------------
+   TtaGetCharacterScript
+
+   Returns the script of the wide character.
+   Return value:
+   A character that identifies the script
+   'L' = Latin, 'G' = Greek 'A' = Arabic, etc.
+  ----------------------------------------------------------------------*/
+char TtaGetCharacterScript (wchar_t c)
+{
+  if (c >= 0x370 && c < 0x400)
+    return 'G'; /* Greek */
+  else if (c >= 0x2AF && c < 0x45F)
+    return 'C'; /* Cyrillic */
+  else if (c >= 0x45F && c < 0x600)
+    return 'H'; /* Hebrew */
+  else if (c >= 0x600 && c < 0x700)
+    return 'A'; /* Arabic */
+  else if (c >= 0x2E80 && c < 0xA000)
+    return 'Z'; /* CJK */
+  else
+    return 'L'; /* Latin */
+}
+
+/*----------------------------------------------------------------------
    TtaGetScript
 
-   Not available for TYPO languages. Returns the script of a language.
-   Parameters:
-   languageId: name of the language.
+   Returns the script of a language languageId.
    Return value:
-   a character that identifies the script ('L' = latin, 'G' = greek).
+   A character that identifies the script
+   'L' = Latin, 'G' = Greek 'A' = Arabic, etc.
   ----------------------------------------------------------------------*/
 char TtaGetScript (Language languageId)
 {
@@ -681,9 +695,9 @@ char TtaGetScript (Language languageId)
 	  return 'A';
 	case  Hebrew_Script:
 	  return 'H';
-	case Japanese_Script:
-	  return 'J';
-	case Chinese_Script:
+	case Cyrillic_Script:
+	  return 'C';
+	case CJK_Script:
 	  return 'Z';
 	default:
 	  return 'L';
@@ -698,13 +712,12 @@ char TtaGetScript (Language languageId)
 
 
 /*----------------------------------------------------------------------
-   TtaGetLanguageName
+  TtaGetLanguageName
 
-   Not available for TYPO languages. Returns the name of a given language.
-   Parameters:
-   languageId: identifier of the language.
-   Return value:
-   the name of the language.
+  Returns the name of a given language.
+  languageId: identifier of the language.
+  Return value:
+  the name of the language.
   ----------------------------------------------------------------------*/
 char *TtaGetLanguageName (Language languageId)
 {
@@ -725,7 +738,6 @@ char *TtaGetLanguageName (Language languageId)
 
    Not available for TYPO languages.
    Returns the RFC-1766 code of a given language.
-   Parameters:
    languageId: identifier of the language.
    Return value:
    the code of the language.
@@ -872,8 +884,8 @@ static char *FoundPatternInList (Language langageId,
 
 
 /*----------------------------------------------------------------------
-   * FoundHyphenPoints: apply Liang algo. on a word and returns the 
-   * hypen points.
+  FoundHyphenPoints: apply Liang algo. on a word and returns the 
+  hypen points.
   ----------------------------------------------------------------------*/
 static void FoundHyphenPoints (Language langageId, char wordToCut[THOT_MAX_CHAR])
 {
@@ -926,9 +938,9 @@ static void FoundHyphenPoints (Language langageId, char wordToCut[THOT_MAX_CHAR]
 
 
 /*----------------------------------------------------------------------
- TtaGetPatternHyphenList 
-   returns a pointer on the list of values representing the hyphen points
-   or NULL 
+  TtaGetPatternHyphenList 
+  returns a pointer on the list of values representing the hyphen points
+  or NULL 
   ----------------------------------------------------------------------*/
 int *TtaGetPatternHyphenList (char word[THOT_MAX_CHAR], Language languageId)
 {
@@ -958,8 +970,8 @@ int *TtaGetPatternHyphenList (char word[THOT_MAX_CHAR], Language languageId)
 }
 
 /*----------------------------------------------------------------------
- * TtaExistPatternList verifies if a list of patterns is defined
- * for a given language
+  TtaExistPatternList verifies if a list of patterns is defined
+  for a given language
   ----------------------------------------------------------------------*/
 ThotBool TtaExistPatternList (Language languageId)
 {
