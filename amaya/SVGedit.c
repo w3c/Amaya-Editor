@@ -181,6 +181,7 @@ void GraphicsSelectionChanged (NotifyElement * event)
       event->element = use;
       event->elementType.ElTypeNum = elemType;
     }
+  UpdateContextSensitiveMenus (event->document);
   SynchronizeSourceView (event);
   Selection_changed_in_basedoc (event);
   /* update the displayed style information */

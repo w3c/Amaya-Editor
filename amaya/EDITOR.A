@@ -307,7 +307,6 @@ MENUS
 	Annotations_ Separator;
 	view:1 Annotations_ button:BCustomQuery -> CustomQuery;
 	view:1 Annotations_ button:BFilterAnnotations -> FilterAnnot;
-	Annotations_ Separator;
 	view:1 Annotations_ button:BConfigAnnotations -> ConfigAnnot;
 
 	view:1 Bookmarks_ button:BBookmarkFile -> BookmarkFile;
