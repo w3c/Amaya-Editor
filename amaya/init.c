@@ -108,6 +108,8 @@ static int          AmayaInitialized = 0;
 static ThotBool     NewFile = FALSE;
 static int          NewDocType = 0;
 static ThotBool     ShowErrors;
+/* the open document is the Amaya default page */
+static ThotBool     WelcomePage = FALSE;
 /* we have to mark the initial loading status to avoid to re-open the
    document view twice */
 static int          Loading_method = CE_INIT;
@@ -1653,7 +1655,7 @@ void InitMimeType (Document document, View view, char *url, char *status)
   BrowserForm
   Initializes a form that ask the URI of the opened or new created document.
   -------------------------------------------------------------------------*/
-static void   BrowserForm (Document doc, View view, char *urlname)
+static void BrowserForm (Document doc, View view, char *urlname)
 {
    char      s[MAX_LENGTH];
    int       i;
@@ -1780,20 +1782,29 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title)
     }
   else
     {
-      strcpy (DirectoryName, s);
-      if (name[0] != EOS)
-	{
-	  strcpy (DocumentName, name);
-	  strcat (s, DIR_STR);
-	  strcat (s, name);
-	}
-      else
+      /* check if it's the default Welcome page */
+      if (name[0] == EOS && !WelcomePage)
 	strcpy (s, DocumentURLs[doc]);
+      else
+	{
+#ifndef _WINDOWS
+	  if (WelcomePage)
+	    getcwd (s, MAX_LENGTH);
+#endif /* _WINDOWS */
+	  strcpy (DirectoryName, s);
+	  if (name[0] != EOS)
+	    {
+	      strcpy (DocumentName, name);
+	      strcat (s, DIR_STR);
+	      strcat (s, name);
+	    }
+	}
       strcpy (LastURLName, s);
     }
 
 #ifdef  _WINDOWS
-  CreateOpenDocDlgWindow (TtaGetViewFrame (doc, view), title, s, DocSelect, DirSelect, 2);
+  CreateOpenDocDlgWindow (TtaGetViewFrame (doc, view), title, s,
+			  DocSelect, DirSelect, 2);
 #else /* WINDOWS */
   TtaSetTextForm (BaseDialog + URLName, s);
   TtaSetDialoguePosition ();
@@ -1854,6 +1865,8 @@ void GoToHome (Document doc, View view)
 
   if (s == NULL)
     {
+      /* the open document is the Amaya default page */
+      WelcomePage = TRUE;
       s = TtaGetEnvString ("THOTDIR");
       sprintf (LastURLName, "%s%camaya%c%s.%s",
 	       s, DIR_SEP, DIR_SEP, AMAYA_PAGE, lang);
@@ -1864,7 +1877,7 @@ void GoToHome (Document doc, View view)
     }
   else
     strcpy (LastURLName, s);
-  
+
   if (doc == 0 || CanReplaceCurrentDocument (doc, view))
     {
       /* load the HOME document */
@@ -4167,7 +4180,7 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
    UpdateSaveAsButtons
    Maintain consistency between buttons in the Save As dialog box
   ----------------------------------------------------------------------*/
-static void	UpdateSaveAsButtons ()
+static void UpdateSaveAsButtons ()
 {
 #ifndef _WINDOWS
   int	active;
@@ -4889,6 +4902,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
        if (val == 1)
 	 {
 	   /* Confirm button */
+	   /* it's no longer the default Welcome page */
+	   WelcomePage = FALSE;
 #ifndef _WINDOWS
 	   /* this code is only valid under Unix. */
 	   /* In Windows, we're using a system widget */
@@ -5289,7 +5304,7 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
   RestoreAmayaDocs checks if Amaya has previously crashed.
   The file Crash.amaya gives the list of saved files
   ----------------------------------------------------------------------*/
-static ThotBool       RestoreAmayaDocs ()
+static ThotBool RestoreAmayaDocs ()
 {
   FILE           *f;
   char            tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
@@ -5447,7 +5462,7 @@ ThotBool CheckMakeDirectory (char *name, ThotBool recursive)
 /*----------------------------------------------------------------------
    FreeAmayaStructures cleans up memory ressources.
   ----------------------------------------------------------------------*/
-void                FreeAmayaStructures ()
+void FreeAmayaStructures ()
 {
   if (LastURLName)
     {
@@ -5481,7 +5496,7 @@ void                FreeAmayaStructures ()
   InitAmaya intializes Amaya variables and open the first document
   window.
   ----------------------------------------------------------------------*/
-void                InitAmaya (NotifyEvent * event)
+void InitAmaya (NotifyEvent * event)
 {
    char               *s;
    char               *tempname;
@@ -5826,7 +5841,7 @@ void                InitAmaya (NotifyEvent * event)
   type attrNum, create one.
   If the root has such an attribute, delete it.
   ----------------------------------------------------------------------*/
-void         ChangeAttrOnRoot (Document document, int attrNum)
+void ChangeAttrOnRoot (Document document, int attrNum)
 {
    Element	    root;
    AttributeType    attrType;
@@ -5980,7 +5995,7 @@ void MakeIDMenu (Document doc, View view)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                HelpAmaya (Document document, View view)
+void HelpAmaya (Document document, View view)
 {
    char                  localname[MAX_LENGTH];
 #ifdef AMAYA_DEBUG
@@ -6081,7 +6096,7 @@ void                HelpAmaya (Document document, View view)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                HelpAtW3C (Document document, View view)
+void HelpAtW3C (Document document, View view)
 {
   char      localname[MAX_LENGTH];
   
@@ -6305,7 +6320,7 @@ void HelpAccess (Document document, View view)
    CheckAmayaClosed closes the application when there is any more
    opened document
   ----------------------------------------------------------------------*/
-void                CheckAmayaClosed ()
+void CheckAmayaClosed ()
 {
   int                i;
 
@@ -6321,7 +6336,7 @@ void                CheckAmayaClosed ()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                CloseDocument (Document doc, View view)
+void CloseDocument (Document doc, View view)
 {
   TtcCloseDocument (doc, view);
   if (!W3Loading)
@@ -6330,7 +6345,7 @@ void                CloseDocument (Document doc, View view)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                AmayaClose (Document document, View view)
+void AmayaClose (Document document, View view)
 {
    int              i;
    ThotBool         documentClosed;

@@ -612,7 +612,7 @@ static void         InitCSSDialog (Document doc, char *s)
 	i = nb;
       TtaNewSizedSelector (BaseCSS + CSSSelect, BaseCSS + CSSForm,
 			   TtaGetMessage (AMAYA, AM_CSS_FILE),
-			   nb, buf, 200, 1, NULL, FALSE, TRUE);
+			   nb, buf, 200, i, NULL, FALSE, TRUE);
     }
   else
     TtaNewLabel (BaseCSS + CSSSelect, BaseCSS + CSSForm,
