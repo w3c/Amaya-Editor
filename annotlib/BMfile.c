@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 2003.
+ *  (c) COPYRIGHT MIT and INRIA, 2003-2004.
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -180,7 +180,7 @@ ThotBool BM_Context_reference (char *url, int *ref)
 }
 
 /*----------------------------------------------------------------------
-  BM_Context_dumpasList
+  BM_Context_dumpasCharList
   Returns a list with a copy of the URLs.
   Caller must free the returned list (but not its contents)
   ----------------------------------------------------------------------*/
@@ -320,6 +320,31 @@ static ThotBool BM_Context_set (int ref, char *url,
   return TRUE;
 }
 
+/* two global variables to communicate data to error handler */
+static ThotBool error;
+
+/*----------------------------------------------------------------------
+  error handler
+  Called whenever there's an RDF parsing error.
+  Sets an error flag, a la errorno. The application must reset it.
+  ---------------------------------------------------------------------*/
+static void error_handler (void *user_data, const char *message, va_list arguments)
+{
+  char msg[256];
+
+  /* set the error flag */
+  error = TRUE;
+  
+  /* print the error message that redland gave us */
+  fprintf (stderr, "Bookmark parsing error:\n");
+  vfprintf (stderr, message, arguments);
+  fputc('\n', stderr);
+
+  /* do the same thing, but for putting a popup message */
+  vsnprintf (msg, sizeof (msg), message, arguments);
+  InitConfirm3L (0, 0, "Bookmark parsing error", msg, NULL, FALSE);
+}
+
 /*----------------------------------------------------------------------
   redland_init
   Initializes the redland environment.
@@ -357,9 +382,14 @@ Document redland_init (char *url, char *tmpfile,
 
   /* create a new librdf_storage object. N.B. in 0.9.12 
      the model storage relationship is 1:1 */
-  model = librdf_new_model(world, 
-			   storage, /* storage to use */
-			   NULL);   /* options to intialize model */
+  model = librdf_new_model (world, 
+			    storage, /* storage to use */
+			    NULL);   /* options to intialize model */
+
+  /* set the error handler and reset the error flag */
+  librdf_world_set_error (world, NULL, 
+			  error_handler);
+  error = FALSE;
 
   ref = BookmarkRef++;
   BM_Context_set (ref, url, tmpfile, world, model, storage);
@@ -414,17 +444,19 @@ static void add_statement (librdf_world *world, librdf_model *model,
   parse_file
   Parsers a file into the model.
   ----------------------------------------------------------------------*/
-static void parse_file (librdf_world *world, librdf_model *model,
+static ThotBool parse_file (librdf_world *world, librdf_model *model,
 			char *filename, char *base, int ntriples)
 {
   librdf_parser* parser;
   librdf_stream* stream;
   librdf_uri *uri;
   librdf_uri *base_uri;
-  int count;
+  librdf_node *node_p;
+  int count = 0 ;
+  ThotBool res;
 
-  uri = librdf_new_uri (world, filename);
-  base_uri = librdf_new_uri (world, base);
+  uri = librdf_new_uri (world, (unsigned char *) filename);
+  base_uri = librdf_new_uri (world, (unsigned char *) base);
 
   if (ntriples)
     /* parse the file as triplets */
@@ -433,39 +465,60 @@ static void parse_file (librdf_world *world, librdf_model *model,
     /* parse the file as rdf */
     parser = librdf_new_parser (world, "raptor", NULL, NULL);
   
-  librdf_parser_set_feature(parser, LIBRDF_MS_aboutEach_URI, "yes");
-  librdf_parser_set_feature(parser, LIBRDF_MS_aboutEachPrefix_URI, "yes");
+  /* @@ JK trying something to understand how this works */
+  node_p = librdf_new_node_from_literal (world, (unsigned char *) "yes", NULL, 0);
+  librdf_parser_set_feature(parser, LIBRDF_MS_aboutEach_URI, node_p);
+  librdf_parser_set_feature(parser, LIBRDF_MS_aboutEachPrefix_URI, node_p);
+  librdf_free_node (node_p);
 
+  error = FALSE;
   stream = librdf_parser_parse_as_stream (parser, uri, base_uri);
 
-  if (!stream)
+  if (!error && stream)
     {
-      fprintf(stderr, "Failed to parse RDF as stream\n");
-      librdf_free_parser(parser);
-      return;
-    }
+      res = TRUE;
 
-  count = 0;
-  while(!librdf_stream_end (stream)) {
-    librdf_statement *statement=librdf_stream_get_object (stream);
-    if(!statement) {
-      fprintf(stderr, "librdf_stream_next returned NULL\n");
-      break;
+      while(!librdf_stream_end (stream)) {
+	librdf_statement *statement=librdf_stream_get_object (stream);
+	if(!statement) {
+	  fprintf(stderr, "librdf_stream_next returned NULL\n");
+	  break;
+	}
+	
+	if (librdf_model_add_statement (model, statement)) {
+	  fprintf(stderr, "librdf_model_add_statement returned error\n");
+	  break;
+	}
+	
+	/* cannot free them anymore */
+	/* librdf_free_statement (statement); */
+	librdf_stream_next(stream); /* advance the stream */
+	count++;
+      }
     }
-    
-    librdf_model_add_statement (model, statement);
-    /* cannot free them anymore */
-    /* librdf_free_statement (statement); */
-    librdf_stream_next(stream); /* advance the stream */
-    count++;
-  }
-  librdf_free_stream (stream);  
+  else
+    res = FALSE;
+
+  if (stream)
+    librdf_free_stream (stream);
+  else
   librdf_free_parser (parser);
   librdf_free_uri (uri);
   librdf_free_uri (base_uri); 
+
+  if (error)
+    {
+      error = FALSE;
+      fprintf(stderr, "Failed to parse RDF as stream\n");
+      /* JK error and we should return 0 and disable this bookmark file, 
+	 rather than save it */
+    }
+  
 #ifdef BMFILE_DEBUG
   fprintf(stderr, "Added %d statements\n", count);
 #endif /* BMFILE_DEBUG */
+
+  return res;
 }
 
 /*----------------------------------------------------------------------
@@ -544,7 +597,7 @@ static int Model_queryID (librdf_world *world, librdf_model *model, char * base_
     {
       snprintf (genid + base_url_len, sizeof (genid) - base_url_len, template_, igenid);
 
-      subject = librdf_new_node_from_uri_string (world, genid);
+      subject = librdf_new_node_from_uri_string (world, (unsigned char *) genid);
 
       partial_statement = librdf_new_statement (world);
       librdf_statement_set_subject (partial_statement, subject);
@@ -595,10 +648,10 @@ static int Model_queryTopic (librdf_world *world, librdf_model *model, char  *to
   if (!topicid && !topicid[0] == EOS)
     return 0;
 
-  subject = librdf_new_node_from_uri_string (world, topicid);
-  predicate = librdf_new_node_from_uri_string (world, RDF_TYPE);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) topicid);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_TYPE);
   object =  librdf_new_node_from_uri_string (world,
-					     BMNS_TOPIC);
+					     (unsigned char *) BMNS_TOPIC);
 
   partial_statement=librdf_new_statement (world);
   librdf_statement_set_subject (partial_statement, subject);
@@ -638,14 +691,14 @@ static ThotBool Model_queryExists (librdf_world *world, librdf_model *model,
       || !object_str || !*object_str)
     return FALSE;
 
-  subject = librdf_new_node_from_uri_string (world, subject_str);
-  predicate = librdf_new_node_from_uri_string (world, predicate_str);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) subject_str);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) predicate_str);
   if (object_str)
     {
       if (librdf_heuristic_object_is_literal (object_str))
-	object = librdf_new_node_from_literal (world, object_str, NULL, 0);
+	object = librdf_new_node_from_literal (world, (unsigned char *) object_str, NULL, 0);
       else
-	object = librdf_new_node_from_uri_string (world, object_str);
+	object = librdf_new_node_from_uri_string (world, (unsigned char *) object_str);
     }
 
   partial_statement=librdf_new_statement (world);
@@ -680,14 +733,14 @@ static librdf_statement* Model_query (librdf_world *world, librdf_model *model,
   librdf_node *predicate = NULL;
   librdf_node *object = NULL;
 
-  subject = librdf_new_node_from_uri_string (world, subject_str);
-  predicate = librdf_new_node_from_uri_string (world, predicate_str);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) subject_str);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) predicate_str);
   if (object_str)
     {
       if (librdf_heuristic_object_is_literal (object_str))
-	object = librdf_new_node_from_literal (world, object_str, NULL, 0);
+	object = librdf_new_node_from_literal (world, (unsigned char *) object_str, NULL, 0);
       else
-	object = librdf_new_node_from_uri_string (world, object_str);
+	object = librdf_new_node_from_uri_string (world, (unsigned char *) object_str);
     }
 
   partial_statement=librdf_new_statement (world);
@@ -712,13 +765,1110 @@ static librdf_statement* Model_query (librdf_world *world, librdf_model *model,
   return (found);
 }
 
+/*----------------------------------------------------------------------
+  Model_getNodeAsStringControl
+  returns the value of a node as a string. It verifies that the value
+  is a literal if the user requested it so.
+  Caller must free the returned string.
+  ----------------------------------------------------------------------*/
+static char* Model_getNodeAsStringControl (librdf_node *node, ThotBool isLiteral)
+{
+  librdf_uri *uri;
+  librdf_node_type type;
+  char *object_str;
+
+  type = librdf_node_get_type (node);
+
+  /* @@ JK: some control */
+  if (type == LIBRDF_NODE_TYPE_LITERAL && isLiteral == FALSE)
+      return NULL;
+  else if (type != LIBRDF_NODE_TYPE_LITERAL && isLiteral == TRUE)
+      return NULL;
+
+  if (type == LIBRDF_NODE_TYPE_LITERAL)
+    object_str = strdup ((char *) librdf_node_get_literal_value (node));
+  else
+    {
+      uri = librdf_node_get_uri (node);
+      object_str = (char *) librdf_uri_to_string (uri);
+    }
+  return (object_str);
+}
+
+/*----------------------------------------------------------------------
+  Model_getNodeAsString
+  returns the value of a node as a string.
+  Caller must free the returned string.
+  ----------------------------------------------------------------------*/
+static char* Model_getNodeAsString (librdf_node *node)
+{
+  librdf_uri *uri;
+  librdf_node_type type;
+  char *object_str;
+
+  type = librdf_node_get_type (node);
+
+  if (type == LIBRDF_NODE_TYPE_LITERAL)
+    object_str = strdup ((char *) librdf_node_get_literal_value (node));
+  else if (type == LIBRDF_NODE_TYPE_BLANK)
+    object_str = strdup ((char *) librdf_node_get_blank_identifier (node));
+  else
+    {
+      uri = librdf_node_get_uri (node);
+      object_str = (char *) librdf_uri_to_string (uri);
+    }
+  return (object_str);
+}
+
+/*----------------------------------------------------------------------
+  Model_getBlankNodeAsString
+  returns the value of a blank node as a string.
+  Caller must free the returned string.
+  ----------------------------------------------------------------------*/
+static char* Model_getBlankNodeAsString (librdf_node *node)
+{
+  librdf_node_type type;
+  char *object_str;
+
+  type = librdf_node_get_type (node);
+
+  if (type == LIBRDF_NODE_TYPE_BLANK)
+    object_str = strdup ((char *) librdf_node_get_blank_identifier (node));
+  else
+    object_str = NULL;
+
+  return (object_str);
+}
+
+/*----------------------------------------------------------------------
+  Model_getObjectAsString
+  returns the object as a string, for a given subject and predicate.
+  Caller must free the returned string.
+  ----------------------------------------------------------------------*/
+static char* Model_getObjectAsString (librdf_world *world, librdf_model *model,
+				      librdf_node *subject, char *predicate_url)
+{
+  librdf_node *predicate, *node;
+  librdf_iterator *iterator;
+  librdf_uri *uri;
+
+  char *object_str;
+
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) predicate_url);
+  iterator = librdf_model_get_targets (model, subject, predicate);
+  librdf_free_node (predicate);
+  if (librdf_iterator_have_elements (iterator))
+    {
+      librdf_node_type type;
+      
+      node = (librdf_node *) librdf_iterator_get_object (iterator);
+      type = librdf_node_get_type (node);
+      /* why is this uri being parsed as a literal? */
+      if (type == LIBRDF_NODE_TYPE_LITERAL)
+	object_str = strdup ((char *) librdf_node_get_literal_value (node));
+      else
+	{
+	  uri = librdf_node_get_uri (node);
+	  object_str = (char *) librdf_uri_to_string (uri);
+	}
+    }
+  else
+    object_str = NULL;
+  librdf_free_iterator (iterator);
+
+  return (object_str);
+}
+
+/*----------------------------------------------------------------------
+  Model_getItemType
+  Returns the type of a given item
+  ----------------------------------------------------------------------*/
+static BookmarkElements Model_getItemType (int ref, char *subject_url)
+{
+  char   *uri_str;
+  BookmarkElements bm_type = BME_UNKNOWN;
+
+  librdf_world *world;
+  librdf_model *model; 
+  librdf_storage *storage;
+  librdf_node *subject;
+  librdf_node *predicate;
+  librdf_node *object;
+  librdf_stream* stream;
+  librdf_statement *partial_statement;
+
+  if (!BM_Context_get (ref, &world, &model, &storage))
+    return BME_UNKNOWN;
+
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) subject_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_TYPE);
+  object = librdf_model_get_target (model, subject, predicate);
+
+  if (!object)
+    {
+      /* maybe we got a blank node, try a different subject */
+      librdf_free_node (subject);
+      subject = librdf_new_node_from_blank_identifier  (world, (unsigned char *) subject_url);
+      object = librdf_model_get_target (model, subject, predicate);
+    }
+
+  if (!object)
+    {
+      librdf_free_node (subject);
+      librdf_free_node (predicate);
+      return BME_UNKNOWN;
+    }
+  
+  librdf_free_node (object);
+  object = NULL;
+
+  partial_statement = librdf_new_statement (world);
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+
+  stream = librdf_model_find_statements (model, partial_statement);
+  librdf_free_statement (partial_statement);
+  
+   while (!librdf_stream_end (stream))
+    {
+      librdf_statement *statement = librdf_stream_get_object (stream);
+
+      if(!statement) 
+	{
+	  fprintf(stderr, "librdf_stream_next returned NULL\n");
+	  break;
+	}
+
+      object = librdf_statement_get_object (statement);
+      uri_str = Model_getNodeAsString (object);
+      
+      if (!strcmp (uri_str, BMNS_TOPIC))
+	bm_type = BME_TOPIC;
+      else if (!strcmp (uri_str, BMNS_BOOKMARK))
+	bm_type = BME_BOOKMARK;
+      else if (!strcmp (uri_str, BMNS_SEPARATOR))
+	bm_type = BME_SEPARATOR;
+      TtaFreeMemory (uri_str);
+
+      if (bm_type != BME_UNKNOWN)
+	break;
+      
+      librdf_stream_next (stream);
+    }
+   
+   librdf_free_stream (stream);
+
+  return bm_type;
+}
+
+
+/*----------------------------------------------------------------------
+  Model_getItemInfo
+  Fills a bookmark item with all info we're interested in from the model.
+  ----------------------------------------------------------------------*/
+static void Model_getItemInfo (int ref, librdf_node *subject,
+			       BookmarkP item)
+{
+  librdf_world *world;
+  librdf_model *model; 
+  librdf_storage *storage;
+
+  if (!BM_Context_get (ref, &world, &model, &storage))
+    return;
+
+  /* 
+  ** query the model to get all the info we need to sort and display the
+  ** bookmarks.
+  */
+  
+  if (item->bm_type == BME_SEEALSO)
+    {
+      /* Get the title and nickname. We don't use subject because we are looking
+       for a different property, associated rather to self_url */
+      if (item->self_url && item->blank_id)
+	{
+	  librdf_node *node;
+
+	  node = librdf_new_node_from_blank_identifier (world, (unsigned char *) item->blank_id);
+	  item->title = Model_getObjectAsString (world, model, node, 
+						 RDFS_LABEL);
+	  if (!item->title)
+	    item->title = Model_getObjectAsString (world, model, node, 
+						   DC1NS_TITLE);
+	  item->nickname = Model_getObjectAsString (world, model, node, 
+						    BMNS_NICKNAME);
+	  librdf_free_node (node);
+	}
+    }
+  else if (item->bm_type == BME_TOPIC || item->bm_type == BME_BOOKMARK)
+    {
+      if (item->bm_type == BME_TOPIC)
+	{
+	  item->parent_url = Model_getObjectAsString (world, model, subject,
+						      BMNS_SUBTOPICOF);
+	  item->collapsed = Model_queryState (ref, item->self_url,
+					      BMNS_COLLAPSED);
+	}
+      else if (item->bm_type == BME_BOOKMARK)
+	{
+	  List *dump = NULL;
+	  
+	  item->bm_type = BME_BOOKMARK;
+	  /* JK: Get a list of all the topics to which this bookmark belongs */
+	  Model_dumpBookmarkTopics (ref, item, &dump);
+	  item->parent_url_list = dump;       
+	  item->parent_url = NULL;
+	  item->bookmarks = Model_getObjectAsString (world, model, subject, 
+						     BMNS_BOOKMARKS);
+	}
+      
+      /* modified  */
+      item->modified = Model_getObjectAsString (world, model, subject, DC1NS_DATE);
+      /* title */
+      item->title = Model_getObjectAsString (world, model, subject, DC1NS_TITLE);
+    }
+}
+
+/*----------------------------------------------------------------------
+  Model_addItemToCollection
+  Adds the item identified by item_url to the collection associated
+  to topic_url.
+  Returns TRUE if succesful.
+  @@ Add instructions to add it to the end of before a given element
+  @@ check what happens when the collection is empty
+  @@ Add new function to exchange one item too (for reorganizing)
+  ----------------------------------------------------------------------*/
+static ThotBool Model_addItemToCollection (librdf_world *world, librdf_model *model, 
+					   char *topic_url, char *item_url)
+{
+  librdf_node* subject;
+  librdf_node* predicate;
+  librdf_node* object;
+  librdf_statement *partial_statement;
+  char *tmp_url;
+  char *subject_url;
+  ThotBool res;
+
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) topic_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_COLLECTION);
+  object = librdf_model_get_target (model, subject, predicate);
+
+  if (!object)
+    {
+      librdf_free_node (subject);
+      librdf_free_node (predicate);
+      return FALSE;
+    }
+
+  tmp_url = Model_getNodeAsString (object);
+  librdf_free_node (object);
+  librdf_free_node (predicate);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_REST);
+  subject_url = NULL;
+
+  while (tmp_url && strcmp (tmp_url, RDF_NIL))
+    {
+      librdf_free_node (subject);
+      if (subject_url)
+	TtaFreeMemory (subject_url);
+      subject_url = tmp_url;
+      subject = librdf_new_node_from_blank_identifier (world, (unsigned char *) subject_url);
+      object = librdf_model_get_target (model, subject, predicate);
+      if (object)
+	{
+	  tmp_url = Model_getNodeAsString (object);
+	  librdf_free_node (object);
+	}
+      else
+	tmp_url = NULL;
+    }
+
+  /* we found the last one */
+  if (subject_url && tmp_url)
+    {
+      librdf_node * new_bnode;
+
+      res = TRUE;
+      /* create the blank node that will be associated with the item */
+      new_bnode = librdf_new_node_from_blank_identifier (world, NULL);
+
+      /* delete the previous statement that says NIL */
+      object = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_NIL);
+      partial_statement = librdf_new_statement (world);
+      /* subject and predicate came from the above while */
+      librdf_statement_set_subject (partial_statement, subject);
+      librdf_statement_set_predicate (partial_statement, predicate);
+      librdf_statement_set_object (partial_statement, object);
+      if (librdf_model_contains_statement (model, partial_statement))
+	librdf_model_remove_statement (model, partial_statement);
+      librdf_free_statement (partial_statement);
+
+      /* make the rest point to the new blank node */
+      subject = librdf_new_node_from_blank_identifier (world, (unsigned char *) subject_url);
+      predicate = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_REST);
+      object = librdf_new_node_from_node  (new_bnode);
+      add_statement (world, model, subject, predicate, object);
+
+      /* add the collection statements refering to the blank node */
+      subject = librdf_new_node_from_node (new_bnode);
+      predicate = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_FIRST);
+      object = librdf_new_node_from_uri_string (world, (unsigned char *) item_url);
+      add_statement (world, model, subject, predicate, object);
+
+      subject = new_bnode;
+      predicate = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_REST);
+      object = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_NIL);
+      add_statement (world, model, subject, predicate, object);
+    }
+  else
+    res = FALSE;
+
+  return res;
+}
+
+/*----------------------------------------------------------------------
+  BM_deleteItemCollection
+  Deletes the item identified by item_url from the collection associated
+  to topic_url.
+  Returns TRUE if succesful.
+  @@ What to do when we have deleted everything in the collection
+  ----------------------------------------------------------------------*/
+ThotBool BM_deleteItemCollection (int ref, char *topic_url, char *item_url, 
+				  ThotBool *isBlankNode, ThotBool cleanAll)
+{
+  ThotBool res;
+
+  librdf_world *world;
+  librdf_model *model;
+  librdf_storage *storage;
+
+  librdf_node* subject;
+  librdf_node* predicate;
+  librdf_node* object;
+  librdf_node* predicate_f;
+  librdf_node* predicate_r;
+  librdf_node* object_r;
+  librdf_statement *partial_statement;
+
+  char *cur_blank_node_id;
+  char *subject_url;
+
+  if (!BM_Context_get (ref, &world, &model, &storage))
+    return FALSE;
+
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) topic_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_COLLECTION);
+  object = librdf_model_get_target (model, subject, predicate);
+  librdf_free_node (predicate);
+
+  if (!object)
+    {
+      librdf_free_node (subject);
+      return FALSE;
+    }
+
+  cur_blank_node_id = Model_getNodeAsString (object);
+  librdf_free_node (object);
+  
+  if (!strcmp (cur_blank_node_id, RDF_NIL))
+    {
+      /* the collection is empty */
+      librdf_free_node (subject);
+      return FALSE;
+    }
+
+  predicate_f = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_FIRST);
+  predicate_r = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_REST);
+
+  subject_url = NULL;
+  object_r = NULL;
+  /* find the blank node that points to the item and store it in cur_blank_node_id */
+  while (cur_blank_node_id && strcmp (cur_blank_node_id, RDF_NIL))
+    {
+      librdf_free_node (subject);
+      if (subject_url)
+	TtaFreeMemory (subject_url);
+      subject_url = cur_blank_node_id;
+      subject = librdf_new_node_from_blank_identifier (world, (unsigned char *) subject_url);
+      object = librdf_model_get_target (model, subject, predicate_f);
+      if (object)
+	{
+	  cur_blank_node_id = Model_getNodeAsString (object);
+	  librdf_free_node (object);
+	  if (!strcmp (cur_blank_node_id, item_url))
+	    {
+	      /* found copy the next object */
+	      object_r = librdf_model_get_target (model, subject, predicate_r);
+	      TtaFreeMemory (cur_blank_node_id);
+	      break;
+	    }
+	  else
+	    {
+	      TtaFreeMemory (cur_blank_node_id);
+	      object = librdf_model_get_target (model, subject, predicate_r);
+	      if (object)
+		cur_blank_node_id = Model_getNodeAsString (object);
+	      else 
+		cur_blank_node_id = NULL;
+	      librdf_free_node (object);
+	    }
+	}
+      else
+	cur_blank_node_id = NULL;
+    }
+
+  /* we found the entry, now remove it from the list */
+  if (object_r)
+    {
+      partial_statement = librdf_new_statement (world);
+
+      /* supress both first and rest properties from this statement */
+
+      /* remove rest */
+      librdf_statement_set_subject (partial_statement, subject);
+      predicate = librdf_new_node_from_node (predicate_r);
+      librdf_statement_set_predicate (partial_statement, predicate);
+      object = librdf_new_node_from_node (object_r);
+      librdf_statement_set_object (partial_statement, object);
+      librdf_model_remove_statement (model, partial_statement);
+      librdf_statement_clear (partial_statement);
+
+      /* remove first */
+      subject = librdf_new_node_from_blank_identifier (world, (unsigned char *) subject_url);
+      object = librdf_model_get_target (model, subject, predicate_f);
+      if (librdf_node_get_type (object) == LIBRDF_NODE_TYPE_BLANK)
+	*isBlankNode = TRUE;
+      else
+	*isBlankNode = FALSE;
+      librdf_statement_set_subject (partial_statement, subject);
+      predicate = librdf_new_node_from_node (predicate_f);
+      librdf_statement_set_predicate (partial_statement, predicate);
+      librdf_statement_set_object (partial_statement, object);
+      librdf_model_remove_statement (model, partial_statement);
+      librdf_statement_clear (partial_statement);
+
+      /* remove all the statements associated with this node */
+      if (cleanAll)
+	BM_deleteItem (ref, subject_url, TRUE);
+
+      /* find the previous collection statement */
+      subject = NULL;
+      object = librdf_new_node_from_blank_identifier (world, (unsigned char *) subject_url);
+      subject = librdf_model_get_source (model, predicate_r, object);
+
+      /* remove the previous rest statement and make a new one pointing to
+	 the rest statement of the one we just removed */
+      if (subject)
+	{
+	  librdf_node *tmp;
+	  tmp = librdf_new_node_from_node (subject);
+	  librdf_statement_set_subject (partial_statement, tmp);
+	  predicate = librdf_new_node_from_node (predicate_r);
+	  librdf_statement_set_predicate (partial_statement, predicate);
+	  librdf_statement_set_object (partial_statement, object);
+	  librdf_model_remove_statement (model, partial_statement);
+	  librdf_statement_clear (partial_statement);
+
+	  predicate = librdf_new_node_from_node (predicate_r);
+	  add_statement (world, model, subject, predicate, object_r);
+	}
+      else
+	{
+	  /* no subject, check if it's the first member of the collection */
+	  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_COLLECTION);
+	  subject = librdf_model_get_source (model, predicate, object);
+	  if (subject)
+	    {
+	      librdf_node *tmp;
+	      tmp = librdf_new_node_from_node (subject);
+	      librdf_statement_set_subject (partial_statement, tmp);
+	      librdf_statement_set_predicate (partial_statement, predicate);
+	      librdf_statement_set_object (partial_statement, object);
+	      librdf_model_remove_statement (model, partial_statement);
+	      librdf_statement_clear (partial_statement);
+	      
+	      predicate = librdf_new_node_from_uri_string (world, 
+							   (unsigned char *) BMNS_COLLECTION);
+	      add_statement (world, model, subject, predicate, object_r);
+	    }
+	  else 	/* nothing found. It must be an error */
+	    {
+	    librdf_free_node (object);
+	    librdf_free_node (predicate);
+	    }
+	}
+      librdf_free_statement (partial_statement);
+    }
+  else
+    {
+      librdf_free_node (subject);
+      res = FALSE;
+    }
+
+  librdf_free_node (predicate_f);
+  librdf_free_node (predicate_r);
+
+  return res;
+}
+
+/*----------------------------------------------------------------------
+  Model_collectionContainsItem
+  Returns TRUE if the collection starting at root contains an item
+  with the URL given as a parameter.
+  ----------------------------------------------------------------------*/
+static ThotBool Model_collectionContainsItem (int ref, librdf_node *root, char *url)
+{
+  ThotBool res = FALSE;
+  librdf_world *world;
+  librdf_model *model;
+  librdf_storage *storage;
+
+  librdf_node *object;
+
+  librdf_node *predicate_f;
+  librdf_node *predicate_r;
+  librdf_node *current;
+  
+  char *tmp_url;
+
+  if (!BM_Context_get (ref, &world, &model, &storage))
+    return FALSE;
+
+  if (!root || !url || url[0] == EOS)
+    return FALSE;
+
+  tmp_url = Model_getNodeAsString (root);
+  if (!strcmp (tmp_url, RDF_NIL))
+    {
+      /* empty collection */
+      TtaFreeMemory (tmp_url);
+      return FALSE;
+    }
+  TtaFreeMemory (tmp_url);
+
+  predicate_f = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_FIRST);
+  predicate_r = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_REST);
+  
+  current = librdf_new_node_from_node (root);
+  tmp_url = NULL;
+  while (current)
+    {
+      object = librdf_model_get_target (model, current, predicate_f);
+      tmp_url = Model_getNodeAsString (object);
+      librdf_free_node (object);
+      if (!strcmp (tmp_url, url))
+	{
+	  librdf_free_node (current);
+	  res = TRUE;
+	  break;
+	}
+      TtaFreeMemory (tmp_url);
+      tmp_url = NULL;
+      object = librdf_model_get_target (model, current, predicate_r);
+      librdf_free_node (current);
+      if (object)
+	{
+	  tmp_url = Model_getNodeAsString (object);
+	  if (!strcmp (tmp_url, RDF_NIL))
+	    {
+	      /* end of collection, nothing found */
+	      librdf_free_node (object);
+	      break;
+	    }
+	  else
+	    {
+	      TtaFreeMemory (tmp_url);
+	      tmp_url = NULL;
+	      current = object;
+	    }
+	}
+      else
+	current = NULL;
+    }
+
+  if (tmp_url)
+    TtaFreeMemory (tmp_url);
+
+  librdf_free_node (predicate_f);
+  librdf_free_node (predicate_r);
+
+  return res;
+}
+
+/*----------------------------------------------------------------------
+  BM_intializeCollection
+  Adds the first and rest items to a new collection
+  ----------------------------------------------------------------------*/
+ThotBool BM_initializeCollection (int ref, BookmarkP new_item)
+{
+  librdf_node *new_item_node;
+  ThotBool res = FALSE;
+
+  librdf_world *world;
+  librdf_model *model;
+  librdf_storage *storage;
+
+  librdf_node *subject;
+  librdf_node *predicate;
+  librdf_node *object;
+  librdf_statement *partial_statement;
+
+  librdf_node *rest = rest;
+
+  if (new_item->bm_type != BME_TOPIC)  
+    return FALSE;
+
+  if (!BM_Context_get (ref, &world, &model, &storage))
+    return FALSE;
+
+  /* add the collection statement and open state */
+  new_item_node = librdf_new_node_from_uri_string (world, 
+						   (unsigned char *) new_item->self_url);
+  
+  /* do the collection statements exist already for this item ? */
+  predicate = librdf_new_node_from_uri_string (world,  (unsigned char *) BMNS_COLLECTION);
+  object = librdf_model_get_target (model, new_item_node, predicate);
+  
+  if (!object)
+    {
+      /* the related topic collection statements don't exist yet,
+	 create them */
+      partial_statement = librdf_new_statement (world);
+      
+      subject = librdf_new_node_from_node (new_item_node);
+      /* predicate was created above */
+      object = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_NIL);
+      librdf_statement_set_subject (partial_statement, subject);
+      librdf_statement_set_predicate (partial_statement, predicate);
+      librdf_statement_set_object (partial_statement, object);
+      librdf_model_add_statement (model, partial_statement);
+      librdf_statement_clear (partial_statement);
+      
+      subject = librdf_new_node_from_node (new_item_node);
+      predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_STATE);
+      object = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_EXPANDED);
+      librdf_statement_set_subject (partial_statement, subject);
+      librdf_statement_set_predicate (partial_statement, predicate);
+      librdf_statement_set_object (partial_statement, object);
+      librdf_model_add_statement (model, partial_statement);
+      librdf_free_statement (partial_statement);
+      res = TRUE;
+    }
+  else
+    {
+      librdf_free_node (predicate);
+      librdf_free_node (object);
+      res = FALSE;
+    }
+
+  librdf_free_node (new_item_node);
+
+  return res;
+}
+
+/*----------------------------------------------------------------------
+  BM_addItemToCollection
+  Adds item_url to the collection associated to topic_url.
+  If an previous_item_url parameter is given, the new item is inserted
+  at that point in the collection; if this parameter is NULL, the
+  new item is added at the bottom of the collection.
+  isBlankNode is used to know if we're pointing to a separator.
+  Returns TRUE if succesful.
+  @@ see if we can use librdf_node_equals (librdf_node* first_node, librdf_node* second_node);
+  (non 0 if equal) to simplify
+  @@ See how to check if an item existed already in the collection before
+  adding it. Probably with another function, getting a stream with "first ="
+  ----------------------------------------------------------------------*/
+ThotBool BM_addItemToCollection (int ref, char *topic_url, 
+				 char *previous_item_url,
+				 BookmarkP new_item,
+				 ThotBool addFirst)
+{
+  ThotBool res = FALSE;
+
+  librdf_world *world;
+  librdf_model *model;
+  librdf_storage *storage;
+
+  librdf_node *subject;
+  librdf_node *predicate;
+  librdf_node *object;
+  librdf_statement *partial_statement;
+
+  librdf_node *predicate_f;
+  librdf_node *predicate_r;
+  librdf_node *root;
+  librdf_node *current;
+
+  librdf_node *rest = rest;
+
+  char *tmp_url;
+
+  if (!BM_Context_get (ref, &world, &model, &storage))
+    return FALSE;
+
+  if (!topic_url || topic_url[0] == EOS)
+    return FALSE;
+
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) topic_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_COLLECTION);
+  root = librdf_model_get_target (model, subject, predicate);
+  librdf_free_node (subject);
+  librdf_free_node (predicate);
+
+  if (!root)
+    return FALSE;
+
+  predicate_f = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_FIRST);
+  predicate_r = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_REST);
+
+  tmp_url = Model_getNodeAsString (root);
+  if (!strcmp (tmp_url, RDF_NIL))
+    {
+      /* empty collection, add it as the first one */
+      addFirst = TRUE;
+    }
+  TtaFreeMemory (tmp_url);
+
+  /* if the collection already contains this item, skip it */
+  if (Model_collectionContainsItem (ref, root, new_item->self_url))
+    {
+      librdf_free_node (root);
+      librdf_free_node (predicate_f);
+      librdf_free_node (predicate_r);
+      return FALSE;
+    }
+
+  if (!addFirst) /* browse the collection to find the previous node */
+    {
+      current = librdf_new_node_from_node (root);
+      while (current)
+	{
+	  if (previous_item_url) /* find a given node */
+	    {
+	      object = librdf_model_get_target (model, current, predicate_f);
+	      if (object)
+		{
+		  tmp_url = Model_getNodeAsString (object);
+		  librdf_free_node (object);
+		  if (!strcmp (tmp_url, previous_item_url))
+		    {
+		      /* found ! */
+		      TtaFreeMemory (tmp_url);
+		      break; 
+		    }
+		  else
+		    {
+		      /* get the next one */
+		      TtaFreeMemory (tmp_url);
+		      object = librdf_model_get_target (model, current, predicate_r);
+		      librdf_free_node (current);
+		      current = object;
+		      tmp_url = Model_getNodeAsString (object);
+		      if (!strcmp (tmp_url, RDF_NIL))
+			{
+			  /* this is the last node. we didn't find it */
+			  TtaFreeMemory (tmp_url);
+			  librdf_free_node (current);
+			  current = NULL;
+			  break; 
+			}
+		      else
+			TtaFreeMemory (tmp_url);
+		    }
+		}
+	      else /* invalid collection */
+		{
+		  librdf_free_node (current);
+		  current = NULL;
+		  break;
+		}
+	    }
+	  else  /* get the last item */
+	    {
+	      object = librdf_model_get_target (model, current, predicate_r);
+	      if (object)
+		{
+		  tmp_url = Model_getNodeAsString (object);
+		  if (!strcmp (tmp_url, RDF_NIL))
+		    {
+		      /* found the item */
+		      librdf_free_node (object);
+		      TtaFreeMemory (tmp_url);
+		      break;
+		    }
+		  else
+		    {
+		      librdf_free_node (current);
+		      current = object;
+		    }
+		}
+	      else
+		{
+		  /* invalid collection */
+		  librdf_free_node (current);
+		  current = NULL;
+		  break;
+		}
+	    }
+	}
+    }
+
+  /* at this point current contains the previous node or NULL if nothing
+   was found */
+  
+  if (addFirst)
+    {
+      librdf_node *new_item_node;
+      /* supress the statement pointing to the first item */
+      
+      /* make the new statement's rest point to the previous one */      
+      partial_statement = librdf_new_statement (world);
+      new_item_node = librdf_new_node_from_blank_identifier (world, NULL);
+      
+      /* add the first statement pointing to the new item */
+      if (new_item->bm_type == BME_SEPARATOR)
+	object = librdf_new_node_from_blank_identifier (world, 
+							(unsigned char *) new_item->self_url);
+      else
+	object = librdf_new_node_from_uri_string (world, 
+						  (unsigned char *) new_item->self_url);
+
+      subject = librdf_new_node_from_node (new_item_node);
+      predicate = librdf_new_node_from_node (predicate_f);
+      librdf_statement_set_subject (partial_statement, subject);
+      librdf_statement_set_predicate (partial_statement, predicate);
+      librdf_statement_set_object (partial_statement, object);
+      librdf_model_add_statement (model, partial_statement);
+      librdf_statement_clear (partial_statement);
+
+      /* add the rest statement pointing to what was the root before */
+      subject = librdf_new_node_from_node (new_item_node);
+      predicate = librdf_new_node_from_node (predicate_r);
+      object = librdf_new_node_from_node (root);
+      librdf_statement_set_subject (partial_statement, subject);
+      librdf_statement_set_predicate (partial_statement, predicate);
+      librdf_statement_set_object (partial_statement, object);
+      librdf_model_add_statement (model, partial_statement);
+
+      /* delete the previous statement saying that root was the beginning of
+	 the collection */
+      subject = librdf_new_node_from_uri_string (world, (unsigned char *) topic_url);
+      predicate = librdf_new_node_from_uri_string (world, 
+						   (unsigned char *) BMNS_COLLECTION);
+      object = librdf_new_node_from_node (root);
+      librdf_statement_set_subject (partial_statement, subject);
+      librdf_statement_set_predicate (partial_statement, predicate);
+      librdf_statement_set_object (partial_statement, object);
+      librdf_model_remove_statement (model, partial_statement);
+      librdf_statement_clear (partial_statement);
+      
+      /* and make the new node the root of the collection */
+      subject = librdf_new_node_from_uri_string (world, (unsigned char *) topic_url);
+      predicate = librdf_new_node_from_uri_string (world,
+						   (unsigned char *) BMNS_COLLECTION);
+      librdf_statement_set_subject (partial_statement, subject);
+      librdf_statement_set_predicate (partial_statement, predicate);
+      librdf_statement_set_object (partial_statement, new_item_node);
+      librdf_model_add_statement (model, partial_statement);
+
+      librdf_free_statement (partial_statement);
+      res = TRUE;
+    }
+  else if (current)
+    { /* add it after the previous item or to the bottom */
+      librdf_node *new_item_node;
+
+      /* make the new statement's rest point to the previous one */      
+      partial_statement = librdf_new_statement (world);
+      new_item_node = librdf_new_node_from_blank_identifier (world, NULL);
+  
+      /* add the first statement pointing to the new item */
+      if (new_item->bm_type == BME_SEPARATOR)
+	object = librdf_new_node_from_blank_identifier (world, 
+							(unsigned char *) new_item->self_url);
+      else
+	object = librdf_new_node_from_uri_string (world, 
+						  (unsigned char *) new_item->self_url);
+
+      subject = librdf_new_node_from_node (new_item_node);
+      predicate = librdf_new_node_from_node (predicate_f);
+      librdf_statement_set_subject (partial_statement, subject);
+      librdf_statement_set_predicate (partial_statement, predicate);
+      librdf_statement_set_object (partial_statement, object);
+      librdf_model_add_statement (model, partial_statement);
+      librdf_statement_clear (partial_statement);
+
+      /* add the rest statement pointing to the previous's rest */
+      subject = librdf_new_node_from_node (new_item_node);
+      predicate = librdf_new_node_from_node (predicate_r);
+      object = librdf_model_get_target (model, current, predicate_r);
+      librdf_statement_set_subject (partial_statement, subject);
+      librdf_statement_set_predicate (partial_statement, predicate);
+      librdf_statement_set_object (partial_statement, object);
+      librdf_model_add_statement (model, partial_statement);
+      librdf_statement_clear (partial_statement);
+
+      /* delete the previous rest statement */
+      subject = librdf_new_node_from_node (current);
+      predicate = librdf_new_node_from_node (predicate_r);
+      object = librdf_model_get_target (model, current, predicate_r);
+      librdf_statement_set_subject (partial_statement, subject);
+      librdf_statement_set_predicate (partial_statement, predicate);
+      librdf_statement_set_object (partial_statement, object);
+      librdf_model_remove_statement (model, partial_statement);
+      librdf_statement_clear (partial_statement);
+
+      /* and make the previous node rest point to the new one */
+      subject = librdf_new_node_from_node (current);
+      predicate = librdf_new_node_from_node (predicate_r);
+      librdf_statement_set_subject (partial_statement, subject);
+      librdf_statement_set_predicate (partial_statement, predicate);
+      librdf_statement_set_object (partial_statement, new_item_node);
+      librdf_model_add_statement (model, partial_statement);
+
+      librdf_free_statement (partial_statement);
+      librdf_free_node (current);
+      res = TRUE;
+    }
+  
+  if (res && new_item->bm_type == BME_TOPIC)
+    BM_initializeCollection (ref, new_item);
+  
+  librdf_free_node (root);
+  librdf_free_node (predicate_f);
+  librdf_free_node (predicate_r);
+
+  return res;
+}
+
+/*----------------------------------------------------------------------
+  Model_removeItemIfDisplaced 
+  Removes the corresponding collection entries of an item if the item
+  has changed topics.
+  ----------------------------------------------------------------------*/
+static void Model_removeItemIfDisplaced (int ref, librdf_statement *statement, BookmarkP me)
+{
+  librdf_world *world;
+  librdf_model *model; 
+  librdf_storage *storage;
+
+  ThotBool isBlankNode;
+  librdf_node *object = NULL;
+  librdf_uri *rdf_uri;
+  char *uri_str;
+  List *cur;
+
+  if (!BM_Context_get (ref, &world, &model, &storage))
+    return;
+
+  object = librdf_statement_get_object (statement);
+  rdf_uri = librdf_node_get_uri (object);	      
+  uri_str = (char *) librdf_uri_to_string (rdf_uri);
+
+  if (me->parent_url)
+    {
+      if (strcmp (uri_str, me->parent_url))
+	BM_deleteItemCollection (ref, uri_str, me->self_url,
+				 &isBlankNode, FALSE);
+    }
+  else
+    {
+      cur = me->parent_url_list;
+      while (cur)
+	{
+	  char *tmp;
+
+	  tmp = (char *) cur->object;
+	  
+	  if (!strcmp (uri_str, tmp))
+	    break;
+	  
+	  cur = cur->next;	      
+	}
+      if (!cur) /* nothing found, delete it */
+	BM_deleteItemCollection (ref, uri_str, me->self_url,
+				 &isBlankNode, TRUE);
+    }
+  free (uri_str);
+}
+
+/*----------------------------------------------------------------------
+  AddBookmarkTopicList
+  ----------------------------------------------------------------------*/
+static void AddBookmarkTopicList (int ref, BookmarkP me)
+
+{
+  librdf_world *world;
+  librdf_model *model; 
+  librdf_storage *storage;
+
+  List *cur;
+  char *url;
+  char *parent_url;
+  librdf_statement *statement;
+  librdf_node *subject, *object, *predicate;
+
+  if (!BM_Context_get (ref, &world, &model, &storage))
+    return;
+
+  url = me->self_url;
+  cur = me->parent_url_list;
+  while (cur) 
+    {
+      subject = librdf_new_node_from_uri_string (world,  (unsigned char *) url);
+      statement = librdf_new_statement (world);
+      librdf_statement_set_subject (statement, subject);
+      predicate = librdf_new_node_from_uri_string (world,  (unsigned char *) BMNS_HASTOPIC);
+      librdf_statement_set_predicate (statement, predicate);
+      parent_url = (char *) cur->object;
+      object = librdf_new_node_from_uri_string (world, (unsigned char *) parent_url);
+      librdf_statement_set_object (statement, object);
+      librdf_model_add_statement (model, statement);
+      librdf_free_statement (statement);
+      /* add the item to the collection */
+      BM_addItemToCollection (ref, parent_url, NULL, me, FALSE);
+      cur = cur->next;
+    }  
+}
+
 
 /*
 ** Public API
 */
+/*----------------------------------------------------------------------
+  BM_generateCollection
+  Given a list of sorted bookmark items, generates an equivalent
+  collection.
+  ----------------------------------------------------------------------*/
+ThotBool BM_generateCollection (int ref, List *items)
+{
+  List *cur;
+  BookmarkP me;
+
+  cur = items;
+
+  if (!cur)
+    return FALSE;
+
+  /* add the root collection */
+  me = (BookmarkP) cur->object;
+  BM_initializeCollection (ref, me);
+
+  cur = cur->next;
+  while (cur)
+    {
+      me = (BookmarkP) cur->object;
+      BM_addItemToCollection (ref, me->parent_url, NULL, me, FALSE);
+      cur = cur->next;
+    }
+
+  return TRUE;
+}
 
 /*----------------------------------------------------------------------
-  BM_save
+  BM_tmpsave
   Gets the temporary file name of a downloaded bookmark file and
   save the model to it.
   ----------------------------------------------------------------------*/
@@ -756,11 +1906,36 @@ ThotBool BM_save (int ref, char *filename)
 }
 
 /*----------------------------------------------------------------------
+  BM_saveOrModify
+  In function of the type of document, either saves it or
+  just updates the modified flag
+  ----------------------------------------------------------------------*/
+ThotBool BM_saveOrModify (int ref, Document doc)
+{
+  ThotBool res;
+
+  /* save the model */
+  if (ref == 0)
+    res = BM_save (ref, GetLocalBookmarksFile ());
+  else
+    {
+      /* save the modified model in the temporary file */
+      if (BM_tmpsave (ref))
+	TtaSetDocumentModified (doc);
+      res = TtaIsDocumentModified (doc);
+    }
+
+  return res;
+}
+
+/*----------------------------------------------------------------------
   BM_parse
   Parses a bookmark file into the model.
   ----------------------------------------------------------------------*/
-void BM_parse (int ref, char *filename, char *base)
+ThotBool BM_parse (int ref, char *filename, char *base)
 {
+  ThotBool res = FALSE;
+
   if (filename && *filename)
     {
       char *file_uri, *base_uri;
@@ -769,7 +1944,7 @@ void BM_parse (int ref, char *filename, char *base)
       librdf_storage *storage;
       
       if (!BM_Context_get (ref, &world, &model, &storage))
-	return;
+	return FALSE;
 
       /* redland expects a file URI */
       if (!IsFilePath (filename))
@@ -780,39 +1955,14 @@ void BM_parse (int ref, char *filename, char *base)
 	base_uri = ANNOT_MakeFileURL ((const char *) base);
       else
 	base_uri = base;
-      parse_file (world, model, file_uri, base_uri, FALSE);
+      res = parse_file (world, model, file_uri, base_uri, FALSE);
       if (filename != file_uri)
 	TtaFreeMemory (file_uri);
       if (base != base_uri)
 	TtaFreeMemory (base_uri);
     }
-}
 
-/*----------------------------------------------------------------------
-  AddBookmarkTopicList
-  ----------------------------------------------------------------------*/
-static void AddBookmarkTopicList (librdf_world *world, librdf_model *model, 
-				  char *url, List *list)
-{
-  List *cur = list;
-  char *parent_url;
-  librdf_statement *statement;
-  librdf_node *subject, *object, *predicate;
-
-  while (cur) 
-    {
-      subject = librdf_new_node_from_uri_string (world, url);
-      statement = librdf_new_statement (world);
-      librdf_statement_set_subject (statement, subject);
-      predicate = librdf_new_node_from_uri_string (world, BMNS_HASTOPIC);
-      librdf_statement_set_predicate (statement, predicate);
-      parent_url = (char *) cur->object;
-      object = librdf_new_node_from_uri_string (world, parent_url);
-      librdf_statement_set_object (statement, object);
-      librdf_model_add_statement (model, statement);
-      librdf_free_statement (statement);
-      cur = cur->next;
-    }  
+  return res;
 }
 
 
@@ -859,46 +2009,56 @@ ThotBool BM_addBookmark (Document doc, int ref, BookmarkP me)
       /* couldn't create a genid */
       return FALSE;
     }
+
+#ifdef URN
+  /* @@ JK urn test */
+  strcpy (bookmarkid, BM_newURN ());
+#else
   sprintf (bookmarkid, "%s", base_uri);
   sprintf (bookmarkid + strlen (base_uri), template_, genid_counter++);
+#endif /* URN */
 
+  /* complete the bookmark with the value of its url */
+  me->self_url = TtaStrdup (bookmarkid);
+
+  /* add the bookmark to the model */
   /* bookmark type */
-  subject = librdf_new_node_from_uri_string (world, bookmarkid);
-  predicate = librdf_new_node_from_uri_string (world, RDF_TYPE);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) bookmarkid);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_TYPE);
   object =  librdf_new_node_from_uri_string (world,
-					     BMNS_BOOKMARK);
+					     (unsigned char *) BMNS_BOOKMARK);
   add_statement (world, model, subject, predicate, object);
 
   /* topic folders */
   if (me->parent_url_list)
-      AddBookmarkTopicList (world, model, bookmarkid, me->parent_url_list);
+    AddBookmarkTopicList (ref, me);
 
   /* creator */
   tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->author, ISO_8859_1);
-  subject = librdf_new_node_from_uri_string (world, bookmarkid);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_CREATOR);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) bookmarkid);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) DC1NS_CREATOR);
   object =  librdf_new_node_from_literal (world, 
-					  tmp,  /* literal string value */
+					  (unsigned char *) tmp,
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
   TtaFreeMemory (tmp);
 
   /* created */
-  subject = librdf_new_node_from_uri_string (world, bookmarkid);
-  predicate = librdf_new_node_from_uri_string (world, ANNOTNS_CREATED);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) bookmarkid);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) ANNOTNS_CREATED);
   object =  librdf_new_node_from_literal (world, 
-					  me->created,  /* literal string value */
+					  (unsigned char *) me->created, 
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
 
 
   /* modified  */
-  subject = librdf_new_node_from_uri_string (world, bookmarkid);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_DATE);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) bookmarkid);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) DC1NS_DATE);
   object =  librdf_new_node_from_literal (world, 
-					  me->modified,  /* literal string value */
+					  (unsigned char *) me->modified, 
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
@@ -906,10 +2066,10 @@ ThotBool BM_addBookmark (Document doc, int ref, BookmarkP me)
 
   /* title */
   tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->title, ISO_8859_1); 
-  subject = librdf_new_node_from_uri_string (world, bookmarkid);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_TITLE);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) bookmarkid);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) DC1NS_TITLE);
   object =  librdf_new_node_from_literal (world, 
-					  tmp,   /* literal string value */
+					  (unsigned char *) tmp,
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
@@ -917,43 +2077,35 @@ ThotBool BM_addBookmark (Document doc, int ref, BookmarkP me)
 
  /* description */
   tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->description, ISO_8859_1); 
-  subject = librdf_new_node_from_uri_string (world, bookmarkid);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_DESCRIPTION);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) bookmarkid);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) DC1NS_DESCRIPTION);
   object =  librdf_new_node_from_literal (world, 
-					  tmp,   /* literal string value */
+					  (unsigned char *) tmp,
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
   TtaFreeMemory (tmp);
 
   /* bookmarks */
-  subject = librdf_new_node_from_uri_string (world, bookmarkid);
-  predicate = librdf_new_node_from_uri_string (world, BMNS_BOOKMARKS);
-  object =  librdf_new_node_from_uri_string (world, me->bookmarks);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) bookmarkid);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_BOOKMARKS);
+  object =  librdf_new_node_from_uri_string (world, (unsigned char *) me->bookmarks);
   add_statement (world, model, subject, predicate, object);
 
   /* context */
   if (me->context)
     {
-      subject = librdf_new_node_from_uri_string (world, bookmarkid);
-      predicate = librdf_new_node_from_uri_string (world, ANNOTNS_CONTEXT);
+      subject = librdf_new_node_from_uri_string (world, (unsigned char *) bookmarkid);
+      predicate = librdf_new_node_from_uri_string (world, (unsigned char *) ANNOTNS_CONTEXT);
       object =  librdf_new_node_from_literal (world, 
-					      me->context,  /* literal string value */
+					      (unsigned char *) me->context, 
 					      NULL,  /* literal XML language */
 					      0);    /* non 0 if literal is XML */
       add_statement (world, model, subject, predicate, object);
     }
+
   /* save the model */
-  if (ref == 0)
-    BM_save (ref, GetLocalBookmarksFile ());
-  else
-    {
-      ThotBool i;
-      /* save the modified model in the temporary file */
-      if (BM_tmpsave (ref))
-	TtaSetDocumentModified (doc);
-      i = TtaIsDocumentModified (doc);
-    }
+  BM_saveOrModify (ref, doc);
 
   return TRUE;
 }
@@ -997,8 +2149,14 @@ ThotBool BM_addTopic (Document doc, int ref, BookmarkP me, ThotBool generateID)
 	  return FALSE;
 	}
       
+#ifdef URN
+      /* @@ JK urn test */
+      strcpy (topicid, BM_newURN ());
+#else
       sprintf (topicid, "%s", base_uri);
       sprintf (topicid + strlen (base_uri), template_, genid_counter++);
+#endif /* URN */
+      me->self_url = TtaStrdup (topicid);
     }
   else
     strcpy (topicid, me->self_url);
@@ -1025,48 +2183,53 @@ ThotBool BM_addTopic (Document doc, int ref, BookmarkP me, ThotBool generateID)
     }
 
   /* topic type */
-  subject = librdf_new_node_from_uri_string (world, topicid);
-  predicate = librdf_new_node_from_uri_string (world, RDF_TYPE);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) topicid);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_TYPE);
   object =  librdf_new_node_from_uri_string (world,
-					     BMNS_TOPIC);
+					     (unsigned char *) BMNS_TOPIC);
   add_statement (world, model, subject, predicate, object);
 
   /* parent topic */
   if (me->parent_url && me->parent_url[0] != EOS)
     {
-      subject = librdf_new_node_from_uri_string (world, topicid);
-      predicate = librdf_new_node_from_uri_string (world, BMNS_SUBTOPICOF);
+      subject = librdf_new_node_from_uri_string (world, (unsigned char *) topicid);
+      predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_SUBTOPICOF);
       object =  librdf_new_node_from_uri_string (world,
-						 me->parent_url);
+						  (unsigned char *) me->parent_url);
       add_statement (world, model, subject, predicate, object);
+
+      /* @@ JK: thesaurus */
     }
 
   /* creator */
-  tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->author, ISO_8859_1); 
-  subject = librdf_new_node_from_uri_string (world, topicid);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_CREATOR);
+  tmp = (char *)TtaConvertByteToMbs ((unsigned char *) me->author, ISO_8859_1); 
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) topicid);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) DC1NS_CREATOR);
   object =  librdf_new_node_from_literal (world, 
-					  tmp,  /* literal string value */
+					  /* literal string value */
+					  (unsigned char *) tmp,
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
   TtaFreeMemory (tmp);
 
   /* created */
-  subject = librdf_new_node_from_uri_string (world, topicid);
-  predicate = librdf_new_node_from_uri_string (world, ANNOTNS_CREATED);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) topicid);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) ANNOTNS_CREATED);
   object =  librdf_new_node_from_literal (world, 
-					  me->created,  /* literal string value */
+					  /* literal string value */
+					  (unsigned char *) me->created,  
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
 
 
   /* modified  */
-  subject = librdf_new_node_from_uri_string (world, topicid);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_DATE);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) topicid);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) DC1NS_DATE);
   object =  librdf_new_node_from_literal (world, 
-					  me->modified,  /* literal string value */
+					  /* literal string value */
+					  (unsigned char *) me->modified, 
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
@@ -1074,10 +2237,10 @@ ThotBool BM_addTopic (Document doc, int ref, BookmarkP me, ThotBool generateID)
 
   /* title */
   tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->title, ISO_8859_1); 
-  subject = librdf_new_node_from_uri_string (world, topicid);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_TITLE);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) topicid);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) DC1NS_TITLE);
   object =  librdf_new_node_from_literal (world, 
-					  tmp,
+					  (unsigned char *) tmp,
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
@@ -1085,180 +2248,70 @@ ThotBool BM_addTopic (Document doc, int ref, BookmarkP me, ThotBool generateID)
 
  /* description */
   tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->description, ISO_8859_1); 
-  subject = librdf_new_node_from_uri_string (world, topicid);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_DESCRIPTION);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) topicid);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) DC1NS_DESCRIPTION);
   object =  librdf_new_node_from_literal (world, 
-					  tmp,
+					  (unsigned char *) tmp,
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
   TtaFreeMemory (tmp);
 
+  /* add it to the collection */
+  /* JK: @@@ have to do something specific for the root parent */
+  BM_addItemToCollection (ref, me->parent_url, NULL, me, FALSE);
+
   /* save the model */
-  if (ref == 0)
-    BM_save (ref, GetLocalBookmarksFile ());
-  else
-    {
-      ThotBool i;
-      /* save the modified model in the temporary file */
-      BM_tmpsave (ref);
-      TtaSetDocumentModified (doc);
-      i = TtaIsDocumentModified (doc);
-    }
+  BM_saveOrModify (ref, doc);
 
   return (TRUE);
 }
 
 /*----------------------------------------------------------------------
-  Model_getNodeAsStringControl
-  returns the value of a node as a string. It verifies that the value
-  is a literal if the user requested it so.
-  Caller must free the returned string.
+  BM_addSeparator
+  Adds a separator to a storage model. 
   ----------------------------------------------------------------------*/
-static char* Model_getNodeAsStringControl (librdf_node *node, ThotBool isLiteral)
+ThotBool BM_addSeparator (Document doc, int ref, 
+			  char *topic_url, 
+			  char *previous_item_url)
 {
-  librdf_uri *uri;
-  librdf_node_type type;
-  char *object_str;
-
-  type = librdf_node_get_type (node);
-
-  /* @@ JK: some control */
-  if (type == LIBRDF_NODE_TYPE_LITERAL && isLiteral == FALSE)
-      return NULL;
-  else if (type != LIBRDF_NODE_TYPE_LITERAL && isLiteral == TRUE)
-      return NULL;
-
-  if (type == LIBRDF_NODE_TYPE_LITERAL)
-    object_str = strdup (librdf_node_get_literal_value (node));
-  else
-    {
-      uri = librdf_node_get_uri (node);
-      object_str = librdf_uri_to_string (uri);
-    }
-  return (object_str);
-}
-
-/*----------------------------------------------------------------------
-  Model_getNodeAsString
-  returns the value of a node as a string.
-  Caller must free the returned string.
-  ----------------------------------------------------------------------*/
-static char* Model_getNodeAsString (librdf_node *node)
-{
-  librdf_uri *uri;
-  librdf_node_type type;
-  char *object_str;
-
-  type = librdf_node_get_type (node);
-
-  if (type == LIBRDF_NODE_TYPE_LITERAL)
-    object_str = strdup (librdf_node_get_literal_value (node));
-  else
-    {
-      uri = librdf_node_get_uri (node);
-      object_str = librdf_uri_to_string (uri);
-    }
-  return (object_str);
-}
-
-/*----------------------------------------------------------------------
-  Model_getObjectAsString
-  returns the object as a string, for a given subject and predicate.
-  Caller must free the returned string.
-  ----------------------------------------------------------------------*/
-static char* Model_getObjectAsString (librdf_world *world, librdf_model *model,
-				      librdf_node *subject, char *predicate_url)
-{
-  librdf_node *predicate, *node;
-  librdf_iterator *iterator;
-  librdf_uri *uri;
-
-  char *object_str;
-
-  predicate = librdf_new_node_from_uri_string (world, predicate_url);
-  iterator = librdf_model_get_targets (model, subject, predicate);
-  librdf_free_node (predicate);
-  if (librdf_iterator_have_elements (iterator))
-    {
-      librdf_node_type type;
-      
-      node = (librdf_node *) librdf_iterator_get_object (iterator);
-      type = librdf_node_get_type (node);
-      /* why is this uri being parsed as a literal? */
-      if (type == LIBRDF_NODE_TYPE_LITERAL)
-	object_str = strdup (librdf_node_get_literal_value (node));
-      else
-	{
-	  uri = librdf_node_get_uri (node);
-	  object_str = librdf_uri_to_string (uri);
-	}
-    }
-  else
-    object_str = NULL;
-  librdf_free_iterator (iterator);
-
-  return (object_str);
-}
-
-/*----------------------------------------------------------------------
-  Model_getItemInfo
-  Fills a bookmark item with all info we're interested in from the model.
-  ----------------------------------------------------------------------*/
-static void Model_getItemInfo (int ref, librdf_node *subject,
-			       BookmarkP item)
-{
+  BookmarkP me;
+  librdf_node* subject;
+  librdf_node* predicate;
+  librdf_node* object;
   librdf_world *world;
   librdf_model *model; 
   librdf_storage *storage;
+  char *url;
 
   if (!BM_Context_get (ref, &world, &model, &storage))
-    return;
+    return FALSE;
+
+  /* add the separator to the model */
+  subject = librdf_new_node_from_blank_identifier (world, NULL);
+  url = Model_getNodeAsString (subject); /* remember it for adding it to the collection */
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_TYPE);
+  object =  librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_SEPARATOR);
+  add_statement (world, model, subject, predicate, object);
+  
+  /*
+  ** add the separator to the collection 
+  */
+
+  me = Bookmark_new ();
+  me->self_url = url;
+  me->bm_type = BME_SEPARATOR;
+
+  BM_addItemToCollection (ref, topic_url, previous_item_url, me, FALSE);
 
   /* 
-  ** query the model to get all the info we need to sort and display the
-  ** bookmarks.
+  ** save the model 
   */
-  
-  if (item->bm_type == BME_SEEALSO)
-    {
-      /* Get the title and nickname. We don't use subject because we are looking
-       for a different property, associated rather to self_url */
-      if (item->self_url)
-	{
-	  librdf_node *node;
+  BM_saveOrModify (ref, doc);
 
-	  node = librdf_new_node_from_uri_string (world, item->bookmarks);
-	  item->title = Model_getObjectAsString (world, model, node, 
-						 DC1NS_TITLE);
-	  item->nickname = Model_getObjectAsString (world, model, node, 
-						    BMNS_NICKNAME);
-	  librdf_free_node (node);
-	}
-    }
-  else
-    {
-      if (item->bm_type == BME_TOPIC)
-	item->parent_url = Model_getObjectAsString (world, model, subject, 
-						    BMNS_SUBTOPICOF);
-      else if (item->bm_type == BME_BOOKMARK)
-	{
-	  List *dump = NULL;
-	  
-	  item->bm_type = BME_BOOKMARK;
-	  /* JK: Get a list of all the topics to which this bookmark belongs */
-	  Model_dumpBookmarkTopics (ref, item, &dump);
-	  item->parent_url_list = dump;       
-	  item->parent_url = NULL;
-	  item->bookmarks = Model_getObjectAsString (world, model, subject, 
-						     BMNS_BOOKMARKS);
-	}
-      
-      /* modified  */
-      item->modified = Model_getObjectAsString (world, model, subject, DC1NS_DATE);
-      /* title */
-      item->title = Model_getObjectAsString (world, model, subject, DC1NS_TITLE);
-    }
+  Bookmark_free (me);
+
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -1290,13 +2343,13 @@ int Model_dumpAsList (int ref, List **dump, BookmarkElements bm_type)
     return (0);
 
   /* dump the topics */
-  predicate = librdf_new_node_from_uri_string (world, RDF_TYPE);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_TYPE);
   if (bm_type == BME_TOPIC)
     object =  librdf_new_node_from_uri_string (world,
-					       BMNS_TOPIC);
+					       (unsigned char *) BMNS_TOPIC);
   else
     object =  librdf_new_node_from_uri_string (world,
-					       BMNS_BOOKMARK);
+					       (unsigned char *) BMNS_BOOKMARK);
 
   partial_statement = librdf_new_statement (world);
   librdf_statement_set_subject (partial_statement, subject);
@@ -1324,7 +2377,7 @@ int Model_dumpAsList (int ref, List **dump, BookmarkElements bm_type)
 	  break;
 	}
 
-      uri_str = librdf_uri_to_string (uri);
+      uri_str = (char *) librdf_uri_to_string (uri);
       if (!uri_str || *uri_str == EOS)
 	{
 	  fprintf(stderr, "no node uri\n");
@@ -1393,8 +2446,8 @@ ThotBool Model_dumpTopicChild (int ref, char *parent_topic_url, List **dump)
     return FALSE;
 
   /* get all the topics that are a child of the parent_topic */
-  predicate = librdf_new_node_from_uri_string (world, BMNS_SUBTOPICOF);
-  object =  librdf_new_node_from_uri_string (world, parent_topic_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_SUBTOPICOF);
+  object =  librdf_new_node_from_uri_string (world, (unsigned char *) parent_topic_url);
 
   partial_statement = librdf_new_statement (world);
   librdf_statement_set_subject (partial_statement, subject);
@@ -1429,10 +2482,10 @@ ThotBool Model_dumpTopicChild (int ref, char *parent_topic_url, List **dump)
     item->self_url = TtaStrdup (parent_topic_url);
     item->bm_type = BME_TOPIC;
 
-    subject = librdf_new_node_from_uri_string (world, parent_topic_url);
-    predicate = librdf_new_node_from_uri_string (world, RDF_TYPE);
+    subject = librdf_new_node_from_uri_string (world, (unsigned char *) parent_topic_url);
+    predicate = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_TYPE);
     object =  librdf_new_node_from_uri_string (world,
-					     BMNS_TOPIC);
+					       (unsigned char *) BMNS_TOPIC);
     partial_statement = librdf_new_statement (world);
     librdf_statement_set_subject (partial_statement, subject);
     librdf_statement_set_predicate (partial_statement, predicate);
@@ -1456,9 +2509,9 @@ ThotBool Model_dumpTopicChild (int ref, char *parent_topic_url, List **dump)
   dumps all the SeeAlso properties related to a given resource.
   resource_url gives the URL of the resource.
   dump contains all the SeeAlso properties; caller must free this list.
-  Returns TRUE if at least a matching statement was found.
+  Returns the number of found matching statements was found.
   ----------------------------------------------------------------------*/
-ThotBool Model_dumpSeeAlso (int ref, char *resource_url, char *topic_url, List **dump)
+int Model_dumpSeeAlso (int ref, char *resource_url, char *topic_url, List **dump)
 {
   librdf_stream* stream;
   librdf_statement *partial_statement;
@@ -1471,20 +2524,21 @@ ThotBool Model_dumpSeeAlso (int ref, char *resource_url, char *topic_url, List *
   librdf_storage *storage;
 
   char *uri_str;
+  char *blank_id;
+
   BookmarkP item;
 
   int count;
 
   if (!BM_Context_get (ref, &world, &model, &storage))
-    return FALSE;
+    return 0;
 
   if (resource_url == NULL)
-    return FALSE;
+    return 0;
 
   /* get all the topics that are a child of the parent_topic */
-  subject = librdf_new_node_from_uri_string (world, resource_url);
-  /* subject = NULL; */
-  predicate = librdf_new_node_from_uri_string (world, RDFS_SEEALSO);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) resource_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) RDFS_SEEALSO);
   object = NULL;
 
   partial_statement = librdf_new_statement (world);
@@ -1506,14 +2560,30 @@ ThotBool Model_dumpSeeAlso (int ref, char *resource_url, char *topic_url, List *
 	}
 
       object = librdf_statement_get_object (statement);
-      /* verify if it's a topic */
-      uri_str = Model_getNodeAsStringControl (object, FALSE);
+      /* check if it's a blank node */
+      if (librdf_node_get_type (object) == LIBRDF_NODE_TYPE_BLANK)
+	{
+	  subject = object;
+	  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_BOOKMARKS);
+	  object = librdf_model_get_target (model, subject, predicate);
+	  librdf_free_node (predicate);
+	  uri_str = Model_getNodeAsStringControl (object, FALSE);
+	  blank_id = Model_getBlankNodeAsString (subject);
+	  librdf_free_node (object);
+	}
+      else
+	{
+	  uri_str = Model_getNodeAsStringControl (object, FALSE);
+	  blank_id = NULL;
+	}
+
       if (uri_str)
 	{
 	  item = Bookmark_new ();
 	  List_add (dump, (void *) item);
 	  item->parent_url = TtaStrdup (topic_url);
 	  item->self_url = TtaStrdup (resource_url);
+	  item->blank_id = blank_id;
 	  item->bookmarks = TtaStrdup (uri_str);
 	  item->bm_type = BME_SEEALSO;
 	  Model_getItemInfo (ref, subject, item);
@@ -1524,7 +2594,7 @@ ThotBool Model_dumpSeeAlso (int ref, char *resource_url, char *topic_url, List *
     }
   librdf_free_stream (stream);
 
-  return (count > 0);
+  return (count);
 }
 
 /*----------------------------------------------------------------------
@@ -1546,12 +2616,16 @@ void Model_dumpSeeAlsoAsList (int ref, List **bm_list)
     {
       next = cur->next;
       me = (BookmarkP) cur->object;
-      dump = NULL;
-      if (Model_dumpSeeAlso (ref, me->self_url, me->parent_url, &dump))
+      if (me->bm_type == BME_BOOKMARK
+	  || (me->bm_type == BME_TOPIC && !me->collapsed))
 	{
-	  /* sort dump and insert it into the list */
-	  cur->next = dump;
-	  List_merge (dump, next);
+	  dump = NULL;
+	  if (Model_dumpSeeAlso (ref, me->self_url, me->parent_url, &dump))
+	    {
+	      /* sort dump and insert it into the list */
+	      cur->next = dump;
+	      List_merge (dump, next);
+	    }
 	}
       cur = next;
     }
@@ -1596,8 +2670,8 @@ ThotBool Model_dumpTopicBookmarks (int ref, List *topic_list, List **dump)
       topic = (BookmarkP)cur->object;
       /* get all the bookmarks that are a stored in the topic */
       subject = NULL;
-      predicate = librdf_new_node_from_uri_string (world, BMNS_HASTOPIC);
-      object =  librdf_new_node_from_uri_string (world, topic->self_url);
+      predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_HASTOPIC);
+      object =  librdf_new_node_from_uri_string (world, (unsigned char *) topic->self_url);
       librdf_statement_set_subject (partial_statement, subject);
       librdf_statement_set_predicate (partial_statement, predicate);
       librdf_statement_set_object (partial_statement, object);
@@ -1661,7 +2735,7 @@ ThotBool Model_dumpBookmarkTopics (int ref, BookmarkP me, List **dump)
   librdf_model *model; 
   librdf_storage *storage;
 
-  char *uri_str;
+  char *uri_str = NULL;
 
   if (!me)
     return FALSE;
@@ -1673,8 +2747,8 @@ ThotBool Model_dumpBookmarkTopics (int ref, BookmarkP me, List **dump)
   partial_statement = librdf_new_statement (world);
 
   /* get all the bookmarks that are a stored in the topic */
-  subject = librdf_new_node_from_uri_string (world, me->self_url);
-  predicate = librdf_new_node_from_uri_string (world, BMNS_HASTOPIC);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) me->self_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_HASTOPIC);
   object =  NULL;
   librdf_statement_set_subject (partial_statement, subject);
   librdf_statement_set_predicate (partial_statement, predicate);
@@ -1720,39 +2794,48 @@ ThotBool Model_dumpBookmarkTopics (int ref, BookmarkP me, List **dump)
   Returns TRUE if at least a matching statement was found.  
   ----------------------------------------------------------------------*/
 ThotBool Model_dumpTopicAsList (int  ref, char *parent_topic_url, 
-				ThotBool sort, List **dump)
+				ThotBool sort, ThotBool prune, List **dump)
 {
   List *topic_list = NULL;
   List *bookmark_list = NULL;
   List *cur;
   BookmarkP bookmark;
 
-  /* first we get all the topics */
-  Model_dumpTopicChild  (ref, parent_topic_url, &topic_list);
-  /* then all the bookmarks contained in each topic */
-  Model_dumpTopicBookmarks (ref, topic_list, &bookmark_list);
-  if (bookmark_list)
+  *dump = NULL;
+
+  /* see how it happens */
+  if (Model_dumpCollection (ref, parent_topic_url, TRUE, dump) == 0)
     {
-      bookmark_list = BM_expandBookmarks (&bookmark_list);
-      cur = bookmark_list;
-      while (cur)
+      /* first we get all the topics */
+      Model_dumpTopicChild  (ref, parent_topic_url, &topic_list);
+      if (prune)
+	/* remove all non expanded topics */
+        topic_list = BM_pruneTopics (&topic_list, parent_topic_url);
+      /* then all the bookmarks contained in each topic */
+      Model_dumpTopicBookmarks (ref, topic_list, &bookmark_list);
+      if (bookmark_list)
 	{
-	  bookmark = (BookmarkP) cur->object;
-	  /* erases all the bookmarks that don't belong to this topic */
-	  if (!BMList_containsURL (topic_list, bookmark->parent_url))
+	  bookmark_list = BM_expandBookmarks (&bookmark_list, prune, topic_list);
+	  cur = bookmark_list;
+	  while (cur)
 	    {
-	      List_delObject (&bookmark_list, cur->object);
-	      cur = bookmark_list;
-	      continue;
+	      bookmark = (BookmarkP) cur->object;
+	      /* erases all the bookmarks that don't belong to this topic */
+	      if (!BMList_containsURL (topic_list, bookmark->parent_url))
+		{
+		  List_delObject (&bookmark_list, cur->object);
+		  cur = bookmark_list;
+		  continue;
+		}
+	      cur = cur->next;
 	    }
-	  cur = cur->next;
 	}
+      /*  both lists */
+      *dump = List_merge (topic_list, bookmark_list);
+      /* sort the result */
+      if (sort)
+	BM_bookmarksSort (dump);
     }
-  /*  both lists */
-  *dump = List_merge (topic_list, bookmark_list);
-  /* sort the result */
-  if (sort)
-    BM_bookmarksSort (dump);
 
   /* add the seeAlso's */
   Model_dumpSeeAlsoAsList (ref, dump);
@@ -1760,6 +2843,429 @@ ThotBool Model_dumpTopicAsList (int  ref, char *parent_topic_url,
   return (TRUE);
 }
 
+/*----------------------------------------------------------------------
+  @@ JK: To be retired when collection works
+  Model_dumpSeq
+  dumps all the Seq items related to a given bookmark file.
+  dump contains all the SeeAlso properties; caller must free this list.
+  Returns the number of entries in the Seq list
+  ----------------------------------------------------------------------*/
+int Model_dumpSeq (int ref, List **dump)
+{
+  librdf_stream* stream;
+  librdf_statement *partial_statement;
+
+  librdf_node *subject = NULL;
+  librdf_node *predicate = NULL;
+  librdf_node *object = NULL;
+  librdf_world *world;
+  librdf_model *model; 
+  librdf_storage *storage;
+
+  char *uri_str = NULL;
+
+  int count;
+
+  if (!BM_Context_get (ref, &world, &model, &storage))
+    return 0;
+
+  /* get the first Seq in the file (we consider there is only one for the moment */
+  subject = NULL;
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_TYPE);
+  object = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_SEQ);
+
+  partial_statement = librdf_new_statement (world);
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+
+  stream = librdf_model_find_statements (model, partial_statement);
+  librdf_free_statement (partial_statement);
+
+  while (!librdf_stream_end (stream))
+    {
+      librdf_statement *statement = librdf_stream_get_object (stream);
+      if(!statement) 
+	{
+	  fprintf(stderr, "librdf_stream_next returned NULL\n");
+	  break;
+	}
+
+      subject = librdf_statement_get_subject (statement);
+      uri_str = Model_getNodeAsString (subject);
+      if (uri_str)
+	{
+	  char *uri_str2;
+
+	  printf("seq subject: %s", (uri_str) ? uri_str : "<none>");
+	  uri_str2 = Model_getNodeAsStringControl (object, FALSE);
+	  if (uri_str2)
+	    printf(" object: %s\n", (uri_str2) ? uri_str2 : "<none>");
+	  TtaFreeMemory (uri_str2);
+	  break;
+	}
+      librdf_stream_next (stream);
+    }
+  librdf_free_stream (stream);
+
+  if (!uri_str)
+    return 0;
+
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) uri_str);
+  TtaFreeMemory (uri_str);
+  predicate = NULL;
+  object = NULL;
+
+  partial_statement = librdf_new_statement (world);
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+
+  stream = librdf_model_find_statements (model, partial_statement);
+  librdf_free_statement (partial_statement);
+
+  count = 0;
+  while (!librdf_stream_end (stream))
+    {
+      librdf_statement *statement = librdf_stream_get_object (stream);
+      if(!statement) 
+	{
+	  fprintf(stderr, "librdf_stream_next returned NULL\n");
+	  break;
+	}
+
+      subject = librdf_statement_get_subject (statement);
+      uri_str = Model_getNodeAsString (subject);
+      if (uri_str)
+        printf("suject: %s", (uri_str) ? uri_str : "<none>");
+      TtaFreeMemory (uri_str);
+      predicate = librdf_statement_get_predicate (statement);
+      uri_str = Model_getNodeAsStringControl (predicate, FALSE);
+      if (uri_str) 
+	printf(" predicate: %s\n", (uri_str) ? uri_str : "<none>");
+      TtaFreeMemory (uri_str);
+      object = librdf_statement_get_object (statement);
+      uri_str = Model_getNodeAsStringControl (object, FALSE);
+      if (uri_str)
+        printf(" object: %s\n", (uri_str) ? uri_str : "<none>");
+      TtaFreeMemory (uri_str);
+      librdf_stream_next (stream);
+    }
+  librdf_free_stream (stream);
+  return (count);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static ThotBool Model_getCollectionItem (int ref, char *identifier,
+					   char **first, char **rest)
+{
+  librdf_stream* stream;
+  librdf_statement *partial_statement;
+
+  librdf_node *subject = NULL;
+  librdf_node *predicate = NULL;
+  librdf_node *object = NULL;
+  librdf_world *world;
+  librdf_model *model; 
+  librdf_storage *storage;
+
+  char *uri_str;
+
+  if (!BM_Context_get (ref, &world, &model, &storage))
+    return 0;
+
+  subject = librdf_new_node_from_blank_identifier (world, (unsigned char *) identifier);
+  predicate =  librdf_new_node_from_uri_string (world,(unsigned char *)  RDF_FIRST);
+  object = NULL;
+
+  partial_statement = librdf_new_statement (world);
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+
+  stream = librdf_model_find_statements (model, partial_statement);
+  librdf_free_statement (partial_statement);
+
+  uri_str = NULL;
+  *first = NULL;
+  *rest = NULL;
+
+  while (!librdf_stream_end (stream))
+    {
+      librdf_statement *statement = librdf_stream_get_object (stream);
+      if(!statement) 
+	{
+	  fprintf(stderr, "librdf_stream_next returned NULL\n");
+	  break;
+	}
+      
+      object = librdf_statement_get_object (statement);
+      uri_str = Model_getNodeAsString (object);
+      if (uri_str)
+	{
+	  *first = uri_str;
+	  break;
+	}
+      librdf_stream_next (stream);
+    }
+  librdf_free_stream (stream);
+
+  if (!uri_str)
+    return FALSE;
+
+  subject = librdf_new_node_from_blank_identifier (world, (unsigned char *) identifier);
+  predicate =  librdf_new_node_from_uri_string (world, (unsigned char *) RDF_REST);
+  object = NULL;
+
+  partial_statement = librdf_new_statement (world);
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+
+  stream = librdf_model_find_statements (model, partial_statement);
+  librdf_free_statement (partial_statement);
+
+  uri_str = NULL;
+  *rest = NULL;
+
+  while (!librdf_stream_end (stream))
+    {
+      librdf_statement *statement = librdf_stream_get_object (stream);
+      if(!statement) 
+	{
+	  fprintf(stderr, "librdf_stream_next returned NULL\n");
+	  break;
+	}
+      
+      object = librdf_statement_get_object (statement);
+      uri_str = Model_getNodeAsString (object);
+      if (uri_str)
+	{
+	  *rest = uri_str;
+	  break;
+	}
+      librdf_stream_next (stream);
+    }
+  librdf_free_stream (stream);
+
+  if (!uri_str)
+    {
+      TtaFreeMemory (*first);
+      *first = NULL;
+    }
+
+  return (*first != NULL && *rest != NULL);
+}
+
+/*----------------------------------------------------------------------
+  Model_getCollectionRoot
+  dumps all the rdf:collection items related to a given bookmark file.
+  dump contains all the SeeAlso properties; caller must free this list.
+  Returns the URL of the root topic. User has to free the string.
+
+  As we don't have a way to know what is the manifest or index inside
+  the rdf file, we just try to find the root element (the one that
+  has no subtopicof property) and start from it.
+  ----------------------------------------------------------------------*/
+char * Model_getCollectionRoot (int ref, char *topic_url)
+{
+  librdf_stream* stream;
+  librdf_statement *partial_statement;
+
+  librdf_node *subject = NULL;
+  librdf_node *predicate = NULL;
+  librdf_node *object = NULL;
+  librdf_world *world;
+  librdf_model *model; 
+  librdf_storage *storage;
+
+  char *uri_str = NULL;
+  char *res;
+
+  if (!BM_Context_get (ref, &world, &model, &storage))
+    return NULL;
+
+  /* get the collection set */
+  if (topic_url)
+    subject = librdf_new_node_from_uri_string (world, (unsigned char *) topic_url);
+  else
+    subject = NULL;
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_COLLECTION);
+  object = NULL;
+
+  partial_statement = librdf_new_statement (world);
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+
+  stream = librdf_model_find_statements (model, partial_statement);
+  librdf_free_statement (partial_statement);
+
+  res = NULL;
+
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_SUBTOPICOF);
+  object = NULL;
+  
+  while (!librdf_stream_end (stream))
+    {
+      librdf_statement *statement = librdf_stream_get_object (stream);
+      if(!statement) 
+	{
+	  fprintf(stderr, "librdf_stream_next returned NULL\n");
+	  break;
+	}
+
+      subject = librdf_statement_get_subject (statement);
+      object = librdf_model_get_target (model, subject, predicate);
+      if (!object) {
+	/* we found the root topic */
+	uri_str = Model_getNodeAsString (subject);
+	/* check if this statement has a subtopicof property */
+	if (uri_str)
+	  res = uri_str;
+	break;
+      }
+      librdf_free_node (object);
+      librdf_stream_next (stream);
+    }
+  librdf_free_stream (stream);
+  librdf_free_node (predicate);
+
+  return (res);
+}
+
+/*----------------------------------------------------------------------
+  Model_dumpCollection
+  dumps all the rdf:collection items related to a given bookmark file.
+  dump contains all the SeeAlso properties; caller must free this list.
+  Returns the number of entries in the Seq list
+  ----------------------------------------------------------------------*/
+int Model_dumpCollection (int ref, char *topic_url, ThotBool isRoot, List **dump)
+{
+  librdf_stream* stream;
+  librdf_statement *partial_statement;
+
+  librdf_node *subject = NULL;
+  librdf_node *predicate = NULL;
+  librdf_node *object = NULL;
+  librdf_world *world;
+  librdf_model *model; 
+  librdf_storage *storage;
+
+  char *uri_str = NULL;
+  char *first, *rest;
+
+  int count = 0;
+
+  BookmarkP item;
+
+  if (!BM_Context_get (ref, &world, &model, &storage))
+    return 0;
+
+  /* get the collection set */
+  if (topic_url)
+    {
+      if (isRoot)
+	{
+	  /* add the info related to the root item */
+	  item = Bookmark_new ();
+	  item->bm_type = Model_getItemType (ref, topic_url);
+	  item->self_url = TtaStrdup (topic_url);
+	  subject = librdf_new_node_from_uri_string (world, (unsigned char *) topic_url);
+	  Model_getItemInfo (ref, subject, item);
+	  librdf_free_node (subject);
+	  List_add (dump, (void *) item);
+	}
+      subject = librdf_new_node_from_uri_string (world, (unsigned char *) topic_url);
+    }
+  else
+    subject = NULL;
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_COLLECTION);
+  object = NULL;
+
+  partial_statement = librdf_new_statement (world);
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+
+  stream = librdf_model_find_statements (model, partial_statement);
+  librdf_free_statement (partial_statement);
+
+  while (!librdf_stream_end (stream))
+    {
+      librdf_statement *statement = librdf_stream_get_object (stream);
+      if(!statement) 
+	{
+	  fprintf(stderr, "librdf_stream_next returned NULL\n");
+	  break;
+	}
+
+      subject = librdf_statement_get_subject (statement);
+      uri_str = Model_getNodeAsString (subject);
+      if (uri_str)
+	{
+	  TtaFreeMemory (uri_str);
+	  object = librdf_statement_get_object (statement);
+	  uri_str = Model_getNodeAsString (object);
+	  break;
+	}
+      librdf_stream_next (stream);
+    }
+  librdf_free_stream (stream);
+
+  if (!uri_str)
+    return 0;
+
+  /* browse the collection set, by following the rdf:first and rest properties */
+  Model_getCollectionItem (ref, uri_str, &first, &rest);
+  while (first && rest) 
+    {
+      count++;
+
+      /* yes, store it */
+      item = Bookmark_new ();
+      item->bm_type = Model_getItemType (ref, first);
+      subject = librdf_new_node_from_uri_string (world, (unsigned char *) first);
+      item->self_url = TtaStrdup (first);
+      Model_getItemInfo (ref, subject, item);
+      if (topic_url)
+	item->parent_url = TtaStrdup (topic_url);
+      else
+	item->parent_url = NULL;
+      librdf_free_node (subject);
+      /* we should reverse the list */
+      List_addEnd (dump, (void *) item);
+      if (item->bm_type == BME_TOPIC && !item->collapsed)
+	{
+	  int count2;
+	  List *tmp_dump = NULL;
+	  count2 = Model_dumpCollection (ref, item->self_url, FALSE, &tmp_dump);
+	  if (count2)
+	    {
+	      List_merge (*dump, tmp_dump);
+	      count += count2;
+	    }
+	}
+
+      TtaFreeMemory (first);
+      TtaFreeMemory (uri_str);
+      if (!strcmp (rest, RDF_NIL))
+	{
+	  TtaFreeMemory (rest);
+	  uri_str = NULL;
+	  break;
+	}
+      else
+	uri_str = rest;
+      Model_getCollectionItem (ref, uri_str, &first, &rest);
+    }
+
+  if (uri_str)
+    TtaFreeMemory (uri_str);
+
+  return (count);
+}
 
 /*----------------------------------------------------------------------
   BM_getItem
@@ -1789,7 +3295,7 @@ BookmarkP BM_getItem (int ref, char *url, ThotBool isTopic)
   /* make a query for all statements related to a given url */
   /* @@ JK: no control yet to see if the RDF type is actually
      bookmark */
-  subject = librdf_new_node_from_uri_string (world, url);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) url);
   partial_statement = librdf_new_statement (world);
   librdf_statement_set_subject (partial_statement, subject);
   librdf_statement_set_predicate (partial_statement, predicate);
@@ -1814,7 +3320,7 @@ BookmarkP BM_getItem (int ref, char *url, ThotBool isTopic)
       object = librdf_statement_get_object (statement);
       predicate = librdf_statement_get_predicate (statement);
       rdf_uri = librdf_node_get_uri (predicate);
-      uri_str = librdf_uri_to_string (rdf_uri);
+      uri_str = (char *) librdf_uri_to_string (rdf_uri);
 
       /* creator */
       if (!strcmp (uri_str, DC1NS_CREATOR))
@@ -1861,9 +3367,9 @@ BookmarkP BM_getItem (int ref, char *url, ThotBool isTopic)
   return me;
 }
 
-static int Model_replace_object (librdf_world *world, librdf_model *model,
-				 librdf_statement *old_statement, char *new_value,
-				 ThotBool isLiteral)
+static ThotBool Model_replace_object (librdf_world *world, librdf_model *model,
+				      librdf_statement *old_statement, char *new_value,
+				      ThotBool isLiteral)
 {
   librdf_node *subject;
   librdf_node *predicate;
@@ -1887,11 +3393,11 @@ static int Model_replace_object (librdf_world *world, librdf_model *model,
       /* make the new object node */
       if (isLiteral)
 	tmp_node =  librdf_new_node_from_literal (world, 
-						  new_value,
+						  (unsigned char *) new_value,
 						  NULL,  /* literal XML language */
 						  0);    /* non 0 if literal is XML */
       else
-	tmp_node = librdf_new_node_from_uri_string (world, new_value);
+	tmp_node = librdf_new_node_from_uri_string (world, (unsigned char *) new_value);
       new_statement = librdf_new_statement (world);
       librdf_statement_set_subject (new_statement, subject);
       librdf_statement_set_predicate (new_statement, predicate);
@@ -1936,7 +3442,7 @@ ThotBool BM_updateItem (Document doc, int ref, BookmarkP me, ThotBool isTopic)
   me->modified = StrdupDate ();
 
   /* make a query for all statements related to a given url */
-  subject = librdf_new_node_from_uri_string (world, me->self_url);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) me->self_url);
   partial_statement = librdf_new_statement (world);
   librdf_statement_set_subject (partial_statement, subject);
   librdf_statement_set_predicate (partial_statement, predicate);
@@ -1956,7 +3462,7 @@ ThotBool BM_updateItem (Document doc, int ref, BookmarkP me, ThotBool isTopic)
 
       predicate = librdf_statement_get_predicate (statement);
       rdf_uri = librdf_node_get_uri (predicate);
-      uri_str = librdf_uri_to_string (rdf_uri);
+      uri_str = (char *) librdf_uri_to_string (rdf_uri);
 
       /* topic folder */
       /* we remove all the known properties first, then update the model */
@@ -1972,13 +3478,19 @@ ThotBool BM_updateItem (Document doc, int ref, BookmarkP me, ThotBool isTopic)
 	    {
 	      /* parent topic */
 	      if (!strcmp (uri_str, BMNS_SUBTOPICOF))
-		librdf_model_remove_statement (model, statement);
+		{
+		  Model_removeItemIfDisplaced (ref, statement, me);
+		  librdf_model_remove_statement (model, statement);
+		}
 	    }
 	  else
 	    {
 	      /* parent topic */
 	      if (!strcmp (uri_str, BMNS_HASTOPIC))
-		librdf_model_remove_statement (model, statement);
+		{
+		  Model_removeItemIfDisplaced (ref, statement, me);
+		  librdf_model_remove_statement (model, statement);
+		}
 	      /* bookmarks */
 	      else if (!strcmp (uri_str, BMNS_BOOKMARKS))
 		librdf_model_remove_statement (model, statement);
@@ -1994,20 +3506,20 @@ ThotBool BM_updateItem (Document doc, int ref, BookmarkP me, ThotBool isTopic)
   /* add the new info */
   /* creator */
   tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->author, ISO_8859_1);
-  subject = librdf_new_node_from_uri_string (world, me->self_url);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_CREATOR);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) me->self_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) DC1NS_CREATOR);
   object =  librdf_new_node_from_literal (world, 
-					  tmp,  /* literal string value */
+					  (unsigned char *) tmp,
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
   TtaFreeMemory (tmp);
 
   /* modified  */
-  subject = librdf_new_node_from_uri_string (world, me->self_url);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_DATE);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) me->self_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) DC1NS_DATE);
   object =  librdf_new_node_from_literal (world, 
-					  me->modified,  /* literal string value */
+					  (unsigned char *) me->modified,
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
@@ -2015,10 +3527,10 @@ ThotBool BM_updateItem (Document doc, int ref, BookmarkP me, ThotBool isTopic)
 
   /* title */
   tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->title, ISO_8859_1); 
-  subject = librdf_new_node_from_uri_string (world, me->self_url);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_TITLE);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) me->self_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) DC1NS_TITLE);
   object =  librdf_new_node_from_literal (world, 
-					  tmp,  /* literal string value */
+					  (unsigned char *) tmp,
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
@@ -2026,10 +3538,10 @@ ThotBool BM_updateItem (Document doc, int ref, BookmarkP me, ThotBool isTopic)
 
  /* description */
   tmp = (char *)TtaConvertByteToMbs ((unsigned char *)me->description, ISO_8859_1); 
-  subject = librdf_new_node_from_uri_string (world, me->self_url);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_DESCRIPTION);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) me->self_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) DC1NS_DESCRIPTION);
   object =  librdf_new_node_from_literal (world, 
-					  me->description,  /* literal string value */
+					  (unsigned char *) me->description,
 					  NULL,  /* literal XML language */
  					  0);    /* non 0 if literal is XML */
   add_statement (world, model, subject, predicate, object);
@@ -2041,29 +3553,32 @@ ThotBool BM_updateItem (Document doc, int ref, BookmarkP me, ThotBool isTopic)
       /* parent topic */
       if (me->parent_url && me->parent_url[0] != EOS)
 	{
-	  subject = librdf_new_node_from_uri_string (world, me->self_url);
-	  predicate = librdf_new_node_from_uri_string (world, BMNS_SUBTOPICOF);
+	  subject = librdf_new_node_from_uri_string (world, (unsigned char *) me->self_url);
+	  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_SUBTOPICOF);
 	  object =  librdf_new_node_from_uri_string (world,
-						     me->parent_url);
+						     (unsigned char *) me->parent_url);
 	  add_statement (world, model, subject, predicate, object);
+	  /* and add it to its new parent collection, reusing the previous
+	   collection ID */
+	  BM_addItemToCollection (ref, me->parent_url, NULL, me, FALSE);
 	}
     }
   else
     {
       /* bookmarks */
-      subject = librdf_new_node_from_uri_string (world, me->self_url);
-      predicate = librdf_new_node_from_uri_string (world, BMNS_BOOKMARKS);
-      object =  librdf_new_node_from_uri_string (world, me->bookmarks);
+      subject = librdf_new_node_from_uri_string (world, (unsigned char *) me->self_url);
+      predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_BOOKMARKS);
+      object =  librdf_new_node_from_uri_string (world, (unsigned char *) me->bookmarks);
       add_statement (world, model, subject, predicate, object);
       
       /* parent topics */
-      AddBookmarkTopicList (world, model, me->self_url, me->parent_url_list);
+      AddBookmarkTopicList (ref, me);
       if (me->context)
 	{
-	  subject = librdf_new_node_from_uri_string (world, me->self_url);
-	  predicate = librdf_new_node_from_uri_string (world, ANNOTNS_CONTEXT);
+	  subject = librdf_new_node_from_uri_string (world, (unsigned char *) me->self_url);
+	  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) ANNOTNS_CONTEXT);
 	  object =  librdf_new_node_from_literal (world, 
-						  me->context,  /* literal string value */
+						  (unsigned char *) me->context,
 						  NULL,  /* literal XML language */
 						  0);    /* non 0 if literal is XML */
 	  add_statement (world, model, subject, predicate, object);
@@ -2071,25 +3586,17 @@ ThotBool BM_updateItem (Document doc, int ref, BookmarkP me, ThotBool isTopic)
     }
 
   /* save the updated model */
-  if (ref == 0)
-    BM_save (ref, GetLocalBookmarksFile ());
-  else
-    {
-      ThotBool i;
+  BM_saveOrModify (ref, doc);
 
-      /* save the modified model in the temporary file */
-      BM_tmpsave (ref);
-      TtaSetDocumentModified (doc);
-      i = TtaIsDocumentModified (doc);
-    }
   return TRUE;
 }
+
 
 /*----------------------------------------------------------------------
   BM_deleteItem
   Erases all the statements related to a given URL
   ----------------------------------------------------------------------*/
-ThotBool BM_deleteItem (int ref, char *item_url)
+ThotBool BM_deleteItem (int ref, char *item_url, ThotBool isBlankIdentifier)
 {
   librdf_stream* stream;
   librdf_statement *partial_statement;
@@ -2108,8 +3615,10 @@ ThotBool BM_deleteItem (int ref, char *item_url)
   if (!item_url || *item_url == EOS)
     return FALSE;
 
-
-  subject = librdf_new_node_from_uri_string (world, item_url);
+  if (isBlankIdentifier)
+    subject = librdf_new_node_from_blank_identifier (world, (unsigned char *) item_url);
+  else
+    subject = librdf_new_node_from_uri_string (world, (unsigned char *) item_url);
   partial_statement = librdf_new_statement (world);
   librdf_statement_set_subject (partial_statement, subject);
   librdf_statement_set_predicate (partial_statement, predicate);
@@ -2136,36 +3645,100 @@ ThotBool BM_deleteItem (int ref, char *item_url)
 
 /*----------------------------------------------------------------------
   BM_deleteItemList
-  Erases all the statements related to a given topic
+  Erases all the statements related to a given topic.
+  The list is given in reverse order.
   ----------------------------------------------------------------------*/
-ThotBool BM_deleteItemList (Document doc, char *parent_topic, List *items)
+ThotBool BM_deleteItemList (int ref, char *parent_topic, List *items)
 {
+  List       *reverse_list = NULL;
   List       *cur;
   BookmarkP   item;
     
   if (!items)
     return FALSE;
   
-  cur = items;
+  /* build a reverse ordered list so that we delete the topic items
+     before the topic itself. (this constraint was induced when adding
+     support for rdf:collection */
 
+  reverse_list = List_reverse (items);
+
+  cur = reverse_list;
   while (cur)
     {
       item = (BookmarkP) cur->object;
       if (item->bm_type == BME_TOPIC)
-	BM_deleteItem (doc, item->self_url);
+	{
+	  ThotBool isBlankNode;
+
+	  /* delete all the statements and states in the collection, including
+	   separators */
+	  /* BM_deleteItemCollectionRec (ref, parent_topic, item->self_url, &isBlankNode); */
+	  /* delete the topics entry in its parent collection */
+	  BM_deleteItemCollection (ref, item->parent_url, item->self_url, &isBlankNode, TRUE);
+	  BM_deleteItem (ref, item->self_url, FALSE);
+	}
       else 
-	BM_deleteBookmarkItem (doc, parent_topic, item->self_url);
+	BM_deleteBookmarkItem (ref, item->parent_url, item->self_url, 
+			       item->bm_type == BME_SEPARATOR);
       cur = cur->next;
     }
+
+  /* delete our work list */
+  List_delAll (&reverse_list, NULL);
+
   return TRUE;
 }
 
+/*----------------------------------------------------------------------
+  BM_deleteBookmarkTopic
+  Deletes a bookmark from a given topic
+  ----------------------------------------------------------------------*/
+ThotBool BM_deleteBookmarkTopic (int ref, char *parent_url, char *self_url, 
+				 ThotBool isBlankIdentifier)
+{
+  librdf_statement *partial_statement;
+
+  librdf_node *subject = NULL;
+  librdf_node *predicate = NULL;
+  librdf_node *object = NULL;
+  librdf_world *world;
+  librdf_model *model; 
+  librdf_storage *storage;
+
+  if (!parent_url || !self_url)
+    return FALSE;
+
+  if (!BM_Context_get (ref, &world, &model, &storage))
+    return FALSE;
+
+  /* delete the relevant HAS_TOPIC property for this bookmark */
+  if (isBlankIdentifier)
+    subject = librdf_new_node_from_blank_identifier (world,  (unsigned char *) self_url);
+  else
+    subject = librdf_new_node_from_uri_string (world, (unsigned char *) self_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_HASTOPIC);
+  object = librdf_new_node_from_uri_string (world, (unsigned char *) parent_url);
+
+  partial_statement = librdf_new_statement (world);
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+
+  if (librdf_model_contains_statement (model, partial_statement))
+    librdf_model_remove_statement (model, partial_statement);
+
+  librdf_free_statement (partial_statement);
+
+  return TRUE;
+}
 
 /*----------------------------------------------------------------------
   BM_deleteBookmarkItem
   Erases all the statements related to a given topic
   ----------------------------------------------------------------------*/
-ThotBool BM_deleteBookmarkItem (int ref, char *parent_url, char *self_url)
+ThotBool BM_deleteBookmarkItem (int ref, char *parent_url, char *self_url, 
+				ThotBool isBlankIdentifier)
 {
   librdf_stream* stream;
   librdf_statement *partial_statement;
@@ -2178,16 +3751,24 @@ ThotBool BM_deleteBookmarkItem (int ref, char *parent_url, char *self_url)
   librdf_model *model; 
   librdf_storage *storage;
 
+  ThotBool isBlankNode;
+
   if (!parent_url || !self_url)
     return FALSE;
 
   if (!BM_Context_get (ref, &world, &model, &storage))
     return FALSE;
 
+  /* remove the bookmark from the collection */
+  BM_deleteItemCollection (ref, parent_url, self_url, &isBlankNode, TRUE);
+
   /* delete the relevant HAS_TOPIC property for this bookmark */
-  subject = librdf_new_node_from_uri_string (world, self_url);
-  predicate = librdf_new_node_from_uri_string (world, BMNS_HASTOPIC);
-  object = librdf_new_node_from_uri_string (world, parent_url);
+  if (isBlankIdentifier)
+    subject = librdf_new_node_from_blank_identifier (world,  (unsigned char *) self_url);
+  else
+    subject = librdf_new_node_from_uri_string (world, (unsigned char *) self_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_HASTOPIC);
+  object = librdf_new_node_from_uri_string (world, (unsigned char *) parent_url);
 
   partial_statement = librdf_new_statement (world);
   librdf_statement_set_subject (partial_statement, subject);
@@ -2201,8 +3782,11 @@ ThotBool BM_deleteBookmarkItem (int ref, char *parent_url, char *self_url)
 
   /* check to see if the bookmark item as other HAS_TOPIC 
      properties or if we can delete it now */
-  subject = librdf_new_node_from_uri_string (world, self_url);
-  predicate = librdf_new_node_from_uri_string (world, BMNS_HASTOPIC);
+  if (isBlankIdentifier)
+    subject = librdf_new_node_from_blank_identifier (world,  (unsigned char *) self_url);
+  else
+    subject = librdf_new_node_from_uri_string (world, (unsigned char *) self_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_HASTOPIC);
   object = NULL;
 
   librdf_statement_set_subject (partial_statement, subject);
@@ -2220,7 +3804,7 @@ ThotBool BM_deleteBookmarkItem (int ref, char *parent_url, char *self_url)
   librdf_free_statement (partial_statement);
 
   if (can_erase)
-    BM_deleteItem (ref, self_url);
+    BM_deleteItem (ref, self_url, isBlankIdentifier);
 
   return TRUE;
 }
@@ -2248,9 +3832,9 @@ ThotBool BM_containsBookmarks (int ref)
 
   /* make a query for all statements of rdf type bookmark */
 
-  predicate = librdf_new_node_from_uri_string (world, RDF_TYPE);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_TYPE);
   object =  librdf_new_node_from_uri_string (world,
-					     BMNS_BOOKMARK);
+					     (unsigned char *) BMNS_BOOKMARK);
   partial_statement = librdf_new_statement (world);
   librdf_statement_set_subject (partial_statement, subject);
   librdf_statement_set_predicate (partial_statement, predicate);
@@ -2280,9 +3864,12 @@ ThotBool BM_containsBookmarks (int ref)
 /*----------------------------------------------------------------------
   BM_pasteBookmark
   Do we need to check literal for something other than object?
+  Returns TRUE if succesful. In this case, new_bookmark_id has a copy
+  of the newly assigned identifier and the caller must free it.
   ----------------------------------------------------------------------*/
 ThotBool BM_pasteBookmark (int dest_ref, int src_ref, 
-			   char *src_bookmark_url, char *dest_parent_url)
+			   char *src_bookmark_url, char *dest_parent_url,
+			   char **new_bookmark_id)
 {
 
   librdf_world *src_world, *dest_world;
@@ -2333,7 +3920,7 @@ ThotBool BM_pasteBookmark (int dest_ref, int src_ref,
   sprintf (bookmarkid + strlen (base_uri), btemplate, genid_counter++);
 
   /* get all the statements and copy them */
-  subject = librdf_new_node_from_uri_string (src_world, src_bookmark_url);
+  subject = librdf_new_node_from_uri_string (src_world, (unsigned char *) src_bookmark_url);
   partial_statement=librdf_new_statement (src_world);
   librdf_statement_set_subject (partial_statement, subject);
   librdf_statement_set_predicate (partial_statement, predicate);
@@ -2365,20 +3952,20 @@ ThotBool BM_pasteBookmark (int dest_ref, int src_ref,
 	  continue;
 	}
       else
-	predicate = librdf_new_node_from_uri_string (dest_world, uri_str);
+	predicate = librdf_new_node_from_uri_string (dest_world, (unsigned char *) uri_str);
       TtaFreeMemory (uri_str);
 
       /* get the object */
       node = librdf_statement_get_object (statement);
       uri_str = Model_getNodeAsString (node);
       if (librdf_node_get_type (node) == LIBRDF_NODE_TYPE_LITERAL)
-	object =  librdf_new_node_from_literal (dest_world, uri_str, NULL, 0);
+	object =  librdf_new_node_from_literal (dest_world,  (unsigned char *) uri_str, NULL, 0);
       else
-	object =  librdf_new_node_from_uri_string (dest_world, uri_str);
+	object =  librdf_new_node_from_uri_string (dest_world, (unsigned char *) uri_str);
       TtaFreeMemory (uri_str);
 
       /* set the subject */
-      subject = librdf_new_node_from_uri_string (dest_world, bookmarkid);
+      subject = librdf_new_node_from_uri_string (dest_world, (unsigned char *) bookmarkid);
 
       /* make the statement */
       partial_statement=librdf_new_statement (src_world);
@@ -2393,9 +3980,9 @@ ThotBool BM_pasteBookmark (int dest_ref, int src_ref,
   librdf_free_stream (stream);
 
   /* and store it under its new topic */
-  subject = librdf_new_node_from_uri_string (dest_world, bookmarkid);
-  predicate = librdf_new_node_from_uri_string (dest_world, BMNS_HASTOPIC);
-  object =  librdf_new_node_from_uri_string (dest_world, dest_parent_url);
+  subject = librdf_new_node_from_uri_string (dest_world, (unsigned char *) bookmarkid);
+  predicate = librdf_new_node_from_uri_string (dest_world, (unsigned char *) BMNS_HASTOPIC);
+  object =  librdf_new_node_from_uri_string (dest_world, (unsigned char *) dest_parent_url);
 
   partial_statement=librdf_new_statement (dest_world);
   librdf_statement_set_subject (partial_statement, subject);
@@ -2403,13 +3990,150 @@ ThotBool BM_pasteBookmark (int dest_ref, int src_ref,
   librdf_statement_set_object (partial_statement, object);
 
   add_statement (dest_world, dest_model, subject, predicate, object);
+
+  *new_bookmark_id = TtaStrdup (bookmarkid);
+
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  BM_pasteBookmarkColl
+  Do we need to check literal for something other than object?
+  ----------------------------------------------------------------------*/
+ThotBool BM_pasteBookmarkColl (int dest_ref, int src_ref, 
+			       char *src_bookmark_url, char *dest_parent_url)
+{
+
+  librdf_world *src_world, *dest_world;
+  librdf_model *src_model, *dest_model; 
+  librdf_storage *src_storage, *dest_storage;
+
+  librdf_stream *stream = NULL;
+  librdf_statement *partial_statement = NULL;
+  librdf_node *subject = NULL;
+  librdf_node *predicate = NULL;
+  librdf_node *object = NULL;
+
+  char bookmarkid[MAX_LENGTH];
+  char *btemplate = "#ambookmark%d";
+  /* should be something else? */
+  char *base_uri = GetLocalBookmarksBaseURI ();
+
+  if (dest_ref == src_ref
+      || !src_bookmark_url || src_bookmark_url[0] == EOS
+      || !dest_parent_url || dest_parent_url[0] == EOS)
+    return FALSE;
+
+  /* get the two contexts */
+  if (!BM_Context_get (src_ref, &src_world, &src_model, &src_storage))
+    return FALSE;
+
+  if (!BM_Context_get (dest_ref, &dest_world, &dest_model, &dest_storage))
+    return FALSE;
+
+  /* get new blank node id */
+  if (genid_counter == 0) 
+    {
+      /* couldn't create a genid */
+      return FALSE;
+    }
   
+  /* @@ don't remember what to do here. I surely need to split the uri we want
+     to paste into its components */
+  genid_counter = Model_queryID (dest_world, dest_model, base_uri, btemplate, 
+				 genid_counter);
+  if (genid_counter == 0) 
+    {
+      /* couldn't create a genid */
+      return FALSE;
+    }
+
+  sprintf (bookmarkid, "%s", base_uri);
+  sprintf (bookmarkid + strlen (base_uri), btemplate, genid_counter++);
+
+  /* get all the statements and copy them */
+  subject = librdf_new_node_from_uri_string (src_world, (unsigned char *) src_bookmark_url);
+  partial_statement=librdf_new_statement (src_world);
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+  stream = librdf_model_find_statements (src_model, partial_statement);
+  librdf_free_statement (partial_statement);
+
+  /* copy all the statements, except for has parent */
+  while (!librdf_stream_end (stream))
+    {
+      librdf_node *node = NULL;
+      char *uri_str;
+      
+      librdf_statement *statement = librdf_stream_get_object (stream);
+      if(!statement) 
+	{
+	  fprintf(stderr, "librdf_stream_next returned NULL\n");
+	  break;
+	}
+      
+      /* get the predicate */
+      node = librdf_statement_get_predicate (statement);
+      uri_str = Model_getNodeAsString (node);
+      /* skip all the hastopic properties. They don't make sense in the target */
+      if (!strcmp (uri_str, BMNS_HASTOPIC))
+	{
+	  TtaFreeMemory (uri_str);
+	  librdf_stream_next(stream); /* advance the stream */
+	  continue;
+	}
+      else
+	predicate = librdf_new_node_from_uri_string (dest_world, (unsigned char *) uri_str);
+      TtaFreeMemory (uri_str);
+
+      /* get the object */
+      node = librdf_statement_get_object (statement);
+      uri_str = Model_getNodeAsString (node);
+      if (librdf_node_get_type (node) == LIBRDF_NODE_TYPE_LITERAL)
+	object =  librdf_new_node_from_literal (dest_world,  (unsigned char *) uri_str, NULL, 0);
+      else
+	object =  librdf_new_node_from_uri_string (dest_world, (unsigned char *) uri_str);
+      TtaFreeMemory (uri_str);
+
+      /* set the subject */
+      subject = librdf_new_node_from_uri_string (dest_world, (unsigned char *) bookmarkid);
+
+      /* make the statement */
+      partial_statement=librdf_new_statement (src_world);
+      librdf_statement_set_subject (partial_statement, subject);
+      librdf_statement_set_predicate (partial_statement, predicate);
+      librdf_statement_set_object (partial_statement, object);
+
+      /* add it */
+      add_statement (dest_world, dest_model, subject, predicate, object);
+      librdf_stream_next(stream); /* advance the stream */
+    }
+  librdf_free_stream (stream);
+
+  /* and store it under its new topic */
+  subject = librdf_new_node_from_uri_string (dest_world, (unsigned char *) bookmarkid);
+  predicate = librdf_new_node_from_uri_string (dest_world, (unsigned char *) BMNS_HASTOPIC);
+  object =  librdf_new_node_from_uri_string (dest_world, (unsigned char *) dest_parent_url);
+
+  partial_statement=librdf_new_statement (dest_world);
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+
+  add_statement (dest_world, dest_model, subject, predicate, object);
+
+  /* if item already existed in collection, delete it */
+  /* add item to the new collection */
+  /* @@ could use value of recall property here */
+  Model_addItemToCollection (dest_world, dest_model, dest_parent_url, src_bookmark_url);
+
   return TRUE;
 }
 
 /*----------------------------------------------------------------------
   BM_addTopicToBookmark
-  AddsDo we need to check literal for something other than object?
+  Adds a new hasTopic property to a bookmark
   ----------------------------------------------------------------------*/
 ThotBool BM_addTopicToBookmark (int ref, char *bookmark_url, 
 				char *new_topic_url)
@@ -2433,10 +4157,10 @@ ThotBool BM_addTopicToBookmark (int ref, char *bookmark_url,
      return FALSE;
 
   /* does the bookmarkd already belongs to this topic? */
-  subject = librdf_new_node_from_uri_string (world, bookmark_url);
-  predicate = librdf_new_node_from_uri_string (world, BMNS_HASTOPIC);
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) bookmark_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_HASTOPIC);
   object = librdf_new_node_from_uri_string (world,
-					    new_topic_url);
+					    (unsigned char *) new_topic_url);
   partial_statement = librdf_new_statement (world);
   librdf_statement_set_subject (partial_statement, subject);
   librdf_statement_set_predicate (partial_statement, predicate);
@@ -2446,14 +4170,87 @@ ThotBool BM_addTopicToBookmark (int ref, char *bookmark_url,
     {
       /* add it */
       librdf_model_add_statement (model, partial_statement);
-      result = TRUE;
     }
-  else
-    result = FALSE;
+  result = TRUE; /* we always return TRUE, whether it existed before or
+		    not */
   librdf_free_statement (partial_statement);
 
   return result;
 }
+
+/*----------------------------------------------------------------------
+  BM_replaceTopicParent
+  Replaces the subTopicOf property by a new one.
+  Only does such if the new topic is not a child of the current topic
+  Returns true if the items were exchanged
+  ----------------------------------------------------------------------*/
+ThotBool BM_replaceTopicParent (int ref, char *topic_url, 
+				char *new_topic_parent_url)
+{
+  librdf_world *world;
+  librdf_model *model;
+  librdf_storage *storage;
+
+  librdf_statement *partial_statement = NULL;
+  librdf_node *subject = NULL;
+  librdf_node *predicate = NULL;
+  librdf_node *object = NULL;
+
+  char *object_url;
+
+  ThotBool result;
+  
+  if (!topic_url || topic_url[0] == EOS
+      || !new_topic_parent_url || new_topic_parent_url[0] == EOS)
+    return FALSE;
+
+  if (!BM_Context_get (ref, &world, &model, &storage))
+     return FALSE;
+
+  /* is the new topic a child of the current topic? */
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) new_topic_parent_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_SUBTOPICOF);
+  object = librdf_model_get_target (model, subject, predicate);
+  result = FALSE;
+  while (!result && object)
+    {
+      object_url = Model_getNodeAsString (object);
+      if (!strcmp (topic_url, object_url))
+	{
+	  TtaFreeMemory (object_url);
+	  result = TRUE;
+	  break;
+	}
+      librdf_free_node (subject);
+      TtaFreeMemory (object_url);
+      subject = object;
+      object = librdf_model_get_target (model, subject, predicate);
+    }
+  librdf_free_node (subject);
+  librdf_free_node (predicate);
+  if (object)
+    librdf_free_node (object);
+
+  if (!result)
+    {
+      /* replace the subTopicOf property */
+      subject = librdf_new_node_from_uri_string (world, (unsigned char *) topic_url);
+      predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_SUBTOPICOF);
+      object = librdf_model_get_target (model, subject, predicate);
+      partial_statement = librdf_new_statement (world);
+      librdf_statement_set_subject (partial_statement, subject);
+      librdf_statement_set_predicate (partial_statement, predicate);
+      librdf_statement_set_object (partial_statement, object);
+      result = Model_replace_object (world, model, partial_statement, 
+				     new_topic_parent_url, FALSE);
+      /* librdf_free_statement (partial_statement); */
+    }
+  else
+    result = FALSE;
+  
+  return result;
+}
+
 
 /*-----------------------------------------------------------
   BM_getDocumentFromRef
@@ -2487,3 +4284,145 @@ Document BM_getDocumentFromRef (int ref)
 
   return (found) ? doc : 0; 
 }
+
+/*-----------------------------------------------------------
+  Model_printStatements
+  Prints all the statements related to subject_url
+  ------------------------------------------------------------*/
+Document BM_printStatements (int ref, char *subject_url)
+{
+  librdf_stream* stream;
+  librdf_statement *partial_statement;
+
+  librdf_node *subject = NULL;
+  librdf_node *predicate = NULL;
+  librdf_node *object = NULL;
+  librdf_world *world;
+  librdf_model *model; 
+  librdf_storage *storage;
+  
+  int count;
+
+  if (!BM_Context_get (ref, &world, &model, &storage))
+    return FALSE;
+
+  /* make a query for all statements of rdf type bookmark */
+  subject = librdf_new_node_from_blank_identifier  (world, (unsigned char *) subject_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_TYPE);
+  object =  NULL;
+  partial_statement = librdf_new_statement (world);
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+
+  stream = librdf_model_find_statements (model, partial_statement);
+  librdf_free_statement (partial_statement);
+  
+  while (!librdf_stream_end (stream))
+    {
+      librdf_statement *statement = librdf_stream_get_object (stream);
+      if(!statement) 
+	{
+	  fprintf(stderr, "librdf_stream_next returned NULL\n");
+	  break;
+	}
+      count++;
+      librdf_stream_next (stream);
+    }
+  librdf_free_stream (stream);
+
+  /* fprintf (stderr, "Found %d potential bookmarks\n", count); */
+  return (count > 0) ? TRUE : FALSE;
+}
+
+/*-----------------------------------------------------------
+  Model_queryState
+  ------------------------------------------------------------*/
+ThotBool Model_queryState (int ref,
+			   char *subject_url, char *state_url)
+{
+  librdf_world *world;
+  librdf_model *model; 
+  librdf_storage *storage;
+  librdf_node *subject = NULL;
+  librdf_node *predicate = NULL;
+  librdf_node *object = NULL;
+  ThotBool res;
+  librdf_statement *partial_statement;
+
+  if (!BM_Context_get (ref, &world, &model, &storage)
+      || !subject_url || !state_url)
+    return FALSE;
+
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) subject_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_STATE);
+  object = librdf_new_node_from_uri_string (world, (unsigned char *) state_url);
+
+  partial_statement = librdf_new_statement (world);
+
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+
+  res =  librdf_model_contains_statement (model, partial_statement);
+
+  librdf_free_statement (partial_statement);
+
+  return (res);
+}
+
+/*-----------------------------------------------------------
+  ThotBool Model_changeState
+  ------------------------------------------------------------*/
+ThotBool Model_changeState (int ref, Document doc,
+			    char *subject_url, char *previous_state_url,
+			    char *new_state_url)
+{
+  librdf_world *world;
+  librdf_model *model; 
+  librdf_storage *storage;
+  librdf_node *subject = NULL;
+  librdf_node *predicate = NULL;
+  librdf_node *object = NULL;
+  librdf_statement *partial_statement;
+
+  if (!BM_Context_get (ref, &world, &model, &storage)
+      || !subject_url)
+    return FALSE;
+
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) subject_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_STATE);
+  object = librdf_new_node_from_uri_string (world, (unsigned char *) previous_state_url);
+
+  partial_statement = librdf_new_statement (world);
+
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+
+  if (librdf_model_contains_statement (model, partial_statement))
+    librdf_model_remove_statement (model, partial_statement);
+
+  librdf_statement_clear (partial_statement);
+
+  subject = librdf_new_node_from_uri_string (world, (unsigned char *) subject_url);
+  predicate = librdf_new_node_from_uri_string (world, (unsigned char *) BMNS_STATE);
+  object = librdf_new_node_from_uri_string (world, (unsigned char *) new_state_url);
+
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+
+  if (!librdf_model_contains_statement (model, partial_statement))
+    librdf_model_add_statement (model, partial_statement);
+
+  librdf_free_statement (partial_statement);
+
+  /* save the model */
+  BM_saveOrModify (ref, doc);
+  
+  return TRUE;
+}
+
+
+

@@ -22,6 +22,7 @@
 #include "f/ANNOTevent_f.h"
 
 /* bookmark includes */
+#include "f/BMevent_f.h"
 #include "f/BMfile_f.h"
 #include "f/BMmenu_f.h"
 #include "f/BMview_f.h"
@@ -100,36 +101,19 @@ ThotBool BM_Open (char *url, char *tmpfile)
   /* initialize it anyway, as this gets raptor initialized too */
   ref = redland_init (normalized_url, tmpfile, FALSE);
 
-  BM_parse (ref, tmpfile, normalized_url);
+  result = BM_parse (ref, tmpfile, normalized_url);
 
   if (normalized_url != url)
     TtaFreeMemory (normalized_url);
 
-  if (BM_containsBookmarks (ref))
-    {
-      int count;
-      int item_count;
-      List *list = NULL;
-      List *items = NULL;
-
-      /* set the doc that's open */
+  if (result && BM_containsBookmarks (ref))
       result = TRUE;
-      count = Model_dumpAsList (ref, &list, BME_TOPIC);
-      item_count = Model_dumpAsList (ref, &items, BME_BOOKMARK);
-      if (item_count)
-	{
-	  count += item_count;
-	  items = BM_expandBookmarks (&items);
-	  list = List_merge (list, items);
-	}
-      /* BM_InitDocumentStructure (doc, list); */
-      List_delAll (&list, BMList_delItem);
-    }
   else
     {
       redland_free (ref, FALSE);
       result = FALSE;
     }
+
   return result;
 }
 
@@ -223,7 +207,8 @@ void BM_Init (void)
       sprintf (LocalBookmarksFile, "%s%c%s", ptr, DIR_SEP, LOCAL_BOOKMARKS_FILE);
     }
   LocalBookmarksBaseURI = ANNOT_MakeFileURL ((char *) LocalBookmarksFile);
-  HomeTopicURI = (char *)TtaGetMemory (strlen (LocalBookmarksBaseURI) + sizeof (HOME_TOPIC_ANCHOR) + 2);
+  HomeTopicURI = (char *)TtaGetMemory (strlen (LocalBookmarksBaseURI) 
+				       + sizeof (HOME_TOPIC_ANCHOR) + 2);
   sprintf (HomeTopicURI, "%s%s", LocalBookmarksBaseURI, HOME_TOPIC_ANCHOR);
 
 
@@ -238,7 +223,11 @@ void BM_Init (void)
 
   if (TtaFileExist (LocalBookmarksFile))
     {
-      BM_parse (0, LocalBookmarksFile, LocalBookmarksBaseURI);
+      if (!BM_parse (0, LocalBookmarksFile, LocalBookmarksBaseURI))
+	{
+	  BookmarksEnabled = FALSE;
+	  InitConfirm (0, 0, "Default bookmark file is corrupt. Disabling bookmarks.");
+	}
       /* get the value of the home topic */
     }
   else
@@ -257,9 +246,11 @@ void BM_Init (void)
       me->modified = StrdupDate ();
       me->bm_type = BME_TOPIC;
       me->parent_url[0] = EOS;
-      /* add and save it right now */
       BM_addTopic (0, 0, me, FALSE);
+      BM_initializeCollection (0, me);
       Bookmark_free (me);
+      /* save the new bookmark file */
+      BM_save (0, GetLocalBookmarksFile ());
     }
 }
 
@@ -322,6 +313,78 @@ void BM_CreateTopic (Document doc, View view)
 }
 
 /*-----------------------------------------------------------------------
+  BM_CreateSeparator
+  Creates a separator after the selection in a bookmark view.
+
+  get the selection
+  get the element type (bookmark, topic, separator) 
+  get the URL in the model
+  Add separator using the previous URL as the before item 
+  -----------------------------------------------------------------------*/
+void BM_CreateSeparator (Document doc, View view)
+{
+  int              ref;
+  Element          el;
+  int              i;
+  int firstCh;
+  char            *selected_item_url;
+  char            *topic_url;
+  DisplayMode      dispMode;
+  ThotBool         isHomeTopic;
+  ThotBool         isBlankIdentifier;
+  ThotBool         found;
+  BookmarkElements item_type;
+
+  if (DocumentTypes[doc] != docBookmark)
+    return;
+
+  if (!GetBookmarksEnabledConfirm (FALSE))
+    return;
+
+  if (!TtaIsDocumentSelected (doc))
+    return;
+
+  TtaGiveFirstSelectedElement (doc, &el, &firstCh, &i);
+  if (!el)
+    return;
+
+  /* get the models reference */
+  if (!BM_Context_reference (DocumentURLs[doc], &ref))
+    return;
+  
+  found = BM_GetModelReferences (ref, doc, el,
+				 &topic_url, &isHomeTopic,
+				 &selected_item_url, &item_type, &isBlankIdentifier);
+  /* get the topic_url */
+  if (found && !isHomeTopic)
+    {
+      /* avoid refreshing the document while doing the tree operation */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, DeferredDisplay);
+      
+      /* make a new separator and add it to the model */
+      BM_addSeparator (doc, ref, topic_url, selected_item_url);
+      
+      /* refresh the bookmark and topic widgets if they are open */
+      BM_refreshBookmarkView (ref);
+
+      /* select the next element */
+      BM_selectNextItem (doc, selected_item_url);
+
+      /* show the document */
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, dispMode);
+    }
+  
+  if (found)
+    {
+      TtaFreeMemory (topic_url);
+      TtaFreeMemory (selected_item_url);
+    }
+}
+
+/*-----------------------------------------------------------------------
   BM_ViewBookmarks
   Opens a dialog for viewing the current bookmarks
   -----------------------------------------------------------------------*/
@@ -333,6 +396,7 @@ void BM_ViewBookmarks (Document doc, View view, ThotBool isRefresh)
   int item_count;
   int ref;
   Document bookmark_doc;
+  char *rootCollection;
 
   if (!GetBookmarksEnabledConfirm (FALSE))
     return;
@@ -345,20 +409,37 @@ void BM_ViewBookmarks (Document doc, View view, ThotBool isRefresh)
   else
     ref = 0;
 
-  count = Model_dumpAsList (ref, &list, BME_TOPIC);
-  item_count = Model_dumpAsList (ref, &items, BME_BOOKMARK);
-  if (item_count)
+  /* see if there is a collection or if we have to generate one */
+  rootCollection = Model_getCollectionRoot (ref, NULL);
+  if (rootCollection)
     {
-      count += item_count;
-      items = BM_expandBookmarks (&items);
-      list = List_merge (list, items);
+      count = Model_dumpCollection (ref, rootCollection, TRUE, &list);
+      TtaFreeMemory (rootCollection);
     }
-
-  if (count > 0)
-    BM_bookmarksSort (&list);
-
+  else
+    {
+      count = Model_dumpAsList (ref, &list, BME_TOPIC);
+      /* remove all collapsed topics */
+      list = BM_pruneTopics (&list, NULL);
+      item_count = Model_dumpAsList (ref, &items, BME_BOOKMARK);
+      if (item_count)
+	{
+	  count += item_count;
+	  items = BM_expandBookmarks (&items, TRUE, list);
+	  list = List_merge (list, items);
+	}
+      
+      if (count > 0)
+	{
+	  BM_bookmarksSort (&list);
+	  /* create add all the items to the collection */
+	  BM_generateCollection (ref, list);
+	  BM_saveOrModify (ref, doc);
+	}
+    }
   /* add the seeAlso's */
-  Model_dumpSeeAlsoAsList (ref, &list);
+  if (count)
+    Model_dumpSeeAlsoAsList (ref, &list);
 
   if (!isRefresh)
     {
@@ -477,26 +558,58 @@ void BM_ImportTopics (Document doc, View view)
 }
 
 /*-----------------------------------------------------------------------
+  BM_ChangeItem
+  A common front end to the Paste and Move bookmark operations
+  -----------------------------------------------------------------------*/
+static void BM_ChangeItem (Document doc, View view, ThotBool move)
+{
+  Element el;
+  ElementType elType;
+  int first, last;
+
+  if (TtaGetSelectedDocument () != doc)
+    return;
+
+  /* do we need to be careful about what is first and last? */
+  TtaGiveFirstSelectedElement (doc, &el, &first, &last);
+  if (!el)
+    return;
+
+  /* selection must be in the same document, and only
+   a caret. An exception is made for separators, as selecting them
+   gives a non empty selection */
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum != Topics_EL_Separator_item 
+      && !TtaIsSelectionEmpty ())
+    return; 
+
+  if (!el)
+    return;
+
+  if (move)
+    BM_Move (doc, el);
+  else
+    BM_Paste (doc, el);
+
+  return;
+}
+
+/*-----------------------------------------------------------------------
   BM_PasteHandler
   Frontend to the paste function.
   -----------------------------------------------------------------------*/
 void BM_PasteHandler (Document doc, View view)
 {
-  Element el;
-  int first, last;
+  BM_ChangeItem (doc, view, FALSE);
+}
 
-  if (TtaGetSelectedDocument () != doc
-      || !TtaIsSelectionEmpty ())
-    return; /* selection must be in the same document, and only
-	     a caret */
-
-  /* do we need to be careful about what is first and last? */
-  TtaGiveFirstSelectedElement (doc, &el, &first, &last);
-
-  if (!el)
-    return;
-
-  BM_Paste (doc, el);
+/*-----------------------------------------------------------------------
+  BM_MoveHandler
+  Frontend to the paste function.
+  -----------------------------------------------------------------------*/
+void BM_MoveHandler (Document doc, View view)
+{
+  BM_ChangeItem (doc, view, TRUE);
 }
 
 /*-----------------------------------------------------------------------
@@ -548,6 +661,7 @@ ThotBool BM_FollowBookmark (NotifyElement *event)
   AttributeType    attrType;
   Attribute	   attr;
   int              i;
+  int              ref;
   char            *url;
   List            *dump;
   DisplayMode      dispMode;
@@ -600,7 +714,8 @@ ThotBool BM_FollowBookmark (NotifyElement *event)
       /* don't let Thot perform the normal operation */
       return TRUE;
     }
-  else if (elType.ElTypeNum == Topics_EL_Topic_item)
+  else if (elType.ElTypeNum == Topics_EL_Topic_item
+	   && BM_Context_reference (DocumentURLs[doc], &ref))
     {
       /* avoid refreshing the document while holophrasting */
       dispMode = TtaGetDisplayMode (doc);
@@ -620,6 +735,18 @@ ThotBool BM_FollowBookmark (NotifyElement *event)
 	  TtaSetAttributeValue (attr, Topics_ATTR_Closed__VAL_Yes, el, doc);
 	  /* remove the contents of this topic */
 	  BM_CloseTopic (doc, el);
+	  /* add a property to the model saying this topic is closed */
+	  attrType.AttrTypeNum = Topics_ATTR_Model_HREF_;
+	  attr = TtaGetAttribute (el, attrType);
+	  i = TtaGetTextAttributeLength (attr);
+	  if (i > 0)
+	    {
+	      /* allocate some memory: length of name + 6 cars for noname */
+	      url = (char *) TtaGetMemory (i + 1);
+	      TtaGiveTextAttributeValue (attr, url, &i);
+	      Model_changeState (ref, doc, url, BMNS_EXPANDED, BMNS_COLLAPSED);
+	      TtaFreeMemory (url);
+	    }
 	}
       else
 	{
@@ -640,18 +767,16 @@ ThotBool BM_FollowBookmark (NotifyElement *event)
 	      i = TtaGetTextAttributeLength (attr);
 	      if (i > 0)
 		{
-		  int ref;
-
-		  if (BM_Context_reference (DocumentURLs[doc], &ref)) 
-		    {
-		      /* allocate some memory: length of name + 6 cars for noname */
-		      url = (char *) TtaGetMemory (i + 1);
-		      TtaGiveTextAttributeValue (attr, url, &i);
-		      Model_dumpTopicAsList (ref, url, TRUE, &dump);
-		      TtaFreeMemory (url);
-		      BM_OpenTopic (doc, dump->next);
-		      List_delAll (&dump, BMList_delItem);
-		    }
+		  /* allocate some memory: length of name + 6 cars for noname */
+		  url = (char *) TtaGetMemory (i + 1);
+		  TtaGiveTextAttributeValue (attr, url, &i);
+		  /* update the model */
+		  Model_changeState (ref, doc, url, BMNS_COLLAPSED, BMNS_EXPANDED);
+		  Model_dumpTopicAsList (ref, url, TRUE, TRUE, &dump);
+		  if (dump)
+		    BM_OpenTopic (doc, dump->next);
+		  List_delAll (&dump, BMList_delItem);
+		  TtaFreeMemory (url);
 		}
 	    }
 	}
@@ -764,6 +889,7 @@ ThotBool BM_ItemDelete (NotifyElement *event)
   DisplayMode      dispMode;
   ThotBool         isTopic;
   ThotBool         isHomeTopic;
+  ThotBool         isBlankIdentifier;
   int              ref;
 
   doc = event->document;
@@ -775,23 +901,34 @@ ThotBool BM_ItemDelete (NotifyElement *event)
     return TRUE;
 
   /* get the models reference */
-  /* @@ JK: don't know how to save an edited file */
   if (!BM_Context_reference (DocumentURLs[doc], &ref))
     return TRUE;
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
 
-  if (elType.ElTypeNum == Topics_EL_SeeAlso_content)
+  if (elType.ElTypeNum == Topics_EL_SeeAlso_content
+      || elType.ElTypeNum == Topics_EL_C_Empty)
     {
       el = TtaGetParent (el);
       elType = TtaGetElementType (el);
     }
 
   if (elType.ElTypeNum == Topics_EL_Bookmark_item)
-    isTopic = FALSE;
+    {
+      isTopic = FALSE;
+      isBlankIdentifier = FALSE;
+    }
+  else if ( elType.ElTypeNum == Topics_EL_Separator_item)
+    {
+      isTopic = FALSE;
+      isBlankIdentifier = TRUE;
+    }
   else if (elType.ElTypeNum == Topics_EL_Topic_item)
-    isTopic = TRUE;
+    {
+      isTopic = TRUE;
+      isBlankIdentifier = FALSE;
+    }
   else
     return TRUE;
 
@@ -824,7 +961,7 @@ ThotBool BM_ItemDelete (NotifyElement *event)
   if (isTopic)
     {
       /* get a list of all items in the topic and remove them */
-      Model_dumpTopicAsList (ref, url, FALSE, &dump);
+      Model_dumpTopicAsList (ref, url, FALSE, FALSE, &dump);
       if (isHomeTopic)
 	BM_deleteItemList (ref, url, dump->next);
       else
@@ -862,9 +999,9 @@ ThotBool BM_ItemDelete (NotifyElement *event)
 	  return TRUE;
 	}
       i++;
-      topic_url = (char *)TtaGetMemory (i);
+      topic_url = (char *) TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, topic_url, &i);
-      BM_deleteBookmarkItem (ref, topic_url, url);
+      BM_deleteBookmarkItem (ref, topic_url, url, isBlankIdentifier);
       TtaFreeMemory (topic_url);
     }
   TtaFreeMemory (url);
@@ -958,7 +1095,7 @@ ThotBool BM_ItemDelete (NotifyElement *event)
     TtaSetDisplayMode (doc, dispMode);
 
   /* refresh the bookmark and topic widgets if they are open */
-  BM_RefreshTopicTree (doc);
+  BM_RefreshTopicTree (ref);
 
   /* don't let Thot perform the normal operation */
   return TRUE;

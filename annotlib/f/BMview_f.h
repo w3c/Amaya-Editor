@@ -17,8 +17,11 @@ extern void BM_seeAlsoSetTitle ( Document doc,
                                  char *title );
 extern Element BM_seeAlsoAdd ( Document doc,
                                Element parent_item );
+extern Element BM_separatorAdd ( Document doc,
+                                 Element topic_item );
 extern Element BM_topicAdd ( Document doc,
-                             Element topic_item );
+                             Element topic_item,
+                             ThotBool collapsed );
 extern void BM_bookmarkSetTitle ( Document doc,
                                   Element bookmark_item,
                                   char *title );
@@ -54,10 +57,21 @@ extern void BM_topicsPreSelect ( int ref,
 extern void BM_FreePasteBuffer ( void );
 extern ThotBool BM_Paste ( Document doc,
                            Element target );
+extern ThotBool BM_Move ( Document doc,
+                          Element target );
 extern ThotBool BM_PastePost ( NotifyOnValue *event );
-extern ThotBool BM_PasteNew ( NotifyElement *event );
 extern ThotBool BM_Copy ( NotifyElement *event );
 extern ThotBool BM_IgnoreEvent ( NotifyOnTarget * );
+extern void BM_selectNextItem ( Document doc,
+                                char *item_url );
+extern ThotBool BM_GetModelReferences ( int ref,
+                                        Document doc,
+                                        Element sel,
+                                        char **topic_url,
+                                        ThotBool *isHomeTopic,
+                                        char **item_url,
+                                        BookmarkElements *item_type,
+                                        ThotBool *isBlankIdentifier );
 
 #else /* __STDC__ */
 
@@ -72,8 +86,11 @@ extern void BM_seeAlsoSetTitle ( Document doc,
                                    char *title );
 extern Element BM_seeAlsoAdd ( Document doc,
                                  Element parent_item );
+extern Element BM_separatorAdd ( Document doc,
+                                   Element topic_item );
 extern Element BM_topicAdd ( Document doc,
-                               Element topic_item );
+                               Element topic_item,
+                               ThotBool collapsed );
 extern void BM_bookmarkSetTitle ( Document doc,
                                     Element bookmark_item,
                                     char *title );
@@ -109,10 +126,21 @@ extern void BM_topicsPreSelect ( int ref,
 extern void BM_FreePasteBuffer ( void );
 extern ThotBool BM_Paste ( Document doc,
                              Element target );
+extern ThotBool BM_Move ( Document doc,
+                            Element target );
 extern ThotBool BM_PastePost ( NotifyOnValue *event );
-extern ThotBool BM_PasteNew ( NotifyElement *event );
 extern ThotBool BM_Copy ( NotifyElement *event );
 extern ThotBool BM_IgnoreEvent ( NotifyOnTarget * );
+extern void BM_selectNextItem ( Document doc,
+                                  char *item_url );
+extern ThotBool BM_GetModelReferences ( int ref,
+                                          Document doc,
+                                          Element sel,
+                                          char **topic_url,
+                                          ThotBool *isHomeTopic,
+                                          char **item_url,
+                                          BookmarkElements *item_type,
+                                          ThotBool *isBlankIdentifier );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

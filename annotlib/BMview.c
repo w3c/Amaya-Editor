@@ -25,10 +25,10 @@
 #include "bookmarks.h"
 #include "Topics.h"
 #include "f/BMevent_f.h"
-
 #include "f/BMfile_f.h"
 #include "f/BMtools_f.h"
 #include "f/BMview_f.h"
+#include "f/BMmenu_f.h"
 
 /*-----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
@@ -100,6 +100,9 @@ static char * BM_topicGetTitle (Element topic_item)
 }
 
 /*-----------------------------------------------------------------------
+  BM_topicGetModelHref
+  returns the URL of the model corresponding to the parent topic
+  
   -----------------------------------------------------------------------*/
 char * BM_topicGetModelHref (Element topic_item)
 {
@@ -198,8 +201,48 @@ Element BM_seeAlsoAdd (Document doc, Element parent_item)
 }
 
 /*-----------------------------------------------------------------------
+  BM_separatorAdd
   -----------------------------------------------------------------------*/
-Element BM_topicAdd (Document doc, Element topic_item)
+Element BM_separatorAdd (Document doc, Element topic_item)
+{
+  ElementType    elType;
+  Element        topic_content, item, el;
+  DisplayMode    dispMode;
+
+  /* find the topic content */
+  topic_content = BM_topicGetCreateContent (doc, topic_item);
+  /* if there's nothing, don't do anything */
+  if (!topic_content)
+    return (Element) NULL;
+
+  /* avoid refreshing the document while we're constructing it */
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+
+  elType = TtaGetElementType (topic_content);
+
+  /* create the item itself */
+  elType.ElTypeNum = Topics_EL_Separator_item;
+  item = TtaNewTree (doc, elType, "");
+
+  /* attach it to the tree */
+  el = TtaGetLastChild (topic_content);
+  if (!el)
+    TtaInsertFirstChild (&item, topic_content, doc);
+  else
+    TtaInsertSibling (item, el, FALSE, doc);
+
+ /* show the document */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
+
+  return item;
+}
+
+/*-----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+Element BM_topicAdd (Document doc, Element topic_item, ThotBool collapsed)
 {
   ElementType      elType;
   Element          topic_content, item, el;
@@ -238,10 +281,20 @@ Element BM_topicAdd (Document doc, Element topic_item)
 
   /* give it a default attribute (open) */
   attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = Topics_ATTR_Open_;
-  attr = TtaNewAttribute (attrType);
-  TtaAttachAttribute (item, attr, doc);
-  TtaSetAttributeValue (attr, Topics_ATTR_Open__VAL_Yes_, item, doc);
+  if (collapsed)
+    {
+      attrType.AttrTypeNum = Topics_ATTR_Closed_;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (item, attr, doc);
+      TtaSetAttributeValue (attr,  Topics_ATTR_Closed__VAL_Yes, item, doc);
+    }
+  else
+    {
+      attrType.AttrTypeNum = Topics_ATTR_Open_;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (item, attr, doc);
+      TtaSetAttributeValue (attr, Topics_ATTR_Open__VAL_Yes_, item, doc);
+    }
 
  /* make the text part read only */
   elType.ElTypeNum = Topics_EL_Topic_title;
@@ -391,7 +444,8 @@ void BM_InitItem (Document doc, Element el, BookmarkP me)
 Element BM_AddItem (Document doc, BookmarkP me)
 {
   ElementType    elType;
-  Element        root, item, el, rootOfThread;
+  Element        root, el, rootOfThread;
+  Element        item = NULL;
   Attribute      attr;
   AttributeType  attrType;
   char          *url;
@@ -472,12 +526,13 @@ Element BM_AddItem (Document doc, BookmarkP me)
     }
   
   if (me->bm_type == BME_TOPIC)
-    item = BM_topicAdd (doc, el);
+    item = BM_topicAdd (doc, el, me->collapsed);
   else if (me->bm_type == BME_BOOKMARK)
     item = BM_bookmarkAdd (doc, el);
   else if (me->bm_type == BME_SEEALSO)
     item = BM_seeAlsoAdd (doc, el);
-
+  else if (me->bm_type == BME_SEPARATOR)
+    item = BM_separatorAdd (doc, el);
   /* init the thread item elements */
   if (item)
     BM_InitItem (doc, item,  me);
@@ -576,8 +631,15 @@ void BM_CloseTopic (Document doc, Element topic_item)
   TtaSetDisplayMode (doc, NoComputedDisplay);
 
   elType = TtaGetElementType (topic_item);
-  
+
+  /* delete the topic entries */
   elType.ElTypeNum = Topics_EL_Topic_content;
+  el = TtaSearchTypedElement (elType, SearchInTree, topic_item);
+  if (el)
+    TtaDeleteTree (el, doc);
+
+  /* delete the seeAlso entries */
+  elType.ElTypeNum = Topics_EL_SeeAlso_content;
   el = TtaSearchTypedElement (elType, SearchInTree, topic_item);
   if (el)
     TtaDeleteTree (el, doc);
@@ -732,12 +794,6 @@ void BM_topicsPrune (Document doc, BookmarkP me)
     {
     /* delete the subtopics, if they exist */
       TtaDeleteTree (el, doc);
-      /* 
-      elType.ElTypeNum = Topics_EL_Topic_content;
-      el = TtaSearchTypedElement (elType, SearchInTree, el);
-      if (el)
-	TtaDeleteTree (el, doc);
-      */
     }
 }
 
@@ -983,12 +1039,16 @@ void BM_topicsPreSelect (int ref, Document TopicTree, BookmarkP bookmark)
   List *topics =  NULL, *list_item;
   int count;
 
-  if (!bookmark)
+  if (!bookmark || bookmark->self_url[0] == EOS)
     {
      /* select the default topic */
       BM_topicSelectToggle (TopicTree, GetHomeTopicURI(), TRUE);
       return;
     }
+
+  /* this is to help ignore a stray gtk callback */
+  if (bookmark->self_url[0] == EOS)
+    return;
 
   if (bookmark->bm_type == BME_TOPIC && bookmark->parent_url)
       BM_topicSelectToggle (TopicTree, bookmark->parent_url, TRUE);
@@ -1014,6 +1074,8 @@ void BM_topicsPreSelect (int ref, Document TopicTree, BookmarkP bookmark)
 typedef struct _BM_PasteBuffer {
   int ref;
   char *bookmark_url;
+  char *topic_url;
+  BookmarkElements item_type;
 } BM_PasteBuffer;
 
 static BM_PasteBuffer PasteBuffer;
@@ -1028,6 +1090,11 @@ void BM_FreePasteBuffer ()
       TtaFreeMemory (PasteBuffer.bookmark_url);
       PasteBuffer.bookmark_url = NULL;
     }
+  if (PasteBuffer.topic_url)
+    {
+      TtaFreeMemory (PasteBuffer.topic_url);
+      PasteBuffer.topic_url = NULL;
+    }
 }
 
 /*-----------------------------------------------------------
@@ -1038,11 +1105,16 @@ void BM_FreePasteBuffer ()
 ThotBool BM_Paste (Document doc, Element target)
 {
   Element el;
-  ElementType elType;
-  ThotBool result;
+  ThotBool result = FALSE;
 
-  char *parent_href;
-  int dest_ref;
+  int              dest_ref;
+  char            *selected_item_url;
+  char            *topic_url;
+  ThotBool         isHomeTopic;
+  ThotBool         isBlankNode;
+  ThotBool         addFirst;
+  BookmarkElements item_type;
+  char            *bookmark_url = NULL;
 
   el = target; /* the place where we want to paste to */
 
@@ -1056,69 +1128,230 @@ ThotBool BM_Paste (Document doc, Element target)
   if (!PasteBuffer.bookmark_url || PasteBuffer.bookmark_url[0] == EOS)
     return TRUE;
 
+  /* paste is only allowed for bookmarks */
+  if (PasteBuffer.item_type != BME_BOOKMARK)
+    return TRUE;
+
   /* @@@ check to see if the ref still exists. The user may have closed the bm file
      in the meatime */
 
-#if 0
-  /* get the concerned node */
-  el = TtaGetFirstChild (el);
-  while (el && value) 
-    {
-      TtaNextSibling (&el);
-      value--;
-    }
-  if (!el)
-    return TRUE;
-#endif
+  /* get the model's reference for the point of insertion */
+  result = BM_GetModelReferences (dest_ref, doc, el,
+				 &topic_url, &isHomeTopic,
+				 &selected_item_url, &item_type, &isBlankNode);
 
-  /* get the concerned node */
-  elType = TtaGetElementType (el);
-  while (el && elType.ElTypeNum != Topics_EL_Bookmark_item 
-	 && elType.ElTypeNum != Topics_EL_Topic_item)
-    {
-      el = TtaGetParent (el);
-      if (el)
-	elType = TtaGetElementType (el);
-    }
-
-  if (!el)
+  if (!result)
     return TRUE;
 
-  /* We now find the model's reference for the parent topic. */
-  if (elType.ElTypeNum == Topics_EL_Bookmark_item)
+  if (item_type == BME_TOPIC)
     {
-      /* it's a bookmark item, we get its parent topic. */
-      el = TtaGetParent (el);  /* topic content */
-      el = TtaGetParent (el);  /* topic item */
-      elType = TtaGetElementType (el);
-    }
-
-  if (elType.ElTypeNum == Topics_EL_Topic_item)
-    {
-      /* we can only paste things to 
-	 topic items */
-      parent_href = BM_topicGetModelHref (el);
+      TtaFreeMemory (topic_url);
+      topic_url = selected_item_url;
+      selected_item_url =  NULL;
+      addFirst = TRUE;
     }
   else
-      parent_href = NULL;
-
-  if (!parent_href)
-    return TRUE;
+    addFirst = FALSE;
 
   if (dest_ref != PasteBuffer.ref)
     {
       /* add the new bookmark to the model */
-      result = BM_pasteBookmark (dest_ref, PasteBuffer.ref, PasteBuffer.bookmark_url, parent_href);
+      result = BM_pasteBookmark (dest_ref, PasteBuffer.ref, PasteBuffer.bookmark_url, 
+				 topic_url,  &bookmark_url);
+      if (result)
+	{
+	  TtaFreeMemory (PasteBuffer.bookmark_url);
+	  PasteBuffer.bookmark_url = bookmark_url;
+	  TtaFreeMemory (PasteBuffer.topic_url);
+	  PasteBuffer.topic_url = TtaStrdup (topic_url);
+	  PasteBuffer.ref = dest_ref;
+	}
     }
   else
     {
-      /* add a new topic to the bookmark */
-      result = BM_addTopicToBookmark (dest_ref, PasteBuffer.bookmark_url, parent_href);
+      /* only do the operation if we're not copying and pasting to the same
+	 position */
+      if (!selected_item_url
+	  || strcmp (PasteBuffer.bookmark_url, selected_item_url))
+	{
+	  /* add a new topic to the bookmark */
+	  
+	  result = BM_addTopicToBookmark (dest_ref, PasteBuffer.bookmark_url, topic_url);
+	  if (!result)
+	    {
+	      bookmark_url = PasteBuffer.bookmark_url;
+	      /* the bookmark already existed in this topic. It's just a change
+		 of order */
+	      /* we may need to remember its model input so that we only change
+		 the order in the collection */
+	      BM_deleteItemCollection (dest_ref, topic_url, PasteBuffer.bookmark_url,
+				       &isBlankNode, FALSE);
+	      result = TRUE;
+	    }
+	}
+    }
+  
+  if (result)
+    {
+      BookmarkP me;
+
+      /* add the bookmark to its new position */
+      me = Bookmark_new ();
+      me->self_url = TtaStrdup (PasteBuffer.bookmark_url);
+      me->bm_type = PasteBuffer.item_type;
+      BM_addItemToCollection (dest_ref, topic_url, selected_item_url, me, 
+			      addFirst);
+      Bookmark_free (me);
+
+      /*
+      ** save the modifications
+      */
+      if (dest_ref == 0)
+	{
+	  /* save the modified model */
+	  BM_save (dest_ref, GetLocalBookmarksFile ());
+	}
+      else
+	{
+	  /* save the modified model in the temporary file */
+	  BM_tmpsave (dest_ref);
+	  /* mark the document as modified. Let the user do the save */
+	  TtaSetDocumentModified (doc);
+	}
+      /* refresh the bookmark view */
+      BM_refreshBookmarkView (dest_ref);
+    }
+
+  if (selected_item_url)
+    TtaFreeMemory (selected_item_url);
+  TtaFreeMemory (topic_url);
+
+  return FALSE;
+}
+
+/*-----------------------------------------------------------
+  BM_Move
+  Moves an item in a given bookmark file. 
+  A move can be done between different documents.
+  Returns TRUE all the time to keep the thotlib from doing
+  mischief.
+  ------------------------------------------------------------*/
+ThotBool BM_Move (Document doc, Element target)
+{
+  Element el;
+  ThotBool result = FALSE;
+
+  int              dest_ref;
+  char            *selected_item_url;
+  char            *topic_url;
+  ThotBool         isHomeTopic;
+  ThotBool         isBlankNode;
+  ThotBool         addFirst;
+  BookmarkElements item_type;
+  
+  el = target; /* the place where we want to paste to */
+
+  /*
+  ** get the reference
+  */
+  if (!BM_Context_reference (DocumentURLs[doc], &dest_ref))
+    return TRUE;
+
+  /* empty buffer? */
+  if (!PasteBuffer.bookmark_url || PasteBuffer.bookmark_url[0] == EOS
+      || !PasteBuffer.topic_url || PasteBuffer.topic_url[0] == EOS)
+    return TRUE;
+     
+  /* @@@ check to see if the ref still exists. The user may have closed the bm file
+     in the meatime */
+
+  /* get the model's reference for the point of insertion */
+  result = BM_GetModelReferences (dest_ref, doc, el,
+				  &topic_url, &isHomeTopic,
+				  &selected_item_url, &item_type, &isBlankNode);
+
+  if (!result)
+    return TRUE;
+  
+  if (item_type == BME_TOPIC)
+    {
+      TtaFreeMemory (topic_url);
+      topic_url = selected_item_url;
+      selected_item_url =  NULL;
+      addFirst = TRUE;
+    }
+  else
+    addFirst = FALSE;
+
+  if (dest_ref != PasteBuffer.ref)
+    {
+      /* add the new bookmark to the model */
+      result = false;
+    }
+  else
+    {
+      BookmarkP me;
+
+      /* only do the operation if we're not copying and pasting to the same
+	 position */
+      if (!selected_item_url
+	  || strcmp (PasteBuffer.bookmark_url, selected_item_url))
+	{
+	  me = Bookmark_new ();
+	  me->self_url = PasteBuffer.bookmark_url;
+	  me->bm_type = PasteBuffer.item_type;
+
+	  if (me->bm_type == BME_BOOKMARK)
+	    {
+	      /* add a new topic to the bookmark */
+	      if (strcmp (topic_url, PasteBuffer.topic_url))
+		{
+		  result = BM_addTopicToBookmark (dest_ref, PasteBuffer.bookmark_url, topic_url);
+		  if (result)
+		    {
+		      /* remove the previous hasTopic property */
+		      BM_deleteBookmarkTopic (dest_ref, PasteBuffer.topic_url, 
+					      PasteBuffer.bookmark_url, isBlankNode); 
+		    }
+		}
+	      else
+		result = TRUE; /* it's the same topic, we're just moving it around */
+	    }
+	  else if (me->bm_type == BME_TOPIC)
+	    {
+	      /* try to change the subTopicOf property to make it point to its new parent
+		 (the new location can't be a child of the current topic) */
+	      result = BM_replaceTopicParent (dest_ref, me->self_url, topic_url);
+	    }
+	  else if (me->bm_type == BME_SEPARATOR)
+	    result = TRUE; /* nothing special to do separators */
+
+	  if (result)
+	    {
+	      /* the bookmark already existed in this topic. It's just a change
+		 of order */
+	      /* we may need to remember its model input so that we only change
+		 the order in the collection */
+	      BM_deleteItemCollection (dest_ref, PasteBuffer.topic_url, me->self_url,
+				       &isBlankNode, FALSE);
+	      BM_addItemToCollection (dest_ref, topic_url, selected_item_url, me, 
+				      addFirst);
+	      /* we update the buffer to the current topic position so that
+		 the user can move it elsewhere and save him the trouble
+		 of having to copy it again */
+	      TtaFreeMemory (PasteBuffer.topic_url);
+	      PasteBuffer.topic_url = TtaStrdup (topic_url);
+	      result = TRUE;
+	    }
+	}
     }
 
   if (result)
     {
       BM_refreshBookmarkView (dest_ref); /* refresh the bookmark view */
+      /* refresh the bookmark and topic widgets if they are open */
+      if (item_type == BME_TOPIC)
+	BM_RefreshTopicTree (dest_ref);
       if (dest_ref == 0)
 	{
 	  /* save the modified model */
@@ -1132,8 +1365,11 @@ ThotBool BM_Paste (Document doc, Element target)
 	  TtaSetDocumentModified (doc);
 	}
     }
-  TtaFreeMemory (parent_href);
-
+  
+  if (selected_item_url)
+    TtaFreeMemory (selected_item_url);
+  TtaFreeMemory (topic_url);
+  
   return FALSE;
 }
 
@@ -1159,89 +1395,6 @@ ThotBool BM_PastePost (NotifyOnValue *event)
   return TRUE;
 }
 
-/*-----------------------------------------------------------
-  BM_PasteNew
-  This handler is called when the user puts the selection
-  in the middle of a title and tries to paste a bookmark there.
-  Returns TRUE all the time to keep the thotlib from doing
-  mischief.
-  ------------------------------------------------------------*/
-ThotBool BM_PasteNew (NotifyElement *event)
-{
-  Element el; 
-  ElementType elType;
-  Document  doc;
-
-  char *parent_href;
-  int dest_ref;
-
-  el = event->element; /* the place where we want to paste to */
-  doc = event->document;
-
-  /*
-  ** get the reference
-  */
-  if (!BM_Context_reference (DocumentURLs[doc], &dest_ref))
-    return TRUE;
-
-  /* empty buffer? */
-  if (!PasteBuffer.bookmark_url || PasteBuffer.bookmark_url[0] == EOS)
-    return TRUE;
-
-  /* get the concerned node */
-  elType = TtaGetElementType (el);
-  while  (el && elType.ElTypeNum != Topics_EL_Topic_item
-	  && elType.ElTypeNum != Topics_EL_Bookmark_item)
-    {
-      el = TtaGetParent (el);
-      elType = TtaGetElementType (el);
-    }
-  if (!el)
-    return TRUE;
-
-  /* We now find the model's reference for the parent topic. */
-  elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == Topics_EL_Bookmark_item)
-    {
-      /* it's a bookmark item, we get its parent topic. */
-      el = TtaGetParent (el);  /* topic content */
-      el = TtaGetParent (el);  /* topic item */
-      elType = TtaGetElementType (el);
-    }
-
-  if (elType.ElTypeNum == Topics_EL_Topic_item)
-    {
-      /* we can only paste things to 
-	 topic items */
-      parent_href = BM_topicGetModelHref (el);
-    }
-  else
-      parent_href = NULL;
-
-  if (!parent_href)
-    return TRUE;
-  
-  /* add the new bookmark to the model */
-  if (BM_pasteBookmark (dest_ref, PasteBuffer.ref, PasteBuffer.bookmark_url, parent_href))
-    {
-      BM_refreshBookmarkView (dest_ref);   /* refresh the bookmark view */
-      if (dest_ref == 0)
-	{
-	  /* save the modified model */
-	  BM_save (dest_ref, GetLocalBookmarksFile ());
-	}
-      else
-	{
-	  /* save the modified model in the temporary file */
-	  BM_tmpsave (dest_ref);
-	  /* mark the document as modified. Let the user do the save */
-	  TtaSetDocumentModified (doc);
-	}
-    }
-  TtaFreeMemory (parent_href);
-
-  return TRUE;
-}
 
 /*-----------------------------------------------------------
   BM_Copy
@@ -1262,6 +1415,9 @@ ThotBool BM_Copy (NotifyElement *event)
   el = event->element;
   doc = event->document;
 
+  /* we clear the paste buffer regardless of what happens below */
+  BM_FreePasteBuffer ();
+
   /*
   ** get the model's bookmark ref
   */
@@ -1274,8 +1430,21 @@ ThotBool BM_Copy (NotifyElement *event)
       elType = TtaGetElementType (el);
     }
 
+  /* @@ JK: This is what I was using before for allowing copy only on bookmarks */
+#if 0
   if (elType.ElTypeNum != Topics_EL_Bookmark_item)
     return FALSE;
+#else
+  /* @@ JK: the new code for copying all */
+  if (elType.ElTypeNum == Topics_EL_Bookmark_item)
+    PasteBuffer.item_type = BME_BOOKMARK;
+  else if (elType.ElTypeNum == Topics_EL_Separator_item)
+    PasteBuffer.item_type = BME_TOPIC;
+  else if (elType.ElTypeNum == Topics_EL_Topic_item)
+    PasteBuffer.item_type = BME_TOPIC;
+  else
+    return FALSE;
+#endif
 
   /* get the bookmarks' model url */
   attrType.AttrTypeNum = Topics_ATTR_Model_HREF_;
@@ -1292,9 +1461,6 @@ ThotBool BM_Copy (NotifyElement *event)
   bookmark_url = (char *) TtaGetMemory (i);
   TtaGiveTextAttributeValue (attr, bookmark_url, &i);
 
-  /* we clear it regardless of what happens below */
-  BM_FreePasteBuffer ();
-
   /*
   ** get the reference
   */
@@ -1302,7 +1468,16 @@ ThotBool BM_Copy (NotifyElement *event)
     return FALSE;
   PasteBuffer.ref = i;
 
+  /* store the URL in the buffer */
   PasteBuffer.bookmark_url = bookmark_url;
+
+  /*
+   * try to find a parent and store its URL 
+   */
+  el = TtaGetParent (el);
+  if (el)
+    el = TtaGetParent (el);
+  PasteBuffer.topic_url = BM_topicGetModelHref (el);
 
   return FALSE;
 }
@@ -1314,5 +1489,140 @@ ThotBool BM_Copy (NotifyElement *event)
   ------------------------------------------------------------*/
 ThotBool BM_IgnoreEvent (NotifyOnTarget *)
 {
+  return TRUE;
+}
+
+/*-----------------------------------------------------------
+  BM_selectNextItem
+  select the next sibling of the element containing item_url
+  ------------------------------------------------------------*/
+void BM_selectNextItem (Document doc, char *item_url)
+{
+  Element        el, root;
+  ElementType    elType;
+  Attribute      attr;
+  AttributeType  attrType;
+  int            i;
+  char          *url;
+
+  if (DocumentTypes[doc] != docBookmark || !item_url || *item_url == EOS)
+    return;
+
+  TtaUnselect (doc);
+
+  root = TtaGetRootElement (doc);
+  elType = TtaGetElementType (root);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = Topics_ATTR_Model_HREF_;      
+
+  TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
+  while (el)
+    {
+      i = TtaGetTextAttributeLength (attr) + 1;
+      url = (char *)TtaGetMemory (i);
+      TtaGiveTextAttributeValue (attr, url, &i);
+      if (!strcasecmp (url, item_url))
+	{
+	  TtaFreeMemory (url);
+	  break;
+	}
+      TtaFreeMemory (url);
+      root = el;
+      TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
+    }
+
+  root = el;
+
+  if (root)
+    {
+      TtaNextSibling (&el);
+      if (!el)
+	el = root;
+      TtaSelectElement (doc, el);
+    }
+}
+
+/*-----------------------------------------------------------
+  BM_GetModelReferences
+  ------------------------------------------------------------*/
+ThotBool BM_GetModelReferences (int ref, Document doc, Element sel, 
+				char **topic_url, ThotBool *isHomeTopic,
+				char **item_url, BookmarkElements *item_type, 
+				ThotBool *isBlankIdentifier)
+{
+  Element          el;
+  ElementType      elType;
+  AttributeType    attrType;
+  Attribute	   attr;
+  int              i;
+  char            *selected_item_url;
+
+  el = sel;
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+
+  if (elType.ElTypeNum == Topics_EL_SeeAlso_content
+      || elType.ElTypeNum == Topics_EL_C_Empty
+      || elType.ElTypeNum == Topics_EL_TEXT_UNIT)
+    {
+      el = TtaGetParent (el);
+      elType = TtaGetElementType (el);
+    }
+
+  if (elType.ElTypeNum == Topics_EL_Bookmark_title
+      || elType.ElTypeNum == Topics_EL_Topic_title)
+    {
+      el = TtaGetParent (el);
+      elType = TtaGetElementType (el);
+    }
+
+  if (elType.ElTypeNum == Topics_EL_Bookmark_item)
+    {
+      *item_type = BME_BOOKMARK;
+      *isBlankIdentifier = FALSE;
+    }
+  else if ( elType.ElTypeNum == Topics_EL_Separator_item)
+    {
+      *item_type = BME_SEPARATOR;
+      *isBlankIdentifier = TRUE;
+    }
+  else if (elType.ElTypeNum == Topics_EL_Topic_item)
+    {
+      *item_type = BME_TOPIC;
+      *isBlankIdentifier = FALSE;
+    }
+  else
+    return FALSE;
+
+  /* get the target URL */
+  attrType.AttrTypeNum = Topics_ATTR_Model_HREF_;
+  attr = TtaGetAttribute (el, attrType);
+  if (!attr)
+    return FALSE;
+      
+  i = TtaGetTextAttributeLength (attr);
+  if (i < 1)
+    {
+      /* item seems empty. We just return */
+      return FALSE;
+    }
+      
+  i++;
+  selected_item_url = (char *) TtaGetMemory (i);
+  TtaGiveTextAttributeValue (attr, selected_item_url, &i);
+  *item_url = selected_item_url;
+
+  /* get the model's reference for the parent topic */
+  el = TtaGetParent (el); /* topic content */
+  el = TtaGetParent (el); /* topic item */
+  *topic_url = BM_topicGetModelHref (el);
+
+  /* check if the user selected the home topic */
+  if (*item_type == BME_TOPIC && !strcmp (selected_item_url, GetHomeTopicURI ()))
+    *isHomeTopic = TRUE;
+  else
+    *isHomeTopic = FALSE;
+
   return TRUE;
 }

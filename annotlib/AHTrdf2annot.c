@@ -208,7 +208,7 @@ static ThotBool FillAnnotField( AnnotMeta* annot,
       else
 	annot->source_url = TtaStrdup ((char *) object);
     }
-  else if (contains (predicate, DC_NS, DC_CREATOR) ||
+  else if (contains (predicate, DC0_NS, DC_CREATOR) ||
 	   contains (predicate, DC1_NS, DC_CREATOR))
     {
 
@@ -230,10 +230,10 @@ static ThotBool FillAnnotField( AnnotMeta* annot,
     }
   else if (contains (predicate, ANNOT_NS, ANNOT_CREATED))
     annot->cdate = TtaStrdup ((char *) object);
-  else if (contains (predicate, DC_NS, DC_DATE) ||
+  else if (contains (predicate, DC0_NS, DC_DATE) ||
 	   contains (predicate, DC1_NS, DC_DATE))
     annot->mdate = TtaStrdup ((char *) object);
-  else if (contains (predicate, DC_NS, DC_TITLE) ||
+  else if (contains (predicate, DC0_NS, DC_TITLE) ||
 	   contains (predicate, DC1_NS, DC_TITLE))
     annot->title = TtaStrdup ((char *) object);
   else if (contains (predicate, RDFMS_NS, RDFMS_TYPE)) 
@@ -432,7 +432,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 #ifdef RAPTOR_RDF_PARSER
   if (triple) 
     {
-      char * predicate = AM_RAPTOR_URI_AS_STRING(triple->predicate);
+      char * predicate = (char *) AM_RAPTOR_URI_AS_STRING(triple->predicate);
       char * subject = NULL;
       char * object =  NULL;
 #else
@@ -456,7 +456,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	  sprintf (subject, "%s#%s", base_uri, ptr);
 	}
       else
-	subject = AM_RAPTOR_URI_AS_STRING(triple->subject);
+	subject = (char *) AM_RAPTOR_URI_AS_STRING(triple->subject);
 
       test = subject[2];
 
@@ -473,7 +473,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	}
       else
 #endif /* AM_REDLAND */
-	object = AM_RAPTOR_URI_AS_STRING(triple->object);
+	object = (char *) AM_RAPTOR_URI_AS_STRING(triple->object);
 #endif
 
       test = object[2];
@@ -607,7 +607,7 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
    /* remember the base name for anoynmous subjects */
   ctx.base_uri = full_file_name;
 #ifdef AM_REDLAND
-  uri = raptor_new_uri (full_file_name);
+  uri = raptor_new_uri ((unsigned char *) full_file_name);
 #else
   uri = full_file_name;
 #endif /* AM_REDLAND */

@@ -55,6 +55,8 @@ void Bookmark_free (BookmarkP me)
     }
   if (me->self_url)
     TtaFreeMemory (me->self_url);
+  if (me->blank_id)
+    TtaFreeMemory (me->blank_id);
   if (me->context)
     TtaFreeMemory (me->context);
   if (me->bookmarks)
@@ -171,20 +173,85 @@ ThotBool BM_IsTopic (void *object)
 }
 
 /*-----------------------------------------------------------
-  BM_expandBookmarks
+  BM_topicIsExpanded
+  ------------------------------------------------------------*/
+static ThotBool BM_topicIsExpanded (List *topic_list, char *topic)
+{
+  List *cur;
+  ThotBool result;
+  BookmarkP item;
+
+  cur = topic_list;
+  result = FALSE;
+  
+  while (cur)
+    {
+      item = (BookmarkP) cur->object;
+      if (item && !strcmp (item->self_url, topic))
+	{
+	  if (!item->collapsed)
+	    result = TRUE;
+	  break;
+	}
+      cur = cur->next;
+    }
+
+  return result;
+}
+
+/*-----------------------------------------------------------
+  BM_pruneTopics
+  Removes all the topics of the list whose parents
+  don't exist or are collapsed
 ------------------------------------------------------------*/
-List *BM_expandBookmarks (List **list)
+List *BM_pruneTopics (List **topic_list, char *parent_topic_url)
+{
+  List *cur;
+  List *new_list = NULL;
+  BookmarkP item;
+  
+  cur = *topic_list;
+
+  while (cur)
+    {
+      item = (BookmarkP) cur->object;
+      /* only add items that are not collapsed or that have no parent_urls
+	 (which we assimilate to root topics) or which correspond to the
+	 start of a given topic */
+      if (!item->parent_url && !parent_topic_url
+	  || parent_topic_url && !strcmp (parent_topic_url, item->self_url)
+	  || item->parent_url && BM_topicIsExpanded (*topic_list, item->parent_url))
+	List_add (&new_list, (void *) item);
+      else
+	{
+	  Bookmark_free (item);
+	  cur->object = NULL;
+	}
+      cur = cur->next;
+    }
+  List_delAll (topic_list, (ThotBool (*)(void*))NULL);
+
+  return new_list;
+}
+
+/*-----------------------------------------------------------
+  BM_expandBookmarks
+  if respectTopicStatus is TRUE, the bookmarks won't
+  be expanded unless the corresponding topic status 
+  is expanded.
+------------------------------------------------------------*/
+List *BM_expandBookmarks ( List **bookmark_list,
+			   ThotBool respectTopicStatus,
+			   List *topic_list)
 {
   List *cur;
   List *cur2;
   List *new_list = NULL;
-  List *cur_new;
   List *parent_url_list;
   BookmarkP item;
   BookmarkP clone;
   
-  cur = *list;
-  cur_new = new_list;
+  cur = *bookmark_list;
 
   while (cur)
     {
@@ -196,18 +263,32 @@ List *BM_expandBookmarks (List **list)
 	  item->parent_url = (char *) parent_url_list->object;
 	  parent_url_list->object = NULL;
 	  List_delAll (&parent_url_list, (ThotBool (*)(void*))NULL);
-	  List_add (&new_list, (void *) item);
+
+	  /* @@ check if this parent already exists or just skip it */
+	  if (!respectTopicStatus 
+	      || respectTopicStatus && BM_topicIsExpanded (topic_list, item->parent_url))
+	    List_add (&new_list, (void *) item);
+	  else
+	    Bookmark_free (item);
 	}
       else
 	{
 	  cur2 = parent_url_list;
 	  while (cur2)
 	    {
-	      /* not sure if this will work */
-	      clone = Bookmark_copy (item);
-	      clone->parent_url = (char *) cur2->object;
-	      cur2->object = NULL;
-	      List_add (&new_list, (void *) clone);
+	      char *parent_url;
+
+	      parent_url = (char *) cur2->object;
+	      if (!respectTopicStatus 
+		  || respectTopicStatus && BM_topicIsExpanded (topic_list, parent_url))
+		{
+		  /* not sure if this will work */
+		  clone = Bookmark_copy (item);
+		  clone->parent_url = (char *) cur2->object;
+		  cur2->object = NULL;
+		  /* @@ check if this parent already exists or just skip it */
+		  List_add (&new_list, (void *) clone);
+		}
 	      cur2 = cur2->next;
 	    }
 	  Bookmark_free (item);
@@ -215,7 +296,7 @@ List *BM_expandBookmarks (List **list)
 	}
       cur = cur->next;
     }
-  List_delAll (list, (ThotBool (*)(void*))NULL);
+  List_delAll (bookmark_list, (ThotBool (*)(void*))NULL);
   return new_list;
 }
 
@@ -333,4 +414,32 @@ void BM_bufferCopy (BM_dyn_buffer *me, char *src)
     strcpy (me->buffer, src);
 }
 
+#ifdef URN
+#define URN_TEMPLATE "urn:uid:"
 
+#include <uuid/uuid.h>
+#endif /* URN */
+
+/*----------------------------------------------------------------------
+  BM_newURN
+  Returns a new URN as a static string. The user must not free
+  this string.
+  ----------------------------------------------------------------------*/
+char *BM_newURN (void)
+{
+#ifdef URN
+  uuid_t uu;
+  static char char_uu[sizeof(URN_TEMPLATE) + 37];
+
+  strcpy (char_uu, URN_TEMPLATE);
+
+  uuid_generate (uu);
+  uuid_unparse (uu, char_uu + sizeof (URN_TEMPLATE) - 1);
+  printf ("Your urn for today will be %s\n", char_uu);
+  uuid_clear (uu);
+
+  return (char_uu);
+#else
+  return NULL;
+#endif /* URN */
+}

@@ -249,6 +249,26 @@ int List_count (List *list)
 }
 
 /* ------------------------------------------------------------
+   List_reverse
+   Returns a new_list that has the input_list in reverse order.
+   Note that the pointers to the lists object element are the
+   same. The caller has to be careful when deleting the list.
+   ------------------------------------------------------------*/
+List * List_reverse (List *input_list)
+{
+  List *reverse_list = NULL;
+  List *cur = input_list;
+
+  while (cur)
+    {
+      List_add (&reverse_list, cur->object);
+      cur = cur->next;
+    }
+  
+  return (reverse_list);
+}
+
+/* ------------------------------------------------------------
    AnnotList_localCount
    Returns the number of local annotations in an annotation  list
    ------------------------------------------------------------*/

@@ -14,7 +14,11 @@ extern ThotBool BMList_containsURL ( List *list,
                                      char *url );
 extern char * BM_GetMDate ( void *object );
 extern ThotBool BM_IsTopic ( void *object );
-extern List *BM_expandBookmarks ( List **list );
+extern List *BM_pruneTopics ( List **topic_list,
+                              char *parent_topic_url );
+extern List *BM_expandBookmarks ( List **bookmark_list,
+                                  ThotBool respectTopicStatus,
+                                  List *topic_list );
 extern BM_dyn_buffer * BM_bufferNew ( void );
 extern void BM_bufferFree ( BM_dyn_buffer * me );
 extern char * BM_bufferContent ( BM_dyn_buffer * me );
@@ -23,6 +27,7 @@ extern void BM_bufferCat ( BM_dyn_buffer *me,
                            char *src );
 extern void BM_bufferCopy ( BM_dyn_buffer *me,
                             char *src );
+extern char *BM_newURN ( void );
 
 #else /* __STDC__ */
 
@@ -34,7 +39,11 @@ extern ThotBool BMList_containsURL ( List *list,
                                        char *url );
 extern char * BM_GetMDate ( void *object );
 extern ThotBool BM_IsTopic ( void *object );
-extern List *BM_expandBookmarks ( List **list );
+extern List *BM_pruneTopics ( List **topic_list,
+                                char *parent_topic_url );
+extern List *BM_expandBookmarks ( List **bookmark_list,
+                                    ThotBool respectTopicStatus,
+                                    List *topic_list );
 extern BM_dyn_buffer * BM_bufferNew ( void );
 extern void BM_bufferFree ( BM_dyn_buffer * me );
 extern char * BM_bufferContent ( BM_dyn_buffer * me );
@@ -43,6 +52,7 @@ extern void BM_bufferCat ( BM_dyn_buffer *me,
                              char *src );
 extern void BM_bufferCopy ( BM_dyn_buffer *me,
                               char *src );
+extern char *BM_newURN ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -2189,17 +2189,28 @@ void SaveDocument (Document doc, View view)
   else
     {
       /* it's a local document */
-      Synchronize (doc, view);
-      /* save a local copy of the current document */
-      if (xmlDoc)
+      if (DocumentTypes[doc] == docBookmark)
 	{
-	  ptr = GetLocalPath (xmlDoc, tempname);
-	  TtaSetDocumentUnmodified (xmlDoc);
+#ifdef BOOKMARKS
+	  ok = BM_DocSave (doc, tempname);
+#else
+	  ok = FALSE;
+#endif BOOKMARKS
 	}
       else
-	ptr = GetLocalPath (doc, tempname);
-      ok = TtaFileCopy (ptr, tempname);
-      TtaFreeMemory (ptr);
+	{
+	  Synchronize (doc, view);
+	  /* save a local copy of the current document */
+	  if (xmlDoc)
+	    {
+	      ptr = GetLocalPath (xmlDoc, tempname);
+	      TtaSetDocumentUnmodified (xmlDoc);
+	    }
+	  else
+	    ptr = GetLocalPath (doc, tempname);
+	  ok = TtaFileCopy (ptr, tempname);
+	  TtaFreeMemory (ptr);
+	}
     }
 
   /* restore original display mode */

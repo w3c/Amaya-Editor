@@ -20,6 +20,7 @@ extern List *List_merge ( List *list1,
                           List *list2 );
 extern List *List_getLast ( List *list );
 extern int List_count ( List *list );
+extern List * List_reverse ( List *input_list );
 extern int AnnotList_localCount ( List *annot_list );
 extern void AnnotFilter_toggleAll ( Document doc,
                                     SelType selector,
@@ -145,6 +146,7 @@ extern List *List_merge ( List *list1,
                             List *list2 );
 extern List *List_getLast ( List *list );
 extern int List_count ( List *list );
+extern List * List_reverse ( List *input_list );
 extern int AnnotList_localCount ( List *annot_list );
 extern void AnnotFilter_toggleAll ( Document doc,
                                       SelType selector,

@@ -23,6 +23,8 @@ extern void BM_CreateBM ( Document doc,
                           View view );
 extern void BM_CreateTopic ( Document doc,
                              View view );
+extern void BM_CreateSeparator ( Document doc,
+                                 View view );
 extern void BM_ViewBookmarks ( Document doc,
                                View view,
                                ThotBool isRefresh );
@@ -31,6 +33,8 @@ extern void BM_ImportTopics ( Document doc,
                               View view );
 extern void BM_PasteHandler ( Document doc,
                               View view );
+extern void BM_MoveHandler ( Document doc,
+                             View view );
 extern ThotBool BM_FollowBookmark ( NotifyElement *event );
 extern ThotBool BM_ShowProperties ( NotifyElement *event );
 extern ThotBool BM_ItemDelete ( NotifyElement *event );
@@ -56,6 +60,8 @@ extern void BM_CreateBM ( Document doc,
                             View view );
 extern void BM_CreateTopic ( Document doc,
                                View view );
+extern void BM_CreateSeparator ( Document doc,
+                                   View view );
 extern void BM_ViewBookmarks ( Document doc,
                                  View view,
                                  ThotBool isRefresh );
@@ -64,6 +70,8 @@ extern void BM_ImportTopics ( Document doc,
                                 View view );
 extern void BM_PasteHandler ( Document doc,
                                 View view );
+extern void BM_MoveHandler ( Document doc,
+                               View view );
 extern ThotBool BM_FollowBookmark ( NotifyElement *event );
 extern ThotBool BM_ShowProperties ( NotifyElement *event );
 extern ThotBool BM_ItemDelete ( NotifyElement *event );

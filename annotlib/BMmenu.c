@@ -395,8 +395,8 @@ static void RefreshBookmarkMenu ()
   TtaSetTextForm (BookmarkBase + mBMTitle, BM_bufferContent (aDynBookmark->title));
   TtaSetTextForm (BookmarkBase + mBMBookmarks, BM_bufferContent (aDynBookmark->bookmarks));
   TtaSetTextForm (BookmarkBase + mBMAuthor, BM_bufferContent (aDynBookmark->author));
-  TtaSetTextForm (BookmarkBase + mBMCreated, aBookmark->created);
-  TtaSetTextForm (BookmarkBase + mBMModified, aBookmark->modified);
+  TtaNewLabel (BookmarkBase + mBMCreated, BookmarkBase + BookmarkMenu, aBookmark->created);
+  TtaNewLabel (BookmarkBase + mBMModified, BookmarkBase + BookmarkMenu, aBookmark->modified);
   TtaSetTextForm (BookmarkBase + mBMDescription, BM_bufferContent (aDynBookmark->description));
 }
 
@@ -472,6 +472,7 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 		      /* if successful, close the dialog */
 		      TtaCloseDocument (BTopicTree);
 		      BTopicTree = 0;
+
 		      /* refresh the view */
 		      BM_refreshBookmarkView (aDynBookmark->ref);
 		      BMmenu_bookmarkFree (&aDynBookmark, &aBookmark);
@@ -1240,7 +1241,7 @@ void BM_RefreshTopicTree (int ref)
 {
   ThotWidget tree;
 
-  if (aBookmark)
+  if (aBookmark && aDynBookmark->ref == ref)
     {
       tree = TtaCatWidget (BookmarkBase + mBMTopicTree);
       tree = TtaClearTree (tree);
@@ -1254,7 +1255,7 @@ void BM_RefreshTopicTree (int ref)
       BM_InitTreeWidget (tree, BTopicTree);
     }
 
-  if (aTopic)
+  if (aTopic && aDynTopic->ref == ref )
     {
       tree = TtaCatWidget (TopicBase + mTMTopicTree);
       if (tree)
@@ -1273,3 +1274,4 @@ void BM_RefreshTopicTree (int ref)
 	}
     }
 }
+

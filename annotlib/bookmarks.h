@@ -29,6 +29,16 @@
 #define BMNS_HASTOPIC BOOKMARK_NS"#"BM_HASTOPIC
 #define BM_NICKNAME "nickname"
 #define BMNS_NICKNAME BOOKMARK_NS"#"BM_NICKNAME
+#define BM_SEPARATOR "Separator"
+#define BMNS_SEPARATOR BOOKMARK_NS"#"BM_SEPARATOR
+#define BM_COLLECTION "collection"
+#define BMNS_COLLECTION BOOKMARK_NS"#"BM_COLLECTION
+#define BM_STATE "state"
+#define BMNS_STATE BOOKMARK_NS"#"BM_STATE
+#define BM_COLLAPSED "Collapsed"
+#define BMNS_COLLAPSED BOOKMARK_NS"#"BM_COLLAPSED
+#define BM_EXPANDED "Expanded"
+#define BMNS_EXPANDED BOOKMARK_NS"#"BM_EXPANDED
 #endif /* BOOKMARKS_H */
 
 /* The local bookmarks file */
@@ -43,9 +53,11 @@
 /* the different kind of bookmark elements */
  
 typedef enum _BookmarkElements {
-  BME_TOPIC    = 1, 
-  BME_BOOKMARK = 2, 
-  BME_SEEALSO  = 4
+  BME_UNKNOWN   = 0,
+  BME_TOPIC     = 1, 
+  BME_BOOKMARK  = 2, 
+  BME_SEPARATOR = 3, 
+  BME_SEEALSO   = 4
 } BookmarkElements;
 
 typedef struct _Bookmark
@@ -55,6 +67,7 @@ typedef struct _Bookmark
   char *parent_url;     /* the parent topic */
   List *parent_url_list;
   char *self_url;       /* the id that talks about this item */
+  char *blank_id;       /* used for seeAlso's that are reifered */
   char *bookmarks;      /* for bookmarks, what we're bookmarking */
   char *title;      
   char *nickname;       /* an alternate title */
@@ -62,6 +75,7 @@ typedef struct _Bookmark
   char *created;
   char *modified;
   char *description;
+  ThotBool collapsed;   /* says whether a topic is collapsed */
   char *context;   /* not used yet, but XPointer like */
 } Bookmark, *BookmarkP;
 

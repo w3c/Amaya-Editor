@@ -197,7 +197,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 #ifdef RAPTOR_RDF_PARSER
   if (triple) 
     {
-      char * predicate = AM_RAPTOR_URI_AS_STRING(triple->predicate);
+      char * predicate = (char *) AM_RAPTOR_URI_AS_STRING(triple->predicate);
       char * subject = NULL;
       char * object = NULL;
 #else
@@ -223,7 +223,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	  sprintf (subject, "%s#%s", base_uri, ptr);
 	}
       else
-	subject = AM_RAPTOR_URI_AS_STRING(triple->subject);
+	subject = (char *) AM_RAPTOR_URI_AS_STRING(triple->subject);
       test = subject[2];
 
 #endif
@@ -244,7 +244,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	}
       else
 #endif /* AM_REDLAND */
-	object = AM_RAPTOR_URI_AS_STRING(triple->object);
+	object = (char *) AM_RAPTOR_URI_AS_STRING(triple->object);
       test = object[2];
 
       objectP = ANNOT_FindRDFResource (listP, object, TRUE);
@@ -334,7 +334,7 @@ static void ReadSchema_callback (Document doc, int status,
       
       /* remember the base name for anoynmous subjects */
 #ifdef AM_REDLAND
-      uri = raptor_new_uri ((const char *) full_file_name);
+      uri = raptor_new_uri ((const unsigned char *) full_file_name);
 #else
       uri = full_file_name;
 #endif /* AM_REDLAND */

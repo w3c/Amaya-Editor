@@ -2630,7 +2630,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        /* do we have to redraw buttons and menus? */
        reinitialized = (docType != DocumentTypes[doc]);
        if (docType == docSource || docType == docLog ||
-	   docType == docLibrary || docType == docBookmark)
+	   docType == docLibrary) /*  || docType == docBookmark) */
 	 {
 	   reinitialized = FALSE;
 	   TtaSetItemOff (doc, 1, File, BHtmlBasic);
@@ -2674,14 +2674,21 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #ifdef BOOKMARKS
 	   if (docType == docBookmark)
 	     {
-	       TtaSetItemOff (doc, 1, Bookmarks_, BBookmarkFile);
-	       TtaSetMenuOff (doc, 1, Edit_);
+	       /* make it be possible to bookmark a bookmark file */
+	       /* TtaSetItemOff (doc, 1, Bookmarks_, BBookmarkFile); */
+	       /* TtaSetMenuOff (doc, 1, Edit_); */
 	     }
-	   else
-	     TtaSetMenuOff (doc, 1, Bookmarks_);
+	   else 
+	     {
+	       TtaSetMenuOff (doc, 1, Bookmarks_);
+	       TtaSetMenuOff (doc, 1, Help_);
+	     }
+#else
+	   TtaSetMenuOff (doc, 1, Help_);
 #endif /* BOOKMARKS */
 	   TtaSetMenuOff (doc, 1, Help_);
-	   /*TtcSwitchButtonBar (doc, 1);*/ /* no button bar */
+	   if (docType != docBookmark)
+	     TtcSwitchButtonBar (doc, 1); /* no button bar */
 	   if (docType == docLog || docType == docLibrary)
 	     {
 	       TtaSetItemOff (doc, 1, File, BExit);
@@ -4077,7 +4084,11 @@ void Reload_callback (int doc, int status, char *urlName,
     }
 #endif /* DAV */
 
-  DocStatusUpdate (newdoc, FALSE);
+   if (DocumentTypes[newdoc] == docBookmark && TtaIsDocumentModified (newdoc))
+     DocStatusUpdate (newdoc, TRUE);
+   else
+     DocStatusUpdate (newdoc, FALSE);
+
   TtaFreeMemory (documentname);
   if (form_data)
     TtaFreeMemory (form_data);

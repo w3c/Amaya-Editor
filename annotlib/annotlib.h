@@ -26,27 +26,38 @@
 /* RDF Property names */
 
 #define RDFMS_NS "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-#define RDF_TYPE   RDFMS_NS "type"
-#define RDFMS_TYPE "type"
+#define RDF_TYPE    RDFMS_NS "type"
+#define RDFMS_TYPE  "type"
+#define RDF_SEQ     RDFMS_NS "Seq"
+#define RDF_NODEID  RDFMS_NS "nodeID"
+#define RDF_FIRST   RDFMS_NS "first"
+#define RDF_REST    RDFMS_NS "rest"
+#define RDF_NIL     RDFMS_NS "nil"
+#define RDF_DESCRIPTION RDFMS_NS "Description"
 
 #define RDFS_LABEL "http://www.w3.org/2000/01/rdf-schema#label"
 #define RDFS_SUBCLASSOF "http://www.w3.org/2000/01/rdf-schema#subClassOf"
 #define RDFS_SEEALSO "http://www.w3.org/2000/01/rdf-schema#seeAlso"
 
 /* DC Property names -- note that we use / rather than # here */
-#define DC_NS "http://purl.org/dc/elements/1.0/"
+#define DC0_NS "http://purl.org/dc/elements/1.0/"
 #define DC1_NS "http://purl.org/dc/elements/1.1/"
+#define DC_NS DC1_NS
 #define DC_CREATOR "creator"
 #define DCNS_CREATOR DC_NS""DC_CREATOR
+#define DC0NS_CREATOR DC0_NS""DC_CREATOR
 #define DC1NS_CREATOR DC1_NS""DC_CREATOR
 #define DC_DATE "date"
 #define DCNS_DATE DC_NS""DC_DATE
+#define DC0NS_DATE DC0_NS""DC_DATE
 #define DC1NS_DATE DC1_NS""DC_DATE
 #define DC_TITLE "title"
 #define DCNS_TITLE DC_NS""DC_TITLE
+#define DC0NS_TITLE DC0_NS""DC_TITLE
 #define DC1NS_TITLE DC1_NS""DC_TITLE
 #define DC_DESCRIPTION "description"
 #define DCNS_DESCRIPTION DC_NS""DC_DESCRIPTION
+#define DC0NS_DESCRIPTION DC0_NS""DC_DESCRIPTION
 #define DC1NS_DESCRIPTION DC1_NS""DC_DESCRIPTION
 
 /* Annotea NS property names */
