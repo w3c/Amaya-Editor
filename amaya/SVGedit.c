@@ -1343,31 +1343,31 @@ void             NameSpaceGenerated (NotifyAttribute *event)
 
 /*----------------------------------------------------------------------
  InheritAttribute
- Check if any ancestor of element el has an attribute of type attrType.
+ Check if any ancestor of element el has an attribute of type attrType
+ and return the attribute found or NULL if not found.
  Check only ancestors defined in the same Thot schema (name space) as el.
  -----------------------------------------------------------------------*/
-static ThotBool     InheritAttribute (Element el, AttributeType attrType)
+static Attribute     InheritAttribute (Element el, AttributeType attrType)
 {
   Element     asc;
   SSchema     sch;
-  ThotBool    inherit;
+  Attribute   inheritedAttr;
 
-  inherit = FALSE;
+  inheritedAttr = FALSE;
   sch = TtaGetElementType(el).ElSSchema;
   asc = TtaGetParent (el);
-  while (asc && !inherit)
+  while (asc && !inheritedAttr)
     {
       if (TtaGetElementType(asc).ElSSchema != sch)
-	asc = NULL;
+	asc = TtaGetParent (asc);
       else
 	{
-	  if (TtaGetAttribute (asc, attrType))
-	    inherit = TRUE;
-	  else
+	  inheritedAttr = TtaGetAttribute (asc, attrType);
+	  if (!inheritedAttr)
 	    asc = TtaGetParent (asc);
 	}
     }
-  return (inherit);
+  return (inheritedAttr);
 }
 
 /*----------------------------------------------------------------------
@@ -1382,13 +1382,13 @@ void         CreateGraphicElement (int entry)
   Element	    first, SvgRoot, newEl, sibling, selEl;
   Element           child, parent, elem, foreignObj;
   ElementType       elType, selType, newType, childType;
-  AttributeType     attrType;
-  Attribute         attr;
+  AttributeType     attrType, attrTypeHTML;
+  Attribute         attr, inheritedAttr;
   SSchema	    docSchema, SvgSchema;
   DisplayMode       dispMode;
   char		    shape;
   char             *path;
-  int		    c1, i, w, h;
+  int		    c1, i, w, h, dir, svgDir;
   int	            oldStructureChecking;
   int               docModified;
   ThotBool	    found, newGraph = FALSE;
@@ -1655,6 +1655,39 @@ void         CreateGraphicElement (int entry)
 	  TtaSetStructureChecking (0, doc);
 	  TtaInsertFirstChild (&child, foreignObj, doc);
 	  TtaSetStructureChecking (oldStructureChecking, doc);
+	  /* is there a SVG direction attribute on any ancestor element? */
+	  attrType.AttrTypeNum = SVG_ATTR_direction_;
+	  inheritedAttr = InheritAttribute (foreignObj, attrType);
+	  dir = -1;
+	  if (!inheritedAttr)
+	    /* no direction attribute. Create a HTML dir attribute with
+	       value ltr */
+	    dir = HTML_ATTR_dir_VAL_ltr_;
+	  else
+	    {
+	      svgDir = TtaGetAttributeValue (inheritedAttr);
+	      switch (svgDir)
+		{
+		case SVG_ATTR_direction__VAL_ltr_ :
+		  dir = HTML_ATTR_dir_VAL_ltr_;
+		  break;
+		case SVG_ATTR_direction__VAL_rtl_ :
+		  dir = HTML_ATTR_dir_VAL_rtl_;
+		  break;
+		case SVG_ATTR_direction__VAL_inherit :
+		  dir = -1;
+		  break;
+		}
+	    }
+	  if (dir >= 0)
+	    {
+	      /* create a dir attribute for the div element */
+	      attrTypeHTML.AttrSSchema = childType.ElSSchema;
+	      attrTypeHTML.AttrTypeNum = HTML_ATTR_dir;
+	      attr = TtaNewAttribute (attrTypeHTML);
+	      TtaAttachAttribute (child, attr, doc);	   
+	      TtaSetAttributeValue (attr, dir, child, doc);
+	    }
 	  /* select the first leaf */
 	  elem = child;
 	  do
