@@ -1892,7 +1892,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 		   /* record the element to be deleted in the history */
 		   OpenHistorySequence (pDoc, pEl, pEl, NULL, firstChar, lastChar);
 		   AddEditOpInHistory (pSibling, pDoc, TRUE,FALSE);
-		   TtaDeleteTree (pSibling, doc);
+		   TtaDeleteTree ((Element)pSibling, doc);
 		   CloseHistorySequence (pDoc);
 		 }
 	     }
