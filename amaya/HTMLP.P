@@ -648,7 +648,7 @@ BOXES
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
-		Visibility: 5;
+		Visibility: Creator =;
 		Size: TAG_FONTSIZE;
 		Style: INVALID_Style;
 		END;
@@ -662,7 +662,7 @@ BOXES
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
-		Visibility: 5;
+		Visibility: Creator =;
 		Size: TAG_FONTSIZE;
 		Style: INVALID_Style;
 		END;	
@@ -4685,7 +4685,7 @@ RULES
 	Foreground: INVALID_Color;
 #endif
 	IN Structure_view BEGIN
-		Visibility: 5;
+		Visibility: Enclosing =;
 		Size: TAG_FONTSIZE;
 		Style: INVALID_Style; Weight: INVALID_Weight;
 		Font: INVALID_Font;
@@ -4702,7 +4702,7 @@ RULES
 	Foreground: INVALID_Color;
 #endif
 	IN Structure_view BEGIN
-		Visibility: 5;
+		Visibility: Enclosing =;
 		Size: TAG_FONTSIZE;
 		Style: INVALID_Style; Weight: INVALID_Weight;
 		Font: INVALID_Font;
