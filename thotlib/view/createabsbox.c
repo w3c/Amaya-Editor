@@ -2419,7 +2419,7 @@ static void  SetVerticalSpace (PtrAbstractBox pAb, ThotBool head,
    vrai ou la queue du pave si head est faux. Marque cette
    information dans le pave. S'il s'agit d'un pave qui
    devient complet, cree ses paves de presentation a`
-   l'extremite qui devient complet. Retourne un pointeur
+   l'extremite qui devient complete. Retourne un pointeur
    sur le dernier pave de presentation cree ou NULL si
    aucun pave n'est cree.
   ----------------------------------------------------------------------*/
@@ -2432,7 +2432,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
    PtrSSchema          pSchS;
    PtrAbstractBox      pAbbCreated;
    PtrAttribute        pAttr;
-   PtrElement          pElAttr;
+   PtrElement          pEl, pElAttr;
    int                 l, valNum;
    InheritAttrTable   *inheritTable;
    PtrHandlePSchema    pHd;
@@ -2503,16 +2503,17 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 	       /* Cree les paves de presentation a` cette extremite. */
 	       /* cherche la 1ere regle de presentation associee a ce type */
 	       /* d'element */
-	       SearchPresSchema (pAb->AbElement, &pSchP, &index, &pSchS, pDoc);
-	       if (pSchS != NULL && pSchS != pAb->AbElement->ElStructSchema)
+	       pEl = pAb->AbElement;
+	       SearchPresSchema (pEl, &pSchP, &index, &pSchS, pDoc);
+	       if (pSchS != NULL && pSchS != pEl->ElStructSchema)
 		 /* il s'agit de l'element racine d'une nature qui
 		    utilise le schema de presentation de son englobant*/
 		 if (pDoc->DocView[pAb->AbDocView - 1].DvSSchema !=
 		     pDoc->DocSSchema)
 		   {
-		     pSchS = pAb->AbElement->ElStructSchema;
+		     pSchS = pEl->ElStructSchema;
 		     pSchP = PresentationSchema (pSchS, pDoc);
-		     index = pAb->AbElement->ElTypeNumber;
+		     index = pEl->ElTypeNumber;
 		   }
 	       pRule = pSchP->PsElemPRule->ElemPres[index - 1];
 	       
@@ -2520,28 +2521,26 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 	       pAttr = NULL;
 	       ApplCrPresRule (pSchS, pSchP, &pAbbCreated, NULL, pDoc,
 			       pAb, head, pRule);
-	       /* traite les regles de creation dues a */
-	       /* l'heritage des attributs */
-	       pSchP = PresentationSchema (pAb->AbElement->ElStructSchema,
-					   pDoc);
+	       /* traite les regles de creation dues a l'heritage des
+		  attributs */
+	       pSchP = PresentationSchema (pEl->ElStructSchema, pDoc);
 	       if (pSchP != NULL)
-		 if (pSchP->PsNInheritedAttrs->Num[pAb->AbElement->ElTypeNumber -1])
+		 if (pSchP->PsNInheritedAttrs->Num[pEl->ElTypeNumber -1])
+		   /* il y a heritage possible */
 		   {
-				/* il y a heritage possible */
-		     if ((inheritTable = pSchP->
-			  PsInheritedAttr->ElInherit[pAb->AbElement->ElTypeNumber - 1])
-			 == NULL)
+		     inheritTable = pSchP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
+		     if (!inheritTable)
 		       {
 			 /* cette table n'existe pas on la genere */
-			 CreateInheritedAttrTable (pAb->AbElement, pDoc);
-			 inheritTable = pSchP->PsInheritedAttr->ElInherit[pAb->AbElement->ElTypeNumber - 1];
+			 CreateInheritedAttrTable (pEl, pDoc);
+			 inheritTable = pSchP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
 		       }
-		     for (l = 1; l <= pAb->AbElement->ElStructSchema->SsNAttributes; l++)
+		     for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
 		       if ((*inheritTable)[l - 1])
-			 /* pAb->AbElement herite de l'attribut l */
-			 if ((pAttr = GetTypedAttrAncestor (pAb->AbElement, l,
-			    pAb->AbElement->ElStructSchema, &pElAttr)) != NULL)
-			   /* cherche si l existe au dessus */
+			 /* pEl herite de l'attribut l */
+			 /* cherche si l existe au dessus */
+			 if ((pAttr = GetTypedAttrAncestor (pEl, l,
+			               pEl->ElStructSchema, &pElAttr)) != NULL)
 			   {
 			     /* on cherchera d'abord dans le schema de */
 			     /* presentation principal de l'attribut */
@@ -2556,10 +2555,10 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 				 valNum = 1;
 				 do
 				   {
-				     pRule = AttrPresRule (pAttr,
-						   pAb->AbElement, TRUE, NULL, 
-						   pSchP, &valNum);
-				     ApplCrPresRule (pAttr->AeAttrSSchema,
+				     pRule = AttrPresRule (pAttr, pEl, TRUE,
+							 NULL, pSchP, &valNum);
+				     if (pRule && !pRule->PrDuplicate)
+				        ApplCrPresRule (pAttr->AeAttrSSchema,
 						   pSchP, &pAbbCreated, pAttr,
 						   pDoc, pAb, head, pRule);
 				   }
@@ -2572,7 +2571,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 				   schemas additionnels */
 				   {
 				     if (pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView == 1)
-				       pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc, pAb->AbElement);
+				       pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc, pEl);
 				   }
 				 else
 				   /* passe au schema additionnel suivant */
@@ -2588,7 +2587,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 		   }
 	       /* traite les regles de creation associees aux attributs de */
 	       /* l'element */
-	       pAttr = pAb->AbElement->ElFirstAttr;
+	       pAttr = pEl->ElFirstAttr;
 	       /* 1er attribut de l'element */
 	       /* boucle sur les attributs de l'element */
 	       while (pAttr != NULL)
@@ -2606,9 +2605,10 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 		       valNum = 1;
 		       do
 			 {
-			   pRule = AttrPresRule (pAttr, pAb->AbElement, FALSE,
-						 NULL, pSchP, &valNum);
-			   ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
+			   pRule = AttrPresRule (pAttr, pEl, FALSE, NULL,
+						 pSchP, &valNum);
+			   if (pRule && !pRule->PrDuplicate)
+			      ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
 				  &pAbbCreated, pAttr, pDoc, pAb, head, pRule);
 			 }
 		       while (valNum > 0);
@@ -2621,7 +2621,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 			 {
 			   if (pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView == 1)
 			     pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema,
-							  pDoc,pAb->AbElement);
+							  pDoc, pEl);
 			 }
 		       else
 			 /* passe au schema additionnel suivant */
@@ -4283,8 +4283,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 		 while (!stop);
 		 notBreakable = !(IsBreakable (pAbb, pDoc));
 		 /* determine le 1er pave fils a creer */
-		 /* premier fils de l'element */
-		 pElChild = pEl->ElFirstChild;
+		 pElChild = pEl->ElFirstChild;  /* premier fils de l'element */
 		 if (pElChild == NULL)
 		   /* le pave n'a pas de descendance */
 		   /* pave vide, il n'est pas coupe' */
@@ -4346,7 +4345,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 		 /* cree les paves des fils successifs */
 		 while (pElChild != NULL)
 		   /* verifie que la vue n'est pas pleine */
-		   if (IsViewFull (viewNb, pDoc, pEl) && !notBreakable)
+		   if (!notBreakable && IsViewFull (viewNb, pDoc, pEl))
 		     /* vue pleine, on arrete la creation des paves des fils */
 		     {
 		       pElChild = NULL;
@@ -4372,7 +4371,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 		       /* a priori on va creer les paves du fils */
 		       ok = TRUE;
 		       if (!ApplyRules)
-			 /* verifie si le fils est deja complete */
+			 /* verifie si le fils est deja completn */
 			 if (pElChild->ElAbstractBox[viewNb - 1] != NULL)
 			   /* le fils a deja des paves dans cette vue */
 			   {
@@ -4407,7 +4406,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 			 /* on cree effectivement les paves du fils */
 			 pAbbChild = AbsBoxesCreate (pElChild, pDoc, viewNb, forward, descent, &completeChild);
 		       else
-			 /* le pave du fils etait deja complete */
+			 /* le pave du fils etait deja complet */
 			 {
 			   pAbbChild = NULL;
 			   completeChild = TRUE;
