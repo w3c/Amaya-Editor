@@ -398,7 +398,7 @@ int                *nSpaces;
 
    /* Calcule la largeur des blancs */
    if (*nSpaces == 0)
-      spaceWidth = CharacterWidth (SPACE, font);
+      spaceWidth = CharacterWidth (WC_SPACE, font);
    else
       spaceWidth = *nSpaces;
    i = *width;			/* Index dans le buffer */

@@ -2631,16 +2631,19 @@ STRING              pathname;
 #ifdef __STDC__
 static void RestoreDefEnvGeom (char* env_var)
 #else
-static void RestoreDefEnvGeom (env_var
+static void RestoreDefEnvGeom (env_var)
 char* env_var;
 #endif /* _STDC_ */
 {
   int x, y, w, h;
 
+  CHAR_T EnvVar[MAX_LENGTH];
+  iso2wc_strcpy (EnvVar, env_var);
+
   /* in order to read the default values from HTML.conf, we erase the 
      registry entry */
   TtaClearEnvString (env_var);
-  TtaGetViewGeometryMM (GeometryDoc, env_var, &x, &y, &w, &h); 
+  TtaGetViewGeometryMM (GeometryDoc, EnvVar, &x, &y, &w, &h); 
   usprintf (s, TEXT("%d %d %d %d"), 
 	   x,
 	   y,
@@ -2656,14 +2659,15 @@ char* env_var;
   using the format "x y w h"
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void SetEnvGeom (CHAR_T* view_name)
+static void SetEnvGeom (char* view_name)
 #else
 static void SetEnvGeom (view_name)
-CHAR_T* view_name
+char* view_name
 #endif /* _STDC_ */
 {
   int view;
   int x, y, w, h;
+  
 
   TtaGetViewGeometryRegistry (GeometryDoc, view_name, &x, &y, &w, &h);
 
@@ -2716,15 +2720,15 @@ static void SetEnvCurrentGeometry ()
   /* only do the processing if the document exists */
   if (DocumentURLs[GeometryDoc])
     {
-      SetEnvGeom (TEXT("Formatted_view"));
-      SetEnvGeom (TEXT("Structure_view"));
-      SetEnvGeom (TEXT("Math_Structure_view"));
+      SetEnvGeom ("Formatted_view");
+      SetEnvGeom ("Structure_view");
+      SetEnvGeom ("Math_Structure_view");
 #ifdef GRAPHML
-      SetEnvGeom (TEXT("Graph_Structure_view"));
+      SetEnvGeom ("Graph_Structure_view");
 #endif /* GRAPHML */
-      SetEnvGeom (TEXT("Alternate_view"));
-      SetEnvGeom (TEXT("Links_view"));
-      SetEnvGeom (TEXT("Table_of_contents"));
+      SetEnvGeom ("Alternate_view");
+      SetEnvGeom ("Links_view");
+      SetEnvGeom ("Table_of_contents");
     } /* if GeometryDoc exists */
 }
 

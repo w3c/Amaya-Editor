@@ -228,7 +228,7 @@ ThotBool		    withUndo;
   elType = TtaGetElementType (el);
   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
      {
-     MapMathMLAttribute (TEXT("link"), &attrType, _EMPTYSTR_, doc);
+     MapMathMLAttribute (TEXT("link"), &attrType, TEXT(""), doc);
      MapMathMLAttributeValue (TEXT("simple"), attrType, &val);
      }
   else

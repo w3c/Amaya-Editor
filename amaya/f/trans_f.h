@@ -9,7 +9,7 @@
 extern void InitTransform ( void );
 extern void TransCallbackDialog ( int ref,
                                   int typedata,
-                                  STRING data );
+                                  CHAR_T* data );
 extern void TransformType ( Document doc,
                             View view );
 extern ThotBool TransformIntoType ( ElementType resultType,
@@ -20,7 +20,7 @@ extern ThotBool TransformIntoType ( ElementType resultType,
 extern void InitTransform (/* void */);
 extern void TransCallbackDialog (/* int ref,
                                     int typedata,
-                                    STRING data */);
+                                    CHAR_T* data */);
 extern void TransformType (/* Document doc,
                               View view */);
 extern ThotBool TransformIntoType (/* ElementType resultType,

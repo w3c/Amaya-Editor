@@ -15,7 +15,7 @@ extern AttrComparType ReadAttrCompar ( BinFile file );
 extern void ReadPRules ( BinFile file,
                          PtrPRule * pPRule,
                          PtrPRule * pNextPRule );
-extern PtrPSchema ReadPresentationSchema ( CUSName fileName,
+extern PtrPSchema ReadPresentationSchema ( Name fileName,
                                            PtrSSchema pSS );
 
 #else /* __STDC__ */
@@ -29,7 +29,7 @@ extern AttrComparType ReadAttrCompar (/* BinFile file */);
 extern void ReadPRules (/* BinFile file,
                            PtrPRule * pPRule,
                            PtrPRule * pNextPRule */);
-extern PtrPSchema ReadPresentationSchema (/* CUSName fileName,
+extern PtrPSchema ReadPresentationSchema (/* Name fileName,
                                              PtrSSchema pSS */);
 
 #endif /* __STDC__ */

@@ -1199,7 +1199,7 @@ ThotBool            use_preconditions;
 	  res = -1;
 	}
       /* erase the last status message */
-      TtaSetStatus (document, view, _EMPTYSTR_, NULL);	       
+      TtaSetStatus (document, view, TEXT(""), NULL);	       
     }
   else
     {
@@ -1362,7 +1362,7 @@ ThotBool         use_preconditions;
 	      res = -1;
 	    }
 	  /* JK: to erase the last status message */
-	  TtaSetStatus (doc, view, _EMPTYSTR_, NULL);	       
+	  TtaSetStatus (doc, view, TEXT(""), NULL);	       
 	}
       else if (with_images)
 	pImage = ImageURLs;
@@ -1393,7 +1393,7 @@ ThotBool         use_preconditions;
 #endif /* AMAYA_JAVA || AMAYA_ILU */
 		      InitConfirm (doc, view, msg);
 		      /* erase the last status message */
-		      TtaSetStatus (doc, view, _EMPTYSTR_, NULL);
+		      TtaSetStatus (doc, view, TEXT(""), NULL);
 		      if (UserAnswer)
 			res = -1;
 		      else
@@ -1573,8 +1573,7 @@ View                view;
     return;
   else if (!TtaIsDocumentModified (doc))
     {
-      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_NOTHING_TO_SAVE),
-		    _EMPTYSTR_);
+      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_NOTHING_TO_SAVE), TEXT(""));
       return;
     }
 

@@ -240,13 +240,6 @@ static ThotBool  itemChecked = FALSE;
 
 extern void InitMathML ();
 
-#ifdef __STDC__
-extern CharUnit* TtaAllocCUString (unsigned int);
-#else  /* !__STDC__ */
-extern CharUnit* TtaAllocCUString ();
-#endif /* !__STDC__ */
-
-
 #ifdef AMAYA_PLUGIN
 extern void CreateFormPlugin (Document, View);
 #endif /* AMAYA_PLUGIN */
@@ -737,7 +730,7 @@ Document            doc;
 #ifdef ANNOTATIONS
 	   TtaSetMenuOff (document, 1, Annotations_);
 #endif /* ANNOTATIONS */
-	   view = TtaGetViewFromName (document, TEXT("Structure_view"));
+	   view = TtaGetViewFromName (document, "Structure_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOff (document, view, Edit_, BCut);
@@ -748,7 +741,7 @@ Document            doc;
 	       TtaSetMenuOff (document, view, StructTypes);
 	       TtaSetMenuOff (document, view, Types);
 	     }
-	   view = TtaGetViewFromName (document, TEXT("Math_Structure_view"));
+	   view = TtaGetViewFromName (document, "Math_Structure_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOff (document, view, Edit_, BCut);
@@ -759,7 +752,7 @@ Document            doc;
 	       TtaSetMenuOff (document, view, Types);
 	     }
 #ifdef GRAPHML
-	   view = TtaGetViewFromName (document, TEXT("Graph_Structure_view"));
+	   view = TtaGetViewFromName (document, "Graph_Structure_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOff (document, view, Edit_, BCut);
@@ -770,7 +763,7 @@ Document            doc;
 	       TtaSetMenuOff (document, view, Types);
 	     }
 #endif /* GRAPHML */
-	   view = TtaGetViewFromName (document, TEXT("Alternate_view"));
+	   view = TtaGetViewFromName (document, "Alternate_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOff (document, view, Edit_, BCut);
@@ -780,7 +773,7 @@ Document            doc;
 	       TtaSetMenuOff (document, view, StructTypes);
 	       TtaSetMenuOff (document, view, Types);
 	     }
-	   view = TtaGetViewFromName (document, TEXT("Links_view"));
+	   view = TtaGetViewFromName (document, "Links_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOff (document, view, Edit_, BCut);
@@ -790,7 +783,7 @@ Document            doc;
 	       TtaSetItemOff (document, view, Edit_, BTransform);
 	       TtaSetMenuOff (document, view, Types);
 	     }
-	   view = TtaGetViewFromName (document, TEXT("Table_of_contents"));
+	   view = TtaGetViewFromName (document, "Table_of_contents");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOff (document, view, Edit_, BCut);
@@ -862,7 +855,7 @@ Document            doc;
 #ifdef ANNOTATIONS
 	   TtaSetMenuOn (document, 1, Annotations_);
 #endif /* ANNOTATIONS */
-	   view = TtaGetViewFromName (document, TEXT("Structure_view"));
+	   view = TtaGetViewFromName (document, "Structure_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOn (document, view, Edit_, BCut);
@@ -873,7 +866,7 @@ Document            doc;
 	       TtaSetMenuOn (document, view, StructTypes);
 	       TtaSetMenuOn (document, view, Types);
 	     }
-	   view = TtaGetViewFromName (document, TEXT("Math_Structure_view"));
+	   view = TtaGetViewFromName (document, "Math_Structure_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOn (document, view, Edit_, BCut);
@@ -884,7 +877,7 @@ Document            doc;
 	       TtaSetMenuOn (document, view, Types);
 	     }
 #ifdef GRAPHML
-	   view = TtaGetViewFromName (document, TEXT("Graph_Structure_view"));
+	   view = TtaGetViewFromName (document, "Graph_Structure_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOn (document, view, Edit_, BCut);
@@ -895,7 +888,7 @@ Document            doc;
 	       TtaSetMenuOn (document, view, Types);
 	     }
 #endif /* GRAPHML */
-	   view = TtaGetViewFromName (document, TEXT("Alternate_view"));
+	   view = TtaGetViewFromName (document, "Alternate_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOn (document, view, Edit_, BCut);
@@ -905,7 +898,7 @@ Document            doc;
 	       TtaSetMenuOn (document, view, StructTypes);
 	       TtaSetMenuOn (document, view, Types);
 	     }
-	   view = TtaGetViewFromName (document, TEXT("Links_view"));
+	   view = TtaGetViewFromName (document, "Links_view");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOn (document, view, Edit_, BCut);
@@ -915,7 +908,7 @@ Document            doc;
 	       TtaSetItemOn (document, view, Edit_, BTransform);
 	       TtaSetMenuOn (document, view, Types);
 	     }
-	   view = TtaGetViewFromName (document, TEXT("Table_of_contents"));
+	   view = TtaGetViewFromName (document, "Table_of_contents");
 	   if (view != 0 && TtaIsViewOpened (document, view))
 	     {
 	       TtaSetItemOn (document, view, Edit_, BCut);
@@ -1105,7 +1098,7 @@ CHAR_T*              text;
      }
    else
      /* the document title cannot be changed */
-     TtaSetTextZone (document, 1, 2, _EMPTYSTR_);
+     TtaSetTextZone (document, 1, 2, TEXT(""));
 }
 
 /*----------------------------------------------------------------------
@@ -1159,8 +1152,7 @@ View                view;
   Dialogue form for answering text, user name and password
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitFormAnswer (Document document, View view, CHAR_T* auth_realm, 
-				    CHAR_T* server)
+void                InitFormAnswer (Document document, View view, CHAR_T* auth_realm, CHAR_T* server)
 #else
 void                InitFormAnswer (document, view, auth_realm, server)
 Document            document;
@@ -1198,7 +1190,7 @@ CHAR_T*              server;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
    TtaWaitShowDialogue ();
-   if (Answer_password[0] == EOS && Answer_name[0] != EOS)
+   if (Answer_password[0] == EOS && Answer_name[0] != WC_EOS)
      {
        /* no password, retry */
        TtaSetTextForm (BaseDialog + NameText, Answer_name);
@@ -1502,29 +1494,29 @@ ThotBool     logFile;
 	  TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
 	  TtaSetToggleItem (doc, 1, Special, TSectionNumber, FALSE);
 	  /* close the Alternate view if it is open */
-	  altView = TtaGetViewFromName (doc, TEXT("Alternate_view"));
+	  altView = TtaGetViewFromName (doc, "Alternate_view");
 	  if (altView != 0 && TtaIsViewOpened (doc, altView))
 	    TtaCloseView (doc, altView);
 	  /* close the Structure view if it is open */
-	  structView = TtaGetViewFromName (doc, TEXT("Structure_view"));
+	  structView = TtaGetViewFromName (doc, "Structure_view");
 	  if (structView != 0 && TtaIsViewOpened (doc, structView))
 	    TtaCloseView (doc, structView);
 	  /* close the Math_structure view if it is open */
-	  structView = TtaGetViewFromName (doc, TEXT("Math_Structure_view"));
+	  structView = TtaGetViewFromName (doc, "Math_Structure_view");
 	  if (structView != 0 && TtaIsViewOpened (doc, structView))
 	    TtaCloseView (doc, structView);
 #ifdef GRAPHML
 	  /* close the Graph_structure view if it is open */
-	  structView = TtaGetViewFromName (doc, TEXT("Graph_Structure_view"));
+	  structView = TtaGetViewFromName (doc, "Graph_Structure_view");
 	  if (structView != 0 && TtaIsViewOpened (doc, structView))
 	    TtaCloseView (doc, structView);
 #endif /* GRAPHML */
 	  /* close the Links view if it is open */
-	  linksView = TtaGetViewFromName (doc, TEXT("Links_view"));
+	  linksView = TtaGetViewFromName (doc, "Links_view");
 	  if (linksView != 0 && TtaIsViewOpened (doc, linksView))
 	    TtaCloseView (doc, linksView);
 	  /* close the Table_of_contents view if it is open */
-	  tocView = TtaGetViewFromName (doc, TEXT("Table_of_contents"));
+	  tocView = TtaGetViewFromName (doc, "Table_of_contents");
 	  if (tocView != 0 && TtaIsViewOpened (doc, tocView))
 	    TtaCloseView (doc, tocView);
 	}
@@ -1578,7 +1570,7 @@ ThotBool     logFile;
 	 }
 
        /* get the geometry of the main view */
-       TtaGetViewGeometryRegistry (doc, TEXT("Formatted_view"), &x, &y, &w, &h);
+       TtaGetViewGeometryRegistry (doc, "Formatted_view", &x, &y, &w, &h);
        TtaSetNotificationMode (doc, 1);
        /* change the position slightly to avoid hiding completely the main
 	  view of other documents */
@@ -1598,7 +1590,7 @@ ThotBool     logFile;
 
        if (opened)
 	   /* the window already exists */
-	   TtaSetTextZone (doc, 1, 2, _EMPTYSTR_);
+	   TtaSetTextZone (doc, 1, 2, TEXT(""));
        else
 	 /* re-use an existing window */
 	 {
@@ -2725,7 +2717,7 @@ View                view;
   /* Change visibility threshold in the main view */
   TtaSetSensibility (document, view, visibility);
   /* Change visibility threshold in the table of content view if it's open */
-  tocView = TtaGetViewFromName (document, TEXT("Table_of_contents"));
+  tocView = TtaGetViewFromName (document, "Table_of_contents");
   if (tocView && TtaIsViewOpened (document, tocView))
      TtaSetSensibility (document, tocView, visibility);
 }
@@ -2923,12 +2915,12 @@ View                view;
 #endif /* GRAPHML */
    int                 x, y, w, h;
 
-   structView = TtaGetViewFromName (document, TEXT("Structure_view"));
+   structView = TtaGetViewFromName (document, "Structure_view");
    if (structView != 0 && TtaIsViewOpened (document, structView))
      TtaRaiseView (document, structView);
    else
      {
-       TtaGetViewGeometryRegistry (document, TEXT("Structure_view"), &x, &y, &w, &h);
+       TtaGetViewGeometryRegistry (document, "Structure_view", &x, &y, &w, &h);
        structView = TtaOpenView (document, TEXT("Structure_view"), x, y, w, h);
        if (structView != 0)
 	 {
@@ -2948,12 +2940,12 @@ View                view;
 	     }
 	 }
      }
-   mathView = TtaGetViewFromName (document, TEXT("Math_Structure_view"));
+   mathView = TtaGetViewFromName (document, "Math_Structure_view");
    if (mathView != 0 && TtaIsViewOpened (document, mathView))
      TtaRaiseView (document, mathView);
    else
      {
-       TtaGetViewGeometryRegistry (document, TEXT("Math_Structure_view"), &x, &y, &w, &h);
+       TtaGetViewGeometryRegistry (document, "Math_Structure_view", &x, &y, &w, &h);
        mathView = TtaOpenView (document, TEXT("Math_Structure_view"), x, y, w, h);
        if (mathView != 0)
 	 {
@@ -2974,12 +2966,12 @@ View                view;
 	 }
      }
 #ifdef GRAPHML
-   graphView = TtaGetViewFromName (document, TEXT("Graph_Structure_view"));
+   graphView = TtaGetViewFromName (document, "Graph_Structure_view");
    if (graphView != 0 && TtaIsViewOpened (document, graphView))
      TtaRaiseView (document, graphView);
    else
      {
-       TtaGetViewGeometryRegistry (document, TEXT("Graph_Structure_view"), &x, &y, &w, &h);
+       TtaGetViewGeometryRegistry (document, "Graph_Structure_view", &x, &y, &w, &h);
        graphView = TtaOpenView (document, TEXT("Graph_Structure_view"), x, y, w, h);
        if (graphView != 0)
 	 {
@@ -3019,14 +3011,14 @@ View                view;
    View                altView;
    int                 x, y, w, h;
 
-   altView = TtaGetViewFromName (document, TEXT("Alternate_view"));
+   altView = TtaGetViewFromName (document, "Alternate_view");
    if (view == altView)
       TtaRaiseView (document, view);
    else if (altView != 0 && TtaIsViewOpened (document, altView))
       TtaRaiseView (document, altView);
    else
      {
-	TtaGetViewGeometryRegistry (document, TEXT("Alternate_view"), &x, &y, &w, &h);
+	TtaGetViewGeometryRegistry (document, "Alternate_view", &x, &y, &w, &h);
 	altView = TtaOpenView (document, TEXT("Alternate_view"), x, y, w, h);
 	if (altView != 0)
 	  {
@@ -3065,14 +3057,14 @@ View                view;
    View                linksView;
    int                 x, y, w, h;
 
-   linksView = TtaGetViewFromName (document, TEXT("Links_view"));
+   linksView = TtaGetViewFromName (document, "Links_view");
    if (view == linksView)
       TtaRaiseView (document, view);
    else if (linksView != 0 && TtaIsViewOpened (document, linksView))
       TtaRaiseView (document, linksView);
    else
      {
-	TtaGetViewGeometryRegistry (document, TEXT("Links_view"), &x, &y, &w, &h);
+	TtaGetViewGeometryRegistry (document, "Links_view", &x, &y, &w, &h);
 	linksView = TtaOpenView (document, TEXT("Links_view"), x, y, w, h);
 	if (linksView != 0)
 	  {
@@ -3111,14 +3103,14 @@ View                view;
    View                tocView;
    int                 x, y, w, h;
 
-   tocView = TtaGetViewFromName (document, TEXT("Table_of_contents"));
+   tocView = TtaGetViewFromName (document, "Table_of_contents");
    if (view == tocView)
       TtaRaiseView (document, view);
    else if (tocView != 0 && TtaIsViewOpened (document, tocView))
       TtaRaiseView (document, tocView);
    else
      {
-	TtaGetViewGeometryRegistry (document, TEXT("Table_of_contents"), &x, &y, &w, &h);
+	TtaGetViewGeometryRegistry (document, "Table_of_contents", &x, &y, &w, &h);
 	tocView = TtaOpenView (document, TEXT("Table_of_contents"), x, y, w, h);
 	if (tocView != 0)
 	  {
@@ -3160,13 +3152,13 @@ NotifyDialog       *event;
 
    view = event->view;
    document = event->document;
-   structView = TtaGetViewFromName (document, TEXT("Structure_view"));
-   altView = TtaGetViewFromName (document, TEXT("Alternate_view"));
-   linksView = TtaGetViewFromName (document, TEXT("Links_view"));
-   tocView = TtaGetViewFromName (document, TEXT("Table_of_contents"));
-   mathView = TtaGetViewFromName (document, TEXT("Math_Structure_view"));
+   structView = TtaGetViewFromName (document, "Structure_view");
+   altView = TtaGetViewFromName (document, "Alternate_view");
+   linksView = TtaGetViewFromName (document, "Links_view");
+   tocView = TtaGetViewFromName (document, "Table_of_contents");
+   mathView = TtaGetViewFromName (document, "Math_Structure_view");
 #ifdef GRAPHML
-   graphView = TtaGetViewFromName (document, TEXT("Graph_Structure_view"));
+   graphView = TtaGetViewFromName (document, "Graph_Structure_view");
 #endif /* GRAPHML */
    if (view != 1)
      /* let Thot perform normal operation */
@@ -3830,7 +3822,7 @@ CHAR_T*             data;
 		   else if (DirectoryName[0] != EOS)
 		     TtaSetStatus (CurrentDocument, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), DirectoryName);
 		   else
-		     TtaSetStatus (CurrentDocument, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), _EMPTYSTR_);
+		     TtaSetStatus (CurrentDocument, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), TEXT(""));
 		 }
 	       NewCSSfile = FALSE;
 	       NewHTMLfile = FALSE;
@@ -3937,8 +3929,8 @@ CHAR_T*             data;
 	 {
 	   /* no answer */
 	   Answer_text[0] = EOS;
-	   Answer_name[0] = EOS;
-	   Answer_password[0] = EOS;
+	   Answer_name[0] = WC_EOS;
+	   Answer_password[0] = WC_EOS;
 	 }
        TtaDestroyDialogue (BaseDialog + FormAnswer);
        break;
@@ -3959,19 +3951,19 @@ CHAR_T*             data;
 	       /* a new char */
 	       Answer_password[Lg_password] = data[Lg_password];
 	       Display_password[Lg_password] = TEXT('*');
-	       Answer_password[++Lg_password] = EOS;
+	       Answer_password[++Lg_password] = WC_EOS;
 	       Display_password[Lg_password] = EOS;
 	     }
 	   else if (Lg_password > i)
 	     {		/* a valid backspace */
 	       
 	       Lg_password--;
-	       Answer_password[Lg_password] = EOS;
+	       Answer_password[Lg_password] = WC_EOS;
 	       Display_password[Lg_password] = EOS;
 	     }
 	 }
        else
-	 Answer_password[NAME_LENGTH - 1] = EOS;
+	 Answer_password[NAME_LENGTH - 1] = WC_EOS;
 #      ifndef _WINDOWS
        if (i > 0)
 	 TtaSetTextForm (BaseDialog + PasswordText, Display_password);
@@ -4916,7 +4908,7 @@ View                view;
    list = fopen (localname, "w");
    TtaListBoxes (document, view, list);
    fclose (list);
-   structView = TtaGetViewFromName (document, TEXT("Structure_view"));
+   structView = TtaGetViewFromName (document, "Structure_view");
    if (structView != 0 && TtaIsViewOpened (document, structView))
      {
        ustrcpy (localname, TempFileDirectory);
@@ -4930,7 +4922,7 @@ View                view;
        TtaListBoxes (document, structView, list);
        fclose (list);
      }
-   mathView = TtaGetViewFromName (document, TEXT("Math_Structure_view"));
+   mathView = TtaGetViewFromName (document, "Math_Structure_view");
    if (mathView != 0 && TtaIsViewOpened (document, mathView))
      {
        ustrcpy (localname, TempFileDirectory);
@@ -4944,7 +4936,7 @@ View                view;
        TtaListBoxes (document, mathView, list);
        fclose (list);
      }
-   tocView = TtaGetViewFromName (document, TEXT("Table_of_contents"));
+   tocView = TtaGetViewFromName (document, "Table_of_contents");
    if (tocView != 0 && TtaIsViewOpened (document, tocView))
      {
        ustrcpy (localname, TempFileDirectory);

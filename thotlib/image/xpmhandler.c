@@ -310,10 +310,10 @@ unsigned long       BackGroundPixel;
    IsXpmFormat check if the file header is of a pixmap                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool                IsXpmFormat (char* fn)
+ThotBool                IsXpmFormat (CHAR_T* fn)
 #else  /* __STDC__ */
 ThotBool                IsXpmFormat (fn)
-char*                  fn;
+CHAR_T*                 fn;
 #endif /* __STDC__ */
 {
    FILE               *f;
@@ -321,7 +321,7 @@ char*                  fn;
    ThotBool            res;
 
    res = FALSE;
-   f = fopen (fn, "r");
+   f = ufopen (fn, TEXT("r"));
    if (f != NULL)
      {
 	c = getc (f);

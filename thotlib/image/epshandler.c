@@ -248,7 +248,7 @@ unsigned long       BackGroundPixel;
    Chech if the picture header is of an eps file                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool             IsEpsFormat (char* fn)
+ThotBool             IsEpsFormat (CHAR_T* fn)
 #else  /* __STDC__ */
 ThotBool             IsEpsFormat (fn)
 char*               fn;
@@ -260,7 +260,7 @@ char*               fn;
    ThotBool            res;
 
    res = FALSE;
-   fin = fopen (fn, "r");
+   fin = ufopen (fn, TEXT("r"));
    if (fin)
      {
 	/* search for %! signature of the eps and ps files */

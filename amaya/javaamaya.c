@@ -82,11 +82,11 @@ int doc;
 
 #endif
 {
-    Answer_name[0] = EOS;
-    Answer_password[0] = EOS;
+    Answer_name[0] = WC_EOS;
+    Answer_password[0] = WC_EOS;
     Lg_password = 0;
     InitFormAnswer (doc, 1, TEXT(""), TEXT(""));
-    if ((Answer_name[0] == EOS) && (Answer_password[0] == EOS))
+    if ((Answer_name[0] == WC_EOS) && (Answer_password[0] == WC_EOS))
       return (-1);
     else
       return(0);

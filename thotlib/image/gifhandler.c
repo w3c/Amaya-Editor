@@ -1744,10 +1744,10 @@ unsigned long       BackGroundPixel;
    IsGifFormat  checks the header file if it's of a gif file       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            IsGifFormat (char *datafile)
+ThotBool            IsGifFormat (CHAR_T* datafile)
 #else  /* __STDC__ */
 ThotBool            IsGifFormat (datafile)
-char               *datafile;
+CHAR_T              *datafile;
 
 #endif /* __STDC__ */
 {
@@ -1760,7 +1760,7 @@ char               *datafile;
    showComment = FALSE;
 
 
-   fp = fopen (datafile, "r");
+   fp = ufopen (datafile, TEXT("r"));
 
    if (fp == NULL)
      {

@@ -168,5 +168,5 @@ ClickEvent *method;
 {
    *method = CE_FORM_GET;
    TtaFreeMemory (*docURL);
-   *docURL = TtaWCSdup (script_URL);
+   *docURL = TtaWCSdup (script_URL); 
 }

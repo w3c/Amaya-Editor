@@ -458,17 +458,17 @@ unsigned long       BackGroundPixel;
    IsJpegFormat checks if the file header conforms the jpeg one    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool           IsJpegFormat (char *fn)
+ThotBool           IsJpegFormat (CHAR_T* fn)
 #else  /* __STDC__ */
 ThotBool           IsJpegFormat (fn)
-char               *fn;
+CHAR_T             *fn;
 
 #endif /* __STDC__ */
 { 
    /*JSAMPROW buffer[1]; *//* row pointer array for read_scanlines */
    FILE               *fd;
 
-   if ((fd = fopen (fn, "rb")) == NULL)
+   if ((fd = ufopen (fn, TEXT("rb"))) == NULL)
      {
 	fprintf (stderr, "can't open %s\n", fn);
 	return FALSE;

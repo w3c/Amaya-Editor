@@ -3022,7 +3022,7 @@ char              **argv;
                  i = 0;
                  do {
                     fileOK = TtaReadByte (inputFile, &car);
-                    inputLine[i] = TtaGetUnicodeValueFromISOLatinCode (car);
+                    inputLine[i] = car;
                     /* fileOK = TtaReadByte (inputFile, &inputLine[i]); */
                     i++;
 				 /* } while (i < LINE_LENGTH && inputLine[i - 1] != WC_EOS && fileOK); */

@@ -721,7 +721,7 @@ int                 shadow;
          GetClientRect (FrRef [frame], &rect);
          outOpt = 0;
 
-#        ifdef _I18N_
+#        if 0 /* ifdef _I18N_ */
          fontLangInfo = GetFontLanguageInfo (TtDisplay);
 
          if (fontLangInfo == GCP_ERROR) /* There is a Problem. */
@@ -763,10 +763,10 @@ int                 shadow;
          GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar), GCP_MAXEXTENT, &results, infoFlag);
 
          ExtTextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, outOpt, &rect, (USTRING) szNewText, lg, anDX); 
-#        else  /* !_I18N_ */
+#        endif /* else  /* !_I18N_ */
          /* ExtTextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, 0, &rect, (USTRING) ptcar, lg, NULL);  */
          TextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg);
-#        endif /* !_I18N_ */
+/* #        endif /* !_I18N_ */
          TtaFreeMemory (ptcar);
       } else {
              if (ptcar[0] == TEXT('\212') || ptcar[0] == TEXT('\12')) {

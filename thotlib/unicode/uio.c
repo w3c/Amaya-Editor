@@ -68,11 +68,11 @@ FILE*  stream;
 }
 
 #ifdef __STDC__
-FILE* ufopen (CHAR_T* name, CHAR_T* mode)
+FILE* ufopen (const CHAR_T* name, const CHAR_T* mode)
 #else  /* !__STDC__ */
 FILE* ufopen (name, mode)
-CHAR_T* name;
-CHAR_T* mode;
+const CHAR_T* name;
+const CHAR_T* mode;
 #endif /* !__STDC__ */
 {
 #  ifdef _I18N_

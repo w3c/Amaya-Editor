@@ -2831,8 +2831,16 @@ char*               equiv;
 		     if (equiv != NULL)
 		       {
 #                         ifdef _WINDOWS
-                          if (&equiv[eindex] != EOS) 
-                             usprintf (equiv_item, TEXT("%s"), &equiv[eindex]); 
+                             if (&equiv[eindex] != EOS) { 
+#                               ifdef _I18N_
+                                CHAR_T Equiv [MAX_LENGTH];
+                                mbstowcs (Equiv, &equiv[eindex], MAX_LENGTH);
+#                               else /* !_I18N_ */
+                                char* Equiv = &equiv[eindex];
+#                               endif /* !_I18N_ */
+                                /* usprintf (equiv_item, TEXT("%s"), &equiv[eindex]); */
+                                usprintf (equiv_item, TEXT("%s"), Equiv); 
+							 } 
                           
                           eindex += strlen (&equiv[eindex]) + 1;
 #                         else  /* !_WINDOWS */
@@ -4286,7 +4294,14 @@ ThotBool            react;
                             if (equiv != NULL) {
 #                              ifdef _WINDOWS
                                if (&equiv[eindex] != EOS) {
-                                  usprintf (equiv_item, TEXT("%s"), &equiv[eindex]);
+#                                 ifdef _I18N_
+                                  CHAR_T Equiv[MAX_LENGTH];
+                                  mbstowcs (Equiv, &equiv[eindex], MAX_LENGTH);
+#                                 else  /* !_I18N_ */
+                                  char* Equiv = &equiv[eindex];
+#                                 endif /* !_I18N_ */
+                                  /* usprintf (equiv_item, TEXT("%s"), &equiv[eindex]); */
+                                  usprintf (equiv_item, TEXT("%s"), Equiv);
 							   } 
                                eindex += strlen (&equiv[eindex]) + 1;
 #                              else  /* !_WINDOWS */

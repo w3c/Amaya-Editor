@@ -1208,7 +1208,7 @@ CHAR_T                c;
        commentText = TtaNewElement (currentDocument, elType);
        SetElemLineNumber (commentText);
        TtaInsertFirstChild (&commentText, commentLineEl, currentDocument);
-       TtaSetTextContent (commentText, _EMPTYSTR_, currentLanguage, currentDocument);
+       TtaSetTextContent (commentText, TEXT(""), currentLanguage, currentDocument);
      }
    /* the input buffer is now empty */
    bufferLength = 0;
@@ -1253,7 +1253,7 @@ UCHAR_T       c;
 	 commentText = TtaNewElement (currentDocument, elType);
          SetElemLineNumber (commentText);
 	 TtaInsertFirstChild (&commentText, commentLineEl, currentDocument);
-	 TtaSetTextContent (commentText, _EMPTYSTR_, currentLanguage,
+	 TtaSetTextContent (commentText, TEXT(""), currentLanguage,
 			    currentDocument);
        }
      else

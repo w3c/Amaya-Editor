@@ -10,7 +10,6 @@ extern CHAR_T* WGetEnv ( char* name );
 extern char* TtaSkipBlanks ( char* ptr );
 extern CHAR_T* TtaSkipWCBlanks ( CHAR_T* ptr );
 extern ThotBool TtaIsBlank ( char* ptr );
-extern ThotBool TtaIsCUSBlank ( CharUnit* ptr );
 extern ThotBool TtaIsWCBlank ( CHAR_T* ptr );
 extern ThotBool TtaGetEnvInt ( char* name,
                                int *value );
@@ -48,7 +47,6 @@ extern CHAR_T* WGetEnv (/* char* name */);
 extern char* TtaSkipBlanks (/* char* ptr */);
 extern CHAR_T* TtaSkipWCBlanks (/* CHAR_T* ptr */);
 extern ThotBool TtaIsBlank (/* char* ptr */);
-extern ThotBool TtaIsCUSBlank (/* CharUnit* ptr */);
 extern ThotBool TtaIsWCBlank (/* CHAR_T* ptr */);
 extern ThotBool TtaGetEnvInt (/* char* name,
                                  int *value */);

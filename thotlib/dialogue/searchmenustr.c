@@ -180,7 +180,7 @@ PtrDocument         pDoc;
 	TtaNewSelector (NumSelAttributeToSearch, NumFormSearchText,
 			TtaGetMessage (LIB, TMSG_ATTR_TO_SEARCH), nbitem, ListeAttr, 5, NULL, TRUE, FALSE);
 	/* initialise le selecteur (rien n'est selectionne') */
-	TtaSetSelector (NumSelAttributeToSearch, -1, _EMPTYSTR_);
+	TtaSetSelector (NumSelAttributeToSearch, -1, TEXT(""));
      }
 }
 
@@ -241,7 +241,7 @@ static void         ConstruitSelecteurTypes ()
       TtaNewSelector (NumSelTypeToSearch, NumFormSearchText,
 		      TtaGetMessage (LIB, TMSG_TYPE_TO_SEARCH), nbitem, ListeTypes, 5, NULL, TRUE, FALSE);
    /* initialise le selecteur (rien n'est selectionne') */
-   TtaSetSelector (NumSelTypeToSearch, -1, _EMPTYSTR_);
+   TtaSetSelector (NumSelTypeToSearch, -1, TEXT(""));
 }
 
 

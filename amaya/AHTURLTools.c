@@ -1081,7 +1081,7 @@ const STRING       url2;
    ThotBool          result;
 
    basename_ptr1 = AmayaParseUrl (url1, TEXT(""), AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
-   basename_ptr2 = AmayaParseUrl (url2, _EMPTYSTR_, AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
+   basename_ptr2 = AmayaParseUrl (url2, TEXT(""), AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
 
    if (ustrcmp (basename_ptr1, basename_ptr2))
       result = FALSE;
@@ -1180,26 +1180,26 @@ const STRING    path;
   chars.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void ChopURL (char *outputURL, const char *inputURL)
+void ChopURL (CHAR_T* outputURL, const CHAR_T* inputURL)
 #else
 void ChopURL (outputURL, inputURL)
-char       *outputURL;
-const char *inputURL;
+CHAR_T*       outputURL;
+const CHAR_T* inputURL;
 #endif
 
 {
   int len;
 
-  len = strlen (inputURL);
+  len = ustrlen (inputURL);
   if (len <= MAX_PRINT_URL_LENGTH) 
-    strcpy (outputURL, inputURL);
+    ustrcpy (outputURL, inputURL);
   else
     /* make a truncated urlName on the status window */
     {
-      strncpy (outputURL, inputURL, MAX_PRINT_URL_LENGTH / 2);
-      outputURL [MAX_PRINT_URL_LENGTH / 2] = EOS;
-      strcat (outputURL, "...");
-      strcat (outputURL, &(inputURL[len - MAX_PRINT_URL_LENGTH / 2 ]));
+      ustrncpy (outputURL, inputURL, MAX_PRINT_URL_LENGTH / 2);
+      outputURL [MAX_PRINT_URL_LENGTH / 2] = WC_EOS;
+      ustrcat (outputURL, TEXT("..."));
+      ustrcat (outputURL, &(inputURL[len - MAX_PRINT_URL_LENGTH / 2 ]));
     }
 }
 

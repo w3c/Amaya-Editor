@@ -173,21 +173,6 @@ unsigned int       n;
 }
 
 /*----------------------------------------------------------------------
-  TtaAllocCUString
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-CharUnit*          TtaAllocCUString (unsigned int n)
-#else  /* !__STDC__ */
-CharUnit*          TtaAllocCUString (n)
-unsigned int       n;
-#endif /* !__STDC__ */
-{
-     if (n == 0)
-        n++;
-     return ((CharUnit*) malloc ((size_t) n * sizeof (CharUnit)));
-}
-
-/*----------------------------------------------------------------------
    TtaGetMemory
 
    Allocates dynamically a buffer of a specific size
@@ -510,36 +495,6 @@ CHAR_T*              str;
    if (res == NULL)
       return (res);
    ustrcpy (res, str);
-   return (res);
-}
-
-/*----------------------------------------------------------------------
-   TtaCUSdup
-
-   Copy the string (CharUnit*) given in argument to a newly allocated piece 
-   of memory.
-
-   Parameters:
-   str: a zero terminated string.
-
-   See also:
-   TtaGetMemory.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-CharUnit*            TtaCUSdup (CharUnit* str)
-#else  /* __STDC__ */
-CharUnit*            TtaCUSdup (str)
-CharUnit*            str;
-#endif /* __STDC__ */
-{
-   CharUnit*         res;
-
-   if (str == NULL)
-      return (NULL);
-   res = TtaGetMemory ((StringLength (str) + 1) * sizeof (CharUnit));
-   if (res == NULL)
-      return (res);
-   StringCopy (res, str);
    return (res);
 }
 
@@ -2540,7 +2495,7 @@ PtrDict            *pDict;
 
 	/* initialise le contexte de dictionnaire */
 	pdict = *pDict;
-	pdict->DictName[0] = CUS_EOS;
+	pdict->DictName[0] = WC_EOS;
 	pdict->DictDirectory[0] = EOS;
 	/* readonly */
 	pdict->DictReadOnly = TRUE;

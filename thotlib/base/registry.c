@@ -192,24 +192,6 @@ char*               ptr;
 }
 
 /*----------------------------------------------------------------------
-   TtaIsCUSBlank returns True if the first character (CharUnit) is a 
-   space, a tab, a linefeed or a newline.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TtaIsCUSBlank (CharUnit* ptr)
-#else
-ThotBool            TtaIsCUSBlank (ptr)
-CharUnit*           ptr;
-#endif
-{
-  if (*ptr == WC_SPACE || *ptr == WC_BSPACE || *ptr == WC_EOL ||
-      *ptr == WC_TAB || *ptr == WC_CR)
-    return (TRUE);
-  else
-    return (FALSE);
-}
-
-/*----------------------------------------------------------------------
    TtaIsWCBlank returns True if the first character (CHAR_T) is a space, 
    a tab, a linefeed or a newline.
   ----------------------------------------------------------------------*/
@@ -1185,7 +1167,7 @@ static ThotBool WINReg_set (CONST STRING key, CONST STRING value)
 
    usprintf (textKey,TEXT("%s\\%s\\%s"), userBase, AppNameW, key);	                    
    success = RegCreateKeyEx (HKEY_CURRENT_USER, textKey, 0, 
-	                         _EMPTYSTR_, REG_OPTION_VOLATILE, KEY_ALL_ACCESS,
+	                         TEXT(""), REG_OPTION_VOLATILE, KEY_ALL_ACCESS,
 		                     NULL, &hKey, &dwDisposition);  
    if (success == ERROR_SUCCESS)
    /* create the userBase entry */
@@ -1205,7 +1187,7 @@ static STRING          WINIni_get (CONST STRING env)
    DWORD               res;
    static CHAR_T         ret[MAX_PATH];	/* thread unsafe! */
 
-   res = GetPrivateProfileString (TEXT("Amaya"), env, _EMPTYSTR_, ret, sizeof (ret), TEXT("Amaya.ini"));
+   res = GetPrivateProfileString (TEXT("Amaya"), env, TEXT(""), ret, sizeof (ret), TEXT("Amaya.ini"));
    return res ? ret : NULL;
 }
 #endif

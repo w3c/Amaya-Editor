@@ -29,7 +29,7 @@ extern void XbmPrint ( STRING fn,
                        int PicHArea,
                        FILE *fd,
                        unsigned int BackGroundPixel );
-extern ThotBool IsXbmFormat ( char* fn );
+extern ThotBool IsXbmFormat ( CHAR_T* fn );
 
 #else /* __STDC__ */
 
@@ -56,7 +56,7 @@ extern void XbmPrint (/* STRING fn,
                          int PicHArea,
                          FILE *fd,
                          unsigned int BackGroundPixel */);
-extern ThotBool IsXbmFormat (/* char* fn */);
+extern ThotBool IsXbmFormat (/* CHAR_T* fn */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

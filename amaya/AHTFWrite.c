@@ -92,12 +92,18 @@ char               c;
       status = AHTFWriter_flush (me);
 
    reqcont = (AHTReqContext *) HTRequest_context (me->request);
-   if (reqcont && reqcont->incremental_cbf)
-     (*reqcont->incremental_cbf)
-       (reqcont->docid, 1, reqcont->urlName, reqcont->outputfile,  
-	   reqcont->content_type, &c, 1, reqcont->context_icbf);
+   if (reqcont && reqcont->incremental_cbf) {
+      char urlName[MAX_LENGTH];
+      char outputfile[MAX_LENGTH];
+      char content_type[MAX_LENGTH];
+      
+      wc2iso_strcpy (urlName, reqcont->urlName);
+      wc2iso_strcpy (outputfile, reqcont->outputfile);
+      wc2iso_strcpy (content_type, reqcont->content_type);
+      (*reqcont->incremental_cbf) (reqcont->docid, 1, urlName, outputfile, content_type, &c, 1, reqcont->context_icbf);
+   } 
 
-   return status;
+   return status; 
 }
 
 /*----------------------------------------------------------------------
@@ -116,32 +122,35 @@ const char*        s;
 
 
    if (me->fp == NULL) {
-#ifdef DEBUG_LIBWWW
-     fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
-#endif
+#     ifdef DEBUG_LIBWWW
+      fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
+#     endif
      return HT_ERROR;
    }
 
    /* Don't write anything if the output is stdout (used for publishing */
    if (me->fp == stdout) 
-     return HT_OK;
+      return HT_OK;
 
-   if (*s)
-     {
-	status = (fputs (s, me->fp) == EOF) ? HT_ERROR : HT_OK;
-	if (status == HT_OK)
-	   status = AHTFWriter_flush (me);
+   if (*s) {
+      status = (fputs (s, me->fp) == EOF) ? HT_ERROR : HT_OK;
+      if (status == HT_OK)
+         status = AHTFWriter_flush (me);
 
-	reqcont = (AHTReqContext *) HTRequest_context (me->request);
+      reqcont = (AHTReqContext *) HTRequest_context (me->request);
  
-	if (reqcont && reqcont->incremental_cbf)
-	  (*reqcont->incremental_cbf)  
-	    (reqcont->docid, 1, reqcont->urlName, reqcont->outputfile,  
-	     reqcont->content_type, s,
-	   strlen (s), reqcont->context_icbf);
-     }
-   else 
-     status = HT_ERROR;
+      if (reqcont && reqcont->incremental_cbf) {
+         char urlName[MAX_LENGTH];
+         char outputfile[MAX_LENGTH];
+         char content_type[MAX_LENGTH];
+      
+         wc2iso_strcpy (urlName, reqcont->urlName);
+         wc2iso_strcpy (outputfile, reqcont->outputfile);
+         wc2iso_strcpy (content_type, reqcont->content_type);
+         (*reqcont->incremental_cbf) (reqcont->docid, 1, urlName, outputfile, content_type, s, strlen (s), reqcont->context_icbf);
+	  }
+   } else 
+         status = HT_ERROR;
 
   /* JK: Should there we a callback to incremental too? */
    return status;
@@ -181,10 +190,16 @@ int                 l;
 
    reqcont = (AHTReqContext *) HTRequest_context (me->request);
 
-   if (reqcont && reqcont->incremental_cbf)
-     (*reqcont->incremental_cbf)
-     (reqcont->docid, 1, reqcont->urlName, reqcont->outputfile,  
-      reqcont->content_type, s, l, reqcont->context_icbf);
+   if (reqcont && reqcont->incremental_cbf) {
+      char urlName[MAX_LENGTH];
+      char outputfile[MAX_LENGTH];
+      char content_type[MAX_LENGTH];
+      
+      wc2iso_strcpy (urlName, reqcont->urlName);
+      wc2iso_strcpy (outputfile, reqcont->outputfile);
+      wc2iso_strcpy (content_type, reqcont->content_type);
+      (*reqcont->incremental_cbf) (reqcont->docid, 1, urlName, outputfile, content_type, s, l, reqcont->context_icbf);
+   }
 
    return status;
 }

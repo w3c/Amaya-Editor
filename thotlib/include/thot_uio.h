@@ -104,7 +104,7 @@
 
 #ifdef __STDC__
 extern CHAR_T* ufgets (CHAR_T*, int, FILE*);
-extern FILE*   ufopen (CHAR_T*, CHAR_T*);
+extern FILE*   ufopen (const CHAR_T*, const CHAR_T*);
 #else  /* !__STDC__ */
 extern CHAR_T* ufgets ();
 extern FILE*   ufopen ();

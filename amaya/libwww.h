@@ -117,7 +117,7 @@ typedef struct _AHTReqContext
     /*                 the following element points to the content type of 
                         a requested node */
     
-    char*              content_type;
+    CHAR_T*            content_type;
 
     /* The following elements are used for the PUT and POST */
     HTAnchor           *source;

@@ -1228,7 +1228,7 @@ PtrSSchema          StructEl;
 	if (pAttr == NULL)
 	   pF = BackSearchTypedElem (pF, pEl->ElTypeNumber, pEl->ElStructSchema);
 	else
-	   pF = BackSearchAttribute (pF, pAttr->AeAttrNum, 0, _EMPTYSTR_, pAttr->AeAttrSSchema);
+	   pF = BackSearchAttribute (pF, pAttr->AeAttrNum, 0, TEXT(""), pAttr->AeAttrSSchema);
 	CheckFirstReference (pF, pAttr, &stop, &pRef);
      }
    while (!stop);
@@ -1243,7 +1243,7 @@ PtrSSchema          StructEl;
 	     if (pAttr == NULL)
 		pF = FwdSearchTypedElem (pF, pEl->ElTypeNumber, pEl->ElStructSchema);
 	     else
-		pF = FwdSearchAttribute (pF, pAttr->AeAttrNum, 0, _EMPTYSTR_, pAttr->AeAttrSSchema);
+		pF = FwdSearchAttribute (pF, pAttr->AeAttrNum, 0, TEXT(""), pAttr->AeAttrSSchema);
 	     CheckFirstReference (pF, pAttr, &stop, &pRef);
 	  }
 	while (!stop);
@@ -3361,7 +3361,7 @@ PtrDocument         pDoc;
 		 action = InsertAfter;
 	      /* envoie l'evenement item a creer */
 	      if (TteItemMenuInsert (pSS, typeNum, pEl, pDoc, action))
-		 if (AddInsertMenuItem (typeName, N, _EMPTYSTR_, prevMenuInd, nItems,
+		 if (AddInsertMenuItem (typeName, N, TEXT(""), prevMenuInd, nItems,
 					menuInd, menuBuf))
 		   {
 		      if (before)
@@ -3409,7 +3409,7 @@ PtrDocument         pDoc;
 					     {
 						GetExternalTypeName (pSS, typeNum, typeName);
 
-						if (!AddInsertMenuItem (typeName, N, _EMPTYSTR_,
+						if (!AddInsertMenuItem (typeName, N, TEXT(""),
 							prevMenuInd, nItems,
 							  menuInd, menuBuf))
 						   /* menu sature' */
@@ -3643,7 +3643,7 @@ ThotBool           *ret;
 
 	if (ok)
 	   if (AddInsertMenuItem (TtaGetMessage (LIB, TMSG_WITHIN_SEL),
-			  _EMPTYSTR_, _EMPTYSTR_, &prevMenuInd, &nItems, &menuInd, menuBuf))
+			  TEXT(""), TEXT(""), &prevMenuInd, &nItems, &menuInd, menuBuf))
 	     {
 		Action[nItems - 1] = InsertWithin;
 		UserAction[nItems - 1] = InsertWithin;
@@ -3686,7 +3686,7 @@ ThotBool           *ret;
 
 				 /* on ajoute une entree pour creer l'element associe */
 				 if (AddInsertMenuItem (firstSel->ElStructSchema->
-							SsRule[refTypeNum - 1].SrName, TtaGetMessage (LIB, TMSG_TO_CREATE), _EMPTYSTR_,
+							SsRule[refTypeNum - 1].SrName, TtaGetMessage (LIB, TMSG_TO_CREATE), TEXT(""),
 				  &prevMenuInd, &nItems, &menuInd, menuBuf))
 				   {
 				      Action[nItems - 1] = ReferredElem;

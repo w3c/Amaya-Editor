@@ -56,7 +56,7 @@ extern STRING TtaGetViewName ( Document document,
 extern ThotBool TtaIsViewOpened ( Document document,
                                   View view );
 extern View TtaGetViewFromName ( Document document,
-                                 CHAR_T* viewName );
+                                 char* viewName );
 extern void TtaGiveActiveView ( Document * document,
                                 View * view );
 extern void DisplayHolophrasted ( PtrElement pEl,
@@ -137,7 +137,7 @@ extern STRING TtaGetViewName (/* Document document,
 extern ThotBool TtaIsViewOpened (/* Document document,
                                     View view */);
 extern View TtaGetViewFromName (/* Document document,
-                                   CHAR_T* viewName */);
+                                   char* viewName */);
 extern void TtaGiveActiveView (/* Document * document,
                                   View * view */);
 extern void DisplayHolophrasted (/* PtrElement pEl,

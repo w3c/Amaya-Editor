@@ -544,7 +544,7 @@ Document doc;
 	  }
      }
    XMLTextToDocument ();
-   elType.ElTypeNum = MathML_EL_TEXT_UNIT;
+   elType.ElTypeNum = MathML_EL_TEXT_UNIT; 
    elType.ElSSchema = GetMathMLSSchema (doc);
    elText = TtaNewElement (doc, elType);
    SetElemLineNumber (elText);
@@ -924,7 +924,8 @@ void SetSingleIntHorizStretchAttr (el, doc, selEl)
   int		    len;
   Language	    lang;
   CHAR_T		alphabet;
-  unsigned char text[2], c;
+  UCHAR_T       text[2];
+  unsigned char c;
 
   if (el == NULL)
      return;
@@ -1036,7 +1037,8 @@ void SetIntVertStretchAttr (el, doc, base, selEl)
   int		    len;
   Language	    lang;
   CHAR_T		alphabet;
-  unsigned char text[2], c;
+  UCHAR_T       text[2];
+  unsigned char c;
 
   if (el == NULL)
      return;
@@ -1754,7 +1756,8 @@ Document		doc;
    int           len, val;
    Language	     lang;
    CHAR_T		 alphabet;
-   unsigned char text[2], c;
+   UCHAR_T       text[2];
+   unsigned char c;
 
    elType = TtaGetElementType (el);
    if (elType.ElTypeNum == MathML_EL_MO)
@@ -1774,10 +1777,10 @@ Document		doc;
 	      if (len == 1)
 		if (alphabet == 'L')
 		   /* a single character */
-		   if (text[0] == '(' || text[0] == ')' ||
-		       text[0] == '[' || text[0] == ']' ||
-		       text[0] == '{' || text[0] == '}' ||
-		       text[0] == '|' )
+		   if (text[0] == TEXT('(') || text[0] == TEXT(')') ||
+		       text[0] == TEXT('[') || text[0] == TEXT(']') ||
+		       text[0] == TEXT('{') || text[0] == TEXT('}') ||
+		       text[0] == TEXT('|'))
 		      {
 		      /* remove the content of the MO element */
 		      TtaDeleteTree (content, doc);
@@ -1801,7 +1804,7 @@ Document		doc;
 		         TtaSetAttributeValue (attr, MathML_ATTR_IntVertStretch_VAL_yes_, el, doc);
 			 }
 		      /* create a new content for the MF element */
-		      if (text[0] == '|')
+		      if (text[0] == TEXT('|'))
 			 {
 			 elType.ElTypeNum = MathML_EL_GRAPHICS_UNIT;
 			 c = 'v';
@@ -1809,7 +1812,7 @@ Document		doc;
 		      else
 			 {
 		         elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-		         c = text[0];
+		         c = (char) text[0];
 			 }
 		      content = TtaNewElement (doc, elType);
 		      TtaInsertFirstChild (&content, el, doc);
@@ -1927,7 +1930,8 @@ Document	doc;
    AttributeType attrType;
    Attribute     attr;
    int           length;
-   char          text[32], c;
+   CHAR_T        text[32];
+   char          c;
 
    child = TtaGetFirstChild (el);
    if (child != NULL)
@@ -2015,7 +2019,7 @@ Document	doc;
 	{
         length = 7;
         TtaGiveTextAttributeValue (attr, text, &length);
-	c = text[0];
+	c = (char)text[0];
 	}
       elType.ElTypeNum = MathML_EL_OpeningFence;
       fence = TtaNewElement (doc, elType);
@@ -2033,7 +2037,7 @@ Document	doc;
 	{
         length = 7;
         TtaGiveTextAttributeValue (attr, text, &length);
-	c = text[0];
+	c = (char) text[0];
 	}
       elType.ElTypeNum = MathML_EL_ClosingFence;
       fence = TtaNewElement (doc, elType);
@@ -2343,7 +2347,7 @@ STRING elementName;
 #endif
 {
    /* no other DTD allowed within MathML elements */
-   ustrcpy (DTDname, _EMPTYSTR_);
+   ustrcpy (DTDname, TEXT(""));
 }
 
 /* end of module */

@@ -3317,7 +3317,7 @@ PtrAttribute        pAttr;
 		      pAb->AbElement->ElLeafType == LtPicture)
 		    {
 		      if (pAb->AbElement->ElPictInfo == NULL)
-			 NewPictInfo (pAb, _EMPTYSTR_, UNKNOWN_FORMAT);
+			 NewPictInfo (pAb, TEXT(""), UNKNOWN_FORMAT);
 		      ((PictInfo *) (pAb->AbElement->ElPictInfo))->PicPresent =
 			                  (PictureScaling)pPRule->PrPresBox[0];
 		      appl = TRUE;
@@ -3325,7 +3325,7 @@ PtrAttribute        pAttr;
 		  else if (pAb->AbPresentationBox)
 		    {
 		      if (pAb->AbPictInfo == NULL)
-			 NewPictInfo (pAb, _EMPTYSTR_, UNKNOWN_FORMAT);
+			 NewPictInfo (pAb, TEXT(""), UNKNOWN_FORMAT);
 		      ((PictInfo *) (pAb->AbPictInfo))->PicPresent =
 			                  (PictureScaling)pPRule->PrPresBox[0];
 		      appl = TRUE;

@@ -613,10 +613,10 @@ void Prof_FreeTable ()
   TtaRebuildProTable: Rebuild the Profiles Table
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void     TtaRebuildProTable (char *prof_file)
+void     TtaRebuildProTable (CHAR_T* prof_file)
 #else  /* !__STDC__ */
 void     TtaRebuildProTable (prof_file)
-char    *prof_file;
+CHAR_T*  prof_file;
 #endif /* !__STDC__ */
 {
   /* delete the profiles table */

@@ -42,8 +42,6 @@
 
 #define URL_STR       "/"
 #define URL_SEP       '/'
-#define CUS_URL_STR   TEXT ("/")
-#define CUS_URL_SEP   TEXT ('/')
 #define WC_URL_STR    TEXT ("/")
 #define WC_URL_SEP    TEXT ('/')
 
@@ -58,8 +56,8 @@ typedef void   TIcbf (Document doc, int status, char *urlName,
 		      const char *data_block, int data_block_size,
 		      void *context);
 
-typedef void  TTcbf (Document doc, int status, STRING urlName,
-                     STRING outputfile, const STRING content_type,
+typedef void  TTcbf (Document doc, int status, CHAR_T* urlName,
+                     CHAR_T* outputfile, const CHAR_T* content_type,
                      void *context);
 
 /* How are Network accesses provided ? */

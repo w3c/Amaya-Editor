@@ -1331,7 +1331,7 @@ LPARAM lParam;
 {
     switch (msg) {
 	       case WM_INITDIALOG:
-			    SetDlgItemText (hwnDlg, IDC_GETALT, _EMPTYSTR_);
+			    SetDlgItemText (hwnDlg, IDC_GETALT, TEXT(""));
                 break;
 
 		   case WM_COMMAND:
@@ -2249,8 +2249,8 @@ LPARAM lParam;
 
     switch (msg) {
 	       case WM_INITDIALOG:
-			    SetDlgItemText (hwnDlg, IDC_SEARCHEDIT, _EMPTYSTR_);
-			    SetDlgItemText (hwnDlg, IDC_REPLACEDIT, _EMPTYSTR_);
+			    SetDlgItemText (hwnDlg, IDC_SEARCHEDIT, TEXT(""));
+			    SetDlgItemText (hwnDlg, IDC_REPLACEDIT, TEXT(""));
 
 				iMode     = 0;
 
@@ -2443,8 +2443,8 @@ LPARAM lParam;
       break;
       
     case ID_CLEAR:
-      SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, _EMPTYSTR_);
-      SetDlgItemText (hwnDlg, IDC_EDITIMGSAVE, _EMPTYSTR_);
+      SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, TEXT(""));
+      SetDlgItemText (hwnDlg, IDC_EDITIMGSAVE, TEXT(""));
       ThotCallback (baseDlg + saveForm, INTEGER_DATA, (STRING) 2);
       break;
       
@@ -2569,9 +2569,9 @@ LPARAM lParam;
 {
     switch (msg) {
 	       case WM_INITDIALOG:
-			    SetDlgItemText (hwnDlg, IDC_GETURL, _EMPTYSTR_);
+			    SetDlgItemText (hwnDlg, IDC_GETURL, TEXT(""));
 				urlToOpen [0] = 0;
-			    SetDlgItemText (hwnDlg, IDC_GETALT, _EMPTYSTR_);
+			    SetDlgItemText (hwnDlg, IDC_GETALT, TEXT(""));
 				altText [0] = 0;
 				break;
 
@@ -3377,7 +3377,7 @@ LPARAM lParam;
 			    SetDlgItemInt (hwnDlg, IDC_EDITPROPOSALS, 3, FALSE);
 				SetDlgItemText (hwnDlg, IDC_EDITIGNORE, currentRejectedchars);
 				iLocation = 2;
-                SetWindowText (hwndCurrentWord, _EMPTYSTR_);
+                SetWindowText (hwndCurrentWord, TEXT(""));
 				WIN_DisplayWords ();
 			    break;
 
@@ -4433,8 +4433,8 @@ LPARAM lParam;
       hwnPasswdEdit = GetDlgItem (hwnDlg, IDC_PASSWDEDIT);
 	  SetDlgItemText (hwnDlg, IDC_AUTHREALM, string_par1);
 	  SetDlgItemText (hwnDlg, IDC_AUTHSERVER, string_par2);
-	  SetDlgItemText (hwnDlg, IDC_PASSWDEDIT, _EMPTYSTR_);
-      SetDlgItemText (hwnDlg, IDC_NAMEEDIT, _EMPTYSTR_);
+	  SetDlgItemText (hwnDlg, IDC_PASSWDEDIT, TEXT(""));
+      SetDlgItemText (hwnDlg, IDC_NAMEEDIT, TEXT(""));
 
 	  setFirstFocus = FALSE;
       break;
@@ -4451,9 +4451,9 @@ LPARAM lParam;
 	GetDlgItemText (hwnDlg, IDC_NAMEEDIT, Answer_name, sizeof (Answer_name) + 1);
 	GetDlgItemText (hwnDlg, IDC_PASSWDEDIT, Answer_password, sizeof (Answer_password) + 1);
 	/* don't end the dialogue unless both answer fields have something */
-	if (Answer_name[0] == EOS)
+	if (Answer_name[0] == WC_EOS)
 	   SetFocus (hwnNameEdit);
-	else if (Answer_password[0] == EOS)
+	else if (Answer_password[0] == WC_EOS)
 		SetFocus (hwnPasswdEdit);
 	else
 	   EndDialog (hwnDlg, ID_CONFIRM);
@@ -4461,7 +4461,7 @@ LPARAM lParam;
 	
       case IDCANCEL:
     /* we clear the answer fields */
-    Answer_name[0] = Answer_password[0] = EOS;
+    Answer_name[0] = Answer_password[0] = WC_EOS;
 	EndDialog (hwnDlg, IDCANCEL);
 	break;
       }
@@ -4528,7 +4528,7 @@ LPARAM lParam;
 			                break;
 
                        case ID_CLEAR:
-							SetDlgItemText (hwnDlg, IDC_BGLOCATION, _EMPTYSTR_);
+							SetDlgItemText (hwnDlg, IDC_BGLOCATION, TEXT(""));
                             ThotCallback (baseDlg + repeatImage, INTEGER_DATA, (STRING)repeatMode);
                             ThotCallback (baseDlg + bgImageForm, INTEGER_DATA, (STRING)2);
 							break;

@@ -97,10 +97,6 @@ and must be removed at the end of the debug */
 #define WC_DIR_STR  TEXT("/")
 #define WC_PATH_STR TEXT(":")
 
-#define CUS_DIR_SEP  CUSTEXT('/')
-#define CUS_PATH_SEP CUSTEXT(':')
-#define CUS_DIR_STR  CUSTEXT("/")
-#define CUS_PATH_STR CUSTEXT(":")
 #else /* __GNUC__ */ /*---------------------------------GNUC--*/
 /* Ugly patches to cope with Visual C++ */
 /* preproccessor flags */
@@ -131,10 +127,6 @@ int                 _getpid (void);
 #define WC_DIR_STR  TEXT("\\")
 #define WC_PATH_STR TEXT(";")
 
-#define CUS_DIR_SEP  CUSTEXT('\\')
-#define CUS_PATH_SEP CUSTEXT(';')
-#define CUS_DIR_STR  CUSTEXT("\\")
-#define CUS_PATH_STR CUSTEXT(";")
 #endif /* ! __GNUC__ */
 /*------------------------------------------------------GNUC--*/
 
@@ -186,10 +178,6 @@ typedef unsigned char   ThotBool;
 #define WC_DIR_STR  TEXT("/")
 #define WC_PATH_STR TEXT(":")
 
-#define CUS_DIR_SEP  CUSTEXT('/')
-#define CUS_PATH_SEP CUSTEXT(':')
-#define CUS_DIR_STR  CUSTEXT("/")
-#define CUS_PATH_STR CUSTEXT(":")
 #endif /* _WINDOWS */
 /********************************************************WINDOWS**/
 #ifdef _I18N_
@@ -202,14 +190,6 @@ typedef unsigned char   ThotBool;
 #define TEXT(str) ___TEXT___(str)
 #endif  /* TEXT */
 
-#if defined(_WINDOWS) && defined(_I18N_)
-/* #   define CUSTEXT(str) L##str */
-#   define CUSTEXT(str) str
-#else
-#     define CUSTEXT(str) str
-#endif
-
-#define _EMPTYSTR_ TEXT("")
 #define __CR__  '\r'
 #define EOS     '\0'
 #define EOL     '\n'
@@ -224,12 +204,7 @@ typedef unsigned char   ThotBool;
 #define WC_SPACE  TEXT(' ')
 #define WC_BSPACE TEXT('\b')
 
-#define CUS_CR     CUSTEXT('\r')
-#define CUS_EOS    CUSTEXT('\0')
-#define CUS_EOL    CUSTEXT('\n')
-#define CUS_TAB    CUSTEXT('\t')
-#define CUS_SPACE  CUSTEXT(' ')
-#define CUS_BSPACE CUSTEXT('\b')
+#define NBSP      0xA0
 
 #define MAX_BYTES 3 
 /* We suppose that a multibyte character is encoded on maximum 2 bytes 

@@ -41,8 +41,8 @@ extern void NormalizeURL ( CHAR_T* orgName,
 extern ThotBool IsSameHost ( const STRING url1,
                              const STRING url2 );
 extern ThotBool HasKnownFileSuffix ( const STRING path );
-extern void ChopURL ( char *outputURL,
-                      const char *inputURL );
+extern void ChopURL ( CHAR_T* outputURL,
+                      const CHAR_T* inputURL );
 extern CHAR_T* AmayaParseUrl ( const CHAR_T* aName,
                                CHAR_T* relatedName,
                                int wanted );
@@ -89,8 +89,8 @@ extern void NormalizeURL (/* CHAR_T* orgName,
 extern ThotBool IsSameHost (/* const STRING url1,
                                const STRING url2 */);
 extern ThotBool HasKnownFileSuffix (/* const STRING path */);
-extern void ChopURL (/* char *outputURL,
-                        const char *inputURL */);
+extern void ChopURL (/* CHAR_T* outputURL,
+                        const CHAR_T* inputURL */);
 extern CHAR_T* AmayaParseUrl (/* const CHAR_T* aName,
                                  CHAR_T* relatedName,
                                  int wanted */);

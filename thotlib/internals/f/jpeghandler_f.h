@@ -38,7 +38,7 @@ extern void JpegPrint ( char *fn,
                         int PicHArea,
                         FILE *fd,
                         unsigned long BackGroundPixel );
-extern ThotBool IsJpegFormat ( char *fn );
+extern ThotBool IsJpegFormat ( CHAR_T* fn );
 
 #else /* __STDC__ */
 
@@ -74,7 +74,7 @@ extern void JpegPrint (/* char *fn,
                           int PicHArea,
                           FILE *fd,
                           unsigned long BackGroundPixel */);
-extern ThotBool IsJpegFormat (/* char *fn */);
+extern ThotBool IsJpegFormat (/* CHAR_T* fn */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

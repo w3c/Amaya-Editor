@@ -156,8 +156,8 @@ void WIN_DisplayWords ()
 	SendMessage (hwnListWords, LB_RESETCONTENT, 0, 0);
     if ((ustrcmp (ChkrCorrection[1], TEXT("$"))) == 0)	{
        currentWord [0] = EOS;
-       SetWindowText (hwndCurrentWord, _EMPTYSTR_);
-	   SendMessage (hwnListWords, LB_ADDSTRING, 0, (LPARAM) ((LPCTSTR)""));  
+       SetWindowText (hwndCurrentWord, TEXT(""));
+	   SendMessage (hwnListWords, LB_ADDSTRING, 0, (LPARAM) (TEXT("")));  
     } else {
          usprintf (currentWord, TEXT("%s"), ChkrCorrection[1]);
          SetWindowText (hwndCurrentWord, ChkrCorrection[1]);

@@ -264,10 +264,10 @@ int status;
       if (AmayaIsAlive && me->terminate_cbf)
 	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile, me->content_type, me->context_tcbf);
       
-      if (me->outputfile && me->outputfile[0] != EOS)
+      if (me->outputfile && me->outputfile[0] != WC_EOS)
 	{
 	  TtaFileUnlink (me->outputfile);
-	  me->outputfile[0] = EOS;
+	  me->outputfile[0] = WC_EOS;
 	}
     }
 

@@ -123,7 +123,7 @@ int WIN_Activate_Request (HTRequest* , HTAlertOpcode, int, const char*, void*, H
 #endif /* _WINDOWS */
 static void SafePut_init (void);
 static void SafePut_delete (void);
-static ThotBool SafePut_query (char *url);
+static ThotBool SafePut_query (CHAR_T* url);
 
 #else
 static void RecCleanCache (/* char *dirname */);
@@ -132,7 +132,7 @@ int WIN_Activate_Request (/* HTRequest* , HTAlertOpcode, int, const char*, void*
 #endif /* _WINDOWS */
 static void SafePut_init (/* void */);
 static void SafePut_delete (/* void */);
-static ThotBool SafePut_query (/* char *url */);
+static ThotBool SafePut_query (/* CHAR_T* url */);
 #endif /* __STDC__ */
 
 
@@ -300,11 +300,12 @@ PicType contentType;
 #endif
 {
  HTAtom           *atom;
- STRING            filename;
+ CHAR_T*           filename;
  HTEncoding        enc = NULL;
  HTEncoding        cte = NULL;
  HTLanguage        lang = NULL;
  double            quality = 1.0;
+ char              FName[MAX_LENGTH];
 
  switch (contentType)
    {
@@ -333,7 +334,8 @@ PicType contentType;
      ** we try to use the filename's suffix to do so.
      */
      filename = AmayaParseUrl (urlName, TEXT(""), AMAYA_PARSE_PATH | AMAYA_PARSE_PUNCTUATION);
-     HTBind_getFormat (filename, &atom, &enc, &cte, &lang, &quality);
+     wc2iso_strcpy (FName, filename);
+     HTBind_getFormat (FName, &atom, &enc, &cte, &lang, &quality);
      TtaFreeMemory (filename);
      if (atom ==  WWW_UNKNOWN)
 	 /*
@@ -343,7 +345,7 @@ PicType contentType;
 	 atom = HTAtom_for ("text/html");
      break;
    }
-
+   
  return atom;
 }
 
@@ -628,10 +630,10 @@ HTRequest           *request;
   if (!(me->output) && 
       (me->output != stdout) && 
 #ifndef _WINDOWS
-      (me->output = fopen (me->outputfile, "w")) == NULL)
+      (me->output = ufopen (me->outputfile, TEXT("w"))) == NULL)
     {
 #else /* !_WINDOWS */
-    (me->output = fopen (me->outputfile, "wb")) == NULL) 
+    (me->output = ufopen (me->outputfile, TEXT("wb"))) == NULL)  
     {
 #endif /* !_WINDOWS */
 
@@ -668,54 +670,45 @@ int                 status;
 
 #endif
 {
-
+ 
    HTAnchor           *new_anchor = HTResponse_redirection (response);
    AHTReqContext      *me = HTRequest_context (request);
    HTMethod            method = HTRequest_method (request);
-   STRING              ref;
-   STRING              escape_src, dst;
+   CHAR_T*             ref;
+   CHAR_T*             escape_src, *dst;
+   CHAR_T              urlAdr[MAX_LENGTH];
+   char                urlRef[MAX_LENGTH];
 
-   if (!me)
-     /* if the redirect doesn't come from Amaya, we call libwww's standard
-	redirect filter */
-     return (HTRedirectFilter (request, response, param, status));
+   if (!me) /* if the redirect doesn't come from Amaya, we call libwww's standard redirect filter */
+      return (HTRedirectFilter (request, response, param, status));
 
-   if (!new_anchor)
-     {
-	if (PROT_TRACE)
-	   HTTrace ("Redirection. No destination\n");
-	return HT_OK;
-     }
+   if (!new_anchor) {
+      if (PROT_TRACE)
+         HTTrace ("Redirection. No destination\n");
+      return HT_OK;
+   }
 
    /*
    ** Only do redirect on GET, HEAD, and authorized domains for PUT
     */
-   if ((me->method == METHOD_PUT && !SafePut_query (me->urlName))
-       || (me->method != METHOD_PUT && !HTMethod_isSafe (method)))
-     {
-       /*
-       ** If we got a 303 See Other then change the method to GET.
-       ** Otherwise ask the user whether we should continue.
-       */
-       if (status == HT_SEE_OTHER) 
-	 {
-	   if (PROT_TRACE)
-	     HTTrace("Redirection. Changing method from %s to GET\n",
-		     HTMethod_name(method));
-	   HTRequest_setMethod(request, METHOD_GET);
-	 }
-       else 
-	 {
-	   HTAlertCallback    *prompt = HTAlert_find (HT_A_CONFIRM);
-	   if (prompt)
-	     {
-	       if ((*prompt) (request, HT_A_CONFIRM, HT_MSG_REDIRECTION,
-			      NULL, NULL, NULL) != YES)
-		 /* @@@ should it be HT_ERROR ? */
-		 return HT_ERROR;
-	     }
-	 }
-     }
+   if ((me->method == METHOD_PUT && !SafePut_query (me->urlName)) || (me->method != METHOD_PUT && !HTMethod_isSafe (method))) {
+      /*
+      ** If we got a 303 See Other then change the method to GET.
+      ** Otherwise ask the user whether we should continue.
+      */
+      if (status == HT_SEE_OTHER) {
+         if (PROT_TRACE)
+            HTTrace("Redirection. Changing method from %s to GET\n", HTMethod_name(method));
+            HTRequest_setMethod(request, METHOD_GET);
+	  } else {
+             HTAlertCallback    *prompt = HTAlert_find (HT_A_CONFIRM);
+             if (prompt) {
+                if ((*prompt) (request, HT_A_CONFIRM, HT_MSG_REDIRECTION, NULL, NULL, NULL) != YES)
+                   /* @@@ should it be HT_ERROR ? */
+                   return HT_ERROR;
+			 } 
+	  } 
+   } 
    /*
     **  Start new request with the redirect anchor found in the headers.
     **  Note that we reuse the same request object which means that we must
@@ -724,107 +717,87 @@ int                 status;
     **  so that we can detect endless loops.
     */
 
-   if (HTRequest_doRetry (request))
-     {
-       /*
-       ** Start request with new credentials 
-       */
+   if (HTRequest_doRetry (request)) {
+      /*
+      ** Start request with new credentials 
+      */
+      /* only do a redirect using a network protocol understood by Amaya */
+      iso2wc_strcpy (urlAdr, new_anchor->parent->address);
+      if (IsValidProtocol (urlAdr)) {
+         /* if it's a valid URL, we try to normalize it */
+         /* We use the pre-redirection anchor as a base name */
+         /* @@ how to obtain this address here? */
+         dst = urlAdr;
+         escape_src = EscapeURL (me->urlName);
+         if (escape_src) {
+            ref = AmayaParseUrl (dst, escape_src, AMAYA_PARSE_ALL);
+            wc2iso_strcpy (urlRef, ref);
+            TtaFreeMemory (escape_src);
+		 } else
+               ref = NULL;
 
-       /* only do a redirect using a network protocol understood by Amaya */
-   	if (IsValidProtocol (new_anchor->parent->address))
-	  {
-	    /* if it's a valid URL, we try to normalize it */
-	    /* We use the pre-redirection anchor as a base name */
-	    /* @@ how to obtain this address here? */
-	    dst = new_anchor->parent->address;
-	    escape_src = EscapeURL (me->urlName);
-	    if (escape_src)
-	      {
-		ref = AmayaParseUrl (dst, escape_src, AMAYA_PARSE_ALL);
-		TtaFreeMemory (escape_src);
-	      }
-	    else
-	      ref = NULL;
+         if (ref) {
+            HTAnchor_setPhysical (HTAnchor_parent (new_anchor), urlRef);
+            TtaFreeMemory (ref);
+		 } else
+               return HT_OK; /* We can't redirect anymore */
+	  } else
+            return HT_OK; /* We can't redirect anymore */
 
-	     if (ref)
-	       {
-		 HTAnchor_setPhysical (HTAnchor_parent (new_anchor), ref);
-		 TtaFreeMemory (ref);
-	       }
-	     else
-	       return HT_OK; /* We can't redirect anymore */
+      /* update the current file name */
+      if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC) || (me->method == METHOD_PUT)) {
+         TtaFreeMemory (me->urlName);
+         me->urlName = TtaWCSdup (urlAdr);
+	  } else {
+            /* it's a SYNC mode, so we should keep the urlName */
+            ustrncpy (me->urlName, urlAdr, MAX_LENGTH - 1);
+            me->urlName[MAX_LENGTH - 1] = EOS;
 	  }
-	else
-	  return HT_OK; /* We can't redirect anymore */
+      ChopURL (me->status_urlName, me->urlName);
 
-	/* update the current file name */
-	if ((me->mode & AMAYA_ASYNC) 
-	    || (me->mode & AMAYA_IASYNC)
-	    || (me->method == METHOD_PUT)) 
-	  {
-	    TtaFreeMemory (me->urlName);
-	    me->urlName = TtaStrdup (new_anchor->parent->address);
-	  }
-	else
-	  /* it's a SYNC mode, so we should keep the urlName */
-	  {
-	    strncpy (me->urlName, new_anchor->parent->address, 
-		     MAX_LENGTH - 1);
-	    me->urlName[MAX_LENGTH - 1] = EOS;
-	  }
-	ChopURL (me->status_urlName, me->urlName);
-
-	/* @@ verify if this is important */
-	/* @@@ new libwww doesn't need this free stream while making
-	   a PUT. Is it the case everywhere or just for PUT? */
-	if (me->method != METHOD_PUT 
-	    && me->request->orig_output_stream != NULL) 
-	  {
-	    AHTFWriter_FREE (me->request->orig_output_stream);
-	    me->request->orig_output_stream = NULL;
-	    if (me->output != stdout) { /* Are we writing to a file? */
-#ifdef DEBUG_LIBWWW
-	      fprintf (stderr, "redirection_handler: New URL is  %s, closing "
-		       "FILE %p\n", me->urlName, me->output); 
-#endif 
-	      fclose (me->output);
-	      me->output = NULL;
-	    }
+      /* @@ verify if this is important */
+      /* @@@ new libwww doesn't need this free stream while making
+         a PUT. Is it the case everywhere or just for PUT? */
+      if (me->method != METHOD_PUT && me->request->orig_output_stream != NULL) {
+         AHTFWriter_FREE (me->request->orig_output_stream);
+         me->request->orig_output_stream = NULL;
+         if (me->output != stdout) { /* Are we writing to a file? */
+#           ifdef DEBUG_LIBWWW
+            fprintf (stderr, "redirection_handler: New URL is  %s, closing FILE %p\n", me->urlName, me->output); 
+#           endif 
+            fclose (me->output);
+            me->output = NULL;
+		 }
 	  }
 
-	/* tell the user what we're doing */
-	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_RED_FETCHING), me->status_urlName);
-
-	/*
-	** launch the request
-	*/
-	/* add a link relationship? */
-	/* reset the request status */
-	me->reqStatus = HT_NEW; 
-	/* clear the errors */
-	HTError_deleteAll (HTRequest_error (request));
-	HTRequest_setError (request, NULL);
-	/* clear the authentication credentials, as they get regenerated  */
-	HTRequest_deleteCredentialsAll (request);
+      /* tell the user what we're doing */
+      TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_RED_FETCHING), me->status_urlName); 
+      /*
+      ** launch the request
+      */
+      /* add a link relationship? */
+      /* reset the request status */
+      me->reqStatus = HT_NEW; 
+      /* clear the errors */
+      HTError_deleteAll (HTRequest_error (request));
+      HTRequest_setError (request, NULL);
+      /* clear the authentication credentials, as they get regenerated  */
+      HTRequest_deleteCredentialsAll (request);
 	
-	if (me->method == METHOD_POST 
-	  || me->method == METHOD_PUT) 	/* PUT, POST etc. */
-       status = HTLoadAbsolute (me->urlName, request);
-	else
-	  HTLoadAnchor (new_anchor, request);
-     }
-   else
-     {
-       HTRequest_addError (request, ERR_FATAL, NO, HTERR_MAX_REDIRECT,
-			   NULL, 0, "HTRedirectFilter");
-       /* so that we can show the error message */
-       if (me->error_html)
-	 DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR;
-       me->reqStatus = HT_ERR;
-       TtaSetStatus (me->docid, 1, 
-		     TtaGetMessage (AMAYA, AM_REDIRECTIONS_LIMIT),
-		     NULL);
-     }
+      if (me->method == METHOD_POST || me->method == METHOD_PUT) { /* PUT, POST etc. */
+         char url_Name[MAX_LENGTH];
+         wc2iso_strcpy (url_Name, me->urlName);
+         status = HTLoadAbsolute (url_Name, request);
+      } else
+           HTLoadAnchor (new_anchor, request);
+   } else {
+          HTRequest_addError (request, ERR_FATAL, NO, HTERR_MAX_REDIRECT, NULL, 0, "HTRedirectFilter");
+          /* so that we can show the error message */
+          if (me->error_html)
+             DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR;
+          me->reqStatus = HT_ERR;
+          TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REDIRECTIONS_LIMIT), NULL);
+   }
 
    /*
    **  By returning HT_ERROR we make sure that this is the last handler to be
@@ -1168,9 +1141,12 @@ int                 status;
 	   /* libwww gives www/unknown when it gets an error. As this is 
 	      an HTML test, we force the type to text/html */
 	   if (!strcmp (content_type, "www/unknown"))
-	     me->content_type = TtaStrdup ("text/html");
-	   else
-	     me->content_type = TtaStrdup (content_type);
+	     me->content_type = TtaWCSdup (TEXT("text/html"));
+	   else {
+         CHAR_T ContentType[MAX_LENGTH];
+         iso2wc_strcpy (ContentType, content_type);
+	     me->content_type = TtaWCSdup (ContentType);
+	   }
 	   
 	   /* Content-Type can be specified by an httpd  server's admin.
 	      To be on the safe side, we normalize its case */
@@ -1274,11 +1250,8 @@ int                 status;
        break;
        
        if (PROT_TRACE)
-	 HTTrace ("Load End.... ERROR: Can't access `%s\'\n",
-		  me->status_urlName ? me->status_urlName :"<UNKNOWN>");
-       TtaSetStatus (me->docid, 1,
-		     TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-		     me->status_urlName ? me->status_urlName : TEXT("<UNKNOWN>"));
+           HTTrace ("Load End.... ERROR: Can't access `%s\'\n", me->status_urlName ? me->status_urlName :"<UNKNOWN>"); 
+       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), me->status_urlName ? me->status_urlName : TEXT("<UNKNOWN>"));
        break;
      default:
        if (PROT_TRACE)
@@ -1590,14 +1563,14 @@ View view;
 #endif /* __STDC__ */
 {
 #ifdef AMAYA_WWW_CACHE
-  STRING real_dir;
-  STRING cache_dir;
-  STRING tmp;
-  int cache_size;
-  int cache_expire;
-  int cache_disconnect;
+  CHAR_T*  real_dir;
+  char*    cache_dir;
+  char*    tmp;
+  int      cache_size;
+  int      cache_expire;
+  int      cache_disconnect;
   ThotBool error;
-  STRING ptr;
+  CHAR_T*  ptr;
 
   if (!HTCacheMode_enabled ())
     /* don't do anything if we're not using a cache */
@@ -1615,8 +1588,8 @@ View view;
 
   /* get something we can work on :) */
   tmp = HTWWWToLocal (cache_dir, "file:", NULL);
-  real_dir = TtaAllocString (ustrlen (tmp) + 20);
-  ustrcpy (real_dir, tmp);
+  real_dir = TtaAllocString (strlen (tmp) + 20);
+  iso2wc_strcpy (real_dir, tmp);
   HT_FREE (tmp);
 
   /* safeguard... abort the operation if cache_dir doesn't end with
@@ -2088,24 +2061,25 @@ static void SafePut_delete (void)
   returns true if the domain to which belongs the URL accepts an automatic
   PUT redirect.
   ----------------------------------------------------------------------*/
-static ThotBool SafePut_query (char *url)
+static ThotBool SafePut_query (CHAR_T* url)
 {
-  HTList *cur;
-  char *me;
+  HTList*  cur;
+  char*    me;
   ThotBool found;
+  CHAR_T   tmp[MAX_LENGTH];
 
   /* extract the domain path of the url and normalize it */
   /* domain = url; */
   cur = safeput_list;
   found = FALSE;
-  while ((me = (char *) HTList_nextObject (cur))) 
-    {
-      if (strstr (url, me))
-	{
-	  found = TRUE;
-	  break;
-	}
-    }
+
+  while ((me = (char*) HTList_nextObject (cur))) {
+        iso2wc_strcpy (tmp, me);
+        if (ustrstr (url, tmp)) {
+           found = TRUE;
+           break;
+		} 
+  } 
 
   return (found);
 }
@@ -2539,10 +2513,10 @@ char **value;
   PrepareFormdata
   ---------------------------------------------------------------------*/
 #ifdef __STDC__
-static HTAssocList * PrepareFormdata (STRING string)
+static HTAssocList * PrepareFormdata (char* string)
 #else
 static HTAssocList * PrepareFormdata (string)
-STRING string;
+char*  string;
 #endif /* __STDC__ */
 {
   char*        tmp_string, *tmp_string_ptr;
@@ -2727,24 +2701,26 @@ int GetObjectWWW (docid, urlName, formdata, outputfile, mode,
 		  incremental_cbf, context_icbf, 
 		  terminate_cbf, context_tcbf, error_html, content_type)
 int           docid;
-STRING        urlName;
-STRING        formdata;
-STRING        outputfile;
+CHAR_T*       urlName;
+CHAR_T*       formdata;
+CHAR_T*       outputfile;
 int           mode;
 TIcbf        *incremental_cbf;
 void         *context_icbf;
 TTcbf        *terminate_cbf;
 void         *context_tcbf;
 ThotBool      error_html;
-STRING        content_type;
+CHAR_T*       content_type;
 #endif
 {
    AHTReqContext      *me;
-   STRING              ref;
-   STRING              esc_url;
+   CHAR_T*             ref;
+   CHAR_T*             esc_url;
+   char                urlRef[MAX_LENGTH];
    int                 status, l;
    int                 tempsubdir;
    ThotBool            bool_tmp;
+   char                frm_data[MAX_LENGTH];
 
    if (urlName == NULL || docid == 0 || outputfile == NULL) 
      {
@@ -2927,7 +2903,8 @@ STRING        content_type;
 		 TtaGetMessage (AMAYA, AM_FETCHING),
 		 me->status_urlName);
 
-   me->anchor = (HTParentAnchor *) HTAnchor_findAddress (ref);
+   wc2iso_strcpy (urlRef, ref);
+   me->anchor = (HTParentAnchor *) HTAnchor_findAddress (urlRef);
    TtaFreeMemory (ref);
    
    TtaGetEnvBoolean ("CACHE_DISCONNECTED_MODE", &bool_tmp);
@@ -2944,8 +2921,10 @@ STRING        content_type;
      } 
 
    /* create the formdata element for libwww */
-   if (formdata && ! (mode & AMAYA_FILE_POST))
-     me->formdata = PrepareFormdata (formdata);
+   if (formdata && ! (mode & AMAYA_FILE_POST)) {
+      wc2iso_strcpy (frm_data, formdata);  
+      me->formdata = PrepareFormdata (frm_data);
+   }
 
    /* do the request */
    if (mode & AMAYA_FORM_POST)
@@ -3115,10 +3094,13 @@ void               *context_tcbf;
    char               *fileURL;
    char               *etag = NULL;
    HTParentAnchor     *dest_anc_parent;
-   STRING              tmp;
-   STRING              esc_url;
+   CHAR_T*             tmp;
+   CHAR_T*             esc_url;
    int                 UsePreconditions;
    ThotBool            lost_update_check = TRUE;
+   char                url_name[MAX_LENGTH];
+   char                file_name[MAX_LENGTH];
+   char*               tmp2;
 
    /* should we protect the PUT against lost updates? */
    tmp = TtaGetEnvString ("ENABLE_LOST_UPDATE_CHECK");
@@ -3174,8 +3156,9 @@ void               *context_tcbf;
 	   ptr2 = ustrstr (urlName, ptr1);
 	   if (ptr2) 
 	     {
-	       me->default_put_name = TtaStrdup (urlName);
-	       me->default_put_name[strlen (me->default_put_name) - strlen (ptr1)] = EOS;
+           wc2iso_strcpy (url_name, urlName);
+	       me->default_put_name = TtaStrdup (url_name);
+	       me->default_put_name[strlen (me->default_put_name) - ustrlen (ptr1)] = EOS;
 	       HTRequest_setDefaultPutName (me->request, me->default_put_name);
 	     }
 	 }
@@ -3187,27 +3170,29 @@ void               *context_tcbf;
    me->terminate_cbf = terminate_cbf;
    me->context_tcbf = context_tcbf;
    esc_url = EscapeURL (urlName);
-   me->urlName = TtaStrdup (esc_url);
+   me->urlName = TtaWCSdup (esc_url);
    TtaFreeMemory (esc_url);
    me->block_size =  file_size;
    /* select the parameters that distinguish a PUT from a GET/POST */
    me->method = METHOD_PUT;
    me->output = stdout;
    /* we are not expecting to receive any input from the server */
-   me->outputfile = (char *) NULL; 
+   me->outputfile = (CHAR_T*) NULL; 
 
 #ifdef _WINDOWS
    /* libwww's HTParse function doesn't take into account the drive name;
       so we sidestep it */
    fileURL = NULL;
    StrAllocCopy (fileURL, "file:");
-   StrAllocCat (fileURL, fileName);
+   wc2iso_strcpy (file_name, fileName);
+   StrAllocCat (fileURL, file_name);
 #else
    fileURL = HTParse (fileName, "file:/", PARSE_ALL);
 #endif /* _WINDOWS */
    me->source = HTAnchor_findAddress (fileURL);
    HT_FREE (fileURL);
-   me->dest = HTAnchor_findAddress (me->urlName);
+   wc2iso_strcpy (url_name, me->urlName);
+   me->dest = HTAnchor_findAddress (url_name);
    /* we memorize the anchor's parent @ as we use it a number of times
       in the following lines */
    dest_anc_parent = HTAnchor_parent (me->dest);
@@ -3218,18 +3203,18 @@ void               *context_tcbf;
    /* we try to use any content-type previosuly associated
       with the parent. If it doesn't exist, we try to guess it
       from the URL */
-   tmp = HTAtom_name (HTAnchor_format (dest_anc_parent));
-   if (!tmp || !ustrcmp (tmp, TEXT("www/unknown")))
+   tmp2 = HTAtom_name (HTAnchor_format (dest_anc_parent));
+   if (!tmp2 || !strcmp (tmp2, "www/unknown"))
      {
        HTAnchor_setFormat (dest_anc_parent, AHTGuessAtom_for (me->urlName, contentType));
-       tmp = HTAtom_name (HTAnchor_format (dest_anc_parent));
+       tmp2 = HTAtom_name (HTAnchor_format (dest_anc_parent));
      }
    /* .. and we give the same type to the source anchor */
    /* we go thru setOutputFormat, rather than change the parent's
       anchor, as that's the place that libwww expects it to be */
-   HTAnchor_setFormat (HTAnchor_parent (me->source), HTAtom_for (tmp));
+   HTAnchor_setFormat (HTAnchor_parent (me->source), HTAtom_for (tmp2));
 
-   HTRequest_setOutputFormat (me->request, HTAtom_for (tmp));
+   HTRequest_setOutputFormat (me->request, HTAtom_for (tmp2));
 
 #if 0 /* JK: code ready, but we're not going to use it yet */
    /*

@@ -36,7 +36,6 @@ extern CHAR_T*    TtaSkipWCBlanks (CHAR_T* ptr);
  * linefeed or a newline.
  */
 extern ThotBool    TtaIsBlank (char* ptr);
-extern ThotBool    TtaIsCUSBlank (CharUnit*);
 
 /*
  * TtaInitializeAppRegistry : initialize the Registry, the only argument
@@ -135,7 +134,6 @@ extern void         TtaSaveAppRegistry (void);
 extern char*        TtaSkipBlanks (/* char* ptr */);
 extern CHAR_T*      TtaSkipWCBlanks (/* CHAR_T* ptr */);
 extern ThotBool     TtaIsBlank (/* char* ptr */);
-extern ThotBool     TtaIsCUSBlank (/* CharUnit* */);
 extern void         TtaInitializeAppRegistry ( /* CHAR_T* appArgv0 */ );
 extern void         TtaFreeAppRegistry ( /* void */ );
 extern ThotBool     TtaGetEnvBoolean ( /* STRING name, ThotBool *value */ );

@@ -1328,10 +1328,10 @@ Attribute          *attributeFound;
    if (ok)
      {
 	if (scope == SearchBackward)
-	   pEl = BackSearchAttribute ((PtrElement) element, searchedAttribute.AttrTypeNum, 0, _EMPTYSTR_,
+	   pEl = BackSearchAttribute ((PtrElement) element, searchedAttribute.AttrTypeNum, 0, TEXT(""),
 			      (PtrSSchema) (searchedAttribute.AttrSSchema));
 	else
-	   pEl = FwdSearchAttribute ((PtrElement) element, searchedAttribute.AttrTypeNum, 0, _EMPTYSTR_,
+	   pEl = FwdSearchAttribute ((PtrElement) element, searchedAttribute.AttrTypeNum, 0, TEXT(""),
 			      (PtrSSchema) (searchedAttribute.AttrSSchema));
 	if (pEl != NULL)
 	   if (scope == SearchInTree)

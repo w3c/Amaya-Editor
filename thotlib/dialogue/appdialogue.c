@@ -2228,7 +2228,7 @@ void                (*procedure) ();
 #else  /* _WINDOWS */
 		          currentFrame = frame;
                   GetClientRect (FrMainRef [frame], &rect);
-                  w = CreateWindow (TEXT("EDIT"), _EMPTYSTR_, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
+                  w = CreateWindow (TEXT("EDIT"), TEXT(""), WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
                                     0, 0, 0, 0, FrMainRef[frame], (HMENU) i, hInstance, NULL);
 
                   FrameTable[frame].Text_Zone[i] = w;

@@ -32,7 +32,6 @@
 #include "appstruct.h"
  
 typedef CHAR_T    Name[MAX_NAME_LENGTH]; /* a name is terminated by a null byte*/
-typedef CharUnit  CUSName[MAX_NAME_LENGTH];
 
 /* values for using schema or user attribute and element type names */ 
 #define USER_NAME 1

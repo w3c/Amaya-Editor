@@ -72,50 +72,50 @@ static Element	LastDeletedElement = NULL;
 #endif /* _WINDOWS */
 
 /* Function name table */
-typedef char       functName[10];
+typedef CHAR_T     functName[10];
 static  functName  functionName[] =
 {
-   "Imaginary",
-   "Real",
-   "arccosh",
-   "arccos",
-   "arccoth",
-   "arccot",
-   "arccsch",
-   "arccsc",
-   "arcsech",
-   "arcsec",
-   "arcsinh",
-   "arcsin",
-   "arctanh",
-   "arctan",
-   "arg",
-   "cosh",
-   "cos",
-   "coth",
-   "cot",
-   "csch",
-   "csc",
-   "curl",
-   "det",
-   "div",
-   "gcd",
-   "grad",
-   "log",
-   "ln",
-   "max",
-   "median",
-   "min",
-   "mode",
-   "mod",
-   "sech",
-   "sec",
-   "sinh",
-   "sin",
-   "tanh",
-   "tan",
-   "xor",
-   ""
+   TEXT("Imaginary"),
+   TEXT("Real"),
+   TEXT("arccosh"),
+   TEXT("arccos"),
+   TEXT("arccoth"),
+   TEXT("arccot"),
+   TEXT("arccsch"),
+   TEXT("arccsc"),
+   TEXT("arcsech"),
+   TEXT("arcsec"),
+   TEXT("arcsinh"),
+   TEXT("arcsin"),
+   TEXT("arctanh"),
+   TEXT("arctan"),
+   TEXT("arg"),
+   TEXT("cosh"),
+   TEXT("cos"),
+   TEXT("coth"),
+   TEXT("cot"),
+   TEXT("csch"),
+   TEXT("csc"),
+   TEXT("curl"),
+   TEXT("det"),
+   TEXT("div"),
+   TEXT("gcd"),
+   TEXT("grad"),
+   TEXT("log"),
+   TEXT("ln"),
+   TEXT("max"),
+   TEXT("median"),
+   TEXT("min"),
+   TEXT("mode"),
+   TEXT("mod"),
+   TEXT("sech"),
+   TEXT("sec"),
+   TEXT("sinh"),
+   TEXT("sin"),
+   TEXT("tanh"),
+   TEXT("tan"),
+   TEXT("xor"),
+   TEXT("")
 };
 
 /*----------------------------------------------------------------------
@@ -2068,8 +2068,8 @@ static void SeparateFunctionNames (firstEl, lastEl, doc, newSelEl, newSelChar)
 		     stop = FALSE;
 		     do
 		       {
-		       flen = strlen (functionName[func]);
-		       if (ustrncmp (functionName[func], &text[i], flen) == 0)
+		       flen = ustrlen (functionName[func]);
+		       if (ustrncmp (functionName[func], &text[i], flen) == 0) 
 			 /* this substring is a function name */
 			 {
 			 /* this element will be deleted */
@@ -2173,7 +2173,7 @@ static void SeparateFunctionNames (firstEl, lastEl, doc, newSelEl, newSelChar)
                        func++; 
                        }
 		     while (!stop &&
-			    strcmp (functionName[func], "") != 0);
+			    ustrcmp (functionName[func], TEXT("")) != 0);
 		     }
 	        }
 	     /* the whole text leaf has been checked */
@@ -3645,7 +3645,7 @@ void AttrOpenCloseChanged (event)
 {
   Element	fence, content;
   int		length;
-  char      text[8];
+  CHAR_T    text[8];
 
   if (event->attributeType.AttrTypeNum == MathML_ATTR_open)
      fence = TtaGetFirstChild (event->element);
@@ -3659,9 +3659,9 @@ void AttrOpenCloseChanged (event)
       if (event->attribute == NULL)
 	/* Attribute has been deleted */
 	if (event->attributeType.AttrTypeNum == MathML_ATTR_open)
-	   text[0] = '(';	/* default value for open */
+	   text[0] = TEXT('(');	/* default value for open */
 	else
-	   text[0] = ')';	/* default value for close */
+	   text[0] = TEXT(')');	/* default value for close */
       else
 	/* attribute has been modified, get its new value */
 	{
@@ -3669,7 +3669,7 @@ void AttrOpenCloseChanged (event)
         TtaGiveTextAttributeValue (event->attribute, text, &length);
 	}
       /* set the content of the fence element */
-      TtaSetGraphicsShape (content, text[0], event->document); 
+      TtaSetGraphicsShape (content, (char)text[0], event->document); 
       }
     }
 }

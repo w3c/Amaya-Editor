@@ -5517,7 +5517,7 @@ ThotBool*       endOfFile;
          }
          if (*endOfFile == FALSE) {
             char* mbsBuff = &FileBuffer[(*index)];
-            (*index) += TtaGetNextWideCharFromMultibyteString (&charRead, &mbsBuff);
+            (*index) += TtaGetNextWideCharFromMultibyteString (&charRead, &mbsBuff, ISOLatin1);
             if (*index > LastCharInFileBuffer)
                *index = 0;
          }

@@ -341,16 +341,16 @@ HTAlertPar         *reply;
 #endif /* __STDC */
 {
    AHTReqContext      *me = HTRequest_context (request);
-   const STRING       realm = HTRequest_realm (request);
-   STRING             server;
+   const char*      realm = HTRequest_realm (request);
+   CHAR_T*            server;
    AHTReqStatus       old_reqStatus;
 
-   if (reply && msgnum >= 0)
+   if (reply && msgnum >= 0) 
      {
        /* initialise */
-       Answer_name[0] = EOS;
+       Answer_name[0] = WC_EOS;
        Lg_password = 0;
-       Answer_password[0] = EOS;
+       Answer_password[0] = WC_EOS;
 
        /* prepare the authentication realm message */
        server = AmayaParseUrl (me->urlName, TEXT(""), AMAYA_PARSE_HOST);
@@ -366,16 +366,18 @@ HTAlertPar         *reply;
 	 TtaFreeMemory (server);
 
        /* handle the user's answers back to the library */
-       if (Answer_name[0] != EOS)
-	 {
-	   HTAlert_setReplyMessage (reply, Answer_name);
-	   if (Answer_password[0] != EOS)
-	     {
-	       /* give password back to the request */
-	       HTAlert_setReplySecret (reply, Answer_password);
-	       return YES;
-	     }
-	 }
+       if (Answer_name[0] != WC_EOS) {    
+          char ansName [MAX_LENGTH];
+          wc2iso_strcpy (ansName, Answer_name);
+          HTAlert_setReplyMessage (reply, ansName);
+          if (Answer_password[0] != WC_EOS) {
+             char ansPasswd[MAX_LENGTH];
+             wc2iso_strcpy (ansPasswd, Answer_password);
+             /* give password back to the request */
+             HTAlert_setReplySecret (reply, ansPasswd);
+             return YES;
+		  }
+	   } 
      }
    return NO;
 }
@@ -499,6 +501,7 @@ HTRequest          *request;
    AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
    int                 index;
    CHAR_T              buffer[1024];
+   char                isoBuff [1024];
 
 
    if (WWWTRACE)	   
@@ -508,7 +511,7 @@ HTRequest          *request;
 
    /* force the error type (we're generating it anyway) */
    if (!me->content_type)
-     me->content_type = TtaStrdup ("text/html");
+     me->content_type = TtaWCSdup (TEXT("text/html"));
 
    while ((pres = (HTError *) HTList_nextObject (cur)))
      {
@@ -524,12 +527,14 @@ HTRequest          *request;
 		  if (me->method != METHOD_PUT) 
 		    {
 		      usprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), me->urlName, me->urlName, (int) pres->element, pres->par);
-		      StrAllocCat (me->error_stream, buffer);
+              wc2iso_strcpy (isoBuff, buffer);
+		      StrAllocCat (me->error_stream, isoBuff);
 		    }
 		  else
 		    {
 		      usprintf (buffer, TEXT("Error: Server is unavailable or doesn't exist"));
-		      StrAllocCat (me->error_stream, buffer);
+              wc2iso_strcpy (isoBuff, buffer);
+		      StrAllocCat (me->error_stream, isoBuff);
 		    }
 		}
 	      return;
@@ -538,12 +543,14 @@ HTRequest          *request;
 	      if (me->method != METHOD_PUT)
 		{
 		  usprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), me->urlName, me->urlName, (int) pres->element, "connection timeout");
-		  StrAllocCat (me->error_stream, buffer);
+          wc2iso_strcpy (isoBuff, buffer);
+		  StrAllocCat (me->error_stream, isoBuff);
 		}
 	      else
 		{
 		  usprintf (buffer, TEXT("Error: Server is unavailable or doesn't exist"));
-		  StrAllocCat (me->error_stream, buffer);
+          wc2iso_strcpy (isoBuff, buffer);
+		  StrAllocCat (me->error_stream, isoBuff);
 		}
 	      break;	   
 	    default:
@@ -614,7 +621,7 @@ int status;
   HTErrorElement      errorElement;
   HTList              *cur;
   CHAR_T              msg_status[10];
-  CHAR_T*             server_status = (CHAR_T*) NULL;
+  char*               server_status = (char*) NULL;
 
   if (status == 200)
     TtaSetStatus (me->docid, 1,  

@@ -220,7 +220,7 @@ ptrfont font;
          WinErrorBox (NULL, TEXT("WinLoadFont (3)"));
       return (OldFont = SelectObject (hdc, currentActiveFont));
    }
-   return OldFont;
+   return (OldFont = SelectObject (hdc, currentActiveFont));
 }
 #endif /* _WINDOWS */
 
@@ -257,19 +257,31 @@ int                 CharacterWidth (c, font)
 ptrfont             font;
 #endif /* __STDC__ */
 {
-#if defined(_I18N_) || defined(__JIS__)
+#ifdef _I18N_
 #ifdef _WINDOWS
       SIZE wsize;
-      HFONT currentFont; 
+      HFONT currentFont, HOldFont; 
       WIN_GetDeviceContext (-1);
-      currentFont = SelectObject (TtDisplay, currentActiveFont);
+      
+      currentFont = WinLoadFont (TtDisplay, font);
       GetTextExtentPoint (TtDisplay, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
       SelectObject (TtDisplay, currentFont);
+#     if 0
+      if (currentActiveFont) {
+         currentFont = SelectObject (TtDisplay, currentActiveFont);
+         GetTextExtentPoint (TtDisplay, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
+         SelectObject (TtDisplay, currentFont);
+	  } else {
+             currentFont = WinLoadFont (TtDisplay, font);
+             GetTextExtentPoint (TtDisplay, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
+             SelectObject (TtDisplay, currentFont);
+	  }
       WIN_ReleaseDeviceContext ();
+#     endif /* 00000000 */
       return wsize.cx;
 #else  /* !_WINDOWS */
 #endif /* _WINDOWS */
-#else /* defined(_I18N_) || defined(__JIS__) */
+#else /* !_I18N_ */
 
    int                 l;
 
@@ -299,7 +311,7 @@ ptrfont             font;
 #endif /* !_WINDOWS */
      }
    return (l);
-#endif /* defined(_I18N_) || defined(__JIS__) */
+#endif /* !_I18N_ */
 }
 
 /*----------------------------------------------------------------------

@@ -101,8 +101,8 @@ CHAR_T c;
 		   (c >= TEXT('A') && c <= TEXT('Z')) ||
            (c >= TEXT('a') && c <= TEXT('z')) ||
            (c >= TEXT('0') && c <= TEXT('9')) ||
-           ((int) TtaGetISOLatinCodeFromUnicode (c) >= 192 && (int) TtaGetISOLatinCodeFromUnicode (c) <= 255) ||
-           c == TtaGetUnicodeValueFromISOLatinCode ('\240') ||
+           ((int) c >= 192 && (int) c <= 255) ||
+           c == '\240' ||
            c == TEXT('_'))
           return TRUE;
        return FALSE;
@@ -338,7 +338,7 @@ void                OctalToChar ()
 		     CompilerMessage (i, COMPIL, FATAL, INVALID_CHAR, inputLine, LineNum);
 		  else
 		    {
-		       inputLine[i] = TtaGetUnicodeValueFromISOLatinCode ((unsigned char) n);
+		       inputLine[i] = (unsigned char) n;
 		       shift = k - i - 1;
 		    }
 	       }
@@ -432,10 +432,10 @@ SyntacticType      *wn;
       if (inputLine[j] >= TEXT('0') && inputLine[j] <= TEXT('9')) 
          *wn = SynInteger;
       else if ((inputLine[j] >= TEXT('A') && inputLine[j] <= TEXT('Z'))     ||
-                inputLine[j] == TtaGetUnicodeValueFromISOLatinCode ('\240') || /*nobreakspace */
+                inputLine[j] == NBSP || /*nobreakspace */
                 (inputLine[j] >= TEXT('a') && inputLine[j] <= TEXT('z'))    ||
-                (((int) TtaGetISOLatinCodeFromUnicode (inputLine[j])) >= 192 &&
-                 ((int) TtaGetISOLatinCodeFromUnicode (inputLine[j])) <= 255))
+                (((int) inputLine[j]) >= 192 &&
+                 ((int) inputLine[j]) <= 255))
            *wn = SynIdentifier;
       else if (inputLine[j] == TEXT('\''))
            *wn = SynString;
@@ -451,7 +451,7 @@ SyntacticType      *wn;
                 (inputLine[j] >= TEXT(':') && inputLine[j] <= TEXT('@')) ||
                 (inputLine[j] >= TEXT('[') && inputLine[j] <= TEXT('^')) || 
                 (inputLine[j] >= TEXT('{') && inputLine[j] <= TEXT('~')) || 
-                inputLine[j] == TtaGetUnicodeValueFromISOLatinCode (127) || 
+                inputLine[j] == 127 || 
                 inputLine[j] == TEXT('`'))
                /* on a trouve un separateur */
                stop = True;	/* verifie l'homogeneite */
@@ -465,16 +465,17 @@ SyntacticType      *wn;
 							 }
                              break;
                         case SynIdentifier:
-                             if (!ValidCharacter (inputLine[j])) {
-#                            if 0
-                             if (!((inputLine[j] >= TEXT('A') && inputLine[j] <= TEXT('Z'))    || 
-                                 (inputLine[j] == TtaGetUnicodeValueFromISOLatinCode ('\240')) || /*nobreakspace */
-                                 (inputLine[j] >= TEXT('a') && inputLine[j] <= TEXT('z'))      || 
-                                 (inputLine[j] >= TEXT('0') && inputLine[j] <= TEXT('9'))      || 
-                                 (((int) TtaGetISOLatinCodeFromUnicode(inputLine[j])) >= 192 && 
-                                  ((int) TtaGetISOLatinCodeFromUnicode (inputLine[j])) <= 255) || /* lettre accentuee */
-                                 inputLine[j] == TEXT('_'))) {
-#                            endif /* @@@@@@@@@@@@@ */
+                             if (!
+								    (
+									    (inputLine[j] >= TEXT('A') && inputLine[j] <= TEXT('Z')) || 
+                                        (inputLine[j] >= TEXT('a') && inputLine[j] <= TEXT('z')) || 
+                                        (inputLine[j] == NBSP)                          || /*nobreakspace */
+                                        (inputLine[j] >= TEXT('0') && inputLine[j] <= TEXT('9')) || 
+                                        ((int)inputLine[j] >= 192 && (int) inputLine[j] <= 255)  || /* lettre accentuee */
+                                        inputLine[j] == TEXT('_')
+									)
+										
+							    ) {
                                 CompilerMessage (j + 1, COMPIL, FATAL, BAD_WORD, inputLine, LineNum);
                                 *wn = SynError;
                                 stop = True;
@@ -988,7 +989,7 @@ STRING              fileName;
 		  j++;
 	       }
 #        ifdef _WINDOWS
-	     while (j < LINE_LENGTH && inputLine [j-1] != TtaGetUnicodeValueFromISOLatinCode (13) && inputLine[j - 1] != TEXT('\n') && fileOK);
+	     while (j < LINE_LENGTH && inputLine [j-1] != 13 && inputLine[j - 1] != TEXT('\n') && fileOK);
 #        else
 	     while (j < LINE_LENGTH && inputLine[j - 1] != TEXT('\n') && fileOK);
 #        endif

@@ -293,17 +293,17 @@ LPSTR  msg;
 
 	switch (app_lang) {
            case FR_LANG:
-               if (!(ghwndAbort = CreateDialog (hInst, (LPCTSTR) "FR_Printinprogress", ghwndMain, (DLGPROC) AbortDlgProc)))
+               if (!(ghwndAbort = CreateDialog (hInst, TEXT("FR_Printinprogress"), ghwndMain, (DLGPROC) AbortDlgProc)))
                   WinErrorBox (ghwndMain, TEXT("InitPrinting: FR_LANG"));
                break;
 
 		   case EN_LANG:
-                if (!(ghwndAbort = CreateDialog (hInst, (LPCTSTR) "EN_Printinprogress", ghwndMain, (DLGPROC) AbortDlgProc)))
+                if (!(ghwndAbort = CreateDialog (hInst, TEXT("EN_Printinprogress"), ghwndMain, (DLGPROC) AbortDlgProc)))
                    WinErrorBox (ghwndMain, TEXT("InitPrinting: EN_LANG"));
                 break;
 
 		   case DE_LANG:
-                if (!(ghwndAbort = CreateDialog (hInst, (LPCTSTR) "DE_Printinprogress", ghwndMain, (DLGPROC) AbortDlgProc)))
+                if (!(ghwndAbort = CreateDialog (hInst, TEXT("DE_Printinprogress"), ghwndMain, (DLGPROC) AbortDlgProc)))
                    WinErrorBox (ghwndMain, TEXT("InitPrinting: DE_LANG"));
 				break;
 	} 

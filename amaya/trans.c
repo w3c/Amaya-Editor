@@ -83,7 +83,7 @@ static Element      myLastSelect, origLastSelect;
 static Element      mySelect;
 
 #ifdef __STDC__
-void		    TransCallbackDialog(int ref, int typedata, STRING data);
+void		    TransCallbackDialog(int ref, int typedata, CHAR_T* data);
 #else
 void                TransCallbackDialog (/*ref, typedata, data*/);
 #endif
@@ -2131,11 +2131,11 @@ STRING              prevtag;
       else if (!ustrcmp (GITagNameByType (subTypes[0]), TEXT("???")) ||
 	       !ustrcmp (GITagNameByType (subTypes[0]), TEXT("none")))
 	/* search if tag can be inserted as a child of the identity */
-	result = IsValidHtmlChild (subTypes[0], tag, _EMPTYSTR_);
+	result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
       /* any math element can be inserted under <MATH> (only row in MathML.S)*/
       if (!result && !ustrcmp (TtaGetElementTypeName (elemType), TEXT("MathML")) && 
 	  ustrcmp (TtaGetSSchemaName (elemType.ElSSchema), TEXT("MathML")) == 0)
-	result = IsValidHtmlChild (subTypes[0], tag, _EMPTYSTR_);
+	result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
       break;
 
     case ConstructList:
@@ -2144,7 +2144,7 @@ STRING              prevtag;
       else if (!ustrcmp (GITagNameByType (subTypes[0]), TEXT("???")) ||
 	       !ustrcmp (GITagNameByType (subTypes[0]), TEXT("p*")) ||
 	       !ustrcmp (GITagNameByType (subTypes[0]), TEXT("none")))
-	result = IsValidHtmlChild (subTypes[0], tag, _EMPTYSTR_);
+	result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
       break;
 
     case ConstructChoice:
@@ -2155,12 +2155,12 @@ STRING              prevtag;
 	  else if (!ustrcmp (GITagNameByType (subTypes[i]),TEXT("???")) ||
 		   !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
 		   !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
-	    result = IsValidHtmlChild (subTypes[i], tag, _EMPTYSTR_);
+	    result = IsValidHtmlChild (subTypes[i], tag, TEXT(""));
 	}
       break;
 
     case ConstructOrderedAggregate:
-      found = (!ustrcmp (prevtag, _EMPTYSTR_));
+      found = (!ustrcmp (prevtag, TEXT("")));
       GIType (prevtag, &prevElType, (Document)TransDoc);
       found = (prevElType.ElTypeNum == 0);
       /* searches the rule of previous sibling */
@@ -2182,7 +2182,7 @@ STRING              prevtag;
 	      else if (!ustrcmp (GITagNameByType (subTypes[i]), TEXT("???")) ||
 		       !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
 		       !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
-		result = IsValidHtmlChild (subTypes[i], tag, _EMPTYSTR_);
+		result = IsValidHtmlChild (subTypes[i], tag, TEXT(""));
 	      if (!result)
 		if (!ustrcmp (GITagNameByType (subTypes[i]), TEXT("???")) ||
 		    !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
@@ -2202,7 +2202,7 @@ STRING              prevtag;
 	  else if (!ustrcmp (GITagNameByType (subTypes[i]), TEXT("???")) ||
 		   !ustrcmp (GITagNameByType (subTypes[i]), TEXT("p*")) ||
 		   !ustrcmp (GITagNameByType (subTypes[i]), TEXT("none")))
-	    result = IsValidHtmlChild (subTypes[i], tag, _EMPTYSTR_);
+	    result = IsValidHtmlChild (subTypes[i], tag, TEXT(""));
 	  if (!result)
 	    if (TtaIsOptionalInAggregate(i,elemType)) 
 	      i++;
@@ -2220,7 +2220,7 @@ STRING              prevtag;
 	    else if (!ustrcmp (GITagNameByType (subTypes[0]), TEXT("???")) ||
 		     !ustrcmp (GITagNameByType (subTypes[0]), TEXT("p*")) ||
 		     !ustrcmp (GITagNameByType (subTypes[0]), TEXT("none")))
-	    result = IsValidHtmlChild (subTypes[0], tag, _EMPTYSTR_);
+	    result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
 	  }
       }
 	      
@@ -2335,12 +2335,12 @@ STRING              prevTag;
    callback of the transformation selection menu 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TransCallbackDialog (int ref, int typedata, STRING data)
+void                TransCallbackDialog (int ref, int typedata, CHAR_T* data)
 #else
 void                TransCallbackDialog (ref, typedata, data)
 int                 ref;
 int                 typedata;
-STRING              data;
+CHAR_T*             data;
 
 #endif
 {
@@ -2504,7 +2504,7 @@ View                view;
   resultTrans = FALSE;
   TransDoc = doc;
   nameSet = TtaAllocString (NAME_LENGTH);
-  ustrcpy (nameSet, _EMPTYSTR_);
+  ustrcpy (nameSet, TEXT(""));
   /* context initialisation -- checks the selection */
   ok = CheckSelectionLevel (TransDoc);
   
@@ -2548,7 +2548,7 @@ View                view;
 		}
 	      else
 		{
-		  ustrcpy (nameSet, _EMPTYSTR_);
+		  ustrcpy (nameSet, TEXT(""));
 		  transSchema = NULL;
 		  elemSelect = NULL;
 		}
@@ -2616,7 +2616,7 @@ View                view;
 			ustrcpy (tag, GITagNameByType (TtaGetElementType (elemSelect)));
 		    }
 		  if (elemSelect == NULL)
-		    ustrcpy (tag, _EMPTYSTR_);
+		    ustrcpy (tag, TEXT(""));
 		  if (CheckValidTransRoot (sm,
 					   TtaGetElementType (sm->MatchNode->Elem),
 					   tag))
@@ -2698,7 +2698,7 @@ Document            doc;
   resultTrans = FALSE;
   TransDoc = doc;
   nameSet = TtaAllocString (NAME_LENGTH);
-  ustrcpy (nameSet, _EMPTYSTR_);
+  ustrcpy (nameSet, TEXT(""));
   
   /* context initialisation -- checks the selection */
   ok = CheckSelectionLevel (TransDoc);
@@ -2741,7 +2741,7 @@ Document            doc;
 		}
 	      else
 		{
-		  ustrcpy (nameSet, _EMPTYSTR_);
+		  ustrcpy (nameSet, TEXT(""));
 		  transSchema = NULL;
 		  elemSelect = NULL;
 		}
@@ -2822,7 +2822,7 @@ Document            doc;
 		{	/* if it is matching a pattern root : insert the transformation */
 		  /* in the matched transformations list */
 		  
-		  ustrcpy (tag, _EMPTYSTR_);
+		  ustrcpy (tag, TEXT(""));
 		  if (CheckValidTransRoot (sm,
 					   TtaGetElementType (sm->MatchNode->Elem),
 					   tag))
@@ -2850,7 +2850,7 @@ Document            doc;
 	  if (best == -1)
 	    /* no transformation for the actual selection : take another one */
 	    best = last;
-	  TransCallbackDialog (TransBaseDialog + TransMenu, 0, best); 
+	  TransCallbackDialog (TransBaseDialog + TransMenu, 0, (CHAR_T*)best);  
 	}
     }
   TtaFreeMemory (nameSet);  

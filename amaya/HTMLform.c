@@ -739,7 +739,7 @@ STRING              action;
   else
     {
       buffer_size = 0;
-      buffer = _EMPTYSTR_;
+      buffer = TEXT("");
     }
   if (buffer_size != 0  && (buffer[buffer_size - 1] == '&'))
     {

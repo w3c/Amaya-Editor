@@ -68,16 +68,6 @@ static CHAR_T*      pres_items_menu[MAX_ITEM_CONF];
 static CHAR_T*      export_items[MAX_ITEM_CONF];
 static CHAR_T*      export_items_menu[MAX_ITEM_CONF];
 
-unsigned long offset[6] = {
-         0x00000000Ul,
-         0x00003080UL,
-         0x000E2080UL,
-         0x03C82080UL,
-         0xFA082080UL,
-         0x82082080UL
-};
-
-
 /*----------------------------------------------------------------------
    ConfigInit initializes the configuration module
   ----------------------------------------------------------------------*/
@@ -101,90 +91,6 @@ void                ConfigInit ()
      }
    TtaConfigReadConfigFiles (SchemaPath);
 }
-
-#ifdef _I18N_
-/*----------------------------------------------------------------------
-  GetNextWideChar: Looks for the next Wide character value in a multibyte
-  character string.
-  Author: Ramzi Guetari.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int GetNextWideCharFromMultibyteString (CHAR_T* car, unsigned char** txt)
-#else  /* !__STDC__ */
-int GetNextWideCharFromMultibyteString (car, txt)
-CHAR_T*        car;
-unsigned char* txt;
-#endif /* !__STDC__ */
-{
-/* #ifdef RamziGuetari */
-    /* This code may be used if a Wide character may be encoded on
-       more than 2 bytes */
-    int            nbBytesToRead;
-    unsigned char* start = *txt;
-    CHAR_T         res;
-
-    /* See how many bytes to read to build a wide character */
-    if (*start < 0xC0)
-       nbBytesToRead = 1;
-    else if (*start < 0xE0)
-         nbBytesToRead = 2;
-    else if (*start < 0xF0)
-         nbBytesToRead = 3;
-    else if (*start < 0xF8)
-         nbBytesToRead = 4;
-    else if (*start < 0xFC)
-         nbBytesToRead = 5;
-    else if (*start <= 0xFF)
-         nbBytesToRead = 6;
-
-    res = 0;
-
-    switch (nbBytesToRead) {        /** WEARNING: There is not break statement between cases */
-           case 6: res += *start++;
-                   res <<= 6;
-
-           case 5: res += *start++;
-                   res <<= 6;
-
-           case 4: res += *start++;
-                   res <<= 6;
-
-           case 3: res += *start++;
-                   res <<= 6;
-
-           case 2: res += *start++;
-                   res <<= 6;
-
-           case 1: res += *start++;
-	}
-    res -= offset[nbBytesToRead - 1];
-
-    if (res <= 0xFFFF)
-       *car = res;
-    else 
-        *car = TEXT('?');
-    
-    return nbBytesToRead;
-/* #   endif /* RamziGuetari */
-#   if 0
-    char            mbcstr[MAX_BYTES] = "\0";
-    int             nbBytesToRead;
-    CHAR_T          res;
-    char*           start = *txt;
-    
-    mbcstr[0] = *start;
-    nbBytesToRead = 1;
-    if (isleadbyte(*start)) {
-       txt++;
-       mbcstr[1] = *start++;
-       nbBytesToRead = 2;
-    }
-    mbtowc (car, mbcstr, nbBytesToRead);
-    /* mbtowc (&res, mbcstr, nbBytesToRead); */
-    return nbBytesToRead;
-#   endif /* 0 */
-}
-#endif /* _I18N_ */
 
 /*----------------------------------------------------------------------
    getFirstWord                                                    
@@ -212,12 +118,12 @@ CHAR_T*             word;
 #  ifdef _I18N_
    /* get the first wide character */
    mbcsStart = &line[indline];
-   nbBytes = GetNextWideCharFromMultibyteString (&wChar, &mbcsStart);
+   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart,ISOLatin1);
    indline += nbBytes; 
 
    while (wChar <= WC_SPACE && wChar != WC_EOS) {
          mbcsStart = &line[indline];
-         nbBytes = GetNextWideCharFromMultibyteString (&wChar, &mbcsStart);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
          indline += nbBytes; 
    }
 
@@ -229,7 +135,7 @@ CHAR_T*             word;
    while (wChar > WC_SPACE && wChar != TEXT(':') && wChar != WC_EOS) {
          word[indword++] = wChar;
          mbcsStart = &line[indline];
-         nbBytes = GetNextWideCharFromMultibyteString (&wChar, &mbcsStart);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
          indline += nbBytes; 
    }
 #  else  /* !_I18N_ */
@@ -277,12 +183,12 @@ CHAR_T*             word;
 #  ifdef _I18N_
    /* Skip blanks */
    mbcsStart = &line[indline];
-   nbBytes = GetNextWideCharFromMultibyteString (&wChar, &mbcsStart);
+   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
    indline += nbBytes; 
 
    while (wChar <= WC_SPACE && wChar != WC_EOS) {
          mbcsStart = &line[indline];
-         nbBytes = GetNextWideCharFromMultibyteString (&wChar, &mbcsStart);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
          indline += nbBytes; 
    }
 
@@ -294,13 +200,13 @@ CHAR_T*             word;
 
    while (wChar > WC_SPACE && wChar != WC_EOS) {
          mbcsStart = &line[indline];
-         nbBytes = GetNextWideCharFromMultibyteString (&wChar, &mbcsStart);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
          indline += nbBytes; 
    }
    /* saute les espaces qui suivent le 1er mot */
    while (wChar <= WC_SPACE && wChar != WC_EOS) {
          mbcsStart = &line[indline];
-         nbBytes = GetNextWideCharFromMultibyteString (&wChar, &mbcsStart);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
          indline += nbBytes; 
    }
    if (wChar == TEXT('#'))
@@ -312,7 +218,7 @@ CHAR_T*             word;
    while (wChar > WC_SPACE && wChar != WC_EOS) {
          word[indword++] = wChar;
          mbcsStart = &line[indline];
-         nbBytes = GetNextWideCharFromMultibyteString (&wChar, &mbcsStart);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
          indline += nbBytes; 
    }
    /* marque la fin du mot trouve' */
@@ -366,12 +272,12 @@ unsigned char*      line;
 #  ifdef _I18N_
    /* saute les espaces de debut de ligne */
    mbcsStart = &line[ind];
-   nbBytes = GetNextWideCharFromMultibyteString (&wChar, &mbcsStart);
+   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
    ind += nbBytes; 
 
    while (wChar <= WC_SPACE && wChar != WC_EOS) {
          mbcsStart = &line[ind];
-         nbBytes = GetNextWideCharFromMultibyteString (&wChar, &mbcsStart);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
          ind += nbBytes; 
    }
    if (wChar == TEXT('#'))
@@ -381,14 +287,14 @@ unsigned char*      line;
    /* saute le premier mot */
    while (wChar > WC_SPACE && wChar != TEXT('#') && wChar != TEXT(':') && wChar != WC_EOS) {
          mbcsStart = &line[ind];
-         nbBytes = GetNextWideCharFromMultibyteString (&wChar, &mbcsStart);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
          ind += nbBytes; 
    }
 
    /* saute les espaces qui suivent le 1er mot */
    while (wChar <= WC_SPACE && wChar != WC_EOS) {
          mbcsStart = &line[ind];
-         nbBytes = GetNextWideCharFromMultibyteString (&wChar, &mbcsStart);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
          ind += nbBytes; 
    }
 
@@ -446,23 +352,23 @@ CHAR_T*             text;
 #  ifdef _I18N_
 
    mbcsStart = &line[indline];
-   nbBytes = GetNextWideCharFromMultibyteString (&wChar, &mbcsStart);
+   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
    indline += nbBytes; 
 
    while (wChar != TEXT(':') && wChar != WC_EOS) {
          mbcsStart = &line[indline];
-         nbBytes = GetNextWideCharFromMultibyteString (&wChar, &mbcsStart);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
          indline += nbBytes; 
    }
    
    if (wChar == TEXT(':')) {
       mbcsStart = &line[indline];
-      nbBytes = GetNextWideCharFromMultibyteString (&wChar, &mbcsStart);
+      nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
       indline += nbBytes; 
 
       while (wChar <= WC_SPACE && wChar != WC_EOS) {
             mbcsStart = &line[indline];
-            nbBytes = GetNextWideCharFromMultibyteString (&wChar, &mbcsStart);
+            nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
             indline += nbBytes; 
       }
       
@@ -474,7 +380,7 @@ CHAR_T*             text;
       while (wChar != TEXT('#') && wChar != WC_EOS) {
             text[indtext++] = wChar;
             mbcsStart = &line[indline];
-            nbBytes = GetNextWideCharFromMultibyteString (&wChar, &mbcsStart);
+            nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
             indline += nbBytes; 
       }
       indtext--;
@@ -814,7 +720,7 @@ CHAR_T*             aSchemaPath;
 	       {
 		  /* commande "ls" sur le directory */
 		  thotDir.buf = fname;
-		  thotDir.bufLen = sizeof (fname) / sizeof (CharUnit);
+		  thotDir.bufLen = sizeof (fname) / sizeof (CHAR_T);
 		  thotDir.PicMask = ThotDirBrowse_FILES;
 		  if (ThotDirBrowse_first (&thotDir, Dir, TEXT("*."), suffix) == 1)
 		     do
@@ -2025,11 +1931,11 @@ int           *height;
    name: the name of the view in P schema.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               TtaGetViewGeometryRegistry (Document document, CHAR_T* name, int *x, int *y, int *width, int *height)
+void               TtaGetViewGeometryRegistry (Document document, char* name, int *x, int *y, int *width, int *height)
 #else  /* __STDC__ */
 void               TtaGetViewGeometryRegistry (document, name, x, y, width, height)
 Document           document;
-CHAR_T*            name;
+char*              name;
 int                *x;
 int                *y;
 int                *width;
@@ -2039,36 +1945,37 @@ int                *height;
 {
   PtrDocument pDoc;
   char      line[MAX_TXT_LEN];
+  char      ptr2[MAX_TXT_LEN];
   CHAR_T*   ptr;
   ThotBool  found;
-  char      varName[MAX_TXT_LEN];
+  CHAR_T    tmp[MAX_TXT_LEN];
 
+  
   UserErrorCode = 0;
   *x = 0;
   *y = 0;
   *width = 0;
   *height = 0;
 
-  wc2iso_strcpy (varName, name);
   if (document < 1 || document > MAX_DOCUMENTS)
-    TtaError (ERR_invalid_document_parameter);
-  else if (document != 0)
-    {
-      pDoc = LoadedDocument[document - 1];
-      ptr = TtaGetEnvString (varName);
-      if (!ptr || ptr[0] == WC_EOS)
-	found = FALSE;
-      else
-	found = TRUE;
+     TtaError (ERR_invalid_document_parameter);
+  else if (document != 0) {
+       pDoc = LoadedDocument[document - 1];
+       ptr = TtaGetEnvString (name);
+       if (!ptr || ptr[0] == WC_EOS)
+          found = FALSE;
+       else
+           found = TRUE;
       
-      if (found)
-	{
-	  sprintf (line, ":%s", ptr);
-	  getXYWidthHeight (line, pDoc, x, y, width, height);
-	}
-      else
-	ConfigGetViewGeometry (pDoc, name, x, y, width, height);
-    }
+      if (found) {
+         wc2iso_strcpy (ptr2, ptr);
+         sprintf (line, ":%s", ptr2);
+         getXYWidthHeight (line, pDoc, x, y, width, height);
+	  } else {
+             iso2wc_strcpy (tmp, name);
+             ConfigGetViewGeometry (pDoc, tmp, x, y, width, height);
+	  }
+  } 
 }
 
 /*----------------------------------------------------------------------

@@ -1793,7 +1793,7 @@ View                view;
        /* Select the text element within the option */
        el = TtaGetFirstChild (new);
        TtaSelectElement (doc, el);
-       TtaSelectView (doc, TtaGetViewFromName (doc, TEXT("Structure_view")));
+       TtaSelectView (doc, TtaGetViewFromName (doc, "Structure_view"));
      }
 }
 

@@ -22,7 +22,7 @@
 /*----------------------------------------------------------------------
   TtaRebuildProTable: Rebuild the Profiles Table
   ----------------------------------------------------------------------*/
-extern void     TtaRebuildProTable (char *prof_file);
+extern void     TtaRebuildProTable (CHAR_T* prof_file);
 
 /*----------------------------------------------------------------------
   TtaCanEdit returns TRUE if there is almost one editing function active.
@@ -49,7 +49,7 @@ extern void     TtaGetDefProfileFileName (STRING name, int length);
 extern int      TtaGetProfilesItems (char** listEntries, int length);
 
 #else  /* !__STDC__ */
-extern void     TtaRebuildProTable (/*char *prof_file*/);
+extern void     TtaRebuildProTable (/*CHAR_T* prof_file*/);
 extern ThotBool TtaCanEdit ();
 extern void     TtaGetProfileFileName (/*STRING name, int length*/);
 extern void     TtaGetDefProfileFileName (/*STRING name, int length*/);

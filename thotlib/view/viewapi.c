@@ -950,11 +950,11 @@ View                view;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-View                TtaGetViewFromName (Document document, CHAR_T* viewName)
+View                TtaGetViewFromName (Document document, char* viewName)
 #else  /* __STDC__ */
 View                TtaGetViewFromName (document, viewName)
 Document            document;
-CHAR_T*             viewName;
+char*               viewName;
 #endif /* __STDC__ */
 {
    View                view;
@@ -966,37 +966,32 @@ CHAR_T*             viewName;
    UserErrorCode = 0;
    view = 0;
    /* Checks the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else
-      /* parameter document is ok */
-     {
-	pDoc = LoadedDocument[document - 1];
-	/* search in the opened views of the main tree */
-	for (aView = 1; aView <= MAX_VIEW_DOC && view == 0; aView++)
-	  {
-	     dView = pDoc->DocView[aView - 1];
-	     if (dView.DvSSchema != NULL && dView.DvPSchemaView != 0)
-		if (ustrcmp (viewName, dView.DvSSchema->SsPSchema->PsView[dView.DvPSchemaView - 1]) == 0)
-		   view = aView;
-	  }
-	if (view == 0)
-	   /* If not found, searching in the views of associated elements */
-	   for (aView = 1; aView <= MAX_ASSOC_DOC && view == 0; aView++)
-	     {
-		pEl = pDoc->DocAssocRoot[aView - 1];
-		if (pEl != NULL)
-		   if (pDoc->DocAssocFrame[aView - 1] != 0)
-		      if (ustrcmp (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
-			 view = aView + 100;
-	     }
-     }
+   if (document < 1 || document > MAX_DOCUMENTS) {
+      TtaError (ERR_invalid_document_parameter);
+   } else if (LoadedDocument[document - 1] == NULL) {
+          TtaError (ERR_invalid_document_parameter);
+   } else {
+          CHAR_T ViewName[MAX_LENGTH];
+          iso2wc_strcpy (ViewName, viewName);
+          /* parameter document is ok */
+          pDoc = LoadedDocument[document - 1];
+          /* search in the opened views of the main tree */
+          for (aView = 1; aView <= MAX_VIEW_DOC && view == 0; aView++) {
+              dView = pDoc->DocView[aView - 1];
+              if (dView.DvSSchema != NULL && dView.DvPSchemaView != 0)
+                 if (ustrcmp (ViewName, dView.DvSSchema->SsPSchema->PsView[dView.DvPSchemaView - 1]) == 0)
+                    view = aView;
+		  }
+          if (view == 0)
+             /* If not found, searching in the views of associated elements */
+             for (aView = 1; aView <= MAX_ASSOC_DOC && view == 0; aView++) {
+                 pEl = pDoc->DocAssocRoot[aView - 1];
+                 if (pEl != NULL)
+                    if (pDoc->DocAssocFrame[aView - 1] != 0)
+                       if (ustrcmp (ViewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+                          view = aView + 100;
+			 }
+   }
    return view;
 }
 

@@ -480,7 +480,7 @@ static void         ProcessSymbol ()
 	if (ppIsNamed)
 	  {
 	     ustrcpy (ppSymb->SymbolName, ppName);
-	     ustrcpy (ppName, _EMPTYSTR_);
+	     ustrcpy (ppName, TEXT(""));
 	  }
 	else
 	   ustrcpy (ppSymb->SymbolName, inputBuffer);
@@ -1084,8 +1084,8 @@ UCHAR_T       c;
 	ppSymb = (strSymbDesc *) TtaGetMemory (sizeof (strSymbDesc));
 	ppSymb->SymbolName = TtaAllocString (NAME_LENGTH);
 	ppSymb->Tag = TtaAllocString (NAME_LENGTH);
-	ustrcpy (ppSymb->SymbolName, _EMPTYSTR_);
-	ustrcpy (ppSymb->Tag, _EMPTYSTR_);
+	ustrcpy (ppSymb->SymbolName, TEXT(""));
+	ustrcpy (ppSymb->Tag, TEXT(""));
 	ppSymb->Rule = NULL;
 	ppSymb->Children = NULL;
 	ppSymb->Followings = NULL;
@@ -1096,7 +1096,7 @@ UCHAR_T       c;
 	if (ppIsNamed)
 	  {
 	     ustrcpy (ppSymb->SymbolName, ppName);
-	     ustrcpy (ppName, _EMPTYSTR_);
+	     ustrcpy (ppName, TEXT(""));
 	  }
      }
 }
@@ -1118,7 +1118,7 @@ UCHAR_T       c;
      }
    else
      {
-	ustrcpy (ppNode->Tag, _EMPTYSTR_);
+	ustrcpy (ppNode->Tag, TEXT(""));
 	ppNode->Attributes = NULL;
 	ppNode->Next = NULL;
      }
@@ -1142,7 +1142,7 @@ UCHAR_T       c;
 	ppLgBuffer = 0;
 	ppIsNamed = FALSE;
      }
-   else if (!ustrcmp (ppSymb->Tag, _EMPTYSTR_))
+   else if (!ustrcmp (ppSymb->Tag, TEXT("")))
      {
 	ppError = TRUE;
 	ErrorMessage (TEXT("Missing Tag Name"));
@@ -1164,7 +1164,7 @@ UCHAR_T       c;
 	ustrcpy (ppNode->Tag, inputBuffer);
 	ppLgBuffer = 0;
      }
-   else if (!ustrcmp (ppNode->Tag, _EMPTYSTR_))
+   else if (!ustrcmp (ppNode->Tag, TEXT("")))
      {
 	ppError = TRUE;
 	ErrorMessage (TEXT("Missing Tag Name"));
@@ -1256,7 +1256,7 @@ UCHAR_T       c;
      {
 #ifndef PPSTANDALONE
        if (ustrcmp (ppNode->Tag, TEXT("*")) == 0)
-	 ThotAttrNum = MapThotAttr (inputBuffer, _EMPTYSTR_);
+	 ThotAttrNum = MapThotAttr (inputBuffer, TEXT(""));
        else
 	 ThotAttrNum = MapThotAttr (inputBuffer, ppNode->Tag);
 	if (ThotAttrNum != -1)
@@ -1356,7 +1356,7 @@ UCHAR_T       c;
 	       }
 	     ppAttr->AttrTag = TtaAllocString (NAME_LENGTH);
 	     ustrcpy (ppAttr->AttrTag, inputBuffer);
-	     ustrcpy (ppAttr->NameAttr, _EMPTYSTR_);
+	     ustrcpy (ppAttr->NameAttr, TEXT(""));
 	     ppAttr->ThotAttr = ThotAttrNum;
 	     ppAttr->IsInt = FALSE;
 	     ppAttr->IsTransf = TRUE;
@@ -1415,7 +1415,7 @@ UCHAR_T       c;
      {
 	ppAttr->AttrAttr = TtaAllocString (NAME_LENGTH);
 	ustrcpy (ppAttr->AttrAttr, inputBuffer);
-	if (!ustrcmp (ppAttr->NameAttr, _EMPTYSTR_))
+	if (!ustrcmp (ppAttr->NameAttr, TEXT("")))
 	  {
 	     ustrcpy (ppAttr->NameAttr, inputBuffer);
 	  }
@@ -1511,7 +1511,7 @@ UCHAR_T       c;
 	ppAttr->IsInt = FALSE;
 	ppAttr->TextVal = TtaAllocString (ppLgBuffer + 2);
 
-	ustrcpy (ppAttr->TextVal, _EMPTYSTR_);
+	ustrcpy (ppAttr->TextVal, TEXT(""));
      }
    else
      {
@@ -1586,7 +1586,7 @@ UCHAR_T       c;
 	ppRule->NewNodes = NULL;
 	ppNode = ppRule->OptionNodes;
 	ppNode->Tag = TtaAllocString (NAME_LENGTH);
-	ustrcpy (ppNode->Tag, _EMPTYSTR_);
+	ustrcpy (ppNode->Tag, TEXT(""));
 	ppNode->Attributes = NULL;
 	ppNode->Next = NULL;
 	ppLgBuffer = 0;
@@ -1658,7 +1658,7 @@ UCHAR_T       c;
 	ppNode->Next = (strNodeDesc *) TtaGetMemory (sizeof (strNodeDesc));
 	ppNode = ppNode->Next;
 	ppNode->Tag = TtaAllocString (NAME_LENGTH);
-	ustrcpy (ppNode->Tag, _EMPTYSTR_);
+	ustrcpy (ppNode->Tag, TEXT(""));
 	ppNode->Attributes = NULL;
 	ppNode->Next = NULL;
      }
@@ -1689,7 +1689,7 @@ UCHAR_T       c;
 	     ErrorMessage (msgBuffer);
 	  }
      }
-   if (!ustrcmp (ppRule->OptionNodes->Tag, _EMPTYSTR_))
+   if (!ustrcmp (ppRule->OptionNodes->Tag, TEXT("")))
      {
 	/* frees the current node descriptor if it is empty (the rule has no opt. node */
 	ad = ppRule->OptionNodes->Attributes;
@@ -1715,7 +1715,7 @@ UCHAR_T       c;
    ppRule->NewNodes = (strNodeDesc *) TtaGetMemory (sizeof (strNodeDesc));
    ppNode = ppRule->NewNodes;
    ppNode->Tag = TtaAllocString (NAME_LENGTH);
-   ustrcpy (ppNode->Tag, _EMPTYSTR_);
+   ustrcpy (ppNode->Tag, TEXT(""));
    ppNode->Attributes = NULL;
    ppNode->Next = NULL;
 }
@@ -1808,7 +1808,7 @@ UCHAR_T       c;
 	  ErrorMessage (msgBuffer);
 	}
     }
-  if (ppRule->OptionNodes && !ustrcmp (ppRule->OptionNodes->Tag, _EMPTYSTR_))
+  if (ppRule->OptionNodes && !ustrcmp (ppRule->OptionNodes->Tag, TEXT("")))
     {				/* free the last Option node if it is empty */
       ad = ppRule->OptionNodes->Attributes;
       while (ad)
@@ -1830,7 +1830,7 @@ UCHAR_T       c;
       ppRule->NewNodes = NULL;
     }
 
-  if (ppRule->NewNodes && !ustrcmp (ppRule->NewNodes->Tag, _EMPTYSTR_))
+  if (ppRule->NewNodes && !ustrcmp (ppRule->NewNodes->Tag, TEXT("")))
     {				/* free the last New node if it is empty */
       ad = ppRule->NewNodes->Attributes;
       while (ad)
@@ -1904,7 +1904,7 @@ UCHAR_T       c;
 	else if (ustrcmp (ppTrans->DestinationTag, pnode->Tag))
 	  /* the first tag of the rule is different from the destination type */
 	  /* the rule has no destination type */
-	  ustrcpy (ppTrans->DestinationTag, _EMPTYSTR_);
+	  ustrcpy (ppTrans->DestinationTag, TEXT(""));
     }
   else
     {
@@ -2398,7 +2398,7 @@ BinFile               infile;
 				      ppNode = NULL;
 				      ppRule = NULL;
 				      ppIsNamed = FALSE;
-				      ustrcpy (ppName, _EMPTYSTR_);
+				      ustrcpy (ppName, TEXT(""));
 				      opStack[0] = EOS;
 				      symbolStack[0] = NULL;
 				      choiceStack[0] = NULL;
@@ -2557,7 +2557,7 @@ strTransSet        **resTrSet;
 		ppNode = NULL;
 		ppRule = NULL;
 		ppIsNamed = FALSE;
-		ustrcpy (ppName, _EMPTYSTR_);
+		ustrcpy (ppName, TEXT(""));
 		opStack[0] = EOS;
 		symbolStack[0] = NULL;
 		choiceStack[0] = NULL;

@@ -1082,7 +1082,7 @@ View                view;
    WithReplace = FALSE;
    ReplaceDone = FALSE;
    AutoReplace = FALSE;
-   ustrcpy (pPrecedentString, _EMPTYSTR_);
+   ustrcpy (pPrecedentString, TEXT(""));
 
 #  ifndef _WINDOWS
    /* efface le label "References dans le document X" */

@@ -1115,10 +1115,10 @@ unsigned long  BackGroundPixel;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool IsPngFormat(char* fn)
+ThotBool IsPngFormat(CHAR_T* fn)
 #else /* __STDC__ */
 ThotBool IsPngFormat(fn)
-char*   fn;
+CHAR_T*  fn;
 #endif /* __STDC__ */
 {
   
@@ -1126,7 +1126,7 @@ char*   fn;
    char buf[8];
    int ret;
 
-   fp = fopen(fn , "rb");
+   fp = ufopen(fn , TEXT("rb"));
    if (!fp)
       return 0;
    ret = fread(buf, 1, 8, fp);

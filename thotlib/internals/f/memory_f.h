@@ -7,13 +7,11 @@
 #ifdef __STDC__
 
 extern STRING TtaAllocString ( unsigned int n );
-extern CharUnit* TtaAllocCUString ( unsigned int n );
 extern void *TtaGetMemory ( unsigned int n );
 extern void TtaFreeMemory ( void* ptr );
 extern void FreeAll ( void );
 extern char* TtaStrdup ( char* str );
 extern CHAR_T* TtaWCSdup ( CHAR_T* str );
-extern CharUnit* TtaCUSdup ( CharUnit* str );
 extern void *TtaRealloc ( void *ptr,
                           unsigned int n );
 extern void InitEditorMemory ( void );
@@ -83,13 +81,11 @@ extern void FreeDictionary ( PtrDict pDict );
 #else /* __STDC__ */
 
 extern STRING TtaAllocString (/* unsigned int n */);
-extern CharUnit* TtaAllocCUString (/* unsigned int n */);
 extern void *TtaGetMemory (/* unsigned int n */);
 extern void TtaFreeMemory (/* void* ptr */);
 extern void FreeAll (/* void */);
 extern char* TtaStrdup (/* char* str */);
 extern CHAR_T* TtaWCSdup (/* CHAR_T* str */);
-extern CharUnit* TtaCUSdup (/* CharUnit* str */);
 extern void *TtaRealloc (/* void *ptr,
                             unsigned int n */);
 extern void InitEditorMemory (/* void */);

@@ -1385,7 +1385,7 @@ LPARAM      lParam;
       InitToolTip (ToolBar);	
     
     /* Create status bar  */
-    StatusBar = CreateStatusWindow (dwStatusBarStyles, _EMPTYSTR_, hwnd, 2);
+    StatusBar = CreateStatusWindow (dwStatusBarStyles, TEXT(""), hwnd, 2);
     ShowWindow (StatusBar, SW_SHOWNORMAL);
     UpdateWindow (StatusBar);
     

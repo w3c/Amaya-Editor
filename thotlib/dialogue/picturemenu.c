@@ -335,7 +335,7 @@ PtrBox              pBox;
    InitPathImage ();
 
    /* liste des fichiers existants */
-   TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1, _EMPTYSTR_, TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
+   TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1, TEXT(""), TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
 
    /* sous-menu des types d'image du formulaire Picture */
    indx = 0;
@@ -372,7 +372,7 @@ PtrBox              pBox;
    /* zone de saisie du nom du fichier image */
    TtaNewTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, BaseDlgImage + _IMAGE_FORM, TtaGetMessage (LIB, TMSG_PICT_FILE), 50, 1, TRUE);
 
-   TtaSetSelector (BaseDlgImage + _ZONE_DIR_IMAGE, -1, _EMPTYSTR_);
+   TtaSetSelector (BaseDlgImage + _ZONE_DIR_IMAGE, -1, TEXT(""));
    TtaSetTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, name);
    TtaSetMenuForm (BaseDlgImage + _MENU_IMAGE_TYPE, IndexTypeImage);
    TtaSetMenuForm (BaseDlgImage + _MENU_IMAGE_FRAME, IndexPresImage);

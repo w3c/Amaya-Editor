@@ -46,122 +46,40 @@ unsigned short ISOLatin2Map [] = {
     0x0159, 0x016F, 0x00FA, 0x0171, 0x00FC, 0x00FD, 0x0163, 0x02D9
 };    
 
-#if 0 /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
-typedef struct {
-        unsigned char Fbyte;
-        unsigned char Sbyte;
-        unsigned char Tbyte;
-        unsigned char Frbyte;
-} MBC;
-
-#ifdef __STDC__
-int ISO2Unicode (char* c, PCHAR_T dest) 
-#else   /* !__STDC__   */
-int ISO2Unicode (c , dest )
-char*     c;
-STRING    dest;
-#endif   /* __STDC__ */
-{
-   if (!c) {
-      dest = (PCHAR_T) 0;
-      return -1;
-   }
-   if ((*c) < 0x80)                          /* code ASCII  */
-      *dest = (CHAR_T) (*c);  
-   else {                   /*  Invalid ASCII code  */
-        dest = (PCHAR_T) 0;
-        return -1;
-   } 
-   return 1;
-} 
-  
-#ifdef __STDC__
-int Unicode2ISO (STRING source, char* dest)
-#else /* !__STDC__ */
-int Unicode2ISO (source , dest )
-STRING   source;
-char*    dest;
-#endif   /* __STDC__ */
-{
-
-    if (!source) {
-       dest = (char*) 0;
-       return -1;
-    }
-    if ((*source) < 0x0080)
-       *dest = (char) (*source);
-    else {
-         *dest = 0;
-         return -1;
-    }
-    return 1;
-}
-
-
-#ifdef  __STDC__
-int MB2Unicode (MBC* mbc, int length, STRING dest)
-#else /*  !__STDC__  */
-int NB2Unicode ( mbc, length, dest )
-MBC*   mbc;
-int    length;
-STRING dest;
-#endif  /* __STDC__ */
-{
-
-  switch (length) { 
-         case  1: *dest = mbc->Fbyte;
-                  break;
- 
-         case  2: *dest = mbc->Fbyte - 0xc0;
-                  *dest <<= 6;
-                  *dest |= (mbc->Sbyte - 0x80);
-                  break;
- 
-         case  3: *dest = mbc->Fbyte - 0xe0;
-                  *dest <<= 6;
-                  *dest |= (mbc->Sbyte - 0x80);
-                  *dest <<= 6;
-                  *dest |= (mbc->Tbyte - 0x80);
-                  break;
-
-         default: return -1;
-  }
-  return 1;
-}
-
-#ifdef __STDC__
-int Unicode2MB ( STRING source, int* length, MBC** mbc)
-#else  /* !__STDC__ */
-int Unicode2MB ( source, length, mbc )
-STRING   source;
-int*     length;
-MBC**    mbc;
-#endif /* __STDC__ */
-{
-  
-  (*mbc)->Fbyte = 0;
-  (*mbc)->Sbyte = 0;
-  (*mbc)->Tbyte = 0;
-  (*mbc)->Frbyte = 0;
-  
-  if ( (*source) < 0x0080 ){
-     (*mbc)->Fbyte = (unsigned char )(*source);
-     *length = 1;
-  } else if ( (*source) < 0x0800 ){
-          (*mbc)->Fbyte = (unsigned char )( 0x00c0 | (*source) >> 6 );
-          (*mbc)->Sbyte = (unsigned char )( 0x0080 | (*source) & 0x003f);
-          *length = 2;
-  } else if ( (*source) < 0x10000 ){
-          (*mbc)->Fbyte = (unsigned char)( 0x00e0 | (*source) >> 12);
-          (*mbc)->Sbyte = (unsigned char)( 0x0080 | ((*source) >> 6 & 0x003f));
-          (*mbc)->Tbyte = (unsigned char)( 0x0080 | ((*source) & 0x003f));
-          *length = 3;
-  } else 
-       return -1;
-
-  return 1;
-}
-#endif /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+unsigned short ISOLatin6Map [] = {
+    0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
+    0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
+    0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
+    0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x001E, 0x001F,
+    0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
+    0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
+    0x0660, 0x0661, 0x0662, 0x0663, 0x0664, 0x0665, 0x0666, 0x0667,
+    0x0668, 0x0669, 0x003A, 0x003B, 0x003C, 0x003D, 0x003E, 0x003F,
+    0x0040, 0x0041, 0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047,
+    0x0048, 0x0049, 0x004A, 0x004B, 0x004C, 0x004D, 0x004E, 0x004F,
+    0x0050, 0x0051, 0x0052, 0x0053, 0x0054, 0x0055, 0x0056, 0x0057,
+    0x0058, 0x0059, 0x005A, 0x005B, 0x005C, 0x005D, 0x005E, 0x005F,
+    0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067,
+    0x0068, 0x0069, 0x006A, 0x006B, 0x006C, 0x006D, 0x006E, 0x006F,
+    0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077,
+    0x0078, 0x0079, 0x007A, 0x007B, 0x007C, 0x007D, 0x007E, 0x007F,
+    0x0080, 0x0081, 0x0082, 0x0083, 0x0084, 0x0085, 0x0086, 0x0087,
+    0x0088, 0x0089, 0x008A, 0x008B, 0x008C, 0x008D, 0x008E, 0x008F,
+    0x0090, 0x0091, 0x0092, 0x0093, 0x0094, 0x0095, 0x0096, 0x0097,
+    0x0098, 0x0099, 0x009A, 0x009B, 0x009C, 0x009D, 0x009E, 0x009F,
+    0x00A0, 0x00A1, 0x00A2, 0x00A3, 0x00A4, 0x00A5, 0x00A6, 0x00A7,
+    0x00A8, 0x00A9, 0x00AA, 0x00AB, 0x060C, 0x00AD, 0x00AE, 0x00AF,
+    0x00B0, 0x00B1, 0x00B2, 0x00B3, 0x00B4, 0x00B5, 0x00B6, 0x00B7,
+    0x00B8, 0x00B9, 0x00BA, 0x061B, 0x00BC, 0x00BD, 0x00BE, 0x061F,
+    0x00C0, 0x0621, 0x0622, 0x0623, 0x0624, 0x0625, 0x0626, 0x0627,
+    0x0628, 0x0629, 0x062A, 0x062B, 0x062C, 0x062D, 0x062E, 0x062F,
+    0x0630, 0x0631, 0x0632, 0x0633, 0x0634, 0x0635, 0x0636, 0x0637,
+    0x0638, 0x0639, 0x063A, 0x00DB, 0x00DC, 0x00DD, 0x00DE, 0x00DF,
+    0x0640, 0x0641, 0x0642, 0x0643, 0x0644, 0x0645, 0x0646, 0x0647,
+    0x0648, 0x0649, 0x064A, 0x064B, 0x064C, 0x064D, 0x064E, 0x064F,
+    0x0650, 0x0651, 0x0652, 0x00F3, 0x00F4, 0x00F5, 0x00F6, 0x00F7,
+    0x00F8, 0x00F9, 0x00FA, 0x00FB, 0x00FC, 0x00FD, 0x00FE, 0x00FF
+};
 
 #ifdef __STDC__
 extern STRING TtaAllocString (unsigned int);
@@ -267,23 +185,6 @@ CHAR_T c;
 #endif /* _I18N_ */
 
 /*----------------------------------------------------------------------------*\
- * ToLower                                                                    *
-\*----------------------------------------------------------------------------*/
-#ifdef __STDC__
-CharUnit ToLower (CharUnit c) 
-#else  /* !__STDC__ */
-CharUnit ToLower (c)
-CharUnit c;
-#endif /* __STDC__ */
-{
-#   if defined(_WINDOWS) && defined(_I18N_)
-    return (CharUnit) towlower((wint_t ) c);
-#   else  /* !(defined(_WINDOWS) && defined(_I18N_)) */
-    return ((char) tolower ((int)c));
-#   endif /* !(defined(_WINDOWS) && defined(_I18N_)) */
-}
-
-/*----------------------------------------------------------------------------*\
  * wctoi                                                                      *
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -318,13 +219,13 @@ const CHAR_T* string;
 }
 
 /*----------------------------------------------------------------------------*\
- * TtaGetISOLatinCodeFromUnicode: return the ISO latin 2 code corresponding to
+ * TtaGetISOLatin2CodeFromUnicode: return the ISO latin 2 code corresponding to
  * the Unicode value wc.
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned char TtaGetISOLatinCodeFromUnicode (const CHAR_T wc)
+unsigned char TtaGetISOLatin2CodeFromUnicode (const CHAR_T wc)
 #else  /* !__STDC__ */
-unsigned char TtaGetISOLatinCodeFromUnicode (wc)
+unsigned char TtaGetISOLatin2CodeFromUnicode (wc)
 const CHAR_T  wc;
 #endif /* !__STDC__ */
 {
@@ -396,14 +297,106 @@ const CHAR_T  wc;
 }
 
 #ifdef __STDC__
-CHAR_T              TtaGetUnicodeValueFromISOLatinCode (const unsigned char c)
+CHAR_T              TtaGetUnicodeValueFromISOLatin2Code (const unsigned char c)
 #else  /* !__STDC__ */
-CHAR_T              TtaGetUnicodeValueFromISOLatinCode (c)
+CHAR_T              TtaGetUnicodeValueFromISOLatin2Code (c)
 const unsigned char wc;
 #endif /* !__STDC__ */
 {
 #  ifdef _I18N_
    return ISOLatin2Map [c];
+#  else  /* !_I18N_ */
+   return c;
+#  endif /* !_I18N_ */
+}
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetISOLatin2CodeFromUnicode: return the ISO latin 2 code corresponding to
+ * the Unicode value wc.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+unsigned char TtaGetISOLatin6CodeFromUnicode (const CHAR_T wc)
+#else  /* !__STDC__ */
+unsigned char TtaGetISOLatin6CodeFromUnicode (wc)
+const CHAR_T  wc;
+#endif /* !__STDC__ */
+{
+#   ifdef _I18N_
+    switch (wc) {
+           case 0x0660: return 0x30; /* ARABIC-INDIC DIGIT ZERO             */
+           case 0x0661: return 0x31; /* ARABIC-INDIC DIGIT ONE              */
+           case 0x0662: return 0x32; /* ARABIC-INDIC DIGIT TWO              */
+           case 0x0663: return 0x33; /* ARABIC-INDIC DIGIT THREE            */
+           case 0x0664: return 0x34; /* ARABIC-INDIC DIGIT FOUR             */
+           case 0x0665: return 0x35; /* ARABIC-INDIC DIGIT FIVE             */
+           case 0x0666: return 0x36; /* ARABIC-INDIC DIGIT SIX              */
+           case 0x0667: return 0x37; /* ARABIC-INDIC DIGIT SEVEN            */
+           case 0x0668: return 0x38; /* ARABIC-INDIC DIGIT EIGHT            */
+           case 0x0669: return 0x39; /* ARABIC-INDIC DIGIT NINE             */
+           case 0x060C: return 0xAC; /* ARABIC COMMA                        */
+           case 0x061B: return 0xBB; /* ARABIC SEMICOLON                    */
+           case 0x061F: return 0xBF; /* ARABIC QUESTION MARK                */
+           case 0x0621: return 0xC1; /* ARABIC LETTER HAMZA                 */
+           case 0x0622: return 0xC2; /* ARABIC LETTER ALEF WITH MADDA ABOVE */
+           case 0x0623: return 0xC3; /* ARABIC LETTER ALEF WITH HAMZA ABOVE */
+           case 0x0624: return 0xC4; /* ARABIC LETTER WAW WITH HAMZA ABOVE  */
+           case 0x0625: return 0xC5; /* ARABIC LETTER ALEF WITH HAMZA BELOW */
+           case 0x0626: return 0xC6; /* ARABIC LETTER YEH WITH HAMZA ABOVE  */
+           case 0x0627: return 0xC7; /* ARABIC LETTER ALEF                  */
+           case 0x0628: return 0xC8; /* ARABIC LETTER BEH                   */
+           case 0x0629: return 0xC9; /* ARABIC LETTER TEH MARBUTA           */
+           case 0x062A: return 0xCA; /* ARABIC LETTER TEH                   */
+           case 0x062B: return 0xCB; /* ARABIC LETTER THEH                  */
+           case 0x062C: return 0xCC; /* ARABIC LETTER JEEM                  */
+           case 0x062D: return 0xCD; /* ARABIC LETTER HAH                   */
+           case 0x062E: return 0xCE; /* ARABIC LETTER KHAH                  */
+           case 0x062F: return 0xCF; /* ARABIC LETTER DAL                   */
+           case 0x0630: return 0xD0; /* ARABIC LETTER THAL                  */
+           case 0x0631: return 0xD1; /* ARABIC LETTER REH                   */
+           case 0x0632: return 0xD2; /* ARABIC LETTER ZAIN                  */
+           case 0x0633: return 0xD3; /* ARABIC LETTER SEEN                  */
+           case 0x0634: return 0xD4; /* ARABIC LETTER SHEEN                 */
+           case 0x0635: return 0xD5; /* ARABIC LETTER SAD                   */
+           case 0x0636: return 0xD6; /* ARABIC LETTER DAD                   */
+           case 0x0637: return 0xD7; /* ARABIC LETTER TAH                   */
+           case 0x0638: return 0xD8; /* ARABIC LETTER ZAH                   */
+           case 0x0639: return 0xD9; /* ARABIC LETTER AIN                   */
+           case 0x063A: return 0xDA; /* ARABIC LETTER GHAIN                 */
+           case 0x0640: return 0xE0; /* ARABIC TATWEEL                      */
+           case 0x0641: return 0xE1; /* ARABIC LETTER FEH                   */
+           case 0x0642: return 0xE2; /* ARABIC LETTER QAF                   */
+           case 0x0643: return 0xE3; /* ARABIC LETTER KAF                   */
+           case 0x0644: return 0xE4; /* ARABIC LETTER LAM                   */
+           case 0x0645: return 0xE5; /* ARABIC LETTER MEEM                  */
+           case 0x0646: return 0xE6; /* ARABIC LETTER NOON                  */
+           case 0x0647: return 0xE7; /* ARABIC LETTER HEH                   */
+           case 0x0648: return 0xE8; /* ARABIC LETTER WAW                   */
+           case 0x0649: return 0xE9; /* ARABIC LETTER ALEF MAKSURA          */
+           case 0x064A: return 0xEA; /* ARABIC LETTER YEH                   */
+           case 0x064B: return 0xEB; /* ARABIC FATHATAN                     */
+           case 0x064C: return 0xEC; /* ARABIC DAMMATAN                     */
+           case 0x064D: return 0xED; /* ARABIC KASRATAN                     */
+           case 0x064E: return 0xEE; /* ARABIC FATHA                        */
+           case 0x064F: return 0xEF; /* ARABIC DAMMA                        */
+           case 0x0650: return 0xF0; /* ARABIC KASRA                        */
+           case 0x0651: return 0xF1; /* ARABIC SHADDA                       */
+           case 0x0652: return 0xF2; /* ARABIC SUKUN                        */
+           default:     return (unsigned char) wc;
+	}
+#   else  /* !_I18N_ */
+    return wc;
+#   endif /* !_I18N_ */
+}
+
+#ifdef __STDC__
+CHAR_T              TtaGetUnicodeValueFromISOLatin6Code (const unsigned char c)
+#else  /* !__STDC__ */
+CHAR_T              TtaGetUnicodeValueFromISOLatin6Code (c)
+const unsigned char wc;
+#endif /* !__STDC__ */
+{
+#  ifdef _I18N_
+   return ISOLatin6Map [c];
 #  else  /* !_I18N_ */
    return c;
 #  endif /* !_I18N_ */
