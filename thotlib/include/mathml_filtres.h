@@ -198,7 +198,8 @@ int filtre_operateurs[] =
     0x2231,
     0x2232,
     0x2233,
-    0x2211,
+    0x2211, /* sum */
+	8719, /* prod */
     -1
   };
 
