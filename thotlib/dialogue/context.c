@@ -263,6 +263,7 @@ static void InitColors (char* name)
  ----------------------------------------------------------------------*/
 static void InitGraphicContexts (void)
 {
+#ifndef _GL
 #ifndef _GTK
   unsigned long       valuemask;
   XGCValues           GCmodel;
@@ -273,6 +274,7 @@ static void InitGraphicContexts (void)
 
 #ifdef _GTK
   gdk_rgb_init ();
+
   white = ColorNumber ("White");
   black = ColorNumber ("Black");
   pix = CreatePattern (0, black, white, 6);
@@ -330,6 +332,8 @@ static void InitGraphicContexts (void)
   gdk_gc_set_fill (TtGreyGC, GDK_TILED);
 
   gdk_pixmap_unref ((GdkPixmap *)pix);
+
+
 #else /* _GTK */
    valuemask = GCForeground | GCBackground | GCFunction;
    white = ColorNumber ("White");
@@ -381,6 +385,8 @@ static void InitGraphicContexts (void)
    XSetFillStyle (TtDisplay, TtGreyGC, FillTiled);
    XFreePixmap (TtDisplay, pix);
 #endif /* _GTK */
+#endif /* _GL */
+
 }
 #endif /* _WINDOWS */
 
