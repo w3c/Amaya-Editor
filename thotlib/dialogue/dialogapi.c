@@ -950,7 +950,7 @@ static gboolean scr_popup_key_press (GtkWidget * widget, GdkEventKey * event, gp
   ----------------------------------------------------------------------*/
 static gboolean scr_popup_focus_out (GtkWidget * widget, GdkEventKey * event, gpointer data)
 {
-  printf ("focus out on widget %p\n");
+  printf ("focus out on widget %p\n", widget);
   return FALSE;
 }
 #endif /* _GTK */
@@ -4020,6 +4020,202 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
     }
 }
 
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+   TtaNewScrollPopup cre'e un pop-up menu :                                 
+   The parameter ref donne la re'fe'rence pour l'application.         
+   The parameter title donne le titre du catalogue.                   
+   The parameter number indique le nombre d'entre'es dans le menu.    
+   The parameter text contient la liste des intitule's du catalogue.  
+   Chaque intitule' commence par un caracte`re qui donne le type de   
+   l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    
+   S'il n'est pas nul, le parame`tre equiv donne les acce'le'rateurs  
+   des entre'es du menu.                                              
+   The parameter button indique le bouton de la souris qui active le  
+   menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
+  ----------------------------------------------------------------------*/
+void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
+			char *text, char *equiv, ThotBool multipleOptions, char button)
+{
+  register int        count;
+  register int        index;
+  register int        ent;
+  register int        i;
+  int                 eindex;
+  ThotBool            rebuilded;
+  struct Cat_Context *catalogue;
+  struct E_List      *adbloc;
+#ifdef _WINDOWS
+  HMENU               menu;
+  HMENU               w;
+  int                 nbOldItems, ndx;
+#endif /* _WINDOWS */
+
+  if (ref == 0)
+    {
+      TtaError (ERR_invalid_reference);
+      return;
+    }
+
+  catalogue = CatEntry (ref);
+  menu = 0;
+  if (catalogue == NULL)
+    TtaError (ERR_cannot_create_dialogue);
+  else
+    {
+      /* Est-ce que le catalogue existe deja ? */
+      rebuilded = FALSE;
+      if (catalogue->Cat_Widget != 0)
+	{
+	  if (catalogue->Cat_Type == CAT_SCRPOPUP)
+	    {
+	      /* Modification du catalogue */
+	      DestContenuMenu (catalogue);
+	      rebuilded = TRUE;
+	    }
+	  else
+	    TtaDestroyDialogue (ref);
+	}
+
+      if (!rebuilded)
+	{
+#ifndef _WINDOWS
+#else  /* _WINDOWS */
+	  DWORD dwStyle;
+
+	  dwStyle =  WS_BORDER | WS_HSCROLL | WS_VSCROLL | WS_POPUPWINDOW 
+	    | LBS_NOTIFY | LBS_WANTKEYBOARDINPUT;
+	  if (multipleOptions)
+	    dwStyle |= LBS_MULTIPLESEL;
+	  menu = CreateWindow ((LPCTSTR) "LISTBOX", 
+			       NULL,
+			       dwStyle;
+			       CW_USEDEFAULT,
+			       CW_USEDEFAULT,
+			       CW_USEDEFAULT,
+			       CW_USEDEFAULT,
+			       hwdnParent,
+			       NULL,
+			       hinst,
+			       NULL);
+#endif /* _WINDOWS */
+	  catalogue->Cat_Widget = menu;
+	  catalogue->Cat_Ref = ref;
+	  catalogue->Cat_Type = CAT_SCRPOPUP;
+	  catalogue->Cat_Button = button;
+	  /* Initialisation de la liste des widgets fils */
+	  adbloc = NewEList ();
+	  catalogue->Cat_Entries = adbloc;
+	}
+      else
+	{
+	  /* Mise a jour du menu existant */
+	  menu = catalogue->Cat_Widget;
+	  adbloc = catalogue->Cat_Entries;
+	  /* Si on a change de bouton on met a jour le widget avec args[0] */
+	  if (catalogue->Cat_Button != button)
+	    {
+	      catalogue->Cat_Button = button;
+	    }
+	  else
+	    button = catalogue->Cat_Button;
+	}
+      catalogue->Cat_Data = -1;
+#ifdef _WINDOWS
+      if (currentParent != 0)
+	WIN_AddFrameCatalogue (currentParent, catalogue);
+#endif /* _WINDOWS */
+      
+      /*** Cree le titre du menu ***/
+      if (title != NULL)
+	{
+	  if (!rebuilded)
+	    {
+#ifdef _WINDOWS
+	      adbloc->E_ThotWidget[0] = (ThotWidget) 0;
+	      adbloc->E_ThotWidget[1] = (ThotWidget) 0;
+#endif /* _WINDOWS */
+	    }
+	}
+      /* Cree les differentes entrees du menu */
+#ifndef _WINDOWS
+#else /* _WINDOWS */
+#if 0
+      nbOldItems = GetMenuItemCount (menu);
+      for (ndx = 0; ndx < nbOldItems; ndx ++)
+        if (!DeleteMenu (menu, ref + ndx, MF_BYCOMMAND))
+	  DeleteMenu (menu, ndx, MF_BYPOSITION);
+#endif
+#endif /* _WINDOWS */
+      
+      i = 0;
+      index = 0;
+      eindex = 0;
+      ent = 2;
+      if (text != NULL)
+	while (i < number)
+	  {
+	    count = strlen (&text[index]);	/* Longueur de l'intitule */
+	    /* S'il n'y a plus d'intitule -> on arrete */
+	    if (count == 0)
+	      {
+		i = number;
+		TtaError (ERR_invalid_parameter);
+		break;
+	      }
+	    else
+	      {
+		
+		/* Faut-il changer de bloc d'entrees ? */
+		if (ent >= C_NUMBER)
+		  {
+		    adbloc->E_Next = NewEList ();
+		    adbloc = adbloc->E_Next;
+		    ent = 0;
+		  }
+		
+		/* Recupere le type de l'entree */
+		adbloc->E_Type[ent] = text[index];
+		adbloc->E_Free[ent] = 'Y';
+		
+		/* Note l'accelerateur */
+		if (equiv != NULL)
+		  {
+		    eindex += strlen (&equiv[eindex]) + 1;
+		  }
+		if (text[index] == 'B' || text[indext] == 'T')
+		  /*__________________________________________ Creation d'un bouton __*/
+		  {
+#ifdef _WINDOWS
+		    SendMessage (menu, LB_INSERTSTRING, ref + i, (LPARAM) &text[index + 1]);
+		    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
+#endif /* _WINDOWS */
+		  }
+		else if (text[index] == 'T')
+		  /*__________________________________________ Creation d'un toggle __*/
+		  {
+#ifdef _WINDOWS
+		    SendMessage (menu, MF_STRING | MF_UNCHECKED, ref + i,
+				 (LPARAM) &text[index + 1]);
+		    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
+#endif /* _WINDOWS */
+		  }
+		else
+		  /*____________________________________ Une erreur de construction __*/
+		  {
+		    TtaDestroyDialogue (ref);
+		    TtaError (ERR_invalid_parameter);	/* Type d'entree non defini */
+		    return;
+		  }
+		i++;
+		ent++;
+		index += count + 1;
+	      }
+	  }
+      
+    }
+}
+#else
 /*----------------------------------------------------------------------
    TtaNewScrollPopup cre'e un pop-up menu :                                 
    The parameter ref donne la re'fe'rence pour l'application.         
@@ -4058,6 +4254,12 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
   GtkWidget          *first = NULL;
   GList              *glist = NULL;
   ThotWidget          w;
+
+#ifdef _WINDOWS
+  HMENU               menu;
+  HMENU               w;
+  int                 nbOldItems, ndx;
+#endif  /* _WINDOWS */
 
   equiv_item[0] = 0;
 
@@ -4389,8 +4591,10 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
 #endif
 	}
     }
-#endif
+#endif /* _GTK */
 }     
+
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    AddInFormulary recherche une entree libre dans le formulaire  
