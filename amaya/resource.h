@@ -744,7 +744,9 @@
 #define IDC_BGCOLOR                     1451
 #define IDC_ALTTEXT                     1452
 #define IDC_FGCOLOR2                    1452
+#define IDC_SECOLOR                     1452
 #define IDC_BGCOLOR2                    1453
+#define IDC_INCOLOR                     1453
 #define IDC_CHANGCOLOR                  1454
 #define IDC_LANNEG                      1456
 #define IDC_NORMALBOLD                  1457
@@ -775,7 +777,9 @@
 #define IDC_TFGCOLOR                    1485
 #define IDC_TBGCOLOR                    1486
 #define IDC_GEOMCHANGE                  1487
+#define IDC_TSECOLOR                    1487
 #define IDC_TPROFILESLOCA               1488
+#define IDC_TINCOLOR                    1488
 #define IDC_TPROFILESELECT              1489
 #define IDC_TPROFILECHANGE              1490
 #define IDC_CSSFILES                    1491
@@ -826,6 +830,8 @@
 #define ID_BUTTON40049                  40049
 #define ID_BUTTON40050                  40050
 #define ID_BUTTON40051                  40051
+#define IDC_CHECKGROUP                  65500
+#define IDC_IGNOREGROUP                 65501
 #define IDC_INDENTGROUP                 65530
 #define IDCALIGNGROUP                   65531
 #define IDC_JUSTIFGROUP                 65532
@@ -836,9 +842,7 @@
 #define IDC_URL_TEXT                    -1
 #define IDC_WHEREGROUP                  65535
 #define IDC_OUTPUTGROUP                 65535
-#define IDC_CHECKGROUP                  65500
-#define IDC_IGNOREGROUP                 65501
-  
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
