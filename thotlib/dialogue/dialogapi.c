@@ -5314,12 +5314,12 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      catalogue->Cat_Ref = ref;
 		      catalogue->Cat_Type = CAT_MENU;
 		      catalogue->Cat_PtParent = parentCatalogue;
-		      catalogue->Cat_Widget = menu;
 #ifdef _WINDOWS
 		      WIN_AddFrameCatalogue (FrMainRef[currentFrame], catalogue);
 		      if (!IsMenu (catalogue->Cat_Widget))
-else  /* _WINDOWS */
 			  catalogue->Cat_Widget = w;
+#else  /* _WINDOWS */
+		      catalogue->Cat_Widget = menu;
 #ifndef _GTK
 		      n = 0;
 		      XtSetArg (args[n], XmNsubMenuId, menu);

@@ -286,7 +286,7 @@ int CharacterWidth (unsigned char c, PtrFont font)
     return 0;
   else if (c == INVISIBLE_CHAR)
     return 1;
-
+	i = 0;
   if (c == START_ENTITY)
     c = '&';
   else if (c == TAB || c == UNBREAKABLE_SPACE)
