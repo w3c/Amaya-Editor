@@ -2788,6 +2788,13 @@ void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
     return;
   if (sel_data->type != GDK_SELECTION_TYPE_STRING)
     return;
+  /* if ClipboardLength is not zero, the last Xbuffer comes from Thot */
+  if (Xbuffer && ClipboardLength == 0)
+    {
+      /* remove the old Xbuffer sent by the X server */
+      TtaFreeMemory (Xbuffer);
+      Xbuffer = NULL;
+    }
   if (Xbuffer == NULL)
     {
       Xbuffer = TtaGetMemory ((sel_data->length + 1) * sizeof (unsigned char));
