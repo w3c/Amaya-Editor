@@ -996,7 +996,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 		  DisplayImage (doc, el, NULL, pathname, NULL);
 		}
 	      else
-		if (TtaFileExist (desc->tempfile))
+		if (desc->tempfile && TtaFileExist (desc->tempfile))
 		  {
 		    /* remote image, but already here */
 		    if (callback)
