@@ -616,7 +616,7 @@ ThotBool BM_addTopic (BookmarkP me, ThotBool generateID)
   if (me->parent_url && me->parent_url[0] != EOS)
     {
       subject = librdf_new_node_from_uri_string (world, topicid);
-      predicate = librdf_new_node_from_uri_string (world, RDFS_SUBCLASSOF);
+      predicate = librdf_new_node_from_uri_string (world, BMNS_SUBTOPICOF);
       object =  librdf_new_node_from_uri_string (world,
 						 me->parent_url);
       add_statement (world, model, subject, predicate, object);
@@ -761,7 +761,7 @@ static void Model_getItemInfo (librdf_world *world, librdf_model *model,
   if (isTopic)
     {
       item->isTopic = TRUE;
-      item->parent_url = Model_getObjectAsString (world, model, subject, RDFS_SUBCLASSOF);
+      item->parent_url = Model_getObjectAsString (world, model, subject, BMNS_SUBTOPICOF);
     }
   else
     {
@@ -891,7 +891,7 @@ ThotBool Model_dumpTopicChild (char *parent_topic_url, List **dump)
   BookmarkP item;
 
   /* get all the topics that are a child of the parent_topic */
-  predicate = librdf_new_node_from_uri_string (world, RDFS_SUBCLASSOF);
+  predicate = librdf_new_node_from_uri_string (world, BMNS_SUBTOPICOF);
   object =  librdf_new_node_from_uri_string (world, parent_topic_url);
 
   partial_statement = librdf_new_statement (world);
@@ -1119,7 +1119,7 @@ BookmarkP BM_getItem (char *url, ThotBool isTopic)
 	{
 	  if (isTopic)
 	    {
-	      if (!strcmp (uri_str,  RDFS_SUBCLASSOF))
+	      if (!strcmp (uri_str,  BMNS_SUBTOPICOF))
 		me->parent_url = Model_getNodeAsString (object, FALSE);
 	    }
 	  else
@@ -1250,7 +1250,7 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
 	  if (isTopic)
 	    {
 	      /* parent topic */
-	      if (!strcmp (uri_str,  RDFS_SUBCLASSOF))
+	      if (!strcmp (uri_str,  BMNS_SUBTOPICOF))
 		Model_replace_object (world, model, statement, me->parent_url, FALSE);
 	    }
 	  else
