@@ -12,23 +12,25 @@ Extensions 2.5:
 ---------------
 
 * CSS:
-  - CSS rules of User preferences are now taken into account when
-    documents are printed. We encourage the user to create two different
-    sections in his/her User preferences CSS file
-    "@media screen {...} @media print {...}"
-  - The attribute MEDIA attached to a CSS link is now interpreted by Amaya.
+  - The user style sheet specified in User preferences is now taken into
+    account when documents are printed. Users are encouraged to create two
+    sections in their own style sheet:
+        @media screen {...}
+        @media print {...}
+  - The "media" attribute attached to a link to a style sheet is now
+    interpreted by Amaya.
 
 Fixed bugs 2.5:
 ---------------
 
 * CSS:
-  - Amaya didn't remove correctly Background colors.
+  - Amaya didn't remove background colors correctly.
   - When generating CSS rules with Style->Create_rule, element and
     attribute names were printed in uppercase.
   - When a link to a CSS style sheet was pasted, that style sheet
     wasn't applied.
-  - Error in the CSS parser: parsing was stopped at the first colon in
-    an @media section.
+  - Error in the CSS parser: parsing stopped at the first colon in an
+    @media section.
   - Amaya failed to create new style rules when existing style rules were
     emmbedded in a comment within the style element.
 
@@ -40,6 +42,11 @@ Fixed bugs 2.5:
   - In some cases, the HTTP Accept header had an extra ":" char.
   - In the Message Digest Authentication algorithm, the digest was being
     made using the absolute-uri, rather than the request-uri.
+
+* MathML:
+  - a strange attribute named EntityName was proposed in the Attribute menu
+  - Odd things happened when an attribute "other" was associated with
+    a character string.
 
 =============================================================
 2.4

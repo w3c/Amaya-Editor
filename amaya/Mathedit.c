@@ -64,6 +64,7 @@ static Element	LastDeletedElement = NULL;
 #include "html2thot_f.h"
 #include "fetchXMLname_f.h"
 #include "HTMLtable_f.h"
+#include "HTMLpresentation_f.h"
 #include "MathMLbuilder_f.h"
 #include "styleparser_f.h"
 #include "trans_f.h"
@@ -2279,6 +2280,21 @@ void FenceModified(event)
   text[0] = (UCHAR_T) event->value;
   text[1] = '\0';
   TtaSetAttributeText (attr, text, mfencedEl, event->document);
+}
+
+/*----------------------------------------------------------------------
+ MathAttrOtherCreated
+ An attribute other has been created by the user. If that attribute is on
+ a TEXT element, move it to the parent.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void MathAttrOtherCreated (NotifyAttribute *event)
+#else /* __STDC__*/
+void MathAttrOtherCreated (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+   AttrToSpan (event->element, event->attribute, event->document);
 }
 
 /*----------------------------------------------------------------------

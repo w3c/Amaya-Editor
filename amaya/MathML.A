@@ -65,6 +65,9 @@ ATTRIBUTES
         AttrDelete.Post -> UpdateAttrID;
         END;
 
+   other:
+	AttrCreate.Post -> MathAttrOtherCreated;
+
    link:
 	AttrMenu.Pre ->    LinkAttrInMenu;
 
