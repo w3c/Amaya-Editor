@@ -763,7 +763,7 @@ bool AmayaWindow::IsSpecialKey( int wx_keycode )
 	       wx_keycode == WXK_TAB  ||
            wx_keycode == WXK_RETURN ||
            wx_keycode == WXK_ESCAPE ||
-           wx_keycode == WXK_SPACE  ||
+           /*wx_keycode == WXK_SPACE  ||*/
            wx_keycode == WXK_DELETE ||
 		   (wx_keycode >= WXK_START && wx_keycode <= WXK_COMMAND)
   );
