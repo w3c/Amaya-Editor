@@ -208,7 +208,6 @@ static View OpenView (Document document, char *viewName,
 		if (viewHasBeenOpen)
 		  {
                     /* look for the current windows, current page, and current page position (top/bottom)*/
-		    int schView = -1; /*pDoc->DocView[view - 1].DvPSchemaView;*/
 		    int window_id = TtaGetDocumentWindowId (document, -1);
 		    int page_id;
 		    int page_position;
