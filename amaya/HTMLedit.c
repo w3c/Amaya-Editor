@@ -1056,7 +1056,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
   /* Check whether the selected elements are a valid content for an anchor */
   elType = TtaGetElementType (first);
   s = TtaGetSSchemaName (elType.ElSSchema);
-  if ((elType.ElTypeNum == HTML_EL_Anchor |
+  if ((elType.ElTypeNum == HTML_EL_Anchor ||
        elType.ElTypeNum == HTML_EL_MAP ||
        elType.ElTypeNum == HTML_EL_map) &&
       !strcmp (s, "HTML") &&
