@@ -121,30 +121,38 @@ STRUCT
 	      y)
          = LIST OF (TEXT);
 
+   timing_text
+        (ATTR fill; stroke; 
+	      font_family; font_size;
+	      x;
+	      y)
+         = LIST OF (TEXT);
+
 
    GraphicsElement
 	= CASE OF
-         rect_period; rect_interface; text_; tline; image_slider; 
+         rect_period; rect_interface; text_; timing_text; tline; image_slider; 
    	     image_collapse; image_keypos; Timeline; groupe_abstrait;
 		  END;
 	     
 
 EXCEPT
 
-   Timeline:                 IsDraw, MoveResize, NoMove;
-   groupe_abstrait:     NoMove, NoResize, HighlightChildren, NoShowBox, NoCreate;
-   rect_period:         MoveResize, HighlightChildren, NoShowBox, NoCreate, NoVMove, NoVresize;
-   rect_interface:      NoMove,NoResize, HighlightChildren, NoShowBox, NoCreate;
-   tline:               NoMove, NoResize, HighlightChildren, NoShowBox, NoCreate;
-   text_:               NoMove, NoResize, NoShowBox, ReturnCreateWithin,
-	                NoCreate;
-   image_slider:	MoveResize, HighlightChildren, NoShowBox, NoVMove, NoResize;
-   image_collapse:  NoMove, NoResize, NoShowBox;
-   image_keypos:    NoMove, NoResize, NoShowBox; 
-   Timeline_Image:           Hidden, SelectParent;
-   GRAPHICS:	        SelectParent;
-   PICTURE:             NoMove, NoResize, SelectParent;
-   TEXT:                NoMove, NoResize;
+   Document:			NoSelect;
+   Timeline:            IsDraw, MoveResize, NoMove, NoCut, NoSelect;
+   groupe_abstrait:     NoMove, NoResize, HighlightChildren, NoShowBox, NoCreate, NoSelect, NoCut;
+   rect_period:         MoveResize, NoShowBox, NoCreate, NoVMove, NoVresize;
+   rect_interface:      NoMove, NoResize, NoShowBox, NoCreate, NoCut;
+   tline:               NoMove, NoResize, NoShowBox, NoCreate, NoCut;
+   text_:               NoMove, NoResize, NoShowBox, ReturnCreateWithin, NoCreate, NoCut, NoSelect;
+   timing_text:         NoMove, NoResize, ReturnCreateWithin, NoCreate, NoCut;
+   image_slider:  	    MoveResize,  NoResize, NoShowBox, NoVMove, NoCut, NoSelect;
+   image_collapse:      NoMove, NoResize, NoShowBox, NoCut;
+   image_keypos:        NoMove, NoResize, NoShowBox, NoCut; 
+   Timeline_Image:      Hidden, SelectParent, NoCut;
+   GRAPHICS:	        SelectParent, NoCut;
+   PICTURE:             NoMove, NoResize, SelectParent, NoCut;
+   TEXT:                NoMove, NoResize, NoCut;
 
    id:                  CssId;
    Unknown_attribute:   Invisible;

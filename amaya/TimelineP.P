@@ -143,6 +143,16 @@ RULES
 	END;
 
  
+   timing_text:
+	BEGIN
+	Width: Enclosed . Width;
+   	HorizPos: Left = Enclosing . Left Userspecified;
+   	VertPos:  HRef = Enclosing . Top + 0.9 Userspecified;
+	HorizRef: Enclosed . HRef;
+	Foreground : Black;
+	FillPattern: nopattern;
+	END;
+
    TEXT_UNIT:
 	BEGIN
 	HorizRef: Enclosed . HRef;

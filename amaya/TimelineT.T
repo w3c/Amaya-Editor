@@ -156,6 +156,19 @@ RULES
 	create 'text>\12' after;
 	END;
 
+   timing_text:
+	BEGIN
+	create SOT;
+	create 'text';
+	indent +6;
+	create attributes;
+	create '>';
+	indent -4;
+	indent -2 after;
+	create SCT after;
+	create 'text>\12' after;
+	END;
+
    
    TEXT_UNIT:
         if immediately within text_

@@ -4,6 +4,8 @@ DEFAULT
    BEGIN
 	 ElemLClick.Pre -> TimelineElClicked;
 	 DocClose.Post -> TimelineWindowClose;
+	 ElemTextModify.Pre -> TimelineTextPreModify;
+	 ElemTextModify.Post -> TimelineTextPostModify;
    END;
 
 
@@ -19,6 +21,7 @@ ELEMENTS
    BEGIN
     PRuleModify.Post -> Timeline_finished_moving_slider;
    END; 
+
 
 ATTRIBUTES
 
