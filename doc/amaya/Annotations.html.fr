@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "DTD/xhtml1-1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Annotations</title>
-  <meta name="GENERATOR" content="amaya V4.0" />
+  <meta name="GENERATOR" content="amaya V4.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -153,21 +151,28 @@ alt="configuration dialog box" /></p>
       d'annotations sont spécifiés à la suite, séparés par un espace. Sous
       Windows, ils sont spécifiés les uns après les autres et séparés par la
       touche <code>Return</code>. Par défaut, ce champ est initialisé avec
-      <code>localhost</code>.
-      <p><em>ASTUCE</em>: Vous puuvez inhiber la consultation d'un serveur
-      d'annotations si vous prefixés l'URL du serveur avec le caractère
-      '-'.</p>
+      <code>localhost</code>. 
+      <p><em>ASTUCE</em>: Vous pouvez inhiber la consultation d'un serveur
+      d'annotations en préfixant l'URL du serveur avec le caractère '-'.</p>
     </dd>
-  <dt><strong>Chargement automatique des annotations (Autoload
-  annotations)</strong></dt>
-    <dd>Cette option indique à Amaya de rechercher automatiquement ou non les
-      annotations lorsqu'une nouvelle URL est chargée. Si elle n'est pas
-      positionnée alors l'utilisateur doit explicitement sélectionner l'entrée
-      <strong>Charger les annotations</strong> pour visualiser celles-ci. Il
-      peut y avoir un certain délai quand Amaya charge les annotations, ce
-      délai étant du à la résolution du nom DNS des serveurs d'annotations.
-      Par défaut, cette option est désactivée.</dd>
-  <dt><strong>Serveur pour publier des annotations (Annotation Post
+  <dt><strong>Chargement automatique des annotations locales et distantes
+  (Autoload annotations)</strong></dt>
+    <dd>Ces options indiquent à Amaya de rechercher automatiquement ou non les
+      annotations lorsqu'une nouvelle URL est chargée. Si elles ne sont pas
+      positionnées alors l'utilisateur doit explicitement sélectionner
+      l'entrée <strong>Charger les annotations</strong> pour visualiser
+      celles-ci. Il peut y avoir un certain délai lorsque Amaya charge les
+      annotations distantes, ce délai étant du à la résolution du nom DNS des
+      serveurs d'annotations. Par défaut, ces options sont désactivées.</dd>
+  <dt><strong>Désactiver le chargement automatique des annotations
+  distantes</strong></dt>
+    <dd>Lorsque cette option est activée, Amaya réinitialise l'option
+      <code>Chargement automatique des annotations distantes</code> au
+      lancement. Cela est très utile si vous travaillez en mode déconnecté de
+      temps en temps et que vous voulez continuer à charger automatiquement
+      les annotations locales tout en rechargeant les annotations distantes
+      lorsque vous êtes connectés. </dd>
+  <dt><strong>Serveur de publication des annotations (Annotation Post
   Server)</strong></dt>
     <dd>Ce champ définit le serveur sur lequel les annotations sont
       enregistrées. Les annotations locales sont toujours sauvegardées dans un
