@@ -327,6 +327,7 @@ if_middle:
 
 static void do_depend(void)
 {
+	int res;
 	int pagesizem1 = getpagesize()-1;
 	int fd = open(filename, O_RDONLY);
 	struct stat st;
@@ -339,15 +340,31 @@ static void do_depend(void)
 	filesize = st.st_size;
 	mmap_mapsize = st.st_size + 2*sizeof(unsigned long);
 	mmap_mapsize = (mmap_mapsize+pagesizem1) & ~pagesizem1;
+#ifdef linux
 	mmap_map = mmap(NULL, mmap_mapsize, PROT_READ, MAP_PRIVATE, fd, 0);
 	if (-1 == (long)mmap_map) {
 		perror("mkdep: mmap");
 		close(fd);
 		return;
 	}
+	res = close(fd);
+	state_machine(mmap_map);
+	res = munmap(mmap_map, mmap_mapsize);
+#else
+        mmap_map = malloc(mmap_mapsize);
+	if (mmap_map == NULL) {
+	    perror("malloc failed");
+	    exit(1);
+	}
+	res = read(fd, mmap_map, filesize);
+	if (res < filesize) {
+	    perror("read didn't complete");
+	    exit(1);
+	}
 	close(fd);
 	state_machine(mmap_map);
-	munmap(mmap_map, mmap_mapsize);
+	free(mmap_map);
+#endif
 }
 
 int main(int argc, char **argv)
