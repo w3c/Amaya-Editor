@@ -39,6 +39,7 @@ static int       TopicBase;
 static int       TopicURLBase;
 
 static BookmarkP aBookmark;
+static BookmarkP aTopic;
 static Document  BTopicTree; /* points to a thot sorted topic tree */
 static Document  TTopicTree; /* points to a thot sorted topic tree */
 
@@ -278,6 +279,7 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 	    {
 	    case 0: /* done */
 	      Bookmark_free (aBookmark);
+	      aBookmark = NULL;
 	      TtaCloseDocument (BTopicTree);
 	      BTopicTree = 0;
 	      TtaDestroyDialogue (ref);
@@ -302,6 +304,7 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 		    {
 		      /* if successful, close the dialog */
 		      Bookmark_free (aBookmark);
+		      aBookmark = NULL;
 		      TtaCloseDocument (BTopicTree);
 		      BTopicTree = 0;
 		      TtaDestroyDialogue (ref);
@@ -311,6 +314,7 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 	      break;
 	    case 2: /* browse */
 	      Bookmark_free (aBookmark);
+	      aBookmark = NULL;
 	      TtaCloseDocument (BTopicTree);
 	      BTopicTree = 0;
 	      TtaDestroyDialogue (ref);
@@ -369,11 +373,18 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
 
    if (BookmarkBase == 0)
      BookmarkBase = TtaSetCallback (BookmarkMenuCallbackDialog, MAX_BOOKMARKMENU_DLG);
+   
+   if (aBookmark)
+     {
+       Bookmark_free (aBookmark);
+       aBookmark = NULL;
+     }
+
    /* dump the topics as a thot three */
    if (BTopicTree != 0)
      TtaCloseDocument (BTopicTree);
    BTopicTree = BM_GetTopicTree ();
-
+   
    /* select the topics in the tree that correspond to those in the bookmark */
    BM_topicsPreSelect (BTopicTree, bookmark);
 
@@ -459,17 +470,17 @@ static void InitTopicMenu (Document doc, BookmarkP bookmark)
   char *annotUser;
   char *tmp;
 
-  aBookmark = Bookmark_new_init (bookmark, TRUE);
-  aBookmark->isTopic = TRUE;
+  aTopic = Bookmark_new_init (bookmark, TRUE);
+  aTopic->isTopic = TRUE;
 
   if (!bookmark)
     {
       annotUser = GetAnnotUser ();
       tmp = TtaConvertMbsToByte (annotUser, ISO_8859_1);
-      strcpy (aBookmark->author, tmp);
+      strcpy (aTopic->author, tmp);
       TtaFreeMemory (tmp);
-      aBookmark->created = StrdupDate ();
-      aBookmark->modified = StrdupDate ();
+      aTopic->created = StrdupDate ();
+      aTopic->modified = StrdupDate ();
     }
 }
 
@@ -480,12 +491,12 @@ static void InitTopicMenu (Document doc, BookmarkP bookmark)
 static void RefreshTopicMenu ()
 {
   /* set the menu entries to the current values */
-  TtaSetTextForm (TopicBase + mTMParentTopic, aBookmark->parent_url);
-  TtaSetTextForm (TopicBase + mTMTitle, aBookmark->title);
-  TtaSetTextForm (TopicBase + mTMAuthor, aBookmark->author);
-  TtaSetTextForm (TopicBase + mTMCreated, aBookmark->created);
-  TtaSetTextForm (TopicBase + mTMModified, aBookmark->modified);
-  TtaSetTextForm (TopicBase + mTMDescription, aBookmark->description);
+  TtaSetTextForm (TopicBase + mTMParentTopic, aTopic->parent_url);
+  TtaSetTextForm (TopicBase + mTMTitle, aTopic->title);
+  TtaSetTextForm (TopicBase + mTMAuthor, aTopic->author);
+  TtaSetTextForm (TopicBase + mTMCreated, aTopic->created);
+  TtaSetTextForm (TopicBase + mTMModified, aTopic->modified);
+  TtaSetTextForm (TopicBase + mTMDescription, aTopic->description);
 }
 
 /*-----------------------------------------------------------------------
@@ -504,9 +515,9 @@ static void TopicMenuSelect_cbf (ThotWidget w, ThotBool state, void *cdata)
 	printf ("Selected URL %s\n", url);
       else
 	printf ("Deselected URL %s\n", url);
-      strcpy (aBookmark->parent_url, url);
+      strcpy (aTopic->parent_url, url);
       /* @@ JK: just for debugging */
-      TtaSetTextForm (TopicBase + mTMParentTopic, aBookmark->parent_url);
+      TtaSetTextForm (TopicBase + mTMParentTopic, aTopic->parent_url);
       TtaFreeMemory (url);
     }
 }
@@ -535,21 +546,23 @@ static void TopicMenuCallbackDialog (int ref, int typedata, char *data)
 	  switch (val) 
 	    {
 	    case 0: /* done */
-	      Bookmark_free (aBookmark);
+	      Bookmark_free (aTopic);
+	      aTopic = NULL;
 	      TtaCloseDocument (TTopicTree);
 	      TTopicTree = 0;
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1: /* create topic */
-	      ControlURIs (aBookmark);
-	      if (aBookmark->isUpdate)
-		result = BM_updateItem (aBookmark, TRUE);
+	      ControlURIs (aTopic);
+	      if (aTopic->isUpdate)
+		result = BM_updateItem (aTopic, TRUE);
 	      else
-		result = BM_addTopic (aBookmark, TRUE);
+		result = BM_addTopic (aTopic, TRUE);
 	      if (result)
 		{
 		  /* if successful, close the dialog */
-		  Bookmark_free (aBookmark);
+		  Bookmark_free (aTopic);
+		  aTopic = NULL;
 		  TtaCloseDocument (TTopicTree);
 		  TTopicTree = 0;
 		  TtaDestroyDialogue (ref);
@@ -564,30 +577,30 @@ static void TopicMenuCallbackDialog (int ref, int typedata, char *data)
 
 	case mTMParentTopic:
 	  if (data)
-	    strcpy (aBookmark->parent_url, data);
+	    strcpy (aTopic->parent_url, data);
 	  else
-	    aBookmark->parent_url[0] = EOS;
+	    aTopic->parent_url[0] = EOS;
 	  break;
 
 	case mTMTitle:
 	  if (data)
-	    strcpy (aBookmark->title, data);
+	    strcpy (aTopic->title, data);
 	  else
-	    aBookmark->title[0] = EOS;
+	    aTopic->title[0] = EOS;
 	  break;
 
 	case mTMAuthor:
 	  if (data)
-	    strcpy (aBookmark->author, data);
+	    strcpy (aTopic->author, data);
 	  else
-	    aBookmark->author[0] = EOS;
+	    aTopic->author[0] = EOS;
 	  break;
 
 	case mTMDescription:
 	  if (data)
-	    strcpy (aBookmark->description, data);
+	    strcpy (aTopic->description, data);
 	  else
-	    aBookmark->description[0] = EOS;
+	    aTopic->description[0] = EOS;
 	  break;
 
 	default:
@@ -609,6 +622,11 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
    if (TopicBase == 0)
      TopicBase = TtaSetCallback (TopicMenuCallbackDialog, MAX_TOPICMENU_DLG);
   
+   if (aTopic)
+     {
+       Bookmark_free (aTopic);
+       aTopic = NULL;
+     }
    /* dump the topics as a thot three */
    if (TTopicTree != 0)
      TtaCloseDocument (TTopicTree);
