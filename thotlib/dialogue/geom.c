@@ -1172,6 +1172,11 @@ ThotBool            close;
       y = PixelToPoint (y) * 1000;
       SetBoundingBox (xMin+x, xMax+x, xOrg, yMin+y, yMax+y, yOrg, pBox, nbpoints);
     }
+  else if (pBox->BxPictInfo != NULL)
+    {
+      free ((STRING) pBox->BxPictInfo);
+      pBox->BxPictInfo = NULL;
+    }
 # endif /* _WINDOWS */
 }
 
