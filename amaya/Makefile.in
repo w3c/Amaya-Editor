@@ -8,6 +8,7 @@
 THOTDIR = @top_srcdir@
 WWWDAV = @WWWDAV@
 LIBWWW_RDF_PARSER = @LIBWWW_RDF_PARSER@
+LIBZ = @LIBZ@
 
 include ../Options
 
@@ -173,7 +174,7 @@ AMAYA_INCLUDES= -I. -I.. -I@top_srcdir@/thotlib/include -I@srcdir@ \
 
 AMAYA_LIBS= ../thotlib/libThotEditor.a ../tablelib/libThotTable.a \
             libCSS.a $(AMAYA_OPTION_LIBS) \
-             @LIBPNG@ @LIBZ@ @LIBJPEG@
+             @LIBPNG@ $(LIBZ) @LIBJPEG@
 
 HTML2THOT_LIBS= -L../thotlib/ -lThotKernel -L.. -lz
 
