@@ -700,13 +700,13 @@ int                 horiz;
 
 
 /* ---------------------------------------------------------------------- */
-/* | ConstruitSubmenu construit un sous-menu attache' a l'item item     | */
+/* | BuildSubmenu construit un sous-menu attache' a l'item item     | */
 /* |            du menu ref.                                            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         ConstruitSubmenu (Menu_Ctl * ptrmenu, int ref, int entry, int frame)
+static void         BuildSubMenu (Menu_Ctl * ptrmenu, int ref, int entry, int frame)
 #else  /* __STDC__ */
-static void         ConstruitSubmenu (ptrmenu, ref, entry, frame)
+static void         BuildSubMenu (ptrmenu, ref, entry, frame)
 Menu_Ctl           *ptrmenu;
 int                 ref;
 int                 entry;
@@ -784,13 +784,13 @@ int                 frame;
 
 
 /* ---------------------------------------------------------------------- */
-/* | ConstruitPopdown construit un menu popdown attache' au bouton      | */
+/* | BuildPopdown construit un menu popdown attache' au bouton      | */
 /* |            de menu.                                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         ConstruitPopdown (Menu_Ctl * ptrmenu, int ref, ThotWidget button, int frame)
+static void         BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotWidget button, int frame)
 #else  /* __STDC__ */
-static void         ConstruitPopdown (ptrmenu, ref, button, frame)
+static void         BuildPopdown (ptrmenu, ref, button, frame)
 Menu_Ctl           *ptrmenu;
 int                 ref;
 ThotWidget          button;
@@ -881,7 +881,7 @@ int                 frame;
 	       {
 		  if (action != 0 && item < MAX_ITEM)
 		     /* creation du sous-menu */
-		     ConstruitSubmenu (ptritem[item].SubMenu, ref, item, frame);
+		     BuildSubMenu (ptritem[item].SubMenu, ref, item, frame);
 	       }
 	  }
 	item++;
@@ -985,7 +985,7 @@ Pixmap              icon;
 	  {
 	     /* Enregistre le widget du menu */
 	     FrameTable[0].ActifMenus[i] = TRUE;
-	     ConstruitPopdown (ptrmenu, ref, FrameTable[0].WdMenus[i], 0);
+	     BuildPopdown (ptrmenu, ref, FrameTable[0].WdMenus[i], 0);
 	     ptrmenu = ptrmenu->NextMenu;
 	     ref += MAX_FRAME;
 	     i++;
@@ -1965,7 +1965,7 @@ int                 doc;
 		       else if (ptrmenu->MenuSelect)
 			  FrameTable[frame].MenuSelect = ptrmenu->MenuID;
 		       else
-			  ConstruitPopdown (ptrmenu, ref, w, frame);
+			  BuildPopdown (ptrmenu, ref, w, frame);
 #ifdef NEW_WILLOWS
 		       ShowWindow (menu_bar, SW_SHOWNORMAL);
 		       UpdateWindow (menu_bar);
