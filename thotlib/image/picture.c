@@ -138,8 +138,8 @@ static unsigned char MirrorBytes[0x100] = {
 #undef MESA
 
 typedef struct _PicCache {
-  short unsigned int width;
-  short unsigned int height;
+  int width;
+  int height;
   float TexCoordW;
   float TexCoordH;
   char *filename;
@@ -231,8 +231,8 @@ static void AddInPicCache (PictInfo *Image, int frame)
   Cache->frame = frame;
   Cache->texbind = Image->TextureBind;
   Cache->filename = TtaGetMemory (strlen(Image->PicFileName) + 1);
-  Cache->height = (short unsigned int) Image->PicHeight;
-  Cache->width = (short unsigned int) Image->PicWidth;
+  Cache->height = Image->PicHeight;
+  Cache->width = Image->PicWidth;
   Cache->TexCoordW = Image->TexCoordW;  
   Cache->TexCoordH = Image->TexCoordH;
   strcpy (Cache->filename, Image->PicFileName);
@@ -628,26 +628,27 @@ void FreeAllPicCacheFromFrame (int frame)
   Pic_Cache *Cache = PicCache;
   Pic_Cache *Before;
   
- Before = Cache;  
+ Before = NULL;  
  while (Cache)
    {
      if (Cache->frame == frame)
        {
 	 if (GL_prepare (frame))
 	   {
-	     if (Before == PicCache)
-	       {		 
-		 PicCache = PicCache->next;
-		 Before = Cache->next; 
-		 Free_Pic_Chache (Cache);
-		 Cache = Before;
-	       }
-	     else
+	     if (Before)
 	       {
 		 Before->next = Cache->next; 
 		 Free_Pic_Chache (Cache);
 		 Cache = Before->next;
-	       }	          
+	       }
+	     else
+	       {
+		 /*we delete the first element 
+		   of the linked list*/		 
+		 PicCache = PicCache->next;
+		 Free_Pic_Chache (Cache);
+		 Cache = PicCache;
+	       }
 	   }
        }
      else
