@@ -1099,7 +1099,7 @@ int                *volume;
 	fprintf (PSfile, "/HPrinterOff 0 def\n");
 	fprintf (PSfile, "/VPrinterOff 0 def\n");
 	fprintf (PSfile, "InitThot\n");
-	fprintf (PSfile, "frstpage\n%%%%%%%%Page: cover 1\n");
+	fprintf (PSfile, "frstpage\n%%%%Page: cover 1\n");
 	NumberOfPages = 1;
 	fflush (PSfile);
      }
