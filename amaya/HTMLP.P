@@ -953,6 +953,8 @@ BOXES
 	LineWeight: Img_border pt;
 	Depth: 10;
 	InLine: No;
+	LineBreak: No;
+	PageBreak: No;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -5250,6 +5252,8 @@ RULES
 	CreateBefore(IMG_S);
 	CreateBefore(ATTR_SRC);
 	CreateBefore(VALUE_SRC);
+	LineBreak: No;
+	PageBreak: No;
 #ifdef COUGAR
 	if Immediately within Object BEGIN
 		Width: Enclosing . Width;

@@ -749,10 +749,6 @@ Document            document;
    attr = TtaGetAttribute (image, attrType);
    if (attr != NULL)
      {
-	/* ask Thot to stop displaying changes made in the document */
-       if (dispMode == DisplayImmediately)
-	 TtaSetDisplayMode (document, DeferredDisplay);
-
 	/* Search the MAP element associated with IMAGE element */
 	length = TtaGetTextAttributeLength (attr);
 	length++;
@@ -765,6 +761,10 @@ Document            document;
 	TtaFreeMemory (text);
 	if (el == NULL)
 	   return;
+
+	/* ask Thot to stop displaying changes made in the document */
+        if (dispMode == DisplayImmediately)
+	  TtaSetDisplayMode (document, DeferredDisplay);
 
 	/* Update MAP attribute */
 	attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
