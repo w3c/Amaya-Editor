@@ -990,6 +990,34 @@ static int          CharRank = 0;	  /* rank of the last matching
 					     character in that entry */
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *SkipSep (char *ptr)
+#else
+static char        *SkipSep (ptr)
+char               *ptr;
+#endif
+{
+  while (ptr != NULL && (*ptr == SPACE || *ptr == ','))
+    ptr++;
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *SkipInt (char *ptr)
+#else
+static char        *SkipInt (ptr)
+char               *ptr;
+#endif
+{
+  while (ptr != NULL && *ptr != SPACE && *ptr != ',')
+    ptr++;
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
    ParseAreaCoords computes x, y, width and height of the box from
    the coords attribute value.
   ----------------------------------------------------------------------*/
@@ -1006,7 +1034,7 @@ Document            document;
    AttributeType       attrType;
    Attribute           attrCoords, attrX, attrY;
    Attribute           attrW, attrH, attrShape;
-   char               *ptr1, *ptr2, *ptr3, *text;
+   char               *ptr3, *text;
    int                 x1, y1, x2, y2;
    int                 length, shape, r;
 
@@ -1080,28 +1108,20 @@ Document            document;
 	if (shape == HTML_ATTR_shape_VAL_rectangle)
 	  {
 	     x1 = x2 = y1 = y2 = 0;
-	     ptr3 = strchr (text, ',');
-	     if (ptr3 != NULL)
-	       {
-		 ptr3[0] = EOS;
-		 sscanf (text, "%d", &x1);
-		 ptr2 = &ptr3[1];
-		 ptr3 = strchr (ptr2, ',');
-		 if (ptr3 != NULL)
-		   {
-		     ptr3[0] = EOS;
-		     sscanf (ptr2, "%d", &y1);
-		     ptr2 = &ptr3[1];
-		     ptr3 = strchr (ptr2, ',');
-		     if (ptr3 != NULL)
-		       {
-			 ptr3[0] = EOS;
-			 sscanf (ptr2, "%d", &x2);
-			 ptr2 = &ptr3[1];
-			 sscanf (ptr2, "%d", &y2);
-		       }
-		   }
-	       }
+	     ptr3 = text;
+	     if (ptr3)
+	       sscanf (ptr3, "%d", &x1);
+	     ptr3 = SkipInt (ptr3);
+	     ptr3 = SkipSep (ptr3);
+	     if (ptr3)
+	       sscanf (ptr3, "%d", &y1);
+	     ptr3 = SkipInt (ptr3);
+	     ptr3 = SkipSep (ptr3);
+	     if (ptr3)
+	       sscanf (ptr3, "%d", &x2);
+	     ptr3 = SkipInt (ptr3);
+	     ptr3 = SkipSep (ptr3);
+	     sscanf (ptr3, "%d", &y2);
 	     TtaSetAttributeValue (attrX, x1, element, document);
 	     TtaSetAttributeValue (attrY, y1, element, document);
 	     TtaSetAttributeValue (attrW, x2 - x1, element, document);
@@ -1110,23 +1130,17 @@ Document            document;
 	else
 	  {
 	     x1 = y1 = r = 0;
-	     ptr3 = strchr (text, ',');
-	     if (ptr3 != NULL)
-	       {
-		 ptr3[0] = EOS;
-		 sscanf (text, "%d", &x1);
-		 ptr2 = &ptr3[1];
-		 ptr3 = strchr (ptr2, ',');
-		 if (ptr3 != NULL)
-		   {
-		     ptr3[0] = EOS;
-		     sscanf (ptr2, "%d", &y1);
-		     ptr2 = &ptr3[1];
-		     sscanf (ptr2, "%d", &r);
-		   }
-		 else
-		   sscanf (ptr2, "%d %d", &y1, &r);
-	       }
+	     ptr3 = text;
+	     if (ptr3)
+	       sscanf (ptr3, "%d", &x1);
+	     ptr3 = SkipInt (ptr3);
+	     ptr3 = SkipSep (ptr3);
+	     if (ptr3)
+	       sscanf (ptr3, "%d", &y1);
+	     ptr3 = SkipInt (ptr3);
+	     ptr3 = SkipSep (ptr3);
+	     if (ptr3)
+	       sscanf (ptr3, "%d", &r);
 	     TtaSetAttributeValue (attrX, x1 - r, element, document);
 	     TtaSetAttributeValue (attrY, y1 - r, element, document);
 	     TtaSetAttributeValue (attrW, 2 * r, element, document);
@@ -1144,29 +1158,20 @@ Document            document;
 	     length--;
 	  }
 	length = 1;
-	ptr1 = text;
+	ptr3 = text;
 	/* add new points */
-	while (ptr1 != NULL)
+	while (ptr3 != NULL)
 	  {
-	     ptr3 = strchr (ptr1, ',');
-	     if (ptr3 == NULL)
-		ptr1 = NULL;
-	     else
-	       {
-		  ptr2 = &ptr3[1];
-		  ptr3 = strchr (ptr2, SPACE);
-		  if (ptr3 == NULL)
-		     ptr3 = strchr (ptr2, ',');
-		  if (ptr3 != NULL)
-		    {
-		       ptr3[0] = EOS;
-		       ptr2 = &ptr3[1];
-		    }
-		  sscanf (ptr1, "%d,%d", &x1, &y1);
-		  TtaAddPointInPolyline (element, length, UnPixel, x1, y1, document);
-		  length++;
-		  ptr1 = ptr2;
-	       }
+	     x1 = y1 = 0;
+	     sscanf (ptr3, "%d", &x1);
+	     ptr3 = SkipInt (ptr3);
+	     ptr3 = SkipSep (ptr3);
+	     if (ptr3)
+	       sscanf (ptr3, "%d", &y1);
+	     ptr3 = SkipInt (ptr3);
+	     ptr3 = SkipSep (ptr3);
+	     TtaAddPointInPolyline (element, length, UnPixel, x1, y1, document);
+	     length++;
 	  }
      }
    TtaFreeMemory (text);

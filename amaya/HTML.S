@@ -312,7 +312,7 @@ STRUCT
 	      Width__; IntWidthPxl; IntWidthPercent;
 	      cellspacing = Integer; cellpadding = Integer) =
 	BEGIN
-	? CAPTION (ATTR Position = Position_top, Position_bottom) = Basic_Set;
+	CAPTION (ATTR Position = Position_top, Position_bottom) = Basic_Set;
 	Table_head = LIST OF (Column_head);
 	? thead = LIST OF (Table_row);
 	Table_body = LIST OF (tbody = LIST OF (Table_row));
