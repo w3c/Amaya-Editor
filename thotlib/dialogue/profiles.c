@@ -36,10 +36,10 @@ static int        nb_elem = 0;
 
 
 /*-------------------------------------------------------------------------
-   InitProfileTable: Seek the current profile and init the function table
+   Prof_InitTable: Seek the current profile and init the function table
 --------------------------------------------------------------------------*/
 
-void InitProfileTable()
+void Prof_InitTable()
 {
 
   STRING              Current_Profile;
@@ -119,13 +119,13 @@ if (nb_elem > 0)
 
 
 /*-----------------------------------------------------------------------------------
-   BelongProfileTable : Check if a function belongs to the profile functions table
+   Prof_BelongTable : Check if a function belongs to the profile functions table
 ------------------------------------------------------------------------------------*/
    
 #ifdef __STDC__
-ThotBool BelongProfileTable(STRING functionName)
+ThotBool Prof_BelongTable(STRING functionName)
 #else  /* __STDC__ */
-ThotBool BelongProfileTable(functionName)
+ThotBool Prof_BelongTable(functionName)
 STRING functionNam;
 #endif /* __STDC__ */
 {
@@ -158,14 +158,14 @@ STRING functionNam;
 
 
 /*------------------------------------------------------------------------
-    RemoveBadSeparators : Remove bad separators in the menu interface
+    Prof_RemoveSeparators : Remove bad separators in the menu interface
 --------------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
-ThotBool RemoveBadSeparators(Menu_Ctl *ptrmenu,int item,char LastItemType)
+ThotBool Prof_RemoveSeparators(Menu_Ctl *ptrmenu,int item,char LastItemType)
 #else  /* __STDC__ */
-ThotBool RemoveBadSeparators(*ptrmenu, item)
+ThotBool Prof_RemoveSeparators(*ptrmenu, item)
 Menu_Ctl *ptrmenu;
 int item;
 #endif /* __STDC__ */
@@ -183,12 +183,12 @@ int item;
 }
 
 /*----------------------------------------------------------------------
-    RemoveSubMenu : Remove a submenu
+    Prof_RemoveSubMenu : Remove a submenu
 -----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool RemoveSubMenu(Menu_Ctl *ptrsubmenu)
+ThotBool Prof_RemoveSubMenu(Menu_Ctl *ptrsubmenu)
 #else  /* __STDC__ */
-ThotBool RemoveSubMenu(ptrsubmenu)
+ThotBool RProf_RemoveSubMenu(ptrsubmenu)
 Menu_Ctl *ptrsubmenu;
 
 #endif /* __STDC__ */
@@ -210,12 +210,12 @@ Menu_Ctl *ptrsubmenu;
 }
 
 /*----------------------------------------------------------------------
-    RemoveMenu : Remove a menu
+    Prof_RemoveMenu : Remove a menu
 -----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool RemoveMenu(Menu_Ctl *ptrmenu)
+ThotBool Prof_RemoveMenu(Menu_Ctl *ptrmenu)
 #else  /* __STDC__ */
-ThotBool RemoveMenu(ptrmenu)
+ThotBool Prof_RemoveMenu(ptrmenu)
 Menu_Ctl *ptrmenu;
 
 #endif /* __STDC__ */
@@ -230,9 +230,9 @@ Menu_Ctl *ptrmenu;
     return TRUE;
   /* check if the attr and select menu are in the profile */
   if (ptrmenu->MenuAttr)
-    return (!BelongProfileTable(TEXT("MenuAttribute")));
+    return (!Prof_BelongTable(TEXT("MenuAttribute")));
   if (ptrmenu->MenuSelect)
-    return (!BelongProfileTable(TEXT("MenuSelection")));    
+    return (!Prof_BelongTable(TEXT("MenuSelection")));    
   /* an empty menu has to be removed */
   if (ptrmenu->ItemsNb == 0)
     return TRUE;
@@ -243,7 +243,7 @@ Menu_Ctl *ptrmenu;
 	{
 	  if (ptrmenu->ItemsList[item].ItemType == TEXT('M'))
 	   {
-	     if (!RemoveSubMenu (ptrmenu->ItemsList[item].SubMenu)) 
+	     if (!Prof_RemoveSubMenu (ptrmenu->ItemsList[item].SubMenu)) 
 	       /* there is at least a non empty sub menu */
 	       return FALSE;
 	   } 
@@ -257,10 +257,10 @@ Menu_Ctl *ptrmenu;
 
 }
 /*------------------------------------------------------------------------
-    ProfileCompilator : Generates the profile file
+    Prof_ProfileCompilator : Generates the profile file
 --------------------------------------------------------------------------*/
 
-void ProfileCompilator()
+void Prof_ProfileCompilator()
 {
   
 }
