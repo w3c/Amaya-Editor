@@ -2513,20 +2513,7 @@ LPARAM lParam;
       ThotCallback (baseDoc + formDoc, INTEGER_DATA, (STRING) 0);
       urlToOpen [0] = 0;
       EndDialog (hwnDlg, IDCANCEL);
-      break;
-      
-#if 0   /* @@@@@@@@@ 000 @@@@@@@@@ */
-    case IDC_GETURL:
-      if (firstInit) {
-	SetFocus (EditURLWnd);
-	ndx = GetWindowTextLength (EditURLWnd);
-	/* PostMessage (EditURLWnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);*/
-	PostMessage (EditURLWnd, EM_SETSEL, 0, MAKELONG (0, ndx));
-	/* firstInit = FALSE;*/
-      }
-      break;
-#endif /* @@@@@@@@@ 000 @@@@@@@@@ */
-      
+      break;      
     }
     break;
   default: return FALSE;
