@@ -752,13 +752,6 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
   ThotBool    useDocRoot = mode & ANNOT_useDocRoot;
   ThotBool    isReplyTo = mode & ANNOT_isReplyTo;
 
-#if 0
-  /* not used for the moment... select the annotation doc
-     right away */
-  Element     el;
-  ElementType elType;
-#endif
-
   /* we can only annotate some types of documents and saved documents */
   if (!ANNOT_CanAnnotate (doc))
     return;
@@ -839,8 +832,8 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
       Document doc_thread;
 
       /* we should add here the current document where the thread is viewed */
-      /* JK: hope this works... even if we haven't saved the body */
       doc_thread =  AnnotThread_searchThreadDoc (DocumentURLs[doc_annot]);
+
       if (doc_thread > 0)
 	{
 	  DocumentMeta[doc_annot]->source_doc = doc_thread;
@@ -860,22 +853,6 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
       XPointer_select (ctx);
       XPointer_free (ctx);
     }
-
-
-#if 0
-  /* ready for primetime, but do we want to do it or highlight
-     the annotated text? */
-  /* select the new annotation document */
-  el = TtaGetRootElement (doc_annot);
-  elType.ElSSchema =  TtaGetSSchema ("HTML", doc);
-  elType.ElTypeNum = HTML_EL_BODY;
-  el = TtaSearchTypedElement (elType, SearchInTree, el);
-  /* then move the root variable so that it points to the beginning of the
-     HTML document */
-  el = TtaGetFirstChild (el);
-  TtaSelectElement (doc_annot, el);
-  TtaSelectView (doc, 1);
-#endif
 }
 
 /*-----------------------------------------------------------------------

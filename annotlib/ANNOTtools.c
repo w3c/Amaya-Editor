@@ -653,14 +653,13 @@ AnnotMeta *AnnotList_searchAnnot (List *list, char *url, AnnotMetaDataSearch sea
 	  break;
 
 #if 0 /* This case is no longer necessary given FixFileURL() */
-#endif
-
 	case AM_BODY_FILE:
 	  if (annot->body_url && IsFilePath (annot->body_url))
 	    ptr = annot->body_url + sizeof ("file://") - 1;
 	  else
 	    ptr = annot->body_url;
 	  break;
+#endif
 
 	case AM_ANAME:
 	  ptr = annot->name;
@@ -942,20 +941,26 @@ Document AnnotThread_searchThreadDoc (char *annot_url)
 #ifdef ANNOT_ON_ANNOT
   int i;
   AnnotMetaDataSearch searchType;
+  char *tmp_url;
 
-  if (IsW3Path (annot_url))
-    searchType = AM_BODY_URL;
+  if (IsW3Path (annot_url) || IsFilePath (annot_url))
+    tmp_url = annot_url;
   else
-    searchType = AM_BODY_FILE;
+    tmp_url = LocalToWWW (annot_url);
+  searchType = AM_BODY_URL;
 
   for (i = 0; i < DocumentTableLength; i++)
     {
       if (!AnnotThread[i].rootOfThread)
 	continue;
       if (AnnotList_searchAnnot (AnnotThread[i].annotations, 
-				 annot_url, searchType))
+				 tmp_url, searchType))
 	break;
     }
+
+  if (tmp_url != annot_url)
+    TtaFreeMemory (tmp_url);
+
   return (i == DocumentTableLength) ? 0 : i;
 #else
   return 0;
