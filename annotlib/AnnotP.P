@@ -187,10 +187,10 @@ RULES
 	BEGIN
 	Visibility: Enclosing =;
 	Width: Enclosing . Width;
-	MarginTop: MARGIN;
-	PaddingTop: MARGIN;
+	MarginTop: 0.2;
+	PaddingTop: 0.2;
 	PaddingLeft: MARGIN;
-	PaddingBottom: MARGIN;
+	PaddingBottom: 0.2;
 	PaddingRight: MARGIN;
 	BorderTopWidth: 1 px;
 	BorderLeftWidth: 1 px;
