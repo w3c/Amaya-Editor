@@ -2157,6 +2157,14 @@ static ThotBool LimitBoundingBoxToClip (int *x, int *y,
 			       int Clipx, int Clipy,
 			       int ClipW, int ClipH)
 {
+  if (*y > (Clipy+ClipH) ||
+      *x > (Clipx+ClipW))
+    return FALSE;  
+
+  if ((*x + *width) < Clipx ||
+      (*y + *height) < Clipy)
+    return FALSE;  
+
   if (*x < Clipx)
     {
       *width += Clipx - *x;
@@ -2203,7 +2211,8 @@ static ThotBool GetAbsoluteBoundingBox (PtrAbstractBox pAb,
   if (LimitBoundingBoxToClip (x, y,
 			      width, height, 
 			      0, 0,
-			      FrameTable[frame].FrWidth, FrameTable[frame].FrHeight))
+			      FrameTable[frame].FrWidth, 
+FrameTable[frame].FrHeight))
     return LimitBoundingBoxToClip (x, y,
 				   width, height, 
 				   xmin - pFrame->FrXOrg, ymin - pFrame->FrYOrg,
