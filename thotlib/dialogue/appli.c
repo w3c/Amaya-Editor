@@ -671,18 +671,18 @@ void  GL_DestroyFrame (int frame)
 #ifndef _NOSHARELIST
   int i;
 
-  if (Printing || frame != Shared_Context)
+  if (Printing || frame != GetSharedContext())
     return;
   for (i = 0 ; i <= MAX_FRAME; i++)
     {  
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)
-      if (i != Shared_Context && FrameTable[i].WdFrame)
+      if (i != GetSharedContext() && FrameTable[i].WdFrame)
 #endif /*#if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 #ifdef _WINGUI
-      if (i != Shared_Context && GL_Context[i])
+      if (i != GetSharedContext() && GL_Context[i])
 #endif /* _WINGUI */
 	{
-    	  Shared_Context = i;
+    	  SetSharedContext(i);
 	  /* stop the loop */
 	  i = MAX_FRAME + 1;
 	} 

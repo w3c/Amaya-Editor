@@ -118,7 +118,7 @@ typedef struct _Frame_Ctl {
 //  ThotWidget Row_Zone;                  /* Parent widget of Text_Zone        */
 //  ThotWidget Combo;                     /* List of combobox Widgets          */
 //  ThotWidget Text_Zone;                 /* List of text-zone Widgets         */
-//  Proc       Call_Text;                 /* List of text-zone Callbacks       */
+  Proc       Call_Text;                 /* This is the callback which is called when a url is activated */
 
 //  ThotToolBar	ToolBar;		/* The toolbar : on GTK toolbar is Button[0] */
   

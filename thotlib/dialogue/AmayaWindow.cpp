@@ -36,6 +36,7 @@
 #include "AmayaPage.h"
 #include "AmayaFrame.h"
 #include "AmayaCallback.h"
+#include "AmayaURLBar.h"
 
 // TODO : a deplacer dans un .h
 #define DEFAULT_TOOGLE_FULLSCREEN    false
@@ -108,9 +109,14 @@ AmayaWindow::AmayaWindow (  int            window_id
   p_SizerFrame->Fit(this);
 
   // Creation of the toolbar
-  //  CreateToolBar( wxHORIZONTAL|wxTB_DOCKABLE|wxTB_FLAT );
-  //  GetToolBar()->SetMargins( 2, 2 );
- 
+  CreateToolBar( wxHORIZONTAL|wxTB_DOCKABLE|wxTB_FLAT );
+  GetToolBar()->SetMargins( 2, 2 );
+  
+  // Create the url entry
+  m_pURLBar = new AmayaURLBar( GetToolBar(), this );
+  m_pURLBar->Fit();
+  GetToolBar()->AddControl( m_pURLBar );
+  
   // Creation of the statusbar
   CreateStatusBar( 1 );
 
@@ -199,7 +205,7 @@ bool AmayaWindow::DetachPage( int position )
  * Description:  search the page at given position
  *--------------------------------------------------------------------------------------
  */
-AmayaPage * AmayaWindow::GetPage( int position )
+AmayaPage * AmayaWindow::GetPage( int position ) const
 {
   if (!m_pNotebook)
     return NULL;
@@ -354,8 +360,36 @@ void AmayaWindow::OnMenuItem( wxCommandEvent& event )
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
+ *      Method:  GetActivePage
+ * Description:  return the current selected page
+ *--------------------------------------------------------------------------------------
+ */
+AmayaPage * AmayaWindow::GetActivePage() const
+{
+  return GetPage(m_pNotebook->GetSelection());
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  GetActiveFrame
+ * Description:  return the current selected frame
+ *--------------------------------------------------------------------------------------
+ */
+AmayaFrame * AmayaWindow::GetActiveFrame() const
+{
+  AmayaPage * p_page = GetActivePage();
+  if (p_page)
+    return p_page->GetActiveFrame();
+  else
+    return NULL;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
  *      Method:  SetURL
- * Description:  TODO
+ * Description:  set the current url value
  *--------------------------------------------------------------------------------------
  */
 void AmayaWindow::SetURL ( const wxString & new_url )
@@ -363,7 +397,31 @@ void AmayaWindow::SetURL ( const wxString & new_url )
   m_pURLBar->SetValue( new_url );
 
   // Just select url
-  m_pURLBar->SetSelection( 0, new_url.Length() );
+  //m_pURLBar->SetSelection( 0, new_url.Length() );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  GetURL
+ * Description:  get the current url value
+ *--------------------------------------------------------------------------------------
+ */
+wxString AmayaWindow::GetURL( )
+{
+  return m_pURLBar->GetValue();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  SetWindowEnableURL
+ * Description:  set the current url status (enable or disable)
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::SetEnableURL( bool urlenabled )
+{
+  m_pURLBar->Enable( urlenabled );
 }
 
 /*
@@ -377,6 +435,19 @@ void AmayaWindow::AppendURL ( const wxString & new_url )
 {
   m_pURLBar->Append( new_url );
 }
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  EmptyURLBar
+ * Description:  remove all items in the url bar
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::EmptyURLBar()
+{
+  m_pURLBar->Clear();
+}
+
 
 /*
  *--------------------------------------------------------------------------------------
@@ -487,7 +558,7 @@ BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
 //  EVT_SPLITTER_SASH_POS_CHANGED( -1, AmayaWindow::OnSplitterPosChanged )
 //  EVT_SPLITTER_DCLICK( -1, AmayaWindow::OnSplitterDClick )
   EVT_SPLITTER_UNSPLIT( -1, AmayaWindow::OnSplitterUnsplit )
-  
+
 //  EVT_SIZE( AmayaWindow::OnSize )
 
 END_EVENT_TABLE()

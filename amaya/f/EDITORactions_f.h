@@ -62,9 +62,9 @@ extern void CreateLinkInHead ( Document document,
                                View view );
 extern void CreateStyle ( Document document,
                           View view );
-extern void CreateComment ( Document document,
+extern void CreateComment ( Document doc,
                             View view );
-extern void CreateScript ( Document document,
+extern void CreateScript ( Document doc,
                            View view );
 extern void CreateParagraph ( Document document,
                               View view );
@@ -324,9 +324,9 @@ extern void CreateLinkInHead ( Document document,
                                  View view );
 extern void CreateStyle ( Document document,
                             View view );
-extern void CreateComment ( Document document,
+extern void CreateComment ( Document doc,
                               View view );
-extern void CreateScript ( Document document,
+extern void CreateScript ( Document doc,
                              View view );
 extern void CreateParagraph ( Document document,
                                 View view );

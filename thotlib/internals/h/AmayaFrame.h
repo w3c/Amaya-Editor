@@ -81,6 +81,11 @@ public:
   void     SetPageTitle(const wxString & page_name);
   wxString GetPageTitle();
 
+  void     SetFrameURL( const wxString & new_url );
+  wxString GetFrameURL();
+  void     SetFrameEnableURL( bool urlenabled );
+  bool     GetFrameEnableURL( );
+
   void        SetPageParent( AmayaPage * p_page );
   AmayaPage * GetPageParent();
 
@@ -133,6 +138,8 @@ protected:
   wxString     m_PageTitle;
   wxString     m_WindowTitle;
   wxString     m_StatusBarText;
+  wxString     m_FrameUrl;
+  bool         m_FrameUrlEnable;
 
   int          m_HOldPosition;
   int          m_VOldPosition;
@@ -140,9 +147,6 @@ protected:
   AmayaPage *     m_pPageParent;  
   AmayaCanvas *   m_pCanvas;
 
-  static wxGLContext * m_pSharedContext;
-
-  //wxFlexGridSizer * m_pFlexSizer;
   wxBoxSizer * m_pHSizer;
   wxBoxSizer * m_pVSizer;
   

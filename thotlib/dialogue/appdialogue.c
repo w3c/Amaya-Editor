@@ -11,7 +11,6 @@
  *
  */
 #ifdef _WX
-  #include "wx/wx.h"
   #include "AmayaFrame.h"
 #endif /* _WX */
 
@@ -25,6 +24,10 @@
 #ifdef _WINGUI
   #include "wininclude.h"
 #endif /* _WINGUI */
+
+#ifdef _WX
+  #include "appdialogue_wx_f.h"
+#endif /* _WX */
 
 #if defined(_GTK) || defined(_MOTIF)
 #include "logowindow.h"
@@ -1709,14 +1712,11 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		    }
 		  else
 		    {
-		      /* used to convert text format */
-		      wxCSConv conv_ascii(_T("ISO-8859-1"));
-
 		      /* Add a button widget to the toolbar and put a pixmap into */
 		      wxASSERT(AmayaFrame::TOOLBAR_TOOL_START+i < AmayaFrame::TOOLBAR_TOOL_END);
 		      toolbar->AddTool(
 			AmayaFrame::TOOLBAR_TOOL_START+i, /* this is the button id => used to call the right callback when activated */
-			wxString( info, conv_ascii ),
+			wxString( info, AmayaWindow::conv_ascii ),
 			*picture,			/* a picture (wxBitmap) generated before */
 			wxNullBitmap,
 			wxITEM_NORMAL,
@@ -2450,9 +2450,21 @@ int TtaAddTextZone (Document doc, View view, char *label,
       frame = GetWindowNumber (doc, view);
       if (frame == 0 || frame > MAX_FRAME)
 	TtaError (ERR_invalid_parameter);
-#ifndef _WX // TODO	
+#ifdef _WX
+      else if (FrameTable[frame].WdFrame)
+#else /* _WX */
       else if (FrameTable[frame].WdFrame && !FrameTable[frame].Text_Zone)
+#endif /* _WX */
 	{
+#ifdef _WX
+	  /* first initialze the urlbar widget */
+	  TtaInitializeURLBar( frame,
+			       label,
+			       editable,
+			       procedure );
+	  /* then fill it with urls */
+	  TtaSetURLBar( frame, listUrl);
+#endif /* _WX */
 
 #if defined(_GTK) || defined(_MOTIF)
 	  row = FrameTable[frame].Row_Zone;
@@ -2701,7 +2713,6 @@ int TtaAddTextZone (Document doc, View view, char *label,
     
 	  ret = 1;
 	}
-#endif // #ifndef _WX // TODO	      
     }
   /* force la mise a jour de la fenetre */
   TtaHandlePendingEvents ();
@@ -2737,11 +2748,12 @@ void TtaSetTextZone (Document doc, View view, char *listUrl)
       frame = GetWindowNumber (doc, view);
       if (frame == 0 || frame > MAX_FRAME)
 	TtaError (ERR_invalid_parameter);
-#ifndef _WX // TODO	      
       else if (FrameTable[frame].WdFrame)
 	{
+#ifndef _WX /* WX doesn't use Text_Zone variable */
 	  w = FrameTable[frame].Text_Zone;
 	  if (w)
+#endif //#ifndef _WX // TODO	      
 	    {
 #ifdef _WINGUI
 	      /* Initialize listbox linked to combobox */
@@ -2763,10 +2775,12 @@ void TtaSetTextZone (Document doc, View view, char *listUrl)
 	      /* Free memory */
 	      g_list_free (combo1_items);
 #endif /* _GTK */
-        
+
+#ifdef _WX
+	      TtaSetURLBar( frame, listUrl);
+#endif /* _WX */
 	    }
 	}
-#endif //#ifndef _WX // TODO	      
     }
 #ifdef _MOTIF
   XFlush (TtDisplay);

@@ -83,7 +83,7 @@ public:
   AmayaPage * CreatePage( bool attach = false, int position = 0 );
   bool AttachPage( int position, AmayaPage * p_page );
   bool DetachPage( int position );
-  AmayaPage * GetPage( int position );
+  AmayaPage * GetPage( int position ) const;
   int GetPageCount() const;
   bool IsClosing();
   
@@ -108,15 +108,21 @@ public:
   void OnSplitterUnsplit( wxSplitterEvent& event );
   
 //  void OnSize( wxSizeEvent& event );
- 
+  
+  // url bar control
+  wxString GetURL();
+  void     SetURL ( const wxString & new_url );
+  void     AppendURL ( const wxString & new_url );
+  void     EmptyURLBar();
+  void     SetEnableURL( bool urlenabled );
 
-  void SetURL ( const wxString & new_url );
-  void AppendURL ( const wxString & new_url );
-
-//  wxMenuBar *   getMenuBar() { return m_pMenuBar; }
-//  
   int		GetWindowId() { return m_WindowId; }
   void          SetWindowId( int window_id ) { m_WindowId = window_id; }
+
+  AmayaPage * GetActivePage() const;
+  AmayaFrame * GetActiveFrame() const;
+
+
  public:
 
  public:

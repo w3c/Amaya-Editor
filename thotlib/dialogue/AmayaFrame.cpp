@@ -30,6 +30,7 @@
 #include "appli_f.h"
 #include "views_f.h"
 #include "structselect_f.h"
+#include "appdialogue_wx_f.h"
 
 #include "AmayaWindow.h"
 #include "AmayaFrame.h"
@@ -39,14 +40,7 @@
 #include "AmayaCallback.h"
 #include "wx/log.h"
 
-
-
-// this is the shared context used to share display lists and textures id
-wxGLContext * AmayaFrame::m_pSharedContext = NULL;
-
-
 IMPLEMENT_DYNAMIC_CLASS(AmayaFrame, wxPanel)
-
 
 /*
  *--------------------------------------------------------------------------------------
@@ -69,6 +63,7 @@ AmayaFrame::AmayaFrame(
      ,m_HOldPosition( 0 )
      ,m_VOldPosition( 0 )
      ,m_ToDestroy( FALSE )
+     ,m_FrameUrlEnable( FALSE )
 {
   // Create the drawing area
   m_pCanvas = CreateDrawingArea();
@@ -126,28 +121,28 @@ AmayaCanvas * AmayaFrame::CreateDrawingArea()
   AmayaCanvas * p_canvas = NULL;
 
 #ifdef _GL
-  // If opengl is used then try to share the context
+
 #ifndef _NOSHARELIST
-  if ( m_pSharedContext == NULL || GetSharedContext () == m_FrameId )
-//  if (GetSharedContext () == -1 || GetSharedContext () == m_FrameId )
+  // If opengl is used then try to share the context
+  if ( GetSharedContext () == -1/* || GetSharedContext () == m_FrameId */)
     {
-#endif /*_NOSHARELIST*/
+      /* there is no existing context, I need to create a first one and share it with others canvas */
       p_canvas = new AmayaCanvas( this );
-      m_pSharedContext = p_canvas->GetContext();
-#ifdef _NOSHARELIST
-      wxPrintf( _T("Warning: upgrade your Opengl implementation (ie: Mesa) to get group opacity!\n") );
-#else /*_NOSHARELIST*/
       SetSharedContext( m_FrameId );
     }
   else
     {
-      //      int shared_frame_id = GetSharedContext();
-      //      wxASSERT( FrameTable[shared_frame_id].WdFrame != 0 );
-      //      AmayaCanvas * p_shared_canvas = FrameTable[shared_frame_id].WdFrame->GetCanvas();
-      //      wxASSERT( p_shared_canvas );
-      p_canvas = new AmayaCanvas( this, m_pSharedContext );
+      wxASSERT( FrameTable[GetSharedContext()].WdFrame );
+      wxGLContext * p_SharedContext = FrameTable[GetSharedContext()].WdFrame->GetCanvas()->GetContext();
+      wxASSERT( p_SharedContext );
+      // create the new canvas with the opengl shared context
+      p_canvas = new AmayaCanvas( this, p_SharedContext );
     }
 #endif /*_NOSHARELIST*/
+
+#ifdef _NOSHARELIST
+  p_canvas = new AmayaCanvas( this );
+#endif /* _NOSHARELIST */
 
   /* try to force opengl to use this canvas (initialize the opengl context) */
   p_canvas->SetCurrent();
@@ -544,6 +539,67 @@ wxString AmayaFrame::GetWindowTitle()
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaFrame
+ *      Method:  SetFrameURL
+ * Description:  setup the current frame url
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFrame::SetFrameURL( const wxString & new_url )
+{
+  wxLogDebug( _T("AmayaFrame::SetFrameURL - frame=%d")+
+	      wxString(_T(" url="))+new_url, GetFrameId() );
+  m_FrameUrl = new_url;
+  
+  // update the window url if the frame is active
+  if ( IsActive() && GetPageParent() )
+    GetPageParent()->SetWindowURL( m_FrameUrl );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFrame
+ *      Method:  GetFrameURL
+ * Description:  return the corresponding document url
+ *--------------------------------------------------------------------------------------
+ */
+wxString AmayaFrame::GetFrameURL()
+{
+  return m_FrameUrl;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFrame
+ *      Method:  SetFrameEnableURL
+ * Description:  force the urlbar to be enable or disable for the current frame
+ *               exemple : the source vue of a document doen't have an urlbar
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFrame::SetFrameEnableURL( bool urlenabled )
+{
+  m_FrameUrlEnable = urlenabled;
+
+  // update the window url if the frame is active
+  if ( IsActive() && GetPageParent() )
+    GetPageParent()->SetWindowEnableURL( GetFrameEnableURL() );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFrame
+ *      Method:  GetFrameEnableURL
+ * Description:  get the frame url status (enable or disable)
+ *               exemple : the source vue of a document doen't have an urlbar
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaFrame::GetFrameEnableURL( )
+{
+  return m_FrameUrlEnable;
+}
+
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFrame
  *      Method:  SetPageParent / GetPageParent
  * Description:  set/get the parent page (tab)
  *--------------------------------------------------------------------------------------
@@ -690,9 +746,9 @@ void AmayaFrame::SetActive( bool active )
       p_statusbar->SetStatusText( m_StatusBarText );
     }
 
-  // update the page title
+  // update the window title
   SetWindowTitle( GetWindowTitle() );
-
+  
   // this frame is active update its page
   AmayaPage * p_page = GetPageParent();
   if (p_page)

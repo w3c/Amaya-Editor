@@ -84,7 +84,10 @@ public:
   
   AmayaWindow * GetWindowParent();
   void SetWindowParent( AmayaWindow * p_window );
-  
+
+  void SetWindowURL(const wxString & window_url);
+  void SetWindowEnableURL( bool urlenabled );
+
   void SetPageId( int page_id );
   int GetPageId();
   void RaisePage();

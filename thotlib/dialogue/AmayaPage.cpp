@@ -644,9 +644,56 @@ void AmayaPage::SetSelected( bool isSelected )
 	    wxPostEvent( this, event_page );
 	  }
       }
+
+    // if there is an active frame
     if ( GetActiveFrame() )
-      GetActiveFrame()->SetActive( TRUE );
+      {
+	// activate it : setup the corresponding menu and update internal boolean
+	GetActiveFrame()->SetActive( TRUE );
+	// setup the right frame url into the main window urlbar
+	SetWindowURL(GetActiveFrame()->GetFrameURL());
+	// setup the enable/disable state of urlbar
+	SetWindowEnableURL( GetActiveFrame()->GetFrameEnableURL() );
+      }
   }
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  SetWindowURL
+ * Description:  update the page's window with the given url string
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPage::SetWindowURL(const wxString & window_url)
+{  
+  // check if this frame's page is active or not
+  if ( IsSelected() )
+    {
+      // if the frame's page is active then update the window url bar
+      AmayaWindow * p_window = GetWindowParent();
+      if (p_window)
+	p_window->SetURL( window_url );
+    }
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  SetWindowEnableURL
+ * Description:  update the page's window with the given url status (enabled or disabled)
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPage::SetWindowEnableURL( bool urlenabled )
+{  
+  // check if this frame's page is active or not
+  if ( IsSelected() )
+    {
+      // if the frame's page is active then update the window url bar
+      AmayaWindow * p_window = GetWindowParent();
+      if (p_window)
+	p_window->SetEnableURL( urlenabled );
+    }
 }
 
 void AmayaPage::SetPageId( int page_id )

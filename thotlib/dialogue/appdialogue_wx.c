@@ -14,8 +14,10 @@
 
 #include "appdialogue_f.h"
 #include "appdialogue_wx_f.h"
+#include "applicationapi_f.h"
 #include "font_f.h"
 #include "profiles_f.h"
+#include "displayview_f.h"
 
 #define THOT_EXPORT extern
 #include "frame_tv.h"
@@ -24,6 +26,10 @@
 #include "AmayaFrame.h"
 #include "AmayaWindow.h"
 #include "AmayaPage.h"
+
+/* this is an extern declaration of a global variable located into amaya part (not in thotlib)
+ * maybe there is a more elegent way to communicate with amaya ? */
+extern char *DocumentURLs[];
 
 /* 
  * In this file there is a list of functions useful
@@ -609,6 +615,43 @@ void TtaGetDocumentPageId( Document doc_id, int schView,
 }
 
 /*----------------------------------------------------------------------
+  TtaGetFrameDocumentId returns the correspondig document id for the given frame id
+  params:
+    + frame_id : the frameid to lookfor corresponding document id
+  returns:
+    + int : the document id correspondig to the frame
+    + -1 if nothing is found
+  ----------------------------------------------------------------------*/
+int TtaGetFrameDocumentId( int frame_id )
+{
+#ifdef _WX
+  return FrameTable[frame_id].FrDoc;
+#else
+  return -1;
+#endif /* #ifdef _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaGetDocumentURL returns the correspondig document url
+  params:
+    + doc_id : 
+  returns:
+    + char * : a pointer to document url
+    + NULL if the doc_id is not valide of there is no associated urls
+  ----------------------------------------------------------------------*/
+char * TtaGetDocumentURL( Document doc_id )
+{
+#ifdef _WX
+  if (doc_id > 0)
+    return DocumentURLs[doc_id];
+  else
+    return NULL;
+#else
+  return NULL;
+#endif /* #ifdef _WX */
+}
+
+/*----------------------------------------------------------------------
   TtaMakePanel create a panel (container)
   notice : a panel needs to be attached to a window
   returns:
@@ -676,3 +719,103 @@ ThotBool TtaFrameIsActive( int frame_id )
 #endif /* #ifdef _WX */
 }
 
+/*----------------------------------------------------------------------
+  TtaInitializeURLBar initialize urlbar with given parameters
+  params:
+    + frame_id : frame identifier
+    + label : the new url entry
+    + editable
+    + procedure: procedure to be executed when the new entry is changed by the user.
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaInitializeURLBar( int          frame_id,
+			  const char * label,
+			  ThotBool     editable,
+			  void (*      procedure)() )
+{
+#ifdef _WX
+  if (!FrameTable[frame_id].WdFrame || FrameTable[frame_id].FrWindowId == -1)
+    return;
+  AmayaWindow * p_window = WindowsTable[FrameTable[frame_id].FrWindowId];
+  if ( !p_window )
+    return;
+  
+  // setup the callback to activate when a url is selected
+  FrameTable[frame_id].Call_Text = procedure;
+
+  // setup the enable/disable flag of the url bar
+  FrameTable[frame_id].WdFrame->SetFrameEnableURL( TRUE );
+#endif /* #ifdef _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaSetURLBar setup the urlbar with a given list of urls (destroy existing urls)
+  params:
+    + frame_id : frame identifier
+    + listUrl : the url list
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaSetURLBar( int frame_id,
+		   const char * listUrl )
+{
+#ifdef _WX
+  if (!FrameTable[frame_id].WdFrame || FrameTable[frame_id].FrWindowId == -1)
+    return;
+  AmayaWindow * p_window = WindowsTable[FrameTable[frame_id].FrWindowId];
+  if ( !p_window )
+    return;
+
+  /* First of all empty the url bar */
+  p_window->EmptyURLBar();
+
+  /* Append URL from url list to the urlbar */
+  const char *ptr, *ptr1;
+  wxString urltoappend;
+  ptr = listUrl;
+  /* function will stop on double EOS */
+  if (listUrl)
+    {
+      while (*ptr != EOS)
+	{
+	  ptr1 = ptr;
+	  while (*ptr1 != EOS)
+	      ptr1++;
+	  urltoappend = wxString( ptr, AmayaWindow::conv_ascii );
+	  p_window->AppendURL( urltoappend );
+	  ptr = ptr1 + 1;
+	}
+    }
+
+  /* the first url in the list is the used one for the current frame */
+  wxString firsturl( listUrl, AmayaWindow::conv_ascii );
+
+  /* setup the internal frame variable used to remember the frame's url string
+   * this string is temporary and is updated each times the user modify the string.
+   * when the user switch between frames, the window urlbar is updated with this string */
+  FrameTable[frame_id].WdFrame->SetFrameURL( firsturl );
+
+  wxLogDebug( _T("TtaSetURLBar:")+
+	      wxString(_T(" url="))+firsturl );
+#endif /* #ifdef _WX */
+}
+
+/*----------------------------------------------------------------------
+  APP_Callback_URLActivate - Callback to set url in box when Enter key pressed
+  params:
+    + frame_id : frame identifier
+    + text : the new url text
+  returns:
+  ----------------------------------------------------------------------*/
+void APP_Callback_URLActivate (int frame_id, const char *text)
+{
+  Document            doc;
+  View                view;
+
+  CloseInsertion ();
+  if (text && strlen(text) > 0)
+    {
+      FrameToView (frame_id, &doc, &view);
+      if (FrameTable[frame_id].Call_Text)
+	(*(Proc3)FrameTable[frame_id].Call_Text) ((void *)doc, (void *)view, (void *)text);
+    }
+}

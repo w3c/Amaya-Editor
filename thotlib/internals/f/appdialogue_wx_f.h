@@ -33,11 +33,21 @@ extern void TtaGetDocumentPageId ( Document doc_id,
                                    int schView,
                                    int * page_id,
                                    int * page_position );
+extern int TtaGetFrameDocumentId ( int frame_id );
+extern char * TtaGetDocumentURL ( Document doc_id );
 extern int TtaMakePanel ( const char * panel_title );
 extern int TtaAttachPanel ( int window_id );
 extern ThotBool TtaDetachPanel ( int panel_id,
                                  int window_id );
 extern ThotBool TtaFrameIsActive ( int frame_id );
+extern void TtaInitializeURLBar ( int frame_id,
+                                  const char * label,
+                                  ThotBool editable,
+                                  void (* procedure)() );
+extern void TtaSetURLBar ( int frame_id,
+                           const char * listUrl );
+extern void APP_Callback_URLActivate ( int frame_id,
+                                       const char *text );
 
 #else /* __STDC__ */
 
@@ -68,11 +78,21 @@ extern void TtaGetDocumentPageId ( Document doc_id,
                                      int schView,
                                      int * page_id,
                                      int * page_position );
+extern int TtaGetFrameDocumentId ( int frame_id );
+extern char * TtaGetDocumentURL ( Document doc_id );
 extern int TtaMakePanel ( const char * panel_title );
 extern int TtaAttachPanel ( int window_id );
 extern ThotBool TtaDetachPanel ( int panel_id,
                                    int window_id );
 extern ThotBool TtaFrameIsActive ( int frame_id );
+extern void TtaInitializeURLBar ( int frame_id,
+                                    const char * label,
+                                    ThotBool editable,
+                                    void (* procedure)() );
+extern void TtaSetURLBar ( int frame_id,
+                             const char * listUrl );
+extern void APP_Callback_URLActivate ( int frame_id,
+                                         const char *text );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
