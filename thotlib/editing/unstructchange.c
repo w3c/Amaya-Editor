@@ -1954,7 +1954,7 @@ void TtcCreateElement (Document doc, View view)
 		    }
 		  AddEditOpInHistory (pElDelete, pDoc, TRUE, FALSE);
 		  
-		  pPrevious = PreviousNotPage (pElDelete, FALSE);
+		  pPrevious = PreviousNotPage (pElDelete, TRUE);
 		  pNext = NextNotPage (pElDelete, FALSE);
 		  DestroyAbsBoxes (pElDelete, pDoc, TRUE);
 		  AbstractImageUpdated (pDoc);
@@ -1990,7 +1990,7 @@ void TtcCreateElement (Document doc, View view)
 		  /* envoie l'evenement ElemDelete.Post a l'application */
 		  CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
 		  if (pNext != NULL)
-		    if (PreviousNotPage (pNext, FALSE) == NULL)
+		    if (PreviousNotPage (pNext, TRUE) == NULL)
 		      /* l'element qui suit l'element detruit devient premier*/
 		      ChangeFirstLast (pNext, pDoc, TRUE, FALSE);
 		  if (pPrevious != NULL)
@@ -2127,28 +2127,6 @@ static PtrElement  AscentChildOfParagraph (PtrElement pEl)
 }
 
 /*----------------------------------------------------------------------
-   NextSiblingNotPage retourne l'element frere suivant pEl qui     
-   n'est pas un saut de page.                              
-  ----------------------------------------------------------------------*/
-static PtrElement NextSiblingNotPage (PtrElement pEl)
-{
-   PtrElement          pNext;
-   ThotBool            stop;
-
-   pNext = pEl->ElNext;
-   stop = FALSE;
-   do
-      if (pNext == NULL)
-	 stop = TRUE;
-      else if (pNext->ElTerminal && pNext->ElLeafType == LtPageColBreak)
-	 pNext = pNext->ElNext;
-      else
-	 stop = TRUE;
-   while (!stop);
-   return pNext;
-}
-
-/*----------------------------------------------------------------------
    DeleteNextChar  If before, the current selection is at the      
    beginning of element pEl and the user has hit the       
    BackSpace key. Merging with previous element.
@@ -2192,9 +2170,9 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
    do
      {
        if (before)
-	 pSibling = PreviousNotPage (pParent, FALSE);
+	 pSibling = PreviousNotPage (pParent, TRUE);
        else
-	 pSibling = NextSiblingNotPage (pParent);
+	 pSibling = NextNotPage (pParent, TRUE);
        if (pSibling == NULL)
 	 {
 	   pElem = pParent;
@@ -2294,9 +2272,9 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
        do
 	 {
 	   if (before)
-	     pSibling = PreviousNotPage (pElem, FALSE);
+	     pSibling = PreviousNotPage (pElem, TRUE);
 	   else
-	     pSibling = NextSiblingNotPage (pElem);
+	     pSibling = NextNotPage (pElem, TRUE);
 	   if (pSibling != NULL)
 	     stop = TRUE;
 	   else
