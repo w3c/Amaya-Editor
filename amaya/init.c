@@ -1424,6 +1424,8 @@ View                view;
 #ifdef MATHML
 	TtaGetViewGeometry (document, "Math_Structure_view", &x, &y, &w, &h);
 	mathView = TtaOpenView (document, "Math_Structure_view", x, y, w, h);
+	TtcSwitchButtonBar (document, mathView);
+	TtcSwitchCommands (document, mathView);
 #endif /* MATHML */
      }
 }
