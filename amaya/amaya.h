@@ -64,7 +64,8 @@ ConvertionType;
 typedef enum _AHTHeaderName
   {
     AM_HTTP_CONTENT_TYPE = 0,
-    AM_HTTP_CHARSET = 1
+    AM_HTTP_CHARSET = 1,
+    AM_HTTP_REASON = 2
   } 
 AHTHeaderName;
 
@@ -74,6 +75,7 @@ typedef struct _AHTHeaders
   {
     CHAR_T *content_type;
     CHAR_T *charset;
+    CHAR_T *reason;
   }
 AHTHeaders;
 
