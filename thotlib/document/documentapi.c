@@ -1576,9 +1576,11 @@ SSchema            *nature;
 
 {
    PtrSSchema          nextNature;
+#ifndef NODISPLAY
    int                 n;
    PtrDocument         pDoc;
    ThotBool            found;
+#endif
 
    UserErrorCode = 0;
    /* verifies the parameter document */
@@ -1587,11 +1589,11 @@ SSchema            *nature;
 	TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
 	TtaError (ERR_invalid_document_parameter);
-   else
       /* parameter document is correct */
+#ifndef NODISPLAY
+   else
      {
 	pDoc = LoadedDocument[document - 1];
-#ifndef NODISPLAY
 	if (*nature == NULL)
 	   /* First apply, build the table of the natures of the document */
 	  {
@@ -1604,7 +1606,8 @@ SSchema            *nature;
 		n = 0;
 	  }
 	else
-	   /* The table is already builded. One looks for the current entry of the table */
+	   /* The table is already builded. One looks for the current entry
+	      of the table */
 	  {
 	     n = 1;
 	     found = FALSE;
@@ -1630,8 +1633,8 @@ SSchema            *nature;
 	     if (found)
 		nextNature = pDoc->DocNatureSSchema[n];
 	  }
-#endif
      }
+#endif
    *nature = (SSchema) nextNature;
 }
 
