@@ -4772,14 +4772,25 @@ int                 code;
       PutInBuffer ((CHAR_T) c);
    else
       {
-      TextToDocument ();
-      MergeText = FALSE;
-      l = currentLanguage;
-      currentLanguage = lang;
-      PutInBuffer ((CHAR_T) c);
-      TextToDocument ();
-      MergeText = FALSE;
-      currentLanguage = l;
+      if (ReadingAnAttrValue)
+	 /* this entity belongs to an attribute value */
+	 {
+	 /* Thot can't mix different languages in the same attribute value */
+	 /* just discard that character */
+	 ;
+	 }
+      else
+	 /* this entity belongs to the element contents */
+	 {
+	 TextToDocument ();
+	 MergeText = FALSE;
+	 l = currentLanguage;
+	 currentLanguage = lang;
+	 PutInBuffer ((CHAR_T) c);
+	 TextToDocument ();
+	 MergeText = FALSE;
+	 currentLanguage = l;
+	 }
       }
 
    /* some special cases: insert a second character */
@@ -4914,9 +4925,10 @@ UCHAR_T       c;
 	      }
 	}
      while (!stop);     
-     if (!OK)
+     if (!OK && !ReadingAnAttrValue)
         {
-	/* assume that semicolon is missing and put the corresponding char */
+	/* If we are not reading an attribute value, assume that semicolon is
+	   missing and put the corresponding char in the document content */
 	if (CharEntityTable[EntityTableEntry].charCode > 255)
 	   PutNonISOlatin1Char (CharEntityTable[EntityTableEntry].charCode);
 	else
