@@ -2720,7 +2720,7 @@ static void UpdateFloat (PtrAbstractBox pAb, PtrAbstractBox pParent,
       /* check if the float property is removed */
       while (pParent && pParent->AbBox &&
 	     pParent->AbBox->BxType == BoFloatGhost)
-	pParent->AbBox->BxType == BoComplete;
+	pParent->AbBox->BxType = BoComplete;
       if (pParent && pParent->AbBox)
 	{
 	  pBlock = pParent->AbBox;
@@ -2752,7 +2752,7 @@ static void UpdateFloat (PtrAbstractBox pAb, PtrAbstractBox pParent,
 	      pBlock->BxRightFloat == NULL)
 	    {
 	      inLine = FALSE;
-	      pParent->AbBox->BxType == BoComplete;
+	      pParent->AbBox->BxType = BoComplete;
 	    }
 	}
     }
