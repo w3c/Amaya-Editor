@@ -1064,6 +1064,11 @@ Document doc;
 				      ANNOTATION_PROP,
 				      FALSE);
 
+  if (!annotClass)
+    annotClass = ANNOT_FindRDFResource (&annot_schema_list,
+					FALLBACK_ANNOTATION_PROP,
+					TRUE);
+
   if (annotClass && annotClass->class)
     {
       List *item;
@@ -1085,13 +1090,19 @@ Document doc;
 	}
     }
   else
-    {
-      /* @@ RRS use the default values */
-      ustrcpy (&s[i], TEXT("Bpositive comment"));
-      i += ustrlen (&s[i]) + 1;
-      ustrcpy (&s[i], TEXT("Bflame"));
-      nb_entries = 2;
-    }
+    if (annotClass)
+      {
+	TypeSelector *t = (TypeSelector*)TtaGetMemory (sizeof(TypeSelector));
+
+	t->type = annotClass;
+	t->name = ANNOT_GetLabel(&annot_schema_list, annotClass);
+	List_add (&typesList, (void*)t);
+
+	ustrcpy (s, t->name);
+	i = ustrlen (s);
+	s[i] = WC_EOS;
+	nb_entries = 1;
+      }
 
   /* create the main menu */
   TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
