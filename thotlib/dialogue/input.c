@@ -39,19 +39,11 @@ typedef struct _key
   int                 K_Value;	      /* return key if command = -1          */
   ThotBool            K_Special;      /* TRUE if it's a special key          */
   struct _key        *K_Other;	      /* next entry at the same level        */
-  union
-  {
-    struct _key    *_K_Next_;	      /* 1st complementary touch (1st level) */
-    int             _K_Modifier_;     /* modifier value (2nd level)          */
-    void           *_K_Param_;     /* the parameter of the access key     */
-  } u;
   struct _key        *K_Next;	      /* 1st complementary touch (1st level) */
   int                 K_Modifier;     /* modifier value (2nd level)          */
+  void               *K_Param;        /* the parameter of the access key     */
 }
 KEY;
-#define K_Next u._K_Next_
-#define K_Modifier u._K_Modifier_
-#define K_Param u._K_Param_
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
