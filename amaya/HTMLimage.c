@@ -713,14 +713,6 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
       ParseExternalDocument (tempfile, originalName, el, FALSE, doc, 
 			     TtaGetDefaultLanguage(), "SVG");
     }
-  else  
-    {
-      /* create a background image for the element */
-      /* set the value */
-#ifndef _WINGUI
-      fprintf(stderr,"Background image !\n");
-#endif /* _WINGUI */
-    }
   
   /* if the document was not modified before this update reset it unmodified */
   if (!modified)

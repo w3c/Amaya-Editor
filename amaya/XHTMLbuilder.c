@@ -174,6 +174,31 @@ ThotBool XhtmlCannotContainText (ElementType elType)
 }
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void CheckALTAttribute (Element el, Document doc)
+{
+  ElementType    elType;
+  Attribute      attr;
+  AttributeType  attrType;
+
+   elType = TtaGetElementType (el);
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = HTML_ATTR_ALT;
+   attr = TtaGetAttribute (el, attrType);
+   if (attr == NULL)
+     {
+       if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
+	 XmlParseError (errorParsing,
+			(unsigned char *)"Default mandatory attribute \"alt\" added", 0);
+       else
+	 HTMLParseError (doc, "Default mandatory attribute \"alt\" added");
+       attr = TtaNewAttribute (attrType);
+       TtaAttachAttribute (el, attr, doc);
+       TtaSetAttributeText (attr, "img", el, doc);
+     }
+}
+
+/*----------------------------------------------------------------------
   XhtmlElementComplete
   Complete Xhtml elements.
   Check its attributes and its contents.
@@ -410,6 +435,8 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	 }
        if (data)
 	 TtaFreeMemory (data);
+       /* Check the mandatory ALT attribute */
+       CheckALTAttribute (el, doc);
        break;
 
      case HTML_EL_IFRAME:	  /* it's an iframe */
@@ -714,6 +741,8 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
        break;
 
      case HTML_EL_PICTURE_UNIT:
+       /* Check the mandatory ALT attribute */
+       CheckALTAttribute (el, doc);
        break;
        
      case HTML_EL_LINK:
@@ -982,11 +1011,10 @@ void HTMLTypeAttrValue (char *val, Attribute lastAttribute,
    Value val has been read for the HTML attribute TYPE.
    Create a child for the current Thot element INPUT accordingly.
   ----------------------------------------------------------------------*/
-void              XhtmlTypeAttrValue (char       *val,
-				      Attribute   currentAttribute,
-				      Element     lastAttrElement,
-				      ParserData *context)
-
+void XhtmlTypeAttrValue (char       *val,
+			 Attribute   currentAttribute,
+			 Element     lastAttrElement,
+			 ParserData *context)
 {
   ElementType     elType;
   Element         newChild;
