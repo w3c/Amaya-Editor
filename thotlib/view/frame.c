@@ -924,45 +924,48 @@ static void SyncBoundingboxes (PtrAbstractBox pInitAb,
   pAb = pInitAb->AbFirstEnclosed;
   while (pAb != NULL)
     {
-      if (pAb->AbLeafType != LtCompound)
+      if (!pAb->AbDead)
 	{
-	  box = pAb->AbBox;
-	  box->BxClipX = box->BxXOrg - FrXOrg;
-	  box->BxClipY = box->BxYOrg - FrYOrg;
- 	  box->BxClipW = box->BxWidth; 
- 	  box->BxClipH = box->BxHeight; 
-	  if (box->BxType == BoPiece ||
-	      box->BxType == BoScript ||
-	      box->BxType == BoMulScript ||
-	      box->BxType == BoSplit)
+	  if (pAb->AbLeafType != LtCompound)
 	    {
-	      box = box->BxNexChild;
-	      while (box != NULL)
+	      box = pAb->AbBox;
+	      box->BxClipX = box->BxXOrg - FrXOrg;
+	      box->BxClipY = box->BxYOrg - FrYOrg;
+	      box->BxClipW = box->BxWidth; 
+	      box->BxClipH = box->BxHeight; 
+	      if (box->BxType == BoPiece ||
+		  box->BxType == BoScript ||
+		  box->BxType == BoMulScript ||
+		  box->BxType == BoSplit)
 		{
-		  box->BxClipX = box->BxXOrg - FrXOrg;
-		  box->BxClipY = box->BxYOrg - FrYOrg;
-		  box->BxClipW = box->BxWidth; 
-		  box->BxClipH = box->BxHeight; 
 		  box = box->BxNexChild;
+		  while (box != NULL)
+		    {
+		      box->BxClipX = box->BxXOrg - FrXOrg;
+		      box->BxClipY = box->BxYOrg - FrYOrg;
+		      box->BxClipW = box->BxWidth; 
+		      box->BxClipH = box->BxHeight; 
+		      box = box->BxNexChild;
+		    }
 		}
-	    }
-	  box = pAb->AbBox;
-	}
-      else
-	{
-	  if (pAb->AbElement->ElSystemOrigin && 
-	      FrameTable[frame].FrView == 1)
-	    {
-	      CoordinateSystemUpdate (pAb, frame, 
-				      pAb->AbBox->BxXOrg, 
-				      pAb->AbBox->BxYOrg);
-	      /* pAb->AbBox->BxXOrg = 0; */
-	      /* pAb->AbBox->BxYOrg = 0; */
-	      SyncBoundingboxesReal (pAb, XFrame, YFrame, frame);
+	      box = pAb->AbBox;
 	    }
 	  else
-	      /* compute children of this box*/
-	      SyncBoundingboxes (pAb, XFrame, YFrame, frame, FrXOrg, FrYOrg);
+	    {
+	      if (pAb->AbElement->ElSystemOrigin && 
+		  FrameTable[frame].FrView == 1)
+		{
+		  CoordinateSystemUpdate (pAb, frame, 
+					  pAb->AbBox->BxXOrg, 
+					  pAb->AbBox->BxYOrg);
+		  /* pAb->AbBox->BxXOrg = 0; */
+		  /* pAb->AbBox->BxYOrg = 0; */
+		  SyncBoundingboxesReal (pAb, XFrame, YFrame, frame);
+		}
+	      else
+		/* compute children of this box*/
+		SyncBoundingboxes (pAb, XFrame, YFrame, frame, FrXOrg, FrYOrg);
+	    }
 	}
       pAb = pAb->AbNext;
     }
