@@ -5172,7 +5172,7 @@ boolean            *complete;
    pAbbReturn = NULL;
    /* Abstract boxes of the element are not created */
    *complete = FALSE;
-   if (pEl != NULL)
+   if (pEl != NULL && pEl->ElStructSchema != NULL)
      {
 	viewSch = AppliedView (pEl, NULL, pDoc, viewNb);
 	pAbbParentAssoc = NULL;

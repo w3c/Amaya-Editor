@@ -526,6 +526,9 @@ static int          CharLevelElement[] =
    HTML_EL_Font_,
    HTML_EL_Emphasis, HTML_EL_Strong, HTML_EL_Def, HTML_EL_Code, HTML_EL_Sample,
    HTML_EL_Keyboard, HTML_EL_Variable, HTML_EL_Cite,
+#ifdef COUGAR
+   HTML_EL_Span,
+#endif
    HTML_EL_Input,
    HTML_EL_Option, HTML_EL_Option_Menu,
    HTML_EL_Toggle_Item, HTML_EL_Toggle_Menu,

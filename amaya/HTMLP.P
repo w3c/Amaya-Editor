@@ -3980,8 +3980,14 @@ RULES
 	if within ISINDEX
 	   Height: 1 pt;
 	IN Structure_view
+	   BEGIN
 	   if within ISINDEX
 		Height: Enclosed . Height;
+	   if within Checkbox_Input
+		Height: 1 pt;
+	   if within Radio_Input
+		Height: 1 pt;
+	   END;
 	END;
 
  BASE:	BEGIN

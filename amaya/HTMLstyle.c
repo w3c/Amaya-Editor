@@ -3883,16 +3883,17 @@ Document            doc;
 
    /* apply all presentation specific attributes found */
    rule = NULL;
-   do
-     {
-       TtaNextPRule (best, &rule);
-       if (rule)
-	 {
-	   new = TtaCopyPRule (rule);
-	   TtaAttachPRule (elem, new, doc);
-	 }
-     }
-   while (rule != NULL);
+   if (best != NULL)
+     do
+       {
+	 TtaNextPRule (best, &rule);
+	 if (rule)
+	   {
+	     new = TtaCopyPRule (rule);
+	     TtaAttachPRule (elem, new, doc);
+	   }
+       }
+     while (rule != NULL);
 }
 
 /************************************************************************

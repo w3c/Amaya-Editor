@@ -1424,7 +1424,7 @@ boolean             createView;
 
    /* there is not any abstract box yet */
    abExist = FALSE;
-   if (pEl != NULL)
+   if (pEl != NULL && pEl->ElStructSchema != NULL)
      {
 	if (AssocView (pEl))
 	   /* associated elements have only one view, view 1 */
@@ -1983,7 +1983,7 @@ boolean             check;
    PtrElement          pAncest, pE;
    boolean             bool, stop, elVisible;
 
-   if (pEl != NULL && pDoc != NULL)
+   if (pEl != NULL && pDoc != NULL && pEl->ElStructSchema != NULL)
      {
 	if (check)
 	  {

@@ -2028,7 +2028,7 @@ boolean             display;
   pagedView = FALSE;
   pAbbLastEmptyCr = NULL;
   pElPage = NULL;
-  if (pEl != NULL)
+  if (pEl != NULL && pEl->ElStructSchema != NULL)
     {
       nAssoc = pEl->ElAssocNum;
       /* verifie si la vue a ete creee */
