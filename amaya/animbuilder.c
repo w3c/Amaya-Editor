@@ -243,12 +243,11 @@ void register_animated_element (Element animated, Document doc)
 	TtaAddAnimRepeatCount (repeat, anim_info);
       else
 	if (strlen (repeatcount) == 10 && 
-	    strcasecmp ("indefinite", repeatcount))
+	    strcasecmp ("indefinite", repeatcount) == 0)
 	  TtaAddAnimRepeatCount (-1, anim_info);
       TtaFreeMemory (repeatcount);
     }
   
-  /*repeat, repeatcount*/
   switch (elType.ElTypeNum)
     {
       
