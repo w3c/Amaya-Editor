@@ -407,8 +407,11 @@ int                 status;
 	{
 	  /* if it's not a file downloaded from FTP, initialize the
 	     content type to text/html by default */
- 	  if (ustrncmp (me->urlName, TEXT("ftp:"), 4))
+	  me->http_headers.content_type = NULL;
+	  /*
+	  if (ustrncmp (me->urlName, TEXT("ftp:"), 4))
 	    me->http_headers.content_type = TtaWCSdup (TEXT("text/html"));
+	  */
 	}
       else 
 	{
