@@ -58,7 +58,7 @@ static NPMIMEType       pluginMimeType;
 static NPStream*        progressStream;
 static boolean          streamOpened = FALSE;
 
-#ifdef _WINDOWS
+#ifdef _WINDOW
 FARPROC ptr_NPP_GetMIMEDescription;
 FARPROC ptr_NPP_Initialize;
 FARPROC ptr_NP_Initialize;
@@ -1167,7 +1167,6 @@ int       type;
     pwindow->clipRect.left   = 0;
     pwindow->clipRect.bottom = imageDesc->PicWArea;
     pwindow->clipRect.right  = imageDesc->PicHArea;
-
 #   ifdef XP_UNIX
     pwindow->ws_info = (NPSetWindowCallbackStruct*) malloc (sizeof (NPSetWindowCallbackStruct));
 #   endif /* XP_UNIX */
@@ -1182,13 +1181,9 @@ int       type;
     strcpy (url, imageDesc->PicFileName);
     
     (NPP) (imageDesc->pluginInstance) = (NPP) malloc (sizeof (NPP_t)); 
-    (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->newp)) (pluginTable [currentExtraHandler]->pluginMimeType, 
-									(NPP)(imageDesc->pluginInstance), 
-									type, 
-									argc, 
-									argn, 
-									argv,  
-									NULL);
+    (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->newp)) 
+                   (pluginTable [currentExtraHandler]->pluginMimeType, 
+                    (NPP)(imageDesc->pluginInstance), type,  argc,  argn, argv, NULL);
 
     stat (url, &sbuf);
 

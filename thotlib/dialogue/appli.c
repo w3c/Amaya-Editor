@@ -65,6 +65,12 @@ static XmString     null_string;
 #define ToolBar_GetItemRect(hwnd, idButton, lprc) \
     (BOOL)SendMessage((hwnd), TB_GETITEMRECT, (WPARAM)idButton, (LPARAM)(LPRECT)lprc)
 
+#define ToolBar_GetToolTips(hwnd) \
+    (HWND)SendMessage((hwnd), TB_GETTOOLTIPS, 0, 0L)
+
+#define ToolBar_AddString(hwnd, hinst, idString) \
+    (int)SendMessage((hwnd), TB_ADDSTRING, (WPARAM)(HINSTANCE)hinst, (LPARAM)idString)
+
 extern HWND      hwndClient ;
 extern HWND      ToolBar    ;
 extern HWND      StatusBar  ;
@@ -80,10 +86,94 @@ static char      URL_txt [500];
 static char      doc_title [500];
 
 int         cyToolBar ;
-HWND        hwndTB ;
+char        szTbStrings [4096];
+HWND        hwndToolTip ;
 DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | CCS_NODIVIDER | TBSTYLE_TOOLTIPS;
 DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 TBADDBITMAP AmayaTBBitmap;
+
+#ifdef __STDC__
+BOOL InitToolTip (HWND hwndToolBar)
+#else  /* __STDC__ */
+BOOL InitToolTip (hwndToolBar)
+HWND hwndToolBar;
+#endif /* __STDC__ */
+{
+   BOOL bSuccess ;
+   TOOLINFO ti ;
+
+   /* Fetch handle to tooltip control */
+   hwndTT = ToolBar_GetToolTips (hwndToolBar) ;
+   if (hwndTT == NULL) 
+      return FALSE ;
+
+   /* Add tooltip for main combo box */
+   ZeroMemory (&ti, sizeof (TOOLINFO)) ;
+   ti.cbSize = sizeof (TOOLINFO) ;
+   ti.uFlags = TTF_IDISHWND | TTF_CENTERTIP | TTF_SUBCLASS ;
+   ti.hwnd   = hwndToolBar ;
+   ti.uId    = (UINT) (HWND) hwndComboBox ;
+   ti.lpszText = LPSTR_TEXTCALLBACK ;
+   bSuccess = ToolTip_AddTool (hwndTT, &ti) ;
+   if (!bSuccess)
+      return FALSE ;
+
+   return bSuccess ;
+}
+
+#ifdef __STDC__
+void CopyToolTipText (LPTOOLTIPTEXT lpttt)
+#else  /* __STDC__ */
+void CopyToolTipText (lpttt)
+LPTOOLTIPTEXT lpttt;
+#endif /* __STDC__ */
+{
+   int i ;
+   int iButton = lpttt->hdr.idFrom ;
+   int cb ;
+   int cMax ;
+   LPSTR pString ;
+   LPSTR pDest = lpttt->lpszText ;
+
+   /* Check for combo box window handles */
+   if (lpttt->uFlags & TTF_IDISHWND) {
+      if ((iButton == (int) hwndCombo) || (iButton == (int) hwndEdit)) {
+         lstrcpy (pDest, "1-2-3 ComboBox") ;
+         return ;
+      }
+   }
+
+   /* Map command ID to string index */
+   for (i = 0 ; CommandToString[i] != -1 ; i++) {
+       if (CommandToString[i] == iButton) {
+          iButton = i ;
+          break ;
+       }
+   }
+
+   /* To be safe, count number of strings in text */
+   pString = szTbStrings ;
+   cMax = 0 ;
+   while (*pString != '\0') {
+         cMax++ ;
+         cb = lstrlen (pString) ;
+         pString += (cb + 1) ;
+   }
+
+   /* Check for valid parameter */
+   if (iButton > cMax)
+      pString = "Invalid Button Index" ;
+   else {
+       /* Cycle through to requested string */
+       pString = szTbStrings ;
+       for (i = 0 ; i < iButton ; i++) {
+           cb = lstrlen (pString) ;
+           pString += (cb + 1) ;
+       }
+   }
+
+   lstrcpy (pDest, pString) ;
+}
 #endif /* _WINDOWS */
 
 #include "absboxes_f.h"
@@ -863,11 +953,11 @@ View                view;
 	return (0);
      }
    else
-#ifndef _WINDOWS
+#     ifndef _WINDOWS
       return (FrameTable[frame].WdFrame);
-#else  /* _WINDOWS */
+#     else  /* _WINDOWS */
       return (FrMainRef[frame]);
-#endif /* _WINDOWS */
+#     endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1001,15 +1091,15 @@ LPARAM      lParam;
      switch (mMsg) {
             case WM_CREATE:
 	         /* Create toolbar  */
-				 AmayaTBBitmap.hInst = hInstance;
-				 AmayaTBBitmap.nID   = ID_TOOLBAR;
-
-                 ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | TBSTYLE_TOOLTIPS,
+		 AmayaTBBitmap.hInst = hInstance;
+		 AmayaTBBitmap.nID   = ID_TOOLBAR;
+                 ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, dwToolBarStyles,
                                          0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0) ;
-				 /*
-                 ShowWindow (ToolBar, SW_SHOWNORMAL);
-                 UpdateWindow (ToolBar);
-				 */
+                 ToolBar_AddString (ToolBar, 0, szTbStrings);
+                 hwndToolTip = ToolBar_GetToolTips (ToolBar);
+
+                 if (dwToolBarStyles & TBSTYLE_TOOLTIPS)
+                    InitToolTip (ToolBar) ;
 
                  /* Create status bar  */
                  StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2) ;
@@ -1041,6 +1131,26 @@ LPARAM      lParam;
                  SendMessage (FrRef [frame], WM_CHAR, wParam, lParam);
                  return 0;
 		 
+            case WM_NOTIFY: {
+                 LPNMHDR pnmh = (LPNMHDR) lParam ;
+                 int idCtrl = (int) wParam ;
+
+		 /* Display notification details in notify window */
+		 DisplayNotificationDetails (wParam, lParam) ;
+		 
+		 /*Toolbar notifications */
+		 if ((pnmh->code >= TBN_LAST) && (pnmh->code <= TBN_FIRST))
+		    return ToolBarNotify (hwnd, wParam, lParam) ;
+		 
+		 /* Fetch tooltip text */
+		 if (pnmh->code == TTN_NEEDTEXT) {
+		    LPTOOLTIPTEXT lpttt = (LPTOOLTIPTEXT) lParam ;
+		    CopyToolTipText (lpttt) ;
+		 }
+		 
+		 return 0 ;
+	    }
+
             case WM_COMMAND:
 			     if (HIWORD (wParam) == EN_UPDATE) {
 				    if (LOWORD (wParam) == URL_TXTZONE) {

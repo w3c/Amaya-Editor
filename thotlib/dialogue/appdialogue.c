@@ -91,12 +91,68 @@ HWND StatusBar;
 
 static HWND hwndTB;
 
+static int  tipIndex = 0;
+static int  strIndex = 0;
+static int  CommandToString [MAX_BUTTON];
+extern char szTbStrings [4096];
+
 #define ToolBar_ButtonStructSize(hwnd) \
     (void)SendMessage((hwnd), TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L)
 #define ToolBar_AddBitmap(hwnd, nButtons, lptbab) \
     (int)SendMessage((hwnd), TB_ADDBITMAP, (WPARAM)nButtons, (LPARAM)(LPTBADDBITMAP) lptbab)
 #define ToolBar_InsertButton(hwnd, idButton, lpButton) \
     (BOOL)SendMessage((hwnd), TB_INSERTBUTTON, (WPARAM)idButton, (LPARAM)(LPTBBUTTON)lpButton)
+
+#ifdef __STDC__
+LPSTR GetString (int iString)
+#else  /* __STDC__ */
+LPSTR GetString (iString)
+int iString;
+#endif /* __STDC__ */
+{
+   int i, cb ;
+   LPSTR pString ;
+
+   /* Cycle through to requested string */
+   pString = szTbStrings ;
+   for (i = 0 ; i < iString ; i++) {
+       cb = lstrlen (pString) ;
+       pString += (cb + 1) ;
+   }
+
+   return pString ;
+}
+
+#ifdef __STDC__
+LRESULT ToolBarNotify (HWND hwnd, WPARAM wParam, LPARAM lParam)
+#else  /* __STDC__ */
+LRESULT ToolBarNotify (hwnd, wParam, lParam)
+HWND   hwnd; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+   LPNMHDR pnmh = (LPNMHDR) lParam ;
+   int idCtrl = (int) wParam ;
+
+   /* Allow toolbar to be customized */
+   if ((pnmh->code == TBN_QUERYDELETE) || (pnmh->code == TBN_QUERYINSERT))
+      return 1 ; /* We always say "yes" */
+
+   /* Provide details of allowable toolbar buttons */
+   if (pnmh->code == TBN_GETBUTTONINFO) {
+      LPTBNOTIFY ptbn = (LPTBNOTIFY) lParam ;
+      int iButton = nCust[ptbn->iItem] ;
+
+      if (iButton != -1) {
+         lstrcpy (ptbn->pszText, GetString (ptbn->iItem)) ;
+         memcpy (&ptbn->tbButton, &tbb[iButton], sizeof (TBBUTTON)) ;
+         return 1 ;
+      }
+   }
+
+   return 0 ;
+}
 
 #endif /* _WINDOWS */
 
@@ -1318,7 +1374,9 @@ char               *info;
                      w->fsStyle   = TBSTYLE_BUTTON;
                      w->dwData    = 0;
                      w->iString   = 0;
-                     FrameTable[frame].Button[i] = w;
+                     CommandToString[tipIndex++] = TBBUTTONS_BASE + i;
+                     CommandToString[tipIndex]   = -1;
+                    FrameTable[frame].Button[i] = w;
                      FrameTable[frame].Call_Button[i] = (Proc) procedure;
                      ToolBar_ButtonStructSize (WinToolBar[frame]);
                      ToolBar_AddBitmap (WinToolBar[frame], 1, &AmayaTBBitmap);
@@ -1339,12 +1397,12 @@ char               *info;
                   }
 #                 endif /* _WINDOWS */
                   if (info != NULL) {
-                      /*
-                       * Add tooltip to the icon.
-                       */
-#                     ifndef _WINDOWS
-		      XcgLiteClueAddWidget(liteClue, w,  info, strlen(info), 0);
-#                     endif /* _WINDOWS */
+#                    ifdef _WINDOWS
+		     strcat (&szTbStrings[strIndex], info);
+		     strIndex += (strlen (info) + 1);
+#                    else  /* !_WINDOWS */
+		     XcgLiteClueAddWidget(liteClue, w,  info, strlen(info), 0);
+#                    endif /* _WINDOWS */
                   }
 	       }
 	  }
