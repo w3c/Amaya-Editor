@@ -4922,8 +4922,8 @@ void ParseExternalDocument (char     *fileName,
   if (use_ref)
     {
       /* We are parsing an external reference for a 'use' svg element */
-      extUseUri = TtaGetMemory (strlen (fileName) + 1);
-      strcpy (extUseUri, fileName);
+      extUseUri = TtaGetMemory (strlen (originalName) + 1);
+      strcpy (extUseUri, originalName);
       /* Extract the ID target */
       if ((ptr = strrchr (extUseUri, '#')) != NULL)
 	{
