@@ -572,8 +572,8 @@ ThotBool            ExcludedType (PtrElement pEl, int typeNum, PtrSSchema pSS)
    la descendance de l'element pEl.				
    Retourne "Vrai" si l'inclusion est autorisee.                   
   ----------------------------------------------------------------------*/
-ThotBool            AllowedIncludedElem (PtrDocument pDoc, PtrElement pEl,
-					 int typeNum, PtrSSchema pSS)
+ThotBool AllowedIncludedElem (PtrDocument pDoc, PtrElement pEl,
+			      int typeNum, PtrSSchema pSS)
 {
    ThotBool            ret;
    int                 i;
@@ -582,11 +582,12 @@ ThotBool            AllowedIncludedElem (PtrDocument pDoc, PtrElement pEl,
    PtrSSchema          pSSrule, pSSExt;
 
    ret = FALSE;
-   if (pSS->SsRule->SrElem[typeNum - 1]->SrConstruct == CsPairedElement)
-     if (!pSS->SsRule->SrElem[typeNum - 1]->SrFirstOfPair)
-       /* c'est un element de fin de paire, on fait comme si */
-       /* c'etait l'element de debut de paire */
-       typeNum--;
+   if (pSS &&
+       pSS->SsRule->SrElem[typeNum - 1]->SrConstruct == CsPairedElement &&
+       !pSS->SsRule->SrElem[typeNum - 1]->SrFirstOfPair)
+     /* c'est un element de fin de paire, on fait comme si */
+     /* c'etait l'element de debut de paire */
+     typeNum--;
 
    pAsc = pEl;
    /* examine les elements ascendants */

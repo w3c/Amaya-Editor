@@ -2085,11 +2085,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 			  RedrawFrameTop (frame, 0);
 			}
 		      y = bottom - pRootBox->BxYOrg - pRootBox->BxHeight;
-		      if (pFrame->FrAbstractBox->AbTruncatedTail &&
-			  (y >= 0
-/* || (!pFrame->FrAbstractBox->AbHeight.DimIsPosition &&
-   pFrame->FrAbstractBox->AbHeight.DimMinimum &&
-   !pRootBox->BxContentHeight)*/))
+		      if (pFrame->FrAbstractBox->AbTruncatedTail && y >= 0)
 			{
 			  /* it lacks some abstract image at the bottom of the frame */
 			  if (tVol > 0 && tVol < pFrame->FrAbstractBox->AbVolume)

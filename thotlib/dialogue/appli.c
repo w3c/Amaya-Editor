@@ -77,10 +77,45 @@ static PtrDocument  OldDocMsgSelect;
 #include "platform_tv.h"
 #include "thotcolor_tv.h"
 
+#ifdef _GTK
+  #include "gtk-functions.h"
+#endif /* _GTK */
+
+#ifdef _MOTIF
+  #include "appli_f.h"
+  #include "input_f.h"
+#endif /* _MOTIF */
+
+#include "absboxes_f.h"
 #include "appdialogue_f.h"
+#include "applicationapi_f.h"
+#include "boxlocate_f.h"
+#include "boxparams_f.h"
+#include "boxselection_f.h"
+#include "buildboxes_f.h"
+#include "callback_f.h"
+#include "context_f.h"
+#include "editcommands_f.h"
+#include "font_f.h"
+#include "frame_f.h"
 #include "inites_f.h"
-#include "uconvert_f.h"
+#include "interface_f.h"
+#include "keyboards_f.h"
+#include "memory_f.h"
+#include "message_f.h"
 #include "picture_f.h"
+#include "scroll_f.h"
+#include "selectmenu_f.h"
+#include "structcommands_f.h"
+#include "structcreation_f.h"
+#include "structmodif_f.h"
+#include "structselect_f.h"
+#include "textcommands_f.h"
+#include "thotmsg_f.h"
+#include "uconvert_f.h"
+#include "views_f.h"
+#include "viewapi_f.h"
+#include "xwindowdisplay_f.h"
 
 #ifdef _WINDOWS
 #define URL_TXTZONE     0
@@ -295,44 +330,6 @@ ThotBool InitToolTip (HWND hwndToolBar)
 }
 #endif /* _WINDOWS */
 
-#include "absboxes_f.h"
-
-#ifdef _GTK
-  #include "gtk-functions.h"
-#endif /* _GTK */
-
-#ifdef _MOTIF
-  #include "appli_f.h"
-  #include "input_f.h"
-#endif /* _MOTIF */
-
-#include "applicationapi_f.h"
-#include "boxlocate_f.h"
-#include "boxparams_f.h"
-#include "boxselection_f.h"
-#include "buildboxes_f.h"
-#include "callback_f.h"
-#include "context_f.h"
-#include "editcommands_f.h"
-#include "font_f.h"
-#include "frame_f.h"
-#include "interface_f.h"
-#include "keyboards_f.h"
-#include "memory_f.h"
-#include "message_f.h"
-#include "scroll_f.h"
-#include "selectmenu_f.h"
-#include "structcommands_f.h"
-#include "structcreation_f.h"
-#include "structmodif_f.h"
-#include "structselect_f.h"
-#include "textcommands_f.h"
-#include "thotmsg_f.h"
-#include "views_f.h"
-#include "viewapi_f.h"
-#include "xwindowdisplay_f.h"
-
-
 /*----------------------------------------------------------------------
   GetFrameNumber returns the Thot window number associated.
   ----------------------------------------------------------------------*/
@@ -434,56 +431,51 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
  ViewFrame          *pFrame;
  int                 xmin, xmax, ymin, ymax;
 #else
- HDC hDC;
+ HDC                 hDC;
 #endif /*_GL*/
 
  if (frame > 0 && frame <= MAX_FRAME)
- {
-#ifndef _GL
-   /* Do not redraw if the document is in NoComputedDisplay mode. */
-   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
    {
-	   if (GetUpdateRect (w, &rect, FALSE))
- {
-     BeginPaint (w, &ps);
- 
-     /* save the previous clipping */
-     pFrame = &ViewFrameTable[frame - 1];
-     xmin = pFrame->FrClipXBegin;
-     xmax = pFrame->FrClipXEnd;
-     ymin = pFrame->FrClipYBegin;
-     ymax = pFrame->FrClipYEnd;
-     pFrame = &ViewFrameTable[frame - 1];
-     pFrame->FrClipXBegin = 0;
-     pFrame->FrClipXEnd = 0;
-     pFrame->FrClipYBegin = 0;
-     pFrame->FrClipYEnd = 0;
-     DefRegion (frame, rect.left, rect.top, rect.right,
-		rect.bottom);
-     EndPaint (w, &ps);
-     DisplayFrame (frame);
-     /* restore the previous clipping */
-     pFrame = &ViewFrameTable[frame - 1];
-     pFrame->FrClipXBegin = xmin;
-     pFrame->FrClipXEnd = xmax;
-     pFrame->FrClipYBegin = ymin;
-     pFrame->FrClipYEnd = ymax;
+#ifndef _GL
+     /* Do not redraw if the document is in NoComputedDisplay mode. */
+     if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay &&
+	 GetUpdateRect (w, &rect, FALSE))
+       {
+	 BeginPaint (w, &ps);
+	 /* save the previous clipping */
+	 pFrame = &ViewFrameTable[frame - 1];
+	 xmin = pFrame->FrClipXBegin;
+	 xmax = pFrame->FrClipXEnd;
+	 ymin = pFrame->FrClipYBegin;
+	 ymax = pFrame->FrClipYEnd;
+	 pFrame = &ViewFrameTable[frame - 1];
+	 pFrame->FrClipXBegin = 0;
+	 pFrame->FrClipXEnd = 0;
+	 pFrame->FrClipYBegin = 0;
+	 pFrame->FrClipYEnd = 0;
+	 DefRegion (frame, rect.left, rect.top, rect.right, rect.bottom);
+	 EndPaint (w, &ps);
+	 DisplayFrame (frame);
+	 /* restore the previous clipping */
+	 pFrame = &ViewFrameTable[frame - 1];
+	 pFrame->FrClipXBegin = xmin;
+	 pFrame->FrClipXEnd = xmax;
+	 pFrame->FrClipYBegin = ymin;
+	 pFrame->FrClipYEnd = ymax;
 	 return;
- }
-   }
+       }
 #else /*_GL*/
-    hDC = BeginPaint (w, &ps);
-	if (GetBadCard())
-		DefClip (frame, -1, -1, -1, -1);
-	WinGL_Swap (hDC);
-    EndPaint (w, &ps);
-	ReleaseDC (w, hDC);
-	return;
+     hDC = BeginPaint (w, &ps);
+     if (GetBadCard())
+       DefClip (frame, -1, -1, -1, -1);
+     WinGL_Swap (hDC);
+     EndPaint (w, &ps);
+     ReleaseDC (w, hDC);
+     return;
 #endif /*_GL*/
- }
+   }
  BeginPaint (w, &ps);
  EndPaint (w, &ps);
-
 }
 
 /*----------------------------------------------------------------------
@@ -508,17 +500,14 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
 #else /*_GL*/
    if (GL_prepare (frame))
      {
-   GL_SwapEnable (frame);
-   GLResize (width, height, 0 ,0);
-   ClearAll (frame);
-   GL_ActivateDrawing (frame);
-   DefRegion (frame, 0, 
- 		0, width,
- 		height);
-   RebuildConcreteImage (frame);
-   GL_Swap (frame);
+       GL_SwapEnable (frame);
+       GLResize (width, height, 0 ,0);
+       ClearAll (frame);
+       GL_ActivateDrawing (frame);
+       DefRegion (frame, 0,  0, width, height);
+       RebuildConcreteImage (frame);
+       GL_Swap (frame);
      }
-   
 #endif/*_GL*/
    /* recompute the scroll bars */
   /*UpdateScrollbars (frame); Done in rebuildconcreteimage, no ?*/
@@ -637,7 +626,7 @@ static void FrameRedraw (int frame, Dimension width, Dimension height)
 #ifdef _GTK
 #ifdef _GL
 /*----------------------------------------------------------------------
-  DrawGL :
+  DrawGL:
   ----------------------------------------------------------------------*/
 gboolean GL_DrawCallback (ThotWidget widget, GdkEventExpose *event, 
 			  gpointer data)
@@ -648,8 +637,7 @@ gboolean GL_DrawCallback (ThotWidget widget, GdkEventExpose *event,
 }
 
 /*----------------------------------------------------------------------
-  GL_Destroy :
-  Close Opengl pipeline
+  GL_Destroy: Close Opengl pipeline
   ----------------------------------------------------------------------*/
 gboolean  GL_Destroy (ThotWidget widget, GdkEventExpose *event, 
 		      gpointer data)
@@ -662,8 +650,7 @@ gboolean  GL_Destroy (ThotWidget widget, GdkEventExpose *event,
 }
 
 /*----------------------------------------------------------------------
-  GL_Init :
-  Opengl pipeline state initialization
+  GL_Init: Opengl pipeline state initialization
   ----------------------------------------------------------------------*/
 gboolean GL_Init (ThotWidget widget, GdkEventExpose *event, gpointer data)
 {
@@ -671,6 +658,64 @@ gboolean GL_Init (ThotWidget widget, GdkEventExpose *event, gpointer data)
     ;
   SetGlPipelineState ();
   return TRUE;   
+}
+
+#ifndef _NOSHARELIST
+static int Shared_Context=-1;
+/*----------------------------------------------------------------------
+  GetSharedContext : get the name of the frame used as shared context
+  ----------------------------------------------------------------------*/
+int GetSharedContext ()
+{
+  return Shared_Context;
+}
+
+/*----------------------------------------------------------------------
+  SetSharedContext : set the name of the frame used as shared context
+  ----------------------------------------------------------------------*/
+void SetSharedContext (int frame)
+{
+  Shared_Context = frame;
+}
+#endif /*_NOSHARELIST*/
+
+/*----------------------------------------------------------------------
+  GL_DestroyFrame: Close Opengl pipeline
+  ----------------------------------------------------------------------*/
+void  GL_DestroyFrame (int frame)
+{
+#ifndef _NOSHARELIST
+  int i;
+
+  if (Printing || frame != Shared_Context)
+    return;
+  for (i = 0 ; i <= MAX_FRAME; i++)
+    {  
+#if defined(_MOTIF) || defined(_GTK)
+      if (i != Shared_Context && FrameTable[i].WdFrame)
+#endif /*#if defined(_MOTIF) || defined(_GTK)        */
+#ifdef _WINDOWS
+      if (i != Shared_Context && GL_Context[i])
+#endif /* _WINDOWS */
+	{
+    	  Shared_Context = i;
+	  /* stop the loop */
+	  i = MAX_FRAME + 1;
+	} 
+    }
+#endif /*_NOSHARELIST*/
+  FreeAllPicCacheFromFrame (frame);
+#ifdef _WINDOWS
+  /* make our context 'un-'current */
+  /*wglMakeCurrent (NULL, NULL);*/
+  /* delete the rendering context */
+  if (GL_Context[frame])
+    wglDeleteContext (GL_Context[frame]);
+  /*if (GL_Windows[frame])*/
+    /*ReleaseDC (hwndClient, GL_Windows[frame]);*/
+  GL_Windows[frame] = 0;
+  GL_Context[frame] = 0;
+#endif /* _WINDOWS */
 }
 #endif /* _GL */
 
@@ -684,7 +729,7 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
   Dimension   width, height;
 #ifdef IV
   int         forever = 0;
-#endif /* _GL */
+#endif /* IV */
  
   frame = (int) data;
   width = event->width;
@@ -1777,8 +1822,8 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 #ifdef _GL
       if (!hwndClient) 
 	{      
-	  MessageBox(NULL, "ERROR!", "Failed to create new client window in function WndProc()", MB_OK); 
-	  return 0;    
+	  MessageBox(NULL, "ERROR!", "Failed to create new client window", MB_OK); 
+	  return 0;
 	}
       /* initialize OpenGL rendering */
       GL_Win32ContextInit (hwndClient, frame);
@@ -1787,7 +1832,6 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
       UpdateWindow (hwndClient);
       SetWindowText (hwnd, wTitle);
       DragAcceptFiles (hwnd, TRUE);
-
       return 0L;
 
     case WM_PALETTECHANGED: 
@@ -1904,7 +1948,6 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 	{
 #ifdef _GL 
 	  GL_DestroyFrame (frame);	
-	  GL_Win32ContextClose (frame, hwnd);
 #endif /*_GL*/
 	  GetDocAndView (frame, &pDoc, &view);
 	  if (pDoc && view)
@@ -3534,7 +3577,7 @@ void RemoveClipping (int frame)
 #endif /* _WINDOWS */
 
 #else /* _GL */
-  GL_UnsetClippingRestore (FALSE);
+  GL_UnsetClipping ();
 #endif /*_GL*/
 }
 

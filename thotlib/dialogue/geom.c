@@ -120,7 +120,7 @@ static void VideoInvert (int frame, int width, int height, int x, int y)
   if (w != None)
     {
 #ifdef _GL
-      GL_DrawEmptyRectangle (152, x, y, width, height);
+      GL_DrawEmptyRectangle (152, x, y, width, height, 0);
 #else /*_GL*/
       
 #ifdef _WINDOWS

@@ -182,9 +182,7 @@ void GetGLContext ()
     }
   gtk_widget_set_default_colormap(gdk_colormap_new(visual, TRUE));
   gtk_widget_set_default_visual(visual);
-
   /* FrameTable[1].WdFrame = visual;  */
-
   context  = gdk_gl_context_new (visual);
   pixmap = gdk_pixmap_new (NULL, GL_HEIGHT, GL_WIDTH, visual->depth);
   glpixmap = gdk_gl_pixmap_new (visual, pixmap);
@@ -198,9 +196,7 @@ void GetGLContext ()
 
   for (i = 0; i < 4; i++)
     LastRgb[i] = -1.;
-
   LastLineWidth = -1.;
-  /*  GL_SetTransText (TRUE); */
 }
 
 #ifdef _WINDOWS
@@ -222,29 +218,29 @@ void initwgl (HDC hDC, int frame)
       glScissor (0, 0, GL_HEIGHT, GL_WIDTH);
       GL_Err();
 #ifdef _TEST
-	  /*permet de verifier la validite du contexte opengl. 
-	  size doit etre >0, sinon cela signifie qu'opengl n'arrive pas a dessiner !!*/
+      /*permet de verifier la validite du contexte opengl. 
+	size doit etre >0, sinon cela signifie qu'opengl n'arrive pas a dessiner !!*/
+      {
+	int size = 0;
+	/*char feedbuffer[16384];*/
+	
+	glFeedbackBuffer (FEEDBUFFERSIZE, GL_3D_COLOR, feedBuffer);
+	glRenderMode (GL_FEEDBACK);
+	glBegin (GL_QUADS);
+	glVertex2i (1, 1);
+	glVertex2i (4, 400);
+	glVertex2i (400, 400);
+	glVertex2i (400, 1);
+	glEnd ();
+	size = glRenderMode (GL_RENDER);
+	if (size > 0)
 	  {
-		  int size = 0;
-		  /*char feedbuffer[16384];*/
-
-		glFeedbackBuffer (FEEDBUFFERSIZE, GL_3D_COLOR, feedBuffer);
-		glRenderMode (GL_FEEDBACK);
-		glBegin (GL_QUADS);
-			glVertex2i (1, 1);
-			glVertex2i (4, 400);
-			glVertex2i (400, 400);
-			glVertex2i (400, 1);
-		glEnd ();
-		size = glRenderMode (GL_RENDER);
-		if (size > 0)
-		{
-	      if (size > 1)
-			  size = 1;
-		}
+	    if (size > 1)
+	      size = 1;
 	  }
+      }
 #endif /*_TEST*/
-	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -911,7 +907,6 @@ GLint GLEnable(GLint mode)
     default :
       break;
     }
-
   return 1;
 }
 
@@ -927,7 +922,6 @@ GLint GLDisable(GLint mode)
     default :
       break;
     }
-
   return 1;
 }
 
@@ -937,10 +931,8 @@ GLint GLPointSize(GLfloat value)
 {
   if (!GL) 
     return 0;
-
   glPassThrough(GL_SET_POINT_SIZE);
   glPassThrough(value);
-  
   return 1;
 }
 
@@ -950,10 +942,8 @@ GLint GLLineWidth(GLfloat value)
 {
   if (!GL) 
     return 0;
-
   glPassThrough(GL_SET_LINE_WIDTH);
   glPassThrough(value);
-
   return 1;
 }
 
@@ -982,6 +972,7 @@ void GL_SwapStop (int frame)
 {
   SwapOK[frame] = FALSE;
 }
+
 /*----------------------------------------------------------------------
   GL_SwapGet : 
   ----------------------------------------------------------------------*/
@@ -989,6 +980,7 @@ ThotBool GL_SwapGet (int frame)
 {
   return SwapOK[frame];
 }
+
 /*----------------------------------------------------------------------
   GL_SwapEnable : 
   ----------------------------------------------------------------------*/
@@ -1005,14 +997,6 @@ void GL_SwapEnable (int frame)
 void WinGL_Swap (HDC hDC)
 {
   /*wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);	 */
-}
-
-/*----------------------------------------------------------------------
-  GL_KillFrame : if realeasing a source sharing context, name a new one 
-as the source sharing context
-  ----------------------------------------------------------------------*/
-void GL_KillFrame (int frame)
-{
 }
 
 #ifdef _WIN_PRINT

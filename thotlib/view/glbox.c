@@ -161,22 +161,26 @@ void ResetMainWindowBackgroundColor (int frame)
   /* the 0.0 for alpha is needed for group opacity */
   glClearColor ((float)red/255, (float)green/255, (float)blue/255, 0.0);
 } 
+
 /*----------------------------------------------------------------------
   Clear clear the area of frame located at (x, y) and of size width x height.
   ----------------------------------------------------------------------*/
 void Clear (int frame, int width, int height, int x, int y)
 {
-  if (GL_prepare (frame))
-    { 
-      y = y + FrameTable[frame].FrTopMargin;
+  int        bottom;
 
-      GL_SetClipping (x, FrameTable[frame].FrHeight - (y+height), width, height);
+  if (GL_prepare (frame))
+    {
+      bottom = FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin;
+      GL_SetClipping (x, bottom - (y + height), width, height);
       glClear (GL_COLOR_BUFFER_BIT); 
-      GL_UnsetClippingRestore (TRUE);
+      /*GL_UnsetClippingRestore (TRUE);*/
     }
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static ThotBool NeedRedraw (int frame)
 {
   ViewFrame          *pFrame;
@@ -192,7 +196,6 @@ static ThotBool NeedRedraw (int frame)
 
 
 #ifdef _WINDOWS 
-
 /*----------------------------------------------------------------------
   ChoosePixelFormatEx : Get Pixel format descriptor in order to request it
 to windows
@@ -645,12 +648,9 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
 	}
     }
   GL_SetupPixelFormat (hDC);
-
   hGLRC = wglCreateContext (hDC);
-
   GL_Windows[frame] = hDC;
   GL_Context[frame] = hGLRC;
-
   if (wglMakeCurrent (hDC, hGLRC))
     {
       SetGlPipelineState ();
@@ -669,32 +669,13 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
 	}
     }
 #ifndef _NOSHARELIST
-  if (GetSharedContext () != -1 && GetSharedContext () != frame) 
-    wglShareLists (GL_Context[GetSharedContext ()], hGLRC);
+  if (Shared_Context != -1 && Shared_Context != frame) 
+    wglShareLists (GL_Context[Shared_Context], hGLRC);
   else
-    SetSharedContext (frame);
+    Shared_Context = frame;
 #endif /*_NOSHARELIST*/
   ActiveFrame = frame;
   ReleaseDC (hwndClient, GL_Windows[frame]);
-}
-
-/*----------------------------------------------------------------------
-  GL_Win32ContextClose : Free opengl contexts
-  ----------------------------------------------------------------------*/
-void GL_Win32ContextClose (int frame, HWND hwndClient)
-{
-  /* make our context 'un-'current */
-  /*wglMakeCurrent (NULL, NULL);*/
-  /* delete the rendering context */
-  if (GL_Context[frame])
-    wglDeleteContext (GL_Context[frame]);
-
-  /*if (GL_Windows[frame])*/
-    /*ReleaseDC (hwndClient, GL_Windows[frame]);*/
-
-  GL_Windows[frame] = 0;
-  GL_Context[frame] = 0;
-  GL_KillFrame (frame);
 }
 
 /*----------------------------------------------------------------------
@@ -702,8 +683,7 @@ void GL_Win32ContextClose (int frame, HWND hwndClient)
   We copy region content of the back buffer on the exposed region 
   => opengl region buffer swapping 
   ----------------------------------------------------------------------*/
-void GL_BackBufferRegionSwapping (int x, int y,
-				  int width, int height, 
+void GL_BackBufferRegionSwapping (int x, int y, int width, int height, 
 				  int Totalheight)
 {  
 #ifndef _WINDOWS

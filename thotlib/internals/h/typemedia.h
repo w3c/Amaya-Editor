@@ -197,26 +197,12 @@ typedef struct _Box
   PtrBox          BxNext;	/* Next displayable box */
   int	          BxNChars;	/* Total number of characters in the box */
   int             BxIndChar;	/* 0 or position of the split box */
-#ifndef _GL
   int             BxXOrg;	/* X origin from the root */
   int             BxYOrg;	/* Y origin from the root */
   int             BxHeight;	        /* Box height including margins */
   int             BxWidth;	        /* Box width including margins */
   int             BxH;	        	/* Inner height */
   int             BxW;	        	/* Inner Width including spaces */
-#else /*_GL*/
-  float           BxXOrg;	        /* X origin from the root */
-  float           BxYOrg;	        /* Y origin from the root */
-  int             BxClipX; 
-  int             BxClipY; 
-  int             BxClipW;
-  int             BxClipH;
-  float           BxHeight;	        /* Box height including margins */
-  float           BxWidth;	        /* Box width including margins */
-  float           BxH;	        	/* Inner height */
-  float           BxW;	        	/* Inner Width including spaces */
-#endif /* _GL */
-
   int             BxTMargin;	        /* Top Margin */
   int             BxLMargin;	        /* Left Margin */
   int             BxBMargin;	        /* Bottom Margin */
@@ -231,13 +217,15 @@ typedef struct _Box
   int             BxBPadding;	        /* Bottom Padding */
   int             BxRPadding;	        /* Right Padding */
 #ifdef _GL
-  int             DisplayList;          /*Video Memory index
-					  of precomputed visual*/
+  int             BxClipX; 
+  int             BxClipY; 
+  int             BxClipW;
+  int             BxClipH;
+  int             DisplayList;          /*Video Memory index of precomputed visual*/
   void            *Pre_computed_Pic;    /*Pic of the rendered content, used
 					  for group, for example*/
   void            *Post_computed_Pic;    /*Pic of the rendered content, used
 					  for group, for example*/
-  
 #endif /*_GL*/
   
   int             BxHorizRef;	        /* Current base */
@@ -272,10 +260,9 @@ typedef struct _Box
   ThotBool        BxShadow;		/* Characters are showed as '*' */
   ThotBool        BxDisplay;	        /* The box has borders or
 					   background */
-    
 #ifdef _GL
     ThotBool        BxEditable;           /* If Box is Rotated or Scaled,
-					     prevents edition*/
+					     prevents edition */
     ThotBool        BxBoundinBoxComputed;
     ThotBool        BxTransformationComputed;
     ThotBool        VisibleModification;    

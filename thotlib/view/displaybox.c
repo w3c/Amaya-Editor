@@ -581,13 +581,8 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
   int                 fg, bg;
   int                 pat;
   int                 style;
-#ifdef _GL
-  float               xd, yd, left, top;
-  float               width, height;
-#else /* _GL */
   int                 xd, yd, left, top; 
   int                 width, height;
-#endif /* _GL */
 
   pAb = pBox->BxAbstractBox;
   pFrame = &ViewFrameTable[frame - 1];
@@ -658,13 +653,8 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
       switch (pAb->AbRealShape)
 	{
 	case '0':
-#ifdef _GL
-	  FDrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			  bg, pat);
-#else /* _GL */
 	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
 			 bg, pat);
-#endif /* _GL */
 	  break;
 	case '1':
 	case '2':
@@ -675,13 +665,8 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
 	case '7':
 	case '8':
 	case 'R':
-#ifdef _GL
-	  FDrawRectangle (frame, i, style, xd, yd, width, height,
-			  fg, bg, pat);
-#else /* _GL */
 	  DrawRectangle (frame, i, style, xd, yd, width, height,
 			 fg, bg, pat);
-#endif /* _GL */
 	  break;
 	case 'g':
 	  /* Coords of the line are given by the enclosing box */
@@ -698,11 +683,7 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
 	  break;
 	case 'C':
 	  if (pBox->BxRx == 0 && pBox->BxRy == 0)	    
-#ifdef _GL
-	    FDrawRectangle (frame, i, style, xd, yd, width, height, fg, bg, pat);
-#else /* _GL */
 	    DrawRectangle (frame, i, style, xd, yd, width, height, fg, bg, pat);
-#endif /* _GL */
 	  else
 	    DrawOval (frame, i, style, xd, yd, width, height, pBox->BxRx,
 		      pBox->BxRy, fg, bg, pat);
@@ -1507,7 +1488,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		       ((!withinSel &&
 			 (right != left + 2 || pBox->BxW <= 2) &&
 			 xpos >= left && xpos <= right) ||
-			withinSel && xpos >= right))
+			(withinSel && xpos >= right)))
 		{
 		  if (nbcar > 0)
 		    {

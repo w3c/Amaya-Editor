@@ -137,28 +137,27 @@
 /*for float => ( pow (N, 2))*/
 /*for int  => (((int)N)<<1)*/
 #define P2(N) (N*N)
-
 /* Arc Precision Drawings */
 #define SLICES 360
 #define SLICES_SIZE 361
-
 #define INTERVAL 0.02 /*1/FPS*/ /* should be 1/25 ... 1/50 */
-
 #define REALY(A) (A + FrameTable[frame].FrTopMargin)
 
 /*--------- STATICS ------*/
-
 /*Current Thickness*/
 static int      S_thick;
-
-
+static GLubyte  Opacity = 255;
+static GLubyte  FillOpacity = 255;
+static GLubyte  StrokeOpacity = 255;
+static ThotBool Fill_style = TRUE;
+static int      X_Clip = 0;
+static int      Y_Clip = 0;
+static int      Width_Clip = 0;
+static int      Height_Clip = 0;
 /*if no 3d card available*/
 static ThotBool Software_Mode = TRUE;
-
 /*if just computing bounding box*/
 static ThotBool PRINTINGMode = FALSE;
-
-
 #ifdef _GLPRINT
 static ThotBool TransText = FALSE;
 #else /* _GLPRINT */
@@ -166,58 +165,49 @@ static ThotBool TransText = FALSE;
 #endif /* _GLPRINT */
 
 
-/*---------------------------------------------------
-  SetSoftware_Mode  : If OpenGL is accelerated or not
-  ----------------------------------------------------*/
+/*----------------------------------------------------------------------
+  SetSoftware_Mode : If OpenGL is accelerated or not
+  ----------------------------------------------------------------------*/
 void SetSoftware_Mode (ThotBool value)
 {
   Software_Mode = value;
 }
-/*---------------------------------------------------
-  GL_TransText : If text must be texture or polygon
-  ----------------------------------------------------*/
+
+/*----------------------------------------------------------------------
+  GL_TransText: If text must be texture or polygon
+  ----------------------------------------------------------------------*/
 ThotBool GL_TransText ()
 {
   return TransText;
 }
 
-/*---------------------------------------------------
-  GL_SetTransText : If text must be texture or polygon
-  ----------------------------------------------------*/
-void GL_SetTransText (ThotBool value)
-{
-  TransText = value;
-}
-
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 ThotBool GL_Printing () 
 {
   return PRINTINGMode;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 ThotBool GL_Err() 
 {
   GLenum errCode = GL_NO_ERROR;
-
   if((errCode = glGetError ()) != GL_NO_ERROR)
     {
 #ifdef _PCLDEBUG
-
 #ifdef _GTK
       g_print ("\n%s :", (char*) gluErrorString (errCode));
 #endif /*_GTK*/
-
 #ifdef _WINDOWS
-      WinErrorBox (NULL, (char*) gluErrorString (errCode));;
+      WinErrorBox (NULL, (char*) gluErrorString (errCode));
 #endif /*_WINDOWS*/
-      
 #endif /*_PCLDEBUG*/
       return TRUE;
     }
   else 
     return FALSE;
 }
-
-
 
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
@@ -227,53 +217,6 @@ void ClearAll (int frame)
 {  
     glClear (GL_COLOR_BUFFER_BIT); 
 }
-
-#ifndef _NOSHARELIST
-
-static int Shared_Context=-1;
-/*----------------------------------------------------------------------
-  GetSharedContext : get the name of the frame used as shared context
-  ----------------------------------------------------------------------*/
-int GetSharedContext ()
-{
-  if (Shared_Context != -1)
-    return Shared_Context;
-  return -1;
-}
-/*----------------------------------------------------------------------
-  SetSharedContext : set the name of the frame used as shared context
-  ----------------------------------------------------------------------*/
-void SetSharedContext (int frame)
-{
-  Shared_Context = frame;
-}
-/*----------------------------------------------------------------------
-  GL_KillFrame : if realeasing a source sharing context, name a new one 
-as the source sharing context
-  ----------------------------------------------------------------------*/
-void GL_KillFrame (int frame)
-{
-  int i;
-
-  if (frame != Shared_Context)
-    return;
-  for (i = 0 ; i <= MAX_FRAME; i++)
-    {  
-#if defined(_MOTIF) || defined(_GTK)
-      if (i != Shared_Context && FrameTable[i].WdFrame)
-#endif /*#if defined(_MOTIF) || defined(_GTK)        */
-        
-#ifdef _WINDOWS
-	    if (i != Shared_Context && GL_Context[i])
-#endif /* _WINDOWS */
-
-	    {
-    	  Shared_Context = i;
-	      return;
-	    } 
-    }
-}
-#endif /*_NOSHARELIST*/
 
 #ifdef _GTK
 /*--------------------------------------------------------------
@@ -299,54 +242,33 @@ void update_bg_colorGTK (int frame, int color)
   gdk_colormap_alloc_color (cmap, &col, FALSE, TRUE);
   gdk_window_set_background (gl_widget->window, &col);
 }
-
 #endif /*_GTK*/
-
 #endif /*_WIN_PRINT*/
 
-
-static int Opacity = 1000;
-static int FillOpacity = 1000;
-static int StrokeOpacity = 1000;
-static ThotBool Fill_style = TRUE;
-
-/*------------------------------------------
+/*----------------------------------------------------------------------
   GL_SetOpacity :
-  ---------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void GL_SetOpacity (int opacity)
 {
-  Opacity = (int) ((opacity * 255)/1000);
-}
-/*------------------------------------------
-  GL_SetStrokeOpacity :
-  ---------------------------------------------*/
-void GL_SetStrokeOpacity (int opacity)
-{
-  StrokeOpacity = (int) ((opacity * 255)/1000);
-}
-/*------------------------------------------
-  GL_SetFillOpacity  :
-  ---------------------------------------------*/
-void GL_SetFillOpacity (int opacity)
-{
-  FillOpacity = (int) ((opacity * 255)/1000);
+  Opacity = (GLubyte) ((opacity * 255)/1000);
 }
 
-static int x_previous_clip = 0;
-static int y_previous_clip = 0;
-static int width_previous_clip = 0;
-static int height_previous_clip = 0;
 /*----------------------------------------------------------------------
-  GL_DestroyFrame :
-  Close Opengl pipeline
+  GL_SetStrokeOpacity :
   ----------------------------------------------------------------------*/
-void  GL_DestroyFrame (int frame)
+void GL_SetStrokeOpacity (int opacity)
 {
-#ifndef _NOSHARELIST
-  GL_KillFrame (frame);
-#endif /*_NOSHARELIST*/
-  FreeAllPicCacheFromFrame (frame);
+  StrokeOpacity = (GLubyte) ((opacity * 255)/1000);
 }
+
+/*----------------------------------------------------------------------
+  GL_SetFillOpacity  :
+  ----------------------------------------------------------------------*/
+void GL_SetFillOpacity (int opacity)
+{
+  FillOpacity = (GLubyte) ((opacity * 255)/1000);
+}
+
 /*----------------------------------------------------------------------
   GL_SetClipping : prevent drawing outside this rectangle
   ----------------------------------------------------------------------*/
@@ -357,55 +279,25 @@ void GL_SetClipping (int x, int y, int width, int height)
 #endif /* _TRACE_GL_PICTURE */
   glEnable (GL_SCISSOR_TEST);
   glScissor (x, y, width, height);
-  if (width_previous_clip == 0 && height_previous_clip == 0)
+  if (Width_Clip == 0 && Height_Clip == 0)
     {
-      x_previous_clip = x;
-      y_previous_clip = y;
-      width_previous_clip = width;
-      height_previous_clip = height;
+      X_Clip = x;
+      Y_Clip = y;
+      Width_Clip = width;
+      Height_Clip = height;
     }
 }
 /*----------------------------------------------------------------------
   GL_UnsetClippingRestore : restore previous clipping or 
 free the drawing from it
   ----------------------------------------------------------------------*/
-void GL_UnsetClippingRestore (ThotBool Restore)
+void GL_UnsetClipping ()
 {  
   glDisable (GL_SCISSOR_TEST);
-  if (Restore)
-    {
-      if (width_previous_clip != 0 && height_previous_clip != 0)
-	{
-	  GL_SetClipping (x_previous_clip, y_previous_clip, 
-			  width_previous_clip, height_previous_clip);
-	  width_previous_clip = 0;
-	  height_previous_clip = 0;
-	}
-    }
-  else
-    {
-      width_previous_clip = 0;
-      height_previous_clip = 0;
-    }
-}
-
-/*----------------------------------------------------------------------
-  GL_UnsetClipping : free the drawing from clipping
-  ----------------------------------------------------------------------*/
-void GL_UnsetClipping  (int x, int y, int width, int height)
-{  
-  glDisable (GL_SCISSOR_TEST);
-  if (width && height)
-    {       
-      GL_SetClipping (x, y, width, height);
-    }
-  else
-    { 
-      x_previous_clip = 0;
-      y_previous_clip = 0;
-      width_previous_clip = 0;
-      height_previous_clip = 0;
-    }
+  X_Clip = 0;
+  Y_Clip = 0;
+  Width_Clip = 0;
+  Height_Clip = 0;
 }
 
 /*----------------------------------------------------------------------
@@ -413,10 +305,10 @@ void GL_UnsetClipping  (int x, int y, int width, int height)
   ----------------------------------------------------------------------*/
 void GL_GetCurrentClipping (int *x, int *y, int *width, int *height)
 {  
-  *x = x_previous_clip;
-  *y = y_previous_clip;
-  *width = width_previous_clip;
-  *height= height_previous_clip;
+  *x = X_Clip;
+  *y = Y_Clip;
+  *width = Width_Clip;
+  *height= Height_Clip;
 }
 
 /*----------------------------------------------------------------------
@@ -424,16 +316,16 @@ void GL_GetCurrentClipping (int *x, int *y, int *width, int *height)
   ----------------------------------------------------------------------*/
 void GL_SetForeground (int fg)
 {
-  unsigned short red, green, blue, us_opac;
+  unsigned short  red, green, blue;
+  GLubyte         us_opac;
 
   if (Fill_style)
-    us_opac= (GLubyte) FillOpacity;
+    us_opac = FillOpacity;
   else
     {
-      us_opac= (GLubyte) StrokeOpacity;
+      us_opac = StrokeOpacity;
       Fill_style = TRUE;	
     }
-    
   TtaGiveThotRGB (fg, &red, &green, &blue);
   glColor4ub ((GLubyte) red,  (GLubyte) green, (GLubyte) blue, (GLubyte) us_opac);    
 }
@@ -456,17 +348,14 @@ void GL_SetPicForeground ()
   ----------------------------------------------------------------------*/
 void InitDrawing (int style, int thick, int fg)
 {
-  float float_thick;
-  
-  float_thick = (GLfloat) thick;
   if (style >= 5)
     {
       /* solid */
       if (thick)
 	{
 	  S_thick = thick;
-	  glLineWidth (float_thick); 
-	  glPointSize (float_thick); 
+	  glLineWidth ((GLfloat) thick); 
+	  glPointSize ((GLfloat) thick); 
 	}
       else
 	{
@@ -492,8 +381,8 @@ void InitDrawing (int style, int thick, int fg)
       if (thick)
 	{
 	  S_thick = thick;
-	  glLineWidth (float_thick); 
-	  glPointSize (float_thick); 
+	  glLineWidth ((GLfloat) thick); 
+	  glPointSize ((GLfloat) thick); 
 	}
       else
 	{
@@ -523,30 +412,14 @@ void GL_VideoInvert (int width, int height, int x, int y)
   glEnd (); 
 }
 
-/*----------------------------------------------------------------------
-  GL_DrawEmptyRectangle Outlined rectangle
-  ----------------------------------------------------------------------*/
-void  GL_DrawEmptyRectangle (int fg, int x, int y, int width, int height)
-{ 
-  Fill_style = FALSE;	
-  GL_SetForeground (fg);
-  glBegin (GL_LINE_LOOP);
-  glVertex2i (x, y );
-  glVertex2i (x + width, y);
-  glVertex2i (x +  width, y + height);
-  glVertex2i (x, y + height);
-  glEnd (); 
-  
-}
-/*----------------------------------------------------------------------
-  GL_DrawEmptyRectangle Outlined rectangle
-  ----------------------------------------------------------------------*/
-void  GL_DrawEmptyRectanglef (int fg, float x, 
-			      float y, float width, float height,
-			      float thick)
-{ 
-  GL_SetForeground (fg);
 
+/*----------------------------------------------------------------------
+  GL_DrawEmptyRectangle Outlined rectangle
+  ----------------------------------------------------------------------*/
+void  GL_DrawEmptyRectangle (int fg, float x, float y, float width,
+			     float height, float thick)
+{ 
+  GL_SetForeground (fg);
   if (IS_ZERO(thick - 1))
     {      
       glBegin (GL_LINE_LOOP);
@@ -558,7 +431,6 @@ void  GL_DrawEmptyRectanglef (int fg, float x,
   else
     {
       thick = thick / 2;
-
       glBegin (GL_QUADS);
 
       glVertex2f (x - thick, y - thick);
@@ -581,22 +453,6 @@ void  GL_DrawEmptyRectanglef (int fg, float x,
       glVertex2f (x + thick + width, y + thick + height);
       glVertex2f (x - thick + width, y + thick + height);
     }
-
-  glEnd (); 
-
-}
-/*----------------------------------------------------------------------
-  GL_DrawRectangle
-  (don't use glrect because it's exactly the same but require opengl 1.2)
-  ----------------------------------------------------------------------*/
-void GL_DrawRectangle (int fg, int x, int y, int width, int height)
-{
-  GL_SetForeground (fg);
-  glBegin (GL_QUADS);
-  glVertex2i (x, y );
-  glVertex2i (x + width, y);
-  glVertex2i (x +  width, y + height);
-  glVertex2i (x, y + height);
   glEnd ();
 }
 
@@ -604,11 +460,11 @@ void GL_DrawRectangle (int fg, int x, int y, int width, int height)
   GL_DrawRectangle
   (don't use glrect because it's exactly the same but require opengl 1.2)
   ----------------------------------------------------------------------*/
-void GL_DrawRectanglef (int fg, float x, float y, float width, float height)
+void GL_DrawRectangle (int fg, float x, float y, float width, float height)
 {
   GL_SetForeground (fg);
   glBegin (GL_QUADS);
-  glVertex2f (x, y );
+  glVertex2f (x, y);
   glVertex2f (x + width, y);
   glVertex2f (x +  width, y + height);
   glVertex2f (x, y + height);
@@ -667,10 +523,8 @@ void GL_DrawSegments (XSegment *point, int npoints)
 /*----------------------------------------------------------------------
   GL_DrawArc : Draw an arc
   ----------------------------------------------------------------------*/
-void GL_DrawArc (float x, float y, 
-		 float w, float h, 
-		 int startAngle, int sweepAngle, 
-		 ThotBool filled)
+void GL_DrawArc (float x, float y, float w, float h, int startAngle,
+		 int sweepAngle, ThotBool filled)
 {
   GLint     i, slices;
 
@@ -793,10 +647,10 @@ void GL_DrawPolygon (ThotPoint *points, int npoints)
 }
 
 
-/*------------------------------------------
+/*----------------------------------------------------------------------
   GL_Point :
   Draw a point using GL primitives
-  -------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void GL_Point (int fg, float width, float x, float y)
 {
   GL_SetForeground (fg);
@@ -808,9 +662,9 @@ void GL_Point (int fg, float width, float x, float y)
 
 
 #ifdef _PIXELFONT
-/*----------------------
+/*----------------------------------------------------------------------
   ResetPixelTransferBias
-  ------------------------*/
+  ----------------------------------------------------------------------*/
 static void ResetPixelTransferBias ()
 {
   glPixelTransferf (GL_RED_BIAS, 0.0); 
@@ -819,9 +673,9 @@ static void ResetPixelTransferBias ()
 
 }
 #define BIT8DIVIDE(A) ((float)A /256)
-/*----------------------
+/*----------------------------------------------------------------------
   SetPixelTransferBias
-  ------------------------*/
+  ----------------------------------------------------------------------*/
 static void SetPixelTransferBias (int fg)
 {
   unsigned short red, green, blue;
@@ -893,27 +747,14 @@ void GL_DrawUnicodeChar (CHAR_T const c, float x, float y,
     return;
   GL_SetForeground (fg); 
   
-  UnicodeFontRender (GL_font,
-		     symbols, 
-		     x,
-		     y, 
-		     1);
-}
-
-int GL_DrawString (unsigned char *buff, int lg, int frame, int x, int y,
-		PtrFont font, int boxWidth, int bl, int hyphen,
-		int startABlock, int fg, int shadow)
-{
-    return GLString (buff, lg, frame, x, y, font, 
- 		   boxWidth, bl, hyphen,  
- 		   startABlock, fg, shadow); 
+  UnicodeFontRender (GL_font, symbols,  x, y, 1);
 }
 
 /*----------------------------------------------------------------------
-  GL_DrawString : Draw a string in a texture or a bitmap 
+  GL_DrawString: Draw a string in a texture or a bitmap 
   ----------------------------------------------------------------------*/
-int GL_UnicodeDrawString (int fg,  CHAR_T *str, float x, float y,  int hyphen,
-			  void *GL_font, int end)
+int GL_DrawString (int fg,  CHAR_T *str, float x, float y,  int hyphen,
+		   void *GL_font, int end)
 {
   int width;
 
@@ -924,38 +765,30 @@ int GL_UnicodeDrawString (int fg,  CHAR_T *str, float x, float y,  int hyphen,
 
   if (Printing)
     {      
-      GL_SetTransText (TRUE);
+      TransText = TRUE;
       GL_SetForeground (fg); 
-      width = UnicodeFontRender (GL_font, str, 
-				 x, y, end);
+      width = UnicodeFontRender (GL_font, str, x, y, end);
       if (hyphen)
 	/* draw the hyphen */
-	GL_DrawUnicodeChar ('\255', 
-			    x + width, y, 
-			    GL_font, fg);
+	GL_DrawUnicodeChar ('\255', x + width, y, GL_font, fg);
       width = 0;
-      GL_SetTransText (FALSE);
+      TransText = FALSE;
     }
   else
     {
       GL_SetForeground (fg); 
-
-      width = UnicodeFontRender (GL_font, str, 
-				 x, y, end);
+      width = UnicodeFontRender (GL_font, str, x, y, end);
       if (hyphen)
 	/* draw the hyphen */
-	GL_DrawUnicodeChar ('\255', 
-			    x + width, y, 
-			    GL_font, fg);
+	GL_DrawUnicodeChar ('\255', x + width, y, GL_font, fg);
     }
-
   return width;
 }
 
 
-/*---------------------------------------------------
+/*----------------------------------------------------------------------
   GetBoxTransformed : only a translation
-  ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 ThotBool GetBoxTransformed (void *v_trans, int *x, int *y)
 {
   PtrTransform Trans = (PtrTransform) v_trans;
@@ -1873,33 +1706,6 @@ void saveBuffer (char *filename, int width, int height)
 	   (unsigned int) width,
 	   (unsigned int) height);
   free (Data);
-}
-
-/*----------------------------------------------------------------------
-  FDrawRectangle draw a rectangle located at (x, y) (as float number)
-  in frame,
-  of geometry width x height.
-  thick indicates the thickness of the lines.
-  Parameters fg, bg, and pattern are for drawing
-  color, background color and fill pattern.
-  ----------------------------------------------------------------------*/
-void FDrawRectangle (int frame, int thick, int style, float x, float y,
-		     float width, float height, int fg, int bg, int pattern)
-{
-  if (width <= 0 || height <= 0)
-    return;
-  if (thick == 0 && pattern == 0)
-    return;
-  y += FrameTable[frame].FrTopMargin;
-  if (pattern == 2) 
-    GL_DrawRectanglef (bg, x + thick/2, y + thick/2, 
-		       width - thick/2, height - thick/2);
-  /* Draw the border */
-  if (thick > 0 && fg >= 0)
-    {     
-      InitDrawing (style, thick, fg); 
-      GL_DrawEmptyRectanglef (fg, x,  y, width, height, thick);
-    }
 }
 
 

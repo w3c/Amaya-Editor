@@ -597,9 +597,7 @@ static void GL_TexturePartialMap (PictInfo *desc, int xFrame, int yFrame,
   texW = desc->TexCoordW * ((float)(w) / desc->PicWidth);
   GL_SetPicForeground ();
   if (PrintingGL)
-    {
-      PrintPoscriptImage (desc, xFrame, yFrame, w, h, frame);
-    }
+    PrintPoscriptImage (desc, xFrame, yFrame, w, h, frame);
   else
     {
       if (GL_NotInFeedbackMode ())
@@ -888,24 +886,33 @@ void ClearOpaqueGroup (PtrAbstractBox pAb, int frame,
 		       int xmin, int xmax, int ymin, int ymax)
 {
 #ifdef _GL
-  int x, y, width, height;
-  int xprevclip, yprevclip, heightprevclip, widthprevclip;  
+  int x, y, width, height, org;
+  int xclip, yclip, heightclip, widthclip;  
  
   if (GetAbsoluteBoundingBox (pAb, &x, &y, &width, &height, 
 			      frame, xmin, xmax, ymin, ymax))
     {
-      y = FrameTable[frame].FrHeight
-	+ FrameTable[frame].FrTopMargin
-	- (y + height);
-      GL_GetCurrentClipping (&xprevclip, &yprevclip, 
-			     &widthprevclip, &heightprevclip);
-      GL_SetClipping (x, y, width, height);  
-
-     /* glClearColor (0, 0, 0, 0);  */
-
-      glClear (GL_COLOR_BUFFER_BIT); 
-      GL_UnsetClipping (xprevclip, yprevclip, 
-			widthprevclip, heightprevclip);
+      org = FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin - (y + height);
+      GL_GetCurrentClipping (&xclip, &yclip, &widthclip, &heightclip);
+      /* limit to the current clipping */
+      if (x < xclip)
+	{
+	  width = width + x - xclip;
+	  x = xclip;
+	}
+      if (org < yclip)
+	{
+	  height = height + org - yclip;
+	  org = yclip;
+	}
+      if (width > widthclip)
+	width = widthclip;
+      if (height > heightclip)
+	height = heightclip;
+      GL_SetClipping (x, org, width, height);
+      glClear (GL_COLOR_BUFFER_BIT);
+      /* restore the previous clipping */
+      GL_SetClipping (xclip, yclip, widthclip, heightclip);
     }
 #endif /*_GL*/
 }
@@ -927,12 +934,10 @@ void OpaqueGroupTexturize (PtrAbstractBox pAb, int frame,
 	+ FrameTable[frame].FrTopMargin
 	- (y + height);
       if (Is_Pre)
-	pAb->AbBox->Pre_computed_Pic = Group_shot (x, y,
-						   width, height,
+	pAb->AbBox->Pre_computed_Pic = Group_shot (x, y, width, height,
 						   frame, FALSE);
       else 
-	pAb->AbBox->Post_computed_Pic = Group_shot (x, y,
-						    width, height,
+	pAb->AbBox->Post_computed_Pic = Group_shot (x, y, width, height,
 						    frame, TRUE);
     }
 #endif /*_GL*/

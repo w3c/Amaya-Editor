@@ -381,42 +381,6 @@ char *ParseNumber (char *cssRule, PresentationValue *pval)
 }
 
 /*----------------------------------------------------------------------
-   ParseClampedUnit:                                                  
-   parse a CSS Unit substring and returns the corresponding      
-   value and its unit.
-   [0,1]
-   or
-   [0,100] in %
-  ----------------------------------------------------------------------*/
-char *ParseClampedUnit (char *text, PresentationValue *pval)
-{
-  float                clamped_value;
-  int                  int_clamped_value;
-
-  if (*(text + strlen (text) -1) == '%')
-    {
-      int_clamped_value = atoi (text);
-      if (int_clamped_value < 0 || int_clamped_value > 100)
-	int_clamped_value = 1000;
-      else
-	int_clamped_value = int_clamped_value * 10;
-    }
-  else
-    {
-      clamped_value = (float) atof (text);
-      if (clamped_value < 0.0 || clamped_value > 1.0)
-	int_clamped_value = 1000;
-      else 
-	int_clamped_value = (int) (clamped_value * 1000.);
-    }
-  pval->typed_data.unit = UNIT_REL;
-  pval->typed_data.value = int_clamped_value;
-  pval->typed_data.real = FALSE;
-  pval->data = int_clamped_value;   
-  return (SkipWord (text));
-}
-
-/*----------------------------------------------------------------------
    ParseCSSUnit:                                                  
    parse a CSS Unit substring and returns the corresponding      
    value and its unit.                                           
@@ -449,6 +413,39 @@ char *ParseCSSUnit (char *cssRule, PresentationValue *pval)
     }
   return (cssRule);
 }
+
+/*----------------------------------------------------------------------
+   ParseClampedUnit:                                                  
+   parse a CSS Unit substring and returns the corresponding value and unit.
+   [0,1]
+   or
+   [0,100] in %
+  ----------------------------------------------------------------------*/
+char *ParseClampedUnit (char *cssRule, PresentationValue *pval)
+{
+  cssRule = ParseNumber (cssRule, pval);
+  if (pval->typed_data.unit == UNIT_PERCENT)
+    {
+      pval->typed_data.unit = UNIT_REL;
+      if (pval->typed_data.value > 100)
+	pval->typed_data.value = 1000;
+      else
+	pval->typed_data.value *= 10;
+    }
+  else
+    {
+      pval->typed_data.unit = UNIT_REL;
+      if (pval->typed_data.real)
+	pval->typed_data.real = FALSE;
+      else if (pval->typed_data.value > 1)
+	pval->typed_data.value = 1000;
+      else
+	pval->typed_data.value *= 1000;
+    }
+  pval->data = pval->typed_data.value;
+  return (cssRule);
+}
+
 
 /*----------------------------------------------------------------------
    ParseBorderValue                                       
@@ -1986,20 +1983,24 @@ static char *ParseCSSFontFamily (Element element, PSchema tsch,
       cssRule = SkipBlanksAndComments (cssRule);
       if (*cssRule == ',')
 	{
+	  /* recursive call to ParseCSSFontFamily */
 	  cssRule++;
 	  cssRule = ParseCSSFontFamily (element, tsch, context, cssRule, css, isHTML);
 	  return (cssRule);
 	}
     }
 
+  /* skip other values */
+  cssRule = SkipBlanksAndComments (cssRule);
+  while (*cssRule == ',')
+    {
+      cssRule++;
+      cssRule = SkipValue (NULL, cssRule);
+      cssRule = SkipBlanksAndComments (cssRule);
+    }
+
   if (font.typed_data.value != 0)
      {
-       cssRule = SkipBlanksAndComments (cssRule);
-      if (*cssRule == ',')
-	{
-	  cssRule++;
-	  cssRule = SkipValue (NULL, cssRule);
-	}
        /* install the new presentation */
        if (DoApply)
 	 {
@@ -4012,7 +4013,7 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 			   CSSInfoPtr css, ThotBool isHTML)
 {
   DisplayMode         dispMode;
-  char               *p = NULL, c;
+  char               *p = NULL;
   char               *valueStart;
   int                 lg;
   unsigned int        i;

@@ -180,11 +180,8 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
   w = FrRef[frame];
   y += FrameTable[frame].FrTopMargin; 
   if (Printing)
-    {
-      width = GL_DrawString (buff, lg, frame, x, y, font,
-			boxWidth, bl, hyphen, 
-			startABlock, fg, shadow);
-    }
+    width = GLString (buff, lg, frame, x, y, font, boxWidth, bl, hyphen, 
+		      startABlock, fg, shadow);
   else
     {
       /* compute the width of the string */
@@ -204,8 +201,8 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	  
 	    }
 	  if (fg >= 0)
-	    width = GL_UnicodeDrawString (fg, (CHAR_T *) buff, 
-					  (float) x, (float) y, hyphen, font, lg);
+	    width = GL_DrawString (fg, (CHAR_T *) buff, 
+				   (float) x, (float) y, hyphen, font, lg);
 	}
     }
   return (width);
@@ -238,19 +235,12 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
       /* replace each character by a star */
       j = 0;
       while (j < lg)
-	{
-	  buff[j++] = '*';
-	}
+	buff[j++] = '*';
     }
-  return (GL_UnicodeDrawString (fg, 
-				buff, 
-				(float) x,
-				(float) y, 
-				hyphen,
-				(void *)font, 
-				lg));
+  return (GL_DrawString (fg, buff, (float) x, (float) y, hyphen, (void *) font, lg));
 }
 #endif /*_WIN_PRINT*/
+
 /*----------------------------------------------------------------------
   DisplayUnderline draw the underline, overline or cross line
   added to some text of lenght lg, using font and located
@@ -357,7 +347,8 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 	FontOrig (font, *ptcar, &x, &y);
 	while (nb > 0)
 	  {
-	    xcour += GL_UnicodeDrawString (fg, (CHAR_T *) ptcar, (float) xcour, (float) y, 0, font, 2);
+	    xcour += GL_DrawString (fg, (CHAR_T *) ptcar, (float) xcour,
+				    (float) y, 0, font, 2);
 	    nb--;
 	  }
      }
@@ -970,6 +961,7 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
 		    int height, int fg, int bg, int pattern)
 {
+  float        th;
   const GLubyte gPat1[] = {
     0x88, 0x88, 0x88, 0x88, 0x22, 0x22, 0x22, 0x22,
     0x88, 0x88, 0x88, 0x88, 0x22, 0x22, 0x22, 0x22,
@@ -994,15 +986,18 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
     return;
 
   y += FrameTable[frame].FrTopMargin;
+  th = (float) thick/2.;
   /* pattern = 4 => we're drawing a math empty place*/
   if (pattern == 4)
     {
       glEnable (GL_POLYGON_STIPPLE);   
       glPolygonStipple (gPat1);
-      GL_DrawRectangle (fg, x, y, width, height);
+      GL_DrawRectangle (fg, (float) x, (float) y,
+			(float) width, (float) height);
     }
-  else if (pattern == 2) 
-    GL_DrawRectangle (bg, x, y, width, height);
+  else if (pattern == 2)
+      GL_DrawRectangle (bg, (float) x + th, (float)y + th, 
+			(float)width - th, (float)height - th);
 
   /* Draw the border */
   if (thick > 0 && fg >= 0)
@@ -1011,12 +1006,12 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
 	width = width - thick;
       if (height > thick)
 	height = height - thick;
-      x = x + thick/2;
-      y = y + thick/2;
-
       InitDrawing (style, thick, fg); 
-      GL_DrawEmptyRectangle (fg, x,  y, width, height);
+      GL_DrawEmptyRectangle (fg, (float) x + th, (float) y + th,
+			     (float) width, (float) height,
+			     (float) thick);
     }
+
   if (pattern == 4)
     glDisable (GL_POLYGON_STIPPLE);      
 }
@@ -2097,14 +2092,10 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 		      xarc[i].angle1, xarc[i].angle2,
 		      FALSE); 
 	}
-	if (arc2 < height / 2)
-	  {
-	   GL_DrawSegments(seg, 5);
-	  }
-	else
-	  {
-	   GL_DrawSegments(seg, 4);
-	  }
+      if (arc2 < height / 2)
+	GL_DrawSegments(seg, 5);
+      else
+	GL_DrawSegments(seg, 4);
      }
 }
 
@@ -2189,23 +2180,22 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 
 
 /*----------------------------------------------------------------------
-  PaintWithPattern fill the rectangle associated to a window w (or frame if w= 0)
-  located on (x , y) and geometry width x height, using the
+  PaintWithPattern fill the rectangle associated to a window w (or frame
+  if w = 0) located on (x , y) and geometry width x height, using the
   given pattern.
-  Parameters fg, bg, and pattern are for drawing
-  color, background color and fill pattern.
+  Parameters fg, bg, and pattern are for drawing color, background color
+  and fill pattern.
   ----------------------------------------------------------------------*/
 void PaintWithPattern (int frame, int x, int y, int width, int height,
 		       ThotWindow w, int fg, int bg, int pattern)
 {
-
-   /* Fill the rectangle associated to the given frame */
-   if (pattern == 2)
-     {
-	if (w != 0) 
-	  GL_DrawRectangle (pattern, x,  y, width, height);
-	else 
-	  GL_DrawRectangle (fg, x,  y + FrameTable[frame].FrTopMargin, width, height);
+  /* Fill the rectangle associated to the given frame */
+  if (pattern == 2)
+    {
+      if (w == 0)
+	y += FrameTable[frame].FrTopMargin;
+      GL_DrawRectangle (pattern, (float) x, (float) y,
+			(float) width, (float) height);
    }
 }
 #endif /* _GL*/

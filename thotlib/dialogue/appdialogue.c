@@ -3019,7 +3019,7 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
      if opengl implementation doesn't support ALPHA BUFFER, allow amaya to work
      but warns about group opacity
   ----------------------------------------------------------------------*/
-ThotWidget	 GetNoAlphaVisual ()
+static ThotWidget GetNoAlphaVisual ()
 {
   /* 
      Parameters of the opengl Buffers
@@ -3469,11 +3469,8 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	     }
 #ifdef _GL
 	   /* Is opengl working ? */
-	   if(gdk_gl_query() == FALSE) 
-	     {
-	       g_print("OpenGL not supported!\n");
-	       exit(0);
-	     }
+	   if (gdk_gl_query() == FALSE) 
+	     g_print("OpenGL not supported!\n");
 #ifdef _NOSHARELIST	  
 	   if ((drawing_area = gtk_gl_area_new (attrlist)) == NULL) 
 	     {
@@ -3496,17 +3493,12 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		 {
 		   drawing_area = GetNoAlphaVisual ();
 		   if (drawing_area == NULL)
-		     {
 		       g_print("Error creating GtkGLArea!\n");
-		       exit(0);
-		     }
 		 }	       
 	       SetSharedContext (frame);
 	     }
-	   else
-	     {
-	       if ((drawing_area = gtk_gl_area_share_new (attrlist, 
-							  GTK_GL_AREA(FrameTable[GetSharedContext ()].WdFrame))) == NULL) 
+	   else if ((drawing_area = gtk_gl_area_share_new (attrlist, 
+							  GTK_GL_AREA (FrameTable[GetSharedContext ()].WdFrame))) == NULL) 
 		 {
 		   drawing_area = GetNoAlphaVisual ();
 		   if (drawing_area == NULL)
@@ -3515,7 +3507,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		       exit(0);
 		     }
 		 }
-	     }	       
 #endif /*_NOSHARELIST*/
 #else /*  _GL */
 	   drawing_area = gtk_drawing_area_new ();

@@ -64,18 +64,12 @@ void GL_Point (int fg, float width, float x, float y);
 void GL_DrawLine (int x1, int y1, int x2, int y2, ThotBool Round);
 void GL_DrawLines (ThotPoint *point, int npoints);
 
-void FDrawRectangle (int frame, int thick, int style, float x, float y, float width,
-		     float height, int fg, int bg, int pattern);
+void GL_DrawEmptyRectangle (int fg, 
+			    float x, float y, 
+			    float width, float height, 
+			    float thick);
 
-void GL_DrawEmptyRectangle (int fg, int x, int y, int width, int height);
-void GL_DrawRectangle (int fg, int x, int y, int width, int height);
-
-void GL_DrawEmptyRectanglef (int fg, 
-			     float x, float y, 
-			     float width, float height, 
-			     float thick);
-
-void GL_DrawRectanglef (int fg, float x, float y, float width, float height);
+void GL_DrawRectangle (int fg, float x, float y, float width, float height);
 
 void GL_DrawSegments (XSegment *point, int npoints);
 void GL_DrawArc (float x, float y, float w, float h, 
@@ -96,11 +90,11 @@ void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int 
 /*Text rendering*/
 void TranslateChars (CHAR_T *text);
 int UnicodeCharacterWidth (CHAR_T c, PtrFont font);
-int GL_UnicodeDrawString (int fg, 
-			  CHAR_T *str, 
-			  float x, float y, 
-			  int hyphen,
-			  void *GL_font, int end);
+int GL_DrawString (int fg, 
+		   CHAR_T *str, 
+		   float x, float y, 
+		   int hyphen,
+		   void *GL_font, int end);
 void GL_DrawUnicodeChar (CHAR_T const c, 
 			 float x, float y, 
 			 void *GL_font, int fg);
@@ -135,10 +129,7 @@ ThotBool SavePng (const char *filename,
 		 unsigned int m_width,
 		  unsigned int m_height);
 void saveBuffer (char *filename, int width, int height);
-void  GL_DestroyFrame (int frame);
-
-void GL_UnsetClipping (int x, int y, int width, int height);
-void GL_UnsetClippingRestore (ThotBool Restore);
+void GL_UnsetClipping ();
 void GL_SetClipping (int x, int y, int width, int height);
 void GL_GetCurrentClipping (int *x, int *y, int *width, int *height);
 
@@ -153,8 +144,6 @@ ThotBool IsDeformed (void *v_trans);
 ThotBool IsBoxDeformed (PtrBox box);
 
 void gl_synchronize ();
-
-
 
 void GL_SwapStop (int frame);
 void GL_SwapEnable (int frame);
@@ -182,16 +171,11 @@ void TtaChangePlay (int frame);
 double ComputeThotCurrentTime (int frame);
 ThotBool GL_Err ();
 void update_bg_colorGTK (int frame, int color);
-int GL_DrawString (unsigned char *buff, int lg, int frame, int x, int y,
-		PtrFont font, int boxWidth, int bl, int hyphen,
-		   int startABlock, int fg, int shadow);
-
 void getboundingbox (int size, float *buffer, int frame,
 		     int *xorig, int *yorig, 
 		     int *worig, int *horig);
 
 void GL_SetPrintForeground (int fg);
-void GL_KillFrame (int frame);
 void SetSoftware_Mode (ThotBool value);
 
 void SetBadCard (ThotBool badbuffer);
