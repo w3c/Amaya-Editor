@@ -128,8 +128,9 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 #else /* !_WINDOWS_DLL */
 #ifdef _WINDOWS
    strcpy (cmd, "thotprinter.exe"); 
-#endif /* !_WINDOWS */
+#else
    sprintf (cmd, "%s/print", BinariesDirectory); 
+#endif /* _WINDOWS */
    strcat (cmd, " -lang ");
    strcat (cmd, ptr);
 #endif /* !_WINDOWS_DLL */
@@ -567,23 +568,24 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 
    cmd[j] = EOS;
    i = strlen (cmd);
-   sprintf (&cmd[i], " -removedir %s/%s.PIV", dir, name);
+   sprintf (&cmd[i], " -removedir %s\%s.PIV", dir, name);
 
     ZeroMemory( &si, sizeof(si) );
     si.cb = sizeof(si);
     ZeroMemory( &pi, sizeof(pi) );
 
-	CreateProcess( NULL, // No module name (use command line). 
-        cmd, // Command line. 
-        NULL,             // Process handle not inheritable. 
-        NULL,             // Thread handle not inheritable. 
-        FALSE,            // Set handle inheritance to FALSE. 
-        0,                // No creation flags. 
-        NULL,             // Use parent's environment block. 
-        NULL,             // Use parent's starting directory. 
-        &si,              // Pointer to STARTUPINFO structure.
-        &pi );             // Pointer to PROCESS_INFORMATION structure.
-/* WaitForInputIdle*/
+	CreateProcess( NULL,   /* No module name (use command line). */
+        cmd,               /* Command line. */
+        NULL,             /* Process handle not inheritable. */
+        NULL,             /* Thread handle not inheritable. */
+        FALSE,            /* Set handle inheritance to FALSE. */
+        0,                /* No creation flags. */
+        NULL,             /* Use parent's environment block. */
+        NULL,             /** Use parent's starting directory. */
+        &si,              /* Pointer to STARTUPINFO structure.*/
+        &pi );            /* Pointer to PROCESS_INFORMATION structure.*/
+	/*do we have to wait until process die ?*/
+	/* WaitForInputIdle()*/ 
 }
 #else /*_WINDOWSDLL*/
    printArgv[printArgc] = TtaStrdup ("-removedir");

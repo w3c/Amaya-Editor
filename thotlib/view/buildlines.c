@@ -34,6 +34,7 @@
 
 #ifdef _GL
 #include <GL/gl.h>
+#include "glwindowdisplay.h"
 #endif /* _GL */
 
 #define SPACE_VALUE_MIN  3

@@ -754,7 +754,6 @@ ThotBool GL_prepare (int frame)
 	  {
 	    GL_Windows[frame] = GetDC (FrRef[frame]);
 	    wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);	 
-	    /*	ReleaseDC (FrRef[frame], GL_Windows[frame] ); */
 	    return TRUE;
 	  }
 #else /*_WINDOWS*/
@@ -773,26 +772,15 @@ void GL_Swap (int frame)
   if (frame >= 0 && frame < MAX_FRAME && 
       SwapOK[frame] && 
       NeedRedraw (frame))
-    {
-      /* gl_synchronize ();  */
-      /* glFinish (); */
-      /* glFlush (); */      
+    {   
       glDisable (GL_SCISSOR_TEST);
-
-      /* glReadBuffer(GL_BACK); */
-      /* glAccum (GL_LOAD, 1); */
 
 #ifdef _WINDOWS
 
       if (FrRef[frame])
 	if (GL_Windows[frame])
 	  {
-	    /*GL_Windows[frame] = GetDC (FrRef[frame]);*/
-	    /*wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);*/
 	    SwapBuffers (GL_Windows[frame]);
-	    /*or*/
-	    /* glSwapBuffers(GL_Windows[frame]); */
-
 	    ReleaseDC (FrRef[frame], GL_Windows[frame] );
 	  }
 #else
@@ -801,19 +789,6 @@ void GL_Swap (int frame)
 	  gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
 	}
 #endif /*_WINDOWS*/
-
-
-      /* glDrawBuffer(GL_BACK); */
-      /* glAccum (GL_RETURN, 1); */
-
-      /* glReadBuffer (GL_FRONT); */
-      /*       glRasterPos2i (0, 0); */
-      /*       glCopyPixels (0, 0,  */
-      /* 		    FrameTable[frame].FrWidth, FrameTable[frame].FrHeight,  */
-      /* 		    GL_COLOR); */
-      /*       glDrawBuffer (GL_BACK); */
-      /*       glReadBuffer (GL_BACK); */
-
       glEnable (GL_SCISSOR_TEST); 
       FrameTable[frame].DblBuffNeedSwap = FALSE;
     }
@@ -853,28 +828,6 @@ void WinGL_Swap (HDC hDC)
 }
 #endif /*_WINDOWS*/
 
-
-
-
-/* /\*--------------------------------------------------- */
-/*   PrintBox :  	     */
-/*   ----------------------------------------------------*\/ */
-/* void PrintBox (PtrBox box, int frame,  */
-/* 	       int xmin, int xmax,  */
-/* 	       int ymin, int ymax) */
-/* { */
-/*   GLfloat feedBuffer[FEEDBUFFERSIZE]; */
-
-/*   glFeedbackBuffer (FEEDBUFFERSIZE, GL_3D_COLOR, feedBuffer); */
-/*   NotFeedBackMode = FALSE;   */
-/*   glRenderMode (GL_FEEDBACK); */
-/*   DisplayBox (box, frame, xmin, xmax, ymin, ymax); */
-/*   NotFeedBackMode = TRUE; */
-/*   GLParseFeedbackBuffer (feedBuffer); */
-/*   NotFeedBackMode = TRUE; */
-/* } */
-
-
 /*---------------------------------------------------
   ComputeBoundingBox :
   Modify Bounding Box according to opengl feedback mechanism
@@ -908,9 +861,7 @@ void ComputeBoundingBox (PtrBox box, int frame,
 			  &box->BxClipY,
 			  &box->BxClipW,
 			  &box->BxClipH);    
-  
-	  /* printBuffer (size, feedBuffer); */ 
-	  
+    
 	  box->BxBoundinBoxComputed = TRUE; 
 	}
       else

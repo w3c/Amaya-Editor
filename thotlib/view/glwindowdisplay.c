@@ -261,7 +261,7 @@ void GL_KillFrame (int frame)
 	{
 	Shared_Context = i;
 	return;
-	}
+	} 
     }
 }
 #endif /*_NOSHARELIST*/
@@ -809,23 +809,10 @@ void GL_Point (int fg, float width, float x, float y)
   ------------------------*/
 static void ResetPixelTransferBias ()
 {
-  /*
-    static GLuint Precompiled = 0;
-
-    if (!Precompiled)
-    {
-    Precompiled = glGenLists (1);
-    glNewList (Precompiled,  GL_COMPILE);
-  */    
   glPixelTransferf (GL_RED_BIAS, 0.0); 
   glPixelTransferf (GL_GREEN_BIAS, 0.0); 
   glPixelTransferf (GL_BLUE_BIAS, 0.0); 
 
-  /*
-    glEndList ();
-    }
-    glCallList (Precompiled); 
-  */
 }
 #define BIT8DIVIDE(A) ((float)A /256)
 /*----------------------
@@ -966,6 +953,9 @@ int GL_UnicodeDrawString (int fg,
 }
 
 
+/*---------------------------------------------------
+  GetBoxTransformed : only a translation
+  ----------------------------------------------------*/
 ThotBool GetBoxTransformed (void *v_trans, int *x, int *y)
 {
   PtrTransform Trans = (PtrTransform) v_trans;
@@ -987,7 +977,9 @@ ThotBool GetBoxTransformed (void *v_trans, int *x, int *y)
   *y = 0;
   return FALSE;
 }
-
+/*---------------------------------------------------
+  IsDeformed : only a translation
+  ----------------------------------------------------*/
 ThotBool IsDeformed (void *v_trans)
 {
   PtrTransform Trans = (PtrTransform) v_trans;
@@ -1009,7 +1001,9 @@ ThotBool IsDeformed (void *v_trans)
     }
   return FALSE;
 }
-
+/*---------------------------------------------------
+  IsBoxDeformed : only a translation
+  ----------------------------------------------------*/
 ThotBool IsBoxDeformed (PtrBox box)
 {
   PtrAbstractBox pAb;
@@ -1025,7 +1019,9 @@ ThotBool IsBoxDeformed (PtrBox box)
   return FALSE;
 }
 
-
+/*---------------------------------------------------
+  IsTransformed :
+  ----------------------------------------------------*/
 ThotBool IsTransformed (void *v_trans)
 {
   PtrTransform Trans = (PtrTransform) v_trans;
@@ -1046,6 +1042,9 @@ ThotBool IsTransformed (void *v_trans)
   return FALSE;
 }
 
+/*---------------------------------------------------
+  IsBoxTransformed :
+  ----------------------------------------------------*/
 ThotBool IsBoxTransformed (PtrBox box)
 {
   PtrAbstractBox pAb;
@@ -1108,10 +1107,6 @@ static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Hei
 	  is_scaled = TRUE;
 	  break;
 	case PtElviewboxTranslate:
-/* 	  x_trans = PixelValue (Trans->XScale, UnPixel, NULL, */
-/* 				ViewFrameTable[ActiveFrame - 1].FrMagnification); */
-/* 	  y_trans = PixelValue (Trans->YScale, UnPixel, NULL, */
-/* 				ViewFrameTable[ActiveFrame - 1].FrMagnification); */
  	  x_trans = Trans->XScale;  
  	  y_trans = Trans->YScale; 
 	  is_translated = TRUE;
@@ -1470,69 +1465,6 @@ void GL_ActivateDrawing(int frame)
 
 
 
-#ifdef _OUT
-void PrintGL (int frame)
-{
-  char             file[2048];
-  FILE             *fp;
-  GLint            viewport[4];
-  ViewFrame        *pFrame;
-
-  if (frame > 0 && 
-      frame < MAX_FRAME && 
-      GL_prepare (frame))
-    {
-      viewport[0] = 0;
-      viewport[1] = 0;
-      viewport[2] = FrameTable[frame].FrWidth;
-      viewport[3] = FrameTable[frame].FrHeight;
- 
-      file[0] = '\0';
-      strcat (file, "/home/cheyroul/test.ps");
-
-      fp = fopen (file, "w");
-
-      if(!fp)
-	{
-	  printf ("Unable to open file %s for writing\n", file);
-	  exit (1);
-	}
-
-      printf ("Saving image to file %s... ", file);
-      fflush (stdout);
-
-      if (GLBeginPage (file, "test", 
-		       viewport, fp, file))
-	{
-	  NotFeedBackMode = FALSE;
-	  PRINTINGMode = TRUE;
-
-	  glEnable (GL_POLYGON_SMOOTH);  
-	  glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST); 
-  
-	  pFrame = &ViewFrameTable[frame - 1];
-
-	  PrintBoxes(frame , pFrame->FrXOrg, 
-		     FrameTable[frame].FrWidth + pFrame->FrXOrg, 
-		     pFrame->FrYOrg, 
-		     FrameTable[frame].FrHeight + pFrame->FrYOrg, 
-		     pFrame->FrAbstractBox);
-	 
-	  GLEndPage ();
-
-	  glDisable (GL_POLYGON_SMOOTH);  
-
-	  NotFeedBackMode = TRUE;
-	  PRINTINGMode = FALSE;
-	}
-
-      fclose (fp);
-
-      printf ("Done!\n");
-      fflush (stdout);
-    }
-}
-#endif /* _OUT */
 
 #define MAX_TIMEFUNC 50
 static void (*TimeFunc[MAX_TIMEFUNC]) (Document doc, double current_time);

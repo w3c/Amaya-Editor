@@ -76,6 +76,7 @@
 
 #ifdef _GL
 #include "animbox_f.h"
+#include "displaybox_f.h"
 #include "content.h"
 #endif /* _GL */
 

@@ -64,8 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "_AMAYA_RELEASE_" /D "STDC_HEADERS" /D "__STDC__" /D "_WIN_PRINT" /D "_I18N_" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_SVGLIB" /D "_SVGANIM" /D "_STIX" /D "_FONTCONFIG" /D "_GLPRINT" /FD /c
-# SUBTRACT CPP /YX
+# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\freetype-2.1.0\include" /D "_AMAYA_RELEASE_" /D "STDC_HEADERS" /D "__STDC__" /D "_WIN_PRINT" /D "_I18N_" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_SVGLIB" /D "_SVGANIM" /D "_STIX" /D "_FONTCONFIG" /D "_GLPRINT" /D "_GL" /FD /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -200,6 +199,10 @@ SOURCE=..\..\thotlib\view\frame.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\image\gifhandler.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\view\gldisplay.c
 # End Source File
 # Begin Source File
 
@@ -348,10 +351,6 @@ SOURCE=..\..\thotlib\base\units.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\unicode\ustring.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\view\windowdisplay.c
 # End Source File
 # Begin Source File
 

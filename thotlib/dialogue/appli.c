@@ -172,6 +172,7 @@ static ThotBool Win_Scroll_visible (HWND scroll_hwnd)
   ----------------------------------------------------------------------*/
 void WIN_GetDeviceContext (int frame)
 {
+#ifndef _GLPRINT
   if (frame < 0 || frame > MAX_FRAME)
     {
       if (TtDisplay)
@@ -192,6 +193,7 @@ void WIN_GetDeviceContext (int frame)
 	  SetICMMode (TtDisplay, ICM_ON);
 	}
     }
+#endif /*_GLPRINT*/
 }
 
 /*----------------------------------------------------------------------
@@ -199,6 +201,7 @@ void WIN_GetDeviceContext (int frame)
   ----------------------------------------------------------------------*/
 void WIN_ReleaseDeviceContext (void)
 {
+#ifndef _GLPRINT
   /* release the previous Device Context. */
   if (TtDisplay != NULL)
     {     
@@ -206,6 +209,7 @@ void WIN_ReleaseDeviceContext (void)
       ReleaseDC (WIN_curWin, TtDisplay);
     }
   TtDisplay = NULL;
+#endif /*_GLPRINT*/
 }
 
 /*----------------------------------------------------------------------

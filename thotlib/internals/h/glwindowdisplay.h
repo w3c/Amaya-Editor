@@ -4,6 +4,10 @@
 
 #ifdef _WINDOWS
 
+#pragma warning (disable: 4786)
+#pragma warning (disable: 4788)
+#pragma warning (disable: 4244)
+
 void GL_Win32ContextClose (int frame, HWND hwndClient);
 void GL_Win32ContextInit (HWND hwndClient, int frame);
 
@@ -22,6 +26,10 @@ typedef struct _XArc {
 	int angle1;
 	int angle2;
 } XArc;
+
+void SetupPixelFormatPrintGL (HDC hDC, int frame);
+void initwgl (HDC hDC, int frame);
+void closewgl (HDC hDC, int frame);
 
 #endif /*_WINDOWS*/
 
@@ -200,4 +208,7 @@ void WinGL_Swap (HDC hDC);
 int GetSharedContext ();
 void SetSharedContext (int frame);
 #endif /* _NOSHARELIST */
+
+void GetGLContext ();
+
 #endif /*_GLWINDOWDISPLAY_H_*/

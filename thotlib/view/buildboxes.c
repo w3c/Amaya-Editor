@@ -35,10 +35,12 @@
 #include "appdialogue_tv.h"
 
 #ifdef _GL
+#include <GL/gl.h>
 #include "displaybox_f.h"
 #include "animbox_f.h"
-#include <GL/gl.h>
+#include "glwindowdisplay.h"
 #endif /* _GL */
+
 extern Frame_Ctl   FrameTable[MAX_FRAME+1];
 
 #define MAX_BOX_INWORK 10

@@ -64,6 +64,10 @@
 #include "units_f.h"
 #include "writepivot_f.h"
 
+#ifdef _GL
+#include "glwindowdisplay.h"
+#endif /*_GL*/
+
 #define MaxPageLib 20
 #define HMinPage 60		/* Hauteur minimum du corps de la page */
 static int          pagesCounter;

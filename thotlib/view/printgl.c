@@ -72,6 +72,14 @@ static GdkVisual    *visual = NULL;
 
 #endif /* _GTK */
 
+#ifdef _WINDOWS
+
+/* Win32 opengl context based on frame number*/
+static HDC   GL_Windows[MAX_FRAME];	
+static HGLRC GL_Context[MAX_FRAME];
+
+#endif /*_WINDOWS*/
+
 #include "GL/gl.h"
 
 #include "ustring.h"
@@ -195,7 +203,89 @@ void GetGLContext ()
  /*  GL_SetTransText (TRUE); */
 }
 
+#ifdef _WINDOWS
 
+
+void initwgl (HDC hDC, int frame)
+{
+	HGLRC hGLRC = 0;
+
+  hGLRC = wglCreateContext (hDC);
+
+  GL_Windows[frame] = hDC;
+  GL_Context[frame] = hGLRC;
+  if (wglMakeCurrent (hDC, hGLRC))
+    {
+      SetGlPipelineState ();
+      GLResize (GL_HEIGHT, GL_WIDTH,0,0);
+      glScissor (0, 0, GL_HEIGHT, GL_WIDTH);
+      GL_Err();
+	}
+}
+
+void closewgl (HDC hDC, int frame)
+{
+	wglDeleteContext (GL_Context[frame]);
+}
+
+void SetupPixelFormatPrintGL (HDC hDC, int frame)
+{
+  PIXELFORMATDESCRIPTOR pfd = 
+    {
+      sizeof(PIXELFORMATDESCRIPTOR),  /* size */
+      1,                              /* version */
+      PFD_DRAW_TO_BITMAP |			  /* Format Must Support Bitmap*/
+      PFD_SUPPORT_OPENGL |
+      PFD_SUPPORT_GDI, 		  /* Format Must Support OpenGL*/         
+      PFD_TYPE_RGBA,                  /* color type */
+      32,                             /* prefered color depth */
+      0, 0, 0, 0, 0, 0,               /* color bits (ignored) */
+      1,                              /* alpha buffer */
+      0,                              /* alpha bits (ignored) */
+      0,                              /* no accumulation buffer */
+      0, 0, 0, 0,                     /* accum bits (ignored) */
+      0,                              /* depth buffer */
+      1,                              /* stencil buffer */
+      0,                              /* no auxiliary buffers */
+      PFD_MAIN_PLANE,                 /* main layer */
+      0,                              /* reserved */
+      0, 0, 0,                        /* no layer, visible, damage masks */
+    };
+  int pixelFormat;	
+	HDC hdcurrent;
+
+hdcurrent = hDC;
+   //hdcurrent = GetDC (NULL);//CreateDC ("DISPLAY", NULL, NULL, NULL);
+
+  pixelFormat = ChoosePixelFormat (hdcurrent, &pfd);
+  if (pixelFormat == 0) 
+    {
+      MessageBox(WindowFromDC(hDC), "ChoosePixelFormat failed.", "Error",
+		 MB_ICONERROR | MB_OK);
+      exit(1);
+    }
+
+  if (SetPixelFormat(hdcurrent, pixelFormat, &pfd) != TRUE) 
+    {
+	LPVOID lpMsgBuf;
+
+	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | 
+	    FORMAT_MESSAGE_IGNORE_INSERTS,
+	    NULL, GetLastError(),
+	    MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), 
+	    (LPTSTR) &lpMsgBuf,  0,  NULL );
+		MessageBox( NULL, (LPCTSTR)lpMsgBuf, "Error", MB_OK | MB_ICONINFORMATION );
+		LocalFree( lpMsgBuf );
+	    MessageBox(WindowFromDC(hDC), "SetPixelFormat failed.", "Error",
+		 MB_ICONERROR | MB_OK);
+		exit(1);
+    }
+   initwgl (hdcurrent, frame);
+}
+
+
+
+#endif /*_WINDOWS*/
 
 static ThotBool NeedRedraw (int frame)
 {
@@ -224,6 +314,10 @@ void InitPrintBox ()
 {
   if (NotFeedBackMode && !CompBoundingBox)
     {
+#ifdef _WINDOWS
+	  /*ReleasePrinterDC ();
+	  SetGLDC ():*/
+#endif /*_WINDOWS*/
       NotFeedBackMode = FALSE;  
       glFeedbackBuffer (FEEDBUFFERSIZE, GL_3D_COLOR, feedBuffer);
       glRenderMode (GL_FEEDBACK);
@@ -236,6 +330,11 @@ void FinishPrintBox ()
 {  
   if (NotFeedBackMode == FALSE && !CompBoundingBox)
     {  
+#ifdef _WINDOWS
+	/*ReleaseDC (w, hDC);*/
+	  /*ReleaseGLDC ();
+	  SetPrinterDC ():TtPrinterDC*/
+#endif /*_WINDOWS*/
       GLParseFeedbackBuffer (feedBuffer); 
       NotFeedBackMode = TRUE;
     }
@@ -290,8 +389,9 @@ void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int 
 ThotBool GL_prepare (int frame)
 {  
 #ifdef _GTK
-  if (gdk_gl_pixmap_make_current (glpixmap, context) != TRUE)
-    return FALSE;
+  return gdk_gl_pixmap_make_current (glpixmap, context);
+#else
+   return wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);
 #endif /* _GTK */
   return TRUE;
 }
@@ -511,12 +611,6 @@ GLint GLText (const char *str,
   fprintf (FILE_STREAM, ") %d %d %d s\n", 
 	   width, x, -y);
 
-  /* fprintf (FILE_STREAM, "(%s) %g %g %d /%s S\n", */
-  /* 	   str,  */
-  /* 	   x, y, */
-  /* 	   fontsize,  */
-  /* 	   fontname); */
-
   return width;
 }
 
@@ -526,6 +620,8 @@ GLint GLText (const char *str,
   ----------------------------------------------------------------------*/
 static void Transcode (FILE *fout, int encoding, unsigned char car)
 {
+  if (!fout)
+	return;
   switch (car)
     {
     case '(':
@@ -567,6 +663,8 @@ int GLString (unsigned char *buff, int lg, int frame, int x, int y,
   static  int         SameBox = 0;
 
   fout = (FILE *) FILE_STREAM;
+  if (!fout)
+	return 0;
   encoding = 0;
   if (y < 0)
     return 0;
@@ -704,6 +802,8 @@ GLint GLDrawPixelsPoscript (GLsizei width, GLsizei height,
   if((width <= 0) || (height <= 0))
     return 0;
   stream = FILE_STREAM;
+  if (!stream)
+	  return 0;
   x = x + xorig;
   y = y + yorig; 
   Mode = (format == GL_RGBA)?1:0;
@@ -846,8 +946,49 @@ void GL_SwapEnable (int frame)
   ----------------------------------------------------------------------*/
 void WinGL_Swap (HDC hDC)
 {
- 
+ 	    /*wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);	 */
 }
+/*----------------------------------------------------------------------
+  GL_KillFrame : if realeasing a source sharing context, name a new one 
+as the source sharing context
+  ----------------------------------------------------------------------*/
+void GL_KillFrame (int frame)
+{
+  
+}
+#ifdef _WIN_PRINT
+/*----------------------------------------------------------------------
+  WDrawString draw a char string of lg chars beginning in buff.
+   ----------------------------------------------------------------------*/
+int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
+		 PtrFont font, int boxWidth, int bl, int hyphen,
+		 int startABlock, int fg, int shadow)
+{
+  int j;
+
+  if (lg < 0)
+    return 0;
+  
+  y += FrameTable[frame].FrTopMargin;
+  if (shadow)
+    {
+      /* replace each character by a star */
+      j = 0;
+      while (j < lg)
+	{
+	  buff[j++] = '*';
+	}
+    }
+  /*return (GL_UnicodeDrawString (fg, 
+				buff, 
+				(float) x,
+				(float) y, 
+				hyphen,
+				(void *)font, 
+				lg));*/
+  return 1;
+}
+#endif /*_WIN_PRINT*/
 #endif /*_WINDOWS*/
 /*----------------------------------------------------------------------
   SetBadCard :  handle video cards that flush backbuffer after each

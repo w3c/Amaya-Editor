@@ -38,6 +38,9 @@
 #include "content.h"
 #include "appli_f.h"
 #include "contentapi_f.h"
+#ifdef _GL
+#include "glwindowdisplay.h"
+#endif /*_GL*/
 
 /*----------------------------------------------------------------------
   IsXYPosComplete returns TRUE indicators when the box position is

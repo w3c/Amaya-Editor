@@ -18,6 +18,10 @@
 #include "appdialogue.h"
 #include "frame.h"
 
+#ifdef _GL
+#include "glwindowdisplay.h"
+#endif /*_GL*/
+
 #define THOT_EXPORT extern
 #include "appdialogue_tv.h"
 #include "boxes_tv.h"

@@ -128,6 +128,8 @@ static ThotWindow    thotWindow;
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
+#include "glwindowdisplay.h"
+
 static int          manualFeed;
 static char       pageSize [3];
 static int          BlackAndWhite;
@@ -258,6 +260,13 @@ BOOL PASCAL InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)
 
   if (StartDoc (hDC, &DocInfo) <= 0)
       return FALSE;
+  
+#ifdef _WINDOWS
+#ifdef _GLPRINT
+   SetupPixelFormatPrintGL (TtPrinterDC, 0);
+#endif /*_GLPRINT*/
+#endif /*_WINDOWS*/
+
  /* might want to call the abort proc here to allow the user to
    * abort just before printing begins */
   return TRUE;
@@ -2503,70 +2512,6 @@ int makeArgcArgv (HINSTANCE hInst, char*** pArgv, char* cmdLine)
       ptr++;
     }
 }
-static void SetupPixelFormatPrintGL (HDC hDC)
-{
-  static PIXELFORMATDESCRIPTOR pfd = 
-    {
-      sizeof(PIXELFORMATDESCRIPTOR),  /* size */
-      1,                              /* version */
-      PFD_DRAW_TO_BITMAP |			  /* Format Must Support Bitmap*/
-      PFD_SUPPORT_OPENGL |
-      PFD_SUPPORT_GDI, 		  /* Format Must Support OpenGL*/         
-      PFD_TYPE_RGBA,                  /* color type */
-      32,                             /* prefered color depth */
-      0, 0, 0, 0, 0, 0,               /* color bits (ignored) */
-      1,                              /* alpha buffer */
-      0,                              /* alpha bits (ignored) */
-      0,                              /* no accumulation buffer */
-      0, 0, 0, 0,                     /* accum bits (ignored) */
-      0,                              /* depth buffer */
-      1,                              /* stencil buffer */
-      0,                              /* no auxiliary buffers */
-      PFD_MAIN_PLANE,                 /* main layer */
-      0,                              /* reserved */
-      0, 0, 0,                        /* no layer, visible, damage masks */
-    };
-  int pixelFormat;	
-	HDC hdcurrent;
-
-hdcurrent = CreateDC ("DISPLAY", NULL, NULL, NULL);
-
-  pixelFormat = ChoosePixelFormat (hdcurrent, &pfd);
-  if (pixelFormat == 0) 
-    {
-      MessageBox(WindowFromDC(hDC), "ChoosePixelFormat failed.", "Error",
-		 MB_ICONERROR | MB_OK);
-      exit(1);
-    }
-
-  if (SetPixelFormat(hdcurrent, pixelFormat, &pfd) != TRUE) 
-    {
-	LPVOID lpMsgBuf;
-
-	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | 
-	    FORMAT_MESSAGE_IGNORE_INSERTS,
-	    NULL, GetLastError(),
-	    MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), 
-	    (LPTSTR) &lpMsgBuf,  0,  NULL );
-		MessageBox( NULL, (LPCTSTR)lpMsgBuf, "Error", MB_OK | MB_ICONINFORMATION );
-		LocalFree( lpMsgBuf );
-	    MessageBox(WindowFromDC(hDC), "SetPixelFormat failed.", "Error",
-		 MB_ICONERROR | MB_OK);
-		exit(1);
-    }
-
-  
-DeleteDC(hdcurrent);
-
-#ifdef _TEST
-  if ((pfd.dwFlags & PFD_GENERIC_ACCELERATED) != 0)
-    SetSoftware_Mode (FALSE);/*MCD mini client driver*/
-  else if ((pfd.dwFlags & PFD_GENERIC_FORMAT) != 0)
-    SetSoftware_Mode (TRUE);/*software opengl*/
-  else
-    SetSoftware_Mode (FALSE);/*ICD installable client driver*/
-#endif /*_TEST*/
-}
 #endif /*_GLPRINT*/
 
 
@@ -2608,12 +2553,10 @@ int main (int argc, char **argv)
   ThotBool          viewFound = FALSE;
   ThotBool          done;
 #ifndef _WINDOWS_DLL
-    ThotBool isTrueColors; 
-	int depth; 
+#ifdef _WINDOWS  
 	char *tmpDocName = NULL;
 	char *tmpDir = NULL;
-	ThotBool buttonCmd;
-#ifdef _WINDOWS
+	ThotBool buttonCmd = FALSE;
 #ifdef _GLPRINT
   HWND hWnd = NULL;
   HDC PrinterDC = 0;
@@ -2904,18 +2847,20 @@ int main (int argc, char **argv)
 	if (!TtaGetPrinterDC (reuse, &k, &l))
   {
 	  TtaFreeMemory (realName);
-	  return;
+	  return 0;
   }
 
-   SetupPixelFormatPrintGL (TtPrinterDC);
   }
 #else
 	if(PrinterDC)
 		TtPrinterDC = PrinterDC;
-#endif /*_GLPRINT*/
+#endif /*_WINDOWS_DLL*/
 
+#ifdef _WINDOWS_DLL
   TtIsTrueColor = isTrueColors;
   TtWDepth = depth;
+#endif /*_WINDOWS_DLL*/
+
   TtWPrinterDepth = GetDeviceCaps (TtPrinterDC, PLANES);
   hCurrentInstance = hInst;
   TtDisplay = GetDC (NULL);
@@ -2956,6 +2901,7 @@ int main (int argc, char **argv)
    /* Initialise the list of table editing actions */
    TableHLoadResources (); 
    Table2LoadResources (); 
+
 
    /* Initialise Picture Drivers for printing */
    InitPictureHandlers (TRUE);
@@ -3075,5 +3021,17 @@ int main (int argc, char **argv)
        }
 #endif /* _GTK */	
    exit (0);
+
+#else /* _WINDOWS */
+#ifdef _WINDOWS_DLL
+   return 0;
+#else /*_WINDOWS_DLL*/
+	ReleaseDC (NULL, TtPrinterDC);
+	closewgl (TtPrinterDC, 0);
+	DeleteDC (TtPrinterDC);
+
+   exit (0);
+
+#endif /*_WINDOWS_DLL*/
 #endif /* _WINDOWS */
 }

@@ -226,6 +226,11 @@ ThotBool GetBadCard ()
 }
 /*----------------------------------------------------------------------
   GL_DrawAll : Really Draws opengl !!
+  This Function is called after any event any window receive,
+  and by the Timer.
+  If a frame need to be redrawn (FrameTable[frame].DblBuffNeedSwap),
+  or animated (FrameTable[frame].Animated_Boxes && FrameTable[frame].Anim_play)
+  Then we call a redrawframebottom
   ----------------------------------------------------------------------*/
 ThotBool GL_DrawAll ()
 {  

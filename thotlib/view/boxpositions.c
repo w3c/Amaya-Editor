@@ -22,6 +22,7 @@
 #ifdef _GL
 #include "frame.h"
 #include "content.h"
+#include "glwindowdisplay.h"
 #endif /* _GL */
 
 #define THOT_EXPORT extern

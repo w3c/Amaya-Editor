@@ -21,6 +21,7 @@
 #include "frame.h"
 
 #ifdef _GL
+#include "glwindowdisplay.h"
 #include "content.h"
 #endif /* _GL */
 
