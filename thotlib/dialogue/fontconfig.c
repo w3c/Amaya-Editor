@@ -391,16 +391,21 @@ static FontScript **FontConfigLoad ()
 #else /* _WINDOWS */
   strcpy (word, "fonts.unix");  
 #endif /* _WINDOWS */
+
 #else /* _GL */
-#ifdef _WINDOWS
-  strcpy (word, "fonts.gl.win");  
-#else /* _WINDOWS */
+
+#ifdef _UNIX
 #ifdef _MACOS
   strcpy (word, "fonts.gl.mac");  
 #else /* _MACOS */
   strcpy (word, "fonts.gl");  
 #endif /* _MACOS */  
+#else /* _UNIX */
+#ifdef _WINDOWS
+  strcpy (word, "fonts.gl.win");  
 #endif /* _WINDOWS */  
+#endif /* _UNIX */
+
 #endif /* _GL */
 
   strcpy (fname, appHome);
