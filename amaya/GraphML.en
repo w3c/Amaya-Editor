@@ -1,9 +1,14 @@
-document
+extension
 
 export
  GraphMLT:   GraphML
 
 translation
+
+TEXT_UNIT: \240
+GRAPHICS_UNIT: \240
+PICTURE_UNIT: \240
+
 GraphML: svg
 style_: style
 xml_space_default: default
@@ -15,4 +20,4 @@ height_: height
 width_: width
 line_: line
 text_: text
-GRAPHICS_UNIT: \240
+

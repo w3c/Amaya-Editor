@@ -679,109 +679,103 @@ void                TtaConfigReadConfigFiles (aSchemaPath)
 CHAR_T*             aSchemaPath;
 #endif                       /* __STDC__ */
 {
-   int                 nbitemdoc, nbitemnat, nbitemext;
-   int                 beginning, i;
-   int                 typ;
-   ThotBool            import;
-   CHAR_T*             Dir;
-   PathBuffer          DirBuffer;
-   ThotDirBrowse       thotDir;
-
+  int                 nbitemdoc, nbitemnat, nbitemext;
+  int                 beginning, i;
+  int                 typ;
+  ThotBool            import;
+  CHAR_T*             Dir;
+  PathBuffer          DirBuffer;
+  ThotDirBrowse       thotDir;
 #define NAME_LENGTH     100
 #define MAX_NAME         80
 #define SELECTOR_NB_ITEMS 5
-   CHAR_T*             suffix;
-   PathBuffer          fname;
-   CHAR_T*             nameOrig;
-   CHAR_T*             nameTrans;
-   ThotBool            stop;
+  CHAR_T*             suffix;
+  PathBuffer          fname;
+  CHAR_T*             nameOrig;
+  CHAR_T*             nameTrans;
+  ThotBool            stop;
 
-   suffix = TtaGetVarLANG ();
-#  ifdef _WINDOWS
-   if (!ustrncasecmp (suffix, TEXT("fr"), 2))
-      app_lang = FR_LANG;
-   else if (!ustrncasecmp (suffix, TEXT("en"), 2))
-      app_lang = EN_LANG;
-   else if (!ustrncasecmp (suffix, TEXT("de"), 2))
-      app_lang = DE_LANG;
-#  endif /* _WINDOWS */
+  /* force the english language in schemas */
+  suffix = TEXT("en");
+#ifdef _WINDOWS
+  app_lang = EN_LANG;
+#endif /* _WINDOWS */
+  /* libere les anciennes entrees des tables de types de documents */
+  /* de natures et d'extensions */
+  ConfigFree ();
 
-   /* libere les anciennes entrees des tables de types de documents */
-   /* de natures et d'extensions */
-   ConfigFree ();
-
-   beginning = 0;
-   i = 0;
-   nbitemdoc = 0;
-   nbitemnat = 0;
-   nbitemext = 0;
-   /* traite successivement tous les directories du path des schemas */
-   ustrncpy (DirBuffer, aSchemaPath, MAX_PATH);
-   stop = FALSE;
-   while (DirBuffer[i] != WC_EOS && i < MAX_PATH && !stop)
-     {
-	while (DirBuffer[i] != WC_PATH_SEP && DirBuffer[i] != WC_EOS && i < MAX_PATH)
-	   i++;
-	if (DirBuffer[i] == WC_EOS)
-	   /* dernier directory du path. Il faut s'arreter apres ce directory */
-	   stop = TRUE;
-	if (DirBuffer[i] == WC_PATH_SEP)
-	   DirBuffer[i] = WC_EOS;
-	if (DirBuffer[i] == WC_EOS)
-	   /* un directory de schema a ete isole' */
-	  {
-	     Dir = &DirBuffer[beginning];
-	     if (TtaCheckDirectory (Dir))
-		/* c'est bien un directory */
-	       {
-		  /* commande "ls" sur le directory */
-		  thotDir.buf = fname;
-		  thotDir.bufLen = sizeof (fname) / sizeof (CHAR_T);
-		  thotDir.PicMask = ThotDirBrowse_FILES;
-		  if (ThotDirBrowse_first (&thotDir, Dir, TEXT("*."), suffix) == 1)
-		     do
-		       {
-			  namesOfDocType (fname, &nameOrig, &nameTrans, &typ, &import);
-			  if (nameOrig != NULL)
-			    {
-			       if (typ == CONFIG_DOCUMENT_STRUCT || typ == CONFIG_EXCLUSION)
-				 {
-				    doc_items[nbitemdoc] = nameOrig;
-				    doc_items_menu[nbitemdoc] = nameTrans;
-				    if (import)
-				       doc_import[nbitemdoc] = TRUE;
-				    nbitemdoc++;
-				 }
-			       if (typ == CONFIG_NATURE_STRUCT)
-				 {
-				    nat_items[nbitemnat] = nameOrig;
-				    nat_items_menu[nbitemnat] = nameTrans;
-				    nbitemnat++;
-				 }
-			       if (typ == CONFIG_EXCLUSION)
-				 {
-				    nat_items[nbitemnat] = TtaAllocString (ustrlen (nameOrig) + 1);
-				    nat_items_menu[nbitemnat] = TtaAllocString (ustrlen (nameTrans) + 1);
-				    ustrcpy (nat_items[nbitemnat], nameOrig);
-                    ustrcpy (nat_items_menu[nbitemnat], nameTrans);
-				    nbitemnat++;
-				 }
-			       if (typ == CONFIG_EXTENSION_STRUCT)
-				 {
-				    ext_items[nbitemext] = nameOrig;
-				    ext_items_menu[nbitemext] = nameTrans;
-				    nbitemext++;
-				 }
-			    }
-		       }
-		     while (ThotDirBrowse_next (&thotDir) == 1);
-		  ThotDirBrowse_close (&thotDir);
-	       }
-	     /* continue a chercher les directories dans le path des schemas */
-	     i++;
-	     beginning = i;
-	  }
-     }
+  beginning = 0;
+  i = 0;
+  nbitemdoc = 0;
+  nbitemnat = 0;
+  nbitemext = 0;
+  /* traite successivement tous les directories du path des schemas */
+  ustrncpy (DirBuffer, aSchemaPath, MAX_PATH);
+  stop = FALSE;
+  while (DirBuffer[i] != WC_EOS && i < MAX_PATH && !stop)
+    {
+      while (DirBuffer[i] != WC_PATH_SEP && DirBuffer[i] != WC_EOS && i < MAX_PATH)
+	i++;
+      if (DirBuffer[i] == WC_EOS)
+	/* dernier directory du path. Il faut s'arreter apres ce directory */
+	stop = TRUE;
+      if (DirBuffer[i] == WC_PATH_SEP)
+	DirBuffer[i] = WC_EOS;
+      if (DirBuffer[i] == WC_EOS)
+	/* un directory de schema a ete isole' */
+	{
+	  Dir = &DirBuffer[beginning];
+	  if (TtaCheckDirectory (Dir))
+	    /* c'est bien un directory */
+	    {
+	      /* commande "ls" sur le directory */
+	      thotDir.buf = fname;
+	      thotDir.bufLen = sizeof (fname) / sizeof (CHAR_T);
+	      thotDir.PicMask = ThotDirBrowse_FILES;
+	      if (ThotDirBrowse_first (&thotDir, Dir, TEXT("*."), suffix) == 1)
+		do
+		  {
+		    namesOfDocType (fname, &nameOrig, &nameTrans, &typ, &import);
+		    if (nameOrig != NULL)
+		      {
+			if (typ == CONFIG_DOCUMENT_STRUCT || typ == CONFIG_EXCLUSION)
+			  {
+			    doc_items[nbitemdoc] = nameOrig;
+			    doc_items_menu[nbitemdoc] = nameTrans;
+			    if (import)
+			      doc_import[nbitemdoc] = TRUE;
+			    nbitemdoc++;
+			  }
+			if (typ == CONFIG_NATURE_STRUCT)
+			  {
+			    nat_items[nbitemnat] = nameOrig;
+			    nat_items_menu[nbitemnat] = nameTrans;
+			    nbitemnat++;
+			  }
+			if (typ == CONFIG_EXCLUSION)
+			  {
+			    nat_items[nbitemnat] = TtaAllocString (ustrlen (nameOrig) + 1);
+			    nat_items_menu[nbitemnat] = TtaAllocString (ustrlen (nameTrans) + 1);
+			    ustrcpy (nat_items[nbitemnat], nameOrig);
+			    ustrcpy (nat_items_menu[nbitemnat], nameTrans);
+			    nbitemnat++;
+			  }
+			if (typ == CONFIG_EXTENSION_STRUCT)
+			  {
+			    ext_items[nbitemext] = nameOrig;
+			    ext_items_menu[nbitemext] = nameTrans;
+			    nbitemext++;
+			  }
+		      }
+		  }
+		while (ThotDirBrowse_next (&thotDir) == 1);
+	      ThotDirBrowse_close (&thotDir);
+	    }
+	  /* continue a chercher les directories dans le path des schemas */
+	  i++;
+	  beginning = i;
+	}
+    }
 }
 
 
@@ -1001,7 +995,7 @@ ThotBool            lang;
    CHAR_T*             app_home;
 
    if (lang)
-        suffix = TtaGetVarLANG ();
+        suffix = TEXT("en");
    else
       suffix = TEXT("conf");
 
