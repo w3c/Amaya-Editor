@@ -232,7 +232,7 @@ MENUS
 	view:1 Annotations_ button:BAnnotate -> AnnotateDocument;
 	view:1 Annotations_ toggle:TShowAnnotations -> ShowAnnotations;
 	Annotations_ Separator;
-	view:1 Annotations_ button:BLoadAnnots -> PostAnnotation;
+	view:1 Annotations_ button:BLoadAnnots -> LoadAnnotations;
 	Annotations_ Separator;
 	view:1 Annotations_ button:BPostAnnot -> PostAnnotation;
 
