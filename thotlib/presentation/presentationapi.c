@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -64,7 +61,7 @@ Document            document;
 	TtaError (ERR_invalid_parameter);
      }
    else
-      /* verifie le parametre document */
+      /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -74,11 +71,11 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	v = 0;
 	if (view < 100)
-	   /* vue de l'arbre principal */
+	   /* View of the main tree */
 	   if (view < 1 || view > MAX_VIEW_DOC)
 	      TtaError (ERR_invalid_parameter);
 	   else if (LoadedDocument[document - 1]->DocView[view - 1].DvPSchemaView == 0)
@@ -87,7 +84,7 @@ Document            document;
 	   else
 	      v = LoadedDocument[document - 1]->DocView[view - 1].DvPSchemaView;
 	else
-	   /* vue d'elements associes */
+	   /* View of associated elements */
 	if (view - 100 < 1 || view - 100 > MAX_ASSOC_DOC)
 	   TtaError (ERR_invalid_parameter);
 	else if (LoadedDocument[document - 1]->DocAssocFrame[view - 101] == 0)
@@ -146,7 +143,7 @@ Document            document;
 	TtaError (ERR_invalid_parameter);
      }
    else
-      /* verifie le parametre document */
+      /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -160,7 +157,7 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document et vue correct */
+      /* parameters document and view are correct */
      {
 	GetReglePres (&pPres);
 	pPres->PrType = (PRuleType) presentationType;
@@ -214,7 +211,7 @@ Document            document;
 	TtaError (ERR_invalid_parameter);
      }
    else
-      /* verifie le parametre document */
+      /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -224,17 +221,17 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	pDoc = LoadedDocument[document - 1];
 	vue = 0;
-	/* on cherche parmi les vues de l'arbre principal */
+	/* Searching into the main tree views */
 	if (pDoc->DocSSchema->SsPSchema != NULL)
 	   for (v = 1; v <= MAX_VIEW && vue == 0; v++)
 	      if (strcmp (pDoc->DocSSchema->SsPSchema->PsView[v - 1],
 			  viewName) == 0)
 		 vue = v;
-	/* si on n'a pas trouve', on cherche parmi les elements associes */
+	/* If not found one search into associated elements */
 	if (vue == 0)
 	   for (v = 1; v <= MAX_ASSOC_DOC && vue == 0; v++)
 	     {
@@ -335,7 +332,7 @@ Document            document;
 	TtaError (ERR_invalid_parameter);
      }
    else
-      /* verifie le parametre document */
+      /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -345,7 +342,7 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 #ifndef NODISPLAY
 	ok = TRUE;
@@ -378,8 +375,7 @@ Document            document;
 	  }
 #ifndef NODISPLAY
 	if (ok)
-	   RedispNewPresSpec (document, (PtrElement) element,
-			      (PtrPRule) pRule);
+	   RedispNewPresSpec (document, (PtrElement) element, (PtrPRule) pRule);
 #endif
      }
 }
@@ -408,7 +404,7 @@ Document            document;
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pPres, pPresPrec;
+   PtrPRule        pPres, pPreviousPres;
 
    UserErrorCode = 0;
    if (element == NULL || pRule == NULL)
@@ -416,7 +412,7 @@ Document            document;
 	TtaError (ERR_invalid_parameter);
      }
    else
-      /* verifie le parametre document */
+      /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -426,26 +422,26 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	pPres = ((PtrElement) element)->ElFirstPRule;
-	pPresPrec = NULL;
+	pPreviousPres = NULL;
 	while (pPres != NULL && pPres != (PtrPRule) pRule)
 	  {
-	     pPresPrec = pPres;
+	     pPreviousPres = pPres;
 	     pPres = pPres->PrNextPRule;
 	  }
 	if (pPres != (PtrPRule) pRule)
-	   /* cet element ne possede pas cette regle de presentation */
+	   /* This element does not own a presentation rule */
 	  {
 	     TtaError (ERR_invalid_parameter);
 	  }
 	else
 	  {
-	     if (pPresPrec == NULL)
+	     if (pPreviousPres == NULL)
 		((PtrElement) element)->ElFirstPRule = pPres->PrNextPRule;
 	     else
-		pPresPrec->PrNextPRule = pPres->PrNextPRule;
+		pPreviousPres->PrNextPRule = pPres->PrNextPRule;
 #ifndef NODISPLAY
 	     RedispPresStandard (document, (PtrElement) element,
 				 pPres->PrType, pPres->PrViewNum);
@@ -511,12 +507,12 @@ Document            document;
    if (element == NULL || pRule == NULL)
       TtaError (ERR_invalid_parameter);
    else if (document < 1 || document > MAX_DOCUMENTS)
-      /* verifie le parametre document */
+      /* verifies the parameter document */
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 #ifndef NODISPLAY
 	done = TRUE;
@@ -722,7 +718,7 @@ Document            document;
 			  }
 		    break;
 		 case PtLineWeight:
-		    /* value = epaisseur du trait en points typo. */
+		    /* value = thickness of the line in typo points. */
 		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
 		    ((PtrPRule) pRule)->PrMinUnit = UnPoint;
 		    ((PtrPRule) pRule)->PrMinAttr = FALSE;
@@ -792,29 +788,29 @@ Document            document;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAb;
+   PtrAbstractBox      pAb;
    int                 v, frame;
    int                 x, y;
 
    UserErrorCode = 0;
    if (element == NULL)
       TtaError (ERR_invalid_parameter);
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    else if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	frame = GetWindowNumber (document, view);
 	if (frame != 0)
 	  {
 	     if (view < 100)
-		/* vue de l'arbre principal */
+		/* View of the main tree */
 		v = view;
 	     else
-		/* vue d'elements associes */
+		/* View of associated elements */
 		v = 1;
 	     pAb = PaveDeElem ((PtrElement) element, v);
 	     if (pAb == NULL)
@@ -874,29 +870,29 @@ TypeUnit            unit;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAb;
+   PtrAbstractBox      pAb;
    int                 v, frame;
    int                 x, y;
 
    UserErrorCode = 0;
    if (element == NULL)
       TtaError (ERR_invalid_parameter);
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    else if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	frame = GetWindowNumber (document, view);
 	if (frame != 0)
 	  {
 	     if (view < 100)
-		/* vue de l'arbre principal */
+		/* View of the main tree */
 		v = view;
 	     else
-		/* vue d'elements associes */
+		/* View of associated elements */
 		v = 1;
 	     pAb = PaveDeElem ((PtrElement) element, v);
 	     if (pAb == NULL)
@@ -967,22 +963,22 @@ int                *height;
    *height = 0;
    if (element == NULL)
       TtaError (ERR_invalid_parameter);
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    else if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	frame = GetWindowNumber (document, view);
 	if (frame != 0)
 	  {
 	     if (view < 100)
-		/* vue de l'arbre principal */
+		/* View of the main tree */
 		v = view;
 	     else
-		/* vue d'elements associes */
+		/* View of associated elements */
 		v = 1;
 	     pAb = PaveDeElem ((PtrElement) element, v);
 	     if (pAb == NULL)
@@ -1048,7 +1044,7 @@ int                *yCoord;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAb;
+   PtrAbstractBox      pAb;
    int                 v, frame;
    int                 x, y;
 
@@ -1057,22 +1053,22 @@ int                *yCoord;
    *yCoord = 0;
    if (element == NULL)
       TtaError (ERR_invalid_parameter);
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    else if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	frame = GetWindowNumber (document, view);
 	if (frame != 0)
 	  {
 	     if (view < 100)
-		/* vue de l'arbre principal */
+		/* View of the main tree */
 		v = view;
 	     else
-		/* vue d'elements associes */
+		/* View of associated elements */
 		v = 1;
 	     pAb = PaveDeElem ((PtrElement) element, v);
 	     if (pAb == NULL)
@@ -1184,7 +1180,7 @@ int                 presentationType;
 {
    PtrPRule        pRule;
    PtrPRule        pPres;
-   boolean             trouve;
+   boolean         found;
 
    UserErrorCode = 0;
    pRule = NULL;
@@ -1195,12 +1191,12 @@ int                 presentationType;
    else
      {
 	pPres = ((PtrElement) element)->ElFirstPRule;
-	trouve = FALSE;
-	while (pPres != NULL && !trouve)
+	found = FALSE;
+	while (pPres != NULL && !found)
 	   if (pPres->PrType == presentationType)
 	     {
 		pRule = pPres;
-		trouve = TRUE;
+		found = TRUE;
 	     }
 	   else
 	      pPres = pPres->PrNextPRule;
@@ -1439,7 +1435,7 @@ PRule               pRule;
 			}
 		  break;
 	       case PtLineWeight:
-		  /* value = epaisseur du trait en points typo. */
+		  /* value = thickness of the line in typographic points */
 		  value = ((PtrPRule) pRule)->PrMinValue;
 		  break;
 	       case PtFillPattern:
@@ -1480,7 +1476,7 @@ PRule               pRule2;
 #endif /* __STDC__ */
 
 {
-   int                 result;
+   int             result;
    PtrPRule        pR1, pR2;
 
    UserErrorCode = 0;
@@ -1560,4 +1556,4 @@ PRule               pRule2;
 }
 
 
-/* fin du module */
+/* End of module */
