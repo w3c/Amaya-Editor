@@ -208,6 +208,7 @@ typedef enum
 typedef enum
 {
   /* the order determines the order of the rules in the presentation schema */
+  /* Don't forget to change constant MAX_TRANSL_PRULE when adding rules */
   PtVisibility, PtFunction, PtVertRef, PtHorizRef, PtHeight, PtWidth, 
   PtVertPos, PtHorizPos,
   PtMarginTop, PtMarginRight, PtMarginBottom, PtMarginLeft,

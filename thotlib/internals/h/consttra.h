@@ -38,7 +38,7 @@
 				   translation rules */
 #define MAX_TRANSL_COND 10	/* max. number of conditions controlling the
 				   application of a translation rules block */
-#define MAX_TRANSL_PRULE 30	/* number of presentation rules types to which
+#define MAX_TRANSL_PRULE 50	/* number of presentation rules types to which
 				   translations can be associated */
 #define MAX_TRANSL_PRES_CASE 20	/* max number of different cases for the
 				   application of translation rules of a
