@@ -580,8 +580,11 @@ static int          PresConstInsert (PSchema tcsh, char *value)
 /*----------------------------------------------------------------------
   CompareCond : defines an absolute order on conditions.
   ----------------------------------------------------------------------*/
-static int CompareCond (PtrCondition c1, PtrCondition c2)
+static int CompareCond (PtrCondition c1, PtrCondition c2, SSchema sch)
 {
+  int              kind;
+  AttributeType    attType;
+
   if (c1 == c2)
     return (0);
   if (c1 == NULL)
@@ -646,11 +649,29 @@ static int CompareCond (PtrCondition c1, PtrCondition c2)
 	return (+1);
       if (c1->CoTestAttrValue && c2->CoTestAttrValue)
 	{
-	  if (c1->CoTextMatch < c2->CoTextMatch)
-	    return (-1);
-	  if (c1->CoTextMatch > c2->CoTextMatch)
-	    return (+1);
-	  return (strcasecmp (c1->CoAttrTextValue, c2->CoAttrTextValue));
+	  kind = TtaGetAttributeKind (attType);
+	  if (kind == 0 || kind == 1)
+	    /* enumerated or integer value */
+	    {
+	      if (c1->CoAttrValue < c2->CoAttrValue)
+		return (-1);
+	      if (c1->CoAttrValue > c2->CoAttrValue)
+		return (+1);
+	      return (0);
+	    }
+	  else if (kind == 2)
+	    /* character string value */
+	    {
+	      if (c1->CoTextMatch < c2->CoTextMatch)
+		return (-1);
+	      if (c1->CoTextMatch > c2->CoTextMatch)
+		return (+1);
+	      if (c1->CoAttrTextValue == NULL)
+		return (-1);
+	      if (c2->CoAttrTextValue == NULL)
+		return (+1);
+	      return (strcasecmp (c1->CoAttrTextValue, c2->CoAttrTextValue));
+	    }
 	}
       return (0);
     default:
@@ -663,7 +684,7 @@ static int CompareCond (PtrCondition c1, PtrCondition c2)
   AddCond : add a new condition in a presentation rule, respecting
   the order of the list.
   ----------------------------------------------------------------------*/
-static void AddCond (PtrCondition *base, PtrCondition cond)
+static void AddCond (PtrCondition *base, PtrCondition cond, SSchema sch)
 {
    PtrCondition        cour = *base;
    PtrCondition        next;
@@ -674,7 +695,7 @@ static void AddCond (PtrCondition *base, PtrCondition cond)
 	cond->CoNextCondition = NULL;
 	return;
      }
-   if (CompareCond (cond, cour) <= 0)
+   if (CompareCond (cond, cour, sch) <= 0)
      {
 	*base = cond;
 	cond->CoNextCondition = cour;
@@ -683,7 +704,7 @@ static void AddCond (PtrCondition *base, PtrCondition cond)
    next = cour->CoNextCondition;
    while (next)
      {
-	if (CompareCond (cond, next) <= 0)
+	if (CompareCond (cond, next, sch) <= 0)
 	  {
 	     cond->CoNextCondition = next;
 	     cour->CoNextCondition = cond;
@@ -701,7 +722,8 @@ static void AddCond (PtrCondition *base, PtrCondition cond)
 /*----------------------------------------------------------------------
   PresRuleAddAncestorCond : add an ancestor condition to a presentation rule.
   ----------------------------------------------------------------------*/
-static void PresRuleAddAncestorCond (PtrPRule rule, int type, int nr)
+static void PresRuleAddAncestorCond (PtrPRule rule, SSchema sch, int type,
+				     int nr)
 {
    PtrCondition        cond = NULL;
 
@@ -733,16 +755,17 @@ static void PresRuleAddAncestorCond (PtrPRule rule, int type, int nr)
        cond->CoAncestorName = NULL;
        cond->CoSSchemaName[0] = EOS;
      }
-   AddCond (&rule->PrCond, cond);
+   AddCond (&rule->PrCond, cond, sch);
 }
 
 /*----------------------------------------------------------------------
   PresRuleAddAttrCond : add a Attr condition to a presentation rule.
   ----------------------------------------------------------------------*/
-static void PresRuleAddAttrCond (PtrPRule rule, int type, int level,
-				 char* value, CondMatch match){
-
+static void PresRuleAddAttrCond (PtrPRule rule, AttributeType attType,
+				 int level, char* value, CondMatch match)
+{
    PtrCondition        cond = NULL;
+   int                 kind;
 
    GetPresentRuleCond (&cond);
    memset (cond, 0, sizeof (Condition));
@@ -757,16 +780,24 @@ static void PresRuleAddAttrCond (PtrPRule rule, int type, int level,
       cond->CoCondition = PcInheritAttribute;
    cond->CoNotNegative = TRUE;
    cond->CoTarget = FALSE;
-   cond->CoTypeAttr = type;
+   cond->CoTypeAttr = attType.AttrTypeNum;
    cond->CoTestAttrValue = (value != NULL);
-   if (value)
+   kind = TtaGetAttributeKind (attType);
+   if (kind == 0 || kind == 1)
+     /* enumerated or integer value */
+     cond->CoAttrValue = (int)value;
+   else if (kind == 2)
+     /* character string value */
      {
-       cond->CoAttrTextValue = TtaStrdup (value);
-       cond->CoTextMatch = match;
+       if (value)
+	 {
+	   cond->CoAttrTextValue = TtaStrdup (value);
+	   cond->CoTextMatch = match;
+	 }
+       else
+	 cond->CoAttrTextValue = NULL;
      }
-   else
-     cond->CoAttrTextValue = NULL;
-   AddCond (&rule->PrCond, cond);
+   AddCond (&rule->PrCond, cond, attType.AttrSSchema);
 }
 
 static char ListOfValues[MAX_LENGTH];
@@ -1088,7 +1119,7 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
 		   cond->CoTypeAttr != ctxt->attrType[i] ||
 		   cond->CoTestAttrValue != (ctxt->attrText != NULL) ||
 		   (cond->CoTestAttrValue &&
-		    (cond->CoTextMatch != ctxt->attrMatch[i] ||
+		    (cond->CoTextMatch != (CondMatch)(ctxt->attrMatch[i]) ||
 		    (cond->CoAttrTextValue &&
 		     ctxt->attrText[i] &&
 		     strcasecmp (cond->CoAttrTextValue, ctxt->attrText[i]))))))
@@ -1201,6 +1232,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 {
   PtrPRule           *chain;
   PtrPRule            pRule = NULL;
+  AttributeType       attType;
   int                 i, att;
 
   /* Search presentation rule */
@@ -1227,7 +1259,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 	  att++;
 	  if (att == 0 && ctxt->type)
 	    /* the attribute is attached to that element like a selector "a#id" */
-	    PresRuleAddAncestorCond (pRule, ctxt->type, 0);
+	    PresRuleAddAncestorCond (pRule, ctxt->schema, ctxt->type, 0);
 	  /* add other conditions ... */
 	  i = 0;
 	  while (i < MAX_ANCESTORS)
@@ -1235,11 +1267,16 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 	      if (i != 0 && ctxt->name[i] && ctxt->names_nb[i] > 0 &&
 		  ctxt->rel[i] != RelPrevious)
 		/* it's an ancestor like a selector "li a" */
-		PresRuleAddAncestorCond (pRule, ctxt->name[i], ctxt->names_nb[i]);
+		PresRuleAddAncestorCond (pRule, ctxt->schema, ctxt->name[i],
+					 ctxt->names_nb[i]);
 	      if (ctxt->attrType[i]  && i != att)
 		/* it's another attribute */
-		PresRuleAddAttrCond (pRule, ctxt->attrType[i], ctxt->attrLevel[i],
-				     ctxt->attrText[i], (CondMatch)ctxt->attrMatch[i]);
+		{
+		  attType.AttrSSchema = ctxt->schema;
+		  attType.AttrTypeNum = ctxt->attrType[i];
+		  PresRuleAddAttrCond (pRule, attType, ctxt->attrLevel[i],
+			     ctxt->attrText[i], (CondMatch)ctxt->attrMatch[i]);
+		}
 	      i++;
 	    }
 
