@@ -128,8 +128,8 @@ View                view;
    TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &i);
    if (el != NULL)
      {
-       /* Search the anchor element */
-       el = SearchAnchor (doc, el, TRUE);
+       /* Look if there is an enclosing anchor element */
+       el = SearchAnchor (doc, el, TRUE, TRUE);
        if (el == NULL)
 	 {
 	   /* The link element is a new created one */
@@ -783,7 +783,7 @@ ThotBool            createLink;
     {
       /* check whether the selection is within an anchor */
       if (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
-	el = SearchAnchor (doc, first, (ThotBool)(!createLink));
+	el = SearchAnchor (doc, first, TRUE, TRUE);
       else
 	el = NULL;
       if (el != NULL)
@@ -869,8 +869,8 @@ ThotBool            createLink;
 	      return;
 	    }
 	  /* check if the anchor to be created is within an anchor element */
-	  else if (SearchAnchor (doc, first, TRUE) != NULL ||
-		   SearchAnchor (doc, last, TRUE) != NULL)
+	  else if (SearchAnchor (doc, first, TRUE, TRUE) != NULL ||
+		   SearchAnchor (doc, last, TRUE, TRUE) != NULL)
 	    {
 	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_ANCHOR2), NULL);
 	      return;
@@ -2422,20 +2422,21 @@ View                view;
 
 
 /*----------------------------------------------------------------------
-   SearchAnchor return the enclosing Anchor element with an        
-   HREF attribute if link is TRUE or an NAME attribute.    
+  SearchAnchor return the enclosing Anchor element with:
+  - a HREF attribute if link is TRUE
+  - a NAME attribute if name is TRUE
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Element             SearchAnchor (Document doc, Element element, ThotBool link)
+Element    SearchAnchor (Document doc, Element element, ThotBool link, ThotBool name)
 #else  /* __STDC__ */
-Element             SearchAnchor (doc, element, link)
-Document            doc;
-Element             element;
-boolaen             link;
-
+Element    SearchAnchor (doc, element, link, name)
+Document   doc;
+Element    element;
+ThotBool   link;
+ThotBool   name;
 #endif /* __STDC__ */
 {
-   AttributeType       attrType;
+   AttributeType       attrType, attrTypeN;
    Attribute           attr;
    ElementType         elType;
    Element             elAnchor;
@@ -2471,8 +2472,9 @@ boolaen             link;
      {
 	/* get the attribute of element Anchor */
 	attr = TtaGetAttribute (elAnchor, attrType);
-	if (attr == NULL)
-	   elAnchor = TtaGetTypedAncestor (elAnchor, elType);
+	if (attr == NULL && (!link || !name))
+	  /* we are not looking for any anchor */
+	  elAnchor = TtaGetTypedAncestor (elAnchor, elType);
      }
    return elAnchor;
 }

@@ -2265,8 +2265,8 @@ View                view;
    TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &i);
    if (el != NULL)
      {
-       /* Search the anchor element */
-       el = SearchAnchor (doc, el, TRUE);
+       /* Look if there is an enclosing anchor element */
+       el = SearchAnchor (doc, el, TRUE, TRUE);
        if (el == NULL)
 	 {
 	   /* The link element is a new created one */

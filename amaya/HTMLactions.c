@@ -938,7 +938,7 @@ Document            document;
      }
 
    /* Search the anchor or LINK element */
-   anchor = SearchAnchor (document, element, TRUE);
+   anchor = SearchAnchor (document, element, TRUE, FALSE);
    if (anchor == NULL)
       if (isHTML && (elType.ElTypeNum == HTML_EL_LINK ||
 		     elType.ElTypeNum == HTML_EL_FRAME))
