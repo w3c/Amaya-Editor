@@ -879,7 +879,8 @@ indLine             wi;
 		     LineNum);
    else if (pr == RULE_Token)
      {
-	CurTRule->TrObject = ToAttr;
+	if (CurTRule->TrObject != ToTranslatedAttr)
+	   CurTRule->TrObject = ToAttr;
 	CurTRule->TrObjectNum = att;
      }
    else if (pr == RULE_CountFunction)
@@ -1860,6 +1861,7 @@ SyntRuleNum         pr;
 		       NewTransRule ();
 		       CurTRule->TrType = TCreate;
 		       CurTRule->TrReferredObj = False;
+		       CurTRule->TrObject = ToConst;
 		       CurTRule->TrObjectNature[0] = '\0';
 		       CurTRule->TrFileNameVar = 0;
 		       VarDefinition = True;
@@ -1914,6 +1916,7 @@ SyntRuleNum         pr;
 		       NewTransRule ();
 		       CurTRule->TrType = TWrite;
 		       CurTRule->TrReferredObj = False;
+		       CurTRule->TrObject = ToConst;
 		       CurTRule->TrObjectNature[0] = '\0';
 		       CurTRule->TrFileNameVar = 0;
 		       VarDefinition = True;
@@ -1942,6 +1945,10 @@ SyntRuleNum         pr;
 		    case KWD_ChangeMainFile:	/* ChangeMainFile */
 		       NewTransRule ();
 		       CurTRule->TrType = TChangeMainFile;
+		       break;
+
+		    case KWD_Translated:	/* Translated */
+		       CurTRule->TrObject = ToTranslatedAttr;
 		       break;
 
 		    case KWD_Content:	/* Content */

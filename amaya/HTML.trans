@@ -406,12 +406,12 @@ Remove P level: P{IMG};
         IMG > :*;
 	}
 
-Remove BlockQuote: (BLOCKQUOTE{*+})+;
+Remove BlockQuote: BLOCKQUOTE{*+};
 	{
 	* > :*;
 	}
 
-Remove tag FONT: FONT{*+};
+Remove FONT: FONT{*+};
 	{
 	* > :*;
 	}

@@ -152,6 +152,7 @@ number
 			 'Referred' VarOrType [ '(' TypeIdent ')' ] /
 	                 CharString /
 	                 BufferIdent / '(' Function < Function > ')' /
+			 'Translated' AttrIdent /
 	                 AttrIdent / 'Value' / 'Content' / 'Comment' /
 			 'FileDir' / 'FileName' / 'Extension' /
 			 'DocumentName' / 'DocumentDir' /
@@ -322,52 +323,53 @@ code  key-word      numbers of rules using the key-word
 1175  ChangeMainFile  67
 1176  Indent          67  62
 1177  RemoveFile      67
-1178  Content         68
-1179  RefId           68  74
-1180  PairId          68
-1181  After           69
-1182  Before          69
-1183  Included        70
-1184  Size            62
-1185  LineSpacing     62
-1186  Adjust          62
-1187  Justify         62
-1188  Hyphenate       62
-1189  Style           62
-1190  Font            62
-1191  UnderLine       62  85
-1192  Thickness       62
-1193  LineStyle       62
-1194  LineWeight      62
-1195  FillPattern     62
-1196  Background      62
-1197  Foreground      62
-1198  Left            81
-1199  Right           81
-1200  VMiddle         81
-1201  LeftWithDots    81
-1202  Yes             82
-1203  No              82  85
-1204  Bold            83
-1205  Italics         83
-1206  Roman           83
-1207  BoldItalics     83
-1208  Oblique         83
-1209  BoldOblique     83
-1210  Times           84
-1211  Helvetica       84
-1212  Courier         84
-1213  NoUnderline     85
-1214  Underlined      85
-1215  Overlined       85
-1216  CrossedOut      85
-1217  OverLine        85
-1218  StrikeOut       85
-1219  Thick           86
-1220  Thin            86
-1221  Solid           87
-1222  Dashed          87
-1223  Dotted          87
+1178  Translated      68
+1179  Content         68
+1180  RefId           68  74
+1181  PairId          68
+1182  After           69
+1183  Before          69
+1184  Included        70
+1185  Size            62
+1186  LineSpacing     62
+1187  Adjust          62
+1188  Justify         62
+1189  Hyphenate       62
+1190  Style           62
+1191  Font            62
+1192  UnderLine       62  85
+1193  Thickness       62
+1194  LineStyle       62
+1195  LineWeight      62
+1196  FillPattern     62
+1197  Background      62
+1198  Foreground      62
+1199  Left            81
+1200  Right           81
+1201  VMiddle         81
+1202  LeftWithDots    81
+1203  Yes             82
+1204  No              82  85
+1205  Bold            83
+1206  Italics         83
+1207  Roman           83
+1208  BoldItalics     83
+1209  Oblique         83
+1210  BoldOblique     83
+1211  Times           84
+1212  Helvetica       84
+1213  Courier         84
+1214  NoUnderline     85
+1215  Underlined      85
+1216  Overlined       85
+1217  CrossedOut      85
+1218  OverLine        85
+1219  StrikeOut       85
+1220  Thick           86
+1221  Thin            86
+1222  Solid           87
+1223  Dashed          87
+1224  Dotted          87
 
 
 
@@ -402,7 +404,7 @@ right part.
    19  CounterIdent         18  30  67  67
    20  CountFunction        18
    21  RelAncestorLevel     20
-   22  AttrIdent            20  20  30  34  58  68
+   22  AttrIdent            20  20  30  34  58  68  68
    23  InitValue            20  67
    24  IncrValue            20  67
    25  AncestorLevel        21

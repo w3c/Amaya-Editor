@@ -146,6 +146,7 @@ Token =		 ConstIdent / VariableIdent /
 		 'Referred' VarOrType [ '(' TypeIdent ')' ] /
                  CharString /
                  BufferIdent / '(' Function < Function > ')' /
+		 'Translated' AttrIdent /
                  AttrIdent / 'Value' / 'Content' / 'Comment' /
 		 'FileDir' / 'FileName' / 'Extension' /
 		 'DocumentName' / 'DocumentDir' /

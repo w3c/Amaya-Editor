@@ -953,7 +953,7 @@ ATTRIBUTES
 	END;
 
  defer: BEGIN
-	Create ' defer';
+	Create ' defer="defer"';
 	END;
 
  event: BEGIN
@@ -981,8 +981,9 @@ ATTRIBUTES
 	END;
 
  meta_content: BEGIN
-	Create ' content=';
-	Create meta_content;
+	Create ' content="';
+	Create Translated meta_content;
+	Create DoubleQuote;
 	END;
 
  scheme: BEGIN
@@ -1011,7 +1012,6 @@ ATTRIBUTES
 
  HREF_ :
 	BEGIN
-	NoTranslation;
 	Create ' href="';
 	Create HREF_;
 	Create DoubleQuote;
@@ -1040,7 +1040,6 @@ ATTRIBUTES
 
  cite:
 	BEGIN
-	NoTranslation;
 	Create ' cite="';
 	Create cite;
 	Create DoubleQuote;
@@ -1163,7 +1162,7 @@ ATTRIBUTES
 	Create ' align="justify"';
 
  NoShade:
-	Create ' noshade';
+	Create ' noshade="noshade"';
 
  Size_: BEGIN
 	Create ' size="';
@@ -1178,10 +1177,9 @@ ATTRIBUTES
 	END;
 
  declare:
-	Create ' declare';
+	Create ' declare="declare"';
 
  codebase: BEGIN
-	NoTranslation;
 	Create ' codebase="';
 	Create codebase;
 	Create DoubleQuote;
@@ -1273,9 +1271,8 @@ ATTRIBUTES
 	END;
 
  Title : BEGIN
-	NoTranslation;
 	Create ' title="';
-	Create Title;
+	Create Translated Title;
 	Create DoubleQuote;
 	END;
 
@@ -1445,7 +1442,7 @@ ATTRIBUTES
 	Create ' type="circle"';
 
  COMPACT:
-	Create ' compact';
+	Create ' compact="compact"';
 
  NumberStyle = Arabic_ :
 	Create ' type="1"';
@@ -1512,14 +1509,13 @@ ATTRIBUTES
 	END;
 
  NAME: BEGIN
-	NoTranslation;
 	Create ' name="';
 	Create NAME;
 	Create DoubleQuote;
 	END;
 
  Multiple:
-	Create ' multiple';
+	Create ' multiple="multiple"';
 
  MenuSize: BEGIN
 	Create ' size="';
@@ -1528,7 +1524,7 @@ ATTRIBUTES
 	END;
 
  Selected:
-	Create ' selected';
+	Create ' selected="selected"';
 
  Value_: BEGIN
 	Create ' value="';
@@ -1549,13 +1545,13 @@ ATTRIBUTES
 	END;
 
  Checked = Yes_:
-	Create ' checked';
+	Create ' checked="checked"';
 
  disabled:
-	Create ' disabled';
+	Create ' disabled="disabled"';
 
  readonly:
-	Create ' readonly';
+	Create ' readonly="readonly"';
 
  label: BEGIN
 	Create ' label="';
@@ -1598,7 +1594,7 @@ ATTRIBUTES
 
  ALT:	BEGIN
 	Create ' alt="';
-	Create ALT;
+	Create Translated ALT;
 	Create DoubleQuote;
 	END;
 
@@ -1644,17 +1640,16 @@ ATTRIBUTES
 	END;
 
  ISMAP:
-	Create ' ismap';
+	Create ' ismap="ismap"';
 
  USEMAP: BEGIN
-	NoTranslation;
 	Create ' usemap="';
 	Create USEMAP;
 	Create DoubleQuote;
 	END;
 
  nohref:
-	Create ' nohref';
+	Create ' nohref="nohref"';
 
  shape = rectangle:
 	Create ' shape="rect"';
@@ -1678,7 +1673,7 @@ ATTRIBUTES
 
  summary: BEGIN
 	Create ' summary="';
-	Create summary;
+	Create Translated summary;
 	Create DoubleQuote;
 	END;
 
@@ -1756,7 +1751,7 @@ ATTRIBUTES
 
  abbr: BEGIN
 	Create ' ="abbr';
-	Create abbr;
+	Create Translated abbr;
 	Create DoubleQuote;
 	END;
 
@@ -1823,7 +1818,7 @@ ATTRIBUTES
 	Create ' valign="baseline"';
 
  No_wrap = no_wrap:
-	Create ' nowrap';
+	Create ' nowrap="nowrap"';
 
  RowHeight: BEGIN
 	Create ' rows="';

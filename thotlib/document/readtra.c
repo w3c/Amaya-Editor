@@ -373,6 +373,9 @@ BinFile             file;
 	       case C_OB_REFERRED_REFID:
 		  obj = ToReferredRefId;
 		  break;
+	       case C_OB_TRANSLATED_ATT:
+		  obj = ToTranslatedAttr;
+		  break;
 	       default:
 		  TSchemaError (8);
 		  obj = ToConst;

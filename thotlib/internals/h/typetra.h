@@ -220,7 +220,8 @@ typedef enum
 	ToReferredRefId,
 	ToFileDir,
 	ToFileName,
-	ToExtension
+	ToExtension,
+	ToTranslatedAttr
 } CreatedObject;
 
 /* relative position in the abstract tree of the element to take by a Get or

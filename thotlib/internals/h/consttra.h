@@ -118,6 +118,7 @@
 #define C_OB_REFERRED_DOCNAME 'n'
 #define C_OB_REFERRED_DOCDIR 'i'
 #define C_OB_REFERRED_REFID 'F'
+#define C_OB_TRANSLATED_ATT 't'
 
 /* relative position in the abstract tree of an element to get */
 #define C_TR_SIBLING 'F'

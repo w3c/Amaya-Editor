@@ -408,6 +408,9 @@ CreatedObject       obj;
 	    case ToReferredRefId:
 	       TtaWriteByte (outfile, C_OB_REFERRED_REFID);
 	       break;
+	    case ToTranslatedAttr:
+	       TtaWriteByte (outfile, C_OB_TRANSLATED_ATT);
+	       break;
 	 }
 
 }

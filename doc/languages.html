@@ -1,8 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+   "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<title>
-The Languages of Thot</title>
+<title>The Languages of Thot</title>
 </head>
 <body>
 
@@ -14,7 +14,7 @@ The Languages of Thot</title>
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of September, 1998</h4>
+<h4>Version of December, 1998</h4>
 <p>
 &copy; 1996 INRIA</p>
 <hr>
@@ -2298,6 +2298,8 @@ exceptions are indicated by a name.  They are separated by semicolons.</p>
     <mo>'</mo>
   </mrow>
 </math>
+
+
 
 NoSpellCheck' /
                     'Hidden' / 'ActiveRef' /
@@ -7571,7 +7573,7 @@ translation is finished.</p>
                 BufferID /
                 VarID /
                '(' Function &lt; Function > ')' /
-                AttrID /
+                [ 'Translated' ] AttrID /
                'Value' /
                'Content' /
                'Comment' / 
@@ -7610,7 +7612,10 @@ which the rule applies.
 </li>
 <li>
 the value of an attribute, if the element being translated has this attribute.
-The attribute is specified by its name;
+The attribute is specified by its name. If it's a text attribute, it can be
+preceded by the <code>Translated</code> keyword, which causes the attribute
+value to be recoded using the text translation table defined by section
+<code><a href="#sectc5225">TEXTTRANSLATE</a></code>;
 </li>
 <li>
 the value of a specific presentation rule.  This object can only be generated
@@ -7677,7 +7682,7 @@ the <tt>DocumentDir</tt> keyword.
 <p>
 When the rule applies to a reference (an element or an attribute defined as a
 reference in the structure schema), it can generate a text related to the
-element referred by that reference.  The rule name is then followed the
+element referred by that reference.  The rule name is then followed by the
 <tt>Referred</tt> keyword and a specification of the object to be generated
 for the referred element.  This specification can be:</p>
 <ul>
@@ -9087,7 +9092,7 @@ Object        = ConstID / CharString /
                 BufferID /
                 VarID /
                 '(' Function &lt; Function > ')' /
-                 AttrID /
+                 [ 'Translated' ] AttrID /
                 'Value' /
                 'Content' /
                 'Comment' / 
