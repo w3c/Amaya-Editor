@@ -2922,7 +2922,7 @@ void EditTopics (Document document, View view)
 void ViewBookmarks (Document document, View view)
 {
 #ifdef BOOKMARKS
-  BM_ViewBookmarks (document, view);
+  BM_ViewBookmarks (document, 0);
 #endif /* BOOKMARKS */
 }
 

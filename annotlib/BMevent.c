@@ -234,6 +234,8 @@ void BM_ViewBookmarks (Document doc, View view)
   if (bookmark_doc == DocumentTableLength)
     /* it is a new document */
     bookmark_doc = BM_NewDocument ();
+  else if (view == 0) /* view == 0 only when called thru the menu bar */
+    TtaRaiseView (bookmark_doc, 1);
 
   /* get the info for each bookmark using the abookmark structure, e.g., calling
      a bmfile function to fill it up with the fields we want, then adding them

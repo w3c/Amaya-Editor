@@ -277,8 +277,11 @@ void BM_InitItem (Document doc, Element el, BookmarkP me)
   else
     {
       /* bookmark title  */
+      /* if there's no title, use the recalls property. */
       if (me->title && *me->title)
 	ptr = me->title;
+      else if (me->bookmarks)
+	ptr = me->bookmarks;
       else
 	ptr = me->self_url;
       BM_bookmarkSetTitle (doc, el, ptr);
