@@ -3,8 +3,7 @@
  */
 
 /*
-   gestion des messages et menus de l'impression.
-
+ * Messages and printing management.
  */
 
 #include "thot_sys.h"
@@ -55,6 +54,7 @@
 #include "memory_f.h"
 #include "registry_f.h"
 #include "docs_f.h"
+#include "print_tv.h"
 
 static PathBuffer   PSdir;
 static boolean      PaperPrint;
@@ -65,8 +65,10 @@ static PtrDocument  pDocPrint;
 static char         PageSize[MAX_NAME_LENGTH];
 static char         Orientation[MAX_NAME_LENGTH];
 
-/*----------------------------------------------------------------------
+int numOfJobs = 0 ;
 
+/*----------------------------------------------------------------------
+  PrintInit: 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PrintInit (int userOrientation, char *tempDir, char *dir, char *name)
@@ -102,7 +104,7 @@ char               *name;
 }
 
 /*----------------------------------------------------------------------
-   Print lancement le programme d'impression.      
+  Running the printing program.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -147,7 +149,8 @@ char               *viewsToPrint;
    if (!thotDir)
       thotDir = ThotDir ();
    tempDir = (char *) TtaGetMemory (40);
-   sprintf (tempDir, "/tmp/Thot%d", pid);
+   sprintf (tempDir, "/tmp/Thot%d", pid + numOfJobs);
+   numOfJobs++ ;
 
    PrintInit (userOrientation, tempDir, dir, name);
    if (printer[0] != '\0')
@@ -167,8 +170,7 @@ char               *viewsToPrint;
 
 
 /*----------------------------------------------------------------------
-   PostScriptSave lance le programme d'impression pour sauver un fichier en
-   PostScript
+   PostScriptSave: Saves the file into Postscript format.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -214,7 +216,8 @@ char               *viewsToPrint;
 	thotDir = ThotDir ();
      }
    tempDir = (char *) TtaGetMemory (40);
-   sprintf (tempDir, "/tmp/Thot%d", pid);
+   sprintf (tempDir, "/tmp/Thot%d", pid + numOfJobs);
+   numOfJobs++ ;
    PrintInit (userOrientation, tempDir, dir, name);
 
    if (psName[0] != '\0')
@@ -233,7 +236,7 @@ char               *viewsToPrint;
 
 
 /*----------------------------------------------------------------------
-   ConnectPrint initialise les valeurs du formulaire d'impression.   
+   ConnectPrint:  initialise les valeurs du formulaire d'impression.   
   ----------------------------------------------------------------------*/
 static void         ConnectPrint ()
 {
