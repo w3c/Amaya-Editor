@@ -74,7 +74,7 @@ org_w3c_thotlib_Extra_JavaStartApplet( /* struct Horg_w3c_thotlib_Extra* none, *
 			      jint doc,
 			      HArrayOfObject* args)
 {
-    jword res;
+    jint res;
     char classname[300];
     char sig[300];
 
@@ -82,11 +82,11 @@ org_w3c_thotlib_Extra_JavaStartApplet( /* struct Horg_w3c_thotlib_Extra* none, *
     javaString2CString(signature, sig, sizeof(sig));
 
     if (!strncmp(sig, "(I[Ljava/lang/String;)", 22))
-	res = do_execute_java_class_method(classname, "main", sig, doc, args);
+	res = do_execute_java_class_method(classname, "main", sig, doc, args).i;
     else if (!strncmp(sig, "(I)", 3))
-	res = do_execute_java_class_method(classname, "main", sig, doc);
+	res = do_execute_java_class_method(classname, "main", sig, doc).i;
     else
-	res = do_execute_java_class_method(classname, "main", sig, args);
+	res = do_execute_java_class_method(classname, "main", sig, args).i;
         
 
     return(res);
@@ -113,7 +113,7 @@ org_w3c_thotlib_Extra_JavaXFlush( /* struct Horg_w3c_thotlib_Extra* none */)
 static int
 org_w3c_thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
 {
-    jword res = 0;
+    jint res = 0;
 
     JavaThotlibRelease();
     if ((arg == NULL) || (event == NULL)) return(0);
@@ -126,13 +126,13 @@ org_w3c_thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
 	case TteAttrExport:
 	case TteAttrDelete: {
 	    NotifyAttribute *ev = (NotifyAttribute *) event;
-	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+	    res = do_execute_java_method((Hjava_lang_Object*) arg,
 		     "callbackAttribute", "(IIJJJI)I", NULL, FALSE,
 		     ev->event, ev->document,
 		     CPtr2JavaLong(ev->element),
 		     CPtr2JavaLong(ev->attribute),
 		     CPtr2JavaLong(ev->attributeType.AttrSSchema),
-		     ev->attributeType.AttrTypeNum);
+		     ev->attributeType.AttrTypeNum).i;
 	    break;
 	}
 	case TteElemMenu:
@@ -151,59 +151,59 @@ org_w3c_thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
 	case TteElemMouseOver:
 	case TteElemMouseOut: {
 	    NotifyElement *ev = (NotifyElement *) event;
-	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+	    res = do_execute_java_method((Hjava_lang_Object*) arg,
 		     "callbackElement", "(IIJJII)I", NULL, FALSE,
 		     ev->event, ev->document,
 		     CPtr2JavaLong(ev->element),
 		     CPtr2JavaLong(ev->elementType.ElSSchema),
 		     ev->elementType.ElTypeNum,
-		     ev->position);
+		     ev->position).i;
 	    break;
 	}
 	case TteElemPaste:
 	case TteElemGraphModify: {
 	    NotifyOnValue *ev = (NotifyOnValue *) event;
-	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+	    res = do_execute_java_method((Hjava_lang_Object*) arg,
 		     "callbackValue", "(IIJJI)I", NULL, FALSE,
 		     ev->event, ev->document,
 		     CPtr2JavaLong(ev->element),
 		     CPtr2JavaLong(ev->target),
-		     ev->value);
+		     ev->value).i;
 	    break;
 	}
 	case TteElemSetReference:
 	case TteElemTextModify: {
 	    NotifyOnTarget *ev = (NotifyOnTarget *) event;
-	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+	    res = do_execute_java_method((Hjava_lang_Object*) arg,
 		     "callbackTarget", "(IIJJI)I", NULL, FALSE,
 		     ev->event, ev->document,
 		     CPtr2JavaLong(ev->element),
 		     CPtr2JavaLong(ev->target),
-		     ev->targetdocument);
+		     ev->targetdocument).i;
 	    break;
 	}
 	case TteElemTransform: {
 	    NotifyOnElementType *ev = (NotifyOnElementType *) event;
-	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+	    res = do_execute_java_method((Hjava_lang_Object*) arg,
 		     "callbackElementType", "(IIJJIJI)I", NULL, FALSE,
 		     ev->event, ev->document,
 		     CPtr2JavaLong(ev->element),
 		     CPtr2JavaLong(ev->elementType.ElSSchema),
 		     ev->elementType.ElTypeNum,
 		     CPtr2JavaLong(ev->targetElementType.ElSSchema),
-		     ev->targetElementType.ElTypeNum);
+		     ev->targetElementType.ElTypeNum).i;
 	    break;
 	}
 	case TtePRuleCreate:
 	case TtePRuleModify:
 	case TtePRuleDelete: {
 	    NotifyPresentation *ev = (NotifyPresentation *) event;
-	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+	    res = do_execute_java_method((Hjava_lang_Object*) arg,
 		     "callbackPresentation", "(IIJJI)I", NULL, FALSE,
 		     ev->event, ev->document,
 		     CPtr2JavaLong(ev->element),
 		     CPtr2JavaLong(ev->pRule),
-		     ev->pRuleType);
+		     ev->pRuleType).i;
 	    break;
 	}
 	case TteDocOpen:
@@ -214,26 +214,26 @@ org_w3c_thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
 	case TteViewOpen:
 	case TteViewClose: {
 	    NotifyDialog *ev = (NotifyDialog *) event;
-	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+	    res = do_execute_java_method((Hjava_lang_Object*) arg,
 		     "callbackDialog", "(III)I", NULL, FALSE,
-		     ev->event, ev->document, ev->view);
+		     ev->event, ev->document, ev->view).i;
 	    break;
 	}
 	case TteViewScroll:
 	case TteViewResize: {
 	    NotifyWindow *ev = (NotifyWindow *) event;
-	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+	    res = do_execute_java_method((Hjava_lang_Object*) arg,
 		     "callbackWindow", "(IIIII)I", NULL, FALSE,
 		     ev->event, ev->document, ev->view,
-		     ev->verticalValue, ev->horizontalValue);
+		     ev->verticalValue, ev->horizontalValue).i;
 	    break;
 	}
 	case TteInit:
 	case TteExit: {
 	    NotifyEvent *ev = (NotifyEvent *) event;
-	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+	    res = do_execute_java_method((Hjava_lang_Object*) arg,
 		     "callbackNotify", "(I)I", NULL, FALSE,
-		     ev->event);
+		     ev->event).i;
 	    break;
 	}
 	case TteNull:
@@ -249,11 +249,11 @@ org_w3c_thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
 static int
 org_w3c_thotlib_Extra_JavaActionMenuCallback(void *arg, int doc, int view)
 {
-    jword res;
+    jint res;
 
     JavaThotlibRelease();
-    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
-		     "callbackMenu", "(II)I", NULL, FALSE, doc, view);
+    res = do_execute_java_method((Hjava_lang_Object*) arg,
+		     "callbackMenu", "(II)I", NULL, FALSE, doc, view).i;
     JavaThotlibLock();
     return((int) res);
 }
@@ -636,7 +636,7 @@ void ButtonCCallbackDispatcher(int no, Document document, View view) {
     if (ButtonJavaCallbacks[no] == NULL) return;
 
     JavaThotlibRelease();
-    do_execute_java_method(0, ButtonJavaCallbacks[no],
+    do_execute_java_method(ButtonJavaCallbacks[no],
                            "callback", "(II)V", 0, 0,
 			   document, view);
     JavaThotlibLock();
@@ -701,9 +701,9 @@ org_w3c_thotlib_Extra_TtaNewButton(jint document,
 
     /* Search the pixmap */
     pixmap = TtaGetImage(imgname);
-    if (pixmap == NULL) {
+    if (pixmap == None) {
 	pixmap = TtaLoadImage(imgname, imgname);
-	if (pixmap == NULL) {
+	if (pixmap == None) {
 	    fprintf(stderr, "TtaNewButton : can't get image name %s\n",
 		    imgname);
 	    return(-1);

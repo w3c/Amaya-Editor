@@ -51,7 +51,6 @@
 
 /*
  * Kaffe runtime accesses not published in native.h
- */
 extern void initialiseKaffe(void);
 extern int threadedFileDescriptor(int fd);
 extern void yieldThread();
@@ -63,6 +62,7 @@ extern void reschedule();
 extern void sleepThread(jlong time);
 static void register_stubs(void);
 void register_biss_awt_API_stubs(void);
+ */
 
 #ifdef __STDC__
 void             JavaHandleAvailableEvents (void);
@@ -817,6 +817,7 @@ void                CloseJava ()
 
 }
 
+#if 0
 /*
  * This method is needed by the Kaffe interpreter.
  * What's happening when the memory is too low ?
@@ -832,6 +833,7 @@ throwOutOfMemory ()
         fprintf (stderr, "(Insufficient memory)\n");
         exit (-1);
 }
+#endif
 
 /*
  * Register the thotlib stuff.

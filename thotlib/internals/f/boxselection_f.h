@@ -8,6 +8,9 @@
 
 extern void SwitchSelection ( int frame,
                               boolean toShow );
+extern void TtaSwitchSelection ( Document document,
+                                 View view,
+                                 boolean toShow );
 extern void ClearViewSelMarks ( int frame );
 extern void ClearViewSelection ( int frame );
 extern void TtaClearViewSelections ( void );
@@ -32,6 +35,9 @@ extern boolean IsAbstractBoxDisplayed ( PtrAbstractBox pAb,
 
 extern void SwitchSelection (/* int frame,
                                 boolean toShow */);
+extern void TtaSwitchSelection (/* Document document,
+                                   View view,
+                                   boolean toShow */);
 extern void ClearViewSelMarks (/* int frame */);
 extern void ClearViewSelection (/* int frame */);
 extern void TtaClearViewSelections (/* void */);

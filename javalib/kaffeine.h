@@ -13,12 +13,8 @@
  */
 extern void initialiseKaffe(void);
 extern int threadedFileDescriptor(int fd);
-extern void yieldThread();
 extern int blockOnFile(int fd, int op);
-extern int (*select_call)(int, fd_set*, fd_set*, fd_set*, struct timeval*);
 extern int blockInts;
-extern void yieldThread();
-extern void reschedule();
 extern void sleepThread(jlong time);
 
 #endif /* __KAFFEINE_H__ */

@@ -19,6 +19,8 @@ extern void TtaSelectString ( Document document,
 extern void TtaExtendSelection ( Document document,
                                  Element element,
                                  int lastCharacter );
+extern void TtaAddElementToSelection ( Document document,
+                                       Element element );
 extern void TtaSelectInterval ( void );
 extern void TtaUnselect ( Document document );
 extern void TtaSetSelectionMode ( boolean withMenu );
@@ -50,6 +52,8 @@ extern void TtaSelectString (/* Document document,
 extern void TtaExtendSelection (/* Document document,
                                    Element element,
                                    int lastCharacter */);
+extern void TtaAddElementToSelection (/* Document document,
+                                         Element element */);
 extern void TtaSelectInterval (/* void */);
 extern void TtaUnselect (/* Document document */);
 extern void TtaSetSelectionMode (/* boolean withMenu */);

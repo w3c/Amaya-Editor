@@ -136,137 +136,141 @@
 #endif
 
 #define Set_ElementType_Ptr_sschema(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
 		"set_sschema", SET_PTR_SIG, 0, 0, PTR2L_CVRT(value))
 #define Get_ElementType_Ptr_sschema(obj) \
-		L2PTR_CVRT(do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_sschema", GET_PTR_SIG, 0, 0))
+		L2PTR_CVRT(do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_sschema", GET_PTR_SIG, 0, 0).j)
 
 #define Set_ElementType_Int_type(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
 		"set_type", SET_INT_SIG, 0, 0, (jint) value)
 #define Get_ElementType_Int_type(obj) \
-		(jint) do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_type", GET_INT_SIG, 0, 0)
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_type", GET_INT_SIG, 0, 0).i
 
 #define Set_AttributeType_Ptr_sschema(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
 		"set_sschema", SET_PTR_SIG, 0, 0, PTR2L_CVRT(value))
 #define Get_AttributeType_Ptr_sschema(obj) \
-		L2PTR_CVRT(do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_sschema", GET_PTR_SIG, 0, 0))
+		L2PTR_CVRT(do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_sschema", GET_PTR_SIG, 0, 0).j)
 
 #define Set_AttributeType_Int_type(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
 		"set_type", SET_INT_SIG, 0, 0, (jint) value)
 #define Get_AttributeType_Int_type(obj) \
-		(jint) do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_type", GET_INT_SIG, 0, 0)
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_type", GET_INT_SIG, 0, 0).i
 
 #define Set_Element_Ptr_element(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
 		"set_element", SET_PTR_SIG, 0, 0, PTR2L_CVRT(value))
 #define Get_Element_Ptr_element(obj) \
-		L2PTR_CVRT(do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_element", GET_PTR_SIG, 0, 0))
+		L2PTR_CVRT(do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_element", GET_PTR_SIG, 0, 0).j)
 
 #define Set_PRule_Ptr_prule(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
 		"set_prule", SET_PTR_SIG, 0, 0, PTR2L_CVRT(value))
 #define Get_PRule_Ptr_prule(obj) \
-		L2PTR_CVRT(do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_prule", GET_PTR_SIG, 0, 0))
+		L2PTR_CVRT(do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_prule", GET_PTR_SIG, 0, 0).j)
 
 #define Set_SSchema_Ptr_sschema(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
 		"set_sschema", SET_PTR_SIG, 0, 0, PTR2L_CVRT(value))
 #define Get_SSchema_Ptr_sschema(obj) \
-		L2PTR_CVRT(do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_sschema", GET_PTR_SIG, 0, 0))
+		L2PTR_CVRT(do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_sschema", GET_PTR_SIG, 0, 0).j)
 
 #define Set_Attribute_Ptr_attribute(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
 		"set_attribute", SET_PTR_SIG, 0, 0, PTR2L_CVRT(value))
 #define Get_Attribute_Ptr_attribute(obj) \
-		L2PTR_CVRT(do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_attribute", GET_PTR_SIG, 0, 0))
+		L2PTR_CVRT(do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_attribute", GET_PTR_SIG, 0, 0).j)
 
 #define Set_IntPtr_Int_value(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
 		"set_value", SET_INT_SIG, 0, 0, (jint) value)
 #define Get_IntPtr_Int_value(obj) \
-		(jint) do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_value", GET_INT_SIG, 0, 0)
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_value", GET_INT_SIG, 0, 0).i
 
 #define Set_Document_Int_document(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
 		"set_document", SET_INT_SIG, 0, 0, (jint) value)
 #define Get_Document_Int_document(obj) \
-		(jint) do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_document", GET_INT_SIG, 0, 0)
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_document", GET_INT_SIG, 0, 0).i
 
 #define Set_Language_Char_lang(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
 		"set_lang", SET_INT_SIG, 0, 0, (jint) value)
 #define Get_Language_Char_lang(obj) \
-		(char) do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_lang", GET_INT_SIG, 0, 0)
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_lang", GET_INT_SIG, 0, 0).c
 
 #define Set_HTTPRequest_Ptr_callback_f(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
 		"set_callback_f", SET_PTR_SIG, 0, 0, PTR2L_CVRT(value))
 #define Get_HTTPRequest_Ptr_callback_f(obj) \
-		L2PTR_CVRT(do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_callback_f", GET_PTR_SIG, 0, 0))
+		L2PTR_CVRT(do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_callback_f", GET_PTR_SIG, 0, 0).j)
 
 #define Set_HTTPRequest_Ptr_callback_arg(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
 		"set_callback_arg", SET_PTR_SIG, 0, 0, PTR2L_CVRT(value))
 #define Get_HTTPRequest_Ptr_callback_arg(obj) \
-		L2PTR_CVRT(do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_callback_arg", GET_PTR_SIG, 0, 0))
+		L2PTR_CVRT(do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_callback_arg", GET_PTR_SIG, 0, 0).j)
 
 #define Set_HTTPRequest_Int_doc(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
 		"set_doc", SET_INT_SIG, 0, 0, (jint) value)
 #define Get_HTTPRequest_Int_doc(obj) \
-		(jint) do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_doc", GET_INT_SIG, 0, 0)
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_doc", GET_INT_SIG, 0, 0).i
 
 #define Set_HTTPRequest_Int_status(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
 		"set_status", SET_INT_SIG, 0, 0, (jint) value)
 #define Get_HTTPRequest_Int_status(obj) \
-		(jint) do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_status", GET_INT_SIG, 0, 0)
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_status", GET_INT_SIG, 0, 0).i
 
 #define Set_HTTPRequest_Str_filename(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"set_filename", "(Ljava/lang/String;)V", 0, 0, (struct Hjava_lang_String*) value)
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"set_filename", "(Ljava/lang/String;)V", 0, 0, \
+		(struct Hjava_lang_String*) value)
 #define Get_HTTPRequest_Str_filename(obj) \
-		(struct Hjava_lang_String*) do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_filename", "()Ljava/lang/String;", 0, 0)
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_filename", "()Ljava/lang/String;", 0, 0).l
 
 #define Set_HTTPRequest_Str_urlName(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"set_urlName", "(Ljava/lang/String;)V", 0, 0, (struct Hjava_lang_String*) value)
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"set_urlName", "(Ljava/lang/String;)V", 0, 0, \
+		(struct Hjava_lang_String*) value)
 #define Get_HTTPRequest_Str_urlName(obj) \
-		(struct Hjava_lang_String*) do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_urlName", "()Ljava/lang/String;", 0, 0)
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_urlName", "()Ljava/lang/String;", 0, 0).l
 
 #define Set_HTTPRequest_Str_mimeType(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"set_mimeType", "(Ljava/lang/String;)V", 0, 0, (struct Hjava_lang_String*) value)
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"set_mimeType", "(Ljava/lang/String;)V", 0, 0, \
+		(struct Hjava_lang_String*) value)
 #define Get_HTTPRequest_Str_mimeType(obj) \
-		(struct Hjava_lang_String*) do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_mimeType", "()Ljava/lang/String;", 0, 0)
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_mimeType", "()Ljava/lang/String;", 0, 0).l
 
 #define Set_HTTPRequest_Str_postCmd(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"set_postCmd", "(Ljava/lang/String;)V", 0, 0, (struct Hjava_lang_String*) value)
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"set_postCmd", "(Ljava/lang/String;)V", 0, 0, \
+		(struct Hjava_lang_String*) value)
 #define Get_HTTPRequest_Str_postCmd(obj) \
-		(struct Hjava_lang_String*) do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_postCmd", "()Ljava/lang/String;", 0, 0)
+		do_execute_java_method((Hjava_lang_Object*) (obj), \
+		"get_postCmd", "()Ljava/lang/String;", 0, 0).l
 
 #endif /* DIRECT_JAVA_VM_ACCESS */
 #endif /* __JAVA_VM_ACCESSES__ */

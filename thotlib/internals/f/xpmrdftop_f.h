@@ -6,21 +6,21 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int XpmReadFileToPixmap ( Display * display,
+extern int XpmReadFileToPixmap ( Display *display,
                                  Drawable d,
                                  char *filename,
-                                 Pixmap * pixmap_return,
-                                 Pixmap * shapemask_return,
-                                 XpmAttributes * attributes );
+                                 Pixmap *pixmap_return,
+                                 Pixmap *shapemask_return,
+                                 XpmAttributes *attributes );
 
 #else /* __STDC__ */
 
-extern int XpmReadFileToPixmap (/* Display * display,
+extern int XpmReadFileToPixmap (/* Display *display,
                                    Drawable d,
                                    char *filename,
-                                   Pixmap * pixmap_return,
-                                   Pixmap * shapemask_return,
-                                   XpmAttributes * attributes */);
+                                   Pixmap *pixmap_return,
+                                   Pixmap *shapemask_return,
+                                   XpmAttributes *attributes */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

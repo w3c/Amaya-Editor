@@ -282,7 +282,10 @@ PRINT_OBJ= \
 tree/paginatePP.o : @srcdir@/tree/paginate.c
 	$(CC) $(CFLAGS) $(INCLUDES) -DPAGINEETIMPRIME -c @srcdir@/tree/paginate.c -o $@
 
-print : ../bin/print
+print : ../bin ../bin/print
+
+../bin :
+	@(mkdir ../bin)
 
 ../bin/print : $(PRINT_OBJ) libThotEditor.a ../tablelib/libThotTable.a ../libpng.a ../libz.a ../libjpeg.a
 	$(CC) $(LDFLAGS) -o $@ $(PRINT_OBJ) -lThotTable -lThotEditor $(LIBS)

@@ -6,81 +6,21 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void xpmFreeColorTable ( XpmColor * colorTable,
-                                int ncolors );
-extern void XpmFreeExtensions ( XpmExtension * extensions,
-                                int nextensions );
-extern int XpmAttributesSize ( void );
-extern void xpmInitAttributes ( XpmAttributes * attributes );
-extern void xpmSetAttributes ( XpmAttributes * attributes,
-                               XpmImage * image,
-                               XpmInfo * info );
-extern void XpmFreeAttributes ( XpmAttributes * attributes );
-extern void xpmInitXpmImage ( XpmImage * image );
-extern void XpmFreeXpmImage ( XpmImage * image );
-extern void xpmInitXpmInfo ( XpmInfo * info );
-extern void XpmFreeXpmInfo ( XpmInfo * info );
-extern void xpmSetInfoMask ( XpmInfo * info,
-                             XpmAttributes * attributes );
-extern void xpmSetInfo ( XpmInfo * info,
-                         XpmAttributes * attributes );
-extern unsigned int atoui ( char *p,
-                            unsigned int l,
-                            unsigned int *ui_return );
-extern int XpmReadFileToBuffer ( char *filename,
-                                 char **buffer_return );
-extern int XpmWriteFileFromBuffer ( char *filename,
-                                    char *buffer );
-extern char* XpmGetErrorString ( int errcode );
+extern unsigned int xpmatoui ( char *p,
+                               unsigned int l,
+                               unsigned int *ui_return );
+extern char * XpmGetErrorString ( int errcode );
 extern int XpmLibraryVersion ( void );
-extern void xpmCreatePixmapFromImage ( Display* display,
-                                       Drawable d,
-                                       XImage* ximage,
-                                       Pixmap* pixmap_return );
-extern void xpmCreateImageFromPixmap ( Display * display,
-                                       Pixmap pixmap,
-                                       XImage ** ximage_return,
-                                       unsigned int *width,
-                                       unsigned int *height );
+extern void XpmFree ( void *ptr );
 
 #else /* __STDC__ */
 
-extern void xpmFreeColorTable (/* XpmColor * colorTable,
-                                  int ncolors */);
-extern void XpmFreeExtensions (/* XpmExtension * extensions,
-                                  int nextensions */);
-extern int XpmAttributesSize (/* void */);
-extern void xpmInitAttributes (/* XpmAttributes * attributes */);
-extern void xpmSetAttributes (/* XpmAttributes * attributes,
-                                 XpmImage * image,
-                                 XpmInfo * info */);
-extern void XpmFreeAttributes (/* XpmAttributes * attributes */);
-extern void xpmInitXpmImage (/* XpmImage * image */);
-extern void XpmFreeXpmImage (/* XpmImage * image */);
-extern void xpmInitXpmInfo (/* XpmInfo * info */);
-extern void XpmFreeXpmInfo (/* XpmInfo * info */);
-extern void xpmSetInfoMask (/* XpmInfo * info,
-                               XpmAttributes * attributes */);
-extern void xpmSetInfo (/* XpmInfo * info,
-                           XpmAttributes * attributes */);
-extern unsigned int atoui (/* char *p,
-                              unsigned int l,
-                              unsigned int *ui_return */);
-extern int XpmReadFileToBuffer (/* char *filename,
-                                   char **buffer_return */);
-extern int XpmWriteFileFromBuffer (/* char *filename,
-                                      char *buffer */);
-extern char* XpmGetErrorString (/* int errcode */);
+extern unsigned int xpmatoui (/* char *p,
+                                 unsigned int l,
+                                 unsigned int *ui_return */);
+extern char * XpmGetErrorString (/* int errcode */);
 extern int XpmLibraryVersion (/* void */);
-extern void xpmCreatePixmapFromImage (/* Display* display,
-                                         Drawable d,
-                                         XImage* ximage,
-                                         Pixmap* pixmap_return */);
-extern void xpmCreateImageFromPixmap (/* Display * display,
-                                         Pixmap pixmap,
-                                         XImage ** ximage_return,
-                                         unsigned int *width,
-                                         unsigned int *height */);
+extern void XpmFree (/* void *ptr */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

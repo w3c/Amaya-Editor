@@ -6,51 +6,33 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int xpmNextString ( xpmData * mdata );
-extern int xpmNextUI ( xpmData * mdata,
-                       unsigned int *ui_return );
-extern unsigned int xpmNextWord ( xpmData * mdata,
+extern int xpmNextString ( xpmData *data );
+extern unsigned int xpmNextWord ( xpmData *data,
                                   char *buf,
                                   unsigned int buflen );
-extern int xpmGetString ( xpmData * mdata,
+extern int xpmNextUI ( xpmData *data,
+                       unsigned int *ui_return );
+extern int xpmGetString ( xpmData *data,
                           char **sptr,
                           unsigned int *l );
-extern int xpmGetCmt ( xpmData * mdata,
+extern int xpmGetCmt ( xpmData *data,
                        char **cmt );
-extern int xpmReadFile ( char *filename,
-                         xpmData * mdata );
-extern int xpmWriteFile ( char *filename,
-                          xpmData * mdata );
-extern void xpmOpenArray ( char **data,
-                           xpmData * mdata );
-extern void xpmOpenBuffer ( char *buffer,
-                            xpmData * mdata );
-extern int xpmDataClose ( xpmData * mdata );
-extern int xpmParseHeader ( xpmData * mdata );
+extern int xpmParseHeader ( xpmData *data );
 
 #else /* __STDC__ */
 
-extern int xpmNextString (/* xpmData * mdata */);
-extern int xpmNextUI (/* xpmData * mdata,
-                         unsigned int *ui_return */);
-extern unsigned int xpmNextWord (/* xpmData * mdata,
+extern int xpmNextString (/* xpmData *data */);
+extern unsigned int xpmNextWord (/* xpmData *data,
                                     char *buf,
                                     unsigned int buflen */);
-extern int xpmGetString (/* xpmData * mdata,
+extern int xpmNextUI (/* xpmData *data,
+                         unsigned int *ui_return */);
+extern int xpmGetString (/* xpmData *data,
                             char **sptr,
                             unsigned int *l */);
-extern int xpmGetCmt (/* xpmData * mdata,
+extern int xpmGetCmt (/* xpmData *data,
                          char **cmt */);
-extern int xpmReadFile (/* char *filename,
-                           xpmData * mdata */);
-extern int xpmWriteFile (/* char *filename,
-                            xpmData * mdata */);
-extern void xpmOpenArray (/* char **data,
-                             xpmData * mdata */);
-extern void xpmOpenBuffer (/* char *buffer,
-                              xpmData * mdata */);
-extern int xpmDataClose (/* xpmData * mdata */);
-extern int xpmParseHeader (/* xpmData * mdata */);
+extern int xpmParseHeader (/* xpmData *data */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

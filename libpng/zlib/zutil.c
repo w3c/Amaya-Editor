@@ -1,32 +1,42 @@
 /* zutil.c -- target dependent utility functions for the compression library
- * Copyright (C) 1995 Jean-loup Gailly.
+ * Copyright (C) 1995-1998 Jean-loup Gailly.
  * For conditions of distribution and use, see copyright notice in zlib.h 
  */
 
-/* $Id$ */
-
-#include <stdio.h>
+/* @(#) $Id$ */
 
 #include "zutil.h"
 
 struct internal_state      {int dummy;}; /* for buggy compilers */
 
-#ifndef __GO32__
+#ifndef STDC
 extern void exit OF((int));
 #endif
 
-char *zlib_version = ZLIB_VERSION;
-
-char *z_errmsg[] = {
-"stream end",          /* Z_STREAM_END    1 */
-"",                    /* Z_OK            0 */
-"file error",          /* Z_ERRNO        (-1) */
-"stream error",        /* Z_STREAM_ERROR (-2) */
-"data error",          /* Z_DATA_ERROR   (-3) */
-"insufficient memory", /* Z_MEM_ERROR    (-4) */
-"buffer error",        /* Z_BUF_ERROR    (-5) */
+const char *z_errmsg[10] = {
+"need dictionary",     /* Z_NEED_DICT       2  */
+"stream end",          /* Z_STREAM_END      1  */
+"",                    /* Z_OK              0  */
+"file error",          /* Z_ERRNO         (-1) */
+"stream error",        /* Z_STREAM_ERROR  (-2) */
+"data error",          /* Z_DATA_ERROR    (-3) */
+"insufficient memory", /* Z_MEM_ERROR     (-4) */
+"buffer error",        /* Z_BUF_ERROR     (-5) */
+"incompatible version",/* Z_VERSION_ERROR (-6) */
 ""};
 
+
+const char * ZEXPORT zlibVersion()
+{
+    return ZLIB_VERSION;
+}
+
+#ifdef DEBUG
+
+#  ifndef verbose
+#    define verbose 0
+#  endif
+int z_verbose = verbose;
 
 void z_error (m)
     char *m;
@@ -34,6 +44,17 @@ void z_error (m)
     fprintf(stderr, "%s\n", m);
     exit(1);
 }
+#endif
+
+/* exported to allow conversion of error code to string for compress() and
+ * uncompress()
+ */
+const char * ZEXPORT zError(err)
+    int err;
+{
+    return ERR_MSG(err);
+}
+
 
 #ifndef HAVE_MEMCPY
 
@@ -48,6 +69,19 @@ void zmemcpy(dest, source, len)
     } while (--len != 0);
 }
 
+int zmemcmp(s1, s2, len)
+    Bytef* s1;
+    Bytef* s2;
+    uInt  len;
+{
+    uInt j;
+
+    for (j = 0; j < len; j++) {
+        if (s1[j] != s2[j]) return 2*(s1[j] > s2[j])-1;
+    }
+    return 0;
+}
+
 void zmemzero(dest, len)
     Bytef* dest;
     uInt  len;
@@ -59,9 +93,10 @@ void zmemzero(dest, len)
 }
 #endif
 
-#if defined( __TURBOC__) && !defined(__SMALL__) && !defined(__MEDIUM__)
-/* Small and medium model are for now limited to near allocation with
- * reduced MAX_WBITS and MAX_MEM_LEVEL
+#ifdef __TURBOC__
+#if (defined( __BORLANDC__) || !defined(SMALL_MEDIUM)) && !defined(__32BIT__)
+/* Small and medium model in Turbo C are for now limited to near allocation
+ * with reduced MAX_WBITS and MAX_MEM_LEVEL
  */
 #  define MY_ZCALLOC
 
@@ -94,7 +129,10 @@ voidpf zcalloc (voidpf opaque, unsigned items, unsigned size)
     voidpf buf = opaque; /* just to make some compilers happy */
     ulg bsize = (ulg)items*size;
 
-    if (bsize < 65536L) {
+    /* If we allocate less than 65520 bytes, we assume that farmalloc
+     * will return a usable pointer which doesn't have to be normalized.
+     */
+    if (bsize < 65520L) {
         buf = farmalloc(bsize);
         if (*(ush*)&buf != 0) return buf;
     } else {
@@ -129,12 +167,14 @@ void  zcfree (voidpf opaque, voidpf ptr)
         return;
     }
     ptr = opaque; /* just to make some compilers happy */
-    z_error("zcfree: ptr not found");
+    Assert(0, "zcfree: ptr not found");
 }
+#endif
 #endif /* __TURBOC__ */
 
-#if defined(M_I86SM)||defined(M_I86MM)||defined(M_I86CM)||defined(M_I86LM)
-/* Microsoft C */
+
+#if defined(M_I86) && !defined(__32BIT__)
+/* Microsoft C in 16-bit mode */
 
 #  define MY_ZCALLOC
 
@@ -160,7 +200,7 @@ void  zcfree (voidpf opaque, voidpf ptr)
 
 #ifndef MY_ZCALLOC /* Any system without a special alloc function */
 
-#ifndef __GO32__
+#ifndef STDC
 extern voidp  calloc OF((uInt items, uInt size));
 extern void   free   OF((voidpf ptr));
 #endif
@@ -170,6 +210,7 @@ voidpf zcalloc (opaque, items, size)
     unsigned items;
     unsigned size;
 {
+    if (opaque) items += size - size; /* make compiler happy */
     return (voidpf)calloc(items, size);
 }
 
@@ -178,6 +219,7 @@ void  zcfree (opaque, ptr)
     voidpf ptr;
 {
     free(ptr);
+    if (opaque) return; /* make compiler happy */
 }
 
 #endif /* MY_ZCALLOC */

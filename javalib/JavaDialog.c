@@ -75,7 +75,7 @@ char *args;
     char *args_list[MAX_ARGS];
     char *ptr;
     int  i,j;
-    jword res;
+    jint res;
     struct Hjava_lang_String* jname;
     struct Hjava_lang_String** cur_arg;
     HArrayOfObject* jargs;
@@ -144,7 +144,7 @@ char *args;
     jname = makeJavaString(name, strlen(name));
     res = do_execute_java_class_method("org.w3c.thotlib.userThreadPool",
 	      "LaunchJavaApplet", "(Ljava/lang/String;I[Ljava/lang/String;)I",
-	      jname, doc, jargs);
+	      jname, doc, jargs).i;
 
     return(res);
 }
@@ -234,11 +234,11 @@ int len;
    i = 0;
    nb = 0;
    for (t = 0; t < 10;t++) {
-    str = makeJavaString(name, strlen(name));
+       str = makeJavaString(name, strlen(name));
        str = (struct Hjava_lang_String*)
                do_execute_java_class_method("org.w3c.thotlib.userThreadPool",
 	                                    "Name",
-					    "(I)Ljava/lang/String;", t);
+					    "(I)Ljava/lang/String;", t).l;
        if (str == NULL) continue;
        javaString2CString(str, name, sizeof(name));
        if (i + strlen(name) >= len) break;

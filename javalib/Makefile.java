@@ -20,8 +20,8 @@ AMAYA_JAVA_OBJ=
 #
 
 AMAYA_JAVA_LIBS= ../javalib/libThotJava.a ../javalib/libAmayaJava.a \
-    ../libkaffevm.a ../libagent.a \
-    ../libnet.a ../libnative.a
+    ../libkaffevm.a \
+    ../libnet.a ../libnative.a ../libzip.a ../libmath.a # ../libagent.a
 
 AMAYA_JAVA_EXTRA_LIBS=
 

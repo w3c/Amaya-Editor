@@ -16,6 +16,7 @@
 #include "kaffeine.h"
 
 #include "kaffeine_f.h"
+#include "jsyscall.h"         /* for Kaffe_SystemCallInterface */
 
 static int JavaEventLoopInitialized =0;
 int x_window_socket;
@@ -273,7 +274,7 @@ ThotAppContext app_ctx;
     /*
      * set up our own select call.
      */
-    select_call = JavaSelect;
+    Kaffe_SystemCallInterface._select = JavaSelect;
 
     /*
      * Startup the Java environment. We should never return

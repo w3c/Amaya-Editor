@@ -6,15 +6,49 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int xpmParseData ( xpmData * data,
-                          XpmImage * image,
-                          XpmInfo * info );
+extern int xpmParseValues ( xpmData *data,
+                            unsigned int *width,
+                            unsigned int *height,
+                            unsigned int *ncolors,
+                            unsigned int *cpp,
+                            unsigned int *x_hotspot,
+                            unsigned int *y_hotspot,
+                            unsigned int *hotspot,
+                            unsigned int *extensions );
+extern int xpmParseColors ( xpmData *data,
+                            unsigned int ncolors,
+                            unsigned int cpp,
+                            XpmColor **colorTablePtr,
+                            xpmHashTable *hashtable );
+extern int xpmParseExtensions ( xpmData *data,
+                                XpmExtension **extensions,
+                                unsigned int *nextensions );
+extern int xpmParseData ( xpmData *data,
+                          XpmImage *image,
+                          XpmInfo *info );
 
 #else /* __STDC__ */
 
-extern int xpmParseData (/* xpmData * data,
-                            XpmImage * image,
-                            XpmInfo * info */);
+extern int xpmParseValues (/* xpmData *data,
+                              unsigned int *width,
+                              unsigned int *height,
+                              unsigned int *ncolors,
+                              unsigned int *cpp,
+                              unsigned int *x_hotspot,
+                              unsigned int *y_hotspot,
+                              unsigned int *hotspot,
+                              unsigned int *extensions */);
+extern int xpmParseColors (/* xpmData *data,
+                              unsigned int ncolors,
+                              unsigned int cpp,
+                              XpmColor **colorTablePtr,
+                              xpmHashTable *hashtable */);
+extern int xpmParseExtensions (/* xpmData *data,
+                                  XpmExtension **extensions,
+                                  unsigned int *nextensions */);
+extern int xpmParseData (/* xpmData *data,
+                            XpmImage *image,
+                            XpmInfo *info */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -209,7 +209,7 @@ char               *content_type;
 
     request = (struct Horg_w3c_amaya_HTTPRequest*)
               do_execute_java_class_method("org.w3c.amaya.HTTPRequest",
-                "newHTTPRequest", "(I)Lorg/w3c/amaya/HTTPRequest;", type);
+                "newHTTPRequest", "(I)Lorg/w3c/amaya/HTTPRequest;", type).l;
 
     if (mode == AMAYA_ASYNC) {
 	Set_HTTPRequest_Ptr_callback_f(terminate, request);
@@ -222,8 +222,8 @@ char               *content_type;
     if (postCmd != NULL) 
 	Set_HTTPRequest_Str_postCmd(postCmd, request);
 
-    result = do_execute_java_method(0, (Hjava_lang_Object*) request,
-                    "Start", "(I)I", 0, 0, flag);
+    result = do_execute_java_method((Hjava_lang_Object*) request,
+                    "Start", "(I)I", 0, 0, flag).i;
 
     JavaThotlibLock();
 
@@ -387,7 +387,7 @@ void               *context_tcbf;
 
     request = (struct Horg_w3c_amaya_HTTPRequest*)
               do_execute_java_class_method("org.w3c.amaya.HTTPRequest",
-                "newHTTPRequest", "(I)Lorg/w3c/amaya/HTTPRequest;", type);
+                "newHTTPRequest", "(I)Lorg/w3c/amaya/HTTPRequest;", type).l;
 
     Set_HTTPRequest_Int_doc(doc, request);
     Set_HTTPRequest_Str_urlName(urlName, request);
@@ -396,8 +396,8 @@ void               *context_tcbf;
     if (mimetype != NULL) 
 	Set_HTTPRequest_Str_mimeType(mimetype, request);
 
-    result = do_execute_java_method(0, (Hjava_lang_Object*) request,
-                    "Start", "(I)I", 0, 0, flag);
+    result = do_execute_java_method((Hjava_lang_Object*) request,
+                    "Start", "(I)I", 0, 0, flag).i;
 
     JavaThotlibLock();
 

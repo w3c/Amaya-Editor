@@ -106,14 +106,13 @@
 #define _PNG_SAVE_BSD_SOURCE
 #undef _BSD_SOURCE
 #endif
-#ifdef _SETJMP_H
-__png.h__ already includes setjmp.h
-__dont__ include it again
+#ifndef _SETJMP_H
+#include <setjmp.h>
 #endif
-#endif /* __linux__ */
-
+#else
 /* include setjmp.h for error handling */
 #include <setjmp.h>
+#endif /* __linux__ */
 
 #ifdef __linux__
 #ifdef _PNG_SAVE_BSD_SOURCE

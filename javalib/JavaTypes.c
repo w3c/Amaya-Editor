@@ -598,15 +598,15 @@ void JavaStringBuffer2CcharPtr(struct Hjava_lang_StringBuffer* in, char **out)
     int capacity;
     struct Hjava_lang_String *string;
     
-    capacity = do_execute_java_method(0, (Hjava_lang_Object*) (in),
-		        "capacity", "()I", 0, 0);
+    capacity = do_execute_java_method((Hjava_lang_Object*) (in),
+		        "capacity", "()I", 0, 0).i;
     if (capacity < MAX_PATH) capacity = MAX_PATH;
     *out = buffer = (char *) malloc(capacity);
     if (buffer == NULL) return;
     buffer[0] = '\0';
     string = (struct Hjava_lang_String *)
-             do_execute_java_method(0, (Hjava_lang_Object*) (in),
-			"toString", "()Ljava/lang/String;", 0, 0);
+             do_execute_java_method((Hjava_lang_Object*) (in),
+			"toString", "()Ljava/lang/String;", 0, 0).l;
     if (string == NULL) return;
     javaString2CString(string, buffer, capacity);
 }
@@ -616,11 +616,11 @@ void CcharPtr2JavaStringBuffer(char *in, struct Hjava_lang_StringBuffer** out)
     int len = strlen(in);
     struct Hjava_lang_String *string;
 
-    do_execute_java_method(0, (Hjava_lang_Object*) (*out),
+    do_execute_java_method((Hjava_lang_Object*) (*out),
                          "ensureCapacity", "(I)V", 0, 0, (jint) len);
     string = makeJavaString(in, len);
     if (string == NULL) return;
-    do_execute_java_method(0, (Hjava_lang_Object*) (*out),
+    do_execute_java_method((Hjava_lang_Object*) (*out),
 	 "insert", "(ILjava/lang/String;)Ljava/lang/StringBuffer;", 0, 0,
 			 0, string);
     free(in);

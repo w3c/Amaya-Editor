@@ -489,8 +489,8 @@ int *bg;
     png_ptr = (png_struct*) TtaGetMemory (sizeof (png_struct));
     if (!png_ptr)
       return NULL;
-    png_ptr->error_fn = (void *)my_png_error;
-    png_ptr->warning_fn = (void *)my_png_warning;
+
+    png_set_error_fn(png_ptr, NULL, my_png_error, my_png_warning);
     
     info_ptr = (png_info*) TtaGetMemory (sizeof (png_info));
     if (!info_ptr)

@@ -7,40 +7,114 @@
 #ifdef __STDC__
 
 extern SSchema GetGraphMLSSchema ( Document doc );
-extern void GraphMLGetDTDName ( char* DTDname, char *elementName );
-extern void MapGraphMLElementType ( char *XMLname, ElementType *elType, char** mappedName, char* content, Document doc );
-extern void GetGraphMLElementName ( ElementType elType, char **buffer );
-extern void MapGraphMLAttribute ( char *Attr, AttributeType *attrType, char* elementName, Document doc );
-extern void MapGraphMLAttributeValue ( char *AttrVal, AttributeType attrType, int *value );
-extern void MapGraphMLEntity ( char *entityName, char *entityValue, int valueLength, char *alphabet );
-extern void GraphMLEntityCreated ( unsigned char *entityValue, char *entityName, Document doc );
-extern Element CreateGraphicLeaf ( Element el, Document doc, boolean *closed, int arrowHead );
-extern void ParseDirAndSpaceAttributes ( Element group, Element el, Document doc );
-extern void GraphMLElementComplete ( Element el, Document doc );
-extern void UpdateInternalAttrForPoly ( Element el, Element leaf, Document doc, int minX, int minY, int maxX, int maxY, boolean setIntPosition );
-extern void CreatePoints ( Attribute attr, Element el, Document doc );
-extern void ParsePositionAttribute ( Attribute attr, Element el, Document doc );
-extern void ParseWidthHeightAttribute ( Attribute attr, Element el, Document doc );
-extern void GraphMLAttributeComplete ( Attribute attr, Element el, Document doc );
+extern void GraphMLGetDTDName ( char* DTDname,
+                                char *elementName );
+extern void MapGraphMLElementType ( char *XMLname,
+                                    ElementType *elType,
+                                    char** mappedName,
+                                    char* content,
+                                    Document doc );
+extern void GetGraphMLElementName ( ElementType elType,
+                                    char **buffer );
+extern void MapGraphMLAttribute ( char *Attr,
+                                  AttributeType *attrType,
+                                  char* elementName,
+                                  Document doc );
+extern void MapGraphMLAttributeValue ( char *AttrVal,
+                                       AttributeType attrType,
+                                       int *value );
+extern void MapGraphMLEntity ( char *entityName,
+                               char *entityValue,
+                               int valueLength,
+                               char *alphabet );
+extern void GraphMLEntityCreated ( unsigned char *entityValue,
+                                   char *entityName,
+                                   Document doc );
+extern Element CreateGraphicLeaf ( Element el,
+                                   Document doc,
+                                   boolean *closed,
+                                   int arrowHead );
+extern void ParseDirAndSpaceAttributes ( Element group,
+                                         Element el,
+                                         Document doc );
+extern void GraphMLElementComplete ( Element el,
+                                     Document doc );
+extern void UpdateInternalAttrForPoly ( Element el,
+                                        Element leaf,
+                                        Document doc,
+                                        int minX,
+                                        int minY,
+                                        int maxX,
+                                        int maxY,
+                                        boolean setIntPosition );
+extern void CreatePoints ( Attribute attr,
+                           Element el,
+                           Document doc );
+extern void ParsePositionAttribute ( Attribute attr,
+                                     Element el,
+                                     Document doc );
+extern void ParseWidthHeightAttribute ( Attribute attr,
+                                        Element el,
+                                        Document doc );
+extern void GraphMLAttributeComplete ( Attribute attr,
+                                       Element el,
+                                       Document doc );
 
 #else /* __STDC__ */
 
 extern SSchema GetGraphMLSSchema (/* Document doc */);
-extern void GraphMLGetDTDName (/* char* DTDname, char *elementName */);
-extern void MapGraphMLElementType (/* char *XMLname, ElementType *elType, char** mappedName, char* content, Document doc */);
-extern void GetGraphMLElementName (/* ElementType elType, char **buffer */);
-extern void MapGraphMLAttribute (/* char *Attr, AttributeType *attrType, char* elementName, Document doc */);
-extern void MapGraphMLAttributeValue (/* char *AttrVal, AttributeType attrType, int *value */);
-extern void MapGraphMLEntity (/* char *entityName, char *entityValue, int valueLength, char *alphabet */);
-extern void GraphMLEntityCreated (/* unsigned char *entityValue, char *entityName, Document doc */);
-extern Element CreateGraphicLeaf (/* Element el, Document doc, boolean *closed, int arrowHead */);
-extern void ParseDirAndSpaceAttributes (/* Element group, Element el, Document doc */);
-extern void GraphMLElementComplete (/* Element el, Document doc */);
-extern void UpdateInternalAttrForPoly (/* Element el, Element leaf, Document doc, int minX, int minY, int maxX, int maxY, boolean setIntPosition */);
-extern void CreatePoints (/* Attribute attr, Element el, Document doc */);
-extern void ParsePositionAttribute (/* Attribute attr, Element el, Document doc */);
-extern void ParseWidthHeightAttribute (/* Attribute attr, Element el, Document doc */);
-extern void GraphMLAttributeComplete (/* Attribute attr, Element el, Document doc */);
+extern void GraphMLGetDTDName (/* char* DTDname,
+                                  char *elementName */);
+extern void MapGraphMLElementType (/* char *XMLname,
+                                      ElementType *elType,
+                                      char** mappedName,
+                                      char* content,
+                                      Document doc */);
+extern void GetGraphMLElementName (/* ElementType elType,
+                                      char **buffer */);
+extern void MapGraphMLAttribute (/* char *Attr,
+                                    AttributeType *attrType,
+                                    char* elementName,
+                                    Document doc */);
+extern void MapGraphMLAttributeValue (/* char *AttrVal,
+                                         AttributeType attrType,
+                                         int *value */);
+extern void MapGraphMLEntity (/* char *entityName,
+                                 char *entityValue,
+                                 int valueLength,
+                                 char *alphabet */);
+extern void GraphMLEntityCreated (/* unsigned char *entityValue,
+                                     char *entityName,
+                                     Document doc */);
+extern Element CreateGraphicLeaf (/* Element el,
+                                     Document doc,
+                                     boolean *closed,
+                                     int arrowHead */);
+extern void ParseDirAndSpaceAttributes (/* Element group,
+                                           Element el,
+                                           Document doc */);
+extern void GraphMLElementComplete (/* Element el,
+                                       Document doc */);
+extern void UpdateInternalAttrForPoly (/* Element el,
+                                          Element leaf,
+                                          Document doc,
+                                          int minX,
+                                          int minY,
+                                          int maxX,
+                                          int maxY,
+                                          boolean setIntPosition */);
+extern void CreatePoints (/* Attribute attr,
+                             Element el,
+                             Document doc */);
+extern void ParsePositionAttribute (/* Attribute attr,
+                                       Element el,
+                                       Document doc */);
+extern void ParseWidthHeightAttribute (/* Attribute attr,
+                                          Element el,
+                                          Document doc */);
+extern void GraphMLAttributeComplete (/* Attribute attr,
+                                         Element el,
+                                         Document doc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

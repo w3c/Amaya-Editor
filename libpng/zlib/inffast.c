@@ -1,5 +1,5 @@
 /* inffast.c -- process literals and length/distance pairs fast
- * Copyright (C) 1995 Mark Adler
+ * Copyright (C) 1995-1998 Mark Adler
  * For conditions of distribution and use, see copyright notice in zlib.h 
  */
 
@@ -13,14 +13,12 @@
 struct inflate_codes_state {int dummy;}; /* for buggy compilers */
 
 /* simplify the use of the inflate_huft type with some defines */
-#define base more.Base
-#define next more.Next
 #define exop word.what.Exop
 #define bits word.what.Bits
 
 /* macros for bit input with no checking and for returning unused bytes */
 #define GRABBITS(j) {while(k<(j)){b|=((uLong)NEXTBYTE)<<k;k+=8;}}
-#define UNGRAB {n+=(c=k>>3);p-=c;k&=7;}
+#define UNGRAB {c=z->avail_in-n;c=(k>>3)<c?k>>3:c;n+=c;p-=c;k-=c<<3;}
 
 /* Called with number of bytes left to write in window at least 258
    (the maximum string length) and number of input bytes available
@@ -29,9 +27,10 @@ struct inflate_codes_state {int dummy;}; /* for buggy compilers */
 
 int inflate_fast(bl, bd, tl, td, s, z)
 uInt bl, bd;
-inflate_huft *tl, *td;
+inflate_huft *tl;
+inflate_huft *td; /* need separate declaration for Borland C++ */
 inflate_blocks_statef *s;
-z_stream *z;
+z_streamp z;
 {
   inflate_huft *t;      /* temporary pointer */
   uInt e;               /* extra bits or operation */
@@ -102,7 +101,7 @@ z_stream *z;
             }
             else                        /* else offset after destination */
             {
-              e = d - (q - s->window);  /* bytes from offset to end */
+              e = d - (uInt)(q - s->window); /* bytes from offset to end */
               r = s->end - e;           /* pointer to offset */
               if (c > e)                /* if source crosses, */
               {
@@ -119,10 +118,13 @@ z_stream *z;
             break;
           }
           else if ((e & 64) == 0)
-            e = (t = t->next + ((uInt)b & inflate_mask[e]))->exop;
+          {
+            t += t->base;
+            e = (t += ((uInt)b & inflate_mask[e]))->exop;
+          }
           else
           {
-            z->msg = "invalid distance code";
+            z->msg = (char*)"invalid distance code";
             UNGRAB
             UPDATE
             return Z_DATA_ERROR;
@@ -132,7 +134,8 @@ z_stream *z;
       }
       if ((e & 64) == 0)
       {
-        if ((e = (t = t->next + ((uInt)b & inflate_mask[e]))->exop) == 0)
+        t += t->base;
+        if ((e = (t += ((uInt)b & inflate_mask[e]))->exop) == 0)
         {
           DUMPBITS(t->bits)
           Tracevv((stderr, t->base >= 0x20 && t->base < 0x7f ?
@@ -152,7 +155,7 @@ z_stream *z;
       }
       else
       {
-        z->msg = "invalid literal/length code";
+        z->msg = (char*)"invalid literal/length code";
         UNGRAB
         UPDATE
         return Z_DATA_ERROR;

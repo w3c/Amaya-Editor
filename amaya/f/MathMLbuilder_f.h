@@ -7,48 +7,112 @@
 #ifdef __STDC__
 
 extern SSchema GetMathMLSSchema ( Document doc );
-extern void MapMathMLElementType ( char *XMLname, ElementType *elType, char** mappedName, char* content, Document doc );
-extern void GetMathMLElementName ( ElementType elType, char **buffer );
-extern void MapMathMLAttribute ( char *Attr, AttributeType *attrType, char* elementName, Document doc );
-extern void MapMathMLAttributeValue ( char *AttrVal, AttributeType attrType, int *value );
-extern void MapMathMLEntity ( char *entityName, char *entityValue, int valueLength, char *alphabet );
-extern void MathMLEntityCreated ( unsigned char *entityValue, char *entityName, Document doc );
+extern void MapMathMLElementType ( char *XMLname,
+                                   ElementType *elType,
+                                   char** mappedName,
+                                   char* content,
+                                   Document doc );
+extern void GetMathMLElementName ( ElementType elType,
+                                   char **buffer );
+extern void MapMathMLAttribute ( char *Attr,
+                                 AttributeType *attrType,
+                                 char* elementName,
+                                 Document doc );
+extern void MapMathMLAttributeValue ( char *AttrVal,
+                                      AttributeType attrType,
+                                      int *value );
+extern void MapMathMLEntity ( char *entityName,
+                              char *entityValue,
+                              int valueLength,
+                              char *alphabet );
+extern void MathMLEntityCreated ( unsigned char *entityValue,
+                                  char *entityName,
+                                  Document doc );
 extern boolean ElementNeedsPlaceholder ( Element el );
-extern void SetSingleHorizStretchAttr ( Element el, Document doc, Element* selEl );
-extern void SetVertStretchAttr ( Element el, Document doc, int base, Element* selEl );
-extern void LinkMathCellsWithColumnHeads ( Element elMTABLE, Document doc );
-extern void SetFontstyleAttr ( Element el, Document doc );
-extern void SetAddspaceAttr ( Element el, Document doc );
-extern void ChangeTypeOfElement ( Element elem, Document doc, int newTypeNum );
-extern void CheckFence ( Element el, Document doc );
-extern void CreateFencedSeparators ( Element fencedExpression, Document doc );
-extern void TransformMFENCED ( Element el, Document doc );
-extern void MathMLElementComplete ( Element el, Document doc );
-extern void MathMLAttributeComplete ( Attribute attr, Element el, Document doc );
-extern void MathMLGetDTDName ( char* DTDname, char *elementName );
+extern void SetSingleHorizStretchAttr ( Element el,
+                                        Document doc,
+                                        Element* selEl );
+extern void SetVertStretchAttr ( Element el,
+                                 Document doc,
+                                 int base,
+                                 Element* selEl );
+extern void LinkMathCellsWithColumnHeads ( Element elMTABLE,
+                                           Document doc );
+extern void SetFontstyleAttr ( Element el,
+                               Document doc );
+extern void SetAddspaceAttr ( Element el,
+                              Document doc );
+extern void ChangeTypeOfElement ( Element elem,
+                                  Document doc,
+                                  int newTypeNum );
+extern void CheckFence ( Element el,
+                         Document doc );
+extern void CreateFencedSeparators ( Element fencedExpression,
+                                     Document doc );
+extern void TransformMFENCED ( Element el,
+                               Document doc );
+extern void MathMLElementComplete ( Element el,
+                                    Document doc );
+extern void MathMLAttributeComplete ( Attribute attr,
+                                      Element el,
+                                      Document doc );
+extern void MathMLGetDTDName ( char* DTDname,
+                               char *elementName );
 
 #else /* __STDC__ */
 
 extern SSchema GetMathMLSSchema (/* Document doc */);
-extern void MapMathMLElementType (/* char *XMLname, ElementType *elType, char** mappedName, char* content, Document doc */);
-extern void GetMathMLElementName (/* ElementType elType, char **buffer */);
-extern void MapMathMLAttribute (/* char *Attr, AttributeType *attrType, char* elementName, Document doc */);
-extern void MapMathMLAttributeValue (/* char *AttrVal, AttributeType attrType, int *value */);
-extern void MapMathMLEntity (/* char *entityName, char *entityValue, int valueLength, char *alphabet */);
-extern void MathMLEntityCreated (/* unsigned char *entityValue, char *entityName, Document doc */);
+extern void MapMathMLElementType (/* char *XMLname,
+                                     ElementType *elType,
+                                     char** mappedName,
+                                     char* content,
+                                     Document doc */);
+extern void GetMathMLElementName (/* ElementType elType,
+                                     char **buffer */);
+extern void MapMathMLAttribute (/* char *Attr,
+                                   AttributeType *attrType,
+                                   char* elementName,
+                                   Document doc */);
+extern void MapMathMLAttributeValue (/* char *AttrVal,
+                                        AttributeType attrType,
+                                        int *value */);
+extern void MapMathMLEntity (/* char *entityName,
+                                char *entityValue,
+                                int valueLength,
+                                char *alphabet */);
+extern void MathMLEntityCreated (/* unsigned char *entityValue,
+                                    char *entityName,
+                                    Document doc */);
 extern boolean ElementNeedsPlaceholder (/* Element el */);
-extern void SetSingleHorizStretchAttr (/* Element el, Document doc, Element* selEl */);
-extern void SetVertStretchAttr (/* Element el, Document doc, int base, Element* selEl */);
-extern void LinkMathCellsWithColumnHeads (/* Element elMTABLE, Document doc */);
-extern void SetFontstyleAttr (/* Element el, Document doc */);
-extern void SetAddspaceAttr (/* Element el, Document doc */);
-extern void ChangeTypeOfElement (/* Element elem, Document doc, int newTypeNum */);
-extern void CheckFence (/* Element el, Document doc */);
-extern void CreateFencedSeparators (/* Element fencedExpression, Document doc */);
-extern void TransformMFENCED (/* Element el, Document doc */);
-extern void MathMLElementComplete (/* Element el, Document doc */);
-extern void MathMLAttributeComplete (/* Attribute attr, Element el, Document doc */);
-extern void MathMLGetDTDName (/* char* DTDname, char *elementName */);
+extern void SetSingleHorizStretchAttr (/* Element el,
+                                          Document doc,
+                                          Element* selEl */);
+extern void SetVertStretchAttr (/* Element el,
+                                   Document doc,
+                                   int base,
+                                   Element* selEl */);
+extern void LinkMathCellsWithColumnHeads (/* Element elMTABLE,
+                                             Document doc */);
+extern void SetFontstyleAttr (/* Element el,
+                                 Document doc */);
+extern void SetAddspaceAttr (/* Element el,
+                                Document doc */);
+extern void ChangeTypeOfElement (/* Element elem,
+                                    Document doc,
+                                    int newTypeNum */);
+extern void CheckFence (/* Element el,
+                           Document doc */);
+extern void CreateFencedSeparators (/* Element fencedExpression,
+                                       Document doc */);
+extern void TransformMFENCED (/* Element el,
+                                 Document doc */);
+extern void MathMLElementComplete (/* Element el,
+                                      Document doc */);
+extern void MathMLAttributeComplete (/* Attribute attr,
+                                        Element el,
+                                        Document doc */);
+extern void MathMLGetDTDName (/* char* DTDname,
+                                 char *elementName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

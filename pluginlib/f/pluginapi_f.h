@@ -24,12 +24,12 @@ extern NPError Ap_GetURL ( NPP instance,
                            const char* target );
 extern NPError Ap_GetURLNotify ( NPP instance,
                                  const char* url,
-                                 const char* target,
+                                 const char *target,
                                  void* notifyData );
 extern NPError Ap_NewStream ( NPP instance,
                               NPMIMEType type,
-                              const char* window,
-                              NPStream** stream_ptr );
+                              const char *window,
+                              NPStream **stream_ptr );
 extern NPError Ap_PostURL ( NPP instance,
                             const char* url,
                             const char* target,
@@ -62,7 +62,7 @@ extern void Ap_InitializePluginTable ( int indexHandler );
 extern int Ap_InitializePlugin ( char* path,
                                  int indexHandler );
 extern void Ap_CreatePluginInstance ( PtrBox box,
-				      PictInfo *imageDesc,
+                                      PictInfo *imageDesc,
                                       Display *display,
                                       int type );
 
@@ -86,12 +86,12 @@ extern NPError Ap_GetURL (/* NPP instance,
                              const char* target */);
 extern NPError Ap_GetURLNotify (/* NPP instance,
                                    const char* url,
-                                   const char* target,
+                                   const char *target,
                                    void* notifyData */);
 extern NPError Ap_NewStream (/* NPP instance,
                                 NPMIMEType type,
-                                const char* window,
-                                NPStream** stream_ptr */);
+                                const char *window,
+                                NPStream **stream_ptr */);
 extern NPError Ap_PostURL (/* NPP instance,
                               const char* url,
                               const char* target,
@@ -123,7 +123,8 @@ extern void Ap_InitializeAmayaTable (/* void */);
 extern void Ap_InitializePluginTable (/* int indexHandler */);
 extern int Ap_InitializePlugin (/* char* path,
                                    int indexHandler */);
-extern void Ap_CreatePluginInstance (/* PictInfo *imageDesc,
+extern void Ap_CreatePluginInstance (/* PtrBox box,
+                                        PictInfo *imageDesc,
                                         Display *display,
                                         int type */);
 

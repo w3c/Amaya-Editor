@@ -118,7 +118,7 @@ extern void RemoveComparAttrPresent (/* PtrElement pEl,
                                         PtrAttribute pAttr */);
 extern PtrAttribute AddAttrToElem (/* PtrElement pEl,
                                       PtrAttribute pNewAttr,
-				      PtrAttribute pAttrnext */);
+                                      PtrAttribute pAttrNext */);
 extern void AttachAttrWithValue (/* PtrElement pEl,
                                     PtrDocument pDoc,
                                     PtrAttribute pNewAttr */);

@@ -122,6 +122,9 @@ extern void RedisplayDefaultPresentation ( Document document,
                                            int view );
 extern void RedispNewGeometry ( Document document,
                                 PtrElement pEl );
+extern void TtaClipPolyline ( Element element,
+                              Document doc,
+                              View view );
 extern void TtaSetDisplayMode ( Document document,
                                 DisplayMode newDisplayMode );
 extern DisplayMode TtaGetDisplayMode ( Document document );
@@ -244,6 +247,9 @@ extern void RedisplayDefaultPresentation (/* Document document,
                                              int view */);
 extern void RedispNewGeometry (/* Document document,
                                   PtrElement pEl */);
+extern void TtaClipPolyline (/* Element element,
+                                Document doc,
+                                View view */);
 extern void TtaSetDisplayMode (/* Document document,
                                   DisplayMode newDisplayMode */);
 extern DisplayMode TtaGetDisplayMode (/* Document document */);
