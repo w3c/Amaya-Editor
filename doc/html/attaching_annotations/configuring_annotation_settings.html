@@ -1,6 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-    "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Configuring Annotation Settings</title>
@@ -33,7 +35,7 @@
 choosing <strong>Configure</strong> from the <strong>Annotations</strong>
 menu. The following figure shows the Windows version of this dialog.</p>
 
-<p><img src="../icons/configurebox.png" alt="configuration dialog box"></p>
+<p><img src="../icons/configurebox.png" alt="configuration dialog box" /></p>
 
 <p></p>
 
@@ -41,10 +43,15 @@ menu. The following figure shows the Windows version of this dialog.</p>
 functions.</p>
 <dl>
   <dt><strong>Annotation user</strong></dt>
-    <dd>A field that is associated with each new annotation as the author of
-      the annotation. By default, Amaya uses the login name of the user. This
-      field enables you to change your user name to something more
-    meaningful.</dd>
+    <dd>The author of the annotation. By default, Amaya uses the login name
+      of the user. This field enables you to change your user name to
+      something more meaningful.</dd>
+  <dt><strong>Annotation post server</strong></dt>
+    <dd>This setting defines the server to which the annotations are posted.
+      Local annotations are always saved to the local repository, and by
+      default, this setting is empty. The post server is not automatically
+      included in the list of servers, so you should enter the post server
+      name in both places.</dd>
   <dt><strong>Annotation servers</strong></dt>
     <dd>A list of servers Amaya should contact when looking for annotations.
       You can specify one or more servers. The reserved server name
@@ -58,32 +65,27 @@ functions.</p>
       <code>localhost</code>.
       <p></p>
       <p class="ProcedureNote"><strong>Tip</strong>:<br />
-       To temporarily disable an annotation server, add a "-" char before its
+      To temporarily disable an annotation server, add a "-" char before its
       URL. Amaya will ignore it.</p>
     </dd>
   <dt><strong>Autoload local annotations/Autoload remote
   annotations</strong></dt>
-    <dd>A check box that tells Amaya to request annotations automatically (by
-      querying the annotation server) every time you browse any URL. If it is
-      not checked, then you can manually choose <strong>Load
-      annotations</strong> from the <strong>Annotations</strong> menu.
+    <dd>Whether Amaya should request annotations automatically (by querying
+      the annotation server) every time you browse any URL. If it is not
+      checked, then you can manually choose <strong>Load annotations</strong>
+      from the <strong>Annotations</strong> menu.
       <p></p>
-      <p class="Note"><strong>Note:</strong><br />
+      <p class="Note"><strong>Note:</strong><br>
       If you check the <strong>Autoload remote annotations</strong> option,
       you may experience a delay in resolving the DNS name of the annotation
       servers. By default, both these options are turned off.</p>
     </dd>
-  <dt><strong>Disable remote autoload at each startup</strong></dt>
-    <dd>If this option is checked, Amaya will reset the <strong>autoload
-      remote annotations </strong>option at launch time. This option can be
-      useful if you're working offline, but still want to autoload the local
-      annotations as well as the remote ones.</dd>
-  <dt><strong>Annotation post server</strong></dt>
-    <dd>This setting defines the server to which the annotations are posted.
-      Local annotations are always saved to the local repository, and by
-      default, this setting is empty. The post server is not automatically
-      included in the list of servers, so you should enter the post server
-      name in both places.</dd>
+  <dt><strong>Disable remote autoload at each startup (for offline
+  work)</strong></dt>
+    <dd>Whether Amaya should reset the <strong>autoload remote annotations
+      </strong>option at launch time. This option can be useful if you are
+      working offline, but still want to autoload the local annotations as
+      well as the remote ones.</dd>
 </dl>
 
 <h2>See Also:</h2>

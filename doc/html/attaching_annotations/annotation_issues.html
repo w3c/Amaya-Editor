@@ -1,12 +1,14 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-    "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Known Issues with Annotations and Modified Documents</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 5.1" />
+  <meta name="GENERATOR" content="amaya 5.2" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -43,11 +45,11 @@ value to be the beginning of that XPointer.</p>
 
 <p>Note that the use of the ID attribute enables the document author to move
 the entire reference by the Xpointer to another location within the document,
-without needing to update the XPointer. The XPointer doesn't depend on the
+without needing to update the XPointer. The XPointer does not depend on the
 elements that precede it.</p>
 
 <p>An annotation becomes an “orphan” when it can no longer be attached to a
-document, that is, when the XPointer doesn't resolve to any element in the
+document, that is, when the XPointer does not resolve to any element in the
 structure. This happens when a document's structure is modified. Amaya
 displays a warning if it detects any orphan annotations while downloading a
 set of annotations from an annotation server. All orphan annotations are
@@ -62,10 +64,11 @@ for an annotation to be misleading.</p>
 
 <p><strong>What can you do to avoide this?</strong></p>
 
-<p>As the author of a document, try to use the ID attribute in strategic
-places, for example, inside &lt;DIV&gt; elements. Amaya enables you to
-automatically associate with or remove an ID attribute to/from a set of
-elements by choosing <strong>Add/Remove ID</strong> from the
-<strong>Special</strong> menu.</p>
+<p>As the author of a document, try to use the <code>ID</code> attribute in
+strategic places, for example, inside <code>&lt;DIV&gt;</code> elements.
+Amaya enables you to automatically associate with or remove an
+<code>ID</code> attribute to/from a set of elements by choosing
+<strong>Add/Remove ID</strong> from the <strong>Special</strong> menu.</p>
 </body>
 </html>
+
