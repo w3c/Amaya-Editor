@@ -1569,7 +1569,7 @@ void SelectString (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar
 void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool check)
 {
   PtrElement          pAncest, pE;
-  ThotBool            b, stop, elVisible;
+  ThotBool            stop, elVisible;
 
   if (pEl != NULL && pDoc != NULL && pEl->ElStructSchema != NULL &&
       pEl != pDoc->DocDocElement) /* do not select the Document element */
