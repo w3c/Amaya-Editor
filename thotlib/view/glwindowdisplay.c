@@ -1581,7 +1581,8 @@ void GL_window_copy_area (int frame,
 void GLResize (int width, int height, int x, int y)
 {
 #ifdef _GTK
-  gdk_gl_wait_gdk();
+  gdk_gl_wait_gdk ();
+  gdk_gl_wait_gl ();
 #endif /*_GTK*/ 
   glViewport (0, 0, width, height);
   glMatrixMode (GL_PROJECTION);      
@@ -1610,11 +1611,16 @@ void gl_window_resize (int frame, int width, int height)
   if (GL_prepare (frame))
       {
 #ifdef _GTK
+  gdk_gl_wait_gdk ();
+  gdk_gl_wait_gl ();
   widget = FrameTable[frame].WdFrame;
 
   gtk_widget_queue_resize  (widget->parent->parent);
   while (gtk_events_pending ()) 
     gtk_main_iteration ();
+
+  gdk_gl_wait_gdk ();
+  gdk_gl_wait_gl ();
   return;
   GLResize (widget->allocation.width+width, 
 	    widget->allocation.height+height, 
