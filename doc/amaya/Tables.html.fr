@@ -31,10 +31,10 @@
 
 <p>Il n'existe pas d'éditeur de tables indépendant dans
 <strong>Amaya</strong>. Une table est une simple structure décrite par le HTML
-DTD et il est édité comme tel. Les commandes pour les tables sont les mêmes
-que pour les autres structures HTML, avec quelques suppléments.</p>
+DTD et elle est éditée comme telle. Les commandes pour les tables sont les
+mêmes que pour les autres structures HTML, avec quelques suppléments.</p>
 
-<h3><a name="Creating">Créer un nouveau tableau</a></h3>
+<h3><a name="Creating">Créer une nouvelle table</a></h3>
 
 <p>Quand on active le bouton table <img src="../Icons/table.gif"
 alt="Table button" /> ou quand on sélectionne l'entrée <strong>Table
@@ -44,7 +44,7 @@ colonnes pour la nouvelle table, ainsi que sa bordure. Si vous avez fait ça
 par erreur, cliquez simplement sur le bouton <strong>Annuler</strong>. Pour
 créer une nouvelle table à la position courante, cliquez sur le bouton
 <strong>Confirmer</strong>. Amaya génèrera ainsi quelque chose comme la table
-suivante (3 colonnes and 2 lignes dans ce cas):</p>
+suivante (3 colonnes et 2 lignes dans ce cas):</p>
 
 <table border="1" summary="table">
   <caption>I</caption>
@@ -62,7 +62,7 @@ suivante (3 colonnes and 2 lignes dans ce cas):</p>
   </tbody>
 </table>
 
-<p>L'espace au dessus de la table est réservé pour la légende. Le point
+<p>L'espace au dessus de la table est réservé à la légende. Le point
 d'insertion est automatiquement placé dans cette légende, de telle manière que
 vous puissiez rentrer son contenu immédiatement. Vous pouvez également
 l'effacer si vous n'avez pas besoin d'une légende.</p>
@@ -79,7 +79,7 @@ href="Creating.html#L906">Entrer</a>.  Déplacez le point d'insertion à la fin
 ou au début de la cellule (par exemple à la fin de la cellule 1.1 dans la
 table ci dessous). En tapant deux fois sur la touche Entrer (la première
 pression de la touche crée un paragraphe dans la cellule courante) vous créez
-une nouvelle cellule et sa colonne correspondante, comme montré si
+une nouvelle cellule et sa colonne correspondante, comme montré ci
 dessous:</p>
 
 <table border="1" summary="table">
@@ -139,8 +139,8 @@ besoin est.</p>
 <p><em>Notez que le modèle de table implémenté dans
 </em><strong><em>Amaya</em></strong><em> est le modèle d'</em><a
 href="../../TR/REC-html40"><em>HTML 4.0</em></a><em>. Celui ci inclus des
-carastéristiques comme les corps multiples 
-(</em><code><em>tbody</em></code><em>), des entêtes de table 
+carastéristiques comme les corps multiples
+(</em><code><em>tbody</em></code><em>), des entêtes de table
 (</em><code><em>thead</em></code><em>) et des bas de table
 (</em><code><em>tfoot</em></code><em>).</em></p>
 </div>

@@ -106,8 +106,8 @@ document.</p>
       </li>
       <li>Si vous n'êtes pas à l'aise avec la souris:
         <ul>
-          <li>Tapez sur n'importe quelle touche ce qui fera surgir une boîte
-            de dialogue: entrez l'URI du document cible et taper sur la touche
+          <li>Tapez sur n'importe quelle touche. Cela fera surgir une boîte de
+            dialogue: entrez l'URI du document cible et taper sur la touche
             <strong>Entrer ou Retourner</strong> pour confirmer.  Le lien est
             créé.</li>
         </ul>
