@@ -291,7 +291,7 @@ static void create_GC(XcgLiteClueWidget cw )
 
 
 	valuemask = GCForeground | GCBackground | GCFillStyle;
-	myXGCV.foreground = cw->liteClue.foreground;
+	myXGCV.foreground = ColorPixel(ColorNumber("Black")) /*cw->liteClue.foreground */;
 	myXGCV.background = ColorPixel(ColorNumber("Yellow")) /* cw->core.background_pixel */;
 	myXGCV.fill_style = FillSolid; 
 
