@@ -87,6 +87,7 @@ struct Cat_Context
     } Cat_Union2;
     ThotWidget          Cat_Widget;	/* Le widget associe au catalogue    */
     ThotWidget          Cat_Title;	/* Le widget du titre                */
+	ThotWidget          Cat_ParentWidget; /* pointer to the widget parent */
     struct Cat_Context *Cat_PtParent;	/* Adresse du catalogue pere         */
     int                 Cat_EntryParent; /* Entree du menu parent            */
     ThotBool            Cat_React;	/* Indicateur reaction immediate     */
@@ -142,7 +143,6 @@ static HFONT          formFONT;
 char                 *iconID;
 static OPENFILENAME  OpenFileName;
 static int           cyValue = 10;
-static HWND           currentParent;
 #else  /* _WINDOWS */
 #ifndef _GTK
 static XmFontList     formFONT;
@@ -1167,7 +1167,6 @@ void WIN_ThotCallBack (HWND hWnd, WPARAM wParam, LPARAM lParam)
    frame = GetMainFrameNumber (hWnd);
    if (frame > 0 && frame <= MAX_FRAME)
    {
-     currentParent = FrMainRef[frame];
      nearest = NULL;
      ref = LOWORD (wParam);
      if (ref == 0)
@@ -2577,12 +2576,11 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
       catalogue->Cat_Button = 'L';
       catalogue->Cat_Data = -1;
       catalogue->Cat_Widget = (ThotWidget) menu;
+  	  catalogue->Cat_ParentWidget = parent;
       adbloc = catalogue->Cat_Entries;
 #ifdef _WINDOWS
       if (parent)
 	WIN_AddFrameCatalogue (parent, catalogue);
-      else if (currentParent)
-	WIN_AddFrameCatalogue (currentParent, catalogue);
       if (number == 0)
 	/* it's a simple button not a pull-down */
 	return;
@@ -3138,6 +3136,7 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 #endif /* _WINDOWS */
 	  catalogue->Cat_Widget = menu;
 	  catalogue->Cat_Ref = ref;
+	  catalogue->Cat_ParentWidget = parent; /* remember the parent widget for the callback */
 	  catalogue->Cat_Type = CAT_POPUP;
 	  catalogue->Cat_Button = button;
 	  /* Initialisation de la liste des widgets fils */
@@ -3162,8 +3161,8 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 	}
       catalogue->Cat_Data = -1;
 #ifdef _WINDOWS
-      if (currentParent != 0)
-	WIN_AddFrameCatalogue (currentParent, catalogue);
+      if (parent != 0)
+	WIN_AddFrameCatalogue (parent, catalogue);
 #endif /* _WINDOWS */
       
       /*** Cree le titre du menu ***/
@@ -3610,9 +3609,11 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 	button = catalogue->Cat_Button;
     }
   catalogue->Cat_Data = -1;
+  catalogue->Cat_ParentWidget = parent;
+
 #ifdef _WINDOWS
-  if (currentParent != 0)
-    WIN_AddFrameCatalogue (currentParent, catalogue);
+  if (parent != 0)
+    WIN_AddFrameCatalogue (parent, catalogue);
 #endif /* _WINDOWS */
   /* Cree les differentes entrees du menu */
   i = 0;
@@ -8200,7 +8201,7 @@ void TtaShowDialogue (int ref, ThotBool remanent)
     {
       GetCursorPos (&curPoint);
       if (!TrackPopupMenu (w,  TPM_LEFTALIGN, curPoint.x, curPoint.y, 0,
-			   currentParent, NULL))
+			   catalogue->Cat_ParentWidget, NULL))
 	WinErrorBox (WIN_Main_Wd, "TtaShowDialogue (1)");
     }
   else
