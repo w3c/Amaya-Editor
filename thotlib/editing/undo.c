@@ -791,16 +791,16 @@ PtrDocument         pDoc;
 {
    ThotBool	stop;
 
-   if (!pDoc->DocLastEdit)
-      /* history is empty */
-      return;
    stop = FALSE;
    while (!stop)
-      {
+   {
+      if (!pDoc->DocLastEdit)
+      /* history is empty */
+        return;
       if (pDoc->DocLastEdit->EoType == EtDelimiter)
-	 stop = TRUE;
+	    stop = TRUE;
       CancelAnEdit (pDoc->DocLastEdit, pDoc, TRUE);
-      }
+   }
 }
 
 /*----------------------------------------------------------------------
