@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -9,7 +9,7 @@
  * User interface for attributes
  *
  * Authors: I. Vatton (INRIA)
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
+ *          R. Guetari (W3C/INRIA) - Windows version
  *
  */
 
@@ -180,16 +180,7 @@ static void InitFormLanguage (Document doc, View view,
 	 }
      }
 
-   if (nbItem == 0)
-     {
-      /* pas de langue definie, on cree une simple zone de saisie de texte */
-#ifndef _WINDOWS
-      TtaNewTextForm (NumSelectLanguage, NumFormLanguage,
-		      TtaGetMessage (LIB, TMSG_LANGUAGE), 30, 1, FALSE);
-      TtaSetTextForm (NumFormLanguage, languageValue);
-#endif /* !_WINDOWS */
-     }
-   else
+   if (nbItem > 0)
      {
 #ifndef _WINDOWS 
        /* on cree un selecteur */

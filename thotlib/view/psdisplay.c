@@ -126,7 +126,7 @@ static int CurrentFont (FILE *fout, PtrFont font)
   if (font != PostscriptFont)
     {
       PostscriptFont = font;
-      if (TtPsFontName[i] == 'g')  /* Greek alphabet */
+      if (TtPsFontName[i] == 'g')  /* Greek script */
 	{
 	  c1 = TtPsFontName[i];
 	  c2 = 'r';	     /* Symbol only has one style available */
@@ -134,7 +134,7 @@ static int CurrentFont (FILE *fout, PtrFont font)
 	}
       else
 	{
-	  /* Latin Alphabet */
+	  /* Latin Script */
 	  c1 = TtPsFontName[i + 1]; /* font Helvetica Times Courrier */
 	  /* convert lowercase to uppercase */
 	  c2 = TtPsFontName[i + 2]; /* Style normal bold italique */

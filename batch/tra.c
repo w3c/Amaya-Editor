@@ -178,7 +178,7 @@ static void         Initialize ()
    pTSchema->TsPictureBuffer = 0;	/* pas de buffer pour les images */
    for (i = 0; i < MAX_TRANSL_PRULE; i++)
       pTSchema->TsPresTRule[i].RtExist = False;
-   pTSchema->TsNTranslAlphabets = 0;	/* pas de traduction de texte */
+   pTSchema->TsNTranslScripts = 0;	/* pas de traduction de texte */
    pTSchema->TsSymbolFirst = 0;	  /* indice de la 1ere regle de traduction
 				     de symboles dans la table TsCharTransl */
    pTSchema->TsSymbolLast = 0;	  /* indice de la derniere regle de traduction
@@ -483,15 +483,15 @@ static void NewSourceString (int indx, int len)
    ThotBool             equal;
    SourceString        source;
    int                 firstEntry, lastEntry;
-   AlphabetTransl     *pAlphTrans;
+   ScriptTransl     *pAlphTrans;
 
    firstEntry = 0;
    lastEntry = 0;
    if (TextTrans)
      /* on est dans les traductions de texte */
      {
-       pAlphTrans = &pTSchema->TsTranslAlphabet[pTSchema->
-					       TsNTranslAlphabets - 1];
+       pAlphTrans = &pTSchema->TsTranslScript[pTSchema->
+					       TsNTranslScripts - 1];
        firstEntry = pAlphTrans->AlBegin;
        lastEntry = pAlphTrans->AlEnd;
      }
@@ -533,8 +533,8 @@ static void NewSourceString (int indx, int len)
 	   if (TextTrans)
 	     /* on est dans les traductions de texte */
 	     {
-	       pAlphTrans = &pTSchema->TsTranslAlphabet[pTSchema->
-						       TsNTranslAlphabets - 1];
+	       pAlphTrans = &pTSchema->TsTranslScript[pTSchema->
+						       TsNTranslScripts - 1];
 	       pAlphTrans->AlEnd++;
 	     }
 	   else if (SymbTrans)
@@ -949,7 +949,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
    int                 i, k;
    Name                n;
    ThotBool            InUseRule, InGetRule, InCreateWriteRule;
-   AlphabetTransl     *pAlphTrans;
+   ScriptTransl     *pAlphTrans;
    TranslVariable     *pTransVar;
    TCounter           *pCntr;
    PtrAttributeTransl  pAttrTrans;
@@ -1176,16 +1176,16 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	     InPresRules = False;
 	     TextTrans = True;
 	     /* on est dans les traductions de texte */
-	     if (pTSchema->TsNTranslAlphabets >= MAX_TRANSL_ALPHABET)
+	     if (pTSchema->TsNTranslScripts >= MAX_TRANSL_ALPHABET)
 	       CompilerMessage (wi, TRA, FATAL,
 				MAX_POSSIBLE_TEXTTRANSLATE_OVERFLOW,
 				inputLine, LineNum);
 	     else
 	       {
-		 pAlphTrans = &pTSchema->TsTranslAlphabet[pTSchema->
-							 TsNTranslAlphabets++];
-		 pAlphTrans->AlAlphabet = 'L';	/* alphabet latin par defaut */
-		 if (pTSchema->TsNTranslAlphabets == 1)
+		 pAlphTrans = &pTSchema->TsTranslScript[pTSchema->
+							 TsNTranslScripts++];
+		 pAlphTrans->AlScript = 'L';	/* script latin par defaut */
+		 if (pTSchema->TsNTranslScripts == 1)
 		   {
 		     pAlphTrans->AlBegin = 1;
 		     pAlphTrans->AlEnd = 0;
@@ -1193,9 +1193,9 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		 else
 		   {
 		     pAlphTrans->AlBegin =
-		       pTSchema->TsTranslAlphabet[pTSchema->TsNTranslAlphabets - 2].AlEnd + 1;
+		       pTSchema->TsTranslScript[pTSchema->TsNTranslScripts - 2].AlEnd + 1;
 		     pAlphTrans->AlEnd =
-		       pTSchema->TsTranslAlphabet[pTSchema->TsNTranslAlphabets - 2].AlEnd;
+		       pTSchema->TsTranslScript[pTSchema->TsNTranslScripts - 2].AlEnd;
 		   }
 	       }
 	     break;
@@ -1210,15 +1210,15 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	     InPresRules = False;
 	     TextTrans = False;	/* fin des traductions de texte */
 	     SymbTrans = True;	/* on est dans les traductions de symbole */
-	     if (pTSchema->TsNTranslAlphabets == 0)
+	     if (pTSchema->TsNTranslScripts == 0)
 	       {
 		 pTSchema->TsSymbolFirst = 1;
 		 pTSchema->TsSymbolLast = 0;
 	       }
 	     else
 	       {
-		 pAlphTrans = &pTSchema->TsTranslAlphabet[pTSchema->
-						      TsNTranslAlphabets - 1];
+		 pAlphTrans = &pTSchema->TsTranslScript[pTSchema->
+						      TsNTranslScripts - 1];
 		 if (pAlphTrans->AlEnd > 0)
 		   {
 		     pTSchema->TsSymbolFirst = pAlphTrans->AlEnd + 1;
@@ -1248,15 +1248,15 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		 pTSchema->TsGraphicsFirst = pTSchema->TsSymbolLast + 1;
 		 pTSchema->TsGraphicsLast = pTSchema->TsSymbolLast;
 	       }
-	     else if (pTSchema->TsNTranslAlphabets == 0)
+	     else if (pTSchema->TsNTranslScripts == 0)
 	       {
 		 pTSchema->TsGraphicsFirst = 1;
 		 pTSchema->TsGraphicsLast = 0;
 	       }
 	     else
 	       {
-		 pAlphTrans = &pTSchema->TsTranslAlphabet[pTSchema->
-						      TsNTranslAlphabets - 1];
+		 pAlphTrans = &pTSchema->TsTranslScript[pTSchema->
+						      TsNTranslScripts - 1];
 		 if (pAlphTrans->AlEnd > 0)
 		   {
 		     pTSchema->TsGraphicsFirst = pAlphTrans->AlEnd + 1;
@@ -1762,13 +1762,13 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	       CntLowercase;
 	     break;
 
-	   case KWD_Alphabet:		/* Alphabet */
+	   case KWD_Script:		/* Script */
 	     if (CurType != CharString + 1)
 	       CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_TEXT_UNITS,
 				inputLine, LineNum);
 	     else
 	       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition =
-		 TcondAlphabet;
+		 TcondScript;
 	     break;
 
 	   case KWD_FirstAttr:	/* FirstAttr */
@@ -2795,25 +2795,25 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		   }
 		 break;
 
-	       case RULE_Alphabet:	/* Alphabet */
+	       case RULE_Script:	/* Script */
 		 if (pr == RULE_TSeqOfTransl)
-		   /* Deja des regles de traduction pour cet alphabet ? */
+		   /* Deja des regles de traduction pour cet script ? */
 		   {
-		     for (i = 0; i < pTSchema->TsNTranslAlphabets - 1; i++)
-		       if (pTSchema->TsTranslAlphabet[i].AlAlphabet ==
+		     for (i = 0; i < pTSchema->TsNTranslScripts - 1; i++)
+		       if (pTSchema->TsTranslScript[i].AlScript ==
 			   inputLine[wi - 1])
 			 CompilerMessage (wi, TRA, FATAL,
 					  CANT_REDEFINE_ALPHABET, inputLine,
 					  LineNum);
 		     if (!error)
-		       pTSchema->TsTranslAlphabet[pTSchema->
-						 TsNTranslAlphabets - 1].
-			 AlAlphabet = (char)inputLine[wi - 1];
+		       pTSchema->TsTranslScript[pTSchema->
+						 TsNTranslScripts - 1].
+			 AlScript = (char)inputLine[wi - 1];
 		   }
 		 else if (pr == RULE_CondOnSelf)
 		   /* dans une condition */
 		   CurBlock->TbCondition[CurBlock->TbNConditions - 1].
-		     TcAlphabet = (char)inputLine[wi - 1];
+		     TcScript = (char)inputLine[wi - 1];
 		 break;
 		 
 	       case RULE_TrSchema:	/* TrSchema */

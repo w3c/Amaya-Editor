@@ -84,7 +84,7 @@ static TransCondition ReadTransCondition (BinFile file)
 		  cond = TcondPRule;
 		  break;
 	       case C_TR_ALPHABET:
-		  cond = TcondAlphabet;
+		  cond = TcondScript;
 		  break;
 	       case C_TR_ATTRIBUTES:
 		  cond = TcondAttributes;
@@ -685,8 +685,8 @@ static void ReadBlocks (BinFile file, PtrTRuleBlock *pBlock, PtrTRule *pNextTRul
 		  TtaReadSignedShort (file, &pCond->TcAscendRelLevel);
 		  switch (pCond->TcCondition)
 			{
-			   case TcondAlphabet:
-			      TtaReadByte (file, &pCond->TcAlphabet);
+			   case TcondScript:
+			      TtaReadByte (file, &pCond->TcScript);
 			      break;
 			   case TcondWithin:
 			   case TcondFirstWithin:
@@ -948,7 +948,7 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
    TranslVariable     *pVar;
    TranslVarItem      *pVarItem;
    PtrAttributeTransl  pAttrTr;
-   AlphabetTransl     *pAlphTr;
+   ScriptTransl     *pAlphTr;
    StringTransl       *pStringTr;
    PRuleTransl        *pPRuleTr;
    PathBuffer          dirBuffer;
@@ -1139,12 +1139,12 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 			       ReadPtrTRuleBlock (file, &pNextBlock);
 		     }
 		}
-	TtaReadShort (file, &pTSch->TsNTranslAlphabets);
+	TtaReadShort (file, &pTSch->TsNTranslScripts);
 	if (!error)
-	   for (i = 0; i < pTSch->TsNTranslAlphabets; i++)
+	   for (i = 0; i < pTSch->TsNTranslScripts; i++)
 	     {
-		pAlphTr = &pTSch->TsTranslAlphabet[i];
-		TtaReadByte (file, &pAlphTr->AlAlphabet);
+		pAlphTr = &pTSch->TsTranslScript[i];
+		TtaReadByte (file, &pAlphTr->AlScript);
 		TtaReadShort (file, &pAlphTr->AlBegin);
 		TtaReadShort (file, &pAlphTr->AlEnd);
 	     }

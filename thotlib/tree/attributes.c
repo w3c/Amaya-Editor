@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -599,14 +599,15 @@ void ChangeLanguage (PtrDocument pDoc, PtrElement pEl, Language lang,
    else
       /* this element is a leaf */
       if (pEl->ElLeafType == LtText &&
-	  pEl->ElLanguage != lang && (pEl->ElLanguage >= 4 || force))
+	  pEl->ElLanguage != lang &&
+	  (pEl->ElLanguage >= TtaGetFirstUserLanguage () || force))
        /* That's a text leaf in a different language */
 	/*
 	  Changes the language of the element:
-	  lang < 4 when a specific alphabet like symbol
+	  lang < TtaGetFirstUserLanguage () when a specific script like symbol
 	*/
        if (pEl->ElTextLength == 0 ||
-	   TtaGetAlphabet (pEl->ElLanguage) == TtaGetAlphabet (lang))
+	   TtaGetScript (pEl->ElLanguage) == TtaGetScript (lang))
 	{
 	  oldElLang = pEl->ElLanguage;
 	   pEl->ElLanguage = lang;
@@ -625,10 +626,10 @@ void ChangeLanguage (PtrDocument pDoc, PtrElement pEl, Language lang,
 		      /* traite le pave' principal de l'element */
 		      /* change la langue du pave */
 		     {
-			pAbsBox->AbLanguage = lang;
+			pAbsBox->AbLang = lang;
 			if (force ||
-			    TtaGetAlphabet (oldElLang) != TtaGetAlphabet(lang))
-			  /* cette langue s'ecrit dans un alphabet different */
+			    TtaGetScript (oldElLang) != TtaGetScript(lang))
+			  /* cette langue s'ecrit dans un script different */
 			  /* ou la langue est forcee */
 			  {
 			    pAbsBox->AbChange = TRUE;

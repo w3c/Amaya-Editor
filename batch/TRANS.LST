@@ -96,7 +96,7 @@ number
    52	Condition =      [ 'Not' ] [ 'Target' ] Cond .
    53	Cond =		 CondOnSelf / CondAscend .
    54	CondOnSelf =     'FirstRef' / 'LastRef' / 'ExternalRef' /
-			 'Alphabet' '=' Alphabet /
+			 'Script' '=' Script /
 			 'FirstAttr' / 'LastAttr' /
 			 'ComputedPage' / 'StartPage' / 'UserPage' / 'ReminderPage' /
 			 'Empty' .
@@ -164,8 +164,8 @@ number
 	
    71	File =           FileName / BufferIdent .
 	
-   13	TSeqOfTransl =   [ Alphabet ] SeqOfTransl .
-   56	Alphabet =       NAME .
+   13	TSeqOfTransl =   [ Script ] SeqOfTransl .
+   56	Script =       NAME .
    14	SeqOfTransl =    'Begin' < Translation > 'End' ';' /
 	                 Translation .
    77	Translation =    Source [ '-' '>' Target ] ';' .
@@ -291,7 +291,7 @@ code  key-word      numbers of rules using the key-word
 1143  FirstRef        54
 1144  LastRef         54
 1145  ExternalRef     54
-1146  Alphabet        54
+1146  Script          54
 1147  FirstAttr       54
 1148  LastAttr        54
 1149  ComputedPage    54
@@ -439,7 +439,7 @@ their right part.
    53  Cond                 52
    54  CondOnSelf           53
    55  CondAscend           53
-   56  Alphabet             54  13
+   56  Script               54  13
    57  Ascend               55
    58  CondOnAscend         55
    59  LevelOrType          57

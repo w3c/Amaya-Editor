@@ -1402,7 +1402,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 	      {
 		pConst = &pPSch->PsConstant[i];
 		pConst->PdType = ReadBasicType (file);
-		if (!TtaReadByte (file, &pConst->PdAlphabet))
+		if (!TtaReadByte (file, &pConst->PdScript))
 		  error = True;
 		j = 0;
 		if (!error)

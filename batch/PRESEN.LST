@@ -57,10 +57,10 @@ number
     6	ConstList =	  Const < Const > .
    28	Const =		  ConstName '=' ConstType ConstValue ';' .
    29	ConstName =	  NAME .
-   30	ConstType =	  'TEXT' [ AlphabetName ] /
+   30	ConstType =	  'TEXT' [ ScriptName ] /
 			  'SYMBOL' / 'GRAPHICS' / 
 			  'PICTURE' [ ImageType ] .
-   32	AlphabetName =	  NAME .
+   32	ScriptName =	  NAME .
    33	ImageType = 	  NUMBER .
    31	ConstValue =	  STRING .
 	
@@ -633,7 +633,7 @@ their right part.
    29  ConstName          28  37  73
    30  ConstType          28  37  73
    31  ConstValue         28  37  73
-   32  AlphabetName       30
+   32  ScriptName         30
    33  ImageType          30
    34  Variable            7   7
    35  VarName            34  73

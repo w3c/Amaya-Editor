@@ -633,7 +633,7 @@ static void         NewConst (indLine wi)
 		       LineNum);
    else
       {
-      pPSchema->PsConstant[pPSchema->PsNConstants].PdAlphabet = 'L';
+      pPSchema->PsConstant[pPSchema->PsNConstants].PdScript = 'L';
       pPSchema->PsConstant[pPSchema->PsNConstants].PdType = CharString;
       pPSchema->PsNConstants++;
       }
@@ -4478,11 +4478,11 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	  }
        break;
 
-     case RULE_AlphabetName:
-       /* AlphabetName */
-       /* c'est l'alphabet d'une constante, on ne garde que le premier */
+     case RULE_ScriptName:
+       /* ScriptName */
+       /* c'est l'script d'une constante, on ne garde que le premier */
        /* caractere */
-       pPSchema->PsConstant[pPSchema->PsNConstants - 1].PdAlphabet =
+       pPSchema->PsConstant[pPSchema->PsNConstants - 1].PdScript =
 	                                           (char) inputLine[wi - 1];
        break;
 
@@ -5080,7 +5080,7 @@ static void ProcessInteger (SyntacticCode gCode, indLine wl, indLine wi)
 	       break;
 	    case RULE_ImageType:
 	       /* c'est le type d'une image */
-	       pPSchema->PsConstant[pPSchema->PsNConstants - 1].PdAlphabet = n;
+	       pPSchema->PsConstant[pPSchema->PsNConstants - 1].PdScript = n;
 	       break;
 	    default:
 	       break;

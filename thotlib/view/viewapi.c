@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -854,7 +854,7 @@ void RedisplayLeaf (PtrElement element, Document document, int delta)
 	       break;
 	     case LtText:
 	       pAbbox1->AbText = element->ElText;
-	       pAbbox1->AbLanguage = element->ElLanguage;
+	       pAbbox1->AbLang = element->ElLanguage;
 	       break;
 	     case LtPolyLine:
 	       pAbbox1->AbLeafType = LtPolyLine;
@@ -871,7 +871,7 @@ void RedisplayLeaf (PtrElement element, Document document, int delta)
 	     case LtGraphics:
 	       pAbbox1->AbLeafType = element->ElLeafType;
 	       pAbbox1->AbShape = element->ElGraph;
-	       pAbbox1->AbGraphAlphabet = 'G';
+	       pAbbox1->AbGraphScript = 'G';
 	       if (element->ElLeafType == LtGraphics)
 		 {
 		   if (element->ElGraph == 'a' &&

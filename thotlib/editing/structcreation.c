@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -839,7 +839,7 @@ void RedisplayNewContent (PtrElement pEl, PtrDocument pDoc, int dVol,
 		     break;
 		   case LtText:
 		     pAb->AbText = pEl->ElText;
-		     pAb->AbLanguage = pEl->ElLanguage;
+		     pAb->AbLang = pEl->ElLanguage;
 		     break;
 		   case LtPolyLine:
 		     pAb->AbLeafType = LtPolyLine;
@@ -856,7 +856,7 @@ void RedisplayNewContent (PtrElement pEl, PtrDocument pDoc, int dVol,
 		   case LtGraphics:
 		     pAb->AbLeafType = LtGraphics;
 		     pAb->AbShape = pEl->ElGraph;
-		     pAb->AbGraphAlphabet = 'G';
+		     pAb->AbGraphScript = 'G';
 		     if (pEl->ElLeafType == LtGraphics && pEl->ElGraph == 'C')
 		       /* rectangle with rounded corners */
 		       {

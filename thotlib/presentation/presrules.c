@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1517,7 +1517,7 @@ void GetConstantBuffer (PtrAbstractBox pAb)
   GetTextBuffer (&pBT);
   pAb->AbText = pBT;
   if (pAb->AbLeafType == LtText)
-    pAb->AbLanguage = TtaGetDefaultLanguage ();
+    pAb->AbLang = TtaGetDefaultLanguage ();
   pAb->AbVolume = 0;
 }
 
@@ -1584,7 +1584,7 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
 	    pAb = pAb->AbNext;
 	  /* prend le contenu de l'element correspondant */
 	  pAb->AbText = pEl->ElText;
-	  pAb->AbLanguage = pEl->ElLanguage;
+	  pAb->AbLang = pEl->ElLanguage;
 	  pAb->AbVolume = pEl->ElTextLength;
 	  break;
 	case LtPolyLine:
@@ -1602,7 +1602,7 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
 	      pAb-> AbRx = 0;
 	      pAb-> AbRy = 0;
 	    }
-	  pAb->AbGraphAlphabet = 'G';
+	  pAb->AbGraphScript = 'G';
 	  if (pAb->AbShape == EOS)
 	    pAb->AbVolume = 0;
 	  else
@@ -2656,7 +2656,7 @@ static void CopyLeaves (PtrElement pEC, PtrAbstractBox *pAb,
 	       {
 		  pAbb1->AbText = pBuffP;
 		  /* c'est le 1er buffer */
-		  pAbb1->AbLanguage = pEC->ElLanguage;
+		  pAbb1->AbLang = pEC->ElLanguage;
 	       }
 	     else
 	       {
@@ -2844,7 +2844,7 @@ void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
 		    pAbb1->AbVolume = pAbbCur->AbVolume;
 		    if (pAbbCur->AbText != NULL)
 		      *pAbb1->AbText = *pAbbCur->AbText;
-		    pAbb1->AbLanguage = pAbbCur->AbLanguage;
+		    pAbb1->AbLang = pAbbCur->AbLang;
 		     pAbb1->AbCanBeModified = FALSE;
 		  }
 		else

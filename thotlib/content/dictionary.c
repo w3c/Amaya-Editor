@@ -37,7 +37,7 @@ static char        *dictPath;	/* environment variable DICOPAR */
 static PtrDict      dictTable[MaxDictionaries];
 
 unsigned            ReverseCode[NbLtr];
-unsigned char       Code[256];	/* Alphabet characters */
+unsigned char       Code[256];	/* Script characters */
 
 #include "memory_f.h"
 #include "fileaccess_f.h"
@@ -46,7 +46,7 @@ unsigned char       Code[256];	/* Alphabet characters */
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void           LoadAlphabet ()
+static void           LoadScript ()
 {
   FILE*         falpha;
   PathBuffer    alphaName;
@@ -59,7 +59,7 @@ static void           LoadAlphabet ()
     strcpy (alphaName, "");
 
   strcat (alphaName, WC_DIR_STR);
-  strcat (alphaName, "alphabet");
+  strcat (alphaName, "script");
   
   if ((falpha = fopen (alphaName, "r")) != NULL)
     {
@@ -639,7 +639,7 @@ void Dict_Init ()
 
    /* Inititializing of environments needed by dictionarires */
    dictPath = TtaGetEnvString ("DICOPAR");
-   LoadAlphabet ();
+   LoadScript ();
 }
 
 

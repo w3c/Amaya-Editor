@@ -269,7 +269,7 @@
 #define RULE_ConstName 	  29
 #define RULE_ConstType 	  30
 #define RULE_ConstValue 	  31
-#define RULE_AlphabetName 	  32
+#define RULE_ScriptName 	  32
 #define RULE_ImageType 	  33
 #define RULE_Variable 	  34
 #define RULE_VarName 	  35

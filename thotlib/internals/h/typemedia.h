@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -506,12 +506,12 @@ typedef struct _AbstractBox
     struct /* AbLeafType = LtText */
     {
       PtrTextBuffer _AbText_;     /* On first text buffer */
-      Language      _AbLanguage_; /* Language used */
+      Language      _AbLang_;     /* Language or script used */
     } s1;
     struct /* AbLeafType = LtGraphics or LtSymbol */
     {
       char     _AbShape_;         /* Drawing code */
-      char     _AbGraphAlphabet_; /* Alphabet used*/
+      char     _AbGraphScript_; /* Script used*/
       char     _AbRealShape_;     /* Effective drawing code */
       int      _AbRx_;            /* Horizontal radius */
       int      _AbRy_;            /* Vertical radius */     
@@ -540,9 +540,9 @@ typedef struct _AbstractBox
 #define AbTruncatedHead u.s0._AbTruncatedHead_
 #define AbTruncatedTail u.s0._AbTruncatedTail_
 #define AbText u.s1._AbText_
-#define AbLanguage u.s1._AbLanguage_
+#define AbLang u.s1._AbLang_
 #define AbShape u.s2._AbShape_
-#define AbGraphAlphabet u.s2._AbGraphAlphabet_
+#define AbGraphScript u.s2._AbGraphScript_
 #define AbRealShape u.s2._AbRealShape_
 #define AbRx u.s2._AbRx_
 #define AbRy u.s2._AbRy_

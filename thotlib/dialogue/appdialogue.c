@@ -198,7 +198,7 @@ void TteInitMenus (char *name, int number)
    char                namef1[100];
    char                namef2[100];
    char                text[100];
-   char                alphabet;
+   char                script;
 
 #ifndef _WINDOWS
    Display            *Dp;
@@ -259,9 +259,9 @@ void TteInitMenus (char *name, int number)
    InitClue(RootShell);
 #endif /* _WINDOWS */
 
-   alphabet = TtaGetAlphabet (TtaGetDefaultLanguage ());
-   FontIdentifier (alphabet, 2, 0, MenuSize, UnPoint, text, namef1);
-   FontIdentifier (alphabet, 2, 1, MenuSize, UnPoint, text, namef2);
+   script = TtaGetScript (TtaGetDefaultLanguage ());
+   FontIdentifier (script, 2, 0, MenuSize, UnPoint, text, namef1);
+   FontIdentifier (script, 2, 1, MenuSize, UnPoint, text, namef2);
 #ifndef _WINDOWS
    TtaChangeDialogueFonts (namef1, namef2);
 #endif /* _WINDOWS */

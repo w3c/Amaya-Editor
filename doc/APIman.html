@@ -6006,7 +6006,7 @@ first ancestor having a Language attribute, unless it carries its own
 Language attribute.</p>
 
 <p>The tool kit maintains a table of all languages used in the documents that
-it handles. Each language has a name and an associated alphabet. Other
+it handles. Each language has a name and an associated script. Other
 information may be associated to a language, such as a dictionary (for
 hyphenation or spelling checking). A language is identified by an identifier
 of type <em>Language</em>.</p>
@@ -6015,7 +6015,7 @@ of type <em>Language</em>.</p>
 Français, English, Symbol and Greek. ``Languages'' ISO_latin_1 and Symbol are
 not natural languages in the same sense as Français, English or Greek. They
 are used when a character string must be written in the corresponding
-alphabet, but is not candidate to such linguistic processing as word
+script, but is not candidate to such linguistic processing as word
 hyphenation or spelling checking. For instance, a piece of C program should
 be considered as written in the language ISO_latin_1; a mathematical symbol
 such as Ï or ¥ should be considered as written in the language Symbol.</p>
@@ -6023,7 +6023,7 @@ such as Ï or ¥ should be considered as written in the language Symbol.</p>
 <p>Other predefined languages, called <em>typographic languages</em>, are
 used by a typographic checker (acronym, short, expo). The tool kit maintains
 a table of all typographic languages used in the documents that it handles.
-Each typographic language has a name and an associated alphabet. Other
+Each typographic language has a name and an associated script. Other
 information may be associated to a language, such as a dictionary (for
 typographic checking). A typographic language is identified by an identifier
 of type <em>Language</em>.</p>
@@ -6035,7 +6035,7 @@ of type <em>Language</em>.</p>
 <h4><a name="sectc1511">15.1.1</a> <a name="L6156">TtaNewLanguage</a></h4>
 <a name="L6157"></a>
 
-<p>Declares a new language, its alphabet and optionally the names of the
+<p>Declares a new language, its script and optionally the names of the
 principal and secondary dictionaries. All languages used in a Thot document
 must be explicitly declared, except for predefined languages. Thot registers
 all declared languages and allocates a different identifier to each of them.
@@ -6047,13 +6047,13 @@ application redeclares an existing language, this new declaration has no
 effect.</p>
 <hr>
 
-<p>Language TtaNewLanguage(char *languageName, char languageAlphabet, char
+<p>Language TtaNewLanguage(char *languageName, char languageScript, char
 *principalDictionary, char *secondDictionary)</p>
 <hr>
 <dl>
   <dt>Parameters:</dt>
     <dd><em>languageName</em>: name of the language.
-      <p><em>languageAlphabet</em>: alphabet to be used for writing that
+      <p><em>languageScript</em>: script to be used for writing that
       language:</p>
       <p>`L' for ISO-Latin-1, `G' for Symbol (Greek).</p>
       <p><em>principalDictionary</em>: name of the principal dictionary or
@@ -6209,18 +6209,18 @@ that matches this language name..</p>
 </div>
 
 <div class="Section">
-<h4><a name="sectc1523">15.2.3</a> TtaGetLanguageIdFromAlphabet</h4>
+<h4><a name="sectc1523">15.2.3</a> TtaGetLanguageIdFromScript</h4>
 <a name="L6340"></a>
 
 <p>Returns the identifier of the first language that uses a given
-alphabet.</p>
+script.</p>
 <hr>
 
-<p>Language TtaGetLanguageIdFromAlphabet(char *languageAlphabet)</p>
+<p>Language TtaGetLanguageIdFromScript(char *languageScript)</p>
 <hr>
 <dl>
   <dt>Parameter:</dt>
-    <dd><em>languageAlphabet</em>: the alphabet of interest (`L' = latin, `G'
+    <dd><em>languageScript</em>: the script of interest (`L' = latin, `G'
       = greek).</dd>
 </dl>
 <dl>
@@ -6230,13 +6230,13 @@ alphabet.</p>
 </div>
 
 <div class="Section">
-<h4><a name="sectc1524">15.2.4</a> TtaGetAlphabet</h4>
+<h4><a name="sectc1524">15.2.4</a> TtaGetScript</h4>
 <a name="L6372"></a>
 
-<p>Returns the alphabet associated with a given language.</p>
+<p>Returns the script associated with a given language.</p>
 <hr>
 
-<p>char TtaGetAlphabet(Language languageId)</p>
+<p>char TtaGetScript(Language languageId)</p>
 <hr>
 <dl>
   <dt>Parameter:</dt>
@@ -6244,7 +6244,7 @@ alphabet.</p>
 </dl>
 <dl>
   <dt>Return value:</dt>
-    <dd>a character that identifies the alphabet (`L' = latin, `G' =
+    <dd>a character that identifies the script (`L' = latin, `G' =
     greek).</dd>
 </dl>
 </div>

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -374,7 +374,7 @@ ThotBool CanHyphen (PtrBox pBox)
 
   if (!TextInserting && pBox->BxAbstractBox->AbHyphenate)
     {
-      language = pBox->BxAbstractBox->AbLanguage;
+      language = pBox->BxAbstractBox->AbLang;
       if (TtaExistPatternList (language))
 	/* il existe une table de pattern */
 	return TRUE;      

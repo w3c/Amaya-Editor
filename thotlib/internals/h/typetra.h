@@ -45,7 +45,7 @@ typedef enum
 	TcondAttributes,
 	TcondFirstAttr,
 	TcondLastAttr,
-	TcondAlphabet,
+	TcondScript,
 	TcondComputedPage,
 	TcondStartPage,
 	TcondUserPage,
@@ -121,9 +121,9 @@ typedef struct _TranslCondition
 						 ascendent */
 	union
 	  {
-	  struct	/* TcCondition = TcondAlphabet */
+	  struct	/* TcCondition = TcondScript */
 	    {
-	    char         _TcAlphabet_;   /* the alphabet on which the condition
+	    char         _TcScript_;   /* the alphabet on which the condition
 			 		    applies */ 
 	    } s0;
 	  struct	 /* TcCondition = TcondWithin, TcondFirstWithin */
@@ -172,7 +172,7 @@ typedef struct _TranslCondition
 
 } TranslCondition;
 
-#define TcAlphabet u.s0._TcAlphabet_
+#define TcScript u.s0._TcScript_
 #define TcImmediatelyWithin u.s1._TcImmediatelyWithin_
 #define TcAscendRel u.s1._TcAscendRel_
 #define TcAscendLevel u.s1._TcAscendLevel_
@@ -505,14 +505,14 @@ typedef struct _StringTransl
 } StringTransl;
 
 /* indices of the text translation rules for an alphabet */
-typedef struct _AlphabetTransl
+typedef struct _ScriptTransl
 {
-  char    AlAlphabet;
+  char    AlScript;
   int     AlBegin; 	/* index of the first characters translation
 			   rule in the table TsCharTransl */
   int	AlEnd;	        /* index of the last characters translation
 			   rule in the same table */
-} AlphabetTransl;
+} ScriptTransl;
 
 /* table of translation rules for each element type */
 typedef struct _ElemTransTable
@@ -559,9 +559,9 @@ typedef struct _TranslSchema
   PRuleTransl    TsPresTRule[MAX_TRANSL_PRULE];	/* translation rules of the
 				  specific presentation, in the order of the
 				  present. rules types */
-  int 	       TsNTranslAlphabets; /* number of element in the array
-				      TsTranslAlphabet */
-  AlphabetTransl TsTranslAlphabet[MAX_TRANSL_ALPHABET];/* translation of
+  int 	       TsNTranslScripts; /* number of element in the array
+				      TsTranslScript */
+  ScriptTransl TsTranslScript[MAX_TRANSL_ALPHABET];/* translation of
 				  character strings for the alphabets */
   int 	       TsSymbolFirst;  /* index of the first symbols translation
 				  rule in the table TsCharTransl */

@@ -162,7 +162,7 @@ static Multi_Key    emk_tab[] =
 /*
  * The ISO 8859 standard includes several 8-bit extensions to
  * the  ASCII  character  set  (also  known  as ISO 646-IRV).
- * Especially important is ISO 8859-1,  the  "Latin  Alphabet
+ * Especially important is ISO 8859-1,  the  "Latin  Script
  * No.  1",  which  has  become  widely  implemented  and may
  * already  be  seen   as   the   de-facto   standard   ASCII
  * replacement.
@@ -274,7 +274,7 @@ static Multi_Key    emk_tab[] =
    {XK_apostrophe, XK_apostrophe, XK_acute},	/* acute */
    {XK_comma, XK_comma, XK_cedilla},	/* cedilla */
    {XK_quotedbl, XK_quotedbl, XK_diaeresis},	/* diaeresis */
-/* Accented Alphabet */
+/* Accented Script */
    {XK_A, XK_grave, XK_Agrave},	/* Agrave */
    {XK_A, XK_acute, XK_Agrave},	/* Aacute */
    {XK_A, XK_apostrophe, XK_Aacute},	/* Aacute */

@@ -172,7 +172,7 @@ void ApplPage (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
    /* epaisseur de 1 pt */
    pAbbChild->AbLeafType = LtGraphics;
    pAbbChild->AbShape = 'h';
-   pAbbChild->AbGraphAlphabet = 'L';
+   pAbbChild->AbGraphScript = 'L';
    pAbbChild->AbVolume = 1;
    pAbbChild->AbCanBeModified = FALSE;
    pAbbChild->AbEnclosing->AbVolume = pAbbChild->AbVolume;

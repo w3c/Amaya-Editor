@@ -44,7 +44,7 @@ static int          MaxNumberOfSizes;
 static int          LogicalPointsSizes[MAX_LOG_SIZE] =
 {6, 8, 10, 12, 14, 16, 20, 24, 30, 40, 60};
 static char        *FontFamily;
-static char         GreekFontAlphabet;
+static char         GreekFontScript;
 static ThotBool     UseLucidaFamily;
 static ThotBool     UseAdobeFamily;
 #ifdef _WINDOWS
@@ -52,7 +52,7 @@ typedef struct FontCharacteristics {
         int   highlight; 
         int   size;
         int   family; 
-        char  alphabet; 
+        char  script; 
 }FontCharacteristics;
 
 typedef FontCharacteristics* ptrFC;
@@ -81,7 +81,7 @@ static SpecFont   FirstFontSel = NULL;
   WIN_LoadFont :  load a Windows TrueType with a defined set of
   characteristics.
   ----------------------------------------------------------------------*/
-static HFONT WIN_LoadFont (char alphabet, int family, int highlight,
+static HFONT WIN_LoadFont (char script, int family, int highlight,
 			   int size)
 {
    HFONT      hFont;
@@ -101,7 +101,7 @@ static HFONT WIN_LoadFont (char alphabet, int family, int highlight,
    fdwUnderline = FALSE;
    fdwStrikeOut = FALSE;
 
-   switch (alphabet)
+   switch (script)
      {
      case 'G':
        charset = DEFAULT_CHARSET;/*SYMBOL_CHARSET;*/
@@ -190,7 +190,7 @@ HFONT WinLoadFont (HDC hdc, PtrFont font)
       LastUsedFont = (ptrFC) TtaGetMemory (sizeof (FontCharacteristics));
       LastUsedFont->highlight = font->highlight; 
       LastUsedFont->size = font->size;
-      LastUsedFont->alphabet = font->alphabet; 
+      LastUsedFont->script = font->script; 
       LastUsedFont->family = font->family; 
       
       if (ActiveFont != (HFONT)0)
@@ -202,7 +202,7 @@ HFONT WinLoadFont (HDC hdc, PtrFont font)
     }
   else if (LastUsedFont->highlight != font->highlight ||
 	   LastUsedFont->size != font->size ||
-	   LastUsedFont->alphabet != font->alphabet ||
+	   LastUsedFont->script != font->script ||
 	   LastUsedFont->family != font->family)
     {
     if (ActiveFont != (HFONT)0)
@@ -212,12 +212,12 @@ HFONT WinLoadFont (HDC hdc, PtrFont font)
 	ActiveFont = (HFONT)0;
 	LastUsedFont->highlight = font->highlight; 
 	LastUsedFont->size      = font->size;
-	LastUsedFont->alphabet  = font->alphabet; 
+	LastUsedFont->script  = font->script; 
 	LastUsedFont->family    = font->family; 
       } 
    }
 
-   ActiveFont = WIN_LoadFont (font->alphabet, font->family,
+   ActiveFont = WIN_LoadFont (font->script, font->family,
 				 font->highlight, font->size);
   return (OldFont = SelectObject (hdc, ActiveFont));
 }
@@ -716,7 +716,7 @@ PtrFont LoadFont (char *name)
 /*----------------------------------------------------------------------
   FontIdentifier computes the name of a Thot font.
   ----------------------------------------------------------------------*/
-void FontIdentifier (char alphabet, int family, int highlight, int size,
+void FontIdentifier (char script, int family, int highlight, int size,
 		     TypeUnit unit, char r_name[10], char r_nameX[100])
 {
   char        *cfamily = "sthc";
@@ -734,7 +734,7 @@ void FontIdentifier (char alphabet, int family, int highlight, int size,
   else if (unit == UnPixel)
     size = PixelToPoint (size);
 
-  if (alphabet != 'L' && alphabet != 'G')
+  if (script != 'L' && script != 'G')
     {
       ffamily = "-*-*";
       if (highlight > MAX_HIGHLIGHT)
@@ -750,14 +750,14 @@ void FontIdentifier (char alphabet, int family, int highlight, int size,
       if (size < 0)
 	{
 	  sprintf (r_nameX, "%s-%s-%s-*-*-13-*-*-*-*-*-iso8859-%c",
-		   ffamily, wght, slant, alphabet);
+		   ffamily, wght, slant, script);
 	  size = 12;
 	}
       else
 	sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-*-*-*-*-iso8859-%c",
-		 ffamily, wght, slant, size, alphabet);
+		 ffamily, wght, slant, size, script);
     }
-  else if (alphabet == 'G' || family == 0)
+  else if (script == 'G' || family == 0)
     {
       family = 0;
       highlight = 0;
@@ -847,19 +847,19 @@ void FontIdentifier (char alphabet, int family, int highlight, int size,
   /* generate the Postscript name */
   if (family > (int) strlen (cfamily))
     family = 1;
-  sprintf (r_name, "%c%c%c%d", TOLOWER (alphabet), cfamily[family],
+  sprintf (r_name, "%c%c%c%d", TOLOWER (script), cfamily[family],
 	   StylesTable[highlight], size);
 }
 
 /*----------------------------------------------------------------------
   ReadFont do a raw Thot font loading (bypasses the font cache).
   ----------------------------------------------------------------------*/
-PtrFont ReadFont (char alphabet, int family, int highlight, int size,
+PtrFont ReadFont (char script, int family, int highlight, int size,
 		  TypeUnit unit)
 {
   char             name[10], nameX[100];
 
-  FontIdentifier (alphabet, family, highlight, size, unit, name, nameX);
+  FontIdentifier (script, family, highlight, size, unit, name, nameX);
 #ifndef _WINDOWS
   return LoadFont (nameX);
 #else  /* _WINDOWS */
@@ -869,10 +869,10 @@ PtrFont ReadFont (char alphabet, int family, int highlight, int size,
 
 /*----------------------------------------------------------------------
   LoadNearestFont load the nearest possible font given a set of attributes
-  like alphabet, family, the size and for a given frame.
+  like script, family, the size and for a given frame.
   Parameters increase decrease are true when a new test is allowed.
   ----------------------------------------------------------------------*/
-static PtrFont LoadNearestFont (char alphabet, int family, int highlight,
+static PtrFont LoadNearestFont (char script, int family, int highlight,
 				int size, int frame,
 				ThotBool increase, ThotBool decrease)
 {
@@ -887,7 +887,7 @@ static PtrFont LoadNearestFont (char alphabet, int family, int highlight,
 #endif /* _WINDOWS */
   PtrFont             ptfont;
 
-  FontIdentifier (alphabet, family, highlight, size, UnRelative, text, textX);
+  FontIdentifier (script, family, highlight, size, UnRelative, text, textX);
   /* initialize the PostScript font name */
   strcpy (PsName, text);
    
@@ -925,12 +925,12 @@ static PtrFont LoadNearestFont (char alphabet, int family, int highlight,
 #ifdef _WINDOWS
 	  /* Allocate the font structure */
 	  ptfont = TtaGetMemory (sizeof (FontInfo));
-	  ptfont->alphabet  = alphabet;
+	  ptfont->script  = script;
 	  ptfont->family    = family;
 	  ptfont->highlight = highlight;
       size = LogicalPointsSizes[size];
 	  ptfont->size      = size;
-	  ActiveFont = WIN_LoadFont (alphabet, family, highlight, size);
+	  ActiveFont = WIN_LoadFont (script, family, highlight, size);
 	  if (TtPrinterDC != 0)
 	    {
 	      hOldFont = SelectObject (TtPrinterDC, ActiveFont);
@@ -992,7 +992,7 @@ static PtrFont LoadNearestFont (char alphabet, int family, int highlight,
 		  else
 		    {
 		      size++;
-		      ptfont = LoadNearestFont (alphabet, family, highlight,
+		      ptfont = LoadNearestFont (script, family, highlight,
 						size, frame, increase, FALSE);
 		    }
 		}
@@ -1003,7 +1003,7 @@ static PtrFont LoadNearestFont (char alphabet, int family, int highlight,
 		  else
 		    {
 		      size--;
-		      ptfont = LoadNearestFont (alphabet, family, highlight,
+		      ptfont = LoadNearestFont (script, family, highlight,
 						size, frame, FALSE, decrease);
 		    }
 		}
@@ -1012,19 +1012,19 @@ static PtrFont LoadNearestFont (char alphabet, int family, int highlight,
 
       if (ptfont == NULL)
 	{
-	  if (alphabet != 'L' && alphabet != 'G' && size != -1)
+	  if (script != 'L' && script != 'G' && size != -1)
 	    /* try without highlight and no specific size */
-	    ptfont = LoadNearestFont (alphabet, family,
+	    ptfont = LoadNearestFont (script, family,
 				      0, -1, frame, FALSE, FALSE);
 	  else
 	    {
-	      /* Try to load another family from the same alphabet */
+	      /* Try to load another family from the same script */
 	      j = 0;
 	      while (j < MAX_FONT)
 		{
 		  if (TtFonts[j] == NULL)
 		    j = MAX_FONT;
-		  else if (TtFontName[j * MAX_FONTNAME] == alphabet)
+		  else if (TtFontName[j * MAX_FONTNAME] == script)
 		    {
 		      ptfont = TtFonts[j];
 		      j = MAX_FONT;
@@ -1050,7 +1050,7 @@ static PtrFont LoadNearestFont (char alphabet, int family, int highlight,
 	  TtFonts[i] = ptfont;
 #if !defined(_WINDOWS) && !defined(_GTK)
           size = LogicalPointsSizes[size];
-	  if (alphabet == 'G' &&
+	  if (script == 'G' &&
 	      (size == 8 || size == 10 || size == 12 ||
 	       size == 14 || size == 24))
 	    TtPatchedFont[i] = size;
@@ -1097,15 +1097,15 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 		{
 		  mask = 1 << (frame - 1);
 		  if (fontset->FontMask | mask)
-		    lfont = LoadNearestFont (GreekFontAlphabet, fontset->FontFamily,
+		    lfont = LoadNearestFont (GreekFontScript, fontset->FontFamily,
 					     fontset->FontHighlight,
 					     fontset->FontSize,
 					     frame, TRUE, TRUE);
-		  if (GreekFontAlphabet == '7' && lfont == NULL)
+		  if (GreekFontScript == '7' && lfont == NULL)
 		    {
 		      /* use symbol instead of ISO_8859_7 */
-		      GreekFontAlphabet = 'G';
-		    lfont = LoadNearestFont (GreekFontAlphabet, fontset->FontFamily,
+		      GreekFontScript = 'G';
+		    lfont = LoadNearestFont (GreekFontScript, fontset->FontFamily,
 					     fontset->FontHighlight,
 					     fontset->FontSize,
 					     frame, TRUE, TRUE);
@@ -1118,7 +1118,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	    }
 	  else
 	    lfont = fontset->FontIso_7; /* Greek */
-	  if (GreekFontAlphabet == '7')
+	  if (GreekFontScript == '7')
 #ifdef _WINDOWS
 	    car = TtaGetCharFromWC (c, WINDOWS_1253);
 #else /* _WINDOWS */
@@ -1318,14 +1318,14 @@ static void RemoveFontInFontSets (PtrFont font, int mask)
 /*----------------------------------------------------------------------
   LoadFontSet allocate a font set and load the ISO-latin-1 font.
   ----------------------------------------------------------------------*/
-static SpecFont LoadFontSet (char alphabet, int family, int highlight,
+static SpecFont LoadFontSet (char script, int family, int highlight,
 			     int size, TypeUnit unit, int frame)
 {
   int                 index;
 #ifdef _I18N_
   SpecFont            prevfontset, fontset;
   int                 mask;
-  ThotBool            specificFont = (alphabet == 'G');
+  ThotBool            specificFont = (script == 'G');
 #endif /* _I18N_ */
 
   /* use only standard sizes */
@@ -1361,7 +1361,7 @@ static SpecFont LoadFontSet (char alphabet, int family, int highlight,
 	  fontset->FontFamily = family;
 	  fontset->FontHighlight = highlight;
 	  fontset->FontSize = index;
-	  fontset->FontIso_1 = LoadNearestFont (alphabet, family, highlight,
+	  fontset->FontIso_1 = LoadNearestFont (script, family, highlight,
 						index, frame, TRUE, TRUE);
 	  /* link this new fontset */
 	  if (prevfontset)
@@ -1379,16 +1379,16 @@ static SpecFont LoadFontSet (char alphabet, int family, int highlight,
   fontset->FontFrames = fontset->FontFrames | mask;
   return (fontset);
 #else /* _I18N_ */
-  return LoadNearestFont (alphabet, family, highlight, index,
+  return LoadNearestFont (script, family, highlight, index,
 			  frame, TRUE, TRUE);
 #endif /* _I18N_ */
 }
 
 /*----------------------------------------------------------------------
-  ThotLoadFont try to load a font given a set of attributes like alphabet,
+  ThotLoadFont try to load a font given a set of attributes like script,
   family, the size and for a given frame.
   ----------------------------------------------------------------------*/
-SpecFont ThotLoadFont (char alphabet, int family, int highlight, int size,
+SpecFont ThotLoadFont (char script, int family, int highlight, int size,
 		       TypeUnit unit, int frame)
 {
   int          zoom;
@@ -1440,7 +1440,7 @@ SpecFont ThotLoadFont (char alphabet, int family, int highlight, int size,
    /* the minimum size is 6 points */
   if (size < 6 && unit == UnPoint)
     size = 6;
-  return LoadFontSet (alphabet, family, highlight, size, unit, frame);
+  return LoadFontSet (script, family, highlight, size, unit, frame);
 }
 
 /*----------------------------------------------------------------------
@@ -1467,13 +1467,13 @@ void InitDialogueFonts (char *name)
   char           **currentlist = NULL;
 #endif /* !_GTK */
   char            *value;
-  char             alphabet;
+  char             script;
   int              f3;
   int              i, index;
 
   /* is there a predefined font family ? */
   MenuSize = 12;
-  alphabet = TtaGetAlphabet (TtaGetDefaultLanguage ());
+  script = TtaGetScript (TtaGetDefaultLanguage ());
   /* initialize the font zoom */
   TtaGetEnvInt ("FontZoom", &FontZoom);
  if (FontZoom == 0)
@@ -1485,7 +1485,7 @@ void InitDialogueFonts (char *name)
     }
    value = TtaGetEnvString ("FontFamily");
   MaxNumberOfSizes = 10;
-  GreekFontAlphabet = '7';
+  GreekFontScript = '7';
   if (value == NULL)
     {
       FontFamily = TtaGetMemory (8);
@@ -1573,17 +1573,17 @@ void InitDialogueFonts (char *name)
   index = 0;
   while (LogicalPointsSizes[index] < MenuSize && index <= MaxNumberOfSizes)
     index++;
-  FontDialogue =  LoadNearestFont (alphabet, 1, 0, index, 0, TRUE, TRUE);
+  FontDialogue =  LoadNearestFont (script, 1, 0, index, 0, TRUE, TRUE);
   if (FontDialogue == NULL)
     {
-      FontDialogue = LoadNearestFont (alphabet, 2, 0, index, 0, TRUE, TRUE);
+      FontDialogue = LoadNearestFont (script, 2, 0, index, 0, TRUE, TRUE);
       if (FontDialogue == NULL)
 	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_MISSING_FONT);
     }
-  IFontDialogue = LoadNearestFont (alphabet, 1, 2, index, 0, TRUE, TRUE);
+  IFontDialogue = LoadNearestFont (script, 1, 2, index, 0, TRUE, TRUE);
   if (IFontDialogue == NULL)
     {
-      IFontDialogue = LoadNearestFont (alphabet, 2, 2, index, 0, TRUE, TRUE);
+      IFontDialogue = LoadNearestFont (script, 2, 2, index, 0, TRUE, TRUE);
       if (IFontDialogue == NULL)
 	IFontDialogue = FontDialogue;
     }
@@ -1591,10 +1591,10 @@ void InitDialogueFonts (char *name)
   index = 0;
   while (LogicalPointsSizes[index] < f3 && index <= MaxNumberOfSizes)
     index++;
-  LargeFontDialogue = LoadNearestFont (alphabet, 1, 1, index, 0, TRUE, TRUE);
+  LargeFontDialogue = LoadNearestFont (script, 1, 1, index, 0, TRUE, TRUE);
   if (LargeFontDialogue == NULL)
     {
-      LargeFontDialogue = LoadNearestFont (alphabet, 2, 1, index, 0, TRUE, TRUE);
+      LargeFontDialogue = LoadNearestFont (script, 2, 1, index, 0, TRUE, TRUE);
       if (LargeFontDialogue == NULL)
 	LargeFontDialogue = IFontDialogue;
     }

@@ -1199,7 +1199,7 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
      {
 	pConst = &pPSch->PsConstant[i];
 	WriteBasicType (pConst->PdType);
-	TtaWriteByte (outfile, pConst->PdAlphabet);
+	TtaWriteByte (outfile, pConst->PdScript);
 	j = 0;
 	do
 	   TtaWriteByte (outfile, pConst->PdString[j++]);

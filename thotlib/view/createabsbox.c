@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -462,7 +462,7 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
    if (pEl->ElTerminal && pEl->ElLeafType == LtText)
      {
 	pAb->AbLeafType = LtText;
-	pAb->AbLanguage = TtaGetDefaultLanguage ();
+	pAb->AbLang = TtaGetDefaultLanguage ();
      }
    return pAb;
 }
@@ -491,13 +491,13 @@ void ConstantCopy (int NConst, PtrPSchema pSchP, PtrAbstractBox pAb)
 	  pAb->AbRy = 5;
 	  pAb->AbRyUnit = UnPoint;
 	}
-      pAb->AbGraphAlphabet = 'L';
+      pAb->AbGraphScript = 'L';
       pAb->AbVolume = 1;
       break;
     case Symbol:
       pAb->AbLeafType = LtSymbol;
       pAb->AbShape = (char) pConst->PdString[0];
-      pAb->AbGraphAlphabet = 'G';
+      pAb->AbGraphScript = 'G';
       if (pAb->AbShape == EOS)
 	pAb->AbVolume = 0;
       else
@@ -508,7 +508,7 @@ void ConstantCopy (int NConst, PtrPSchema pSchP, PtrAbstractBox pAb)
       if (pAb->AbText == NULL)
 	GetConstantBuffer (pAb);
       CopyStringToBuffer (pConst->PdString, pAb->AbText, &l);
-      pAb->AbLanguage = TtaGetDefaultLanguage ();
+      pAb->AbLang = TtaGetDefaultLanguage ();
       pAb->AbVolume = pAb->AbText->BuLength;
       break;
     case Picture:

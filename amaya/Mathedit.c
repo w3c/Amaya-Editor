@@ -2237,12 +2237,12 @@ void                InitMathML ()
    GetCharType
    returns the type of character c (MN, MI or MO).
  -----------------------------------------------------------------------*/
-static int GetCharType (unsigned char c, char alphabet)
+static int GetCharType (unsigned char c, char script)
 {
   int	ret;
 
   ret = MathML_EL_MO;
-  if (alphabet == 'L')
+  if (script == 'L')
      /* ISO-Latin 1 */
      {
      if (c >= '0' && c <= '9')
@@ -2255,7 +2255,7 @@ static int GetCharType (unsigned char c, char alphabet)
      else
         ret = MathML_EL_MO;
      }
-  else if (alphabet == 'G')
+  else if (script == 'G')
      /* Symbol character set */
      {
      if (c >= '0' && c <= '9')
@@ -2468,7 +2468,7 @@ static void SeparateFunctionNames (Element *firstEl, Element lastEl,
 	     /* ignore text leaves that are shorter than the shortest
 		function name (2 characters) */
 	     /* function names can only be written in latin characters */
-             if (len > 1 && TtaGetAlphabet (lang) == 'L')
+             if (len > 1 && TtaGetScript (lang) == 'L')
                 {
 		   /* check all possible substrings of the text leaf */
 		   for (i = 0; i < len-1; i++)
@@ -2658,7 +2658,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
   SSchema	MathMLSchema;
   int		firstSelChar, lastSelChar, newSelChar, len, totLen, i, j,
 		start;
-  char	        alphabet, c;
+  char	        script, c;
   Language	lang;
 #define TXTBUFLEN 200
   unsigned char text[TXTBUFLEN];
@@ -2739,11 +2739,11 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
           {
           len = TXTBUFLEN - totLen;
           TtaGiveTextContent (textEl, &text[i], &len, &lang);
-          alphabet = TtaGetAlphabet (lang);
+          script = TtaGetScript (lang);
 	  for (j = 0; j < len; j++)
 	     {
 	     language[i+j] = lang;
-	     mathType[i+j] = (char)GetCharType (text[i+j], alphabet);
+	     mathType[i+j] = (char)GetCharType (text[i+j], script);
 	     }
 	  i+= len;
 	  totLen += len;
@@ -2871,7 +2871,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
       separate = FALSE;
       if (mathType[i] != mathType[i-1] ||
 	  language[i] != language[i-1])
-	/* different mathematical type or different alphabet.
+	/* different mathematical type or different script.
 	   Create a separate element */
 	separate = TRUE;
       else if (i == totLen)
@@ -2885,7 +2885,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
         /* if successive integral characters, keep them in the same element */
 	if ((int)text[i] == 242 && text[i] == text [i-1])
 	  {
-	  if (TtaGetAlphabet (language[i]) == 'G' &&
+	  if (TtaGetScript (language[i]) == 'G' &&
 	      language[i] == language[i-1])
 	    separate = FALSE;
 	  }
@@ -3116,7 +3116,7 @@ static void SetContentAfterEntity (char *entityName, Element el, Document doc)
       /* Unknown entity */
       bufEntity[0] = '?';
       bufEntity[1] = EOS;
-      lang = TtaGetLanguageIdFromAlphabet('L');
+      lang = TtaGetLanguageIdFromScript('L');
     }
 #ifdef _I18N_
   else if (value < 1023)
@@ -3133,7 +3133,7 @@ static void SetContentAfterEntity (char *entityName, Element el, Document doc)
 	{
 	  bufEntity[0] = ((unsigned char) value);
 	  bufEntity[1] = EOS;
-	  lang = TtaGetLanguageIdFromAlphabet('L');
+	  lang = TtaGetLanguageIdFromScript('L');
 	}
       else
 	/* Try to find a fallback character */

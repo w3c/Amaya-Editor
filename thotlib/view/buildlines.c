@@ -679,7 +679,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
   still = TRUE;
   spaceWidth = BoxCharacterWidth (SPACE, font);
   spaceAdjust = spaceWidth;
-  language = pBox->BxAbstractBox->AbLanguage;
+  language = pBox->BxAbstractBox->AbLang;
 
   if (max != pBox->BxWidth - 1)
     {

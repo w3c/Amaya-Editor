@@ -529,7 +529,7 @@ static int          PresConstInsert (PSchema tcsh, char *value)
     return (-1);
   i = pSchemaPrs->PsNConstants;
   pSchemaPrs->PsConstant[i].PdType = CharString;
-  pSchemaPrs->PsConstant[i].PdAlphabet = 'L';
+  pSchemaPrs->PsConstant[i].PdScript = 'L';
   strncpy (&pSchemaPrs->PsConstant[i].PdString[0], value, MAX_PRES_CONST_LEN);
   pSchemaPrs->PsNConstants++;
   return(i+1);

@@ -3326,7 +3326,7 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
     /* character is not in the fallback table */
     {
       /* display a question mark instead */
-      *lang = TtaGetLanguageIdFromAlphabet('L');
+      *lang = TtaGetLanguageIdFromScript('L');
       fallback[0]= '?';
     }
 #ifdef _I18N_
@@ -3344,19 +3344,19 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
       if (UnicodeFallbackTable[i].EightbitCode < 255)
 	{
 	  /* Symbol character */
-	  *lang = TtaGetLanguageIdFromAlphabet('G');
+	  *lang = TtaGetLanguageIdFromScript('G');
 	  fallback[0] = UnicodeFallbackTable[i].EightbitCode;
 	}
       else if (UnicodeFallbackTable[i].EightbitCode < 2000)
 	{
 	  /* ISO latin-1 fallback */
-	  *lang = TtaGetLanguageIdFromAlphabet('L');
+	  *lang = TtaGetLanguageIdFromScript('L');
 	  fallback[0]= UnicodeFallbackTable[i].EightbitCode - 1000;
 	}
       else
 	{
 	  /* Symbol fallback */
-	  *lang = TtaGetLanguageIdFromAlphabet('G');
+	  *lang = TtaGetLanguageIdFromScript('G');
 	  fallback[0] = UnicodeFallbackTable[i].EightbitCode - 2000;
 	}
       /* some special cases: add a second character */

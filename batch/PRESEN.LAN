@@ -51,10 +51,10 @@ CountValue =	  NUMBER .
 ConstList =	  Const < Const > .
 Const =		  ConstName '=' ConstType ConstValue ';' .
 ConstName =	  NAME .
-ConstType =	  'TEXT' [ AlphabetName ] /
+ConstType =	  'TEXT' [ ScriptName ] /
 		  'SYMBOL' / 'GRAPHICS' / 
 		  'PICTURE' [ ImageType ] .
-AlphabetName =	  NAME .
+ScriptName =	  NAME .
 ImageType = 	  NUMBER .
 ConstValue =	  STRING .
 

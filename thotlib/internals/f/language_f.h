@@ -10,15 +10,15 @@ extern char *TtaGetLanguageNameFromCode ( char *code );
 extern char *TtaGetLanguageCodeFromName ( char *name );
 extern void InitLanguage ( void );
 extern Language TtaNewLanguage ( char *languageName,
-                                 char languageAlphabet,
+                                 char languageScript,
                                  char *principalDictionary,
                                  char *secondDictionary );
 extern void TtaRemoveLanguage ( Language language );
 extern Language TtaGetLanguageIdFromName ( char *name );
 extern char *TtaGetVarLANG ( void );
 extern Language TtaGetDefaultLanguage ( void );
-extern Language TtaGetLanguageIdFromAlphabet ( char languageAlphabet );
-extern char TtaGetAlphabet ( Language languageId );
+extern Language TtaGetLanguageIdFromScript ( char languageScript );
+extern char TtaGetScript ( Language languageId );
 extern char *TtaGetLanguageName ( Language languageId );
 extern char *TtaGetLanguageCode ( Language languageId );
 extern int TtaGetNumberOfLanguages ( void );
@@ -34,15 +34,15 @@ extern char *TtaGetLanguageNameFromCode (/* char *code */);
 extern char *TtaGetLanguageCodeFromName (/* char *name */);
 extern void InitLanguage (/* void */);
 extern Language TtaNewLanguage (/* char *languageName,
-                                   char languageAlphabet,
+                                   char languageScript,
                                    char *principalDictionary,
                                    char *secondDictionary */);
 extern void TtaRemoveLanguage (/* Language language */);
 extern Language TtaGetLanguageIdFromName (/* char *name */);
 extern char *TtaGetVarLANG (/* void */);
 extern Language TtaGetDefaultLanguage (/* void */);
-extern Language TtaGetLanguageIdFromAlphabet (/* char languageAlphabet */);
-extern char TtaGetAlphabet (/* Language languageId */);
+extern Language TtaGetLanguageIdFromScript (/* char languageScript */);
+extern char TtaGetScript (/* Language languageId */);
 extern char *TtaGetLanguageName (/* Language languageId */);
 extern char *TtaGetLanguageCode (/* Language languageId */);
 extern int TtaGetNumberOfLanguages (/* void */);

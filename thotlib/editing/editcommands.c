@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -922,7 +922,7 @@ static void NewTextLanguage (PtrAbstractBox pAb, int charIndex, Language lang)
 	      pEl = pNextEl;
 	    AbstractImageUpdated (pDoc);
 	  }
-	if (pEl != NULL && pEl->ElStructSchema != NULL)
+	if (pEl && pEl->ElStructSchema)
 	  {
 	    /* change la langue dans la feuille de texte */
 	    ChangeLanguage (pDoc, pEl, lang, TRUE);
@@ -955,7 +955,7 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
   pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
   notification = FALSE;
   pSelAb = *pAb;
-  plang = pSelAb->AbLanguage;
+  plang = pSelAb->AbLang;
   if (keyboard == -1)
     /* l'utilisateur a saisi un caractere au clavier */
     if (plang < TtaGetFirstUserLanguage())
@@ -977,13 +977,13 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
       language = plang;
   else if (keyboard == 2)
     /* insert a standard character */
-    if (TtaGetAlphabet (plang) == 'L')
+    if (TtaGetScript (plang) == 'L')
       language = plang;
     else
       language = TtaGetDefaultLanguage ();
   else if (keyboard == 3)
-    /* insert a character form the greek palette */
-    language = TtaGetLanguageIdFromAlphabet ('G');
+    /* insert a character from the greek palette */
+    language = TtaGetLanguageIdFromScript ('G');
   else
     language = 0;
 
@@ -1004,7 +1004,7 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
 		    pSelAb = pSelAb->AbPrevious;
 		    if (pSelAb != NULL)
 		      if (pSelAb->AbLeafType == LtText &&
-			  pSelAb->AbLanguage == language &&
+			  pSelAb->AbLang == language &&
 			  pSelAb->AbCanBeModified && !pSelAb->AbReadOnly)
 			{
 			  cut = FALSE;
@@ -1464,7 +1464,7 @@ static void SaveInClipboard (int *charsDelta, int *spacesDelta, int *xDelta,
 		    /* switch the Paste entry in all documents */
 		    SwitchPaste (NULL, TRUE);
 		  
-		  ClipboardLanguage = pAb->AbLanguage;
+		  ClipboardLanguage = pAb->AbLang;
 		  /* sauve le texte selectionne dans la feuille */
 		  i = 1;	/* Indice de debut */
 		  pTargetBuffer = &ClipboardThot;
@@ -2329,12 +2329,12 @@ static void         ContentEditing (int editType)
 				   pAb, frame, editType != TEXT_SUP);
 	      else if (editType == TEXT_PASTE && !FromKeyboard)
 		{
-		  /* Verifie que l'alphabet du clipboard correspond a celui
+		  /* Verifie que l'script du clipboard correspond a celui
 		     du pave */
 		  if (ClipboardLanguage == 0)
 		    ClipboardLanguage = TtaGetDefaultLanguage ();
 		  if (pAb->AbLeafType != LtText &&
-		      pAb->AbLanguage != ClipboardLanguage)
+		      pAb->AbLang != ClipboardLanguage)
 		    {
 		      /* charsDelta contient le nombre de carateres qui
 			 precedent dans la boite */
@@ -2549,8 +2549,8 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 	  switch (pAb->AbLeafType)
 	    {
 	    case LtText:
-	      /* prend la boite d'alphabet courant ou au besoin */
-	      /* cree un nouveau texte avec le bon alphabet */
+	      /* prend la boite d'script courant ou au besoin */
+	      /* cree un nouveau texte avec le bon script */
 	      if (!toDelete)
 		notification = GiveAbsBoxForLanguage (frame, &pAb,
 						      keyboard);

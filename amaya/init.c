@@ -2135,7 +2135,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   strcat (buffer, HTAppVersion);
 	   strcat (buffer, ", see http://www.w3.org/Amaya/ ");
 	   leaf = TtaGetFirstLeaf (comment);
-	   lang = TtaGetLanguageIdFromAlphabet('L');
+	   lang = TtaGetLanguageIdFromScript('L');
 	   TtaSetTextContent (leaf, buffer, lang, doc);
 	 }
        TtaSetNotificationMode (doc, 1);

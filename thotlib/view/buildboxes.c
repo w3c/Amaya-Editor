@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -55,6 +55,7 @@ static int             BiwIndex = 0;
 #include "exceptions_f.h"
 #include "font_f.h"
 #include "frame_f.h"
+#include "language_f.h"
 #include "memory_f.h"
 #include "picture_f.h"
 #include "scroll_f.h"
@@ -1202,7 +1203,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
   SpecFont            font;
   PictInfo           *picture;
   BoxType             tableType;
-  char                alphabet = 'L';
+  char                script = 'L';
   int                 width, i, j;
   int                 height;
   ThotBool            enclosedWidth;
@@ -1219,18 +1220,13 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
   height = pAb->AbSize;
   unit = pAb->AbSizeUnit;
   if (pAb->AbLeafType == LtText)
-    {
-      if (pAb->AbLanguage < 4)
-	alphabet = TtaGetAlphabet (pAb->AbLanguage);
-      else
-	alphabet = 'L';
-    }
+    script = TtaGetScript (pAb->AbLang);
   else if (pAb->AbLeafType == LtSymbol)
-    alphabet = 'G';
+    script = 'G';
   else if (pAb->AbLeafType == LtCompound)
-    alphabet = 'L';
+    script = 'L';
   /* teste l'unite */
-  font = ThotLoadFont (alphabet, pAb->AbFont, FontStyleAndWeight(pAb),
+  font = ThotLoadFont (script, pAb->AbFont, FontStyleAndWeight(pAb),
 		       height, unit, frame);
  
   /* Creation */
@@ -2547,7 +2543,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  height = pAb->AbSize;
 	  unit = pAb->AbSizeUnit;
 	  if (pAb->AbLeafType == LtText)
-	    pBox->BxFont = ThotLoadFont (TtaGetAlphabet (pAb->AbLanguage),
+	    pBox->BxFont = ThotLoadFont (TtaGetScript (pAb->AbLang),
 					 pAb->AbFont, FontStyleAndWeight(pAb),
 					 height, unit, frame);
 	  else if (pAb->AbLeafType == LtSymbol)

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -944,7 +944,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 	    pPres1 = &pSchP->PsConstant[pVa1->ViConstant - 1];
 	    CopyStringToBuffer (pPres1->PdString, pAb->AbText, &l);
 	    pAb->AbVolume += l;
-	    pAb->AbLanguage = TtaGetDefaultLanguage ();
+	    pAb->AbLang = 0; /* default */
 	    break;
 	    
 	  case VarAttrValue:

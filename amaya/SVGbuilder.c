@@ -122,10 +122,10 @@ void    MapSVGAttributeValue (char* AttrVal, AttributeType attrType, int *value)
    MapSVGEntity
    Search that entity in the entity table and return the corresponding value.
   ----------------------------------------------------------------------*/
-void   MapSVGEntity (char *entityName, char *entityValue, char *alphabet)
+void   MapSVGEntity (char *entityName, char *entityValue, char *script)
 {
   entityValue[0] = EOS;
-  *alphabet = EOS;
+  *script = EOS;
 }
 
 /*----------------------------------------------------------------------

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -769,7 +769,7 @@ void ChangeLanguageLeaves (PtrElement pEl, Language lang)
 	    pEl->ElLanguage != lang && pEl->ElLanguage  >= 4)
      /*
        Changes the language of the element:
-       lang < 4 when a specific alphabet like symbol
+       lang < TtaGetFirstUserLanguage () when a specific script like symbol
      */
      pEl->ElLanguage = lang;
 }

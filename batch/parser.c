@@ -359,7 +359,7 @@ void GetNextToken (indLine start, indLine *wi, indLine *wl, SyntacticType *wn)
 		       (inputLine[j] >= '0' && inputLine[j] <= '9'
 		       should be:
 		       if (iswalnum (inputLine[j])) to see if inputLine[j] is
-		       alphabetical or numerical value @@@@@@@@@@ */
+		       scriptical or numerical value @@@@@@@@@@ */
 
 		    if (!((inputLine[j] >= 'A' && inputLine[j] <= 'Z') || 
 			  (inputLine[j] >= 'a' && inputLine[j] <= 'z') || 

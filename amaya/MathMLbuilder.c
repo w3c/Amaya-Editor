@@ -207,7 +207,7 @@ void MapMathMLAttributeValue (char *AttrVal, AttributeType attrType,
    Search that entity in the entity table and return the corresponding value.
   ----------------------------------------------------------------------*/
 void MapMathMLEntity (char *entityName, char *entityValue,
-		      char *alphabet)
+		      char *script)
 {
    int	i;
   ThotBool       found;
@@ -222,13 +222,13 @@ void MapMathMLEntity (char *entityName, char *entityValue,
       i--;
       entityValue[0] = (unsigned char) pMathEntityTable[i].charCode;
       entityValue[1] = EOS;
-      *alphabet = 'G';
-      /* *alphabet = pMathEntityTable[i].charAlphabet;*/
+      *script = 'G';
+      /* *script = pMathEntityTable[i].charScript;*/
     }
   else
     {
       entityValue[0] = EOS;
-      *alphabet = EOS;
+      *script = EOS;
     }
 }
 
@@ -654,7 +654,7 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
   AttributeType	attrType;
   Language	lang;
   CHAR_T        text[2];
-  char	        alphabet;
+  char	        script;
   unsigned char c;
   int		len;
 
@@ -701,15 +701,15 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 		 /* get that character */
 		 len = 2;
 		 TtaGiveBufferContent (textEl, text, len, &lang);
-		 alphabet = TtaGetAlphabet (lang);
-		 if (alphabet == 'L')
+		 script = TtaGetScript (lang);
+		 if (script == 'L')
 		    {
 		    if (text[0] == '-' || text[0] == '_' ||
 			text[0] == 175)
 		      /* a horizontal line in the middle of the box */
 		      c = 'h'; 
 		    }
-		 else if (alphabet == 'G')
+		 else if (script == 'G')
 		    /* a single Symbol character */
 		    {
 		    if (text[0] == 172)
@@ -786,7 +786,7 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
   AttributeType	attrType;
   SSchema       MathMLSSchema;
   Language	lang;
-  char		alphabet;
+  char		script;
 #define buflen 50
   CHAR_T        text[buflen];
   unsigned char c;
@@ -873,8 +873,8 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 		  len++;
 		  TtaGiveBufferContent (textEl, text, len, &lang);
 		  len --;
-		  alphabet = TtaGetAlphabet (lang);
-		  if (alphabet == 'G')
+		  script = TtaGetScript (lang);
+		  if (script == 'G')
 		    /* Adobe Symbol character set */
 		    {
 		    integral = TRUE;
@@ -942,9 +942,9 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 					len++;
 					TtaGiveBufferContent (textEl, text,
 							      len, &lang); 
-					alphabet = TtaGetAlphabet (lang);
-					if (alphabet != 'G')
-					  /* not the right alphabet for an
+					script = TtaGetScript (lang);
+					if (script != 'G')
+					  /* not the right script for an
 					     integral*/
 					  textEl = NULL;
 					else
@@ -1491,7 +1491,7 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 #define BUFLEN 10
   unsigned char    	text[BUFLEN];
   Language	lang;
-  char		alphabet;
+  char		script;
 
   /* get the content of the mo element */
   textEl = TtaGetFirstChild (el);
@@ -1542,11 +1542,11 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 	  {
 	    len = BUFLEN;
 	    TtaGiveTextContent (textEl, text, &len, &lang);
-	    alphabet = TtaGetAlphabet (lang);
+	    script = TtaGetScript (lang);
 	    if (len == 1)
 	      {
 	       /* the mo element contains a single character */
-	       if (alphabet == 'L')
+	       if (script == 'L')
 	          /* ISO-Latin 1 character */
 	          {
 		  if (text[0] == '-')
@@ -1601,7 +1601,7 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 			   (int)text[0] == 160)    /* em space */
 		     val = MathML_ATTR_IntAddSpace_VAL_nospace;
 		  }
-	       else if (alphabet == 'G')
+	       else if (script == 'G')
 		 {
 		   /* Symbol character set */
 		   if ((int)text[0] == 163 || /* less or equal */
@@ -1678,7 +1678,7 @@ void      CheckFence (Element el, Document doc)
    PresentationValue   pval;
    PresentationContext ctxt;
    CHAR_T              text[2];
-   char	               alphabet;
+   char	               script;
    unsigned char       c;
    int                 len, val;
 
@@ -1698,8 +1698,8 @@ void      CheckFence (Element el, Document doc)
 	   {
 	   len = 2;
 	   TtaGiveBufferContent (content, text, len, &lang);
-	   alphabet = TtaGetAlphabet (lang);
-	   if ((alphabet == 'G') &&
+	   script = TtaGetScript (lang);
+	   if ((script == 'G') &&
 	       (text[0] == 229 || text[0] == 213))  /* Sigma,  Pi */
 	     /* it's a large operator */
 	     {
@@ -1715,12 +1715,12 @@ void      CheckFence (Element el, Document doc)
 	   else if (ChildOfMRowOrInferred (el))
 	     /* the MO element is a child of a MROW element */
 	      {
-	      if (((alphabet == 'L') &&
+	      if (((script == 'L') &&
 		   (text[0] == '(' || text[0] == ')' ||
 		    text[0] == '[' || text[0] == ']' ||
 		    text[0] == '{' || text[0] == '}' ||
 		    text[0] == '|'))  ||
-		  ((alphabet == 'G') &&
+		  ((script == 'G') &&
 		   (text[0] == 225 || text[0] == 241)))
 		/* it's a stretchable parenthesis or equivalent */
 		{
@@ -1749,9 +1749,9 @@ void      CheckFence (Element el, Document doc)
 		  }
 		/* create a new content for the MF element */
 		elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-		if (alphabet == 'G' && text[0] == 241)
+		if (script == 'G' && text[0] == 241)
 		  c = '>';    /* RightAngleBracket */
-		else if (alphabet == 'G' && text[0] == 225)
+		else if (script == 'G' && text[0] == 225)
 		  c = '<';    /* LeftAngleBracket */
 		else
 		  c = (char) text[0];
@@ -1825,7 +1825,7 @@ void CreateFencedSeparators (Element fencedExpression, Document doc, ThotBool re
            sepValue[0] = text[sep];
            sepValue[1] = SPACE;
            sepValue[2] = EOS;
-	   lang = TtaGetLanguageIdFromAlphabet('L');
+	   lang = TtaGetLanguageIdFromScript('L');
            TtaSetTextContent (leaf, sepValue, lang, doc);
 	   /* is there a following non-space character in separators? */
 	   i = sep + 1;

@@ -73,7 +73,7 @@ void TtaExtractSuffix (char *aName, char *aSuffix)
   TtaStrAddSorted
   Adds new entry in table. Table is a linear array with strings
   separated by EOS. The sort is done with a strcmp. This means
-  that digits are sorted alphabetically, rather than numerically.
+  that digits are sorted scriptically, rather than numerically.
   Parameters:
   new_entry : string to be added
   table : string linear table

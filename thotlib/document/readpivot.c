@@ -1904,7 +1904,7 @@ static  LabelString         label;
   PictInfo           *image;
   int                 i, j, n, view, l, elType;
   int                 rule, n1, n2, n3, n4;
-  char                alphabet;
+  char                script;
   char                c;
   CHAR_T              ctext;
   ThotBool            create, inclusion, modif, b1, b2;
@@ -2240,23 +2240,23 @@ static  LabelString         label;
 		  /* version pivot < 4 */
 		  {
 		    /* alpabet par defaut = Latin */
-		    alphabet = 'L';
+		    script = 'L';
 		    /* dans le cas d'une inclusion sans expansion, il */
-		    /* n'y a pas d'alphabet. */
+		    /* n'y a pas d'script. */
 		    /* dans les versions pivot anciennes, il peut y avoir un */
-		    /* tag d'alphabet. On le saute */
+		    /* tag d'script. On le saute */
 		    if (*tag != C_PIV_BEGIN && *tag != C_PIV_END &&
 			*tag != C_PIV_TYPE && *tag != C_PIV_NATURE)
-		      /* on a lu l'alphabet */
+		      /* on a lu l'script */
 		      {
-			alphabet = *tag;
+			script = *tag;
 			/* lit l'octet suivant */
 			if (!TtaReadByte (pivFile, tag))
-			  PivotError (pivFile, "PivotError: Alphabet");
+			  PivotError (pivFile, "PivotError: Script");
 		      }
 		    if (create)
 		      {
-			pEl->ElLanguage = TtaGetLanguageIdFromAlphabet (alphabet);
+			pEl->ElLanguage = TtaGetLanguageIdFromScript (script);
 			/* verifie que la langue est dans la table des langues
 			   du document */
 			found = FALSE;

@@ -445,13 +445,13 @@ static void PutInt (int n, int fnum, char *outBuf, PtrDocument pDoc,
    feuilles de type leafType.
   ----------------------------------------------------------------------*/
 static PtrTSchema GetTransSchForContent (PtrElement pEl, LeafType leafType,
-					 AlphabetTransl **pTransAlph)
+					 ScriptTransl **pTransAlph)
 {
   PtrTSchema   pTSch;
   PtrSSchema   pSS;
   PtrElement   pAncestor;
   int          i;
-  char         alphabet;
+  char         script;
   ThotBool     transExist;
    
   pSS = NULL;
@@ -460,9 +460,9 @@ static PtrTSchema GetTransSchForContent (PtrElement pEl, LeafType leafType,
   pAncestor = pEl;
   *pTransAlph = NULL;
   if (pEl->ElTerminal && pEl->ElLeafType == LtText && pEl->ElLanguage < 4)
-    alphabet = TtaGetAlphabet (pEl->ElLanguage);
+    script = TtaGetScript (pEl->ElLanguage);
   else
-    alphabet = 'L';
+    script = 'L';
   do
     {
       if (pSS != pAncestor->ElStructSchema)
@@ -475,22 +475,22 @@ static PtrTSchema GetTransSchForContent (PtrElement pEl, LeafType leafType,
 	    switch (leafType)
               {
 	      case LtText:
-		if (pTSch->TsNTranslAlphabets > 0)
-		  /* il y a au moins un alphabet a traduire */
-		  /* cherche les regles de traduction pour l'alphabet */
+		if (pTSch->TsNTranslScripts > 0)
+		  /* il y a au moins un script a traduire */
+		  /* cherche les regles de traduction pour l'script */
 		  /* de la feuille */
 		  {
 		    i = 0;
 		    do
 		      {
-			*pTransAlph = &pTSch->TsTranslAlphabet[i++];
-			if ((*pTransAlph)->AlAlphabet == alphabet &&
+			*pTransAlph = &pTSch->TsTranslScript[i++];
+			if ((*pTransAlph)->AlScript == script &&
 			    (*pTransAlph)->AlBegin > 0)
 			  transExist = TRUE;
 			else
 			  *pTransAlph = NULL;
 		      }
-		    while (!transExist && i < pTSch->TsNTranslAlphabets);
+		    while (!transExist && i < pTSch->TsNTranslScripts);
 		  }
 		break;
 	      case LtSymbol:
@@ -515,7 +515,7 @@ static PtrTSchema GetTransSchForContent (PtrElement pEl, LeafType leafType,
    effectue les traductions de caracteres selon la table
   ----------------------------------------------------------------------*/
 static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
-			   AlphabetTransl *pTransAlph, ThotBool lineBreak,
+			   ScriptTransl *pTransAlph, ThotBool lineBreak,
 			   int fnum, PtrDocument pDoc)
 {
   PtrTextBuffer        pNextBufT, pPrevBufT;
@@ -539,7 +539,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
   /* traduit la suite des buffers source */
   do
     /* Dans la table de traduction, les chaines sources sont */
-    /* rangees par ordre alphabetique. On cherche une chaine */
+    /* rangees par ordre scriptique. On cherche une chaine */
     /* source qui commence par le caractere a traduire. */
     {
       while (c > (CHAR_T) (pTSch->TsCharTransl[ft - 1].StSource[b]) &&
@@ -727,7 +727,7 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 {
   PtrTSchema          pTSch;
   PtrTextBuffer       pBufT;
-  AlphabetTransl     *pTransAlph;
+  ScriptTransl     *pTransAlph;
   StringTransl       *pTrans;
   CHAR_T             c;
   char                ci;
@@ -1435,10 +1435,10 @@ static ThotBool     ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
 	       ret = pElem->ElFirstPRule != NULL;
 	       break;
 
-	     case TcondAlphabet:
-	       /* la condition porte sur l'alphabet */
+	     case TcondScript:
+	       /* la condition porte sur l'script */
 	       if (pElem->ElTypeNumber == CharString + 1)
-		 ret = (TtaGetAlphabet(pElem->ElLanguage) == Cond->TcAlphabet);
+		 ret = (TtaGetScript(pElem->ElLanguage) == Cond->TcScript);
 	       break;
 
 	     case TcondAttributes:
@@ -2392,7 +2392,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
   BinFile             includedFile;
   PtrReference        pRef;
   PtrTSchema          pTransTextSch;
-  AlphabetTransl      *pTransAlph;
+  ScriptTransl      *pTransAlph;
   int                 fnum;
   int                 i;
   CHAR_T              c;

@@ -260,7 +260,7 @@ void SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc,
 /*--------------------------------------------------------------------
   MergeTextElements   si l'element pEl est une feuille de texte et si
   son suivant est egalement une feuille de texte dans le meme
-  alphabet, reunit les deux elements sucessifs en un seul.
+  script, reunit les deux elements sucessifs en un seul.
   Le deuxieme element, devenu vide, n'est pas libere' et un
   pointeur sur cet element est retourne dans pFreeEl.
   Le parametre booleen removeAbsBox indique s'il faut liberer les

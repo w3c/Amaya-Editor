@@ -3884,7 +3884,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
    IsIdenticalTextType       retourne 'vrai' si l'element pointe par pEl     
    (appartenant au document pointe par pDoc) a un frere suivant et 
    si les deux elements sont des feuilles de texte dans le meme    
-   alphabet, avec les memes attributs et les memes regles de       
+   script, avec les memes attributs et les memes regles de       
    presentation specifiques.                                       
    Dans ce cas, les deux elements sont fusionnes et l'image        
    abstraite est mise a jour. pLib contient au retour un pointeur  

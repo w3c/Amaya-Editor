@@ -112,7 +112,7 @@ void                WriteTransCondition (TransCondition cond)
 	    case TcondPRule:
 	       TtaWriteByte (outfile, C_TR_PRULE);
 	       break;
-	    case TcondAlphabet:
+	    case TcondScript:
 	       TtaWriteByte (outfile, C_TR_ALPHABET);
 	       break;
 	    case TcondAttributes:
@@ -568,8 +568,8 @@ void WriteBlocks (PtrTRuleBlock pBlock, PtrSSchema pSS)
 	     WriteSignedShort (pCond->TcAscendRelLevel);
 	     switch (pCond->TcCondition)
 		   {
-		      case TcondAlphabet:
-			 TtaWriteByte (outfile, pCond->TcAlphabet);
+		      case TcondScript:
+			 TtaWriteByte (outfile, pCond->TcScript);
 			 break;
 		      case TcondWithin:
 		      case TcondFirstWithin:
@@ -720,7 +720,7 @@ ThotBool WriteTranslationSchema (Name fileName, PtrTSchema pTSch, PtrSSchema pSS
    TranslVariable     *pVar;
    TranslVarItem      *pVarItem;
    PtrAttributeTransl  pAttrTr;
-   AlphabetTransl     *pAlphTr;
+   ScriptTransl     *pAlphTr;
    StringTransl       *pStrnTr;
    PRuleTransl        *pPruleTr;
    int                 i, j;
@@ -824,11 +824,11 @@ ThotBool WriteTranslationSchema (Name fileName, PtrTSchema pTSch, PtrSSchema pSS
 		 WriteBlockPtr (pPruleTr->RtPRuleValueBlock[j]);
 	  }
      }
-   WriteShort (pTSch->TsNTranslAlphabets);
-   for (i = 0; i < pTSch->TsNTranslAlphabets; i++)
+   WriteShort (pTSch->TsNTranslScripts);
+   for (i = 0; i < pTSch->TsNTranslScripts; i++)
      {
-	pAlphTr = &pTSch->TsTranslAlphabet[i];
-	TtaWriteByte (outfile, pAlphTr->AlAlphabet);
+	pAlphTr = &pTSch->TsTranslScript[i];
+	TtaWriteByte (outfile, pAlphTr->AlScript);
 	WriteShort (pAlphTr->AlBegin);
 	WriteShort (pAlphTr->AlEnd);
      }

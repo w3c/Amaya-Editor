@@ -585,7 +585,7 @@ typedef struct _Counter
 typedef struct _PresConstant
 {
   BasicType PdType;                       /* type of the constant */
-  char      PdAlphabet;                   /* alphabet of the constant */
+  char      PdScript;                     /* script of the constant */
   char      PdString[MAX_PRES_CONST_LEN]; /* constant presentation string,
 					     terminated by a NUL character */
 } PresConstant;

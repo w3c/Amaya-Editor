@@ -90,7 +90,7 @@ SeqOfCond =      Condition < 'And' Condition > .
 Condition =      [ 'Not' ] [ 'Target' ] Cond .
 Cond =		 CondOnSelf / CondAscend .
 CondOnSelf =     'FirstRef' / 'LastRef' / 'ExternalRef' /
-		 'Alphabet' '=' Alphabet /
+		 'Script' '=' Script /
 		 'FirstAttr' / 'LastAttr' /
 		 'ComputedPage' / 'StartPage' / 'UserPage' / 'ReminderPage' /
 		 'Empty' .
@@ -158,8 +158,8 @@ RelPosition =    'Included' / 'Refered' / 'Referred' .
 
 File =           FileName / BufferIdent .
 
-TSeqOfTransl =   [ Alphabet ] SeqOfTransl .
-Alphabet =       NAME .
+TSeqOfTransl =   [ Script ] SeqOfTransl .
+Script =       NAME .
 SeqOfTransl =    'Begin' < Translation > 'End' ';' /
                  Translation .
 Translation =    Source [ '-' '>' Target ] ';' .

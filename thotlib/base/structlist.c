@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1403,7 +1403,7 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	   case LtText:
 	   case LtReference:
 	      fprintf (fileDescriptor, "language = %s",
-		       TtaGetLanguageName (pAb->AbLanguage));
+		       TtaGetLanguageName (pAb->AbLang));
 	      fprintf (fileDescriptor, "\n");
 	      for (i = 1; i <= Indent + 6; i++)
 		 fprintf (fileDescriptor, " ");
@@ -1425,8 +1425,8 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	      break;
            case LtSymbol:
 	   case LtGraphics:
-	      fprintf (fileDescriptor, "alphabet=%c \'%c\'",
-		       pAb->AbGraphAlphabet, pAb->AbShape);
+	      fprintf (fileDescriptor, "script=%c \'%c\'",
+		       pAb->AbGraphScript, pAb->AbShape);
 	      if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C')
 		{
 		  fprintf (fileDescriptor, " rx:%d", pAb->AbRx);
@@ -3258,7 +3258,7 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 			   {
 			   case CharString:
 			     fprintf (fileDescriptor, "Text ");
-			     fprintf (fileDescriptor, "%c", pPr1->PdAlphabet);
+			     fprintf (fileDescriptor, "%c", pPr1->PdScript);
 			     break;
 			   case GraphicElem:
 			     fprintf (fileDescriptor, "Graphics ");

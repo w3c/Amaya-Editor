@@ -221,7 +221,7 @@
               <li><small><a href="#sectd5282">Conditions on
                 references</a></small></li>
               <li><small><a href="#sectd5284">Conditions on the
-                alphabets</a></small></li>
+                scripts</a></small></li>
               <li><small><a href="#sectd5285">Conditions on page
                 breaks</a></small></li>
               <li><small><a href="#sectd5286">Conditions on the element's
@@ -3008,23 +3008,23 @@ keyword representing its type (<tt>Text</tt>, <tt>Symbol</tt>,
 A semi-colon terminates each declaration.</p>
 
 <p>In the case of a character string, the keyword <tt>Text</tt> can be
-followed by the name of an alphabet (for example, <tt>Greek</tt> or
+followed by the name of an script (for example, <tt>Greek</tt> or
 <tt>Latin</tt>) in which the constant's text should be expressed. If the
-alphabet name is absent, the Latin alphabet is used. When the alphabet name
-is present, only the first letter of the alphabet name is interpreted. Thus,
-the words <tt>Greek</tt> and <tt>Grec</tt> designate the same alphabet. In
-current versions of Thot, only the Greek and Latin alphabets are
+script name is absent, the Latin script is used. When the script name
+is present, only the first letter of the script name is interpreted. Thus,
+the words <tt>Greek</tt> and <tt>Grec</tt> designate the same script. In
+current versions of Thot, only the Greek and Latin scripts are
 available.</p>
 <pre>                 'CONST' ConstSeq
      ConstSeq   = Const &lt; Const &gt; .
      Const      = ConstID '=' ConstType ConstValue ';' .
      ConstID    = NAME .
-     ConstType  ='Text' [ Alphabet ] / 'Symbol' /
+     ConstType  ='Text' [ Script ] / 'Symbol' /
                  'Graphics' / 'Picture' .
      ConstValue = STRING .
-     Alphabet   = NAME .</pre>
+     Script   = NAME .</pre>
 
-<p>For character strings in the Latin alphabet (ISO Latin-1 character set),
+<p>For character strings in the Latin script (ISO Latin-1 character set),
 characters having codes higher than 127 (decimal) are represented by their
 code in octal.</p>
 
@@ -6008,7 +6008,7 @@ order:</p>
 of declarations. All of these sections are optional, expect for the
 translation rules associated with element types. Many <tt>TEXTTRANSLATE</tt>
 sections can appear, each defining the rules for translating character
-strings of a particular alphabet.</p>
+strings of a particular script.</p>
 <pre>     TransSchema ='TRANSLATION' ElemID ';'
                 [ 'LINELENGTH' LineLength ';' ]
                 [ 'LINEEND' CHARACTER ';' ]
@@ -6456,7 +6456,7 @@ written <tt>Parent</tt> instead of <tt>Ancestor 1</tt>.</p>
 <tt>Within</tt>, <tt>Attributes</tt>, <tt>Presentation</tt>, and those
 concerning an attribute or a specific presentation can apply to an ancestor.
 Conditions <tt>FirstRef</tt>, <tt>LastRef</tt>, <tt>ExternalRef</tt>,
-<tt>Alphabet</tt>, <tt>FirstAttr</tt>, <tt>LastAttr</tt>,
+<tt>Script</tt>, <tt>FirstAttr</tt>, <tt>LastAttr</tt>,
 <tt>ComputedPage</tt>, <tt>StartPage</tt>, <tt>UserPage</tt>,
 <tt>ReminderPage</tt>, <tt>Empty</tt> cannot be preceded by keywords
 <tt>Parent</tt> or <tt>Ancestor</tt>.</p>
@@ -6525,17 +6525,17 @@ keyword.</p>
 </div>
 
 <div class="subsubsection">
-<h4><a name="sectd5284" id="sectd5284">Conditions on the alphabets</a></h4>
+<h4><a name="sectd5284" id="sectd5284">Conditions on the scripts</a></h4>
 
 <p>The character string base type (and only this type) can use the condition
-<tt>Alphabet = a</tt> which indicates that the translation rule(s) should
-only apply if the alphabet of the character string is the one whose name
+<tt>Script = a</tt> which indicates that the translation rule(s) should
+only apply if the script of the character string is the one whose name
 appears after the equals sign (or is not, if there is a preceding
 <tt>NOT</tt> keyword). This condition cannot be applied to translation rules
 of an attribute.</p>
 
-<p>In the current implementation of Thot, the available alphabets are the
-<tt>Latin</tt> alphabet and the <tt>Greek</tt> alphabet.</p>
+<p>In the current implementation of Thot, the available scripts are the
+<tt>Latin</tt> script and the <tt>Greek</tt> script.</p>
 </div>
 
 <div class="subsubsection">
@@ -6699,7 +6699,7 @@ between the keywords <tt>BEGIN</tt> and <tt>END</tt>.</p>
    Cond         = CondElem / CondAscend .
    CondElem     ='FirstRef' / 'LastRef' /
                  'ExternalRef' /
-                 'Alphabet' '=' Alphabet /
+                 'Script' '=' Script /
                  'ComputedPage' / 'StartPage' / 
                  'UserPage' / 'ReminderPage' /
                  'Empty' /
@@ -6721,7 +6721,7 @@ between the keywords <tt>BEGIN</tt> and <tt>END</tt>.</p>
    GreaterLess  = '&gt;' / '&lt;' .
    NParent      = NUMBER.
    ExtStruct    = '(' ElemID ')' .
-   Alphabet     = NAME .
+   Script     = NAME .
    RelatAttr    ='=' Value /
                  '&gt;' [ '-' ] Minimum /
                  '&lt;' [ '-' ] Maximum /
@@ -7612,21 +7612,21 @@ recode these terminal elements of the documents structure. The last sections
 of a translation schema are intended for this purpose, each specifying the
 recoding rules for one type of terminal element.</p>
 
-<p>The recoding rules for character strings are grouped by alphabets. There
-is a group of rules for each alphabet of the Thot document that must be
+<p>The recoding rules for character strings are grouped by scripts. There
+is a group of rules for each script of the Thot document that must be
 translated. Each such group of rules begins with the <tt>TEXTTRANSLATE</tt>
-keyword, followed by the specification of the alphabet to translate and the
+keyword, followed by the specification of the script to translate and the
 recoding rules, between the <tt>BEGIN</tt> and <tt>END</tt> keywords unless
-there is only one recoding rule for the alphabet. The specification of the
-alphabet is not required: by default it is assumed to the Latin alphabet (the
+there is only one recoding rule for the script. The specification of the
+script is not required: by default it is assumed to the Latin script (the
 ISO Latin-1 character set).</p>
 
 <p>Each recoding rule is formed by a source string between apostrophes and a
 target string, also between apostrophes, the two strings being separated by
 the arrow symbol (<tt>-&gt;</tt>), formed by the ``minus'' and ``greater
 than'' characters. The rule is terminated by a semi-colon.</p>
-<pre>     TextTransSeq = [ Alphabet ] TransSeq .
-     Alphabet     = NAME .
+<pre>     TextTransSeq = [ Script ] TransSeq .
+     Script     = NAME .
      TransSeq     ='BEGIN' &lt; Translation &gt; 'END' ';' /
                     Translation .
      Translation  = Source [ '-&gt;' Target ] ';' .
@@ -7640,7 +7640,7 @@ string can have different lengths and the target string can be empty. In this
 last case, the translator simply suppresses every occurrence of the source
 string in the translated document.</p>
 
-<p>For a given alphabet, the order of the rules is not important and has no
+<p>For a given script, the order of the rules is not important and has no
 significance because the T language compiler reorders the rules in ways that
 speed up the translator's work. The total number of recoding rules is limited
 by the compiler as is the maximum length of the source and target strings.</p>
@@ -7648,7 +7648,7 @@ by the compiler as is the maximum length of the source and target strings.</p>
 <p>The recoding rules for symbols and graphical elements are written in the
 same manner as the recoding rules for character strings. They are preceded,
 respectively, by the <tt>SYMBTRANSLATE</tt> and <tt>GRAPHTRANSLATE</tt> and
-so not require a specification of the alphabet. Their source string is
+so not require a specification of the script. Their source string is
 limited to one character, since, in Thot, each symbol and each graphical
 element is represented by a single character. The symbol and graphical
 element codes are defined along with the <a href="#sect7">non-standard
@@ -7873,10 +7873,10 @@ CounterValue    = NUMBER .
 ConstSeq        = Const &lt; Const &gt; .
 Const           = ConstID '=' ConstType ConstValue ';' .
 ConstID         = NAME .
-ConstType       = 'Text' [ Alphabet ] / 'Symbol' /
+ConstType       = 'Text' [ Script ] / 'Symbol' /
                   'Graphics' / 'Picture' .
 ConstValue      = STRING .
-Alphabet        = NAME .
+Script        = NAME .
 
 VarSeq          = Variable &lt; Variable &gt; .
 Variable        = VarID ':' FunctionSeq ';' .
@@ -8242,7 +8242,7 @@ Condition     = [ 'NOT' ] [ 'Target' ] Cond .
 Cond          = CondElem / CondAscend .
 CondElem      = 'FirstRef' / 'LastRef' /
                 'ExternalRef' /
-                'Alphabet' '=' Alphabet /
+                'Script' '=' Script /
                 'ComputedPage' / 'StartPage' / 
                 'UserPage' / 'ReminderPage' /
                 'Empty' /
@@ -8263,7 +8263,7 @@ CondOnAscend  = 'First' / 'Last' /
 NumParent     = [ GreaterLess ] NParent .
 GreaterLess   = '&gt;' / '&lt;' .
 NParent       = NUMBER.
-Alphabet      = NAME .
+Script      = NAME .
 RelatAttr     = '=' Value /
                  '&gt;' [ '-' ] Minimum /
                  '&lt;' [ '-' ] Maximum /
@@ -8379,8 +8379,8 @@ PresIntervalMax= NUMBER .
 PresValue     = [ '-' ] PresVal .
 PresVal       = NUMBER .
 
-TextTransSeq  = [ Alphabet ] TransSeq .
-Alphabet      = NAME .
+TextTransSeq  = [ Script ] TransSeq .
+Script        = NAME .
 TransSeq      = 'BEGIN' &lt; Translation &gt; 'END' ';' /
                 Translation .
 Translation   = Source [ '-&gt;' Target ] ';' .
@@ -8396,8 +8396,8 @@ Target        = STRING .</pre>
 <div class="section">
 <h2><a name="sectb71" id="sectb71">Characters</a></h2>
 
-<p>The characters of the Latin alphabet follow the encoding defined in the
-ISO 8859-1 (ISO Latin-1) standard. The characters of the Greek alphabet
+<p>The characters of the Latin script follow the encoding defined in the
+ISO 8859-1 (ISO Latin-1) standard. The characters of the Greek script
 follow the encoding defined by Adobe for its Symbol font (Adobe
 FontSpecific).</p>
 

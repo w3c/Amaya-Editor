@@ -973,7 +973,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   restbl = 0;
   pAb = pBox->BxAbstractBox;
   /* is it a box with a right-to-left writing? */
-  rtl = (pAb->AbDirection == 'R');
+  car = TtaGetScript (pAb->AbLang);
+  rtl = (car == 'A' || car == 'H');
+  /* rtl = (pAb->AbDirection == 'R'); */
   font = pBox->BxFont;
   /* do we have to display stars instead of characters? */
   if (pAb->AbBox->BxShadow)

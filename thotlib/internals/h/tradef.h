@@ -64,7 +64,7 @@
 #define KWD_FirstRef 	1143
 #define KWD_LastRef 	1144
 #define KWD_ExternalRef 	1145
-#define KWD_Alphabet 	1146
+#define KWD_Script 	1146
 #define KWD_FirstAttr 	1147
 #define KWD_LastAttr 	1148
 #define KWD_ComputedPage 	1149
@@ -202,7 +202,7 @@
 #define RULE_Cond 	  53
 #define RULE_CondOnSelf 	  54
 #define RULE_CondAscend 	  55
-#define RULE_Alphabet 	  56
+#define RULE_Script 	  56
 #define RULE_Ascend 	  57
 #define RULE_CondOnAscend 	  58
 #define RULE_LevelOrType 	  59

@@ -1476,7 +1476,7 @@ int                 main (int argc, char **argv)
 			{
 			   case CharString:
 			      printf ("Text ");
-			      putchar (pPr1->PdAlphabet);
+			      putchar (pPr1->PdScript);
 			      break;
 			   case GraphicElem:
 			      printf ("Graphics ");

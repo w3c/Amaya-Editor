@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -57,7 +57,7 @@ struct Langue_Ctl
 {
   char        LangName[MAX_NAME_LENGTH];      /* Nom de la langue                     */
   char        LangCode[MAX_NAME_LENGTH];      /* Code de la langue (RFC1766)          */
-  char        LangAlphabet;                   /* Alphabet associe a la langue         */
+  char        LangScript;                     /* Script associe a la langue           */
   char        LangPrincipal[MAX_NAME_LENGTH]; /* Name du dictionnaire principal       */
   char        LangSecondary[MAX_NAME_LENGTH]; /* Name du dictionnaire secondaire      */
   Dictionary  LangDict[MAX_DICTS];            /* Pointeurs vers les dictionnaires     */
