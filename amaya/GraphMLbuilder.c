@@ -20,7 +20,6 @@
 #include "GraphML.h"
 #include "HTML.h"
 #include "parser.h"
-#include "styleparser_f.h"
 #include "style.h"
 
 /* mapping table of attribute values */
@@ -41,8 +40,10 @@ static AttrValueMapping GraphMLAttrValueMappingTable[] =
 
 #define MaxMsgLength 200
 
+#include "css_f.h"
 #include "fetchXMLname_f.h"
 #include "html2thot_f.h"
+#include "styleparser_f.h"
 #include "XMLparser_f.h"
 
 
@@ -494,33 +495,19 @@ int             *error
 {
    ElementType		elType, parentType, newType;
    Element		child, parent, new, leaf;
+   AttributeType        attrType;
+   Attribute            attr;
+   int                  length;
    PRule		fillPatternRule, newPRule;
    SSchema	        GraphMLSSchema;
-   ThotBool		closedShape;
+   STRING               text;
+   ThotBool		closedShape, parseCSS;
 
    *error = 0;
    elType = TtaGetElementType (el);
    GraphMLSSchema = GetGraphMLSSchema (doc);
-   if (elType.ElSSchema != GraphMLSSchema)
-     /* this is not a GraphML element. It's the HTML element <XMLGraphics>, or
-	any other element containing a GraphML expression */
+   if (elType.ElSSchema == GraphMLSSchema)
      {
-     if (TtaGetFirstChild (el) == NULL && !TtaIsLeaf (elType))
-	/* this element is empty. Create a GraphML element as it's child */
-	{
-	newType.ElSSchema = GraphMLSSchema;
-	newType.ElTypeNum = GraphML_EL_GraphML;
-	new = TtaNewElement (doc, newType);
-	TtaInsertFirstChild (&new, el, doc);
-	/* Create a placeholder within the GraphML element */
-        newType.ElTypeNum = GraphML_EL_GraphicsElement;
-	child = TtaNewElement (doc, newType);
-	TtaInsertFirstChild (&child, new, doc);
-	}
-     }
-   else
-     {
-
      /* if the parent element is defined by a different SSchema, insert
         a GraphML root element between the element and its parent */
      parent = TtaGetParent (el);
@@ -538,21 +525,60 @@ int             *error
 	  SetGraphicDepths (doc, el);
        }
 
-     /* if it's an image element, create a PICTURE_UNIT child */
-     else if (elType.ElTypeNum == GraphML_EL_image)
+     switch (elType.ElTypeNum)
        {
+       case GraphML_EL_image:
+	 /* it's an image element, create a PICTURE_UNIT child */
 	 /* create the graphical element */
 	 newType.ElSSchema = elType.ElSSchema;
 	 newType.ElTypeNum = GraphML_EL_PICTURE_UNIT;
 	 leaf = TtaNewElement (doc, newType);
 	 TtaInsertFirstChild (&leaf, el, doc);
-       }
+	 break;
 
-     /* if it's a graphic primitive, create a GRAPHIC_UNIT leaf as a child
-	of the element, if it has not been done when creating attributes
-	(points, arrowhead, rx, ry) */
-     else
-       {
+       case GraphML_EL_use_:
+	 /* it's a use element, copy the element addressed by its xlink_href
+            attribute after the last child */
+	 child = TtaGetLastChild (el);
+         /**** TO DO ****/
+	 break;
+
+       case GraphML_EL_style__:
+	 /* it's a style element, parse its contents as a style sheet */
+	 /* Search the type attribute */
+	 attrType.AttrSSchema = elType.ElSSchema;
+	 attrType.AttrTypeNum = GraphML_ATTR_type;
+	 attr = TtaGetAttribute (el, attrType);
+	 parseCSS = FALSE;
+	 if (attr == NULL)
+	   /* no type attribute. Assume CSS by default */
+	   parseCSS = TRUE;
+	 else
+	   /* the style element has a type attribute */
+	   /* get its value */
+	   {
+	     length = TtaGetTextAttributeLength (attr);
+	     text = TtaAllocString (length + 1);
+	     TtaGiveTextAttributeValue (attr, text, &length);
+	     if (!ustrcasecmp (text, TEXT("text/css")))
+	       parseCSS = TRUE;
+	     TtaFreeMemory (text);
+	   }
+	 if (parseCSS)
+	   {
+	     text = GetStyleContents (el);
+	     if (text)
+	       {
+		 ReadCSSRules (doc, NULL, text, FALSE);
+		 TtaFreeMemory (text);
+	       }
+	   }
+	 break;
+ 
+       default:
+	 /* if it's a graphic primitive, create a GRAPHIC_UNIT leaf as a child
+	    of the element, if it has not been done when creating attributes
+	    (points, arrowhead, rx, ry) */
 	 leaf = CreateGraphicLeaf (el, doc, &closedShape, 0);
 	 /* if it's a closed shape, move the FillPattern rule to that leaf */
 	 if (closedShape && leaf)
@@ -565,6 +591,7 @@ int             *error
 		 TtaRemovePRule (el, fillPatternRule, doc);
 	       }
 	   }
+	 break;
        }
      }
 }
@@ -954,10 +981,9 @@ ThotBool        delete
 	  {
           ctxt = TtaGetSpecificStyleContext (doc);
 	  ptr++;
-          ptr = ParseNumber (ptr, &pval);
+          ptr = ParseCSSUnit (ptr, &pval);
 	  if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	    {
-	    pval.typed_data.unit = STYLE_UNIT_PX;
 	    /* the specific presentation is not a CSS rule */
 	    ctxt->cssLevel = 0;
             ctxt->destroy = delete;
@@ -967,10 +993,9 @@ ThotBool        delete
           if (*ptr == TEXT(','))
 	    {
 	    ptr++;
-	    ptr = ParseNumber (ptr, &pval);
+	    ptr = ParseCSSUnit (ptr, &pval);
 	    if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	      {
-	      pval.typed_data.unit = STYLE_UNIT_PX;
 	      ctxt->cssLevel = 0;
               ctxt->destroy = delete;
 	      TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);

@@ -14,11 +14,11 @@ ATTR
    xml_space = xml_space_default, xml_space_preserve;
 
    { global attributes for internal processing }
-   Invalid_attribute = TEXT;
-   Ghost_restruct = TEXT;
+   Invalid_attribute = text;
+   Ghost_restruct = text;
    Highlight = Yes_;        { to show the SVG element corresponding to the
 			      current selection in the source view }
-   Namespace = TEXT;        { for children of element foreignObject }
+   Namespace = text;        { for children of element foreignObject }
    IntEmptyShape = yes_, no_;
 
 STRUCT
@@ -27,8 +27,8 @@ STRUCT
 	(ATTR viewBox = text;
 	      x = text;
               y = text;
-	      !height_ = Text;
-	      !width_ = Text)
+	      !height_ = text;
+	      !width_ = text)
         = LIST OF (GraphicsElement) + (XMLcomment, XMLPI)
           with height_ ?= '6cm', width_ ?= '10cm';
 
@@ -36,11 +36,20 @@ STRUCT
         (ATTR fill = text;
 	      stroke = text;
 	      stroke_width = text;
-	      transform = TEXT;
+	      transform = text;
               linestyle_ = solid_, dashed_, dotted_)
         = LIST OF (GraphicsElement);
 
-   { defs }
+   defs
+        (ATTR { requiredFeatures; requiredExtensions; systemLanguage }
+	      externalResourcesRequired = false, true;
+	      fill;
+	      stroke;
+	      stroke_width;
+	      transform;
+	      { graphicsElementEvents })
+        = LIST OF (GraphicsElement);
+
    { path }
 	
    Spline
@@ -160,8 +169,8 @@ STRUCT
    tspan
 	(ATTR x;
               y;
-	      dx = TEXT;
-	      dy = TEXT)
+	      dx = text;
+	      dy = text)
 	= LIST OF (SpanElement);
 
    { tref }
@@ -174,10 +183,26 @@ STRUCT
    { missing-glyph }
    { hkern }
    { vkern }
-   { use }
-   
+
+   use_
+        (ATTR xlink_href = text;
+	      { requiredFeatures; requiredExtensions; systemLanguage }
+	      externalResourcesRequired;
+	      fill;
+	      stroke;
+	      stroke_width;
+	      transform;
+	      { graphicsElementEvents }
+	      x; 
+	      y;
+              width_;
+              height_)
+        = AGGREGATE
+              desc; title; metadata;
+	      END;
+	
    image
-	(ATTR xlink_href = Text;
+	(ATTR xlink_href;
 	      transform;
 	      x; 
 	      y;
@@ -188,7 +213,16 @@ STRUCT
               PICTURE;
 	      END;
 
-   { symbol }
+   symbol_
+	(ATTR externalResourcesRequired;
+	      fill;
+	      stroke;
+	      stroke_width;
+	      viewBox;
+	      preserveAspectRatio = text; 
+	      { graphicsElementEvents })
+        = LIST OF (GraphicsElement);
+	      
    { marker }
    
    desc = TEXT;
@@ -201,15 +235,36 @@ STRUCT
    { radialGradient }
    { stop }
    { pattern }
-   { a }
+
+   a
+        (ATTR { requiredFeatures; requiredExtensions; systemLanguage }
+	      externalResourcesRequired;
+	      fill;
+              stroke;
+	      stroke_width;
+	      transform;
+	      { graphicsElementEvents }
+	      target_ = text)
+	= GraphicsElement;
+
    { view }
    { animate }
    { set }
    { animateMotion }
    { animateColor }
    { animateTransform }
-   { script }
-   { style }
+
+   script
+	(ATTR externalResourcesRequired;
+	      type = text)
+	= TEXT;
+
+   style__
+	(ATTR type;
+	      media = text;
+	      title_ = text)
+	= TEXT;
+
    { color-profile }
    { color-profile-src }
    { font-face }
@@ -241,11 +296,14 @@ STRUCT
 
    GraphicsElement
 	= CASE OF
-	      GraphML; g; Spline; ClosedSpline; rect; circle; ellipse; line_;
-	      polyline; polygon; text_; image; desc; title;
-	      foreignObject; metadata; XLink;
+	      desc; title; metadata; defs;
+	      Spline; ClosedSpline;
+	      text_; rect; circle; ellipse; line_; polyline; polygon;
+	      use_; image; GraphML; g; a;
+	      script; style__; symbol_;
+	      foreignObject; XLink;
 	      END;
-	
+
    TextComponent
 	= CASE OF
 	      tspan;	{ must be the first option, to allow the Return key

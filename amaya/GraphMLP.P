@@ -81,6 +81,18 @@ BOXES
 		END;
 	END;
 
+   DEFS_S:
+	BEGIN
+	Content: Text 'defs';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style; Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
    SPLINE_S:
 	BEGIN
 	Content: Text 'spline';
@@ -201,9 +213,33 @@ BOXES
 		END;
 	END;
 
+   USE_S:
+	BEGIN
+	Content: Text 'use';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style; Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
    IMAGE_S:
 	BEGIN
 	Content: Text 'image';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style; Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+   SYMBOL_S:
+	BEGIN
+	Content: Text 'symbol';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -228,6 +264,42 @@ BOXES
    TITLE_S:
 	BEGIN
 	Content: Text 'title';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style; Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+   A_S:
+	BEGIN
+	Content: Text 'a';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style; Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+   SCRIPT_S:
+	BEGIN
+	Content: Text 'script';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style; Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+   STYLE_S:
+	BEGIN
+	Content: Text 'style';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -331,6 +403,30 @@ BOXES
                 Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
                 END;
         END;
+
+ ATTR_xml_space_default: BEGIN
+	Content: Text ' xml:space=default';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ ATTR_xml_space_preserve: BEGIN
+	Content: Text ' xml:space=preserve';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
 
    ATTR_viewBox: BEGIN
 	Content: Text '  viewBox=';
@@ -565,6 +661,29 @@ BOXES
 
    ATTR_linestyle_dotted: BEGIN
 	Content: Text '  linestyle=dotted';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+   ATTR_extResourcesReq_false: BEGIN
+	Content: Text '  externalResourcesRequired=false';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   ATTR_extResourcesReq_true: BEGIN
+	Content: Text '  externalResourcesRequired=true';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -907,7 +1026,6 @@ BOXES
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
-
    VALUE_xlink_href: BEGIN
 	Content: (xlink_href);
 	Visibility: 0;
@@ -920,8 +1038,8 @@ BOXES
 		END;
 	END;
 
- ATTR_xml_space_default: BEGIN
-	Content: Text ' xml:space=default';
+   ATTR_preserveAspectRatio: BEGIN
+	Content: Text '  preserveAspectRatio=';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -931,9 +1049,20 @@ BOXES
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
+   VALUE_preserveAspectRatio: BEGIN
+	Content: (preserveAspectRatio);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
 
- ATTR_xml_space_preserve: BEGIN
-	Content: Text ' xml:space=preserve';
+   ATTR_target: BEGIN
+	Content: Text '  target=';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -943,7 +1072,86 @@ BOXES
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
+   VALUE_target: BEGIN
+	Content: (target_);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
 
+   ATTR_type: BEGIN
+	Content: Text '  type=';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_type: BEGIN
+	Content: (type);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+   ATTR_media: BEGIN
+	Content: Text '  media=';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_media: BEGIN
+	Content: (media);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+   ATTR_title: BEGIN
+	Content: Text '  title=';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_title: BEGIN
+	Content: (title_);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
 
 { presentation boxes }
 
@@ -1058,9 +1266,28 @@ RULES
 	BEGIN
 	CreateBefore (G_S);
 	CreateWith (VerticalLine);
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
+   defs:
+	BEGIN
+	CreateBefore (DEFS_S);
+	CreateWith (VerticalLine);
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	IN Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	IN Alternate_view
@@ -1076,7 +1303,10 @@ RULES
 	MarginLeft: 5 px;
 	MarginBottom: 5 px;
 	MarginRight: 5 px;
+	if within defs
+	   Visibility: 0;
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		MarginTop: 0;
 		MarginLeft: 0;
 		MarginBottom: 0;
@@ -1099,7 +1329,10 @@ RULES
 	MarginLeft: 5 px;
 	MarginBottom: 5 px;
 	MarginRight: 5 px;
+	if within defs
+	   Visibility: 0;
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		MarginTop: 0;
 		MarginLeft: 0;
 		MarginBottom: 0;
@@ -1122,7 +1355,10 @@ RULES
 	Height: 1.5 cm UserSpecified;
 	HorizPos: Left = Enclosing . Left + 1 pt UserSpecified;
 	VertPos:  Top = Enclosing . Top + 1 pt UserSpecified;
+	if within defs
+	   Visibility: 0;
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
@@ -1141,7 +1377,10 @@ RULES
 	Height: * . Width;
 	HorizPos: VMiddle = Enclosing . Left + 1 cm  UserSpecified;
 	VertPos:  HMiddle = Enclosing . Top + 1 cm  UserSpecified;
+	if within defs
+	   Visibility: 0;
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
@@ -1160,7 +1399,10 @@ RULES
 	Height: 1.5 cm UserSpecified;
 	HorizPos: VMiddle = Enclosing . Left + 1.3 cm  UserSpecified;
 	VertPos:  HMiddle = Enclosing . Top + 0.8 cm  UserSpecified;
+	if within defs
+	   Visibility: 0;
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
@@ -1178,7 +1420,10 @@ RULES
         VertPos:  Top = Enclosing . Top + 1 pt UserSpecified;
         Width: Right = Enclosing . Left + 4 pt;
         Height:  Bottom = Enclosing . Top + 4 pt;
+	if within defs
+	   Visibility: 0;
        	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -1192,7 +1437,10 @@ RULES
 	CreateBefore (POLYLINE_S);
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
+	if within defs
+	   Visibility: 0;
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -1207,7 +1455,10 @@ RULES
 	CreateWith (VerticalLine);
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
+	if within defs
+	   Visibility: 0;
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
@@ -1226,7 +1477,10 @@ RULES
    	HorizPos: Left = Enclosing . Left + 1 pt Userspecified;
    	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
 	HorizRef: Enclosed . HRef;
+	if within defs
+	   Visibility: 0;
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -1245,7 +1499,10 @@ RULES
 	HorizPos: Left = Previous . Right;
 	VertPos:  HRef = Previous . HRef;
 	HorizRef: Enclosed . HRef;
+	if within defs
+	   Visibility: 0;
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -1259,6 +1516,22 @@ RULES
 		END;	
 	END;
 
+   use_:
+	BEGIN
+	CreateBefore (USE_S);
+	CreateWith (VerticalLine);
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	IN Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
    image:
 	BEGIN
 	CreateBefore (IMAGE_S);
@@ -1267,9 +1540,28 @@ RULES
    	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
 	Width: Enclosed . Width;
         Height: Enclosed . Height;
+	if within defs
+	   Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
+   symbol_:
+	BEGIN
+	CreateBefore (SYMBOL_S);
+	CreateWith (VerticalLine);
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	IN Alternate_view
@@ -1312,13 +1604,61 @@ RULES
 		END;
 	END;
 
+   a:
+	BEGIN
+	CreateBefore (A_S);
+	CreateWith (VerticalLine);
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	IN Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
+   script:
+	BEGIN
+	CreateBefore (SCRIPT_S);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   style__:
+	BEGIN
+	CreateBefore (STYLE_S);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
    foreignObject:
 	BEGIN
 	CreateBefore (FOREIGNOBJECT_S);
 	CreateWith (VerticalLine);
    	HorizPos: Left = Enclosing . Left + 1 pt Userspecified;
    	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
+	if within defs
+	   Visibility: 0;
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -1459,6 +1799,20 @@ ATTRIBUTES
         CreateBefore(VALUE_style);
         END;
  
+  xml_space = xml_space_default:
+	CreateBefore (ATTR_xml_space_default);
+
+  xml_space = xml_space_preserve:
+	CreateBefore (ATTR_xml_space_preserve);
+
+  Highlight:
+	BEGIN
+        if TEXT_UNIT
+	   CreateAfter (IndexBox);
+	if NOT TEXT_UNIT
+	   CreateLast (IndexBox);
+	END;
+
   viewBox:
         BEGIN
         CreateBefore(ATTR_viewBox);
@@ -1545,6 +1899,11 @@ ATTRIBUTES
 	IN Structure_view
 		LineStyle: Enclosing =;
 	END;
+
+  externalResourcesRequired = false:
+	CreateBefore (ATTR_extResourcesReq_false);
+  externalResourcesRequired = true:
+	CreateBefore (ATTR_extResourcesReq_true);
 
   points:
 	BEGIN
@@ -1641,18 +2000,34 @@ ATTRIBUTES
 	CreateBefore (VALUE_xlink_href);
 	END;
 
-  Highlight:
+  preserveAspectRatio:
 	BEGIN
-        if TEXT_UNIT
-	   CreateAfter (IndexBox);
-	if NOT TEXT_UNIT
-	   CreateLast (IndexBox);
+	CreateBefore (ATTR_preserveAspectRatio);
+	CreateBefore (VALUE_preserveAspectRatio);
 	END;
 
-  xml_space = xml_space_default:
-	CreateBefore (ATTR_xml_space_default);
+  target_:
+	BEGIN
+	CreateBefore (ATTR_target);
+	CreateBefore (VALUE_target);
+	END;
 
-  xml_space = xml_space_preserve:
-	CreateBefore (ATTR_xml_space_preserve);
+  type:
+	BEGIN
+	CreateBefore (ATTR_type);
+	CreateBefore (VALUE_type);
+	END;
 
+  media:
+	BEGIN
+	CreateBefore (ATTR_media);
+	CreateBefore (VALUE_media);
+	END;
+
+  title_:
+	BEGIN
+	CreateBefore (ATTR_title);
+	CreateBefore (VALUE_title);
+	END;
+  
 END

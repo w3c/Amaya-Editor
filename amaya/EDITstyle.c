@@ -276,7 +276,7 @@ NotifyElement      *event;
 
 
 /*----------------------------------------------------------------------
-  ChangeStyles
+  DeleteStyle
   the STYLE element will be deleted in the document HEAD.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -311,18 +311,18 @@ NotifyAttribute    *event;
   int                 braces;
 
   buffer = GetStyleContents (event->element);
-  /* compare both srings */
+  /* compare both strings */
   i = 0;
   ptr1 = buffer;
   previousEnd = i;
   pEnd = ptr1;
   braces = 0;
   if (!OldBuffer)
-    /* mange the whole style element */
+    /* This is a brand new style element */
     ApplyCSSRules (event->element, ptr1, event->document, FALSE);
   else
     {
-      /* mange only differences */
+      /* handle only differences */
       while (OldBuffer[i] == *ptr1 && *ptr1 != WC_EOS)
 	{
 	  if (i > 0 && OldBuffer[i-1] == TEXT('{'))
@@ -341,7 +341,7 @@ NotifyAttribute    *event;
 	ptr1++;
 	}
       
-      /* now ptr1 and OldBuffer[i] point different strings */
+      /* now ptr1 and OldBuffer[i] point to different strings */
       if (*ptr1 != WC_EOS)
 	{
 	  ptr2 = ptr1 + ustrlen (ptr1);

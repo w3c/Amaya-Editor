@@ -4206,8 +4206,8 @@ CSSInfoPtr      css;
 }
 
 /*----------------------------------------------------------------------
-   ParseStyleDeclaration: parse one HTML style declaration    
-   stored in the header of a HTML document                       
+   ParseStyleDeclaration: parse a style declaration    
+   stored in the style element of a document                       
    We expect the style string to be of the form:                   
    [                                                                
    e.g: pinky, awful { color: pink, font-family: helvetica }        
@@ -4549,7 +4549,7 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-  ApplyCSSRules: parse an CSS Style description stored in the
+  ApplyCSSRules: parse a CSS Style description stored in the
   header of a HTML document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__

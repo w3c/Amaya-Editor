@@ -45,6 +45,18 @@ RULES
 	create 'g>\12' after;
 	END;
 
+   defs:
+	BEGIN
+	create SOT;
+	create 'defs';
+	create attributes;
+	create CloseTagNL;
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'defs>\12' after;
+	END;
+
    Spline:
 	BEGIN
 	create SOT;
@@ -221,6 +233,18 @@ RULES
 	create 'tspan>\12' after;
 	END;
 
+   use_:
+	BEGIN
+	create SOT;
+	create 'use';
+	create attributes;
+	create '>';
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'use>\12' after;
+	END;
+
    image:
 	BEGIN
 	create SOT;
@@ -238,6 +262,18 @@ RULES
 		create SCT after;
 		create 'image>\12' after;
 		END;
+	END;
+
+   symbol_:
+	BEGIN
+	create SOT;
+	create 'symbol';
+	create attributes;
+	create '>';
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'symbol>\12' after;
 	END;
 
    desc:
@@ -262,6 +298,44 @@ RULES
 	indent -2 after;
 	create SCT after;
 	create 'title>\12' after;
+	END;
+
+   a:
+	BEGIN
+	create SOT;
+	create 'a';
+	create attributes;
+	create '>';
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'a>\12' after;
+	END;
+
+   script:
+	BEGIN
+	create SOT;
+	create 'script';
+	create attributes;
+	create '><![CDATA[\12';
+	indent +2;
+	indent -2 after;
+        create '\12]]>' after;
+	create SCT after;
+	create 'script>\12' after;
+	END;
+
+   style__:
+	BEGIN
+	create SOT;
+	create 'style';
+	create attributes;
+	create '><![CDATA[\12';
+	indent +2;
+	indent -2 after;
+        create '\12]]>' after;
+	create SCT after;
+	create 'style>\12' after;
 	END;
 
    foreignObject:
@@ -346,6 +420,17 @@ ATTRIBUTES
         create DoubleQuote;
         end;
  
+   xml_space = xml_space_default:
+	BEGIN
+	create SAN;
+	create 'xml:space="default"';
+	END;
+   xml_space = xml_space_preserve:
+	BEGIN
+	create SAN;
+	create 'xml:space="preserve"';
+	END;
+
    Namespace:
 	begin
         create SAN;
@@ -440,6 +525,17 @@ ATTRIBUTES
 	BEGIN
 	create SAN;
 	create 'linestyle="dotted"';
+	END;
+
+   externalResourcesRequired = false:
+	BEGIN
+	create SAN;
+	create 'externalResourcesRequired="false"';
+	END;
+   externalResourcesRequired = true:
+	BEGIN
+	create SAN;
+	create 'externalResourcesRequired="true"';
 	END;
 
    points:
@@ -567,15 +663,46 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-   xml_space = xml_space_default:
+   preserveAspectRatio:
 	BEGIN
 	create SAN;
-	create 'xml:space="default"';
+	create 'preserveAspectRatio="';
+	create preserveAspectRatio;
+	create DoubleQuote;
 	END;
-   xml_space = xml_space_preserve:
+
+   target_:
 	BEGIN
 	create SAN;
-	create 'xml:space="preserve"';
+	create 'target="';
+	create target_;
+	create DoubleQuote;
 	END;
+
+   type:
+	BEGIN
+	create SAN;
+	create 'type="';
+	create type;
+	create DoubleQuote;
+	END;
+
+   media:
+	BEGIN
+	create SAN;
+	create 'media="';
+	create media;
+	create DoubleQuote;
+	END;
+
+   title_:
+	BEGIN
+	create SAN;
+	create 'title="';
+	create title_;
+	create DoubleQuote;
+	END;
+
+#include "Text_SGML.inc"
 
 END

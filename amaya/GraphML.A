@@ -22,6 +22,12 @@ ELEMENTS
 	ElemGraphModify.Post -> ControlPointChanged;
    ClosedSpline:
 	ElemGraphModify.Post -> ControlPointChanged;
+   rect:
+	ElemGraphModify.Post -> GraphicsChanged;
+   circle:
+	ElemGraphModify.Post -> GraphicsChanged;
+   ellipse:
+	ElemGraphModify.Post -> GraphicsChanged;
    polyline:
 	ElemGraphModify.Post -> ControlPointChanged;
    polygon:
@@ -31,24 +37,24 @@ ELEMENTS
 	ElemNew.Post ->         TspanCreated;
 	ElemPaste.Post ->       TspanCreated;
 	END;
+   style__:
+	BEGIN
+	ElemTextModify.Pre ->   ChangeStyle;
+	ElemTextModify.Post ->  StyleChanged;
+	ElemDelete.Pre ->       DeleteStyle;
+	END;
    foreignObject:
 	BEGIN
 	ElemExport.Pre ->       ExportForeignObject;
 	ElemGraphModify.Post -> GraphicsChanged;
 	END;
-   rect:
-	ElemGraphModify.Post -> GraphicsChanged;
-   circle:
-	ElemGraphModify.Post -> GraphicsChanged;
-   ellipse:
-	ElemGraphModify.Post -> GraphicsChanged;
 
    GRAPHICS_UNIT:
 	ElemDelete.Post ->      GraphLeafDeleted;
    PICTURE_UNIT:
 	BEGIN
-	ElemNew.Post -> UpdateSRCattribute;
-	ElemTextModify.Post -> UpdateSRCattribute;
+	ElemNew.Post ->         UpdateSRCattribute;
+	ElemTextModify.Post ->  UpdateSRCattribute;
 	END;
 
 ATTRIBUTES

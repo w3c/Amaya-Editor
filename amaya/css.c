@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -558,7 +558,8 @@ ThotBool        removed;
 		  (css->localName && !ustrcmp (url, css->localName))))
 	/* an external CSS */
 	found = TRUE;
-      else if (!url && css->category == CSS_DOCUMENT_STYLE && css->documents[doc])
+      else if (!url && css->category == CSS_DOCUMENT_STYLE &&
+	       css->documents[doc])
 	found = TRUE;
       else
 	css = css->NextCSS;

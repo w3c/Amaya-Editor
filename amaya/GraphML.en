@@ -11,13 +11,18 @@ PICTURE_UNIT: \240
 
 GraphML: svg
 style_: style
+xml_space: xml:space
 xml_space_default: default
 xml_space_preserve: preserve
-xml_space: xml:space
 yes_: yes
 no_: no
 height_: height
 width_: width
+stroke_width: stroke-width
 line_: line
 text_: text
-
+use_: use
+symbol_: symbol
+target_: target
+style__: style
+title_: title
