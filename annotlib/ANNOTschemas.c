@@ -9,6 +9,12 @@
  * ANNOTschemas.c : parses an RDF Schema describing some annotation
  * classes and properties.
  *
+ * The schema is parsed into linked data structures that, once,
+ * created, are expected to last for the remaining lifetime of
+ * the application and must be freed as an entire unit.  This
+ * permits the use of simple (memory address) handles rather
+ * than strings (URIs) for Resources.
+ *
  * NOTE: the code assumes libwww's RDF parser.
  *
  * Author: Ralph R. Swick (W3C/MIT)
@@ -221,35 +227,22 @@ RDFResourceP ANNOT_FindRDFResource( listP, name, create )
      ThotBool create;
 #endif /* __STDC__ */
 {
-  static char* last_name = NULL;
-  static unsigned int last_length = 0;
-  static RDFResourceP resource = NULL;
+  RDFResourceP resource;
 
   if (!name)
     return NULL;
 
-  if (!last_name || strcmp(last_name, name)) {
-    /* search for resource in list */
-    resource = _ListSearchResource (*listP, name);
-    if ((!resource || !resource->name) && create)
-      {
-	resource = TtaGetMemory (sizeof(RDFResource));
+  /* search for resource in list */
+  resource = _ListSearchResource (*listP, name);
+  if ((!resource || !resource->name) && create)
+    {
+      resource = TtaGetMemory (sizeof(RDFResource));
 
-	resource->name = TtaStrdup (name);
-	resource->statements = NULL;
-	resource->class = NULL;
-	List_add (listP, (void*) resource);
-      }
-    if (last_length < ustrlen(name))
-      {
-	if (last_name)
-	  TtaFreeMemory (last_name);
-
-	last_length = 2*ustrlen(name);
-	last_name = TtaAllocString (last_length);
-      }
-    strcpy(last_name, name);
-  }
+      resource->name = TtaStrdup (name);
+      resource->statements = NULL;
+      resource->class = NULL;
+      List_add (listP, (void*) resource);
+    }
 
   return resource;
 }
@@ -388,9 +381,10 @@ void ANNOT_ReadSchema (doc, namespace_URI)
       TtaSetStatus (doc, 1, "Annotation schema downloaded", NULL); /* @@ */
 }
 
-#ifdef RRS_DEBUG
+
+#ifdef RDFSCHEMA_DEBUG
 /*------------------------------------------------------------
-   ANNOT_DumpSchema
+   SCHEMA_DumpRDFResources
   ------------------------------------------------------------
    Dumps the schema model to stderr for debugging
   ------------------------------------------------------------*/
@@ -413,4 +407,40 @@ int SCHEMA_DumpRDFResources()
 
   return entries;
 }
-#endif /* RRS_DEBUG */
+#endif /* RDFSCHEMA_DEBUG */
+
+
+/*------------------------------------------------------------
+   SCHEMA_FreeRDFResource()
+  ------------------------------------------------------------
+   Frees the dynamic heap resources for a singe RDF Resource
+  ------------------------------------------------------------*/
+static ThotBool SCHEMA_FreeRDFResource( void *item )
+{
+  RDFResourceP r = (RDFResourceP)item;
+
+  TtaFreeMemory (r->name);
+  List_delAll (&r->statements, List_delCharObj);
+  if (r->class)
+    {
+      List_delAll (&r->class->instances, NULL);
+      List_delAll (&r->class->subClasses, NULL);
+      TtaFreeMemory ((CHAR_T *)r->class);
+    }
+  return TRUE;
+}
+
+
+/*------------------------------------------------------------
+   SCHEMA_FreeRDFModel()
+  ------------------------------------------------------------
+   Frees the dynamic heap for all resources in an RDF Model
+  ------------------------------------------------------------*/
+#ifdef __STDC__
+void SCHEMA_FreeRDFModel()
+#else /* __STDC__ */
+void SCHEMA_FreeRDFModel()
+#endif /* __STDC__ */
+{
+  List_delAll (&annot_schema_list, SCHEMA_FreeRDFResource);
+}

@@ -15,6 +15,7 @@ extern char *ANNOT_GetLabel ( List **listP,
                               RDFResourceP r );
 extern void ANNOT_ReadSchema ( Document doc,
                                char *namespace_URI );
+void SCHEMA_FreeRDFModel();
 
 #else /* __STDC__ */
 
@@ -27,6 +28,7 @@ extern char *ANNOT_GetLabel (/* List **listP,
                                 RDFResourceP r */);
 extern void ANNOT_ReadSchema (/* Document doc,
                                  char *namespace_URI */);
+void SCHEMA_FreeRDFModel();
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

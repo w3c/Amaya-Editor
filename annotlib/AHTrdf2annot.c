@@ -46,6 +46,10 @@ static const char * HTTP_CONTENT_TYPE   = "ContentType";
 static const char * RDFMS_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 static const char * RDFMS_TYPE = "type";
 
+static char* find_last_annotURL = NULL;
+static int find_last_length = 0;
+static AnnotMeta *find_last_annot = NULL;
+
 /********************** global variables ***********************/
 
 List *annot_list;  /* a list of annotations */
@@ -135,15 +139,20 @@ static ThotBool contains(char *input, const char *s1, const char * s2)
   return FALSE;
 }
 
+/* ------------------------------------------------------------
+   FindAnnot
+
+   internal routine to optimize searching for an annotation
+   on the list of annotations.
+ ------------------------------------------------------------ */
 static AnnotMeta* FindAnnot( List** listP, char* annot_url, ThotBool create )
 {
-  static char* last_annotURL = NULL;
-  static int last_length = 0;
-  static AnnotMeta *annot = NULL;
+  AnnotMeta *annot = find_last_annot;
+  int url_length;
 
   /*  uri = HTLocalToWWW (file_name, "file:"); */
 
-  if (!last_annotURL || strcmp(last_annotURL, annot_url)) {
+  if (!find_last_annotURL || strcmp(find_last_annotURL, annot_url)) {
     /* search for annotation in list */
     annot = AnnotList_searchAnnot (*listP, annot_url, AM_ANNOT_URL);
     if (!annot && create)
@@ -152,18 +161,36 @@ static AnnotMeta* FindAnnot( List** listP, char* annot_url, ThotBool create )
 	annot->annot_url = TtaStrdup (annot_url);
 	List_add (listP, (void*) annot);
       }
-    if (last_length < ustrlen(annot_url))
+    url_length = ustrlen(annot_url) + 1;
+    if (find_last_length < url_length)
       {
-	if (last_annotURL)
-	  TtaFreeMemory (last_annotURL);
+	if (find_last_annotURL)
+	  TtaFreeMemory (find_last_annotURL);
 
-	last_length = 2*ustrlen(annot_url);
-	last_annotURL = TtaAllocString (last_length);
+	find_last_length = 2*url_length;
+	find_last_annotURL = TtaAllocString (find_last_length);
       }
-    strcpy(last_annotURL, annot_url);
+    strcpy(find_last_annotURL, annot_url);
+    find_last_annot = annot;
   }
 
   return annot;
+}
+
+/* ------------------------------------------------------------
+   Finish_FindAnnot
+
+   Returns dynamic resources allocated in FindAnnot
+ ------------------------------------------------------------ */
+
+static void Finish_FindAnnot(void)
+{
+  if (find_last_annotURL)
+    {
+      TtaFreeMemory (find_last_annotURL);
+      find_last_annotURL = NULL;
+      find_last_length = 0;
+    }
 }
 
 /* ------------------------------------------------------------
@@ -259,8 +286,6 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 List *RDF_parseFile (char *file_name, AnnotFileType type)
 {
   annot_list = NULL;
-  (void)FindAnnot (&annot_list, "***reset***", FALSE);
-
 
   if (type != ANNOT_LIST)
       return NULL;
@@ -271,6 +296,8 @@ List *RDF_parseFile (char *file_name, AnnotFileType type)
       annot_list = NULL;
       return NULL;
     }
+
+  Finish_FindAnnot();
 
   /* output whatever we parsed */
   AnnotList_print (annot_list);
@@ -304,4 +331,3 @@ int main (int argc, char *argv[])
     }
 }
 #endif /* _RDFDEBUG */
-

@@ -390,6 +390,7 @@ void ANNOT_Quit ()
     TtaFreeMemory (annotPostServer);
   if (annotAlgaeText)
     TtaFreeMemory (annotAlgaeText);
+  SCHEMA_FreeRDFModel();
 }
 
 /*-----------------------------------------------------------------------
@@ -588,10 +589,6 @@ View view;
 
       schema_init = TRUE;
     }
-
-#ifdef RRS_DEBUG
-  SCHEMA_DumpRDFResources();
-#endif /* RRS_DEBUG */
 
   /* don't annotate other annotations, text only documents, or
      graphic documents */
