@@ -854,7 +854,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 
 	/* update desc->status in order to alert DisplayImage if the
 	   image was not found */	
-	if ((status != 200) && (status != 0))
+	if (status != 200 && status != 0)
 	  desc->status = IMAGE_NOT_LOADED;
 	else
 	  desc->status = IMAGE_LOADED;
@@ -875,8 +875,11 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	    /* the image may be included using either an SRC, an EMBED,
 	       an OBJECT, a use or a tref element */
 	    if (ctxEl->callback)
-	      ctxEl->callback (doc, ctxEl->currentElement, desc->tempfile,
-			       ctxEl->extra, TRUE);
+	      {
+		if (desc->status == IMAGE_LOADED)
+		  ctxEl->callback (doc, ctxEl->currentElement, desc->tempfile,
+				   ctxEl->extra, TRUE);
+	      }
 	    else
 	      {
 		elType = TtaGetElementType (ctxEl->currentElement);
