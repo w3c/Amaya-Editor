@@ -170,6 +170,7 @@ EXCEPT
    tline:               NoMove, NoResize, NoShowBox, NoCreate, NoCut;
    text_:               NoMove, NoResize, NoShowBox, ReturnCreateWithin, NoCreate, NoCut, NoSelect;
    timing_text:         NoMove, NoResize, ReturnCreateWithin, NoCreate, NoCut;
+   text_id:             NoMove, NoResize, ReturnCreateWithin, NoCreate, NoCut;
    image_slider:  	    MoveResize,  NoResize, NoShowBox, NoVMove, NoCut, NoSelect;
    image_collapse:      NoMove, NoResize, NoShowBox, NoCut;
    image_keypos:        NoMove, NoResize, NoShowBox, NoCut; 

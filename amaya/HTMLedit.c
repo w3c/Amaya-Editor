@@ -2195,6 +2195,9 @@ void UpdateAttrID (NotifyAttribute * event)
          element */
          AttrToSpan (event->element, event->attribute, event->document);
       }
+#ifdef _SVGANIM
+   Update_element_id_on_timeline (event); 
+#endif /* _SVGANIM */
 }
 
 

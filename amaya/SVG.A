@@ -253,4 +253,16 @@ ATTRIBUTES
 	AttrModify.Post -> AttrXlinkHrefChanged;
 	AttrDelete.Pre ->  DeleteAttrXlinkHref;
 	END;
+   begin_:
+   BEGIN
+    AttrCreate.Post -> AttrAnimTimeChanged;
+	AttrModify.Post -> AttrAnimTimeChanged;
+	AttrDelete.Post -> AttrAnimTimeChanged;
+	END;
+   dur:
+   BEGIN
+	AttrCreate.Post -> AttrAnimTimeChanged;
+	AttrModify.Post -> AttrAnimTimeChanged;
+	AttrDelete.Post -> AttrAnimTimeChanged;
+   END;
 END

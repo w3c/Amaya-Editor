@@ -15,10 +15,15 @@ ELEMENTS
 	PRuleModify.Post -> Timeline_exp_period_modified;
 
    col_period:
+   BEGIN
+    PRuleModify.Pre ->  Timeline_col_period_pre_modify;
 	PRuleModify.Post -> Timeline_col_period_modified;
+   END;
+
 
    image_slider:
     PRuleModify.Post -> Timeline_finished_moving_slider;
+
 
 
 ATTRIBUTES

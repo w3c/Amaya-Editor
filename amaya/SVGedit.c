@@ -2259,6 +2259,19 @@ ThotBool DeleteAttrXlinkHref (NotifyAttribute *event)
   return TRUE;
 }
 
+
+/*----------------------------------------------------------------------
+ AttrAnimTimeChanged
+ Callback to update timeline
+ -----------------------------------------------------------------------*/
+void AttrAnimTimeChanged (NotifyAttribute *event)
+{
+#ifdef _SVGANIM
+	Update_period_position_and_size (event->document, event->element);
+#endif /* _SVGANIM */
+}
+
+
 #if 0
 /*** This is an experiment to test how SVG could be animated ***/
 /*** Works for document ~quint/Talks/AC-Nov00/all.htm only   ***/
@@ -2496,4 +2509,5 @@ void TextChangedInGroup (NotifyOnTarget *event)
     }
   /* that's it! */
 }
+
 #endif /* _SVG */
