@@ -227,6 +227,8 @@ bool AmayaApp::OnInit()
  */
 int AmayaApp::OnExit()
 {
+  delete m_pAmayaInstance;
+
   // flush the clipboard in order to keep current text for further use in other applications
   wxTheClipboard->Flush();
 
