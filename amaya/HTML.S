@@ -80,22 +80,15 @@ STRUCT
 
   DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
 	
-  Head_misc =
-	CASE OF
-	STYLE_;
-	SCRIPT_;
-	META;
-	LINK;
-	END;
   HEAD								{ HEAD }
      (ATTR profile = Text) =
 	AGGREGATE
-	Document_URL = TEXT - (Head_misc);
-	TITLE = TEXT - (Head_misc);				{ TITLE }
+	Document_URL = TEXT - (STYLE_, SCRIPT_, META, LINK);
+	TITLE = TEXT - (STYLE_, SCRIPT_, META, LINK);		{ TITLE }
       ? ISINDEX (ATTR Prompt = Text) = CONSTANT C_Empty;	{ ISINDEX }
 		    { prompt }
       ? BASE;							{ BASE }
-	END + (Object, Head_misc);
+	END + (Object, STYLE_, SCRIPT_, META, LINK);
 
   STYLE_							{ STYLE }
      (ATTR Notation = Text; media = Text) =
@@ -874,7 +867,6 @@ EXCEPT
 	Document_URL:	Hidden, NoSpellCheck, NoCut;
 	C_Empty:	Hidden, NoSpellCheck, NoSelect;
 	C_BR:		SelectParent;
-	Head_misc:	Hidden;
 	Frames:		Hidden;
 	FRAMESET:	NoCreate;	{ prevent a Return at the end of the
 					  document from creating a FRAMESET }
