@@ -629,6 +629,7 @@ char               *docName;
    if (IsW3Path (tempOrgName)) {
       /* the name is complete, go to the Sixth Step */
       strcpy (newName, tempOrgName);
+      SimplifyUrl (&newName);
       /* verify if the URL has the form "protocol://server:port" */
       ptr = AmayaParseUrl (newName, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
       if (ptr && !strcmp (ptr, newName)) /* it has this form, we complete it by adding a DIR_STR  */
@@ -854,7 +855,7 @@ HTURI               *parts;
 
   memset (parts, '\0', sizeof (HTURI));
   /* Look for fragment identifier */
-  if ((p = strrchr(name, '#')) != NULL)
+  if ((p = strchr(name, '#')) != NULL)
     {
       *p++ = '\0';
       parts->fragment = p;
@@ -1029,7 +1030,6 @@ int            wanted;
 	      p[1]=0;
 	      /* Add given one */
 	      strcat (result, given.relative);
-	      /*SimplifyUrl (&result);*/
 	    }
 	}
       else if (given.relative)
@@ -1279,24 +1279,23 @@ char        **url;
 		{
 		  orig = p + 1;
 		  dest = (*(p+2)!=used_sep) ? p+2 : p+3;
-		  while ((*orig++ = *dest++)); /* Remove a slash and a dot */
+		  while ((*orig++ = *dest++)); /* Remove a used_sep and a dot*/
 		  end = orig - 1;
 		}
 	      else if (*(p+1)=='.' && *(p+2)=='.' && (*(p+3)==used_sep || !*(p+3)))
 		{
 		  newptr = p;
-		  while (newptr>path && *--newptr!=used_sep); /* prev slash */
-		  if (!strncmp(newptr, "/../", 4))
-		    {
-		      orig = newptr + 1;
-		      dest = (*(p+3)!=used_sep) ? p+3 : p+4;
-		      while ((*orig++ = *dest++)); /* Remove /xxx/.. */
-		      end = orig-1;
-		      /* Start again with prev slash */
-		      p = newptr;
-		    }
+		  while (newptr>path && *--newptr!=used_sep); /* prev used_sep */
+		  if (*newptr == used_sep)
+		    orig = newptr + 1;
 		  else
-		    p++;
+		    orig = newptr;
+
+		  dest = (*(p+3) != used_sep) ? p+3 : p+4;
+		  while ((*orig++ = *dest++)); /* Remove /xxx/.. */
+		  end = orig-1;
+		  /* Start again with prev slash */
+		  p = newptr;
 		}
 	      else if (*(p+1) == used_sep)
 		{
@@ -1319,7 +1318,7 @@ char        **url;
     /*
     **  Check for host/../.. kind of things
     */
-    if (*path=='/' && *(path+1)=='.' && *(path+2)=='.' && (!*(path+3) || *(path+3)=='/'))
+    if (*path==used_sep && *(path+1)=='.' && *(path+2)=='.' && (!*(path+3) || *(path+3)==used_sep))
 	*(path+1) = EOS;
 
   return;
@@ -1466,20 +1465,24 @@ char            *relatedName;
       else
 	{
 	  levels= 0; 
-	  for (; *q && (*q != '#'); q++)
+	  for (; *q && *q != '#' && *q!=';' && *q!='?'; q++)
 	    if (*q == DIR_SEP)
 	      levels++;
 	  
-	  result[0] = 0;
+	  result[0] = EOS;
 	  for (;levels; levels--)
 	    strcat (result, "../");
 	  strcat (result, last_slash+1);
 	} 
-      
+
+      if (!*result)
+	strcat (result, "./");
+
       /* exactly the right length */
       len = strlen (result);
       if ((return_value = (char *) TtaGetMemory (len + 1)) != NULL)
 	strcpy (return_value, result);
+
     }
 # ifdef _WINDOWS
   len = strlen (return_value);

@@ -495,7 +495,7 @@ char               *data;
 #endif
 {
   int                 val;
-  PRuleInfoPtr        rpi;
+  PRuleInfoPtr        rpi = NULL;
   char                tempfile[MAX_LENGTH];
   char                tempname[MAX_LENGTH];
   char               *s;
