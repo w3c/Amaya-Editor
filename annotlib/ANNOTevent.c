@@ -59,6 +59,7 @@ typedef struct _DELETE_context {
   Document source_doc;
   Document annot_doc;
   CHAR_T *annot_url;
+  CHAR_T *output_file;
   Element annotEl;
   ThotBool annot_is_remote;
 } DELETE_context;
@@ -1024,6 +1025,7 @@ void *context;
    Document source_doc;
    Document annot_doc;
    CHAR_T  *annot_url;
+   CHAR_T  *output_file;
    Element  annotEl;
    ThotBool annot_is_remote;
 
@@ -1038,6 +1040,7 @@ void *context;
    annot_url = ctx->annot_url;
    annotEl = ctx->annotEl;
    annot_is_remote = ctx->annot_is_remote;
+   output_file = ctx->output_file;
 
    if (status == HT_OK)
      {
@@ -1064,6 +1067,12 @@ void *context;
      }
    
    TtaFreeMemory (annot_url);
+   if (output_file)
+     {
+       if (*output_file != EOS)
+	 TtaFileUnlink (output_file);
+       TtaFreeMemory (output_file);
+     }
    TtaFreeMemory (ctx);
    /* clear the status line if there was no error*/
    if (status == HT_OK && doc == source_doc)
@@ -1089,7 +1098,12 @@ void ANNOT_Delete (document, view)
   AttributeType    attrType;
   Attribute	   attr;
   CHAR_T          *annot_url;
+  CHAR_T          *annot_server;
+  CHAR_T          *form_data;
+  CHAR_T          *char_ptr;
+  List            *list_ptr;
   int              i;
+  int              res;
   AnnotMeta       *annot;
   ThotBool         annot_is_remote;
   DELETE_context *ctx;
@@ -1185,13 +1199,11 @@ void ANNOT_Delete (document, view)
       /* @@ JK: I may need to split the url and get the separate form_data */
       if (IsFilePath (annot_url))
 	{
-	  CHAR_T *norm_url;
-
 	  annot_is_remote = FALSE;
-	  norm_url = TtaGetMemory (ustrlen (annot_url));
-	  NormalizeFile (annot_url, norm_url, AM_CONV_NONE);
-	  annot_doc = IsDocumentLoaded (norm_url, NULL);
-	  TtaFreeMemory (norm_url);
+	  char_ptr = TtaGetMemory (ustrlen (annot_url));
+	  NormalizeFile (annot_url, char_ptr, AM_CONV_NONE);
+	  annot_doc = IsDocumentLoaded (char_ptr, NULL);
+	  TtaFreeMemory (char_ptr);
 	}
       else
 	{
@@ -1206,10 +1218,64 @@ void ANNOT_Delete (document, view)
   ctx->annot_url = annot_url;
   ctx->annotEl = annotEl;
   ctx->annot_is_remote = annot_is_remote;
+  if (annot_is_remote)
+    /* make some space to store any output file that the server would send */
+    ctx->output_file = TtaGetMemory (MAX_LENGTH + 1);
+  else
+    ctx->output_file = NULL;
 
   if (annot_is_remote)
     {
       /* do the post call */
+
+      /* find the annotation server by comparition */
+      list_ptr = annotServers;
+      annot_server = NULL;
+      while (list_ptr)
+	{
+	  annot_server = list_ptr->object;
+	  if (!ustrcasecmp (annot_server, TEXT("localhost")))
+	    continue;
+	  if (!ustrncasecmp (annot_server, annot_url, ustrlen (annot_server)))
+	    break;
+	  list_ptr = list_ptr->next;
+	}
+      annot_server = "http://tuvalu:2030/cgi-script";
+      if (annot_server)
+	{
+	  /* compute the form_data */
+	  i =  (sizeof (TEXT("delete_source="))
+				   + ustrlen (annot_url)
+				   + sizeof (TEXT("&rdftype=http://www.w3.org/1999/xx/annotation-ns#/Annotation"))
+				   + 1);
+	  form_data = TtaGetMemory (sizeof (TEXT("delete_source="))
+				   + ustrlen (annot_url)
+				   + sizeof (TEXT("&rdftype=http://www.w3.org/1999/xx/annotation-ns#/Annotation"))
+				   + 1);
+	  usprintf (form_data,
+		    "delete_source=%s&rdftype=http://www.w3.org/1999/xx/annotation-ns#Annotation",
+		    annot_url);
+	  /* launch the request */
+	  res = GetObjectWWW (doc,
+			      annot_server,
+			      form_data,
+			      ctx->output_file,
+			      AMAYA_ASYNC | AMAYA_FORM_POST | AMAYA_FLUSH_REQUEST,
+			      NULL,
+			      NULL, 
+			      (void *)  ANNOT_Delete_callback,
+			      (void *) ctx,
+			      NO,
+			      NULL);
+	  TtaFreeMemory (form_data);
+	  /* do something with res in case of error (invoke the callback? */
+	}
+      else
+	{
+	  /* invoke the callback with an error */
+	  ANNOT_Delete_callback (doc, HT_ERROR, NULL, NULL, NULL,
+				 (void *) ctx);
+	}
     }
   else
     {
@@ -1219,4 +1285,3 @@ void ANNOT_Delete (document, view)
   /* @@ JK: Todo rename the function to LINK_SaveIndex, as that's what it's
      doing */
 }
-
