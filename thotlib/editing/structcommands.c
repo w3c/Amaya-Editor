@@ -2496,11 +2496,14 @@ boolean             Before;
     {
       elConst = FALSE;
       empty = FALSE;
-      InsertionPoint = (firstSel == lastSel 
-			&& firstChar == lastChar
-			&& firstSel->ElTerminal
-			&& ((firstSel->ElLeafType == LtText && firstChar > 0)
-			    || firstSel->ElLeafType == LtPicture));
+      InsertionPoint = (firstSel == lastSel  &&
+			firstSel->ElTerminal &&
+			((firstSel->ElLeafType == LtText && firstChar > 0 &&
+			  firstChar == lastChar)            ||
+			 firstSel->ElLeafType == LtPicture  ||
+			 firstSel->ElLeafType == LtGraphics ||
+			 firstSel->ElLeafType == LtPolyLine ||
+			 firstSel->ElLeafType == LtSymbol     ));
       /* Peut-on considerer la selection courante comme un simple point */
       /* d'insertion ? */
       if (!InsertionPoint)
@@ -2622,15 +2625,23 @@ boolean             Before;
 	      selHead = (firstSel == lastSel &&
 			 firstSel->ElPrevious == NULL &&
 			 lastSel->ElTerminal &&
-			 (lastSel->ElLeafType == LtText || lastSel->ElLeafType == LtPicture) &&
-			 firstChar <= 1);
+			 ((lastSel->ElLeafType == LtText && firstChar <= 1) ||
+			  (lastSel->ElLeafType == LtPicture && firstChar == 0) ||
+			  lastSel->ElLeafType == LtGraphics ||
+			  lastSel->ElLeafType == LtPolyLine ||
+			  lastSel->ElLeafType == LtSymbol ));
 	      /* la selection est-t-elle a la fin de la derniere feuille
 		 de texte d'un element */
 	      selTail = (firstSel == lastSel &&
 			 lastSel->ElNext == NULL &&
 			 lastSel->ElTerminal &&
-			 (lastSel->ElLeafType == LtText || lastSel->ElLeafType == LtPicture) &&
-			 firstChar > lastSel->ElTextLength);
+			 ((lastSel->ElLeafType == LtText &&
+			   firstChar > lastSel->ElTextLength) ||
+			  (lastSel->ElLeafType == LtPicture &&
+			   firstChar > 0) ||
+			  lastSel->ElLeafType == LtGraphics ||
+			  lastSel->ElLeafType == LtPolyLine ||
+			  lastSel->ElLeafType == LtSymbol ));
 	    }
 	  
 	  /* verifie si la selection est en fin ou debut de paragraphe */
