@@ -96,7 +96,6 @@ TABLE {
 }
 
 TABLE.characters {border : thin solid;
-border-color: black;
 }
 
 TD {
@@ -257,23 +256,17 @@ BODY  {
 EM  {
   font-style: normal;
   font-weight:  bold;
-  color:  black;
-  background: white;
   }
 
 STRONG  {
   font-style: italic;
-  background: white;
   font-weight:  bold;
-  color:  black;
   }
 
 EM STRONG, STRONG EM  {
   text-transform: uppercase;
   font-style: normal;
   font-weight:  bolder;
-  background: white;
-  color:  black;
   }
 
 B {
@@ -323,7 +316,6 @@ ACRONYM {
 
 H1, H2, H3, H4, H5, H6, DT, TH, THEAD, TFOOT  {
   color:  #036;
-  background: white;
   }
 
 HR  {
@@ -335,11 +327,9 @@ HR  {
   }
 
 COL, COLGROUP, TABLE, TBODY, TD, TR {
-  color:  black;
   text-decoration:  none;
   border-color: black;
   border-style: none;
-  background: white;
   }
 
 A:link  {

@@ -275,10 +275,17 @@ RULES
 	Create 'br';
 	Remove;
 	Create Attributes;
+	if not within Preformatted
 #ifdef XML
-	Create ' />\12';
+	   Create ' />\12';
 #else
-	Create '>\12';
+	   Create '>\12';
+#endif
+	if within Preformatted
+#ifdef XML
+	   Create ' />';
+#else
+	   Create '>';
 #endif
 	END;
 
