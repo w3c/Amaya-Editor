@@ -4031,6 +4031,7 @@ void InitAmayaCache (void)
      erasing everything  by accident */
   ptr = TempFileDirectory;
   can_erase = TRUE;
+#ifdef _UNIX
   while (*ptr && can_erase)
     {
       if (*ptr == '.')
@@ -4043,10 +4044,11 @@ void InitAmayaCache (void)
 	}
       else if (*ptr == '~')
 	can_erase = FALSE;
-      else if (!isalnum (*ptr) && *ptr != DIR_SEP && *ptr != ':')
+      else if (!isalnum (*ptr) && *ptr != SPACE && *ptr != DIR_SEP && *ptr != ':')
 	can_erase = FALSE;
       ptr++;
     }
+#endif /* _UNIX */
 
   /* Detect if it's a unique instance */
   AmayaUniqueInstance = CheckSingleInstance (str);
