@@ -1116,7 +1116,6 @@ ThotBool            createLink;
   TtaCloseUndoSequence (doc);
 }
 
-
 /*----------------------------------------------------------------------
    MakeUniqueName
    Check attribute NAME or ID in order to make sure that its value is unique
@@ -1132,91 +1131,118 @@ Document     doc;
 
 #endif /* __STDC__ */
 {
-  Element	    image;
   ElementType	    elType;
   AttributeType     attrType;
-  SSchema	    HTMLSSchema;
   Attribute         attr;
+  Element	    image;
   STRING            value;
   CHAR_T            url[MAX_LENGTH];
   int               length, i;
-  ThotBool          change, isHTML;
+  ThotBool          change, checkID;
 
-  HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
   elType = TtaGetElementType (el);
-  isHTML = (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0);
-  attrType.AttrSSchema = HTMLSSchema;
-  if (isHTML &&
-      (elType.ElTypeNum == HTML_EL_Anchor || elType.ElTypeNum == HTML_EL_MAP))
-    attrType.AttrTypeNum = HTML_ATTR_NAME;
-  else
-    {
-      if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
-	{
-	  attrType.AttrSSchema = elType.ElSSchema;
-	  attrType.AttrTypeNum = MathML_ATTR_id;
-	}
-      else
-#ifdef GRAPHML
-	if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
-	  {
-	    attrType.AttrSSchema = elType.ElSSchema;
-	    attrType.AttrTypeNum = GraphML_ATTR_id;
-	  }
+  attrType.AttrSSchema = elType.ElSSchema;
+  checkID = FALSE;
+  if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+    /* it's an element from the XHTML namespace */
+    if (elType.ElTypeNum == HTML_EL_Anchor ||
+	elType.ElTypeNum == HTML_EL_MAP)
+      /* it's an anchor or a map. Look for a NAME attribute */
+      {
+	attrType.AttrTypeNum = HTML_ATTR_NAME;
+	attr = TtaGetAttribute (el, attrType);
+	if (attr != 0)
+	  /* the element has a NAME attribute. Check it and then check
+	     if there is an ID too */
+	  checkID = TRUE;
 	else
+	  /* no NAME. Look for an ID */
+	  attrType.AttrTypeNum = HTML_ATTR_ID;
+      }
+    else
+      /* Look for an ID attribute */
+      attrType.AttrTypeNum = HTML_ATTR_ID;
+  else
+    if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
+      /* it's an element from the MathML namespace, look for the
+         id attribute from the same namespace */
+      attrType.AttrTypeNum = MathML_ATTR_id;
+    else
+#ifdef GRAPHML
+      if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+	/* it's an element from the SVG namespace, look for the
+	   id attribute from the same namespace */
+	attrType.AttrTypeNum = GraphML_ATTR_id;
+      else
 #endif
-       attrType.AttrTypeNum = HTML_ATTR_ID;
-    }
-  attr = TtaGetAttribute (el, attrType);
-
-  if (attr != 0)
+	attrType.AttrTypeNum = 0;
+  
+  if (attrType.AttrTypeNum != 0)
     {
-      /* the element has an attribute NAME or ID */
-      length = TtaGetTextAttributeLength (attr) + 10;
-      value = TtaAllocString (length);
-      change = FALSE;
-      if (value != NULL)
+      attr = TtaGetAttribute (el, attrType);
+      if (attr)
+	/* the element has an attribute NAME or ID. Check it */
 	{
-	  TtaGiveTextAttributeValue (attr, value, &length);
-	  i = 0;
-	  while (SearchNAMEattribute (doc, value, attr) != NULL)
+	  length = TtaGetTextAttributeLength (attr) + 10;
+	  value = TtaAllocString (length);
+	  change = FALSE;
+	  if (value != NULL)
 	    {
-	      /* Yes. Avoid duplicate NAMEs */
-	      change = TRUE;
-	      i++;
-	      usprintf (&value[length], TEXT("%d"), i);
-	    }
-	  
-	  if (change)
-	    {
-	      /* copy the element Label into the NAME attribute */
-	      TtaSetAttributeText (attr, value, el, doc);
-	      if (isHTML && elType.ElTypeNum == HTML_EL_MAP)
+	      TtaGiveTextAttributeValue (attr, value, &length);
+	      i = 0;
+	      while (SearchNAMEattribute (doc, value, attr) != NULL)
 		{
-		  /* Search backward the refered image */
-		  attrType.AttrTypeNum = HTML_ATTR_USEMAP;
-		  TtaSearchAttribute (attrType, SearchBackward, el,
-				      &image, &attr);
-		  if (attr != NULL && image != NULL)
-		    /* Search forward the refered image */
-		    TtaSearchAttribute (attrType, SearchForward, el,
-					&image, &attr);
-		  if (attr != NULL && image != NULL)
+		  /* Yes. Avoid duplicate NAMEs */
+		  change = TRUE;
+		  i++;
+		  usprintf (&value[length], TEXT("%d"), i);
+		}
+	      
+	      if (change)
+		{
+		  /* copy the element Label into the NAME attribute */
+		  TtaSetAttributeText (attr, value, el, doc);
+		  if (checkID)
+		    /* It's an HTML anchor. We have just changed its NAME
+		       attribute. Change its ID (if any) accordingly */
 		    {
-		      i = MAX_LENGTH;
-		      TtaGiveTextAttributeValue (attr, url, &i);
-		      if (i == length+1 && !ustrncmp (&url[1], value, length))
+		      attrType.AttrTypeNum = HTML_ATTR_ID;
+		      attr = TtaGetAttribute (el, attrType);
+		      if (attr)
+			TtaSetAttributeText (attr, value, el, doc);
+		    }
+		  if ((ustrcmp(TtaGetSSchemaName (elType.ElSSchema),
+			       TEXT("HTML")) == 0) &&
+		      elType.ElTypeNum == HTML_EL_MAP)
+		    /* it's a MAP element */
+		    {
+		      /* Search backward the refered image */
+		      attrType.AttrTypeNum = HTML_ATTR_USEMAP;
+		      TtaSearchAttribute (attrType, SearchBackward, el,
+					  &image, &attr);
+		      if (!attr)
+			/* Not found. Search forward the refered image */
+			TtaSearchAttribute (attrType, SearchForward, el,
+					    &image, &attr);
+		      if (attr && image)
+			/* referred image found */
 			{
-			  /* Change the USEMAP of the image */
-			  attr = TtaGetAttribute (image, attrType);
-			  ustrcpy (&url[1], value);
-			  TtaSetAttributeText (attr, url, image, doc);
+			  i = MAX_LENGTH;
+			  TtaGiveTextAttributeValue (attr, url, &i);
+			  if (i == length+1 && !ustrncmp (&url[1], value,
+							  length))
+			    {
+			      /* Change the USEMAP attribute of the image */
+			      attr = TtaGetAttribute (image, attrType);
+			      ustrcpy (&url[1], value);
+			      TtaSetAttributeText (attr, url, image, doc);
+			    }
 			}
 		    }
 		}
 	    }
+	  TtaFreeMemory (value);
 	}
-       TtaFreeMemory (value);
     }
 }
 

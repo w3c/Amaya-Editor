@@ -1598,8 +1598,9 @@ Document            document;
 	RedisplayEmptyReferences (pEl, &pDoc, (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
 	/* Retransmet les valeurs des compteurs et attributs TRANSMIT */
 	/* s'il y a des elements apres */
-	if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
-	   RepApplyTransmitRules (pEl, pSS, pDoc);
+        if (pEl->ElStructSchema)
+	   if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
+	      RepApplyTransmitRules (pEl, pSS, pDoc);
      }
 }
 
