@@ -2,7 +2,7 @@
  * Copyright (c) 1996 INRIA, All rights reserved
  */
 
-/* Module de visualisation des claviers. */
+/* Module for viewing the keyboards */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -308,18 +308,18 @@ static ITEM         Items_Isol[] =
 
 static ITEM         Items_Symb[] =
 {
-   {83, 'S', NULL},		/* somme */
-   {80, 'P', NULL},		/* produit */
+   {83, 'S', NULL},		/* sum */
+   {80, 'P', NULL},		/* product */
    {85, 'U', NULL},		/* union */
    {73, 'I', NULL},		/* intersection */
-   {105, 'i', NULL},		/* integ */
-   {99, 'c', NULL},		/* integ curv */
-   {100, 'd', NULL},		/* integ double */
-   {114, 'r', NULL},		/* racine */
-   {60, '<', NULL},		/* fleche < */
-   {62, '>', NULL},		/* fleche >  */
-   {118, 'V', NULL},		/* fleche V  */
-   {94, '^', NULL},		/* fleche ^  */
+   {105, 'i', NULL},		/* integral */
+   {99, 'c', NULL},		/* circle integral */
+   {100, 'd', NULL},		/* double integral */
+   {114, 'r', NULL},		/* root */
+   {60, '<', NULL},		/* < arrow */
+   {62, '>', NULL},		/* > arrow */
+   {118, 'V', NULL},		/* V arrow */
+   {94, '^', NULL},		/* ^ arrow */
    {91, '[', NULL},		/* */
    {93, ']', NULL},		/* */
    {40, '(', NULL},		/* */
@@ -331,42 +331,42 @@ static ITEM         Items_Symb[] =
 
 static ITEM         Items_Graph[] =
 {
-   {'C', 'C', NULL},		/* cercle, ovale */
-   {'L', 'L', NULL},		/* losange */
-   {'P', 'P', NULL},		/* ellipse barree */
-   {'Q', 'Q', NULL},		/* cercle ovale barree */
+   {'C', 'C', NULL},		/* oval circle */
+   {'L', 'L', NULL},		/* diamond */
+   {'P', 'P', NULL},		/* crossed ellipse */
+   {'Q', 'Q', NULL},		/* crossed oval circle */
    {'R', 'R', NULL},		/* rectangle */
-   {'W', 'W', NULL},		/* haut + droit */
-   {'X', 'X', NULL},		/* bas + droit */
-   {'Y', 'Y', NULL},		/* haut +gauche */
-   {'Z', 'Z', NULL},		/* bas + gauche */
+   {'W', 'W', NULL},		/* up + right */   
+   {'X', 'X', NULL},		/* down + right */
+   {'Y', 'Y', NULL},		/* up + left */
+   {'Z', 'Z', NULL},		/* down + left*/
    {'c', 'c', NULL},		/* ellipse */
-   {'b', 'b', NULL},		/* - en bas */
-   {'h', 'h', NULL},		/* - centree */
-   {'t', 't', NULL},		/* - en haut */
-   {'l', 'l', NULL},		/* | gauche */
-   {'v', 'v', NULL},		/* | centree */
-   {'r', 'r', NULL},		/* | droite */
+   {'b', 'b', NULL},		/* - top  */
+   {'h', 'h', NULL},		/* - middle */
+   {'t', 't', NULL},		/* - bottom */
+   {'l', 'l', NULL},		/* left  | */
+   {'v', 'v', NULL},		/* centered | */
+   {'r', 'r', NULL},		/* right | */
    {'/', '/', NULL},		/* / */
    {'\\', '\\', NULL},		/* \  */
-   {'<', '<', NULL},		/* fleche < */
-   {'>', '>', NULL},		/* fleche > */
-   {'V', 'V', NULL},		/* fleche V */
-   {'^', '^', NULL},		/* fleche ^ */
-   {'E', 'E', NULL},		/* fleche NE */
-   {'e', 'e', NULL},		/* fleche SE */
-   {'O', 'O', NULL},		/* fleche NO */
-   {'o', 'o', NULL},		/* fleche SO */
+   {'<', '<', NULL},		/* < arrow */
+   {'>', '>', NULL},		/* > arrow */
+   {'V', 'V', NULL},		/* V arrow */
+   {'^', '^', NULL},		/* ^ arrow */
+   {'E', 'E', NULL},		/* NE arrow */
+   {'e', 'e', NULL},		/* SE arrow */
+   {'O', 'O', NULL},		/* NW arrow */
+   {'o', 'o', NULL},		/* SW arrow */
    {'S', 'S', NULL},		/* segments */
-   {'U', 'U', NULL},		/* segments > */
-   {'N', 'N', NULL},		/* segments < */
-   {'M', 'M', NULL},		/* segments <> */
-   {'p', 'p', NULL},		/* polygone */
+   {'U', 'U', NULL},		/* > segments */
+   {'N', 'N', NULL},		/* < segments */
+   {'M', 'M', NULL},		/* <> segments */
+   {'p', 'p', NULL},		/* polygon */
    {'B', 'B', NULL},		/* beziers */
-   {'F', 'F', NULL},		/* beziers > */
-   {'A', 'A', NULL},		/* beziers < */
-   {'D', 'D', NULL},		/* beziers <> */
-   {'s', 's', NULL}		/* bezier fermee */
+   {'F', 'F', NULL},		/* > beziers */
+   {'A', 'A', NULL},		/* < beziers */
+   {'D', 'D', NULL},		/* <> beziers */
+   {'s', 's', NULL}		/* closed bezier */
 };
 
 #include "textcommands_f.h"
@@ -377,10 +377,10 @@ static ITEM         Items_Graph[] =
 #include "structselect_f.h"
 
 /*----------------------------------------------------------------------
-   WChar affiche le caractere ch a` la position x,y de la fenetre w
-   en utilisant la police de caracteres font.              
-   La fonction func indique s'il s'agit d'une boite        
-   active (1) ou non (0).                                  
+   WChar
+   displays character ch at position <x,y> of window w using the character
+   policy font.
+   Function func indicates if it's an active box (1) or not (0).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WChar (ThotWindow w, char ch, int x, int y, int func, ptrfont font, int disp, ThotGC GClocal)
@@ -410,13 +410,14 @@ ThotGC              GClocal;
 }
 
 /*----------------------------------------------------------------------
-   FinKbd termine l'affichage du clavier.                          
+   KbdEndDisplay
+   Ends the display of a keyboard.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         FinKbd (ThotWidget w, int index, caddr_t call_d)
+static void         KbdEndDisplay (ThotWidget w, int index, caddr_t call_d)
 
 #else  /* __STDC__ */
-static void         FinKbd (w, index, call_d)
+static void         KbdEndDisplay (w, index, call_d)
 ThotWidget          w;
 int                 index;
 caddr_t             call_d;
@@ -429,12 +430,13 @@ caddr_t             call_d;
 }
 
 /*----------------------------------------------------------------------
-   RetourKbd traite les touches du clavier.                        
+   KbdCallbackHandler
+   handles the keyboard keys.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RetourKbd (ThotWidget w, int param, caddr_t call_d)
+static void         KbdCallbackHandler (ThotWidget w, int param, caddr_t call_d)
 #else  /* __STDC__ */
-static void         RetourKbd (w, param, call_d)
+static void         KbdCallbackHandler (w, param, call_d)
 ThotWidget          w;
 int                 param;
 caddr_t             call_d;
@@ -453,7 +455,8 @@ caddr_t             call_d;
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
-   ExposeKbd affiche les touches du clavier.                       
+   ExposeKbd
+   displays the keyboard keys
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ExposeKbd (ThotWidget w, int param, XmDrawnButtonCallbackStruct * infos)
@@ -501,7 +504,8 @@ XmDrawnButtonCallbackStruct *infos;
 
 
 /*----------------------------------------------------------------------
-   CreateKeyboard cree un clavier.                                 
+   CreateKeyboard
+   creates a keyboard.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CreateKeyboard (int number, char *title, ptrfont pFont, int col, int x, int y, ITEM * items, int nbitem)
@@ -634,7 +638,7 @@ int                 nbitem;
    n++;
    w = XmCreatePushButton (w, TtaGetMessage (LIB, TMSG_CANCEL), args, n);
    XtManageChild (w);
-   XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) FinKbd, (XtPointer) number);
+   XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) KbdEndDisplay, (XtPointer) number);
    XmFontListFree (xfont);
 
    /* Definit le bouton d'annulation comme bouton par defaut */
@@ -653,7 +657,7 @@ int                 nbitem;
 
    /* Affiche les differents boutons du clavier */
    it = items;
-   /* Prepare les parametres des procedures RetourKbd et ExposeKbd */
+   /* Prepare les parametres des procedures KbdCallbackHandler et ExposeKbd */
    param = number * 256;	/* indice du clavier */
 
    if (it->legend == 0)
@@ -672,7 +676,7 @@ int                 nbitem;
 	     string[1] = '\0';
 	     w = XmCreatePushButton (row, string, args, n);
 	     XtManageChild (w);
-	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) RetourKbd, (XtPointer) (param + (int) (it->value)));
+	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) KbdCallbackHandler, (XtPointer) (param + (int) (it->value)));
 	  }			/*for */
 	XmFontListFree (xfont);
      }
@@ -694,7 +698,7 @@ int                 nbitem;
 	     string[1] = '\n';
 	     w = XmCreateDrawnButton (row, "", args, n);
 	     XtManageChild (w);
-	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) RetourKbd, (XtPointer) (param + (int) (it->value)));
+	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) KbdCallbackHandler, (XtPointer) (param + (int) (it->value)));
 	     XtAddCallback (w, XmNexposeCallback, (XtCallbackProc) ExposeKbd, (XtPointer) (param + i));
 	  }			/*for */
      }
@@ -702,7 +706,8 @@ int                 nbitem;
 
 
 /*----------------------------------------------------------------------
-   LoadKbd charge un des claviers.                                 
+   LoadKbd
+   loads a keyboard.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -754,7 +759,8 @@ int                 number;
 
 
 /*----------------------------------------------------------------------
-   KeyboardMap mappe un clavier.                                         
+   KeyboardMap
+   maps a keyboard.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                KeyboardMap (int kb)
@@ -786,7 +792,8 @@ int                 kb;
 }
 
 /*----------------------------------------------------------------------
-   Initialisation des claviers.                                    
+  KeyboardsLoadResource
+  Initializes the keyboards.
   ----------------------------------------------------------------------*/
 void                KeyboardsLoadResources ()
 {
@@ -825,7 +832,8 @@ void                KeyboardsLoadResources ()
 
 
 /*----------------------------------------------------------------------
-   TtcDisplayMathKeyboard initialise le changement du clavier math.           
+   TtcDisplayMathKeyboard
+   displays the math keyboard
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcDisplayMathKeyboard (Document document, View view)
@@ -845,7 +853,8 @@ View                view;
 
 
 /*----------------------------------------------------------------------
-   TtcDisplayGraphicsKeyboard initialise le changement clavier graphics       
+   TtcDisplayGraphicsKeyboard
+   displays the graphics keyboard
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcDisplayGraphicsKeyboard (Document document, View view)
@@ -865,7 +874,8 @@ View                view;
 
 
 /*----------------------------------------------------------------------
-   TtcDisplayLatinKeyboard initialise le changement du clavier latin.         
+   TtcDisplayLatinKeyboard
+   displays the latin keyboard
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcDisplayLatinKeyboard (Document document, View view)
@@ -885,7 +895,8 @@ View                view;
 
 
 /*----------------------------------------------------------------------
-   TtcDisplayGreekKeyboard initialise le changement du clavier greek.         
+   TtcDisplayGreekKeyboard
+   displays the greek keyboard 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcDisplayGreekKeyboard (Document document, View view)
