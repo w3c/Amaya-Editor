@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
   <title>Liens et Ancres</title>
-  <meta name="GENERATOR" content="amaya 7.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.0, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -107,8 +107,8 @@ alt="The Add/Remove ID menu" /></p>
 <ol>
   <li><a href="Selecting.html.fr#Selecting">Sélectionnez</a> le contenu de
     l'ancre à créer</li>
-  <li>Cliquez sur le bouton <img alt="Link " src="../images/Link.gif" />, ou
-    choisir <strong>Créer/changer lien</strong> du menu
+  <li>Cliquez sur le bouton <img alt="Link " src="../images/Link.gif" />
+    (premier cas), ou choisir <strong>Créer/changer lien</strong> du menu
     <strong>Liens</strong>, ou encore utiliser le raccourci clavier (par
     défaut Ctrl Shift L)
     <ul>
@@ -121,10 +121,11 @@ alt="The Add/Remove ID menu" /></p>
           </li>
           <li>Si vous n'êtes pas à l'aise avec la souris :
             <ul>
-              <li>Tapez sur n'importe quelle touche. Cela fera surgir une
-                boîte de dialogue : entrez l'URI du document cible et taper
-                sur la touche <strong>Enter ou Return</strong> pour
-                confirmer. Le lien est créé.</li>
+              <li>Tapez sur la touche <code>Esc</code> ou
+                <code>Delete</code>. Cela fera surgir une boîte de dialogue :
+                entrez l'URI du document cible et taper sur la touche
+                <strong>Enter ou Return</strong> pour confirmer. Le lien est
+                créé.</li>
             </ul>
           </li>
           <li>Si l'élément cible n'est pas visualisé :
@@ -138,7 +139,7 @@ alt="The Add/Remove ID menu" /></p>
           </li>
         </ul>
       </li>
-      <li>Dans le deuxième cas, s'offre à vous plusieurs solutions :
+      <li>Dans les autres cas, s'offre à vous plusieurs solutions :
         <ul>
           <li>Si le document cible est visualisé par <strong>Amaya</strong>,
             cliquez sur le bouton <strong>Clic</strong> puis n'importe où

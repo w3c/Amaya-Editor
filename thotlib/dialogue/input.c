@@ -1068,7 +1068,8 @@ ThotBool ThotInput (int frame, unsigned char *string, unsigned int nb,
       mainframe = GetWindowNumber (document, 1);
       if (command > 0)
 	{
-	  if (command != CMD_DeletePrevChar)
+	  if (command != CMD_DeletePrevChar &&
+	      command != CMD_DeleteSelection)
 	    /* It's not a delete, close the current insertion */
 	    CloseInsertion ();
 

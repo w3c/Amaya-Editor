@@ -1954,17 +1954,19 @@ static void ContentEditing (int editType)
   ThotBool            defaultWidth, defaultHeight;
   ThotBool            show, graphEdit, open;
 
-  /* termine l'insertion de caracteres en cours */
-  CloseTextInsertion ();
   pCell = NULL;
   textPasted = FALSE;
   graphEdit = FALSE;
 
-  /* Traitement de la Commande PASTE de l'application */
   if (editType == TEXT_PASTE && ClipboardThot.BuLength == 0 && !FromKeyboard)
     {
-      if (ThotLocalActions[T_cmdpaste] != NULL)
-	(*ThotLocalActions[T_cmdpaste]) ();
+      /* paste a structured element */
+      if (ThotLocalActions[T_cmdpaste])
+	{
+	  /* close the current text insertion */
+	  CloseTextInsertion ();
+	  (*ThotLocalActions[T_cmdpaste]) ();
+	}
     }
   /* Traitement des Commandes INSERT, CUT, PASTE, COPY, OOPS */
   else
@@ -1976,6 +1978,10 @@ static void ContentEditing (int editType)
 	return;
       else
 	{
+	  if ((editType != TEXT_DEL && editType != TEXT_SUP) ||
+	      !ViewFrameTable[frame - 1].FrSelectOnePosition)
+	    /* close the current text insertion */
+	    CloseTextInsertion ();
 	  pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
 	  /* verifie qu'une selection courante est visualisee */
 	  if (pBox == NULL)
@@ -2409,7 +2415,7 @@ static void ContentEditing (int editType)
 		  }
 		else
 		  DeleteSelection (defaultHeight, defaultWidth, pLine, pBox,
-				   pAb, frame, editType != TEXT_SUP);
+				   pAb, frame, FALSE/*editType != TEXT_SUP*/);
 	      else if (editType == TEXT_PASTE && !FromKeyboard)
 		{
 		  /* Verifie que l'script du clipboard correspond a celui
