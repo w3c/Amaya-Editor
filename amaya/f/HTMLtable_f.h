@@ -7,7 +7,8 @@
 #ifdef __STDC__
 
 extern void CheckAllRows ( Element table,
-                           Document doc );
+                           Document doc,
+			   ThotBool placeholder );
 extern void CheckTable ( Element table,
                          Document doc );
 extern void NewCell ( Element cell,
@@ -39,7 +40,8 @@ extern ThotBool RowspanDelete ( NotifyAttribute * event );
 #else /* __STDC__ */
 
 extern void CheckAllRows (/* Element table,
-                             Document doc */);
+                             Document doc,
+			     ThotBool placeholder */);
 extern void CheckTable (/* Element table,
                            Document doc */);
 extern void NewCell (/* Element cell,

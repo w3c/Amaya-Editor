@@ -1061,7 +1061,7 @@ View                view;
 		   NumberRows--;
 		 }
 	     } 
-	   CheckAllRows (el, document);
+	   CheckAllRows (el, document, FALSE);
 	 }
        TtaUnlockTableFormatting ();
        TtaSetDisplayMode (document, DisplayImmediately);

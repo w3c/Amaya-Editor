@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -162,19 +162,22 @@ ThotBool            inMath;
    Return the created empty cell.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      AddEmptyCellInRow (Element row, Element colhead, Element sibling, ThotBool before, Document doc, ThotBool inMath)
+static Element      AddEmptyCellInRow (Element row, Element colhead, Element sibling, ThotBool before, Document doc, ThotBool inMath, ThotBool placeholder)
 #else
-static Element      AddEmptyCellInRow (row, colhead, sibling, before, doc, inMath)
+static Element      AddEmptyCellInRow (row, colhead, sibling, before, doc, inMath, placeholder)
 Element             row;
 Element             colhead;
 Element             sibling;
 ThotBool            before;
 Document            doc;
 ThotBool            inMath;
+ThotBool            placeholder
 #endif
 {
-  Element             lastcell;
+  Element             lastcell, constr;
   ElementType         elType;
+  Attribute           attr;
+  AttributeType       attrType;
 
   lastcell = NULL;
   if (row == NULL)
@@ -188,10 +191,29 @@ ThotBool            inMath;
       else
 	elType.ElTypeNum = HTML_EL_Data_cell;
       lastcell = TtaNewTree (doc, elType, "");
-      if (lastcell != NULL)
+      if (lastcell)
 	{
 	  TtaInsertSibling (lastcell, sibling, before, doc);
 	  RelateCellWithColumnHead (lastcell, colhead, doc, inMath);
+	  if (inMath && placeholder)
+	    /* put attribute IntPlaceholder on the empty Construct that has
+	       been created in the new cell */
+	    {
+	      elType.ElTypeNum = MathML_EL_Construct;
+	      constr = TtaSearchTypedElement (elType, SearchInTree, lastcell);
+	      if (constr)
+		{
+		  attrType.AttrSSchema = elType.ElSSchema;
+		  attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
+		  attr = TtaNewAttribute (attrType);
+		  if (attr)
+		    {
+		      TtaAttachAttribute (constr, attr, doc);
+		      TtaSetAttributeValue (attr,
+			     MathML_ATTR_IntPlaceholder_VAL_yes_, constr, doc);
+		    }
+		}
+	    }
 	}
     }
   return (lastcell);
@@ -239,8 +261,10 @@ ThotBool            inMath;
 	    if (last)
 	      child = TtaGetLastChild (currentrow);
 	    else
-	      child = GetCloseCellFromColumnHead (currentrow, lastcolhead, before, inMath);
-	    AddEmptyCellInRow (currentrow, colhead, child, before, doc, inMath);
+	      child = GetCloseCellFromColumnHead (currentrow, lastcolhead,
+						  before, inMath);
+	    AddEmptyCellInRow (currentrow, colhead, child, before, doc,
+			       inMath, FALSE);
 	    TtaPreviousSibling (&currentrow);
 	  }
 
@@ -255,8 +279,10 @@ ThotBool            inMath;
 		if (last)
 		  child = TtaGetLastChild (currentrow);
 		else
-		  child = GetCloseCellFromColumnHead (currentrow, lastcolhead, before, inMath);
-		AddEmptyCellInRow (currentrow, colhead, child, before, doc, inMath);
+		  child = GetCloseCellFromColumnHead (currentrow, lastcolhead,
+						      before, inMath);
+		AddEmptyCellInRow (currentrow, colhead, child, before, doc,
+				   inMath, FALSE);
 		TtaNextSibling (&currentrow);
 	      }
 	  }
@@ -285,8 +311,10 @@ ThotBool            inMath;
 			    if (last)
 			      child = TtaGetLastChild (currentrow);
 			    else
-			      child = GetCloseCellFromColumnHead (currentrow, lastcolhead, before, inMath);
-			    AddEmptyCellInRow (currentrow, colhead, child, before, doc, inMath);
+			      child = GetCloseCellFromColumnHead (currentrow,
+					         lastcolhead, before, inMath);
+			    AddEmptyCellInRow (currentrow, colhead, child,
+					       before, doc, inMath, FALSE);
 			    TtaNextSibling (&currentrow);
 			  }
 		      }
@@ -303,17 +331,19 @@ ThotBool            inMath;
 		      {
 			if (group != groupdone)
 			  {
-			    currentrow = TtaGetFirstChild (group);
-			    while (currentrow != NULL)
-			      {
-				/* get the sibling cell */
-				if (last)
-				  child = TtaGetLastChild (currentrow);
-				else
-				  child = GetCloseCellFromColumnHead (currentrow, lastcolhead, before, inMath);
-				AddEmptyCellInRow (currentrow, colhead, child, before, doc, inMath);
-				TtaNextSibling (&currentrow);
-			      }
+			  currentrow = TtaGetFirstChild (group);
+			  while (currentrow != NULL)
+			    {
+			    /* get the sibling cell */
+			    if (last)
+			      child = TtaGetLastChild (currentrow);
+			    else
+			      child = GetCloseCellFromColumnHead (currentrow, 
+						 lastcolhead, before, inMath);
+			    AddEmptyCellInRow (currentrow, colhead, child,
+					       before, doc, inMath, FALSE);
+			    TtaNextSibling (&currentrow);
+			    }
 			  }
 			
 			if (last)
@@ -449,11 +479,12 @@ int                 span;
   CheckAllRows
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CheckAllRows (Element table, Document doc)
+void                CheckAllRows (Element table, Document doc, ThotBool placeholder)
 #else
-void                CheckAllRows (table, doc)
+void                CheckAllRows (table, doc, placeholder)
 Element             table;
 Document            doc;
+ThotBool            placeholder;
 #endif
 {
   Element            *colElement;
@@ -476,7 +507,8 @@ Document            doc;
   
   /* store the list of colheads */
   elType = TtaGetElementType (table);
-  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), doc));
+  inMath = !TtaSameSSchemas (elType.ElSSchema,
+			     TtaGetSSchema (TEXT("HTML"), doc));
   if (inMath)
     {
       elType.ElTypeNum = MathML_EL_MColumn_head;
@@ -553,7 +585,8 @@ Document            doc;
 		    {
 		      /* there is no Column_head for that cell */
 		      /* Create an additional Column_head */
-		      colElement[cRef] = NewColumnHead (colElement[cRef - 1], FALSE, TRUE, row, doc, inMath);
+		      colElement[cRef] = NewColumnHead (colElement[cRef - 1],
+						FALSE, TRUE, row, doc, inMath);
 		      colVSpan[cRef] = 0;
 		      cNumber++;
 		    }
@@ -561,7 +594,8 @@ Document            doc;
 		  if (cRef < cNumber)
 		    {
 		      /* relate the cell with its corresponding Column_head */
-		      RelateCellWithColumnHead (cell, colElement[cRef], doc, inMath);
+		      RelateCellWithColumnHead (cell, colElement[cRef], doc,
+						inMath);
 
 		      if (!inMath)
 			{
@@ -572,7 +606,7 @@ Document            doc;
 			      span = TtaGetAttributeValue (attr);
 			      if (span > 1)
 				{
-				  /* Set the attribute RowExt if row span > 1 */
+				  /* Set the attribute RowExt if row span > 1*/
 				  colVSpan[cRef] = span - 1;
 				  SetRowExt (cell, row, span, doc);
 				}
@@ -625,7 +659,8 @@ Document            doc;
 					  TtaAttachAttribute (cell, attr, doc);
 					}
 				      if (attr != NULL)
-					TtaSetAttributeReference (attr, cell, doc, colElement[cRef], doc);
+					TtaSetAttributeReference (attr, cell,
+						  doc, colElement[cRef], doc);
 				    }
 				}
 			    }
@@ -652,7 +687,8 @@ Document            doc;
 	      if (colVSpan[cRef] > 0)
 		colVSpan[cRef]--;
 	      else
-		cell = AddEmptyCellInRow (row, colElement[cRef], cell, FALSE, doc, inMath);
+		cell = AddEmptyCellInRow (row, colElement[cRef], cell, FALSE,
+					  doc, inMath, placeholder);
 	      cRef++;
 	    }
 	  }
@@ -733,7 +769,8 @@ Document            doc;
 	      TtaAttachAttribute (cell, attr, doc);
 	    }
 	  if (attr != NULL)
-	    TtaSetAttributeReference (attr, cell, doc, colElement[cRef + span - 1], doc);
+	    TtaSetAttributeReference (attr, cell, doc,
+				      colElement[cRef + span - 1], doc);
 	  /* remove extra cells */
 	  nextCell = cell;
 	  TtaNextSibling (&nextCell);
@@ -942,7 +979,7 @@ Document            doc;
 	    firstgroup = tfoot;
 
 	  /* associate each cell with a column */
-	  CheckAllRows (table, doc);
+	  CheckAllRows (table, doc, FALSE);
 	  CheckTableAfterCellUpdate = TRUE;
 	}
     }
@@ -980,7 +1017,8 @@ ThotBool            genrateColumn;
 #endif
 
   elType = TtaGetElementType (cell);
-  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), doc));
+  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"),
+							      doc));
 
   if (!inMath && elType.ElTypeNum == HTML_EL_Table_cell)
     /* change the cell into a Data_cell */
@@ -1238,7 +1276,7 @@ NotifyElement      *event;
      elType.ElTypeNum = HTML_EL_Table;
    table = TtaGetTypedAncestor (rowgroup, elType);
    doc = event->document;
-   CheckAllRows (table, doc);
+   CheckAllRows (table, doc, FALSE);
    CheckTableAfterCellUpdate = TRUE;
 }
 
@@ -1458,7 +1496,7 @@ ThotBool     inMath;
 	  if (TtaPrepareUndo (doc))
 	      TtaDeleteTree (colhead, doc);
 	  if (span)
-	     CheckAllRows (table, doc);
+	     CheckAllRows (table, doc, FALSE);
 	}
     }
   return (empty);
@@ -1487,7 +1525,8 @@ NotifyElement      *event;
   span = CurrentSpan;
   CurrentSpan = 0;
   elType = TtaGetElementType (event->element);
-  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), event->document));
+  inMath = !TtaSameSSchemas (elType.ElSSchema,
+			     TtaGetSSchema (TEXT("HTML"),event->document));
   removed = RemoveColumn (CurrentColumn, doc, TRUE, inMath);
   if (removed)
     span--;
@@ -1505,7 +1544,8 @@ NotifyElement      *event;
 	}
       cell = GetCloseCellFromColumnHead (CurrentRow, col, before, inMath);
       /* regenerate an empty cell */
-      cell = AddEmptyCellInRow (CurrentRow, CurrentColumn, cell, before, doc, inMath);
+      cell = AddEmptyCellInRow (CurrentRow, CurrentColumn, cell, before, doc,
+				inMath, FALSE);
       child = TtaGetFirstChild (cell);
       TtaSelectElement (doc, child);
     }
@@ -1619,14 +1659,14 @@ NotifyElement      *event;
       /* the table element is just created now
        We need to create the table_head element */
       if (inMath)
-	CheckMTable (table, doc);
+	CheckMTable (table, doc, FALSE);
       else
 	CheckTable (table, doc);
       NewTable = FALSE;
     }
   else
     {
-      CheckAllRows (table, doc);
+      CheckAllRows (table, doc, FALSE);
       CheckTableAfterCellUpdate = FALSE;
       /* avoid processing the cells of the created row */
       CurrentRow = row;
@@ -1665,14 +1705,14 @@ NotifyElement      *event;
       /* the table element is just created now
        We need to create the table_head element */
       if (inMath)
-	CheckMTable (table, doc);
+	CheckMTable (table, doc, FALSE);
       else
 	CheckTable (table, doc);
       NewTable = FALSE;
     }
   else
     {
-      CheckAllRows (table, doc);
+      CheckAllRows (table, doc, FALSE);
       CheckTableAfterCellUpdate = FALSE;
     }
   /* avoid processing the cells of the created row */
@@ -1703,7 +1743,7 @@ Document            doc;
    elType = TtaGetElementType (cell);
    elType.ElTypeNum = HTML_EL_Table;
    table = TtaGetTypedAncestor (cell, elType);
-   CheckAllRows (table, doc);
+   CheckAllRows (table, doc, FALSE);
    CheckTableAfterCellUpdate = TRUE;
 }
 
@@ -1827,7 +1867,7 @@ Document            doc;
    elType = TtaGetElementType (cell);
    elType.ElTypeNum = HTML_EL_Table;
    table = TtaGetTypedAncestor (cell, elType);
-   CheckAllRows (table, doc);
+   CheckAllRows (table, doc, FALSE);
    CheckTableAfterCellUpdate = TRUE;
 }
 

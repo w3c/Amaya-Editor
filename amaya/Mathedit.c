@@ -622,7 +622,7 @@ int                 construct;
                      parent, new, next;
   ElementType        newType, elType;
   SSchema            docSchema, mathSchema;
-  int                c1, c2, i, j, len, oldStructureChecking;
+  int                c1, c2, i, j, len, oldStructureChecking, col;
   ThotBool	     before, ParBlock, emptySel, ok, insertSibling,
 		     selectFirstChild, displayTableForm, mrowCreated;
 
@@ -649,7 +649,7 @@ int                 construct;
            TtaCreateElement (newType, doc);
 	   }
 #ifdef GRAPHML
-	if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
+	if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
 	   /* selection is in a GraphML element */
 	   {
            newType.ElTypeNum = GraphML_EL_Math;
@@ -688,7 +688,7 @@ int                 construct;
 		if (next)
 		  /* there is another character string after that one.
 		     split the enclosing mo, mn, mi or mtext */
-		   sibling = SplitTextInMathML (doc, sibling, c1, &mrowCreated);
+		   sibling = SplitTextInMathML (doc, sibling, c1,&mrowCreated);
 		else
 		   /* create the new element after the character string */
 		   before = FALSE;
@@ -703,8 +703,9 @@ int                 construct;
 	{
 	  /* get the MathML schema for this document or associate it to the
 	     document if it is not associated yet */
-	  mathSchema = TtaNewNature (docSchema, TEXT("MathML"), TEXT("MathMLP"));
-	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0 &&
+	  mathSchema = TtaNewNature (docSchema, TEXT("MathML"),
+				     TEXT("MathMLP"));
+	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) &&
 	      elType.ElTypeNum != HTML_EL_Math)
 	    /* the current selection is in an HTML element, but it's not
 	       a Math element */
@@ -774,7 +775,7 @@ int                 construct;
 		}
 	    }
 
-	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0 &&
+	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) &&
 	      elType.ElTypeNum == HTML_EL_Math)
 	    /* the current selection is in an HTML element, and it's a
 	       Math element */
@@ -814,7 +815,7 @@ int                 construct;
 		  /* try first to create a new Math element as a sibling */
 		  if (TtaCanInsertSibling (elType, sibling, before, doc))
 		    insertSibling = TRUE;
-		  /* if it fails, try to create a new Math element as a child */
+		  /* if it fails, try to create a new Math element as a child*/
 		  else if (TtaCanInsertFirstChild (elType, sibling, doc))
 		    insertSibling = FALSE;
 		  else
@@ -1090,11 +1091,12 @@ int                 construct;
 		  TtaInsertFirstChild (&new, child, doc);
 		  elType.ElTypeNum = MathML_EL_MTD;
 		  child = TtaSearchTypedElement (elType, SearchInTree, el);
-		  while (NumberCols > 1)
+		  col = NumberCols;
+		  while (col > 1)
 		    {
 		      new = TtaNewTree (doc, elType, "");
 		      TtaInsertSibling (new, child, FALSE, doc);
-		      NumberCols--;
+		      col--;
 		    }
 		}
 	      if (NumberRows > 1)
@@ -1103,12 +1105,23 @@ int                 construct;
 		  row = TtaSearchTypedElement (elType, SearchInTree, el);
 		  while (NumberRows > 1)
 		    {
+		      elType.ElTypeNum = MathML_EL_MTR;
 		      new = TtaNewTree (doc, elType, "");
 		      TtaInsertSibling (new, row, FALSE, doc);
 		      NumberRows--;
+		      /* create cells within the row */
+		      elType.ElTypeNum = MathML_EL_MTD;
+		      child = TtaSearchTypedElement (elType, SearchInTree,new);
+		      col = NumberCols;
+		      while (col > 1)
+			{
+			  new = TtaNewTree (doc, elType, "");
+			  TtaInsertSibling (new, child, FALSE, doc);
+			  col--;
+			}
 		    }
 		}
-	      CheckAllRows (el, doc);
+	      CheckAllRows (el, doc, FALSE);
 	    }
 
 	  /* if the new element is a child of a FencedExpression element,

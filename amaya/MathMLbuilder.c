@@ -1470,13 +1470,16 @@ Document doc;
    The content of a MTABLE element has been created following
    the original MathML structure.  Create all Thot elements defined
    in the MathML S schema.
+   If placeholder, associate an attribute IntPlaceholder with all
+   cells generated in a MathML table.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void CheckMTable (Element elMTABLE, Document doc)
+void CheckMTable (Element elMTABLE, Document doc, ThotBool placeholder)
 #else /* __STDC__*/
-void CheckMTable (elMTABLE, doc)
+void CheckMTable (elMTABLE, doc, placeholder)
   Element	elMTABLE;
   Document	doc;
+  ThotBool      placeholder;
 #endif /* __STDC__*/
 {
   ElementType	elType;
@@ -1565,7 +1568,7 @@ void CheckMTable (elMTABLE, doc)
       }
     row = nextRow;
     }
-  CheckAllRows (elMTABLE, doc);
+  CheckAllRows (elMTABLE, doc, placeholder);
 }
 
 /*----------------------------------------------------------------------
@@ -2527,7 +2530,7 @@ int             *error;
        case MathML_EL_MTABLE:
 	  /* end of a MTABLE. Create all elements defined in the MathML S
              schema */
-	  CheckMTable (el, doc);
+	  CheckMTable (el, doc, TRUE);
 	  break;
        case MathML_EL_MTD:
 	  /* Create placeholders within the table cell */
