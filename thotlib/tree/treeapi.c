@@ -2846,7 +2846,7 @@ static PtrElement   SearchSSchema (SSchema sschema, PtrElement pEl)
    PtrElement          pE, pFound;
 
    pFound = NULL;
-   if (sschema == pEl->ElStructSchema)
+   if ((PtrSSchema)sschema == pEl->ElStructSchema)
       pFound = pEl;
    else if (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
      {
