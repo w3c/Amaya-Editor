@@ -19,7 +19,9 @@
  *
  */
 
+/*
 #define DEBUG
+*/
 
 /* Included headerfiles */
 #define EXPORT extern
