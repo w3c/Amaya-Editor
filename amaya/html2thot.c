@@ -381,6 +381,7 @@ static char         FileBufferA[INPUT_FILE_BUFFER_SIZE+1];
 static CHARSET      ParsingCharset;           /* encoding of the parsed document */
 static int	    LastCharInFileBuffer = 0; /* last char. in the buffer */
 static int          CurrentBufChar;           /* current character read */
+static int          StartOfTagIndx;           /* last "<" read */
 static CHAR_T	    PreviousBufChar = EOS;    /* previous character read */
 static char*        InputText;
 static gzFile       stream = 0;
@@ -436,6 +437,8 @@ static PtrElemToBeChecked LastElemToBeChecked = NULL;
 static State        currentState;	  /* current state of the automaton */
 static State        returnState;	  /* return state from subautomaton */
 static ThotBool     NormalTransition;
+static ThotBool     CharProcessed;
+
 
 /* information about an entity being read */
 static CHAR_T       EntityName[MaxEntityLength];/* name of entity being read */
@@ -1250,6 +1253,7 @@ char                c;
    if (LgBuffer > 0)
       TextToDocument ();
    HTMLcontext.mergeText = FALSE;
+   StartOfTagIndx = CurrentBufChar - 1;
 }
 
 /*----------------------------------------------------------------------
@@ -2739,38 +2743,9 @@ CHAR_T                c;
   UnknownTag = FALSE;
   if ((HTMLcontext.lastElement != NULL) && (lastElemEntry != -1))
     {
-      if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("math")))
-	/* a <math> tag has been read */
-	{
-#ifndef EXPAT_PARSER
-	  /* Parse the MathML structure */
-	  if (XMLparse (stream, &CurrentBufChar, TEXT("MathML"), HTMLcontext.doc, HTMLcontext.lastElement, FALSE,
-		    HTMLcontext.language, pHTMLGIMapping[lastElemEntry].XMLname))
-	    /* when returning from the XML parser, the end tag has already
-	       been read */
-	    (void) CloseElement (lastElemEntry, -1, FALSE);
-	  else
-#endif /* EXPAT_PARSER */
-	    StopParsing ();
-	}
-      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("xmlgraphics")) ||
-               !ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("svg")))
-	/* a tag <xmlgraphics> or <svg> has been read */
-        {
-#ifndef EXPAT_PARSER
-	  /* Parse the GraphML structure */
-	  if (XMLparse (stream, &CurrentBufChar, TEXT("GraphML"), HTMLcontext.doc, HTMLcontext.lastElement, FALSE,
-		    HTMLcontext.language, pHTMLGIMapping[lastElemEntry].XMLname))
-	    /* when returning from the XML parser, the end tag has already
-	       been read */
-	    (void) CloseElement (lastElemEntry, -1, FALSE);
-	  else
-#endif /* EXPAT_PARSER */
-	    StopParsing ();
-	}
-      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("pre"))   ||
-               !ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("style")) ||
-               !ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("script")))
+      if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("pre")) ||
+	  !ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("style")) ||
+	  !ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("script")))
 	/* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
 	AfterTagPRE = TRUE;
       else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("table")))
@@ -3140,11 +3115,14 @@ CHAR_T*             GIname;
 static void         EndOfStartGI (CHAR_T c)
 #else
 static void         EndOfStartGI (c)
-CHAR_T                c;
+CHAR_T              c;
 #endif
 {
    CHAR_T        theGI[MaxMsgLength];
-   int			 i;
+#ifndef EXPAT_PARSER
+   CHAR_T        schemaName[MaxMsgLength];
+#endif
+   int		 i;
 
    if (HTMLcontext.parsingTextArea)
       /* We are parsing the contents of a TEXTAREA element. If a start
@@ -3172,13 +3150,43 @@ CHAR_T                c;
       ustrncpy (theGI, inputBuffer, MaxMsgLength - 1);
       theGI[MaxMsgLength - 1] = WC_EOS;
       InitBuffer ();
-      if (HTMLcontext.lastElementClosed && (HTMLcontext.lastElement == rootElement))
+      if (HTMLcontext.lastElementClosed &&
+	  (HTMLcontext.lastElement == rootElement))
          /* an element after the tag </html>, ignore it */
          {
          ParseHTMLError (HTMLcontext.doc, TEXT("Element after tag </html>. Ignored"));
          return;
          }
-      ProcessStartGI (theGI);
+      if (!ustrcmp (theGI, TEXT("math")) ||
+	  !ustrcmp (theGI, TEXT("svg")) ||
+	  !ustrcmp (theGI, TEXT("xmlgraphics")))
+	/*** there may be a namespace prefix in front of the tag name ****/
+	/* a <math> or <svg> tag has been read */
+#ifdef EXPAT_PARSER
+	StopParsing ();
+#else
+	{
+	  /* Parse the corresponding element with the XML parser */
+	  if (!ustrcmp (theGI, TEXT("math")))
+	     ustrcpy (schemaName, TEXT("MathML"));
+	  else
+	     ustrcpy (schemaName, TEXT("GraphML"));
+	  /* get back to the beginning of the tag in the input buffer */
+          CurrentBufChar = StartOfTagIndx;
+	  if (!XMLparse (stream, &CurrentBufChar, schemaName,
+			 HTMLcontext.doc, &HTMLcontext.lastElement,
+			 &HTMLcontext.lastElementClosed,
+			 HTMLcontext.language))
+	    StopParsing ();   /* the XML parser raised an error */
+	  /* the whole element has been read by the XML parser */
+	  /* reset the automaton state */
+	  NormalTransition = FALSE;
+	  currentState = 0;
+	  CharProcessed = TRUE;
+	}
+#endif /* EXPAT_PARSER */
+      else
+        ProcessStartGI (theGI);
       }
 }
 
@@ -5390,12 +5398,15 @@ char*              HTMLbuf;
 				     }
 
 			    /* call the procedure associated with the transition */
+			    CharProcessed = FALSE;
 			    if (trans->action != NULL)
 			       (*(trans->action)) (charRead);
+			    if (NormalTransition || CharProcessed)
+			       /* the input character has been processed */
+			       charRead = WC_EOS;
+			      
 			    if (NormalTransition)
 			      {
-				 /* the input character has been processed */
-				 charRead = WC_EOS;
 				 /* the procedure associated with the transition has not */
 				 /* changed state explicitely */
 				 /* change current automaton state */
@@ -6853,8 +6864,8 @@ Document   doc;
        /* InputText = HTMLbuf; */
        CurrentBufChar = 0;
 #ifndef EXPAT_PARSER
-       if (!XMLparse (NULL, &CurrentBufChar, schemaName, doc, lastelem,
-		      isclosed, TtaGetDefaultLanguage(), NULL))
+       if (!XMLparse (NULL, &CurrentBufChar, schemaName, doc, &lastelem,
+		      &isclosed, TtaGetDefaultLanguage()))
 #endif /* EXPAT_PARSER */
 	  StopParsing ();
       }

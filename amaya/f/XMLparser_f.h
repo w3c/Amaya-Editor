@@ -20,10 +20,9 @@ extern ThotBool XMLparse ( FILE *infile,
                            int *index,
                            STRING DTDname,
                            Document doc,
-                           Element el,
-                           ThotBool isclosed,
-                           Language lang,
-                           CHAR_T* closingTag );
+                           Element *el,
+                           ThotBool *isclosed,
+                           Language lang );
 
 #else /* __STDC__ */
 
@@ -41,10 +40,9 @@ extern ThotBool XMLparse (/* FILE *infile,
                              int *index,
                              STRING DTDname,
                              Document doc,
-                             Element el,
-                             ThotBool isclosed,
-                             Language lang,
-                             CHAR_T* closingTag */);
+                             Element *el,
+                             ThotBool *isclosed,
+                             Language lang */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

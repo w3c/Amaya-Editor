@@ -99,9 +99,7 @@ static CHAR_T	    currentElementContent = ' ';
 static Attribute    currentAttribute = NULL;
 static ThotBool	    HTMLStyleAttribute = FALSE;
 static ThotBool	    XMLrootClosed = FALSE;
-static STRING	    XMLrootClosingTag = NULL;
 static int	    XMLrootLevel = 0;
-static ThotBool	    lastTagRead = FALSE;
 static ThotBool     XMLabort = FALSE;
 static ThotBool     XlinkAttribute = FALSE;
 
@@ -495,22 +493,19 @@ CHAR_T                c;
 #endif
 {
   stackLevel--;
-  if (stackLevel < XMLrootLevel && lastTagRead)
+  if (stackLevel >= 0)
+    currentLanguage = languageStack[stackLevel];
+  if (elementStack[stackLevel] != NULL)
+    {
+      /* restore the parser context */
+      currentParserCtxt = parserCtxtStack[stackLevel];
+      currentElement = elementStack[stackLevel];
+      currentElementClosed = TRUE;
+      XMLElementComplete (currentElement, currentDocument);
+    }
+  if (stackLevel == XMLrootLevel)
     /* end of the XML object. Return to the calling parser */
     XMLrootClosed = TRUE;
-  else
-    {
-      if (stackLevel >= 0)
-	currentLanguage = languageStack[stackLevel];
-      if (elementStack[stackLevel] != NULL)
-        {
-	  /* restore the parser context */
-	  currentParserCtxt = parserCtxtStack[stackLevel];
-	  currentElement = elementStack[stackLevel];
-	  currentElementClosed = TRUE;
-	  XMLElementComplete (currentElement, currentDocument);
-        }
-    }
   immAfterTag = TRUE;
 }
 
@@ -713,38 +708,20 @@ CHAR_T                c;
   else
      i = 0;
 
-  if (stackLevel == XMLrootLevel)
-     {
-     /* end of the whole XML object to be parsed */
-     /* wait for the following '>' to be read before returning to the
-	calling parser */
-     lastTagRead = TRUE;
-     if (XMLrootClosingTag && XMLrootClosingTag != EOS &&
-         ustrcasecmp (&inputBuffer[i], XMLrootClosingTag))
-	/* wrong closing tag */
-	{
-	usprintf (msgBuffer, TEXT("Unexpected end tag </%s> instead of </%s>"),
-		  inputBuffer, XMLrootClosingTag);
+  if (XMLelementType[stackLevel - 1] != NULL)
+    /* the corresponding opening tag was a known tag */
+    if (ustrcmp(&inputBuffer[i], XMLelementType[stackLevel - 1]) != 0)
+      /* the end tag does not close the current element */
+      {
+	/* print an error message */
+	usprintf (msgBuffer,
+		  TEXT("Unexpected XML end tag </%s> instead of </%s>"),
+		  inputBuffer, XMLelementType[stackLevel - 1]);
 	ParseHTMLError (currentDocument, msgBuffer);
 	normalTransition = FALSE;
 	XMLabort = TRUE;
-	}
-     }
-  else
-     if (XMLelementType[stackLevel - 1] != NULL)
-       /* the corresponding opening tag was a known tag */
-       if (ustrcmp(&inputBuffer[i], XMLelementType[stackLevel - 1]) != 0)
-          /* the end tag does not close the current element */
-          {
-          /* print an error message */
-          usprintf (msgBuffer,
-		    TEXT("Unexpected XML end tag </%s> instead of </%s>"),
-		    inputBuffer, XMLelementType[stackLevel - 1]);
-          ParseHTMLError (currentDocument, msgBuffer);
-	  normalTransition = FALSE;
-	  XMLabort = TRUE;
-          }
- 
+      }
+  
   /* the input buffer is now empty */
   bufferLength = 0;
 }
@@ -778,7 +755,7 @@ CHAR_T                c;
 
 #endif
 {
-  Attribute	attr, oldAttr;
+  Attribute	attr;
   AttributeType	attrType;
   int		i;
   UCHAR_T         msgBuffer[MAX_BUFFER_LENGTH];
@@ -851,22 +828,13 @@ CHAR_T                c;
         {
 	if (ustrcasecmp (&inputBuffer[i], TEXT("style")) == 0)
 	   HTMLStyleAttribute = TRUE;
-        oldAttr = TtaGetAttribute (currentElement, attrType);
-        if (oldAttr != NULL)
-	   {
-           /* this attribute already exists for the current element */
-           usprintf (msgBuffer, TEXT("Duplicate XML attribute %s"),
-		     inputBuffer);
-           ParseHTMLError (currentDocument, msgBuffer);	
-	   normalTransition = FALSE;
-	   XMLabort = TRUE;
-	   }
-        else
+        attr = TtaGetAttribute (currentElement, attrType);
+        if (!attr)
 	   {
 	   attr = TtaNewAttribute (attrType);
 	   TtaAttachAttribute (currentElement, attr, currentDocument);
-	   currentAttribute = attr;
 	   }
+	currentAttribute = attr;
         }
      }
  
@@ -1757,21 +1725,19 @@ void                FreeXMLParser ()
    doc: document to which the abstract tree belongs
    el: the previous sibling (if isclosed) or parent of the tree to be built
    lang: current language
-   closingTag: name of the tag that should terminate the tree to be parsed.
    Return TRUE if the parsing is complete.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool  XMLparse (FILE *infile, int *index, STRING DTDname, Document doc, Element el, ThotBool isclosed, Language lang, CHAR_T* closingTag)
+ThotBool  XMLparse (FILE *infile, int *index, STRING DTDname, Document doc, Element *el, ThotBool *isclosed, Language lang)
 #else
-ThotBool  XMLparse (infile, index, DTDname, doc, el, isclosed, lang, closingTag)
+ThotBool  XMLparse (infile, index, DTDname, doc, el, isclosed, lang)
 FILE     *infile;
 int      *index;
 STRING    DTDname;
 Document  doc;
-Element   el;
-ThotBool  isclosed;
+Element   *el;
+ThotBool  *isclosed;
 Language  lang;
-CHAR_T*   closingTag;
 #endif
 {
   UCHAR_T             charRead;
@@ -1788,9 +1754,7 @@ CHAR_T*   closingTag;
   ThotBool	      oldElementClosed;
   Attribute	      oldAttribute;
   ThotBool	      oldXMLrootClosed;
-  STRING	      oldXMLrootClosingTag;
   int		      oldXMLrootLevel;
-  ThotBool	      oldlastTagRead;
   int		      oldStackLevel;
 
   /* initialize all parser contexts if not done yet */
@@ -1809,19 +1773,15 @@ CHAR_T*   closingTag;
   oldLanguage = currentLanguage;
   currentLanguage = lang;
   oldElement = currentElement;
-  currentElement = el;
+  currentElement = *el;
   oldElementClosed = currentElementClosed;
-  currentElementClosed = isclosed;
+  currentElementClosed = *isclosed;
   oldAttribute = currentAttribute;
   currentAttribute = NULL;
   oldXMLrootClosed = XMLrootClosed;
   XMLrootClosed = FALSE;
-  oldXMLrootClosingTag = XMLrootClosingTag;
-  XMLrootClosingTag = closingTag;
   oldXMLrootLevel = XMLrootLevel;
   XMLrootLevel = stackLevel;
-  oldlastTagRead = lastTagRead;
-  lastTagRead = FALSE;
   oldStackLevel = stackLevel;
   XMLabort = FALSE;
   inputBuffer[0] = EOS;
@@ -1995,9 +1955,9 @@ CHAR_T*   closingTag;
     }
   while (!endOfFile && !XMLrootClosed && !XMLabort);
 
-  /* end of the XML root element */
-  if (!isclosed)
-     XMLElementComplete (el, currentDocument);
+  /* return parameters */
+  *el = currentElement;
+  *isclosed = currentElementClosed;
 
   /* restore the previous parsing environment */
   if (currentParserCtxt)
@@ -2009,10 +1969,9 @@ CHAR_T*   closingTag;
   currentElementClosed = oldElementClosed;
   currentAttribute = oldAttribute;
   XMLrootClosed = oldXMLrootClosed;
-  XMLrootClosingTag = oldXMLrootClosingTag;
   XMLrootLevel = oldXMLrootLevel;
-  lastTagRead = oldlastTagRead;
   stackLevel = oldStackLevel;
+
   return (!XMLabort);
 }
 

@@ -59,7 +59,7 @@ CHAR_T*        elementName;
 Document       doc;
 #endif
 {
-  attrType->AttrSSchema = GetMathMLSSchema (doc);
+  attrType->AttrSSchema = GetXLinkSSchema (doc);
   MapXMLAttribute (XLINK_TYPE, attrName, elementName, doc, &(attrType->AttrTypeNum));
 }
 
