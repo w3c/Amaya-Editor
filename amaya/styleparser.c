@@ -5704,7 +5704,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
     pInfo = AddInfoCSS (docRef, css, CSS_DOCUMENT_STYLE, CSS_ALL, link);
   /* look for the CSS descriptor that points to the extension schema */
   refcss = css;
-  if (import)
+  if (pInfo && pInfo->PiCategory == CSS_IMPORT)
     {
       while (refcss &&
 	   refcss->infos[docRef] && refcss->infos[docRef]->PiCategory == CSS_IMPORT)

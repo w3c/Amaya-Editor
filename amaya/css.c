@@ -1012,7 +1012,6 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
     }
 
   /* look for the CSS descriptor that points to the extension schema */
-  refcss = css;
   if (import)
     {
       while (refcss && refcss->import)
@@ -1020,6 +1019,8 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
       if (refcss->infos[doc])
 	link = refcss->infos[doc]->PiLink;
     }
+  else
+    refcss = css;
   /* now apply style rules */
   pInfo = refcss->infos[doc];
   if (tempfile[0] == EOS)
@@ -1064,14 +1065,14 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
 	{
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
 	  fclose (res);
-	  ReadCSSRules (doc, css, tmpBuff, tempURL, 0, FALSE, NULL);
+	  ReadCSSRules (doc, refcss, tmpBuff, tempURL, 0, FALSE, NULL);
 	  TtaFreeMemory (tmpBuff);
 	  return;
 	}
       tmpBuff[buf.st_size] = 0;
       fclose (res);
 
-      ReadCSSRules (doc, css, tmpBuff, tempURL, 0, FALSE, link);
+      ReadCSSRules (doc, refcss, tmpBuff, tempURL, 0, FALSE, link);
       TtaFreeMemory (tmpBuff);
     }
 }
