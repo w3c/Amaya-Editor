@@ -48,7 +48,6 @@ static Pixmap   iconGraphics;
 static Pixmap   mIcons[12];
 static int      GraphDialogue;
 static boolean  PaletteDisplayed = FALSE;
-extern SSchema	GraphMLSSchema;
 #define BUFFER_LENGTH 100
 
 /*----------------------------------------------------------------------
@@ -592,7 +591,7 @@ boolean    GraphicsPRuleChange (event)
 
   mainView = TtaGetViewFromName (doc, "Formatted_view");
   elType = TtaGetElementType (el);
-  if (elType.ElSSchema != GraphMLSSchema)
+  if (elType.ElSSchema != GetGraphMLSSchema (doc))
     return (ret); /* let Thot perform normal operation */
 
   attrType.AttrSSchema = elType.ElSSchema;
@@ -738,7 +737,7 @@ int                 construct;
    AttributeType	attrType;
    Attribute	attr;
    int		c1, c2, i, j, w, h, minX, minY, maxX, maxY;
-   SSchema	docSchema;
+   SSchema	docSchema, GraphMLSSchema;
    char		shape;
    DisplayMode	dispMode;
    boolean	found, automaticPlacement;
@@ -755,8 +754,7 @@ int                 construct;
    TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
    /* Are we in a drawing? */
    docSchema = TtaGetDocumentSSchema (doc);
-   if (GraphMLSSchema == NULL)
-     GraphMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), "GraphML", "GraphMLP");
+   GraphMLSSchema = GetGraphMLSSchema (doc);
    elType.ElTypeNum = GraphML_EL_GraphML;
    elType.ElSSchema = GraphMLSSchema;
    attrType.AttrSSchema = GraphMLSSchema;

@@ -9,7 +9,7 @@
 extern char *SkipSep ( char *ptr );
 extern char *SkipInt ( char *ptr );
 extern void ParseAreaCoords ( Element element, Document document );
-extern int MapGI ( char *gi, SSchema *schema );
+extern int MapGI ( char *gi, SSchema *schema, Document doc );
 extern void GIType ( char *gi, ElementType *elType, Document doc );
 extern char *GITagNameByType ( ElementType elType );
 extern char *GITagName ( Element elem );
@@ -36,7 +36,7 @@ extern void StartHTMLParser ( Document doc, char *htmlFileName, char *documentNa
 extern char *SkipSep (/* char *ptr */);
 extern char *SkipInt (/* char *ptr */);
 extern void ParseAreaCoords (/* Element element, Document document */);
-extern int MapGI (/* char *gi, SSchema *schema */);
+extern int MapGI (/* char *gi, SSchema *schema, Document doc */);
 extern void GIType (/* char *gi, ElementType *elType, Document doc */);
 extern char *GITagNameByType (/* ElementType elType */);
 extern char *GITagName (/* Element elem */);

@@ -10,7 +10,7 @@ extern void GetXMLElementNameFromThotType ( ElementType elType, char **buffer );
 extern void XMLInsertElement ( Element el );
 extern void XMLElementComplete ( Element el, Document doc );
 extern void XMLTextToDocument ( void );
-extern void MapXMLElementType ( char *XMLname, ElementType *elType, char** mappedName, char* content );
+extern void MapXMLElementType ( char *XMLname, ElementType *elType, char** mappedName, char* content, Document doc );
 extern void FreeXMLParser ( void );
 extern void XMLparse ( char* DTDname, Document doc, Element el, boolean isclosed, Language lang, char *closingTag );
 
@@ -20,7 +20,7 @@ extern void GetXMLElementNameFromThotType (/* ElementType elType, char **buffer 
 extern void XMLInsertElement (/* Element el */);
 extern void XMLElementComplete (/* Element el, Document doc */);
 extern void XMLTextToDocument (/* void */);
-extern void MapXMLElementType (/* char *XMLname, ElementType *elType, char** mappedName, char* content */);
+extern void MapXMLElementType (/* char *XMLname, ElementType *elType, char** mappedName, char* content, Document doc */);
 extern void FreeXMLParser (/* void */);
 extern void XMLparse (/* char* DTDname, Document doc, Element el, boolean isclosed, Language lang, char *closingTag */);
 

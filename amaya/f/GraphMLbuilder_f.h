@@ -6,11 +6,11 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void InitGraphMLBuilder ( char *DTDname, Document doc );
+extern SSchema GetGraphMLSSchema ( Document doc );
 extern void GraphMLGetDTDName ( char* DTDname, char *elementName );
-extern void MapGraphMLElementType ( char *XMLname, ElementType *elType, char** mappedName, char* content );
+extern void MapGraphMLElementType ( char *XMLname, ElementType *elType, char** mappedName, char* content, Document doc );
 extern void GetGraphMLElementName ( ElementType elType, char **buffer );
-extern void MapGraphMLAttribute ( char *Attr, AttributeType *attrType, char* elementName );
+extern void MapGraphMLAttribute ( char *Attr, AttributeType *attrType, char* elementName, Document doc );
 extern void MapGraphMLAttributeValue ( char *AttrVal, AttributeType attrType, int *value );
 extern void MapGraphMLEntity ( char *entityName, char *entityValue, int valueLength, char *alphabet );
 extern void GraphMLEntityCreated ( unsigned char *entityValue, char *entityName, Document doc );
@@ -25,11 +25,11 @@ extern void GraphMLAttributeComplete ( Attribute attr, Element el, Document doc 
 
 #else /* __STDC__ */
 
-extern void InitGraphMLBuilder (/* char *DTDname, Document doc */);
+extern SSchema GetGraphMLSSchema (/* Document doc */);
 extern void GraphMLGetDTDName (/* char* DTDname, char *elementName */);
-extern void MapGraphMLElementType (/* char *XMLname, ElementType *elType, char** mappedName, char* content */);
+extern void MapGraphMLElementType (/* char *XMLname, ElementType *elType, char** mappedName, char* content, Document doc */);
 extern void GetGraphMLElementName (/* ElementType elType, char **buffer */);
-extern void MapGraphMLAttribute (/* char *Attr, AttributeType *attrType, char* elementName */);
+extern void MapGraphMLAttribute (/* char *Attr, AttributeType *attrType, char* elementName, Document doc */);
 extern void MapGraphMLAttributeValue (/* char *AttrVal, AttributeType attrType, int *value */);
 extern void MapGraphMLEntity (/* char *entityName, char *entityValue, int valueLength, char *alphabet */);
 extern void GraphMLEntityCreated (/* unsigned char *entityValue, char *entityName, Document doc */);

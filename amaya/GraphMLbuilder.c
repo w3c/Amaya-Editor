@@ -109,23 +109,24 @@ static AttrValueMapping GraphMLAttrValueMappingTable[] =
 };
 
 #define MaxMsgLength 200
-SSchema	GraphMLSSchema = NULL;
 
 /*----------------------------------------------------------------------
-   InitGraphMLBuilder
+   GetGraphMLSSchema returns the GraphML Thot schema for document doc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               InitGraphMLBuilder (char *DTDname, Document doc)
+SSchema            GetGraphMLSSchema (Document doc)
 #else
-void               InitGraphMLBuilder (DTDname, doc)
-char              *DTDname;
+SSchema            GetGraphMLSSchema (doc)
 Document	   doc;
 
 #endif
 {
-   GraphMLSSchema = TtaGetSSchema (DTDname, doc);
-   if (GraphMLSSchema == NULL)
-      GraphMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), "GraphML", "GraphMLP");
+  SSchema	GraphMLSSchema;
+
+  GraphMLSSchema = TtaGetSSchema ("GraphML", doc);
+  if (GraphMLSSchema == NULL)
+    GraphMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), "GraphML", "GraphMLP");
+  return (GraphMLSSchema);
 }
 
 /*----------------------------------------------------------------------
@@ -159,13 +160,14 @@ char *elementName;
    Returns -1 and schema = NULL if not found.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               MapGraphMLElementType (char *XMLname, ElementType *elType, char** mappedName, char* content)
+void               MapGraphMLElementType (char *XMLname, ElementType *elType, char** mappedName, char* content, Document doc)
 #else
-void               MapGraphMLElementType (XMLname, elType, mappedName, content)
+void               MapGraphMLElementType (XMLname, elType, mappedName, content, doc)
 char               *XMLname;
 ElementType	   *elType;
 char		   **mappedName;
 char		   *content;
+Document            doc;
 #endif
 {
    int                 i;
@@ -180,7 +182,7 @@ char		   *content;
        else
 	  {
 	  elType->ElTypeNum = GraphMLElemMappingTable[i].ThotType;
-	  elType->ElSSchema = GraphMLSSchema;
+	  elType->ElSSchema = GetGraphMLSSchema (doc);
 	  *mappedName = GraphMLElemMappingTable[i].XMLname;
 	  *content = GraphMLElemMappingTable[i].XMLcontents;
 	  }
@@ -227,13 +229,13 @@ char** buffer;
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void          MapGraphMLAttribute (char *Attr, AttributeType *attrType, char* elementName)
+void          MapGraphMLAttribute (char *Attr, AttributeType *attrType, char* elementName, Document doc)
 #else
-void          MapGraphMLAttribute (Attr, attrType, elementName)
+void          MapGraphMLAttribute (Attr, attrType, elementName, doc)
 char               *Attr;
 AttributeType      *attrType;
 char 		   *elementName;
-
+Document            doc;
 #endif
 {
    int                 i;
@@ -248,13 +250,13 @@ char 		   *elementName;
 	 if (GraphMLAttributeMappingTable[i].XMLelement[0] == EOS)
 	       {
 	       attrType->AttrTypeNum = GraphMLAttributeMappingTable[i].ThotAttribute;
-	       attrType->AttrSSchema = GraphMLSSchema;
+	       attrType->AttrSSchema = GetGraphMLSSchema (doc);
 	       }
 	 else if (!strcasecmp (GraphMLAttributeMappingTable[i].XMLelement,
 			       elementName))
 	       {
 	       attrType->AttrTypeNum = GraphMLAttributeMappingTable[i].ThotAttribute;
-	       attrType->AttrSSchema = GraphMLSSchema;
+	       attrType->AttrSSchema = GetGraphMLSSchema (doc);
 	       }
 	 else
 	       i++;
@@ -365,7 +367,7 @@ boolean		changeShape;
    if (leaf == NULL)
       /* create the graphical element */
       {
-      elType.ElSSchema = GraphMLSSchema;
+      elType.ElSSchema = GetGraphMLSSchema (doc);
       elType.ElTypeNum = GraphML_EL_GRAPHICS_UNIT;
       leaf = TtaNewElement (doc, elType);
       if (child == NULL)
@@ -645,10 +647,11 @@ Document	doc;
    ElementType		elType, parentType, newType;
    Element		child, parent, new, leaf;
    PRule		fillPatternRule, newPRule;
+   SSchema	        GraphMLSSchema;
    boolean		closedShape;
 
    elType = TtaGetElementType (el);
-
+   GraphMLSSchema = GetGraphMLSSchema (doc);
    if (elType.ElSSchema != GraphMLSSchema)
      /* this is not a GraphML element. It's the HTML element <XMLGraphics>, or
 	any other element containing a GraphML expression */
@@ -756,7 +759,7 @@ void UpdateInternalAttrForPoly (el, leaf, doc, minX, minY, maxX, maxY, setIntPos
       }
    TtaChangeLimitOfPolyline (leaf, unit, width, height, doc);
 
-   attrType.AttrSSchema = GraphMLSSchema;
+   attrType.AttrSSchema = GetGraphMLSSchema (doc);
    if (setIntPosition)
       {
       attrType.AttrTypeNum = GraphML_ATTR_IntPosX;

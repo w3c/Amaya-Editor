@@ -498,7 +498,7 @@ static void         ProcessSymbol ()
 	     sd->Next = ppSymb;
 	  }
 	schema = ppTransSet->Schema;
-	if (strcmp (ppSymb->Tag, "*") && (MapGI (ppSymb->Tag, &schema) == -1))
+	if (strcmp (ppSymb->Tag, "*") && (MapGI (ppSymb->Tag, &schema, 0) == -1))
 	  {
 	     ppError = TRUE;
 	     sprintf (msgBuffer, "unknown element %s", ppSymb->Tag);
@@ -1638,7 +1638,7 @@ unsigned char       c;
 	strcpy (ppNode->Tag, inputBuffer);
 	ppLgBuffer = 0;
 	schema = ppTransSet->Schema;
-	if (MapGI (ppNode->Tag, &schema) == -1)
+	if (MapGI (ppNode->Tag, &schema, 0) == -1)
 	  {
 	     ppError = TRUE;
 	     sprintf (msgBuffer, "unknown tag </%s>", ppNode->Tag);
@@ -1674,7 +1674,7 @@ unsigned char       c;
 	strcpy (ppNode->Tag, inputBuffer);
 	ppLgBuffer = 0;
 	schema = ppTransSet->Schema;
-	if (MapGI (ppNode->Tag, &schema) == -1)
+	if (MapGI (ppNode->Tag, &schema, 0) == -1)
 	  {
 	     ppError = TRUE;
 	     sprintf (msgBuffer, "unknown tag </%s>", ppNode->Tag);
@@ -1793,7 +1793,7 @@ unsigned char       c;
       if (strcmp (ppNode->Tag, "*") && 
 	  strcmp (ppNode->Tag, "#") &&
 	  ppNode->Tag[0] != '\"' &&
-	  (MapGI (ppNode->Tag, &schema) == -1))
+	  (MapGI (ppNode->Tag, &schema, 0) == -1))
 	{
 	  ppError = TRUE;
 	  sprintf (msgBuffer, "unknown tag </%s>", ppNode->Tag);

@@ -6,10 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void InitMathMLBuilder ( char *DTDname, Document doc );
-extern void MapMathMLElementType ( char *XMLname, ElementType *elType, char** mappedName, char* content );
+extern SSchema GetMathMLSSchema ( Document doc );
+extern void MapMathMLElementType ( char *XMLname, ElementType *elType, char** mappedName, char* content, Document doc );
 extern void GetMathMLElementName ( ElementType elType, char **buffer );
-extern void MapMathMLAttribute ( char *Attr, AttributeType *attrType, char* elementName );
+extern void MapMathMLAttribute ( char *Attr, AttributeType *attrType, char* elementName, Document doc );
 extern void MapMathMLAttributeValue ( char *AttrVal, AttributeType attrType, int *value );
 extern void MapMathMLEntity ( char *entityName, char *entityValue, int valueLength, char *alphabet );
 extern void MathMLEntityCreated ( unsigned char *entityValue, char *entityName, Document doc );
@@ -28,10 +28,10 @@ extern void MathMLGetDTDName ( char* DTDname, char *elementName );
 
 #else /* __STDC__ */
 
-extern void InitMathMLBuilder (/* char *DTDname, Document doc */);
-extern void MapMathMLElementType (/* char *XMLname, ElementType *elType, char** mappedName, char* content */);
+extern SSchema GetMathMLSSchema (/* Document doc */);
+extern void MapMathMLElementType (/* char *XMLname, ElementType *elType, char** mappedName, char* content, Document doc */);
 extern void GetMathMLElementName (/* ElementType elType, char **buffer */);
-extern void MapMathMLAttribute (/* char *Attr, AttributeType *attrType, char* elementName */);
+extern void MapMathMLAttribute (/* char *Attr, AttributeType *attrType, char* elementName, Document doc */);
 extern void MapMathMLAttributeValue (/* char *AttrVal, AttributeType attrType, int *value */);
 extern void MapMathMLEntity (/* char *entityName, char *entityValue, int valueLength, char *alphabet */);
 extern void MathMLEntityCreated (/* unsigned char *entityValue, char *entityName, Document doc */);

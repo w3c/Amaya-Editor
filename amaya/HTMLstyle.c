@@ -4128,7 +4128,7 @@ Document            doc;
 	save = *cur;
 	*cur = 0;
 	schema = NULL;
-	if (MapGI (first, &schema) == -1)
+	if (MapGI (first, &schema, doc) == -1)
 	  {
 	     return (0);
 	  }

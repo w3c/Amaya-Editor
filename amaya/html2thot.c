@@ -950,12 +950,12 @@ Document            document;
    Returns -1 and schema = NULL if not found.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 MapGI (char *gi, SSchema *schema)
+int                 MapGI (char *gi, SSchema *schema, Document doc)
 #else
-int                 MapGI (gi, schema)
+int                 MapGI (gi, schema, doc)
 char               *gi;
 SSchema		   *schema;
-
+Document            doc;
 #endif
 {
    int                 i;
@@ -987,7 +987,7 @@ SSchema		   *schema;
          {
          elType.ElTypeNum = 0;
          elType.ElSSchema = *schema;
-         MapXMLElementType (gi, &elType, &mappedName, &content);
+         MapXMLElementType (gi, &elType, &mappedName, &content, doc);
          if (elType.ElTypeNum == 0)
 	    {
             entry = -1;
@@ -1040,7 +1040,7 @@ Document	    doc;
      }
    while (HTMLGIMappingTable[i].htmlGI[0] != EOS);
    /* if not found, look at the XML mapping tables */
-   MapXMLElementType (gi, elType, &mappedName, &content);
+   MapXMLElementType (gi, elType, &mappedName, &content, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -1189,7 +1189,7 @@ char               *tag;
 
    thotAttr = -1;
    schema = HTMLSSchema;
-   lastElemEntry = MapGI (tag, &schema);
+   lastElemEntry = MapGI (tag, &schema, theDocument);
    if (lastElemEntry >= 0)
      {
 	tableEntry = MapAttr (Attr, &schema);
@@ -1315,7 +1315,7 @@ void                InitMapping ()
 		/* a GI has been read */
 	       {
 		  schema = HTMLSSchema;
-		  entry = MapGI (name, &schema);
+		  entry = MapGI (name, &schema, theDocument);
 #ifdef DEBUG
 		  if (entry < 0)
 		     fprintf (stderr, "error in EquivEndingElem: tag %s unknown in line\n%s\n", name, EquivEndingElem[line]);
@@ -1373,7 +1373,7 @@ void                InitMapping ()
 	i = 0;
 	ptr++;
 	schema = HTMLSSchema;
-	entry = MapGI (name, &schema);
+	entry = MapGI (name, &schema, theDocument);
 #ifdef DEBUG
 	if (entry < 0)
 	   fprintf (stderr, "error in StartTagEndingElem: tag %s unknown in line\n%s\n", name, StartTagEndingElem[line]);
@@ -1404,7 +1404,7 @@ void                InitMapping ()
 		  newCE = (PtrClosedElement) TtaGetMemory (sizeof (ClosedElement));
 		  newCE->nextClosedElem = NULL;
 		  schema = HTMLSSchema;
-		  newCE->tagNum = MapGI (name, &schema);
+		  newCE->tagNum = MapGI (name, &schema, theDocument);
 #ifdef DEBUG
 		  if (newCE->tagNum < 0)
 		     fprintf (stderr, "error in StartTagEndingElem: tag %s unknown in line\n%s\n", name, StartTagEndingElem[line]);
@@ -3237,7 +3237,7 @@ char               *GIname;
       return;
   /* search the HTML element name in the mapping table */
   schema = HTMLSSchema;
-  entry = MapGI (GIname, &schema);
+  entry = MapGI (GIname, &schema, theDocument);
   lastElemEntry = entry;
   if (entry < 0)
     /* not found in the HTML DTD */
@@ -3382,7 +3382,7 @@ char                c;
    CloseBuffer ();
    /* seach the HTML tag in the mapping table */
    schema = HTMLSSchema;
-   entry = MapGI (inputBuffer, &schema);
+   entry = MapGI (inputBuffer, &schema, theDocument);
    if (entry < 0)
      {
 	if (HTMLrootClosingTag && HTMLrootClosingTag != EOS &&
@@ -3417,7 +3417,7 @@ char                c;
 	     do
 	       {
 		  schema = HTMLSSchema;
-		  entry = MapGI (msgBuffer, &schema);
+		  entry = MapGI (msgBuffer, &schema, theDocument);
 		  ok = CloseElement (entry, -1);
 		  msgBuffer[1]++;
 		  i++;
@@ -3434,10 +3434,10 @@ char                c;
 	     {
 		ok = TRUE;
 		schema = HTMLSSchema;
-		if (!CloseElement (MapGI ("OL", &schema), -1))
-		   if (!CloseElement (MapGI ("UL", &schema), -1))
-		      if (!CloseElement (MapGI ("MENU", &schema), -1))
-			 if (!CloseElement (MapGI ("DIR", &schema), -1))
+		if (!CloseElement (MapGI ("OL", &schema, theDocument), -1))
+		   if (!CloseElement (MapGI ("UL", &schema, theDocument), -1))
+		      if (!CloseElement (MapGI ("MENU", &schema, theDocument), -1))
+			 if (!CloseElement (MapGI ("DIR", &schema, theDocument), -1))
 			    ok = FALSE;
 	     }
 	if (!ok)
@@ -6062,7 +6062,7 @@ Document            doc;
 		       ThotLevel[i + 1] = ThotLevel[i] + 1;
 		    }
 		  schema = HTMLSSchema;
-		  GINumberStack[1] = MapGI (tag, &schema);
+		  GINumberStack[1] = MapGI (tag, &schema, theDocument);
 		  ElementStack[1] = elem;
 		  ThotLevel[1] = 1;
 		  LanguageStack[1] = currentLanguage;

@@ -178,7 +178,7 @@ static void            InitParserContexts ()
    ctxt->SSchemaName = (char*) TtaGetMemory (MAX_SS_NAME_LENGTH);
    strcpy (ctxt->SSchemaName, "MathML");
    ctxt->XMLSSchema = NULL;
-   ctxt->InitBuilder = (Proc) InitMathMLBuilder;
+   ctxt->InitBuilder = (Proc) GetMathMLSSchema;
    ctxt->MapElementType = (Proc) MapMathMLElementType;
    ctxt->GetElementName = (Proc) GetMathMLElementName;
    ctxt->MapAttribute = (Proc) MapMathMLAttribute;
@@ -202,7 +202,7 @@ static void            InitParserContexts ()
    ctxt->SSchemaName = (char*) TtaGetMemory (MAX_SS_NAME_LENGTH);
    strcpy (ctxt->SSchemaName, "GraphML");
    ctxt->XMLSSchema = NULL;
-   ctxt->InitBuilder = (Proc) InitGraphMLBuilder;
+   ctxt->InitBuilder = (Proc) GetGraphMLSSchema;
    ctxt->MapElementType = (Proc) MapGraphMLElementType;
    ctxt->GetElementName = (Proc) GetGraphMLElementName;
    ctxt->MapAttribute = (Proc) MapGraphMLAttribute;
@@ -426,8 +426,8 @@ char                *DTDname;
   /* initialize the corresponding builder */
   if (currentParserCtxt != NULL)
      {
+     (*(currentParserCtxt->InitBuilder)) (currentDocument);
      currentParserCtxt->XMLSSchema = TtaGetSSchema (DTDname, currentDocument);
-     (*(currentParserCtxt->InitBuilder)) (DTDname, currentDocument);
      }
 }
 
@@ -548,20 +548,21 @@ char                c;
    Returns -1 and schema = NULL if not found.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               MapXMLElementType (char *XMLname, ElementType *elType, char** mappedName, char* content)
+void               MapXMLElementType (char *XMLname, ElementType *elType, char** mappedName, char* content, Document doc)
 #else
-void               MapXMLElementType (XMLname, elType, mappedName, content)
+void               MapXMLElementType (XMLname, elType, mappedName, content, doc)
 char               *XMLname;
 ElementType        *elType;
 char               **mappedName;
-char		   *content
+char		   *content;
+Document            doc;
 #endif
 {
    PtrParserCtxt	ctxt;
 
-   /* Look at the current context if there is noe */
+   /* Look at the current context if there is one */
    if (currentParserCtxt != NULL)
-      (*(currentParserCtxt->MapElementType)) (XMLname, elType, mappedName, content);
+      (*(currentParserCtxt->MapElementType)) (XMLname, elType, mappedName, content, doc);
    /* if not found, look at other contexts */
    if (elType->ElSSchema == NULL)
       {
@@ -573,7 +574,7 @@ char		   *content
 	while (ctxt != NULL && elType->ElSSchema == NULL)
 	  {
 	    if (ctxt != currentParserCtxt)
-	      (*(ctxt->MapElementType)) (XMLname, elType, mappedName, content);
+	      (*(ctxt->MapElementType)) (XMLname, elType, mappedName, content, doc);
 	    ctxt = ctxt->NextParserCtxt;
 	  }
       }
@@ -605,7 +606,7 @@ char                c;
      {
        elType.ElSSchema = NULL;
        elType.ElTypeNum = 0;
-       MapXMLElementType (inputBuffer, &elType, &typeName, &currentElementContent);
+       MapXMLElementType (inputBuffer, &elType, &typeName, &currentElementContent, currentDocument);
        if (elType.ElTypeNum <= 0)
 	  {
 	  sprintf (msgBuffer, "Unknown XML element %s", inputBuffer);
@@ -741,7 +742,8 @@ char                c;
   if (XMLelementType[stackLevel-1] != NULL)
      {
      (*(currentParserCtxt->MapAttribute)) (inputBuffer, &attrType,
-					   XMLelementType[stackLevel-1]);
+					   XMLelementType[stackLevel-1],
+					   currentDocument);
      if (attrType.AttrTypeNum <= 0)
         /* not found. Is it a HTML attribute? */
 	{
@@ -1089,7 +1091,7 @@ char                c;
    /* create a Thot element for the comment */
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
-   MapXMLElementType ("XMLcomment", &elType, &typeName, &cont);
+   MapXMLElementType ("XMLcomment", &elType, &typeName, &cont, currentDocument);
    if (elType.ElTypeNum <= 0)
       {
       sprintf (msgBuffer, "Unknown XML element %s", inputBuffer);
@@ -1103,7 +1105,7 @@ char                c;
       /* element XMLcomment */
       elType.ElSSchema = NULL;
       elType.ElTypeNum = 0;
-      MapXMLElementType ("XMLcomment_line", &elType, &typeName, &cont);
+      MapXMLElementType ("XMLcomment_line", &elType, &typeName, &cont, currentDocument);
       commentLineEl = TtaNewElement (currentDocument, elType);
       TtaInsertFirstChild (&commentLineEl, commentEl, currentDocument);
       /* create a TEXT element as the first child of element XMLcomment_line */
@@ -1145,7 +1147,7 @@ unsigned char       c;
 	 /* create a new XMLcomment_line element */
 	 elType.ElSSchema = NULL;
 	 elType.ElTypeNum = 0;
-	 MapXMLElementType ("XMLcomment_line", &elType, &typeName, &cont);
+	 MapXMLElementType ("XMLcomment_line", &elType, &typeName, &cont, currentDocument);
 	 commentLineEl = TtaNewElement (currentDocument, elType);
 	 /* inserts the new XMLcomment_line after the previous one */
 	 TtaInsertSibling (commentLineEl, TtaGetParent (commentText), FALSE,

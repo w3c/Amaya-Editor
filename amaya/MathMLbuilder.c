@@ -261,23 +261,24 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
 };
 
 #define MaxMsgLength 200
-static SSchema	MathMLSSchema = NULL;
 
 /*----------------------------------------------------------------------
-   InitMathMLBuilder
+   GetMathMLSSchema returns the MathML Thot schema for document doc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               InitMathMLBuilder (char *DTDname, Document doc)
+SSchema            GetMathMLSSchema (Document doc)
 #else
-void               InitMathMLBuilder (DTDname, doc)
-char              *DTDname;
+SSchema            GetMathMLSSchema (doc)
 Document	   doc;
 
 #endif
 {
-   MathMLSSchema = TtaGetSSchema (DTDname, doc);
+  SSchema	MathMLSSchema;
+
+   MathMLSSchema = TtaGetSSchema ("MathML", doc);
    if (MathMLSSchema == NULL)
       MathMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), "MathML", "MathMLP");
+   return (MathMLSSchema);
 }
 
 
@@ -288,13 +289,14 @@ Document	   doc;
    Returns -1 and schema = NULL if not found.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               MapMathMLElementType (char *XMLname, ElementType *elType, char** mappedName, char* content)
+void               MapMathMLElementType (char *XMLname, ElementType *elType, char** mappedName, char* content, Document doc)
 #else
-void               MapMathMLElementType (XMLname, elType, mappedName, content)
+void               MapMathMLElementType (XMLname, elType, mappedName, content, doc)
 char               *XMLname;
 ElementType	   *elType;
 unsigned char	   **mappedName;
 char		   *content;
+Document            doc;
 #endif
 {
    int                 i;
@@ -309,7 +311,7 @@ char		   *content;
        else
 	  {
 	  elType->ElTypeNum = MathMLElemMappingTable[i].ThotType;
-	  elType->ElSSchema = MathMLSSchema;
+	  elType->ElSSchema = GetMathMLSSchema (doc);
 	  *mappedName = MathMLElemMappingTable[i].XMLname;
 	  *content = MathMLElemMappingTable[i].XMLcontents;
 	  }
@@ -356,13 +358,13 @@ char* buffer;
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void          MapMathMLAttribute (char *Attr, AttributeType *attrType, char* elementName)
+void          MapMathMLAttribute (char *Attr, AttributeType *attrType, char* elementName, Document doc)
 #else
-void          MapMathMLAttribute (Attr, attrType, elementName)
+void          MapMathMLAttribute (Attr, attrType, elementName, doc)
 char               *Attr;
 AttributeType      *attrType;
 char 		   *elementName;
-
+Document            doc;
 #endif
 {
    int                 i;
@@ -377,13 +379,13 @@ char 		   *elementName;
 	 if (MathMLAttributeMappingTable[i].XMLelement[0] == EOS)
 	       {
 	       attrType->AttrTypeNum = MathMLAttributeMappingTable[i].ThotAttribute;
-	       attrType->AttrSSchema = MathMLSSchema;
+	       attrType->AttrSSchema = GetMathMLSSchema (doc);
 	       }
 	 else if (!strcasecmp (MathMLAttributeMappingTable[i].XMLelement,
 			       elementName))
 	       {
 	       attrType->AttrTypeNum = MathMLAttributeMappingTable[i].ThotAttribute;
-	       attrType->AttrSSchema = MathMLSSchema;
+	       attrType->AttrSSchema = GetMathMLSSchema (doc);
 	       }
 	 else
 	       i++;
@@ -497,12 +499,12 @@ Document doc;
 	buffer[len+1] = ';';
 	buffer[len+2] = EOS;
 	elType.ElTypeNum = MathML_EL_TEXT_UNIT;
-	elType.ElSSchema = MathMLSSchema;
+	elType.ElSSchema = GetMathMLSSchema (doc);
 	elText = TtaNewElement (doc, elType);
 	XMLInsertElement (elText);
 	lang = TtaGetLanguageIdFromAlphabet('L');
 	TtaSetTextContent (elText, buffer, lang, doc);
-	attrType.AttrSSchema = MathMLSSchema;
+	attrType.AttrSSchema = GetMathMLSSchema (doc);
 	attrType.AttrTypeNum = MathML_ATTR_entity;
         attr = TtaNewAttribute (attrType);
         TtaAttachAttribute (elText, attr, doc);
@@ -646,7 +648,7 @@ static void	CreatePlaceholders (el, doc)
    AttributeType	attrType;
    boolean	create;
 
-   elType.ElSSchema = MathMLSSchema;
+   elType.ElSSchema = GetMathMLSSchema (doc);
    prev = NULL;
    create = TRUE;
    sibling = el;
@@ -774,7 +776,7 @@ static void	CheckMathSubExpressions (el, type1, type2, type3, doc)
   Element	child, new, prev;
   ElementType	elType, childType;
 
-  elType.ElSSchema = MathMLSSchema;
+  elType.ElSSchema = GetMathMLSSchema (doc);
   child = TtaGetFirstChild (el);
   prev = NULL;
   NextNotSep (&child, &prev);
@@ -1086,7 +1088,7 @@ static void SetPlaceholderAttr (el, doc)
      return;
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == MathML_EL_Construct &&
-      elType.ElSSchema == MathMLSSchema)
+      elType.ElSSchema == GetMathMLSSchema (doc))
      {
      attrType.AttrSSchema = elType.ElSSchema;
      attrType.AttrTypeNum = MathML_ATTR_placeholder;
@@ -1122,12 +1124,13 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
 {
   Element	elem, base, next, group, pair, script, prevPair, prevScript;
   ElementType	elType, elTypeGroup, elTypePair, elTypeScript;
-
+  SSchema       MathMLSSchema;
   base = NULL;
   group = NULL;
   prevPair = NULL;
   prevScript = NULL;
 
+  MathMLSSchema = GetMathMLSSchema (doc);
   elTypeGroup.ElSSchema = MathMLSSchema;
   elTypePair.ElSSchema = MathMLSSchema;
   elTypeScript.ElSSchema = MathMLSSchema;
@@ -1776,8 +1779,10 @@ Document	doc;
    Element		child, parent, new, prev, next;
    AttributeType	attrType;
    Attribute		attr;
+   SSchema       MathMLSSchema;
 
    elType = TtaGetElementType (el);
+   MathMLSSchema = GetMathMLSSchema (doc);
 
    if (elType.ElSSchema != MathMLSSchema)
      /* this is not a MathML element. It's the HTML element <math>, or
