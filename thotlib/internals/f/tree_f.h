@@ -13,6 +13,8 @@ extern ThotBool ElementIsHidden ( PtrElement pEl );
 extern ThotBool ElementIsReadOnly ( PtrElement pEl );
 extern ThotBool CannotInsertNearElement ( PtrElement pEl,
                                           ThotBool beforeElement );
+extern PtrElement SearchTypedElementInSubtree ( PtrElement pEl, int typeNum,
+						PtrSSchema pSS );
 extern PtrElement FwdSearchElemByTypeName ( PtrElement pEl,
                                             char *typeName );
 extern PtrElement BackSearchElemByTypeName ( PtrElement pEl,
@@ -187,6 +189,8 @@ extern ThotBool ElementIsHidden (/* PtrElement pEl */);
 extern ThotBool ElementIsReadOnly (/* PtrElement pEl */);
 extern ThotBool CannotInsertNearElement (/* PtrElement pEl,
                                             ThotBool beforeElement */);
+extern PtrElement SearchTypedElementInSubtree (/* PtrElement pEl, int typeNum,
+						  PtrSSchema pSS */);
 extern PtrElement FwdSearchElemByTypeName (/* PtrElement pEl,
                                               char *typeName */);
 extern PtrElement BackSearchElemByTypeName (/* PtrElement pEl,

@@ -2537,13 +2537,14 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		       ThotBool Before)
 {
   PtrElement          firstSel, lastSel, pNew, pF, pSibling, pEl, pSecond;
-  PtrElement          pElem, pElSplit, pSplitEl, pNextEl;
+  PtrElement          pElem, pElSplit, pSplitEl, pNextEl, pParent;
   ElementType	      elType;
   PtrDocument         pSelDoc;
   NotifyElement       notifyEl;
   int                 firstChar, lastChar, origFirstChar, origLastChar,
-		      NSiblings, ancestorRule,
-		      rule, prevrule, prevprevrule, nComp;
+		      NSiblings, ancestorRule, rule, nComp, nAncest, i;
+#define MAX_ANCESTORS_CREATE 10
+  int                 ancest[MAX_ANCESTORS_CREATE];
   ThotBool            InsertionPoint, ok, createAfter, splitElem, elConst;
   ThotBool            empty, selHead, selTail, done, deleted;
 
@@ -2630,7 +2631,8 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		{
 		OpenHistorySequence (pSelDoc, firstSel, lastSel, NULL,
 				     firstChar, lastChar);
-	        ok = ChangeTypeOfElements (firstSel, lastSel, pSelDoc, typeNum, pSS);
+	        ok = ChangeTypeOfElements (firstSel, lastSel, pSelDoc,
+					   typeNum, pSS);
 		CloseHistorySequence (pSelDoc);
 		}
 	      if (!ok)
@@ -2641,7 +2643,8 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                   elType.ElSSchema = (SSchema) pSS;
 
                   if (TransformIntoFunction != NULL)
-                     ok = TransformIntoFunction (elType,  (Document) IdentDocument (pSelDoc));
+                     ok = TransformIntoFunction (elType,
+					 (Document) IdentDocument (pSelDoc));
 		}
 	      /* si ca n'a pas marche' et si plusieurs elements sont
 		 selectionne's, on essaie de transformer chaque element
@@ -2756,13 +2759,13 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	       une telle liste ou un tel agregat */
 	    {
 	      rule = typeNum;
-	      prevrule = 0;  prevprevrule = 0;
+	      nAncest = 0;
 	      while (rule > 0 && !ok)
 		{
-		  /* on cherche d'abord une regle CsList */
+		  /* on cherche d'abord une regle List */
 		  ancestorRule = ListRuleOfElem (rule, pSS);
 		  if (ancestorRule == 0)
-		    /* Pas trouve' de regle Liste On cherche une regle 
+		    /* Pas trouve' de regle List. On cherche une regle 
 		       Aggregate */
 		    ancestorRule = AggregateRuleOfElem (rule, pSS);
 		  if (ancestorRule == 0)
@@ -2772,17 +2775,24 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		      ok = CanInsertBySplitting (&pEl, firstChar, &splitElem,
 				    &pSplitEl, &pElSplit, createAfter,
 				    ancestorRule, pSS, pSelDoc);
-		      if (!ok && ancestorRule > 0)
+		      if (!ok)
 			{
-			if (ancestorRule == prevrule ||
-			    ancestorRule == prevprevrule)
-			   rule = 0;
-			else
-			   {
-			   prevprevrule = prevrule;
-			   prevrule = rule;
-			   rule = ancestorRule;
-			   }
+			  /* is this rule already in the stack? */
+			  for (i = 0; i < nAncest && rule; i++)
+			    if (ancest[i] == ancestorRule)
+			      rule = 0;   /* yes, stop to avoid recursion */
+			  if (rule)
+			    {
+			      if (nAncest >= MAX_ANCESTORS_CREATE - 1)
+				/* stack overflow. Stop */
+				rule = 0;
+			      else
+				/* put that rule on the stack */
+				{
+				  ancest[nAncest++] = ancestorRule;
+				  rule = ancestorRule;
+				}
+			    }
 			}
 		    }
 		}
@@ -2826,12 +2836,14 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		    {
 		      /* store the editing operation in the history */
 		      AddEditOpInHistory (pSplitEl, pSelDoc, TRUE, TRUE);
-		      ok = BreakElement (pSplitEl, pElSplit, firstChar, FALSE, FALSE);
+		      ok = BreakElement (pSplitEl, pElSplit, firstChar, FALSE,
+					 FALSE);
 		      if (!ok)
 			  CancelLastEditFromHistory (pSelDoc);
 		      else
 			{
-			  AddEditOpInHistory (pSplitEl->ElNext, pSelDoc, FALSE, TRUE);
+			  AddEditOpInHistory (pSplitEl->ElNext, pSelDoc, FALSE,
+					      TRUE);
 			  createAfter = TRUE;
 			  if (ancestorRule > 0)
 			    {
@@ -2839,7 +2851,8 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 			      do
 				{
 				  ok = AllowedSibling (pElem, pSelDoc, typeNum,
-					       pSS, (ThotBool)(!createAfter), TRUE, FALSE);
+				                 pSS, (ThotBool)(!createAfter),
+						 TRUE, FALSE);
 				  if (ok)
 				    {
 				      pEl = pElem;
@@ -2850,7 +2863,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 				  else
 				    {
 				      pElem = pElem->ElFirstChild;
-				      while (pElem != NULL && pElem->ElNext != NULL)
+				      while (pElem && pElem->ElNext != NULL)
 					pElem = pElem->ElNext;
 				    }
 				}
@@ -2860,14 +2873,31 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		    }
 		  if (!done)
 		    if (ancestorRule > 0)
+		      /* intermediate elements have to be created */
 		      {
+			/* first, create the high-level element */
 			pNew = NewSubtree (ancestorRule, pSS, pSelDoc,
 					   FALSE, TRUE, TRUE, TRUE);
-			elType.ElTypeNum = typeNum;
+			/* create intermediate elements following the stack */
+			pParent = pNew;
 			elType.ElSSchema = (SSchema) pSS;
-			TtaCreateDescent (IdentDocument (pSelDoc),
-					  (Element) pNew, elType);
-			ok = True;
+			for (i = nAncest; i > 0 && pParent; i--)
+			  {
+			    elType.ElTypeNum = ancest[i - 1];
+			    TtaCreateDescent (IdentDocument (pSelDoc),
+					      (Element) pParent, elType);
+			    pParent = SearchTypedElementInSubtree (pParent,
+						       ancest[i - 1], pSS);
+			  }
+			if (pParent)
+			  /* create the low-level element (the element of the
+			     desired type) */
+			  {
+			   elType.ElTypeNum = typeNum;
+			   TtaCreateDescentWithContent (IdentDocument(pSelDoc),
+						   (Element) pParent, elType);
+			  }
+			ok = TRUE;
 		      }
 		}
 	      if (ok)
@@ -2887,11 +2917,12 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 					  &pSecond, FALSE);
 			AddEditOpInHistory (firstSel, pSelDoc, FALSE, TRUE);
 			AddEditOpInHistory (pSecond, pSelDoc, FALSE, TRUE);
-			BuildAbsBoxSpliText (firstSel, pSecond, pNextEl, pSelDoc);
+			BuildAbsBoxSpliText (firstSel, pSecond, pNextEl,
+					     pSelDoc);
 		      }
 		  if (pNew == NULL)
-		    pNew = NewSubtree (typeNum, pSS, pSelDoc,
-				       TRUE, TRUE, TRUE, TRUE);
+		    pNew = NewSubtree (typeNum, pSS, pSelDoc, TRUE, TRUE,
+				       TRUE, TRUE);
 		  
 		  /* Insertion du nouvel element */
 		  if (createAfter)
@@ -2983,13 +3014,17 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 			  /* si on est dans un element copie' par inclusion,
 			     on met a jour les copies de cet element. */
 			  RedisplayCopies (pNew, pSelDoc, TRUE);
-			  UpdateNumbers (NextElement (pNew), pNew, pSelDoc, TRUE);
+			  UpdateNumbers (NextElement (pNew), pNew, pSelDoc,
+					 TRUE);
 			  /* Indiquer que le document est modifie' */
 			  SetDocumentModified (pSelDoc, TRUE, 30);
-			  /* envoie un evenement ElemNew.Post a l'application */
+			  /* envoie un evenement ElemNew.Post a l'application*/
 			  NotifySubTree (TteElemNew, pSelDoc, pNew, 0);
 			  /* Replace la selection */
-			  SelectElementWithEvent (pSelDoc, FirstLeaf (pNew), TRUE, TRUE);
+			  pEl = SearchTypedElementInSubtree (pNew, typeNum,
+							     pSS);
+			  SelectElementWithEvent (pSelDoc, FirstLeaf (pEl),
+						  TRUE, TRUE);
 			}
 		    }
 		}

@@ -229,6 +229,31 @@ ThotBool CannotInsertNearElement (PtrElement pEl, ThotBool beforeElement)
 }
 
 /*----------------------------------------------------------------------
+   SearchTypedElementInSubtree					
+  ----------------------------------------------------------------------*/
+PtrElement SearchTypedElementInSubtree (PtrElement pEl, int typeNum,
+					PtrSSchema pSS)
+{
+  PtrElement          pRet, pChild;
+
+  pRet = NULL;
+  if (pEl->ElStructSchema == pSS && pEl->ElTypeNumber == typeNum)
+    /* got a hit on the element */
+    pRet = pEl;
+  else if (!pEl->ElTerminal)
+    /* recursive search among the children of the element */
+    {
+      pChild = pEl->ElFirstChild;
+      while (pChild && !pRet)
+	{
+	  pRet = SearchTypedElementInSubtree (pChild, typeNum, pSS);
+	  pChild = pChild->ElNext;
+	}
+    }
+  return pRet;
+}
+
+/*----------------------------------------------------------------------
    FwdSearchTypeNameInSubtree					
   ----------------------------------------------------------------------*/
 static PtrElement FwdSearchTypeNameInSubtree (PtrElement pEl, ThotBool test,
