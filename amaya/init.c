@@ -1633,8 +1633,7 @@ void InitInfo (char *label, char *info)
     return;
 #ifdef _WINGUI   
   MessageBox (NULL, info, label, MB_OK);
-#endif /* !_WINGUI */
-
+#endif /* _WINGUI */
 #if defined(_GTK) || defined(_WX)  
   TtaDisplayMessage (CONFIRM, info, NULL);
 #endif /* #if defined(_GTK) || defined(_WX) */
@@ -1645,7 +1644,7 @@ void InitInfo (char *label, char *info)
 void ConfirmError (Document document, View view, char *label,
 		   char *extrabutton, char *confirmbutton)
 {
-#if defined(_GTK)
+#ifdef _GTK
    char      s[MAX_LENGTH];
    int       i, n;
 
@@ -1667,16 +1666,12 @@ void ConfirmError (Document document, View view, char *label,
    TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
    /* wait for an answer */
    TtaWaitShowDialogue ();
-   /* remove the critic section */
-   CriticConfirm = FALSE;
-#endif /* #if defined(_GTK) */
-   
-#ifdef _WINGUI
-   CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view),
-			       extrabutton, confirmbutton, label);
-#endif /* _WINGUI */
+#endif /* _GTK */
 #ifdef _WX
-  ThotBool created = CreateInitConfirmDlgWX (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view), NULL, extrabutton, confirmbutton, label);
+  ThotBool created = CreateInitConfirmDlgWX (BaseDialog + ConfirmForm,
+					     TtaGetViewFrame (document, view),
+					     NULL, extrabutton, confirmbutton,
+					     label, NULL, NULL);
   if (created)
     {
       TtaSetDialoguePosition ();
@@ -1685,6 +1680,12 @@ void ConfirmError (Document document, View view, char *label,
       TtaWaitShowDialogue ();
     }
 #endif /* _WX */
+#ifdef _WINGUI
+   CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view),
+			       extrabutton, confirmbutton, label);
+#endif /* _WINGUI */
+   /* remove the critic section */
+   CriticConfirm = FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -1692,7 +1693,6 @@ void ConfirmError (Document document, View view, char *label,
 void InitConfirm3L (Document document, View view, char *label1, char *label2,
 		    char *label3, ThotBool withCancel)
 {
-#ifdef _GTK
   /* IV: This widget can't be called twice, but it happens when downloading a
      document with protected images. This is a quick silution to avoid the
      sigsev, although it doesn't fix the problem */
@@ -1701,6 +1701,7 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
   else
     CriticConfirm = TRUE;
 
+#ifdef _GTK
   /* Confirm form */
   if (withCancel)
     TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),  
@@ -1728,20 +1729,32 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
   TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
   /* wait for an answer */
   TtaWaitShowDialogue ();
-  CriticConfirm = FALSE;
 #endif /* _GTK */
+#ifdef _WX
+  ThotBool created = CreateInitConfirmDlgWX (BaseDialog + ConfirmForm,
+					     TtaGetViewFrame (document, view),
+					     NULL /* title */, NULL, NULL,
+					     label1, label2, label3);
+  if (created)
+    {
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
+      /* wait for an answer */
+      TtaWaitShowDialogue ();
+    }
+#endif /* _WX */
 #ifdef _WINGUI
   CreateInitConfirm3LDlgWindow (TtaGetViewFrame (document, view),
-				TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label1,
-				label2, label3, withCancel);
+				TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
+				label1, label2, label3, withCancel);
 #endif /* _WINGUI */
+  CriticConfirm = FALSE;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void InitConfirm (Document document, View view, char *label)
 {
-#if  defined(_GTK)
   /* Confirm form */
   /* JK: This widget can't be called twice, but it happens when downloading a
      document with protected images. This is a quick silution to avoid the
@@ -1751,6 +1764,7 @@ void InitConfirm (Document document, View view, char *label)
   else
     CriticConfirm = TRUE;
 
+#ifdef _GTK
   TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),
 	      TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 2, 'L', D_CANCEL);
   TtaNewLabel (BaseDialog + ConfirmText, BaseDialog + ConfirmForm, label);
@@ -1758,14 +1772,12 @@ void InitConfirm (Document document, View view, char *label)
   TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
   /* wait for an answer */
   TtaWaitShowDialogue ();
-  /* remove the critic section */
-  CriticConfirm = FALSE;
-#endif /* #if defined(_GTK) */   
-#ifdef _WINGUI
-  CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), NULL, NULL, label);
-#endif /* _WINGUI */
+#endif /* _GTK */   
 #ifdef _WX
-  ThotBool created = CreateInitConfirmDlgWX (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view), NULL, NULL, NULL, label);
+  ThotBool created = CreateInitConfirmDlgWX (BaseDialog + ConfirmForm,
+					     TtaGetViewFrame (document, view),
+					     NULL /* title */, NULL, NULL,
+					     label, NULL, NULL);
   if (created)
     {
       TtaSetDialoguePosition ();
@@ -1774,6 +1786,12 @@ void InitConfirm (Document document, View view, char *label)
       TtaWaitShowDialogue ();
     }
 #endif /* _WX */
+#ifdef _WINGUI
+  CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view),
+			      NULL, NULL, label);
+#endif /* _WINGUI */
+  /* remove the critic section */
+  CriticConfirm = FALSE;
 }
 
 /*----------------------------------------------------------------------

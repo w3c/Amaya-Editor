@@ -18,14 +18,14 @@
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL_2">
-              <label></label>
+              <label>'                                                                                          '</label>
               <style>wxALIGN_CENTRE</style>
             </object>
             <flag>wxEXPAND</flag>
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL_3">
-              <label></label>
+              <label>'                                                                                          '</label>
               <style>wxALIGN_CENTRE</style>
             </object>
             <flag>wxEXPAND</flag>

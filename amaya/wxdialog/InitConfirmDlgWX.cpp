@@ -35,37 +35,33 @@ InitConfirmDlgWX::InitConfirmDlgWX( int ref,
 				    const wxString & title,
 				    const wxString & extrabutton,
 				    const wxString & confirmbutton,
-				    const wxString & label ) :
+				    const wxString & label,
+				    const wxString & label2,
+				    const wxString & label3 ) :
   AmayaDialog( NULL, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("InitConfirmDlgWX"));
-  m_Label         = label;
-  m_Title         = title;
-  m_ExtraButton   = extrabutton;
-  m_ConfirmButton = confirmbutton;
-  m_CancelButton  = TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL));
-
-#if 0
-  wxLogDebug( _T("InitConfirmDlgWX::InitConfirmDlgWX - title=")+m_Title+
-	      _T("\textrabutton=")+m_ExtraButton+
-	      _T("\tconfirmbutton=")+m_ConfirmButton+
-	      _T("\tlabel=")+m_Label );
-#endif /* 0*/
+  wxString cancelbutton = TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL));
 
   // update dialog labels with given ones
-  SetTitle( m_Title );
-  //  XRCCTRL(*this, "wxID_LABEL",         wxStaticText)->SetValidator( wxGenericValidator(&m_Label) );
-  XRCCTRL(*this, "wxID_LABEL",         wxStaticText)->SetLabel( m_Label );
-  XRCCTRL(*this, "wxID_EXTRABUTTON",   wxButton)->SetLabel( m_ExtraButton );
-  XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel( m_ConfirmButton );
-  XRCCTRL(*this, "wxID_CANCELBUTTON",  wxButton)->SetLabel( m_CancelButton );
+  SetTitle( title );
+  XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( label );
+  XRCCTRL(*this, "wxID_LABEL_2", wxStaticText)->SetLabel( label2 );
+  XRCCTRL(*this, "wxID_LABEL_3", wxStaticText)->SetLabel( label3 );
+  XRCCTRL(*this, "wxID_EXTRABUTTON", wxButton)->SetLabel( extrabutton );
+  XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel( confirmbutton );
+  XRCCTRL(*this, "wxID_CANCELBUTTON",  wxButton)->SetLabel( cancelbutton );
   
-  // now hide unused button (destroy it)
-  if (m_ExtraButton.IsEmpty())
+  // now hide unused field and buttons (destroy it)
+  if (label2.IsEmpty())
+    XRCCTRL(*this, "wxID_LABEL_2", wxStaticText)->Destroy();
+  if (label3.IsEmpty())
+    XRCCTRL(*this, "wxID_LABEL_3", wxStaticText)->Destroy();
+  if (extrabutton.IsEmpty())
     XRCCTRL(*this, "wxID_EXTRABUTTON",     wxButton)->Destroy();
-  if (m_ConfirmButton.IsEmpty())
+  if (confirmbutton.IsEmpty())
     XRCCTRL(*this, "wxID_CONFIRMBUTTON",   wxButton)->Destroy();
-  if (m_CancelButton.IsEmpty())
+  if (cancelbutton.IsEmpty())
     XRCCTRL(*this, "wxID_CANCELBUTTON",    wxButton)->Destroy();
 
   // give default focus to ... 

@@ -61,28 +61,30 @@ ThotBool CreateInitConfirmDlgWX ( int ref,
 				  char *title,
 				  char *extrabutton,
 				  char *confirmbutton,
-				  char *label )
+				  char *label,
+				  char *label2,
+				  char *label3 )
 {
 #ifdef _WX
   wxString wx_label = TtaConvMessageToWX( label );
+  wxString wx_label2 = TtaConvMessageToWX( label2 );
+  wxString wx_label3 = TtaConvMessageToWX( label3 );
   wxString wx_title = TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_LIB_CONFIRM) );
   wxString wx_extrabutton;
   wxString wx_confirmbutton;
 
   if (extrabutton && extrabutton[0] != EOS)
-  {
+    {
     /* a message with 3 buttons */
     wx_extrabutton = TtaConvMessageToWX( extrabutton );
     if (confirmbutton && confirmbutton[0] != EOS)
       wx_confirmbutton = TtaConvMessageToWX( confirmbutton );
     else
       wx_confirmbutton = TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) );
-  }
+    }
   else
-  {
     /* just 2 buttons */
     wx_extrabutton = TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_LIB_CONFIRM) );
-  }
 
   InitConfirmDlgWX * p_dlg = new InitConfirmDlgWX(
       ref, /* thotlib catalog reference */
@@ -90,13 +92,11 @@ ThotBool CreateInitConfirmDlgWX ( int ref,
       wx_title, /* title */
       wx_extrabutton,
       wx_confirmbutton,
-      wx_label ); /* message label */
+      wx_label, wx_label2, wx_label3 ); /* message label2 */
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-    {
       /* the dialog has been sucesfully registred */
       return TRUE;
-    }
   else
     {
       /* an error occured durring registration */

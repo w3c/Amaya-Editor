@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.19  2004-09-23 16:18:44  vatton
+ ** Revision 1.20  2004-09-30 07:23:42  vatton
+ ** New message info.
+ ** Irene
+ **
+ ** Revision 1.19  2004/09/23 16:18:44  vatton
  ** Reorganization of Preferences menus.
  ** Irene
  **
@@ -214,10 +218,6 @@ void DAVPropertiesVerticalDialog (Document docid, char *title,
   if (docid > 0 && list) 
     {
       lines = AwList_size(list)/2;
-#ifdef _WINGUI
-#endif /* _WINGUI */
-#ifdef _WX
-#endif /* _WX */
 #ifdef _GTK
       /* Main form */
       TtaNewSheet (BaseDialog + form, 
@@ -281,6 +281,9 @@ void DAVPropertiesVerticalDialog (Document docid, char *title,
 		   (char *)"              ");
       TtaSetDialoguePosition ();
       TtaShowDialogue (BaseDialog + form, TRUE);            
+#else /* _GTK */
+      /* function not implemented yet */
+      InitInfo ("", TtaGetMessage(LIB, TMSG_NOT_AVAILABLE));
 #endif /* _GTK */
     }
 }
@@ -308,10 +311,6 @@ void DAVHorizontalDialog (Document docid, char *title, char *rheader,
 
   if (docid > 0 && list) 
     {
-#ifdef _WINGUI
-#endif /* _WINGUI */
-#ifdef _WX
-#endif /* _WX */
 #ifdef _GTK
       /* Main form */
       TtaNewSheet (BaseDialog + form, 
@@ -351,6 +350,9 @@ void DAVHorizontalDialog (Document docid, char *title, char *rheader,
                      "              ");
         TtaSetDialoguePosition ();
         TtaShowDialogue (BaseDialog + form, TRUE);   
+#else /* _GTK */
+      /* function not implemented yet */
+      InitInfo ("", TtaGetMessage(LIB, TMSG_NOT_AVAILABLE));
 #endif /* _GTK */
       }
 }

@@ -11,7 +11,9 @@ extern ThotBool CreateInitConfirmDlgWX ( int ref,
                                          char *title,
                                          char *extrabutton,
                                          char *confirmbutton,
-                                         char *label );
+                                         char *label,
+                                         char *label2,
+                                         char *label3 );
 extern ThotBool CreateOpenDocDlgWX ( int ref,
                                      ThotWindow parent,
                                      const char *title,
@@ -76,7 +78,9 @@ extern ThotBool CreateInitConfirmDlgWX ( int ref,
                                            char *title,
                                            char *extrabutton,
                                            char *confirmbutton,
-                                           char *label );
+                                           char *label,
+                                           char *label2,
+                                           char *label3 );
 extern ThotBool CreateOpenDocDlgWX ( int ref,
                                        ThotWindow parent,
                                        const char *title,

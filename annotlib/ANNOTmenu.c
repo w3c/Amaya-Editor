@@ -24,6 +24,7 @@
 #include "ANNOTschemas_f.h"
 #include "ANNOTevent_f.h"
 #include "ANNOTtools_f.h"
+#include "init_f.h"
 
 /* amaya includes */
 #include "HTMLhistory_f.h"
@@ -166,7 +167,7 @@ static void CustomQueryCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void CustomQueryMenuInit (Document document, View view)
 {
-#ifndef _WINGUI
+#ifdef _GTK
    int              i;
    char          *ptr;
 
@@ -186,49 +187,6 @@ void CustomQueryMenuInit (Document document, View view)
 		"Query Customization Menu",
 		2, s, FALSE, 10, 'L', D_DONE);
 
-   /* @@ JK: removed the following menus as they're not ready for the
-      demo, and added a temporary checkbox */
-#if 0
-   TtaNewLabel (CustomQueryBase + mUsersGroups, 
-		CustomQueryBase + CustomQueryMenu,
-	       "Users and groups");
-
-   TtaNewTextForm (CustomQueryBase + mUser1,
-		   CustomQueryBase + CustomQueryMenu,
-		   "user1",
-		   20,
-		   1,
-		   TRUE);
-
-   TtaNewTextForm (CustomQueryBase + mUser2,
-		   CustomQueryBase + CustomQueryMenu,
-		   "user2",
-		   20,
-		   1,
-		   TRUE);
-
-   TtaNewLabel (CustomQueryBase + mTime, 
-		CustomQueryBase + CustomQueryMenu,
-		"Time");
-
-   TtaNewTextForm (CustomQueryBase + mBtime,
-		   CustomQueryBase + CustomQueryMenu,
-		   "Begin",
-		   20,
-		   1,
-		   TRUE);
-
-   TtaNewTextForm (CustomQueryBase + mEtime,
-		   CustomQueryBase + CustomQueryMenu,
-		   "End",
-		   20,
-		   1,
-
-   TtaNewLabel (CustomQueryBase + mExpertMode,
-		CustomQueryBase + CustomQueryMenu,
-		"Expert mode");
-		   TRUE);
-#else
   /* create the radio buttons for choosing a selector */
   i = 0;
   strcpy (&s[i], "BUse standard query");
@@ -244,8 +202,6 @@ void CustomQueryMenuInit (Document document, View view)
 		 NULL,
 		 0,
 		 TRUE);
-#endif
-
    TtaNewTextForm (CustomQueryBase + mFreeText,
 		   CustomQueryBase + CustomQueryMenu,
 		   "(%u stands for the URL of the document that's being browsed)",
@@ -269,8 +225,10 @@ void CustomQueryMenuInit (Document document, View view)
    /* display the menu */
    TtaSetDialoguePosition ();
    TtaShowDialogue (CustomQueryBase + CustomQueryMenu, TRUE);
-
-#endif /* !_WINGUI */
+#else /* _GTK */
+   /* function not implemented yet */
+   InitInfo ("", TtaGetMessage(LIB, TMSG_NOT_AVAILABLE));
+#endif /* _GTK */
 }
 
 /**************************************************
@@ -285,7 +243,8 @@ void CustomQueryMenuInit (Document document, View view)
   Filter.
   ------------------------------------------------------------------*/
 #ifdef _WINGUI
-static void WIN_AnnotFilterNewSelector (Document doc, char *entries, int nb_entries)
+static void WIN_AnnotFilterNewSelector (Document doc, char *entries,
+					int nb_entries)
 {
   int index = 0;
   int i = 0;
@@ -377,18 +336,19 @@ static void BuildAnnotFilterSelector (Document doc, SelType selector)
 
 #ifdef _WINGUI
   WIN_AnnotFilterNewSelector (doc, s, nb_entries);
-#else /* _WINGUI */
+#endif /* _WINGUI */
+#ifdef _WX
+  /* function not implemented yet */
+  InitInfo ("", TtaGetMessage(LIB, TMSG_NOT_AVAILABLE));
+#endif /* _WX */
+#ifdef _GTK
   /* Fill in the form  */
   TtaNewSelector (AnnotFilterBase + mFilterSelector, 
 		  AnnotFilterBase + AnnotFilterMenu,
 		  NULL,
-		  nb_entries,
-		  s,
-		  5,
-		  NULL,
-		  TRUE,
-		  TRUE);
-#endif /* _WINGUI */
+		  nb_entries, s, 5,
+		  NULL, TRUE, TRUE);
+#endif /* _GTK */
 }
 
 /*---------------------------------------------------------------

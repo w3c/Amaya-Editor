@@ -23,7 +23,9 @@ public:
 		    const wxString & title,
 		    const wxString & extrabutton,
 		    const wxString & confirmbutton,
-		    const wxString & label );
+		    const wxString & label,
+		    const wxString & label2,
+		    const wxString & label3 );
   virtual ~InitConfirmDlgWX();
 
 private:
