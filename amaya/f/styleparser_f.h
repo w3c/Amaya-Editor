@@ -59,6 +59,7 @@ extern void ApplyCSSRules ( Element el,
 extern char ReadCSSRules ( Document docRef,
                            CSSInfoPtr css,
                            char *buffer,
+                           char *url,
                            int numberOfLinesRead,
                            ThotBool withUndo );
 
@@ -117,6 +118,7 @@ extern void ApplyCSSRules (/* Element el,
 extern char ReadCSSRules (/* Document docRef,
                              CSSInfoPtr css,
                              char *buffer,
+                             char *url,
                              int numberOfLinesRead,
                              ThotBool withUndo */);
 

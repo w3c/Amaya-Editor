@@ -813,13 +813,11 @@ void ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
    auquel appartient la regle.             
    Retourne vrai si les conditions sont toutes satisfaites.
   ----------------------------------------------------------------------*/
-ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
-				      PtrAttribute pAttr, PtrElement pElAttr,
-				      int view, PtrSSchema pSS,
-				      PtrDocument pDoc)
+ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
+			   PtrAttribute pAttr, PtrElement pElAttr,
+			   int view, PtrSSchema pSS,
+			   PtrDocument pDoc)
 {
-  ThotBool            ok, currentCond, stop, equal;
-  int                 valcompt, valmaxi, valmini, i;
   PtrPSchema          pSchP = NULL;
   PtrElement          pElSibling, pAsc, pElem, pRoot;
   PtrReference        pRef;
@@ -827,11 +825,14 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
   PtrDocument         pDocExt;
   PtrAttribute        pA;
   unsigned char       attrVal[MAX_TXT_LEN];
+  int                 valcompt, valmaxi, valmini;
+  int                 i, j;
+  ThotBool            ok, found, stop, equal;
 
   /* a priori les conditions sont satisfaites */
   ok = TRUE;
   /* on examine toutes les conditions de la chaine */
-  while (pCond != NULL && ok)
+  while (pCond && ok)
     {
       if (!pCond->CoTarget)
 	pElem = pEl;
@@ -841,8 +842,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	{
 	  pElem = NULL;
 	  if (pAttr != NULL &&
-	      pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrType ==
-	      AtReferenceAttr)
+	      pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrType == AtReferenceAttr)
 	    /* c'est un attribut reference */
 	    pRef = pAttr->AeAttrReference;
 	  else
@@ -863,13 +863,12 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	/* evalue le compteur */
 	{
 	  pSchP = PresentationSchema (pSS, pDoc);
-	  if (pSchP != NULL)
+	  if (pSchP)
 	    valcompt = CounterVal (pCond->CoCounter, pSS, pSchP, pElem, view);
 	}
-      if (pElem != NULL)
+      if (pElem)
 	switch (pCond->CoCondition)
 	  {
-
 	  case PcFirst:
 	    /* on saute les marques de page precedentes */
 	    pElSibling = pElem->ElPrevious;
@@ -882,7 +881,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	      else
 		stop = TRUE;
 	    while (!stop);
-	    currentCond = pElSibling == NULL;
+	    found = pElSibling == NULL;
 	    break;
 
 	  case PcLast:
@@ -897,29 +896,29 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	      else
 		stop = TRUE;
 	    while (!stop);
-	    currentCond = pElSibling == NULL;
+	    found = pElSibling == NULL;
 	    /* traitement particulier pour les lignes de tableau */
 	    if (ThotLocalActions[T_condlast] != NULL)
-	      (*ThotLocalActions[T_condlast]) (pElem, &currentCond);
+	      (*ThotLocalActions[T_condlast]) (pElem, &found);
 	    break;
        
 	  case PcReferred:
 	    /* la condition est satisfaite si l'element (ou le */
 	    /* premier de ses ascendants sur lequel peut porter une */
 	    /* reference) est reference' au moins une fois. */
-	    currentCond = FALSE;
+	    found = FALSE;
 	    pAsc = pElem;
 	    do
 	      {
 		if (pAsc->ElReferredDescr != NULL)
 		  /* l'element est reference' */
-		  currentCond = TRUE;
-		if (!currentCond)
+		  found = TRUE;
+		if (!found)
 		  /* l'element n'est pas reference' */
 		  /* on examine l'element ascendant */
 		  pAsc = pAsc->ElParent;
 	      }
-	    while (pAsc != NULL && !currentCond);
+	    while (pAsc != NULL && !found);
 	    break;
 
 	  case PcFirstRef:
@@ -936,11 +935,11 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	      pRef = pElem->ElReference;
 	    if (pRef != NULL)
 	      if (pCond->CoCondition == PcFirstRef)
-		currentCond = pEl->ElReference->RdPrevious == NULL;
+		found = pEl->ElReference->RdPrevious == NULL;
 	      else
-		currentCond = pEl->ElReference->RdNext == NULL;
+		found = pEl->ElReference->RdNext == NULL;
 	    else
-	      currentCond = FALSE;
+	      found = FALSE;
 	    break;
 
 	  case PcExternalRef:
@@ -948,7 +947,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	    /* la condition est satisfaite s'il s'agit d'un */
 	    /* element ou d'un attribut reference externe (ou interne) */
 	    pRef = NULL;
-	    currentCond = FALSE;
+	    found = FALSE;
 	    if (pAttr != NULL &&
 		pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrType == AtReferenceAttr)
 	      /* c'est un attribut reference */
@@ -960,22 +959,22 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	      /* c'est peut-etre une inclusion */
 	      pRef = pElem->ElSource;
 	    if (pRef == NULL)
-	      currentCond = FALSE;
+	      found = FALSE;
 	    else if (pCond->CoCondition == PcInternalRef)
-	      currentCond = pRef->RdInternalRef;
+	      found = pRef->RdInternalRef;
 	    else
-	      currentCond = !pRef->RdInternalRef;
+	      found = !pRef->RdInternalRef;
 	    break;
 
 	  case PcCopyRef:
 	    /* la condition est satisfaite si l'element est une copie */
-	    currentCond = pElem->ElIsCopy;
+	    found = pElem->ElIsCopy;
 	    break;
 
 	  case PcAnyAttributes:
 	    /* la condition est satisfaite si l'element */
 	    /* porte des attributs */
-	    currentCond = pElem->ElFirstAttr != NULL;
+	    found = pElem->ElFirstAttr != NULL;
 	    break;
 
 	  case PcFirstAttr:
@@ -983,7 +982,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	    /* la condition est satisfaite si le bloc */
 	    /* attribut pAttr est le 1er de l'element */
 	    if (pAttr && pElAttr)
-	      currentCond = pAttr == pElAttr->ElFirstAttr;
+	      found = pAttr == pElAttr->ElFirstAttr;
 	    break;
 
 	  case PcLastAttr:
@@ -991,59 +990,59 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	    /* la condition est satisfaite si le bloc     */
 	    /* attribut pAttr est le dernier de l'element */
 	    if (pAttr)
-	      currentCond = pAttr->AeNext == NULL;
+	      found = pAttr->AeNext == NULL;
 	    break;
 
 	  case PcUserPage:
 	    /* la condition est satisfaite si l'element
 	       est un saut de page utilisateur */
 	    if (pElem->ElTypeNumber == PageBreak + 1)
-	      currentCond = pElem->ElPageType == PgUser;
+	      found = pElem->ElPageType == PgUser;
 	    break;
 
 	  case PcStartPage:
 	    /* la condition est satisfaite si l'element
 	       est un saut de page de debut */
 	    if (pElem->ElTypeNumber == PageBreak + 1)
-	      currentCond = pElem->ElPageType == PgBegin;
+	      found = pElem->ElPageType == PgBegin;
 	    break;
 
 	  case PcComputedPage:
 	    /* la condition est satisfaite si l'element
 	       est un saut de page calcule */
 	    if (pElem->ElTypeNumber == PageBreak + 1)
-	      currentCond = pElem->ElPageType == PgComputed;
+	      found = pElem->ElPageType == PgComputed;
 	    break;
 
 	  case PcEmpty:
 	    /* la condition est satisfaite si l'element est vide */
 	    if (pElem->ElTerminal)
 	      if (pElem->ElLeafType == LtReference)
-		currentCond = pElem->ElReference == NULL;
+		found = pElem->ElReference == NULL;
 	      else
-		currentCond = pElem->ElVolume == 0;
+		found = pElem->ElVolume == 0;
 	    else
-	      currentCond = pElem->ElFirstChild == NULL;
+	      found = pElem->ElFirstChild == NULL;
 	    break;
 
 	  case PcRoot:
 	    /* la condition est satisfaite si le parent de l'element est
 	       le document lui-meme */
-	    currentCond = (pElem->ElParent &&
+	    found = (pElem->ElParent &&
 			   pElem->ElParent->ElTypeNumber ==
 			   pElem->ElParent->ElStructSchema->SsDocument);
 	    break;
 
 	  case PcEven:
-	    currentCond = !(valcompt & 1);
+	    found = !(valcompt & 1);
 	    break;
 
 	  case PcOdd:
-	    currentCond = (valcompt & 1);
+	    found = (valcompt & 1);
 	    break;
 
 	  case PcOne:
-	    currentCond = (valcompt == 1);
+	    found = (valcompt == 1);
 	    break;
 
 	  case PcInterval:
@@ -1052,7 +1051,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 		/* Calcule la valeur mini du compteur */
 		valmini = CounterValMinMax (pCond->CoCounter, pSS, pSchP,
 					    pElem, view, FALSE);
-		currentCond = (valmini <= pCond->CoMaxCounter) &&
+		found = (valmini <= pCond->CoMaxCounter) &&
 		  (valmini >= pCond->CoMinCounter);
 	      }
 	    else if (pCond->CoValCounter == CntMaxVal)
@@ -1060,12 +1059,12 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 		/* Calcule la valeur maxi du compteur */
 		valmaxi = CounterValMinMax (pCond->CoCounter, pSS, pSchP,
 					    pElem, view, TRUE);
-		currentCond = (valmaxi <= pCond->CoMaxCounter) &&
+		found = (valmaxi <= pCond->CoMaxCounter) &&
 		  (valmaxi >= pCond->CoMinCounter);
 	      }
 	    else
 	      /* Calcule la valeur courante du compteur */
-	      currentCond = (valcompt <= pCond->CoMaxCounter) &&
+	      found = (valcompt <= pCond->CoMaxCounter) &&
 		(valcompt >= pCond->CoMinCounter);
 	    break;
 
@@ -1074,7 +1073,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	    pAsc = pElem->ElParent;
 	    if (pAsc == NULL)
 	      /* aucun ancetre, condition non satisfaite */
-	      currentCond = FALSE;
+	      found = FALSE;
 	    else
 	      {
 		i = 0;
@@ -1092,7 +1091,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 					  pSS->SsName));
 		      else
 			equal = (!strcmp (pCond->CoAncestorName,
-					   pAsc->ElStructSchema->SsRule->SrElem[pAsc->ElTypeNumber - 1]->SrName) &&
+					  pAsc->ElStructSchema->SsRule->SrElem[pAsc->ElTypeNumber - 1]->SrName) &&
 				 !strcmp (pCond->CoSSchemaName,
 					  pAsc->ElStructSchema->SsName));
 		      if (equal)
@@ -1110,8 +1109,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 		    {
 		      if (pCond->CoTypeAncestor != 0)
 			equal = (pAsc->ElTypeNumber == pCond->CoTypeAncestor &&
-				 !strcmp (pAsc->ElStructSchema->SsName,
-					  pSS->SsName));
+				 !strcmp (pAsc->ElStructSchema->SsName, pSS->SsName));
 		      else
 			equal = (!strcmp (pCond->CoAncestorName,
 					  pAsc->ElStructSchema->SsRule->SrElem[pAsc->ElTypeNumber - 1]->SrName) &&
@@ -1122,25 +1120,25 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 		      pAsc = pAsc->ElParent;  /* passe a l'element ascendant */
 		    }
 		if (pCond->CoAncestorRel == CondEquals)
-		  currentCond = i == pCond->CoRelation;
+		  found = i == pCond->CoRelation;
 		else if (pCond->CoAncestorRel == CondGreater)
-		  currentCond = i > pCond->CoRelation;
+		  found = i > pCond->CoRelation;
 		else if (pCond->CoAncestorRel == CondLess)
-		  currentCond = i < pCond->CoRelation;
+		  found = i < pCond->CoRelation;
 	      }
 	    break;
 
 	  case PcElemType:
 	    /* verifie si l'attribut est attache' a un element du
 	       type voulu */
-	    currentCond = (pElAttr->ElTypeNumber == pCond->CoTypeElem);
+	    found = (pElAttr->ElTypeNumber == pCond->CoTypeElem);
 	    break;
 
 	  case PcInheritAttribute:
 	    /* verifie si l'element ou un de ses ascendants possede cet
 	       attribut, eventuellement avec la valeur voulue */
 	    pAsc = pElem;
-	    currentCond = FALSE;
+	    found = FALSE;
 	    while (pAsc)
 	      {
 		pA = pAsc->ElFirstAttr;
@@ -1157,7 +1155,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 		      {
 			if (!pCond->CoTestAttrValue)
 			  /* we don't care about the attribute value */
-			  currentCond = TRUE;
+			  found = TRUE;
 			else
 			  /* test the attribute value */
 			  {
@@ -1165,21 +1163,45 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 			      /* it's a text attribute. Compare strings */
 			      {
 				if (!pA->AeAttrText)
-				  currentCond = (pCond->CoAttrTextValue[0] == EOS);
+				  found = (pCond->CoAttrTextValue[0] == EOS);
 				else
 				  {
 				    CopyBuffer2MBs (pA->AeAttrText, 0, attrVal,
 						    MAX_TXT_LEN);
-				    currentCond = !strcmp (pCond->CoAttrTextValue,
-							   attrVal);
+				    /* test the attribute value */
+				    j = 0;
+				    found = FALSE;
+				    while (!found && attrVal[j] != EOS)
+				      {
+					i = 0;
+					while (pCond->CoAttrTextValue[i] != EOS &&
+					       attrVal[j + i] == pCond->CoAttrTextValue[i])
+					  i++;
+					found = (pCond->CoAttrTextValue[i] == EOS);
+					if (found)
+					  {
+					    if (pCond->CoTextMatch == CoWord)
+					      {
+						/* check if a word matches */
+						i += j + 2;
+						found = (j == 0 || attrVal[j - 1] == SPACE) &&
+						  (attrVal[j] == EOS || attrVal[j] == SPACE);
+					      }
+					    else if (pCond->CoTextMatch == CoMatch)
+					      /* the whole attribute value must be equal */
+					      found = attrVal[j + i] == EOS;
+					  }
+					/* prepare next search */
+					j++;
+				      }
 				  }
 			      }
 			    else
-			      currentCond = (pCond->CoAttrValue == pA->AeAttrValue);
+			      found = (pCond->CoAttrValue == pA->AeAttrValue);
 			  }
 			/* don't check other attributes for this element */
 			pA = NULL;
-			if (currentCond)
+			if (found)
 			  /* don't look further */
 			  pAsc = NULL;
 		      }
@@ -1194,8 +1216,8 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	  case PcAttribute:
 	    /* verifie si l'element possede cet attribut */
 	    pA = pElem->ElFirstAttr;
-	    currentCond = FALSE;
-	    while (pA != NULL && !currentCond)
+	    found = FALSE;
+	    while (pA != NULL && !found)
 	      /* boucle sur les attributs de l'element */
 	      {
 		if (pA->AeAttrNum == pCond->CoTypeAttr &&
@@ -1204,7 +1226,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 		  {
 		    if (!pCond->CoTestAttrValue)
 		      /* we don't care about the attribute value */
-		      currentCond = TRUE;
+		      found = TRUE;
 		    else
 		      /* test the attribute value */
 		      {
@@ -1212,17 +1234,16 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 			  /* it's a text attribute. Compare strings */
 			  {
 			    if (!pA->AeAttrText)
-			      currentCond = (pCond->CoAttrTextValue[0] == EOS);
+			      found = (pCond->CoAttrTextValue[0] == EOS);
 			    else
 			      {
 				CopyBuffer2MBs (pA->AeAttrText, 0, attrVal,
 						MAX_TXT_LEN);
-				currentCond = !strcmp (pCond->CoAttrTextValue,
-						       attrVal);
+				found = !strcmp (pCond->CoAttrTextValue, attrVal);
 			      }
 			  }
 			else
-			  currentCond = (pCond->CoAttrValue == pA->AeAttrValue);
+			  found = (pCond->CoAttrValue == pA->AeAttrValue);
 		      } 
 		    pA = NULL;
 		  }
@@ -1230,7 +1251,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 		  pA = pA->AeNext;		/* attribut suivant */
 	      }
 	    /* as it's impossible to set an attribute to the PAGE */
-	    if (!currentCond && pElem->ElTypeNumber == PageBreak + 1)
+	    if (!found && pElem->ElTypeNumber == PageBreak + 1)
 	      {
 		/* get the root element */
 		if (pElem->ElParent && pElem->ElParent->ElTypeNumber ==
@@ -1241,8 +1262,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 		       document element */
 		    pRoot = pElem->ElParent->ElFirstChild;
 		    while (pRoot && 
-			   (pRoot->ElTypeNumber !=
-			    pElem->ElStructSchema->SsRootElem ||
+			   (pRoot->ElTypeNumber != pElem->ElStructSchema->SsRootElem ||
 			    pRoot->ElStructSchema != pElem->ElStructSchema))
 		      pRoot = pRoot->ElNext;
 		  }
@@ -1258,14 +1278,14 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 		  }
 		pA = pRoot->ElFirstAttr;
 		/* check the list of attributes of the root element */
-		while (pA != NULL && !currentCond)
+		while (pA != NULL && !found)
 		  /* boucle sur les attributs de l'element */
 		  {
 		    if (pA->AeAttrNum == pCond->CoTypeAttr)
 		      {
 			if (!pCond->CoTestAttrValue)
 			  /* we don't care about the attribute value */
-			  currentCond = TRUE;
+			  found = TRUE;
 			else
 			  /* test the attribute value */
 			  {
@@ -1273,17 +1293,17 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 			      /* it's a text attribute. Compare strings */
 			      {
 				if (!pA->AeAttrText)
-				  currentCond = (pCond->CoAttrTextValue[0] == EOS);
+				  found = (pCond->CoAttrTextValue[0] == EOS);
 				else
 				  {
 				    CopyBuffer2MBs (pA->AeAttrText, 0, attrVal,
 						    MAX_TXT_LEN);
-				    currentCond = !strcmp (pCond->CoAttrTextValue,
+				    found = !strcmp (pCond->CoAttrTextValue,
 							   attrVal);
 				  }
 			      }
 			    else
-			      currentCond = (pCond->CoAttrValue == pA->AeAttrValue);
+			      found = (pCond->CoAttrValue == pA->AeAttrValue);
 			  } 
 			pA = NULL;
 		      }
@@ -1294,17 +1314,17 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	    break;
 
 	  case PcNoCondition:
-	    currentCond = TRUE;
+	    found = TRUE;
 	    break;
 	    
 	  case PcDefaultCond:
-	    currentCond = TRUE;
+	    found = TRUE;
 	    break;
 	  }
 
       if (!pCond->CoNotNegative)
-	currentCond = !currentCond;
-      ok = ok && currentCond;
+	found = !found;
+      ok = ok && found;
       pCond = pCond->CoNextCondition;
     }
 
@@ -1977,7 +1997,6 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 		       ThotBool inheritRule, PtrAttribute pAttrComp,
 		       PtrPSchema pSchP, int *valueNum)
 {
-  ThotBool            found;
   PtrPRule            pRule;
   PtrAttribute        pAt2;
   PtrElement          pElAttr;
@@ -1986,7 +2005,8 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
   char                buffer[400];
   char               *attrValue, *ptr;
   unsigned int        len;
-  int                 i;
+  int                 i, j, k;
+  ThotBool            found, ok;
 
   pRule = NULL;
   if (pSchP == NULL)
@@ -2012,6 +2032,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 	CopyBuffer2MBs (pAttr->AeAttrText, 0, buffer, 399);
 	attrValue = buffer;
       }
+
     if (!AttrHasException (ExcCssClass, pAttr->AeAttrNum,pAttr->AeAttrSSchema))
       /* the content of the attribute is considered as a single value */
       {
@@ -2066,21 +2087,44 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
     {
       if (pAPRule->ApElemType == 0 || pAPRule->ApElemType == pEl->ElTypeNumber)
 	{
-	  if ((pAttr->AeAttrType == AtTextAttr) &&
-	      (pAPRule->ApString[0] != EOS))
+	  if (pAttr->AeAttrType == AtTextAttr &&
+	      pAPRule->ApString[0] != EOS)
 	    {
-	      if (pAttr->AeAttrText != NULL)
+	      if (attrValue)
 		{
-		/**** should be StringAndTextEqual instead of strncmp,
-		 as the value may span over several buffers ****/
-		if (strlen (pAPRule->ApString) == len &&
-		    !strncmp (pAPRule->ApString, attrValue, len))
-		  {
-		    if (pAPRule->ApElemType == 0)
-		      pPRdef = pAPRule;
-		    else
-		      pPRinherit = pAPRule;
-		  }
+		  /* test the attribute value */
+		  j = 0;
+		  ok = FALSE;
+		  while (!ok && attrValue[j] != EOS)
+		    {
+		      k = 0;
+		      while (pAPRule->ApString[k] != EOS &&
+			     attrValue[j + k] == pAPRule->ApString[k])
+			k++;
+		      ok = (pAPRule->ApString[k] == EOS);
+		      if (ok)
+			{
+			  if (pAPRule->ApMatch == CoWord)
+			    {
+			      /* check if a word matches */
+			      k += j + 2;
+			      ok = (j == 0 || attrValue[j - 1] == SPACE) &&
+				(attrValue[k] == EOS || attrValue[k] == SPACE);
+			    }
+			  else if (pAPRule->ApMatch == CoMatch)
+			    /* the whole attribute value must be equal */
+			    ok = attrValue[j + k] == EOS;
+			}
+		      /* prepare next search */
+		      j++;
+		    }
+		  if (ok)
+		    {
+		      if (pAPRule->ApElemType == 0)
+			pPRdef = pAPRule;
+		      else
+			pPRinherit = pAPRule;
+		    }
 		}
 	    }
 	  else

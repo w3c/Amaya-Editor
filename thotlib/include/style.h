@@ -21,6 +21,13 @@
 #define __STYLE_H__
 #define MAX_ANCESTORS 5
 
+typedef enum
+{
+  Txtmatch,
+  Txtsubstring,
+  Txtword
+} AttrMatch;
+
 /* two different contexts for generic and specific presentation */
 typedef struct struct_GenericContext
   {
@@ -38,7 +45,8 @@ typedef struct struct_GenericContext
     int           names_nb[MAX_ANCESTORS];  /* number of occurences */
     int           attrType[MAX_ANCESTORS];  /* type of the attribute */
     int           attrLevel[MAX_ANCESTORS]; /* level of the attribute */
-    char          *attrText[MAX_ANCESTORS]; /* attr. or box name */
+    char         *attrText[MAX_ANCESTORS];  /* attr. or box name */
+    AttrMatch     attrMatch[MAX_ANCESTORS]; /* how attr. values match */
   }
 GenericContextBlock, *GenericContext;
 

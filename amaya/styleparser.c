@@ -197,7 +197,7 @@ static void  CSSParseError (char *msg, char *value)
 	    return;
 	}
 
-      if (DocURL != NULL)
+      if (DocURL)
 	{
 	  fprintf (ErrFile, "*** Errors/warnings in %s\n", DocURL);
 	  /* set to NULL as long as the CSS file doesn't change */
@@ -222,8 +222,17 @@ static char *SkipProperty (char *ptr)
   char        c;
 
   deb = ptr;
-  while (*ptr != EOS && *ptr != ';' && *ptr != '}')
-    ptr++;
+  while (*ptr != EOS && *ptr != ';' && *ptr != '}' && *ptr != '"')
+    {
+      if (*ptr == '"' && (ptr == deb || ptr[-1] != '\\'))
+	{
+	  /* skip to the end of the string "..." */
+	  ptr++;
+	  while (*ptr != '"' && ptr[-1] != '\\')
+	    ptr++;
+	}
+      ptr++;
+    }
   /* print the skipped property */
   c = *ptr;
   *ptr = EOS;
@@ -244,8 +253,17 @@ static char *SkipValue (char *ptr, ThotBool error)
   char        c;
 
   deb = ptr;
-  while (*ptr != EOS && *ptr != ';' && *ptr != '}')
-    ptr++;
+  while (*ptr != EOS && *ptr != ';' && *ptr != '}' && *ptr != '"')
+    {
+      if (*ptr == '"' && (ptr == deb || ptr[-1] != '\\'))
+	{
+	  /* skip to the end of the string "..." */
+	  ptr++;
+	  while (*ptr != '"' && ptr[-1] != '\\')
+	    ptr++;
+	}
+      ptr++;
+    }
   /* print the skipped property */
   c = *ptr;
   *ptr = EOS;
@@ -1744,7 +1762,11 @@ static char *ParseCSSFontFamily (Element element, PSchema tsch,
   if (font.typed_data.value != 0)
      {
        cssRule = SkipBlanksAndComments (cssRule);
-       cssRule = SkipValue (cssRule, FALSE);
+      if (*cssRule == ',')
+	{
+	  cssRule++;
+	  cssRule = SkipValue (cssRule, FALSE);
+	}
        /* install the new presentation */
        if (DoApply)
 	 {
@@ -1982,7 +2004,7 @@ static char *ParseCSSFont (Element element, PSchema tsch,
     ;
   else
     {
-      while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
+      while (*cssRule != ';' && *cssRule != EOS)
 	{
 	  ptr = cssRule;
 	  skippedNL = NewLineSkipped;
@@ -3329,7 +3351,8 @@ static void  ParseCSSRule (Element element, PSchema tsch,
   while (*cssRule != EOS)
     {
       cssRule = SkipBlanksAndComments (cssRule);
-      if (*cssRule == '{')
+      if (*cssRule < 0x41 || *cssRule > 0x7A ||
+	  (*cssRule > 0x5A && *cssRule < 0x60))
 	{
 	  cssRule++;
 	  CSSParseError ("Invalid character", "{");
@@ -3955,6 +3978,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   char              *pseudoclasses[MAX_ANCESTORS];
   char              *attrs[MAX_ANCESTORS];
   char              *attrvals[MAX_ANCESTORS];
+  AttrMatch          attrmatch[MAX_ANCESTORS];
   int                i, j, k, max;
   int                att, maxAttr, kind;
   int                specificity, xmlType;
@@ -3971,12 +3995,13 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       pseudoclasses[i] = NULL;
       attrs[i] = NULL;
       attrvals[i] = NULL;
-
+      attrmatch[i] = Txtmatch;
       ctxt->name[i] = 0;
       ctxt->names_nb[i] = 0;
       ctxt->attrType[i] = 0;
       ctxt->attrLevel[i] = 0;
       ctxt->attrText[i] = NULL;
+      ctxt->attrMatch[1] = Txtmatch;
     }
   ctxt->box = 0;
   ctxt->type = 0;
@@ -4095,8 +4120,22 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    selector++;
 	    while (*selector != EOS && *selector != ']' &&
 		   *selector != '=' && *selector != '~' &&
-		   *selector != '^')
+		   *selector != '|' && *selector != '^' &&
+		   *selector != '!')
 	      *cur++ = *selector++;
+	    /* check matching */
+	    if (*selector == '~')
+	      {
+		attrmatch[0] = Txtword;
+		selector++;
+	      }
+	    else if (*selector == '|')
+	      {
+		attrmatch[0] = Txtsubstring;
+		selector++;
+	      }
+	    else
+	      attrmatch[0] = Txtmatch;
 	    /* close the word */
 	    *cur++ = EOS;
 	    /* point to the attribute in sel[] if it's valid name */
@@ -4132,7 +4171,10 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 			    DoApply = FALSE;
 			  }
 			else
-			  *cur++ = *selector++;
+			  {
+			    *cur++ = tolower (*selector);
+			    selector++;
+			  }
 		      }
 		    /* there is a value */
 		    if (*selector == '"')
@@ -4146,10 +4188,9 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    /* end of the attribute */
 	    if (*selector != ']')
 	      {
-		if (*selector == '^')
-		  CSSParseError ("Not supported selector", "^");
-		else
-		  CSSParseError ("Invalid attribute", attrs[0]);
+		selector[1] = EOS;
+		CSSParseError ("Not supported selector", selector);
+		selector += 2;
 		DoApply = FALSE;
 	      }
 	    else
@@ -4192,9 +4233,10 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      names[i] = names[i - 1];
 	      ids[i] = ids[i - 1];
 	      classes[i] = classes[i - 1];
+	      pseudoclasses[i] = pseudoclasses[i - 1];
 	      attrs[i] = attrs[i - 1];
 	      attrvals[i] = attrvals[i - 1];
-	      pseudoclasses[i] = pseudoclasses[i - 1];
+	      attrmatch[i] = attrmatch[i - 1];
 	    }
 	}
     }
@@ -4391,6 +4433,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	       it's represented by the element type, not by an attribute */
 	    att = 0;
 	  ctxt->attrType[j] = att;
+	  ctxt->attrMatch[j] = attrmatch[i];
 	  attrType.AttrSSchema = ctxt->schema;
 	  attrType.AttrTypeNum = att;
 	  if (i == 0 && att == 0 && ctxt->schema == NULL)
@@ -4782,17 +4825,18 @@ void ApplyCSSRules (Element el, char *cssRule, Document doc, ThotBool destroy)
    This function uses the current css context or creates it. It's able
    to work on the given buffer or call GetNextChar to read the parsed
    file.
+   The parameter url gives the URL of the style shheet parsed.
    Parameter numberOfLinesRead indicates the number of lines already
    read in the file.
    Parameter withUndo indicates whether the changes made in the document
    structure and content have to be registered in the Undo queue or not
   ----------------------------------------------------------------------*/
-char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
+char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		   int numberOfLinesRead, ThotBool withUndo)
 {
   DisplayMode         dispMode;
   char                c;
-  char               *cssRule, *base;
+  char               *cssRule, *base, *saveDocURL;
   int                 index;
   int                 CSSindex;
   int                 CSScomment;
@@ -4832,8 +4876,8 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
 
   /* register parsed CSS file and the document to which CSS are to be applied */
   ParsedDoc = docRef;
-  if (css->url)
-    DocURL = css->url;
+  if (url)
+    DocURL = url;
   else
     /* the CSS source in within the document itself */
     DocURL = DocumentURLs[docRef];
@@ -5016,19 +5060,6 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
 			    cssRule++;
 			  if (quoted)
 			    cssRule--;
-			  *cssRule = EOS;
-			  if (TtaIsPrinting ())
-			    base = strstr (&cssRule[1], "print");
-			  else
-			    base = strstr (&cssRule[1], "screen");
-			  if (base == NULL)
-			    base = strstr (&cssRule[1], "all");
-			  if (base == NULL)
-			    ignoreImport = TRUE;
-			  if (!ignoreImport)
-			    LoadStyleSheet (base, docRef, NULL, css,
-					    css->media[docRef],
-					    css->category == CSS_USER_STYLE);
 			}
 		    }
 		  else if (*cssRule == '"')
@@ -5043,11 +5074,31 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
 		      base = cssRule;
 		      while (*cssRule != EOS && *cssRule != '"')
 			cssRule++;
-		      *cssRule = EOS;
-		      if (!ignoreImport)
-			LoadStyleSheet (base, docRef, NULL, css,
-					css->media[docRef],
-					css->category == CSS_USER_STYLE);
+		    }
+		  if (*cssRule != EOS)
+		    /* isolate the file name */
+		    *cssRule = EOS;
+		  /* check if a media is defined */
+		  cssRule++;
+		  cssRule = TtaSkipBlanks (cssRule);
+		  if (*cssRule != ';')
+		    {
+		      if (TtaIsPrinting ())
+			ignoreImport = (strncasecmp (cssRule, "print", 5) &&
+					strncasecmp (cssRule, "all", 3));
+		      else
+			ignoreImport = (strncasecmp (cssRule, "screen", 6) &&
+					strncasecmp (cssRule, "all", 3));
+		    }
+		  if (!ignoreImport)
+		    {
+		      /* save the displayed URL when an error is reported */
+		      saveDocURL = DocURL;
+		      LoadStyleSheet (base, docRef, NULL, css,
+				      css->media[docRef],
+				      css->category == CSS_USER_STYLE);
+		      /* restore the displayed URL when an error is reported */
+		      DocURL = saveDocURL;
 		    }
 		  /* restore the number of lines */
 		  LineNumber = newlines;

@@ -319,6 +319,12 @@ typedef enum
   CondGreater, CondLess, CondEquals
 } ArithRel;
 
+/* To interpret the field CoMatch */
+typedef enum
+{
+  CoMatch, CoSubstring, CoWord
+} CondMatch;
+
 typedef struct _Condition *PtrCondition;
 
 /* A presentation rule application condition */
@@ -372,7 +378,8 @@ typedef struct _Condition
 	} s0;
 	struct        /* text attribute */
 	{
-	  Name  _CoAttrTextValue_; /* the value that satisfies the condition */
+	  Name      _CoAttrTextValue_; /* the value that satisfies the condition */
+	  CondMatch _CoTextMatch_;     /* matching condition: substring, word, ... */
 	} s1;
       } u;
     } s3;
@@ -394,6 +401,7 @@ typedef struct _Condition
 #define CoTestAttrValue u.s3._CoTestAttrValue_
 #define CoAttrValue u.s3.u.s0._CoAttrValue_
 #define CoAttrTextValue u.s3.u.s1._CoAttrTextValue_
+#define CoTextMatch u.s3.u.s1._CoTextMatch_
 
 /* The presentation rules relative to an object are linked by means of
    the pointer PrNextPRule. This way the presentation rules of a type
@@ -646,34 +654,36 @@ typedef struct _AttributePres
 			   apply, 0 if the rules apply whatever the element
 			   type is */
   struct _AttributePres *ApNextAttrPres; /* the packet of presentation rules
-			   for the next element */
+					    for the next element */
   union
   {
     struct        /* numerical attribute */
     {
       int	  _ApNCases_; /* number of application cases for the
-			   presentation rules */
+				 presentation rules */
       NumAttrCase _ApCase_[MAX_PRES_ATTR_CASE]; /* the cases of application
-			   of the presentation rules */
+						   of the presentation rules */
     } s0;
     struct        /* reference attribute */
     {
       PtrPRule    _ApRefFirstPRule_; /* first rule in the string of rules
-			   to apply for the attribute */
+					to apply for the attribute */
     } s1;
     struct        /* text attribute */
     {
       Name  	  _ApString_;	/* the value triggering the application of the
-			   presentation rules */
-      PtrPRule    _ApTextFirstPRule_;    /* first rule in the string of rules
-			   to apply for this value */
+				   presentation rules */
+      CondMatch   _ApMatch_;    /* matching condition: substring, word, ... */
+      PtrPRule    _ApTextFirstPRule_; /* first rule in the string of rules
+					 to apply for this value */
     } s2;
     struct        /* enumerated attribute */
     {
-      PtrPRule    _ApEnumFirstPRule_[MAX_ATTR_VAL + 1]; /* for each value of
-			   the attribute, in the order of the table
-			   AttrEnumValue, address of the first presentation
-			   rule associated with this value */
+      PtrPRule    _ApEnumFirstPRule_[MAX_ATTR_VAL + 1]; /* for each atribute value,
+							   in the order of the table
+							   AttrEnumValue, ppoints the
+							   first presentation rule
+							   associated with this value */
     } s3;
   } u;
 } AttributePres;
@@ -682,6 +692,7 @@ typedef struct _AttributePres
 #define ApCase u.s0._ApCase_
 #define ApRefFirstPRule u.s1._ApRefFirstPRule_
 #define ApString u.s2._ApString_
+#define ApMatch u.s2._ApMatch_
 #define ApTextFirstPRule u.s2._ApTextFirstPRule_
 #define ApEnumFirstPRule u.s3._ApEnumFirstPRule_
 

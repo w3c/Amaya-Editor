@@ -564,7 +564,7 @@ static int          PresConstInsert (PSchema tcsh, char *value)
 /*----------------------------------------------------------------------
   CompareCond : defines an absolute order on conditions.
   ----------------------------------------------------------------------*/
-static int          CompareCond (PtrCondition c1, PtrCondition c2)
+static int CompareCond (PtrCondition c1, PtrCondition c2)
 {
   if (c1 == c2)
     return (0);
@@ -628,6 +628,14 @@ static int          CompareCond (PtrCondition c1, PtrCondition c2)
 	return (-1);
       if (c1->CoTestAttrValue && !c2->CoTestAttrValue)
 	return (+1);
+      if (c1->CoTestAttrValue && c2->CoTestAttrValue)
+	{
+	  if (c1->CoTextMatch < c2->CoTextMatch)
+	    return (-1);
+	  if (c1->CoTextMatch > c2->CoTextMatch)
+	    return (+1);
+	  return (strcasecmp (c1->CoAttrTextValue, c2->CoAttrTextValue));
+	}
       return (0);
     default:
       return (+1);
@@ -639,7 +647,7 @@ static int          CompareCond (PtrCondition c1, PtrCondition c2)
   AddCond : add a new condition in a presentation rule, respecting
   the order of the list.
   ----------------------------------------------------------------------*/
-static void         AddCond (PtrCondition * base, PtrCondition cond)
+static void AddCond (PtrCondition *base, PtrCondition cond)
 {
    PtrCondition        cour = *base;
    PtrCondition        next;
@@ -657,7 +665,7 @@ static void         AddCond (PtrCondition * base, PtrCondition cond)
 	return;
      }
    next = cour->CoNextCondition;
-   while (next != NULL)
+   while (next)
      {
 	if (CompareCond (cond, next) <= 0)
 	  {
@@ -715,7 +723,8 @@ static void PresRuleAddAncestorCond (PtrPRule rule, int type, int nr)
 /*----------------------------------------------------------------------
   PresRuleAddAttrCond : add a Attr condition to a presentation rule.
   ----------------------------------------------------------------------*/
-static void PresRuleAddAttrCond (PtrPRule rule, int type, int level, char* value)
+static void PresRuleAddAttrCond (PtrPRule rule, int type, int level,
+				 char* value, CondMatch match)
 {
    PtrCondition        cond = NULL;
 
@@ -735,7 +744,10 @@ static void PresRuleAddAttrCond (PtrPRule rule, int type, int level, char* value
    cond->CoTypeAttr = type;
    cond->CoTestAttrValue = (value != NULL);
    if (value)
-     strncpy (cond->CoAttrTextValue, value, MAX_NAME_LENGTH);
+     {
+       strncpy (cond->CoAttrTextValue, value, MAX_NAME_LENGTH);
+       cond->CoTextMatch = match;
+     }
    else
      cond->CoAttrTextValue[0] = EOS;
    AddCond (&rule->PrCond, cond);
@@ -755,7 +767,7 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
   AttributePres      *attrs;
   char               *attrVal;
   unsigned int        elementType;
-  int                 nbrules;
+  int                 nbrules, match;
   int                 i, j, val;
 
   /* select the right attribute */
@@ -766,6 +778,7 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
   ppRule = NULL;
   attrVal = ctxt->attrText[att];
   elementType = ctxt->name[att];
+  match = ctxt->attrMatch[att];
   for (i = 0; i < nbrules && !ppRule && attrs; i++)
     {
       if ((att > 0 && attrs->ApElemType != (int)(ctxt->type)) ||
@@ -796,7 +809,7 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
 		      attrs->ApCase[j].CaLowerBound == val &&
 		      attrs->ApCase[j].CaUpperBound == val)
 		    ppRule = &(attrs->ApCase[j].CaFirstPRule);
-		  else	    
+		  else
 		    for (j = 0; j < attrs->ApNCases && !ppRule ; j++)
 		      if (attrs->ApCase[j].CaComparType == ComparConstant &&
 			  attrs->ApCase[j].CaLowerBound < -MAX_INT_ATTR_VAL &&
@@ -805,7 +818,8 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
 		}
 	      break;
 	    case AtTextAttr:
-	      if (attrVal && !strcmp (attrs->ApString, attrVal))
+	      if (attrVal && !strcmp (attrs->ApString, attrVal) &&
+		  attrs->ApMatch == match)
 		ppRule = &(attrs->ApTextFirstPRule);
 	      else if (!attrVal && attrs->ApString[0] == EOS)
 		ppRule = &(attrs->ApTextFirstPRule);
@@ -841,7 +855,7 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
   PtrPSchema          pPS;
   PtrPRule           *ppRule;
   char               *attrVal;
-  int                 nbrules, val;
+  int                 nbrules, val, match;
 
   pSS = (PtrSSchema) ctxt->schema;
   ppRule = FirstPresAttrRuleSearch (tsch, attrType, ctxt, att, &attrs);
@@ -873,6 +887,7 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 	}
 
       attrVal = ctxt->attrText[att];
+      match = ctxt->attrMatch[att];
       switch (pSS->SsAttribute->TtAttr[attrType - 1]->AttrType)
 	{
 	case AtNumAttr:
@@ -897,7 +912,11 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 	  break;
 	case AtTextAttr:
 	  if (attrVal)
-	    strcpy (new->ApString, attrVal);
+	    {
+	      strcpy (new->ApString, attrVal);
+	      /* add the condition too */
+	      new->ApMatch = match;
+	    }
 	  else
 	    new->ApString[0] = EOS;
 	  new->ApTextFirstPRule = NULL;
@@ -1034,8 +1053,9 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
 		    ctxt->attrLevel[i] == 0) ||
 		   cond->CoTypeAttr != ctxt->attrType[i] ||
 		   cond->CoTestAttrValue != (ctxt->attrText != NULL) ||
-		   (cond->CoTestAttrValue && strcmp (cond->CoAttrTextValue,
-						     ctxt->attrText[i]))))
+		   (cond->CoTestAttrValue &&
+		    cond->CoTextMatch != ctxt->attrMatch[i] &&
+		    strcasecmp (cond->CoAttrTextValue, ctxt->attrText[i]))))
 	     cond = cond->CoNextCondition;
 	   if (cond == NULL)
 	     /* conditions are different */
@@ -1186,7 +1206,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 	      if (ctxt->attrType[i]  && i != att)
 		/* it's another attribute */
 		PresRuleAddAttrCond (pRule, ctxt->attrType[i], ctxt->attrLevel[i],
-				     ctxt->attrText[i]);
+				     ctxt->attrText[i], ctxt->attrMatch[i]);
 	      i++;
 	    }
 
@@ -2522,16 +2542,18 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 	      /*  select the good starting point depending on the context */
 	      if (ctxt->box)
 		pRule = BoxRuleSearch ((PtrPSchema) tsch, ctxt);
-	      if (pRule)
+	      if (pRule && documentDisplayMode[doc - 1] != NoComputedDisplay)
 		{
 		  i = 0;
 		  while (attrType == 0 && i < MAX_ANCESTORS)
 		    attrType = ctxt->attrType[i++];
-		  ApplyAGenericStyleRule (doc, (PtrSSchema) ctxt->schema, ctxt->type, attrType, ctxt->box, pRule, FALSE);
+		  ApplyAGenericStyleRule (doc, (PtrSSchema) ctxt->schema,
+					  ctxt->type, attrType, ctxt->box, pRule, FALSE);
 		}
 	    }
 	  else
-	    ApplyASpecificStyleRule (pRule, (PtrElement) el, LoadedDocument[doc - 1], FALSE);
+	    ApplyASpecificStyleRule (pRule, (PtrElement) el,
+				     LoadedDocument[doc - 1], FALSE);
 	}
     }
   return (0);

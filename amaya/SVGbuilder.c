@@ -983,7 +983,7 @@ void SVGElementComplete (Element el, Document doc, int *error)
 	     text = GetStyleContents (el);
 	     if (text)
 	       {
-		 ReadCSSRules (doc, NULL, text,
+		 ReadCSSRules (doc, NULL, text, NULL,
 			       TtaGetElementLineNumber (el), FALSE);
 		 TtaFreeMemory (text);
 	       }

@@ -1095,7 +1095,10 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
 			      if (pCond->CoTestAttrValue)
 				{
 				  if (pSS->SsAttribute->TtAttr[pCond->CoTypeAttr]->AttrType == AtTextAttr)
-				    TtaReadName (file, pCond->CoAttrTextValue);
+				    {
+				      TtaReadName (file, pCond->CoAttrTextValue);
+				      pCond->CoTextMatch = CoMatch;
+				    }
 				  else
 				    TtaReadSignedShort (file,
 							&pCond->CoAttrValue);

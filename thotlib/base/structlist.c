@@ -2820,7 +2820,15 @@ static void wrCondition (PtrCondition pCond, FILE *fileDescriptor)
 	       if (pCond->CoTestAttrValue)
 		 {
 		   if (pSchemaStr->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrType == AtTextAttr)
-		     fprintf (fileDescriptor, " = %s", pCond->CoAttrTextValue);
+		     {
+		       if (pCond->CoTextMatch == CoSubstring)
+			 fprintf (fileDescriptor, " |=");
+		       else if (pCond->CoTextMatch == CoWord)
+			 fprintf (fileDescriptor, " ~=");
+		       else
+			 fprintf (fileDescriptor, " =");
+		       fprintf (fileDescriptor, " %s", pCond->CoAttrTextValue);
+		     }
 		   else
 		     fprintf (fileDescriptor, " = %d", pCond->CoAttrValue);
 		 }
