@@ -1771,42 +1771,15 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	{
 	  if (c >= 0x370 && c < 0x3FF)
 	    {
-		  /* Greek characters */
+	      /* Greek characters */
 #ifdef _GL
 	      /* use STIX fonts here */
 	      code = 'E';
 	      car = GetStixFontAndIndex (c, fontset, &pfont);
 	      if (pfont == NULL)
-		  {
-		    code = GreekFontScript;
-		    if (code == '7')
-		    {
-		      pfont = &(fontset->Font_7);
-#ifdef _WINDOWS
-		      encoding = WINDOWS_1253;
-#else /* _WINDOWS */
-		      encoding = ISO_8859_7;
-#endif /* _WINDOWS */
-		    }
-		    else
-		    {
-		      pfont = &(fontset->Font_16);
-		      encoding = ISO_SYMBOL;
-		    }
-		  }
-#else /* _GL */
+		{
 		  code = GreekFontScript;
-		  if (c == 0x3C2 || c == 0x3D1 ||
-		      c == 0x3D2 || c == 0x3D5 ||
-		      c == 0x3D6)
-		    /* final sigma, thetasym, upsih, phi, piv */
-		    /* use the Symbol font */
-		    {
-		      code = 'G';
-		      pfont = &(fontset->Font_16);
-		      encoding = ISO_SYMBOL;
-		    }
-		  else if (code == '7')
+		  if (code == '7')
 		    {
 		      pfont = &(fontset->Font_7);
 #ifdef _WINDOWS
@@ -1820,6 +1793,33 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		      pfont = &(fontset->Font_16);
 		      encoding = ISO_SYMBOL;
 		    }
+		}
+#else /* _GL */
+	      code = GreekFontScript;
+	      if (c == 0x3C2 || c == 0x3D1 ||
+		  c == 0x3D2 || c == 0x3D5 ||
+		  c == 0x3D6)
+		/* final sigma, thetasym, upsih, phi, piv */
+		/* use the Symbol font */
+		{
+		  code = 'G';
+		  pfont = &(fontset->Font_16);
+		  encoding = ISO_SYMBOL;
+		}
+	      else if (code == '7')
+		{
+		  pfont = &(fontset->Font_7);
+#ifdef _WINDOWS
+		  encoding = WINDOWS_1253;
+#else /* _WINDOWS */
+		  encoding = ISO_8859_7;
+#endif /* _WINDOWS */
+		}
+	      else
+		{
+		  pfont = &(fontset->Font_16);
+		  encoding = ISO_SYMBOL;
+		}
 #endif /* _GL */
 	    }
 	  else if (c == 0x210E /* planckh */ ||
@@ -1959,7 +1959,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	      encoding = ISO_8859_2;
 #endif /* _WINDOWS */
 	    }
-	  else if ((c > 0x2000 && c < 0x237F &&
+	  else if ((c > 0x2000 && c < 0x237F &&  /* mathematical characters */
 		   (c < 0x2018 || c > 0x201D) && /* Windows quotations */
 		   c != 0x20AC) || /* euro */
 		   c == 0x25CA ||  /* lozenge */
@@ -1970,25 +1970,36 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		   c == 0x192)     /* latin small letter f with hook */
 	    {
 #ifdef _GL
-	      /* use STIX fonts here */
-	      code = 'E';
-	      car = GetStixFontAndIndex (c, fontset, &pfont);
-	      if (pfont == NULL )
+	      if (c == 0x220F || c == 0x2211)
+		/* an oversized product or summation sign. Use the Symbol
+		   font: these characters are ill-aligned in Esstix */
 		{
-		  code = '7';
-		  pfont = &(fontset->Font_7);
-#ifdef _WINDOWS
-		  encoding = WINDOWS_1253;
-#else /* _WINDOWS */
-		  encoding = ISO_8859_7;
-#endif /* _WINDOWS */
+		  code = GreekFontScript;
+		  pfont = &(fontset->Font_16);
+		  encoding = ISO_SYMBOL;
 		}
+	      else
+		{
+		  /* use Esstix fonts */
+		  code = 'E';
+		  car = GetStixFontAndIndex (c, fontset, &pfont);
+		  if (pfont == NULL )
+		    {
+		      code = '7';
+		      pfont = &(fontset->Font_7);
+#ifdef _WINDOWS
+		      encoding = WINDOWS_1253;
+#else /* _WINDOWS */
+		      encoding = ISO_8859_7;
+#endif /* _WINDOWS */
+		    }
 #else /* _GL */
-	      /* Symbols */
-	      code = 'G';
-	      pfont = &(fontset->Font_16);
-	      encoding = ISO_SYMBOL;
+		  /* Symbols */
+		  code = 'G';
+		  pfont = &(fontset->Font_16);
+		  encoding = ISO_SYMBOL;
 #endif /* _GL */
+		}
 	    }
 	  else if (c < 0x24F)
 	    {
@@ -2051,10 +2062,10 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 #endif /* _WINDOWS */
 	    }
 #ifdef _GL
-	  else if ((c >= 0x2190 && c <= 0x22F1) ||
-	      (c >= 0x25A0 && c <= 0x25F7))
+	  else if (c >= 0x25A0 && c <= 0x25F7)
+	    /* geometric shapes */
 	    {
-		   /* use STIX fonts here */
+	      /* use Esstix fonts */
 	      code = 'E';
 	      car = GetStixFontAndIndex (c, fontset, &pfont);
 	      if (pfont == NULL)
