@@ -798,6 +798,141 @@
               <focused>1</focused>
             </object>
           </object>
+          <object class="notebookpage">
+            <label>WebDAV Preferences</label>
+            <object class="wxPanel" name="wxID_PAGE_DAV">
+              <object class="wxBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxVERTICAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_USER_REF">
+                        <label>Reference de l'utilisateur WebDAV (mail)</label>
+                      </object>
+                    </object>
+                    <object class="spacer">
+                      <size>0,5</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxTextCtrl" name="wxID_VALUE_DAV_USER"/>
+                      <option>0</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxRadioBox" name="wxID_RADIO_LOCK_DEPTH">
+                        <label>Portee du verrou WebDAV</label>
+                        <content>
+                          <item>exclusive</item>
+                          <item>partagee</item>
+                        </content>
+                        <style>wxRA_SPECIFY_ROWS</style>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                    </object>
+                    <object class="spacer">
+                      <size>10,0</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxRadioBox" name="wxID_RADIO_LOCK_DEPTH">
+                        <label>Profondeur du verrou WebDAV</label>
+                        <content>
+                          <item>0</item>
+                          <item>Infinie</item>
+                        </content>
+                        <style></style>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxRadioBox" name="wxID_RADIO_TIMEOUT">
+                        <label>Duree du verrou</label>
+                        <content>
+                          <item>Infinie</item>
+                          <item>Autre (exprime en secondes)</item>
+                        </content>
+                        <style>wxRA_SPECIFY_COLS|wxSUNKEN_BORDER</style>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxSlider" name="wxID_TIMEOUT_VALUE">
+                        <value>300</value>
+                        <min>300</min>
+                        <max>1000</max>
+                        <style>wxSL_LABELS</style>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALIGN_BOTTOM</flag>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxVERTICAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxRadioBox" name="wxID_RADIO_AWARENESS">
+                        <label>Notification WebDAV</label>
+                        <content>
+                          <item>Notification generale</item>
+                          <item>Notification a la fermeture</item>
+                        </content>
+                        <style>wxRA_SPECIFY_ROWS</style>
+                      </object>
+                      <flag>wxEXPAND</flag>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxVERTICAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_RESOURCES">
+                        <label>Liste des ressources de l'utilisateur WebDAV</label>
+                      </object>
+                    </object>
+                    <object class="spacer">
+                      <size>0,5</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxTextCtrl" name="wxID_VALUE_DAV_RESOURCES"/>
+                      <option>0</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
+              </object>
+              <focused>1</focused>
+            </object>
+          </object>
         </object>
         <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
