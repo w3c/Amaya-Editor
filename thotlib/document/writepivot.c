@@ -811,7 +811,7 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
   PtrTextBuffer       pBuf;
   PtrPathSeg          pPa;
   PtrAttribute        pAttr;
-  PtrPRule            pPRule;
+  PtrPRule            pPRule = NULL;
   PtrSSchema          pSS;
   NotifyElement       notifyEl;
   NotifyAttribute     notifyAttr;
@@ -886,8 +886,11 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
       /* write the view number */
       PutShort (pivFile, 1);
       /* write the specificity and the importance of the rule */
-      PutShort (pivFile, pPRule->PrSpecificity);
-      PutBoolean (pivFile, pPRule->PrImportant);
+      if (pPRule)
+	{
+	  PutShort (pivFile, pPRule->PrSpecificity);
+	  PutBoolean (pivFile, pPRule->PrImportant);
+	}
       /* write the presentation box number */
       PutShort (pivFile, 0);
       /* write the specific rule and its parameters */

@@ -2575,7 +2575,8 @@ void CheckNewLines (NotifyOnTarget *event)
 	    selChanged = TRUE;
 	  }
     }
-  content[j] = EOS;
+  if (j < length)
+    content[j] = EOS;
   if (changed)
     /* we have made changes in the text buffer, update the element */
     {
