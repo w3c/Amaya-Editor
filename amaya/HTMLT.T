@@ -106,38 +106,43 @@ RULES
 	END;
 
  H1:	BEGIN
+	if not within Preformatted Create '\12';
 	Create '<h1';
 	Create Attributes;
 	Create '>';
 	Create '</h1>' After;
-	if not within Preformatted Create '\12\12' After;
+	if not within Preformatted Create '\12' After;
 	END;
 
  H2:	BEGIN
+	if not within Preformatted Create '\12';
 	Create '<h2';
 	Create Attributes;
 	Create '>';
 	Create '</h2>' After;
-	if not within Preformatted Create '\12\12' After;
+	if not within Preformatted Create '\12' After;
 	END;
 
  H3:	BEGIN
+	if not within Preformatted Create '\12';
 	Create '<h3';
 	Create Attributes;
 	Create '>';
 	Create '</h3>' After;
-	if not within Preformatted Create '\12\12' After;
+	if not within Preformatted Create '\12' After;
 	END;
 
  H4:	BEGIN
+	if not within Preformatted Create '\12';
 	Create '<h4';
 	Create Attributes;
 	Create '>';
 	Create '</h4>' After;
-	if not within Preformatted Create '\12\12' After;
+	if not within Preformatted Create '\12' After;
 	END;
 
  H5:	BEGIN
+	if not within Preformatted Create '\12';
 	Create '<h5';
 	Create Attributes;
 	Create '>';
@@ -146,6 +151,7 @@ RULES
 	END;
 
  H6:	BEGIN
+	if not within Preformatted Create '\12';
 	Create '<h6';
 	Create Attributes;
 	Create '>';
