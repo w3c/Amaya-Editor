@@ -1331,8 +1331,8 @@ void DisplaySelMessage (char *text, PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 void TtaSetStatus (Document document, View view, char *text, char *name)
 {
-   int                 frame;
-   char                s[MAX_LENGTH];
+   int                 frame, length;
+   char                *s;
 #ifndef _WINDOWS
 #ifndef _GTK
    Arg                 args[MAX_ARGS];
@@ -1356,6 +1356,10 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 	if (frame != 0)
 	  if (FrameTable[frame].WdStatus != 0)
 	    {
+	     length = strlen (text) + 1;
+	     if (name)
+	       length += strlen (name);
+	     s = TtaGetMemory (length);
 #ifdef _WINDOWS
 	     if (name)
 	       /* text est un format */
@@ -1396,6 +1400,7 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 	     gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].WdStatus));
 #endif /* !_GTK */
 #endif /* _WINDOWS */
+	     TtaFreeMemory (s);
 	    }
      }
 }
