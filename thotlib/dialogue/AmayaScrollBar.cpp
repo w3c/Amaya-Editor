@@ -35,26 +35,28 @@ AmayaScrollBar::~AmayaScrollBar()
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaScrollBar
  *      Method:  OnSetFocus
- * Description:  
+ * Description:  just refuse to get the focus because on windows, the scrollbar is blinking
  *--------------------------------------------------------------------------------------
  */
 void AmayaScrollBar::OnSetFocus( wxFocusEvent & event )
 {
   wxLogDebug( _T("AmayaScrollBar::OnSetFocus") );
-  event.Skip();
+  // do not skip this event because we want stop focus
+  //event.Skip();
 }
 
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaScrollBar
  *      Method:  OnKillFocus
- * Description:  
+ * Description:  just refuse to get the focus because on windows, the scrollbar is blinking
  *--------------------------------------------------------------------------------------
  */
 void AmayaScrollBar::OnKillFocus( wxFocusEvent & event )
 {
   wxLogDebug( _T("AmayaScrollBar::OnKillFocus") );
-  event.Skip();
+  // do not skip this event because we want stop focus
+  //event.Skip();
 }
 
 

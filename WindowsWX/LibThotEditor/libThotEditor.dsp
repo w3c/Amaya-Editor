@@ -131,6 +131,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaPanel.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaScrollBar.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaSimpleWindow.cpp
 # End Source File
 # Begin Source File
