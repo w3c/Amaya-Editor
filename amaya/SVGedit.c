@@ -1555,7 +1555,7 @@ void CreateGraphicElement (int entry)
   Document	    doc;
   Element	    first, SvgRoot, newEl, sibling, selEl;
   Element           child, parent, elem, foreignObj, altText, leaf;
-  ElementType       elType, selType, newType, childType;
+  ElementType       elType, selType, newType, childType, parentType;
   AttributeType     attrType, attrTypeHTML;
   Attribute         attr, inheritedAttr;
   SSchema	    docSchema, SvgSchema;
@@ -1567,6 +1567,7 @@ void CreateGraphicElement (int entry)
   int	            oldStructureChecking;
   int               docModified;
   ThotBool	    found, newGraph = FALSE;
+  Construct         constOfType;
 
   doc = TtaGetSelectedDocument ();
   if (doc == 0)
@@ -1602,11 +1603,25 @@ void CreateGraphicElement (int entry)
 	/* the current selection is not in a SVG element, create one */
 	{
 	  selType = TtaGetElementType (first);
+	  /* Allow an SVG element only within an HTML or a generic XML element */
 	  if (strcmp (TtaGetSSchemaName (selType.ElSSchema), "HTML"))
 	    {
-	      /* selection is not in an HTML element. */
-	      TtaCancelLastRegisteredSequence (doc);
-	      return;
+	      /* It's not an HTML element. Is it an XML one ? */
+	      if (selType.ElTypeNum == 1)
+		{
+		  parent = TtaGetParent (first);
+		  parentType = TtaGetElementType (parent);
+		  constOfType = TtaGetConstructOfType (parentType);
+		}
+	      else
+		constOfType = TtaGetConstructOfType (selType);
+	      if (constOfType != ConstructAny)
+		{
+		  /* It's not an XML element */
+		  TtaCancelLastRegisteredSequence (doc);
+		  return;
+		}
+
 	    }
 	  SvgSchema = TtaNewNature (doc, docSchema, "SVG",
 				      "SVGP");
