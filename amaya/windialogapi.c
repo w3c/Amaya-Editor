@@ -2467,10 +2467,9 @@ LPARAM lParam;
 
     switch (msg) {
 	       case WM_INITDIALOG:
+                EditURLWnd = GetDlgItem (hwnDlg, IDC_GETURL);
                 SetWindowText (hwnDlg, wndTitle);
 			    SetDlgItemText (hwnDlg, IDC_GETURL, tmpDocName);
-                EditURLWnd = GetDlgItem (hwnDlg, IDC_GETURL);
-                SetFocus (EditURLWnd) ;
 				urlToOpen [0] = 0;
 				break;
 
@@ -2482,7 +2481,8 @@ LPARAM lParam;
                          ThotCallback (baseDoc + urlName, STRING_DATA, urlToOpen);
 				   }
 				}
-			    switch (LOWORD (wParam)) {
+
+				switch (LOWORD (wParam)) {
                        case ID_CONFIRM:
                             ThotCallback (baseDoc + formDoc, INTEGER_DATA, (STRING)1);
 					        EndDialog (hwnDlg, ID_CONFIRM);
@@ -2525,11 +2525,17 @@ LPARAM lParam;
 					        EndDialog (hwnDlg, IDCANCEL);
 							break;
 
+#                      if 0   /* @@@@@@@@@ 000 @@@@@@@@@ */
                        case IDC_GETURL:
-                            ndx = GetWindowTextLength (EditURLWnd);
-                            /* PostMessage (EditURLWnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx); */
-                            PostMessage (EditURLWnd, EM_SETSEL, 0, MAKELONG (0, ndx));
+						    if (firstInit) {
+                               SetFocus (EditURLWnd);
+                               ndx = GetWindowTextLength (EditURLWnd);
+                               /* PostMessage (EditURLWnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx); */
+                               PostMessage (EditURLWnd, EM_SETSEL, 0, MAKELONG (0, ndx));
+                               /* firstInit = FALSE; */
+							}
                             break;
+#                       endif /* @@@@@@@@@ 000 @@@@@@@@@ */
 
 				}
 				break;

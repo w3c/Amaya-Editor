@@ -107,6 +107,7 @@ TypeUnit unit;
           case TEXT('t'):
                usprintf (&WIN_lpszFace[0], TEXT("Times New Roman"));
                /* usprintf (&WIN_lpszFace[0], L"Alis Akhbar MT"); */
+               /* usprintf (&WIN_lpszFace[0], TEXT("UT Cairo")); */
                /* usprintf (&WIN_lpszFace[0], L"Farsi 1.1"); */
                break;
 

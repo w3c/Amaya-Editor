@@ -466,6 +466,9 @@ LPARAM lParam;
    CHAR_T string[2];
    int  len = 0;
 
+   if (frame < 0)
+      return;
+
    if ((msg != WM_SYSKEYDOWN) && (msg != WM_KEYDOWN) && (msg != WM_CHAR))
       return;
 
@@ -473,9 +476,6 @@ LPARAM lParam;
       specialKey = FALSE;
    else
       specialKey = TRUE;
-
-   if (frame < 0)
-      return;
 
    status = GetKeyState (VK_SHIFT);
    if (HIBYTE (status)) 
@@ -493,6 +493,7 @@ LPARAM lParam;
       escChar = TRUE;
    }
 
+/* 
    if ((wParam == VK_CANCEL) ||
        (wParam == VK_BACK)   ||
        (wParam == VK_RETURN) ||
@@ -508,19 +509,30 @@ LPARAM lParam;
        (wParam == VK_INSERT) ||
        (wParam == VK_F2)     ||
        (wParam == VK_DELETE))  
-       /* (wParam == VK_SHIFT)  ||
-       (wParam == VK_CONTROL))   */
+       (wParam == VK_SHIFT)  ||
+       (wParam == VK_CONTROL))   
       len = 0;
    else
-       len = 1;
+       len = 1; */
 
-   if (msg == WM_SYSKEYDOWN || msg == WM_KEYDOWN)
+   if ((msg == WM_SYSKEYDOWN || msg == WM_KEYDOWN) && 
+       wParam != 0xBB && wParam != 0xBD)
       len = 0;
    else
         len = 1;
 
+   /* Alt + '+' return 0xBB and this needs to be converted into Alt + '+' */
+   /* Alt + '-' return 0xBD and this needs to be converted into Alt + '-' */
+   if (keyboard_mask & THOT_MOD_ALT) {
+      if (wParam == 0xBD)
+         wParam = '-';
+      else if (keyboard_mask & THOT_MOD_SHIFT && wParam == 0xBB)
+           wParam = '+';
+   }
+
    if (wParam == VK_MENU || wParam == VK_CONTROL)
       return;
+
    string[0] = (CHAR_T) wParam;
    ThotInput (frame, &string[0], len, keyboard_mask, wParam);
 
@@ -641,10 +653,10 @@ int                 key;
       frame = 0;
 
 #  ifdef _WINDOWS
-   if (key == 13 && nb == 1)
-     specialKey = FALSE;
-   else if (key >= 1 && key <= 26 && nb == 1)
-     specialKey = TRUE;
+   if (key == 0xD && nb == 1)
+      specialKey = FALSE;
+   else if (((key >= 0x1 && key <= 0x1A) || key == 0xBB || key == 0xBD) && nb == 1)
+        specialKey = TRUE;
    else if (escChar) {
         specialKey = TRUE;
         escChar = FALSE;
@@ -653,320 +665,287 @@ int                 key;
 
    value = string[0];
    found = FALSE;
-   if (nb == 2)
-     {
-       /* It's a Thot action call */
-       command = (int) string[1];
-       found = TRUE;
-     }
-   else
-     {
-       command = 0;	   
-       /* Set the right indicator */
-       if (PicMask & THOT_MOD_CTRL)
-	 if (PicMask & THOT_MOD_SHIFT)
-	   modtype = THOT_MOD_S_CTRL;
-	 else
-	   modtype = THOT_MOD_CTRL;
-       else if (PicMask & THOT_MOD_ALT)
-	 if (PicMask & THOT_MOD_SHIFT)
-	   modtype = THOT_MOD_S_ALT;
-	 else
-	   modtype = THOT_MOD_ALT;
-       else if (PicMask & THOT_MOD_SHIFT)
-	 modtype = THOT_MOD_SHIFT;
-       else
-	 modtype = THOT_NO_MOD;
+   if (nb == 2) {
+      /* It's a Thot action call */
+      command = (int) string[1];
+      found = TRUE;
+   } else {
+          command = 0;	   
+          /* Set the right indicator */
+          if (PicMask & THOT_MOD_CTRL)
+	         if (PicMask & THOT_MOD_SHIFT)
+	            modtype = THOT_MOD_S_CTRL;
+	         else
+	             modtype = THOT_MOD_CTRL;
+          else if (PicMask & THOT_MOD_ALT)
+               if (PicMask & THOT_MOD_SHIFT)
+                  modtype = THOT_MOD_S_ALT;
+               else
+                   modtype = THOT_MOD_ALT;
+         else if (PicMask & THOT_MOD_SHIFT)
+              modtype = THOT_MOD_SHIFT;
+         else
+              modtype = THOT_NO_MOD;
 
-       /* Is it a second level of the current automata? */
-       if (Automata_current != NULL)
-	 {
-	   /* search a second level entry */
-	   ptr = Automata_current;
-	   Automata_current = NULL;
-	   while (!found && ptr != NULL)
-	     {
-	       if (ptr != NULL)
-		 {
-		   if (ptr->K_EntryCode == key && modtype == ptr->K_Modifier)
-		     found = TRUE;
-		   else
-		     ptr = ptr->K_Other;
-		 }
-	     }
+         /* Is it a second level of the current automata? */
+         if (Automata_current != NULL) {
+            /* search a second level entry */
+            ptr = Automata_current;
+            Automata_current = NULL;
+            while (!found && ptr != NULL) {
+                  if (ptr != NULL) {
+                     if (ptr->K_EntryCode == key && modtype == ptr->K_Modifier)
+                        found = TRUE;
+                     else
+                         ptr = ptr->K_Other;
+				  }
+			}
 	   
-	   if (found)
-	     {
-	       value = (UCHAR_T) ptr->K_Value;
-	       command = ptr->K_Command;
-	     }
-	 }
-       else
-	 {
-	   /* Search a first level entry? */
-	   if (modtype == THOT_MOD_S_CTRL)
-	     ptr = Automata_CTRL;
-	   else if (modtype == THOT_MOD_CTRL)
-	     ptr = Automata_ctrl;
-	   else if (modtype == THOT_MOD_S_ALT)
-	     ptr = Automata_ALT;
-	   else if (modtype == THOT_MOD_ALT)
-	     ptr = Automata_alt;
-	   else
-	     ptr = Automata_normal;
+            if (found) {
+               value = (UCHAR_T) ptr->K_Value;
+               command = ptr->K_Command;
+			}
+		 } else {
+                /* Search a first level entry? */
+                if (modtype == THOT_MOD_S_CTRL)
+                   ptr = Automata_CTRL;
+                else if (modtype == THOT_MOD_CTRL)
+                     ptr = Automata_ctrl;
+                else if (modtype == THOT_MOD_S_ALT)
+                     ptr = Automata_ALT;
+                else if (modtype == THOT_MOD_ALT)
+                     ptr = Automata_alt;
+                else
+                     ptr = Automata_normal;
 
-#ifdef _WINDOWS
-	   endOfSearch = FALSE;
-	   while (!endOfSearch && ptr != NULL)
-#else  /* !_WINDOWS */
-           while (!found && ptr != NULL)
-#endif /* _WINDOWS */
-	     {
-	       if (ptr != NULL)
-		 {
-		   if (ptr->K_EntryCode == key)
-		     {
-#ifdef _WINDOWS
-		       endOfSearch = TRUE;
-		       if (specialKey)
-			 {
-#endif /* _WINDOWS */
-			   /* On entre dans un automate */
-			   found = TRUE;
-			   Automata_current = ptr->K_Next;
-			   if (Automata_current == NULL)
-			     {
-			       /* il s'agit d'une valeur definie a premier niveau */
-			       value = (UCHAR_T) ptr->K_Value;
-			       command = ptr->K_Command;
-			     }
-#ifdef _WINDOWS
-			 }
-#endif /* _WINDOWS */
-		     }
-		   else
-		     ptr = ptr->K_Other;
-		 }
-	     }
-	 }
-     }
+#               ifdef _WINDOWS
+                endOfSearch = FALSE;
+                while (!endOfSearch && ptr != NULL)
+#               else  /* !_WINDOWS */
+                while (!found && ptr != NULL)
+#               endif /* _WINDOWS */
+				{
+                   if (ptr != NULL) {
+                      if (ptr->K_EntryCode == key) {
+#                        ifdef _WINDOWS
+                         endOfSearch = TRUE;
+                         if (specialKey) {
+#                           endif /* _WINDOWS */
+                            /* On entre dans un automate */
+                            found = TRUE;
+                            Automata_current = ptr->K_Next;
+                            if (Automata_current == NULL) {
+                               /* il s'agit d'une valeur definie a premier niveau */
+                               value = (UCHAR_T) ptr->K_Value;
+                               command = ptr->K_Command;
+							}
+#                        ifdef _WINDOWS
+						 }
+#                        endif /* _WINDOWS */
+					  } else
+                            ptr = ptr->K_Other;
+				   } 
+				} 
+		 } 
+   } 
 
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    if (specialKey && !found)
-#else /* !_WINDOWS */
+#  else /* !_WINDOWS */
    if (!found)
-#endif /* _WINDOWS */
-     /* Mangement of special keys */
-     switch (key)
-       {
-       case THOT_KEY_Up:
-#      ifdef THOT_KEY_R8
-       case THOT_KEY_R8:
-#      endif
-	 if (modtype == THOT_MOD_SHIFT)
-	   command = SpecialShiftKeys[MY_KEY_Up];
-	 else if (modtype == THOT_MOD_CTRL)
-	   command = SpecialCtrlKeys[MY_KEY_Up];
-	 else
-	   command = SpecialKeys[MY_KEY_Up];
-	 Automata_current = NULL;
-	 break;
+#  endif /* _WINDOWS */
+      /* Mangement of special keys */
+      switch (key) {
+             case THOT_KEY_Up:
+#            ifdef THOT_KEY_R8
+             case THOT_KEY_R8:
+#            endif
+	              if (modtype == THOT_MOD_SHIFT)
+                     command = SpecialShiftKeys[MY_KEY_Up];
+                  else if (modtype == THOT_MOD_CTRL)
+                       command = SpecialCtrlKeys[MY_KEY_Up];
+                  else
+                       command = SpecialKeys[MY_KEY_Up];
+                  Automata_current = NULL;
+                  break;
 
-       case THOT_KEY_Left:
-#      ifdef THOT_KEY_R10
-       case THOT_KEY_R10:
-#      endif
-	 if (modtype == THOT_MOD_SHIFT)
-	   command = SpecialShiftKeys[MY_KEY_Left];
-	 else if (modtype == THOT_MOD_CTRL)
-	   command = SpecialCtrlKeys[MY_KEY_Left];
-	 else
-	   command = SpecialKeys[MY_KEY_Left];
-	 Automata_current = NULL;
-	 break;
+             case THOT_KEY_Left:
+#            ifdef THOT_KEY_R10
+             case THOT_KEY_R10:
+#            endif
+                  if (modtype == THOT_MOD_SHIFT)
+                     command = SpecialShiftKeys[MY_KEY_Left];
+                  else if (modtype == THOT_MOD_CTRL)
+                       command = SpecialCtrlKeys[MY_KEY_Left];
+                  else
+                       command = SpecialKeys[MY_KEY_Left];
+                  Automata_current = NULL;
+                  break;
 
-       case THOT_KEY_Right:
-#      ifdef THOT_KEY_R12
-       case THOT_KEY_R12:
-#      endif
-	 if (modtype == THOT_MOD_SHIFT)
-	   command = SpecialShiftKeys[MY_KEY_Right];
-	 else if (modtype == THOT_MOD_CTRL)
-	   command = SpecialCtrlKeys[MY_KEY_Right];
-	 else
-	   command = SpecialKeys[MY_KEY_Right];
-	 Automata_current = NULL;
-	 break;
+             case THOT_KEY_Right:
+#            ifdef THOT_KEY_R12
+             case THOT_KEY_R12:
+#            endif
+                  if (modtype == THOT_MOD_SHIFT)
+                     command = SpecialShiftKeys[MY_KEY_Right];
+                  else if (modtype == THOT_MOD_CTRL)
+                       command = SpecialCtrlKeys[MY_KEY_Right];
+                  else
+                       command = SpecialKeys[MY_KEY_Right];
+                  Automata_current = NULL;
+                  break;
 
-       case THOT_KEY_Down:
-#      ifdef THOT_KEY_R14
-       case THOT_KEY_R14:
-#      endif
-	 if (modtype == THOT_MOD_SHIFT)
-	   command = SpecialShiftKeys[MY_KEY_Down];
-	 else if (modtype == THOT_MOD_CTRL)
-	   command = SpecialCtrlKeys[MY_KEY_Down];
-	 else
-	   command = SpecialKeys[MY_KEY_Down];
-	 Automata_current = NULL;
-	 break;
+             case THOT_KEY_Down:
+#            ifdef THOT_KEY_R14
+             case THOT_KEY_R14:
+#            endif
+                  if (modtype == THOT_MOD_SHIFT)
+                     command = SpecialShiftKeys[MY_KEY_Down];
+                  else if (modtype == THOT_MOD_CTRL)
+                       command = SpecialCtrlKeys[MY_KEY_Down];
+                  else
+                       command = SpecialKeys[MY_KEY_Down];
+                  Automata_current = NULL;
+                  break;
 
-       case THOT_KEY_Prior:
-#      ifdef THOT_KEY_R9
-       case THOT_KEY_R9:
-#      endif
-	 if (modtype == THOT_MOD_SHIFT)
-	   command = SpecialShiftKeys[MY_KEY_Prior];
-	 else if (modtype == THOT_MOD_CTRL)
-	   command = SpecialCtrlKeys[MY_KEY_Prior];
-	 else
-	   command = SpecialKeys[MY_KEY_Prior];
-	 Automata_current = NULL;
-	 break;
+             case THOT_KEY_Prior:
+#            ifdef THOT_KEY_R9
+             case THOT_KEY_R9:
+#            endif
+                  if (modtype == THOT_MOD_SHIFT)
+                     command = SpecialShiftKeys[MY_KEY_Prior];
+                  else if (modtype == THOT_MOD_CTRL)
+                       command = SpecialCtrlKeys[MY_KEY_Prior];
+                  else
+                       command = SpecialKeys[MY_KEY_Prior];
+                  Automata_current = NULL;
+                  break;
 
-       case THOT_KEY_Next:
-#      ifdef THOT_KEY_R15
-       case THOT_KEY_R15:
-#      endif
-	 if (modtype == THOT_MOD_SHIFT)
-	   command = SpecialShiftKeys[MY_KEY_Next];
-	 else if (modtype == THOT_MOD_CTRL)
-	   command = SpecialCtrlKeys[MY_KEY_Next];
-	 else
-	   command = SpecialKeys[MY_KEY_Next];
-	 Automata_current = NULL;
-	 break;
+             case THOT_KEY_Next:
+#            ifdef THOT_KEY_R15
+             case THOT_KEY_R15:
+#            endif
+                  if (modtype == THOT_MOD_SHIFT)
+                     command = SpecialShiftKeys[MY_KEY_Next];
+                  else if (modtype == THOT_MOD_CTRL)
+                       command = SpecialCtrlKeys[MY_KEY_Next];
+                  else
+                       command = SpecialKeys[MY_KEY_Next];
+                  Automata_current = NULL;
+                  break;
 
-       case THOT_KEY_Home:
-#      ifdef THOT_KEY_R7
-       case THOT_KEY_R7:
-#      endif
-	 if (modtype == THOT_MOD_SHIFT)
-	   command = SpecialShiftKeys[MY_KEY_Home];
-	 else if (modtype == THOT_MOD_CTRL)
-	   command = SpecialCtrlKeys[MY_KEY_Home];
-	 else
-	   command = SpecialKeys[MY_KEY_Home];
-	 Automata_current = NULL;
-	 break;
+             case THOT_KEY_Home:
+#            ifdef THOT_KEY_R7
+             case THOT_KEY_R7:
+#            endif
+                  if (modtype == THOT_MOD_SHIFT)
+                     command = SpecialShiftKeys[MY_KEY_Home];
+                  else if (modtype == THOT_MOD_CTRL)
+                       command = SpecialCtrlKeys[MY_KEY_Home];
+                  else
+                       command = SpecialKeys[MY_KEY_Home];
+                  Automata_current = NULL;
+                  break;
 
-       case THOT_KEY_End:
-#      ifdef THOT_KEY_R13
-       case THOT_KEY_R13:
-#      endif
-	 if (modtype == THOT_MOD_SHIFT)
-	   command = SpecialShiftKeys[MY_KEY_End];
-	 else if (modtype == THOT_MOD_CTRL)
-	   command = SpecialCtrlKeys[MY_KEY_End];
-	 else
-	   command = SpecialKeys[MY_KEY_End];
-	 Automata_current = NULL;
-	 break;
+             case THOT_KEY_End:
+#            ifdef THOT_KEY_R13
+             case THOT_KEY_R13:
+#            endif
+                  if (modtype == THOT_MOD_SHIFT)
+                     command = SpecialShiftKeys[MY_KEY_End];
+                  else if (modtype == THOT_MOD_CTRL)
+                       command = SpecialCtrlKeys[MY_KEY_End];
+                  else
+                       command = SpecialKeys[MY_KEY_End];
+                  Automata_current = NULL;
+                  break;
 
-       case THOT_KEY_BackSpace:
-	 if (modtype == THOT_MOD_SHIFT)
-	   command = SpecialShiftKeys[MY_KEY_BackSpace];
-	 else if (modtype == THOT_MOD_CTRL)
-	   command = SpecialCtrlKeys[MY_KEY_BackSpace];
-	 else
-	   command = SpecialKeys[MY_KEY_BackSpace];
-	 Automata_current = NULL;
-	 break;
+             case THOT_KEY_BackSpace:
+                  if (modtype == THOT_MOD_SHIFT)
+                     command = SpecialShiftKeys[MY_KEY_BackSpace];
+                  else if (modtype == THOT_MOD_CTRL)
+                       command = SpecialCtrlKeys[MY_KEY_BackSpace];
+                  else
+                       command = SpecialKeys[MY_KEY_BackSpace];
+                  Automata_current = NULL;
+                  break;
 	 
-       case THOT_KEY_Delete:
-	 if (modtype == THOT_MOD_SHIFT)
-	   command = SpecialShiftKeys[MY_KEY_Delete];
-	 else if (modtype == THOT_MOD_CTRL)
-	   command = SpecialCtrlKeys[MY_KEY_Delete];
-	 else
-	   command = SpecialKeys[MY_KEY_Delete];
-	 Automata_current = NULL;
-	 break;
+             case THOT_KEY_Delete:
+                  if (modtype == THOT_MOD_SHIFT)
+                     command = SpecialShiftKeys[MY_KEY_Delete];
+                  else if (modtype == THOT_MOD_CTRL)
+                       command = SpecialCtrlKeys[MY_KEY_Delete];
+                  else
+                       command = SpecialKeys[MY_KEY_Delete];
+                  Automata_current = NULL;
+                  break;
 
-       default: break;
-       }
+             default: break;
+      } 
 
-   if (Automata_current == NULL)
-     {
-       /* Appel d'une action Thot */
-       FrameToView (frame, &document, &view);
-       if (command > 0)
-	 {
-	   /* Termine l'insertion eventuellement en cours */
-	   if (command != CMD_DeletePrevChar)
-	     /* Ce n'est pas un delete, il faut terminer l'insertion courante */
-	     CloseInsertion ();
+      if (Automata_current == NULL) {
+         /* Appel d'une action Thot */
+         FrameToView (frame, &document, &view);
+         if (command > 0) {
+            /* Termine l'insertion eventuellement en cours */
+            if (command != CMD_DeletePrevChar)
+               /* Ce n'est pas un delete, il faut terminer l'insertion courante */
+               CloseInsertion ();
 
-	   /* Call action if it's active */
-	   if (MenuActionList[command].ActionActive[frame])
-	     {
-	       /* l'action est active pour la fenetre courante */
-	       /* prepare les parametres */
-	       if (MenuActionList[command].User_Action != NULL)
-		 {
-		   if (((*MenuActionList[command].User_Action) (MenuActionList[command].User_Arg, document, view)) &&
-		       (MenuActionList[command].Call_Action != NULL))
-		     (*MenuActionList[command].Call_Action) (document, view);
-		 }
-	       else if (MenuActionList[command].Call_Action != NULL)
-		 (*MenuActionList[command].Call_Action) (document, view);
-	     }
-	 }
-       else if (nb == 0) /* Rien a inserer */      
-	 return;
-      /* Traitement des caracteres au cas par cas */
-      else
-	{
-	  if (value == 8 || value == 127)
-	    {
-              /* Par defaut BackSpace detruit le caractere precedent */
-              /* sans se soucier de la langue courante */
-              if (MenuActionList[CMD_DeletePrevChar].User_Action != NULL)
-		{
-		  if (((*MenuActionList[CMD_DeletePrevChar].User_Action) (MenuActionList[CMD_DeletePrevChar].User_Arg, document, view)) &&
-		      (MenuActionList[CMD_DeletePrevChar].Call_Action != NULL))
-                    (*MenuActionList[CMD_DeletePrevChar].Call_Action) (document, view);
-		}
-	      else if (MenuActionList[CMD_DeletePrevChar].Call_Action != NULL)
-		(*MenuActionList[CMD_DeletePrevChar].Call_Action) (document, view);
-              return;
-	    }
+            /* Call action if it's active */
+            if (MenuActionList[command].ActionActive[frame]) {
+               /* l'action est active pour la fenetre courante */
+               /* prepare les parametres */
+               if (MenuActionList[command].User_Action != NULL) {
+                  if (((*MenuActionList[command].User_Action) (MenuActionList[command].User_Arg, document, view)) &&
+                      (MenuActionList[command].Call_Action != NULL))
+                     (*MenuActionList[command].Call_Action) (document, view);
+			   } else if (MenuActionList[command].Call_Action != NULL)
+                         (*MenuActionList[command].Call_Action) (document, view);
+			}
+		 } else if (nb == 0) /* Rien a inserer */      
+                return;
+         /* Traitement des caracteres au cas par cas */
+         else {
+              if (value == 8 || value == 127) {
+                 /* Par defaut BackSpace detruit le caractere precedent */
+                 /* sans se soucier de la langue courante */
+                 if (MenuActionList[CMD_DeletePrevChar].User_Action != NULL) {
+                    if (((*MenuActionList[CMD_DeletePrevChar].User_Action) (MenuActionList[CMD_DeletePrevChar].User_Arg, document, view)) &&
+                        (MenuActionList[CMD_DeletePrevChar].Call_Action != NULL))
+                       (*MenuActionList[CMD_DeletePrevChar].Call_Action) (document, view);
+				 } else if (MenuActionList[CMD_DeletePrevChar].Call_Action != NULL)
+                           (*MenuActionList[CMD_DeletePrevChar].Call_Action) (document, view);
+                 return;
+			  }
 
-           /*** Sequence de traitement des espaces ***/
-	  if (value == BREAK_LINE || (InputSpace && value == SHOWN_BREAK_LINE))
-	    {
-              if (MenuActionList[0].Call_Action)
-		(*MenuActionList[0].Call_Action) (document, view, BREAK_LINE);
-	    }
-	  else if (value == THIN_SPACE || (InputSpace && value == SHOWN_THIN_SPACE))
-	    {
-	      if (MenuActionList[0].Call_Action)
-		(*MenuActionList[0].Call_Action) (document, view, THIN_SPACE);
-	    }
-	  else if (value == HALF_EM || (InputSpace && value == SHOWN_HALF_EM))
-	    {
-	      if (MenuActionList[0].Call_Action)
-		(*MenuActionList[0].Call_Action) (document, view, HALF_EM);
-	    }
-	  else if (value == UNBREAKABLE_SPACE || (InputSpace && value == SHOWN_UNBREAKABLE_SPACE))
-	    {
-	      if (MenuActionList[0].Call_Action)
-		(*MenuActionList[0].Call_Action) (document, view, UNBREAKABLE_SPACE);
-	    }
-	  else if ((InputSpace && value == SHOWN_SPACE))
-	    {
-	      if (MenuActionList[0].Call_Action)
-		(*MenuActionList[0].Call_Action) (document, view, _SPACE_);
-	    }
-	  else if ((value >= 32 && value < 128) || (value >= 144 && value < 256))
-	    {
-	      /* on insere un caractere valide quelque soit la langue */
-	      if (MenuActionList[0].Call_Action)
-		(*MenuActionList[0].Call_Action) (document, view, value);
-	    }
-	}
-     }
-}
+              /*** Sequence de traitement des espaces ***/
+              if (value == BREAK_LINE || (InputSpace && value == SHOWN_BREAK_LINE)) {
+                 if (MenuActionList[0].Call_Action)
+                    (*MenuActionList[0].Call_Action) (document, view, BREAK_LINE);
+			  } else if (value == THIN_SPACE || (InputSpace && value == SHOWN_THIN_SPACE)) {
+                     if (MenuActionList[0].Call_Action)
+                        (*MenuActionList[0].Call_Action) (document, view, THIN_SPACE);
+			  } else if (value == HALF_EM || (InputSpace && value == SHOWN_HALF_EM)) {
+                     if (MenuActionList[0].Call_Action)
+                        (*MenuActionList[0].Call_Action) (document, view, HALF_EM);
+			  } else if (value == UNBREAKABLE_SPACE || (InputSpace && value == SHOWN_UNBREAKABLE_SPACE)) {
+                     if (MenuActionList[0].Call_Action)
+                        (*MenuActionList[0].Call_Action) (document, view, UNBREAKABLE_SPACE);
+			  } else if ((InputSpace && value == SHOWN_SPACE)) {
+                     if (MenuActionList[0].Call_Action)
+                        (*MenuActionList[0].Call_Action) (document, view, _SPACE_);
+			  } else if ((value >= 32 && value < 128) || (value >= 144 && value < 256)) {
+#                    ifdef _WINDOWS
+                     if (!specialKey)
+#                    endif /* _WINDOWS */
+                     /* on insere un caractere valide quelque soit la langue */
+                     if (MenuActionList[0].Call_Action)
+                        (*MenuActionList[0].Call_Action) (document, view, value);
+			  }
+		 } 
+	  }  
+} 
 
 
 
@@ -1057,12 +1036,11 @@ STRING              appliname;
 #endif /* __STDC__ */
 {
    char*               text;	   /* fichier de translation transmis a motif */
-   CHAR_T              line[200];  /* ligne en construction pour motif */
-   CHAR_T              home[200], name[80]; 
-   char                ch[80], iname [80]; 
-   STRING              Uch;
-   STRING              adr;
-   CHAR_T              equiv[MAX_EQUIV]; /* equivalents caracteres pour motif */
+   char                line[200];  /* ligne en construction pour motif */
+   char                home[200], name[80]; 
+   char                ch[80]; 
+   char*               adr;
+   char                equiv[MAX_EQUIV]; /* equivalents caracteres pour motif */
    unsigned int        key1, key2; /* 1ere & 2eme cles sous forme de keysym X */
    int                 e, i;
    int                 mod1, mod2; /* 1er/ 2eme modifieurs : voir THOT_MOD_xx */
@@ -1107,17 +1085,8 @@ STRING              appliname;
 
 	/* FnCopy la premiere ligne du fichier (#override, ou #...) */
 	ustrcpy (text, TEXT("#override\n"));
+	ch[0] = 0;
 	fscanf (file, "%80s", ch);
-#   if defined(_I18N_) || defined(__JIS__)
-    Uch = TtaAllocString (strlen (ch) + 1);
-#   ifdef _WINDOWS
-    MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
-#   else  /* !_WINDOWS */
-    mbstowcs (Uch, ch, sizeof (ch));
-#   endif /* !_WINDOWS */
-#   else /* defined(_I18N_) || defined(__JIS__) */
-    Uch = ch;
-#   endif /* defined(_I18N_) || defined(__JIS__) */
 	do {
        /* Initialisations */
        mod1 = mod2 = THOT_NO_MOD;
@@ -1125,12 +1094,12 @@ STRING              appliname;
        ustrcpy (line, TEXT("!"));	/* initialisation de la ligne */
 
        /* Est-ce la fin de fichier ? */
-       if (ustrlen (Uch) == 0 || EndOfString (Uch, TEXT("^")))
+       if (ustrlen (ch) == 0 || EndOfString (ch, TEXT("^")))
           e = 0;
-       else if (Uch[0] != TEXT('#')) {
+       else if (ch[0] != TEXT('#')) {
             /* it is not a comment */
             /* -------> Lecture des autres champs */
-            if (!ustrcasecmp (Uch, TEXT("shift"))) {
+            if (!ustrcasecmp (ch, TEXT("shift"))) {
                mod1 = THOT_MOD_SHIFT;
                /* copie 1er modifieur */
                ustrcpy (equiv, TEXT("Shift"));
@@ -1138,24 +1107,14 @@ STRING              appliname;
                ustrcat (line, TEXT("Shift"));
                ustrcat (line, TEXT(" "));
                /* Lecture enventuelle d'un deuxieme modifieur */
-               Uch[0] = EOS;
+			   ch[0] = 0;
                fscanf (file, "%80s", ch);
-#              if defined(_I18N_) || defined(__JIS__)
-               Uch = TtaAllocString (strlen (ch) + 1);
-#              ifdef _WINDOWS
-               MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
-#              else  /* !_WINDOWS */
-               mbstowcs (Uch, ch, sizeof (ch));
-#              endif /* !_WINDOWS */
-#              else /* defined(_I18N_) || defined(__JIS__) */
-               Uch = ch;
-#              endif /* defined(_I18N_) || defined(__JIS__) */
 			} else {
                    mod1 = THOT_NO_MOD;
                    equiv[0] = EOS;
 			}
 
-            if (!ustrcasecmp (Uch, TEXT("ctrl"))) {
+            if (!ustrcasecmp (ch, TEXT("ctrl"))) {
                mod1 += THOT_MOD_CTRL;
                /* copie 2eme modifieur */
                ustrcat (equiv, TEXT("Ctrl"));
@@ -1163,19 +1122,9 @@ STRING              appliname;
                ustrcat (line, TEXT("Ctrl"));
                ustrcat (line, TEXT(" "));
                /* Lecture de la cle */
-               Uch[0] = EOS;
+			   ch[0] = 0;
                fscanf (file, "%80s", ch);
-#              if defined(_I18N_) || defined(__JIS__)
-               Uch = TtaAllocString (strlen (ch) + 1);
-#              ifdef _WINDOWS
-               MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
-#              else  /* !_WINDOWS */
-               mbstowcs (Uch, ch, sizeof (ch));
-#              endif /* !_WINDOWS */
-#              else /* defined(_I18N_) || defined(__JIS__) */
-               Uch = ch;
-#              endif /* defined(_I18N_) || defined(__JIS__) */
-			} else if (!ustrcasecmp (Uch, TEXT("alt")) || !ustrcasecmp (Uch, TEXT("meta"))) {
+			} else if (!ustrcasecmp (ch, TEXT("alt")) || !ustrcasecmp (ch, TEXT("meta"))) {
                    mod1 += THOT_MOD_ALT;
                    /* copie 2eme modifieur */
                    ustrcat (equiv, TEXT("Alt"));
@@ -1183,35 +1132,12 @@ STRING              appliname;
                    ustrcat (line, TEXT("Alt"));
                    ustrcat (line, TEXT(" "));
                    /* Lecture de la cle */
-                   Uch[0] = EOS;
+				   ch[0] = 0;
                    fscanf (file, "%80s", ch);
-#                  if defined(_I18N_) || defined(__JIS__)
-                   Uch = TtaAllocString (strlen (ch) + 1);
-#                  ifdef _WINDOWS
-                   MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
-#                  else  /* !_WINDOWS */
-                   mbstowcs (Uch, ch, sizeof (ch));
-#                  endif /* !_WINDOWS */
-#                  else /* defined(_I18N_) || defined(__JIS__) */
-                   Uch = ch;
-#                  endif /* defined(_I18N_) || defined(__JIS__) */
 			} 
 
             /* Extrait la valeur de la cle */
-            iname[0] = EOS;
-            sscanf (ch, "<Key>%80s", iname);
-#           if defined(_I18N_) || defined(__JIS__)
-            mbstowcs (name, iname, sizeof (iname));
-            Uch = TtaAllocString (strlen (ch) + 1);
-#           ifdef _WINDOWS
-            MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
-#           else  /* !_WINDOWS */
-            mbstowcs (Uch, ch, sizeof (ch));
-#           endif /* !_WINDOWS */
-#           else /* defined(_I18N_) || defined(__JIS__) */
-            ustrcpy (name, iname);
-            Uch = ch;
-#           endif /* defined(_I18N_) || defined(__JIS__) */
+            sscanf (ch, "<Key>%80s", name);
             if (name[0] != EOS) {
                /* copie de la cle */
                ustrcat (line, TEXT("<Key>"));
@@ -1236,25 +1162,14 @@ STRING              appliname;
             ustrcat (equiv, name);
 
             /* Lecture eventuelle d'une deuxieme composition */
-            ustrcpy (name, _EMPTYSTR_);
-            fscanf (file, "%80s", iname);
-            if (iname[0] == ',') {
+            fscanf (file, "%80s", name);
+            if (name[0] == ',') {
                /* copie du separateur */
                ustrcat (line, TEXT(", "));
-               Uch [0] = EOS;
+			   ch[0] = 0;
                fscanf (file, "%80s", ch);
-#              if defined(_I18N_) || defined(__JIS__)
-               Uch = TtaAllocString (strlen (ch) + 1);
-#              ifdef _WINDOWS
-               MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
-#              else  /* !_WINDOWS */
-               mbstowcs (Uch, ch, sizeof (ch));
-#              endif /* !_WINDOWS */
-#              else /* defined(_I18N_) || defined(__JIS__) */
-               Uch = ch;
-#              endif /* defined(_I18N_) || defined(__JIS__) */
 		      
-               if (!ustrcasecmp (Uch, TEXT("shift"))) {
+               if (!ustrcasecmp (ch, TEXT("shift"))) {
                   mod2 = THOT_MOD_SHIFT;
                   /* copie du 2eme modifieur */
                   ustrcat (equiv, TEXT("Shift"));
@@ -1262,24 +1177,14 @@ STRING              appliname;
                   ustrcat (line, TEXT("Shift"));
                   ustrcat (line, TEXT(" "));
                   /* Lecture enventuelle d'un deuxieme modifieur */
-                  Uch[0] = EOS;
+				  ch[0] = 0;
                   fscanf (file, "%80s", ch);
-#                 if defined(_I18N_) || defined(__JIS__)
-                  Uch = TtaAllocString (strlen (ch) + 1);
-#                 ifdef _WINDOWS
-                  MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
-#                 else  /* !_WINDOWS */
-                  mbstowcs (Uch, ch, sizeof (ch));
-#                 endif /* !_WINDOWS */
-#                 else /* defined(_I18N_) || defined(__JIS__) */
-                  Uch = ch;
-#                 endif /* defined(_I18N_) || defined(__JIS__) */
 			   } else {
                       mod2 = THOT_NO_MOD;
                       ustrcat (equiv, TEXT(" "));
 			   }
 
-               if (!ustrcasecmp (Uch, TEXT("ctrl"))) {
+               if (!ustrcasecmp (ch, TEXT("ctrl"))) {
                   mod2 += THOT_MOD_CTRL;
                   /* copie 2eme modifieur */
                   ustrcat (equiv, TEXT("Ctrl"));
@@ -1287,21 +1192,11 @@ STRING              appliname;
                   ustrcat (line, TEXT("Ctrl"));
                   ustrcat (line, TEXT(" "));
                   /* copie de la cle */
-                  Uch[0] = EOS;
+				  ch[0] = 0;
                   fscanf (file, "%80s", ch);
-#                 if defined(_I18N_) || defined(__JIS__)
-                  Uch = TtaAllocString (strlen (ch) + 1);
-#                 ifdef _WINDOWS
-                  MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
-#                 else  /* !_WINDOWS */
-                  mbstowcs (Uch, ch, sizeof (ch));
-#                 endif /* !_WINDOWS */
-#                 else /* defined(_I18N_) || defined(__JIS__) */
-                  Uch = ch;
-#                 endif /* defined(_I18N_) || defined(__JIS__) */
-                  ustrcat (line, Uch);
+                  ustrcat (line, ch);
                   ustrcat (line, TEXT(" "));
-			   } else if (!ustrcasecmp (Uch, TEXT("alt")) || !ustrcasecmp (Uch, TEXT("meta"))) {
+			   } else if (!ustrcasecmp (ch, TEXT("alt")) || !ustrcasecmp (ch, TEXT("meta"))) {
                       mod2 += THOT_MOD_ALT;
                       /* copie 2eme modifieur */
                       ustrcat (equiv, TEXT("Alt"));
@@ -1309,37 +1204,14 @@ STRING              appliname;
                       ustrcat (line, TEXT("Alt"));
                       ustrcat (line, TEXT(" "));
                       /* copie de la cle */
-                      Uch[0] = EOS;
+					  ch[0] = 0;
                       fscanf (file, "%80s", ch);
-#                     if defined(_I18N_) || defined(__JIS__)
-                      Uch = TtaAllocString (strlen (ch) + 1);
-#                     ifdef _WINDOWS
-                      MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
-#                     else  /* !_WINDOWS */
-                      mbstowcs (Uch, ch, sizeof (ch));
-#                     endif /* !_WINDOWS */
-#                     else /* defined(_I18N_) || defined(__JIS__) */
-                      Uch = ch;
-#                     endif /* defined(_I18N_) || defined(__JIS__) */
-                      ustrcat (line, Uch);
+                      ustrcat (line, ch);
                       ustrcat (line, TEXT(" "));
 			   }
 
                /* Extrait la valeur de la cle */
-               iname [0] = EOS ;
-               sscanf (ch, "<Key>%80s", iname);
-#              if defined(_I18N_) || defined(__JIS__)
-               mbstowcs (name, iname, sizeof (iname));
-               Uch = TtaAllocString (strlen (ch) + 1);
-#              ifdef _WINDOWS
-               MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
-#              else  /* !_WINDOWS */
-               mbstowcs (Uch, ch, sizeof (ch));
-#              endif /* !_WINDOWS */
-#              else /* defined(_I18N_) || defined(__JIS__) */
-               strcpy (name, iname);
-               Uch = ch;
-#              endif /* defined(_I18N_) || defined(__JIS__) */
+               sscanf (ch, "<Key>%80s", name);
                if (name [0] != EOS) {
                   ustrcat (line, TEXT("<Key>"));	/* copie de la cle */
                   i = ustrlen (name);
@@ -1360,32 +1232,21 @@ STRING              appliname;
                ustrcat (equiv, name);
 
                /* Lecture de l'action */
-               iname [0] = EOS;
-               fscanf (file, "%80s", iname);
+               fscanf (file, "%80s", name);
 	    }
 
             /* Isole l'intitule de la commande */
-            strncpy (ch, iname, 80);
-#           if defined(_I18N_) || defined(__JIS__)
-            Uch = TtaAllocString (strlen (ch) + 1);
-#           ifdef _WINDOWS
-            MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
-#           else  /* !_WINDOWS */
-            mbstowcs (Uch, ch, sizeof (ch));
-#           endif /* !_WINDOWS */
-#           else /* defined(_I18N_) || defined(__JIS__) */
-            Uch = ch;
-#           endif /* defined(_I18N_) || defined(__JIS__) */
-            adr = ustrchr (Uch, TEXT('('));
+            strncpy (ch, name, 80);
+            adr = ustrchr (ch, TEXT('('));
             if (adr == NULL)
-               adr = ustrchr (Uch, SPACE);
+               adr = ustrchr (ch, SPACE);
             if (adr == NULL)
                i = max;
             else {
                  adr[0] = EOS;
                  /* Selection de la bonne commande */
                  for (i = 0; i < max; i++)
-                 if (!ustrcmp (Uch, MenuActionList[i].ActionName))
+                 if (!ustrcmp (ch, MenuActionList[i].ActionName))
                     break;
 			} 
 
@@ -1393,24 +1254,24 @@ STRING              appliname;
             if (i <= 8) {
                /* FnCopy la ligne dans le source de la table de translations */
                ustrcat (text, line);
-               if (!ustrcmp (Uch, CST_InsertChar)) {
+               if (!ustrcmp (ch, CST_InsertChar)) {
                   ustrcat (text, TEXT("insert-string("));
                   ustrcat (text, AsciiTranslate (&adr[1]));
-			   } else if (!ustrcmp (Uch, CST_DeleteSelection))
+			   } else if (!ustrcmp (ch, CST_DeleteSelection))
                       ustrcat (text, TEXT("delete-selection()"));
-               else if (!ustrcmp (Uch, CST_DeletePrevChar))
+               else if (!ustrcmp (ch, CST_DeletePrevChar))
                     ustrcat (text, TEXT("delete-prev-char()"));
-               else if (!ustrcmp (Uch, CST_PreviousChar))
+               else if (!ustrcmp (ch, CST_PreviousChar))
                     ustrcat (text, TEXT("backward-char()"));
-               else if (!ustrcmp (Uch, CST_NextChar))
+               else if (!ustrcmp (ch, CST_NextChar))
                     ustrcat (text, TEXT("forward-char()"));
-               else if (!ustrcmp (Uch, CST_PreviousLine))
+               else if (!ustrcmp (ch, CST_PreviousLine))
                     ustrcat (text, TEXT("previous-line()"));
-               else if (!ustrcmp (Uch, CST_NextLine))
+               else if (!ustrcmp (ch, CST_NextLine))
                     ustrcat (text, TEXT("next-line()"));
-               else if (!ustrcmp (Uch, CST_BeginningOfLine))
+               else if (!ustrcmp (ch, CST_BeginningOfLine))
                     ustrcat (text, TEXT("beginning-of-line()"));
-               else if (!ustrcmp (Uch, CST_EndOfLine))
+               else if (!ustrcmp (ch, CST_EndOfLine))
                     ustrcat (text, TEXT("end-of-line()"));
                ustrcat (text, TEXT("\n"));
 			}
@@ -1436,19 +1297,9 @@ STRING              appliname;
               do
                 i = fgetc (file);
              while (i != NEW_LINE);
-	   } 
-       Uch[0] = EOS;
+	   }
+	   ch[0] = 0;
        fscanf (file, "%80s", ch);
-#      if defined(_I18N_) || defined(__JIS__)
-       Uch = TtaAllocString (strlen (ch) + 1);
-#      ifdef _WINDOWS
-       MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
-#      else  /* !_WINDOWS */
-       mbstowcs (Uch, ch, sizeof (ch));
-#      endif /* !_WINDOWS */
-#      else /* defined(_I18N_) || defined(__JIS__) */
-       Uch = ch;
-#      endif /* defined(_I18N_) || defined(__JIS__) */
 	} while (e != 0);
 
     fclose (file);

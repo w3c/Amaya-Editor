@@ -144,7 +144,7 @@
 #   define _RightKEY_                      L"right"
 #   define _ReturnKEY_                     L"Return"
 #   define _ShiftKEY_                      L"Shift"
-#   define _SpaceKEY_                      L"space"
+#   define _SpaceKEY_                      L"Space"
 #   define _UpKEY_                         L"up"
 
 #   define _KBKeyRC_                       L"<Key>"
@@ -340,7 +340,7 @@
 #      define _RightKEY_                      "right"
 #      define _ReturnKEY_                     "Return"
 #      define _ShiftKEY_                      "Shift"
-#      define _SpaceKEY_                      "space"
+#      define _SpaceKEY_                      "Space"
 #      define _UpKEY_                         "up"
 
 #      define _KBKeyRC_                       "<Key>"

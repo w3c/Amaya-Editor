@@ -359,8 +359,7 @@ int                 shadow;
    int                 anDX [2000];
 
    w = FrRef[frame];
-   if (lg > 0 && w != None)
-     {
+   if (lg > 0 && w != None) {
       ptcar = &buff[i - 1];
       /* Dealing with BR tag for windows */
       /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
@@ -376,49 +375,49 @@ int                 shadow;
          WinErrorBox (NULL); */
 
       WinLoadGC (TtDisplay, fg, RO);
-      if (!ShowSpace || shadow)
-	{
+      if (!ShowSpace || shadow) {
          /* draw the spaces */
          ptcar = TtaAllocString (lg + 1);
-	 if (shadow)
-	   {
-	     /* replace each character by a star */
-	     j = 0;
-	     while (j < lg)
-	       ptcar[j++] = TEXT('*');
-	     ptcar[lg] = EOS;
-	   }
-	 else
-	   {
-	     ustrncpy (ptcar, &buff[i - 1], lg);
-	     ptcar[lg] = EOS;
-	     SpaceToChar (ptcar);	/* substitute spaces */
-	   }
+         if (shadow) {
+            /* replace each character by a star */
+	        j = 0;
+	        while (j < lg)
+	              ptcar[j++] = TEXT('*');
+	        ptcar[lg] = EOS;
+		 } else {
+                ustrncpy (ptcar, &buff[i - 1], lg);
+                ptcar[lg] = EOS;
+                SpaceToChar (ptcar);	/* substitute spaces */
+		 } 
          GetClientRect (FrRef [frame], &rect);
          outOpt = 0;
+
+#        ifdef _I18N_
+         fontLangInfo = GetFontLanguageInfo (TtDisplay);
+
          if (fontLangInfo == GCP_ERROR) /* There is a Problem. */
             WinErrorBox (NULL);
 
-	 if (fontLangInfo & GCP_DIACRITIC)
+         if (fontLangInfo & GCP_DIACRITIC)
             infoFlag |= GCP_DIACRITIC;
          
-	 if (fontLangInfo & GCP_GLYPHSHAPE) {
-	   /* The font/language contains multiple glyphs per code point or per code point */
-	   /* combination (supports shaping and/or ligation), and the font contains advanced */
-	   /* glyph tables to provide extra glyphs for the extra shapes. If this value is given, */
-	   /* the lpGlyphs array must be used with the GetCharacterPlacement function and the */
-	   /* ETO_GLYPHINDEX value must be passed to the ExtTextOut function when the string is drawn. */
-	   infoFlag |= GCP_GLYPHSHAPE;
-	 }
+         if (fontLangInfo & GCP_GLYPHSHAPE) {
+            /* The font/language contains multiple glyphs per code point or per code point */
+            /* combination (supports shaping and/or ligation), and the font contains advanced */
+            /* glyph tables to provide extra glyphs for the extra shapes. If this value is given, */
+            /* the lpGlyphs array must be used with the GetCharacterPlacement function and the */
+            /* ETO_GLYPHINDEX value must be passed to the ExtTextOut function when the string is drawn. */
+            infoFlag |= GCP_GLYPHSHAPE;
+		 } 
          
-	 if (fontLangInfo & GCP_USEKERNING)
-	   /* The font contains a kerning table which can be used to provide better spacing */
-	   /* between the characters and glyphs. */
-	   infoFlag |= GCP_USEKERNING;
+         if (fontLangInfo & GCP_USEKERNING)
+            /* The font contains a kerning table which can be used to provide better spacing */
+            /* between the characters and glyphs. */
+            infoFlag |= GCP_USEKERNING;
          
-	 if (fontLangInfo & GCP_REORDER)
-	   /* The language requires reordering for display--for example, Hebrew or Arabic. */
-	   infoFlag |= GCP_CLASSIN;
+         if (fontLangInfo & GCP_REORDER)
+            /* The language requires reordering for display--for example, Hebrew or Arabic. */
+            infoFlag |= GCP_CLASSIN;
 
          infoFlag |= GCP_DISPLAYZWG;
 
@@ -432,75 +431,81 @@ int                 shadow;
          results.nGlyphs     = 2000;
          results.nMaxFit     = 0;
 
-         fontLangInfo = GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar), GCP_MAXEXTENT, &results, infoFlag);
+         GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar), GCP_MAXEXTENT, &results, infoFlag);
 
          ExtTextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, outOpt, &rect, (USTRING) szNewText, lg, anDX); 
+#        else  /* !_I18N_ */
          /* ExtTextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, 0, &rect, (USTRING) ptcar, lg, NULL);  */
-         /* TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg); */
+         TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg);
+#        endif /* !_I18N_ */
          TtaFreeMemory (ptcar);
       } else {
-           if (ptcar[0] == TEXT('\212') || ptcar[0] == TEXT('\12')) {
-              /* skip the Control return char */
-              ptcar++;
-             lg--;
-           }
-           if (lg != 0) {
-              /* GetClipRgn(TtDisplay, clipRgn); */
-              outOpt = 0;
-              if (fontLangInfo == GCP_ERROR) /* There is a Problem. */
-                 WinErrorBox (NULL);
+             if (ptcar[0] == TEXT('\212') || ptcar[0] == TEXT('\12')) {
+                /* skip the Control return char */
+                ptcar++;
+               lg--;
+			 }
+             if (lg != 0) {
+                /* GetClipRgn(TtDisplay, clipRgn); */
+                outOpt = 0;
 
-              if (fontLangInfo & GCP_DIACRITIC)
-                 infoFlag |= GCP_DIACRITIC;
+#               ifdef _I18N_
+                fontLangInfo = GetFontLanguageInfo (TtDisplay);
+
+                if (fontLangInfo == GCP_ERROR) /* There is a Problem. */
+                   WinErrorBox (NULL);
+
+                if (fontLangInfo & GCP_DIACRITIC)
+                   infoFlag |= GCP_DIACRITIC;
          
-              if (fontLangInfo & GCP_GLYPHSHAPE) {
-		/* The font/language contains multiple glyphs per code point or per code point */
-		/* combination (supports shaping and/or ligation), and the font contains advanced */
-		/* glyph tables to provide extra glyphs for the extra shapes. If this value is given, */
-		/* the lpGlyphs array must be used with the GetCharacterPlacement function and the */
-		/* ETO_GLYPHINDEX value must be passed to the ExtTextOut function when the string is drawn. */
-		infoFlag |= GCP_GLYPHSHAPE;
-	      } 
+                if (fontLangInfo & GCP_GLYPHSHAPE) {
+		           /* The font/language contains multiple glyphs per code point or per code point */
+		           /* combination (supports shaping and/or ligation), and the font contains advanced */
+                   /* glyph tables to provide extra glyphs for the extra shapes. If this value is given, */
+                   /* the lpGlyphs array must be used with the GetCharacterPlacement function and the */
+                   /* ETO_GLYPHINDEX value must be passed to the ExtTextOut function when the string is drawn. */
+                   infoFlag |= GCP_GLYPHSHAPE;
+				}  
          
-              if (fontLangInfo & GCP_USEKERNING)
-		/* The font contains a kerning table which can be used to provide better spacing */
-		/* between the characters and glyphs. */
-		infoFlag |= GCP_USEKERNING;
+                if (fontLangInfo & GCP_USEKERNING)
+                   /* The font contains a kerning table which can be used to provide better spacing */
+                   /* between the characters and glyphs. */
+                   infoFlag |= GCP_USEKERNING;
          
-              if (fontLangInfo & GCP_REORDER)
-		/* The language requires reordering for display--for example, Hebrew or Arabic. */
-		infoFlag |= GCP_CLASSIN;
+                if (fontLangInfo & GCP_REORDER)
+                   /* The language requires reordering for display--for example, Hebrew or Arabic. */
+                   infoFlag |= GCP_CLASSIN;
 
-              infoFlag |= GCP_DISPLAYZWG;
+                infoFlag |= GCP_DISPLAYZWG;
 
-              results.lStructSize = sizeof (results);
-              results.lpOutString = &szNewText[0];
-              results.lpOrder     = NULL;
-              results.lpDx        = &anDX[0];
-              results.lpCaretPos  = NULL;
-              results.lpClass     = NULL;
-              results.lpGlyphs    = &auGlyphs[0];
-              results.nGlyphs     = 2000;
-              results.nMaxFit     = 0;
-	      fontLangInfo = GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar), GCP_MAXEXTENT, &results, infoFlag);
+                results.lStructSize = sizeof (results);
+                results.lpOutString = &szNewText[0];
+                results.lpOrder     = NULL;
+                results.lpDx        = &anDX[0];
+                results.lpCaretPos  = NULL;
+                results.lpClass     = NULL;
+                results.lpGlyphs    = &auGlyphs[0];
+                results.nGlyphs     = 2000;
+                results.nMaxFit     = 0;
+	            GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar), GCP_MAXEXTENT, &results, infoFlag);
 
-              /* ExtTextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, outOpt, &rect, (USTRING) szNewText, lg, anDX); */
-              TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg);
-	     }
-	}
-
-      if (hyphen)
-	{
+                ExtTextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, outOpt, &rect, (USTRING) szNewText, lg, anDX);
+#               else  /* !_I18N_ */
+                TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg);
+#               endif /* !_18N_ */
+			 } 
+	  } 
+ 
+      if (hyphen) {
          /* draw the hyphen */
          /* GetClipRgn(TtDisplay, clipRgn); */
          TextOut (TtDisplay, x + width + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, TEXT("\255"), 1);
-	}
+	  } 
       FinishDrawing (0, RO, active);
       SelectObject (TtDisplay, hOldFont);
       /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
       return (width);
-     }
-   else
+     } else
      return (0);
 }
 
