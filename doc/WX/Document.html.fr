@@ -5,16 +5,14 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Changer la structure</title>
-  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="en" lang="en">
 
 <div>
-<img alt="Amaya"
-src="../../resources/icons/22x22/logo.png" />
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" />
 
 <p class="nav"><a href="Views.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -30,12 +28,10 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <p>Amaya vous permet ce créer de nouveaux documents locaux ou distants.
 Quatre types de documents sont disponibles :</p>
 <ul>
-  <li><a
-    href="../../../../../domenon/carcone/w3c/Amaya/doc/amaya/Creating.html.fr#Creating">XHTML</a>,
-    hypertexte</li>
+  <li><a href="HTML.html.fr">XHTML</a>, hypertexte</li>
   <li><a href="Math.html.fr#Math">MathML</a>, expressions mathématiques</li>
   <li><a href="SVG.html.fr">SVG</a>, graphique</li>
-  <li>CSS, feuille de style</li>
+  <li><a href="StyleSheets.html.fr">CSS</a>, feuille de style</li>
 </ul>
 
 <p class="ProcedureCaption">Pour créer un document :</p>
