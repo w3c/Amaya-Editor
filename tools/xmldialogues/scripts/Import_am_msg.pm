@@ -53,14 +53,18 @@ use vars  qw(		$in_labelfile
 # declaration of the global variables used in all the process	
 	my %labels = ();	#values of label (=key)and their reference 
 	my %texts = ();	#references (=key) and their text
+	
 	my $current_label = "";	#to notice the current label occured ,in which we are
 	my $current_tag = ""; #to notice in which tag we are
 	my $english_text = "";
 	my $found = 0; #boolean used during the parse of a whole label to treat the new adds
 	my $modification_necessary = 0; #boolean used during the parse of a whole label to treat the updating
 	my @list_of_lang_occur = () ;
-	 $encodage = ""; #to load the encoding type of the messages
+	 	$encodage = ""; #to load the encoding type of the messages
 	
+# packages used
+use Read_label qw ( &init_label );
+
 ################################################################################
 ##							sub exported
 ################################################################################
@@ -77,11 +81,10 @@ sub import_a_language {
 	$in_textfile = $in_textdirectory . $language_code . $in_textsufix;
 	$newbasefile = $basefile . ".new";
 
-	#to avoid problems
+#to avoid problems
 	@list_of_lang_occur = () ;
 	%labels = ();
 	%texts = ();
-
 
 
 # declaration of the parser
@@ -98,10 +101,20 @@ sub import_a_language {
 			   Comment => \&comment_hndl,
 			   Default => \&default_hndl
 				);
-
-	initlabel ();
-	inittext ();						
-	
+# to load the label and their references
+	my @list = Read_label::init_label ($in_labelfile);
+	{
+		my $i = $list[0] + 1;
+		print	 "\n", $list[0] , "\n";	
+		do {
+			$labels{ $list[$i] } = $list[$i + 1];
+			$i += 2;
+		}while ( $i <= ($list [0] * 3) );
+	}
+#to load the messages and their references		
+	inittext ();
+							
+#parsing now	
 	open (IN,"<$basefile") || die "can't read $basefile because: $!\n";
 	open (OUT,">$newbasefile") || die "can't create $newbasefile because: $!\n";
 	debug ("\n\tBegin of the parse");
@@ -138,66 +151,7 @@ sub debug { #wrote messages for debuging when necessary ($debug = 1)
 
 #--------------------------------------------------------------------
 
-sub addlabel {
-# extract From a line (!="") given in parameter the elements and adds them in %labels 
-	my $label;
-	my $label_ref;
-	my @else; 
 
-	if ( $_[0] ne "" && $_[0] !~ /^\/\*/ && $_[0] =~ /^#define/i ) {
-		chomp ($_[0]);
-		($_,$label,$label_ref,@else) = split (/\s+/, $_[0]);
-		$labels{$label} = $label_ref;
-	}
-	elsif ( $_[0] eq "" || $_[0] =~ /^\/\*/) {} # it's normal
-	else {
-	   print "label file $in_labelfile not well-formed at line $_[1]\n";
-   }
-} #end addlabel
-
-#--------------------------------------------------------------------
-
-sub initlabel {# fill the %labels from $in_labelfile that is reading
-	my $line;
-	my $line_count = 0; # used to indicate the line of an error
-	
-# open $in_labelfile only if it exists and is readable
-	unless (-r $in_labelfile){ print "fichier $in_labelfile introuvable"}
-   else {open (LABEL, "<$in_labelfile") || die "erreur de lecture de $in_labelfile: $!";}
-
-#	drop the comments at the beginning	
-#	comments have to be either empty lines either don't begin with "#define" 
-	do{
-		$line = <LABEL>;
-		$line_count++;
-	} 
-	while ($line eq "" || !($line =~ /^#define/i) );		
-#	the first line witch we are interested in have been already read	
-	if ($line ne "") {
-		addlabel ($line,$line_count);
-	}
-	
-#	reads and adds all the labels
-#	warning, the rest of the file must be well-formed without errors 	
-	while ($line = <LABEL>) {
-		$line_count++;	
-		if ($line ne "") {
-			addlabel ($line, $line_count);
-		}
-  	}
-	close (LABEL) || die "problem during LABEL'file is closed: $!";
-
-# verification
-#	if ($debug){
-#		my $i;my %otherside;
-#		%otherside = reverse %labels ;
-#		for ($i = 0 ; $i <= 198 ; $i++) {
-#			print "the label is ",$otherside{"$i"},"\t\tand the reference is $i\n";
-#		}
-#	}
-	
-	debug (" % labels initialized !");
-} #end initlabel
 
 #--------------------------------------------------------------------
 #--------------------------------------------------------------------
@@ -572,4 +526,69 @@ __END__
 #------------------end of file Import_am_msg.pm-------------------------------
 
 
+########################no more utility
+sub addlabel {
+# extract From a line (!="") given in parameter the elements and adds them in %labels 
+	my $label;
+	my $label_ref;
+	my @else; 
 
+	if ( $_[0] ne "" && $_[0] !~ /^\/\*/ && $_[0] =~ /^#define/i ) {
+		chomp ($_[0]);
+		($_,$label,$label_ref,@else) = split (/\s+/, $_[0]);
+		$labels{$label} = $label_ref;
+	}
+	elsif ( $_[0] eq "" || $_[0] =~ /^\/\*/) {} # it's normal
+	else {
+	   print "label file $in_labelfile not well-formed at line $_[1]\n";
+   }
+} #end addlabel
+
+#--------------------------------------------------------------------
+
+sub initlabel {# fill the %labels from $in_labelfile that is reading
+	my $line;
+	my $line_count = 0; # used to indicate the line of an error
+	
+# open $in_labelfile only if it exists and is readable
+unless (-r $in_labelfile)
+	{ 
+		print "fichier $in_labelfile introuvable";
+	}
+else {
+	open (LABEL, "<$in_labelfile") || die "erreur de lecture de $in_labelfile: $!";
+
+#	drop the comments at the beginning	
+#	comments have to be either empty lines either don't begin with "#define" 
+	do{
+		$line = <LABEL>;
+		$line_count++;
+	} 
+	while ($line eq "" || !($line =~ /^#define/i) );		
+#	the first line witch we are interested in have been already read	
+	if ($line ne "") {
+		addlabel ($line,$line_count);
+	}
+	
+#	reads and adds all the labels
+#	warning, the rest of the file must be well-formed without errors 	
+	while ($line = <LABEL>) {
+		$line_count++;	
+		if ($line ne "") {
+			addlabel ($line, $line_count);
+		}
+  	}
+	close (LABEL) || die "problem during LABEL'file is closed: $!";
+
+# verification
+#	if ($debug){
+#		my $i;my %otherside;
+#		%otherside = reverse %labels ;
+#		for ($i = 0 ; $i <= 198 ; $i++) {
+#			print "the label is ",$otherside{"$i"},"\t\tand the reference is $i\n";
+#		}
+#	}
+	
+	debug (" % labels initialized !");
+}	
+} #end initlabel

@@ -24,71 +24,75 @@ BEGIN {
 	my $in_labelfile = "";
 	
 ################################################################################
-##							sub exported
+##							sub exported (se how to use it in the end)
 ################################################################################
 
 sub init_label {# fill the %labels from $in_labelfile that is reading
-	 $in_labelfile  = shift;
-	
-
+	 $in_labelfile  = shift; #name of the label file
 	
 	my $line = "";
 	my $line_count = 0; # used to indicate the line of an error
 	my $continue = 1; # to indicate that one label at least is rcognise 
-	
-# open $in_labelfile only if it exists and is readable
-	unless (-r $in_labelfile) { 
-		print "fichier $in_labelfile introuvable\n";
-		}
-   else {
-		open (LABEL, "<$in_labelfile") || die "erreur de lecture de $in_labelfile: $!\n";
-	}
 
+#to avoid problem	
+	$num_of_label = 0 ; 
+	@list_of_label = (); 
+	%label_refs = (); 
+# open $in_labelfile only if it exists and is readable
+   if (-r $in_labelfile) { # it's ok
+		if (! (open (LABEL, "<$in_labelfile")) ) {
+		 	warn "Error no reading possible in $in_labelfile: $!\n";	
+		}
+		else {
 #	drop the comments at the beginning	
 #	comments have to be either empty lines either don't begin with "#define" 
-	
-	while ( $continue && defined ($line = <LABEL>)  ) {
-		$line_count++;
-		if ($line && $line =~ /^\/\*that is the real begin of labels used\*\//i ) {
-			$continue = 0 ;
-		}		
-	} 
+			while ( $continue && defined ($line = <LABEL>)  ) {
+				$line_count++;
+				if ($line && $line =~ /^\/\*that is the real begin of labels used\*\//i ) {
+					$continue = 0 ;
+				}		
+			} 
 #	the first line in witch we are interested can be (but not necessary)read	now
-	if ( $continue) {
-		do {
-			print "\n\tPlease write this line at the begining of the good labels:\n",
-					"/*that is the real begin of labels used*/\n",
-					"\tInto $in_labelfile \n",
-					"\tAre you ok? (Yes/No):\t";
-			$_ = <STDIN>;
-			chomp;				
-		}
-		while (!defined ($_) || $_ !~ /^y/i );
-		close (LABEL) || die "problem during LABEL'file $in_labelfile is closed: $!\n";
-		init_label ($in_labelfile) ; ##warning, can do some error
-	}
-	else {
+			if ( $continue) {
+				do {
+					print "\n\tPlease write this line at the begining of the good labels:\n",
+							"/*that is the real begin of labels used*/\n",
+							"\tInto $in_labelfile \n",
+							"\tAre you ok? (Yes/No):\t";
+					$_ = <STDIN>;
+					chomp;				
+				}
+				while (!defined ($_) || $_ !~ /^y/i );
+				close (LABEL) || warn "problem during LABEL'file $in_labelfile is closed: $!\n";
+				init_label ($in_labelfile) ; ##warning : recursivity, can do some errors
+			}
+			else { #continue == 0
 #	reads and adds all the labels
 #	warning, the rest of the file must be well-formed without errors 	
-	 	@list_of_label = ();	# to avoid pbs
-	 	while ($line = <LABEL>) {
-			$line_count++;
-			chomp ($line);	
-			if ($line ne "") {
-				addlabel ($line, $line_count);
+	 			@list_of_label = ();	# to avoid pbs
+	 			while ($line = <LABEL>) {
+					$line_count++;
+					chomp ($line);	
+					if ($line ne "") {
+						addlabel ($line, $line_count);
+					}
+  				}	
+				close (LABEL) || die "problem during LABEL'file $in_labelfile is closed: $!\n";
 			}
-  		}	
-	
-	close (LABEL) || die "problem during LABEL'file $in_labelfile is closed: $!\n";
+			if ($num_of_label == @list_of_label) {	 
+				return ( $num_of_label,
+						@list_of_label,
+						%label_refs
+						);
+			}
+			else {
+				print "problem during the reading of $in_labelfile\n";
+			}
+		}#end else open...	
+	}	 
+	else  {   #(!(-r $in_labelfile))
+		print "file $in_labelfile not found\n";
 	}
-	
-	
-	return ( $num_of_label,
-				@list_of_label,
-				%label_refs
-			);
-	
-	 
 } #end initlabel
 ################################################################################
 ## 								End  sub main
@@ -106,13 +110,19 @@ sub addlabel {
 	my @else; 
 
 	chomp ($line);
-	if ( $line ne "" && $line !~ /^\/\*/ && $line =~ /^#define/i ) {
+	if ( $line eq "" || $line =~ /^\/\*/ || $line =~ /^#endif/) 
+		{} # it's normal
+	elsif ( $line ne "" && $line !~ /^\/\*/ && $line =~ /^#define/i ) {
 		($_,$label,$label_ref,@else) = split (/\s+/, $line);
-		$num_of_label++;
-		push (@list_of_label,$label );
-		$label_refs{$label} = $label_ref;		
+		if (defined $label_ref) {
+			$num_of_label += 1;
+			push (@list_of_label, $label );
+			$label_refs{$label} = $label_ref;
+		}
+		else {
+			print "label file $in_labelfile not well-formed at line $line_num\n";
+		}
 	}
-	elsif ( $line eq "" || $line =~ /^\/\*/ || $line =~ /^#endif/) {} # it's normal
 	else {
 	   print "label file $in_labelfile not well-formed at line $line_num\n";
    }
@@ -125,6 +135,24 @@ sub addlabel {
 
 1;
 __END__
+that is the good way to use it :
+{
+my @a = (); # sorted list
+my %b = (); # table keys/values
+my @list = Read_label::init_label ("/home/ehuck/opera/Amaya/amaya/amayamsg.h");
+my $total = $list[0];
+
+my $i = 1;
+	do {
+		push (@a, $list[$i]  );
+		$i++;
+	}while ( $i <= $total );
+	do {
+		$b{$list[$i]} = $list[$i+1];
+		$i += 2;
+	}while ( $i <= ($total * 3) );
+
+
 #------------------end of file Read_label.pm-------------------------------
 
 

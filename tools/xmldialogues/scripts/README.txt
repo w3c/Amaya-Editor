@@ -1,4 +1,4 @@
-This is small informations that you need for your first use of "Amaya dialogues
+This is small informations that you need for your FIRST USE of "Amaya dialogues
 managment"
  
 It can not function whithout: 
@@ -42,8 +42,23 @@ it will be OK
 
 You can now run the program with 
 - 'perl Am_dial_managment.pl'
-- or  make it executable and type './Am_dial_managment.pl'
+- or  make it executable ('chmod u+x Am_dial_managment.pl')
+	and type './Am_dial_managment.pl'
 
 Warning:
 You need to do a "cvs update" before using this program, and of course a "cvs
 commit" after
+
+OTHERS things:
+
+
+
+
+
+
+
+
+
+
+
+
