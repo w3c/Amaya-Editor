@@ -663,6 +663,531 @@ RULES
 		END;
 	END;
 
+   filter:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'filter';
+	indent +8;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -8;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'filter>\14' after;
+		END;
+	END;
+
+   feDistantLight:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feDistantLight';
+	indent +16;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -16;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feDistantLight>\14' after;
+		END;
+	END;
+
+   fePointLight:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'fePointLight';
+	indent +14;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -14;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'fePointLight>\14' after;
+		END;
+	END;
+
+   feSpotLight:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feSpotLight';
+	indent +13;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -13;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feSpotLight>\14' after;
+		END;
+	END;
+
+   feBlend:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feBlend';
+	indent +9;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -9;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feBlend>\14' after;
+		END;
+	END;
+
+   feColorMatrix:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feColorMatrix';
+	indent +15;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -15;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feColorMatrix>\14' after;
+		END;
+	END;
+
+   feComponentTransfer:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feComponentTransfer';
+	indent +21;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -21;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feComponentTransfer>\14' after;
+		END;
+	END;
+
+   feFuncR:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feFuncR';
+	indent +9;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -9;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feFuncR>\14' after;
+		END;
+	END;
+
+   feFuncG:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feFuncG';
+	indent +9;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -9;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feFuncG>\14' after;
+		END;
+	END;
+
+   feFuncB:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feFuncB';
+	indent +9;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -9;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feFuncB>\14' after;
+		END;
+	END;
+
+   feFuncA:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feFuncA';
+	indent +9;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -9;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feFuncA>\14' after;
+		END;
+	END;
+
+   feComposite:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feComposite';
+	indent +13;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -13;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feComposite>\14' after;
+		END;
+	END;
+
+   feConvolveMatrix:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feConvolveMatrix';
+	indent +17;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -17;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feConvolveMatrix>\14' after;
+		END;
+	END;
+
+   feDiffuseLighting:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feDiffuseLighting';
+	indent +19;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -19;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feDiffuseLighting>\14' after;
+		END;
+	END;
+
+   feDisplacementMap:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feDisplacementMap';
+	indent +19;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -19;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feDisplacementMap>\14' after;
+		END;
+	END;
+
+   feFlood:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feFlood';
+	indent +9;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -9;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feFlood>\14' after;
+		END;
+	END;
+
+   feGaussianBlur:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feGaussianBlur';
+	indent +16;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -16;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feGaussianBlur>\14' after;
+		END;
+	END;
+
+   feImage:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feImage';
+	indent +9;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -9;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feImage>\14' after;
+		END;
+	END;
+
+   feMerge:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feMerge';
+	indent +9;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -9;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feMerge>\14' after;
+		END;
+	END;
+
+   feMergeNode:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feMergeNode';
+	indent +13;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -13;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feMergeNode>\14' after;
+		END;
+	END;
+
+   feMorphology:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feMorphology';
+	indent +14;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -14;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feMorphology>\14' after;
+		END;
+	END;
+
+   feOffset:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feOffset';
+	indent +10;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -10;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feOffset>\14' after;
+		END;
+	END;
+
+   feSpecularLighting:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feSpecularLighting';
+	indent +20;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -20;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feSpecularLighting>\14' after;
+		END;
+	END;
+
+   feTile:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feTile';
+	indent +8;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -8;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feTile>\14' after;
+		END;
+	END;
+
+   feTurbulence:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'feTurbulence';
+	indent +14;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -14;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'feTurbulence>\14' after;
+		END;
+	END;
+
    cursor:
 	BEGIN
 	if immediately within use_
@@ -1799,11 +2324,11 @@ ATTRIBUTES
 	create 'display="inherit"';
 	END;
 
-   filter:
+   filter_:
 	BEGIN
 	create SAN;
 	create 'filter="';
-	create filter;
+	create filter_;
 	create DoubleQuote;
 	END;
 
@@ -3016,6 +3541,543 @@ ATTRIBUTES
 	create 'maskContentUnits="objectBoundingBox"';
 	END;
 
+  filterUnits = userSpaceOnUse:
+	BEGIN
+	create SAN;
+	create 'filterUnits="userSpaceOnUse"';
+	END;
+  filterUnits = objectBoundingBox:
+	BEGIN
+	create SAN;
+	create 'filterUnits="objectBoundingBox"';
+	END;
+
+  primitiveUnits = userSpaceOnUse:
+	BEGIN
+	create SAN;
+	create 'primitiveUnits="userSpaceOnUse"';
+	END;
+  primitiveUnits = objectBoundingBox:
+	BEGIN
+	create SAN;
+	create 'primitiveUnits="objectBoundingBox"';
+	END;
+
+  filterRes:
+	BEGIN
+	create SAN;
+	create 'filterRes="';
+	create filterRes;
+	create DoubleQuote;
+	END;
+
+  azimuth:
+	BEGIN
+	create SAN;
+	create 'azimuth="';
+	create azimuth;
+	create DoubleQuote;
+	END;
+
+  elevation:
+	BEGIN
+	create SAN;
+	create 'elevation="';
+	create elevation;
+	create DoubleQuote;
+	END;
+
+  z:
+	BEGIN
+	create SAN;
+	create 'z="';
+	create z;
+	create DoubleQuote;
+	END;
+
+  pointsAtX:
+	BEGIN
+	create SAN;
+	create 'pointsAtX="';
+	create pointsAtX;
+	create DoubleQuote;
+	END;
+
+  pointsAtY:
+	BEGIN
+	create SAN;
+	create 'pointsAtY="';
+	create pointsAtY;
+	create DoubleQuote;
+	END;
+
+  pointsAtZ:
+	BEGIN
+	create SAN;
+	create 'pointsAtZ="';
+	create pointsAtZ;
+	create DoubleQuote;
+	END;
+
+  specularExponent:
+	BEGIN
+	create SAN;
+	create 'specularExponent="';
+	create specularExponent;
+	create DoubleQuote;
+	END;
+
+  limitingConeAngle:
+	BEGIN
+	create SAN;
+	create 'limitingConeAngle="';
+	create limitingConeAngle;
+	create DoubleQuote;
+	END;
+
+  result:
+	BEGIN
+	create SAN;
+	create 'result="';
+	create result;
+	create DoubleQuote;
+	END;
+
+  in_:
+	BEGIN
+	create SAN;
+	create 'in="';
+	create in_;
+	create DoubleQuote;
+	END;
+
+  in2:
+	BEGIN
+	create SAN;
+	create 'in2="';
+	create in2;
+	create DoubleQuote;
+	END;
+
+  mode = normal_:
+	BEGIN
+	create SAN;
+	create 'mode="normal"';
+	END;
+  mode = multiply:
+	BEGIN
+	create SAN;
+	create 'mode="multiply"';
+	END;
+  mode = screen:
+	BEGIN
+	create SAN;
+	create 'mode="screen"';
+	END;
+  mode = darken:
+	BEGIN
+	create SAN;
+	create 'mode="darken"';
+	END;
+  mode = lighten:
+	BEGIN
+	create SAN;
+	create 'mode="lighten"';
+	END;
+
+  type__ = matrix:
+	BEGIN
+	create SAN;
+	create 'type="matrix"';
+	END;
+  type__ = saturate:
+	BEGIN
+	create SAN;
+	create 'type="saturate"';
+	END;
+  type__ = hueRotate:
+	BEGIN
+	create SAN;
+	create 'type="hueRotate"';
+	END;
+  type__ = luminanceToAlpha:
+	BEGIN
+	create SAN;
+	create 'type="luminanceToAlpha"';
+	END;
+
+  values:
+	BEGIN
+	create SAN;
+	create 'values="';
+	create values;
+	create DoubleQuote;
+	END;
+
+  type___ = identity:
+	BEGIN
+	create SAN;
+	create 'type="identity"';
+	END;
+  type___ = table:
+	BEGIN
+	create SAN;
+	create 'type="table"';
+	END;
+  type___ = discrete:
+	BEGIN
+	create SAN;
+	create 'type="discrete"';
+	END;
+  type___ = linear:
+	BEGIN
+	create SAN;
+	create 'type="linear"';
+	END;
+  type___ = gamma:
+	BEGIN
+	create SAN;
+	create 'type="gamma"';
+	END;
+
+  tableValues:
+	BEGIN
+	create SAN;
+	create 'tableValues="';
+	create tableValues;
+	create DoubleQuote;
+	END;
+
+  slope_:
+	BEGIN
+	create SAN;
+	create 'slope="';
+	create slope_;
+	create DoubleQuote;
+	END;
+
+  intercept:
+	BEGIN
+	create SAN;
+	create 'intercept="';
+	create intercept;
+	create DoubleQuote;
+	END;
+
+  amplitude:
+	BEGIN
+	create SAN;
+	create 'amplitude="';
+	create amplitude;
+	create DoubleQuote;
+	END;
+
+  exponent:
+	BEGIN
+	create SAN;
+	create 'exponent="';
+	create exponent;
+	create DoubleQuote;
+	END;
+
+  offset_:
+	BEGIN
+	create SAN;
+	create 'offset="';
+	create offset_;
+	create DoubleQuote;
+	END;
+
+  operator = over:
+	BEGIN
+	create SAN;
+	create 'operator="over"';
+	END;
+  operator = in__:
+	BEGIN
+	create SAN;
+	create 'operator="in"';
+	END;
+  operator = out:
+	BEGIN
+	create SAN;
+	create 'operator="out"';
+	END;
+  operator = atop:
+	BEGIN
+	create SAN;
+	create 'operator="atop"';
+	END;
+  operator = xor:
+	BEGIN
+	create SAN;
+	create 'operator="xor"';
+	END;
+  operator = arithmetic:
+	BEGIN
+	create SAN;
+	create 'operator="arithmetic"';
+	END;
+
+  k1:
+	BEGIN
+	create SAN;
+	create 'k1="';
+	create k1;
+	create DoubleQuote;
+	END;
+
+  k2:
+	BEGIN
+	create SAN;
+	create 'k2="';
+	create k2;
+	create DoubleQuote;
+	END;
+
+  k3:
+	BEGIN
+	create SAN;
+	create 'k3="';
+	create k3;
+	create DoubleQuote;
+	END;
+
+  k4:
+	BEGIN
+	create SAN;
+	create 'k4="';
+	create k4;
+	create DoubleQuote;
+	END;
+
+  order:
+	BEGIN
+	create SAN;
+	create 'order="';
+	create order;
+	create DoubleQuote;
+	END;
+
+  kernelMatrix:
+	BEGIN
+	create SAN;
+	create 'kernelMatrix="';
+	create kernelMatrix;
+	create DoubleQuote;
+	END;
+
+  divisor:
+	BEGIN
+	create SAN;
+	create 'divisor="';
+	create divisor;
+	create DoubleQuote;
+	END;
+
+  bias:
+	BEGIN
+	create SAN;
+	create 'bias="';
+	create bias;
+	create DoubleQuote;
+	END;
+
+  targetX:
+	BEGIN
+	create SAN;
+	create 'targetX="';
+	create targetX;
+	create DoubleQuote;
+	END;
+
+  targetY:
+	BEGIN
+	create SAN;
+	create 'targetY="';
+	create targetY;
+	create DoubleQuote;
+	END;
+
+  edgeMode = duplicate:
+	BEGIN
+	create SAN;
+	create 'edgeMode="duplicate"';
+	END;
+  edgeMode = wrap:
+	BEGIN
+	create SAN;
+	create 'edgeMode="wrap"';
+	END;
+  edgeMode = none:
+	BEGIN
+	create SAN;
+	create 'edgeMode="none"';
+	END;
+
+  kernelUnitLength:
+	BEGIN
+	create SAN;
+	create 'kernelUnitLength="';
+	create kernelUnitLength;
+	create DoubleQuote;
+	END;
+
+  preserveAlpha:
+	BEGIN
+	create SAN;
+	create 'preserveAlpha="';
+	create preserveAlpha;
+	create DoubleQuote;
+	END;
+
+  surfaceScale:
+	BEGIN
+	create SAN;
+	create 'surfaceScale="';
+	create surfaceScale;
+	create DoubleQuote;
+	END;
+
+  diffuseConstant:
+	BEGIN
+	create SAN;
+	create 'diffuseConstant="';
+	create diffuseConstant;
+	create DoubleQuote;
+	END;
+
+  scale_:
+	BEGIN
+	create SAN;
+	create 'scale="';
+	create scale_;
+	create DoubleQuote;
+	END;
+
+  xChannelSelector = R:
+	BEGIN
+	create SAN;
+	create 'xChannelSelector="R"';
+	END;
+  xChannelSelector = G:
+	BEGIN
+	create SAN;
+	create 'xChannelSelector="G"';
+	END;
+  xChannelSelector = B:
+	BEGIN
+	create SAN;
+	create 'xChannelSelector="B"';
+	END;
+  xChannelSelector = A:
+	BEGIN
+	create SAN;
+	create 'xChannelSelector="A"';
+	END;
+
+  yChannelSelector = R:
+	BEGIN
+	create SAN;
+	create 'yChannelSelector="R"';
+	END;
+  yChannelSelector = G:
+	BEGIN
+	create SAN;
+	create 'yChannelSelector="G"';
+	END;
+  yChannelSelector = B:
+	BEGIN
+	create SAN;
+	create 'yChannelSelector="B"';
+	END;
+  yChannelSelector = A:
+	BEGIN
+	create SAN;
+	create 'yChannelSelector="A"';
+	END;
+
+  stdDeviation:
+	BEGIN
+	create SAN;
+	create 'stdDeviation="';
+	create stdDeviation;
+	create DoubleQuote;
+	END;
+
+  operator_ = erode:
+	BEGIN
+	create SAN;
+	create 'operator="erode"';
+	END;
+  operator_ = dilate:
+	BEGIN
+	create SAN;
+	create 'operator="dilate"';
+	END;
+
+  radius:
+	BEGIN
+	create SAN;
+	create 'radius="';
+	create radius;
+	create DoubleQuote;
+	END;
+
+  specularConstant:
+	BEGIN
+	create SAN;
+	create 'specularConstant="';
+	create specularConstant;
+	create DoubleQuote;
+	END;
+
+  baseFrequency:
+	BEGIN
+	create SAN;
+	create 'baseFrequency="';
+	create baseFrequency;
+	create DoubleQuote;
+	END;
+
+  numOctaves:
+	BEGIN
+	create SAN;
+	create 'numOctaves="';
+	create numOctaves;
+	create DoubleQuote;
+	END;
+
+  seed:
+	BEGIN
+	create SAN;
+	create 'seed="';
+	create seed;
+	create DoubleQuote;
+	END;
+
+  stitchTiles = stitch:
+	BEGIN
+	create SAN;
+	create 'stitchTiles="stitch"';
+	END;
+  stitchTiles = noStitch:
+	BEGIN
+	create SAN;
+	create 'stitchTiles="noStitch"';
+	END;
+
+  type____ = fractalNoise:
+	BEGIN
+	create SAN;
+	create 'type="fractalNoise"';
+	END;
+  type____ = turbulence:
+	BEGIN
+	create SAN;
+	create 'type="turbulence"';
+	END;
+
    target_:
 	BEGIN
 	create SAN;
@@ -3174,14 +4236,6 @@ ATTRIBUTES
 	BEGIN
 	create SAN;
 	create 'calcMode="spline"';
-	END;
-
-  values:
-	BEGIN
-	create SAN;
-	create 'values="';
-	create values;
-	create DoubleQuote;
 	END;
 
   keyTimes:

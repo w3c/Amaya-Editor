@@ -101,6 +101,7 @@ table_column_group: table-column-group
 table_column: table-column
 table_cell: table-cell
 table_caption: table-caption
+filter_: filter
 image_rendering: image-rendering
 mask_: mask
 opacity_: opacity
@@ -163,6 +164,15 @@ glyphRef_: glyphRef
 rendering_intent: rendering-intent
 relative_colorimetric: relative-colorimetric
 absolute_colorimetric: absolute-colorimetric
+in_: in
+type__: type
+type___: type
+slope_: slope
+offset_: offset
+in__: in
+scale_: scale
+operator_: operator
+type____: type
 target_: target
 attributeName_: attributeName
 begin_: begin

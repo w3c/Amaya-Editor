@@ -90,7 +90,7 @@ STRUCT
 	                table_column_group, table_column, table_cell,
 	                table_caption, none, inherit; 
 	                                      {PresentationAttributes-Graphics}
-	      filter = text;                  {PresentationAttributes-Graphics}
+	      filter_ = text;                 {PresentationAttributes-Graphics}
 	      image_rendering = auto, optimizeSpeed, optimizeQuality, inherit;
 		                              {PresentationAttributes-Graphics}
 	      mask_ = text;                   {PresentationAttributes-Graphics}
@@ -199,7 +199,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -257,7 +257,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -324,7 +324,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -390,7 +390,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -441,7 +441,7 @@ STRUCT
 	      color; color_interpolation; {PresentationAttributes-Color}
 	      color_rendering;            {PresentationAttributes-Color}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -493,7 +493,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -556,7 +556,7 @@ STRUCT
 	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
 	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -593,7 +593,7 @@ STRUCT
 	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
 	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -630,7 +630,7 @@ STRUCT
 	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
 	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -664,7 +664,7 @@ STRUCT
 	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
 	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -699,7 +699,7 @@ STRUCT
 	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
 	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -736,7 +736,7 @@ STRUCT
 	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
 	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -770,7 +770,7 @@ STRUCT
 	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
 	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -812,7 +812,7 @@ STRUCT
 	      font_variant;          {PresentationAttributes-FontSpecification}
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -873,7 +873,7 @@ STRUCT
 	      font_variant;          {PresentationAttributes-FontSpecification}
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -936,7 +936,7 @@ STRUCT
 	      font_variant;          {PresentationAttributes-FontSpecification}
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -996,7 +996,7 @@ STRUCT
 	      font_variant;          {PresentationAttributes-FontSpecification}
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1058,7 +1058,7 @@ STRUCT
 	      font_variant;          {PresentationAttributes-FontSpecification}
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1146,7 +1146,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1279,7 +1279,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1338,7 +1338,7 @@ STRUCT
 	      font_variant;          {PresentationAttributes-FontSpecification}
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1396,7 +1396,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1431,31 +1431,476 @@ STRUCT
 
 { Filter Effects }
 
-   { filter }
-   { feDistantLight }
-   { fePointLight }
-   { feSpotLight }
-   { feBlend }
-   { feColorMatrix }
-   { feComponentTransfer }
-   { feFuncR }
-   { feFuncG }
-   { feFuncB }
-   { feFuncA }
-   { feComposite }
-   { feConvolveMatrix }
-   { feDiffuseLighting }
-   { feDisplacementMap }
-   { feFlood }
-   { feGaussianBlur }
-   { feImage }
-   { feMerge }
-   { feMergeNode }
-   { feMorphology }
-   { feOffset }
-   { feSpecularLighting }
-   { feTile }
-   { feTurbulence }
+   filter
+	(ATTR xlink_type; xlink_role; xlink_arcrole;   {xlinkRefAttrs}
+	      xlink_title; xlink_show; xlink_actuate;  {xlinkRefAttrs}
+              xlink_href;
+	      externalResourcesRequired;
+	      class; style_;	
+	      { PresentationAttributes-All }
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      enable_background;          {PresentationAttributes-Containers}
+	      flood_color; flood_opacity; {PresentationAttributes-feFlood}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      color_profile_;             {PresentationAttributes-Images}
+	      lighting_color;         {PresentationAttributes-LightingEffects}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
+	      writing_mode;		 {PresentationAttributes-TextElements}
+	      clip; overflow;	         {PresentationAttributes-Viewports}
+	      filterUnits = userSpaceOnUse, objectBoundingBox;
+	      primitiveUnits = userSpaceOnUse, objectBoundingBox;
+	      x;
+	      y;
+	      width_;
+	      height_;
+	      filterRes = text)
+	= LIST OF
+	    (CASE OF
+	      desc; title; metadata;
+	      feBlend; feFlood; 
+	      feColorMatrix; feComponentTransfer; 
+	      feComposite; feConvolveMatrix; feDiffuseLighting;
+	      feDisplacementMap; 
+	      feGaussianBlur; feImage; feMerge; 
+	      feMorphology; feOffset; feSpecularLighting; 
+	      feTile; feTurbulence;
+	      animate; set_;
+	     END);	
+
+   feDistantLight
+	(ATTR azimuth = text;
+	      elevation = text)
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
+
+   fePointLight
+	(ATTR x;
+	      y;
+	      z	= text)
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
+
+   feSpotLight
+	(ATTR x;
+	      y;
+	      z;
+	      pointsAtX = text;
+	      pointsAtY = text;
+	      pointsAtZ = text;
+	      specularExponent = text;
+	      limitingConeAngle = text)
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
+
+   feBlend
+	(ATTR color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      x;                          {filter_primitive_attributes_with_in}
+	      y;                          {filter_primitive_attributes_with_in}
+	      width_;                     {filter_primitive_attributes_with_in}
+	      height_;                    {filter_primitive_attributes_with_in}
+	      result = text;              {filter_primitive_attributes_with_in}
+	      in_ = text;                 {filter_primitive_attributes_with_in}
+	      in2 = text;
+	      mode = normal_, multiply, screen, darken, lighten;)
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
+
+   feColorMatrix
+	(ATTR color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      x;                          {filter_primitive_attributes_with_in}
+	      y;                          {filter_primitive_attributes_with_in}
+	      width_;                     {filter_primitive_attributes_with_in}
+	      height_;                    {filter_primitive_attributes_with_in}
+	      result;                     {filter_primitive_attributes_with_in}
+	      in_;                        {filter_primitive_attributes_with_in}
+ 	      type__ = matrix, saturate, hueRotate, luminanceToAlpha;
+	      values = text)
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
+
+   feComponentTransfer
+	(ATTR color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      x;                          {filter_primitive_attributes_with_in}
+	      y;                          {filter_primitive_attributes_with_in}
+	      width_;                     {filter_primitive_attributes_with_in}
+	      height_;                    {filter_primitive_attributes_with_in}
+	      result;                     {filter_primitive_attributes_with_in}
+	      in_)                        {filter_primitive_attributes_with_in}
+	= BEGIN
+	    ? feFuncR;
+	    ? feFuncG;
+	    ? feFuncB;
+	    ? feFuncA;
+          END;
+
+   feFuncR
+	(ATTR type___ = identity, table, discrete, linear, gamma; {component_transfer_function_attributes}
+	      tableValues = text;      {component_transfer_function_attributes}
+	      slope_ = text;           {component_transfer_function_attributes}
+	      intercept = text;        {component_transfer_function_attributes}
+	      amplitude = text;        {component_transfer_function_attributes}
+	      exponent = text;         {component_transfer_function_attributes}
+	      offset_ = text;)         {component_transfer_function_attributes}
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
+
+   feFuncG
+	(ATTR type___;                 {component_transfer_function_attributes}
+	      tableValues;             {component_transfer_function_attributes}
+	      slope_;                  {component_transfer_function_attributes}
+	      intercept;               {component_transfer_function_attributes}
+	      amplitude;               {component_transfer_function_attributes}
+	      exponent;                {component_transfer_function_attributes}
+	      offset_)                 {component_transfer_function_attributes}
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
+
+   feFuncB
+	(ATTR type___;                 {component_transfer_function_attributes}
+	      tableValues;             {component_transfer_function_attributes}
+	      slope_;                  {component_transfer_function_attributes}
+	      intercept;               {component_transfer_function_attributes}
+	      amplitude;               {component_transfer_function_attributes}
+	      exponent;                {component_transfer_function_attributes}
+	      offset_)                 {component_transfer_function_attributes}
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
+
+   feFuncA
+	(ATTR type___;                 {component_transfer_function_attributes}
+	      tableValues;             {component_transfer_function_attributes}
+	      slope_;                  {component_transfer_function_attributes}
+	      intercept;               {component_transfer_function_attributes}
+	      amplitude;               {component_transfer_function_attributes}
+	      exponent;                {component_transfer_function_attributes}
+	      offset_)                 {component_transfer_function_attributes}
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
+
+   feComposite
+	(ATTR color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      x;                          {filter_primitive_attributes_with_in}
+	      y;                          {filter_primitive_attributes_with_in}
+	      width_;                     {filter_primitive_attributes_with_in}
+	      height_;                    {filter_primitive_attributes_with_in}
+	      result;                     {filter_primitive_attributes_with_in}
+	      in_;                        {filter_primitive_attributes_with_in}
+	      in2;
+	      operator = over, in__, out, atop, xor, arithmetic;
+	      k1 = text;
+	      k2 = text;
+	      k3 = text;
+	      k4 = text)
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
+
+   feConvolveMatrix
+	(ATTR color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      x;                          {filter_primitive_attributes_with_in}
+	      y;                          {filter_primitive_attributes_with_in}
+	      width_;                     {filter_primitive_attributes_with_in}
+	      height_;                    {filter_primitive_attributes_with_in}
+	      result;                     {filter_primitive_attributes_with_in}
+	      in_;                        {filter_primitive_attributes_with_in}
+	      order = text;
+	      kernelMatrix = text;
+	      divisor = text;
+	      bias = text;
+	      targetX = integer;
+	      targetY = integer;
+	      edgeMode = duplicate, wrap, none;
+	      kernelUnitLength = text;
+	      preserveAlpha = text)
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
+
+   feDiffuseLighting
+	(ATTR class; style_;	
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      color_interpolation_filters;{PresentationAttributes-FilterPrimitives}
+	      lighting_color;          {PresentationAttributes-LightingEffects}
+	      x;                          {filter_primitive_attributes_with_in}
+	      y;                          {filter_primitive_attributes_with_in}
+	      width_;                     {filter_primitive_attributes_with_in}
+	      height_;                    {filter_primitive_attributes_with_in}
+	      result;                     {filter_primitive_attributes_with_in}
+	      in_;                        {filter_primitive_attributes_with_in}
+	      surfaceScale = text;
+	      diffuseConstant = text;
+	      kernelUnitLength)
+	= BEGIN
+	  CASE OF feDistantLight; fePointLight; feSpotLight; END;
+	  LIST OF
+	    (CASE OF
+	      animate; set_; animateColor;
+	     END);
+	  END;
+	
+   feDisplacementMap
+	(ATTR color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      x;                          {filter_primitive_attributes_with_in}
+	      y;                          {filter_primitive_attributes_with_in}
+	      width_;                     {filter_primitive_attributes_with_in}
+	      height_;                    {filter_primitive_attributes_with_in}
+	      result;                     {filter_primitive_attributes_with_in}
+	      in_;                        {filter_primitive_attributes_with_in}
+	      in2;
+	      scale_ = text;
+	      xChannelSelector = R, G, B, A;
+	      yChannelSelector = R, G, B, A)
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
+
+   feFlood
+	(ATTR class; style_;
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      flood_color; flood_opacity; {PresentationAttributes-feFlood}
+	      color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      x;                          {filter_primitive_attributes_with_in}
+	      y;                          {filter_primitive_attributes_with_in}
+	      width_;                     {filter_primitive_attributes_with_in}
+	      height_;                    {filter_primitive_attributes_with_in}
+	      result;                     {filter_primitive_attributes_with_in}
+	      in_)                        {filter_primitive_attributes_with_in}
+	= LIST OF
+	    (CASE OF
+	      animate; set_; animateColor;
+	     END);
+
+   feGaussianBlur
+	(ATTR color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      x;                          {filter_primitive_attributes_with_in}
+	      y;                          {filter_primitive_attributes_with_in}
+	      width_;                     {filter_primitive_attributes_with_in}
+	      height_;                    {filter_primitive_attributes_with_in}
+	      result;                     {filter_primitive_attributes_with_in}
+	      in_;                        {filter_primitive_attributes_with_in}
+	      stdDeviation = text)
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
+	
+   feImage
+	(ATTR xlink_type; xlink_role; xlink_arcrole;   {xlinkRefAttrs}
+	      xlink_title; xlink_show; xlink_actuate;  {xlinkRefAttrs}
+	      xlink_href;
+	      externalResourcesRequired; 
+	      class; style_;
+	      { PresentationAttributes-All }
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      enable_background;          {PresentationAttributes-Containers}
+	      flood_color; flood_opacity; {PresentationAttributes-feFlood}
+	      fill; fill_opacity;           {PresentationAttributes-FillStroke}
+	      fill_rule; stroke;            {PresentationAttributes-FillStroke}
+	      stroke_dasharray;             {PresentationAttributes-FillStroke}
+	      stroke_dashoffset;            {PresentationAttributes-FillStroke}
+	      stroke_linecap;               {PresentationAttributes-FillStroke}
+	      stroke_linejoin;              {PresentationAttributes-FillStroke}
+	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
+	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
+	      color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      font_family; font_size;{PresentationAttributes-FontSpecification}
+	      font_size_adjust;      {PresentationAttributes-FontSpecification}
+	      font_stretch;          {PresentationAttributes-FontSpecification}
+	      font_style;            {PresentationAttributes-FontSpecification}
+	      font_variant;          {PresentationAttributes-FontSpecification}
+	      font_weight;           {PresentationAttributes-FontSpecification}
+	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
+	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
+	      image_rendering; mask_;        {PresentationAttributes-Graphics}
+              opacity_; pointer_events;      {PresentationAttributes-Graphics}
+	      shape_rendering;               {PresentationAttributes-Graphics}
+	      text_rendering; visibility_;   {PresentationAttributes-Graphics}
+	      color_profile_;             {PresentationAttributes-Images}
+	      lighting_color;         {PresentationAttributes-LightingEffects}
+	      marker_start; marker_mid;       {PresentationAttributes-Markers}
+	      marker_end;                     {PresentationAttributes-Markers}
+	      alignment_baseline;  {PresentationAttributes-TextContentElements}
+	      baseline_shift;      {PresentationAttributes-TextContentElements}
+	      direction_;	   {PresentationAttributes-TextContentElements}
+	      dominant_baseline;   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_horizontal;
+				   {PresentationAttributes-TextContentElements}
+	      glyph_orientation_vertical;
+				   {PresentationAttributes-TextContentElements}
+	      kerning;		   {PresentationAttributes-TextContentElements}
+	      letter_spacing;	   {PresentationAttributes-TextContentElements}
+	      text_anchor;	   {PresentationAttributes-TextContentElements}
+	      text_decoration;	   {PresentationAttributes-TextContentElements}
+	      unicode_bidi;	   {PresentationAttributes-TextContentElements}
+	      word_spacing;	   {PresentationAttributes-TextContentElements}
+	      writing_mode;		 {PresentationAttributes-TextElements}
+	      clip; overflow)	         {PresentationAttributes-Viewports}
+	= LIST OF
+	    (CASE OF
+	      animate; set_; animateTransform;
+	     END);
+
+   feMerge
+	(ATTR color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      x;                          {filter_primitive_attributes}
+	      y;                          {filter_primitive_attributes}
+	      width_;                     {filter_primitive_attributes}
+	      height_;                    {filter_primitive_attributes}
+	      result)                     {filter_primitive_attributes}
+	= LIST OF (feMergeNode);
+
+   feMergeNode
+	(ATTR in_)
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
+
+   feMorphology
+	(ATTR color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      x;                          {filter_primitive_attributes_with_in}
+	      y;                          {filter_primitive_attributes_with_in}
+	      width_;                     {filter_primitive_attributes_with_in}
+	      height_;                    {filter_primitive_attributes_with_in}
+	      result;                     {filter_primitive_attributes_with_in}
+	      in_;                        {filter_primitive_attributes_with_in}
+	      operator_ = erode, dilate;
+	      radius = text)
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
+
+   feOffset
+	(ATTR color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      x;                          {filter_primitive_attributes_with_in}
+	      y;                          {filter_primitive_attributes_with_in}
+	      width_;                     {filter_primitive_attributes_with_in}
+	      height_;                    {filter_primitive_attributes_with_in}
+	      result;                     {filter_primitive_attributes_with_in}
+	      in_;                        {filter_primitive_attributes_with_in}
+	      dx;
+	      dy)
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
+
+   feSpecularLighting
+	(ATTR class; style_;	
+	      color; color_interpolation; {PresentationAttributes-Color}
+	      color_rendering;            {PresentationAttributes-Color}
+	      color_interpolation_filters;{PresentationAttributes-FilterPrimitives}
+	      lighting_color;          {PresentationAttributes-LightingEffects}
+	      x;                          {filter_primitive_attributes_with_in}
+	      y;                          {filter_primitive_attributes_with_in}
+	      width_;                     {filter_primitive_attributes_with_in}
+	      height_;                    {filter_primitive_attributes_with_in}
+	      result;                     {filter_primitive_attributes_with_in}
+	      in_;                        {filter_primitive_attributes_with_in}
+	      surfaceScale;
+	      specularConstant = text;
+	      specularExponent;
+	      kernelUnitLength)
+	= BEGIN
+	  CASE OF feDistantLight; fePointLight; feSpotLight; END;
+	  LIST OF
+	    (CASE OF
+	      animate; set_; animateColor;
+	     END);
+	  END;
+	
+   feTile
+	(ATTR color_interpolation_filters;{PresentationAttributes-FilterPrimitives}
+	      x;                          {filter_primitive_attributes_with_in}
+	      y;                          {filter_primitive_attributes_with_in}
+	      width_;                     {filter_primitive_attributes_with_in}
+	      height_;                    {filter_primitive_attributes_with_in}
+	      result;                     {filter_primitive_attributes_with_in}
+	      in_)                        {filter_primitive_attributes_with_in}
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
+
+  feTurbulence
+	(ATTR color_interpolation_filters; {PresentationAttributes-FilterPrimitives}
+	      x;                          {filter_primitive_attributes}
+	      y;                          {filter_primitive_attributes}
+	      width_;                     {filter_primitive_attributes}
+	      height_;                    {filter_primitive_attributes}
+	      result;                     {filter_primitive_attributes}
+	      baseFrequency = text;
+	      numOctaves = integer;
+	      seed = text;
+	      stitchTiles = stitch, noStitch;
+	      type____ = fractalNoise, turbulence)
+	= LIST OF
+	    (CASE OF
+	      animate; set_;
+	     END);
 
 { Interactivity }
 
@@ -1499,7 +1944,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1578,7 +2023,7 @@ STRUCT
 	      repeatDur = text;
 	      fill_ = remove_, freeze;
               calcMode = discrete, linear, paced, spline;  {animValueAttrs}
-	      values = text;
+	      values;
 	      keyTimes = text;
 	      keySplines = text;
 	      from = text;
@@ -1696,7 +2141,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1760,7 +2205,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1818,7 +2263,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1949,7 +2394,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter;               {PresentationAttributes-Graphics}
+	      display; filter_;              {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -2006,7 +2451,7 @@ STRUCT
 	      path; text_; rect; circle; ellipse; line_; polyline; polygon;
 	      use_; image; SVG; g; view; switch; a; altGlyphDef;
 	      script_; style__; symbol_; marker; clipPath; mask;
-	      linearGradient; radialGradient; pattern; cursor; font_;
+	      linearGradient; radialGradient; pattern; filter; cursor; font_;
 	      animate; set_; animateMotion; animateColor; animateTransform;
 	      color_profile; font_face;
 	      Timeline_cross; 
@@ -2106,7 +2551,7 @@ EXCEPT
    clip_rule:		Invisible;
    cursor_:		Invisible;
    display:		Invisible;
-   filter:		Invisible;
+   filter_:		Invisible;
    image_rendering:	Invisible;
    mask_:		Invisible;
    pointer_events:	Invisible;
