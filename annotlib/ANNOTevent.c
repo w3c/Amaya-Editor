@@ -31,8 +31,10 @@ static List   *annotServers;   /* URL pointing to the annot server script */
 static CHAR_T *annotPostServer; /* URL pointing to the annot server script */
 static CHAR_T *annotMainIndex; /* index file where we give the correspondance
 				between URLs and annotations */
-static ThotBool annotAutoLoad; /* should annotations be downloaded
-				  automatically? */
+static ThotBool annotLAutoLoad; /* should local annotations be downloaded
+				   automatically? */
+static ThotBool annotRAutoLoad; /* should remote annotations be downloaded
+				   automatically? */
 static ThotBool annotCustomQuery; /* use an algae custom query if TRUE */
 static CHAR_T *annotAlgaeText;    /* the custom algae query text */
 
@@ -70,6 +72,13 @@ typedef struct _DELETE_context {
   ThotBool annot_is_remote;
   AnnotMeta *annot;
 } DELETE_context;
+
+/* the different annotation download modes */
+typedef enum _AnnotLoadMode {
+  AM_LOAD_NONE = 0,  /* don't load anything */
+  AM_LOAD_LOCAL = 1, /* load local annots */
+  AM_LOAD_REMOTE = 2 /* load remote annots */
+} AnnotLoadMode;
 
 /*-----------------------------------------------------------------------
    GetAnnotCustomQuery
@@ -335,7 +344,9 @@ void ANNOT_Init ()
   /* initialize the annot global variables */
   annotDir = TtaWCSdup (TtaGetEnvString ("ANNOT_DIR"));
   annotMainIndex = TtaWCSdup (TtaGetEnvString ("ANNOT_MAIN_INDEX"));
-  annotAutoLoad = !ustrcasecmp (TtaGetEnvString ("ANNOT_AUTOLOAD"), "yes");
+  TtaGetEnvBoolean ("ANNOT_LAUTOLOAD", &annotLAutoLoad);
+  TtaGetEnvBoolean ("ANNOT_RAUTOLOAD", &annotRAutoLoad);
+
   tmp = TtaGetEnvString ("ANNOT_USER");
   if (tmp)
     annotUser = TtaWCSdup (tmp);
@@ -506,25 +517,6 @@ Document doc;
 
 
 /*-----------------------------------------------------------------------
-   ANNOT_AutoLoad
-  -----------------------------------------------------------------------
-  -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void ANNOT_AutoLoad (Document doc, View view)
-#else /* __STDC__*/
-void ANNOT_AutoLoad (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__*/
-{
-  if (!annotAutoLoad)
-    return;
-
-  ANNOT_Load (doc, view);
-}
-
-/*-----------------------------------------------------------------------
   RemoteLoad_callback
   -----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
@@ -588,15 +580,18 @@ void *context;
 }
 
 /*-----------------------------------------------------------------------
-  ANNOT_Load
+  ANNOT_Load2
+  Loads the annotations from the local and remote servers. 
+  The mode parameter says what kind of servers we want to consult
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void ANNOT_Load (Document doc, View view)
+static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 #else /* __STDC__*/
-void ANNOT_Load (doc, view)
+static ANNOT_Load2 (doc, view, mode)
 Document doc;
 View view;
+AnnotLoadMode mode;
 #endif /* __STDC__*/
 {
   char *annotIndex;
@@ -607,6 +602,9 @@ View view;
   List *ptr;
   CHAR_T *server;
   ThotBool is_active = FALSE;
+
+  if (mode == AM_LOAD_NONE)
+    return;
 
   if (!schema_init)
     {
@@ -631,7 +629,8 @@ View view;
    * load the local annotations if there's no annotserver or if
    * annotServers include the localhost
    */
-  if (!annotServers || AnnotList_search (annotServers, TEXT("localhost")))
+  if ((mode & AM_LOAD_LOCAL)
+      && (!annotServers || AnnotList_search (annotServers, TEXT("localhost"))))
     {
       annotIndex = LINK_GetAnnotationIndexFile (DocumentURLs[doc]);
       LINK_LoadAnnotationIndex (doc, annotIndex, TRUE);
@@ -643,7 +642,7 @@ View view;
    * Query each annotation server for annotations related to this 
    * document
    */
-  if (annotServers) 
+  if ((mode & AM_LOAD_REMOTE) && annotServers) 
     {
       /* load the annotations, server by server */
       ptr = annotServers;
@@ -710,6 +709,48 @@ View view;
 	  TtaFreeMemory (annotURL);
 	}
     }
+}
+
+/*-----------------------------------------------------------------------
+   ANNOT_AutoLoad
+  -----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void ANNOT_AutoLoad (Document doc, View view)
+#else /* __STDC__*/
+void ANNOT_AutoLoad (doc, view)
+Document doc;
+View view;
+#endif /* __STDC__*/
+{
+  AnnotLoadMode mode = AM_LOAD_NONE;
+
+  if (annotLAutoLoad)
+    mode |= AM_LOAD_LOCAL;
+  if (annotRAutoLoad)
+    mode |= AM_LOAD_REMOTE;
+
+  if (mode == 0)
+    return;
+
+  ANNOT_Load2 (doc, view, mode);
+}
+
+/*-----------------------------------------------------------------------
+  ANNOT_Load
+  Front end to the Load Annotations command
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void ANNOT_Load (Document doc, View view)
+#else /* __STDC__*/
+void ANNOT_Load (doc, view)
+Document doc;
+View view;
+#endif /* __STDC__*/
+{
+  ANNOT_Load2 (doc, view, AM_LOAD_LOCAL | AM_LOAD_REMOTE);
 }
 
 /*-----------------------------------------------------------------------
@@ -1598,3 +1639,48 @@ void ANNOT_Delete (document, view)
       ANNOT_Delete_callback (doc, HT_OK, NULL, NULL, NULL, (void *) ctx);
     }
 }
+
+/*----------------------------------------------------------------------
+  ANNOT_AddLink
+  adds a new link to an annotation
+ -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void ANNOT_AddLink (Document doc, View view)
+#else /* __STDC__*/
+void ANNOT_AddLink (document, view)
+     Document doc;
+     View view;
+#endif /* __STDC__*/
+{
+#if 0
+  ElementType elType;
+  Element root, el, newEl;
+  Attribute attr;
+  AttributeType       attrType;
+
+  root = TtaGetMainRoot (doc);
+  elType.ElSSchema =  TtaGetDocumentSSchema (doc);
+  elType.ElTypeNum = Annot_EL_Description;
+  root = TtaSearchTypedElement (elType, SearchInTree, root);
+  if (!root)
+    return;
+
+  /* create the new element */
+  elType.ElTypeNum = Annot_EL_SourceDoc;
+  newEl = TtaNewElement (doc, elType);
+  /* attach it to the metadata */
+  el = TtaGetLastChild (root);
+  TtaInsertSibling (newEl, el, FALSE, doc);
+#if 0
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = Annot_ATTR_HREF_;
+  attr = TtaNewAttribute (attrType);
+  /* copy the URL + text of the original document */
+  TtaAttachAttribute (newEl, attr, doc);
+  TtaSetAttributeText (attr, "jose", newEl, doc);
+#endif
+  TtaSetTextContent (newEl, "jose", TtaGetDefaultLanguage (), doc);
+#endif
+}
+

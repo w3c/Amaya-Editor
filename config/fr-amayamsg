@@ -202,30 +202,32 @@
 200 Nom de l'utilisateur
 201 Serveur de publication
 202 Serveur d'annotations
-203 Charger automatiquement les annotations
-204 Couleur de sélection
-205 Couleur du curseur d'insertion
-206 Orientation
-207 Portrait
-208 Paysage
-209 Support FTP (experimental)
-210 Ce document est incomplet, ne le sauvez pas - voir Vues/Montrer les erreurs
-211 Dans le profil Amaya courant :
-212 Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs
-213 Le codage de ce document n'est pas supporté par Amaya
-214 Aucun codage n'est déclaré pour ce document
-215 Codage non défini. Acceptez-vous de déclarer de l'ISO_8859_1 ?
-216 Non disponible
-217 Butiner
-218 Sélecteur de fichiers
-219 Sélection
-220 Filtre local des annotations
-221 Montrer
-222 Cacher
-223 Montrer tout
-224 Cacher tout
-225 * signifie caché, - signifie partiellement caché
-226 Options de filtrage
-227 Par auteur
-228 Par type
-229 Par serveur
+203 Charger automatiquement les annotations locales
+204 Charger automatiquement les annotations remotes
+205 Desactiver le chargement automatique des	annotations remotes au demarrage
+206 Couleur de sélection
+207 Couleur du curseur d'insertion
+208 Orientation
+209 Portrait
+210 Paysage
+211 Support FTP (experimental)
+212 Ce document est incomplet, ne le sauvez pas - voir Vues/Montrer les erreurs
+213 Dans le profil Amaya courant :
+214 Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs
+215 Le codage de ce document n'est pas supporté par Amaya
+216 Aucun codage n'est déclaré pour ce document
+217 Codage non défini. Acceptez-vous de déclarer de l'ISO_8859_1 ?
+218 Non disponible
+219 Butiner
+220 Sélecteur de fichiers
+221 Sélection
+222 Filtre local des annotations
+223 Montrer
+224 Cacher
+225 Montrer tout
+226 Cacher tout
+227 * signifie caché, - signifie partiellement caché
+228 Options de filtrage
+229 Par auteur
+230 Par type
+231 Par serveur

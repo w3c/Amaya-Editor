@@ -202,30 +202,32 @@
 200 Annotation user
 201 Annotation post server
 202 Annotation servers
-203 Autoload annotations
-204 Selection color
-205 Caret color
-206 Orientation
-207 Portrait
-208 Landscape
-209 Enable FTP (experimental)
-210 This document is incomplete, don't save it - See Views/Show parsing errors
-211 In the current Amaya profile:
-212 Some tags/attributes are ignored - see Views/Show parsing errors
-213 The encoding of this document is not supported by Amaya
-214 This document has no encoding declaration
-215 There is no encoding, set it to ISO_8859_1 ?
-216 Not available
-217 Browse
-218 File Browser
-219 Selection
-220 Annotation Local Filter Menu
-221 Show
-222 Hide
-223 Show all
-224 Hide all
-225 * means hidden, - means partially hidden
-226 Filter options
-227 By author
-228 By type
-229 By server
+203 Autoload local annotations
+204 Autoload remote annotations
+205 Disable remote autoload at each startup (for off-line work)
+206 Selection color
+207 Caret color
+208 Orientation
+209 Portrait
+210 Landscape
+211 Enable FTP (experimental)
+212 This document is incomplete, don't save it - See Views/Show parsing errors
+213 In the current Amaya profile:
+214 Some tags/attributes are ignored - see Views/Show parsing errors
+215 The encoding of this document is not supported by Amaya
+216 This document has no encoding declaration
+217 There is no encoding, set it to ISO_8859_1 ?
+218 Not available
+219 Browse
+220 File Browser
+221 Selection
+222 Annotation Local Filter Menu
+223 Show
+224 Hide
+225 Show all
+226 Hide all
+227 * means hidden, - means partially hidden
+228 Filter options
+229 By author
+230 By type
+231 By server

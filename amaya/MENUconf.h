@@ -86,7 +86,9 @@ static void BuildProfileSelector();
 #define mAnnotPostServer        3
 #define mAnnotServers           4
 #define mToggleAnnot            5
-#define mAnnotAutoLoad          6
-#define MAX_ANNOTMENU_DLG       7
+#define mAnnotLAutoLoad         6
+#define mAnnotRAutoLoad         7
+#define mAnnotRAutoLoadRst      8
+#define MAX_ANNOTMENU_DLG       9
 
 #endif /* _MENUCONF.h */

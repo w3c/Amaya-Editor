@@ -277,6 +277,10 @@ static AM_WIN_MenuText WIN_AnnotMenuText[] =
 	{IDC_TANNOTPOSTSERVER, AM_ANNOT_POST_SERVER},
 	{IDC_TANNOTSERVERS, AM_ANNOT_SERVERS},
 	{IDC_ANNOTAUTOLOAD, AM_ANNOT_AUTOLOAD},
+	/*
+	{IDC_ANNOTRAUTOLOAD, AM_ANNOT_RAUTOLOAD},
+	{IDC_ANNOTRAUTOLOADRST, AM_ANNOT_RAUTOLOAD_RST},
+	 */
 	{0, 0}
 };
 #endif /* _WINDOWS */
@@ -284,7 +288,9 @@ static int      AnnotBase;
 static CHAR_T   AnnotUser [MAX_LENGTH];
 static CHAR_T   AnnotPostServer [MAX_LENGTH];
 static CHAR_T   AnnotServers [MAX_LENGTH];
-static ThotBool AnnotAutoLoad;
+static ThotBool AnnotLAutoLoad;
+static ThotBool AnnotRAutoLoad;
+static ThotBool AnnotRAutoLoadRst;
 #endif /* ANNOTATIONS */
 
 #include "query_f.h"
@@ -376,6 +382,7 @@ void InitAmayaDefEnv ()
 {
   CHAR_T *ptr,  *ptr2;
   CHAR_T username[MAX_LENGTH];
+  ThotBool annot_rautoload, annot_rautoload_rst;
 
   /* browsing editing options */
   ptr = TtaGetEnvString ("THOTDIR");
@@ -438,7 +445,9 @@ void InitAmayaDefEnv ()
 #ifdef ANNOTATIONS
   TtaSetDefEnvString ("ANNOT_POST_SERVER", TEXT(""), FALSE);
   TtaSetDefEnvString ("ANNOT_SERVERS", TEXT("localhost"), FALSE);
-  TtaSetDefEnvString ("ANNOT_AUTOLOAD", TEXT("no"), FALSE);
+  TtaSetDefEnvString ("ANNOT_LAUTOLOAD", TEXT("no"), FALSE);
+  TtaSetDefEnvString ("ANNOT_RAUTOLOAD", TEXT("no"), FALSE);
+  TtaSetDefEnvString ("ANNOT_RAUTOLOAD_RST", TEXT("yes"), FALSE);
   TtaSetEnvString ("ANNOT_MAIN_INDEX", TEXT("annot.index"), FALSE);
   ptr = TtaGetEnvString ("APP_HOME");
   ptr2 = TtaGetMemory ( ustrlen (ptr) + ustrlen (TEXT("annotations"))
@@ -450,10 +459,14 @@ void InitAmayaDefEnv ()
   if (!_GetSysUserName (username))
     username[0] = EOS;
   TtaSetDefEnvString ("ANNOT_USER", username, FALSE);
+  /* reset remote annotations autoload ?*/
+  TtaGetEnvBoolean ("ANNOT_RAUTOLOAD_RST", &annot_rautoload_rst);
+  TtaGetEnvBoolean ("ANNOT_RAUTOLOAD", &annot_rautoload);
+  if (annot_rautoload_rst && annot_rautoload)
+    TtaSetEnvBoolean ("ANNOT_RAUTOLOAD", FALSE, TRUE);
 #endif /* ANNOTATIONS */
 
   /* appearance */
-
 }
 
 /*----------------------------------------------------------------------
@@ -4180,7 +4193,9 @@ static void GetAnnotConf ()
   GetEnvString ("ANNOT_USER", AnnotUser);
   GetEnvString ("ANNOT_POST_SERVER", AnnotPostServer);
   GetEnvString ("ANNOT_SERVERS", AnnotServers);
-  TtaGetEnvBoolean ("ANNOT_AUTOLOAD", &AnnotAutoLoad);
+  TtaGetEnvBoolean ("ANNOT_LAUTOLOAD", &AnnotLAutoLoad);
+  TtaGetEnvBoolean ("ANNOT_RAUTOLOAD", &AnnotRAutoLoad);
+  TtaGetEnvBoolean ("ANNOT_RAUTOLOAD_RST", &AnnotRAutoLoadRst);
 
 #ifdef _WINDOWS
   /* we substitute spaces into \r for the configuration widget menu */
@@ -4206,7 +4221,9 @@ static void SetAnnotConf ()
   TtaSetEnvString ("ANNOT_USER", AnnotUser, TRUE);
   TtaSetEnvString ("ANNOT_POST_SERVER", AnnotPostServer, TRUE);
   TtaSetEnvString ("ANNOT_SERVERS", AnnotServers, TRUE);
-  TtaSetEnvBoolean ("ANNOT_AUTOLOAD", AnnotAutoLoad, TRUE);
+  TtaSetEnvBoolean ("ANNOT_LAUTOLOAD", AnnotLAutoLoad, TRUE);
+  TtaSetEnvBoolean ("ANNOT_RAUTOLOAD", AnnotRAutoLoad, TRUE);
+  TtaSetEnvBoolean ("ANNOT_RAUTOLOAD_RST", AnnotRAutoLoadRst, TRUE);
 
   TtaSaveAppRegistry ();
 
@@ -4231,7 +4248,9 @@ static void GetDefaultAnnotConf ()
   GetDefEnvString ("ANNOT_USER", AnnotUser);
   GetDefEnvString ("ANNOT_POST_SERVER", AnnotPostServer);
   GetDefEnvString ("ANNOT_SERVERS", AnnotServers);
-  TtaGetDefEnvBoolean ("ANNOT_AUTOLOAD", &AnnotAutoLoad);
+  TtaGetDefEnvBoolean ("ANNOT_LAUTOLOAD", &AnnotLAutoLoad);
+  TtaGetDefEnvBoolean ("ANNOT_RAUTOLOAD", &AnnotRAutoLoad);
+  TtaGetDefEnvBoolean ("ANNOT_RAUTOLOAD_RST", &AnnotRAutoLoadRst);
 #ifdef _WINDOWS
   /* we substitute spaces into \n for the configuration widget menu */
   ConvertSpaceNL (AnnotServers, TRUE);
@@ -4253,8 +4272,14 @@ HWND hwnDlg;
   SetDlgItemText (hwnDlg, IDC_ANNOTUSER, AnnotUser);
   SetDlgItemText (hwnDlg, IDC_ANNOTPOSTSERVER, AnnotPostServer);
   SetDlgItemText (hwnDlg, IDC_ANNOTSERVERS, AnnotServers);
-  CheckDlgButton (hwnDlg, IDC_ANNOTAUTOLOAD, (AnnotAutoLoad) 
+  CheckDlgButton (hwnDlg, IDC_ANNOTAUTOLOAD, (AnnotLAutoLoad) 
 		  ? BST_CHECKED : BST_UNCHECKED);
+#if 0
+  CheckDlgButton (hwnDlg, IDC_ANNOTRAUTOLOAD, (AnnotRAutoLoad) 
+		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_ANNOTRAUTOLOADRST, (AnnotRAutoLoadRst) 
+		  ? BST_CHECKED : BST_UNCHECKED);
+#endif
 }
 #else /* WINDOWS */
 /*----------------------------------------------------------------------
@@ -4271,7 +4296,9 @@ static void RefreshAnnotMenu ()
   TtaSetTextForm (AnnotBase + mAnnotUser, AnnotUser);
   TtaSetTextForm (AnnotBase + mAnnotPostServer, AnnotPostServer);
   TtaSetTextForm (AnnotBase + mAnnotServers, AnnotServers);
-  TtaSetToggleMenu (AnnotBase + mToggleAnnot, 0, AnnotAutoLoad);
+  TtaSetToggleMenu (AnnotBase + mToggleAnnot, 0, AnnotLAutoLoad);
+  TtaSetToggleMenu (AnnotBase + mToggleAnnot, 1, AnnotRAutoLoad);
+  TtaSetToggleMenu (AnnotBase + mToggleAnnot, 2, AnnotRAutoLoadRst);
 }
 #endif /* !_WINDOWS */
 
@@ -4331,9 +4358,17 @@ LPARAM lParam;
 	{
 	  /* switch buttons */
 	case IDC_ANNOTAUTOLOAD:
-	  AnnotAutoLoad = !AnnotAutoLoad;
+	  AnnotLAutoLoad = !AnnotLAutoLoad;
+	  break;
+#if 0
+	case IDC_ANNOTRAUTOLOAD:
+	  AnnotRAutoLoad = !AnnotRAutoLoad;
 	  break;
 
+	case IDC_ANNOTRAUTOLOADRST:
+	  AnnotRAutoLoadRst = !AnnotRAutoLoadRst;
+	  break;
+#endif
 	  /* action buttons */
 	case ID_APPLY:
 	  SetAnnotConf ();	  
@@ -4427,7 +4462,13 @@ STRING              data;
 	  switch (val) 
 	    {
 	    case 0:
-	      AnnotAutoLoad = !AnnotAutoLoad;
+	      AnnotLAutoLoad = !AnnotLAutoLoad;
+	      break;
+	    case 1:
+	      AnnotRAutoLoad = !AnnotRAutoLoad;
+	      break;
+	    case 2:
+	      AnnotRAutoLoadRst = !AnnotRAutoLoadRst;
 	      break;
 	    }
 	  break;
@@ -4484,12 +4525,14 @@ View                view;
 		   30,
 		   1,
 		   TRUE);
-   usprintf (s, "B%s%c",
-	     TtaGetMessage (AMAYA, AM_ANNOT_AUTOLOAD), EOS);
+   usprintf (s, "B%s%cB%s%cB%s",
+	     TtaGetMessage (AMAYA, AM_ANNOT_LAUTOLOAD), EOS,
+	     TtaGetMessage (AMAYA, AM_ANNOT_RAUTOLOAD), EOS,
+	     TtaGetMessage (AMAYA, AM_ANNOT_RAUTOLOAD_RST));
    TtaNewToggleMenu (AnnotBase + mToggleAnnot,
 		     AnnotBase + AnnotMenu,
 		     NULL,
-		     1,
+		     3,
 		     s,
 		     NULL,
 		     FALSE);

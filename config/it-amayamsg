@@ -202,30 +202,32 @@
 200 Nome utente
 201 Server per la pubblicazione
 202 Server per le annotazioni
-203 Caricamento automatico delle annotazioni
-204 Colore della selezione
-205 Colore del cursore
-206 Orientamento
-207 Ritratto
-208 Paesaggio
-209 Abilita FTP (sperimentale)
-210 Questo documento è incompleto, non salvarlo - Vedi Viste/Mostra errori di parsificazion
-211 Nel profilo attuale di Amaya:
-212 I tag/attributi sono ignorati - vedi Viste/Mostra le errore
-213 La codifica per questo documento non e` supportata da Amaya
-214 Questo documento non ha una dichiarazione di codifica
-215 Non è indicata codifica: usare ISO_8859_1?
-216 Non disponibile
-217 Scorri
-218 File Browser
-219 Selezione
-220 Menu per i filtri locali - annotazioni
-221 Mostra
-222 Nascondi
-223 Mostra tutto
-224 Nascondi tutto
-225 * significa nascosto, - significa parzialmente nascosto
-226 Opzioni per i filtri
-227 Per autore
-228 Per tipo
-229 Per server
+203 Caricamento automatico delle annotazioni local
+204 Caricamento automatico delle annotazioni remote
+205 **Disable remote autoload at each startup (for off-line work)
+206 Colore della selezione
+207 Colore del cursore
+208 Orientamento
+209 Ritratto
+210 Paesaggio
+211 Abilita FTP (sperimentale)
+212 Questo documento è incompleto, non salvarlo - Vedi Viste/Mostra errori di parsificazion
+213 Nel profilo attuale di Amaya:
+214 I tag/attributi sono ignorati - vedi Viste/Mostra le errore
+215 La codifica per questo documento non e` supportata da Amaya
+216 Questo documento non ha una dichiarazione di codifica
+217 Non è indicata codifica: usare ISO_8859_1?
+218 Non disponibile
+219 Scorri
+220 File Browser
+221 Selezione
+222 Menu per i filtri locali - annotazioni
+223 Mostra
+224 Nascondi
+225 Mostra tutto
+226 Nascondi tutto
+227 * significa nascosto, - significa parzialmente nascosto
+228 Opzioni per i filtri
+229 Per autore
+230 Per tipo
+231 Per server
