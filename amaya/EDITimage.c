@@ -528,7 +528,7 @@ Document            doc;
 void                UpdateImageMap (Element image, Document document)
 #else  /* __STDC__ */
 void                UpdateImageMap (image, document)
-Element             image;;
+Element             image;
 Document            document;
 
 #endif /* __STDC__ */

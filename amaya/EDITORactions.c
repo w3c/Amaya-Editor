@@ -1043,7 +1043,7 @@ Element             element;
 	x2 = TtaGetAttributeValue (attrW);
 	y2 = TtaGetAttributeValue (attrH);
 	if (shape == HTML_ATTR_shape_VAL_rectangle)
-	   sprintf (text, "%d,%d %d,%d", x1, y1, x1 + x2, y1 + y2);
+	   sprintf (text, "%d,%d,%d,%d", x1, y1, x1 + x2, y1 + y2);
 	else
 	  {
 	     /* to make a circle, height and width have to be equal */
@@ -1055,7 +1055,7 @@ Element             element;
 	     else if (x2 > y2)
 		TtaSetAttributeValue (attrH, x2, element, document);
 	     x2 = x2 / 2;
-	     sprintf (text, "%d,%d %d", x1 + x2, y1 + x2, x2);
+	     sprintf (text, "%d,%d,%d", x1 + x2, y1 + x2, x2);
 	  }
      }
    else if (shape == HTML_ATTR_shape_VAL_polygon)
@@ -1067,8 +1067,10 @@ Element             element;
 	while (i <= length)
 	  {
 	     TtaGivePolylinePoint (child, i, UnPixel, &x1, &y1);
-	     sprintf (buffer, "%d,%d ", x1, y1);
+	     sprintf (buffer, "%d,%d", x1, y1);
 	     strcat (text, buffer);
+	     if (i < length)
+	       strcat (text, ",");
 	     i++;
 	  }
      }
@@ -1228,13 +1230,13 @@ char               *shape;
 	     TtaSetAttributeReference (attrRef, el, doc, image, doc);
 	     TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_polygon, el, doc);
 	     TtaGiveBoxSize (image, doc, 1, UnPixel, &w, &h);
-	     TtaChangeLimitOfPolyline (child, UnPixel, w, h, doc);
+	     /*TtaChangeLimitOfPolyline (child, UnPixel, w, h, doc);*/
 	  }
 	/* ask Thot to display changes made in the document */
 	TtaSetDisplayMode (doc, DisplayImmediately);
 	TtaSelectElement (doc, child);
 	if (shape[0] == 'p')
-	   InsertChar ('p', 1);
+	   TtcInsertGraph (doc, 1, 'p');
 	/* Compute coords attribute */
 	SetAreaCoords (doc, el);
 	/* FrameUpdating creation of Area and selection of destination */

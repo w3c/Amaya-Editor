@@ -196,7 +196,7 @@ AHTReqContext;
 #define NAME_LENGTH     32
 
 #define HTAppName "amaya"
-#define HTAppVersion "V0.8 Alpha"
+#define HTAppVersion "V0.95 Alpha"
 
 #ifndef EXPORT
 #define EXPORT extern
@@ -282,114 +282,6 @@ typedef struct _LoadedImageDesc
 LoadedImageDesc;
 
 EXPORT LoadedImageDesc *ImageURLs;
-
-extern void         InitMapping ();
-extern void         InitImage ();
-extern void         InitTransform ();
-
-
-#ifdef __STDC__
-extern int          PtEnPixel (int value, int horiz);	/* thot internal function */
-extern int          PixelEnPt (int value, int horiz);	/* thot internal function */
-extern void         CreateNewElement (int, SSchema, Document);
-extern void         SelectInitial (Document);
-extern int          TtaFileExist (char *);
-extern boolean      OpenMainView (Document, char *, char *);
-extern void         SetTarget (Document, View);
-extern void         SetTableWidths (Document);
-extern void         CheckTable (Element, Document);
-extern boolean      DoubleClick (NotifyElement *);
-extern void         RemoveAttrInPair (Element, Document, int);
-extern void         SelectDestination (Document, Element);
-extern void         SetCharAttribute (int, int, int);
-extern int          GetObjectWWW (int, char *, char *, char *, int, TIcbf *, void *, TTcbf *, void *, BOOL);
-extern int          PutObjectWWW (int, char *, char *, int, TTcbf *, void *);
-extern int          UploadMemWWW (int, HTMethod, char *, char *, unsigned long, int, TTcbf *, void *, char *);
-extern AHTDocId_Status *GetDocIdStatus (int, HTList *);
-extern BOOL         AHTReqContext_delete (AHTReqContext *);
-extern void         AHTPrintPendingRequestStatus (Document, boolean);
-extern boolean      IsSameHost (char *, char *);
-extern void         StopRequest (int);
-extern void         AHTError_MemPrint (HTRequest *);
-extern HTStream    *AHTFWriter_new (HTRequest *, FILE *, BOOL);
-extern int          Add_NewSocket_to_Loop (HTRequest *, HTAlertOpcode, int, const char *, void *, HTAlertPar *);
-extern void         CreateAnchor (Document, View, boolean);
-extern void         SetCharFontOrPhrase (int, int);
-extern void         InsertChar (unsigned char, int);
-extern void         ClearAllViewSelection (void);
-extern int          TtaFileUnlink (char *);
-extern void         QuitEditor (void);
-extern void         CloseInsertion (void);
-extern char        *ThotRealloc (char *, unsigned int);
-extern int          TtaGiveRGB (char *colname, unsigned short *, unsigned short *, unsigned short *);
-extern int          GetWindowFrame (ThotWindow);
-extern void         GetSizesFrame (int, int *, int *);
-extern void         DefClip (int, int, int, int, int);
-extern void         FrameResized (int *, int, int *);
-extern char        *TtaStrdup (char *str);
-extern void         MakeCompleteName (char *, char *, PathBuffer, PathBuffer, int *);
-extern void         ColorRGB (int num, unsigned short *red, unsigned short *green, unsigned short *blue);
-extern void         TtaSetAttributeReference (Attribute attribute, Element element, Document document, Element target, Document targetDocument);
-
-#else  /* __STDC__ */
-extern int          PtEnPixel ();	/* thot internal function */
-extern int          PixelEnPt ();	/* thot internal function */
-extern void         CreateNewElement ();
-extern void         SelectInitial ();
-extern int          TtaFileExist ();
-extern boolean      OpenMainView ();
-extern void         SetTarget ();
-extern void         SetTableWidths ();
-extern void         CheckTable ();
-extern boolean      DoubleClick ();
-extern void         RemoveAttrInPair ();
-extern void         SelectDestination ();
-extern void         SetCharAttribute ();
-extern int          GetObjectWWW ();
-extern int          PutObjectWWW ();
-extern int          UploadMemWWW ();
-extern AHTDocId_Status *GetDocIdStatus ();
-extern BOOL         AHTReqContext_delete ();
-extern void         AHTPrintPendingRequestStatus ();
-extern boolean      IsSameHost ();
-extern void         StopRequest ();
-extern void         AHTError_MemPrint ();
-extern HTStream    *AHTFWriter_new ();
-extern int          Add_NewSocket_to_Loop ();
-extern void         CreateAnchor ();
-extern void         SetCharFontOrPhrase ();
-extern void         InsertChar ();
-extern void         ClearAllViewSelection ();
-extern int          TtaFileUnlink ();
-extern void         QuitEditor ();
-extern void         CloseInsertion ();
-extern char        *ThotRealloc ();
-extern int          TtaGiveRGB ();
-extern int          GetWindowFrame ();
-extern void         GetSizesFrame ();
-extern void         DefClip ();
-extern void         FrameResized ();
-extern char        *TtaStrdup ();
-extern void         MakeCompleteName ();
-extern void         ColorRGB ();
-extern void         TtaSetAttributeReference ();
-
-#endif /* __STDC__ */
-
-extern void         QueryInit ();
-extern void         QueryClose ();
-
-#ifndef _WINDOWS
-#ifdef __STDC__
-extern XtInputCallbackProc AHTCallback_bridge (caddr_t, int *, XtInputId *);
-
-#else
-extern XtInputCallbackProc AHTCallback_bridge ();
-
-#endif /* __STDC__ */
-#else    /* _WINDOWS */
-LONG                AHTCallback_bridge (caddr_t, int *);
-#endif   /* !_WINDOWS */
 
 extern HTList      *conv;	/* List of global converters */
 extern AmayaContext *Amaya;	/* Amaya's global context    */

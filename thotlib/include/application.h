@@ -9,6 +9,7 @@
 #define _APPLICATION_H_
 
 #include "typebase.h"
+#include "fileaccess.h"
 #include "registry.h"
 
 /* error codes */
