@@ -69,8 +69,7 @@ int                WIN_NormalLineSpacing;
 
 extern HINSTANCE    hInstance;
 extern HDC          TtPrinterDC;
-extern char         DocToOpen [MAX_LENGTH];
-extern char         WIN_buffMenu [MAX_TXT_LEN];
+extern char         DocToOpen[MAX_LENGTH];
 extern char         ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
 extern int          ClickX, ClickY;
 extern int          CORR;
@@ -81,26 +80,26 @@ extern ThotBool     NumberLinks;
 extern ThotBool     PrintURL;
 extern ThotBool     IgnoreCSS;
 
-static char       UrlToOpen [MAX_LENGTH];
-static char       HrefUrl [MAX_LENGTH];
-static char       TmpDocName [MAX_LENGTH];
-static char       altText [MAX_LENGTH];
-static char       message [300];
-static char       message2 [300];
-static char       message3 [300];
-static char       wndTitle [100];
-static char       currentPathName [100];
-static char       winCurLang [100];
-static char       currentFileToPrint [MAX_PATH];
-static char       attDlgTitle [100];
-static char       mathEntityName[MAX_TXT_LEN];
+static char       UrlToOpen[MAX_LENGTH];
+static char       HrefUrl[MAX_LENGTH];
+static char       TmpDocName[MAX_LENGTH];
+static char       AltText[MAX_LENGTH];
+static char       Message[300];
+static char       Message2[300];
+static char       Message3[300];
+static char       WndTitle[100];
+static char       CurrentPathName[100];
+static char       WinCurLang[100];
+static char       CurFileToPrint[MAX_PATH];
+static char       AttDlgTitle[100];
+static char       MathEntName[MAX_TXT_LEN];
 static char       szBuffer[MAX_BUFF];
-static char*      classList;
-static char*      langList;
-static char*      saveList;
-static char*      cssList;
-static char*      mimeType;
-static char*      charSet;
+static char      *ClassList;
+static char      *LangList;
+static char      *SavList;
+static char      *cssList;
+static char      *mimeType;
+static char      *charSet;
 static int          currentDoc;
 static int          currentView;
 static int          SpellingBase;
@@ -119,7 +118,6 @@ static int          fontSize;
 static int          docSelect;
 static int          dirSelect;
 static int          currAttrVal;
-static int          LangValue;
 static int          Num_zoneRecess;
 static int          Num_zoneLineSpacing;
 static int          Align_num;
@@ -154,7 +152,7 @@ static ThotBool     HTMLFormat;
 static OPENFILENAME OpenFileName;
 static char        *szFilter;
 static char         szFileName[256];
-static char         szBuffer [MAX_BUFF];
+static char         szBuffer[MAX_BUFF];
 static ThotWindow   wndCSSList;
 static ThotWindow   wndLangList;
 static ThotWindow   wndListRule;
@@ -175,7 +173,7 @@ static ThotWindow   MimeTypeDlg = NULL;
 static ThotWindow   DocInfo[DocumentTableLength];
 static UINT         itemIndex;
 static UINT         nbClass;
-static UINT         nbItem;
+static UINT         NbItem;
 static char        *string_par1;
 static char        *string_par2;
 static ThotBool     ReleaseFocus;
@@ -200,7 +198,7 @@ void ReusePrinterDC ()
   if (TtaGetPrinterDC (TRUE, &orientation, &paper))
     {
       /* EnableWindow (ghwndMain, FALSE); */
-      ThotCallback (BasePrint + PPrinterName, STRING_DATA, currentFileToPrint);
+      ThotCallback (BasePrint + PPrinterName, STRING_DATA, CurFileToPrint);
       ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (char *)1);
     }
 }
@@ -238,8 +236,8 @@ LRESULT CALLBACK AltDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	{
 	  if (LOWORD (wParam) == IDC_GETALT)
 	    {
-	      GetDlgItemText (hwnDlg, IDC_GETALT, altText, sizeof (altText) - 1);
-	      ThotCallback (BaseImage + ImageAlt, STRING_DATA, altText);
+	      GetDlgItemText (hwnDlg, IDC_GETALT, AltText, sizeof (AltText) - 1);
+	      ThotCallback (BaseImage + ImageAlt, STRING_DATA, AltText);
 	    }
 	}
 #endif /* IV */
@@ -247,9 +245,9 @@ LRESULT CALLBACK AltDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	{
 	case ID_CONFIRM:
 	case ID_DONE:
-	  GetDlgItemText (hwnDlg, IDC_GETALT, altText, sizeof (altText) - 1);
-	  ThotCallback (BaseImage + ImageAlt, STRING_DATA, altText);
-	  if (!altText || altText [0] == 0)
+	  GetDlgItemText (hwnDlg, IDC_GETALT, AltText, sizeof (AltText) - 1);
+	  ThotCallback (BaseImage + ImageAlt, STRING_DATA, AltText);
+	  if (!AltText || AltText[0] == 0)
 	    MessageBox (hwnDlg, TtaGetMessage (AMAYA, AM_ALT_MISSING),
 			TtaGetMessage (AMAYA, AM_ALT), MB_OK | MB_ICONERROR);
 	  else 
@@ -278,7 +276,7 @@ LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     {
     case WM_INITDIALOG:
       newFont = GetStockObject (DEFAULT_GUI_FONT); 
-      SetWindowText (hwnDlg, wndTitle);
+      SetWindowText (hwnDlg, WndTitle);
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
 		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE),
@@ -295,7 +293,7 @@ LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       if (newFont)
 	SendMessage (wndCSSList, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
        SendMessage (wndCSSList, LB_RESETCONTENT, 0, 0);
-      while (i < nbItem && cssList[index] != EOS)
+      while (i < NbItem && cssList[index] != EOS)
 	{
 	  SendMessage (wndCSSList, LB_INSERTSTRING, i, (LPARAM) &cssList[index]); 
 	  index += strlen (&cssList[index]) + 1;	/* entry length */
@@ -429,7 +427,7 @@ LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 		  SetDlgItemText (hwnDlg, IDC_GETURL, TmpDocName);
 	  else
 		  SetDlgItemText (hwnDlg, IDC_GETURL, "");
-      HrefUrl [0] = 0;
+      HrefUrl[0] = 0;
 
 	  /* set the default focus and return FALSE to validate it */
 	  SetFocus (GetDlgItem (hwnDlg, IDC_GETURL));
@@ -492,7 +490,7 @@ LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  
 	case IDCANCEL:
 	  ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (char*) 0);
-	  HrefUrl [0] = 0;
+	  HrefUrl[0] = 0;
 	  EndDialog (hwnDlg, IDCANCEL);
 	  break;      
 	}
@@ -512,9 +510,9 @@ LRESULT CALLBACK HelpDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
   switch (msg)
     {
     case WM_INITDIALOG:
-      SetWindowText (GetDlgItem (hwnDlg, IDC_VERSION), currentPathName);
-      SetWindowText (GetDlgItem (hwnDlg, IDC_ABOUT1), message);
-      SetWindowText (GetDlgItem (hwnDlg, IDC_ABOUT2), message2);
+      SetWindowText (GetDlgItem (hwnDlg, IDC_VERSION), CurrentPathName);
+      SetWindowText (GetDlgItem (hwnDlg, IDC_ABOUT1), Message);
+      SetWindowText (GetDlgItem (hwnDlg, IDC_ABOUT2), Message2);
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
 		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       break;
@@ -678,7 +676,7 @@ LRESULT CALLBACK PrintDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	      ThotCallback (BasePrint + PaperFormat, INTEGER_DATA,
 			    (char*) paper);
 	      ThotCallback (BasePrint + PPrinterName, STRING_DATA,
-			    currentFileToPrint);
+			    CurFileToPrint);
 	      ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (char*)1);
 	    }
 	  break;
@@ -812,71 +810,71 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE),
 		     TtaGetMessage (LIB, TMSG_DONE));
       
-      radio1 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
+      radio1 = CreateWindow ("BUTTON", &LangList[ndx],
 			     WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 			     cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 			     (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
        /* set the font of the window */
       if (newFont)
 	SendMessage (radio1, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-      ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+      ndx += strlen (&LangList[ndx]) + 1;
       i++;
-      radio2 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
+      radio2 = CreateWindow ("BUTTON", &LangList[ndx],
 		  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 		  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 		  (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
        /* set the font of the window */
       if (newFont)
 	SendMessage (radio2, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-      ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+      ndx += strlen (&LangList[ndx]) + 1;
       i++;
       if (attDlgNbItems > 2)
 	{
-	  radio3 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
+	  radio3 = CreateWindow ("BUTTON", &LangList[ndx],
 				 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 				 cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 				 (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 	  /* set the font of the window */
 	  if (newFont)
 	    SendMessage (radio3, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	  ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+	  ndx += strlen (&LangList[ndx]) + 1;
 	  i++;
 	  if (attDlgNbItems > 3)
 	    {	  
-	      radio4 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
+	      radio4 = CreateWindow ("BUTTON", &LangList[ndx],
 				     WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 				     cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 				     (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 	      /* set the font of the window */
 	      if (newFont)
 		SendMessage (radio4, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	      ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+	      ndx += strlen (&LangList[ndx]) + 1;
 	      i++;
 	      if (attDlgNbItems > 4)
 		{
-		  radio5 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
+		  radio5 = CreateWindow ("BUTTON", &LangList[ndx],
 					 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 					 cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 					 (HMENU) OPT5, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 		  /* set the font of the window */
 		  if (newFont)
 		    SendMessage (radio5, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-		  ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+		  ndx += strlen (&LangList[ndx]) + 1;
 		  i++;
           if (attDlgNbItems > 5)
 		  {
-	         radio6 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
+	         radio6 = CreateWindow ("BUTTON", &LangList[ndx],
 				 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 				 cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 				 (HMENU) OPT6, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 		 /* set the font of the window */
 		 if (newFont)
 		   SendMessage (radio6, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	         ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+	         ndx += strlen (&LangList[ndx]) + 1;
 	         i++;
 	         if (attDlgNbItems > 6)
 			 {	  
-	            radio7 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
+	            radio7 = CreateWindow ("BUTTON", &LangList[ndx],
 					WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 					cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 					(HMENU) OPT7, (HINSTANCE) GetWindowLong (hwnDlg,
@@ -884,29 +882,29 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 		    /* set the font of the window */
 		    if (newFont)
 		      SendMessage (radio7, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	            ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+	            ndx += strlen (&LangList[ndx]) + 1;
 	            i++;
 	            if (attDlgNbItems > 7)
 				{
-		          radio8 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
+		          radio8 = CreateWindow ("BUTTON", &LangList[ndx],
 					  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 					  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 					  (HMENU) OPT8, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 			  /* set the font of the window */
 			  if (newFont)
 			    SendMessage (radio8, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	              ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+	              ndx += strlen (&LangList[ndx]) + 1;
 		          i++;
 				  if (attDlgNbItems > 8)
 				  {
-		            radio9 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
+		            radio9 = CreateWindow ("BUTTON", &LangList[ndx],
 					  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 					  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 					  (HMENU) OPT9, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 			    /* set the font of the window */
 			    if (newFont)
 			      SendMessage (radio9, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	                ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+	                ndx += strlen (&LangList[ndx]) + 1;
 		            i++;
 				  }
 				}
@@ -915,7 +913,7 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 		}
 	   }
 	}
-      groupBx = CreateWindow ("BUTTON", attDlgTitle,
+      groupBx = CreateWindow ("BUTTON", AttDlgTitle,
 		  WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0,
 		  rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg,
 		  (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
@@ -1117,7 +1115,7 @@ LRESULT CALLBACK MimeTypeDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       if (newFont)
 	    SendMessage (wndMTlist, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       SendMessage (wndMTlist, LB_RESETCONTENT, 0, 0);
-      while (i < nbItem && mimeType[index] != '\0')
+      while (i < NbItem && mimeType[index] != '\0')
 	{
 	  SendMessage (wndMTlist, LB_INSERTSTRING, i, (LPARAM) &mimeType[index]); 
 	  index += strlen (&mimeType[index]) + 1;/* Longueur de l'intitule */
@@ -1222,7 +1220,7 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, ID_CLEAR), TtaGetMessage (AMAYA, AM_CLEAR));
       SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TtaGetMessage (AMAYA, AM_BROWSE));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
-      SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
+      SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, CurrentPathName);
       
 	  if (HTMLFormat ||
 		  DocumentTypes[SavingDocument] == docMath ||
@@ -1408,7 +1406,7 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), TtaGetMessage (AMAYA, AM_CLEAR));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 
-      SetWindowText (hwnDlg, wndTitle);
+      SetWindowText (hwnDlg, WndTitle);
       SetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen);
 	  /* put the focus on the first dialog item */
 	  SetFocus (GetDlgItem (hwnDlg, IDC_GETURL));
@@ -1474,7 +1472,7 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       
       case IDCANCEL:
 	ThotCallback (BaseDialog + OpenForm, INTEGER_DATA, (char*) 0);
-	UrlToOpen [0] = 0;
+	UrlToOpen[0] = 0;
 	EndDialog (hwnDlg, IDCANCEL);
 	break;      
       }
@@ -1504,30 +1502,30 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 	
 	SetDlgItemText (hwnDlg, IDC_GETURL, "");
-	UrlToOpen [0] = 0;
+	UrlToOpen[0] = 0;
 	SetDlgItemText (hwnDlg, IDC_GETALT, "");
-	altText [0] = 0;
+	AltText[0] = 0;
 	break;
 	
       case WM_COMMAND:
 	if (HIWORD (wParam) == EN_UPDATE)
 	  if (LOWORD (wParam) == IDC_GETALT)
 	    {
-	      GetDlgItemText (hwnDlg, IDC_GETALT, altText, sizeof (altText) - 1);
-	      ThotCallback (BaseImage + ImageAlt, STRING_DATA, altText);
+	      GetDlgItemText (hwnDlg, IDC_GETALT, AltText, sizeof (AltText) - 1);
+	      ThotCallback (BaseImage + ImageAlt, STRING_DATA, AltText);
 	    }
 	switch (LOWORD (wParam))
 	  {
 	  case ID_CONFIRM:
 	    GetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen, sizeof (UrlToOpen) - 1);
-	    GetDlgItemText (hwnDlg, IDC_GETALT, altText, sizeof (altText) - 1);
-	    if (!altText || altText [0] == 0)
+	    GetDlgItemText (hwnDlg, IDC_GETALT, AltText, sizeof (AltText) - 1);
+	    if (!AltText || AltText[0] == 0)
 	      MessageBox (hwnDlg, TtaGetMessage (AMAYA, AM_ALT_MISSING),
 			  TtaGetMessage (AMAYA, AM_BUTTON_IMG),
 			  MB_OK | MB_ICONERROR);
 	    else 
 	      {
-		ThotCallback (BaseImage + ImageAlt, STRING_DATA, altText);
+		ThotCallback (BaseImage + ImageAlt, STRING_DATA, AltText);
 		ThotCallback (BaseImage + ImageURL, STRING_DATA, UrlToOpen);
 		ThotCallback (BaseImage + FormImage, INTEGER_DATA, (char*) 1);
 		EndDialog (hwnDlg, ID_CONFIRM);
@@ -1556,13 +1554,13 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	      strcpy (UrlToOpen, OpenFileName.lpstrFile);
 	    
 	    SetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen);
-	    if (altText [0] != 0)
+	    if (AltText[0] != 0)
 	      EndDialog (hwnDlg, ID_CONFIRM);
 	    break;
 
 	  case IDCANCEL:
 	    ThotCallback (BaseImage + FormImage, INTEGER_DATA, (char*) 0);
-	    UrlToOpen [0] = 0;
+	    UrlToOpen[0] = 0;
 	    EndDialog (hwnDlg, IDCANCEL);
 	    break;
 	  }
@@ -1663,7 +1661,7 @@ LRESULT CALLBACK GraphicsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 LRESULT CALLBACK SaveListDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 								  LPARAM lParam)
 {
-  static ThotWindow  wndSaveList;
+  static ThotWindow  wndSavList;
   HFONT              newFont;
   int                index = 0;
   UINT               i = 0;
@@ -1681,19 +1679,19 @@ LRESULT CALLBACK SaveListDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL),
 		     TtaGetMessage (LIB, TMSG_CANCEL));
       
-      wndSaveList = CreateWindow ("listbox", NULL,
+      wndSavList = CreateWindow ("listbox", NULL,
 		  WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 				  10, 30, 260, 180, hwnDlg, (HMENU) 1, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
       
       /* set the font of the window */
       if (newFont)
-	SendMessage (wndSaveList, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-      SendMessage (wndSaveList, LB_RESETCONTENT, 0, 0);
-      while (i < nbItem && saveList[index] != EOS)
+	SendMessage (wndSavList, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+      SendMessage (wndSavList, LB_RESETCONTENT, 0, 0);
+      while (i < NbItem && SavList[index] != EOS)
 	{
-	  SendMessage (wndSaveList, LB_INSERTSTRING, i, (LPARAM) &saveList[index]); 
-	  index += strlen (&saveList[index]) + 1;	/* Longueur de l'intitule */
+	  SendMessage (wndSavList, LB_INSERTSTRING, i, (LPARAM) &SavList[index]); 
+	  index += strlen (&SavList[index]) + 1;	/* Longueur de l'intitule */
 	  i++;
 	}
       break;
@@ -1701,8 +1699,8 @@ LRESULT CALLBACK SaveListDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     case WM_COMMAND:
       if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE)
 	{
-	  itemIndex = SendMessage (wndSaveList, LB_GETCURSEL, 0, 0);
-	  itemIndex = SendMessage (wndSaveList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
+	  itemIndex = SendMessage (wndSavList, LB_GETCURSEL, 0, 0);
+	  itemIndex = SendMessage (wndSavList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
 	  SetDlgItemText (hwnDlg, IDC_LANGEDIT, szBuffer);
 	}
       switch (LOWORD (wParam))
@@ -1736,7 +1734,7 @@ LRESULT CALLBACK CloseDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     {
     case WM_INITDIALOG:
       SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_CLOSE_DOC));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_CLOSEMSG), message);
+      SetWindowText (GetDlgItem (hwnDlg, IDC_CLOSEMSG), Message);
       SetWindowText (GetDlgItem (hwnDlg, ID_SAVEDOC),
 		  TtaGetMessage (LIB, TMSG_SAVE_DOC));
       SetWindowText (GetDlgItem (hwnDlg, IDC_DONTSAVE),
@@ -1792,13 +1790,13 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       newFont = GetStockObject (DEFAULT_GUI_FONT); 
       /* destroy the focus of the previous open dialog */
       LangForm = hwnDlg;
-      SetWindowText (hwnDlg, wndTitle);
+      SetWindowText (hwnDlg, WndTitle);
 	  SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
 	  SetWindowText (GetDlgItem (hwnDlg, ID_DELETE),
 		  TtaGetMessage (LIB, TMSG_DEL_ATTR));
 	  SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_LANGELEM), message);
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_INHERITEDLANG), message2);
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_LANGELEM), Message);
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_INHERITEDLANG), Message2);
       
       wndLangList = CreateWindow ("listbox", NULL,
 		  WS_CHILD | WS_VISIBLE | LBS_STANDARD,
@@ -1808,13 +1806,13 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       if (newFont)
          SendMessage (wndLangList, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       SendMessage (wndLangList, LB_RESETCONTENT, 0, 0);
-      while (i < nbItem && langList[index] != '\0')
+      while (i < NbItem && LangList[index] != '\0')
 	{
-	  SendMessage (wndLangList, LB_INSERTSTRING, i, (LPARAM) &langList[index]); 
-	  index += strlen (&langList[index]) + 1;/* Longueur de l'intitule */
+	  SendMessage (wndLangList, LB_INSERTSTRING, i, (LPARAM) &LangList[index]); 
+	  index += strlen (&LangList[index]) + 1;/* Longueur de l'intitule */
 	  i++;
       }
-      SetWindowText (GetDlgItem (hwnDlg, IDC_LNGEDIT), winCurLang);
+      SetWindowText (GetDlgItem (hwnDlg, IDC_LNGEDIT), WinCurLang);
       break;
 
     case WM_CLOSE:
@@ -2143,9 +2141,9 @@ LRESULT CALLBACK MathEntityDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       switch (LOWORD (wParam))
 	{
 	case ID_CONFIRM:
-	  GetDlgItemText (hwnDlg, IDC_EDIT_NAME, mathEntityName,
-		  sizeof (mathEntityName) - 1);
-	  ThotCallback (BaseDialog + MathEntityText, STRING_DATA, mathEntityName);
+	  GetDlgItemText (hwnDlg, IDC_EDIT_NAME, MathEntName,
+		  sizeof (MathEntName) - 1);
+	  ThotCallback (BaseDialog + MathEntityText, STRING_DATA, MathEntName);
 	  ThotCallback (BaseDialog + MathEntityForm, INTEGER_DATA, (char*) 1);
 	  EndDialog (hwnDlg, ID_CONFIRM);
 	  break;
@@ -2198,10 +2196,10 @@ LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       if (newFont)
          SendMessage (wndListRule, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       SendMessage (wndListRule, LB_RESETCONTENT, 0, 0);
-      while (i < nbClass && classList[index] != EOS)
+      while (i < nbClass && ClassList[index] != EOS)
 	{
-	  SendMessage (wndListRule, LB_INSERTSTRING, i, (LPARAM) &classList[index]); 
-	  index += strlen (&classList[index]) + 1;	/* entry length */
+	  SendMessage (wndListRule, LB_INSERTSTRING, i, (LPARAM) &ClassList[index]); 
+	  index += strlen (&ClassList[index]) + 1;	/* entry length */
 	  i++;
 	}
       if (WithEdit)
@@ -2213,7 +2211,7 @@ LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  /* set the font of the window */
 	  if (newFont)
 	    SendMessage (wndEditRule, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	  SetDlgItemText (hwnDlg, IDC_EDITRULE, classList);
+	  SetDlgItemText (hwnDlg, IDC_EDITRULE, ClassList);
 	}
       break;
 
@@ -2307,12 +2305,12 @@ LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg,
       newFont = GetStockObject (DEFAULT_GUI_FONT);
 	  ptr = TtaGetMessage (LIB, TMSG_LIB_CONFIRM);
       SetWindowText (hwnDlg, ptr);
-      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), wndTitle);
-	if (strcmp (wndTitle, ptr))
+      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), WndTitle);
+	if (strcmp (WndTitle, ptr))
 		/* generate a button show */
       SetWindowText (GetDlgItem (hwnDlg, ID_SHOW), TtaGetMessage (AMAYA, AM_AFILTER_SHOW));
     SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
-      messageWnd = CreateWindow ("STATIC", message,
+      messageWnd = CreateWindow ("STATIC", Message,
 				 WS_CHILD | WS_VISIBLE | SS_LEFT,
 				 10, 5, 500, 15, hwnDlg, (HMENU) 99, 
 				 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE),
@@ -2354,17 +2352,17 @@ LRESULT CALLBACK InitConfirm3LDlgProc (ThotWindow hwnDlg, UINT msg,
     switch (msg)
       {
       case WM_INITDIALOG:
-	SetWindowText (hwnDlg, wndTitle);
-	SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), wndTitle);
+	SetWindowText (hwnDlg, WndTitle);
+	SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), WndTitle);
 	if (WithCancel)
 	  SetWindowText (GetDlgItem (hwnDlg, IDCANCEL),
 	  TtaGetMessage (LIB, TMSG_CANCEL));
-	if (message)
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_MESSAGE1), message);
-	if (message2)
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_MESSAGE2), message2);
-	if (message3)
-	  SetWindowText (GetDlgItem (hwnDlg, IDC_MESSAGE3), message3);
+	if (Message)
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_MESSAGE1), Message);
+	if (Message2)
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_MESSAGE2), Message2);
+	if (Message3)
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_MESSAGE3), Message3);
 	break; 
 	
       case WM_COMMAND:
@@ -3221,7 +3219,7 @@ LRESULT CALLBACK BackgroundImageDlgProc (ThotWindow hwnDlg, UINT msg,
     switch (msg)
       {
       case WM_INITDIALOG:
-	SetDlgItemText (hwnDlg, IDC_BGLOCATION, currentPathName);
+	SetDlgItemText (hwnDlg, IDC_BGLOCATION, CurrentPathName);
 	CheckRadioButton (hwnDlg, IDC_REPEAT, IDC_NOREPEAT, IDC_REPEAT);
 	SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_BACKGROUND_IMAGE));
 	SetWindowText (GetDlgItem (hwnDlg, IDC_OPENLOCATION),
@@ -3532,12 +3530,12 @@ void CreateAltDlgWindow ()
 void CreateCSSDlgWindow (ThotWindow parent, int nb_item, char *buffer,
 			 char *title, char *msg_text)
 {
-  nbItem     = (UINT)nb_item;
+  NbItem     = (UINT)nb_item;
   cssList    = buffer;
-  strcpy (wndTitle, title);
-  if (nbItem == 0)
+  strcpy (WndTitle, title);
+  if (NbItem == 0)
     /* no entry */
-    MessageBox (parent, msg_text, wndTitle, MB_OK | MB_ICONWARNING);
+    MessageBox (parent, msg_text, WndTitle, MB_OK | MB_ICONWARNING);
   else 
     DialogBox (hInstance, MAKEINTRESOURCE (CSSDIALOG), parent,
 	       (DLGPROC) CSSDlgProc);
@@ -3583,9 +3581,9 @@ void CreateHRefDlgWindow (ThotWindow parent, char *HRefValue,
 void CreateHelpDlgWindow (ThotWindow parent, char *localname, char *msg1,
 			  char *msg2)
 {  
-  strcpy (currentPathName, localname);
-  strcpy (message, msg1);
-  strcpy (message2, msg2);
+  strcpy (CurrentPathName, localname);
+  strcpy (Message, msg1);
+  strcpy (Message2, msg2);
   DialogBox (hInstance, MAKEINTRESOURCE (HELPDIALOG), parent,
 	     (DLGPROC) HelpDlgProc);
 }
@@ -3608,7 +3606,7 @@ void CreatePrintDlgWindow (ThotWindow parent, char *ps_dir)
 {  
   gbAbort            = FALSE;
   ghwndMain          = parent;
-  strcpy (currentFileToPrint, ps_dir);
+  strcpy (CurFileToPrint, ps_dir);
 
   if (PrintForm)
     SetFocus (PrintForm);
@@ -3660,7 +3658,7 @@ void CreateCharsetDlgWindow (ThotWindow parent)
 void CreateMimeTypeDlgWindow (ThotWindow parent, int nb_item, char *mimetype_list)
 {
    mimeType                = mimetype_list;
-   nbItem                  = (UINT)nb_item;
+   NbItem                  = (UINT)nb_item;
    DialogBox (hInstance, MAKEINTRESOURCE (MIMETYPEDIALOG), SaveAsForm, (DLGPROC) MimeTypeDlgProc);
 }
 
@@ -3675,7 +3673,7 @@ void  CreateSaveAsDlgWindow (ThotWindow parent, char *path_name)
 		DocumentTypes[SavingDocument] != docSVG &&
 		DocumentTypes[SavingDocument] != docImage &&
 		DocumentTypes[SavingDocument] != docXml);
-  strcpy (currentPathName, path_name);
+  strcpy (CurrentPathName, path_name);
   if (HTMLFormat)
     DialogBox (hInstance, MAKEINTRESOURCE (SAVEASDIALOG), parent,
 	(DLGPROC) SaveAsDlgProc);
@@ -3697,7 +3695,7 @@ void  CreateOpenDocDlgWindow (ThotWindow parent, char *title, char *url,
 {
   docSelect = doc_select;
   dirSelect = dir_select;
-  strcpy (wndTitle, title);
+  strcpy (WndTitle, title);
   strcpy (TmpDocName, docName);
   strcpy ( UrlToOpen, url);
   
@@ -3751,7 +3749,8 @@ void  CreateGraphicsDlgWindow (ThotWindow frame)
   if (GraphPal)
     SetFocus (GraphPal);
   else
-   DialogBox (hInstance, MAKEINTRESOURCE (GRAPHICSDIALOG), NULL, (DLGPROC) GraphicsDlgProc);
+   DialogBox (hInstance, MAKEINTRESOURCE (GRAPHICSDIALOG), NULL,
+   (DLGPROC) GraphicsDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -3759,9 +3758,10 @@ void  CreateGraphicsDlgWindow (ThotWindow frame)
  ------------------------------------------------------------------------*/
 void CreateSaveListDlgWindow (ThotWindow parent, int nb_item, char *save_list)
 {  
-  nbItem      = (UINT)nb_item;
-  saveList    = save_list;
-  DialogBox (hInstance, MAKEINTRESOURCE (SAVELISTDIALOG), parent, (DLGPROC) SaveListDlgProc);
+  NbItem      = (UINT)nb_item;
+  SavList    = save_list;
+  DialogBox (hInstance, MAKEINTRESOURCE (SAVELISTDIALOG), parent,
+	  (DLGPROC) SaveListDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -3770,8 +3770,9 @@ void CreateSaveListDlgWindow (ThotWindow parent, int nb_item, char *save_list)
 void CreateCloseDocDlgWindow (ThotWindow parent, char *msg, ThotBool *save_befor,
 			      ThotBool *close_dont_save)
 {  
-  strcpy (message, msg);
-  DialogBox (hInstance, MAKEINTRESOURCE (CLOSEDOCDIALOG), parent, (DLGPROC) CloseDocDlgProc);
+  strcpy (Message, msg);
+  DialogBox (hInstance, MAKEINTRESOURCE (CLOSEDOCDIALOG), parent,
+	  (DLGPROC) CloseDocDlgProc);
   *save_befor = saveBeforeClose;
   *close_dont_save = closeDontSave;
 }
@@ -3781,19 +3782,23 @@ void CreateCloseDocDlgWindow (ThotWindow parent, char *msg, ThotBool *save_befor
  ------------------------------------------------------------------------*/
 void CreateLanguageDlgWindow (ThotWindow parent, char *title, char *msg1,
 			      int nb_item, char *lang_list, char *msg2,
-			      int lang_value, char *curLang)
+			      int lang_value)
 {
   if (LangForm)
 	  EndDialog (LangForm, ID_DONE); 
 
-   strcpy (wndTitle, title);
-   strcpy (message, msg1);
-   strcpy (message2, msg2);
-   strcpy (winCurLang, curLang);
-   langList                = lang_list;
-   nbItem                  = (UINT)nb_item;
-   LangValue               = lang_value;
-   DialogBox (hInstance, MAKEINTRESOURCE (LANGUAGEDIALOG), NULL, (DLGPROC) LanguageDlgProc);
+   strcpy (WndTitle, title);
+   strcpy (Message, msg1);
+   strcpy (Message2, msg2);
+   if (lang_value >= 0)
+	   /* there is a selected language */
+	   strcpy (WinCurLang, TtaGetLanguageName (lang_value));
+   else
+	   WinCurLang[0] = EOS;
+   LangList = lang_list;
+   NbItem = (UINT)nb_item;
+   DialogBox (hInstance, MAKEINTRESOURCE (LANGUAGEDIALOG), NULL,
+	   (DLGPROC) LanguageDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -3811,7 +3816,8 @@ void CreateCharacterDlgWindow (ThotWindow parent, int font_num, int font_style,
   if (CharacterForm)
     SetFocus (CharacterForm);
   else
-	DialogBox (hInstance, MAKEINTRESOURCE (CHARACTERSDIALOG), NULL, (DLGPROC) CharacterDlgProc);
+	DialogBox (hInstance, MAKEINTRESOURCE (CHARACTERSDIALOG), NULL,
+	(DLGPROC) CharacterDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -3825,7 +3831,7 @@ void CreateAttributeDlgWindow (char *title, int curr_val, int nb_items)
 	  EndDialog (AttrForm, ID_DONE);
 	  AttrForm = NULL;
   }
-  strcpy (attDlgTitle, title);
+  strcpy (AttDlgTitle, title);
   currAttrVal = curr_val;
   attDlgNbItems = nb_items;
   switch (attDlgNbItems)
@@ -3872,9 +3878,9 @@ void CreateAttributeDlgWindow (char *title, int curr_val, int nb_items)
  ------------------------------------------------------------------------*/
 void CreateMCHARDlgWindow (ThotWindow parent, char *math_entity_name) 
 {
-    strcpy (mathEntityName, math_entity_name);
+    strcpy (MathEntName, math_entity_name);
     DialogBox (hInstance, MAKEINTRESOURCE (MATH_ENTITY_DLG), NULL, (DLGPROC) MathEntityDlgProc);
-    strcpy (math_entity_name, mathEntityName);
+    strcpy (math_entity_name, MathEntName);
 }
 
 /*-----------------------------------------------------------------------
@@ -3883,7 +3889,7 @@ void CreateMCHARDlgWindow (ThotWindow parent, char *math_entity_name)
 void CreateRuleDlgWindow (ThotWindow parent, int nb_class, char *class_list)
 {  
   nbClass     = (UINT)nb_class;
-  classList   = class_list;
+  ClassList   = class_list;
   WithEdit = TRUE;
   DialogBox (hInstance, MAKEINTRESOURCE (CREATERULEDIALOG), parent, (DLGPROC) ApplyClassDlgProc);
 }
@@ -3894,7 +3900,7 @@ void CreateRuleDlgWindow (ThotWindow parent, int nb_class, char *class_list)
 void CreateApplyClassDlgWindow (ThotWindow parent, int nb_class, char *class_list)
 {  
   nbClass     = (UINT)nb_class;
-  classList   = class_list;
+  ClassList   = class_list;
   WithEdit = FALSE;
   DialogBox (hInstance, MAKEINTRESOURCE (APPLYCLASSDIALOG), NULL,
 	     (DLGPROC) ApplyClassDlgProc);
@@ -3905,17 +3911,17 @@ void CreateApplyClassDlgWindow (ThotWindow parent, int nb_class, char *class_lis
  ------------------------------------------------------------------------*/
 void CreateInitConfirmDlgWindow (ThotWindow parent, char *title, char *label)
 {  
-  strcpy (message, label);
+  strcpy (Message, label);
   if (title && title[0] != EOS)
   {
 	/* a meesage with 3 buttons */
-    strcpy (wndTitle, title);
+    strcpy (WndTitle, title);
     DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG1), parent,
                (DLGPROC) InitConfirmDlgProc);
   }
   else
   {
-    strcpy (wndTitle, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+    strcpy (WndTitle, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
     DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent,
                (DLGPROC) InitConfirmDlgProc);
   }
@@ -3928,16 +3934,16 @@ void CreateInitConfirm3LDlgWindow (ThotWindow parent, char *title,
 				   char *msg, char *msg2, char *msg3,
 				   ThotBool withCancel)
 {
-  strcpy (message, msg);
+  strcpy (Message, msg);
   if (msg2 && *msg2 != EOS)
-    strcpy (message2, msg2);
+    strcpy (Message2, msg2);
   else
-    message2[0] = EOS;
+    Message2[0] = EOS;
   if (msg3 && *msg3 != EOS)
-    strcpy (message3, msg3);
+    strcpy (Message3, msg3);
   else
-    message3[0] = EOS;
-  strcpy (wndTitle, title);
+    Message3[0] = EOS;
+  strcpy (WndTitle, title);
   /* register if the cancel button has to be generated */
   WithCancel = withCancel;
   if (withCancel)
@@ -3998,7 +4004,7 @@ void CreateAuthenticationDlgWindow (ThotWindow parent, const char *realm,
 void CreateBackgroundImageDlgWindow (ThotWindow parent, char *image_location)
 {
   szFilter         = APPIMAGENAMEFILTER;
-  strcpy (currentPathName, image_location);
+  strcpy (CurrentPathName, image_location);
   DialogBox (hInstance, MAKEINTRESOURCE (BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
 }
 

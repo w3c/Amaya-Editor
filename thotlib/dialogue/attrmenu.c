@@ -70,8 +70,8 @@ static PtrDocument  PtrDocOfReqAttr;
 
 
 extern WNDPROC      lpfnTextZoneWndProc ;
-char                WIN_buffMenu[MAX_TXT_LEN];
-static char         WIN_Lab[1024];
+static char         WIN_buffMenu[MAX_TXT_LEN];
+static char         WIN_Lab[200];
 static char         formRange[100];
 static char        *szAppName;
 static ThotWindow   hwnEdit;
@@ -130,7 +130,7 @@ static void InitFormLanguage (Document doc, View view,
    char               *ptr;
    char                languageCode[MAX_TXT_LEN];
    char                label[200];
-   int                 defItem, nbItem, length;
+   int                 defItem, nbItem;
 #ifndef _WINDOWS
    char                bufMenu[MAX_TXT_LEN];
    int                 i;
@@ -180,9 +180,6 @@ static void InitFormLanguage (Document doc, View view,
 	   strcat (label, TtaGetLanguageName(language));
 	 }
      }
-   else if (ptr)
-     /* display the current language */
-       strcpy (label, ptr);
    else
      label[0] = EOS;
 
@@ -193,7 +190,7 @@ static void InitFormLanguage (Document doc, View view,
 #else  /* _WINDOWS */
    sprintf (WIN_Lab, "%s", label);
    WIN_nbItem = nbItem; 
-   WIN_Language = language;
+   WIN_Language = defItem;
 #endif /* _WINDOWS */
 }
 
@@ -1700,7 +1697,7 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 					 TtaGetMessage (LIB, TMSG_LANGUAGE),
 					 TtaGetMessage (LIB, TMSG_LANG_OF_EL), 
 					 WIN_nbItem, WIN_buffMenu, WIN_Lab, 
-					 (int)WIN_Language, TtaGetLanguageName (WIN_Language));
+					 (int)WIN_Language);
 #else /* _WINDOWS */
 		if (ActiveAttr[item] == 0)
 		  TtaSetToggleMenu (refmenu, item, FALSE);
@@ -1764,8 +1761,6 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
   ----------------------------------------------------------------------*/
 void CallbackLanguageMenu (int ref, int val, char *txt)
 {
-  Language		i;
-
   switch (ref)
     {
     case NumSelectLanguage:
@@ -1773,10 +1768,7 @@ void CallbackLanguageMenu (int ref, int val, char *txt)
       if (txt == NULL)
 	TextAttrValue[0] = EOS;
       else
-	{
-	  i = TtaGetLanguageIdFromName (txt);
-	  strncpy (TextAttrValue, TtaGetLanguageCode (i), LgMaxAttrText);
-	}
+	  strncpy (TextAttrValue, TtaGetLanguageCodeFromName (txt), LgMaxAttrText);
 #ifndef _WINDOWS 
       TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, "");
 #endif /* _WINDOWS */
