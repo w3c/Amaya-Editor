@@ -7708,7 +7708,8 @@ RULES
 		END;
 	END;
 
- TEXT_UNIT:	BEGIN
+ TEXT_UNIT:
+	BEGIN
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	if within Inserted_Text
@@ -7730,6 +7731,14 @@ RULES
 		if within Preformatted
 		   Font: Courier;
 		END;
+	END;
+
+ SYMBOL_UNIT:
+	BEGIN
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		END;		
 	END;
 
 #ifdef PAGE
