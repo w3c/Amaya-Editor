@@ -378,8 +378,10 @@ static ThotBool CloseTextInsertionWithControl ()
 	      if (pSelBox->BxBuffer->BuLength != 0 &&
 		  pSelBox->BxIndChar > pSelBox->BxBuffer->BuLength &&
 		  pSelBox->BxNChars > 0)
+		{
 		/* the insertion at the end of a buffer was removed */
 		pSelBox->BxIndChar = 0;
+		}
 	      /* update the split box */
 	      if (pBox->BxBuffer != pSelBox->BxBuffer &&
 		  pBox->BxNexChild == pSelBox)
@@ -843,7 +845,6 @@ static void StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox,
 		  /* update the selected box */
 		  pSelBox->BxAbstractBox->AbText = pNewBuffer;
 		  pSelBox->BxIndChar = 0;
-		  /*pSelBox->BxFirstChar = 1;*/
 		  pSelBox->BxBuffer = pNewBuffer;
 	       }
 	     else
@@ -1361,7 +1362,6 @@ static void LoadPictFile (PtrLine pLine, ThotBool defaultHeight,
 			  ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb,
 			  int frame)
 {
-  printf ("LoadPicture\n");
   if (pAb->AbLeafType == LtPicture)
     {
       /* give access to the application image menu */
@@ -2923,10 +2923,12 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			      xDelta = BoxCharacterWidth (c, font);
 			      if (c == SPACE)
 				adjust = pSelBox->BxSpaceWidth;
-			      UpdateViewSelMarks (frame, xDelta, spacesDelta, charsDelta);
-			      /* Reevaluation du debut de la boite coupee ? */
 			      if (previousChars == 0 && pSelBox->BxFirstChar == 1)
-				pSelBox = pAb->AbBox;
+				{
+				  /* Reevaluation of the whole split box */
+				  pSelBox = pAb->AbBox;
+				  UpdateViewSelMarks (frame, xDelta, spacesDelta, charsDelta);
+				}
 			      else if (previousChars == 0)
 				{
 				  /* Si la selection est en debut de boite  */
@@ -2935,7 +2937,9 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				  pSelBox = pSelBox->BxPrevious;
 				  if (pViewSel->VsLine != NULL)
 				    pViewSel->VsLine = pViewSel->VsLine->LiPrevious;
-				}	/*else if previousChars == 0 */
+				}
+			      else
+				UpdateViewSelMarks (frame, xDelta, spacesDelta, charsDelta);
 			      
 			    }
 			  /* ==> Les autres cas d'insertion */
@@ -2962,14 +2966,13 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			      else
 				xDelta = BoxCharacterWidth (c, font);
 			      
-			      /* Est-ce une insertion en debut de boite ? */
-			      if (beginOfBox && previousChars == 0)
+			      if (/*beginOfBox && */previousChars == 0)
 				{
+				  /* insert at the beginning of a box */
 				  pSelBox->BxBuffer = pBuffer;
-				  pSelBox->BxFirstChar = pBuffer->BuLength;
-				  /* Est-ce une boite de coupure vide ? */
+				  pSelBox->BxIndChar = ind;
 				  if (pSelBox->BxNChars == 0)
-				    /* retire la largeur minimum */
+				    /* the box is not empty now, get the right width */
 				    pSelBox->BxWidth = 0;
 				}
 			      
