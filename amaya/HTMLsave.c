@@ -464,11 +464,11 @@ Document            doc;
       buffer[0] = '\0';
       if (useMathML)
 	 {
-	 strcat (buffer, "      xmlns:m=\"http://www.w3.org/TR/REC-MathML/\"\n");
+	 strcat (buffer, "\n      xmlns:m=\"http://www.w3.org/TR/REC-MathML/\"");
 	 }
       if (useGraphML)
 	 {
-	 strcat (buffer, "      xmlns:g=\"http://www.w3.org/Graphics/SVG/Amaya2D\"\n");
+	 strcat (buffer, "\n      xmlns:g=\"http://www.w3.org/Graphics/SVG/Amaya2D\"");
 	 }
       /* set the value of attribute Namespaces */
       if (attr == NULL)
