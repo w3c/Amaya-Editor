@@ -156,13 +156,14 @@ Rule5 =           'MarginTop' ':' MarginWidth /
                   'BorderBottomStyle' ':' BorderStyle /
                   'BorderLeftStyle' ':' BorderStyle .
 
-MarginWidth =     'Enclosing' '=' / Distance .	{ add 'auto' }
-PaddingWidth =    'Enclosing' '=' / Distance .
-BorderWidth =     'Enclosing' '=' / 'Thin' / 'Medium' / 'Thick' / Distance .
-BorderColor =     'Enclosing' '=' / ColorName .	{ add 'Transparent' }
-BorderStyle =     'Enclosing' '=' /
+MarginWidth =     InheritParent / Distance .	{ add 'auto' }
+PaddingWidth =    InheritParent / Distance .
+BorderWidth =     InheritParent / 'Thin' / 'Medium' / 'Thick' / Distance .
+BorderColor =     InheritParent / ColorName .	{ add 'Transparent' }
+BorderStyle =     InheritParent /
                   'None' / 'Hidden' / 'Dotted' / 'Dashed' / 'Solid' /
                   'Double' / 'Groove' / 'Ridge' / 'Inset' / 'Outset' .
+InheritParent =   'Enclosing' '=' .
 ColorName =       NAME .
 
 FileName =	  STRING .

@@ -1280,10 +1280,7 @@ SyntacticCode       gCode;
 		   gCode == RULE_BoolInherit || gCode == RULE_InheritDist ||
 		   gCode == RULE_InheritSize || gCode == RULE_AdjustInherit ||
 		   gCode == RULE_LineStyleInherit ||
-		   gCode == RULE_StyleInherit ||
-                   gCode == RULE_MarginWidth || gCode == RULE_PaddingWidth ||
-		   gCode == RULE_BorderWidth || gCode == RULE_BorderColor ||
-		   gCode == RULE_BorderStyle)
+		   gCode == RULE_StyleInherit || gCode == RULE_InheritParent)
 		  /* PresInherit */
 		 {
 		    CurRule->PrInhPercent = False;
