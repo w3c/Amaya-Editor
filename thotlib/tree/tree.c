@@ -882,112 +882,116 @@ void InsertElemAfterLastSibling (PtrElement pOld, PtrElement pNew)
    pSourceDoc into the target element pEl2 belonging to document pTargetDoc.
    If Check is TRUE, check that the target document uses the structure
    schemas that define the attributes to be copied.
+   If copyRef is FALSE reference attributes are not copied.
   ----------------------------------------------------------------------*/
 static void CopyAttributes (PtrElement pEl1, PtrElement pEl2,
 			    PtrDocument pSourceDoc, PtrDocument pTargetDoc,
-			    ThotBool Check)
+			    ThotBool Check, ThotBool copyRef)
 {
-   PtrAttribute        pAttr1, pAttr2, pPrevAttr;
-   PtrReference        rf;
-   PtrReference        pPr;
-   int                 len, nR;
-   ThotBool            ok;
+  PtrAttribute        pAttr1, pAttr2, pPrevAttr;
+  PtrReference        rf;
+  PtrReference        pPr;
+  int                 len, nR;
+  ThotBool            ok;
 
-   /* no attributes (yet) on the copy */
-   pEl2->ElFirstAttr = NULL;	
-   if (pEl1->ElFirstAttr != NULL)
-      /* there are some attributes on the source element, so let's copy them */
-      {
+  /* no attributes (yet) on the copy */
+  pEl2->ElFirstAttr = NULL;	
+  if (pEl1->ElFirstAttr != NULL)
+    /* there are some attributes on the source element, so let's copy them */
+    {
       pAttr1 = pEl1->ElFirstAttr;	/* attribute to copy */
       pPrevAttr = NULL;	/* last attribute of the target */
       pAttr2 = NULL;
       /* fill and link all copied elements */
       do
-	 {
-	 if (pAttr2 == NULL)
-	   /* gets an attribute block for the target */
-	   GetAttribute (&pAttr2);	
-	 /* copies the attribute */
-	 *pAttr2 = *pAttr1;	
-	 if (pAttr2->AeAttrType == AtTextAttr)
-	   /* it's a text attribute and it does not yet have a buffer */
-	   pAttr2->AeAttrText = NULL;
-	 pAttr2->AeNext = NULL;
-	 ok = TRUE;
-	 if (Check && pSourceDoc != pTargetDoc)
-	   /* check that the structure schema defining the attribute is
-	      known in the target document */
-           if (!GetSSchemaForDoc (pAttr1->AeAttrSSchema->SsName, pTargetDoc))
-	     {
-	       nR = CreateNature (pAttr1->AeAttrSSchema->SsName, NULL,
-				  pTargetDoc->DocSSchema, pTargetDoc);
-	       if (nR == 0)
-		 /* can't create the schema for the target document. Don't
-		    copy this attribute */
-		 ok = FALSE;
-	       else
-		 {
-		   /* schema loaded. Change the structure schema of the copy */
-		   pAttr2->AeAttrSSchema = pTargetDoc->DocSSchema->
-		                          SsRule->SrElem[nR - 1]->SrSSchemaNat;
-		   AddSchemaGuestViews (pTargetDoc, pAttr2->AeAttrSSchema);
-		 }
-	    }
-	 if (ok)
-	    {
-	    if (pAttr1->AeAttrType == AtReferenceAttr)
-	       /* it's a reference attribute, we copy the reference */
-	       {
-	       if (pAttr1->AeAttrReference == NULL)
-	          pAttr2->AeAttrReference = NULL;
-	       else
+	{
+	if (copyRef || pAttr1->AeAttrType != AtReferenceAttr)
+	  {
+	  if (pAttr2 == NULL)
+	    /* gets an attribute block for the target */
+	    GetAttribute (&pAttr2);	
+	  /* copies the attribute */
+	  *pAttr2 = *pAttr1;	
+	  if (pAttr2->AeAttrType == AtTextAttr)
+	    /* it's a text attribute and it does not yet have a buffer */
+	    pAttr2->AeAttrText = NULL;
+	  pAttr2->AeNext = NULL;
+	  ok = TRUE;
+	  if (Check && pSourceDoc != pTargetDoc)
+	    /* check that the structure schema defining the attribute is
+	       known in the target document */
+	    if (!GetSSchemaForDoc (pAttr1->AeAttrSSchema->SsName, pTargetDoc))
+	      {
+		nR = CreateNature (pAttr1->AeAttrSSchema->SsName, NULL,
+				   pTargetDoc->DocSSchema, pTargetDoc);
+		if (nR == 0)
+		  /* can't create the schema for the target document. Don't
+		     copy this attribute */
+		  ok = FALSE;
+		else
 		  {
-	          /* gets a reference */
-	          GetReference (&rf);		
-		  pAttr2->AeAttrReference = rf;
-		  /* fills the new reference */
-		  pPr = pAttr2->AeAttrReference;
-		  pPr->RdElement = pEl2;
-		  pPr->RdAttribute = pAttr2;
-		  pPr->RdReferred = pAttr1->AeAttrReference->RdReferred;
-		  pPr->RdTypeRef = pAttr1->AeAttrReference->RdTypeRef;
-		  pPr->RdInternalRef = pAttr1->AeAttrReference->RdInternalRef;
-		  if (pPr->RdReferred != NULL)
-		     /* puts the new reference at the head of the link */
-		     {
-		     pPr->RdNext = pPr->RdReferred->ReFirstReference;
-		     if (pPr->RdNext != NULL)
-		        pPr->RdNext->RdPrevious = rf;
-		     pPr->RdReferred->ReFirstReference = rf;
-		     }
+		    /* schema loaded. Change the structure schema of the copy*/
+		    pAttr2->AeAttrSSchema = pTargetDoc->DocSSchema->
+		      SsRule->SrElem[nR - 1]->SrSSchemaNat;
+		    AddSchemaGuestViews (pTargetDoc, pAttr2->AeAttrSSchema);
 		  }
-	       }
-	    else if (pAttr2->AeAttrType == AtTextAttr)
-	       /* it's a text attribute, we attach a text buffer to it */
-	       /* where we'll copy the context */
-	       if (pAttr1->AeAttrText != NULL)
+	      }
+	  if (ok)
+	    {
+	      if (pAttr1->AeAttrType == AtReferenceAttr)
+		/* it's a reference attribute, we copy the reference */
+		{
+		  if (pAttr1->AeAttrReference == NULL)
+		    pAttr2->AeAttrReference = NULL;
+		  else
+		    {
+		      /* gets a reference */
+		      GetReference (&rf);		
+		      pAttr2->AeAttrReference = rf;
+		      /* fills the new reference */
+		      pPr = pAttr2->AeAttrReference;
+		      pPr->RdElement = pEl2;
+		      pPr->RdAttribute = pAttr2;
+		      pPr->RdReferred = pAttr1->AeAttrReference->RdReferred;
+		      pPr->RdTypeRef = pAttr1->AeAttrReference->RdTypeRef;
+		      pPr->RdInternalRef = pAttr1->AeAttrReference->RdInternalRef;
+		      if (pPr->RdReferred != NULL)
+			/* puts the new reference at the head of the link */
+			{
+			  pPr->RdNext = pPr->RdReferred->ReFirstReference;
+			  if (pPr->RdNext != NULL)
+			    pPr->RdNext->RdPrevious = rf;
+			  pPr->RdReferred->ReFirstReference = rf;
+			}
+		    }
+		}
+	      else if (pAttr2->AeAttrType == AtTextAttr)
+		/* it's a text attribute, we attach a text buffer to it */
+		/* where we'll copy the context */
+		if (pAttr1->AeAttrText != NULL)
 	          {
-	          GetTextBuffer (&pAttr2->AeAttrText);
-		  CopyTextToText (pAttr1->AeAttrText, pAttr2->AeAttrText,&len);
+		    GetTextBuffer (&pAttr2->AeAttrText);
+		    CopyTextToText (pAttr1->AeAttrText, pAttr2->AeAttrText,
+				    &len);
 		  }
-	    /* links the attribute to the target */
-	    if (pPrevAttr == NULL)
-	       /* first attribute of the target */
-	       pEl2->ElFirstAttr = pAttr2;
-	    else
-	       pPrevAttr->AeNext = pAttr2;
-	    pPrevAttr = pAttr2;
-	    pAttr2 = NULL;
+	      /* links the attribute to the target */
+	      if (pPrevAttr == NULL)
+		/* first attribute of the target */
+		pEl2->ElFirstAttr = pAttr2;
+	      else
+		pPrevAttr->AeNext = pAttr2;
+	      pPrevAttr = pAttr2;
+	      pAttr2 = NULL;
 	    }
-	 /* continues with the next attribute of the source */
-	 pAttr1 = pAttr1->AeNext;
-	 }
+	  }
+	/* continues with the next attribute of the source */
+	pAttr1 = pAttr1->AeNext;
+	}
       while (pAttr1 != NULL);
       if (pAttr2 != NULL)
 	FreeAttribute (pAttr2);
-      }
+    }
 }
-
 
 /*----------------------------------------------------------------------
   CopyPresRules
@@ -3088,11 +3092,13 @@ void DeleteElement (PtrElement *pEl, PtrDocument pDoc)
    referenced element descriptor with the source.
    If deepCopy the whole subtree is copied, otherwise only the pSource
    element is copied.
+   If copyRef, all reference attributes are copied. If copyRef is FALSE,
+   reference attributes are NOT copied.
   ----------------------------------------------------------------------*/
 PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		     PtrSSchema pSSchema, PtrDocument pDocCopy,
 		     PtrElement pParent, ThotBool checkAttr, ThotBool shareRef,
-		     ThotBool keepAccess, ThotBool deepCopy)
+		     ThotBool keepAccess, ThotBool deepCopy, ThotBool copyRef)
 {
   PtrElement          pEl, pS2, pC1, pC2;
   PtrReference        rf;
@@ -3227,7 +3233,8 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 	      pEl->ElStructSchema = pSSchema;
 	      pEl->ElTypeNumber = copyType;
 	      /* copies the attributes */
-	      CopyAttributes (pSource, pEl, pDocSource, pDocCopy, checkAttr);
+	      CopyAttributes (pSource, pEl, pDocSource, pDocCopy, checkAttr,
+			      copyRef);
 	      /* copies the specific presentation rules */
 	      CopyPresRules (pSource, pEl);	
 	      if (shareRef)
@@ -3342,7 +3349,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		    {
 		      pC2 = CopyTree (pS2, pDocSource, pSSchema, pDocCopy,
 				      pEl, checkAttr, shareRef, keepAccess,
-				      deepCopy);
+				      deepCopy, copyRef);
 		      if (pC2)
 			{
 			  if (pC1 == NULL)
@@ -3442,7 +3449,7 @@ void CopyIncludedElem (PtrElement pEl, PtrDocument pDoc)
 		copy it's content */
 	     {
 	       /* we copy the attributes */
-	       CopyAttributes (pSource, pEl, pDocSource, pDoc, TRUE);
+	       CopyAttributes (pSource, pEl, pDocSource, pDoc, TRUE, TRUE);
 	       /* we copy the specific presentation rules */
 	       CopyPresRules (pSource, pEl);
 	       if (pEl->ElTerminal)
@@ -3523,7 +3530,7 @@ void CopyIncludedElem (PtrElement pEl, PtrDocument pDoc)
 				  pSource->ElStructSchema->SsName)))
 		 {
 		   pC1 = CopyTree (pSource, pDocSource, pEl->ElStructSchema,
-				   pDoc, pEl, TRUE, TRUE, FALSE, TRUE);
+				   pDoc, pEl, TRUE, TRUE, FALSE, TRUE, TRUE);
 		   if (pC1 != NULL)
 		     {
 		       pC1->ElReferredDescr = NULL;
@@ -3539,7 +3546,8 @@ void CopyIncludedElem (PtrElement pEl, PtrDocument pDoc)
 		   do
 		     {
 		       pC2 = CopyTree (pS2, pDocSource, pEl->ElStructSchema,
-				       pDoc, pEl, TRUE, TRUE, FALSE, TRUE);
+				       pDoc, pEl, TRUE, TRUE, FALSE, TRUE,
+				       TRUE);
 		       if (pC2 != NULL)
 			 {
 			   if (pC1 == NULL)
@@ -3581,7 +3589,7 @@ PtrElement          ReplicateElement (PtrElement pEl, PtrDocument pDoc)
    ConvertIntToLabel (NewLabel (pDoc), pNew->ElLabel);
    /* copies the attributes without verifying because we don't change 
       the structure  scheme */
-   CopyAttributes (pEl, pNew, pDoc, pDoc, FALSE);
+   CopyAttributes (pEl, pNew, pDoc, pDoc, FALSE, TRUE);
    /* copies the specific presentation rules */
    CopyPresRules (pEl, pNew);
    pNew->ElPrevious = NULL;

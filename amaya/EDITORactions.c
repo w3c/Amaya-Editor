@@ -2138,7 +2138,7 @@ void CellVertExtend (Document doc, View view)
   int           span, nextSpan, newSpan, i;
   char          name[50];
   Document      refdoc;
-  ThotBool      inMath, newAttr;
+  ThotBool      inMath;
 
   cell = GetEnclosingCell (doc);
   if (cell)
@@ -2197,6 +2197,7 @@ void CellVertExtend (Document doc, View view)
 	    attrType.AttrTypeNum = MathML_ATTR_rowspan_;
 	  else
 	    attrType.AttrTypeNum = HTML_ATTR_rowspan_;
+
           attr = TtaGetAttribute (nextCell, attrType);
 	  if (attr)
 	    {
@@ -2206,37 +2207,46 @@ void CellVertExtend (Document doc, View view)
 	    }
           else
 	    nextSpan = 1;
+
 	  attr = TtaGetAttribute (cell, attrType);
 	  if (attr)
 	    {
-	      newAttr = FALSE;
 	      span = TtaGetAttributeValue (attr);
 	      if (span < 1)
 		span = 1;
 	    }
 	  else
-	    {
 	      span = 1;
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (cell, attr, doc);
-	      newAttr = TRUE;
-	    }
 	  if (nextSpan == 0)
+	    /* "infinite" spanning */
 	    newSpan = 0;
 	  else
 	    newSpan = span + nextSpan;
 	  /* merge the following cell(s) with the current cell */
-	  ChangeRowspan (cell, span, newSpan, doc);
+	  ChangeRowspan (cell, span, &newSpan, doc);
 	  /* set and register the new value of attribute rowspan */
-	  if (newAttr)
+	  if (!attr)
 	    {
-	      TtaSetAttributeValue (attr, newSpan, cell, doc);
-	      TtaRegisterAttributeCreate (attr, cell, doc);
+	      if (newSpan != 1)
+		{
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (cell, attr, doc);
+		  TtaSetAttributeValue (attr, newSpan, cell, doc);
+		  TtaRegisterAttributeCreate (attr, cell, doc);
+		}
 	    }
 	  else
 	    {
-	      TtaRegisterAttributeReplace (attr, cell, doc);
-	      TtaSetAttributeValue (attr, newSpan, cell, doc);
+	      if (newSpan == 1)
+		{
+		  TtaRegisterAttributeDelete (attr, cell, doc);
+		  TtaRemoveAttribute (cell, attr, doc);
+		}
+	      else
+		{
+		  TtaRegisterAttributeReplace (attr, cell, doc);
+		  TtaSetAttributeValue (attr, newSpan, cell, doc);
+		}
 	    }
 	  SetRowExt (cell, newSpan, doc, inMath);
 	  TtaCloseUndoSequence (doc);
@@ -2259,7 +2269,7 @@ void CellHorizExtend (Document doc, View view)
   int           span, nextSpan, newSpan, i;
   char          name[50];
   Document      refdoc;
-  ThotBool      inMath, newAttr;
+  ThotBool      inMath;
 
   cell = GetEnclosingCell (doc);
   if (cell)
@@ -2329,35 +2339,41 @@ void CellHorizExtend (Document doc, View view)
 	    }
           else
 	    nextSpan = 1;
-	  if (colspanAttr)
-	    newAttr = FALSE;
-	  else
-	    {
-	      colspanAttr = TtaNewAttribute (colspanType);
-	      TtaAttachAttribute (cell, colspanAttr, doc);
-	      newAttr = TRUE;
-	    }
+
 	  if (nextSpan == 0)
 	    /* "infinite" spanning */
 	    newSpan = 0;
 	  else
 	    newSpan = span + nextSpan;
 	  /* merge the following cell(s) with the current cell */
-	  ChangeColspan (cell, span, newSpan, doc);
+	  ChangeColspan (cell, span, &newSpan, doc);
 	  SetColExt (cell, newSpan, doc, inMath, FALSE);
           /* we set and register the new value of attribute colspan after
 	     cells have actually merged. That way, when undoing the command,
              merged cells will be recreated and linked to their column with
 	     the right (old) value of the attribute */
-	  if (newAttr)
+	  if (!colspanAttr)
 	    {
-	      TtaSetAttributeValue (colspanAttr, newSpan, cell, doc);
-	      TtaRegisterAttributeCreate (colspanAttr, cell, doc);
+	      if (newSpan != 1)
+		{
+		  colspanAttr = TtaNewAttribute (colspanType);
+		  TtaAttachAttribute (cell, colspanAttr, doc);
+		  TtaSetAttributeValue (colspanAttr, newSpan, cell, doc);
+		  TtaRegisterAttributeCreate (colspanAttr, cell, doc);
+		}
 	    }
 	  else
 	    {
-	      TtaRegisterAttributeReplace (colspanAttr, cell, doc);
-	      TtaSetAttributeValue (colspanAttr, newSpan, cell, doc);
+	      if (newSpan == 1)
+		{
+		  TtaRegisterAttributeDelete (colspanAttr, cell, doc);
+		  TtaRemoveAttribute (cell, colspanAttr, doc);
+		}
+	      else
+		{
+		  TtaRegisterAttributeReplace (colspanAttr, cell, doc);
+		  TtaSetAttributeValue (colspanAttr, newSpan, cell, doc);
+		}
 	    }
 	  TtaCloseUndoSequence (doc);
 	  TtaSetDocumentModified (doc);
@@ -2374,7 +2390,7 @@ void CellVertShrink (Document doc, View view)
   ElementType   elType;
   Attribute     attr;
   AttributeType attrType;
-  int           span;
+  int           span, newSpan;
   ThotBool      inMath;
 
   cell = GetEnclosingCell (doc);
@@ -2396,7 +2412,8 @@ void CellVertShrink (Document doc, View view)
 	    span = GetActualRowspan (cell, inMath);
 	  if (span >= 2)
 	    {
-	      if (span == 2)
+	      newSpan = span - 1;
+	      if (newSpan == 1)
 		{
 		  TtaRegisterAttributeDelete (attr, cell, doc);
 		  TtaRemoveAttribute (cell, attr, doc);
@@ -2404,10 +2421,10 @@ void CellVertShrink (Document doc, View view)
 	      else
 		{
 		  TtaRegisterAttributeReplace (attr, cell, doc);
-		  TtaSetAttributeValue (attr, span-1, cell, doc);
+		  TtaSetAttributeValue (attr, newSpan, cell, doc);
 		}
-	      ChangeRowspan (cell, span, span-1, doc);
-	      SetRowExt (cell, span-1, doc, inMath);
+	      ChangeRowspan (cell, span, &newSpan, doc);
+	      SetRowExt (cell, newSpan, doc, inMath);
 	      TtaCloseUndoSequence (doc);
 	      TtaSetDocumentModified (doc);
 	    }
@@ -2424,7 +2441,7 @@ void CellHorizShrink (Document doc, View view)
   ElementType   elType;
   Attribute     attr;
   AttributeType attrType;
-  int           span;
+  int           span, newSpan;
   ThotBool      inMath;
 
   cell = GetEnclosingCell (doc);
@@ -2445,8 +2462,9 @@ void CellHorizShrink (Document doc, View view)
 	  if (span == 0)
 	    span = GetActualColspan (cell, inMath);
 	  if (span >= 2)
-	    {   
-	      if (span == 2)
+	    {
+	      newSpan = span - 1;
+	      if (newSpan == 1)
 		{
 		  TtaRegisterAttributeDelete (attr, cell, doc);
 		  TtaRemoveAttribute (cell, attr, doc);
@@ -2454,10 +2472,10 @@ void CellHorizShrink (Document doc, View view)
 	      else
 		{
 		  TtaRegisterAttributeReplace (attr, cell, doc);
-		  TtaSetAttributeValue (attr, span-1, cell, doc);
+		  TtaSetAttributeValue (attr, newSpan, cell, doc);
 		}
-	      ChangeColspan (cell, span, span-1, doc);
-	      SetColExt (cell, span-1, doc, inMath, FALSE);
+	      ChangeColspan (cell, span, &newSpan, doc);
+	      SetColExt (cell, newSpan, doc, inMath, FALSE);
 	      TtaCloseUndoSequence (doc);
 	      TtaSetDocumentModified (doc);
 	    }

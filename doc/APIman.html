@@ -10,11 +10,11 @@
 
 <body>
 <pre><em>ThotLib V3</em></pre>
-<pre>Date: 28 May, 2001</pre>
+<pre>Date: 3 February, 2004</pre>
 
 <h1>The Thot Tool Kit API</h1>
 <address>
-  Vincent QUINT, Irène VATTON - W3C/INRIA
+  Vincent QUINT, Irène VATTON - W3C/INRIA 
 </address>
 <hr>
 
@@ -333,17 +333,17 @@ integer which is the number of the element type or attribute type in that
 structure schema. Structure ElementType is defined in file
 <em>tree.h</em>:</p>
 <pre>typedef struct _ElementType
-    {
-    SSchema ElSSchema;
-    int ElTypeNum;
-    } ElementType;</pre>
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;SSchema ElSSchema;
+&nbsp;&nbsp;&nbsp; int ElTypeNum;
+&nbsp;&nbsp;&nbsp;&nbsp;} ElementType;</pre>
 
 <p>Structure AttributeType is defined in file <em>attribute.h</em>:</p>
 <pre>typedef struct _AttributeType
-    {
-    SSchema AttrSSchema;
-    int AttrTypeNum;
-    } AttributeType;</pre>
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;SSchema AttrSSchema;
+&nbsp;&nbsp;&nbsp;&nbsp;int AttrTypeNum;
+&nbsp;&nbsp;&nbsp;&nbsp;} AttributeType;</pre>
 
 <p>In addition some integers are used for exchanging parameters between the
 application program and the tool kit. Available parameters with their
@@ -388,7 +388,7 @@ these functions.</p>
 must be called before any other function of the tool kit.</p>
 <hr>
 
-<p>void   TtaInitialize(char *applicationName)</p>
+<p>void &nbsp;&nbsp;TtaInitialize(char *applicationName)</p>
 <hr>
 <dl>
   <dt>Parameter:</dt>
@@ -503,7 +503,7 @@ module that calls them.</p>
 name="L677"></a>TtaGetMemory.</p>
 <hr>
 
-<p>void  TtaFreeMemory(char *buffer)</p>
+<p>void &nbsp;TtaFreeMemory(char *buffer)</p>
 <hr>
 <dl>
   <dt>Parameter:</dt>
@@ -719,7 +719,7 @@ overwrite)</p>
   <dt>Parameters:</dt>
     <dd><em>name</em>: name of the entry.
       <p><em>value</em>: value associated to the entry.</p>
-      <p><em>overwrite</em>: should we overwrite an existing entry ?</p>
+      <p><em>overwrite</em>: should we overwrite an existing entry&nbsp;?</p>
     </dd>
 </dl>
 </div>
@@ -739,7 +739,7 @@ overwrite)</p>
   <dt>Parameters:</dt>
     <dd><em>name</em>: name of the entry.
       <p><em>value</em>: value associated to the entry.</p>
-      <p><em>overwrite</em>: should we overwrite an existing entry ?</p>
+      <p><em>overwrite</em>: should we overwrite an existing entry&nbsp;?</p>
     </dd>
 </dl>
 </div>
@@ -757,7 +757,7 @@ overwrite)</p>
   <dt>Parameters:</dt>
     <dd><em>name</em>: name of the entry.
       <p><em>value</em>: value associated to the entry.</p>
-      <p><em>overwrite</em>: should we overwrite an existing entry ?</p>
+      <p><em>overwrite</em>: should we overwrite an existing entry&nbsp;?</p>
     </dd>
 </dl>
 </div>
@@ -776,7 +776,7 @@ overwrite)</p>
   <dt>Parameters:</dt>
     <dd><em>name</em>: name of the entry.
       <p><em>value</em>: value associated to the entry.</p>
-      <p><em>overwrite</em>: should we overwrite an existing entry ?</p>
+      <p><em>overwrite</em>: should we overwrite an existing entry&nbsp;?</p>
     </dd>
 </dl>
 </div>
@@ -872,8 +872,8 @@ this function more than one time with different
 event concerning these specific dialogue items. It receives three parameters:
 the dialogue item reference, the data type, and the data value:</p>
 <pre>void callbakProcedure(reference, datatype, data)
-     int reference;
-     int datatype;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int reference;
+&nbsp;&nbsp;&nbsp;  int datatype;
      char *data;</pre>
 <hr>
 
@@ -898,7 +898,7 @@ the dialogue item reference, the data type, and the data value:</p>
 
 <p>This function manages all Thot and Motif pending events. The application
 have to call this function to allow user's interactions and display
-updates to be managed during long treatments.</p>
+updates&nbsp;to be managed during long treatments.</p>
 <hr>
 
 <p>void TtaHandlePendingEvents()</p>
@@ -1280,13 +1280,17 @@ the en-applicationTXT gives the English version of messages text:</p>
 <table border="0">
   <tbody>
     <tr>
-      <td width="50%"><p>#define APP_start              0</p>
+      <td width="50%"><p>#define
+        APP_start&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        0</p>
 
-        <p>#define APP_abort             1</p>
+        <p>#define
+        APP_abort&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1</p>
 
-        <p>#define APP_no_file          2</p>
+        <p>#define
+        APP_no_file&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2</p>
 
-        <p>#define APP_complete      3</p>
+        <p>#define APP_complete&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3</p>
 
         <p>#define APP_MSG_MAX 4</p>
 
@@ -1654,8 +1658,8 @@ char *text, ThotBool horizontal, int packet, char button, int dbutton)</p>
 <p>This function creates a dialog sheet element attached to the ThotWidget
 parent. When the parent ThotWidget is distroyed, the ThotWidget that realizes
 this sheet is automatically destroyed. Usually the parent is the document
-view frame returned by the API function  TtaGetViewFrame (document, view) 
-and the sheet has to be destroyed before closing the document view.</p>
+view frame returned by the API function  TtaGetViewFrame (document, view) and
+the sheet has to be destroyed before closing the document view.</p>
 
 <p>A dialog sheet is similar to a sheet element, but no "cancel/done" button
 is automatically generated.</p>
@@ -2661,8 +2665,8 @@ user will not be asked to save the document when closing it.</p>
 <p>void TtaSetDocumentUnmodified(Document document)</p>
 <hr>
 <dl>
-  <dt>Parameter :</dt>
-    <dd><p><em>document</em> : the document.</p>
+  <dt>Parameter&nbsp;:</dt>
+    <dd><p><em>document</em>&nbsp;: the document.</p>
     </dd>
 </dl>
 </div>
@@ -2678,8 +2682,8 @@ any change will be made on the document (see TtaIsDocumentUpdated).</p>
 <p>void TtaSetDocumentUnupdated(Document document)</p>
 <hr>
 <dl>
-  <dt>Parameter :</dt>
-    <dd><p><em>document</em> : the document.</p>
+  <dt>Parameter&nbsp;:</dt>
+    <dd><p><em>document</em>&nbsp;: the document.</p>
     </dd>
 </dl>
 </div>
@@ -2698,10 +2702,10 @@ document.</p>
 <p>SSchema TtaGetSchemaExtension(Document document, char *ExtensionName)</p>
 <hr>
 <dl>
-  <dt>Parameter :</dt>
-    <dd><p><em>document</em> : the document for which the extension structure
-      schema is asked.</p>
-      <p><em>ExtensionName</em> : the extension name.</p>
+  <dt>Parameter&nbsp;:</dt>
+    <dd><p><em>document</em>&nbsp;: the document for which the extension
+      structure schema is asked.</p>
+      <p><em>ExtensionName</em>&nbsp;: the extension name.</p>
     </dd>
 </dl>
 </div>
@@ -3175,7 +3179,7 @@ be included in the module that calls them.</p>
       number does not appear explicitly in a structure schema: it is
       generated by the schema compiler. For obtaining all type numbers of a
       structure schema, use the command:<br>
-      <em>       printsch -h SchemaName<br>
+      <em> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printsch -h SchemaName<br>
       </em>which lists on the standard output a file that can be included
       into a C program. This file also contains all attribute numbers of the
       schema</dd>
@@ -5086,7 +5090,7 @@ href="#secta4">4</a>, an attribute type contains an attribute number, but
 this number does not appear explicitly in a structure schema: it is generated
 by the schema compiler. For obtaining all attribute numbers of a structure
 schema, use the command:<br>
-<em>       printsch -h SchemaName<br>
+<em> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printsch -h SchemaName<br>
 </em>which lists on the standard output a file that can be included into a C
 program.</p>
 
@@ -5869,7 +5873,29 @@ char *targetDocumentName, Document *targetDocument)</p>
 </div>
 
 <div class="Section">
-<h4><a name="sectc1426">14.2.6</a> TtaSameReferenceAttributes</h4>
+<h4><a name="sectc1426">14.2.6</a> TtaGetFirstReferringAttribute</h4>
+<a name="L5902"></a>
+
+<p>Return the first element that refers to the given element through
+an attribute of type attrType</p>
+<hr>
+
+<p>Element TtaGetFirstReferringAttribute (Element element, AttributeType attrType)</p>
+<hr>
+<dl>
+  <dt>Parameter:</dt>
+    <dd><em>element</em>: the element of interest</dd>
+    <dd><em>attrType</em>: type of the reference attribute considered</dd>
+</dl>
+<dl>
+  <dt>Return value:</dt>
+    <dd>the referring element if it exists, NULL if element is not referred
+      by this type of attribute.</dd>
+</dl>
+</div>
+
+<div class="Section">
+<h4><a name="sectc1427">14.2.7</a> TtaSameReferenceAttributes</h4>
 <a name="L5933"></a>
 
 <p>Compares two reference attributes.</p>
@@ -6011,14 +6037,14 @@ information may be associated to a language, such as a dictionary (for
 hyphenation or spelling checking). A language is identified by an identifier
 of type <em>Language</em>.</p>
 
-<p>There are five predefined languages, whose names are : ISO_latin_1,
+<p>There are five predefined languages, whose names are&nbsp;: ISO_latin_1,
 Français, English, Symbol and Greek. ``Languages'' ISO_latin_1 and Symbol are
 not natural languages in the same sense as Français, English or Greek. They
-are used when a character string must be written in the corresponding
-script, but is not candidate to such linguistic processing as word
-hyphenation or spelling checking. For instance, a piece of C program should
-be considered as written in the language ISO_latin_1; a mathematical symbol
-such as Ï or ¥ should be considered as written in the language Symbol.</p>
+are used when a character string must be written in the corresponding script,
+but is not candidate to such linguistic processing as word hyphenation or
+spelling checking. For instance, a piece of C program should be considered as
+written in the language ISO_latin_1; a mathematical symbol such as Ï or ¥
+should be considered as written in the language Symbol.</p>
 
 <p>Other predefined languages, called <em>typographic languages</em>, are
 used by a typographic checker (acronym, short, expo). The tool kit maintains
@@ -6212,16 +6238,15 @@ that matches this language name..</p>
 <h4><a name="sectc1523">15.2.3</a> TtaGetLanguageIdFromScript</h4>
 <a name="L6340"></a>
 
-<p>Returns the identifier of the first language that uses a given
-script.</p>
+<p>Returns the identifier of the first language that uses a given script.</p>
 <hr>
 
 <p>Language TtaGetLanguageIdFromScript(char *languageScript)</p>
 <hr>
 <dl>
   <dt>Parameter:</dt>
-    <dd><em>languageScript</em>: the script of interest (`L' = latin, `G'
-      = greek).</dd>
+    <dd><em>languageScript</em>: the script of interest (`L' = latin, `G' =
+      greek).</dd>
 </dl>
 <dl>
   <dt>Return value:</dt>
@@ -6963,9 +6988,9 @@ Thot Editor library.</p>
 <p>These functions allow the application to define either generic style or
 specific style. Generic style is stored in an extended presentation schema
 attached to the document and specific style is attached to elements. The
-application needs to create a generic context to set, get or update a 
-generic style rule  and  needs to create a specific context to set, get or
-update a specific style rule.</p>
+application needs to create a generic context to set, get or update a generic
+style rule  and  needs to create a specific context to set, get or update a
+specific style rule.</p>
 
 <div class="Section">
 <h3><a name="sectb171">17.1</a> Constructors</h3>

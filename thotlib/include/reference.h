@@ -191,6 +191,21 @@ extern void TtaGiveReferenceAttributeValue (Attribute attribute,
 extern int TtaIsElementReferred (Element element);
 
 /*----------------------------------------------------------------------
+   TtaGetFirstReferringAttribute
+
+   Return the first element that refers to the given element through
+   an attribute of type attrType.
+   Parameter:
+   element: the element of interest
+   attrType: type of the reference attribute considered
+   Return value:
+   the referring element if it exists, NULL if element is not referred
+   by this type of attribute.
+  ----------------------------------------------------------------------*/
+extern Element TtaGetFirstReferringAttribute (Element element,
+					      AttributeType attrType);
+
+/*----------------------------------------------------------------------
    TtaSameReferenceAttributes
 
    Compares two reference attributes.

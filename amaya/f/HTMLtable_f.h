@@ -66,7 +66,7 @@ extern int GetActualColspan ( Element cell,
                               ThotBool inMath );
 extern void ChangeColspan ( Element cell,
                             int oldspan,
-                            int newspan,
+                            int* newspan,
                             Document doc );
 extern void ColspanCreated ( NotifyAttribute * event );
 extern ThotBool RegisterColspan ( NotifyAttribute * event );
@@ -78,7 +78,7 @@ extern int GetActualRowspan ( Element cell,
                               ThotBool inMath );
 extern void ChangeRowspan ( Element cell,
                             int oldspan,
-                            int newspan,
+                            int* newspan,
                             Document doc );
 extern void RowspanCreated ( NotifyAttribute * event );
 extern ThotBool RegisterRowspan ( NotifyAttribute * event );
@@ -147,7 +147,7 @@ extern int GetActualColspan ( Element cell,
                                 ThotBool inMath );
 extern void ChangeColspan ( Element cell,
                               int oldspan,
-                              int newspan,
+                              int* newspan,
                               Document doc );
 extern void ColspanCreated ( NotifyAttribute * event );
 extern ThotBool RegisterColspan ( NotifyAttribute * event );
@@ -159,7 +159,7 @@ extern int GetActualRowspan ( Element cell,
                                 ThotBool inMath );
 extern void ChangeRowspan ( Element cell,
                               int oldspan,
-                              int newspan,
+                              int* newspan,
                               Document doc );
 extern void RowspanCreated ( NotifyAttribute * event );
 extern ThotBool RegisterRowspan ( NotifyAttribute * event );

@@ -681,10 +681,62 @@ int TtaIsElementReferred (Element element)
 	   /* The element has a referenced element descriptor */
 	   if (((PtrElement) element)->ElReferredDescr->ReFirstReference != NULL ||
 	       ((PtrElement) element)->ElReferredDescr->ReExtDocRef != NULL)
-	      /* The element is well referenced */
+	      /* The element is referenced */
 	      result = 1;
      }
    return result;
+}
+
+/*----------------------------------------------------------------------
+   TtaGetFirstReferringAttribute
+
+   Return the first element that refers to the given element through
+   an attribute of type attrType.
+   Parameter:
+   element: the element of interest
+   attrType: type of the reference attribute considered
+   Return value:
+   the referring element if it exists, NULL if element is not referred
+   by this type of attribute.
+  ----------------------------------------------------------------------*/
+Element TtaGetFirstReferringAttribute (Element element, AttributeType attrType)
+{
+  PtrElement      referringEl;
+  PtrReference    ref;
+
+  UserErrorCode = 0;
+  referringEl = NULL;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (attrType.AttrSSchema == NULL)
+    TtaError (ERR_invalid_attribute_type);
+  else if (attrType.AttrTypeNum < 1 ||
+	   attrType.AttrTypeNum > ((PtrSSchema)(attrType.AttrSSchema))->SsNAttributes)
+    TtaError (ERR_invalid_attribute_type);
+  else
+    /* parameters are OK */
+    {
+      if (((PtrElement) element)->ElReferredDescr)
+	/* The element has a referenced element descriptor */
+	{
+	  ref = ((PtrElement) element)->ElReferredDescr->ReFirstReference;
+	  /* check all references to this element */
+	  while (ref && !referringEl)
+	    {
+	      if (ref->RdAttribute)
+		/* this is a reference from an attribute. Check the attribute*/
+		{
+		  if (ref->RdAttribute->AeAttrSSchema == (PtrSSchema)(attrType.AttrSSchema) &&
+		      ref->RdAttribute->AeAttrNum == attrType.AttrTypeNum)
+		    /* that's the attribute we are looking for */
+		    referringEl = ref->RdElement;
+		}
+	      if (!referringEl)
+		ref = ref->RdNext;
+	    }
+	}
+    }
+  return ((Element) referringEl);
 }
 
 /*----------------------------------------------------------------------

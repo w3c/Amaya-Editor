@@ -927,8 +927,8 @@ void CopyCommand ()
 		pCopy = NULL;
 	      else
 		/* the application agrees, create a deep copy of the element */
-		pCopy = CopyTree (pEl, pSelDoc, pEl->ElStructSchema,
-				  pSelDoc, NULL, FALSE, TRUE, FALSE, TRUE);
+		pCopy = CopyTree (pEl, pSelDoc, pEl->ElStructSchema, pSelDoc,
+				  NULL, FALSE, TRUE, FALSE, TRUE, TRUE);
 	      if (pCopy)
 		/* store the copy into the list of saved elements */
 		{
