@@ -836,7 +836,13 @@ void                FetchImage (Document doc, Element el, char *URL, int flags, 
       else
 	imageName = URL;
 
-      if (imageName)
+      /* LC 3/7/01 */
+      /* Don't treat the  xlink:href attributes 
+	 that begins with the string  'data' */
+
+      if (imageName &&
+	  (strncmp (imageName, "data", 4) != 0) &&
+	  (strncmp (imageName, "DATA", 4) != 0))
 	{
 	  update = TRUE;
 	  /* add BASE to image name, if necessary */
