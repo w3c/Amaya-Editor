@@ -1,8 +1,7 @@
 
 /* 
-   des.c : gestion des designations de boites.
-   I. Vatton - Mars 85
-   IV : Juin 93 polylines
+   locate what is designated in Concret Image in unstructured mode.
+   I. Vatton
  */
 
 #include "libmsg.h"
@@ -33,13 +32,9 @@
 #include "changepresent_f.h"
 #include "boxselection_f.h"
 
-#ifdef WWW_MSWINDOWS		/* map to MSVC library system calls */
-#include <math.h>
-#endif /* WWW_MSWINDOWS */
-
 
 /* ---------------------------------------------------------------------- */
-/* |    DesBoite recherche recursivement le pave qui englobe le point   | */
+/* | GetClickedBox recherche recursivement le pave qui englobe le point | */
 /* |            designe' par x,y.                                       | */
 /* |            La fonction regarde toute l'arborescence des paves      | */
 /* |            pour trouver le premier pave de plus petite profondeur  | */
@@ -48,29 +43,29 @@
 /* |            le pave fils qui l'emporte.                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DesBoite (PtrBox * result, PtrAbstractBox pAb, int frame, int x, int y, int *pointselect)
+void                DesBoite (PtrBox * result, PtrAbstractBox pRootAb, int frame, int x, int y, int *pointselect)
 #else  /* __STDC__ */
-void                DesBoite (result, pAb, frame, x, y, pointselect)
+void                DesBoite (result, pRootAb, frame, x, y, pointselect)
 PtrBox           *result;
-PtrAbstractBox             pAb;
+PtrAbstractBox             pRootAb;
 int                 frame;
 int                 x;
 int                 y;
 int                *pointselect;
-
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pav;
-   PtrBox            sbox, pBox;
-   PtrBox            testbox;
-   int                 distmax;
+   PtrAbstractBox             pAb;
+   PtrBox            pSelBox, pBox;
+   PtrBox            pCurrentBox;
+   int                 dist;
    int                 pointIndex;
    ViewFrame            *pFrame;
    int                 d;
 
    pBox = NULL;
-   sbox = NULL;
-   distmax = 2000;		/* au-dela, on n'accepte pas la selection */
+   pSelBox = NULL;
+   /* au-dela, on n'accepte pas la selection */
+   dist = 2000;
    pFrame = &ViewFrameTable[frame - 1];
 
    if (pFrame->FrAbstractBox != NULL)
@@ -81,28 +76,28 @@ int                *pointselect;
 	pBox = pBox->BxNext;
 	while (pBox != NULL)
 	  {
-	     pav = pBox->BxAbstractBox;
+	     pAb = pBox->BxAbstractBox;
 	     pointIndex = 0;
-	     if (pav->AbVisibility >= pFrame->FrVisibility)
+	     if (pAb->AbVisibility >= pFrame->FrVisibility)
 	       {
-		  if (pav->AbPresentationBox || pav->AbLeafType == LtGraphics || pav->AbLeafType == LtPlyLine)
+		  if (pAb->AbPresentationBox || pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPlyLine)
 		    {
-		       testbox = DansLaBoite (pav, x, x, y, &pointIndex);
-		       if (testbox == NULL)
-			  d = distmax + 1;
+		       pCurrentBox = DansLaBoite (pAb, x, x, y, &pointIndex);
+		       if (pCurrentBox == NULL)
+			  d = dist + 1;
 		       else
 			  d = 0;
 		    }
-		  else if (pav->AbLeafType == LtSymbol && pav->AbShape == 'r')
+		  else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
 		     /* glitch pour le symbole racine */
 		     d = DistGraphique (x, y, pBox, 1);
-		  else if (pav->AbLeafType == LtText
-			   || pav->AbLeafType == LtSymbol
-			   || pav->AbLeafType == LtPicture
+		  else if (pAb->AbLeafType == LtText
+			   || pAb->AbLeafType == LtSymbol
+			   || pAb->AbLeafType == LtPicture
 		     /* ou une boite composee vide */
-		   || (pav->AbLeafType == LtCompound && pav->AbVolume == 0))
+		   || (pAb->AbLeafType == LtCompound && pAb->AbVolume == 0))
 		    {
-		       if (pav->AbLeafType == LtPicture)
+		       if (pAb->AbLeafType == LtPicture)
 			 {
 			    /* detecte si on selectionne la droite de l'image */
 			    d = pBox->BxXOrg + (pBox->BxWidth / 2);
@@ -116,35 +111,38 @@ int                *pointselect;
 				       pBox->BxWidth, pBox->BxHeight);
 		    }
 		  else
-		     d = distmax + 1;
+		     d = dist + 1;
 
 		  /* Prend l'element le plus proche */
-		  if (d < distmax)
+		  if (d < dist)
 		    {
-		       distmax = d;
-		       sbox = pBox;
-		       *pointselect = pointIndex;	/* le point selectionne */
+		       dist = d;
+		       pSelBox = pBox;
+		       /* le point selectionne */
+		       *pointselect = pointIndex;
 		    }
-		  else if (d == distmax)
+		  else if (d == dist)
 		    {
 		       /* Si c'est la premiere boite trouvee */
-		       if (sbox == NULL)
+		       if (pSelBox == NULL)
 			 {
-			    distmax = d;
-			    sbox = pBox;
-			    *pointselect = pointIndex;	/* le point selectionne */
+			    dist = d;
+			    pSelBox = pBox;
+			    /* le point selectionne */
+			    *pointselect = pointIndex;
 			 }
 		       /* Si la boite est sur un plan au dessus de la precedente */
-		       else if (sbox->BxAbstractBox->AbDepth > pBox->BxAbstractBox->AbDepth)
+		       else if (pSelBox->BxAbstractBox->AbDepth > pBox->BxAbstractBox->AbDepth)
 			 {
-			    distmax = d;
-			    sbox = pBox;
-			    *pointselect = pointIndex;	/* le point selectionne */
+			    dist = d;
+			    pSelBox = pBox;
+			    /* le point selectionne */
+			    *pointselect = pointIndex;
 			 }
 		    }
 	       }
 	     pBox = pBox->BxNext;
 	  }
      }
-   *result = sbox;
+   *result = pSelBox;
 }

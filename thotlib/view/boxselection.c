@@ -79,14 +79,16 @@ int                 frame;
 boolean             toShow;
 #endif /* __STDC__ */
 {
+   ViewFrame            *pFrame;
+
    /* visualisation la selection locale */
    if (frame > 0)
      {
-       frame--;
+	pFrame = &ViewFrameTable[frame - 1];
 	/* compare le booleen toShow et l'etat de la selection */
-	if (toShow && !ViewFrameTable[frame].FrSelectShown)
+	if (toShow && !pFrame->FrSelectShown)
 	   VisuSel (frame, TRUE);
-	else if (!toShow && ViewFrameTable[frame].FrSelectShown)
+	else if (!toShow && pFrame->FrSelectShown)
 	   VisuSel (frame, TRUE);
      }
 }
