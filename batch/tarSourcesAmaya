@@ -288,6 +288,7 @@ Amaya/Windows/LibThotEditor/*.dsp \
 Amaya/Windows/LibThotKernel/*.dsp \
 Amaya/Windows/app/*.dsp \
 Amaya/Windows/cpp/*.dsp \
+Amaya/Windows/davlib/*.dsp \
 Amaya/Windows/libThotTable/*.dsp \
 Amaya/Windows/libjpeg/*.dsp \
 Amaya/Windows/libpng/*.dsp \
@@ -310,6 +311,7 @@ Amaya/WindowsGL/LibThotEditor/*.dsp \
 Amaya/WindowsGL/LibThotKernel/*.dsp \
 Amaya/WindowsGL/app/*.dsp \
 Amaya/WindowsGL/cpp/*.dsp \
+Amaya/WindowsGL/davlib/*.dsp \
 Amaya/WindowsGL/libThotTable/*.dsp \
 Amaya/WindowsGL/libjpeg/*.dsp \
 Amaya/WindowsGL/libpng/*.dsp \
