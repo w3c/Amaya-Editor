@@ -708,7 +708,11 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	  {
 	    elType = TtaGetElementType (ctxEl->currentElement);
 
-	    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+	    /* the image may be included using either an SRC, an EMBED,
+	       or an OBJECT element */
+	    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT 
+		|| elType.ElTypeNum == HTML_EL_Embed_
+		|| elType.ElTypeNum == HTML_EL_Object)
 	      DisplayImage (doc, ctxEl->currentElement, tempfile, ptr);
 	    else if (ctxEl->callback != NULL)
 	      ctxEl->callback(doc, ctxEl->currentElement, tempfile, ctxEl->extra);
