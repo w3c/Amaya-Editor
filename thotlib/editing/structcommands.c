@@ -2886,6 +2886,8 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 			pNextEl = firstSel->ElNext;
 			SplitTextElement (firstSel, firstChar, pSelDoc, TRUE,
 					  &pSecond, FALSE);
+			AddEditOpInHistory (firstSel, pSelDoc, FALSE, TRUE);
+			AddEditOpInHistory (pSecond, pSelDoc, FALSE, TRUE);
 			BuildAbsBoxSpliText (firstSel, pSecond, pNextEl, pSelDoc);
 		      }
 		  if (pNew == NULL)
