@@ -136,9 +136,9 @@ typedef enum _ClickEvent {
 #define AClassSelect    31
 #define ConfirmSave     32
 #define ConfirmSaveList 33
-#define HREFDirSelect   34
-#define HREFDocSelect   35
-#define HREFFilterText  36
+#define BrowserDirSelect   34
+#define BrowserDocSelect   35
+#define BrowserFilterText  36
 #define HREFLocalName   37
 #define MakeIdMenu      38
 #define mElemName       39
@@ -146,7 +146,11 @@ typedef enum _ClickEvent {
 #define mRemoveId       41
 #define mIdUseSelection 42
 #define mIdStatus       43
-#define OptionMenu	44
+#define FileBrowserForm 44
+#define FileBrowserText 45
+#define FileBrowserFilter 46
+#define FileBrowserLocalName 47
+#define OptionMenu	48
 /* MAX_SUBMENUS references reserved for submenus of Option menu */
 /* Do not insert new entries here */
 #define MAX_SUBMENUS    400

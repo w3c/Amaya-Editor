@@ -1600,6 +1600,10 @@
 <label define="AM_UNKNOWN_ENCODING">
 	<message xml:lang="en">The encoding of this document is not supported by Amaya. If you edit it, you may loose some information</message>
 </label>
+<label define="AM_BROWSE">
+	<message xml:lang="en">Browse</message>
+	<message xml:lang="fr">Butiner</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

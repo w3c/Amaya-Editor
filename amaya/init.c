@@ -1233,6 +1233,58 @@ CHAR_T*          label;
 #endif /* _WINDOWS */
 }
 
+/*-------------------------------------------------------------------------
+  FileBrowserForm
+  Initializes a form that ask the URI of the opened or new created document.
+  -------------------------------------------------------------------------*/
+#ifdef __STDC__
+static void   BrowserForm (Document doc, View view)
+#else
+static void   BrowserForm (doc, view)
+Document          doc;
+View              view;
+#endif
+{
+   CHAR_T    s[MAX_LENGTH];
+   int       i;
+
+   /* Dialogue form for open URL or local */
+   i = 0;
+   ustrcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+   i += ustrlen (&s[i]) + 1;
+   ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
+   i += ustrlen (&s[i]) + 1;
+   ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
+   
+   TtaNewSheet (BaseDialog + FileBrowserForm, TtaGetViewFrame (doc, 1),
+		TtaGetMessage (AMAYA, AM_BROWSE), 3, s,
+		TRUE, 2, 'L', D_CANCEL);
+   /*
+   TtaNewTextForm (BaseDialog + FileBrowserText, BaseDialog + FileBrowserForm,
+		   TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
+   */
+   TtaNewTextForm (BaseDialog + FileBrowserText, BaseDialog + FileBrowserForm,
+		   TEXT (" "), 50, 1, TRUE);
+   TtaNewLabel (BaseDialog + FileBrowserLocalName,
+		BaseDialog + FileBrowserForm, " ");
+   TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
+		     TtaGetMessage (LIB, TMSG_DOC_DIR),
+		     BaseDialog + BrowserDirSelect, ScanFilter,
+		     TtaGetMessage (AMAYA, AM_FILES),
+		     BaseDialog + BrowserDocSelect);
+   TtaNewTextForm (BaseDialog + FileBrowserFilter,
+		   BaseDialog + FileBrowserForm,
+		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
+
+   /* initialise the text fields in the dialogue box */
+   ustrcpy (s, DirectoryName);
+   ustrcat (s, DIR_STR);
+   ustrcat (s, DocumentName);
+   TtaSetTextForm (BaseDialog + FileBrowserText, s);
+   TtaSetTextForm (BaseDialog + FileBrowserFilter, ScanFilter);
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (BaseDialog + FileBrowserForm, FALSE);
+}
 
 /*----------------------------------------------------------------------
   InitOpenDocForm initializes a form that ask the URI of the opened or
@@ -1302,7 +1354,6 @@ CHAR_T*             title;
    CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), title, s, DocSelect, DirSelect, 2);
 #endif /* _WINDOWS */
 }
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -4176,19 +4227,9 @@ CHAR_T*             data;
        else if (val == 2)
 	 /* Clear button */
 	 {
-	   AttrHREFvalue[0] = WC_EOS;
 #ifndef _WINDOWS
-	   TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
+           BrowserForm (AttrHREFdocument, 1);
 #endif /* !_WINDOWS */
-	 }
-       else if (val == 3)
-	 /* Filter button */
-	 {
-	   TtaListDirectory (DirectoryName, BaseDialog + AttrHREFForm,
-			     TtaGetMessage (LIB, TMSG_DOC_DIR),
-			     BaseDialog + HREFDirSelect,
-			     ScanFilter, TtaGetMessage (AMAYA, AM_FILES),
-			     BaseDialog + HREFDocSelect);
 	 }
        else 
 	 /* "Cancel" button */
@@ -4207,7 +4248,43 @@ CHAR_T*             data;
        NormalizeFile (data, AttrHREFvalue, AM_CONV_NONE);
        break;
 
-     case HREFDirSelect:
+       /* *********File Browser*********** */
+     case FileBrowserForm:
+       if (val == 1)
+	 {
+	   /* Confirm */
+	   tempfile = TtaAllocString (MAX_LENGTH);
+	   memset (tempfile, WC_EOS, MAX_LENGTH);
+	   ustrcpy (tempfile, DirectoryName);
+	   ustrcat (tempfile, WC_DIR_STR);
+	   ustrcat (tempfile, DocumentName);
+	   TtaSetTextForm (BaseDialog + AttrHREFText, tempfile);
+	   TtaFreeMemory (tempfile);
+	   TtaDestroyDialogue (BaseDialog + FileBrowserForm);
+	 }
+       else if (val == 2)
+	 /* Clear button */
+	 {
+#ifndef _WINDOWS
+	   TtaSetTextForm (BaseDialog + FileBrowserText, AttrHREFvalue);
+#endif /* !_WINDOWS */
+	 }
+       else if (val == 3)
+	 /* Filter button */
+	 {
+	   TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
+			     TtaGetMessage (LIB, TMSG_DOC_DIR),
+			     BaseDialog + BrowserDirSelect,
+			     ScanFilter, TtaGetMessage (AMAYA, AM_FILES),
+			     BaseDialog + BrowserDocSelect);
+	 }
+       else 
+	 /* "Cancel" button */
+	 {
+	 }
+       break;
+
+     case BrowserDirSelect:
 #ifdef _WINDOWS
        usprintf (DirectoryName, TEXT("%s"), data);
 #else  /* _WINDOWS */
@@ -4228,40 +4305,41 @@ CHAR_T*             data;
 	       ustrcat (DirectoryName, DIR_STR);
 	       ustrcat (DirectoryName, data);
 	     }
-	   ustrcpy (AttrHREFvalue, DirectoryName);
-	   TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
-	   TtaListDirectory (DirectoryName, BaseDialog + AttrHREFForm,
+	   TtaSetTextForm (BaseDialog + FileBrowserText, DirectoryName);
+	   TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
 			     TtaGetMessage (LIB, TMSG_DOC_DIR),
-			     BaseDialog + HREFDirSelect, ScanFilter,
+			     BaseDialog + BrowserDirSelect, ScanFilter,
 			     TtaGetMessage (AMAYA, AM_FILES),
-			     BaseDialog + HREFDocSelect);
+			     BaseDialog + BrowserDocSelect);
 	   DocumentName[0] = EOS;
 	 }
 #endif /* _WINDOWS */
        break;
 
-     case HREFDocSelect:
+     case BrowserDocSelect:
        if (DirectoryName[0] == EOS)
 	 /* set path on current directory */
 	 ugetcwd (DirectoryName, MAX_LENGTH);
        /* Extract suffix from document name */
        ustrcpy (DocumentName, data);
        /* construct the document full name */
-       ustrcpy (AttrHREFvalue, DirectoryName);
-       ustrcat (AttrHREFvalue, WC_DIR_STR);
-       ustrcat (AttrHREFvalue, DocumentName);
+       tempfile = TtaAllocString (MAX_LENGTH);
+       ustrcpy (tempfile, DirectoryName);
+       ustrcat (tempfile, WC_DIR_STR);
+       ustrcat (tempfile, DocumentName);
 #ifndef _WINDOWS
-       TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
+       TtaSetTextForm (BaseDialog + FileBrowserText, tempfile);
 #endif /* !_WINDOWS */
+       TtaFreeMemory (tempfile);
        break;
 
-     case HREFFilterText:
+     case FileBrowserFilter:
        /* Filter value */
        if (ustrlen(data) <= NAME_LENGTH)
 	 ustrcpy (ScanFilter, data);
 #ifndef _WINDOWS
        else
-	 TtaSetTextForm (BaseDialog + HREFFilterText, ScanFilter);
+	 TtaSetTextForm (BaseDialog + BrowserFilterText, ScanFilter);
 #endif /* !_WINDOWS */
        break;
        

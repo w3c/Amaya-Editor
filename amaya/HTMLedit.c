@@ -575,38 +575,22 @@ ThotBool	    withUndo;
 	i = 0;
 	ustrcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
 	i += ustrlen (&s[i]) + 1;
-	ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
-	i += ustrlen (&s[i]) + 1;
-	ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
+	ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
 	
 	TtaNewSheet (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),
-		     TtaGetMessage (AMAYA, AM_ATTRIBUTE), 3, s,
+		     TtaGetMessage (AMAYA, AM_ATTRIBUTE), 2, s,
 		     TRUE, 2, 'L', D_CANCEL);
 	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
 			TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
 	TtaNewLabel (BaseDialog + HREFLocalName,
 		     BaseDialog + AttrHREFForm, " ");
-	TtaListDirectory (DirectoryName, BaseDialog + AttrHREFForm,
-			  TtaGetMessage (LIB, TMSG_DOC_DIR),
-			  BaseDialog + HREFDirSelect, ScanFilter,
-			  TtaGetMessage (AMAYA, AM_FILES),
-			  BaseDialog + HREFDocSelect);
-	TtaNewTextForm (BaseDialog + HREFFilterText,
-			BaseDialog + AttrHREFForm,
-			TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
-	/* initialise the text fields in the dialogue box */
-	if (AttrHREFvalue[0] != WC_EOS)
-	  TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
-	else
-	  {
-	    ustrcpy (s, DirectoryName);
-	    ustrcat (s, DIR_STR);
-	    ustrcat (s, DocumentName);
-	    TtaSetTextForm (BaseDialog + AttrHREFText, s);
-	  }
-	TtaSetTextForm (BaseDialog + HREFFilterText, ScanFilter);
+	/* initialise the text field in the dialogue box */
+	TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
+	ustrcpy (s, DirectoryName);
+	ustrcat (s, DIR_STR);
+	ustrcat (s, DocumentName);
 	TtaSetDialoguePosition ();
-	TtaShowDialogue (BaseDialog + AttrHREFForm, FALSE);
+	TtaShowDialogue (BaseDialog + AttrHREFForm, TRUE);
 #else  /* _WINDOWS */
     if (AttrHREFvalue[0] != WC_EOS)
        usprintf (s, TEXT("%s"), AttrHREFvalue);
@@ -1620,7 +1604,6 @@ void ElementDeleted(event)
         }
 }
 
-
 /*----------------------------------------------------------------------
    ChangeURI
    Element el has been pasted in document doc. It comes from document
@@ -1629,8 +1612,8 @@ void ElementDeleted(event)
    context.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void ChangeURI (Element el, Attribute attr, Document originDocument,
-		Document doc)
+void    ChangeURI (Element el, Attribute attr,
+		   Document originDocument, Document doc)
 #else  /* __STDC__ */
 void    ChangeURI (el, attr, originDocument, doc)
 Element el;
