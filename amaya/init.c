@@ -3611,7 +3611,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	       docProfile = L_Other;
 	       unknown = FALSE;
 	     }
-	   else if (!strncasecmp (&content_type[i+1], "rrdf+xml", 7))
+	   else if (MultipleBookmarks () && !strncasecmp (&content_type[i+1], "rdf+xml", 7))
 	     {
 	       /* it's an RDF document. By default we assume we will
 		  parse it as generic XML */

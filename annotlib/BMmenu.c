@@ -596,8 +596,7 @@ void BM_BookmarkMenu (Document doc, View view, int ref, BookmarkP bookmark)
 		TtaGetMessage (AMAYA, AM_BM_BPROPERTIES),
 		3, s, TRUE, 2, 'L', D_DONE);
 
-#if 0
-   if (!bookmark)
+   if (MultipleBookmarks () && !bookmark)
      {
        /* we only show this property for new bookmarks */
        /* bookmark files */
@@ -607,7 +606,6 @@ void BM_BookmarkMenu (Document doc, View view, int ref, BookmarkP bookmark)
 		       BookmarkBase + BookmarkMenu,
 		       NULL, TRUE);
      }
-#endif
 
    /* topic hiearchy */
    label = TtaGetMessage (AMAYA, AM_BM_TOPIC_HIERARCHY);

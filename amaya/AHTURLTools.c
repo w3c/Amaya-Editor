@@ -749,6 +749,20 @@ ThotBool IsCSSName (const char *path)
 }
 
 /*----------------------------------------------------------------------
+  MultipleBookmarks
+  returns the value of the multiple bookmarks environment variable.
+  (TRUE if enabled).
+  ----------------------------------------------------------------------*/
+ThotBool MultipleBookmarks (void)
+{
+  ThotBool multiple_bm;
+
+  TtaGetEnvBoolean ("ENABLE_MULTIPLE_BM", &multiple_bm);
+
+  return (multiple_bm);
+}
+
+/*----------------------------------------------------------------------
   IsRDFName                                                         
   returns TRUE if path points to an RDF resource.
   ----------------------------------------------------------------------*/
@@ -757,11 +771,12 @@ ThotBool IsRDFName (const char *path)
    char                temppath[MAX_LENGTH];
    char                suffix[MAX_LENGTH];
 
+   /* temporarily disabling this function */
+   if (!MultipleBookmarks ())
+     return FALSE;
+
    if (!path)
       return (FALSE);
-
-   /* temporarily blocking this function */
-   return FALSE;
 
    strcpy (temppath, path);
    TtaExtractSuffix (temppath, suffix);
