@@ -425,98 +425,111 @@ Document            doc;
   ThotBool           status, textFile;
 
   textFile = (DocumentTypes[doc] == docText ||
+              DocumentTypes[doc] == docSource ||
 	      DocumentTypes[doc] == docCSS);
 
-   CheckPrintingDocument (doc);
-   ustrcpy (viewsToPrint, TEXT("Formatted_view "));
-   if (!textFile && WithToC)
-     ustrcat (viewsToPrint, TEXT("Table_of_contents "));
+  CheckPrintingDocument (doc);
+  ustrcpy (viewsToPrint, TEXT("Formatted_view "));
+  if (DocumentTypes[doc] == docHTML && WithToC)
+    ustrcat (viewsToPrint, TEXT("Table_of_contents "));
+  
+  if (textFile)
+    {
+      if (PageSize == PP_A4)
+	{
+	  if (Orientation == PP_Landscape)
+	    TtaSetPrintSchema (TEXT("TextFilePL"));
+	  else
+	    TtaSetPrintSchema (TEXT("TextFilePP"));
+	}
+      else
+	{
+	  if (Orientation == PP_Landscape)
+	    TtaSetPrintSchema (TEXT("TextFileUSL"));
+	  else
+	    TtaSetPrintSchema (TEXT("TextFilePPUS"));
+	}
+    }
+  else if (DocumentTypes[doc] == docSVG)
+    TtaSetPrintSchema (TEXT("GraphMLP"));
+  else if (DocumentTypes[doc] == docMath)
+    TtaSetPrintSchema (TEXT("MathMLP"));
+  else if (DocumentTypes[doc] == docAnnot)
+    TtaSetPrintSchema (TEXT("AnnotP"));
+  else if (DocumentTypes[doc] == docHTML && NumberLinks)
+    /* display numbered links */
+    {
+      /* associate an attribute InternalLink with all anchors refering
+	 a target in the same document.  This allows P schemas to work
+	 properly */
+      SetInternalLinks (DocPrint);
+      if (PageSize == PP_A4)
+	{
+	  if (Orientation == PP_Landscape)
+	    TtaSetPrintSchema (TEXT("HTMLPLL"));
+	  else
+	    TtaSetPrintSchema (TEXT("HTMLPLP"));
+	}
+      else
+	{
+	  if (Orientation == PP_Landscape)
+	    TtaSetPrintSchema (TEXT("HTMLUSLL"));
+	  else
+	    TtaSetPrintSchema (TEXT("HTMLPLPUS"));
+	}
+      ustrcat (viewsToPrint, TEXT("Links_view "));
+    }
+  else if (PageSize == PP_A4)
+    {
+      if (Orientation == PP_Landscape)
+	TtaSetPrintSchema (TEXT("HTMLPL"));
+      else
+	TtaSetPrintSchema (TEXT("HTMLPP"));
+    }
+  else
+    {
+      if (Orientation == PP_Landscape)
+	TtaSetPrintSchema (TEXT("HTMLUSL"));
+      else
+	TtaSetPrintSchema (TEXT("HTMLPPUS"));
+    }    
+  
+  status = TtaIsDocumentModified (doc);
 
-   if (textFile)
-     {
-        if (PageSize == PP_A4)
-	  {
-	   if (Orientation == PP_Landscape)
-	     TtaSetPrintSchema (TEXT("TextFilePL"));
-	   else
-	     TtaSetPrintSchema (TEXT("TextFilePP"));
-	  }
-	else
-	  {
-	   if (Orientation == PP_Landscape)
-	     TtaSetPrintSchema (TEXT("TextFileUSL"));
-	   else
-	     TtaSetPrintSchema (TEXT("TextFilePPUS"));
-	  }
-     }
-   else if (NumberLinks)
-     /* display numbered links */
-     {
-       /* associate an attribute InternalLink with all anchors refering
-	  a target in the same document.  This allows P schemas to work
-	  properly */
-       SetInternalLinks (DocPrint);
-       if (PageSize == PP_A4)
-	 {
-	   if (Orientation == PP_Landscape)
-	     TtaSetPrintSchema (TEXT("HTMLPLL"));
-	   else
-	     TtaSetPrintSchema (TEXT("HTMLPLP"));
-	 }
-       else
-	 {
-	   if (Orientation == PP_Landscape)
-	     TtaSetPrintSchema (TEXT("HTMLUSLL"));
-	   else
-	     TtaSetPrintSchema (TEXT("HTMLPLPUS"));
-	 }
-       ustrcat (viewsToPrint, TEXT("Links_view "));
-     }
-   else if (PageSize == PP_A4)
-     {
-	   if (Orientation == PP_Landscape)
-	     TtaSetPrintSchema (TEXT("HTMLPL"));
-	   else
-	     TtaSetPrintSchema (TEXT("HTMLPP"));
-     }
-   else
-     {
-	   if (Orientation == PP_Landscape)
-	     TtaSetPrintSchema (TEXT("HTMLUSL"));
-	   else
-	     TtaSetPrintSchema (TEXT("HTMLPPUS"));
-     }    
-   
-   /* post or remove the PrintURL attribute */
-   el =  TtaGetMainRoot (doc);
-   status = TtaIsDocumentModified (doc);
-   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   if (textFile)
-     attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
-   else
-     attrType.AttrTypeNum = HTML_ATTR_PrintURL;
-   attr = TtaGetAttribute (el, attrType);
-   if (attr == 0 && PrintURL)
-     {
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (el, attr, doc);
-     }
-
-   if (attr != 0 && !PrintURL)
-     TtaRemoveAttribute (el, attr, doc);
-   /* get the path dir where css files have to be stored */
-   if (textFile || IgnoreCSS)
-     files = NULL;
-   else
-     {
-       TtaGetPrintNames (&files, &dir);
-       /* store css files and get the list of names */
-       files = CssToPrint (doc, dir);
-     }
-   TtaPrint (DocPrint, viewsToPrint, files);
-   TtaFreeMemory (files);
-   if (!status)
-     TtaSetDocumentUnmodified (doc);
+  if (textFile || DocumentTypes[doc] == docImage ||
+      DocumentTypes[doc] == docHTML)
+    {
+      /* post or remove the PrintURL attribute */
+      attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+      if (textFile)
+	attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
+      else
+	attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+      el =  TtaGetMainRoot (doc);
+      attr = TtaGetAttribute (el, attrType);
+      if (!attr && PrintURL)
+	{
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attr, doc);
+	}
+      if (attr && !PrintURL)
+	TtaRemoveAttribute (el, attr, doc);
+    }
+  
+  /* get the path dir where css files have to be stored */
+  if (DocumentTypes[doc] == docHTML && !IgnoreCSS)
+    {
+      TtaGetPrintNames (&files, &dir);
+      /* store css files and get the list of names */
+      files = CssToPrint (doc, dir);
+    }
+  else
+    files = NULL;
+  TtaPrint (DocPrint, viewsToPrint, files);
+  if (files)
+    TtaFreeMemory (files);
+  if (!status)
+    TtaSetDocumentUnmodified (doc);
 }
 
 /*----------------------------------------------------------------------

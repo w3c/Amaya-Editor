@@ -1677,19 +1677,22 @@ PtrAbstractBox      rootAbsBox;
 	NewLeftMargin = DEF_LEFT_MARGIN;
 	NewTopMargin = DEF_TOP_MARGIN;
 	PageHeight = DEF_PAGE_HEIGHT;
-	/* verifie que le pave racine a une largeur fixe */
-	pDim = &rootAbsBox->AbWidth;
-	if (pDim->DimIsPosition || pDim->DimValue < 0 ||
-	    pDim->DimAbRef != NULL || pDim->DimUnit == UnPercent)
-	   /* ce n'est pas une largeur fixe, on impose la largeur par */
-	   /* defaut */
+	if (rootAbsBox)
 	  {
-	     pDim->DimIsPosition = FALSE;
-	     pDim->DimValue = DEF_PAGE_WIDTH;
-	     pDim->DimAbRef = NULL;
-	     pDim->DimUnit = UnPoint;
-	     rootAbsBox->AbWidthChange = TRUE;
-	     change = TRUE;
+	    /* verifie que le pave racine a une largeur fixe */
+	    pDim = &rootAbsBox->AbWidth;
+	    if (pDim->DimIsPosition || pDim->DimValue < 0 ||
+		pDim->DimAbRef != NULL || pDim->DimUnit == UnPercent)
+	      /* ce n'est pas une largeur fixe, on impose la largeur par */
+	      /* defaut */
+	      {
+		pDim->DimIsPosition = FALSE;
+		pDim->DimValue = DEF_PAGE_WIDTH;
+		pDim->DimAbRef = NULL;
+		pDim->DimUnit = UnPoint;
+		rootAbsBox->AbWidthChange = TRUE;
+		change = TRUE;
+	      }
 	  }
      }
 
@@ -1743,16 +1746,19 @@ PtrAbstractBox      rootAbsBox;
       /* on conserve la nouvelle marge */
      {
 	LeftMargin = NewLeftMargin;
-	/* on modifie la position horizontale du pave racine */
-	pPos = &rootAbsBox->AbHorizPos;
-	pPos->PosAbRef = NULL;
-	pPos->PosDistance = LeftMargin;
-	pPos->PosEdge = Left;
-	pPos->PosRefEdge = Left;
-	pPos->PosUnit = UnPoint;
-	pPos->PosUserSpecified = FALSE;
-	rootAbsBox->AbHorizPosChange = TRUE;
-	change = TRUE;
+	if (rootAbsBox)
+	  {
+	    /* on modifie la position horizontale du pave racine */
+	    pPos = &rootAbsBox->AbHorizPos;
+	    pPos->PosAbRef = NULL;
+	    pPos->PosDistance = LeftMargin;
+	    pPos->PosEdge = Left;
+	    pPos->PosRefEdge = Left;
+	    pPos->PosUnit = UnPoint;
+	    pPos->PosUserSpecified = FALSE;
+	    rootAbsBox->AbHorizPosChange = TRUE;
+	    change = TRUE;
+	  }
      }
    if (change)
       /* on signale le changement de position ou de dimension du pave */

@@ -840,13 +840,14 @@ STRING              cssNames;
      }
 
    /* searches the paper orientation for the presentation scheme */
+   orientation = 0;
    ConfigGetPresentationOption(pDoc->DocSSchema, TEXT("orientation"), value);
    if (value[0] != WC_EOS)
-     ustrcmp (Orientation, value);
-   if (!ustrcmp (Orientation, TEXT("Landscape")))
-     orientation = 1;
-   else
-     orientation = 0;
+     if (!ustrcmp (Orientation, value))
+        if (!ustrcmp (Orientation, TEXT("Landscape")))
+	  orientation = 1;
+        else
+	  orientation = 0;
 
    /* restores the presentation scheme */
    ustrcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);

@@ -1385,7 +1385,7 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   PutBeginTag,PutEndTag,TransfertNode 
+   PutBeginTag,PutEndTag,TransferNode 
    fill the HTML buffer with the generated nodes 
   ----------------------------------------------------------------------*/
 
@@ -1609,13 +1609,13 @@ strGenStack *ND;
 }
 
 /*----------------------------------------------------------------------
-   TransfertChildren : copies the children of node into the result instance 
+   TransferChildren : copies the children of node into the result instance 
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static ThotBool        TransfertChildren (strNode * node)
+static ThotBool        TransferChildren (strNode * node)
 #else
-static ThotBool        TransfertChildren (strNode * node)
+static ThotBool        TransferChildren (strNode * node)
 strNode            *node;
 
 #endif
@@ -1645,13 +1645,13 @@ strNode            *node;
 }
 
 /*----------------------------------------------------------------------
-   TransfertNode : copies a node and its content into the result instance 
+   TransferNode : copies a node and its content into the result instance 
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static ThotBool        TransfertNode (strNode * node, ThotBool inplace)
+static ThotBool        TransferNode (strNode * node, ThotBool inplace)
 #else
-static ThotBool        TransfertNode (node, inplace)
+static ThotBool        TransferNode (node, inplace)
 strNode            *node;
 ThotBool            inplace;
 
@@ -1734,7 +1734,7 @@ strMatchChildren   *smc;
 	     else
 	       { /* there is no matching: transferring the node to
 		    destination instance */
-		  result = result && TransfertNode (smc2->MatchNode, FALSE);
+		  result = result && TransferNode (smc2->MatchNode, FALSE);
 	       }
 	  }
 	else
@@ -1845,7 +1845,7 @@ strMatchChildren   *sm;
 	     }
 	   if (RNodeCour != NULL && RNodeCour->Tag[0] == '*')
 	     { /* copie du noeud source */
-	       result = result && TransfertNode (sm->MatchNode, TRUE);
+	       result = result && TransferNode (sm->MatchNode, TRUE);
 	       transChildDone = TRUE;
 	     }
 	   if ((RNodeCour != NULL && RNodeCour->Tag[0] == '#') ||
@@ -1862,7 +1862,7 @@ strMatchChildren   *sm;
 		     }
 		   else
 		     {			
-		       result = result && TransfertChildren (sm->MatchNode);
+		       result = result && TransferChildren (sm->MatchNode);
 		     }
 		   transChildDone = TRUE;
 		 }
