@@ -1333,11 +1333,11 @@ int             frame;
 				delta = cell->AbPrevious->AbWidth.DimValue;
 			      else
 				delta = 0;
-			      cell->AbWidth.DimAbRef = colBox[cRef];
+			      /*cell->AbWidth.DimAbRef = colBox[cRef];
 			      cell->AbWidth.DimValue = -delta;
 			      cell->AbWidth.DimUnit = UnPixel;
 			      cell->AbWidth.DimSameDimension = TRUE;
-			      ComputeDimRelation (cell, frame, TRUE);
+			      ComputeDimRelation (cell, frame, TRUE);*/
 			    }
 
 			  /* process elements in this cell */
