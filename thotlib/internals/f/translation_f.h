@@ -13,8 +13,7 @@ extern ThotBool ExportDocument ( PtrDocument pDoc,
                                  ThotBool recordLineNb );
 extern void ExportXmlDocument ( PtrDocument pDoc,
                                 PtrElement pNode,
-                                int indent,
-                                FILE *fileDescriptor );
+                                ThotBool recordLineNb );
 extern void ExportTree ( PtrElement pEl,
                          PtrDocument pDoc,
                          char *fName,
@@ -35,8 +34,7 @@ extern ThotBool ExportDocument (/* PtrDocument pDoc,
                                    ThotBool recordLineNb */);
 extern void ExportXmlDocument (/* PtrDocument pDoc,
                                   PtrElement pNode,
-                                  int indent,
-                                  FILE *fileDescriptor */);
+                                  ThotBool recordLineNb */);
 extern void ExportTree (/* PtrElement pEl,
                            PtrDocument pDoc,
                            char *fName,
