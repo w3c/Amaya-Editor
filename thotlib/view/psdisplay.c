@@ -101,6 +101,27 @@ STRING              s2;
    else
       fputs (s2, fout);
 }
+/*----------------------------------------------------------------------
+  DrawChar draw a char at location (x, y) in frame and with font.
+  RO indicates whether it's a read-only box active
+  indicates if the box is active parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
+#else  /* __STDC__ */
+void                DrawChar (car, frame, x, y, font, RO, active, fg)
+UCHAR_T       car;
+int                 frame;
+int                 x;
+int                 y;
+ptrfont             font;
+int                 RO;
+int                 active;
+int                 fg;
+
+#endif /* __STDC__ */
+{
+}
 
 /*----------------------------------------------------------------------
    Transcode emit the Poscript code for the given char.
@@ -1069,16 +1090,16 @@ int                 fg;
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawRectangle (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
+void                DrawRectangle (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawRectangle (frame, thick, style, x, y, larg, height, RO, active, fg, bg, pattern)
+void                DrawRectangle (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
 int                 frame;
 int                 thick;
 int                 style;
 int                 x;
 int                 y;
-int                 larg;
+int                 width;
 int                 height;
 int                 RO;
 int                 active;
@@ -1087,10 +1108,10 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
-   int    xf, yf;
+   int                 xf, yf;
    FILE               *fout;
 
-   if (y < 0)   
+   if (y < 0)
       return;
    y += FrameTable[frame].FrTopMargin;
    fout = (FILE *) FrRef[frame];
@@ -1099,7 +1120,7 @@ int                 pattern;
    if (thick > 0)
       CurrentColor (fout, fg);
 
-   xf = PixelToPoint (x + larg);
+   xf = PixelToPoint (x + width);
    yf = PixelToPoint (y + height);
    x = PixelToPoint (x);
    y = PixelToPoint (y);
@@ -1479,15 +1500,15 @@ C_points           *controls;
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawDiamond (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
+void                DrawDiamond (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 #else  /* __STDC__ */
-void                DrawDiamond (frame, thick, style, x, y, larg, height, RO, active, fg, bg, pattern)
+void                DrawDiamond (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
 int                 frame;
 int                 thick;
 int                 style;
 int                 x;
 int                 y;
-int                 larg;
+int                 width;
 int                 height;
 int                 RO;
 int                 active;
@@ -1506,9 +1527,9 @@ int                 pattern;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
-   xm = PixelToPoint (x + larg / 2);
+   xm = PixelToPoint (x + width / 2);
    ym = PixelToPoint (y + height / 2);
-   xf = PixelToPoint (x + larg);
+   xf = PixelToPoint (x + width);
    yf = PixelToPoint (y + height);
    x = PixelToPoint (x);
    y = PixelToPoint (y);
@@ -1524,15 +1545,15 @@ int                 pattern;
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawOval (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
+void                DrawOval (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 #else  /* __STDC__ */
-void                DrawOval (frame, thick, style, x, y, larg, height, RO, active, fg, bg, pattern)
+void                DrawOval (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
 int                 frame;
 int                 thick;
 int                 style;
 int                 x;
 int                 y;
-int                 larg;
+int                 width;
 int                 height;
 int                 RO;
 int                 active;
@@ -1554,7 +1575,7 @@ int                 pattern;
       CurrentColor (fout, fg);
 
    arc = 3 * 72 / 25.4;
-   xf = PixelToPoint (x + larg - 1);
+   xf = PixelToPoint (x + width - 1);
    yf = PixelToPoint (y + height - 1);
    x = PixelToPoint (x);
    y = PixelToPoint (y);
@@ -1573,15 +1594,15 @@ int                 pattern;
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawEllips (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
+void                DrawEllips (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 #else  /* __STDC__ */
-void                DrawEllips (frame, thick, style, x, y, larg, height, RO, active, fg, bg, pattern)
+void                DrawEllips (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
 int                 frame;
 int                 thick;
 int                 style;
 int                 x;
 int                 y;
-int                 larg;
+int                 width;
 int                 height;
 int                 RO;
 int                 active;
@@ -1602,24 +1623,24 @@ int                 pattern;
    /* Do we need to change the current color ? */
    if (thick > 0)
       CurrentColor (fout, fg);
-   larg = larg / 2;
+   width = width / 2;
    height = height / 2;
-   xm = PixelToPoint (x + larg);
+   xm = PixelToPoint (x + width);
    ym = PixelToPoint (y + height);
-   larg = PixelToPoint (larg);
+   width = PixelToPoint (width);
    height = PixelToPoint (height);
 
    FillWithPattern (fout, fg, bg, pattern);
-   if (larg == height)
+   if (width == height)
      {
        /* Draw a circle */
-       fprintf (fout, "%d %d %d -%d %d cer\n", style, thick, xm, ym, larg);
+       fprintf (fout, "%d %d %d -%d %d cer\n", style, thick, xm, ym, width);
      }
    else
      {
        /* Draw an ellips */
        fprintf (fout, "%d %d %d %d %d %d ellipse\n", style, thick,
-		xm, -ym, larg, height);
+		xm, -ym, width, height);
      }
 }
 
@@ -1685,15 +1706,15 @@ int                 fg;
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawRectangleFrame (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
+void                DrawRectangleFrame (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 #else  /* __STDC__ */
-void                DrawRectangleFrame (frame, thick, style, x, y, larg, height, RO, active, fg, bg, pattern)
+void                DrawRectangleFrame (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
 int                 frame;
 int                 thick;
 int                 style;
 int                 x;
 int                 y;
-int                 larg;
+int                 width;
 int                 height;
 int                 RO;
 int                 active;
@@ -1714,7 +1735,7 @@ int                 pattern;
       CurrentColor (fout, fg);
 
    arc = 3 * 72 / 25.4;
-   xf = PixelToPoint (x + larg - 1);
+   xf = PixelToPoint (x + width - 1);
    yf = PixelToPoint (y + height - 1);
    x = PixelToPoint (x);
    y = PixelToPoint (y);
@@ -1734,15 +1755,15 @@ int                 pattern;
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawEllipsFrame (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
+void                DrawEllipsFrame (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 #else  /* __STDC__ */
-void                DrawEllipsFrame (frame, thick, style, x, y, larg, height, RO, active, fg, bg, pattern)
+void                DrawEllipsFrame (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
 int                 frame;
 int                 thick;
 int                 style;
 int                 x;
 int                 y;
-int                 larg;
+int                 width;
 int                 height;
 int                 RO;
 int                 active;
@@ -1764,30 +1785,30 @@ int                 pattern;
    if (thick > 0)
       CurrentColor (fout, fg);
 
-   larg = larg / 2;
+   width = width / 2;
    height = height / 2;
-   xm = PixelToPoint (x + larg);
+   xm = PixelToPoint (x + width);
    ym = PixelToPoint (y + height);
-   larg = PixelToPoint (larg);
+   width = PixelToPoint (width);
    height = PixelToPoint (height);
 
    FillWithPattern (fout, fg, bg, pattern);
-   if (larg == height)
+   if (width == height)
      {
 	/* draw a circle */
-	fprintf (fout, "%d %d %d -%d %d cer\n", style, thick, xm, ym, larg);
+	fprintf (fout, "%d %d %d -%d %d cer\n", style, thick, xm, ym, width);
      }
    else
      {
 	/* draw an ellipse */
-	fprintf (fout, "%d %d %d %d %d %d ellipse\n", style, thick, xm, -ym, larg, height);
+	fprintf (fout, "%d %d %d %d %d %d ellipse\n", style, thick, xm, -ym, width, height);
      }
    px7mm = 7 * 72 / 25.4 + 0.5;
    if (height > px7mm)
      {
 	y = (ym - height + px7mm);
 	A = ((double) height - px7mm) / height;
-	shiftX = larg * sqrt (1 - A * A) + 0.5;
+	shiftX = width * sqrt (1 - A * A) + 0.5;
 	fprintf (fout, "%d -%d  %d -%d %d %d %d Seg\n",
 		 xm - shiftX, y, xm + shiftX, y, style, thick, 2);
      }

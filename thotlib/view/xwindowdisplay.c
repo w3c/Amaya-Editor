@@ -77,25 +77,6 @@ int          *pY;
    *pY += ((XFontStruct *) font)->ascent;
 }
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
-
-#else  /* __STDC__ */
-void                DrawChar (car, frame, x, y, font, RO, active, fg)
-UCHAR_T             car;
-int                 frame;
-int                 x;
-int                 y;
-ptrfont             font;
-int                 RO;
-int                 active;
-int                 fg;
-#endif /* __STDC__ */
-{
-}
-
 
 /*----------------------------------------------------------------------
   LoadColor load the given color in the drawing Graphic Context.
@@ -1469,50 +1450,47 @@ int                 pattern;
 #endif /* __STDC__ */
 
 {
-   Pixmap              pat;
+  Pixmap              pat;
 
-   if (width <= 0 || height <= 0)
-      return;
-   if (thick == 0 && pattern == 0)
-      return;
+  if (width <= 0 || height <= 0)
+    return;
+  if (thick == 0 && pattern == 0)
+    return;
 
-   if (width > thick + 1)
-     width = width - thick - 1;
-   if (height > thick + 1)
-     height = height - thick - 1;
-   x += thick / 2;
-   y = y + thick / 2 + FrameTable[frame].FrTopMargin;
-
-   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
-
-   if (pat != 0) {
+  y += FrameTable[frame].FrTopMargin;
+  pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+  if (pat != 0)
+    {
 #ifdef _GTK
-     gdk_gc_set_tile ( TtGreyGC, pat);    
-     gdk_draw_rectangle ( FrRef[frame], TtGreyGC, TRUE, 
-			  x, y, width-1, height-1);
-     gdk_pixmap_unref (pat);
+      gdk_gc_set_tile ( TtGreyGC, pat);    
+      gdk_draw_rectangle ( FrRef[frame], TtGreyGC, TRUE, x, y, width, height);
+      gdk_pixmap_unref (pat);
 #else /* _GTK */
       XSetTile (TtDisplay, TtGreyGC, pat);
-    
-      XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC,
-                      x, y, width, height);
+      XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x, y, width, height);
       XFreePixmap (TtDisplay, pat);
 #endif /* _GTK */
-   }
+    }
 
-   /* Draw the border */
-   if (thick > 0)
-     {
-	InitDrawing (0, style, thick, RO, active, fg); 
+  /* Draw the border */
+  if (thick > 0)
+    {
+      if (width > thick)
+	width = width - thick;
+      if (height > thick)
+	height = height - thick;
+      x = x + thick / 2;
+      y = y + thick / 2;
+
+      InitDrawing (0, style, thick, RO, active, fg); 
 #ifdef _GTK
-	gdk_draw_rectangle ( FrRef[frame],TtLineGC,FALSE, 
-			     x, y, width, height);
+      gdk_draw_rectangle ( FrRef[frame],TtLineGC,FALSE, x, y, width, height);
 
 #else /* _GTK */
-	XDrawRectangle (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height);
+      XDrawRectangle (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height);
 #endif /* _GTK */
-	FinishDrawing (0, RO, active);
-   }
+      FinishDrawing (0, RO, active);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2771,12 +2749,13 @@ int                 pattern;
 	gdk_gc_set_tile (TtGreyGC, pat);
 	gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE,  point, 13);
 	/* Trace quatre arcs de cercle */
-	for (i=0;i<4;i++){  
+	for (i = 0; i < 4; i++)
+	  {  
 	  gdk_draw_arc (FrRef[frame], TtGreyGC,TRUE,  
 			xarc[i].x, xarc[i].y, 
 			xarc[i].width, xarc[i].height, 
-			xarc[i].angle1,xarc[i].angle2);
-	}
+			xarc[i].angle1, xarc[i].angle2);
+	  }
 	gdk_pixmap_unref (pat);
 #else /* _GTK */
 	XSetTile (TtDisplay, TtGreyGC, pat);
@@ -2793,28 +2772,32 @@ int                 pattern;
      {
 	InitDrawing (0, style, thick, RO, active, fg);
 #ifdef _GTK
-	for (i=0;i<4;i++){  
+	for (i = 0 ; i < 4; i++)
+	  {  
 	  gdk_draw_arc (FrRef[frame], TtLineGC, FALSE, 
 			xarc[i].x, xarc[i].y, 
 			xarc[i].width, xarc[i].height, 
-			xarc[i].angle1,xarc[i].angle2); 
-	}
+			xarc[i].angle1, xarc[i].angle2); 
+	  }
 #else /* _GTK */
 	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4);
 #endif /* _GTK */
-	if (arc2 < height / 2) {
+	if (arc2 < height / 2)
+	  {
 #ifdef _GTK
 	   gdk_draw_segments (FrRef[frame], TtLineGC, seg, 5);
 #else /* _GTK */
 	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 5);
 #endif /* _GTK */
-	} else {
+	  }
+	else
+	  {
 #ifdef _GTK
 	   gdk_draw_segments (FrRef[frame], TtLineGC, seg, 4);
 #else /* _GTK */
 	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
 #endif /* _GTK */
-	}
+	  }
 	FinishDrawing (0, RO, active);
      }
 }
