@@ -41,8 +41,13 @@ ELEMENTS
 	BEGIN
 	ElemNew.Post -> CellCreated;
 	ElemPaste.Post -> CellPasted;
-	ElemDelete.Pre -> DeleteCell;
-	ElemDelete.Post -> CellDeleted;
+	{ElemDelete.Pre -> DeleteCell;
+	ElemDelete.Post -> CellDeleted;}
+	END;
+   MColumn_head:
+	BEGIN
+	ElemDelete.Pre -> DeleteColumn;
+	ElemDelete.Post -> ColumnDeleted;
 	END;
    MTR:
 	BEGIN

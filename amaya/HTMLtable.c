@@ -1761,6 +1761,68 @@ void RowDeleted (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
+   DeleteColumn                                             
+  ----------------------------------------------------------------------*/
+ThotBool DeleteColumn (NotifyElement * event)
+{
+}
+
+
+/*----------------------------------------------------------------------
+   ColumnDeleted                                             
+  ----------------------------------------------------------------------*/
+void ColumnDeleted (NotifyElement * event)
+{
+#ifdef IV
+  Element             cell, col, child;
+  ElementType         elType;
+  Document            doc;
+  int                 span;
+  ThotBool            removed;
+  ThotBool            inMath;
+  ThotBool            before;
+
+  if (event->info == 1)
+    /* the delete is already done by undo */
+    return;
+  doc = event->document;
+  span = CurrentSpan;
+  /* todo: generate empty cell after */
+  CurrentSpan = 0;
+  elType = TtaGetElementType (event->element);
+  inMath = !TtaSameSSchemas (elType.ElSSchema,
+			     TtaGetSSchema ("HTML",event->document));
+  removed = RemoveColumn (CurrentColumn, doc, TRUE, inMath);
+  if (removed)
+    span--;
+  else if (CurrentColumn)
+    {
+      /* get the previous or the next one in the current row */
+      before = FALSE;
+      col = CurrentColumn;
+      TtaPreviousSibling (&col);
+      if (col == NULL)
+	{
+	  before = TRUE;
+	  col = CurrentColumn;
+	  TtaNextSibling (&col);
+	}
+      /*cell = CloseCellForNewColumn (CurrentRow, col, doc, before, inMath,
+				    &span, &rowspan);
+      cell = AddEmptyCellInRow (CurrentRow, CurrentColumn, cell, before, doc,
+				inMath, FALSE);
+      child = TtaGetFirstChild (cell);
+      TtaSelectElement (doc, child);*/
+    }
+  if (CurrentRow)
+    HandleColAndRowAlignAttributes (CurrentRow, doc);
+  CurrentColumn = NULL;
+  CurrentRow = NULL;
+#endif
+}
+
+#ifdef IV
+/*----------------------------------------------------------------------
    DeleteCell                                              
   ----------------------------------------------------------------------*/
 ThotBool DeleteCell (NotifyElement * event)
@@ -1867,6 +1929,7 @@ void CellDeleted (NotifyElement * event)
   CurrentColumn = NULL;
   CurrentRow = NULL;
 }
+#endif
 
 /*----------------------------------------------------------------------
    TableCreated                                            

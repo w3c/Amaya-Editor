@@ -81,20 +81,26 @@ ELEMENTS
    Table_body:
 	ElemDelete.Post -> TablebodyDeleted;
 
+   Column_head:
+	BEGIN
+	ElemDelete.Pre -> DeleteColumn;
+	ElemDelete.Post -> ColumnDeleted;
+	END;
+
    Data_cell:
 	BEGIN
 	ElemNew.Post -> CellCreated;
 	ElemPaste.Post -> CellPasted;
-	ElemDelete.Pre -> DeleteCell;
-	ElemDelete.Post -> CellDeleted;
+	{ElemDelete.Pre -> DeleteCell;
+	ElemDelete.Post -> CellDeleted;}
 	END;
 
    Heading_cell:
 	BEGIN
 	ElemNew.Post -> CellCreated;
 	ElemPaste.Post -> CellPasted;
-	ElemDelete.Pre -> DeleteCell;
-	ElemDelete.Post -> CellDeleted;
+	{ElemDelete.Pre -> DeleteCell;
+	ElemDelete.Post -> CellDeleted;}
 	END;
 
    Table_row:

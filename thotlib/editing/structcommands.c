@@ -469,12 +469,9 @@ static void IsomorphicTransform (PtrElement pEl, PtrSSchema pSS,
 
 
 /*----------------------------------------------------------------------
-   SendEventSubTree      envoie l'evenement AppEvent.Pre pour      
-   l'element pEl du document pDoc et, si le document le demande,   
-   pour tous les descendants de pEl.                               
-   Retourne TRUE si l'application n'est pas d'accord pour          
-   appliquer la commande a` l'element pEl ou a` un de ses          
-   descendants.                                                    
+  SendEventSubTree sends the AppEvent.Pre event for the element pEl
+  of the document pDoc and all enclosed elements.
+  Returns TRUE if the application refuses the delete operation       
   ----------------------------------------------------------------------*/
 ThotBool SendEventSubTree (APPevent AppEvent, PtrDocument pDoc, PtrElement pEl,
 			   int end)
@@ -1180,7 +1177,7 @@ void CutCommand (ThotBool save)
 			(void*)&lastSel,
 			(void*)&firstChar,
 			(void*)&lastChar);
-/******************/
+
 	      /* Si tout le contenu d'un element est selectionne', on
 		 detruit l'element englobant la selection, sauf s'il
 		 est indestructible. */
@@ -1235,7 +1232,7 @@ void CutCommand (ThotBool save)
 		      lastChar = 0;
 		    }
 		}
-/**************/
+
 	      doc = IdentDocument (pSelDoc);
 	      dispMode = TtaGetDisplayMode (doc);
 	      /* lock tables formatting */
@@ -1369,14 +1366,37 @@ void CutCommand (ThotBool save)
 			}
 		    }
 
-		  /* traite tous les elements selectionnes */
-		  pEl = firstSel;	/* premier element selectionne */
+		  /* manage all selected elements */
+		  pEl = firstSel;	/* first selected element */
 		  pS = NULL;
 		  pSave = NULL;
 		  pLastSave = NULL;
 		  pFree = NULL;
 		  enclosingCell = NULL;
-		  while (pEl != NULL && pEl->ElStructSchema != NULL)
+		  if (WholeColumnSelected && SelectedColumn)
+		    {
+		      /* send the ElemDelete.Pre event for the column head
+			 and check if the delete operation is accepted */
+		      notifyEl.event = TteElemDelete;
+		      notifyEl.document = doc;
+		      notifyEl.element = (Element) SelectedColumn->ElParent;
+		      notifyEl.info = 0; /* not sent by undo */
+		      notifyEl.elementType.ElTypeNum = SelectedColumn->ElTypeNumber;
+		      notifyEl.elementType.ElSSchema = (SSchema) (SelectedColumn->ElStructSchema);
+		      NSiblings = 0;
+		      pF = SelectedColumn;
+		      while (pF->ElPrevious != NULL)
+			{
+			  NSiblings++;
+			  pF = pF->ElPrevious;
+			}
+		      notifyEl.position = NSiblings;
+		      if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
+			/* the delete is refused */
+			pEl = NULL;
+		    }
+
+		  while (pEl && pEl->ElStructSchema)
 		    {
 		      if (!pageSelected)
 			/* On ne detruit pas les marques de pages,
@@ -1432,6 +1452,7 @@ void CutCommand (ThotBool save)
 			      else
 				pEl = NextInSelection (pEl, lastSel);
 			    }
+
 			  /* verifie qu'il ne s'agit pas d'un element
 			     de paire dont l'homologue ne serait pas
 			     dans la selection */
@@ -1444,13 +1465,12 @@ void CutCommand (ThotBool save)
 			    }
 			  if (!SendEventSubTree (TteElemDelete, pSelDoc, pE, last))
 			    {
-				/* detruit les paves de l'element courant */
+			      /* delete abstract boxes of the element */
 			      DestroyAbsBoxes (pE, pSelDoc, TRUE);
-				/* conserve un pointeur sur le pere */
+			      /* conserve un pointeur sur le pere */
 			      pParentEl = pE->ElParent;
-			      /* envoie l'evenement ElemDelete.Pre et
-				 demande a l'application si elle est
-				 d'accord pour detruire l'element */
+			      /* send the ElemDelete.Pre event and check
+				 if the delete operation is accepted */
 			      notifyEl.event = TteElemDelete;
 			      notifyEl.document = doc;
 			      notifyEl.element = (Element) pParentEl;
@@ -1577,6 +1597,31 @@ void CutCommand (ThotBool save)
 			      && !cutPage)
 			    pEl = NULL;
 			}
+		    }
+
+		  if (WholeColumnSelected && SelectedColumn)
+		    {
+		      /* delete abstract boxes of the column head */
+		      DestroyAbsBoxes (SelectedColumn, pSelDoc, TRUE);
+		      notifyEl.event = TteElemDelete;
+		      notifyEl.document = doc;
+		      notifyEl.element = (Element) SelectedColumn->ElParent;
+		      notifyEl.info = 0; /* not sent by undo */
+		      notifyEl.elementType.ElTypeNum = SelectedColumn->ElTypeNumber;
+		      notifyEl.elementType.ElSSchema = (SSchema) (SelectedColumn->ElStructSchema);
+		      NSiblings = 0;
+		      pF = SelectedColumn;
+		      while (pF->ElPrevious != NULL)
+			{
+			  NSiblings++;
+			  pF = pF->ElPrevious;
+			}
+		      notifyEl.position = NSiblings;
+		      /* record that deletion in the history */
+		      AddEditOpInHistory (SelectedColumn, pSelDoc, TRUE, FALSE);
+		      RemoveElement (SelectedColumn);
+		      /* send the ElemDelete.Post event */
+		      CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
 		    }
 		  CloseHistorySequence (pSelDoc);
 		  
