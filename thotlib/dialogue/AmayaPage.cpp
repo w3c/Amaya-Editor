@@ -39,6 +39,7 @@
 #include "AmayaCanvas.h"
 
 
+IMPLEMENT_DYNAMIC_CLASS(AmayaPage, wxPanel)
 
 /*
  *--------------------------------------------------------------------------------------
@@ -62,7 +63,7 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window )
      ,m_pNoteBookParent( NULL )
      ,m_pWindowParent( NULL )
      ,m_PageId(-1)
-     ,m_ActiveFrame(0)
+     ,m_ActiveFrame(1) // by default, frame 1 is selected
 {
   // Insert a forground sizer
   wxBoxSizer * p_SizerTop = new wxBoxSizer ( wxVERTICAL );
@@ -71,13 +72,17 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window )
   // Insert a windows splitter 
   m_pSplitterWindow = new wxSplitterWindow( this, -1,
                       wxDefaultPosition, wxDefaultSize,
-                      wxSP_FULLSASH | wxSP_3DSASH | wxSP_NOBORDER | wxSP_PERMIT_UNSPLIT );
+					    /*wxSP_FULLSASH |*/ wxSP_3DSASH/* | wxSP_NOBORDER*/ /*| wxSP_PERMIT_UNSPLIT*/ );
   p_SizerTop->Add( m_pSplitterWindow, 1, wxGROW, 0 );
  
   /// Insert to area : Top / bottom
   m_pTopFrame     = NULL;
   m_pBottomFrame  = NULL;
   m_pSplitterWindow->SetMinimumPaneSize( 50 );
+
+  // Create a dummy panel to initilize the splitter window with something
+  m_DummyPanel = new wxPanel( m_pSplitterWindow );
+  m_pSplitterWindow->Initialize( m_DummyPanel );
 
   SetAutoLayout(TRUE);
 }
@@ -94,40 +99,71 @@ AmayaPage::~AmayaPage()
 {
 }
 
-
 /*
  *--------------------------------------------------------------------------------------
  *       Class: AmayaPage 
- *      Method: AttachTopFrame
+ *      Method: AttachFrame
  * Description: attache a AmayaFrame to the page (top or bottom)
  *      params:
  *        + AmayaFrame * p_frame : the frame to attach
- *        + TODO ... : the position identifier - top or bottom
+ *        + int position : the position identifier - top (1) or bottom (2)
  *      return:
  *        + AmayaFrame * : the old frame or NULL if there was no old frame at this place
  *--------------------------------------------------------------------------------------
  */
-AmayaFrame * AmayaPage::AttachTopFrame( AmayaFrame * p_frame )
+AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
 {
-  AmayaFrame * oldframe = m_pTopFrame;
+  // Select the right frame
+  AmayaFrame ** pp_frame_container = NULL;
+  switch (position)
+    {
+    case 1:
+      pp_frame_container = &m_pTopFrame;
+      break;
+    case 2:
+      pp_frame_container = &m_pBottomFrame;
+      break;
+    default:
+      wxASSERT_MSG(FALSE, _T("AmayaPage::AttachFrame -> Bad position"));
+      return NULL;
+      break;
+    }
 
+  // remember what is the oldframe
+  AmayaFrame * oldframe = *pp_frame_container;
   if (p_frame == NULL || p_frame == oldframe )
-    return NULL;
+    {
+      if (!m_pSplitterWindow->IsSplit())
+      	{
+      	  m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
+      	  AdjustSplitterPos();
+      	}
+      return NULL;
+    }
 
   /* p_frame is the new top frame */  
-  m_pTopFrame = p_frame;
+  *pp_frame_container = p_frame;
 
   /* the frame needs a new parent ! */
-  m_pTopFrame->Reparent( m_pSplitterWindow );
+  p_frame->Reparent( m_pSplitterWindow );
 
+  bool ok = false;
   if (oldframe != NULL)
-    m_pSplitterWindow->ReplaceWindow( oldframe, m_pTopFrame );
-  else if (m_pBottomFrame == NULL)
-    m_pSplitterWindow->Initialize( m_pTopFrame );
+    ok = m_pSplitterWindow->ReplaceWindow( oldframe, p_frame );
+  else if (m_pBottomFrame == NULL || m_pTopFrame == NULL)
+    {
+      ok = m_pSplitterWindow->ReplaceWindow( m_DummyPanel, p_frame );
+      m_DummyPanel->Destroy();
+      m_DummyPanel = NULL;
+    }
   else
-    m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
-  
-  m_pTopFrame->Show();
+    {
+      ok = m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
+      AdjustSplitterPos();
+    }
+  wxASSERT_MSG(ok, _T("AmayaPage::AttachFrame -> Impossible d'attacher la frame") );
+
+  p_frame->Show();
 
   SetAutoLayout(TRUE);
 
@@ -145,102 +181,88 @@ AmayaFrame * AmayaPage::AttachTopFrame( AmayaFrame * p_frame )
   if (p_frame && GetWindowParent())
     GetWindowParent()->SetMenuBar( p_frame->GetMenuBar() );
 
-  /* return the old topframe : needs to be manualy deleted .. */
+  // return the old frame : needs to be manualy deleted ..
   return oldframe;
 }
 
 /*
  *--------------------------------------------------------------------------------------
- *       Class: AmayaPage 
- *      Method: AttachBottomFrame
- * Description: cf. above -> AttachTopFrame
+ *       Class:  AmayaPage
+ *      Method:  DetachFrame
+ * Description:  detache the frame (hide it but don't delete it)
+ *      params:
+ *        + 1 the top frame
+ *        + 2 the bottom frame 
+ *      return:
+ *        + AmayaFrame* : the detached frame
  *--------------------------------------------------------------------------------------
  */
-AmayaFrame * AmayaPage::AttachBottomFrame( AmayaFrame * p_frame )
+AmayaFrame * AmayaPage::DetachFrame( int position )
 {
-  AmayaFrame * oldframe = m_pBottomFrame;
+  // Select the right frame : top or bottom
+  AmayaFrame ** pp_frame_container = NULL;
+  switch (position)
+    {
+    case 1:
+      pp_frame_container = &m_pTopFrame;
+      break;
+    case 2:
+      pp_frame_container = &m_pBottomFrame;
+      break;
+    default:
+      wxASSERT_MSG(FALSE, _T("AmayaPage::DetachFrame -> Bad position"));
+      return NULL;
+      break;
+    }
 
-  if (p_frame == NULL || p_frame == oldframe)
+  AmayaFrame * oldframe = *pp_frame_container;
+
+  if (oldframe == NULL)
     return NULL;
 
-  /* p_frame is the new top frame */  
-  m_pBottomFrame = p_frame;
+  bool isUnsplited = m_pSplitterWindow->Unsplit( oldframe );
+  if (!isUnsplited)
+    {
+      // The frame is alone and can't be unsplit
+      // => replace it with a dummy panel
+      m_DummyPanel = new wxPanel( m_pSplitterWindow );
+      bool isReplaced = m_pSplitterWindow->ReplaceWindow( oldframe, m_DummyPanel );
+      wxASSERT_MSG( isReplaced, _T("La frame n'a pas pu etre remplacee") );
+    }
 
-  /* the frame needs a new parent ! */
-  m_pBottomFrame->Reparent( m_pSplitterWindow );
-  
-  if (oldframe != NULL)
-    m_pSplitterWindow->ReplaceWindow( oldframe, m_pBottomFrame );
-  else if (m_pTopFrame == NULL)
-    m_pSplitterWindow->Initialize( m_pBottomFrame );
+  // update old and new AmayaFrame parents
+  if (oldframe)
+    {
+      oldframe->SetActive( FALSE );
+      // no more parents
+      //      oldframe->SetPageParent( NULL ); 
+    }
+
+  *pp_frame_container = NULL;
+
+  // This frame is not anymore active
+  // activate the other frame
+  int active_frame_position = 1;
+  while ( !GetFrame( active_frame_position ) && active_frame_position <= MAX_MULTI_FRAME )
+    active_frame_position++;
+  if ( active_frame_position <= MAX_MULTI_FRAME )
+    {
+      // there is another frame
+      // so activate it
+      AmayaFrame * p_frame = GetFrame( active_frame_position );
+      SetActiveFrame( p_frame );
+      if ( GetActiveFrame() )
+	GetActiveFrame()->SetActive( TRUE );
+      else
+	wxASSERT(FALSE);
+    }
   else
-    m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
+    {
+      GetWindowParent()->DesactivateMenuBar();
 
-  m_pBottomFrame->Show();
-
-  SetAutoLayout(TRUE);
-  Layout();
- 
-  // update old and new AmayaFrame parents
-  if (oldframe)
-    oldframe->SetPageParent( NULL ); // no more parent
-  if (p_frame)
-    p_frame->SetPageParent( this ); // I'm your parent
-
-  // update the page title (same as top frame)
-  if (p_frame)
-    p_frame->SetPageTitle(p_frame->GetPageTitle());
-  
-  /* return the old bottomframe : needs to be manualy deleted .. */
-  return oldframe;
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  DetachTopFrame
- * Description:  detache the top frame (hide it but don't delete it)
- *--------------------------------------------------------------------------------------
- */
-AmayaFrame * AmayaPage::DetachTopFrame()
-{
-  AmayaFrame * oldframe = m_pTopFrame;
-
-  if (oldframe == NULL)
-    return NULL;
-
-  m_pSplitterWindow->Unsplit( oldframe );
-
-  // update old and new AmayaFrame parents
-  if (oldframe)
-    oldframe->SetPageParent( NULL ); // no more parent
-
-  m_pTopFrame = NULL;
-
-  return oldframe;
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  DetachBottomFrame
- * Description:  detache the bottom frame (hide it but don't delete it)
- *--------------------------------------------------------------------------------------
- */
-AmayaFrame * AmayaPage::DetachBottomFrame()
-{
-  AmayaFrame * oldframe = m_pBottomFrame;
-
-  if (oldframe == NULL)
-    return NULL;
-
-  m_pSplitterWindow->Unsplit( oldframe );
-
-  // update old and new AmayaFrame parents
-  if (oldframe)
-    oldframe->SetPageParent( NULL ); // no more parent
-
-  m_pBottomFrame = NULL;
+      // there is no more frame
+      SetActiveFrame( NULL );
+    }
 
   return oldframe;
 }
@@ -298,7 +320,20 @@ void AmayaPage::OnSplitterDClick( wxSplitterEvent& event )
 void AmayaPage::OnSplitterUnsplit( wxSplitterEvent& event )
 {
   wxLogDebug( _T("AmayaPage::OnSplitterUnsplit\n") );
-  
+
+  // the frame has been maybe unsplited manualy
+  // maybe an update is needed
+  int pos = GetFramePosition( wxDynamicCast(event.GetWindowBeingRemoved(), AmayaFrame) );
+  switch ( pos )
+    {
+    case 1:
+      m_pTopFrame = NULL;
+      break;
+    case 2:
+      m_pBottomFrame = NULL;
+      break;
+    }
+
   event.Skip();  
 }
 
@@ -323,7 +358,7 @@ void AmayaPage::OnSize( wxSizeEvent& event )
   wxLogDebug( _T("AmayaPage::OnSize w=%d h=%d \n"),
 		event.GetSize().GetWidth(),
 		event.GetSize().GetHeight() );
-  
+  /*
   // force the splitter position (depending of window size)
   float new_height = event.GetSize().GetHeight();
   float new_width = event.GetSize().GetWidth();
@@ -333,10 +368,48 @@ void AmayaPage::OnSize( wxSizeEvent& event )
     new_slash_pos = m_SlashRatio * new_height;
   else if ( split_mode == 2 ) // vertically
     new_slash_pos = m_SlashRatio * new_width;
-  if ( new_slash_pos > 0 )
+  if ( new_slash_pos > 0 && (GetFrame(1) || GetFrame(2)) )
     m_pSplitterWindow->SetSashPosition( (int)new_slash_pos );
+  */
 
-  event.Skip(); 
+  AdjustSplitterPos( /*event.GetSize().GetHeight(), event.GetSize().GetWidth()*/ );
+  event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  AdjustSplitterPos
+ * Description:  adjust the splitbar position,
+ *               the split bar pos could be horizontal or vertical
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPage::AdjustSplitterPos( int height, int width )
+{
+  if ( height == -1 )
+    height = GetSize().GetHeight();
+  if ( width == -1 )
+    width = GetSize().GetWidth();
+
+  // force the splitter position (depending of window size)
+  float new_height    = height;
+  float new_width     = width;
+  float new_slash_pos = 0;
+  int split_mode      = m_pSplitterWindow->GetSplitMode();
+  switch (split_mode)
+    {
+    case 1:
+      new_slash_pos = m_SlashRatio * new_height;
+      break;
+    case 2:
+      new_slash_pos = m_SlashRatio * new_width;
+      break;
+    default:
+      wxASSERT(FALSE);
+      break;
+    }  
+  if ( new_slash_pos > 0 && (GetFrame(1) && GetFrame(2)) )
+    m_pSplitterWindow->SetSashPosition( (int)new_slash_pos );
 }
 
 /*
@@ -369,12 +442,12 @@ void AmayaPage::OnClose(wxCloseEvent& event)
     {
       p_AmayaFrame = m_pTopFrame;
       frame_id     = m_pTopFrame->GetFrameId();
-      DetachTopFrame();
+      //      DetachFrame(1);
       p_AmayaFrame->OnClose( event );
       if ( FrameTable[frame_id].WdFrame != 0)
 	{
 	  // if the frame didnt die, just re-attach it
-	  AttachTopFrame(p_AmayaFrame);
+	  AttachFrame(p_AmayaFrame, 1);
 	  m_IsClosed = FALSE;
 	}
     }
@@ -384,12 +457,12 @@ void AmayaPage::OnClose(wxCloseEvent& event)
     { 
       p_AmayaFrame = m_pBottomFrame;
       frame_id     = m_pBottomFrame->GetFrameId();
-      DetachBottomFrame();
+      //      DetachFrame(2);
       p_AmayaFrame->OnClose( event );
       if (FrameTable[frame_id].WdFrame != 0)
 	{
 	  // if the frame didnt die, just re-attach it
-	  AttachBottomFrame(p_AmayaFrame);
+	  AttachFrame(p_AmayaFrame, 2);
 	  m_IsClosed = FALSE;
 	}
     }
@@ -515,12 +588,7 @@ void AmayaPage::SetSelected( bool isSelected )
 	  }
       }
     if ( GetActiveFrame() )
-      {
-	GetActiveFrame()->SetActive( TRUE );
-
-	// update the page title
-	//	GetActiveFrame()->SetWindowTitle(m_pTopFrame->GetWindowTitle());
-      }
+      GetActiveFrame()->SetActive( TRUE );
   }
 }
 
@@ -570,7 +638,24 @@ AmayaFrame * AmayaPage::GetFrame( int frame_position ) const
       return m_pBottomFrame;
     }
   else
-	  return NULL;
+    return NULL;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  GetFramePosition
+ * Description:  return the frame position if it exist in the current page
+ *--------------------------------------------------------------------------------------
+ */
+int AmayaPage::GetFramePosition( const AmayaFrame * p_frame ) const
+{
+  if ( p_frame == GetFrame(1) )
+    return 1;
+  else if ( p_frame == GetFrame(2) )
+    return 2;
+  else
+    return 0;
 }
 
 /*
@@ -585,11 +670,11 @@ void AmayaPage::DeletedFrame( AmayaFrame * p_frame )
 {
   if ( p_frame == GetFrame(1) )
     {
-      DetachTopFrame();
+      DetachFrame(1);
     }
   if ( p_frame == GetFrame(2) )
     {
-      DetachBottomFrame();
+      DetachFrame(2);
     }
 }
 
@@ -607,7 +692,6 @@ AmayaFrame * AmayaPage::GetActiveFrame() const
 {
   return GetFrame( m_ActiveFrame );
 }
-
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
