@@ -2504,8 +2504,10 @@ ThotBool FrameButtonDownCallback(
 	/* a selection extension */
 	TtaAbortShowDialogue ();
 	LocateSelectionInView (frame, x, y, 0);
+#ifndef _WINDOWS
 	FrameToView (frame, &document, &view);
 	TtcCopyToClipboard (document, view);
+#endif /* _WINDOWS */
       }
       else
       {
@@ -2603,8 +2605,10 @@ ThotBool FrameButtonUpCallback(
   if ( Selecting )
     {
       Selecting = FALSE;
+#ifndef _WINDOWS
       FrameToView (frame, &document, &view);
       TtcCopyToClipboard (document, view);
+#endif /* _WINDOWS */
     } 
 
   if (thot_button_id == THOT_LEFT_BUTTON)
@@ -2654,10 +2658,11 @@ ThotBool FrameButtonDClickCallback(
       ClickX = x;
       ClickY = y;
       LocateSelectionInView (frame, ClickX, ClickY, 3);
-      
+#ifndef _WINDOWS
       /* a word is probably selected, copy it into clipboard */
       FrameToView (frame, &document, &view);
       TtcCopyToClipboard (document, view);
+#endif /* _WINDOWS */
     }
     break;
     
@@ -2776,7 +2781,9 @@ ThotBool FrameMotionCallback(
 	  if (Selecting)
 	    {
 	      LocateSelectionInView (frame,  Motion_x, Motion_y, 0);
+#ifndef _WINDOWS
 	      TtcCopyToClipboard (doc, view);
+#endif /* _WINDOWS */
 	    }
 	}      
     }

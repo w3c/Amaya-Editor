@@ -3679,6 +3679,10 @@ void TtcCutSelection (Document doc, View view)
 	 /* use the right frame */
 	 ActiveFrame = frame;
      }
+
+#if defined(_WX) && defined (_WINDOWS)
+  TtcCopyToClipboard (doc, view);
+#endif /*  defined(_WX) && defined (_WINDOWS) */
 #ifdef _WINGUI
    TtcCopyToClipboard (doc, view);
 
@@ -4019,6 +4023,10 @@ void TtcCopySelection (Document doc, View view)
 	/* use the right frame */
 	ActiveFrame = frame;
     }
+
+#if defined(_WX) && defined (_WINDOWS)
+  TtcCopyToClipboard (doc, view);
+#endif /*  defined(_WX) && defined (_WINDOWS) */
 #ifdef _WINGUI
   activeWnd = GetFocus ();
   if (activeWnd == FrRef [frame])
