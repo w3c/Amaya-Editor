@@ -73,6 +73,8 @@ extern void RebuildConcreteImage ( int frame );
 extern ThotBool IsDead ( PtrAbstractBox pAb );
 extern void ClearConcreteImage ( int frame );
 extern void CheckScrollingWidth ( int frame );
+extern void InitTable ( int i,
+                        PtrDocument pDoc );
 extern ThotBool ChangeConcreteImage ( int frame,
                                       int *pageHeight,
                                       PtrAbstractBox pAb );
@@ -146,6 +148,8 @@ extern void RebuildConcreteImage (/* int frame */);
 extern ThotBool IsDead (/* PtrAbstractBox pAb */);
 extern void ClearConcreteImage (/* int frame */);
 extern void CheckScrollingWidth (/* int frame */);
+extern void InitTable (/* int i,
+                          PtrDocument pDoc */);
 extern ThotBool ChangeConcreteImage (/* int frame,
                                         int *pageHeight,
                                         PtrAbstractBox pAb */);

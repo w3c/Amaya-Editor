@@ -4124,7 +4124,7 @@ void Reload (Document doc, View view)
    if (IsW3Path (pathname))
      {
        /* load the document from the Web */
-       toparse = GetObjectWWW (doc, pathname, form_data, tempfile, 
+       toparse = GetObjectWWW (doc, 0, pathname, form_data, tempfile, 
 			       mode,
 			       NULL, NULL, (void *) Reload_callback, 
 			       (void *) ctx, YES, NULL);
@@ -4803,7 +4803,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 		      ThotBool history, TTcbf *cbf, void *ctx_cbf,
 		      CHARSET charset)
 {
-  Document            newdoc;
+  Document            newdoc, refdoc;
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
   GETHTMLDocument_context *ctx = NULL;
@@ -5033,8 +5033,13 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	  if (IsW3Path (pathname))
 	    {
 	      css = SearchCSS (0, pathname, NULL, &pInfo);
+	      if (method == CE_MAKEBOOK || method == CE_RELATIVE)
+		/* add the referer field in the GET */
+		refdoc = doc;
+	      else
+		refdoc = 0;
 	      if (css == NULL)
-		toparse =  GetObjectWWW (newdoc, pathname, form_data,
+		toparse =  GetObjectWWW (newdoc, refdoc, pathname, form_data,
 					 tempfile, mode, NULL, NULL,
 					 (void *) GetAmayaDoc_callback,
 					 (void *) ctx, YES, content_type);

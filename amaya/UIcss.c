@@ -87,7 +87,7 @@ ThotBool LoadRemoteStyleSheet (char *url, Document doc, Element el,
       /* the CSS is not loaded yet */
       /* changed this to doc */
       UpdateTransfer (doc);
-      toparse = GetObjectWWW (doc, completeURL, NULL, localfile,
+      toparse = GetObjectWWW (doc, 0, completeURL, NULL, localfile,
 			      AMAYA_SYNC | AMAYA_LOAD_CSS, NULL, NULL,
 			      NULL, NULL, NO, NULL);
       ResetStop (doc);

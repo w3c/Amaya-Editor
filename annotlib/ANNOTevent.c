@@ -748,6 +748,7 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 	  else
 	    UpdateTransfer (doc);
 	  res = GetObjectWWW (doc,
+			      0,
 			      server,
 			      annotURL,
 			      ctx->remoteAnnotIndex,
@@ -1309,6 +1310,7 @@ void ANNOT_Post (Document doc, View view)
       free_url = FALSE;
 
       res = GetObjectWWW (doc,
+			  0,
 			  url,
 			  rdf_file,
 			  ctx->remoteAnnotIndex,
@@ -1343,6 +1345,7 @@ void ANNOT_Post (Document doc, View view)
 	  free_url = TRUE;
 	  
 	  res = GetObjectWWW (doc,
+			      0,
 			      url,
 			      rdf_file,
 			      ctx->remoteAnnotIndex,
@@ -1986,6 +1989,7 @@ void ANNOT_Delete (Document doc, View view)
 	  /* launch the request */
 	  ANNOT_UpdateTransfer (doc);
 	  res = GetObjectWWW (doc,
+			      0,
 			      annot->annot_url,
 			      NULL,
 			      ctx->output_file,

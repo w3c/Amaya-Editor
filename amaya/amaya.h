@@ -282,22 +282,22 @@ typedef enum _ClickEvent {
 /* send the form using the GET HTTP method */
 #define AMAYA_FORM_GET  32	/*0x100000 */
 /* bypass caching */
-#define AMAYA_NOCACHE	64
+#define AMAYA_NOCACHE	64 /* 2^6 */
 /* don't follow redirections */
-#define AMAYA_NOREDIR	128
+#define AMAYA_NOREDIR	128 /* 2^7 */
 /* Prevents a stop race condition in ASYNC transfers */
-#define AMAYA_ASYNC_SAFE_STOP  256
-#define AMAYA_LOAD_CSS   512
-#define AMAYA_FLUSH_REQUEST 1024
-#define AMAYA_USE_PRECONDITIONS 2048
-#define AMAYA_LOAD_IMAGE 4096
+#define AMAYA_ASYNC_SAFE_STOP  256 /* 2^8 */
+#define AMAYA_LOAD_CSS   512 /* 2^9 */
+#define AMAYA_FLUSH_REQUEST 1024 /* 2^10 */
+#define AMAYA_USE_PRECONDITIONS 2048 /* 2^11 */
+#define AMAYA_LOAD_IMAGE 4096 /* 2^12 */
 /* post an annonation */
-#define AMAYA_FILE_POST 8192
+#define AMAYA_FILE_POST 8192 /* 2^13 */
 /* delete an annotation */
-#define AMAYA_DELETE    16384
-#define AMAYA_MBOOK_IMAGE 32768
+#define AMAYA_DELETE    16384 /* 2^14 */
+#define AMAYA_MBOOK_IMAGE 32768 /* 2^15 */
 /* post an annotation using PUT */
-#define AMAYA_SIMPLE_PUT 65536
+#define AMAYA_SIMPLE_PUT 65536 /* 2^16 */
 
 /*
  * Flags to indicate the action to take when the network options

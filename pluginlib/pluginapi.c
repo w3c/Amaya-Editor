@@ -98,13 +98,7 @@ NPNetscapeFuncs* amayaFunctionsTable;
 	 ** fileSuffix: output variable represnting all file suffixes
             supported by the plugin.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void ParseMIMEType (const int indexHandler, const char* pluginMimeType)
-#else  /* __STDC__ */
-static void ParseMIMEType (indexHandler, pluginMimeType)
-const int   indexHandler;
-const char* pluginMimeType;
-#endif /* __STDC__ */
 {
    int  index     = 0;
    int  suffixNdx = 0;
@@ -226,15 +220,7 @@ const char* pluginMimeType;
               if the type of stream required by the plugin is NP_NORMAL.
               The data is delivered pregressively to the plug-in. 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void Ap_Normal (NPP pluginInstance, NPStream* stream, const char* url) 
-#else  /* __STDC__ */
-static void Ap_Normal (pluginInstance, stream, url) 
-NPP         pluginInstance; 
-NPStream*   stream; 
-const char* url;
-#endif /* __STDC__ */
 {
     FILE*       fptr;
     char*       buffer;
@@ -274,15 +260,7 @@ const char* url;
               if the type of stream required by the plugin is NP_ASFILE.
               The data is delivered pregressively to the plug-in as it is saved. 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void Ap_AsFile (NPP pluginInstance, NPStream* stream, const char* url) 
-#else  /* __STDC__ */
-static void Ap_AsFile (pluginInstance, stream, url) 
-NPP         pluginInstance; 
-NPStream*   stream; 
-const char* url;
-#endif /* __STDC__ */
 {
     FILE*       fptr;
     char        buffer [BUFSIZE];
@@ -311,24 +289,7 @@ const char* url;
 /*----------------------------------------------------------------------
   Ap_GetURLNotifyProgressCallback
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void   Ap_GetURLNotifyProgressCallback (int doc, int status, char *urlName, char *outputfile, AHTHeaders *http_headers, char *pbuffer, int buffer_length,  void * context)
-#else  /* __STDC__ */
-static void  Ap_GetURLNotifyProgressCallback (doc, status, urlName, outpufile, http_headers, pbuffer, buffer_length, context)
-
-int doc;
-int status;
-char *urlName;
-char *outputfile;
-AHTHeaders *http_headers;
-char* pbuffer;
-int   buffer_length;
-void *context;
-
-#endif /* __STDC__ */
-{
-#   ifndef AMAYA_JAVA
     struct stat    sbuf;
     static FILE*   fptr = NULL;
     static char*   file;
@@ -385,27 +346,13 @@ void *context;
 	  /*(*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(instance), progressStream, file); */
        }
     }
-#   endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
   Ap_GetURLNotifyCallback
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void   Ap_GetURLNotifyCallback (int doc, int status, char *urlName, char *outputfile, AHTHeaders *http_headers, void * context)
-#else  /* __STDC__ */
-static void  Ap_GetURLNotifyCallback (doc, status, urlName, outpufile, http_headers, context)
-
-int doc;
-int status;
-char *urlName;
-char *outputfile;
-AHTHeaders *http_headers;
-void *context;
-#endif /* __STDC__ */
 {
-#   ifndef AMAYA_JAVA
     char*               file;
     struct stat         sbuf;
     NPStream*           stream;
@@ -436,18 +383,12 @@ void *context;
 	  &stype); 
        Ap_Normal ((NPP) (instance), stream, file); 
     }
-#   endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
   Ap_MemAlloc
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void* Ap_MemAlloc (uint32 size)
-#else  /* __STDC__ */
-void* Ap_MemAlloc (size)
-uint32 size;
-#endif /* __STDC__ */
 {
 #   ifdef PLUGIN_DEBUG
     printf ("***** Ap_MemAlloc *****\n");
@@ -458,12 +399,7 @@ uint32 size;
 /*----------------------------------------------------------------------
   Ap_MemFlush
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 uint32  Ap_MemFlush (uint32 size)
-#else  /* __STDC__ */
-uint32  Ap_MemFlush (size)
-uint32 size;
-#endif /* __STDC__ */
 {
 #   ifdef PLUGIN_DEBUG
     printf ("***** Ap_MemFlush *****\n"); 
@@ -474,12 +410,7 @@ uint32 size;
 /*----------------------------------------------------------------------
   Ap_MemFree
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void  Ap_MemFree (void* ptr)
-#else  /* __STDC__ */
-void  Ap_MemFree (ptr)
-void* ptr;
-#endif /* __STDC__ */
 {
 #   ifdef PLUGIN_DEBUG
     printf ("***** Ap_MemFree *****\n");
@@ -492,12 +423,7 @@ void* ptr;
                   for example when leaving the document contaning the
                   plugin.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void Ap_FreePicture (PictInfo* imageDesc) 
-#else  /* __STDC__ */
-void Ap_FreePicture (imageDesc)
-PictInfo* imageDesc;
-#endif /* __STDC__ */
 {
    pluginTable [imageDesc->PicType - InlineHandlers]->pluginFunctionsTable->destroy ((NPP)(imageDesc->pluginInstance), NULL);
 }
@@ -505,14 +431,7 @@ PictInfo* imageDesc;
 /*----------------------------------------------------------------------
   Ap_DestroyStream
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 NPError Ap_DestroyStream (NPP instance, NPStream* stream, NPError reason)
-#else  /* __STDC__ */
-NPError Ap_DestroyStream (instance, stream, reason)
-NPP       instance;
-NPStream* stream;
-NPError   reason;
-#endif /* __STDC__ */
 {
 #   ifdef PLUGIN_DEBUG
     printf ("***** Ap_DestroyStream *****\n");
@@ -541,11 +460,7 @@ NPError   reason;
 /*----------------------------------------------------------------------
   Ap_GetJavaEnv
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 JRIEnv*  Ap_GetJavaEnv (void)
-#else  /* __STDC__ */
-JRIEnv*  Ap_GetJavaEnv ()
-#endif /* __STDC__ */
 {
 #   ifdef PLUGIN_DEBUG
     printf ("***** Ap_GetJavaEnv *****\n"); 
@@ -556,12 +471,7 @@ JRIEnv*  Ap_GetJavaEnv ()
 /*----------------------------------------------------------------------
   Ap_GetJavaEPeer
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 jref Ap_GetJavaPeer (NPP instance)
-#else  /* __STDC__ */
-jref Ap_GetJavaPeer (instance)
-NPP instance;
-#endif /* __STDC__ */
 {
 #   ifdef PLUGIN_DEBUG
     printf ("***** Ap_GetJavaPeer *****\n"); 
@@ -572,15 +482,7 @@ NPP instance;
 /*----------------------------------------------------------------------
   Ap_URLNotify
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void Ap_URLNotify (NPP instance, const char* url, NPReason reason, void* notifyData)
-#else  /* __STDC__ */
-void Ap_URLNotify (instance, url, reason, notifyData)
-NPP         instance; 
-const char *url; 
-NPReason    reason; 
-void*       notifyData;
-#endif /* __STDC__ */
 {
 #   ifdef PLUGIN_DEBUG
     printf ("*** Ap_URLNotify ***\n");
@@ -590,14 +492,7 @@ void*       notifyData;
 /*----------------------------------------------------------------------
   Ap_GetURL
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 NPError Ap_GetURL (NPP instance, const char* url, const char* target)
-#else  /* __STDC__ */
-NPError Ap_GetURL (instance, url, target)
-NPP         instance;
-const char *url;
-const char *target;
-#endif /* __STDC__ */
 {
   int         result;
   char        tempfile [500];
@@ -623,7 +518,7 @@ const char *target;
 	  printf ("AM_geturl: Passing stream to the plug-in\n");
 #         endif
 	  strcpy (tempurl, url);
-	  result = GetObjectWWW (1, tempurl, NULL, tempfile, AMAYA_IASYNC, 
+	  result = GetObjectWWW (1, 0, tempurl, NULL, tempfile, AMAYA_IASYNC, 
 				 (void*) Ap_GetURLNotifyProgressCallback,
 				 (void*) instance, 
 				 (void*) Ap_GetURLNotifyProgressCallback,
@@ -641,15 +536,7 @@ const char *target;
 /*----------------------------------------------------------------------
   Ap_GetURLNotify
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 NPError Ap_GetURLNotify (NPP instance, const char* url, const char *target, void* notifyData)
-#else  /* !__STDC__ */
-NPError Ap_GetURLNotify (instance, url, target, notifyData)
-NPP         instance; 
-const char *url; 
-const char *target; 
-void       *notifyData;
-#endif /* __STDC__ */
 {
 #   ifdef PLUGIN_DEBUG
     printf ("*** Ap_GetURLNotify ***\n");
@@ -662,15 +549,7 @@ void       *notifyData;
 /*----------------------------------------------------------------------
   Ap_NewStream
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 NPError    Ap_NewStream (NPP instance, NPMIMEType type, const char *window, NPStream **stream_ptr)
-#else  /* __STDC__ */
-NPError    Ap_NewStream (instance, type, window, stream_ptr)
-NPP        instance;
-NPMIMEType type;
-const char *window;
-NPStream  **stream_ptr;
-#endif /* __STDC__ */
 {
 #ifdef PLUGIN_DEBUG
     printf ("***** Ap_NewStream *****\n");
@@ -691,17 +570,7 @@ NPStream  **stream_ptr;
 /*----------------------------------------------------------------------
   Ap_PostURL
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 NPError Ap_PostURL (NPP instance, const char* url, const char* target, uint32 len, const char* buf, NPBool file)
-#else  /* __STDC__ */
-NPError Ap_PostURL (instance, url, target, len, buf, file)
-NPP         instance;
-const char* url;
-const char* target;
-uint32      len;
-const char* buf;
-NPBool      file;
-#endif /* __STDC__ */
 {
   int         count;
   char*       bufToPost = NULL;
@@ -738,12 +607,14 @@ NPBool      file;
 	      printf ("error occured while reading file: %s\n", fileToPost);
 	      return (NPERR_GENERIC_ERROR);
 	    }
-	  GetObjectWWW (1, tempurl, bufToPost, NULL, AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0, NULL);
+	  GetObjectWWW (1, 0, tempurl, bufToPost, NULL, 
+			AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0, NULL);
 	}
     }
   else
     /* Posting data from memory */
-    GetObjectWWW (1, tempurl, tempbuf, NULL, AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0, NULL);
+    GetObjectWWW (1, 0, tempurl, tempbuf, NULL, 
+		  AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0, NULL);
   
    return (NPERR_NO_ERROR);
 }
@@ -751,18 +622,7 @@ NPBool      file;
 /*----------------------------------------------------------------------
   Ap_PostURLNotify
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 NPError Ap_PostURLNotify (NPP instance, const char* url, const char* target, uint32 len, const char* buf, NPBool file, void* notifyData)
-#else  /* !__STDC__ */
-NPError Ap_PostURLNotify (instance, url, target, len, buf, file, void* notifyData)
-NPP         instance; 
-const char* url; 
-const char* target; 
-uint32      len;
-const char* buf;
-NPBool      file;
-void*       notifyData;
-#endif /* __STDC__ */
 {
     printf ("*** Ap_PostURLNotify ***\n");
 
@@ -774,13 +634,7 @@ void*       notifyData;
 /*----------------------------------------------------------------------
   Ap_RequestRead
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 NPError Ap_RequestRead (NPStream* stream, NPByteRange* rangeList)
-#else  /* __STDC__ */
-NPError Ap_RequestRead (stream, rangeList)
-NPStream*    stream;
-NPByteRange* rangeList;
-#endif /* __STDC__ */
 {
     FILE*        fptr;
     char*        buffer = NULL;
@@ -813,13 +667,7 @@ NPByteRange* rangeList;
 /*----------------------------------------------------------------------
   Ap_Status
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void Ap_Status (NPP instance, const char* message)
-#else  /* __STDC__ */
-void Ap_Status (instance, message)
-NPP         instance; 
-const char* message;
-#endif /* __STDC__ */
 {
 #   ifdef PLUGIN_DEBUG
     printf ("***** Ap_Status *****\n");
@@ -830,12 +678,7 @@ const char* message;
 /*----------------------------------------------------------------------
   Ap_UserAgent
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 const char* Ap_UserAgent (NPP instance)
-#else  /* __STDC__ */
-const char* Ap_UserAgent (instance)
-NPP instance;
-#endif /* __STDC__ */
 {
 #   ifdef PLUGIN_DEBUG
     printf ("***** Ap_UserAgent *****\n");
@@ -846,15 +689,7 @@ NPP instance;
 /*----------------------------------------------------------------------
   Ap_Write
   ----------------------------------------------------------------------*/
-#ifdef __STDC__ 
 int32 Ap_Write (NPP instance, NPStream* stream, int32 len, void* buffer)
-#else  /* __STDC__ */
-int32 Ap_Write (instance, stream, len, buffer)
-NPP       instance;
-NPStream* stream;
-int32     len;
-void*     buffer;
-#endif /* __STDC__ */
 {
 #   ifdef PLUGIN_DEBUG
     printf ("***** Ap_Write *****\n");
@@ -865,15 +700,7 @@ void*     buffer;
 /*----------------------------------------------------------------------
   Ap_Version
   ----------------------------------------------------------------------*/
-#ifdef __STDC__ 
 void Ap_Version (int* plugin_major, int* plugin_minor, int* amaya_major, int* amaya_minor)
-#else  /* __STDC__ */
-void Ap_Version (plugin_major, plugin_minor, amaya_major, amaya_minor)
-int* plugin_major; 
-int* plugin_minor; 
-int* amaya_major; 
-int* amaya_minor;
-#endif /* __STDC__ */
 {
 #   ifdef PLUGIN_DEBUG
     printf ("***** Ap_Version *****\n");
@@ -887,12 +714,7 @@ int* amaya_minor;
 /*----------------------------------------------------------------------
   Ap_ReloadPlugins
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void Ap_ReloadPlugins (NPBool reloadPages)
-#else  /* __STDC__ */
-void Ap_ReloadPlugins (reloadPages)
-NPBool reloadPages;
-#endif /* __STDC__ */
 {
 #   ifdef PLUGIN_DEBUG
     printf ("***** Ap_ReloadPlugins *****\n");
@@ -903,14 +725,7 @@ NPBool reloadPages;
 /*----------------------------------------------------------------------
   AM_getvalue
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 NPError Ap_GetValue (NPP instance, NPNVariable variable, void* r_value)
-#else  /* __STDC__ */
-NPError Ap_GetValue (instance, variable, r_value)
-NPP         instance; 
-NPNVariable variable; 
-void*       r_value;
-#endif /* __STDC__ */
 {
     NPError error = NPERR_NO_ERROR;
 #   ifdef PLUGIN_DEBUG
@@ -936,11 +751,7 @@ void*       r_value;
 /*----------------------------------------------------------------------
   InitializeTable
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void Ap_InitializeAmayaTable (void)
-#else  /* __STDC__ */
-void Ap_InitializeAmayaTable ()
-#endif /* __STDC__ */
 {
     amayaFunctionsTable  = (NPNetscapeFuncs*) malloc (sizeof (NPNetscapeFuncs));
 #   ifdef PLUGIN_DEBUG
@@ -973,12 +784,7 @@ void Ap_InitializeAmayaTable ()
 /*----------------------------------------------------------------------
   Ap_InitializePluginTable
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void Ap_InitializePluginTable (int indexHandler)
-#else  /* __STDC__ */
-void Ap_InitializePluginTable (indexHandler)
-int indexHandler;
-#endif /* __STDC__ */
 {
     char* message;
     int   ret;
@@ -1014,13 +820,7 @@ int indexHandler;
 /*----------------------------------------------------------------------
   InitializePlugin
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int Ap_InitializePlugin (char* path, int indexHandler)
-#else  /* __STDC__ */
-int Ap_InitializePlugin (path, indexHandler)
-char* path;
-int   indexHandler;
-#endif /* __STDC__ */
 {
     /* Open the library and get the symbols addresses */
     char* message = (char*) NULL;
@@ -1093,14 +893,7 @@ int   indexHandler;
 /*----------------------------------------------------------------------
   CreateInstance
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void Ap_CreatePluginInstance (PtrBox box, PictInfo *imageDesc, Display *display, int type) 
-#else  /* __STDC__ */
-void Ap_CreatePluginInstance (imageDesc, display, type)
-PictInfo* imageDesc;
-Display*  display; 
-int       type;
-#endif /* __STDC__ */
 {
 
     ElementType   elType;

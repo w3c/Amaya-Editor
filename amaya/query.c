@@ -981,6 +981,8 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
 	   if (escape_src)
 	     {
 	       ref = AmayaParseUrl (dst, escape_src, AMAYA_PARSE_ALL);
+	       /* @@@@@@@ */
+	       AHTRequest_setRefererHeader (me->request, escape_src);
 	       TtaFreeMemory (escape_src);
 	     }
 	   else
@@ -2771,6 +2773,16 @@ static   HTAssocList * PrepareFormdata (char *string)
 
 /*----------------------------------------------------------------------
   ---------------------------------------------------------------------*/
+void AHTRequest_setRefererHeader (HTRequest *request, char *value)
+{				
+  HTRqHd rqhd = HTRequest_rqHd (request);
+  rqhd = rqhd & (~HT_C_REFERER);
+  HTRequest_setRqHd (request, rqhd);
+  HTRequest_addExtraHeader (request, "Referer", value);
+}
+
+/*----------------------------------------------------------------------
+  ---------------------------------------------------------------------*/
 void AHTRequest_setCustomAcceptHeader (HTRequest *request, char *value)
 {				
   HTRqHd rqhd = HTRequest_rqHd (request);
@@ -2846,6 +2858,7 @@ void InvokeGetObjectWWW_callback (int docid, char *urlName,
    Inputs:
    - docid  Document identifier for the set of objects being
    retrieved.
+   - refdoc Document identifier to refer.
    - urlName The URL to be retrieved (MAX_URL_LENGTH chars length)
    - outputfile A pointer to an empty string of MAX_URL_LENGTH.
    - mode The retrieval mode.
@@ -2869,7 +2882,7 @@ void InvokeGetObjectWWW_callback (int docid, char *urlName,
    HT_ERROR
    HT_OK
   ----------------------------------------------------------------------*/
-int GetObjectWWW (int docid, char *urlName, char *formdata,
+int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
 		  char *outputfile, int mode, TIcbf *incremental_cbf, 
 		  void *context_icbf, TTcbf *terminate_cbf, 
 		  void *context_tcbf, ThotBool error_html, char *content_type)
@@ -3008,6 +3021,9 @@ int GetObjectWWW (int docid, char *urlName, char *formdata,
 	 }
 	 else
 	   AHTRequest_setCustomAcceptHeader (me->request, GENERAL_ACCEPT_NEGOTIATION);
+       /* IV 13/08/2003 */
+       if (refdoc && DocumentURLs[refdoc] && IsHTTPPath (DocumentURLs[refdoc]))
+	 AHTRequest_setRefererHeader (me->request, DocumentURLs[refdoc]);
        /* language negotiation */
        HTRequest_setLanguage (me->request, acceptLanguages, TRUE);
      }

@@ -1405,7 +1405,7 @@ static int SafeSaveFileThroughNet (Document doc, char *localfile,
 
   TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_VERIFYING), NULL);
   strcpy (tempURL, remotefile);
-  res = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE
+  res = GetObjectWWW (doc, 0, tempURL, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE
 		      | AMAYA_FLUSH_REQUEST, NULL, NULL, NULL, NULL, NO, NULL);
   if (res != 0)
     {

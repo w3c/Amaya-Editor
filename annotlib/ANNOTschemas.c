@@ -492,6 +492,7 @@ void SCHEMA_ReadSchema (Document doc, char *namespace_URI)
     {
       /* launch the request */
       res = GetObjectWWW (doc,
+			  0,
 			  namespace_URI,
 			  NULL,
 			  ctx->filename,

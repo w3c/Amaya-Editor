@@ -1008,7 +1008,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 	      else
 		newflags = flags | AMAYA_ASYNC;
 	      
-	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
+	      i = GetObjectWWW (doc, doc, pathname, NULL, tempfile,
 	                        newflags, NULL, NULL,
 				(void *) libWWWImageLoaded,
 				(void *) FetchImage_ctx, NO, NULL);
