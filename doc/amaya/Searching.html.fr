@@ -98,9 +98,9 @@ trouvé"  apparaît au dessus du bouton Confirmer  .</p>
 <p>L'option de recherche ou de remplacement peut être abandonnée à n'importe
 quel moment en cliquant sur le bouton <strong>Terminer</strong>.</p>
 
-<p><strong>Nouveau</strong>:  Les opérations de remplacement peuvent être
-désormais annulées à l'aide de la fonction Défaire (dans le menu Édition, ou
-par le raccourci clavier control-z).</p>
+<p>Les opérations de remplacement peuvent être annulées à l'aide de la
+fonction Défaire (dans le menu Édition, ou par le raccourci clavier
+control-z).</p>
 </div>
 
 <p align="right"><a href="Selecting.html"><img alt="previous" border="0"

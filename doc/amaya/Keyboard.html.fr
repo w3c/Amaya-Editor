@@ -18,8 +18,8 @@
 <h3>Entrer des caractères ISO-Latin-1 dans Amaya</h3>
 
 <p>Pour obtenir un espace non sécable (<code>&amp;nbsp;</code>) avec Amaya,
-vous devez taper la touche <code>Contrôle</code> avec la touche
-<code>Espace</code>.</p>
+vous devez taper la touche <code>Control</code> avec la touche
+<code>Backspace</code>.</p>
 
 <p>Pour les caractères ISO-latin qui ne sont pas directement disponibles
 depuis le clavier, Amaya fournit deux méthodes d'entrée à multi-touches. Le
@@ -34,15 +34,15 @@ et le support multi-touches standard est désactivé.</p>
 <p>Pour les caractères ISO-Latin-1 indisponibles sur le clavier standard, il
 existe normalement une méthode qui insère ce caractère par une séquence de
 deux caractères disponibles précédés par la touche spéciale
-<strong>Composer</strong>. Sur Amaya il est possible de changer la position de
-la première touche et de la deuxième.</p>
+<strong>Composer</strong>. Sur Amaya il est possible d'inverser la première
+touche et la deuxième.</p>
 
 <p>Si la touche <strong>Composer </strong>n'existe pas vous pouvez l'attacher
 à une touche existante comme <strong>Alt-Gr</strong> par la commande
 <code>xmodmap</code> suivante:</p>
 <pre>keycode 113 = Multi_key</pre>
 
-<p>Cette commande peut être rangée dans le fichier $HOME/.Xmodmad , ainsi elle
+<p>Cette commande peut être rangée dans le fichier $HOME/.Xmodmap , ainsi elle
 pourra être appliquée dès qu'on lancera le serveur X.</p>
 
 <table border="1" summary="Latin-1 sequences">
@@ -91,7 +91,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td class="name">Aring</td>
       <td>197</td>
       <td>&lt;Shift&gt; A</td>
-      <td>star</td>
+      <td>étoile</td>
       <td>Å</td>
     </tr>
     <tr>
@@ -301,7 +301,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td class="name">aring</td>
       <td>229</td>
       <td>a</td>
-      <td>star</td>
+      <td>étoile</td>
       <td>å</td>
     </tr>
     <tr>
@@ -696,8 +696,8 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
 
 <p>La méthode d'entrée multi-touches optionnelle est basée sur deux séquences
 commençant par "l'accent" suivi de la "lettre". Par exemple pour obtenir un
-'ã', taper d'abord sur '~' puis sur 'a'.Pour obtenir un '~' vous devez taper
-deux fois sur '~'.Le tableau suivant donne les séquences de touches
+'ã', taper d'abord sur '~' puis sur 'a'. Pour obtenir un '~' vous devez taper
+deux fois sur '~'. Le tableau suivant donne les séquences de touches
 disponibles:</p>
 
 <table border="1" summary="Latin-1 sequences">
@@ -738,7 +738,7 @@ disponibles:</p>
     <tr>
       <td class="name">Aring</td>
       <td>197</td>
-      <td>star</td>
+      <td>étoile</td>
       <td>&lt;Shift&gt; A</td>
       <td>Å</td>
     </tr>
@@ -850,7 +850,7 @@ disponibles:</p>
     <tr>
       <td class="name">Oslash</td>
       <td>216</td>
-      <td>star</td>
+      <td>étoile</td>
       <td>&lt;Shift&gt; O</td>
       <td>Ø</td>
     </tr>
@@ -927,7 +927,7 @@ disponibles:</p>
     <tr>
       <td class="name">aring</td>
       <td>229</td>
-      <td>star</td>
+      <td>étoile</td>
       <td>a</td>
       <td>å</td>
     </tr>
@@ -1032,7 +1032,7 @@ disponibles:</p>
     <tr>
       <td class="name">oslash</td>
       <td>248</td>
-      <td>star</td>
+      <td>étoile</td>
       <td>o</td>
       <td>ø</td>
     </tr>
