@@ -991,8 +991,10 @@ static void  XhtmlCheckInsert (Element *el, Element  parent,
 	 }
      }
    else
-     if (!IsXMLElementInline (elType))
-       /* it is not a character level element */
+     if (!IsXMLElementInline (elType) &&
+	 elType.ElTypeNum != HTML_EL_Comment_ &&
+	 elType.ElTypeNum != HTML_EL_XMLPI)
+       /* it is not a character level element nor a comment or a PI */
        /* don't insert it as a child of a Pseudo_paragraph, but as a sibling */
        {
 	 parentType = TtaGetElementType (parent);
