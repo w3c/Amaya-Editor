@@ -264,7 +264,7 @@ int                 mode;
    Element             elForm;
    Attribute           attr, attrS, def;
    AttributeType       attrType, attrTypeS;
-   int                 length;
+   int                 length, i;
    char                name[MAX_LENGTH], value[MAX_LENGTH];
    boolean             multipleSelects, defaultSelected;
    int                 modified = FALSE;
@@ -522,7 +522,7 @@ int                 mode;
 				}
 			      else if (mode == HTML_EL_Reset_Input)
 				{
-				   /* Reset according to the default attribute */
+				  /* Reset according to the default attribute*/
 				  /* gets the default value */
 				   attrTypeS.AttrTypeNum = HTML_ATTR_Default_Value;
 				   def = TtaGetAttribute (el, attrTypeS);
@@ -530,6 +530,12 @@ int                 mode;
 				     {
 					length = MAX_LENGTH - 1;
 					TtaGiveTextAttributeValue (def, value, &length);
+					if (elType.ElTypeNum == HTML_EL_Password_Input)
+					   {
+					   for (i = 0; i < length; i++)
+					      value[i] = '*';
+					   value[length] = '\0';
+					   }
 				     }
 				   else
 				     /* there's no default value */

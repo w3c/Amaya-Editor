@@ -494,22 +494,24 @@ STRUCT
 		{ size                 maxlength }
 		  tabindex; accesskey;
 		{ tabindex  accesskey }
-		  onfocus; onblur; onselect; onchange) =
+		  onfocus; onblur; onselect; onchange;
 		{ onfocus  onblur  onselect  onchange }
+		  Default_Value) =
 		Text_With_Frame with Area_Size ?= 20;
 	Password_Input					{ INPUT / PASSWORD }
-	   (ATTR !NAME; disabled; readonly;
-		{ name  disabled  readonly }
+	   (ATTR !NAME; Value_; disabled; readonly;
+		{ name  value   disabled  readonly }
 		  Area_Size; MaxLength;
 		{ size       maxlength }
-		  tabindex; accesskey; onfocus; onblur;
-		{ tabindex  accesskey  onfocus  onblur }
-		  onselect; onchange) =
-		{ onselect  onchange }
-		Text_With_Frame;
+		  tabindex; accesskey;
+		{ tabindex  accesskey }
+		  onfocus; onblur; onselect; onchange;
+		{ onfocus  onblur  onselect  onchange }
+		  Default_Value) =
+		Text_With_Frame with Area_Size ?= 20;
 	Checkbox_Input					{ INPUT / CHECKBOX }
 	   (ATTR !NAME; Value_; Checked = Yes_, No_;
-		{ name   value   checked }
+		{ name  value   checked }
 		  disabled; readonly;
 		{ disabled  readonly }
 		  tabindex; accesskey; onfocus; onblur;
@@ -548,8 +550,8 @@ STRUCT
 		END with NAME ?= 'Reset',
 			 Value_ ?= 'Reset';
 	File_Input					{ INPUT / FILE }
-	   (ATTR !NAME; disabled; readonly;
-		{ name  disabled  readonly }
+	   (ATTR !NAME; Value_; disabled; readonly;
+		{ name  value   disabled  readonly }
 		  tabindex; accesskey;
 		{ tabindex  accesskey }
 		  onfocus; onblur; accept = Text) =

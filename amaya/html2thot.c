@@ -2666,7 +2666,7 @@ Element             el;
 #else
    char               *name1, *name2;
 #endif
-   int                 length;
+   int                 length, i;
 
    elType = TtaGetElementType (el);
    /* is this a block-level element in a character-level element? */
@@ -2745,7 +2745,9 @@ Element             el;
 		elType.ElTypeNum = HTML_EL_Text_Input;
 		child = TtaNewTree (theDocument, elType, "");
 		TtaInsertFirstChild (&child, el, theDocument);
+
 	    case HTML_EL_Text_Input:
+	    case HTML_EL_Password_Input:
 		attrType.AttrSSchema = HTMLSSchema;
 		attrType.AttrTypeNum = HTML_ATTR_Value_;
 		attr = TtaGetAttribute (el, attrType);
@@ -2755,19 +2757,35 @@ Element             el;
 		      leaf of element */
 		   length = TtaGetTextAttributeLength (attr);
 		   if (length > 0)
-		     {
-		        text = TtaGetMemory (length + 1);
-		        TtaGiveTextAttributeValue (attr, text, &length);
-		        leaf = TtaGetFirstChild (el);
-			if (leaf != NULL)
-			  {
-			  childType = TtaGetElementType (leaf);
-			  if (childType.ElTypeNum == HTML_EL_TEXT_UNIT)
-			    TtaSetTextContent (leaf, text, currentLanguage,
-					       theDocument);
-			  }
-			TtaFreeMemory (text);
-		     }
+		      {
+		      /* get element Inserted_Text */
+		      child = TtaGetFirstChild (el);
+		      if (child != NULL)
+			 {
+			 /* get the text leaf */
+			 leaf = TtaGetFirstChild (child);
+			 if (leaf != NULL)
+			    {
+			    childType = TtaGetElementType (leaf);
+			    if (childType.ElTypeNum == HTML_EL_TEXT_UNIT)
+			       {
+			       /* copy attribute value into the text leaf */
+		               text = TtaGetMemory (length + 1);
+			       if (elType.ElTypeNum == HTML_EL_Text_Input)
+		                  TtaGiveTextAttributeValue (attr, text, &length);
+			       else if (elType.ElTypeNum == HTML_EL_Password_Input)
+				  {
+			          for (i = 0; i < length; i++)
+				      text[i] = '*';
+				  text[length] = '\0';
+				  }
+			       TtaSetTextContent (leaf, text, currentLanguage,
+					          theDocument);
+			       TtaFreeMemory (text);
+			       }
+			    }
+			 }
+		      }
 		   }
 	       break;
 
@@ -4267,7 +4285,9 @@ char                c;
 
 #endif
 {
-   AttributeType       attrType;
+   AttributeType       attrType, attrType1;
+   Attribute	       attr;
+   ElementType	       elType;
    Element             child;
    Language	       lang;
    char                translation;
@@ -4452,6 +4472,20 @@ char                c;
 			}
 		  TtaSetGraphicsShape (child, shape, theDocument);
 	       }
+	  }
+	else if (!strcmp (lastAttrEntry->XMLattribute, "VALUE"))
+	  {
+	     elType = TtaGetElementType (lastAttrElement);
+	     if (elType.ElTypeNum == HTML_EL_Text_Input ||
+		 elType.ElTypeNum == HTML_EL_Password_Input)
+		/* create a Default_Value attribute with the same content */
+		{
+		attrType1.AttrSSchema = attrType.AttrSSchema;
+		attrType1.AttrTypeNum = HTML_ATTR_Default_Value;
+		attr = TtaNewAttribute (attrType1);
+		TtaAttachAttribute (lastAttrElement, attr, theDocument);
+		TtaSetAttributeText (attr, inputBuffer, lastAttrElement, theDocument);
+		}
 	  }
 #ifndef STANDALONE
 	/* Some HTML attributes are equivalent to a CSS property:      */

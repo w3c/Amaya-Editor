@@ -29,7 +29,7 @@ amaya_math_schema= compMATH compMATHP compMATHT
 #
 # Structure schema compilation.
 #
-compMATH : $(AMAYA)/MathML.STR
+compMATH: $(AMAYA)/MathML.STR
 $(AMAYA)/MathML.STR : $(AMAYA)/MathML.S ../bin/str ../bin/prs ../bin/tra
 	STR=`pwd`/../bin/str;PRS=`pwd`/../bin/prs;TRA=`pwd`/../bin/tra;\
 	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
@@ -41,7 +41,7 @@ $(AMAYA)/MathML.STR : $(AMAYA)/MathML.S ../bin/str ../bin/prs ../bin/tra
 #
 # Presentation schemas compilation
 #
-compMATHP : $(AMAYA)/MathMLP.PRS
+compMATHP: $(AMAYA)/MathMLP.PRS
 $(AMAYA)/MathMLP.PRS : $(AMAYA)/MathMLP.P ../bin/prs
 	PRS=`pwd`/../bin/prs;\
 	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
@@ -50,7 +50,7 @@ $(AMAYA)/MathMLP.PRS : $(AMAYA)/MathMLP.P ../bin/prs
 #
 # Traduction schemas compilation
 #
-compMATHT : $(AMAYA)/MathMLT.TRA
+compMATHT: $(AMAYA)/MathMLT.TRA
 $(AMAYA)/MathMLT.TRA : $(AMAYA)/MathMLT.T ../bin/tra
 	TRA=`pwd`/../bin/tra;\
 	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
@@ -60,7 +60,7 @@ $(AMAYA)/MathMLT.TRA : $(AMAYA)/MathMLT.T ../bin/tra
 #
 # Interface schemas compilation
 #
-MathML.h MathMLAPP.c : $(AMAYA)/MathML.STR $(AMAYA)/MathML.A ../bin/app
+MathML.h MathMLAPP.c: $(AMAYA)/MathML.STR $(AMAYA)/MathML.A ../bin/app
 	(if test "$(AMAYA)" != "" -a "$(AMAYA)" != "." -a \
 	         "$(AMAYA)" != "../amaya" ; then \
 	    $(CP) $(AMAYA)/MathML.A .  ; \
