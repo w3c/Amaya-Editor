@@ -7528,10 +7528,12 @@ void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
 void TtaNewPwdForm (int ref, int ref_parent, char *title, int width,
  		     int height, ThotBool react)
 {
+#ifdef _GTK
   struct Cat_Context *catalogue;
   TtaNewTextForm (ref, ref_parent, title, width, height, react);
   catalogue = CatEntry (ref);
   gtk_entry_set_visibility (GTK_WIDGET(catalogue->Cat_Entries), FALSE);
+#endif /* GTK */
 }
 /*----------------------------------------------------------------------
    TtaSetTextForm initialise une feuille de saisie de texte :         
@@ -7545,7 +7547,7 @@ void TtaSetTextForm (int ref, char *text)
    ThotWidget          w;
 #ifdef _GTK
    gint                tmpint;
-#endif
+#endif /* GTK */
 
    catalogue = CatEntry (ref);
    if (catalogue == NULL)
