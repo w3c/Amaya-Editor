@@ -1074,335 +1074,343 @@ ThotBool		    select;
 #endif /* __STDC__ */
 
 {
-   PtrElement          firstSel, lastSel, pAncest, pE, pNextEl, pPrevEl,
-                       pPrev, pNext, pChild, pEl2, pEl, pCompleteElem,
-                       pSibling, pClose;
-   PtrElement         *list;
-   PtrDocument         pDoc;
-   NotifyElement       notifyEl;
-   int                 firstChar, lastChar, NSiblings, nextChar, view;
-   int                 nbEl, i, j;
-   ThotBool            ret, ok;
+  PtrElement      firstSel, lastSel, pAncest, pE, pNextEl, pPrevEl, pPrev,
+                  pNext, pChild, pEl2, pEl, pCompleteElem, pSibling, pClose;
+  PtrElement      *list;
+  PtrDocument     pDoc;
+  NotifyElement   notifyEl;
+  int             firstChar, lastChar, NSiblings, nextChar, view;
+  int             nbEl, i, j;
+  ThotBool        ret, ok;
 
-   ret = FALSE;
-   NSiblings = 0;
-   CloseInsertion ();
-   /* y-a-t'il une selection courante ? */
-   if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
-   else if (!pDoc->DocReadOnly)
-     {
-	if (pSplitEl != NULL)
-	  {
-	     firstSel = pSplitEl;
-	     firstChar = splitIndex;
-	  }
-	if (pElReplicate != NULL)
-	  {
-	     ok = TRUE;
-	     pAncest = pElReplicate->ElParent;
-	     pEl = firstSel;
-	     if (firstChar <= 1 || !pEl->ElTerminal || pEl->ElLeafType != LtText)
+  ret = FALSE;
+  NSiblings = 0;
+  CloseInsertion ();
+  /* y-a-t'il une selection courante ? */
+  if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+    TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
+  else if (!pDoc->DocReadOnly)
+    {
+      if (pSplitEl != NULL)
+	{
+	  firstSel = pSplitEl;
+	  firstChar = splitIndex;
+	}
+      if (pElReplicate != NULL)
+	{
+	  if (pElReplicate->ElTypeNumber == pElReplicate->ElStructSchema->SsRootElem)
+	    /* that's the root element. Don't duplicate it */
+	    ok = FALSE;
+	  else
+	    {
+	      ok = TRUE;
+	      pAncest = pElReplicate->ElParent;
+	      pEl = firstSel;
+	      if (firstChar <= 1 || !pEl->ElTerminal ||
+		  pEl->ElLeafType != LtText)
 		/* la selection est en debut d'element */
-	       {
-		  /* tant qu'il n'y a pas de frere precedent, on remonte au pere */
+		{
+		  /* tant qu'il n'y a pas de frere precedent, on remonte au
+		     pere */
 		  while (pEl->ElParent != NULL && pEl->ElPrevious == NULL)
-		     pEl = pEl->ElParent;
+		    pEl = pEl->ElParent;
 		  if (pEl->ElPrevious == NULL)
-		     /* il n'y a pas de frere precedent, on ne peut pas diviser */
-		     ok = FALSE;
-	       }
-	  }
-	else
-	   ok = CanSplitElement (firstSel, firstChar, block, &pAncest, &pEl,
-				 &pElReplicate);
-	if (ok)
-	  {
-	     /* demande a l'application si on peut creer ce type d'element */
-	     notifyEl.event = TteElemNew;
-	     notifyEl.document = (Document) IdentDocument (pDoc);
-	     notifyEl.element = (Element) (pElReplicate->ElParent);
-	     notifyEl.elementType.ElTypeNum = pElReplicate->ElTypeNumber;
-	     notifyEl.elementType.ElSSchema = (SSchema) pElReplicate->ElStructSchema;
-	     pSibling = pElReplicate;
-	     NSiblings = 1;
-	     while (pSibling->ElPrevious != NULL)
-	       {
-		  NSiblings++;
-		  pSibling = pSibling->ElPrevious;
-	       }
-	     notifyEl.position = NSiblings;
-	     if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
-		/* l'application refuse */
-		pAncest = NULL;
-	  }
-	if (pAncest != NULL)
-	  {
-	     pPrev = pEl->ElPrevious;
-	     TtaClearViewSelections ();	/* annule d'abord la selection */
-	     pNext = pEl;
-	     nextChar = firstChar;
-
-	     /* Coupure eventuelle de l'atome TEXTE */
-	     if (pEl->ElTerminal)
-	       {
-		if (pEl->ElLeafType == LtText && firstChar > 1)
-		  {
-		     if (firstChar > pEl->ElTextLength && pEl->ElNext != NULL)
-		       {
-			  pPrev = pEl;
-			  pNext = pEl->ElNext;
-			  if (pNext->ElTerminal && pNext->ElLeafType == LtText)
-			     nextChar = 1;
-			  else
-			     nextChar = 0;
-		       }
-		     else
-		       {
-			  SplitTextElement (pEl, firstChar, pDoc, TRUE,
-					    &pNext, TRUE);
-			  if (pEl == NULL || pEl->ElStructSchema == NULL)
-			     /* pEl has been deleted by the application.
-				we are lost! */
-			     return ret;
-			  else
-			    /* modifie le volume des paves contenant la 1ere
-			       partie du texte */
-			    for (view = 0; view < MAX_VIEW_DOC; view++)
-			       if (pNext->ElTextLength > 0)
-				  UpdateAbsBoxVolume (pEl, view, pDoc);
-			  pPrev = pEl;
-			  nextChar = 1;
-		       }
-		  }
-		else if (pEl->ElLeafType == LtPicture && firstChar > 0 &&
-			 pEl->ElNext != NULL )
-		  {
-		    pPrev = pEl;
-		    pNext = pEl->ElNext;
-		    if (pNext->ElTerminal && pNext->ElLeafType == LtText)
+		    /* il n'y a pas de frere precedent,on ne peut pas diviser*/
+		    ok = FALSE;
+		}
+	    }
+	}
+      else
+	ok = CanSplitElement (firstSel, firstChar, block, &pAncest, &pEl,
+			      &pElReplicate);
+      if (ok)
+	{
+	  /* demande a l'application si on peut creer ce type d'element */
+	  notifyEl.event = TteElemNew;
+	  notifyEl.document = (Document) IdentDocument (pDoc);
+	  notifyEl.element = (Element) (pElReplicate->ElParent);
+	  notifyEl.elementType.ElTypeNum = pElReplicate->ElTypeNumber;
+	  notifyEl.elementType.ElSSchema = (SSchema) pElReplicate->ElStructSchema;
+	  pSibling = pElReplicate;
+	  NSiblings = 1;
+	  while (pSibling->ElPrevious != NULL)
+	    {
+	      NSiblings++;
+	      pSibling = pSibling->ElPrevious;
+	    }
+	  notifyEl.position = NSiblings;
+	  if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
+	    /* l'application refuse */
+	    pAncest = NULL;
+	}
+      if (pAncest != NULL)
+	{
+	  pPrev = pEl->ElPrevious;
+	  TtaClearViewSelections ();	/* annule d'abord la selection */
+	  pNext = pEl;
+	  nextChar = firstChar;
+	  
+	  /* Coupure eventuelle de l'atome TEXTE */
+	  if (pEl->ElTerminal)
+	    {
+	      if (pEl->ElLeafType == LtText && firstChar > 1)
+		{
+		  if (firstChar > pEl->ElTextLength && pEl->ElNext != NULL)
+		    {
+		      pPrev = pEl;
+		      pNext = pEl->ElNext;
+		      if (pNext->ElTerminal && pNext->ElLeafType == LtText)
 			nextChar = 1;
-		     else
+		      else
 			nextChar = 0;
-		  }
-	       }
-	     pClose = pPrev->ElNext;
-	     /* enregistre les elements preexistants */
-	     pE = pPrev->ElNext;
-	     nbEl = 0;
-	     while (pE != NULL)
-	       {
-		  nbEl++;
-		  pE = pE->ElNext;
-	       }
-	     list = (PtrElement *) TtaGetMemory (nbEl * sizeof (PtrElement));
-	     pE = pPrev->ElNext;
-	     nbEl = 0;
-	     while (pE != NULL)
-	       {
-		  list[nbEl++] = pE;
-		  pE = pE->ElNext;
-	       }
-	     
-	     /* detruit les paves des elements qui vont etre deplaces au */
-	     /* niveau le plus bas. La notification n'est faite que sur  */
-	     /* les elements preexistants */
-	     pE = pPrev->ElNext;
-	     pPrevEl = NULL;
-	     i = 0;
-	     while (pE != NULL)
-	       {
-		  DestroyAbsBoxes (pE, pDoc, TRUE);
-		  pNextEl = pE->ElNext;
-		  /* signale a l'application qu'on va retirer l'element */
-		  j = i;
-		  while (j < nbEl && list[j] != pE)
-		    j++;
+		    }
+		  else
+		    {
+		      SplitTextElement (pEl, firstChar, pDoc, TRUE,
+					&pNext, TRUE);
+		      if (pEl == NULL || pEl->ElStructSchema == NULL)
+			/* pEl has been deleted by the application.
+			   we are lost! */
+			return ret;
+		      else
+			/* modifie le volume des paves contenant la 1ere
+			   partie du texte */
+			for (view = 0; view < MAX_VIEW_DOC; view++)
+			  if (pNext->ElTextLength > 0)
+			    UpdateAbsBoxVolume (pEl, view, pDoc);
+		      pPrev = pEl;
+		      nextChar = 1;
+		    }
+		}
+	      else if (pEl->ElLeafType == LtPicture && firstChar > 0 &&
+		       pEl->ElNext != NULL )
+		{
+		  pPrev = pEl;
+		  pNext = pEl->ElNext;
+		  if (pNext->ElTerminal && pNext->ElLeafType == LtText)
+		    nextChar = 1;
+		  else
+		    nextChar = 0;
+		}
+	    }
+	  pClose = pPrev->ElNext;
+	  /* enregistre les elements preexistants */
+	  pE = pPrev->ElNext;
+	  nbEl = 0;
+	  while (pE != NULL)
+	    {
+	      nbEl++;
+	      pE = pE->ElNext;
+	    }
+	  list = (PtrElement *) TtaGetMemory (nbEl * sizeof (PtrElement));
+	  pE = pPrev->ElNext;
+	  nbEl = 0;
+	  while (pE != NULL)
+	    {
+	      list[nbEl++] = pE;
+	      pE = pE->ElNext;
+	    }
+	  
+	  /* detruit les paves des elements qui vont etre deplaces au */
+	  /* niveau le plus bas. La notification n'est faite que sur  */
+	  /* les elements preexistants */
+	  pE = pPrev->ElNext;
+	  pPrevEl = NULL;
+	  i = 0;
+	  while (pE != NULL)
+	    {
+	      DestroyAbsBoxes (pE, pDoc, TRUE);
+	      pNextEl = pE->ElNext;
+	      /* signale a l'application qu'on va retirer l'element */
+	      j = i;
+	      while (j < nbEl && list[j] != pE)
+		j++;
+	      if (j < nbEl)
+		{
+		  notifyEl.event = TteElemDelete;
+		  notifyEl.document = (Document) IdentDocument (pDoc);
+		  notifyEl.element = (Element) pE;
+		  notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
+		  notifyEl.elementType.ElSSchema = (SSchema)pE->ElStructSchema;
+		  pSibling = pE;
+		  NSiblings = 0;
+		  while (pSibling->ElPrevious != NULL)
+		    {
+		      NSiblings++;
+		      pSibling = pSibling->ElPrevious;
+		    }
+		  notifyEl.position = TTE_TOOLKIT_DELETE;
+		  notifyEl.info = 0;
+		  if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
+		    /* l'application refuse de continuer */
+		    return (ret);
+		}
+	      if (pE->ElStructSchema != NULL)
+		{
+		  RemoveElement (pE);
+		  /* signale a l'application qu'on a retire' un element */
 		  if (j < nbEl)
 		    {
-		      notifyEl.event = TteElemDelete;
-		      notifyEl.document = (Document) IdentDocument (pDoc);
-		      notifyEl.element = (Element) pE;
-		      notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
-		      notifyEl.elementType.ElSSchema = (SSchema) pE->ElStructSchema;
-		      pSibling = pE;
-		      NSiblings = 0;
-		      while (pSibling->ElPrevious != NULL)
-			{
-			  NSiblings++;
-			  pSibling = pSibling->ElPrevious;
-			}
-		      notifyEl.position = TTE_TOOLKIT_DELETE;
+		      notifyEl.element = (Element) pPrev->ElParent;
+		      notifyEl.position = NSiblings;
 		      notifyEl.info = 0;
-		      if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
-			/* l'application refuse de continuer */
-			return (ret);
+		      CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
 		    }
-		  if (pE->ElStructSchema != NULL)
+		  if (pPrevEl != NULL)
+		    InsertElementAfter (pPrevEl, pE);
+		  pPrevEl = pE;
+		}
+	      /* previous managed item in the list */
+	      if (j < nbEl)
+		i = j;
+	      pE = pNextEl;
+	    }
+	  TtaFreeMemory (list);
+	  AbstractImageUpdated (pDoc);
+	  if (pClose != NULL)
+	    /* l'element pPrev devient le dernier fils de son pere */
+	    ChangeFirstLast (pPrev, pDoc, FALSE, FALSE);
+	  /* Reconstruction d'une structure parallele */
+	  pE = pPrev->ElParent;
+	  pEl2 = pE;
+	  pChild = pNext;
+	  while ((pE != NULL) && (pE != pAncest))
+	    {
+	      if (pE != pElReplicate)
+		{
+		  /* signale a l'application qu'on va creer un element */
+		  notifyEl.event = TteElemNew;
+		  notifyEl.document = (Document) IdentDocument (pDoc);
+		  notifyEl.element = (Element) (pE->ElParent);
+		  notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
+		  notifyEl.elementType.ElSSchema = (SSchema)pE->ElStructSchema;
+		  pSibling = pE;
+		  NSiblings = 1;
+		  while (pSibling->ElPrevious != NULL)
 		    {
-		      RemoveElement (pE);
-		      /* signale a l'application qu'on a retire' un element */
-		      if (j < nbEl)
+		      NSiblings++;
+		      pSibling = pSibling->ElPrevious;
+		    }
+		  notifyEl.position = NSiblings;
+		  if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
+		    /* l'application refuse de continuer */
+		    return (ret);
+		}
+	      pEl2 = ReplicateElement (pE, pDoc);
+	      InsertFirstChild (pEl2, pChild);
+	      CompleteElement (pEl2, pDoc);
+	      pChild = pEl2;
+	      if (pE != pElReplicate)
+		{
+		  /* les freres suivant l'element duplique' sont transfere's */
+		  /* comme freres suivants du clone */
+		  pClose = pE->ElNext;
+		  if (pClose != NULL)
+		    {
+		      pPrevEl = pEl2;
+		      while (pClose != NULL)
 			{
-			  notifyEl.element = (Element) pPrev->ElParent;
+			  DestroyAbsBoxes (pClose, pDoc, TRUE);
+			  pNextEl = pClose->ElNext;
+			  /* signale a l'appli qu'on va retirer l'element */
+			  notifyEl.event = TteElemDelete;
+			  notifyEl.document = (Document) IdentDocument (pDoc);
+			  notifyEl.element = (Element) pClose;
+			  notifyEl.elementType.ElTypeNum =pClose->ElTypeNumber;
+			  notifyEl.elementType.ElSSchema = (SSchema) pClose->ElStructSchema;
+			  pSibling = pClose;
+			  NSiblings = 0;
+			  while (pSibling->ElPrevious != NULL)
+			    {
+			      NSiblings++;
+			      pSibling = pSibling->ElPrevious;
+			    }
+			  notifyEl.position = TTE_TOOLKIT_DELETE;
+			  notifyEl.info = 0;
+			  if (CallEventType ((NotifyEvent *) (&notifyEl),TRUE))
+			    /* l'application refuse de continuer */
+			    return (ret);
+			  
+			  RemoveElement (pClose);
+			  /* signale a l'application qu'on a retire' un
+			     element */
+			  notifyEl.element = (Element) (pE->ElParent);
 			  notifyEl.position = NSiblings;
 			  notifyEl.info = 0;
 			  CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+			  InsertElementAfter (pPrevEl, pClose);
+			  pPrevEl = pClose;
+			  pClose = pNextEl;
 			}
-		      if (pPrevEl != NULL)
-			InsertElementAfter (pPrevEl, pE);
-		      pPrevEl = pE;
+		      AbstractImageUpdated (pDoc);
+		      /* l'element pE devient le dernier fils de son pere */
+		      ChangeFirstLast (pE, pDoc, FALSE, FALSE);
 		    }
-		  /* previous managed item in the list */
-		  if (j < nbEl)
-		    i = j;
-		  pE = pNextEl;
-	       }
-	     TtaFreeMemory (list);
-	     AbstractImageUpdated (pDoc);
-	     if (pClose != NULL)
-		/* l'element pPrev devient le dernier fils de son pere */
-		ChangeFirstLast (pPrev, pDoc, FALSE, FALSE);
-	     /* Reconstruction d'une structure parallele */
-	     pE = pPrev->ElParent;
-	     pEl2 = pE;
-	     pChild = pNext;
-	     while ((pE != NULL) && (pE != pAncest))
-	       {
-		  if (pE != pElReplicate)
-		    {
-		       /* signale a l'application qu'on va creer un element */
-		       notifyEl.event = TteElemNew;
-		       notifyEl.document = (Document) IdentDocument (pDoc);
-		       notifyEl.element = (Element) (pE->ElParent);
-		       notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
-		       notifyEl.elementType.ElSSchema = (SSchema) pE->ElStructSchema;
-		       pSibling = pE;
-		       NSiblings = 1;
-		       while (pSibling->ElPrevious != NULL)
-			 {
-			    NSiblings++;
-			    pSibling = pSibling->ElPrevious;
-			 }
-		       notifyEl.position = NSiblings;
-		       if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
-			  /* l'application refuse de continuer */
-			  return (ret);
-		    }
-		  pEl2 = ReplicateElement (pE, pDoc);
-		  InsertFirstChild (pEl2, pChild);
-		  CompleteElement (pEl2, pDoc);
-		  pChild = pEl2;
-		  if (pE != pElReplicate)
-		    {
-		       /* les freres suivant l'element duplique' sont transfere's */
-		       /* comme freres suivants du clone */
-		       pClose = pE->ElNext;
-		       if (pClose != NULL)
-			 {
-			    pPrevEl = pEl2;
-			    while (pClose != NULL)
-			      {
-				 DestroyAbsBoxes (pClose, pDoc, TRUE);
-				 pNextEl = pClose->ElNext;
-				 /* signale a l'application qu'on va retirer l'element */
-				 notifyEl.event = TteElemDelete;
-				 notifyEl.document = (Document) IdentDocument (pDoc);
-				 notifyEl.element = (Element) pClose;
-				 notifyEl.elementType.ElTypeNum = pClose->ElTypeNumber;
-				 notifyEl.elementType.ElSSchema = (SSchema) pClose->ElStructSchema;
-				 pSibling = pClose;
-				 NSiblings = 0;
-				 while (pSibling->ElPrevious != NULL)
-				   {
-				      NSiblings++;
-				      pSibling = pSibling->ElPrevious;
-				   }
-				 notifyEl.position = TTE_TOOLKIT_DELETE;
-				 notifyEl.info = 0;
-				 if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
-				    /* l'application refuse de continuer */
-				    return (ret);
-
-				 RemoveElement (pClose);
-				 /* signale a l'application qu'on a retire' un element */
-				 notifyEl.element = (Element) (pE->ElParent);
-				 notifyEl.position = NSiblings;
-				 notifyEl.info = 0;
-				 CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
-				 InsertElementAfter (pPrevEl, pClose);
-				 pPrevEl = pClose;
-				 pClose = pNextEl;
-			      }
-			    AbstractImageUpdated (pDoc);
-			    /* l'element pE devient le dernier fils de son pere */
-			    ChangeFirstLast (pE, pDoc, FALSE, FALSE);
-			 }
-		    }
-		  pEl2 = pE;
+		}
+	      pEl2 = pE;
+	      pE = pE->ElParent;
+	    }
+	  pClose = pEl2->ElNext;
+	  FwdSkipPageBreak (&pClose);
+	  InsertElementAfter (pEl2, pChild);
+	  if (pClose == NULL)
+	    /* l'element pEl2 n'est plus le dernier fils de son pere */
+	    ChangeFirstLast (pEl2, pDoc, FALSE, TRUE);
+	  /* traite les exclusions des elements crees */
+	  RemoveExcludedElem (&pChild, pDoc);
+	  /* traite les attributs requis des elements crees */
+	  AttachMandatoryAttributes (pChild, pDoc);
+	  if (pDoc->DocSSchema == NULL)
+	    /* le document a ete ferme' entre temps */
+	    ret = FALSE;
+	  else
+	    {
+	      /* traitement des exceptions des nouveaux elements cree's */
+	      CreationExceptions (pChild, pDoc);
+	      /* complete l'element qui a ete coupe' en deux */
+	      pCompleteElem = NULL;
+	      pE = pPrev->ElParent;
+	      while ((pE != NULL) && (pE != pAncest))
+		{
+		  if (CompleteElement (pE, pDoc))
+		    pCompleteElem = pE;
 		  pE = pE->ElParent;
-	       }
-	     pClose = pEl2->ElNext;
-	     FwdSkipPageBreak (&pClose);
-	     InsertElementAfter (pEl2, pChild);
-	     if (pClose == NULL)
-		/* l'element pEl2 n'est plus le dernier fils de son pere */
-		ChangeFirstLast (pEl2, pDoc, FALSE, TRUE);
-	     /* traite les exclusions des elements crees */
-	     RemoveExcludedElem (&pChild, pDoc);
-	     /* traite les attributs requis des elements crees */
-	     AttachMandatoryAttributes (pChild, pDoc);
-	     if (pDoc->DocSSchema == NULL)
-		/* le document a ete ferme' entre temps */
-		ret = FALSE;
-	     else
-	       {
-		  /* traitement des exceptions des nouveaux elements cree's */
-		  CreationExceptions (pChild, pDoc);
-		  /* complete l'element qui a ete coupe' en deux */
-		  pCompleteElem = NULL;
-		  pE = pPrev->ElParent;
-		  while ((pE != NULL) && (pE != pAncest))
-		    {
-		       if (CompleteElement (pE, pDoc))
-			  pCompleteElem = pE;
-		       pE = pE->ElParent;
-		    }
-		  /* traitement des exceptions de l'element qui a ete coupe' */
-		  CreationExceptions (pElReplicate, pDoc);
-		  /* envoie un evenement ElemPaste.Post a l'application */
-		  NotifySubTree (TteElemPaste, pDoc, pChild, -1);
-		  /* reconstruit les paves des elements qui ont ete complete's */
-		  /* cree les paves du nouvel element */
-		  CreateAllAbsBoxesOfEl (pChild, pDoc);
-		  CreateAllAbsBoxesOfEl (pElReplicate, pDoc);
-		  if (pCompleteElem != NULL)
-		     CreateAllAbsBoxesOfEl (pCompleteElem, pDoc);
-		  AbstractImageUpdated (pDoc);
-		  RedisplayDocViews (pDoc);
-		  /* si on est dans un element copie' par inclusion,   */
-		  /* on met a jour les copies de cet element.          */
-		  RedisplayCopies (pEl2, pDoc, TRUE);
-		  RedisplayCopies (pElReplicate, pDoc, TRUE);
-		  UpdateNumbers (NextElement (pChild), pEl2, pDoc, TRUE);
-		  /* indiquer que le document est modifie' */
-		  SetDocumentModified (pDoc, TRUE, 30);
-		  if (select && pNext != NULL)
-		    {
-		     if (nextChar == 0)
-			SelectElementWithEvent (pDoc, pNext, TRUE, TRUE);
-		     else
-			SelectPositionWithEvent (pDoc, pNext, nextChar);
-		    }
-		  ret = TRUE;
-	       }
-	     for (view = 0; view < MAX_VIEW_DOC; view++)
-		if (pEl->ElAbstractBox[view] != NULL)
-		   RedisplayCopies (pEl->ElAbstractBox[view]->AbElement, pDoc,
-				    TRUE);
-	  }
-     }
-   return ret;
+		}
+	      /* traitement des exceptions de l'element qui a ete coupe' */
+	      CreationExceptions (pElReplicate, pDoc);
+	      /* envoie un evenement ElemPaste.Post a l'application */
+	      NotifySubTree (TteElemPaste, pDoc, pChild, -1);
+	      /* reconstruit les paves des elements qui ont ete complete's */
+	      /* cree les paves du nouvel element */
+	      CreateAllAbsBoxesOfEl (pChild, pDoc);
+	      CreateAllAbsBoxesOfEl (pElReplicate, pDoc);
+	      if (pCompleteElem != NULL)
+		CreateAllAbsBoxesOfEl (pCompleteElem, pDoc);
+	      AbstractImageUpdated (pDoc);
+	      RedisplayDocViews (pDoc);
+	      /* si on est dans un element copie' par inclusion,   */
+	      /* on met a jour les copies de cet element.          */
+	      RedisplayCopies (pEl2, pDoc, TRUE);
+	      RedisplayCopies (pElReplicate, pDoc, TRUE);
+	      UpdateNumbers (NextElement (pChild), pEl2, pDoc, TRUE);
+	      /* indiquer que le document est modifie' */
+	      SetDocumentModified (pDoc, TRUE, 30);
+	      if (select && pNext != NULL)
+		{
+		  if (nextChar == 0)
+		    SelectElementWithEvent (pDoc, pNext, TRUE, TRUE);
+		  else
+		    SelectPositionWithEvent (pDoc, pNext, nextChar);
+		}
+	      ret = TRUE;
+	    }
+	  for (view = 0; view < MAX_VIEW_DOC; view++)
+	    if (pEl->ElAbstractBox[view] != NULL)
+	      RedisplayCopies (pEl->ElAbstractBox[view]->AbElement, pDoc,
+			       TRUE);
+	}
+    }
+  return ret;
 }
 
 
