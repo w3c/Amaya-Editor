@@ -13,18 +13,22 @@ Extensions 2.3:
     Amaya.
 
 *MathML:
-  - When saving entities Amaya keeps the names that were read when downloading
-    the document.
+  - When saving entities Amaya keeps the names that were read at downloading.
+
+*CSS:
+  - More complex CSS selectors are supported, including several ancestor
+    elements as well as an attribute from an ancestor.
 
 * User Interface:
   - The content of the TITLE element is displayed as the window title,
     instead of the filename.
-  - In the file amaya.profiles the function TtcCloseDocument must be replaced
-    by CloseDocument.
   - Amaya provides now an horizontal scroll bar when the document includes
     images or tables larger then the current window size.
   - Shortcuts Control Up, Control Down, Control Left, Control Right allow one
     to scroll smoothly the window in the four directions.
+  - When a document has been read as XHTML, it is saved by default as XHTML.
+  - In the file amaya.profiles the function TtcCloseDocument must be replaced
+    by CloseDocument.
 
 * libwww:
   - It's now possible to say that the proxy should ONLY be used with a given
