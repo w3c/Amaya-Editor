@@ -1641,6 +1641,9 @@ void FreeDocumentResource (Document doc)
     return;
 
   TtaSetItemOff (doc, 1, Views, BShowLogFile);
+  /* unmap the Save as form */
+  TtaDestroyDialogue (BaseDialog + SaveForm);
+
   CleanUpParsingErrors ();
 
   if (DocumentURLs[doc] != NULL)

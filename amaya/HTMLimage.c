@@ -104,11 +104,16 @@ ThotBool AddLoadedImage (char *name, char *pathname, Document doc,
 	/* the image file exist for a different document */
 	pImage->status = IMAGE_LOADED;
 	TtaFileCopy (sameImage->localName, pImage->localName);
+	if (sameImage->content_type)
+	  pImage->content_type = TtaStrdup (sameImage->content_type);
+	else
+	  pImage->content_type = NULL;
 	return (FALSE);
      }
    else
      {
 	pImage->status = IMAGE_NOT_LOADED;
+	pImage->content_type = NULL;
 	return (TRUE);
      }
 }
@@ -626,7 +631,10 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	/* display for each elements in the list */
 	/* get the mime type if the image was downloaded from the net */
 	ptr = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE); 
-	ctxEl = desc->elImage;
+	/* memorize the mime type (in case we want to save the file later on) */
+	if (ptr)
+	  desc->content_type = TtaStrdup (ptr);
+ 	ctxEl = desc->elImage;
 	desc->elImage = NULL;
 	while (ctxEl != NULL)
 	  {

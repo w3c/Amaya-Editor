@@ -1254,6 +1254,8 @@ void                RemoveDocumentImages (Document doc)
 		TtaFreeMemory (pImage->originalName);
 	     if (pImage->localName != NULL)
 		TtaFreeMemory (pImage->localName);
+	     if (pImage->content_type != NULL)
+	       TtaFreeMemory (pImage->content_type);
 	     if (pImage->elImage)
 	       {
 		 ctxEl = pImage->elImage;
