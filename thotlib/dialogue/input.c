@@ -552,15 +552,6 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
   frame = (int) data;
   if (frame > MAX_FRAME)
     frame = 0;
-  if (ClickIsDone == 1)
-    /* Amaya is waiting for a selection */
-    {
-      ClickIsDone = 0;
-      ClickFrame = 0;
-      ClickX = 0;
-      ClickY = 0;
-      return FALSE;
-    }
   /* the drawing area is the main zone where keypress event must be active */
   drawing_area = FrameTable[frame].WdFrame;
   /* Focus is on all the drawing frame : 
@@ -870,6 +861,17 @@ ThotBool ThotInput (int frame, unsigned char *string, unsigned int nb,
     }
   else
     {
+      if (ClickIsDone == 1 &&
+	  (key == THOT_KEY_Escape || key == THOT_KEY_Delete))
+	/* Amaya is waiting for a clickselection */
+	{
+	  ClickIsDone = 0;
+	  ClickFrame = 0;
+	  ClickX = 0;
+	  ClickY = 0;
+	  return FALSE;
+	}
+
       command = 0;	   
       /* Set the right indicator */
       if (PicMask & THOT_MOD_CTRL)

@@ -1961,8 +1961,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
        * store the location and return.
        */
       if (ClickIsDone == 1 &&
-	  (mMsg == WM_LBUTTONDOWN || mMsg == WM_RBUTTONDOWN ||
-	   mMsg == WM_CHAR))
+	  (mMsg == WM_LBUTTONDOWN || mMsg == WM_RBUTTONDOWN)
 	{
 	  ClickIsDone = 0;
 	  ClickFrame = frame;
@@ -2399,52 +2398,49 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 #endif /* _GL */
 
 #ifndef _GTK
-  /* ne pas traiter si le document est en mode NoComputedDisplay */
   if (FrameTable[frame].FrDoc == 0 ||
       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+    /* don't manage a document with NoComputedDisplay mode */
     return;
   else if (ev == NULL)
     return;
-  else if (ClickIsDone == 1 &&
-	   (ev->type == ButtonPress || ev->type == KeyPress))
-#else /* _GTK */
-    frame = (int )data;
-  /* ne pas traiter si le document est en mode NoComputedDisplay */
-  if (FrameTable[frame].FrDoc == 0 ||
-      documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-    return FALSE;
-  else if (event == NULL)
-    return FALSE;
-  else if (ClickIsDone == 1 && event->type == GDK_BUTTON_PRESS)
-    /* see CharTranslationGTK for GDK_KEY_PRESS */
-#endif /* _GTK */
-    /* Amaya is waiting for a selection */
+  else if (ClickIsDone == 1 && ev->type == ButtonPress)
+    /* Amaya is waiting for a click selection */
     {
       ClickIsDone = 0;
       ClickFrame = frame;
-#ifndef _GTK
       ClickX = ev->xbutton.x;
       ClickY = ev->xbutton.y;
       return;
+    }
+  else if (TtaTestWaitShowDialogue ()
+      && (ev->type != ButtonPress || (ev->xbutton.state & THOT_KEY_ControlMask) == 0))
+    /* a TtaWaitShowDialogue in progress, don't change the selection */
+    return;
 #else /* _GTK */
+    frame = (int )data;
+  if (FrameTable[frame].FrDoc == 0 ||
+      documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+    /* don't manage a document with NoComputedDisplay mode */
+    return FALSE;
+  else if (event == NULL)
+    /* a TtaWaitShowDialogue in progress, don't change the selection */
+    return FALSE;
+  else if (ClickIsDone == 1 && event->type == GDK_BUTTON_PRESS)
+    /* Amaya is waiting for a click selection */
+    {
+      ClickIsDone = 0;
+      ClickFrame = frame;
       ClickX = event->x;
       ClickY = event->y;
       return FALSE;
-#endif /* _GTK */
     }
-
-  /* S'il y a un TtaWaitShowDialogue en cours on n'autorise pas de changer */
-  /* la selection courante. */
-#ifndef _GTK
-  if (TtaTestWaitShowDialogue ()
-      && (ev->type != ButtonPress || (ev->xbutton.state & THOT_KEY_ControlMask) == 0))
-    return;
-#else /* _GTK */
-  if (TtaTestWaitShowDialogue ()
+  else if (TtaTestWaitShowDialogue ()
       && (event->type != GDK_BUTTON_PRESS || 
 	  event->type != GDK_2BUTTON_PRESS ||
 	  event->type != GDK_MOTION_NOTIFY || 
 	  (event->state & GDK_CONTROL_MASK ) == 0))
+    /* a TtaWaitShowDialogue in progress, don't change the selection */
     return FALSE;
   /* 
      Set the drawing area Focused
