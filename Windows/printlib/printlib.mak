@@ -100,7 +100,6 @@ CLEAN :
 	-@erase "$(INTDIR)\schtrad.obj"
 	-@erase "$(INTDIR)\structschema.obj"
 	-@erase "$(INTDIR)\Style.obj"
-	-@erase "$(INTDIR)\translation.obj"
 	-@erase "$(INTDIR)\tree.obj"
 	-@erase "$(INTDIR)\uaccess.obj"
 	-@erase "$(INTDIR)\uconvert.obj"
@@ -188,7 +187,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\schtrad.obj" \
 	"$(INTDIR)\structschema.obj" \
 	"$(INTDIR)\Style.obj" \
-	"$(INTDIR)\translation.obj" \
 	"$(INTDIR)\tree.obj" \
 	"$(INTDIR)\uaccess.obj" \
 	"$(INTDIR)\uconvert.obj" \
@@ -276,7 +274,6 @@ CLEAN :
 	-@erase "$(INTDIR)\schtrad.obj"
 	-@erase "$(INTDIR)\structschema.obj"
 	-@erase "$(INTDIR)\Style.obj"
-	-@erase "$(INTDIR)\translation.obj"
 	-@erase "$(INTDIR)\tree.obj"
 	-@erase "$(INTDIR)\uaccess.obj"
 	-@erase "$(INTDIR)\uconvert.obj"
@@ -364,7 +361,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\schtrad.obj" \
 	"$(INTDIR)\structschema.obj" \
 	"$(INTDIR)\Style.obj" \
-	"$(INTDIR)\translation.obj" \
 	"$(INTDIR)\tree.obj" \
 	"$(INTDIR)\uaccess.obj" \
 	"$(INTDIR)\uconvert.obj" \
@@ -473,6 +469,7 @@ DEP_CPP_ABSBO=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\page_tv.h"\
+	"..\..\thotlib\internals\var\select_tv.h"\
 	
 
 "$(INTDIR)\absboxes.obj" : $(SOURCE) $(DEP_CPP_ABSBO) "$(INTDIR)"
@@ -1391,6 +1388,7 @@ DEP_CPP_BOXRE=\
 	"..\..\thotlib\internals\f\absboxes_f.h"\
 	"..\..\thotlib\internals\f\appli_f.h"\
 	"..\..\thotlib\internals\f\boxmoves_f.h"\
+	"..\..\thotlib\internals\f\boxrelations_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
@@ -2782,6 +2780,7 @@ DEP_CPP_DISPLA=\
 	"..\..\thotlib\internals\f\appli_f.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
 	"..\..\thotlib\internals\f\attributes_f.h"\
+	"..\..\thotlib\internals\f\attrmenu_f.h"\
 	"..\..\thotlib\internals\f\attrpresent_f.h"\
 	"..\..\thotlib\internals\f\boxselection_f.h"\
 	"..\..\thotlib\internals\f\buildboxes_f.h"\
@@ -6516,132 +6515,6 @@ DEP_CPP_STYLE=\
 	
 
 "$(INTDIR)\Style.obj" : $(SOURCE) $(DEP_CPP_STYLE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\..\thotlib\document\translation.c
-
-!IF  "$(CFG)" == "printlib - Win32 Release"
-
-DEP_CPP_TRANS=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readprs_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\schtrad_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\translation_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
-
-"$(INTDIR)\translation.obj" : $(SOURCE) $(DEP_CPP_TRANS) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
-
-DEP_CPP_TRANS=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\applicationapi_f.h"\
-	"..\..\thotlib\internals\f\callback_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\externalref_f.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\readprs_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\schtrad_f.h"\
-	"..\..\thotlib\internals\f\structschema_f.h"\
-	"..\..\thotlib\internals\f\translation_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotcolor.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
-
-"$(INTDIR)\translation.obj" : $(SOURCE) $(DEP_CPP_TRANS) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

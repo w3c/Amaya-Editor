@@ -294,10 +294,6 @@ SOURCE=..\..\Thotlib\presentation\Style.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\document\translation.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\tree\tree.c
 # End Source File
 # Begin Source File
