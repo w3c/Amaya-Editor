@@ -772,7 +772,9 @@ int                 frame;
     {
       minimumRule = (!pBox->BxAbstractBox->AbWidth.DimIsPosition
 		     && pBox->BxAbstractBox->AbWidth.DimMinimum);
-      if (IsParentBox (pFromBox, pBox) && pFromBox->BxContentWidth)
+
+      if (minimumRule && IsParentBox (pFromBox, pBox)
+	  && pFromBox->BxContentWidth)
 	/* If the minimum size depends on an enclosing box and the current
 	 * size of this box depends on the content size,
 	 * don't change the value
@@ -841,7 +843,9 @@ int                 frame;
     {
       minimumRule = (!pBox->BxAbstractBox->AbHeight.DimIsPosition
 		     && pBox->BxAbstractBox->AbHeight.DimMinimum);
-      if (IsParentBox (pFromBox, pBox) && pFromBox->BxContentHeight)
+
+      if (minimumRule && IsParentBox (pFromBox, pBox)
+	  && pFromBox->BxContentHeight)
 	/* If the minimum size depends on an enclosing box and the current
 	 * size of this box depends on the content size,
 	 * don't change the value

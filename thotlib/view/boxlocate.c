@@ -1383,7 +1383,7 @@ int                *max;
 	/* Si la boite englobante prend la taille de son contenu */
 	/* et que le pave n'est pas attache a l'englobante       */
 	if (pParentAb->AbBox->BxContentWidth)
-	   switch (pParentAb->AbBox->BxHorizEdge)
+	   switch (pAb->AbBox->BxHorizEdge)
 		 {
 		    case Left:
 		       *max = 100000;
@@ -1411,7 +1411,7 @@ int                *max;
 
 	/* Si la boite englobante prend la taille de son contenu */
 	if (pParentAb->AbBox->BxContentHeight)
-	   switch (pParentAb->AbBox->BxVertEdge)
+	   switch (pAb->AbBox->BxVertEdge)
 		 {
 		    case Top:
 		       *max = 100000;
