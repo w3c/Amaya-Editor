@@ -133,7 +133,8 @@ static void InsertPastedElement (PtrElement pEl, ThotBool within,
    element pEl in document pDoc.                           
   ----------------------------------------------------------------------*/
 static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
-				  ThotBool within, ThotBool before, PtrDocument pDoc)
+				  ThotBool within, ThotBool before,
+				  ThotBool *cancelled, PtrDocument pDoc)
 {
    PtrElement          pElem, pChild, pPasted, pOrig, pParent, pSibling,
                        pAncest, pE, pElAttr, newElement;
@@ -147,6 +148,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 
    pPasted = NULL;
    pAncest = NULL;
+   *cancelled = FALSE;
    pOrig = pSavedEl->PeElement;
    ok = FALSE;
    if (within)
@@ -299,7 +301,10 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 		   notifyEl.position = NSiblings;
 		   if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 		     /* l'application refuse */
-		     stop = TRUE;
+		     {
+		       stop = TRUE;
+		       *cancelled = TRUE;
+		     }
 		   else
 		     {
 		       pAncest = NewSubtree (pSavedEl->PeAscendTypeNum[asc],
@@ -376,6 +381,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 				   DeleteElement (&pAncest, pDoc);
 				   stop = TRUE;
 				   ok = FALSE;
+				   *cancelled = TRUE;
 				   asc = 0;
 				 }
 			       else
@@ -427,7 +433,10 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
        notifyVal.element = (Element) pParent;
        notifyVal.target = (Element) pOrig;
        notifyVal.value = NSiblings;
-       if (!CallEventType ((NotifyEvent *) (&notifyVal), TRUE))
+       if (CallEventType ((NotifyEvent *) (&notifyVal), TRUE))
+	 /* l'application refuse */
+	 *cancelled = TRUE;
+       else
 	 /* l'application accepte */
 	 {
 	   /* Cree une copie de l'element a coller. */
@@ -505,7 +514,8 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 	   while (pChild != NULL && pElem != NULL)
 	     {
 	       pPasteD->PeElement = pChild;
-	       pElem = PasteAnElement (pElem, pPasteD, within, before, pDoc);
+	       pElem = PasteAnElement (pElem, pPasteD, within, before,
+				       cancelled, pDoc);
 	       if (pElem)
 		 {
 		   /* pointer to the first element in the inserted list */
@@ -518,7 +528,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 		     pChild = pChild->ElNext;
 		 }
 	     }
-	   TtaFreeMemory ( pPasteD);
+	   TtaFreeMemory (pPasteD);
 	 }
      }
    return pPasted;
@@ -538,7 +548,7 @@ void PasteCommand ()
   DisplayMode         dispMode;
   Document            doc;
   int                 firstChar, lastChar, view, i;
-  ThotBool            ok, before, within, lock;
+  ThotBool            ok, before, within, lock, cancelled;
   
   before = FALSE;
   if (FirstSavedElement == NULL)
@@ -645,14 +655,16 @@ void PasteCommand ()
 	ok = FALSE;
 	do
 	  {
-	    pPasted = PasteAnElement (pEl, pPasteD, within, before, pDoc);
-	    if (pPasted == NULL)
-	      /* echec */
+	    pPasted = PasteAnElement (pEl, pPasteD, within, before, &cancelled,
+				      pDoc);
+	    if (pPasted == NULL && !cancelled)
+	      /* echec, mais l'application n'a pas refusé */
 	      if (!within && !before && pNextEl != NULL)
 		/* on essayait de coller apres le dernier colle' */
 		/* on va essayer de coller le meme element avant l'element */
 		/* qui doit suivre la partie collee */
-		pPasted = PasteAnElement (pNextEl, pPasteD, within, TRUE,pDoc);
+		pPasted = PasteAnElement (pNextEl, pPasteD, within, TRUE,
+					  &cancelled, pDoc);
 	    if (pPasted != NULL)
 	      /* a copy of element pPasteD has been sucessfully pasted */
 	      {
