@@ -1855,6 +1855,22 @@
 	<message xml:lang="fr">Actualiser</message>
 	<message xml:lang="es">Actualizar</message>
 </label>
+<label define="TMSG_FORMATLEFT">
+	<message xml:lang="en">Left</message>
+	<message xml:lang="fr">Gauche</message>
+</label>
+<label define="TMSG_FORMATRIGHT">
+	<message xml:lang="en">Right</message>
+	<message xml:lang="fr">Droite</message>
+</label>
+<label define="TMSG_FORMATCENTER">
+	<message xml:lang="en">Center</message>
+	<message xml:lang="fr">Centré</message>
+</label>
+<label define="TMSG_FORMATJUSTIFY">
+	<message xml:lang="en">Justify</message>
+	<message xml:lang="fr">Justifié</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>

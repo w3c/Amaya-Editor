@@ -1792,6 +1792,9 @@ void CallbackPresMenu (int ref, int val, char *txt)
 #ifdef _WINGUI 
       WIN_IndentValue = val;
 #endif /* _WINGUI */
+#ifdef _WX
+      StdIndent = FALSE;
+#endif /* _WX */
       if (IndentSign != 0 && IndentValue == 0)
 	{
 	  IndentSign = 0;
@@ -1849,7 +1852,7 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	{
 	  OldLineSp = val;
 #ifdef _WINGUI 
-      WIN_OldLineSp = val;
+	  WIN_OldLineSp = val;
 #endif /* _WINGUI */
 	  if (val < (NormalLineSpacing * 3) / 2)
 	    i = 0;
@@ -1860,6 +1863,9 @@ void CallbackPresMenu (int ref, int val, char *txt)
 #ifdef _GTK
 	  TtaSetMenuForm (NumMenuLineSpacing, i);
 #endif /* _GTK */
+#ifdef _WX
+	  StdLineSp = FALSE;
+#endif /* _WX */
 	}
       break;
     case NumMenuLineSpacing:	/* saisie de l'interligne par un menu */
@@ -2355,17 +2361,19 @@ void TtcChangeFormat (Document document, View view)
    PtrAbstractBox      pAb;
    int                 firstChar, lastChar;
    int                 i;
-#ifdef _WINGUI 
+#if defined(_WINGUI) || defined(_WX)
    int                 alignNum;
    int                 lineSpacingNum;
    int                 indentNum;
-#endif /* _WINGUI */
+#endif /* #if defined(_WINGUI) || defined(_WX) */
 #ifdef _GTK
    char                string[MAX_TXT_LEN];
 #endif /* _GTK */
    
    ThotBool            selectionOK;
 
+   if ( document <= 0 )
+     return;
    pDoc = LoadedDocument[document - 1];
 
    /* demande quelle est la selection courante */
@@ -2437,9 +2445,9 @@ void TtcChangeFormat (Document document, View view)
 	     break;
 	   }
          
-#ifdef _WINGUI
+#if defined(_WINGUI) || defined(_WX)
          alignNum = i - 1;
-#endif /* _WINGUI */
+#endif /* _WINGUI || defined(_WX) */
          
 #ifdef _GTK
          TtaSetMenuForm (NumMenuAlignment, i - 1);
@@ -2474,9 +2482,9 @@ void TtcChangeFormat (Document document, View view)
 	   i = 0;
          else
 	   i = 1;
-#ifdef _WINGUI
+#if defined(_WINGUI) || defined(_WX)
          indentNum = i;
-#endif  /* _WINGUI */
+#endif  /* _WINGUI || defined(_WX) */
 #ifdef _GTK
          TtaSetMenuForm (NumMenuRecessSense, i);
 
@@ -2523,22 +2531,26 @@ void TtcChangeFormat (Document document, View view)
               i = 2;
          else
               i = 1;
-
 #ifdef _WINGUI
          lineSpacingNum = i;
          CreateChangeFormatDlgWindow (NumZoneRecess, NumZoneLineSpacing, alignNum,
 				      IndentValue, indentNum, OldLineSp, lineSpacingNum);
-#endif /* _WINGUI */  
+#endif /* _WINGUI */
 #ifdef _GTK
          TtaSetMenuForm (NumMenuLineSpacing, i);
          DocModPresent = pDoc;
          TtaShowDialogue (NumFormPresFormat, TRUE);
 #endif /* _GTK */     
+#ifdef _WX
+	 AmayaPanelParams p;
+	 p.param1 = (void*)AmayaFormatPanel::wxFORMAT_MODIF_ALL;
+	 p.param2 = (void*)alignNum;
+	 p.param3 = (void*)IndentValue;
+	 p.param4 = (void*)OldLineSp;
+	 AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_FORMAT, p );
+#endif /* _WX */  
       }
    }	
-#ifdef _WX
-   wxASSERT_MSG(false, _T("TODO: TtcChangeFormat"));
-#endif /* _WX */
 }
 
 

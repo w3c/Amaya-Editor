@@ -176,15 +176,20 @@
                                   <object class="wxBoxSizer">
                                     <orient>wxHORIZONTAL</orient>
                                     <object class="sizeritem">
-                                      <object class="wxButton" name="wxID_APPLY">
-                                        <label>*Apply*</label>
+                                      <object class="wxBitmapButton" name="wxID_APPLY">
+                                        <tooltip>*Apply*</tooltip>
+                                        <bitmap stock_id="wxART_TICK_MARK"></bitmap>
                                       </object>
+                                      <option>1</option>
+                                      <flag>wxEXPAND</flag>
                                     </object>
                                     <object class="sizeritem">
-                                      <object class="wxButton" name="wxID_REFRESH">
-                                        <label>*ReFresh*</label>
+                                      <object class="wxBitmapButton" name="wxID_REFRESH">
+                                        <tooltip>*ReFresh*</tooltip>
+                                        <bitmap>../icons/refresh.png</bitmap>
                                       </object>
-                                      <flag>wxLEFT</flag>
+                                      <option>1</option>
+                                      <flag>wxLEFT|wxEXPAND</flag>
                                       <border>2</border>
                                     </object>
                                   </object>

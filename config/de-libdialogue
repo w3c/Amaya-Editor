@@ -172,3 +172,7 @@
 170 **Tools
 171 **Mandatory attribute, it can't be removed
 172 **Refresh
+173 **Left
+174 **Right
+175 **Center
+176 **Justify

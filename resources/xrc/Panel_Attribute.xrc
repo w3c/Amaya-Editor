@@ -145,7 +145,7 @@
                                                 <orient>wxHORIZONTAL</orient>
                                                 <object class="sizeritem">
                                                   <object class="wxBitmapButton" name="wxID_BUTTON_DEL_ATTR">
-                                                    <bitmap>../icons/delete.gif</bitmap>
+                                                    <bitmap>../icons/delete2.png</bitmap>
                                                     <style>wxBU_AUTODRAW</style>
                                                     <tooltip>*Supprimer*</tooltip>
                                                   </object>

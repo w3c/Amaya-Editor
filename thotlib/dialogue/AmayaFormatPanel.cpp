@@ -2,7 +2,6 @@
 
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
-#include "wx/colordlg.h"
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -51,25 +50,24 @@ AmayaFormatPanel::AmayaFormatPanel( wxWindow * p_parent_window, AmayaNormalWindo
 {
   wxLogDebug( _T("AmayaFormatPanel::AmayaFormatPanel") );
 
-#if 0
-  //  m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
-
   // setup labels
   RefreshToolTips();
-  m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_COLORS)));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_MODIFYCOLOR", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_GETCOLOR", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CPGETBUTTON)));
+  m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_FORMAT)));
 
-  m_Bitmap_Empty        = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "empty.gif" ) );
-  m_Bitmap_DefaultColor = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "default_color.gif" ) );
-  m_Color_ButtonBG      = XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->GetBackgroundColour();
+  //TtaGetMessage (LIB, TMSG_ALIGN)
+  XRCCTRL(*m_pPanelContentDetach, "wxID_LABEL_FORMATINDENT", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_INDENT_PTS)));
+  //TtaGetMessage (LIB, TMSG_INDENT)
+  XRCCTRL(*m_pPanelContentDetach, "wxID_LABEL_FORMATLINESPACE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_LINE_SPACING_PTS)));
+  //TtaGetMessage (LIB, TMSG_LINE_SPACING)
 
-  // on windows, the color selector dialog must be complete.
-  m_ColourData.SetChooseFull(true);
-#endif /* 0 */
+  m_OffColour = XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATLEFT", wxBitmapButton)->GetBackgroundColour();
+  m_OnColour  = wxColour(250, 200, 200);
 
   // register myself to the manager, so I will be avertised that another panel is floating ...
   m_pManager->RegisterSubPanel( this );
+
+  ResetPresentMenus();
+  RefreshFormatPanel();
 }
 
 /*
@@ -103,13 +101,22 @@ int AmayaFormatPanel::GetPanelType()
  *--------------------------------------------------------------------------------------
  */
 void AmayaFormatPanel::RefreshToolTips()
-{
-  /* 
-  XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_DEFAULTCOLORS", wxButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_STD_COLORS)));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_SWITCHCOLORS", wxButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CPCOLORSWITCH)));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CPCOLORBG)));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CPCOLORFG)));
-*/
+{  
+  XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_FORMAT",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_UNCHANGED)));
+  XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_INDENT",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_UNCHANGED)));
+  XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_LINESPACE",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_UNCHANGED)));
+  
+  //  XRCCTRL(*m_pPanelContentDetach, "wxID_APPLY_LS", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+  //  XRCCTRL(*m_pPanelContentDetach, "wxID_APPLY_FI", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATLEFT", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_FORMATLEFT)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATRIGHT", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_FORMATRIGHT)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATCENTER", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_FORMATCENTER)));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATJUSTIFY", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_FORMATJUSTIFY)));
+
+  XRCCTRL(*m_pPanelContentDetach,"wxID_APPLY_INDENT",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+  XRCCTRL(*m_pPanelContentDetach,"wxID_APPLY_LINESPACE",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+  XRCCTRL(*m_pPanelContentDetach,"wxID_REFRESH",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_REFRESH)));
+  XRCCTRL(*m_pPanelContentDetach,"wxID_APPLY",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
 }
 
 
@@ -122,36 +129,39 @@ void AmayaFormatPanel::RefreshToolTips()
  */
 void AmayaFormatPanel::SendDataToPanel( AmayaPanelParams& p )
 {
-#if 0
-  // update button background colors
-  m_ThotBGColor = (int)p.param1;
-  if (m_ThotBGColor >= 0)
+  int modif_type       = (int)p.param1;
+  int align_num        = (int)p.param2;
+  int indent_value     = (int)p.param3;
+  int line_space_value = (int)p.param4;
+
+  if ( modif_type & wxFORMAT_MODIF_FORMAT)
     {
-      wxColour * p_bg_colour = ColorPixel(m_ThotBGColor);
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBackgroundColour( *p_bg_colour );
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_Empty);
-    }
-  else
-    {
-      // default bg color is ? white ?
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBackgroundColour( m_Color_ButtonBG );
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_DefaultColor);
+      XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATLEFT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+      XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATRIGHT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+      XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATCENTER", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+      XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATJUSTIFY", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+      switch(align_num)
+	{
+	case 0:
+	  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATLEFT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+	  break;
+	case 1:
+	  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATRIGHT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+	  break;
+	case 2:
+	  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATCENTER", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+	  break;
+	case 3:
+	  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATJUSTIFY", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+	  break;
+	}
     }
 
-  m_ThotFGColor = (int)p.param2;
-  if (m_ThotFGColor >= 0)
-    {
-      wxColour * p_fg_colour = ColorPixel(m_ThotFGColor);
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBackgroundColour( *p_fg_colour );
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_Empty);
-    }
-  else
-    {
-      // default fg color is ? black ?
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBackgroundColour( m_Color_ButtonBG );
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_DefaultColor);
-    }
-#endif /* 0 */
+  if ( modif_type & wxFORMAT_MODIF_INDENT)
+    XRCCTRL(*m_pPanelContentDetach,"wxID_SPIN_FORMATINDENT",wxSpinCtrl)->SetValue(indent_value);
+  
+  if ( modif_type & wxFORMAT_MODIF_LINESPACE)
+    XRCCTRL(*m_pPanelContentDetach,"wxID_SPIN_FORMATLINESPACE",wxSpinCtrl)->SetValue(line_space_value);
 }
 
 /*
@@ -180,19 +190,286 @@ bool AmayaFormatPanel::IsActive()
   return AmayaSubPanel::IsActive();
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFormatPanel
+ *      Method:  OnApply
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFormatPanel::OnApply( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaFormatPanel::OnApply") );
+  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFormatPanel
+ *      Method:  OnRefresh
+ * Description:  refresh the panel from current selection
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFormatPanel::OnRefresh( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaFormatPanel::OnRefresh") );
+  RefreshFormatPanel();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFormatPanel
+ *      Method:  RefreshFormatPanel
+ * Description:  refresh the panel from current selection
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFormatPanel::RefreshFormatPanel()
+{
+  Document doc;
+  View view;
+  TtaGetActiveView( &doc, &view );
+  TtcChangeFormat( doc, view );
+
+  XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_FORMAT",wxBitmapButton)->SetBackgroundColour(m_OffColour);
+  XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_INDENT",wxBitmapButton)->SetBackgroundColour(m_OffColour);
+  XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_LINESPACE",wxBitmapButton)->SetBackgroundColour(m_OffColour);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFormatPanel
+ *      Method:  OnFormatLeftChanged
+ * Description:  when a format button is pressed (left,right,center,justify)
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFormatPanel::OnFormatLeftChanged( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaFormatPanel::OnFormatLeftChanged") );
+
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATLEFT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATRIGHT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATCENTER", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATJUSTIFY", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_FORMAT",wxBitmapButton)->SetBackgroundColour(m_OffColour);
+  ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 0);
+  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFormatPanel
+ *      Method:  OnFormatRightChanged
+ * Description:  when a format button is pressed (left,right,center,justify)
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFormatPanel::OnFormatRightChanged( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaFormatPanel::OnFormatRightChanged") );
+
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATLEFT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATRIGHT", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATCENTER", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATJUSTIFY", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_FORMAT",wxBitmapButton)->SetBackgroundColour(m_OffColour);
+  ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 1);
+  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFormatPanel
+ *      Method:  OnFormatCenterChanged
+ * Description:  when a format button is pressed (left,right,center,justify)
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFormatPanel::OnFormatCenterChanged( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaFormatPanel::OnFormatCenterChanged") );
+
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATLEFT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATRIGHT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATCENTER", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATJUSTIFY", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_FORMAT",wxBitmapButton)->SetBackgroundColour(m_OffColour);
+  ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 2);
+  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFormatPanel
+ *      Method:  OnFormatJustifyChanged
+ * Description:  when a format button is pressed (left,right,center,justify)
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFormatPanel::OnFormatJustifyChanged( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaFormatPanel::OnFormatJustifyChanged") );
+
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATLEFT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATRIGHT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATCENTER", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATJUSTIFY", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+  XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_FORMAT",wxBitmapButton)->SetBackgroundColour(m_OffColour);
+  ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 3);
+  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFormatPanel
+ *      Method:  IndentChanged
+ * Description:  when the indent spin ctrl value is changed
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFormatPanel::IndentChanged()
+{
+  wxLogDebug( _T("AmayaFormatPanel::IndentChanged") );
+
+  XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_INDENT",wxBitmapButton)->SetBackgroundColour(m_OffColour);
+  int indent_value = XRCCTRL(*m_pPanelContentDetach,"wxID_SPIN_FORMATINDENT",wxSpinCtrl)->GetValue();
+  ThotCallback (NumZoneRecess, INTEGER_DATA, (char*)indent_value);
+  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFormatPanel
+ *      Method:  OnIndentChanged
+ * Description:  when the indent spin ctrl value is changed
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFormatPanel::OnIndentChanged( wxSpinEvent& event )
+{
+  IndentChanged();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFormatPanel
+ *      Method:  OnIndentChangedButton
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFormatPanel::OnIndentChangedButton( wxCommandEvent& event )
+{
+  IndentChanged();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFormatPanel
+ *      Method:  LineSpaceChanged
+ * Description:  when the line space spin ctrl value is changed
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFormatPanel::LineSpaceChanged()
+{
+  wxLogDebug( _T("AmayaFormatPanel::LineSpaceChanged") );
+
+  XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_LINESPACE",wxBitmapButton)->SetBackgroundColour(m_OffColour);
+  int linespace_value = XRCCTRL(*m_pPanelContentDetach,"wxID_SPIN_FORMATLINESPACE",wxSpinCtrl)->GetValue();
+  ThotCallback (NumZoneLineSpacing, INTEGER_DATA, (char*)linespace_value);
+  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFormatPanel
+ *      Method:  OnLineSpaceChanged
+ * Description:  when the line space spin ctrl value is changed
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFormatPanel::OnLineSpaceChanged( wxSpinEvent& event )
+{
+  LineSpaceChanged();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFormatPanel
+ *      Method:  OnLineSpaceChangedButton
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFormatPanel::OnLineSpaceChangedButton( wxCommandEvent& event )
+{
+  LineSpaceChanged();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFormatPanel
+ *      Method:  OnDefaultFormat
+ * Description:  when the default button is pressed
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFormatPanel::OnDefaultFormat( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaFormatPanel::OnDefaultFormat") );
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATLEFT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATRIGHT", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATCENTER", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATJUSTIFY", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+  XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_FORMAT",wxBitmapButton)->SetBackgroundColour(m_OnColour);
+  ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 4);
+  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFormatPanel
+ *      Method:  OnDefaultIndent
+ * Description:  when the default button is pressed
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFormatPanel::OnDefaultIndent( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaFormatPanel::OnDefaultIdent") );
+  XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_INDENT",wxBitmapButton)->SetBackgroundColour(m_OnColour);
+  //  XRCCTRL(*m_pPanelContentDetach,"wxID_SPIN_FORMATINDENT",wxSpinCtrl)->SetValue(_T(""));
+  ThotCallback (NumMenuRecessSense, INTEGER_DATA, (char*) 2);
+  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFormatPanel
+ *      Method:  OnDefaultLineSpace
+ * Description:  when the default button is pressed
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFormatPanel::OnDefaultLineSpace( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaFormatPanel::OnDefaultLineSpace") );
+  XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_LINESPACE",wxBitmapButton)->SetBackgroundColour(m_OnColour);
+  //  XRCCTRL(*m_pPanelContentDetach,"wxID_SPIN_FORMATLINESPACE",wxSpinCtrl)->SetValue(_T(""));
+  ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (char*) 3);
+  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
+}
+
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaFormatPanel, AmayaSubPanel)
-  /*
-  EVT_BUTTON( XRCID("wxID_MODIFYCOLOR"), AmayaFormatPanel::OnModifyColor ) 
-  EVT_BUTTON( XRCID("wxID_GETCOLOR"),    AmayaFormatPanel::OnGetColor ) 
-  EVT_BUTTON( XRCID("wxID_BUTTON_DEFAULTCOLORS"), AmayaFormatPanel::OnDefaultColors ) 
-  EVT_BUTTON( XRCID("wxID_BUTTON_SWITCHCOLORS"),  AmayaFormatPanel::OnSwitchColors ) 
-  EVT_BUTTON( XRCID("wxID_BUTTON_FGCOLOR"),  AmayaFormatPanel::OnChooseFGColor ) 
-  EVT_BUTTON( XRCID("wxID_BUTTON_BGCOLOR"),  AmayaFormatPanel::OnChooseBGColor ) 
-  */
+  EVT_SPINCTRL( XRCID("wxID_SPIN_FORMATINDENT"),     AmayaFormatPanel::OnIndentChanged ) 
+  EVT_SPINCTRL( XRCID("wxID_SPIN_FORMATLINESPACE"),  AmayaFormatPanel::OnLineSpaceChanged ) 
+  EVT_BUTTON( XRCID("wxID_APPLY_INDENT"),      AmayaFormatPanel::OnIndentChangedButton ) 
+  EVT_BUTTON( XRCID("wxID_APPLY_LINESPACE"),   AmayaFormatPanel::OnLineSpaceChangedButton ) 
+
+  EVT_BUTTON( XRCID("wxID_BMPBUTTON_FORMATLEFT"),    AmayaFormatPanel::OnFormatLeftChanged ) 
+  EVT_BUTTON( XRCID("wxID_BMPBUTTON_FORMATRIGHT"),   AmayaFormatPanel::OnFormatRightChanged ) 
+  EVT_BUTTON( XRCID("wxID_BMPBUTTON_FORMATCENTER"),  AmayaFormatPanel::OnFormatCenterChanged ) 
+  EVT_BUTTON( XRCID("wxID_BMPBUTTON_FORMATJUSTIFY"), AmayaFormatPanel::OnFormatJustifyChanged ) 
+
+  EVT_BUTTON( XRCID("wxID_DEFAULT_FORMAT"),    AmayaFormatPanel::OnDefaultFormat ) 
+  EVT_BUTTON( XRCID("wxID_DEFAULT_INDENT"),    AmayaFormatPanel::OnDefaultIndent ) 
+  EVT_BUTTON( XRCID("wxID_DEFAULT_LINESPACE"), AmayaFormatPanel::OnDefaultLineSpace ) 
+
+  EVT_BUTTON( XRCID("wxID_APPLY"), AmayaFormatPanel::OnApply )
+  EVT_BUTTON( XRCID("wxID_REFRESH"), AmayaFormatPanel::OnRefresh )
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

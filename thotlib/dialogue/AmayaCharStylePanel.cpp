@@ -54,8 +54,8 @@ AmayaCharStylePanel::AmayaCharStylePanel( wxWindow * p_parent_window, AmayaNorma
  // setup labels
   RefreshToolTips();
   m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CHAR)));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_APPLY", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_REFRESH", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_REFRESH)));
+  //  XRCCTRL(*m_pPanelContentDetach, "wxID_APPLY", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+  //  XRCCTRL(*m_pPanelContentDetach, "wxID_REFRESH", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_REFRESH)));
   XRCCTRL(*m_pPanelContentDetach, "wxID_LABEL_FONTFAMILY", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_FONT_FAMILY)));
   XRCCTRL(*m_pPanelContentDetach, "wxID_LABEL_UNDERLINE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_LINE)));
   XRCCTRL(*m_pPanelContentDetach, "wxID_LABEL_BODYSIZE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BODY_SIZE_PTS)));
@@ -141,7 +141,9 @@ int AmayaCharStylePanel::GetPanelType()
  *--------------------------------------------------------------------------------------
  */
 void AmayaCharStylePanel::RefreshToolTips()
-{  
+{
+  XRCCTRL(*m_pPanelContentDetach,"wxID_REFRESH",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_REFRESH)));
+  XRCCTRL(*m_pPanelContentDetach,"wxID_APPLY",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
 }
 
 /*
