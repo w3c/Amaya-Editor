@@ -1030,14 +1030,13 @@ void TtaFreeView (Document document, View view)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
+   else	if (view < 1 || view > MAX_VIEW_DOC)
+     TtaError (ERR_invalid_parameter);
    else
-      /* parameter document is ok */
+      /* parameters look OK */
      {
 	pDoc = LoadedDocument[document - 1];
-	if (view < 1 || view > MAX_VIEW_DOC)
-	  TtaError (ERR_invalid_parameter);
-	else
-	  CleanImageView (view, pDoc, TRUE);
+	CleanImageView (view, pDoc, TRUE);
      }
 }
 

@@ -884,9 +884,10 @@ void ComputeBoundingBox (PtrBox box, int frame,
 			 int xmin, int xmax, 
 			 int ymin, int ymax)
 {
-  GLfloat feedBuffer[FEEDBUFFERSIZE];
-  GLint   size;
-  
+  GLfloat    feedBuffer[FEEDBUFFERSIZE];
+  GLint      size;
+  ViewFrame  *pFrame;
+ 
   if (NotFeedBackMode)
     {
       glFeedbackBuffer (FEEDBUFFERSIZE, GL_2D, feedBuffer);
@@ -914,8 +915,9 @@ void ComputeBoundingBox (PtrBox box, int frame,
 	}
       else
 	{
-	  box->BxClipX = box->BxXOrg;
-	  box->BxClipY = box->BxYOrg;
+	  pFrame = &ViewFrameTable[frame - 1];
+	  box->BxClipX = box->BxXOrg - pFrame->FrXOrg;
+	  box->BxClipY = box->BxYOrg - pFrame->FrYOrg;
 	  box->BxClipW = box->BxW;
 	  box->BxClipH = box->BxH;
 	  box->BxBoundinBoxComputed = FALSE; 
