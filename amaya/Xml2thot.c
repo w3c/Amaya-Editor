@@ -4103,16 +4103,13 @@ static void  InitializeExpatParser (CHARSET charset)
   else if (charset == ISO_8859_2   || charset == ISO_8859_3   ||
 	   charset == ISO_8859_4   || charset == ISO_8859_5   ||
 	   charset == ISO_8859_6   || charset == ISO_8859_7   ||
-	   charset == ISO_8859_8   || charset == ISO_8859_9)
+	   charset == ISO_8859_8   || charset == ISO_8859_9   ||
+	   charset == ISO_8859_15  || charset == WINDOWS_1252)
     /* buffers will be converted to UTF-8 by Amaya */
     Parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
   else if (charset == ISO_8859_6_E || charset == ISO_8859_6_I ||
 	   charset == ISO_8859_8_E || charset == ISO_8859_8_I ||
-	   charset == ISO_8859_10  || charset == ISO_8859_15  ||
-	   charset == ISO_8859_supp)
-    Parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
-  /* Consider WINDOWS_1252 (Windows Latin 1) as ISO_8859_1 */
-  else if (charset == WINDOWS_1252)
+	   charset == ISO_8859_10  || charset == ISO_8859_supp)
     Parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
   else
     {
@@ -4879,7 +4876,8 @@ static void   XmlParse (FILE     *infile, CHARSET charset,
 	   if (charset == ISO_8859_2   || charset == ISO_8859_3   ||
 	       charset == ISO_8859_4   || charset == ISO_8859_5   ||
 	       charset == ISO_8859_6   || charset == ISO_8859_7   ||
-	       charset == ISO_8859_8   || charset == ISO_8859_9)
+	       charset == ISO_8859_8   || charset == ISO_8859_9   ||
+	       charset == ISO_8859_15  || charset == WINDOWS_1252)
 	     {
 	       /* convert the original stream into UTF-8 */
 	       buffer = TtaConvertIsoToMbs (&bufferRead[i], charset);
