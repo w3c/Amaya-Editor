@@ -687,9 +687,9 @@ static void GL_SetupPixelFormat (HDC hDC)
       PFD_TYPE_RGBA,                  /* color type */
       24,                             /* prefered color depth */
       0, 0, 0, 0, 0, 0,               /* color bits (ignored) */
-      1,                              /* no alpha buffer */
+      1,                              /* alpha buffer */
       0,                              /* alpha bits (ignored) */
-      0,                              /* no accumulation buffer */
+      0,                              /* accumulation buffer */
       0, 0, 0, 0,                     /* accum bits (ignored) */
       0,                              /* depth buffer */
       1,                              /* stencil buffer */

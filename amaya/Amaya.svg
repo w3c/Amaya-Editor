@@ -168,8 +168,7 @@
 
           <div xmlns="http://www.w3.org/1999/xhtml">
 
-          <table width="400px">
-            <caption></caption>
+          <table style="background-color : lightblue" width="400px">            <caption></caption>
             <tbody>
               <tr>
                 <td>Part of specification</td>
