@@ -2775,6 +2775,7 @@ View                view;
    CHAR_T	documentname[MAX_LENGTH];
    CHAR_T	tempdir[MAX_LENGTH];
    Document	sourceDoc;
+   NotifyElement event;
 
    if (DocumentSource[document])
      /* the source code of this document is already shown */
@@ -2804,6 +2805,8 @@ View                view;
         DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
         StartParser (sourceDoc, tempdocument, documentname, tempdir,
 		     tempdocument, TRUE);
+	event.document = document;
+	SynchronizeSourceView (&event);
         TtaSetItemOff (sourceDoc, 1, File, BTemplate);
         }
      TtaFreeMemory (tempdocument);

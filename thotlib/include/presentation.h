@@ -340,6 +340,46 @@ extern void         TtaGiveBoxSize (Element element, Document document, View vie
 extern void         TtaGiveBoxPosition (Element element, Document document, View view, TypeUnit unit, /*OUT*/ int *xCoord, /*OUT*/ int *yCoord);
 
 /*----------------------------------------------------------------------
+   TtaGiveBoxAbsPosition
+ 
+   Returns the x and y coordinates of the box corresponding to an element in
+   a given view. The returned coordinates indicate the distance
+   between the upper left corner of the box and the upper left corner of its
+   window.
+ 
+   Parameters:
+   element: the element of interest.
+   document: the document of interest.
+   view: the view.
+   unit: the unit used for the values.
+ 
+   Return parameters:
+   xCoord: distance from the left edge of the window to the left
+   edge of the box.
+   yCoord:  distance from the upper edge of the window to the upper
+   edge of the box.
+ 
+  ----------------------------------------------------------------------*/
+extern void         TtaGiveBoxAbsPosition (Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord);
+
+/*----------------------------------------------------------------------
+   TtaGiveWindowSize
+ 
+   Returns the height and width of the window corresponding to a given view.
+ 
+   Parameters:
+   document: the document of interest.
+   view: the view.
+   unit: the unit used for the values (UnPixel or UnPoint only)
+ 
+   Return parameters:
+   width: window width in units.
+   height: window height in units.
+ 
+  ----------------------------------------------------------------------*/
+extern void        TtaGiveWindowSize (Document document, View view, TypeUnit unit, int *width, int *height);
+
+/*----------------------------------------------------------------------
  *   TtaGiveRGB returns the RGB of the color.
  ----------------------------------------------------------------------*/
 extern void         TtaGiveRGB ( char* colname, /*OUT*/ unsigned short *red, /*OUT*/ unsigned short *green, /*OUT*/ unsigned short *blue );
@@ -499,6 +539,8 @@ extern void         TtaChangeBoxSize ( /* Element element, View view, Document d
 extern void         TtaChangeBoxPosition ( /* Element element, Document document, View view, int X, int Y, TypeUnit unit */ );
 extern void         TtaGiveBoxSize ( /* Element element, Document document, View view, TypeUnit unit, int *width, int *height */ );
 extern void         TtaGiveBoxPosition ( /* Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord */ );
+extern void         TtaGiveBoxAbsPosition ( /* Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord */ );
+extern void         TtaGiveWindowSize ( /* Document document, View view, TypeUnit unit, int *width, int *height */ );
 extern void         TtaGiveRGB ( /*STRING colname, unsigned short *red, unsigned short *green, unsigned short *blue*/ );
 extern void         TtaGiveThotRGB (/*int num, unsigned short *red, unsigned short *green, unsigned short *blue*/);
 extern void         TtaNextPRule ( /* Element element, PRule *pRule */ );

@@ -27,6 +27,7 @@ ATTR
 
    Invalid_attribute = Text;
    Ghost_restruct = Text;
+   Highlight = Yes_;
 
 CONST
 
@@ -835,6 +836,7 @@ EXCEPT
 	Ref_IMG:	Invisible;
 	AreaRef_IMG:	Invisible;
 	Invalid_attribute: Invisible;
+	Highlight:	Invisible;
 	PseudoClass:	Invisible, CssPseudoClass;
 	Default_Value:	Invisible;
 	DefaultSelected:Invisible;

@@ -54,7 +54,13 @@ HWND currentWindow = NULL;
 static CHAR_T WIN_buffer [1024];
 #endif /* _WINDOWS */
 
-/**** Some prototypes *****/
+/* info about the last element highlighted when synchronizing with the
+   source view */
+Document	HighlightDocument = 0;
+Element		HighlightElement = NULL;
+Attribute	HighLightAttribute = NULL;
+
+/* Some prototypes */
 #ifdef __STDC__
 static ThotBool     FollowTheLink (Element anchor, Element elSource, Document doc);
 #else  /* __STDC__ */
@@ -1127,6 +1133,8 @@ Document       doc;
         TtaFreeMemory (DocumentMeta[doc]);
         DocumentMeta[doc] = NULL;
 	}
+      if (HighlightDocument == doc)
+	ResetHighlightedElement ();
       if (DocumentSource[doc])
 	{
 	sourceDoc = DocumentSource[doc];
@@ -1669,6 +1677,22 @@ Element	el;
 }
 
 /*----------------------------------------------------------------------
+   ResetHighlightedElement
+   If an element is currently highlighted, remove its Highlight attribute
+  ----------------------------------------------------------------------*/
+void                ResetHighlightedElement ()
+{
+   if (HighlightElement)
+      {
+      TtaRemoveAttribute (HighlightElement, HighLightAttribute,
+			  HighlightDocument);
+      HighlightDocument = 0;
+      HighlightElement = NULL;
+      HighLightAttribute = NULL;
+      }
+}
+
+/*----------------------------------------------------------------------
    SynchronizeSourceView
    A new element has been selected. If the Source view is open,
    synchronize it with the new selection.      
@@ -1682,21 +1706,32 @@ NotifyElement* event;
 {
    Element             firstSel, el, child, prevChild, otherEl;
    int                 firstChar, lastChar, line, i, view;
+   AttributeType       attrType;
+   Attribute	       attr;
    Document	       doc, otherDoc;
+   int		       val, x, y, width, height;
+   ThotBool	       otherDocIsHTML, done;
 
+   if (!event)
+       return;
    doc = event->document;
-   /* first, get the other Thot document to be synchronized with the one
-      where the user clicked */
+   done = FALSE;
+   /* get the other Thot document to be synchronized with the one where the
+      user has just clicked */
    otherDoc = 0;
    if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docHTMLRO)
       /* the user clicked on a HTML document, the other doc is the
          corresponding source document */
+      {
       otherDoc = DocumentSource[doc];
+      otherDocIsHTML = FALSE;
+      }
    else if (DocumentTypes[doc] == docSource ||
 	    DocumentTypes[doc] == docSourceRO)
       /* the user clicked on a source document, the other doc is the
          corresponding HTML document */
       {
+      otherDocIsHTML = TRUE;
       for (i = 1; i < DocumentTableLength; i++)
          if (DocumentURLs[i] != NULL)
 	    if (DocumentTypes[i] == docHTML ||
@@ -1745,16 +1780,49 @@ NotifyElement* event;
 	    }
 	 while (!otherEl && el);
 
-	 if (otherEl)
-	    /* element found. Scroll all views where it appears to show
-	       it at the top of the window */
+	 if (otherEl && otherEl != HighlightElement)
+	    /* element found */
 	    {
+	    /* If an element is currently highlighted, remove its Highlight
+	       attribute */
+	    ResetHighlightedElement ();
+	    /* Put a Highlight attribute on the element found */
+	    if (otherDocIsHTML)
+	       {
+	       attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), otherDoc);
+	       attrType.AttrTypeNum = HTML_ATTR_Highlight;
+	       val = HTML_ATTR_Highlight_VAL_Yes_;
+	       }
+	    else
+	       {
+	       attrType.AttrSSchema = TtaGetSSchema (TEXT("TextFile"), otherDoc);
+	       attrType.AttrTypeNum = TextFile_ATTR_Highlight;
+	       val = TextFile_ATTR_Highlight_VAL_Yes_;
+	       }
+	    attr = TtaNewAttribute (attrType);
+	    TtaAttachAttribute (otherEl, attr, otherDoc);
+	    TtaSetAttributeValue (attr, val, otherEl, otherDoc);
+	    /* record the highlighted element */
+	    HighlightDocument = otherDoc;
+	    HighlightElement = otherEl;
+	    HighLightAttribute = attr;
+	    /* Scroll all views where the element appears to show it */
 	    for (view = 1; view < 6; view++)
 	       if (TtaIsViewOpened (otherDoc, view))
-		  TtaShowElement (otherDoc, view, otherEl, 0);
+		  {
+		  TtaGiveBoxAbsPosition (otherEl, otherDoc, view, UnPixel, &x, &y);
+		  TtaGiveWindowSize (otherDoc, view, UnPixel, &width, &height);
+		  if (y < 0 || y > height - 15)
+		     TtaShowElement (otherDoc, view, otherEl, 25);
+		  }
 	    }
+	 done = TRUE;
 	 }
       }
+   if (!done)
+      /* If an element is currently highlighted, remove its Highlight
+	 attribute */
+      ResetHighlightedElement ();
 }
 
 /*----------------------------------------------------------------------

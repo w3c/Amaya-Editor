@@ -1838,6 +1838,7 @@ TypeUnit            unit;
 
    Parameters:
    element: the element of interest.
+   document: the document of interest.
    view: the view.
    unit: the unit used for the values.
 
@@ -1920,12 +1921,13 @@ int                *height;
    TtaGiveBoxPosition
 
    Returns the x and y coordinates of the box corresponding to an element in
-   a given view. The returned coordinates indicate the distance in points
+   a given view. The returned coordinates indicate the distance
    between the upper left corner of the box and the upper left corner of its
    parent box.
 
    Parameters:
    element: the element of interest.
+   document: the document of interest.
    view: the view.
    unit: the unit used for the values.
 
@@ -2013,7 +2015,155 @@ int                *yCoord;
 	}
     }
 }
-#endif
+
+/*----------------------------------------------------------------------
+   TtaGiveBoxAbsPosition
+
+   Returns the x and y coordinates of the box corresponding to an element in
+   a given view. The returned coordinates indicate the distance
+   between the upper left corner of the box and the upper left corner of its
+   window.
+
+   Parameters:
+   element: the element of interest.
+   document: the document of interest.
+   view: the view.
+   unit: the unit used for the values.
+
+   Return parameters:
+   xCoord: distance from the left edge of the window to the left
+   edge of the box.
+   yCoord:  distance from the upper edge of the window to the upper
+   edge of the box.
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaGiveBoxAbsPosition (Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord)
+#else  /* __STDC__ */
+void                TtaGiveBoxAbsPosition (element, Document document, view, unit, xCoord, yCoord)
+Element             element;
+Document            document;
+View                view;
+TypeUnit            unit;
+int                *xCoord;
+int                *yCoord;
+
+#endif /* __STDC__ */
+{
+  PtrAbstractBox      pAb;
+  PtrBox              pBox;
+  ViewFrame	      *pFrame;
+  int                 v, frame;
+  int                 x, y;
+
+  UserErrorCode = 0;
+  *xCoord = 0;
+  *yCoord = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  /* verifies the parameter document */
+  else if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      /* parameter document is correct */
+      frame = GetWindowNumber (document, view);
+      if (frame != 0)
+	{
+	  if (view < 100)
+	    /* View of the main tree */
+	    v = view;
+	  else
+	    /* View of associated elements */
+	    v = 1;
+	  pAb = AbsBoxOfEl ((PtrElement) element, v);
+	  if (pAb == NULL)
+	    {
+	      *xCoord = 32000;
+	      *yCoord = 32000;
+	    }
+	  else
+	    {
+	      pBox = pAb->AbBox;
+	      if (pBox->BxType == BoSplit && pBox->BxNexChild != NULL)
+		pBox = pBox->BxNexChild;
+	      pFrame = &ViewFrameTable[frame - 1];
+	      *xCoord = pBox->BxXOrg - pFrame->FrXOrg;
+	      *yCoord = pBox->BxYOrg - pFrame->FrYOrg;
+
+	      /* Convert values to pixels */
+	      if (unit == UnPercent)
+		{
+	          GetSizesFrame (frame, &x, &y);
+		  *xCoord = PixelValue (*xCoord, UnPercent, (PtrAbstractBox) x, 0);
+		  *yCoord = PixelValue (*yCoord, UnPercent, (PtrAbstractBox) y, 0);
+		}
+	      else
+		{
+		  *xCoord = PixelValue (*xCoord, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		  *yCoord = PixelValue (*yCoord, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		}
+	    }
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+   TtaGiveWindowSize
+
+   Returns the height and width of the window corresponding to a given view.
+
+   Parameters:
+   document: the document of interest.
+   view: the view.
+   unit: the unit used for the values (UnPixel or UnPoint only)
+
+   Return parameters:
+   width: window width in units.
+   height: window height in units.
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaGiveWindowSize (Document document, View view, TypeUnit unit, int *width, int *height)
+#else  /* __STDC__ */
+void                TtaGiveWindowSize (document, view, unit, width, height)
+Document            document;
+View                view;
+TypeUnit            unit;
+int                *width;
+int                *height;
+
+#endif /* __STDC__ */
+{
+  int                 frame;
+  int                 w, h;
+
+  UserErrorCode = 0;
+  *width = 0;
+  *height = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (unit == UnPercent || unit == UnRelative || unit == UnXHeight)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      /* parameter document is correct */
+      frame = GetWindowNumber (document, view);
+      if (frame != 0)
+	{
+	  GetSizesFrame (frame, &w, &h);
+          /* Convert values */
+	  *width = PixelValue (w, unit, NULL, ViewFrameTable[frame - 1].FrMagnification);
+	  *height = PixelValue (h, unit, NULL, ViewFrameTable[frame - 1].FrMagnification);
+	}
+    }
+}
+#endif /* NODISPLAY */
 
 /*----------------------------------------------------------------------
    TtaGetPRule

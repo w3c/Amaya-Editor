@@ -10032,6 +10032,20 @@ ATTRIBUTES
 	   CreateBefore(VALUE_Invalid_attribute);
 	END;
 
+#ifndef PAGE
+  Highlight:
+	BEGIN
+	Foreground : Black;
+	Background : Yellow;
+	FillPattern: backgroundcolor;
+	ShowBox;
+	IN Structure_view ShowBox;
+	IN Links_view ShowBox;
+	IN Alternate_view ShowBox;
+	IN Table_of_contents ShowBox;
+	END;
+#endif
+
   Error_type = UnknownTag:
 	BEGIN
 #ifdef BLACK_WHITE
@@ -10048,3 +10062,4 @@ ATTRIBUTES
 	   CreateAfter(INVALID_E);
 
 END
+

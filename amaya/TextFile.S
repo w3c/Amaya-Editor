@@ -4,6 +4,9 @@ STRUCTURE TextFile;
 
 DEFPRES TextFileP;
 
+ATTR
+   Highlight = Yes_;
+
 STRUCT
    TextFile (ATTR PrintURL = Yes_;) =
 	AGGREGATE
@@ -18,4 +21,5 @@ EXCEPT
 	TextFile: 	NoMove, NoResize, ImportLine;
 	BODY:           Hidden;
         PrintURL:       Invisible;
+	Highlight:	Invisible;
 END
