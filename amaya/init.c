@@ -1059,17 +1059,18 @@ char               *pathname;
 }
 
 /*----------------------------------------------------------------------
-   LoadHTMLDocument starts the parsing of the new document and         
-   stores its path (or URL) into the document table.       
+   LoadHTMLDocument parse of the new document and         
+   store its path (or URL) into the document table.       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Document     LoadHTMLDocument (Document doc, char *pathname, char *tempfile, char *documentname, boolean history)
+static Document     LoadHTMLDocument (Document doc, char *pathname, char *tempfile, char *documentname, char *content_type, boolean history)
 #else
-static Document     LoadHTMLDocument (doc, pathname, tempfile, documentname, history)
+static Document     LoadHTMLDocument (doc, pathname, tempfile, documentname, content_type, history)
 Document            doc;
 char               *pathname;
 char               *tempfile;
 char               *documentname;
+char               *content_type;
 boolean		    history;
 
 #endif
@@ -1079,9 +1080,44 @@ boolean		    history;
    char               *tempdir;
    char               *s;
    int                 i;
+   boolean	       PlainText;
+   boolean	       HTMLfile;
 
    tempdocument = TtaGetMemory (MAX_LENGTH);
-   if (!IsTextName (pathname) && tempfile[0] != EOS)
+
+   PlainText = FALSE;
+   HTMLfile = FALSE;
+   if (content_type == NULL || content_type[0] == EOS)
+      /* local document or no content type from the server */
+      /* try to guess the document type after its file name extension */
+      {
+      if (IsTextName (pathname))
+	 {
+	 PlainText = TRUE;
+	 HTMLfile = FALSE;
+	 }
+      else
+	 HTMLfile = TRUE;
+      }
+   else
+      /* the server returned a content type */
+      {
+      i = 0;
+      while (content_type[i] != '/' && content_type[i] != EOS)
+	  i++;
+      if (content_type[i] == '/')
+	 {
+	 content_type[i] = EOS;
+	 if (strcasecmp (content_type, "text") == 0)
+	    {
+	    if (strcasecmp (&content_type[i+1], "html") == 0)
+	       HTMLfile = TRUE;
+	    else
+	       PlainText = TRUE;
+	    }
+	 }
+      }
+   if (!PlainText && !HTMLfile && tempfile[0] != EOS)
      {
 	/* The document is not an HTML file and cannot be parsed */
 	/* rename the temporary file */
@@ -1158,7 +1194,9 @@ boolean		    history;
 	if (TtaGetViewFrame (newdoc, 1) != 0)
 	   /* this document is displayed */
 	   TtaSetTextZone (newdoc, 1, 1, s);
-	StartHTMLParser (newdoc, tempdocument, documentname, tempdir, pathname);
+
+	StartHTMLParser (newdoc, tempdocument, documentname, tempdir, pathname,
+			 PlainText);
 	if (newdoc != doc)
 	   /* the document is displayed in a different window */
 	   /* reset the history of the new window */
@@ -1240,7 +1278,8 @@ View                view;
      {
         TtaSetCursorWatch (0, 0);
 	/* do we need to control the last slash here? */
-	res = LoadHTMLDocument (newdoc, pathname, tempfile, documentname, FALSE);
+	res = LoadHTMLDocument (newdoc, pathname, tempfile, documentname,
+				content_type, FALSE);
 	W3Loading = 0;		/* loading is complete now */
 	TtaHandlePendingEvents ();
 	/* fetch and display all images referred by the document */
@@ -1686,7 +1725,7 @@ boolean		    history;
 	       if (toparse != -1)
 		 {
 		   /* do we need to control the last slash here? */
-		   res = LoadHTMLDocument (newdoc, pathname, tempfile, documentname, history);
+		   res = LoadHTMLDocument (newdoc, pathname, tempfile, documentname, content_type, history);
 		   W3Loading = 0;		/* loading is complete now */
 		   if (res == 0)
 		     {

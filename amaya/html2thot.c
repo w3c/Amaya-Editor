@@ -875,8 +875,6 @@ static boolean      EmptyLine = TRUE;	  /* no printable character encountered
 					     yet in the current line */
 static boolean      StartOfFile = TRUE;	  /* no printable character encountered
 					     yet in the file */
-static boolean      NotHTML = TRUE;	  /* input file is not HTML. It's
-					     plain ISO-Latin-1 */
 static boolean      AfterTagPRE = FALSE;  /* <PRE> has just been read */
 static boolean      ParsingCSS = FALSE;	  /* reading the content of a STYLE
 					     element */
@@ -6066,22 +6064,10 @@ char               *HTMLbuf;
 			  /* suppress all spaces preceding the end of line */
 			  while (LgBuffer > 0 && inputBuffer[LgBuffer - 1] == SPACE)
 			     LgBuffer--;
-			  if (NotHTML && EmptyLine && !StartOfFile)
-			     /* empty line in plain text mode */
-			     /* create a new paragraph by simulating a <P> tag */
-			    {
-			       StartOfTag (SPACE);
-			       ProcessStartGI ("P");
-			       /* ignore character */
-			       charRead = EOS;
-			    }
-			  else
-			    {
-			       /* new line is equivalent to space */
-			       charRead = SPACE;
-			       if (LgBuffer > 0)
-			          TextToDocument ();
-			    }
+			  /* new line is equivalent to space */
+			  charRead = SPACE;
+			  if (LgBuffer > 0)
+			     TextToDocument ();
 		        }
 		/* beginning of a new input line */
 		EmptyLine = TRUE;
@@ -6174,9 +6160,6 @@ char               *HTMLbuf;
 				      currentState = -trans->newState;
 				   }
 			      }
-			    if (currentState != 0)
-			       /* an element of HTML syntax has been recognized */
-			       NotHTML = FALSE;
 			    /* done */
 			    trans = NULL;
 			    if (ParsingCSS)
@@ -6209,6 +6192,67 @@ char               *HTMLbuf;
      }
    while ((infile != NULL && !feof (infile) && !ferror (infile)) ||
 	  (HTMLbuf != NULL && !endBuffer));
+   /* end of HTML file */
+   EndOfDocument ();
+}
+
+
+/*----------------------------------------------------------------------
+   ReadTextFile
+   read plain text file into a PRE element.
+   input text comes from either the infile file or the text
+   buffer textbuf. One parameter should be NULL.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                ReadTextFile (FILE * infile, char *textbuf)
+#else
+void                ReadTextFile (infile, textbuf)
+FILE               *infile;
+char		   *textbuf;
+#endif
+{
+   unsigned char       charRead;
+   boolean             endBuffer;
+
+   InputText = textbuf;
+   InputFile = infile;
+   endBuffer = FALSE;
+   numberOfCharRead = 0;
+   numberOfLinesRead = 1;
+   /* create a PRE element by simulating a PRE tag */
+   StartOfTag (SPACE);
+   ProcessStartGI ("PRE");
+
+   /* read the text file sequentially */
+   do
+     {
+	/* read one character from the source */
+	charRead = GetNextInputChar ();
+	if (infile == NULL)
+	   endBuffer = (charRead == EOS);
+	if (charRead != EOS)
+	  {
+	     /* Check the character read */
+	     /* Consider LF and FF as the end of an input line. */
+	     if ((int) charRead == 10)
+		/* LF = end of line */
+		/* generate a Thot new line character */
+		charRead = (unsigned char) 138;
+	     else
+		/* it's not an end of line */
+	        /* Ignore non printable characters except HT, LF, FF. */
+		if ((charRead < SPACE || (int) charRead >= 254 ||
+		    	((int) charRead >= 127 && (int) charRead <= 159))
+			   && (int) charRead != 9 && (int) charRead != 138)
+		     /* it's not a printable character, ignore it */
+		     charRead = EOS;
+	     if (charRead != EOS)
+		/* a valid character has been read */
+		PutInBuffer (charRead);
+	  }
+     }
+   while ((infile != NULL && !feof (infile) && !ferror (infile)) ||
+	  (textbuf != NULL && !endBuffer));
    /* end of HTML file */
    EndOfDocument ();
 }
@@ -7212,16 +7256,13 @@ Document            doc;
 	  }
 	lastElement = lastelem;
 	lastElementClosed = isclosed;
-	/* input file is HTML */
-	NotHTML = FALSE;
      }
    else
      {
 	lastElement = rootElement;
 	lastElementClosed = FALSE;
-	/* input file could be plain ASCII (or ISO-Latin-1) */
-	NotHTML = TRUE;
      }
+   /* input file is supposed to be HTML */
    GINumberStack[0] = -1;
    ElementStack[0] = rootElement;
    ThotLevel[0] = 1;
@@ -7340,6 +7381,7 @@ char              **argv;
    char                documentName[200];
    Element             el, oldel;
    int                 returnCode;
+   boolean	       PlainText;
 
    /* check the number of arguments in command line */
    returnCode = 0;
@@ -7368,6 +7410,8 @@ char              **argv;
 	     /* input file OK. Get the output file name from the command line */
 	     argv++;
 	     strcpy (pivotFileName, *argv);
+	     /* the file to be parsed is supposed to be HTML */
+	     PlainText = FALSE;
 	     /* initialize mapping table */
 	     InitMapping ();
 	     /* initialize automaton for the HTML parser */
@@ -7406,14 +7450,15 @@ char              **argv;
    distant) path or URL of the html document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                StartHTMLParser (Document doc, char *htmlFileName, char *documentName, char *documentDirectory, char *pathURL)
+void                StartHTMLParser (Document doc, char *htmlFileName, char *documentName, char *documentDirectory, char *pathURL, boolean PlainText)
 #else
-void                StartHTMLParser (doc, htmlFileName, documentName, documentDirectory, pathURL)
+void                StartHTMLParser (doc, htmlFileName, documentName, documentDirectory, pathURL, PlainText)
 Document            doc;
 char               *htmlFileName;
 char               *documentName;
 char               *documentDirectory;
 char               *pathURL;
+boolean	            PlainText;
 
 #endif
 {
@@ -7494,13 +7539,22 @@ char               *pathURL;
 #ifdef HANDLE_COMPRESSED_FILES
            if (cbuf != NULL)
 	      {
-	      HTMLparse (NULL, cbuf);
+	      if (PlainText)
+		 ReadTextFile (NULL, cbuf);
+	      else
+	         HTMLparse (NULL, cbuf);
 	      TtaFreeMemory(cbuf);
 	      } 
 	   else
-	      HTMLparse (infile, NULL);
+	      if (PlainText)
+		 ReadTextFile (infile, NULL);
+	      else
+	         HTMLparse (infile, NULL);
 #else
-	   HTMLparse (infile, NULL);
+	   if (PlainText)
+	      ReadTextFile (infile, NULL);
+	   else
+	      HTMLparse (infile, NULL);
 #endif
 	   /* completes all unclosed elements */
 	   el = lastElement;

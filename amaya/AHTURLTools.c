@@ -197,37 +197,37 @@ const char         *path;
 
    /* Normalize the suffix */
    i = 0;
-   while (suffix[i] != EOS)
+   while (suffix[i] != EOS && i < MAX_LENGTH -1)
      {
        nsuffix[i] = tolower (suffix[i]);
        i++;
      }
    nsuffix[i] = EOS;
-   if ((strcmp (nsuffix, "html")) &&
-       (strcmp (nsuffix, "htm")) &&
-       (strcmp (nsuffix, "shtml")))
-     return (FALSE);
+   if ((!strcmp (nsuffix, "html")) ||
+       (!strcmp (nsuffix, "htm")) ||
+       (!strcmp (nsuffix, "shtml")))
+     return (TRUE);
    else if (!strcmp (nsuffix, "gz"))
      {
-       /* take in account compressed files */
+       /* take into account compressed files */
        ExtractSuffix (temppath, suffix);       
        /* Normalize the suffix */
        i = 0;
-       while (suffix[i] != EOS)
+       while (suffix[i] != EOS && i < MAX_LENGTH -1)
 	 {
 	   nsuffix[i] = tolower (suffix[i]);
 	   i++;
 	 }
        nsuffix[i] = EOS;
-       if ((strcmp (nsuffix, "html")) &&
-	   (strcmp (nsuffix, "htm")) &&
-	   (strcmp (nsuffix, "shtml")))
-	 return (FALSE);
-       else
+       if ((!strcmp (nsuffix, "html")) ||
+	   (!strcmp (nsuffix, "htm")) ||
+	   (!strcmp (nsuffix, "shtml")))
 	 return (TRUE);
+       else
+	 return (FALSE);
      }
    else
-     return (TRUE);
+     return (FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -254,17 +254,17 @@ const char         *path;
 
    /* Normalize the suffix */
    i = 0;
-   while (suffix[i] != EOS)
+   while (suffix[i] != EOS && i < MAX_LENGTH -1)
      {
        nsuffix[i] = tolower (suffix[i]);
        i++;
      }
    nsuffix[i] = EOS;
-   if ((strcmp (nsuffix, "gif")) && (strcmp (nsuffix, "xbm")) &&
-       (strcmp (nsuffix, "xpm")) && (strcmp (nsuffix, "jpg")) &&
-       (strcmp (nsuffix, "png")) && (strcmp (nsuffix, "au")))
-      return (FALSE);
-   return (TRUE);
+   if ((!strcmp (nsuffix, "gif")) || (!strcmp (nsuffix, "xbm")) ||
+       (!strcmp (nsuffix, "xpm")) || (!strcmp (nsuffix, "jpg")) ||
+       (!strcmp (nsuffix, "png")) || (!strcmp (nsuffix, "au")))
+      return (TRUE);
+   return (FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -291,35 +291,28 @@ const char         *path;
 
    /* Normalize the suffix */
    i = 0;
-   while (suffix[i] != EOS)
+   while (suffix[i] != EOS && i < MAX_LENGTH -1)
      {
 	nsuffix[i] = tolower (suffix[i]);
 	i++;
      }
    nsuffix[i] = EOS;
 
-   if ((strcmp (nsuffix, "gif")) && (strcmp (nsuffix, "xbm")) &&
-       (strcmp (nsuffix, "xpm")) && (strcmp (nsuffix, "jpg")) &&
-       (strcmp (nsuffix, "pdf")) && (strcmp (nsuffix, "png")) &&
-       (strcmp (nsuffix, "tgz")) && (strcmp (nsuffix, "tar")) &&
-       (strcmp (nsuffix, "xpg")) && (strcmp (nsuffix, "xpd")) &&
-       (strcmp (nsuffix, "ps"))  && (strcmp (nsuffix, "au")))
+   if ((!strcmp (nsuffix, "txt")) || (!strcmp (nsuffix, "dtd")))
       return (TRUE);
    else if (!strcmp (nsuffix, "gz"))
      {
-       /* take in account compressed files */
+       /* take into account compressed files */
        ExtractSuffix (temppath, suffix);       
        /* Normalize the suffix */
        i = 0;
-       while (suffix[i] != EOS)
+       while (suffix[i] != EOS && i < MAX_LENGTH -1)
 	 {
 	   nsuffix[i] = tolower (suffix[i]);
 	   i++;
 	 }
        nsuffix[i] = EOS;
-       if ((!strcmp (nsuffix, "html")) ||
-	   (!strcmp (nsuffix, "htm")) ||
-	   (!strcmp (nsuffix, "shtml")))
+       if ((!strcmp (nsuffix, "txt")) || (!strcmp (nsuffix, "dtd")))
 	 return (TRUE);
        else
 	 return (FALSE);
@@ -437,7 +430,8 @@ Document            doc;
   int                 length;
 
   basename = TtaGetMemory (MAX_LENGTH);
-  strcpy (basename, DocumentURLs[doc]);
+  strncpy (basename, DocumentURLs[doc], MAX_LENGTH-1);
+  basename[MAX_LENGTH-1] = EOS;
   length = MAX_LENGTH -1;
   /* get the root element    */
   el = TtaGetMainRoot (doc);
@@ -582,7 +576,8 @@ char               *docName;
    ptr = orgName;
    /* skip leading white space and new line characters */
    while ((*ptr == ' ' || *ptr == EOL) && *ptr++ != EOS);
-   strcpy (tempOrgName, ptr);
+   strncpy (tempOrgName, ptr, MAX_LENGTH -1);
+   tempOrgName[MAX_LENGTH -1] = EOS;
    /* clean trailing white space */
    ptr = strchr (tempOrgName, ' ');
    if (ptr)
@@ -1373,8 +1368,8 @@ char            *aName;
 char            *relatedName;
 #endif  /* __STDC__ */
 {
-  char      *return_value;
-  char       result[MAX_LENGTH];
+  char          *return_value;
+  char           result[MAX_LENGTH];
   char          *p;
   char          *q;
   char          *after_access;

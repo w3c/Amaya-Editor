@@ -46,7 +46,8 @@ extern void StartHTMLParser ( Document doc,
                               char *htmlFileName,
                               char *documentName,
                               char *documentDirectory,
-                              char *pathURL );
+                              char *pathURL,
+                              boolean PlainText );
 
 #else /* __STDC__ */
 extern void CheckMathElement (/* Element el */);
@@ -90,7 +91,8 @@ extern void StartHTMLParser (/* Document doc,
                                 char *htmlFileName,
                                 char *documentName,
                                 char *documentDirectory,
-                                char *pathURL */);
+                                char *pathURL,
+                                boolean PlainText */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
