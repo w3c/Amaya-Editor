@@ -36,7 +36,7 @@ manipuler les expressions mathématiques de la même manière que vous manipulez
 les autres parties des éléments HTML. Toutes les commandes d'édition fournies
 par Amaya pour traiter le texte sont également utilisables pour les
 mathématiques. Il y a quelques manipulations supplémentaires pour entrer des
-constructions mathématiques.  .</p>
+constructions mathématiques.  </p>
 
 <h3><a name="Creating">Créer une expression mathématique</a></h3>
 
@@ -45,37 +45,37 @@ constructions mathématiques.  .</p>
 <p>Pour créer une expression mathématique dans un document, il suffit de <a
 href="Selecting.html#Selecting">déplacer le point d'insertion</a>  à l'endroit
 où vous voulez insérer l'expression, puis de cliquer sur le bouton
-<strong>Math</strong>  (le bouton le plus à droite de la barret) ou de
-sélectionner l'entrée  <strong>Math</strong> du menu <strong>Elémen</strong>. 
-Le bouton <strong>Math</strong> affichr une palette qui reste à l'écran
-jusqu´à ce que vous cliquiez sur le bouton "terminer". L'article  The
-<strong>Math</strong> du menu <strong>Eléments</strong> affiche un menu qui
-surgit. Choisissez l'outil qui vous est le plus commode. Les deux vous
-permettent de sélectionner la construction mathématique à insérer. </p>
+<strong>Math</strong>  (le bouton le plus à droite de la barre des boutons) ou
+de sélectionner l'entrée  <strong>Math</strong> du menu
+<strong>Eléments</strong>. Le bouton <strong>Math</strong> affiche une palette
+qui reste à l'écran jusqu´à ce que vous cliquiez sur le bouton "terminer".
+L'article <strong>Math</strong> du menu <strong>Eléments</strong> affiche un
+menu. Choisissez l'outil qui vous est le plus commode. Les deux vous
+permettent de sélectionner la construction mathématique à insérer.</p>
 
 <p>Dans la palette  Math (ou le menu), le premier article vous permet de créer
 une nouvelle formule lorsque le point d'insertion est dans un élément HTML   (
 mais le point d'insertion ne devrait pas être à l'intérieur d'un élément
-MathML). </p>
+MathML).</p>
 
 <p>Dans le menu  <strong>Math</strong>, les éléments suivants vous donnent la
 possibilité de créer de nouveaux éléments de base (non disponibles dans la
 palette): Texte (<code>mtext</code>), Identificateur  (<code>mi</code>),
-Nombre  (<code>mn</code>), Operateur (<code>mo</code>). Vous pouvez également
+Nombre  (<code>mn</code>), Opérateur (<code>mo</code>). Vous pouvez également
 utiliser ces commandes pour changer le type d'un élément  seul ou d'une
-séquence d'éléments. </p>
+séquence d'éléments.</p>
 
-<p>Ces articles du menu  <strong>Math</strong> sont suivis par l'article 
+<p>Ces articles du menu  <strong>Math</strong> sont suivis par l'article
 Caractère (<code>mchar</code>). Cette commande vous permet d'entrer un
 caractère qui n'est pas disponible sur le clavier. Elle affiche une boîte de
-dialogue dans laquelle vous devez entrer le nom du caractère (par exemple 
+dialogue dans laquelle vous devez entrer le nom du caractère (par exemple
 <em>alpha </em> pour le caractère grec &alpha;).</p>
 
 <p>Les élements suivants du menu  <strong>Math</strong> (ou de la palette)
 vous permettent de créer de nouvelles constructions à l'intérieur d'une
 formule. Si le point d'insertion n'est pas dans une formule, un élément Math
 est d'abord créé pour accepter la nouvelle construction. Les constructions
-disponibles sont: </p>
+disponibles sont:</p>
 <ul>
   <li>Racine ( <code>mroot dans</code> MathML):  <math
     xmlns="http://www.w3.org/1998/Math/MathML">
@@ -245,25 +245,25 @@ xmlns="http://www.w3.org/1998/Math/MathML">
   <mi>&alpha;&beta;&gamma;</mi>
 </math>
  ) affiche une autre palette à partir de laquelle vous pouvez insérer des
-symboles mathématiques et des caractères grecs. </p>
+symboles mathématiques et des caractères grecs.</p>
 
-<h4><a name="Entering">Entrer des constructions à partir du clavier. </a></h4>
+<h4><a name="Entering">Entrer des constructions à partir du clavier.</a></h4>
 
 <p>Vous n' êtes pas obligé d'utiliser le menu ou la palette  pour créer et
 éditer des expressions mathématiques. Vous pouvez entrer des constructions
 mathématiques directement à partir du clavier étant donné que chaque article
 du menu <strong>Math</strong> a un équivalent sur le clavier ( tous les
-raccourcis sont énumérés dans le menu). Ceci vous permet de taper plus vite. 
+raccourcis sont énumérés dans le menu). Ceci vous permet de taper plus vite.
 Si vous voulez taper encore plus vite, vous pouvez aussi utiliser les touches
 de direction du  clavier pour  faire passer  le point d'insertion d'une
-construction à une autre. </p>
+construction à une autre.</p>
 
 <h3><a name="Entering1">Entrer des caractères</a></h3>
 
 <p>Quand vous tapez une chaîne de caractères dans un élement MathML, Amaya
 analyse cette chaîne et engendre automatiquement des éléments <code>mo</code>
-(opérateur), <code>mn</code> (nombre), <code>mi</code> (identificateur), et 
-<code>mtext. Par exemple, pour entrer</code></p>
+(opérateur), <code>mn</code> (nombre), <code>mi</code> (identificateur), et
+<code>mtext.</code>Par exemple, pour entrer</p>
 
 <p><math xmlns="http://www.w3.org/1998/Math/MathML">
   <mrow>
@@ -278,54 +278,54 @@ analyse cette chaîne et engendre automatiquement des éléments <code>mo</code>
 </p>
 
 <p>il suffit de taper cette séquence de 6 caractères: <code>x=2a+b</code>
-(n'oubliez pas de cliquer d'abord sur l'article Math du menu 
+(n'oubliez pas de cliquer d'abord sur l'article Math du menu
 <strong>Math</strong>  si vous n'êtes pas dans une expression mathématique),
 et vous obtiendrez la structure suivante (vous pouvez vérifier dans le  <a
-href="#Math_Struc">Math_Structure vue</a>):</p>
+href="#Math_Struc">vue Math_Structure </a>):</p>
 <pre>&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mi&gt;b&lt;/mi&gt;</pre>
 
 <p>Si le résultat ne correspond pas exactement à ce que vous vouliez, il
 suffit de sélectionner les caractères mal interprétés et de changer leur type
 avec l'une des commandes Texte (mtext), Identificateur(mi), Nombre(mn),
-Opérateur (mo) du menu Eléments/Math. </p>
+Opérateur (mo) du menu Eléments/Math.</p>
 
-<h3><a name="Structure">Editer la structure </a></h3>
+<h3><a name="Structure">Editer la structure</a></h3>
 
 <p>Amaya prévoit la même méthode pour créer et éditer des matrices que pour <a
 href="Tables.html#Editing">éditer des tables  HTML</a>. Comme pour les tables,
 il y a une commande spécifique (Détruire une colonne de matrice) pour détruire
 une colonne dans une matrice, même si elle n'est pas vide. Cette commande est
-située à la fin du sous-menu  <strong>Math</strong> du menu 
-<strong>Eléments.</strong>.</p>
+située à la fin du sous-menu  <strong>Math</strong> du menu
+<strong>Eléments.</strong></p>
 
 <p>Si vous voulez changer la structure d'une expression existante, pour
 ajouter par exemple un exposant ou mettre des parenthèses autour d'une
 expression, il suffit de sélectionner l'expression et d'entrer la nouvelle
 expression avec la palette, le menu <strong>Math</strong> ou le <a
 href="#Entering">clavier</a>. Vous pouvez également utiliser la commande
-<strong>Transformer </strong>du menu  <strong>Edition</strong>. Sélectionner
+<strong>Transformer </strong>du menu  <strong>Edition</strong>. Sélectionnez 
 l'expression que vous voulez transformer et la
 commande<strong>Transformer</strong> affichera un menu avec tous les
-changements possibles. </p>
+changements possibles.</p>
 
-<h3><a name="Math_Struc">Math_Structure vue</a></h3>
+<h3><a name="Math_Struc">Vue Math_Structure </a></h3>
 
-<p>Toutes les fois qu'un document contient des éléments MathML, choisir
-l'article  <a href="Views.html#Structure">Montrer la structure </a>du menu 
-<strong>Vues </strong> ouvre <em>deux vues</em>:</p>
+<p>Toutes les fois qu'un document contient des éléments MathML, la sélection
+de  l'article  <a href="Views.html#Structure">Montrer la structure </a>du menu
+<strong>Vues </strong> ouvre en fait <em>deux vues</em>:</p>
 <ul>
   <li>La  Structure vue montre la structure principale du document  HTML. Dans
     cette vue, les éléments  MathML sont seulement représentés par une
-    étiquette mathématique mais leurs contenus effectifs ne sont pas
+    étiquette mathématique.  Leurs contenus effectifs ne sont pas
   indiqués.</li>
   <li>La  Math_Structure vue montre seulement les éléments MathML, mais là,
-    tous leurs composants sont visibles.  </li>
+    tous leurs composants sont visibles.</li>
 </ul>
 
 <p>Vous pouvez éditer des expressions mathématiques aussi bien dans la vue
-pricipale que dans la  Math_Structure vue. La  Math_Structure vue est
-particulièrement utile pour éviter l'ambiguïté. Observez l'exemple suivant:
-</p>
+pricipale que dans la  vue Math_Structure. La vue  Math_Structure  est
+particulièrement utile pour éviter l'ambiguïté. Observez l'exemple
+suivant:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" mode="display">
   <mrow>
     <mi>x</mi>
@@ -345,9 +345,9 @@ particulièrement utile pour éviter l'ambiguïté. Observez l'exemple suivant:
 <p>Lorsque vous déplacez le point d'insertion aprés le caractère<em> b</em>,
 il n'est pas évident de distinguer  si vous voulez ajouter quelquechose <em>à
 l'intérieur </em>de la racine carrée ou  <em>aprés</em> elle.  Sélectionner
-(ou vérifier ) dans la  Math_Structure vue évite toute ambiguïté. Vous pouvez
-également vérifier la position de la ligne , en bas de la fenêtre pricipale.
-</p>
+(ou vérifier ) dans la  vue Math_Structure  évite toute ambiguïté. Vous pouvez
+également vérifier la position de la ligne, en bas de la fenêtre
+pricipale.</p>
 
 <h3><a name="Links">Les liens dans MathML</a></h3>
 
@@ -356,7 +356,7 @@ Ces liens sont représentés en utilisant une version détachée du  <a
 href="http://www.w3.org/TR/WD-xlink">XML Linking Language (XLink)</a>. Seuls
 les liens simples unidirectionnels sont utilisables, mais vous pouvez associer
 un lien à n'importe quelle partie d'une formule. Par exemple, la fraction dans
-la formule ci-dessous est un lien vers la page d'accueil W3C:  </p>
+la formule ci-dessous est un lien vers la page d'accueil W3C:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mrow>
     <mi>y</mi>
@@ -381,19 +381,19 @@ la formule ci-dessous est un lien vers la page d'accueil W3C:  </p>
 
 <p>Cliquer deux fois sur un des caractères à l'intérieur de la fraction fait
 apparaître la page d'accueil W3C. Dans le classeur XML, la fraction est
-représentée par: </p>
+représentée par:</p>
 <pre><code>&lt;mfrac xml:link="simple" href="http://www.w3.org/"&gt;...&lt;/mfrac&gt;</code></pre>
 
-<p>(Vous pouvez trouver cela seulement dans la structure vue. ce n'est pas
-couremment indiqué dans les liens vue).  Pour créer un tel lien, il suffit de
-sélectionner une expression (la fraction dans l'exemple ci-dessus par
-exemple), de cliquer sur le bouton Lien ( ou de sélectionnezr le "créer lien"
-du menu Liens), et de cliquer sur la cible désirée. Si la cible est une
-expression dans une formule, vous devez d'abord transformer cette expression
-en cible. Il suffit de sélectionner l'expression ainsi que le "créer cible" du
-menu Liens. Ceci crée un attribut <code>id</code> pour l'expression cible.</p>
+<p>(Vous pouvez trouver cela seulement dans la vue structure. ce n'est pas
+couremment indiqué dans la vue liens).  Pour créer un tel lien, il suffit de
+sélectionner une expression (la fraction dans l'exemple ci-dessus ), de
+cliquer sur le bouton Lien ( ou de sélectionner le "créer lien" du menu
+Liens), et de cliquer sur la cible désirée. Si la cible est une expression
+dans une formule, vous devez d'abord transformer cette expression en cible. Il
+suffit de sélectionner l'expression ainsi que le "créer cible" du menu Liens.
+Ceci crée un attribut <code>id</code> pour l'expression cible.</p>
 
-<h3><a name="Current">Imperfections courantes</a></h3>
+<h3><a name="Current">Limite  courantes</a></h3>
 
 <p>Amaya implémente seulement les <em>Etiquettes de Présentation</em> à partir
 du MathML 2.0, et non  le  <em>Balisage du Contenu</em>. Tous les éléments de
@@ -414,9 +414,9 @@ href="StyleSheets.html">associer le style  CSS </a> aux éléments MathML
 (attribut<code> class</code> et  <code>style</code>) et un élément  MathML
 peut être la cible d'un lien (attribut<code> id</code>).</p>
 
-<p>A cause du manque de réservoirs mathématiques, seule une série limitée
-d'entités représentant des symboles mathématiques est reconnue, la plupart
-disponibles dans le réservoir Symbole. La version courante contient: 
+<p>A cause du manque de polices de caractères  mathématiques, seule une série
+limitée d'entités représentant des symboles mathématiques est reconnue, la
+plupart disponible dans la police  Symbole. La version courante contient:
 Therefore, SuchThat, DownTee, Or, And, Not, Exists, ForAll, Element,
 NotElement, NotSubset, Subset, SubsetEqual, Superset, SupersetEqual,
 DoubleLeftArrow, DoubleLeftRightArrow, DoubleRightArrow, LeftArrow,
