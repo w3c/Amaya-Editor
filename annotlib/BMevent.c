@@ -1,0 +1,546 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 2003.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ * 
+ */
+
+/*
+ * BMevent.c : interface module between Amaya and the bookmark
+ * code.
+ *
+ * Author: J. Kahan (W3C/ERCIM)
+ *
+ */
+
+
+/* annotlib includes */
+#include "annotlib.h"
+#include "bookmarks.h"
+
+#include "f/ANNOTtools_f.h"
+#include "f/ANNOTevent_f.h"
+
+/* bookmark includes */
+#include "f/BMfile_f.h"
+#include "f/BMmenu_f.h"
+#include "f/BMview_f.h"
+#include "f/BMtools_f.h"
+#include "Topics.h"
+
+/* Amaya includes */
+#include "XPointer.h"
+#include "XPointer_f.h"
+#include "XPointerparse_f.h"
+#include "init_f.h"
+
+static char *LocalBookmarksFile;
+static char *LocalBookmarksBaseURI;
+static char *HomeTopicURI;
+
+char *GetLocalBookmarksFile (void)
+{
+  return LocalBookmarksFile;
+}
+
+char *GetLocalBookmarksBaseURI (void)
+{
+  return LocalBookmarksBaseURI;
+}
+
+char *GetHomeTopicURI (void)
+{
+  return HomeTopicURI;
+}
+
+/*
+** public API 
+*/
+
+/*-----------------------------------------------------------------------
+  BM_Init
+  -----------------------------------------------------------------------*/
+void BM_Init (void)
+{
+  char *ptr;
+
+  
+  redland_init ();
+  
+  /* the local bookmark file name */
+  ptr =  TtaGetEnvString ("APP_HOME");
+  if (ptr != NULL)
+    {
+      LocalBookmarksFile = TtaGetMemory (strlen (ptr) + strlen (LOCAL_BOOKMARKS_FILE) + 2);
+      sprintf (LocalBookmarksFile, "%s%c%s", ptr, DIR_SEP, LOCAL_BOOKMARKS_FILE);
+    }
+  LocalBookmarksBaseURI = ANNOT_MakeFileURL ((const char *) LocalBookmarksFile);
+  HomeTopicURI = TtaGetMemory (strlen (LocalBookmarksBaseURI) + sizeof (HOME_TOPIC_ANCHOR) + 2);
+  sprintf (HomeTopicURI, "%s%s", LocalBookmarksBaseURI, HOME_TOPIC_ANCHOR);
+
+  if (TtaFileExist (LocalBookmarksFile))
+    {
+      BM_parse (LocalBookmarksFile, LocalBookmarksBaseURI);
+      /* get the value of the home topic */
+    }
+  else
+    {
+      /* the bookmark file is empty, we create it and add the home topic */
+      BookmarkP me;
+      
+      me = Bookmark_new_init (NULL);
+      strcpy (me->title, HOME_TOPIC_TITLE);
+      strcpy (me->author, GetAnnotUser ());
+      strcpy (me->self_url, HomeTopicURI);
+      me->created = StrdupDate ();
+      me->modified = StrdupDate ();
+      me->isTopic = TRUE;
+      me->parent_url[0] = EOS;
+      /* add and save it right now */
+      BM_addTopic (me, FALSE);
+      Bookmark_free (me);
+    }
+}
+
+/*-----------------------------------------------------------------------
+  BM_FreeConf
+  -----------------------------------------------------------------------*/
+void BM_FreeConf ()
+{
+  TtaFreeMemory (LocalBookmarksFile);
+  TtaFreeMemory (LocalBookmarksBaseURI);
+}
+
+/*-----------------------------------------------------------------------
+  BM_Quit
+  -----------------------------------------------------------------------*/
+void BM_Quit (void)
+{
+  /* save the bookmark file */
+  BM_save (LocalBookmarksFile);
+  redland_free ();
+  BM_FreeConf ();
+}
+
+/*-----------------------------------------------------------------------
+  BM_Create
+  Opens a dialog for bookmarking the URL viewed in doc.
+  -----------------------------------------------------------------------*/
+void BM_CreateBM (Document doc, View view)
+{
+  BM_BookmarkMenu (doc, view, NULL);
+}
+
+/*-----------------------------------------------------------------------
+  BM_CreateTopic
+  Opens a dialog for bookmarking the URL viewed in doc.
+  -----------------------------------------------------------------------*/
+void BM_CreateTopic (Document doc, View view)
+{
+  BM_TopicMenu (doc, view, NULL);
+}
+
+/*-----------------------------------------------------------------------
+  BM_ViewBookmarks
+  Opens a dialog for bookmarking the URL viewed in doc.
+  -----------------------------------------------------------------------*/
+void BM_ViewBookmarks (Document doc, View view)
+{
+  List *list = NULL;
+  int count;
+  Document bookmark_doc;
+
+  count = Model_dumpAsList (&list, TRUE);
+  count += Model_dumpAsList (&list, FALSE);
+
+  if (count > 0)
+    BM_bookmarksSort (&list);
+
+  /* open the document */
+  bookmark_doc = BM_NewDocument ();
+
+  /* get the info for each bookmark using the abookmark structure, e.g., calling
+     a bmfile function to fill it up with the fields we want, then adding them
+     to the model thru BMview.c */
+  BM_InitDocumentStructure (bookmark_doc, list);
+ 
+  List_delAll (&list, BMList_delItem);
+}
+
+/*-----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+static Element GetItemElement (Element input)
+{
+  ElementType elType;
+  Element el = input;
+
+  if (!el)
+    return ((Element) NULL);
+
+  el = input;
+  elType = TtaGetElementType (el);
+
+  /* point to the correct item */
+  if (elType.ElTypeNum == Topics_EL_TEXT_UNIT)
+    {
+      el = TtaGetParent (el);
+      elType = TtaGetElementType (el);
+    }
+  if (elType.ElTypeNum == Topics_EL_TEXT_UNIT
+      || elType.ElTypeNum == Topics_EL_Bookmark_title
+      || elType.ElTypeNum == Topics_EL_Topic_title
+      || elType.ElTypeNum == Topics_EL_Topic_content)
+    {
+      el = TtaGetParent (el);
+      elType = TtaGetElementType (el);
+    }
+  return (el);
+}
+
+/*-----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+static void FollowBookmark_callback (Document doc, int status, char *urlName, 
+				     char *outputfile, AHTHeaders *http_headers,
+				     void *ctx)
+{
+  TtaFreeMemory ((char *) ctx);
+}
+
+/*-----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+ThotBool BM_SimpleRClick (NotifyElement *event)
+{
+  Document doc;
+  Element el;
+  ElementType      elType;
+  AttributeType    attrType;
+  Attribute	   attr;
+  int              i;
+  char            *url;
+  List            *dump;
+  DisplayMode      dispMode;
+
+  doc = event->document;
+  el = event->element;
+
+  /* point to the correct item */
+  el = GetItemElement (el);
+  if (!el)
+    return FALSE;
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+
+  if (elType.ElTypeNum == Topics_EL_Bookmark_item)
+    {
+      /* get the target URL */
+      attrType.AttrTypeNum = Topics_ATTR_HREF_;
+      attr = TtaGetAttribute (el, attrType);
+      if (!attr)
+	return FALSE;
+      
+      i = TtaGetTextAttributeLength (attr);
+      if (i < 1)
+	{
+	  /* bookmark seems empty. We just return */
+	  return FALSE;
+	}
+      
+      i++;
+      url = TtaGetMemory (i);
+      TtaGiveTextAttributeValue (attr, url, &i);
+      
+      GetAmayaDoc (url, NULL, 0, doc, 
+		   CE_RELATIVE, FALSE, 
+		   (void *) FollowBookmark_callback, 
+		   (void *) url, UTF_8);
+      
+      /* don't let Thot perform the normal operation */
+      return TRUE;
+    }
+  else if (elType.ElTypeNum == Topics_EL_Topic_item)
+    {
+      /* avoid refreshing the document while holophrasting */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, DeferredDisplay);
+
+      attrType.AttrTypeNum = Topics_ATTR_Open_;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr)
+	{
+	  /* TtaHolophrastElement (el, TRUE, doc); */
+	  /* change the attribute value */
+	  TtaRemoveAttribute (el, attr, doc);
+	  attrType.AttrTypeNum = Topics_ATTR_Closed_;
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attr, doc);
+	  TtaSetAttributeValue (attr, Topics_ATTR_Closed__VAL_Yes, el, doc);
+	  /* remove the contents of this topic */
+	  BM_CloseTopic (doc, el);
+	}
+      else
+	{
+	  attrType.AttrTypeNum = Topics_ATTR_Closed_;
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr)
+	    {
+	      /* TtaHolophrastElement (el, FALSE, doc); */
+	      /* change the attribute value */
+	      TtaRemoveAttribute (el, attr, doc);
+	      attrType.AttrTypeNum = Topics_ATTR_Open_;
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (el, attr, doc);
+	      TtaSetAttributeValue (attr, Topics_ATTR_Open__VAL_Yes_, el, doc);
+	      /* dump the topics related to this one */
+	      attrType.AttrTypeNum = Topics_ATTR_Model_HREF_;
+	      attr = TtaGetAttribute (el, attrType);
+	      i = TtaGetTextAttributeLength (attr);
+	      if (i > 0)
+		{
+		  /* allocate some memory: length of name + 6 cars for noname */
+		  url = TtaGetMemory (i + 1);
+		  TtaGiveTextAttributeValue (attr, url, &i);
+		  Model_dumpTopicAsList (&dump, url, TRUE);
+		  TtaFreeMemory (url);
+		  BM_OpenTopic (doc, dump->next);
+		  List_delAll (&dump, BMList_delItem);
+		}
+	    }
+	}
+
+      /* show the document */
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, dispMode);
+      if (!attr)
+	return FALSE;
+      return TRUE;
+    }
+  else
+    return FALSE;
+}
+
+/*-----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+ThotBool BM_ShowProperties (NotifyElement *event)
+{
+  Document doc;
+  Element el;
+  ElementType      elType;
+  AttributeType    attrType;
+  Attribute	   attr;
+  int              i;
+  char            *url;
+  BookmarkP        bookmark;
+
+  doc = event->document;
+  el = event->element;
+
+ /* point to the correct item */
+  el = GetItemElement (el);
+  if (!el)
+    return FALSE;
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+
+  if (elType.ElTypeNum == Topics_EL_Bookmark_item
+      || elType.ElTypeNum == Topics_EL_Topic_item)
+    {
+      /* get the target URL */
+      attrType.AttrTypeNum = Topics_ATTR_Model_HREF_;
+      attr = TtaGetAttribute (el, attrType);
+      if (!attr)
+	return FALSE;
+      
+      i = TtaGetTextAttributeLength (attr);
+      if (i < 1)
+	{
+	  /* bookmark seems empty. We just return */
+	  return FALSE;
+	}
+      
+      i++;
+      url = TtaGetMemory (i);
+      TtaGiveTextAttributeValue (attr, url, &i);
+      if (elType.ElTypeNum == Topics_EL_Bookmark_item)
+	bookmark = BM_getItem (url, FALSE);
+      else
+	  bookmark = BM_getItem (url, TRUE);
+      TtaFreeMemory (url);
+
+      if (!bookmark)
+	  return FALSE;
+
+      bookmark->isUpdate = TRUE;
+
+      if (elType.ElTypeNum == Topics_EL_Bookmark_item)
+	BM_BookmarkMenu (doc, 1, bookmark);
+      else
+	{
+	  bookmark->isTopic = TRUE;
+	  BM_TopicMenu (doc, 1, bookmark);
+	}
+      
+      /* free the temporary bookmark structure */
+      Bookmark_free (bookmark);
+
+      /* don't let Thot perform the normal operation */
+      return TRUE;
+    }
+  else
+    return FALSE;
+}
+
+/*-----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+ThotBool BM_ItemDelete (NotifyElement *event)
+{
+  Document doc;
+  Element          el, el2;
+  ElementType      elType;
+  AttributeType    attrType;
+  Attribute	   attr;
+  int              i;
+  char            *url;
+  List            *dump;
+  DisplayMode      dispMode;
+  ThotBool         isTopic;
+  ThotBool         isHomeTopic;
+
+  doc = event->document;
+  el = event->element;
+
+  /* point to the correct item */
+  el = GetItemElement (el);
+  if (!el)
+    return TRUE;
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+
+  if (elType.ElTypeNum == Topics_EL_Bookmark_item)
+    isTopic = FALSE;
+  else
+    isTopic = TRUE;
+
+  /* get the target URL */
+  attrType.AttrTypeNum = Topics_ATTR_Model_HREF_;
+  attr = TtaGetAttribute (el, attrType);
+  if (!attr)
+    return TRUE;
+      
+  i = TtaGetTextAttributeLength (attr);
+  if (i < 1)
+    {
+      /* item seems empty. We just return */
+      return TRUE;
+    }
+      
+  i++;
+  url = TtaGetMemory (i);
+  TtaGiveTextAttributeValue (attr, url, &i);
+  
+  /* check if the user selected the home topic */
+  if (isTopic && !strcmp (url, HomeTopicURI))
+    isHomeTopic = TRUE;
+  else
+    isHomeTopic = FALSE;
+
+  /*
+  ** remove the item(s) from the model
+  */
+  if (isTopic)
+    {
+      /* get a list of all items in the topic and remove them */
+      Model_dumpTopicAsList (&dump, url, FALSE);
+      if (isHomeTopic)
+	BM_deleteItemList (dump->next);
+      else
+	BM_deleteItemList (dump);
+      List_delAll (&dump, BMList_delItem);
+    }
+  else
+    BM_deleteItem (url);
+  TtaFreeMemory (url);
+
+  /* save the modified model */
+  BM_save (LocalBookmarksFile);
+
+  /*
+  **  move the selection up
+  */
+
+  /* choose the next element to highlight */
+  /* previous item */
+  el2 = el;
+  TtaPreviousSibling (&el2);
+  if (!el2)
+    {
+      el2 = el;
+      /* next item */
+      TtaNextSibling (&el2);
+    }
+
+  if (!el2)
+    {
+      /* there are no siblings, get its parent */
+      el2 = TtaGetParent (el);
+      el2 =  GetItemElement (el2);
+    }
+
+  elType = TtaGetElementType (el2);
+  if (elType.ElTypeNum == Topics_EL_Bookmark_item)
+    {
+      /* select the next bookmark sibling */
+      elType.ElTypeNum = Topics_EL_Bookmark_title;
+      el2 = TtaSearchTypedElement (elType, SearchInTree, el2);
+      el2 = TtaGetFirstChild (el2);
+      TtaSelectString (doc, el2, 1, 0);
+    }
+  else /* select the next topic sibling or parent */
+    {
+      elType.ElTypeNum = Topics_EL_Topic_title;
+      el2 = TtaSearchTypedElement (elType, SearchInTree, el2);
+      el2 = TtaGetFirstChild (el2);
+      TtaSelectString (doc, el2, 1, 0);
+    }
+
+  /*
+  ** remove the items from the tree 
+  */
+
+  /* avoid refreshing the document while doing the tree operation */
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+
+  if (isHomeTopic)
+    {
+      /* delete the container if it exists */
+      elType.ElTypeNum = Topics_EL_Topic_content;
+      el2 = TtaSearchTypedElement (elType, SearchInTree, el);
+      if (el2)
+	TtaDeleteTree (el2, doc);
+    }
+  else
+    {
+      el2 = TtaGetParent (el);
+      TtaDeleteTree (el, doc);
+
+      /* delete the topic container if there is no other sibling */
+      elType = TtaGetElementType (el2);
+      if (elType.ElTypeNum == Topics_EL_Topic_item)
+	{
+	  el = TtaGetFirstChild (el2);
+	  if (!el)
+	    TtaDeleteTree (el2, doc);
+	}
+    }
+
+  /* show the document */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
+  /* don't let Thot perform the normal operation */
+  return TRUE;
+}
