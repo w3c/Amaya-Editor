@@ -12,8 +12,6 @@
 #include "wx/menu.h"
 #include "wx/splitter.h"
 
-
-//#include "AmayaCallback.h"
 class AmayaPanel;
 class AmayaPage;
 class AmayaFrame;
