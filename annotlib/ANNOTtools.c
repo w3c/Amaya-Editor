@@ -2538,7 +2538,7 @@ void WWWToLocal (char *url)
 {
   char *tmp;
   char *tmp_url;
-  char target[10];
+  char target[MAX_LENGTH];
 
   ThotBool free_tmp_url;
 
