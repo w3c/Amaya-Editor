@@ -172,7 +172,7 @@ int                 errorCode;
 		    break;
 	      }
 #   ifdef _WINDOWS
-    MessageBox (NULL, buffer, "", MB_OK | MB_ICONERROR);
+    /* MessageBox (NULL, buffer, "", MB_OK | MB_ICONERROR); */
 #   else  /* _WINDOWS */
 	fprintf (stderr, buffer);
 #   endif /* _WINDOWS */

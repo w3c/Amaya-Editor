@@ -105,7 +105,7 @@ int                 msgType;
       cxChar = textMetric.tmAveCharWidth;
       cyChar = textMetric.tmHeight + textMetric.tmExternalLeading + 1;
 
-	  if (_CY_ >= 1000) {
+	  if (_CY_ >= 550) {
          ScrollWindow (hWnd, 0, -cyChar, NULL, NULL);
          UpdateWindow (hWnd);
 	  } else

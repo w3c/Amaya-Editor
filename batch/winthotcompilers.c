@@ -690,11 +690,52 @@ char* fileName;
                                       hLib = LoadLibrary ("tra");
                                       if (!hLib)
                                          return FATAL_EXIT_CODE;
+
                                       ptrMainProc = GetProcAddress (hLib, "TRAmain");
                                       if (!ptrMainProc) {
                                          FreeLibrary (hLib);
                                          return FATAL_EXIT_CODE;
 									  }
+
+                                      len = strlen (SrcPath);
+                                      if (SrcPath [len - 1] == '\\') {
+                                         SrcFileName = (char*) malloc (len + 12);
+                                         sprintf (SrcFileName, "%sgreek.sgml", SrcPath);
+									  } else {
+                                             SrcFileName = (char*) malloc (len + 13);
+                                             sprintf (SrcFileName, "%s\\greek.sgml", SrcPath);
+									  }
+
+                                      len = strlen (WorkPath);
+                                      if (WorkPath [len - 1] == '\\') {
+                                         WorkFileName = (char*) malloc (len + 12);
+                                         sprintf (WorkFileName, "%sgreek.sgml", WorkPath);
+									  } else {
+                                             WorkFileName = (char*) malloc (len + 13);
+                                             sprintf (WorkFileName, "%s\\greek.sgml", WorkPath);
+									  }
+
+                                      Copy_File (hwnd, SrcFileName, WorkFileName);
+
+                                      len = strlen (SrcPath);
+                                      if (SrcPath [len - 1] == '\\') {
+                                         SrcFileName = (char*) malloc (len + 14);
+                                         sprintf (SrcFileName, "%sText_SGML.inc", SrcPath);
+									  } else {
+                                             SrcFileName = (char*) malloc (len + 15);
+                                             sprintf (SrcFileName, "%s\\Text_SGML.inc", SrcPath);
+									  }
+
+                                      len = strlen (WorkPath);
+                                      if (WorkPath [len - 1] == '\\') {
+                                         WorkFileName = (char*) malloc (len + 14);
+                                         sprintf (WorkFileName, "%sText_SGML.inc", WorkPath);
+									  } else {
+                                             WorkFileName = (char*) malloc (len + 15);
+                                             sprintf (WorkFileName, "%s\\Text_SGML.inc", WorkPath);
+									  }
+
+                                      Copy_File (hwnd, SrcFileName, WorkFileName);
 
                                       ptr = strrchr(currentFile, '.');
                                       if (ptr) {

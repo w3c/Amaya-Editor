@@ -1365,8 +1365,7 @@ PtrDocument         pDoc;
 		  TtaDestroyDialogue (EventMenu[frame - 1]);
 #         ifdef _WINDOWS
           if (subMenuID [frame]) {
-			  if (!DeleteMenu (FrameTable[frame].WdMenus[menu], subMenuID [frame], MF_BYCOMMAND))
-                 WinErrorBox (NULL);
+			  DeleteMenu (FrameTable[frame].WdMenus[menu], subMenuID [frame], MF_BYCOMMAND);
           } else 
                subMenuID [frame] = 0;
 

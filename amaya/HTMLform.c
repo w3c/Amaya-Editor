@@ -1360,152 +1360,124 @@ Element             el;
 		  /* create the main menu */
 		  TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
 			       NULL, nbitems, buffmenu, NULL, 'L');
-		  if (multipleOptions)
-		     for (i = 0; i < nbitems; i++)
-			if (selected[i])
-#              ifdef _WINDOWS
-               WIN_TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE, FrMainRef [currentFrame]);
-#              else  /* !_WINDOWS */
-			   TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
-#              endif /* _WINDOWS */
-                  if (nbsubmenus > 0)
-                     /* There ia at least 1 OPTGROUP. Create submenus
-                        corresponding to OPTGROUPs */
-                     {
-                     nbitems = 0;	/* item number in main (SELECT) menu */
-		     /* check all children of element SELECT */
-        	     el = TtaGetFirstChild (menuEl);
-		     nbsubmenus = 0;
-        	     while (nbsubmenus < MAX_SUBMENUS && el)
-        	       {
-        		  elType = TtaGetElementType (el);
-        		  if (elType.ElTypeNum == HTML_EL_Option &&
-                              elType.ElSSchema == htmlSch)
-			     /* this is an OPTION */
+          if (multipleOptions)
+             for (i = 0; i < nbitems; i++)
+                 if (selected[i])
+#                ifdef _WINDOWS
+                 WIN_TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE, FrMainRef [currentFrame]);
+#                else  /* !_WINDOWS */
+                 TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
+#                endif /* _WINDOWS */
+                 if (nbsubmenus > 0) {
+                    /* There ia at least 1 OPTGROUP. Create submenus corresponding to OPTGROUPs */
+                    nbitems = 0;	/* item number in main (SELECT) menu */
+                    /* check all children of element SELECT */
+                    el = TtaGetFirstChild (menuEl);
+                    nbsubmenus = 0;
+                    while (nbsubmenus < MAX_SUBMENUS && el) {
+                          elType = TtaGetElementType (el);
+                          if (elType.ElTypeNum == HTML_EL_Option && elType.ElSSchema == htmlSch)
+                             /* this is an OPTION */
                              nbitems++;	/* item number in the main menu */
-        		  else if (elType.ElTypeNum == HTML_EL_OptGroup &&
-                              elType.ElSSchema == htmlSch)
-			    /* this is an OPTGROUP.  Create the corresponding
-			       sub menu */
-                            {
-			    /* First, check all children of OPTGROUP */
-                            child = TtaGetFirstChild (el);
-                            lgmenu = 0;
-                            nbsubitems = 0;
-                            while (nbsubitems < MAX_SUBOPTIONS && child)
-                               {
-                               childType = TtaGetElementType (child);
-                               if (childType.ElTypeNum == HTML_EL_Option &&
-                                   childType.ElSSchema == htmlSch)
-				  /* it's an OPTION. Create a submenu item */
-                                  {
-				  subOptions[nbsubmenus][nbsubitems] = child;
-				  if (multipleOptions)
-				     {
-				     attrType.AttrTypeNum = HTML_ATTR_Selected;
-				     subSelected[nbsubmenus][nbsubitems] =
-					(TtaGetAttribute (child, attrType) != NULL);
-				     }
-                                  /* get the item label */
-                                  attrType.AttrTypeNum = HTML_ATTR_label;
-                                  attr = TtaGetAttribute (child, attrType);
-                                  length = MAX_LABEL_LENGTH - 1;
-                                  if (attr)
-				     /* there is a label attribute. Take it */
-                                     TtaGiveTextAttributeValue (attr, text,
-								&length);
-				  else
-				     /* take the element's content */
-				     {
-				     elText = TtaGetFirstChild (child);
-				     if (elText)
-				        TtaGiveTextContent (elText, text,
-							    &length, &lang);
-				     else
-					length = 0;
-				     }
-			          /* count the EOS character */
-			          text[length] = EOS;
-			          length++;
-	                          /* we have to add the 'B'or 'T' character */
-			          length++;
-        		          if (lgmenu + length < MAX_LENGTH)
-        			    /* append that item to the buffer */
-                                    {
-        			    if (multipleOptions)
-        			      sprintf (&buffmenu[lgmenu], "T%s", text);
-        			    else
-        			      sprintf (&buffmenu[lgmenu], "B%s", text);
-        			    nbsubitems++;
-        			    }
-        		          lgmenu += length;
-                                  }
-			       /* next child of OPTGROUP */
-                               TtaNextSibling (&child);
-                               }
-			    /* All children of OPTGROUP have been checked. */
-			    /* create the submenu */
-                            TtaNewSubmenu (BaseDialog+OptionMenu+nbsubmenus+1,
-                                        BaseDialog+OptionMenu, nbitems, NULL,
-                                        nbsubitems, buffmenu, NULL, FALSE);
-			    if (multipleOptions)
-			       for (i = 0; i < nbsubitems; i++)
-			          if (subSelected[nbsubmenus][i])
-#                    ifdef _WINDOWS
-                     WIN_TtaSetToggleMenu (BaseDialog + OptionMenu + nbsubmenus + 1, i, TRUE, FrMainRef [currentFrame]);
-#                    else  /* !_WINDOWS */
-				     TtaSetToggleMenu (BaseDialog+OptionMenu+nbsubmenus+1, i, TRUE);
-#                    endif /* _WINDOWS */
-			    nbsubmenus++;
-                            nbitems++;	/* item number in the main menu */
-                            }
-			  /* Next child of SELECT */
+                          else if (elType.ElTypeNum == HTML_EL_OptGroup && elType.ElSSchema == htmlSch) {
+                               /* this is an OPTGROUP.  Create the corresponding sub menu */
+                               /* First, check all children of OPTGROUP */
+                               child = TtaGetFirstChild (el);
+                               lgmenu = 0;
+                               nbsubitems = 0;
+                               while (nbsubitems < MAX_SUBOPTIONS && child) {
+                                     childType = TtaGetElementType (child);
+                                     if (childType.ElTypeNum == HTML_EL_Option && childType.ElSSchema == htmlSch) {
+                                        /* it's an OPTION. Create a submenu item */
+                                        subOptions[nbsubmenus][nbsubitems] = child;
+                                        if (multipleOptions) {
+                                           attrType.AttrTypeNum = HTML_ATTR_Selected;
+                                           subSelected[nbsubmenus][nbsubitems] = (TtaGetAttribute (child, attrType) != NULL);
+										} 
+                                        /* get the item label */
+                                        attrType.AttrTypeNum = HTML_ATTR_label;
+                                        attr = TtaGetAttribute (child, attrType);
+                                        length = MAX_LABEL_LENGTH - 1;
+                                       if (attr) /* there is a label attribute. Take it */
+                                          TtaGiveTextAttributeValue (attr, text, &length);
+									   else { /* take the element's content */
+                                            elText = TtaGetFirstChild (child);
+                                            if (elText)
+                                               TtaGiveTextContent (elText, text, &length, &lang);
+                                            else
+                                               length = 0;
+									   } 
+                                       /* count the EOS character */
+                                       text[length] = EOS;
+                                       length++;
+	                                   /* we have to add the 'B'or 'T' character */
+                                       length++;
+                                       if (lgmenu + length < MAX_LENGTH) { /* append that item to the buffer */
+                                          if (multipleOptions)
+                                             sprintf (&buffmenu[lgmenu], "T%s", text);
+                                          else
+                                             sprintf (&buffmenu[lgmenu], "B%s", text);
+                                          nbsubitems++;
+									   } 
+                                       lgmenu += length;
+									 } 
+                                     /* next child of OPTGROUP */
+                                     TtaNextSibling (&child);
+							   }
+                               /* All children of OPTGROUP have been checked. */
+                               /* create the submenu */
+                                TtaNewSubmenu (BaseDialog+OptionMenu+nbsubmenus+1, BaseDialog+OptionMenu, nbitems, NULL, nbsubitems, buffmenu, NULL, FALSE);
+                                if (multipleOptions)
+                                   for (i = 0; i < nbsubitems; i++)
+                                       if (subSelected[nbsubmenus][i])
+#                                         ifdef _WINDOWS
+                                          WIN_TtaSetToggleMenu (BaseDialog + OptionMenu + nbsubmenus + 1, i, TRUE, FrMainRef [currentFrame]);
+#                                         else  /* !_WINDOWS */
+                                          TtaSetToggleMenu (BaseDialog+OptionMenu+nbsubmenus+1, i, TRUE);
+#                                         endif /* _WINDOWS */
+                                          nbsubmenus++;
+                                          nbitems++;	/* item number in the main menu */
+						  }
+                          /* Next child of SELECT */
                           TtaNextSibling (&el);
-        	       }
-                     }
-		  /* activate the menu that has just been created */
-		  ReturnOption = -1;
-		  ReturnOptionMenu = -1;
-		  TtaSetDialoguePosition ();
-		  TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
-		  /* wait for an answer from the user */
-		  TtaWaitShowDialogue ();
-		  if (ReturnOption >= 0 && ReturnOptionMenu >= 0)
-		    {
-		       /* make the returned option selected */
-		       if (ReturnOptionMenu == 0)
-			  /* an item in the main (SELECT) menu */
-			  {
-		          el = option[ReturnOption];
-		          sel = selected[ReturnOption];
-			  }
-		       else
-			  /* an item in a submenu */
-			  {
-		          el = subOptions[ReturnOptionMenu - 1][ReturnOption];
-			  sel = subSelected[ReturnOptionMenu - 1][ReturnOption];
-			  }
-		       modified = TtaIsDocumentModified (doc);	  
-		       if (!multipleOptions)
-		          OnlyOneOptionSelected (el, doc, FALSE);
-		       else
-			  {
-			  attrType.AttrTypeNum = HTML_ATTR_Selected;
-			  attr = TtaGetAttribute (el, attrType);
-			  if (sel)
-			     TtaRemoveAttribute (el, attr, doc);
-			  else
-			     {
-			     if (!attr)
-				attr = TtaNewAttribute (attrType);
-			     TtaAttachAttribute (el, attr, doc);
-			     TtaSetAttributeValue (attr, HTML_ATTR_Selected_VAL_Yes_, el, doc);
-			     }
-			  }
-		       if (!modified)
-			  TtaSetDocumentUnmodified (doc);
-		    }
-	       }
-	  }
-     }
+					}
+				 }
+                 /* activate the menu that has just been created */
+                 ReturnOption = -1;
+                 ReturnOptionMenu = -1;
+                 TtaSetDialoguePosition ();
+                 TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
+                 /* wait for an answer from the user */
+                 TtaWaitShowDialogue ();
+                 if (ReturnOption >= 0 && ReturnOptionMenu >= 0) {
+                    /* make the returned option selected */
+					 if (ReturnOptionMenu == 0) { /* an item in the main (SELECT) menu */
+                        el = option[ReturnOption];
+                        sel = selected[ReturnOption];
+					 } else { /* an item in a submenu */
+                            el = subOptions[ReturnOptionMenu - 1][ReturnOption];
+                            sel = subSelected[ReturnOptionMenu - 1][ReturnOption];
+					 }
+                     modified = TtaIsDocumentModified (doc);	  
+                     if (!multipleOptions)
+                        OnlyOneOptionSelected (el, doc, FALSE);
+                     else {
+                          attrType.AttrTypeNum = HTML_ATTR_Selected;
+                          attr = TtaGetAttribute (el, attrType);
+                          if (sel)
+                             TtaRemoveAttribute (el, attr, doc);
+                          else {
+                               if (!attr)
+                                  attr = TtaNewAttribute (attrType);
+                               TtaAttachAttribute (el, attr, doc);
+                               TtaSetAttributeValue (attr, HTML_ATTR_Selected_VAL_Yes_, el, doc);
+						  } 
+					 } 
+                     if (!modified)
+                        TtaSetDocumentUnmodified (doc);
+				 } 
+		   } 
+	  } 
+     } 
 }
+ 

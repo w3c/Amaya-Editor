@@ -1514,6 +1514,10 @@ int                 zoom;
 	*yif = PixelValue (h, UnPixel, NULL, zoom);
     }
 
+  if (TtDisplay == (HDC) 0)
+     WIN_GetDeviceContext (-1);
+
+
   if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
     {
       /* xif and yif contain width and height of the box */	  
