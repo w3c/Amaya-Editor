@@ -248,14 +248,11 @@ ATTRIBUTES
 
   href_ :
 	BEGIN
-	if not AnnotIsHidden
-           BEGIN
-	   CreateBefore(ATTR_href);
-  	   CreateBefore(VALUE_href);
-           END;
-        if not AnnotIsHidden and AnnotIcon1
+        CreateBefore(ATTR_href);
+  	CreateBefore(VALUE_href);
+        if AnnotIcon1
            CreateFirst(Annot_gif1);
-        if not AnnotIsHidden and AnnotIcon2
+        if AnnotIcon2
            CreateFirst(Annot_gif2);
 	END;
 
@@ -264,6 +261,8 @@ ATTRIBUTES
  	Visibility: 0;
 	IN Structure_view
 		Visibility: 0;
+	IN Links_view
+		Visibility: 5;
 	END;
 
 {****
