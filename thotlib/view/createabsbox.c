@@ -175,40 +175,40 @@ PtrSSchema          pSS;
    pPR = NULL;
    if (*pRSpecif != NULL && *pRDefault != NULL)
      {
-	/* Il n'y a pas de fonction par defaut. Donc si on est sur une regle */
-	/* specifique de type fonction, on la prend, si ses conditions */
-	/* d'application sont satisfaites. */
-	if ((*pRSpecif)->PrType == PtFunction &&
-	    (*pRDefault)->PrType > PtFunction)
-	  {
-	     stop = FALSE;
-	     do
-	       {
-		  if ((*pRSpecif)->PrCond == NULL ||
-		  CondPresentation ((*pRSpecif)->PrCond, pEl, pAttr, 1, pSS))
-		     /* condition d'application satisfaites */
-		    {
-		       pPR = *pRSpecif;
-		       stop = TRUE;
-		    }
-		  /* prochaine regle specifique a traiter */
-		  *pRSpecif = (*pRSpecif)->PrNextPRule;
-		  if (!stop)
-		     /* la condition n'est pas satisfaite, on essaie les
-			fonctions suivantes */
-		     if (*pRSpecif == NULL)
-			/* pas de regle specifique suivante, on arrete */
-			stop = TRUE;
-		     else if ((*pRSpecif)->PrType != PtFunction)
-			/* la regle specifique suivante n'est pas une Fonction,
-			   on arrete */
-			stop = TRUE;
-	       }
-	     while (!stop);
-	  }
+     /* Il n'y a pas de fonction par defaut. Donc si on est sur une regle */
+     /* specifique de type fonction, on la prend, si ses conditions */
+     /* d'application sont satisfaites. */
+     if ((*pRSpecif)->PrType == PtFunction &&
+	 (*pRDefault)->PrType > PtFunction)
+	{
+	stop = FALSE;
+	do
+	   {
+	   if ((*pRSpecif)->PrCond == NULL ||
+	       CondPresentation ((*pRSpecif)->PrCond, pEl, pAttr, pEl, 1, pSS))
+	      /* conditions d'application satisfaites */
+	      {
+	      pPR = *pRSpecif;
+	      stop = TRUE;
+	      }
+	   /* prochaine regle specifique a traiter */
+	   *pRSpecif = (*pRSpecif)->PrNextPRule;
+	   if (!stop)
+	     /* la condition n'est pas satisfaite, on essaie les
+		fonctions suivantes */
+	     if (*pRSpecif == NULL)
+	       /* pas de regle specifique suivante, on arrete */
+	       stop = TRUE;
+	     else if ((*pRSpecif)->PrType != PtFunction)
+	       /* la regle specifique suivante n'est pas une Fonction,
+		  on arrete */
+	       stop = TRUE;
+	   }
+	while (!stop);
+	}
      }
    if (pPR == NULL)
-      if (*pRDefault != NULL)
+     if (*pRDefault != NULL)
 	{
 	   if (*pRSpecif != NULL)
 	      if ((*pRSpecif)->PrType == (*pRDefault)->PrType &&
@@ -226,7 +226,7 @@ PtrSSchema          pSS;
 			   /* on n'a pas encore trouve' la bonne regle */
 			   if ((*pRSpecif)->PrCond == NULL ||
 			       CondPresentation ((*pRSpecif)->PrCond, pEl,
-								pAttr, 1, pSS))
+						 pAttr, pEl, 1, pSS))
 			      /* les conditions d'application sont satisfaites,
 				 on prend cette regle */
 			      pPR = *pRSpecif;
@@ -289,38 +289,38 @@ PtrSSchema          pSS;
 
    pPR = NULL;
    if (*pRSpecif != NULL)
-      if ((*pRSpecif)->PrViewNum == Vue)
-	 if ((*pRSpecif)->PrType == Typ)
-	   {
-	      stop = FALSE;
-	      /* on traite toutes les regles successives de meme type et qui */
-	      /* concernent la meme vue */
-	      do
-		{
-		   if (pPR == NULL)
-		      /* on n'a pas encore trouve' la regle qui s'applique */
-		      if ((*pRSpecif)->PrCond == NULL ||
-			  CondPresentation ((*pRSpecif)->PrCond, pEl, pAttr, Vue, pSS))
-			 /* les conditions d'application de la regle sont satisfaites, */
-			 /* on la prend */
-			 pPR = *pRSpecif;
-		   if ((*pRSpecif)->PrNextPRule == NULL)
-		      stop = TRUE;
-		   else if ((*pRSpecif)->PrNextPRule->PrViewNum == Vue &&
-			    (*pRSpecif)->PrNextPRule->PrType == Typ)
-		      *pRSpecif = (*pRSpecif)->PrNextPRule;
-		   else
-		      stop = TRUE;
-		}
-	      while (!stop);
-	      /* avance d'une regle */
-	      if (*pRSpecif != NULL)
-		 *pRSpecif = (*pRSpecif)->PrNextPRule;
-	      if (*pRDefault != NULL)
-		 if ((*pRDefault)->PrType == Typ
-		     && (*pRDefault)->PrViewNum == Vue)
-		    *pRDefault = (*pRDefault)->PrNextPRule;
-	   }
+     if ((*pRSpecif)->PrViewNum == Vue)
+       if ((*pRSpecif)->PrType == Typ)
+	  {
+	  stop = FALSE;
+	  /* on traite toutes les regles successives de meme type et qui */
+	  /* concernent la meme vue */
+	  do
+	    {
+	    if (pPR == NULL)
+	       /* on n'a pas encore trouve' la regle qui s'applique */
+	       if ((*pRSpecif)->PrCond == NULL ||
+		   CondPresentation ((*pRSpecif)->PrCond, pEl, pAttr, pEl,
+				     Vue, pSS))
+		  /* les conditions d'application de la regle sont satisfaites,
+		     on prend cette regle */
+		  pPR = *pRSpecif;
+	    if ((*pRSpecif)->PrNextPRule == NULL)
+	       stop = TRUE;
+	    else if ((*pRSpecif)->PrNextPRule->PrViewNum == Vue &&
+		     (*pRSpecif)->PrNextPRule->PrType == Typ)
+	       *pRSpecif = (*pRSpecif)->PrNextPRule;
+	    else
+	       stop = TRUE;
+	    }
+	  while (!stop);
+	  /* avance d'une regle */
+	  if (*pRSpecif != NULL)
+	     *pRSpecif = (*pRSpecif)->PrNextPRule;
+	  if (*pRDefault != NULL)
+	     if ((*pRDefault)->PrType == Typ && (*pRDefault)->PrViewNum == Vue)
+		*pRDefault = (*pRDefault)->PrNextPRule;
+	  }
    if (pPR == NULL)
       if (*pRDefault != NULL)
 	 if ((*pRDefault)->PrType == Typ)
@@ -964,23 +964,26 @@ PtrDocument         pDoc;
 
 
 /*----------------------------------------------------------------------
-   CondPresentation evalue les conditions d'application d'une      
-   regle de presentation qui s'applique a` l'element pEl,  
+   CondPresentation evalue les conditions d'application d'une regle de    
+   presentation qui s'applique a` l'element pEl ou a l'attribut pAttr
    pour la vue de numero View.                              
-   pCond est la premiere condition de la chaine des        
-   conditions qui s'appliquent a la regle de presentation. 
-   pSS est le schema de structure correspondant au schema  
-   de presentation auquel appartient la regle.             
+   pCond est la premiere condition de la chaine des conditions qui
+   s'appliquent a la regle de presentation. 
+   pElAttr est l'element qui porte l'attribut pAttr, si pAttr != NULL.
+   pSS est le schema de structure correspondant au schema de presentation
+   auquel appartient la regle.             
    Retourne vrai si les conditions sont toutes satisfaites.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl, PtrAttribute pAttr,
+ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
+				      PtrAttribute pAttr, PtrElement pElAttr,
 				      int view, PtrSSchema pSS)
 #else  /* __STDC__ */
-ThotBool            CondPresentation (pCond, pEl, pAttr, view, pSS)
+ThotBool            CondPresentation (pCond, pEl, pAttr, pElAttr, view, pSS)
 PtrCondition        pCond;
 PtrElement          pEl;
 PtrAttribute        pAttr;
+PtrElement          pElAttr;
 int                 view;
 PtrSSchema          pSS;
 #endif /* __STDC__ */
@@ -1150,15 +1153,15 @@ PtrSSchema          pSS;
 		       /* TODO */
 		       /* la condition est satisfaite si le bloc */
 		       /* attribut pAttr est le 1er de l'element */
-		       if (pAttr != NULL)
-			  currentCond = pAttr == pEl->ElFirstAttr;
+		       if (pAttr && pElAttr)
+			  currentCond = pAttr == pElAttr->ElFirstAttr;
 		       break;
 
 		    case PcLastAttr:
 		       /* TODO */
 		       /* la condition est satisfaite si le bloc     */
 		       /* attribut pAttr est le dernier de l'element */
-		       if (pAttr != NULL)
+		       if (pAttr)
 			  currentCond = pAttr->AeNext == NULL;
 		       break;
 
@@ -1283,8 +1286,9 @@ PtrSSchema          pSS;
 		       break;
 
 		    case PcElemType:
-		       /* verifie si l'attribut est attache' a un element du type voulu */
-		       currentCond = (pElem->ElTypeNumber == pCond->CoTypeElAttr);
+		       /* verifie si l'attribut est attache' a un element du
+			  type voulu */
+		       currentCond = (pElAttr->ElTypeNumber == pCond->CoTypeElAttr);
 		       break;
 
 		    case PcAttribute:
@@ -1500,7 +1504,7 @@ ThotBool            completeCreator;
 	ok = TRUE;
       else
 	/* On verifie les conditions d'application de la regle de creation */
-	ok = CondPresentation (pRCre->PrCond, pEl, pAttr, viewSch, pSS);
+	ok = CondPresentation (pRCre->PrCond, pEl, pAttr, pEl, viewSch, pSS);
     }
   /* on ne cree un pave de presentation que si le pave de l'element qui */
   /* provoque la creation existe dans la vue. */
@@ -3065,21 +3069,24 @@ ThotBool            forward;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ApplyAttrPresRules (PtrSSchema pSS, PtrPSchema pSchPres,
-			    PtrAttribute pAttr, PtrAbstractBox * pAbbReturn,
-				     DocViewNumber viewNb, PtrDocument pDoc,
-			       PtrElement pEl, ThotBool forward, int *lqueue,
-					PtrPRule queuePR[MAX_QUEUE_LEN],
-				      PtrAbstractBox queuePP[MAX_QUEUE_LEN],
-					PtrPSchema queuePS[MAX_QUEUE_LEN],
-					PtrAttribute queuePA[MAX_QUEUE_LEN],
-			      PtrAbstractBox pNewAbbox, ThotBool inheritRule)
+			    PtrAttribute pAttr, PtrElement pElAttr,
+			    PtrAbstractBox * pAbbReturn,
+			    DocViewNumber viewNb, PtrDocument pDoc,
+			    PtrElement pEl, ThotBool forward, int *lqueue,
+			    PtrPRule queuePR[MAX_QUEUE_LEN],
+			    PtrAbstractBox queuePP[MAX_QUEUE_LEN],
+			    PtrPSchema queuePS[MAX_QUEUE_LEN],
+			    PtrAttribute queuePA[MAX_QUEUE_LEN],
+			    PtrAbstractBox pNewAbbox, ThotBool inheritRule)
 #else  /* __STDC__ */
-static void         ApplyAttrPresRules (pSS, pSchPres, pAttr, pAbbReturn, viewNb, pDoc, pEl,
-				 forward, lqueue, queuePR, queuePP, queuePS,
-					queuePA, pNewAbbox, inheritRule)
+static void         ApplyAttrPresRules (pSS, pSchPres, pAttr, pElAttr,
+			    pAbbReturn, viewNb, pDoc, pEl, forward, lqueue,
+                            queuePR, queuePP, queuePS, queuePA, pNewAbbox,
+                            inheritRule)
 PtrSSchema          pSS;
 PtrPSchema          pSchPres;
 PtrAttribute        pAttr;
+PtrElement          pElAttr;
 PtrAbstractBox     *pAbbReturn;
 DocViewNumber       viewNb;
 PtrDocument         pDoc;
@@ -3143,7 +3150,8 @@ ThotBool            inheritRule;
 			 {
 			    /* la regle pour la vue 1 */
 			    if (pR->PrCond == NULL ||
-				CondPresentation (pR->PrCond, pEl, pAttr, 1, pSS))
+				CondPresentation (pR->PrCond, pEl, pAttr,
+						  pElAttr, 1, pSS))
 			       /* la condition d'application est satisfaite */
 			      {
 				 /* On la conserve au cas ou on ne trouve pas mieux */
@@ -3163,7 +3171,7 @@ ThotBool            inheritRule;
 					   pR = pR->PrNextPRule;
 					   if (pR->PrViewNum == view)
 					      if (pR->PrCond == NULL ||
-						  CondPresentation (pR->PrCond, pEl, pAttr, view, pSS))
+						  CondPresentation (pR->PrCond, pEl, pAttr, pElAttr, view, pSS))
 						 pRuleToApply = pR;
 					}
 				      if (pRuleToApply == NULL)
@@ -3178,7 +3186,8 @@ ThotBool            inheritRule;
 			  /* cette regle ne s'applique que si le numero de vue correspond */
 		       if (view == pR->PrViewNum)
 			  if (pR->PrCond == NULL ||
-			      CondPresentation (pR->PrCond, pEl, pAttr, view, pSS))
+			      CondPresentation (pR->PrCond, pEl, pAttr,
+						pElAttr, view, pSS))
 			     pRuleToApply = pR;
 
 		       if (pRuleToApply && DoesViewExist (pEl, pDoc, viewNb))
@@ -3257,12 +3266,15 @@ ThotBool            inheritRule;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
-			   PtrDocument pDoc, int *vis, DocViewNumber viewNb,
-					ThotBool * ok, ThotBool inheritRule)
+                           PtrElement pElAttr, PtrDocument pDoc, int *vis,
+                           DocViewNumber viewNb, ThotBool *ok,
+			   ThotBool inheritRule)
 #else  /* __STDC__ */
-static void         ApplyVisibRuleAttr (pEl, pAttr, pDoc, vis, viewNb, ok, inheritRule)
+static void         ApplyVisibRuleAttr (pEl, pAttr, pElAttr, pDoc, vis,
+					viewNb, ok, inheritRule)
 PtrElement          pEl;
 PtrAttribute        pAttr;
+PtrElement          pElAttr;
 PtrDocument         pDoc;
 int                *vis;
 DocViewNumber       viewNb;
@@ -3305,8 +3317,8 @@ ThotBool            inheritRule;
 		  {
 		     if (pR->PrViewNum == 1)
 			if (pR->PrCond == NULL ||
-			    CondPresentation (pR->PrCond, pEl, pAttr, 1,
-					      pAttr->AeAttrSSchema))
+			    CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
+                                              1, pAttr->AeAttrSSchema))
 			  {
 			     pRuleView1 = pR;
 			     if (view == 1)
@@ -3320,8 +3332,8 @@ ThotBool            inheritRule;
 			  }
 		     if (!stop)
 			if (pR->PrViewNum == view &&
-			    CondPresentation (pR->PrCond, pEl, pAttr, view,
-					      pAttr->AeAttrSSchema))
+			    CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
+					      view, pAttr->AeAttrSSchema))
 			  {
 			     /* regle trouvee, on l'evalue */
 			     *vis = IntegerRule (pR, pEl, viewNb, ok, &unit, pAttr);
@@ -3443,7 +3455,8 @@ PtrPSchema         *pSchPPage;
 	      if ((pAttr = GetTypedAttrAncestor (pEl, l, pEl->ElStructSchema,
 						 &pElAttr)) != NULL)
 		 /* cherche si l existe au dessus */
-		 ApplyVisibRuleAttr (pEl, pAttr, pDoc, vis, viewNb, &ok, TRUE);
+		 ApplyVisibRuleAttr (pEl, pAttr, pElAttr, pDoc, vis, viewNb,
+				     &ok, TRUE);
      }
 
    /* cherche si les attributs de l'element modifient la visibilite */
@@ -3451,7 +3464,7 @@ PtrPSchema         *pSchPPage;
    while (pAttr != NULL)
       /* boucle sur les attributs de l'element */
      {
-	ApplyVisibRuleAttr (pEl, pAttr, pDoc, vis, viewNb, &ok, FALSE);
+	ApplyVisibRuleAttr (pEl, pAttr, pEl, pDoc, vis, viewNb, &ok, FALSE);
 	pAttr = pAttr->AeNext;	/* attribut suivant de l'element */
      }
 
@@ -3703,7 +3716,8 @@ PtrAbstractBox      pNewAbbox;
 		  while (pRule != NULL)
 		    {
 		       if (pRule->PrCond == NULL ||
-			   CondPresentation (pRule->PrCond, pEl, NULL, 1, pEl->ElStructSchema))
+			   CondPresentation (pRule->PrCond, pEl, NULL, NULL,
+					     1, pEl->ElStructSchema))
 
 			  /* les conditions d'application de la regle sont satisfaites, */
 
@@ -3726,13 +3740,13 @@ PtrAbstractBox      pNewAbbox;
       if (pEl->ElStructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
 	 /* il y a heritage possible */
 	 for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
-	    if ((*inheritTable)[l - 1])		/* pEl herite de l'attribut l */
+	    if ((*inheritTable)[l - 1])	   /* pEl herite de l'attribut l */
 	       /* cherche si l'attribut l existe au dessus */
 	       if ((pAttr = GetTypedAttrAncestor (pEl, l, pEl->ElStructSchema, &pElAttr)) != NULL)
 		  ApplyAttrPresRules (pAttr->AeAttrSSchema,
 				      pAttr->AeAttrSSchema->SsPSchema,
-				      pAttr, pAbbReturn, viewNb, pDoc, pEl,
-				      forward, lqueue, queuePR,
+				      pAttr, pElAttr, pAbbReturn, viewNb, pDoc,
+				      pEl, forward, lqueue, queuePR,
 				      queuePP, queuePS, queuePA,
 				      pNewAbbox, TRUE);
    /* ApplyRule les regles de presentation des attributs de l'element. */
@@ -3742,7 +3756,7 @@ PtrAbstractBox      pNewAbbox;
 	{
 	   ApplyAttrPresRules (pAttr->AeAttrSSchema,
 			       pAttr->AeAttrSSchema->SsPSchema,
-			       pAttr, pAbbReturn, viewNb, pDoc, pEl,
+			       pAttr, pEl, pAbbReturn, viewNb, pDoc, pEl,
 			       forward, lqueue, queuePR,
 			       queuePP, queuePS, queuePA, pNewAbbox, FALSE);
 	   pAttr = pAttr->AeNext;

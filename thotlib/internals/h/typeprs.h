@@ -674,8 +674,8 @@ typedef struct _TransmitElem
 
 typedef ThotBool InheritAttrTable[MAX_ATTR_SSCHEMA];	/* this table is
                                           attached to an element and
-					  indicates what are the elements
-					  that this attribute inherits */
+					  indicates what are the attributes
+					  that this element inherits */
 typedef ThotBool ComparAttrTable[MAX_ATTR_SSCHEMA]; /* this table is
 					  attached to an element and
 					  indicates what are the attributes
@@ -734,11 +734,11 @@ typedef struct _PresentSchema
 					  StructSchema.AsAttribute, the number
 					  of elements that can inherit from the
 					  attribute */
-  int    	PsNInheritedAttrs[MAX_RULES_SSCHEMA]; /* points for each element,
-					  in the same order as in the table
-					  StructSchema.SsRule, on the table
-					  indicating the number of attributes
-					  inherited by the element */
+  int    	PsNInheritedAttrs[MAX_RULES_SSCHEMA]; /* for each element, in
+					  the same order as in the table
+					  StructSchema.SsRule, indicates the
+					  number of attributes inherited by the
+					  element */
   InheritAttrTable *PsInheritedAttr[MAX_RULES_SSCHEMA]; /* points for each type
 					  of element, in the same order as in
 					  the table StructSchema.SsRule, on the

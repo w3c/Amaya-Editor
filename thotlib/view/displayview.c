@@ -1074,8 +1074,8 @@ Document            document;
 	/* on applique sur les elements du sous arbre pEl  */
 	/* les regles de presentation liees a l'heritage de cet attribut */
 	/* par le sous-arbre s'il existe des elements heritants de celui-ci */
-	ApplyAttrPRulesToSubtree (pEl, LoadedDocument[document - 1], pAttrAsc);
-
+	ApplyAttrPRulesToSubtree (pEl, LoadedDocument[document - 1], pAttrAsc,
+				  pElAttr);
 	/* puis on applique sur les elements du sous-arbre pEl */
 	/* les regles de presentation liees a la comparaison d'un attribut */
 	/* du sous-arbre avec ce type d'attribut */
@@ -1120,12 +1120,12 @@ Document            document;
 		  PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
    /* d'abord on applique les regles de presentation liees */
    /* a l'attribut sur l'element lui-meme */
-   ApplyAttrPRulesToElem (pEl, LoadedDocument[document - 1], pAttr, FALSE);
+   ApplyAttrPRulesToElem (pEl, LoadedDocument[document - 1], pAttr, pEl, FALSE);
    /* puis on applique sur pEl et les elements du sous-arbre pEl */
    /* les regles de presentation liees a l'heritage de cet attribut */
    /* par le sous arbre s'il existe des elements heritants de celui-ci */
    if (inheritance)
-      ApplyAttrPRulesToSubtree (pEl, LoadedDocument[document - 1], pAttr);
+      ApplyAttrPRulesToSubtree (pEl, LoadedDocument[document - 1], pAttr, pEl);
    /* puis on applique sur les elements du sous arbre pEl */
    /* les regles de presentation liees a la comparaison d'un attribut */
    /* du sous-arbre avec cetype d'attribut */

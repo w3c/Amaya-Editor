@@ -6,15 +6,6 @@
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
  * Module traitant les attributs
  *
  * Author: V. Quint (INRIA)
@@ -454,13 +445,15 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ApplyAttrPRulesToElem (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr, ThotBool inherit)
+void                ApplyAttrPRulesToElem (PtrElement pEl, PtrDocument pDoc,
+		      PtrAttribute pAttr, PtrElement pElAttr, ThotBool inherit)
 
 #else  /* __STDC__ */
-void                ApplyAttrPRulesToElem (pEl, pDoc, pAttr, inherit)
+void                ApplyAttrPRulesToElem (pEl, pDoc, pAttr, pElAttr, inherit)
 PtrElement          pEl;
 PtrDocument         pDoc;
 PtrAttribute        pAttr;
+PtrElement          pElAttr;
 ThotBool            inherit;
 
 #endif /* __STDC__ */
@@ -517,7 +510,7 @@ ThotBool            inherit;
 	if (doIt)
 	  {
 	     /* applique les regles de presentation de l'attribut */
-	     UpdatePresAttr (pEl, pAttr, pDoc, FALSE, inherit, NULL);
+	     UpdatePresAttr (pEl, pAttr, pElAttr, pDoc, FALSE, inherit, NULL);
 	     /* reaffiche les variables de presentation qui utilisent */
 	     /* l'attribut */
 	     RedisplayAttribute (pAttr, pEl, pDoc);
@@ -534,13 +527,15 @@ ThotBool            inherit;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ApplyAttrPRulesToSubtree (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
+void                ApplyAttrPRulesToSubtree (PtrElement pEl, PtrDocument pDoc,
+				       PtrAttribute pAttr, PtrElement pElAttr)
 
 #else  /* __STDC__ */
-void                ApplyAttrPRulesToSubtree (pEl, pDoc, pAttr)
+void                ApplyAttrPRulesToSubtree (pEl, pDoc, pAttr, pElAttr)
 PtrElement          pEl;
 PtrDocument         pDoc;
 PtrAttribute        pAttr;
+PtrElement          pElAttr;
 
 #endif /* __STDC__ */
 
@@ -557,7 +552,7 @@ PtrAttribute        pAttr;
 	   for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
 	      if (pChild->ElStructSchema == pEl->ElStructSchema)
 		 /* same structure schema */
-		 ApplyAttrPRulesToSubtree (pChild, pDoc, pAttr);
+		 ApplyAttrPRulesToSubtree (pChild, pDoc, pAttr, pElAttr);
 
 	/* on traite l'element lui-meme */
 	/* on cherche d'abord si pEl herite de pAttr */
@@ -577,7 +572,7 @@ PtrAttribute        pAttr;
 		  {
 		     /* pEl herite de l'attribut pAttr */
 		     /* on lui applique la presentation correspondante */
-		     ApplyAttrPRulesToElem (pEl, pDoc, pAttr, TRUE);
+		     ApplyAttrPRulesToElem (pEl, pDoc, pAttr, pElAttr, TRUE);
 		  }
 	     }
      }
@@ -635,7 +630,7 @@ PtrAttribute        pAttr;
 		   /* l'attribut de rang i se compare a pAttr */
 		   if ((pCompAttr = GetTypedAttrForElem (pEl, i, pAttr->AeAttrSSchema)) != NULL)
 		      /* pEl possede un attribut comme celui de rang i */
-		      ApplyAttrPRulesToElem (pEl, pDoc, pCompAttr, FALSE);
+		      ApplyAttrPRulesToElem (pEl, pDoc, pCompAttr, pEl, FALSE);
 	     }
      }
 }
@@ -799,6 +794,7 @@ PtrDocument         pDoc;
 }
 
 /*----------------------------------------------------------------------
+   RemoveAttrPresentation
    Retire la presentation associee a l'attribut pAttr dans les	
    images de l'element pEl.					
    Si pCompAttr != NULL, les regles de presentation dependant	
@@ -808,13 +804,17 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                RemoveAttrPresentation (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr, ThotBool inherit, PtrAttribute pCompAttr)
+void                RemoveAttrPresentation (PtrElement pEl, PtrDocument pDoc,
+		                     PtrAttribute pAttr, PtrElement pElAttr,
+				     ThotBool inherit, PtrAttribute pCompAttr)
 
 #else  /* __STDC__ */
-void                RemoveAttrPresentation (pEl, pDoc, pAttr, inherit, pCompAttr)
+void                RemoveAttrPresentation (pEl, pDoc, pAttr, pElAttr, inherit,
+					    pCompAttr)
 PtrElement          pEl;
 PtrDocument         pDoc;
 PtrAttribute        pAttr;
+PtrElement          pElAttr;
 ThotBool            inherit;
 PtrAttribute        pCompAttr;
 
@@ -826,7 +826,7 @@ PtrAttribute        pCompAttr;
      {
 	/* supprime la presentation attachee a la valeur de l'attribut, si */
 	/* elle n'est pas nulle */
-	UpdatePresAttr (pEl, pAttr, pDoc, TRUE, inherit, pCompAttr);
+	UpdatePresAttr (pEl, pAttr, pElAttr, pDoc, TRUE, inherit, pCompAttr);
 
 	/* reaffiche les variables de presentation qui utilisent */
 	/* l'attribut */
@@ -842,13 +842,14 @@ PtrAttribute        pCompAttr;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                RemoveInheritedAttrPresent (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
+void                RemoveInheritedAttrPresent (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr, PtrElement pElAttr)
 
 #else  /* __STDC__ */
-void                RemoveInheritedAttrPresent (pEl, pDoc, pAttr)
+void                RemoveInheritedAttrPresent (pEl, pDoc, pAttr, pElAttr)
 PtrElement          pEl;
 PtrDocument         pDoc;
 PtrAttribute        pAttr;
+PtrElement          pElAttr;
 
 #endif /* __STDC__ */
 
@@ -864,7 +865,7 @@ PtrAttribute        pAttr;
 	   for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
 	      if (pChild->ElStructSchema == pEl->ElStructSchema)
 		 /* same structure schema */
-		 RemoveInheritedAttrPresent (pChild, pDoc, pAttr);
+		 RemoveInheritedAttrPresent (pChild, pDoc, pAttr, pElAttr);
 
 	/* process element pEl itself */
 	if (pEl->ElStructSchema->SsPSchema != NULL)
@@ -880,7 +881,8 @@ PtrAttribute        pAttr;
 			PsInheritedAttr[pEl->ElTypeNumber - 1];
 		  }
 		if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
-		   RemoveAttrPresentation (pEl, pDoc, pAttr, TRUE, NULL);
+		   RemoveAttrPresentation (pEl, pDoc, pAttr, pElAttr,
+					   TRUE, NULL);
 	     }
      }
 }
@@ -940,7 +942,8 @@ PtrAttribute        pAttr;
 		   /* l'attribut de rang i se compare a pAttr */
 		   if ((pCompAttr = GetTypedAttrForElem (pEl, i, pAttr->AeAttrSSchema)) != NULL)
 		      /* pEl possede un attribut comme celui de rang i */
-		      RemoveAttrPresentation (pEl, pDoc, pCompAttr, FALSE, pAttr);
+		      RemoveAttrPresentation (pEl, pDoc, pCompAttr, pEl,
+					      FALSE, pAttr);
 	     }
      }
 }
@@ -1024,9 +1027,12 @@ PtrAttribute        pAttrNext;
 }
 
 /*----------------------------------------------------------------------
+   AttachAttrWithValue
    Met dans l'element pEl la valeur de l'attribut pNewAttr		
    Les regles de presentation de cette nouvelle valeur sont	
-   appliquees a l'element.						
+   appliquees a l'element.
+   Egalement utilise' pour supprimer un attribut et desappliquer les
+   regles de presentation correspondantes.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc, PtrAttribute pNewAttr)
@@ -1148,7 +1154,7 @@ PtrAttribute        pNewAttr;
 	    /* heritage et comparaison sont lies a un attribut de pEl */
 	    /* On supprime d'abord les regles de presentation liees a
 	       l'attribut sur l'element lui-meme */
-	    RemoveAttrPresentation (pEl, pDoc, pAttr, FALSE, NULL);
+	    RemoveAttrPresentation (pEl, pDoc, pAttr, pEl, FALSE, NULL);
 	    /* indique que le document a ete modifie' */
 	    /* un changement d'attribut vaut dix caracteres saisis */
 	    SetDocumentModified (pDoc, TRUE, 10);
@@ -1156,7 +1162,7 @@ PtrAttribute        pNewAttr;
 	       de l'heritage de cet attribut par le sous-arbre, s'il existe
 	       des elements heritants de celui-ci */
 	    if (inherit)
-	       RemoveInheritedAttrPresent (pEl, pDoc, pAttr);
+	       RemoveInheritedAttrPresent (pEl, pDoc, pAttr, pEl);
 	    /* On supprime des elements du sous arbre pEl la presentation
 	       venant de la comparaison d'un attribut du sous-arbre avec ce
 	       type d'attribut */
@@ -1174,7 +1180,7 @@ PtrAttribute        pNewAttr;
 	        l'heritage de cet attribut par le sous-arbre, s'il existe des
 	        elements heritants de celui-ci */
 	     if (inherit)
-		RemoveInheritedAttrPresent (pEl, pDoc, pAttrAsc);
+		RemoveInheritedAttrPresent (pEl, pDoc, pAttrAsc, pElAttr);
 	     /* on supprime du sous-arbre pEl la presentation venant de la
 	        comparaison d'un attribut du sous-arbre avec ce type d'attribut */
 	     if (compare)
@@ -1223,12 +1229,12 @@ PtrAttribute        pNewAttr;
 	     /* applique les regles du nouvel attribut */
 	     /* applique d'abord les regles de presentation associees a
 	        l'attribut sur l'element lui-meme */
-	     ApplyAttrPRulesToElem (pEl, pDoc, pAttr, FALSE);
+	     ApplyAttrPRulesToElem (pEl, pDoc, pAttr, pEl, FALSE);
 	     /* applique les regles de presentation venant de l'heritage de
 	        cet attribut par le sous-arbre s'il existe des elements qui
 	        heritent */
 	     if (inherit)
-		ApplyAttrPRulesToSubtree (pEl, pDoc, pAttr);
+		ApplyAttrPRulesToSubtree (pEl, pDoc, pAttr, pEl);
 	     /* applique sur les elements du sous-arbre les regles de
 	        presentation venant de la comparaison d'un attribut du
 	        sous-arbre avec ce type d'attribut */
@@ -1251,7 +1257,7 @@ PtrAttribute        pNewAttr;
 	     /* applique sur les elements du sous-arbre les regles de
 	        presentation venant de l'heritage de cet attribut par le
 	        sous-arbre, s'il existe des elements qui heritent */
-	     ApplyAttrPRulesToSubtree (pEl, pDoc, pAttrAsc);
+	     ApplyAttrPRulesToSubtree (pEl, pDoc, pAttrAsc, pElAttr);
 	     /* applique sur les elements du sous-arbre les regles de
 	        presentation venant de la comparaison d'un attribut de
 	        sous-arbre avec ce type d'attribut */

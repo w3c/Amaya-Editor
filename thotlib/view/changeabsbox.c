@@ -161,9 +161,12 @@ void                UpdateAbsBoxVolume (pEl, view, pDoc)
    type typeRule a appliquer pour la vue view.                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SimpleSearchRulepEl (PtrPRule * pRuleView1, PtrElement pEl, int view, PRuleType typeRule, FunctionType typeFunc, PtrPRule * pRule)
+static void         SimpleSearchRulepEl (PtrPRule * pRuleView1, PtrElement pEl,
+					 int view, PRuleType typeRule,
+					 FunctionType typeFunc, PtrPRule *pRule)
 #else  /* __STDC__ */
-void                SimpleSearchRulepEl (pRuleView1, pEl, view, typeRule, typeFunc, pRule)
+static void         SimpleSearchRulepEl (pRuleView1, pEl, view, typeRule,
+					 typeFunc, pRule)
 PtrPRule           *pRuleView1;
 PtrElement          pEl;
 int                 view;
@@ -173,39 +176,40 @@ PtrPRule           *pRule;
 #endif /* __STDC__ */
 
 {
-  ThotBool            found;
   PtrPRule            pR;
 
   pR = *pRule;
+  *pRule = NULL;
   *pRuleView1 = NULL;
-  found = FALSE;
-  while (!found && pR != NULL)
+  while (pR != NULL)
     {
       if (pR->PrType == typeRule &&
 	  (typeRule != PtFunction || typeFunc == FnAny ||
 	   pR->PrPresFunction == typeFunc))
-	{
-	  /* regle du type cherche' */
-	  if (pR->PrViewNum == view)
-	    /* pour la vue voulue */
-	    if (pR->PrCond == NULL ||
-		CondPresentation (pR->PrCond, pEl, NULL, view, pEl->ElStructSchema))
-	      /* les conditions d'application de la regle sont satisfaites */
-	      found = TRUE;
-	  
-	  if (!found)
-	    {
-	      if (pR->PrViewNum == 1 && *pRuleView1 == NULL)
-		/* regle du type cherche' pour la vue 1 */
-		if (pR->PrCond == NULL ||
-		    CondPresentation (pR->PrCond, pEl, NULL, view, pEl->ElStructSchema))
-		  /* les conditions d'application de la regle sont satisfaites */
-		  /* on la garde pour le cas ou on ne trouve pas mieux */
-		  *pRuleView1 = pR;
-	      /* regle suivante */
-	      pR = pR->PrNextPRule;
-	    }
-	}
+	 {
+	 /* regle du type cherche' */
+	 if (pR->PrViewNum == view &&	    /* pour la vue voulue */
+	     (pR->PrCond == NULL ||
+	      CondPresentation (pR->PrCond, pEl, NULL, NULL, view,
+		                pEl->ElStructSchema)))
+	     /* les conditions d'application de la regle sont satisfaites */
+	     /* cette regle convient, a moins qu'on en trouve une autre */
+	     /* plus specifique dans les regles qui suivent */
+	     *pRule = pR;
+	  else
+	     {
+	     if (pR->PrViewNum == 1 && *pRuleView1 == NULL)
+	       /* regle du type cherche' pour la vue 1 */
+	       if (pR->PrCond == NULL ||
+		   CondPresentation (pR->PrCond, pEl, NULL, NULL, view,
+		                     pEl->ElStructSchema))
+		 /* les conditions d'application de la regle sont satisfaites*/
+		 /* on la garde pour le cas ou on ne trouve pas mieux */
+		 *pRuleView1 = pR;
+	     }
+	 /* regle suivante */
+	 pR = pR->PrNextPRule;
+	 }
       else
 	/* ce n'est pas le type de regle cherche' */
 	if (pR->PrType > typeRule)
@@ -215,10 +219,6 @@ PtrPRule           *pRule;
 	  /* regle suivante */
 	  pR = pR->PrNextPRule;
     }
-  if (found)
-    *pRule = pR;
-  else
-    *pRule = NULL;
 }
 
 
@@ -283,226 +283,238 @@ PtrAttribute       *pAttr;
    *pSPR = NULL;
    if (pEl != NULL && pEl->ElStructSchema->SsPSchema != NULL)
      {
-	/* cherche d'abord parmi les regles de presentation specifique */
-	/* associees a l'element, sauf s'il s'agit d'un pave de presentation */
-	if (presNum == 0)
-	  {
-	     pRule = pEl->ElFirstPRule;
-	     stop = FALSE;
-	     while (pRule != NULL && !stop)
-		if (pRule->PrType == typeRule &&
-		    (typeRule != PtFunction || typeFunc == FnAny ||
-		     pRule->PrPresFunction == typeFunc) &&
-		    pRule->PrViewNum == view)
-		   stop = TRUE;
-		else
-		   /* regle suivante */
-		   pRule = pRule->PrNextPRule;
-	     if (pRule != NULL)
-	       {
-		  /* si la regle est associee a un attribut, on retourne un */
-		  /* pointeur sur cet attribut */
-		  if (pRule->PrSpecifAttr > 0)
-		    {
-		       *pAttr = pEl->ElFirstAttr;
-		       stop = FALSE;
-		       while (*pAttr != NULL && !stop)
-			  if ((*pAttr)->AeAttrNum == pRule->PrSpecifAttr
-			      && (*pAttr)->AeAttrSSchema == pRule->PrSpecifAttrSSchema)
-			     stop = TRUE;
-			  else
-			     *pAttr = (*pAttr)->AeNext;
-		    }
-	       }
-	  }
-	else
-	   /* les boites de presentation ne sont pas concernees par les */
-	   /* attributs */
-	   attr = FALSE;
+     /* cherche d'abord parmi les regles de presentation specifique */
+     /* associees a l'element, sauf s'il s'agit d'un pave de presentation */
+     if (presNum == 0)
+	{
+        pRule = pEl->ElFirstPRule;
+	stop = FALSE;
+	while (pRule != NULL && !stop)
+	   if (pRule->PrType == typeRule &&
+	       (typeRule != PtFunction || typeFunc == FnAny ||
+		pRule->PrPresFunction == typeFunc) &&
+	       pRule->PrViewNum == view)
+	      stop = TRUE;
+	   else
+	      /* regle suivante */
+	      pRule = pRule->PrNextPRule;
+	if (pRule != NULL)
+	   {
+	   /* si la regle est associee a un attribut, on retourne un */
+	   /* pointeur sur cet attribut */
+	   if (pRule->PrSpecifAttr > 0)
+	      {
+	      *pAttr = pEl->ElFirstAttr;
+	      stop = FALSE;
+	      while (*pAttr != NULL && !stop)
+		 if ((*pAttr)->AeAttrNum == pRule->PrSpecifAttr &&
+		     (*pAttr)->AeAttrSSchema == pRule->PrSpecifAttrSSchema)
+		    stop = TRUE;
+		 else
+		    *pAttr = (*pAttr)->AeNext;
+	      }
+	   }
+	}
+     else
+	/* les boites de presentation ne sont pas concernees par les */
+	/* attributs */
+	attr = FALSE;
 
-	/* cherche parmi les regles de presentation des */
-	/* attributs de l'element, si on n'a pas encore trouve' */
-	if (pRule == NULL && attr)
-	  {
-	     pA = pEl->ElFirstAttr;	/* premier attribut de l'element */
-	     /* parcourt tous les attributs de l'element, de facon a garder la */
-	     /* regle qui correspond au dernier attribut qui possede ce type de */
-	     /* regle */
-	     while (pA != NULL)
-	       {
-		  pR = NULL;
-		  /* Si on travaille pour la vue principale, on traite d'abord les */
-		  /* schemas de presentation additionnels les plus prioritaires, */
-		  /* sinon on ignore les schemas additionnels. */
-		  if (view == 1)
-		     pHd = pA->AeAttrSSchema->SsFirstPSchemaExtens;
-		  else
-		     pHd = NULL;
-		  if (pHd == NULL)
-		     /* pas de schema additionnel. On prend le schema principal */
-		     pSP = pA->AeAttrSSchema->SsPSchema;
-		  else
-		    /* on prend le schema additionnel le plus prioritaire */
+     /* cherche parmi les regles de presentation des attributs de l'element,
+	si on n'a pas encore trouve' */
+     if (pRule == NULL && attr)
+	{
+	pA = pEl->ElFirstAttr;	/* premier attribut de l'element */
+	/* parcourt tous les attributs de l'element, de facon a garder la */
+	/* regle qui correspond au dernier attribut qui possede ce type de */
+	/* regle */
+	while (pA != NULL)
+	   {
+	   pR = NULL;
+	   /* Si on travaille pour la vue principale, on traite d'abord les */
+	   /* schemas de presentation additionnels les plus prioritaires, */
+	   /* sinon on ignore les schemas additionnels. */
+	   if (view == 1)
+	      pHd = pA->AeAttrSSchema->SsFirstPSchemaExtens;
+	   else
+	      pHd = NULL;
+	   if (pHd == NULL)
+	      /* pas de schema additionnel. On prend le schema principal */
+	      pSP = pA->AeAttrSSchema->SsPSchema;
+	   else
+	      /* on prend le schema additionnel le plus prioritaire */
+	      {
+	      while (pHd->HdNextPSchema != NULL)
+		  pHd = pHd->HdNextPSchema;
+	      pSP = pHd->HdPSchema;
+	      }
+	   while (pR == NULL && pSP != NULL)
+	      {
+	      /* premiere regle de presentation de cet attribut */
+	      pR = AttrPresRule (pA, pEl, FALSE, NULL, pSP);
+	      /* parcourt les regles de presentation de l'attribut */
+	      while (pR != NULL)
+		 {
+		 if (pR->PrType == typeRule &&
+		     (typeRule != PtFunction || typeFunc == FnAny ||
+		      pR->PrPresFunction == typeFunc) &&
+		     pR->PrViewNum == view)
+		    /* regle du type cherche' pour la vue voulue */
+		    if (pR->PrCond == NULL ||
+			CondPresentation (pR->PrCond, pEl, pA, pEl, view,
+					  pA->AeAttrSSchema))
+		       /* les conditions d'application de la regle sont */
+		       /* satisfaites. On garde cette regle et on continue */
+		       /* pour voir s'il y en a une plus specifique */
+		       {
+		       pRule = pR;
+		       *pAttr = pA;
+		       *pSPR = pSP;
+		       *pSSR = pA->AeAttrSSchema;
+		       }
+		 if (pR->PrType <= typeRule)
+		    /* regle suivante */
+		    pR = pR->PrNextPRule;
+		 else
+		    pR = NULL;
+		 }
+	      if (pR == NULL)
+		 /* on n'a pas encore trouve'. On continue de chercher dans */
+		 /* les schemas de presentation de moindre priorite' */
+		 {
+		 if (pHd == NULL)
+		    /* on cherchait dans le schema de presentation principal
+		       c'est fini */
+		    pSP = NULL;
+		 else
 		    {
-		       while (pHd->HdNextPSchema != NULL)
-			  pHd = pHd->HdNextPSchema;
+		    /* on prend le schema de presentation additionnel de */
+		    /* moindre priorite' */
+		    pHd = pHd->HdPrevPSchema;
+		    if (pHd == NULL)
+		       /* plus de schemas additionnels, on prend le schema
+			  principal */
+		       pSP = pA->AeAttrSSchema->SsPSchema;
+		    else
 		       pSP = pHd->HdPSchema;
 		    }
-		  while (pR == NULL && pSP != NULL)
-		    {
-		       /* premiere regle de presentation de cet attribut */
-		       pR = AttrPresRule (pA, pEl, FALSE, NULL, pSP);
-		       /* parcourt les regles de presentation de l'attribut */
-		       stop = FALSE;
-		       while (pR != NULL && !stop)
-			 {
-			    if (pR->PrType == typeRule &&
-				(typeRule != PtFunction	|| typeFunc == FnAny ||
-				 pR->PrPresFunction == typeFunc) &&
-				pR->PrViewNum == view)
-			       /* regle du type cherche' pour la vue voulue */
-			       if (pR->PrCond == NULL ||
-				   CondPresentation (pR->PrCond, pEl, pA, view, pA->AeAttrSSchema))
-				  /* les conditions d'application de la regle sont */
-				  /* satisfaites */
-				 {
-				    pRule = pR;
-				    *pAttr = pA;
-				    *pSPR = pSP;
-				    *pSSR = pA->AeAttrSSchema;
-				    stop = TRUE;
-				 }
-			    if (!stop)
-			       pR = pR->PrNextPRule;	/* regle suivante */
-			 }
-		       if (pR == NULL)
-			  /* on n'a pas encore trouve'. On continue de chercher dans */
-			  /* les schemas de presentation de moindre priorite' */
-			 {
-			    if (pHd == NULL)
-			       /* on cherchait dans le schema de presentation principal. */
-			       /* c'est fini */
-			       pSP = NULL;
-			    else
-			      {
-				 /* on prend le schema de presentation additionnel de */
-				 /* moindre priorite' */
-				 pHd = pHd->HdPrevPSchema;
-				 if (pHd == NULL)
-				    /* plus de schemas additionnels, on prend le schema princ */
-				    pSP = pA->AeAttrSSchema->SsPSchema;
-				 else
-				    pSP = pHd->HdPSchema;
-			      }
-			 }
-		    }
-		  /* passe a l'attribut suivant de l'element */
-		  pA = pA->AeNext;
-	       }
-	  }
+		 }
+	      }
+	   /* passe a l'attribut suivant de l'element */
+	   pA = pA->AeNext;
+	   }
+	}
 
-	/* cherche parmi les regles de presentation des attributs */
-	/* herites par l'element, si on n'a pas encore trouve' */
-	if (pRule == NULL)
-	   /* on n'applique pas aux boites de presentation les regles de */
-	   /* presentation des attributs herites */
-	   if (presNum == 0)
-	     {
-		if (pEl->ElStructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
-		  {
-		     /* il y a heritage possible */
-		     if ((inheritTable = pEl->ElStructSchema->SsPSchema->
-			  PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
-		       {
-			  /* cette table n'existe pas on la genere */
-			  CreateInheritedAttrTable (pEl);
-			  inheritTable = pEl->ElStructSchema->SsPSchema->
-			     PsInheritedAttr[pEl->ElTypeNumber - 1];
-		       }
-		     for (l = 1; l <= pEl->ElStructSchema->SsNAttributes && *pSPR == NULL;
-			  l++)
-			if ((*inheritTable)[l - 1])
-			   /* pEl herite de l'attribut l */
-			   /* cherche si l'attribut l existe au dessus */
-			   if ((*pAttr = GetTypedAttrAncestor (pEl, l, pEl->ElStructSchema,
-							 &pElAttr)) != NULL)
-			     {
-				/* on traite d'abord les schemas de presentation */
-				/* additionnels les plus prioritaires si on travaille pour */
-				/* la vue principale. Sinon, on ignore les schemas */
-				/* additionnels */
-				if (view == 1)
-				   pHd = (*pAttr)->AeAttrSSchema->SsFirstPSchemaExtens;
-				else
-				   pHd = NULL;
-				if (pHd == NULL)
-				   /* pas de schema additionnel. Prend le schema principal */
-				   pSP = (*pAttr)->AeAttrSSchema->SsPSchema;
-				else
-				   /* on cherche le schema additionnel le plus proritaire */
-				  {
-				     while (pHd->HdNextPSchema != NULL)
-					pHd = pHd->HdNextPSchema;
-				     pSP = pHd->HdPSchema;
-				  }
-				stop = FALSE;
-				while (!stop && pSP != NULL)
-				  {
-				     /* premiere regle de presentation de cet attribut dans */
-				     /* ce schema de presentation */
-				     pRule = AttrPresRule (*pAttr, pEl, TRUE, NULL, pSP);
-				     /* parcourt les regles de presentation de l'attribut */
-				     while (pRule != NULL && !stop)
-				       {
-					  if (pRule->PrType == typeRule &&
-					      (typeRule != PtFunction ||
-						typeFunc == FnAny ||
-						pRule->PrPresFunction == typeFunc) &&
-					      pRule->PrViewNum == view)
-					     /* regle du type cherche' pour la vue voulue */
-					     if (pRule->PrCond == NULL ||
-						 CondPresentation (pRule->PrCond, pEl, *pAttr,
-					     view, (*pAttr)->AeAttrSSchema))
-						/* les conditions d'application de la regle */
-						/* sont satisfaites */
-					       {
-						  *pSPR = pSP;
-						  *pSSR = (*pAttr)->AeAttrSSchema;
-						  stop = TRUE;
-					       }
-					  if (!stop)
-					     /* regle suivante */
-					     pRule = pRule->PrNextPRule;
-				       }
-				     if (!stop)
-					/* on n'a pas encore trouve'. On continue de chercher */
-					/* dans les schemas de presentation de moindre priorite */
-				       {
-					  if (pHd == NULL)
-					     /* on cherchait dans le schema de presentation */
-					     /* principal. C'est fini */
-					     pSP = NULL;
-					  else
-					    {
-					       /* on prend le schema de presentation additionnel de */
-					       /* moindre priorite' */
-					       pHd = pHd->HdPrevPSchema;
-					       if (pHd == NULL)
-						  /* plus de schemas additionnels, on prend le schema */
-						  /* principal */
-						  pSP = (*pAttr)->AeAttrSSchema->SsPSchema;
-					       else
-						  pSP = pHd->HdPSchema;
-					    }
-				       }
-
-				  }
-			     }
+     /* cherche parmi les regles de presentation des attributs */
+     /* herites par l'element, si on n'a pas encore trouve' */
+     if (pRule == NULL)
+	/* on n'applique pas aux boites de presentation les regles de */
+	/* presentation des attributs herites */
+	if (presNum == 0)
+	   {
+	   if (pEl->ElStructSchema->SsPSchema->
+                                      PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+	      {
+	      /* il y a heritage possible */
+	      if ((inheritTable = pEl->ElStructSchema->SsPSchema->
+		             PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
+		 {
+		 /* cette table n'existe pas on la genere */
+		 CreateInheritedAttrTable (pEl);
+		 inheritTable = pEl->ElStructSchema->SsPSchema->
+			              PsInheritedAttr[pEl->ElTypeNumber - 1];
 		  }
-	     }
+	       for (l = 1; l <= pEl->ElStructSchema->SsNAttributes &&
+		           *pSPR == NULL; l++)
+		  if ((*inheritTable)[l - 1])
+		     /* pEl herite de l'attribut l */
+		     /* cherche si l'attribut l existe au dessus */
+		     if ((*pAttr = GetTypedAttrAncestor (pEl, l,
+							 pEl->ElStructSchema,
+							 &pElAttr)) != NULL)
+			{
+			/* on traite d'abord les schemas de presentation */
+			/* additionnels les plus prioritaires si on travaille*/
+			/* pour la vue principale. Sinon, on ignore les */
+			/* schemas additionnels */
+			if (view == 1)
+			   pHd = (*pAttr)->AeAttrSSchema->SsFirstPSchemaExtens;
+			else
+			   pHd = NULL;
+			if (pHd == NULL)
+			   /* pas de schema additionnel. Prend le schema
+			      principal */
+			   pSP = (*pAttr)->AeAttrSSchema->SsPSchema;
+			else
+			   /* on cherche le schema additionnel le plus
+			      proritaire */
+			   {
+			   while (pHd->HdNextPSchema != NULL)
+			      pHd = pHd->HdNextPSchema;
+			   pSP = pHd->HdPSchema;
+			   }
+			while (pRule == NULL && pSP != NULL)
+			   {
+			   /* premiere regle de presentation de cet
+			      attribut dans ce schema de presentation */
+			   pR = AttrPresRule (*pAttr, pEl, TRUE, NULL, pSP);
+			   /* parcourt les regles de presentation de l'attr. */
+			   while (pR != NULL)
+			      {
+			      if (pR->PrType == typeRule &&
+				  (typeRule != PtFunction ||
+				   typeFunc == FnAny ||
+				   pR->PrPresFunction == typeFunc) &&
+				  pR->PrViewNum == view)
+				  /*regle du type cherche' pour la vue voulue*/
+				  if (pR->PrCond == NULL ||
+				      CondPresentation (pR->PrCond, pEl,
+						      *pAttr, pElAttr, view,
+						      (*pAttr)->AeAttrSSchema))
+				     /*les conditions d'application de la regle
+				     sont satisfaites. On garde cette regle et
+				     on continue pour trouver les regles plus
+				     specifiques */
+				     {
+				     pRule = pR;
+				     *pSPR = pSP;
+				     *pSSR = (*pAttr)->AeAttrSSchema;
+				     }
+			      if (pR->PrType <= typeRule)
+				 /* regle suivante */
+				 pR = pR->PrNextPRule;
+			      else
+				 pR = NULL;
+			      }
+			   if (pRule == NULL)
+			      /* on n'a pas encore trouve'. On continue de
+			      chercher dans les schemas de presentation de
+			      moindre priorite */
+			      {
+			      if (pHd == NULL)
+				 /* on cherchait dans le schema de
+				    presentation principal. Fini */
+				 pSP = NULL;
+			      else
+				 {
+				  /* on prend le schema de presentation 
+				     additionnel de moindre priorite' */
+				   pHd = pHd->HdPrevPSchema;
+				   if (pHd == NULL)
+				      /* plus de schemas additionnels, on
+					 prend le schema principal */
+				      pSP = (*pAttr)->AeAttrSSchema->SsPSchema;
+				   else
+				      pSP = pHd->HdPSchema;
+				 }
+			      }
+			   }
+			}
+	      }
+	   }
 
-	if (pRule == NULL)
-	  {
+     if (pRule == NULL)
+	{
 	     /* on n'a pas encore trouve' */
 	     *pAttr = NULL;
 	     pSchS = pEl->ElStructSchema;
@@ -586,7 +598,7 @@ PtrAttribute       *pAttr;
 	       /* the rule is relative to an additional schema */
 	     *pSPR = pSchP;
 	     *pSSR = pSchS;
-	  }
+	}
      }
    return pRule;
 }
@@ -3246,7 +3258,8 @@ ThotBool            redisp;
 	     while (!stop && !found);
 	     if (found)
 		/* reevalue les conditions d'application de la regle */
-		if (!CondPresentation (pRCre->PrCond, pAb->AbElement, NULL, viewSch,
+		if (!CondPresentation (pRCre->PrCond, pAb->AbElement, NULL,
+				       NULL, viewSch,
 				       pAb->AbElement->ElStructSchema))
 		   /* On va detruire le pave, on cherche d'abord le pave de */
 		   /* presentation suivant de meme type */
@@ -3403,7 +3416,7 @@ ThotBool            redisp;
 			       if (depend)
 				  /* reevalue les conditions d'application de la regle */
 				  if (CondPresentation (pRCre->PrCond, pAb->AbElement,
-							NULL, viewSch, pAb->AbElement->ElStructSchema))
+							NULL, NULL, viewSch, pAb->AbElement->ElStructSchema))
 				     /* cherche si le pave est deja cree' */
 				    {
 				       isCreated = FALSE;
@@ -4301,12 +4314,16 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc, ThotBool remove, ThotBool inherit, PtrAttribute pAttrComp)
+void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
+				    PtrElement pElAttr, PtrDocument pDoc,
+				    ThotBool remove, ThotBool inherit,
+				    PtrAttribute pAttrComp)
 
 #else  /* __STDC__ */
-void                UpdatePresAttr (pEl, pAttr, pDoc, remove, inherit, pAttrComp)
+void                UpdatePresAttr (pEl, pAttr, pElAttr, pDoc, remove, inherit, pAttrComp)
 PtrElement          pEl;
 PtrAttribute        pAttr;
+PtrElement          pElAttr;
 PtrDocument         pDoc;
 ThotBool            remove;
 ThotBool            inherit;
@@ -4409,11 +4426,11 @@ PtrAttribute        pAttrComp;
 			     pR = pRuleView1;
 			  }
 		       if (pR && pR->PrCond)
-			  if (!CondPresentation (pR->PrCond, pEl, pAttr, viewSch,
-					         pAttr->AeAttrSSchema))
-			     /* les conditions d'application de la regle ne
-				sont pas satisfaites, on n'applique pas la regle */
-			     pR = NULL;
+			 if (!CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
+						viewSch, pAttr->AeAttrSSchema))
+			    /* les conditions d'application de la regle ne sont
+			       pas satisfaites, on n'applique pas la regle */
+			    pR = NULL;
 		    }
 		  else
 		    pR = NULL;/********/

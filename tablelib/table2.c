@@ -99,11 +99,11 @@ ThotBool            *ApplAttr;
 		     *ApplAttr = FALSE;
 	       }
 
-	     else if (pEl->ElTypeNumber == GetElemWithException (EXC_ID_Compound_Raw, pEl->ElStructSchema))
+	     else if (pEl->ElTypeNumber == GetElemWithException (EXC_ID_Compound_Row, pEl->ElStructSchema))
 	       {
 		  /* on inhibe la regle de creation de l'attribut Filet_Droit 
 		     quand l'attribut Type_Table vaut Colonnes ou Tabulations */
-		  if (pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Right_Hairline_CompRaw, pEl->ElStructSchema)
+		  if (pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Right_Hairline_CompRow, pEl->ElStructSchema)
 		      && (pAttrTab->AeAttrValue == 3 || pAttrTab->AeAttrValue == 4))
 		     *ApplAttr = FALSE;
 	       }
@@ -217,11 +217,11 @@ ThotBool            *PcLast;
 #endif /* __STDC__ */
 
 {
-   if (TypeHasException (EXC_ID_Simple_Raw, pEl->ElTypeNumber, pEl->ElStructSchema)
-       || TypeHasException (EXC_ID_Compound_Raw, pEl->ElTypeNumber, pEl->ElStructSchema))
+   if (TypeHasException (EXC_ID_Simple_Row, pEl->ElTypeNumber, pEl->ElStructSchema)
+       || TypeHasException (EXC_ID_Compound_Row, pEl->ElTypeNumber, pEl->ElStructSchema))
       /* c'est bien une ligne simple ou composee de tableau */
       if (pEl->ElParent != NULL)
-	 if (TypeHasException (EXC_ID_The_Raws, pEl->ElParent->ElTypeNumber,
+	 if (TypeHasException (EXC_ID_The_Rows, pEl->ElParent->ElTypeNumber,
 			       pEl->ElParent->ElStructSchema))
 	    /* c'est une ligne du 1er niveau */
 	   {
@@ -425,15 +425,15 @@ PtrDocument         pDoc;
 
 
 /*----------------------------------------------------------------------
-  DeleteRawHairline    detruit les boites de presentation FootHairline
+  DeleteRowHairline    detruit les boites de presentation FootHairline
   creees par la ligne de tableau qui precede le saut de page pointe'
   par pElPage.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DeleteRawHairline (PtrElement pElPage, PtrDocument pDoc)
+static void         DeleteRowHairline (PtrElement pElPage, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void         DeleteRawHairline (pElPage, pDoc)
+static void         DeleteRowHairline (pElPage, pDoc)
 PtrElement          pElPage;
 PtrDocument         pDoc;
 
@@ -448,8 +448,8 @@ PtrDocument         pDoc;
    /* supprime le filet horizontal du bas de la ligne precedente */
    pEl = pElPage->ElPrevious;	/* element precedent le saut de page */
    if (pEl != NULL)
-      if (TypeHasException (EXC_ID_Simple_Raw, pEl->ElTypeNumber, pEl->ElStructSchema) ||
-	  TypeHasException (EXC_ID_Compound_Raw, pEl->ElTypeNumber, pEl->ElStructSchema))
+      if (TypeHasException (EXC_ID_Simple_Row, pEl->ElTypeNumber, pEl->ElStructSchema) ||
+	  TypeHasException (EXC_ID_Compound_Row, pEl->ElTypeNumber, pEl->ElStructSchema))
 	 /* c'est bien une ligne de tableau */
 	 /* on examine toutes les vues du document */
 	 for (view = 1; view <= MAX_VIEW_DOC; view++)
@@ -587,11 +587,11 @@ ThotBool            *cutDone;
 	       {
 		  *cutDone = TRUE;
 		  /* cas particulier des tableaux */
-		  if (TypeHasException (EXC_ID_The_Raws, pElPage->ElParent->ElTypeNumber,
+		  if (TypeHasException (EXC_ID_The_Rows, pElPage->ElParent->ElTypeNumber,
 					pElPage->ElParent->ElStructSchema))
 		     /* supprime le filet horizontal du bas de la ligne precedente */
 		     if (viewNb == 0)	/* inutile lors de la pagination */
-			DeleteRawHairline (pElPage, pDoc);
+			DeleteRowHairline (pElPage, pDoc);
 
 		  /*cherche l'element a repeter */
 		  pElToCopy = SearchTypeExcept (pSpecial, pElPage, ExcPageBreakRepBefore, FALSE);
@@ -619,7 +619,7 @@ ThotBool            *cutDone;
 			 }
 		       if (viewNb == 0)
 			  /* cas particulier des tableaux */
-			  if (TypeHasException (EXC_ID_The_Raws, pElPage->ElParent->ElTypeNumber,
+			  if (TypeHasException (EXC_ID_The_Rows, pElPage->ElParent->ElTypeNumber,
 					 pElPage->ElParent->ElStructSchema))
 			     /* reapplique les regles de hauteur des filets verticaux */
 			     ApplHeightRuleToHairlines (pEl, pDoc);

@@ -339,17 +339,17 @@ PtrDocument         pDoc;
 	while (pRef != NULL)
 	   /* parcourt les references a l'element */
 	  {
-	     if (pRef->RdAttribute != NULL)
-		/* c'est une reference par attribut */
-		if (!IsWithinANewElement (pRef->RdElement))
-		   /* l'element qui reference n'est pas dans les nouveaux
-		      elements. s'il est dans le tampon, on n'y touche pas */
-		   if (!IsASavedElement (pRef->RdElement))
-		      /* on recalcule la presentation de l'element qui reference */
-		      UpdatePresAttr (pRef->RdElement, pRef->RdAttribute, pDoc,
-				      FALSE, FALSE, NULL);
-	     /* reference suivante au meme element */
-	     pRef = pRef->RdNext;
+	  if (pRef->RdAttribute != NULL)
+	     /* c'est une reference par attribut */
+	     if (!IsWithinANewElement (pRef->RdElement))
+	        /* l'element qui reference n'est pas dans les nouveaux
+	           elements. s'il est dans le tampon, on n'y touche pas */
+	        if (!IsASavedElement (pRef->RdElement))
+	           /* on recalcule la presentation de l'element qui reference*/
+	           UpdatePresAttr (pRef->RdElement, pRef->RdAttribute,
+	                           pRef->RdElement, pDoc, FALSE, FALSE, NULL);
+	  /* reference suivante au meme element */
+	  pRef = pRef->RdNext;
 	  }
      }
    if (!pRoot->ElTerminal)
@@ -479,8 +479,8 @@ ThotBool            redisplay;
 			else
 			   pPrevAttr->AeNext = pAttr->AeNext;
 		     /* recalcule la presentation de l'element sans l'attribut */
-		     UpdatePresAttr (pElRef, pRef->RdAttribute, *pDoc, TRUE,
-				     FALSE, NULL);
+		     UpdatePresAttr (pElRef, pRef->RdAttribute, pElRef, *pDoc,
+				     TRUE, FALSE, NULL);
 		     AbstractImageUpdated (*pDoc);
 		     if (redisplay)
 			RedisplayDocViews (*pDoc);

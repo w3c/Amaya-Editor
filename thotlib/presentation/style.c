@@ -696,7 +696,10 @@ int                 att;
       GetAttributePres (&new);
       tsch->PsNAttrPRule[attrType - 1] = nbrules;
       if (att > 0 && ctxt->type)
+	{
 	new->ApElemType = ctxt->type;
+	pSS->SsPSchema->PsNHeirElems[attrType - 1] += 1;
+	}
       if (attrs)
 	{
 	  new->ApNextAttrPres = attrs->ApNextAttrPres;

@@ -485,7 +485,8 @@ ThotBool            premierfils;
 	     pRe1 = &pNode->ElStructSchema->SsRule[pNode->ElTypeNumber - 1];
 	     fprintf (fileDescriptor, "%s", pRe1->SrOrigName);
 	     /* ecrit le nom du schema de structure de l'element */
-	     fprintf (fileDescriptor, "(%s %x)", pNode->ElStructSchema->SsName, pNode->ElStructSchema);
+	     fprintf (fileDescriptor, "(%s %x)", pNode->ElStructSchema->SsName,
+		                          (unsigned int)pNode->ElStructSchema);
 	  }
 	fprintf (fileDescriptor, " Label=%s", pNode->ElLabel);
 	/* ecrit le volume de l'element */
@@ -3046,10 +3047,7 @@ FILE               *fileDescriptor;
 {
    PtrDocument         pDoc;
    PtrHandlePSchema    pHd;
-   Counter            *pCo1;
-   CntrItem           *pCp1;
    PresConstant       *pPr1;
-   PresentationBox    *pBo1;
    TtAttribute        *pAt1;
    AttributePres      *pRP1;
    NumAttrCase        *pCa1;

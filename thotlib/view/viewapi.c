@@ -1405,21 +1405,24 @@ ThotBool            suppression;
    if (pOldAttr != NULL)
       /* oui, on s'en occupe */
      {
-	/* on supprime d'abordles regles de presentation liees */
+	/* on supprime d'abord les regles de presentation liees */
 	/* a l'attribut sur l'element lui-meme */
-	RemoveAttrPresentation (pEl, LoadedDocument[document - 1], pOldAttr, FALSE, NULL);
+	RemoveAttrPresentation (pEl, LoadedDocument[document - 1], pOldAttr,
+				pEl, FALSE, NULL);
 	/* puis on supprime sur pEl et sur les elements du sous arbre pEl */
 	/* les regles de presentation liees a l'heritage de cet attribut */
 	/* par le sous-arbre s'il existe des elements heritants de celui-ci */
 	if (inheritance)
-	   RemoveInheritedAttrPresent (pEl, LoadedDocument[document - 1], pOldAttr);
+	   RemoveInheritedAttrPresent (pEl, LoadedDocument[document - 1],
+				       pOldAttr, pEl);
 	/* puis on supprime sur les elements du sous-arbre pEl */
 	/* les regles de presentation liees a la comparaison d'un attribut */
 	/* du sous-arbre avec ce type d'attribut */
 	if (!pEl->ElTerminal && comparaison)
 	   for (pElChild = pEl->ElFirstChild; pElChild != NULL;
 		pElChild = pElChild->ElNext)
-	      RemoveComparAttrPresent (pElChild, LoadedDocument[document - 1], pOldAttr);
+	      RemoveComparAttrPresent (pElChild, LoadedDocument[document - 1],
+				       pOldAttr);
      }
    else if (pAttrAsc != NULL)
      {
@@ -1429,12 +1432,13 @@ ThotBool            suppression;
 	/* liees a l'heritage de cet attribut par le sous-arbre s'il */
 	/* existe des elements heritants de celui-ci */
 	if (inheritance)
-	   RemoveInheritedAttrPresent (pEl, LoadedDocument[document - 1], pAttrAsc);
+	   RemoveInheritedAttrPresent (pEl, LoadedDocument[document - 1],
+				       pAttrAsc, pElAttr);
 	/* puis on supprime sur le sous-arbre pEl les regles de */
 	/* presentation liees a la comparaison d'un attribut */
 	/* du sous-arbre avec ce type d'attribut */
 	if (comparaison)
-	   RemoveComparAttrPresent (pEl, LoadedDocument[document - 1], pAttrAsc);
+	   RemoveComparAttrPresent (pEl, LoadedDocument[document-1], pAttrAsc);
      }
 }
 

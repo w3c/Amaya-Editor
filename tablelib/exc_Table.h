@@ -12,7 +12,7 @@
 
 #define EXC_ID_The_Columns		561
 
-#define EXC_ID_The_Raws		562
+#define EXC_ID_The_Rows 		562
 
 #define EXC_ID_Column			563
 
@@ -28,19 +28,19 @@
 
 #define EXC_ID_Sub_Columns		567
 
-#define EXC_ID_Raw			568
+#define EXC_ID_Row			568
 
-#define EXC_ID_Simple_Raw		569
+#define EXC_ID_Simple_Row		569
 			
-#define EXC_ID_Title_Raw		570
+#define EXC_ID_Title_Row		570
 
-#define EXC_ID_Body_Raw		571
+#define EXC_ID_Body_Row		        571
 
-#define EXC_ID_Compound_Raw 		572
+#define EXC_ID_Compound_Row 		572
 			
-#define EXC_ID_Title_Compound_Raw		573
+#define EXC_ID_Title_Compound_Row	573
 
-#define EXC_ID_Sub_Raws		574
+#define EXC_ID_Sub_Rows 		574
 
 #define EXC_ID_FootTable		578
 
@@ -54,8 +54,8 @@
 #define EXC_ID_Right_Hairline_SimpCol	522
 #define EXC_ID_Foot_Hairline_CompCol	523
 #define EXC_ID_Foot_Hairline_Headings	526
-#define EXC_ID_Foot_Hairline_SimpRaw	528
-#define EXC_ID_Right_Hairline_CompRaw	529
+#define EXC_ID_Foot_Hairline_SimpRow	528
+#define EXC_ID_Right_Hairline_CompRow	529
 
 #define EXC_ID_Title_Width	 	540
 #define EXC_ID_Ref_Title	 	541

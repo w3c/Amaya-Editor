@@ -53,30 +53,51 @@ PtrElement          pEl;
    int                 rule;
    AttributePres      *pAttrPR;
    InheritAttrTable   *table;
+   PtrPSchema          pSchP;
+   PtrHandlePSchema    pHd;
 
    pEl->ElTypeNumber = pEl->ElTypeNumber;
    if (pEl->ElStructSchema->SsPSchema != NULL)
      {
-	/* table allocation and initialization */
-	if ((table = (InheritAttrTable *) TtaGetMemory (sizeof (InheritAttrTable))) == NULL)
-	   /* memory exhausted */
-	   return;
-	for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE);
+     /* table allocation and initialization */
+     if ((table = (InheritAttrTable *) TtaGetMemory (sizeof (InheritAttrTable))) == NULL)
+        /* memory exhausted */
+        return;
+     for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE);
 
-	pEl->ElStructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1] = table;
-	/* for all attributes defined in the structure schema */
-	for (attr = 0; attr < pEl->ElStructSchema->SsNAttributes; attr++)
-	  {
-	     pAttrPR = pEl->ElStructSchema->SsPSchema->PsAttrPRule[attr];
-	     if (pAttrPR != NULL)
-		/* check all presentation rules associated with that attribute */
-		for (rule = 0; rule < pEl->ElStructSchema->SsPSchema->PsNAttrPRule[attr]; rule++)
-		  {
-		     if (pAttrPR->ApElemType == pEl->ElTypeNumber)
-			(*table)[attr] = TRUE;
-		     pAttrPR = pAttrPR->ApNextAttrPres;
-		  }
-	  }
+     pEl->ElStructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1] = table;
+     /* for all attributes defined in the structure schema */
+     for (attr = 0; attr < pEl->ElStructSchema->SsNAttributes; attr++)
+       {
+       /* check the main presentation schema and all its extensions */
+       pSchP = pEl->ElStructSchema->SsPSchema;
+       pHd = NULL;
+       while (pSchP)
+	 {
+	   pAttrPR = pSchP->PsAttrPRule[attr];
+	   if (pAttrPR != NULL)
+	      /* check all presentation rules associated with that attribute */
+	      for (rule = 0; rule < pSchP->PsNAttrPRule[attr]; rule++)
+		{
+		  if (pAttrPR->ApElemType == pEl->ElTypeNumber)
+		     (*table)[attr] = TRUE;
+		  pAttrPR = pAttrPR->ApNextAttrPres;
+		}
+	   /* next P schema */
+	   if (pHd == NULL)
+	      /* extension schemas have not been checked yet */
+	      /* get the first extension schema */
+	      pHd = pEl->ElStructSchema->SsFirstPSchemaExtens;
+	   else
+	      /* get the next extension schema */
+	      pHd = pHd->HdNextPSchema;
+	   if (pHd == NULL)
+	     /* no more extension schemas. Stop */
+	      pSchP = NULL;
+	   else
+	      pSchP = pHd->HdPSchema;
+	 }
+       }
      }
 }
 
@@ -115,46 +136,69 @@ PtrAttribute        pAttr;
    int                 rule;
    int                 item;
    PresentSchema      *pPS;
+   PtrPSchema          pSchP;
+   PtrHandlePSchema    pHd;   
 
    /* table allocation and initialization */
    pPS = pAttr->AeAttrSSchema->SsPSchema;
+   if (!pPS)
+      return;
    if ((table = (ComparAttrTable *) TtaGetMemory (sizeof (ComparAttrTable))) == NULL)
       /* memory exhausted */
       return;
-   if (pPS != NULL)
-     {
-	for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE);
-	attNum = pAttr->AeAttrNum;
-	pPS->PsComparAttr[attNum - 1] = table;
-	/* scan all attributes defined in the structure schema */
-	for (attr = 0; attr < pAttr->AeAttrSSchema->SsNAttributes; attr++)
-	   /* check only integer attributes */
-	   if (pAttr->AeAttrSSchema->SsAttribute[attr].AttrType == AtNumAttr)
-	      if (pPS->PsNAttrPRule[attr] != 0)
-		{
-		   /* check presentation rules associated with attribute attr */
-		   pAttrPR = pPS->PsAttrPRule[attr];
-		   for (rule = 0; rule < pPS->PsNAttrPRule[attr]; rule++)
+   for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE);
+   attNum = pAttr->AeAttrNum;
+   pPS->PsComparAttr[attNum - 1] = table;
+   /* scan all attributes defined in the structure schema */
+   for (attr = 0; attr < pAttr->AeAttrSSchema->SsNAttributes; attr++)
+      /* check only integer attributes */
+      if (pAttr->AeAttrSSchema->SsAttribute[attr].AttrType == AtNumAttr)
+         {
+         /* check the main presentation schema and all its extensions */
+         pSchP = pPS;
+         pHd = NULL;
+         while (pSchP)
+	    {
+	    if (pSchP->PsNAttrPRule[attr] > 0)
+	       {
+	       pAttrPR = pSchP->PsAttrPRule[attr];
+	       /* check presentation rules associated with attribute attr */
+	       for (rule = 0; rule < pSchP->PsNAttrPRule[attr]; rule++)
+		  {
+		  if (pAttrPR->ApElemType == 0)
+		     /* no inheritance */
 		     {
-			if (pAttrPR->ApElemType == 0)
-			   /* not inheritance */
-			  {
-			     for (item = 0; item < pAttrPR->ApNCases; item++)
-			       {
-				  if (pAttrPR->ApCase[item].CaComparType == ComparAttr
-				      && (pAttrPR->ApCase[item].CaLowerBound == attNum
-					  || pAttrPR->ApCase[item].CaUpperBound == attNum))
-				    {
-				       (*table)[attr] = TRUE;
-				       break;
-				    }
-			       }
-			     break;
-			  }
-			pAttrPR = pAttrPR->ApNextAttrPres;
+		     for (item = 0; item < pAttrPR->ApNCases; item++)
+			{
+			if (pAttrPR->ApCase[item].CaComparType == ComparAttr
+			    && (pAttrPR->ApCase[item].CaLowerBound == attNum
+			      || pAttrPR->ApCase[item].CaUpperBound == attNum))
+			   {
+			   (*table)[attr] = TRUE;
+			   break;
+			   }
+			}
+		     break;
 		     }
-		}
-     }
+		  pAttrPR = pAttrPR->ApNextAttrPres;
+		  }
+	       }
+	    /* next P schema */
+	    if (pHd == NULL)
+	       /* extension schemas have not been checked yet */
+	       /* get the first extension schema */
+	       pHd = pAttr->AeAttrSSchema->SsFirstPSchemaExtens;
+	    else
+	       /* get the next extension schema */
+	       pHd = pHd->HdNextPSchema;
+	    if (pHd == NULL)
+	      /* no more extension schemas. Stop */
+	       pSchP = NULL;
+	    else
+	       pSchP = pHd->HdPSchema;
+	    
+	    }
+        }
 }
 
 

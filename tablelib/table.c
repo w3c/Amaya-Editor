@@ -1,20 +1,11 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
- /*
- * Warning:
- * This module is part of Thot, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
-
- /*
+/*
  *
  * Authors: V. Quint (INRIA)
  *          C. Roisin (INRIA) 
@@ -241,15 +232,15 @@ ThotBool            *ret;
 }
 
 
-/* SetAttrTitleRaw    met les attribut Ref_Title_Width sur l'element pointe' par */
+/* SetAttrTitleRow    met les attribut Ref_Title_Width sur l'element pointe' par */
 /* pTitre et l'attribut Width_Percent avec une valeur qui depend du */
 /* degre' d'imbrication des lignes composees. */
 
 #ifdef __STDC__
-static void         SetAttrTitleRaw (PtrElement pElTitle, PtrDocument pDoc)
+static void         SetAttrTitleRow (PtrElement pElTitle, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void         SetAttrTitleRaw (pElTitle, pDoc)
+static void         SetAttrTitleRow (pElTitle, pDoc)
 PtrElement          pElTitle;
 PtrDocument         pDoc;
 
@@ -285,10 +276,10 @@ PtrDocument         pDoc;
    /* Titre de ligne pour calculer la valeur de l'attribut */
    percent = 100;
    pE = pElTitle;
-   while (!TypeHasException (EXC_ID_The_Raws, pE->ElTypeNumber, pE->ElStructSchema))
-      /* on n'est pas encore arrive' a l'element The_Raws */
+   while (!TypeHasException (EXC_ID_The_Rows, pE->ElTypeNumber, pE->ElStructSchema))
+      /* on n'est pas encore arrive' a l'element The_Rows */
      {
-	if (TypeHasException (EXC_ID_Compound_Raw, pE->ElTypeNumber, pE->ElStructSchema))
+	if (TypeHasException (EXC_ID_Compound_Row, pE->ElTypeNumber, pE->ElStructSchema))
 	   /* c'est une ligne composee */
 	   percent = percent / 2;
 	pE = pE->ElParent;
@@ -296,10 +287,10 @@ PtrDocument         pDoc;
    pAttr->AeAttrValue = percent;
 
    /* traite tous les titres de ligne imbriques */
-   if (TypeHasException (EXC_ID_Title_Compound_Raw, pElTitle->ElTypeNumber, pElTitle->ElStructSchema))
+   if (TypeHasException (EXC_ID_Title_Compound_Row, pElTitle->ElTypeNumber, pElTitle->ElStructSchema))
       /* c'est un titre de ligne composee, il y a donc des titres de ligne imbriques */
      {
-	pE = pElTitle->ElNext;	/* passe a l'element Sub_Raws */
+	pE = pElTitle->ElNext;	/* passe a l'element Sub_Rows */
 	if (pE != NULL)
 	  {
 	     pE = pE->ElFirstChild;	/* passe a la premiere ligne imbriquee */
@@ -308,11 +299,11 @@ PtrDocument         pDoc;
 		  pT = pE->ElFirstChild;	/* passe au titre de la ligne imbriquee */
 		  if (pT != NULL)
 		    {
-		       if (TypeHasException (EXC_ID_Title_Raw, pT->ElTypeNumber, pT->ElStructSchema) ||
-			   TypeHasException (EXC_ID_Title_Compound_Raw, pT->ElTypeNumber, pT->ElStructSchema))
-			  /* c'est bien un element Title_Raw ou Title_Compound_Raw, */
+		       if (TypeHasException (EXC_ID_Title_Row, pT->ElTypeNumber, pT->ElStructSchema) ||
+			   TypeHasException (EXC_ID_Title_Compound_Row, pT->ElTypeNumber, pT->ElStructSchema))
+			  /* c'est bien un element Title_Row ou Title_Compound_Row, */
 			  /* on verifie ses attributs */
-			  SetAttrTitleRaw (pT, pDoc);
+			  SetAttrTitleRow (pT, pDoc);
 		    }
 		  pE = pE->ElNext;
 	       }
@@ -320,13 +311,13 @@ PtrDocument         pDoc;
      }
 }
 
-/* SetRawAttribute     met l'attribut Filet_Gauche et Filet_Bas a l'element */
+/* SetRowAttribute     met l'attribut Filet_Gauche et Filet_Bas a l'element */
 
 #ifdef __STDC__
-static void         SetRawAttribute (PtrElement pLigne, PtrDocument pDoc)
+static void         SetRowAttribute (PtrElement pLigne, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void         SetRawAttribute (pLigne, pDoc)
+static void         SetRowAttribute (pLigne, pDoc)
 PtrElement          pLigne;
 PtrDocument         pDoc;
 
@@ -335,12 +326,12 @@ PtrDocument         pDoc;
 {
    PtrAttribute        pAttr;
 
-   pAttr = AttachAttrByExceptNum (EXC_ID_Foot_Hairline_SimpRaw, pLigne, NULL, pDoc);
+   pAttr = AttachAttrByExceptNum (EXC_ID_Foot_Hairline_SimpRow, pLigne, NULL, pDoc);
    pAttr->AeAttrValue = 2;
 
-   if (TypeHasException (EXC_ID_Compound_Raw, pLigne->ElTypeNumber, pLigne->ElStructSchema))
+   if (TypeHasException (EXC_ID_Compound_Row, pLigne->ElTypeNumber, pLigne->ElStructSchema))
      {
-	pAttr = AttachAttrByExceptNum (EXC_ID_Right_Hairline_CompRaw, pLigne, NULL, pDoc);
+	pAttr = AttachAttrByExceptNum (EXC_ID_Right_Hairline_CompRow, pLigne, NULL, pDoc);
 	pAttr->AeAttrValue = 2;
      }
 }
@@ -523,7 +514,7 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   PtrElement          pE, pCol, pElRaw, pElTheRaws, pCell, pNCell;
+   PtrElement          pE, pCol, pElRow, pElTheRows, pCell, pNCell;
    int                 NType, TypeCell;
    PtrAttribute        pAttr;
    PtrElement          pElRef;
@@ -543,8 +534,8 @@ PtrDocument         pDoc;
    pE = pEl->ElParent;
    while (pE->ElTypeNumber != NType)
       pE = pE->ElParent;
-   /* l'element apres En_Tetes est The_Raws */
-   pElTheRaws = pE->ElNext;
+   /* l'element apres En_Tetes est The_Rows */
+   pElTheRows = pE->ElNext;
 
    /* verifie s'il y a des Columns simples qui precedent la nouvelle */
    /* Column simple */
@@ -552,31 +543,31 @@ PtrDocument         pDoc;
    firstCol = (pCol == pEl);
 
    /* numero du type d'element Ligne_simple */
-   NType = GetElemWithException (EXC_ID_Simple_Raw, pEl->ElStructSchema);
+   NType = GetElemWithException (EXC_ID_Simple_Row, pEl->ElStructSchema);
    /* numero du type d'element Cellule */
    TypeCell = GetElemWithException (EXC_ID_Cell, pEl->ElStructSchema);
 
    /* Cherche toutes les lignes simples */
-   pElRaw = pElTheRaws;
-   while (pElRaw != NULL)
+   pElRow = pElTheRows;
+   while (pElRow != NULL)
      {
-	pElRaw = FwdSearchTypedElem (pElRaw, NType, pEl->ElStructSchema);
-	if (pElRaw != NULL)
-	   if (!ElemIsWithinSubtree (pElRaw, pElTheRaws))
+	pElRow = FwdSearchTypedElem (pElRow, NType, pEl->ElStructSchema);
+	if (pElRow != NULL)
+	   if (!ElemIsWithinSubtree (pElRow, pElTheRows))
 	      /* la ligne trouvee ne fait pas partie du tableau */
-	      pElRaw = NULL;
+	      pElRow = NULL;
 	   else
 	     {
 		/* on a trouve' une ligne simple du tableau */
 		/* on passe a la premiere cellule de la ligne */
-		pCell = pElRaw->ElFirstChild->ElNext->ElFirstChild;
+		pCell = pElRow->ElFirstChild->ElNext->ElFirstChild;
 		/* on cree une nouvelle cellule */
 		pNCell = NewSubtree (TypeCell, pEl->ElStructSchema, pDoc,
-				pElRaw->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
+				pElRow->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 		/* on insere cette nouvelle cellule dans l'arbre */
 		if (pCell == NULL)
 		   /* la ligne n'avait pas encore de cellules */
-		   InsertFirstChild (pElRaw->ElFirstChild->ElNext, pNCell);
+		   InsertFirstChild (pElRow->ElFirstChild->ElNext, pNCell);
 		else if (firstCol)
 		   /* on cree la 1ere Column, on insere la nouvelle cellule */
 		   /* avant la 1ere cellule */
@@ -643,17 +634,17 @@ PtrDocument         pDoc;
 
 
 /* passe a la ligne imbriquee suivante */
-/* CreateSimpleRaw      On vient de creer une ligne simple. Associe */
+/* CreateSimpleRow      On vient de creer une ligne simple. Associe */
 /* un attribut Filet_horizontal a cette ligne et cree une cellule dans */
 /* la ligne pour chaque Column simple du tableau. Associe a chaque */
 /* Cellule creee un attribut La_Column qui pointe vers la Column */
 /* correspondante */
 
 #ifdef __STDC__
-static void         CreateSimpleRaw (PtrElement pEl, PtrDocument pDoc)
+static void         CreateSimpleRow (PtrElement pEl, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void         CreateSimpleRaw (pEl, pDoc)
+static void         CreateSimpleRow (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 
@@ -665,16 +656,16 @@ PtrDocument         pDoc;
 
    pCellPrec = NULL;
    /* met les attributs a la ligne */
-   SetRawAttribute (pEl, pDoc);
+   SetRowAttribute (pEl, pDoc);
    /*pElTitle = pEl->ElFirstChild; */
    /* met les attributs au titre de la ligne */
-   SetAttrTitleRaw (pEl->ElFirstChild, pDoc);
+   SetAttrTitleRow (pEl->ElFirstChild, pDoc);
 
-   /* remonte a l'element The_Raws */
+   /* remonte a l'element The_Rows */
    pE = pEl->ElParent;
-   while (!TypeHasException (EXC_ID_The_Raws, pE->ElTypeNumber, pEl->ElStructSchema))
+   while (!TypeHasException (EXC_ID_The_Rows, pE->ElTypeNumber, pEl->ElStructSchema))
       pE = pE->ElParent;
-   /*pElRaw = pE; */
+   /*pElRow = pE; */
    /* l'element The_Columns */
    pElCols = pE->ElPrevious->ElFirstChild->ElNext;
    /* cherche le numero du type d'element Simple_Column */
@@ -760,7 +751,7 @@ PtrDocument         pDoc;
 	/* met les attributs sur Les Columns */
 	SetAttrHairlineToCols (pC, pDoc);
 
-	pL = pE->ElNext;	/* element The_Raws */
+	pL = pE->ElNext;	/* element The_Rows */
 
 
 	if (!TypeHasException (EXC_ID_The_Columns, pC->ElTypeNumber, pSS))
@@ -792,18 +783,18 @@ PtrDocument         pDoc;
 		    }
 		  while (pE != NULL);
 
-		  if (!TypeHasException (EXC_ID_The_Raws, pL->ElTypeNumber, pSS))
-		     printf ("On ne trouve pas The_Raws\n");
+		  if (!TypeHasException (EXC_ID_The_Rows, pL->ElTypeNumber, pSS))
+		     printf ("On ne trouve pas The_Rows\n");
 		  else
 		    {
 		       /* passe a la premiere Line */
 		       pE = pL->ElFirstChild;
-		       if (!TypeHasException (EXC_ID_Raw, pE->ElTypeNumber, pSS))
+		       if (!TypeHasException (EXC_ID_Row, pE->ElTypeNumber, pSS))
 			  printf ("On ne trouve pas la 1ere Line\n");
 		       else
 			 {
 			    /* traite toutes les lignes creees */
-			    NType = GetElemWithException (EXC_ID_Simple_Raw, pSS);
+			    NType = GetElemWithException (EXC_ID_Simple_Row, pSS);
 			    /* numero du type Ligne_simple */
 			    do
 			      {
@@ -813,7 +804,7 @@ PtrDocument         pDoc;
 				 InsertOption (pE, &pElNew, pDoc);
 				 /* traite les attributs requis */
 				 AttachMandatoryAttributes (pE, pDoc);
-				 CreateSimpleRaw (pE, pDoc);
+				 CreateSimpleRow (pE, pDoc);
 				 /* passe a la ligne suivante */
 				 pE = pE->ElNext;
 			      }
@@ -826,16 +817,16 @@ PtrDocument         pDoc;
 }
 
 
-/* CreateRawHairline       Si l'element pElRaw est bien une */
+/* CreateRowHairline       Si l'element pElRow est bien une */
 /* ligne de tableau et l'element pBasPage un Bas_Table, cree */
-/* la boite de presentation Filet_Bas de la ligne pElRaw. */
+/* la boite de presentation Filet_Bas de la ligne pElRow. */
 
 #ifdef __STDC__
-static void         CreateRawHairline (PtrElement pElRaw, PtrElement pElFootPage, PtrDocument pDoc)
+static void         CreateRowHairline (PtrElement pElRow, PtrElement pElFootPage, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void         CreateRawHairline (pElRaw, pElFootPage, pDoc)
-PtrElement          pElRaw;
+static void         CreateRowHairline (pElRow, pElFootPage, pDoc)
+PtrElement          pElRow;
 PtrElement          pElFootPage;
 PtrDocument         pDoc;
 
@@ -846,19 +837,19 @@ PtrDocument         pDoc;
    PtrAttribute        pAttr;
    ThotBool             found;
 
-   if (pElFootPage != NULL && pElRaw != NULL)
+   if (pElFootPage != NULL && pElRow != NULL)
       if (TypeHasException (EXC_ID_FootTable, pElFootPage->ElTypeNumber, pElFootPage->ElStructSchema))
 	 /* le bas de page est bien un bas de page */
-	 if (TypeHasException (EXC_ID_Simple_Raw, pElRaw->ElTypeNumber, pElRaw->ElStructSchema) ||
-	     TypeHasException (EXC_ID_Compound_Raw, pElRaw->ElTypeNumber, pElRaw->ElStructSchema))
+	 if (TypeHasException (EXC_ID_Simple_Row, pElRow->ElTypeNumber, pElRow->ElStructSchema) ||
+	     TypeHasException (EXC_ID_Compound_Row, pElRow->ElTypeNumber, pElRow->ElStructSchema))
 	    /* la ligne est bien une ligne de tableau */
 	   {
 	      /* cherche l'attribut Filet_Bas de la ligne */
-	      attr = GetAttrWithException (EXC_ID_Foot_Hairline_SimpRaw, pElRaw->ElStructSchema);
-	      pAttr = pElRaw->ElFirstAttr;
+	      attr = GetAttrWithException (EXC_ID_Foot_Hairline_SimpRow, pElRow->ElStructSchema);
+	      pAttr = pElRow->ElFirstAttr;
 	      found = FALSE;
 	      while (pAttr != NULL && !found)
-		 if (pAttr->AeAttrSSchema == pElRaw->ElStructSchema &&
+		 if (pAttr->AeAttrSSchema == pElRow->ElStructSchema &&
 		     pAttr->AeAttrNum == attr)
 		    /* C'est l'attribut Filet_Bas */
 		    found = TRUE;
@@ -868,7 +859,7 @@ PtrDocument         pDoc;
 	      if (found)
 		 /* applique les regles de presentation de l'attribut pour */
 		 /* faire creer la boite filet. */
-		 UpdatePresAttr (pElRaw, pAttr, pDoc, FALSE, FALSE, NULL);
+		 UpdatePresAttr (pElRow, pAttr, pElRow, pDoc, FALSE, FALSE, NULL);
 	   }
 }
 
@@ -945,26 +936,26 @@ PtrDocument         pDoc;
 	  }
      }
 
-   else if (TypeHasException (EXC_ID_Simple_Raw, pEl->ElTypeNumber, pEl->ElStructSchema))
+   else if (TypeHasException (EXC_ID_Simple_Row, pEl->ElTypeNumber, pEl->ElStructSchema))
       /* creation d'une Ligne_simple */
-      CreateSimpleRaw (pEl, pDoc);
+      CreateSimpleRow (pEl, pDoc);
 
-   else if (TypeHasException (EXC_ID_Compound_Raw, pEl->ElTypeNumber, pEl->ElStructSchema))
+   else if (TypeHasException (EXC_ID_Compound_Row, pEl->ElTypeNumber, pEl->ElStructSchema))
       /* creation d'une Ligne composee */
      {
 	/* met l'attribut Filet_horizontal */
-	SetRawAttribute (pEl, pDoc);
-	/* met l'attribut sur le Title_Compound_Raw */
-	SetAttrTitleRaw (pEl->ElFirstChild, pDoc);
+	SetRowAttribute (pEl, pDoc);
+	/* met l'attribut sur le Title_Compound_Row */
+	SetAttrTitleRow (pEl->ElFirstChild, pDoc);
 	/* descend a la premiere Line */
 	pE = pEl->ElFirstChild->ElNext->ElFirstChild;
-	if (!TypeHasException (EXC_ID_Raw, pE->ElTypeNumber, pE->ElStructSchema))
+	if (!TypeHasException (EXC_ID_Row, pE->ElTypeNumber, pE->ElStructSchema))
 	   printf ("On ne trouve pas la 1ere Line\n");
 	else
 	  {
 	     /* traite toutes les lignes creees */
 	     /* numero du type Ligne_simple */
-	     NType = GetElemWithException (EXC_ID_Simple_Raw, pEl->ElStructSchema);
+	     NType = GetElemWithException (EXC_ID_Simple_Row, pEl->ElStructSchema);
 	     do
 	       {
 		  /* transforme la Line en Ligne_simple */
@@ -973,7 +964,7 @@ PtrDocument         pDoc;
 		  InsertOption (pE, &pC, pDoc);
 		  /* traite les attributs requis */
 		  AttachMandatoryAttributes (pE, pDoc);
-		  CreateSimpleRaw (pE, pDoc);
+		  CreateSimpleRow (pE, pDoc);
 		  pE = pE->ElNext;
 	       }
 	     while (pE != NULL);
@@ -1029,7 +1020,7 @@ PtrElement          pEl;
 #endif /* __STDC__ */
 
 {
-   PtrElement          pElRaw, pElRawSuiv, pE, pElTheRaws, pCell;
+   PtrElement          pElRow, pElRowSuiv, pE, pElTheRows, pCell;
    PtrAttribute        pAttr;
    int                 NType, attr;
 
@@ -1040,34 +1031,34 @@ PtrElement          pEl;
 	pE = pEl->ElParent;
 	while (pE->ElTypeNumber != NType)
 	   pE = pE->ElParent;
-	/* l'element apres En_Tetes est The_Raws */
-	pElTheRaws = pE->ElNext;
+	/* l'element apres En_Tetes est The_Rows */
+	pElTheRows = pE->ElNext;
 	/* numero du type d'element Ligne_simple */
-	NType = GetElemWithException (EXC_ID_Simple_Raw, pEl->ElStructSchema);
+	NType = GetElemWithException (EXC_ID_Simple_Row, pEl->ElStructSchema);
 	/* numero de l'attribut Ref_Column */
 	attr = GetAttrWithException (EXC_ID_Ref_Column, pEl->ElStructSchema);
 	/* cherche la premiere ligne du tableau */
-	pElRaw = FwdSearchTypedElem (pEl, NType, pEl->ElStructSchema);
-	if (pElRaw != NULL)
-	   if (!ElemIsWithinSubtree (pElRaw, pElTheRaws))
+	pElRow = FwdSearchTypedElem (pEl, NType, pEl->ElStructSchema);
+	if (pElRow != NULL)
+	   if (!ElemIsWithinSubtree (pElRow, pElTheRows))
 	      /* la ligne founde ne fait pas partie du meme tableau */
-	      pElRaw = NULL;
+	      pElRow = NULL;
 	/* parcourt toutes les lignes simples du tableau, dans l'ordre */
 
-	while (pElRaw != NULL)
+	while (pElRow != NULL)
 	  {
 	     /* on commence par chercher la ligne suivante */
-	     pElRawSuiv = FwdSearchTypedElem (pElRaw, NType, pEl->ElStructSchema);
-	     if (pElRawSuiv != NULL)
-		if (!ElemIsWithinSubtree (pElRawSuiv, pElTheRaws))
+	     pElRowSuiv = FwdSearchTypedElem (pElRow, NType, pEl->ElStructSchema);
+	     if (pElRowSuiv != NULL)
+		if (!ElemIsWithinSubtree (pElRowSuiv, pElTheRows))
 		   /* la ligne founde ne fait pas partie du meme tableau */
-		   pElRawSuiv = NULL;
+		   pElRowSuiv = NULL;
 
 	     /* on passe a la premiere cellule de la ligne */
 	     pCell = NULL;
-	     if (pElRaw->ElFirstChild != NULL)
-		if (pElRaw->ElFirstChild->ElNext != NULL)
-		   pCell = pElRaw->ElFirstChild->ElNext->ElFirstChild;
+	     if (pElRow->ElFirstChild != NULL)
+		if (pElRow->ElFirstChild->ElNext != NULL)
+		   pCell = pElRow->ElFirstChild->ElNext->ElFirstChild;
 	     /* cherche dans cette ligne la cellule qui reference cette */
 	     /* Column simple */
 	     while (pCell != NULL)
@@ -1084,7 +1075,7 @@ PtrElement          pEl;
 				  {
 				     /* l'attribut La_Column de cette cellule reference */
 				     /* la Column simple traitee, on selectionne cette cellule */
-				     AddInSelection (pCell, (ThotBool)(pElRawSuiv == NULL));
+				     AddInSelection (pCell, (ThotBool)(pElRowSuiv == NULL));
 				     pCell = NULL;	/* arrete la recherche des cellules */
 				  }
 			  pAttr = NULL;		/* arrete la recherche des attributs */
@@ -1095,7 +1086,7 @@ PtrElement          pEl;
 		     pCell = pCell->ElNext;
 	       }
 	     /* passe a la ligne suivante */
-	     pElRaw = pElRawSuiv;
+	     pElRow = pElRowSuiv;
 	  }
      }
 }
@@ -1236,29 +1227,29 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   PtrElement          pElTheRaws, pElRaw, pCell, pNCell, pElParent;
-   int                 rawType, cellType, i, nbPastedCells;
+   PtrElement          pElTheRows, pElRow, pCell, pNCell, pElParent;
+   int                 RowType, cellType, i, nbPastedCells;
 
 
    nbPastedCells = 0;
    cellType = GetElemWithException (EXC_ID_Cell, pCol->ElStructSchema);	/* numero du type Cellule */
-   rawType = GetElemWithException (EXC_ID_The_Raws, pCol->ElStructSchema);	/* numero du type The_Raws */
-   pElTheRaws = FwdSearchTypedElem (pCol, rawType, pCol->ElStructSchema);	/* cherche l'element The_Raws */
-   rawType = GetElemWithException (EXC_ID_Simple_Raw, pCol->ElStructSchema);	/* numero du type Ligne_simple */
+   RowType = GetElemWithException (EXC_ID_The_Rows, pCol->ElStructSchema);	/* numero du type The_Rows */
+   pElTheRows = FwdSearchTypedElem (pCol, RowType, pCol->ElStructSchema);	/* cherche l'element The_Rows */
+   RowType = GetElemWithException (EXC_ID_Simple_Row, pCol->ElStructSchema);	/* numero du type Ligne_simple */
 
    /* parcourt les lignes simples du tableau */
-   pElRaw = pElTheRaws;
-   while (pElRaw != NULL)
+   pElRow = pElTheRows;
+   while (pElRow != NULL)
      {
-	pElRaw = FwdSearchTypedElem (pElRaw, rawType, pCol->ElStructSchema);
-	if (pElRaw != NULL)
-	   if (!ElemIsWithinSubtree (pElRaw, pElTheRaws))	/* la ligne founde ne fait pas partie du tableau */
-	      pElRaw = NULL;
+	pElRow = FwdSearchTypedElem (pElRow, RowType, pCol->ElStructSchema);
+	if (pElRow != NULL)
+	   if (!ElemIsWithinSubtree (pElRow, pElTheRows))	/* la ligne founde ne fait pas partie du tableau */
+	      pElRow = NULL;
 	   else
 	     {
 		/* on a found' une ligne simple appartenant au meme tableau,
 		   on passe a la premiere cellule de la ligne */
-		pElParent = pElRaw->ElFirstChild->ElNext;
+		pElParent = pElRow->ElFirstChild->ElNext;
 		pCell = pElParent->ElFirstChild;
 		if (nbPastedCells < NbCell)
 		  {
@@ -1375,38 +1366,38 @@ PtrDocument         pDoc;
 }
 
 
-/* CheckRaw traite toutes les lignes simples contenues dans */
-/* l'element pointe' par pElRaw */
+/* CheckRow traite toutes les lignes simples contenues dans */
+/* l'element pointe' par pElRow */
 
 #ifdef __STDC__
-static void         CheckRaw (PtrElement pElRaw, PtrElement pElCols, PtrDocument pDoc)
+static void         CheckRow (PtrElement pElRow, PtrElement pElCols, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void         CheckRaw (pElRaw, pElCols, pDoc)
-PtrElement          pElRaw;
+static void         CheckRow (pElRow, pElCols, pDoc)
+PtrElement          pElRow;
 PtrElement          pElCols;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrElement          pSubRaw, pCell, pCellPrec, pCellSuiv, pCol, pElTitleRaw;
-   int                 rawTypeSimple;
+   PtrElement          pSubRow, pCell, pCellPrec, pCellSuiv, pCol, pElTitleRow;
+   int                 RowTypeSimple;
 
    /* accede au titre de la ligne */
-   pElTitleRaw = pElRaw->ElFirstChild;
-   if (TypeHasException (EXC_ID_Title_Raw, pElTitleRaw->ElTypeNumber, pElTitleRaw->ElStructSchema)
-       || TypeHasException (EXC_ID_Title_Compound_Raw, pElTitleRaw->ElTypeNumber, pElTitleRaw->ElStructSchema))
-      /* c'est bien un element Title_Raw ou Title_Compound_Raw */
-      SetAttrTitleRaw (pElTitleRaw, pDoc);
+   pElTitleRow = pElRow->ElFirstChild;
+   if (TypeHasException (EXC_ID_Title_Row, pElTitleRow->ElTypeNumber, pElTitleRow->ElStructSchema)
+       || TypeHasException (EXC_ID_Title_Compound_Row, pElTitleRow->ElTypeNumber, pElTitleRow->ElStructSchema))
+      /* c'est bien un element Title_Row ou Title_Compound_Row */
+      SetAttrTitleRow (pElTitleRow, pDoc);
 
-   rawTypeSimple = GetElemWithException (EXC_ID_Simple_Raw, pElRaw->ElStructSchema);
-   if (pElRaw->ElTypeNumber == rawTypeSimple)		/* c'est une ligne simple on la traite */
+   RowTypeSimple = GetElemWithException (EXC_ID_Simple_Row, pElRow->ElStructSchema);
+   if (pElRow->ElTypeNumber == RowTypeSimple)		/* c'est une ligne simple on la traite */
      {
-	pCell = pElRaw->ElFirstChild;	/* accede a la premiere cellule */
+	pCell = pElRow->ElFirstChild;	/* accede a la premiere cellule */
 	while (pCell->ElNext != NULL)
 	   pCell = pCell->ElNext;
-	pCell = pCell->ElFirstChild;	/* pCell pointe sur l'element Contenu_Raw */
+	pCell = pCell->ElFirstChild;	/* pCell pointe sur l'element Contenu_Row */
 	/* pCell: premiere cellule */
 	/* parcourt toutes les Column du tableau */
 	pCol = pElCols->ElFirstChild;
@@ -1427,17 +1418,17 @@ PtrDocument         pDoc;
      }
 
    else
-      /* c'est une ligne composee passe a l'element Sub_Raws */
+      /* c'est une ligne composee passe a l'element Sub_Rows */
      {
-	pSubRaw = pElRaw->ElFirstChild;
-	while (pSubRaw->ElNext != NULL)
-	   pSubRaw = pSubRaw->ElNext;
-	/* traite tous les elements contenus dans l'element Sub_Raws */
-	pSubRaw = pSubRaw->ElFirstChild;
-	while (pSubRaw != NULL)
+	pSubRow = pElRow->ElFirstChild;
+	while (pSubRow->ElNext != NULL)
+	   pSubRow = pSubRow->ElNext;
+	/* traite tous les elements contenus dans l'element Sub_Rows */
+	pSubRow = pSubRow->ElFirstChild;
+	while (pSubRow != NULL)
 	  {
-	     CheckRaw (pSubRaw, pElCols, pDoc);
-	     pSubRaw = pSubRaw->ElNext;
+	     CheckRow (pSubRow, pElCols, pDoc);
+	     pSubRow = pSubRow->ElNext;
 	  }
      }
 }
@@ -1546,17 +1537,17 @@ PtrDocument         pDoc;
 	else
 	   /* ce n'est ni un element Simple_Column ni un element
 	      Compound_Column qui a ete colle' */
-	   if (TypeHasException (EXC_ID_Simple_Raw, pElPasted->ElTypeNumber, pElPasted->ElStructSchema)
-	       || TypeHasException (EXC_ID_Compound_Raw, pElPasted->ElTypeNumber, pElPasted->ElStructSchema))
+	   if (TypeHasException (EXC_ID_Simple_Row, pElPasted->ElTypeNumber, pElPasted->ElStructSchema)
+	       || TypeHasException (EXC_ID_Compound_Row, pElPasted->ElTypeNumber, pElPasted->ElStructSchema))
 	   /* c'est un element Ligne_simple ou Ligne_Composed qui a ete colle' */
 	   /* Pour chaque ligne simple collee, on verifie que chaque */
 	   /* cellule a bien un attribut La_Column (si elle ne l'a pas, */
 	   /* on lui met) et que le nombre de cellules est egal au nombre */
 	   /* de Columns simples du tableau (si non, on supprime les */
 	   /* cellules excedentaires ou on cree les cellules manquantes. */
-	   /* remonte d'abord a l'element The_Raws */
+	   /* remonte d'abord a l'element The_Rows */
 	  {
-	     typeNumber = GetElemWithException (EXC_ID_The_Raws, pElPasted->ElStructSchema);
+	     typeNumber = GetElemWithException (EXC_ID_The_Rows, pElPasted->ElStructSchema);
 	     pE = pElPasted->ElParent;
 	     while (pE->ElTypeNumber != typeNumber)
 		pE = pE->ElParent;
@@ -1564,7 +1555,7 @@ PtrDocument         pDoc;
 	     pE = pE->ElPrevious->ElFirstChild->ElNext;
 	     if (TypeHasException (EXC_ID_The_Columns, pE->ElTypeNumber, pE->ElStructSchema))
 		/* c'est bien The_Columns */
-		CheckRaw (pElPasted, pE, pDoc);
+		CheckRow (pElPasted, pE, pDoc);
 	  }
      }
 }
@@ -1889,7 +1880,7 @@ void                TableauLoadResources ()
 	TteConnectAction (T_lastsaved, (Proc) LastSavedIsAColumn);
 	TteConnectAction (T_pastesiblingtable, (Proc) PasteSibling);
 	TteConnectAction (T_refattr, (Proc) CheckAttrRef);
-	TteConnectAction (T_createhairline, (Proc) CreateRawHairline);
+	TteConnectAction (T_createhairline, (Proc) CreateRowHairline);
 	TteConnectAction (T_holotable, (Proc) CanHolophrast);
 	TteConnectAction (T_checkextens, (Proc) CheckExtension);
 	TteConnectAction (T_ruleattr, (Proc) CanApplAttrRules);
