@@ -655,16 +655,16 @@ void *context;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                libWWWImageLoaded (int doc, int status, STRING urlName,
-                                     STRING outputfile, STRING content_type,
+                                     STRING outputfile, AHTHeaders *http_headers,
 				       void * context)
 #else  /* __STDC__ */
 void                libWWWImageLoaded (doc, status, urlName, outputfile, 
-				       content_type, context)
+				       http_headers, context)
 int doc;
 int status;
 STRING urlName;
 STRING outputfile;
-STRING content_type;
+AHTHeaders *http_headers;
 void *context;
 
 #endif /* __STDC__ */

@@ -114,10 +114,9 @@ typedef struct _AHTReqContext
     /* a file has been received                  */
     void               *context_tcbf;	/* Context for the above cbf                 */
     
-    /*                 the following element points to the content type of 
-                        a requested node */
-    
-    CHAR_T*            content_type;
+    /*                 the following structure holds a copy of the
+		       HTTP headers that the application is interested in */
+    AHTHeaders         http_headers;
 
     /* The following elements are used for the PUT and POST */
     HTAnchor           *source;

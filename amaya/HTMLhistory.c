@@ -250,17 +250,17 @@ ClickEvent  CE_event;
 void               GotoPreviousHTML_callback (int newdoc, int status, 
 					      STRING urlName,
 					      STRING outputfile, 
-					      STRING content_type,
+					      AHTHeaders *http_headers,
 					      void * context)
 #else  /* __STDC__ */
 void               GotoPreviousHTML_callback (newdoc, status, urlName,
-                                             outputfile, content_type, 
+                                             outputfile, http_headers,
                                              context)
 int newdoc;
 int status;
 STRING urlName;
 STRING outputfile;
-STRING content_type;
+AHTHeaders *http_headers;
 void *context;
 #endif
 {
@@ -424,17 +424,17 @@ View                view;
 void               GotoNextHTML_callback (int newdoc, int status, 
 					      STRING urlName,
 					      STRING outputfile, 
-					      STRING content_type,
+					      AHTHeaders *http_headers,
 					      void * context)
 #else  /* __STDC__ */
 void               GotoNextHTML_callback (newdoc, status, urlName,
-                                             outputfile, content_type, 
+                                             outputfile, http_headers,
                                              context)
 int newdoc;
 int status;
 STRING urlName;
 STRING outputfile;
-STRING content_type;
+AHTHeaders *http_headers;
 void *context;
 #endif
 {

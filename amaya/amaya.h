@@ -49,15 +49,31 @@
 /* Number of views used in Amaya */
 #define AMAYA_MAX_VIEW_DOC  7
 
-/* The structures used for request callbacks */
+/* the HTTP header name we want to make visible to the application */
+typedef enum _AHTHeaderName
+  {
+    AM_HTTP_CONTENT_TYPE = 0,
+    AM_HTTP_CHARSET = 1
+  } 
+AHTHeaderName;
 
+/* the structure used for exchanging HTTP header info between the net library
+   and amaya */
+typedef struct _AHTHeaders
+  {
+    CHAR_T *content_type;
+    CHAR_T *charset;
+  }
+AHTHeaders;
+
+/* The structures used for request callbacks */
 typedef void   TIcbf (Document doc, int status, char *urlName,
-		      char *outputfile, const char *content_type,
+		      char *outputfile, const AHTHeaders *http_headers,
 		      const char *data_block, int data_block_size,
 		      void *context);
 
 typedef void  TTcbf (Document doc, int status, CHAR_T* urlName,
-                     CHAR_T* outputfile, const CHAR_T* content_type,
+                     CHAR_T* outputfile, const AHTHeaders *http_headers,
                      void *context);
 
 /* How are Network accesses provided ? */

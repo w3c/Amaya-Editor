@@ -8,6 +8,8 @@
 
 extern AHTDocId_Status *GetDocIdStatus ( int docid,
                                          HTList * documents );
+extern CHAR_T *HTTP_headers ( AHTHeaders *me, 
+			      AHTHeaderName param );
 extern ThotBool AHTReqContext_delete ( AHTReqContext * me );
 extern int AHTOpen_file ( HTRequest * request );
 extern int AHTLoadTerminate_handler ( HTRequest * request,
@@ -54,6 +56,8 @@ extern void libwww_updateNetworkConf ( int status );
 
 extern AHTDocId_Status *GetDocIdStatus (/* int docid,
                                            HTList * documents */);
+extern CHAR_T *HTTP_headers (/* AHTHeaders *me, 
+				AHTHeaderName param */);
 extern ThotBool AHTReqContext_delete (/* AHTReqContext * me */);
 extern int AHTOpen_file (/* HTRequest * request */);
 extern int AHTLoadTerminate_handler (/* HTRequest * request,

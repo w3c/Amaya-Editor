@@ -31,7 +31,7 @@ extern void libWWWImageLoaded ( int doc,
                                 int status,
                                 STRING urlName,
                                 STRING outputfile,
-                                STRING content_type,
+                                AHTHeaders *http_headers,
                                 void * context );
 extern STRING GetActiveImageInfo ( Document document,
                                    Element element );
@@ -71,7 +71,7 @@ extern void libWWWImageLoaded (/* int doc,
                                   int status,
                                   STRING urlName,
                                   STRING outputfile,
-                                  STRING content_type,
+                                  AHTHeaders *http_headers,
                                   void * context */);
 extern STRING GetActiveImageInfo (/* Document document,
                                      Element element */);

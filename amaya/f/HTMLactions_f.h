@@ -13,7 +13,7 @@ extern void FollowTheLink_callback ( int targetDocument,
                                      int status,
                                      STRING urlName,
                                      STRING outputfile,
-                                     STRING content_type,
+                                     AHTHeaders *http_headers,
                                      void * context );
 extern void DoAction ( Document doc,
                        View view );
@@ -39,7 +39,7 @@ extern void FollowTheLink_callback (/* int targetDocument,
                                        int status,
                                        STRING urlName,
                                        STRING outputfile,
-                                       STRING content_type,
+                                       AHTHeaders *http_headers,
                                        void * context */);
 extern void DoAction (/* Document doc,
                          View view */);

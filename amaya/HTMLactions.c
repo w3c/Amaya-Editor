@@ -480,17 +480,17 @@ Attribute           ignore;
 void               FollowTheLink_callback (int targetDocument, int status, 
 					   STRING urlName,
 					   STRING outputfile, 
-					   STRING content_type,
+					   AHTHeaders *http_headers,
 					   void * context)
 #else  /* __STDC__ */
 void               FollowTheLink_callback (targetDocument, status, urlName,
-                                             outputfile, content_type, 
+                                             outputfile, http_headers,
                                              context)
 int TargetDocument;
 int status;
 STRING url, urlName;
 STRING outputfile;
-STRING content_type;
+AHTHeaders *http_headers;
 void *context;
 
 #endif

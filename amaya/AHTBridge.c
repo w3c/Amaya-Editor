@@ -243,7 +243,7 @@ int status;
   if (me->reqStatus == HT_END)
     {
       if (AmayaIsAlive ()  && me->terminate_cbf)
-	(*me->terminate_cbf) (me->docid, 0, me->urlName, me->outputfile, me->content_type, me->context_tcbf);
+	(*me->terminate_cbf) (me->docid, 0, me->urlName, me->outputfile, &(me->http_headers), me->context_tcbf);
 
     }
   else if (me->reqStatus == HT_ABORT)
@@ -251,7 +251,7 @@ int status;
        button. We erase the incoming file, if it exists */
     {
       if (AmayaIsAlive () && me->terminate_cbf)
-	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile, me->content_type, me->context_tcbf);
+	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile, &(me->http_headers), me->context_tcbf);
       if (me->outputfile && me->outputfile[0] != WC_EOS)
 	{
 	  TtaFileUnlink (me->outputfile);
@@ -262,7 +262,7 @@ int status;
     {
       /* there was an error */
       if (AmayaIsAlive && me->terminate_cbf)
-	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile, me->content_type, me->context_tcbf);
+	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile, &(me->http_headers), me->context_tcbf);
       
       if (me->outputfile && me->outputfile[0] != WC_EOS)
 	{

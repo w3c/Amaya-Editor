@@ -95,12 +95,11 @@ char               c;
    if (reqcont && reqcont->incremental_cbf) {
       char urlName[MAX_LENGTH];
       char outputfile[MAX_LENGTH];
-      char content_type[MAX_LENGTH];
       
       wc2iso_strcpy (urlName, reqcont->urlName);
       wc2iso_strcpy (outputfile, reqcont->outputfile);
-      wc2iso_strcpy (content_type, reqcont->content_type);
-      (*reqcont->incremental_cbf) (reqcont->docid, 1, urlName, outputfile, content_type, &c, 1, reqcont->context_icbf);
+      /* @@ JK: http_headers isn't initalized here yet */
+      (*reqcont->incremental_cbf) (reqcont->docid, 1, urlName, outputfile,  &(reqcont->http_headers), &c, 1, reqcont->context_icbf);
    } 
 
    return status; 
@@ -142,12 +141,12 @@ const char*        s;
       if (reqcont && reqcont->incremental_cbf) {
          char urlName[MAX_LENGTH];
          char outputfile[MAX_LENGTH];
-         char content_type[MAX_LENGTH];
       
          wc2iso_strcpy (urlName, reqcont->urlName);
          wc2iso_strcpy (outputfile, reqcont->outputfile);
-         wc2iso_strcpy (content_type, reqcont->content_type);
-         (*reqcont->incremental_cbf) (reqcont->docid, 1, urlName, outputfile, content_type, s, strlen (s), reqcont->context_icbf);
+
+	 /* @@ JK: http_headers isn't initalized here yet */
+         (*reqcont->incremental_cbf) (reqcont->docid, 1, urlName, outputfile,  &(reqcont->http_headers), s, strlen (s), reqcont->context_icbf);
 	  }
    } else 
          status = HT_ERROR;
@@ -193,12 +192,11 @@ int                 l;
    if (reqcont && reqcont->incremental_cbf) {
       char urlName[MAX_LENGTH];
       char outputfile[MAX_LENGTH];
-      char content_type[MAX_LENGTH];
       
       wc2iso_strcpy (urlName, reqcont->urlName);
       wc2iso_strcpy (outputfile, reqcont->outputfile);
-      wc2iso_strcpy (content_type, reqcont->content_type);
-      (*reqcont->incremental_cbf) (reqcont->docid, 1, urlName, outputfile, content_type, s, l, reqcont->context_icbf);
+      /* @@ JK: http_headers isn't initalized here yet */
+      (*reqcont->incremental_cbf) (reqcont->docid, 1, urlName, outputfile, &(reqcont->http_headers), s, l, reqcont->context_icbf);
    }
 
    return status;

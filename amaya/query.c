@@ -350,6 +350,118 @@ PicType contentType;
 }
 
 /*----------------------------------------------------------------------
+  HTTP_Headers_set
+  Copies the headers in which the application is interested, doing
+  any in-between conversions as needed.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context, int status)
+#else
+void HTTP_headers_set (request, response, context, status)
+HTRequest          *request;
+HTResponse         *response;
+void               *context;
+int                 status;
+#endif
+{
+  AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
+  HTAtom *tmp_atom;
+  char *content_type;
+  CHAR_T tmp_wchar[MAX_LENGTH];
+  HTParentAnchor *anchor = HTRequest_anchor (request);
+
+  /* @@@ later I'll add a function here to specify which headers we
+     want to copy */
+
+  /* we have already forced a content type (what about a charset? */
+  if (me->http_headers.content_type)
+    return;
+
+   /* copy the content_type */
+  tmp_atom = HTAnchor_format (anchor);
+  if (tmp_atom)
+    content_type = HTAtom_name (tmp_atom);
+  else
+    content_type = "www/unknown";
+  
+  if (content_type && content_type [0] != EOS)
+    {
+      /* libwww gives www/unknown when it gets an error. As this is 
+	 an HTML test, we force the type to text/html */
+      if (!strcmp (content_type, "www/unknown"))
+	me->http_headers.content_type = TtaWCSdup (TEXT("text/html"));
+      else 
+	{
+	  iso2wc_strcpy (tmp_wchar, content_type);
+	  me->http_headers.content_type = TtaWCSdup (tmp_wchar);
+	}
+      
+#ifdef DEBUG_LIBWWW
+      fprintf (stderr, "content type is: %s\n", me->http_headers.content_type);
+#endif /* DEBUG_LIBWWW */
+    }
+  
+  /* copy the charset */
+  tmp_atom = HTAnchor_charset (anchor);
+  if (tmp_atom)
+    {
+      iso2wc_strcpy (tmp_wchar, HTAtom_name (tmp_atom));
+      me->http_headers.charset = TtaWCSdup (tmp_wchar);
+    }
+}
+
+/*----------------------------------------------------------------------
+  HTTP_headers_delete
+  Deletes all the paramaters that were assigned to the response type
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void HTTP_headers_delete (AHTHeaders me)
+#else
+static void HTTP_headers_delete (me)
+AHTHeaders me;
+#endif
+{
+  if (me.content_type)
+    TtaFreeMemory (me.content_type);
+
+  if (me.charset)
+    TtaFreeMemory (me.charset);
+}
+
+/*----------------------------------------------------------------------
+  HTTP_headers
+  Returns the value of a parameter in the HTTP response structure.
+  Returns null if this structure is empty.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T *HTTP_headers (AHTHeaders *me, AHTHeaderName param)
+#else
+CHAR_T *HTTP_headers (me, param)
+AHTHeaders *me;
+AHTHeaderName param;
+#endif
+{
+  char *result;
+
+  if (!me)
+    return NULL;
+  
+  switch (param)
+    {
+    case AM_HTTP_CONTENT_TYPE:
+      result = me->content_type;
+      break;
+    case AM_HTTP_CHARSET:
+      result = me->charset;
+      break;
+    default:
+      result = NULL;
+    }
+  
+  return result;
+}
+
+/*----------------------------------------------------------------------
   AHTReqContext_new
   create a new Amaya Context Object and update the global Amaya
   request status.
@@ -505,11 +617,11 @@ AHTReqContext      *me;
        if (me->method == METHOD_PUT && me->urlName)
 	 TtaFreeMemory (me->urlName);
 
-       if (me->content_type)
-	 TtaFreeMemory (me->content_type);
-       
        if (me->formdata)
 	 HTAssocList_delete (me->formdata);
+
+       /* erase the response headers */
+       HTTP_headers_delete (me->http_headers);
        
 #ifdef ANNOTATIONS
        if (me->document)
@@ -1016,8 +1128,6 @@ int                 status;
 {
   AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
   ThotBool            error_flag;
-  char               *content_type;
-  HTParentAnchor     *anchor;
 
   if (!me)
      return HT_ERROR;		/* not an Amaya request */
@@ -1037,16 +1147,17 @@ int                 status;
    if (IsHTTP09Error (request))
      status = -1;
 
-   if (status == HT_LOADED || 
-       status == HT_CREATED || 
-       status == HT_NO_DATA ||
+   if (status == HT_LOADED
+       || status == HT_CREATED
+       || status == HT_NO_DATA
        /* kludge for work around libwww problem */
-       (status == HT_INTERRUPTED && me->method == METHOD_PUT) ||
+       || (status == HT_INTERRUPTED && me->method == METHOD_PUT)
 #ifdef AMAYA_WWW_CACHE
        /* what status to use to know we're downloading from a cache? */
-       status ==  HT_NOT_MODIFIED ||
+       || status ==  HT_NOT_MODIFIED
+       || status == HT_PARTIAL_CONTENT
 #endif /* AMAYA_WWW_CACHE */
-       me->reqStatus == HT_ABORT)
+       || me->reqStatus == HT_ABORT)
      error_flag = FALSE;
      else
      error_flag = TRUE;
@@ -1126,37 +1237,9 @@ int                 status;
    else 
      if (me->reqStatus != HT_ABORT)
        me->reqStatus = HT_END;
-   
-   /* copy the content_type */
-   if (!me->content_type)
-     {
-       anchor = HTRequest_anchor (request);
-       if (anchor && HTAnchor_format (anchor))
-	 content_type = HTAtom_name (HTAnchor_format (anchor));
-       else
-	 content_type = "www/unknown";
 
-       if (content_type && content_type [0] != EOS)
-	 {
-	   /* libwww gives www/unknown when it gets an error. As this is 
-	      an HTML test, we force the type to text/html */
-	   if (!strcmp (content_type, "www/unknown"))
-	     me->content_type = TtaWCSdup (TEXT("text/html"));
-	   else {
-         CHAR_T ContentType[MAX_LENGTH];
-         iso2wc_strcpy (ContentType, content_type);
-	     me->content_type = TtaWCSdup (ContentType);
-	   }
-	   
-	   /* Content-Type can be specified by an httpd  server's admin.
-	      To be on the safe side, we normalize its case */
-	   ConvertToLowerCase (me->content_type);
-	   
-#ifdef DEBUG_LIBWWW
-	   fprintf (stderr, "content type is: %s\n", me->content_type);
-#endif /* DEBUG_LIBWWW */
-	 } 
-     }
+   /* copy the headers in which the application is interested */
+   HTTP_headers_set (request, response, context, status);
 
    /* to avoid a hangup while downloading css files */
    if (AmayaAlive_flag && (me->mode & AMAYA_LOAD_CSS))
@@ -2302,9 +2385,8 @@ void                QueryInit ()
 
 #ifdef HTDEBUG
    /* an undocumented option for being able to generate an HTTP protocol trace */
-   strptr = TtaGetEnvString ("ENABLE_LIBWWW_DEBUG");
-   if (strptr && *strptr)
-     WWW_TraceFlag = SHOW_PROTOCOL_TRACE;
+   if (TtaGetEnvInt ("ENABLE_LIBWWW_DEBUG", &tmp_i))
+     WWW_TraceFlag = tmp_i;
    else
      WWW_TraceFlag = 0;
 #endif /* HTDEBUG */
@@ -3100,7 +3182,6 @@ void               *context_tcbf;
    int                 UsePreconditions;
    ThotBool            lost_update_check = TRUE;
    char                url_name[MAX_LENGTH];
-   char                file_name[MAX_LENGTH];
    char*               tmp2;
 
    /* should we protect the PUT against lost updates? */
@@ -3183,6 +3264,8 @@ void               *context_tcbf;
 #ifdef _WINDOWS
    /* libwww's HTParse function doesn't take into account the drive name;
       so we sidestep it */
+   char  file_name[MAX_LENGTH];
+
    fileURL = NULL;
    StrAllocCopy (fileURL, "file:");
    wc2iso_strcpy (file_name, fileName);
@@ -3412,7 +3495,7 @@ int                 docid;
 		       if (me->terminate_cbf)
 			 (*me->terminate_cbf) (me->docid, -1, me->urlName,
 					       me->outputfile,
-					       me->content_type, 
+					       NULL,
 					       me->context_tcbf);
 
 		       if (async_flag) 

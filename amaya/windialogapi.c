@@ -4452,17 +4452,32 @@ LPARAM lParam;
 	GetDlgItemText (hwnDlg, IDC_NAMEEDIT, Answer_name, sizeof (Answer_name) + 1);
 	GetDlgItemText (hwnDlg, IDC_PASSWDEDIT, Answer_password, sizeof (Answer_password) + 1);
 	/* don't end the dialogue unless both answer fields have something */
+<<<<<<< windialogapi.c
+	if (Answer_name[0] == EOS)
+	  SetFocus (hwnNameEdit);
+	else if (Answer_password[0] == EOS)
+	  SetFocus (hwnPasswdEdit);
+=======
 	if (Answer_name[0] == WC_EOS)
 	   SetFocus (hwnNameEdit);
 	else if (Answer_password[0] == WC_EOS)
 		SetFocus (hwnPasswdEdit);
+>>>>>>> 1.83
 	else
-	   EndDialog (hwnDlg, ID_CONFIRM);
+	  {
+	    UserAnswer = 1;
+	    EndDialog (hwnDlg, ID_CONFIRM);
+	  }
 	break;
 	
       case IDCANCEL:
     /* we clear the answer fields */
+<<<<<<< windialogapi.c
+	Answer_name[0] = Answer_password[0] = EOS;
+	UserAnswer = 0;
+=======
     Answer_name[0] = Answer_password[0] = WC_EOS;
+>>>>>>> 1.83
 	EndDialog (hwnDlg, IDCANCEL);
 	break;
       }

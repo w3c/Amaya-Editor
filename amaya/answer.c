@@ -354,13 +354,13 @@ HTAlertPar         *reply;
 #endif /* __STDC */
 {
    AHTReqContext      *me = HTRequest_context (request);
-   const char*         realm = HTRequest_realm (request);
+   const char*               realm = HTRequest_realm (request);
    CHAR_T*             server;
    AHTReqStatus        old_reqStatus;
 #  ifdef _I18N_
    CHAR_T              RealM[MAX_LENGTH];
 #  else  /* !_I18N_ */
-   CHAR_T*             RealM = realm;
+   const CHAR_T*             RealM = realm;
 #  endif /* !_I18N_ */
 
    if (reply && msgnum >= 0) 
@@ -387,18 +387,19 @@ HTAlertPar         *reply;
 	 TtaFreeMemory (server);
 
        /* handle the user's answers back to the library */
-       if (Answer_name[0] != WC_EOS) {    
-          char ansName [MAX_LENGTH];
-          wc2iso_strcpy (ansName, Answer_name);
-          HTAlert_setReplyMessage (reply, ansName);
-          if (Answer_password[0] != WC_EOS) {
-             char ansPasswd[MAX_LENGTH];
-             wc2iso_strcpy (ansPasswd, Answer_password);
-             /* give password back to the request */
-             HTAlert_setReplySecret (reply, ansPasswd);
-             return YES;
-		  }
-	   } 
+       if (UserAnswer)
+	 {
+	   char tmp[MAX_LENGTH];
+	   wc2iso_strcpy (tmp, Answer_name);
+	   /* set the user name */
+	   HTAlert_setReplyMessage (reply, tmp);
+	   /* set the password */
+	   wc2iso_strcpy (tmp, Answer_password);
+	   HTAlert_setReplySecret (reply, tmp);
+	   return YES;
+	 }
+       else
+	 return NO;
      }
    return NO;
 }
@@ -531,8 +532,8 @@ HTRequest          *request;
       return;
 
    /* force the error type (we're generating it anyway) */
-   if (!me->content_type)
-     me->content_type = TtaWCSdup (TEXT("text/html"));
+   if (!me->http_headers.content_type)
+     me->http_headers.content_type = TtaWCSdup (TEXT("text/html"));
 
    while ((pres = (HTError *) HTList_nextObject (cur)))
      {

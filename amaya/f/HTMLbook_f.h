@@ -21,7 +21,7 @@ extern void GetIncludedDocuments_callback ( int newdoc,
                                             int status,
                                             STRING urlName,
                                             STRING outputfile,
-                                            STRING content_type,
+                                            AHTHeaders *http_headers,
                                             void * context );
 extern void MakeBook ( Document document,
                        View view );
@@ -43,7 +43,7 @@ extern void GetIncludedDocuments_callback (/* int newdoc,
                                               int status,
                                               STRING urlName,
                                               STRING outputfile,
-                                              STRING content_type,
+                                              AHTHeaders *http_headers,
                                               void * context */);
 extern void MakeBook (/* Document document,
                          View view */);

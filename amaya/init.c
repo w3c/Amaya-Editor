@@ -1190,11 +1190,12 @@ CHAR_T*              server;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
    TtaWaitShowDialogue ();
-   if (Answer_password[0] == EOS && Answer_name[0] != WC_EOS)
+   if (UserAnswer && (Answer_name[0] == WC_EOS || Answer_password[0] == WC_EOS))
      {
-       /* no password, retry */
+       /* no login name or password, retry */
        TtaSetTextForm (BaseDialog + NameText, Answer_name);
        TtaSetTextForm (BaseDialog + PasswordText, Answer_password);
+       TtaSetDialoguePosition ();
        TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
        TtaWaitShowDialogue ();
      }
@@ -2501,16 +2502,16 @@ ThotBool            history;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                Reload_callback (int doc, int status, CHAR_T* urlName,
-                                     CHAR_T* outputfile, CHAR_T* content_type,
+                                     CHAR_T* outputfile, AHTHeaders *http_headers,
 				       void * context)
 #else  /* __STDC__ */
 void                Reload_callback (doc, status, urlName, outputfile, 
-				       content_type, context)
+				       http_headers, context)
 int doc;
 int status;
 CHAR_T* urlName;
 CHAR_T* outputfile;
-CHAR_T* content_type;
+AHTHeaders *http_headers;
 void *context;
 
 #endif
@@ -2520,6 +2521,7 @@ void *context;
   CHAR_T* tempfile;
   CHAR_T* documentname;
   CHAR_T* form_data;
+  CHAR_T* content_type;
   ClickEvent method;
   Document res;
   Element el;
@@ -2542,6 +2544,7 @@ void *context;
      {
        TtaSetCursorWatch (0, 0);
        /* do we need to control the last slash here? */
+       content_type = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE);
        res = LoadHTMLDocument (newdoc, pathname, form_data, method, tempfile, 
 			       documentname, content_type, FALSE);
 	W3Loading = 0;		/* loading is complete now */
@@ -3192,14 +3195,14 @@ NotifyDialog       *event;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void GetHTMLDocument_callback (int newdoc, int status, CHAR_T* urlName, CHAR_T* outputfile, CHAR_T* content_type, void * context)
+void GetHTMLDocument_callback (int newdoc, int status, CHAR_T* urlName, CHAR_T* outputfile, AHTHeaders *http_headers, void * context)
 #else  /* __STDC__ */
-void GetHTMLDocument_callback (newdoc, status, urlName, outputfile, content_type, context)
+void GetHTMLDocument_callback (newdoc, status, urlName, outputfile, http_headers, context)
 int       newdoc;
 int       status;
 CHAR_T*   urlName;
 CHAR_T*    outputfile;
-CHAR_T*    content_type;
+AHTHeaders *http_headers;
 void*     context;
 
 #endif
@@ -3266,7 +3269,7 @@ void*     context;
 	     NormalizeURL (pathname, 0, tempdocument, documentname, NULL);
 
 	   /* do we need to control the last slash here? */
-	   res = LoadHTMLDocument (newdoc, pathname, form_data, method, tempfile, documentname, content_type, history);
+	   res = LoadHTMLDocument (newdoc, pathname, form_data, method, tempfile, documentname, http_headers->content_type, history);
 	   W3Loading = 0;		/* loading is complete now */
 	   if (res == 0)
 	     {
@@ -3932,7 +3935,10 @@ CHAR_T*             data;
 	   Answer_text[0] = EOS;
 	   Answer_name[0] = WC_EOS;
 	   Answer_password[0] = WC_EOS;
+	   UserAnswer = 0;
 	 }
+       else
+	 UserAnswer = 1;
        TtaDestroyDialogue (BaseDialog + FormAnswer);
        break;
      case AnswerText:

@@ -16,7 +16,7 @@ extern void GotoPreviousHTML_callback ( int newdoc,
                                         int status,
                                         STRING urlName,
                                         STRING outputfile,
-                                        STRING content_type,
+                                        AHTHeaders *http_headers,
                                         void * context );
 extern void GotoPreviousHTML ( Document doc,
                                View view );
@@ -24,7 +24,7 @@ extern void GotoNextHTML_callback ( int newdoc,
                                     int status,
                                     STRING urlName,
                                     STRING outputfile,
-                                    STRING content_type,
+                                    AHTHeaders *http_headers,
                                     void * context );
 extern void GotoNextHTML ( Document doc,
                            View view );
@@ -45,7 +45,7 @@ extern void GotoPreviousHTML_callback (/* int newdoc,
                                           int status,
                                           STRING urlName,
                                           STRING outputfile,
-                                          STRING content_type,
+                                          AHTHeaders *http_headers,
                                           void * context */);
 extern void GotoPreviousHTML (/* Document doc,
                                  View view */);
@@ -53,7 +53,7 @@ extern void GotoNextHTML_callback (/* int newdoc,
                                       int status,
                                       STRING urlName,
                                       STRING outputfile,
-                                      STRING content_type,
+                                      AHTHeaders *http_headers,
                                       void * context */);
 extern void GotoNextHTML (/* Document doc,
                              View view */);

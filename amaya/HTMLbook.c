@@ -983,17 +983,17 @@ Document    document;
 void   GetIncludedDocuments_callback (int newdoc, int status, 
 				      STRING urlName,
 				      STRING outputfile, 
-				      STRING content_type,
+				      AHTHeaders *http_headers,
 				      void * context)
 #else  /* __STDC__ */
 void   GetIncludedDocuments_callback (newdoc, status, urlName,
-				      outputfile, content_type, 
+				      outputfile, http_headers,
 				      context)
 int    newdoc;
 int    status;
 STRING urlName;
 STRING outputfile;
-STRING content_type;
+AHTHeaders *http_headers;
 void  *context;
 #endif /* __STDC__ */
 {
