@@ -139,8 +139,6 @@ PtrAbstractBox             pPav;
 }
 #endif /* __COLPAGE__ */
 
-#ifdef __COLPAGE__
-
  /* nouvelle procedure du module crimabs, utilisee dans CreePaves et Chaine */
 /* ---------------------------------------------------------------------- */
 /* |    RechPavPage retourne le premier pave corps de page qui          | */
@@ -215,7 +213,6 @@ boolean             EnAvant;
    return Retour;
 
 }
-#endif /* __COLPAGE__ */
 
 #ifdef __COLPAGE__
 
@@ -749,8 +746,6 @@ PtrPSchema         *pSchPPage;
    return cptpage;
 }
 
-#ifdef __COLPAGE__
-
  /* -------------------------------------------------------------- */
  /*  |    NbPages retourne le nombre de pages sous la racine pPav| */
  /* -------------------------------------------------------------- */
@@ -787,10 +782,7 @@ PtrAbstractBox             pPav;
    return nb;
 }
 
-#endif /* __COLPAGE__ */
 
-
-#ifdef __COLPAGE__
 /* ---------------------------------------------------------------------- */
 /* |    PagePleine evalue si la page en cours de remplissage est pleine.| */
  /*     dans le cas ou le document est pagine.                  | */
@@ -1014,8 +1006,6 @@ boolean             EnAvant;
 	}
 
 }
-#endif /* __COLPAGE__ */
-
 
 #ifdef __COLPAGE__
 
