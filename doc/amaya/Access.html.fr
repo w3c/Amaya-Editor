@@ -13,9 +13,7 @@
 <table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
-      <td>
-
-        <p></p>
+      <td><p></p>
 
         <p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /><img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
@@ -29,74 +27,77 @@
 </table>
 
 <div id="Access">
-<h2>Accessibility and Amaya</h2>
+<h2>Accessibilité dans Amaya  </h2>
 
-<h3>Producing Accessible content</h3>
+<h3>Produire un contenu accessible</h3>
 
-<p>Amaya can be used to produce content that conforms to the W3C's <a
+<p>Amaya peut être utilisé pour produire un contenu conforme au <a
 href="http://www.w3.org/TR/WAI-WEBCONTENT">Web Content Accessibility
-Guidelines</a>. Some features, such as the requirement for an alt attribute
-for images and imagemap areas are already built in - it is impossible to add
-an image until it has alternative text. Amaya also automatically prduces valid
-W3C compliant markup. Other features, such as appropriate long descriptions
-and captioning must be done by the author through the attributes menus or
-structure menus.</p>
+Guidelines</a> du W3C.  Certaines caractéristiques, comme par exemple
+l'obligation d'avoir un attribut "alt" pour les images et les zones actives ,
+ont déjà été incluses _ il est impossible d'ajouter une image tant qu'il n'y a
+pas de texte associé. Amaya produit aussi automatiquement un solide balisage
+conforme au W3C. D'autres caractéristiques, comme les longues descriptions
+spécifiques et les légendes, doivent être effectuées par l'auteur  à l'aide
+des attributs des  menus ou des menus structure. </p>
 
-<p>The Amaya help documentation currently describes <a
-href="HTML-elements/infoTypes.html">how to use a few individual HTML
-elements</a> and as that documentation is written it will include help on how
-to ensure that the pages produced are accessible. In the meantime the most
-thorough guidelines are the W3C's <a
-href="http://www.w3.org/TR/WAI-WEBCONTENT">Web Content Accessibility
-Guidelines</a>. The W3C's <a href="http://www.w3.org/WAI">Web Accessibility
-Initiative</a> also publishes "<a
-href="http://www.w3.org/WAI/References/QuickTips/#Introduction">Quick Tips to
-make accessible Web sites</a>", ten handy reminders which are:</p>
+<p>La documentation d'aide d'Amaya décrit <a
+href="HTML-elements/infoTypes.html">comment utiliser quelques éléments
+individuels HTML </a>et inclue une aide en ligne sur comment assurer que les
+pages produites soient accessibles. En attendant, les guides en ligne les plus
+complets sont les <a href="http://www.w3.org/TR/WAI-WEBCONTENT">Web Content
+Accessibility Guidelines</a> du W3c. Le  <a href="http://www.w3.org/WAI">Web
+Accessibility Initiative</a> du W3C publie également  "<a
+href="http://www.w3.org/WAI/References/QuickTips/#Introduction">De brefs 
+tuyaux  pour faire des sites Web accessibles</a>", dix rappels pratiques qui
+sont:</p>
 <ul>
-  <li><strong>Images &amp; animations.</strong> Use the <code>alt</code>
-    attribute to describe the function of each visual.</li>
-  <li><strong>Image maps.</strong> Use client-side <code> MAP</code> and text
-    for hotspots.</li>
-  <li><strong>Multimedia.</strong> Provide captioning and transcripts of
-    audio, and descriptions of video.</li>
-  <li><strong>Hypertext links.</strong> Use text that makes sense when read
-    out of context. For example, avoid <q>click here</q>.</li>
-  <li><strong>Page organization.</strong> Use headings, lists, and consistent
-    structure. Use <strong>CSS</strong> for layout and style where
-  possible.</li>
-  <li><strong>Graphs &amp; charts.</strong> Summarize or use the
-    <code>longdesc</code> attribute.</li>
-  <li><strong>Scripts, applets, &amp; plug-ins.</strong> Provide alternative
-    content in case active features are inaccessible or unsupported.</li>
-  <li><strong>Frames.</strong> Use <code> NOFRAMES</code> and meaningful
-    titles.</li>
-  <li><strong>Tables.</strong> Make line by line reading sensible.
-  Summarize.</li>
-  <li><strong>Check your work.</strong> Validate. Use tools, checklist, and
-    guidelines at <a
+  <li><strong>Images &amp; animations.</strong> Utilisez l'attribut 
+    <code>alt</code> pour décrire la fonction de chaque optique.  </li>
+  <li><strong>Zones actives.</strong> Utilisez le  <code>MAP</code>
+    côté-client et le texte pour les  hotspots.</li>
+  <li><strong>Multimedia.</strong> Fournissez  des légendes et des
+    transcriptions d'audio, et des descriptions de vidéo. </li>
+  <li><strong>Liens d'hypertexte.</strong> Utilisez  un texte qui fait sens
+    quand il est lu en-dehors du contexte. Par exemple, évitez "cliquer ici".
+  </li>
+  <li><strong>Organisation de la page.</strong> Utilisez les en-têtes, les
+    listes, ainsi qu'une structure logique. Utilisez  <strong>CSS</strong>
+    pour la mise en page et le style quand c'est  possible.</li>
+  <li><strong>Graphismes &amp; cartes.</strong>Récapitulez ou utilisez
+    l'attribut <code>longdesc</code>.</li>
+  <li><strong>Scripts, applets, &amp; plug-ins.</strong> Fournissez un contenu
+    alternatif dans le cas où les caractéristiques actives sont  inaccessibles
+    ou sans support. </li>
+  <li><strong>Frames.</strong> Utilisez<code> NOFRAMES</code> ainsi que  des
+    titres significatifs. </li>
+  <li><strong>Tables.</strong> Faîtes une lecture sensée ligne par ligne.
+    Récapitulez.</li>
+  <li><strong>Vérifier votre  travail.</strong> Validez. Utilisez les outils,
+    les listes de vérification, et les aides en ligne au <a
     href="http://www.w3.org/TR/WAI-WEBCONTENT">http://www.w3.org/TR/WAI-WEBCONTENT</a>.</li>
 </ul>
 
 <p></p>
 
-<h3>Accessibility of Amaya</h3>
+<h3>Accessibilité d' Amaya</h3>
 
-<p>Amaya's accessibility for people with disabilities is being improved with
-each release. Currently it is possible to perform most functions in Amaya
-without using a mouse, and to do most editing functions (except entering text)
-without using the keyboard.</p>
+<p>L'accessibilité d'Amaya pour les  non connaisseurs s'améliore à chaque
+version.  Il est maintenant possible d'exécuter un grand nombre de fonctions
+sans utiliser une souris, et d'exécuter des fonctions d'édition (à l'exception
+de: entrer le texte) sans utiliser le clavier. </p>
 
-<p>Accessibility features in the current version include:</p>
+<p>Les caractéristiques d'accessibilité dans la version courante incluent:</p>
 <ul>
-  <li>Alternate, Link, Structure and Table of Contents views that can be
-    navigated and edited, and are all synchronized to the Formatted
-  view..</li>
-  <li>Source editing.</li>
-  <li>Adding, removing and editing multiple stylesheets dynamically, including
-    a user stylesheet.</li>
-  <li>Keyboard activation of commands, and links and form controls. (Although
-    some further features, like selecting a link target, still require a
-    mouse)</li>
+  <li>Les vues "Montrer le vue alternée"," Montrer les liens", "Montrer la
+    structure", "Montrer la table des matières", qui peuvent être naviguées et
+    éditées, et qui sont en synchronisation avec la vue formatée.</li>
+  <li>Editer la source.</li>
+  <li>Ajouter, supprimer et éditer dynamiquement plusieurs feuilles de style,
+    incluant un utilisateur feuille de style. </li>
+  <li>Activation des commandes du clavier, des liens et des contrôles de forme
+    (bien que  quelques caractéristiques supplémentaires, comme par exemple
+    "sélectionner un lien cible", nécessitent encore une souris). </li>
 </ul>
 </div>
 
