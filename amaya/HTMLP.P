@@ -7346,6 +7346,7 @@ RULES
 
  OptGroup: BEGIN
 	CreateBefore(OPTGROUP_S);
+	CreateWith(VerticalLine);
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
@@ -9137,8 +9138,10 @@ ATTRIBUTES
 	CreateBefore(ATTR_VALUE);
 	CreateBefore(VALUE_VALUE);
 	IN Structure_view BEGIN
-	    HorizPos: Left = Previous . Right;
-	    VertPos: HRef = Previous . HRef;
+	    if NOT Option BEGIN
+	       HorizPos: Left = Previous . Right;
+	       VertPos: HRef = Previous . HRef;
+	       END;
 	    END;
 	END;
  Multiple:

@@ -776,7 +776,6 @@ boolean             with_images;
 #endif
 {
   LoadedImageDesc *pImage;
-  DisplayMode      dispMode;
   char            *tempname;
   char            *msg;
   int              remainder = 10000;
@@ -795,14 +794,7 @@ boolean             with_images;
 
   /* First step : build the output and ask for confirmation */
   SetNamespacesAndDTD (document);
-  /* suspend the redisplay due to the temporary update of attributes
-     STYLE and META-CONTENT */
-  dispMode = TtaGetDisplayMode (document);
-  if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (document, DeferredDisplay);
   TtaExportDocument (document, tempname, "HTMLT");
-  /* retore the redisplay */
-  TtaSetDisplayMode (document, dispMode);
   res = 0;
   if (confirm && with_images)
     {
@@ -1508,7 +1500,6 @@ void                DoSaveAs ()
   AttributeType       attrType;
   ElementType         elType;
   Element             el, root;
-  DisplayMode         dispMode;
   char               *documentFile;
   char               *tempname, *localPath;
   char               *imagePath, *base;
@@ -1697,11 +1688,6 @@ DBG(fprintf(stderr, " set SaveName to noname.html\n");)
 
   if (ok)
     {
-      /* avoid flash on screen */
-      dispMode = TtaGetDisplayMode (doc);
-      if (dispMode == DisplayImmediately)
-	TtaSetDisplayMode (doc, DeferredDisplay);
-
       /* Transform all URLs to absolute ones */
         if (UpdateURLs)
 	  {
@@ -1726,9 +1712,6 @@ DBG(fprintf(stderr, " set SaveName to noname.html\n");)
 	 * else add them to the list of remote images to be copied.
 	 */
 	UpdateDocAndImages (src_is_local, dst_is_local, imgbase, documentFile);
-	  
-	/* restore the current mode */
-	TtaSetDisplayMode (doc, dispMode);
 	  
 	if (dst_is_local)
 	  {
