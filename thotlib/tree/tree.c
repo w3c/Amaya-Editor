@@ -71,7 +71,7 @@ PtrDocument         DocumentOfElement (PtrElement pEl)
 	pDoc = LoadedDocument[i];
 	if (pDoc != NULL)
 	  {
-	     if (pDoc->DocRootElement == pE)
+	     if (pDoc->DocDocElement == pE)
 		/* it's the root of the principal tree */
 		return pDoc;
 	     /* searches among the associate elements */
@@ -1062,68 +1062,68 @@ ThotBool            ElemIsWithinSubtree (PtrElement pEl, PtrElement pRoot)
 
 /*----------------------------------------------------------------------
    EquivalentType                                                          
-   Tests if the type of pEl is coherent with typeNum.
+   Tests if the type of pEl is equivalent to typeNum.
   ----------------------------------------------------------------------*/
 ThotBool     EquivalentType (PtrElement pEl, int typeNum, PtrSSchema pSS)
 {
-   ThotBool            ok;
-   SRule              *pRe1;
-   SRule              *pRe2;
-   int                 i;
-   ThotBool            SSok;
+  ThotBool            ok;
+  SRule              *pRe1;
+  SRule              *pRe2;
+  int                 i;
+  ThotBool            SSok;
 
-   if (!pEl)
-      return FALSE;
-   ok = FALSE;			/* assume a FALSE reply */
-   if (pSS == NULL)
-      SSok = TRUE;		/* use any struct. scheme */
-   else
-      /* compares the identifier of the structure scheme */
-      SSok = !ustrcmp (pEl->ElStructSchema->SsName, pSS->SsName);
-   if (SSok && pEl->ElTypeNumber == typeNum)
-      ok = TRUE;
-   else if (pSS != NULL)
-     {
-	pRe1 = &pSS->SsRule[typeNum - 1];
-	/* rule defining the type of element we are searching */
-	if (pRe1->SrConstruct == CsChoice)
-	  {
-	     if (pRe1->SrNChoices > 0)
-		/* the searched type is an explicit choice (alias)
-		   the current element is defined in the same scheme
-		   than that of the searched element */
-	       {
-		  i = 0;
-		  do
-		     /* compares the element type to the choice options */
+  if (!pEl)
+    return FALSE;
+  ok = FALSE;			/* assume a FALSE reply */
+  if (pSS == NULL)
+    SSok = TRUE;		/* use any struct. scheme */
+  else
+    /* compares the identifier of the structure scheme */
+    SSok = !ustrcmp (pEl->ElStructSchema->SsName, pSS->SsName);
+  if (SSok && pEl->ElTypeNumber == typeNum)
+    ok = TRUE;
+  else if (pSS != NULL)
+    {
+      pRe1 = &pSS->SsRule[typeNum - 1];
+      /* rule defining the type of element we are searching */
+      if (pRe1->SrConstruct == CsChoice)
+	{
+	  if (pRe1->SrNChoices > 0)
+	    /* the searched type is an explicit choice
+	       the current element is defined in the same scheme
+	       as that of the searched element */
+	    {
+	      i = 0;
+	      do
+		/* compares the element type with the options of the choice */
+		{
+		  if (pEl->ElTypeNumber == pRe1->SrChoice[i])
+		    ok = !ustrcmp (pEl->ElStructSchema->SsName, pSS->SsName);
+		  else
 		    {
-		       if (pEl->ElTypeNumber == pRe1->SrChoice[i])
-			  ok = !ustrcmp (pEl->ElStructSchema->SsName, pSS->SsName);
-		       else
-			 {
-			    pRe2 = &pSS->SsRule[pRe1->SrChoice[i] - 1];
-			    if (pRe2->SrConstruct == CsNatureSchema)
-			       /* the choice option is a change of nature */
-			       /* keeps the root elements of this nature */
-			       if (pEl->ElStructSchema == pRe2->SrSSchemaNat)
-				  ok = pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem;
-			 }
-		       i++;
+		      pRe2 = &pSS->SsRule[pRe1->SrChoice[i] - 1];
+		      if (pRe2->SrConstruct == CsNatureSchema)
+			/* the choice option is a change of nature */
+			/* keeps the root elements of this nature */
+			if (pEl->ElStructSchema == pRe2->SrSSchemaNat)
+			  ok = pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem;
 		    }
-		  while ((!ok) && (i < pRe1->SrNChoices));
-
-	       }
-	  }
-	else if (pRe1->SrConstruct == CsNatureSchema)
-	  {
-	     /* the searched type is a change of nature, we keep the
-		root elements of this nature */
-	     if (pEl->ElStructSchema == pRe1->SrSSchemaNat)
-		if (pEl->ElTypeNumber == pRe1->SrSSchemaNat->SsRootElem)
-		   ok = TRUE;
-	  }
-     }
-   return ok;
+		  i++;
+		}
+	      while ((!ok) && (i < pRe1->SrNChoices));
+	      
+	    }
+	}
+      else if (pRe1->SrConstruct == CsNatureSchema)
+	{
+	  /* the searched type is a change of nature, we keep the
+	     root elements of this nature */
+	  if (pEl->ElStructSchema == pRe1->SrSSchemaNat)
+	    if (pEl->ElTypeNumber == pRe1->SrSSchemaNat->SsRootElem)
+	      ok = TRUE;
+	}
+    }
+  return ok;
 }
 
 
@@ -2572,14 +2572,14 @@ void       RemoveExcludedElem (PtrElement * pEl, PtrDocument pDoc)
    PtrElement          pAsc, pChild, pNextChild;
    PtrSSchema          pSS, pExtSSch;
    int                 i;
-   ThotBool            exclus;
+   ThotBool            excluded;
 
    if ((*pEl) != NULL)
      {
 	/* tests all the ancestors of the element */ 
 	pAsc = (*pEl)->ElParent;
-	exclus = FALSE;
-	while (pAsc != NULL && !exclus)
+	excluded = FALSE;
+	while (pAsc != NULL && !excluded)
 	  {
 	     /* examines all the exclusions defined for this type of element */
 	    /* first access the structuring rule */
@@ -2598,13 +2598,13 @@ void       RemoveExcludedElem (PtrElement * pEl, PtrDocument pDoc)
 				of an element excluded by the ancestor */
 			     if ((*pEl)->ElTypeNumber <= MAX_BASIC_TYPE)
 				/* it's a base type, it's excluded */
-			       exclus = TRUE;
+			       excluded = TRUE;
 			     else if (!ustrcmp (pSS->SsName, (*pEl)->ElStructSchema->SsName))
 				/* compares the identifiers of the structure schemes */
 				/* same structure schemes, excluded type */
-			       exclus = TRUE;
+			       excluded = TRUE;
 			   }
-			  if (!exclus)
+			  if (!excluded)
 			     if ((*pEl)->ElTypeNumber == (*pEl)->ElStructSchema->SsRootElem)
 				/* the current element is the root element of its 
 				   structure scheme: it's a nature */
@@ -2614,11 +2614,11 @@ void       RemoveExcludedElem (PtrElement * pEl, PtrDocument pDoc)
 				  if (pRuleExcl->SrConstruct == CsNatureSchema)
 				     /* the exclusion is a nature, the exclusion can be applied */
 				     /* if the nature names are the same */
-				     exclus = (ustrcmp ((*pEl)->ElStructSchema->SsName,
+				     excluded = (ustrcmp ((*pEl)->ElStructSchema->SsName,
 						   pRuleExcl->SrName) == 0);
 			       }
 			  /* the 2nd element of a pair is excluded if the first one is excluded */
-			  if (!exclus)
+			  if (!excluded)
 			     /* we still haven't excluded our element */
 			     if (pRule->SrExclusion[i - 1] + 1 == (*pEl)->ElTypeNumber)
 				/* the precedent type is excluded */
@@ -2628,7 +2628,7 @@ void       RemoveExcludedElem (PtrElement * pEl, PtrDocument pDoc)
 				      /* the element is member of a pair */
 				      if (!(*pEl)->ElStructSchema->SsRule[(*pEl)->ElTypeNumber - 1].SrFirstOfPair)
 					 /* it's the 2nd member of the pair */
-					 exclus = TRUE;
+					 excluded = TRUE;
 		       }
 		  /* go to the next extension scheme */
 		  if (pExtSSch == NULL)
@@ -2647,7 +2647,7 @@ void       RemoveExcludedElem (PtrElement * pEl, PtrDocument pDoc)
 	     /* climbs to the ancestor element */
 	     pAsc = pAsc->ElParent;
 	  }
-	if (exclus)
+	if (excluded)
 	  {
 	     /* removes the subtree of it's tree and frees it */
 	     DeleteElement (pEl, pDoc);
@@ -3103,7 +3103,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		       element belonging to the scheme where the source element
 		       is defined */
 		    if (pParent == NULL)
-		      pAsc = pDocCopy->DocRootElement;
+		      pAsc = pDocCopy->DocDocElement;
 		    else
 		      pAsc = pParent;
 		    sameSSchema = pSource->ElTypeNumber <= MAX_BASIC_TYPE;
@@ -3141,7 +3141,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 			    /* climbs one level to the next ancestor element */
 			    if ((pAsc->ElParent == NULL) &&
 				(pAsc->ElStructSchema->SsExtension))
-			      pAsc = pDocCopy->DocRootElement;
+			      pAsc = pDocCopy->DocDocElement;
 			    else
 			      pAsc = pAsc->ElParent;
 			    }
@@ -3185,7 +3185,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 	    }
 	  if (copyType != 0)
 	    {
-	    /* gest an element for the copy */
+	    /* get an element for the copy */
 	    GetElement (&pEl);
 	    /* fills the copy */
 	    pEl->ElStructSchema = pSSchema;
@@ -3662,7 +3662,7 @@ PtrAttribute GetTypedAttrAncestor (PtrElement pEl, int attrNum,
 
 /*----------------------------------------------------------------------
    CheckLanguageAttr
-   verifies that the root pEl has a language attribute. If not, we
+   verifies that the root pEl has a language attribute. If not,
    we add one.
   ----------------------------------------------------------------------*/
 void                CheckLanguageAttr (PtrDocument pDoc, PtrElement pEl)
@@ -3677,12 +3677,12 @@ void                CheckLanguageAttr (PtrDocument pDoc, PtrElement pEl)
 	{
 	   /* a priori, we'll take the default language */
 	   lang = TtaGetDefaultLanguage ();
-	   if (pEl != pDoc->DocRootElement)
+	   if (pEl != pDoc->DocDocElement)
 	      /* it's not the root of the principal tree, so we verify
 		 if the principal tree has has a language attribue. If yes, 
 		 we use that language */
 	     {
-		pAttr = GetTypedAttrForElem (pDoc->DocRootElement, 1, NULL);
+		pAttr = GetTypedAttrForElem (pDoc->DocDocElement, 1, NULL);
 		if (pAttr != NULL)
 		   if (pAttr->AeAttrText != NULL)
 		      lang = TtaGetLanguageIdFromName (pAttr->AeAttrText->BuContent);
@@ -3711,15 +3711,14 @@ void                CheckLanguageAttr (PtrDocument pDoc, PtrElement pEl)
 	}
 }
 
-
 /* ----------------------------------------------------------------------
    TtaGetMainRoot
 
-   Returns the root element of the main abstract tree representing a document.
+   Returns the document element of the abstract tree representing a document.
    Parameter:
    document: the document.
    Return value:
-   the root element of the main abstract tree.
+   the document element of the abstract tree.
    ---------------------------------------------------------------------- */
 Element             TtaGetMainRoot (Document document)
 {
@@ -3734,8 +3733,47 @@ Element             TtaGetMainRoot (Document document)
 	TtaError (ERR_invalid_document_parameter);
    else
       /* Parameter document is ok */
-	element = LoadedDocument[document - 1]->DocRootElement;
+	element = LoadedDocument[document - 1]->DocDocElement;
    return ((Element) element);
+}
+
+/* ----------------------------------------------------------------------
+   TtaGetRootElement
+
+   Returns the root element of the abstract tree representing a document.
+   Parameter:
+   document: the document.
+   Return value:
+   the root element of the abstract tree.
+   ---------------------------------------------------------------------- */
+Element             TtaGetRootElement (Document document)
+{
+   PtrElement          root, el;
+
+   UserErrorCode = 0;
+   /* Checks the parameter document */
+   root = NULL;
+   if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+     TtaError (ERR_invalid_document_parameter);
+   else
+     /* Parameter document is ok */
+     {
+     el = LoadedDocument[document - 1]->DocDocElement;
+     if (el)
+       {
+	 el = el->ElFirstChild;
+	 while (el && !root)
+	   {
+	     if (el->ElStructSchema->SsRootElem == el->ElTypeNumber)
+	       root = el;
+	     else
+	       el = el->ElNext;
+	   }
+       }
+     }
+   return ((Element) root);
 }
 
 /* ----------------------------------------------------------------------

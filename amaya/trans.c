@@ -1928,6 +1928,10 @@ static ThotBool     IsValidHtmlChild (ElementType elemType, STRING tag, STRING p
     return FALSE;
   switch (constOfType)
     {
+    case ConstructAny:
+      result = TRUE;
+      break;
+
     case ConstructIdentity:
       if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
 	result = TRUE;
@@ -2081,6 +2085,8 @@ static ThotBool     IsValidHtmlChild (ElementType elemType, STRING tag, STRING p
     case ConstructReference:
     case ConstructBasicType:
     case ConstructPair:
+    case ConstructEmpty:
+    case ConstructDocument:
     case ConstructError:
       break;
     }

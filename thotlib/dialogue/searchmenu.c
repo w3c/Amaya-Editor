@@ -434,7 +434,7 @@ static ThotBool SearchEmptyElem (PtrElement pCurrEl, PtrSearchContext pContext)
 	{
 	   pEl = pContext->SStartElement;
 	   if (pEl == NULL)
-	      pEl = pContext->SDocument->DocRootElement;
+	      pEl = pContext->SDocument->DocDocElement;
 	}
       else
 	 pEl = pContext->SEndElement;
@@ -536,7 +536,7 @@ static ThotBool SearchEmptyRefer (PtrElement pCurrEl, PtrSearchContext pContext)
 	{
 	   pEl = pContext->SStartElement;
 	   if (pEl == NULL)
-	      pEl = pContext->SDocument->DocRootElement;
+	      pEl = pContext->SDocument->DocDocElement;
 	}
       else
 	 pEl = pContext->SEndElement;
@@ -721,7 +721,7 @@ void                TtcSearchEmptyElement (Document document, View view)
    if (!ok)
      {
 	pDocSel = pDoc;
-	pFirstSel = pDoc->DocRootElement;
+	pFirstSel = pDoc->DocDocElement;
      }
    if (pDocSel != pDoc)
       /* pas de selection dans le document d'ou vient la commande */
@@ -863,7 +863,7 @@ void                TtcSearchEmptyReference (Document document, View view)
    if (!ok)
      {
 	pDocSel = pDoc;
-	pFirstSel = pDoc->DocRootElement;
+	pFirstSel = pDoc->DocDocElement;
      }
 
    if (pDocSel != pDoc)
@@ -1148,7 +1148,7 @@ void                TtcSearchText (Document document, View view)
   if (!ok)
     {
       pDocSel = pDoc;
-      pFirstSel = pLastSel = pDoc->DocRootElement;
+      pFirstSel = pLastSel = pDoc->DocDocElement;
       firstChar = lastChar = 0;
     }
 
@@ -1476,7 +1476,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 			      pFirstSel = SearchingD->SStartElement;
 			      firstChar = SearchingD->SStartChar;
 			      if (pFirstSel == NULL)
-				pFirstSel = SearchingD->SDocument->DocRootElement;
+				pFirstSel = SearchingD->SDocument->DocDocElement;
 			    }
 			  else
 			    {
@@ -1657,9 +1657,9 @@ void BuildGoToPageMenu (PtrDocument pDoc, int docView, int schView,
      {
 	/* cherche le numero de vue dans le schema de presentation */
 	/* applique' au document */
-	SearchedPageSchView = AppliedView (pDoc->DocRootElement, NULL, pDoc,
+	SearchedPageSchView = AppliedView (pDoc->DocDocElement, NULL, pDoc,
 					   docView);
-	SearchedPageRoot = pDoc->DocRootElement;
+	SearchedPageRoot = pDoc->DocDocElement;
      }
    /* compose le titre "Recherche dans le document..." */
    strcpy (buffTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));

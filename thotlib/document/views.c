@@ -659,9 +659,9 @@ PtrDocument         pDoc;
 	(*ThotLocalActions[T_chselect]) (pDoc);
      if (ThotLocalActions[T_chattr] != NULL)
 	(*ThotLocalActions[T_chattr]) (pDoc);
-     if (pDoc->DocRootElement != NULL)
+     if (pDoc->DocDocElement != NULL)
 	{
-	pDoc->DocViewRootAb[0] = AbsBoxesCreate (pDoc->DocRootElement, pDoc,
+	pDoc->DocViewRootAb[0] = AbsBoxesCreate (pDoc->DocDocElement, pDoc,
 						 1, TRUE, TRUE, &bool);
 	i = 0;
 	/* on ne s'occupe pas de la hauteur de page */
@@ -853,7 +853,7 @@ int CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS, int cho
 	 /* elements associes on cree la nouvelle image depuis */
 	 /* le debut du document */
 	
-	pDoc->DocViewRootAb[freeView-1] = AbsBoxesCreate (pDoc->DocRootElement,
+	pDoc->DocViewRootAb[freeView-1] = AbsBoxesCreate (pDoc->DocDocElement,
 					    pDoc, freeView, TRUE, TRUE, &bool);
       else
 	 {
@@ -874,7 +874,7 @@ int CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS, int cho
 	    CheckAbsBox (firstSel, freeView, pDoc, FALSE, FALSE);
 	 else
 	    {
-	    pAb = pDoc->DocRootElement->ElAbstractBox[chosenView - 1];
+	    pAb = pDoc->DocDocElement->ElAbstractBox[chosenView - 1];
 	    if (pAb == NULL)
 	       truncHead = FALSE;
 	    else if (pAb->AbLeafType != LtCompound)
@@ -887,7 +887,7 @@ int CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS, int cho
 	       /* la vue designee commence au debut du */
 	       /* document, on cree la nouvelle image depuis */
 	       /* le debut du document */
-	       pDoc->DocViewRootAb[freeView - 1] = AbsBoxesCreate (pDoc->DocRootElement,
+	       pDoc->DocViewRootAb[freeView - 1] = AbsBoxesCreate (pDoc->DocDocElement,
 					 pDoc, freeView, TRUE, TRUE, &bool);
 	    else
 	       {
@@ -914,7 +914,7 @@ int CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS, int cho
 	       
 	       /* cree la nouvelle vue a partir de cet element */
 	       if (pAb == NULL)
-		  CheckAbsBox (pDoc->DocRootElement, freeView, pDoc, TRUE,
+		  CheckAbsBox (pDoc->DocDocElement, freeView, pDoc, TRUE,
 			       FALSE);
 	       else
 		  CheckAbsBox (pAb->AbElement, freeView, pDoc, TRUE, FALSE);

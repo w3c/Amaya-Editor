@@ -2890,6 +2890,20 @@ BOXES
 
 RULES
 
+   Document:
+	BEGIN
+        Width: Enclosing . Width;
+	HorizPos: Left = Enclosing . Left;
+	MarginLeft: 3 em;
+	VertPos: Top = Enclosing . Top + 0.5 cm;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width;
+		HorizPos: Left = Enclosing . Left;
+		MarginLeft: 0.5;
+		Visibility: 10;
+		END;
+	END;
+
    MathML:
 	BEGIN
 	CreateBefore(Math_S);
@@ -2897,34 +2911,13 @@ RULES
 	PageBreak: No;
 	LineBreak: No;
 	LineWeight: 1 pt;
-	if Root
-		BEGIN
-		Width: Enclosing . Width;
-		HorizPos: Left = Enclosing . Left;
-		MarginLeft: 3 em;
-		VertPos: Top = Enclosing . Top + 0.5 cm;
-		END;
-	if not Root
-		BEGIN
-		Width: Enclosed . Width;
-		VertPos: Top = Previous . Bottom;
-		HorizPos: Left = Enclosing . Left;
-		END;
+	VertPos: Top = Previous . Bottom;
+	HorizPos: Left = Enclosing . Left;
         HorizRef: Enclosed not ElemWithAttr IntVertStretch . HRef;
 	IN Structure_view BEGIN
-		if Root
-			BEGIN
-			Width: Enclosing . Width - 0.5 cm;
-			HorizPos: Left = Enclosing . Left + 0.5 cm;
-			MarginLeft: 0;
-			END;
-		if not Root
-			BEGIN
-			Width: Enclosing . Width - STRUCT_INDENT;
-			HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-			END;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Size: Enclosing =;
-		Visibility: 10;
 		END;
 	IN Alternate_view
 		BEGIN

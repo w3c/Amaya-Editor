@@ -179,44 +179,55 @@ BOXES
 
 RULES
 
-  Document_URL:	BEGIN
-	Visibility: 1;
-	END;
-
-  TextFile: BEGIN
+  Document: BEGIN
 	Font: Courier;
 	Style: Roman;
 	Weight: Normal;
 	Adjust: Left;
 #ifdef PAGE
 	Size: 10 pt;
-	HorizPos: VMiddle = Enclosing.VMiddle;
-	Page(ThePage);
 	Width: Enclosing . Width;
 #else
 	Size: 12 pt;
-	HorizPos: Left = Enclosing . Left;
 	Width: Enclosed . Width;
+        PaddingBottom: 3 cm;
 #endif
-	Vertpos: Top = Previous . Bottom + 0.4;
+	Vertpos: Top = Enclosing . Top;
 	Indent: 0;
 	LineSpacing: 1;
 	END;
 
-  BODY: BEGIN
-	HorizPos: Left = Enclosing . Left + 1;
+  TextFile: BEGIN
 #ifdef PAGE
-	Width: Enclosing . Width - 2;
+	Page(ThePage);
+        Width: Enclosing . Width;
+	Foreground: Black;
+#else
+	Width: Enclosed . Width;
+	HorizPos: Left = Enclosing . Left + 0.7;
+#endif
+        VertPos: Top = Enclosing . Top;
+	END;
+
+  Document_URL:	BEGIN
+	Visibility: 1;
+	END;
+
+  BODY: BEGIN
+#ifdef PAGE
+	HorizPos: Left = Enclosing . Left;
+	Width: Enclosing . Width;
 #else
 	CreateWith (RightSpace);
+	HorizPos: Left = Enclosing . Left + 1;
 	Width: Enclosed . Width;
 #endif
 	END;
 
   Line\240: BEGIN
-	Line;
 	LineBreak: Yes;
 #ifdef PAGE
+	Line;
 	Width: Enclosing . Width;
 #else
 	Width: Enclosed . Width;

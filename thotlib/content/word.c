@@ -274,11 +274,11 @@ ThotBool NextTree (PtrElement * pEl, int *charIndx, PtrSearchContext context)
 		   else
 		      i--;
 		if (i == 0)
-		   if (context->SDocument->DocRootElement != NULL)
+		   if (context->SDocument->DocDocElement != NULL)
 		      context->STree = 0;
 	     }
 	   if (context->STree == 0)
-	      *pEl = context->SDocument->DocRootElement;
+	      *pEl = context->SDocument->DocDocElement;
 	   else if (context->STree > 0)
 	      *pEl = context->SDocument->DocAssocRoot[i - 1];
 	   if (*pEl != NULL)
@@ -321,7 +321,7 @@ ThotBool SearchNextWord (PtrElement * curEl, int *beginning, int *end,
       pEl = context->SStartElement;
       iChar = context->SStartChar;
       if (pEl == NULL && context->SDocument != NULL)
-	pEl = context->SDocument->DocRootElement;
+	pEl = context->SDocument->DocDocElement;
     }
 
   /* Check that element is a Text element and that the research does */

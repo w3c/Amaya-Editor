@@ -126,6 +126,9 @@
 #define C_NATURE_CONSTR 'X'
 #define C_PAIR_CONSTR 'P'
 #define C_EXTENS_CONSTR 'E'
+#define C_DOCUMENT_CONSTR 'D'
+#define C_ANY_CONSTR 'a'
+#define C_EMPTY_CONSTR 'e'
 
 /* base type coding */
 #define C_CHAR_STRING 'C'
@@ -137,3 +140,5 @@
 #define C_UNUSED 'U'
 
 #endif /* __CONST_STR_H__ */
+
+

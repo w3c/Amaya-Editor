@@ -1295,8 +1295,7 @@ static void         WriteRule (FILE * Hfile, int r, SRule * pExtensRule)
   ----------------------------------------------------------------------*/
 static void         WriteDefineFile (STRING fname)
 {
-   ThotBool             firstLocalAttribute;
-   ThotBool             first;
+   ThotBool            firstLocalAttribute, first;
    int                 firstRule;
    int                 i;
    int                 rule;
@@ -1354,17 +1353,9 @@ static void         WriteDefineFile (STRING fname)
 	for (rule = firstRule; rule < pSSchema->SsNRules; rule++)
 	  {
 	     pRule = &pSSchema->SsRule[rule];
-	     /* skip associated elements, Extern, Included elements and units*/
-	     if (!pRule->SrAssocElem &&
-		 !pRule->SrRefImportedDoc &&
-		 !pRule->SrUnitElem)
-		/* ignore lists added for associated elements */
-	       {
-		if (pRule->SrConstruct != CsList)
-		   WriteRule (Hfile, rule, NULL);
-		else if (!pSSchema->SsRule[pRule->SrListItem - 1].SrAssocElem)
-		   WriteRule (Hfile, rule, NULL);
-	       }
+	     /* skip Extern, Included elements and units*/
+	     if (!pRule->SrRefImportedDoc && !pRule->SrUnitElem)
+	       WriteRule (Hfile, rule, NULL);
 	  }
 	/* write extension rules */
 	if (pSSchema->SsExtension && pSSchema->SsNExtensRules > 0)
@@ -1374,30 +1365,6 @@ static void         WriteDefineFile (STRING fname)
 	       {
 		  pRule = &pSSchema->SsExtensBlock->EbExtensRule[rule];
 		  WriteRule (Hfile, rule, pRule);
-	       }
-	  }
-	/* write associated elements */
-	first = True;
-	for (rule = firstRule; rule < pSSchema->SsNRules; rule++)
-	   if (pSSchema->SsRule[rule].SrAssocElem)
-	     {
-		if (first)
-		  {
-		     fprintf (Hfile, "\n/* Associated elements */\n");
-		     first = False;
-		  }
-		WriteRule (Hfile, rule, NULL);
-	     }
-	if (!first)
-	   /* there is at least one associated element. Write LIST rules added */
-	   /* for associated elements */
-	  {
-	     for (rule = firstRule; rule < pSSchema->SsNRules; rule++)
-	       {
-		  pRule = &pSSchema->SsRule[rule];
-		  if (pRule->SrConstruct == CsList)
-		     if (pSSchema->SsRule[pRule->SrListItem - 1].SrAssocElem)
-			WriteRule (Hfile, rule, NULL);
 	       }
 	  }
 	/* write exported elements */

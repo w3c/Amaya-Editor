@@ -377,17 +377,17 @@ static void         CheckPrintingDocument (Document document)
     }
 }
 
-
 /*----------------------------------------------------------------------
    PrintDocument prints the document using predefined parameters.
    ----------------------------------------------------------------------*/  
 static void         PrintDocument (Document doc, View view)
 {
   AttributeType      attrType;
+  ElementType        elType;
   Attribute          attr;
-  Element            el;
+  Element            el, docEl;
   STRING             files, dir;
-  char             viewsToPrint[MAX_PATH];
+  char               viewsToPrint[MAX_PATH];
   ThotBool           status, textFile;
 
   textFile = (DocumentTypes[doc] == docText ||
@@ -468,11 +468,19 @@ static void         PrintDocument (Document doc, View view)
     {
       /* post or remove the PrintURL attribute */
       attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+      elType.ElSSchema = attrType.AttrSSchema;
       if (textFile)
-	attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
+	{
+	  elType. ElTypeNum = TextFile_EL_TextFile;
+	  attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
+	}
       else
-	attrType.AttrTypeNum = HTML_ATTR_PrintURL;
-      el =  TtaGetMainRoot (doc);
+	{
+	  elType. ElTypeNum = HTML_EL_HTML;
+	  attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+	}
+      docEl = TtaGetMainRoot (doc);
+      el = TtaSearchTypedElement (elType, SearchForward, docEl);
       attr = TtaGetAttribute (el, attrType);
       if (!attr && PrintURL)
 	{
@@ -871,7 +879,8 @@ static Element MoveDocumentBody (Element el, Document destDoc,
       /* locate the target element within the source document */
       root = SearchNAMEattribute (sourceDoc, target, NULL);
       elType = TtaGetElementType (root);
-      isID = (elType.ElTypeNum != HTML_EL_Anchor && elType.ElTypeNum != HTML_EL_MAP);
+      isID = (elType.ElTypeNum != HTML_EL_Anchor &&
+	      elType.ElTypeNum != HTML_EL_MAP);
     }
   else
     {

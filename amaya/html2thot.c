@@ -462,7 +462,7 @@ static int	    BufferLineNumber = 0; /* line number in the source file of
 static ParserData   HTMLcontext = {0, ISO_8859_1, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
 
 static SSchema      DocumentSSchema = NULL;  /* the HTML structure schema */
-static Element      rootElement;	  /* root element of the document */
+static Element      rootElement = NULL;	  /* root element of the document */
 static int          lastElemEntry = 0;	  /* index in the pHTMLGIMapping of the
 					     element being created */
 static Attribute    lastAttribute = NULL; /* last attribute created */
@@ -2731,7 +2731,7 @@ static void           ProcessStartGI (char* GIname)
     }
   if (entry >= 0)
     {
-      /* does this start tag also imply the end tag of some current elements? */
+      /* does this start tag also imply the end tag of some current elements?*/
       pClose = FirstClosedElem[entry];
       while (pClose != NULL)
 	{
@@ -2751,53 +2751,46 @@ static void           ProcessStartGI (char* GIname)
 	  InsertInvalidEl (msgBuffer, TRUE);
 	}
       else
-	  {
-	    el = NULL;
-	    sameLevel = TRUE;
-	    if (pHTMLGIMapping[entry].ThotType > 0)
-	      {
-		if (pHTMLGIMapping[entry].ThotType == HTML_EL_HTML)
-		  /* the corresponding Thot element is the root of the
-		     abstract tree, which has been created at initialization */
-		  el = rootElement;
-		else
-		  /* create a Thot element */
-		  {
-		    elType.ElSSchema = DocumentSSchema;
-		    elType.ElTypeNum = pHTMLGIMapping[entry].ThotType;
-		    if (pHTMLGIMapping[entry].XMLcontents == 'E')
-		      /* empty HTML element. Create all children specified */
-		      /* in the Thot structure schema */
-		      el = TtaNewTree (HTMLcontext.doc, elType, "");
-		    else
-		      /* the HTML element may have children. Create only */
-		      /* the corresponding Thot element, without any child */
-		      el = TtaNewElement (HTMLcontext.doc, elType);
-		    TtaSetElementLineNumber (el, NumberOfLinesRead);
-		    sameLevel = InsertElement (&el);
-		    if (el != NULL)
-		      {
-			if (pHTMLGIMapping[entry].XMLcontents == 'E')
-			  HTMLcontext.lastElementClosed = TRUE;
-			if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-			  /* an empty Text element has been created. The */
-			  /* following character data must go to that elem. */
-			  HTMLcontext.mergeText = TRUE;
-		      }
-		  }
-	      }
-	    if (pHTMLGIMapping[entry].XMLcontents != 'E')
-	      {
-		ElementStack[StackLevel] = el;
-		if (sameLevel)
-		  ThotLevel[StackLevel] = ThotLevel[StackLevel - 1];
-		else
-		  ThotLevel[StackLevel] = ThotLevel[StackLevel - 1] + 1;
-	        LanguageStack[StackLevel] = HTMLcontext.language;
-		GINumberStack[StackLevel++] = entry;
-	      }
-	  }
-     }
+	{
+	  el = NULL;
+	  sameLevel = TRUE;
+	  if (pHTMLGIMapping[entry].ThotType > 0)
+	    {
+	      /* create a Thot element */
+	      elType.ElSSchema = DocumentSSchema;
+	      elType.ElTypeNum = pHTMLGIMapping[entry].ThotType;
+	      if (pHTMLGIMapping[entry].XMLcontents == 'E')
+		/* empty HTML element. Create all children specified */
+		/* in the Thot structure schema */
+		el = TtaNewTree (HTMLcontext.doc, elType, "");
+	      else
+		/* the HTML element may have children. Create only */
+		/* the corresponding Thot element, without any child */
+		el = TtaNewElement (HTMLcontext.doc, elType);
+	      TtaSetElementLineNumber (el, NumberOfLinesRead);
+	      sameLevel = InsertElement (&el);
+	      if (el != NULL)
+		{
+		  if (pHTMLGIMapping[entry].XMLcontents == 'E')
+		    HTMLcontext.lastElementClosed = TRUE;
+		  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+		    /* an empty Text element has been created. The */
+		    /* following character data must go to that elem. */
+		    HTMLcontext.mergeText = TRUE;
+		}
+	    }
+	  if (pHTMLGIMapping[entry].XMLcontents != 'E')
+	    {
+	      ElementStack[StackLevel] = el;
+	      if (sameLevel)
+		ThotLevel[StackLevel] = ThotLevel[StackLevel - 1];
+	      else
+		ThotLevel[StackLevel] = ThotLevel[StackLevel - 1] + 1;
+	      LanguageStack[StackLevel] = HTMLcontext.language;
+	      GINumberStack[StackLevel++] = entry;
+	    }
+	}
+    }
 }
 
 
@@ -3821,28 +3814,14 @@ static void         PutLessAndSpace (char c)
 static void         StartOfComment (char c)
 {
    ElementType      elType;
-   Element          elComment, elCommentLine, child, lastChild;
+   Element          elComment, elCommentLine;
 
    /* create a Thot element Comment */
    elType.ElSSchema = DocumentSSchema;
    elType.ElTypeNum = HTML_EL_Comment_;
    elComment = TtaNewElement (HTMLcontext.doc, elType);
    TtaSetElementLineNumber (elComment, NumberOfLinesRead);
-   if (HTMLcontext.lastElementClosed && (HTMLcontext.lastElement == rootElement))
-      /* a comment after the tag </html> */
-      /* insert it as the last child of the root element */
-     {
-	child = TtaGetFirstChild (rootElement);
-	lastChild = NULL;
-	while (child != NULL)
-	  {
-	     lastChild = child;
-	     TtaNextSibling (&child);
-	  }
-	TtaInsertSibling (elComment, lastChild, FALSE, HTMLcontext.doc);
-     }
-   else
-      InsertElement (&elComment);
+   InsertElement (&elComment);
    HTMLcontext.lastElementClosed = TRUE;
    /* create a Comment_line element as the first child of */
    /* element Comment */
@@ -3857,7 +3836,8 @@ static void         StartOfComment (char c)
 	CommentText = TtaNewElement (HTMLcontext.doc, elType);
 	TtaSetElementLineNumber (CommentText, NumberOfLinesRead);
 	TtaInsertFirstChild (&CommentText, elCommentLine, HTMLcontext.doc);
-	TtaSetTextContent (CommentText, "", HTMLcontext.language, HTMLcontext.doc);
+	TtaSetTextContent (CommentText, "", HTMLcontext.language,
+			   HTMLcontext.doc);
      }
    InitBuffer ();
 }
@@ -4732,17 +4712,18 @@ static void        HTMLparse (FILE * infile, char* HTMLbuf)
 
 /*----------------------------------------------------------------------
    ReadTextFile
-   read plain text file into a PRE element.
+   read plain text file into a TextFile document.
    input text comes from either the infile file or the text
    buffer textbuf. One parameter should be NULL.
   ----------------------------------------------------------------------*/
-void ReadTextFile (FILE *infile, char *textbuf, Document doc, char *pathURL)
+static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
+			  char *pathURL)
 {
-  Element      parent, el, prev;
-  ElementType  elType;
-  unsigned char      charRead;
-  ThotBool     endOfTextFile;
-  Element      elLeaf;
+  Element        parent, el, prev;
+  ElementType    elType;
+  unsigned char  charRead;
+  ThotBool       endOfTextFile;
+  Element        elLeaf;
 
   InputText = textbuf;
   LgBuffer = 0;
@@ -4751,9 +4732,9 @@ void ReadTextFile (FILE *infile, char *textbuf, Document doc, char *pathURL)
   NumberOfLinesRead = 1; 
   CurrentBufChar = 0;
 
-  parent = TtaGetMainRoot (doc);
+  parent = TtaGetRootElement (doc);    /* the root element */
   elType = TtaGetElementType (parent);
-  el = TtaGetLastChild (parent);
+  el = TtaGetFirstChild (parent);    /* first child of the root element */
   if (el == NULL)
     {
       /* insert the Document_URL element */
@@ -5247,7 +5228,7 @@ void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
 static void CheckHeadElements (Element el, Element *elHead,
 			       Element *elBody, Document doc)
 {
-  Element           nextEl, rootElement, lastChild;
+  Element           nextEl, rootEl, lastChild;
   ElementType       elType;
 
   /* check all children of the given element */
@@ -5273,10 +5254,10 @@ static void CheckHeadElements (Element el, Element *elHead,
 	  /* create the HEAD element if it does not exist */
 	  if (*elHead == NULL)
 	    {
-	      rootElement = TtaGetMainRoot (doc);
+	      rootEl = TtaGetRootElement (doc);
 	      elType.ElTypeNum = HTML_EL_HEAD;
 	      *elHead = TtaNewElement (doc, elType);
-	      TtaInsertFirstChild (elHead, rootElement, doc);
+	      TtaInsertFirstChild (elHead, rootEl, doc);
 	      /* create also the title */
 	      elType.ElTypeNum = HTML_EL_TITLE;
 	      lastChild = TtaNewTree (doc, elType, "");
@@ -5610,8 +5591,8 @@ void            CheckAbstractTree (char* pathURL, Document doc)
    ThotBool	ok, moved;
    SSchema      docSSchema;
 
-   /* the root element only accepts elements HEAD, BODY, FRAMESET Comment and PI*/
-   /* as children */
+   /* the root HTML element only accepts elements HEAD, BODY, FRAMESET
+      Comment and PI as children */
    elHead = NULL;
    elBody = NULL;
    elFrameset = NULL;
@@ -5628,9 +5609,9 @@ void            CheckAbstractTree (char* pathURL, Document doc)
 #endif /* ANNOTATIONS */
      {
        elRoot = TtaGetMainRoot (doc);
+       el = TtaGetFirstChild (elRoot);
        docSSchema = TtaGetDocumentSSchema (doc);
      }
-   el = TtaGetFirstChild (elRoot);
    if (el != NULL)
      {
 	elType = TtaGetElementType (el);
@@ -5642,6 +5623,23 @@ void            CheckAbstractTree (char* pathURL, Document doc)
 	     TtaNextSibling (&el);
 	     if (el != NULL)
 		elType = TtaGetElementType (el);
+	  }
+	if (elType.ElTypeNum == HTML_EL_HTML)
+	  /* that's the HTML root element */
+	  {
+	  elRoot = el;
+	  /* check its children elements */
+	  el = TtaGetFirstChild (elRoot);
+	  elType = TtaGetElementType (el);
+	  /* skip Comments, PI and Invalid_elements */
+	  while (el != NULL && (elType.ElTypeNum == HTML_EL_Comment_ ||
+				elType.ElTypeNum == HTML_EL_Invalid_element ||
+				elType.ElTypeNum == HTML_EL_XMLPI))
+	    {
+	      TtaNextSibling (&el);
+	      if (el != NULL)
+		elType = TtaGetElementType (el);
+	    }
 	  }
 	if (elType.ElTypeNum == HTML_EL_HEAD)
 	   /* the first child of the root element is HEAD */
@@ -5674,10 +5672,13 @@ void            CheckAbstractTree (char* pathURL, Document doc)
 	  }
 	if (el != NULL)
 	  {
-	     if (elType.ElTypeNum == HTML_EL_BODY)
+	     if (elType.ElTypeNum == HTML_EL_HTML)
+	        elRoot = el;
+	     else if (elType.ElTypeNum == HTML_EL_BODY)
 		/* this child of the root element is BODY */
 		elBody = el;
 	  }
+	
 	/* check all children of the root element */
 	CheckHeadElements (elRoot, &elHead, &elBody, doc);
 	if (elBody != NULL)
@@ -6185,7 +6186,7 @@ void            CheckAbstractTree (char* pathURL, Document doc)
   ----------------------------------------------------------------------*/
 static void     InitializeHTMLParser (Element lastelem, ThotBool isclosed, Document doc)
 {
-   char       tag[20];
+   char         tag[20];
    Element      elem;
    int          i;
    SSchema      schema;
@@ -6349,9 +6350,9 @@ void              StartParser (Document doc, char* htmlFileName,
   Element         el, oldel;
   AttributeType   attrType;
   Attribute       attr;
-  char*         s;
-  char          tempname[MAX_LENGTH];
-  char          temppath[MAX_LENGTH];
+  char*           s;
+  char            tempname[MAX_LENGTH];
+  char            temppath[MAX_LENGTH];
   int             length;
   ThotBool        isHTML;
   char            www_file_name[MAX_LENGTH];
@@ -6429,7 +6430,8 @@ void              StartParser (Document doc, char* htmlFileName,
 	  isHTML = (strcmp (TtaGetSSchemaName (DocumentSSchema), "HTML") == 0);
 	if (plainText)
 	  {
-	    rootElement = TtaGetMainRoot (doc);
+	    el = TtaGetMainRoot (doc);
+	    rootElement = TtaGetFirstChild (el);
 	    if (DocumentTypes[doc] == docSource)
 	      {
 		/* add the attribute Source */
@@ -6473,7 +6475,7 @@ void              StartParser (Document doc, char* htmlFileName,
 	      rootElement = ANNOT_GetHTMLRoot (doc); 
 	    else
 #endif /* ANNOTATIONS */
-	      rootElement = TtaGetMainRoot (doc);
+	      rootElement = TtaGetRootElement (doc);
 	    /* add the default attribute PrintURL */
 	    attrType.AttrSSchema = DocumentSSchema;
 	    attrType.AttrTypeNum = HTML_ATTR_PrintURL;

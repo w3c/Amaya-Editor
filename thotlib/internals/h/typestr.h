@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -17,8 +17,7 @@
  
 /* DEFINITIONS:
  
-   Whatever the category of an element is (composed, associated,
-   parameter), its structure is defined by a rule from the table
+   The structure of every element is defined by a rule from the table
    StructSchema.SsRule.
    A rule number is the rank of the rule in the table
      StructSchema.SsRule.
@@ -30,7 +29,7 @@
  
 #include "appstruct.h"
  
-typedef CHAR_T    Name[MAX_NAME_LENGTH]; /* a name terminated by a null byte */
+typedef CHAR_T    Name[MAX_NAME_LENGTH]; /* a name terminated by a null char */
 
 /* values for using schema or user attribute and element type names */ 
 #define USER_NAME 1
@@ -49,10 +48,13 @@ typedef enum
         CsBasicElement,
         CsNatureSchema,
         CsPairedElement,
-        CsExtensionRule
+        CsExtensionRule,
+        CsDocument,
+        CsAny,
+        CsEmpty
 } RConstruct;
-#define MAX_CONSTRUCT   11      /* number of values for RConstruct */
- 
+#define MAX_CONSTRUCT   14      /* number of values for RConstruct */
+
 /* basic types known by Thot (refer to the constant MAX_BASIC_TYPE) */
 typedef enum
 {
@@ -81,22 +83,22 @@ typedef enum
  
 typedef struct _TtAttribute
 {
-        Name             AttrName;     /* name of the attribute, may be
-                                          translated in the user's language */
-        Name             AttrOrigName; /* real name of the attribute */
-        ThotBool         AttrGlobal;   /* the attribute can apply to all
-                                          the elements defined in the schema */
-        int       AttrFirstExcept;     /* index in SsException of the first
+        Name       AttrName;          /* name of the attribute, may be
+                                         translated in the user's language */
+        Name       AttrOrigName;      /* real name of the attribute */
+        ThotBool   AttrGlobal;        /* the attribute can apply to all
+                                         the elements defined in the schema */
+        int        AttrFirstExcept;   /* index in SsException of the first
                                           exception number associated with this
                                           attribute, 0 if no exception is
                                           associated */
-        int       AttrLastExcept;      /* index in SsException of the last
+        int        AttrLastExcept;    /* index in SsException of the last
                                           exception number associated with this
                                           attribute */
-        AttribType      AttrType;      /* attribute type */
+        AttribType AttrType;          /* attribute type */
         union
         {
-          struct                       /* AttribType = AtReferenceAttr */
+          struct                      /* AttribType = AtReferenceAttr */
           {
             /* number of the rule defining the type of element referenced by
                the attribute */
@@ -105,7 +107,7 @@ typedef struct _TtAttribute
                defined, 0 if same schema */
             Name             _AttrTypeRefNature_;
           } s2;
-	  struct		       /* AttribType = AtEnumAttr */
+	  struct		      /* AttribType = AtEnumAttr */
 	  {
 	    /* number of possible values (effective size of the table
 	       AttrEnumValue) */
@@ -309,6 +311,7 @@ typedef struct _StructSchema
 					    a schema extension */
    PtrExtensBlock   SsExtensBlock;       /* Extension rules block if it is a
 					    schema extension */
+   int              SsDocument;          /* number of the document rule */
    int              SsRootElem;          /* number of the root rule */
    int              SsNObjects;          /* number of existing elements with
 					    the root rule type */
@@ -337,3 +340,5 @@ typedef struct _StructSchema
 } StructSchema;
 
 #endif /* _THOTLIB_TYPESTR_H_ */
+
+

@@ -2683,7 +2683,7 @@ create_dialog_math ()
 /*----------------------------------------------------------------
   Functions of the "Preferences" dialog box 
   ----------------------------------------------------------------*/
-static void Initialisation_preferences ()/* il faudra faire un free 
+static void Initialisation_preferences () /******* il faudra faire un free */
 {
   general = (General *)TtaGetMemory (sizeof (General)); 
   general->home_page = "www.w3c.org";

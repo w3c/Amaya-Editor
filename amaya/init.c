@@ -5149,15 +5149,15 @@ void         ChangeAttrOnRoot (Document document, int attrNum)
    ThotBool	    docModified;
 
    docModified = TtaIsDocumentModified (document);
-   root = TtaGetMainRoot (document);
+   root = TtaGetRootElement (document);
    attrType.AttrSSchema = TtaGetDocumentSSchema (document);
    attrType.AttrTypeNum = attrNum;
    attr = TtaGetAttribute (root, attrType);
    if (attr != NULL)
-      /* the root element has a SectionNumbering attribute. Remove it */
+      /* the root element has that attribute. Remove it */
       TtaRemoveAttribute (root, attr, document);
    else
-      /* the root element has no SectionNumbering attribute. Create one */
+      /* the root element does not have that attribute. Create it */
       {
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (root, attr, document);
@@ -5266,10 +5266,10 @@ void                HelpAmaya (Document document, View view)
    FILE               *list;
 
    /* get the root element */
-   el = TtaGetMainRoot (document);
    strcpy (localname, TempFileDirectory);
    strcat (localname, "/tree.debug");
    list = fopen (localname, "w");
+   el = TtaGetMainRoot (document);
    TtaListAbstractTree (el, list);
    fclose (list);
    strcpy (localname, TempFileDirectory);

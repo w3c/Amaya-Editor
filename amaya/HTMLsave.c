@@ -709,11 +709,11 @@ void         SetNamespacesAndDTD (Document doc)
    CHARSET              charset;
    STRING               ptr;
 #define MAX_CHARSET_LEN 50
-   char               Charset[MAX_CHARSET_LEN];
-   char		buffer[200];
+   char                 Charset[MAX_CHARSET_LEN];
+   char		        buffer[200];
    ThotBool		useMathML, useGraphML, useFrames;
 
-   root = TtaGetMainRoot (doc);
+   root = TtaGetRootElement (doc);
    if (DocumentTypes[doc] == docHTML)
      {
      useMathML = FALSE;

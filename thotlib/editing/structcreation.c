@@ -2246,7 +2246,7 @@ ThotBool            inclusion;
       /* document, et non les regles par defaut de la nature courante */
      {
 	page = TRUE;
-	pSS = pDoc->DocRootElement->ElStructSchema;
+	pSS = pDoc->DocDocElement->ElStructSchema;
      }
    if (typeNum != 0 && pSS != NULL)
      {

@@ -393,6 +393,7 @@ void                ChangeTitle (Document doc, View view)
    el = TtaGetMainRoot (doc);
    elType.ElSSchema = TtaGetDocumentSSchema (doc);
    if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+     /* it's a HTML document */
      {
        elType.ElTypeNum = HTML_EL_TITLE;
        el = TtaSearchTypedElement (elType, SearchForward, el);
@@ -421,7 +422,6 @@ void                ChangeTitle (Document doc, View view)
 #endif /* _WINDOWS */
      }
 }
-
 
 /*----------------------------------------------------------------------
    SetNewTitle

@@ -278,7 +278,7 @@ ThotBool OpenDocument (char *docName, PtrDocument pDoc, ThotBool loadIncludedDoc
 		  LoadDocumentPiv (pivotFile, pDoc, loadIncludedDoc, skeleton,
 				   pSS, withAppEvent, removeExclusions);
 		  TtaReadClose (pivotFile);
-		  if (pDoc->DocRootElement != NULL)
+		  if (pDoc->DocDocElement != NULL)
 		     /* le document lu n'est pas vide */
 		    {
 		       /* le nom de fichier devient le nom du document */
@@ -307,7 +307,7 @@ void                DeleteAllTrees (PtrDocument pDoc)
    if (pDoc != NULL)
      {
 	/* libere tout l'arbre du document et ses descripteurs de reference */
-	DeleteElement (&pDoc->DocRootElement, pDoc);
+	DeleteElement (&pDoc->DocDocElement, pDoc);
 	/* document views are now empty */
 	for (view = 0; view < MAX_VIEW_DOC; view++)
 	   pDoc->DocViewRootAb[view] = NULL;
@@ -959,8 +959,7 @@ static void ExportedContent (ThotBool *createAll, int *elType, PtrSSchema *pSS,
 	     }
 	 }
        
-       if (!ok &&
-	   *elType == (*pSS)->SsRootElem)
+       if (!ok && *elType == (*pSS)->SsRootElem)
 	 {
 	   pSRule = &(*pContSS)->SsRule[*contentType - 1];
 	   if (pSRule->SrConstruct == CsNatureSchema)
@@ -2106,7 +2105,8 @@ static  LabelString         label;
 	  /* on cree toujours la racine du document */
 	  if (!create)
 	    if (pSSchema == pDoc->DocSSchema)
-	      if (elType == pSSchema->SsRootElem)
+	      if (elType == pSSchema->SsRootElem ||
+		  elType == pSSchema->SsDocument)
 		/* c'est la racine, on cree */
 		create = TRUE;
 	  if (!create)
@@ -3320,7 +3320,7 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 		      ThotBool skeleton, PtrSSchema pLoadedSS,
 		      ThotBool withEvent, ThotBool removeExclusions)
 {
-   PtrElement          s, p, pFirst;
+   PtrElement          s, p, d, pFirst;
    PtrSSchema          pSS, pNat, pSchS1, curExtension, previousSSchema;
    PtrPSchema          pPSchema;
    PtrReferredDescr    pRefD, pNextRefD;
@@ -3336,7 +3336,7 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
    ok = FALSE;
    error = FALSE;
    msgOldFormat = TRUE;
-   pDoc->DocRootElement = NULL;
+   pDoc->DocDocElement = NULL;
    createPages = FALSE;
    pDoc->DocNNatures = 0;
    /* lit l'entete du fichier pivot */
@@ -3384,7 +3384,7 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 	     }
 	 }
        pDoc->DocLabels = NULL;
-       /* ReadTreePiv le fichier .PIV */
+       /* lit le fichier .PIV */
        
        /* lit les elements associes */
        for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
@@ -3531,7 +3531,7 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 	       structureOK = structureOK && ok;
 	     }
 	 }
-       
+
        /* lit le corps du document */
        if (!error &&
 	   tag != (CHAR_T) C_PIV_DOC_END)
@@ -3557,25 +3557,43 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 		   /* force la creation d'un element racine */
 		   if (p == NULL)
 		     /* rien n'a ete cree */
-		     p = NewSubtree (pDoc->DocSSchema->SsRootElem,
-				     pDoc->DocSSchema, pDoc, 0,
-				     FALSE, TRUE, TRUE, TRUE);
-		   else if (p->ElStructSchema != pDoc->DocSSchema ||
-			    p->ElTypeNumber != pDoc->DocSSchema->SsRootElem)
-		     /* ce n'est pas la racine attendue */
 		     {
-		       s = p;
+		       d = NewSubtree (pDoc->DocSSchema->SsDocument,
+				       pDoc->DocSSchema, pDoc, 0,
+				       FALSE, TRUE, TRUE, TRUE);
 		       p = NewSubtree (pDoc->DocSSchema->SsRootElem,
 				       pDoc->DocSSchema, pDoc, 0,
 				       FALSE, TRUE, TRUE, TRUE);
-		       InsertFirstChild (p, s);
+		       InsertFirstChild (d, p);
+		     }
+		   else if (p->ElStructSchema == pDoc->DocSSchema &&
+			    p->ElTypeNumber == pDoc->DocSSchema->SsDocument)
+		     d = p;
+		   else
+		     /* ce n'est pas la racine attendue */
+		     {
+		       d = NewSubtree (pDoc->DocSSchema->SsDocument,
+				       pDoc->DocSSchema, pDoc, 0,
+				       FALSE, TRUE, TRUE, TRUE);
+		       if (p->ElTypeNumber == pDoc->DocSSchema->SsRootElem &&
+			   p->ElStructSchema == pDoc->DocSSchema)
+			 InsertFirstChild (d, p);
+		       else
+			 {
+			  s = p;
+		          p = NewSubtree (pDoc->DocSSchema->SsRootElem,
+				          pDoc->DocSSchema, pDoc, 0,
+				          FALSE, TRUE, TRUE, TRUE);
+		          InsertFirstChild (d, p);
+			  InsertFirstChild (p, s);
+			 }
 		     }
 		   /* traite les elements exclus */
 		   if (removeExclusions)
 		     RemoveExcludedElem (&p, pDoc);
 		   /* accouple les paires */
 		   AssociatePairs (p);
-		   pDoc->DocRootElement = p;
+		   pDoc->DocDocElement = d;
 		   if (pDoc->DocCheckingMode & PIV_CHECK_MASK)
 		     /* verifie que cet arbre est correct */
 		     {
@@ -3645,8 +3663,8 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 	 /* copie les elements inclus */
 	 {
 	   /* on affecte des labels aux elements de l'arbre principal */
-	   if (pDoc->DocRootElement != NULL)
-	     SetLabel (pDoc->DocRootElement, pDoc);
+	   if (pDoc->DocDocElement != NULL)
+	     SetLabel (pDoc->DocDocElement, pDoc);
 	   /* on affecte des labels aux elements des arbres associes */
 	   for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
 	     if (pDoc->DocAssocRoot[assoc] != NULL)
@@ -3655,16 +3673,10 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 	   /* Update the inclusions values */
 	   UpdateInclusionElements (pDoc, loadExternalDoc, removeExclusions);
 	   
-	   /* verifie que les racines de tous les arbres du document
-	      possedent bien un attribut langue */
-	   CheckLanguageAttr (pDoc, pDoc->DocRootElement);
-	   pDoc->DocRootElement->ElAccess = AccessReadWrite;
+	   pDoc->DocDocElement->ElAccess = AccessReadWrite;
 	   for (i = 0; i < MAX_ASSOC_DOC; i++)
 	     if (pDoc->DocAssocRoot[i] != NULL)
-	       {
-		 CheckLanguageAttr (pDoc, pDoc->DocAssocRoot[i]);
 		 pDoc->DocAssocRoot[i]->ElAccess = AccessReadWrite;
-	       }
 	   if (ThotLocalActions[T_indexschema] != NULL)
 	     (*ThotLocalActions[T_indexschema]) (pDoc);
 	   if (withEvent && pDoc->DocSSchema != NULL && !error)

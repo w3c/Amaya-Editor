@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA  1996-2000
+ *  (c) COPYRIGHT INRIA  1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -10,7 +10,7 @@
  * en memoire.
  *
  * Author: V. Quint (INRIA)
- *         R. Guetari (W3C/INRIA): Unciode.
+ *         R. Guetari (W3C/INRIA): Unicode.
  *
  */
 
@@ -29,14 +29,7 @@ static BinFile      outfile;
    UniqueIdent	retourne un nombre entier qui sera utilise	
    comme un identificateur unique du schema compile'.		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 int                 UniqueIdent ()
-
-#else  /* __STDC__ */
-int                 UniqueIdent ()
-#endif				/* __STDC__ */
-
 {
    int                 r;
 
@@ -45,37 +38,19 @@ int                 UniqueIdent ()
    return (r % 65536);
 }
 
-
 /*----------------------------------------------------------------------
    WriteShort      ecrit l'entier n				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                WriteShort (int n)
-
-#else  /* __STDC__ */
-void                WriteShort (n)
-int                 n;
-
-#endif /* __STDC__ */
-
 {
    TtaWriteByte (outfile, (char) (n / 256));
    TtaWriteByte (outfile, (char) (n % 256));
 }
 
-
 /*----------------------------------------------------------------------
    WriteSignedShort  ecrit l'entier signe' n			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                WriteSignedShort (int n)
-
-#else  /* __STDC__ */
-void                WriteSignedShort (n)
-int                 n;
-
-#endif /* __STDC__ */
-
 {
    if (n >= 0)
       WriteShort (n);
@@ -83,19 +58,10 @@ int                 n;
       WriteShort (n + 65536);
 }
 
-
 /*----------------------------------------------------------------------
    WriteName       ecrit le nom name				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                WriteName (Name name)
-
-#else  /* __STDC__ */
-void                WriteName (name)
-Name                name;
-
-#endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -105,19 +71,10 @@ Name                name;
    while (name[i - 1] != '\0');
 }
 
-
 /*----------------------------------------------------------------------
    WriteBoolean       ecrit le booleen b dans le fichier		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                WriteBoolean (ThotBool b)
-
-#else  /* __STDC__ */
-void                WriteBoolean (b)
-ThotBool             b;
-
-#endif /* __STDC__ */
-
 {
    if (b)
       TtaWriteByte (outfile, '\1');
@@ -125,19 +82,10 @@ ThotBool             b;
       TtaWriteByte (outfile, '\0');
 }
 
-
 /*----------------------------------------------------------------------
    WriteAttributeType   ecrit un type d'attribut			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                WriteAttributeType (AttribType typ)
-
-#else  /* __STDC__ */
-void                WriteAttributeType (typ)
-AttribType          typ;
-
-#endif /* __STDC__ */
-
 {
 
    switch (typ)
@@ -157,19 +105,10 @@ AttribType          typ;
 	 }
 }
 
-
 /*----------------------------------------------------------------------
    WriteConstructor       ecrit un constructeur			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                WriteConstructor (RConstruct constr)
-
-#else  /* __STDC__ */
-void                WriteConstructor (constr)
-RConstruct          constr;
-
-#endif /* __STDC__ */
-
 {
    switch (constr)
 	 {
@@ -206,22 +145,22 @@ RConstruct          constr;
 	    case CsExtensionRule:
 	       TtaWriteByte (outfile, C_EXTENS_CONSTR);
 	       break;
+	    case CsDocument:
+	       TtaWriteByte (outfile, C_DOCUMENT_CONSTR);
+	       break;
+	    case CsAny:
+	       TtaWriteByte (outfile, C_ANY_CONSTR);
+	       break;
+	    case CsEmpty:
+	       TtaWriteByte (outfile, C_EMPTY_CONSTR);
+	       break;
 	 }
 }
-
 
 /*----------------------------------------------------------------------
    WriteBasicType   ecrit un type de base				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                WriteBasicType (BasicType typ)
-
-#else  /* __STDC__ */
-void                WriteBasicType (typ)
-BasicType           typ;
-
-#endif /* __STDC__ */
-
 {
    switch (typ)
 	 {
@@ -249,19 +188,10 @@ BasicType           typ;
 	 }
 }
 
-
 /*----------------------------------------------------------------------
    WriteRule     ecrit une regle de structure			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         WriteRule (SRule * pSRule)
-
-#else  /* __STDC__ */
-static void         WriteRule (pSRule)
-SRule              *pSRule;
-
-#endif /* __STDC__ */
-
 {
    int                 j;
 
@@ -339,9 +269,12 @@ SRule              *pSRule;
 	       break;
 	    case CsExtensionRule:
 	       break;
+	    case CsDocument:
+	    case CsAny:
+	    case CsEmpty:
+	       break;
 	 }
 }
-
 
 /*----------------------------------------------------------------------
    WriteStructureSchema						
@@ -350,18 +283,8 @@ SRule              *pSRule;
    Si code est nul, ecrit le schema avec un nouveau code		
    d'identification, sinon avec code comme code d'identification.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool             WriteStructureSchema (Name fileName, PtrSSchema pSS,
-					  int code)
-
-#else  /* __STDC__ */
-ThotBool             WriteStructureSchema (fileName, pSS, code)
-Name                fileName;
-PtrSSchema          pSS;
-int                 code;
-
-#endif /* __STDC__ */
-
+					   int code)
 {
    TtAttribute        *pAttr;
    int                 i, j;
@@ -381,6 +304,7 @@ int                 code;
       WriteShort (code);
    WriteName (pSS->SsDefaultPSchema);
    WriteBoolean (pSS->SsExtension);
+   WriteShort (pSS->SsDocument);
    WriteShort (pSS->SsRootElem);
    WriteShort (pSS->SsNAttributes);
    WriteShort (pSS->SsNRules);

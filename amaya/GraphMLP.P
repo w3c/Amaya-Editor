@@ -1269,6 +1269,14 @@ BOXES
 
 RULES
 
+   Document:
+	BEGIN
+	Size: 12 pt;
+	Font: helvetica;
+	IN Structure_view
+		Width: Enclosing . Width;
+	END;
+
    GraphML:
 	BEGIN
 	CreateBefore(SVG_S);

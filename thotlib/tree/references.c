@@ -171,8 +171,8 @@ PtrDocument        *pDoc;
 			    }
 			  pE = NULL;
 			  /* on cherche d'abord dans l'arbre principal du document */
-			  if ((*pDoc)->DocRootElement != NULL)
-			     pE = SearchElemLabel ((*pDoc)->DocRootElement, pRefD1->ReReferredLabel);
+			  if ((*pDoc)->DocDocElement != NULL)
+			     pE = SearchElemLabel ((*pDoc)->DocDocElement, pRefD1->ReReferredLabel);
 			  /* on cherche danbs les arbres associes */
 			  for (assoc = 0; pE == NULL && assoc < MAX_ASSOC_DOC; assoc++)
 			     if ((*pDoc)->DocAssocRoot[assoc] != NULL)

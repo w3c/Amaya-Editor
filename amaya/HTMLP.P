@@ -313,7 +313,6 @@ BOXES
 	Content: Text 'html';
 	Visibility: 0;
 	IN Structure_view BEGIN
-		VertPos: Top = Enclosing . Top + 0.5;
 		Size: TAG_FONTSIZE;
 		Font: TAG_Font;
 		Weight: TAG_Weight;
@@ -5894,16 +5893,6 @@ BOXES
 	   Underline: NoUnderline;
 	   END;
 	END;
-#else
-
- BodyBottomSpace: BEGIN
-	Background : White;
-	Foreground : Black;
-	FillPattern: backgroundcolor;
-	Content: Graphics ' ';
-	Height: 1 cm;
-	Width: 1 px;
-	END;
 #endif
 
 #ifndef PAGE
@@ -5928,7 +5917,8 @@ BOXES
 
 RULES
 
- HTML:	BEGIN
+ Document:
+	BEGIN
 	Depth: 0;
 	Adjust: Left;
 	Indent: 0;
@@ -5947,12 +5937,13 @@ RULES
 	HorizPos: Left = Enclosing . Left;
 #endif
 	VertPos: Top = Enclosing . Top;
-	CreateFirst(HTML_S);
+	PaddingBottom: 2 cm;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - 1;
+		Width: Enclosing . Width;
 		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + 1;
+		HorizPos: Left = Enclosing . Left;
+		PaddingLeft: 0.4;
 		Font: Helvetica;
 		END;
 	IN Links_view BEGIN
@@ -5975,9 +5966,21 @@ RULES
 		END;
 	END;
 
+ HTML:	BEGIN
+	Width: Enclosing . Width;
+	VertPos: Top = Enclosing . Top;
+	CreateBefore(HTML_S);
+	IN Structure_view BEGIN
+		VertPos: Top = Previous . Bottom;
+		Width: Enclosing . Width - 1;
+		HorizPos: Left = Enclosing . Left + 1;
+		END;
+	END;
+
  HEAD:	BEGIN
 	Visibility: 0;
 	CreateBefore(HEAD_S);
+	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -5987,6 +5990,7 @@ RULES
 
  BODY:	BEGIN
 	CreateBefore(BODY_S);
+	CreateWith(VerticalLine);
 	IF NOT within NOFRAMES BEGIN
 		MarginTop: 0.2;
 		VertPos: Top = Previous AnyElem . Bottom;
@@ -6006,8 +6010,6 @@ RULES
 	Adjust: Left;
 	MarginLeft: 0.5 cm;
 	MarginRight: 0.5 cm;
-	IF NOT within NOFRAMES
-		CreateLast(BodyBottomSpace);
 #endif
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
@@ -6055,6 +6057,7 @@ RULES
 
  TITLE:	BEGIN
 	CreateBefore(TITLE_S);
+	CreateWith(VerticalLine);
 #ifndef PAGE
 	Visibility: 0;
 #endif
@@ -6114,6 +6117,7 @@ RULES
 
  STYLE_: BEGIN
 	CreateBefore(STYLE_S);
+	CreateWith(VerticalLine);
 	Visibility: 0;
 	Line;
 	IN Structure_view BEGIN
@@ -6125,6 +6129,7 @@ RULES
 
  SCRIPT: BEGIN
 	CreateBefore(SCRIPT_S);
+	CreateWith(VerticalLine);
 	Visibility: 0;
 	Line;
 	IN Structure_view BEGIN

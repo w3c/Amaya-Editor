@@ -1623,7 +1623,7 @@ static void PrintView (PtrDocument pDoc)
      }
    else
      {
-       pEl = pDoc->DocRootElement;
+       pEl = pDoc->DocDocElement;
        pViewD = &pDoc->DocView[CurrentView - 1];
        ustrncpy (viewName,
 		 pViewD->DvSSchema->SsPSchema->PsView[pViewD->DvPSchemaView-1],

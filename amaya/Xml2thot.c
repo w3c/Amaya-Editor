@@ -165,8 +165,6 @@ static char         *docURL = NULL;
 static SSchema       DocumentSSchema = NULL;
                         /* root element of the document */
 static Element       rootElement;
-                        /* type of the root element */
-static ElementType   rootElType;
                         /* name of the root element */
 static char          XMLrootName[100];
                         /* root element is closed */
@@ -1611,34 +1609,25 @@ static void       StartOfXmlStartElement (char *GIname)
   else
     {
       newElement = NULL;
-      if (rootElement != NULL && stackLevel <= 1 &&
-	  elType.ElTypeNum == rootElType.ElTypeNum &&
-	  elType.ElSSchema == rootElType.ElSSchema)
-	/* the corresponding Thot element is the root of the */
-	/* abstract tree, which has been created at initialization */
-	newElement = rootElement;
+      /* create a Thot element */
+      if (currentElementContent == 'E')
+	/* empty XML element. Create all children specified */
+	/* in the Thot structure schema */
+	newElement = TtaNewTree (XMLcontext.doc, elType, "");
       else
+	/* the HTML element may have children. Create only */
+	/* the corresponding Thot element, without any child */
+	newElement = TtaNewElement (XMLcontext.doc, elType);
+
+      XmlSetElemLineNumber (newElement);
+      InsertXmlElement (&newElement);
+      if (newElement != NULL)
 	{
-	  /* create a Thot element */
-	  if (currentElementContent == 'E')
-	    /* empty XML element. Create all children specified */
-	    /* in the Thot structure schema */
-	    newElement = TtaNewTree (XMLcontext.doc, elType, "");
-	  else
-	    /* the HTML element may have children. Create only */
-	    /* the corresponding Thot element, without any child */
-	    newElement = TtaNewElement (XMLcontext.doc, elType);
-	  
-	  XmlSetElemLineNumber (newElement);
-	  InsertXmlElement (&newElement);
-	  if (newElement != NULL)
-	    {
-	      /* an empty Text element has been created. */
-	      /* The following character data must go to that elem. */
-	      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-		XMLcontext.mergeText = TRUE;
-	    }
-	}   
+	  /* an empty Text element has been created. */
+	  /* The following character data must go to that elem. */
+	  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	    XMLcontext.mergeText = TRUE;
+	}
       elementStack[stackLevel] = newElement;
       nameElementStack[stackLevel] = mappedName;
       elInStack = TRUE;
@@ -2354,7 +2343,14 @@ static void       EndOfAttributeValue (unsigned char *attrValue,
 		       entityName[l++] = START_ENTITY;
 		       for (k = i; k < length && !end; k++)
 			 {
-			   if (attrValue[k] == ';')
+			   if (attrValue[k] == '&')
+			     {
+			       /* An '&' inside an other '&' ?? We suppose */
+			       /* the first one doesn't belong to an entity */
+			       k = length;
+			       buffer [j++] = (char) START_ENTITY;
+			     }
+			   else if (attrValue[k] == ';')
 			     {
 			       /* End of the entity */
 			       end = TRUE;
@@ -3161,7 +3157,6 @@ static void       Hndl_ElementStart (void *userData,
 				     const XML_Char **attlist)
 
 {
-   int            nbatts = 0;
    char          *buffer = NULL;
    unsigned char *attrName = NULL;
    unsigned char *attrValue = NULL;
@@ -3169,8 +3164,6 @@ static void       Hndl_ElementStart (void *userData,
    char          *ptr;
    PtrParserCtxt  elementParserCtxt = NULL;
    char           msgBuffer[MaxMsgLength];
-   Element        savCurrentElement = NULL;
-   ThotBool       isRoot = FALSE;
 
 #ifdef EXPAT_PARSER_DEBUG
    printf ("\n Hndl_ElementStart '%s'\n", name);
@@ -3179,20 +3172,7 @@ static void       Hndl_ElementStart (void *userData,
    /* Initialize root element name and parser context if not done yet */
    if (XMLrootName[0] == EOS)
      /* This is the first parsed element */
-     {
-       strcpy (XMLrootName, (char*) name);
-       if (rootElement != NULL)
-	 {
-	   /* This is the root of the Thot abstract tree */
-	   isRoot = TRUE;
-#ifdef XML_GEN
-	   /* Instanciate the XML generic Root Element */
-	   if (strcmp (TtaGetSSchemaName (DocumentSSchema),
-			"XML") == 0)
-	     TtaChangeXMLRootElement (XMLrootName, XMLcontext.doc);
-#endif /* XML_GEN */
-	 }
-     }
+     strcpy (XMLrootName, (char*) name);
 
    /* Treatment for the GI */
    if (XMLcontext.parsingTextArea)
@@ -3252,14 +3232,6 @@ static void       Hndl_ElementStart (void *userData,
 	  StartOfXmlStartElement (bufName);
 	  
 	  /*-------  Treatment of the attributes -------*/
-	  nbatts = XML_GetSpecifiedAttributeCount (parser);
-	  if (isRoot && nbatts != 0)
-	    {
-	      /* Specific treatment to take into account the XML elements */
-	      /* declared previously to the root, as the comments or the PI */
-	      savCurrentElement = XMLcontext.lastElement;
-	      XMLcontext.lastElement = rootElement;
-	    }
 	  while (*attlist != NULL)
 	    {
 	      /* Create the corresponding Thot attribute */
@@ -3292,9 +3264,6 @@ static void       Hndl_ElementStart (void *userData,
 	      if (attrValue != NULL)
 	      TtaFreeMemory (attrValue);
 	    }
-	  if (isRoot && nbatts != 0)
-	    XMLcontext.lastElement = savCurrentElement;
-
 	  /* Restore the context (it may have been changed */
 	  /* by the treatment of the attributes) */
 	  currentParserCtxt = elementParserCtxt;
@@ -4152,8 +4121,6 @@ void StartXmlParser (Document doc, char *htmlFileName,
 
 {
   Element         el, oldel;
-  AttributeType   attrType;
-  Attribute       attr;
   char           *s;
   char            tempname[MAX_LENGTH];
   char            temppath[MAX_LENGTH];
@@ -4165,7 +4132,6 @@ void StartXmlParser (Document doc, char *htmlFileName,
 
   /* General initialization */
   rootElement = TtaGetMainRoot (doc);
-  rootElType = TtaGetElementType (rootElement);     
   InitializeXmlParsingContext (doc, rootElement, FALSE, FALSE);
 
   /* Specific Initialization */
@@ -4220,20 +4186,9 @@ void StartXmlParser (Document doc, char *htmlFileName,
 
       /* Is the current document a XHTML document */
       isXHTML = (strcmp (TtaGetSSchemaName (DocumentSSchema),
-			  "HTML") == 0);	
+			  "HTML") == 0);
       if (isXHTML)
-	{
-	  strcpy (XMLrootName, ("html"));
-	  /* Add the default attribute PrintURL */
-	  attrType.AttrSSchema = DocumentSSchema;
-	  attrType.AttrTypeNum = HTML_ATTR_PrintURL;
-	  attr = TtaGetAttribute (rootElement, attrType);
-	  if (!attr)
-	    {
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (rootElement, attr, doc);
-	    }
-	}
+	strcpy (XMLrootName, ("html"));
 
       LoadUserStyleSheet (doc);
 

@@ -1,12 +1,12 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
-   Ce module charge un schema de structure depuis un fichier .STR
+   This module loads a structure schema from a .STR file
  */
 
 #include "thot_sys.h"
@@ -29,17 +29,7 @@
    ReadAttribType                                                  
    lit un type d'attribut et retourne sa valeur.   		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool     ReadAttribType (BinFile file, AttribType * attrType)
-
-#else  /* __STDC__ */
-static ThotBool     ReadAttribType (file, attrType)
-BinFile             file;
-AttribType         *attrType;
-
-#endif /* __STDC__ */
-
 {
    char c;
 
@@ -66,22 +56,11 @@ AttribType         *attrType;
    return TRUE;
 }
 
-
 /*----------------------------------------------------------------------
    ReadRConstruct							
    	lit un constructeur et retourne sa valeur.                      
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool     ReadRConstruct (BinFile file, RConstruct * constr)
-
-#else  /* __STDC__ */
-static ThotBool     ReadRConstruct (file, constr)
-BinFile             file;
-RConstruct         *constr;
-
-#endif /* __STDC__ */
-
 {
    char c;
 
@@ -121,6 +100,15 @@ RConstruct         *constr;
 	    case C_EXTENS_CONSTR:
 	       *constr = CsExtensionRule;
 	       break;
+	    case C_DOCUMENT_CONSTR:
+	       *constr = CsDocument;
+	       break;
+	    case C_ANY_CONSTR:
+	       *constr = CsAny;
+	       break;
+	    case C_EMPTY_CONSTR:
+	       *constr = CsEmpty;
+	       break;
 	    default:
 	       *constr = CsIdentity;
 	       return FALSE;
@@ -128,22 +116,11 @@ RConstruct         *constr;
    return TRUE;
 }
 
-
 /*----------------------------------------------------------------------
    ReadBasicType                                                   
    lit un type de base et retourne sa valeur.      		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool     ReadBasicType (BinFile file, BasicType * typ)
-
-#else  /* __STDC__ */
-static ThotBool     ReadBasicType (file, typ)
-BinFile             file;
-BasicType          *typ;
-
-#endif /* __STDC__ */
-
 {
    char c;
 
@@ -178,21 +155,10 @@ BasicType          *typ;
    return TRUE;
 }
 
-
 /*----------------------------------------------------------------------
    ReadAttribute                                			
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool     ReadAttribute (BinFile file, TtAttribute * pAttr)
-
-#else  /* __STDC__ */
-static ThotBool     ReadAttribute (file, pAttr)
-BinFile             file;
-TtAttribute        *pAttr;
-
-#endif /* __STDC__ */
-
 {
    AttribType          attrType;
    int                 j;
@@ -229,21 +195,10 @@ TtAttribute        *pAttr;
    return TRUE;
 }
 
-
 /*----------------------------------------------------------------------
    ReadSRule                                  			
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool     ReadSRule (BinFile file, SRule * pSRule)
-
-#else  /* __STDC__ */
-static ThotBool     ReadSRule (file, pSRule)
-BinFile             file;
-SRule              *pSRule;
-
-#endif /* __STDC__ */
-
 {
    RConstruct          constr;
    int                 j;
@@ -304,7 +259,6 @@ SRule              *pSRule;
 	    case CsReference:
 	       TtaReadShort (file, &pSRule->SrReferredType);
 	       TtaReadName (file, pSRule->SrRefTypeNat);
-
 	       break;
 	    case CsIdentity:
 	       TtaReadShort (file, &pSRule->SrIdentRule);
@@ -334,6 +288,9 @@ SRule              *pSRule;
 	       TtaReadBool (file, &pSRule->SrFirstOfPair);
 	       break;
 	    case CsExtensionRule:
+	    case CsDocument:
+	    case CsAny:
+	    case CsEmpty:
 	       break;
 	 }
    return TRUE;
@@ -342,36 +299,30 @@ SRule              *pSRule;
 /*----------------------------------------------------------------------
    ReadConstants                                          		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool     ReadConstants (BinFile file, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-static ThotBool     ReadConstants (file, pSS)
-BinFile             file;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
 {
-#  ifdef _I18N_
+#ifdef _I18N_
    CHAR_T c;
    int    i;
 
    i = 0;
-   do {
-      do {
-         TtaReadWideChar (file, &c, ISO_8859_1);
-         pSS->SsConstBuffer[i++] = c;
-	  } while (c != WC_EOS && i < MAX_LEN_ALL_CONST);
-      TtaReadWideChar (file, &c, ISO_8859_1);
-      pSS->SsConstBuffer[i++] = c;
-   } while (c != WC_EOS && i < MAX_LEN_ALL_CONST);
+   do
+     {
+       do
+	 {
+	   TtaReadWideChar (file, &c, ISO_8859_1);
+	   pSS->SsConstBuffer[i++] = c;
+	 }
+       while (c != WC_EOS && i < MAX_LEN_ALL_CONST);
+       TtaReadWideChar (file, &c, ISO_8859_1);
+       pSS->SsConstBuffer[i++] = c;
+     }
+   while (c != WC_EOS && i < MAX_LEN_ALL_CONST);
    if (i >= MAX_LEN_ALL_CONST)
-      return FALSE;
+     return FALSE;
    else
-       return TRUE;
-#  else  /* !_I18N_ */
+     return TRUE;
+#else  /* !_I18N_ */
    char c;
    int                 i;
 
@@ -392,9 +343,8 @@ PtrSSchema          pSS;
       return FALSE;
    else
       return TRUE;
-#  endif /* !_I18N_ */
+#endif /* !_I18N_ */
 }
-
 
 /*----------------------------------------------------------------------
    ReadStructureSchema                                             
@@ -404,17 +354,7 @@ PtrSSchema          pSS;
    pSS: schema de structure en memoire a remplir.               	
    Retourne VRAI si chargement reussi, FAUX si echec.              
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 ThotBool            ReadStructureSchema (Name fileName, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-ThotBool            ReadStructureSchema (fileName, pSS)
-Name                fileName;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
 { 
    BinFile             file;
    PathBuffer          buf;
@@ -422,12 +362,12 @@ PtrSSchema          pSS;
    int                 i;
 
    /* compose le nom du fichier a ouvrir */
-#  if 0 
+#if 0 
    pwdPath = TtaGetEnvString ("PWD");
    ustrncpy (dirBuffer, pwdPath, MAX_PATH);
-#  endif  /* !_WINDOWS_COMPILERS */
+#endif  /* !_WINDOWS_COMPILERS */
    ustrncpy (dirBuffer, SchemaPath, MAX_PATH);
-/* #  endif * _WINDOWS_COMPILERS */
+/* #endif * _WINDOWS_COMPILERS */
    MakeCompleteName (fileName, "STR", dirBuffer, buf, &i);
 
    /* ouvre le fichier */
@@ -437,7 +377,8 @@ PtrSSchema          pSS;
      {
 	ustrncpy (buf, fileName, MAX_PATH);
 	ustrcat (buf, ".STR");
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE),
+			   buf);
 	return FALSE;
      }
    else
@@ -451,6 +392,7 @@ PtrSSchema          pSS;
 	TtaReadBool (file, &pSS->SsExtension);
 	pSS->SsNExtensRules = 0;
 	pSS->SsExtensBlock = NULL;
+	TtaReadShort (file, &pSS->SsDocument);
 	TtaReadShort (file, &pSS->SsRootElem);
 	pSS->SsNObjects = 0;
 	TtaReadShort (file, &pSS->SsNAttributes);
@@ -464,7 +406,8 @@ PtrSSchema          pSS;
 	if (!ReadConstants (file, pSS))
 	  {
 	     /* message 'Fichier .STR incorrect ' */
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_STR_FILE),
+	     TtaDisplayMessage (INFO,
+				TtaGetMessage (LIB, TMSG_INCORRECT_STR_FILE),
 				fileName);
 	     return FALSE;
 	  }

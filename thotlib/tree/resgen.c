@@ -11,26 +11,14 @@
 #include "constres.h"
 #include "resmatch_f.h"
 
-#ifdef __STDC__
 extern STRING TtaAllocString (unsigned int);
-#else  /* __STDC__ */
-extern STRING TtaAllocString ();
-#endif /* ___STDC__ */
 
-#ifdef __STDC__
-static ThotBool RestTransformChildren (Restruct restr, Element oldElem, Element newElem, TypeTree typeTree, TypeTree ancestTree, Document srcDoc, Document dstDoc);
-#else  /* __STDC__ */
-static ThotBool RestTransformChildren (/* restr, oldElem, newElem, typeTree, ancestTree, doc */);
-#endif  /* __STDC__ */
+static ThotBool RestTransformChildren (Restruct restr, Element oldElem,
+				       Element newElem, TypeTree typeTree,
+				       TypeTree ancestTree, Document srcDoc,
+				       Document dstDoc);
 
-
-#ifdef __STDC__
 static ThotBool IsNodeOfType (TypeTree node, ElementType elType)
-#else  /* __STDC__ */
-static ThotBool IsNodeOfType (node, elType)
-TypeTree node;
-ElementType elType;
-#endif  /* __STDC__ */
 {
   ThotBool result = FALSE;
 
@@ -42,17 +30,12 @@ ElementType elType;
   
   return result;
 }
+
 /*----------------------------------------------------------------------
   RestNextEffNode retourne le noeud effectif suivant lastNode dans tree
   Profondeur d'abord
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 TypeTree RestNextEffNode (TypeTree tree, TypeTree lastNode) 
-#else  /* __STDC__ */
-TypeTree RestNextEffNode (tree, lastNode) 
-TypeTree tree;
-TypeTree lastNode;
-#endif  /* __STDC__ */
 {
   ThotBool found = FALSE;
   ThotBool wentUp = FALSE;
@@ -119,11 +102,8 @@ TypeTree lastNode;
   transfere le contenu de l'element oldElem dans newElem, les deux elements
   appartiennent au meme type de  base
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool RestTransferContent (Element oldElem, Element newElem, Document doc)
-#else  /* __STDC__ */
-static ThotBool RestTransferContent (Element oldElem, Element newElem, Document doc)
-#endif  /* __STDC__ */
+static ThotBool RestTransferContent (Element oldElem, Element newElem,
+				     Document doc)
 {
   ElementType newType, oldType;
   Language lang;
@@ -195,6 +175,7 @@ static ThotBool RestTransferContent (Element oldElem, Element newElem, Document 
       }
   return result;
 }
+
 /*----------------------------------------------------------------------  
   IsPresentInAggregate
   est vrai si un element de type typeNum est present comme fils de 
@@ -203,14 +184,8 @@ static ThotBool RestTransferContent (Element oldElem, Element newElem, Document 
   contient l'element precedant dans l'aggregat (ou NULL s'il n'y en 
   a pas).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool IsPresentInAggregate (Element elParent, int typeNum, Element *elem)
-#else  /* __STDC__ */
-static ThotBool IsPresentInAggregate (elParent, typeNum, elem)
-Element elParent;
-int typeNum;
-Element *elem;
-#endif  /* __STDC__ */
+static ThotBool IsPresentInAggregate (Element elParent, int typeNum,
+				      Element *elem)
 {
   int card, indice;
   ElementType *typesArray;
@@ -283,7 +258,6 @@ Element *elem;
     }
   return result;
 }
-
  
 /*----------------------------------------------------------------------  
   RestCreateDescent
@@ -292,27 +266,15 @@ Element *elem;
   est l'element existant auquel doit etre rattachee la branche creee
   newElem retourne l'element de plus bas niveau cree
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
- Element RestCreateDescent (Element ancestor, TypeTree ancestTree, TypeTree descendTree, TypeTree recOrigTree, TypeTree recDestTree, Document doc)
-#else  /* __STDC__ */
- Element RestCreateDescent (ancestor, ancestTree, descendTree, recOrigTree, recDestTree, doc)
-Element ancestor;
-Element *newElem;
-TypeTree ancestTree;
-TypeTree descendTree;
-TypeTree recOrigTree;
-TypeTree recDestTree;
-Document doc;
-#endif  /* __STDC__ */
+static Element RestCreateDescent (Element ancestor, TypeTree ancestTree,
+				  TypeTree descendTree, TypeTree recOrigTree,
+				  TypeTree recDestTree, Document doc)
 {
-
   ElementType elType;
   Element elLast, elNew, elParent;
   TypeTree nStack [10];
   int top, i;
   TypeTree tNode;
- 
-
  
   elNew = NULL;
   top = 0;
@@ -328,7 +290,8 @@ Document doc;
       if (tNode != NULL)
 	tNode = recOrigTree;
     }
-  while (ancestTree != NULL && tNode != NULL && tNode->TId != ancestTree->TId && top < 10)
+  while (ancestTree != NULL && tNode != NULL &&
+	 tNode->TId != ancestTree->TId && top < 10)
     {
       /* recherche ancestTree dans les ancetres de descendTree */
       nStack [top++] = tNode;
@@ -399,8 +362,6 @@ Document doc;
       return elNew;
 }
 
-     
-
 static ThotBool RestTransAttr (Element oldElem, Element newElem, Document doc)
 {
   return TRUE;
@@ -409,13 +370,7 @@ static ThotBool RestTransAttr (Element oldElem, Element newElem, Document doc)
 /*----------------------------------------------------------------------  
   RestTarget
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
- TypeTree RestTarget (TypeTree source, Restruct restr)
-#else  /* __STDC__ */
- TypeTree RestTarget (source, restr)
-TypeTree source;
-Restruct restr;
-#endif  /* __STDC__ */
+static TypeTree RestTarget (TypeTree source, Restruct restr)
 {
   int i = 0;
   TypeTree res = NULL;
@@ -437,13 +392,7 @@ Restruct restr;
 /*----------------------------------------------------------------------  
   RestSourceRec
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
- TypeTree RestSourceRec (TypeTree source, Restruct restr)
-#else  /* __STDC__ */
- TypeTree RestSourceRec (source, restr)
-TypeTree source;
-Restruct restr;
-#endif  /* __STDC__ */
+static TypeTree RestSourceRec (TypeTree source, Restruct restr)
 {
   int i = 0;
   TypeTree res = NULL;
@@ -465,13 +414,7 @@ Restruct restr;
 /*----------------------------------------------------------------------  
   RestDestRec
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
- TypeTree RestDestRec (TypeTree source, Restruct restr)
-#else  /* __STDC__ */
- TypeTree RestDestRec (source, restr)
-TypeTree source;
-Restruct restr;
-#endif  /* __STDC__ */
+static TypeTree RestDestRec (TypeTree source, Restruct restr)
 {
   int i = 0;
   TypeTree res = NULL;
@@ -494,13 +437,7 @@ Restruct restr;
   RestSearchInTree
   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static TypeTree RestSearchInTree (ElementType searchedType, TypeTree root)
-#else  /* __STDC__ */
-static TypeTree RestSearchInTree (searchedType, root)
-ElementType searchedType;
-TypeTree root;
-#endif  /* __STDC__ */
 {
   TypeTree currentNode, result = NULL;
 
@@ -524,18 +461,10 @@ TypeTree root;
   descendants de parentTree et insere comme descendants de elDestParent,
   dans le document doc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool RestTransformElement (Restruct restr, Element elSource, Element elDestParent, TypeTree sourceTree, TypeTree parentTree, Document srcDoc, Document dstDoc)
-#else  /* __STDC__ */
-static ThotBool RestTransformElement (restr, elSource, elDestParent, sourceTree, parentTree, srcDoc, dstDoc)
-Restruct restr;
-Element elSource;
-Element elDestParent;
-TypeTree sourceTree;
-TypeTree parentTree;
-Document srcDoc;
-Document dstDoc;
-#endif  /* __STDC__ */
+static ThotBool RestTransformElement (Restruct restr, Element elSource,
+				      Element elDestParent, TypeTree sourceTree,
+				      TypeTree parentTree, Document srcDoc,
+				      Document dstDoc)
 {
   ElementType elType, targetType;
   Element elTarget, prev, elParent;
@@ -666,50 +595,15 @@ Document dstDoc;
   return result;
 }
 
-#ifdef THIS_IS_GARBAGE
-
-    /* l'element n'a pas de type marque comme effectif, */
-    /* c'est donc un choix ou une liste uniquement instanciee */
-    /* on transforme sa descendence en l'ignorant. */
-     {
-      /* recherche le fils de elSource et son arbre de type */
-      elChild = TtaGetFirstChild (elSource);
-      elType = TtaGetElementType (elChild);
-      treeChild = sourceTree->TChild;
-      while (treeChild != NULL && !IsNodeOfType (treeChild, elType))
-	/*treeChild->TypeNum != elType.ElTypeNum*/
-	treeChild = treeChild->TNext;
-      
-      result = (treeChild != NULL &&
-		RestTransformElement (restr, 
-				      elChild, 
-				      elDestParent,
-				      treeChild,
-				      parentTree, 
-				      srcDoc,
-				      dstDoc));
-     }
-return result;
-
-#endif
-
 /*----------------------------------------------------------------------  
   RestTransformChildren
   transforme la descendance de srcElem suivant les couplages de typeTree
   et les insere comme descendants de newElem
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool RestTransformChildren (Restruct restr, Element srcElem, Element newElem, TypeTree typeTree, TypeTree ancestTree, Document srcDoc, Document dstDoc)
-#else  /* __STDC__ */
-static ThotBool RestTransformChildren (restr, srcElem, newElem, typeTree, ancestTree, srcDoc, dstDoc)
-Restruct restr;
-Element srcElem;
-Element newElem;
-TypeTree typeTree;
-TypeTree ancestTree;
-Document srcDoc;
-Document dstDoc;
-#endif  /* __STDC__ */
+static ThotBool RestTransformChildren (Restruct restr, Element srcElem,
+				       Element newElem, TypeTree typeTree,
+				       TypeTree ancestTree, Document srcDoc,
+				       Document dstDoc)
 {
   Element elChild;
   ElementType elType;
@@ -753,51 +647,11 @@ Document dstDoc;
   return result;
 } 
   
-#ifdef THIS_IS_GARBAGE
-{    while (childTree != NULL && 
-	     (!IsNodeOfType (childTree, elType) &&
-	      !(childTree->TPrintSymb == '[' &&
-		childTree->TChild != NULL &&
-		IsNodeOfType (childTree->TChild, elType))))
-	childTree = childTree->TNext;
-
-      if (childTree != NULL && !IsNodeOfType (childTree, elType))
-	childTree = childTree->TChild;
-      if (childTree != NULL)
-	result = (result && 
-		  RestTransformElement (restr, elChild, newElem, childTree, typeTree, srcDoc, dstDoc));
-      else if (TtaIsLeaf (elType))
-	{
-	  elCopy = TtaCopyTree (elChild, srcDoc, dstDoc, newElem);
-	  prev = TtaGetLastChild (newElem);
-	  if (elCopy != NULL)
-	    if (prev == NULL)
-	      TtaInsertFirstChild (&elCopy, newElem, dstDoc);
-	    else
-	      TtaInsertSibling (elCopy, prev, FALSE, dstDoc);
-      	  result = !TtaGetErrorCode();
-	}
-      else
-	result = FALSE; 
-	
-      /* traite le fils suivant */
-      TtaNextSibling (&elChild);
-    }
-  return result;
-
-#endif
-
 /*----------------------------------------------------------------------  
   RestChangeOnPlace
   applique la transformation restruct pour changement type sur place
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool RestChangeOnPlace (Document doc, Restruct restruct)
-#else  /* __STDC__ */
-ThotBool RestChangeOnPlace (doc, restruct)
-Document doc;
-Restruct restruct;
-#endif  /* __STDC__ */
 {
   TypeTree ptrTree, target;
   Element newInstance, elTargetParent, father, prev, tfather, tprev;
@@ -885,7 +739,8 @@ Restruct restruct;
         TtaInsertSibling (RContext->COldElems[0], prev, FALSE, doc);
       TtaSelectElement (doc, RContext->COldElems[0]); 
       for (i = 1; i < RContext->CNbOldElems; i++)
-	TtaInsertSibling (RContext->COldElems[i], RContext->COldElems[i - 1], FALSE, doc);
+	TtaInsertSibling (RContext->COldElems[i], RContext->COldElems[i - 1],
+			  FALSE, doc);
       if (RContext->CNbOldElems > 1)
 	TtaExtendSelection (doc, RContext->COldElems[RContext->CNbOldElems - 1],0);
     }
@@ -899,110 +754,4 @@ Restruct restruct;
 	TtaDeleteTree(RContext->COldElems[i], doc);
     }
   return result;
-}
-
-
-/*----------------------------------------------------------------------  
-  RestChangeToType
-  applique la transformation restruct pour changement type 
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool RestChangeToType (Document sourceDoc, Document destDoc, Element destParent, Element destSibling, Restruct restruct)
-#else  /* __STDC__ */
-ThotBool RestChangeToType (sourceDoc, destDoc, destParent, destSibling, restruct)
-Document sourceDoc;
-Document destDoc;
-Element destParent;
-Element destSibling;
-Restruct restruct;
-#endif  /* __STDC__ */
-{
-  Element newInstance, elChild, elTargetParent, tprev, tfather;
-  ElementType destType, targetType;
-  Attribute attrDst, attrMandatory = NULL;
-  TypeTree ptrTree, target;
-  int i;
-  ThotBool result = TRUE;
-  
-  tfather = NULL;
-  destType = restruct->RDestType;
-  ptrTree =  restruct->RSrcPrint->STree;
-  
-#ifdef DEBUG
-  printf ("Application de la transformation :\n");
-  printf (" source : %s\n", restruct->RSrcPrint->SPrint);
-  printf (" cible  : %s\n\n", restruct->RDestPrint);
-#endif
- if (destParent == NULL)
-   {
-     newInstance = TtaGetMainRoot (destDoc);
-     elChild = TtaGetFirstChild (newInstance);
-     while (elChild != NULL)
-       {
-	 TtaDeleteTree (elChild, destDoc);
-	 elChild = TtaGetFirstChild (newInstance);
-       }
-     attrDst = NULL;
-     TtaNextAttribute (newInstance, &attrDst);
-     while (attrDst!=NULL)
-       {
-	 TtaRemoveAttribute (newInstance, attrDst, destDoc);
-	 if (TtaGetErrorCode != 0)
-	   attrMandatory = attrDst;
-	 attrDst = attrMandatory;
-	 TtaNextAttribute (newInstance, &attrDst);
-       }
-   }
- else
-   {
-     newInstance = TtaNewElement (destDoc, destType);
-     if (destSibling == NULL)
-       TtaInsertFirstChild (&newInstance, destParent, destDoc);
-     else
-       TtaInsertSibling (newInstance, destSibling, FALSE, destDoc);
-   }
-
-   /* transforme la descendance */
- for (i = 0; i < RContext->CNbOldElems; i++)
-   if (TtaIsLeaf (TtaGetElementType(RContext->COldElems[i])))
-     /* cas des feuilles : diretement transferees */
-     result = result && RestTransferContent (RContext->COldElems[i], newInstance, destDoc);
-   else
-     /* source multiples : transforme chacun des elements */
-     if (ptrTree->TPrintSymb == '*')
-       result = result && RestTransformElement (restruct, RContext->COldElems[i], newInstance, ptrTree->TChild, ptrTree, sourceDoc, destDoc);
-     else
-       {
-	 /* element source unique */
-	 target = RestTarget (ptrTree, restruct);
-	 if (target == NULL || target->TypeNum != ptrTree->TypeNum)
-	   /* le type de la racine source n'est pas couple avec un noeud */
-	   /* de meme type : engage la transformation */
-	   result = result && RestTransformChildren (restruct, RContext->COldElems[i], newInstance, ptrTree, ptrTree, sourceDoc, destDoc);
-	 else
-	   {
-	     /* le type de la racine source est couple avec un noeud */
-	     /* de meme type : cree une descendance et copie l'element */
-	     targetType.ElSSchema = destType.ElSSchema;
-	     targetType.ElTypeNum = target->TypeNum;
-	     elTargetParent = RestCreateDescent (newInstance, 
-						 NULL, 
-						 target,
-						 RestDestRec (ptrTree, restruct),
-						 RestSourceRec (ptrTree, restruct),
-						 destDoc);
-	     tprev = elTargetParent;
-	     TtaPreviousSibling (&tprev);
-	     if (tprev == NULL)
-	       tfather = TtaGetParent (elTargetParent);
-	     TtaDeleteTree (elTargetParent, destDoc);
-	     
-	     newInstance = TtaCopyTree (RContext->COldElems[i], sourceDoc, destDoc, tfather); 
-	     if (tprev == NULL)
-	       TtaInsertFirstChild (&newInstance, tfather, destDoc);
-	     else
-	       TtaInsertSibling (newInstance, tprev, FALSE, destDoc);
-	   }
-       }
- return result;
 }

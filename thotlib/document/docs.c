@@ -161,6 +161,7 @@ Document TtaInitDocument (CHAR_T *structureSchema, CHAR_T *documentName,
 			  Document document)
 { 
   PtrDocument         pDoc;
+  PtrElement          pEl;
   int                 i;
   
   UserErrorCode = 0;
@@ -199,26 +200,32 @@ Document TtaInitDocument (CHAR_T *structureSchema, CHAR_T *documentName,
 	      InitApplicationSchema (pDoc->DocSSchema);
 #endif
 	      /* One create the internal representation of an empty document */
-	      pDoc->DocRootElement = NewSubtree (pDoc->DocSSchema->SsRootElem,
-						 pDoc->DocSSchema, pDoc, 0, TRUE, TRUE, TRUE, TRUE);
+	      pDoc->DocDocElement = NewSubtree (pDoc->DocSSchema->SsDocument,
+						pDoc->DocSSchema, pDoc, 0,
+						FALSE, TRUE, TRUE, TRUE);
+	      pEl = NewSubtree (pDoc->DocSSchema->SsRootElem, pDoc->DocSSchema,
+				pDoc, 0, TRUE, TRUE, TRUE, TRUE);
 	      /* suppress excluded elements */
-	      RemoveExcludedElem (&pDoc->DocRootElement, pDoc);
-	      if (pDoc->DocRootElement == NULL)
+	      if (pEl)
+		RemoveExcludedElem (&pEl, pDoc);
+	      if (pEl == NULL)
 		{
+		  DeleteElement (&pDoc->DocDocElement, pDoc);
 		  UnloadDocument (&pDoc);
 		  TtaError (ERR_empty_document);
 		}
 	      else
 		{
-		  pDoc->DocRootElement->ElAccess = AccessReadWrite;
+		  InsertFirstChild (pDoc->DocDocElement, pEl);
+		  pDoc->DocDocElement->ElAccess = AccessReadWrite;
 #ifndef NODISPLAY
-		  /* Create required attributes by the whole created tree */
-		  AttachMandatoryAttributes (pDoc->DocRootElement, pDoc);
+		  /* Create required attributes for the whole created tree */
+		  AttachMandatoryAttributes (pDoc->DocDocElement, pDoc);
 #endif
 		  /* dealing with exceptions */
-		  CreateWithException (pDoc->DocRootElement, pDoc);
+		  CreateWithException (pEl, pDoc);
 		  /* An attribut Language is stored in the root */
-		  CheckLanguageAttr (pDoc, pDoc->DocRootElement);
+		  CheckLanguageAttr (pDoc, pEl);
 		  /* The document is named */
 		  ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
 		  pDoc->DocDName[MAX_NAME_LENGTH - 1] = WC_EOS;
@@ -363,7 +370,7 @@ void                LoadDocument (PtrDocument * pDoc, STRING fileName)
        ustrncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
        /* ouvre les vues a ouvrir */
        OpenDefaultViews (*pDoc);
-       if ((*pDoc)->DocRootElement != NULL)
+       if ((*pDoc)->DocDocElement != NULL)
 	 /* Pour tous les elements du document que l'on vient de */
 	 /* charger qui sont designe's par des references, cherche */
 	 /* toutes les references appartenant a d'autres documents */
@@ -390,10 +397,8 @@ void NewDocument (PtrDocument * pDoc, CHAR_T* SSchemaName, CHAR_T *docName,
    CHAR_T              docType[MAX_NAME_LENGTH];
    PathBuffer          directoryBuffer;
    PathBuffer          fileNameBuffer;
-
    PtrPSchema          pPSchema;
    int                 view;
-
    int                 i;
 
    if (*pDoc != NULL)
@@ -422,8 +427,8 @@ void NewDocument (PtrDocument * pDoc, CHAR_T* SSchemaName, CHAR_T *docName,
 	 ustrncpy (directoryBuffer, SchemaPath, MAX_PATH);
 	 MakeCompleteName (docType, "STR", directoryBuffer,
 			   fileNameBuffer, &i);
+	 pEl = NULL;
 	 /* teste si le fichier '.STR' existe */
-
 	 if (TtaFileExist (fileNameBuffer) == 0)
 	    {
 	    ustrncpy (fileNameBuffer, docType, MAX_NAME_LENGTH);
@@ -455,20 +460,27 @@ void NewDocument (PtrDocument * pDoc, CHAR_T* SSchemaName, CHAR_T *docName,
 		  if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 		     {
 		     /* cree la representation interne d'un document vide */
-		     (*pDoc)->DocRootElement = NewSubtree ((*pDoc)->DocSSchema->SsRootElem,
+		     (*pDoc)->DocDocElement = NewSubtree ((*pDoc)->DocSSchema->SsDocument, (*pDoc)->DocSSchema, *pDoc, 0, FALSE, TRUE, TRUE, TRUE);
+		     pEl = NewSubtree ((*pDoc)->DocSSchema->SsRootElem,
 			(*pDoc)->DocSSchema, *pDoc, 0, TRUE, TRUE, TRUE, TRUE);
-		     /* supprime les elements exclus */
-		     RemoveExcludedElem (&((*pDoc)->DocRootElement), *pDoc);
+		     /* suppress excluded elements  */
+		     RemoveExcludedElem (&pEl, *pDoc);
+		     if (pEl)
+	               InsertFirstChild ((*pDoc)->DocDocElement, pEl);
 		     }
 		  }
 	    }
-	 if ((*pDoc)->DocRootElement == NULL)
+	 if (pEl == NULL)
 	    /* echec creation document */
+	    {
+	    if ((*pDoc)->DocDocElement)
+	      DeleteElement (&((*pDoc)->DocDocElement), *pDoc);
 	    UnloadDocument (pDoc);
+	    }
 	 else
 	    {
-	    (*pDoc)->DocRootElement->ElAccess = AccessReadWrite;
-	    CheckLanguageAttr (*pDoc, (*pDoc)->DocRootElement);
+	    (*pDoc)->DocDocElement->ElAccess = AccessReadWrite;
+	    CheckLanguageAttr (*pDoc, pEl);
 	    /* ajoute un saut de page a la fin de l'arbre principal */
 	    /* pour toutes les vues qui sont mises en page */
 	    /* schema de presentation du document */
@@ -477,7 +489,7 @@ void NewDocument (PtrDocument * pDoc, CHAR_T* SSchemaName, CHAR_T *docName,
 	    for (view = 0; view < pPSchema->PsNViews; view++)
 	       if (pPSchema->PsPaginatedView[view])
 		  /* cette vue est mise en page */
-		  AddLastPageBreak ((*pDoc)->DocRootElement, view + 1, *pDoc,
+		  AddLastPageBreak ((*pDoc)->DocDocElement, view + 1, *pDoc,
 				    TRUE);
 	    /* le document appartient au directory courant */
 	    if (directory[0] != EOS)
@@ -508,20 +520,25 @@ void NewDocument (PtrDocument * pDoc, CHAR_T* SSchemaName, CHAR_T *docName,
 	    notifyDoc.view = 0;
 	    CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 	    /* traitement des attributs requis */
-	    AttachMandatoryAttributes ((*pDoc)->DocRootElement, *pDoc);
+	    AttachMandatoryAttributes (pEl, *pDoc);
 	    if ((*pDoc)->DocSSchema != NULL)
 	       /* le document n'a pas ete ferme' pendant l'attente */
 	       /* des attributs requis */
 	       {
 	       /* traitement des exceptions */
 	       if (ThotLocalActions[T_createtable] != NULL)
-		  (*ThotLocalActions[T_createtable])
-		                  ((*pDoc)->DocRootElement, *pDoc);
+		  (*ThotLocalActions[T_createtable]) (pEl, *pDoc);
 	       /* ouvre les vues du document cree' */
 	       OpenDefaultViews (*pDoc);
-	       /* selectionne la 1ere feuille */
-	       pEl = FirstLeaf ((*pDoc)->DocRootElement);
-	       SelectElement (*pDoc, pEl, TRUE, TRUE);
+	       /* selectionne la 1ere feuille du document */
+	       pEl = FwdSearchTypedElem ((*pDoc)->DocDocElement,
+					 (*pDoc)->DocSSchema->SsRootElem,
+					 (*pDoc)->DocSSchema);
+	       if (pEl)
+		 {
+	          pEl = FirstLeaf (pEl);
+	          SelectElement (*pDoc, pEl, TRUE, TRUE);
+		 }
 	       }
 	    }
 	 }
@@ -838,7 +855,7 @@ void TtaRemoveSchemaExtension (Document document, SSchema extension,
 	  }
 	else
 	  {
-	     root = pDoc->DocRootElement;
+	     root = pDoc->DocDocElement;
 	     if (root != NULL)
 		RemoveExtensionFromTree (&root, document, (PtrSSchema) extension,
 					 removedElements, removedAttributes);

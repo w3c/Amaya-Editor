@@ -122,7 +122,7 @@ int                 accessMode;
       for (view = 0; view < MAX_VIEW_DOC; view++)
 	if (pDoc->DocView[view].DvPSchemaView > 0)
 	  {
-	    pAb = pDoc->DocRootElement->ElAbstractBox[view];
+	    pAb = pDoc->DocDocElement->ElAbstractBox[view];
 	    SetAbsBoxAccessMode (pAb, accessMode);
 	    h = 0;
 	    ChangeConcreteImage (pDoc->DocViewFrame[view], &h, pAb);
@@ -1030,7 +1030,7 @@ PtrSSchema          pSS;
    ThotBool            ok, currentCond, stop, equal;
    int                 valcompt, valmaxi, valmini, i;
    PtrPSchema          pSchP = NULL;
-   PtrElement          pElSibling, pAsc, pElem;
+   PtrElement          pElSibling, pAsc, pElem, pRoot;
    PtrReference        pRef;
    DocumentIdentifier  IDocExt;
    PtrDocument         pDocExt;
@@ -1235,8 +1235,11 @@ PtrSSchema          pSS;
 	       break;
 	       
 	     case PcRoot:
-	       /* la condition est satisfaite si l'element n'a pas de parent */
-	       currentCond = (pElem->ElParent == NULL);
+	       /* la condition est satisfaite si le parent de l'element est
+                  le document lui-meme */
+	       currentCond = (pElem->ElParent &&
+			      pElem->ElParent->ElTypeNumber ==
+			          pElem->ElParent->ElStructSchema->SsDocument);
 	       break;
 
 	     case PcEven:
@@ -1273,6 +1276,7 @@ PtrSSchema          pSS;
 		 currentCond = (valcompt <= pCond->CoMaxCounter) &&
 		   (valcompt >= pCond->CoMinCounter);
 	       break;
+
 	     case PcWithin:
 	       /* condition sur le nombre d'ancetres d'un type donne' */
 	       pAsc = pElem->ElParent;
@@ -1284,8 +1288,9 @@ PtrSSchema          pSS;
 		   i = 0;
 		   if (pCond->CoImmediate)
 		     /* Condition: If immediately within n element-type */
-		     /* Les n premiers ancetres successifs doivent etre du type */
-		     /* CoTypeAncestor, sans comporter d'elements d'autres type */
+		     /* Les n premiers ancetres successifs doivent etre du */
+		     /* type CoTypeAncestor, sans comporter d'elements */
+		     /* d'autres type */
 		     /* on compte les ancetres successifs de ce type */
 		     while (pAsc != NULL)
 		       {
@@ -1354,11 +1359,32 @@ PtrSSchema          pSS;
 	       /* as it's impossible to set an attribute to the PAGE */
 	       if (!currentCond && pElem->ElTypeNumber == PageBreak + 1)
 		 {
+		   /* get the root element */
+		   if (pElem->ElParent && pElem->ElParent->ElTypeNumber ==
+		                 pElem->ElParent->ElStructSchema->SsDocument)
+		     /* parent of PAGE element is the document element */
+		     {
+		       /* get the root element from the children of the
+			  document element */
+		       pRoot = pElem->ElParent->ElFirstChild;
+		       while (pRoot && 
+			      (pRoot->ElTypeNumber !=
+			                 pElem->ElStructSchema->SsRootElem ||
+			       pRoot->ElStructSchema != pElem->ElStructSchema))
+			  pRoot = pRoot->ElNext;
+		     }
+		   else
+		     {
+		     pAsc = pElem;
+		     pRoot = pElem;
+		     while (pAsc->ElParent != NULL)
+		       {
+		       pRoot = pAsc;
+		       pAsc = pAsc->ElParent;
+		       }
+		     }
+		   pA = pRoot->ElFirstAttr;
 		   /* check the list of attributes of the root element */
-		   pAsc = pElem;
-		   while (pAsc->ElParent != NULL)
-		     pAsc = pAsc->ElParent;
-		   pA = pAsc->ElFirstAttr;
 		   while (pA != NULL && !currentCond)
 		     /* boucle sur les attributs de l'element */
 		     {

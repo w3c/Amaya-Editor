@@ -1066,7 +1066,7 @@ void                FreeDocument (PtrDocument pDoc)
    int                 i;
 
    pDoc->DocSSchema = NULL;
-   pDoc->DocRootElement = NULL;
+   pDoc->DocDocElement = NULL;
    for (i = 0; i < MAX_ASSOC_DOC; i++)
      {
        pDoc->DocAssocRoot[i] = NULL;

@@ -1915,7 +1915,7 @@ void                TtcChangeCharacters (Document document, View view)
      {
 	/* par defaut la racine du document */
 	pSelDoc = pDoc;
-	pFirstSel = pDoc->DocRootElement;
+	pFirstSel = pDoc->DocDocElement;
 	pLastSel = pFirstSel;
 	selectionOK = TRUE;
      }
@@ -2123,7 +2123,7 @@ void                TtcChangeGraphics (Document document, View view)
      {
 	/* par defaut la racine du document */
 	pSelDoc = pDoc;
-	pFirstSel = pDoc->DocRootElement;
+	pFirstSel = pDoc->DocDocElement;
 	selectionOK = TRUE;
      }
 
@@ -2276,7 +2276,7 @@ void                TtcChangeFormat (Document document, View view)
    if (!selectionOK) {
       /* par defaut la racine du document */
       pSelDoc = pDoc;
-      pFirstSel = pDoc->DocRootElement;
+      pFirstSel = pDoc->DocDocElement;
       selectionOK = TRUE;
    }
 

@@ -41,31 +41,14 @@ TtAttribute        *pAt1;
 
 #include "readstr_f.h"
 
-#ifdef __STDC__
 extern CHAR_T*      TtaGetEnvString (char*);
 extern void         TtaInitializeAppRegistry (CHAR_T*);
 extern void         TtaSaveAppRegistry (void);
 
-#else
-extern CHAR_T*      TtaGetEnvString ();
-extern void         TtaInitializeAppRegistry ();
-extern void         TtaSaveAppRegistry ();
-
-#endif /* __STDC__ */
-
 /*----------------------------------------------------------------------
    wrcar ecrit un caractere.                                       
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrcar (unsigned char ch)
-
-#else  /* __STDC__ */
-static void         wrcar (ch)
-unsigned char       ch;
-
-#endif /* __STDC__ */
-
 {
    int                 c;
 
@@ -154,20 +137,10 @@ unsigned char       ch;
      }
 }
 
-
 /*----------------------------------------------------------------------
    writenb ecrit un nombre.                                        
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         writenb (int n)
-
-#else  /* __STDC__ */
-static void         writenb (n)
-int                 n;
-
-#endif /* __STDC__ */
-
 {
    if (n >= 100000)
       printf ("%6d", n);
@@ -183,20 +156,10 @@ int                 n;
       printf ("%1d", n);
 }
 
-
 /*----------------------------------------------------------------------
    wrnom ecrit une chaine de caracteres.                           
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrnom (Name n)
-
-#else  /* __STDC__ */
-static void         wrnom (n)
-Name                n;
-
-#endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -208,20 +171,10 @@ Name                n;
      }
 }
 
-
 /*----------------------------------------------------------------------
    wrnomregle ecrit un nom de regle.                               
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrnomregle (int r)
-
-#else  /* __STDC__ */
-static void         wrnomregle (r)
-int                 r;
-
-#endif /* __STDC__ */
-
 {
    if (pSchStr->SsRule[r - 1].SrName[0] == '\0')
       /* Name vide, on ecrit son numero */
@@ -233,36 +186,20 @@ int                 r;
       wrnom (pSchStr->SsRule[r - 1].SrName);
 }
 
-
 /*----------------------------------------------------------------------
-   DebutComment debute un commentaire.                             
+   OpenComment debute un commentaire.                             
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         DebutComment ()
-
-#else  /* __STDC__ */
-static void         DebutComment ()
-#endif				/* __STDC__ */
-
+static void         OpenComment ()
 {
    if (CommentNum == 0)
       printf ("{ ");
    CommentNum++;
 }
 
-
 /*----------------------------------------------------------------------
-   FinComment finit un commentaire.                                
+   CloseComment finit un commentaire.                                
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         FinComment ()
-
-#else  /* __STDC__ */
-static void         FinComment ()
-#endif				/* __STDC__ */
-
+static void         CloseComment ()
 {
    CommentNum--;
    if (CommentNum == 0)
@@ -272,38 +209,20 @@ static void         FinComment ()
 /*----------------------------------------------------------------------
    wrNULL ecrit NULL.                                              
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrNULL ()
-
-#else  /* __STDC__ */
-static void         wrNULL ()
-#endif				/* __STDC__ */
-
 {
 
-   DebutComment ();
+   OpenComment ();
    printf ("NULL");
-   FinComment ();
+   CloseComment ();
 }
-
 
 /*----------------------------------------------------------------------
    wrnomreglext ecrit le nom de la regle de numero r. Cette regle  
    fait partie du schema de structure traite' si N est nul.
    Sinon elle fait partie du schema de nom N.              
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrnomreglext (int r, Name N)
-
-#else  /* __STDC__ */
-static void         wrnomreglext (r, N)
-int                 r;
-Name                N;
-
-#endif /* __STDC__ */
-
 {
    if (N[0] == '\0')
      {
@@ -329,20 +248,10 @@ Name                N;
      }
 }
 
-
 /*----------------------------------------------------------------------
    wrNumExcept ecrit le numero d'exception Num.                    
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrNumExcept (int Num)
-
-#else  /* __STDC__ */
-static void         wrNumExcept (Num)
-int                 Num;
-
-#endif /* __STDC__ */
-
 {
    switch (Num)
 	 {
@@ -503,36 +412,18 @@ int                 Num;
 	 }
 }
 
-
 /*----------------------------------------------------------------------
    Wdefine ecrit #define.                                          
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         Wdefine ()
-
-#else  /* __STDC__ */
-static void         Wdefine ()
-#endif				/* __STDC__ */
-
 {
    printf ("#define ");
 }
 
-
 /*----------------------------------------------------------------------
    wrattr ecrit un attribut.                                       
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrattr (int a)
-
-#else  /* __STDC__ */
-static void         wrattr (a)
-int                 a;
-
-#endif /* __STDC__ */
-
 {
    int                 j;
    TtAttribute        *pAt1;
@@ -606,21 +497,11 @@ int                 a;
    pAt1->AttrGlobal = True;
 }
 
-
 /*----------------------------------------------------------------------
    wrext ecrit le mot extern si la regle de numero r est une      
    reference d'inclusion de document externe.              
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrext (int r)
-
-#else  /* __STDC__ */
-static void         wrext (r)
-int                 r;
-
-#endif /* __STDC__ */
-
 {
    SRule              *pRe1;
 
@@ -630,18 +511,10 @@ int                 r;
 	 printf (" extern");
 }
 
-
 /*----------------------------------------------------------------------
    welembase ecrit un element de base.                             
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         welembase ()
-
-#else  /* __STDC__ */
-static void         welembase ()
-#endif				/* __STDC__ */
-
 {
    PtrSSchema          pSc1;
    int                 r;
@@ -694,23 +567,11 @@ static void         welembase ()
    printf ("\n");
 }
 
-
 /*----------------------------------------------------------------------
    wrrule ecrit une regle.                                         
    si pRegleExtens est non nul, il s'agit d'une regle d'extension  
   ----------------------------------------------------------------------*/
-
-
-#ifdef __STDC__
 static void         wrrule (int r, SRule * pRegleExtens)
-
-#else  /* __STDC__ */
-static void         wrrule (r, pRegleExtens)
-int                 r;
-SRule              *pRegleExtens;
-
-#endif /* __STDC__ */
-
 {
    int                 i;
    PtrSSchema          pSc1;
@@ -748,32 +609,32 @@ SRule              *pRegleExtens;
 
 	     if (pRe1->SrNLocalAttrs > 0)
 	       {
-		  for (i = 1; i <= pRe1->SrNLocalAttrs; i++)
-		    {
-		       /*          if (pRe1->SrRequiredAttr[i - 1])
-		          printf("!"); */
-		       wrattr (pRe1->SrLocalAttr[i - 1]);
-		    }
+		 for (i = 1; i <= pRe1->SrNLocalAttrs; i++)
+		   wrattr (pRe1->SrLocalAttr[i - 1]);
 	       }
 	     return;
 	  }
 	printf (" ");
-	DebutComment ();
+	OpenComment ();
 	writenb (r);
-	FinComment ();
+	CloseComment ();
 	putchar ('\t');
 	if (pRe1->SrRecursive)
 	  {
-	     DebutComment ();
+	     OpenComment ();
 	     printf ("Recursive");
-	     FinComment ();
+	     CloseComment ();
 	  }
 	if (pRegleExtens != NULL && pRe1->SrName[0] == '\0')
 	   printf ("Root");
 	else if (pRegleExtens != NULL)
 	   wrnom (pRe1->SrName);
 	else
-	   wrnomregle (r);
+	  {
+	    if (pRe1->SrConstruct == CsDocument)
+	      OpenComment ();
+	    wrnomregle (r);
+	  }
 	if (pRe1->SrNLocalAttrs > 0)
 	  {
 	     printf (" (ATTR ");
@@ -788,7 +649,7 @@ SRule              *pRegleExtens;
 		     printf (";\n%c%c", '\t', '\t');
 	       }
 	  }
-	if (pRegleExtens == NULL)
+	if (pRegleExtens == NULL && pRe1->SrConstruct != CsDocument)
 	   printf (" = ");
 	if (pRe1->SrNLocalAttrs > 0)
 	   printf ("\n%c%c", '\t', '\t');
@@ -896,10 +757,11 @@ SRule              *pRegleExtens;
 		    printf ("PAIR");
 		    break;
 		 case CsExtensionRule:
-
+	         case CsDocument:
+	         case CsAny:
+	         case CsEmpty:
 		    break;
 	      }
-	/* Fin du switch SrConstruct */
 	/* ecrit les inclusions et les exclusions */
 	if (pRe1->SrNInclusions > 0)
 	  {
@@ -963,23 +825,20 @@ SRule              *pRegleExtens;
 		     printf (", ");
 	       }
 	  }
-	printf (";\n");
+	if (pRe1->SrConstruct == CsDocument)
+	  {
+	    CloseComment ();
+	    printf ("\n");
+	  }
+	else
+	  printf (";\n");
      }
 }
-
 
 /*----------------------------------------------------------------------
    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                printName (char *buffer)
-
-#else  /* __STDC__ */
-void                printName (buffer)
-char               *buffer;
-
-#endif /* __STDC__ */
-
 {
    int                 i = 0;
 
@@ -994,20 +853,10 @@ char               *buffer;
    printf (": \n");
 }
 
-
 /*----------------------------------------------------------------------
    main.                                                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 main (int argc, char **argv)
-
-#else  /* __STDC__ */
-int                 main (argc, argv)
-int                 argc;
-char              **argv;
-
-#endif /* __STDC__ */
-
 {
    char               *exec, c;
    int                 inputfile = False;
@@ -1124,9 +973,9 @@ char              **argv;
 		  {
 		     pRe1 = &pSc1->SsRule[r - 1];
 		     printf (" ");
-		     DebutComment ();
+		     OpenComment ();
 		     writenb (r);
-		     FinComment ();
+		     CloseComment ();
 		     putchar ('\t');
 		     wrnomregle (r);
 		     printf (" = \'");
@@ -1162,18 +1011,9 @@ char              **argv;
 	for (r = FirstRule; r <= pSc1->SsNRules; r++)
 	  {
 	     pRe1 = &pSc1->SsRule[r - 1];
-	     /* saute les elements associes, les elements Extern et Included
-		et les unites */
-	     if (!pRe1->SrAssocElem &&
-		 !pRe1->SrRefImportedDoc &&
-		 !pRe1->SrUnitElem)
-		/* ignore les regles listes ajoutees pour les elements associes */
-	       {
-		if (pRe1->SrConstruct != CsList)
-		   wrrule (r, NULL);
-		else if (!pSc1->SsRule[pRe1->SrListItem - 1].SrAssocElem)
-		   wrrule (r, NULL);
-	       }
+	     /* saute les elements Extern et Included et les unites */
+	     if (!pRe1->SrRefImportedDoc && !pRe1->SrUnitElem)
+	       wrrule (r, NULL);
 	  }
 	/* ecrit les regles d'extension */
 	if (pSc1->SsExtension && pSc1->SsNExtensRules > 0)
@@ -1186,43 +1026,6 @@ char              **argv;
 	       {
 		  pRe1 = &pSc1->SsExtensBlock->EbExtensRule[r - 1];
 		  wrrule (r, pRe1);
-	       }
-	  }
-	/* ecrit les elements associes */
-	First = True;
-	for (r = FirstRule; r <= pSc1->SsNRules; r++)
-	   if (pSc1->SsRule[r - 1].SrAssocElem)
-	     {
-		if (First)
-		  {
-		     if (!optionh)
-			printf ("ASSOC\n");
-		     else
-			printf ("\n/* Associated elements */\n");
-		     First = False;
-		  }
-		wrrule (r, NULL);
-	     }
-	if (!First)
-	   /* il y a au moins un element associe', on ecrit les regles listes */
-	   /* ajoutees pour les elements associes */
-	  {
-	     if (!optionh)
-	       {
-		  DebutComment ();
-		  printf ("lists of associated elements:\n");
-	       }
-	     for (r = FirstRule; r <= pSc1->SsNRules; r++)
-	       {
-		  pRe1 = &pSc1->SsRule[r - 1];
-		  if (pRe1->SrConstruct == CsList)
-		     if (pSc1->SsRule[pRe1->SrListItem - 1].SrAssocElem)
-			wrrule (r, NULL);
-	       }
-	     if (!optionh)
-	       {
-		  FinComment ();
-		  printf ("\n");
 	       }
 	  }
 	/* ecrit les unites exportees */

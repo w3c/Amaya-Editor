@@ -3517,12 +3517,12 @@ ThotBool      ExportDocument (PtrDocument pDoc, STRING fName,
        InitOutputFiles (outputFile, pDoc);
        /* remet a zero les indicateurs "deja traduit" de tous les elements */
        /* du document */
-       ResetTranslTags (pDoc->DocRootElement);
+       ResetTranslTags (pDoc->DocDocElement);
        for (i = 0; i < MAX_ASSOC_DOC; i++)
 	 if (pDoc->DocAssocRoot[i] != NULL)
 	   ResetTranslTags (pDoc->DocAssocRoot[i]);
        /* traduit l'arbre principal du document */
-       TranslateTree (pDoc->DocRootElement, pDoc, TRUE, TRUE, FALSE,
+       TranslateTree (pDoc->DocDocElement, pDoc, TRUE, TRUE, FALSE,
 		      recordLineNb);
        /* traduit les arbres associe's */
        for (i = 0; i < MAX_ASSOC_DOC; i++)

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -41,13 +41,7 @@
    Au retour, pDoc contient un pointeur sur le contexte de 
    document.                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void          CreateDocument (PtrDocument *pDoc, Document *document)
-#else  /* __STDC__ */
-void          CreateDocument (pDoc, document)
-PtrDocument  *pDoc;
-Document     *document;
-#endif /* __STDC__ */
 {
   Document        doc;
 
@@ -81,7 +75,6 @@ Document     *document;
   (*pDoc)->DocDefaultCharset = TRUE;
 }
 
-
 /*----------------------------------------------------------------------
    GetSRuleFromName cherche dans le schema de structure pSS (et dans les    
    extensions et schemas de structures utilises comme      
@@ -93,19 +86,8 @@ Document     *document;
    trouvee dans ce schema. typeNum vaut zero si le nom     
    n'est pas trouve'.                                      
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                GetSRuleFromName (int *typeNum, PtrSSchema * pSS, Name typeName, int whichName)
-
-#else  /* __STDC__ */
-void                GetSRuleFromName (typeNum, pSS, typeName, whichName)
-int                *typeNum;
-PtrSSchema         *pSS;
-Name                typeName;
-int                 whichName;
-
-#endif /* __STDC__ */
-
+void                GetSRuleFromName (int *typeNum, PtrSSchema * pSS,
+				      Name typeName, int whichName)
 {
    int                 ruleNum;
    PtrSSchema          pSSch;
@@ -165,17 +147,9 @@ int                 whichName;
    trouve dans ce schema. attrNum vaut zero si le nom     
    n'est pas trouve'.                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetAttrRuleFromName (int *attrNum, PtrSSchema *pSSch, PtrElement pElem, Name attrName, int whichName)
-#else  /* __STDC__ */
-void                GetAttrRuleFromName (attrNum, pSSch, pElem, attrName, whichName)
-int                *attrNum;
-PtrSSchema          pSSch;
-PtrElement          pEl;
-Name                attrName; 
-int                 whichName;
-
-#endif /* __STDC__ */
+void                GetAttrRuleFromName (int *attrNum, PtrSSchema *pSSch,
+					 PtrElement pElem, Name attrName,
+					 int whichName)
 {
   int                 i;
   ThotBool            found, newCshema;
@@ -283,16 +257,7 @@ int                 whichName;
 /*----------------------------------------------------------------------
    	GetTypeNumIdentity						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 GetTypeNumIdentity (int typeNum, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-int                 GetTypeNumIdentity (typeNum, pSS)
-int                 typeNum;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
 {
    while (pSS->SsRule[typeNum - 1].SrConstruct == CsIdentity)
       typeNum = pSS->SsRule[typeNum - 1].SrIdentRule;
@@ -304,15 +269,8 @@ PtrSSchema          pSS;
    	SameSRules teste si les regles de numero typeNum1 et		
    	typeNum2 dans les schemas de structure pSS1 et pSS2 sont egales	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            SameSRules (int typeNum1, PtrSSchema pSS1, int typeNum2, PtrSSchema pSS2)
-#else  /* __STDC__ */
-ThotBool            SameSRules (typeNum1, pSS1, typeNum2, pSS2)
-int                 typeNum1;
-PtrSSchema          pSS1;
-int                 typeNum2;
-PtrSSchema          pSS2;
-#endif /* __STDC__ */
+ThotBool            SameSRules (int typeNum1, PtrSSchema pSS1, int typeNum2,
+				PtrSSchema pSS2)
 {
   ThotBool            ret;
   
@@ -338,20 +296,9 @@ PtrSSchema          pSS2;
    	uniquement par des regles d'CsIdentity, de nature et de CsChoice.	
    	pEl est l'element d'arbre abstrait pour lequel on travaille.	
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool            EquivalentSRules (int typeNum1, PtrSSchema pSS1, int typeNum2, PtrSSchema pSS2, PtrElement pEl)
-
-#else  /* __STDC__ */
-ThotBool            EquivalentSRules (typeNum1, pSS1, typeNum2, pSS2, pEl)
-int                 typeNum1;
-PtrSSchema          pSS1;
-int                 typeNum2;
-PtrSSchema          pSS2;
-PtrElement          pEl;
-
-#endif /* __STDC__ */
-
+ThotBool            EquivalentSRules (int typeNum1, PtrSSchema pSS1,
+				      int typeNum2, PtrSSchema pSS2,
+				      PtrElement pEl)
 {
    ThotBool            ret;
    int                 i;
@@ -511,24 +458,13 @@ PtrElement          pEl;
    return ret;
 }
 
-
 /*----------------------------------------------------------------------
    ListRuleOfElem  si l'element de type (typeNum, pSS) peut	
    etre un fils d'un element CsList, retourne le numero de  
    la regle definissant cet element CsList.                 
    Retourne 0 sinon.                                       
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 int                 ListRuleOfElem (int typeNum, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-int                 ListRuleOfElem (typeNum, pSS)
-int                 typeNum;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
 {
    int                 rule, ret;
 
@@ -541,24 +477,13 @@ PtrSSchema          pSS;
    return ret;
 }
 
-
 /*----------------------------------------------------------------------
    AggregateRuleOfElem    si l'element de type (typeNum, pSS) peut	
    etre un fils d'un element CsAggregate, retourne le numero   
    de la regle definissant cet element CsAggregate.            
    Retourne 0 sinon.                                       
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 int                 AggregateRuleOfElem (int typeNum, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-int                 AggregateRuleOfElem (typeNum, pSS)
-int                 typeNum;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
 {
    int                 rule, comp, ret;
    SRule              *pRule;
@@ -577,24 +502,12 @@ PtrSSchema          pSS;
    return ret;
 }
 
-
 /*----------------------------------------------------------------------
    	ExcludedType verifie si l'element pointe par pEl et ses ascendants
    	excluent le type d'element de numero typeNum defini dans le	
    	schema de structure pSS.					
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 ThotBool            ExcludedType (PtrElement pEl, int typeNum, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-ThotBool            ExcludedType (pEl, typeNum, pSS)
-PtrElement          pEl;
-int                 typeNum;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
 {
    SRule              *pRule;
    int                 i;
@@ -665,26 +578,14 @@ PtrSSchema          pSS;
    return ret;
 }
 
-
 /*----------------------------------------------------------------------
    AllowedIncludedElem evalue si un element de type typeNum (defini 
    dans le schema de structure pSS) peut etre une inclusion dans	
    la descendance de l'element pEl.				
    Retourne "Vrai" si l'inclusion est autorisee.                   
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool            AllowedIncludedElem (PtrDocument pDoc, PtrElement pEl, int typeNum, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-ThotBool            AllowedIncludedElem (pDoc, pEl, typeNum, pSS)
-PtrDocument	    pDoc;
-PtrElement          pEl;
-int                 typeNum;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
+ThotBool            AllowedIncludedElem (PtrDocument pDoc, PtrElement pEl,
+					 int typeNum, PtrSSchema pSS)
 {
    ThotBool            ret;
    int                 i;
@@ -746,17 +647,16 @@ PtrSSchema          pSS;
            pAsc = pAsc->ElParent;
 
         if ((pAsc->ElStructSchema->SsExtension) &&
-            (pDoc->DocRootElement != NULL))
+            (pDoc->DocDocElement != NULL))
            /* L'element fait partie d'un arbre associe dont la */
            /* racine est une extension. */
            /* ==> On reporte l'evaluation sur la racine de l'arbre */
            /* principal ! */
-           ret = AllowedIncludedElem (pDoc, pDoc->DocRootElement, typeNum, pSS);
+           ret = AllowedIncludedElem (pDoc, pDoc->DocDocElement, typeNum, pSS);
      }
 
    return ret;
 }
-
 
 /*----------------------------------------------------------------------
    	ListOrAggregateRule   Cherche si l'element pEl qui fait partie d'un	
@@ -767,19 +667,8 @@ PtrSSchema          pSS;
    	le numero de cette regle.					
    	Si non retourne 0 dans typeNum et NULL dans pSS.		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                ListOrAggregateRule (PtrDocument pDoc, PtrElement pEl, int *typeNum, PtrSSchema * pSS)
-
-#else  /* __STDC__ */
-void                ListOrAggregateRule (pDoc, pEl, typeNum, pSS)
-PtrDocument         pDoc;
-PtrElement          pEl;
-int                *typeNum;
-PtrSSchema         *pSS;
-
-#endif /* __STDC__ */
-
+void                ListOrAggregateRule (PtrDocument pDoc, PtrElement pEl,
+					 int *typeNum, PtrSSchema * pSS)
 {
    int                 c;
    ThotBool            test, equiv;
@@ -848,23 +737,12 @@ PtrSSchema         *pSS;
      }
 }
 
-
 /*----------------------------------------------------------------------
    Rend le type de constructeur d'un element
    et, dans nComp, le nombre de composants definis par le schema s'il
    s'agit d'un agregat.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 RConstruct          GetElementConstruct (PtrElement pEl, int *nComp)
-
-#else  /* __STDC__ */
-RConstruct          GetElementConstruct (pEl, nComp)
-PtrElement          pEl;
-int		   *nComp;
-
-#endif /* __STDC__ */
-
 {
    RConstruct          constr;
    int                 typ = 0;
@@ -886,22 +764,12 @@ int		   *nComp;
    return constr;
 }
 
-
 /*----------------------------------------------------------------------
    Teste si un element a un ancetre de type liste, mais sans       
    agregat entre l'element et cet ancetre. Rend cet ancetre ou	
    	NULL si ce n'est pas le cas.					
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 PtrElement          AncestorList (PtrElement pEl)
-
-#else  /* __STDC__ */
-PtrElement          AncestorList (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
-
 {
    ThotBool            stop;
    RConstruct          constr;
@@ -938,17 +806,7 @@ PtrElement          pEl;
    Teste si les cardinalites minimales et maximales de la liste	
    	pEl permettent d'ajouter ou retrancher delta elements.		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 ThotBool            CanChangeNumberOfElem (PtrElement pEl, int delta)
-
-#else  /* __STDC__ */
-ThotBool            CanChangeNumberOfElem (pEl, delta)
-PtrElement          pEl;
-int                 delta;
-
-#endif /* __STDC__ */
-
 {
    PtrElement          pChild;
    int                 len;
@@ -994,7 +852,6 @@ int                 delta;
    return ret;
 }
 
-
 /*----------------------------------------------------------------------
    	SRuleForSibling cherche le type d'element qui peut etre cree comme	
    	voisin de l'element pointe par pEl. On ne tient pas compte des	
@@ -1011,23 +868,10 @@ int                 delta;
    	est un composant optionnel d'agregat ou un composant d'un	
    	agregat non ordonne'.						
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                SRuleForSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before, int distance, int *typeNum, PtrSSchema * pSS, ThotBool * list, ThotBool * optional)
-
-#else  /* __STDC__ */
-void                SRuleForSibling (pDoc, pEl, before, distance, typeNum, pSS, list, optional)
-PtrDocument         pDoc;
-PtrElement          pEl;
-ThotBool            before;
-int                 distance;
-int                *typeNum;
-PtrSSchema         *pSS;
-ThotBool           *list;
-ThotBool           *optional;
-
-#endif /* __STDC__ */
-
+void                SRuleForSibling (PtrDocument pDoc, PtrElement pEl,
+				     ThotBool before, int distance,
+				     int *typeNum, PtrSSchema * pSS,
+				     ThotBool * list, ThotBool * optional)
 {
    int                 i;
    PtrElement          pE;
@@ -1255,7 +1099,6 @@ ThotBool           *optional;
       *pSS = NULL;
 }
 
-
 /*----------------------------------------------------------------------
    	ReferredType   pRefEl est un pointeur sur un element reference.	
    	pRefAttr est un pointeur sur un attribut reference. L'un des	
@@ -1266,20 +1109,9 @@ ThotBool           *optional;
    	Retourne typeNum = 0 et pSS = NULL s'il s'agit d'une reference	
    	non typee : CsReference(Any)					
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                ReferredType (PtrElement pRefEl, PtrAttribute pRefAttr, PtrSSchema * pSS, int *typeNum, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-void                ReferredType (pRefEl, pRefAttr, pSS, typeNum, pDoc)
-PtrElement          pRefEl;
-PtrAttribute        pRefAttr;
-PtrSSchema         *pSS;
-int                *typeNum;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+void                ReferredType (PtrElement pRefEl, PtrAttribute pRefAttr,
+				  PtrSSchema * pSS, int *typeNum,
+				  PtrDocument pDoc)
 {
    int                 referredNature;
    SRule              *pRule;
@@ -1361,25 +1193,14 @@ PtrDocument         pDoc;
      }
 }
 
-
 /*----------------------------------------------------------------------
    	CanCutElement       indique si on peut couper l'element pEl.		
    	On considere l'exception NoCut et les composants obligatoires	
    	d'agregats et le nombre minimum d'elements des listes.		
    	pElCut sur le premier des elements deja coupes			
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool            CanCutElement (PtrElement pEl, PtrDocument pDoc, PtrElement pElCut)
-
-#else  /* __STDC__ */
-ThotBool            CanCutElement (pEl, pDoc, pElCut)
-PtrElement          pEl;
-PtrDocument         pDoc;
-PtrElement          pElCut;
-
-#endif /* __STDC__ */
-
+ThotBool            CanCutElement (PtrElement pEl, PtrDocument pDoc,
+				   PtrElement pElCut)
 {
    int                 typeNum;
    PtrSSchema          pSS;
@@ -1395,7 +1216,11 @@ PtrElement          pElCut;
    InCutBuffer = FALSE;
    if (pEl != NULL)
      {
-      if (TypeHasException (ExcNoCut, pEl->ElTypeNumber, pEl->ElStructSchema))
+      if (pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem)
+	/* do not delete the root element */
+	ret = FALSE;
+      else if (TypeHasException (ExcNoCut, pEl->ElTypeNumber,
+				 pEl->ElStructSchema))
 	 /* l'exception NoCut est associee au type de l'element */
 	{
 	   ret = FALSE;
@@ -1475,7 +1300,6 @@ PtrElement          pElCut;
    return ret;
 }
 
-
 /*----------------------------------------------------------------------
    AllowedSibling  retourne vrai si on peut inserer un element de  
    type typeNum (defini dans le schema de structure pSS) comme	
@@ -1484,18 +1308,10 @@ PtrElement          pElCut;
    user indique si l'insertion est demandee par l'utilisateur.	
    inTree indique si l'element est deja en place dans l'arbre.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            AllowedSibling (PtrElement pEl, PtrDocument pDoc, int typeNum, PtrSSchema pSS, ThotBool before, ThotBool user, ThotBool inTree)
-#else  /* __STDC__ */
-ThotBool            AllowedSibling (pEl, pDoc, typeNum, pSS, before, user, inTree)
-PtrElement          pEl;
-PtrDocument         pDoc;
-int                 typeNum;
-PtrSSchema          pSS;
-ThotBool            before;
-ThotBool            user;
-ThotBool            inTree;
-#endif /* __STDC__ */
+ThotBool            AllowedSibling (PtrElement pEl, PtrDocument pDoc,
+				    int typeNum, PtrSSchema pSS,
+				    ThotBool before, ThotBool user,
+				    ThotBool inTree)
 {
   PtrSSchema          pAscSS;
   SRule              *pRule;
@@ -1784,26 +1600,14 @@ ThotBool            inTree;
   return ok;
 }
 
-
 /*----------------------------------------------------------------------
    AllowedFirstComponent      retourne vrai si on peut inserer un     
    element de type compTypeNum (defini dans le schema de structure	
    pCompSS) comme premier fils dans l'agregat defini par la regle	
    de numero aggrTypeNum du schema de structure pCompSS.		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool            AllowedFirstComponent (int aggrTypeNum, PtrSSchema pAggrSS, int compTypeNum, PtrSSchema pCompSS)
-
-#else  /* __STDC__ */
-ThotBool            AllowedFirstComponent (aggrTypeNum, pAggrSS, compTypeNum, pCompSS)
-int                 aggrTypeNum;
-PtrSSchema          pAggrSS;
-int                 compTypeNum;
-PtrSSchema          pCompSS;
-
-#endif /* __STDC__ */
-
+ThotBool            AllowedFirstComponent (int aggrTypeNum, PtrSSchema pAggrSS,
+					   int compTypeNum, PtrSSchema pCompSS)
 {
    int                 i;
    SRule              *pRule;
@@ -1868,7 +1672,6 @@ PtrSSchema          pCompSS;
    return ok;
 }
 
-
 /*----------------------------------------------------------------------
    AllowedFirstChild     retourne vrai si on peut inserer un     
    element de type typeNum (defini dans le schema de structure pSS)
@@ -1877,21 +1680,9 @@ PtrSSchema          pCompSS;
    user indique si l'insertion est demandee par l'utilisateur.     
    inTree indique si l'element est deja en place dans l'arbre.	
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool            AllowedFirstChild (PtrElement pEl, PtrDocument pDoc, int typeNum, PtrSSchema pSS, ThotBool user, ThotBool inTree)
-
-#else  /* __STDC__ */
-ThotBool            AllowedFirstChild (pEl, pDoc, typeNum, pSS, user, inTree)
-PtrElement          pEl;
-PtrDocument         pDoc;
-int                 typeNum;
-PtrSSchema          pSS;
-ThotBool            user;
-ThotBool            inTree;
-
-#endif /* __STDC__ */
-
+ThotBool            AllowedFirstChild (PtrElement pEl, PtrDocument pDoc,
+				       int typeNum, PtrSSchema pSS,
+				       ThotBool user, ThotBool inTree)
 {
    SRule              *pRule1, *pRule2;
    PtrElement          pAsc, pChild;
@@ -2085,23 +1876,12 @@ ThotBool            inTree;
    return ok;
 }
 
-
 /*----------------------------------------------------------------------
    	InsertChildFirst   Insere dans l'arbre abstrait l'element pChild	
    	comme premier fils de l'element pEl.				
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                InsertChildFirst (PtrElement pEl, PtrElement pChild, PtrElement * pFeuille, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-void                InsertChildFirst (pEl, pChild, pFeuille, pDoc)
-PtrElement          pEl;
-PtrElement          pChild;
-PtrElement         *pFeuille;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-
+void                InsertChildFirst (PtrElement pEl, PtrElement pChild,
+				      PtrElement * pFeuille, PtrDocument pDoc)
 {
    ThotBool            same;
 
@@ -2119,7 +1899,6 @@ PtrDocument         pDoc;
       InsertFirstChild (pEl, pChild);
 }
 
-
 /*----------------------------------------------------------------------
    	CreateDescendant  Cherche a creer, pour un element defini par la	
    	regle typeNum du schema de structure pSS, une descendance	
@@ -2132,22 +1911,10 @@ PtrDocument         pDoc;
    	pLeaf: si succes, pointeur sur l'element de plus bas niveau	
    	cree: c'est un element de type descTypeNum.			
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS, PtrDocument pDoc, PtrElement * pLeaf, int assocNum, int descTypeNum, PtrSSchema pDescSS)
-
-#else  /* __STDC__ */
-PtrElement          CreateDescendant (typeNum, pSS, pDoc, pLeaf, assocNum, descTypeNum, pDescSS)
-int                 typeNum;
-PtrSSchema          pSS;
-PtrDocument         pDoc;
-PtrElement         *pLeaf;
-int                 assocNum;
-int                 descTypeNum;
-PtrSSchema          pDescSS;
-
-#endif /* __STDC__ */
-
+PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS,
+				      PtrDocument pDoc, PtrElement * pLeaf,
+				      int assocNum, int descTypeNum,
+				      PtrSSchema pDescSS)
 {
    PtrElement          pEl, pDesc, pEl1, pEl2;
    int                 i, j;
@@ -2184,6 +1951,7 @@ PtrSSchema          pDescSS;
 		    case CsReference:
 		    case CsConstant:
 		    case CsPairedElement:
+		    case CsEmpty:
 		       /* regles terminales */
 		       break;
 		    case CsNatureSchema:
@@ -2407,7 +2175,6 @@ PtrSSchema          pDescSS;
    return pEl;
 }
 
-
 /*----------------------------------------------------------------------
    TtaGetSchemaExtension
 
@@ -2422,14 +2189,8 @@ PtrSSchema          pDescSS;
    NULL if the extension is not associated with the document.
 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-SSchema             TtaGetSchemaExtension (Document document, STRING NomExtension)
-#else  /* __STDC__ */
-SSchema             TtaGetSchemaExtension (document, NomExtension)
-Document            document;
-STRING              NomExtension;
-
-#endif /* __STDC__ */
+SSchema             TtaGetSchemaExtension (Document document,
+					   STRING NomExtension)
 {
    PtrSSchema          pSS;
    PtrSSchema          pExtSS;
@@ -2449,25 +2210,14 @@ STRING              NomExtension;
    return (SSchema) pExtSS;
 }
 
-
 /*----------------------------------------------------------------------
    ExtensionRule retourne un pointeur sur la regle d'extension       
    qui se trouve dans le schema d'extension pExtSS et qui          
    s'applique aux elements de type typeNum definis dans le schema  
    de structure pSS.                                               
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-SRule              *ExtensionRule (PtrSSchema pSS, int typeNum, PtrSSchema pExtSS)
-
-#else  /* __STDC__ */
-SRule              *ExtensionRule (pSS, typeNum, pExtSS)
-PtrSSchema          pSS;
-int                 typeNum;
-PtrSSchema          pExtSS;
-
-#endif /* __STDC__ */
-
+SRule              *ExtensionRule (PtrSSchema pSS, int typeNum,
+				   PtrSSchema pExtSS)
 {
    SRule              *RegleExt;
    SRule              *Rule;
@@ -2516,13 +2266,7 @@ PtrSSchema          pExtSS;
    peut etre appliquee au schema de l'element pEl et, dans ce cas, 
    retourne dans pExt le schema a appliquer.                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            ValidExtension (PtrElement pEl, PtrSSchema * pExt)
-#else  /* __STDC__ */
-ThotBool            ValidExtension (pEl, pExt)
-PtrElement          pEl;
-PtrSSchema         *pExt;
-#endif /* __STDC__ */
 {
    PtrSSchema          pExtSS, pSS;
    ThotBool            result;
@@ -2559,20 +2303,13 @@ PtrSSchema         *pExt;
    return result;
 }
 
-
 /*----------------------------------------------------------------------
    Cherche parmi les attributs attaches a l'element pointe' par    
    pEl s'il en existe un du meme type (eventuellement avec une     
    valeur differente) que celui pointe par pAttr.                  
    Retourne un pointeur sur cet attribut ou NULL s'il n'existe pas 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrAttribute        GetAttributeOfElement (PtrElement pEl, PtrAttribute pAttr)
-#else  /* __STDC__ */
-PtrAttribute        GetAttributeOfElement (pEl, pAttr)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-#endif /* __STDC__ */
 {
    ThotBool            found;
    PtrAttribute        pA;
@@ -2594,20 +2331,13 @@ PtrAttribute        pAttr;
    return pA;
 }
 
-
 /*----------------------------------------------------------------------
    Retourne un pointeur vers l'attribut qui contient la valeur	
    pour l'element pEl de l'attribut pAttr				
    Si cet attribut n'a pas de valeur pour l'element pEl, retourne	
    NULL.								
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrAttribute        AttributeValue (PtrElement pEl, PtrAttribute pAttr)
-#else  /* __STDC__ */
-PtrAttribute        AttributeValue (pEl, pAttr)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-#endif /* __STDC__ */
 {
    if (pEl != NULL)
       return (GetAttributeOfElement (pEl, pAttr));
@@ -2620,19 +2350,9 @@ PtrAttribute        pAttr;
    	type de pNewAttr a l'element pEl qui porte eventuellement un	
    	attribut pAttr de meme type que pNewAttr.			
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool            CanAssociateAttr (PtrElement pEl, PtrAttribute pAttr, PtrAttribute pNewAttr, ThotBool * mandatory)
-
-#else  /* __STDC__ */
-ThotBool            CanAssociateAttr (pEl, pAttr, pNewAttr, mandatory)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-PtrAttribute        pNewAttr;
-ThotBool            *mandatory;
-
-#endif /* __STDC__ */
-
+ThotBool            CanAssociateAttr (PtrElement pEl, PtrAttribute pAttr,
+				      PtrAttribute pNewAttr,
+				      ThotBool * mandatory)
 {
    ThotBool            requested, allowed;
    SRule              *pRe1;
@@ -2701,7 +2421,6 @@ ThotBool            *mandatory;
    return (!requested && allowed);
 }
 
-
 /*----------------------------------------------------------------------
    CanSplitElement: Indique si on peut diviser un element en deux, 
    au caractere de rang firstChar dans l'element firstEl	
@@ -2712,20 +2431,9 @@ ThotBool            *mandatory;
    pEl : l'element devant lequel se fera la division.      
    pSplitEl : l'element qui va etre divise'.		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool            CanSplitElement (PtrElement firstEl, int firstChar, ThotBool lineBlock,
-		PtrElement * pList, PtrElement * pEl, PtrElement * pSplitEl)
-#else  /* __STDC__ */
-ThotBool            CanSplitElement (firstEl, firstChar, lineBlock, pList, pEl, pSplitEl)
-PtrElement          firstEl;
-int                 firstChar;
-ThotBool            lineBlock;
-PtrElement         *pList;
-PtrElement         *pEl;
-PtrElement         *pSplitEl;
-
-#endif /* __STDC__ */
+ThotBool            CanSplitElement (PtrElement firstEl, int firstChar,
+				     ThotBool lineBlock, PtrElement * pList,
+				     PtrElement * pEl, PtrElement * pSplitEl)
 {
    PtrElement          pE;
    int		       nComp;

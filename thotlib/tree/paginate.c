@@ -363,8 +363,8 @@ static void DisplaySelectPages (PtrDocument pDoc, PtrElement firstPage,
      }
    else
      {
-	pRootEl = pDoc->DocRootElement;
-	schView = AppliedView (pDoc->DocRootElement, NULL, pDoc, view);
+	pRootEl = pDoc->DocDocElement;
+	schView = AppliedView (pDoc->DocDocElement, NULL, pDoc, view);
 	for (v = 1; v <= MAX_VIEW_DOC; v++)
 	   if (pDoc->DocView[v - 1].DvPSchemaView == schView)
 	     {
@@ -1389,8 +1389,8 @@ static void DestroyImAbsPages (int view, ThotBool Assoc, PtrDocument pDoc, int s
    AddLastPageBreak	ajoute une marque de page a la fin de la vue	
    	schView de l'arbre de racine pRootEl s'il n'y en a pas deja une
   ----------------------------------------------------------------------*/
-void AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
-		       ThotBool withAPP)
+PtrElement AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
+			     ThotBool withAPP)
 {
    PtrElement          pEl;
    PtrElement          pElPage;
@@ -1401,6 +1401,7 @@ void AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
    NotifyElement       notifyEl;
    int                 NSiblings;
 
+   pElPage = NULL;
    /* cherche d'abord s'il n'y en pas deja une */
    pageAtEnd = FALSE;		/* on n'en pas encore vu */
    if (pRootEl == NULL)
@@ -1442,7 +1443,20 @@ void AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
 	    pEl = pEl->ElFirstChild;	/* descend d'un niveau */
       while (!(stop || pEl == NULL || pageAtEnd));
 
-   pEl = pRootEl->ElFirstChild;
+   pSchP = pDoc->DocSSchema->SsPSchema;
+   if (GetPageRule (pRootEl, schView, &pSchP))
+     /* the document element has a PAGE rule. Add the last PAGE element
+	as its last child */
+     pEl = pRootEl->ElFirstChild;
+   else
+     /* the PAGE rule is then associated with the root element */
+     {
+       pEl = FwdSearchTypedElem (pRootEl, pRootEl->ElStructSchema->SsRootElem,
+				 pRootEl->ElStructSchema);
+       if (pEl)
+	 pEl = pEl->ElFirstChild;
+     }
+
    if (pEl != NULL && !pageAtEnd)
       /* il n'y a pas de marque de page a la fin de la vue */
       /* cree une marque de page */
@@ -1492,6 +1506,7 @@ void AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
 #endif /* PAGINEETIMPRIME */
 	  }
      }
+   return pElPage;
 }
 
 /*----------------------------------------------------------------------
@@ -1502,11 +1517,12 @@ void AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
   ----------------------------------------------------------------------*/
 void PaginateView (PtrDocument pDoc, int view, ThotBool Assoc)
 {
-  PtrElement          pRootEl, firstPage, pPage;
+  PtrElement          pRootEl, firstPage, lastPage, pPage;
   PtrAbstractBox      rootAbsBox, pP;
   PtrAbstractBox      previousPageAbBox;
 #ifdef PAGINEETIMPRIME
   PtrPSchema          pSchP;
+  PtrElement          pEl;
   int                 h, cpt;
 #else /*  PAGINEETIMPRIME */
   PtrElement          firstSelection, lastSelection;
@@ -1537,7 +1553,7 @@ void PaginateView (PtrDocument pDoc, int view, ThotBool Assoc)
       /* numero dans le document de la vue a paginer */
       iview = 0;
       /* numero dans le schema de la vue a paginer */
-      schView = 1;
+ schView = 1;
       pRootEl = pDoc->DocAssocRoot[iview];
       frame = pDoc->DocAssocFrame[iview];
     }
@@ -1546,8 +1562,8 @@ void PaginateView (PtrDocument pDoc, int view, ThotBool Assoc)
       /* numero dans le document de la vue a paginer */
       iview = view - 1;
       /* numero dans le schema de la vue a paginer */
-      schView = AppliedView (pDoc->DocRootElement, NULL, pDoc, view);
-      pRootEl = pDoc->DocRootElement;
+      schView = AppliedView (pDoc->DocDocElement, NULL, pDoc, view);
+      pRootEl = pDoc->DocDocElement;
       frame = pDoc->DocViewFrame[iview];
     }
   
@@ -1746,7 +1762,7 @@ void PaginateView (PtrDocument pDoc, int view, ThotBool Assoc)
   while (!shorter || somthingAdded || rootAbsBox->AbTruncatedTail);
 
    /* Ajoute le saut de page qui manque eventuellement a la fin */
-   AddLastPageBreak (pRootEl, schView, pDoc, TRUE);
+   lastPage = AddLastPageBreak (pRootEl, schView, pDoc, TRUE);
 
 #ifdef PAGINEETIMPRIME
    /* il faut imprimer la derniere page */
@@ -1755,8 +1771,18 @@ void PaginateView (PtrDocument pDoc, int view, ThotBool Assoc)
      pDoc->DocAssocFreeVolume[iview] = 100;
    else
      pDoc->DocViewFreeVolume[iview] = 100;
-   rootAbsBox->AbTruncatedTail = TRUE;	/* il reste des paves a creer : */
-   /* ce sont ceux de la nouvelle marque de page */
+   rootAbsBox->AbTruncatedTail = TRUE;
+   if (lastPage)
+     {
+       pEl = lastPage->ElParent;
+       while (pEl)
+	 {
+	   if (pEl->ElAbstractBox[iview])
+	     pEl->ElAbstractBox[iview]->AbTruncatedTail = TRUE;
+	   pEl = pEl->ElParent;
+	 } 
+     }
+   /* il reste des paves a creer : ce sont ceux de la nouvelle marque de page*/
    AddAbsBoxes (rootAbsBox, pDoc, FALSE);
    
    /* cherche la marque de page qui vient d'etre inseree */

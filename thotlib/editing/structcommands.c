@@ -280,30 +280,35 @@ int                 typeNum2;
 	pSRule2 = &pSS2->SsRule[typeNum2 - 1];
 	if (pSRule1->SrConstruct == pSRule2->SrConstruct)
 	   switch (pSRule1->SrConstruct)
-		 {
-		    case CsNatureSchema:
-		       ret = (ustrcmp (pSRule1->SrName, pSRule2->SrName) == 0);
-		       break;
-		    case CsBasicElement:
-		       ret = (pSRule1->SrBasicType == pSRule2->SrBasicType);
-		       break;
-		    case CsReference:
-		       ret = (pSRule1->SrReferredType == pSRule2->SrReferredType &&
-			      ustrcmp (pSRule1->SrRefTypeNat, pSRule2->SrRefTypeNat) == 0);
-		       break;
-		    case CsIdentity:
-		       ret = (pSRule1->SrIdentRule == pSRule2->SrIdentRule);
-		       break;
-		    case CsList:
-		       ret = IsomorphicTypes (pSS1, pSRule1->SrListItem, pSS2, pSRule2->SrListItem);
-		       break;
-		    case CsConstant:
-		       ret = (pSRule1->SrIndexConst == pSRule2->SrIndexConst);
-		       break;
-		    default:	/* CsChoice, CsAggregate, CsUnorderedAggregate */
-		       ret = FALSE;
-		       break;
-		 }
+	     {
+	     case CsNatureSchema:
+	       ret = (ustrcmp (pSRule1->SrName, pSRule2->SrName) == 0);
+	       break;
+	     case CsBasicElement:
+	       ret = (pSRule1->SrBasicType == pSRule2->SrBasicType);
+	       break;
+	     case CsReference:
+	       ret = (pSRule1->SrReferredType == pSRule2->SrReferredType &&
+		      ustrcmp (pSRule1->SrRefTypeNat, pSRule2->SrRefTypeNat) == 0);
+	       break;
+	     case CsIdentity:
+	       ret = (pSRule1->SrIdentRule == pSRule2->SrIdentRule);
+	       break;
+	     case CsList:
+	       ret = IsomorphicTypes (pSS1, pSRule1->SrListItem, pSS2,
+				      pSRule2->SrListItem);
+	       break;
+	     case CsConstant:
+	       ret = (pSRule1->SrIndexConst == pSRule2->SrIndexConst);
+	       break;
+	     case CsEmpty:
+	     case CsAny:
+	       ret = TRUE;
+	       break;
+	     default:	/* CsChoice, CsAggregate, CsUnorderedAggregate */
+	       ret = FALSE;
+	       break;
+	     }
 	/* on a trouve' un isomorphisme, on le note */
 	if (ret)
 	  {
@@ -1901,24 +1906,25 @@ PtrDocument         pDoc;
    ok = TRUE;
    /* on teste d'abord le constructeur du candidat englobant */
    switch (pSS->SsRule[typeNum - 1].SrConstruct)
-	 {
-	    case CsConstant:
-	    case CsReference:
-	    case CsBasicElement:
-	    case CsPairedElement:
-	       /* types sans descendance possible, inutile d'aller plus loin */
-	       ok = FALSE;
-	       break;
-	    case CsChoice:
-	       if (pSS->SsRule[typeNum - 1].SrNChoices == -1)
-		  /* NATURE, on n'a pas envie de changer de schema de struct. */
-		  ok = FALSE;
-	       break;
-	    default:
-	       /* on va regarder de plus pres... */
-	       ok = TRUE;
-	       break;
-	 }
+     {
+     case CsConstant:
+     case CsReference:
+     case CsBasicElement:
+     case CsPairedElement:
+     case CsEmpty:
+       /* types sans descendance possible, inutile d'aller plus loin */
+       ok = FALSE;
+       break;
+     case CsChoice:
+       if (pSS->SsRule[typeNum - 1].SrNChoices == -1)
+	 /* NATURE, on n'a pas envie de changer de schema de structure */
+	 ok = FALSE;
+       break;
+     default:
+       /* on va regarder de plus pres... */
+       ok = TRUE;
+       break;
+     }
    if (ok && firstEl != NULL)
       /* le constructeur du candidat englobant permet une descendance */
       /* on verifie que les candidats englobe's peuvent etre ses */
@@ -2236,66 +2242,66 @@ int                *param;
 	if (doit)
 	   /* traitement selon le constructeur du type */
 	   switch (pSRule->SrConstruct)
+	     {
+	     case CsIdentity:
+	       /* CsIdentity', on continue */
+	       found = SearchChoiceRules (pSS, pSRule->SrIdentRule,
+					  pEl, (int *) Anchor);
+	       break;
+	     case CsList:
+	       /* CsList, on continue */
+	       found = SearchChoiceRules (pSS, pSRule->SrListItem, pEl,
+					  (int *) Anchor);
+	       break;
+	     case CsChoice:
+	       if (pSRule->SrNChoices == 0)
+		 /* SRule UNIT */
 		 {
-		    case CsIdentity:
-		       /* CsIdentity', on continue */
-		       found = SearchChoiceRules (pSS, pSRule->SrIdentRule,
-						  pEl, (int *) Anchor);
-		       break;
-		    case CsList:
-		       /* CsList, on continue */
-		       found = SearchChoiceRules (pSS, pSRule->SrListItem, pEl,
-						  (int *) Anchor);
-		       break;
-		    case CsChoice:
-		       if (pSRule->SrNChoices == 0)
-			  /* SRule UNIT */
-			 {
-			    if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrUnitElem)
-			       /* l'element est une unite', on a trouve' la regle */
-			       found = TRUE;
-			 }
-		       else if (pSRule->SrNChoices > 0)
-			  /* SRule CsChoice avec options explicites */
-			 {
-			   /* on verifie d'abord si le type de l'element est une */
-			   /* des options de ce choix */
-			   if (!ustrcmp (pSS->SsName, pEl->ElStructSchema->SsName))
-			     for (choice = 0; choice < pSRule->SrNChoices &&
-				    !found; choice++)
-			       if (pSRule->SrChoice[choice] == pEl->ElTypeNumber)
-				 /* c'est effectivement une des options */
-				 found = TRUE;
-			   if (!found)
-			     /* on n'a pas trouve'. On cherche a partir des
-				regles qui definissent les options du choix */
-			     for (choice = 0; choice < pSRule->SrNChoices &&
-				    !found; choice++)
-			       found = SearchChoiceRules (pSS,
-							  pSRule->SrChoice[choice],
-
-							  pEl, (int *) Anchor);
-			 }
-		       if (found)
-			  /* cette regle CsChoice mene au type de pEl */
-			  /* on l'enregistre dans la liste des regles ChoiX */
-			  /* traversees */
-			 {
-			    pChoiceD = (PtrChoiceOptionDescr) TtaGetMemory (sizeof (ChoiceOptionDescr));
-			    if (pChoiceD != NULL)
-			      {
-				 pChoiceD->COtypeNum = typeNum;
-				 pChoiceD->COStructSch = pSS;
-				 pChoiceD->CONext = *Anchor;
-				 *Anchor = pChoiceD;
-			      }
-			 }
-		       break;
-		    default:
-		       break;
+		   if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrUnitElem)
+		     /* l'element est une unite', on a trouve' la regle */
+		     found = TRUE;
 		 }
+	       else if (pSRule->SrNChoices > 0)
+		 /* SRule CsChoice avec options explicites */
+		 {
+		   /* on verifie d'abord si le type de l'element est une */
+		   /* des options de ce choix */
+		   if (!ustrcmp (pSS->SsName, pEl->ElStructSchema->SsName))
+		     for (choice = 0; choice < pSRule->SrNChoices &&
+			    !found; choice++)
+		       if (pSRule->SrChoice[choice] == pEl->ElTypeNumber)
+			 /* c'est effectivement une des options */
+			 found = TRUE;
+		   if (!found)
+		     /* on n'a pas trouve'. On cherche a partir des
+			regles qui definissent les options du choix */
+		     for (choice = 0; choice < pSRule->SrNChoices &&
+			    !found; choice++)
+		       found = SearchChoiceRules (pSS,
+						  pSRule->SrChoice[choice],
+						  
+						  pEl, (int *) Anchor);
+		 }
+	       if (found)
+		 /* cette regle CsChoice mene au type de pEl */
+		 /* on l'enregistre dans la liste des regles Choix */
+		 /* traversees */
+		 {
+		   pChoiceD = (PtrChoiceOptionDescr) TtaGetMemory (sizeof (ChoiceOptionDescr));
+		   if (pChoiceD != NULL)
+		     {
+		       pChoiceD->COtypeNum = typeNum;
+		       pChoiceD->COStructSch = pSS;
+		       pChoiceD->CONext = *Anchor;
+		       *Anchor = pChoiceD;
+		     }
+		 }
+	       break;
+	     default:
+	       break;
+	     }
 	if (pSRule->SrRecursive && pSRule->SrRecursDone && doit)
-	   pSRule->SrRecursDone = FALSE;
+	  pSRule->SrRecursDone = FALSE;
      }
    param = (int *) Anchor;
    return found;

@@ -72,7 +72,6 @@
 
 static CHAR_T         nameBuffer[MAX_NAME_LENGTH];
 
-
 /*----------------------------------------------------------------------
    TtaOpenMainView
 
@@ -112,7 +111,7 @@ View TtaOpenMainView (Document document, int x, int y, int w, int h)
 	    {
 	      /* Add a pagebreak probably missed at the end of the document */
 	      if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[0])
-		AddLastPageBreak (pDoc->DocRootElement, 1, pDoc, FALSE);
+		AddLastPageBreak (pDoc->DocDocElement, 1, pDoc, FALSE);
 	      nView = CreateAbstractImage (pDoc, 1, 0, pDoc->DocSSchema, 1,
 					   TRUE, NULL);
 	      OpenCreatedView (pDoc, nView, FALSE, x, y, w, h);
@@ -203,7 +202,7 @@ static View OpenView (Document document, STRING viewName, int x, int y,
 	      {
 		/* Add a page break probably missed at the end */
 		if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[allViews[v].VdView])
-		  AddLastPageBreak (pDoc->DocRootElement, allViews[v].VdView,
+		  AddLastPageBreak (pDoc->DocDocElement, allViews[v].VdView,
 				    pDoc, FALSE);
 		nView = CreateAbstractImage (pDoc, allViews[v].VdView, 0,
 					     allViews[v].VdSSchema, 1, FALSE,
@@ -1263,7 +1262,7 @@ void UndisplayElement (PtrElement pEl, Document document)
 	 {
 	   DestroyAbsBoxes (pEl, pDoc, TRUE);
 	   RemoveElement (pEl);
-	   if (pEl != pDoc->DocRootElement)
+	   if (pEl != pDoc->DocDocElement)
 	     {
 	       for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
 		 if (pDoc->DocAssocRoot[assoc] == pEl)

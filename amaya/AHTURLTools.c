@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -698,12 +698,12 @@ char  *GetBaseURL (Document doc)
 
   /* @@@ irene */
   if (!DocumentURLs[doc])
-	  return NULL;
+     return NULL;
   basename = TtaGetMemory (MAX_LENGTH);
   strncpy (basename, DocumentURLs[doc], MAX_LENGTH-1);
   basename[MAX_LENGTH-1] = EOS;
   length = MAX_LENGTH -1;
-  /* get the root element    */
+  /* get the document element */
   el = TtaGetMainRoot (doc);
   /* search the BASE element */
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
@@ -726,7 +726,8 @@ char  *GetBaseURL (Document doc)
 	  TtaGiveTextAttributeValue (attr, basename, &length);
 	  /* base and orgName have to be separated by a DIR_SEP */
 	  length--;
-	  if (basename[0] != EOS && basename[length] != URL_SEP && basename[length] != DIR_SEP) 
+	  if (basename[0] != EOS && basename[length] != URL_SEP &&
+	      basename[length] != DIR_SEP) 
 	    /* verify if the base has the form "protocol://server:port" */
 	    {
 	      ptr = AmayaParseUrl (basename, "", AMAYA_PARSE_ACCESS |
@@ -984,9 +985,9 @@ void NormalizeURL (char *orgName, Document doc, char *newName,
    int            length;
    ThotBool       check;
 
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    int ndx;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    if (!newName || !docName)
       return;
@@ -1041,8 +1042,11 @@ void NormalizeURL (char *orgName, Document doc, char *newName,
        strcpy (newName, tempOrgName);
        SimplifyUrl (&newName);
        /* verify if the URL has the form "protocol://server:port" */
-       ptr = AmayaParseUrl (newName, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
-       if (ptr && !strcmp (ptr, newName)) /* it has this form, we complete it by adding a DIR_STR  */
+       ptr = AmayaParseUrl (newName, "", AMAYA_PARSE_ACCESS |
+			                 AMAYA_PARSE_HOST |
+			                 AMAYA_PARSE_PUNCTUATION);
+       if (ptr && !strcmp (ptr, newName))
+	 /* it has this form, we complete it by adding a DIR_STR  */
          strcat (newName, URL_STR);
 
        if (ptr)
@@ -1054,7 +1058,7 @@ void NormalizeURL (char *orgName, Document doc, char *newName,
    else
      {
        /* Calculate the absolute URL, using the base or document URL */
-#      ifdef _WINDOWS
+#ifdef _WINDOWS
        if (!IsW3Path (basename))
 	 {
 	   length = strlen (tempOrgName);
@@ -1062,7 +1066,7 @@ void NormalizeURL (char *orgName, Document doc, char *newName,
 	     if (tempOrgName [ndx] == '/')
 	       tempOrgName [ndx] = '\\';
 	 }
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
        ptr = AmayaParseUrl (tempOrgName, basename, AMAYA_PARSE_ALL);
        if (ptr)
 	 {
@@ -1115,7 +1119,8 @@ void NormalizeURL (char *orgName, Document doc, char *newName,
 	 }
        else
 	 { /* docname is comprised inside the URL */
-           while (length >= 0 && newName[length] != URL_SEP && newName[length] != DIR_SEP)
+           while (length >= 0 && newName[length] != URL_SEP &&
+		  newName[length] != DIR_SEP)
 	     length--;
 	   if (length < 0)
              strcpy (docName, newName);
@@ -1460,9 +1465,9 @@ char   *AmayaParseUrl (const char *aName, char *relatedName, int wanted)
 	  strcat (result, "");
 	else
 	  {
-	    if (wanted & AMAYA_PARSE_PUNCTUATION)
+	   if (wanted & AMAYA_PARSE_PUNCTUATION)
 	      strcat (result, "#");
-	    strcat (result, given.fragment ? given.fragment : related.fragment); 
+	   strcat (result, given.fragment ? given.fragment : related.fragment); 
 	  }
       }
   len = strlen (result);
@@ -1497,13 +1502,13 @@ static char   *HTCanon (char **filename, char *host)
      else
 	 used_sep = DIR_SEP;
   
-    while (access > *filename && *(access - 1) != used_sep)       /* Find access method */
+    while (access > *filename && *(access - 1) != used_sep) /* Find access method */
 	access--;
-    if ((path = strchr (host, used_sep)) == NULL)			/* Find path */
+    if ((path = strchr (host, used_sep)) == NULL)	        /* Find path */
        path = host + strlen (host);
     if ((strptr = strchr (host, '@')) != NULL && strptr < path)	   /* UserId */
        host = strptr;
-    if ((port = strchr (host, ':')) != NULL && port > path)      /* Port number */
+    if ((port = strchr (host, ':')) != NULL && port > path)   /* Port number */
        port = NULL;
 
     strptr = host;				    /* Convert to lower-case */
@@ -1682,7 +1687,8 @@ void         SimplifyUrl (char **url)
       p = path;
       while (p < end)
 	{
-	  /* if we're pointing to a char, it's safe to reactivate the ../ convertion */
+	  /* if we're pointing to a char, it's safe to reactivate the 
+	     ../ convertion */
 	  if (!ddot_simplify && *p != '.' && *p != used_sep)
 	    ddot_simplify = TRUE;
 
@@ -1746,10 +1752,10 @@ void         SimplifyUrl (char **url)
   ----------------------------------------------------------------------*/
 ThotBool NormalizeFile (char *src, char *target, ConvertionType convertion)
 {
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    char             *s;
    int               i;
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
    ThotBool          change;
    int               start_index; /* the first char that we'll copy */
 
@@ -1857,10 +1863,9 @@ char      *MakeRelativeURL (char *aName, char *relatedName)
   char  *after_access;
   char  *last_slash = NULL;
   int    slashes, levels, len;
-
-# ifdef _WINDOWS
+#ifdef _WINDOWS
   int ndx;
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
   if (aName == NULL || relatedName == NULL)
     return (NULL);
@@ -1928,12 +1933,12 @@ char      *MakeRelativeURL (char *aName, char *relatedName)
 	strcpy (return_value, result);
 
     }
-# ifdef _WINDOWS
+#ifdef _WINDOWS
   len = strlen (return_value);
   for (ndx = 0; ndx < len; ndx ++)
 	  if (return_value[ndx] == '\\')
 	     return_value[ndx] = '/' ;
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
   return (return_value);
 }
 

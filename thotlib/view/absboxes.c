@@ -1624,7 +1624,7 @@ void                JumpIntoView (int frame, int distance)
 	      view = 1;
 	    }
 	  else
-	    pEl = pDoc->DocRootElement;
+	    pEl = pDoc->DocDocElement;
 	  if (pEl != NULL)
 	    {
 	      pAbbRoot = pEl->ElAbstractBox[view - 1];

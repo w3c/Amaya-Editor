@@ -78,7 +78,7 @@ STRING          documentSchemasPath;
   else
     {
       pDoc->DocSSchema = NULL;
-      pDoc->DocRootElement = NULL;
+      pDoc->DocDocElement = NULL;
       pDoc->DocLabels = NULL;
       /* on donne son nom au document */
       ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);

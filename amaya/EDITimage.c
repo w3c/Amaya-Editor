@@ -114,9 +114,11 @@ void CallbackImage (int ref, int typedata, char *data)
 	  /* Filter button */
 	  /* reinitialize directories and document lists */
 	  TtaListDirectory (DirectoryImage, ref,
-			    TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
+			    TtaGetMessage (LIB, TMSG_DOC_DIR),
+			    BaseImage + ImageDir,
 			    ImgFilter,
-			    TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
+			    TtaGetMessage (AMAYA, AM_FILES),
+			    BaseImage + ImageSel);
 	}
       else if (val == 0)
 	{ /* Cancel button */ 
@@ -129,7 +131,8 @@ void CallbackImage (int ref, int typedata, char *data)
 	{
 	  /* IMG element without ALT attribute: error message */
 #ifndef _WINDOWS
-	  TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormImage, TtaGetMessage (AMAYA, AM_ALT_MISSING));
+	  TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormImage,
+		       TtaGetMessage (AMAYA, AM_ALT_MISSING));
 #endif /* !_WINDOWS */
 	}
       else if (ref == BaseImage + FormBackground && BgDocument != 0)
@@ -166,7 +169,7 @@ void CallbackImage (int ref, int typedata, char *data)
 		}
 	      else if (elType.ElTypeNum == HTML_EL_BODY)
 		{
-		  /* move the pRule on the root element */
+		  /* move the pRule to the root element */
 		  el =  TtaGetMainRoot (document);
 		  last = el;
 		}
@@ -224,8 +227,11 @@ void CallbackImage (int ref, int typedata, char *data)
 		i = STYLE_VREPEAT;
 	      else
 		i = STYLE_SCALE;
-	      if (IsHTTPPath (DocumentURLs[document]) && !IsHTTPPath (LastURLImage)) {
-		/* load a local image into a remote document copy image file into the temporary directory of the document */
+	      if (IsHTTPPath (DocumentURLs[document]) &&
+		  !IsHTTPPath (LastURLImage))
+		{
+		/* load a local image into a remote document copy image file
+		   into the temporary directory of the document */
 		TtaExtractName (LastURLImage, tempfile, tempname);
 		NormalizeURL (tempname, document, tempfile, tempname, NULL);
 		AddLoadedImage (tempname, tempfile, document, &desc);
@@ -234,12 +240,14 @@ void CallbackImage (int ref, int typedata, char *data)
 		    desc->status = IMAGE_MODIFIED;
 		    TtaFileCopy (LastURLImage, desc->localName);
 		  }
-	      } 
+		} 
 	      do
 		{
 		  elType = TtaGetElementType (el);
-		  /* if the PRule is on a text string or picture, move it to the enclosing element */
-		  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT || elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+		  /* if the PRule is on a text string or picture, move it to
+		     the enclosing element */
+		  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+		      elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
 		    {
 		      el = TtaGetParent (el);
 		      elStyle = el;
@@ -247,7 +255,8 @@ void CallbackImage (int ref, int typedata, char *data)
 			last = el;
 		      elType = TtaGetElementType (el);
 		    } 
-		  /* if the PRule is on a Pseudo-Paragraph, move it to the enclosing element */
+		  /* if the PRule is on a Pseudo-Paragraph, move it to the
+		     enclosing element */
 		  if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
 		    {
 		      el = TtaGetParent (el);
@@ -257,7 +266,8 @@ void CallbackImage (int ref, int typedata, char *data)
 		    } 
 		  if (LastURLImage[0] == EOS)
 		    HTMLResetBackgroundImage (document, el);
-		  else if (IsHTTPPath (DocumentURLs[document]) && !IsHTTPPath (LastURLImage))
+		  else if (IsHTTPPath (DocumentURLs[document]) &&
+			   !IsHTTPPath (LastURLImage))
 		    HTMLSetBackgroundImage (document, el, i, tempname);
 		  else
 		    HTMLSetBackgroundImage (document, el, i, LastURLImage);
@@ -283,10 +293,10 @@ void CallbackImage (int ref, int typedata, char *data)
     case ImageFilter: /* Filter value */
       if (strlen(data) <= NAME_LENGTH)
 	strcpy (ImgFilter, data);
-#             ifndef _WINDOWS
+#ifndef _WINDOWS
       else
 	TtaSetTextForm (BaseImage + ImageFilter, ImgFilter);
-#             endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
       break;
     case ImageURL:
       if (data == NULL)
@@ -326,13 +336,17 @@ void CallbackImage (int ref, int typedata, char *data)
 	  strcat (DirectoryImage, DIR_STR);
 	  strcat (DirectoryImage, data);
 	}
-#             ifndef _WINDOWS
+#ifndef _WINDOWS
       TtaSetTextForm (BaseImage + ImageURL, DirectoryImage);
-#             endif /* !_WINDOWS */
-      TtaListDirectory (DirectoryImage, BaseImage + FormImage, TtaGetMessage (LIB, TMSG_DOC_DIR), 
-			BaseImage + ImageDir, ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
-      TtaListDirectory (DirectoryImage, BaseImage + FormBackground, TtaGetMessage (LIB, TMSG_DOC_DIR), 
-			BaseImage + ImageDir, ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
+#endif /* !_WINDOWS */
+      TtaListDirectory (DirectoryImage, BaseImage + FormImage,
+			TtaGetMessage (LIB, TMSG_DOC_DIR), 
+			BaseImage + ImageDir, ImgFilter,
+			TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
+      TtaListDirectory (DirectoryImage, BaseImage + FormBackground,
+			TtaGetMessage (LIB, TMSG_DOC_DIR), 
+			BaseImage + ImageDir, ImgFilter,
+			TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
       ImageName[0] = EOS;
       break;
     case ImageSel:
@@ -393,9 +407,9 @@ static void         GetAlt (Document document, View view)
        TtaWaitShowDialogue ();
      }
    TtaDestroyDialogue (BaseImage + FormAlt);   
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    CreateAltDlgWindow ();
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -560,7 +574,8 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	else
 	   TtaInsertSibling (el, child, FALSE, doc);
 	child = TtaGetFirstChild (el);
-	/* For polygons, sets the value after the Ref_IMG attribute is created */
+	/* For polygons, sets the value after the Ref_IMG attribute is
+	   created */
 	if (shape[0] != 'p')
 	   TtaSetGraphicsShape (child, shape[0], doc);
 
@@ -745,7 +760,7 @@ char *GetImageURL (Document document, View view)
 void ChangeBackgroundImage (Document document, View view)
 {
    char           *s = TtaGetMemory (MAX_LENGTH);
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    int             i;
 
    /* there is a selection */
@@ -796,7 +811,7 @@ void ChangeBackgroundImage (Document document, View view)
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseImage + FormBackground, TRUE);
    TtaFreeMemory (s);
-#  else /* _WINDOWS */
+#else /* _WINDOWS */
    if (LastURLImage[0] != EOS)
       strcpy (s, LastURLImage);
    else {
@@ -806,7 +821,7 @@ void ChangeBackgroundImage (Document document, View view)
    }
    BgDocument = document;
    CreateBackgroundImageDlgWindow (TtaGetViewFrame (document, view), s);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 

@@ -369,7 +369,7 @@ PtrDocument         pDoc;
 			  /* elements of type srcNumType+1 transmit their */
 			  /* content to the documents of interest */
 			  /* Search an element of that type in the document */
-			  pSrcEl = FwdSearchTypedElem (pDoc->DocRootElement,
+			  pSrcEl = FwdSearchTypedElem (pDoc->DocDocElement,
 						       srcNumType + 1, pSS);
 			  if (pSrcEl != NULL)
 			     /* apply the Transmit rule to the element found */

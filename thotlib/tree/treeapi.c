@@ -56,17 +56,7 @@ static Name         nameBuffer;
    SetAssocNumber: assign the number nAssoc of the associated element 
    to all sub-tree which root is pEl.  
    ------------------------------------------------------------------ */
-
-#ifdef __STDC__
 static void         SetAssocNumber (PtrElement pEl, int nAssoc)
-
-#else  /* __STDC__ */
-static void         SetAssocNumber (pEl, nAssoc)
-PtrElement          pEl;
-int                 nAssoc;
-
-#endif /* __STDC__ */
-
 {
    if (pEl != NULL)
      {
@@ -83,7 +73,6 @@ int                 nAssoc;
      }
 }
 
-
 /* ----------------------------------------------------------------------
    ChangeElementType
 
@@ -95,17 +84,7 @@ int                 nAssoc;
    typeNum: new type for the element
 
    ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
 void             ChangeElementType (Element element, int typeNum)
-
-#else  /* __STDC__ */
-void             ChangeElementType (element, typeNum)
-Element             element;
-int                 typeNum;
-
-#endif /* __STDC__ */
-
 {
    UserErrorCode = 0;
    if (element == NULL)
@@ -116,7 +95,6 @@ int                 typeNum;
       else
 	 ((PtrElement)element)->ElTypeNumber = typeNum;
 }
-
 
 /* ----------------------------------------------------------------------
    TtaNewElement
@@ -131,17 +109,7 @@ int                 typeNum;
    the created element.
 
    ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
 Element             TtaNewElement (Document document, ElementType elementType)
-
-#else  /* __STDC__ */
-Element             TtaNewElement (document, elementType)
-Document            document;
-ElementType         elementType;
-
-#endif /* __STDC__ */
-
 {
    PtrElement          element;
 
@@ -180,7 +148,6 @@ ElementType         elementType;
    return ((Element) element);
 }
 
-
 /* ----------------------------------------------------------------------
    TtaNewTree
 
@@ -197,18 +164,7 @@ ElementType         elementType;
    the root element of the created tree.
 
    ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
 Element             TtaNewTree (Document document, ElementType elementType, char* label)
-
-#else  /* __STDC__ */
-Element             TtaNewTree (document, elementType, label)
-Document            document;
-ElementType         elementType;
-char*               label;
-
-#endif /* __STDC__ */
-
 {
    PtrElement          element;
 
@@ -262,17 +218,7 @@ char*               label;
    the created element.
 
    ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
 Element             TtaNewTranscludedElement (Document document, Element orig)
-
-#else  /* __STDC__ */
-Element             TtaNewTranscludedElement (document, orig)
-Document            document;
-Element             orig;
-
-#endif /* __STDC__ */
-
 {
    PtrElement          element;
    PtrReference        pRef;
@@ -323,7 +269,6 @@ Element             orig;
    return ((Element) element);
 }
 
-
 /* ------------------------------------------------------------
    TransRef cherche dans le sous-arbre de racine pElem tous les
    elements reference's et transfert sur eux les references qui    
@@ -331,17 +276,7 @@ Element             orig;
    affecte aussi un nouveau label a tous les elements du           
    sous-arbre de racine pElem.                                     
    ------------------------------------------------------------ */
-#ifdef __STDC__
 static void         TransRef (PtrElement pElem, PtrElement pRoot, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         TransRef (pElem, pRoot, pDoc)
-PtrElement          pElem;
-PtrElement          pRoot;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
 {
    PtrElement          pSon;
    PtrReferredDescr    pDescRef;
@@ -412,7 +347,6 @@ PtrDocument         pDoc;
      }
 }
 
-
 /* ----------------------------------------------------------------------
    TtaCopyTree
 
@@ -428,19 +362,8 @@ PtrDocument         pDoc;
    the root element of the created tree.
 
    ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-Element             TtaCopyTree (Element sourceElement, Document sourceDocument, Document destinationDocument, Element parent)
-
-#else  /* __STDC__ */
-Element             TtaCopyTree (sourceElement, sourceDocument, destinationDocument, parent)
-Element             sourceElement;
-Document            sourceDocument;
-Document            destinationDocument;
-Element             parent;
-
-#endif /* __STDC__ */
-
+Element            TtaCopyTree (Element sourceElement, Document sourceDocument,
+				Document destinationDocument, Element parent)
 {
    PtrElement          element;
    PtrElement          ancestor;
@@ -516,7 +439,6 @@ Element             parent;
    return ((Element) element);
 }
 
-
 /* ---------------------------------------------------------------------- *
    CreateDescent
 
@@ -535,15 +457,8 @@ Element             parent;
    Return value:
    the last descendant created or NULL if the element cannot be created.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-static Element      CreateDescent (Document document, Element element, ElementType elementType, ThotBool withContent)
-#else  /* __STDC__ */
-static Element      CreateDescent (document, element, elementType, withContent)
-Document            document;
-Element             element;
-ElementType         elementType;
-ThotBool            withContent;
-#endif /* __STDC__ */
+static Element    CreateDescent (Document document, Element element,
+				 ElementType elementType, ThotBool withContent)
 {
   PtrElement          lastCreated;
   PtrElement          firstCreated;
@@ -720,7 +635,6 @@ ThotBool            withContent;
   return ((Element) lastCreated);
 }
 
-
 /* ----------------------------------------------------------------------
    TtaCreateDescent
 
@@ -737,14 +651,8 @@ ThotBool            withContent;
    the last descendant created or NULL if the element cannot be created.
    This element is empty.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-Element             TtaCreateDescent (Document document, Element element, ElementType elementType)
-#else  /* __STDC__ */
-Element             TtaCreateDescent (document, element, elementType)
-Document            document;
-Element             element;
-ElementType         elementType;
-#endif /* __STDC__ */
+Element             TtaCreateDescent (Document document, Element element,
+				      ElementType elementType)
 {
    return CreateDescent (document, element, elementType, FALSE);
 }
@@ -766,14 +674,8 @@ ElementType         elementType;
    If not NULL, the minimum content of that element has been created.
 
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-Element             TtaCreateDescentWithContent (Document document, Element element, ElementType elementType)
-#else  /* __STDC__ */
-Element             TtaCreateDescentWithContent (document, element, elementType
-Document            document;
-Element             element;
-ElementType         elementType;
-#endif /* __STDC__ */
+Element        TtaCreateDescentWithContent (Document document, Element element,
+					    ElementType elementType)
 {
    return CreateDescent (document, element, elementType, TRUE);
 }
@@ -790,13 +692,7 @@ ElementType         elementType;
    element: the element (or root of the tree) to be deleted.
    document: the document containing the element to be deleted.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 void                TtaDeleteTree (Element element, Document document)
-#else  /* __STDC__ */
-void                TtaDeleteTree (element, document)
-Element             element;
-Document            document;
-#endif /* __STDC__ */
 {
    PtrDocument         pDoc;
    ThotBool            root;
@@ -829,18 +725,18 @@ Document            document;
 #endif
 	     if (root)
 	       {
-		if (pDoc->DocRootElement == pEl)
+		if (pDoc->DocDocElement == pEl)
 		   /* The whole main tree is destroyed */
-		   pDoc->DocRootElement = NULL;
+		   pDoc->DocDocElement = NULL;
 		else if (pEl->ElAssocNum > 0 &&
 			 pDoc->DocAssocRoot[pEl->ElAssocNum - 1] == pEl)
 		   pDoc->DocAssocRoot[pEl->ElAssocNum - 1] = NULL;
 	       }
+
 	     DeleteElement (&pEl, pDoc);
 	  }
      }
 }
-
 
 /* ----------------------------------------------------------------------
    TtaAttachNewTree
@@ -853,13 +749,7 @@ Document            document;
    document structure schema.
    document: the document to which the tree is to be attached.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 void                TtaAttachNewTree (Element tree, Document document)
-#else  /* __STDC__ */
-void                TtaAttachNewTree (tree, document)
-Element             tree;
-Document            document;
-#endif /* __STDC__ */
 {
    PtrDocument         pDoc;
    SRule              *pRule;
@@ -908,16 +798,29 @@ Document            document;
 	 TtaError (ERR_element_does_not_match_DTD);
        else
 	 {
-	   if (pRoot->ElTypeNumber == pRoot->ElStructSchema->SsRootElem)
-	     /* The main tree */
+	   if (pRoot->ElTypeNumber == pRoot->ElStructSchema->SsDocument &&
+	       pRoot->ElStructSchema == pDoc->DocSSchema)
+	     /* The main tree (starting at the document element) */
 	     {
 #ifndef NODISPLAY
-	       if (pDoc->DocRootElement != NULL)
-		 UndisplayElement (pDoc->DocRootElement, document);
+	       if (pDoc->DocDocElement != NULL)
+		 UndisplayElement (pDoc->DocDocElement, document);
 #endif
-	       /* Don't remove the root element */
-	       DeleteElement (&pDoc->DocRootElement, pDoc);
-	       pDoc->DocRootElement = pRoot;
+	       DeleteElement (&pDoc->DocDocElement, pDoc);
+	       pDoc->DocDocElement = pRoot;
+	       numAssocLibre = 0;
+	       ok = TRUE;
+	     }
+	   else if (pRoot->ElTypeNumber == pRoot->ElStructSchema->SsRootElem &&
+		    pRoot->ElStructSchema == pDoc->DocSSchema)
+	     /* The main tree (starting at the root) */
+	     {
+#ifndef NODISPLAY
+	       if (pDoc->DocDocElement != NULL)
+		 UndisplayElement (pRoot, document);
+#endif
+	       DeleteElement (pRoot, pDoc);
+	       InsertFirstChild (pDoc->DocDocElement, pRoot);
 	       numAssocLibre = 0;
 	       ok = TRUE;
 	     }
@@ -997,7 +900,6 @@ Document            document;
      }
 }
 
-
 /*----------------------------------------------------------------------
    TtaExportTree
  
@@ -1013,15 +915,8 @@ Document            document;
    name must not be specified in parameter TSchemaName. See
    function TtaSetSchemaPath.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaExportTree (Element element, Document document, STRING fileName, STRING TSchemaName)
-#else  /* __STDC__ */
-void                TtaExportTree (element, document, fileName, TSchemaName)
-Element             element;
-Document            document;
-STRING              fileName;
-STRING              TSchemaName;
-#endif /* __STDC__ */
+void                TtaExportTree (Element element, Document document,
+				   STRING fileName, STRING TSchemaName)
 {
   UserErrorCode = 0;
   /* verifies the parameter document */
@@ -1049,15 +944,8 @@ STRING              TSchemaName;
    if FALSE, inserts newElement as next sibling of sibling.
    document: the document to which both elements belong.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                TtaInsertSibling (Element newElement, Element sibling, ThotBool before, Document document)
-#else  /* __STDC__ */
-void                TtaInsertSibling (newElement, sibling, before, document)
-Element             newElement;
-Element             sibling;
-ThotBool            before;
-Document            document;
-#endif /* __STDC__ */
+void                TtaInsertSibling (Element newElement, Element sibling,
+				      ThotBool before, Document document)
 {
 #ifndef NODISPLAY
    PtrElement          pNeighbour;
@@ -1168,14 +1056,8 @@ void                TtaAskFirstCreation ()
    If newElement is an option that replaces the choice, newElement takes
    the value of parent.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                TtaInsertFirstChild (Element * newElement, Element parent, Document document)
-#else  /* __STDC__ */
-void                TtaInsertFirstChild (newElement, parent, document)
-Element            *newElement;
-Element             parent;
-Document            document;
-#endif /* __STDC__ */
+void                TtaInsertFirstChild (Element * newElement, Element parent,
+					 Document document)
 {
 #ifndef NODISPLAY
    PtrElement          pNeighbour;
@@ -1284,14 +1166,7 @@ Document            document;
    document: the document for which the element is created.
 
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 void                TtaInsertElement (ElementType elementType, Document document)
-#else  /* __STDC__ */
-void                TtaInsertElement (elementType, document)
-ElementType         elementType;
-Document            document;
-
-#endif /* __STDC__ */
 {
    UserErrorCode = 0;
    if (elementType.ElSSchema == NULL)
@@ -1321,14 +1196,7 @@ Document            document;
    document: the document containing the element to be removed.
 
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 void                TtaRemoveTree (Element element, Document document)
-#else  /* __STDC__ */
-void                TtaRemoveTree (element, document)
-Element             element;
-Document            document;
-
-#endif /* __STDC__ */
 {
    PtrDocument         pDoc;
    ThotBool            root;
@@ -1353,16 +1221,15 @@ Document            document;
 #endif
 	if (root)
 	  {
-	   if (pDoc->DocRootElement == (PtrElement) element)
-	      /* Tha main tree is cleared */
-	      pDoc->DocRootElement = NULL;
+	   if (pDoc->DocDocElement == (PtrElement) element)
+	      /* The main tree is cleared */
+	      pDoc->DocDocElement = NULL;
 	   else if (pDoc->DocAssocRoot[((PtrElement) element)->ElAssocNum - 1] == (PtrElement) element)
 	      /* Verifies if it is the root of an associated tree */
 	      pDoc->DocAssocRoot[((PtrElement) element)->ElAssocNum - 1] = NULL;
 	  }
      }
 }
-
 
 /* ----------------------------------------------------------------------
    TtaSetElementLineNumber
@@ -1373,13 +1240,7 @@ Document            document;
    element: the element.
    nb: line number of the element.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 void                TtaSetElementLineNumber (Element element, int nb)
-#else  /* __STDC__ */
-void                TtaSetElementLineNumber (element, nb)
-Element             element;
-int		    int;
-#endif /* __STDC__ */
 {
    UserErrorCode = 0;
    if (element == NULL)
@@ -1387,7 +1248,6 @@ int		    int;
    else
 	((PtrElement) element)->ElLineNb = nb;
 }
-
 
 /* ----------------------------------------------------------------------
    TtaSetAccessRight
@@ -1401,14 +1261,8 @@ int		    int;
    right: access right for that element (ReadOnly, ReadWrite, Hidden).
    document: the document to which the element belongs.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                TtaSetAccessRight (Element element, AccessRight right, Document document)
-#else  /* __STDC__ */
-void                TtaSetAccessRight (element, right, document)
-Element             element;
-AccessRight         right;
-Document            document;
-#endif /* __STDC__ */
+void                TtaSetAccessRight (Element element, AccessRight right,
+				       Document document)
 {
 #ifndef NODISPLAY
   AccessRight         oldAccessRight;
@@ -1508,7 +1362,6 @@ Document            document;
     }
 }
 
-
 /* ----------------------------------------------------------------------
    TtaHolophrastElement
 
@@ -1520,14 +1373,8 @@ Document            document;
    FALSE: if the element is holphrasted, it gets expanded.
    document: the document to which the element belongs.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                TtaHolophrastElement (Element element, ThotBool holophrast, Document document)
-#else  /* __STDC__ */
-void                TtaHolophrastElement (element, holophrast, document)
-Element             element;
-ThotBool            holophrast;
-Document            document;
-#endif /* __STDC__ */
+void                TtaHolophrastElement (Element element, ThotBool holophrast,
+					  Document document)
 {
    ThotBool            CanHolo;
 
@@ -1577,14 +1424,7 @@ Document            document;
    document: the document for which insertion is changed.
 
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 void                TtaSetMandatoryInsertion (ThotBool on, Document document)
-#else  /* __STDC__ */
-void                TtaSetMandatoryInsertion (on, document)
-ThotBool            on;
-Document            document;
-
-#endif /* __STDC__ */
 {
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
@@ -1609,13 +1449,7 @@ Document            document;
    structure checking.
    document: the document for which structure checking is changed.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 void                TtaSetStructureChecking (ThotBool on, Document document)
-#else  /* __STDC__ */
-void                TtaSetStructureChecking (on, document)
-ThotBool            on;
-Document            document;
-#endif /* __STDC__ */
 {
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
@@ -1626,7 +1460,6 @@ Document            document;
   else
     (LoadedDocument [document - 1])->DocCheckingMode |= COMPLETE_CHECK_MASK;
 }
-
 
 /* ----------------------------------------------------------------------
    TtaGetStructureChecking
@@ -1639,12 +1472,7 @@ Document            document;
    Parameter:
    document: the document for which structure checking is asked.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 int                 TtaGetStructureChecking (Document document)
-#else  /* __STDC__ */
-int                 TtaGetStructureChecking (document)
-Document            document;
-#endif /* __STDC__ */
 {
   int	ret;
 
@@ -1658,7 +1486,6 @@ Document            document;
   return ret;
 }
 
-
 /* ----------------------------------------------------------------------
    TtaSetCheckingMode
 
@@ -1667,12 +1494,7 @@ Document            document;
    Parameter:
    strict: if TRUE, the presence of all mandatory elements is checked.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 void                TtaSetCheckingMode (ThotBool strict)
-#else  /* __STDC__ */
-void                TtaSetCheckingMode (strict)
-ThotBool            strict;
-#endif /* __STDC__ */
 {
    FullStructureChecking = strict;
 }
@@ -1694,13 +1516,7 @@ ThotBool            strict;
    root: the root element of the next associated tree.
    NULL if there is no next associated tree for the document.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 void                TtaNextAssociatedRoot (Document document, Element * root)
-#else  /* __STDC__ */
-void                TtaNextAssociatedRoot (document, root)
-Document            document;
-Element            *root;
-#endif /* __STDC__ */
 {
    int                 assoc;
    PtrDocument         pDoc;
@@ -1727,7 +1543,8 @@ Element            *root;
 	     /* Go to the root of the tree */
 	     while (pEl->ElParent != NULL)
 		pEl = pEl->ElParent;
-	     if (pEl == pDoc->DocRootElement)
+	     if (pEl == pDoc->DocDocElement ||
+		 (pEl && pEl->ElParent == pDoc->DocDocElement))
 		/* It's the main tree, the associated tree is returned */
 		nextRoot = pDoc->DocAssocRoot[0];
 	     else
@@ -1762,12 +1579,7 @@ Element            *root;
    Return value:
    the first child element of parent; NULL if parent has no child.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 Element             TtaGetFirstChild (Element parent)
-#else  /* __STDC__ */
-Element             TtaGetFirstChild (parent)
-Element             parent;
-#endif /* __STDC__ */
 {
    PtrElement          child;
 
@@ -1797,12 +1609,7 @@ Element             parent;
    Return value:
    the last child element of parent; NULL if parent has no child.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 Element             TtaGetLastChild (Element parent)
-#else  /* __STDC__ */
-Element             TtaGetLastChild (parent)
-Element             parent;
-#endif /* __STDC__ */
 {
    PtrElement          child;
 
@@ -1836,12 +1643,7 @@ Element             parent;
    Return value:
    the first leaf element of parent; parent itself if it has no leaf
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 Element             TtaGetFirstLeaf (Element parent)
-#else  /* __STDC__ */
-Element             TtaGetFirstLeaf (parent)
-Element             parent;
-#endif /* __STDC__ */
 {
    Element          leaf;
 
@@ -1865,12 +1667,7 @@ Element             parent;
    Return value:
    the last leaf element of parent; parent itself if it has no leaf.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 Element             TtaGetLastLeaf (Element parent)
-#else  /* __STDC__ */
-Element             TtaGetLastLeaf (parent)
-Element             parent;
-#endif /* __STDC__ */
 {
    Element          leaf;
 
@@ -1895,12 +1692,7 @@ Element             parent;
    element: the previous sibling element, or NULL if there is no
    previous sibling.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 void                TtaPreviousSibling (Element * element)
-#else  /* __STDC__ */
-void                TtaPreviousSibling (element)
-Element            *element;
-#endif /* __STDC__ */
 {
    PtrElement          sibling;
 
@@ -1929,12 +1721,7 @@ Element            *element;
    Return parameter:
    element: the next sibling element, or NULL if there is no next sibling.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 void                TtaNextSibling (Element * element)
-#else  /* __STDC__ */
-void                TtaNextSibling (element)
-Element            *element;
-#endif /* __STDC__ */
 {
    PtrElement          sibling;
 
@@ -1964,12 +1751,7 @@ Element            *element;
    Return value:
    the successor, or NULL if there is no successor.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 Element             TtaGetSuccessor (Element element)
-#else  /* __STDC__ */
-Element             TtaGetSuccessor (element)
-Element             element;
-#endif /* __STDC__ */
 {
    PtrElement          successor;
 
@@ -1996,12 +1778,7 @@ Element             element;
    Return value:
    the predecessor, or NULL if there is no predecessor.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 Element             TtaGetPredecessor (Element element)
-#else  /* __STDC__ */
-Element             TtaGetPredecessor (element)
-Element             element;
-#endif /* __STDC__ */
 {
    PtrElement          predecessor, pEl;
 
@@ -2034,13 +1811,7 @@ Element             element;
    the common ancestor, or NULL if there is no
    common ancestor.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 Element             TtaGetCommonAncestor (Element element1, Element element2)
-#else  /* __STDC__ */
-Element             TtaGetCommonAncestor (element1, element2)
-Element             element1;
-Element             element2;
-#endif /* __STDC__ */
 {
    PtrElement          ancestor;
 
@@ -2065,13 +1836,8 @@ Element             element2;
    Return value:
    the ancestor, or NULL if there is no ancestor of that type.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-Element             TtaGetTypedAncestor (Element element, ElementType ancestorType)
-#else  /* __STDC__ */
-Element             TtaGetTypedAncestor (element, ancestorType)
-Element             element;
-ElementType         ancestorType;
-#endif /* __STDC__ */
+Element             TtaGetTypedAncestor (Element element,
+					 ElementType ancestorType)
 {
    PtrElement          ancestor;
 
@@ -2100,12 +1866,7 @@ ElementType         ancestorType;
    Return value:
    true or false.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 ThotBool            TtaIsExtensionElement (Element element)
-#else  /* __STDC__ */
-ThotBool            TtaIsExtensionElement (element)
-Element             element;
-#endif /* __STDC__ */
 {
 
    UserErrorCode = 0;
@@ -2131,12 +1892,7 @@ Element             element;
    Return value:
    true or false.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 ThotBool            TtaIsTranscludedElement (Element element)
-#else  /* __STDC__ */
-ThotBool            TtaIsTranscludedElement (element)
-Element             element;
-#endif /* __STDC__ */
 {
 
    UserErrorCode = 0;
@@ -2163,12 +1919,7 @@ Element             element;
    Return value:
    name of that type.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 STRING              TtaGetElementTypeName (ElementType elementType)
-#else  /* __STDC__ */
-STRING              TtaGetElementTypeName (elementType)
-ElementType         elementType;
-#endif /* __STDC__ */
 {
 
    UserErrorCode = 0;
@@ -2195,12 +1946,7 @@ ElementType         elementType;
    Return value:
    original name of that type.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 STRING              TtaGetElementTypeOriginalName (ElementType elementType)
-#else  /* __STDC__ */
-STRING              TtaGetElementTypeOriginalName (elementType)
-ElementType         elementType;
-#endif /* __STDC__ */
 {
 
    UserErrorCode = 0;
@@ -2232,13 +1978,7 @@ ElementType         elementType;
    elementType: the type having this name, or elementType.ElTypeNum = 0
    if the type is not found.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                TtaGiveTypeFromName (ElementType * elementType, STRING name)
-#else  /* __STDC__ */
-void                TtaGiveTypeFromName (elementType, name)
-ElementType        *elementType;
-STRING              name;
-#endif /* __STDC__ */
+void               TtaGiveTypeFromName (ElementType * elementType, STRING name)
 {
    UserErrorCode = 0;
    (*elementType).ElTypeNum = 0;
@@ -2250,7 +1990,6 @@ STRING              name;
    else
 	GetSRuleFromName (&((*elementType).ElTypeNum), (PtrSSchema *) (&((*elementType).ElSSchema)), name, USER_NAME);
 }
-
 
 /* ----------------------------------------------------------------------
    TtaGiveTypeFromOriginalName
@@ -2268,16 +2007,8 @@ STRING              name;
    elementType: the type having this name, or elementType.ElTypeNum = 0
    if the type is not found.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                TtaGiveTypeFromOriginalName (ElementType * elementType, STRING name)
-
-#else  /* __STDC__ */
-void                TtaGiveTypeFromOriginalName (elementType, name)
-ElementType        *elementType;
-STRING              name;
-
-#endif /* __STDC__ */
-
+void                TtaGiveTypeFromOriginalName (ElementType * elementType,
+						 STRING name)
 {
    UserErrorCode = 0;
    (*elementType).ElTypeNum = 0;
@@ -2300,13 +2031,7 @@ STRING              name;
    Return value:
    0 if both types are different, 1 if they are identical.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 int                 TtaSameTypes (ElementType type1, ElementType type2)
-#else  /* __STDC__ */
-int                 TtaSameTypes (type1, type2)
-ElementType         type1;
-ElementType         type2;
-#endif /* __STDC__ */
 {
    int                 result;
 
@@ -2349,12 +2074,7 @@ ElementType         type2;
    Return value:
    label of the element.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 STRING              TtaGetElementLabel (Element element)
-#else  /* __STDC__ */
-STRING              TtaGetElementLabel (element)
-Element             element;
-#endif /* __STDC__ */
 {
 
    UserErrorCode = 0;
@@ -2362,15 +2082,15 @@ Element             element;
    if (element == NULL)
 	TtaError (ERR_invalid_parameter);
    else 
-#   ifdef _I18N_
+#ifdef _I18N_
    {
     CHAR_T wcsTmpStr [MAX_NAME_LENGTH];
     mbstowcs (wcsTmpStr, ((PtrElement) element)->ElLabel, MAX_NAME_LENGTH);
 	ustrncpy (nameBuffer, wcsTmpStr, MAX_NAME_LENGTH);
    }
-#   else  /* !_I18N_ */
+#else  /* !_I18N_ */
 	ustrncpy (nameBuffer, ((PtrElement) element)->ElLabel, MAX_NAME_LENGTH);
-#   endif /* !_I18N_ */
+#endif /* !_I18N_ */
    return nameBuffer;
 }
 
@@ -2383,12 +2103,7 @@ Element             element;
    Return value:
    line number of the element.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 int                 TtaGetElementLineNumber (Element element)
-#else  /* __STDC__ */
-int                 TtaGetElementLineNumber (element)
-Element             element;
-#endif /* __STDC__ */
 {
    int	lineNb;
 
@@ -2410,13 +2125,7 @@ Element             element;
    Return value:
    1 = the type is a constant, 0 = the type is not a constant.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 int                 TtaIsConstant (ElementType elementType)
-#else  /* __STDC__ */
-int                 TtaIsConstant (elementType)
-ElementType         elementType;
-#endif /* __STDC__ */
-
 {
    int                 result;
 
@@ -2435,7 +2144,6 @@ ElementType         elementType;
    return result;
 }
 
-
 /* ----------------------------------------------------------------------
    TtaIsLeaf
 
@@ -2445,12 +2153,7 @@ ElementType         elementType;
    Return value:
    1 if the type is a leaf, 0 if the type is not a leaf.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 int                 TtaIsLeaf (ElementType elementType)
-#else  /* __STDC__ */
-int                 TtaIsLeaf (elementType)
-ElementType         elementType;
-#endif /* __STDC__ */
 {
    int                 result;
 
@@ -2472,7 +2175,6 @@ ElementType         elementType;
    return result;
 }
 
-
 /* ----------------------------------------------------------------------
    TtaGetConstructOfType
 
@@ -2483,63 +2185,64 @@ ElementType         elementType;
    Return value:
    the construct that defines the structure of that element type.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 Construct           TtaGetConstructOfType (ElementType elementType)
-#else  /* __STDC__ */
-Construct           TtaGetConstructOfType (elementType)
-ElementType         elementType;
-#endif /* __STDC__ */
 {
-   Construct           result;
+  Construct           result;
 
-   UserErrorCode = 0;
-   result = ConstructError;
-   if (elementType.ElSSchema == NULL)
-	TtaError (ERR_invalid_parameter);
-   else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
-	    elementType.ElTypeNum < 1)
-	TtaError (ERR_invalid_element_type);
-   else
-      switch (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct)
-	    {
-	       case CsIdentity:
-		  result = ConstructIdentity;
-		  break;
-	       case CsList:
-		  result = ConstructList;
-		  break;
-	       case CsChoice:
-		  result = ConstructChoice;
-		  break;
-	       case CsAggregate:
-		  result = ConstructOrderedAggregate;
-		  break;
-	       case CsUnorderedAggregate:
-		  result = ConstructUnorderedAggregate;
-		  break;
-	       case CsConstant:
-		  result = ConstructConstant;
-		  break;
-	       case CsReference:
-		  result = ConstructReference;
-		  break;
-	       case CsBasicElement:
-		  result = ConstructBasicType;
-		  break;
-	       case CsNatureSchema:
-		  result = ConstructNature;
-		  break;
-	       case CsPairedElement:
-		  result = ConstructPair;
-		  break;
-	       case CsExtensionRule:
-		  result = ConstructError;
-		  break;
-	       default:
-		  result = ConstructError;
-		  break;
-	    }
-   return result;
+  UserErrorCode = 0;
+  result = ConstructError;
+  if (elementType.ElSSchema == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
+	   elementType.ElTypeNum < 1)
+    TtaError (ERR_invalid_element_type);
+  else
+    switch (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct)
+      {
+      case CsIdentity:
+	result = ConstructIdentity;
+	break;
+      case CsList:
+	result = ConstructList;
+	break;
+      case CsChoice:
+	result = ConstructChoice;
+	break;
+      case CsAggregate:
+	result = ConstructOrderedAggregate;
+	break;
+      case CsUnorderedAggregate:
+	result = ConstructUnorderedAggregate;
+	break;
+      case CsConstant:
+	result = ConstructConstant;
+	break;
+      case CsReference:
+	result = ConstructReference;
+	break;
+      case CsBasicElement:
+	result = ConstructBasicType;
+	break;
+      case CsNatureSchema:
+	result = ConstructNature;
+	break;
+      case CsPairedElement:
+	result = ConstructPair;
+	break;
+      case CsExtensionRule:
+	result = ConstructError;
+	break;
+      case CsDocument:
+	result = ConstructDocument;
+      case CsAny:
+	result = ConstructAny;
+      case CsEmpty:
+        result = ConstructEmpty;
+      default:
+	result = ConstructError;
+	break;
+      }
+  return result;
 }
 
 /* ----------------------------------------------------------------------
@@ -2552,15 +2255,7 @@ ElementType         elementType;
    Return value:
    the cardinal of that element type (integer value).
    ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
 int           TtaGetCardinalOfType (ElementType elementType)
-#else  /* __STDC__ */
-int           TtaGetCardinalOfType (elementType)
-ElementType         elementType;
-
-#endif /* __STDC__ */
-
 {
    int           result;
    SRule        *pRule;
@@ -2615,15 +2310,8 @@ ElementType         elementType;
    typesArray: a array of element types.
    size: the number of types actually inserted in the array
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void           TtaGiveConstructorsOfType (ElementType **typesArray,int *size,ElementType elementType)
-#else  /* __STDC__ */
-void           TtaGiveConstructorsOfType (typesArray,size,elementType)
-ElementType         elementType;
-ElementType       **typesArray;
-int                *size;
-#endif /* __STDC__ */
-
+void           TtaGiveConstructorsOfType (ElementType **typesArray,
+					  int *size,ElementType elementType)
 { 
    SRule        *pRule;
    int i;
@@ -2756,13 +2444,8 @@ int                *size;
    componentType is allowed in the aggregate or if aggregateType is not
    an aggregate.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-int           TtaGetRankInAggregate (ElementType componentType, ElementType aggregateType)
-#else  /* __STDC__ */
-int           TtaGetRankInAggregate (componentType, aggregateType)
-ElementType 	    componentType;
-ElementType         aggregateType;
-#endif /* __STDC__ */
+int           TtaGetRankInAggregate (ElementType componentType,
+				     ElementType aggregateType)
 {
    int		rank, i;
    SRule        *pRule;
@@ -2799,13 +2482,7 @@ ElementType         aggregateType;
    Return value:
    TRUE if this component is optional.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 ThotBool          TtaIsOptionalInAggregate (int rank, ElementType elementType)
-#else  /* __STDC__ */
-ThotBool          TtaIsOptionalInAggregate (rank, elementType)
-int 		    rank;
-ElementType         elementType;
-#endif /* __STDC__ */
 {
    ThotBool result;
    SRule        *pRule;
@@ -2839,13 +2516,7 @@ ElementType         elementType;
    Return value:
    the construct that defines the structure of that element.
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 Construct           TtaGetConstruct (Element element)
-#else  /* __STDC__ */
-Construct           TtaGetConstruct (element)
-Element             element;
-#endif /* __STDC__ */
-
 {
    Construct           result;
 
@@ -2858,7 +2529,6 @@ Element             element;
    return result;
 }
 
-
 /* ----------------------------------------------------------------------
    TtaGetAccessRight
 
@@ -2868,16 +2538,7 @@ Element             element;
    Return Value:
    access right for that element (ReadOnly, ReadWrite, Hidden, Inherited).
    ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
 AccessRight         TtaGetAccessRight (Element element)
-
-#else  /* __STDC__ */
-AccessRight         TtaGetAccessRight (element)
-Element             element;
-
-#endif /* __STDC__ */
-
 {
    AccessRight         right;
 
@@ -2918,16 +2579,7 @@ Element             element;
    1 if the element is holphrasted, 0 if not.
 
    ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
 int                 TtaIsHolophrasted (Element element)
-
-#else  /* __STDC__ */
-int                 TtaIsHolophrasted (element)
-Element             element;
-
-#endif /* __STDC__ */
-
 {
    int                 result;
 
@@ -2957,16 +2609,7 @@ Element             element;
    1 if the element is protected, 0 if not.
 
    ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
 int                 TtaIsReadOnly (Element element)
-
-#else  /* __STDC__ */
-int                 TtaIsReadOnly (element)
-Element             element;
-
-#endif /* __STDC__ */
-
 {
    int                 result;
 
@@ -2994,16 +2637,7 @@ Element             element;
    1 if the element is hidden, 0 if not.
 
    ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
 int                 TtaIsHidden (Element element)
-
-#else  /* __STDC__ */
-int                 TtaIsHidden (element)
-Element             element;
-
-#endif /* __STDC__ */
-
 {
    int                 result;
 
@@ -3032,16 +2666,7 @@ Element             element;
    1 if the element is included, 0 if not.
 
    ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
 int                 TtaIsInAnInclusion (Element element)
-
-#else  /* __STDC__ */
-int                 TtaIsInAnInclusion (element)
-Element             element;
-
-#endif /* __STDC__ */
-
 {
    int                 result;
    PtrElement          pAsc;
@@ -3074,17 +2699,7 @@ Element             element;
    1 if ancestor in an ancestor of element, 0 if not.
 
    ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
 int                 TtaIsAncestor (Element element, Element ancestor)
-
-#else  /* __STDC__ */
-int                 TtaIsAncestor (element, ancestor)
-Element             element;
-Element             ancestor;
-
-#endif /* __STDC__ */
-
 {
    int                 result;
 
@@ -3114,17 +2729,7 @@ Element             ancestor;
    1 if the first element precedes the second element, 0 if not.
 
    ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
 int                 TtaIsBefore (Element element1, Element element2)
-
-#else  /* __STDC__ */
-int                 TtaIsBefore (element1, element2)
-Element             element1;
-Element             element2;
-
-#endif /* __STDC__ */
-
 {
    int                 result;
 
@@ -3140,7 +2745,6 @@ Element             element2;
    return result;
 }
 
-
 /* ----------------------------------------------------------------------
    TtaIsFirstPairedElement
 
@@ -3153,16 +2757,7 @@ Element             element2;
    1 if it is the first element of the pair, 0 if it is the second.
 
    ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
 int                 TtaIsFirstPairedElement (Element element)
-
-#else  /* __STDC__ */
-int                 TtaIsFirstPairedElement (element)
-Element             element;
-
-#endif /* __STDC__ */
-
 {
    int                 result;
 
@@ -3178,7 +2773,6 @@ Element             element;
       result = 1;
    return result;
 }
-
 
 /* ----------------------------------------------------------------------
    TtaCanInsertSibling
@@ -3198,19 +2792,8 @@ Element             element;
    schema does not allow that insertion.
 
    ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-ThotBool            TtaCanInsertSibling (ElementType elementType, Element sibling, ThotBool before, Document document)
-
-#else  /* __STDC__ */
-ThotBool            TtaCanInsertSibling (elementType, sibling, before, document)
-ElementType         elementType;
-Element             sibling;
-ThotBool            before;
-Document            document;
-
-#endif /* __STDC__ */
-
+ThotBool         TtaCanInsertSibling (ElementType elementType, Element sibling,
+				      ThotBool before, Document document)
 {
    ThotBool            ret;
 
@@ -3253,14 +2836,8 @@ Document            document;
    schema does not allow that insertion.
 
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-ThotBool            TtaCanInsertFirstChild (ElementType elementType, Element parent, Document document)
-#else  /* __STDC__ */
-ThotBool            TtaCanInsertFirstChild (elementType, parent, document)
-ElementType         elementType;
-Element             parent;
-Document            document;
-#endif /* __STDC__ */
+ThotBool       TtaCanInsertFirstChild (ElementType elementType, Element parent,
+				       Document document)
 {
    ThotBool            ret;
 
@@ -3304,12 +2881,7 @@ Document            document;
    element in the clipboard or if the clipboard is empty.
 
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 void                TtaNextCopiedElement (Element * element)
-#else  /* __STDC__ */
-void                TtaNextCopiedElement (element)
-Element            *element;
-#endif /* __STDC__ */
 {
    PtrPasteElem        next;
 
@@ -3339,7 +2911,6 @@ Element            *element;
       *element = (Element) (next->PeElement);
 }
 
-
 /* ----------------------------------------------------------------------
    TtaGetCopiedDocument
 
@@ -3367,24 +2938,18 @@ Document            TtaGetCopiedDocument ()
 
 /* ----------------------------------------------------------------------
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 static PtrElement   SearchLabel (STRING label, PtrElement pEl)
-#else  /* __STDC__ */
-static PtrElement   SearchLabel (label, pEl)
-STRING              label;
-PtrElement          pEl;
-#endif /* __STDC__ */
 {
    PtrElement          pE, pFound;
-#  ifdef _I18N_
+#ifdef _I18N_
    char                mbsLabel[MAX_LENGTH];
-#  else  /* !_I18N_ */
+#else  /* !_I18N_ */
    char*               mbsLabel = label;
-#  endif /* !_I18N_ */
+#endif /* !_I18N_ */
    
-#  ifdef _I18N_
+#ifdef _I18N_
    wcstombs (mbsLabel, label, MAX_LENGTH);
-#  endif /* _I18N_ */
+#endif /* _I18N_ */
 
    pFound = NULL;
    if (strcmp (mbsLabel, pEl->ElLabel) == 0)
@@ -3420,13 +2985,7 @@ PtrElement          pEl;
    the element found, or NULL if no element has been found.
 
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-Element             TtaSearchElementByLabel (STRING searchedLabel, Element element)
-#else  /* __STDC__ */
-Element             TtaSearchElementByLabel (searchedLabel, element)
-STRING              searchedLabel;
-Element             element;
-#endif /* __STDC__ */
+Element         TtaSearchElementByLabel (STRING searchedLabel, Element element)
 {
    PtrElement          elementFound;
 
@@ -3459,13 +3018,7 @@ Element             element;
    the element found, or NULL if not found.
 
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 Element             TtaSearchEmptyElement (SearchDomain scope, Element element)
-#else  /* __STDC__ */
-Element             TtaSearchEmptyElement (scope, element)
-SearchDomain        scope;
-Element             element;
-#endif /* __STDC__ */
 {
    PtrElement          pEl;
    PtrElement          elementFound;
@@ -3494,7 +3047,6 @@ Element             element;
    return ((Element) elementFound);
 }
 
-
 /* ----------------------------------------------------------------------
    TtaSearchOtherPairedElement
 
@@ -3507,12 +3059,7 @@ Element             element;
    the paired element.
 
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 Element             TtaSearchOtherPairedElement (Element element)
-#else  /* __STDC__ */
-Element             TtaSearchOtherPairedElement (element)
-Element             element;
-#endif /* __STDC__ */
 {
    PtrElement          pairedElement;
 
@@ -3526,7 +3073,6 @@ Element             element;
       pairedElement = GetOtherPairedElement ((PtrElement) element);
    return ((Element) pairedElement);
 }
-
 
 /* ----------------------------------------------------------------------
    TtaSearchNoPageBreak
@@ -3543,13 +3089,7 @@ Element             element;
    only page breaks.
 
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 Element             TtaSearchNoPageBreak (Element element, ThotBool forward)
-#else  /* __STDC__ */
-Element             TtaSearchNoPageBreak (element, forward)
-Element             element;
-ThotBool            forward;
-#endif /* __STDC__ */
 {
    PtrElement          noPage;
 
@@ -3573,7 +3113,6 @@ ThotBool            forward;
    return ((Element) noPage);
 }
 
-
 /* ----------------------------------------------------------------------
    TtaHasHiddenException
 
@@ -3582,12 +3121,7 @@ ThotBool            forward;
    attributes are not included in the DTD.
 
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 ThotBool            TtaHasHiddenException (ElementType elType)
-#else  /* __STDC__ */
-ThotBool            TtaHasHiddenException (elType)
-ElementType         elType;
-#endif /* __STDC__ */
 {
   return TypeHasException (ExcHidden, elType.ElTypeNum, 
 			   (PtrSSchema) elType.ElSSchema);
@@ -3601,12 +3135,7 @@ ElementType         elType;
    attributes are not included in the DTD.
 
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 ThotBool            TtaHasInvisibleException (AttributeType attrType)
-#else  /* __STDC__ */
-ThotBool            TtaHasInvisibleException (attrType)
-AttributeType       attrType
-#endif /* __STDC__ */
 {
   return TypeHasException (ExcInvisible, attrType.AttrTypeNum, 
 			   (PtrSSchema) attrType.AttrSSchema);

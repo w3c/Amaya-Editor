@@ -496,19 +496,22 @@ void      GraphMLElementComplete (Element el, Document doc, int *error)
      /* if the parent element is defined by a different SSchema, insert
         a GraphML root element between the element and its parent */
      parent = TtaGetParent (el);
-     parentType = TtaGetElementType (parent);
-     if (parentType.ElSSchema != elType.ElSSchema)
-       {
-        if (elType.ElTypeNum != GraphML_EL_GraphML)
-	  {
-	  newType.ElSSchema = GraphMLSSchema;
-	  newType.ElTypeNum = GraphML_EL_GraphML;
-	  CreateEnclosingElement (el, newType, doc);
-	  }
-	else
-	  /* apply a deph rule to each child */
-	  SetGraphicDepths (doc, el);
-       }
+     if (parent)
+        {
+        parentType = TtaGetElementType (parent);
+        if (parentType.ElSSchema != elType.ElSSchema)
+           {
+           if (elType.ElTypeNum != GraphML_EL_GraphML)
+	      {
+	      newType.ElSSchema = GraphMLSSchema;
+	      newType.ElTypeNum = GraphML_EL_GraphML;
+	      CreateEnclosingElement (el, newType, doc);
+	      }
+	   else
+	      /* apply a deph rule to each child */
+	      SetGraphicDepths (doc, el);
+	   }
+	}
 
      switch (elType.ElTypeNum)
        {

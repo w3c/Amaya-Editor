@@ -1192,7 +1192,7 @@ void WriteTableLangues (BinFile pivFile, PtrDocument pDoc)
    pDoc->DocNLanguages = 0;
    for (i = 0; i < MAX_ASSOC_DOC; i++)
       UpdateLanguageTable (pDoc, pDoc->DocAssocRoot[i]);
-   UpdateLanguageTable (pDoc, pDoc->DocRootElement);
+   UpdateLanguageTable (pDoc, pDoc->DocDocElement);
    for (i = 0; i < pDoc->DocNLanguages; i++)
      {
 	TtaWriteByte (pivFile, (char) C_PIV_LANG);
@@ -1294,7 +1294,7 @@ void SauveDoc (BinFile pivFile, PtrDocument pDoc)
 	     }
 	}
    /* ecrit la representation pivot de tout le corps du document */
-   pEl = pDoc->DocRootElement;
+   pEl = pDoc->DocDocElement;
    if (pEl != NULL)
      {
 	/* envoie l'evenement ElemSave.Pre a l'application, si */

@@ -704,7 +704,7 @@ void XPointer_select (XPointerContextPtr ctx)
   if (TtaGetSelectedDocument () == ctx->doc)
     TtaUnselect (ctx->doc);
 
-  root = TtaGetMainRoot (ctx->doc);
+  root = TtaGetRootElement (ctx->doc);
   /* only do the selection if it's not the root */
   if (ctx->nodeStart.el != root)
     {
@@ -851,7 +851,7 @@ XPointerContextPtr XPointer_parse (Document doc, char *buffer)
   context->curNode = &(context->nodeStart);
   /* and initialize the document root */
   context->doc = doc;
-  context->root = TtaGetMainRoot (doc);
+  context->root = TtaGetRootElement (doc);
 
   /* start parsing */
   context->lookahead = LexAn (context);

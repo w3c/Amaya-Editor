@@ -2126,31 +2126,34 @@ void      MathMLElementComplete (Element el, Document doc, int *error)
 	  break;
        }
      parent = TtaGetParent (el);
-     parentType = TtaGetElementType (parent);
-     if (parentType.ElSSchema != elType.ElSSchema)
-        /* root of a MathML tree, Create a MathML element if there is no */
-        if (elType.ElTypeNum != MathML_EL_MathML)
-	  {
-	  elType.ElSSchema = MathMLSSchema;
-	  elType.ElTypeNum = MathML_EL_MathML;
-	  new = TtaNewElement (doc, elType);
-	  TtaInsertSibling (new, el, TRUE, doc);
-	  next = el;
-	  TtaNextSibling (&next);
-	  TtaRemoveTree (el, doc);
-	  TtaInsertFirstChild (&el, new, doc);
-	  prev = el;
-	  while (next != NULL)
-	    {
-	    child = next;
-	    TtaNextSibling (&next);
-	    TtaRemoveTree (child, doc);
-	    TtaInsertSibling (child, prev, FALSE, doc);
-	    prev = child;
-	    }
-	  /* Create placeholders within the MathML element */
-	  CreatePlaceholders (el, doc);
-	  }
+     if (parent)
+       {
+	 parentType = TtaGetElementType (parent);
+	 if (parentType.ElSSchema != elType.ElSSchema)
+	   /* root of a MathML tree, Create a MathML element if there is no */
+	   if (elType.ElTypeNum != MathML_EL_MathML)
+	     {
+	       elType.ElSSchema = MathMLSSchema;
+	       elType.ElTypeNum = MathML_EL_MathML;
+	       new = TtaNewElement (doc, elType);
+	       TtaInsertSibling (new, el, TRUE, doc);
+	       next = el;
+	       TtaNextSibling (&next);
+	       TtaRemoveTree (el, doc);
+	       TtaInsertFirstChild (&el, new, doc);
+	       prev = el;
+	       while (next != NULL)
+		 {
+		   child = next;
+		   TtaNextSibling (&next);
+		   TtaRemoveTree (child, doc);
+		   TtaInsertSibling (child, prev, FALSE, doc);
+		   prev = child;
+		 }
+	       /* Create placeholders within the MathML element */
+	       CreatePlaceholders (el, doc);
+	     }
+       }
      }
    if (!ok)
      /* send an error message */

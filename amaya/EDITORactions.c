@@ -83,7 +83,7 @@ void               NewCss (Document document, View view)
 void InitializeNewDoc (STRING url, int docType, Document doc)
 {
   ElementType          elType;
-  Element              root, title, text, el, head, child, meta, body;
+  Element              docEl, root, title, text, el, head, child, meta, body;
   AttributeType        attrType;
   Attribute            attr;
   Language             language;
@@ -128,13 +128,13 @@ void InitializeNewDoc (STRING url, int docType, Document doc)
 
   ResetStop (doc);
   language = TtaGetDefaultLanguage ();
-  root = TtaGetMainRoot (doc);
+  docEl = TtaGetMainRoot (doc);
   /* disable auto save */
   TtaSetDocumentBackUpInterval (doc, 0);
   /* Set the document charset */
   TtaSetDocumentCharset (doc, ISO_8859_1);
 
-  elType = TtaGetElementType (root);
+  elType = TtaGetElementType (docEl);
   attrType.AttrSSchema = elType.ElSSchema;
 
   if (docType == docHTML)
@@ -150,7 +150,9 @@ void InitializeNewDoc (STRING url, int docType, Document doc)
 	ParsingLevel[doc] = L_Strict;
       
       LoadUserStyleSheet (doc);
-      /* attach an attribute PrintURL to the document root */
+      /* attach an attribute PrintURL to the root element */
+      elType.ElTypeNum = HTML_EL_HTML;
+      root = TtaSearchTypedElement (elType, SearchInTree, docEl);
       attrType.AttrTypeNum = HTML_ATTR_PrintURL;
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (root, attr, doc);
@@ -232,7 +234,7 @@ void InitializeNewDoc (STRING url, int docType, Document doc)
 
       /* Search the first element to set initial selection */
       elType.ElTypeNum = MathML_EL_Construct;
-      el = TtaSearchTypedElement (elType, SearchInTree, root);
+      el = TtaSearchTypedElement (elType, SearchInTree, docEl);
       /* set the initial selection */
       TtaSelectElement (doc, el);
       if (SelectionDoc != 0)
@@ -248,7 +250,7 @@ void InitializeNewDoc (STRING url, int docType, Document doc)
 
       /* Search the first element to set initial selection */
       elType.ElTypeNum = GraphML_EL_GraphicsElement;
-      el = TtaSearchTypedElement (elType, SearchInTree, root);
+      el = TtaSearchTypedElement (elType, SearchInTree, docEl);
       /* set the initial selection */
       TtaSelectElement (doc, el);
       if (SelectionDoc != 0)
@@ -259,7 +261,9 @@ void InitializeNewDoc (STRING url, int docType, Document doc)
   else
     {
       /*-------------  Other documents ------------*/
-      /* attach the default attribute PrintURL to the document root */
+      /* attach the default attribute PrintURL to the root element */
+      elType.ElTypeNum = TextFile_EL_TextFile;
+      root = TtaSearchTypedElement (elType, SearchInTree, docEl);
       attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (root, attr, doc);
@@ -296,16 +300,16 @@ void                SpellCheck (Document document, View view)
 {
    AttributeType       attrType;
    Attribute           attr;
-   Element             root, el, body;
+   Element             docEl, el, body;
    ElementType         elType;
    int                 firstchar, lastchar;
 
-   root = TtaGetMainRoot (document);
-   elType = TtaGetElementType (root);
+   docEl = TtaGetMainRoot (document);
+   elType = TtaGetElementType (docEl);
    if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
      {
        elType.ElTypeNum = HTML_EL_BODY;
-       body = TtaSearchTypedElement (elType, SearchInTree, root);
+       body = TtaSearchTypedElement (elType, SearchInTree, docEl);
        if (body == NULL)
 	 return;
        /* if there is no Language attribute on the BODY, create one */
@@ -409,8 +413,8 @@ static Element   InsertWithinHead (Document document, View view, int elementT)
      {
        elType.ElSSchema = docSchema;
        elType.ElTypeNum = HTML_EL_HEAD;
-       parent = TtaGetMainRoot (document);
-       head = TtaSearchTypedElement (elType, SearchForward, parent);
+       el = TtaGetMainRoot (document);
+       head = TtaSearchTypedElement (elType, SearchForward, el);
        
        /* give current position */
        TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &j);

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -82,20 +82,8 @@ static int              nbNatures;
    Returns the frame number of ) if the creation failed and the available
    volume in *vol.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 CreateWindowWithTitle (PtrDocument pDoc, int view, Name viewName, int *vol, int X, int Y, int width, int height)
-#else  /* __STDC__ */
-int                 CreateWindowWithTitle (pDoc, view, viewName, vol, X, Y, width, height)
-PtrDocument         pDoc;
-int                 view;
-Name                viewName;
-int                *vol;
-int                 X;
-int                 Y;
-int                 width;
-int                 height;
-
-#endif /* __STDC__ */
+int CreateWindowWithTitle (PtrDocument pDoc, int view, Name viewName,
+			   int *vol, int X, int Y, int width, int height)
 {
    int    createdFrame;
    CHAR_T buf[MAX_TXT_LEN];
@@ -115,19 +103,11 @@ int                 height;
    return createdFrame;
 }
 
-
 /*----------------------------------------------------------------------
    ListWithText     retourne TRUE si l'element pEl est une  	
    liste dont les elements peuvent contenir du texte.      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     ListWithText (PtrElement pEl, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static ThotBool     ListWithText (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
    PtrElement          pChild, pNext, pDesc, pTextEl;
    ThotBool            ok;
@@ -165,23 +145,13 @@ PtrDocument         pDoc;
    return ok;
 }
 
-
 /*----------------------------------------------------------------------
    ListDescent cherche si l'element pEl ou l'un de ses         	
    descendants est une liste dont les elements peuvent     
    contenir du texte. Retourne l'element List trouve' ou  	
    NULL si echec.                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrElement   ListDescent (PtrElement pEl, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static PtrElement   ListDescent (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
 {
    PtrElement          pListEl, pChild;
 
@@ -221,14 +191,8 @@ PtrDocument         pDoc;
    	SearchElemWithExcept	Search an element with exception	
    	exceptNum in the pEl subtree.					
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrElement   SearchElemWithExcept (int exceptNum, PtrElement pEl, PtrSSchema pSS)
-#else  /* __STDC__ */
-static PtrElement   SearchElemWithExcept (exceptNum, pEl, pSS)
-int                 exceptNum;
-PtrElement          pEl;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
+static PtrElement   SearchElemWithExcept (int exceptNum, PtrElement pEl,
+					  PtrSSchema pSS)
 {
    PtrElement          pRes, pChild;
 
@@ -252,13 +216,7 @@ PtrSSchema          pSS;
    l'arbre abstrait du document pDoc.                      
    Retourne TRUE si succes, FALSE si echec.                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     ReadImportFile (FILE * file, PtrDocument pDoc)
-#else  /* __STDC__ */
-static ThotBool     ReadImportFile (file, pDoc)
-FILE               *file;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
    PtrElement          pEl, pListEl, pTextEl, pDesc, pPrev, pAncest;
    int                 typeNum, exceptNum, len, i;
@@ -289,7 +247,7 @@ PtrDocument         pDoc;
       /* on procede a l'importation. Sinon, on ne fait rien. */
       {
       /* on cherche le premier element qui porte cette exception */
-      pEl = SearchElemWithExcept (exceptNum, pDoc->DocRootElement,
+      pEl = SearchElemWithExcept (exceptNum, pDoc->DocDocElement,
 				  pDoc->DocSSchema);
       if (pEl != NULL)
 	 {
@@ -396,14 +354,8 @@ PtrDocument         pDoc;
    directory: directory du fichier a importer             		
    fileName: nom du fichier a importer.                        	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ImportDocument (Name SSchemaName, PathBuffer directory, CHAR_T* fileName)
-#else  /* __STDC__ */
-void                ImportDocument (SSchemaName, directory, fileName)
-Name                SSchemaName;
-PathBuffer          directory;
-CHAR_T*             fileName;
-#endif /* __STDC__ */
+void                ImportDocument (Name SSchemaName, PathBuffer directory,
+				    CHAR_T* fileName)
 {
   FILE               *file;
   PtrDocument         pDoc;
@@ -411,6 +363,7 @@ CHAR_T*             fileName;
   NotifyDialog        notifyDoc;
   Name                PSchemaName;
   Document            doc;
+  PtrElement          pEl;
   int                 i;
   ThotBool            ok;
 
@@ -438,6 +391,7 @@ CHAR_T*             fileName;
 	     /* charge le schema de structure et le schema de presentation */
 	     LoadSchemas (SSchemaName, PSchemaName, &pDoc->DocSSchema, NULL,
 			  FALSE);
+	     pEl = NULL;
 	     if (pDoc->DocSSchema != NULL)
 	       {
 		 /* send the event notification to the application */
@@ -447,22 +401,30 @@ CHAR_T*             fileName;
 		 if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 		   {
 		     /* cree la representation interne d'un document minimum */
-		     pDoc->DocRootElement = NewSubtree (pDoc->DocSSchema->SsRootElem,
+		     pEl = NewSubtree (pDoc->DocSSchema->SsRootElem,
+				       pDoc->DocSSchema, pDoc, 0, TRUE, TRUE,
+				       TRUE, TRUE);
+		     if (pEl)
+		       {
+			 pDoc->DocDocElement = NewSubtree (pDoc->DocSSchema->SsDocument,
 						        pDoc->DocSSchema, pDoc,
-							0, TRUE, TRUE, TRUE,
+							0, FALSE, TRUE, TRUE,
 							TRUE);
-		     /* supprime les elements exclus */
-		     RemoveExcludedElem (&pDoc->DocRootElement, pDoc);
+			 InsertFirstChild (pDoc->DocDocElement, pEl);
+			 /* supprime les elements exclus */
+			 RemoveExcludedElem (&pDoc->DocDocElement, pDoc);
+		       }
 		   }
 	       }
-	     if (pDoc->DocRootElement == NULL)
+	     if (pDoc->DocDocElement == NULL)
 	       /* on n'a pas pu charger les schemas ou l'application refuse */
 	       UnloadDocument (&pDoc);
 	     else
 	       {
 		 /* complete le descripteur du document */
-		 pDoc->DocRootElement->ElAccess = AccessReadWrite;
-		 CheckLanguageAttr (pDoc, pDoc->DocRootElement);
+		 pDoc->DocDocElement->ElAccess = AccessReadWrite;
+		 if (pEl)
+		   CheckLanguageAttr (pDoc, pEl);
 		 ustrncpy (pDoc->DocDName, fileName, MAX_NAME_LENGTH);
 		 pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 		 ustrncpy (pDoc->DocIdent, fileName, MAX_DOC_IDENT_LEN);
@@ -484,14 +446,14 @@ CHAR_T*             fileName;
 		 notifyDoc.view = 0;
 		 CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 		 /* traitement des attributs requis */
-		 AttachMandatoryAttributes (pDoc->DocRootElement, pDoc);
+		 AttachMandatoryAttributes (pDoc->DocDocElement, pDoc);
 		 if (pDoc->DocSSchema != NULL)
 		   /* le document n'a pas ete ferme' pendant l'attente des */
 		   /* attributs requis */
 		   {
 		     /* traitement des exceptions */
 		     if (ThotLocalActions[T_createtable] != NULL)
-		       (*ThotLocalActions[T_createtable])(pDoc->DocRootElement,
+		       (*ThotLocalActions[T_createtable])(pDoc->DocDocElement,
 							   pDoc);
 		     /* ouvre les vues du document cree' */
 		     OpenDefaultViews (pDoc);
@@ -504,17 +466,10 @@ CHAR_T*             fileName;
     }
 }
 
-
 /*----------------------------------------------------------------------
    DisplayDoc                                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         DisplayDoc (PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         DisplayDoc (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
    NotifyDialog        notifyDoc;
    int                 i, X, Y, width, height;
@@ -565,9 +520,9 @@ PtrDocument         pDoc;
 	    (*ThotLocalActions[T_chselect]) (pDoc);
 	 if (ThotLocalActions[T_chattr] != NULL)
 	    (*ThotLocalActions[T_chattr]) (pDoc);
-	 if (pDoc->DocRootElement != NULL)
+	 if (pDoc->DocDocElement != NULL)
 	    {
-	    pDoc->DocViewRootAb[0] = AbsBoxesCreate (pDoc->DocRootElement,
+	    pDoc->DocViewRootAb[0] = AbsBoxesCreate (pDoc->DocDocElement,
 					       pDoc, 1, TRUE, TRUE, &complete);
 	    /* on ne s'occupe pas de la hauteur de page */
 	    i = 0;
@@ -592,13 +547,7 @@ PtrDocument         pDoc;
    les sauts de page engendre's par le debut d'un element  
    qui a la regle de presentation Page.                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         RemovePagesBeginTree (PtrElement pRoot, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         RemovePagesBeginTree (pRoot, pDoc)
-PtrElement          pRoot;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
   PtrElement          pPage, pPrevPage;
   
@@ -627,14 +576,8 @@ PtrDocument         pDoc;
    document pointe' par pDoc. newPSchemaName est le nom du nouveau	
    schema de presentation a appliquer au document.                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void          ChangeDocumentPSchema (PtrDocument pDoc, Name newPSchemaName, ThotBool withEvent)
-#else  /* __STDC__ */
-static void          ChangeDocumentPSchema (pDoc, newPSchemaName, withEvent)
-PtrDocument         pDoc;
-Name                newPSchemaName;
-ThotBool            withEvent;
-#endif /* __STDC__ */
+static void ChangeDocumentPSchema (PtrDocument pDoc, Name newPSchemaName,
+				   ThotBool withEvent)
 {
    PtrPSchema          pPSchema;
 
@@ -661,7 +604,7 @@ ThotBool            withEvent;
       CloseAllViewsDoc (pDoc);
       /* detruit tous les sauts de page engendre's par le debut d'un
 	 element qui a la regle de presentation Page */
-      RemovePagesBeginTree (pDoc->DocRootElement, pDoc);
+      RemovePagesBeginTree (pDoc->DocDocElement, pDoc);
       for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
 	if (pDoc->DocAssocRoot[assoc] != NULL)
 	  RemovePagesBeginTree (pDoc->DocAssocRoot[assoc], pDoc);
@@ -707,23 +650,15 @@ ThotBool            withEvent;
    ustrncpy (SchemaPath, schemaPath, MAX_PATH);
 }
 
-
 /*----------------------------------------------------------------------
    RedisplayNatureView reconstruit les paves de tous les elements       
    de la nature pNatSSchema qui sont presents dans l'arbre de paves    
    de racine pAb du document pDoc.                                
    Retourne Vrai si au moins un pave a ete reconstruit.            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     RedisplayNatureView (PtrDocument pDoc, PtrAbstractBox pAb, PtrSSchema pNatSSchema, int view, int frame)
-#else  /* __STDC__ */
-static ThotBool     RedisplayNatureView (pDoc, pAb, pNatSSchema, view, frame)
-PtrDocument         pDoc;
-PtrAbstractBox      pAb;
-PtrSSchema          pNatSSchema;
-int                 view;
-int                 frame;
-#endif /* __STDC__ */
+static ThotBool     RedisplayNatureView (PtrDocument pDoc, PtrAbstractBox pAb,
+					 PtrSSchema pNatSSchema, int view,
+					 int frame)
 {
   PtrElement          pEl;
   PtrAbstractBox      redispAb, RlNext;
@@ -781,21 +716,13 @@ int                 frame;
   return result;
 }
 
-
 /*----------------------------------------------------------------------
    RedisplayNature reconstruit les paves de tous les elements      
    de la nature pNatSSchema qui sont presents dans les images      
    abstraites du document pDoc, et reaffiche les vues              
    correspondantes.                                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         RedisplayNature (PtrDocument pDoc, PtrSSchema pNatSSchema)
-#else  /* __STDC__ */
-static void         RedisplayNature (pDoc, pNatSSchema)
-PtrDocument         pDoc;
-PtrSSchema          pNatSSchema;
-
-#endif /* __STDC__ */
 {
   PtrAbstractBox      pRootAb;
   int                 view, assoc, frame, volume;
@@ -840,24 +767,14 @@ PtrSSchema          pNatSSchema;
     }
 }
 
-
 /*----------------------------------------------------------------------
    ChangeNaturePSchema effectue le changement de presentation d'une 
    nature pour le document pointe' par pDoc. newPSchemaName est le nom 
    du nouveau schema de presentation a appliquer a la nature dont  
    le schema de structure est pointe' par pNatSSchema.             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ChangeNaturePSchema (PtrDocument pDoc, PtrSSchema pNatSSchema, Name newPSchemaName, ThotBool withEvent)
-#else  /* __STDC__ */
-static void         ChangeNaturePSchema (pDoc, pNatSSchema, newPSchemaName, withEvent)
-PtrDocument         pDoc;
-PtrSSchema          pNatSSchema;
-Name                newPSchemaName;
-ThotBool            withEvent;
-
-#endif /* __STDC__ */
-
+static void  ChangeNaturePSchema (PtrDocument pDoc, PtrSSchema pNatSSchema,
+				  Name newPSchemaName, ThotBool withEvent)
 {
    PtrPSchema          pPSchema;
    PtrSSchema          naturePSchema[MAX_PRES_NATURE];
@@ -942,14 +859,8 @@ ThotBool            withEvent;
    This function is only accessible by applications linked
    with the libThotEditor library.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        TtaChangeNaturePresentSchema (Document document, SSchema natureSSchema, STRING newPresentation)
-#else  /* __STDC__ */
-void        TtaChangeNaturePresentSchema (document, natureSSchema, newPresentation)
-Document            document;
-SSchema             natureSSchema;
-STRING              newPresentation;
-#endif /* __STDC__ */
+void TtaChangeNaturePresentSchema (Document document, SSchema natureSSchema,
+				   STRING newPresentation)
 {
   PtrDocument         pDoc;
 
@@ -965,22 +876,16 @@ STRING              newPresentation;
     /* parameter document is correct */
     {
       pDoc = LoadedDocument[document - 1];
-      ChangeNaturePSchema (pDoc, (PtrSSchema) natureSSchema, newPresentation, FALSE);
+      ChangeNaturePSchema (pDoc, (PtrSSchema) natureSSchema, newPresentation,
+			   FALSE);
     }
-
 }
 
 /*----------------------------------------------------------------------
     ChangePresMenuInput traite les retours du menu des schemas de     
             presentation                                           
 ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ChangePresMenuInput (int ref, int val)
-#else  /* __STDC__ */
-static void         ChangePresMenuInput (ref, val)
-int                 ref;
-int                 val;
-#endif /* __STDC__ */
 {
   PtrDocument         pDoc;
   Name                newpres;
@@ -1032,13 +937,7 @@ int                 val;
   TtcChangePresentation affiche le menu de changement de schema de 
   presentation d'un document et de ses natures.
 ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcChangePresentation (Document document, View view)
-#else  /* __STDC__ */
-void                TtcChangePresentation (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
 {
 #define LgMaxTableNature 20
    PtrSSchema          TableNatures[LgMaxTableNature];

@@ -36,10 +36,6 @@ extern void SetElemLineNumber ( Element el );
 extern char GetNextInputChar ( FILE *infile,
                                int *index,
                                ThotBool *endOfFile );
-extern void ReadTextFile ( FILE *infile,
-                           char *textbuf,
-                           Document doc,
-                           char *pathURL );
 extern void CheckDocHeader ( char *fileName,
                              ThotBool *xmlDec,
                              ThotBool *docType,
@@ -98,10 +94,6 @@ extern void SetElemLineNumber (/* Element el */);
 extern char GetNextInputChar (/* FILE *infile,
                                  int *index,
                                  ThotBool *endOfFile */);
-extern void ReadTextFile (/* FILE *infile,
-                             char *textbuf,
-                             Document doc,
-                             char *pathURL */);
 extern void CheckDocHeader (/* char *fileName,
                                ThotBool *xmlDec,
                                ThotBool *docType,

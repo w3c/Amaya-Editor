@@ -1009,7 +1009,7 @@ void TtcChangeColors (Document document, View view)
      {
 	/* par defaut la racine du document */
 	pSelDoc = pDoc;
-	pFirstSel = pDoc->DocRootElement;
+	pFirstSel = pDoc->DocDocElement;
 	selectionOK = TRUE;
      }
 

@@ -772,7 +772,7 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
   /* is the document selected? */
   if (useDocRoot)
     {
-      firstEl = TtaGetMainRoot (doc);
+      firstEl = TtaGetRootElement (doc);
       if (!firstEl)
 	return NULL; /* something went wrong */
       firstLen = 0;

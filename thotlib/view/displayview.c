@@ -661,7 +661,7 @@ static void RebuildViewImage (int view, ThotBool Assoc, PtrDocument pDoc)
      }
    else 
      {
-       pElRoot = pDoc->DocRootElement;
+       pElRoot = pDoc->DocDocElement;
        pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1];
        pAbbRoot = pDoc->DocViewRootAb[view - 1];
        frame = pDoc->DocViewFrame[view - 1];
@@ -675,7 +675,7 @@ static void RebuildViewImage (int view, ThotBool Assoc, PtrDocument pDoc)
    pFrame = &ViewFrameTable[frame - 1];
    GetSizesFrame (frame, &w, &h);
    DefClip (frame, pFrame->FrXOrg, pFrame->FrYOrg, w, h);
-}                               /* RebuildViewImage */
+}
 
 
 /*----------------------------------------------------------------------

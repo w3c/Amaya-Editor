@@ -142,14 +142,7 @@ static ThotBool     ImportExcept;  /* we met exception ImportLine or
 /*----------------------------------------------------------------------
    InitBasicType                                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         InitBasicType (SRule * pRule, STRING name, BasicType typ)
-#else  /* __STDC__ */
-static void         InitBasicType (pRule, name, typ)
-SRule              *pRule;
-STRING              name;
-BasicType           typ;
-#endif /* __STDC__ */
 {
    ustrncpy (pRule->SrName, name, MAX_NAME_LENGTH);
    pRule->SrConstruct = CsBasicElement;
@@ -167,15 +160,10 @@ BasicType           typ;
    pRule->SrRefImportedDoc = False;
 }
 
-
 /*----------------------------------------------------------------------
    Initialize initializes the structure schema in memory.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         Initialize ()
-#else  /* __STDC__ */
-static void         Initialize ()
-#endif /* __STDC__ */
 {
    int                 i;
    TtAttribute        *pAttr;
@@ -184,6 +172,7 @@ static void         Initialize ()
    pSSchema->SsExtension = False;
    pSSchema->SsNExtensRules = 0;
    pSSchema->SsExtensBlock = NULL;
+   pSSchema->SsDocument = 0;
    pSSchema->SsRootElem = 0;
    CurExtensRule = NULL;
    pSSchema->SsNAttributes = 0;
@@ -231,6 +220,24 @@ static void         Initialize ()
    InitBasicType (pRule, "UNUSED", UnusedBasicType);
 
    pSSchema->SsNRules = MAX_BASIC_TYPE;
+
+   /* create the Document rule */
+   pRule = &pSSchema->SsRule[pSSchema->SsNRules++];
+   pSSchema->SsDocument = pSSchema->SsNRules;
+   strcpy (pRule->SrName, "Document");
+   pRule->SrConstruct = CsDocument;
+   pRule->SrAssocElem = False;
+   pRule->SrUnitElem = False;
+   pRule->SrExportedElem = False;
+   pRule->SrFirstExcept = 0;
+   pRule->SrLastExcept = 0;
+   pRule->SrNDefAttrs = 0;
+   pRule->SrRecursive = False;
+   pRule->SrNLocalAttrs = 0;
+   pRule->SrNInclusions = 0;
+   pRule->SrNExclusions = 0;
+   pRule->SrRefImportedDoc = False;
+
    pSSchema->SsConstBuffer[0] = '\0';
    pSSchema->SsConstBuffer[1] = '\0';
    pSSchema->SsExport = False;
@@ -268,17 +275,12 @@ static void         Initialize ()
    ImportExcept = False;
 }
 
-
 /*----------------------------------------------------------------------
    RuleNameExist checks if the last rule name of the rules table is
    already used within other rule of the same table.	
    Returns TRUE is it is the case.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool      RuleNameExist ()
-#else  /* __STDC__ */
-static ThotBool      RuleNameExist ()
-#endif /* __STDC__ */
 {
    int                 r;
    ThotBool             ret;
@@ -300,16 +302,10 @@ static ThotBool      RuleNameExist ()
    return ret;
 }
 
-
 /*----------------------------------------------------------------------
    Undefined                                                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         Undefined (int n)
-#else  /* __STDC__ */
-static void         Undefined (n)
-int                 n;
-#endif /* __STDC__ */
 {
    int                 j;
    SrcIdentDesc       *pIdent;
@@ -353,18 +349,12 @@ int                 n;
      }
 }
 
-
 /*----------------------------------------------------------------------
-   ChangeOneRule sets the rigth number of one rule instead of its indentifier.
+   ChangeOneRule sets the rigth number of one rule instead of its identifier.
    Undefined elements are considered as external structures (natures).	
    Unreferred elements are considered as errors if they are associated elements.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ChangeOneRule (SRule * pRule)
-#else  /* __STDC__ */
-static void         ChangeOneRule (pRule)
-SRule              *pRule;
-#endif /* __STDC__ */
 {
    int                 j;
 
@@ -484,18 +474,16 @@ SRule              *pRule;
 	 }
        break;
      case CsConstant:
-       break;
      case CsBasicElement:
-       break;
      case CsNatureSchema:
-       break;
      case CsPairedElement:
-       break;
      case CsExtensionRule:
+     case CsDocument:
+     case CsAny:
+     case CsEmpty:
        break;
      }
 }
-
 
 /*----------------------------------------------------------------------
    ChangeRules sets the rigth number of rules instead of their indentifiers.
@@ -503,11 +491,7 @@ SRule              *pRule;
    Unreferred elements are considered as errors if they are associated
    elements.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ChangeRules ()
-#else  /* __STDC__ */
-static void         ChangeRules ()
-#endif /* __STDC__ */
 {
    int                 i;
    TtAttribute        *pAttr;
@@ -547,18 +531,10 @@ static void         ChangeRules ()
      }
 }
 
-
 /*----------------------------------------------------------------------
    CopyWord copies  the current word into the name parameter.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CopyWord (Name name, indLine wi, indLine wl)
-#else  /* __STDC__ */
-static void         CopyWord (name, wi, wl)
-Name                name;
-indLine             wi;
-indLine             wl;
-#endif /* __STDC__ */
 {
    if (wl > MAX_NAME_LENGTH - 1)
       CompilerMessage (wi, STR, FATAL, STR_WORD_TOO_LONG, inputLine, LineNum);
@@ -569,16 +545,10 @@ indLine             wl;
      }
 }
 
-
 /*----------------------------------------------------------------------
    Push                                                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         Push (indLine wi)
-#else  /* __STDC__ */
-static void         Push (wi)
-indLine             wi;
-#endif /* __STDC__ */
 {
    if (RecursLevel >= MAX_SRULE_RECURS)
       CompilerMessage (wi, STR, FATAL, STR_RULE_NESTING_TOO_DEEP, inputLine,
@@ -591,17 +561,10 @@ indLine             wi;
      }
 }
 
-
 /*----------------------------------------------------------------------
    RightIdentifier                                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         RightIdentifier (int n, indLine wi)
-#else  /* __STDC__ */
-static void         RightIdentifier (n, wi)
-int                 n;
-indLine             wi;
-#endif /* __STDC__ */
 {
    SRule              *pRule;
 
@@ -657,12 +620,7 @@ indLine             wi;
 /*----------------------------------------------------------------------
    NewRule                                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         NewRule (indLine wi)
-#else  /* __STDC__ */
-static void         NewRule (wi)
-indLine             wi;
-#endif /* __STDC__ */
 {
    int                 i;
    SRule              *pRule;
@@ -741,20 +699,13 @@ indLine             wi;
      }
 }
 
-
 /*----------------------------------------------------------------------
    RuleNumber returns the rule number that defines the current word as
    element type.
    If this word doesn't match with a previous defined element type,
    the function returns 0.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          RuleNumber (indLine wl, indLine wi)
-#else  /* __STDC__ */
-static int          RuleNumber (wl, wi)
-indLine             wl;
-indLine             wi;
-#endif /* __STDC__ */
 {
    int                 RuleNum;
    Name                N;
@@ -770,19 +721,12 @@ indLine             wi;
    return RuleNum;
 }
 
-
 /*----------------------------------------------------------------------
    AttributeNumber returns the attribute number associated with this name.
    If this word doesn't match with a previous defined attribute,
    the function returns 0.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          AttributeNumber (indLine wl, indLine wi)
-#else  /* __STDC__ */
-static int          AttributeNumber (wl, wi)
-indLine             wl;
-indLine             wi;
-#endif /* __STDC__ */
 {
    int                 AttrNum;
    Name                N;
@@ -798,23 +742,14 @@ indLine             wi;
    return AttrNum;
 }
 
-
 /*----------------------------------------------------------------------
    ExceptionNum manages the exception num.
    If checkType is TRUE, the exception has to rest on an element type.
    If checkAttr is TRUE, the exception has to rest on an attribute.
    If checkIntAttr is TRUE, the exception has to rest on a numeric attribute.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ExceptionNum (int num, ThotBool checkType, ThotBool checkAttr, ThotBool CheckIntAttr, indLine wi)
-#else  /* __STDC__ */
-static void         ExceptionNum (num, checkType, checkAttr, CheckIntAttr, wi)
-int                 num;
-ThotBool             checkType;
-ThotBool             checkAttr;
-ThotBool             CheckIntAttr;
-indLine             wi;
-#endif /* __STDC__ */
+static void      ExceptionNum (int num, ThotBool checkType, ThotBool checkAttr,
+			       ThotBool CheckIntAttr, indLine wi)
 {
    SRule              *pRule;
    TtAttribute        *pAttr;
@@ -868,18 +803,10 @@ indLine             wi;
      }
 }
 
-
 /*----------------------------------------------------------------------
    BasicEl                                                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         BasicEl (int n, indLine wi, SyntRuleNum pr)
-#else  /* __STDC__ */
-static void         BasicEl (n, wi, pr)
-int                 n;
-indLine             wi;
-SyntRuleNum         pr;
-#endif /* __STDC__ */
 {
    SRule              *pRule;
 
@@ -945,17 +872,10 @@ SyntRuleNum         pr;
      }
 }
 
-
 /*----------------------------------------------------------------------
    StoreConstText stores the constant text                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          StoreConstText (int wi, int wl)
-#else  /* __STDC__ */
-static int          StoreConstText (wi, wl)
-int                 wi;
-int                 wl;
-#endif /* __STDC__ */
 {
    int                 i, pos;
 
@@ -976,16 +896,10 @@ int                 wl;
    return pos;
 }
 
-
 /*----------------------------------------------------------------------
    InitRule initializes a structure rule.             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         InitRule (SRule * pRule)
-#else  /* __STDC__ */
-static void         InitRule (pRule)
-SRule              *pRule;
-#endif /* __STDC__ */
 {
    pRule->SrName[0] = '\0';
    pRule->SrNDefAttrs = 0;
@@ -1001,15 +915,10 @@ SRule              *pRule;
    pRule->SrRefImportedDoc = False;
 }
 
-
 /*----------------------------------------------------------------------
    DuplicatePairRule duplicates the rule if it is a paired rule.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         DuplicatePairRule ()
-#else  /* __STDC__ */
-static void         DuplicatePairRule ()
-#endif /* __STDC__ */
 {
    SRule              *newRule;
    SRule              *prevRule;
@@ -1027,17 +936,10 @@ static void         DuplicatePairRule ()
      }
 }
 
-
 /*----------------------------------------------------------------------
    GetExtensionRule searchs an extension rule matching the name (wi, wl).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static SRule       *GetExtensionRule (indLine wi, indLine wl)
-#else  /* __STDC__ */
-static SRule       *GetExtensionRule (wi, wl)
-indLine             wi;
-indLine             wl;
-#endif /* __STDC__ */
 {
    SRule              *pRule;
    Name                n;
@@ -1064,17 +966,10 @@ indLine             wl;
    return pRule;
 }
 
-
 /*----------------------------------------------------------------------
    NewExtensionRule creates and initializes a new extension rule.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static SRule       *NewExtensionRule (indLine wi, indLine wl)
-#else  /* __STDC__ */
-static SRule       *NewExtensionRule (wi, wl)
-indLine             wi;
-indLine             wl;
-#endif /* __STDC__ */
 {
    SRule              *pRule;
    PtrExtensBlock      pEB;
@@ -1108,7 +1003,6 @@ indLine             wl;
    return pRule;
 }
 
-
 /*----------------------------------------------------------------------
    ProcessToken manages the next word starting at position wi in the
    current line.
@@ -1118,17 +1012,8 @@ indLine             wl;
    in the identifiers table.
    The parameter r gives the rule number where the word appears.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, int nb, SyntRuleNum pr)
-#else  /* __STDC__ */
-static void         ProcessToken (wi, wl, c, r, nb, pr)
-indLine             wi;
-indLine             wl;
-SyntacticCode       c;
-SyntacticCode       r;
-int                 nb;
-SyntRuleNum         pr;
-#endif /* __STDC__ */
+static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
+				  SyntacticCode r, int nb, SyntRuleNum pr)
 {
    int                 SynInteger, i, j;
    Name                N;
@@ -2574,16 +2459,11 @@ SyntRuleNum         pr;
        }
 }
 
-
 /*----------------------------------------------------------------------
    ExternalTypes sets as external all elements stored in the external
    elements table of the structure schema.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ExternalTypes ()
-#else  /* __STDC__ */
-static void         ExternalTypes ()
-#endif /* __STDC__ */
 {
    int                 i, j;
    SRule              *pRule;
@@ -2637,16 +2517,8 @@ static void         ExternalTypes ()
 /*----------------------------------------------------------------------
    CheckRecursivity                                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CheckRecursivity (int r, int path[], int level, ThotBool busy[], ThotBool done[])
-#else  /* __STDC__ */
-static void         CheckRecursivity (r, path, level, busy, done)
-int                 r;
-int                 path[];
-int                 level;
-ThotBool             busy[];
-ThotBool             done[];
-#endif /* __STDC__ */
+static void         CheckRecursivity (int r, int path[], int level,
+				      ThotBool busy[], ThotBool done[])
 {
    int                 m;
    SRule              *pRule;
@@ -2705,11 +2577,7 @@ ThotBool             done[];
 /*----------------------------------------------------------------------
    ChkRecurs                                                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ChkRecurs ()
-#else  /* __STDC__ */
-static void         ChkRecurs ()
-#endif /* __STDC__ */
 {
    int                i;
    int                path[100];
@@ -2735,11 +2603,7 @@ static void         ChkRecurs ()
    ListAssocElem       liste les elements consideres comme		
    elements associes                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ListAssocElem ()
-#else  /* __STDC__ */
-static void         ListAssocElem ()
-#endif /* __STDC__ */
 {
    int                 i;
    SRule              *pRule;
@@ -2797,6 +2661,7 @@ static void         ListAssocElem ()
 	 /* it's not a associated element */
 	 if (pSSchema->SsRule[i].SrRecursDone)
 	   if (i + 1 != pSSchema->SsRootElem &&
+	       i + 1 != pSSchema->SsDocument &&
 	       !pSSchema->SsRule[i].SrUnitElem)
 	     {
 	       if (pSSchema->SsRule[i].SrConstruct == CsChoice)
@@ -2824,11 +2689,7 @@ static void         ListAssocElem ()
 /*----------------------------------------------------------------------
    ListNotCreated lists elements which will not be created by the editor.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ListNotCreated ()
-#else  /* __STDC__ */
-static void         ListNotCreated ()
-#endif /* __STDC__ */
 {
    int                 r, rr;
    int                 i;
@@ -2906,6 +2767,10 @@ static void         ListNotCreated ()
 	   /* constants will be created */
 	   pRule->SrRecursDone = True;
 	   break;
+	 case CsDocument:
+	   /* document element will be created */
+	   pRule->SrRecursDone = True;
+	   break;
 	 default:
 	   break;
 	 }
@@ -2968,23 +2833,10 @@ static void         ListNotCreated ()
    main                                                            
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS 
-#ifdef __STDC__
-int                 STRmain (HWND hwnd, HWND statusBar, int argc, STRING *argv, int* Y)
-#else  /* __STDC__ */
-int                 STRmain (hwnd, argc, argv, hDC, Y)
-HWND                hwnd;
-int                 argc;
-STRING*             argv;
-int*                Y;
-#endif /* __STDC__ */
+int                 STRmain (HWND hwnd, HWND statusBar, int argc,
+			     STRING *argv, int* Y)
 #else  /* !_WINDOWS */
-#ifdef __STDC__
 int                 main (int argc, char **argv)
-#else  /* __STDC__ */
-int                 main (argc, argv)
-int                 argc;
-char              **argv;
-#endif /* __STDC__ */
 #endif /* _WINDOWS */
 {
    FILE               *inputFile;

@@ -1354,7 +1354,6 @@ static void	AttachAttrToElem (PtrAttribute pAttr, PtrElement pEl, PtrDocument pD
 static void         AttachAttrToRange (PtrAttribute pAttr, int lastChar, int firstChar, PtrElement pLastSel, PtrElement pFirstSel, PtrDocument pDoc, ThotBool reDisplay)
 {
    PtrElement          pEl;
-   int                 i;
 
    /* eteint d'abord la selection */
    TtaClearViewSelections ();
@@ -1373,16 +1372,6 @@ static void         AttachAttrToRange (PtrAttribute pAttr, int lastChar, int fir
 	/* cherche l'element a traiter ensuite */
 	pEl = NextInSelection (pEl, pLastSel);
      }
-   /* si c'est un changement de langue qui s'applique a la racine de */
-   /* l'arbre principal du document, on change aussi la langue de */
-   /* tous les autres arbre de ce document */
-   if (pAttr->AeAttrNum == 1)	/* attribut Langue = 1 */
-      if (pFirstSel == pDoc->DocRootElement)
-	{
-	   for (i = 1; i <= MAX_ASSOC_DOC; i++)
-	      if (pDoc->DocAssocRoot[i - 1] != NULL)
-		 AttachAttrToElem (pAttr, pDoc->DocAssocRoot[i - 1], pDoc);
-	}
    /* close the editing sequence */
    if (ThotLocalActions[T_closehistory] != NULL)
 	(*ThotLocalActions[T_closehistory]) (pDoc);

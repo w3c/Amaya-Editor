@@ -47,16 +47,7 @@ ThotBool             Transm;
 /*----------------------------------------------------------------------
    wrnb ecrit au terminal l'entier nb.                             
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrnb (int nb)
-
-#else  /* __STDC__ */
-static void         wrnb (nb)
-int                 nb;
-
-#endif /* __STDC__ */
-
 {
    if (nb < 0)
      {
@@ -77,20 +68,10 @@ int                 nb;
       printf ("999999999");
 }
 
-
 /*----------------------------------------------------------------------
    wrlevel ecrit au terminal le niveau relatif n.                 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrlevel (Level n)
-
-#else  /* __STDC__ */
-static void         wrlevel (n)
-Level               n;
-
-#endif /* __STDC__ */
-
 {
    switch (n)
 	 {
@@ -130,16 +111,7 @@ Level               n;
 /*----------------------------------------------------------------------
    wrdistunit ecrit le nom d'une unite' de distance.               
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrdistunit (TypeUnit u)
-
-#else  /* __STDC__ */
-static void         wrdistunit (u)
-TypeUnit            u;
-
-#endif /* __STDC__ */
-
 {
    switch (u)
 	 {
@@ -164,20 +136,10 @@ TypeUnit            u;
 	 }
 }
 
-
 /*----------------------------------------------------------------------
    wrrepere ecrit au terminal le repere de boite r.                
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrrepere (BoxEdge r)
-
-#else  /* __STDC__ */
-static void         wrrepere (r)
-BoxEdge             r;
-
-#endif /* __STDC__ */
-
 {
    switch (r)
 	 {
@@ -211,20 +173,10 @@ BoxEdge             r;
 	 }
 }
 
-
 /*----------------------------------------------------------------------
    wrnom ecrit au terminal le nom n.                               
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrnom (Name n)
-
-#else  /* __STDC__ */
-static void         wrnom (n)
-Name                n;
-
-#endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -249,35 +201,16 @@ Name                n;
 /*----------------------------------------------------------------------
    wrnomregle ecrit au terminal le nom de la regle de numero r.    
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrnomregle (int r)
-
-#else  /* __STDC__ */
-static void         wrnomregle (r)
-int                 r;
-
-#endif /* __STDC__ */
-
 {
    if (r > 0)
       wrnom (pSchemaStr->SsRule[r - 1].SrName);
 }
 
-
 /*----------------------------------------------------------------------
    wrnomattr ecrit au terminal le nom de l'attribut de numero a.   
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrnomattr (int a)
-
-#else  /* __STDC__ */
-static void         wrnomattr (a)
-int                 a;
-
-#endif /* __STDC__ */
-
 {
    if (a != 0)
       wrnom (pSchemaStr->SsAttribute[abs (a) - 1].AttrName);
@@ -288,36 +221,16 @@ int                 a;
    wrnomboite ecrit au terminal le nom de la boite de presentation 
    de numero b.                                            
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrnomboite (int b)
-
-#else  /* __STDC__ */
-static void         wrnomboite (b)
-int                 b;
-
-#endif /* __STDC__ */
-
 {
    if (b > 0)
       wrnom (pSchemaPrs->PsPresentBox[b - 1].PbName);
 }
 
-
 /*----------------------------------------------------------------------
    wrModeHerit ecrit au terminal un mode d'heritage.               
   ----------------------------------------------------------------------*/
-
-
-#ifdef __STDC__
 static void         wrModeHerit (InheritMode M)
-
-#else  /* __STDC__ */
-static void         wrModeHerit (M)
-InheritMode         M;
-
-#endif /* __STDC__ */
-
 {
    switch (M)
 	 {
@@ -339,20 +252,10 @@ InheritMode         M;
 	 }
 }
 
-
 /*----------------------------------------------------------------------
    wrsize ecrit au terminal la regle de taille pointee par pR.     
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrsize (PtrPRule pR)
-
-#else  /* __STDC__ */
-static void         wrsize (pR)
-PtrPRule            pR;
-
-#endif /* __STDC__ */
-
 {
    if (pR->PrPresMode == PresInherit)
      {
@@ -404,21 +307,11 @@ PtrPRule            pR;
    printf (";");
 }
 
-
 /*----------------------------------------------------------------------
    wrfontstyle ecrit au terminal la regle d'heritage ou la valeur  
    entiere de la regle pointee par pR.                     
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrfontstyle (PtrPRule pR)
-
-#else  /* __STDC__ */
-static void         wrfontstyle (pR)
-PtrPRule            pR;
-
-#endif /* __STDC__ */
-
 {
    if (pR->PrPresMode == PresInherit)
      {
@@ -580,21 +473,11 @@ PtrPRule            pR;
    printf (";");
 }
 
-
 /*----------------------------------------------------------------------
    wrnbherit ecrit au terminal la regle d'heritage ou la valeur    
    entiere de la regle pointee par pR.                     
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrnbherit (PtrPRule pR)
-
-#else  /* __STDC__ */
-static void         wrnbherit (pR)
-PtrPRule            pR;
-
-#endif /* __STDC__ */
-
 {
    if (pR->PrPresMode == PresInherit)
      if (pR->PrInhPercent)
@@ -635,21 +518,11 @@ PtrPRule            pR;
    printf (";");
 }
 
-
 /*----------------------------------------------------------------------
    wrminind ecrit au terminal une regle du type Indent, Size, Margin*, etc.  
    La regle a ecrire est pointee par pR.                                  
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrminind (PtrPRule pR)
-
-#else  /* __STDC__ */
-static void         wrminind (pR)
-PtrPRule            pR;
-
-#endif /* __STDC__ */
-
 {
    if (pR->PrPresMode == PresInherit)
       wrnbherit (pR);
@@ -674,21 +547,10 @@ PtrPRule            pR;
      }
 }
 
-
 /*----------------------------------------------------------------------
    wrpos ecrit au terminal la position pos.                        
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrpos (PosRule pos, ThotBool Def)
-
-#else  /* __STDC__ */
-static void         wrpos (pos, Def)
-PosRule             pos;
-ThotBool             Def;
-
-#endif /* __STDC__ */
-
 {
    if (Def)
       if (pos.PoPosDef == NoEdge)
@@ -730,21 +592,10 @@ ThotBool             Def;
    printf (";");
 }
 
-
 /*----------------------------------------------------------------------
    wrdimens ecrit au terminal la dimension Dim.                    
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrdimens (DimensionRule Dim, ThotBool Hauteur)
-
-#else  /* __STDC__ */
-static void         wrdimens (Dim, Hauteur)
-DimensionRule       Dim;
-ThotBool             Hauteur;
-
-#endif /* __STDC__ */
-
 {
    if (Dim.DrPosition)
       wrpos (Dim.DrPosRule, True);
@@ -813,20 +664,10 @@ ThotBool             Hauteur;
      }
 }
 
-
 /*----------------------------------------------------------------------
    wrCondition                                             
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrCondition (PtrCondition pCond)
-
-#else  /* __STDC__ */
-static void         wrCondition (pCond)
-PtrCondition        pCond;
-
-#endif /* __STDC__ */
-
 {
    if (!pCond->CoNotNegative)
       printf ("NOT ");
@@ -953,16 +794,7 @@ PtrCondition        pCond;
    wrFonctPres ecrit au terminal la fonction de presentation       
    contenue dans la regle pointee par pR.                  
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrFonctPres (PtrPRule pR)
-
-#else  /* __STDC__ */
-static void         wrFonctPres (pR)
-PtrPRule            pR;
-
-#endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -1075,20 +907,10 @@ PtrPRule            pR;
    printf (";");
 }
 
-
 /*----------------------------------------------------------------------
    wrajust ecrit au terminal la regle d'ajustement des lignes.     
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrajust (PtrPRule pR)
-
-#else  /* __STDC__ */
-static void         wrajust (pR)
-PtrPRule            pR;
-
-#endif /* __STDC__ */
-
 {
    if (pR->PrPresMode == PresInherit)
       wrnbherit (pR);
@@ -1113,20 +935,10 @@ PtrPRule            pR;
 	    }
 }
 
-
 /*----------------------------------------------------------------------
    wrboolean ecrit la regle booleenne pointee par pR.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrboolean (PtrPRule pR)
-
-#else  /* __STDC__ */
-static void         wrboolean (pR)
-PtrPRule            pR;
-
-#endif /* __STDC__ */
-
 {
    if (pR->PrPresMode == PresInherit)
       wrnbherit (pR);
@@ -1137,20 +949,10 @@ PtrPRule            pR;
 	 printf ("No;");
 }
 
-
 /*----------------------------------------------------------------------
    WriteCounterStyle ecrit au terminal un style de compteur.            
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         WriteCounterStyle (CounterStyle St)
-
-#else  /* __STDC__ */
-static void         WriteCounterStyle (St)
-CounterStyle        St;
-
-#endif /* __STDC__ */
-
 {
    switch (St)
 	 {
@@ -1172,21 +974,11 @@ CounterStyle        St;
 	 }
 }
 
-
 /*----------------------------------------------------------------------
    wrsuiteregles ecrit au terminal la suite de regles chainees dont 
    RP pointe sur la regle de tete.                         
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         wrsuiteregles (PtrPRule RP)
-
-#else  /* __STDC__ */
-static void         wrsuiteregles (RP)
-PtrPRule            RP;
-
-#endif /* __STDC__ */
-
 {
    PtrCondition        pCond;
 
@@ -1447,21 +1239,10 @@ PtrPRule            RP;
      }
 }
 
-
 /*----------------------------------------------------------------------
    main                                                            
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 int                 main (int argc, char **argv)
-
-#else  /* __STDC__ */
-int                 main (argc, argv)
-int                 argc;
-char              **argv;
-
-#endif /* __STDC__ */
-
 {
    int                 i, k;
    PtrHostView         pHostView;

@@ -1458,8 +1458,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   int                 yFrame = 0;
   int                 wFrame, hFrame, w, h;
   int                 width, height;
-  ThotBool             releaseDC = FALSE;
-
+#ifdef _WINDOWS
+  ThotBool            releaseDC = FALSE;
+#endif
   pAb = box->BxAbstractBox;
   if (pAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
     /* the picture is not visible */

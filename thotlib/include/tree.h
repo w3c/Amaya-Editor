@@ -51,6 +51,9 @@ typedef enum _Construct
      ConstructBasicType,
      ConstructNature,
      ConstructPair,
+     ConstructDocument,
+     ConstructAny,
+     ConstructEmpty,
      ConstructError
   }
 Construct;
@@ -403,16 +406,27 @@ extern void         TtaSetCheckingMode (ThotBool strict);
 /* ----------------------------------------------------------------------
    TtaGetMainRoot
 
-   Returns the root element of the main abstract tree representing a document.
+   Returns the document element of the abstract tree representing a document.
 
    Parameter:
    document: the document.
 
    Return value:
-   the root element of the main abstract tree.
+   the document element of the abstract tree.
 
    ---------------------------------------------------------------------- */
 extern Element      TtaGetMainRoot (Document document);
+
+/* ----------------------------------------------------------------------
+   TtaGetRootElement
+
+   Returns the root element of the abstract tree representing a document.
+   Parameter:
+   document: the document.
+   Return value:
+   the root element of the abstract tree.
+   ---------------------------------------------------------------------- */
+extern Element      TtaGetRootElement (Document document);
 
 /* ----------------------------------------------------------------------
    TtaNextAssociatedRoot

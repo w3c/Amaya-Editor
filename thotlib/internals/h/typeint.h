@@ -576,8 +576,7 @@ typedef struct _DocumentDescr
 {
   PtrDocument     DocNext;	/* to link the free blocks */
   PtrSSchema	  DocSSchema;	/* structure schema of the document */
-  PtrElement      DocRootElement; /* pointer on the root element of the
-				     main abstract tree */
+  PtrElement      DocDocElement;  /* pointer to the document element */
   PtrElement      DocAssocRoot[MAX_ASSOC_DOC];	/* pointers on the roots of
 						   each associated tree */
   PtrElement	  DocAssocSubTree[MAX_ASSOC_DOC]; /* root of the subtree

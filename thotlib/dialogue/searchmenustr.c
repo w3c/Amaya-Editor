@@ -1,20 +1,11 @@
 
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * searchmenu.c : diverse document search functions.
  *
@@ -100,13 +91,7 @@ static PtrAttribute pAttrTrouve;
    ConstruitSelecteurAttributs construit le selecteur des attributs
    a chercher pour le document pDoc.                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ConstruitSelecteurAttributs (PtrDocument pDoc)
-#else
-static void         ConstruitSelecteurAttributs (pDoc)
-PtrDocument         pDoc;
-
-#endif
 {
 #define LgMaxListeAttr 980
    int                 i, nbitem;
@@ -244,7 +229,6 @@ static void         ConstruitSelecteurTypes ()
    TtaSetSelector (NumSelTypeToSearch, -1, "");
 }
 
-
 /*----------------------------------------------------------------------
    ChAttr  cherche dans le domaine decrit par context et a partir  
    partir de (et a l'interieur de) l'element elCour, le    
@@ -254,16 +238,8 @@ static void         ConstruitSelecteurTypes ()
    pointeur sur le bloc attribut trouve' et selectionne    
    l'element trouve'.                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrAttribute ChAttr (PtrElement elCour, PtrSearchContext context, int GetAttributeOfElement, PtrSSchema pSS)
-#else
-static PtrAttribute ChAttr (elCour, context, GetAttributeOfElement, pSS)
-PtrElement          elCour;
-PtrSearchContext    context;
-int                 GetAttributeOfElement;
-PtrSSchema          pSS;
-
-#endif
+static PtrAttribute ChAttr (PtrElement elCour, PtrSearchContext context,
+			    int GetAttributeOfElement, PtrSSchema pSS)
 {
    PtrElement          pEl;
    PtrElement          pAscendant;
@@ -278,7 +254,7 @@ PtrSSchema          pSS;
 	{
 	   pEl = context->SStartElement;
 	   if (pEl == NULL)
-	      pEl = context->SDocument->DocRootElement;
+	      pEl = context->SDocument->DocDocElement;
 	}
       else
 	 pEl = context->SEndElement;
@@ -373,15 +349,8 @@ PtrSSchema          pSS;
    Retourne un pointeur sur l'element si trouve', ou NULL  
    si echec.                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrElement   ChType (PtrElement elCour, PtrSearchContext context, STRING NomType)
-#else
-static PtrElement   ChType (elCour, context, NomType)
-PtrElement          elCour;
-PtrSearchContext    context;
-STRING               NomType;
-
-#endif
+static PtrElement   ChType (PtrElement elCour, PtrSearchContext context,
+			    STRING NomType)
 {
    PtrElement          pEl;
    PtrElement          pAscendant;
@@ -394,7 +363,7 @@ STRING               NomType;
 	{
 	   pEl = context->SStartElement;
 	   if (pEl == NULL)
-	      pEl = context->SDocument->DocRootElement;
+	      pEl = context->SDocument->DocDocElement;
 	}
       else
 	 pEl = context->SEndElement;
@@ -454,18 +423,11 @@ STRING               NomType;
    return (pEl);
 }
 
-
 /*----------------------------------------------------------------------
    InitMenuNatures    initialise le menu des natures a chercher       
    pour le document pDoc.                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         InitMenuNatures (PtrDocument pDoc)
-#else
-static void         InitMenuNatures (pDoc)
-PtrDocument         pDoc;
-
-#endif
 {
    int                 nbitem;
    CHAR_T                ListeTypes[LgMaxListeTypes];
@@ -522,13 +484,7 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
   BuildStructSearchMenu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                BuildStructSearchMenu (PtrDocument pDoc)
-#else
-void                BuildStructSearchMenu (pDoc)
-PtrDocument         pDoc;
-
-#endif
 {
    CHAR_T BufMenu [MAX_TXT_LEN];
 
@@ -583,15 +539,8 @@ PtrDocument         pDoc;
    retourne un pointeur sur ce bloc attribut,              
    sinon, retourne NULL.                                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrAttribute ElPossedeAttr (PtrElement pEl, int NumAttr, PtrSSchema pSchAttr)
-#else
-static PtrAttribute ElPossedeAttr (pEl, NumAttr, pSchAttr)
-PtrElement          pEl;
-int                 NumAttr;
-PtrSSchema          pSchAttr;
-
-#endif
+static PtrAttribute ElPossedeAttr (PtrElement pEl, int NumAttr,
+				   PtrSSchema pSchAttr)
 {
    PtrAttribute        pA;
    ThotBool            trouve;
@@ -645,19 +594,10 @@ PtrSSchema          pSchAttr;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrElement   ChTypeAttr (PtrElement elCour, PtrSearchContext context, STRING NomType, ThotBool AvecAttribut, int NumAttrCherche, PtrSSchema SchAttrCherche, PtrAttribute * AttrTrouve)
-#else
-static PtrElement   ChTypeAttr (elCour, context, NomType, AvecAttribut, NumAttrCherche, SchAttrCherche, AttrTrouve)
-PtrElement          elCour;
-PtrSearchContext    context;
-STRING               NomType;
-ThotBool            AvecAttribut;
-int                 NumAttrCherche;
-PtrSSchema          SchAttrCherche;
-PtrAttribute       *AttrTrouve;
-
-#endif
+static PtrElement   ChTypeAttr (PtrElement elCour, PtrSearchContext context,
+				STRING NomType, ThotBool AvecAttribut,
+				int NumAttrCherche, PtrSSchema SchAttrCherche,
+				PtrAttribute * AttrTrouve)
 {
    PtrElement          pEl;
    PtrElement          pAsc;
@@ -728,16 +668,10 @@ PtrAttribute       *AttrTrouve;
    return pEl;
 }
 
-#ifdef __STDC__
-void                CallbackStructSearchMenu (int ref, int val, STRING txt, PtrSearchContext DomaineCherche)
-#else
-void                CallbackStructSearchMenu (ref, val, txt, DomaineCherche)
-int                 ref;
-int                 val;
-STRING               txt;
-PtrSearchContext    DomaineCherche;
-
-#endif
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void                CallbackStructSearchMenu (int ref, int val, STRING txt,
+					      PtrSearchContext DomaineCherche)
 {
    switch (ref)
 	 {
@@ -764,14 +698,8 @@ PtrSearchContext    DomaineCherche;
 /*----------------------------------------------------------------------
    BuildGoToPageMenu traite la commande Aller page numero              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                BuildSearchOptions (ThotBool * erreur, PtrSearchContext DomaineCherche)
-#else
-void                BuildSearchOptions (erreur, DomaineCherche)
-ThotBool           *erreur;
-PtrSearchContext    DomaineCherche;
-
-#endif
+void                BuildSearchOptions (ThotBool * erreur,
+					PtrSearchContext DomaineCherche)
 {
    ThotBool            trouve;
    int                 i;
@@ -838,16 +766,11 @@ PtrSearchContext    DomaineCherche;
    *erreur = *erreur || (NomTypeAChercher[0] == EOS && NomAttrAChercher[0] == EOS);
 }
 
-
-#ifdef __STDC__
-void                StructSearch (PtrElement elCour, PtrSearchContext DomaineCherche, ThotBool * trouve)
-#else
-void                StructSearch (elCour, DomaineCherche, trouve)
-ThotBool           *trouve;
-PtrElement          elCour;
-PtrSearchContext    DomaineCherche;
-
-#endif
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void                StructSearch (PtrElement elCour,
+				  PtrSearchContext DomaineCherche,
+				  ThotBool * trouve)
 {
    ThotBool            stop;
    PtrElement          pEl;
@@ -898,15 +821,9 @@ PtrSearchContext    DomaineCherche;
       while (!stop);
 }
 
-
-#ifdef __STDC__
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void                StructAndAttrSearch (PtrElement premsel, ThotBool * ok)
-#else
-void                StructAndAttrSearch (premsel, ok)
-PtrElement          premsel;
-ThotBool           *ok;
-
-#endif
 {
    PtrElement          pAsc;
    ThotBool            trouve;
@@ -941,11 +858,9 @@ ThotBool           *ok;
    *ok = trouve;
 }
 
-#ifdef __STDC__
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void                ValAttrSearch ()
-#else
-void                ValAttrSearch ()
-#endif
 {
    CHAR_T                NomAtt[100];
    int                 lg, lg1;

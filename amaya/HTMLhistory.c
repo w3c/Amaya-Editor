@@ -110,7 +110,7 @@ Element       	ElementAtPosition (Document doc, int pos)
 	     vol = TtaGetElementVolume (el);
 	     if (sum + vol <= pos)
 	        {
-	next = el;
+		next = el;
 	        TtaNextSibling (&next);
 		if (next == NULL)
 		  stop = TRUE;

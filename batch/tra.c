@@ -750,34 +750,7 @@ PtrSSchema          pSS;
 	   }
 	 else
 	   /* c'est une regle Get ou Copy */
-	   /* s'agit-il d'un element associe' ? */
-	   {
-	     if (CurTRule->TrRelPosition == RpSibling)
-	       {
-		 j = 0;
-		 found = False;
-		 do
-		   {
-		     j++;
-		     if (j == i)
-		       {
-		       if (pSS->SsRule[j - 1].SrAssocElem)
-			 found = True;
-		       else
-			 {
-			   pSRule = &pSS->SsRule[j - 1];
-			   if (pSRule->SrConstruct == CsList)
-			     if (pSS->SsRule[pSRule->SrListItem-1].SrAssocElem)
-			       found = True;
-			    }
-		       }
-		   }
-		 while (j < pSS->SsNRules && !found);
-		 if (found)
-		   CurTRule->TrRelPosition = RpAssoc;
-	       }
-	     CurTRule->TrElemType = i;
-	   }
+	   CurTRule->TrElemType = i;
        TypeInGetRule[0] = '\0';
        /* le nom de type a ete traite' */
      }
