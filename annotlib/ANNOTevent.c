@@ -826,8 +826,8 @@ void *context;
 
 	       /* replace the body only if it changed */
 	       if (returned_annot->body_url
-		   && !annot->body_url 
-		   && ustrcmp (annot->body_url, returned_annot->body_url))
+		   && (!annot->body_url 
+		       || ustrcmp (annot->body_url, returned_annot->body_url)))
 		 {
 		   /* update the anchor in the source doc */
 		   ReplaceLinkToAnnotation (source_doc, annot->name, 
@@ -1236,7 +1236,8 @@ void *context;
   Element  annotEl;
   AnnotMeta *annot;
   ThotBool annot_is_remote;
-  
+  ThotBool delete_annot = TRUE;
+
   /* restore REMOTELOAD contextext's */  
   ctx = (DELETE_context *) context;
 
@@ -1255,26 +1256,39 @@ void *context;
   
   if (status == HT_OK)
     {
-      /* remove the annotation metadata and the annotation icon */
-      ANNOT_FreeAnnotResource (source_doc, annotEl, annot);
-      /* remove the annotation from the document's annotation list and 
-	 update it */
-      AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
-			  annot_url, FALSE);
+      /* @@ JK: check if the user didn't close it in the meantime */
+      if (annot_doc) /* close the annotation window and free its resources */
+	{
+	  /* we don't want to save any last modifications, we're deleting
+	     it */
+	  TtaSetDocumentUnmodified (annot_doc);
+	  /* if it was a new annotation that was never saved,
+	     it'll be automatically deleted when closing the
+	     annot document */
+	  if (!IsW3Path (DocumentURLs[annot_doc])
+	      && !TtaFileExist (DocumentURLs[annot_doc]))
+	    delete_annot = FALSE;
+
+	  /* closes the document window and frees all metada
+	   associated with the document */
+	  CloseDocument (annot_doc, 1);
+	}
+
+      if (delete_annot)
+	{
+	  /* remove the annotation metadata and the annotation icon */
+	  ANNOT_FreeAnnotResource (source_doc, annotEl, annot);
+	  /* remove the annotation from the document's annotation list and 
+	     update it */
+	  AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
+			      annot_url, FALSE);
+	}
+
       /* update the annotation index or delete it if it's empty */
       if (AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0)
 	LINK_SaveLink (source_doc);
       else
 	LINK_DeleteLink (source_doc);
-      
-      /* close the annotation window if it was open */
-      /* @@ JK: check if the user didn't close it in the meantime */
-      if (annot_doc)
-	{
-	  TtaSetDocumentUnmodified (annot_doc);
-	  /* we should add all the views */
-	  TtaCloseDocument (annot_doc);
-	}
     }
    
   TtaFreeMemory (annot_url);
@@ -1443,9 +1457,9 @@ void ANNOT_Delete (document, view)
       while (list_ptr)
 	{
 	  annot_server = list_ptr->object;
-	  if (!ustrcasecmp (annot_server, TEXT("localhost")))
-	    continue;
-	  if (!ustrncasecmp (annot_server, annot_url, ustrlen (annot_server)))
+	  if (ustrcasecmp (annot_server, TEXT("localhost"))
+	      && !ustrncasecmp (annot_server, annot_url, 
+				ustrlen (annot_server)))
 	    break;
 	  list_ptr = list_ptr->next;
 	}
