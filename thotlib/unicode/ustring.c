@@ -233,7 +233,7 @@ const CHAR_T *str2;
 
 /*-------------------------------------------------------------
   ustrcat: appends src to the content of dest. This function 
-  suposes that momery has been already allocated in the same 
+  suposes that memory has been already allocated in the same 
   way that strcat does.
   -------------------------------------------------------------*/
 #ifdef __STDC__
