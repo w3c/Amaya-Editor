@@ -68,6 +68,7 @@ extern void GetServerName ( CHAR_T *url,
 extern CHAR_T *ANNOT_GetHTMLTitle ( Document doc );
 extern void ANNOT_SetType ( Document doc,
                             RDFResourceP type );
+extern CHAR_T * ANNOT_MakeFileURL ( CHAR_T *path );
 
 #else /* __STDC__ */
 
@@ -133,6 +134,7 @@ extern void GetServerName (/* CHAR_T *url,
 extern CHAR_T *ANNOT_GetHTMLTitle (/* Document doc */);
 extern void ANNOT_SetType (/* Document doc,
                               RDFResourceP type */);
+extern CHAR_T * ANNOT_MakeFileURL (/* CHAR_T *path */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -507,8 +507,7 @@ Document annot_doc;
     annot->source_url = TtaStrdup (DocumentURLs[source_doc]);
   else
     {
-      annot->source_url = TtaAllocString (strlen (DocumentURLs[source_doc])+7);
-      sprintf (annot->source_url, "file://%s", DocumentURLs[source_doc]);
+      annot->source_url = ANNOT_MakeFileURL (DocumentURLs[source_doc]);
     }
 
   /* get the current date... cdate = mdate at this stage */
@@ -529,9 +528,7 @@ Document annot_doc;
   if (!IsW3Path (DocumentURLs[annot_doc]) 
       && !IsFilePath (DocumentURLs[annot_doc]))
     {
-      annot->body_url = TtaGetMemory (ustrlen (DocumentURLs[annot_doc])
-				      + sizeof (TEXT("file://")));
-      usprintf (annot->body_url, "file://%s", DocumentURLs[annot_doc]);
+      annot->body_url = ANNOT_MakeFileURL (DocumentURLs[annot_doc]);
     }
   else
     annot->body_url = TtaStrdup (DocumentURLs[annot_doc]);
@@ -657,9 +654,18 @@ void LINK_SelectSourceDoc (doc, annotIndex)
 {
   XPointerContextPtr xptr_ctx;
   AnnotMeta *annot;
-  
+  CHAR_T *url;
+
+  if (IsW3Path (annot_url) || IsFilePath (annot_url))
+    url = annot_url;
+  else
+    url = ANNOT_MakeFileURL (annot_url);
+
   annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations,
-				 annot_url, AM_BODY_URL);
+				 url, AM_BODY_URL);
+  if (url != annot_url)
+    TtaFreeMemory (url);
+
     if (annot)
       {
 	xptr_ctx = XPointer_parse (doc, annot->xptr);

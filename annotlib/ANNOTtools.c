@@ -875,7 +875,7 @@ Element SearchAnnotation (doc, annotDoc)
 				  TtaGetMainRoot (doc));
   while (elCour != NULL) 
   {
-    ancName = SearchAttributeInEl (doc, elCour, HTML_ATTR_ID, TEXT("HTML"));
+    ancName = SearchAttributeInEl (doc, elCour, XLink_ATTR_id, TEXT("XLink"));
     if (ancName) 
       {
 	if (!ustrcmp (ancName, annotDoc))
@@ -1258,10 +1258,7 @@ RDFResourceP type;
 	      && !IsFilePath (DocumentURLs[doc]))
 	    {
 	      /* @@ add the file:// (why it wasn't there before? */
-	      ptr = TtaGetMemory (strlen (DocumentURLs[doc])
-				  + sizeof (TEXT("file://"))
-				  + 1);
-	      usprintf (ptr, "file://%s", DocumentURLs[doc]);
+	      ptr = ANNOT_MakeFileURL (DocumentURLs[doc]);
 	    }
 	  else
 	    ptr = NULL;
@@ -1276,4 +1273,27 @@ RDFResourceP type;
 	}
     }
   TtaFreeMemory (url);
+}
+
+/*-----------------------------------------------------------------------
+   ANNOT_MakeFileURL
+   Returns a dynamically allocated string containing the directory path
+   given in input, prefixed by the "file://" URL convention.
+   It's up to the caller to free the returned string.
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T * ANNOT_MakeFileURL (CHAR_T *path)
+#else
+CHAR_T *ANNOT_MakeFileURL (path)
+CHAR_T *path;
+#endif /* __STDC__ */
+{
+  CHAR_T *url;
+  /* @@ add the file:// (why it wasn't there before? */
+  url = TtaGetMemory (ustrlen (path)
+		      + sizeof (TEXT("file://"))
+		      + 1);
+  if (url)
+    usprintf (url, "file://%s", path);
+  return url;
 }

@@ -1222,10 +1222,7 @@ void ANNOT_Delete (document, view)
 	{
 	  /* it's a local annotation */
 	  annot_is_remote = FALSE;
-	  annot_url = TtaGetMemory (ustrlen (DocumentURLs[doc])
-				    + sizeof (TEXT("file://"))
-				    + 1);
-	  usprintf (annot_url, "file://%s", DocumentURLs[doc]);
+	  annot_url = ANNOT_MakeFileURL (DocumentURLs[doc]);
 	}
 
       /* find the annotation link in the source document that corresponds
