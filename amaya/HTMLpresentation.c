@@ -414,8 +414,10 @@ ThotBool            ChangePRule (NotifyPresentation * event)
 	  {
 	    root = TtaGetParent (el);
 	    if (presType == PRBackground)
-	      MovePRule (presRule, el, root, doc, TRUE);
-	    ret = TRUE; /* don't let Thot perform normal operation */      
+	      {
+		MovePRule (presRule, el, root, doc, TRUE);
+		ret = TRUE; /* don't let Thot perform normal operation */  
+	      }   
 	  }
 	else if (elType.ElTypeNum == HTML_EL_HTML)
 	  {
