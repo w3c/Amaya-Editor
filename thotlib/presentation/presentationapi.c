@@ -602,25 +602,30 @@ ThotBool            display;
        reDisp = TRUE;
      }
 
-   /* numero de cette view dans le schema de presentation qui la definit */
+   /* view number in the presentation schema that defines it */
    viewSch = AppliedView (pEl, NULL, pDoc, pAb->AbDocView);
    doit = FALSE;
 
-   /* traite le changement de largeur */
+   /* manage the width change of the box */
    if (width != 0 && pAb->AbBox != NULL && width != pAb->AbBox->BxWidth)
      {
-       /* cherche d'abord la regle de dimension qui s'applique a l'element */
+       /* look for the dimension rule applied to the element */
        pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
 				    PtWidth, FnAny, FALSE, TRUE, &pAttr);
-       /* on ne change pas la largeur si c'est celle du contenu ou si */
-       /* c'est une boite elastique.  */
+       /* don't change the width when it depends on the contents or it's */
+       /* a stretched box */
        ok = TRUE;
        if (!pRStd->PrDimRule.DrPosition)
 	 {
 	   if (pRStd->PrDimRule.DrRelation == RlEnclosed)
-	     /* largeur du contenu */
-	     if (pAb->AbLeafType != LtPicture)
-	       /* sauf si image */
+	     if (pAb->AbLeafType == LtPicture ||
+		 (pAb->AbLeafType == LtCompound &&
+		  pAb->AbFirstEnclosed &&
+		  pAb->AbFirstEnclosed->AbLeafType == LtPicture &&
+		  pAb->AbFirstEnclosed->AbNext == NULL))
+	       /*  the width depends on the contents but it's a picture */
+	       ok = TRUE;
+	     else
 	       ok = FALSE;
 	 }
        else
@@ -651,13 +656,12 @@ ThotBool            display;
 				  ViewFrameTable[frame - 1].FrMagnification);
 	     }
 	   
-	   /* cherche si la largeur de l'element est determinee par un */
-	   /* attribut auquel est associee l'exception NewWidth */
+	   /* check if the width is given by an attribute with the exception NewWidth */
 	   attr = FALSE;
 	   if (pAttr != NULL)
 	     if (AttrHasException (ExcNewWidth, pAttr->AeAttrNum,
 				   pAttr->AeAttrSSchema))
-	       /* la nouvelle largeur sera rangee dans l'attribut */
+	       /* the new width will be stored into the attribute */
 	       attr = TRUE;
 	   
 	   doit = TRUE;
@@ -670,7 +674,7 @@ ThotBool            display;
 	     {
 	       pPRule = pRStd;
 	       if (pAttr->AeAttrType == AtNumAttr)
-		 /* modifie la valeur de l'attribut */
+		 /* change the attribute value */
 		 {
 		   notifyAttr.event = TteAttrModify;
 		   notifyAttr.document = doc;
@@ -687,53 +691,50 @@ ThotBool            display;
 		         AddAttrEditOpInHistory (pAttr, pEl, pDoc, TRUE, TRUE);
 
 		       pAttr->AeAttrValue += dx;
-		       /* fait reafficher les variables de presentation */
-		       /* utilisant l'attribut */
+		       /* redisplay presentation variables using the attribute */
 		       RedisplayAttribute (pAttr, pEl, pDoc);
 		       if (display)
-			 /* la nouvelle valeur de l'attribut doit etre prise */
-			 /* en compte dans les copies-inclusions de l'element*/
+			 /* the new attribute value must be transmitted */
+			 /* to copies and inclusions of the element */
 			 RedisplayCopies (pEl, pDoc, TRUE);
 		     }
 		 }
 	     }
 	   else
-	     /* la nouvelle largeur doit etre rangee dans une regle */
-	     /* de presentation specifique */
+	     /* the new width will be stored in a specific presentation rule */
 	     {
-	       /* cherche si l'element a deja une regle de largeur specifique*/
+	       /* check if the specific presentation rule already exists */
 	       pPRule = SearchPresRule (pEl, PtWidth, 0, &isNew, pDoc,
 					pAb->AbDocView);
-	       if (isNew)
-		 /* create a new rule for the element */
+	       if (isNew ||
+		   (pAb->AbBox->BxWidth != 0 &&
+			pPRule->PrDimRule.DrValue == 0))
 		 {
-		   pR = pPRule->PrNextPRule;
-		   /* copy the standard rule */
-		   *pPRule = *pRStd;
-		   pPRule->PrCond = NULL;
-		   pPRule->PrNextPRule = pR;
-		   pPRule->PrViewNum = viewSch;
-		   /* if the rule is associated to an attribute */
-		   /* keep the link to that attribute */
-		   if (pAttr != NULL)
+		   if (isNew)
 		     {
-		       pPRule->PrSpecifAttr = pAttr->AeAttrNum;
-		       pPRule->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
+		       /* create a new rule for the element */
+		       pR = pPRule->PrNextPRule;
+		       /* copy the standard rule */
+		       *pPRule = *pRStd;
+		       pPRule->PrCond = NULL;
+		       pPRule->PrNextPRule = pR;
+		       pPRule->PrViewNum = viewSch;
+		       /* if the rule is associated to an attribute */
+		       /* keep the link to that attribute */
+		       if (pAttr != NULL)
+			 {
+			   pPRule->PrSpecifAttr = pAttr->AeAttrNum;
+			   pPRule->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
+			 }
 		     }
-		   value = pPRule->PrDimRule.DrValue;
-		 }
-	       else if (pAb->AbLeafType == LtPicture &&
-			pAb->AbBox->BxWidth != 0 &&
-			pPRule->PrDimRule.DrValue == 0)
-		 {
-		   /* specific case for pictures:
-		      the rule is NULL but the width is not */
+		   /* the rule is NULL but the width is not */
 		   if (pRStd->PrDimRule.DrUnit == UnPercent)
-		     value = LogicalValue (width, UnPercent,
+		     dx = LogicalValue (width, UnPercent,
 					   (PtrAbstractBox) widthRef, 0);
 		   else
-		     value = LogicalValue (width, pAb->AbWidth.DimUnit, pAb,
+		     dx = LogicalValue (width, pAb->AbWidth.DimUnit, pAb,
 				    ViewFrameTable[frame - 1].FrMagnification);
+		   value = 0;
 		 }
 	       else
 		 {
@@ -755,16 +756,15 @@ ThotBool            display;
 	       SetDocumentModified (pDoc, TRUE, 0);
 	       for (view = 1; view <= MAX_VIEW_DOC; view++)
 		 if (pEl->ElAbstractBox[view - 1] != NULL)
-		   /* l'element traite' a un pave dans cette view */
+		   /* the element has an abstract box in that view */
 		   if (pDoc->DocView[view - 1].DvSSchema ==
 		               pDoc->DocView[pAb->AbDocView - 1].DvSSchema &&
+		       /* or in a view of the same type */
 		       pDoc->DocView[view - 1].DvPSchemaView ==
 		               pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView)
-		     /* c'est une view de meme type que la view traitee, on */
-		     /* traite le pave de l'element dans cette view */
 		     {
 		       pAbbCur = pEl->ElAbstractBox[view - 1];
-		       /* saute les paves de presentation */
+		       /* skip presentation abstract boxes */
 		       stop = FALSE;
 		       do
 			 if (pAbbCur == NULL)
@@ -801,20 +801,27 @@ ThotBool            display;
 	 }
      }
 
-   /* traite le changement de hauteur de la boite */
+   /* manage the height change of the box */
    if (height != 0 && pAb->AbBox != NULL && height != pAb->AbBox->BxHeight)
-     /* cherche d'abord la regle de dimension qui s'applique a l'element */
      {
+       /* look for the dimension rule applied to the element */
        pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
 				    PtHeight, FnAny, FALSE, TRUE, &pAttr);
-       /* on ne change pas la hauteur si c'est celle du contenu ou si c'est */
-       /* une boite elastique. */
+       /* don't change the width when it depends on the contents or it's */
+       /* a stretched box */
        ok = TRUE;
        if (!pRStd->PrDimRule.DrPosition)
 	 {
+	     /*  the width depends on the contents and it's not a picture */
 	   if (pRStd->PrDimRule.DrRelation == RlEnclosed)
-	     /* hauteur du contenu */
-	     if (pAb->AbLeafType != LtPicture)
+	     if (pAb->AbLeafType == LtPicture ||
+		 (pAb->AbLeafType == LtCompound &&
+		  pAb->AbFirstEnclosed &&
+		  pAb->AbFirstEnclosed->AbLeafType == LtPicture &&
+		  pAb->AbFirstEnclosed->AbNext == NULL))
+	       /*  the width depends on the contents but it's a picture */
+	       ok = TRUE;
+	     else
 	       ok = FALSE;
 	 }
        else
@@ -845,13 +852,12 @@ ThotBool            display;
 				  ViewFrameTable[frame - 1].FrMagnification);
 	     }
 	   
-	   /* cherche si la hauteur de l'element est determinee par un */
-	   /* attribut auquel est associee l'exception NewHeight */
+	   /* check if the width is given by an attribute with the exception NewHeight */
 	   attr = FALSE;
 	   if (pAttr != NULL)
 	     if (AttrHasException (ExcNewHeight, pAttr->AeAttrNum,
 				   pAttr->AeAttrSSchema))
-	       /* la nouvelle hauteur sera rangee dans l'attribut */
+	       /* the new height will be stored into the attribute */
 	       attr = TRUE;
 	   doit = TRUE;
 	   if (!BoxCreating && !histOpen)
@@ -863,7 +869,7 @@ ThotBool            display;
 	     {
 	       pPRule = pRStd;
 	       if (pAttr->AeAttrType == AtNumAttr)
-		 /* modifier la valeur de l'attribut */
+		 /* change the attribute value */
 		 {
 		   notifyAttr.event = TteAttrModify;
 		   notifyAttr.document = doc;
@@ -879,53 +885,51 @@ ThotBool            display;
 		       if (!BoxCreating)
 		         AddAttrEditOpInHistory (pAttr, pEl, pDoc, TRUE, TRUE);
 		       pAttr->AeAttrValue += dy;
-		       /* fait reafficher les variables de presentation */
-		       /* utilisant l'attribut */
+		       /* redisplay presentation variables using the attribute */
 		       RedisplayAttribute (pAttr, pEl, pDoc);
 		       if (display)
-			 /* la nouvelle valeur de l'attribut doit etre prise */
-			 /* en compte dans les copies-inclusions de l'element*/
+			 /* the new attribute value must be transmitted */
+			 /* to copies and inclusions of the element */
 			 RedisplayCopies (pEl, pDoc, TRUE);
 		     }
 		 }
 	     }
 	   else
-	     /* la nouvelle hauteur doit etre rangee dans une regle */
-	     /* de presentation specifique */
+	     /* the new height will be stored in a specific presentation rule */
 	     {
-	       /* cherche si l'element a deja une regle de hauteur specifique*/
+	       /* check if the specific presentation rule already exists */
 	       pPRule = SearchPresRule (pEl, PtHeight, 0, &isNew, pDoc,
 					pAb->AbDocView);
-	       if (isNew)
-		 /* create a new rule for the element */
+	       if (isNew ||
+		   (pAb->AbBox->BxHeight != 0 &&
+		    pPRule->PrDimRule.DrValue == 0))
 		 {
-		   pR = pPRule->PrNextPRule;
-		   /* copy the standard rule */
-		   *pPRule = *pRStd;
-		   pPRule->PrCond = NULL;
-		   pPRule->PrNextPRule = pR;
-		   pPRule->PrViewNum = viewSch;
-		   /* if the rule is associated to an attribute */
-		   /* keep the link to that attribute */
-		   if (pAttr != NULL)
+		   if (isNew)
 		     {
-		       pPRule->PrSpecifAttr = pAttr->AeAttrNum;
-		       pPRule->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
+		       /* create a new rule for the element */
+		       pR = pPRule->PrNextPRule;
+		       /* copy the standard rule */
+		       *pPRule = *pRStd;
+		       pPRule->PrCond = NULL;
+		       pPRule->PrNextPRule = pR;
+		       pPRule->PrViewNum = viewSch;
+		       /* if the rule is associated to an attribute */
+		       /* keep the link to that attribute */
+		       if (pAttr != NULL)
+			 {
+			   pPRule->PrSpecifAttr = pAttr->AeAttrNum;
+			   pPRule->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
+			 }
 		     }
-		   value = pPRule->PrDimRule.DrValue;
-		 }
-	       else if (pAb->AbLeafType == LtPicture &&
-			pAb->AbBox->BxHeight != 0 &&
-			pPRule->PrDimRule.DrValue == 0)
-		 {
 		   /* specific case for pictures:
 		      the rule is NULL but the height is not */
 		   if (pRStd->PrDimRule.DrUnit == UnPercent)
-		     value = LogicalValue (height, UnPercent,
-					   (PtrAbstractBox) heightRef, 0);
+		     dy = LogicalValue (height, UnPercent,
+					(PtrAbstractBox) heightRef, 0);
 		   else
-		     value = LogicalValue (height, pAb->AbHeight.DimUnit, pAb,
-				    ViewFrameTable[frame - 1].FrMagnification);
+		     dy = LogicalValue (height, pAb->AbHeight.DimUnit, pAb,
+					ViewFrameTable[frame - 1].FrMagnification);
+		   value = 0;
 		 }
 	       else
 		 {
@@ -948,16 +952,15 @@ ThotBool            display;
 	       SetDocumentModified (pDoc, TRUE, 0);
 	       for (view = 1; view <= MAX_VIEW_DOC; view++)
 		 if (pEl->ElAbstractBox[view - 1] != NULL)
-		   /* l'element traite' a un pave dans cette view */
+		   /* the element has an abstract box in that view */
 		   if (pDoc->DocView[view - 1].DvSSchema ==
 		               pDoc->DocView[pAb->AbDocView - 1].DvSSchema &&
+		       /* or in a view of the same type */
 		       pDoc->DocView[view - 1].DvPSchemaView ==
 		               pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView)
-		     /* c'est une view de meme type que la view traitee, on */
-		     /* traite le pave de l'element dans cette view */
 		     {
 		       pAbbCur = pEl->ElAbstractBox[view - 1];
-		       /* saute les paves de presentation */
+		       /* skip presentation abstract boxes */
 		       stop = FALSE;
 		       do
 			 if (pAbbCur == NULL)

@@ -1819,6 +1819,7 @@ PictInfo           *imageDesc;
   PictureScaling      pres;
   Drawable            picMask = None;
   Drawable            myDrawable = None;
+  PtrAbstractBox      pAb;
   Picture_Report      status;
   unsigned long       Bgcolor;
   int                 typeImage;
@@ -1832,7 +1833,8 @@ PictInfo           *imageDesc;
 #endif /* _WIN_PRINT */
 #endif /* _WINDOWS */
 
-  if (box->BxAbstractBox->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
+  pAb = box->BxAbstractBox;
+  if (pAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
     /* the picture is not visible */
     return;
   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS)
@@ -1843,7 +1845,7 @@ PictInfo           *imageDesc;
   status = PictureFileOk (fileName, &typeImage);
   w = 0;
   h = 0;
-  Bgcolor = ColorPixel (box->BxAbstractBox->AbBackground);
+  Bgcolor = ColorPixel (pAb->AbBackground);
   
 #ifdef _WINDOWS
 #ifndef _WIN_PRINT
@@ -1889,7 +1891,7 @@ PictInfo           *imageDesc;
 	  w = 20;
 	  h = 20;
 	}
-      else if (box->BxAbstractBox->AbLeafType == LtCompound)
+      else if (pAb->AbLeafType == LtCompound)
 	{
 	  /* a background image, draw over the whole box */
 	  w = box->BxWidth;
@@ -1913,19 +1915,19 @@ PictInfo           *imageDesc;
 		XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
 		XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (BackgroundColor[frame]));
 	      }
-	    else if (box->BxAbstractBox->AbSensitive && !box->BxAbstractBox->AbPresentationBox)
+	    else if (pAb->AbSensitive && !pAb->AbPresentationBox)
 	      {
 		/* Set active Box Color */
 		XSetForeground (TtDisplay, TtGraphicGC, Box_Color);
 		XSetForeground (TtDisplay, GCpicture, Box_Color);
-		XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbBackground));
+		XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (pAb->AbBackground));
 	      }
 	    else
 	      {
 		/* Set Box Color */
-		XSetForeground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbForeground));
-		XSetForeground (TtDisplay, GCpicture, ColorPixel (box->BxAbstractBox->AbForeground));
-		XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbBackground));
+		XSetForeground (TtDisplay, TtGraphicGC, ColorPixel (pAb->AbForeground));
+		XSetForeground (TtDisplay, GCpicture, ColorPixel (pAb->AbForeground));
+		XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (pAb->AbBackground));
 	      }
 #endif /* _WINDOWS */
 	}
@@ -1988,19 +1990,38 @@ PictInfo           *imageDesc;
 	  if (h == 0)
 	    h = hFrame;
 	  /* Do you have to extend the clipping */
-	  if (box->BxAbstractBox->AbLeafType == LtCompound)
+	  if (pAb->AbLeafType == LtCompound)
 	    DefClip (frame, box->BxXOrg, box->BxYOrg, box->BxXOrg + w, box->BxYOrg + h);
 	  else
 	    DefClip (frame, box->BxXOrg, box->BxYOrg, box->BxXOrg + box->BxRMargin + box->BxRBorder + box->BxRPadding + w, box->BxYOrg + box->BxBMargin + box->BxBBorder + box->BxBPadding + h);
-	  if (box->BxAbstractBox && !box->BxAbstractBox->AbPresentationBox)
-	    NewDimPicture (box->BxAbstractBox);
-	  /* check if a rule min is applied to this box */
-	  if (!box->BxAbstractBox->AbWidth.DimIsPosition &&
-	      box->BxAbstractBox->AbWidth.DimMinimum)
-	    ChangeDefaultWidth (box, box, w, 0, frame);
-	  if (!box->BxAbstractBox->AbHeight.DimIsPosition &&
-	      box->BxAbstractBox->AbHeight.DimMinimum)
-	    ChangeDefaultHeight (box, box, h, frame);
+	  if (!pAb->AbPresentationBox)
+	    NewDimPicture (pAb);
+
+	  /* transmit picture dimensions */
+	  if (!pAb->AbWidth.DimIsPosition)
+	    {
+	      if (pAb->AbWidth.DimMinimum)
+		/* the rule min is applied to this box */
+		ChangeDefaultWidth (box, box, w, 0, frame);
+	      else if (pAb->AbEnclosing && pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
+		       pAb->AbNext == NULL && pAb->AbPrevious == NULL)
+		{
+		  /* the parent box should inherit the picture width */
+		  ChangeWidth (pAb->AbEnclosing->AbBox, pAb->AbEnclosing->AbBox, NULL, w, 0, frame);
+		}
+	    }
+	  if (!pAb->AbHeight.DimIsPosition)
+	    {
+	      if (pAb->AbHeight.DimMinimum)
+		/* the rule min is applied to this box */
+		ChangeDefaultHeight (box, box, h, frame);
+	      else if (pAb->AbEnclosing && pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
+		       pAb->AbNext == NULL && pAb->AbPrevious == NULL)
+		{
+		  /* the parent box should inherit the picture height */
+		  ChangeHeight (pAb->AbEnclosing->AbBox, pAb->AbEnclosing->AbBox, NULL, h, frame);
+		}
+	    }
 	}
     }
 
@@ -2018,15 +2039,6 @@ PictInfo           *imageDesc;
       imageDesc->PicWArea = w;
       imageDesc->PicHArea = h;
     }
-#ifdef IV
-  if (box->BxType != BoPicture)
-    {
-      /* we don't use mask for background picture till we don't change
-	 clipping management */
-      FreePixmap (picMask);
-      picMask = None;
-    }
-#endif /* IV */
   FreePixmap (imageDesc->PicPixmap);
   imageDesc->PicPixmap = myDrawable;
 #ifdef _WINDOWS

@@ -1914,13 +1914,13 @@ int                *max;
       ok = FALSE;
    /* Il est impossible de modifier la dimension du contenu */
    /* d'une boite construite ou de type texte                  */
-   else if (pAb->AbLeafType == LtCompound || pAb->AbLeafType == LtText)
+   /*****else if (pAb->AbLeafType == LtCompound || pAb->AbLeafType == LtText)
      {
        if (horizRef && pBox->BxContentWidth && !pAb->AbWidth.DimMinimum)
 	 ok = FALSE;
        else if (!horizRef && pBox->BxContentHeight && !pAb->AbHeight.DimMinimum)
 	 ok = FALSE;
-     }
+	 }********/
    else if (horizRef && pAb->AbWidth.DimAbRef == pParentAb)
      /* box width linked with its parent */
       ok = FALSE;

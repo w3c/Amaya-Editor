@@ -1331,8 +1331,9 @@ RULES
 
    PICTURE_UNIT:
 	BEGIN
-	Width: Enclosing . Width min;
-        Height: Enclosing . Height min;
+	Width: Enclosing . Width;
+        Height: Enclosing . Height;
+	Depth: Enclosing + 2;
 	IN Graph_Structure_view
 		Visibility: 0;
 	IN Graph_Alternate_view

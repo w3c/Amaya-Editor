@@ -4589,54 +4589,10 @@ PtrAttribute        pAttrComp;
 				    pAbb->AbNotInLine = FALSE;
 				    appl = TRUE;
 				  }
+
 			    if (appl)
 			      /* on a change' la presentation du pave */
 			      {
-				if (!remove)
-				  /* ce n'est pas une suppression d'attribut */
-				  /* cherche si l'element possede pour cette vue une */
-				  /* regle de presentation specifique de meme type que */
-				  /* celle qu'on vient d'appliquer */
-				  {
-				    pRSpecif = pEl->ElFirstPRule;
-				    pRP = NULL;
-				    stop = FALSE;
-				    do
-				      {
-					if (pRSpecif == NULL)
-					  stop = TRUE;
-					else if (pRSpecif->PrViewNum == viewSch &&
-						 pRSpecif->PrType == typeRule)
-					  if (typeRule == PtFunction)
-					    {
-					      if (pR->PrPresFunction == pRSpecif->PrPresFunction)
-						stop = TRUE; /* trouve'*/
-					    }
-					  else
-					    stop = TRUE;	/* trouve' */
-					if (!stop)
-					  {
-					    pRP = pRSpecif;
-					    pRSpecif = pRSpecif->PrNextPRule;
-					  }
-				      }
-				    while (!stop);
-				    if (pRSpecif != NULL)
-				      /* l'element possede cette regle specifique, on */
-				      /* la supprime : l'attribut a priorite' sur la */
-				      /* presentation specifique */
-				      {
-					pRS = pRSpecif->PrNextPRule;
-					if (pRP == NULL)
-					  /* c'etait la 1ere */
-					  pEl->ElFirstPRule = pRS;
-					else
-					  pRP->PrNextPRule = pRS;
-					FreePresentRule (pRSpecif);
-					/* libere la regle */
-				      }
-				  }
-				
 				if (pAbb->AbVisibility <= 0)
 				  /* l'attribut rend le pave invisible */
 				  {

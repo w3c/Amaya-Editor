@@ -546,7 +546,7 @@ NotifyPresentation *event;
 		  {
 		    /* the new value is the old one plus the delta */
 		    TtaGiveBoxSize (el, doc, 1, unit, &value, &i);
-		    value += TtaGetPRuleValue (presRule);
+		    value = TtaGetPRuleValue (presRule);
 		    if (unit == UnPercent)
 		      usprintf (buffer, TEXT("%d%%"), value);
 		    else
@@ -573,7 +573,7 @@ NotifyPresentation *event;
 		  {
 		    /* the new value is the old one plus the delta */
 		    TtaGiveBoxSize (el, doc, 1, unit, &i, &value);
-		    value += TtaGetPRuleValue (presRule);
+		    value = TtaGetPRuleValue (presRule);
 		    attrType.AttrTypeNum = HTML_ATTR_Height_;
 		    attr = TtaGetAttribute (el, attrType);
 		    if (attr == NULL)

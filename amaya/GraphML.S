@@ -258,7 +258,7 @@ STRUCT
 EXCEPT
 
    GraphML:             IsDraw;
-   g:                   MoveResize;
+   g:                   NoMove, NoResize;
    Spline:              MoveResize, HighlightChildren, NoShowBox;
    ClosedSpline:        MoveResize, HighlightChildren, NoShowBox;
    rect:                MoveResize, HighlightChildren, NoShowBox;
@@ -267,9 +267,10 @@ EXCEPT
    line_:               MoveResize, HighlightChildren, NoShowBox;
    polyline:            MoveResize, HighlightChildren, NoShowBox;
    polygon:             MoveResize, HighlightChildren, NoShowBox;
+   image:	        MoveResize, HighlightChildren, NoShowBox;
    text_:               MoveResize;
    foreignObject:       MoveResize;
-   PICTURE:             MoveResize;
+   PICTURE:             NoMove, NoResize;
    TEXT:                NoMove, NoResize;
 
    id:                  CssId;

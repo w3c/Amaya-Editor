@@ -322,11 +322,11 @@ PresentationValue  *pval;
    value and its unit.                                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T*       ParseCSSUnit (CHAR_T* cssRule, PresentationValue *pval)
+CHAR_T            *ParseCSSUnit (CHAR_T* cssRule, PresentationValue *pval)
 #else
-CHAR_T*       ParseCSSUnit (cssRule, pval)
-CHAR_T*            cssRule;
-PresentationValue  *pval;
+CHAR_T            *ParseCSSUnit (cssRule, pval)
+CHAR_T            *cssRule;
+PresentationValue *pval;
 #endif
 {
   int                 val = 0;

@@ -211,7 +211,7 @@ Element         CreateGraphicLeaf (Element el, Document doc, ThotBool *closed, i
 Element         CreateGraphicLeaf (el, doc, closed, arrowHead)
 Element		el;
 Document	doc;
-ThotBool		*closed;
+ThotBool       *closed;
 int		arrowHead;
 
 #endif
@@ -700,10 +700,10 @@ Document	doc;
 ThotBool   ParseWidthHeightAttribute (Attribute attr, Element el, Document doc, ThotBool delete)
 #else
 ThotBool   ParseWidthHeightAttribute (attr, el, doc, delete)
-Attribute	attr;
-Element		el;
-Document	doc;
-ThotBool        delete;
+Attribute  attr;
+Element	   el;
+Document   doc;
+ThotBool   delete;
 
 #endif
 {
