@@ -170,8 +170,10 @@ int                 height;
 #  ifndef _WIN_PRINT
    createdFrame = MakeFrame (pDoc->DocSSchema->SsName, view, buf, X, Y, width,
 			     height, vol, IdentDocument (pDoc));
-#  endif /* _WIN_PRINT */
    return createdFrame;
+#  else  /* _WIN_PRINT */
+   return -1;
+#  endif /* _WIN_PRINT */
 }
 
 

@@ -85,9 +85,6 @@ boolean             ToCreate;
 {
   char              *dicodoc;
   char               path[MAX_PATH], dictname[MAX_PATH];
-# ifdef _WINDOWS
-  char* home_dir;
-# endif /* _WINDOWS */
 
   /* dictionary name = document name */
   *pDictionary = (int) NULL;

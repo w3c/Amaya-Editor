@@ -135,7 +135,10 @@ int Magic64[256] =    /* for 4 levels of red and blue */
 char *typecouleur[] = {"grayscale", "undefined type", "RGB",
 		       "colormap", "grayscale+alpha",
 		       "undefined type", "RGB+alpha"};
-    
+
+#ifdef _WINDOWS     
+extern BOOL pic2print;
+#endif /* _WINDOWS */
 
 #ifdef __STDC__
 void png_error (png_struct* png_ptr, char* message)
@@ -646,7 +649,14 @@ int                *height;
 #   endif /* _WINDOWS */
   }
 
+# ifdef _WINDOWS
+  if (pic2print && TtPrinterDC)
+     pixmap = WIN_DataToPixmap (TtPrinterDC, TtIsPrinterTrueColor, TtWPrinterDepth, buffer, w, h, ncolors,  colrs);
+  else
+     pixmap = WIN_DataToPixmap (TtDisplay, TtIsTrueColor, TtWDepth, buffer, w, h, ncolors,  colrs);
+# else  /* !_WINDOWS */
   pixmap = DataToPixmap (buffer, w, h, ncolors,  colrs);
+# endif /* _WINDOWS */
   TtaFreeMemory (buffer);
   if (pixmap == None)
     return (ThotBitmapNone); 

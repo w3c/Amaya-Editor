@@ -132,18 +132,26 @@ static unsigned char MirrorBytes[0x100] = {
 };
 
 #ifdef _WINDOWS 
+#ifdef __STDC__
+void LoadPicture2Print (int, PtrBox, PictInfo*);
+#else  /* __STDC__ */
+void LoadPicture2Print ();
+#endif /* __STDC__ */
+
 extern boolean  peInitialized;
 
-int bgRed;
-int bgGreen;
-int bgBlue;
+BOOL pic2print = FALSE ;
+int  bgRed;
+int  bgGreen;
+int  bgBlue;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void WIN_LayoutTransparentPicture (HBITMAP pixmap, int x, int y, int width, int height, int red, int green, int blue)
+void WIN_LayoutTransparentPicture (HDC hDC, HBITMAP pixmap, int x, int y, int width, int height, int red, int green, int blue)
 #else  /* !__STDC__ */
-void WIN_LayoutTransparentPicture (pixmap, x, y, width, height, red, green, blue)
+void WIN_LayoutTransparentPicture (hDC, pixmap, x, y, width, height, red, green, blue)
+HDC      hDC;
 HBITMAP  pixmap; 
 int      x;
 int      y;
@@ -171,18 +179,18 @@ int      blue;
    COLORREF crColor = RGB (red, green, blue);
    COLORREF crOldBkColor ;
 
-   hImageDC = CreateCompatibleDC (TtDisplay);
+   hImageDC = CreateCompatibleDC (hDC);
    bitmap = SelectObject (hImageDC, pixmap);
-   SetMapMode (hImageDC, GetMapMode (TtDisplay));
+   SetMapMode (hImageDC, GetMapMode (hDC));
    
-   hOrDC = CreateCompatibleDC (TtDisplay);
-   SetMapMode (hOrDC, GetMapMode (TtDisplay));
+   hOrDC = CreateCompatibleDC (hDC);
+   SetMapMode (hOrDC, GetMapMode (hDC));
    bitmapOr = CreateCompatibleBitmap (hImageDC, width, height);
    pOldBitmapOr = SelectObject (hOrDC, bitmapOr);
    BitBlt (hOrDC, 0, 0, width, height, hImageDC, 0, 0, SRCCOPY);
 
-   hAndDC = CreateCompatibleDC (TtDisplay);
-   SetMapMode (hAndDC, GetMapMode (TtDisplay));
+   hAndDC = CreateCompatibleDC (hDC);
+   SetMapMode (hAndDC, GetMapMode (hDC));
    bitmapAnd = CreateBitmap (width, height, 1, 1, NULL);
    pOldBitmapAnd = SelectObject (hAndDC, bitmapAnd);
 
@@ -191,25 +199,25 @@ int      blue;
 
    SetBkColor (hImageDC, crOldBkColor);
 
-   hInvAndDC = CreateCompatibleDC (TtDisplay);
-   SetMapMode (hInvAndDC, GetMapMode (TtDisplay));
+   hInvAndDC = CreateCompatibleDC (hDC);
+   SetMapMode (hInvAndDC, GetMapMode (hDC));
    bitmapInvAnd = CreateBitmap (width, height, 1, 1, NULL);
    pOldBitmapInvAnd = SelectObject (hInvAndDC, bitmapInvAnd);
    BitBlt (hInvAndDC, 0, 0, width, height, hAndDC, 0, 0, NOTSRCCOPY);
 
    BitBlt (hOrDC, 0, 0, width, height, hInvAndDC, 0, 0, SRCAND);
 
-   hDestDC = CreateCompatibleDC (TtDisplay);
-   SetMapMode (hDestDC, GetMapMode (TtDisplay));
+   hDestDC = CreateCompatibleDC (hDC);
+   SetMapMode (hDestDC, GetMapMode (hDC));
    bitmapDest = CreateCompatibleBitmap (hImageDC, width, height);
    pOldBitmapDest = SelectObject (hDestDC, bitmapDest);
-   BitBlt (hDestDC, 0, 0, width, height, TtDisplay, x, y, SRCCOPY);
+   BitBlt (hDestDC, 0, 0, width, height, hDC, x, y, SRCCOPY);
 
    BitBlt (hDestDC, 0, 0, width, height, hAndDC, 0, 0, SRCAND);
 
    BitBlt (hDestDC, 0, 0, width, height, hOrDC, 0, 0, SRCINVERT);
 
-   BitBlt (TtDisplay, x, y, width, height, hDestDC, 0, 0, SRCCOPY);
+   BitBlt (hDC, x, y, width, height, hDestDC, 0, 0, SRCCOPY);
 
    SelectObject (hDestDC, pOldBitmapDest);
    SelectObject (hInvAndDC, pOldBitmapInvAnd);
@@ -423,6 +431,25 @@ PictInfo           *imageDesc;
    by the drawable.                                                          
    if picXOrg or picYOrg are postive, the copy operation is shifted      
   ----------------------------------------------------------------------*/
+#ifdef _WINDOWS
+#ifdef __STDC__
+static void         WIN_LayoutPicture (HDC currentDeviceContext, BOOL trueColorsDevice, Pixmap pixmap, Drawable drawable, int picXOrg, int picYOrg, int w, int h, int xFrame, int yFrame, int frame, PictInfo *imageDesc)
+#else  /* __STDC__ */
+static void         WIN_LayoutPicture (currentDeviceContext,trueColorsDevice, pixmap, drawable, picXOrg, picYOrg, w, h, xFrame, yFrame, frame, imageDesc)
+HDC                 currentDeviceContext; 
+BOOL                trueColorsDevice;
+Pixmap              pixmap;
+Drawable            drawable;
+int                 picXOrg;
+int                 picYOrg;
+int                 w;
+int                 h;
+int                 xFrame;
+int                 yFrame;
+int                 frame;
+PictInfo           *imageDesc;
+#endif /* __STDC__ */
+#else  /* _WINDOWS */
 #ifdef __STDC__
 static void         LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg, int picYOrg, int w, int h, int xFrame, int yFrame, int frame, PictInfo *imageDesc)
 #else  /* __STDC__ */
@@ -438,6 +465,7 @@ int                 yFrame;
 int                 frame;
 PictInfo           *imageDesc;
 #endif /* __STDC__ */
+#endif /* _WINDOWS */
 {
 
   ViewFrame*        pFrame;
@@ -461,7 +489,6 @@ PictInfo           *imageDesc;
   HRGN    hrgn;
 # endif /* _WINDOWS */
 
-
   if (picXOrg < 0)
     {
       xFrame = xFrame - picXOrg;
@@ -474,10 +501,10 @@ PictInfo           *imageDesc;
     }
 # ifdef _WINDOWS 
 		 
-  if (!TtIsTrueColor) {
-     WIN_InitSystemColors ();
-     SelectPalette (TtDisplay, TtCmap, FALSE);
-     nbPalColors = RealizePalette (TtDisplay);
+  if (!trueColorsDevice) {
+     WIN_InitSystemColors (currentDeviceContext);
+     SelectPalette (currentDeviceContext, TtCmap, FALSE);
+     nbPalColors = RealizePalette (currentDeviceContext);
   }
 # endif /* _WINDOWS */
 
@@ -502,23 +529,23 @@ PictInfo           *imageDesc;
 #         else /* _WINDOWS */
 	case RealSize:
 	  if ((imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) || imageDesc->PicType == -1) {
-	    hMemDC = CreateCompatibleDC (TtDisplay);
+	    hMemDC = CreateCompatibleDC (currentDeviceContext);
 	    hOldBitmap1 = SelectObject (hMemDC, pixmap);
-	    SetMapMode (hMemDC, GetMapMode (TtDisplay));
+	    SetMapMode (hMemDC, GetMapMode (currentDeviceContext));
 	    GetObject (pixmap, sizeof (BITMAP), (LPVOID) &bm) ;
 	    ptSize.x = bm.bmWidth;
 	    ptSize.y = bm.bmHeight;
-	    DPtoLP (TtDisplay, &ptSize, 1);
+	    DPtoLP (currentDeviceContext, &ptSize, 1);
 	    ptOrg.x = 0;
 	    ptOrg.y = 0;
 	    DPtoLP (hMemDC, &ptOrg, 1);
 	    
-	    BitBlt (TtDisplay, xFrame, yFrame, ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY);
+	    BitBlt (currentDeviceContext, xFrame, yFrame, ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY);
 		SelectObject (hMemDC, hOldBitmap1);
 	    if (!DeleteDC (hMemDC))
            WinErrorBox (NULL);
 	  } else {
-           WIN_LayoutTransparentPicture (pixmap, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
+           WIN_LayoutTransparentPicture (currentDeviceContext, pixmap, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
 	  }
 #         endif /* _WINDOWS */
 	  break;
@@ -649,11 +676,11 @@ PictInfo           *imageDesc;
                   clipWidth = delta;
 		  }
 	  
-          hMemDC  = CreateCompatibleDC (TtDisplay);
-          hBkgBmp = CreateCompatibleBitmap (TtDisplay, w, h);
-          hOrigDC = CreateCompatibleDC (TtDisplay);
+          hMemDC  = CreateCompatibleDC (currentDeviceContext);
+          hBkgBmp = CreateCompatibleBitmap (currentDeviceContext, w, h);
+          hOrigDC = CreateCompatibleDC (currentDeviceContext);
           hrgn = CreateRectRgn (x, y, x + clipWidth, y + clipHeight);
-          SelectClipRgn(TtDisplay, hrgn); 
+          SelectClipRgn(currentDeviceContext, hrgn); 
           hOldBitmap1 = SelectObject (hOrigDC, pixmap);
           hOldBitmap2 = SelectObject (hMemDC, hBkgBmp);
           
@@ -669,12 +696,12 @@ PictInfo           *imageDesc;
 			 y += imageDesc->PicHArea;
 		  } while (y < (h - yFrame));
 
-          BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
+          BitBlt (currentDeviceContext, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
 
 		  SelectObject (hOrigDC, hOldBitmap1);
 		  SelectObject (hMemDC, hOldBitmap2);
 
-          SelectClipRgn(TtDisplay, NULL); 
+          SelectClipRgn(currentDeviceContext, NULL); 
 
           if (!DeleteDC (hMemDC))
              WinErrorBox (WIN_Main_Wd);
@@ -1174,7 +1201,12 @@ int                 hlogo;
       h = hFrame;
    x += xFrame;
    y += yFrame;
+#  ifdef _WINDOWS
+   WIN_LayoutPicture (TtDisplay, TtIsTrueColor, pixmap, drawable, picXOrg, picYOrg, w, h, x, y, frame, imageDesc);
+#  else  /* _WINDOWS */
    LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, frame, imageDesc);
+#  endif /* _WINDOWS */
+
 #  ifdef _WINDOWS
    if (!DeleteObject (pixmap))
       WinErrorBox (WIN_Main_Wd);
@@ -1285,17 +1317,35 @@ int                 frame;
 		 (*(PictureHandlerTable[typeImage].DrawPicture)) (box, imageDesc, xFrame + xTranslate, yFrame + yTranslate);
 	     }
 	   else {
+#       ifdef _WINDOWS
+	    WIN_LayoutPicture (TtDisplay, TtIsTrueColor, imageDesc->PicPixmap, drawable, picXOrg, picYOrg,
+			    wFrame, hFrame, xFrame + xTranslate, yFrame + yTranslate, frame, imageDesc);
+#       else  /* _WINDOWS */
 	    LayoutPicture (imageDesc->PicPixmap, drawable, picXOrg, picYOrg,
 			    wFrame, hFrame, xFrame + xTranslate, yFrame + yTranslate, frame, imageDesc);
+#       endif /* _WINDOWS */
 	   }
 	   
 	 }
      }
    else if (typeImage < InlineHandlers && typeImage > -1)
      /* for the moment we didn't consider plugin printing */
+#       ifdef _WINDOWS
+	 if (TtPrinterDC) {
+        pic2print = TRUE;
+        LoadPicture2Print (frame, box, imageDesc);
+	    WIN_LayoutPicture (TtPrinterDC, TtIsPrinterTrueColor, imageDesc->PicPixmap, drawable, picXOrg, picYOrg,
+			    wFrame, hFrame, xFrame + xTranslate, yFrame + yTranslate, frame, imageDesc);
+	 } else {
+           (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, xFrame, yFrame, wFrame, hFrame, picXArea,
+							                                       picYArea, picWArea, picHArea,
+							                                       (FILE *) drawable, BackGroundPixel);
+	 }
+#       else  /* _WINDOWS */
      (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, xFrame, yFrame, wFrame, hFrame, picXArea,
 							     picYArea, picWArea, picHArea,
 							     (FILE *) drawable, BackGroundPixel);
+#       endif /* _WINDOWS */
 #  ifdef _WINDOWS
    WIN_ReleaseDeviceContext ();
 #  endif /* _WINDOWS */
@@ -1451,10 +1501,12 @@ PictInfo           *imageDesc;
    if (status != Supported_Format)
      {
 #      ifdef _WINDOWS
-       imageDesc->PicType = 3;
-       pres = RealSize;
-       myDrawable = (*(PictureHandlerTable [GIF_FORMAT].
-		       Produce_Picture)) (LostPicturePath, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask);
+       if (TtPrinterDC == NULL) {
+          imageDesc->PicType = 3;
+          pres = RealSize;
+          myDrawable = (*(PictureHandlerTable [GIF_FORMAT].Produce_Picture)) 
+			             (LostPicturePath, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
+	   }
 #      else  /* !_WINDOWS */
        myDrawable = PictureLogo;
 #      endif /* _WINDOWS */
@@ -1538,6 +1590,10 @@ PictInfo           *imageDesc;
 		   if(box->BxHeight != 0)
 		     yFrame = box->BxHeight;
 		 }
+
+#          ifdef _WINDOWS
+           pic2print = FALSE ;
+#          endif /* _WINDOWS */
 	       myDrawable = (*(PictureHandlerTable[typeImage].
 			       Produce_Picture)) (fileName, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
 	       /* intrinsic width and height */
@@ -1606,6 +1662,127 @@ PictInfo           *imageDesc;
 #     endif /* _WINDOWS */
 
 }
+
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  LoadPicture2Print
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                LoadPicture2Print (int frame, PtrBox box, PictInfo * imageDesc)
+#else  /* __STDC__ */
+void                LoadPicture2Print (frame, box, imageDesc)
+int                 frame;
+PtrBox              box;
+PictInfo           *imageDesc;
+#endif /* __STDC__ */
+{
+   int                 typeImage;
+   char                fileName[1023];
+   PictureScaling      pres;
+   int                 xFrame = 0;
+   int                 yFrame = 0;
+   int                 wFrame, hFrame, w, h;
+   int                 width, height;
+   Drawable            picMask = None;
+   Drawable            myDrawable = None;
+   Picture_Report      status;
+   unsigned long       Bgcolor;
+
+   if (box->BxAbstractBox->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
+     /* the picture is not visible */
+     return;
+
+   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == '\0')
+      return;
+
+   GetPictureFileName (imageDesc->PicFileName, fileName);
+   typeImage = imageDesc->PicType;
+   status = PictureFileOk (fileName, &typeImage);
+   w = 0;
+   h = 0;
+
+   if (status != Supported_Format) {
+      if (TtPrinterDC == NULL) {
+         imageDesc->PicType = 3;
+         pres = RealSize;
+         myDrawable = (*(PictureHandlerTable [GIF_FORMAT].Produce_Picture)) 
+                        (LostPicturePath, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
+	  }
+
+      imageDesc->PicType = -1;
+      wFrame = w = 40;
+      hFrame = h = 40;
+      picMask = None;
+   } else {
+        /* Supported format */
+        imageDesc->PicType = typeImage;
+        pres = imageDesc->PicPresent;
+        if ((typeImage == XBM_FORMAT || typeImage == XPM_FORMAT) && pres == ReScale)
+           pres = imageDesc->PicPresent = RealSize;
+        if (box == NULL) {
+           w = 20;
+           h = 20;
+		} else {
+             w = box->BxWidth;
+             h = box->BxHeight;
+		}
+
+        Bgcolor = ColorPixel (box->BxAbstractBox->AbBackground);
+        if (PictureHandlerTable[typeImage].Produce_Picture != NULL) {
+           /* xFrame and yFrame get the box size if picture is */
+           /* rescaled and receive the position of the picture */
+           if (pres != ReScale || Printing) {
+              xFrame = 0;
+              yFrame = 0;
+		   } else {
+                if (box->BxWidth != 0)
+                   xFrame = box->BxWidth;
+                if (box->BxHeight != 0)
+                   yFrame = box->BxHeight;
+		   }
+           myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture)) 
+                          (fileName, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
+           /* intrinsic width and height */
+           imageDesc->PicWidth = width;
+           imageDesc->PicHeight = height;
+           imageDesc->bgRed   = bgRed;
+           imageDesc->bgGreen = bgGreen;
+           imageDesc->bgBlue  = bgBlue;
+		}
+       
+        if (myDrawable == None) {
+           myDrawable = PictureLogo;
+           imageDesc->PicType = -1;
+           wFrame = w = 40;
+           hFrame = h = 40;
+           picMask = None;
+		} else {
+             if (box != NULL && (w == 0 ||h == 0 )) {
+                /* one of box size is unknown, keep the image size */
+                if (w == 0)
+                   w = wFrame;
+                if (h == 0)
+                   h = hFrame;
+                /* Do you have to extend the clipping */
+                DefClip (frame, box->BxXOrg, box->BxYOrg, box->BxXOrg + w, box->BxYOrg + h);
+                NewDimPicture (box->BxAbstractBox);
+			 }
+		}
+   }
+
+   imageDesc->PicXArea = xFrame;
+   imageDesc->PicYArea = yFrame;
+   imageDesc->PicWArea = wFrame;
+   imageDesc->PicHArea = hFrame;
+
+   if (box->BxType != BoPicture) {
+      /* we don't use mask for background picture till we don't change clipping management */
+      FreePixmap (picMask);
+      picMask = None;
+   }
+   UpdatePictInfo (imageDesc, myDrawable);
+}
+#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------

@@ -550,7 +550,7 @@ View                view;
 
    /* Signale que l'on prend la selection */
    if (document == 0)
-      frame = FrRef[0];
+      frame = (int)FrRef[0];
    else
       frame = GetWindowNumber (document, view);
 #ifndef _WINDOWS

@@ -2381,9 +2381,11 @@ boolean            *removeEl;
    PathBuffer          directoryName;
    FILE               *newFile;
    char                currentFileName[MAX_PATH];	/* nom du fichier principal */
-   char		       cmd[MAX_PATH];
    boolean             found, possibleRef;
    char                c;
+#  ifndef _WINDOWS 
+   char		       cmd[MAX_PATH];
+#  endif /* _WINDOWS */
 
    n[0] = EOS;
    /* on applique la regle selon son type */

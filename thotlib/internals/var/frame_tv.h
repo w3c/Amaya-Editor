@@ -46,11 +46,13 @@ THOT_EXPORT HACCEL       hAccel[MAX_FRAME + 2];
 THOT_EXPORT WNDCLASSEX   RootShell;
 THOT_EXPORT HFONT        DefaultFont; /* default Font                */
 THOT_EXPORT HDC          TtDisplay;
+THOT_EXPORT HDC          TtPrinterDC;
 THOT_EXPORT HPALETTE     TtCmap;      /* Table des couleurs pour Thot  */
 THOT_EXPORT LPLOGPALETTE ptrLogPal;
 THOT_EXPORT HRGN         clipRgn;
 THOT_EXPORT WIN_GC_BLK   TtLineGC;
 THOT_EXPORT boolean      TtIsTrueColor;
+THOT_EXPORT boolean      TtIsPrinterTrueColor;
 #else /* _WINDOWS */
 THOT_EXPORT ThotWidget   RootShell;
 THOT_EXPORT XmFontList   DefaultFont;  /* default Font                */
@@ -69,6 +71,7 @@ THOT_EXPORT ThotGC       TtGraphicGC;	/* Graphic context pour les images      */
 
 THOT_EXPORT ThotWindow TtRootWindow; /* Identification de la fenetre racine 	*/
 THOT_EXPORT int        TtWDepth;	/* Nombre de plans de l'ecran  		*/
+THOT_EXPORT int        TtWPrinterDepth;	/* Nombre de plans de l'ecran  		*/
 THOT_EXPORT char       TtFontName[MAX_FONT * MAX_FONTNAME];/* Name X-Window 	*/
 THOT_EXPORT char       TtPsFontName[MAX_FONT * 8];	/* Name PostScript 	*/
 THOT_EXPORT int        TtFontFrames[MAX_FONT];

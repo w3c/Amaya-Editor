@@ -115,6 +115,8 @@ char              **d;
 	   XFreePixmap (TtDisplay, PicMask);
      }
    return (pixmap);
+#  else  /* _WINDOWS */
+   return (Pixmap) NULL;
 #  endif /* _WINDOWS */
 }
 #endif /* _WIN_PRINT */

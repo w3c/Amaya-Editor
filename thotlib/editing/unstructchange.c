@@ -922,9 +922,11 @@ boolean		    before
 
 #endif /* __STDC__ */
 {
-   PtrElement          pSibling, child;
-   boolean	       ret;
-
+   PtrElement          pSibling;
+   boolean	           ret;
+#  ifndef _WINDOWS 
+   PtrElement          child;
+#  endif /* _WINDOWS */
    ret = FALSE;
    if (before)
       pSibling = pEl->ElPrevious;
