@@ -562,30 +562,30 @@ static void LoadSpellChecker ()
     }
   else
     strcpy (ChkrCorrection[0], ChkrErrWord);
-  for (i = 1; i <= NC; i++)
+  for (i = 0; i < NC; i++)
     {
       pWord = WordsList[i];
       if (pWord >= 0)
 	{
-	  strcpy (ChkrCorrection[i], &DictsList[i]->DictString[pWord]);
-	  Code2Asci (ChkrCorrection[i]);
+	  strcpy (ChkrCorrection[i + 1], &DictsList[i]->DictString[pWord]);
+	  Code2Asci (ChkrCorrection[i + 1]);
 	  switch (type_err)
 	    {
 	    case 1:	/* SmallLettering ou melange */
 	      break;
 	    case 2:
-	      SetCapital (ChkrCorrection[i]);
+	      SetCapital (ChkrCorrection[i + 1]);
 	      break;
 	    case 3:
-	      SetUpperCase (ChkrCorrection[i]);
+	      SetUpperCase (ChkrCorrection[i + 1]);
 	      break;
 	    }
 	  /* convert the string into the dialog encoding if necessary */
 	  if (defaultCharset == UTF_8)
 	    {
-	      word = TtaConvertByteToMbs ((unsigned char *)ChkrCorrection[i],
+	      word = TtaConvertByteToMbs ((unsigned char *)ChkrCorrection[i + 1],
 					  ISO_8859_1);
-	      strcpy (ChkrCorrection[i], (char *)word);
+	      strcpy (ChkrCorrection[i + 1], (char *)word);
 	      TtaFreeMemory (word);
 	    }
 	}
