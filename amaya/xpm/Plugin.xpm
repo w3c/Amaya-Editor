@@ -1,7 +1,7 @@
 /* XPM */
 static char * Plugin_xpm[] = {
 "16 16 5 1",
-" 	c #bfbfbf",
+" 	s None",
 ".	c #ffffff",
 "X	c #1861FFFFA699",
 "o	c #000000",

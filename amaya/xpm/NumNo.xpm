@@ -1,7 +1,7 @@
 /* XPM */
 static char * NumNo_xpm[] = {
 "16 16 5 1",
-" 	c #BFBFBF",
+" 	s None",
 ".	c #DFDFDFDFDFDF",
 "X	c #FFFFFF",
 "o	c #000000",

@@ -3,7 +3,7 @@ static char *Java_xpm[] = {
 /* width height num_colors chars_per_pixel */
 "    16 16       42            1",
 /* colors */
-"  c #bfbfbf",
+"  s None",
 "# c #304d9e",
 "a c #495996",
 "b c #5975b6",

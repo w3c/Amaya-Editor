@@ -1,7 +1,7 @@
 /* XPM */
 static char * I_xpm[] = {
 "16 16 5 1",
-" 	c #BFBFBF",
+" 	s None",
 ".	c #00FF00",
 "X	c #C1FFC1",
 "O	c #767676",

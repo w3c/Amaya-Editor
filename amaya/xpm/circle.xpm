@@ -1,8 +1,8 @@
 /* XPM */
 static char * circle_xpm[] = {
 "24 18 3 1",
-" 	c #FFFFFF",
-".	c #BFBFBF",
+" 	s None",
+".	s None",
 "X	c #000000",
 "                        ",
 " ......................X",

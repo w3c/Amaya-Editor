@@ -1,7 +1,7 @@
 /* XPM */
 static char * Editor_xpm[] = {
 "16 16 4 1",
-" 	c #BFBFBF",
+" 	s None",
 ".	c #B27700",
 "X	c #FFAA00",
 "o	c #000000",

@@ -1,7 +1,7 @@
 /* XPM */
 static char * Graph_xpm[] = {
 "16 16 5 1",
-" 	c #BEFBBEFBBEFB",
+" 	s None",
 ".	c #6969FF",
 "X	c #000000",
 "O	c #00FF00",
