@@ -651,7 +651,7 @@ boolean    GraphicsPRuleChange (event)
  
   attrType.AttrSSchema = elType.ElSSchema;
   /* switch off the current selection */
-  TtaSwitchSelection (doc, mainView, FALSE);
+  /*TtaSwitchSelection (doc, mainView, FALSE);*/
   dispMode = TtaGetDisplayMode (doc);
   /* ask Thot to stop displaying changes made in the document */
   if (dispMode == DisplayImmediately)
@@ -753,7 +753,7 @@ boolean    GraphicsPRuleChange (event)
     }
   TtaSetDisplayMode (doc, dispMode);
    /* switch on the current selection */
-   TtaSwitchSelection (doc, mainView, TRUE);
+   /* TtaSwitchSelection (doc, mainView, TRUE);*/
   return ret; /* let Thot perform normal operation */
 }
 
@@ -975,7 +975,7 @@ int                 construct;
    if (newType.ElTypeNum > 0)
      {
        /* switch off the current selection */
-       TtaSwitchSelection (doc, 1, FALSE);
+       /*TtaSwitchSelection (doc, 1, FALSE);*/
        dispMode = TtaGetDisplayMode (doc);
        /* ask Thot to stop displaying changes made in the document */
        if (dispMode == DisplayImmediately)
@@ -1078,7 +1078,7 @@ int                 construct;
        /* ask Thot to display changes made in the document */
        TtaSetDisplayMode (doc, dispMode);
        /* switch on the current selection */
-       TtaSwitchSelection (doc, 1, TRUE);
+       /*TtaSwitchSelection (doc, 1, TRUE);*/
      }
    TtaSetDocumentModified (doc);
 }
@@ -1112,7 +1112,7 @@ static void         CreateGroup ()
       return;
 
    /* switch off the current selection */
-   TtaSwitchSelection (doc, 1, FALSE);
+   /*TtaSwitchSelection (doc, 1, FALSE);*/
    dispMode = TtaGetDisplayMode (doc);
    /* ask Thot to stop displaying changes made in the document */
    if (dispMode == DisplayImmediately)
@@ -1212,7 +1212,7 @@ static void         CreateGroup ()
    /* ask Thot to display changes made in the document */
    TtaSetDisplayMode (doc, dispMode);
    /* switch off the current selection */
-   TtaSwitchSelection (doc, 1, FALSE);
+   /*TtaSwitchSelection (doc, 1, FALSE);*/
 }
 
 

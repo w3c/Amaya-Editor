@@ -506,6 +506,9 @@ ClickEvent          method;
    /* avoid storing POST forms */
    if (method == CE_FORM_POST)
      return;
+   else if (method == CE_RELATIVE)
+     /* All registered URLs are absolute */
+     method = CE_ABSOLUTE;
 
    /* initialize the history if it has not been done yet */
    if (DocHistoryIndex[doc] < 0 || DocHistoryIndex[doc] >= DOC_HISTORY_SIZE)
@@ -554,7 +557,7 @@ ClickEvent          method;
 
    DocHistory[doc][DocHistoryIndex[doc]].HistUrl = NULL;
    DocHistory[doc][DocHistoryIndex[doc]].form_data = NULL;
-   DocHistory[doc][DocHistoryIndex[doc]].method = CE_FALSE;
+   DocHistory[doc][DocHistoryIndex[doc]].method = CE_ABSOLUTE;
 
    /* set the Forward button off */
    SetArrowButton (doc, FALSE, FALSE);

@@ -432,7 +432,7 @@ Document            doc;
 		   }
 		 /* get the referred document */
 		 targetDocument = GetHTMLDocument (documentURL, form_data,
-				   doc, doc, CE_TRUE, TRUE, 
+				   doc, doc, CE_RELATIVE, TRUE, 
 				   (void *) FollowTheLink_callback, (void *) ctx);
 	       }
 	return (TRUE);

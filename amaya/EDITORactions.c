@@ -82,7 +82,7 @@ View                view;
 	  }
      }
 
-   doc = GetHTMLDocument (tempfile, NULL, 0, 0, CE_FALSE, FALSE, NULL, NULL);
+   doc = GetHTMLDocument (tempfile, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
    ResetStop (doc);
    root = TtaGetMainRoot (doc);
    elType = TtaGetElementType (root);
@@ -826,18 +826,24 @@ View                view;
 #endif /* __STDC__ */
 {
    ElementType         elType;
-   Element             el;
-   int                 firstSelectedChar, i;
+   Element             el, firstEl;
    AttributeType       attrType;
    Attribute           attr;
+   int                 firstChar, i;
+   boolean             displayTableForm;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
      {
+       /* check the selection */
+       displayTableForm = TtaIsSelectionEmpty ();
+       if (displayTableForm)
+	 {
+	 }
        elType.ElTypeNum = HTML_EL_Table;
        TtaCreateElement (elType, document);
        /* get the new Table */
-       TtaGiveFirstSelectedElement (document, &el, &firstSelectedChar, &i);
+       TtaGiveFirstSelectedElement (document, &el, &firstChar, &i);
        elType = TtaGetElementType (el);
        while (elType.ElTypeNum != HTML_EL_Table && el != NULL)
 	 {

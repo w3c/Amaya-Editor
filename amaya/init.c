@@ -937,9 +937,9 @@ View                view;
    CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), docToOpen, BaseDialog, OpenForm, DocSelect, DirSelect, 2);
    if (docToOpen && docToOpen [0] != 0) {
       if (InNewWindow)
-         GetHTMLDocument (docToOpen, NULL, 0, 0, CE_FALSE, NULL, 0, FALSE);
+         GetHTMLDocument (docToOpen, NULL, 0, 0, CE_ABSOLUTE, NULL, 0, FALSE);
       else 
-          GetHTMLDocument (docToOpen, NULL, document, document, CE_FALSE, NULL, 0, TRUE);
+          GetHTMLDocument (docToOpen, NULL, document, document, CE_ABSOLUTE, NULL, 0, TRUE);
    }
 #  endif /* _WINDOWS */
 }
@@ -2158,7 +2158,7 @@ void *context;
     - form_data: the text to be posted.
     - doc: the document which can be removed if not updated.
     - baseDoc: the document which documentPath is relative to.
-    - CE_event: CE_FORM_POST for a post request, CE_TRUE for a double click.
+    - CE_event: CE_FORM_POST for a post request, CE_RELATIVE for a double click.
     - history: record the URL in the browsing history
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2213,7 +2213,7 @@ void               *ctx_cbf;
    /* Extract the target if necessary */
    ExtractTarget (tempdocument, target);
    /* Add the  base content if necessary */
-   if (CE_event == CE_TRUE || CE_event == CE_FORM_GET
+   if (CE_event == CE_RELATIVE || CE_event == CE_FORM_GET
        || CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK)
      NormalizeURL (tempdocument, baseDoc, pathname, documentname, NULL);
    else
@@ -2260,7 +2260,7 @@ void               *ctx_cbf;
    if (ok && newdoc == 0)
      {
        /* document not loaded yet */
-       if ((CE_event == CE_TRUE || CE_event == CE_FORM_GET
+       if ((CE_event == CE_RELATIVE || CE_event == CE_FORM_GET
 	    || CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK)
 	   && !IsW3Path (pathname) 
 	   && !TtaFileExist (pathname))
@@ -2557,9 +2557,9 @@ char               *data;
 		 {
 		   /* load an URL */
 		   if (InNewWindow)
-		     GetHTMLDocument (LastURLName, NULL, 0, 0, CE_FALSE, FALSE, NULL, NULL);
+		     GetHTMLDocument (LastURLName, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
 		   else
-		     GetHTMLDocument (LastURLName, NULL, CurrentDocument, CurrentDocument, CE_FALSE, TRUE, NULL, NULL);
+		     GetHTMLDocument (LastURLName, NULL, CurrentDocument, CurrentDocument, CE_ABSOLUTE, TRUE, NULL, NULL);
 		 }
 	       else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
 		 {
@@ -2571,9 +2571,9 @@ char               *data;
 		   if (TtaFileExist (tempfile))
 		     {
 		       if (InNewWindow)
-			 GetHTMLDocument (tempfile, NULL, 0, 0, CE_FALSE, FALSE, NULL, NULL);
+			 GetHTMLDocument (tempfile, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
 		       else
-			 GetHTMLDocument (tempfile, NULL, CurrentDocument, CurrentDocument, CE_FALSE, TRUE, NULL, NULL);
+			 GetHTMLDocument (tempfile, NULL, CurrentDocument, CurrentDocument, CE_ABSOLUTE, TRUE, NULL, NULL);
 		     }
 		   else
 		     TtaSetStatus (CurrentDocument, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempfile);
@@ -2980,7 +2980,7 @@ char     *docname;
       if (IsW3Path (docname))
 	{
 	  /* it's a remote file */
-	  LoadHTMLDocument (newdoc, docname, NULL, CE_FALSE, 
+	  LoadHTMLDocument (newdoc, docname, NULL, CE_ABSOLUTE, 
 			    tempdoc, DocumentName, NULL, FALSE);
 	}
       else
@@ -2988,7 +2988,7 @@ char     *docname;
 	  /* it's a local file */
 	  tempfile[0] = EOS;
 	  /* load the temporary file */
-	  LoadHTMLDocument (newdoc, tempdoc, NULL, CE_FALSE,
+	  LoadHTMLDocument (newdoc, tempdoc, NULL, CE_ABSOLUTE,
 			    tempfile, DocumentName, NULL, FALSE);
 	  /* change its URL */
 	  TtaFreeMemory (DocumentURLs[newdoc]);

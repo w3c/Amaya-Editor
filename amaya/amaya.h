@@ -61,9 +61,9 @@ typedef void  TTcbf (Document doc, int status, char *urlName,
 #endif
 #endif
 
-/* The different events for a DoubleClick */
+/* The different events to open a new document */
 typedef enum _ClickEvent {
-  CE_FALSE, CE_TRUE, CE_FORM_POST, CE_FORM_GET, CE_HELP, CE_MAKEBOOK
+  CE_ABSOLUTE, CE_RELATIVE, CE_FORM_POST, CE_FORM_GET, CE_HELP, CE_MAKEBOOK
 } ClickEvent;
 
 typedef char        AmayaReadChar ();
