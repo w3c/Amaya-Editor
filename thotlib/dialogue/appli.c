@@ -3265,8 +3265,10 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
 #if defined(_WX) | defined(_GTK)
   ThotEvent           event;
   int                 i;
-  AmayaFrame *        w;
 #endif /* _WX | _GTK */
+#if defined(_WX)
+  ThotFrame           w;
+#endif /* _WX */
 #ifdef _GTK   
   Drawable            drawable;
   ThotWidget          w;
