@@ -1650,6 +1650,7 @@ void *LoadStixFont (int family, int size)
   ----------------------------------------------------------------------*/
 void ChangeFontsetSize (int size, PtrBox box, int frame)
 {
+#ifdef _I18N_
   SpecFont fontset, fontsetbase = box->BxFont;
   char code = box->BxScript;
 
@@ -1673,6 +1674,7 @@ void ChangeFontsetSize (int size, PtrBox box, int frame)
 					    size, size,
 					    frame, TRUE, TRUE);
     }
+#endif /* _I18N_ */
 }
 /*----------------------------------------------------------------------
   GetFontAndIndexFromSpec return the glyph index and the font
