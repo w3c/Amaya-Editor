@@ -1216,9 +1216,9 @@
 </label>
 <label define="AM_PROXY_DOMAIN">
 	<message xml:lang="en">Proxy domain list (e.g., lists.w3.org)</message>
-	<message xml:lang="fr">Ne pas utiliser un proxy avec ces domaines</message>
+	<message xml:lang="fr">Liste des domaines du proxy (e.g., lists.w3.org)</message>
 	<message xml:lang="de">Proxy domain list (e.g., lists.w3.org)</message>
-	<message xml:lang="it">Non usare il proxy su questi domini (es., www.w3.org)</message>
+	<message xml:lang="it">Domini di proxy (es., www.w3.org)</message>
 	<message xml:lang="es">Lista de dominios proxy domain list (e.g., lists.w3.org)</message>
 </label>
 <label define="AM_GENERAL_MENU">

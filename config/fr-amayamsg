@@ -154,7 +154,7 @@
 152 Taille maximale des entrées du cache (Mo)
 153 Configuration du proxy
 154 Proxy HTTP
-155 Ne pas utiliser un proxy avec ces domaines
+155 Liste des domaines du proxy (e.g., lists.w3.org)
 156 Configuration générale
 157 Page de démarrage
 158 Délai des infobulles (ms)

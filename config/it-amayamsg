@@ -154,7 +154,7 @@
 152 Dimensione dell'indice della cache (Mb)
 153 Preferenze sull'uso dei proxy
 154 HTTP proxy (es., http://groucho.marx.edu)
-155 Non usare il proxy su questi domini (es., www.w3.org)
+155 Domini di proxy (es., www.w3.org)
 156 Preferenze generali
 157 Home Page
 158 Ritardo del ToolTip (ms)
