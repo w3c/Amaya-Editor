@@ -2487,6 +2487,23 @@ View view;
 }
 
 /*----------------------------------------------------------------------
+  ConfigAnnot
+  A frontend to the Templates configuration menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ConfigAnnot (Document doc, View view)
+#else 
+void ConfigAnnot (doc, view)
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#ifdef ANNOTATIONS
+   AnnotConfMenu (doc, view);
+#endif /* ANNOTATIONS */
+}
+
+/*----------------------------------------------------------------------
   AnnotateDocument
   Frontend to the function that creates an annotation
   ----------------------------------------------------------------------*/

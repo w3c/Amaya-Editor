@@ -79,13 +79,12 @@ static void BuildProfileSelector();
 #define mTemplatesEmpty1        3
 #define MAX_TEMPLATESMENU_DLG   4
 
+#define AnnotMenu               1
+#define mAnnotUser              2
+#define mAnnotPostServer        3
+#define mAnnotServers           4
+#define mToggleAnnot            5
+#define mAnnotAutoLoad          6
+#define MAX_ANNOTMENU_DLG       7
+
 #endif /* _MENUCONF.h */
-
-
-
-
-
-
-
-
-

@@ -3510,6 +3510,8 @@ void               *ctx_cbf;
 	       else if (CE_event == CE_ANNOT)
 		 {
 		   newdoc = InitDocView (doc, documentname, docAnnot, 0, FALSE);
+		   /* we're downloading an annotation, fix the accept_header
+		      (thru the content_type variable) to application/rdf */
 		   content_type = TEXT("application/rdf");
 		 }
 #endif /* ANNOTATIONS */

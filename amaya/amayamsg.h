@@ -207,4 +207,9 @@ int                 AMAYA;
 #define AM_COLOR_PALETTE	      195
 #define AM_LANNEG_MENU		      196
 #define AM_XML_ERROR		      197
-#define AMAYA_MSG_MAX                 198
+#define AM_ANNOT_CONF_MENU            198
+#define AM_ANNOT_USER                 199
+#define AM_ANNOT_POST_SERVER          200
+#define AM_ANNOT_SERVERS              201
+#define AM_ANNOT_AUTOLOAD             202
+#define AMAYA_MSG_MAX                 203

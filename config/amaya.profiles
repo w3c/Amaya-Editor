@@ -92,6 +92,7 @@ ShowMapAreas
 +templates
 +views
 +svg
++annot
 
 ################# AMAYA FUNCTIONS
 [amayabase]
@@ -350,3 +351,4 @@ LoadAnnotations
 PostAnnotation
 ShowAnnotations
 CustomQuery
+ConfigAnnot

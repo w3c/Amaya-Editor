@@ -255,8 +255,30 @@ static int      TemplatesBase;
 static CHAR_T   TemplatesUrl [MAX_LENGTH];
 static int      CurrentProfile = -1;
 
+#ifdef ANNOTATIONS
+/* Annotation menu option */
+#ifdef _WINDOWS
+static HWND     AnnotHwnd = NULL;
+static AM_WIN_MenuText WIN_AnnotMenuText[] = 
+{
+	{AM_INIT_ALL, AM_ANNOT_CONF_MENU},
+	{IDC_ANNOTUSER, AM_ANNOT_USER},
+	{IDC_ANNOTPOSTSERVER, AM_ANNOT_POSTSERVER},
+	{IDC_ANNOTSERVERS, AM_ANNOT_SERVERS},
+	{IDC_ANNOTAUTOLOAD, AM_ANNOT_AUTOLOAD},
+	{0, 0}
+};
+#endif /* _WINDOWS */
+static int      AnnotBase;
+static CHAR_T   AnnotUser [MAX_LENGTH];
+static CHAR_T   AnnotPostServer [MAX_LENGTH];
+static CHAR_T   AnnotServers [MAX_LENGTH];
+static ThotBool AnnotAutoLoad;
+#endif /* ANNOTATIONS */
+
 #include "query_f.h"
 #include "init_f.h"
+
 
 
 /*
@@ -354,6 +376,15 @@ void InitAmayaDefEnv ()
   TtaSetDefEnvString ("CACHE_PROTECTED_DOCS", TEXT("yes"), FALSE);
   TtaSetDefEnvString ("CACHE_DISCONNECTED_MODE", TEXT("no"), FALSE);
   TtaSetDefEnvString ("CACHE_EXPIRE_IGNORE", TEXT("no"), FALSE);
+
+  /* annotations */
+#ifdef ANNOTATIONS
+  TtaSetDefEnvString ("ANNOT_USER", TEXT(""), FALSE);
+  TtaSetDefEnvString ("ANNOT_POST_SERVER", TEXT("locahost"), FALSE);
+  TtaSetDefEnvString ("ANNOT_SERVERS", TEXT("localhost"), FALSE);
+  TtaSetDefEnvString ("ANNOT_AUTOLOAD", TEXT("no"), FALSE);
+#endif /* ANNOTATIONS */
+
   /* appearance */
 
 }
@@ -3889,6 +3920,335 @@ STRING              pathname;
 #endif /* _GTK */
 }
 
+#ifdef ANNOTATIONS
+/*********************
+** Annotations configuration menu
+***********************/
+/*----------------------------------------------------------------------
+  GetAnnotConf
+  Makes a copy of the current registry annotation values
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void GetAnnotConf (void)
+#else
+static void GetAnnotConf ()
+#endif /* __STDC__ */
+{
+  GetEnvString ("ANNOT_USER", AnnotUser);
+  GetEnvString ("ANNOT_POST_SERVER", AnnotPostServer);
+  GetEnvString ("ANNOT_SERVERS", AnnotServers);
+  TtaGetEnvBoolean ("ANNOT_AUTOLOAD", &AnnotAutoLoad);
+}
+
+/*----------------------------------------------------------------------
+  SetAnnotConf
+  Updates the registry annotation values
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void SetAnnotConf (void)
+#else
+static void SetAnnotConf ()
+#endif /* __STDC__ */
+{
+  TtaSetEnvString ("ANNOTP_USER", AnnotUser, TRUE);
+  TtaSetEnvString ("ANNOTP_POST_SERVER", AnnotPostServer, TRUE);
+  TtaSetEnvString ("ANNOT_SERVERS", AnnotServers, TRUE);
+  TtaSetEnvBoolean ("ANNOT_AUTOLOAD", AnnotAutoLoad, TRUE);
+
+  TtaSaveAppRegistry ();
+}
+
+/*----------------------------------------------------------------------
+  GetDefaultAnnotConf
+  Gets the registry default annotation values.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void GetDefaultAnnotConf ()
+#else
+static void GetDefaultAnnotConf ()
+#endif /*__STDC__*/
+{
+  /* read the default values */
+  GetDefEnvString ("ANNOT_USER", AnnotUser);
+  GetDefEnvString ("ANNOT_POST_SERVER", AnnotPostServer);
+  GetDefEnvString ("ANNOT_SERVERS", AnnotServers);
+  TtaGetDefEnvBoolean ("ANNOT_AUTOLOAD", &AnnotAutoLoad);
+}
+
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_RefreshAnnotMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_RefreshAnnotMenu (HWND hwnDlg)
+#else
+void WIN_RefreshAnnotMenu (hwnDlg)
+HWND hwnDlg;
+#endif /* __STDC__ */
+{
+  SetDlgItemText (hwnDlg, IDC_ANNOTUSER, AnnotUser);
+  SetDlgItemText (hwnDlg, IDC_ANNOT_POST_SERVER, AnnotPostServer);
+  SetDlgItemText (hwnDlg, IDC_ANNOT_SERVERS, AnnotServers);
+  CheckDlgButton (hwnDlg, IDC_ANNOTAUTOLOAD, (AnnotAutoLoad) 
+		  ? BST_CHECKED : BST_UNCHECKED);
+}
+#else /* WINDOWS */
+/*----------------------------------------------------------------------
+  RefreshAnnotyMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void RefreshAnnotMenu ()
+#else
+static void RefreshAnnotMenu ()
+#endif /* __STDC__ */
+{
+  /* set the menu entries to the current values */
+  TtaSetTextForm (AnnotBase + mAnnotUser, AnnotUser);
+  TtaSetTextForm (AnnotBase + mAnnotPostServer, AnnotPostServer);
+  TtaSetTextForm (AnnotBase + mAnnotServers, AnnotServers);
+  TtaSetToggleMenu (AnnotBase + mToggleAnnot, 0, AnnotAutoLoad);
+}
+#endif /* !_WINDOWS */
+
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_AnnotDlgProc
+  Windows callback for the annot menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK WIN_AnnotDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
+				     LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK WIN_AnnotDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      AnnotHwnd = hwnDlg;
+      /* initialize the menu text */
+      WIN_SetMenuText (hwnDlg, WIN_AnnotMenuText);
+      /* write the current values in the dialog entries */
+      WIN_RefreshAnnotMenu (hwnDlg);
+      break;
+      
+    case WM_CLOSE:
+    case WM_DESTROY:
+      /* reset the status flag */
+      AnnotHwnd = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+
+    case WM_COMMAND:
+      if (HIWORD (wParam) == EN_UPDATE)
+	{
+          switch (LOWORD (wParam))
+	    {
+	    case IDC_ANNOTUSER:
+	      GetDlgItemText (hwnDlg, IDC_ANNOTUSER, AnnotUser,
+			      sizeof (AnnotUsere) - 1);
+	      break;
+	    case IDC_ANNOTPOSTSERVER:
+	      GetDlgItemText (hwnDlg, IDC_ANNOTPOSTSERVER, AnnotPostServer,
+			      sizeof (AnnotPostServer) - 1);
+	      break;
+	    case IDC_ANNOTSERVERS:
+	      GetDlgItemText (hwnDlg, IDC_ANNOTSERVERS, AnnotServers,
+			      sizeof (AnnotServers) - 1);
+	      break;
+	    }
+	}
+      switch (LOWORD (wParam))
+	{
+	  /* switch buttons */
+	case IDC_ANNOTAUTOLOAD:
+	  AnnotAutoLoad = !AnnotAutoLoad;
+	  break;
+
+	  /* action buttons */
+	case ID_APPLY:
+	  SetAnnotConf ();	  
+	  /* reset the status flag */
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	case ID_DONE:
+	  /* reset the status flag */
+	  AnnotHwnd = NULL;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	case ID_DEFAULTS:
+	  /* always signal this as modified */
+	  GetDefaultAnnotConf ();
+	  WIN_RefreshAnnotMenu (hwnDlg);
+	  break;
+	}
+      break;	     
+    default: return FALSE;
+    }
+  return TRUE;
+}
+#else /* _WINDOWS */
+/*----------------------------------------------------------------------
+  AnnotCallbackDialog
+  callback of the annotation configuration menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         AnnotCallbackDialog (int ref, int typedata, STRING data)
+#else
+static void         AnnotCallbackDialog (ref, typedata, data)
+int                 ref;
+int                 typedata;
+STRING              data;
+
+#endif
+{
+  int                 val;
+
+  if (ref == -1)
+    {
+      /* removes the annot conf menu */
+      TtaDestroyDialogue (AnnotBase + AnnotMenu);
+    }
+  else
+    {
+      /* has the user changed the options? */
+      val = (int) data;
+      switch (ref - AnnotBase)
+	{
+	case AnnotMenu:
+	  switch (val) 
+	    {
+	    case 0:
+	      TtaDestroyDialogue (ref);
+	      break;
+	    case 1:
+	      SetAnnotConf ();
+	      TtaDestroyDialogue (ref);
+	      break;
+	    case 2:
+	      GetDefaultAnnotConf ();
+	      RefreshAnnotMenu ();
+	      break;
+	    default:
+	      break;
+	    }
+	  break;
+
+	case mAnnotUser:
+	  if (data)
+	    ustrcpy (AnnotUser, data);
+	  else
+	    AnnotUser [0] = EOS;
+	  break;
+
+	case mAnnotPostServer:
+	  if (data)
+	    ustrcpy (AnnotPostServer, data);
+	  else
+	    AnnotPostServer [0] = EOS;
+	  break;
+
+	case mAnnotServers:
+	  if (data)
+	    ustrcpy (AnnotServers, data);
+	  else
+	    AnnotServers [0] = EOS;
+	  break;
+
+	case mToggleAnnot:
+	  switch (val) 
+	    {
+	    case 0:
+	      AnnotAutoLoad = !AnnotAutoLoad;
+	      break;
+	    }
+	  break;
+
+	default:
+	  break;
+	}
+    }
+}
+#endif /* !_WINDOWS */
+
+/*----------------------------------------------------------------------
+  AnnotConfMenu
+  Build and display the Conf Menu dialog box and prepare for input.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         AnnotConfMenu (Document document, View view)
+#else
+void         AnnotConfMenu (document, view)
+Document            document;
+View                view;
+#endif
+{
+
+#ifndef _WINDOWS
+   int              i;
+
+   /* Create the dialogue form */
+   i = 0;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
+   i += ustrlen (&s[i]) + 1;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
+
+   TtaNewSheet (AnnotBase + AnnotMenu, 
+		TtaGetViewFrame (document, view),
+		TtaGetMessage (AMAYA, AM_ANNOT_CONF_MENU),
+		2, s, FALSE, 6, 'L', D_DONE);
+
+   TtaNewTextForm (AnnotBase + mAnnotUser,
+		   AnnotBase + AnnotMenu,
+		   TtaGetMessage (AMAYA, AM_ANNOT_USER),
+		   20,
+		   1,
+		   TRUE);
+   TtaNewTextForm (AnnotBase + mAnnotPostServer,
+		   AnnotBase + AnnotMenu,
+		   TtaGetMessage (AMAYA, AM_ANNOT_POST_SERVER),
+		   20,
+		   1,
+		   TRUE);
+   TtaNewTextForm (AnnotBase + mAnnotServers,
+		   AnnotBase + AnnotMenu,
+		   TtaGetMessage (AMAYA, AM_ANNOT_SERVERS),
+		   20,
+		   1,
+		   TRUE);
+   usprintf (s, "B%s%c",
+	     TtaGetMessage (AMAYA, AM_ANNOT_AUTOLOAD), EOS);
+   TtaNewToggleMenu (AnnotBase + mToggleAnnot,
+		     AnnotBase + AnnotMenu,
+		     NULL,
+		     1,
+		     s,
+		     NULL,
+		     FALSE);
+#endif /* !_WINDOWS */
+
+   /* load and display the current values */
+   GetAnnotConf ();
+#ifndef _WINDOWS
+   RefreshAnnotMenu ();
+  /* display the menu */
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (AnnotBase + AnnotMenu, TRUE);
+#else
+  if (!AnnotHwnd)
+    /* only activate the menu if it isn't active already */
+     DialogBox (hInstance, MAKEINTRESOURCE (ANNOTMENU), NULL, (DLGPROC) WIN_AnnotDlgProc);
+  else
+     SetFocus (AnnotHwnd);
+#endif /* !_WINDOWS */
+}
+#endif /* ANNOTATIONS */
 
 /*----------------------------------------------------------------------
    InitConfMenu: initialisation, called during Amaya initialisation
@@ -3915,13 +4275,10 @@ void                InitConfMenu ()
 			       MAX_PROFILEMENU_DLG);
   TemplatesBase = TtaSetCallback (TemplatesCallbackDialog,
 			       MAX_LANNEGMENU_DLG);
+#ifdef ANNOTATIONS
+  AnnotBase = TtaSetCallback (AnnotCallbackDialog,
+			      MAX_ANNOTMENU_DLG);
+#endif /* ANNOTATIONS */
 #endif /* !_WINDOWS */
 }
-
-
-
-
-
-
-
 
