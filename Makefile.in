@@ -351,10 +351,13 @@ redland_config: @MAKEREDLAND@ force
 		        --cache-file=$$localdir/config.cache; \
 		$(ECHO) "redland is configured" ; \
 	        cd raptor ; \
-		echo "Patching the raptor_config.h file to avoid including glib2-0" ; \
-	        $(CP) raptor_config.h raptor_config.h.orig ; \
-	        $(SED) "s/\(\#define HAVE_G_UTF8_NORMALIZE 1\)/\/* \1 *\//" \
-			raptor_config.h.orig > raptor_config.h ; \
+		if [ ! -e raptor_config.h.org ] ; then \
+		  $(ECHO) "Patching the raptor_config.h file to avoid including glib2-0" ; \
+	          $(CP) raptor_config.h raptor_config.h.orig ; \
+	          $(SED) "s/\(\#define HAVE_G_UTF8_NORMALIZE 1\)/\/* \1 *\//" \
+			  raptor_config.h.orig > raptor_config.h ; \
+		  $(ECHO) "Raptor is patched" ; \
+		fi ; \
 	  fi)
 
 
