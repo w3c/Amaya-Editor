@@ -19,10 +19,10 @@ extern void ANNOT_InitDocumentMeta ( Document doc,
                                      CHAR_T *title );
 extern void ANNOT_InitDocumentBody ( Document docAnnot,
                                      CHAR_T *title );
-extern Element ANNOT_AddThreadItem ( Document docAnnot,
-                                     Element root,
-                                     ThotBool AsSibling );
-extern void ANNOT_InitDocumentThread ( Document docAnnot );
+extern Element ANNOT_NewThreadItem ( Document doc,
+                                     AnnotMeta *annot );
+extern Element ANNOT_AddThreadItem ( Document doc,
+                                     AnnotMeta *annot );
 extern void ANNOT_InitDocumentStructure ( Document doc,
                                           Document docAnnot,
                                           AnnotMeta *annot,
@@ -46,10 +46,10 @@ extern void ANNOT_InitDocumentMeta (/* Document doc,
                                        CHAR_T *title */);
 extern void ANNOT_InitDocumentBody (/* Document docAnnot,
                                        CHAR_T *title */);
-extern Element ANNOT_AddThreadItem (/* Document docAnnot,
-                                       Element root,
-                                       ThotBool AsSibling */);
-extern void ANNOT_InitDocumentThread (/* Document docAnnot */);
+extern Element ANNOT_NewThreadItem (/* Document doc,
+                                       AnnotMeta *annot */);
+extern Element ANNOT_AddThreadItem (/* Document doc,
+                                       AnnotMeta *annot */);
 extern void ANNOT_InitDocumentStructure (/* Document doc,
                                             Document docAnnot,
                                             AnnotMeta *annot,

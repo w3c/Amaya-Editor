@@ -315,14 +315,20 @@ RULES
 
  TI_Title:
 	BEGIN
+	IN Links_view
+	   Visibility: Thread_visibility;
 	END;
 
  TI_Date:
 	BEGIN
+	IN Links_view
+	   Visibility: Thread_visibility;
 	END;
 
  TI_Author:
 	BEGIN
+	IN Links_view
+	   Visibility: Thread_visibility;
 	END;
 
  TI_Type:

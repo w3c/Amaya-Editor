@@ -653,7 +653,7 @@ void ANNOT_Load (Document doc, View view)
   ** To do: protect for annot/annot agains the user putting an annotation
   on other parts of the annotation than the body
   -----------------------------------------------------------------------*/
-void ANNOT_Create (Document doc, View view, ThotBool useDocRoot)
+void ANNOT_Create (Document doc, View view, ThotBool useDocRoot, ThotBool isReplyTo)
 {
   Document    doc_annot;
   AnnotMeta  *annot;
@@ -684,18 +684,6 @@ void ANNOT_Create (Document doc, View view, ThotBool useDocRoot)
 		"You cannot annotate a modified document. Please save it first.");
       return;
     }
-
-#ifdef ANNOT_ON_ANNOT
-  /* @@ JK Exp stuff to add a new thread item */
-#if 0
-  else if (DocumentTypes[doc] == docAnnot) 
-    {
-      ANNOT_AddThreadItem (doc, NULL, TRUE);
-      return;
-    }
-  /* @@ */
-#endif 
-#endif /* ANNOT_ON_ANNOT */
 
   if (!annotUser || *annotUser == EOS)
     {
@@ -758,7 +746,16 @@ void ANNOT_Create (Document doc, View view, ThotBool useDocRoot)
       XPointer_select (ctx);
       XPointer_free (ctx);
     }
-  
+
+#ifdef ANNOT_ON_ANNOT
+  if (DocumentTypes[doc] == docAnnot && isReplyTo)
+    {
+      annot->in_reply_to = TRUE;
+      /* ANNOT_AddThreadItem (doc, annot); */
+      ANNOT_AddThreadItem (2, annot);
+    }
+#endif /* ANNOT_ON_ANNOT */
+
 #if 0
   /* ready for primetime, but do we want to do it or highlight
      the annotated text? */

@@ -93,7 +93,14 @@ typedef struct _AnnotMeta {
 		       to the body (only used for local files for the moment */
   CHAR_T *name;  /* the value of the name tag added to the source document 
 		  for making a reverse link */
+  ThotBool in_reply_to;     /* if the annotation is a reply, this field gets
+			       the URL of the annotation we're replying to */
 } AnnotMeta;
+
+typedef struct _AnnotThread {
+  AnnotMeta *annotation;
+  AnnotMeta *in_reply_to;
+} AnnotThread;
 
 /* the different kind of annotation searches we can do in an
    an annotation metadata list */
