@@ -137,7 +137,8 @@ boolean             CloseADocument (Document document, Document docform, View vi
 #else  /* __STDC__ */
 boolean             CloseADocument (document, docform, viewform)
 Document            document;
-View                view;
+Document            docform;
+View                viewform;
 
 #endif /* __STDC__ */
 {
