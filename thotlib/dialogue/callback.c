@@ -8,13 +8,10 @@
 #undef EXPORT
 #define EXPORT extern
 #include "edit.var"
+#include "appevents.var"
 
 #include "readstr_f.h"
 #include "callbackinit_f.h"
-
-/* Global variable pointing to the list of action-definitions. */
-extern PtrEventsSet applicationList;
-extern PtrEventsSet applicationEditor;
 
 /* FUNCTIONS FOR GENERATING THE ACTION-LISTS */
 #ifdef __STDC__
@@ -28,15 +25,15 @@ PtrElement          pEl;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ExecuteAction looks for the concerned action in schemas.        | */
-/* |            It returns TRUE if the executed action takes            | */
-/* |            place of the editor action else it returns FALSE.       | */
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------
+   CallAction looks for the concerned action in event list.
+   It returns TRUE if the event action takes place of the editor action
+   else it returns FALSE.
+ ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      ExecuteAction (NotifyEvent * notifyEvent, APPevent event, boolean pre, int type, Element element, PtrSSchema schStruct)
+static boolean      CallAction (NotifyEvent * notifyEvent, APPevent event, boolean pre, int type, Element element, PtrSSchema schStruct)
 #else  /* __STDC__ */
-static boolean      ExecuteAction (notifyEvent, event, pre, type, element, schStruct)
+static boolean      CallAction (notifyEvent, event, pre, type, element, schStruct)
 NotifyEvent        *notifyEvent;
 APPevent            event;
 boolean             pre;
@@ -45,40 +42,40 @@ Element             element;
 PtrSSchema        schStruct;
 #endif /* __STDC__ */
 {
-  PtrActionEvent      pactevent;
-  PtrEventsSet        appliActions;
+  PtrActionEvent      pActEvent;
+  PtrEventsSet        eventsSet;
   boolean             status;
-  Proc                proctodo;
-  Func                functodo;
+  Proc                procEvent;
+  Func                funcEvent;
 
-  proctodo = NULL;
-  functodo = NULL;
+  procEvent = NULL;
+  funcEvent = NULL;
 
-  /* See all actions linked with this event in different schemas */
-  while (schStruct != NULL && proctodo == NULL && functodo == NULL)
+  /* See all actions linked with this event in different event lists */
+  while (schStruct != NULL && procEvent == NULL && funcEvent == NULL)
     {
-      appliActions = schStruct->SsActionList;
-      if (appliActions != NULL)
+      eventsSet = schStruct->SsActionList;
+      if (eventsSet != NULL)
 	{
 	  /* take the concerned actions list */
-	  pactevent = appliActions->EvSList[event];
-	  while (pactevent != NULL)
+	  pActEvent = eventsSet->EvSList[event];
+	  while (pActEvent != NULL)
 	    {
-	      if (pactevent->AEvPre == pre && (pactevent->AEvType == 0 || pactevent->AEvType == type))
+	      if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
 		{
 		  if (pre)
-		    functodo = (Func) pactevent->AEvAction->ActAction;
+		    funcEvent = (Func) pActEvent->AEvAction->ActAction;
 		  else
-		    proctodo = pactevent->AEvAction->ActAction;
-		  pactevent = NULL;	/* end of research */
+		    procEvent = pActEvent->AEvAction->ActAction;
+		  pActEvent = NULL;	/* end of research */
 		}
 	      else
-		pactevent = pactevent->AEvNext;	/* continue */
+		pActEvent = pActEvent->AEvNext;	/* continue */
 	    }
 	}
       
       /* See in the parent schema */
-      if (proctodo == NULL && functodo == NULL)
+      if (procEvent == NULL && funcEvent == NULL)
 	{
 	  status = TRUE;	/* still in the same schema */
 	  if (element != 0)
@@ -99,36 +96,36 @@ PtrSSchema        schStruct;
     }
   
   /* See all actions linked with this event in EDITOR application */
-  if (proctodo == NULL && functodo == NULL)
+  if (procEvent == NULL && funcEvent == NULL)
     {
-      appliActions = applicationEditor;
-      if (appliActions != NULL)
+      eventsSet = EditorEvents;
+      if (eventsSet != NULL)
 	{
 	  /* take the concerned actions list */
-	  pactevent = appliActions->EvSList[event];
-	  while (pactevent != NULL)
+	  pActEvent = eventsSet->EvSList[event];
+	  while (pActEvent != NULL)
 	    {
-	      if (pactevent->AEvPre == pre && (pactevent->AEvType == 0 || pactevent->AEvType == type))
+	      if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
 		{
 		  if (pre)
-		    functodo = (Func) pactevent->AEvAction->ActAction;
+		    funcEvent = (Func) pActEvent->AEvAction->ActAction;
 		  else
-		    proctodo = pactevent->AEvAction->ActAction;
-		  pactevent = NULL;	/* end of research */
+		    procEvent = pActEvent->AEvAction->ActAction;
+		  pActEvent = NULL;	/* end of research */
 		}
 	      else
-		pactevent = pactevent->AEvNext;
+		pActEvent = pActEvent->AEvNext;
 	    }
 	}
     }
   
   status = FALSE;
-  if (functodo != NULL || proctodo != NULL)
+  if (funcEvent != NULL || procEvent != NULL)
     {
-      if (functodo != NULL)
-	status = (*functodo) (notifyEvent);
+      if (funcEvent != NULL)
+	status = (*funcEvent) (notifyEvent);
       else
-	(*proctodo) (notifyEvent);
+	(*procEvent) (notifyEvent);
     }
   return status;
 }
@@ -156,7 +153,7 @@ boolean             pre;
      {
 	element = notifyAttr->element;
 	schStruct = (PtrSSchema) ((notifyAttr->attributeType).AttrSSchema);
-	return ExecuteAction ((NotifyEvent *) notifyAttr, notifyAttr->event, pre,
+	return CallAction ((NotifyEvent *) notifyAttr, notifyAttr->event, pre,
 		 notifyAttr->attributeType.AttrTypeNum, element, schStruct);
      }
    else
@@ -295,5 +292,5 @@ boolean             pre;
 	       break;
 	 }
 
-   return ExecuteAction (notifyEvent, notifyEvent->event, pre, elType, element, schStruct);
+   return CallAction (notifyEvent, notifyEvent->event, pre, elType, element, schStruct);
 }

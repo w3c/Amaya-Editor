@@ -1015,8 +1015,8 @@ PtrDocument         pDoc;
    PtrAttribute         pAttr;
    PtrPRule        pR;
    PtrAbstractBox             pAbbox1;
-   AbPosition        *pPavP1;
-   AbDimension       *pPavD1;
+   AbPosition        *pPosAb;
+   AbDimension       *pDimAb;
 
 #ifdef __COLPAGE__
    boolean             bool;
@@ -1027,13 +1027,13 @@ PtrDocument         pDoc;
    pAbbox1 = pAb;
    if (pAbbox1->AbVertRef.PosAbRef == pRef)
      {
-	pPavP1 = &pAbbox1->AbVertRef;
+	pPosAb = &pAbbox1->AbVertRef;
 	/* prend d'abord la regle standard */
-	pPavP1->PosEdge = VertRef;
-	pPavP1->PosRefEdge = VertRef;
-	pPavP1->PosDistance = 0;
-	pPavP1->PosAbRef = NULL;
-	pPavP1->PosUserSpecified = FALSE;
+	pPosAb->PosEdge = VertRef;
+	pPosAb->PosRefEdge = VertRef;
+	pPosAb->PosDistance = 0;
+	pPosAb->PosAbRef = NULL;
+	pPosAb->PosUserSpecified = FALSE;
 	pR = LaRegle (pDoc, pAb, &pSPR, PtVertRef, TRUE, &pAttr);
 #ifdef __COLPAGE__
 	appl = Applique (pR, pSPR, pAb, pDoc, pAttr, &bool);
@@ -1045,13 +1045,13 @@ PtrDocument         pDoc;
      }
    if (pAbbox1->AbHorizRef.PosAbRef == pRef)
      {
-	pPavP1 = &pAbbox1->AbHorizRef;
+	pPosAb = &pAbbox1->AbHorizRef;
 	/* prend d'abord la regle standard */
-	pPavP1->PosEdge = HorizRef;
-	pPavP1->PosRefEdge = HorizRef;
-	pPavP1->PosDistance = 0;
-	pPavP1->PosAbRef = NULL;
-	pPavP1->PosUserSpecified = FALSE;
+	pPosAb->PosEdge = HorizRef;
+	pPosAb->PosRefEdge = HorizRef;
+	pPosAb->PosDistance = 0;
+	pPosAb->PosAbRef = NULL;
+	pPosAb->PosUserSpecified = FALSE;
 	pR = LaRegle (pDoc, pAb, &pSPR, PtHorizRef, TRUE, &pAttr);
 #ifdef __COLPAGE__
 	(void) Applique (pR, pSPR, pAb, pDoc, pAttr, &bool);
@@ -1063,14 +1063,14 @@ PtrDocument         pDoc;
      }
    if (pAbbox1->AbHeight.DimIsPosition)
      {
-	pPavP1 = &pAbbox1->AbHeight.DimPosition;
-	if (pPavP1->PosAbRef == pRef)
+	pPosAb = &pAbbox1->AbHeight.DimPosition;
+	if (pPosAb->PosAbRef == pRef)
 	  {
-	     pPavP1->PosEdge = Top;
-	     pPavP1->PosRefEdge = Top;
-	     pPavP1->PosDistance = 0;
-	     pPavP1->PosAbRef = NULL;
-	     pPavP1->PosUserSpecified = FALSE;
+	     pPosAb->PosEdge = Top;
+	     pPosAb->PosRefEdge = Top;
+	     pPosAb->PosDistance = 0;
+	     pPosAb->PosAbRef = NULL;
+	     pPosAb->PosUserSpecified = FALSE;
 	     pR = LaRegle (pDoc, pAb, &pSPR, PtHeight, TRUE, &pAttr);
 #ifdef __COLPAGE__
 	     (void) Applique (pR, pSPR, pAb, pDoc, pAttr, &bool);
@@ -1087,12 +1087,12 @@ PtrDocument         pDoc;
      }
    else if (pAbbox1->AbHeight.DimAbRef == pRef)
      {
-	pPavD1 = &pAbbox1->AbHeight;
-	pPavD1->DimValue = 0;
-	pPavD1->DimAbRef = NULL;
-	pPavD1->DimUnit = UnRelative;
-	pPavD1->DimSameDimension = TRUE;
-	pPavD1->DimUserSpecified = FALSE;
+	pDimAb = &pAbbox1->AbHeight;
+	pDimAb->DimValue = 0;
+	pDimAb->DimAbRef = NULL;
+	pDimAb->DimUnit = UnRelative;
+	pDimAb->DimSameDimension = TRUE;
+	pDimAb->DimUserSpecified = FALSE;
 	pR = LaRegle (pDoc, pAb, &pSPR, PtHeight, TRUE, &pAttr);
 #ifdef __COLPAGE__
 	(void) Applique (pR, pSPR, pAb, pDoc, pAttr, &bool);
@@ -1104,15 +1104,15 @@ PtrDocument         pDoc;
      }
    if (pAbbox1->AbWidth.DimIsPosition)
      {
-	pPavP1 = &pAbbox1->AbWidth.DimPosition;
-	if (pPavP1->PosAbRef == pRef)
+	pPosAb = &pAbbox1->AbWidth.DimPosition;
+	if (pPosAb->PosAbRef == pRef)
 	  {
-	     pPavP1->PosEdge = Left;
-	     pPavP1->PosRefEdge = Left;
-	     pPavP1->PosDistance = 0;
-	     pPavP1->PosAbRef = NULL;
+	     pPosAb->PosEdge = Left;
+	     pPosAb->PosRefEdge = Left;
+	     pPosAb->PosDistance = 0;
+	     pPosAb->PosAbRef = NULL;
 	     pR = LaRegle (pDoc, pAb, &pSPR, PtWidth, TRUE, &pAttr);
-	     pPavP1->PosUserSpecified = FALSE;
+	     pPosAb->PosUserSpecified = FALSE;
 #ifdef __COLPAGE__
 	     (void) Applique (pR, pSPR, pAb, pDoc, pAttr, &bool);
 #else  /* __COLPAGE__ */
@@ -1128,12 +1128,12 @@ PtrDocument         pDoc;
      }
    else if (pAbbox1->AbWidth.DimAbRef == pRef)
      {
-	pPavD1 = &pAbbox1->AbWidth;
-	pPavD1->DimValue = 0;
-	pPavD1->DimAbRef = NULL;
-	pPavD1->DimUnit = UnRelative;
-	pPavD1->DimSameDimension = TRUE;
-	pPavD1->DimUserSpecified = FALSE;
+	pDimAb = &pAbbox1->AbWidth;
+	pDimAb->DimValue = 0;
+	pDimAb->DimAbRef = NULL;
+	pDimAb->DimUnit = UnRelative;
+	pDimAb->DimSameDimension = TRUE;
+	pDimAb->DimUserSpecified = FALSE;
 	pR = LaRegle (pDoc, pAb, &pSPR, PtWidth, TRUE, &pAttr);
 #ifdef __COLPAGE__
 	(void) Applique (pR, pSPR, pAb, pDoc, pAttr, &bool);
@@ -1145,12 +1145,12 @@ PtrDocument         pDoc;
      }
    if (pAbbox1->AbVertPos.PosAbRef == pRef)
      {
-	pPavP1 = &pAbbox1->AbVertPos;
-	pPavP1->PosEdge = Top;
-	pPavP1->PosRefEdge = Top;
-	pPavP1->PosDistance = 0;
-	pPavP1->PosAbRef = NULL;
-	pPavP1->PosUserSpecified = FALSE;
+	pPosAb = &pAbbox1->AbVertPos;
+	pPosAb->PosEdge = Top;
+	pPosAb->PosRefEdge = Top;
+	pPosAb->PosDistance = 0;
+	pPosAb->PosAbRef = NULL;
+	pPosAb->PosUserSpecified = FALSE;
 	pR = LaRegle (pDoc, pAb, &pSPR, PtVertPos, TRUE, &pAttr);
 #ifdef __COLPAGE__
 	(void) Applique (pR, pSPR, pAb, pDoc, pAttr, &bool);
@@ -1167,12 +1167,12 @@ PtrDocument         pDoc;
      }
    if (pAbbox1->AbHorizPos.PosAbRef == pRef)
      {
-	pPavP1 = &pAbbox1->AbHorizPos;
-	pPavP1->PosEdge = Left;
-	pPavP1->PosRefEdge = Left;
-	pPavP1->PosDistance = 0;
-	pPavP1->PosAbRef = NULL;
-	pPavP1->PosUserSpecified = FALSE;
+	pPosAb = &pAbbox1->AbHorizPos;
+	pPosAb->PosEdge = Left;
+	pPosAb->PosRefEdge = Left;
+	pPosAb->PosDistance = 0;
+	pPosAb->PosAbRef = NULL;
+	pPosAb->PosUserSpecified = FALSE;
 	pR = LaRegle (pDoc, pAb, &pSPR, PtHorizPos, TRUE, &pAttr);
 #ifdef __COLPAGE__
 	(void) Applique (pR, pSPR, pAb, pDoc, pAttr, &bool);

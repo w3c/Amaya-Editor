@@ -9,27 +9,24 @@
 extern C_points *PointsControle ( PtrTextBuffer buffer,
                                   int nb );
 extern void DimTexte ( PtrTextBuffer adbuff,
-                       int nbcar,
+                       int nChars,
                        ptrfont font,
-                       int *large,
-                       int *carbl );
+                       int *width,
+                       int *nSpaces );
 extern void EvalSymb ( PtrAbstractBox pAb,
-                       int *large,
-                       int *haut );
+                       int *width,
+                       int *height );
 extern void EvalGraph ( PtrAbstractBox pAb,
-                        int *large,
-                        int *haut );
-extern void EvalPolyLine ( PtrAbstractBox pAb,
-                           int *large,
-                           int *haut );
+                        int *width,
+                        int *height );
 extern void EvalText ( PtrAbstractBox pAb,
-                       int *large,
-                       int *haut,
-                       int *carbl );
+                       int *width,
+                       int *height,
+                       int *nSpaces );
 extern void EvalComp ( PtrAbstractBox pAb,
                        int frame,
-                       int *large,
-                       int *haut );
+                       int *width,
+                       int *height );
 extern PtrLine DesLigne ( PtrBox pBox );
 extern void MajBox ( PtrBox pBox,
                      PtrLine adligne,
@@ -57,27 +54,24 @@ extern boolean ModifVue ( int frame,
 extern C_points *PointsControle (/* PtrTextBuffer buffer,
                                     int nb */);
 extern void DimTexte (/* PtrTextBuffer adbuff,
-                         int nbcar,
+                         int nChars,
                          ptrfont font,
-                         int *large,
-                         int *carbl */);
+                         int *width,
+                         int *nSpaces */);
 extern void EvalSymb (/* PtrAbstractBox pAb,
-                         int *large,
-                         int *haut */);
+                         int *width,
+                         int *height */);
 extern void EvalGraph (/* PtrAbstractBox pAb,
-                          int *large,
-                          int *haut */);
-extern void EvalPolyLine (/* PtrAbstractBox pAb,
-                             int *large,
-                             int *haut */);
+                          int *width,
+                          int *height */);
 extern void EvalText (/* PtrAbstractBox pAb,
-                         int *large,
-                         int *haut,
-                         int *carbl */);
+                         int *width,
+                         int *height,
+                         int *nSpaces */);
 extern void EvalComp (/* PtrAbstractBox pAb,
                          int frame,
-                         int *large,
-                         int *haut */);
+                         int *width,
+                         int *height */);
 extern PtrLine DesLigne (/* PtrBox pBox */);
 extern void MajBox (/* PtrBox pBox,
                        PtrLine adligne,

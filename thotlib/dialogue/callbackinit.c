@@ -7,75 +7,74 @@
 #include "memory_f.h"
 #include "readstr_f.h"
 
-/* Global variable pointing to the list of action-definitions. */
-PtrEventsSet  applicationList = NULL;
-PtrEventsSet  applicationEditor = NULL;
-PtrAction     externalActions = NULL;
+#undef EXPORT
+#define EXPORT
+#include "appevents.var"
 
 
 /* ---------------------------------------------------------------------- */
-/* |    FindAction finds and returns an action with the name actionName | */
+/* |    FetchAction finds and returns an action with the name actionName | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static PtrAction    FindAction (char *actionName)
+static PtrAction    FetchAction (char *actionName)
 #else  /* __STDC__ */
-static PtrAction    FindAction (actionName)
+static PtrAction    FetchAction (actionName)
 char               *actionName;
 #endif /* __STDC__ */
 {
-   PtrAction           paction;
+   PtrAction           pAction;
 
-   paction = externalActions;
-   while (paction != NULL && strcmp (actionName, paction->ActName) != 0)
-      paction = paction->ActNext;
-   return paction;
+   pAction = ActionList;
+   while (pAction != NULL && strcmp (actionName, pAction->ActName) != 0)
+      pAction = pAction->ActNext;
+   return pAction;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    InsertAction inserts an action structure in list of actions     | */
-/* |            pointed to by the global variable externalActions.      | */
+/* |    TteAddAction inserts an action in the list of actions           | */
+/* |            pointed to by the global variable ActionList.           | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                InsertAction (char *actionName, Proc doIt)
+void                TteAddAction (char *actionName, Proc doIt)
 #else  /* __STDC__ */
-void                InsertAction (actionName, doIt)
+void                TteAddAction (actionName, doIt)
 char               *actionName;
 Proc                doIt;
 #endif /* __STDC__ */
 {
-   PtrAction           paction;
-   PtrAction           newaction;
+   PtrAction           pAction;
+   PtrAction           newAction;
 
-   paction = externalActions;
-   if (paction != NULL)
+   pAction = ActionList;
+   if (pAction != NULL)
      {
 	/* following actions are treated */
-	newaction = paction->ActNext;
-	while (newaction != NULL && strcmp (actionName, paction->ActName) != 0)
+	newAction = pAction->ActNext;
+	while (newAction != NULL && strcmp (actionName, pAction->ActName) != 0)
 	  {
-	     paction = paction->ActNext;
-	     newaction = newaction->ActNext;
+	     pAction = pAction->ActNext;
+	     newAction = newAction->ActNext;
 	  }
-	if (strcmp (actionName, paction->ActName) == 0)
-	   newaction = paction;
+	if (strcmp (actionName, pAction->ActName) == 0)
+	   newAction = pAction;
      }
    else
-      newaction = NULL;		/* First action inserted here */
+      newAction = NULL;		/* First action inserted here */
 
-   if (newaction == NULL)
+   if (newAction == NULL)
      {
-	newaction = (PtrAction) TtaGetMemory (sizeof (APP_action));
-	newaction->ActName = actionName;
-	newaction->ActAction = doIt;
-	newaction->ActPre = FALSE;
-	newaction->ActEvent = TteNull;
-	newaction->ActNext = NULL;
-	if (paction != NULL)
-	   paction->ActNext = newaction;
+	newAction = (PtrAction) TtaGetMemory (sizeof (APP_action));
+	newAction->ActName = actionName;
+	newAction->ActAction = doIt;
+	newAction->ActPre = FALSE;
+	newAction->ActEvent = TteNull;
+	newAction->ActNext = NULL;
+	if (pAction != NULL)
+	   pAction->ActNext = newAction;
 	else
 	  /* First message inserted here */
-	   externalActions = newaction;
+	   ActionList = newAction;
      }
 }
 
@@ -92,35 +91,36 @@ int                 structureId;
 char               *name;
 #endif /* __STDC__ */
 {
-  PtrEventsSet  pevset, newevset;
+  PtrEventsSet  pevset, newEvSet;
   int           event;
 
-  /* Create the new application context */
-  newevset = (PtrEventsSet) TtaGetMemory (sizeof (EventsSet));
-  newevset->EvSStructId = structureId;
-  newevset->EvSName = name;
+  /* Create the new events set */
+  newEvSet = (PtrEventsSet) TtaGetMemory (sizeof (EventsSet));
+  newEvSet->EvSStructId = structureId;
+  newEvSet->EvSName = name;
   for (event = 0; event <= TteExit; event++)
-    newevset->EvSList[event] = NULL;
-  newevset->EvSNext = NULL;
+    newEvSet->EvSList[event] = NULL;
+  newEvSet->EvSNext = NULL;
   
   /* Link it */
   if (strcmp (name, "EDITOR") == 0)
     {
-      if (applicationEditor != NULL)
-	/* delete the previous one */
-	TtaFreeMemory ((char *) applicationEditor);
-      applicationEditor = newevset;
+      /* it is the global set */
+      EditorEvents = newEvSet;
+      /* it is the first one: initialize other sets */
+      SchemasEvents = NULL;
     }
-  else if (applicationList == NULL)
-    applicationList = newevset;
+  else if (SchemasEvents == NULL)
+    /* it is specific to a schema */
+    SchemasEvents = newEvSet;
   else
     {
-      pevset = applicationList;
+      pevset = SchemasEvents;
       while (pevset->EvSNext != NULL)
 	pevset = pevset->EvSNext;
-      pevset->EvSNext = newevset;
+      pevset->EvSNext = newEvSet;
     }
-  return newevset;
+  return newEvSet;
 }
 
 
@@ -144,7 +144,7 @@ char               *actionName;
 
   if (event > TteExit)
     return;
-  action = FindAction (actionName);
+  action = FetchAction (actionName);
   if (action == NULL)
     return;
   

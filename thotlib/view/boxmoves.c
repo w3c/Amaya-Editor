@@ -3012,10 +3012,10 @@ int                 frame;
    boolean             deplace;
    boolean             depabsolu;
    PtrBox            pBo1;
-   AbDimension       *pPavD1;
+   AbDimension       *pDimAb;
    PtrAbstractBox             pPa3;
    PtrAbstractBox             cepave;
-   AbPosition        *pPavP1;
+   AbPosition        *pPosAb;
 
    /* On verifie que la largeur de la boite depend du contenu et qu'on */
    /* n'est pas deja en train de traiter l'englobement de cette boite  */
@@ -3023,7 +3023,7 @@ int                 frame;
    /* dans les boites de paves composes des boites de texte */
 
    pBo1 = pAb->AbBox;
-   pPavD1 = &pAb->AbWidth;
+   pDimAb = &pAb->AbWidth;
    if (pBo1->BxContentWidth && pBo1->BxType != BoGhost)
      {
 	/* On indique que l'englobement horizontal est en cours de traitement */
@@ -3157,21 +3157,21 @@ int                 frame;
 				   box1->BxXOrg += val;
 
 				/* Est-ce que cette boite deplace l'axe de l'englobante ? */
-				pPavP1 = &pAb->AbVertRef;
-				if (pPavP1->PosAbRef == pavefils)
+				pPosAb = &pAb->AbVertRef;
+				if (pPosAb->PosAbRef == pavefils)
 				  {
 				     deplace = TRUE;
 				     box1->BxMoved = NULL;
 				     /* Est-ce que la relation porte sur l'axe de reference ? */
-				     if (pPavP1->PosRefEdge != VertRef)
+				     if (pPosAb->PosRefEdge != VertRef)
 					DepAxe (pBo1, box1, val, frame);
 				     /* Recalcule la position de l'axe */
 				     else
 				       {
-					  if (pPavP1->PosUnit == UnPercent)
-					     i = PixelValue (pPavP1->PosDistance, UnPercent, (PtrAbstractBox) pAb->AbBox->BxWidth);
+					  if (pPosAb->PosUnit == UnPercent)
+					     i = PixelValue (pPosAb->PosDistance, UnPercent, (PtrAbstractBox) pAb->AbBox->BxWidth);
 					  else
-					     i = PixelValue (pPavP1->PosDistance, pPavP1->PosUnit, pAb);
+					     i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb);
 					  i = i + box1->BxXOrg + box1->BxVertRef - pBo1->BxXOrg;
 					  DepAxe (pBo1, box1, i - pBo1->BxVertRef, frame);
 				       }
@@ -3200,7 +3200,7 @@ int                 frame;
      }
    /* Si la boite prend la largeur minimum, il faut quand meme      */
    /* evaluer la largeur du contenu et verifier la regle du minimum */
-   else if (!pPavD1->DimIsPosition && pPavD1->DimMinimum
+   else if (!pDimAb->DimIsPosition && pDimAb->DimMinimum
 	    && pBo1->BxType != BoGhost)
      {
 	EvalComp (pAb, frame, &larg, &val);
@@ -3232,10 +3232,10 @@ int                 frame;
    boolean             deplace;
    boolean             depabsolu;
    PtrBox            pBo1;
-   AbDimension       *pPavD1;
+   AbDimension       *pDimAb;
    PtrAbstractBox             pPa3;
    PtrAbstractBox             cepave;
-   AbPosition        *pPavP1;
+   AbPosition        *pPosAb;
 
    /* On verifie que la hauteur de la boite depend du contenu et qu'on */
    /* n'est pas deja en train de traiter l'englobement de cette boite  */
@@ -3243,7 +3243,7 @@ int                 frame;
    /* dans les boites de paves composes des boites de texte            */
 
    pBo1 = pAb->AbBox;
-   pPavD1 = &pAb->AbHeight;
+   pDimAb = &pAb->AbHeight;
    if (pBo1->BxContentHeight && pBo1->BxType != BoGhost)
      {
 
@@ -3379,21 +3379,21 @@ int                 frame;
 				   box1->BxYOrg += val;
 
 				/* Est-ce que cette boite deplace la base de l'englobante ? */
-				pPavP1 = &pAb->AbHorizRef;
-				if (pPavP1->PosAbRef == pavefils)
+				pPosAb = &pAb->AbHorizRef;
+				if (pPosAb->PosAbRef == pavefils)
 				  {
 				     deplace = TRUE;
 				     box1->BxMoved = NULL;
 				     /* Est-ce que la relation porte sur l'axe de reference ? */
-				     if (pPavP1->PosRefEdge != HorizRef)
+				     if (pPosAb->PosRefEdge != HorizRef)
 					DepBase (pBo1, box1, val, frame);
 				     /* Recalcule la position de l'axe */
 				     else
 				       {
-					  if (pPavP1->PosUnit == UnPercent)
-					     i = PixelValue (pPavP1->PosDistance, UnPercent, (PtrAbstractBox) pAb->AbBox->BxHeight);
+					  if (pPosAb->PosUnit == UnPercent)
+					     i = PixelValue (pPosAb->PosDistance, UnPercent, (PtrAbstractBox) pAb->AbBox->BxHeight);
 					  else
-					     i = PixelValue (pPavP1->PosDistance, pPavP1->PosUnit, pAb);
+					     i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb);
 					  i = i + box1->BxYOrg + box1->BxHorizRef - pBo1->BxYOrg;
 					  DepBase (pBo1, box1, i - pBo1->BxHorizRef, frame);
 				       }
@@ -3430,7 +3430,7 @@ int                 frame;
      }
    /* Si la boite prend la hauteur minimum, il faut quand meme      */
    /* evaluer la hauteur du contenu et verifier la regle du minimum */
-   else if (!pPavD1->DimIsPosition && pPavD1->DimMinimum
+   else if (!pDimAb->DimIsPosition && pDimAb->DimMinimum
 	    && pBo1->BxType != BoGhost)
      {
 	EvalComp (pAb, frame, &val, &haut);

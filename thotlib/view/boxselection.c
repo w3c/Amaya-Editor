@@ -1,12 +1,7 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    visu.c : gestion des Selections.
    Module de gestion des Selections.
-
-   I. Vatton - Novembre 84
-   IV : Juin 93 polylines
+   I. Vatton
  */
 
 #include "thot_gui.h"
@@ -38,13 +33,6 @@
 #include "structselect_f.h"
 #include "displayselect_f.h"
 
-#ifdef __STDC__
-extern void         EndInsert (void);
-
-#else
-extern void         EndInsert ();
-
-#endif
 
 /* ---------------------------------------------------------------------- */
 /* |    RazPavSelect parcours l'arborescence pour annuler toutes les    | */
@@ -393,8 +381,8 @@ ViewSelection            *marque;
 	  {
 	     marque->VsIndBox = deb + i;
 	     /* Reevaluation du decalage dans la boite */
-	     x = pBox->BxSpaceWidth;	/* 0 si on prend la largeur reelle du blanc */
-	     carbl = pBox->BxFirstChar;	/* Index du premier caractere a traiter */
+	     carbl = pBox->BxSpaceWidth;	/* 0 si on prend la largeur reelle du blanc */
+	     x = pBox->BxFirstChar;	/* Index du premier caractere a traiter */
 	     DimTexte (pBox->BxBuffer, marque->VsIndBox, pBox->BxFont, &x, &carbl);
 	     marque->VsXPos = x;
 	     marque->VsNSpaces = carbl;

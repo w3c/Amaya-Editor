@@ -1,12 +1,6 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    lig.c :  gestion de la mise en lignes des boites
-   I. Vatton - Novembre 84
-   France Logiciel numero de depot 88-39-001-00
-   IV : Aout 92 dimensions minimales
-   IV : Aout 92 coupure des mots
+   I. Vatton
  */
 
 #include "thot_sys.h"
@@ -15,8 +9,9 @@
 
 #define EXPORT extern
 #include "img.var"
+
 /* Nombre maximum de coupures de mots consecutives */
-static int          maxcoupuresvoisines = 2;
+static int          MaxSiblingBreaks = 2;
 
 #include "boxmoves_f.h"
 #include "boxlocate_f.h"
@@ -25,30 +20,20 @@ static int          maxcoupuresvoisines = 2;
 #include "boxselection_f.h"
 #include "buildlines_f.h"
 #include "font_f.h"
+#include "frame_f.h"
 #include "hyphen_f.h"
 
-#ifdef __STDC__
-extern void         DefClip (int, int, int, int, int);
-
-#else  /* __STDC__ */
-extern void         DefClip ();
-
-#endif /* __STDC__ */
 
 /* ---------------------------------------------------------------------- */
 /* |    Suivante rend l'adresse de la boite associee au pave vivant qui | */
 /* |            suit pAb.                                            | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 PtrBox            Suivante (PtrAbstractBox pAb)
-
 #else  /* __STDC__ */
 PtrBox            Suivante (pAb)
 PtrAbstractBox             pAb;
-
 #endif /* __STDC__ */
-
 {
    PtrAbstractBox             nextpave;
    boolean             boucle;
@@ -684,7 +669,7 @@ PtrTextBuffer     *newbuff;
 	  {
 	     pLi1 = adligne->LiPrevious;
 	     cpt = 0;
-	     while (cpt < maxcoupuresvoisines && pLi1 != NULL)
+	     while (cpt < MaxSiblingBreaks && pLi1 != NULL)
 		if (pLi1->LiLastPiece != NULL)
 		   if (pLi1->LiLastPiece->BxType == BoDotted)
 		     {
@@ -698,7 +683,7 @@ PtrTextBuffer     *newbuff;
 		else
 		   pLi1 = NULL;
 
-	     if (cpt == maxcoupuresvoisines)
+	     if (cpt == MaxSiblingBreaks)
 		/* On refuse de couper le dernier mot */
 		nonfini = FALSE;
 	  }			/*if adligne != NULL */
@@ -1756,7 +1741,7 @@ int                *haut;
    PtrAbstractBox             pAbbox1;
    PtrBox            pBo2;
    PtrLine            pLi2;
-   AbPosition        *pPavP1;
+   AbPosition        *pPosAb;
    boolean             ajustif;
    boolean             absoluEnX;
    boolean             absoluEnY;
@@ -2017,8 +2002,8 @@ int                *haut;
 	/* s'il depend de la premiere boite englobee */
 	if (pAbbox1->AbHorizRef.PosAbRef == pAbbox1->AbFirstEnclosed && pBox->BxFirstLine != NULL)
 	  {
-	     pPavP1 = &pAbbox1->AbHorizRef;
-	     x = PixelValue (pPavP1->PosDistance, pPavP1->PosUnit, pAbbox1);
+	     pPosAb = &pAbbox1->AbHorizRef;
+	     x = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAbbox1);
 	     DepBase (pBox, NULL, pBox->BxFirstLine->LiHorizRef + x - pBox->BxHorizRef, frame);
 	  }
      }
@@ -2479,32 +2464,29 @@ boolean            *chgFS;
 /* |    DispBloc libere les lignes acquises pour l'affichage du bloc de | */
 /* |            lignes a` partir et y compris la ligne passee en        | */
 /* |            parametre. Libere toutes les boites coupees creees pour | */
-/* |            ces lignes. L'indicateur chgDF ou chgFS est bascule si  | */
+/* |            ces lignes.						| */
+/* |		changeSelectBegin et changeSelectEnd sont bascules si   | */
 /* |            la boite referencee par la marque Debut ou Fin de       | */
 /* |            Selection est liberee.                                  | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
-void                DispBloc (PtrBox pBox, int frame, PtrLine premligne, boolean * chgDS, boolean * chgFS)
-
+void                DispBloc (PtrBox pBox, int frame, PtrLine premligne, boolean * changeSelectBegin, boolean * changeSelectEnd)
 #else  /* __STDC__ */
-void                DispBloc (pBox, frame, premligne, chgDS, chgFS)
+void                DispBloc (pBox, frame, premligne, changeSelectBegin, changeSelectEnd)
 PtrBox            pBox;
 int                 frame;
 PtrLine            premligne;
-boolean            *chgDS;
-boolean            *chgFS;
-
+boolean            *changeSelectBegin;
+boolean            *changeSelectEnd;
 #endif /* __STDC__ */
-
 {
    PtrBox            box1;
    PtrLine            lignesuiv;
    PtrLine            adligne;
    PtrAbstractBox             pAb;
 
-   *chgDS = FALSE;
-   *chgFS = FALSE;
+   *changeSelectBegin = FALSE;
+   *changeSelectEnd = FALSE;
    adligne = premligne;
    if (adligne != NULL)
      {
@@ -2518,9 +2500,9 @@ boolean            *chgFS;
 		  box1 = adligne->LiFirstBox;
 		  /* Est-ce que la premiere boite est une boite suite ? */
 		  if (adligne->LiPrevious->LiLastBox == box1)
-		     DispCoup (adligne->LiFirstPiece, frame, chgDS, chgFS);
+		     DispCoup (adligne->LiFirstPiece, frame, changeSelectBegin, changeSelectEnd);
 		  else
-		     DispCoup (box1, frame, chgDS, chgFS);
+		     DispCoup (box1, frame, changeSelectBegin, changeSelectEnd);
 		  pBox->BxLastLine = adligne->LiPrevious;
 	       }
 	     else
@@ -2564,7 +2546,7 @@ boolean            *chgFS;
 
 	     while (box1 != NULL)
 	       {
-		  DispCoup (box1, frame, chgDS, chgFS);
+		  DispCoup (box1, frame, changeSelectBegin, changeSelectEnd);
 		  box1 = Suivante (box1->BxAbstractBox);
 	       }
 	  }
@@ -2593,8 +2575,8 @@ int                 frame;
 {
    int                 l, h, haut;
    int                 large;
-   boolean             chgDS;
-   boolean             chgFS;
+   boolean             changeSelectBegin;
+   boolean             changeSelectEnd;
    boolean             SvAff;
    unsigned char       icar;
    PtrLine            adligne;
@@ -2638,7 +2620,7 @@ int                 frame;
 
 	SvAff = EvalAffich;
 	EvalAffich = FALSE;
-	DispBloc (pBox, frame, adligne, &chgDS, &chgFS);
+	DispBloc (pBox, frame, adligne, &changeSelectBegin, &changeSelectEnd);
 	if (pBox->BxFirstLine == NULL)
 	  {
 	     /* On fait reevaluer la mise en lignes et on recupere */
@@ -2669,7 +2651,7 @@ int                 frame;
 	/* Faut-il reevaluer les marques de selection ? */
 	pFrame = &FntrTable[frame - 1];
 	pMa0 = &pFrame->FrSelectionBegin;
-	if (chgDS && pMa0->VsBox != NULL)
+	if (changeSelectBegin && pMa0->VsBox != NULL)
 	  {
 	     /* Si la selection a encore un sens */
 	     if (pMa0->VsBox->BxAbstractBox != NULL)
@@ -2677,7 +2659,7 @@ int                 frame;
 	  }
 
 	pMa1 = &pFrame->FrSelectionEnd;
-	if (chgFS && pMa1->VsBox != NULL)
+	if (changeSelectEnd && pMa1->VsBox != NULL)
 	  {
 	     /* Si la selection a encore un sens */
 	     if (pMa1->VsBox->BxAbstractBox != NULL)
@@ -2759,7 +2741,7 @@ int                 frame;
    int                 nbblanc;
    PtrTextBuffer      newbuff;
    PtrBox            pBo1;
-   AbDimension       *pPavD1;
+   AbDimension       *pDimAb;
    PtrLine            pLi2;
 
    /* Si la boite est eclatee, on remonte jusqu'a la boite bloc de lignes */
@@ -2769,12 +2751,12 @@ int                 frame;
 
    if (adligne != NULL)
      {
-	pPavD1 = &pave->AbWidth;
+	pDimAb = &pave->AbWidth;
 	/* C'est une ligne extensible --> on l'etend */
 	if (pBo1->BxContentWidth)
 	  {
 	     /* Si le bloc de lignes deborde de sa dimension minimale */
-	     if (!pPavD1->DimIsPosition && pPavD1->DimMinimum
+	     if (!pDimAb->DimIsPosition && pDimAb->DimMinimum
 		 && pBo1->BxWidth + dx < pBo1->BxRuleWidth)
 	       {
 		  /* Il faut prendre la largeur du minimum */
@@ -2789,7 +2771,7 @@ int                 frame;
 	       }
 	  }
 	/* Si le bloc de lignes deborde de sa dimension minimale */
-	else if (!pPavD1->DimIsPosition && pPavD1->DimMinimum
+	else if (!pDimAb->DimIsPosition && pDimAb->DimMinimum
 		 && adligne->LiRealLength + dx > pBo1->BxWidth)
 	  {
 	     /* Il faut prendre la largeur du contenu */
@@ -2943,13 +2925,13 @@ PtrAbstractBox             pAb;
    PtrLine            pLi2;
    PtrBox            pBo1;
 
-   /* AbDimension   *pPavD1; */
+   /* AbDimension   *pDimAb; */
 
    pBo1 = pAb->AbBox;
    if (Propage != ToSiblings || pBo1->BxVertFlex)
      {
 	pLi1 = DesLigne (pBox);
-	/*pPavD1 = &pAb->AbHeight; */
+	/*pDimAb = &pAb->AbHeight; */
 
 	if (pLi1 != NULL)
 	  {

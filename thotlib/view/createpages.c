@@ -1105,7 +1105,7 @@ boolean             EnAvant;
    boolean             baspage, bool;
    PtrAbstractBox             pAb, pAbb1, pPere, ancPere, pAbbLast, pHB, pPRP, pPRP1,
                        pPRP2, PavReaff, pAbb;
-   AbDimension       *pPavD1;
+   AbDimension       *pDimAb;
    PtrElement          pVoisin;
    PresentationBox             *pBo1;
    boolean             fin, trouve, perenouveau, premtour, complet, ok,
@@ -1585,10 +1585,10 @@ boolean             EnAvant;
 		     /* applique la nouvelle regle specifique Verticale */
 		     if (pRegleDimV != NULL)
 			Applique (pRegleDimV, pSPR, pAbb, pDoc, pAttr, &bool);
-		     pPavD1 = &pAbb->AbHeight;
-		     pPavD1->DimMinimum = TRUE;	/* regle de hauteur minimum */
+		     pDimAb = &pAbb->AbHeight;
+		     pDimAb->DimMinimum = TRUE;	/* regle de hauteur minimum */
 		     /* TODO inutile, a supprimer car fait par applique */
-		     pPavD1->DimValue = HauteurTotalePage - HauteurBasPage - HauteurHautPage;
+		     pDimAb->DimValue = HauteurTotalePage - HauteurBasPage - HauteurHautPage;
 		     pAbb->AbHeightChange = TRUE;
 		     /* on memorise le pave de pEl (ou son pere si il a ete cree) */
 		     /* au cas ou la page deborde a cause de lui */
@@ -2056,7 +2056,7 @@ PtrAbstractBox             pNewAbbox;
    int                 nv;
    PtrPRule        pRegle, pRegleV, pRSpec, pRDef;
    PtrAbstractBox             pAbbChild;
-   AbDimension       *pPavD1;
+   AbDimension       *pDimAb;
 
    /* traitement particulier aux sauts de page */
    /* le cas des pages Rappel est supprime */
@@ -2126,12 +2126,12 @@ PtrAbstractBox             pNewAbbox;
    pEl->ElAbstractBox[VueNb - 1] = pNewAbbox;
    /* impose les regles de la boite marque de page */
    /* hauteur d'une marque de page */
-   pPavD1 = &pAbbChild->AbHeight;
-   pPavD1->DimIsPosition = FALSE;
-   pPavD1->DimValue = 1;
-   pPavD1->DimAbRef = NULL;
-   pPavD1->DimUnit = UnPoint;
-   pPavD1->DimUserSpecified = FALSE;
+   pDimAb = &pAbbChild->AbHeight;
+   pDimAb->DimIsPosition = FALSE;
+   pDimAb->DimValue = 1;
+   pDimAb->DimAbRef = NULL;
+   pDimAb->DimUnit = UnPoint;
+   pDimAb->DimUserSpecified = FALSE;
    pAbbChild->AbSize = 1;
    pAbbChild->AbSizeUnit = UnPoint;
    pAbbChild->AbHighlight = 0;
@@ -2198,7 +2198,7 @@ boolean            *arret;
    PRuleType           TRegle;
    PtrSSchema        pSchS;
    PtrAttribute         pAttr;
-   AbDimension       *pPavD1;
+   AbDimension       *pDimAb;
    PresentationBox             *pBo1;
 
    /* cas de la derniere marque de page : on ne genere pas de pave */
@@ -3363,12 +3363,12 @@ boolean            *arret;
 			    queuePS, queuePP, queuePR, lqueue);
 	     pRegle = pRegle->PrNextPRule;
 	  }
-	pPavD1 = &pAbbox1->AbHeight;
+	pDimAb = &pAbbox1->AbHeight;
 	/* en attendant que le compilateur genere la regle de */
 	/* dimension minimale, on le fait a la main : la */
 	/* valeur generee par la regle doit etre interpretee */
 	/* par le mediateur comme minimale */
-	pPavD1->DimMinimum = TRUE;
+	pDimAb->DimMinimum = TRUE;
 
 	/* le contenu du filet de changement de page */
 	/* est engendre directement par un pave de presentation */

@@ -1,16 +1,10 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /* ======================================================================= */
-/* |                                                                    | */
-/* |                           Projet THOT                              | */
 /* |                                                                    | */
 /* |                    Chargement et Liberation                        | */
 /* |            des schemas de structure et de presentation             | */
 /* |                                                                    | */
-/* |                    V. Quint        Juin 1984                       | */
-/* |                                                                    | */
-/* |            France Logiciel no de depot 88-39-001-00                | */
+/* |                    V. Quint  		                        | */
 /* |                                                                    | */
 /* ======================================================================= */
 
@@ -33,9 +27,6 @@ typedef struct _UnePresent
 UnePresent;
 
 #include "app.h"
-
-extern PtrEventsSet applicationList;
-
 #include "appdialogue.h"
 
 /* variables importees */
@@ -43,6 +34,7 @@ extern PtrEventsSet applicationList;
 #include "edit.var"
 #include "appdialogue.var"
 
+extern PtrEventsSet  SchemasEvents;
 /* variables locales */
 /* table des schemas de presentation charges */
 static UnePresent   TabSchPres[MAX_PSCHEMAS];
@@ -54,35 +46,32 @@ static UnePresent   TabSchPres[MAX_PSCHEMAS];
 #include "schemas_f.h"
 
 /* ---------------------------------------------------------------------- */
-/* |    InitSchAppli(scheme)                                            | */
+/* |    InitSchAppli(pSchema)                                            | */
 /* |            Initialises the application pointer in the StructSchema    | */
 /* |            if there is an application for this schema. If not,     | */
 /* |            the pointer is set to NULL.                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                InitSchAppli (PtrSSchema scheme)
-
+void                InitSchAppli (PtrSSchema pSchema)
 #else  /* __STDC__ */
-void                InitSchAppli (scheme)
-PtrSSchema        scheme;
-
+void                InitSchAppli (pSchema)
+PtrSSchema        pSchema;
 #endif /* __STDC__ */
-
 {
-   char                appliName[MAX_NAME_LENGTH];
-   PtrEventsSet  appliaction;
+   char          schemaName[MAX_NAME_LENGTH];
+   PtrEventsSet  schemaActions;
 
-   strcpy (appliName, scheme->SsName);
-   scheme->SsActionList = NULL;
-   if (scheme->SsName[0] != '\0')
+   strcpy (schemaName, pSchema->SsName);
+   pSchema->SsActionList = NULL;
+   if (pSchema->SsName[0] != '\0')
      {
-	/* Do the application specific initialisations and update StructSchema. */
-	appliaction = applicationList;
-	while (appliaction != NULL && strcmp (appliaction->EvSName, appliName) != 0)
-	   appliaction = appliaction->EvSNext;
-	if (appliaction != NULL)
+	/* Do the specific initialisations and update StructSchema. */
+	schemaActions = SchemasEvents;
+	while (schemaActions != NULL && strcmp (schemaActions->EvSName, schemaName) != 0)
+	   schemaActions = schemaActions->EvSNext;
+	if (schemaActions != NULL)
 	   /* It contains the complete set of event/action for an application. */
-	   scheme->SsActionList = appliaction;
+	   pSchema->SsActionList = schemaActions;
      }
 }
 

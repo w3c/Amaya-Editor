@@ -29,9 +29,6 @@
 #include "edit.var"
 #include "frame.var"
 #include "appdialogue.var"
-/* Tant qu'il n'est pas possible de modifier la signature de la fonction
-   TtaInitialize, il faut passer par la variable globale CurrentServer
-   pour modifier le server courant par la ligne de commande */
 
 extern boolean      WithMessages;	/* partage avec le module dialog.c */
 extern Pixmap       image;
