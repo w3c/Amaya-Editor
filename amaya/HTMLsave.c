@@ -1070,7 +1070,7 @@ void RestartParser (Document doc, char *localFile,
 
   /* Remove the previous namespaces declaration */
   TtaFreeNamespaceDeclaration (doc);
-
+  TtaSetDisplayMode (doc, NoComputedDisplay);
   for (i = 1; i < DocumentTableLength; i++)
     if (DocumentURLs[i] != NULL)
       if (DocumentSource[i] == doc && DocumentTypes[i] == docLog)
@@ -1100,11 +1100,9 @@ void RestartParser (Document doc, char *localFile,
     ChangeToEditorMode (doc);
   
   /* Removes all CSS informations linked with the document */
-  TtaSetDisplayMode (doc, DeferredDisplay);
   RemoveDocCSSs (doc);  
   /* free access keys table */
   TtaRemoveDocAccessKeys (doc);
-  
   /* store the document profile if it has been modified */
   profile = TtaGetDocumentProfile (doc);
   if (profile != parsingLevel)
@@ -1112,7 +1110,6 @@ void RestartParser (Document doc, char *localFile,
       TtaSetDocumentProfile (doc, parsingLevel);
       TtaUpdateMenus (doc, 1, ReadOnlyDocument[doc]);
     }
-
   /* Calls the corresponding parser */
   if (DocumentMeta[doc]->xmlformat)       
     StartXmlParser (doc, localFile, documentname, tempdir,
@@ -1120,15 +1117,15 @@ void RestartParser (Document doc, char *localFile,
   else
     StartParser (doc, localFile, documentname, tempdir, localFile, FALSE);
 
-  /* Restore the Display Mode */
-  TtaSetDisplayMode (doc, DisplayImmediately);
-
   /* Activate the section numbering */
   if (DocumentTypes[doc] == docHTML && SNumbering[doc])
     ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
   /* Activate the section numbering */
   if (DocumentTypes[doc] == docHTML && MapAreas[doc])
     ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
+  /* Restore the Display Mode */
+  TtaSetDisplayMode (doc, DisplayImmediately);
+
   /* fetch and display all images referred by the document */
   ActiveTransfer (doc);
   FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, NULL);
