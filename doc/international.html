@@ -62,6 +62,24 @@ http://www.biz.net.pl/iso/x-fonts/index.html (pour les membre du projet
 op&eacute;ra : /opera/fonts-latin-2). Il faut mettre &agrave; jour le champ
 THOTFONT dans la base de registres .thotrc pour acceder au repertoire ou sont
 install&eacute;es les polices.</p>
+<p>
+Ajout d'un jeu de caract&egrave;re : pour ajouter un jeu de caract&egrave;re
+il faut d'abord s'assurer de disposer de la police correspondante, ensuite, il
+suffit :</p>
+<ul>
+<li>
+d'ajouter le chargement de la police dans font.c (fonction FontIdentifier, le
+parametre alphabet est associ&eacute; &agrave; un nom de police : l pour
+iso8859-1, e pour iso8859-2),
+<li>
+de d&eacute;clarer le langage systeme pour le nouveau jeu de caract&egrave;re
+dans language.c (fonction InitLanguage) et les langages utilisateur utilisant
+ce jeu de caract&egrave;re, meme fonction ou utiliser TtaNewLanguage,
+<li>
+mettre a jour l'entree THOTFONT dans la base de registres,
+<li>
+le tour est jou&eacute;.
+</ul>
 
 <h4>Bugs connus et fonctions non (encore) impl&eacute;ment&eacute;es :</h4>
 <p>
@@ -73,5 +91,7 @@ caract&egrave;res symbol, l'alignement sur la ligne de base n'est pas
 correct.</p>
 <p>
 </p>
+<p>
+<em>St&eacute;phane Bonhomme, 15 janvier 1998.</em></p>
 </body>
 </html>
