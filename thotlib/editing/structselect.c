@@ -124,7 +124,6 @@ void InitSelection ()
    AbsBoxSelectedAttr = NULL;
    FirstSelectedCharInAttr = 0;
    LastSelectedCharInAttr = 0;
-   InitSelectedCharInAttr = 0;
    SelectedColumn = NULL;
    WholeColumnSelected = FALSE;
 }
@@ -409,7 +408,6 @@ void CancelSelection ()
    AbsBoxSelectedAttr = NULL;
    FirstSelectedCharInAttr = 0;
    LastSelectedCharInAttr = 0;
-   InitSelectedCharInAttr = 0;
 }
 
 /*----------------------------------------------------------------------
@@ -1008,7 +1006,7 @@ void HighlightAttrSelection (PtrDocument pDoc, PtrElement pEl,
       AbsBoxSelectedAttr = NULL;
       FirstSelectedCharInAttr = firstChar;
       LastSelectedCharInAttr = lastChar;
-      InitSelectedCharInAttr = 0;
+      FixedChar = 0;
 
       /* process all chosen views */
       for (view = 0; view < lastView; view++)
@@ -1737,6 +1735,7 @@ void HighlightVisibleAncestor (PtrElement pEl)
    and ending at rank last Char.
    pAb is a presentation abstract box that contains the value of a
    numerical or textual attribute.
+   The parameter string is TRUE when one or more characters are selected.
   ----------------------------------------------------------------------*/
 void SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstChar,
 			 int lastChar, ThotBool string)
@@ -1760,6 +1759,8 @@ void SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstChar,
       FirstSelectedCharInAttr = firstChar;
       LastSelectedCharInAttr = lastChar;
       SelPosition = !string;
+      if (SelPosition)
+	FixedChar = firstChar;
       /* highlight the new selection in all views */
       for (view = 0; view < MAX_VIEW_DOC; view++)
 	{
@@ -3027,14 +3028,14 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 		  FirstSelectedCharInAttr = 1;
 		  LastSelectedCharInAttr = pAb->AbVolume + 1;
 		}
-	      else if (rank <= InitSelectedCharInAttr)
+	      else if (rank <= FixedChar)
 		{
 		  FirstSelectedCharInAttr = rank;
-		  LastSelectedCharInAttr = InitSelectedCharInAttr;
+		  LastSelectedCharInAttr = FixedChar;
 		}
 	      else
 		{
-		  FirstSelectedCharInAttr = InitSelectedCharInAttr;
+		  FirstSelectedCharInAttr = FixedChar;
 		  LastSelectedCharInAttr = rank;
 		}
 	      if (TtaGetDisplayMode (FrameTable[frame].FrDoc) == DisplayImmediately)
@@ -3159,7 +3160,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	       CancelSelection ();
 	       /*if (TtaGetDisplayMode (FrameTable[frame].FrDoc) == DisplayImmediately)*/
 	       SelectStringInAttr (pDoc, pAb, rank, rank, FALSE);
-	       InitSelectedCharInAttr = rank;
+	       FixedChar = rank;
 	     }
 	   else if (rank > 0 && pEl->ElTerminal &&
 		    (pEl->ElLeafType == LtText ||

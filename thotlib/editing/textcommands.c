@@ -737,30 +737,79 @@ static void MovingCommands (int code, Document doc, View view,
 	  break;
 
 	case 3:	/* End of line (^E) */
-	  if (pBox)
-	    MoveInLine (frame, TRUE, extendSel);
-	  if (pViewSel->VsBox)
-	    /* Get the last X position */
+	  if (AbsBoxSelectedAttr)
+	    {
+	      i = AbsBoxSelectedAttr->AbVolume + 1;
+	      if (extendSel)
+		{
+		  if (LeftExtended && FixedChar != i)
+		 {
+		   /* change the extension direction */
+		   RightExtended = TRUE;
+		   LeftExtended = FALSE;
+		 }
+		ChangeSelection (frame, AbsBoxSelectedAttr, i,
+				 TRUE, LeftExtended, FALSE, FALSE);
+		}
+	      else
+		SelectStringInAttr (LoadedDocument[doc - 1], AbsBoxSelectedAttr,
+				    i, i-1, FALSE);
+	    }
+	  else
+	    {
+	      if (pBox)
+		MoveInLine (frame, TRUE, extendSel);
+	      if (pViewSel->VsBox)
+		/* Get the last X position */
 #ifndef _GL
-	    ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
+		ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
 #else /* _GL */
-	  ClickX = pViewSel->VsBox->BxClipX + pViewSel->VsBox->BxClipX;
+	        ClickX = pViewSel->VsBox->BxClipX + pViewSel->VsBox->BxClipX;
 #endif /* _GL */
+	    }
 	  break;
 	   
 	case 4:	/* Beginning of line (^A) */
-	  if (pBox)
-	    MoveInLine (frame, FALSE, extendSel);
-	  if (pViewSel->VsBox)
-	    /* Get the last X position */
+	  if (AbsBoxSelectedAttr)
+	    {
+	      i = 1;
+	      if (extendSel)
+		{
+		  if (!LeftExtended && FixedChar != i)
+		 {
+		   /* change the extension direction */
+		   RightExtended = FALSE;
+		   LeftExtended = TRUE;
+		 }
+		ChangeSelection (frame, AbsBoxSelectedAttr, i,
+				 TRUE, LeftExtended, FALSE, FALSE);
+		}
+	      else
+		SelectStringInAttr (LoadedDocument[doc - 1], AbsBoxSelectedAttr,
+				    i, i-1, FALSE);
+	    }
+	  else
+	    {
+	      if (pBox)
+		MoveInLine (frame, FALSE, extendSel);
+	      if (pViewSel->VsBox)
+		/* Get the last X position */
 #ifndef _GL
-	    ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
+		ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
 #else /* _GL */
-	  ClickX = pViewSel->VsBox->BxClipX + pViewSel->VsBox->BxClipX;
+	        ClickX = pViewSel->VsBox->BxClipX + pViewSel->VsBox->BxClipX;
 #endif /* _GL */
+	    }
 	  break;
 	   
 	case 7:	/* Next line (^N) */
+	  if (AbsBoxSelectedAttr)
+	    {
+	      /* ignore extensions */
+	      extendSel = FALSE;
+	      LeftExtended = FALSE;
+	      RightExtended = FALSE;
+	    }
 	  if (pBox)
 	    pEl = pBox->BxAbstractBox->AbElement;
 	  if (pBox && !pBox->BxAbstractBox->AbPresentationBox &&
@@ -834,6 +883,13 @@ static void MovingCommands (int code, Document doc, View view,
 	  break;
 	   
 	case 8:	/* Previous line (^P) */
+	  if (AbsBoxSelectedAttr)
+	    {
+	      /* ignore extensions */
+	      extendSel = FALSE;
+	      LeftExtended = FALSE;
+	      RightExtended = FALSE;
+	    }
 	  if (pBox)
 	    pEl = pBox->BxAbstractBox->AbElement;
 	  if (pBox && !pBox->BxAbstractBox->AbPresentationBox &&
@@ -872,7 +928,7 @@ static void MovingCommands (int code, Document doc, View view,
 		    }
 		  else
 		    {
-		      /* just decrease the curent extension */
+		      /* just decrease the current extension */
 #ifndef _GL
 		      y = pBoxEnd->BxYOrg;
 #else /* _GL */
@@ -920,27 +976,39 @@ static void MovingCommands (int code, Document doc, View view,
 	      pEl = firstEl;
 	    }
 	  done = SearchPreviousWord (&pEl, &first, &last, word, &WordSearchContext);
-	  if ((RightExtended && last >= lastC && pEl == lastEl) ||
-	      (LeftExtended && first == firstC - 1 &&  pEl == firstEl))
+	  if ((RightExtended && last >= lastC &&
+	       (pEl == lastEl || AbsBoxSelectedAttr)) ||
+	      (LeftExtended && first == firstC - 1 &&
+	       (pEl == firstEl || AbsBoxSelectedAttr)))
 	    /* It was not the beginning of the next word */
 	    done = SearchPreviousWord (&pEl, &first, &last, word, &WordSearchContext);
+	  if (AbsBoxSelectedAttr && first == 0)
+	    /* beginning of the string */
+	    first = 1;
 	  if (extendSel)
 	    {
-	      if (!LeftExtended && firstEl == FixedElement && pEl == FixedElement &&
-		  last <= FixedChar)
+	      if (!LeftExtended && firstEl == FixedElement &&
+		  (pEl == FixedElement || AbsBoxSelectedAttr) &&
+		  first <= FixedChar)
 		{
 		  /* change the extension direction */
 		  RightExtended = FALSE;
 		  LeftExtended = TRUE;
 		}
-	      i = first;
-	      if (pEl->ElAbstractBox[view - 1])
-		ChangeSelection (frame, pEl->ElAbstractBox[view - 1], i,
+	      if (AbsBoxSelectedAttr)
+		ChangeSelection (frame, AbsBoxSelectedAttr, first,
+				 TRUE, LeftExtended, FALSE, FALSE);
+	      else if (pEl->ElAbstractBox[view - 1])
+		ChangeSelection (frame, pEl->ElAbstractBox[view - 1], first,
 				 TRUE, LeftExtended, FALSE, FALSE);
 	    }
 	  else
 	    {
-	      SelectString (LoadedDocument[doc - 1], pEl, first, first - 1);
+	      if (AbsBoxSelectedAttr)
+		SelectStringInAttr (LoadedDocument[doc - 1], AbsBoxSelectedAttr,
+				    first, first - 1, FALSE);
+	      else
+		SelectString (LoadedDocument[doc - 1], pEl, first, first - 1);
 	      /* remove the extension direction */
 	      LeftExtended = FALSE;
 	    }
@@ -968,31 +1036,43 @@ static void MovingCommands (int code, Document doc, View view,
 	       pEl = lastEl;
 	     }
 	   done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
-	   if ((!LeftExtended && first == lastC && pEl == lastEl) ||
-	       (!RightExtended && first >= firstC && pEl == firstEl))
+	   if ((!LeftExtended && first == lastC &&
+		(pEl == lastEl || AbsBoxSelectedAttr)) ||
+	       (!RightExtended && first >= firstC &&
+		(pEl == firstEl || AbsBoxSelectedAttr)))
 	     {
 	     /* It was not the beginning of the next word */
 	       if (RightExtended)
 	       last++; /* move after the end of the previous word */
 	       done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
 	     }
+	   if (AbsBoxSelectedAttr && first == 0)
+	     /* beginning of the attribute string */
+	     first = 1;
 	   if (extendSel)
 	     {
-	       if (LeftExtended && firstEl == FixedElement &&
+	       if (LeftExtended &&
+		   (pEl == FixedElement || AbsBoxSelectedAttr) &&
 		   first >= FixedChar)
 		 {
 		   /* change the extension direction */
 		   RightExtended = TRUE;
 		   LeftExtended = FALSE;
 		 }
-		 i = first;
-	       if (pEl->ElAbstractBox[view - 1])
-		 ChangeSelection (frame, pEl->ElAbstractBox[view - 1], i,
+	       if (AbsBoxSelectedAttr)
+		 ChangeSelection (frame, AbsBoxSelectedAttr, first,
+				  TRUE, LeftExtended, FALSE, FALSE);
+	       else if (pEl->ElAbstractBox[view - 1])
+		 ChangeSelection (frame, pEl->ElAbstractBox[view - 1], first,
 				  TRUE, LeftExtended, FALSE, FALSE);
 	     }
 	   else
 	     {
-	       SelectString (LoadedDocument[doc - 1], pEl, first, first - 1);
+	       if (AbsBoxSelectedAttr)
+		 SelectStringInAttr (LoadedDocument[doc - 1], AbsBoxSelectedAttr,
+				     first, first - 1, FALSE);
+	       else
+		 SelectString (LoadedDocument[doc - 1], pEl, first, first - 1);
 	       /* remove the extension direction */
 	       LeftExtended = FALSE;
 	     }

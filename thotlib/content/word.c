@@ -18,6 +18,9 @@
 #include "typemedia.h"
 #include "language.h"
 
+#define THOT_EXPORT extern
+#include "select_tv.h"
+
 static PtrDocument  DocSDomain;
 static PtrElement   FirstElSDomain;
 static PtrElement   LastElSDomain;
@@ -262,7 +265,11 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
     {
       /* search start */
       pEl = context->SStartElement;
-      iChar = context->SStartChar;
+      if (!AbsBoxSelectedAttr)
+	/* don't change this value when an attribute value is selected */
+	iChar = context->SStartChar;
+      else if (iChar == 0)
+	iChar = 1;
       if (pEl == NULL && context->SDocument)
 	pEl = context->SDocument->DocDocElement;
     }
@@ -273,9 +280,15 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
     {
       if (pEl->ElTypeNumber != CharString + 1 || iChar >= pEl->ElTextLength)
 	{
-	  /* there is no buffer */
-	  pBuf = NULL;
-	  iChar = 1;
+	  if (AbsBoxSelectedAttr)
+	    /* selection within an attribute */
+	    pBuf = AbsBoxSelectedAttr->AbText;
+	  else
+	    {
+	      /* there is no buffer */
+	      pBuf = NULL;
+	      iChar = 1;
+	    }
 	}
       else
 	/* first buffer of element */
@@ -294,7 +307,7 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
       endChar = context->SEndChar;
     }
 
-  while (pBuf == NULL && pEl != NULL)
+  while (pBuf == NULL && pEl)
     {
       /* Search the first non-empty and non-protected element */
       pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL, NULL);
@@ -311,7 +324,7 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
 	/* n'est pas cache' a l'utilisateur */
 	{
 	  pAncestor = pEl;
-	  while (pAncestor->ElParent != NULL && pAncestor->ElSource == NULL)
+	  while (pAncestor->ElParent && pAncestor->ElSource == NULL)
 	    pAncestor = pAncestor->ElParent;
 	  if (pAncestor->ElSource == NULL && !ElementIsHidden (pEl) &&
 	      pEl->ElTextLength != 0)
@@ -321,7 +334,7 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
 	}
     }
 
-  if (pEl == NULL)
+  if (pEl == NULL || iChar < 0)
     return (FALSE);
   else if (pEl == endEl && iChar >= endChar)
     /* On est arrive a la fin du domaine de recherche */
@@ -402,28 +415,43 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
   iChar = *beginning;
   *end = iChar;
   word[0] = EOS;
-  if (pEl == NULL)
+  if (pEl == NULL && context)
     {
       /* C'est le debut de la recherche */
       pEl = context->SEndElement;
-      iChar = context->SEndChar;
-      if (iChar > 2)
-	/* La fin de selection pointe toujours sur un caratere plus loin */
-	iChar--;
+      if (!AbsBoxSelectedAttr)
+	{
+	  /* don't change this value when an attribute value is selected */
+	  iChar = context->SEndChar;
+	  if (iChar > 2)
+	    /* La fin de selection pointe toujours sur un caratere plus loin */
+	    iChar--;
+	}
+      if (pEl == NULL && context->SDocument)
+	pEl = context->SDocument->DocDocElement;
     }
   iChar--;
 
-  /* Verifie que l'element est de type texte */
-  /* et que la recherche ne debute pas sur le dernier caractere */
-  if (pEl->ElTypeNumber != CharString + 1 || iChar < 1)
+  /* Check that element is a Text element and that the research does */
+  /* not start on the last character */
+  if (pEl)
     {
-      /* On n'a pas trouve de buffer */
-      pBuf = NULL;
-      iChar = 1;
+      if (pEl->ElTypeNumber != CharString + 1 || iChar < 1)
+	{
+	  if (AbsBoxSelectedAttr)
+	    /* selection within an attribute */
+	    pBuf = AbsBoxSelectedAttr->AbText;
+	  else
+	    {
+	      /* there is no buffer */
+	      pBuf = NULL;
+	      iChar = 1;
+	    }
+	}
+      else
+	/* first buffer of element */
+	pBuf = pEl->ElText;
     }
-  else
-    /* 1er Buffer de l'element */
-    pBuf = pEl->ElText;
 
   /* Determine l'element limite du contexte de recherche */
   if (context == NULL)
@@ -441,7 +469,7 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
     {
       /* Recherche le premier element texte non vide */
       pEl = BackSearchTypedElem (pEl, CharString + 1, NULL, NULL);
-      if (pEl != NULL)
+      if (pEl)
 	{
 	  if (endEl && ElemIsBefore (pEl, endEl))
 	    /* l'element trouve' est avant l'element de debut, */
@@ -455,7 +483,7 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
 	/* n'est pas cache' a l'utilisateur */
 	{
 	  pAncestor = pEl;
-	  while (pAncestor->ElParent != NULL && pAncestor->ElSource == NULL)
+	  while (pAncestor->ElParent && pAncestor->ElSource == NULL)
 	    pAncestor = pAncestor->ElParent;
 	  if (pAncestor->ElSource == NULL && !ElementIsHidden (pEl) &&
 	      pEl->ElTextLength != 0)
@@ -467,7 +495,7 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
 	}
     }
   
-  if (pEl == NULL)
+  if (pEl == NULL || iChar < 0)
     return (FALSE);
   else if (pEl == endEl && iChar < endChar)
     /* On est arrive a la fin du domaine de recherche */
@@ -480,7 +508,10 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
 	{
 	  /* On passe au buffer suivant */
 	  len -= pBuf->BuLength;
-	  pBuf = pBuf->BuNext;
+	  if (pBuf->BuNext == NULL)
+	    len = pBuf->BuLength - 1;
+	  else
+	    pBuf = pBuf->BuNext;
 	}
 
       index = len;
