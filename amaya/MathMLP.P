@@ -924,7 +924,7 @@ RULES
    Superscript:
 	BEGIN
 	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
-	HorizPos: Left = Base . Right;
+	HorizPos: Left = Base . Right + 0.1;
 	VertPos: Bottom = Base . Top + 0.9;
 	IN Structure_view BEGIN
 		Size: Enclosing =;
