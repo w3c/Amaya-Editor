@@ -2,6 +2,21 @@ This file lists the bugs that have been fixed and the extensions that
 have been introduced in Amaya and Thot since version 1.4 of Amaya.
  
 =============================================================
+2.1
+=============================================================
+ 
+Extensions 2.1:
+---------------
+ 
+Fixed bugs 2.1:
+---------------
+
+* Amaya was not able to use the shared library libjpeg.so
+
+* There were memory leaks in the previous version
+ 
+  
+=============================================================
 2.0
 =============================================================
 

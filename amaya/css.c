@@ -253,17 +253,45 @@ CSSInfoPtr      css;
 		  if (oldcss != css && oldcss->documents[doc])
 		    if (oldcss->category == CSS_USER_STYLE)
 		      {
-			found = TRUE;
-			/* add after that schema with a higher priority */
-			prevS = pSchema;
-			before = FALSE;
+			/* check if it includes a presentation schema
+			   for that structure */
+			pInfo = oldcss->infos;
+			while (pInfo != NULL && pInfo->PiDoc != doc)
+			  pInfo = pInfo->PiNext;
+			if (pInfo != NULL && pInfo->PiLink == nextLink)
+			  {
+			    pIS = pInfo->PiSchemas;
+			    while (pIS && pIS->PiSSchema != sSchema)
+			      pIS = pIS->PiSNext;
+			    if (pIS && pIS->PiPSchema)
+			      {
+				found = TRUE;
+				/* add after that schema with a higher priority */
+				prevS = pIS->PiPSchema;
+				before = FALSE;
+			      }
+			  }
 		      }
 		    else if (oldcss->category == CSS_DOCUMENT_STYLE)
 		      {
-			found = TRUE;
-			/* add in first position and last priority */
-			prevS = pSchema;
-			before = TRUE;
+			/* check if it includes a presentation schema
+			   for that structure */
+			pInfo = oldcss->infos;
+			while (pInfo != NULL && pInfo->PiDoc != doc)
+			  pInfo = pInfo->PiNext;
+			if (pInfo != NULL && pInfo->PiLink == nextLink)
+			  {
+			    pIS = pInfo->PiSchemas;
+			    while (pIS && pIS->PiSSchema != sSchema)
+			      pIS = pIS->PiSNext;
+			    if (pIS && pIS->PiPSchema)
+			      {
+				found = TRUE;
+				/* add before that schema with a lower priority */
+				prevS = pIS->PiPSchema;
+				before = TRUE;
+			      }
+			  }
 		      }
 		  else
 		    oldcss = oldcss->NextCSS;

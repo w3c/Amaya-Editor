@@ -4333,7 +4333,7 @@ ThotBool            withUndo;
 		  CSSindex++;
 		  CSSbuffer[CSSindex] = c;
 		}
-	      else if (c == '/' && CSScomment == MAX_CSS_LENGTH)
+	      else if (c == '/')
 		{
 		  CSSindex--;
 		  /* Ok we consider this as a closing tag ! */
