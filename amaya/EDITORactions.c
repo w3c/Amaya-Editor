@@ -525,11 +525,27 @@ void                CreateLinkInHead (Document document, View view)
   ----------------------------------------------------------------------*/
 void                CreateStyle (Document document, View view)
 {
-  Element             el;
+  Element             el, child;
+  ElementType         elType;
+  AttributeType       attrType;
+  Attribute           attr;
 
   el = InsertWithinHead (document, view, HTML_EL_STYLE_);
   if (el != NULL)
-    TtaSelectElement (document, el);
+    {
+      /* create an attribute type="text/css" */
+      elType = TtaGetElementType (el);
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_Notation;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, document);
+      TtaSetAttributeText (attr, TEXT("text/css"), el, document);
+      child = TtaGetFirstChild (el);
+      if (child)
+	TtaSelectElement (document, child);
+      else
+	TtaSelectElement (document, el);
+    }
 }
 
 
