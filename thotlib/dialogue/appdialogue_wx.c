@@ -92,13 +92,13 @@ int TtaMakeWindow( int x, int y, int w, int h )
   /* Create the window */
   p_AmayaWindow = 
     new AmayaWindow( window_id, NULL, wxDefaultPosition, wxDefaultSize );
- if (!p_AmayaWindow)
+  if (!p_AmayaWindow)
     return -1; /* no enough memory */
-
-   if (w != 0 && h != 0)
-   p_AmayaWindow->SetSize(x, y, w, h);
+  
+  if (w != 0 && h != 0)
+    p_AmayaWindow->SetSize(-1, -1, w, h);
   else
-   p_AmayaWindow->SetSize(-1, -1, 800, 600);
+    p_AmayaWindow->SetSize(-1, -1, 800, 600);
     
   /* save the window reference into the global array */ 
   WindowTable[window_id].WdWindow = p_AmayaWindow;
