@@ -1034,6 +1034,7 @@ void TtcCreateElement (Document doc, View view)
   ThotBool            ok, replicate, createAfter, selBegin, selEnd, ready;
   ThotBool            empty, list, optional, deleteEmpty, histSeq;
   ThotBool            lock = TRUE;
+  DisplayMode         dispMode;
 
   if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
     return;
@@ -1534,7 +1535,12 @@ void TtcCreateElement (Document doc, View view)
 		  pClose = NextElement (pElDelete);
 		  /* retire l'element de l'arbre abstrait */
 		  RemoveElement (pElDelete);
+		  dispMode = TtaGetDisplayMode (doc);
+		  if (dispMode == DisplayImmediately)
+		    TtaSetDisplayMode (doc, DeferredDisplay);
 		  UpdateNumbers (pClose, pElDelete, pDoc, TRUE);
+		  if (dispMode == DisplayImmediately)
+		    TtaSetDisplayMode (doc, dispMode);
 		  RedisplayCopies (pElDelete, pDoc, TRUE);
 		  DeleteElement (&pElDelete, pDoc);
 		  /* envoie l'evenement ElemDelete.Post a l'application */
@@ -1611,12 +1617,19 @@ void TtcCreateElement (Document doc, View view)
 		  /* cree les paves du nouvel element et */
 		  /* met a jour ses voisins */
 		  AbstractImageUpdated (pDoc);
+
+ 
 		  /* indique au Mediateur les modifications */
 		  RedisplayDocViews (pDoc);
 		  /* si on est dans un element copie' par inclusion, */
 		  /* on met a jour les copies de cet element. */
 		  RedisplayCopies (pNew, pDoc, TRUE);
+		  dispMode = TtaGetDisplayMode (doc);
+		  if (dispMode == DisplayImmediately)
+		    TtaSetDisplayMode (doc, DeferredDisplay);
 		  UpdateNumbers (NextElement (pNew), pNew, pDoc, TRUE);
+		  if (dispMode == DisplayImmediately)
+		    TtaSetDisplayMode (doc, dispMode);
 		  /* Indiquer que le document est modifie' */
 		  SetDocumentModified (pDoc, TRUE, 30);
 		  if (!lock)
