@@ -4,7 +4,7 @@ DICOPAR=$(THOTDIR)\dicopar
 
 [amaya]
 THOTSYSSCH=$(THOTDIR)\amaya;$(THOTDIR)\annotlib
-LANG=en_US
+LANG=en
 HOME_PAGE=
 ENABLE_MULTIKEY=no
 # URL of your HTTP proxy server  (server.address:port :port is optional)

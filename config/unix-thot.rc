@@ -19,7 +19,7 @@ LANG=en
 HOME_PAGE=
 ENABLE_CACHE=Yes
 THOTSYSSCH=$(THOTDIR)/amaya:$(THOTDIR)/annotlib
-LANG=en_US
+LANG=en
 # AMAYA_PLUGIN_DIR=$(THOTDIR)/plugintest/$(MACHINE)
 AMAYA_APPLET_DIR=$(THOTDIR)/classes/org/w3c/amaya/applets
 # URL of your HTTP proxy server  (server.address:port :port is optional)
@@ -34,14 +34,6 @@ SAFE_PUT_REDIRECT=
 Profiles_File=amaya.profiles
 Profile=Editor
 ACCESSKEY_MOD=Alt
-
-[alliance]
-THOTSYSSCH=$(THOTDIR)/schemas:$(THOTDIR)/schemasOPERA:$(THOTDIR)/alliance/schemas:$(THOTDIR)/alliance/icons:$(THOTDIR)/alliance/manuals
-LANG=en_US
-
-[byzance]
-THOTSYSSCH=$(THOTDIR)/schemas:$(THOTDIR)/schemasOPERA:$(THOTDIR)/alliance/schemas:$(THOTDIR)/alliance/icons:$(THOTDIR)/alliance/manuals
-LANG=en_US
 
 [annotations]
 ANNBASE=$(THOTDIR)/misc/annotations/documents/base
