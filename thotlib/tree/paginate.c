@@ -1038,9 +1038,9 @@ static void SetMark (PtrAbstractBox pAb, PtrElement rootEl, PtrDocument pDoc,
 			  }
 			}
 			/* see if the the break can be inserted after the parent */
-			while (!pCreator->AbNext && pCreator->AbEnclosing &&
+			/*while (!pCreator->AbNext && pCreator->AbEnclosing &&
 			       pCreator->AbEnclosing != pAb)
-			  pCreator = pCreator->AbEnclosing;
+			       pCreator = pCreator->AbEnclosing;*/
 			*pPage = InsertMark (pCreator, frame, nbView, origCutAbsBox,
 					     needBreak, schView, pDoc, rootEl, 1);
 			pCreator->AbOnPageBreak = TRUE;
