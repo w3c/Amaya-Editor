@@ -2267,13 +2267,14 @@ char               *data;
    switch (ref - TransBaseDialog)
 	 {
 	    case TransMenu:
-               TtaSelectElement (TransDoc, NULL);
 	       oldDisplayMode = TtaGetDisplayMode (TransDoc);
-	       if (oldDisplayMode != DeferredDisplay)
-		 {
-		   TtaSetDisplayMode (TransDoc, DeferredDisplay);
-		   TtaClearViewSelections ();
-		 }
+	       /* annule la selection */
+	       if (oldDisplayMode != DisplayImmediately)
+		 TtaSetDisplayMode (TransDoc, DisplayImmediately);
+	       TtaSelectElement (TransDoc, NULL);
+	       /* passe en mode de display differe */
+	       TtaSetDisplayMode (TransDoc, DeferredDisplay);
+		
 	       resultTrans = ApplyTransformation (menuTrans[val], TransDoc);
 	       if (!resultTrans)
 		 {
@@ -2306,7 +2307,7 @@ char               *data;
 		       TtaNextSibling (&myFirstSelect);
 		    else
 		       myFirstSelect = TtaGetFirstChild (myFirstSelect);
-	            TtaSetDisplayMode (TransDoc, oldDisplayMode);
+	            TtaSetDisplayMode (TransDoc, DisplayImmediately);
 		    TtaSelectElement (TransDoc, myFirstSelect);
 		    if (myLastSelect != NULL && TtaIsBefore (myFirstSelect, myLastSelect))
 		       TtaExtendSelection (TransDoc, myLastSelect, 0);

@@ -617,11 +617,6 @@ char               *data;
 	    }
 	  TtaSelectElement (doc, leaf);
 	}
-      else if (surround)
-	{
-	  /* une transformation a marche */
-	  TtaSetDisplayMode (doc, DisplayImmediately);
-	}
       break;
     default:
       break;
