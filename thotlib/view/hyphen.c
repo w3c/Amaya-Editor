@@ -25,15 +25,19 @@
 
 static int sepchar[] =
 {
- /*TEXT(' '), TEXT('.'), TEXT(','), TEXT('`'), TEXT('\47'), TEXT('-')*/
+ /* TEXT(' '), TEXT('.'), TEXT(','), TEXT('`'), TEXT('\47'), TEXT('-') */
   32, 46, 44, 96, 39, 45,
- /*TEXT(';'), TEXT(':'), TEXT('['), TEXT(']'), TEXT('('), TEXT(')')*/
+  /* TEXT('#'), TEXT('$'), TEXT('%'), TEXT('&'), TEXT('*'), TEXT('+'), TEXT('=') */
+  35, 36, 37, 38, 42, 43, 61,
+ /* TEXT(';'), TEXT(':'), TEXT('['), TEXT(']'), TEXT('('), TEXT(')') */
   59, 58, 91, 93, 40, 41,
- /*TEXT('{'), TEXT('}'), TEXT('<'), TEXT('>'), TEXT('/'), TEXT('!')*/
+ /* TEXT('{'), TEXT('}'), TEXT('<'), TEXT('>'), TEXT('/'), TEXT('!') */
   123, 125, 60, 62, 47, 33,
- /*TEXT('?'), TEXT('\n'), TEXT('\240'), TEXT('\241'), TEXT('\277'), TEXT('\253')*/
+  /* TEXT('\\'), TEXT("^'), TEXT('_'), TEXT('|'), TEXT('~') */
+  92, 94, 95, 124, 126,
+ /* TEXT('?'), TEXT('\n'), TEXT('\240'), TEXT('\241'), TEXT('\277'), TEXT('\253') */
   63, 10, 160, 161, 191, 171,
- /*TEXT('\273'), TEXT('\212'), TEXT('"'), TEXT('\201'), TEXT('\202'), TEXT('\0')*/
+ /* TEXT('\273'), TEXT('\212'), TEXT('"'), TEXT('\201'), TEXT('\202'), TEXT('\0') */
   187, 138, 34, 129, 130, 0
 };
 
