@@ -4,8 +4,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.4, see http://www.w3.org/Amaya/" />
   <title>Ein generisches Format für ein Element oder eine Klasse
   erzeugen</title>
   <style type="text/css">
@@ -44,18 +43,20 @@ Menü <strong>Formate</strong>.</p>
 <p class="ProcedureCaption">Um ein generisches Format für ein Element zu
 erzeugen:</p>
 <ol>
-  <li>Das Element, welches man als Vorlage benutzen möchte markieren.
+  <li>Das Element, welches man als Vorlage benutzen möchte markieren. 
     <p class="Note"><strong>Bemerkung:</strong> Man darf nur
     <strong>ein</strong> Element markieren und dieses <strong>muss</strong>
     das Attribut <code>style</code> haben.</p>
   </li>
   <li><strong>Regel erzeugen</strong> im Menü <strong>Formate</strong>
     auswählen. Amaya öffnet einen Dialog, in dem eine Liste von Selektoren
-    angezeigt werden.
-    <p><img alt="Dialog Regel erzeugen" src="../../images/createRule.png"
+    angezeigt werden. 
+    <p><img alt="Dialog Regel erzeugen" src="../../images/createRule-de.png"
     /></p>
     <p>Diese Liste enthält alle Klassen, die im derzeitigen Dokument
-    definiert sind und die Elemente, denen sie zugeordnet sind.</p>
+    definiert sind (auch die, welche in einer zugeordneten externe
+    Formatvorlage definiert sind) und die Elemente, denen sie zugeordnet
+    sind.</p>
   </li>
   <li>Aus der oberen Liste einen Selektor auswählen. Diesen kann man im
     unteren Feld umbenenen, also einen neuen Klassennamen eingeben. Danach
@@ -89,3 +90,4 @@ Auch kann man hier eine Klasse ändern oder entfernen.</p>
 </div>
 </body>
 </html>
+
