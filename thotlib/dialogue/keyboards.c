@@ -892,12 +892,13 @@ void                KeyboardsLoadResources ()
 
 #   ifndef _WINDOWS
     SymbolIcons = LoadFont ("ivsymb", 0);
+    if (SymbolIcons == NULL) {
+       /*Fonte 'ivsymb' inaccessible */
+       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), "ivsymb");
+       SymbolIcons = FontDialogue;
+	} 
 #   endif /* _WINDOWS */
-   if (SymbolIcons == NULL) {
-      /*Fonte 'ivsymb' inaccessible */
-      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), "ivsymb");
-      SymbolIcons = FontDialogue;
-   }
+
 }
 
 
@@ -917,7 +918,9 @@ View                view;
 {
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
+#  ifndef _WINDOWS
    TtaSetDialoguePosition ();
+#  endif /* !_WINDOWS */
    TtaSetCurrentKeyboard (0);
 }
 
@@ -938,7 +941,9 @@ View                view;
 {
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
+#  ifndef _WINDOWS
    TtaSetDialoguePosition ();
+#  endif /* !_WINDOWS */
    TtaSetCurrentKeyboard (1);
 }
 
@@ -959,7 +964,9 @@ View                view;
 {
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
+#  ifndef _WINDOWS 
    TtaSetDialoguePosition ();
+#  endif /* !_WINDOWS */
    TtaSetCurrentKeyboard (2);
 }
 
@@ -979,7 +986,9 @@ View                view;
 {
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
+#  ifndef _WINDOWS 
    TtaSetDialoguePosition ();
+#  endif /* !_WINDOWS */
    TtaSetCurrentKeyboard (3);
 #  ifdef _WINDOWS
    CreateGreekKeyboardDlgWindow (NULL);

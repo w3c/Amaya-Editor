@@ -81,7 +81,7 @@ extern void         TtaSetMainLoop (ExternalInitMainLoop init,
    state: TRUE to enable the button, false to disable it.
    Returns index
   ----------------------------------------------------------------------*/
-extern int          TtaAddButton (Document document, View view, ThotIcon picture, void (*procedure) (), STRING functionName, STRING info, BYTE type, ThotBool state);
+extern int          TtaAddButton (Document document, View view, ThotIcon picture, void (*procedure) (), char* functionName, STRING info, BYTE type, ThotBool state);
 
 /*----------------------------------------------------------------------
    TtaGetButtonCallback

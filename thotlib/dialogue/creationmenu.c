@@ -66,11 +66,12 @@ Name                typeName;
    usprintf (&bufMenu[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_CREATE_EL_REF));
    i += ustrlen (&bufMenu[i]) + 1;
    usprintf (&bufMenu[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_SHOW_EL_REF));
-   TtaNewPopup (NumMenuCreateReferenceElem, 0,
-	      TtaGetMessage (LIB, TMSG_MODE_INSERT), 2, bufMenu, NULL, 'L');
+   TtaNewPopup (NumMenuCreateReferenceElem, 0, TtaGetMessage (LIB, TMSG_MODE_INSERT), 2, bufMenu, NULL, 'L');
+#  ifndef _WINDOWS
    TtaShowDialogue (NumMenuCreateReferenceElem, FALSE);
    /* waits until the user replies to the menu */
    TtaWaitShowDialogue ();
+#  endif /* !_WINDOWS */
    *generate = AnswerCreateAskForNew;
    return AnswerMenuAskForNew;
 }
@@ -125,10 +126,11 @@ ThotBool            natureChoice;
    if (natureChoice)
      {
 	menu = NumFormNature;
+#   ifndef _WINDOWS
 	/* selector stating the nature of the element to create (or of the capture zone
 	   if the configuration files don't define any natures */
-	TtaNewForm (NumFormNature,  0,
-	       TtaGetMessage (LIB, TMSG_OBJECT_TYPE), TRUE, 1, 'L', D_CANCEL);
+	TtaNewForm (NumFormNature, 0, TtaGetMessage (LIB, TMSG_OBJECT_TYPE), TRUE, 1, 'L', D_CANCEL);
+#   endif /* !_WINDOWS */
 	nbitem = ConfigMakeDocTypeMenu (bufMenuB, &length, FALSE);
 	if (nbitem > 0)
 	   /* the Start Up file defines the natures */
@@ -139,16 +141,20 @@ ThotBool            natureChoice;
 	     else
 		length = 5;
 	     /* creates the selector */
+#        ifndef _WINDOWS
 	     TtaNewSelector (NumSelectNatureName, NumFormNature,
 			     TtaGetMessage (LIB, TMSG_OBJECT_TYPE), nbitem, bufMenuB, length, NULL, TRUE, FALSE);
 	     /* sets the selector on its first entry */
-	     TtaSetSelector (NumSelectNatureName, 0, _EMPTYSTR_);
+	     TtaSetSelector (NumSelectNatureName, 0, TEXT(""));
+#        endif /* !_WINDOWS */
 	  }
 	else
 	   /* we did not create a selector, we create a capture zone having
 	      the nature of the element to create */
-	   TtaNewTextForm (NumSelectNatureName, NumFormNature,
-		       TtaGetMessage (LIB, TMSG_OBJECT_TYPE), 30, 1, FALSE);
+#      ifndef _WINDOWS
+	   TtaNewTextForm (NumSelectNatureName, NumFormNature, TtaGetMessage (LIB, TMSG_OBJECT_TYPE), 30, 1, FALSE)
+#      endif /* !_WINDOWS */
+	   ;
      }
    else
      {
@@ -167,10 +173,12 @@ ThotBool            natureChoice;
 	  }
 	TtaNewPopup (NumMenuElChoice, 0, menuTitle, nbEntries, bufMenuB, NULL, 'L');
      }
+#  ifndef _WINDOWS
    TtaShowDialogue (menu, FALSE);
    /* waits until the user has answered to the menu and that the 
       mediator has called ChoiceMenuCallback */
    TtaWaitShowDialogue ();
+#  endif /* !_WINDOWS */
 }
 
 
@@ -235,9 +243,11 @@ CHAR_T                button;
 	src += l + 1;
      }
    TtaNewPopup (RefMenu, 0, title, nbEntries, bufMenuB, NULL, button);
+#  ifndef _WINDOWS
    TtaShowDialogue (RefMenu, FALSE);
    /* waits for the user's answer */
    TtaWaitShowDialogue ();
+#  endif /* !_WINDOWS */
 }
 
 

@@ -615,14 +615,18 @@ STRING              data;
 	  if (PaperPrint == PP_PS)
 	    {
 	      PaperPrint = PP_PRINTER;
+#         ifndef _WINDOWS
 	      TtaSetTextForm (BasePrint+NumZonePrinterName, PPrinter);
+#         endif /* !_WINDOWS */
 	    }
 	  break;
 	case 1:
 	  if (PaperPrint == PP_PRINTER)
 	    {
 	      PaperPrint = PP_PS;
+#         ifndef _WINDOWS
 	      TtaSetTextForm (BasePrint+NumZonePrinterName, PSdir);
+#         endif /* !_WINDOWS */
 	    }
 	  break;
 	}

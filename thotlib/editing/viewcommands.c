@@ -1200,8 +1200,10 @@ View                view;
                   }
              }
         /* active le pop-up menu */
+#       ifndef _WINDOWS
         TtaSetDialoguePosition ();
         TtaShowDialogue (MenuAActiver, False);
+#       endif /* !_WINDOWS */
      }
 }
 

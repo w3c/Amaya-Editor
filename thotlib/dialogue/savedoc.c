@@ -176,6 +176,7 @@ void                BuildSaveDocMenu ()
      }
 }
 
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    CallbackSaveDocMenu
    callback handler for the Save File menu.
@@ -233,7 +234,9 @@ STRING              txt;
 			 if (TraductionSchemaName[0] == EOS)
 			   ustrcat (ptTranslatedName, DefaultFileSuffix);
 			 /* reinitialise la zone du nom de document */
+#            ifndef _WINDOWS
 			 TtaSetTextForm (NumZoneDocNameTooSave, ptTranslatedName);
+#             endif /* !_WINDOWS */
 		      }
 		    ustrcpy (SaveFileName, BufDir);
 		 }
@@ -251,9 +254,9 @@ STRING              txt;
 				 ustrcat (DocumentPath, PATH_STR);
 				 ustrcat (DocumentPath, SaveDirectoryName);
 				 BuildPathDocBuffer (BufDir, EOS, &nbitem);
-				 TtaNewSelector (NumZoneDirDocToSave, NumFormSaveAs,
-					  TtaGetMessage (LIB, TMSG_DOC_DIR),
-				      nbitem, BufDir, 6, NULL, FALSE, TRUE);
+#                ifndef _WINDOWS
+				 TtaNewSelector (NumZoneDirDocToSave, NumFormSaveAs, TtaGetMessage (LIB, TMSG_DOC_DIR), nbitem, BufDir, 6, NULL, FALSE, TRUE);
+#                endif /* _WINDOWS */
 			      }
 			 }
 		 }
@@ -349,7 +352,9 @@ STRING              txt;
 				 {
 				    /* demande confirmation */
 				    usprintf (BufDir, TtaGetMessage (LIB, TMSG_FILE_EXIST), ptTranslatedName);
+#                   ifndef _WINDOWS
 				    TtaNewLabel (NumLabelConfirm, NumFormConfirm, BufDir);
+#                   endif /* !_WINDOWS */
 				    TtaShowDialogue (NumFormConfirm, FALSE);
 				 }
 
@@ -364,6 +369,7 @@ STRING              txt;
 	       break;
 	 }
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
    SaveDocAs
@@ -391,19 +397,21 @@ PtrDocument         pDoc;
 	 if (pDoc->DocSSchema != NULL)
 	   {
 	      DocumentToSave = pDoc;
+#         ifndef _WINDOWS
 	      /* cree le formaulaire Sauver comme */
-	      TtaNewSheet (NumFormSaveAs,  0,
-			   TtaGetMessage (LIB, TMSG_SAVE_AS),
-		 1, TtaGetMessage (LIB, TMSG_SAVE), TRUE, 3, 'L', D_CANCEL);
+	      TtaNewSheet (NumFormSaveAs, 0, TtaGetMessage (LIB, TMSG_SAVE_AS), 1, TtaGetMessage (LIB, TMSG_SAVE), TRUE, 3, 'L', D_CANCEL);
+#         endif /* !_WINDOWS */
 
 	      /* cree et */
 	      /* initialise le selecteur sur aucune entree */
 	      BuildPathDocBuffer (BufDir, EOS, &nbitem);
-	      TtaNewSelector (NumZoneDirDocToSave, NumFormSaveAs,
-			      TtaGetMessage (LIB, TMSG_DOC_DIR),
-			      nbitem, BufDir, 6, NULL, FALSE, TRUE);
+#         ifndef _WINDOWS
+	      TtaNewSelector (NumZoneDirDocToSave, NumFormSaveAs, TtaGetMessage (LIB, TMSG_DOC_DIR), nbitem, BufDir, 6, NULL, FALSE, TRUE);
+#         endif /* _WINDOWS */
 	      entry = SearchStringInBuffer(BufDir,pDoc->DocDirectory,nbitem);
+#         ifndef _WINDOWS
 	      TtaSetSelector (NumZoneDirDocToSave, entry, _EMPTYSTR_);
+#         endif /* !_WINDOWS */
 	      /* initialise le titre du formulaire Sauver Comme */
 	      ustrcpy (SaveFileName, pDoc->DocDName);
 	      ustrcpy (SaveDirectoryName, pDoc->DocDirectory);
@@ -468,8 +476,9 @@ PtrDocument         pDoc;
 	      else
 		ustrcat (BufMenu, ".PIV");
 	      /* nom de document propose' */
-	      TtaNewTextForm (NumZoneDocNameTooSave, NumFormSaveAs,
-		      TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), 50, 1, TRUE);
+#         ifndef _WINDOWS
+	      TtaNewTextForm (NumZoneDocNameTooSave, NumFormSaveAs, TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), 50, 1, TRUE);
+#         endif /* !_WINDOWS */
 	      TtaSetTextForm (NumZoneDocNameTooSave, BufMenu);
 
 /*        ActiveEntree(NumMenuCopyOrRename, 0); */
@@ -483,13 +492,16 @@ PtrDocument         pDoc;
 	      ustrcpy (BufMenu, TtaGetMessage (LIB, TMSG_SAVE_AS));
 	      i = ustrlen (BufMenu) + 1;
 	      ustrcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+#         ifndef _WINDOWS
 	      TtaNewDialogSheet (NumFormConfirm,  0, NULL, 2, BufMenu, FALSE, 1, 'L');
+#         endif /* !_WINDOWS */
 
 	      /* affiche le formulaire */
 	      TtaShowDialogue (NumFormSaveAs, FALSE);
 	   }
 }
 
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   TtcSaveDocumentAs
   standard handler for a SaveDocumentAs action.
@@ -526,7 +538,7 @@ View                view;
 	  }
      }
 }
-
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   TtcSaveDocument

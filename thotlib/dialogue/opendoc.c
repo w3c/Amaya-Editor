@@ -185,15 +185,13 @@ Name                name;
 #endif /* __STDC__ */
 
 {
-
+#  ifndef _WINDOWS
    /* Formulaire du schema de presentation */
-   TtaNewForm (NumFormPresentationSchema,  0,
-	       TtaGetMessage (LIB, TMSG_PRES), TRUE, 1, 'L', D_DONE);
+   TtaNewForm (NumFormPresentationSchema, 0, TtaGetMessage (LIB, TMSG_PRES), TRUE, 1, 'L', D_DONE);
 
    /* zone de saisie du nom du schema de presentation */
-   TtaNewTextForm (NumZonePresentationSchema, NumFormPresentationSchema,
-		   TtaGetMessage (LIB, TMSG_PRES), 30, 1, FALSE);
-
+   TtaNewTextForm (NumZonePresentationSchema, NumFormPresentationSchema, TtaGetMessage (LIB, TMSG_PRES), 30, 1, FALSE);
+#  endif /* !_WINDOWS
    /* presentation par defaut */
    if (pSchStr->SsExtension)
       /* c'est une extension de schema, il n'y a pas de regle racine */
@@ -245,37 +243,42 @@ STRING              data;
 	       break;
 	 }
 }
+
 /*----------------------------------------------------------------------
 BuildImportForm : cree Le formulaire d'importation de documents.
   ----------------------------------------------------------------------*/
 static void BuildImportForm()
 {
-  int nbItems,length;
-  CHAR_T bufMenu[MAX_TXT_LEN];
+   int nbItems,length;
+   CHAR_T bufMenu[MAX_TXT_LEN];
  
- /* Formulaire Classe du document a importer */
-   TtaNewForm (NumFormImportClass,  0,
-	  TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), TRUE, 1, 'L', D_DONE);
+#  ifndef _WINDOWS
+   /* Formulaire Classe du document a importer */
+   TtaNewForm (NumFormImportClass, 0, TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), TRUE, 1, 'L', D_DONE);
    /* selecteur ou zone de saisie Classe du document a importer */
+#  endif /* !_WINDOWS */
    nbItems = ConfigMakeImportMenu (bufMenu);
    if (nbItems == 0)
       /* pas d'import defini dans le fichier de langue, */
       /* on cree une simple zone de saisie de texte */
-      TtaNewTextForm (NumSelectImportClass, NumFormImportClass,
-		   TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), 30, 1, FALSE);
-   else
-      /* on cree un selecteur */
-     {
-	if (nbItems >= 6)
-	   length = 6;
-	else
-	   length = nbItems;
-	TtaNewSelector (NumSelectImportClass, NumFormImportClass,
-			TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), nbItems, bufMenu, length, NULL, TRUE, FALSE);
-	/* initialise le selecteur sur sa premiere entree */
-	TtaSetSelector (NumSelectImportClass, 0, _EMPTYSTR_);
-     }
+#     ifndef _WINDOWS
+      TtaNewTextForm (NumSelectImportClass, NumFormImportClass, TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), 30, 1, FALSE)
+#     endif /* !_WINDOWS */
+	  ;
+   else {
+        /* on cree un selecteur */
+        if (nbItems >= 6)
+           length = 6;
+        else
+             length = nbItems;
+#       ifndef _WINDOWS
+	    TtaNewSelector (NumSelectImportClass, NumFormImportClass, TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), nbItems, bufMenu, length, NULL, TRUE, FALSE);
+	    /* initialise le selecteur sur sa premiere entree */
+	    TtaSetSelector (NumSelectImportClass, 0, _EMPTYSTR_);
+#       endif /* !_WINDOWS */
+   } 
 }
+
 /*----------------------------------------------------------------------
    CallbackImportMenu
    updates the ImportMenu form.
@@ -388,8 +391,9 @@ STRING              data;
 				 ustrcat (DocumentPath, PATH_STR);
 				 ustrcat (DocumentPath, DirectoryName);
 				 BuildPathDocBuffer (bufDir, EOS, &i);
-				 TtaNewSelector (NumZoneDirOpenDoc, NumFormOpenDoc,
-						 TtaGetMessage (LIB, TMSG_DOC_DIR), i, bufDir, 9, NULL, FALSE, TRUE);
+#                ifndef _WINDOWS
+				 TtaNewSelector (NumZoneDirOpenDoc, NumFormOpenDoc, TtaGetMessage (LIB, TMSG_DOC_DIR), i, bufDir, 9, NULL, FALSE, TRUE);
+#                endif /* !_WINDOWS */
 
 				 TtaListDirectory (DirectoryName, NumFormOpenDoc, NULL, -1,
 						   docSuffix, TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
@@ -526,18 +530,22 @@ View                view;
 
    /* Creation du Formulaire Ouvrir */
    parentWidget = TtaGetViewFrame (document, view);
-   TtaNewForm (NumFormOpenDoc,  parentWidget,
-	       TtaGetMessage (LIB, TMSG_OPEN_DOC), TRUE, 2, 'L', D_CANCEL);
+#  ifndef _WINDOWS
+   TtaNewForm (NumFormOpenDoc, parentWidget, TtaGetMessage (LIB, TMSG_OPEN_DOC), TRUE, 2, 'L', D_CANCEL);
+#  endif /* !_WINDOWS */
    /* zone de saisie des dossiers documents */
    BuildPathDocBuffer (bufDir, EOS, &nbItems);
-   TtaNewSelector (NumZoneDirOpenDoc, NumFormOpenDoc,
-   TtaGetMessage (LIB, TMSG_DOC_DIR), nbItems, bufDir, 6, NULL, FALSE, TRUE);
+#  ifndef _WINDOWS
+   TtaNewSelector (NumZoneDirOpenDoc, NumFormOpenDoc, TtaGetMessage (LIB, TMSG_DOC_DIR), nbItems, bufDir, 6, NULL, FALSE, TRUE);
+#  endif /* !_WINDOWS */
    if (DirectoryName[0] == EOS && nbItems >= 1)
       /* si pas de dossier courant, on initialise avec le premier de bufDir */
      {
 	ustrcpy (DirectoryName, bufDir);
 	ustrcpy (DefaultDocumentName, bufDir);
+#   ifndef _WINDOWS
 	TtaSetSelector (NumZoneDirOpenDoc, 0, NULL);
+#   endif /* !_WINDOWS */
      }
    else if (DirectoryName[0] != EOS)
      {
@@ -547,8 +555,10 @@ View                view;
 	 URL_DIR_SEP = DIR_SEP;
 
        entry = SearchStringInBuffer(bufDir, DirectoryName, nbItems);
-       if(entry != -1)
-	 TtaSetSelector (NumZoneDirOpenDoc, entry, NULL);
+#      ifndef _WINDOWS
+       if (entry != -1)
+          TtaSetSelector (NumZoneDirOpenDoc, entry, NULL);
+#      endif /* !_WINDOWS */
        ustrcpy (docName, DirectoryName);
        length = ustrlen (docName);
        docName[length] = URL_DIR_SEP;
@@ -565,8 +575,9 @@ View                view;
       length = 30;
    else
       length = 50;
-   TtaNewTextForm (NumZoneDocNameToOpen, NumFormOpenDoc,
-		   TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), length, 1, TRUE);
+#  ifndef _WINDOWS
+   TtaNewTextForm (NumZoneDocNameToOpen, NumFormOpenDoc, TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), length, 1, TRUE);
+#  endif /* !_WINDOWS */
    TtaSetTextForm (NumZoneDocNameToOpen, DefaultDocumentName);
 
    if (NbDocSuffix > 1)
@@ -582,7 +593,9 @@ View                view;
                           NbDocSuffix, bufDir, NULL, TRUE);
         TtaSetMenuForm (NumToggleDocTypeToOpen, 0);
       }
+#  ifndef _WINDOWS
    TtaSetDialoguePosition ();
+#  endif /* !_WINDOWS */
    TtaShowDialogue (NumFormOpenDoc, TRUE);
 }
 

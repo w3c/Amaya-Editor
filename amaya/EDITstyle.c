@@ -1193,16 +1193,16 @@ View                view;
 	{
 	  len = 50;
 	  TtaGiveTextAttributeValue (attr, a_class, &len);
-#ifndef _WINDOWS
+#     ifndef _WINDOWS
 	  TtaSetSelector (BaseDialog + ClassSelect, -1, a_class);
-#endif /* _WINDOWS */
+#     endif /* _WINDOWS */
 	  ustrcpy (CurrentClass, a_class);
 	}
       else
 	{
-#ifndef _WINDOWS
+#     ifndef _WINDOWS
 	  TtaSetSelector (BaseDialog + ClassSelect, 0, NULL);
-#endif /* _WINDOWS */
+#     endif /* _WINDOWS */
 	  ustrcpy (CurrentClass, elHtmlName);
 	}
   
@@ -1286,12 +1286,16 @@ View                view;
     {
       len = 50;
       TtaGiveTextAttributeValue (attr, a_class, &len);
+#     ifndef _WINDOWS
       TtaSetSelector (BaseDialog + AClassSelect, -1, a_class);
+#     endif /* !_WINDOWS */
       ustrcpy (CurrentClass, a_class);
     }
   else
     {
+#     ifndef _WINDOWS
       TtaSetSelector (BaseDialog + AClassSelect, 0, NULL);
+#     endif /* !_WINDOWS */
       ustrcpy (CurrentClass, TEXT("default"));
     }
 

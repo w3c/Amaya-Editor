@@ -122,9 +122,10 @@ View                view;
 		  dest += l + 1;
 		  src += l + 1;
 	       }
-	     TtaNewPopup (NumMenuViewsToOpen, 0, TtaGetMessage (LIB, TMSG_VIEWS), nbItems,
-			  bufMenu, NULL, 'L');
+	     TtaNewPopup (NumMenuViewsToOpen, 0, TtaGetMessage (LIB, TMSG_VIEWS), nbItems, bufMenu, NULL, 'L');
+#        ifndef _WINDOWS
 	     TtaShowDialogue (NumMenuViewsToOpen, FALSE);
+#        endif /* !_WINDOWS */
 	  }
      }
 }

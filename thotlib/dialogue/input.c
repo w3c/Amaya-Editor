@@ -1044,7 +1044,7 @@ STRING              appliname;
 	/* Initialise la lecture du fichier */
 	e = 1;
 	max = MaxMenuAction;
-	len = ustrlen (CST_InsertChar) + 2;
+	len = ustrlen ("TtcInsertChar") + 2;
 
 	/* FnCopy la premiere ligne du fichier (#override, ou #...) */
 	ustrcpy (text, TEXT("#override\n"));
@@ -1217,24 +1217,24 @@ STRING              appliname;
             if (i <= 8) {
                /* FnCopy la ligne dans le source de la table de translations */
                ustrcat (text, line);
-               if (!ustrcmp (ch, CST_InsertChar)) {
+               if (!ustrcmp (ch, "TtcInsertChar")) {
                   ustrcat (text, TEXT("insert-string("));
                   ustrcat (text, AsciiTranslate (&adr[1]));
-			   } else if (!ustrcmp (ch, CST_DeleteSelection))
+			   } else if (!ustrcmp (ch, "TtcDeleteSelection"))
                       ustrcat (text, TEXT("delete-selection()"));
-               else if (!ustrcmp (ch, CST_DeletePrevChar))
+               else if (!ustrcmp (ch, "TtcDeletePreviousChar"))
                     ustrcat (text, TEXT("delete-prev-char()"));
-               else if (!ustrcmp (ch, CST_PreviousChar))
+               else if (!ustrcmp (ch, "TtcPreviousChar"))
                     ustrcat (text, TEXT("backward-char()"));
-               else if (!ustrcmp (ch, CST_NextChar))
+               else if (!ustrcmp (ch, "TtcNextChar"))
                     ustrcat (text, TEXT("forward-char()"));
-               else if (!ustrcmp (ch, CST_PreviousLine))
+               else if (!ustrcmp (ch, "TtcPreviousLine"))
                     ustrcat (text, TEXT("previous-line()"));
-               else if (!ustrcmp (ch, CST_NextLine))
+               else if (!ustrcmp (ch, "TtcNextLine"))
                     ustrcat (text, TEXT("next-line()"));
-               else if (!ustrcmp (ch, CST_BeginningOfLine))
+               else if (!ustrcmp (ch, "TtcStartOfLine"))
                     ustrcat (text, TEXT("beginning-of-line()"));
-               else if (!ustrcmp (ch, CST_EndOfLine))
+               else if (!ustrcmp (ch, "TtcEndOfLine"))
                     ustrcat (text, TEXT("end-of-line()"));
                ustrcat (text, TEXT("\n"));
 			}

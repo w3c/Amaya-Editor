@@ -584,10 +584,12 @@ STRING              data;
 	  {
 	    InitSearchDomain ((int) data, ChkrRange);
 	    /* On prepare la recheche suivante */
+#       ifndef _WINDOWS
 	    if (ChkrRange->SStartToEnd)
 	      TtaSetMenuForm (SpellingBase + ChkrMenuOR, 2);
 	    else
 	      TtaSetMenuForm (SpellingBase + ChkrMenuOR, 0);
+#       endif /* !_WINDOWS */
 	  }
 	else if (ChkrRange != NULL)
 	  /* Est-ce que le document vient de recevoir la selection */

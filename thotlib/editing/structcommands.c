@@ -3471,9 +3471,11 @@ View                view;
 		  TtaNewPopup (NumMenuSurround, 0, title, NItems,
 			       menuBuffer, NULL, TEXT('L'));
 		  /* affiche le pop-up menu */
+#         ifndef _WINDOWS
 		  TtaShowDialogue (NumMenuSurround, FALSE);
 		  /* attend la reponse de l'utilisateur */
 		  TtaWaitShowDialogue ();
+#         endif /* !_WINDOWS */
 	       }
 	  }
      }
@@ -3610,9 +3612,11 @@ View                view;
 		   TtaNewPopup (NumMenuChangeType, 0, title, NItems,
 				menuBuffer, NULL, TEXT('L'));
 		   /* affiche le pop-up menu */
+#          ifndef _WINDOWS
 		   TtaShowDialogue (NumMenuChangeType, FALSE);
 		   /* attend la reponse de l'utilisateur */
 		   TtaWaitShowDialogue ();
+#          endif /* !_WINDOWS */
 		}
 	   }
 }

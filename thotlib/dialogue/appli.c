@@ -1575,11 +1575,11 @@ LPARAM lParam;
                      wParam != 0x37      &&
                      wParam != 0x38      &&
 					 wParam != 0x39)
-				 return 0;
+				 break; 
 
             case WM_SYSCHAR:
             case WM_CHAR:
-                 TtaAbortShowDialogue ();
+                 /* TtaAbortShowDialogue (); */
 				 key = (int) wParam;
                  if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (STRING) &key))
                     /* WIN_CharTranslation (FrRef[frame], frame, mMsg, wParam, lParam); */
@@ -1635,7 +1635,7 @@ LPARAM lParam;
 
             case WM_LBUTTONDBLCLK:/* left double click handling */
 				 ReturnOption = -1;
-                 TtaAbortShowDialogue ();
+                 /* TtaAbortShowDialogue (); */
 	  
                  /* memorise la position de la souris */
                  ClickFrame = frame;
@@ -1659,7 +1659,7 @@ LPARAM lParam;
                     ApplyDirectResize (frame, ClickX, ClickY);
                     /* memorize the click position */
                  } else {
-                      TtaAbortShowDialogue ();
+                      /* TtaAbortShowDialogue (); */
                       LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
                  }
                  return 0;

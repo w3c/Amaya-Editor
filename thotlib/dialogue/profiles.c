@@ -777,9 +777,9 @@ Menu_Ctl  *ptrmenu;
     return FALSE;
   else if (ptrmenu->MenuAttr)
     /* check if the attr and select menu are in the profile */
-    return (Prof_BelongTable (TEXT("MenuAttribute")));
+    return (Prof_BelongTable ("MenuAttribute"));
   else if (ptrmenu->MenuSelect)
-    return (Prof_BelongTable (TEXT("MenuSelection")));    
+    return (Prof_BelongTable ("MenuSelection"));    
   else if (ptrmenu->ItemsNb == 0)
     /* an empty menu has to be removed */
     return FALSE;

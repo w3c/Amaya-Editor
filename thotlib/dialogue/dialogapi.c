@@ -376,6 +376,7 @@ void WIN_ReleaseDeviceContext ()
    TtDisplay = 0;
 }
 
+#if 0 /* @@@@@@@@@@@@@@@@@@@@ */
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -610,6 +611,7 @@ int  cmd;
 
    }
 }
+#endif /* @@@@@@@@@@@@@@@@@@@@ */
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1062,7 +1064,7 @@ struct E_List      *adbloc;
      }
 }
 
-
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    Callback for closing a menu                                        
   ----------------------------------------------------------------------*/
@@ -1085,7 +1087,7 @@ caddr_t             call_d;
    if (icatal == ShowCat && ShowReturn == 1)
       ShowReturn = 0;
 }
-
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
    Callback for a menu button                                         
@@ -1253,7 +1255,7 @@ caddr_t             call_d;
      }				/*if */
 }				/*CallToggle */
 
-
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    ReturnTogglevalues retourne les entre'es bascule'es du             
    toggle-menu catalogue.                                             
@@ -1299,7 +1301,7 @@ struct Cat_Context *catalogue;
 	  }
      }
 }
-
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
    Callback d'initialisation d'un formulaire.                         
@@ -1386,7 +1388,7 @@ caddr_t             call_d;
      }
 }
 
-
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    Callback d'initialisation d'un formulaire avec positionnement.     
   ----------------------------------------------------------------------*/
@@ -1404,7 +1406,7 @@ caddr_t             call_d;
    TtaSetDialoguePosition ();
    INITform (w, parentCatalogue, call_d);
 }
-
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
    Destruction de feuillet.                                           
@@ -1493,12 +1495,10 @@ caddr_t             call_d;
 	  }
       }
 }
-#endif /* !WINDOWS */
 
 /*----------------------------------------------------------------------
    Callback de feuillet.                                              
   ----------------------------------------------------------------------*/
-#ifndef _WINDOWS
 #ifdef __STDC__
 static void         CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
 
@@ -2365,7 +2365,7 @@ STRING              text;
 
    XmStringFree (title_string);
    XmStringFree (OK_string);
-#  endif /* _WINDOWS */
+#  endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -2447,7 +2447,7 @@ int                 msgType;
 	  }
 	XFlush (GDp);
      }
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -3538,10 +3538,12 @@ CHAR_T                button;
 		     if (equiv != NULL)
 		       {
 #                         ifdef _WINDOWS
+				          /*
                           if (&equiv[eindex] != EOS) {
                              if (parseAccelerator (&equiv[eindex], &fVirt, &key))
                                 addAccelerator (1, fVirt, key, ref + i);
                           }
+						  */
                           eindex += ustrlen (&equiv[eindex]) + 1;
 #                         else  /* !_WINDOWS */
 			  title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
@@ -3753,7 +3755,7 @@ struct E_List     **adbloc;
    return (w);
 }
 
-
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaNewIconMenu cre'e un sous-menu :                                        
    Le parame`tre ref donne la re'fe'rence pour l'application.         
@@ -3779,7 +3781,6 @@ ThotBool            horizontal;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
    int                 i;
    int                 ent;
    int                 n;
@@ -3936,8 +3937,8 @@ ThotBool            horizontal;
 	     ent++;
 	  }
      }
-#  endif /* _WINDOWS */
 }
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    TtaNewSubmenu cre'e un sous-menu :                                 
@@ -4170,10 +4171,12 @@ ThotBool            react;
                          /* Note l'accelerateur */
                          if (equiv != NULL) {
 #                           ifdef _WINDOWS
+							 /*
                             if (&equiv[eindex] != EOS) {
                                if (parseAccelerator (&equiv[eindex], &fVirt, &key))
                                   addAccelerator (1, fVirt, key, ref);
 							}
+							*/
                             eindex += ustrlen (&equiv[eindex]) + 1;
 #                           else  /* _WINDOWS */
                             title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
@@ -4368,8 +4371,8 @@ ThotBool            react;
                             if (equiv != NULL) {
 #                              ifdef _WINDOWS
                                if (&equiv[eindex] != EOS) {
-                                  if (parseAccelerator (&equiv[eindex], &fVirt, &key))
-                                     addAccelerator (currentFrame, fVirt, key, ref + i);
+                                  /*if (parseAccelerator (&equiv[eindex], &fVirt, &key))
+                                     addAccelerator (currentFrame, fVirt, key, ref + i);*/
                                   usprintf (equiv_item, TEXT("%s"), &equiv[eindex]);
 							   } 
                                eindex += ustrlen (&equiv[eindex]) + 1;
@@ -4470,7 +4473,7 @@ ThotBool            react;
      }
 }
 
-
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaSetMenuForm fixe la selection dans un sous-menu de formulaire : 
    Le parame`tre ref donne la re'fe'rence du catalogue.               
@@ -4558,7 +4561,6 @@ int                 val;
      }
 }
 
-
 /*----------------------------------------------------------------------
    TtaNewToggleMenu cre'e un sous-menu a` choix multiples :           
    Le parame`tre ref donne la re'fe'rence pour l'application.         
@@ -4587,7 +4589,6 @@ ThotBool            react;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
    register int        count;
    register int        index;
    int                 eindex;
@@ -4825,9 +4826,8 @@ ThotBool            react;
 	else
 	   TtaError (ERR_invalid_parameter);
      }
-#  endif /* _WINDOWS */
 }
-
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    TtaSetToggleMenu fixe la selection dans un toggle-menu :           
@@ -5561,7 +5561,7 @@ STRING              title;
      }
 }
 
-
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   NewSheet
   ----------------------------------------------------------------------*/
@@ -5591,25 +5591,11 @@ int                 cattype;
    ThotWidget          form;
    ThotWidget          w;
    STRING               ptr = NULL;
-
-#  ifdef _WINDOWS
-   struct Cat_Context* copyCat;
-   int                 strSize;
-   int                 charWidth;
-   TEXTMETRIC          tm;
-   WIN_GetDeviceContext (-1);
-   GetTextMetrics (TtDisplay, &tm);
-   charWidth = tm.tmAveCharWidth;
-#  else /* _WINDOWS */
    Arg                 args[MAX_ARGS];
    Arg                 argform[1];
    XmString            title_string, OK_string;
    ThotWidget          row;
-#  endif /* _WINDOWS */
 
-#  ifdef _WINDOWS
-   cyValue = 10;
-#  endif /* _WINDOWS */
    if (ref == 0)
      {
 	TtaError (ERR_invalid_reference);
@@ -5629,7 +5615,6 @@ int                 cattype;
 	/* Recherche le widget parent */
 	if (MainShell == 0 && parent == 0)
 	  {
-#       ifndef _WINDOWS
 	    OK_string = XmStringCreateSimple (TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
 	    n = 0;
 	    XtSetArg (args[n], XmNx, (Position) ShowX);
@@ -5641,7 +5626,6 @@ int                 cattype;
 	    XtSetArg (args[n], XmNuseAsyncGeometry, TRUE);
 	    n++;
 	    PopShell = XtCreatePopupShell ("", applicationShellWidgetClass, RootShell, args, 0);
-#       endif /* _WINDOWS */
 	  }
 	/*________________________________________________ Feuillet principal __*/
 	else
@@ -5660,7 +5644,6 @@ int                 cattype;
 	   w = MainShell;
 
 	n = 0;
-#       ifndef _WINDOWS
 	XtSetArg (args[n], XmNfontList, DefaultFont);
 	n++;
 	if (w == PopShell)
@@ -5668,9 +5651,7 @@ int                 cattype;
 	else
 	  form = XtCreateWidget (title, topLevelShellWidgetClass, w, args, n);
 	XtAddCallback (form, XmNdestroyCallback, (XtCallbackProc) formKill, catalogue);
-#       endif /* !_WINDOWS */
 
-#       ifndef _WINDOWS
 /*** Cree le formulaire dans sa frame ***/
 	title_string = XmStringCreateSimple (title);
 	XtSetArg (args[n], XmNdialogTitle, title_string);
@@ -5685,7 +5666,6 @@ int                 cattype;
 	XtAddCallback (XtParent (form), XmNpopdownCallback, (XtCallbackProc) CallSheet, catalogue);
 
 	XmStringFree (title_string);
-#       endif /* _WINDOWS */
 	catalogue->Cat_Ref = ref;
 	catalogue->Cat_Type = cattype;
 	catalogue->Cat_Button = button;
@@ -5698,7 +5678,6 @@ int                 cattype;
 	adbloc->E_Next = NewEList ();
 	adbloc = adbloc->E_Next;
 
-#       ifndef _WINDOWS
 	/*** Cree un Row-Column pour mettre les boutons QUIT/... ***/
 	/*** en dessous des sous-menus et sous-formulaires.    ***/
 	n = 0;
@@ -5784,7 +5763,6 @@ int                 cattype;
 	n++;
 	XtSetArg (args[n], XmNforeground, FgMenu_Color);
 	n++;
-#       endif /* !_WINDOWS */
 	adbloc = catalogue->Cat_Entries;
 
 	if (cattype == CAT_SHEET)
@@ -5793,7 +5771,6 @@ int                 cattype;
 	  {
 	    /*** Cree le bouton de confirmation du formulaire ***/
 	     ent = 1;
-#            ifndef _WINDOWS 
 	     w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), args, n);
 	     XtManageChild (w);
 	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallSheet, catalogue);
@@ -5804,16 +5781,6 @@ int                 cattype;
 	     /* Definit le bouton de confirmation comme bouton par defaut */
 	     XtSetArg (argform[0], XmNdefaultButton, w);
 	     XtSetValues (form, argform, 1);
-#            else  /* _WINDOWS */
-             strSize = ustrlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) * charWidth + 20;
-             formulary.Buttons[bIndex] = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_LIB_CONFIRM), 
-                                                       WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                                       bAbsBase, 300, strSize, 20, parent, 
-                                                       (HMENU) IDCANCEL, hInstance, NULL) ;
-             bAbsBase += (strSize + 20);
-             bIndex++ ;
-	     adbloc->E_ThotWidget[1] = (ThotWidget) IDCANCEL;
-#            endif /* _WINDOWS */
 	  }
 	else
 	   ent = 0;
@@ -5833,28 +5800,15 @@ int                 cattype;
 		     ptr = &text[index];
 		  else
 		    {
-#                      ifndef _WINDOWS
 		       w = XmCreatePushButton (row, &text[index], args, n);
 		       XtManageChild (w);
 		       XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallSheet, catalogue);
 		       adbloc->E_ThotWidget[ent] = w;
-#                      else  /* _WINDOWS */
-                       strSize = ustrlen (&text[index]) * charWidth + 10;
-                       formulary.Buttons[bIndex] = CreateWindow ((LPCTSTR)"BUTTON", (LPCTSTR)(&text[index]), 
-                                                                 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                                                 bAbsBase, 300, strSize, 20, (HWND)parent, 
-                                                                 (HMENU)(ref + bIndex), (HINSTANCE)hInstance, (LPVOID)NULL) ;
-                       bAbsBase += (strSize + 10);
-                       bIndex++ ;
-	               adbloc->E_ThotWidget[ent] = (ThotWidget) bIndex;
-#                      endif /* _WINDOWS */
 		    }
-#                 ifndef _WINDOWS
 		  /* Definit le bouton de confirmation comme bouton par defaut */
 		  if (index == 0)
 		     XtSetArg (argform[0], XmNdefaultButton, w);
 		  XtSetValues (form, argform, 1);
-#                 endif  /* !_WINDOWS */
 	       }
 	     index += count + 1;
 	     ent++;
@@ -5865,72 +5819,22 @@ int                 cattype;
 	   switch (dbutton)
 		 {
 		    case D_CANCEL:
-#                      ifndef _WINDOWS
 		       w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_CANCEL), args, n);
-#                      else  /* _WINDOWS */
-                       strSize = ustrlen (TtaGetMessage (LIB, TMSG_CANCEL)) * charWidth + 10;
-                       formulary.Buttons[bIndex] = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_CANCEL), 
-                                                                 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                                                 bAbsBase, 300, strSize, 20, parent, 
-                                                                 (HMENU) IDCANCEL, hInstance, NULL) ;
-	               adbloc->E_ThotWidget[ent] = (ThotWidget) IDCANCEL;
-                       bAbsBase += (strSize + 10);
-#                      endif /* _WINDOWS */
 		       break;
 		    case D_DONE:
-#                      ifndef _WINDOWS
 		       w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_DONE), args, n);
-#                      else  /* _WINDOWS */
-                       strSize = ustrlen (TtaGetMessage (LIB, TMSG_DONE)) * charWidth + 10;
-                       formulary.Buttons[bIndex] = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_DONE), 
-                                                                 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                                                 bAbsBase, 300, strSize, 20, parent, 
-                                                                 (HMENU) IDCANCEL, hInstance, NULL) ;
-	               adbloc->E_ThotWidget[ent] = (ThotWidget) IDCANCEL;
-                       bAbsBase += (strSize + 10);
-#                      endif /* _WINDOWS */
 		       break;
 		 }
 	else
-#          ifndef _WINDOWS
 	   w = XmCreatePushButton (row, ptr, args, n);
-#          else  /* _WINDOWS */
-	  {
-             strSize = ustrlen (ptr) * charWidth + 10;
-             formulary.Buttons[bIndex] = CreateWindow (TEXT("BUTTON"), ptr, 
-                                                       WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                                       bAbsBase, 300, strSize, 20, parent, 
-                                                       (HMENU) (ref + bIndex), hInstance, NULL) ;
-             bAbsBase += (strSize + 10);
-	     adbloc->E_ThotWidget[ent] = (ThotWidget) bIndex;
-	  } 
-          bIndex++ ;
-#          endif /* _WINDOWS */
 
-#       ifndef _WINDOWS
 	XtManageChild (w);
 	XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallSheet, catalogue);
-#       endif /* !_WINDOWS */
 	/* Range le bouton dans le 1er bloc de widgets */
 	adbloc->E_ThotWidget[0] = w;
-#       ifdef _WINDOWS
-        form = CreateWindow (_WNDIALOGBOXCST_, title, DS_MODALFRAME | WS_POPUP | 
-                             WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
-	  		     CW_USEDEFAULT, CW_USEDEFAULT, bAbsBase + 20, 400,
-			     w, 0, hInstance, 0); 
-
-#   ifdef AMAYA_DEBUG
-	fprintf (stderr, "Created ComboBox %X\n", form);
-#   endif /* AMAYA_DEBUG */
-
-        catalogue->Cat_Widget = form;
-        copyCat = catalogue;
-        WIN_AddFrameCatalogue (parent, copyCat) ;
-        bIndex   =  0;
-        bAbsBase = 60;
-#       endif /* _WINDOWS */
      }
 }
+#endif /* !_WINDOWS */
 
 #ifdef _WINDOWS
  /*----------------------------------------------------------------------
@@ -6025,6 +5929,7 @@ LPARAM lParam;
 }
 #endif /* _WINDOWS */
 
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaNewForm cre'e un formulaire :                                   
    Le parame`tre ref donne la reference et parent le ThotWidget pe're 
@@ -6127,7 +6032,7 @@ CHAR_T                button;
 {
    NewSheet (ref, parent, title, number - 1, text, horizontal, package, button, D_DONE, CAT_DIALOG);
 }
-
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
    TtaAttachForm attache le catalogue au formulaire ou au feuillet    
@@ -6281,7 +6186,7 @@ int                 ref;
      }
 }
 
-
+#ifndef _WINDOWS 
 /*----------------------------------------------------------------------
    TtaNewSelector cre'e un se'lecteur dans un formulaire :            
    Le parame`tre ref donne la re'fe'rence pour l'application.         
@@ -6316,7 +6221,6 @@ ThotBool            react;
    struct Cat_Context *catalogue;
    struct Cat_Context *parentCatalogue;
 
-#  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
    ThotWidget          wt;
    int                 ent;
@@ -6328,7 +6232,6 @@ ThotBool            react;
    struct E_List      *adbloc;
    XmString            title_string;
    XmString           *item;
-#  endif /* _WINDOWS */
 
    ThotBool            rebuilded;
 
@@ -6386,7 +6289,6 @@ ThotBool            react;
    catalogue->Cat_SelectList = !withText;
    catalogue->Cat_React = react;
 
-#  ifndef _WINDOWS
    if (number == 0)
      {
 	/* Cree un selecteur avec une entree a blanc */
@@ -6627,10 +6529,10 @@ ThotBool            react;
 	i++;
      }
    TtaFreeMemory ( item);
-#  endif /* _WINDOWS */
 }
+#endif /* !_WINDOWS */
 
-
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaActiveSelector rend actif le  se'lecteur.                       
   ----------------------------------------------------------------------*/
@@ -6667,7 +6569,6 @@ int                 ref;
 #       endif /* _WINDOWS */
      }
 }
-
 
 /*----------------------------------------------------------------------
    TtaDesactiveSelector rend non actif le  se'lecteur.                        
@@ -6706,8 +6607,9 @@ int                 ref;
 #       endif /* _WINDOWS */
      }
 }
+#endif /* !_WINDOWS */
 
-
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaSetSelector initialise l'entre'e et/ou le texte du se'lecteur : 
    Le parame`tre ref donne la re'fe'rence du catalogue.               
@@ -6725,9 +6627,7 @@ STRING              text;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
    ThotWidget          w;
-#  endif /* !_WINDOWS */
    ThotWidget          wt;
    ThotWidget          select;
    struct Cat_Context *catalogue;
@@ -6746,7 +6646,6 @@ STRING              text;
 	     return;
 	  }
 
-#       ifndef _WINDOWS
 	if (!catalogue->Cat_SelectList)
 	  {
 	     wt = XmSelectionBoxGetChild (select, XmDIALOG_TEXT);
@@ -6793,7 +6692,6 @@ STRING              text;
 	      XtAddCallback (select, XmNsingleSelectionCallback, (XtCallbackProc) CallList, catalogue);
 	   else
 	      XtAddCallback (wt, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
-#       endif /* _WINDOWS */
      }
 }
 
@@ -6812,15 +6710,9 @@ STRING              text;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
    XmString            title_string;
    int                 n;
-#  else  /* _WINDOWS */
-   HDC         hdc ;
-   RECT        rect ;
-   PAINTSTRUCT ps ;
-#  endif /* _WINDOWS */
    int                 i;
    int                 ent;
    int                 rebuilded;
@@ -6834,9 +6726,7 @@ STRING              text;
 	TtaError (ERR_invalid_reference);
 	return;
      }
-#  ifndef _WINDOWS
    title_string = 0;
-#  endif /* _WINDOWS */
    catalogue = CatEntry (ref);
    rebuilded = 0;
    if (catalogue == NULL)
@@ -6846,33 +6736,18 @@ STRING              text;
 	/* Modification du catalogue */
 	w = catalogue->Cat_Widget;
 	/* Regarde si le widget est affiche */
-#       ifndef _WINDOWS
 	if (XtIsManaged (w))
-#       else  /* _WINDOWS */
-        if (IsWindowVisible (w))
-#       endif /* WINDOWS */
 	   rebuilded = 2;
 	else
 	   rebuilded = 1;
-#       ifndef _WINDOWS
 	n = 0;
 	title_string = XmStringCreateSimple (text);
 	XtSetArg (args[n], XmNlabelString, title_string);
 	n++;
 	XtSetValues (w, args, n);
-#       else   /* _WINDOWS */
-        hdc = BeginPaint (w, &ps);
-        GetClientRect (w, &rect);
-        DrawText (hdc, text, -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-        EndPaint (w, &ps);
-#       endif 
 	/* Faut-il reafficher le widget ? */
 	if (rebuilded == 2)
-#          ifndef _WINDOWS
 	   XtManageChild (w);
-#          else  /* _WINDOWS */
-           UpdateWindow (w);
-#          endif /* _WINDOWS */   
      }
    else
      {
@@ -6911,7 +6786,6 @@ STRING              text;
 	w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 
 /*** Cree l'intitule ***/
-#       ifndef _WINDOWS
 	n = 0;
 	title_string = XmStringCreateSimple (text);
 	XtSetArg (args[n], XmNfontList, DefaultFont);
@@ -6925,13 +6799,6 @@ STRING              text;
 	/*XtSetArg (args[n], XmNborderColor, BgMenu_Color);
 	n++;*/
 	w = XmCreateLabel (w, "Dialogue", args, n);
-#       else  /* _WINDOWS */
-	if (!isOnlyBlank (text)) {
-	   w = CreateWindow (TEXT("STATIC"), text, WS_CHILD | WS_VISIBLE | SS_LEFT, 10, cyValue, 100, 30, 
-			     parentCatalogue->Cat_Widget, (HMENU) ref, hInstance, NULL);
-	   cyValue += 40;
-	}
-#       endif /* _WINDOWS */
 
 	catalogue->Cat_Widget = w;
 	catalogue->Cat_Ref = ref;
@@ -6942,9 +6809,7 @@ STRING              text;
 	catalogue->Cat_EntryParent = i;
 	catalogue->Cat_Entries = NULL;
      }
-#  ifndef _WINDOWS
    XmStringFree (title_string);
-#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -6974,11 +6839,9 @@ ThotBool            react;
    struct E_List      *adbloc;
    ThotWidget          w;
    ThotWidget          row;
-#ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
    XmString            title_string;
    int                 n;
-#endif  /* !_WINDOWS */
 
    if (ref == 0)
      {
@@ -7023,7 +6886,6 @@ ThotBool            react;
 	  {
 	     /* Cree a l'interieur Row-Column du formulaire */
 	     row = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-#ifndef _WINDOWS
 	     row = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 	     n = 0;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
@@ -7075,52 +6937,31 @@ ThotBool            react;
 	     if (TextTranslations != NULL)
 		XtSetArg (args[n], XmNtranslations, TextTranslations);
 	     n++;
-#endif /* !_WINDOWS */
 
 	     if (height < 2)
 	       {
-#ifndef _WINDOWS 
 		  XtSetArg (args[n], XmNeditMode, XmSINGLE_LINE_EDIT);
 		  n++;
 		  /*XtSetArg(args[n], XmNscrollVertical, FALSE); n++; */
 		  w = XmCreateText (row, "Dialogue", args, n);
-#else  /* _WINDOWS */
-		  w = CreateWindow (TEXT("EDIT"), _EMPTYSTR_, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER, 
-				    10, cyValue, 200, 30, parentCatalogue->Cat_Widget, (HMENU) ref, hInstance, NULL);
-		  cyValue += 40;
-#endif /* _WINDOWS */
 	       }
 	     else
 	       {
-#ifndef _WINDOWS 
 		  XtSetArg (args[n], XmNeditMode, XmMULTI_LINE_EDIT);
 		  n++;
 		  XtSetArg (args[n], XmNrows, (short) height);
 		  n++;
 		  w = XmCreateScrolledText (row, "Dialogue", args, n);
-#else  /* _WINDOWS */
-		  /* Create a multi-line edit windows *
-		   * TODO TODO TODO TODO TODO TODO    */
-#endif /* !_WINDOWS */
 	       }
-#ifndef _WINDOWS 
 	     XtManageChild (w);
 	     /* Si la feuille de saisie est reactive */
 	     if (react)
 		XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
-#else  /* _WINDOWS */
-	     ShowWindow (w, SW_SHOWNORMAL);
-	     UpdateWindow (w);
-#endif /* _WINDOWS */
 	     catalogue->Cat_Ref = ref;
 	     catalogue->Cat_Type = CAT_TEXT;
 	     /* L'entree Cat_Entries contient le numero du widget texte */
 	     catalogue->Cat_Entries = (struct E_List *) w;
-#ifndef _WINDOWS
 	     catalogue->Cat_Widget = row;
-#else  /* _WINDOWS */
-	     catalogue->Cat_Widget = w;
-#endif /* _WINDOWS */
 	     catalogue->Cat_PtParent = parentCatalogue;
 	     adbloc->E_ThotWidget[ent] = (ThotWidget) catalogue;
 	     adbloc->E_Free[ent] = TEXT('N');
@@ -7128,7 +6969,6 @@ ThotBool            react;
 	  }
      }
 }
-
 
 /*----------------------------------------------------------------------
    TtaSetTextForm initialise une feuille de saisie de texte :         
@@ -7159,27 +6999,26 @@ STRING              text;
       TtaError (ERR_invalid_reference);
    else if (catalogue->Cat_Type != CAT_TEXT)
       TtaError (ERR_invalid_reference);
-   else
+   else 
      {
-	w = (ThotWidget) catalogue->Cat_Entries;
-	/* Si la feuille de saisie est reactive */
+        w = (ThotWidget) catalogue->Cat_Entries;
+        /* Si la feuille de saisie est reactive */
 #       ifndef _WINDOWS
-	if (catalogue->Cat_React)
-	   XtRemoveCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
+        if (catalogue->Cat_React)
+           XtRemoveCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
 
-	XmTextSetString (w, text);
-	lg = ustrlen (text);
-	XmTextSetSelection (w, lg, lg, 500);
+        XmTextSetString (w, text);
+        lg = ustrlen (text);
+        XmTextSetSelection (w, lg, lg, 500);
 
-	/* Si la feuille de saisie est reactive */
-	if (catalogue->Cat_React)
-	   XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
+        /* Si la feuille de saisie est reactive */
+        if (catalogue->Cat_React)
+        XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
 #       else  /* _WINDOWS */
-	SetWindowText (w, text) ;
+        SetWindowText (w, text) ;
 #       endif /* _WINDOWS */
      }
 }
-
 
 /*----------------------------------------------------------------------
    TtaNewNumberForm cre'e une feuille de saisie de nombre :           
@@ -7203,7 +7042,6 @@ ThotBool            react;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
    int                 ent;
    int                 n;
    int                 i;
@@ -7382,9 +7220,7 @@ ThotBool            react;
 	     catalogue->Cat_Entries->E_ThotWidget[1] = w;
 	  }
      }
-#  endif /* _WINDOWS */
 }
-
 
 /*----------------------------------------------------------------------
    TtaSetNumberForm fixe le contenu de la feuille de saisie de texte :        
@@ -7447,14 +7283,12 @@ int                 val;
      }
 }
 
-
 /*----------------------------------------------------------------------
    TtaSetDialoguePosition me'morise la position actuelle de la souris 
    comme position d'affichage des TtaShowDialogue().               
   ----------------------------------------------------------------------*/
 void                TtaSetDialoguePosition ()
 {
-#  ifndef _WINDOWS
    ThotWindow          wdum;
    int                 xdum;
    int                 ydum;
@@ -7462,9 +7296,7 @@ void                TtaSetDialoguePosition ()
    /* Enregistre la position courante du curseur pour les futurs show */
    wdum = RootWindow (GDp, DefaultScreen (GDp));
    XQueryPointer (GDp, wdum, &wdum, &wdum, &xdum, &ydum, &ShowX, &ShowY, &xdum);
-#  endif /* _WINDOWS */
 }
-
 
 /*----------------------------------------------------------------------
    TtaShowDialogue active le catalogue de'signe.                      
@@ -7617,7 +7449,7 @@ void                TtaWaitShowDialogue ()
    /* Fin de l'attente */
    CurrentWait = 0;
 }
-
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    TtaTestWaitShowDialogue retourne Vrai (1) si un TtaWaitShowDialogue        
@@ -7628,7 +7460,7 @@ ThotBool            TtaTestWaitShowDialogue ()
    return (CurrentWait);
 }
 
-
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaAbortShowDialogue abandonne le TtaShowDialogue.                 
   ----------------------------------------------------------------------*/
@@ -7665,3 +7497,4 @@ void                TtaAbortShowDialogue ()
 	  }
      }
 }
+#endif /* !_WINDOWS */

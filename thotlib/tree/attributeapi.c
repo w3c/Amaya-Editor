@@ -603,11 +603,11 @@ Document            document;
    Must be 0 if element is NULL.
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                TtaSetAttributeText (Attribute attribute, char* buffer, Element element, Document document)
+void                TtaSetAttributeText (Attribute attribute, STRING buffer, Element element, Document document)
 #else  /* __STDC__ */
 void                TtaSetAttributeText (attribute, buffer, element, document)
 Attribute           attribute;
-char*               buffer;
+STRING              buffer;
 Element             element;
 Document            document;
 #endif /* __STDC__ */

@@ -157,9 +157,10 @@ char*               data;
 			   {
 			      /* demande confirmation */
 			      usprintf (BufDir, TtaGetMessage (LIB, TMSG_FILE_EXIST), docName);
+#                 ifndef _WINDOWS
 			      TtaNewLabel (NumLabelConfirm, NumFormConfirm, BufDir);
-/*           ClassDocToCreate[0] = EOS; */
 			      TtaSetDialoguePosition ();
+#                 endif /* !_WINDOWS */
 			      TtaShowDialogue (NumFormConfirm, FALSE);
 			   }
 			 else
@@ -204,7 +205,9 @@ char*               data;
 				 strcat (DocumentPath, PATH_STR);
 				 strcat (DocumentPath, DirectoryDocToCreate);
 				 BuildPathDocBuffer (BufDir, EOS, &i);
+#                ifndef _WINDOWS
 				 TtaNewSelector (NumZoneDocDirToCreate, NumFormCreateDoc, TtaGetMessage (LIB, TMSG_DOC_DIR), i, BufDir, 9, NULL, FALSE, TRUE);
+#                endif /* !_WINDOWS */
 			      }
 			 }
 		 }
@@ -261,15 +264,18 @@ View                view;
    /* Creation du formulaire Creer document */
    /* +++++++++++++++++++++++++++++++++++++ */
    parentWidget = TtaGetViewFrame (document, view);
-   TtaNewForm (NumFormCreateDoc,  parentWidget,
-	       TtaGetMessage (LIB, TMSG_CREATE_DOC), TRUE, 2, 'L', D_CANCEL);
+#  ifndef _WINDOWS
+   TtaNewForm (NumFormCreateDoc, parentWidget, TtaGetMessage (LIB, TMSG_CREATE_DOC), TRUE, 2, 'L', D_CANCEL);
+#  endif /* !_WINDOWS */
    /* zone de saisie des dossiers documents */
    BuildPathDocBuffer (BufDir, EOS, &nbitem);
    if (DirectoryDocToCreate[0]!=EOS)
      entry = SearchStringInBuffer (BufDir, DirectoryDocToCreate, nbitem);
+#  ifndef _WINDOWS
    TtaNewSelector (NumZoneDocDirToCreate, NumFormCreateDoc, TtaGetMessage (LIB, TMSG_DOC_DIR), nbitem, BufDir, 9, NULL, FALSE, TRUE);
    if (nbitem >= 1 && entry!= -1)
       TtaSetSelector (NumZoneDocDirToCreate, entry, NULL);
+#  endif /* !_WINDOWS */
    /* nom du document a creer */
    if (DocumentPath!=NULL && (DirectoryDocToCreate[i] == EOS || entry == -1))
      {
@@ -303,26 +309,30 @@ View                view;
 	else
 	   length = 5;
 	/* cree le selecteur */
-	TtaNewSelector (NumSelDocClassToCreate, NumFormCreateDoc,
-			TtaGetMessage (LIB, TMSG_DOC_TYPE), nbitem, BufMenu, length, NULL, TRUE, FALSE);
+#   ifndef _WINDOWS
+	TtaNewSelector (NumSelDocClassToCreate, NumFormCreateDoc, TtaGetMessage (LIB, TMSG_DOC_TYPE), nbitem, BufMenu, length, NULL, TRUE, FALSE);
+#   endif /* !_WINDOWS */
 	entry = 0;
 	if(ClassDocToCreate[0]!=EOS)
 	  entry = SearchStringInBuffer (BufMenu, ClassDocToCreate, nbitem);
 	/* initialise le selecteur sur sa premiere entree */
-	
+#   ifndef _WINDOWS
 	TtaSetSelector (NumSelDocClassToCreate, entry, ClassDocToCreate);
+#   endif /* _WINDOWS */
      }
    else
       /* on n'a pas cree' de selecteur, on cree une zone de saisie */
      {
-       TtaNewTextForm (NumSelDocClassToCreate, NumFormCreateDoc,
-		       TtaGetMessage (LIB, TMSG_DOC_TYPE), 30, 1, FALSE);
+#      ifndef _WINDOWS
+       TtaNewTextForm (NumSelDocClassToCreate, NumFormCreateDoc, TtaGetMessage (LIB, TMSG_DOC_TYPE), 30, 1, FALSE);
+#      endif /* !_WINDOWS */
        if(ClassDocToCreate[0]!=EOS)
 	 TtaSetTextForm (NumSelDocClassToCreate,ClassDocToCreate);
      }
    /* zone de saisie du nom du document a creer */
-   TtaNewTextForm (NumZoneDocNameToCreate, NumFormCreateDoc,
-		   TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), 50, 1, TRUE);
+#  ifndef _WINDOWS
+   TtaNewTextForm (NumZoneDocNameToCreate, NumFormCreateDoc, TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), 50, 1, TRUE);
+#  endif /* !_WINDOWS */
    TtaSetTextForm (NumZoneDocNameToCreate, docName);
 
    /* Formulaire Confirmation creation */
@@ -330,10 +340,12 @@ View                view;
    ustrcpy (BufMenu, TtaGetMessage (LIB, TMSG_RENAME));
    i = ustrlen (BufMenu) + 1;
    ustrcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+#  ifndef _WINDOWS
    TtaNewDialogSheet (NumFormConfirm, parentWidget, NULL, 2, BufMenu, FALSE, 1, 'L');
 
 /* affichage du formulaire Creer document */
    TtaSetDialoguePosition ();
+#  endif /* !_WINDOWS */
    TtaShowDialogue (NumFormCreateDoc, FALSE);
 }
 

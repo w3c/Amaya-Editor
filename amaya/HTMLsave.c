@@ -540,8 +540,10 @@ void                DoSaveObjectAs ()
 
 	if (res)
 	  {
+#        ifndef _WINDOWS
 	     TtaSetDialoguePosition ();
 	     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
+#        endif /* !_WINDOWS */
 	     return;
 	  }
 	SavingObject = 0;
@@ -556,8 +558,10 @@ void                DoSaveObjectAs ()
 	if (!UserAnswer)
 	  {
 	     /* the user has to change the name of the saving file */
+#        ifndef _WINDOWS
 	     TtaSetDialoguePosition ();
 	     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
+#        endif /* !_WINDOWS */
 	     return;
 	  }
      }
@@ -654,7 +658,9 @@ View                view;
 	     ustrcat (SaveName, html_EXT);
 	   ustrcat (tempname, SaveName);
 	 }
+#      ifndef _WINDOWS
        TtaSetDialoguePosition ();
+#      endif /* !_WINDOWS */
      }
    else
      {
@@ -1246,7 +1252,7 @@ ThotBool         use_preconditions;
 	  pImage = pImage->nextImage;
 	}
 
-#ifndef _WINDOWS 
+#     ifndef _WINDOWS 
       TtaNewSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
 		      NULL, nb, msg, 6, NULL, FALSE, TRUE);
        
@@ -1254,9 +1260,9 @@ ThotBool         use_preconditions;
       TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
       /* wait for an answer */
       TtaWaitShowDialogue ();
-#else  /* _WINDOWS */
+#     else  /* _WINDOWS */
       CreateSaveListDlgWindow (TtaGetViewFrame (doc, view), nb, msg, BaseDialog, ConfirmSave);
-#endif /* _WINDOWS */
+#     endif /* _WINDOWS */
       if (!UserAnswer)
 	res = -1;
     }

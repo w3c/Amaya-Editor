@@ -1268,7 +1268,9 @@ int                 applyDomain;
 		      {
 			if (IndentSign != 0 && IndentValue == 0)
 			  IndentValue = 15;
+#           ifndef _WINDOWS
 			TtaSetNumberForm (NumZoneRecess, IndentValue);
+#           endif /* !_WINDOWS */
 		      }
 		  }
 	      }
@@ -1528,6 +1530,7 @@ View                view;
    pDoc = LoadedDocument[document - 1];
    ResetMenus ();
 
+#  ifndef _WINDOWS
    /* formulaire presentation standard */
    TtaNewSheet (NumFormPresentStandard, TtaGetViewFrame (document, view), 
 		TtaGetMessage (LIB, TMSG_STD_PRES),
@@ -1544,15 +1547,17 @@ View                view;
    usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_STD_FORMAT));
    i += ustrlen (&string[i]) + 1;
    usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_STD_GEOMETRY));
+
    TtaNewToggleMenu (NumMenuPresentStandard, NumFormPresentStandard,
 		TtaGetMessage (LIB, TMSG_STD_PRES), 5, string, NULL, TRUE);
    /* annule toutes les options du choix multiple Presentation standard */
-#  ifndef _WINDOWS 
    TtaSetToggleMenu (NumMenuPresentStandard, -1, FALSE);
 #  endif /* _WINDOWS */
    /* active le formulaire "Presentation standard" */
    DocModPresent = pDoc;
+#  ifndef _WINDOWS
    TtaShowDialogue (NumFormPresentStandard, TRUE);
+#  endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1823,12 +1828,16 @@ STRING              txt;
       if (IndentSign != 0 && IndentValue == 0)
 	{
 	  IndentSign = 0;
+#     ifndef _WINDOWS
 	  TtaSetMenuForm (NumMenuRecessSense, 1);
+#     endif /* !_WINDOWS */
 	}
       else if (IndentSign == 0 && IndentValue != 0)
 	{
 	  IndentSign = 1;
+#     ifndef _WINDOWS
 	  TtaSetMenuForm (NumMenuRecessSense, 0);
+#     endif /* !_WINDOWS */
 	}
       ApplyPresentMod (Apply_Indent);
       break;
@@ -1851,16 +1860,18 @@ STRING              txt;
 	      IndentValue = 15;
 #         ifdef _WINDOWS
           WIN_IndentValue = 15;
-#         endif /* _WINDOWS */
+#         else  /* _WINDOWS */
 	      TtaSetNumberForm (NumZoneRecess, 15);
+#         endif /* !_WINDOWS */
 	    }
 	  else if (IndentSign == 0 && IndentValue != 0)
 	    {
 	      IndentValue = 0;
 #         ifdef _WINDOWS 
           WIN_IndentValue = 0;
-#         endif /* _WINDOWS */
+#         else  /* _WINDOWS */
 	      TtaSetNumberForm (NumZoneRecess, 0);
+#         endif /* !_WINDOWS */
 	    }
 	}
       ApplyPresentMod (Apply_Indent);
@@ -1879,7 +1890,9 @@ STRING              txt;
 	    i = 2;
 	  else
 	    i = 1;
+#     ifndef _WINDOWS 
 	  TtaSetMenuForm (NumMenuLineSpacing, i);
+#     endif /* !_WINDOWS */
 	}
       ApplyPresentMod (Apply_LineSp);
       break;
@@ -1897,8 +1910,9 @@ STRING              txt;
 	  OldLineSp = ((val + 2) * NormalLineSpacing) / 2;
 #     ifdef _WINDOWS
       WIN_OldLineSp = OldLineSp;
-#     endif /* _WINDOWS */
+#     else  /* _WINDOWS */
 	  TtaSetNumberForm (NumZoneLineSpacing, OldLineSp);
+#     endif /* !_WINDOWS */
 	}
       ApplyPresentMod (Apply_LineSp);
       break;
@@ -2203,7 +2217,9 @@ View                view;
 #       endif /* _WINDOWS */
 	  }
 	DocModPresent = pDoc;
+#   ifndef _WINDOWS 
 	TtaShowDialogue (NumFormPresChar, TRUE);
+#   endif /* !_WINDOWS */
      }
 }
 
@@ -2259,10 +2275,12 @@ View                view;
 	     /* annule les etats memorises */
 	     ResetMenus ();
 
+#        ifndef _WINDOWS
 	     /* feuille de dialogue Presentation Graphiques */
 	     TtaNewSheet (NumFormPresGraphics, TtaGetViewFrame (document, view), 
 			  TtaGetMessage (LIB, TMSG_GRAPHICS_PRES),
 		 1, TtaGetMessage (LIB, TMSG_APPLY), FALSE, 3, 'L', D_DONE);
+#        endif /* !_WINDOWS */
 
 	     /* sous-menu style des traits */
 	     i = 0;
@@ -2273,8 +2291,7 @@ View                view;
 	     usprintf (&string[i], TEXT("%s"), TEXT("Buuuuu"));	/* Traits_pointilles */
 	     i += ustrlen (&string[i]) + 1;
 	     usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_UNCHANGED));
-	     TtaNewSubmenu (NumMenuStrokeStyle, NumFormPresGraphics, 0,
-	      TtaGetMessage (LIB, TMSG_LINE_STYLE), 4, string, NULL, TRUE);
+	     TtaNewSubmenu (NumMenuStrokeStyle, NumFormPresGraphics, 0, TtaGetMessage (LIB, TMSG_LINE_STYLE), 4, string, NULL, TRUE);
 	     /* change la police des 3 premieres entrees du style des traits */
 	     for (i = 0; i < 3; i++)
 		TtaRedrawMenuEntry (NumMenuStrokeStyle, i, TEXT("icones"), ThotColorNone, -1);
@@ -2297,18 +2314,21 @@ View                view;
 		 i = 0;
 		 break;
 	       }
+#        ifndef _WINDOWS
 	     TtaSetMenuForm (NumMenuStrokeStyle, i - 1);
 
 	     /* zone de saisie epaisseur des traits */
-	     TtaNewNumberForm (NumZoneStrokeWeight, NumFormPresGraphics,
-		       TtaGetMessage (LIB, TMSG_LINE_WEIGHT), 0, 72, TRUE);
+	     TtaNewNumberForm (NumZoneStrokeWeight, NumFormPresGraphics, TtaGetMessage (LIB, TMSG_LINE_WEIGHT), 0, 72, TRUE);
+#        endif /* !_WINDOWS */
 	     ChngLineWeight = TRUE;
 	     StdLineWeight = FALSE;
 	     LineWeight = pAb->AbLineWeight;
 	     /* Toggle button Epaisseur des traits standard */
 	     usprintf (string, TEXT("B%s"), TtaGetMessage (LIB, TMSG_UNCHANGED));
+#        ifndef _WINDOWS
 	     TtaNewToggleMenu (NumToggleWidthUnchanged, NumFormPresGraphics,
 			       NULL, 1, string, NULL, TRUE);
+#        endif /* !_WINDOWS */
 	     /* initialise la zone de saisie epaisseur des traits */
 	     if (pAb->AbLineWeightUnit == UnPoint)
 		i = LineWeight;
@@ -2320,7 +2340,9 @@ View                view;
 		  if ((currentFontSize * i) % 10 >= 5)
 		     i++;
 	       }
+#        ifndef _WINDOWS
 	     TtaSetNumberForm (NumZoneStrokeWeight, i);
+#        endif /* !_WINDOWS */
 
 	     /* selecteur motif de remplissage */
 	     nbItems = MakeMenuPattern (string, MAX_TXT_LEN);
@@ -2332,19 +2354,24 @@ View                view;
 		     i = 5;
 		  else
 		     i = nbItems;
-		  TtaNewSelector (NumSelectPattern, NumFormPresGraphics,
-				  TtaGetMessage (LIB, TMSG_FILL_PATTERN),
-				  nbItems, string, i, NULL, TRUE, TRUE);
+
+#         ifndef _WINDOWS 
+		  TtaNewSelector (NumSelectPattern, NumFormPresGraphics, TtaGetMessage (LIB, TMSG_FILL_PATTERN), nbItems, string, i, NULL, TRUE, TRUE);
 		  /* initialise le selecteur sur sa premiere entree */
-		  TtaSetSelector (NumSelectPattern, pAb->AbFillPattern, _EMPTYSTR_);
+		  TtaSetSelector (NumSelectPattern, pAb->AbFillPattern, TEXT(""));
+#         endif /* _WINDOWS */
 	       }
 	     /* Toggle button Motif de remplissage standard */
+#        ifndef _WINDOWS
 	     i = 0;
 	     usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewToggleMenu (NumTogglePatternUnchanged, NumFormPresGraphics,
 			       NULL, 1, string, NULL, TRUE);
+#         endif /* !_WINDOWS */
 	     DocModPresent = pDoc;
+#        ifndef _WINDOWS
 	     TtaShowDialogue (NumFormPresGraphics, TRUE);
+#        endif /* !_WINDOWS */
 	  }
      }
 }

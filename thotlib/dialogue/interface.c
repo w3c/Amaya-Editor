@@ -1348,17 +1348,16 @@ void                TtaHandlePendingEvents ()
    function must be called after all initializations have been made.
 
   ----------------------------------------------------------------------*/
-void                  TtaMainLoop ()
-{
-  NotifyEvent         notifyEvt;
-#ifdef _WINDOWS
-  MSG                 msg;
-#else /* ! _WINDOWS */
-  ThotEvent           ev;
-#endif /* _WINDOWS */
+void TtaMainLoop () {
+     NotifyEvent         notifyEvt;
+#    ifdef _WINDOWS
+     MSG                 msg;
+#    else /* ! _WINDOWS */
+     ThotEvent           ev;
+#    endif /* _WINDOWS */
 
-  if (NewInitMainLoop)
-    NewInitMainLoop(app_cont);
+     if (NewInitMainLoop)
+        NewInitMainLoop(app_cont);
 
 #ifndef _GTK
   TtaInstallMultiKey ();
@@ -1374,6 +1373,9 @@ void                  TtaMainLoop ()
   notifyEvt.event = TteInit;
   CallEventType (&notifyEvt, FALSE);
   
+#    ifdef _WINDOWS
+#    endif /* _WINDOWS */
+
   /* Loop wainting for the events */
 #ifndef _GTK
   while (1)
@@ -1387,8 +1389,11 @@ void                  TtaMainLoop ()
       TtaFetchOneEvent (&ev);
       TtaHandleOneEvent (&ev);
 #else  /* !_WINDOWS */
-      if (GetMessage (&msg, NULL, 0, 0))
-	TtaHandleOneWindowEvent (&msg);
+      if (GetMessage (&msg, NULL, 0, 0)) {
+         if (currentFrame >= 1)
+            SetFocus (FrRef[currentFrame]);
+         TtaHandleOneWindowEvent (&msg);
+	  }
 #endif /* _WINDOWS */
     }
 #else /* _GTK */

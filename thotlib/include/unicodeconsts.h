@@ -19,9 +19,6 @@
 #   define _SheetClassCST_        L"SheetClass" 
 #   define _SpecialCharsCST_      L"@#$&+~" 
 #   define _ThotColorPaletteCST_  L"ThotColorPalette"
-#   define _TtcPasteCST_          L"TtcPaste"
-#   define _TtcRedoCST_           L"TtcRedo"
-#   define _TtcUndoCST_           L"TtcUndo"
 #   define _WNDIALOGBOXCST_       L"WNDIALOGBOX"
 
 #   define _THOTElement_          L"thot"
@@ -217,9 +214,6 @@
 #      define _SheetClassCST_        "SheetClass" 
 #      define _SpecialCharsCST_      "@#$&+~" 
 #      define _ThotColorPaletteCST_  "ThotColorPalette"
-#      define _TtcPasteCST_          "TtcPaste"
-#      define _TtcRedoCST_           "TtcRedo"
-#      define _TtcUndoCST_           "TtcUndo"
 #      define _WNDIALOGBOXCST_       "WNDIALOGBOX"
 
 #      define _THOTElement_          "thot"

@@ -118,6 +118,7 @@ static int          ReturnValueSelectReferMenu;
 #include "views_f.h"
 #include "word_f.h"
 
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   InitMenuWhereToSearch 
   inits the "Where to search" submenu.
@@ -142,10 +143,10 @@ int                 ref;
    i += ustrlen (&string[i]) + 1;
    usprintf (&string[i], TEXT("%s%s"), "B", TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
    /* sous-menu Ou` rechercher element vide */
-   TtaNewSubmenu (NumMenuOrSearchText, ref, 0,
-	    TtaGetMessage (LIB, TMSG_SEARCH_WHERE), 4, string, NULL, FALSE);
+   TtaNewSubmenu (NumMenuOrSearchText, ref, 0, TtaGetMessage (LIB, TMSG_SEARCH_WHERE), 4, string, NULL, FALSE);
    TtaSetMenuForm (NumMenuOrSearchText, 2);
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   ActivateMenuWhereToSearch
@@ -294,13 +295,14 @@ PtrSearchContext    pContext;
 	    /* il y a un autre arbre a traiter, on continue avec le */
 	    /* debut de ce nouvel arbre */
 	    ok = SearchEmptyElem (pNextEl, pContext);
-   if (ok)
-     /* On prepare la recherche suivante */
-     if (searchDomain->SStartToEnd)
-	TtaSetMenuForm (NumMenuOrSearchText, 2);	/* After selection */
-     else
-	TtaSetMenuForm (NumMenuOrSearchText, 0);	/* Before selection */
-   return ok;
+#  ifndef _WINDOWS
+   if (ok) /* On prepare la recherche suivante */
+      if (searchDomain->SStartToEnd)
+         TtaSetMenuForm (NumMenuOrSearchText, 2);	/* After selection */
+      else
+           TtaSetMenuForm (NumMenuOrSearchText, 0);	/* Before selection */
+#   endif /* !_WINDOWS */
+    return ok;
 }
 
 
@@ -412,14 +414,13 @@ PtrSearchContext    pContext;
 	    /* il y a un autre arbre a traiter, on continue avec le */
 	    /* debut de ce nouvel arbre */
 	    ok = SearchEmptyRefer (pNextEl, pContext);
-   if (ok)
-     /* On prepare la recherche suivante */
-     if (searchDomain->SStartToEnd)
-	/* After selection */
-	TtaSetMenuForm (NumMenuOrSearchText, 2);
-     else
-	/* Before selection */
-	TtaSetMenuForm (NumMenuOrSearchText, 0);
+#  ifndef _WINDOWS
+   if (ok) /* On prepare la recherche suivante */
+      if (searchDomain->SStartToEnd) /* After selection */
+         TtaSetMenuForm (NumMenuOrSearchText, 2);
+      else /* Before selection */
+           TtaSetMenuForm (NumMenuOrSearchText, 0);
+#  endif /* !_WINDOWS */
    return ok;
 }
 
@@ -465,9 +466,9 @@ int                 val;
 	      if (!ok || pDocSel != searchDomain->SDocument)
 		/* la selection a change' de document, on refuse */
 		{
-		  TtaNewLabel (NumLabelEmptyElemNotFound,
-			       NumFormSearchEmptyElement,
-			       TtaGetMessage (LIB, TMSG_DO_NOT_CHANGE_DOC));
+#         ifndef _WINDOWS
+		  TtaNewLabel (NumLabelEmptyElemNotFound, NumFormSearchEmptyElement, TtaGetMessage (LIB, TMSG_DO_NOT_CHANGE_DOC));
+#         endif /* !_WINDOWS */
 		  StartSearch = TRUE;
 		  return;
 		}
@@ -485,14 +486,17 @@ int                 val;
 	      /* on reactive les entrees du sous-menu "Ou chercher" */
 	      ActivateMenuWhereToSearch ();
 	      /* efface le message "Pas trouve'" dans le formulaire */
+#         ifndef _WINDOWS
 	      TtaNewLabel (NumLabelEmptyElemNotFound, NumFormSearchEmptyElement, TEXT(" "));
+#         endif /* !_WINDOWS */
 	    }
 	  else
 	    /* on n'a pas trouve' */
 	    {
 	      /* message 'Pas trouve' dans le formulaire */
-	      TtaNewLabel (NumLabelEmptyElemNotFound, NumFormSearchEmptyElement,
-			   TtaGetMessage (LIB, TMSG_NOT_FOUND));
+#         ifndef _WINDOWS 
+	      TtaNewLabel (NumLabelEmptyElemNotFound, NumFormSearchEmptyElement, TtaGetMessage (LIB, TMSG_NOT_FOUND));
+#         endif /* !_WINDOWS */
 	      StartSearch = TRUE;
 	    }
 	}
@@ -543,22 +547,23 @@ View                view;
    /* compose le titre "Recherche dans le document..." */
    ustrcpy (buffTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
    ustrcat (buffTitle, pDoc->DocDName);
-   TtaNewSheet (NumFormSearchEmptyElement, TtaGetViewFrame (document, view), 
-		buffTitle,
-	   1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 3, 'L', D_DONE);
+#  ifndef _WINDOWS
+   TtaNewSheet (NumFormSearchEmptyElement, TtaGetViewFrame (document, view), buffTitle, 1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 3, 'L', D_DONE);
    /* label indiquant la recherche d'elements vides */
-   TtaNewLabel (NumLabelDocSearcheEmptyElement, NumFormSearchEmptyElement,
-		TtaGetMessage (LIB, TMSG_SEARCH_EMPTY_EL));
+   TtaNewLabel (NumLabelDocSearcheEmptyElement, NumFormSearchEmptyElement, TtaGetMessage (LIB, TMSG_SEARCH_EMPTY_EL)); 
    InitMenuWhereToSearch (NumFormSearchEmptyElement);
 
    /* le message "Pas trouve'" */
    TtaNewLabel (NumLabelEmptyElemNotFound, NumFormSearchEmptyElement, TEXT(" "));
    /* active le formulaire */
    TtaShowDialogue (NumFormSearchEmptyElement, TRUE);
+#  endif /* !_WINDOWS */
    if (!ok)
      {
 	InitSearchDomain (3, searchDomain);
+#   ifndef _WINDOWS
 	TtaSetMenuForm (NumMenuOrSearchText, 3);
+#   endif /* !_WINDOWS */
      }
    searchDomain->SDocument = pDoc;
 }
@@ -605,9 +610,9 @@ int                 val;
 		     if (!ok || pDocSel != searchDomain->SDocument)
 			/* la selection a change' de document, on refuse */
 		       {
-			  TtaNewLabel (NumLabelEmptyRefereneceNotFound,
-				       NumFormSearchEmptyReference,
-			       TtaGetMessage (LIB, TMSG_DO_NOT_CHANGE_DOC));
+#             ifndef _WINDOWS
+			  TtaNewLabel (NumLabelEmptyRefereneceNotFound, NumFormSearchEmptyReference, TtaGetMessage (LIB, TMSG_DO_NOT_CHANGE_DOC));
+#             endif /* !_WINDOWS */
 			  StartSearch = TRUE;
 			  return;
 		       }
@@ -625,14 +630,17 @@ int                 val;
 		     ActivateMenuWhereToSearch ();
 		     /* efface le message 'Pas trouve' dans la feuille de */
 		     /* saisie */
+#            ifndef _WINDOWS
 		     TtaNewLabel (NumLabelEmptyRefereneceNotFound, NumFormSearchEmptyReference, TEXT(" "));
+#            endif /* !_WINDOWS */
 		  }
 		else
 		   /* on n'a pas trouve' */
 		  {
+#            ifndef _WINDOWS
 		     /* message 'Pas trouve' dans la feuille de saisie */
-		     TtaNewLabel (NumLabelEmptyRefereneceNotFound, NumFormSearchEmptyReference,
-				  TtaGetMessage (LIB, TMSG_NOT_FOUND));
+		     TtaNewLabel (NumLabelEmptyRefereneceNotFound, NumFormSearchEmptyReference, TtaGetMessage (LIB, TMSG_NOT_FOUND));
+#            endif /* !_WINDOWS */
 		     StartSearch = TRUE;
 		  }
 	     }
@@ -687,23 +695,24 @@ View                view;
    ustrcpy (buffTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
    ustrcat (buffTitle, pDoc->DocDName);
    /* feuille de dialogue Rechercher reference vide */
-   TtaNewSheet (NumFormSearchEmptyReference, TtaGetViewFrame (document, view), 
-		buffTitle,
-	   1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 3, 'L', D_DONE);
+#  ifndef _WINDOWS
+   TtaNewSheet (NumFormSearchEmptyReference, TtaGetViewFrame (document, view), buffTitle, 1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 3, 'L', D_DONE);
 
    /* label indiquant la recherche de references vides */
-   TtaNewLabel (NumLabelDocSearchEmptyRef, NumFormSearchEmptyReference,
-		TtaGetMessage (LIB, TMSG_SEARCH_EMPTY_REF));
+   TtaNewLabel (NumLabelDocSearchEmptyRef, NumFormSearchEmptyReference, TtaGetMessage (LIB, TMSG_SEARCH_EMPTY_REF));
    InitMenuWhereToSearch (NumFormSearchEmptyReference);
 
    /* le message "Pas trouve'" */
    TtaNewLabel (NumLabelEmptyRefereneceNotFound, NumFormSearchEmptyReference, TEXT(" "));
    /* active le formulaire */
    TtaShowDialogue (NumFormSearchEmptyReference, TRUE);
+#  endif /* !_WINDOWS */
    if (!ok)
      {
 	InitSearchDomain (3, searchDomain);
+#   ifndef _WINDOWS 
 	TtaSetMenuForm (NumMenuOrSearchText, 3);
+#   endif /* !_WINDOWS */
      }
    searchDomain->SDocument = pDoc;
 }
@@ -755,13 +764,14 @@ int                *selEntry;
 	dest += l + 1;
 	src += l + 1;
      }
-   TtaNewPopup (NumMenuReferenceChoice, 0, TtaGetMessage (LIB, TMSG_LINK), nbEntries,
-		bufMenuB, NULL, TEXT('L'));
+   TtaNewPopup (NumMenuReferenceChoice, 0, TtaGetMessage (LIB, TMSG_LINK), nbEntries, bufMenuB, NULL, TEXT('L'));
+#  ifndef _WINDOWS
    TtaSetDialoguePosition ();
    TtaShowDialogue (NumMenuReferenceChoice, FALSE);
    /* attend que l'utilisateur ait repondu au menu et que le */
    /* mediateur ait appele' CallbackReferenceMenu */
    TtaWaitShowDialogue ();
+#  endif /* !_WINDOWS */
    *selEntry = ReturnValueSelectReferMenu;
 }
 
@@ -796,7 +806,9 @@ ThotBool            docExtNext;
 	SearchReferenceEnd = TRUE;
 	ustrcpy (msg, TtaGetMessage (LIB, TMSG_NOT_FOUND));
      }
+#  ifndef _WINDOWS
    TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference, msg);
+#  endif /* !_WINDOWS */
 }
 
 
@@ -853,11 +865,12 @@ PtrDocument         pDoc;
 	     ustrcpy (bufText, TtaGetMessage (LIB, TMSG_SEARCH_REF_TO_EL));
 	     ustrcat (bufText, TEXT(" "));
 	     ustrcat (bufText, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
-	     TtaNewLabel (NumLabelSearchReference, NumFormSearchReference,
-			  bufText);
+#        ifndef _WINDOWS
+	     TtaNewLabel (NumLabelSearchReference, NumFormSearchReference, bufText);
 	     TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference, TEXT(" "));
 	     /* active le formulaire de recherche */
 	     TtaShowDialogue (NumFormSearchReference, FALSE);
+#        endif /* !_WINDOWS */
 	  }
      }
 }
@@ -887,14 +900,15 @@ View                view;
 	ustrcpy (BufMenu, TtaGetMessage (LIB, TMSG_SEARCH));
 	i = ustrlen (TtaGetMessage (LIB, TMSG_SEARCH)) + 1;
 	ustrcpy (BufMenu + i, TtaGetMessage (LIB, TMSG_OPEN));
-	TtaNewSheet (NumFormSearchReference, TtaGetViewFrame (document, view), 
-		     TtaGetMessage (LIB, TMSG_SEARCH_REF), 2, BufMenu, TRUE, 1, TEXT('L'), D_DONE);
+#   ifndef _WINDOWS
+	TtaNewSheet (NumFormSearchReference, TtaGetViewFrame (document, view), TtaGetMessage (LIB, TMSG_SEARCH_REF), 2, BufMenu, TRUE, 1, TEXT('L'), D_DONE);
 	/* label indiquant le type d'element dont on cherche les references */
 	TtaNewLabel (NumLabelSearchReference, NumFormSearchReference,
 		     TtaGetMessage (LIB, TMSG_SEARCH_REF_TO_EL));
 
 	/* label "Pas trouve'" pour Recherche des references a` un element */
 	TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference, TEXT(" "));
+#   endif /* !_WINDOWS */
 	BuildSearchReferences (pDoc);
      }
 }
@@ -943,7 +957,9 @@ int                 data;
 			 if (pDoc != NULL)
 			   {
 			     /* efface le label */
+#                ifndef _WINDOWS
 			     TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference, TEXT(" "));
+#                endif /* !_WINDOWS */
 			     SearchAReference (FALSE);
 			   }
 		       }
@@ -1036,24 +1052,21 @@ View                view;
 	sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_REPLACE_ON_REQU));
 	i += ustrlen (&string[i]) + 1;
 	sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_AUTO_REPLACE));
-	TtaNewSubmenu (NumMenuReplaceMode, NumFormSearchText, 0,
-		 TtaGetMessage (LIB, TMSG_REPLACE), 3, string, NULL, FALSE);
-	if (WithReplace)
-	  {
-	     if (AutoReplace)
-		TtaSetMenuForm (NumMenuReplaceMode, 2);
-	     else
-		TtaSetMenuForm (NumMenuReplaceMode, 1);
-	  }
-	else
-	   TtaSetMenuForm (NumMenuReplaceMode, 0);
+	TtaNewSubmenu (NumMenuReplaceMode, NumFormSearchText, 0, TtaGetMessage (LIB, TMSG_REPLACE), 3, string, NULL, FALSE);
+	if (WithReplace) {
+       if (AutoReplace)
+          TtaSetMenuForm (NumMenuReplaceMode, 2);
+       else
+            TtaSetMenuForm (NumMenuReplaceMode, 1);
+	} else
+          TtaSetMenuForm (NumMenuReplaceMode, 0);
      }
    else
       TtaNewLabel (NumMenuReplaceMode, NumFormSearchText, " ");
 
    /* sous-menu Ou` rechercher */
-#  endif /* _WINDOWS */
    InitMenuWhereToSearch (NumFormSearchText);
+#  endif /* _WINDOWS */
 
    WithReplace = FALSE;
    ReplaceDone = FALSE;
@@ -1083,10 +1096,7 @@ View                view;
    TextOK = FALSE;
 #  else  /* _WINDOWS */
    if (!ok)
-     {
-	InitSearchDomain (3, searchDomain);
-	/* TtaSetMenuForm (NumMenuOrSearchText, 3); */
-     }
+      InitSearchDomain (3, searchDomain);
    searchDomain->SDocument = pDoc;
    TextOK = FALSE;
    CreateSearchDlgWindow (TtaGetViewFrame (document, view));
@@ -1143,7 +1153,9 @@ STRING              txt;
 	{
 	  WithReplace = TRUE;
 	  DoReplace = TRUE;
+#     ifndef _WINDOWS
 	  TtaSetMenuForm (NumMenuReplaceMode, 1);
+#     endif /* !_WINDOWS */
 	}
       break;
     case NumToggleUpperEqualLower:
@@ -1179,7 +1191,9 @@ STRING              txt;
       break;
     case NumFormSearchText:
       /* Boutons de la feuille de dialogue */
+#     ifndef _WINDOWS
       TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, TEXT(" "));
+#     endif /* !_WINDOWS */
       if (searchDomain->SDocument == NULL)
 	{
 	  TtaDestroyDialogue (NumFormSearchText);
@@ -1247,8 +1261,10 @@ STRING              txt;
 		    /* on ne remplace pas dans un sous-arbre en */
 		    /* lecture seule */
 		    if (ElementIsReadOnly (pFirstSel))
-		      TtaNewLabel (NumLabelAttributeValue, NumFormSearchText,
-				   TtaGetMessage (LIB, TMSG_EL_RO));
+#             ifndef _WINDOWS
+		      TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, TtaGetMessage (LIB, TMSG_EL_RO))
+#             endif /* !_WINDOWS */
+			  ;
 		    else if (!pFirstSel->ElIsCopy && pFirstSel->ElText != NULL
 			     && pFirstSel->ElTerminal
 			     && pFirstSel->ElLeafType == LtText)
@@ -1389,14 +1405,13 @@ STRING              txt;
 	  if (found)
 	    {
 	      /* on a trouve' et selectionne'. */
-	      if (!AutoReplace)
-		/* On prepare la recherche suivante */
-		if (searchDomain->SStartToEnd)
-		  /* After selection */
-		  TtaSetMenuForm (NumMenuOrSearchText, 2);
-		else
-		  /* Before selection */
-		  TtaSetMenuForm (NumMenuOrSearchText, 0);
+#         ifndef _WINDOWS
+	      if (!AutoReplace) /* On prepare la recherche suivante */
+             if (searchDomain->SStartToEnd) /* After selection */
+                TtaSetMenuForm (NumMenuOrSearchText, 2);
+             else /* Before selection */
+                  TtaSetMenuForm (NumMenuOrSearchText, 0);
+#         endif /* !_WINDOWS */
 	      StartSearch = FALSE;
 	      if (ThotLocalActions[T_strsearchshowvalattr] != NULL)
 		(*ThotLocalActions[T_strsearchshowvalattr]) ();
@@ -1408,15 +1423,16 @@ STRING              txt;
 		{
 		  if (!AutoReplace)
 		    /* message "Plus de remplacement" */
-		    TtaNewLabel (NumLabelAttributeValue,
-			         NumFormSearchText,
-			         TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE));
+#           ifndef _WINDOWS
+		    TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE))
+#           endif /* !_WINDOWS */
+			;
 		}
+#         ifndef _WINDOWS
 	      else
 		/* message "Pas trouve'" */
-		TtaNewLabel (NumLabelAttributeValue,
-			     NumFormSearchText,
-			     TtaGetMessage (LIB, TMSG_NOT_FOUND));
+		TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, TtaGetMessage (LIB, TMSG_NOT_FOUND));
+#       endif /* !_WINDOWS */
 	      StartSearch = TRUE;
 	    }
 	}
@@ -1476,15 +1492,15 @@ ThotBool            assoc;
    /* compose le titre "Recherche dans le document..." */
    ustrcpy (buffTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
    ustrcat (buffTitle, pDoc->DocDName);
+#  ifndef _WINDOWS 
    /* cree formulaire de saisie du numero de la page cherchee */
-   TtaNewSheet (NumFormSearchPage,  0,
-		buffTitle, 1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, TEXT('L'), D_CANCEL);
+   TtaNewSheet (NumFormSearchPage,  0, buffTitle, 1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, TEXT('L'), D_CANCEL);
 
    /* cree zone de saisie du numero de la page cherchee */
-   TtaNewNumberForm (NumZoneSearchPage, NumFormSearchPage,
-		     TtaGetMessage (LIB, TMSG_GOTO_PAGE), 0, 9999, FALSE);
+   TtaNewNumberForm (NumZoneSearchPage, NumFormSearchPage, TtaGetMessage (LIB, TMSG_GOTO_PAGE), 0, 9999, FALSE);
    /* affiche le formulaire */
    TtaShowDialogue (NumFormSearchPage, FALSE);
+#  endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------

@@ -2708,8 +2708,10 @@ View                view;
       if (i > 0)
 	{ /* if some transformations have been matched, shows the menu */
 	  TtaNewPopup (TransBaseDialog + TransMenu, 0, TtaGetMessage (TRANSDIAL, TR_TRANSFORM), i, menuBuf, NULL, 'L');
+#     ifndef _WINDOWS
 	  TtaSetDialoguePosition ();
 	  TtaShowDialogue (TransBaseDialog + TransMenu, TRUE);
+#     endif /* !_WINDOWS */
 	}
       else
 	/* display an status message */

@@ -3656,7 +3656,9 @@ STRING              data;
 	 /* Clear */
 	 {
 	   LastURLName[0] = EOS;
+#      ifndef _WINDOWS
 	   TtaSetTextForm (BaseDialog + URLName, LastURLName);
+#      endif /* !_WINDOWS */
 	 }
        else if (val == 3)
 	 /* Parse */
@@ -3787,7 +3789,9 @@ STRING              data;
        ustrcpy (tempfile, DirectoryName);
        ustrcat (tempfile, DIR_STR);
        ustrcat (tempfile, DocumentName);
+#      ifndef _WINDOWS
        TtaSetTextForm (BaseDialog + URLName, tempfile);
+#      endif /* !_WINDOWS */
        TtaFreeMemory (tempfile);
        break;
        
@@ -3800,8 +3804,10 @@ STRING              data;
        /* Filter value */
        if (ustrlen(data) <= NAME_LENGTH)
 	 ustrcpy (ScanFilter, data);
+#      ifndef _WINDOWS
        else
 	 TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
+#      endif /* !_WINDOWS */
        break;
      case FormAnswer:
        /* *********Get an answer********* */
@@ -3843,8 +3849,10 @@ STRING              data;
 	 }
        else
 	 Answer_password[NAME_LENGTH - 1] = EOS;
+#      ifndef _WINDOWS
        if (i > 0)
 	 TtaSetTextForm (BaseDialog + PasswordText, Display_password);
+#      endif /* !_WINDOWS */
        break;
        
        /* *********Save document as********* */
@@ -3938,8 +3946,10 @@ STRING              data;
 	       SavePath[0] = EOS;
 	       SaveImgsURL[0] = EOS;
 	       SaveName[0] = EOS;
+#          ifndef _WINDOWS
 	       TtaSetTextForm (BaseDialog + NameSave, SaveImgsURL);
 	       TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
+#          endif /* !_WINDOWS */
 	     }
 	 }
        else if (val == 3)
@@ -4017,7 +4027,9 @@ STRING              data;
 	     ustrcat (tempfile, DocumentName);
 	   else
 	     ustrcat (tempfile, ObjectName);
+#      ifndef _WINDOWS
 	   TtaSetTextForm (BaseDialog + NameSave, SavePath);
+#      endif /* !_WINDOWS */
 	   TtaListDirectory (SavePath, BaseDialog + SaveForm,
 			     TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSave,
 			     ScanFilter, TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
@@ -4036,7 +4048,9 @@ STRING              data;
        ustrcpy (tempfile, SavePath);
        ustrcat (tempfile, DIR_STR);
        ustrcat (tempfile, SaveName);
+#      ifndef _WINDOWS
        TtaSetTextForm (BaseDialog + NameSave, tempfile);
+#      endif /* !_WINDOWS */
        TtaFreeMemory (tempfile);
        break;
 

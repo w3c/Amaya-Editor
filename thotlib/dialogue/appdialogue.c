@@ -288,7 +288,9 @@ int                 number;
    alphabet = TtaGetAlphabet (TtaGetDefaultLanguage ());
    FontIdentifier (alphabet, TEXT('H'), 0, MenuSize, UnPoint, text, namef1);
    FontIdentifier (alphabet, TEXT('H'), 1, MenuSize, UnPoint, text, namef2);
+#  ifndef _WINDOWS
    TtaChangeDialogueFonts (namef1, namef2);
+#  endif /* !_WINDOWS */
 
    /* reserve les menus de Thot */
    TtaGetReferencesBase (MAX_ThotMenu);
@@ -308,112 +310,112 @@ int                 number;
 	   MenuActionList[FreeMenuAction].ActionActive[i] = TRUE;
      }
    for (i = FreeMenuAction;i < MaxMenuAction;i++) {
-	MenuActionList[i].ActionName = _EMPTYSTR_;
+	MenuActionList[i].ActionName = "";
 	MenuActionList[i].Call_Action = NULL;
 	MenuActionList[i].User_Action = NULL;
 	MenuActionList[i].ActionEquiv = NULL;
    }
 
    /* Initialisation des actions internes obligatoires */
-   MenuActionList[0].ActionName = CST_InsertChar;	/* action InsertChar() */
+   MenuActionList[0].ActionName = "TtcInsertChar";	/* action InsertChar() */
    MenuActionList[0].Call_Action = (Proc) NULL;
    MenuActionList[0].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_DeletePrevChar].ActionName = CST_DeletePrevChar;
+   MenuActionList[CMD_DeletePrevChar].ActionName = "TtcDeletePreviousChar";
    MenuActionList[CMD_DeletePrevChar].Call_Action = (Proc) NULL;
    MenuActionList[CMD_DeletePrevChar].User_Action = (UserProc) NULL;
    MenuActionList[CMD_DeletePrevChar].ActionEquiv = CST_EquivBS;
 
-   MenuActionList[CMD_DeleteSelection].ActionName = CST_DeleteSelection;
+   MenuActionList[CMD_DeleteSelection].ActionName = "TtcDeleteSelection";
    MenuActionList[CMD_DeleteSelection].Call_Action = (Proc) NULL;
    MenuActionList[CMD_DeleteSelection].User_Action = (UserProc) NULL;
    MenuActionList[CMD_DeleteSelection].ActionEquiv = CST_EquivDel;
 
-   MenuActionList[CMD_PreviousChar].ActionName = CST_PreviousChar;
+   MenuActionList[CMD_PreviousChar].ActionName = "TtcPreviousChar";
    MenuActionList[CMD_PreviousChar].Call_Action = (Proc) TtcPreviousChar;
    MenuActionList[CMD_PreviousChar].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_NextChar].ActionName = CST_NextChar;
+   MenuActionList[CMD_NextChar].ActionName = "TtcNextChar";
    MenuActionList[CMD_NextChar].Call_Action = (Proc) TtcNextChar;
    MenuActionList[CMD_NextChar].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_PreviousLine].ActionName = CST_PreviousLine;
+   MenuActionList[CMD_PreviousLine].ActionName = "TtcPreviousLine";
    MenuActionList[CMD_PreviousLine].Call_Action = (Proc) TtcPreviousLine;
    MenuActionList[CMD_PreviousLine].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_NextLine].ActionName = CST_NextLine;
+   MenuActionList[CMD_NextLine].ActionName = "TtcNextLine";
    MenuActionList[CMD_NextLine].Call_Action = (Proc) TtcNextLine;
    MenuActionList[CMD_NextLine].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_BeginningOfLine].ActionName = CST_BeginningOfLine;
+   MenuActionList[CMD_BeginningOfLine].ActionName = "TtcStartOfLine";
    MenuActionList[CMD_BeginningOfLine].Call_Action = (Proc) TtcStartOfLine;
    MenuActionList[CMD_BeginningOfLine].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_EndOfLine].ActionName = CST_EndOfLine;
+   MenuActionList[CMD_EndOfLine].ActionName = "TtcEndOfLine";
    MenuActionList[CMD_EndOfLine].Call_Action = (Proc) TtcEndOfLine;
    MenuActionList[CMD_EndOfLine].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_ParentElement].ActionName = CST_ParentElement;
+   MenuActionList[CMD_ParentElement].ActionName = "TtcParentElement";
    MenuActionList[CMD_ParentElement].Call_Action = (Proc) TtcParentElement;
    MenuActionList[CMD_ParentElement].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_PreviousElement].ActionName = CST_PreviousElement;
+   MenuActionList[CMD_PreviousElement].ActionName = "TtcPreviousElement";
    MenuActionList[CMD_PreviousElement].Call_Action = (Proc) TtcPreviousElement;
    MenuActionList[CMD_PreviousElement].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_NextElement].ActionName = CST_NextElement;
+   MenuActionList[CMD_NextElement].ActionName = "TtcNextElement";
    MenuActionList[CMD_NextElement].Call_Action = (Proc) TtcNextElement;
    MenuActionList[CMD_NextElement].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_ChildElement].ActionName = CST_ChildElement;
+   MenuActionList[CMD_ChildElement].ActionName = "TtcChildElement";
    MenuActionList[CMD_ChildElement].Call_Action = (Proc) TtcChildElement;
    MenuActionList[CMD_ChildElement].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_PageUp].ActionName = CST_PageUp;
+   MenuActionList[CMD_PageUp].ActionName = "TtcPageUp";
    MenuActionList[CMD_PageUp].Call_Action = (Proc) TtcPageUp;
    MenuActionList[CMD_PageUp].User_Action = (UserProc) NULL;
    MenuActionList[CMD_PageUp].ActionEquiv = CST_EquivPrior;
 
-   MenuActionList[CMD_PageDown].ActionName = CST_PageDown;
+   MenuActionList[CMD_PageDown].ActionName = "TtcPageDown";
    MenuActionList[CMD_PageDown].Call_Action = (Proc) TtcPageDown;
    MenuActionList[CMD_PageDown].User_Action = (UserProc) NULL;
    MenuActionList[CMD_PageDown].ActionEquiv = CST_EquivNext;
 
-   MenuActionList[CMD_PageTop].ActionName = CST_PageTop;
+   MenuActionList[CMD_PageTop].ActionName = "TtcPageTop";
    MenuActionList[CMD_PageTop].Call_Action = (Proc) TtcPageTop;
    MenuActionList[CMD_PageTop].User_Action = (UserProc) NULL;
    MenuActionList[CMD_PageTop].ActionEquiv = CST_EquivHome;
 
-   MenuActionList[CMD_PageEnd].ActionName = CST_PageEnd;
+   MenuActionList[CMD_PageEnd].ActionName = "TtcPageEnd";
    MenuActionList[CMD_PageEnd].Call_Action = (Proc) TtcPageEnd;
    MenuActionList[CMD_PageEnd].User_Action = (UserProc) NULL;
    MenuActionList[CMD_PageEnd].ActionEquiv = CST_EquivEnd;
 
-   MenuActionList[CMD_CreateElement].ActionName = CST_CreateElement;
+   MenuActionList[CMD_CreateElement].ActionName = "TtcCreateElement";
    MenuActionList[CMD_CreateElement].Call_Action = (Proc) NULL;
    MenuActionList[CMD_CreateElement].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_CopyToClipboard].ActionName = CST_CopyClipboard;
+   MenuActionList[CMD_CopyToClipboard].ActionName = "TtcCopyToClipboard";
    MenuActionList[CMD_CopyToClipboard].Call_Action = (Proc) TtcCopyToClipboard;
    MenuActionList[CMD_CopyToClipboard].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_PasteFromClipboard].ActionName = CST_PasteClipboard;
+   MenuActionList[CMD_PasteFromClipboard].ActionName = "TtcPasteFromClipboard";
    MenuActionList[CMD_PasteFromClipboard].Call_Action = (Proc) NULL;
    MenuActionList[CMD_PasteFromClipboard].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_PreviousSelChar].ActionName = CST_PreviousSelChar;
+   MenuActionList[CMD_PreviousSelChar].ActionName = "TtcPreviousSelChar";
    MenuActionList[CMD_PreviousSelChar].Call_Action = (Proc) TtcPreviousSelChar;
    MenuActionList[CMD_PreviousSelChar].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_NextSelChar].ActionName = CST_NextSelChar;
+   MenuActionList[CMD_NextSelChar].ActionName = "TtcNextSelChar";
    MenuActionList[CMD_NextSelChar].Call_Action = (Proc) TtcNextSelChar;
    MenuActionList[CMD_NextSelChar].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_PreviousSelLine].ActionName = CST_PreviousSelLine;
+   MenuActionList[CMD_PreviousSelLine].ActionName = "TtcPreviousSelLine";
    MenuActionList[CMD_PreviousSelLine].Call_Action = (Proc) TtcPreviousSelLine;
    MenuActionList[CMD_PreviousSelLine].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_NextSelLine].ActionName = CST_NextSelLine;
+   MenuActionList[CMD_NextSelLine].ActionName = "TtcNextSelLine";
    MenuActionList[CMD_NextSelLine].Call_Action = (Proc) TtcNextSelLine;
    MenuActionList[CMD_NextSelLine].User_Action = (UserProc) NULL;
 }
@@ -424,16 +426,16 @@ int                 number;
    actions d'interface.                                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddMenuAction (STRING actionName, Proc procedure)
+void                TteAddMenuAction (char* actionName, Proc procedure)
 
 #else  /* __STDC__ */
 void                TteAddMenuAction (actionName, procedure)
-STRING              actionName;
+char*               actionName;
 Proc                procedure;
 
 #endif /* __STDC__ */
 {
-   STRING              ptr;
+   char*               ptr;
    int                 lg;
    int                 i;
 
@@ -441,12 +443,12 @@ Proc                procedure;
      //   if (actionName == NULL)  
        return;			/* pas de nom d'action declare */
 
-   lg = ustrlen (actionName);
+   lg = strlen (actionName);
    if (FreeMenuAction < MaxMenuAction && lg != 0)
      {
 	/* Alloue une chaine de caractere pour le nom de l'action */
-	ptr = TtaAllocString (lg + 1);
-	ustrcpy (ptr, actionName);
+	ptr = TtaGetMemory (lg + 1);
+	strcpy (ptr, actionName);
 	MenuActionList[FreeMenuAction].ActionName = ptr;
 	MenuActionList[FreeMenuAction].Call_Action = procedure;
 	MenuActionList[FreeMenuAction].User_Action = (UserProc) NULL;
@@ -464,17 +466,17 @@ Proc                procedure;
    built-in action, or override a previously defined user action.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                TteAddUserMenuAction (STRING actionName, UserProc procedure, void *arg)
+int                TteAddUserMenuAction (char* actionName, UserProc procedure, void *arg)
 
 #else  /* __STDC__ */
 int                TteAddUserMenuAction (actionName, procedure, arg)
-STRING              actionName;
-UserProc            procedure;
+char*              actionName;
+UserProc           procedure;
 void               *arg;
 
 #endif /* __STDC__ */
 {
-   STRING              ptr;
+   char*               ptr;
    int                 lg;
    int                 i;
 
@@ -483,14 +485,14 @@ void               *arg;
     */
    if (actionName == NULL)
       return(-1);
-   lg = ustrlen (actionName);
+   lg = strlen (actionName);
    if (lg == 0) return(-1);
 
    /*
     * Search in the menu actions table for a predefined action with this name
     */
    for (i = 0;i < FreeMenuAction;i++) {
-       if (!ustrcmp(MenuActionList[i].ActionName, actionName)) {
+       if (!strcmp(MenuActionList[i].ActionName, actionName)) {
            /*
 	    * This action already exists, register the user procedure.
 	    */
@@ -507,8 +509,8 @@ void               *arg;
    if (FreeMenuAction < MaxMenuAction && lg != 0)
      {
 	/* Dup' the action name string */
-	ptr = TtaAllocString (lg + 1);
-	ustrcpy (ptr, actionName);
+	ptr = TtaGetMemory (lg + 1);
+	strcpy (ptr, actionName);
 	MenuActionList[FreeMenuAction].ActionName = ptr;
 	MenuActionList[FreeMenuAction].Call_Action = (Proc) NULL;
 	MenuActionList[FreeMenuAction].User_Action = procedure;
@@ -529,11 +531,11 @@ void               *arg;
    d'interface.                                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          FindMenuAction (STRING actionName)
+static int          FindMenuAction (char* actionName)
 
 #else  /* __STDC__ */
 static int          FindMenuAction (actionName)
-STRING              actionName;
+char*               actionName;
 
 #endif /* __STDC__ */
 {
@@ -541,7 +543,7 @@ STRING              actionName;
 
    for (i = 0; i < MaxMenuAction; i++)
      {
-	if (!ustrcmp (actionName, MenuActionList[i].ActionName))
+	if (!strcmp (actionName, MenuActionList[i].ActionName))
 	   return (i);
      }
    return (i);
@@ -823,7 +825,7 @@ int                 itemsNumber;
    TteAddMenuItem ajoute une nouvel item dans un menu.                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddMenuItem (WindowType windowtype, STRING schemaName, int menuID, int subMenu, int itemID, STRING actionName, char itemType)
+void                TteAddMenuItem (WindowType windowtype, STRING schemaName, int menuID, int subMenu, int itemID, char* actionName, char itemType)
 
 #else  /* __STDC__ */
 void                TteAddMenuItem (windowtype, schemaName, menuID, subMenu, itemID, actionName, itemType)
@@ -832,7 +834,7 @@ STRING              schemaName;
 int                 menuID;
 int                 subMenu;
 int                 itemID;
-STRING              actionName;
+char*               actionName;
 char                itemType;
 
 #endif /* __STDC__ */
@@ -1124,19 +1126,19 @@ int                 doc;
 		     }
 		 }
 	       /* Is it the Paste command */
-	       if (!ustrcmp (MenuActionList[action].ActionName, _TtcPasteCST_))
+	       if (!strcmp (MenuActionList[action].ActionName, "TtcPaste"))
 		 {
 		   FrameTable[frame].MenuPaste = ref;
 		   FrameTable[frame].EntryPaste = item;
 		 }
 	       /* Is it the Undo command */
-	       if (!ustrcmp (MenuActionList[action].ActionName, _TtcUndoCST_))
+	       if (!strcmp (MenuActionList[action].ActionName, "TtcUndo"))
 		 {
 		   FrameTable[frame].MenuUndo = ref;
 		   FrameTable[frame].EntryUndo = item;
 		 }
 	       /* Is it the Redo command */
-	       if (!ustrcmp (MenuActionList[action].ActionName, _TtcRedoCST_))
+	       if (!strcmp (MenuActionList[action].ActionName, "TtcRedo"))
 		 {
 		   FrameTable[frame].MenuRedo = ref;
 		   FrameTable[frame].EntryRedo = item;
@@ -1415,14 +1417,14 @@ ThotWidget   toplevel;
    Returns index
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int        TtaAddButton (Document document, View view, ThotIcon picture, void (*procedure) (), STRING functionName, STRING info, BYTE type, ThotBool state)
+int        TtaAddButton (Document document, View view, ThotIcon picture, void (*procedure) (), char* functionName, STRING info, BYTE type, ThotBool state)
 #else  /* __STDC__ */
 int        TtaAddButton (document, view, picture, procedure, functionName, info, type, state)
 Document   document;
 View       view;
 ThotIcon   picture;
 void       (*procedure) ();
-STRING     functionName;
+char*      functionName;
 STRING     info;
 BYTE       type;
 ThotBool   state;
@@ -4246,7 +4248,9 @@ STRING              data;
 		  if (ref >= NumMenuAttrName && ref <= NumMenuAttrName + MAX_ITEM)
 		     /* retour du menu des attributs */
 		    {
+#              ifndef _WINDOWS
 		       TtaSetDialoguePosition ();
+#              endif /* !_WINDOWS */
 		       (*ThotLocalActions[T_rattr]) (ref, (int) data, ActiveFrame);
 		    }
                   if (ref >= NumMenuPresNature && ref <= NumMenuPresNature + NbMaxMenuPresNature)
@@ -4286,7 +4290,9 @@ STRING              data;
 	     if (menu == menuThot)
 	       {
 		  /* traitement du menu attribut */
+#         ifndef _WINDOWS
 		  TtaSetDialoguePosition ();
+#         endif /* !_WINDOWS */
 		  (*ThotLocalActions[T_rattr]) (ref, (int) data, frame);
 		  return;
 	       }
@@ -4294,7 +4300,9 @@ STRING              data;
 	     if (menu == menuThot)
 	       {
 		  /* traitement du menu selection */
+#         ifndef _WINDOWS
 		  TtaSetDialoguePosition ();
+#         endif /* !_WINDOWS */
 		  (*ThotLocalActions[T_rselect]) (ref, (int) data + 1, frame);
 		  return;
 	       }
