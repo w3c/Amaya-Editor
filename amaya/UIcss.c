@@ -193,11 +193,34 @@ void LoadUserStyleSheet (Document doc)
 }
 
 /*----------------------------------------------------------------------
-   UpdateStyleSheet removes then reload a style sheet url to all related
-   documents.
-   The parameter tempdoc points to the updated CSS file.
+  EmbedStyleSheets style sheet of document docsrc becomes embeded of
+  document docdest.
   ----------------------------------------------------------------------*/
-void  UpdateStyleSheet (char *url, char *tempdoc)
+void EmbedStyleSheets (Document docsrc, Document docdest)
+{
+  CSSInfoPtr          css;
+
+  css = CSSList;
+  while (css)
+    {
+      if (css->documents[docsrc])
+	{
+	  css->documents[docsrc] = FALSE;
+	  css->documents[docdest] = TRUE;
+	  css->enabled[docdest] = TRUE;
+	  css->category = CSS_EMBED;
+	}
+      css = css->NextCSS;
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  UpdateStyleSheet removes then reload a style sheet url to all related
+  documents.
+  The parameter tempdoc points to the updated CSS file.
+  ----------------------------------------------------------------------*/
+void UpdateStyleSheet (char *url, char *tempdoc)
 {
   CSSInfoPtr          css;
   Document            doc;
@@ -645,6 +668,7 @@ static void InitCSSDialog (Document doc, char *s)
   while (css)
     {
       if (css->documents[doc] &&
+	   css->category != CSS_EMBED &&
 	  /* the document style cannot be open */
 	  ((CSScase == 1 && css->category != CSS_DOCUMENT_STYLE) ||
 	  /* it's impossible to disable an imported style sheet */

@@ -18,7 +18,8 @@ typedef enum
   CSS_USER_STYLE,	/* the CSS associated to the browser  */
   CSS_DOCUMENT_STYLE,	/* a <style> element in the document  */
   CSS_EXTERNAL_STYLE,	/* an external CSS                    */
-  CSS_IMPORT            /* an imported CSS                    */
+  CSS_IMPORT,           /* an imported CSS                    */
+  CSS_EMBED             /* CSS of an object element           */
 } CSSCategory;
 
 typedef enum

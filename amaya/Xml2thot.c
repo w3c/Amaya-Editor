@@ -4866,7 +4866,10 @@ void        ParseExternalDocument (char     *fileName,
       /* to the sub-tree of which 'extEl' is the root */
       /* This allow to enable the style sheets attached to the external doc */
       if (copy)
-	TtaMoveDocumentExtensionsToElement (externalDoc, copy);
+	{
+	  TtaMoveDocumentExtensionsToElement (externalDoc, copy);
+	  EmbedStyleSheets (externalDoc, doc);
+	}
 
       /* Remove the ParsingErrors file */
       RemoveParsingErrors (externalDoc);

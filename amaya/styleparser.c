@@ -26,6 +26,7 @@ typedef struct _BackgroundImageCallbackBlock
 {
   Element                     el;
   PSchema                     tsch;
+  CSSInfoPtr                  css;
   union
   {
     PresentationContextBlock  specific;
@@ -2999,6 +3000,7 @@ void ParseCSSBackgroundImageCallback (Document doc, Element element,
   BackgroundImageCallbackPtr callblock;
   Element                    el;
   PSchema                    tsch;
+  CSSInfoPtr                 css;
   PresentationContext        context;
   PresentationValue          image;
   PresentationValue          value;
@@ -3007,29 +3009,64 @@ void ParseCSSBackgroundImageCallback (Document doc, Element element,
   if (callblock == NULL)
     return;
 
-  /* avoid too many redisplay */
-  dispMode = TtaGetDisplayMode (doc);
-  if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (doc, DeferredDisplay);
-
   el = callblock->el;
   tsch = callblock->tsch;
   context = &callblock->context.specific;
+  if (doc)
+    {
+      /* avoid too many redisplay */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, DeferredDisplay);
+    }
+  else
+    {
+      /* check if the CSS still exists */
+      css = CSSList;
+      while (css && css != callblock->css)
+	css = css->NextCSS;
+      if (css == NULL)
+	tsch = NULL;
+    }
 
-  /* Ok the image was fetched, finish the background-image handling */
-  image.pointer = file;
-  TtaSetStylePresentation (PRBackgroundPicture, el, tsch, context, image);
-
-  /* enforce the showbox */
-  value.typed_data.value = 1;
-  value.typed_data.unit = UNIT_REL;
-  value.typed_data.real = FALSE;
-  TtaSetStylePresentation (PRShowBox, el, tsch, context, value);
+  if (el || tsch)
+    {
+      /* Ok the image was fetched, finish the background-image handling */
+      image.pointer = file;
+      TtaSetStylePresentation (PRBackgroundPicture, el, tsch, context, image);
+      
+      /* enforce the showbox */
+      value.typed_data.value = 1;
+      value.typed_data.unit = UNIT_REL;
+      value.typed_data.real = FALSE;
+      TtaSetStylePresentation (PRShowBox, el, tsch, context, value);
+      
+    }
 
   TtaFreeMemory (callblock);
   /* restore the display mode */
-  if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (doc, dispMode);
+  if (doc)
+    {
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, dispMode);
+    }
+  else if (css)
+    {
+      for (doc = 1; doc < DocumentTableLength; doc++)
+	if (css->documents[doc] && css->enabled[doc] &&
+	    /* don't manage a document used by make book */
+	    (DocumentMeta[doc] == NULL ||
+	     DocumentMeta[doc]->method != CE_MAKEBOOK))
+	  {
+	    /* Change the Display Mode to take into account the new presentation */
+	    dispMode = TtaGetDisplayMode (doc);
+	    if (dispMode == DisplayImmediately)
+	      TtaSetDisplayMode (doc, NoComputedDisplay);
+	    /* Restore the display mode */
+	    if (dispMode == DisplayImmediately)
+	      TtaSetDisplayMode (doc, dispMode);
+	  }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3184,11 +3221,12 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 	  if (bg_image == NULL || !strcasecmp (bg_image, "yes"))
 	    /* background images are enabled */
 	    {
-	      callblock = (BackgroundImageCallbackPtr) TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
+	      callblock = (BackgroundImageCallbackPtr) TtaGetMemory (sizeof (BackgroundImageCallbackBlock));
 	      if (callblock != NULL)
 		{
 		  callblock->el = element;
 		  callblock->tsch = tsch;
+		  callblock->css = css;
 		  if (element == NULL)
 		    memcpy (&callblock->context.generic, ctxt,
 			    sizeof (GenericContextBlock));

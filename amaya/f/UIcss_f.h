@@ -13,6 +13,8 @@ extern ThotBool LoadRemoteStyleSheet ( char *url,
                                        char *completeURL,
                                        char *localfile );
 extern void LoadUserStyleSheet ( Document doc );
+extern void EmbedStyleSheets ( Document docsrc,
+                               Document docdest );
 extern void UpdateStyleSheet ( char *url,
                                char *tempdoc );
 extern void AttrMediaChanged ( NotifyAttribute *event );
@@ -39,6 +41,8 @@ extern ThotBool LoadRemoteStyleSheet (/* char *url,
                                          char *completeURL,
                                          char *localfile */);
 extern void LoadUserStyleSheet (/* Document doc */);
+extern void EmbedStyleSheets (/* Document docsrc,
+                                 Document docdest */);
 extern void UpdateStyleSheet (/* char *url,
                                  char *tempdoc */);
 extern void AttrMediaChanged (/* NotifyAttribute *event */);
