@@ -6300,6 +6300,26 @@ RULES
 	END;
 
  H1:	BEGIN
+	MarginTop: 4 px;
+	MarginLeft: 4 px;
+	MarginBottom: 4 px;
+	MarginRight: 4 px;
+	PaddingTop: 4 px;
+	PaddingLeft: 4 px;
+	PaddingBottom: 4 px;
+	PaddingRight: 4 px;
+	BorderTopWidth: 4 px;
+	BorderLeftWidth: 4 px;
+	BorderBottomWidth: 4 px;
+	BorderRightWidth: 4 px;
+	BorderBottomColor: Green;
+	BorderRightColor: Green;
+	BorderTopColor: Yellow;
+	BorderLeftColor: Yellow;
+	BorderTopStyle: Solid;
+	BorderLeftStyle: Dashed;
+	BorderBottomStyle: Double;
+	BorderRightStyle: Dotted;
 	Line;
 	LineBreak: No;
 #ifdef PAGE

@@ -32,23 +32,10 @@ do
    Amaya/config/amaya.keyboard \
    Amaya/config/amaya.profiles \
    Amaya/config/*thot.rc \
-   Amaya/config/en-amayadialogue \
-   Amaya/config/en-amayamsg \
-   Amaya/config/en-libdialogue \
-   Amaya/config/en-corrdialogue \
-   Amaya/config/fr-amayadialogue \
-   Amaya/config/fr-amayamsg \
-   Amaya/config/fr-libdialogue \
-   Amaya/config/fr-corrdialogue \
-   Amaya/config/de-amayadialogue \
-   Amaya/config/de-amayamsg \
-   Amaya/config/de-libdialogue \
-   Amaya/config/de-corrdialogue \
-   Amaya/config/tr-amayadialogue \
-   Amaya/config/tr-amayamsg \
-   Amaya/config/tr-libdialogue \
-   Amaya/config/tr-corrdialogue \
-   Amaya/config/it-* \
+   Amaya/config/*-amayadialogue \
+   Amaya/config/*-amayamsg \
+   Amaya/config/*-libdialogue \
+   Amaya/config/*-corrdialogue \
    Amaya/dicopar/*.ptn \
    Amaya/dicopar/alphabet \
    Amaya/dicopar/clavier \

@@ -46,7 +46,7 @@
 #ifndef _WINDOWS
 static XmString  null_string;
 #endif
-static CHAR_T         OldMsgSelect[MAX_TXT_LEN];
+static CHAR_T       OldMsgSelect[MAX_TXT_LEN];
 static PtrDocument  OldDocMsgSelect;
 
 #undef THOT_EXPORT
@@ -63,20 +63,16 @@ static PtrDocument  OldDocMsgSelect;
 #define URL_TXTZONE     0
 #define TITLE_TXTZONE   1
 #define IDR_TOOLBAR    165
-
 #define MENU_VIEWS            551
 #define SHOW_STRUCTURE        553
 #define SHOW_ALTERNATE        554
 #define SHOW_LINKS            555
-#define SHOW_TAB_OF_CONTENTS  556
-							  
+#define SHOW_TAB_OF_CONTENTS  556					       
 #define CLOSE_STRUCTURE       232
 #define CLOSE_ALTERNATE       272
 #define CLOSE_LINKS           312
 #define CLOSE_TAB_OF_CONTENTS 352
-
 #define WM_ENTER (WM_USER)
-
 #define MAX_MENUS 5
 
 #define ToolBar_AutoSize(hwnd) \
@@ -104,10 +100,6 @@ static PtrDocument  OldDocMsgSelect;
 extern int WIN_TtaHandleMultiKeyEvent (UINT, WPARAM, LPARAM, STRING);
 #else  /* __STDC__ */
 extern int WIN_TtaHandleMultiKeyEvent ();
-UINT    msg; 
-WPARAM wParam; 
-LPARAM lParam;
-STRING  k;
 #endif /* __STDC__ */
 
 extern HWND      hwndClient;
@@ -123,10 +115,8 @@ extern int       Window_Curs;
 static HWND      hwndHead;
 static STRING    txtZoneLabel;
 static BOOL      paletteRealized = FALSE;
-
 static CHAR_T    URL_txt [500];
 static CHAR_T    doc_title [500];
-
 static int       oldXPos;
 static int       oldYPos;
 
@@ -1858,7 +1848,7 @@ LPARAM lParam;
                  if (firstTime && fBlocking) {
                      winCapture = GetCapture ();
                      autoScroll = TRUE;
-					 firstTime = FALSE;
+		     firstTime = FALSE;
                      SetCapture (hwnd);
 				 }
                  return 0;

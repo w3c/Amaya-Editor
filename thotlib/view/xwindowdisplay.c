@@ -158,29 +158,36 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
-    CHAR_T                dash[2];
-    if (style == 0)
-      {
+  char              dash[2];
+
+  if (style >= 5)
+    {
+      /* solid */
 #ifdef _GTK
-	gdk_gc_set_line_attributes (TtLineGC, thick, GDK_LINE_SOLID, GDK_CAP_BUTT, GDK_JOIN_MITER);
+      gdk_gc_set_line_attributes (TtLineGC, thick, GDK_LINE_SOLID, GDK_CAP_BUTT, GDK_JOIN_MITER);
 #else /* _GTK */
       XSetLineAttributes (TtDisplay, TtLineGC, thick, LineSolid, CapButt, JoinMiter);
 #endif /* _GTK */
-     }
-    else
-      {
-	dash[0] = (CHAR_T) (style * 4);
-	dash[1] = (CHAR_T) 4;
+    }
+  else
+    {
+      if (style == 3)
+	/* dotted */
+	dash[0] = 4;
+      else
+	/* dashed */
+	dash[0] = 12;
+      dash[1] = 4;
 #ifdef _GTK
-	gdk_gc_set_dashes ( TtLineGC, 0, dash, 2); 
-	gdk_gc_set_line_attributes (TtLineGC, thick, GDK_LINE_ON_OFF_DASH, GDK_CAP_BUTT, GDK_JOIN_MITER);
+      gdk_gc_set_dashes ( TtLineGC, 0, dash, 2); 
+      gdk_gc_set_line_attributes (TtLineGC, thick, GDK_LINE_ON_OFF_DASH, GDK_CAP_BUTT, GDK_JOIN_MITER);
 #else /* _GTK */
-	XSetDashes (TtDisplay, TtLineGC, 0, dash, 2);
-	XSetLineAttributes (TtDisplay, TtLineGC, thick, LineOnOffDash, CapButt, JoinMiter);
+      XSetDashes (TtDisplay, TtLineGC, 0, dash, 2);
+      XSetLineAttributes (TtDisplay, TtLineGC, thick, LineOnOffDash, CapButt, JoinMiter);
 #endif /* _GTK */
-      }
-   /* Load the correct color */
-    LoadColor (disp, RO, active, fg);
+    }
+  /* Load the correct color */
+  LoadColor (disp, RO, active, fg);
 }
 
 
@@ -2384,11 +2391,11 @@ int                 pattern;
 }
 
 /*----------------------------------------------------------------------
-  DrawVerticalLine draw a vertical line aligned top center or bottom
+  DrawVerticalLine draw a horizontal line aligned top center or bottom
   depending on align value.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
-  parameter fg indicates the drawing color
+  RO indicates whether it's a read-only box.
+  active indicates if the box is active.
+  The parameter fg indicates the drawing color.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawHorizontalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int active, int fg)
@@ -3028,22 +3035,23 @@ int xf;
 int yf;
 #endif /* __STDC__ */
 {
-   if (FrRef[frame] != None) {
+  if (FrRef[frame] != None)
+    {
 #ifdef _GTK
       gdk_window_copy_area (FrRef[frame], TtWhiteGC,
-			   xf,
-			   yf + FrameTable[frame].FrTopMargin,
-			   FrRef[frame],
-			   xd,
-			   yd + FrameTable[frame].FrTopMargin,
-			   width,
-			   height);
+			    xf,
+			    yf + FrameTable[frame].FrTopMargin,
+			    FrRef[frame],
+			    xd,
+			    yd + FrameTable[frame].FrTopMargin,
+			    width,
+			    height);
 #else /* _GTK */
       XCopyArea (TtDisplay, FrRef[frame], FrRef[frame], TtWhiteGC,
 		 xd, yd + FrameTable[frame].FrTopMargin, width, height,
 		 xf, yf + FrameTable[frame].FrTopMargin);
 #endif /* _GTK */
-   }
+    }
 }
 
 /*----------------------------------------------------------------------

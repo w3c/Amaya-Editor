@@ -2003,7 +2003,7 @@ View                view;
 #endif /* _WINDOWS */
    /* force la mise a jour de la fenetre */
    TtaHandlePendingEvents ();
-}				/*TtcSwitchButtonBar */
+}
 
 
 /*----------------------------------------------------------------------

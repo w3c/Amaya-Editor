@@ -17,7 +17,7 @@ extern ThotBool TtaReadSignedShort ( BinFile file,
 extern ThotBool TtaReadInteger ( BinFile file,
                                  int *sval );
 extern ThotBool TtaReadName ( BinFile file,
-                              STRING name );
+                              char* name );
 extern BinFile TtaReadOpen ( CONST CharUnit* filename );
 extern void TtaReadClose ( BinFile file );
 extern BinFile TtaWriteOpen ( CONST STRING filename );
@@ -78,13 +78,13 @@ extern ThotBool TtaReadSignedShort (/* BinFile file,
 extern ThotBool TtaReadInteger (/* BinFile file,
                                    int *sval */);
 extern ThotBool TtaReadName (/* BinFile file,
-                                STRING name */);
+                                char* name */);
 extern BinFile TtaReadOpen (/* CONST CharUnit* filename */);
 extern void TtaReadClose (/* BinFile file */);
 extern BinFile TtaWriteOpen (/* CONST STRING filename */);
 extern void TtaWriteClose (/* BinFile file */);
 extern ThotBool TtaWriteByte (/* BinFile file,
-                                 CHAR_T bval */);
+                                 char bval */);
 extern ThotBool TtaWriteShort (/* BinFile file,
                                   int sval */);
 extern ThotBool TtaWriteInteger (/* BinFile file,
@@ -102,10 +102,10 @@ extern ThotBool DocIdentIsNull (/* DocumentIdentifier Ident */);
 extern void TtaExtractName (/* char* text,
                                char* aDirectory,
                                char* aName */);
-extern void MakeCompleteName (/* char* fname,
-                                 char* fext,
-                                 char* directory_list,
-                                 char* completeName,
+extern void MakeCompleteName (/* CharUnit* fname,
+                                 CharUnit* fext,
+                                 CharUnit* directory_list,
+                                 CharUnit* completeName,
                                  int *length */);
 extern void GetPictureFileName (/* STRING name,
                                    STRING fileName */);

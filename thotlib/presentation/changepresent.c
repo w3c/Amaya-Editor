@@ -1144,7 +1144,6 @@ ThotBool        remove;
 		     ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
 		  }
 	       }
-	    /* pCurrentRule = pCurrentRule->PrNextPRule; */
 	    }
 
 	  if (done)
@@ -1297,7 +1296,6 @@ ThotBool           remove;
 			    ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
 			}
 		    }
-		  /*pCurrentRule = pCurrentRule->PrNextPRule;*/
 		}
 	      /* redisplay the element if needed */
 	      if (found)

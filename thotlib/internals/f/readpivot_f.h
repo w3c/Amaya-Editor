@@ -53,19 +53,19 @@ extern ThotBool AbstractTreeOK ( PtrElement pEl,
 extern void AssociatePairs ( PtrElement pRoot );
 extern void ReadSchemaNamesPiv ( BinFile file,
                                  PtrDocument pDoc,
-                                 STRING tag,
+                                 char* tag,
                                  PtrSSchema pLoadedSS,
                                  void (*withThisPSchema) (Document document,
                                  STRING natSchema,
                                  STRING presentSchema) );
 extern void ReadLanguageTablePiv ( BinFile file,
                                    PtrDocument pDoc,
-                                   STRING tag );
+                                   char* tag );
 extern int ReadVersionNumberPiv ( BinFile file,
                                   PtrDocument pDoc );
 extern void ReadPivotHeader ( BinFile file,
                               PtrDocument pDoc,
-                              STRING tag );
+                              char* tag );
 extern void LoadDocumentPiv ( BinFile file,
                               PtrDocument pDoc,
                               ThotBool loadExternalDoc,
@@ -123,19 +123,19 @@ extern ThotBool AbstractTreeOK (/* PtrElement pEl,
 extern void AssociatePairs (/* PtrElement pRoot */);
 extern void ReadSchemaNamesPiv (/* BinFile file,
                                    PtrDocument pDoc,
-                                   STRING tag,
+                                   char* tag,
                                    PtrSSchema pLoadedSS,
                                    void (*withThisPSchema) (Document document,
                                    STRING natSchema,
                                    STRING presentSchema) */);
 extern void ReadLanguageTablePiv (/* BinFile file,
                                      PtrDocument pDoc,
-                                     STRING tag */);
+                                     char* tag */);
 extern int ReadVersionNumberPiv (/* BinFile file,
                                     PtrDocument pDoc */);
 extern void ReadPivotHeader (/* BinFile file,
                                 PtrDocument pDoc,
-                                STRING tag */);
+                                char* tag */);
 extern void LoadDocumentPiv (/* BinFile file,
                                 PtrDocument pDoc,
                                 ThotBool loadExternalDoc,

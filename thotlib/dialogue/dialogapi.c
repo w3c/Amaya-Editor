@@ -198,27 +198,12 @@ LRESULT CALLBACK ThotDlgProc    ();
 LRESULT CALLBACK TxtZoneWndProc ();
 #endif /* __STDC__ */
 
+static int          nAmayaShow;
+static DWORD        WinLastError;
+
 /* following variables are declared as extern in frame_tv.h */
 HINSTANCE           hInstance = 0;
-/* STRING               tszAppName; */
-int                 nAmayaShow;
-DWORD               WinLastError;
-ThotWindow          WinToolBar[MAX_FRAME + 2];
-HMENU               WinMenus[MAX_FRAME + 2];	/* MS-Windows associated menus */
-HWND                hwndAmaya;
-ThotWindow          WinStatusBar[MAX_FRAME + 2];
-HWND                WIN_Main_Wd;
-
 HBITMAP             WIN_LastBitmap = 0;
-HFONT               WIN_LastFont = 0;
-int                 WIN_ActifFen;	/* Number of active document frame  */
-int                 WIN_DesFen;	/* selected ViewFrame               */
-int                 WIN_DesX;	/* Position X of the selection      */
-int                 WIN_DesY;	/* Position Y of the selection      */
-int                 WIN_DesReturn;	/* Selection indicator              */
-USTRING      WIN_buffer;	/* Buffer for exchanges with Window */
-int                 WIN_Lgbuffer;
-extern CHAR_T         docToOpen [256];
 #ifdef  APPFILENAMEFILTER
 #undef  APPFILENAMEFILTER
 #endif  /* APPFILENAMEFILTER */
@@ -441,7 +426,7 @@ ThotMenu menu;
 }
 
 /*----------------------------------------------------------------------
-   GetVScrollParentNumber :  returns the Thot window number associated to a     
+  GetVScrollParentNumber:  returns the Thot window number associated to a     
    given menu.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -462,7 +447,7 @@ ThotWindow vScroll;
 }
 
 /*----------------------------------------------------------------------
-   GetHScrollParentNumber :  returns the Thot window number associated to a     
+  GetHScrollParentNumber:  returns the Thot window number associated to a  
    given menu.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -482,6 +467,8 @@ ThotWindow hScroll;
    return -1;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 HMENU WIN_GetMenu (int frame)
 #else  /* !__STDC__ */
@@ -720,7 +707,6 @@ int       nShow;
    currentFrame = -1;
    hInstance  = hInst;
    nAmayaShow = nShow;
-   /* tszAppName = "Amaya"; */
 
    argc = makeArgcArgv (hInst, &argv, lpCommand);
    main (argc, argv);

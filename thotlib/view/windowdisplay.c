@@ -174,45 +174,54 @@ int                 y2;
 
 #endif /* __STDC__ */
 {
-   HPEN     pen;
-   HPEN     hOldPen;
-   LOGBRUSH logBrush;
+  HPEN     pen;
+  HPEN     hOldPen;
+  LOGBRUSH logBrush;
 
-   WIN_GetDeviceContext (frame);
+  WIN_GetDeviceContext (frame);
+  if (TtLineGC.thick <= 1)
+    {
+      switch (TtLineGC.style)
+	{
+	case 3:
+	  pen = CreatePen (PS_DOT, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
+	  break;
+	case 4:
+	  pen = CreatePen (PS_DASH, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue)); 
+	  break;
+	default:
+	  pen = CreatePen (PS_SOLID, TtLineGC.thick, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));   
+	  break;
+	}
+    }
+  else
+    {
+      logBrush.lbStyle = BS_SOLID;
+      logBrush.lbColor = RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue);
+      
+      switch (TtLineGC.style)
+	{
+	case 3:
+	  pen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, TtLineGC.thick, &logBrush, 0, NULL);
+	  break;
+	case 4:
+	  pen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, TtLineGC.thick, &logBrush, 0, NULL); 
+	  break;
+	default:
+	  pen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, TtLineGC.thick, &logBrush, 0, NULL);   
+	  break;
+	}
+    }
 
-   if (TtLineGC.thick <= 1) {
-	  switch (TtLineGC.style) {
-             case 0:  pen = CreatePen (PS_SOLID, TtLineGC.thick, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));   
-                      break;
-             case 1:  pen = CreatePen (PS_DASH, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue)); 
-                      break;
-             default: pen = CreatePen (PS_DOT, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
-                      break;
-	   }
-   } else {
-          logBrush.lbStyle = BS_SOLID;
-          logBrush.lbColor = RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue);
+  hOldPen = SelectObject (TtDisplay, pen);
+  MoveToEx (TtDisplay, x1, y1, NULL);
+  LineTo (TtDisplay, x2, y2);
 
-          switch (TtLineGC.style) {
-                 case 0:  pen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, TtLineGC.thick, &logBrush, 0, NULL);   
-                          break;
-                 case 1:  pen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, TtLineGC.thick, &logBrush, 0, NULL); 
-                          break;
-                 default: pen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, TtLineGC.thick, &logBrush, 0, NULL);
-                          break;
-		  }
-   } 
-
-   hOldPen = SelectObject (TtDisplay, pen);
-
-   MoveToEx (TtDisplay, x1, y1, NULL);
-   LineTo (TtDisplay, x2, y2);
-
-   SelectObject (TtDisplay, hOldPen);
-   WIN_ReleaseDeviceContext ();
-   if (!DeleteObject (pen))
-      WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DoDrawOneLine");
-   pen = (HPEN) 0;
+  SelectObject (TtDisplay, hOldPen);
+  WIN_ReleaseDeviceContext ();
+  if (!DeleteObject (pen))
+    WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DoDrawOneLine");
+  pen = (HPEN) 0;
 }
 
 
@@ -1573,33 +1582,45 @@ int                 pattern;
 		 hBrush = (HBRUSH) 0;
    }
 
-   if (thick > 0) {
-      if (thick <= 1) {
-         switch (style) {
-                case 0:  hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
-                         break;
-                case 1:  hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
-                         break;
-                default: hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
-                         break;
-		 } 
-	  } else {
-             logBrush.lbStyle = BS_SOLID;
-             logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+   if (thick > 0)
+     {
+       if (thick <= 1)
+	 {
+	   switch (style)
+	     {
+	     case 3:
+	       hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+	       break;
+	     case 4:
+	       hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+	       break;
+	     default:
+	       hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+	       break;
+	     } 
+	 }
+       else
+	 {
+	   logBrush.lbStyle = BS_SOLID;
+	   logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
 
-             switch (style) {
-                    case 0:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
-                             break;
-                    case 1:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
-                             break;
-                    default: hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
-                             break;
-			 } 
-	  }  
-   } else {
-          if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
-             WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawRectangle (1)");
-   }
+	   switch (style)
+	     {
+	     case 3:
+	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
+	       break;
+	     case 4:
+	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
+	       break;
+	     default:
+	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
+	       break;
+	     } 
+	 }  
+     }
+   else if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
+     WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawRectangle (1)");
+
    hOldPen = SelectObject (TtDisplay, hPen) ;
    result = SelectClipRgn (TtDisplay, clipRgn); 
    if (result == ERROR)
@@ -2318,33 +2339,44 @@ int                 pattern;
 		 hBrush = (HBRUSH) 0;
    }
 
-   if (thick > 0) {
-      if (thick <= 1) {
-         switch (style) {
-                case 0:  hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
-                         break;
-                case 1:  hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
-                         break;
-                default: hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
-                         break;
-		 } 
-	  } else {
-             logBrush.lbStyle = BS_SOLID;
-             logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+   if (thick > 0)
+     {
+       if (thick <= 1)
+	 {
+	   switch (style)
+	     {
+	     case 3:
+	       hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+	       break;
+	     case 4:
+	       hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+	       break;
+	     default:
+	       hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+	       break;
+	     } 
+	 }
+       else
+	 {
+	   logBrush.lbStyle = BS_SOLID;
+	   logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
 
-             switch (style) {
-                    case 0:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
-                             break;
-                    case 1:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
-                             break;
-                    default: hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
-                             break;
-			 } 
-	  }  
-   } else {
-          if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
-             WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawOval (1)");
-   }
+	   switch (style)
+	     {
+	     case 3:
+	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
+	       break;
+	     case 4:
+	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
+	       break;
+	     default:
+	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
+	       break;
+	     } 
+	 }  
+     }
+   else if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
+     WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawOval (1)");
 
    hOldPen = SelectObject (TtDisplay, hPen) ;
    result = SelectClipRgn (TtDisplay, clipRgn); 
@@ -2447,33 +2479,44 @@ int                 pattern;
 		 hBrush = (HBRUSH) 0;
    }
 
-   if (thick > 0) {
-      if (thick <= 1) {
-         switch (style) {
-                case 0:  hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
-                         break;
-                case 1:  hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
-                         break;
-                default: hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
-                         break;
-		 } 
-	  } else {
-             logBrush.lbStyle = BS_SOLID;
-             logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+   if (thick > 0)
+     {
+       if (thick <= 1)
+	 {
+	   switch (style)
+	     {
+	     case 0:
+	       hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+	       break;
+	     case 1:
+	       hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+	       break;
+	     default:
+	       hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+	       break;
+	     } 
+	 }
+       else
+	 {
+	   logBrush.lbStyle = BS_SOLID;
+	   logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
 
-             switch (style) {
-                    case 0:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
-                             break;
-                    case 1:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
-                             break;
-                    default: hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
-                             break;
-			 } 
-	  }  
-   } else {
-          if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
-             WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawEllips (1)");
-   }
+	   switch (style)
+	     {
+	     case 0:
+	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
+	       break;
+	     case 1:
+	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
+	       break;
+	     default:
+	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
+	       break;
+	     } 
+	 }  
+     }
+   else if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
+     WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawEllips (1)");
 
    hOldPen = SelectObject (TtDisplay, hPen) ;
    result = SelectClipRgn (TtDisplay, clipRgn); 
@@ -2939,19 +2982,16 @@ int xf;
 int yf;
 #endif /* __STDC__ */
 {
-   if (FrRef[frame] != None) {
-	  RECT cltRect;
+  RECT cltRect;
+  if (FrRef[frame] != None) {
       WIN_GetDeviceContext (frame);
 
-	  GetClientRect (FrRef [frame], &cltRect);
+      GetClientRect (FrRef [frame], &cltRect);
       if (autoScroll)
-	     ScrollDC (TtDisplay, xf - xd, yf - yd, NULL, &cltRect, NULL, NULL);
+	ScrollDC (TtDisplay, xf - xd, yf - yd, NULL, &cltRect, NULL, NULL);
       else 
-	  /* UpdateWindow (FrRef [frame]); */
-	  ScrollWindowEx (FrRef [frame], xf - xd, yf - yd, NULL, &cltRect, NULL, NULL, SW_INVALIDATE);
-	  /********
-	  ScrollWindow (FrRef [frame], xf - xd, yf - yd, &cltRect, &cltRect);
-	   ********/
+	/* UpdateWindow (FrRef [frame]); */
+	ScrollWindowEx (FrRef [frame], xf - xd, yf - yd, NULL, &cltRect, NULL, NULL, SW_INVALIDATE);
       WIN_ReleaseDeviceContext ();
    }
 }

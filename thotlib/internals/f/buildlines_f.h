@@ -24,7 +24,7 @@ extern void RemoveLines ( PtrBox pBox,
                           ThotBool * changeSelectEnd );
 extern void RecomputeLines ( PtrAbstractBox pAb,
                              PtrLine pFirstLine,
-                             PtrBox pFirstBox,
+                             PtrBox ibox,
                              int frame );
 extern void UpdateLineBlock ( PtrAbstractBox pAb,
                               PtrLine pLine,
@@ -56,7 +56,7 @@ extern void RemoveLines (/* PtrBox pBox,
                             ThotBool * changeSelectEnd */);
 extern void RecomputeLines (/* PtrAbstractBox pAb,
                                PtrLine pFirstLine,
-                               PtrBox pFirstBox,
+                               PtrBox ibox,
                                int frame */);
 extern void UpdateLineBlock (/* PtrAbstractBox pAb,
                                 PtrLine pLine,

@@ -31,8 +31,8 @@ extern void TreateDictionary (/* PtrDict dict */);
 extern int LoadTreatedDict (/* PtrDict * pDictionary,
                                Language lang,
                                PtrDocument document,
-                               STRING dictName,
-                               STRING dictDirectory,
+                               CharUnit* dictName,
+                               CharUnit* dictDirectory,
                                ThotBool readonly,
                                ThotBool toCreate */);
 extern ThotBool ReloadDictionary (/* PtrDict * pDictionary */);

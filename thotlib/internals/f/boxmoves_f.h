@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern void IsXYPosComplete ( PtrBox pBox,
-                              ThotBool * horizRef,
-                              ThotBool * vertRef );
+                              ThotBool *horizRef,
+                              ThotBool *vertRef );
 extern ThotBool IsXPosComplete ( PtrBox pBox );
 extern ThotBool IsYPosComplete ( PtrBox pBox );
 extern ThotBool IsParentBox ( PtrBox pBox,
@@ -90,8 +90,8 @@ extern void HeightPack ( PtrAbstractBox pAb,
 #else /* __STDC__ */
 
 extern void IsXYPosComplete (/* PtrBox pBox,
-                                ThotBool * horizRef,
-                                ThotBool * vertRef */);
+                                ThotBool *horizRef,
+                                ThotBool *vertRef */);
 extern ThotBool IsXPosComplete (/* PtrBox pBox */);
 extern ThotBool IsYPosComplete (/* PtrBox pBox */);
 extern ThotBool IsParentBox (/* PtrBox pBox,

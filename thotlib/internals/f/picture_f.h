@@ -13,8 +13,12 @@ extern void InitPictureHandlers ( ThotBool printing );
 extern void GetPictHandlersList ( int *count,
                                   STRING buffer );
 extern void DrawPicture ( PtrBox box,
-                          PictInfo * imageDesc,
-                          int frame );
+                          PictInfo *imageDesc,
+                          int frame,
+                          int x,
+                          int y,
+                          int w,
+                          int h );
 extern void UnmapImage ( PictInfo* imageDesc );
 extern unsigned char* ZoomPicture ( unsigned char *cpic,
                                     int cWIDE,
@@ -24,7 +28,7 @@ extern unsigned char* ZoomPicture ( unsigned char *cpic,
                                     int bperpix );
 extern void LoadPicture ( int frame,
                           PtrBox box,
-                          PictInfo * imageDesc );
+                          PictInfo *imageDesc );
 extern int GetPictureType ( int GUIIndex );
 extern int GetPictTypeIndex ( int picType );
 extern int GetPictPresIndex ( PictureScaling picPresent );
@@ -42,8 +46,12 @@ extern void InitPictureHandlers (/* ThotBool printing */);
 extern void GetPictHandlersList (/* int *count,
                                     STRING buffer */);
 extern void DrawPicture (/* PtrBox box,
-                            PictInfo * imageDesc,
-                            int frame */);
+                            PictInfo *imageDesc,
+                            int frame,
+                            int x,
+                            int y,
+                            int w,
+                            int h */);
 extern void UnmapImage (/* PictInfo* imageDesc */);
 extern unsigned char* ZoomPicture (/* unsigned char *cpic,
                                       int cWIDE,
@@ -53,7 +61,7 @@ extern unsigned char* ZoomPicture (/* unsigned char *cpic,
                                       int bperpix */);
 extern void LoadPicture (/* int frame,
                             PtrBox box,
-                            PictInfo * imageDesc */);
+                            PictInfo *imageDesc */);
 extern int GetPictureType (/* int GUIIndex */);
 extern int GetPictTypeIndex (/* int picType */);
 extern int GetPictPresIndex (/* PictureScaling picPresent */);

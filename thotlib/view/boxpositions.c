@@ -462,11 +462,11 @@ ThotBool            vertRef;
 
    /* Origine de la boite du pave le plus englobant */
    pBox = pAb->AbBox;
-   x = pBox->BxXOrg;
-   y = pBox->BxYOrg;
-   width = pBox->BxWidth;
-   height = pBox->BxHeight;
-   Peclate = pBox->BxType == BoGhost;
+   x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+   y = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
+   width = pBox->BxW;
+   height = pBox->BxH;
+   Peclate = (pBox->BxType == BoGhost);
    pChildAb = pAb->AbFirstEnclosed;
 
    /* Indique s'il faut reevaluer l'englobement du contenu apres mise a jour */
@@ -581,7 +581,7 @@ ThotBool            vertRef;
 		     /* decale la boite positionnee en X dans l'englobante */
 		     if (horizRef && newX)
 		       {
-			  i = pChildBox->BxXOrg + pChildBox->BxWidth - width;
+			  i = pChildBox->BxXOrg + pChildBox->BxW - width;
 			  /* regarde s'il s'agit d'une boite elastique */
 			  if (pChildBox->BxHorizFlex)
 			    {
@@ -671,7 +671,7 @@ ThotBool            vertRef;
 		     /* decale la boite positionnee en Y dans l'englobante */
 		     if (vertRef && newY)
 		       {
-			  i = pChildBox->BxYOrg + pChildBox->BxHeight - height;
+			  i = pChildBox->BxYOrg + pChildBox->BxH - height;
 
 			  /* regarde s'il s'agit d'une boite elastique */
 			  if (pChildBox->BxVertFlex)

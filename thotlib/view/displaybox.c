@@ -43,15 +43,15 @@ static int          GetLineWeight (pAb)
 PtrAbstractBox      pAb;
 #endif /* __STDC__ */
 {
-   if (pAb == NULL)
-      return (0);
-   else
-      return PixelValue (pAb->AbLineWeight, pAb->AbLineWeightUnit, pAb, 0);
+  if (pAb == NULL)
+    return (0);
+  else
+    return PixelValue (pAb->AbLineWeight, pAb->AbLineWeightUnit, pAb, 0);
 }
 
 
 /*----------------------------------------------------------------------
-  DisplayImage display a empty box in the frame.
+  DisplayImage displays a empty box in the frame.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         DisplayImage (PtrBox pBox, int frame)
@@ -61,74 +61,37 @@ PtrBox              pBox;
 int                 frame;
 #endif /* __STDC__ */
 {
-   ViewFrame          *pFrame;
-   PtrBox              pCurrentBox;
-   int                 dx, dy;
-   int                 i;
-   int                 width, height;
-   int                 op, RO;
+  ViewFrame          *pFrame;
+  int                 dx, dy;
+  int                 op, RO;
 
-   if (pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
-     {
-	if (pBox->BxAbstractBox->AbSensitive)
-	   op = 1;
-	else
-	   op = 0;
-	if (pBox->BxAbstractBox->AbReadOnly)
-	   RO = 1;
-	else
-	   RO = 0;
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
+    {
+      if (pBox->BxAbstractBox->AbSensitive)
+	op = 1;
+      else
+	op = 0;
+      if (pBox->BxAbstractBox->AbReadOnly)
+	RO = 1;
+      else
+	RO = 0;
 
-	/* compute the location an geometry of the box */
-	dx = pBox->BxXOrg;
-	dy = pBox->BxYOrg;
-	/* box sizes have to be positive */
-	width = pBox->BxWidth;
-	if (width < 0)
-	  width = 0;
-	height = pBox->BxHeight;
-	if (height < 0)
-	  height = 0;
+      /* For changing drawing color */
+      DrawRectangle (frame, 0, 0, 0, 0, 0, 0, 0, 0, pBox->BxAbstractBox->AbForeground,
+		     pBox->BxAbstractBox->AbBackground, 0);
 
-	/* CHKR_LIMIT the area to fill to the englobing box */
-	pCurrentBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
-	i = pCurrentBox->BxXOrg - dx;
-	if (i > 0)
-	  {
-	     dx = pCurrentBox->BxXOrg;
-	     width -= i;
-	  }
-
-	i = pCurrentBox->BxXOrg + pCurrentBox->BxWidth - dx;
-	if (width > i)
-	   width = i;
-
-	i = pCurrentBox->BxYOrg - dy;
-	if (i > 0)
-	  {
-	     dy = pCurrentBox->BxYOrg;
-	     height -= i;
-	  }
-	/* For changing drawing color */
-	DrawRectangle (frame, 0, 0, 0, 0, 0, 0, 0, 0, pBox->BxAbstractBox->AbForeground,
-		       pBox->BxAbstractBox->AbBackground, 0);
-
-	i = pCurrentBox->BxYOrg + pCurrentBox->BxHeight - dy;
-	if (height > i)
-	   height = i;
-
-	DrawPicture (pBox, (PictInfo *) pBox->BxPictInfo, frame);
-
-	pFrame = &ViewFrameTable[frame - 1];
-	/* Should the end of de line be filled with dots */
-	if (pBox->BxEndOfBloc > 0)
-	  {
-	     /* Compute the origin alignment */
-	     dy = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
-	     DrawPoints (frame, pBox->BxXOrg + pBox->BxWidth - pFrame->FrXOrg, dy,
-	      pBox->BxEndOfBloc, RO, op, pBox->BxAbstractBox->AbForeground);
-	  }
-     }
+      DrawPicture (pBox, (PictInfo *) pBox->BxPictInfo, frame, 0, 0, 0, 0);
+      /* Should the end of de line be filled with dots */
+      if (pBox->BxEndOfBloc > 0)
+	{
+	  /* fill the end of the line with dots */
+	  dx = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+	  dy = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
+	  DrawPoints (frame, dx + pBox->BxWidth - pFrame->FrXOrg, dy,
+		      pBox->BxEndOfBloc, RO, op, pBox->BxAbstractBox->AbForeground);
+	}
+    }
 }
 
 
@@ -144,139 +107,124 @@ PtrBox              pBox;
 int                 frame;
 #endif /* __STDC__ */
 {
-   ptrfont             font;
-   PtrBox              mbox;
-   PtrAbstractBox      pAbbox1;
-   ViewFrame          *pFrame;
-   ThotBool            withbackground;
-   int                 xd, yd, i;
-   int                 fg;
-   int                 bg;
-   int                 op, RO;
-   int                 width, height;
+  ptrfont             font;
+  ViewFrame          *pFrame;
+  ThotBool            withbackground;
+  int                 xd, yd, i;
+  int                 fg;
+  int                 bg;
+  int                 op, RO;
+  int                 width, height;
 
-   /* Search for the box defining the enclosing constraints */
-   pAbbox1 = pBox->BxAbstractBox->AbEnclosing;
-   mbox = pAbbox1->AbBox;
-
-   /* If the englobing abstract box is splitted take the first englobing
-      not splitted */
-   if (mbox->BxType == BoGhost)
-      while (mbox->BxType == BoGhost && mbox->BxAbstractBox->AbEnclosing != NULL)
-	 mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
-
-   fg = pBox->BxAbstractBox->AbForeground;
-   bg = pBox->BxAbstractBox->AbBackground;
-   withbackground = (pBox->BxAbstractBox->AbFillPattern == 2);
-   if (pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
-      if (mbox->BxXOrg + mbox->BxWidth > pBox->BxXOrg
-	  && mbox->BxYOrg + mbox->BxHeight > pBox->BxYOrg)
+  fg = pBox->BxAbstractBox->AbForeground;
+  bg = pBox->BxAbstractBox->AbBackground;
+  withbackground = (pBox->BxAbstractBox->AbFillPattern == 2);
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
+    {
+      font = pBox->BxFont;
+      if (font != NULL)
 	{
-	   font = pBox->BxFont;
-	   if (font != NULL)
-	     {
-		/* Position in the frame */
-		pFrame = &ViewFrameTable[frame - 1];
-		xd = pBox->BxXOrg - pFrame->FrXOrg;
-		yd = pBox->BxYOrg - pFrame->FrYOrg;
-		if (pBox->BxAbstractBox->AbSensitive)
-		   op = 1;
-		else
-		   op = 0;
-		if (pBox->BxAbstractBox->AbReadOnly)
-		   RO = 1;
-		else
-		   RO = 0;
+	  /* Position in the frame */
+	  xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
+	  yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
 
-		/* box sizes have to be positive */
-		width = pBox->BxWidth;
-		if (width < 0)
-		  width = 0;
-		height = pBox->BxHeight;
-		if (height < 0)
-		  height = 0;
-
-		if (withbackground)
-		   DrawRectangle (frame, 0, 0, xd, yd, width, height, 0, 0, 0, bg, 2);
-
-		/* Line thickness */
-		i = GetLineWeight (pBox->BxAbstractBox);
-
-		switch (pBox->BxAbstractBox->AbShape)
-		      {
-			 case 'r':
-			    DrawRadical (frame, i, xd, yd, width, height, font, RO, op, fg);
-			    break;
-			 case 'i':
-			    DrawIntegral (frame, i, xd, yd, width, height, 0, font, RO, op, fg);
-			    break;
-			 case 'c':
-			    DrawIntegral (frame, i, xd, yd, width, height, 1, font, RO, op, fg);
-			    break;
-			 case 'd':
-			    DrawIntegral (frame, i, xd, yd, width, height, 2, font, RO, op, fg);
-			    break;
-			 case 'S':
-			    DrawSigma (frame, xd, yd, width, height, font, RO, op, fg);
-			    break;
-			 case 'P':
-			    DrawPi (frame, xd, yd, width, height, font, RO, op, fg);
-			    break;
-			 case 'I':
-			    DrawIntersection (frame, xd, yd, width, height, font, RO, op, fg);
-			    break;
-			 case 'U':
-			    DrawUnion (frame, xd, yd, width, height, font, RO, op, fg);
-			    break;
-			 case 'h':
-			    DrawHorizontalLine (frame, i, 0, xd, yd, width, height, 1, RO, op, fg);
-			    break;
-			 case 'v':
-			    DrawVerticalLine (frame, i, 0, xd, yd, width, height, 1, RO, op, fg);
-			    break;
-			 case '>':
-			    DrawArrow (frame, i, 0, xd, yd, width, height, 0, RO, op, fg);
-			    break;
-			 case '^':
-			    DrawArrow (frame, i, 0, xd, yd, width, height, 90, RO, op, fg);
-			    break;
-			 case '<':
-			    DrawArrow (frame, i, 0, xd, yd, width, height, 180, RO, op, fg);
-			    break;
-			 case 'V':
-			    DrawArrow (frame, i, 0, xd, yd, width, height, 270, RO, op, fg);
-			    break;
-			 case '(':
-			    DrawParenthesis (frame, i, xd, yd, width, height, 0, font, RO, op, fg);
-			    break;
-			 case ')':
-			    DrawParenthesis (frame, i, xd, yd, width, height, 1, font, RO, op, fg);
-			    break;
-			 case '{':
-			    DrawBrace (frame, i, xd, yd, width, height, 0, font, RO, op, fg);
-			    break;
-			 case '}':
-			    DrawBrace (frame, i, xd, yd, width, height, 1, font, RO, op, fg);
-			    break;
-			 case '[':
-			    DrawBracket (frame, i, xd, yd, width, height, 0, font, RO, op, fg);
-			    break;
-			 case ']':
-			    DrawBracket (frame, i, xd, yd, width, height, 1, font, RO, op, fg);
-			    break;
-			 default:
-			    break;
-		      }
-		/* Should the end of de line be filled with dots */
-		if (pBox->BxEndOfBloc > 0)
-		  {
-		     pFrame = &ViewFrameTable[frame - 1];
-		     /* Compute the origin alignment */
-		     yd += pBox->BxHorizRef;
-		     DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, RO, op, fg);
-		  }
-	     }
+	  if (pBox->BxAbstractBox->AbSensitive)
+	    op = 1;
+	  else
+	    op = 0;
+	  if (pBox->BxAbstractBox->AbReadOnly)
+	    RO = 1;
+	  else
+	    RO = 0;
+	  
+	  /* box sizes have to be positive */
+	  width = pBox->BxW;
+	  if (width < 0)
+	    width = 0;
+	  height = pBox->BxH;
+	  if (height < 0)
+	    height = 0;
+	  
+	  if (withbackground)
+	    DrawRectangle (frame, 0, 0, xd, yd, width, height, 0, 0, 0, bg, 2);
+	  
+	  /* Line thickness */
+	  i = GetLineWeight (pBox->BxAbstractBox);
+	  
+	  switch (pBox->BxAbstractBox->AbShape)
+	    {
+	    case 'r':
+	      DrawRadical (frame, i, xd, yd, width, height, font, RO, op, fg);
+	      break;
+	    case 'i':
+	      DrawIntegral (frame, i, xd, yd, width, height, 0, font, RO, op, fg);
+	      break;
+	    case 'c':
+	      DrawIntegral (frame, i, xd, yd, width, height, 1, font, RO, op, fg);
+	      break;
+	    case 'd':
+	      DrawIntegral (frame, i, xd, yd, width, height, 2, font, RO, op, fg);
+	      break;
+	    case 'S':
+	      DrawSigma (frame, xd, yd, width, height, font, RO, op, fg);
+	      break;
+	    case 'P':
+	      DrawPi (frame, xd, yd, width, height, font, RO, op, fg);
+	      break;
+	    case 'I':
+	      DrawIntersection (frame, xd, yd, width, height, font, RO, op, fg);
+	      break;
+	    case 'U':
+	      DrawUnion (frame, xd, yd, width, height, font, RO, op, fg);
+	      break;
+	    case 'h':
+	      DrawHorizontalLine (frame, i, 0, xd, yd, width, height, 1, RO, op, fg);
+	      break;
+	    case 'v':
+	      DrawVerticalLine (frame, i, 0, xd, yd, width, height, 1, RO, op, fg);
+	      break;
+	    case '>':
+	      DrawArrow (frame, i, 0, xd, yd, width, height, 0, RO, op, fg);
+	      break;
+	    case '^':
+	      DrawArrow (frame, i, 0, xd, yd, width, height, 90, RO, op, fg);
+	      break;
+	    case '<':
+	      DrawArrow (frame, i, 0, xd, yd, width, height, 180, RO, op, fg);
+	      break;
+	    case 'V':
+	      DrawArrow (frame, i, 0, xd, yd, width, height, 270, RO, op, fg);
+	      break;
+	    case '(':
+	      DrawParenthesis (frame, i, xd, yd, width, height, 0, font, RO, op, fg);
+	      break;
+	    case ')':
+	      DrawParenthesis (frame, i, xd, yd, width, height, 1, font, RO, op, fg);
+	      break;
+	    case '{':
+	      DrawBrace (frame, i, xd, yd, width, height, 0, font, RO, op, fg);
+	      break;
+	    case '}':
+	      DrawBrace (frame, i, xd, yd, width, height, 1, font, RO, op, fg);
+	      break;
+	    case '[':
+	      DrawBracket (frame, i, xd, yd, width, height, 0, font, RO, op, fg);
+	      break;
+	    case ']':
+	      DrawBracket (frame, i, xd, yd, width, height, 1, font, RO, op, fg);
+	      break;
+	    default:
+	      break;
+	    }
+	  if (pBox->BxEndOfBloc > 0)
+	    {
+	      /* fill the end of the line with dots */
+	      yd = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
+	      DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, RO, op, fg);
+	    }
 	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -292,59 +240,42 @@ int                 frame;
 CHAR_T                modele;
 #endif /* __STDC__ */
 {
-   PtrBox              mbox;
-   PtrAbstractBox      pAbbox1;
-   ViewFrame          *pFrame;
-   int                 op, RO;
-   int                 xd, yd;
-   int                 width, height;
+  ViewFrame          *pFrame;
+  int                 op, RO;
+  int                 xd, yd;
+  int                 width, height;
 
-   /* Search for the box defining the enclosing constraints */
-   if (pBox->BxAbstractBox->AbEnclosing == NULL)
-      mbox = pBox;
-   else
-     {
-	pAbbox1 = pBox->BxAbstractBox->AbEnclosing;
-	mbox = pAbbox1->AbBox;
-	/* If the englobing abstract box is splitted take the first englobing
-	   not splitted */
-	if (mbox->BxType == BoGhost)
-	   while (mbox->BxType == BoGhost && mbox->BxAbstractBox->AbEnclosing != NULL)
-	      mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
-     }
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
+    {
+      if (pBox->BxAbstractBox->AbSensitive)
+	op = 1;
+      else
+	op = 0;
+      if (pBox->BxAbstractBox->AbReadOnly)
+	RO = 1;
+      else
+	RO = 0;
 
-   pFrame = &ViewFrameTable[frame - 1];
-   if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
-      if (mbox->BxXOrg + mbox->BxWidth > pBox->BxXOrg
-	  && mbox->BxYOrg + mbox->BxHeight > pBox->BxYOrg)
-	{
-	   if (pBox->BxAbstractBox->AbSensitive)
-	      op = 1;
-	   else
-	      op = 0;
-	   if (pBox->BxAbstractBox->AbReadOnly)
-	      RO = 1;
-	   else
-	      RO = 0;
-	   xd = pBox->BxXOrg - pFrame->FrXOrg;
-	   yd = pBox->BxYOrg - pFrame->FrYOrg;
-	   /* box sizes have to be positive */
-	   width = pBox->BxWidth;
-	   if (width < 0)
-	     width = 0;
-	   height = pBox->BxHeight;
-	   if (height < 0)
-	     height = 0;
-
-	   if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
-	      DrawRectangle (frame, 2, 0, xd, yd, width,
-		  height, RO, op, pBox->BxAbstractBox->AbForeground,
-			     pBox->BxAbstractBox->AbBackground, 0);
-	   else
-	      PaintWithPattern (frame, xd, yd, width, height, 0, RO, op,
-		     pBox->BxAbstractBox->AbForeground,
-		     pBox->BxAbstractBox->AbBackground, 4);
-	}
+      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
+      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
+      /* box sizes have to be positive */
+      width = pBox->BxW;
+      if (width < 0)
+	width = 0;
+      height = pBox->BxH;
+      if (height < 0)
+	height = 0;
+      
+      if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
+	DrawRectangle (frame, 2, 0, xd, yd, width,
+		       height, RO, op, pBox->BxAbstractBox->AbForeground,
+		       pBox->BxAbstractBox->AbBackground, 0);
+      else
+	PaintWithPattern (frame, xd, yd, width, height, 0, RO, op,
+			  pBox->BxAbstractBox->AbForeground,
+			  pBox->BxAbstractBox->AbBackground, 4);
+    }
 }
 
 
@@ -359,53 +290,36 @@ PtrBox              pBox;
 int                 frame;
 #endif /* __STDC__ */
 {
+  ViewFrame          *pFrame;
+  PtrAbstractBox      pAb;
   int                 i, xd, yd;
-  PtrBox              mbox;
   int                 op, RO;
   int                 fg;
   int                 bg;
   int                 style;
   int                 width, height;
-  PtrAbstractBox      pv;
-  ViewFrame          *pFrame;
-
-  /* Search for the box defining the enclosing constraints */
-  if (pBox->BxAbstractBox->AbEnclosing == NULL)
-    mbox = pBox;
-  else
-    {
-      pv = pBox->BxAbstractBox->AbEnclosing;
-      mbox = pv->AbBox;
-      /* If the englobing abstract box is splitted take the first englobing
-	 not splitted */
-      if (mbox->BxType == BoGhost)
-	while (mbox->BxType == BoGhost && mbox->BxAbstractBox->AbEnclosing != NULL)
-	  mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
-    }
 
   fg = pBox->BxAbstractBox->AbForeground;
   bg = pBox->BxAbstractBox->AbBackground;
-  if (pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
-    if (mbox->BxXOrg + mbox->BxWidth >= pBox->BxXOrg
-	&& mbox->BxYOrg + mbox->BxHeight >= pBox->BxYOrg)
-      {
-	pFrame = &ViewFrameTable[frame - 1];
-	xd = pBox->BxXOrg - pFrame->FrXOrg;
-	yd = pBox->BxYOrg - pFrame->FrYOrg;
-	if (pBox->BxAbstractBox->AbSensitive)
-	  op = 1;
-	else
-	  op = 0;
-	if (pBox->BxAbstractBox->AbReadOnly)
-	  RO = 1;
-	else
-	  RO = 0;
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
+    {
+      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
+      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
+      if (pBox->BxAbstractBox->AbSensitive)
+	op = 1;
+      else
+	op = 0;
+      if (pBox->BxAbstractBox->AbReadOnly)
+	RO = 1;
+      else
+	RO = 0;
 
-	width = pBox->BxWidth;
-	height = pBox->BxHeight;
-	if (Printing)
+      width = pBox->BxW;
+      height = pBox->BxH;
+      if (Printing)
 	  {
-	    /* clipping sur l'origine */
+	    /* clip the origin */
 	    if (xd < 0)
 	      {
 		width += xd;
@@ -416,12 +330,12 @@ int                 frame;
 		height += yd;
 		yd = 0;
 	      }
-	    /* limite la largeur a la valeur du clipping */
-	    if (xd + width > ViewFrameTable[frame -1].FrClipXEnd - pFrame->FrXOrg)
-	      width = ViewFrameTable[frame -1].FrClipXEnd - pFrame->FrXOrg - xd;
+	    /* clip the width */
+	    if (xd + width > pFrame->FrClipXEnd - pFrame->FrXOrg)
+	      width = pFrame->FrClipXEnd - pFrame->FrXOrg - xd;
 	    /* limite la hauteur a la valeur du clipping */
-	    if (yd + height > ViewFrameTable[frame -1].FrClipYEnd - pFrame->FrYOrg)
-	      height = ViewFrameTable[frame -1].FrClipYEnd - pFrame->FrYOrg - yd;
+	    if (yd + height > pFrame->FrClipYEnd - pFrame->FrYOrg)
+	      height = pFrame->FrClipYEnd - pFrame->FrYOrg - yd;
 	  }
 	/* box sizes have to be positive */
 	if (width < 0)
@@ -429,25 +343,25 @@ int                 frame;
 	if (height < 0)
 	  height = 0;
 
-	pv = pBox->BxAbstractBox;
+	pAb = pBox->BxAbstractBox;
 	/* Style and thickness of drawing */
-	i = GetLineWeight (pv);
-	switch (pv->AbLineStyle)
+	i = GetLineWeight (pAb);
+	switch (pAb->AbLineStyle)
 	  {
 	  case 'S':
-	    style = 0;
+	    style = 5; /* solid */
 	    break;
 	  case '-':
-	    style = 3;
+	    style = 4; /* dashed */
 	    break;
 	  case '.':
-	    style = 1;
+	    style = 3; /* dotted */
 	    break;
 	  default:
-	    style = 0;
+	    style = 5; /* solid */
 	  }
 
-	switch (pv->AbRealShape)
+	switch (pAb->AbRealShape)
 	  {
 	  case '\260':
 	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg, bg, 2);
@@ -486,21 +400,17 @@ int                 frame;
 	  case '7':
 	  case '8':
 	  case 'R':
-	    DrawRectangle (frame, i, style, xd, yd, width,
-			   height, RO, op, fg, bg, pv->AbFillPattern);
+	    DrawRectangle (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pAb->AbFillPattern);
 	    break;
 	  case 'C':
-	    DrawOval (frame, i, style, xd, yd, width,
-		      height, RO, op, fg, bg, pv->AbFillPattern);
+	    DrawOval (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pAb->AbFillPattern);
 	    break;
 	  case 'L':
-	    DrawDiamond (frame, i, style, xd, yd, width,
-			 height, RO, op, fg, bg, pv->AbFillPattern);
+	    DrawDiamond (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pAb->AbFillPattern);
 	    break;
 	  case 'a':
 	  case 'c':
-	    DrawEllips (frame, i, style, xd, yd, width,
-			height, RO, op, fg, bg, pv->AbFillPattern);
+	    DrawEllips (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pAb->AbFillPattern);
 	    break;
 	  case 'h':
 	    DrawHorizontalLine (frame, i, style, xd, yd, width, height, 1, RO, op, fg);
@@ -532,28 +442,22 @@ int                 frame;
 	     DrawArrow (frame, i, style, xd, yd, width, height, 0, RO, op, fg);
 	     break;
 	  case 'E':
-	    DrawArrow (frame, i, style, xd, yd, width,
-		       height, 45, RO, op, fg);
+	    DrawArrow (frame, i, style, xd, yd, width, height, 45, RO, op, fg);
 	    break;
 	  case '^':
-	    DrawArrow (frame, i, style, xd, yd, width,
-		       height, 90, RO, op, fg);
+	    DrawArrow (frame, i, style, xd, yd, width, height, 90, RO, op, fg);
 	    break;
 	  case 'O':
-	    DrawArrow (frame, i, style, xd, yd, width,
-		       height, 135, RO, op, fg);
+	    DrawArrow (frame, i, style, xd, yd, width, height, 135, RO, op, fg);
 	    break;
 	  case '<':
-	    DrawArrow (frame, i, style, xd, yd, width,
-		       height, 180, RO, op, fg);
+	    DrawArrow (frame, i, style, xd, yd, width, height, 180, RO, op, fg);
 	    break;
 	  case 'o':
-	    DrawArrow (frame, i, style, xd, yd, width,
-		       height, 225, RO, op, fg);
+	    DrawArrow (frame, i, style, xd, yd, width, height, 225, RO, op, fg);
 	    break;
 	  case 'V':
-	    DrawArrow (frame, i, style, xd, yd, width,
-		       height, 270, RO, op, fg);
+	    DrawArrow (frame, i, style, xd, yd, width, height, 270, RO, op, fg);
 	    break;
 	  case 'e':
 	    DrawArrow (frame, i, style, xd, yd, width,
@@ -562,11 +466,11 @@ int                 frame;
 	    
 	  case 'P':
 	    DrawRectangleFrame (frame, i, style, xd, yd, width,
-				height, RO, op, fg, bg, pv->AbFillPattern);
+				height, RO, op, fg, bg, pAb->AbFillPattern);
 	    break;
 	  case 'Q':
 	    DrawEllipsFrame (frame, i, style, xd, yd, width,
-			     height, RO, op, fg, bg, pv->AbFillPattern);
+			     height, RO, op, fg, bg, pAb->AbFillPattern);
 	    break;
 	  case 'W':
 	    DrawCorner (frame, i, style, xd, yd, width, height, 0, RO, op, fg);
@@ -587,8 +491,8 @@ int                 frame;
 	
 	if (pBox->BxEndOfBloc > 0)
 	  {
-	    /* Compute the origin alignment */
-	    yd += pBox->BxHorizRef;
+	    /* fill the end of the line with dots */
+	    yd = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
 	    DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, RO, op, fg);
 	  }
       }
@@ -596,7 +500,7 @@ int                 frame;
 
 
 /*----------------------------------------------------------------------
-  PolyTransform check whether a polyline Box need to be transformed
+  PolyTransform checks whether a polyline Box need to be transformed
   to fit in the current area.
   If the CHKR_LIMIT point matches the current geometry, no need
   to change anything, otherwise, all points are moved using
@@ -616,10 +520,10 @@ PtrBox              pBox;
    int                 width, height;
 
    /* box sizes have to be positive */
-   width = pBox->BxWidth;
+   width = pBox->BxW;
    if (width < 0)
      width = 0;
-   height = pBox->BxHeight;
+   height = pBox->BxH;
    if (height < 0)
      height = 0;
 
@@ -689,139 +593,121 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   PtrBox              mbox;
-   PtrAbstractBox      pAb;
-   ViewFrame          *pFrame;
-   int                 i, xd, yd;
-   int                 op, RO;
-   int                 fg;
-   int                 bg;
-   int                 style, arrow;
-   int                 width;
+  PtrAbstractBox      pAb;
+  ViewFrame          *pFrame;
+  int                 i, xd, yd;
+  int                 op, RO;
+  int                 fg;
+  int                 bg;
+  int                 style, arrow;
+  int                 width;
 
-   /* If no point is defined, no need to draw it */
-   if (pBox->BxBuffer == NULL || pBox->BxNChars <= 1)
-      return;
+  /* If no point is defined, no need to draw it */
+  if (pBox->BxBuffer == NULL || pBox->BxNChars <= 1)
+    return;
 
-   /* Transform the polyline if the box size has changed */
-   PolyTransform (pBox);
-
-   /* Search for the box defining the enclosing constraints */
-   if (pBox->BxAbstractBox->AbEnclosing == NULL)
-      mbox = pBox;
-   else
-     {
-	pAb = pBox->BxAbstractBox->AbEnclosing;
-	mbox = pAb->AbBox;
-	/* If the englobing abstract box is splitted take the first englobing
-	   not splitted */
-	if (mbox->BxType == BoGhost)
-	   while (mbox->BxType == BoGhost && mbox->BxAbstractBox->AbEnclosing != NULL)
-	      mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
-     }
-
-   fg = pBox->BxAbstractBox->AbForeground;
-   bg = pBox->BxAbstractBox->AbBackground;
-   if (pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
-      if (mbox->BxXOrg + mbox->BxWidth >= pBox->BxXOrg
-	  && mbox->BxYOrg + mbox->BxHeight >= pBox->BxYOrg)
+  /* Transform the polyline if the box size has changed */
+  PolyTransform (pBox);
+  fg = pBox->BxAbstractBox->AbForeground;
+  bg = pBox->BxAbstractBox->AbBackground;
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
+    {
+      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
+      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
+      if (pBox->BxAbstractBox->AbSensitive)
+	op = 1;
+      else
+	op = 0;
+      
+      if (pBox->BxAbstractBox->AbReadOnly)
+	RO = 1;
+      else
+	RO = 0;
+      
+      /* box sizes have to be positive */
+      width = pBox->BxW;
+      if (width < 0)
+	width = 0;
+      
+      pAb = pBox->BxAbstractBox;
+      /* Style and thickness of the line */
+      i = GetLineWeight (pAb);
+      switch (pAb->AbLineStyle)
 	{
-	   pFrame = &ViewFrameTable[frame - 1];
-	   xd = pBox->BxXOrg - pFrame->FrXOrg;
-	   yd = pBox->BxYOrg - pFrame->FrYOrg;
-	   if (pBox->BxAbstractBox->AbSensitive)
-	      op = 1;
-	   else
-	      op = 0;
-
-	   if (pBox->BxAbstractBox->AbReadOnly)
-	      RO = 1;
-	   else
-	      RO = 0;
-
-	   /* box sizes have to be positive */
-	   width = pBox->BxWidth;
-	   if (width < 0)
-	     width = 0;
-
-	   pAb = pBox->BxAbstractBox;
-	   /* Style and thickness of the line */
-	   i = GetLineWeight (pAb);
-	   switch (pAb->AbLineStyle)
-		 {
-		    case 'S':
-		       style = 0;
-		       break;
-		    case '-':
-		       style = 3;
-		       break;
-		    case '.':
-		       style = 1;
-		       break;
-		    default:
-		       style = 0;
-		 }
-
-	   switch (pAb->AbPolyLineShape)
-		 {
-		    case 'S':	/* Segments */
-		    case 'U':	/* Segments forward arrow */
-		    case 'N':	/* Segments backward arrow */
-		    case 'M':	/* Segments arrows on both directions */
-		    case 'w':	/* Segments (2 points) */
-		    case 'x':	/* Segments (2 points) forward arrow */
-		    case 'y':	/* Segments (2 points) backward arrow */
-		    case 'z':	/* Segments (2 points) arrows on both directions */
-		       if (pAb->AbPolyLineShape == 'S' || pAb->AbPolyLineShape == 'w')
-			  arrow = 0;
-		       else if (pAb->AbPolyLineShape == 'U' || pAb->AbPolyLineShape == 'x')
-			  arrow = 1;
-		       else if (pAb->AbPolyLineShape == 'N' || pAb->AbPolyLineShape == 'y')
-			  arrow = 2;
-		       else
-			  arrow = 3;
-		       DrawSegments (frame, i, style, xd, yd, pBox->BxBuffer, pBox->BxNChars, RO, op, fg, arrow);
-		       break;
-		    case 'B':	/* Beziers (open) */
-		    case 'A':	/* Beziers (open) forward arrow */
-		    case 'F':	/* Beziers (open) backward arrow */
-		    case 'D':	/* Beziers (open) arrows on both directions */
-		       if (pAb->AbPolyLineShape == 'B')
-			  arrow = 0;
-		       else if (pAb->AbPolyLineShape == 'A')
-			  arrow = 1;
-		       else if (pAb->AbPolyLineShape == 'F')
-			  arrow = 2;
-		       else
-			  arrow = 3;
-		       /* compute control points */
-		       if (pBox->BxPictInfo == NULL)
-			  pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars);
-		       DrawCurb (frame, i, style, xd, yd, pBox->BxBuffer,
-				 pBox->BxNChars, RO, op, fg, arrow, (C_points *) pBox->BxPictInfo);
-		       break;
-		    case 'p':	/* polygon */
-		       DrawPolygon (frame, i, style, xd, yd, pBox->BxBuffer,
-			 pBox->BxNChars, RO, op, fg, bg, pAb->AbFillPattern);
-		       break;
-		    case 's':	/* closed spline */
-		       /* compute control points */
-		       if (pBox->BxPictInfo == NULL)
-			  pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars);
-		       DrawSpline (frame, i, style, xd, yd, pBox->BxBuffer,
-				   pBox->BxNChars, RO, op, fg, bg, pAb->AbFillPattern, (C_points *) pBox->BxPictInfo);
-		       break;
-		    default:
-		       break;
-		 }
-
-	   if (pBox->BxEndOfBloc > 0)
-	     {
-		/* Compute the origin alignment */
-		yd += pBox->BxHorizRef;
-		DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, RO, op, fg);
-	     }
+	case 'S':
+	  style = 5; /* solid */
+	  break;
+	case '-':
+	  style = 4; /* dashed */
+	  break;
+	case '.': /* dotted */
+	  style = 3;
+	  break;
+	default:
+	  style = 5; /* solid */
 	}
+
+      switch (pAb->AbPolyLineShape)
+	{
+	case 'S':	/* Segments */
+	case 'U':	/* Segments forward arrow */
+	case 'N':	/* Segments backward arrow */
+	case 'M':	/* Segments arrows on both directions */
+	case 'w':	/* Segments (2 points) */
+	case 'x':	/* Segments (2 points) forward arrow */
+	case 'y':	/* Segments (2 points) backward arrow */
+	case 'z':	/* Segments (2 points) arrows on both directions */
+	  if (pAb->AbPolyLineShape == 'S' || pAb->AbPolyLineShape == 'w')
+	    arrow = 0;
+	  else if (pAb->AbPolyLineShape == 'U' || pAb->AbPolyLineShape == 'x')
+	    arrow = 1;
+	  else if (pAb->AbPolyLineShape == 'N' || pAb->AbPolyLineShape == 'y')
+	    arrow = 2;
+	  else
+	    arrow = 3;
+	  DrawSegments (frame, i, style, xd, yd, pBox->BxBuffer, pBox->BxNChars, RO, op, fg, arrow);
+	  break;
+	case 'B':	/* Beziers (open) */
+	case 'A':	/* Beziers (open) forward arrow */
+	case 'F':	/* Beziers (open) backward arrow */
+	case 'D':	/* Beziers (open) arrows on both directions */
+	  if (pAb->AbPolyLineShape == 'B')
+	    arrow = 0;
+	  else if (pAb->AbPolyLineShape == 'A')
+	    arrow = 1;
+	  else if (pAb->AbPolyLineShape == 'F')
+	    arrow = 2;
+	  else
+	    arrow = 3;
+	  /* compute control points */
+	  if (pBox->BxPictInfo == NULL)
+	    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars);
+	  DrawCurb (frame, i, style, xd, yd, pBox->BxBuffer,
+		    pBox->BxNChars, RO, op, fg, arrow, (C_points *) pBox->BxPictInfo);
+	  break;
+	case 'p':	/* polygon */
+	  DrawPolygon (frame, i, style, xd, yd, pBox->BxBuffer,
+		       pBox->BxNChars, RO, op, fg, bg, pAb->AbFillPattern);
+	  break;
+	case 's':	/* closed spline */
+	  /* compute control points */
+	  if (pBox->BxPictInfo == NULL)
+	    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars);
+	  DrawSpline (frame, i, style, xd, yd, pBox->BxBuffer,
+		      pBox->BxNChars, RO, op, fg, bg, pAb->AbFillPattern, (C_points *) pBox->BxPictInfo);
+	  break;
+	default:
+	  break;
+	}
+      
+      if (pBox->BxEndOfBloc > 0)
+	{
+	  /* fill the end of the line with dots */
+	  yd = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
+	  DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, RO, op, fg);
+	}
+    }
 }
 
 
@@ -839,184 +725,193 @@ PtrBox              pBox;
 int                 frame;
 #endif /* __STDC__ */
 {
-   PtrTextBuffer       adbuff;
-   PtrTextBuffer       newbuff;
-   PtrAbstractBox      pAbbox1;
-   ViewFrame          *pFrame;
-   UCHAR_T       car;
-   PtrBox              mbox;
-   int                 indbuff;
-   int                 restbl;
-   int                 newind;
-   int                 newbl, lg;
-   int                 charleft, dc;
-   int                 buffleft;
-   int                 indmax, bl;
-   int                 nbcar, x, y;
-   int                 lgspace;
-   int                 fg;
-   int                 bg;
-   int                 RO;
-   int                 op;
-   int                 shadow;
-   int                 width;
-   ThotBool            blockbegin;
-   ThotBool            withbackground;
-   ThotBool            withline;
+  PtrTextBuffer       adbuff;
+  PtrTextBuffer       newbuff;
+  ViewFrame          *pFrame;
+  PtrBox              mbox;
+  UCHAR_T             car;
+  int                 indbuff;
+  int                 restbl;
+  int                 newind;
+  int                 newbl, lg;
+  int                 charleft, dc;
+  int                 buffleft;
+  int                 indmax, bl;
+  int                 nbcar, x, y;
+  int                 lgspace;
+  int                 fg;
+  int                 bg;
+  int                 RO;
+  int                 op;
+  int                 shadow;
+  int                 width;
+  ThotBool            blockbegin;
+  ThotBool            withbackground;
+  ThotBool            withline;
 
-   indmax = 0;
-   buffleft = 0;
-   adbuff = NULL;
-   indbuff = 0;
-   restbl = 0;
-   /* Search for the enclosing box defining the size constraints */
-   if (pBox->BxAbstractBox->AbEnclosing == NULL)
-      mbox = pBox;
-   else {
-        pAbbox1 = pBox->BxAbstractBox->AbEnclosing;
-        mbox = pAbbox1->AbBox;
+  indmax = 0;
+  buffleft = 0;
+  adbuff = NULL;
+  indbuff = 0;
+  restbl = 0;
 
-        /* Si le pave englobant est eclate on saute au pave englobant entier */
-        if (mbox->BxType == BoGhost)
-           while (mbox->BxType == BoGhost && mbox->BxAbstractBox->AbEnclosing != NULL)
-                 mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
-   } 
+  /* Search for the enclosing box */
+  if (pBox->BxAbstractBox->AbEnclosing == NULL)
+    mbox = pBox;
+  else
+    {
+      mbox = pBox->BxAbstractBox->AbEnclosing->AbBox;
+      if (mbox->BxType == BoGhost)
+	while (mbox->BxType == BoGhost &&
+	       mbox->BxAbstractBox->AbEnclosing != NULL)
+	  mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
+    } 
+  
+  /* do we have to display stars instead of characters? */
+  if (pBox->BxAbstractBox->AbBox->BxShadow)
+    shadow = 1;
+  else
+    shadow = 0;
+  
+  /* Is this box the first of a block of text? */
+  if (mbox == pBox)
+    blockbegin = TRUE;
+  else if (mbox->BxType != BoBlock || mbox->BxFirstLine == NULL)
+    blockbegin = TRUE;
+  else if (pBox->BxType == BoComplete && mbox->BxFirstLine->LiFirstBox == pBox)
+    blockbegin = TRUE;
+  else if ((pBox->BxType == BoPiece || pBox->BxType == BoDotted) &&
+	   mbox->BxFirstLine->LiFirstPiece == pBox)
+    blockbegin = TRUE;
+  else
+    blockbegin = FALSE;
+  
+  /* Is an hyphenation mark needed at the end of the box? */
+  if (pBox->BxType == BoDotted)
+    withline = TRUE;
+  else
+    withline = FALSE;
 
-   /* do we have to display stars instead of characters? */
-   if (pBox->BxAbstractBox->AbBox->BxShadow)
-      shadow = 1;
-   else
-        shadow = 0;
-
-   /* Is this bos the first of a lines block of isolated text */
-   if (mbox == pBox)
-      blockbegin = TRUE;
-   else if (mbox->BxType != BoBlock || mbox->BxFirstLine == NULL)
-        blockbegin = TRUE;
-   else if (pBox->BxType == BoComplete && mbox->BxFirstLine->LiFirstBox == pBox)
-        blockbegin = TRUE;
-   else if ((pBox->BxType == BoPiece || pBox->BxType == BoDotted) && mbox->BxFirstLine->LiFirstPiece == pBox)
-        blockbegin = TRUE;
-   else
-        blockbegin = FALSE;
-
-   /* Is an hyphenation mark needed at the end of the box ? */
-   if (pBox->BxType == BoDotted)
-      withline = TRUE;
-   else
-       withline = FALSE;
-
-   fg = pBox->BxAbstractBox->AbForeground;
-   bg = pBox->BxAbstractBox->AbBackground;
-   withbackground = (pBox->BxAbstractBox->AbFillPattern == 2);
-
-   if (pBox->BxNChars > 0)
-      if (pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
-         if (mbox->BxXOrg + mbox->BxWidth > pBox->BxXOrg && mbox->BxYOrg + mbox->BxHeight > pBox->BxYOrg) {
-	   /* Initialization */
-	   /* -------------- */
-	   pFrame = &ViewFrameTable[frame - 1];
-	   x = pBox->BxXOrg - pFrame->FrXOrg;
-	   y = pBox->BxYOrg - pFrame->FrYOrg;
-	   bl = 0;
-	   newind = pBox->BxFirstChar;
-	   newbuff = pBox->BxBuffer;
-	   charleft = pBox->BxNChars;
-	   newbl = pBox->BxNPixels;
-	   lg = 0;
-	   if (pBox->BxAbstractBox->AbSensitive)
-	     op = 1;
-	   else
-	     op = 0;
-	   if (pBox->BxAbstractBox->AbReadOnly)
-	     RO = 1;
-	   else
-	     RO = 0;
+  fg = pBox->BxAbstractBox->AbForeground;
+  bg = pBox->BxAbstractBox->AbBackground;
+  withbackground = (pBox->BxAbstractBox->AbFillPattern == 2);
+  
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pBox->BxNChars > 0 &&
+      pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
+    {
+      /* Initialization */
+      x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
+      y = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
+      bl = 0;
+      newind = pBox->BxFirstChar;
+      newbuff = pBox->BxBuffer;
+      charleft = pBox->BxNChars;
+      newbl = pBox->BxNPixels;
+      lg = 0;
+      if (pBox->BxAbstractBox->AbSensitive)
+	op = 1;
+      else
+	op = 0;
+      if (pBox->BxAbstractBox->AbReadOnly)
+	RO = 1;
+      else
+	RO = 0;
 	   
-	   /* box sizes have to be positive */
-	   width = pBox->BxWidth;
-	   if (width < 0)
-	     width = 0;
+      /* box sizes have to be positive */
+      width = pBox->BxW;
+      if (width < 0)
+	width = 0;
 
-	   lgspace = pBox->BxSpaceWidth;
-	   if (lgspace == 0)
-	     lgspace = CharacterWidth (SPACE, pBox->BxFont);
+      lgspace = pBox->BxSpaceWidth;
+      if (lgspace == 0)
+	lgspace = CharacterWidth (SPACE, pBox->BxFont);
 
-	   /* Search the first displayable char */
-	   /* --------------------------------- */
-	   if (charleft > 0)
-	     do {
-	       adbuff = newbuff;
-	       indbuff = newind;
-	       restbl = newbl;
-	       x += lg;
-	       car = (UCHAR_T) (adbuff->BuContent[indbuff - 1]);
-	       if (car == SPACE) {
-		 lg = lgspace;
-		 if (newbl > 0) {
-		   newbl--;
-		   lg++;
-		 } 
-	       } else
-		 lg = CharacterWidth (car, pBox->BxFont);
+      /* Search the first displayable char */
+      if (charleft > 0)
+	do
+	  {
+	    adbuff = newbuff;
+	    indbuff = newind;
+	    restbl = newbl;
+	    x += lg;
+	    car = (UCHAR_T) (adbuff->BuContent[indbuff - 1]);
+	    if (car == SPACE)
+	      {
+		lg = lgspace;
+		if (newbl > 0)
+		  {
+		    newbl--;
+		    lg++;
+		  } 
+	      }
+	    else
+	      lg = CharacterWidth (car, pBox->BxFont);
 	       
-	       charleft--;
-	       /* Skip to next char */
-	       if (indbuff < adbuff->BuLength)
-		 newind = indbuff + 1;
-	       else {
-		 if (adbuff->BuNext == NULL && charleft > 0)
-		   charleft = 0;
-		 newind = 1;
-		 newbuff = adbuff->BuNext;
-	       } 
-	     } while (!(x + lg > 0 || charleft <= 0));
+	    charleft--;
+	    /* Skip to next char */
+	    if (indbuff < adbuff->BuLength)
+	      newind = indbuff + 1;
+	    else
+	      {
+		if (adbuff->BuNext == NULL && charleft > 0)
+		  charleft = 0;
+		newind = 1;
+		newbuff = adbuff->BuNext;
+	      } 
+	  } while (!(x + lg > 0 || charleft <= 0));
 	   
-	   /* Display the list of text buffers pointed by adbuff */
-	   /* beginning at indbuff and of lenght charleft.       */
-	   /* -------------------------------------------------- */
-	   if (x + lg > 0)
-	     charleft++;
-	   nbcar = 0;
-	   if (adbuff == NULL)
-	     charleft = 0;
-	   else {
-	     buffleft = adbuff->BuLength - indbuff + 1;
-	     if (charleft > buffleft)
-	       indmax = adbuff->BuLength;
-	     else
-	       indmax = indbuff - 1 + charleft;
-	   } 
+      /* Display the list of text buffers pointed by adbuff */
+      /* beginning at indbuff and of lenght charleft.       */
+      /* -------------------------------------------------- */
+      if (x + lg > 0)
+	charleft++;
+      nbcar = 0;
+      if (adbuff == NULL)
+	charleft = 0;
+      else
+	{
+	  buffleft = adbuff->BuLength - indbuff + 1;
+	  if (charleft > buffleft)
+	    indmax = adbuff->BuLength;
+	  else
+	    indmax = indbuff - 1 + charleft;
+	} 
 	   
-	   /* Do we need to draw a background */
-	   if (withbackground)
-	     DrawRectangle (frame, 0, 0, x, y, width + pBox->BxXOrg - pFrame->FrXOrg - x, FontHeight (pBox->BxFont), 0, 0, 0, bg, 2);
-	   while (charleft > 0) {
-	     /* handle each char in the buffer */
-	     while (indbuff <= indmax) {
-	       car = (UCHAR_T) (adbuff->BuContent[indbuff - 1]);
-	       
-	       if (car == SPACE || car == THIN_SPACE || car == HALF_EM || car == UNBREAKABLE_SPACE || car == TAB) {
-		 /* display the last chars handled */
-		 dc = indbuff - nbcar;
-		 x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont, 0, bl, 0, blockbegin, RO, op, fg, shadow);
+      /* Do we need to draw a background */
+      if (withbackground)
+	DrawRectangle (frame, 0, 0, x, y, width + pBox->BxXOrg - pFrame->FrXOrg - x, FontHeight (pBox->BxFont), 0, 0, 0, bg, 2);
+      while (charleft > 0)
+	{
+	  /* handle each char in the buffer */
+	  while (indbuff <= indmax)
+	    {
+	      car = (UCHAR_T) (adbuff->BuContent[indbuff - 1]);
+	      
+	      if (car == SPACE || car == THIN_SPACE ||
+		  car == HALF_EM || car == UNBREAKABLE_SPACE || car == TAB)
+		{
+		  /* display the last chars handled */
+		  dc = indbuff - nbcar;
+		  x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont, 0, bl, 0, blockbegin, RO, op, fg, shadow);
+		  
+		  if (shadow && (car == SPACE || car == THIN_SPACE || car == HALF_EM || UNBREAKABLE_SPACE || car == TAB))
+		    DrawChar ('*', frame, x, y, pBox->BxFont, RO, op, fg);
+		  else if (!ShowSpace)
+		    {
+		      /* Show the space chars */
+		      if (car == SPACE || car == TAB) 
+			DrawChar (SHOWN_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
+		      else if (car == THIN_SPACE)
+			DrawChar (SHOWN_THIN_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
+		      else if (car == HALF_EM)
+			DrawChar (SHOWN_HALF_EM, frame, x, y, pBox->BxFont, RO, op, fg);
+		      else if (car == UNBREAKABLE_SPACE)
+			DrawChar (SHOWN_UNBREAKABLE_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
+		    }
 		 
-		 if (shadow && (car == SPACE || car == THIN_SPACE || car == HALF_EM || UNBREAKABLE_SPACE || car == TAB))
-		   DrawChar ('*', frame, x, y, pBox->BxFont, RO, op, fg);
-		 else if (!ShowSpace) {
-		   /* Show the space chars */
-		   if (car == SPACE || car == TAB) 
-		     DrawChar (SHOWN_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
-		   else if (car == THIN_SPACE)
-		     DrawChar (SHOWN_THIN_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
-		   else if (car == HALF_EM)
-		     DrawChar (SHOWN_HALF_EM, frame, x, y, pBox->BxFont, RO, op, fg);
-		   else if (car == UNBREAKABLE_SPACE)
-		     DrawChar (SHOWN_UNBREAKABLE_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
-		 }    
-		 
-		 nbcar = 0;
-		 if (car == SPACE)
+		  nbcar = 0;
+		  if (car == SPACE)
 		   if (restbl > 0) {
 		     /* Pixel space splitting */
 		     x = x + lgspace + 1;
@@ -1036,40 +931,275 @@ int                 frame;
 	     /* Draw the last chars from buffer */
 	     dc = indbuff - nbcar;
 	     charleft -= buffleft;
-	     if (charleft <= 0) { /* Finished */
-	       x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont, width, bl, withline, blockbegin, RO, op, fg, shadow);
-	       if (pBox->BxUnderline != 0)
-		 DisplayUnderline (frame, x, y, pBox->BxFont, pBox->BxUnderline, pBox->BxThickness, pBox->BxWidth, RO, op, fg);
-	       /* Next char lookup */
-	       if (((UCHAR_T) adbuff->BuContent[indbuff - 1] == BREAK_LINE || (UCHAR_T) adbuff->BuContent[indbuff - 1] == NEW_LINE) && !ShowSpace)
-		 DrawChar (SHOWN_BREAK_LINE, frame, x, y, pBox->BxFont, RO, op, fg);
-	     } else {
-	       x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont, 0, bl, 0, blockbegin, RO, op, fg, shadow);
-	       bl = 0;
-	       /* Skip to next buffer */
-	       if (adbuff->BuNext == NULL)
-		 charleft = 0;
-	       else {
-		 indbuff = 1;
-		 adbuff = adbuff->BuNext;
-		 buffleft = adbuff->BuLength;
-		 if (charleft < buffleft)
-		   indmax = charleft;
+	     if (charleft <= 0)
+	       {
+		 /* Finished */
+		 x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont, width, bl, withline, blockbegin, RO, op, fg, shadow);
+		 if (pBox->BxUnderline != 0)
+		   DisplayUnderline (frame, x, y, pBox->BxFont, pBox->BxUnderline, pBox->BxThickness, pBox->BxWidth, RO, op, fg);
+		 /* Next char lookup */
+		 if (((UCHAR_T) adbuff->BuContent[indbuff - 1] == BREAK_LINE ||
+		      (UCHAR_T) adbuff->BuContent[indbuff - 1] == NEW_LINE) &&
+		     !ShowSpace)
+		   DrawChar (SHOWN_BREAK_LINE, frame, x, y, pBox->BxFont, RO, op, fg);
+	       }
+	     else
+	       {
+		 x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont, 0, bl, 0, blockbegin, RO, op, fg, shadow);
+		 bl = 0;
+		 /* Skip to next buffer */
+		 if (adbuff->BuNext == NULL)
+		   charleft = 0;
 		 else
-		   indmax = buffleft;
-	       }  
-	     }  
+		   {
+		     indbuff = 1;
+		     adbuff = adbuff->BuNext;
+		     buffleft = adbuff->BuLength;
+		     if (charleft < buffleft)
+		       indmax = charleft;
+		     else
+		       indmax = buffleft;
+		   }
+	       }
 	     nbcar = 0;
-	   }  
-	   
-	   /* Should the end of de line be filled with dots */
-	   if (pBox->BxEndOfBloc > 0) {
-	     pFrame = &ViewFrameTable[frame - 1];
-	     /* Compute the origin alignment */
-	     y = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
-	     DrawPoints (frame, pBox->BxXOrg + width - pFrame->FrXOrg, y, pBox->BxEndOfBloc, RO, op, fg);
-	   }
-	 }
+	}  
+      
+      /* Should the end of de line be filled with dots */
+      if (pBox->BxEndOfBloc > 0)
+	{
+	  /* fill the end of the line with dots */
+	  x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+	  y = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
+	  DrawPoints (frame, pBox->BxXOrg + width - pFrame->FrXOrg, y, pBox->BxEndOfBloc, RO, op, fg);
+	}
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  DisplayBorders displays the box borders.
+  Parameters x, y, w, h give the clipping region.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DisplayBorders (PtrBox box, int frame, int x, int y, int w, int h)
+#else  /* __STDC__ */
+void                DisplayBorders (box, frame, x, y, w, h)
+PtrBox              box;
+int                 frame;
+int                 x;
+int                 y;
+int                 w;
+int                 h;
+#endif /* __STDC__ */
+{
+  PtrAbstractBox      pAb;
+  int                 color;
+  int                 t, b, l, r, pos, dim;
+  int                 xFrame, yFrame;
+
+  if (x < 0 || y < 0 || w <= 0 || h <= 0)
+    return;
+  pAb = box->BxAbstractBox;
+  /* position in the frame */
+  xFrame = box->BxXOrg - ViewFrameTable[frame - 1].FrXOrg;
+  yFrame = box->BxYOrg - ViewFrameTable[frame - 1].FrYOrg;
+  /* part of the top, left, bottom and right border which are visible */
+  t = yFrame + box->BxTMargin + box->BxTBorder - y;
+  l = xFrame + box->BxLMargin + box->BxLBorder - x;
+  b = y + h - yFrame  - box->BxHeight + box->BxBMargin + box->BxBBorder;
+  r = x + w - xFrame  - box->BxWidth + box->BxRMargin + box->BxRBorder;
+  if (box->BxTBorder && pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2 && t > 0)
+    {
+      /* the top border is visible */
+      if (pAb->AbTopBColor == -1)
+	color = pAb->AbForeground;
+      else
+	color = pAb->AbTopBColor;
+      /* the top border is visible */
+      switch (pAb->AbTopStyle)
+	{
+	case 10: /* outset */
+	  break;
+	case 9: /* inset */
+	  break;
+	case 8: /* ridge */
+	  break;
+	case 7: /* groove */
+	  break;
+	case 6: /* double */
+	  /* top line */
+	  DrawHorizontalLine (frame, 1, 5,
+			      x, yFrame + box->BxTMargin,
+			      w, 1,
+			      0, 0, 0, color);
+	  /* the width of the bottom line depends on the visibility of vertical borders */
+	  dim = w;
+	  pos = x;
+	  if (l > 0)
+	    {
+	      pos += l;
+	      dim -= l;
+	    }
+	  if (r > 0)
+	    dim -= r;
+	  /* bottom line */
+	  if (t < h)
+	    DrawHorizontalLine (frame, 1, 5,
+				pos, yFrame + box->BxTMargin + box->BxTBorder,
+				dim, 1,
+				2, 0, 0, color);
+	  break;
+	default:
+	  DrawHorizontalLine (frame, t, pAb->AbTopStyle,
+			      x, y,
+			      w, t,
+			      0, 0, 0, color);
+	  break;
+	}
+    }
+  if (box->BxLBorder && pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2 && l > 0)
+    {
+      if (pAb->AbLeftBColor == -1)
+	color = pAb->AbForeground;
+      else
+	color = pAb->AbLeftBColor;
+      /* the left border is visible */
+      switch (pAb->AbTopStyle)
+	{
+	case 10: /* outset */
+	  break;
+	case 9: /* inset */
+	  break;
+	case 8: /* ridge */
+	  break;
+	case 7: /* groove */
+	  break;
+	case 6: /* double */
+	  /* left line */
+	  DrawVerticalLine (frame, 1, 5,
+			    xFrame + box->BxLMargin, y,
+			    1, h,
+			    0, 0, 0, color);
+	  /* the width of the right line depends on the visibility of horizontal borders */
+	  dim = h;
+	  pos = y;
+	  if (t > 0)
+	    {
+	      pos += t;
+	      dim -= t;
+	    }
+	  if (b > 0)
+	    dim -= b;
+	  /* rigth line */
+	  DrawVerticalLine (frame, 1, 5,
+			    xFrame + box->BxLMargin + box->BxLBorder, pos,
+			    1, dim,
+			    2, 0, 0, color);
+	  break;
+	default:
+	  DrawVerticalLine (frame, l, pAb->AbLeftStyle,
+			    x, y,
+			    l, h,
+			    0, 0, 0, color);
+	  break;
+	}
+    }
+  if (box->BxBBorder && pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2 && b > 0)
+    {
+      if (pAb->AbBottomBColor == -1)
+	color = pAb->AbForeground;
+      else
+	color = pAb->AbBottomBColor;
+      /* the bottom border is visible */
+      switch (pAb->AbBottomStyle)
+	{
+	case 10: /* outset */
+	  break;
+	case 9: /* inset */
+	  break;
+	case 8: /* ridge */
+	  break;
+	case 7: /* groove */
+	  break;
+	case 6: /* double */
+	  /* top line */
+	  /* the width of the bottom line depends on the visibility of vertical borders */
+	  dim = w;
+	  pos = x;
+	  if (l > 0)
+	    {
+	      pos += l;
+	      dim -= l;
+	    }
+	  if (r > 0)
+	    dim -= r;
+	  /* bottom line */
+	  DrawHorizontalLine (frame, 1, 5,
+			      pos, yFrame + box->BxHeight - box->BxBMargin - box->BxBBorder,
+			      dim, 1,
+			      0, 0, 0, color);
+	  /* bottom line */
+	  if (b < h)
+	  DrawHorizontalLine (frame, 1, 5,
+			      x, yFrame + box->BxHeight - box->BxBMargin,
+			      w, 1,
+			      2, 0, 0, color);
+	  break;
+	default:
+	  DrawHorizontalLine (frame, b, pAb->AbBottomStyle,
+			      x, yFrame + box->BxHeight - box->BxBMargin - box->BxBBorder,
+			      w, b,
+			      0, 0, 0, color);
+	  break;
+	}
+    }
+  if (box->BxRBorder && pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2 && r > 0)
+    {
+      if (pAb->AbRightBColor == -1)
+	color = pAb->AbForeground;
+      else
+	color = pAb->AbRightBColor;
+      /* the right border is visible */
+      switch (pAb->AbRightStyle)
+	{
+	case 10: /* outset */
+	  break;
+	case 9: /* inset */
+	  break;
+	case 8: /* ridge */
+	  break;
+	case 7: /* groove */
+	  break;
+	case 6: /* double */
+	  /* the width of the left line depends on the visibility of horizontal borders */
+	  dim = h;
+	  pos = y;
+	  if (t > 0)
+	    {
+	      pos += t;
+	      dim -= t;
+	    }
+	  if (b > 0)
+	    dim -= b;
+	  /* left line */
+	  DrawVerticalLine (frame, 1, 5,
+			    xFrame + box->BxWidth - box->BxRMargin - box->BxRBorder, pos,
+			    1, dim,
+			    0, 0, 0, color);
+	  /* rigth line */
+	  DrawVerticalLine (frame, 1, 5,
+			    xFrame + box->BxWidth - box->BxRMargin, y,
+			    1, h,
+			    2, 0, 0, color);
+	  break;
+	default:
+	  DrawVerticalLine (frame, r, pAb->AbRightStyle,
+			    xFrame + box->BxWidth - box->BxRMargin - box->BxRBorder, y,
+			    r, h,
+			    0, 0, 0, color);
+	  break;
+	}
+    }
 }
 
 
@@ -1077,41 +1207,82 @@ int                 frame;
   DisplayBox display a box depending on it's content.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplayBox (PtrBox pBox, int frame)
+void                DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 #else  /* __STDC__ */
-void                DisplayBox (pBox, frame)
-PtrBox              pBox;
+void                DisplayBox (box, frame, xmin, xmax, ymin, ymax)
+PtrBox              box;
 int                 frame;
+int                 xmin;
+int                 xmax;
+int                 ymin;
+int                 ymax;
 #endif /* __STDC__ */
 {
-  if (pBox->BxAbstractBox->AbVolume == 0 ||
-      (pBox->BxAbstractBox->AbLeafType == LtPolyLine && pBox->BxNChars == 1))
+  ViewFrame          *pFrame;
+  int                x, y;
+  int                xd, yd, width, height;
+
+  pFrame = &ViewFrameTable[frame - 1];
+  x = box->BxXOrg - ViewFrameTable[frame - 1].FrXOrg;
+  y = box->BxYOrg - ViewFrameTable[frame - 1].FrYOrg;
+  xd = box->BxXOrg + box->BxLMargin;
+  yd = box->BxYOrg + box->BxTMargin;
+  width = box->BxWidth - box->BxLMargin - box->BxRMargin;
+  height = box->BxHeight - box->BxTMargin - box->BxBMargin;
+  if (Printing)
+    {
+      /* clipping on the origin */
+      if (xd < x)
+	{
+	  width = width - x + xd;
+	  xd = x;
+	}
+      if (yd < y)
+	{
+	  height = height - y + yd;
+	  yd = y;
+	}
+      /* clipping on the width */
+      if (xd + width > xmax)
+	width = xmax - xd;
+      /* clipping on the height */
+      if (yd + height > ymax)
+	height = ymax - yd;
+    }
+  if (yd + height >= ymin
+      && yd <= ymax
+      && xd + width >= xmin
+      && xd <= xmax)
+    DisplayBorders (box, frame, xd - x, yd - y, width, height);
+
+  if (box->BxAbstractBox->AbVolume == 0 ||
+      (box->BxAbstractBox->AbLeafType == LtPolyLine && box->BxNChars == 1))
     {
       /* Empty */
-      if (pBox->BxAbstractBox->AbLeafType == LtSymbol)
-	DisplayEmptyBox (pBox, frame, '2');
+      if (box->BxAbstractBox->AbLeafType == LtSymbol)
+	DisplayEmptyBox (box, frame, '2');
       else if (ThotLocalActions[T_emptybox] != NULL)
-	(*ThotLocalActions[T_emptybox]) (pBox, frame, '2');
+	(*ThotLocalActions[T_emptybox]) (box, frame, '2');
     }
-  else if (pBox->BxAbstractBox->AbLeafType == LtText)
+  else if (box->BxAbstractBox->AbLeafType == LtText)
     /* Display a Text box */
-    DisplayJustifiedText (pBox, frame);
-  else if (pBox->BxType == BoPicture)
+    DisplayJustifiedText (box, frame);
+  else if (box->BxType == BoPicture)
     /* Picture */
-    DisplayImage (pBox, frame);
-  else if (pBox->BxAbstractBox->AbLeafType == LtSymbol)
+    DisplayImage (box, frame);
+  else if (box->BxAbstractBox->AbLeafType == LtSymbol)
     /* Symbol */
-    if (pBox->BxAbstractBox->AbShape == EOS)
-      DisplayEmptyBox (pBox, frame, '2');
+    if (box->BxAbstractBox->AbShape == EOS)
+      DisplayEmptyBox (box, frame, '2');
     else
-      DisplaySymbol (pBox, frame);
-  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
+      DisplaySymbol (box, frame);
+  else if (box->BxAbstractBox->AbLeafType == LtGraphics)
     /* Graphics */
-    if (pBox->BxAbstractBox->AbShape == EOS)
-      DisplayEmptyBox (pBox, frame, '2');
+    if (box->BxAbstractBox->AbShape == EOS)
+      DisplayEmptyBox (box, frame, '2');
     else
-      DisplayGraph (pBox, frame);
-  else if (pBox->BxAbstractBox->AbLeafType == LtPolyLine)
+      DisplayGraph (box, frame);
+  else if (box->BxAbstractBox->AbLeafType == LtPolyLine)
     /* Polyline */
-    DrawPolyLine (pBox, frame);
+    DrawPolyLine (box, frame);
 }

@@ -10,8 +10,18 @@ extern void DisplayEmptyBox ( PtrBox pBox,
                               int frame,
                               CHAR_T modele );
 extern void PolyTransform ( PtrBox pBox );
-extern void DisplayBox ( PtrBox pBox,
-                         int frame );
+extern void DisplayBorders ( PtrBox box,
+                             int frame,
+                             int x,
+                             int y,
+                             int w,
+                             int h );
+extern void DisplayBox ( PtrBox box,
+                         int frame,
+                         int xmin,
+                         int xmax,
+                         int ymin,
+                         int ymax );
 
 #else /* __STDC__ */
 
@@ -19,8 +29,18 @@ extern void DisplayEmptyBox (/* PtrBox pBox,
                                 int frame,
                                 CHAR_T modele */);
 extern void PolyTransform (/* PtrBox pBox */);
-extern void DisplayBox (/* PtrBox pBox,
-                           int frame */);
+extern void DisplayBorders (/* PtrBox box,
+                               int frame,
+                               int x,
+                               int y,
+                               int w,
+                               int h */);
+extern void DisplayBox (/* PtrBox box,
+                           int frame,
+                           int xmin,
+                           int xmax,
+                           int ymin,
+                           int ymax */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

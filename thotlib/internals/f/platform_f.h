@@ -38,9 +38,9 @@ extern ThotBool TtaCompareFiles ( CONST STRING file1,
 extern int TtaFileExist (/* CONST CharUnit* filename */);
 extern int TtaFileUnlink (/* CONST STRING filename */);
 extern int ThotDirBrowse_first (/* ThotDirBrowse * me,
-                                   char* dir,
-                                   char* name,
-                                   char* ext */);
+                                   CharUnit* dir,
+                                   CharUnit* name,
+                                   CharUnit* ext */);
 extern int ThotDirBrowse_next (/* ThotDirBrowse * me */);
 extern int ThotDirBrowse_close (/* ThotDirBrowse * me */);
 extern ThotFileHandle TtaFileOpen (/* CONST STRING name,

@@ -8,14 +8,14 @@
 
 extern char* TtaSkipBlanks ( char* ptr );
 extern ThotBool TtaIsBlank ( char* ptr );
-extern ThotBool TtaIsCUSBlank (CharUnit*);
+extern ThotBool TtaIsCUSBlank ( CharUnit* ptr );
 extern ThotBool TtaGetEnvInt ( char* name,
                                int *value );
 extern ThotBool TtaGetEnvBoolean ( char* name,
                                    ThotBool *value );
 extern CharUnit* TtaGetEnvString ( char* name );
-extern void TtaClearEnvString ( char* name );
-extern void TtaSetEnvInt ( char* name,
+extern void TtaClearEnvString ( char *name );
+extern void TtaSetEnvInt ( char *name,
                            int value,
                            int overwrite );
 extern void TtaSetEnvBoolean ( char *name,
@@ -43,12 +43,12 @@ extern int SearchFile ( STRING fileName,
 
 extern char* TtaSkipBlanks (/* char* ptr */);
 extern ThotBool TtaIsBlank (/* char* ptr */);
-extern ThotBool    TtaIsCUSBlank (/* CharUnit* */);
+extern ThotBool TtaIsCUSBlank (/* CharUnit* ptr */);
 extern ThotBool TtaGetEnvInt (/* char* name,
                                  int *value */);
 extern ThotBool TtaGetEnvBoolean (/* char* name,
                                      ThotBool *value */);
-extern char* TtaGetEnvString (/* char* name */);
+extern CharUnit* TtaGetEnvString (/* char* name */);
 extern void TtaClearEnvString (/* char *name */);
 extern void TtaSetEnvInt (/* char *name,
                              int value,

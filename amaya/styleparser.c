@@ -363,28 +363,13 @@ CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  cssRule = SkipProperty (cssRule);
-  return (cssRule);
-}
-
-/*----------------------------------------------------------------------
-   ParseCSSBorderRightWidth : parse a CSS BorderRightWidth
-   attribute string.                                          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static STRING       ParseCSSBorderRightWidth (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
-#else
-static STRING       ParseCSSBorderRightWidth (element, tsch, context, cssRule, css, isHTML)
-Element             element;
-PSchema             tsch;
-PresentationContext context;
-STRING              cssRule;
-CSSInfoPtr          css;
-ThotBool            isHTML;
-#endif
-{
-  cssRule = SkipProperty (cssRule);
+  PresentationValue   border;
+  
+  cssRule = SkipBlanksAndComments (cssRule);
+  /* first parse the attribute string */
+  cssRule = ParseCSSUnit (cssRule, &border);
+  if (border.typed_data.unit != STYLE_UNIT_INVALID && border.typed_data.value > 0)
+    TtaSetStylePresentation (PRBorderTopWidth, element, tsch, context, border);
   return (cssRule);
 }
 
@@ -405,7 +390,13 @@ CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  cssRule = SkipProperty (cssRule);
+  PresentationValue   border;
+  
+  cssRule = SkipBlanksAndComments (cssRule);
+  /* first parse the attribute string */
+  cssRule = ParseCSSUnit (cssRule, &border);
+  if (border.typed_data.unit != STYLE_UNIT_INVALID && border.typed_data.value > 0)
+    TtaSetStylePresentation (PRBorderBottomWidth, element, tsch, context, border);
   return (cssRule);
 }
 
@@ -426,7 +417,40 @@ CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  cssRule = SkipProperty (cssRule);
+  PresentationValue   border;
+  
+  cssRule = SkipBlanksAndComments (cssRule);
+  /* first parse the attribute string */
+  cssRule = ParseCSSUnit (cssRule, &border);
+  if (border.typed_data.unit != STYLE_UNIT_INVALID && border.typed_data.value > 0)
+    TtaSetStylePresentation (PRBorderLeftWidth, element, tsch, context, border);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBorderRightWidth : parse a CSS BorderRightWidth
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static STRING       ParseCSSBorderRightWidth (Element element, PSchema tsch,
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+#else
+static STRING       ParseCSSBorderRightWidth (element, tsch, context, cssRule, css, isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+STRING              cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
+  PresentationValue   border;
+  
+  cssRule = SkipBlanksAndComments (cssRule);
+  /* first parse the attribute string */
+  cssRule = ParseCSSUnit (cssRule, &border);
+  if (border.typed_data.unit != STYLE_UNIT_INVALID && border.typed_data.value > 0)
+    TtaSetStylePresentation (PRBorderRightWidth, element, tsch, context, border);
   return (cssRule);
 }
 
@@ -447,6 +471,13 @@ CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
+  STRING            ptr;
+
+  ptr = cssRule;
+  ParseCSSBorderTopWidth (element, tsch, context, cssRule, css, isHTML);
+  ParseCSSBorderBottomWidth (element, tsch, context, ptr, css, isHTML);
+  ParseCSSBorderLeftWidth (element, tsch, context, ptr, css, isHTML);
+  ParseCSSBorderRightWidth (element, tsch, context, ptr, css, isHTML);
   cssRule = SkipProperty (cssRule);
   return (cssRule);
 }

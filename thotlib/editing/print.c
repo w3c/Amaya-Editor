@@ -411,7 +411,7 @@ PtrAbstractBox      pPage;
   while (pBox != NULL && IsParentBox (pPage->AbBox, pBox))
     {
       if (pBox->BxYOrg < h)
-	DisplayBox (pBox, frame);
+	DisplayBox (pBox, frame, 0, 32000, 0, h);
       pBox = pBox->BxNext;
     }
 }
@@ -461,7 +461,7 @@ int                 org;
   /* print all boxes of the current page*/
   while (pBox != NULL && IsParentBox (pPage->AbBox, pBox))
     {
-      DisplayBox (pBox, frame);
+      DisplayBox (pBox, frame, framexmin, framexmax, y, h);
       pBox = pBox->BxNext;
     }
 

@@ -1620,45 +1620,20 @@ FILE               *fileDescriptor;
 	fprintf (fileDescriptor, "\n");
 	if (pBox != NULL)
 	  {
-	     for (j = 1; j <= Indent; j++)
+	     for (j = 1; j <= Indent + 4; j++)
 		fprintf (fileDescriptor, " ");
-	     fprintf (fileDescriptor, "  Characters:");
+	     fprintf (fileDescriptor, "Characters:");
 	     wrnumber (pAb->AbVolume, fileDescriptor);
 	     if (pAb->AbLeafType == LtText)
 	       {
 		  fprintf (fileDescriptor, " Spaces:");
 		  wrnumber (pBox->BxNSpaces, fileDescriptor);
 	       }
-	     fprintf (fileDescriptor, "\n");
-	     for (j = 1; j <= Indent; j++)
-		fprintf (fileDescriptor, " ");
-	     fprintf (fileDescriptor, "  Width:");
-	     wrnumber (pBox->BxWidth, fileDescriptor);
-	     fprintf (fileDescriptor, " Height:");
-	     wrnumber (pBox->BxHeight, fileDescriptor);
-	     if (pBox->BxContentWidth)
-		fprintf (fileDescriptor, " Minimum-Width:");
-	     else
-		fprintf (fileDescriptor, " Content-Width:");
-	     wrnumber (pBox->BxRuleWidth, fileDescriptor);
-	     if (pBox->BxContentWidth)
-		fprintf (fileDescriptor, " Minimum-Height:");
-	     else
-		fprintf (fileDescriptor, " Content-Height:");
-	     wrnumber (pBox->BxRuleHeigth, fileDescriptor);
-	     if (pAb->AbOnPageBreak)
-	       fprintf (fileDescriptor, " ON PAGE BOUNDARY");
-	     if (pAb->AbAfterPageBreak)
-	       fprintf (fileDescriptor, " OUT OF PAGE");
 
 	     fprintf (fileDescriptor, "\n");
-	     for (j = 1; j <= Indent; j++)
+	     for (j = 1; j <= Indent + 4; j++)
 		fprintf (fileDescriptor, " ");
-	     fprintf (fileDescriptor, "  Base:");
-	     wrnumber (pBox->BxHorizRef, fileDescriptor);
-	     fprintf (fileDescriptor, " Axis:");
-	     wrnumber (pBox->BxVertRef, fileDescriptor);
-	     fprintf (fileDescriptor, " X:");
+	     fprintf (fileDescriptor, "X:");
 	     if (pBox->BxType == BoSplit)
 		wrnumber (pBox->BxNexChild->BxXOrg, fileDescriptor);
 	     else
@@ -1668,14 +1643,86 @@ FILE               *fileDescriptor;
 		wrnumber (pBox->BxNexChild->BxYOrg, fileDescriptor);
 	     else
 		wrnumber (pBox->BxYOrg, fileDescriptor);
-	     if (pBox->BxShadow)
-	       fprintf (fileDescriptor, " Shadow:Y");
+	     fprintf (fileDescriptor, " Base:");
+	     wrnumber (pBox->BxHorizRef, fileDescriptor);
+	     fprintf (fileDescriptor, " Axis:");
+	     wrnumber (pBox->BxVertRef, fileDescriptor);
 
 	     fprintf (fileDescriptor, "\n");
-	     for (j = 1; j <= Indent; j++)
+	     for (j = 1; j <= Indent + 4; j++)
 		fprintf (fileDescriptor, " ");
+	     fprintf (fileDescriptor, "Width:");
+	     wrnumber (pBox->BxWidth, fileDescriptor);
+	     fprintf (fileDescriptor, "  Inside_Width:");
+	     wrnumber (pBox->BxW, fileDescriptor);
+	     if (pBox->BxContentWidth)
+		fprintf (fileDescriptor, " Minimum-Width:");
+	     else
+		fprintf (fileDescriptor, " Content-Width:");
+	     wrnumber (pBox->BxRuleWidth, fileDescriptor);
+
+	     fprintf (fileDescriptor, "\n");
+	     for (j = 1; j <= Indent + 4; j++)
+		fprintf (fileDescriptor, " ");
+	     fprintf (fileDescriptor, "Height:");
+	     wrnumber (pBox->BxHeight, fileDescriptor);
+	     fprintf (fileDescriptor, " Inside_Height:");
+	     wrnumber (pBox->BxH, fileDescriptor);
+	     if (pBox->BxContentHeight)
+		fprintf (fileDescriptor, " Minimum-Height:");
+	     else
+		fprintf (fileDescriptor, " Content-Height:");
+	     wrnumber (pBox->BxRuleHeigth, fileDescriptor);
+
+	     fprintf (fileDescriptor, "\n");
+	     for (j = 1; j <= Indent + 4; j++)
+		fprintf (fileDescriptor, " ");
+	     fprintf (fileDescriptor, "Margins Top:");
+	     wrnumber (pBox->BxTMargin, fileDescriptor);
+	     fprintf (fileDescriptor, " Left:");
+	     wrnumber (pBox->BxLMargin, fileDescriptor);
+	     fprintf (fileDescriptor, " Bottom:");
+	     wrnumber (pBox->BxBMargin, fileDescriptor);
+	     fprintf (fileDescriptor, " Right:");
+	     wrnumber (pBox->BxRMargin, fileDescriptor);
+
+	     fprintf (fileDescriptor, "\n");
+	     for (j = 1; j <= Indent + 4; j++)
+		fprintf (fileDescriptor, " ");
+	     fprintf (fileDescriptor, "Borders Top:");
+	     wrnumber (pBox->BxTBorder, fileDescriptor);
+	     fprintf (fileDescriptor, " Left:");
+	     wrnumber (pBox->BxLBorder, fileDescriptor);
+	     fprintf (fileDescriptor, " Bottom:");
+	     wrnumber (pBox->BxBBorder, fileDescriptor);
+	     fprintf (fileDescriptor, " Right:");
+	     wrnumber (pBox->BxRBorder, fileDescriptor);
+		fprintf (fileDescriptor, " ");
+
+	     fprintf (fileDescriptor, "\n");
+	     for (j = 1; j <= Indent + 4; j++)
+		fprintf (fileDescriptor, " ");
+	     fprintf (fileDescriptor, "Paddings Top:");
+	     wrnumber (pBox->BxTPadding, fileDescriptor);
+	     fprintf (fileDescriptor, " Left:");
+	     wrnumber (pBox->BxLPadding, fileDescriptor);
+	     fprintf (fileDescriptor, " Bottom:");
+	     wrnumber (pBox->BxBPadding, fileDescriptor);
+	     fprintf (fileDescriptor, " Right:");
+	     wrnumber (pBox->BxRPadding, fileDescriptor);
+
+	     fprintf (fileDescriptor, "\n");
+	     for (j = 1; j <= Indent + 4; j++)
+		fprintf (fileDescriptor, " ");
+	     fprintf (fileDescriptor, "Status:");
+	     if (pBox->BxShadow)
+	       fprintf (fileDescriptor, " Shadow:Y");
+	     if (pAb->AbOnPageBreak)
+	       fprintf (fileDescriptor, " ON PAGE BOUNDARY");
+	     if (pAb->AbAfterPageBreak)
+	       fprintf (fileDescriptor, " OUT OF PAGE");
 	     if (!pAb->AbHorizEnclosing)
-		fprintf (fileDescriptor, "  Not-Horiz-Enclosed");
+		fprintf (fileDescriptor, " Not-Horiz-Enclosed");
 	     if (!pAb->AbVertEnclosing)
 		fprintf (fileDescriptor, " Not-Vert-Enclosed");
 	     /* On liste les relations hors-structure */
@@ -1688,29 +1735,32 @@ FILE               *fileDescriptor;
 	     if (pBox->BxHOutOfStruct)
 		fprintf (fileDescriptor, " VDimRelation-Out-Enclosing");
 
-	     fprintf (fileDescriptor, " Nature:");
+	     fprintf (fileDescriptor, "\n");
+	     for (j = 1; j <= Indent + 4; j++)
+		fprintf (fileDescriptor, " ");
+	     fprintf (fileDescriptor, "Nature:");
 	     switch (pAb->AbLeafType)
 		   {
 		      case LtCompound:
 			 if (pBox->BxType == BoGhost)
-			    fprintf (fileDescriptor, "GHOST");
+			    fprintf (fileDescriptor, " GHOST");
 			 else if (pAb->AbInLine)
-			   fprintf (fileDescriptor, "LINES");
+			   fprintf (fileDescriptor, " LINES");
 			 else if (pBox->BxType == BoTable)
-			    fprintf (fileDescriptor, "TABLE");
+			    fprintf (fileDescriptor, " TABLE");
 			 else if (pBox->BxType == BoColumn)
-			    fprintf (fileDescriptor, "COLUMN");
+			    fprintf (fileDescriptor, " COLUMN");
 			 else if (pBox->BxType == BoRow)
-			    fprintf (fileDescriptor, "ROW");
+			    fprintf (fileDescriptor, " ROW");
 			 else if (pBox->BxType == BoCell)
-			    fprintf (fileDescriptor, "CELL");
+			    fprintf (fileDescriptor, " CELL");
 			 else
-			    fprintf (fileDescriptor, "COMP");
+			    fprintf (fileDescriptor, " COMP");
 			 if (pAb->AbInLine || pBox->BxType == BoTable ||
 			     pBox->BxType == BoColumn || pBox->BxType == BoRow)
 			   {
 			     fprintf (fileDescriptor, "\n");
-			     for (j = 1; j <= Indent; j++)
+			     for (j = 1; j <= Indent + 4; j++)
 			       fprintf (fileDescriptor, " ");
 			     fprintf (fileDescriptor, "  Min_Width:");
 			     wrnumber (pBox->BxMinWidth, fileDescriptor);
