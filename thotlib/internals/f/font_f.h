@@ -8,8 +8,6 @@
 
 extern int NumberOfFonts ( void );
 extern int GetCharsCapacity ( int volpixel );
-extern XCharStruct *CharacterStructure ( CHAR_T c,
-                                         XFontStruct *xf );
 extern int CharacterWidth ( unsigned char c,
                             PtrFont font );
 extern int SpecialCharBoxWidth ( CHAR_T c );
@@ -65,8 +63,6 @@ extern void ThotFreeAllFonts ( void );
 
 extern int NumberOfFonts (/* void */);
 extern int GetCharsCapacity (/* int volpixel */);
-extern XCharStruct *CharacterStructure (/* CHAR_T c,
-                                           XFontStruct *xf */);
 extern int CharacterWidth (/* unsigned char c,
                               PtrFont font */);
 extern int SpecialCharBoxWidth (/* CHAR_T c */);

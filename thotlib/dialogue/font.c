@@ -283,7 +283,7 @@ int GetCharsCapacity (int volpixel)
 #if !defined(_WINDOWS) && !defined(_GTK)
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-XCharStruct *CharacterStructure(CHAR_T c, XFontStruct *xf)
+static XCharStruct *CharacterStructure(CHAR_T c, XFontStruct *xf)
 {
   unsigned int c1, c2;
 
