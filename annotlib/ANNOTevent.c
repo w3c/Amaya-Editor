@@ -332,21 +332,15 @@ void ANNOT_Init ()
 {
   CHAR_T *tmp;
 
-  /* setup the default registry values */
-  tmp = TtaGetEnvString ("APP_HOME");
-  annotDir = TtaGetMemory (ustrlen (tmp) + ustrlen (ANNOT_DIR) + 2);
-  usprintf (annotDir, TEXT("%s%c%s"), tmp, DIR_SEP, ANNOT_DIR);
-  TtaSetEnvString ("ANNOT_DIR", annotDir, FALSE);
-  TtaFreeMemory (annotDir);
-  TtaSetEnvString ("ANNOT_MAIN_INDEX", ANNOT_MAIN_INDEX, FALSE);
-  TtaSetEnvString ("ANNOT_USER", ANNOT_USER, FALSE);
-  TtaSetEnvString ("ANNOT_AUTOLOAD", TEXT("no"), FALSE);
-
   /* initialize the annot global variables */
   annotDir = TtaWCSdup (TtaGetEnvString ("ANNOT_DIR"));
   annotMainIndex = TtaWCSdup (TtaGetEnvString ("ANNOT_MAIN_INDEX"));
-  annotUser = TtaWCSdup (TtaGetEnvString ("ANNOT_USER"));
   annotAutoLoad = !ustrcasecmp (TtaGetEnvString ("ANNOT_AUTOLOAD"), "yes");
+  tmp = TtaGetEnvString ("ANNOT_USER");
+  if (tmp)
+    annotUser = TtaWCSdup (tmp);
+  else
+    annotUser = NULL;
   tmp = TtaGetEnvString ("ANNOT_SERVERS");
   if (tmp)
     annotServers = CopyAnnotServers (tmp);
@@ -720,6 +714,13 @@ void ANNOT_Create (doc, view)
 
   if (!ANNOT_CanAnnotate (doc))
     return;
+
+  if (!annotUser || *annotUser == EOS)
+    {
+      InitInfo (TEXT("Make a new annotation"), 
+		TEXT("No annotation user declared. Please open the Annotations/Configure menu."));
+      return;
+    }
 
   if (!useDocRoot && TtaGetSelectedDocument () != doc)
     return; /* Error: nothing selected in this document */
