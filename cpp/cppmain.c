@@ -25,16 +25,9 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 #ifdef _WINDOWS
 #include <windows.h>
-#endif /* _WINDOWS */
-
-#ifdef _WINDOWS
-#define DLLEXPORT __declspec (dllexport)
 #include "compilers_f.h"
 #endif /* _WINDOWS */
-
-#ifndef EMACS
 #include "config.h"
-#endif /* not EMACS */
 
 extern char *getenv ();
 
@@ -49,13 +42,7 @@ cpp_options options;
 #ifdef _WINDOWS
 HWND hWND;
 int  _CY_;
-#ifdef __STDC__
 void CPPError (HWND hwnd, char* errorMsg)
-#else  /* !__STDC__ */
-void CPPError (hwnd, errorMsg)
-HWND hwnd;
-char* errorMsg;
-#endif /* __STDC__ */
 {
    TEXTMETRIC  textMetric;
    COLORREF    oldColor;
@@ -98,19 +85,12 @@ char* errorMsg;
 }
 #endif /* _WINDOWS */
 
-void fancy_abort () {
+void fancy_abort ()
+{
      fatal ("Internal gcc abort.");
 } 
 
-#ifdef __STDC__
-int CPPmain (HWND hwnd, int argc, char** argv, int* Y)
-#else  /* !__STDC__ */
-int CPPmain (hwnd, argc, argv, Y)
-HWND   hwnd;
-int    argc;
-char** argv;
-int*   Y;
-#endif /* __STDC__ */
+int CPPmain (HWND hwnd, int argc, char **argv, int *Y)
 {
    char *p;
    int i;
