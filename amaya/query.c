@@ -765,9 +765,10 @@ int                 status;
 			   NULL, 0, "HTRedirectFilter");
        TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REDIRECTIONS_LIMIT),
 		     NULL);
-       if (me->error_html)
-	 DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; 
        /* so that we can show the error message */
+       if (me->error_html)
+	 DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR;
+       me->reqStatus = HT_ERR;
      }
 
    /*
@@ -1969,6 +1970,7 @@ void                QueryInit ()
      tmp_i = DEFAULT_NET_EVENT_TIMEOUT;
    HTHost_setEventTimeout (tmp_i);
 
+   HTRequest_setMaxRetry (8);
 #ifdef CATCH_SIG
    signal (SIGPIPE, SIG_IGN);
 #endif

@@ -38,6 +38,9 @@ LRESULT CALLBACK GetSaveDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK GetSaveDlgProc (HWND, UINT, WPARAM, LPARAM);
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
+
+static STRING       DefaultName;
+static CHAR         StdDefaultName[] = "Overview.html";
 static CHAR         tempSavedObject[MAX_LENGTH];
 static int          URL_attr_tab[] = {
    HTML_ATTR_HREF_,
@@ -622,18 +625,18 @@ DBG(fprintf(stderr, "SaveDocumentLocally :  %s / %s\n", directoryName, documentN
   abort.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      AddNoName (Document document, View view, STRING url, boolean *ok)
+static boolean     AddNoName (Document document, View view, STRING url, boolean *ok)
 #else
-static boolean      AddNoName (document, view, url, ok)
-Document            document;
-View                view;
-STRING              url;
-boolean            *ok;
+static boolean     AddNoName (document, view, url, ok)
+Document           document;
+View               view;
+STRING             url;
+boolean           *ok;
 #endif
 {
-   CHAR                msg[MAX_LENGTH];
-   CHAR                documentname[MAX_LENGTH];
-   int                 len;
+   CHAR            msg[MAX_LENGTH];
+   CHAR            documentname[MAX_LENGTH];
+   int             len;
 
   len = strlen (url);
   TtaExtractName (url, msg, documentname);
@@ -652,7 +655,12 @@ boolean            *ok;
 	}
       else if (url[len -1] != DIR_SEP)
 	strcat (msg, DIR_STR);
-      strcat (msg, "noname.html");
+      /* get default name */
+      DefaultName = TtaGetEnvString ("DEFAULTNAME");
+      if (DefaultName == NULL || *DefaultName == EOS)
+	DefaultName = StdDefaultName;
+
+      strcat (msg, DefaultName);
       InitConfirm (document, view, msg);
 
       if (UserAnswer == 0)
@@ -991,7 +999,7 @@ View                view;
 #endif
 {
    CHAR                tempname[MAX_LENGTH];
-   int                 i;
+   int                 i, res;
    boolean             ok;
 
    if (!TtaGetDocumentAccessMode (document))
@@ -1033,8 +1041,10 @@ DBG(fprintf(stderr, "SaveDocument : %d to %s\n", document, tempname);)
 	 {
 	   ok = TRUE;
 	   /* need to update the document url */
-	   strcat (tempname, DIR_STR);
-	   strcat (tempname, "noname.html");
+	   res = strlen(tempname) - 1;
+	   if (tempname[res] != URL_SEP)
+	     strcat (tempname, URL_STR);
+	   strcat (tempname, DefaultName);
 	   TtaFreeMemory (DocumentURLs[SavingDocument]);
 	   DocumentURLs[SavingDocument] = (STRING) TtaStrdup (tempname);
 	 }
@@ -1563,26 +1573,26 @@ DBG(fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n", DocumentUR
        }
      else
        {
-	 strcat (documentFile, "/");
-	 url_sep = '/';
+	 strcat (documentFile, URL_STR);
+	 url_sep = URL_SEP;
        }
     }
   else if (dst_is_local)
     url_sep = DIR_SEP;
   else
-    url_sep = '/';
+    url_sep = URL_SEP;
 
   if (SaveName[0] == EOS)
     {
       /* there is no document name */
       if (AddNoName (SavingDocument, 1, documentFile, &ok))
 	{
+	  ok = TRUE;
 	  res = strlen(SavePath) - 1;
 	  if (SavePath[res] == url_sep)
 	    SavePath[res] = EOS;
 	  /* need to update the document url */
-	  strcpy (SaveName, "noname.html");
-DBG(fprintf(stderr, " set SaveName to noname.html\n");)
+	  strcpy (SaveName, DefaultName);
 	}
       else if (!ok)
 	{
