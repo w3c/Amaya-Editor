@@ -79,7 +79,7 @@ int AmayaApp::AttrList[] =
 #endif /* _GL */
 
 wxImageList * AmayaApp::m_pDocImageList = NULL;
-wxIcon AmayaApp::m_AppIcon( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"logo.png"), wxBITMAP_TYPE_PNG );
+wxIcon AmayaApp::m_AppIcon = wxIcon();
 
 /*
  *--------------------------------------------------------------------------------------
@@ -196,6 +196,14 @@ bool AmayaApp::OnInit()
   /* add the default document icon */
   wxBitmap default_icon( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"default_document.png"), wxBITMAP_TYPE_PNG );
   m_pDocImageList->Add( default_icon );
+
+
+  /* setup the app icon */
+#ifdef _WINDOWS
+  m_AppIcon = wxIcon( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"logo.ico"), wxBITMAP_TYPE_ICO );
+#else /* _WINDOWS */
+  m_AppIcon = wxIcon( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"logo.png"), wxBITMAP_TYPE_PNG );
+#endif /* _WINDOWS */
 
 #endif /* _GLPRINT */
 

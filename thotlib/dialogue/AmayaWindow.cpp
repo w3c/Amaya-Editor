@@ -45,6 +45,7 @@
 #include "AmayaCallback.h"
 #include "AmayaToolBar.h"
 #include "AmayaPanel.h"
+#include "AmayaApp.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaWindow, wxFrame)
 
@@ -74,7 +75,7 @@ AmayaWindow::AmayaWindow (  int            window_id
   m_ActiveFrameId( 0 )
 {
   wxLogDebug( _T("AmayaWindow::AmayaWindow: window_id=%d"), m_WindowId );
-  SetIcon( wxIcon(TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"logo.png"),wxBITMAP_TYPE_PNG) );
+  SetIcon( AmayaApp::GetAppIcon() );
   CenterOnParent();
 }
 

@@ -54,7 +54,7 @@ AmayaDialog::AmayaDialog( wxWindow * p_parent, int ref ) :
   wxLogDebug( _T("AmayaDialog::AmayaDialog - ref=%d"), ref );
  
   // SetIcon provoque un warning, on ne l'utilise pas pr le moment.
-  //SetIcon( wxIcon(TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"logo.png"),wxBITMAP_TYPE_PNG) );
+  //SetIcon( AmayaApp::GetAppIcon() );
 }
 
 /*----------------------------------------------------------------------
