@@ -4016,7 +4016,6 @@ PtrDocument         pDoc;
        || typeRule == PtIndent
        || typeRule == PtLineSpacing
        || typeRule == PtAdjust
-       || typeRule == PtJustify
        || typeRule == PtHyphenate
        || typeRule == PtLineStyle
        || typeRule == PtLineWeight

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -46,7 +46,6 @@
 #define C_PR_FONT 'F'
 #define C_PR_HEIGHT 'H'
 #define C_PR_LINESPACING 'I'
-#define C_PR_JUSTIFY 'J'
 #define C_PR_WIDTH 'L'
 #define C_PR_XRADIUS 'M'
 #define C_PR_YRADIUS 'N'
@@ -99,6 +98,7 @@
 #define C_PIV_RIGHT 'D'
 #define C_PIV_LEFT 'G'
 #define C_PIV_LEFTDOT 'P'
+#define C_PIV_JUSTIFY 'J'
 
 /* dimension types codes */
 #define C_PIV_ABSOLUTE 'A'

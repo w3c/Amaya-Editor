@@ -31,7 +31,6 @@ DEFAULT
    Height: Enclosed . Height;
    VertPos: Top = Previous . Bottom;
    HorizPos: Left = Enclosing . Left;
-   Justify: Enclosing =;
    LineSpacing: Enclosing =;
    Visibility: Enclosing =;
    Font: Enclosing =;
@@ -60,7 +59,7 @@ BOXES
 	Fillpattern: nopattern;
 	Underline: NoUnderline;
 	Copy (Document_URL);
-	Justify: No;
+	Adjust: Left;
 	HorizPos: Left = Previous PAGE_BREAK . Left;
 	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
 	Width: Enclosed . Width;
@@ -78,7 +77,7 @@ BOXES
 	Fillpattern: nopattern;
 	Underline: NoUnderline;
 	Content: Text ' ';
-	Justify: No;
+	Adjust: Left;
 	HorizPos: Left = Previous PAGE_BREAK . Left;
 	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
 	Height:   1.2 cm;
@@ -149,7 +148,7 @@ BOXES
 	Fillpattern: nopattern;
 	Underline: NoUnderline;
 	Content: Text '   ';
-	Justify: No;
+	Adjust: Left;
 	HorizPos: Left = BODY . Right;
 	VertPos: Top = Enclosing . Top;
 	Width: Enclosed . Width;
@@ -201,7 +200,6 @@ RULES
 #endif
 	Vertpos: Top = Previous . Bottom + 0.4;
 	Indent: 0;
-	Justify: No;
 	LineSpacing: 1;
 	END;
 

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -172,9 +172,6 @@ BinFile             file;
 	       break;
 	    case C_PR_ADJUST:
 	       return PtAdjust;
-	       break;
-	    case C_PR_JUSTIFY:
-	       return PtJustify;
 	       break;
 	    case C_PR_HYPHENATE:
 	       return PtHyphenate;
@@ -472,6 +469,9 @@ BinFile             file;
 	       break;
 	    case C_PIV_LEFTDOT:
 	       align = AlignLeftDots;
+	       break;
+	    case C_PIV_JUSTIFY:
+	       align = AlignJustify;
 	       break;
 	    default:
 	       error = True;
@@ -1342,11 +1342,10 @@ PtrPRule           *pNextPRule;
 				     case PtAdjust:
 					pPR->PrAdjust = ReadAlignment (file);
 					break;
-				     case PtJustify:
 				     case PtHyphenate:
 				     case PtVertOverflow:
 				     case PtHorizOverflow:
-					TtaReadBool (file, &pPR->PrJustify);
+					TtaReadBool (file, &pPR->PrBoolValue);
 					break;
 				     default:
 					break;

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1432,9 +1432,8 @@ Document            document;
    PRXRadius, PRYRadius: an integer (radius in points)
    PRVertPos, PRHorizPos: an integer (distance in points)
    PRWidth, PRHeight: an integer (size in points)
-   PRJustify: Justified, NotJustified.
    PRHyphenate: Hyphenation, NoHyphenation.
-   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
+   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots, Justify.
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1680,33 +1679,15 @@ Document            document;
 	   ((PtrPRule) pRule)->PrDimRule.DrValue = value;
 	   break;
 
-	 case PtJustify:
-	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-	   switch (value)
-	     {
-	     case Justified:
-	       ((PtrPRule) pRule)->PrJustify = TRUE;
-	       break;
-	     case NotJustified:
-	       ((PtrPRule) pRule)->PrJustify = FALSE;
-	       break;
-	     default:
-#ifndef NODISPLAY
-	       done = FALSE;
-#endif
-	       TtaError (ERR_invalid_parameter);
-	       break;
-	     }
-	   break;
 	 case PtHyphenate:
 	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
 	   switch (value)
 	     {
 	     case Hyphenation:
-	       ((PtrPRule) pRule)->PrJustify = TRUE;
+	       ((PtrPRule) pRule)->PrBoolValue = TRUE;
 	       break;
 	     case NoHyphenation:
-	       ((PtrPRule) pRule)->PrJustify = FALSE;
+	       ((PtrPRule) pRule)->PrBoolValue = FALSE;
 	       break;
 	     default:
 #ifndef NODISPLAY
@@ -1732,6 +1713,9 @@ Document            document;
 	       break;
 	     case LeftWithDots:
 	       ((PtrPRule) pRule)->PrAdjust = AlignLeftDots;
+	       break;
+	     case Justify:
+	       ((PtrPRule) pRule)->PrAdjust = AlignJustify;
 	       break;
 	     default:
 #ifndef NODISPLAY
@@ -2595,9 +2579,8 @@ PRule               pRule;
    PRXRadius, PRYRadius: radius
    PtVertPos, PtHorizPos: distance
    PtWidth, PtHeight: distance
-   PRJustify: Justified, NotJustified.
    PRHyphenate: Hyphenation, NoHyphenation.
-   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
+   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots, Justify.
  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2768,14 +2751,8 @@ PRule               pRule;
 	  value = ((PtrPRule) pRule)->PrDimRule.DrValue;
 	break;
 
-      case PtJustify:
-	if (((PtrPRule) pRule)->PrJustify)
-	  value = Justified;
-	else
-	  value = NotJustified;
-	break;
       case PtHyphenate:
-	if (((PtrPRule) pRule)->PrJustify)
+	if (((PtrPRule) pRule)->PrBoolValue)
 	  value = Hyphenation;
 	else
 	  value = NoHyphenation;
@@ -2795,6 +2772,9 @@ PRule               pRule;
 	    break;
 	  case AlignLeftDots:
 	    value = LeftWithDots;
+	    break;
+	  case AlignJustify:
+	    value = Justify;
 	    break;
 	  default:
 	    TtaError (ERR_invalid_parameter);
@@ -3025,9 +3005,8 @@ PRule               pRule2;
 				                     pR2->PrDimRule.DrValue)
 				  result = 1;
 			      break;
-			    case PtJustify:
 			    case PtHyphenate:
-			      if (pR1->PrJustify == pR2->PrJustify)
+			      if (pR1->PrBoolValue == pR2->PrBoolValue)
 				result = 1;
 			      break;
 			    case PtAdjust:

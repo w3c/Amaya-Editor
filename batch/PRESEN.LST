@@ -105,7 +105,6 @@ number
 			  'HorizPos' ':' PosV /
 			  'VertOverflow' ':' Boolean /
 			  'HorizOverflow' ':' Boolean /
-			  'Justify' ':' BoolInherit /
 			  'Hyphenate' ':' BoolInherit /
 			  'LineSpacing' ':' DistInherit .
    52	Rule2 =		  'Break' ':' Boolean /
@@ -255,7 +254,7 @@ number
    62	BoolInherit =	  Boolean / Link '=' .
 	
    71	AdjustInherit =	  Adjustment / Link '=' .
-  121	Adjustment =	  'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' .
+  121	Adjustment =	  'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' / 'Justify' .
 	
    64	SizeInherit =	  SizeA [ 'PT' ] / Link  InheritSize .
   123	InheritSize =	  '+' PosSizeA [ 'PT' ] [ 'Max' MaxSizeA ] /
@@ -351,10 +350,10 @@ code  character  numbers of rules using the key-word
 
 1001      ;       1   3   4  17  28  34  41   8  47  49  46  46  46  46  46 159
 1002      ,       3   4  37  75
-1003      :      17  34  41  51  51  51  51  51  51  51  51  51  51  51  52  52
-                 52  52  52  52  52  52  52  52  52  52  52  52  52  52  52  53
-                 54  54  54  54  54  54  54  55  55  55  55  55  55  55  55  55
-                 55  55  55  55  55  55  55  55  55  55  55  95 135
+1003      :      17  34  41  51  51  51  51  51  51  51  51  51  51  52  52  52
+                 52  52  52  52  52  52  52  52  52  52  52  52  52  52  53  54
+                 54  54  54  54  54  54  55  55  55  55  55  55  55  55  55  55
+                 55  55  55  55  55  55  55  55  55  55  95 135
 1004      -      21 108 110 120 123 137 137 137 137 138 149 149
 1005      (      20  37  38  53  53  53  53  90  73 135 148 148 159
 1006      )      20  37  38  53  53  53  53  90  73 135 148 148 159
@@ -430,118 +429,118 @@ code  key-word      numbers of rules using the key-word
 1153  HorizPos           51
 1154  VertOverflow       51
 1155  HorizOverflow      51
-1156  Justify            51
-1157  Hyphenate          51
-1158  LineSpacing        51
-1159  Break              52
-1160  LineBreak          52
-1161  PageBreak          52
-1162  InLine             52
-1163  Size               52
-1164  Visibility         52
-1165  Font               52
-1166  Underline          52
-1167  Thickness          52
-1168  Style              52
-1169  Weight             52
-1170  Indent             52
-1171  Adjust             52
-1172  NoBreak1           52
-1173  NoBreak2           52
-1174  Content            52
-1175  Gather             52
-1176  Line               53
-1177  NoLine             53
-1178  Included           53
-1179  Column             53
-1180  Copy               53
-1181  Depth              53
-1182  LineStyle          54
-1183  LineWeight         54
-1184  FillPattern        54
-1185  Background         54
-1186  Foreground         54  84
-1187  ShowBox            54
-1188  BackgroundPicture  54
-1189  PictureMode        54
-1190  MarginTop          55
-1191  MarginRight        55
-1192  MarginBottom       55
-1193  MarginLeft         55
-1194  PaddingTop         55
-1195  PaddingRight       55
-1196  PaddingBottom      55
-1197  PaddingLeft        55
-1198  BorderTopWidth     55
-1199  BorderRightWidth   55
-1200  BorderBottomWidth  55
-1201  BorderLeftWidth    55
-1202  BorderTopColor     55
-1203  BorderRightColor   55
-1204  BorderBottomColor  55
-1205  BorderLeftColor    55
-1206  BorderTopStyle     55
-1207  BorderRightStyle   55
-1208  BorderBottomStyle  55
-1209  BorderLeftStyle    55
-1210  Auto               81
-1211  Thin               83  68
-1212  Medium             83
-1213  Thick              83  68
-1214  Transparent        84  78
-1215  None               85
-1216  Hidden             85
-1217  Dotted             85  77
-1218  Dashed             85  77
-1219  Solid              85  77
-1220  Double             85
-1221  Groove             85
-1222  Ridge              85
-1223  Inset              85
-1224  Outset             85
-1225  Enclosing          86  97  89
-1226  Creator            86  97  89
-1227  NormalSize         80
-1228  Scale              80
-1229  RepeatXY           80
-1230  RepeatX            80
-1231  RepeatY            80
-1232  nil                59  60
-1233  UserSpecified      59  60  58
-1234  Refering           92  94
-1235  First              96 148
-1236  Second             96
-1237  Enclosed           97  89
-1238  Previous           97  89
-1239  Next               97
-1240  Refered            97
-1241  Referred           97 148
-1242  Root               97 148
-1243  NOT                98 147
-1244  AnyElem            99
-1245  AnyBox             99
-1246  ElemWithAttr       99
-1247  Left               93 121
-1248  VMiddle            93 121
-1249  VRef               93
-1250  Right              93 121
-1251  Top                91
-1252  HMiddle            91
-1253  HRef               91
-1254  Bottom             91
-1255  Min                58  58 110 123
-1256  CM                106
-1257  MM                106
-1258  PT                106  64 123 123
-1259  PC                106
-1260  PX                106
-1261  EM                106
-1262  EX                106
-1263  GrandFather        89
-1264  Max               110 123
-1265  Yes                61
-1266  No                 61
-1267  LeftWithDots      121
+1156  Hyphenate          51
+1157  LineSpacing        51
+1158  Break              52
+1159  LineBreak          52
+1160  PageBreak          52
+1161  InLine             52
+1162  Size               52
+1163  Visibility         52
+1164  Font               52
+1165  Underline          52
+1166  Thickness          52
+1167  Style              52
+1168  Weight             52
+1169  Indent             52
+1170  Adjust             52
+1171  NoBreak1           52
+1172  NoBreak2           52
+1173  Content            52
+1174  Gather             52
+1175  Line               53
+1176  NoLine             53
+1177  Included           53
+1178  Column             53
+1179  Copy               53
+1180  Depth              53
+1181  LineStyle          54
+1182  LineWeight         54
+1183  FillPattern        54
+1184  Background         54
+1185  Foreground         54  84
+1186  ShowBox            54
+1187  BackgroundPicture  54
+1188  PictureMode        54
+1189  MarginTop          55
+1190  MarginRight        55
+1191  MarginBottom       55
+1192  MarginLeft         55
+1193  PaddingTop         55
+1194  PaddingRight       55
+1195  PaddingBottom      55
+1196  PaddingLeft        55
+1197  BorderTopWidth     55
+1198  BorderRightWidth   55
+1199  BorderBottomWidth  55
+1200  BorderLeftWidth    55
+1201  BorderTopColor     55
+1202  BorderRightColor   55
+1203  BorderBottomColor  55
+1204  BorderLeftColor    55
+1205  BorderTopStyle     55
+1206  BorderRightStyle   55
+1207  BorderBottomStyle  55
+1208  BorderLeftStyle    55
+1209  Auto               81
+1210  Thin               83  68
+1211  Medium             83
+1212  Thick              83  68
+1213  Transparent        84  78
+1214  None               85
+1215  Hidden             85
+1216  Dotted             85  77
+1217  Dashed             85  77
+1218  Solid              85  77
+1219  Double             85
+1220  Groove             85
+1221  Ridge              85
+1222  Inset              85
+1223  Outset             85
+1224  Enclosing          86  97  89
+1225  Creator            86  97  89
+1226  NormalSize         80
+1227  Scale              80
+1228  RepeatXY           80
+1229  RepeatX            80
+1230  RepeatY            80
+1231  nil                59  60
+1232  UserSpecified      59  60  58
+1233  Refering           92  94
+1234  First              96 148
+1235  Second             96
+1236  Enclosed           97  89
+1237  Previous           97  89
+1238  Next               97
+1239  Refered            97
+1240  Referred           97 148
+1241  Root               97 148
+1242  NOT                98 147
+1243  AnyElem            99
+1244  AnyBox             99
+1245  ElemWithAttr       99
+1246  Left               93 121
+1247  VMiddle            93 121
+1248  VRef               93
+1249  Right              93 121
+1250  Top                91
+1251  HMiddle            91
+1252  HRef               91
+1253  Bottom             91
+1254  Min                58  58 110 123
+1255  CM                106
+1256  MM                106
+1257  PT                106  64 123 123
+1258  PC                106
+1259  PX                106
+1260  EM                106
+1261  EX                106
+1262  GrandFather        89
+1263  Max               110 123
+1264  Yes                61
+1265  No                 61
+1266  LeftWithDots      121
+1267  Justify           121
 1268  Roman              69
 1269  Italics            69
 1270  Oblique            69
@@ -662,7 +661,7 @@ their right part.
    59  PosH               51  58
    60  PosV               51  58
    61  Boolean            51  51  52  52  52  52  52  62
-   62  BoolInherit        51  51
+   62  BoolInherit        51
    63  DistInherit        51  52  54
    64  SizeInherit        52
    65  NbInherit          52  53

@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
  
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
-
 /*
  * presentmenu.c : Functions to modify the specific presentation
  *
@@ -79,7 +70,6 @@ static ThotBool     ChngUnderline;  /* user asks to modify the underline */
 static ThotBool     ChngUlWeight;/* user asks to modify the underline weight */
 static ThotBool     ChngFontSize;   /* user asks to modify the body size */
 static ThotBool     ChngAlign;	/* user asks to modify the alignment mode */
-static ThotBool     ChngJustif;	/* user asks to change the justification */
 static ThotBool     ChngHyphen;	/* user asks to change the hyphenation */
 static ThotBool     ChngIndent;	/* user asks to change the indentation */
 static ThotBool     ChngLineSp;	/* user asks to change the line spacing */
@@ -96,7 +86,7 @@ static ThotBool     ChngTrame;	/* user asks to change the pattern */
 #define Apply_AllChars		7
 
 #define Apply_Align		8
-#define Apply_Justif		9
+
 #define Apply_Hyphen		10
 #define Apply_Indent		11
 #define Apply_LineSp		12
@@ -114,7 +104,6 @@ static ThotBool     StdUnderline;  /* user asks to reset the underline */
 static ThotBool     StdUlWeight;/* user asks to reset the underline weight */
 static ThotBool     StdFontSize;   /* user asks to reset the body size */
 static ThotBool     StdAlign;	/* user asks to reset the alignment mode */
-static ThotBool     StdJustif;	/* user asks to reset the justification */
 static ThotBool     StdHyphen;	/* user asks to reset the hyphenation */
 static ThotBool     StdIndent;	/* user asks to reset the indentation */
 static ThotBool     StdLineSp;	/* user asks to reset the line spacing */
@@ -129,7 +118,6 @@ static int          UnderlineStyle; /* underline style requested by the user */
 static int          UnderlineWeight;/* underline weight requested by user */
 static int          FontSize;	/* body size (in points) requested by user */
 static int          Align;	/* line alignment mode */
-static ThotBool     Justif;	/* with or without justification */
 static ThotBool     Hyphenate;	/* with or without hyphenation */
 static int          IndentValue;/* value in points for the 1st line indent */
 static int          IndentSign;	/* the indentation sign */
@@ -791,25 +779,7 @@ int                 weightUnderline;
    	ModifyLining applique a l'element pEl les modifications		
    		sur la mise en ligne demandes par l'utilisateur.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ModifyLining (PtrElement pEl, PtrDocument pDoc, int viewToApply, ThotBool modifAdjust, int Adjust, ThotBool modifJustif, ThotBool Justif, ThotBool modifIndent, int ValIndent, ThotBool modifLineSpacing, int LineSpacing, ThotBool modifHyphen, ThotBool Hyphenate)
-#else  /* __STDC__ */
-static void         ModifyLining (pEl, pDoc, viewToApply, modifAdjust, Adjust, modifJustif, Justif, modifIndent, ValIndent, modifLineSpacing, LineSpacing, modifHyphen, Hyphenate)
-PtrElement          pEl;
-PtrDocument         pDoc;
-int                 viewToApply;
-ThotBool            modifAdjust;
-int                 Adjust;
-ThotBool            modifJustif;
-ThotBool            Justif;
-ThotBool            modifIndent;
-int                 ValIndent;
-ThotBool            modifLineSpacing;
-int                 LineSpacing;
-ThotBool            modifHyphen;
-ThotBool            Hyphenate;
-
-#endif /* __STDC__ */
+static void         ModifyLining (PtrElement pEl, PtrDocument pDoc, int viewToApply, ThotBool modifAdjust, int Adjust, ThotBool modifIndent, int ValIndent, ThotBool modifLineSpacing, int LineSpacing, ThotBool modifHyphen, ThotBool Hyphenate)
 {
    ThotBool            isNew;
    PtrPRule            pPRule;
@@ -840,6 +810,9 @@ ThotBool            Hyphenate;
 	    pPRule->PrAdjust = AlignCenter;
 	    break;
 	  case 4:
+	    pPRule->PrAdjust = AlignJustify;
+	    break;
+	  case 5:
 	    pPRule->PrAdjust = AlignLeftDots;
 	    break;
 	  default:
@@ -856,27 +829,6 @@ ThotBool            Hyphenate;
 	  /* reset the previous value */
 	  pPRule->PrAdjust = value;
      }
-   /* Justification */
-   if (modifJustif)
-     {
-	pPRule = SearchPresRule (pEl, PtJustify, 0, &isNew, pDoc, viewToApply);
-	pPRule->PrType = PtJustify;
-	pPRule->PrViewNum = viewSch;
-	/* by default it should be translated into a CSS rule */
-	pPRule->PrLevel = 1;
-	pPRule->PrPresMode = PresImmediate;
-	bValue = pPRule->PrJustify;
-	pPRule->PrJustify = Justif;
-	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
-	  {
-	     SetDocumentModified (pDoc, TRUE, 0);
-	     ApplyNewRule (pDoc, pPRule, pEl);
-	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	  }
-	else if (!isNew)
-	  /* reset the previous value */
-	  pPRule->PrJustify = bValue;
-     }
    /* Coupure des mots */
    if (modifHyphen)
      {
@@ -886,8 +838,8 @@ ThotBool            Hyphenate;
 	/* by default it should be translated into a CSS rule */
 	pPRule->PrLevel = 1;
 	pPRule->PrPresMode = PresImmediate;
-	bValue = pPRule->PrJustify;
-	pPRule->PrJustify = Hyphenate;
+	bValue = pPRule->PrBoolValue;
+	pPRule->PrBoolValue = Hyphenate;
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
 	     SetDocumentModified (pDoc, TRUE, 0);
@@ -896,7 +848,7 @@ ThotBool            Hyphenate;
 	  }
 	else if (!isNew)
 	  /* reset the previous value */
-	  pPRule->PrJustify = bValue;
+	  pPRule->PrBoolValue = bValue;
      }
    /* Renfoncement de la 1ere ligne */
    if (modifIndent)
@@ -983,7 +935,6 @@ int                 applyDomain;
   ThotBool            locChngLineWeight;
   ThotBool            locChngTrame;
   ThotBool            locChngAlign;
-  ThotBool            locChngJustif;
   ThotBool            locChngHyphen;
   ThotBool            locChngIndent;
   ThotBool            locChngLineSp;
@@ -1072,10 +1023,6 @@ int                 applyDomain;
 		       && (applyDomain == Apply_Align
 			   || applyDomain == Apply_AllFormat
 			   || applyDomain == Apply_All));
-	locChngJustif = ((StdJustif || ChngJustif)
-			 && (applyDomain == Apply_Justif
-			     || applyDomain == Apply_AllFormat
-			     || applyDomain == Apply_All));
 	locChngHyphen = ((StdHyphen || ChngHyphen)
 			 && (applyDomain == Apply_Hyphen
 			     || applyDomain == Apply_AllFormat
@@ -1088,7 +1035,7 @@ int                 applyDomain;
 			 && (applyDomain == Apply_LineSp
 			     || applyDomain == Apply_AllFormat
 			     || applyDomain == Apply_All));
-	chngFormat = (locChngAlign || locChngJustif || locChngHyphen || locChngIndent || locChngLineSp);
+	chngFormat = (locChngAlign || locChngHyphen || locChngIndent || locChngLineSp);
 
 	/* Set chngGraphics indicator */
 	locChngLineStyle = ((StdLineStyle || ChngLineStyle)
@@ -1246,8 +1193,11 @@ int                 applyDomain;
 		      case AlignCenter:
 			i = 3;
 			break;
-		      case AlignLeftDots:
+		      case AlignJustify:
 			i = 4;
+			break;
+		      case AlignLeftDots:
+			i = 5;
 			break;
 		      default:
 			i = 1;
@@ -1255,18 +1205,6 @@ int                 applyDomain;
 		      }
 		    locChngAlign = (i != Align);
 		  }
-	      }
-
-	    /* justification */
-	    if (locChngJustif)
-	      {
-		if (StdJustif)
-		  {
-		    RuleSetPut (TheRules, PtJustify);
-		    locChngJustif = FALSE;
-		  }
-		else
-		  locChngJustif = (Justif != pAb->AbJustify);
 	      }
 
 	    /* coupure des mots */
@@ -1306,9 +1244,9 @@ int                 applyDomain;
 		      {
 			if (IndentSign != 0 && IndentValue == 0)
 			  IndentValue = 15;
-#           ifndef _WINDOWS
+#ifndef _WINDOWS
 			TtaSetNumberForm (NumZoneRecess, IndentValue);
-#           endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 		      }
 		  }
 	      }
@@ -1451,7 +1389,6 @@ int                 applyDomain;
 		  if (pBlock != NULL)
 		     ModifyLining (pBlock, pSelDoc, SelectedView,
 				   locChngAlign, Align,
-				   locChngJustif, Justif,
 				   locChngIndent, IndentValue * IndentSign,
 				   locChngLineSp, OldLineSp,
 				   locChngHyphen, Hyphenate);
@@ -1570,7 +1507,7 @@ View                view;
    pDoc = LoadedDocument[document - 1];
    ResetMenus ();
 
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    /* formulaire presentation standard */
    TtaNewSheet (NumFormPresentStandard, TtaGetViewFrame (document, view), 
 		TtaGetMessage (LIB, TMSG_STD_PRES),
@@ -1592,12 +1529,12 @@ View                view;
 		TtaGetMessage (LIB, TMSG_STD_PRES), 5, string, NULL, TRUE);
    /* annule toutes les options du choix multiple Presentation standard */
    TtaSetToggleMenu (NumMenuPresentStandard, -1, FALSE);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    /* active le formulaire "Presentation standard" */
    DocModPresent = pDoc;
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    TtaShowDialogue (NumFormPresentStandard, TRUE);
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1631,7 +1568,6 @@ int                 val;
 	case 1:
 	  /* format standard */
 	  StdAlign = TRUE;
-	  StdJustif = TRUE;
 	  StdHyphen = TRUE;
 	  StdIndent = TRUE;
 	  StdLineSp = TRUE;
@@ -1664,7 +1600,6 @@ int                 val;
 	  StdUlWeight = FALSE;
 	  StdFontSize = FALSE;
 	  StdAlign = FALSE;
-	  StdJustif = FALSE;
 	  StdHyphen = FALSE;
 	  StdIndent = FALSE;
 	  StdLineSp = FALSE;
@@ -1818,7 +1753,7 @@ STRING              txt;
       ApplyPresentMod (Apply_FontSize);
       break;
     case NumMenuAlignment:	/* alignement des lignes */
-      if (val == 3)	/* entree 3: Standard */
+      if (val == 4)	/* entree 4: Standard */
 	{
 	  ChngAlign = FALSE;
 	  StdAlign = TRUE;
@@ -1830,20 +1765,6 @@ STRING              txt;
 	  Align = val + 1;
 	}
       ApplyPresentMod (Apply_Align);
-      break;
-    case NumMenuJustification:		/* justification */
-      if (val == 2)	/* entree 2: Standard */
-	{
-	  ChngJustif = FALSE;
-	  StdJustif = TRUE;
-	}
-      else
-	{
-	  ChngJustif = TRUE;
-	  StdJustif = FALSE;
-	  Justif = (val == 0);
-	}
-      ApplyPresentMod (Apply_Justif);
       break;
     case NumMenuWordBreak:	/* coupure des mots */
       if (val == 2)	/* entree 2: Standard */
@@ -1862,22 +1783,22 @@ STRING              txt;
     case NumZoneRecess:	/* renfoncement de la premiere ligne */
       ChngIndent = TRUE;
       IndentValue = val;
-#     ifdef _WINDOWS 
+#ifdef _WINDOWS 
       WIN_IndentValue = val;
-#     endif /* _WINDOWS */
+#endif /* _WINDOWS */
       if (IndentSign != 0 && IndentValue == 0)
 	{
 	  IndentSign = 0;
-#     ifndef _WINDOWS
+#ifndef _WINDOWS
 	  TtaSetMenuForm (NumMenuRecessSense, 1);
-#     endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	}
       else if (IndentSign == 0 && IndentValue != 0)
 	{
 	  IndentSign = 1;
-#     ifndef _WINDOWS
+#ifndef _WINDOWS
 	  TtaSetMenuForm (NumMenuRecessSense, 0);
-#     endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	}
       ApplyPresentMod (Apply_Indent);
       break;
@@ -1898,20 +1819,20 @@ STRING              txt;
 	  if (IndentSign != 0 && IndentValue == 0)
 	    {
 	      IndentValue = 15;
-#         ifdef _WINDOWS
+#ifdef _WINDOWS
           WIN_IndentValue = 15;
-#         else  /* _WINDOWS */
+#else  /* _WINDOWS */
 	      TtaSetNumberForm (NumZoneRecess, 15);
-#         endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	    }
 	  else if (IndentSign == 0 && IndentValue != 0)
 	    {
 	      IndentValue = 0;
-#         ifdef _WINDOWS 
+#ifdef _WINDOWS 
           WIN_IndentValue = 0;
-#         else  /* _WINDOWS */
+#else  /* _WINDOWS */
 	      TtaSetNumberForm (NumZoneRecess, 0);
-#         endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	    }
 	}
       ApplyPresentMod (Apply_Indent);
@@ -1921,18 +1842,18 @@ STRING              txt;
       if (OldLineSp != val)
 	{
 	  OldLineSp = val;
-#     ifdef _WINDOWS 
+#ifdef _WINDOWS 
       WIN_OldLineSp = val;
-#     endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	  if (val < (NormalLineSpacing * 3) / 2)
 	    i = 0;
 	  else if (val >= NormalLineSpacing * 2)
 	    i = 2;
 	  else
 	    i = 1;
-#     ifndef _WINDOWS 
+#ifndef _WINDOWS 
 	  TtaSetMenuForm (NumMenuLineSpacing, i);
-#     endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	}
       ApplyPresentMod (Apply_LineSp);
       break;
@@ -1948,11 +1869,11 @@ STRING              txt;
 	  StdLineSp = FALSE;
 	  /* l'utilisateur demande a changer l'interligne */
 	  OldLineSp = ((val + 2) * NormalLineSpacing) / 2;
-#     ifdef _WINDOWS
+#ifdef _WINDOWS
       WIN_OldLineSp = OldLineSp;
-#     else  /* _WINDOWS */
+#else  /* _WINDOWS */
 	  TtaSetNumberForm (NumZoneLineSpacing, OldLineSp);
-#     endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	}
       ApplyPresentMod (Apply_LineSp);
       break;
@@ -2062,16 +1983,16 @@ View                view;
    PtrElement          pFirstSel, pLastSel;
    PtrElement          pEl;
    PtrAbstractBox      pAb;
-#  ifndef _WINDOWS 
+#ifndef _WINDOWS 
    int                 nbItems;
    int                 max, bodyRelatSize, bodyPointSize;
    STRING              s;
    CHAR_T                string[MAX_TXT_LEN];
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    int                 fontNum;
    static CHOOSEFONT   cf ; 
    static LOGFONT      lf ;
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
    int                 i;
    int                 firstChar, lastChar;
    ThotBool            selectionOK;
@@ -2115,7 +2036,7 @@ View                view;
 	     /* annule les etats memorises */
 	     ResetMenus ();
 
-#        ifndef _WINDOWS 
+#ifndef _WINDOWS 
 	     /* formulaire Presentation Caracteres */
 	     TtaNewSheet (NumFormPresChar, TtaGetViewFrame (document, view), 
 			  TtaGetMessage (LIB, TMSG_CHAR),
@@ -2187,7 +2108,7 @@ View                view;
 	     nbItems++;
 	     TtaNewSubmenu (NumMenuCharFontSize, NumFormPresChar, 0,
 			    TtaGetMessage (LIB, TMSG_BODY_SIZE_PTS), nbItems, string, NULL, TRUE);
-#        endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	     /* initialise la zone 'Famille de caracteres' */
 	     ChngFontFamily = TRUE;
 	     StdFontFamily = FALSE;
@@ -2211,33 +2132,33 @@ View                view;
 		 i = 0;
 		 break;
 	       }
-#        ifdef _WINDOWS 
+#ifdef _WINDOWS 
          fontNum = i;
-#        else /* !_WINDOWS */
+#else /* !_WINDOWS */
 	     TtaSetMenuForm (NumMenuCharFamily, i - 1);
-#        endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	     /* initialise le catalogue 'Style des caracteres' */
 	     ChngFontStyle = TRUE;
 	     StdFontStyle = FALSE;
 	     FontStyle = pAb->AbFontStyle;
-#        ifndef _WINDOWS 
+#ifndef _WINDOWS 
 	     TtaSetMenuForm (NumMenuCharFontStyle, FontStyle);
-#        endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	     /* initialise le catalogue 'Graisse des caracteres' */
 	     ChngFontWeight = TRUE;
 	     StdFontWeight = FALSE;
 	     FontWeight = pAb->AbFontWeight;
-#        ifndef _WINDOWS 
+#ifndef _WINDOWS 
 	     TtaSetMenuForm (NumMenuCharFontWeight, FontWeight);
-#        endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 
 	     /* initialise le catalogue 'Epaisseur du souligne' */
 	     ChngUnderline = TRUE;
 	     StdUnderline = FALSE;
 	     UnderlineStyle = pAb->AbUnderline;
-#        ifndef _WINDOWS 
+#ifndef _WINDOWS 
 	     TtaSetMenuForm (NumMenuUnderlineType, UnderlineStyle);
-#        endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	     ChngLineWeight = TRUE;
 	     StdLineWeight = FALSE;
 	     UnderlineWeight = pAb->AbThickness;
@@ -2252,16 +2173,16 @@ View                view;
 		i = FontRelSize (FontSize);
 	     else
 		i = pAb->AbSize;
-#        ifndef _WINDOWS 
+#ifndef _WINDOWS 
 	     TtaSetMenuForm (NumMenuCharFontSize, i);
-#       else  /* _WINDOWS */
+#else  /* _WINDOWS */
 		CreateCharacterDlgWindow (TtaGetViewFrame (document, view), fontNum, FontStyle, FontWeight, UnderlineStyle, FontSize);
-#       endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	  }
 	DocModPresent = pDoc;
-#   ifndef _WINDOWS 
+#ifndef _WINDOWS 
 	TtaShowDialogue (NumFormPresChar, TRUE);
-#   endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
      }
 }
 
@@ -2317,12 +2238,12 @@ View                view;
 	     /* annule les etats memorises */
 	     ResetMenus ();
 
-#        ifndef _WINDOWS
+#ifndef _WINDOWS
 	     /* feuille de dialogue Presentation Graphiques */
 	     TtaNewSheet (NumFormPresGraphics, TtaGetViewFrame (document, view), 
 			  TtaGetMessage (LIB, TMSG_GRAPHICS_PRES),
 		 1, TtaGetMessage (LIB, TMSG_APPLY), FALSE, 3, 'L', D_DONE);
-#        endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 
 	     /* sous-menu style des traits */
 	     i = 0;
@@ -2335,10 +2256,10 @@ View                view;
 	     usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewSubmenu (NumMenuStrokeStyle, NumFormPresGraphics, 0, TtaGetMessage (LIB, TMSG_LINE_STYLE), 4, string, NULL, TRUE);
 	     /* change la police des 3 premieres entrees du style des traits */
-#        ifndef _WINDOWS
+#ifndef _WINDOWS
 	     for (i = 0; i < 3; i++)
              TtaRedrawMenuEntry (NumMenuStrokeStyle, i, TEXT("icones"), ThotColorNone, -1);
-#        endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	     /* initialise le sous-menu style des traits */
 	     ChngLineStyle = TRUE;
 	     StdLineStyle = FALSE;
@@ -2358,21 +2279,21 @@ View                view;
 		 i = 0;
 		 break;
 	       }
-#        ifndef _WINDOWS
+#ifndef _WINDOWS
 	     TtaSetMenuForm (NumMenuStrokeStyle, i - 1);
 
 	     /* zone de saisie epaisseur des traits */
 	     TtaNewNumberForm (NumZoneStrokeWeight, NumFormPresGraphics, TtaGetMessage (LIB, TMSG_LINE_WEIGHT), 0, 72, TRUE);
-#        endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	     ChngLineWeight = TRUE;
 	     StdLineWeight = FALSE;
 	     LineWeight = pAb->AbLineWeight;
 	     /* Toggle button Epaisseur des traits standard */
 	     usprintf (string, TEXT("B%s"), TtaGetMessage (LIB, TMSG_UNCHANGED));
-#        ifndef _WINDOWS
+#ifndef _WINDOWS
 	     TtaNewToggleMenu (NumToggleWidthUnchanged, NumFormPresGraphics,
 			       NULL, 1, string, NULL, TRUE);
-#        endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	     /* initialise la zone de saisie epaisseur des traits */
 	     if (pAb->AbLineWeightUnit == UnPoint)
 		i = LineWeight;
@@ -2384,9 +2305,9 @@ View                view;
 		  if ((currentFontSize * i) % 10 >= 5)
 		     i++;
 	       }
-#        ifndef _WINDOWS
+#ifndef _WINDOWS
 	     TtaSetNumberForm (NumZoneStrokeWeight, i);
-#        endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 
 	     /* selecteur motif de remplissage */
 	     nbItems = MakeMenuPattern (string, MAX_TXT_LEN);
@@ -2399,23 +2320,23 @@ View                view;
 		  else
 		     i = nbItems;
 
-#         ifndef _WINDOWS 
+#ifndef _WINDOWS 
 		  TtaNewSelector (NumSelectPattern, NumFormPresGraphics, TtaGetMessage (LIB, TMSG_FILL_PATTERN), nbItems, string, i, NULL, TRUE, TRUE);
 		  /* initialise le selecteur sur sa premiere entree */
 		  TtaSetSelector (NumSelectPattern, pAb->AbFillPattern, TEXT(""));
-#         endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	       }
 	     /* Toggle button Motif de remplissage standard */
-#        ifndef _WINDOWS
+#ifndef _WINDOWS
 	     i = 0;
 	     usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewToggleMenu (NumTogglePatternUnchanged, NumFormPresGraphics,
 			       NULL, 1, string, NULL, TRUE);
-#         endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	     DocModPresent = pDoc;
-#        ifndef _WINDOWS
+#ifndef _WINDOWS
 	     TtaShowDialogue (NumFormPresGraphics, TRUE);
-#        endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	  }
      }
 }
@@ -2443,14 +2364,13 @@ View                view;
    PtrAbstractBox      pAb;
    int                 firstChar, lastChar;
    int                 i;
-#  ifdef _WINDOWS 
+#ifdef _WINDOWS 
    int                 alignNum;
-   int                 justificationNum;
    int                 lineSpacingNum;
    int                 indentNum;
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    CHAR_T                string[MAX_TXT_LEN];
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
    ThotBool            selectionOK;
 
    pDoc = LoadedDocument[document - 1];
@@ -2475,7 +2395,7 @@ View                view;
       if (pAb != NULL) {
 
          ResetMenus ();
-#        ifndef _WINDOWS
+#ifndef _WINDOWS
          /* formulaire Presentation Format */
          TtaNewSheet (NumFormPresFormat, TtaGetViewFrame (document, view), 
                       TtaGetMessage (LIB, TMSG_FORMAT),
@@ -2483,42 +2403,53 @@ View                view;
 
          /* sous-menu Alignement */
          i = 0;
-         sprintf (&string[i], "%s", "Bmiidn");	/* gauche */
+         sprintf (&string[i], "%s", "Bmiidn");	/* Left */
          i += ustrlen (&string[i]) + 1;
-         sprintf (&string[i], "%s", "Bmeiin");	/* droite */
+         sprintf (&string[i], "%s", "Bmeiin");	/* Right */
          i += ustrlen (&string[i]) + 1;
-         sprintf (&string[i], "%s", "Bmfogn");	/* Centrer */
+         sprintf (&string[i], "%s", "Bmfogn");	/* Center */
+         i += ustrlen (&string[i]) + 1;
+         sprintf (&string[i], "%s", "Bmiiin");	/* Justify */
          i += ustrlen (&string[i]) + 1;
          sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));	/* Inchange */
          TtaNewSubmenu (NumMenuAlignment, NumFormPresFormat, 0,
-         TtaGetMessage (LIB, TMSG_ALIGN), 4, string, NULL, TRUE);
-         /* change la police des 3 premieres entrees */
-         for (i = 0; i < 3; i++)
-             TtaRedrawMenuEntry (NumMenuAlignment, i, "icones", ThotColorNone, -1);
+         TtaGetMessage (LIB, TMSG_ALIGN), 5, string, NULL, TRUE);
+         /* change la police des 4 premieres entrees */
+         for (i = 0; i < 4; i++)
+            TtaRedrawMenuEntry (NumMenuAlignment, i, "icones", ThotColorNone, -1);
          /* initialise le menu de cadrage des lignes */
-#        endif _WINDOWS
-         switch (pAb->AbAdjust) {
-                case AlignLeft:   i = 1;
-                                  break;
-                case AlignRight:  i = 2;
-                                  break;
-                case AlignCenter: i = 3;
-                                  break;
-                default:          i = 1;
-                                  break;
-		 }
-#        ifdef _WINDOWS
+#endif _WINDOWS
+         switch (pAb->AbAdjust)
+	   {
+	   case AlignLeft:
+	     i = 1;
+	     break;
+	   case AlignRight:
+	     i = 2;
+	     break;
+	   case AlignCenter:
+	     i = 3;
+	     break;
+	   case AlignJustify:
+	     i = 4;
+	     break;
+	   default:
+	     i = 1;
+	     break;
+	   }
+#ifdef _WINDOWS
          alignNum = i - 1;
-#        else  /* _WINDOWS */
+#else  /* _WINDOWS */
          TtaSetMenuForm (NumMenuAlignment, i - 1);
          /* zone de saisie du renfoncement en points typo */
          TtaNewNumberForm (NumZoneRecess, NumFormPresFormat,
          TtaGetMessage (LIB, TMSG_INDENT_PTS), 0, 300, TRUE);
          /* initialise la valeur du renfoncement */
-#        endif /* _WINDOWS */
+#endif /* _WINDOWS */
          IndentValue = PixelToPoint (PixelValue (abs (pAb->AbIndent),
-                                     pAb->AbIndentUnit, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
-#        ifndef _WINDOWS
+                                     pAb->AbIndentUnit, pAb,
+			    ViewFrameTable[ActiveFrame - 1].FrMagnification));
+#ifndef _WINDOWS
          TtaSetNumberForm (NumZoneRecess, IndentValue);
 
          /* sous-menu sens de renfoncement */
@@ -2534,35 +2465,15 @@ View                view;
          for (i = 0; i < 2; i++)
          TtaRedrawMenuEntry (NumMenuRecessSense, i, "icones", ThotColorNone, -1);
          /* initialise le sens de renfoncement */
-#        endif /* _WINDOWS */
+#endif /* _WINDOWS */
          if (pAb->AbIndent > 0)
             i = 0;
          else
              i = 1;
-#        ifdef _WINDOWS
+#ifdef _WINDOWS
          indentNum = i;
-#        else  /* _WINDOWS */
+#else  /* _WINDOWS */
          TtaSetMenuForm (NumMenuRecessSense, i);
-
-         /* sous-menu de justification */
-         i = 0;
-         sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_LIB_YES));
-         i += ustrlen (&string[i]) + 1;
-         sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_LIB_NO));
-         i += ustrlen (&string[i]) + 1;
-         sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
-         TtaNewSubmenu (NumMenuJustification, NumFormPresFormat, 0,
-                        TtaGetMessage (LIB, TMSG_JUSTIFY), 3, string, NULL, TRUE);
-#        endif /* _WINDOWS */
-         /* menu de justification */
-         if (pAb->AbJustify)
-            i = 1;  /* avec justification */
-         else
-             i = 2; /* sans justification */
-#        ifdef _WINDOWS 
-         justificationNum = i - 1;
-#        else /* _WINDOWS */
-         TtaSetMenuForm (NumMenuJustification, i - 1);
 
          /* zone de saisie de l'interligne en points typo */
          TtaNewNumberForm (NumZoneLineSpacing, NumFormPresFormat,
@@ -2582,17 +2493,17 @@ View                view;
          /* change la police des 3 premieres entrees */
          for (i = 0; i < 3; i++)
              TtaRedrawMenuEntry (NumMenuLineSpacing, i, "icones", ThotColorNone, -1);
-#        endif /* _WINDOWS */
+#endif /* _WINDOWS */
          /* initialise l'interligne en points typographiques */
          OldLineSp = PixelToPoint (PixelValue (pAb->AbLineSpacing,
                                      pAb->AbLineSpacingUnit, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
-#        ifndef _WINDOWS
+#ifndef _WINDOWS
          TtaSetNumberForm (NumZoneLineSpacing, OldLineSp);
-#        endif /* _WINDOWS */
+#endif /* _WINDOWS */
          NormalLineSpacing = PixelToPoint(PixelValue (10, UnRelative, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
-#        ifdef _WINDOWS
+#ifdef _WINDOWS
          WIN_NormalLineSpacing = NormalLineSpacing;
-#        endif /* _WINDOWS */
+#endif /* _WINDOWS */
          /* saisie de l'interligne par un menu */
          if (OldLineSp < (NormalLineSpacing * 3) / 2)
             i = 0;
@@ -2600,14 +2511,14 @@ View                view;
               i = 2;
          else
               i = 1;
-#        ifdef _WINDOWS
+#ifdef _WINDOWS
          lineSpacingNum = i;
-         CreateChangeFormatDlgWindow (NumZoneRecess, NumZoneLineSpacing, alignNum, IndentValue, indentNum, justificationNum, OldLineSp, lineSpacingNum);
-#        else  /* _WINDOWS */
+         CreateChangeFormatDlgWindow (NumZoneRecess, NumZoneLineSpacing, alignNum, IndentValue, indentNum, OldLineSp, lineSpacingNum);
+#else  /* _WINDOWS */
          TtaSetMenuForm (NumMenuLineSpacing, i);
          DocModPresent = pDoc;
          TtaShowDialogue (NumFormPresFormat, TRUE);
-#        endif /* _WINDOWS */
+#endif /* _WINDOWS */
       }
    }	
 }
@@ -2637,8 +2548,6 @@ static void         ResetMenus ()
 	StdFontSize = FALSE;
 	ChngAlign = FALSE;
 	StdAlign = FALSE;
-	ChngJustif = FALSE;
-	StdJustif = FALSE;
 	ChngHyphen = FALSE;
 	StdHyphen = FALSE;
 	ChngIndent = FALSE;

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -437,7 +437,6 @@ typedef struct _AbstractBox
   TypeUnit        AbBottomBorderUnit; /* Bottom Border Unit */
   TypeUnit        AbLeftBorderUnit;   /* Left Border Unit */
 
-  ThotBool        AbJustify;	/* Lines are justified */
   ThotBool        AbAcceptLineBreak;    /* Can be split in lines */
   ThotBool        AbAcceptPageBreak;    /* Can be split by page breaks */
   ThotBool        AbHyphenate;	/* Contents can be hyphenated */

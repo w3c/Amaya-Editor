@@ -173,7 +173,6 @@ PresRule =       'Size' [ PresRelat ] /
                  'Indent' [ PresRelat ] /
                  'LineSpacing' [ PresRelat ] /
                  'Adjust' [ '=' AdjustVal ] /
-	         'Justify' [ '=' BooleanVal ] /
 	         'Hyphenate' [ '=' BooleanVal ] /
                  'Style' [ '=' StyleVal ] /
                  'Weight' [ '=' WeightVal ] /
@@ -190,7 +189,7 @@ PresRelat =      '=' PresValue /
                  '<' [ '-' ] MaximumPres /
                  'IN' '[' [ '-' ] MinIntervalPres '.' '.'
                           [ '-' ] MaxIntervalPres ']' .
-AdjustVal =      'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' .
+AdjustVal =      'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' / 'Justify' .
 BooleanVal =     'Yes' / 'No' .
 StyleVal =       'Roman' / 'Italics' / 'Oblique' .
 WeightVal =      'Normal' / 'Bold' .

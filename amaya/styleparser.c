@@ -1086,14 +1086,10 @@ static char *ParseCSSTextAlign (Element element, PSchema tsch,
 				CSSInfoPtr css, ThotBool isHTML)
 {
    PresentationValue   align;
-   PresentationValue   justify;
 
    align.typed_data.value = 0;
    align.typed_data.unit = STYLE_UNIT_REL;
    align.typed_data.real = FALSE;
-   justify.typed_data.value = 0;
-   justify.typed_data.unit = STYLE_UNIT_REL;
-   justify.typed_data.real = FALSE;
 
    cssRule = SkipWCBlanksAndComments (cssRule);
    if (!ustrncasecmp (cssRule, TEXT("left"), 4))
@@ -1113,7 +1109,7 @@ static char *ParseCSSTextAlign (Element element, PSchema tsch,
      }
    else if (!ustrncasecmp (cssRule, TEXT("justify"), 7))
      {
-	justify.typed_data.value = Justified;
+	align.typed_data.value = Justify;
 	cssRule = SkipWord (cssRule);
      }
    else
@@ -1126,14 +1122,7 @@ static char *ParseCSSTextAlign (Element element, PSchema tsch,
     * install the new presentation.
     */
    if (align.typed_data.value)
-     {
-       TtaSetStylePresentation (PRAdjust, element, tsch, context, align);
-     }
-   if (justify.typed_data.value)
-     {
-       TtaSetStylePresentation (PRJustify, element, tsch, context, justify);
-       TtaSetStylePresentation (PRHyphenate, element, tsch, context, justify);
-     }
+     TtaSetStylePresentation (PRAdjust, element, tsch, context, align);
    return (cssRule);
 }
 
@@ -3060,10 +3049,6 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
 		  settings->value.typed_data.value);
       add_unit = 1;
       break;
-    case PRJustify:
-      if (settings->value.typed_data.value == STYLE_JUSTIFIED)
-	usprintf (buffer, TEXT("text-align: justify"));
-      break;
     case PRAdjust:
       switch (settings->value.typed_data.value)
 	{
@@ -3078,6 +3063,9 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	  break;
 	case STYLE_ADJUSTLEFTWITHDOTS:
 	  ustrcpy (buffer, TEXT("text-align: left"));
+	  break;
+        case STYLE_ADJUSTJUSTIFY:
+	  ustrcpy (buffer, TEXT("text-align: justify"));
 	  break;
 	}
       break;

@@ -38,7 +38,6 @@ DEFAULT
    Weight: Enclosing =;
    Size: Enclosing =;
    Indent: 0;
-   Justify: No;
    Adjust: Left;
    LineSpacing: 1;
    Depth : Enclosing =;

@@ -552,8 +552,7 @@ ThotBool            ChangePRule (NotifyPresentation * event)
 	      }
 	    else if (IsCharacterLevelElement (el)
 		&& (presType == PRIndent || presType == PRLineSpacing
-		    || presType == PRAdjust || presType == PRJustify
-		    || presType == PRHyphenate))
+		    || presType == PRAdjust || presType == PRHyphenate))
 	      /* if the rule is a Format rule applied to a character-level
 		 element, move it to the first enclosing non character-level
 		 element */

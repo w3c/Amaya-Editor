@@ -2038,14 +2038,6 @@ indLine             wi;
 	CurRule->PrType = PtAdjust;
 	InheritRule (InheritParent);
      }
-   if (GetTypedRule (PtJustify, pPSchema->PsFirstDefaultPRule) == NULL)
-      /* pas de regle Justify par defaut, on en cree une : */
-      /* Justify: Enclosing =; */
-     {
-	CreateDefaultRule ();
-	CurRule->PrType = PtJustify;
-	InheritRule (InheritParent);
-     }
    if (GetTypedRule (PtLineStyle, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle LineStyle par defaut, on en cree une : */
       /* LineStyle: Enclosing =; */
@@ -2101,7 +2093,7 @@ indLine             wi;
 	CreateDefaultRule ();
 	CurRule->PrType = PtVertOverflow;
 	CurRule->PrPresMode = PresImmediate;
-        CurRule->PrJustify = FALSE;
+        CurRule->PrBoolValue = FALSE;
      }
    if (GetTypedRule (PtHorizOverflow, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle HorizOverflow par defaut, on en cree une : */
@@ -2110,7 +2102,7 @@ indLine             wi;
 	CreateDefaultRule ();
 	CurRule->PrType = PtHorizOverflow;
 	CurRule->PrPresMode = PresImmediate;
-        CurRule->PrJustify = FALSE;
+        CurRule->PrBoolValue = FALSE;
      }
    CurRule->PrNextPRule = NULL;
 }
@@ -2335,11 +2327,11 @@ indLine		    wi;
 	   LayoutRule (FnNotInLine, wi);
       }
    else
-      /* on est dans une regle Justify, Hyphenate, VertOverflow ou
+      /* on est dans une regle Hyphenate, VertOverflow ou
 	 HorizOverflow */
       {
 	CurRule->PrPresMode = PresImmediate;
-	CurRule->PrJustify = bool;
+	CurRule->PrBoolValue = bool;
       }
 }
 
@@ -2914,10 +2906,6 @@ indLine             wi;
 	/* HorizPos */
 	CreatePRule (PtHorizPos, wi);
 	AxisDef = True;	/* le prochain repere boite est une definition */
-	break;
-      case KWD_Justify:
-	/* Justify */
-	CreatePRule (PtJustify, wi);
 	break;
       case KWD_Hyphenate:
 	/* Hyphenate */
@@ -3603,6 +3591,10 @@ indLine             wi;
       case KWD_LeftWithDots:
 	/* LeftWithDots */
 	CurRule->PrAdjust = AlignLeftDots;
+	break;
+      case KWD_Justify:
+	/* Justify */
+	CurRule->PrAdjust = AlignJustify;
 	break;
       case KWD_IF:
 	/* IF */
@@ -6603,7 +6595,7 @@ static void         CheckPageBoxes ()
 			view);
       pR->PrType = PtHorizOverflow;
       pR->PrPresMode = PresImmediate;
-      pR->PrJustify = True;
+      pR->PrBoolValue = True;
     }
 }
 

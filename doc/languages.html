@@ -15,7 +15,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of December 28, 2000</h4>
+<h4>Version of February 12, 2001</h4>
 
 <p>© 1996-2000 INRIA</p>
 <hr>
@@ -163,7 +163,6 @@
               <li><small><a href="#sectd42222">First line
                 indentation</a></small></li>
               <li><small><a href="#sectd42223">Alignment</a></small></li>
-              <li><small><a href="#sectd42224">Justification</a></small></li>
               <li><small><a href="#sectd42225">Hyphenation</a></small></li>
               <li><small><a href="#sectd42226">Avoiding line
                 breaking</a></small></li>
@@ -3279,7 +3278,6 @@ following rules are considered to be the default rules:</p>
    Indent:            Enclosing =;
    LineSpacing:       Enclosing =;
    Adjust:            Enclosing =;
-   Justify:           Enclosing =;
    Hyphenate:         Enclosing =;
    PageBreak:         Yes;
    LineBreak:         Yes;
@@ -3994,7 +3992,7 @@ function.  The properties are:</p>
   <li>the height or width of the box, with overflow exceptions,</li>
   <li>the margins, padding and borders of the box,</li>
   <li>the characteristics of the lines contained in the box: linespacing,
-    indentation of the first line, justification, hyphenation,</li>
+    indentation of the first line, hyphenation,</li>
   <li>the conditions for breaking the box across pages,</li>
   <li>the characteristics of the characters contained in the box: size, font,
     style, underlining,</li>
@@ -4059,7 +4057,6 @@ rules are terminated by a semicolon.</p>
                 'LineSpacing' ':'   DistanceInherit /
                 'Indent' ':'        DistanceInherit /
                 'Adjust' ':'        AdjustInherit /
-                'Justify' ':'       BoolInherit /
                 'Hyphenate' ':'     BoolInherit /
                 'PageBreak' ':'     Boolean /
                 'LineBreak' ':'     Boolean /
@@ -4748,7 +4745,7 @@ of the attribute is used.</p>
   minimumA       = minimum / AttrID .
   minimum        = NUMBER .</pre>
 
-<p>The properties which can be obtained by inheritance are justification,
+<p>The properties which can be obtained by inheritance are
 hyphenation, interline spacing, character font (font family), font style, font
 size, visibility, indentation, underlining, alignment of text, stacking order
 of objects, the style and thickness of lines, fill pattern and the colors of
@@ -4782,7 +4779,7 @@ boxes will be placed according to the line breaking rules.</p>
 
 <p>The <tt>Line</tt> rule does not have a parameter.  The characteristics of
 the lines that will be constructed are determined by the <tt>LineSpacing</tt>,
-<tt>Indent</tt>, <tt>Adjust</tt>, <tt>Justify</tt>, and <tt>Hyphenate</tt>
+<tt>Indent</tt>, <tt>Adjust</tt>, and <tt>Hyphenate</tt>
 rules.  Moreover, the <a href="#insectd42226"><tt>Inline</tt> rule</a> permits
 the exclusion of certain elements from the line breaking process.</p>
 
@@ -4857,6 +4854,7 @@ inherited.  A constant value is specified by a keyword:</p>
   <li><tt>Left</tt>: at the left edge,</li>
   <li><tt>Right</tt>: at the right edge,</li>
   <li><tt>VMiddle</tt>: centered</li>
+  <li><tt>Justify</tt>: justified</li>
   <li><tt>LeftWithDots</tt>: at the left edge with a dotted line filling out
     the last line up to the right edge of the line breaking box.</li>
 </ul>
@@ -4865,69 +4863,8 @@ inherited.  A constant value is specified by a keyword:</p>
 specified by a kinship keyword followed by an equals sign.</p>
 <pre>                      'Adjust' ':' AlignOrInherit
      AlignOrInherit = Kinship '=' / Alignment .
-     Alignment      = 'Left' / 'Right' / 'VMiddle' /
+     Alignment      = 'Left' / 'Right' / 'VMiddle' / 'Justify' /
                       'LeftWithDots' .</pre>
-</div>
-
-<div class="subsubsection">
-<h4><a name="sectd42224">Justification</a></h4>
-
-<p>The <tt>Justify</tt> rule indicates whether the lines contained in the box
-and produced by a <tt>Line</tt> rule should be extended horizontally to occupy
-the entire width of their enclosing box.  The first and last lines are treated
-specially: the position of the beginning of the first line is fixed by the
-<tt>Indent</tt> rule and last line is not extended.  The justification
-property defined by this rule takes a boolean value, which can be a constant
-or inherited.  A constant boolean value is expressed by either the
-<tt>Yes</tt> or the <tt>No</tt> keyword.  An inherited value can only be the
-same as that of the reference box and is specified by a kinship keyword
-followed by an equals sign.</p>
-<pre>                  'Justify' ':' BoolInherit
-     BoolInherit = Boolean / Kinship '=' .
-     Boolean     ='Yes' / 'No' .</pre>
-
-<p>When the lines are justified, the alignment property specified in the
-<tt>Adjust</tt> rule has no influence, other than on the last line produced.
-This occurs because, when the other are extended to the limits of the box, the
-alignment style is no longer perceptible.</p>
-
-<blockquote class="example">
-  <p><strong>Example:</strong></p>
-
-  <p>An important use of inheritance is to vary the characteristics of lines
-  for an element type (for example, Paragraph) according to the enclosing
-  environment (for example, Summary or Section), and thus obtain different
-  line breaking styles for the same elements when they appear in different
-  environments.  The following rules specify that paragraphs inherit their
-  alignment, justification, and line spacing:</p>
-  <pre>Paragraph :
-   BEGIN
-   Justify : Enclosing = ;
-   LineSpacing : Enclosing = ;
-   Adjust : Enclosing =;
-   Line;
-   END;</pre>
-
-  <p>If the alignment, justification, and line spacing of the Section and
-  Summary elements is fixed:</p>
-  <pre>Section :
-   BEGIN
-   Adjust : Left;
-   Justify : Yes;
-   LineSpacing : 1;
-   END;
-Summary :
-   BEGIN
-   Adjust : VMiddle;
-   Justify : No;
-   LineSpacing : 1.3;
-   END;</pre>
-
-  <p>then the paragraphs appearing in sections are justified with a simple
-  line spacing while those appearing in summaries are centered and not
-  justified and have a larger line spacing.  These are nevertheless the very
-  same type of paragraph defined in the logical structure schema.</p>
-</blockquote>
 </div>
 
 <div class="subsubsection">
@@ -6737,7 +6674,7 @@ rules:</p>
 <ul>
   <li>those taking numeric values (<tt>Size, Indent, LineSpacing,
     LineWeight</tt>),</li>
-  <li>those with values taken from a predefined list (<tt>Adjust, Justify,
+  <li>those with values taken from a predefined list (<tt>Adjust,
     Hyphenate, Style, Weight, Font, UnderLine, Thickness,
   LineStyle</tt>),</li>
   <li>those whose value is a name (<tt>FillPattern, Background,
@@ -7618,7 +7555,7 @@ for which the translation rule block should be applied.</p>
   <li>rules taking numeric values: <tt>Size</tt>, <tt>Indent</tt>,
     <tt>LineSpacing</tt>, <tt>LineWeight</tt>,</li>
   <li>rules whose values are taken from a predefined list (i.e. whose type is
-    an enumeration): <tt>Adjust</tt>, <tt>Justify</tt>, <tt>Hyphenate,/TT&gt;,
+    an enumeration): <tt>Adjust</tt>, <tt>Hyphenate,/TT&gt;,
     <tt>Style</tt>, <tt>Weight</tt>, <tt>Font</tt>, <tt>UnderLine</tt>,
     <tt>Thickness</tt>, <tt>LineStyle</tt>,</tt></li>
   <li>rules whose value is a name: <tt>FillPattern</tt>, <tt>Background</tt>,
@@ -7659,7 +7596,6 @@ followed by the name of the value.  The names of the fill patterns (the
                       'Indent' [ PresRelation ] /
                       'LineSpacing' [ PresRelation ] /
                       'Adjust' [ '=' AdjustVal ] /
-                      'Justify' [ '=' BoolVal ] /
                       'Hyphenate' [ '=' BoolVal ] /
                       'Style' [ '=' StyleVal ] /
                       'Weight' [ '=' WeightVal ] /
@@ -7677,7 +7613,7 @@ followed by the name of the value.  The names of the fill patterns (the
                       '&lt;' [ '-' ] PresMaximum /
                       'IN' '[' [ '-' ] PresIntervalMin '..'
                               [ '-' ] PresIntervalMax ']' .
-     AdjustVal      = 'Left' / 'Right' / 'VMiddle' / 
+     AdjustVal      = 'Left' / 'Right' / 'VMiddle' / 'Justify' /
                       'LeftWithDots' .
      BoolVal        = 'Yes' / 'No' .
      StyleVal       = 'Roman' / 'Italics' / 'Oblique' .
@@ -8122,7 +8058,6 @@ Property        = 'VertRef' ':' HorizPosition /
                   'LineSpacing' ':' DistOrInherit /
                   'Indent' ':' DistOrInherit /
                   'Adjust' ':' AlignOrInherit /
-                  'Justify' ':' BoolInherit /
                   'Hyphenate' ':' BoolInherit /
                   'PageBreak' ':' Boolean /
                   'LineBreak' ':' Boolean /
@@ -8466,7 +8401,6 @@ PresRule      = 'Size' [ PresRelation ] /
                 'Indent' [ PresRelation ] /
                 'LineSpacing' [ PresRelation ] /
                 'Adjust' [ '=' AdjustVal ] /
-                'Justify' [ '=' BoolVal ] /
                 'Hyphenate' [ '=' BoolVal ] /
                 'Style' [ '=' StyleVal ] /
                 'Weight' [ '=' WeightVal ] /
@@ -8484,7 +8418,7 @@ PresRelation  = '=' PresValue /
                 '&lt;' [ '-' ] PresMaximum /
                 'IN' '[' [ '-' ] PresIntervalMin '..'
                          [ '-' ] PresIntervalMax ']' .
-AdjustVal     = 'Left' / 'Right' / 'VMiddle' / 
+AdjustVal     = 'Left' / 'Right' / 'VMiddle' / 'Justify' /
                 'LeftWithDots' .
 BoolVal       = 'Yes' / 'No' .
 StyleVal      = 'Roman' / 'Italics' / 'Oblique' .

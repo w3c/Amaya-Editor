@@ -22,7 +22,6 @@ DEFAULT
 	Height: Enclosed . Height;
 	VertPos: Top = Previous . Bottom;
 	HorizPos: Left = Enclosing . Left;
-	Justify: Enclosing =;
 	Hyphenate: Enclosing =;
 	LineSpacing: Enclosing =;
 	LineWeight: Enclosing =;
@@ -124,7 +123,6 @@ RULES
   Annot:
 	BEGIN
 	Adjust: Left;
-	Justify: No;
 	Indent: 0;
 	Font: Helvetica;
 	Style: Roman;

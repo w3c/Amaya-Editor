@@ -53,7 +53,6 @@ DEFAULT
    Weight: Enclosing =;
    Size: Enclosing =;
    Indent: 0;
-   Justify: No;
    Adjust: Left;
    LineSpacing: 1;
    Depth : Enclosing =;
@@ -3514,7 +3513,6 @@ RULES
 	BEGIN
 	Gather: Yes;
 	LineBreak: No;
-	Justify: No;
 	PageBreak: No;
 	HorizRef: * . HMiddle;
 	CreateBefore(MTABLE_S);

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -932,9 +932,8 @@ PtrPRule            pPRule;
      case PtLineStyle:
        val = pPRule->PrChrValue;
        break;
-     case PtJustify:
      case PtHyphenate:
-       if (pPRule->PrJustify)
+       if (pPRule->PrBoolValue)
 	 val = TEXT('Y');
        else
 	 val = TEXT('N');
@@ -953,6 +952,9 @@ PtrPRule            pPRule;
 	   break;
 	 case AlignLeftDots:
 	   val = TEXT('D');
+	   break;
+	 case AlignJustify:
+	   val = TEXT('J');
 	   break;
 	 }
        break;
@@ -2686,9 +2688,8 @@ ThotBool            recordLineNb;
 	      case PtForeground:
 		PutColor (pRPres->PrIntValue, fileNum, pDoc, *lineBreak);
 		break;
-	      case PtJustify:
 	      case PtHyphenate:
-		if (pRPres->PrJustify)
+		if (pRPres->PrBoolValue)
 		  PutChar ((wchar_t) TEXT('Y'), fileNum, NULL, pDoc, *lineBreak, FALSE);
 		else
 		  PutChar ((wchar_t) TEXT('N'), fileNum, NULL, pDoc, *lineBreak, FALSE);
@@ -2707,6 +2708,9 @@ ThotBool            recordLineNb;
 		    break;
 		  case AlignLeftDots:
 		    PutChar ((wchar_t) TEXT('D'), fileNum, NULL, pDoc, *lineBreak, FALSE);
+		    break;
+		  case AlignJustify:
+		    PutChar ((wchar_t) TEXT('J'), fileNum, NULL, pDoc, *lineBreak, FALSE);
 		    break;
 		  }
 		break;

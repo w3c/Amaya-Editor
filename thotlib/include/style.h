@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -140,9 +140,6 @@ typedef struct _PresentationSetting
 #define STYLE_BORDERINSET		9
 #define STYLE_BORDEROUTSET		10
 
-#define STYLE_JUSTIFIED			1
-#define STYLE_NOTJUSTIFIED		2
-
 #define STYLE_HYPHENATE			1
 #define STYLE_NOHYPHENATE		2
 
@@ -150,6 +147,7 @@ typedef struct _PresentationSetting
 #define STYLE_ADJUSTRIGHT		2
 #define STYLE_ADJUSTCENTERED		3
 #define STYLE_ADJUSTLEFTWITHDOTS	4
+#define STYLE_ADJUSTJUSTIFY		5
 
 #define STYLE_INLINE			1
 #define STYLE_NOTINLINE			2

@@ -179,7 +179,6 @@ number
 	                 'Indent' [ PresRelat ] /
 	                 'LineSpacing' [ PresRelat ] /
 	                 'Adjust' [ '=' AdjustVal ] /
-		         'Justify' [ '=' BooleanVal ] /
 		         'Hyphenate' [ '=' BooleanVal ] /
 	                 'Style' [ '=' StyleVal ] /
 	                 'Weight' [ '=' WeightVal ] /
@@ -196,7 +195,7 @@ number
 	                 '<' [ '-' ] MaximumPres /
 	                 'IN' '[' [ '-' ] MinIntervalPres '.' '.'
 	                          [ '-' ] MaxIntervalPres ']' .
-   82	AdjustVal =      'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' .
+   82	AdjustVal =      'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' / 'Justify' .
    83	BooleanVal =     'Yes' / 'No' .
    84	StyleVal =       'Roman' / 'Italics' / 'Oblique' .
    85	WeightVal =      'Normal' / 'Bold' .
@@ -227,7 +226,7 @@ code  character  numbers of rules using the key-word
 
 1001      ;       1   1   1   1  15  18  26  28  36  51  66  66  66  66  66  66
                  66  66  66  66  66  67  67  67  67  67  14  77
-1002      =      15  35  54  62  62  62  62  62  62  62  62  62  62  62  62  81
+1002      =      15  35  54  62  62  62  62  62  62  62  62  62  62  62  81
 1003      :      18  28  30  34  45  80
 1004      -      21  35  35  35  35  37  73  77  81  81  81  81  92
 1005      (      26  30  34  59  58  58  66  66  68  68  68
@@ -335,22 +334,22 @@ code  key-word      numbers of rules using the key-word
 1186  Size            62
 1187  LineSpacing     62
 1188  Adjust          62
-1189  Justify         62
-1190  Hyphenate       62
-1191  Style           62
-1192  Weight          62
-1193  Font            62
-1194  UnderLine       62  87
-1195  Thickness       62
-1196  LineStyle       62
-1197  LineWeight      62
-1198  FillPattern     62
-1199  Background      62
-1200  Foreground      62
-1201  Left            82
-1202  Right           82
-1203  VMiddle         82
-1204  LeftWithDots    82
+1189  Hyphenate       62
+1190  Style           62
+1191  Weight          62
+1192  Font            62
+1193  UnderLine       62  87
+1194  Thickness       62
+1195  LineStyle       62
+1196  LineWeight      62
+1197  FillPattern     62
+1198  Background      62
+1199  Foreground      62
+1200  Left            82
+1201  Right           82
+1202  VMiddle         82
+1203  LeftWithDots    82
+1204  Justify         82
 1205  Yes             83
 1206  No              83  87
 1207  Roman           84
@@ -467,7 +466,7 @@ their right part.
    80  TransPres            12  12
    81  PresRelat            62  62  62  62
    82  AdjustVal            62
-   83  BooleanVal           62  62
+   83  BooleanVal           62
    84  StyleVal             62
    85  WeightVal            62
    86  FontVal              62

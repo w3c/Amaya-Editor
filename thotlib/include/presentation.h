@@ -61,7 +61,6 @@ typedef int        *PRule;
 #define PRLineSpacing 35
 #define PRDepth 36
 #define PRAdjust 37
-#define PRJustify 38
 #define PRLineStyle 39
 #define PRLineWeight 40
 #define PRFillPattern 41
@@ -116,10 +115,7 @@ typedef int        *PRule;
 #define AdjustRight 2
 #define Centered 3
 #define LeftWithDots 4
-
-/* values for rule PRJustify */
-#define Justified 1
-#define NotJustified 2
+#define Justify 5
 
 /* values for rule PRLineStyle */
 #define SolidLine 1
@@ -150,7 +146,7 @@ extern void TtaSetFontZoom (int zoom);
    Parameter:
    presentationType: type of the presentation rule to be created. Available
    values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
-   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
+   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle,
    PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
    PRWidth, PRHeight, PRVertPos, PRHorizPos.
    view: the view (this view must be open).
@@ -171,7 +167,7 @@ extern PRule        TtaNewPRule (int presentationType, View view, Document docum
    Parameter:
    presentationType: type of the presentation rule to be created. Available
    values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
-   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
+   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle,
    PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
    PRShowBox, PRNotInLine.
    viewName: the name of the view (this view does not need to be open).
@@ -192,7 +188,7 @@ extern PRule        TtaNewPRuleForView (int presentationType, int view, Document
    Parameter:
    presentationType: type of the presentation rule to be created. Available
    values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
-   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
+   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle,
    PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
    PRShowBox, PRNotInLine.
    viewName: the name of the view (this view does not need to be open).
@@ -299,9 +295,8 @@ extern void         TtaRemovePRule (Element element, PRule pRule, Document docum
       > 0 (padding in points).
    PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
       an integer > 0 (border width in points).
-   PRJustify: Justified, NotJustified.
    PRHyphenate: Hyphenation, NoHyphenation.
-   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
+   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots, Justify.
 
   ----------------------------------------------------------------------*/
 extern void         TtaSetPRuleValue (Element element, PRule pRule, int value, Document document);
@@ -514,7 +509,7 @@ extern void         TtaNextPRule (Element element, /*INOUT*/ PRule * pRule);
    element: the element of interest.
    presentationType: type of the desired presentation rule. Available
    values are PRSize, PtStyle, PtWeight, PRFont, PRUnderline, PRThickness,
-   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
+   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle,
    PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
    PRShowBox, PRNotInLine.
  
@@ -536,7 +531,7 @@ extern PRule        TtaGetPRule (Element element, int presentationType);
    Return value:
    type of that presentation rule. Available values are RSize, PtStyle,
    RFont, RUnderline, RThickness, PRIndent, RLineSpacing, RDepth, RAdjust,
-   RJustify, RLineStyle, RLineWeight, RFillPattern, RBackground,
+   RLineStyle, RLineWeight, RFillPattern, RBackground,
    RForeground, RHyphenate, PRShowBox, PRNotInLine.
 
   ----------------------------------------------------------------------*/
@@ -577,9 +572,8 @@ extern int          TtaGetPRuleType (PRule pRule);
       > 0 (padding in points).
    PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
       an integer > 0 (border width in points).
-   PRJustify: Justified, NotJustified.
    PRHyphenate: Hyphenation, NoHyphenation.
-   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
+   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots, Justify.
 
   ----------------------------------------------------------------------*/
 extern int          TtaGetPRuleValue (PRule pRule);

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1107,20 +1107,22 @@ PtrPRule            pR;
 	       case AlignLeftDots:
 		  printf ("LeftWithDots;");
 		  break;
+	       case AlignJustify:
+		  printf ("Justify;");
+		  break;
 	    }
 }
 
 
 /*----------------------------------------------------------------------
-   wrjustif ecrit la regle de justification ou hyphenation pointee 
-   par pR.                                                 
+   wrboolean ecrit la regle booleenne pointee par pR.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         wrjustif (PtrPRule pR)
+static void         wrboolean (PtrPRule pR)
 
 #else  /* __STDC__ */
-static void         wrjustif (pR)
+static void         wrboolean (pR)
 PtrPRule            pR;
 
 #endif /* __STDC__ */
@@ -1129,7 +1131,7 @@ PtrPRule            pR;
    if (pR->PrPresMode == PresInherit)
       wrnbherit (pR);
    if (pR->PrPresMode == PresImmediate)
-      if (pR->PrJustify)
+      if (pR->PrBoolValue)
 	 printf ("Yes;");
       else
 	 printf ("No;");
@@ -1421,21 +1423,17 @@ PtrPRule            RP;
 		    printf ("Width: ");
 		    wrdimens (RP->PrDimRule, False);
 		    break;
-		 case PtJustify:
-		    printf ("Justify: ");
-		    wrjustif (RP);
-		    break;
 		 case PtHyphenate:
 		    printf ("Hyphenate: ");
-		    wrjustif (RP);
+		    wrboolean (RP);
 		    break;
 		 case PtVertOverflow:
 		    printf ("VertOverflow: ");
-		    wrjustif (RP);
+		    wrboolean (RP);
 		    break;
 		 case PtHorizOverflow:
 		    printf ("HorizOverflow: ");
-		    wrjustif (RP);
+		    wrboolean (RP);
 		    break;
 		 case PtAdjust:
 		    printf ("Adjust: ");

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -8,7 +8,7 @@
 /*
  * Windows Dialogue API routines for Amaya
  *
- * Authors:  I. Vatton (INRIA), R. Guetari (W3C/INRIA), J. Kahan (W3C/INRIA)
+ * Authors:  I. Vatton (W3C/INRIA), R. Guetari (W3C/INRIA), J. Kahan (W3C/INRIA)
  *
  */
 #ifdef _WINDOWS
@@ -128,7 +128,6 @@ static int          Num_zoneLineSpacing;
 static int          Align_num;
 static int          Indent_value;
 static int          Indent_num;
-static int          Justification_num;
 static int          Old_lineSp;
 static int          Line_spacingNum;
 static int          attDlgNbItems;
@@ -2159,11 +2158,6 @@ LPARAM lParam;
 	   SetWindowText (GetDlgItem (hwnDlg, IDC_INDENTDEFAULT), TtaGetMessage (LIB, TMSG_UNCHANGED));
 	   SetWindowText (GetDlgItem (hwnDlg, IDC_INDENTPT), TtaGetMessage (LIB, TMSG_INDENT_PTS));
 
-	   SetWindowText (GetDlgItem (hwnDlg, IDC_JUSTIFGROUP), TtaGetMessage (LIB, TMSG_JUSTIFY));
-	   SetWindowText (GetDlgItem (hwnDlg, IDC_JUSTIFYES), TtaGetMessage (LIB, TMSG_LIB_YES));
-	   SetWindowText (GetDlgItem (hwnDlg, IDC_JUSTIFNO), TtaGetMessage (LIB, TMSG_LIB_NO));
-	   SetWindowText (GetDlgItem (hwnDlg, IDC_JUSTIFDEFAULT), TtaGetMessage (LIB, TMSG_UNCHANGED));
-
 	   SetWindowText (GetDlgItem (hwnDlg, IDC_LINESPACEGROUP), TtaGetMessage (LIB, TMSG_LINE_SPACING));
 	   SetWindowText (GetDlgItem (hwnDlg, IDC_LINESPACINGPT), TtaGetMessage (LIB, TMSG_LINE_SPACING_PTS));
        SetWindowText (GetDlgItem (hwnDlg, IDC_SPACINGDEFAULT), TtaGetMessage (LIB, TMSG_UNCHANGED));
@@ -2176,16 +2170,13 @@ LPARAM lParam;
       CheckRadioButton (hwnDlg, IDC_LEFT, IDC_DEFAULTALIGN, IDC_RIGHT);
     else if (Align_num  == 2)
       CheckRadioButton (hwnDlg, IDC_LEFT, IDC_DEFAULTALIGN, IDC_CENTER);
+    else if (Align_num  == 3)
+      CheckRadioButton (hwnDlg, IDC_LEFT, IDC_DEFAULTALIGN, IDC_JUSTIFY);
     
     if (Indent_num == 0)
       CheckRadioButton (hwnDlg, IDC_INDENT1, IDC_INDENTDEFAULT, IDC_INDENT1);
     else if (Indent_num == 1)
       CheckRadioButton (hwnDlg, IDC_INDENT1, IDC_INDENTDEFAULT, IDC_INDENT2);
-    
-    if (Justification_num == 0)
-      CheckRadioButton (hwnDlg, IDC_JUSTIFYES, IDC_JUSTIFDEFAULT, IDC_JUSTIFYES);
-    else if (Justification_num == 1)
-      CheckRadioButton (hwnDlg, IDC_JUSTIFYES, IDC_JUSTIFDEFAULT, IDC_JUSTIFNO);
     
     if (Line_spacingNum == 0)
       CheckRadioButton (hwnDlg, IDC_SSMALL, IDC_SPACINGDEFAULT, IDC_SSMALL);
@@ -2253,23 +2244,19 @@ LPARAM lParam;
       ThotCallback (NumMenuAlignment, INTEGER_DATA, (CHAR_T*) 2);
       break;
       
-    case IDC_DEFAULTALIGN:
+    case IDC_BJUSTIFY:
+      CheckRadioButton (hwnDlg, IDC_LEFT, IDC_DEFAULTALIGN, IDC_JUSTIFY);
       ThotCallback (NumMenuAlignment, INTEGER_DATA, (CHAR_T*) 3);
       break;
       
-      /* Jusitification menu */
-    case IDC_JUSTIFYES:
-      ThotCallback (NumMenuJustification, INTEGER_DATA, (CHAR_T*) 0);
+    case IDC_JUSTIFY:
+      ThotCallback (NumMenuAlignment, INTEGER_DATA, (CHAR_T*) 3);
       break;
       
-    case IDC_JUSTIFNO:
-      ThotCallback (NumMenuJustification, INTEGER_DATA, (CHAR_T*) 1);
+    case IDC_DEFAULTALIGN:
+      ThotCallback (NumMenuAlignment, INTEGER_DATA, (CHAR_T*) 4);
       break;
-      
-    case IDC_JUSTIFDEFAULT:
-      ThotCallback (NumMenuJustification, INTEGER_DATA, (CHAR_T*) 2);
-      break;
-      
+
       /* Indent Menu */ 
     case IDC_INDENT1:
       ThotCallback (NumMenuRecessSense, INTEGER_DATA, (CHAR_T*) 0);
@@ -3688,27 +3675,13 @@ ThotBool    withCancel;
 /*-----------------------------------------------------------------------
  CreateChangeFormatDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
-void CreateChangeFormatDlgWindow (int num_zone_recess, int num_zone_line_spacing, int align_num, int indent_value, int indent_num, int justification_num, int old_lineSp, int line_spacingNum)
-#else  /* !__STDC__ */
-void CreateChangeFormatDlgWindow (num_zone_recess, num_zone_line_spacing, align_num, indent_value, indent_num, justification_num, old_lineSp, line_spacingNum)
-int num_zone_recess;
-int num_zone_line_spacing;
-int align_num;
-int indent_value;
-int indent_num;
-int justification_num;
-int old_lineSp;
-int line_spacingNum;
-ThotWindow  parent;
-#endif /* __STDC__ */
+void CreateChangeFormatDlgWindow (int num_zone_recess, int num_zone_line_spacing, int align_num, int indent_value, int indent_num, int old_lineSp, int line_spacingNum)
 {  
   Num_zoneRecess      = num_zone_recess;
   Num_zoneLineSpacing = num_zone_line_spacing;
   Align_num           = align_num; 
   Indent_value        = indent_value;
   Indent_num          = indent_num;
-  Justification_num   = justification_num;
   Old_lineSp          = old_lineSp;
   Line_spacingNum     = line_spacingNum;
   

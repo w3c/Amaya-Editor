@@ -2118,10 +2118,6 @@ SyntRuleNum         pr;
 	     PresentationName (PtAdjust, pr, wi);
 	     break;
 
-	   case KWD_Justify:
-	     PresentationName (PtJustify, pr, wi);
-	     break;
-
 	   case KWD_Hyphenate:
 	     PresentationName (PtHyphenate, pr, wi);
 	     break;
@@ -2183,6 +2179,10 @@ SyntRuleNum         pr;
 
 	   case KWD_LeftWithDots:
 	     PresentValue ('D', wi);
+	     break;
+
+	   case KWD_Justify:
+	     PresentValue ('J', wi);
 	     break;
 
 	   case KWD_Yes:

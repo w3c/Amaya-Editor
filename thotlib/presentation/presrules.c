@@ -495,19 +495,16 @@ static ThotBool BoolRule (PtrPRule pPRule, PtrElement pEl,
 		    pAbb = AbsBoxInherit (pPRule, pEl, view);
 		    if (pAbb == NULL)
 		       *ok = FALSE;
-		    else if (pPRule->PrType == PtJustify)
-		       val = pAbb->AbJustify;
 		    else if (pPRule->PrType == PtHyphenate)
 		       val = pAbb->AbHyphenate;
 		    break;
 		 case PresFunction:
 		    break;
 		 case PresImmediate:
-		    if (pPRule->PrType == PtJustify ||
-			pPRule->PrType == PtHyphenate ||
+		    if (pPRule->PrType == PtHyphenate ||
 			pPRule->PrType == PtVertOverflow ||
 			pPRule->PrType == PtHorizOverflow)
-		       val = pPRule->PrJustify;
+		       val = pPRule->PrBoolValue;
 		    break;
 	      }
 
@@ -3714,17 +3711,6 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	    ApplyDim (&pAb->AbWidth, pAb, pSchP, pAttr, &appl, pPRule, pDoc);
 	    break;
 
-	  case PtJustify:
-	    pAb->AbJustify = BoolRule (pPRule, pAb->AbElement,
-				       pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbJustify = FALSE;
-		appl = TRUE;
-	      }
-	    break;
-
 	  case PtHyphenate:
 	    pAb->AbHyphenate = BoolRule (pPRule, pAb->AbElement,
 					 pAb->AbDocView, &appl);
@@ -3749,8 +3735,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	    break;
 
 	  case PtAdjust:
-	    pAb->AbAdjust = AlignRule (pPRule, pAb->AbElement,
-					 pAb->AbDocView, &appl);
+	    pAb->AbAdjust = AlignRule (pPRule, pAb->AbElement, pAb->AbDocView,
+				       &appl);
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
 	      {

@@ -317,9 +317,8 @@
 #define IDC_INDENTDEFAULT               1115
 #define IDC_BINDENT1                    1116
 #define IDC_BINDENT2                    1118
-#define IDC_JUSTIFYES                   1120
-#define IDC_JUSTIFNO                    1121
-#define IDC_JUSTIFDEFAULT               1122
+#define IDC_JUSTIFY                     1119
+#define IDC_BJUSTIFY                    1120
 #define IDC_LINESPACINGPT               1123
 #define IDC_LINESPACINGPTVALUE          1124
 #define IDC_LINESPACINGEDIT             1125

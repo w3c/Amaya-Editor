@@ -664,7 +664,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
       /* get the block of lines */
       while (pParentBox->BxType == BoGhost)
 	pParentBox = pParentBox->BxAbstractBox->AbEnclosing->AbBox;
-      if (pParentBox->BxAbstractBox->AbJustify)
+      if (pParentBox->BxAbstractBox->AbAdjust == AlignJustify)
 	/* for a justified line take the minimum space width */
 	spaceAdjust = FloatToInt ((float) (spaceAdjust * 7) / (float) (10));
     }
@@ -2150,7 +2150,8 @@ void                ComputeLines (PtrBox pBox, int frame, int *height)
 		}
 
 	      /* Teste le cadrage des lignes */
-	      if (toAdjust && (full || pAb->AbTruncatedTail) && pAb->AbJustify)
+	      if (toAdjust && (full || pAb->AbTruncatedTail) &&
+		  pAb->AbAdjust == AlignJustify)
 		Adjust (pBox, pLine, frame, orgXComplete, orgYComplete);
 	      else
 		{
@@ -2310,11 +2311,11 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
    yf = yd + pLine->LiHeight;
 
    /* reaffiche la fin de la ligne */
-   if (pAb->AbAdjust == AlignLeft
-       || pAb->AbAdjust == AlignLeftDots
-   /* on force le cadrage a gauche si le bloc de lignes prend la largeur */
-   /* du contenu */
-       || pAb->AbBox->BxContentWidth)
+   if (pAb->AbAdjust == AlignLeft || pAb->AbAdjust == AlignJustify ||
+       pAb->AbAdjust == AlignLeftDots ||
+       /* on force le cadrage a gauche si le bloc de lignes prend la largeur */
+       /* du contenu */
+       pAb->AbBox->BxContentWidth)
      {
 	if (pLine->LiLastPiece == NULL)
 	   pLastBox = pLine->LiLastBox;

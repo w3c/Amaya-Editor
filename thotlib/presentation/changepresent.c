@@ -450,9 +450,6 @@ int          NumTypePRuleAPI (PtrPRule pRule)
 	    case PtAdjust:
 	       return PRAdjust;
 	       break;
-	    case PtJustify:
-	       return PRJustify;
-	       break;
 	    case PtLineStyle:
 	       return PRLineStyle;
 	       break;

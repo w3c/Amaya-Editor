@@ -99,7 +99,6 @@ Rule1 =	  	  'VertRef' ':' HorizPosition /
 		  'HorizPos' ':' PosV /
 		  'VertOverflow' ':' Boolean /
 		  'HorizOverflow' ':' Boolean /
-		  'Justify' ':' BoolInherit /
 		  'Hyphenate' ':' BoolInherit /
 		  'LineSpacing' ':' DistInherit .
 Rule2 =		  'Break' ':' Boolean /
@@ -249,7 +248,7 @@ InheritDist =	  '=' / '+' AbsDist / '-' AbsDist .
 BoolInherit =	  Boolean / Link '=' .
 
 AdjustInherit =	  Adjustment / Link '=' .
-Adjustment =	  'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' .
+Adjustment =	  'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' / 'Justify' .
 
 SizeInherit =	  SizeA [ 'PT' ] / Link  InheritSize .
 InheritSize =	  '+' PosSizeA [ 'PT' ] [ 'Max' MaxSizeA ] /

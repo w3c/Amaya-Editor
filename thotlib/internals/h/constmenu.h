@@ -1,25 +1,16 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 #ifndef _CONSTMENU_H_
 #define _CONSTMENU_H_
 
 /* ALLOCATION DES NUMEROS DE CATALOGUES					*/
 /* Catalogues reserves aux fonctions standards de l'editeur Thot	*/
-#define NumFormCreateDoc		22
+#define NumFormCreateDoc	22
 #define NumZoneDocNameToCreate	1
 #define NumZoneDocDirToCreate	2
 #define NumSelDocClassToCreate	3
@@ -161,7 +152,7 @@
 
 #define NumFormPresFormat	157
 #define NumMenuAlignment	158
-#define	NumMenuJustification	159
+
 #define NumZoneRecess		160
 #define NumMenuRecessSense	161
 #define NumZoneLineSpacing	162

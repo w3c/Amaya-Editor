@@ -466,7 +466,6 @@ ThotBool            ro;
    pAb->AbBottomBorderUnit = UnPoint;
    pAb->AbLeftBorderUnit = UnPoint;
 
-   pAb->AbJustify = FALSE;
    pAb->AbAcceptLineBreak = TRUE;
    pAb->AbAcceptPageBreak = TRUE;
    pAb->AbHyphenate = FALSE;

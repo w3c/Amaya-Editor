@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -201,7 +201,7 @@ typedef struct _PresentationBox
 /* Alignment of the lines in an abstract box */
 typedef enum
 {
-  AlignLeft, AlignRight, AlignCenter, AlignLeftDots
+  AlignLeft, AlignRight, AlignCenter, AlignLeftDots, AlignJustify
 } BAlignment;	/* AlignLeftDots = aligned to the left, the last
 		   line is filled with dots */
 
@@ -218,7 +218,7 @@ typedef enum
   PtBorderTopColor, PtBorderRightColor, PtBorderBottomColor, PtBorderLeftColor,
   PtBorderTopStyle, PtBorderRightStyle, PtBorderBottomStyle, PtBorderLeftStyle,
   PtSize, PtStyle, PtWeight, PtFont, PtUnderline, PtThickness,
-  PtIndent, PtLineSpacing, PtDepth, PtAdjust, PtJustify,
+  PtIndent, PtLineSpacing, PtDepth, PtAdjust,
   PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground,
   PtHyphenate, PtVertOverflow, PtHorizOverflow,
   PtXRadius, PtYRadius,
@@ -489,10 +489,10 @@ typedef struct _PresRule
 	{
 	  DimensionRule _PrDimRule_;
 	} s4;
-	struct	/* PRuleType = PtJustify, PtHyphenate, PtVertOverflow,
+	struct	/* PRuleType = PtHyphenate, PtVertOverflow,
 		   PtHorizOverflow */
 	{
-	  ThotBool _PrJustify_;
+	  ThotBool _PrBoolValue_;
 	} s5;
 	struct	/* PRuleType = PtAdjust */
 	{
@@ -525,7 +525,7 @@ typedef struct _PresRule
 #define PrMinValue u.s2.u.s2._PrMinValue_
 #define PrPosRule u.s2.u.s3._PrPosRule_
 #define PrDimRule u.s2.u.s4._PrDimRule_
-#define PrJustify u.s2.u.s5._PrJustify_
+#define PrBoolValue u.s2.u.s5._PrBoolValue_
 #define PrAdjust u.s2.u.s6._PrAdjust_
 
 /* operation on a counter */

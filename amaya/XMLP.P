@@ -276,7 +276,7 @@ RULES
 	END;
 	PageBreak: No;
 	LineBreak: No;
-	Justify: No;
+	Adjust: Left;
 	Hyphenate: No;
 	Gather: Yes;
 	LineWeight: 1 pt;

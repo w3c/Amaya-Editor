@@ -547,6 +547,9 @@ BinFile             file;
 	    case C_PIV_LEFTDOT:
 	       align = AlignLeftDots;
 	       break;
+	    case C_PIV_JUSTIFY:
+	       align = AlignJustify;
+	       break;
 	    default:
 	       PivotError (file, TEXT("PivotError (Align 1)"));
 	       align = AlignLeft;
@@ -1654,9 +1657,6 @@ ThotBool            link;
     case C_PR_YRADIUS:
       TypeRP = PtYRadius;
       break;
-    case C_PR_JUSTIFY:
-      TypeRP = PtJustify;
-      break;
     case C_PR_HYPHENATE:
       TypeRP = PtHyphenate;
       break;
@@ -1797,7 +1797,6 @@ ThotBool            link;
 	if (!TtaReadByte (pivFile, &ch))
 	  PivotError (pivFile, TEXT("PivotError: PresRule 3"));
 	break;
-      case PtJustify:
       case PtHyphenate:
 	just = ReadBoolean (pivFile);
 	break;
@@ -2007,9 +2006,8 @@ ThotBool            link;
           case PtBorderLeftStyle:
 	    pPRule->PrChrValue = ch;
 	    break;
-	  case PtJustify:
 	  case PtHyphenate:
-	    pPRule->PrJustify = just;
+	    pPRule->PrBoolValue = just;
 	    break;
 	  default:
 	    break;

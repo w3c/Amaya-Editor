@@ -239,9 +239,6 @@ FILE               *fileDescriptor;
     case PtAdjust:
       fprintf (fileDescriptor, "Adjust");
       break;
-    case PtJustify:
-      fprintf (fileDescriptor, "Justify");
-      break;
     case PtHyphenate:
       fprintf (fileDescriptor, "Hyphenate");
       break;
@@ -1370,12 +1367,13 @@ FILE               *fileDescriptor;
 		 case AlignLeftDots:
 		    fprintf (fileDescriptor, "leftDots");
 		    break;
+		 case AlignJustify:
+		    fprintf (fileDescriptor, "justify");
+		    break;
 		 default:
 		    fprintf (fileDescriptor, "AbAdjust ????");
 		    break;
 	      }
-	fprintf (fileDescriptor, " Justif:");
-	wrThotBool (pAb->AbJustify, fileDescriptor);
 	fprintf (fileDescriptor, " Hyphen:");
 	wrThotBool (pAb->AbHyphenate, fileDescriptor);
 
@@ -3173,6 +3171,9 @@ FILE               *fileDescriptor;
 	       case AlignLeftDots:
 		  fprintf (fileDescriptor, "LeftWithDots;");
 		  break;
+	       case AlignJustify:
+		  fprintf (fileDescriptor, "Justify;");
+		  break;
 	    }
 }
 
@@ -3193,7 +3194,7 @@ FILE               *fileDescriptor;
       wrnbherit (pR, fileDescriptor);
    if (pR->PrPresMode == PresImmediate)
      {
-      if (pR->PrJustify)
+      if (pR->PrBoolValue)
 	 fprintf (fileDescriptor, "Yes;");
       else
 	 fprintf (fileDescriptor, "No;");
@@ -3428,10 +3429,6 @@ FILE               *fileDescriptor;
 		 case PtAdjust:
 		    fprintf (fileDescriptor, "Adjust: ");
 		    wrajust (RP, fileDescriptor);
-		    break;
-		 case PtJustify:
-		    fprintf (fileDescriptor, "Justify: ");
-		    wrjustif (RP, fileDescriptor);
 		    break;
 		 case PtHyphenate:
 		    fprintf (fileDescriptor, "Hyphenate: ");

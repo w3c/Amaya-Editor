@@ -93,7 +93,6 @@ DEFAULT
 	Height: Enclosed . Height;
 	VertPos: Top = Previous . Bottom;
 	HorizPos: Left = Enclosing . Left;
-	Justify: Enclosing =;
 	Hyphenate: Enclosing =;
 	LineSpacing: Enclosing =;
 	LineWeight: Enclosing =;
@@ -5599,7 +5598,7 @@ BOXES
 	Fillpattern : nopattern;
 	Underline: NoUnderline;
 	Copy (TITLE);
-	Justify: No;
+	Adjust: Left;
 	HorizPos: Left = Previous PAGE_BREAK . Left;
 	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.2 cm;
 	Height:  Enclosed . Height;
@@ -5617,7 +5616,7 @@ BOXES
 	Fillpattern : nopattern;
 	Underline: NoUnderline;
 	Copy (Document_URL);
-	Justify: No;
+	Adjust: Left;
 	HorizPos: Left = Previous PAGE_BREAK . Left;
 #ifdef LANDSCAPE
 	Height:   0.8 cm;
@@ -5642,7 +5641,7 @@ BOXES
 	Fillpattern : nopattern;
 	Underline: NoUnderline;
 	Content: Text ' ';
-	Justify: No;
+	Adjust: Left;
 	HorizPos: Left = Previous PAGE_BREAK . Left;
 	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
 	Height:   1.2 cm;
@@ -5916,7 +5915,6 @@ RULES
  HTML:	BEGIN
 	Depth: 0;
 	Adjust: Left;
-	Justify: No;
 	Indent: 0;
 	Font: Times;
 	Style: Roman;
@@ -5961,7 +5959,7 @@ RULES
 		END;
 	END;
 
-  HEAD:	BEGIN
+ HEAD:	BEGIN
 	Visibility: 0;
 	CreateBefore(HEAD_S);
 	IN Structure_view BEGIN
@@ -5983,11 +5981,13 @@ RULES
 		END;
 	Width: Enclosing . Width;
 #ifdef PAGE
+	Adjust: Justify;
 	Hyphenate: Yes;
 #else
 	HorizPos: Left = Enclosing . Left;
 	Height: Enclosing . Height min;
 	Hyphenate: No;
+	Adjust: Left;
 	MarginLeft: 0.5 cm;
 	MarginRight: 0.5 cm;
 	IF NOT within NOFRAMES
@@ -5999,12 +5999,17 @@ RULES
 		MarginTop: 0;
 		MarginLeft: 0;
 		MarginRight: 0;
-#ifndef PAGE
+#ifdef PAGE
+		Adjust: Left;
+#else
                 Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
 #endif
 		END;
 	IN Links_view BEGIN
+#ifdef PAGE
+		Adjust: Left;
+#endif
 		MarginTop: 0;
 		MarginLeft: 0.5;
 		MarginRight: 0;
@@ -6160,6 +6165,7 @@ RULES
 	Line;
 	LineBreak: No;
 #ifdef PAGE
+	Adjust: Left;
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 #endif
@@ -6210,6 +6216,7 @@ RULES
 	Line;
 	LineBreak: No;
 #ifdef PAGE
+	Adjust: Left;
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 	CreateAfter (HeadingPageNumber);
@@ -6255,6 +6262,7 @@ RULES
 	Line;
 	LineBreak: No;
 #ifdef PAGE
+	Adjust: Left;
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 	CreateAfter (HeadingPageNumber);
@@ -6301,6 +6309,7 @@ RULES
 	Line;
 	LineBreak: No;
 #ifdef PAGE
+	Adjust: Left;
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 	CreateAfter (HeadingPageNumber);
@@ -6347,6 +6356,7 @@ RULES
 	Line;
 	LineBreak: No;
 #ifdef PAGE
+	Adjust: Left;
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 	CreateAfter (HeadingPageNumber);
@@ -6387,6 +6397,7 @@ RULES
 	Line;
 	LineBreak: No;
 #ifdef PAGE
+	Adjust: Left;
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 	CreateAfter (HeadingPageNumber);
@@ -6919,6 +6930,7 @@ RULES
 	BEGIN
 	Width: Enclosing . Width;
 	Depth: Enclosing =;
+	Adjust: Left;
 	END;
 
  Paragraph: BEGIN
@@ -6929,11 +6941,7 @@ RULES
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;
-	if NOT within Table
-	   and NOT within GraphML
-	   Justify: Yes;
 #endif
-	Adjust: Enclosing =;
 	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom;
 	if NOT within Definition and NOT within List_Item BEGIN
@@ -6959,13 +6967,7 @@ RULES
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;
-	if NOT within Table
-#ifdef GRAPHML
-	   and NOT within GraphML
 #endif
-	   Justify: Yes;
-#endif
-	Adjust: Enclosing =;
 	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom;
 	IN Structure_view BEGIN
@@ -7021,16 +7023,9 @@ RULES
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width - LIST_INDENT;
 	HorizPos: Left = Enclosing . Left + LIST_INDENT;
-#ifdef PAGE
-#ifdef GRAPHML
-	if NOT within GraphML
-#endif
-	Justify: Yes;
-#endif
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Justify: No;
 		END;
 	END;
 
@@ -7038,13 +7033,6 @@ RULES
 	CreateBefore(UL_S);
 	CreateWith(VerticalLine);
 	LineBreak: No;
-#ifdef PAGE
-	if NOT within Table
-#ifdef GRAPHML
-	   and NOT within GraphML
-#endif
-	   Justify: Yes;
-#endif
 	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom;
 	if NOT within Definition and NOT within List_Item
@@ -7053,7 +7041,6 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
-		Justify: No;
 		END;
 	IN Links_view
 		Visibility: 0;
@@ -7063,13 +7050,6 @@ RULES
 	CreateBefore(OL_S);
 	CreateWith(VerticalLine);
 	LineBreak: No;
-#ifdef PAGE
-	if NOT within Table
-#ifdef GRAPHML
-	   and NOT within GraphML
-#endif
-	   Justify: Yes;
-#endif
 	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom;
 	if NOT within Definition and NOT within List_Item
@@ -7842,18 +7822,17 @@ RULES
 	Gather: Yes;
 	LineBreak: No;
 #ifdef PAGE
+	Adjust: Left;
 	PageBreak: Yes;
 	NoBreak1 : 3;
 	NoBreak2 : 1;
 #endif
-	Justify: No;
 	VertPos: Top = Previous NOT MAP . Bottom;
 	{MarginTop: 0.5;}
 	if within Center
 		HorizPos: VMiddle = Enclosing . VMiddle;
 	Width: Enclosing . Width;
 	Height: Enclosed . Height;
-	Adjust: Left;
 	CreateBefore(TABLE_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
@@ -9168,10 +9147,9 @@ ATTRIBUTES
  TextAlign = justify_:
 	BEGIN
 	CreateBefore(ALIGN_JUSTIFY);
-	Adjust: Left;
-	Justify: Yes;
+	Adjust: Justify;
 	In Structure_view
-	   Justify: Enclosing =;
+	   Adjust: Enclosing =;
 	END;
  TextAlign (Table) = center_:
 	BEGIN
@@ -9879,7 +9857,6 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ALIGN_LEFT);
 	Adjust: Left;
-	Justify : No;
 	IN Structure_view BEGIN
 		Adjust: Enclosing =;
 		END;
@@ -9889,7 +9866,6 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ALIGN_CENTER);
 	Adjust: VMiddle;
-	Justify : No;
 	IN Structure_view BEGIN
 		Adjust: Enclosing =;
 		END;
@@ -9902,7 +9878,6 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ALIGN_RIGHT);
 	Adjust: Right;
-	Justify : No;
 	IN Structure_view BEGIN
 		Adjust: Enclosing =;
 		END;
@@ -9914,23 +9889,17 @@ ATTRIBUTES
  Cell_align = Cell_justify :
 	BEGIN
 	CreateBefore(ALIGN_JUSTIFY);
-	Adjust: Left;
-	Justify : Yes;
-	IN Structure_view BEGIN
+	Adjust: Justify;
+	IN Structure_view
 		Adjust: Enclosing =;
-		Justify: Enclosing =;
-		END;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 	   	Adjust: Left;
-		Justify: Enclosing =;
-		END;
 	END;
 
  Cell_align = Cell_char :
 	BEGIN
 	CreateBefore(ALIGN_CHAR);
 	Adjust: Right;
-	Justify : No;
 	IN Structure_view BEGIN
 		Adjust: Enclosing =;
 		END;

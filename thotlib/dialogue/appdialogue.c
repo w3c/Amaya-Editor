@@ -2627,7 +2627,8 @@ int  MakeFrame (CHAR_T* schema, int view, STRING name, int X, int Y,
 		     else 
 		       BuildPopdown (ptrmenu, ref, w, frame, doc);
 #ifdef _WINDOWS
-		     AppendMenu (menu_bar, MF_POPUP, (UINT) w, TtaGetMessage (THOT, ptrmenu->MenuID));
+		     AppendMenu (menu_bar, MF_POPUP, (UINT) w,
+				 TtaGetMessage (THOT, ptrmenu->MenuID));
 #else  /* !_WINDOWS */
 #ifdef _GTK
 		     menu_item = gtk_menu_item_new_with_label (TtaGetMessage (THOT, ptrmenu->MenuID));
@@ -4096,7 +4097,6 @@ void      ThotCallback (int ref, int typedata, STRING data)
       case NumMenuUnderlineType:
       case NumMenuUnderlineWeight:
       case NumMenuAlignment:
-      case NumMenuJustification:
       case NumMenuWordBreak:
       case NumZoneRecess:
       case NumMenuRecessSense:

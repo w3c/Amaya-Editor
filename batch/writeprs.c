@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA  1996-2000
+ *  (c) COPYRIGHT INRIA  1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -283,9 +283,6 @@ PRuleType           ruleType;
 	    case PtAdjust:
 	       TtaWriteByte (outfile, C_PR_ADJUST);
 	       break;
-	    case PtJustify:
-	       TtaWriteByte (outfile, C_PR_JUSTIFY);
-	       break;
 	    case PtHyphenate:
 	       TtaWriteByte (outfile, C_PR_HYPHENATE);
 	       break;
@@ -497,6 +494,9 @@ BAlignment          align;
 	       break;
 	    case AlignLeftDots:
 	       TtaWriteByte (outfile, C_PIV_LEFTDOT);
+	       break;
+	    case AlignJustify:
+	       TtaWriteByte (outfile, C_PIV_JUSTIFY);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid alignment %X\n", align);
@@ -1191,11 +1191,10 @@ PtrPRule            pPRule;
 			     case PtAdjust:
 				WriteAlignment (currentRule->PrAdjust);
 				break;
-			     case PtJustify:
 			     case PtHyphenate:
 			     case PtVertOverflow:
 			     case PtHorizOverflow:
-				WriteBoolean (currentRule->PrJustify);
+				WriteBoolean (currentRule->PrBoolValue);
 				break;
 			     case PtPictInfo:
 			     case PtXRadius:

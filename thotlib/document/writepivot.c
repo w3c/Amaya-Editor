@@ -234,6 +234,9 @@ BAlignment          c;
 	    case AlignLeftDots:
 	       TtaWriteByte (pivFile, C_PIV_LEFTDOT);
 	       break;
+	    case AlignJustify:
+	       TtaWriteByte (pivFile, C_PIV_JUSTIFY);
+	       break;
 	 }
 }
 
@@ -554,7 +557,7 @@ PtrPRule      pPRule;
 	rType == PtUnderline || rType == PtThickness ||
 	rType == PtIndent || rType == PtLineSpacing ||
 	rType == PtDepth ||
-	rType == PtAdjust || rType == PtJustify ||
+	rType == PtAdjust ||
 	rType == PtLineStyle || rType == PtLineWeight ||
 	rType == PtFillPattern ||
 	rType == PtBackground || rType == PtForeground ||
@@ -702,9 +705,6 @@ PtrPRule      pPRule;
         case PtYRadius:
 	  TtaWriteByte (pivFile, C_PR_YRADIUS);
 	  break;
-	case PtJustify:
-	  TtaWriteByte (pivFile, C_PR_JUSTIFY);
-	  break;
 	case PtHyphenate:
 	  TtaWriteByte (pivFile, C_PR_HYPHENATE);
 	  break;
@@ -844,9 +844,8 @@ PtrPRule      pPRule;
         case PtBorderLeftStyle:
 	  TtaWriteByte (pivFile, pPRule->PrChrValue);
 	  break;
-	case PtJustify:
 	case PtHyphenate:
-	  PutBoolean (pivFile, pPRule->PrJustify);
+	  PutBoolean (pivFile, pPRule->PrBoolValue);
 	  break;
 	default:
 	  break;

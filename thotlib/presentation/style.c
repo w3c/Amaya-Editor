@@ -1488,18 +1488,6 @@ ThotBool            generic;
         rule->PrMinAttr = FALSE;
         }
       break;
-    case PtJustify:
-      rule->PrPresMode = PresImmediate;
-      switch (value)
-	{
-	case STYLE_JUSTIFIED:
-	  rule->PrJustify = TRUE;
-	  break;
-	case STYLE_NOTJUSTIFIED:
-	  rule->PrJustify = FALSE;
-	  break;
-	}
-      break;
     case PtAdjust:
       rule->PrPresMode = PresImmediate;
       switch (value)
@@ -1516,6 +1504,9 @@ ThotBool            generic;
 	case STYLE_ADJUSTLEFTWITHDOTS:
 	  rule->PrAdjust = AlignLeftDots;
 	  break;
+	case STYLE_ADJUSTJUSTIFY:
+	  rule->PrAdjust = AlignJustify;
+	  break;
 	default:
 	  rule->PrAdjust = AlignLeft;
 	  break;
@@ -1526,10 +1517,10 @@ ThotBool            generic;
       switch (value)
 	{
 	case STYLE_HYPHENATE:
-	  rule->PrJustify = TRUE;
+	  rule->PrBoolValue = TRUE;
 	  break;
 	case STYLE_NOHYPHENATE:
-	  rule->PrJustify = FALSE;
+	  rule->PrBoolValue = FALSE;
 	  break;
 	}
       break;
@@ -1650,7 +1641,7 @@ ThotBool            generic;
     case PtVertOverflow:
     case PtHorizOverflow:
       rule->PrPresMode = PresImmediate;
-      rule->PrJustify = TRUE;
+      rule->PrBoolValue = TRUE;
       break;
     case PtFunction:
       rule->PrPresMode = PresFunction;
@@ -1943,15 +1934,8 @@ PtrPRule                   rule;
       value = rule->PrDimRule.DrValue;
       break;
 
-    case PtJustify:
-      if (rule->PrJustify)
-	value = STYLE_JUSTIFIED;
-      else
-	value = STYLE_NOTJUSTIFIED;
-      break;
-
     case PtHyphenate:
-      if (rule->PrJustify)
+      if (rule->PrBoolValue)
 	value = STYLE_HYPHENATE;
       else
 	value = STYLE_NOHYPHENATE;
@@ -1976,6 +1960,9 @@ PtrPRule                   rule;
 	  break;
 	case AlignLeftDots:
 	  value = STYLE_ADJUSTLEFTWITHDOTS;
+	  break;
+	case AlignJustify:
+	  value = STYLE_ADJUSTJUSTIFY;
 	  break;
 	default:
 	  value = STYLE_ADJUSTLEFT;
@@ -2220,9 +2207,6 @@ ThotBool           *absolute;
     case PRWidth:
       *intRule = PtWidth;
       *absolute = TRUE;
-      break;
-    case PRJustify:
-      *intRule = PtJustify;
       break;
     case PRHyphenate:
       *intRule = PtHyphenate;
@@ -2504,9 +2488,6 @@ int                 extra;
       break;
     case PtWidth:
       setting->type = PRWidth;
-      break;
-    case PtJustify:
-      setting->type = PRJustify;
       break;
     case PtHyphenate:
       setting->type = PRHyphenate;
