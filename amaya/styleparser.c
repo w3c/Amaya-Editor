@@ -3422,7 +3422,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 {
   ElementType        elType;
   PSchema            tsch;
-  /*AttributeType      attrType;*/
+  /*AttributeType    attrType;*/
   char               sel[MAX_ANCESTORS * 50];
   char              *deb, *cur;
   char              *structName;
@@ -3726,13 +3726,14 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
     }
 
   /* Get the schema name of the main element */
-  if (ctxt->schema == NULL)
-    ctxt->schema = TtaGetDocumentSSchema (doc);
-  isHTML = (strcmp (TtaGetSSchemaName (ctxt->schema), "HTML") == 0);
-  tsch = GetPExtension (doc, ctxt->schema, css);
-  structName = TtaGetSSchemaName (ctxt->schema);
-  if (tsch && cssRule)
-    ParseCSSRule (NULL, tsch, (PresentationContext) ctxt, cssRule, css, isHTML);
+  if (ctxt->schema != NULL)
+    {
+      isHTML = (strcmp (TtaGetSSchemaName (ctxt->schema), "HTML") == 0);
+      tsch = GetPExtension (doc, ctxt->schema, css);
+      structName = TtaGetSSchemaName (ctxt->schema);
+      if (tsch && cssRule)
+	ParseCSSRule (NULL, tsch, (PresentationContext) ctxt, cssRule, css, isHTML);
+    }
   return (selector);
 }
 
