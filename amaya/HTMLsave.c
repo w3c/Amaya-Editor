@@ -1536,7 +1536,8 @@ View                view;
 #ifdef ANNOTATIONS
   if (DocumentTypes[doc] == docAnnot) 
     {
-      return (ANNOT_SaveDocument (doc));
+      ANNOT_SaveDocument (doc);
+      return;
     }
   else
 #endif /* ANNOTATIONS */
