@@ -1488,7 +1488,7 @@ int GL_UnicodeDrawString (int fg,
 
   if (GL_Printing ())
     {
-      GLText (str, 
+      GLText ((char *)str, 
 	      "ptmr", 
 	      12, 
 	      x, 
