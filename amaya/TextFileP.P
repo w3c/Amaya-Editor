@@ -160,7 +160,7 @@ BOXES
 	END;
 
   IndexBox: BEGIN
-        Content: Picture 'index.gif';
+        Content: Picture 'AmayaSrcSyncIndex.gif';
         HorizPos: Left = Root . Left;
         VertPos: Top = Enclosing . Top;
         VertOverflow : Yes;
