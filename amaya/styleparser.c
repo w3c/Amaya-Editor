@@ -346,20 +346,23 @@ PresentationValue *border
 {
   /* first parse the attribute string */
    border->typed_data.value = 0;
-   border->typed_data.unit = STYLE_UNIT_PX;
+   border->typed_data.unit = STYLE_UNIT_INVALID;
    border->typed_data.real = FALSE;
    if (!ustrncasecmp (cssRule, TEXT("thin"), 4))
      {
+       border->typed_data.unit = STYLE_UNIT_PX;
        border->typed_data.value = 1;
        cssRule = SkipWord (cssRule);
      }
    else if (!ustrncasecmp (cssRule, TEXT("medium"), 6))
      {
+       border->typed_data.unit = STYLE_UNIT_PX;
        border->typed_data.value = 3;
        cssRule = SkipWord (cssRule);
      }
    else if (!ustrncasecmp (cssRule, TEXT("thick"), 5))
      {
+       border->typed_data.unit = STYLE_UNIT_PX;
        border->typed_data.value = 5;
        cssRule = SkipWord (cssRule);
      }
@@ -404,8 +407,11 @@ PresentationValue *border
    else if (!ustrncasecmp (cssRule, TEXT("outset"), 6))
      border->typed_data.value = STYLE_BORDEROUTSET;
    else
-     /* invalid style */
-     return (cssRule);
+     {
+       /* invalid style */
+       border->typed_data.unit = STYLE_UNIT_INVALID;
+       return (cssRule);
+     }
    /* the value is parsed now */
    cssRule = SkipWord (cssRule);
    return (cssRule);
@@ -426,7 +432,8 @@ STRING              cssRule;
 PresentationValue  *val;
 #endif
 {
-  CHAR_T                colname[100];
+  CHAR_T              colname[100];
+  STRING              ptr;
   unsigned short      redval = (unsigned short) -1;
   unsigned short      greenval = 0;	/* composant of each RGB       */
   unsigned short      blueval = 0;	/* default to red if unknown ! */
@@ -531,15 +538,16 @@ PresentationValue  *val;
   else if (isalpha (*cssRule))
     {
       /* we expect a color name like "red", store it in colname */
+      ptr = cssRule;
       len = sizeof (colname) - 1;
-      for (i = 0; i < len && cssRule[i] != EOS; i++)
+      for (i = 0; i < len && ptr[i] != EOS; i++)
 	{
-	  if (!isalnum (cssRule[i]) && cssRule[i] != EOS)
+	  if (!isalnum (ptr[i]) && ptr[i] != EOS)
 	    {
-	      cssRule += i;
+	      ptr += i;
 	      break;
 	    }
-	  colname[i] = cssRule[i];
+	  colname[i] = ptr[i];
 	}
       colname[i] = EOS;
       
@@ -551,6 +559,7 @@ PresentationValue  *val;
 	    greenval = ColornameTable[i].green;
 	    blueval = ColornameTable[i].blue;
 	    failed = FALSE;
+	    cssRule = ptr;
 	    i = NBCOLORNAME;
 	  }
     }
@@ -592,7 +601,12 @@ ThotBool            isHTML;
   cssRule = SkipBlanksAndComments (cssRule);
   cssRule = ParseBorderValue (cssRule, &border);
   if (border.typed_data.unit != STYLE_UNIT_INVALID)
-    TtaSetStylePresentation (PRBorderTopWidth, element, tsch, context, border);
+    {
+      TtaSetStylePresentation (PRBorderTopWidth, element, tsch, context, border);
+      border.typed_data.value = 1;
+      border.typed_data.unit = STYLE_UNIT_REL;
+      TtaSetStylePresentation (PRShowBox, element, tsch, context, border);
+    }
   return (cssRule);
 }
 
@@ -619,7 +633,12 @@ ThotBool            isHTML;
   /* first parse the attribute string */
   cssRule = ParseBorderValue (cssRule, &border);
   if (border.typed_data.unit != STYLE_UNIT_INVALID)
-    TtaSetStylePresentation (PRBorderBottomWidth, element, tsch, context, border);
+    {
+      TtaSetStylePresentation (PRBorderBottomWidth, element, tsch, context, border);
+      border.typed_data.value = 1;
+      border.typed_data.unit = STYLE_UNIT_REL;
+      TtaSetStylePresentation (PRShowBox, element, tsch, context, border);
+    }
   return (cssRule);
 }
 
@@ -646,7 +665,12 @@ ThotBool            isHTML;
   /* first parse the attribute string */
   cssRule = ParseBorderValue (cssRule, &border);
   if (border.typed_data.unit != STYLE_UNIT_INVALID)
-    TtaSetStylePresentation (PRBorderLeftWidth, element, tsch, context, border);
+    {
+      TtaSetStylePresentation (PRBorderLeftWidth, element, tsch, context, border);
+      border.typed_data.value = 1;
+      border.typed_data.unit = STYLE_UNIT_REL;
+      TtaSetStylePresentation (PRShowBox, element, tsch, context, border);
+    }
   return (cssRule);
 }
 
@@ -673,7 +697,12 @@ ThotBool            isHTML;
   /* first parse the attribute string */
   cssRule = ParseBorderValue (cssRule, &border);
   if (border.typed_data.unit != STYLE_UNIT_INVALID)
-    TtaSetStylePresentation (PRBorderRightWidth, element, tsch, context, border);
+    {
+      TtaSetStylePresentation (PRBorderRightWidth, element, tsch, context, border);
+      border.typed_data.value = 1;
+      border.typed_data.unit = STYLE_UNIT_REL;
+      TtaSetStylePresentation (PRShowBox, element, tsch, context, border);
+    }
   return (cssRule);
 }
 
@@ -1108,6 +1137,7 @@ ThotBool            isHTML;
       if (ptr == cssRule)
 	/* rule not found */
 	cssRule = SkipProperty (cssRule);
+      cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
 }
@@ -1143,6 +1173,7 @@ ThotBool            isHTML;
       if (ptr == cssRule)
 	/* rule not found */
 	cssRule = SkipProperty (cssRule);
+      cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
 }
@@ -1178,6 +1209,7 @@ ThotBool            isHTML;
       if (ptr == cssRule)
 	/* rule not found */
 	cssRule = SkipProperty (cssRule);
+      cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
 }
@@ -1213,6 +1245,7 @@ ThotBool            isHTML;
       if (ptr == cssRule)
 	/* rule not found */
 	cssRule = SkipProperty (cssRule);
+      cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
 }
