@@ -3847,8 +3847,11 @@ char               *data;
 	i = j / MAX_ITEM;
 	frame = j - (i * MAX_ITEM);	/* reste de la division */
 #   ifdef _WINDOWS
-    if (frame != -1)
+    if (frame != -1) {
+       if (frame != currentFrame)
+          frame = currentFrame;
        currentWindow = FrRef [frame];
+	}
 #   endif /* _WINDOWS */
 	item = i / MAX_MENU;
 	menu = i - (item * MAX_MENU);	/* reste de la division */

@@ -504,7 +504,7 @@ char* title	;
                                  DS_MODALFRAME | WS_POPUP | 
                                  WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
                                  ClickX, ClickY,
-                                 335, 230,
+                                 335, 280,
                                  parent, NULL, hInstance, NULL) ;
 
    ShowWindow (hwnSheetDialog, SW_SHOWNORMAL) ;
@@ -573,19 +573,19 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 				/* Create Apply button */
                 applyButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_APPLY), 
                                             WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                            30, 170, 85, 30, hwnd, 
+                                            10, 170, 70, 30, hwnd, 
                                             (HMENU) ID_APPLY, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
 
 				/* Create Delete Button */
 				deleteButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DEL_ATTR), 
                                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                           120, 170, 85, 30, hwnd, 
+                                           90, 170, 150, 30, hwnd, 
                                            (HMENU) ID_DELETE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
  
 				/* Create Done Button */
 				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
                                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                           210, 170, 85, 30, hwnd, 
+                                           250, 170, 70, 30, hwnd, 
                                            (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
 				break;
 
@@ -1335,11 +1335,11 @@ PtrDocument         pDoc;
   for (view = 1; view <= MAX_VIEW_DOC; view++)
     {
       frame = pDoc->DocViewFrame[view - 1];
+      if (frame != 0 && FrameTable[frame].MenuAttr != -1)
+	{
 #     ifdef _WINDOWS 
       currentFrame = frame;
 #     endif /* _WINDOWS */
-      if (frame != 0 && FrameTable[frame].MenuAttr != -1)
-	{
 	  menuID = FrameTable[frame].MenuAttr;
 	  menu = FindMenu (frame, menuID, &pMenu) - 1;
 	  ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;

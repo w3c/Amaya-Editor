@@ -771,7 +771,7 @@ struct Cat_Context* catalogue;
                      twIndex = 0;
 
                      while (twIndex < C_NUMBER && !found)
-                           if (FrameCatList[frameIndex].Cat_Table[catIndex] &&
+                           if (FrameCatList[frameIndex].Cat_Table[catIndex] && FrameCatList[frameIndex].Cat_Table[catIndex]->Cat_Entries &&
                                FrameCatList[frameIndex].Cat_Table[catIndex]->Cat_Entries->E_ThotWidget[twIndex] == parent) {
 			      
                               found = TRUE ;
@@ -854,7 +854,7 @@ int        ref;
 
    catalogue = FrameCatList[frame].Cat_Table [0];
    while (icat < MAX_FRAMECAT) {
-         if (catalogue && catalogue->Cat_Ref == ref)
+         if (catalogue && (catalogue->Cat_Ref == ref || catalogue->Cat_Ref == ref - 1))
             return catalogue ;
          if (catalogue && FrameCatList[frame].Cat_Table [icat] &&
              (FrameCatList[frame].Cat_Table[icat]->Cat_Ref > ref) && (catalogue->Cat_Ref <= ref))
@@ -895,9 +895,7 @@ HWND hWnd;
       sprintf (str, "Error %d : not registered\n", WinLastError);
    else
        sprintf (str, "Error %d : %s\n", WinLastError, win_errtab[msg].errstr);
-#  ifdef AMAYA_DEBUG
-   printf (stderr, str);
-#  endif /* AMAYA_DEBUG */
+
    MessageBox (hWnd, str, tszAppName, MB_OK);
 }
 

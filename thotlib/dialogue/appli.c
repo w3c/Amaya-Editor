@@ -114,6 +114,7 @@ extern HWND      currentDlg;
 extern int       ReturnOption;
 #ifndef _WIN_PRINT
 extern int  Window_Curs;
+extern int  currentFrame;
 #if 0
 HBITMAP     appLogo = (HBITMAP)0;
 int         cyLogo;
@@ -1226,6 +1227,9 @@ LPARAM      lParam;
 	*/
     RECT   rWindow ;
     int  frame = GetMainFrameNumber (hwnd);
+
+	if (frame != -1)
+       currentFrame = frame;
     GetWindowRect (hwnd, &rect);
 
     switch (mMsg) {
@@ -1444,9 +1448,12 @@ LPARAM lParam;
 	 static POINT ptCursor;
 	 static BOOL  fBlocking;
      static BOOL  firstTime = TRUE;
-     static HWND  winCapture = (HWND) 0;
+     static HWND  winCapture = (HWND) -1;
 
      frame = GetFrameNumber (hwnd);
+
+     if (frame != -1)
+        currentFrame = frame;
 
 	 GetWindowRect (hwnd, &rect);
      GetClientRect (hwnd, &cRect);
@@ -1473,25 +1480,28 @@ LPARAM lParam;
 		
      } 
 
-     if (frame != -1 && winCapture != hwnd && fBlocking) {
-        GetCursorPos (&ptCursor);
-		if (ptCursor.y > rect.bottom || ptCursor.y < rect.top) {
-			if (ptCursor.y > rect.bottom) {
-               delta = 13;
-               Y_Pos = cRect.bottom;
-			}
-            if (ptCursor.y < rect.top) {
-               delta = -13;
-               Y_Pos = 0;
-			}
+     /* if (frame != -1 && winCapture != hwnd && fBlocking) { */
+     if (wParam & MK_LBUTTON && frame != -1 && winCapture != (HWND) -1) {
+        if (winCapture != hwnd) {
+           GetCursorPos (&ptCursor);
+           if (ptCursor.y > rect.bottom || ptCursor.y < rect.top) {
+              if (ptCursor.y > rect.bottom) {
+                  delta = 13;
+                  Y_Pos = cRect.bottom;
+			  }
+              if (ptCursor.y < rect.top) {
+                 delta = -13;
+                 Y_Pos = 0;
+			  }
 
-            if (ptCursor.x > rect.right)
-               X_Pos = cRect.right;
+              if (ptCursor.x > rect.right)
+                 X_Pos = cRect.right;
 
-            VerticalScroll (frame, delta, TRUE);
-            LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
-            /* if (wParam & MK_LBUTTON) */
-            SendMessage (hwnd, WM_MOUSEMOVE, 0, 0L);
+              VerticalScroll (frame, delta, TRUE);
+              LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
+              /* if (wParam & MK_LBUTTON) */
+                 SendMessage (hwnd, WM_MOUSEMOVE, 0, 0L);
+		   }
 		}
 	 }
 
@@ -1526,26 +1536,34 @@ LPARAM lParam;
             case WM_LBUTTONDOWN:
                  /* Activate the client window */
                  SetFocus (FrRef[frame]);
+                 ClickFrame = frame;
+                 oldXPos = ClickX = LOWORD (lParam);
+                 oldYPos = ClickY = HIWORD (lParam);
                  /* stop any current insertion of text */
                  CloseInsertion ();
 
-                 status = GetKeyState (VK_CONTROL);
+                 status = GetKeyState (VK_SHIFT);
                  if (HIBYTE (status)) {
-                    /* changes the box position */
-                    ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
-                    /* This is the beginning of a selection */
-                 } else {
-                      ClickFrame = frame;
-                      oldXPos = ClickX = LOWORD (lParam);
-                      oldYPos = ClickY = HIWORD (lParam);
-                      LocateSelectionInView (frame, ClickX, ClickY, 2);
-                 }
-                 fBlocking = TRUE;
+                    LocateSelectionInView (frame, ClickX, ClickY, 0);
+				 } else {
+                        status = GetKeyState (VK_CONTROL);
+                        if (HIBYTE (status)) {
+                           /* changes the box position */
+                           ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
+                           /* This is the beginning of a selection */
+						} else {
+                               /* ClickFrame = frame;
+                               oldXPos = ClickX = LOWORD (lParam);
+                               oldYPos = ClickY = HIWORD (lParam); */
+                               LocateSelectionInView (frame, ClickX, ClickY, 2);
+						} 
+                        fBlocking = TRUE;
+				 }
                  return 0;
 
             case WM_LBUTTONUP:
                  ReleaseCapture ();
-                 winCapture = (HWND) 0;
+                 winCapture = (HWND) -1;
                  firstTime = TRUE;
                  if (fBlocking)
                     fBlocking = FALSE;
@@ -1606,11 +1624,13 @@ LPARAM lParam;
             case WM_MOUSEMOVE:
                  X_Pos = LOWORD (lParam) ;
                  Y_Pos = HIWORD (lParam) ;
-                 if (fBlocking) {
-                    if (((oldXPos <= X_Pos - 1) || (oldXPos >= X_Pos + 1)) && 
+                 /* if (fBlocking) { */
+                 if (wParam & MK_LBUTTON) {
+                    if (((oldXPos <= X_Pos - 1) || (oldXPos >= X_Pos + 1)) ||  
                         ((oldYPos <= Y_Pos - 1) || (oldYPos >= Y_Pos + 1)))	  
                        LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
-                 }
+                 } else
+                        fBlocking = FALSE;
 				 oldXPos = X_Pos;
 				 oldYPos = Y_Pos;
                  return 0;
