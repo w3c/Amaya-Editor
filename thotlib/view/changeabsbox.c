@@ -3589,7 +3589,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 			{
 			  pRNA = SearchRulepAb (pDoc, pAb, &pSPR, typeRule,
 						func, TRUE, &pAttrib);
-			  if (pR == pRNA || remove)
+			  if (pR != pRNA || remove) /* 12/07/02 set attr didn't work */
 			    appl = ApplyPresRuleAb (pRNA, pSPR, pAb, pDoc,
 						    pAttrib);
 			}
