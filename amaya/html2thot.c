@@ -6112,6 +6112,7 @@ STRING              fileName;
 		}
 	    }
 	}
+	  gzclose (stream);
     }
   return (isXHTML);
 }
