@@ -7348,19 +7348,17 @@ void InitAmaya (NotifyEvent * event)
 	   /* check if it is an absolute or a relative name */
 #ifdef _WINDOWS
 	   if (LastURLName[0] == DIR_SEP || LastURLName[1] == ':')
-	     /* it is an absolute name */
-	     TtaExtractName (LastURLName, DirectoryName, DocumentName);
-	   else
-	     /* it is a relative name */
-	     strcpy (DocumentName, LastURLName);
 #else /* _WINDOWS */
 	   if (LastURLName[0] == DIR_SEP)
+#endif /* _WINDOWS */
 	     /* it is an absolute name */
 	     TtaExtractName (LastURLName, DirectoryName, DocumentName);
 	   else
-	     /* it is a relative name */
-	     strcpy (DocumentName, LastURLName);
-#endif /* _WINDOWS */
+	     {
+	       /* it is a relative name */
+	       getcwd (DirectoryName, MAX_LENGTH);
+	       strcpy (DocumentName, LastURLName);
+	     }
 	   /* start with the local document */
 	   LastURLName[0] = EOS;
 	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);

@@ -263,6 +263,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   char                 tempfile[MAX_LENGTH];
   char                *charsetName;
   CHARSET              charset;
+  ThotBool             xhtml_mimetype;
 
   pathname = (char *)TtaGetMemory (MAX_LENGTH);
   documentname = (char *)TtaGetMemory (MAX_LENGTH);
@@ -333,6 +334,11 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       /*-------------  New XHTML document ------------*/
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;
+      TtaGetEnvBoolean ("ENABLE_XHTML_MIMETYPE", &xhtml_mimetype);
+      if (xhtml_mimetype)
+	DocumentMeta[doc]->content_type = TtaStrdup (AM_XHTML_MIME_TYPE);
+      else
+	DocumentMeta[doc]->content_type = TtaStrdup ("text/html");
 
       /* create the DOCTYPE element corresponding to the document's profile */
       elType.ElTypeNum = HTML_EL_DOCTYPE;
