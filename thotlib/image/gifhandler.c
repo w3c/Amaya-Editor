@@ -8,7 +8,7 @@
 /*
  *
  * Authors: I. Vatton, N. Layaida (INRIA)
- *          R. Guetari (W3C/INRIA) - First Windows version
+ *          R. Guetari (W3C/INRIA) - Previous Windows version
  */
  
 #include "thot_sys.h"
@@ -624,7 +624,9 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 
   width  = w;
   height = h;
-
+  if (bperpix > 2)
+    /* no mask generated for RGB descriptor */
+    return NULL;
   newmask = XCreateImage (TtDisplay, theVisual, 1, ZPixmap, 0, 0, width, height, 8, 0);
   bpl = newmask->bytes_per_line;
   newmask->data = (char *) TtaGetMemory (bpl * height);
@@ -815,7 +817,6 @@ static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
 #ifndef _GTK
   XImage             *newimage = NULL;
   unsigned char      *bit_data, *bitp;
-  unsigned short     *sdata;
   unsigned long       c;
   unsigned int        col;
   int                 linepad, shiftnum;
@@ -823,6 +824,7 @@ static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
   int                 bytesperline;
   int                 temp, ind;
   int                 w, h;
+  unsigned char       r, g, b;
   int                 bmap_order;
   int                 rshift, gshift, bshift;
   int                 useMSB;
@@ -918,23 +920,30 @@ static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
     case 16:
       bit_data = (unsigned char *) TtaGetMemory (width * height * 2);
       bitp = bit_data;
-      sdata = (unsigned short *) data;
       ind = 0; /* pixel index */
       rshift = 0;
       gshift = nbbits (theVisual->red_mask);
       bshift = gshift + nbbits (theVisual->green_mask);
       for (w = (width * height); w > 0; w--)
 	{
-	  if (ncolors <= 256)
-	    /* use one byte per pixel */
-	    col = data[ind++];
+	  if (ncolors == 0)
+	    {
+	      /* read the RGB from the data descriptor */
+	      r = data[ind++];
+	      g = data[ind++];
+	      b = data[ind++];
+	      temp = ((r & theVisual->red_mask) | 
+		      ((g >> gshift) & theVisual->green_mask) |
+		      ((b >> bshift) & theVisual->blue_mask));
+	    }
 	  else
-	    /* use two bytes per pixel */
-	    col = sdata[ind++];
-	  temp = ((colrs[col].red & theVisual->red_mask) | 
-		  ((colrs[col].green >> gshift) & theVisual->green_mask) |
-		  (((colrs[col].blue >> bshift) & theVisual->blue_mask)));
-	  
+	    {
+	      /* use one byte per pixel */
+	      col = data[ind++];
+	      temp = (((colrs[col].red >> 8) & theVisual->red_mask) | 
+		      (((colrs[col].green >> 8) >> gshift) & theVisual->green_mask) |
+		      (((colrs[col].blue >> 8) >> bshift) & theVisual->blue_mask));
+	    }
 	  if (BitmapBitOrder (dsp) == MSBFirst)
 	    {
 	      *bitp++ = (temp >> 8) & 0xff;
@@ -946,7 +955,6 @@ static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
 	      *bitp++ = (temp >> 8) & 0xff;
 	    }
 	}
-      
       newimage = XCreateImage (dsp,
 			       theVisual,
 			       depth, ZPixmap, 0, (char *) bit_data,
@@ -967,20 +975,26 @@ static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
       bmap_order = BitmapBitOrder (dsp);
 
       bitp = bit_data;
-      sdata = (unsigned short *) data;
       ind = 0; /* pixel index */
       useMSB = (newimage->bits_per_pixel > 24);
       for (w = (width * height); w > 0; w--)
 	{
-	  if (ncolors <= 256)
-	    /* use one byte per pixel */
-	    col = data[ind++];
+	  if (ncolors == 0)
+	    {
+	      /* read the RGB from the data descriptor */
+	      r = data[ind++];
+	      g = data[ind++];
+	      b = data[ind++];
+	      c = ((r << rshift) | (g << gshift) | (b << bshift));
+	    }
 	  else
-	    /* use two bytes per pixel */
-	    col = sdata[ind++];
-	  c = (((colrs[col].red >> 8) & 0xff) << rshift) |
-	    (((colrs[col].green >> 8) & 0xff) << gshift) |
-	    (((colrs[col].blue >> 8) & 0xff) << bshift);
+	    {
+	      /* use one byte per pixel */
+	      col = data[ind++];
+	      c = (((colrs[col].red >> 8) & 0xff) << rshift) |
+		(((colrs[col].green >> 8) & 0xff) << gshift) |
+		(((colrs[col].blue >> 8) & 0xff) << bshift);
+	    }
 	  if (bmap_order == MSBFirst)
 	    {
 	      if (useMSB)
@@ -1016,7 +1030,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 {
   HBITMAP             newimage;
   unsigned char      *bit_data, *bitp;
-  unsigned short*sdata;
+  unsigned char       r, g, b;
   unsigned int        col;
   int                 temp, w, h, ind;
   int                 linepad;
@@ -1028,8 +1042,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
     case 1:
     case 2:
     case 4:
-	case 8:
-      sdata  = (unsigned short *) data;
+    case 8:
       /* translate image palette to the system palette  */
       for (ind = 0; ind < ncolors; ind++)
 	colrs[ind].pixel = GetSystemColorIndex (colrs[ind].red,
@@ -1046,12 +1059,8 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 	{
 	  for (w = 0; w < width; w++)
 	    {
-	      if (ncolors <= 256)
-		/* use one byte per pixel */
-		col = data[ind++];
-	      else
-		/* use two bytes per pixel */
-		col = sdata[ind++];
+	      /* use one byte per pixel */
+	      col = data[ind++];
 	      *bitp++ = (unsigned char) colrs[col].pixel & 0xff;
 	    }
 	  if (linepad)
@@ -1063,27 +1072,35 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
     case 16:
       bit_data = (unsigned char *) TtaGetMemory (width * height * 2);
       bitp   = bit_data;
-      sdata  = (unsigned short *) data;
       ind = 0; /* pixel index */
       rshift = 0;
       gshift = 5;
       bshift = 11;
       for (w = (width * height); w > 0; w--)
 	{
-	  if (ncolors <= 256)
-	    /* use one byte per pixel */
-	    col = data[ind++];
+	  if (ncolors == 0)
+	    {
+	      /* read the RGB from the data descriptor */
+	      r = data[ind++];
+	      g = data[ind++];
+	      b = data[ind++];
+	      temp = ((r & 63488) |
+		      ((g >> gshift) & 2016) |
+		      ((b >> bshift) & 31));
+	    }
 	  else
-	    /* use two bytes per pixel */
-	    col = sdata[ind++];
-	  if (IS_WIN95)
-	    temp = (((colrs[col].red * 255) & 63488) |
-		    (((colrs[col].green * 255) >> gshift) & 2016) |
-		    ((((colrs[col].blue * 255) >> bshift) & 31)));
-	  else
-	    temp = (((colrs[col].red << 8) & 63488) |
-		    (((colrs[col].green << 8) >> gshift) & 2016) |
-		    ((((colrs[col].blue << 8) >> bshift) & 31)));
+	    {
+	      /* use one byte per pixel */
+	      col = data[ind++];
+	      if (IS_WIN95)
+		temp = (((colrs[col].red * 255) & 63488) |
+			(((colrs[col].green * 255) >> gshift) & 2016) |
+			((((colrs[col].blue * 255) >> bshift) & 31)));
+	      else
+		temp = (((colrs[col].red << 8) & 63488) |
+			(((colrs[col].green << 8) >> gshift) & 2016) |
+			((((colrs[col].blue << 8) >> bshift) & 31)));
+	    }
 	  *bitp++ = temp & 0xff;
 	  *bitp++ = (temp >> 8) & 0xff;
 	}
@@ -1091,21 +1108,26 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
     case 24:
       bit_data = (unsigned char *) TtaGetMemory (width * height * 4);
       bitp   = bit_data;
-      sdata  = (unsigned short *) data;
       ind = 0; /* pixel index */
       for (h = height; h > 0; h--)
 	{
 	  for (w = width; w > 0; w--)
 	    {
-	      if (ncolors <= 256)
-		/* use one byte per pixel */
-		col = data[ind++];
+	      if (ncolors == 0)
+		{
+		  /* read the RGB from the data descriptor */
+		  *bitp++ = data[ind++];
+		  *bitp++ = data[ind++];
+		  *bitp++ = data[ind++];
+		}
 	      else
-		/* use two bytes per pixel */
-		col = sdata[ind++];
-	      *bitp++ = colrs[col].blue;
-	      *bitp++ = colrs[col].green;
-	      *bitp++ = colrs[col].red;
+		{
+		  /* use one byte per pixel */
+		  col = data[ind++];
+		  *bitp++ = colrs[col].blue;
+		  *bitp++ = colrs[col].green;
+		  *bitp++ = colrs[col].red;
+		}
 	    }
 	  if (width % 2 != 0) 
 	    *bitp++ = 0;
@@ -1115,21 +1137,26 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
     case 32:
       bit_data = (unsigned char *) TtaGetMemory (width * height * 4);
       bitp   = bit_data;
-      sdata  = (unsigned short *) data;
       ind = 0; /* pixel index */
       for (h = height; h > 0; h--)
 	{
 	  for (w = width; w > 0; w--)
 	    {
-	      if (ncolors <= 256)
-		/* use one byte per pixel */
-		col = data[ind++];
+	      if (ncolors == 0)
+		{
+		  /* read the RGB from the data descriptor */
+		  *bitp++ = data[ind++];
+		  *bitp++ = data[ind++];
+		  *bitp++ = data[ind++];
+		}
 	      else
-		/* use two bytes per pixel */
-		col = sdata[ind++];
-	      *bitp++ = colrs[col].blue;
-	      *bitp++ = colrs[col].green;
-	      *bitp++ = colrs[col].red;
+		{
+		  /* use one byte per pixel */
+		  col = data[ind++];
+		  *bitp++ = colrs[col].blue;
+		  *bitp++ = colrs[col].green;
+		  *bitp++ = colrs[col].red;
+		}
 	      *bitp++ = 0;
 	    }
 	}
@@ -1148,10 +1175,11 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 
 /*----------------------------------------------------------------------
   Allocate and return the thotColors table.
-  The parameter bperpix gives the number of bytes per pixel.
+  The parameter bg gives the index of the transparent color in the
+  image colormap.
   ----------------------------------------------------------------------*/
 Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
-		     int ncolors, ThotColorStruct *colrs, int bperpix)
+		     int ncolors, ThotColorStruct *colrs, int bg)
 {
 #ifndef _WINDOWS
 #ifndef _GTK
@@ -1298,7 +1326,7 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       imageDesc->PicMask = MakeMask (TtDisplay, buffer, w, h, GifTransparent, 1);
 #endif /* _WINDOWS */
     }  
-  pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, 1);
+  pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, GifTransparent);
   TtaFreeMemory (buffer);
   if (pixmap == None)
     {
@@ -1325,14 +1353,14 @@ void DataToPrint (unsigned char *data, PictureScaling pres, int xif, int yif,
 		  int wif, int hif, int picW, int picH, FILE *fd, int ncolors,
 		  int transparent, int bgColor, ThotColorStruct *colrs)
 {
-  unsigned short  *sdata;
   int              delta;
   int              xtmp, ytmp;
   int	           col, ind;
   int              x, y;
   unsigned short   red, green, blue;
+  unsigned char    r, g, b;
 
-  if (transparent != -1 && transparent < ncolors)
+  if (transparent != -1 && ncolors && transparent < ncolors)
     {
       TtaGiveThotRGB (bgColor, &red, &green, &blue);
       colrs[transparent].red   = red << 8;
@@ -1342,7 +1370,6 @@ void DataToPrint (unsigned char *data, PictureScaling pres, int xif, int yif,
   
   xtmp = 0;
   ytmp = 0;
-  sdata = (unsigned short  *) data;
   switch (pres)
     {
     case RealSize:
@@ -1396,16 +1423,23 @@ void DataToPrint (unsigned char *data, PictureScaling pres, int xif, int yif,
       ind = ((ytmp + y) * picW) + xtmp;
       for (x = 0 ; x < wif; x++)
 	{
-	  if (ncolors > 256)
-	    /* use two bytes per pixel */
-	    col = sdata[ind++];
+	  if (ncolors == 0)
+	    {
+	      /* read the RGB from the data descriptor */
+	      r = data[ind++];
+	      g = data[ind++];
+	      b = data[ind++];
+	      fprintf (fd, "%02x%02x%02x", r, g, b);
+	    }
 	  else
-	    /* use one byte per pixel */
-	    col = data[ind++];
-	  fprintf (fd, "%02x%02x%02x",
-		   colrs[col].red >> 8,
-		   colrs[col].green >> 8,
-		   colrs[col].blue >> 8);
+	    {
+	      /* use one byte per pixel */
+	      col = data[ind++];
+	      fprintf (fd, "%02x%02x%02x",
+		       colrs[col].red >> 8,
+		       colrs[col].green >> 8,
+		       colrs[col].blue >> 8);
+	    }
 	}
       fprintf(fd, "\n");
     }

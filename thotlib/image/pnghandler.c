@@ -7,7 +7,7 @@
 
 /*
  * Authors: I. Vatton, N. Layaida (INRIA)
- *          R. Guetari (W3C/INRIA) - Windows version
+ *          R. Guetari (W3C/INRIA) - Initial Windows version
  */
 
 #include "thot_gui.h"
@@ -359,8 +359,18 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height, int *ncolo
 	*bg = (info_ptr->background.index);
       break;
 
-    case  PNG_COLOR_TYPE_GRAY:
     case PNG_COLOR_TYPE_RGB:
+      if (TtWDepth > 8)
+	{
+	  /* True color -> Keep the image descriptor as it is */
+	  TtaFreeMemory (pixels);
+	  pixels = png_pixels;
+	  png_pixels = NULL;
+	  TtaFreeMemory (colors);
+	  colors = NULL;
+	  break;
+	}
+    case  PNG_COLOR_TYPE_GRAY:
       ind = 0; /* pixel index */
       for (ypos = 0; ypos < *height; ypos ++)
 	{
@@ -394,7 +404,7 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height, int *ncolo
 		  cgr = (int) ((a/255.0) * cgr + ((255.0-a)/255.0) * 211.0);
 		}
    
-	      if (isgrey && TtWDepth <= 8)
+	      if (isgrey)
 		{
 		  /* Use the palette of 16 colors */
 		  gr = cgr & 0xF0;
@@ -403,7 +413,7 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height, int *ncolo
 		  gr = min(gr, 0xF0);
 		  pixels[ind++] = gr >> 4;
 		}
-	      else if (TtWDepth <= 8)
+	      else
 		{
 		  /* Use the palette of 128 colors */
 		  r = cr & 0xC0;
@@ -420,71 +430,6 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height, int *ncolo
 		  g = min(g, 255) & 0xE0;
 		  b = min(b, 255) & 0xC0;
 		  pixels[ind++] = (unsigned char) ((r >> 6) | (g >> 3) | (b >> 1));
-		}
-	      else
-		{    
-		  /* Generate a palette for this image */
-		  found = FALSE;
-#ifndef _WINDOWS
-		  cr = cr << 8;
-		  cg = cg << 8;
-		  cb = cb << 8;
-#endif /* _WINDOWS */
-		  i = 0;
-		  while (i < *ncolors && !found)
-		    {
-		      if (colors[i].red == cr &&
-			  colors[i].green == cg &&
-			  colors[i].blue == cb)
-			found = TRUE;
-		      else
-			i++;
-		    }
-		  if (!found)
-		    {
-		      if (*ncolors > 256 && spixels == NULL)
-			{
-			  /* we need two bytes per pixel */
-			  spixels = (short *) TtaGetMemory ((*width) * (*height) * sizeof (short));
-			  if (spixels)
-			    {
-			      for (j = 0; j < ind; j++)
-				{
-				  val = (int) pixels[j];
-				  spixels[j] = (unsigned short) val;
-				}
-			      TtaFreeMemory (pixels);
-			      pixels = NULL;
-			    }
-			}
-		      if (*ncolors == 512)
-			{
-			  ptr = TtaRealloc (colors, sizeof (ThotColorStruct) * 6000);
-			  if (ptr)
-			    colors = ptr;
-			  else
-			    i--;
-			}
-		      if (*ncolors < 6000)
-			{
-			  /* New entry in the palette */
-			  colors[i].red = cr;
-			  colors[i].green = cg;
-			  colors[i].blue = cb;
-#if !defined(_WINDOWS) && !defined(_GTK)
-			  colors[i].flags = DoRed|DoGreen|DoBlue;
-#endif /* _WINDOWS && GTK */
-			  *ncolors = i + 1;
-			}
-		      else
-			i--;
-		    }
-		  if (spixels)
-		    /* use two bytes per pixel */
-		    spixels[ind++] = (unsigned short) i;
-		  else if (pixels)
-		    /* use one byte per pixel */
-		    pixels[ind++] = (unsigned char) i;
 		}
 	    }
 	}
@@ -589,8 +534,9 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   int              w, h, bperpix;
 
   buffer = ReadPngToData (fn, &w, &h, &ncolors, &cpp, &colrs, &bg);
-  if (ncolors > 256)
-    bperpix = sizeof (short);
+  if (ncolors == 0)
+    /* one byte per component RGB */ 
+    bperpix = sizeof (char) * 3;
   else
     bperpix = sizeof (char);
   /* return image dimensions */
@@ -634,7 +580,7 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       return ((Drawable) NULL);
     }
 
-  if (bg >= 0)
+  if (bg >= 0 && colrs)
     {
 #ifdef _WINDOWS
       /* register the transparent color index */
@@ -647,7 +593,7 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #endif /* _WINDOWS */
     }
 
-  pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, bperpix);
+  pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, bg);
   TtaFreeMemory (buffer);
   /* free the table of colors */
   TtaFreeMemory (colrs);

@@ -37,7 +37,7 @@ extern Pixmap DataToPixmap ( unsigned char *image_data,
                              int height,
                              int ncolors,
                              ThotColorStruct *colrs,
-                             int bperpix );
+                             int bg );
 extern unsigned char *ReadGifToData ( char *datafile,
                                       int *w,
                                       int *h,
@@ -110,7 +110,7 @@ extern Pixmap DataToPixmap (/* unsigned char *image_data,
                                int height,
                                int ncolors,
                                ThotColorStruct *colrs,
-                               int bperpix */);
+                               int bg */);
 extern unsigned char *ReadGifToData (/* char *datafile,
                                         int *w,
                                         int *h,

@@ -248,7 +248,7 @@ Drawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   if (data == NULL)
     return ((Drawable) NULL);
 
-  pixmap = DataToPixmap (data, w, h, 100, colrs, 1);
+  pixmap = DataToPixmap (data, w, h, 100, colrs, -1);
   TtaFreeMemory (data);  
   if (pixmap == None)
     {
