@@ -1162,10 +1162,9 @@ void GraphicsChanged (NotifyOnValue *event)
 /*----------------------------------------------------------------------
  UpdateStyleOrSvgAttr
  update (or create) the style attribute or the SVG attribute corresponding
- the presentation rule presRule for element el.
+ the presentation rule of type presType for element el.
  -----------------------------------------------------------------------*/
-static void UpdateStyleOrSvgAttr (PRule presRule, int presType, Element el,
-				  Document doc)
+static void UpdateStyleOrSvgAttr (int presType, Element el, Document doc)
 {
 
   ElementType    elType;
@@ -1279,7 +1278,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 
   if (presType != PRVertPos && presType != PRHorizPos &&
       presType != PRHeight  && presType != PRWidth)
-    UpdateStyleOrSvgAttr (presRule, presType, el, doc);
+    UpdateStyleOrSvgAttr (presType, el, doc);
   else
     {
       unit = TtaGetPRuleUnit (presRule);
@@ -1360,10 +1359,7 @@ void GraphicsPRuleDeleted (NotifyPresentation *event)
       presType == PRLineStyle  || presType == PRLineWeight ||
       presType == PRBackground || presType == PRForeground ||
       presType == PRFillPattern)
-    {
-      SetStyleAttribute (doc, el);
-      TtaSetDocumentModified (doc);
-    }
+    UpdateStyleOrSvgAttr (presType, el, doc);
 }
 
 /*----------------------------------------------------------------------
