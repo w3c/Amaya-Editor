@@ -471,6 +471,15 @@ STRING              aSchemaPath;
 
    suffix = TtaGetVarLANG ();
 
+#  ifdef _WINDOWS
+   if (!ustrncasecmp (suffix, "fr", 2))
+      app_lang = FR_LANG;
+   else if (!ustrncasecmp (suffix, "en", 2))
+      app_lang = EN_LANG;
+   else if (!ustrncasecmp (suffix, "de", 2))
+      app_lang = DE_LANG;
+#  endif /* _WINDOWS */
+
    /* libere les anciennes entrees des tables de types de documents */
    /* de natures et d'extensions */
    for (i = 0; i < MAX_ITEM_CONF; i++)

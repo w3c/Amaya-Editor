@@ -42,6 +42,12 @@ extern HDC          TtDisplay;
 #define THOT_GC_FONT        0x10
 #define THOT_GC_PEN         0x20
 
+#define FR_LANG 1
+#define EN_LANG 2
+#define DE_LANG 3
+
+int app_lang;
+
 typedef struct struct_ThotGC {
      int                 capabilities;
      int                 foreground;
