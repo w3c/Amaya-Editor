@@ -42,6 +42,7 @@
 
 #ifdef ANNOTATIONS
 #include "annotlib.h"
+#include "ANNOTtools_f.h"
 #endif /* ANNOTATIONS */
 
 /* tables defined in XHTMLbuilder.c */
