@@ -41,7 +41,7 @@
 #define THOT_EXPORT
 #include "page_tv.h"
 
-#define PRINT_DEBUG
+/* #define PRINT_DEBUG */
 
 #include "absboxes_f.h"
 #include "applicationapi_f.h"
@@ -1275,7 +1275,7 @@ FILE     *list;
 char      localname[50];
 static int       n = 1;
 
-   sprintf (localname, "C:\\TEMP\\AMAYA\\print%d.dbg", n);
+   sprintf (localname, "/users/guetari/.amaya/print%d.debug", n);
    n++;
    list = fopen (localname, "w");
    TtaListBoxes (1, 1, list);
