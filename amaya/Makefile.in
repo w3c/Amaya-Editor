@@ -190,9 +190,12 @@ CSS_OBJ = \
 	fetchXMLname.o \
 	styleparser.o
 
+# recompile this file if these schema change
+fetchXMLname.o : $(AMAYA_MATH_SCHEMAS) $(AMAYA_GRAPH_SCHEMAS)
+
 libCSS : libCSS.a
 
-libCSS.a : $(CSS_OBJ)
+libCSS.a : $(CSS_OBJ) 
 	$(AR) libCSS.a $(CSS_OBJ)
 	$(RANLIB) libCSS.a
 
