@@ -673,7 +673,7 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 	  server = ptr->object;
 	  ptr = ptr->next;
 	  if (!server || !strcasecmp (server, "localhost")
-	      || server[0] == '-')
+	      || server[0] == '-' || server[0] == EOS)
 	    continue;
 	  /* create the context for the callback */
 	  ctx = TtaGetMemory (sizeof (REMOTELOAD_context));
