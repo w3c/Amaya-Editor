@@ -41,6 +41,7 @@
 #include "HTMLhistory_f.h"
 #include "HTMLsave_f.h"
 #include "HTMLtable_f.h"
+#include "MathMLbuilder_f.h"
 #include "MENUconf_f.h"
 #include "styleparser_f.h"
 #include "UIcss_f.h"
