@@ -63,11 +63,13 @@ extern void TtcSwitchButtonBar ( Document doc,
 extern void APP_TextCallback ( ThotWidget w,
                                int frame,
                                void *call_d );
+extern char *InitBufferForComboBox ( char *buffer );
 extern int TtaAddTextZone ( Document doc,
                             View view,
                             char *label,
                             ThotBool editable,
-                            void (*procedure) () );
+                            void (*procedure) (),
+                            char *string );
 extern void TtaSetTextZone ( Document doc,
                              View view,
                              int index,
@@ -183,11 +185,13 @@ extern void TtcSwitchButtonBar (/* Document doc,
 extern void APP_TextCallback (/* ThotWidget w,
                                  int frame,
                                  void *call_d */);
+extern char *InitBufferForComboBox (/* char *buffer */);
 extern int TtaAddTextZone (/* Document doc,
                               View view,
                               char *label,
                               ThotBool editable,
-                              void (*procedure) () */);
+                              void (*procedure) (),
+                              char *string */);
 extern void TtaSetTextZone (/* Document doc,
                                View view,
                                int index,

@@ -40,7 +40,7 @@ extern void TtaRebuildProTable (char *prof_file);
 extern ThotBool TtaCanEdit ();
 
 /*----------------------------------------------------------------------
-   TtaGetProfileFineName:  Get the text for the profile file name.
+   TtaGetProfileFileName:  Get the text for the profile file name.
    name is a provided buffer of length characters to receive the name.
   ----------------------------------------------------------------------*/
 extern void TtaGetProfileFileName (char *name, int length);

@@ -1627,7 +1627,7 @@ int  savetga (const char *filename,
 
   length = width * height * 4;
   screenFile = fopen("screenshot.tga", "w");
-  pixelDepth = 32;
+  pixelDepth = 16;
   /* compute image type: 2 for RGB(A), 3 for greyscale*/
   mode = pixelDepth / 8;
   if ((pixelDepth == 24) || (pixelDepth == 32))
