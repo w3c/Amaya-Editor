@@ -128,6 +128,40 @@ static void         ResetMenus ();
 
 
 /*----------------------------------------------------------------------
+   GetEnclosingBlock
+   return the first ancestor of element pEl that has a Line presentation
+   rule for the active view.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static PtrElement   GetEnclosingBlock (PtrElement pEl, PtrDocument pDoc)
+#else  /* __STDC__ */
+static PtrElement   GetEnclosingBlock (pEl, pDoc)
+PtrElement          pEl;
+PtrDocument	    pDoc;
+#endif /* __STDC__ */
+{
+  PtrElement	pBlock;
+  int		viewSch;
+  PtrPRule	pPRule;
+  PtrPSchema	pSPR;
+  PtrSSchema	pSSR;
+  PtrAttribute	pAttr;
+
+  pBlock = NULL;
+  viewSch = AppliedView (pEl, NULL, pDoc, SelectedView);
+  while (pBlock == NULL && pEl != NULL)
+     {
+     pPRule = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+				   PtFunction, FnLine, FALSE, TRUE, &pAttr);
+     if (pPRule != NULL)
+	pBlock = pEl;
+     else
+	pEl = pEl->ElParent;
+     }
+  return pBlock;
+}
+
+/*----------------------------------------------------------------------
    ApplyPresentMod
    applies the presentation modifications that were requested by means
    of the Characters form, the Format form, the Graphics form, or the
@@ -140,11 +174,10 @@ static void         ApplyPresentMod (applyDomain)
 int                 applyDomain;
 #endif /* __STDC__ */
 {
-  PtrElement          pEl;
+  PtrElement          pEl, pFirstSel, pLastSel, pElem, pBlock, pPrevBlock;
   PtrDocument         pSelDoc;
-  PtrElement          pFirstSel, pLastSel;
-  TypeUnit            LocLineWeightUnit;
   PtrAbstractBox      pAb;
+  TypeUnit            LocLineWeightUnit;
   int                 firstChar, lastChar;
   int                 currentBodySize;
   int                 i;
@@ -166,9 +199,9 @@ int                 applyDomain;
   boolean             locChngHyphen;
   boolean             locChngIndent;
   boolean             locChngLineSp;
+  boolean	      doIt;
 
   selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
-  selectionOK = selectionOK && ((firstChar==0 && lastChar==0) || (firstChar<lastChar));
   if (selectionOK && pSelDoc != NULL)
     if (pSelDoc->DocSSchema != NULL)
       /* il y a bien une selection et le document selectionne' n'a pas */
@@ -249,20 +282,26 @@ int                 applyDomain;
 			    || applyDomain == Apply_AllGraphics
 			    || applyDomain == Apply_All));
 	chngGraphics = (locChngLineStyle || locChngLineWeight || locChngTrame);
-	
+
+	doIt = True;
 	if (ChngStandardColor || chngChars || chngGraphics || locChngHyphen)
 	  /* changement des caracteres */
-	  /* coupe les elements du debut et de la fin de la selection */
-	  /* s'ils sont partiellement selectionnes */
-	  if (firstChar > 1 || lastChar > 0)
-	    CutSelection (pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
-	
-	if (chngChars || chngFormat || chngGraphics
-	    || ChngStandardColor || ChngStandardGeom)
-	  /* il y a quelque chose a changer, on parcourt la selection */
-	  /* courante et on change ce qu'a demande' l'utilisateur */
+	  if (pFirstSel == pLastSel && firstChar == lastChar)
+	     /* no character selected. Do nothing */
+	     doIt = FALSE;
+	  else
+	    /* coupe les elements du debut et de la fin de la selection */
+	    /* s'ils sont partiellement selectionnes */
+	    if (firstChar > 1 || lastChar > 0)
+	      CutSelection (pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
+	if (doIt)
+	 if (chngChars || chngFormat || chngGraphics
+	     || ChngStandardColor || ChngStandardGeom)
+	   /* il y a quelque chose a changer, on parcourt la selection */
+	   /* courante et on change ce qu'a demande' l'utilisateur */
 	  {
 	    pEl = pFirstSel;
+	    pPrevBlock = NULL;
 	    while (pEl != NULL)
 	      /* Traite l'element courant */
 	      {
@@ -502,13 +541,39 @@ int                 applyDomain;
 		      }
 		  }
 
+		pElem = pEl;
+		if (chngFormat)
+		  /* Format properties apply to block elements only. If the
+		     selected element is not a block, apply the properties to
+		     the first enclosing block (i.e. the first ancestor with a
+		     Line presentation rule for the selected view).  If there
+		     is no enclosing block, but the selected element is a
+		     compound element, apply the properties to this selected
+		     element, otherwise, don't apply format properties */
+		  {
+		  if (pPrevBlock != NULL && ElemIsWithinSubtree (pEl, pPrevBlock))
+		     pBlock = NULL;
+		  else
+		     {
+		     pBlock = GetEnclosingBlock (pEl, pSelDoc);
+		     if (pBlock == NULL)
+		        if (!pEl->ElTerminal)
+			   pBlock = pEl;
+		     }
+		  if (pBlock != NULL)
+		     {
+		     pPrevBlock = pBlock;
+		     pElem = pBlock;
+		     }
+		  }
+
 		/* Standard properties */
 		if (ChngStandardColor)
 		  {
 		    RuleSetPut (TheRules, PtBackground);
 		    RuleSetPut (TheRules, PtForeground);
 		  }
-		RemoveSpecPresTree (pEl, pSelDoc, TheRules, SelectedView);
+		RemoveSpecPresTree (pElem, pSelDoc, TheRules, SelectedView);
 		RuleSetClr (TheRules);
 
 		/* Character properties */
@@ -526,7 +591,8 @@ int                 applyDomain;
 
 		/* Format properties */
 		if (chngFormat)
-		  ModifyLining (pEl, pSelDoc, SelectedView, locChngCadr, Cadr,
+		  if (pBlock != NULL)
+		     ModifyLining (pBlock, pSelDoc, SelectedView, locChngCadr, Cadr,
 				locChngJustif, Justif, locChngIndent, IndentValue * IndentSign,
 				locChngLineSp, OldLineSp, locChngHyphen, Hyphenate);
 		/* Standard geometry */
