@@ -268,6 +268,14 @@ else
   with_wxdebug="no"
 fi
 
+# it is possible to specify wxWidgets library path,
+# usefull for developpers who want to compile amaya with different wxWidgets version
+AC_ARG_WITH(wxsrcdir, [  --with-wxsrcdir=...               compiles Amaya with a specific wxWidgets sources path ])
+if test "$with_wxsrcdir" = "" ; then
+  with_wxsrcdir="../../wxWidgets"
+fi
+
+
 if test "$with_wx" = "yes" ; then
   if test "$with_gtk" = "yes" ; then
     echo 
@@ -401,10 +409,13 @@ if test "$with_mesa" = "yes" ; then
 fi
 
 if test "$with_wx" = "yes" ; then
-  
+  # WX_SRCDIR is better to understand the code than with_wxsrcdir variable
+  WX_SRCDIR=$with_wxsrcdir
+  AC_SUBST(WX_SRCDIR)
+
   # check that sources of wxWidgets exists
-  if test ! -f ../../wxWidgets/Makefile.in ; then
-    AC_MSG_ERROR(wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/) or remove --with-wx option !)
+  if test ! -f $WX_SRCDIR/Makefile.in ; then
+    AC_MSG_ERROR(wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/), or remove --with-wx option, or check --with-wxsrcdir is correct !)
   fi
 
   # --------- configure wxWidgets library --------------- #
@@ -453,13 +464,13 @@ if test "$with_wx" = "yes" ; then
   # launch the configure
   if test "$with_mesa" = "yes" ; then
     # use internal OpenGL (mesa) libraries
-    ../../../wxWidgets/configure CFLAGS="-I${GL_BUILDDIR}/include" CXXFLAGS="-I${GL_BUILDDIR}/include" CPPFLAGS="-I${GL_BUILDDIR}/include" OPENGL_LIBS="-lGL -lGLU" $WXCONFIGURE_OPTION
+    ../$WX_SRCDIR/configure CFLAGS="-I${GL_BUILDDIR}/include" CXXFLAGS="-I${GL_BUILDDIR}/include" CPPFLAGS="-I${GL_BUILDDIR}/include" OPENGL_LIBS="-lGL -lGLU" $WXCONFIGURE_OPTION
     if test $? != 0 ; then
       AC_MSG_ERROR(A problem occurs durring wxWidgets library configuration. Please fix the problem and try again.)
     fi
   else
     # use OpenGL system libraries
-    ../../../wxWidgets/configure $WXCONFIGURE_OPTION    
+    ../$WX_SRCDIR/configure $WXCONFIGURE_OPTION    
   fi
   cd $OLDDIR
   echo "---> Configuring wxWidgets library. - DONE"
@@ -488,7 +499,6 @@ if test "$with_wx" = "yes" ; then
     fi
   fi
   WX_LIBRARIES="`$WXCONFIG --libs $WXCONFIG_LIBS_PARAM` ${WX_LIBRARIES_EXTRA_PARAM}"
-#  WX_LIBRARIES="`$WXCONFIG --libs=$WXCONFIG_LIBS_PARAM` ${WX_LIBRARIES_EXTRA_PARAM}"
   AC_SUBST(WX_LIBRARIES)
 
   WX_OPTIONS="-D_WX"
@@ -1371,9 +1381,9 @@ fi
 
 if test "$with_wx" = "yes" ; then
   if test "$with_wxdebug" = "yes" ; then
-    echo "Amaya configured with wxWidgets (experimental) [with debug]"
+    echo "Amaya configured with wxWidgets {srcdir=$WX_SRCDIR} (debug) (experimental)"
   else
-    echo "Amaya configured with wxWidgets (experimental)"
+    echo "Amaya configured with wxWidgets {srcdir=$WX_SRCDIR} (experimental)"
   fi
 fi
 

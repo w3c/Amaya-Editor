@@ -310,7 +310,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SET_MAKE YACC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX LEX LEXLIB LEX_OUTPUT_ROOT AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CP MV RM MKDIR ECHO CAT CHMOD SED AR DIFF EGREP ALLOCA LIBOBJS AMAYAGUI GTKCONFIG_FOUND GTK_INCLUDES GTK_LIBRARIES GL_BUILDDIR GL_INCLUDES GL_LIBRARIES WX_BUILDDIR WX_INCLUDES WX_LIBRARIES LIBJPEG LIBPNG LIBZ MAKEJPEG MAKEPNG GTK_GL_INCLUDES GTK_GL_LIBRARIES FREETYPE_INCLUDES FREETYPE_LIBRARIES XFT_INCLUDES XFT_LIBRARIES STDCPP_INCLUDES STDCPP_LIBRARIES PRINTIFNOTGL NOPRINT AMAYA_VER CEXTRACT_VER CEXTRACT_FLAGS THOTINCLUDES APIINCLUDES VPATHOPT GTK_OPTIONS THOT_OPTIONS AMAYA_OPTIONS PLUGIN_OPTIONS AMAYA_ANNOT_OPTIONS AMAYA_ANNOT_INCLUDES AMAYA_ANNOT_EXTRA_LIBS IMGLIBS EXTRA_LIBS EXTRA_INCLUDES DAVDIR LIBDAV WITHDAV WWWDAV MAKERAPTOR MAKEREDLAND ANNOTLIB_COMPILE_BM AMAYA_RAPTOR_SRC AMAYA_RAPTOR_LIBS AMAYA_RAPTOR_INCLUDES MAKE_LIBWWW_RDF_PARSER LIBWWW_RDF_PARSER SUBDIRS EXTRA_MAKEFILE_IN LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SET_MAKE YACC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX LEX LEXLIB LEX_OUTPUT_ROOT AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CP MV RM MKDIR ECHO CAT CHMOD SED AR DIFF EGREP ALLOCA LIBOBJS AMAYAGUI GTKCONFIG_FOUND GTK_INCLUDES GTK_LIBRARIES GL_BUILDDIR GL_INCLUDES GL_LIBRARIES WX_SRCDIR WX_BUILDDIR WX_INCLUDES WX_LIBRARIES LIBJPEG LIBPNG LIBZ MAKEJPEG MAKEPNG GTK_GL_INCLUDES GTK_GL_LIBRARIES FREETYPE_INCLUDES FREETYPE_LIBRARIES XFT_INCLUDES XFT_LIBRARIES STDCPP_INCLUDES STDCPP_LIBRARIES PRINTIFNOTGL NOPRINT AMAYA_VER CEXTRACT_VER CEXTRACT_FLAGS THOTINCLUDES APIINCLUDES VPATHOPT GTK_OPTIONS THOT_OPTIONS AMAYA_OPTIONS PLUGIN_OPTIONS AMAYA_ANNOT_OPTIONS AMAYA_ANNOT_INCLUDES AMAYA_ANNOT_EXTRA_LIBS IMGLIBS EXTRA_LIBS EXTRA_INCLUDES DAVDIR LIBDAV WITHDAV WWWDAV MAKERAPTOR MAKEREDLAND ANNOTLIB_COMPILE_BM AMAYA_RAPTOR_SRC AMAYA_RAPTOR_LIBS AMAYA_RAPTOR_INCLUDES MAKE_LIBWWW_RDF_PARSER LIBWWW_RDF_PARSER SUBDIRS EXTRA_MAKEFILE_IN LTLIBOBJS'
 ac_subst_files='plugin_frag www_frag math_frag svg_frag annot_frag dav_frag'
 
 # Initialize some variables set by options.
@@ -875,6 +875,7 @@ Optional Packages:
   --with-wx               use wxWidgets GUI toolkit (experimental)
   --with-nogui            do not use GUI toolkit
   --with-wxdebug               compiles wxWidgets with debuging options
+  --with-wxsrcdir=...               compiles Amaya with a specific wxWidgets sources path
   --with-graphiclibs     use static libjpeg, libpng.
   --with-dav              enable WebDAV support (experimental)
 
@@ -13459,6 +13460,19 @@ else
   with_wxdebug="no"
 fi
 
+# it is possible to specify wxWidgets library path,
+# usefull for developpers who want to compile amaya with different wxWidgets version
+
+# Check whether --with-wxsrcdir or --without-wxsrcdir was given.
+if test "${with_wxsrcdir+set}" = set; then
+  withval="$with_wxsrcdir"
+
+fi;
+if test "$with_wxsrcdir" = "" ; then
+  with_wxsrcdir="../../wxWidgets"
+fi
+
+
 if test "$with_wx" = "yes" ; then
   if test "$with_gtk" = "yes" ; then
     echo
@@ -13633,12 +13647,15 @@ echo "$as_me: error: A problem occurs durring Mesa library compilation. Please f
 fi
 
 if test "$with_wx" = "yes" ; then
+  # WX_SRCDIR is better to understand the code than with_wxsrcdir variable
+  WX_SRCDIR=$with_wxsrcdir
+
 
   # check that sources of wxWidgets exists
-  if test ! -f ../../wxWidgets/Makefile.in ; then
-    { { echo "$as_me:$LINENO: error: wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/) or remove --with-wx option !" >&5
-echo "$as_me: error: wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/) or remove --with-wx option !" >&2;}
-   { (exit 1); exit 1; }; }
+  if test ! -f $WX_SRCDIR/Makefile.in ; then
+    { { echo "$as_me:$LINENO: error: wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/)" >&5
+echo "$as_me: error: wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/)" >&2;}
+   { (exit or remove --with-wx option); exit or remove --with-wx option; }; }
   fi
 
   # --------- configure wxWidgets library --------------- #
@@ -13689,7 +13706,7 @@ echo "$as_me: error: TODO: configurer wxWidgets pour MACOSX" >&2;}
   # launch the configure
   if test "$with_mesa" = "yes" ; then
     # use internal OpenGL (mesa) libraries
-    ../../../wxWidgets/configure CFLAGS="-I${GL_BUILDDIR}/include" CXXFLAGS="-I${GL_BUILDDIR}/include" CPPFLAGS="-I${GL_BUILDDIR}/include" OPENGL_LIBS="-lGL -lGLU" $WXCONFIGURE_OPTION
+    ../$WX_SRCDIR/configure CFLAGS="-I${GL_BUILDDIR}/include" CXXFLAGS="-I${GL_BUILDDIR}/include" CPPFLAGS="-I${GL_BUILDDIR}/include" OPENGL_LIBS="-lGL -lGLU" $WXCONFIGURE_OPTION
     if test $? != 0 ; then
       { { echo "$as_me:$LINENO: error: A problem occurs durring wxWidgets library configuration. Please fix the problem and try again." >&5
 echo "$as_me: error: A problem occurs durring wxWidgets library configuration. Please fix the problem and try again." >&2;}
@@ -13697,7 +13714,7 @@ echo "$as_me: error: A problem occurs durring wxWidgets library configuration. P
     fi
   else
     # use OpenGL system libraries
-    ../../../wxWidgets/configure $WXCONFIGURE_OPTION
+    ../$WX_SRCDIR/configure $WXCONFIGURE_OPTION
   fi
   cd $OLDDIR
   echo "---> Configuring wxWidgets library. - DONE"
@@ -13728,7 +13745,6 @@ echo "$as_me: error: Cannot find wx-config. Please download wxWidgets (http://ww
     fi
   fi
   WX_LIBRARIES="`$WXCONFIG --libs $WXCONFIG_LIBS_PARAM` ${WX_LIBRARIES_EXTRA_PARAM}"
-#  WX_LIBRARIES="`$WXCONFIG --libs=$WXCONFIG_LIBS_PARAM` ${WX_LIBRARIES_EXTRA_PARAM}"
 
 
   WX_OPTIONS="-D_WX"
@@ -15468,6 +15484,7 @@ s,@GTK_LIBRARIES@,$GTK_LIBRARIES,;t t
 s,@GL_BUILDDIR@,$GL_BUILDDIR,;t t
 s,@GL_INCLUDES@,$GL_INCLUDES,;t t
 s,@GL_LIBRARIES@,$GL_LIBRARIES,;t t
+s,@WX_SRCDIR@,$WX_SRCDIR,;t t
 s,@WX_BUILDDIR@,$WX_BUILDDIR,;t t
 s,@WX_INCLUDES@,$WX_INCLUDES,;t t
 s,@WX_LIBRARIES@,$WX_LIBRARIES,;t t
@@ -16212,9 +16229,9 @@ fi
 
 if test "$with_wx" = "yes" ; then
   if test "$with_wxdebug" = "yes" ; then
-    echo "Amaya configured with wxWidgets (experimental) with debug"
+    echo "Amaya configured with wxWidgets {srcdir=$WX_SRCDIR} (debug) (experimental)"
   else
-    echo "Amaya configured with wxWidgets (experimental)"
+    echo "Amaya configured with wxWidgets {srcdir=$WX_SRCDIR} (experimental)"
   fi
 fi
 
