@@ -730,8 +730,8 @@ static int          FindListSubTree (int id, Element * elem)
   ----------------------------------------------------------------------*/
 static ThotBool ExportSubTree (Element subTree, Document doc)
 {
-  char	      tmpfilename[25];
-  char	      charRead;
+  char	              tmpfilename[MAX_PATH];
+  char	              charRead;
   FILE		     *inputFile = NULL;
   int                 len;
   ThotBool	      result = FALSE;
