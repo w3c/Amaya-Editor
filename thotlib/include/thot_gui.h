@@ -59,6 +59,8 @@ typedef struct struct_ThotGC {
      int                 capabilities;
      int                 foreground;
      int                 background;
+     int                 thick;
+     int                 style;
 } WIN_GC_BLK, *WIN_GC, *ThotGC;
 
 typedef struct _FontInfo

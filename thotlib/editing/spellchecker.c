@@ -112,7 +112,7 @@ boolean             ToCreate;
 	{
 	  strcpy (path, "C:\\TEMP");
 	  if (!TtaFileExist (path))
-	    mkdir (path);
+	    _mkdir (path);
 	}
     }
 # else  /* !_WINDOWS */
