@@ -25,7 +25,7 @@
 # can be useful for creating a module that consists of many directories
 # spread out over the entire source repository.
 
-amaya_windows		-a Windows WIN32
+amaya_windows		-a Windows
 amaya_schemas           -a schemas schemasOPERA
 
 amaya_configure         -a Makefile.in Options.in config.h.in \
@@ -59,6 +59,5 @@ amaya_amaya             -a amaya
 # Macro packages
 #
 
-Amaya                   -a amaya_base amaya_thotlib amaya_java \
+Amaya                   -a amaya_base amaya_thotlib amaya_annotlib \
                            amaya_doc amaya_amaya amaya_plugins amaya_windows
-			   amaya_annotlib
