@@ -3257,7 +3257,7 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	Width: Enclosing . Width;
-	PaddingLeft: 1 em;
+	{PaddingLeft: 0.5 em;}
 	VertPos: Top = Previous not MAP . Bottom;
 	if not within Definition and not within List_Item
 	        MarginTop: 0.5;
@@ -3279,7 +3279,7 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	Width: Enclosing . Width;
-	PaddingLeft: 1 em;
+	{PaddingLeft: 0.5 em;}
 	VertPos: Top = Previous not MAP . Bottom;
 	if not within Definition and not within List_Item
 	        MarginTop: 0.5;
@@ -7175,7 +7175,7 @@ ATTRIBUTES
   dir (Unnumbered_List) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
-	PaddingLeft: 1 em;
+	{PaddingLeft: 0.5 em;}
 	PaddingRight: 0;
 	IN Structure_view BEGIN
 		PaddingLeft: 0;
@@ -7188,7 +7188,7 @@ ATTRIBUTES
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
 	PaddingLeft: 0;
-	PaddingRight: 1 em;
+	{PaddingRight: 0.5 em;}
 	IN Structure_view BEGIN
 		PaddingRight: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7199,7 +7199,7 @@ ATTRIBUTES
   dir (Numbered_List) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
-	PaddingLeft: 1 em;
+	{PaddingLeft: 0.5 em;}
 	PaddingRight: 0;
 	IN Structure_view BEGIN
 		PaddingLeft: 0;
