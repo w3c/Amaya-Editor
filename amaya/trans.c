@@ -739,15 +739,14 @@ static int FindListSubTree (int id, Element * elem)
   ----------------------------------------------------------------------*/
 static ThotBool ExportSubTree (Element subTree, Document doc)
 {
+  FILE		     *inputFile = NULL;
+  struct stat        *StatBuffer;
+  SSchema	      sch;
   char	              tmpfilename[MAX_PATH];
   int	              charRead;
-  FILE		     *inputFile = NULL;
   int                 len;
   ThotBool	      result = FALSE;
-  struct stat        *StatBuffer;
   int		      status;
-  SSchema	      sch;
-
 
   len = BUFFER_LEN - szHTML;
   strcpy ((char *)tmpfilename, (char *)TtaGetEnvString ("APP_TMPDIR"));
@@ -756,16 +755,16 @@ static ThotBool ExportSubTree (Element subTree, Document doc)
   
   sch = TtaGetDocumentSSchema (doc);
   if (strcmp ((char *)TtaGetSSchemaName (sch), "MathML") == 0)
-    TtaExportTree (subTree, doc, tmpfilename, "MathMLT");     
+    TtaExportTree (subTree, doc, tmpfilename, "MathMLT");
   else if (strcmp ((char *)TtaGetSSchemaName (sch), "SVG") == 0)
-    TtaExportTree (subTree, doc, tmpfilename, "SVGT");     
+    TtaExportTree (subTree, doc, tmpfilename, "SVGT");
   else if (strcmp ((char *)TtaGetSSchemaName (sch), "Annot") == 0)
-    TtaExportTree (subTree, doc, tmpfilename, "AnnotT");     
+    TtaExportTree (subTree, doc, tmpfilename, "AnnotT");
   else
     if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
-      TtaExportTree (subTree, doc, tmpfilename, "HTMLTX");     
+      TtaExportTree (subTree, doc, tmpfilename, "HTMLTX");
     else
-      TtaExportTree (subTree, doc, tmpfilename, "HTMLT");     
+      TtaExportTree (subTree, doc, tmpfilename, "HTMLT");
 
   StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
   status = stat (tmpfilename, StatBuffer);
@@ -790,7 +789,7 @@ static ThotBool ExportSubTree (Element subTree, Document doc)
   bufHTML[szHTML] = EOS;
   return result;
 }
-      
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1712,9 +1711,9 @@ static void ApplyTransformation (strMatch *sm, Document doc)
 {
   SSchema              sch;
   Element              elParent, elFound;
+  CHARSET              charset;
   Attribute            attr;
   AttributeType        attrType;
-  ThotBool             found;
   SearchDomain         domain;
   ParserData           context = {0, UTF_8, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
   DisplayMode          oldDisplayMode;
@@ -1723,6 +1722,7 @@ static void ApplyTransformation (strMatch *sm, Document doc)
   int                  length, error;
   char                 buf [MAX_LENGTH], *name;
   ThotBool             res;
+  ThotBool             found;
 
   res = FALSE;
   idfCounter = 1;
@@ -1742,6 +1742,10 @@ static void ApplyTransformation (strMatch *sm, Document doc)
       TtaSetDisplayMode (doc, DeferredDisplay);
       /* remove the selection */
       TtaSelectElement (doc, NULL);
+      /* export with UTF-8 encoding */
+      charset = TtaGetDocumentCharset (doc);
+      TtaSetDocumentCharset (doc, UTF_8, FALSE);
+
       /* initialize the transformation stack */
       child = sm->MatchChildren;
       TopGenerStack = 0;
@@ -1768,6 +1772,8 @@ static void ApplyTransformation (strMatch *sm, Document doc)
       res = res && StartFragmentParser (sm->MatchChildren, doc);
       TtaFreeMemory (bufHTML);
 
+      /* restore the current charset */   
+      TtaSetDocumentCharset (doc, charset, FALSE);
       if (res)
 	{	
 	  /* if the html parsing was succesful */

@@ -374,80 +374,49 @@ HTTP запросов. Вы должны задать полное имя сервера. Если прокси использует
 порт отличный от 80, введите в конец URL символ ":" и далее номер вашего
 порта. Нижеприведённая таблица показывает примеры использования.</p>
 
-<table border="1">
+<table border="1" cellspacing="0" cellpadding="0"
+style="margin-left:.2in;border-collapse:  collapse;border:none;">
   <tbody>
     <tr>
-      <td>
-        <table border="1">
-          <tbody>
-            <tr>
-              <td>
-                <table border="1">
-                  <tbody>
-                    <tr>
-                      <td>
-                        <table border="1" cellspacing="0" cellpadding="0"
-                        style="margin-left:.2in;border-collapse:  collapse;border:none;">
-                          <tbody>
-                            <tr>
-                              <td width="194" valign="top"
-                              style="width:145.85pt;border-top:solid green 1.5pt;   border-left:none;border-bottom:solid green .75pt;border-right:none;   padding:0in 5.4pt 0in 5.4pt"><p
-                                class="TableHead"><span xml:lang="RU"
-                                lang="RU"
-                                style="font-weight:   normal"><b>Запись HTTP
-                                Proxy</b></span></p>
-                              </td>
-                              <td width="377" valign="top"
-                              style="width:282.55pt;border-top:solid green 1.5pt;   border-left:none;border-bottom:solid green .75pt;border-right:none;   padding:0in 5.4pt 0in 5.4pt"><p
-                                class="TableHead"><span xml:lang="RU"
-                                lang="RU"
-                                style="font-weight:   normal"><b>Результат</b></span></p>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td width="194" valign="top"
-                              style="width:145.85pt;border:none;padding:0in 5.4pt 0in 5.4pt"><p
-                                class="Code0"><span xml:lang="EN"
-                                lang="EN">   groucho.marx.edu</span></p>
+      <td width="194" valign="top"
+      style="width:145.85pt;border-top:solid green 1.5pt;   border-left:none;border-bottom:solid green .75pt;border-right:none;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead"><span xml:lang="RU" lang="RU"
+        style="font-weight:   normal"><b>Запись HTTP Proxy</b></span></p>
+      </td>
+      <td width="377" valign="top"
+      style="width:282.55pt;border-top:solid green 1.5pt;   border-left:none;border-bottom:solid green .75pt;border-right:none;   padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableHead"><span xml:lang="RU" lang="RU"
+        style="font-weight:   normal"><b>Результат</b></span></p>
+      </td>
+    </tr>
+    <tr>
+      <td width="194" valign="top"
+      style="width:145.85pt;border:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="Code0"><span xml:lang="EN" lang="EN">  
+        groucho.marx.edu</span></p>
 
-                                <p class="Code0"><span xml:lang="EN"
-                                lang="EN">           </span></p>
-                              </td>
-                              <td width="377" valign="top"
-                              style="width:282.55pt;border:none;padding:0in 5.4pt 0in 5.4pt"><p
-                                class="TableText"><span xml:lang="RU"
-                                lang="RU">Объявляет прокси сервер, называемый
-                                groucho.marx.edu, и работающий на принятом по
-                                умолчанию порту, т.е. 80.</span></p>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td width="194" valign="top"
-                              style="width:145.85pt;border:none;border-bottom:   solid green 1.5pt;padding:0in 5.4pt 0in 5.4pt"><p
-                                class="Code0"><span xml:lang="EN"
-                                lang="EN">   groucho.marx.edu:1234</span></p>
+        <p class="Code0"><span xml:lang="EN" lang="EN">           </span></p>
+      </td>
+      <td width="377" valign="top"
+      style="width:282.55pt;border:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><span xml:lang="RU" lang="RU">Объявляет прокси
+        сервер, называемый groucho.marx.edu, и работающий на принятом по
+        умолчанию порту, т.е. 80.</span></p>
+      </td>
+    </tr>
+    <tr>
+      <td width="194" valign="top"
+      style="width:145.85pt;border:none;border-bottom:   solid green 1.5pt;padding:0in 5.4pt 0in 5.4pt"><p
+        class="Code0"><span xml:lang="EN" lang="EN">  
+        groucho.marx.edu:1234</span></p>
 
-                                <p class="Code0"><span xml:lang="EN"
-                                lang="EN">           </span></p>
-                              </td>
-                              <td width="377" valign="top"
-                              style="width:282.55pt;border:none;border-bottom:   solid green 1.5pt;padding:0in 5.4pt 0in 5.4pt"><p
-                                class="TableText"><span xml:lang="RU"
-                                lang="RU">Объявляет прокси сервер, называемый
-                                groucho.marx.edu, и работающий на порту
-                                1234.</span></p>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <p class="Code0"><span xml:lang="EN" lang="EN">           </span></p>
+      </td>
+      <td width="377" valign="top"
+      style="width:282.55pt;border:none;border-bottom:   solid green 1.5pt;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><span xml:lang="RU" lang="RU">Объявляет прокси
+        сервер, называемый groucho.marx.edu, и работающий на порту
+        1234.</span></p>
       </td>
     </tr>
   </tbody>
