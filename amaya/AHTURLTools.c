@@ -538,8 +538,10 @@ ThotBool IsUndisplayedName (const char *path)
    TtaExtractSuffix (temppath, suffix);
 
    if (!strcasecmp (suffix, "exe") ||
+       !strcasecmp (suffix, "zip") ||
+       !strcasecmp (suffix, "ppt") ||
        !strcasecmp (suffix, "pdf") ||
-       !strcasecmp (suffix, "ps") ||
+       !strcasecmp (suffix, "ps")  ||
        !strcasecmp (suffix, "eps") ||
        !strcasecmp (suffix, "tar") ||
        !strcasecmp (suffix, "tgz") ||
@@ -551,8 +553,10 @@ ThotBool IsUndisplayedName (const char *path)
        /* take into account compressed files */
        TtaExtractSuffix (temppath, suffix);       
        if (!strcasecmp (suffix, "exe") ||
+	   !strcasecmp (suffix, "zip") ||
+	   !strcasecmp (suffix, "ppt") ||
 	   !strcasecmp (suffix, "pdf") ||
-	   !strcasecmp (suffix, "ps") ||
+	   !strcasecmp (suffix, "ps")  ||
 	   !strcasecmp (suffix, "eps") ||
 	   !strcasecmp (suffix, "tar") ||
 	   !strcasecmp (suffix, "ddl") ||
