@@ -912,9 +912,9 @@ CHAR_T             *data;
 	  /* @@ here I need to have a pointer in memory to the
 	     annotation document... means I'll only be able to have
 	     one such annotation dialogue at the time */
-	  if (AnnotSelType != val)
+	  if (AnnotSelType != (SelType) val)
 	    {
-	      AnnotSelType = val;
+	      AnnotSelType = (SelType) val;
 	      AnnotSelItem[0] = WC_EOS;
 	      BuildAnnotFilterSelector (AnnotFilterDoc, val);
 	      TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, TEXT(""));
