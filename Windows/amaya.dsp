@@ -107,6 +107,10 @@ SOURCE=..\amaya\AHTURLTools.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\amaya\amaya.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=..\amaya\amaya.rc
 # End Source File
 # Begin Source File
@@ -124,6 +128,38 @@ SOURCE=..\amaya\answer.c
 # Begin Source File
 
 SOURCE=..\amaya\appicon.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\bcenter.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\bindent1.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\bindent2.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\bleft.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\bright.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\bslarge.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\bsmedium.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\bssmall.bmp
 # End Source File
 # Begin Source File
 
@@ -207,6 +243,10 @@ SOURCE=..\amaya\libmanag.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\amaya\math.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=..\amaya\Mathedit.c
 # End Source File
 # Begin Source File
@@ -264,6 +304,10 @@ SOURCE=..\amaya\transparse.c
 # Begin Source File
 
 SOURCE=..\amaya\UIcss.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wincurso.cur
 # End Source File
 # Begin Source File
 
