@@ -1495,7 +1495,7 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
       pPSch->PsNAttrPRule = (NumberTable*) realloc (pPSch->PsNAttrPRule, i);
       i = size * sizeof (int);
       pPSch->PsNHeirElems = (NumberTable*) realloc (pPSch->PsNHeirElems, i);
-      if (!pSS->SsAttribute || !pPSch->PsAttrPRule || pPSch->PsNAttrPRule ||
+      if (!pSS->SsAttribute || !pPSch->PsAttrPRule || !pPSch->PsNAttrPRule ||
 	  !pPSch->PsNHeirElems)
 	{
 	  TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
@@ -1523,7 +1523,7 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
 	pPSch->PsComparAttr->CATable[i] = NULL;
       }
 
-  /* Append a new attribute type */
+  /* Add a new attribute type */
   i = pSS->SsNAttributes;
   pSS->SsAttribute->TtAttr[i] = (PtrTtAttribute) malloc (sizeof (TtAttribute));
   if (pSS->SsAttribute->TtAttr[i] == NULL)
@@ -1539,7 +1539,7 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
   pSS->SsAttribute->TtAttr[i]->AttrType = AtTextAttr;
 
   /* Initialize and insert the presentation rules */
-  /* associed to this new attribute */
+  /* associed with this new attribute */
   InsertXmlAtRules (pPSch, pSS->SsNAttributes);
 
   /* Update the type number */
@@ -1614,6 +1614,32 @@ static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
   /* First specific rule associated with this element type */
   prevPRule = pPSch->PsElemPRule[nSRules];
 
+  /* Rule 'Line' view 1 */
+  /*
+  pRule = InsertAXmlPRule (PtFunction, FORMATTED_VIEW, PresFunction,
+			   prevPRule, pPS, nSRules);
+  if (pRule != NULL)
+    {
+      pRule->PrPresFunction = FnLine;
+      pRule->PrPresBoxRepeat = 0;
+      pRule->PrExternal = 0;
+      pRule->PrElement = 0;
+      prevPRule = pRule;
+    }
+  */
+
+ /* Rule 'NoLine' view 2 */
+  pRule = InsertAXmlPRule (PtFunction, STRUCTURE_VIEW, PresFunction,
+			   prevPRule, pPSch, nSRules);
+  if (pRule != NULL)
+    {
+      pRule->PrPresFunction = FnNoLine;
+      pRule->PrPresBoxRepeat = 0;
+      pRule->PrExternal = 0;
+      pRule->PrElement = 0;
+      prevPRule = pRule;
+    }
+
  /* Rule 'CreateBefore(ElementName)' */
   pRule = InsertAXmlPRule (PtFunction, FORMATTED_VIEW, PresFunction,
 			   prevPRule, pPSch, nSRules);
@@ -1657,7 +1683,7 @@ static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
       pRule->PrDimRule.DrMin = FALSE;
       pRule->PrDimRule.DrUserSpecified = FALSE;
       pRule->PrDimRule.DrValue = 0;
-      pRule->PrDimRule.DrRelation = RlEnclosing;
+      pRule->PrDimRule.DrRelation = RlEnclosed;
       pRule->PrDimRule.DrNotRelat = FALSE;
       pRule->PrDimRule.DrRefKind = RkPresBox;
       pRule->PrDimRule.DrRefIdent = 0;
@@ -1939,6 +1965,7 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
   if (pSS != NULL)
     {
       /* Modify the structure schema name */
+      /*
       if (sSchemaUri != NULL && pSS->SsUriName == NULL)
 	{
 	  pSS->SsUriName = TtaGetMemory (strlen (sSchemaUri) + 1);
@@ -1963,6 +1990,7 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
 		i = pSS->SsNRules;
 	      }
 	}
+      */
 
       printf ("\nNombre d'attributs : %d\n", pSS->SsNAttributes);
       for (i = 0;  i < pSS->SsNAttributes; i++)
@@ -2135,11 +2163,13 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
       if (i < MAX_SSCHEMAS)
 	{
 	  /* The generic schema is found in the table, modify its name */
+	  /*   ***
 	  if (sSchemaName != NULL)
 	    strncpy (LoadedSSchema[i].StructSchemaName, sSchemaName,
 		     MAX_NAME_LENGTH);
 	  else
 	    LoadedSSchema[i].StructSchemaName[0] = EOS;
+	    *** */
 	}
 
       /* Update the LoadedPSchema table */
@@ -2149,11 +2179,13 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
       if (i < MAX_SSCHEMAS)
 	{
 	  /* The generic schema is found in the table, modify its name */
+	  /*   ***
 	  if (sSchemaName != NULL)
 	    strncpy (LoadedPSchema[i].PresSchemaName, sSchemaName,
 		     MAX_NAME_LENGTH);
 	  else
 	    LoadedPSchema[i].PresSchemaName[0] = EOS;
+	    *** */
 	}
 #endif
     }
