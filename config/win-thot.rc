@@ -1,9 +1,9 @@
 [thot_lib]
-THOTSYSSCH=$(THOTDIR)\amaya:$(THOTDIR)\annotlib
+THOTSYSSCH=$(THOTDIR)\amaya
 DICOPAR=$(THOTDIR)\dicopar
 
 [amaya]
-THOTSYSSCH=$(THOTDIR)\amaya
+THOTSYSSCH=$(THOTDIR)\amaya;$(THOTDIR)\annotlib
 LANG=en_US
 HOME_PAGE=
 ENABLE_MULTIKEY=no
