@@ -12,6 +12,10 @@
 #include "appdialogue_wx.h"
 #include "message_wx.h"
 
+static int      MyRef;
+static char     Buffer[100];
+
+
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
@@ -39,6 +43,7 @@ AuthentDlgWX::AuthentDlgWX( int ref,
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("AuthentDlgWX"));
   wxString wx_title = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION) );
   SetTitle( wx_title );
+  MyRef = ref;
 
   ptr = TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM);
   label = (char *)TtaGetMemory (((auth_realm) ? strlen (auth_realm) : 0)
@@ -85,7 +90,7 @@ AuthentDlgWX::~AuthentDlgWX()
   ----------------------------------------------------------------------*/
 void AuthentDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
-  ThotCallback (BaseDialog + FormAnswer, INTEGER_DATA, (char*) 1);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
 }
 
 /*----------------------------------------------------------------------
@@ -93,7 +98,7 @@ void AuthentDlgWX::OnConfirmButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void AuthentDlgWX::OnCancelButton( wxCommandEvent& event )
 {
-  ThotCallback (BaseDialog + FormAnswer, INTEGER_DATA, (char*) 0);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
 /*---------------------------------------------------------------
@@ -101,14 +106,12 @@ void AuthentDlgWX::OnCancelButton( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void AuthentDlgWX::OnName ( wxCommandEvent& event )
 {
-  char buffer[100];
-
   wxString wx_name = XRCCTRL(*this, "wxID_AU", wxTextCtrl)->GetValue( );
   // set the printer name
   // allocate a temporary buffer to copy the 'const char *' printer name buffer 
-  wxASSERT( wx_name.Len() < 100 );
-  strcpy( buffer, wx_name.ToAscii() );
-  ThotCallback (BaseDialog + NameText,  STRING_DATA, (char *)buffer );
+  wxASSERT( wx_name.Len() < 512 );
+  strcpy( Buffer, wx_name.ToAscii() );
+  ThotCallback (BaseDialog + NameText,  STRING_DATA, (char *)Buffer );
 }
 
 /*---------------------------------------------------------------
@@ -116,13 +119,11 @@ void AuthentDlgWX::OnName ( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void AuthentDlgWX::OnPassword ( wxCommandEvent& event )
 {
-  char buffer[100];
-
   wxString wx_passwd = XRCCTRL(*this, "wxID_PASSWD", wxTextCtrl)->GetValue( );
   // allocate a temporary buffer to copy the 'const char *' printer name buffer 
-  wxASSERT( wx_passwd.Len() < 100 );
-  strcpy( buffer, wx_passwd.ToAscii() );
-  ThotCallback (BaseDialog + PasswordText,  STRING_DATA, (char *)buffer );
+  wxASSERT( wx_passwd.Len() < 512 );
+  strcpy( Buffer, wx_passwd.ToAscii() );
+  ThotCallback (BaseDialog + PasswordText,  STRING_DATA, (char *)Buffer );
 }
 
 #endif /* _WX */

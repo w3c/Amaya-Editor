@@ -232,6 +232,7 @@ AMAYA_OBJ = \
 	wxdialog/CSSDlgWX.o \
 	wxdialog/DocInfoDlgWX.o \
 	wxdialog/HRefDlgWX.o \
+	wxdialog/ImageDlgWX.o \
 	wxdialog/InitConfirmDlgWX.o \
 	wxdialog/OpenDocDlgWX.o \
 	wxdialog/PreferenceDlgWX.o \
@@ -239,6 +240,7 @@ AMAYA_OBJ = \
 	wxdialog/SaveAsDlgWX.o \
 	wxdialog/SearchDlgWX.o \
 	wxdialog/SpellCheckDlgWX.o \
+	wxdialog/TextDlgWX.o \
 	wxdialog/TitleDlgWX.o \
 	wxdialogapi.o \
 	EDITORAPP.o \

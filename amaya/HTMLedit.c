@@ -862,13 +862,15 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 	if (LinkAsXmlCSS || LinkAsCSS)
 	  /* select a CSS file */
 	  created = CreateHRefDlgWX ( BaseDialog + AttrHREFForm,
-				      TtaGetViewFrame (doc, 1), URL_list, AttrHREFvalue,
-				      DocSelect, DirSelect, docCSS );
+				      TtaGetViewFrame (doc, 1), URL_list,
+				      AttrHREFvalue,
+				      docCSS );
 	else
 	  /* select any file */
 	  created = CreateHRefDlgWX ( BaseDialog + AttrHREFForm,
-				      TtaGetViewFrame (doc, 1), URL_list, AttrHREFvalue,
-				      DocSelect, DirSelect, docText );
+				      TtaGetViewFrame (doc, 1), URL_list,
+				      AttrHREFvalue,
+				      docText );
 	if (created)
 	  {
 	    TtaSetDialoguePosition ();

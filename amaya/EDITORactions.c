@@ -1901,7 +1901,7 @@ void CreateTable (Document document, View view)
 	  TBorder = 1;
 #ifdef _WINGUI
 	  CreateTableDlgWindow (NumberCols, NumberRows, TBorder);
-#endif  /* !_WINGUI */
+#endif  /* _WINGUI */
 #ifdef _WX
 	  ThotBool created;
 	  created = CreateCreateTableDlgWX (BaseDialog + TableForm,

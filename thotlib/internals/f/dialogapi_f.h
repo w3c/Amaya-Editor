@@ -73,6 +73,7 @@ extern void TtaRedrawMenuEntry ( int ref,
                                  char *fontname,
                                  ThotColor color,
                                  int activate );
+extern ThotBool TtaRaiseDialogue ( int ref );
 extern void TtaUnmapDialogue ( int ref );
 extern void TtaDestroyDialogue ( int ref );
 extern void TtaChangeFormTitle ( int ref,
@@ -256,6 +257,7 @@ extern void TtaRedrawMenuEntry ( int ref,
                                    char *fontname,
                                    ThotColor color,
                                    int activate );
+extern ThotBool TtaRaiseDialogue ( int ref );
 extern void TtaUnmapDialogue ( int ref );
 extern void TtaDestroyDialogue ( int ref );
 extern void TtaChangeFormTitle ( int ref,

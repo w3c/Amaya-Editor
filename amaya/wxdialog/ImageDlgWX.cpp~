@@ -39,7 +39,7 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
 			    const wxString & title,
 			    const wxString & docName,
 			    const wxString & filter ) :
-  AmayaDialog( parent, ref ),
+  AmayaDialog( NULL, ref ),
   m_Filter(filter)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("OpenDocDlgWX"));
@@ -47,13 +47,13 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
 
   // update dialog labels with given ones
   SetTitle( title );
-  XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_LOCATION) ));
-  XRCCTRL(*this, "wxID_OPENBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_OPEN_URL) ));
+  XRCCTRL(*this, "wxID_LABEL",        wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_LOCATION) ));
+  XRCCTRL(*this, "wxID_OPENBUTTON",   wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_OPEN_URL) ));
   XRCCTRL(*this, "wxID_BROWSEBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_BROWSE) ));
   XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_CANCEL) ));
 
   // give focus to ...
-  //  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetFocus();
+  //  XRCCTRL(*this, "wxID_COMBOBOX",     wxComboBox)->SetFocus();
 
   // TODO ? peutetre mettre un boutton CLEAR
   // SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), TtaGetMessage (AMAYA, AM_CLEAR));
@@ -77,7 +77,7 @@ OpenDocDlgWX::~OpenDocDlgWX()
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::AppendURL( const wxString & url )
 {
-  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->Append( url );
+  XRCCTRL(*this, "wxID_COMBOBOX",     wxComboBox)->Append( url );
 }
 
 /*----------------------------------------------------------------------
@@ -88,7 +88,7 @@ void OpenDocDlgWX::AppendURL( const wxString & url )
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::SetCurrentURL( const wxString & url )
 {
-  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( url );
+  XRCCTRL(*this, "wxID_COMBOBOX",     wxComboBox)->SetValue( url );
 }
 
 /*----------------------------------------------------------------------

@@ -454,6 +454,11 @@ extern ThotBool TtaTestWaitShowDialogue (void);
 extern void TtaAbortShowDialogue (void);
 
 /*----------------------------------------------------------------------
+  TtaRaiseDialogue raises the dialogue if it exists,
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaRaiseDialogue (int ref);
+
+/*----------------------------------------------------------------------
    TtaUnmapDialogue desactive le dialogue s'il est actif.             
   ----------------------------------------------------------------------*/
 extern void TtaUnmapDialogue (int ref);

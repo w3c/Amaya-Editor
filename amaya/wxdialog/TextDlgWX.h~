@@ -21,9 +21,9 @@ public:
   // Constructor.
   HRefDlgWX( int ref,
 	     wxWindow* parent,
-	     const wxString & title,
 	     const wxArrayString & url_list,
 	     const wxString & wx_init_value,
+	     const wxString & title,
 	     const wxString & filter );
     
   // Destructor.                  

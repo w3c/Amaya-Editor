@@ -12,6 +12,9 @@
 
 #include "CreateTableDlgWX.h"
 
+static int      MyRef;
+
+
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
@@ -35,8 +38,8 @@ END_EVENT_TABLE()
     AmayaDialog( parent, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("CreateTableDlgWX"));
-  wxLogDebug( _T("CreateTableDlgWX::CreateTableDlgWX - caption=")+caption);
   SetTitle( caption );
+  MyRef = ref;
 
   // update dialog labels
   XRCCTRL(*this, "wxID_NUMBER_COL_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_COLS) ));
@@ -65,8 +68,8 @@ END_EVENT_TABLE()
   ----------------------------------------------------------------------*/
 CreateTableDlgWX::~CreateTableDlgWX()
 {
-  /* when the dialog is destroyed, It important to cleanup context */
-  ThotCallback (BaseDialog + TableForm, INTEGER_DATA, (char*) 0); 
+  /* when the dialog is destroyed, It's important to cleanup context */
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0); 
 }
 
 /*----------------------------------------------------------------------
@@ -92,7 +95,7 @@ void CreateTableDlgWX::OnConfirmButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void CreateTableDlgWX::OnCancelButton( wxCommandEvent& event )
 {
-  ThotCallback (BaseDialog + TableForm, INTEGER_DATA, (char *) 0);
+  ThotCallback (MyRef, INTEGER_DATA, (char *) 0);
 }
 
 #endif /* _WX */

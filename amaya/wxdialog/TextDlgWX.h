@@ -1,7 +1,7 @@
 #ifdef _WX
 
-#ifndef __HREFDLGWX_H__
-#define __HREFDLGWX_H__
+#ifndef __TEXTDLGWX_H__
+#define __TEXTDLGWX_H__
 
 //-----------------------------------------------------------------------------
 // Headers
@@ -10,31 +10,27 @@
 #include "AmayaDialog.h"
 
 //-----------------------------------------------------------------------------
-// Class definition: HRefDlgWX
+// Class definition: TextDlgWX
 //-----------------------------------------------------------------------------
 
-class HRefDlgWX : public AmayaDialog
+class TextDlgWX : public AmayaDialog
 {
 
 public: 
     
   // Constructor.
-  HRefDlgWX( int ref,
+  TextDlgWX( int ref, int subref,
 	     wxWindow* parent,
 	     const wxString & title,
-	     const wxArrayString & url_list,
-	     const wxString & wx_init_value,
-	     const wxString & filter );
+	     const wxString & label,
+	     const wxString & value );
     
   // Destructor.                  
-  virtual ~HRefDlgWX();
+  virtual ~TextDlgWX();
 
 private:
 
   void OnOk( wxCommandEvent& event );
-  void OnBrowse( wxCommandEvent& event );
-  void OnClick( wxCommandEvent& event );
-  void OnClear( wxCommandEvent& event );
   void OnCancel( wxCommandEvent& event );
 
   // Any class wishing to process wxWindows events must use this macro
@@ -45,6 +41,6 @@ private:
 
 };
 
-#endif  // __HREFDLGWX_H__
+#endif  // __TEXTDLGWX_H__
 
 #endif /* _WX */

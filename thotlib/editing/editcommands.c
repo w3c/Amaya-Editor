@@ -3452,7 +3452,8 @@ void PasteXClipboard (unsigned char *src, int nbytes, CHARSET charset)
    many times as necessary with the characters read.     
   ----------------------------------------------------------------------*/
 /* MJD: Not sure we need double functions here (PasteXClipboard and PasteXClipboardW);
-   better to use only one (PasteXClipboard, with signature of current PasteXClipboardW). */
+   better to use only one (PasteXClipboard, with signature of current
+   PasteXClipboardW). */
 static void PasteXClipboardW (wchar_t* src, int nchars)
 {
   PtrTextBuffer       clipboard;
@@ -3740,6 +3741,8 @@ void TtcDeletePreviousChar (Document doc, View view)
       delPrev = (StructSelectionMode ||
 		 ViewFrameTable[frame - 1].FrSelectOnePosition);
       GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar,&lastChar);
+      if (pDoc == NULL)
+	return;
       if (!delPrev)
 	{
           if (firstEl == lastEl &&

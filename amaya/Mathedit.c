@@ -82,15 +82,15 @@ static Document DocMathElementSelected = 0;
 #include "styleparser_f.h"
 #include "trans_f.h"
 #include "UIcss_f.h"
-
+#ifdef _WX
+#include "wxdialogapi_f.h"
+#endif /* _WX */
 #ifdef _WINGUI
-  #include "wininclude.h"
+#include "wininclude.h"
 #endif /* _WINGUI */
-
 #ifdef _WINDOWS
-	#include <commctrl.h>
+#include <commctrl.h>
 #endif /* _WINDOWS */
-
 #include "XLinkedit_f.h"
 
 #ifdef _GTK
@@ -1336,8 +1336,20 @@ static void         CreateMathConstruct (int construct)
 	  NumberCols = 2;
 #ifdef _WINGUI
 	  CreateMatrixDlgWindow (NumberCols, NumberRows);
-#endif /* !_WINGUI */
-#if defined(_GTK) || defined(_WX) 
+#endif /* _WINGUI */
+#ifdef _WX
+	  ThotBool created;
+	  created = CreateCreateTableDlgWX (BaseDialog + TableForm,
+					    TtaGetViewFrame (doc, 1),
+					    NumberCols, NumberRows, 0);
+	  if (created)
+	    {
+	      TtaShowDialogue (BaseDialog + TableForm, FALSE);
+	      /* wait for an answer */
+	      TtaWaitShowDialogue ();
+	    }
+#endif /* _WX */
+#ifdef _GTK
 	  TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (doc, 1),
 		      TtaGetMessage (1, BMatrix), TRUE, 1, 'L', D_CANCEL);
 	  TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
@@ -1350,7 +1362,7 @@ static void         CreateMathConstruct (int construct)
 	  TtaShowDialogue (BaseDialog + TableForm, FALSE);
 	  /* wait for an answer */
 	  TtaWaitShowDialogue ();
-#endif /* #if defined(_GTK) || defined(_WX)*/
+#endif /* _GTK */
     
 	  if (!UserAnswer || NumberRows == 0 || NumberCols == 0)
 	    /* the user decided to abort the command */

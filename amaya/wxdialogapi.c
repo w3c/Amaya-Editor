@@ -16,6 +16,7 @@
   #include "wxdialog/CSSDlgWX.h"
   #include "wxdialog/DocInfoDlgWX.h"
   #include "wxdialog/HRefDlgWX.h"
+  #include "wxdialog/ImageDlgWX.h"
   #include "wxdialog/InitConfirmDlgWX.h"
   #include "wxdialog/OpenDocDlgWX.h"
   #include "wxdialog/PreferenceDlgWX.h"
@@ -23,10 +24,13 @@
   #include "wxdialog/SaveAsDlgWX.h"
   #include "wxdialog/SearchDlgWX.h"
   #include "wxdialog/SpellCheckDlgWX.h"
+  #include "wxdialog/TextDlgWX.h"
   #include "wxdialog/TitleDlgWX.h"
 #endif /* _WX */
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef _WX
 wxArrayString BuildWX_URL_List( const char * url_list )
 {
@@ -67,6 +71,10 @@ ThotBool CreateInitConfirmDlgWX ( int ref,
 				  char *label3 )
 {
 #ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
   wxString wx_label = TtaConvMessageToWX( label );
   wxString wx_label2 = TtaConvMessageToWX( label2 );
   wxString wx_label3 = TtaConvMessageToWX( label3 );
@@ -140,6 +148,10 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent,
 			      DocumentType doc_type )
 {
 #ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
   wxString wx_title   = TtaConvMessageToWX( title );
   wxString wx_docName = TtaConvMessageToWX( docName );
   wxString wx_filter;
@@ -161,8 +173,7 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent,
   else 
     wx_filter = APPFILENAMEFILTER;
 
-  OpenDocDlgWX * p_dlg = new OpenDocDlgWX( ref,
-					   parent,
+  OpenDocDlgWX * p_dlg = new OpenDocDlgWX( ref, parent,
 					   wx_title,
 					   wx_docName,
 					   wx_filter );
@@ -207,6 +218,56 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent,
 }
 
 /*----------------------------------------------------------------------
+  CreateImageDlgWX create the dialog for creating new image
+  params:
+    + parent : parent window
+    + title : dialog title
+    + urlToOpen : suggested url
+  returns:
+  ----------------------------------------------------------------------*/
+ThotBool CreateImageDlgWX ( int ref, ThotWindow parent,
+			    const char *title,
+			    const char *urlToOpen,
+			    const char *alt)
+{
+#ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
+  wxString wx_title   = TtaConvMessageToWX( title );
+  wxString wx_urlToOpen = TtaConvMessageToWX( urlToOpen );
+  wxString wx_alt = TtaConvMessageToWX( alt );
+  wxString wx_filter = APPIMAGENAMEFILTER;
+
+  ImageDlgWX * p_dlg = new ImageDlgWX( ref,
+				       parent,
+				       wx_title,
+				       wx_urlToOpen,
+				       wx_alt,
+				       wx_filter );
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+    {
+      /* the dialog has been sucesfully registred */
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (ref, FALSE);
+      /* wait for an answer */
+      TtaWaitShowDialogue ();
+      return TRUE;
+    }
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
   CreateTitleDlgWX create the dialog to change the document title
   params:
     + doc_title : the current document title
@@ -216,8 +277,13 @@ ThotBool CreateTitleDlgWX ( int ref, ThotWindow parent,
 			    char *doc_title )
 {
 #ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
   wxString wx_title     = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_CHANGE_TITLE) );
   wxString wx_doc_title = TtaConvMessageToWX( doc_title );
+
   TitleDlgWX * p_dlg = new TitleDlgWX( ref,
 				       parent,
 				       wx_title,
@@ -248,9 +314,14 @@ ThotBool CreateSearchDlgWX ( int ref, ThotWindow parent,  char* caption,
 			     ThotBool withReplace, ThotBool searchAfter)
 {
 #ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
   wxString wx_caption = TtaConvMessageToWX( caption );
   wxString wx_searched = TtaConvMessageToWX( searched );
   wxString wx_replace = TtaConvMessageToWX( replace );
+
   SearchDlgWX * p_dlg = new SearchDlgWX( ref,
 					 parent,
 					 wx_caption,
@@ -282,7 +353,12 @@ ThotBool CreateSearchDlgWX ( int ref, ThotWindow parent,  char* caption,
 ThotBool CreatePrintDlgWX ( int ref, ThotWindow parent,  char* ps_file)
 {
 #ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
   wxString wx_ps_file = TtaConvMessageToWX( ps_file );
+
   PrintDlgWX * p_dlg = new PrintDlgWX( ref,
 				       parent,
 				       wx_ps_file );
@@ -311,7 +387,12 @@ ThotBool CreateSaveAsDlgWX ( int ref, ThotWindow parent,
 			     char* pathname, int doc)
 {
 #ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
   wxString wx_pathname = TtaConvMessageToWX( pathname );
+
   SaveAsDlgWX * p_dlg = new SaveAsDlgWX( ref,
 					 parent,
 					 wx_pathname,
@@ -341,14 +422,16 @@ ThotBool CreateAuthentDlgWX ( int ref, ThotWindow parent,
 			     char *auth_realm, char *server)
 {
 #ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
   AuthentDlgWX * p_dlg = new AuthentDlgWX( ref,
 					   parent,
 					   auth_realm, server);
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-    {
       /* the dialog has been sucesfully registred */
       return TRUE;
-    }
   else
     {
       /* an error occured durring registration */
@@ -392,9 +475,12 @@ ThotBool CreateCSSDlgWX( int ref, ThotWindow parent,
       return FALSE;
     }
 
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
   /* create the dialog */
-  CSSDlgWX * p_dlg = new CSSDlgWX( ref,
-				   parent,
+  CSSDlgWX * p_dlg = new CSSDlgWX( ref, parent,
 				   wx_title,
 				   wx_items );
 
@@ -436,6 +522,10 @@ ThotBool CreateCheckedListDlgWX( int ref, ThotWindow parent, char *title,
 
   if ( nb_item )
     {
+      /* check if the dialog is alredy open */
+      if (TtaRaiseDialogue (ref))
+	return FALSE;
+
       /* create the dialog */
       CheckedListDlgWX * p_dlg = new CheckedListDlgWX( ref,
 						       parent,
@@ -463,6 +553,10 @@ ThotBool CreateCheckedListDlgWX( int ref, ThotWindow parent, char *title,
 ThotBool CreateDocInfoDlgWX ( int ref, ThotWindow parent, int doc)
 {
 #ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
   DocInfoDlgWX * p_dlg = new DocInfoDlgWX( ref,
 					   parent,
 					   doc );
@@ -486,28 +580,72 @@ ThotBool CreateDocInfoDlgWX ( int ref, ThotWindow parent, int doc)
   - Add CSS file
   - Create/Modify a link
  ------------------------------------------------------------------------*/
-ThotBool CreateHRefDlgWX ( int ref, ThotWindow parent,
+ThotBool CreateHRefDlgWX ( int ref,
+			   ThotWindow parent,
 			   const char *url_list,
 			   const char *HRefValue,
-			   int doc_select, int dir_select, int doc_type)
+			   int doc_type)
 {
 #ifdef _WX
   wxString wx_title      = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ATTRIBUTE) );
-  wxString wx_filter;
   wxString wx_init_value = TtaConvMessageToWX( HRefValue );
-
+  wxString wx_filter;
   if (doc_type == docCSS)
     wx_filter = APPCSSNAMEFILTER;
   else 
     wx_filter = APPFILENAMEFILTER;
-
   wxArrayString wx_items = BuildWX_URL_List(url_list);
+
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
   HRefDlgWX * p_dlg = new HRefDlgWX( ref,
 				     parent,
+				     wx_title,
 				     wx_items,
 				     wx_init_value,
-				     wx_title,
 				     wx_filter );
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+      /* the dialog has been sucesfully registred */
+      return TRUE;
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  ImageDlgWX create the dialog for creating new iamges
+  params:
+    + parent : parent window
+    + title : dialog title
+    + value : init value
+  returns:
+  ----------------------------------------------------------------------*/
+ThotBool CreateTextDlgWX ( int ref, int subref, ThotWindow parent,
+			   const char *title, const char *label,
+			   const char *value )
+{
+#ifdef _WX
+  wxString wx_title   = TtaConvMessageToWX( title );
+  wxString wx_label   = TtaConvMessageToWX( label );
+  wxString wx_value = TtaConvMessageToWX( value );
+
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
+  TextDlgWX * p_dlg = new TextDlgWX( ref, subref, parent,
+				     wx_title,
+				     wx_label,
+				     wx_value );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */
@@ -531,6 +669,11 @@ ThotBool CreateCreateTableDlgWX ( int ref, ThotWindow parent,
 				  int def_cols, int def_rows, int def_border)
 {
 #ifdef _WX
+
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
   wxString wx_title = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_BUTTON_TABLE) );
   CreateTableDlgWX * p_dlg = new CreateTableDlgWX( ref,
 						   parent,
@@ -561,6 +704,11 @@ ThotBool CreatePreferenceDlgWX ( int ref, ThotWindow parent,
 				 const char *url_list )
 {
 #ifdef _WX
+
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
   wxArrayString wx_items = BuildWX_URL_List(url_list);
   PreferenceDlgWX * p_dlg = new PreferenceDlgWX( ref,
 						 parent,
@@ -587,6 +735,11 @@ ThotBool CreatePreferenceDlgWX ( int ref, ThotWindow parent,
 ThotBool CreateSpellCheckDlgWX ( int ref, int base, ThotWindow parent)
 {
 #ifdef _WX
+
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
   SpellCheckDlgWX * p_dlg = new SpellCheckDlgWX( ref, base, parent);
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */

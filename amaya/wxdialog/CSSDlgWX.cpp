@@ -12,6 +12,9 @@
 #include "appdialogue_wx.h"
 #include "message_wx.h"
 
+static int      MyRef;
+
+
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
@@ -34,8 +37,7 @@ CSSDlgWX::CSSDlgWX( int ref,
   AmayaDialog( parent, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("CSSDlgWX"));
-
-  wxLogDebug( _T("CSSDlgWX::CSSDlgWX - title=")+title );
+  MyRef = ref;
 
   // update dialog labels with given ones
   SetTitle( title );
@@ -55,7 +57,7 @@ CSSDlgWX::CSSDlgWX( int ref,
   ----------------------------------------------------------------------*/
 CSSDlgWX::~CSSDlgWX()
 {
-  ThotCallback (BaseCSS + CSSForm, INTEGER_DATA, (char*) 0);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
 /*----------------------------------------------------------------------
@@ -78,7 +80,7 @@ void CSSDlgWX::OnOkButton( wxCommandEvent& event )
       ThotCallback (BaseCSS + CSSSelect, STRING_DATA, buffer);
     }
 
-  ThotCallback (BaseCSS + CSSForm, INTEGER_DATA, (char*) 1);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
 }
 
 /*----------------------------------------------------------------------
@@ -89,7 +91,9 @@ void CSSDlgWX::OnOkButton( wxCommandEvent& event )
 void CSSDlgWX::OnCancelButton( wxCommandEvent& event )
 {
   wxLogDebug( _T("CSSDlgWX::OnCancelButton") );
-  ThotCallback (BaseCSS + CSSForm, INTEGER_DATA, (char*) 0);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
 #endif /* _WX */
+
+

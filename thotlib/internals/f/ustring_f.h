@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern wchar_t Ttowlower ( wchar_t wc );
 extern int ustrcasecmp ( const CHAR_T *str1,
                          const CHAR_T *str2 );
@@ -40,6 +41,7 @@ extern CHARSET TtaGetDefaultCharset ( void );
 extern char *TtaGetCharsetName ( CHARSET charset );
 
 #else /* __STDC__ */
+
 extern wchar_t Ttowlower ( wchar_t wc );
 extern int ustrcasecmp ( const CHAR_T *str1,
                            const CHAR_T *str2 );

@@ -3283,19 +3283,19 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 			  /* send an event TteElemNew  Post to application */
 			  NotifySubTree (TteElemNew, pSelDoc, pNew, 0, 0,
 					 FALSE, FALSE);
-			  /* met a jour ses voisins */
-			  CreateAllAbsBoxesOfEl (pNew, pSelDoc);
-			  /* Mise a jour des images abstraites */
-			  AbstractImageUpdated (pSelDoc);
-			  /* indique au Mediateur les modifications */
-			  RedisplayDocViews (pSelDoc);
-			  /* si on est dans un element copie' par inclusion,
-			     on met a jour les copies de cet element. */
-			  RedisplayCopies (pNew, pSelDoc, TRUE);
-			  UpdateNumbers (NextElement (pNew), pNew, pSelDoc,
-					 TRUE);
 			  if (pNew && pNew->ElParent)
 			    {
+			      /* the element still exists */
+			      CreateAllAbsBoxesOfEl (pNew, pSelDoc);
+			      /* Mise a jour des images abstraites */
+			      AbstractImageUpdated (pSelDoc);
+			      /* indique au Mediateur les modifications */
+			      RedisplayDocViews (pSelDoc);
+			      /* si on est dans un element copie' par inclusion,
+				 on met a jour les copies de cet element. */
+			      RedisplayCopies (pNew, pSelDoc, TRUE);
+			      UpdateNumbers (NextElement (pNew), pNew, pSelDoc,
+					     TRUE);
 			      /* Indiquer que le document est modifie' */
 			      SetDocumentModified (pSelDoc, TRUE, 30);
 			      /* Replace la selection */

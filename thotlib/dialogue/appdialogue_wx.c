@@ -1334,7 +1334,7 @@ ThotBool TtaRegisterWidgetWX( int ref, void * p_widget )
     }
    else
      {
-       /* this catalogue allready has a associated widget ? */
+       /* this catalogue has already a associated widget ? */
        if (catalogue->Cat_Widget)
 	 {
 	   /* yes ! destroy the old dialogue */

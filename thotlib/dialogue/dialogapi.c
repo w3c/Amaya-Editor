@@ -3709,6 +3709,32 @@ static int DestForm (int ref)
 }
 
 /*----------------------------------------------------------------------
+  TtaRaiseDialogue raises the dialogue if it exists,
+  ----------------------------------------------------------------------*/
+ThotBool TtaRaiseDialogue (int ref)
+{
+  struct Cat_Context *catalogue;
+  
+  if (ref == 0)
+    {
+      TtaError (ERR_invalid_reference);
+      return FALSE;
+    }
+  catalogue = CatEntry (ref);
+  if (catalogue == NULL || catalogue->Cat_Widget == 0)
+    return FALSE;
+#ifdef _WX
+  /* hide the widget */
+  if (catalogue->Cat_Type == CAT_DIALOG && catalogue->Cat_Widget)
+    {
+      catalogue->Cat_Widget->Show( true );
+      catalogue->Cat_Widget->Raise( );
+    }
+#endif /* _WX */
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
   TtaUnmapDialogue desactive le dialogue s'il est actif.
   ----------------------------------------------------------------------*/
 void TtaUnmapDialogue (int ref)
