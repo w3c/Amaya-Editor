@@ -150,10 +150,8 @@ static int AdvanceNextWord (unsigned char *line, int indline)
 	  /* skip to the end of the current line */
 	  while (line[indline] != EOS && line[indline] != EOL)
 	    indline++;
-      if (line[indline] == EOL)
-		indline++;
 	}
-	  else
+      else
 	indline++;
     }
   return indline;
@@ -171,7 +169,9 @@ static int getWord (int indline, unsigned char *line, char *word)
   /* copy the word from the line*/
   indword = 0;
   word[0] = EOS;
-  while (line[indline] != EOS && line[indline] != ';')
+  while (line[indline] == __CR__ || line[indline] == EOL)
+    indline++;    
+  while (line[indline] != EOS && line[indline] != ';' && line[indline] != EOL)
     word[indword++] = line[indline++];
   /* marque la fin du mot trouve' */
   word[indword] = EOS;
@@ -180,10 +180,48 @@ static int getWord (int indline, unsigned char *line, char *word)
       line[0] = EOS;
       return 0;
     }
-  if (line[indline] != EOS)
+  if (line[indline] == ';')
     indline++;
   /*place ourself next to a word*/
   indline = AdvanceNextWord (line, indline);
+  return (indline);
+}
+
+/*----------------------------------------------------------------------
+   getFontFamily                                                  
+  ----------------------------------------------------------------------*/
+static int getFontFamily (int indline, unsigned char *line, char *word)
+{
+  int             indword;
+
+  /* copy the word from the line*/
+  indword = 0;
+  word[0] = EOS;
+  if (line[indline] == EOL)
+    indline++;
+  if (line[indline] == __CR__)
+    indline++;
+  if (line[indline] == EOL)
+    /* end of the current font family list */
+    return indline;
+  while (line[indline] != EOS && line[indline] != EOL)
+    {
+      if (isnum (line[indline]))
+	{
+	  while (line[indline] != EOS &&
+		 line[indline] > SPACE && line[indline] != ';')
+	    word[indword++] = line[indline++];
+	  if (line[indline] == ';')
+	    indline++;
+	  if (line[indline] == __CR__)
+	    indline++;
+	  /* word found */
+	  word[indword] = EOS;
+	  return indline;
+	}
+      else
+	indline++;     
+    }
   return (indline);
 }
 
@@ -196,65 +234,32 @@ static int getFontFace (int indline, unsigned char *line, char *word)
 
   indword = 0;
   word[0] = EOS;  
-  /* skip all char if there are */
-  while (line[indline] != EOS && line[indline] != EOL)
-     {
-       if (line[indline] == '=')
-	 {
-	   /* get the font-face highlight number*/
-	   word[indword++] = line[indline-1];
-	   word[indword++] = EOS;
-	   indline++;
-	   /*we return to the '1=' */
-	   while (line[indline] != EOS &&
-		  line[indline] >= SPACE && line[indline] != ';')
-	     word[indword++] = line[indline++];
-	   if (line[indline] != EOS)
-		indline++;
-	   /* mark the end of the word */
-	   word[indword] = EOS;
-	   return indline;
-	 }
-       indline++;
-     }
-     return (indline);
-}
-
-/*----------------------------------------------------------------------
-   getFontFamily                                                  
-  ----------------------------------------------------------------------*/
-static int getFontFamily (int indline, unsigned char *line, char *word)
-{
-  int             indword;
-  int             count;
-
-  /* copy the word from the line*/
-  indword = 0;
-  word[0] = EOS;
-  count = 0;
-  /* skip 2 lines */
-  while (line[indline] != EOS && count < 2)
-    if (line[indline++] == EOL)
-      count++;
-  while (line[indline] != EOS && line[indline] != EOL)
-  {
-    if (isnum (line[indline]))
-	 {
-	   while (line[indline] != EOS &&
-		  line[indline] > SPACE && line[indline] != ';')
-	     word[indword++] = line[indline++];
-	   if (line[indline] != EOS)
-		indline++;
-	   /* word found */
-	   word[indword] = EOS;
-	   return indline;
-	 }
-	else
-       indline++;     
-  }
+  if (line[indline] == EOL)
+    /* end of the current font face list */
+    return indline;
+  while (line[indline] != EOS && line[indline] != ';'
+	 && line[indline] != EOL)
+    {
+      /* get the font-face highlight number */
+      word[indword] = line[indline];
+      if (line[indline] == '=')
+	  /* get the font-face string */
+	word[indword++] = EOS;
+      else if (line[indline] == __CR__)
+	  /* get the font-face string */
+	word[indword] = EOS;
+      else
+	indword++;
+      indline++;
+    }
+  if (line[indline] != EOS)
+    indline++;
+  if (line[indline] == __CR__)
+    indline++;
+  /* mark the end of the word */
+  word[indword] = EOS;
   return (indline);
 }
-
 
 /*----------------------------------------------------------------------
   FontLoadFile : Fill the structure for name - font correspondance
@@ -323,18 +328,15 @@ static ThotBool FontLoadFile ( FILE *file, FontScript **fontsscript_tab)
 			      fontsscript_tab[script]->family[face]->highlight[style] == NULL)
 			    {
 			      /*Get the font-face in 1=font-face string (so +1-1)*/
-			      fontface = TtaStrdup (&word[2]);
 #ifdef _GL
-			      if (!TtaFileExist (fontface))
+			      if (!TtaFileExist (&word[2]))
 #else /* _GL */
-			      if (!IsXLFDPatterneAFont (fontface))
+			      if (!IsXLFDPatterneAFont (&word[2]))
 #endif /* _GL */
-				{
-				  complete = FALSE;
-				  /*printf ("Font file %s not found\n", fontface)*/;
-				}
+				complete = FALSE;
 			      else
 				{
+				  fontface = TtaStrdup (&word[2]);
 				  fontsscript_tab[script]->family[face]->highlight[style] = fontface;
 				  /* note if STIX fonts are available */
 				  if (script == 21 && !StixExist)
