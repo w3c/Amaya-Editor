@@ -48,6 +48,13 @@ typedef XPathItem * XPathList;
 /* the thotlib attribute type used to identify an id attribute*/
 #define THOT_ATTR_ID    2  
 
+typedef enum _selMode {
+  SEL_START_POINT=1,
+  SEL_END_POINT=16,
+  SEL_STRING_RANGE=32,
+  SEL_RANGE_TO=64
+} selMode;
+
 /*----------------------------------------------------------------------
   StrACat
 
@@ -81,21 +88,28 @@ static void StrACat (char ** dest, const char * src)
 }
 
 /*----------------------------------------------------------------------
-  AdjustChIndex
+  AdjustSelMode
 
   Makes sure that the index to a text element doesn't point outside
   of the length of the text.
   Returns the adjusted index, if any.
   ----------------------------------------------------------------------*/
-static int AdjustChIndex (Element el, int index)
+static void AdjustSelMode (Element el, int *start, int index, selMode *mode)
 {
   int len;
 
   len = TtaGetTextLength (el);
-  if (index > len)
-    return (len);
-  else
-    return (index);
+  if (*start > 0)
+    {
+      *mode |= SEL_STRING_RANGE;
+      if (*start > len)
+	{
+	  *mode |= SEL_END_POINT;
+	  *start = len;
+	}
+      else if (*start > index)
+	*mode |= SEL_START_POINT;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -421,19 +435,26 @@ ThotBool SearchTextPosition (Element *mark, int *firstCh)
   the caller to free the returned string.
   Returns NULL in case of error.
   ----------------------------------------------------------------------*/
-static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len, ThotBool firstF)
+static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len, int mode, ThotBool firstF)
 {
   XPathItem *xpath_item, *xpath_tmp;
   char buffer[500];
   char *xpath_expr = NULL;
 
   xpath_item = *xpath_list;
-  if  (firstCh > 0)
+  if  (mode & SEL_STRING_RANGE)
     {
-      if (firstF)
-	StrACat (&xpath_expr, "start-point(string-range(");
-      else
+      if (mode & SEL_END_POINT)
 	StrACat (&xpath_expr, "end-point(string-range(");
+      else if (mode & SEL_START_POINT)
+	{
+	  if (firstF)
+	    StrACat (&xpath_expr, "start-point(string-range(");
+	  else
+	    StrACat (&xpath_expr, "end-point(string-range(");
+	}
+      else
+	StrACat (&xpath_expr, "string-range(");
     }
 
   while (xpath_item)
@@ -458,11 +479,13 @@ static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len, ThotBo
       xpath_item = xpath_tmp;
     }
 
-  if  (firstCh > 0)
+  if (mode & SEL_STRING_RANGE)
     {
       snprintf (buffer, sizeof (buffer),
-		",\"\",%d,%d))", firstCh, len);
+		",\"\",%d,%d)", firstCh, len);
       StrACat (&xpath_expr, buffer);
+      if (mode & SEL_START_POINT || mode & SEL_END_POINT)
+	StrACat (&xpath_expr, ")");
     }
 
   return (xpath_expr);
@@ -480,9 +503,9 @@ static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len, ThotBo
   Returns NULL in case of failure.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char *XPointer_ThotEl2XPath (Element start, int firstCh, int len, ThotBool firstF)
+char *XPointer_ThotEl2XPath (Element start, int firstCh, int len, selMode mode, ThotBool firstF)
 #else
-char *XPointer_ThotEl2XPath (start, firstCh, len, firstF)
+char *XPointer_ThotEl2XPath (start, firstCh, selMode mode, len, firstF)
 Element start;
 int firstCh;
 int len;
@@ -550,7 +573,7 @@ ThotBool firstF;
   
   /* find the xpath expression (this function frees the list while building
      the string) */
-  xpath_expr = XPathList2Str (&xpath_list, firstCh, len, firstF);
+  xpath_expr = XPathList2Str (&xpath_list, firstCh, len, mode, firstF);
   return (xpath_expr);
 }
 
@@ -581,9 +604,10 @@ View view;
   char       *lastXpath = NULL;
   ElementType elType;
 
+  selMode    mode = 0;
+
   /* @@ debug */
   char       *xptr_expr = NULL;
-
 
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   /* only do this operation on XML and HTML documents */
@@ -599,8 +623,10 @@ View view;
   
   /* get the first selected element */
   TtaGiveFirstSelectedElement (doc, &firstEl, &firstCh, &i);
-  firstCh = AdjustChIndex (firstEl, firstCh);
-  
+  printf ("first Ch is %d, i is %d\n", firstCh, i);
+
+  AdjustSelMode (firstEl, &firstCh, i, &mode);
+
   if (firstEl == NULL)
     return NULL; /* ERROR, there is no selection */
 
@@ -610,7 +636,8 @@ View view;
   else
     {
       TtaGiveLastSelectedElement (doc, &lastEl, &i, &lastCh);
-      lastCh = AdjustChIndex (lastEl, lastCh);
+      printf ("last Ch is %d, i is %d\n", lastCh, i);
+      AdjustSelMode (lastEl, &lastCh, i, &mode);
     }
 
   /* if the selection is in the same element, adjust the first element's
@@ -619,17 +646,21 @@ View view;
     {
       firstLen = lastCh - firstCh + 1;
       lastEl = NULL;
+      mode  = mode & ~(SEL_START_POINT | SEL_END_POINT);
     }
   else
-    firstLen = 1;
+    {
+      firstLen = 1;
+      mode |= SEL_RANGE_TO;
+    }
 
-  firstXpath = XPointer_ThotEl2XPath (firstEl, firstCh, firstLen, TRUE);
+  firstXpath = XPointer_ThotEl2XPath (firstEl, firstCh, firstLen, mode, TRUE);
 #ifdef DEBUG_XPOINTER
   fprintf (stderr, "\nfirst xpointer is %s", firstXpath);
 #endif  
   if (lastEl)
     {
-      lastXpath = XPointer_ThotEl2XPath (lastEl, lastCh, 1, FALSE);
+      lastXpath = XPointer_ThotEl2XPath (lastEl, lastCh, 1, mode, FALSE);
 #ifdef DEBUG_XPOINTER
       fprintf (stderr, "\nlast xpointer is %s\n", lastXpath);
 #endif  

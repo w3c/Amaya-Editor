@@ -1,4 +1,5 @@
 #ifndef AMAYA_XPOINTER_H
+#define AMAYA_XPOINTER_H
 
 /***************************************************
   General definitions
@@ -6,9 +7,12 @@
 
 /* the different types of nodes */
 typedef enum _nodeType {
-  SINGLE_NODE,     /* XPointer is a single node */
-  RANGE_TO,        /* XPointer is a node set (two nodes */
-  STRING_RANGE     /* XPointer node points to a string */
+  SINGLE_NODE=0x1,     /* XPointer is a single node */
+  RANGE_TO=0x2,        /* XPointer is a node set (two nodes */
+  STRING_RANGE=0x4,    /* XPointer node points to a string */
+  START_POINT=0x8,     /* XPointer node points to a string */
+  END_POINT=0x10       /* XPointer node points to a string */
+
 } nodeType;
 
 /***************************************************
@@ -82,14 +86,10 @@ typedef struct _parserContext {
   
   nodeType   type;        /* 0, single node, 1 range-to */
   nodeInfo  *curNode;
-  nodeInfo   nodeA;
-  nodeInfo   nodeB;
+  nodeInfo   nodeStart;
+  nodeInfo   nodeEnd;
 } parserContext;
 
 typedef parserContext *parserContextPtr;
 
 #endif /* AMAYA_XPOINTER_H */
-
-
-
-

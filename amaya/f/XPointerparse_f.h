@@ -11,8 +11,8 @@ void XPointer_select (parserContextPtr ctx);
 Element XPointer_el (nodeInfo *node);
 int XPointer_startC (nodeInfo *node);
 int XPointer_endC (nodeInfo *node);
-nodeInfo *XPointer_nodeA (parserContextPtr ctx);
-nodeInfo *XPointer_nodeB (parserContextPtr ctx);
+nodeInfo *XPointer_nodeStart (parserContextPtr ctx);
+nodeInfo *XPointer_nodeEnd (parserContextPtr ctx);
 
 #else /* __STDC__ */
 

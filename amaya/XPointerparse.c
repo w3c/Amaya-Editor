@@ -207,7 +207,7 @@ static void RangeTo (parserContextPtr ctx)
   printf ("RangeTo: clearing curNode\n");
 #endif
 
-  if (!curNode || curNode->el == 0 || curNode == &(ctx->nodeB))
+  if (!curNode || curNode->el == 0 || curNode == &(ctx->nodeEnd))
     /* @@ need to add other error codes */
     CtxAddError (ctx, "RangeTo: no existing content");
   else
@@ -215,7 +215,7 @@ static void RangeTo (parserContextPtr ctx)
       ctx->type = RANGE_TO;
       /* point to the context of the second node */
       curNode->processed = 1;
-      ctx->curNode = &(ctx->nodeB);
+      ctx->curNode = &(ctx->nodeEnd);
     }
 }
 
@@ -244,7 +244,7 @@ static void StringRange (parserContextPtr ctx, int startC, int len)
 	    curNode->endC = pos + len - 1;
 	  else
 	    curNode->endC = curNode->startC;
-	  curNode->type = STRING_RANGE;
+	  curNode->type |= STRING_RANGE;
 	}
     }
   
@@ -254,6 +254,22 @@ static void StringRange (parserContextPtr ctx, int startC, int len)
 #endif
 }
 
+static void StartPoint (parserContextPtr ctx)
+{
+  nodeInfo *curNode = ctx->curNode;
+
+  curNode->type |= START_POINT;
+  curNode->endC = curNode->startC -1;
+}
+
+static void EndPoint (parserContextPtr ctx)
+{
+  nodeInfo *curNode = ctx->curNode;
+
+  curNode->type |= END_POINT;
+  curNode->startC++;
+  curNode->endC = curNode->startC -1;
+}
 
 /************************************************** 
   Lexical analyzer functions
@@ -462,6 +478,7 @@ static void Term (parserContextPtr ctx)
 	  Match (ctx, '(');
 	  Factor (ctx);
 	  Match (ctx, ')');
+	  StartPoint (ctx);
 #ifdef XPTR_PARSE_DEBUG
 	  printf ("end of start-point function\n");
 #endif
@@ -475,6 +492,7 @@ static void Term (parserContextPtr ctx)
 	  Match (ctx, '(');
 	  Factor (ctx);
 	  Match (ctx, ')');
+	  EndPoint (ctx);
 #ifdef XPTR_PARSE_DEBUG
 	  printf ("end of end-point function\n");
 #endif
@@ -626,7 +644,7 @@ static void InitSymtable (parserContextPtr ctx)
 **************************************************/						  
 static void SelectNode (Document doc, nodeInfo *node)
 {
-  if (node->type == STRING_RANGE)
+  if (node->type & STRING_RANGE)
     TtaSelectString (doc, node->el, node->startC, node->endC);
   else
     TtaSelectElement (doc, node->el);
@@ -650,9 +668,9 @@ void XPointer_select (parserContextPtr ctx)
   if (TtaGetSelectedDocument () == ctx->doc)
     TtaUnselect (ctx->doc);
 
-  SelectNode (ctx->doc, &(ctx->nodeA));
+  SelectNode (ctx->doc, &(ctx->nodeStart));
   if (ctx->type == RANGE_TO)
-    SelectToNode (ctx->doc, &(ctx->nodeB));
+    SelectToNode (ctx->doc, &(ctx->nodeEnd));
 }
 
 /*----------------------------------------------------------------------
@@ -688,29 +706,29 @@ ThotBool XPointer_isStringRange (nodeInfo *node)
   if (!node)
     return FALSE;
 
-  return (node->type == STRING_RANGE);
+  return (node->type & STRING_RANGE);
 }
 
 /*----------------------------------------------------------------------
-  XPointer_nodeA
+  XPointer_nodeStart
   ----------------------------------------------------------------------*/
-nodeInfo *XPointer_nodeA (parserContextPtr ctx)
+nodeInfo *XPointer_nodeStart (parserContextPtr ctx)
 {
   if (!ctx)
     return NULL;
 
-  return (&(ctx->nodeA));
+  return (&(ctx->nodeStart));
 }
 
 /*----------------------------------------------------------------------
-  XPointer_nodeB
+  XPointer_nodeEnd
   ----------------------------------------------------------------------*/
-nodeInfo *XPointer_nodeB (parserContextPtr ctx)
+nodeInfo *XPointer_nodeEnd (parserContextPtr ctx)
 {
   if (!ctx)
     return NULL;
 
-  return (&(ctx->nodeB));
+  return (&(ctx->nodeEnd));
 }
 
 /*----------------------------------------------------------------------
@@ -784,7 +802,7 @@ parserContextPtr XPointer_parse (Document doc, char *buffer)
   InitSymtable (context);
 
   /* point to the first node */
-  context->curNode = &(context->nodeA);
+  context->curNode = &(context->nodeStart);
   /* and initialize the document root */
   context->doc = doc;
   context->root = TtaGetMainRoot (doc);
@@ -803,10 +821,10 @@ parserContextPtr XPointer_parse (Document doc, char *buffer)
       printf ("Error: %s\n", context->error);
   else
     {
-      if (context->nodeA.el)
-	printf ("el 1 is %d\n", context->nodeA.el);
-      if (context->nodeB.el)
-	printf ("el 2 is %d\n", context->nodeB.el);
+      if (context->nodeStart.el)
+	printf ("el 1 is %d\n", context->nodeStart.el);
+      if (context->nodeEnd.el)
+	printf ("el 2 is %d\n", context->nodeEnd.el);
     }
   XPointer_select (context);
 #endif /*  XPTR_ACTION_DEBUG */
