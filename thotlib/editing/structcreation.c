@@ -917,6 +917,7 @@ PtrAbstractBox      pAbEl;
        /* un pave correspondant existe dans la vue view */
        /* met a jour le volume dans les paves englobants */
        {
+	 assoc = AssocView (pEl);
 	 pAb = pEl->ElAbstractBox[view]->AbEnclosing;
 	 while (pAb != NULL)
 	   {
