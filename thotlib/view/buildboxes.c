@@ -533,9 +533,12 @@ int                *height;
 	case ']':
 	case '{':
 	case '}':
+	  *width = (int) ((float) CharacterWidth (230, font) * value);
+	  *height = hfont;
+	  break;
 	case '<':
 	case '>':
-	  *width = (int) ((float) CharacterWidth (230, font) * value);
+	  *width = 2 * CharacterWidth (230, font);
 	  *height = hfont;
 	  break;
 	case '|':       /* vertical bar */
@@ -543,7 +546,7 @@ int                *height;
 	  *height = hfont;	  
 	  break;
         case 'D':       /* double vertical bar */
-	  *width = 2 * CharacterWidth (124, font);  /* | */
+	  *width = 3 * CharacterWidth (124, font);  /* | */
 	  *height = hfont;	  
 	  break;
 	case '^':

@@ -2736,8 +2736,6 @@ int                 frame;
 	    case '}':
 	    case '[':
 	    case ']':
-	    case '<':
-	    case '>':
 	      i = (int) ((float) CharacterWidth (230, font) * value);
 	      ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame);
 	      break;

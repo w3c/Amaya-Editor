@@ -1208,9 +1208,7 @@ ptrfont             font;
 int                 RO;
 int                 active;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 xm, yf, yend;
 

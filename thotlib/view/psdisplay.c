@@ -999,25 +999,32 @@ int                 fg;
    ey = FontHeight (font);
    h -= ey;
    y += FontBase (font);
-   x = PixelToPoint (x + (l / 2));
-   yf = PixelToPoint (y + h);
-   y = PixelToPoint (y) + 1;
 
    if (h < ey / 4)
      {
+       x = PixelToPoint (x + (l / 2));
+       yf = PixelToPoint (y + h);
+       y = PixelToPoint (y) + 1;
 	/* Made of only one glyph */
 	if (direction == 0)
-	   fprintf (fout, "-%d %d ([) c\n", yf, x);
+	   fprintf (fout, "-%d %d (\341) c\n", yf, x);
 	else
-	   fprintf (fout, "-%d %d (])c\n", yf, x);
+	   fprintf (fout, "-%d %d (\361)c\n", yf, x);
      }
    else
      {
 	/* Drawn with more than one glyph */
-	if (direction == 0)	/* Trace un crochet ouvrant */
-	   fprintf (fout, "%d -%d -%d %s (\\351) (\\352) (\\353) s3\n", x + 1, yf, y, Scale);
+	if (direction == 0)
+	  /* Trace un crochet ouvrant */
+	  fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n",
+		   PixelToPoint (x + l), PixelToPoint (y),
+		   PixelToPoint (x), PixelToPoint (y + (h / 2)),
+		   PixelToPoint (x + l), PixelToPoint (y + h), 5, 1, 3);
 	else
-	   fprintf (fout, "%d -%d -%d %s (\\371) (\\372) (\\373) s3\n", x, yf, y, Scale);
+	  fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n",
+		   PixelToPoint (x), PixelToPoint (y),
+		   PixelToPoint (x + l), PixelToPoint (y + (h / 2)),
+		   PixelToPoint (x), PixelToPoint (y + h), 5, 1, 3);
      }
 }
 

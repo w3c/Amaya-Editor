@@ -3741,7 +3741,6 @@ void               *ctx_cbf;
    /*TtaHandlePendingEvents ();*/
 }
 
-#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    UpdateSaveAsButtons
    Maintain consistency between buttons in the Save As dialog box
@@ -3752,17 +3751,27 @@ static void	UpdateSaveAsButtons ()
 static void	UpdateSaveAsButtons ()
 #endif
 {
+#ifndef _WINDOWS
   int	active;
 
-  if (SaveAsHTML || SaveAsXML)
-     active = 1;
+  if (SaveAsHTML)
+    {
+      TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
+      TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
+      active = 1;
+    }
+  else if (SaveAsXML)
+    {
+      TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
+      TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
+      active = 1;
+    }
   else
-     active = 0;
+    active = 0;
   TtaRedrawMenuEntry (BaseDialog + ToggleSave, 4, NULL, -1, active);
   TtaRedrawMenuEntry (BaseDialog + ToggleSave, 5, NULL, -1, active);
-
-}
 #endif /* !_WINDOWS */
+}
 
 /*----------------------------------------------------------------------
    SetFileSuffix
@@ -4099,44 +4108,27 @@ CHAR_T*             data;
        switch (val)
 	 {
 	 case 0:	/* "Save as HTML" button */
-#ifdef _WINDOWS
 	   SaveAsHTML = TRUE;
 	   SaveAsXML = FALSE;
 	   SaveAsText = FALSE;
-#else  /* !_WINDOWS */
-	   SaveAsHTML = !SaveAsHTML;
-	   SaveAsXML = !SaveAsHTML;
-	   SaveAsText = FALSE;
-	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
-	   TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
 	   UpdateSaveAsButtons ();
-#endif /* _WINDOWS */
 	   SetFileSuffix ();
 	   break;
 	 case 1:	/* "Save as XML" button */
-#ifdef _WINDOWS
 	   SaveAsHTML = FALSE;
 	   SaveAsXML = TRUE;
 	   SaveAsText = FALSE;
-#else  /* !_WINDOWS */ 
-	   SaveAsXML = !SaveAsXML;
-	   SaveAsHTML = !SaveAsXML;
-	   SaveAsText = FALSE;
-	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
-	   TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
 	   UpdateSaveAsButtons ();
-#endif /* _WINDOWS */
 	   SetFileSuffix ();
+	   /* Set the document charset */
+	   if (TtaGetDocumentCharset (SavingDocument) == UNDEFINED_CHARSET)
+	     TtaSetDocumentCharset (SavingDocument, ISO_8859_1);
 	   break;
 	 case 2:	/* "Save as Text" button */
-#ifdef _WINDOWS
 	   SaveAsText = TRUE;
 	   SaveAsHTML = FALSE;
 	   SaveAsXML = FALSE;
-#else  /* !_WINDOWS */
-	   SaveAsText = !SaveAsText;
-	   SaveAsHTML = !SaveAsText;
-	   SaveAsXML = FALSE;
+#ifndef _WINDOWS
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
 	   UpdateSaveAsButtons ();
