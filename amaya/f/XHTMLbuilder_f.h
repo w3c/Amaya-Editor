@@ -6,41 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void XhtmlElementComplete ( Element el,
-                                   Document doc,
-                                   int *error );
-extern void XhtmlGetDTDName ( STRING DTDname,
-                              STRING elementName );
-extern AttributeMapping* XhtmlMapAttribute ( CHAR_T* attrName,
-                                             AttributeType* attrType,
-                                             CHAR_T* elementName,
-                                             Document doc );
-extern void XhtmlMapAttributeValue ( CHAR_T* AttrVal,
-                                     AttributeType attrType,
-                                     int* value );
-extern void XhtmlMapEntity ( STRING entityName,
-                             int *entityValue,
-                             int valueLength,
-                             STRING alphabet );
-
 #else /* __STDC__ */
-
-extern void XhtmlElementComplete (/* Element el,
-                                     Document doc,
-                                     int *error */);
-extern void XhtmlGetDTDName (/* STRING DTDname,
-                                STRING elementName */);
-extern AttributeMapping* XhtmlMapAttribute (/* CHAR_T* attrName,
-                                               AttributeType* attrType,
-                                               CHAR_T* elementName,
-                                               Document doc */);
-extern void XhtmlMapAttributeValue (/* CHAR_T* AttrVal,
-                                       AttributeType attrType,
-                                       int* value */);
-extern void XhtmlMapEntity (/* STRING entityName,
-                               int *entityValue,
-                               int valueLength,
-                               STRING alphabet */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

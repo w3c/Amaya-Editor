@@ -55,6 +55,8 @@ extern ThotBool AmayaIsAlive ( void );
 extern ThotBool CanDoStop ( void );
 extern void CanDoStop_set ( ThotBool value );
 extern void libwww_updateNetworkConf ( int status );
+extern void AHTFTPURL_flag_set ( ThotBool value );
+extern ThotBool AHTFTPURL_flag ( void );
 
 #else /* __STDC__ */
 
@@ -107,6 +109,8 @@ extern ThotBool AmayaIsAlive (/* void */);
 extern ThotBool CanDoStop (/* void */);
 extern void CanDoStop_set (/* ThotBool value */);
 extern void libwww_updateNetworkConf (/* int status */);
+extern void AHTFTPURL_flag_set (/* ThotBool value */);
+extern ThotBool AHTFTPURL_flag (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

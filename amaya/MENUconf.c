@@ -139,6 +139,7 @@ static AM_WIN_MenuText WIN_GeneralMenuText[] =
 	{IDC_MULTIKEY, AM_ENABLE_MULTIKEY},
 	{IDC_BGIMAGES, AM_SHOW_BG_IMAGES},
 	{IDC_DOUBLECLICK, AM_ENABLE_DOUBLECLICK},
+	{IDC_ENABLEFTP, AM_ENABLE_FTP},
 	{0, 0}
 };
 #endif /* _WINDOWS */
@@ -152,6 +153,7 @@ static ThotBool DoubleClick;
 static CHAR_T   DialogueLang [MAX_LENGTH];
 static int      FontMenuSize;
 static CHAR_T   HomePage [MAX_LENGTH];
+static ThotBool EnableFTP;
 
 /* Publish menu options */
 #ifdef _WINDOWS
@@ -346,6 +348,7 @@ void InitAmayaDefEnv ()
   /* @@@ */
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   /* @@@ */
+  TtaSetDefEnvString ("ENABLE_FTP", TEXT("no"), FALSE);
   
 #ifndef _WINDOWS
   TtaSetDefEnvString ("THOTPRINT", TEXT("lpr"), FALSE);
@@ -1522,6 +1525,7 @@ static void GetGeneralConf ()
   TtaGetEnvBoolean ("ENABLE_MULTIKEY", &Multikey);
   TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &BgImages);
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
+  TtaGetEnvBoolean ("ENABLE_FTP", &EnableFTP);
   GetEnvString ("HOME_PAGE", HomePage);
   GetEnvString ("LANG", DialogueLang);
   TtaGetEnvInt ("FontMenuSize", &FontMenuSize);
@@ -1710,6 +1714,8 @@ static void SetGeneralConf ()
   /* @@@ */
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   /* @@@ */
+  TtaSetEnvBoolean ("ENABLE_FTP", EnableFTP, TRUE);
+  AHTFTPURL_flag_set (EnableFTP);
   TtaSetEnvString ("HOME_PAGE", HomePage, TRUE);
   TtaSetEnvString ("LANG", DialogueLang, TRUE);
   TtaSetEnvInt ("FontMenuSize", FontMenuSize, TRUE);
@@ -1740,6 +1746,8 @@ static void GetDefaultGeneralConf ()
 		       GeneralBase + mToggleGeneral, 1);
   GetDefEnvToggle ("ENABLE_DOUBLECLICK", &DoubleClick,
 		       GeneralBase + mToggleGeneral, 2);
+  GetDefEnvToggle ("ENABLE_FTP", &EnableFTP,
+		       GeneralBase + mToggleGeneral, 3);
   GetDefEnvString ("HOME_PAGE", HomePage);
   GetDefEnvString ("LANG", DialogueLang);
   TtaGetDefEnvInt ("FontMenuSize", &FontMenuSize);
@@ -1769,6 +1777,8 @@ HWND hwnDlg;
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_DOUBLECLICK, (DoubleClick) 
 		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_ENABLEFTP, (EnableFTP) 
+		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang);
   SetDlgItemInt (hwnDlg, IDC_ZOOM, Zoom, TRUE);
   SetDlgItemText (hwnDlg, IDC_TMPDIR, AppTmpDir);
@@ -1790,6 +1800,7 @@ static void RefreshGeneralMenu ()
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 0, Multikey);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 1, BgImages);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 2, DoubleClick);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 3, EnableFTP);
   TtaSetTextForm (GeneralBase + mHomePage, HomePage);
   TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
   TtaSetNumberForm (GeneralBase + mFontMenuSize, FontMenuSize);
@@ -1865,6 +1876,9 @@ LPARAM lParam;
 	  break;
 	case IDC_DOUBLECLICK:
 	  DoubleClick = !DoubleClick;
+	  break;
+	case IDC_ENABLEFTP:
+	  EnableFTP = !EnableFTP;
 	  break;
 
 	  /* action buttons */
@@ -1961,6 +1975,9 @@ STRING              data;
 	    case 2:
 	      DoubleClick = !DoubleClick;
 	      break;
+	    case 3:
+	      EnableFTP = !EnableFTP;
+	      break;
 	    }
 	  break;
 
@@ -2049,15 +2066,16 @@ STRING              pathname;
 		   FALSE);
    TtaNewLabel (GeneralBase + mGeneralEmpty2, GeneralBase + GeneralMenu, " ");   
    /* fifth line */
-   usprintf (s, "B%s%cB%s%cB%s", 
-	    TtaGetMessage (AMAYA, AM_ENABLE_MULTIKEY), EOS, 
-	    TtaGetMessage (AMAYA, AM_SHOW_BG_IMAGES), EOS, 
-	    TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK));
+   usprintf (s, "B%s%cB%s%cB%s%cB%s", 
+	     TtaGetMessage (AMAYA, AM_ENABLE_MULTIKEY), EOS, 
+	     TtaGetMessage (AMAYA, AM_SHOW_BG_IMAGES), EOS, 
+	     TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK), EOS,
+	     TtaGetMessage (AMAYA, AM_ENABLE_FTP));
 
    TtaNewToggleMenu (GeneralBase + mToggleGeneral,
 		     GeneralBase + GeneralMenu,
 		     NULL,
-		     3,
+		     4,
 		     s,
 		     NULL,
 		     FALSE);

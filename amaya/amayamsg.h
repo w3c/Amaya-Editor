@@ -1,3 +1,4 @@
+/* Beginning of labels */
 #define AM_FILES		0
 #define AM_OPEN_URL		1
 #define AM_CLEAR		2
@@ -205,4 +206,5 @@
 #define AM_ORIENTATION		204
 #define AM_PORTRAIT		205
 #define AM_LANDSCAPE		206
-#define AMAYA_MSG_MAX		207
+#define AM_ENABLE_FTP		207
+#define AMAYA_MSG_MAX		208

@@ -105,6 +105,8 @@ static  ThotBool    UserAborted_flag; /* set to 1 if we're processing a user
 static int          fd_cachelock; /* open handle to the .lock cache file */
 #endif /* AMAYA_WWW_CACHE */
 
+static  ThotBool    FTPURL_flag; /* if set to true, we can browse FTP URLs */
+
 #include "answer_f.h"
 #include "query_f.h"
 #include "AHTURLTools_f.h"
@@ -2400,6 +2402,8 @@ void                QueryInit ()
      WWW_TraceFlag = 0;
 #endif /* HTDEBUG */
 
+   TtaGetEnvBoolean ("ENABLE_FTP", &FTPURL_flag);
+
 #ifdef DEBUG_LIBWWW
   /* forwards error messages to our own function */
    WWW_TraceFlag = THD_TRACE;
@@ -3634,3 +3638,37 @@ int status;
       AHTAcceptLanguagesInit (acceptLanguages);
     }
 }
+
+/****************************************************************************
+ ** The following two functions allow to set and read the value of          *
+ ** the  FTPURL_flag. If this flag is true, it means we can browse FTP URLs *
+ ***************************************************************************/
+
+/*----------------------------------------------------------------------
+  AHT_FTPURL_flag_set
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AHTFTPURL_flag_set (ThotBool value)
+#else
+void AHTFTPURL_flag_set (value)
+ThotBool value;
+#endif /* __STDC__ */
+{
+  FTPURL_flag = value;
+}
+
+/*----------------------------------------------------------------------
+  AHT_FTPURL_flag
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool AHTFTPURL_flag (void)
+#else
+ThotBool AHTFTPURL_flag (void)
+#endif /* __STDC__ */
+{
+  return (FTPURL_flag);
+}
+
+
+
+
