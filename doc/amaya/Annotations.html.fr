@@ -28,23 +28,25 @@
 <div id="Assembling">
 <h2><a name="L1065">Les annotations dans Amaya</a></h2>
 <ul>
-  <li><a href="#def">Définition</a></li>
-  <li><a href="Annotations.html#Local">Annotations locales et
+  <li><a href="Annotations.html.fr#def">Définition</a></li>
+  <li><a href="Annotations.html.fr#Local">Annotations locales et
   distantes</a></li>
-  <li><a href="Annotations.html#Annotation">Menu des annotations</a></li>
-  <li><a href="Annotations.html#Configurat">Menu de configuration pour les
+  <li><a href="Annotations.html.fr#Annotation">Menu des annotations</a></li>
+  <li><a href="Annotations.html.fr#Configurat">Menu de configuration pour les
     annotations</a></li>
-  <li><a href="Annotations.html#Creating1">Créer une annotation</a></li>
-  <li><a href="Annotations.html#Deleting">Supprimer une annotation</a></li>
-  <li><a href="Annotations.html#Loading">Charger et afficher une
+  <li><a href="Annotations.html.fr#Creating1">Créer une annotation</a></li>
+  <li><a href="Annotations.html.fr#Deleting1">Supprimer une
+  annotation</a></li>
+  <li><a href="Annotations.html.fr#Loading">Charger et afficher une
     annotations</a></li>
-  <li><a href="Annotations.html#Navigating">Activer des annotations</a></li>
-  <li><a href="Annotations.html#Issues1">Problèmes relatifs aux annotations et
-    aux documents modifiés</a></li>
+  <li><a href="Annotations.html.fr#Navigating">Activer des
+  annotations</a></li>
+  <li><a href="Annotations.html.fr#Issues1">Problèmes relatifs aux annotations
+    et aux documents modifiés</a></li>
 </ul>
 
 <div id="Annotations">
-<h3><a name="def">Définition</a></h3>
+<h3 id="def">Définition</h3>
 
 <p>Une annotation est un commentaire, une note, une explication ou tout autre
 remarque externe qui peut être attachée à un document web ou à une partie de
@@ -233,7 +235,7 @@ local) n'est pas supportée .</p>
 <strong>Imprimer</strong> qui imprime le corps de l'annotation ou la commande
 <strong>Recharger</strong>.</p>
 
-<h3>Détruire une annotation</h3>
+<h3 id="Deleting1">Détruire une annotation</h3>
 
 <p>La commande <strong>Détruire une annotation</strong> du menu de la fenêtre
 d'annotation vous permet de supprimer celle-ci. Vous pouvez également

@@ -199,6 +199,27 @@ décrits.</p>
         document</a></li>
     </ul>
   </li>
+  <li><a href="Annotations.html.fr#Assembling">Les annotations dans Amaya</a> 
+    <ul>
+      <li><a href="Annotations.html.fr#def">Définition</a></li>
+      <li><a href="Annotations.html.fr#Local">Annotations locales et
+        distantes</a></li>
+      <li><a href="Annotations.html.fr#Annotation">Menu des
+      annotations</a></li>
+      <li><a href="Annotations.html.fr#Configurat">Menu de configuration pour
+        les annotations</a></li>
+      <li><a href="Annotations.html.fr#Creating1">Créer une
+      annotation</a></li>
+      <li><a href="Annotations.html.fr#Deleting1">Détruire une
+      annotation</a></li>
+      <li><a href="Annotations.html.fr#Loading">Charger et présenter les
+        annotations</a></li>
+      <li><a href="Annotations.html.fr#Navigating">Activer des
+      annotations</a></li>
+      <li><a href="Annotations.html.fr#Issues1">Problèmes relatifs aux
+        annotations et aux documents modifiés</a></li>
+    </ul>
+  </li>
   <li><a href="Configure.html.fr#Configuring">Configurer Amaya</a> 
     <ul>
       <li><a href="Configure.html.fr#Conventions">Conventions</a> 
@@ -284,6 +305,8 @@ spécifique d'Amaya :</p>
     section</a></li>
   <li><a rel="Chapter" href="MakeBook.html.fr#Assembling">Assembler des
     collections de document</a></li>
+  <li><a href="Annotations.html.fr#Assembling">Les annotations dans
+  Amaya</a></li>
 </ul>
 
 <p>Il est également possible de changer les options par défaut (reportez-vous
