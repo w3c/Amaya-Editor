@@ -141,4 +141,5 @@ int                 AMAYA;
 #define AM_REPEAT                     129
 #define AM_REPEAT_X                   130
 #define AM_RELOAD_FILES               131
-#define AMAYA_MSG_MAX                 132
+#define AM_AUTHENTICATION_CONFIRM     132
+#define AMAYA_MSG_MAX                 133

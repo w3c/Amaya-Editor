@@ -25,6 +25,10 @@
 
 #define CACHE_DIR_NAME DIR_STR"libwww-cache"
 #define DEFAULT_CACHE_SIZE 5
+#define DEFAULT_MAX_SOCKET 8
+#define DEFAULT_DNS_TIMEOUT 60
+#define DEFAULT_PERSIST_TIMEOUT 60L
+#define DEFAULT_NET_EVENT_TIMEOUT 20000
 
 /* Amaya includes  */
 #define THOT_EXPORT extern
@@ -72,7 +76,8 @@ struct _HTError
 
 static HTList      *converters = NULL;	/* List of global converters */
 static HTList      *acceptTypes = NULL; /* List of types for the Accept header */
-static HTList      *encodings = NULL;
+static HTList      *transfer_encodings = NULL;
+static HTList      *content_encodings = NULL;
 static int          object_counter = 0;	/* loaded objects counter */
 static  boolean     AmayaAlive_flag; /* set to 1 if the application is active;
 					0 if we have killed */
@@ -346,12 +351,6 @@ int                 docid;
    /* Bind the Context object together with the Request Object */
    me->request = HTRequest_new ();
   
-   /*
-   ** Make sure that the first request is flushed immediately and not
-   ** buffered in the output buffer
-   */
-   HTRequest_setFlush(me->request, YES);
-
    /* clean the associated file structure) */
    HTRequest_setOutputStream (me->request, NULL);
  
@@ -766,6 +765,117 @@ int                 status;
    return HT_ERROR;
 }
 
+#ifdef AMAYA_LOST_UPDATE
+/*----------------------------------------------------------------------
+  precondition_handler
+  412 "Precondition failed" handler
+  ----------------------------------------------------------------------*/
+#if __STDC__
+static int          precondition_handler (HTRequest * request, HTResponse * response, void *context, int status)
+#else
+static int          precondition_handler (request, response, context, status)
+HTRequest          *request;
+HTResponse         *response;
+void               *context;
+int                 status;
+#endif /* __STDC__ */
+{
+  AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
+  int conflict = 0;
+
+  if (!me)
+    return HT_OK;		/* not an Amaya request */
+
+   if (me->output && me->output != stdout)
+     {
+       fclose (me->output);
+       me->output = NULL;
+     }
+ 
+   if (conflict == 1) 
+     {
+       /* start a new PUT request without preconditions */
+       /* @@@ put some form here */
+       /* Stop here */
+       return HT_ERROR;
+     }
+   else 
+     if (conflict == 2)
+       {
+	 /* Stop here */
+	 return HT_ERROR;
+       }
+   else
+     return HT_OK; /* Just finish the request */
+}       
+
+/*
+**  Request HEAD checker filter
+*/
+PRIVATE int check_handler (HTRequest * request, HTResponse * response,
+                           void * param, int status)
+{
+  int conflict = 0;
+  /***
+    CRequest * req = (CRequest *) HTRequest_context(request);
+    CVersionConflict conflict;
+   
+    req->Cleanup();
+    ***/
+    /*
+    ** If head request showed that the document doesn't exist
+    ** then just go ahead and PUT it. Otherwise ask for help
+    */
+    if (status==HT_INTERRUPTED || status==HT_TIMEOUT)
+      {
+	return HT_ERROR;
+      } 
+    else
+      if (abs(status)/100!=2) 
+	{
+	  /* Start a new PUT request without preconditions */
+	  /***
+	    HTAnchor * source = req->Source();
+	    HTAnchor * dest = req->Destination();
+	    CRequest * new_req = new CRequest(req->m_pDoc);
+	    delete req;
+	    new_req->PutDocument(source, dest, FALSE);
+	    ***/
+	} 
+      else 
+	if (conflict)
+	  {
+	    if (conflict == 1) 
+	      {
+		/*** 
+		  HTAnchor * source = req->Source();
+		  HTAnchor * dest = req->Destination();
+		  CRequest * new_req = new CRequest(req->m_pDoc);
+		  delete req;
+		  ***/
+		/* Start a new PUT request without preconditions */
+		/***
+		  new_req->PutDocument(source, dest, FALSE);
+		  ***/
+	      } 
+	    else 
+	      if (conflict == 2) 
+		{
+		  /***
+		  HTAnchor * address = req->Source();
+		  CRequest * new_req = new CRequest(req->m_pDoc);
+		  delete req;
+		  ***/
+		  /* Start a new GET request  */
+		  /***
+		    new_req->GetDocument(address, 2);
+		    ***/
+		}
+	  }
+    return HT_ERROR;
+}
+#endif /* AMAYA_LOST_UPDATE */
+
 /*----------------------------------------------------------------------
   terminate_handler
   this function is registered to handle the result of the request
@@ -869,26 +979,29 @@ int                 status;
      me->reqStatus = HT_ERR;
    else if (me->reqStatus != HT_ABORT)
      me->reqStatus = HT_END;
-   
+ 
    /* copy the content_type */
-   content_type = request->anchor->content_type->name;
-   if (content_type && content_type [0] != EOS)
+   if (!me->content_type)
      {
-       /* libwww gives www/unknown when it gets an error. As this is 
-	  an HTML test, we force the type to text/html */
-       if (!strcmp (content_type, "www/unknown"))
-	 me->content_type = TtaStrdup ("text/html");
-       else
-	 me->content_type = TtaStrdup (content_type);
-
-       /* Content-Type can be specified by an httpd  server's admin. To be on
-	  the safe side, we normalize its case */
-       ConvertToLowerCase (me->content_type);
-
+       content_type = request->anchor->content_type->name;
+       if (content_type && content_type [0] != EOS)
+	 {
+	   /* libwww gives www/unknown when it gets an error. As this is 
+	      an HTML test, we force the type to text/html */
+	   if (!strcmp (content_type, "www/unknown"))
+	     me->content_type = TtaStrdup ("text/html");
+	   else
+	     me->content_type = TtaStrdup (content_type);
+	   
+	   /* Content-Type can be specified by an httpd  server's admin.
+	      To be on the safe side, we normalize its case */
+	   ConvertToLowerCase (me->content_type);
+	   
 #ifdef DEBUG_LIBWWW
-        fprintf (stderr, "content type is: %s\n", me->content_type);
+	   fprintf (stderr, "content type is: %s\n", me->content_type);
 #endif /* DEBUG_LIBWWW */
-     } 
+	 } 
+     }
 
    /* to avoid a hangup while downloading css files */
    if (AmayaAlive_flag && (me->mode & AMAYA_LOAD_CSS))
@@ -905,6 +1018,7 @@ int                 status;
 
    ProcessTerminateRequest (request, response, context, status);
    
+   /* stop here */
    return HT_ERROR;
 }
 
@@ -1195,6 +1309,10 @@ static void         AHTNetInit (void)
   HTNet_addAfter (HTCacheUpdateFilter, "http://*", NULL, HT_NOT_MODIFIED, 
 		  HT_FILTER_MIDDLE);
 #endif /* AMAYA_WWW_CACHE */
+#ifdef AMAYA_LOST_UPDATE
+  HTNet_addAfter (precondition_handler, NULL, NULL, HT_PRECONDITION_FAILED,
+		  HT_FILTER_MIDDLE);
+#endif /* AMAYA_LOST_UPDATE */
 #ifndef _WINDOWS
   HTNet_addAfter (AHTLoadTerminate_handler, NULL, NULL, HT_ALL, 
 		   HT_FILTER_LAST);	
@@ -1223,7 +1341,6 @@ static void         AHTAlertInit ()
    HTError_setShow (~((unsigned int) 0 ) & ~((unsigned int) HT_ERR_SHOW_DEBUG));	/* process all messages except debug ones*/
    HTAlert_add (AHTConfirm, HT_A_CONFIRM);
    HTAlert_add (AHTPrompt, HT_A_PROMPT);
-   HTAlert_add (AHTPromptPassword, HT_A_SECRET);
    HTAlert_add (AHTPromptUsernameAndPassword, HT_A_USER_PW);
 }
 
@@ -1438,6 +1555,13 @@ static void Cacheinit ()
   else
     cache_enabled = YES;
 
+  /* cache protected documents? */
+  strptr = (char *) TtaGetEnvString ("CACHE_PROTECTED");
+  if (strptr && *strptr && !strcasecmp (strptr,"yes" ))
+    HTCacheMode_setProtected (YES);
+  else
+    HTCacheMode_setProtected (NO);
+
   /* get the cache dir (or use a default one) */
   strptr = (char *) TtaGetEnvString ("CACHE_DIR");
   if (strptr && *strptr) 
@@ -1500,7 +1624,6 @@ static void Cacheinit ()
 	    }
 #ifdef DEBUG_LIBWWW
 	  else
-
 	    fprintf (stderr, "created the cache lock\n");
 #endif /* DEBUG_LIBWWW */
 	}
@@ -1584,8 +1707,10 @@ char               *AppVersion;
       converters = HTList_new ();
    if (!acceptTypes)
       acceptTypes = HTList_new ();
-   if (!encodings)
-      encodings = HTList_new ();
+   if (!transfer_encodings)
+      transfer_encodings = HTList_new ();
+   if (!content_encodings)
+      content_encodings = HTList_new ();
 
    /* Register the default set of transport protocols */
    HTTransportInit ();
@@ -1615,19 +1740,28 @@ char               *AppVersion;
 
    /* Register the default set of converters */
    AHTConverterInit (converters);
-   AHTAcceptTypesInit (acceptTypes);
    HTFormat_setConversion (converters);
+   AHTAcceptTypesInit (acceptTypes);
 
    /* Register the default set of transfer encoders and decoders */
-   HTTransferEncoderInit (encodings);	/* chunks ??? */
-   HTFormat_setTransferCoding (encodings);
+   HTTransferEncoderInit (transfer_encodings);
+   HTFormat_setTransferCoding(transfer_encodings);
+   
+   /* Register the default set of content encoders and decoders */
+   HTContentEncoderInit(content_encodings);
+   if (HTList_count(content_encodings) > 0)
+     HTFormat_setContentCoding(content_encodings);
+   else 
+     {
+       HTList_delete(content_encodings);
+       content_encodings = NULL;
+     }
 
    /* Register the default set of MIME header parsers */
    HTMIMEInit ();   /* must be called again for language selector */
 
    /* Register the default set of Icons for directory listings */
    /*HTIconInit(NULL); *//* experimental */
-
 }
 
 /*----------------------------------------------------------------------
@@ -1642,36 +1776,30 @@ static void         AHTProfile_delete ()
 {
  
   /* free the Amaya global context */
-  if (!converters)
-    HTConversion_deleteAll (converters);
-  if (!acceptTypes)
+
+  /* Clean up all the registred converters */
+  HTFormat_deleteAll ();
+  if (acceptTypes)
     HTConversion_deleteAll (acceptTypes);
-  if (!encodings)
-    HTCoding_deleteAll (encodings);
-  
+
   HTList_delete (Amaya->docid_status);
   HTList_delete (Amaya->reqlist);
   TtaFreeMemory (Amaya);
-  {
 
-    if (HTLib_isInitialized ())
+  if (HTLib_isInitialized ())
       
 #ifdef _WINDOWS
-      HTEventTerminate ();
+    HTEventTerminate ();
 #endif _WINDOWS;		
     
-    /* Clean up the persistent cache (if any) */
+  /* Clean up the persistent cache (if any) */
 #ifdef AMAYA_WWW_CACHE
-    clear_cachelock ();
-    HTCacheTerminate ();
+  clear_cachelock ();
+  HTCacheTerminate ();
 #endif /* AMAYA_WWW_CACHE */
     
-    /* Clean up all the global preferences */
-    HTFormat_deleteAll ();
-    
-    /* Terminate libwww */
-    HTLibTerminate ();
-  }
+  /* Terminate libwww */
+  HTLibTerminate ();
 }
 
 /*----------------------------------------------------------------------
@@ -1703,6 +1831,9 @@ void                QueryInit ()
 void                QueryInit ()
 #endif
 {
+  char *strptr;
+  int tmp_i;
+  long tmp_l;
 
    AmayaContextInit ();
    AHTProfile_newAmaya (HTAppName, HTAppVersion);
@@ -1733,14 +1864,40 @@ void                QueryInit ()
     ***/
   
    /* Setting up different network parameters */
+
    /* Maximum number of simultaneous open sockets */
-   HTNet_setMaxSocket (8);
+   strptr = (char *) TtaGetEnvString ("MAX_SOCKET");
+   if (strptr && *strptr) 
+     tmp_i = atoi (strptr);
+   else
+     tmp_i = DEFAULT_MAX_SOCKET;
+   HTNet_setMaxSocket (tmp_i);
+
    /* different network services timeouts */
-   HTDNS_setTimeout (60);
-   HTHost_setPersistTimeout (60L);
+   /* dns timeout */
+   strptr = (char *) TtaGetEnvString ("DNS_TIMEOUT");
+   if (strptr && *strptr) 
+     tmp_i = atoi (strptr);
+   else
+     tmp_i = DEFAULT_DNS_TIMEOUT;
+   HTDNS_setTimeout (tmp_i);
+
+   /* persistent connections timeout */
+   strptr = (char *) TtaGetEnvString ("PERSISTCX_TIMEOUT");
+   if (strptr && *strptr) 
+     tmp_l = atol (strptr);
+   else
+     tmp_l = DEFAULT_PERSIST_TIMEOUT;
+   HTHost_setPersistTimeout (tmp_l);
+
    /* default timeout in ms */
-   HTHost_setEventTimeout (20000);
-   
+   strptr = (char *) TtaGetEnvString ("NET_EVENT_TIMEOUT");
+   if (strptr && *strptr) 
+     tmp_i = atoi (strptr);
+   else
+     tmp_i = DEFAULT_NET_EVENT_TIMEOUT;
+   HTHost_setEventTimeout (tmp_i);
+
 #ifdef CATCH_SIG
    signal (SIGPIPE, SIG_IGN);
 #endif
@@ -2189,6 +2346,14 @@ char 	     *content_type;
    HTRequest_setPreemptive (me->request, NO);
 #endif /* _WINDOWS */
 
+   /*
+   ** Make sure that the first request is flushed immediately and not
+   ** buffered in the output buffer
+   */
+   if (mode & AMAYA_FLUSH_REQUEST)
+     HTRequest_setFlush(me->request, YES);
+   HTRequest_setFlush(me->request, YES);
+
    /* prepare the URLname that will be displayed in teh status bar */
    ChopURL (me->status_urlName, me->urlName);
    TtaSetStatus (me->docid, 1, 
@@ -2326,6 +2491,8 @@ void               *context_tcbf;
    int                 fd;
    struct stat         file_stat;
    char               *fileURL;
+   /* temporarily put it here, should come in the API */
+   boolean             UsePreconditions = FALSE;
 
    AmayaLastHTTPErrorMsg [0] = EOS;
    
@@ -2380,7 +2547,7 @@ void               *context_tcbf;
    if (me == NULL)
      {
 	/* @@ need an error message here */
-	TtaHandlePendingEvents ();
+	TtaHandlePendingEvents (); 
 	return (HT_ERROR);
      }
 
@@ -2424,6 +2591,17 @@ void               *context_tcbf;
    HTRequest_setPreemptive (me->request, NO);
 #endif /* _WINDOWS */
 
+   /*
+   ** Make sure that the first request is flushed immediately and not
+   ** buffered in the output buffer
+   */
+   if (mode & AMAYA_FLUSH_REQUEST)
+     HTRequest_setFlush(me->request, YES);
+
+   /* Should we use preconditions? */
+   if (UsePreconditions)
+     HTRequest_setPreconditions(me->request, YES);
+   
    /* don't use the cache while saving a document */
    HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH);
 

@@ -1544,10 +1544,10 @@ View                view;
      }
 #endif 
 
-#ifdef AMAYA_JAVA
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
    mode = AMAYA_SYNC | AMAYA_NOCACHE;
 #else
-   mode = AMAYA_ASYNC | AMAYA_NOCACHE;
+   mode = AMAYA_ASYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST;
 #endif /* AMAYA_JAVA */
 
    if (method == CE_FORM_POST)
@@ -2330,7 +2330,12 @@ void               *ctx_cbf;
 	       W3Loading = newdoc;
 	       ActiveTransfer (newdoc);
 	       /* set up the transfer mode */
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 	       mode = AMAYA_ASYNC;
+#else
+	       mode = AMAYA_ASYNC | AMAYA_FLUSH_REQUEST;
+#endif /* AMAYA_JAVA */
+
 	       if (CE_event == CE_FORM_POST)
 		 mode = mode | AMAYA_FORM_POST | AMAYA_NOCACHE;
 	       else if (CE_event == CE_MAKEBOOK)

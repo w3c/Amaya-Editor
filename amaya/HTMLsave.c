@@ -619,12 +619,10 @@ PicType             filetype;
   char              msg[MAX_LENGTH];
   char              tempfile[MAX_LENGTH]; /* File name used to refetch */
   char              tempURL[MAX_LENGTH];  /* May be redirected */
-  char             *no_reread_check;
-  char             *no_write_check;
+  char             *enable_publish_verify;
   int               res;
 
-  no_reread_check = TtaGetEnvString("NO_REREAD_CHECK");
-  no_write_check = TtaGetEnvString("NO_WRITE_CHECK");
+  enable_publish_verify = TtaGetEnvString("ENABLE_PUBLISH_VERIFY");
   
 DBG(fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %d\n", localfile, remotefile, filetype);)
 
@@ -632,12 +630,12 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %d\n", localfile, r
 #ifdef AMAYA_JAVA
   res = PutObjectWWW (doc, localfile, remotefile, AMAYA_SYNC | AMAYA_NOCACHE, filetype, NULL, NULL);
 #else /* AMAYA_JAVA */
-  res = PutObjectWWW (doc, localfile, remotefile, AMAYA_SYNC | AMAYA_NOCACHE, filetype, NULL, NULL);
+  res = PutObjectWWW (doc, localfile, remotefile, AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST, filetype, NULL, NULL);
 #endif /* AMAYA_JAVA */
   if (res != 0)
     /* The HTTP PUT method failed ! */
     return (res);
-  if (no_reread_check != NULL)
+  if (enable_publish_verify == NULL)
     return (0);
 
   /* Refetch */
@@ -649,7 +647,8 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  refetch %s \n", remotefile);)
   res = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE,
 		      NULL, NULL, NULL, NULL, NO, NULL);
 #else /* AMAYA_JAVA */
-  res = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE, NULL, NULL, NULL, NULL, YES, NULL);
+  res = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE
+		      | AMAYA_FLUSH_REQUEST, NULL, NULL, NULL, NULL, NO, NULL);
 #endif /* AMAYA_JAVA */
   if (res != 0)
     {
@@ -670,7 +669,7 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  refetch %s \n", remotefile);)
 	res = -1;
     }
 
-  if (no_write_check == NULL && res == 0)
+  if (res == 0)
     {
       /* Compare content. */
 DBG(fprintf(stderr, "SafeSaveFileThroughNet :  compare %s and %s \n", remotefile, localfile);)
@@ -1766,8 +1765,16 @@ void                DoSaveObjectAs ()
 
    if (!dst_is_local)
      {
+#ifdef AMAYA_JAVA
 	res = PutObjectWWW (SavingObject, tempSavedObject, tempfile,
-	                    unknown_type, AMAYA_SYNC | AMAYA_NOCACHE, NULL, NULL);
+			    unknown_type,
+			    AMAYA_SYNC | AMAYA_NOCACHE, NULL, NULL);
+#else
+	res = PutObjectWWW (SavingObject, tempSavedObject, tempfile,
+			    unknown_type,
+			    AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST, NULL, NULL);
+#endif /* AMAYA_JAVA */
+
 
 	if (res)
 	  {

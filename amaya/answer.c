@@ -170,19 +170,22 @@ HTAlertPar         *reply;
 
 #endif /* __STDC__ */
 {
+  boolean answer;
 
-   /* Wait an answer */
-   UserAnswer = TRUE;
-   TtaNewLabel (BaseDialog + ConfirmText, BaseDialog + ConfirmForm, TtaGetMessage (AMAYA, AM_GET_USER_NAME + msgnum));
-   TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
-   TtaWaitShowDialogue ();
-   if (UserAnswer)
-     {
-	UserAnswer = FALSE;
-	return (TRUE);
-     }
-   else
-      return (FALSE);
+    /* for the moment, we only take into account confirmation for
+       authentication */
+  if (op != HT_A_CONFIRM
+      && (msgnum != HT_MSG_RETRY_PROXY_AUTH 
+	  || msgnum != HT_MSG_RETRY_AUTHENTICATION)) 
+    return TRUE;
+
+  InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_AUTHENTICATION_CONFIRM));
+  if (UserAnswer)
+    answer = TRUE;
+  else
+    answer = FALSE;
+
+  return (answer);
 }
 
 /*----------------------------------------------------------------------
@@ -234,53 +237,6 @@ HTAlertPar         *reply;
      }
    return NO;
 }
-
-
-/*----------------------------------------------------------------------
-  AHTPromptPassword
-  prompts for password without echoing the reply.			
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
- BOOL         AHTPromptPassword (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
-				       void *input, HTAlertPar * reply)
-#else  /* __STDC__ */
- BOOL         AHTPromptPassword (request, op, msgnum, dfault, input, reply)
-HTRequest          *request;
-HTAlertOpcode       op;
-int                 msgnum;
-const char         *dfault;
-void               *input;
-HTAlertPar         *reply;
-
-#endif
-{
-   char               *result = NULL;
-
-   if (reply && msgnum >= 0)
-     {
-	/* initialise */
-	Lg_password = 0;
-	Answer_password[0] = EOS;
-	Display_password[0] = EOS;
-	TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, TtaGetMessage (AMAYA, AM_GET_USER_NAME + msgnum));
-	TtaDetachForm (BaseDialog + AnswerText);
-	TtaDetachForm (BaseDialog + NameText);
-	TtaSetTextForm (BaseDialog + PasswordText, "");
-	TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
-	TtaWaitShowDialogue ();
-	/* come back from dialogue */
-	TtaAttachForm (BaseDialog + AnswerText);
-	TtaAttachForm (BaseDialog + NameText);
-	if (*Answer_password)
-	  {
-	     StrAllocCopy (result, Answer_password);
-	     HTAlert_setReplySecret (reply, result);
-	     return YES;
-	  }
-     }
-   return NO;
-}
-
 
 /*----------------------------------------------------------------------
   AHTPromptUsernameAndPassword
@@ -425,6 +381,10 @@ HTRequest          *request;
    if (!request || !cur)
       return;
 
+   /* force the error type (we're generating it anyway) */
+   if (!me->content_type)
+     me->content_type = TtaStrdup ("text/html");
+
    while ((pres = (HTError *) HTList_nextObject (cur)))
      {
 	index = HTError_index (pres);
@@ -437,12 +397,16 @@ HTRequest          *request;
 		{
 		  if (me->method != METHOD_PUT) 
 		    {
-		      sprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), me->urlName, me->urlName, pres->element, (char *) pres->par);
+		      sprintf (buffer, 
+			       TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), 
+			       me->urlName, me->urlName, 
+			       pres->element, (char *) pres->par);
 		      StrAllocCat (me->error_stream, buffer);
 		    }
 		  else
 		    {
-		      sprintf (buffer, "Error: Server is unavaiable or doesn't exist");
+		      sprintf (buffer, "Error: Server is unavailable "
+			       "or doesn't exist");
 		      StrAllocCat (me->error_stream, buffer);
 		    }
 		}
@@ -451,12 +415,15 @@ HTRequest          *request;
 	    case HTERR_TIME_OUT:
 	      if (me->method != METHOD_PUT)
 		{
-		  sprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), me->urlName, me->urlName, pres->element, (char *) "connection timeout");
+		  sprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL),
+			   me->urlName, me->urlName,
+			   pres->element, (char *) "connection timeout");
 		  StrAllocCat (me->error_stream, buffer);
 		}
 	      else
 		{
-		  sprintf (buffer, "Error: Server is unavaiable or doesn't exist");
+		  sprintf (buffer, "Error: Server is unavaliable or "
+			   "doesn't exist");
 		  StrAllocCat (me->error_stream, buffer);
 		}
 	      break;	   
