@@ -1,5 +1,5 @@
 /*
-   Module de gestion des Selections.
+   Manage box selections
    I. Vatton
  */
 
@@ -34,13 +34,13 @@
 
 
 /* ---------------------------------------------------------------------- */
-/* |    RazPavSelect parcours l'arborescence pour annuler toutes les    | */
-/* |            selections de pave.                                     | */
+/* |    ClearAbstractBoxSelection parcours l'arborescence pour annuler  | */
+/* |            toutes ls selections de pave.                           | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         RazPavSelect (PtrAbstractBox pAb)
+static void         ClearAbstractBoxSelection (PtrAbstractBox pAb)
 #else  /* __STDC__ */
-static void         RazPavSelect (pAb)
+static void         ClearAbstractBoxSelection (pAb)
 PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
@@ -51,20 +51,46 @@ PtrAbstractBox             pAb;
    pAbbox1 = pAb;
    if (pAbbox1->AbSelected)
      {
-	/* Le pave est selectionne */
+	/* ce pave est selectionne */
 	pAbbox1->AbSelected = FALSE;
      }
    else
      {
-	/* Sinon on parcours le sous-arbre */
+	/* on parcours le sous-arbre */
 	pChildAb = pAbbox1->AbFirstEnclosed;
 	while (pChildAb != NULL)
 	  {
-	     RazPavSelect (pChildAb);
+	     ClearAbstractBoxSelection (pChildAb);
 	     pChildAb = pChildAb->AbNext;
 	  }
      }
 }
+
+/* ---------------------------------------------------------------------- */
+/* |    SetSelect bascule la mise en e'vidence de la se'lection dans    | */
+/* |            la fenetree^tre frame :                                 | */
+/* |            - si toShow est Vrai et que la se'lection est eteinte,  | */
+/* |            - ou si toShow est Faux et la se'lection allume'e.      | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                SetSelect (int frame, boolean toShow)
+#else  /* __STDC__ */
+void                SetSelect (frame, toShow)
+int                 frame;
+boolean             toShow;
+#endif /* __STDC__ */
+{
+   /* visualisation la selection locale */
+   if (frame > 0)
+     {
+	/* compare le booleen toShow et l'etat de la selection */
+	if (toShow && !FntrTable[frame - 1].FrSelectShown)
+	   VisuSel (frame, TRUE);
+	else if (!toShow && FntrTable[frame - 1].FrSelectShown)
+	   VisuSel (frame, TRUE);
+     }
+}
+
 
 /* ---------------------------------------------------------------------- */
 /* |    AnnuleMrq annule la selection courante dans la fenetre.         | */
@@ -83,36 +109,10 @@ int                 frame;
      {
 	pFrame = &FntrTable[frame - 1];
 	if (pFrame->FrAbstractBox != NULL)
-	   RazPavSelect (pFrame->FrAbstractBox);
+	   ClearAbstractBoxSelection (pFrame->FrAbstractBox);
 	pFrame->FrSelectOneBox = FALSE;
 	pFrame->FrSelectionBegin.VsBox = NULL;
 	pFrame->FrSelectionEnd.VsBox = NULL;
-     }
-}
-
-/* ---------------------------------------------------------------------- */
-/* |    SetSelect bascule la mise en e'vidence de la se'lection dans    | */
-/* |            la fenetree^tre frame :                                 | */
-/* |            - si Allume est Vrai et que la se'lection est eteinte,  | */
-/* |            - ou si Allume est Faux et la se'lection allume'e.      | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                SetSelect (int frame, boolean allume)
-#else  /* __STDC__ */
-void                SetSelect (frame, allume)
-int                 frame;
-boolean             allume;
-
-#endif /* __STDC__ */
-{
-   /* Visualisation de la selection locale */
-   if (frame > 0)
-     {
-	/* Teste le booleen allume et l'etat de la selection */
-	if (allume && !FntrTable[frame - 1].FrSelectShown)
-	   VisuSel (frame, TRUE);
-	else if (!allume && FntrTable[frame - 1].FrSelectShown)
-	   VisuSel (frame, TRUE);
      }
 }
 

@@ -1,5 +1,5 @@
 /*
-   pos.c : gestion des placements absolus des boites.
+   compute box positions.
    I. Vatton
  */
 
