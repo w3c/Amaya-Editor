@@ -95,7 +95,7 @@ uninstall :
 update :
 	@(cd $(THOTDIR) ; cvs update)
 	@(if [ -d $(THOTDIR)/../$(LIBWWW) ] ; then \
-	  cd $(THODIR)/../$(LIBWWW) ; cvs update ; fi)
+	  cd $(THOTDIR)/../$(LIBWWW) ; cvs update ; fi)
 
 commit :
 	@(cd $(THOTDIR) ; cvs commit)
