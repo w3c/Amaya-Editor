@@ -3891,6 +3891,7 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		HorizPos: Left = Enclosing . Left;
 		Line;
+		MarginLeft: 2;
 		Indent: -2;
 #ifdef PAGE
 		Adjust: LeftWithDots;
@@ -4068,6 +4069,7 @@ RULES
 		VertPos : Top = Previous . Bottom;
 		HorizPos: Left = Enclosing . Left;
 		Line;
+		MarginLeft: 2;
 		Indent: -2;
 #ifdef PAGE
 		Visibility: 0;	{ attribute HREF_ changes visibility }
@@ -4814,6 +4816,7 @@ RULES
 	CreateFirst (FRAME_Label);
 #endif
 	Line;
+	MarginLeft: 3;
 	Indent: -3;
 	Width: Enclosing . Width;
 	IN Structure_view BEGIN
@@ -5111,6 +5114,7 @@ ATTRIBUTES
 		VertPos : Top = Previous . Bottom;
 		HorizPos: Left = Enclosing . Left;
 		Line;
+		MarginLeft: 2;
 		Indent: -2;
 #ifdef PAGE
 		Adjust: LeftWithDots;
