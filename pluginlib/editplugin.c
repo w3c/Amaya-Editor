@@ -28,7 +28,7 @@
 char*                 pluginPath;
 
 static int            BasePlugin = 0;
-static char           buffer [800]; /* A REVOIR $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ */
+static char           buffer [800]; /* A REVOIR $$$$$$$$$$$$$ */
 
 extern PluginInfo*    pluginTable [100];
 extern int            pluginCounter ;

@@ -45,7 +45,7 @@ extern int              InlineHandlers;
 extern PictureHandler   PictureHandlerTable[MAX_PICT_FORMATS];
 
 /* static NPP              pluginInstance; */
-static NPSavedData*     saved = NULL;
+/* static NPSavedData*     saved = NULL; */
 /* static NPPluginFuncs*   pluginFunctionsTable; */
 static NPMIMEType       pluginMimeType;
 
@@ -154,7 +154,7 @@ const char* pluginMimeType;
                     if (pluginMimeType [index] == ',')
                        token [ndx++] = suffixes [suffixNdx++] = pluginMimeType [index++];
               }
-              printf ("suffixes: %s\n", token);
+              /* printf ("suffixes: %s\n", token); */
               if (pluginMimeType [index] !=EOS) {
                  ndx = 0;
                  while (pluginMimeType [index] != EOS && pluginMimeType [index] != ';' && pluginMimeType [index] != ':')
@@ -166,12 +166,12 @@ const char* pluginMimeType;
                  }
                  if (pluginMimeType [index] == ':')
                     index++;
-                 printf ("comment: %s\n", token);
+                 /* printf ("comment: %s\n", token); */
               }
          }
    }
    suffixes [suffixNdx] = EOS;
-   printf ("all suffixes: %s\n", suffixes) ;
+   printf ("Suffixes: %s\n", suffixes) ;
    pluginTable [indexHandler]->fileExt = (char*) malloc (strlen (suffixes) + 1) ;
    strcpy (pluginTable [indexHandler]->fileExt, suffixes);
 }
@@ -188,6 +188,8 @@ NPStream* stream ;
 NPError   reason ;
 #endif /* __STDC__ */
 {
+    printf ("***** Ap_DestroyStream *****\n") ;
+
     if (instance == NULL)
        return NPERR_INVALID_INSTANCE_ERROR;
 
@@ -204,7 +206,7 @@ JRIEnv*  Ap_GetJavaEnv (void)
 JRIEnv*  Ap_GetJavaEnv ()
 #endif /* __STDC__ */
 {
-    printf ("Get Java Environment \n");
+    printf ("***** Ap_GetJavaEnv *****\n") ;
     return (NULL);
 }
 
@@ -218,7 +220,7 @@ jref Ap_GetJavaPeer (instance)
 NPP instance ;
 #endif /* __STDC__ */
 {
-    printf ("Get Java Peer \n");
+    printf ("***** Ap_GetJavaPeer *****\n") ;
     return (NULL);
 }
 
@@ -236,7 +238,7 @@ const char* window ;
 {
    /*NPStream * stream;*/
 
-   printf ("GetURL  %s \n", url);
+   printf ("***** Ap_GetURL *****\n") ;
     
    if (window) {
       /* pass the stream to AMAYA */
@@ -263,7 +265,7 @@ void* Ap_MemAlloc (size)
 uint32 size ;
 #endif /* __STDC__ */
 {
-    printf ("MemAlloc %d\n", (int) size);
+    printf ("***** Ap_MemAlloc *****\n") ;
     return malloc (size);
 }
 
@@ -277,7 +279,7 @@ uint32  Ap_MemFlush (size)
 uint32 size ;
 #endif /* __STDC__ */
 {
-    printf ("MemFlush \n");
+    printf ("***** Ap_MemFlush *****\n") ;
     return (0);
 }
 
@@ -291,7 +293,7 @@ void  Ap_MemFree (ptr)
 void* ptr ;
 #endif /* __STDC__ */
 {
-    printf ("MemFree \n");
+    printf ("***** Ap_MemFree *****\n") ;
     free (ptr);
 }
 
@@ -304,7 +306,7 @@ NPError Ap_NewStream (NPP instance, NPMIMEType type, const char* window, NPStrea
 NPError Ap_NewStream (NPP instance, NPMIMEType type, const char* window, NPStream** stream_ptr)
 #endif /* __STDC__ */
 {
-    printf ("NewStream \n");
+    printf ("***** Ap_NewStream *****\n") ;
 
     (*stream_ptr) = (NPStream*) malloc (sizeof (NPStream));
     
@@ -326,7 +328,7 @@ const char* buf ;
 NPBool      file ;
 #endif /* __STDC__ */
 {
-   printf ("PostURL  \n");
+   printf ("***** Ap_PostURL *****\n") ;
    return NPERR_NO_ERROR;
 }
 
@@ -342,6 +344,9 @@ NPByteRange* rangeList ;
 #endif /* __STDC__ */
 {
     FILE        *fptr;
+
+    printf ("***** Ap_RequestRead *****\n") ;
+
     /*
     char        *buffer;
     int         count = 0, ret = 0, ready_to_read, size;
@@ -383,6 +388,7 @@ NPP         instance ;
 const char* message ;
 #endif /* __STDC__ */
 {
+    printf ("***** Ap_Status *****\n") ;
     printf ("Status %s\n", message);
 }
 
@@ -396,7 +402,7 @@ const char* Ap_UserAgent (instance)
 NPP instance ;
 #endif /* __STDC__ */
 {
-    printf ("User Agent \n");
+    printf ("***** Ap_UserAgent *****\n") ;
     return ("Amaya");
 }
 
@@ -413,7 +419,7 @@ int32     len ;
 void*     buffer ;
 #endif /* __STDC__ */
 {
-    printf ("Write \n");
+    printf ("***** Ap_Write *****\n") ;
     return 4;
 }
 
@@ -430,7 +436,7 @@ int* amaya_major  ;
 int* amaya_minor  ;
 #endif /* __STDC__ */
 {
-    printf ("Version \n") ;
+    printf ("***** Ap_Version *****\n") ;
     *plugin_major = NP_VERSION_MAJOR;
     *plugin_minor = NP_VERSION_MINOR;
 }
@@ -445,7 +451,7 @@ void Ap_ReloadPlugins (reloadPages)
 NPBool reloadPages ;
 #endif /* __STDC__ */
 {
-    printf ("Reload Plugins \n");
+    printf ("***** Ap_ReloadPlugins *****\n") ;
 }
 
 /*----------------------------------------------------------------------
@@ -461,7 +467,7 @@ void*       r_value ;
 #endif /* __STDC__ */
 {
     NPError error = NPERR_NO_ERROR;
-    printf ("Get Value \n");
+    printf ("***** Ap_GetValue *****\n") ;
     if (!instance) error = NPERR_INVALID_INSTANCE_ERROR;
     else {
          switch (variable) {
@@ -519,6 +525,7 @@ int indexHandler;
     char* message ;
     int   ret ;
 
+    printf ("***** Ap_InitializePluginTable *****\n") ;
 
     pluginTable [indexHandler]->pluginFunctionsTable = (NPPluginFuncs*) malloc (sizeof (NPPluginFuncs));
     printf ("Size of NPPluginFuncs = %d\n", (int) sizeof (NPPluginFuncs));
@@ -550,6 +557,9 @@ int   indexHandler;
     char GUI_Name [20];
     int index1 = 0 ;
     int index2 = 0;
+
+    printf ("***** Ap_InitializePlugin *****\n") ;
+
     pluginTable [indexHandler]->pluginHandle = dlopen (path, RTLD_NOW);
     
     /* strcpy(message, dlerror());*/
@@ -607,6 +617,8 @@ Display* display;
     int         ret;
     int16 argc  = 3; /* to parametrize */
     
+    printf ("***** Ap_CreatePluginInstance *****\n") ;
+
     argn[0] = "SRC";
     argn[1] = "WIDTH";
     argn[2] = "HEIGHT";

@@ -3,9 +3,9 @@ APPLICATION EDITOR;
 USES
 	HTML, Lookup, NoStructSelect
 #ifdef AMAYA_PLUGIN
-	, Plugin;
+       , Plugin;
 #else /* AMAYA_PLUGIN */
-	;
+       ;
 #endif /* AMAYA_PLUGIN */
 
 DEFAULT

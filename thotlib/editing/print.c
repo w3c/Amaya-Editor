@@ -118,7 +118,7 @@ static ThotWindow   thotWindow;
 int                 UserErrorCode;
 
 static int          manualFeed;
-static char        *pageSize;
+static char         pageSize [3];
 static int          BlackAndWhite;
 static int          HorizShift;
 static int          VertShift;
@@ -2703,6 +2703,7 @@ char              **argv;
    boolean             realNameFound = FALSE;
    boolean             viewFound = FALSE;
    boolean             removeDirectory = FALSE;
+   boolean             done;
 
    Repaginate     = 0;
    NPagesPerSheet = 1;
@@ -2717,7 +2718,6 @@ char              **argv;
    HorizShift     = 0;
    VertShift      = 0;
    Zoom           = 100;
-   pageSize       = (char*) TtaGetMemory (3);
    strcpy (pageSize, "A4");
    Orientation    = "Portrait";
    
@@ -2727,9 +2727,9 @@ char              **argv;
    TtaInitializeAppRegistry (argv[0]);
 
    argCounter = 1;
-   while (argCounter < argc) {
-       if (argv [argCounter][0] == '-') {
-	   if (!strcmp (argv [argCounter], "-display")) {
+   while (argCounter < argc) {  /* Parsing the command line */
+       if (argv [argCounter][0] == '-') { /* the argument is a parameter */
+	   if (!strcmp (argv [argCounter], "-display")) { /* The display is distant */
               argCounter++;
               server = (char*)  TtaGetMemory (strlen (argv[argCounter]) + 1);
               strcpy (server, argv[argCounter++]);
@@ -2738,8 +2738,8 @@ char              **argv;
                   argCounter++;
                   realName = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
                   strcpy (realName, argv[argCounter++]);
-           } else if (!strcmp (argv [argCounter], "-ps")) {
-	          if (destination) {
+           } else if (!strcmp (argv [argCounter], "-ps")) { /* The destination is postscript file */
+	          if (destination) {                        /* There is a problem, a destination is already given */
                      fprintf (stderr, "error: destination is already given\n");
                      exit (1);
                   }
@@ -2747,7 +2747,7 @@ char              **argv;
                   argCounter++;
                   printer = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
                   strcpy (printer, argv[argCounter++]);
-           } else if (!strcmp (argv [argCounter], "-out")) {
+           } else if (!strcmp (argv [argCounter], "-out")) { /* The destination is a printer */
 	          if (destination) {
                      fprintf (stderr, "error: destination is already given\n");
                      exit (1);
@@ -2756,7 +2756,7 @@ char              **argv;
                   argCounter++;
                   printer = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
                   strcpy (printer, argv[argCounter++]);
-           } else if (!strcmp (argv [argCounter], "-v")) {
+           } else if (!strcmp (argv [argCounter], "-v")) { /* At least one view must be given in the command line */
 	          viewFound = TRUE;
                   argCounter++;
                   strcpy (PrintViewName [viewsCounter++], argv [argCounter++]);
@@ -2784,10 +2784,10 @@ char              **argv;
            } else if (!strcmp (argv [argCounter], "-portrait")) 
 	         /* Orientation is already set to Portrait value */ 
                   argCounter++;
-           else if (!strcmp (argv [argCounter], "-sch")) {
+           else if (!strcmp (argv [argCounter], "-sch")) { /* flag for schema directories */
                   argCounter++;
                   strcpy (SchemaPath, argv[argCounter++]);
-           } else if (!strcmp (argv [argCounter], "-doc")) {
+           } else if (!strcmp (argv [argCounter], "-doc")) { /* flag for document directories */
                   argCounter++;
                   strcpy (DocumentDir, argv[argCounter++]);
            } else {
@@ -2802,8 +2802,7 @@ char              **argv;
                          case 'L': lastPage = atoi (option);
                                    argCounter++;
                                    break;
-                         case 'P': pageSize = (char*) TtaGetMemory (strlen (option) + 1);
-                                   strcpy (pageSize, option);
+                         case 'P': strcpy (pageSize, option);
                                    argCounter++;
                                    break;
                          case '#': NCopies = atoi (option);
@@ -2825,11 +2824,11 @@ char              **argv;
                                    exit (1);
                   }
            }
-       } else {
-	    if (TtaFileExist (argv [argCounter])) {
-	      ExtractName (argv[argCounter], tempDir, name);   
+       } else { /* the argument is the filename */
+	    if (TtaFileExist (argv [argCounter])) { /* does it exist ?? */
+	       ExtractName (argv[argCounter], tempDir, name); /* Yes, it does, split the string into two parts: directory and filename */  
                argCounter++;
-            } else {
+            } else { /* The file does not exist */
                    fprintf (stderr, "File %s not found\n", argv [argCounter]);
                    exit (1);
             }
@@ -2846,10 +2845,18 @@ char              **argv;
    }
 
    length = strlen (name);
+   done   = FALSE;
+   index  = 0;
 
-   for (index = 0; index < length; index++)
-       if (name [index] == '.')
+   /* The following loop removes the suffix from the filename (name) */
+   while ((index < length) && !done) {
+       if (name [index] == '.') {
           name [index] = '\0';
+          done = TRUE;
+       } else
+             index++;
+   }
+
    ShowSpace = 1;  /* Restitution des espaces */
 
    /* Initialise la table des messages d'erreurs */
