@@ -76,9 +76,12 @@ const CHAR_T* mode;
 #endif /* !__STDC__ */
 {
 #  ifdef _I18N_
+#  ifdef _WINDOWS
    if (IS_NT)
       return _wfopen (name, mode);
-   else {
+   else
+#  endif /* _WINDOWS */ 
+   {
         char mbName[MAX_LEN];
         char mbMode[MAX_LEN];
 

@@ -203,7 +203,7 @@ STRING              txt;
 	       /* zone de saisie du nom du document a creer */
 	       if (TtaCheckDirectory (txt) && txt[ustrlen (txt) - 1] != URL_DIR_SEP)
 		 {
-		    StringCopy (SaveDirectoryName, txt);
+		    ustrcpy (SaveDirectoryName, txt);
 		    SaveFileName[0] = EOS;
 		 }
 	       else
@@ -280,7 +280,7 @@ STRING              txt;
 		 }
 	       else if (val == PivotEntryNum)
 		 {
-		   StringCopy (TraductionSchemaName, TEXT("_ThotOther_"));
+		   ustrcpy (TraductionSchemaName, TEXT("_ThotOther_"));
 		   UnsetEntryMenu (NumMenuCopyOrRename, 0);
 		   UnsetEntryMenu (NumMenuCopyOrRename, 1);
 		 }
@@ -402,7 +402,7 @@ PtrDocument         pDoc;
 #         endif /* _WINDOWS */
 	      entry = SearchStringInBuffer(BufDir,pDoc->DocDirectory,nbitem);
 #         ifndef _WINDOWS
-	      TtaSetSelector (NumZoneDirDocToSave, entry, _EMPTYSTR_);
+	      TtaSetSelector (NumZoneDirDocToSave, entry, TEXT(""));
 #         endif /* !_WINDOWS */
 	      /* initialise le titre du formulaire Sauver Comme */
 	      ustrcpy (SaveFileName, pDoc->DocDName);

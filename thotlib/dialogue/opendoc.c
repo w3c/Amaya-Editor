@@ -274,7 +274,7 @@ static void BuildImportForm()
 #       ifndef _WINDOWS
 	    TtaNewSelector (NumSelectImportClass, NumFormImportClass, TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), nbItems, bufMenu, length, NULL, TRUE, FALSE);
 	    /* initialise le selecteur sur sa premiere entree */
-	    TtaSetSelector (NumSelectImportClass, 0, _EMPTYSTR_);
+	    TtaSetSelector (NumSelectImportClass, 0, TEXT(""));
 #       endif /* !_WINDOWS */
    } 
 }

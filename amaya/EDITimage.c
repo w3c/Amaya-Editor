@@ -789,7 +789,7 @@ void ChangeBackgroundImage (document, view)
       TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
    else
      {
-	StringCopy (s, DirectoryImage);
+	ustrcpy (s, DirectoryImage);
 	ustrcat (s, DIR_STR);
 	ustrcat (s, ImageName);
 	TtaSetTextForm (BaseImage + ImageURL, s);

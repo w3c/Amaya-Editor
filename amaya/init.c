@@ -1175,8 +1175,8 @@ CHAR_T*              server;
 			   + ((auth_realm) ? ustrlen (auth_realm) : 0)
 			   + 20); /*a bit more than enough memory */
    usprintf (label, TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM),
-	     ((auth_realm) ? auth_realm : _EMPTYSTR_), 
-	     ((server) ? server : _EMPTYSTR_));
+	     ((auth_realm) ? auth_realm : TEXT("")), 
+	     ((server) ? server : TEXT("")));
    TtaNewLabel (BaseDialog + RealmText, BaseDialog + FormAnswer,
 		label);
    TtaFreeMemory (label);

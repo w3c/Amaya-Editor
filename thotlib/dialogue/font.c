@@ -635,10 +635,10 @@ int                 size;
  *      LoadFont load a given font designed by its name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ptrfont             LoadFont (CHAR_T name[100], int toPatch)
+ptrfont             LoadFont (char name[100], int toPatch)
 #else  /* __STDC__ */
 ptrfont             LoadFont (name, toPatch)
-CHAR_T                name[100];
+char                name[100];
 int                 toPatch;
 #endif /* __STDC__ */
 {
@@ -648,12 +648,12 @@ int                 toPatch;
   result = gdk_font_load ((gchar *)name);
   return (result);
 #else /* _GTK */
-   CHAR_T              tmp[200];
+   char                tmp[200];
    XFontStruct        *result;
    int                 mincar;
    int                 spacewd;
 
-   ustrcpy (tmp, name);
+   strcpy (tmp, name);
 
    result = XLoadQueryFont (TtDisplay, tmp);
    if (result != NULL)

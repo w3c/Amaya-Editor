@@ -53,7 +53,7 @@
 STRING WIN_Home;
 #else /* !_WINDOWS */
 #   define THOT_INI_FILENAME      TEXT("unix-thot.rc")
-#   define DEF_TMPDIR             "/tmp"
+#   define DEF_TMPDIR             TEXT("/tmp")
 #endif /* ! _WINDOWS */
 
 #define THOT_RC_FILENAME      TEXT("thot.rc")
@@ -94,7 +94,13 @@ static STRING        Thot_Dir;
 static CHAR_T        EnvString[MAX_TXT_LEN];
 #else  /* !_I18N_ */
 static char          EnvString[MAX_TXT_LEN];
-#endif /* !_I18N_ */         
+#endif /* !_I18N_ */
+
+#ifndef _WINDOWS
+CHAR_T  UCOMPILED_IN_THOTDIR[MAX_TXT_LEN];
+CHAR_T  UCOMPILED_IN_THOTDIR2[MAX_TXT_LEN];
+CHAR_T  UMACHINE[MAX_TXT_LEN];
+#endif  /* !_WINDOWS */         
 
 PathBuffer execname;
 PathBuffer path;
@@ -229,9 +235,9 @@ int                 o_len;
   CHAR_T* res  = output;
   CHAR_T* value;
   CHAR_T  save;
-# if defined(_WINDOWS) && defined(_I18N_)
+# ifdef _I18N_
   char      baseA [MAX_LENGTH];
-# endif /* _WINDOWS */
+# endif /* _I18N_ */
 
 #define CHECK_OVERFLOW (((cour - input) > i_len) || ((res - output) >= (o_len - 1)))
 
@@ -275,12 +281,12 @@ int                 o_len;
 	fprintf (stderr, "invalid variable name %s in %s\n", base, THOT_INI_FILENAME);
 
       /* We are ready to fetch the base value from the Registry */
-#     if defined(_WINDOWS) && defined(_I18N_)
+#     ifdef _I18N_
       wc2iso_strcpy (baseA, base);
       value = TtaGetEnvString (baseA);
-#     else  /* !(defined(_WINDOWS) && defined(_I18N_)) */
+#     else  /* !_I18N_ */
       value = TtaGetEnvString (base);
-#     endif /* !(defined(_WINDOWS) && defined(_I18N_)) */
+#     endif /* !_I18N_ */
       if (value == NULL)
 	{
 	  fprintf (stderr, "%s referencing undefined variable %s\n", THOT_INI_FILENAME, base);
@@ -529,7 +535,7 @@ FILE               *output;
 	  if (next->level == REGISTRY_USER
 	      && strcasecmp (cour->name, "TMPDIR")
 #ifndef _WINDOWS
-	      && ustrcasecmp (next->name, "APP_TMPDIR")
+	      && strcasecmp (next->name, "APP_TMPDIR")
 #endif /* _WINDOWS */
 	      && strcasecmp (next->name, "APP_HOME"))
 	    fprintf (output, "%s=%s\n", next->name, next->orig);
@@ -1059,7 +1065,7 @@ char*   name;
   value = _wgetenv (tmp);
 # else  /* !_WINDOWS */
   EnvVarVal = getenv (name); 
-  mbstowcs (EnvString, tmp, MAX_TXT_LEN);
+  mbstowcs (EnvString, EnvVarVal, MAX_TXT_LEN);
   value = EnvString;
 # endif /* !_WINDOWS */
 # else  /* !_I18N_ */
@@ -1251,9 +1257,9 @@ RegistryLevel level;
    CHAR_T    appli[MAX_LENGTH];
    char*     name;
    char*     value;
-#  if defined(_WINDOWS) && defined(_I18N_)
+#  ifdef _I18N_
    CHAR_T*   wc_value;
-#  endif /* defined(_WINDOWS) && defined(_I18N_) */
+#  endif /* _I18N_ */
    ustrcpy (appli, THOT_LIB_DEFAULTNAME);
    input = ufopen (filename, TEXT("r"));
    if (input == NULL)
@@ -1307,13 +1313,13 @@ RegistryLevel level;
 	value = str;
 	str = SkipToEqual (str);
 	*str = EOS;
-#   if defined(_WINDOWS) && defined(_I18N_)
+#   ifdef _I18N_
     wc_value = TtaAllocString (strlen (value) + 1);
     iso2wc_strcpy (wc_value, value);
 	AddRegisterEntry (appli, name, wc_value, level, TRUE);
-#   else /* !(defined(_WINDOWS) && defined(_I18N_)) */
+#   else /* !_I18N_ */
 	AddRegisterEntry (appli, name, value, level, TRUE);
-#   endif /* !(defined(_WINDOWS) && defined(_I18N_)) */
+#   endif /* !_I18N_ */
      }
    fclose (input);
 }
@@ -1347,7 +1353,7 @@ static void         InitEnviron ()
    TtaSetDefEnvString ("DOUBLECLICKDELAY", TEXT("500"), TRUE);
    pT = TtaGetEnvString ("DOUBLECLICKDELAY");
    if (pT != NULL)
-     DoubleClickDelay = atoi(pT);
+     DoubleClickDelay = wctoi(pT);
    else 
        DoubleClickDelay = 500;
 #endif /* _WINDOWS */
@@ -1493,7 +1499,7 @@ CHAR_T*             appArgv0;
      ustrncpy (&execname[0], appArgv0, sizeof (execname) / sizeof (CHAR_T));
 # else  /* !_WINDOWS */
   if (appArgv0[0] == WC_DIR_SEP)
-     strncpy (&execname[0], appArgv0, sizeof (execname) / sizeof (CHAR_T));
+     ustrncpy (&execname[0], appArgv0, sizeof (execname) / sizeof (CHAR_T));
 # endif /* _WINDOWS */
    
   /*
@@ -1593,7 +1599,7 @@ CHAR_T*             appArgv0;
 	    */
 	   if (filename[0] == WC_DIR_SEP)
 	     {
-	       StringCopy (execname, filename);
+	       ustrcpy (execname, filename);
 	       dir_end = execname;
 	       while (*dir_end)
 		 dir_end++; /* go to the ending NUL */
@@ -1601,7 +1607,7 @@ CHAR_T*             appArgv0;
 		 dir_end--;
 	     }
 	   else
-	     StringCopy (dir_end + 1, filename);
+	    ustrcpy (dir_end + 1, filename);
 	 } 
      }
 #endif /* HAVE_LSTAT */
@@ -1670,18 +1676,20 @@ CHAR_T*             appArgv0;
 	 }
 #ifdef COMPILED_IN_THOTDIR
        /* Check a compiled-in value */
-       else if (IsThotDir (COMPILED_IN_THOTDIR))
+       else if (IsThotDir (UCOMPILED_IN_THOTDIR))
 	 {
-           StringCopy (execname, COMPILED_IN_THOTDIR);
-           AddRegisterEntry ("System", "THOTDIR", COMPILED_IN_THOTDIR, REGISTRY_INSTALL, TRUE);
+           iso2wc_strcpy (UCOMPILED_IN_THOTDIR, COMPILED_IN_THOTDIR);
+           ustrcpy (execname, UCOMPILED_IN_THOTDIR);
+           AddRegisterEntry (TEXT("System"), "THOTDIR", UCOMPILED_IN_THOTDIR, REGISTRY_INSTALL, TRUE);
 	 } 
 #else /* COMPILED_IN_THOTDIR */
 #ifdef COMPILED_IN_THOTDIR2
        /* Check a compiled-in value */
-       else if (IsThotDir (COMPILED_IN_THOTDIR2))
+       else if (IsThotDir (UCOMPILED_IN_THOTDIR2))
 	 {
-           StringCopy (execname, COMPILED_IN_THOTDIR2);
-           AddRegisterEntry ("System", "THOTDIR", COMPILED_IN_THOTDIR2, REGISTRY_INSTALL, TRUE);
+           iso2wc_strcpy (UCOMPILED_IN_THOTDIR2, COMPILED_IN_THOTDIR2);
+           ustrcpy (execname, COMPILED_IN_THOTDIR2);
+           AddRegisterEntry (TEXT("System"), "THOTDIR", UCOMPILED_IN_THOTDIR2, REGISTRY_INSTALL, TRUE);
 	 }
 #endif /* COMPILED_IN_THOTDIR2 */
 #endif /* COMPILED_IN_THOTDIR */
@@ -1694,7 +1702,8 @@ CHAR_T*             appArgv0;
    
 #ifdef MACHINE
    /* if MACHINE is set up, add it to the registry */
-   AddRegisterEntry ("System", "MACHINE", MACHINE, REGISTRY_INSTALL, TRUE);
+   iso2wc_strcpy (UMACHINE, MACHINE);
+   AddRegisterEntry (TEXT("System"), "MACHINE", UMACHINE, REGISTRY_INSTALL, TRUE);
 #endif
 
    /* load the system settings, stored in THOTDIR/config/thot.ini */
@@ -1738,8 +1747,8 @@ CHAR_T*             appArgv0;
      /* win95: apphome is  thotdir\users\username */
      usprintf (app_home, TEXT("%s\\%s\\%s"), execname, WIN_USERS_HOME_DIR, ptr);   
 #else /* !_WINDOWS */
-   ptr = cus_getenv (TEXT("HOME"));
-   cus_sprintf (app_home, "%s%c.%s", ptr, WC_DIR_SEP, AppNameW); 
+   ptr = getenv ("HOME");
+   usprintf (app_home, TEXT("%s%c.%s"), ptr, WC_DIR_SEP, AppNameW); 
 #endif _WINDOWS
    /* store the value of APP_HOME in the registry */
    AddRegisterEntry (AppRegistryEntryAppli, "APP_HOME", app_home, REGISTRY_SYSTEM, TRUE);

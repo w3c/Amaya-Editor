@@ -190,9 +190,9 @@ int                 fileRef;
    ThotBool            stop;
 
    if (dirTitle == NULL)
-      dirTitle = _EMPTYSTR_;
+      dirTitle = TEXT("");
    if (fileTitle == NULL)
-      fileTitle = _EMPTYSTR_;
+      fileTitle = TEXT("");
 
    /* S'il s'agit d'un directory accessible */
    if (TtaCheckDirectory (aDirectory)
