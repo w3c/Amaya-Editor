@@ -378,7 +378,7 @@ int                 construct;
       if (construct == 1)
 	/* button Math or DisplayMath */
 	{
-	if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
 	   /* selection is in an HTML element */
 	   {
            newType.ElTypeNum = HTML_EL_Math;
@@ -386,7 +386,7 @@ int                 construct;
            TtaCreateElement (newType, doc);
 	   }
 #ifdef GRAPHML
-	if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+	if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
 	   /* selection is in a GraphML element */
 	   {
            newType.ElTypeNum = GraphML_EL_Math;
@@ -409,7 +409,7 @@ int                 construct;
       before = TRUE;
 
       /* Check whether the selected element is a MathML element */
-      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
 	{
 	  /* the selection concerns a MathML element */
 	  mathSchema = elType.ElSSchema;
@@ -428,7 +428,7 @@ int                 construct;
 	  /* the selection concerns an HTML or GraphML element */
 	{
 	  mathSchema = TtaNewNature (docSchema, "MathML", "MathMLP");
-	  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
+	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
 	      elType.ElTypeNum != HTML_EL_Math)
 	    {
 	      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && c1 > 1)
@@ -493,7 +493,7 @@ int                 construct;
 		}
 	    }
 
-	  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
+	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
 	      elType.ElTypeNum == HTML_EL_Math)
 	    {
 	      /* search the first MathML element */
@@ -523,7 +523,7 @@ int                 construct;
 		 {
 #ifdef GRAPHML
 		 elType = TtaGetElementType (sibling);
-		 if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+		 if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
 		    /* selection is within a GraphML element */
 		    {
 		    elType.ElTypeNum = GraphML_EL_Math;
@@ -797,12 +797,12 @@ int                 construct;
    CallbackMaths: manage Maths dialogue events.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CallbackMaths (int ref, int typedata, char *data)
+static void         CallbackMaths (int ref, int typedata, STRING data)
 #else
 static void         CallbackMaths (ref, typedata, data)
 int                 ref;
 int                 typedata;
-char               *data;
+STRING              data;
 
 #endif
 {
@@ -1206,11 +1206,11 @@ static void CheckMROW (el, doc)
    returns the type of character c (MN, MI or MO).
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int GetCharType (unsigned char c, char alphabet)
+static int GetCharType (UCHAR c, CHAR alphabet)
 #else /* __STDC__*/
 static int GetCharType (c, alphabet)
-     unsigned char c;
-     char	   alphabet;
+UCHAR c;
+CHAR  alphabet;
 #endif /* __STDC__*/
 {
   int	ret;
@@ -1452,12 +1452,12 @@ static void ParseMathString (theText, theElem, doc)
   SSchema	MathMLSchema;
   int		firstSelChar, lastSelChar, newSelChar, len, totLen, i, j,
 		start;
-  char		alphabet, c;
+  CHAR		alphabet, c;
   Language	lang;
 #define TXTBUFLEN 200
-  unsigned char text[TXTBUFLEN];
-  char		language[TXTBUFLEN];
-  unsigned char	mathType[TXTBUFLEN];
+  UCHAR         text[TXTBUFLEN];
+  CHAR		language[TXTBUFLEN];
+  UCHAR         mathType[TXTBUFLEN];
   int           oldStructureChecking;
 
   /* get the current selection */
@@ -1519,7 +1519,7 @@ static void ParseMathString (theText, theElem, doc)
 	  for (j = 0; j < len; j++)
 	     {
 	     language[i+j] = lang;
-	     mathType[i+j] = (unsigned char) GetCharType (text[i+j], alphabet);
+	     mathType[i+j] = (UCHAR) GetCharType (text[i+j], alphabet);
 	     }
 	  i+= len;
 	  totLen += len;
@@ -1535,7 +1535,7 @@ static void ParseMathString (theText, theElem, doc)
 	/* comma or point between two digits: the comma or point is part of
 	   the number */
 	  {
-	  mathType[i] = (unsigned char) MathML_EL_MN;
+	  mathType[i] = (UCHAR) MathML_EL_MN;
 	  i++;
 	  }
     }
@@ -1907,7 +1907,7 @@ View                view;
    AttributeType       attrType;
    Attribute           attr;
    Document            refDoc;
-   char                name[50];
+   CHAR                name[50];
    int                 firstchar, lastchar;
 
    /* get the first selected element */
@@ -2095,7 +2095,7 @@ void FenceModified(event)
   ElementType	elType;
   AttributeType	attrType;
   Attribute	attr;
-  unsigned char	text[2];
+  UCHAR         text[2];
 
   mfencedEl = TtaGetParent (event->element);
   elType = TtaGetElementType (event->element);
@@ -2111,7 +2111,7 @@ void FenceModified(event)
      attr =  TtaNewAttribute (attrType);
      TtaAttachAttribute (mfencedEl, attr, event->document);
      }
-  text[0] = (unsigned char) event->value;
+  text[0] = (UCHAR) event->value;
   text[1] = '\0';
   TtaSetAttributeText (attr, text, mfencedEl, event->document);
 }
@@ -2131,7 +2131,7 @@ void AttrOpenCloseChanged (event)
 {
   Element	fence, content;
   int		length;
-  unsigned char	text[8];
+  UCHAR         text[8];
 
   if (event->attributeType.AttrTypeNum == MathML_ATTR_open)
      fence = TtaGetFirstChild (event->element);
@@ -2178,7 +2178,7 @@ void FencedSeparatorModified(event)
   AttributeType	attrType;
   int		i, len;
   Language	lang;
-  unsigned char	text[32];
+  UCHAR         text[32];
 
   fencedExpEl = TtaGetParent (event->element);
   if (fencedExpEl == NULL)

@@ -7,28 +7,28 @@
 #ifdef __STDC__
 
 extern SSchema GetGraphMLSSchema ( Document doc );
-extern void GraphMLGetDTDName ( char* DTDname,
-                                char *elementName );
-extern void MapGraphMLElementType ( char *XMLname,
+extern void GraphMLGetDTDName ( STRING DTDname,
+                                STRING elementName );
+extern void MapGraphMLElementType ( STRING XMLname,
                                     ElementType *elType,
-                                    char** mappedName,
-                                    char* content,
+                                    STRING* mappedName,
+                                    STRING content,
                                     Document doc );
 extern void GetGraphMLElementName ( ElementType elType,
-                                    char **buffer );
-extern void MapGraphMLAttribute ( char *Attr,
+                                    STRING* buffer );
+extern void MapGraphMLAttribute ( STRING Attr,
                                   AttributeType *attrType,
-                                  char* elementName,
+                                  STRING elementName,
                                   Document doc );
-extern void MapGraphMLAttributeValue ( char *AttrVal,
+extern void MapGraphMLAttributeValue ( STRING AttrVal,
                                        AttributeType attrType,
                                        int *value );
-extern void MapGraphMLEntity ( char *entityName,
-                               char *entityValue,
+extern void MapGraphMLEntity ( STRING entityName,
+                               STRING entityValue,
                                int valueLength,
-                               char *alphabet );
-extern void GraphMLEntityCreated ( unsigned char *entityValue,
-                                   char *entityName,
+                               STRING alphabet );
+extern void GraphMLEntityCreated ( USTRING entityValue,
+                                   STRING entityName,
                                    Document doc );
 extern Element CreateGraphicLeaf ( Element el,
                                    Document doc,
@@ -63,28 +63,28 @@ extern void GraphMLAttributeComplete ( Attribute attr,
 #else /* __STDC__ */
 
 extern SSchema GetGraphMLSSchema (/* Document doc */);
-extern void GraphMLGetDTDName (/* char* DTDname,
-                                  char *elementName */);
-extern void MapGraphMLElementType (/* char *XMLname,
+extern void GraphMLGetDTDName (/* STRING DTDname,
+                                  STRING elementName */);
+extern void MapGraphMLElementType (/* STRING XMLname,
                                       ElementType *elType,
-                                      char** mappedName,
-                                      char* content,
+                                      STRING* mappedName,
+                                      STRING content,
                                       Document doc */);
 extern void GetGraphMLElementName (/* ElementType elType,
-                                      char **buffer */);
-extern void MapGraphMLAttribute (/* char *Attr,
+                                      STRING* buffer */);
+extern void MapGraphMLAttribute (/* STRING Attr,
                                     AttributeType *attrType,
-                                    char* elementName,
+                                    STRING elementName,
                                     Document doc */);
-extern void MapGraphMLAttributeValue (/* char *AttrVal,
+extern void MapGraphMLAttributeValue (/* STRING AttrVal,
                                          AttributeType attrType,
                                          int *value */);
-extern void MapGraphMLEntity (/* char *entityName,
-                                 char *entityValue,
+extern void MapGraphMLEntity (/* STRING entityName,
+                                 STRING entityValue,
                                  int valueLength,
-                                 char *alphabet */);
-extern void GraphMLEntityCreated (/* unsigned char *entityValue,
-                                     char *entityName,
+                                 STRING alphabet */);
+extern void GraphMLEntityCreated (/* USTRING entityValue,
+                                     STRING entityName,
                                      Document doc */);
 extern Element CreateGraphicLeaf (/* Element el,
                                      Document doc,

@@ -7,44 +7,44 @@
 #ifdef __STDC__
 
 extern void GetXMLElementNameFromThotType ( ElementType elType,
-                                            char **buffer );
+                                            STRING *buffer );
 extern void XMLInsertElement ( Element el );
 extern void XMLElementComplete ( Element el,
                                  Document doc );
 extern void XMLTextToDocument ( void );
-extern void MapXMLElementType ( char *XMLname,
+extern void MapXMLElementType ( STRING XMLname,
                                 ElementType *elType,
-                                char** mappedName,
-                                char* content,
+                                STRING* mappedName,
+                                STRING content,
                                 Document doc );
 extern void FreeXMLParser ( void );
-extern void XMLparse ( char* DTDname,
+extern void XMLparse ( STRING DTDname,
                        Document doc,
                        Element el,
                        boolean isclosed,
                        Language lang,
-                       char *closingTag );
+                       STRING closingTag );
 
 #else /* __STDC__ */
 
 extern void GetXMLElementNameFromThotType (/* ElementType elType,
-                                              char **buffer */);
+                                              STRING *buffer */);
 extern void XMLInsertElement (/* Element el */);
 extern void XMLElementComplete (/* Element el,
                                    Document doc */);
 extern void XMLTextToDocument (/* void */);
-extern void MapXMLElementType (/* char *XMLname,
+extern void MapXMLElementType (/* STRING XMLname,
                                   ElementType *elType,
-                                  char** mappedName,
-                                  char* content,
+                                  STRING* mappedName,
+                                  STRING content,
                                   Document doc */);
 extern void FreeXMLParser (/* void */);
-extern void XMLparse (/* char* DTDname,
+extern void XMLparse (/* STRING DTDname,
                          Document doc,
                          Element el,
                          boolean isclosed,
                          Language lang,
-                         char *closingTag */);
+                         STRING closingTag */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

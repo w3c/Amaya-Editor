@@ -30,14 +30,14 @@ typedef struct _SubDoc
   {
      struct _SubDoc  *SDnext;
      Element          SDel;
-     char            *SDname;
+     STRING           SDname;
   }SubDoc;
 
 /* the structure used for the GetIncludedDocuments_callback function */
 typedef struct _GetIncludedDocuments_context {
   Element		link, next;
   Attribute		RelAttr, HrefAttr;
-  char			*url, *ptr, *text;
+  STRING		url, ptr, text;
   Document		document;
 } GetIncludedDocuments_context;
 
@@ -45,8 +45,8 @@ static struct _SubDoc  *SubDocs;
 static int              PaperPrint;
 static int              ManualFeed;
 static int              PageSize;
-static char             PSdir[MAX_PATH];
-static char             pPrinter[MAX_PATH];
+static CHAR             PSdir[MAX_PATH];
+static CHAR             pPrinter[MAX_PATH];
 static Document		docPrint;
 static boolean		numberLinks;
 static boolean		withToC;
@@ -78,11 +78,11 @@ void                MakeBook_callback (/* Document document */);
   RegisterSubDoc adds a new entry in SubDoc table.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RegisterSubDoc (Element el, char *url)
+static void         RegisterSubDoc (Element el, STRING url)
 #else
 static void         RegisterSubDoc (el, url)
 Element             el;
-char               *url;
+STRING              url;
 #endif
 {
   struct _SubDoc  *entry, *last;
@@ -113,10 +113,10 @@ char               *url;
   Return the DIV element that correspond to the sub-document or NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      SearchSubDoc (char *url)
+static Element      SearchSubDoc (STRING url)
 #else
 static Element      SearchSubDoc (url)
-char               *url;
+STRING              url;
 #endif
 {
   Element          el;
@@ -131,7 +131,7 @@ char               *url;
   el = NULL;
   while (!docFound && entry != NULL)
     {
-      docFound = (strcmp (url, entry->SDname) == 0);
+      docFound = (ustrcmp (url, entry->SDname) == 0);
       if (!docFound)
 	entry = entry->SDnext;
       else
@@ -180,8 +180,9 @@ Document                document;
   Attribute		HrefAttr, IntLinkAttr;
   Attribute             attr, ExtLinkAttr;
   AttributeType	        attrType;
-  char		       *text, *ptr, *url, number[10];
-  char                  value[MAX_LENGTH];
+  STRING		text, ptr, url; 
+  CHAR                  number[10];
+  CHAR                  value[MAX_LENGTH];
   int			length, i, volume;
   int                   status, position;
   boolean               split;
@@ -250,7 +251,7 @@ Document                document;
 	      /* does an external link become an internal link ? */
 	      if (document == DocBook && SubDocs != NULL)
 		{
-		  ptr = strrchr (text, '#');
+		  ptr = ustrrchr (text, '#');
 		  url = text;
 		  split = FALSE;
 		  if (ptr == text)
@@ -285,8 +286,8 @@ Document                document;
 		      if (ptr != NULL)
 			{
 			  /* get the target name */
-			  strcpy (value, ptr);
-			  length = strlen (value);
+			  ustrcpy (value, ptr);
+			  length = ustrlen (value);
 			  /* check whether the name changed */
 			  i = 0;
 			  target = SearchNAMEattribute (document, &value[1], NULL);
@@ -374,8 +375,9 @@ static void         CheckPrintingDocument (document)
 Document            document;
 #endif
 {
-   char             docName[MAX_LENGTH];
-   char            *ptr, suffix[MAX_LENGTH];
+   CHAR             docName[MAX_LENGTH];
+   STRING           ptr; 
+   CHAR             suffix[MAX_LENGTH];
    int              lg;
 
    if (docPrint != document)
@@ -387,21 +389,21 @@ Document            document;
        ptr = TtaGetEnvString ("TMPDIR");
        if (ptr != NULL && TtaCheckDirectory (ptr))
 	 {
-	   strcpy(PSdir,ptr);
-	   lg = strlen(PSdir);
+	   ustrcpy(PSdir,ptr);
+	   lg = ustrlen(PSdir);
 	   if (PSdir[lg - 1] == DIR_SEP)
 	     PSdir[--lg] = '\0';
 	 }
        else
 	 {
 #          ifdef _WINDOWS
-	   strcpy (PSdir,"C:\\TEMP");
+	   ustrcpy (PSdir,"C:\\TEMP");
 #          else  /* !_WINDOWS */
-	   strcpy (PSdir,"/tmp");
+	   ustrcpy (PSdir,"/tmp");
 #          endif /* !_WINDOWS */
-	   lg = strlen (PSdir);
+	   lg = ustrlen (PSdir);
 	 }
-       strcpy (docName, TtaGetDocumentName (document));
+       ustrcpy (docName, TtaGetDocumentName (document));
        ExtractSuffix (docName, suffix);
 #      ifdef _WINDOWS
        sprintf (&PSdir[lg], "\\%s.ps", docName);
@@ -434,13 +436,13 @@ Document            document;
   AttributeType      attrType;
   Attribute          attr;
   Element            el;
-  char               viewsToPrint[MAX_PATH];
+  CHAR               viewsToPrint[MAX_PATH];
   boolean            status;
 
    CheckPrintingDocument (document);
-   strcpy (viewsToPrint, "Formatted_view ");
+   ustrcpy (viewsToPrint, "Formatted_view ");
    if (withToC)
-     strcat (viewsToPrint, "Table_of_contents ");
+     ustrcat (viewsToPrint, "Table_of_contents ");
    if (numberLinks)
      /* display numbered links */
      {
@@ -452,7 +454,7 @@ Document            document;
 	 TtaSetPrintSchema ("HTMLPLP");
        else
 	 TtaSetPrintSchema ("HTMLPLPUS");
-       strcat (viewsToPrint, "Links_view ");
+       ustrcat (viewsToPrint, "Links_view ");
      }
    else
      {
@@ -484,12 +486,12 @@ Document            document;
    CallbackImage manage returns of Picture form.                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackPrint (int ref, int typedata, char *data)
+void                CallbackPrint (int ref, int typedata, STRING data)
 #else  /* __STDC__ */
 void                CallbackPrint (ref, typedata, data)
 int                 ref;
 int                 typedata;
-char               *data;
+STRING              data;
 #endif /* __STDC__ */
 {
   int                 val;
@@ -582,10 +584,10 @@ char               *data;
       if (data[0] != '\0')
 	if (PaperPrint == PP_PRINTER)
 	  /* text capture zone for the printer name */
-	  strncpy (pPrinter, data, MAX_PATH);
+	  ustrncpy (pPrinter, data, MAX_PATH);
 	else
 	  /* text capture zone for the name of the PostScript file */
-	  strncpy (PSdir, data, MAX_PATH);
+	  ustrncpy (PSdir, data, MAX_PATH);
       break;
     }
 }
@@ -598,7 +600,7 @@ void                InitPrint (void)
 void                InitPrint ()
 #endif /* __STDC__ */
 {
-  char *ptr;
+  STRING ptr;
 
    basePrint = TtaSetCallback (CallbackPrint, PRINT_MAX_REF);
    docPrint = 0;
@@ -607,9 +609,9 @@ void                InitPrint ()
    /* read default printer variable */
    ptr = TtaGetEnvString ("THOTPRINT");
    if (ptr == NULL)
-     strcpy (pPrinter, "");
+     ustrcpy (pPrinter, "");
    else
-     strcpy (pPrinter, ptr);
+     ustrcpy (pPrinter, ptr);
 
    PageSize = PP_A4;
    PaperPrint = PP_PRINTER;
@@ -631,7 +633,7 @@ View                view;
 #endif
 {
 #  ifndef _WINDOWS
-   char             bufMenu[MAX_LENGTH];
+   CHAR             bufMenu[MAX_LENGTH];
    int              i;
 #  endif /* !_WINDOWS */
 
@@ -644,11 +646,11 @@ View                view;
 	   1, TtaGetMessage (AMAYA, AM_BUTTON_PRINT), FALSE, 2, 'L', D_CANCEL);
    i = 0;
    sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (LIB, TMSG_MANUAL_FEED));
-   i += strlen (&bufMenu[i]) + 1;
+   i += ustrlen (&bufMenu[i]) + 1;
    sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_PRINT_TOC));
-   i += strlen (&bufMenu[i]) + 1;
+   i += ustrlen (&bufMenu[i]) + 1;
    sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_NUMBERED_LINKS));
-   i += strlen (&bufMenu[i]) + 1;
+   i += ustrlen (&bufMenu[i]) + 1;
    sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_PRINT_URL));
    TtaNewToggleMenu (basePrint+NumMenuOptions, basePrint+NumFormPrint,
 		TtaGetMessage (LIB, TMSG_OPTIONS), 4, bufMenu, NULL, FALSE);
@@ -664,7 +666,7 @@ View                view;
    /* Paper format submenu */
    i = 0;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_A4));
-   i += strlen (&bufMenu[i]) + 1;
+   i += ustrlen (&bufMenu[i]) + 1;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_US));
    TtaNewSubmenu (basePrint+NumMenuPaperFormat, basePrint+NumFormPrint, 0,
 	     TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, FALSE);
@@ -676,7 +678,7 @@ View                view;
    /* Print to paper/ Print to file submenu */
    i = 0;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PRINTER));
-   i += strlen (&bufMenu[i]) + 1;
+   i += ustrlen (&bufMenu[i]) + 1;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PS_FILE));
    TtaNewSubmenu (basePrint+NumMenuSupport, basePrint+NumFormPrint, 0,
                   TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, TRUE);
@@ -756,14 +758,14 @@ Element             nextEl;
   document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void    MoveDocumentBody (Element *el, Document destDoc, Document sourceDoc, char *target, char *url, boolean deleteTree)
+static void    MoveDocumentBody (Element *el, Document destDoc, Document sourceDoc, STRING target, STRING url, boolean deleteTree)
 #else
 static void    MoveDocumentBody (el, destDoc, sourceDoc, target, url, deleteTree)
 Element       *el;
 Document       destDoc;
 Document       sourceDoc;
-char          *target;
-char          *url;
+STRING         target;
+STRING         url;
 boolean        deleteTree;
 #endif
 {
@@ -888,9 +890,9 @@ boolean        deleteTree;
 
 #ifdef __STDC__
 void               GetIncludedDocuments_callback (int newdoc, int status, 
-					     char *urlName,
-					     char *outputfile, 
-					     char *content_type,
+					     STRING urlName,
+					     STRING outputfile, 
+					     STRING content_type,
 					     void * context)
 #else  /* __STDC__ */
 void               GetIncludedDocuments_callback (newdoc, status, urlName,
@@ -898,15 +900,15 @@ void               GetIncludedDocuments_callback (newdoc, status, urlName,
                                              context)
 int newdoc;
 int status;
-char *urlName;
-char *outputfile;
-char *content_type;
+STRING urlName;
+STRING outputfile;
+STRING content_type;
 void *context;
 #endif /* __STDC__ */
 {
   Element		link, next;
   Attribute		RelAttr, HrefAttr;
-  char			*url, *ptr, *text;
+  STRING		url, ptr, text;
   Document		document;
   GetIncludedDocuments_context  *ctx;
 
@@ -976,7 +978,7 @@ Document            document;
   Attribute		RelAttr, HrefAttr = NULL;
   AttributeType	attrType;
   int			length;
-  char			*text, *ptr, *url = NULL;
+  STRING		text, ptr, url = NULL;
   Document		newdoc;
   boolean              call_callback = FALSE;
   GetIncludedDocuments_context  *ctx = NULL;
@@ -1002,7 +1004,7 @@ Document            document;
 	  length = TtaGetTextAttributeLength (RelAttr);
 	  text = TtaGetMemory (length + 1);
 	  TtaGiveTextAttributeValue (RelAttr, text, &length);
-	  if (strcasecmp (text, "chapter") && strcasecmp (text, "subdocument"))
+	  if (ustrcasecmp (text, "chapter") && ustrcasecmp (text, "subdocument"))
 	    RelAttr = NULL;
 	  TtaFreeMemory (text);
 	}
@@ -1026,7 +1028,7 @@ Document            document;
 	   length = TtaGetTextAttributeLength (HrefAttr);
 	   text = TtaGetMemory (length + 1);
 	   TtaGiveTextAttributeValue (HrefAttr, text, &length);
-	   ptr = strrchr (text, '#');
+	   ptr = ustrrchr (text, '#');
 	   url = text;
 	   if (ptr != NULL)
 	     {

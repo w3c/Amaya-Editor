@@ -10,7 +10,7 @@ extern boolean CheckGenerator ( NotifyElement * event );
 extern boolean GenerateQuoteBefore ( NotifyAttribute * event );
 extern void GenerateQuoteAfter ( NotifyAttribute * event );
 extern void SetRelativeURLs ( Document document,
-                              char *newpath );
+                              STRING newpath );
 extern void SaveDocumentAs ( Document document,
                              View view );
 extern void SaveDocument ( Document document,
@@ -20,8 +20,8 @@ extern boolean DocumentToSave ( NotifyDialog * event );
 extern void DoSaveAs ( void );
 extern void InitSaveObjectForm ( Document document,
                                  View view,
-                                 char *object,
-                                 char *pathname );
+                                 STRING object,
+                                 STRING pathname );
 extern void DeleteTempObjectFile ( void );
 extern void DoSaveObjectAs ( void );
 
@@ -31,7 +31,7 @@ extern boolean CheckGenerator (/* NotifyElement * event */);
 extern boolean GenerateQuoteBefore (/* NotifyAttribute * event */);
 extern void GenerateQuoteAfter (/* NotifyAttribute * event */);
 extern void SetRelativeURLs (/* Document document,
-                                char *newpath */);
+                                STRING newpath */);
 extern void SaveDocumentAs (/* Document document,
                                View view */);
 extern void SaveDocument (/* Document document,
@@ -41,8 +41,8 @@ extern boolean DocumentToSave (/* NotifyDialog * event */);
 extern void DoSaveAs (/* void */);
 extern void InitSaveObjectForm (/* Document document,
                                    View view,
-                                   char *object,
-                                   char *pathname */);
+                                   STRING object,
+                                   STRING pathname */);
 extern void DeleteTempObjectFile (/* void */);
 extern void DoSaveObjectAs (/* void */);
 

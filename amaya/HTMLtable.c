@@ -50,7 +50,7 @@ boolean             inMath;
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr;
-   char                name[50];
+   CHAR                name[50];
    Document            refdoc;
 
    cell = TtaGetFirstChild (row);
@@ -931,7 +931,7 @@ boolean             genrateColumn;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
-  char                ptr[100];
+  CHAR                ptr[100];
   int                 span, i;
   boolean             before, inMath;
 #ifndef STANDALONE
@@ -1225,7 +1225,7 @@ NotifyElement      *event;
   AttributeType       attrType;
   Attribute           attr;
   Document            refDoc;
-  char                name[50];
+  CHAR                name[50];
   boolean             inMath;
 
   cell = event->element;

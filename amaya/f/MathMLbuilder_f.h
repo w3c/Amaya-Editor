@@ -7,26 +7,26 @@
 #ifdef __STDC__
 
 extern SSchema GetMathMLSSchema ( Document doc );
-extern void MapMathMLElementType ( char *XMLname,
+extern void MapMathMLElementType ( STRING XMLname,
                                    ElementType *elType,
-                                   char** mappedName,
-                                   char* content,
+                                   STRING* mappedName,
+                                   STRING content,
                                    Document doc );
 extern void GetMathMLElementName ( ElementType elType,
-                                   char **buffer );
-extern void MapMathMLAttribute ( char *Attr,
+                                   STRING *buffer );
+extern void MapMathMLAttribute ( STRING Attr,
                                  AttributeType *attrType,
-                                 char* elementName,
+                                 STRING elementName,
                                  Document doc );
-extern void MapMathMLAttributeValue ( char *AttrVal,
+extern void MapMathMLAttributeValue ( STRING AttrVal,
                                       AttributeType attrType,
                                       int *value );
-extern void MapMathMLEntity ( char *entityName,
-                              char *entityValue,
+extern void MapMathMLEntity ( STRING entityName,
+                              STRING entityValue,
                               int valueLength,
-                              char *alphabet );
-extern void MathMLEntityCreated ( unsigned char *entityValue,
-                                  char *entityName,
+                              STRING alphabet );
+extern void MathMLEntityCreated ( USTRING entityValue,
+                                  STRING entityName,
                                   Document doc );
 extern boolean ElementNeedsPlaceholder ( Element el );
 extern void SetSingleHorizStretchAttr ( Element el,
@@ -56,32 +56,32 @@ extern void MathMLElementComplete ( Element el,
 extern void MathMLAttributeComplete ( Attribute attr,
                                       Element el,
                                       Document doc );
-extern void MathMLGetDTDName ( char* DTDname,
-                               char *elementName );
+extern void MathMLGetDTDName ( STRING DTDname,
+                               STRING elementName );
 
 #else /* __STDC__ */
 
 extern SSchema GetMathMLSSchema (/* Document doc */);
-extern void MapMathMLElementType (/* char *XMLname,
+extern void MapMathMLElementType (/* STRING XMLname,
                                      ElementType *elType,
-                                     char** mappedName,
-                                     char* content,
+                                     STRING* mappedName,
+                                     STRING content,
                                      Document doc */);
 extern void GetMathMLElementName (/* ElementType elType,
-                                     char **buffer */);
-extern void MapMathMLAttribute (/* char *Attr,
+                                     STRING *buffer */);
+extern void MapMathMLAttribute (/* STRING Attr,
                                    AttributeType *attrType,
-                                   char* elementName,
+                                   STRING elementName,
                                    Document doc */);
-extern void MapMathMLAttributeValue (/* char *AttrVal,
+extern void MapMathMLAttributeValue (/* STRING AttrVal,
                                         AttributeType attrType,
                                         int *value */);
-extern void MapMathMLEntity (/* char *entityName,
-                                char *entityValue,
+extern void MapMathMLEntity (/* STRING entityName,
+                                STRING entityValue,
                                 int valueLength,
-                                char *alphabet */);
-extern void MathMLEntityCreated (/* unsigned char *entityValue,
-                                    char *entityName,
+                                STRING alphabet */);
+extern void MathMLEntityCreated (/* USTRING entityValue,
+                                    STRING entityName,
                                     Document doc */);
 extern boolean ElementNeedsPlaceholder (/* Element el */);
 extern void SetSingleHorizStretchAttr (/* Element el,
@@ -111,8 +111,8 @@ extern void MathMLElementComplete (/* Element el,
 extern void MathMLAttributeComplete (/* Attribute attr,
                                         Element el,
                                         Document doc */);
-extern void MathMLGetDTDName (/* char* DTDname,
-                                 char *elementName */);
+extern void MathMLGetDTDName (/* STRING DTDname,
+                                 STRING elementName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

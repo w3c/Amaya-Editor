@@ -30,21 +30,21 @@
 #include "UIcss_f.h"
 
 #ifdef _WINDOWS
-extern char* WIN_Home;
+extern STRING WIN_Home;
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    AddCSS                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CSSInfoPtr      AddCSS (Document doc, Document docRef, CSSCategory category, char *url, char *localName)
+CSSInfoPtr      AddCSS (Document doc, Document docRef, CSSCategory category, STRING url, STRING localName)
 #else
 CSSInfoPtr      AddCSS (doc, docRef, category, url, localName)
 Document        doc;
 Document        docRef;
 CSSCategory     category;
-char           *url;
-char           *localName;
+STRING          url;
+STRING          localName;
 #endif
 {
   CSSInfoPtr          css, prev;
@@ -81,11 +81,11 @@ char           *localName;
    or the CSS_DOCUMENT_STYLE css of the document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CSSInfoPtr          SearchCSS (Document doc, char *url)
+CSSInfoPtr          SearchCSS (Document doc, STRING url)
 #else
 CSSInfoPtr          SearchCSS (doc, url)
 Document            doc;
-char               *url;
+STRING               url;
 #endif
 {
   CSSInfoPtr          css = CSSList;
@@ -95,7 +95,7 @@ char               *url;
       if (doc != 0 && css->doc == doc)
 	return css;
       else if (doc == 0 && url != NULL &&
-	       css->url != NULL && !strcmp(css->url, url))
+	       css->url != NULL && !ustrcmp(css->url, url))
 	return css;
       else
 	css = css->NextCSS;
@@ -292,10 +292,10 @@ CSSInfoPtr      css;
    URL given in argument.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LoadHTMLStyleSheet (char *URL, Document doc, CSSInfoPtr css)
+void                LoadHTMLStyleSheet (STRING URL, Document doc, CSSInfoPtr css)
 #else
 void                LoadHTMLStyleSheet (URL, doc, css)
-char               *URL;
+STRING               URL;
 Document            doc;
 CSSInfoPtr          css;
 #endif
@@ -303,11 +303,11 @@ CSSInfoPtr          css;
   CSSInfoPtr          oldcss;
   struct stat         buf;
   FILE               *res;
-  char                tempfile[MAX_LENGTH];
-  char                tempname[MAX_LENGTH];
-  char                tempURL[MAX_LENGTH];
-  char               *tempdocument;
-  char               *buffer = NULL;
+  CHAR                tempfile[MAX_LENGTH];
+  CHAR                tempname[MAX_LENGTH];
+  CHAR                tempURL[MAX_LENGTH];
+  STRING               tempdocument;
+  STRING               buffer = NULL;
   int                 len;
   int                 local = FALSE;
   int                 toparse;
@@ -327,7 +327,7 @@ CSSInfoPtr          css;
 	      if (!oldcss->documents[doc])
 		{
 		  oldcss->documents[doc] = TRUE;
-		  strcpy (tempfile, oldcss->localName);
+		  ustrcpy (tempfile, oldcss->localName);
 		}
 	    }
 	  else
@@ -352,7 +352,7 @@ CSSInfoPtr          css;
 		  TtaFileUnlink (tempdocument);
 		  /* now we can rename the local name of a remote document */
 		  rename (tempfile, tempdocument);
-		  strcpy (tempfile, tempdocument);
+		  ustrcpy (tempfile, tempdocument);
 		  TtaFreeMemory (tempdocument);
 		}
 	    }
@@ -361,7 +361,7 @@ CSSInfoPtr          css;
 	{
 	  oldcss = SearchCSS (0, tempURL);
 	  local = TRUE;
-	  strcpy (tempfile, tempURL);
+	  ustrcpy (tempfile, tempURL);
 	}
       if (tempfile[0] == EOS)
 	return;
@@ -387,7 +387,7 @@ CSSInfoPtr          css;
 	    TtaFileUnlink (tempfile);
 	  return;
 	}
-      buffer = (char *) TtaGetMemory (buf.st_size + 1000);
+      buffer = (STRING) TtaGetMemory (buf.st_size + 1000);
       if (buffer == NULL)
 	{
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
@@ -442,10 +442,10 @@ Document            doc;
   CSSInfoPtr          css;
   struct stat         buf;
   FILE               *res;
-  char                tempfile[MAX_LENGTH];
-  char               *buffer, *ptr;
-  char               *home;
-  char               *thotdir;
+  CHAR                tempfile[MAX_LENGTH];
+  STRING               buffer, ptr;
+  STRING               home;
+  STRING               thotdir;
   int                 len;
 
   /* look for the User preferences */
@@ -464,8 +464,8 @@ Document            doc;
     {
       /* Load User preferences */
 #     ifdef _WINDOWS
-      home = (char*) TtaGetMemory (strlen (WIN_Home) + 1);
-      strcpy (home, WIN_Home);
+      home = (STRING) TtaGetMemory (ustrlen (WIN_Home) + 1);
+      ustrcpy (home, WIN_Home);
 #     else  /* !_WINDOWS */
       home = TtaGetEnvString ("HOME");
 #     endif /* _WINDOWS */
@@ -510,7 +510,7 @@ Document            doc;
 	    fclose (res);
 	  else
 	    {
-	      buffer = (char*) TtaGetMemory (buf.st_size + 1000);
+	      buffer = (STRING) TtaGetMemory (buf.st_size + 1000);
 	      if (buffer == NULL)
 		fclose (res);
 	      else

@@ -6,112 +6,112 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char *SkipSep ( char *ptr );
-extern char *SkipInt ( char *ptr );
+extern STRING SkipSep ( STRING ptr );
+extern STRING SkipInt ( STRING ptr );
 extern void ParseAreaCoords ( Element element,
                               Document document );
-extern int MapGI ( char *gi,
+extern int MapGI ( STRING gi,
                    SSchema *schema,
                    Document doc );
-extern void GIType ( char *gi,
+extern void GIType ( STRING gi,
                      ElementType *elType,
                      Document doc );
-extern char *GITagNameByType ( ElementType elType );
-extern char *GITagName ( Element elem );
-extern void MapHTMLAttribute ( char *Attr,
+extern STRING GITagNameByType ( ElementType elType );
+extern STRING GITagName ( Element elem );
+extern void MapHTMLAttribute ( STRING Attr,
                                AttributeType *attrType,
-                               char* elementName,
+                               STRING elementName,
                                Document doc );
-extern int MapThotAttr ( char *Attr,
-                         char *tag );
+extern int MapThotAttr ( STRING Attr,
+                         STRING tag );
 extern int MapAttrValue ( int ThotAtt,
-                          char *AttrVal );
+                          STRING AttrVal );
 extern void InitMapping ( void );
 extern void ParseHTMLError ( Document doc,
-                             unsigned char *msg );
+                             USTRING msg );
 extern boolean IsCharacterLevelElement ( Element el );
 extern void OnlyOneOptionSelected ( Element el,
                                     Document doc,
                                     boolean parsing );
 extern void SetAttrIntItemStyle ( Element el,
                                   Document doc );
-extern void CreateAttrWidthPercentPxl ( char *buffer,
+extern void CreateAttrWidthPercentPxl ( STRING buffer,
                                         Element el,
                                         Document doc,
                                         int oldWidth );
-extern void CreateAttrIntSize ( char *buffer,
+extern void CreateAttrIntSize ( STRING buffer,
                                 Element el,
                                 Document doc );
 extern void InitAutomaton ( void );
 extern void FreeHTMLParser ( void );
-extern char GetNextInputChar ( boolean *endOfFile );
-extern void CheckAbstractTree ( char *pathURL );
+extern CHAR GetNextInputChar ( boolean *endOfFile );
+extern void CheckAbstractTree ( STRING pathURL );
 extern void ParseIncludedHTML ( Element elem,
-                                char *closingTag );
-extern void ParseSubTree ( char *HTMLbuf,
+                                STRING closingTag );
+extern void ParseSubTree ( STRING HTMLbuf,
                            Element lastelem,
                            boolean isclosed,
                            Document doc );
 extern void StartParser ( Document doc,
-                          char *htmlFileName,
-                          char *documentName,
-                          char *documentDirectory,
-                          char *pathURL,
+                          STRING htmlFileName,
+                          STRING documentName,
+                          STRING documentDirectory,
+                          STRING pathURL,
                           boolean PlainText );
 
 #else /* __STDC__ */
 
-extern char *SkipSep (/* char *ptr */);
-extern char *SkipInt (/* char *ptr */);
+extern STRING SkipSep (/* STRING ptr */);
+extern STRING SkipInt (/* STRING ptr */);
 extern void ParseAreaCoords (/* Element element,
                                 Document document */);
-extern int MapGI (/* char *gi,
+extern int MapGI (/* STRING gi,
                      SSchema *schema,
                      Document doc */);
-extern void GIType (/* char *gi,
+extern void GIType (/* STRING gi,
                        ElementType *elType,
                        Document doc */);
-extern char *GITagNameByType (/* ElementType elType */);
-extern char *GITagName (/* Element elem */);
-extern void MapHTMLAttribute (/* char *Attr,
+extern STRING GITagNameByType (/* ElementType elType */);
+extern STRING GITagName (/* Element elem */);
+extern void MapHTMLAttribute (/* STRING Attr,
                                  AttributeType *attrType,
-                                 char* elementName,
+                                 STRING elementName,
                                  Document doc */);
-extern int MapThotAttr (/* char *Attr,
-                           char *tag */);
+extern int MapThotAttr (/* STRING Attr,
+                           STRING tag */);
 extern int MapAttrValue (/* int ThotAtt,
-                            char *AttrVal */);
+                            STRING AttrVal */);
 extern void InitMapping (/* void */);
 extern void ParseHTMLError (/* Document doc,
-                               unsigned char *msg */);
+                               USTRING msg */);
 extern boolean IsCharacterLevelElement (/* Element el */);
 extern void OnlyOneOptionSelected (/* Element el,
                                       Document doc,
                                       boolean parsing */);
 extern void SetAttrIntItemStyle (/* Element el,
                                     Document doc */);
-extern void CreateAttrWidthPercentPxl (/* char *buffer,
+extern void CreateAttrWidthPercentPxl (/* STRING buffer,
                                           Element el,
                                           Document doc,
                                           int oldWidth */);
-extern void CreateAttrIntSize (/* char *buffer,
+extern void CreateAttrIntSize (/* STRING buffer,
                                   Element el,
                                   Document doc */);
 extern void InitAutomaton (/* void */);
 extern void FreeHTMLParser (/* void */);
-extern char GetNextInputChar (/* boolean *endOfFile */);
-extern void CheckAbstractTree (/* char *pathURL */);
+extern CHAR GetNextInputChar (/* boolean *endOfFile */);
+extern void CheckAbstractTree (/* STRING pathURL */);
 extern void ParseIncludedHTML (/* Element elem,
-                                  char *closingTag */);
-extern void ParseSubTree (/* char *HTMLbuf,
+                                  STRING closingTag */);
+extern void ParseSubTree (/* STRING HTMLbuf,
                              Element lastelem,
                              boolean isclosed,
                              Document doc */);
 extern void StartParser (/* Document doc,
-                            char *htmlFileName,
-                            char *documentName,
-                            char *documentDirectory,
-                            char *pathURL,
+                            STRING htmlFileName,
+                            STRING documentName,
+                            STRING documentDirectory,
+                            STRING pathURL,
                             boolean PlainText */);
 
 #endif /* __STDC__ */

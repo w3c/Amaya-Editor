@@ -9,24 +9,24 @@
 extern boolean DeleteMap ( NotifyElement * event );
 extern void CallbackImage ( int ref,
                             int typedata,
-                            char *data );
+                            STRING data );
 extern void InitImage ( void );
-extern char *GetImageURL ( Document document,
-                           View view );
+extern STRING GetImageURL ( Document document,
+                            View view );
 extern void ChangeBackgroundImage ( Document document,
                                     View view );
 extern void ComputeSRCattribute ( Element el,
                                   Document doc,
                                   Document sourceDocument,
                                   Attribute attr,
-                                  char *text );
+                                  STRING text );
 extern void UpdateSRCattribute ( NotifyElement * event );
 extern void SRCattrModified ( NotifyAttribute * event );
 extern void CreateImage ( Document document,
                           View view );
-extern boolean AddLocalImage ( char *fullname,
-                               char *name,
-                               char *url,
+extern boolean AddLocalImage ( STRING fullname,
+                               STRING name,
+                               STRING url,
                                Document doc,
                                LoadedImageDesc ** desc );
 extern void RemoveDocumentImages ( Document doc );
@@ -36,24 +36,24 @@ extern void RemoveDocumentImages ( Document doc );
 extern boolean DeleteMap (/* NotifyElement * event */);
 extern void CallbackImage (/* int ref,
                               int typedata,
-                              char *data */);
+                              STRING data */);
 extern void InitImage (/* void */);
-extern char *GetImageURL (/* Document document,
-                             View view */);
+extern STRING GetImageURL (/* Document document,
+                              View view */);
 extern void ChangeBackgroundImage (/* Document document,
                                       View view */);
 extern void ComputeSRCattribute (/* Element el,
                                     Document doc,
                                     Document sourceDocument,
                                     Attribute attr,
-                                    char *text */);
+                                    STRING text */);
 extern void UpdateSRCattribute (/* NotifyElement * event */);
 extern void SRCattrModified (/* NotifyAttribute * event */);
 extern void CreateImage (/* Document document,
                             View view */);
-extern boolean AddLocalImage (/* char *fullname,
-                                 char *name,
-                                 char *url,
+extern boolean AddLocalImage (/* STRING fullname,
+                                 STRING name,
+                                 STRING url,
                                  Document doc,
                                  LoadedImageDesc ** desc */);
 extern void RemoveDocumentImages (/* Document doc */);

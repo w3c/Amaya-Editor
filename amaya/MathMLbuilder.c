@@ -25,12 +25,12 @@
 #define EOS     '\0'
 #define SPACE    ' '
 
-typedef unsigned char MathEntityName[20];
+typedef UCHAR  MathEntityName[20];
 typedef struct _MathEntity
   {			 /* a Math entity representing an operator char */
      MathEntityName      MentityName;	/* entity name */
      int                 charCode;	/* decimal code of char */
-     char		 alphabet;	/* 'L' = ISO-Latin-1, 'G' = Symbol */
+     CHAR		 alphabet;	/* 'L' = ISO-Latin-1, 'G' = Symbol */
   }
 MathEntity;
 
@@ -341,13 +341,13 @@ Document	   doc;
    Returns -1 and schema = NULL if not found.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               MapMathMLElementType (char *XMLname, ElementType *elType, char** mappedName, char* content, Document doc)
+void               MapMathMLElementType (STRING XMLname, ElementType *elType, STRING* mappedName, STRING content, Document doc)
 #else
 void               MapMathMLElementType (XMLname, elType, mappedName, content, doc)
-char               *XMLname;
+STRING              XMLname;
 ElementType	   *elType;
-unsigned char	   **mappedName;
-char		   *content;
+USTRING*           mappedName;
+STRING	           content;
 Document            doc;
 #endif
 {
@@ -357,7 +357,7 @@ Document            doc;
    /* search in MathMLElemMappingTable */
    i = 0;
    do
-       if (strcasecmp (MathMLElemMappingTable[i].XMLname, XMLname))
+       if (ustrcasecmp (MathMLElemMappingTable[i].XMLname, XMLname))
 	  i++;
        else
 	  {
@@ -375,11 +375,11 @@ Document            doc;
    search in the mapping tables the XML name for a given Thot type
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               GetMathMLElementName (ElementType elType, char **buffer)
+void               GetMathMLElementName (ElementType elType, STRING *buffer)
 #else
 void               GetMathMLElementName (elType, buffer)
 ElementType elType;
-char* buffer;
+STRING buffer;
 
 #endif
 {
@@ -388,12 +388,12 @@ char* buffer;
    if (elType.ElTypeNum > 0)
      {
 	i = 0;
-	if (strcmp ("MathML", TtaGetSSchemaName (elType.ElSSchema)) == 0)
+	if (ustrcmp ("MathML", TtaGetSSchemaName (elType.ElSSchema)) == 0)
 	  do
 	    {
 	     if (MathMLElemMappingTable[i].ThotType == elType.ElTypeNum)
 		{
-		*buffer = (char *) MathMLElemMappingTable[i].XMLname;
+		*buffer = (STRING) MathMLElemMappingTable[i].XMLname;
 		return;
 		}
 	     i++;
@@ -410,12 +410,12 @@ char* buffer;
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void          MapMathMLAttribute (char *Attr, AttributeType *attrType, char* elementName, Document doc)
+void          MapMathMLAttribute (STRING Attr, AttributeType *attrType, STRING elementName, Document doc)
 #else
 void          MapMathMLAttribute (Attr, attrType, elementName, doc)
-char               *Attr;
+STRING              Attr;
 AttributeType      *attrType;
-char 		   *elementName;
+STRING		    elementName;
 Document            doc;
 #endif
 {
@@ -425,7 +425,7 @@ Document            doc;
    attrType->AttrSSchema = NULL;
    i = 0;
    do
-      if (strcasecmp (MathMLAttributeMappingTable[i].XMLattribute, Attr))
+      if (ustrcasecmp (MathMLAttributeMappingTable[i].XMLattribute, Attr))
 	 i++;
       else
 	 if (MathMLAttributeMappingTable[i].XMLelement[0] == EOS)
@@ -433,7 +433,7 @@ Document            doc;
 	       attrType->AttrTypeNum = MathMLAttributeMappingTable[i].ThotAttribute;
 	       attrType->AttrSSchema = GetMathMLSSchema (doc);
 	       }
-	 else if (!strcasecmp (MathMLAttributeMappingTable[i].XMLelement,
+	 else if (!ustrcasecmp (MathMLAttributeMappingTable[i].XMLelement,
 			       elementName))
 	       {
 	       attrType->AttrTypeNum = MathMLAttributeMappingTable[i].ThotAttribute;
@@ -450,10 +450,10 @@ Document            doc;
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MapMathMLAttributeValue (char *AttrVal, AttributeType attrType, int *value)
+void                MapMathMLAttributeValue (STRING AttrVal, AttributeType attrType, int *value)
 #else
 void                MapMathMLAttributeValue (AttrVal, attrType, value)
-char               *AttrVal;
+STRING              AttrVal;
 AttributeType       attrType;
 int		   *value;
 #endif
@@ -467,7 +467,7 @@ int		   *value;
        i++;
    if (MathMLAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
        do
-	   if (!strcasecmp (MathMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
+	   if (!ustrcasecmp (MathMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
 	       *value = MathMLAttrValueMappingTable[i].ThotAttrValue;
 	   else
 	       i++;
@@ -479,13 +479,13 @@ int		   *value;
    Search that entity in the entity table and return the corresponding value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void	MapMathMLEntity (char *entityName, char *entityValue, int valueLength, char *alphabet)
+void	MapMathMLEntity (STRING entityName, STRING entityValue, int valueLength, STRING alphabet)
 #else
 void	MapMathMLEntity (entityName, entityValue, valueLength, alphabet)
-char *entityName;
-char *entityValue;
+STRING entityName;
+STRING entityValue;
 int valueLength;
-char *alphabet;
+STRING alphabet;
 
 #endif
 
@@ -493,12 +493,12 @@ char *alphabet;
    int	i;
 
    for (i = 0; MathEntityTable[i].charCode >= 0 &&
-	       strcmp (MathEntityTable[i].MentityName, entityName);
+	       ustrcmp (MathEntityTable[i].MentityName, entityName);
 	       i++);
-   if (!strcmp (MathEntityTable[i].MentityName, entityName))
+   if (!ustrcmp (MathEntityTable[i].MentityName, entityName))
       /* entity found */
       {
-      entityValue[0] = (unsigned char) MathEntityTable[i].charCode;
+      entityValue[0] = (UCHAR) MathEntityTable[i].charCode;
       entityValue[1] = EOS;
       *alphabet = MathEntityTable[i].alphabet;
       }
@@ -515,11 +515,11 @@ char *alphabet;
    Create a text element containing the entity name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void        MathMLEntityCreated (unsigned char *entityValue, char *entityName, Document doc)
+void        MathMLEntityCreated (USTRING entityValue, STRING entityName, Document doc)
 #else
 void        MathMLEntityCreated (entityValue, entityName, doc)
-unsigned char *entityValue;
-char *entityName;
+USTRING entityValue;
+STRING  entityName;
 Document doc;
 
 #endif
@@ -531,9 +531,9 @@ Document doc;
    Language	 lang;
    int		 len;
 #define MAX_ENTITY_LENGTH 80
-   char		 buffer[MAX_ENTITY_LENGTH];
+   CHAR		 buffer[MAX_ENTITY_LENGTH];
 
-   if (strlen (entityValue) <= 1)
+   if (ustrlen (entityValue) <= 1)
      if (entityValue[0] == EOS || entityValue[0] == SPACE ||
         ((int)entityValue[0]) == 129 ||	/* thin space */
         ((int)entityValue[0]) == 130 ||	/* en space */
@@ -543,11 +543,11 @@ Document doc;
            attribute entity */
 	{
 	XMLTextToDocument ();
-	len = strlen (entityName);
+	len = ustrlen (entityName);
 	if (len > MAX_ENTITY_LENGTH -3)
 	   len = MAX_ENTITY_LENGTH -3;
 	buffer[0] = '&';
-	strncpy (&buffer[1], entityName, len);
+	ustrncpy (&buffer[1], entityName, len);
 	buffer[len+1] = ';';
 	buffer[len+2] = EOS;
 	elType.ElTypeNum = MathML_EL_TEXT_UNIT;
@@ -580,8 +580,8 @@ Document doc;
    Element	parent, new;
    int		len;
    Language	lang;
-   char		alphabet;
-   char		text[4];
+   CHAR		alphabet;
+   CHAR		text[4];
 
    len = TtaGetTextLength (*el);
    if (len == 1)
@@ -912,8 +912,8 @@ void SetSingleHorizStretchAttr (el, doc, selEl)
   AttributeType	attrType;
   int		len;
   Language	lang;
-  char		alphabet;
-  unsigned char	text[2], c;
+  CHAR		alphabet;
+  UCHAR	        text[2], c;
 
   if (el == NULL)
      return;
@@ -1024,8 +1024,8 @@ void SetVertStretchAttr (el, doc, base, selEl)
   AttributeType	attrType;
   int		len;
   Language	lang;
-  char		alphabet;
-  unsigned char	text[2], c;
+  CHAR		alphabet;
+  UCHAR	        text[2], c;
 
   if (el == NULL)
      return;
@@ -1525,9 +1525,9 @@ void SetAddspaceAttr (el, doc)
   Attribute	attr;
   int		len, val;
 #define BUFLEN 10
-  unsigned char	text[BUFLEN];
+  UCHAR    	text[BUFLEN];
   Language	lang;
-  char		alphabet;
+  CHAR		alphabet;
 
   textEl = TtaGetFirstChild (el);
   if (textEl != NULL)
@@ -1664,8 +1664,8 @@ Document		doc;
    Attribute	attr;
    int		len;
    Language	lang;
-   char		alphabet;
-   unsigned char	text[2], c;
+   CHAR		alphabet;
+   UCHAR	text[2], c;
 
    elType = TtaGetElementType (el);
    if (elType.ElTypeNum == MathML_EL_MO)
@@ -1741,7 +1741,7 @@ Document	doc;
    Attribute     attr;
    int		 length, sep, i;
    Language	 lang;
-   char		 text[32], sepValue[4];
+   CHAR		 text[32], sepValue[4];
 
    /* get the separators attribute */
    mfenced = TtaGetParent (fencedExpression);
@@ -1824,7 +1824,7 @@ Document	doc;
    AttributeType attrType;
    Attribute     attr;
    int		 length;
-   char		 text[32], c;
+   CHAR		 text[32], c;
 
    child = TtaGetFirstChild (el);
    if (child != NULL)
@@ -2133,16 +2133,16 @@ Document	doc;
    MathMLGetDTDName
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void      MathMLGetDTDName (char* DTDname, char *elementName)
+void      MathMLGetDTDName (STRING DTDname, STRING elementName)
 #else
 void      MathMLGetDTDName (DTDname, elementName)
-char* DTDname;
-char *elementName;
+STRING DTDname;
+STRING elementName;
 
 #endif
 {
    /* no other DTD allowed within MathML elements */
-   strcpy (DTDname, "");
+   ustrcpy (DTDname, "");
 }
 
 /* end of module */

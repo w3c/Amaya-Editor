@@ -66,7 +66,7 @@
 */
 int  Window_Curs;
 
-char docToOpen [256];
+CHAR docToOpen [256];
 extern boolean viewClosed;
 /* extern bmpID;  */
 #define AMAYA_PAGE "\\amaya\\AmayaPage.html"
@@ -77,7 +77,7 @@ extern boolean viewClosed;
 #define AMAYA_PAGE_DOC "http://www.w3.org/Amaya/User/"
 
 static int          AmayaInitialized = 0;
-static char        *Manual[] = {
+static STRING       Manual[] = {
 "Browsing.html",
 "Selecting.html",
 "Searching.html",
@@ -164,7 +164,7 @@ static Pixmap       iconJava;
 static BOOL itemChecked = FALSE;
 extern int  currentFrame;
 extern int  menu_item;
-extern char LostPicturePath [512];
+extern CHAR LostPicturePath [512];
 
 BOOL        tbStringsInitialized = FALSE;
 int         tipIndex;
@@ -218,11 +218,11 @@ typedef struct _GETHTMLDocument_context {
   boolean ok;
   boolean history;
   boolean local_link;
-  char *target;
-  char *documentname;
-  char *form_data;
+  STRING target;
+  STRING documentname;
+  STRING form_data;
   ClickEvent  method;
-  char *tempdocument;
+  STRING tempdocument;
   TTcbf *cbf;
   void *ctx_cbf;
 } GETHTMLDocument_context;
@@ -231,8 +231,8 @@ typedef struct _GETHTMLDocument_context {
    Reload_callback function */
 typedef struct _RELOAD_context {
   Document newdoc;
-  char *documentname;
-  char *form_data;
+  STRING documentname;
+  STRING form_data;
   ClickEvent method;
   int position;	/* volume preceding the the first element to be shown */
   int distance; /* distance from the top of the window to the top of this
@@ -246,20 +246,20 @@ boolean HTMLErrorsFound = FALSE;
    corresponding document is already loaded or 0.          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            IsDocumentLoaded (char *documentURL, char *form_data)
+Document            IsDocumentLoaded (STRING documentURL, STRING form_data)
 #else
 Document            IsDocumentLoaded (documentURL, form_data)
-char               *documentURL;
-char               *form_data;
+STRING              documentURL;
+STRING              form_data;
 
 #endif
 {
    int                 i;
    boolean             found;
-   char               *otherURL;
-   char                URL_DIR_STR[2];
+   STRING              otherURL;
+   CHAR                URL_DIR_STR[2];
 
-   if (documentURL && strchr (documentURL, '/'))
+   if (documentURL && ustrchr (documentURL, '/'))
 	  sprintf (URL_DIR_STR, "/");
    else 
 	   sprintf (URL_DIR_STR, DIR_STR);
@@ -270,8 +270,8 @@ char               *form_data;
    i = 1;
    found = FALSE;
    otherURL = TtaGetMemory (MAX_LENGTH);
-   strcpy (otherURL, documentURL);
-   strcat (otherURL, URL_DIR_STR);
+   ustrcpy (otherURL, documentURL);
+   ustrcat (otherURL, URL_DIR_STR);
    while (!found && i < DocumentTableLength)
      {
 	if (!DocumentURLs[i])
@@ -279,13 +279,13 @@ char               *form_data;
 	else
 	  {
 	    /* compare the url */
-	     found = (strcmp (documentURL, DocumentURLs[i]) == 0
-		      || strcmp (otherURL, DocumentURLs[i]) == 0);
+	     found = (ustrcmp (documentURL, DocumentURLs[i]) == 0
+		      || ustrcmp (otherURL, DocumentURLs[i]) == 0);
 	     /* compare the form_data */
 	     if (found 
 		 && (!((!form_data && !DocumentMeta[i]->form_data)
 		       || (form_data && DocumentMeta[i]->form_data
-			   && !strcmp (form_data, 
+			   && !ustrcmp (form_data, 
 				       DocumentMeta[i]->form_data)))))
 		 found = FALSE;
 
@@ -334,29 +334,29 @@ View		view;
    ExtractParameters extract parameters from document nane.        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ExtractParameters (char *aName, char *parameters)
+void                ExtractParameters (STRING aName, STRING parameters)
 #else
 void                ExtractParameters (aName, parameters)
-char               *aName;
-char               *parameters;
+STRING              aName;
+STRING              parameters;
 #endif
 {
    int                 lg, i;
-   char               *ptr, *oldptr;
+   STRING              ptr, oldptr;
 
    if (!parameters || !aName)
      /* bad parameters */
      return;
 
    parameters[0] = EOS;
-   lg = strlen (aName);
+   lg = ustrlen (aName);
    if (lg)
      {
 	/* the name is not empty */
 	oldptr = ptr = &aName[0];
 	do
 	  {
-	     ptr = strrchr (oldptr, '?');
+	     ptr = ustrrchr (oldptr, '?');
 	     if (ptr)
 		oldptr = &ptr[1];
 	  }
@@ -367,7 +367,7 @@ char               *parameters;
 	  {
 	     aName[i - 1] = EOS;
 	     if (i != lg)
-		strcpy (parameters, oldptr);
+		ustrcpy (parameters, oldptr);
 	  }
      }
 }
@@ -377,29 +377,29 @@ char               *parameters;
    ExtractTarget extract the target name from document nane.        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ExtractTarget (char *aName, char *target)
+static void         ExtractTarget (STRING aName, STRING target)
 #else
 static void         ExtractTarget (aName, target)
-char               *aName;
-char               *target;
+STRING              aName;
+STRING              target;
 #endif
 {
    int                 lg, i;
-   char               *ptr, *oldptr;
+   STRING              ptr, oldptr;
 
    if (!target || !aName)
      /* bad target */
      return;
 
    target[0] = EOS;
-   lg = strlen (aName);
+   lg = ustrlen (aName);
    if (lg)
      {
 	/* the name is not empty */
 	oldptr = ptr = &aName[0];
 	do
 	  {
-	     ptr = strrchr (oldptr, '#');
+	     ptr = ustrrchr (oldptr, '#');
 	     if (ptr)
 		oldptr = &ptr[1];
 	  }
@@ -410,7 +410,7 @@ char               *target;
 	  {
 	     aName[i - 1] = EOS;
 	     if (i != lg)
-		strcpy (target, oldptr);
+		ustrcpy (target, oldptr);
 	  }
      }
 }
@@ -420,30 +420,30 @@ char               *target;
    ExtractSuffix extract suffix from document nane.                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ExtractSuffix (char *aName, char *aSuffix)
+void                ExtractSuffix (STRING aName, STRING aSuffix)
 #else
 void                ExtractSuffix (aName, aSuffix)
-char               *aName;
-char               *aSuffix;
+STRING              aName;
+STRING              aSuffix;
 
 #endif
 {
    int                 lg, i;
-   char               *ptr, *oldptr;
+   STRING              ptr, oldptr;
 
    if (!aSuffix || !aName)
      /* bad suffix */
      return;
 
    aSuffix[0] = EOS;
-   lg = strlen (aName);
+   lg = ustrlen (aName);
    if (lg)
      {
 	/* the name is not empty */
 	oldptr = ptr = &aName[0];
 	do
 	  {
-	     ptr = strrchr (oldptr, '.');
+	     ptr = ustrrchr (oldptr, '.');
 	     if (ptr)
 		oldptr = &ptr[1];
 	  }
@@ -454,7 +454,7 @@ char               *aSuffix;
 	  {
 	     aName[i - 1] = EOS;
 	     if (i != lg)
-		strcpy (aSuffix, oldptr);
+		ustrcpy (aSuffix, oldptr);
 	  }
      }
 }
@@ -1069,16 +1069,16 @@ View                view;
    Load the corresponding document in that window.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         TextURL (Document document, View view, char *text)
+static void         TextURL (Document document, View view, STRING text)
 #else
 static void         TextURL (document, view, text)
 Document            doc;
 View                view;
-char               *text;
+STRING              text;
 
 #endif
 {
-  char             *s = NULL;
+  STRING            s = NULL;
   boolean           change;
 
   change = FALSE;
@@ -1118,7 +1118,7 @@ char               *text;
 	CallbackDialogue (BaseDialog + URLName, STRING_DATA, text);
       InNewWindow = FALSE;
       CurrentDocument = document;
-      CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+      CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (STRING) 1);
     }
 }
 
@@ -1128,12 +1128,12 @@ char               *text;
    Update the TITLE element for the corresponding document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         TextTitle (Document document, View view, char *text)
+static void         TextTitle (Document document, View view, STRING text)
 #else
 static void         TextTitle (document, view, text)
 Document            doc;
 View                view;
-char               *text;
+STRING              text;
 
 #endif
 {
@@ -1203,12 +1203,12 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitConfirm (Document document, View view, char *label)
+void                InitConfirm (Document document, View view, STRING label)
 #else
 void                InitConfirm (document, view, label)
 Document            document;
 View                view;
-char               *label;
+STRING              label;
 
 #endif
 {
@@ -1241,16 +1241,16 @@ View                view;
    /* For Windoz have a look to OPENFILENAME structure and
       GetOpenFileName function */
    int               i;
-   char              s[MAX_LENGTH];
+   CHAR              s[MAX_LENGTH];
 
    CurrentDocument = document;
    /* Dialogue form for open URL or local */
    i = 0;
-   strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-   i += strlen (&s[i]) + 1;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
-   i += strlen (&s[i]) + 1;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
+   ustrcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+   i += ustrlen (&s[i]) + 1;
+   ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
+   i += ustrlen (&s[i]) + 1;
+   ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
 
    TtaNewSheet (BaseDialog + OpenForm, TtaGetViewFrame (document, view),  TtaGetMessage (AMAYA, AM_OPEN_URL),
 		3, s, TRUE, 2, 'L', D_CANCEL);
@@ -1265,9 +1265,9 @@ View                view;
       TtaSetTextForm (BaseDialog + URLName, LastURLName);
    else
      {
-	strcpy (s, DirectoryName);
-	strcat (s, DIR_STR);
-	strcat (s, DocumentName);
+	ustrcpy (s, DirectoryName);
+	ustrcat (s, DIR_STR);
+	ustrcat (s, DocumentName);
 	TtaSetTextForm (BaseDialog + URLName, s);
      }
 
@@ -1329,16 +1329,16 @@ View                view;
    logFile is TRUE if the new view is created to display a log file
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Document     InitDocView (Document doc, char *pathname, boolean logFile)
+static Document     InitDocView (Document doc, STRING pathname, boolean logFile)
 #else
 static Document     InitDocView (doc, pathname, logFile)
 Document            doc;
-char               *pathname;
+STRING              pathname;
 boolean             logFile;
 #endif
 {
-   char               *tempname;
-   char               *temppath;
+   STRING              tempname;
+   STRING              temppath;
    View                mainView, structView, altView, linksView, tocView;
    Document            old_doc;
    boolean             opened;
@@ -1413,7 +1413,7 @@ boolean             logFile;
    TtaExtractName (pathname, temppath, tempname);
    if (tempname[0] == EOS)
       /* there is a slash at the end of the path */
-      strcpy (tempname, "noname.html");
+      ustrcpy (tempname, "noname.html");
 
    doc = TtaNewDocument ("HTML", tempname);
    TtaFreeMemory (tempname);
@@ -1584,19 +1584,19 @@ boolean             logFile;
   CreateHTMLContainer creates an HTML container for an image
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void CreateHTMLContainer (char *pathname, char *docname, char *tempfile,
+static void CreateHTMLContainer (STRING pathname, STRING docname, STRING tempfile,
 				 boolean local)
 #else
 static void CreateHTMLContainer (pathname, docname, tempfile, local)
-char *pathname;
-char *docname;
-char *tempfile;
+STRING pathname;
+STRING docname;
+STRING tempfile;
 boolean local;
 #endif 
 {
   FILE *file;
-  char *tempfile_new;
-  char *ptr;
+  STRING tempfile_new;
+  STRING ptr;
 
   if (!local)
     {
@@ -1604,20 +1604,20 @@ boolean local;
 	 find it easily next time around. 
 	 The convention is to change the image's extension to 'html',
 	 and give the HTML's container the image's extension */
-      tempfile_new = TtaGetMemory (strlen (tempfile) + strlen (docname) 
+      tempfile_new = TtaGetMemory (ustrlen (tempfile) + ustrlen (docname) 
 				   + 10);
-      strcpy (tempfile_new, tempfile);
-      ptr = strrchr (tempfile_new, DIR_SEP);
+      ustrcpy (tempfile_new, tempfile);
+      ptr = ustrrchr (tempfile_new, DIR_SEP);
       ptr++;
-      strcpy (ptr, docname);
-      ptr = strrchr (tempfile_new, '.');
+      ustrcpy (ptr, docname);
+      ptr = ustrrchr (tempfile_new, '.');
       if (ptr)
 	{
 	  ptr++;
-	  strcpy (ptr, "html");
+	  ustrcpy (ptr, "html");
 	}
       else
-	strcat (ptr, ".html");
+	ustrcat (ptr, ".html");
       TtaFileUnlink (tempfile_new);
 #   ifndef _WINDOWS
       rename (tempfile, tempfile_new);
@@ -1646,31 +1646,31 @@ boolean local;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void MoveImageFile (Document source_doc, Document dest_doc,
-			   char *documentname)
+			   STRING documentname)
 #else
 static void MoveImageFile (source_doc, dest_doc, documentname)
 Document source_doc;
 Document dest_doc;
-char *documentname;
+STRING documentname;
 #endif
 {
-  char *source;
-  char *target;
-  char *imagefile;
-  char *ptr;
+  STRING source;
+  STRING target;
+  STRING imagefile;
+  STRING ptr;
   
   /* generate the name of the file where is stored the image */
-  imagefile = TtaGetMemory (strlen (documentname) + 6);
-  strcpy (imagefile, documentname);
-  ptr = strrchr (imagefile, '.');
+  imagefile = TtaGetMemory (ustrlen (documentname) + 6);
+  ustrcpy (imagefile, documentname);
+  ptr = ustrrchr (imagefile, '.');
   ptr++;
-  strcpy (ptr, "html");
+  ustrcpy (ptr, "html");
   
   /* create the source and dest file names */
-  source = TtaGetMemory (strlen (TempFileDirectory) + strlen (imagefile) + 6);
+  source = TtaGetMemory (ustrlen (TempFileDirectory) + ustrlen (imagefile) + 6);
   sprintf (source, "%s%c%d%c%s", 
 	   TempFileDirectory, DIR_SEP, source_doc, DIR_SEP, imagefile);
-  target = TtaGetMemory (strlen (TempFileDirectory) + strlen (imagefile) + 6);
+  target = TtaGetMemory (ustrlen (TempFileDirectory) + ustrlen (imagefile) + 6);
   sprintf (target, "%s%c%d%c%s", 
 	   TempFileDirectory, DIR_SEP, dest_doc, DIR_SEP, imagefile);
 
@@ -1690,23 +1690,23 @@ char *documentname;
   tempfile gives the file name of the current copy of the remote file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Document     LoadHTMLDocument (Document doc, char *pathname, char *form_data, int method, char *tempfile, char *documentname, char *content_type, boolean history)
+static Document     LoadHTMLDocument (Document doc, STRING pathname, STRING form_data, int method, STRING tempfile, STRING documentname, STRING content_type, boolean history)
 #else
 static Document     LoadHTMLDocument (doc, pathname, form_data, method, tempfile, documentname, content_type, history)
 Document            doc;
-char               *pathname;
-char               *form_data;
+STRING              pathname;
+STRING              form_data;
 int                 method;
-char               *tempfile;
-char               *documentname;
-char               *content_type;
+STRING              tempfile;
+STRING              documentname;
+STRING              content_type;
 boolean		    history;
 #endif
 {
   Document            newdoc = 0;
-  char               *tempdocument;
-  char               *tempdir;
-  char               *s;
+  STRING              tempdocument;
+  STRING              tempdir;
+  STRING              s;
   int                 i, j;
   boolean	       PlainText;
   boolean	       HTMLfile;
@@ -1748,9 +1748,9 @@ boolean		    history;
 	     j++;
 	   if (content_type[j] == ';')
 	     content_type[j] = EOS;
-	   if (strcasecmp (content_type, "text") == 0)
+	   if (ustrcasecmp (content_type, "text") == 0)
 	     {
-	       if (strncasecmp (&content_type[i+1], "html", 4) == 0)
+	       if (ustrncasecmp (&content_type[i+1], "html", 4) == 0)
 		 HTMLfile = TRUE;
 	       else
 		 PlainText = TRUE;
@@ -1761,7 +1761,7 @@ boolean		    history;
   /* Is the document an image */
   if (!PlainText && !HTMLfile)
     {
-      if (content_type && !strcmp (content_type, "image") 
+      if (content_type && !ustrcmp (content_type, "image") 
 	  && tempfile[0] != EOS)
 	{
 	  /* get a pointer to the type ('/' substituted with an EOS
@@ -1796,17 +1796,17 @@ boolean		    history;
     {
       /* The document is not an HTML file and cannot be parsed */
       /* rename the temporary file */
-      strcpy (SavingFile, tempfile);
+      ustrcpy (SavingFile, tempfile);
       SavingDocument = 0;
       SavingObject = 0;
       tempdocument = TtaGetMemory (MAX_LENGTH);
       TtaExtractName (pathname, tempfile, tempdocument);
       /* reinitialize directories and document lists */
-      strcpy (pathname, DirectoryName);
-      strcat (pathname, DIR_STR);
-      strcat (pathname, tempdocument);
-      strcpy (SavePath, DirectoryName);
-      strcpy (SaveName, tempdocument);
+      ustrcpy (pathname, DirectoryName);
+      ustrcat (pathname, DIR_STR);
+      ustrcat (pathname, tempdocument);
+      ustrcpy (SavePath, DirectoryName);
+      ustrcpy (SaveName, tempdocument);
       ResetStop (doc);
       InitSaveObjectForm (doc, 1, SavingFile, pathname);
     }
@@ -1869,13 +1869,13 @@ boolean		    history;
 	{
 	  /* It is a local document */
 	  tempdocument = TtaGetMemory (MAX_LENGTH);
-	  strcpy (tempdocument, pathname);
+	  ustrcpy (tempdocument, pathname);
 	}
       
       /* save the document name into the document table */
-      i = strlen (pathname) + 1;
+      i = ustrlen (pathname) + 1;
       s = TtaGetMemory (i);
-      strcpy (s, pathname);
+      ustrcpy (s, pathname);
       if (DocumentURLs[newdoc] != NULL)
 	TtaFreeMemory (DocumentURLs[(int) newdoc]);
       DocumentURLs[newdoc] = s;
@@ -1894,15 +1894,15 @@ boolean		    history;
 	{
 	  /* concatenate the URL and its form_data and then
 	     display it on the amaya URL box */
-	  i = strlen (pathname) + 5;
+	  i = ustrlen (pathname) + 5;
 	  if (form_data && method != CE_FORM_POST)
-	    i += strlen (form_data);
+	    i += ustrlen (form_data);
 	  s = TtaGetMemory (i);
 
 	  if (form_data && method != CE_FORM_POST)
 	    sprintf (s, "%s?%s", pathname, form_data);
 	  else
-	    strcpy (s, pathname);
+	    ustrcpy (s, pathname);
 
 	  TtaSetTextZone (newdoc, 1, 1, s);
 	  TtaFreeMemory (s);
@@ -1930,26 +1930,26 @@ boolean		    history;
   Reload_callback
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                Reload_callback (int doc, int status, char *urlName,
-                                     char *outputfile, char *content_type,
+void                Reload_callback (int doc, int status, STRING urlName,
+                                     STRING outputfile, STRING content_type,
 				       void * context)
 #else  /* __STDC__ */
 void                Reload_callback (doc, status, urlName, outputfile, 
 				       content_type, context)
 int doc;
 int status;
-char *urlName;
-char *outputfile;
-char *content_type;
+STRING urlName;
+STRING outputfile;
+STRING content_type;
 void *context;
 
 #endif
 {
   Document newdoc;
-  char *pathname;
-  char *tempfile;
-  char *documentname;
-  char *form_data;
+  STRING pathname;
+  STRING tempfile;
+  STRING documentname;
+  STRING form_data;
   ClickEvent method;
   Document res;
   Element el;
@@ -1966,7 +1966,7 @@ void *context;
   tempfile = outputfile;
 
   pathname = TtaGetMemory (MAX_LENGTH);
-  strcpy (pathname, urlName);
+  ustrcpy (pathname, urlName);
 
   if (status == 0)
      {
@@ -2012,11 +2012,11 @@ View                view;
 #endif
 {
    Document            newdoc;
-   char               *tempfile;
-   char               *pathname;
-   char               *documentname;
+   STRING              tempfile;
+   STRING              pathname;
+   STRING              documentname;
    int                 toparse;
-   char               *form_data;
+   STRING              form_data;
    ClickEvent          method;
    int                 mode;
    int		       position;
@@ -2159,7 +2159,7 @@ View                view;
 #endif
 {
   int               zoom, zoomVal;
-  char             *zoomStr;
+  STRING            zoomStr;
 
   zoom = TtaGetZoom (document, view);
   if (zoom < 10)
@@ -2199,7 +2199,7 @@ View                view;
 #endif
 {
   int               zoom, zoomVal;
-  char             *zoomStr;
+  STRING            zoomStr;
 
   zoom = TtaGetZoom (document, view);
   if (zoom > -10)
@@ -2510,9 +2510,9 @@ NotifyDialog       *event;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void               GetHTMLDocument_callback (int newdoc, int status, 
-					     char *urlName,
-					     char *outputfile, 
-					     char *content_type,
+					     STRING urlName,
+					     STRING outputfile, 
+					     STRING content_type,
 					     void * context)
 #else  /* __STDC__ */
 void               GetHTMLDocument_callback (newdoc, status, urlName,
@@ -2520,9 +2520,9 @@ void               GetHTMLDocument_callback (newdoc, status, urlName,
                                              context)
 int newdoc;
 int status;
-char *urlName;
-char *outputfile;
-char *content_type;
+STRING urlName;
+STRING outputfile;
+STRING content_type;
 void *context;
 
 #endif
@@ -2531,14 +2531,14 @@ void *context;
    Document            doc;
    Document            baseDoc;
    Document            res;
-   char               *tempfile;
-   char               *target;
-   char               *pathname;
-   char               *documentname;
-   char               *form_data;
+   STRING              tempfile;
+   STRING              target;
+   STRING              pathname;
+   STRING              documentname;
+   STRING              form_data;
    ClickEvent          method;
-   char               *tempdocument;
-   char               *s;
+   STRING              tempdocument;
+   STRING              s;
    int                 i;
    boolean	       history;
    boolean             ok;
@@ -2568,12 +2568,12 @@ void *context;
    local_link = ctx->local_link;
    
    pathname = TtaGetMemory (MAX_LENGTH + 1);
-   strncpy (pathname, urlName, MAX_LENGTH);
+   ustrncpy (pathname, urlName, MAX_LENGTH);
    pathname[MAX_LENGTH] = EOS;
    tempfile = TtaGetMemory (MAX_LENGTH + 1);
    if (outputfile != NULL)
      {
-       strncpy (tempfile, outputfile, MAX_LENGTH);
+       ustrncpy (tempfile, outputfile, MAX_LENGTH);
        tempfile[MAX_LENGTH] = EOS;
      }
    else
@@ -2585,7 +2585,7 @@ void *context;
        /* will open a new document if newdoc is a modified document */
        if (status == 0)
 	 {
-	   if (IsW3Path (pathname) && !strcmp (documentname, "noname.html"))
+	   if (IsW3Path (pathname) && !ustrcmp (documentname, "noname.html"))
 	     /* keep the real name */
 	     NormalizeURL (pathname, 0, tempdocument, documentname, NULL);
 
@@ -2617,9 +2617,9 @@ void *context;
 	   if (DocumentURLs[newdoc] == NULL)
 	     {
 	       /* save the document name into the document table @@@ */
-	       i = strlen (pathname) + 1;
+	       i = ustrlen (pathname) + 1;
 	       s = TtaGetMemory (i);
-	       strcpy (s, pathname);
+	       ustrcpy (s, pathname);
 	       DocumentURLs[newdoc] = s;
 	       TtaSetTextZone (newdoc, 1, 1, s);
 	       /* save the document's formdata into the document table */
@@ -2683,11 +2683,11 @@ void *context;
     - history: record the URL in the browsing history
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            GetHTMLDocument (const char *documentPath, char *form_data, Document doc, Document baseDoc, ClickEvent CE_event, boolean history, TTcbf *cbf, void *ctx_cbf)
+Document            GetHTMLDocument (const STRING documentPath, STRING form_data, Document doc, Document baseDoc, ClickEvent CE_event, boolean history, TTcbf *cbf, void *ctx_cbf)
 #else
-Document            GetHTMLDocument (documentPath, const char *form_data, doc, baseDoc, CE_event, history, void *cbf, void *ctx_cbf)
-char               *documentPath;
-char               *form_data;
+Document            GetHTMLDocument (documentPath, const STRING form_data, doc, baseDoc, CE_event, history, void *cbf, void *ctx_cbf)
+STRING              documentPath;
+STRING              form_data;
 Document            doc;
 Document            baseDoc;
 ClickEvent          CE_event;
@@ -2698,12 +2698,12 @@ void               *ctx_cbf;
 #endif
 {
    Document            newdoc;
-   char               *tempfile;
-   char               *tempdocument;
-   char               *parameters;
-   char               *target;
-   char               *pathname;
-   char               *documentname;
+   STRING              tempfile;
+   STRING              tempdocument;
+   STRING              parameters;
+   STRING              target;
+   STRING              pathname;
+   STRING              documentname;
    int                 toparse;
    int                 slash;
    int                 mode;
@@ -2712,7 +2712,7 @@ void               *ctx_cbf;
 
 
    /* Extract parameters if necessary */
-   if (strlen (documentPath) > MAX_LENGTH - 1) 
+   if (ustrlen (documentPath) > MAX_LENGTH - 1) 
      {
        TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL), "512");
        return (0);
@@ -2729,7 +2729,7 @@ void               *ctx_cbf;
    tempfile = TtaGetMemory (MAX_LENGTH);
    pathname = TtaGetMemory (MAX_LENGTH);
 
-   strcpy (tempdocument, documentPath);
+   ustrcpy (tempdocument, documentPath);
    ExtractParameters (tempdocument, parameters);
    /* Extract the target if necessary */
    ExtractTarget (tempdocument, target);
@@ -2746,8 +2746,8 @@ void               *ctx_cbf;
      {
        /* we need to ask the server */
        newdoc = 0;
-       strcat (pathname, "?");
-       strcat (pathname, parameters);
+       ustrcat (pathname, "?");
+       ustrcat (pathname, parameters);
      }
 
    if (ok && newdoc != 0 && history)
@@ -2882,11 +2882,11 @@ void               *ctx_cbf;
 		 if (IsW3Path (pathname))
 		   {
 		     if (CE_event != CE_FORM_POST
-			 && !strcmp (documentname, "noname.html"))
+			 && !ustrcmp (documentname, "noname.html"))
 		       {
-			 slash = strlen (pathname);
+			 slash = ustrlen (pathname);
 			 if (slash && pathname[slash - 1] != '/')
-			   strcat (pathname, "/");
+			   ustrcat (pathname, "/");
 		       }
 		       toparse =  GetObjectWWW (newdoc,
 						pathname,
@@ -2985,27 +2985,27 @@ static void	SetFileSuffix ()
 
 #endif
 {
-  char		      suffix[6];
-  char               *filename;
+  CHAR		      suffix[6];
+  STRING              filename;
   int		      i, len;
 
   if (SavingDocument != 0 && SaveName[0] != EOS)
     {
       if (SaveAsHTML)
 #ifdef _WINDOWS
-	strcpy (suffix, "htm");
+	ustrcpy (suffix, "htm");
 #else /* _WINDOWS */
-	strcpy (suffix, "html");
+	ustrcpy (suffix, "html");
 #endif /* _WINDOWS */
        else if (SaveAsXML)
-	strcpy (suffix, "xml");
+	ustrcpy (suffix, "xml");
        else if (SaveAsText)
-	strcpy (suffix, "txt");
+	ustrcpy (suffix, "txt");
       else
 	 return;
 
       /* looks for a suffix at the end of the document name */
-      len = strlen (SaveName);
+      len = ustrlen (SaveName);
       for (i = len-1; i > 0 && SaveName[i] != '.'; i--);
       if (SaveName[i] != '.')
 	/* there is no suffix */
@@ -3017,7 +3017,7 @@ static void	SetFileSuffix ()
 	/* there is a suffix */
 	{
 	  i++;
-	  if (strncmp (suffix, &SaveName[i], 3) == 0)
+	  if (ustrncmp (suffix, &SaveName[i], 3) == 0)
 	    /* the requested suffix is already here. Do nothing */
 	    i = 0;
 	}
@@ -3025,12 +3025,12 @@ static void	SetFileSuffix ()
       if (i > 0)
 	/* change or append the suffix */
 	{
-	  strcpy (&SaveName[i], suffix);
+	  ustrcpy (&SaveName[i], suffix);
 	  /* display the new filename in the dialog box */
 	  filename = TtaGetMemory (MAX_LENGTH);
-	  strcpy (filename, DirectoryName);
-	  strcat (filename, DIR_STR);
-	  strcat (filename, SaveName);
+	  ustrcpy (filename, DirectoryName);
+	  ustrcat (filename, DIR_STR);
+	  ustrcat (filename, SaveName);
 	  TtaSetTextForm (BaseDialog + NameSave, filename);
 	  TtaFreeMemory (filename);
 	}
@@ -3041,24 +3041,24 @@ static void	SetFileSuffix ()
    Callback procedure for dialogue events.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackDialogue (int ref, int typedata, char *data)
+void                CallbackDialogue (int ref, int typedata, STRING data)
 #else
 void                CallbackDialogue (ref, typedata, data)
 int                 ref;
 int                 typedata;
-char               *data;
+STRING              data;
 #endif
 {
   AttributeType       attrType;
   ElementType	      elType;
   Attribute           attrHREF;
-  char               *tempfile;
-  char               *tempname;
-  char                url_sep;
+  STRING              tempfile;
+  STRING              tempname;
+  CHAR                url_sep;
   int                 val, i;
   boolean             change;
 
-  if (typedata == STRING_DATA && data && strchr (data, '/'))
+  if (typedata == STRING_DATA && data && ustrchr (data, '/'))
     url_sep = '/';
   else 
     url_sep = DIR_SEP;
@@ -3110,9 +3110,9 @@ char               *data;
 		 {
 		   /* load a local file */
 		   tempfile = TtaGetMemory (MAX_LENGTH);
-		   strcpy (tempfile, DirectoryName);
-		   strcat (tempfile, DIR_STR);
-		   strcat (tempfile, DocumentName);
+		   ustrcpy (tempfile, DirectoryName);
+		   ustrcat (tempfile, DIR_STR);
+		   ustrcat (tempfile, DocumentName);
 		   if (TtaFileExist (tempfile))
 		     {
 		       if (InNewWindow)
@@ -3141,7 +3141,7 @@ char               *data;
        if (IsW3Path (data))
 	 {
 	   /* save the URL name */
-	   strcpy (LastURLName, data);
+	   ustrcpy (LastURLName, data);
 	   DocumentName[0] = EOS;
 	 }
        else
@@ -3152,7 +3152,7 @@ char               *data;
 	   
 	   if (TtaCheckDirectory (tempfile))
 	     {
-	       strcpy (DirectoryName, tempfile);
+	       ustrcpy (DirectoryName, tempfile);
 	       DocumentName[0] = EOS;
 	     }
 	   else
@@ -3167,20 +3167,20 @@ char               *data;
 #    else  /* _WINDOWS */
        if (DirectoryName[0] != EOS)
 	 {
-	   if (!strcmp (data, ".."))
+	   if (!ustrcmp (data, ".."))
 	     {
 	       /* suppress last directory */
 	       tempname = TtaGetMemory (MAX_LENGTH);
 	       tempfile = TtaGetMemory (MAX_LENGTH);
-	       strcpy (tempname, DirectoryName);
+	       ustrcpy (tempname, DirectoryName);
 	       TtaExtractName (tempname, DirectoryName, tempfile);
 	       TtaFreeMemory (tempfile);
 	       TtaFreeMemory (tempname);
 	     }
 	   else
 	     {
-	       strcat (DirectoryName, DIR_STR);
-	       strcat (DirectoryName, data);
+	       ustrcat (DirectoryName, DIR_STR);
+	       ustrcat (DirectoryName, data);
 	     }
 	   TtaSetTextForm (BaseDialog + URLName, DirectoryName);
 	   TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
@@ -3196,13 +3196,13 @@ char               *data;
 	 getcwd (DirectoryName, MAX_LENGTH);
        
        /* Extract suffix from document name */
-       strcpy (DocumentName, data);
+       ustrcpy (DocumentName, data);
        LastURLName[0] = EOS;
        /* construct the document full name */
        tempfile = TtaGetMemory (MAX_LENGTH);
-       strcpy (tempfile, DirectoryName);
-       strcat (tempfile, DIR_STR);
-       strcat (tempfile, DocumentName);
+       ustrcpy (tempfile, DirectoryName);
+       ustrcat (tempfile, DIR_STR);
+       ustrcat (tempfile, DocumentName);
        TtaSetTextForm (BaseDialog + URLName, tempfile);
        TtaFreeMemory (tempfile);
        break;
@@ -3214,8 +3214,8 @@ char               *data;
        break;
      case FilterText:
        /* Filter value */
-       if (strlen(data) <= NAME_LENGTH)
-	 strcpy (ScanFilter, data);
+       if (ustrlen(data) <= NAME_LENGTH)
+	 ustrcpy (ScanFilter, data);
        else
 	 TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
        break;
@@ -3230,15 +3230,15 @@ char               *data;
 	 }
        break;
      case AnswerText:
-       strncpy (Answer_text, data, MAX_LENGTH);
+       ustrncpy (Answer_text, data, MAX_LENGTH);
        Answer_text[MAX_LENGTH - 1] = EOS;
        break;
      case NameText:
-       strncpy (Answer_name, data, NAME_LENGTH);
+       ustrncpy (Answer_name, data, NAME_LENGTH);
        Answer_text[NAME_LENGTH - 1] = EOS;
        break;
      case PasswordText:
-       i = strlen (data);
+       i = ustrlen (data);
        if (i < NAME_LENGTH - 1)
 	 {
 	   if (Lg_password < i)
@@ -3322,16 +3322,16 @@ char               *data;
 	   /* Move the information into LastURLName or DirectoryName */
 	   if (IsW3Path (SavePath))
 	     {
-	       strcpy (LastURLName, SavePath);
-	       strcat (LastURLName, "/");
-	       strcat (LastURLName, SaveName);
+	       ustrcpy (LastURLName, SavePath);
+	       ustrcat (LastURLName, "/");
+	       ustrcat (LastURLName, SaveName);
 	       DirectoryName[0] = EOS;
 	     }
 	   else
 	     {
 	       LastURLName[0] = EOS;
-	       strcpy (DirectoryName, SavePath);
-	       strcat (DocumentName, SaveName);
+	       ustrcpy (DirectoryName, SavePath);
+	       ustrcat (DocumentName, SaveName);
 	     }
 	 }
        else if (val == 2)
@@ -3373,11 +3373,11 @@ char               *data;
        if (!IsW3Path (data))
 	 change = NormalizeFile (data, tempfile);
        else
-	 strcpy (tempfile, data);
+	 ustrcpy (tempfile, data);
        
-       if (tempfile[strlen (tempfile) - 1] == url_sep)
+       if (tempfile[ustrlen (tempfile) - 1] == url_sep)
 	 {
-	   strcpy (SavePath, tempfile);
+	   ustrcpy (SavePath, tempfile);
 	   SaveName[0] = EOS;
 	 }
        else
@@ -3395,32 +3395,32 @@ char               *data;
        if (!IsW3Path (data))
 	 change = NormalizeFile (data, SaveImgsURL);
        else
-	 strcpy (SaveImgsURL, data);
+	 ustrcpy (SaveImgsURL, data);
        break;
      case DirSave:
        if (!IsW3Path (SavePath))
 	 {
 	   /* Document directories */
 	   tempfile = TtaGetMemory (MAX_LENGTH);
-	   if (!strcmp (data, ".."))
+	   if (!ustrcmp (data, ".."))
 	     {
 	       /* suppress last directory */
 	       tempname = TtaGetMemory (MAX_LENGTH);
-	       strcpy (tempname, SavePath);
+	       ustrcpy (tempname, SavePath);
 	       TtaExtractName (tempname, SavePath, tempfile);
 	       TtaFreeMemory (tempname);
 	     }
 	   else
 	     {
-	       strcat (SavePath, DIR_STR);
-	       strcat (SavePath, data);
+	       ustrcat (SavePath, DIR_STR);
+	       ustrcat (SavePath, data);
 	     }
-	   strcpy (tempfile, SavePath);
-	   strcat (tempfile, DIR_STR);
+	   ustrcpy (tempfile, SavePath);
+	   ustrcat (tempfile, DIR_STR);
 	   if (SavingDocument != 0)
-	     strcat (tempfile, DocumentName);
+	     ustrcat (tempfile, DocumentName);
 	   else
-	     strcat (tempfile, ObjectName);
+	     ustrcat (tempfile, ObjectName);
 	   TtaSetTextForm (BaseDialog + NameSave, SavePath);
 	   TtaListDirectory (SavePath, BaseDialog + SaveForm,
 			     TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSave,
@@ -3434,12 +3434,12 @@ char               *data;
 	 /* set path on current directory */
 	 getcwd (SavePath, MAX_LENGTH);
        
-       strcpy (SaveName, data);
+       ustrcpy (SaveName, data);
        /* construct the document full name */
        tempfile = TtaGetMemory (MAX_LENGTH);
-       strcpy (tempfile, SavePath);
-       strcat (tempfile, DIR_STR);
-       strcat (tempfile, SaveName);
+       ustrcpy (tempfile, SavePath);
+       ustrcat (tempfile, DIR_STR);
+       ustrcat (tempfile, SaveName);
        TtaSetTextForm (BaseDialog + NameSave, tempfile);
        TtaFreeMemory (tempfile);
        break;
@@ -3483,7 +3483,7 @@ char               *data;
 
      case AttrHREFText:
        /* save the HREF name */
-       strcpy (AttrHREFvalue, data);
+       ustrcpy (AttrHREFvalue, data);
        break;
 
      case ClassForm:
@@ -3519,15 +3519,15 @@ char               *data;
   Return the new recovered document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int       RestoreOneAmayaDoc (Document doc,char *tempdoc, char *docname)
+int       RestoreOneAmayaDoc (Document doc,STRING tempdoc, STRING docname)
 #else
 int       RestoreOneAmayaDoc (doc, tempdoc, docname)
 Document  doc;
-char     *tempdoc;
-char     *docname;
+STRING    tempdoc;
+STRING    docname;
 #endif
 {
-  char                tempfile[MAX_LENGTH];
+  CHAR                tempfile[MAX_LENGTH];
   int                 newdoc, len;
   boolean             stopped_flag;
 
@@ -3554,9 +3554,9 @@ char     *docname;
 			    tempfile, DocumentName, NULL, FALSE);
 	  /* change its URL */
 	  TtaFreeMemory (DocumentURLs[newdoc]);
-	  len = strlen (docname) + 1;
+	  len = ustrlen (docname) + 1;
 	  DocumentURLs[newdoc] = TtaGetMemory (len);
-	  strcpy (DocumentURLs[newdoc], docname);
+	  ustrcpy (DocumentURLs[newdoc], docname);
 	  TtaSetTextZone (newdoc, 1, 1, docname);
 	  /* change its directory name */
 	  TtaExtractName (docname, DirectoryName, DocumentName);
@@ -3586,8 +3586,8 @@ char     *docname;
 static boolean        RestoreAmayaDocs ()
 {
   FILE               *f;
-  char                tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
-  char                docname[MAX_LENGTH];
+  CHAR                tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
+  CHAR                docname[MAX_LENGTH];
   boolean             aDoc;
 
   /* check if Amaya has crashed */
@@ -3634,7 +3634,7 @@ void                InitAmaya (event)
 NotifyEvent        *event;
 #endif
 {
-   char               *s, *tempname;
+   STRING              s, tempname;
    int                 i;
    boolean             restoredDoc;
 
@@ -3733,26 +3733,26 @@ NotifyEvent        *event;
 #  ifdef _WINDOWS 
    s = NULL;
 #  else  /* !_WINDOWS */
-   s = (char *) TtaGetEnvString ("HOME");
+   s = (STRING) TtaGetEnvString ("HOME");
 #  endif /* _WINDOWS */
 
    if (s)
-      strcpy (TempFileDirectory, s);
+      ustrcpy (TempFileDirectory, s);
    else
 #  ifdef _WINDOWS
      if (!TtaFileExist ("C:\\TEMP"))
         mkdir ("C:\\TEMP");
-   strcpy (TempFileDirectory, "C:\\TEMP\\AMAYA");
+   ustrcpy (TempFileDirectory, "C:\\TEMP\\AMAYA");
 #  else  /* !_WINDOWS */
-     strcpy (TempFileDirectory, "/tmp");
-   strcat (TempFileDirectory, "/.amaya");
+     ustrcpy (TempFileDirectory, "/tmp");
+   ustrcat (TempFileDirectory, "/.amaya");
 #  endif /* _WINDOWS */
 
    i = mkdir (TempFileDirectory, S_IRWXU);
    if (i != 0 && errno != EEXIST)
      {
 #  ifndef _WINDOWS
-       strcpy (TempFileDirectory, "/tmp/.amaya");
+       ustrcpy (TempFileDirectory, "/tmp/.amaya");
        i = mkdir (TempFileDirectory, S_IRWXU);
        if (i != 0 && errno != EEXIST)
 #  endif /* !_WINDOWS */
@@ -3798,7 +3798,7 @@ NotifyEvent        *event;
    ObjectName[0] = EOS;
    SaveImgsURL = TtaGetMemory (MAX_LENGTH);
    SaveImgsURL[0] = EOS;
-   strcpy (ScanFilter, ".*htm*");
+   ustrcpy (ScanFilter, ".*htm*");
    SaveAsHTML = TRUE;
    SaveAsXML = FALSE;
    SaveAsText = FALSE;
@@ -3849,7 +3849,7 @@ NotifyEvent        *event;
      return;
    else
       /* No argument in the command line. Try the variable HOME_PAGE */
-      s = (char *) TtaGetEnvString ("HOME_PAGE");
+      s = (STRING) TtaGetEnvString ("HOME_PAGE");
 
 #  ifdef _WINDOWS
    sprintf (LostPicturePath, "%s\\amaya\\lost.gif", TtaGetEnvString ("THOTDIR"));              
@@ -3858,27 +3858,27 @@ NotifyEvent        *event;
       /* No argument in the command line, no HOME_PAGE variable. Open the */
       /* default Amaya URL */
      {
-       s = (char *) TtaGetEnvString ("THOTDIR");
+       s = (STRING) TtaGetEnvString ("THOTDIR");
        if (s != NULL)
 	 {
-	   strcpy (LastURLName, s);
+	   ustrcpy (LastURLName, s);
 	 }
        else
 	 LastURLName[0] = EOS;
-       strcat (LastURLName, AMAYA_PAGE);
-       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+       ustrcat (LastURLName, AMAYA_PAGE);
+       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (STRING) 1);
      }
    else if (IsW3Path (s))
      {
        /* it is a remote document */
-       strcpy (LastURLName, s);
-       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+       ustrcpy (LastURLName, s);
+       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (STRING) 1);
      }
    else
      {
-       if (strncmp(s, "file:/", 6) == 0)
+       if (ustrncmp(s, "file:/", 6) == 0)
 	 s += 6;
-       if (strncmp(s, "/localhost", 10) == 0)
+       if (ustrncmp(s, "/localhost", 10) == 0)
 	s += 10;
        if (TtaFileExist (s))
 	 {
@@ -3893,10 +3893,10 @@ NotifyEvent        *event;
 	     TtaExtractName (LastURLName, DirectoryName, DocumentName);
 	   else
 	     /* it is a relative name */
-	     strcpy (DocumentName, LastURLName);
+	     ustrcpy (DocumentName, LastURLName);
 	   /* start with the local document */
 	   LastURLName[0] = EOS;
-	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (STRING) 1);
 	 }
     else
         /* Create a new document */
@@ -3987,7 +3987,7 @@ View                view;
 
 #endif
 {
-   char                localname[MAX_LENGTH];
+   CHAR                localname[MAX_LENGTH];
 #ifdef AMAYA_DEBUG
    Element             el;
    View                structView, tocView;
@@ -3995,31 +3995,31 @@ View                view;
 
    /* get the root element */
    el = TtaGetMainRoot (document);
-   strcpy (localname, TempFileDirectory);
-   strcat (localname, "/tree.debug");
+   ustrcpy (localname, TempFileDirectory);
+   ustrcat (localname, "/tree.debug");
    list = fopen (localname, "w");
    TtaListAbstractTree (el, list);
    fclose (list);
-   strcpy (localname, TempFileDirectory);
-   strcat (localname, "/view.debug");
+   ustrcpy (localname, TempFileDirectory);
+   ustrcat (localname, "/view.debug");
    list = fopen (localname, "w");
    TtaListView (document, view, list);
    fclose (list);
-   strcpy (localname, TempFileDirectory);
-   strcat (localname, "/boxes.debug");
+   ustrcpy (localname, TempFileDirectory);
+   ustrcat (localname, "/boxes.debug");
    list = fopen (localname, "w");
    TtaListBoxes (document, view, list);
    fclose (list);
    structView = TtaGetViewFromName (document, "Structure_view");
    if (structView != 0 && TtaIsViewOpened (document, structView))
      {
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, "/structview.debug");
+       ustrcpy (localname, TempFileDirectory);
+       ustrcat (localname, "/structview.debug");
        list = fopen (localname, "w");
        TtaListView (document, structView, list);
        fclose (list);
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, "/structboxes.debug");
+       ustrcpy (localname, TempFileDirectory);
+       ustrcat (localname, "/structboxes.debug");
        list = fopen (localname, "w");
        TtaListBoxes (document, structView, list);
        fclose (list);
@@ -4027,13 +4027,13 @@ View                view;
    tocView = TtaGetViewFromName (document, "Table_of_contents");
    if (tocView != 0 && TtaIsViewOpened (document, tocView))
      {
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, "/tocview.debug");
+       ustrcpy (localname, TempFileDirectory);
+       ustrcat (localname, "/tocview.debug");
        list = fopen (localname, "w");
        TtaListView (document, tocView, list);
        fclose (list);
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, "/tocboxes.debug");
+       ustrcpy (localname, TempFileDirectory);
+       ustrcat (localname, "/tocboxes.debug");
        list = fopen (localname, "w");
        TtaListBoxes (document, tocView, list);
        fclose (list);
@@ -4043,9 +4043,9 @@ View                view;
 # ifndef _WINDOWS
   TtaNewDialogSheet (BaseDialog + AboutForm, TtaGetViewFrame (document, view), HTAppName, 1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
 # endif  /* _WINDOWS */
-  strcpy (localname, HTAppName);
-  strcat (localname, " - ");
-  strcat (localname, HTAppVersion);
+  ustrcpy (localname, HTAppName);
+  ustrcat (localname, " - ");
+  ustrcat (localname, HTAppVersion);
 # ifndef _WINDOWS
   TtaNewLabel(BaseDialog + Version, BaseDialog + AboutForm, localname);
   TtaNewLabel(BaseDialog + About1, BaseDialog + AboutForm, TtaGetMessage(AMAYA, AM_ABOUT1));
@@ -4067,18 +4067,18 @@ int         index;
 #endif /* __STDC__*/
 {
   Document    document;
-  char    localname[MAX_LENGTH];
-  char   *s;
+  CHAR    localname[MAX_LENGTH];
+  STRING  s;
   
   localname[0] = EOS;
-  s = (char *) TtaGetEnvString ("THOTDIR");
+  s = (STRING) TtaGetEnvString ("THOTDIR");
   if (s != NULL)
     sprintf (localname, "%s%cdoc%camaya%c%s", s, DIR_SEP, DIR_SEP, DIR_SEP, Manual[index]);
 
   if (!TtaFileExist (localname))
     {
-      strcpy (localname, AMAYA_PAGE_DOC);
-      strcat (localname, Manual[index]);
+      ustrcpy (localname, AMAYA_PAGE_DOC);
+      ustrcat (localname, Manual[index]);
     }
   document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE, NULL, NULL);
   InitDocHistory (document);
@@ -4344,7 +4344,7 @@ Document doc;
 View     view;
 #endif /* __STDC__ */
 {
-  char    localname[MAX_LENGTH];
+  CHAR    localname[MAX_LENGTH];
 
   sprintf (localname, "%s%c%d%cHTML.ERR", TempFileDirectory, DIR_SEP, doc, DIR_SEP);
   doc = GetHTMLDocument (localname, NULL, 0, 0, CE_LOG, FALSE, NULL, NULL);

@@ -31,7 +31,7 @@
 #endif
 
 
-extern char   SchemaPath[MAX_PATH];
+extern CHAR   SchemaPath[MAX_PATH];
 
 
 /* pattern and rules internal representation */
@@ -56,7 +56,7 @@ static boolean      ppIsNamed;
 static boolean      ppOptional;
 static boolean      ppIterTag;
 static boolean	    selRuleFlag;
-static char         ppName[20];
+static CHAR         ppName[20];
 static parChoice   *ppChoice;	/* current forest descriptor */
 static parForest   *ppForest;	/* cuurent forest descriptor */
 static parChoice   *ppLastChoice;
@@ -67,7 +67,7 @@ static strAttrDesc    *ppAttr;	/* attribute descriptor */
 static strNodeDesc    *ppNode;	/* node descriptor */
 static strRuleDesc    *ppRule;	/* rule descriptor */
 static parChoice   *choiceStack[MAX_STACK];
-static char         opStack[MAX_STACK];
+static CHAR         opStack[MAX_STACK];
 static strSymbDesc    *symbolStack[MAX_STACK];
 static int          sizeStack;
 static int          patDepth;
@@ -77,7 +77,7 @@ static boolean      normalTransition;
 
 #define MaxBufferLength   1000
 #define AllmostFullBuffer  700
-static unsigned char inputBuffer[MaxBufferLength];
+static UCHAR inputBuffer[MaxBufferLength];
 static int          ppLgBuffer = 0;	/* actual length of text in input buffer */
 typedef int         State;	/* a state of the automaton */
 static State        currentState;	/* current state of the automaton */
@@ -314,15 +314,15 @@ parChoice          *pc;
    	ErrorMessage	print the error message msg on stderr.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ErrorMessage (unsigned char *msg)
+static void         ErrorMessage (USTRING msg)
 #else
 static void         ErrorMessage (msg)
-unsigned char      *msg;
+USTRING     msg;
 
 #endif
 {
 #ifndef PPSTANDALONE
-   char                numline[5];
+   CHAR                numline[5];
 
    sprintf (numline, "%d", numberOfLinesRead);
    TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_TRANS_PARSE_ERROR), numline);
@@ -358,13 +358,13 @@ strSymbDesc           *symb;
 	isjok = FALSE;
 	isnull = (symb == NULL);
 	if (!isnull)
-	   isjok = (!strcmp (symb->Tag, "*"));
+	   isjok = (!ustrcmp (symb->Tag, "*"));
 	pl = *pList;
 	found = ((isnull && pl->Symbol == NULL) || (!isnull && pl->Symbol == symb));
 	if (pl->Next == NULL && !isnull && !found)
 	  {
 	     if ((isjok && pl->Symbol == NULL) ||
-	     (!isjok && (pl->Symbol == NULL || !strcmp (pl->Symbol->Tag, "*"))))
+	     (!isjok && (pl->Symbol == NULL || !ustrcmp (pl->Symbol->Tag, "*"))))
 	       {
 		  *pList = (strListSymb *) TtaGetMemory (sizeof (strListSymb));
 		  (*pList)->Next = pl;
@@ -380,7 +380,7 @@ strSymbDesc           *symb;
 	else
 	  {
 	     while (!found && pl->Next &&
-		    ((isjok || isnull) || (pl->Next->Symbol && strcmp (pl->Next->Symbol->Tag, "*")))
+		    ((isjok || isnull) || (pl->Next->Symbol && ustrcmp (pl->Next->Symbol->Tag, "*")))
 		    && (isnull || pl->Next->Symbol != NULL))
 	       {
 		  found = ((isnull && pl->Symbol == NULL) ||
@@ -454,7 +454,7 @@ static void         ProcessSymbol ()
 #endif
 {
    strSymbDesc     *sd;
-   char             msgBuffer[MaxBufferLength];
+   CHAR             msgBuffer[MaxBufferLength];
    SSchema	    schema;
 
    if (ppLgBuffer != 0)
@@ -462,8 +462,8 @@ static void         ProcessSymbol ()
        /* cr4eates a new symbol in the pattern internal representation */
 	ppTrans->NbPatSymb++;
 	ppSymb = (strSymbDesc *) TtaGetMemory (sizeof (strSymbDesc));
-	ppSymb->SymbolName = (char *) TtaGetMemory (NAME_LENGTH);
-	ppSymb->Tag = (char *) TtaGetMemory (NAME_LENGTH);
+	ppSymb->SymbolName = (STRING) TtaGetMemory (NAME_LENGTH);
+	ppSymb->Tag = (STRING) TtaGetMemory (NAME_LENGTH);
 	ppSymb->Rule = NULL;
 	ppSymb->Children = NULL;
 	ppSymb->Followings = NULL;
@@ -474,12 +474,12 @@ static void         ProcessSymbol ()
 	ppSymb->Depth = patDepth;
 	if (ppIsNamed)
 	  {
-	     strcpy (ppSymb->SymbolName, ppName);
-	     strcpy (ppName, "");
+	     ustrcpy (ppSymb->SymbolName, ppName);
+	     ustrcpy (ppName, "");
 	  }
 	else
-	   strcpy (ppSymb->SymbolName, inputBuffer);
-	strcpy (ppSymb->Tag, inputBuffer);
+	   ustrcpy (ppSymb->SymbolName, inputBuffer);
+	ustrcpy (ppSymb->Tag, inputBuffer);
 
 	ppIsNamed = FALSE;
 	ppLgBuffer = 0;
@@ -498,7 +498,7 @@ static void         ProcessSymbol ()
 	     sd->Next = ppSymb;
 	  }
 	schema = ppTransSet->Schema;
-	if (strcmp (ppSymb->Tag, "*") && (MapGI (ppSymb->Tag, &schema, 0) == -1))
+	if (ustrcmp (ppSymb->Tag, "*") && (MapGI (ppSymb->Tag, &schema, 0) == -1))
 	  {
 	     ppError = TRUE;
 	     sprintf (msgBuffer, "unknown element %s", ppSymb->Tag);
@@ -578,10 +578,10 @@ static void         NewSymbol ()
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SymbolName (unsigned char c)
+static void         SymbolName (UCHAR c)
 #else
 static void         SymbolName (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -591,7 +591,7 @@ unsigned char       c;
 	ErrorMessage ("missing tag name");
      }
    ppIsNamed = TRUE;
-   strcpy (ppName, inputBuffer);
+   ustrcpy (ppName, inputBuffer);
    ppLgBuffer = 0;
 }
 
@@ -599,10 +599,10 @@ unsigned char       c;
   a transformation name has been read, allocates a new trasformation descriptor
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndNameTrans (unsigned char c)
+static void         EndNameTrans (UCHAR c)
 #else
 static void         EndNameTrans (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -612,7 +612,7 @@ unsigned char       c;
 	patDepth = 0;
 	ppTrans = (strTransDesc *) TtaGetMemory (sizeof (strTransDesc));
 	ppTrans->NameTrans = TtaGetMemory (NAME_LENGTH);
-	strcpy (ppTrans->NameTrans, inputBuffer);
+	ustrcpy (ppTrans->NameTrans, inputBuffer);
 	ppTrans->NbPatSymb = 0;
 	ppTrans->NbRules = 0;
 	ppTrans->PatDepth = 0;
@@ -645,10 +645,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         Option (unsigned char c)
+static void         Option (UCHAR c)
 #else
 static void         Option (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -660,10 +660,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BeginExp (unsigned char c)
+static void         BeginExp (UCHAR c)
 #else
 static void         BeginExp (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -686,10 +686,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndExp (unsigned char c)
+static void         EndExp (UCHAR c)
 #else
 static void         EndExp (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -813,10 +813,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         IterationTag (unsigned char c)
+static void         IterationTag (UCHAR c)
 #else
 static void         IterationTag (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -826,10 +826,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         Iteration (unsigned char c)
+static void         Iteration (UCHAR c)
 #else
 static void         Iteration (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -870,10 +870,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BeginChild (unsigned char c)
+static void         BeginChild (UCHAR c)
 #else
 static void         BeginChild (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -897,10 +897,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndChild (unsigned char c)
+static void         EndChild (UCHAR c)
 #else
 static void         EndChild (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -963,10 +963,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndChoice (unsigned char c)
+static void         EndChoice (UCHAR c)
 #else
 static void         EndChoice (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -990,10 +990,10 @@ unsigned char       c;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         EndPatNode (unsigned char c)
+static void         EndPatNode (UCHAR c)
 #else
 static void         EndPatNode (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -1011,10 +1011,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndPattern (unsigned char c)
+static void         EndPattern (UCHAR c)
 #else
 static void         EndPattern (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -1062,10 +1062,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BeginOfTag (unsigned char c)
+static void         BeginOfTag (UCHAR c)
 #else
 static void         BeginOfTag (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -1077,10 +1077,10 @@ unsigned char       c;
    else
      {
 	ppSymb = (strSymbDesc *) TtaGetMemory (sizeof (strSymbDesc));
-	ppSymb->SymbolName = (char *) TtaGetMemory (NAME_LENGTH);
-	ppSymb->Tag = (char *) TtaGetMemory (NAME_LENGTH);
-	strcpy (ppSymb->SymbolName, "");
-	strcpy (ppSymb->Tag, "");
+	ppSymb->SymbolName = (STRING) TtaGetMemory (NAME_LENGTH);
+	ppSymb->Tag = (STRING) TtaGetMemory (NAME_LENGTH);
+	ustrcpy (ppSymb->SymbolName, "");
+	ustrcpy (ppSymb->Tag, "");
 	ppSymb->Rule = NULL;
 	ppSymb->Children = NULL;
 	ppSymb->Followings = NULL;
@@ -1090,8 +1090,8 @@ unsigned char       c;
 	ppSymb->Next = NULL;
 	if (ppIsNamed)
 	  {
-	     strcpy (ppSymb->SymbolName, ppName);
-	     strcpy (ppName, "");
+	     ustrcpy (ppSymb->SymbolName, ppName);
+	     ustrcpy (ppName, "");
 	  }
      }
 }
@@ -1099,10 +1099,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BeginRuleTag (unsigned char c)
+static void         BeginRuleTag (UCHAR c)
 #else
 static void         BeginRuleTag (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -1113,7 +1113,7 @@ unsigned char       c;
      }
    else
      {
-	strcpy (ppNode->Tag, "");
+	ustrcpy (ppNode->Tag, "");
 	ppNode->Attributes = NULL;
 	ppNode->Next = NULL;
      }
@@ -1122,22 +1122,22 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfTagName (unsigned char c)
+static void         EndOfTagName (UCHAR c)
 #else
 static void         EndOfTagName (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
    if (ppLgBuffer != 0)
      {
-	strcpy (ppSymb->Tag, inputBuffer);
+	ustrcpy (ppSymb->Tag, inputBuffer);
 	if (!ppIsNamed)
-	   strcpy (ppSymb->SymbolName, inputBuffer);
+	   ustrcpy (ppSymb->SymbolName, inputBuffer);
 	ppLgBuffer = 0;
 	ppIsNamed = FALSE;
      }
-   else if (!strcmp (ppSymb->Tag, ""))
+   else if (!ustrcmp (ppSymb->Tag, ""))
      {
 	ppError = TRUE;
 	ErrorMessage ("Missing Tag Name");
@@ -1147,19 +1147,19 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndRuleTagName (unsigned char c)
+static void         EndRuleTagName (UCHAR c)
 #else
 static void         EndRuleTagName (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
    if (ppLgBuffer != 0)
      {
-	strcpy (ppNode->Tag, inputBuffer);
+	ustrcpy (ppNode->Tag, inputBuffer);
 	ppLgBuffer = 0;
      }
-   else if (!strcmp (ppNode->Tag, ""))
+   else if (!ustrcmp (ppNode->Tag, ""))
      {
 	ppError = TRUE;
 	ErrorMessage ("Missing Tag Name");
@@ -1169,15 +1169,15 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppEndOfAttrName (unsigned char c)
+static void         ppEndOfAttrName (UCHAR c)
 #else
 static void         ppEndOfAttrName (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
    int                 ThotAttrNum;
-   char                msgBuffer[MaxBufferLength];
+   CHAR                msgBuffer[MaxBufferLength];
 
    if (ppLgBuffer != 0)
      {
@@ -1191,14 +1191,14 @@ unsigned char       c;
 	       {
 		  ppSymb->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		  ppAttr = ppSymb->Attributes;
-		  ppAttr->NameAttr = (char *) TtaGetMemory (NAME_LENGTH);
+		  ppAttr->NameAttr = (STRING) TtaGetMemory (NAME_LENGTH);
 		  ppAttr->Next = NULL;
 	       }
 	     else
 	       {
-		  while (ppAttr->Next && strcmp (ppAttr->NameAttr, inputBuffer))
+		  while (ppAttr->Next && ustrcmp (ppAttr->NameAttr, inputBuffer))
 		     ppAttr = ppAttr->Next;
-		  if (!strcmp (ppAttr->NameAttr, inputBuffer))
+		  if (!ustrcmp (ppAttr->NameAttr, inputBuffer))
 		    {
 		       ppError = TRUE;
 		       ErrorMessage ("Multi valued attribute");
@@ -1211,7 +1211,7 @@ unsigned char       c;
 		       ppAttr->Next = NULL;
 		    }
 	       }
-	     strcpy (ppAttr->NameAttr, inputBuffer);
+	     ustrcpy (ppAttr->NameAttr, inputBuffer);
 	     ppAttr->ThotAttr = ThotAttrNum;
 	     ppAttr->IsInt = TRUE;
 	     ppAttr->IsTransf = FALSE;
@@ -1237,15 +1237,15 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppEndRuleAttrName (unsigned char c)
+static void         ppEndRuleAttrName (UCHAR c)
 #else
 static void         ppEndRuleAttrName (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
    int                 ThotAttrNum;
-   char                msgBuffer[MaxBufferLength];
+   CHAR                msgBuffer[MaxBufferLength];
 
    if (ppLgBuffer != 0)
      {
@@ -1259,14 +1259,14 @@ unsigned char       c;
 	       {
 		  ppNode->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		  ppAttr = ppNode->Attributes;
-		  ppAttr->NameAttr = (char *) TtaGetMemory (NAME_LENGTH);
+		  ppAttr->NameAttr = (STRING) TtaGetMemory (NAME_LENGTH);
 		  ppAttr->Next = NULL;
 	       }
 	     else
 	       {
-		  while (ppAttr->Next && strcmp (ppAttr->NameAttr, inputBuffer))
+		  while (ppAttr->Next && ustrcmp (ppAttr->NameAttr, inputBuffer))
 		     ppAttr = ppAttr->Next;
-		  if (!strcmp (ppAttr->NameAttr, inputBuffer))
+		  if (!ustrcmp (ppAttr->NameAttr, inputBuffer))
 		    {
 		       ppError = TRUE;
 		       ErrorMessage ("Multi valued attribute");
@@ -1279,7 +1279,7 @@ unsigned char       c;
 		       ppAttr->Next = NULL;
 		    }
 	       }
-	     strcpy (ppAttr->NameAttr, inputBuffer);
+	     ustrcpy (ppAttr->NameAttr, inputBuffer);
 	     ppAttr->ThotAttr = ThotAttrNum;
 	     ppAttr->IsInt = TRUE;
 	     ppAttr->IsTransf = FALSE;
@@ -1305,10 +1305,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppTransAttr (unsigned char c)
+static void         ppTransAttr (UCHAR c)
 #else
 static void         ppTransAttr (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -1326,14 +1326,14 @@ unsigned char       c;
 	       {
 		  ppNode->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		  ppAttr = ppNode->Attributes;
-		  ppAttr->NameAttr = (char *) TtaGetMemory (NAME_LENGTH);
+		  ppAttr->NameAttr = (STRING) TtaGetMemory (NAME_LENGTH);
 		  ppAttr->Next = NULL;
 	       }
 	     else
 	       {
-		  while (ppAttr->Next && strcmp (ppAttr->NameAttr, inputBuffer))
+		  while (ppAttr->Next && ustrcmp (ppAttr->NameAttr, inputBuffer))
 		     ppAttr = ppAttr->Next;
-		  if (!strcmp (ppAttr->NameAttr, inputBuffer))
+		  if (!ustrcmp (ppAttr->NameAttr, inputBuffer))
 		    {
 		       ppError = TRUE;
 		       ErrorMessage ("Multi valued attribute");
@@ -1347,8 +1347,8 @@ unsigned char       c;
 		    }
 	       }
 	     ppAttr->AttrTag = TtaGetMemory (NAME_LENGTH);
-	     strcpy (ppAttr->AttrTag, inputBuffer);
-	     strcpy (ppAttr->NameAttr, "");
+	     ustrcpy (ppAttr->AttrTag, inputBuffer);
+	     ustrcpy (ppAttr->NameAttr, "");
 	     ppAttr->ThotAttr = ThotAttrNum;
 	     ppAttr->IsInt = FALSE;
 	     ppAttr->IsTransf = TRUE;
@@ -1372,10 +1372,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppTransAttrValue (unsigned char c)
+static void         ppTransAttrValue (UCHAR c)
 #else
 static void         ppTransAttrValue (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -1383,7 +1383,7 @@ unsigned char       c;
      {
 	ppAttr->IsTransf = TRUE;
 	ppAttr->AttrTag = TtaGetMemory (NAME_LENGTH);
-	strcpy (ppAttr->AttrTag, inputBuffer);
+	ustrcpy (ppAttr->AttrTag, inputBuffer);
 	ppLgBuffer = 0;
      }
    else
@@ -1396,20 +1396,20 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppEndTransAttr (unsigned char c)
+static void         ppEndTransAttr (UCHAR c)
 #else
 static void         ppEndTransAttr (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
    if (ppLgBuffer != 0)
      {
 	ppAttr->AttrAttr = TtaGetMemory (NAME_LENGTH);
-	strcpy (ppAttr->AttrAttr, inputBuffer);
-	if (!strcmp (ppAttr->NameAttr, ""))
+	ustrcpy (ppAttr->AttrAttr, inputBuffer);
+	if (!ustrcmp (ppAttr->NameAttr, ""))
 	  {
-	     strcpy (ppAttr->NameAttr, inputBuffer);
+	     ustrcpy (ppAttr->NameAttr, inputBuffer);
 	  }
 	ppLgBuffer = 0;
      }
@@ -1424,10 +1424,10 @@ unsigned char       c;
    	ppPutInBuffer	put character c in the input buffer.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppPutInBuffer (unsigned char c)
+static void         ppPutInBuffer (UCHAR c)
 #else
 static void         ppPutInBuffer (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -1474,10 +1474,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppStartOfAttrValue (unsigned char c)
+static void         ppStartOfAttrValue (UCHAR c)
 #else
 static void         ppStartOfAttrValue (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -1488,10 +1488,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppEndOfAttrValue (unsigned char c)
+static void         ppEndOfAttrValue (UCHAR c)
 #else
 static void         ppEndOfAttrValue (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -1501,9 +1501,9 @@ unsigned char       c;
    if (ppLgBuffer == 0)
      {
 	ppAttr->IsInt = FALSE;
-	ppAttr->TextVal = TtaGetMemory (sizeof (char) * (ppLgBuffer + 2));
+	ppAttr->TextVal = TtaGetMemory (sizeof (CHAR) * (ppLgBuffer + 2));
 
-	strcpy (ppAttr->TextVal, "");
+	ustrcpy (ppAttr->TextVal, "");
      }
    else
      {
@@ -1529,11 +1529,11 @@ unsigned char       c;
 	       }
 	     else
 	       {
-		  ppAttr->TextVal = (char *) TtaGetMemory (sizeof (char) * (ppLgBuffer + 2));
+		  ppAttr->TextVal = (STRING) TtaGetMemory (sizeof (CHAR) * (ppLgBuffer + 2));
 		  if (inputBuffer [0] == '\"')
-		    strcpy (ppAttr->TextVal, &(inputBuffer[1]));
+		    ustrcpy (ppAttr->TextVal, &(inputBuffer[1]));
 		  else
-		    strcpy (ppAttr->TextVal, inputBuffer);
+		    ustrcpy (ppAttr->TextVal, inputBuffer);
 		  ppAttr->IsInt = FALSE;
 	       }
 	  }
@@ -1545,10 +1545,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BeginRules (unsigned char c)
+static void         BeginRules (UCHAR c)
 #else
 static void         BeginRules (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -1559,10 +1559,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndLeftPartRule (unsigned char c)
+static void         EndLeftPartRule (UCHAR c)
 #else
 static void         EndLeftPartRule (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -1570,7 +1570,7 @@ unsigned char       c;
      {				/* allocates a new rule descriptor */
 	ppRule = (strRuleDesc *) TtaGetMemory (sizeof (strRuleDesc));
 	ppRule->RuleName = TtaGetMemory (20);
-	strcpy (ppRule->RuleName, inputBuffer);
+	ustrcpy (ppRule->RuleName, inputBuffer);
 	ppRule->NextRule = NULL;
 	ppRule->Next = NULL;
 	ppRule->OptionNodes = (strNodeDesc *) TtaGetMemory (sizeof (strNodeDesc));
@@ -1578,7 +1578,7 @@ unsigned char       c;
 	ppRule->NewNodes = NULL;
 	ppNode = ppRule->OptionNodes;
 	ppNode->Tag = TtaGetMemory (NAME_LENGTH);
-	strcpy (ppNode->Tag, "");
+	ustrcpy (ppNode->Tag, "");
 	ppNode->Attributes = NULL;
 	ppNode->Next = NULL;
 	ppLgBuffer = 0;
@@ -1593,10 +1593,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DeleteElementRule(unsigned char c)
+static void         DeleteElementRule(UCHAR c)
 #else
 static void          DeleteElementRule (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -1604,7 +1604,7 @@ unsigned char       c;
     {				/* allocates a new rule descriptor */
       ppRule = (strRuleDesc *) TtaGetMemory (sizeof (strRuleDesc));
       ppRule->RuleName = TtaGetMemory (20);
-      strcpy (ppRule->RuleName, inputBuffer);
+      ustrcpy (ppRule->RuleName, inputBuffer);
       ppRule->NextRule = NULL;
       ppRule->Next = NULL;
       ppRule->NewNodes = NULL;
@@ -1623,19 +1623,19 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndNode (unsigned char c)
+static void         EndNode (UCHAR c)
 #else
 static void         EndNode (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
-   char                msgBuffer[MaxBufferLength];
+   CHAR                msgBuffer[MaxBufferLength];
    SSchema	       schema;
 
    if (ppLgBuffer != 0)
      {
-	strcpy (ppNode->Tag, inputBuffer);
+	ustrcpy (ppNode->Tag, inputBuffer);
 	ppLgBuffer = 0;
 	schema = ppTransSet->Schema;
 	if (MapGI (ppNode->Tag, &schema, 0) == -1)
@@ -1650,7 +1650,7 @@ unsigned char       c;
 	ppNode->Next = (strNodeDesc *) TtaGetMemory (sizeof (strNodeDesc));
 	ppNode = ppNode->Next;
 	ppNode->Tag = TtaGetMemory (NAME_LENGTH);
-	strcpy (ppNode->Tag, "");
+	ustrcpy (ppNode->Tag, "");
 	ppNode->Attributes = NULL;
 	ppNode->Next = NULL;
      }
@@ -1658,20 +1658,20 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOptNodes (unsigned char c)
+static void         EndOptNodes (UCHAR c)
 #else
 static void         EndOptNodes (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
    strAttrDesc		*ad, *ad2;
-   char			msgBuffer[MaxBufferLength];
+   CHAR			msgBuffer[MaxBufferLength];
    SSchema		schema;
 
    if (ppLgBuffer != 0)
      {
-	strcpy (ppNode->Tag, inputBuffer);
+	ustrcpy (ppNode->Tag, inputBuffer);
 	ppLgBuffer = 0;
 	schema = ppTransSet->Schema;
 	if (MapGI (ppNode->Tag, &schema, 0) == -1)
@@ -1681,7 +1681,7 @@ unsigned char       c;
 	     ErrorMessage (msgBuffer);
 	  }
      }
-   if (!strcmp (ppRule->OptionNodes->Tag, ""))
+   if (!ustrcmp (ppRule->OptionNodes->Tag, ""))
      {
 	/* frees the current node descriptor if it is empty (the rule has no opt. node */
 	ad = ppRule->OptionNodes->Attributes;
@@ -1707,20 +1707,20 @@ unsigned char       c;
    ppRule->NewNodes = (strNodeDesc *) TtaGetMemory (sizeof (strNodeDesc));
    ppNode = ppRule->NewNodes;
    ppNode->Tag = TtaGetMemory (NAME_LENGTH);
-   strcpy (ppNode->Tag, "");
+   ustrcpy (ppNode->Tag, "");
    ppNode->Attributes = NULL;
    ppNode->Next = NULL;
 }
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SelectionRule (unsigned char c)
+static void         SelectionRule (UCHAR c)
 #else
 static void         SelectionRule (c)
-unsigned char       c;
+UCHAR       c;
 #endif
 {
-  char                   msgBuffer[MaxBufferLength];
+  CHAR                   msgBuffer[MaxBufferLength];
   strAttrDesc		*ppAttr;
 
   if (selRuleFlag)
@@ -1738,14 +1738,14 @@ unsigned char       c;
 	    {
 	      ppNode->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 	      ppAttr = ppNode->Attributes;
-	      ppAttr->NameAttr = (char *) TtaGetMemory (NAME_LENGTH);
+	      ppAttr->NameAttr = (STRING) TtaGetMemory (NAME_LENGTH);
 	      ppAttr->Next = NULL;
 	    }
 	  else
 	    {
-	      while (ppAttr->Next && strcmp (ppAttr->NameAttr, inputBuffer))
+	      while (ppAttr->Next && ustrcmp (ppAttr->NameAttr, inputBuffer))
 		ppAttr = ppAttr->Next;
-	      if (!strcmp (ppAttr->NameAttr, inputBuffer))
+	      if (!ustrcmp (ppAttr->NameAttr, inputBuffer))
 		{
 		  ppError = TRUE;
 		  ErrorMessage ("Multi valued attribute");
@@ -1754,26 +1754,26 @@ unsigned char       c;
 		{
 		  ppAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		  ppAttr = ppAttr->Next;
-		  ppAttr->NameAttr = (char *) TtaGetMemory (NAME_LENGTH);
+		  ppAttr->NameAttr = (STRING) TtaGetMemory (NAME_LENGTH);
 		  ppAttr->Next = NULL;
 		}
 	    }
-	  strcpy (ppAttr->NameAttr, "ZZGHOST");
+	  ustrcpy (ppAttr->NameAttr, "ZZGHOST");
 	  ppAttr->ThotAttr = HTML_ATTR_Ghost_restruct;
 	  ppAttr->IsInt = FALSE;
 	  ppAttr->IsTransf = FALSE;
-	  ppAttr->TextVal = (char *) TtaGetMemory (NAME_LENGTH);
-    	  strcpy (ppAttr->TextVal, "Select");
+	  ppAttr->TextVal = (STRING) TtaGetMemory (NAME_LENGTH);
+    	  ustrcpy (ppAttr->TextVal, "Select");
 	}
     }
 }
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndRule (unsigned char c)
+static void         EndRule (UCHAR c)
 #else
 static void         EndRule (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -1782,16 +1782,16 @@ unsigned char       c;
   strSymbDesc           *psymb;
   strNodeDesc           *pnode;
   strAttrDesc           *ad, *ad2;
-  char                   msgBuffer[MaxBufferLength];
+  CHAR                   msgBuffer[MaxBufferLength];
   SSchema		  schema;
 
   if (ppLgBuffer != 0)
     {
-      strcpy (ppNode->Tag, inputBuffer);
+      ustrcpy (ppNode->Tag, inputBuffer);
       ppLgBuffer = 0;
       schema = ppTransSet->Schema;
-      if (strcmp (ppNode->Tag, "*") && 
-	  strcmp (ppNode->Tag, "#") &&
+      if (ustrcmp (ppNode->Tag, "*") && 
+	  ustrcmp (ppNode->Tag, "#") &&
 	  ppNode->Tag[0] != '\"' &&
 	  (MapGI (ppNode->Tag, &schema, 0) == -1))
 	{
@@ -1800,7 +1800,7 @@ unsigned char       c;
 	  ErrorMessage (msgBuffer);
 	}
     }
-  if (ppRule->OptionNodes && !strcmp (ppRule->OptionNodes->Tag, ""))
+  if (ppRule->OptionNodes && !ustrcmp (ppRule->OptionNodes->Tag, ""))
     {				/* free the last Option node if it is empty */
       ad = ppRule->OptionNodes->Attributes;
       while (ad)
@@ -1822,7 +1822,7 @@ unsigned char       c;
       ppRule->NewNodes = NULL;
     }
 
-  if (ppRule->NewNodes && !strcmp (ppRule->NewNodes->Tag, ""))
+  if (ppRule->NewNodes && !ustrcmp (ppRule->NewNodes->Tag, ""))
     {				/* free the last New node if it is empty */
       ad = ppRule->NewNodes->Attributes;
       while (ad)
@@ -1862,7 +1862,7 @@ unsigned char       c;
   ok = FALSE;
   while (psymb)
     {
-      if (!strcmp (ppRule->RuleName, psymb->SymbolName))
+      if (!ustrcmp (ppRule->RuleName, psymb->SymbolName))
 	{
 	  prule = psymb->Rule;
 	  if (prule == NULL)
@@ -1885,18 +1885,18 @@ unsigned char       c;
 	pnode = ppRule->OptionNodes;
       else
 	pnode = ppRule->NewNodes;
-      if (pnode && strcmp (pnode->Tag, "*") != 0)
+      if (pnode && ustrcmp (pnode->Tag, "*") != 0)
 	if (ppTrans->DestinationTag == NULL)
 	  {
 	    /* the dest type is undefined => the first tag of the rule defines */
 	    /* the destination type of the transformation */
 	    ppTrans->DestinationTag = TtaGetMemory (NAME_LENGTH);
-	    strcpy (ppTrans->DestinationTag, pnode->Tag);
+	    ustrcpy (ppTrans->DestinationTag, pnode->Tag);
 	  }
-	else if (strcmp (ppTrans->DestinationTag, pnode->Tag))
+	else if (ustrcmp (ppTrans->DestinationTag, pnode->Tag))
 	  /* the first tag of the rule is different from the destination type */
 	  /* the rule has no destination type */
-	  strcpy (ppTrans->DestinationTag, "");
+	  ustrcpy (ppTrans->DestinationTag, "");
     }
   else
     {
@@ -1909,10 +1909,10 @@ unsigned char       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndTransformation (unsigned char c)
+static void         EndTransformation (UCHAR c)
 #else
 static void         EndTransformation (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -1922,7 +1922,7 @@ unsigned char       c;
    ppTrans->RootDesc = (strSymbDesc *) TtaGetMemory (sizeof (strSymbDesc));
    ppTrans->RootDesc->SymbolName = ppTrans->NameTrans;
    ppTrans->RootDesc->Tag = TtaGetMemory (NAME_LENGTH);
-   strcpy (ppTrans->RootDesc->Tag, "pattern_root");
+   ustrcpy (ppTrans->RootDesc->Tag, "pattern_root");
    /* warning : the Rule points the transformation record (no rule for the root node) */
    ppTrans->RootDesc->Rule = (strRuleDesc *) ppTrans;
    ppTrans->RootDesc->IsOptional = FALSE;
@@ -1950,10 +1950,10 @@ unsigned char       c;
    	Do_nothing	Do nothing.				       	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         Do_nothing (char c)
+static void         Do_nothing (CHAR c)
 #else
 static void         Do_nothing (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -1970,7 +1970,7 @@ typedef struct _Transition *PtrTransition;
 
 typedef struct _Transition
   {				/* a transition of the automaton in   "executable" form */
-     unsigned char       trigger;	/* the imput character that triggers
+     UCHAR       trigger;	/* the imput character that triggers
 					   the transition */
      Proc                action;	/* the procedure to be called when
 					   the transition occurs */
@@ -1996,7 +1996,7 @@ typedef struct _sourceTransition
   {				/* a transition of the automaton in
 				   "source" form */
      State               initState;	/* initial state of transition */
-     char                trigger;	/* the imput character that triggers
+     CHAR                trigger;	/* the imput character that triggers
 					   the transition */
      Proc                transitionAction;	/* the procedure to be called when
 						   the transition occurs */
@@ -2205,7 +2205,7 @@ BinFile               infile;
 #endif
 #endif
 {
-   unsigned char       charRead, oldcharRead;
+   UCHAR       charRead, oldcharRead;
    boolean             match, readOk;
    PtrTransition       trans;
 
@@ -2364,7 +2364,7 @@ BinFile               infile;
 				      ppNode = NULL;
 				      ppRule = NULL;
 				      ppIsNamed = FALSE;
-				      strcpy (ppName, "");
+				      ustrcpy (ppName, "");
 				      opStack[0] = EOS;
 				      symbolStack[0] = NULL;
 				      choiceStack[0] = NULL;
@@ -2422,23 +2422,23 @@ static void         initpparse ()
    	ppStartParser loads the file Directory/FileName for parsing	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ppStartParser (char *name,SSchema tStrSchema, strTransSet **resTrSet)
+int                 ppStartParser (STRING name,SSchema tStrSchema, strTransSet **resTrSet)
 #else
 int                 ppStartParser (name, tStrSchema, resTrSet)
-char               *name;
+STRING              name;
 SSchema            tStrSchema;
 strTransSet        **resTrSet;
 #endif
 {
-   char                msg[200];
+   CHAR                msg[200];
 
 #ifdef PPSTANDALONE
    FILE               *infile = (FILE *)0;
 #else
    BinFile             infile = (BinFile)0;
-   char		       fileName[MAX_LENGTH];
-   char                pathes[MAX_LENGTH];
-   char               *next, *cour;
+   CHAR		       fileName[MAX_LENGTH];
+   CHAR                pathes[MAX_LENGTH];
+   STRING              next, cour;
    boolean             found = FALSE;
    struct stat        *StatBuffer;
    int                 len, status;
@@ -2448,12 +2448,12 @@ strTransSet        **resTrSet;
    /* searches if a transformation set is already allocated */
    /* for the file to be parsed */
    ppTransSet = strMatchEnv.TransSets;
-   while (ppTransSet != NULL && (strcmp (ppTransSet->TransFileName, name) != 0))
+   while (ppTransSet != NULL && (ustrcmp (ppTransSet->TransFileName, name) != 0))
      ppTransSet = ppTransSet->Next;
    if (ppTransSet == NULL)
      {
        ppTransSet = TtaGetMemory (sizeof (strTransSet));
-       strcpy (ppTransSet->TransFileName, name);
+       ustrcpy (ppTransSet->TransFileName, name);
        ppTransSet->Schema = tStrSchema;
        ppTransSet->timeLastWrite = (time_t) 0;
        ppTransSet->NbTrans = 0;
@@ -2469,25 +2469,25 @@ strTransSet        **resTrSet;
    cour = pathes;
    while (!found && cour != NULL)
      {
-   	next = strchr (cour, PATH_SEP);
+   	next = ustrchr (cour, PATH_SEP);
 	if (next == NULL)
-       	  strcpy (fileName, cour);
+       	  ustrcpy (fileName, cour);
         else
 	  {
-            strncpy (fileName, cour, (size_t)(next - cour)); 
+            ustrncpy (fileName, cour, (size_t)(next - cour)); 
 	    fileName[(next - cour)] = '\0';
           }
-        len = strlen(fileName);
+        len = ustrlen(fileName);
         if (fileName[len]!= DIR_SEP)
-          strcat (fileName,DIR_STR);
-        strcat (fileName,name);
-        strcat (fileName,".trans");
+          ustrcat (fileName,DIR_STR);
+        ustrcat (fileName,name);
+        ustrcat (fileName,".trans");
 	found = (TtaFileExist(fileName) == 1);
 	if (!found)
 	   if (next == NULL)
 	      cour = NULL;
 	   else
-	      cour = (char *)(next+1);
+	      cour = (STRING)(next+1);
      }
    
    /* check if the file is newer than last read */
@@ -2523,7 +2523,7 @@ strTransSet        **resTrSet;
 		ppNode = NULL;
 		ppRule = NULL;
 		ppIsNamed = FALSE;
-		strcpy (ppName, "");
+		ustrcpy (ppName, "");
 		opStack[0] = EOS;
 		symbolStack[0] = NULL;
 		choiceStack[0] = NULL;

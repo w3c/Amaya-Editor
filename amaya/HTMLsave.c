@@ -28,8 +28,8 @@
 
 #ifdef _WINDOWS
 #include "resource.h"
-static char         currentDocToSave[MAX_LENGTH];
-static char         currentPathName[MAX_LENGTH];
+static CHAR         currentDocToSave[MAX_LENGTH];
+static CHAR         currentPathName[MAX_LENGTH];
 extern HINSTANCE    hInstance;
 
 #ifdef __STDC__
@@ -38,7 +38,7 @@ LRESULT CALLBACK GetSaveDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK GetSaveDlgProc (HWND, UINT, WPARAM, LPARAM);
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
-static char         tempSavedObject[MAX_LENGTH];
+static CHAR         tempSavedObject[MAX_LENGTH];
 static int          URL_attr_tab[] = {
    HTML_ATTR_HREF_,
    HTML_ATTR_codebase,
@@ -54,7 +54,7 @@ static int          SRC_attr_tab[] = {
    HTML_ATTR_background_,
    HTML_ATTR_Style_
 };
-static char        *QuotedText;
+static STRING       QuotedText;
 
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
@@ -75,11 +75,11 @@ static char        *QuotedText;
  CreateGetSaveDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateGetSaveDlgWindow (HWND parent, char* path_name)
+void CreateGetSaveDlgWindow (HWND parent, STRING path_name)
 #else  /* !__STDC__ */
 void CreateGetSaveDlgWindow (parent, path_name)
 HWND  parent;
-char* path_name;
+STRING path_name;
 #endif /* __STDC__ */
 {  
   sprintf (currentPathName, path_name);
@@ -99,7 +99,7 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-  static char txt [500];
+  static CHAR txt [500];
   
   switch (msg)
     {
@@ -122,14 +122,14 @@ LPARAM lParam;
 
 	case IDCANCEL:
 	  EndDialog (hwnDlg, IDCANCEL);
-	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 0);
+	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (STRING) 0);
 	  break;
 
 	case ID_CONFIRM:
 	  /* TODO: Extract directory and file name from urlToOpen */
 	  EndDialog (hwnDlg, ID_CONFIRM);
 	  TtaExtractName (currentDocToSave, SavePath, ObjectName);
-	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 1);
+	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (STRING) 1);
 	  break;
 	}
       break;
@@ -153,7 +153,8 @@ NotifyElement      *event;
 {
   AttributeType      attrType;
   Attribute          attr;
-  char               buff[MAX_LENGTH], *ptr;
+  CHAR               buff[MAX_LENGTH];
+  STRING             ptr;
   int                length;
 
   attrType.AttrSSchema = TtaGetDocumentSSchema (event->document);
@@ -163,7 +164,7 @@ NotifyElement      *event;
     {
       length = MAX_LENGTH - 1;
       TtaGiveTextAttributeValue (attr, buff, &length);
-      if (!strcasecmp (buff, "GENERATOR"))
+      if (!ustrcasecmp (buff, "GENERATOR"))
 	{
 	  /* is it Amaya generator ? */
 	  attrType.AttrTypeNum = HTML_ATTR_meta_content;
@@ -172,7 +173,7 @@ NotifyElement      *event;
 	    {
 	      length = MAX_LENGTH - 1;
 	      TtaGiveTextAttributeValue (attr, buff, &length);
-	      ptr = strstr (buff, "amaya");
+	      ptr = ustrstr (buff, "amaya");
 	      if (ptr == NULL)
 		ptr = strstr (buff, "Amaya");
 	      if (ptr == NULL)
@@ -204,7 +205,7 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-  char             *ptr;
+  STRING            ptr;
   int               length;
 
   length = TtaGetTextAttributeLength (event->attribute);
@@ -253,11 +254,11 @@ NotifyAttribute    *event;
    SetRelativeURLs: try to make relative URLs within an HTML document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SetRelativeURLs (Document document, char *newpath)
+void                SetRelativeURLs (Document document, STRING newpath)
 #else
 void                SetRelativeURLs (document, newpath)
 Document            document;
-char               *newpath;
+STRING              newpath;
 #endif
 {
   Element             el, root, content;
@@ -265,10 +266,10 @@ char               *newpath;
   Attribute           attr;
   AttributeType       attrType;
   Language            lang;
-  char                old_url[MAX_LENGTH];
-  char                oldpath[MAX_LENGTH];
-  char                tempname[MAX_LENGTH];
-  char               *new_url;
+  CHAR                old_url[MAX_LENGTH];
+  CHAR                oldpath[MAX_LENGTH];
+  CHAR                tempname[MAX_LENGTH];
+  STRING              new_url;
   int                 index, max;
   int                 len;
 
@@ -351,18 +352,18 @@ DBG(fprintf(stderr, "Changed URL from %s to %s\n", old_url, new_url);)
   Build and display the Save As dialog box and prepare for input.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InitSaveForm (Document document, View view, char *pathname)
+static void         InitSaveForm (Document document, View view, STRING pathname)
 #else
 static void         InitSaveForm (document, view, pathname)
 Document            document;
 View                view;
-char               *pathname;
+STRING              pathname;
 
 #endif
 {
 #  ifndef _WINDOWS
-   char             buffer[3000];
-   char             s[MAX_LENGTH];
+   CHAR             buffer[3000];
+   CHAR             s[MAX_LENGTH];
    int              i;
 
    /* Dialogue form for saving a document */
@@ -423,7 +424,7 @@ View                view;
 
 #endif
 {
-   char             tempname[MAX_LENGTH];
+   CHAR             tempname[MAX_LENGTH];
    int              i;
 
    if (SavingDocument != 0 && SavingDocument != document)
@@ -442,13 +443,13 @@ View                view;
 	 {
 	   tempname[i-2] = EOS;
 	   TtaFreeMemory (DocumentURLs[SavingDocument]);
-	   DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempname);
+	   DocumentURLs[SavingDocument] = (STRING) TtaStrdup (tempname);
 	 }
        else if (i > 1 && !strcmp (&tempname[i-1], ".Z"))
 	 {
 	   tempname[i-1] = EOS;
 	   TtaFreeMemory (DocumentURLs[SavingDocument]);
-	   DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempname);
+	   DocumentURLs[SavingDocument] = (STRING) TtaStrdup (tempname);
 	 }
        
        /* if it is a Web document use the current SavePath */
@@ -495,7 +496,7 @@ Document            doc;
    ElementType		elType;
    AttributeType	attrType;
    Attribute		attr;
-   char			buffer[200];
+   CHAR			buffer[200];
    boolean		useMathML, useGraphML, useFrames;
 
    useMathML = FALSE;
@@ -562,17 +563,17 @@ Document            doc;
    Return TRUE if the document has been saved
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean    SaveDocumentLocally (char *directoryName, char *documentName)
+static boolean    SaveDocumentLocally (STRING directoryName, STRING documentName)
 #else
 static boolean    SaveDocumentLocally (directoryName, documentName)
-char             *directoryName;
-char             *documentName;
+STRING            directoryName;
+STRING            documentName;
 
 #endif
 {
   DisplayMode         dispMode;
-  char                tempname[MAX_LENGTH];
-  char                docname[100];
+  CHAR                tempname[MAX_LENGTH];
+  CHAR                docname[100];
   boolean             ok;
 
 DBG(fprintf(stderr, "SaveDocumentLocally :  %s / %s\n", directoryName, documentName);)
@@ -621,17 +622,17 @@ DBG(fprintf(stderr, "SaveDocumentLocally :  %s / %s\n", directoryName, documentN
   abort.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      AddNoName (Document document, View view, char *url, boolean *ok)
+static boolean      AddNoName (Document document, View view, STRING url, boolean *ok)
 #else
 static boolean      AddNoName (document, view, url, ok)
 Document            document;
 View                view;
-char               *url;
+STRING              url;
 boolean            *ok;
 #endif
 {
-   char                msg[MAX_LENGTH];
-   char                documentname[MAX_LENGTH];
+   CHAR                msg[MAX_LENGTH];
+   CHAR                documentname[MAX_LENGTH];
    int                 len;
 
   len = strlen (url);
@@ -668,23 +669,23 @@ boolean            *ok;
   Return 0 if the file has been saved
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          SafeSaveFileThroughNet (Document doc, char *localfile,
-                          char *remotefile, PicType filetype,
+static int          SafeSaveFileThroughNet (Document doc, STRING localfile,
+                          STRING remotefile, PicType filetype,
 			  boolean use_preconditions)
 #else
 static int          SafeSaveFileThroughNet (doc, localfile, remotefile, filetype,
 					    use_preconditions)
 Document            doc;
-char               *localfile;
-char               *remotefile;
+STRING              localfile;
+STRING              remotefile;
 PicType             filetype;
 boolean             use_preconditions;
 #endif
 {
-  char              msg[MAX_LENGTH];
-  char              tempfile[MAX_LENGTH]; /* File name used to refetch */
-  char              tempURL[MAX_LENGTH];  /* May be redirected */
-  char             *verify_publish;
+  CHAR              msg[MAX_LENGTH];
+  CHAR              tempfile[MAX_LENGTH]; /* File name used to refetch */
+  CHAR              tempURL[MAX_LENGTH];  /* May be redirected */
+  STRING            verify_publish;
   int               res;
   int               mode = 0;
 
@@ -788,8 +789,8 @@ boolean             use_preconditions;
 #endif
 {
   LoadedImageDesc *pImage;
-  char            *tempname;
-  char            *msg;
+  STRING           tempname;
+  STRING           msg;
   int              remainder = 10000;
   int              index = 0, len, nb = 0;
   int              imageType, res;
@@ -981,7 +982,7 @@ View                view;
 
 #endif
 {
-   char                tempname[MAX_LENGTH];
+   CHAR                tempname[MAX_LENGTH];
    int                 i;
    boolean             ok;
 
@@ -1007,13 +1008,13 @@ View                view;
      {
        tempname[i-2] = EOS;
        TtaFreeMemory (DocumentURLs[SavingDocument]);
-       DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempname);
+       DocumentURLs[SavingDocument] = (STRING) TtaStrdup (tempname);
      }
    else if (i > 1 && !strcmp (&tempname[i-1], ".Z"))
      {
        tempname[i-1] = EOS;
        TtaFreeMemory (DocumentURLs[SavingDocument]);
-       DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempname);
+       DocumentURLs[SavingDocument] = (STRING) TtaStrdup (tempname);
      }
 
 DBG(fprintf(stderr, "SaveDocument : %d to %s\n", document, tempname);)
@@ -1027,7 +1028,7 @@ DBG(fprintf(stderr, "SaveDocument : %d to %s\n", document, tempname);)
 	   strcat (tempname, DIR_STR);
 	   strcat (tempname, "noname.html");
 	   TtaFreeMemory (DocumentURLs[SavingDocument]);
-	   DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempname);
+	   DocumentURLs[SavingDocument] = (STRING) TtaStrdup (tempname);
 	 }
 
 DBG(fprintf(stderr, "SaveDocument : remote saving\n");)
@@ -1071,9 +1072,9 @@ void                   BackUpDocs ()
 {
   Document             doc;
   FILE                *f;
-  char                 pathname[MAX_LENGTH];
-  char                 docname[MAX_LENGTH];
-  char                *ptr;
+  CHAR                 pathname[MAX_LENGTH];
+  CHAR                 docname[MAX_LENGTH];
+  STRING               ptr;
   int                  l;
 
   /* check all modified documents */
@@ -1145,13 +1146,13 @@ NotifyDialog       *event;
   The parameter newURL gives the new document URL (or local file).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void            UpdateDocAndImages (boolean src_is_local, boolean dst_is_local, char *imgbase, char *newURL)
+static void            UpdateDocAndImages (boolean src_is_local, boolean dst_is_local, STRING imgbase, STRING newURL)
 #else
 static void            UpdateDocAndImages (src_is_local, dst_is_local, imgbase, newURL)
 boolean                src_is_local;
 boolean                dst_is_local;
-char                  *imgbase;
-char                  *newURL;
+STRING                 imgbase;
+STRING                 newURL;
 #endif
 {
    AttributeType       attrType;
@@ -1160,16 +1161,16 @@ char                  *newURL;
    Element             el, root, content;
    LoadedImageDesc    *pImage;
    Language            lang;
-   char                tempfile[MAX_LENGTH];
-   char                localpath[MAX_LENGTH];
-   char                oldpath[MAX_LENGTH];
-   char                oldname[MAX_LENGTH];
-   char                tempname[MAX_LENGTH];
-   char                imgname[MAX_LENGTH];
-   char                url[MAX_LENGTH];
-   char               *buf, *ptr;
-   char               *sStyle, *stringStyle;
-   char               *oldStyle;
+   CHAR                tempfile[MAX_LENGTH];
+   CHAR                localpath[MAX_LENGTH];
+   CHAR                oldpath[MAX_LENGTH];
+   CHAR                oldname[MAX_LENGTH];
+   CHAR                tempname[MAX_LENGTH];
+   CHAR                imgname[MAX_LENGTH];
+   CHAR                url[MAX_LENGTH];
+   STRING              buf, ptr;
+   STRING              sStyle, stringStyle;
+   STRING              oldStyle;
    int                 buflen, max, index;
 
    if (imgbase[0] != EOS)
@@ -1199,7 +1200,7 @@ char                  *newURL;
    if (!SaveAsText)
       {
 	TtaFreeMemory (DocumentURLs[SavingDocument]);
-	DocumentURLs[SavingDocument] = (char *) TtaStrdup (newURL);
+	DocumentURLs[SavingDocument] = (STRING) TtaStrdup (newURL);
       }
 
    if (CopyImages)
@@ -1327,7 +1328,7 @@ char                  *newURL;
 				       /* image was already loaded */
 				       if (pImage->originalName != NULL)
 					 TtaFreeMemory (pImage->originalName);
-				       pImage->originalName = (char *) TtaStrdup (tempname);
+				       pImage->originalName = (STRING) TtaStrdup (tempname);
 				       if (TtaFileExist(pImage->localName))
 					 pImage->status = IMAGE_MODIFIED;
 				       else
@@ -1367,7 +1368,7 @@ char                  *newURL;
 		   if (elType.ElTypeNum != HTML_EL_Object)
 		     {
 		       buflen = MAX_LENGTH;
-		       buf = (char *) TtaGetMemory (buflen);
+		       buf = (STRING) TtaGetMemory (buflen);
 		       if (buf == NULL)
 			 break;
 		       TtaGiveTextAttributeValue (attr, buf, &buflen);
@@ -1479,7 +1480,7 @@ DBG(fprintf(stderr, "     SRC from %s to %s\n", buf, url);)
 				       /* image was already loaded */
 				       if (pImage->originalName != NULL)
 					 TtaFreeMemory (pImage->originalName);
-				       pImage->originalName = (char *) TtaStrdup (tempname);
+				       pImage->originalName = (STRING) TtaStrdup (tempname);
 				       if (TtaFileExist(pImage->localName))
 					 pImage->status = IMAGE_MODIFIED;
 				       else
@@ -1519,16 +1520,16 @@ void                DoSaveAs ()
   AttributeType       attrType;
   ElementType         elType;
   Element             el, root;
-  char               *documentFile;
-  char               *tempname, *localPath;
-  char               *imagePath, *base;
-  char                imgbase[MAX_LENGTH];
+  STRING              documentFile;
+  STRING              tempname, localPath;
+  STRING              imagePath, base;
+  CHAR                imgbase[MAX_LENGTH];
 #ifndef IV
-  char                backupName[MAX_LENGTH], backupFile[MAX_LENGTH];
+  CHAR                backupName[MAX_LENGTH], backupFile[MAX_LENGTH];
 #else
   Element             copy;
 #endif
-  char                url_sep;
+  CHAR                url_sep;
   int                 res;
   int                 len;
   boolean             src_is_local;
@@ -1797,19 +1798,19 @@ DBG(fprintf(stderr, "   Uploading document to net %s\n", documentFile);)
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitSaveObjectForm (Document document, View view, char *object,
-					char *pathname)
+void                InitSaveObjectForm (Document document, View view, STRING object,
+					STRING pathname)
 #else
 void                InitSaveObjectForm (document, view, object, pathname)
 Document            document;
 View                view;
-char               *object;
-char               *pathname;
+STRING              object;
+STRING              pathname;
 
 #endif
 {
 #  ifndef _WINDOWS
-   char                tempdir[MAX_LENGTH];
+   CHAR                tempdir[MAX_LENGTH];
 #  endif /* _WINDOWS */
 
    if (SavingDocument != 0)
@@ -1859,8 +1860,8 @@ void                DoSaveObjectAs (void)
 void                DoSaveObjectAs ()
 #endif
 {
-   char                tempfile[MAX_LENGTH];
-   char                msg[MAX_LENGTH];
+   CHAR                tempfile[MAX_LENGTH];
+   CHAR                msg[MAX_LENGTH];
    boolean             dst_is_local;
    int                 res;
 

@@ -6,11 +6,11 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean AddLoadedImage ( char *name,
-                                char *pathname,
+extern boolean AddLoadedImage ( STRING name,
+                                STRING pathname,
                                 Document doc,
                                 LoadedImageDesc ** desc );
-extern LoadedImageDesc *SearchLoadedImage ( char *localpath,
+extern LoadedImageDesc *SearchLoadedImage ( STRING localpath,
                                             Document doc );
 extern void UpdateImageMap ( Element image,
                              Document document,
@@ -18,23 +18,23 @@ extern void UpdateImageMap ( Element image,
                              int oldHeight );
 extern void DisplayImage ( Document doc,
                            Element el,
-                           char *imageName );
+                           STRING imageName );
 extern void HandleImageLoaded ( int doc,
                                 int status,
-                                char *urlName,
-                                char *outputfile,
+                                STRING urlName,
+                                STRING outputfile,
                                 void * context );
 extern void libWWWImageLoaded ( int doc,
                                 int status,
-                                char *urlName,
-                                char *outputfile,
-                                char *content_type,
+                                STRING urlName,
+                                STRING outputfile,
+                                STRING content_type,
                                 void * context );
-extern char *GetActiveImageInfo ( Document document,
-                                  Element element );
+extern STRING GetActiveImageInfo ( Document document,
+                                   Element element );
 extern void FetchImage ( Document doc,
                          Element el,
-                         char *URL,
+                         STRING URL,
                          int flags,
                          LoadedImageCallback callback,
                          void *extra );
@@ -43,11 +43,11 @@ extern boolean FetchAndDisplayImages ( Document doc,
 
 #else /* __STDC__ */
 
-extern boolean AddLoadedImage (/* char *name,
-                                  char *pathname,
+extern boolean AddLoadedImage (/* STRING name,
+                                  STRING pathname,
                                   Document doc,
                                   LoadedImageDesc ** desc */);
-extern LoadedImageDesc *SearchLoadedImage (/* char *localpath,
+extern LoadedImageDesc *SearchLoadedImage (/* STRING localpath,
                                               Document doc */);
 extern void UpdateImageMap (/* Element image,
                                Document document,
@@ -55,23 +55,23 @@ extern void UpdateImageMap (/* Element image,
                                int oldHeight */);
 extern void DisplayImage (/* Document doc,
                              Element el,
-                             char *imageName */);
+                             STRING imageName */);
 extern void HandleImageLoaded (/* int doc,
                                   int status,
-                                  char *urlName,
-                                  char *outputfile,
+                                  STRING urlName,
+                                  STRING outputfile,
                                   void * context */);
 extern void libWWWImageLoaded (/* int doc,
                                   int status,
-                                  char *urlName,
-                                  char *outputfile,
-                                  char *content_type,
+                                  STRING urlName,
+                                  STRING outputfile,
+                                  STRING content_type,
                                   void * context */);
-extern char *GetActiveImageInfo (/* Document document,
-                                    Element element */);
+extern STRING GetActiveImageInfo (/* Document document,
+                                     Element element */);
 extern void FetchImage (/* Document doc,
                            Element el,
-                           char *URL,
+                           STRING URL,
                            int flags,
                            LoadedImageCallback callback,
                            void *extra */);

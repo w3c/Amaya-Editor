@@ -41,7 +41,7 @@ strMatch;
 /* Source structure tree nodes definition */
 typedef struct _Node
   {
-     char               *Tag;		/* HTML tag */
+     STRING              Tag;		/* HTML tag */
      Element             Elem;		/* element instance */
      struct _Node       *Parent;	
      struct _Node       *Child;
@@ -64,18 +64,18 @@ typedef strNode   *StructureTree;
 /* Attribute descriptor */
 typedef struct _AttrDesc
   {
-     char               *NameAttr;
+     STRING              NameAttr;
      int                 ThotAttr;
      boolean             IsInt;
      boolean             IsTransf;
      union
        {
-	  char               *_TextVal;
+	  STRING              _TextVal;
 	  int                 _IntVal;
 	  struct _s0
 	    {
-	       char               *_Tag;
-	       char               *_Attr;
+	       STRING              _Tag;
+	       STRING              _Attr;
 	    }
 	  s0;
        }
@@ -92,7 +92,7 @@ strAttrDesc;
 /* node generated */
 typedef struct _NodeDesc
   {
-     char               *Tag;
+     STRING              Tag;
      strAttrDesc        *Attributes;
      struct _NodeDesc   *Next;
   }
@@ -100,7 +100,7 @@ strNodeDesc;
 
 typedef struct _RuleDesc
   {
-     char               *RuleName;
+     STRING              RuleName;
      strNodeDesc        *OptionNodes;
      strNodeDesc        *NewNodes;
      boolean		DeleteRule;
@@ -131,8 +131,8 @@ strListSymb;
 /* pattern node (symbol) */
 typedef struct _SymbDesc
   {
-     char               *SymbolName;
-     char               *Tag;
+     STRING              SymbolName;
+     STRING              Tag;
      strRuleDesc        *Rule;
      boolean             IsOptional;
      boolean             IsActiveSymb;
@@ -148,7 +148,7 @@ strSymbDesc;
 /* transformation descriptor */
 typedef struct _TransDesc
   {
-     char               *NameTrans;
+     STRING              NameTrans;
      int                 NbPatSymb;
      int                 NbRules;
      int                 PatDepth;
@@ -157,7 +157,7 @@ typedef struct _TransDesc
      strSymbDesc        *Symbols;
      strRuleDesc        *Rules;
      boolean             IsActiveTrans;
-     char               *DestinationTag;
+     STRING              DestinationTag;
      struct _TransDesc  *Next;
   }
 strTransDesc;
@@ -165,7 +165,7 @@ strTransDesc;
 typedef struct _TransSet
 {
   /* name of the transformation set (eg, name of file without suffix .trans) */
-  char		      TransFileName [20];
+  CHAR		      TransFileName [20];
 #ifndef PPSTANDALONE
   SSchema	      Schema;
 #endif

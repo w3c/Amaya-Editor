@@ -27,9 +27,9 @@
 #include "windialogapi_f.h"
 #endif /* _WINDOWS */
 
-static char         ListBuffer[MAX_CSS_LENGTH + 1];
+static CHAR         ListBuffer[MAX_CSS_LENGTH + 1];
 static int          NbClass = 0;
-static char         CurrentClass[80];
+static CHAR         CurrentClass[80];
 static Element      ClassReference;
 static Document     DocReference;
 static Document	    ApplyClassDoc;
@@ -170,8 +170,9 @@ NotifyAttribute    *event;
 {
   Element             el;
   Language            lang;
-  char               *buffer, *ptr1, *ptr2;
-  char               *pEnd, *nEnd, c;
+  STRING              buffer, ptr1, ptr2;
+  STRING              pEnd, nEnd;
+  CHAR                c;
   int                 buflen, i, j;
   int                 previousEnd, nextEnd;
   int                 braces;
@@ -210,8 +211,8 @@ NotifyAttribute    *event;
       /* now ptr1 and ListBuffer[i] point different strings */
       if (*ptr1 != EOS)
 	{
-	  ptr2 = ptr1 + strlen (ptr1);
-	  j = i + strlen (&ListBuffer[i]);
+	  ptr2 = ptr1 + ustrlen (ptr1);
+	  j = i + ustrlen (&ListBuffer[i]);
 	  nextEnd = j;
 	  nEnd = ptr2;
 	  braces = 0;
@@ -304,7 +305,7 @@ NotifyAttribute    *event;
    Document            doc;
    Attribute           at;
    AttributeType       atType;
-   char               *style = NULL;
+   STRING              style = NULL;
    int                 len;
 
    el = event->element;
@@ -339,7 +340,7 @@ NotifyAttribute    *event;
 	/*
 	 * parse and apply the new style content.
 	 */
-	style = (char*) TtaGetMemory (len + 2);
+	style = (STRING) TtaGetMemory (len + 2);
 	if (style == NULL)
 	   return;
 	TtaGiveTextAttributeValue (event->attribute, style, &len);
@@ -367,7 +368,7 @@ Document            doc;
   ElementType	      elType;
   Attribute           attr;
   AttributeType       attrType;
-  char               *a_class = CurrentClass;
+  STRING              a_class = CurrentClass;
   int		      firstSelectedChar, lastSelectedChar, i, j, lg;
   DisplayMode         dispMode;
   boolean	      setClassAttr;
@@ -392,7 +393,7 @@ Document            doc;
   if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, DeferredDisplay);
 
-  if (strcmp (CurrentClass, "default") &&
+  if (ustrcmp (CurrentClass, "default") &&
       !IsImplicitClassName (CurrentClass, doc))
      {
      setClassAttr = TRUE;
@@ -427,7 +428,7 @@ Document            doc;
 		 parent = TtaGetParent (cour);
 		 elType = TtaGetElementType (parent);
 		 if (elType.ElTypeNum == HTML_EL_Span &&
-		     !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+		     !ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 		    /* parent is a SPAN element */
 		    if (firstSelectedEl == TtaGetFirstChild (parent) &&
 			firstSelectedEl == TtaGetLastChild (parent))
@@ -474,7 +475,7 @@ Document            doc;
 	      parent = TtaGetParent (cour);
 	      elType = TtaGetElementType (parent);
 	      if (elType.ElTypeNum == HTML_EL_Span &&
-		  !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+		  !ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 		 /* parent element is a SPAN */
 		 if (lastSelectedEl == TtaGetFirstChild (parent) &&
 		     lastSelectedEl == TtaGetLastChild (parent))
@@ -562,12 +563,12 @@ Document            doc;
   Attribute           attr;
   AttributeType       attrType;
   ElementType         elType, selType;
-  char                stylestring[1000];
-  char               *a_class;
+  CHAR                stylestring[1000];
+  STRING              a_class;
   int                 len, base;
 
   /* check whether it's the element type or a godd class name */
-  strcpy (stylestring, "\n");
+  ustrcpy (stylestring, "\n");
   elType = TtaGetElementType (ClassReference);
   GIType (CurrentClass, &selType, doc);
   /* create a string containing the new CSS definition. */
@@ -575,7 +576,7 @@ Document            doc;
     {
       if (CurrentClass[0] != '.' && CurrentClass[0] != '#')
 	/* it's an invalid class name */
-	strcat (stylestring, ".");
+	ustrcat (stylestring, ".");
     }
   else if (selType.ElTypeNum != elType.ElTypeNum)
     {
@@ -583,12 +584,12 @@ Document            doc;
       TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TYPE), NULL);
       return;
     }
-  strcat (stylestring, CurrentClass);
-  strcat (stylestring, " { ");
-  base = strlen (stylestring);
+  ustrcat (stylestring, CurrentClass);
+  ustrcat (stylestring, " { ");
+  base = ustrlen (stylestring);
   len = 1000 - base - 4;
   GetHTMLStyleString (ClassReference, doc, &stylestring[base], &len);
-  strcat (stylestring, "}");
+  ustrcat (stylestring, "}");
   
   /* change the selected element to be of the new class. */
   RemoveStyle (ClassReference, doc, FALSE);
@@ -619,13 +620,13 @@ Document            doc;
    after the first name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          BuildClassList (Document doc, char *buf, int size, char *first)
+static int          BuildClassList (Document doc, STRING buf, int size, STRING first)
 #else  /* __STDC__ */
 static int          BuildClassList (doc, buf, size, first)
 Document            doc;
-char               *buf;
+STRING              buf;
 int                 size;
-char               *first;
+STRING              first;
 
 #endif /* __STDC__ */
 {
@@ -633,7 +634,7 @@ char               *first;
   Element             el;
   Attribute           attr;
   AttributeType       attrType;
-  char                selector[100];
+  CHAR                selector[100];
   int                 Free;
   int                 len;
   int                 nb, i;
@@ -647,8 +648,8 @@ char               *first;
   Free = size;
   if (first)
     {
-      strcpy (&buf[index], first);
-      len = strlen (first);
+      ustrcpy (&buf[index], first);
+      len = ustrlen (first);
       len++;
       Free -= len;
       index += len;
@@ -674,19 +675,19 @@ char               *first;
 	    {
 	      if (buf[cur] == '.')
 		cur++;
-	      len = strlen (&buf[cur]) + 1;
-	      found = !strcmp (selector, &buf[cur]);
+	      len = ustrlen (&buf[cur]) + 1;
+	      found = !ustrcmp (selector, &buf[cur]);
 	      cur += len;
 	    }
 
 	  if (!found)
 	    {
-	      len = strlen (selector);
+	      len = ustrlen (selector);
 	      if (len > Free)
 		return (nb);
 	      /* add this new class name + the dot */
 	      buf[index++] = '.';
-	      strcpy (&buf[index], selector);
+	      ustrcpy (&buf[index], selector);
               len++; /* add the \0 */
               Free -= len;
               index += len;
@@ -714,8 +715,8 @@ View                view;
   AttributeType       attrType;
   Element             last_elem;
   ElementType         elType;
-  char                a_class[50];
-  char               *elHtmlName;
+  CHAR                a_class[50];
+  STRING              elHtmlName;
   int                 len, i, j;
   int                 firstSelectedChar, lastSelectedChar;
 
@@ -762,14 +763,14 @@ View                view;
 #   ifndef _WINDOWS
       TtaSetSelector (BaseDialog + ClassSelect, -1, a_class);
 #   endif /* _WINDOWS */
-      strcpy (CurrentClass, a_class);
+      ustrcpy (CurrentClass, a_class);
     }
   else
     {
 #   ifndef _WINDOWS
       TtaSetSelector (BaseDialog + ClassSelect, 0, NULL);
 #   endif /* _WINDOWS */
-      strcpy (CurrentClass, elHtmlName);
+      ustrcpy (CurrentClass, elHtmlName);
     }
   
   /* pop-up the dialogue box. */
@@ -796,7 +797,7 @@ View                view;
   Attribute           attr;
   AttributeType       attrType;
   Element             firstSelectedEl;
-  char                a_class[50];
+  CHAR                a_class[50];
   int                 len;
   int                 firstSelectedChar, lastSelectedChar;
 
@@ -829,12 +830,12 @@ View                view;
       len = 50;
       TtaGiveTextAttributeValue (attr, a_class, &len);
       TtaSetSelector (BaseDialog + AClassSelect, -1, a_class);
-      strcpy (CurrentClass, a_class);
+      ustrcpy (CurrentClass, a_class);
     }
   else
     {
       TtaSetSelector (BaseDialog + AClassSelect, 0, NULL);
-      strcpy (CurrentClass, "default");
+      ustrcpy (CurrentClass, "default");
     }
 
    /* pop-up the dialogue box. */
@@ -849,12 +850,12 @@ View                view;
    StyleCallbackDialogue : procedure for style dialogue events        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                StyleCallbackDialogue (int ref, int typedata, char *data)
+void                StyleCallbackDialogue (int ref, int typedata, STRING data)
 #else  /* __STDC__ */
 void                StyleCallbackDialogue (ref, typedata, data)
 int                 ref;
 int                 typedata;
-char               *data;
+STRING              data;
 
 #endif /* __STDC__ */
 {
@@ -865,7 +866,7 @@ char               *data;
   if (typedata == INTEGER_DATA)
     fprintf (stderr, "StyleCallbackDialogue(%d,%d) \n", ref, (int) data);
   else if (typedata == STRING_DATA)
-    fprintf (stderr, "StyleCallbackDialogue(%d,\"%s\") \n", ref, (char *) data);
+    fprintf (stderr, "StyleCallbackDialogue(%d,\"%s\") \n", ref, (char*) data);
 #endif
 
   switch (ref - BaseDialog)
@@ -878,7 +879,7 @@ char               *data;
     case ClassSelect:
     case AClassSelect:
       if (typedata == STRING_DATA)
-	strcpy (CurrentClass, data);
+	ustrcpy (CurrentClass, data);
       break;
     case AClassForm:
       if (typedata == INTEGER_DATA && val == 1)

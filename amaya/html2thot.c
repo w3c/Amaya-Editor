@@ -52,7 +52,7 @@
 
 #include "parser.h"
 
-typedef unsigned char entityName[10];
+typedef UCHAR entityName[10];
 typedef struct _CharEntityEntry
   {			 /* a SGML entity representing an ISO-Latin1 char */
      entityName          charName;	/* entity name */
@@ -514,12 +514,12 @@ typedef struct _ClosedElement
 ClosedElement;
 
 #define MaxGIlength 14
-typedef unsigned char GI[MaxGIlength];
+typedef UCHAR GI[MaxGIlength];
  
 typedef struct _GIMapping
   {                             /* mapping of a HTML element */
      GI                  htmlGI;        /* name of the HTML element */
-     char                htmlContents;  /* info about the contents of the HTML element:
+     CHAR                htmlContents;  /* info about the contents of the HTML element:
                                            'E'=empty,  space=some contents */
      int                 ThotType;      /* type of the Thot element or attribute */
      PtrClosedElement    firstClosedElem;       /* first element closed by the start
@@ -712,7 +712,7 @@ static int          BlockLevelElement[] =
 /* start tags that imply the end of a current element */
 /* any tag of each line implies the end of the current element if the type of
    that element is in the same line */
-typedef char        oneLine[100];
+typedef CHAR        oneLine[100];
 static oneLine      EquivEndingElem[] =
 {
    "DT DD LI OPTION",
@@ -1160,10 +1160,10 @@ static int          StackLevel = 0;	     /* first free element on the
 /* information about the input file */
 
 #define INPUT_FILE_BUFFER_SIZE 2000
-static char	    FileBuffer[INPUT_FILE_BUFFER_SIZE+1];
+static CHAR	    FileBuffer[INPUT_FILE_BUFFER_SIZE+1];
 static int	    CurCharInFileBuffer = 0;
 static int	    LastCharInFileBuffer = 0;
-static char        *InputText = NULL;
+static STRING       InputText = NULL;
 static FILE        *InputFile = NULL;
 static int          curChar = 0;
 static int          numberOfLinesRead = 0;/* number of lines read in the
@@ -1178,13 +1178,13 @@ static boolean      AfterTagPRE = FALSE;  /* <PRE> has just been read */
 static boolean      ParsingCSS = FALSE;	  /* reading the content of a STYLE
 					     element */
 static int          WithinTable = 0;      /* <TABLE> has been read */
-static char	    prevChar = EOS;	  /* last character read */
-static char        *docURL = NULL;	  /* path or URL of the document */
+static CHAR	    prevChar = EOS;	  /* last character read */
+static STRING       docURL = NULL;	  /* path or URL of the document */
 
 /* input buffer */
 #define MaxBufferLength 1000
 #define AllmostFullBuffer 700
-static unsigned char inputBuffer[MaxBufferLength];
+static UCHAR inputBuffer[MaxBufferLength];
 static int          LgBuffer = 0;	  /* actual length of text in input
 					     buffer */
 
@@ -1213,7 +1213,7 @@ static boolean      ReadingHREF = FALSE;  /* reading the value of a HREF
 static boolean      MergeText = FALSE;	  /* character data should be catenated
 					     with the last Text element */
 static boolean      HTMLrootClosed = FALSE;
-static char*        HTMLrootClosingTag = NULL;
+static STRING        HTMLrootClosingTag = NULL;
 
 static PtrElemToBeChecked FirstElemToBeChecked = NULL;
 static PtrElemToBeChecked LastElemToBeChecked = NULL;
@@ -1225,7 +1225,7 @@ static boolean      NormalTransition;
 
 /* information about an entity being read */
 #define MaxEntityLength 50
-static char         EntityName[MaxEntityLength];/* name of entity being read */
+static CHAR         EntityName[MaxEntityLength];/* name of entity being read */
 static int          LgEntityName = 0;	  /* length of entity name read so
 					     far */
 static int          EntityTableEntry = 0; /* entry of the entity table that
@@ -1236,23 +1236,23 @@ static int          CharRank = 0;	  /* rank of the last matching
 #define MaxMsgLength 200	/* maximum size of error messages */
 
 #ifdef __STDC__
-static void         ProcessStartGI (char *GIname);
+static void         ProcessStartGI (STRING GIname);
 #else
 static void         ProcessStartGI ();
 #endif
 
 static FILE*   ErrFile = (FILE*) 0;
-static char    ErrFileName [80];
+static CHAR    ErrFileName [80];
 
 extern boolean HTMLErrorsFound;
  
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char        *SkipSep (char *ptr)
+STRING       SkipSep (STRING ptr)
 #else
-char        *SkipSep (ptr)
-char               *ptr;
+STRING       SkipSep (ptr)
+STRING              ptr;
 #endif
 {
   while (*ptr == SPACE || *ptr == ',')
@@ -1263,10 +1263,10 @@ char               *ptr;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char        *SkipInt (char *ptr)
+STRING       SkipInt (STRING ptr)
 #else
-char        *SkipInt (ptr)
-char               *ptr;
+STRING       SkipInt (ptr)
+STRING              ptr;
 #endif
 {
   while (*ptr != EOS && *ptr != SPACE && *ptr != ',')
@@ -1291,7 +1291,7 @@ Document            document;
    AttributeType       attrType;
    Attribute           attrCoords, attrX, attrY;
    Attribute           attrW, attrH, attrShape;
-   char               *ptr3, *text;
+   STRING              ptr3, text;
    int                 x1, y1, x2, y2;
    int                 length, shape, r;
 
@@ -1443,30 +1443,31 @@ Document            document;
    Returns -1 and schema = NULL if not found.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 MapGI (char *gi, SSchema *schema, Document doc)
+int                 MapGI (STRING gi, SSchema *schema, Document doc)
 #else
 int                 MapGI (gi, schema, doc)
-char               *gi;
+STRING              gi;
 SSchema		   *schema;
 Document            doc;
 #endif
 {
   int                 i;
   int                 entry;
-  ElementType	       elType;
-  char                *mappedName, content;
-  boolean	       isHTML;
+  ElementType	      elType;
+  STRING              mappedName; 
+  CHAR                content;
+  boolean	      isHTML;
 
   entry = -1;
   if (*schema == NULL)
     isHTML = FALSE;
   else
-    isHTML = !(strcmp (TtaGetSSchemaName (*schema), "HTML"));
+    isHTML = !(ustrcmp (TtaGetSSchemaName (*schema), "HTML"));
   /* first, look at the HTML mapping table */
   i = 0;
   if (*schema == NULL || isHTML)
     do
-      if (!strcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
+      if (!ustrcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
 	entry = i;
       else
 	i++;
@@ -1503,16 +1504,17 @@ Document            doc;
    a given GI Name. If not found returns zero.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GIType (char *gi, ElementType *elType, Document doc)
+void                GIType (STRING gi, ElementType *elType, Document doc)
 #else
 void                GIType (gi, elType, doc)
-char               *gi;
+STRING              gi;
 ElementType        *elType;
 Document	    doc;
 #endif
 {
   int                 i;
-  char		       *mappedName, content;
+  STRING	      mappedName; 
+  CHAR                content;
 
   elType->ElSSchema = NULL;
   elType->ElTypeNum = 0;
@@ -1520,7 +1522,7 @@ Document	    doc;
   i = 0;
   do
     {
-      if (!strcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
+      if (!ustrcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
 	{
 	  
 	  if (HTMLSSchema == NULL && ! (doc == (Document) 0))
@@ -1543,25 +1545,25 @@ Document	    doc;
    GITagNameByType search in the mapping tables the name for a given type
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *GITagNameByType (ElementType elType)
+STRING              GITagNameByType (ElementType elType)
 #else
-char               *GITagNameByType (elType)
+STRING              GITagNameByType (elType)
 ElementType elType;
 
 #endif
 {
   int		i;
-  char		*buffer;
+  STRING	buffer;
 
   if (elType.ElTypeNum > 0)
     {
       i = 0;
-      if (strcmp ("HTML", TtaGetSSchemaName (elType.ElSSchema)) == 0)
+      if (ustrcmp ("HTML", TtaGetSSchemaName (elType.ElSSchema)) == 0)
 	do
 	  {
 	    if (HTMLGIMappingTable[i].ThotType == elType.ElTypeNum &&
-		strcmp (HTMLGIMappingTable[i].htmlGI, "LISTING"))	/* use PRE */
-	      return (char *) HTMLGIMappingTable[i].htmlGI;
+		ustrcmp (HTMLGIMappingTable[i].htmlGI, "LISTING"))	/* use PRE */
+	      return (STRING) HTMLGIMappingTable[i].htmlGI;
 	    i++;
 	  }
 	while (HTMLGIMappingTable[i].htmlGI[0] != EOS);
@@ -1580,9 +1582,9 @@ ElementType elType;
    GITagName search in GIMappingTable the name for a given element
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *GITagName (Element elem)
+STRING              GITagName (Element elem)
 #else
-char               *GITagName (elem)
+STRING              GITagName (elem)
 Element             elem;
 
 #endif
@@ -1599,10 +1601,10 @@ Element             elem;
    as well as the corresponding Thot SSchema
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static AttributeMapping*          MapAttr (char *Attr, SSchema *schema, int elemEntry)
+static AttributeMapping*          MapAttr (STRING Attr, SSchema *schema, int elemEntry)
 #else
 static AttributeMapping*          MapAttr (Attr, schema, elemEntry)
-char               *Attr;
+STRING              Attr;
 SSchema            *schema;
 int                 elemEntry;
 
@@ -1615,13 +1617,13 @@ int                 elemEntry;
    *schema = NULL;
    i = 0;
    do
-      if (!strcasecmp (HTMLAttributeMappingTable[i].XMLattribute, Attr))
+      if (!ustrcasecmp (HTMLAttributeMappingTable[i].XMLattribute, Attr))
 	 if (HTMLAttributeMappingTable[i].XMLelement[0] == EOS)
 	       {
 	       entry = i;
 	       *schema = HTMLSSchema;
 	       }
-	 else if (!strcasecmp (HTMLAttributeMappingTable[i].XMLelement,
+	 else if (!ustrcasecmp (HTMLAttributeMappingTable[i].XMLelement,
 			       HTMLGIMappingTable[elemEntry].htmlGI))
 	       {
 	       entry = i;
@@ -1643,12 +1645,12 @@ int                 elemEntry;
    attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void          MapHTMLAttribute (char *Attr, AttributeType *attrType, char* elementName, Document doc)
+void          MapHTMLAttribute (STRING Attr, AttributeType *attrType, STRING elementName, Document doc)
 #else
 void          MapHTMLAttribute (Attr, attrType, elementName, doc)
-char               *Attr;
+STRING              Attr;
 AttributeType      *attrType;
-char               *elementName;
+STRING              elementName;
 Document            doc;
 
 #endif
@@ -1688,11 +1690,11 @@ Document            doc;
    corresponding to the rank of that entry.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 MapThotAttr (char *Attr, char *tag)
+int                 MapThotAttr (STRING Attr, STRING tag)
 #else
 int                 MapThotAttr (Attr, tag)
-char               *Attr;
-char               *tag;
+STRING              Attr;
+STRING              tag;
 
 #endif
 {
@@ -1718,11 +1720,11 @@ char               *tag;
    Thot value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 MapAttrValue (int ThotAtt, char *AttrVal)
+int                 MapAttrValue (int ThotAtt, STRING AttrVal)
 #else
 int                 MapAttrValue (ThotAtt, AttrVal)
 int                 ThotAtt;
-char               *AttrVal;
+STRING              AttrVal;
 
 #endif
 {
@@ -1747,7 +1749,7 @@ char               *AttrVal;
 	 else
 	    /* for other attributes, uppercase and lowercase are */
 	    /* equivalent */
-	    if (!strcasecmp (HTMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
+	    if (!ustrcasecmp (HTMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
 	       value = HTMLAttrValueMappingTable[i].ThotAttrValue;
 	    else
 	       i++;
@@ -1870,7 +1872,7 @@ void                InitMapping ()
 
 	line++;
      }
-   while (strcmp (EquivEndingElem[line], "") != 0);
+   while (ustrcmp (EquivEndingElem[line], "") != 0);
 
    /* read table StartTagEndingElem */
    line = 0;
@@ -1898,7 +1900,7 @@ void                InitMapping ()
 	i = 0;
 	ptr++;
 #ifdef DEBUG
-	if (strcmp (name, "closes") != 0)
+	if (ustrcmp (name, "closes") != 0)
 	   fprintf (stderr, "error in StartTagEndingElem: \"%s\" instead of \"closes\" in line\n%s\n", name, StartTagEndingElem[line]);
 #endif
 	lastCE = HTMLGIMappingTable[entry].firstClosedElem;
@@ -1932,7 +1934,7 @@ void                InitMapping ()
 	while (StartTagEndingElem[line][ptr] != EOS);
 	line++;
      }
-   while (strcmp (StartTagEndingElem[line], "") != 0);
+   while (ustrcmp (StartTagEndingElem[line], "") != 0);
 }
 
 /*----------------------------------------------------------------------
@@ -1971,11 +1973,11 @@ SSchema		    ThotSSchema;
    ParseHTMLError  print the error message msg on stderr.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ParseHTMLError (Document doc, unsigned char *msg)
+void                ParseHTMLError (Document doc, USTRING msg)
 #else
 void                ParseHTMLError (doc, msg)
 Document            doc;
-unsigned char      *msg;
+USTRING             msg;
 
 #endif
 {
@@ -2158,7 +2160,7 @@ ElementType         elType;
    int                 i;
    boolean             ret;
 
-   if (strcmp (TtaGetSSchemaName(elType.ElSSchema), "HTML"))
+   if (ustrcmp (TtaGetSSchemaName(elType.ElSSchema), "HTML"))
       /* not an HTML element */
       ret = TRUE;
    else
@@ -2276,10 +2278,10 @@ static void         TextToDocument ()
    Put the preceding text into the Thot document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         StartOfTag (char c)
+static void         StartOfTag (CHAR c)
 #else
 static void         StartOfTag (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -2292,10 +2294,10 @@ char                c;
    PutInBuffer     put character c in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutInBuffer (unsigned char c)
+static void         PutInBuffer (UCHAR c)
 #else
 static void         PutInBuffer (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -2518,19 +2520,19 @@ Element            *el;
    element el.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CreateAttr (Element el, AttributeType attrType, char *text, boolean invalid)
+static void         CreateAttr (Element el, AttributeType attrType, STRING text, boolean invalid)
 #else
 static void         CreateAttr (el, attrType, text, invalid)
 Element             el;
 AttributeType       attrType;
-char               *text;
+STRING              text;
 boolean             invalid;
 
 #endif
 {
    int                 attrKind;
    int                 length;
-   char               *buffer;
+   STRING              buffer;
    Attribute           attr, oldAttr;
 
    if (attrType.AttrTypeNum != 0)
@@ -2558,12 +2560,12 @@ boolean             invalid;
 	   /* Copy the name of the invalid attribute as the content */
 	   /* of the Invalid_attribute attribute. */
 	  {
-	     length = strlen (text) + 2;
+	     length = ustrlen (text) + 2;
 	     length += TtaGetTextAttributeLength (attr);
 	     buffer = TtaGetMemory (length + 1);
 	     TtaGiveTextAttributeValue (attr, buffer, &length);
-	     strcat (buffer, " ");
-	     strcat (buffer, text);
+	     ustrcat (buffer, " ");
+	     ustrcat (buffer, text);
 	     TtaSetAttributeText (attr, buffer, el, theDocument);
 	     TtaFreeMemory (buffer);
 	  }
@@ -2809,14 +2811,14 @@ Element             el;
 		       elFrames, lastFrame, lastChild;
    Attribute           attr;
    AttributeType       attrType;
-   char               *text;
-   char                lastChar[2];
+   STRING              text;
+   CHAR                lastChar[2];
    Language            lang;
 #ifdef STANDALONE
-   char               *name1, *name2;
-   char               *imageName;
+   STRING              name1, name2;
+   STRING              imageName;
 #else
-   char               *name1, *name2;
+   STRING              name1, name2;
 #endif
    int                 length;
 
@@ -3120,10 +3122,10 @@ Element             el;
 	    TtaGiveTextAttributeValue (attr, name1, &length);
 	    /* extract image name from full name */
 	    TtaExtractName (name1, name2, imageName);
-	    if (strlen (imageName) == 0)
+	    if (ustrlen (imageName) == 0)
 	       /* full names ends with ''/ */
 	       TtaExtractName (name2, name1, imageName);
-	    if (strlen (imageName) != 0)
+	    if (ustrlen (imageName) != 0)
 	       TtaSetTextContent (el, imageName, currentLanguage, theDocument);
 	    TtaFreeMemory (name1);
 	    TtaFreeMemory (name2);
@@ -3145,7 +3147,7 @@ Element             el;
 	    length = TtaGetTextAttributeLength (attr);
 	    name1 = TtaGetMemory (length + 1);
 	    TtaGiveTextAttributeValue (attr, name1, &length);
-	    if ((!strcasecmp (name1, "STYLESHEET")) || (!strcasecmp (name1, "STYLE")))
+	    if ((!ustrcasecmp (name1, "STYLESHEET")) || (!ustrcasecmp (name1, "STYLE")))
 	      {
 		 /* it's a link to a style sheet. Load that style sheet */
 		 attrType.AttrSSchema = HTMLSSchema;
@@ -3221,7 +3223,7 @@ Element el;
    int                 length, nbspaces;
    ElementType         elType;
    Element             lastLeaf;
-   char                lastChar[2];
+   CHAR                lastChar[2];
    boolean             endingSpacesDeleted;
 
    endingSpacesDeleted = FALSE;
@@ -3309,14 +3311,14 @@ boolean             onStartTag;
 	      looks for that element in the stack, but not at
 	      a higher level as a table element */
 	   if (!onStartTag &&
-	       (!strcmp (HTMLGIMappingTable[entry].htmlGI, "FORM") ||
-		!strcmp (HTMLGIMappingTable[entry].htmlGI, "FONT") ||
-		!strcmp (HTMLGIMappingTable[entry].htmlGI, "CENTER")))
+	       (!ustrcmp (HTMLGIMappingTable[entry].htmlGI, "FORM") ||
+		!ustrcmp (HTMLGIMappingTable[entry].htmlGI, "FONT") ||
+		!ustrcmp (HTMLGIMappingTable[entry].htmlGI, "CENTER")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "TBODY") ||
-		   !strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "TR") ||
-		   !strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "TH") ||
-		   !strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "TD"))
+	       if (!ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "TBODY") ||
+		   !ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "TR") ||
+		   !ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "TH") ||
+		   !ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "TD"))
 		 {
 		   /* ignore this end tag */
 		   ret = FALSE;
@@ -3337,33 +3339,33 @@ boolean             onStartTag;
 	      equivalent), looks for that element in the
 	      stack, but not at a higher level as the list (or
 	      equivalent) element */
-	   if (!strcmp (HTMLGIMappingTable[start].htmlGI, "LI"))
+	   if (!ustrcmp (HTMLGIMappingTable[start].htmlGI, "LI"))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "OL") ||
-		   !strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "UL") ||
-		   !strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "DIR") ||
-		   !strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "MENU"))
+	       if (!ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "OL") ||
+		   !ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "UL") ||
+		   !ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "DIR") ||
+		   !ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "MENU"))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!strcmp (HTMLGIMappingTable[start].htmlGI, "OPTION"))
+	   else if (!ustrcmp (HTMLGIMappingTable[start].htmlGI, "OPTION"))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "SELECT"))
+	       if (!ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "SELECT"))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!strcmp (HTMLGIMappingTable[start].htmlGI, "DD") ||
-		    !strcmp (HTMLGIMappingTable[start].htmlGI, "DT"))
+	   else if (!ustrcmp (HTMLGIMappingTable[start].htmlGI, "DD") ||
+		    !ustrcmp (HTMLGIMappingTable[start].htmlGI, "DT"))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "DL"))
+	       if (!ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "DL"))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!strcmp (HTMLGIMappingTable[start].htmlGI, "TR") ||
-		    !strcmp (HTMLGIMappingTable[start].htmlGI, "TD") ||
-		    !strcmp (HTMLGIMappingTable[start].htmlGI, "TH"))
+	   else if (!ustrcmp (HTMLGIMappingTable[start].htmlGI, "TR") ||
+		    !ustrcmp (HTMLGIMappingTable[start].htmlGI, "TD") ||
+		    !ustrcmp (HTMLGIMappingTable[start].htmlGI, "TH"))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "TABLE"))
+	       if (!ustrcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "TABLE"))
 		 stop = TRUE;
 	       else
 		 i--;
@@ -3462,15 +3464,15 @@ boolean             onStartTag;
    element INPUT accordingly.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         TypeAttrValue (char *val)
+static void         TypeAttrValue (STRING val)
 #else
 static void         TypeAttrValue (val)
-char               *val;
+STRING              val;
 
 #endif
 {
    int                 value;
-   unsigned char       msgBuffer[MaxMsgLength];
+   UCHAR       msgBuffer[MaxMsgLength];
    ElementType         elType;
    Element             newChild;
    AttributeType       attrType;
@@ -3653,10 +3655,10 @@ Document            doc;
    of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfStartTag (char c)
+static void         EndOfStartTag (CHAR c)
 #else
 static void         EndOfStartTag (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -3664,7 +3666,7 @@ char                c;
    AttributeType       attrType;
    Attribute           attr;
    int                 length;
-   char               *text;
+   STRING              text;
 #ifdef MATHML
    boolean	       math;
 #endif
@@ -3674,10 +3676,10 @@ char                c;
      {
 #ifdef MATHML
 	math = FALSE;
-	if (!strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "MATH"))
+	if (!ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "MATH"))
 	   /* a <MATH> tag has been read */
 	   math = TRUE;
-	else if (!strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "MATHDISP"))
+	else if (!ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "MATHDISP"))
 	   /* a <MATHDISP> tag has been read.  add an attribute "mode=display"
 	      (for compatibility with old MathML version WD-math-970704 */
 	   {
@@ -3707,7 +3709,7 @@ char                c;
 	else 
 #endif /* MATHML */
 #ifdef GRAPHML
-	if (!strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "XMLGRAPHICS"))
+	if (!ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "XMLGRAPHICS"))
 	   /* a <XMLGRAPHICS> tag has been read */
 	   {
 	   /* Parse the GraphML structure */
@@ -3719,12 +3721,12 @@ char                c;
 	   }
 	else
 #endif /* GRAPHML */
-	if (!strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "PRE") ||
-	    !strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "STYLE") ||
-	    !strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "SCRIPT") )
+	if (!ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "PRE") ||
+	    !ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "STYLE") ||
+	    !ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "SCRIPT") )
 	   /* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
 	   AfterTagPRE = TRUE;
-	else if (!strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "TABLE"))
+	else if (!ustrcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "TABLE"))
 	   /* <TABLE> has been read */
 	   WithinTable++;
 	else if (HTMLGIMappingTable[lastElemEntry].htmlContents == 'E')
@@ -3758,7 +3760,7 @@ char                c;
 		  length = TtaGetTextAttributeLength (attr);
 		  text = TtaGetMemory (length + 1);
 		  TtaGiveTextAttributeValue (attr, text, &length);
-		  if (!strcasecmp (text, "text/css"))
+		  if (!ustrcasecmp (text, "text/css"))
 		     ParsingCSS = TRUE;
 		  TtaFreeMemory (text);
 	       }
@@ -3789,23 +3791,23 @@ int                 entry;
      {
        ok = TRUE;
        /* only TH and TD elements are allowed as children of a TR element */
-       if (!strcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TR"))
-	 if (strcmp (HTMLGIMappingTable[entry].htmlGI, "TH") &&
-	     strcmp (HTMLGIMappingTable[entry].htmlGI, "TD"))
+       if (!ustrcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TR"))
+	 if (ustrcmp (HTMLGIMappingTable[entry].htmlGI, "TH") &&
+	     ustrcmp (HTMLGIMappingTable[entry].htmlGI, "TD"))
 	   ok = FALSE;
        if (ok)
 	 /* only CAPTION, THEAD, TFOOT, TBODY, COLGROUP, COL and TR are */
 	 /* allowed as children of a TABLE element */
-	 if (!strcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TABLE"))
-	   if (strcmp (HTMLGIMappingTable[entry].htmlGI, "CAPTION") &&
-	       strcmp (HTMLGIMappingTable[entry].htmlGI, "THEAD") &&
-	       strcmp (HTMLGIMappingTable[entry].htmlGI, "TFOOT") &&
-	       strcmp (HTMLGIMappingTable[entry].htmlGI, "TBODY") &&
-	       strcmp (HTMLGIMappingTable[entry].htmlGI, "COLGROUP") &&
-	       strcmp (HTMLGIMappingTable[entry].htmlGI, "COL") &&
-	       strcmp (HTMLGIMappingTable[entry].htmlGI, "TR"))
-	     if (!strcmp (HTMLGIMappingTable[entry].htmlGI, "TD") ||
-		 !strcmp (HTMLGIMappingTable[entry].htmlGI, "TH"))
+	 if (!ustrcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TABLE"))
+	   if (ustrcmp (HTMLGIMappingTable[entry].htmlGI, "CAPTION") &&
+	       ustrcmp (HTMLGIMappingTable[entry].htmlGI, "THEAD") &&
+	       ustrcmp (HTMLGIMappingTable[entry].htmlGI, "TFOOT") &&
+	       ustrcmp (HTMLGIMappingTable[entry].htmlGI, "TBODY") &&
+	       ustrcmp (HTMLGIMappingTable[entry].htmlGI, "COLGROUP") &&
+	       ustrcmp (HTMLGIMappingTable[entry].htmlGI, "COL") &&
+	       ustrcmp (HTMLGIMappingTable[entry].htmlGI, "TR"))
+	     if (!ustrcmp (HTMLGIMappingTable[entry].htmlGI, "TD") ||
+		 !ustrcmp (HTMLGIMappingTable[entry].htmlGI, "TH"))
 	       /* Table cell within a TABLE, without a TR. Assume TR */
 	       {
 		/* save the last last GI read from the input file */
@@ -3820,21 +3822,21 @@ int                 entry;
        if (ok)
 	 /* CAPTION, THEAD, TFOOT, TBODY, COLGROUP are allowed only as
 	    children of a TABLE element */
-	 if (strcmp (HTMLGIMappingTable[entry].htmlGI, "CAPTION") == 0 ||
-	     strcmp (HTMLGIMappingTable[entry].htmlGI, "THEAD") == 0 ||
-	     strcmp (HTMLGIMappingTable[entry].htmlGI, "TFOOT") == 0 ||
-	     strcmp (HTMLGIMappingTable[entry].htmlGI, "TBODY") == 0 ||
-	     strcmp (HTMLGIMappingTable[entry].htmlGI, "COLGROUP") == 0)
-	   if (strcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TABLE") != 0)
+	 if (ustrcmp (HTMLGIMappingTable[entry].htmlGI, "CAPTION") == 0 ||
+	     ustrcmp (HTMLGIMappingTable[entry].htmlGI, "THEAD") == 0 ||
+	     ustrcmp (HTMLGIMappingTable[entry].htmlGI, "TFOOT") == 0 ||
+	     ustrcmp (HTMLGIMappingTable[entry].htmlGI, "TBODY") == 0 ||
+	     ustrcmp (HTMLGIMappingTable[entry].htmlGI, "COLGROUP") == 0)
+	   if (ustrcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TABLE") != 0)
 	      ok = FALSE;
        if (ok)
 	 /* only TR is allowed as a child of a THEAD, TFOOT or TBODY element */
-	 if (!strcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "THEAD") ||
-	     !strcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TFOOT") ||
-	     !strcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TBODY"))
-	   if (strcmp (HTMLGIMappingTable[entry].htmlGI, "TR"))
-	     if (!strcmp (HTMLGIMappingTable[entry].htmlGI, "TD") ||
-		 !strcmp (HTMLGIMappingTable[entry].htmlGI, "TH"))
+	 if (!ustrcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "THEAD") ||
+	     !ustrcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TFOOT") ||
+	     !ustrcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TBODY"))
+	   if (ustrcmp (HTMLGIMappingTable[entry].htmlGI, "TR"))
+	     if (!ustrcmp (HTMLGIMappingTable[entry].htmlGI, "TD") ||
+		 !ustrcmp (HTMLGIMappingTable[entry].htmlGI, "TH"))
 	       /* Table cell within a THEAD, TFOOT or TBODY without a TR. */
 	       /* Assume TR */
 	       {
@@ -3849,17 +3851,17 @@ int                 entry;
 	       ok = FALSE;
        if (ok)
 	 /* refuse BODY within BODY */
-	 if (strcmp (HTMLGIMappingTable[entry].htmlGI, "BODY") == 0)
+	 if (ustrcmp (HTMLGIMappingTable[entry].htmlGI, "BODY") == 0)
 	   if (Within (HTML_EL_BODY, HTMLSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse HEAD within HEAD */
-	 if (strcmp (HTMLGIMappingTable[entry].htmlGI, "HEAD") == 0)
+	 if (ustrcmp (HTMLGIMappingTable[entry].htmlGI, "HEAD") == 0)
 	   if (Within (HTML_EL_HEAD, HTMLSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse STYLE within STYLE */
-	 if (strcmp (HTMLGIMappingTable[entry].htmlGI, "STYLE") == 0)
+	 if (ustrcmp (HTMLGIMappingTable[entry].htmlGI, "STYLE") == 0)
 	   if (Within (HTML_EL_STYLE_, HTMLSSchema))
 	     ok = FALSE;
        return ok;
@@ -3908,10 +3910,10 @@ int                 entry;
    tag position is incorrect (TRUE).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InsertInvalidEl (char *content, boolean position)
+static void         InsertInvalidEl (STRING content, boolean position)
 #else
 static void         InsertInvalidEl (content, position)
-char               *content;
+STRING              content;
 boolean		    position;
 
 #endif
@@ -3952,24 +3954,24 @@ boolean		    position;
    or character), according to the mapping table.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ProcessStartGI (char *GIname)
+static void         ProcessStartGI (STRING GIname)
 #else
 static void         ProcessStartGI (GIname)
-char               *GIname;
+STRING              GIname;
 
 #endif
 {
   ElementType         elType;
   Element             el;
   int                 entry;
-  unsigned char       msgBuffer[MaxMsgLength];
+  UCHAR       msgBuffer[MaxMsgLength];
   PtrClosedElement    pClose;
   boolean             sameLevel;
   SSchema	      schema;
 
   /* ignore tag <P> within PRE */
   if (Within (HTML_EL_Preformatted, HTMLSSchema))
-    if (strcasecmp (GIname, "P") == 0)
+    if (ustrcasecmp (GIname, "P") == 0)
       return;
 
   /* search the HTML element name in the mapping table */
@@ -4061,20 +4063,20 @@ char               *GIname;
    EndOfStartGI    An HTML GI has been read in a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfStartGI (char c)
+static void         EndOfStartGI (CHAR c)
 #else
 static void         EndOfStartGI (c)
-char                c;
+CHAR                c;
 #endif
 {
-   char                theGI[MaxMsgLength];
+   CHAR                theGI[MaxMsgLength];
 
    /* if the last character in the GI is a '/', ignore it.  This is to
       accept the XML syntax for empty elements, for instance <br/> */
    if (LgBuffer > 0 && inputBuffer[LgBuffer-1] == '/')
       LgBuffer--;
    CloseBuffer ();
-   strncpy (theGI, inputBuffer, MaxMsgLength - 1);
+   ustrncpy (theGI, inputBuffer, MaxMsgLength - 1);
    theGI[MaxMsgLength - 1] = EOS;
    InitBuffer ();
    if (lastElementClosed && (lastElement == rootElement))
@@ -4091,10 +4093,10 @@ char                c;
    end of a GI and the end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfStartGIandTag (char c)
+static void         EndOfStartGIandTag (CHAR c)
 #else
 static void         EndOfStartGIandTag (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -4107,15 +4109,15 @@ char                c;
    Terminate all corresponding Thot elements.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfEndTag (char c)
+static void         EndOfEndTag (CHAR c)
 #else
 static void         EndOfEndTag (c)
-char                c;
+CHAR                c;
 
 #endif
 {
    SSchema	       schema;
-   unsigned char       msgBuffer[MaxMsgLength];
+   UCHAR       msgBuffer[MaxMsgLength];
    int                 entry;
    int                 i;
    boolean             ok;
@@ -4133,7 +4135,7 @@ char                c;
 	   i++;
 	else
 	   i = 0;
-        if (strcasecmp (&inputBuffer[i], HTMLrootClosingTag) == 0)
+        if (ustrcasecmp (&inputBuffer[i], HTMLrootClosingTag) == 0)
 	   {
 	   HTMLrootClosed = TRUE;
 	   ok = TRUE;
@@ -4166,7 +4168,7 @@ char                c;
 	   /* the end tag is </Hn>. Consider all Hn as equivalent. */
 	   /* </H3> is considered as an end tag for <H2>, for instance */
 	  {
-	     strcpy (msgBuffer, inputBuffer);
+	     ustrcpy (msgBuffer, inputBuffer);
 	     msgBuffer[1] = '1';
 	     i = 1;
 	     do
@@ -4180,10 +4182,10 @@ char                c;
 	     while (i <= 6 && !ok);
 	  }
 	if (!ok &&
-	    (!strcasecmp (inputBuffer, "OL") ||
-	     !strcasecmp (inputBuffer, "UL") ||
-	     !strcasecmp (inputBuffer, "MENU") ||
-	     !strcasecmp (inputBuffer, "DIR")))
+	    (!ustrcasecmp (inputBuffer, "OL") ||
+	     !ustrcasecmp (inputBuffer, "UL") ||
+	     !ustrcasecmp (inputBuffer, "MENU") ||
+	     !ustrcasecmp (inputBuffer, "DIR")))
 	  /* the end tag is supposed to close a list */
 	  /* try to close another type of list */
 	  {
@@ -4212,10 +4214,10 @@ char                c;
    current element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      PutInContent (char *ChrString)
+static Element      PutInContent (STRING ChrString)
 #else
 static Element      PutInContent (ChrString)
-char               *ChrString;
+STRING              ChrString;
 
 #endif
 {
@@ -4252,10 +4254,10 @@ char               *ChrString;
    corresponding Thot attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfAttrName (char c)
+static void         EndOfAttrName (CHAR c)
 #else
 static void         EndOfAttrName (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -4265,8 +4267,8 @@ char                c;
    Element             child;
    Attribute           attr;
    SSchema	       schema;
-   char                translation;
-   unsigned char       msgBuffer[MaxMsgLength];
+   CHAR                translation;
+   UCHAR       msgBuffer[MaxMsgLength];
 
    CloseBuffer ();
    /* if a single '/' or '?' has been read instead of an attribute name, ignore
@@ -4289,8 +4291,8 @@ char                c;
    if (tableEntry == NULL)
       /* this attribute is not in the HTML mapping table */
      {
-	if (strcasecmp (inputBuffer, "xmlns") == 0 ||
-	    strncasecmp (inputBuffer, "xmlns:", 6) == 0)
+	if (ustrcasecmp (inputBuffer, "xmlns") == 0 ||
+	    ustrncasecmp (inputBuffer, "xmlns:", 6) == 0)
 	   /* this is a namespace declaration */
 	   {
 	   lastAttrEntry = NULL;
@@ -4377,10 +4379,10 @@ char                c;
    end of an attribute name and the end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfAttrNameAndTag (char c)
+static void         EndOfAttrNameAndTag (CHAR c)
 #else
 static void         EndOfAttrNameAndTag (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -4393,10 +4395,10 @@ char                c;
    attribute value has been read.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         StartOfAttrValue (char c)
+static void         StartOfAttrValue (CHAR c)
 #else
 static void         StartOfAttrValue (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -4415,10 +4417,10 @@ char                c;
    oldWidth is -1 or the old image width.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateAttrWidthPercentPxl (char *buffer, Element el, Document doc, int oldWidth)
+void                CreateAttrWidthPercentPxl (STRING buffer, Element el, Document doc, int oldWidth)
 #else
 void                CreateAttrWidthPercentPxl (buffer, el, doc, oldWidth)
-char               *buffer;
+STRING              buffer;
 Element             el;
 Document            doc;
 int                 oldWidth;
@@ -4427,7 +4429,7 @@ int                 oldWidth;
   AttributeType      attrTypePxl, attrTypePercent;
   Attribute          attrOld, attrNew;
   int                length, val;
-  unsigned char      msgBuffer[MaxMsgLength];
+  UCHAR      msgBuffer[MaxMsgLength];
 #ifndef STANDALONE
   ElementType	     elType;
   int                w, h;
@@ -4440,7 +4442,7 @@ int                 oldWidth;
 #endif
 
   /* remove trailing spaces */
-  length = strlen (buffer) - 1;
+  length = ustrlen (buffer) - 1;
   while (length > 0 && buffer[length] <= SPACE)
     length--;
   attrTypePxl.AttrSSchema = TtaGetDocumentSSchema (doc);
@@ -4514,10 +4516,10 @@ int                 oldWidth;
    Create the corresponding internal attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateAttrIntSize (char *buffer, Element el, Document doc)
+void                CreateAttrIntSize (STRING buffer, Element el, Document doc)
 #else
 void                CreateAttrIntSize (buffer, el, doc)
-char               *buffer;
+STRING              buffer;
 Element             el;
 Document            doc;
 
@@ -4526,7 +4528,7 @@ Document            doc;
    AttributeType       attrType;
    int                 val, ind, factor, delta;
    Attribute           attr;
-   unsigned char       msgBuffer[MaxMsgLength];
+   UCHAR       msgBuffer[MaxMsgLength];
 
    /* is the first character a '+' or a '-' ? */
    ind = 0;
@@ -4578,10 +4580,10 @@ Document            doc;
    Put that value in the current Thot attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfAttrValue (char c)
+static void         EndOfAttrValue (CHAR c)
 #else
 static void         EndOfAttrValue (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -4590,15 +4592,15 @@ char                c;
    ElementType	       elType;
    Element             child;
    Language	       lang;
-   char                translation;
-   char                shape;
-   char               *buffer;
-   char               *attrName;
+   CHAR                translation;
+   CHAR                shape;
+   STRING              buffer;
+   STRING              attrName;
    int                 val;
    int                 length;
    int                 attrKind;
    boolean             done;
-   unsigned char       msgBuffer[MaxMsgLength];
+   UCHAR       msgBuffer[MaxMsgLength];
 
    if (IgnoreAttr)
       /* this is the end of value of an invalid attribute. Keep the */
@@ -4619,22 +4621,22 @@ char                c;
       /* an attribute after the tag </html>, ignore it */
       done = TRUE;
    /* treatments of some particular HTML attributes */
-   else if (!strcmp (lastAttrEntry->XMLattribute, "STYLE"))
+   else if (!ustrcmp (lastAttrEntry->XMLattribute, "STYLE"))
      {
 #ifndef STANDALONE
 	TtaSetAttributeText (lastAttribute, inputBuffer, lastAttrElement,
 			     theDocument);
-	ParseHTMLSpecificStyle (lastElement, (char *) inputBuffer, theDocument, FALSE);
+	ParseHTMLSpecificStyle (lastElement, (STRING) inputBuffer, theDocument, FALSE);
 #endif
 	done = TRUE;
      }
 #ifndef STANDALONE
-   else if (!strcmp (lastAttrEntry->XMLattribute, "LINK"))
-      HTMLSetAlinkColor (theDocument, (char *) inputBuffer);
-   else if (!strcmp (lastAttrEntry->XMLattribute, "ALINK"))
-      HTMLSetAactiveColor (theDocument, (char *) inputBuffer);
-   else if (!strcmp (lastAttrEntry->XMLattribute, "VLINK"))
-      HTMLSetAvisitedColor (theDocument, (char *) inputBuffer);
+   else if (!ustrcmp (lastAttrEntry->XMLattribute, "LINK"))
+      HTMLSetAlinkColor (theDocument, (STRING) inputBuffer);
+   else if (!ustrcmp (lastAttrEntry->XMLattribute, "ALINK"))
+      HTMLSetAactiveColor (theDocument, (STRING) inputBuffer);
+   else if (!ustrcmp (lastAttrEntry->XMLattribute, "VLINK"))
+      HTMLSetAvisitedColor (theDocument, (STRING) inputBuffer);
 #endif
 
    if (!done)
@@ -4680,7 +4682,7 @@ char                c;
 		     break;
 		  case 1:	/* integer */
 		     if (attrType.AttrTypeNum == HTML_ATTR_Border &&
-			 !strcasecmp (inputBuffer, "border") )
+			 !ustrcasecmp (inputBuffer, "border") )
 			/* BORDER="BORDER" for a TABLE */
 			{
 			val = 1;
@@ -4726,13 +4728,13 @@ char                c;
 			/* this is the content of an invalid attribute */
 			/* append it to the current Invalid_attribute */
 		        {
-			length = strlen (inputBuffer) + 2;
+			length = ustrlen (inputBuffer) + 2;
 			length += TtaGetTextAttributeLength (lastAttribute);
 			buffer = TtaGetMemory (length + 1);
 			TtaGiveTextAttributeValue (lastAttribute, buffer,
 						   &length);
-			strcat (buffer, "=");
-			strcat (buffer, inputBuffer);
+			ustrcat (buffer, "=");
+			ustrcat (buffer, inputBuffer);
 			TtaSetAttributeText (lastAttribute, buffer,
 					     lastAttrElement, theDocument);
 			TtaFreeMemory (buffer);
@@ -4756,13 +4758,13 @@ char                c;
         /* IntWidthPxl */
         CreateAttrWidthPercentPxl (inputBuffer, lastAttrElement, theDocument, -1);
 
-     else if (!strcmp (lastAttrEntry->XMLattribute, "SIZE"))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, "SIZE"))
        {
        TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
        if (attrType.AttrTypeNum == HTML_ATTR_Font_size)
 	  CreateAttrIntSize (inputBuffer, lastAttrElement, theDocument);
        }
-     else if (!strcmp (lastAttrEntry->XMLattribute, "SHAPE"))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, "SHAPE"))
        {
        child = TtaGetFirstChild (lastAttrElement);
        if (child != NULL)
@@ -4785,7 +4787,7 @@ char                c;
      	  TtaSetGraphicsShape (child, shape, theDocument);
           }
        }
-     else if (!strcmp (lastAttrEntry->XMLattribute, "VALUE"))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, "VALUE"))
        {
        elType = TtaGetElementType (lastAttrElement);
        if (elType.ElTypeNum == HTML_EL_Text_Input ||
@@ -4807,15 +4809,15 @@ char                c;
      /*      bgcolor        ->                   background         */
      /*      text           ->                   color              */
      /*      color          ->                   color              */
-     else if (!strcmp (lastAttrEntry->XMLattribute, "BACKGROUND"))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, "BACKGROUND"))
         {
         sprintf (msgBuffer, "background: url(%s)", inputBuffer);
         ParseHTMLSpecificStyle (lastElement, msgBuffer, theDocument, FALSE);
         }
-     else if (!strcmp (lastAttrEntry->XMLattribute, "BGCOLOR"))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, "BGCOLOR"))
         HTMLSetBackgroundColor (theDocument, lastElement, inputBuffer);
-     else if (!strcmp (lastAttrEntry->XMLattribute, "TEXT") ||
-	      !strcmp (lastAttrEntry->XMLattribute, "COLOR"))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, "TEXT") ||
+	      !ustrcmp (lastAttrEntry->XMLattribute, "COLOR"))
         HTMLSetForegroundColor (theDocument, lastElement, inputBuffer);
 #endif /* !STANDALONE */
      }
@@ -4827,10 +4829,10 @@ char                c;
    end of an attribute value and the end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfAttrValueAndTag (char c)
+static void         EndOfAttrValueAndTag (CHAR c)
 #else
 static void         EndOfAttrValueAndTag (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -4842,10 +4844,10 @@ char                c;
    StartOfEntity   A character '&' has been encountered in text.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         StartOfEntity (char c)
+static void         StartOfEntity (CHAR c)
 #else
 static void         StartOfEntity (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -4896,14 +4898,14 @@ int                 code;
      lang = TtaGetLanguageIdFromAlphabet('L');
 
    if (lang == currentLanguage)
-      PutInBuffer ((char) c);
+      PutInBuffer ((CHAR) c);
    else
       {
       TextToDocument ();
       MergeText = FALSE;
       l = currentLanguage;
       currentLanguage = lang;
-      PutInBuffer ((char) c);
+      PutInBuffer ((CHAR) c);
       TextToDocument ();
       MergeText = FALSE;
       currentLanguage = l;
@@ -4934,15 +4936,15 @@ int                 code;
    entity table and put the corresponding character in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfEntity (char c)
+static void         EndOfEntity (CHAR c)
 #else
 static void         EndOfEntity (c)
-char                c;
+CHAR                c;
 
 #endif
 {
    int                 i;
-   unsigned char       msgBuffer[MaxMsgLength];
+   UCHAR       msgBuffer[MaxMsgLength];
 
    EntityName[LgEntityName] = EOS;
    if (CharEntityTable[EntityTableEntry].charName[CharRank] == EOS)
@@ -4950,7 +4952,7 @@ char                c;
       if (CharEntityTable[EntityTableEntry].charCode > 255)
 	 PutNonISOlatin1Char (CharEntityTable[EntityTableEntry].charCode);
       else
-	 PutInBuffer ((char) (CharEntityTable[EntityTableEntry].charCode));
+	 PutInBuffer ((CHAR) (CharEntityTable[EntityTableEntry].charCode));
    else
       /* entity not in the table. Print an error message */
      {
@@ -4970,15 +4972,15 @@ char                c;
    read.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EntityChar (unsigned char c)
+static void         EntityChar (UCHAR c)
 #else
 static void         EntityChar (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
    int                 i;
-   unsigned char       msgBuffer[MaxMsgLength];
+   UCHAR       msgBuffer[MaxMsgLength];
    boolean	       OK, done, stop;
 
    done = FALSE;
@@ -4992,7 +4994,7 @@ unsigned char       c;
      stop = FALSE;
      do
 	{
-	if (strncmp (EntityName, CharEntityTable[i].charName, LgEntityName) != 0)
+	if (ustrncmp (EntityName, CharEntityTable[i].charName, LgEntityName) != 0)
 	   stop = TRUE;
 	else
 	   if (CharEntityTable[i].charName[CharRank] < c)
@@ -5011,7 +5013,7 @@ unsigned char       c;
 	if (CharEntityTable[EntityTableEntry].charCode > 255)
 	   PutNonISOlatin1Char (CharEntityTable[EntityTableEntry].charCode);
 	else
-	   PutInBuffer ((char) (CharEntityTable[EntityTableEntry].charCode));
+	   PutInBuffer ((CHAR) (CharEntityTable[EntityTableEntry].charCode));
 	if (c != SPACE)
 	   /* print an error message */
 	   ParseHTMLError (theDocument, "Missing semicolon");
@@ -5034,7 +5036,7 @@ unsigned char       c;
 	  OK = FALSE;
 	else
 	  if (LgEntityName > 0 &&
-	      strncmp (EntityName, CharEntityTable[EntityTableEntry].charName,
+	      ustrncmp (EntityName, CharEntityTable[EntityTableEntry].charName,
 		       LgEntityName) != 0)
 	     OK = FALSE;
 	  else
@@ -5080,10 +5082,10 @@ unsigned char       c;
    having that code in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfNumEntity (char c)
+static void         EndOfNumEntity (CHAR c)
 #else
 static void         EndOfNumEntity (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -5091,7 +5093,7 @@ char                c;
 
    EntityName[LgEntityName] = EOS;
    sscanf (EntityName, "%d", &code);
-   PutInBuffer ((char) code);
+   PutInBuffer ((CHAR) code);
    LgEntityName = 0;
 }
 
@@ -5101,10 +5103,10 @@ char                c;
    the entity buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         NumEntityChar (char c)
+static void         NumEntityChar (CHAR c)
 #else
 static void         NumEntityChar (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -5141,10 +5143,10 @@ static void         EndOfDocument ()
    PutLess put '<' in the input buffer
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutLess (char c)
+static void         PutLess (CHAR c)
 #else
 static void         PutLess (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -5155,10 +5157,10 @@ char                c;
    PutAmpersandSpace       put '& ' in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutAmpersandSpace (char c)
+static void         PutAmpersandSpace (CHAR c)
 #else
 static void         PutAmpersandSpace (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -5170,10 +5172,10 @@ char                c;
    PutLessAndSpace put '<' and the space read in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutLessAndSpace (char c)
+static void         PutLessAndSpace (CHAR c)
 #else
 static void         PutLessAndSpace (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -5186,10 +5188,10 @@ char                c;
    StartOfComment  Beginning of a HTML comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         StartOfComment (char c)
+static void         StartOfComment (CHAR c)
 #else
 static void         StartOfComment (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -5236,10 +5238,10 @@ char                c;
    PutInComment    put character c in the current HTML comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutInComment (unsigned char c)
+static void         PutInComment (UCHAR c)
 #else
 static void         PutInComment (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -5286,10 +5288,10 @@ unsigned char       c;
    EndOfComment    End of a HTML comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfComment (char c)
+static void         EndOfComment (CHAR c)
 #else
 static void         EndOfComment (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -5307,10 +5309,10 @@ char                c;
    PutDash put a dash character in the current comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutDash (char c)
+static void         PutDash (CHAR c)
 #else
 static void         PutDash (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -5322,10 +5324,10 @@ char                c;
    PutDashDash     put 2 dash characters in the current comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutDashDash (char c)
+static void         PutDashDash (CHAR c)
 #else
 static void         PutDashDash (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -5338,10 +5340,10 @@ char                c;
    PutQuestionMark put a question mark in the current PI.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutQuestionMark (char c)
+static void         PutQuestionMark (CHAR c)
 #else
 static void         PutQuestionMark (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -5353,10 +5355,10 @@ char                c;
    EndOfDoctypeDecl	A Doctype declaration has been read
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfDoctypeDecl (char c)
+static void         EndOfDoctypeDecl (CHAR c)
 #else
 static void         EndOfDoctypeDecl (c)
-char                c;
+CHAR                c;
  
 #endif
 {
@@ -5364,10 +5366,10 @@ char                c;
 
    CloseBuffer ();
    /* process the Doctype declaration available in inputBuffer */
-   if (!strcasecmp (inputBuffer, "DOCTYPE"))
+   if (!ustrcasecmp (inputBuffer, "DOCTYPE"))
       {
       for (i = 7; inputBuffer[i] <= SPACE && inputBuffer[i] != EOS; i++);
-      if (!strcasecmp (&inputBuffer[i], "HTML"))
+      if (!ustrcasecmp (&inputBuffer[i], "HTML"))
 	 /* it's a HTML document */
 	 {
          /***** TO DO *****/;
@@ -5381,10 +5383,10 @@ char                c;
    EndOfPI	A Processing Instruction has been read
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfPI (char c)
+static void         EndOfPI (CHAR c)
 #else
 static void         EndOfPI (c)
-char                c;
+CHAR                c;
  
 #endif
 {
@@ -5405,10 +5407,10 @@ char                c;
    Do_nothing      Do nothing.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         Do_nothing (char c)
+static void         Do_nothing (CHAR c)
 #else
 static void         Do_nothing (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -5421,7 +5423,7 @@ typedef struct _Transition *PtrTransition;
 typedef struct _Transition
   {				/* a transition of the automaton in
 				   "executable" form */
-     unsigned char       trigger;	/* the imput character that triggers
+     UCHAR       trigger;	/* the imput character that triggers
 					   the transition */
      Proc                action;	/* the procedure to be called when
 					   the transition occurs */
@@ -5447,7 +5449,7 @@ typedef struct _sourceTransition
   {				/* a transition of the automaton in
 				   "source" form */
      State               initState;	/* initial state of transition */
-     char                trigger;	/* the imput character that triggers
+     CHAR                trigger;	/* the imput character that triggers
 					   the transition */
      Proc                transitionAction;	/* the procedure to be called when
 						   the transition occurs */
@@ -5673,13 +5675,13 @@ void                FreeHTMLParser ()
    whatever it is.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char     GetNextChar (boolean *endOfFile)
+static CHAR     GetNextChar (boolean *endOfFile)
 #else
-static char     GetNextChar (endOfFile)
+static CHAR     GetNextChar (endOfFile)
 boolean *endOfFile;
 #endif
 {
-   char		charRead;
+   CHAR		charRead;
    int		res;
 
    charRead = EOS;
@@ -5731,13 +5733,13 @@ boolean *endOfFile;
    input file or buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char          GetNextInputChar (boolean *endOfFile)
+CHAR          GetNextInputChar (boolean *endOfFile)
 #else
-char          GetNextInputChar (endOfFile)
+CHAR          GetNextInputChar (endOfFile)
 boolean *endOfFile;
 #endif
 {
-  char		charRead;
+  CHAR		charRead;
 
   charRead = EOS;
   *endOfFile = FALSE;
@@ -5764,7 +5766,7 @@ boolean *endOfFile;
 	    /* next character is not LF. Store next character and return LF */
 	    {
 	      prevChar = charRead;
-	      charRead = (char) 10;
+	      charRead = (CHAR) 10;
 	    }
 	}
       /* update the counters of characters and lines read */
@@ -5785,15 +5787,15 @@ boolean *endOfFile;
    One parameter should be NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void        HTMLparse (FILE * infile, char *HTMLbuf)
+static void        HTMLparse (FILE * infile, STRING HTMLbuf)
 #else
 static void        HTMLparse (infile, HTMLbuf)
 FILE               *infile;
-char               *HTMLbuf;
+STRING              HTMLbuf;
 
 #endif
 {
-   unsigned char       charRead;
+   UCHAR       charRead;
    boolean             match;
    PtrTransition       trans;
    boolean             endOfFile;
@@ -5836,7 +5838,7 @@ char               *HTMLbuf;
 		      if (currentState == 6 || currentState == 9)
 			/* within an attribute value between quotes */
 			if (lastAttrEntry != NULL &&
-			    !strcmp (lastAttrEntry->XMLattribute, "SRC"))
+			    !ustrcmp (lastAttrEntry->XMLattribute, "SRC"))
 			   /* value of an SRC attribute */
 			   /* consider new line as an empty char*/
 			   charRead = EOS;
@@ -6043,14 +6045,14 @@ char               *HTMLbuf;
    buffer textbuf. One parameter should be NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void        ReadTextFile (FILE * infile, char *textbuf)
+static void        ReadTextFile (FILE * infile, STRING textbuf)
 #else
 static void        ReadTextFile (infile, textbuf)
 FILE               *infile;
-char		   *textbuf;
+STRING	           textbuf;
 #endif
 {
-   unsigned char       charRead;
+   UCHAR       charRead;
    boolean             endOfFile;
 
    InputText = textbuf;
@@ -6064,7 +6066,7 @@ char		   *textbuf;
 
    /* if we are reading a file and the fist line is "<!DOCTYPE HTML...", then
       parse that file as an HTML file */
-   if (InputFile != NULL && !strncasecmp (FileBuffer, "<!DOCTYPE HTML", 14))
+   if (InputFile != NULL && !ustrncasecmp (FileBuffer, "<!DOCTYPE HTML", 14))
       {
       prevChar = charRead;
       HTMLparse (infile, textbuf);
@@ -6476,10 +6478,10 @@ Document            doc;
    the missing elements.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CheckAbstractTree (char *pathURL)
+void                CheckAbstractTree (STRING pathURL)
 #else
 void                CheckAbstractTree (pathURL)
-char               *pathURL;
+STRING              pathURL;
 
 #endif
 {
@@ -7049,7 +7051,7 @@ boolean             isclosed;
 Document            doc;
 #endif  /* __STDC__ */
 {
-   char                tag[20];
+   CHAR                tag[20];
    Element             elem;
    int                 i;
    SSchema	       schema;
@@ -7068,8 +7070,8 @@ Document            doc;
 	   elem = lastelem;
 	while (elem != NULL && elem != rootElement)
 	  {
-	     strcpy (tag, GITagNameByType (TtaGetElementType (elem)));
-	     if (strcmp (tag, "???"))
+	     ustrcpy (tag, GITagNameByType (TtaGetElementType (elem)));
+	     if (ustrcmp (tag, "???"))
 	       {
 		  for (i = StackLevel; i > 0; i--)
 		    {
@@ -7123,11 +7125,11 @@ Document            doc;
    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void       ParseIncludedHTML (Element elem, char *closingTag)
+void       ParseIncludedHTML (Element elem, STRING closingTag)
 #else
 void       ParseIncludedHTML (elem, closingTag)
 Element		elem;
-char		*closingTag;
+STRING	        closingTag;
 
 #endif
 {
@@ -7157,10 +7159,10 @@ char		*closingTag;
    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void       ParseSubTree (char *HTMLbuf, Element lastelem, boolean isclosed, Document doc)
+void       ParseSubTree (STRING HTMLbuf, Element lastelem, boolean isclosed, Document doc)
 #else
 void       ParseSubTree (HTMLbuf, lastelem, isclosed, doc)
-char		*HTMLbuf;
+STRING	   HTMLbuf;
 Element		lastelem;
 boolean		isclosed;
 Document	doc;
@@ -7168,11 +7170,11 @@ Document	doc;
 #endif
 {
    ElementType	elType;
-   char		*schemaName;
+   STRING	schemaName;
 
    elType = TtaGetElementType (lastelem);
    schemaName = TtaGetSSchemaName(elType.ElSSchema);
-   if (strcmp (schemaName, "HTML") == 0)
+   if (ustrcmp (schemaName, "HTML") == 0)
       /* parse an HTML subtree */
       {
       InitializeHTMLParser (lastelem, isclosed, doc);
@@ -7205,10 +7207,10 @@ char              **argv;
 #endif
 {
    FILE               *infile;
-   char                htmlFileName[200];
-   char                pivotFileName[200];
-   char                documentDirectory[200];
-   char                documentName[200];
+   CHAR                htmlFileName[200];
+   CHAR                pivotFileName[200];
+   CHAR                documentDirectory[200];
+   CHAR                documentName[200];
    Element             el, oldel;
    int                 returnCode;
    boolean	       PlainText;
@@ -7226,7 +7228,7 @@ char              **argv;
 	TtaInitializeAppRegistry (argv[0]);
 	/* get the input file name from the command line */
 	argv++;
-	strcpy (htmlFileName, *argv);
+	ustrcpy (htmlFileName, *argv);
 	/*  open the input file */
 	infile = fopen (htmlFileName, "r");
 	if (infile == 0)
@@ -7239,7 +7241,7 @@ char              **argv;
 	  {
 	     /* input file OK. Get the output file name from the command line */
 	     argv++;
-	     strcpy (pivotFileName, *argv);
+	     ustrcpy (pivotFileName, *argv);
 	     /* the file to be parsed is supposed to be HTML */
 	     PlainText = FALSE;
 	     /* initialize mapping table */
@@ -7252,7 +7254,7 @@ char              **argv;
 	     TtaExtractName (pivotFileName, documentDirectory, documentName);
 	     if (documentName[0] == EOS && !TtaCheckDirectory (documentDirectory))
 	       {
-		  strcpy (documentName, documentDirectory);
+		  ustrcpy (documentName, documentDirectory);
 		  documentDirectory[0] = EOS;
 	       }
 	     TtaSetDocumentPath (documentDirectory);
@@ -7280,14 +7282,14 @@ char              **argv;
    distant) path or URL of the html document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                StartParser (Document doc, char *htmlFileName, char *documentName, char *documentDirectory, char *pathURL, boolean PlainText)
+void                StartParser (Document doc, STRING htmlFileName, STRING documentName, STRING documentDirectory, STRING pathURL, boolean PlainText)
 #else
 void                StartParser (doc, htmlFileName, documentName, documentDirectory, pathURL, PlainText)
 Document            doc;
-char               *htmlFileName;
-char               *documentName;
-char               *documentDirectory;
-char               *pathURL;
+STRING              htmlFileName;
+STRING              documentName;
+STRING              documentDirectory;
+STRING              pathURL;
 boolean	            PlainText;
 
 #endif
@@ -7300,9 +7302,9 @@ boolean	            PlainText;
    AttributeType       attrType;
    Attribute           attr;
    int		       length;
-   char               *s;
-   char                tempname[MAX_LENGTH];
-   char                temppath[MAX_LENGTH];
+   STRING              s;
+   CHAR                tempname[MAX_LENGTH];
+   CHAR                temppath[MAX_LENGTH];
 
    theDocument = doc;
    FirstElemToBeChecked = NULL;
@@ -7333,12 +7335,12 @@ boolean	            PlainText;
 	WithinTable = 0;
 	if (documentName[0] == EOS && !TtaCheckDirectory (documentDirectory))
 	  {
-	     strcpy (documentName, documentDirectory);
+	     ustrcpy (documentName, documentDirectory);
 	     documentDirectory[0] = EOS;
-	     s = (char *) TtaGetEnvString ("PWD");
+	     s = (STRING) TtaGetEnvString ("PWD");
 	     /* set path on current directory */
 	     if (s != NULL)
-		strcpy (documentDirectory, s);
+		ustrcpy (documentDirectory, s);
 	     else
 		documentDirectory[0] = EOS;
 	  }
@@ -7348,15 +7350,15 @@ boolean	            PlainText;
 	/* the Thot document has been successfully created */
 	{
 #ifndef STANDALONE
-	   length = strlen (pathURL);
-	   if (strcmp (pathURL, htmlFileName) == 0)
+	   length = ustrlen (pathURL);
+	   if (ustrcmp (pathURL, htmlFileName) == 0)
 	      {
 	      docURL = TtaGetMemory (length+1);
-	      strcpy (docURL, pathURL);
+	      ustrcpy (docURL, pathURL);
 	      }
 	   else
 	      {
-	      length += strlen (htmlFileName) + 20;
+	      length += ustrlen (htmlFileName) + 20;
 	      docURL = TtaGetMemory (length+1);
 	      sprintf (docURL, "%s temp file: %s", pathURL, htmlFileName);
 	      }

@@ -134,21 +134,21 @@ Document	   doc;
    This element type appear with an 'X' in the ElemMappingTable.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void      GraphMLGetDTDName (char* DTDname, char *elementName)
+void      GraphMLGetDTDName (STRING DTDname, STRING elementName)
 #else
 void      GraphMLGetDTDName (DTDname, elementName)
-char* DTDname;
-char *elementName;
+STRING DTDname;
+STRING elementName;
  
 #endif
 {
-   if (strcmp (elementName, "math") == 0)
-      strcpy (DTDname, "MathML");
-   else if (strcmp (elementName, "label") == 0 ||
-	    strcmp (elementName, "text") == 0)
-      strcpy (DTDname, "HTML");
+   if (ustrcmp (elementName, "math") == 0)
+      ustrcpy (DTDname, "MathML");
+   else if (ustrcmp (elementName, "label") == 0 ||
+	    ustrcmp (elementName, "text") == 0)
+      ustrcpy (DTDname, "HTML");
    else
-      strcpy (DTDname, "");
+      ustrcpy (DTDname, "");
 }
 
 /*----------------------------------------------------------------------
@@ -158,13 +158,13 @@ char *elementName;
    Returns -1 and schema = NULL if not found.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               MapGraphMLElementType (char *XMLname, ElementType *elType, char** mappedName, char* content, Document doc)
+void               MapGraphMLElementType (STRING XMLname, ElementType *elType, STRING* mappedName, STRING content, Document doc)
 #else
 void               MapGraphMLElementType (XMLname, elType, mappedName, content, doc)
-char               *XMLname;
+STRING              XMLname;
 ElementType	   *elType;
-char		   **mappedName;
-char		   *content;
+STRING*		    mappedName;
+STRING	            content;
 Document            doc;
 #endif
 {
@@ -174,7 +174,7 @@ Document            doc;
    /* search in GraphMLElemMappingTable */
    i = 0;
    do
-       if (strcasecmp (GraphMLElemMappingTable[i].XMLname, XMLname))
+       if (ustrcasecmp (GraphMLElemMappingTable[i].XMLname, XMLname))
 	  i++;
        else
 	  {
@@ -192,11 +192,11 @@ Document            doc;
    search in the mapping table the XML name for a given Thot type
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               GetGraphMLElementName (ElementType elType, char **buffer)
+void               GetGraphMLElementName (ElementType elType, STRING* buffer)
 #else
 void               GetGraphMLElementName (elType, buffer)
 ElementType elType;
-char** buffer;
+STRING* buffer;
 
 #endif
 {
@@ -205,12 +205,12 @@ char** buffer;
    if (elType.ElTypeNum > 0)
      {
 	i = 0;
-	if (strcmp ("GraphML", TtaGetSSchemaName (elType.ElSSchema)) == 0)
+	if (ustrcmp ("GraphML", TtaGetSSchemaName (elType.ElSSchema)) == 0)
 	  do
 	    {
 	     if (GraphMLElemMappingTable[i].ThotType == elType.ElTypeNum)
 		{
-		*buffer = (char *) GraphMLElemMappingTable[i].XMLname;
+		*buffer = (STRING) GraphMLElemMappingTable[i].XMLname;
 		return;
 		}
 	     i++;
@@ -227,12 +227,12 @@ char** buffer;
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void          MapGraphMLAttribute (char *Attr, AttributeType *attrType, char* elementName, Document doc)
+void          MapGraphMLAttribute (STRING Attr, AttributeType *attrType, STRING elementName, Document doc)
 #else
 void          MapGraphMLAttribute (Attr, attrType, elementName, doc)
-char               *Attr;
+STRING              Attr;
 AttributeType      *attrType;
-char 		   *elementName;
+STRING		    elementName;
 Document            doc;
 #endif
 {
@@ -242,7 +242,7 @@ Document            doc;
    attrType->AttrSSchema = NULL;
    i = 0;
    do
-      if (strcasecmp (GraphMLAttributeMappingTable[i].XMLattribute, Attr))
+      if (ustrcasecmp (GraphMLAttributeMappingTable[i].XMLattribute, Attr))
 	 i++;
       else
 	 if (GraphMLAttributeMappingTable[i].XMLelement[0] == EOS)
@@ -250,7 +250,7 @@ Document            doc;
 	       attrType->AttrTypeNum = GraphMLAttributeMappingTable[i].ThotAttribute;
 	       attrType->AttrSSchema = GetGraphMLSSchema (doc);
 	       }
-	 else if (!strcasecmp (GraphMLAttributeMappingTable[i].XMLelement,
+	 else if (!ustrcasecmp (GraphMLAttributeMappingTable[i].XMLelement,
 			       elementName))
 	       {
 	       attrType->AttrTypeNum = GraphMLAttributeMappingTable[i].ThotAttribute;
@@ -267,10 +267,10 @@ Document            doc;
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MapGraphMLAttributeValue (char *AttrVal, AttributeType attrType, int *value)
+void                MapGraphMLAttributeValue (STRING AttrVal, AttributeType attrType, int *value)
 #else
 void                MapGraphMLAttributeValue (AttrVal, attrType, value)
-char               *AttrVal;
+STRING              AttrVal;
 AttributeType       attrType;
 int		   *value;
 #endif
@@ -284,7 +284,7 @@ int		   *value;
        i++;
    if (GraphMLAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
        do
-	   if (!strcasecmp (GraphMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
+	   if (!ustrcasecmp (GraphMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
 	       *value = GraphMLAttrValueMappingTable[i].ThotAttrValue;
 	   else
 	       i++;
@@ -296,13 +296,13 @@ int		   *value;
    Search that entity in the entity table and return the corresponding value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void	MapGraphMLEntity (char *entityName, char *entityValue, int valueLength, char *alphabet)
+void	MapGraphMLEntity (STRING entityName, STRING entityValue, int valueLength, STRING alphabet)
 #else
 void	MapGraphMLEntity (entityName, entityValue, valueLength, alphabet)
-char *entityName;
-char *entityValue;
+STRING entityName;
+STRING entityValue;
 int valueLength;
-char *alphabet;
+STRING alphabet;
 
 #endif
 {
@@ -315,11 +315,11 @@ char *alphabet;
    A GraphML entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void        GraphMLEntityCreated (unsigned char *entityValue, char *entityName, Document doc)
+void        GraphMLEntityCreated (USTRING entityValue, STRING entityName, Document doc)
 #else
 void        GraphMLEntityCreated (entityValue, entityName, doc)
-unsigned char *entityValue;
-char *entityName;
+USTRING entityValue;
+STRING entityName;
 Document doc;
 
 #endif
@@ -334,10 +334,10 @@ Document doc;
    Return that GRAPHICS_UNIT element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      CreateGraphicalLeaf (char shape, Element el, Document doc, boolean changeShape)
+static Element      CreateGraphicalLeaf (CHAR shape, Element el, Document doc, boolean changeShape)
 #else
 static Element      CreateGraphicalLeaf (shape, el, doc, changeShape)
-char		shape;
+CHAR		shape;
 Element		el;
 Document	doc;
 boolean		changeShape;
@@ -346,7 +346,7 @@ boolean		changeShape;
 {
    ElementType	elType;
    Element	leaf, child;
-   char		oldShape;
+   CHAR		oldShape;
 
    leaf = NULL;
    child = TtaGetLastChild (el);
@@ -397,7 +397,7 @@ int		arrowHead;
 {
    ElementType		elType;
    Element		leaf;
-   char			shape;
+   CHAR			shape;
 
    leaf = NULL;
    *closed = FALSE;
@@ -555,7 +555,7 @@ Document	doc;
    AttributeType	attrType, spaceAttrType;
    Attribute		dirAttr, spaceAttr, attr, intAttr;
    int			length, val, dir;
-   char			*text, *ptr;
+   STRING		text, ptr;
    DisplayMode		dispMode;
 
    elType = TtaGetElementType (group);
@@ -864,7 +864,7 @@ Document	doc;
    Element		leaf;
    int			length, x, y, nbPoints, maxX, maxY, minX, minY, i;
    TypeUnit		unit;
-   char			*text, *ptr;
+   STRING		text, ptr;
    boolean		closed;
 
    /* create (or get) the Graphics leaf according to the element type */
@@ -929,7 +929,7 @@ Document	doc;
 #endif
 {
    int                  length, x, y, attrKind;
-   char                 *text, *ptr;
+   STRING               text, ptr;
    AttributeType        attrType;
    Attribute            attrX, attrY;
 
@@ -989,7 +989,7 @@ Document	doc;
    AttributeType	attrType, newAttrType;
    Attribute		intAttr;
    int			attrKind, length, l;
-   char			*text, *ptr;
+   STRING		text, ptr;
 
    length = TtaGetTextAttributeLength (attr) + 2;
    text = TtaGetMemory (length);

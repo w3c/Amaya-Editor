@@ -28,7 +28,7 @@
 #define MAX_LENGTH     512
 
 /* an entity name */
-typedef unsigned char entName[10];
+typedef UCHAR entName[10];
 
 /* an entity representing an ISO-Latin-1 character */
 typedef struct _EntityDictEntry
@@ -63,7 +63,7 @@ typedef struct _XMLparserContext *PtrParserCtxt;
 typedef struct _XMLparserContext
   {
      PtrParserCtxt NextParserCtxt;	/* next parser context */
-     char*	   SSchemaName;		/* name of Thot structure schema */
+     STRING	   SSchemaName;		/* name of Thot structure schema */
      SSchema	   XMLSSchema;		/* the Thot structure schema */
      Proc	   InitBuilder;		/* action to be called when the parser
 					   begins parsing a fragment */
@@ -101,8 +101,8 @@ static boolean      immAfterTag = FALSE;  /* A tag has just been read */
 /* input buffer */
 #define MAX_BUFFER_LENGTH 1000
 #define ALLMOST_FULL_BUFFER 700
-static unsigned char inputBuffer[MAX_BUFFER_LENGTH];
-static int          bufferLength = 0;	  /* actual length of text in input
+static UCHAR inputBuffer[MAX_BUFFER_LENGTH];
+static int   bufferLength = 0;	  /* actual length of text in input
 					     buffer */
 
 /* information about the Thot document under construction */
@@ -110,17 +110,17 @@ static Document     currentDocument = 0;	  /* the Thot document */
 static Language     currentLanguage;	  /* language used in the document */
 static Element	    currentElement = NULL;
 static boolean	    currentElementClosed = FALSE;
-static char	    currentElementContent = ' ';
+static CHAR	    currentElementContent = ' ';
 static Attribute    currentAttribute = NULL;
 static boolean	    HTMLStyleAttribute = FALSE;
 static boolean	    XMLrootClosed = FALSE;
-static char*	    XMLrootClosingTag = NULL;
+static STRING	    XMLrootClosingTag = NULL;
 static int	    XMLrootLevel = 0;
 static boolean	    lastTagRead = FALSE;
 
 /* parser stack */
 #define MAX_STACK_HEIGHT 200		  /* maximum stack height */
-static unsigned char* XMLelementType[MAX_STACK_HEIGHT]; /* XML element name */
+static USTRING      XMLelementType[MAX_STACK_HEIGHT]; /* XML element name */
 static Element      elementStack[MAX_STACK_HEIGHT];  /* element in the Thot
                                              abstract tree */
 static Language     languageStack[MAX_STACK_HEIGHT]; /* element language */
@@ -135,7 +135,7 @@ static boolean      normalTransition;
 
 /* information about an entity being read */
 #define MAX_ENTITY_LENGTH 80
-static char         entityName[MAX_ENTITY_LENGTH]; /* name of entity being
+static CHAR         entityName[MAX_ENTITY_LENGTH]; /* name of entity being
 					     read */
 static int          entityNameLength = 0; /* length of entity name read so
 					     far */
@@ -168,8 +168,8 @@ static void            InitParserContexts ()
 
    /* initialize MathML parser */
    ctxt->NextParserCtxt = NULL;	/* last context */
-   ctxt->SSchemaName = (char*) TtaGetMemory (MAX_SS_NAME_LENGTH);
-   strcpy (ctxt->SSchemaName, "MathML");
+   ctxt->SSchemaName = (STRING) TtaGetMemory (MAX_SS_NAME_LENGTH);
+   ustrcpy (ctxt->SSchemaName, "MathML");
    ctxt->XMLSSchema = NULL;
    ctxt->InitBuilder = (Proc) GetMathMLSSchema;
    ctxt->MapElementType = (Proc) MapMathMLElementType;
@@ -192,8 +192,8 @@ static void            InitParserContexts ()
 
    /* initialize GraphML parser */
    ctxt->NextParserCtxt = NULL;	/* last context */
-   ctxt->SSchemaName = (char*) TtaGetMemory (MAX_SS_NAME_LENGTH);
-   strcpy (ctxt->SSchemaName, "GraphML");
+   ctxt->SSchemaName = (STRING) TtaGetMemory (MAX_SS_NAME_LENGTH);
+   ustrcpy (ctxt->SSchemaName, "GraphML");
    ctxt->XMLSSchema = NULL;
    ctxt->InitBuilder = (Proc) GetGraphMLSSchema;
    ctxt->MapElementType = (Proc) MapGraphMLElementType;
@@ -213,11 +213,11 @@ static void            InitParserContexts ()
    GetXMLElementNameFromThotType
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void  GetXMLElementNameFromThotType (ElementType elType, char **buffer)
+void  GetXMLElementNameFromThotType (ElementType elType, STRING *buffer)
 #else
 void  GetXMLElementNameFromThotType (elType, buffer)
 ElementType elType;
-char **buffer;
+STRING *buffer;
 
 #endif
 {
@@ -234,10 +234,10 @@ char **buffer;
 
       ctxt = firstParserCtxt;
       while (ctxt != NULL &&
-	    strcmp (ctxt->SSchemaName, TtaGetSSchemaName (elType.ElSSchema)))
+	    ustrcmp (ctxt->SSchemaName, TtaGetSSchemaName (elType.ElSSchema)))
 	 ctxt = ctxt->NextParserCtxt;
       if (ctxt != NULL &&
-	  !strcmp (ctxt->SSchemaName, TtaGetSSchemaName (elType.ElSSchema)))
+	  !ustrcmp (ctxt->SSchemaName, TtaGetSSchemaName (elType.ElSSchema)))
 	 (*(ctxt->GetElementName)) (elType, buffer);
       }
 }
@@ -285,7 +285,7 @@ Document doc;
 
       ctxt = firstParserCtxt;
       while (ctxt != NULL &&
-	    strcmp (ctxt->SSchemaName, TtaGetSSchemaName (elType.ElSSchema)))
+	    ustrcmp (ctxt->SSchemaName, TtaGetSSchemaName (elType.ElSSchema)))
 	 ctxt = ctxt->NextParserCtxt;
       if (ctxt != NULL)
 	 (*(ctxt->ElementComplete)) (el, doc);
@@ -296,10 +296,10 @@ Document doc;
    CreateTextElement
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void CreateTextElement (char *text, Language lang)
+static void CreateTextElement (STRING text, Language lang)
 #else
 static void CreateTextElement (text, lang)
-char *text;
+STRING text;
 Language lang;
 
 #endif
@@ -338,7 +338,7 @@ void         XMLTextToDocument ()
   if (inputBuffer[firstChar] != EOS)
      {
      /* suppress trailing spaces */
-     lastChar = strlen (inputBuffer) - 1;
+     lastChar = ustrlen (inputBuffer) - 1;
      for (i = lastChar; inputBuffer[i] <= SPACE && i > 0; i--);     
      inputBuffer[i+1] = EOS;
      CreateTextElement (&(inputBuffer[firstChar]), currentLanguage);
@@ -354,10 +354,10 @@ void         XMLTextToDocument ()
    Put the preceding text in the Thot document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         StartOfTag (char c)
+static void         StartOfTag (CHAR c)
 #else
 static void         StartOfTag (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -370,10 +370,10 @@ char                c;
    Put character c in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutInBuffer (unsigned char c)
+static void         PutInBuffer (UCHAR c)
 #else
 static void         PutInBuffer (c)
-unsigned char       c;
+UCHAR               c;
 
 #endif
 {
@@ -414,16 +414,16 @@ unsigned char       c;
    Get the parser context correponding to a given DTD
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ChangeParserContext (char *DTDname)
+static void         ChangeParserContext (STRING DTDname)
 #else
 static void         ChangeParserContext (DTDname)
-char                *DTDname;
+STRING              DTDname;
  
 #endif
 {
   currentParserCtxt = firstParserCtxt;
   while (currentParserCtxt != NULL &&
-	 strcmp (DTDname, currentParserCtxt->SSchemaName))
+	 ustrcmp (DTDname, currentParserCtxt->SSchemaName))
      currentParserCtxt = currentParserCtxt->NextParserCtxt;
   /* initialize the corresponding builder */
   if (currentParserCtxt != NULL)
@@ -439,10 +439,10 @@ char                *DTDname;
    Close the corresponding Thot element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfXMLEndTag (char c)
+static void         EndOfXMLEndTag (CHAR c)
 #else
 static void         EndOfXMLEndTag (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -471,16 +471,16 @@ char                c;
    A ">" or a "/" has been read. It indicates the end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfStartTag (char c)
+static void         EndOfStartTag (CHAR c)
 #else
 static void         EndOfStartTag (c)
-char                c;
+CHAR                c;
 
 #endif
 {
-  char	DTDname[100];
-  unsigned char        msgBuffer[MAX_BUFFER_LENGTH];
-  unsigned char *      s;
+  CHAR	  DTDname[100];
+  UCHAR   msgBuffer[MAX_BUFFER_LENGTH];
+  USTRING s;
 
   if (currentElementContent == 'X' && c != '/')
      /* the current element will contain elements from another DTD */
@@ -489,7 +489,7 @@ char                c;
      DTDname[0] = EOS;
      if (XMLelementType[stackLevel-1] != NULL)
         (*(currentParserCtxt->GetDTDName))(DTDname, XMLelementType[stackLevel-1]);
-     if (strcmp (DTDname, "HTML") == 0)
+     if (ustrcmp (DTDname, "HTML") == 0)
 	{
 	ParseIncludedHTML (currentElement, XMLelementType[stackLevel-1]);
 	/* when returning from the HTML parser, the end tag has already
@@ -538,10 +538,10 @@ char                c;
     A ">" after a "/" has been read. It indicates the end of a empty tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfEmptyTag (char c)
+static void         EndOfEmptyTag (CHAR c)
 #else
 static void         EndOfEmptyTag (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -555,13 +555,13 @@ char                c;
    Returns -1 and schema = NULL if not found.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               MapXMLElementType (char *XMLname, ElementType *elType, char** mappedName, char* content, Document doc)
+void               MapXMLElementType (STRING XMLname, ElementType *elType, STRING* mappedName, STRING content, Document doc)
 #else
 void               MapXMLElementType (XMLname, elType, mappedName, content, doc)
-char               *XMLname;
+STRING              XMLname;
 ElementType        *elType;
-char               **mappedName;
-char		   *content;
+STRING*             mappedName;
+STRING              content;
 Document            doc;
 #endif
 {
@@ -579,7 +579,7 @@ Document            doc;
       /* The schema is known -> search the corresponding context */
       ctxt = firstParserCtxt;
       while (ctxt != NULL &&
-	     strcmp (TtaGetSSchemaName (elType->ElSSchema), ctxt->SSchemaName))
+	     ustrcmp (TtaGetSSchemaName (elType->ElSSchema), ctxt->SSchemaName))
 	  ctxt = ctxt->NextParserCtxt;
       /* get the Thot element number */
       if (ctxt != NULL)
@@ -609,17 +609,17 @@ Document            doc;
    Create the corresponding Thot element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfStartGI (char c)
+static void         EndOfStartGI (CHAR c)
 #else
 static void         EndOfStartGI (c)
-char                c;
+CHAR                c;
 #endif
 {
    Element		newElement;
    ElementType		elType;
    int			i;
-   char			*typeName;
-   unsigned char        msgBuffer[MAX_BUFFER_LENGTH];
+   STRING		typeName;
+   UCHAR                msgBuffer[MAX_BUFFER_LENGTH];
 
    /* close the input buffer */
    inputBuffer[bufferLength] = EOS;
@@ -673,10 +673,10 @@ char                c;
    end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfStartGIandTag (char c)
+static void         EndOfStartGIandTag (CHAR c)
 #else
 static void         EndOfStartGIandTag (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -690,15 +690,15 @@ char                c;
    Check that it closes the right element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfClosingTagName (char c)
+static void         EndOfClosingTagName (CHAR c)
 #else
 static void         EndOfClosingTagName (c)
-char                c;
+CHAR                c;
 
 #endif
 {
   int		    i;
-  unsigned char     msgBuffer[MAX_BUFFER_LENGTH];
+  UCHAR             msgBuffer[MAX_BUFFER_LENGTH];
 
   /* close the input buffer */
   inputBuffer[bufferLength] = EOS;
@@ -718,7 +718,7 @@ char                c;
 	calling parser */
      lastTagRead = TRUE;
      if (XMLrootClosingTag && XMLrootClosingTag != EOS &&
-         strcasecmp (&inputBuffer[i], XMLrootClosingTag))
+         ustrcasecmp (&inputBuffer[i], XMLrootClosingTag))
 	/* wrong closing tag */
 	{
         sprintf (msgBuffer, "Unexpected end tag </%s> instead of </%s>",
@@ -729,7 +729,7 @@ char                c;
   else
      if (XMLelementType[stackLevel - 1] != NULL)
        /* the corresponding opening tag was a known tag */
-       if (strcmp(&inputBuffer[i], XMLelementType[stackLevel - 1]) != 0)
+       if (ustrcmp(&inputBuffer[i], XMLelementType[stackLevel - 1]) != 0)
           /* the end tag does not close the current element */
           {
           /* print an error message */
@@ -747,10 +747,10 @@ char                c;
    An element name followed by a '>' has been read in a closing tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfNameAndClosingTag (char c)
+static void         EndOfNameAndClosingTag (CHAR c)
 #else
 static void         EndOfNameAndClosingTag (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -764,17 +764,17 @@ char                c;
    Create the corresponding Thot attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfAttrName (char c)
+static void         EndOfAttrName (CHAR c)
 #else
 static void         EndOfAttrName (c)
-char                c;
+CHAR                c;
 
 #endif
 {
   Attribute	attr, oldAttr;
   AttributeType	attrType;
   int		i;
-  unsigned char msgBuffer[MAX_BUFFER_LENGTH];
+  UCHAR         msgBuffer[MAX_BUFFER_LENGTH];
 
   /* close the input buffer */
   inputBuffer[bufferLength] = EOS;
@@ -785,7 +785,7 @@ char                c;
      {
      attrType.AttrTypeNum = 0;
      i = 0;
-     if (strncmp (inputBuffer, "xml:", 4) == 0)
+     if (ustrncmp (inputBuffer, "xml:", 4) == 0)
         /* special xml attributes */
         (*(currentParserCtxt->MapAttribute)) (&inputBuffer[4], &attrType,
 					      XMLelementType[stackLevel-1],
@@ -809,7 +809,7 @@ char                c;
 	MapHTMLAttribute (&inputBuffer[i], &attrType,
 			  XMLelementType[stackLevel-1], currentDocument);
 	if (attrType.AttrTypeNum > 0)
-	   if (strcasecmp (&inputBuffer[i], "style") == 0)
+	   if (ustrcasecmp (&inputBuffer[i], "style") == 0)
 	      HTMLStyleAttribute = TRUE;
 	}
      if (attrType.AttrTypeNum <= 0)
@@ -845,10 +845,10 @@ char                c;
    name and the end of a start tag.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfAttrNameAndTag (char c)
+static void         EndOfAttrNameAndTag (CHAR c)
 #else
 static void         EndOfAttrNameAndTag (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -862,16 +862,16 @@ char                c;
    Put that value in the current Thot attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfAttrValue (char c)
+static void         EndOfAttrValue (CHAR c)
 #else
 static void         EndOfAttrValue (c)
-char                c;
+CHAR                c;
 
 #endif
 {
    AttributeType	attrType;
    int			attrKind, val;
-   unsigned char msgBuffer[MAX_BUFFER_LENGTH];
+   UCHAR                msgBuffer[MAX_BUFFER_LENGTH];
 
    /* close the input buffer */
    inputBuffer[bufferLength] = EOS;
@@ -903,7 +903,7 @@ char                c;
 	   TtaSetAttributeText (currentAttribute, inputBuffer, currentElement,
 				currentDocument);
 	   if (HTMLStyleAttribute)
-	      ParseHTMLSpecificStyle (currentElement, (char *) inputBuffer,
+	      ParseHTMLSpecificStyle (currentElement, (STRING) inputBuffer,
 				      currentDocument, FALSE);
 	   break;
 	case 3:       /* reference */
@@ -926,10 +926,10 @@ char                c;
    A character '&' has been encountered.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         StartOfEntity (char c)
+static void         StartOfEntity (CHAR c)
 #else
 static void         StartOfEntity (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -942,28 +942,28 @@ char                c;
    and put the corresponding content in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfEntity (char c)
+static void         EndOfEntity (CHAR c)
 #else
 static void         EndOfEntity (c)
-char                c;
+CHAR                c;
 
 #endif
 {
-   int                 i;
-   unsigned char       msgBuffer[MAX_BUFFER_LENGTH];
-   unsigned char       entityValue[MAX_ENTITY_LENGTH];	
-   char		       alphabet;
-   Language	       lang;
+   int         i;
+   UCHAR       msgBuffer[MAX_BUFFER_LENGTH];
+   UCHAR       entityValue[MAX_ENTITY_LENGTH];	
+   CHAR	       alphabet;
+   Language    lang;
 
    entityName[entityNameLength] = EOS;
 
    /* First, look in the predifined entities table */
    for (i = 0; XMLpredifinedEntities[i].charCode > 0 &&
-	       strcmp (XMLpredifinedEntities[i].charName, entityName);
+	       ustrcmp (XMLpredifinedEntities[i].charName, entityName);
 	       i++);
-   if (!strcmp (XMLpredifinedEntities[i].charName, entityName))
+   if (!ustrcmp (XMLpredifinedEntities[i].charName, entityName))
       /* entity found in the predifined table */
-      PutInBuffer ((char) (XMLpredifinedEntities[i].charCode));
+      PutInBuffer ((CHAR) (XMLpredifinedEntities[i].charCode));
    else
       /* entity not in the predifined table */
       {
@@ -1014,10 +1014,10 @@ char                c;
    A character belonging to an XML entity has been read.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EntityChar (unsigned char c)
+static void         EntityChar (UCHAR c)
 #else
 static void         EntityChar (c)
-unsigned char       c;
+UCHAR       c;
 
 #endif
 {
@@ -1051,10 +1051,10 @@ unsigned char       c;
    having that code in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfNumEntity (char c)
+static void         EndOfNumEntity (CHAR c)
 #else
 static void         EndOfNumEntity (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -1062,7 +1062,7 @@ char                c;
 
    entityName[entityNameLength] = EOS;
    sscanf (entityName, "%d", &code);
-   PutInBuffer ((char) code);
+   PutInBuffer ((CHAR) code);
    entityNameLength = 0;
 }
 
@@ -1072,10 +1072,10 @@ char                c;
    Put that character in the entity buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         NumEntityChar (char c)
+static void         NumEntityChar (CHAR c)
 #else
 static void         NumEntityChar (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -1103,10 +1103,10 @@ char                c;
    The character following '/' in a start tag is not '>'.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         XMLerror (char c)
+static void         XMLerror (CHAR c)
 #else
 static void         XMLerror (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -1118,10 +1118,10 @@ char                c;
    Put '& ' in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutAmpersandSpace (char c)
+static void         PutAmpersandSpace (CHAR c)
 #else
 static void         PutAmpersandSpace (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -1135,18 +1135,18 @@ char                c;
    Beginning of an XML comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         StartOfComment (char c)
+static void         StartOfComment (CHAR c)
 #else
 static void         StartOfComment (c)
-char                c;
+CHAR                c;
 
 #endif
 {
    ElementType	elType;
    Element	commentEl, commentLineEl;
-   char		*typeName;
-   unsigned char msgBuffer[MAX_BUFFER_LENGTH];
-   char		cont;
+   STRING	typeName;
+   UCHAR msgBuffer[MAX_BUFFER_LENGTH];
+   CHAR		cont;
 
    /* create a Thot element for the comment */
    elType.ElSSchema = NULL;
@@ -1184,17 +1184,17 @@ char                c;
    Put character c in the current XML comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutInComment (unsigned char c)
+static void         PutInComment (UCHAR c)
 #else
 static void         PutInComment (c)
-unsigned char       c;
+UCHAR       c;
  
 #endif
 {
    ElementType	elType;
    Element	commentLineEl;
-   char		*typeName;
-   char		cont;
+   STRING	typeName;
+   CHAR		cont;
 
    if (c != EOS)
       if ((int) c == 10 || (int) c == 13)
@@ -1236,10 +1236,10 @@ unsigned char       c;
    End of an XML comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfComment (char c)
+static void         EndOfComment (CHAR c)
 #else
 static void         EndOfComment (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -1259,10 +1259,10 @@ char                c;
    Put a dash character in the current comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutDash (char c)
+static void         PutDash (CHAR c)
 #else
 static void         PutDash (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -1274,10 +1274,10 @@ char                c;
    PutQuestionMark put a question mark in the current PI.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutQuestionMark (char c)
+static void         PutQuestionMark (CHAR c)
 #else
 static void         PutQuestionMark (c)
-char                c;
+CHAR                c;
  
 #endif
 {
@@ -1289,10 +1289,10 @@ char                c;
    EndOfDeclaration
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfDeclaration (char c)
+static void         EndOfDeclaration (CHAR c)
 #else
 static void         EndOfDeclaration (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -1306,10 +1306,10 @@ char                c;
    EndOfPI      A Processing Instruction has been read
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfPI (char c)
+static void         EndOfPI (CHAR c)
 #else
 static void         EndOfPI (c)
-char                c;
+CHAR                c;
  
 #endif
 {
@@ -1332,10 +1332,10 @@ char                c;
    Do nothing.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         Do_nothing (char c)
+static void         Do_nothing (CHAR c)
 #else
 static void         Do_nothing (c)
-char                c;
+CHAR                c;
 
 #endif
 {
@@ -1348,7 +1348,7 @@ typedef struct _Transition *PtrTransition;
 /* a transition of the automaton in "executable" form */
 typedef struct _Transition
   {
-     unsigned char       trigger;	/* the imput character that triggers
+     UCHAR       trigger;	/* the imput character that triggers
 					   the transition */
      Proc                action;	/* the procedure to be called when
 					   the transition occurs */
@@ -1374,7 +1374,7 @@ static StateDescr	XMLautomaton[MAX_STATE];
 typedef struct _sourceTransition
   {
      state               initState;	/* initial state of transition */
-     char                trigger;	/* the imput character that triggers
+     CHAR                trigger;	/* the imput character that triggers
 					   the transition */
      Proc                transitionAction;/* the procedure to be called when
 					   the transition occurs */
@@ -1588,19 +1588,19 @@ void                FreeXMLParser ()
    closingTag: name of the tag that should terminate the tree to be parsed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void	XMLparse (char* DTDname, Document doc, Element el, boolean isclosed, Language lang, char *closingTag)
+void	XMLparse (STRING DTDname, Document doc, Element el, boolean isclosed, Language lang, STRING closingTag)
 #else
 void	XMLparse (DTDname, doc, el, isclosed, lang, closingTag)
-char	 *DTDname;
+STRING   DTDname;
 Document doc;
 Element  el;
 boolean isclosed;
 Language lang;
-char *closingTag;
+STRING closingTag;
 
 #endif
 {
-  unsigned char       charRead;
+  UCHAR       charRead;
   boolean             match;
   PtrTransition       trans;
   boolean	      endOfFile;
@@ -1614,7 +1614,7 @@ char *closingTag;
   boolean	      oldElementClosed;
   Attribute	      oldAttribute;
   boolean	      oldXMLrootClosed;
-  char		      *oldXMLrootClosingTag;
+  STRING	      oldXMLrootClosingTag;
   int		      oldXMLrootLevel;
   boolean	      oldlastTagRead;
   int		      oldStackLevel;

@@ -9,16 +9,16 @@
 extern CSSInfoPtr AddCSS ( Document doc,
                            Document docRef,
                            CSSCategory category,
-                           char *url,
-                           char *localName );
+                           STRING url,
+                           STRING localName );
 extern CSSInfoPtr SearchCSS ( Document doc,
-                              char *url );
+                              STRING url );
 extern void RemoveDocCSSs ( Document doc,
                             boolean removeFile );
 extern PSchema GetPExtension ( Document doc,
                                SSchema sSchema,
                                CSSInfoPtr css );
-extern void LoadHTMLStyleSheet ( char *URL,
+extern void LoadHTMLStyleSheet ( STRING URL,
                                  Document doc,
                                  CSSInfoPtr css );
 extern void LoadUserStyleSheet ( Document doc );
@@ -29,16 +29,16 @@ extern void InitCSS ( void );
 extern CSSInfoPtr AddCSS (/* Document doc,
                              Document docRef,
                              CSSCategory category,
-                             char *url,
-                             char *localName */);
+                             STRING url,
+                             STRING localName */);
 extern CSSInfoPtr SearchCSS (/* Document doc,
-                                char *url */);
+                                STRING url */);
 extern void RemoveDocCSSs (/* Document doc,
                               boolean removeFile */);
 extern PSchema GetPExtension (/* Document doc,
                                  SSchema sSchema,
                                  CSSInfoPtr css */);
-extern void LoadHTMLStyleSheet (/* char *URL,
+extern void LoadHTMLStyleSheet (/* STRING URL,
                                    Document doc,
                                    CSSInfoPtr css */);
 extern void LoadUserStyleSheet (/* Document doc */);

@@ -22,8 +22,8 @@
 /* a record in an history */
 typedef struct _HistElement
 {
-	char*	HistUrl;	/* document URL */
-        char*   form_data;       /* data associated with forms */
+	STRING	HistUrl;	/* document URL */
+        STRING  form_data;       /* data associated with forms */
         int     method;         /* method used to request this URL */
 	int	HistPosition;	/* volume preceding the first element to be
 				made visible in the main window */
@@ -189,9 +189,9 @@ int             RelativePosition (doc, distance)
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void               GotoPreviousHTML_callback (int newdoc, int status, 
-					      char *urlName,
-					      char *outputfile, 
-					      char *content_type,
+					      STRING urlName,
+					      STRING outputfile, 
+					      STRING content_type,
 					      void * context)
 #else  /* __STDC__ */
 void               GotoPreviousHTML_callback (newdoc, status, urlName,
@@ -199,9 +199,9 @@ void               GotoPreviousHTML_callback (newdoc, status, urlName,
                                              context)
 int newdoc;
 int status;
-char *urlName;
-char *outputfile;
-char *content_type;
+STRING urlName;
+STRING outputfile;
+STRING content_type;
 void *context;
 #endif
 {
@@ -242,8 +242,8 @@ View                view;
 #endif
 {
    GotoHistory_context *ctx;
-   char               *url = NULL;
-   char               *form_data = NULL;
+   STRING              url = NULL;
+   STRING              form_data = NULL;
    int                 prev, i;
    int                 method;
    boolean	       last, hist;
@@ -274,7 +274,7 @@ View                view;
    if (!form_data && (!DocumentMeta[doc]  || !DocumentMeta[doc]->form_data))
      same_form_data = TRUE;
    else if (form_data && DocumentMeta[doc] && DocumentMeta[doc]->form_data 
-	    && (!strcmp (form_data, DocumentMeta[doc]->form_data)))
+	    && (!ustrcmp (form_data, DocumentMeta[doc]->form_data)))
      same_form_data = TRUE;
    else
      same_form_data = FALSE;
@@ -282,7 +282,7 @@ View                view;
    /* if the document has been edited, ask the user to confirm, except
       if it's simply a jump in the same document */
    if (DocumentURLs[doc] != NULL)
-     if (strcmp(DocumentURLs[doc], url)
+     if (ustrcmp(DocumentURLs[doc], url)
 	 || !same_form_data)
        if (!CanReplaceCurrentDocument (doc, view))
          return;
@@ -328,7 +328,7 @@ View                view;
 
    DocHistoryIndex[doc] = prev;
    /* is it the current document ? */     
-   if (DocumentURLs[doc] && !strcmp (url, DocumentURLs[doc]) && same_form_data)
+   if (DocumentURLs[doc] && !ustrcmp (url, DocumentURLs[doc]) && same_form_data)
      {
        /* it's just a move in the same document */
        GotoPreviousHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
@@ -346,9 +346,9 @@ View                view;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void               GotoNextHTML_callback (int newdoc, int status, 
-					      char *urlName,
-					      char *outputfile, 
-					      char *content_type,
+					      STRING urlName,
+					      STRING outputfile, 
+					      STRING content_type,
 					      void * context)
 #else  /* __STDC__ */
 void               GotoNextHTML_callback (newdoc, status, urlName,
@@ -356,9 +356,9 @@ void               GotoNextHTML_callback (newdoc, status, urlName,
                                              context)
 int newdoc;
 int status;
-char *urlName;
-char *outputfile;
-char *content_type;
+STRING urlName;
+STRING outputfile;
+STRING content_type;
 void *context;
 #endif
 {
@@ -397,8 +397,8 @@ View                view;
 #endif
 {
    GotoHistory_context  *ctx;
-   char         *url = NULL;
-   char         *form_data = NULL;
+   STRING        url = NULL;
+   STRING        form_data = NULL;
    int           method;
    int		 next, i;
    boolean       same_form_data;
@@ -422,7 +422,7 @@ View                view;
    if (!form_data && (!DocumentMeta[doc] || !DocumentMeta[doc]->form_data))
      same_form_data = TRUE;
    else if (form_data && DocumentMeta[doc] && DocumentMeta[doc]->form_data 
-	    && (!strcmp (form_data, DocumentMeta[doc]->form_data)))
+	    && (!ustrcmp (form_data, DocumentMeta[doc]->form_data)))
      same_form_data = TRUE;
    else
      same_form_data = FALSE;
@@ -430,7 +430,7 @@ View                view;
    /* if the document has been edited, ask the user to confirm, except
       if it's simply a jump in the same document */
    if (DocumentURLs[doc] != NULL)
-     if (strcmp(DocumentURLs[doc], DocHistory[doc][next].HistUrl)
+     if (ustrcmp(DocumentURLs[doc], DocHistory[doc][next].HistUrl)
 	 || !same_form_data)
        if (!CanReplaceCurrentDocument (doc, view))
          return;
@@ -467,7 +467,7 @@ View                view;
    ctx->doc = doc;
 
    /* is it the current document ? */
-   if (DocumentURLs[doc] && !strcmp (url, DocumentURLs[doc]) && same_form_data)
+   if (DocumentURLs[doc] && !ustrcmp (url, DocumentURLs[doc]) && same_form_data)
      /* it's just a move in the same document */
      GotoNextHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
    else
@@ -482,12 +482,12 @@ View                view;
    Add a new URL in the history associated with the window of document doc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                AddDocHistory (Document doc, char *url, char *form_data, ClickEvent method)
+void                AddDocHistory (Document doc, STRING url, STRING form_data, ClickEvent method)
 #else  /* __STDC__ */
 void                AddDocHistory (doc, url, form_data, method)
 Document	    doc;
-char               *url;
-char               *form_data;
+STRING              url;
+STRING              form_data;
 ClickEvent          method;
 
 #endif /* __STDC__ */

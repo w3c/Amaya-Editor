@@ -31,7 +31,7 @@
 /* the structure used for storing the context of the 
    FetchAndDisplayImages_callback function */
 typedef struct _FetchImage_context {
-  char *base_url;
+  STRING base_url;
   LoadedImageDesc    *desc;
 } FetchImage_context;
 
@@ -46,18 +46,18 @@ typedef struct _FetchImage_context {
    descriptor entry and the value FALSE.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             AddLoadedImage (char *name, char *pathname, Document doc, LoadedImageDesc ** desc)
+boolean             AddLoadedImage (STRING name, STRING pathname, Document doc, LoadedImageDesc ** desc)
 #else  /* __STDC__ */
 boolean             AddLoadedImage (name, pathname, doc, desc)
-char               *name;
-char               *pathname;
+STRING              name;
+STRING              pathname;
 Document            doc;
 LoadedImageDesc   **desc;
 
 #endif /* __STDC__ */
 {
    LoadedImageDesc    *pImage, *previous, *sameImage;
-   char*               localname;
+   STRING               localname;
 
    *desc = NULL;
    sameImage = NULL;
@@ -73,7 +73,7 @@ LoadedImageDesc   **desc;
    previous = NULL;
    while (pImage != NULL)
      {
-	if (strcmp (pathname, pImage->originalName) == 0)
+	if (ustrcmp (pathname, pImage->originalName) == 0)
 	  {
 	     /* image already loaded */
 	     sameImage = pImage;
@@ -100,10 +100,10 @@ LoadedImageDesc   **desc;
 
    /* It is a new loaded image */
    pImage = (LoadedImageDesc *) TtaGetMemory (sizeof (LoadedImageDesc));
-   pImage->originalName = TtaGetMemory (strlen (pathname) + 1);
-   strcpy (pImage->originalName, pathname);
-   pImage->localName = TtaGetMemory (strlen (localname) + 1);
-   strcpy (pImage->localName, localname);
+   pImage->originalName = TtaGetMemory (ustrlen (pathname) + 1);
+   ustrcpy (pImage->originalName, pathname);
+   pImage->localName = TtaGetMemory (ustrlen (localname) + 1);
+   ustrcpy (pImage->localName, localname);
    pImage->prevImage = previous;
    if (previous != NULL)
       previous->nextImage = pImage;
@@ -136,10 +136,10 @@ LoadedImageDesc   **desc;
    The function returns the descriptor entry or NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-LoadedImageDesc    *SearchLoadedImage (char *localpath, Document doc)
+LoadedImageDesc    *SearchLoadedImage (STRING localpath, Document doc)
 #else  /* __STDC__ */
 LoadedImageDesc    *SearchLoadedImage (localpath, doc)
-char               *localpath;
+STRING              localpath;
 Document            doc;
 #endif /* __STDC__ */
 {
@@ -152,7 +152,7 @@ Document            doc;
       pImage = ImageURLs;
       while (pImage != NULL)
 	{
-	  if (strcmp (localpath, pImage->localName) == 0 && 
+	  if (ustrcmp (localpath, pImage->localName) == 0 && 
 	      ((doc == 0) || (pImage->document == doc)))
 	    /* image found */
 	    return (pImage);
@@ -184,7 +184,7 @@ int                 oldHeight;
    AttributeType       attrType;
    Attribute           attr;
    Element             el, child;
-   char               *text;
+   STRING              text;
    int                 shape, w, h, length;
    int                 deltax, deltay, val;
    DisplayMode         dispMode;
@@ -320,12 +320,12 @@ int                 oldHeight;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplayImage (Document doc, Element el, char *imageName)
+void                DisplayImage (Document doc, Element el, STRING imageName)
 #else  /* __STDC__ */
 void                DisplayImage (doc, el, imageName)
 Document            doc;
 Element             el;
-char               *imageName;
+STRING              imageName;
 #endif /* __STDC__ */
 {
   ElementType         elType;
@@ -361,24 +361,24 @@ char               *imageName;
    		from the web.						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                HandleImageLoaded (int doc, int status, char *urlName,
-                                     char *outputfile, void * context)
+void                HandleImageLoaded (int doc, int status, STRING urlName,
+                                     STRING outputfile, void * context)
 #else  /* __STDC__ */
 void                HandleImageLoaded (doc, status, urlName, outputfile, context)
 int doc;
 int status;
-char *urlName;
-char *outputfile;
+STRING urlName;
+STRING outputfile;
 void *context;
 
 #endif /* __STDC__ */
 {
-   char               *pathname;
-   char*               tempfile;
+   STRING              pathname;
+   STRING               tempfile;
    FetchImage_context  *FetchImage_ctx;
    LoadedImageDesc    *desc;
-   char               *base_url;
-   char               *ptr;
+   STRING              base_url;
+   STRING              ptr;
    ElemImage          *ctxEl, *ctxPrev;
    ElementType         elType;
 
@@ -391,7 +391,7 @@ void *context;
        TtaFreeMemory (FetchImage_ctx);
        
        /* check if this request wasn't aborted */
-       if (strcmp (base_url, DocumentURLs[doc]))
+       if (ustrcmp (base_url, DocumentURLs[doc]))
 	 {
 	   /* it's not the same url, so let's just return */
 	   TtaFreeMemory (base_url);
@@ -410,21 +410,21 @@ void *context;
 	/* the image could not be loaded */
 	if ((status != 200) && (status != 0))
 	   return;
-	tempfile = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
+	tempfile = (STRING) TtaGetMemory (sizeof (CHAR) * MAX_LENGTH);
 	/* rename the local file of the image */
-	strcpy (tempfile, desc->localName);
+	ustrcpy (tempfile, desc->localName);
 	
 	/* If this is an image document, point to the correct files */
 	if (DocumentTypes[doc] == docImage)
 	  {
-	    ptr = strrchr (tempfile, '.');
+	    ptr = ustrrchr (tempfile, '.');
 	    if (ptr) 
 	      {
 		ptr++;
-		strcpy (ptr, "html");
+		ustrcpy (ptr, "html");
 	      }
 	    else
-	      strcat (tempfile, ".html");
+	      ustrcat (tempfile, ".html");
 	    TtaFreeMemory (desc->localName);
 	    desc->localName = TtaStrdup (tempfile);
 	  }
@@ -442,9 +442,9 @@ void *context;
 	/* save pathname */
 	TtaFreeMemory (desc->originalName);
 	pathname = urlName;
-	desc->originalName = TtaGetMemory (strlen (pathname) + 1);
+	desc->originalName = TtaGetMemory (ustrlen (pathname) + 1);
 	desc->status = IMAGE_LOADED;
-	strcpy (desc->originalName, pathname);
+	ustrcpy (desc->originalName, pathname);
 	/* display for each elements in the list */
 	ctxEl = desc->elImage;
 	desc->elImage = NULL;
@@ -471,17 +471,17 @@ void *context;
                 is loaded from the web.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                libWWWImageLoaded (int doc, int status, char *urlName,
-                                     char *outputfile, char *content_type,
+void                libWWWImageLoaded (int doc, int status, STRING urlName,
+                                     STRING outputfile, STRING content_type,
 				       void * context)
 #else  /* __STDC__ */
 void                libWWWImageLoaded (doc, status, urlName, outputfile, 
 				       content_type, context)
 int doc;
 int status;
-char *urlName;
-char *outputfile;
-char *content_type;
+STRING urlName;
+STRING outputfile;
+STRING content_type;
 void *context;
 
 #endif /* __STDC__ */
@@ -510,15 +510,15 @@ void *context;
    The non-null returned string has the form "?X,Y"        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *GetActiveImageInfo (Document document, Element element)
+STRING              GetActiveImageInfo (Document document, Element element)
 #else  /* __STDC__ */
-char               *GetActiveImageInfo (document, element)
+STRING              GetActiveImageInfo (document, element)
 Document            document;
 Element             element;
 
 #endif /* __STDC__ */
 {
-   char               *ptr;
+   STRING              ptr;
    int                 X, Y;
 
    ptr = NULL;
@@ -546,13 +546,13 @@ Element             element;
    may indicate extra transfer parameters, for example bypassing the cache.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FetchImage (Document doc, Element el, char *URL, int flags,
+void                FetchImage (Document doc, Element el, STRING URL, int flags,
                                 LoadedImageCallback callback, void *extra)
 #else  /* __STDC__ */
 void                FetchImage (doc, el, URL, flags, callback, extra)
 Document            doc;
 Element             el;
-char               *URL;
+STRING              URL;
 int                 flags;
 LoadedImageCallback callback;
 void               *extra;
@@ -563,9 +563,9 @@ void               *extra;
   AttributeType       attrType;
   Attribute           attr;
   LoadedImageDesc    *desc;
-  char               *imageName;
-  char                pathname[MAX_LENGTH];
-  char                tempfile[MAX_LENGTH];
+  STRING              imageName;
+  CHAR                pathname[MAX_LENGTH];
+  CHAR                tempfile[MAX_LENGTH];
   int                 length, i;
   boolean             update;
   boolean             newImage;
@@ -654,7 +654,7 @@ void               *extra;
 		  /* it is a local image */
 		if (callback)
 		  {
-		    if (!strncmp(pathname, "file:/", 6))
+		    if (!ustrncmp(pathname, "file:/", 6))
 		      callback(doc, el, &pathname[6], extra);
 		    else
 		      callback(doc, el, &pathname[0], extra);
@@ -719,7 +719,7 @@ int                 flags;
    Attribute           attr;
    Element             el, elFound;
    ElementType         elType;
-   char               *currentURL;
+   STRING              currentURL;
    boolean             stopped_flag;
 
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
@@ -754,7 +754,7 @@ int                 flags;
      {
 	TtaHandlePendingEvents ();
 	/* verify if StopTransfer was called */
-	if (DocumentURLs[doc] == NULL || strcmp (currentURL, DocumentURLs[doc]))
+	if (DocumentURLs[doc] == NULL || ustrcmp (currentURL, DocumentURLs[doc]))
 	    /* the document has been removed */
 	    break;
 

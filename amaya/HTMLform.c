@@ -35,12 +35,12 @@
 #include "HTMLactions_f.h"
 #include "HTMLform_f.h"
 
-static char        *buffer;    /* temporary buffer used to build the query
+static STRING       buffer;    /* temporary buffer used to build the query
 				  string */
 static int          lgbuffer;  /* size of the temporary buffer */
 static int          documentStatus;
  
-extern char               *GetActiveImageInfo (Document document, Element element);
+extern STRING GetActiveImageInfo (Document document, Element element);
 
 #ifdef _WINDOWS 
 extern HWND FrMainRef [12];
@@ -83,11 +83,11 @@ void RestoreDocumentStatus (event)
   writes the equivalent escape code of a car in a string		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EscapeChar (char *string, unsigned char c)
+static void         EscapeChar (STRING string, UCHAR c)
 #else
 static void         EscapeChar (string, c)
-char               *string;
-unsigned char       c;
+STRING              string;
+UCHAR               c;
 
 #endif
 {
@@ -100,33 +100,33 @@ unsigned char       c;
   reallocates memory and concatenates a string into buffer	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         AddToBuffer (char *orig)
+static void         AddToBuffer (STRING orig)
 #else
 static void         AddToBuffer (orig)
-char               *orig;
+STRING              orig;
 
 #endif
 {
    void               *status;
    int                 lg;
 
-   lg = strlen (orig) + 1;
-   if (strlen (buffer) + lg > lgbuffer)
+   lg = ustrlen (orig) + 1;
+   if (ustrlen (buffer) + lg > lgbuffer)
      {
 	/* it is necessary to extend the buffer */
 	if (lg < PARAM_INCREMENT)
 	   lg = PARAM_INCREMENT;
-	status = TtaRealloc (buffer, sizeof (char) * (lgbuffer + lg));
+	status = TtaRealloc (buffer, sizeof (CHAR) * (lgbuffer + lg));
 
 	if (status != NULL)
 	  {
 	     buffer = status;
 	     lgbuffer += lg;
-	     strcat (buffer, orig);
+	     ustrcat (buffer, orig);
 	  }
      }
    else
-      strcat (buffer, orig);
+      ustrcat (buffer, orig);
 }
 
 
@@ -135,19 +135,19 @@ char               *orig;
   add a string into the query buffer				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         AddElement (unsigned char *element)
+static void         AddElement (USTRING element)
 #else
 static void         AddElement (element)
-unsigned char      *element;
+USTRING             element;
 
 #endif
 {
-   char                tmp[4] = "%";
-   char                tmp2[2] = "a";
+   CHAR                tmp[4] = "%";
+   CHAR                tmp2[2] = "a";
 
-   if (buffer == (char *) NULL)
+   if (buffer == (STRING) NULL)
      {
-	buffer = (char *) TtaGetMemory (PARAM_INCREMENT);
+	buffer = (STRING) TtaGetMemory (PARAM_INCREMENT);
 	lgbuffer = PARAM_INCREMENT;
 	buffer[0] = EOS;
      }
@@ -209,15 +209,15 @@ unsigned char      *element;
   Removes beginning and ending spaces in a char string
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         TrimSpaces (char *string)
+static void         TrimSpaces (STRING string)
 #else
 static void         TrimSpaces (string)
-char               *string;
+STRING              string;
 #endif
 {
-  char *start;
-  char *end;
-  char *ptr;
+  STRING start;
+  STRING end;
+  STRING ptr;
 
   if (!string || *string == EOS)
     return;
@@ -245,10 +245,10 @@ char               *string;
   add a name=value pair, and a trailling & into the query buffer	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         AddNameValue (char *name, char *value)
+static void         AddNameValue (STRING name, STRING value)
 #else
 static void         AddNameValue (name, value)
-char               *name, *value,
+STRING              name, value,
 #endif
 {
    AddElement (name);
@@ -263,11 +263,11 @@ char               *name, *value,
   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SubmitOption (Element option, char *name, Document doc)
+static void         SubmitOption (Element option, STRING name, Document doc)
 #else
 static void         SubmitOption (option, name, doc)
 Element		    option;
-char		   *name;
+STRING	            name;
 Document	    doc;
 #endif
 {
@@ -275,7 +275,7 @@ Document	    doc;
   Attribute           attr;
   AttributeType       attrType;
   int                 length;
-  char                value[MAX_LENGTH];
+  CHAR                value[MAX_LENGTH];
   Language            lang;
 
   /* check if element is selected */
@@ -300,8 +300,8 @@ Document	    doc;
 	TtaGiveTextContent (elText, value, &length, &lang);
         }
       /* remove extra spaces */
-      TrimSpaces ((char *) &name);
-      TrimSpaces ((char *) &value);
+      TrimSpaces ((STRING) &name);
+      TrimSpaces ((STRING) &value);
       /* save the name/value pair of the element */
       AddNameValue (name, value);
       }
@@ -324,7 +324,7 @@ Document	   doc;
   ElementType         elType;
   Element             option, child;
   int                 length;
-  char                name[MAX_LENGTH];
+  CHAR                name[MAX_LENGTH];
   
   /* get the name of the Option Menu */
   length = MAX_LENGTH - 1;
@@ -512,7 +512,7 @@ int                 mode;
    Attribute           attr, attrS, def;
    AttributeType       attrType, attrTypeS;
    int                 length;
-   char                name[MAX_LENGTH], value[MAX_LENGTH];
+   CHAR                name[MAX_LENGTH], value[MAX_LENGTH];
    int                 modified = FALSE;
    Language            lang;
 
@@ -715,22 +715,22 @@ int                 mode;
   submits a form : builds the query string and sends the request	       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DoSubmit (Document doc, int method, char *action)
+static void         DoSubmit (Document doc, int method, STRING action)
 #else
 static void         DoSubmit (doc, method, action)
 Document            doc;
 int                 method;
-char               *action;
+STRING              action;
 
 #endif
 {
    int                 buffer_size;
    int                 i;
-   char               *urlName;
+   STRING              urlName;
 
    /* remove any trailing & */
    if (buffer)
-      buffer_size = strlen (buffer);
+      buffer_size = ustrlen (buffer);
    else
      {
        buffer_size = 0;
@@ -758,14 +758,14 @@ char               *action;
 			}	/* switch */
 	       break;		/* case INDEX */
 	    case HTML_ATTR_METHOD_VAL_Get_:
-	       urlName = TtaGetMemory (strlen (action) + buffer_size + 2);
-	       if (urlName != (char *) NULL)
+	       urlName = TtaGetMemory (ustrlen (action) + buffer_size + 2);
+	       if (urlName != (STRING) NULL)
 		 {
-		    strcpy (urlName, action);
+		    ustrcpy (urlName, action);
 		    /*** @@ removing it from here
-		    strcat (urlName, "?");
+		    ustrcat (urlName, "?");
 		    if (buffer_size)
-		      strcat (urlName, buffer);
+		      ustrcat (urlName, buffer);
 		      ***/
 		    GetHTMLDocument (urlName, buffer, doc, doc,
 				     CE_FORM_GET, TRUE, FALSE, FALSE);
@@ -802,12 +802,12 @@ Element             element;
    Attribute           attr;
    AttributeType       attrType;
    int                 i, length, button_type;
-   char               *action, *name, *value, *info;
+   STRING              action, name, value, info;
    int                 method;
    boolean	       found;
 
-   buffer = (char *) NULL;
-   action = (char *) NULL;
+   buffer = (STRING) NULL;
+   action = (STRING) NULL;
 
    /* find out the characteristics of the button which was pressed */
    found = FALSE;
@@ -863,7 +863,7 @@ Element             element;
 			length = TtaGetTextAttributeLength (attr);
 			name = TtaGetMemory (length + 3);
 			TtaGiveTextAttributeValue (attr, name, &length);
-			strcat (name, ". ");
+			ustrcat (name, ". ");
 			length ++;
 			/* get the x and y coordinates */
 			info = GetActiveImageInfo (doc, element);
@@ -1084,7 +1084,7 @@ Element             el;
    Attribute           attr, attrN;
    AttributeType       attrType, attrTypeN;
    int                 modified, length;
-   char                name[MAX_LENGTH], buffer[MAX_LENGTH];
+   CHAR                name[MAX_LENGTH], buffer[MAX_LENGTH];
 
    if (el == NULL)
       return;
@@ -1145,7 +1145,7 @@ Element             el;
 			      {
 				 length = MAX_LENGTH - 1;
 				 TtaGiveTextAttributeValue (attrN, buffer, &length);
-				 if (!strcmp (name, buffer))
+				 if (!ustrcmp (name, buffer))
 				   {
 				      /* same NAME: set the checked attribute to NO */
 				      attr = TtaGetAttribute (elForm, attrType);
@@ -1245,8 +1245,8 @@ Element             el;
    Attribute	       attr;
    SSchema	       htmlSch;
    int                 length, nbitems, lgmenu, i, nbsubmenus, nbsubitems;
-   char                text[MAX_LABEL_LENGTH];
-   char                buffmenu[MAX_LENGTH];
+   CHAR                text[MAX_LABEL_LENGTH];
+   CHAR                buffmenu[MAX_LENGTH];
    Language            lang;
    int                 modified;
    boolean	       multipleOptions, sel;

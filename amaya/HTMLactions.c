@@ -42,7 +42,7 @@
 #include "windialogapi_f.h"
 
 HWND currentWindow = NULL;
-static char WIN_buffer [1024];
+static CHAR WIN_buffer [1024];
 #endif /* _WINDOWS */
 
 /**** Some prototypes *****/
@@ -58,8 +58,8 @@ typedef struct _FollowTheLink_context {
   Document             doc;
   Element              anchor;
   Element              elSource;
-  char                *sourceDocUrl;
-  char                *url;
+  STRING               sourceDocUrl;
+  STRING               url;
 } FollowTheLink_context;
 
 extern boolean HTMLErrorsFound;
@@ -355,11 +355,11 @@ int		    *firstSelChar;
    comparing NAME attributes.              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Element             SearchNAMEattribute (Document doc, char *nameVal, Attribute ignore)
+Element             SearchNAMEattribute (Document doc, STRING nameVal, Attribute ignore)
 #else  /* __STDC__ */
 Element             SearchNAMEattribute (doc, nameVal, ignore)
 Document            doc;
-char               *nameVal;
+STRING              nameVal;
 Attribute           ignore;
 
 #endif /* __STDC__ */
@@ -369,7 +369,7 @@ Attribute           ignore;
    Attribute           nameAttr;
    boolean             found;
    int                 length;
-   char               *name;
+   STRING              name;
 
    el = TtaGetMainRoot (doc);
    attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
@@ -389,7 +389,7 @@ Attribute           ignore;
 		  {
 		     TtaGiveTextAttributeValue (nameAttr, name, &length);
 		     /* compare the NAME attribute */
-		     found = (strcmp (name, nameVal) == 0);
+		     found = (ustrcmp (name, nameVal) == 0);
 		     TtaFreeMemory (name);
 		  }
 	     }
@@ -417,7 +417,7 @@ Attribute           ignore;
 		   {
 		     TtaGiveTextAttributeValue (nameAttr, name, &length);
 		     /* compare the NAME attribute */
-		     found = (strcmp (name, nameVal) == 0);
+		     found = (ustrcmp (name, nameVal) == 0);
 		     TtaFreeMemory (name);
 		   }
 	       }
@@ -439,9 +439,9 @@ Attribute           ignore;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void               FollowTheLink_callback (int targetDocument, int status, 
-					   char *urlName,
-					   char *outputfile, 
-					   char *content_type,
+					   STRING urlName,
+					   STRING outputfile, 
+					   STRING content_type,
 					   void * context)
 #else  /* __STDC__ */
 void               FollowTheLink_callback (targetDocument, status, urlName,
@@ -449,9 +449,9 @@ void               FollowTheLink_callback (targetDocument, status, urlName,
                                              context)
 int TargetDocument;
 int status;
-char *url, urlName;
-char *outputfile;
-char *content_type;
+STRING url, urlName;
+STRING outputfile;
+STRING content_type;
 void *context;
 
 #endif
@@ -459,9 +459,9 @@ void *context;
   Element             elFound;
   ElementType         elType;
   Element             elSource;
-  Document             doc;
-  Element              anchor;
-  char                *sourceDocUrl, *url;
+  Document            doc;
+  Element             anchor;
+  STRING              sourceDocUrl, url;
   AttributeType       attrType;
   Attribute           PseudoAttr;
   SSchema             docSchema; 
@@ -495,7 +495,7 @@ void *context;
       if (targetDocument == doc)
 	/* the target document is in the same window as the
 	   source document */
-	if (strcmp (sourceDocUrl, DocumentURLs[targetDocument]))
+	if (ustrcmp (sourceDocUrl, DocumentURLs[targetDocument]))
 	  /* both document have different URLs */
 	  PseudoAttr = NULL;
      
@@ -569,8 +569,8 @@ Document            doc;
    ElementType         elType;
    Document            targetDocument;
    SSchema             HTMLSSchema;
-   char                documentURL[MAX_LENGTH];
-   char               *url, *form_data, *info, *sourceDocUrl;
+   CHAR                documentURL[MAX_LENGTH];
+   STRING              url, form_data, info, sourceDocUrl;
    int                 length;
    boolean		isHTML;
    FollowTheLink_context *ctx;
@@ -631,9 +631,9 @@ Document            doc;
 	     while (url[length] == ' ')
 		url[length--] = EOS;
 	     /* save the complete URL of the source document */
-	     length = strlen (DocumentURLs[doc])+1;
+	     length = ustrlen (DocumentURLs[doc])+1;
 	     sourceDocUrl = TtaGetMemory (length);
-	     strcpy (sourceDocUrl, DocumentURLs[doc]);
+	     ustrcpy (sourceDocUrl, DocumentURLs[doc]);
 	     /* save the context */
 	     ctx = TtaGetMemory (sizeof (FollowTheLink_context));
 	     ctx->anchor = anchor;
@@ -658,7 +658,7 @@ Document            doc;
 	     else
 		/* the target element seems to be in another document */
 	       {
-		 strncpy (documentURL, url, MAX_LENGTH - 1);
+		 ustrncpy (documentURL, url, MAX_LENGTH - 1);
 		 documentURL[MAX_LENGTH - 1] = EOS;
 		 url[0] = EOS;
 		 /* is the source element an image map? */
@@ -672,7 +672,7 @@ Document            doc;
 		     if (info != NULL)
 		       {
 			 /* @@ what do we do with the precedent parameters? */
-			strcat (documentURL, info);
+			ustrcat (documentURL, info);
 			TtaFreeMemory (info);
 		       }
 		   }
@@ -748,7 +748,7 @@ NotifyElement      *event;
 
    element = event->element;
    elType = TtaGetElementType (element);
-   isHTML = (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
+   isHTML = (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
 
    /* Check if the current element is interested in double click */
    ok = FALSE;
@@ -926,7 +926,7 @@ Document            doc;
    Element             textElem;
    int                 length;
    Language            lang;
-   char               *text;
+   STRING              text;
 
    if (TtaGetViewFrame (doc, 1) == 0)
       /* this document is not displayed */
@@ -955,8 +955,8 @@ Document       doc;
 #endif /* __STDC__ */
 {
   int                i;
-  char              *tempdocument;
-  char               htmlErrFile [80];
+  STRING             tempdocument;
+  CHAR               htmlErrFile [80];
 
   if (doc == 0)
     return;
@@ -1730,7 +1730,7 @@ Element             el;
    Attribute           attrNAME, attrHREF;
    AttributeType       attrType;
    ElementType	       elType;
-   char               *buffer;
+   STRING              buffer;
    int                 length;
 
    /* select target document and target anchor */
@@ -1784,7 +1784,7 @@ Element             el;
 	     buffer = TtaGetMemory (length + 1);
 	     /* copy the HREF attribute into the buffer */
 	     TtaGiveTextAttributeValue (attrHREF, buffer, &length);
-	     strcpy (AttrHREFvalue, buffer);
+	     ustrcpy (AttrHREFvalue, buffer);
 #            ifndef _WINDOWS
 	     /* initialise the text field in the dialogue box */
 	     TtaSetTextForm (BaseDialog + AttrHREFText, buffer);

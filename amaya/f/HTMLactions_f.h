@@ -7,13 +7,13 @@
 #ifdef __STDC__
 
 extern Element SearchNAMEattribute ( Document doc,
-                                     char *nameVal,
+                                     STRING nameVal,
                                      Attribute ignore );
 extern void FollowTheLink_callback ( int targetDocument,
                                      int status,
-                                     char *urlName,
-                                     char *outputfile,
-                                     char *content_type,
+                                     STRING urlName,
+                                     STRING outputfile,
+                                     STRING content_type,
                                      void * context );
 extern boolean DoubleClick ( NotifyElement * event );
 extern void UpdateTitle ( Element el,
@@ -31,13 +31,13 @@ extern void SelectDestination ( Document doc,
 #else /* __STDC__ */
 
 extern Element SearchNAMEattribute (/* Document doc,
-                                       char *nameVal,
+                                       STRING nameVal,
                                        Attribute ignore */);
 extern void FollowTheLink_callback (/* int targetDocument,
                                        int status,
-                                       char *urlName,
-                                       char *outputfile,
-                                       char *content_type,
+                                       STRING urlName,
+                                       STRING outputfile,
+                                       STRING content_type,
                                        void * context */);
 extern boolean DoubleClick (/* NotifyElement * event */);
 extern void UpdateTitle (/* Element el,

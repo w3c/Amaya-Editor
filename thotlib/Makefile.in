@@ -22,7 +22,7 @@ bindir = @bindir@
 MACHINE= @target@
 
 SUBDIRS = include
-OBJDIRS = base content dialogue document editing image presentation tree view xml
+OBJDIRS = base content dialogue document editing image presentation tree unicode view xml
 
 @SET_MAKE@
 
@@ -107,6 +107,9 @@ THOTK_OBJ = \
 	tree/tree.o \
 	tree/checkaccess.o \
 	tree/labelalloc.o \
+	unicode/uaccess.o \
+	unicode/uconvert.o \
+	unicode/ustring.o \
 	xml/writexml.o \
 	xml/savexml.o \
 	xml/translatexml.o \

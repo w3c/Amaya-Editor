@@ -46,7 +46,7 @@ boolean MakeASpan (elem, span, doc)
   ret = FALSE;
   *span = NULL;
   elType = TtaGetElementType (elem);
-  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
     /* it's an HTML element */
     if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
      {
@@ -115,7 +115,7 @@ void DeleteSpanIfNoAttr (el, doc, firstChild, lastChild)
   *lastChild = NULL;
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == HTML_EL_Span &&
-      strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+      ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
      {
      span = el;
      attr = NULL;
@@ -159,7 +159,7 @@ void  AttrToSpan (elem, attr, doc)
   ElementType   elType;
   int		kind, len;
 #define ATTRLEN 64
-  char*	oldValue; /* [ATTRLEN]; */
+  STRING	oldValue; /* [ATTRLEN]; */
 
   elType = TtaGetElementType (elem);
   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
@@ -167,7 +167,7 @@ void  AttrToSpan (elem, attr, doc)
     {
       parent = TtaGetParent (elem);
       elType = TtaGetElementType (parent);
-      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
         /* the parent element is an HTML element */
 	/* Create a Span element and move to attribute to this Span element */
         MakeASpan (elem, &span, doc);
@@ -176,7 +176,7 @@ void  AttrToSpan (elem, attr, doc)
 	span = parent;
       if (span != NULL)
         {
-	  oldValue = (char*) TtaGetMemory (sizeof (char) * ATTRLEN);
+	  oldValue = (STRING) TtaGetMemory (sizeof (CHAR) * ATTRLEN);
 	  TtaGiveAttributeType (attr, &attrType, &kind);
 	  newAttr = TtaGetAttribute (span, attrType);
 	  if (newAttr == NULL)
@@ -268,7 +268,7 @@ boolean	    NonHTMLleaf;
       {
       elType = TtaGetElementType (fromEl);
 #ifdef GRAPHML
-      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
 	 if (elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT)
 	    /* don't add FillPattern and ShowBox rules to a Rectangle,
 	       Circle, Polygon, etc. */
@@ -317,7 +317,7 @@ Element             elem;
    Attribute           styleAttr;
    Element	       firstChild, lastChild;
 #define STYLELEN 1000
-   char*               style;
+   STRING               style;
    int                 len;
 
    /* does the element have a Style_ attribute ? */
@@ -326,7 +326,7 @@ Element             elem;
    styleAttr = TtaGetAttribute (elem, attrType);
    /* keep the new style string */
    len = STYLELEN;
-   style = (char*) TtaGetMemory (sizeof (char) * STYLELEN);
+   style = (STRING) TtaGetMemory (sizeof (CHAR) * STYLELEN);
    GetHTMLStyleString (elem, doc, style, &len);
    if (len == 0)
      {
@@ -372,7 +372,7 @@ NotifyPresentation *event;
   AttributeType      attrType;
   Attribute          attr;
 #define STYLELEN 1000
-  char               buffer[15];
+  CHAR               buffer[15];
   int                presType;
   int                w, h, unit, value, i;
   boolean            ret;
@@ -632,8 +632,8 @@ static void MoveAttrLang (oldAttr, el, doc)
   Attribute	newAttr, attr;
   AttributeType	attrType;
   int		kind, len;
-  char*	value    = (char*) TtaGetMemory (sizeof (char) * ATTRLEN); 
-  char* oldValue = (char*) TtaGetMemory (sizeof (char) * ATTRLEN);
+  STRING	value    = (STRING) TtaGetMemory (sizeof (CHAR) * ATTRLEN); 
+  STRING oldValue = (STRING) TtaGetMemory (sizeof (CHAR) * ATTRLEN);
   boolean	sameLang;
 
   /* if all siblings have the same LANG attribute, move that attibute to
@@ -658,7 +658,7 @@ static void MoveAttrLang (oldAttr, el, doc)
 	      {
 	      len = ATTRLEN - 1;
 	      TtaGiveTextAttributeValue (attr, value, &len);
-	      if (strcasecmp(oldValue, value) != 0)
+	      if (ustrcasecmp(oldValue, value) != 0)
 		 sameLang = FALSE;
 	      }
 	   }

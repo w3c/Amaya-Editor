@@ -14,23 +14,23 @@ extern int RelativePosition ( Document doc,
                               int *distance );
 extern void GotoPreviousHTML_callback ( int newdoc,
                                         int status,
-                                        char *urlName,
-                                        char *outputfile,
-                                        char *content_type,
+                                        STRING urlName,
+                                        STRING outputfile,
+                                        STRING content_type,
                                         void * context );
 extern void GotoPreviousHTML ( Document doc,
                                View view );
 extern void GotoNextHTML_callback ( int newdoc,
                                     int status,
-                                    char *urlName,
-                                    char *outputfile,
-                                    char *content_type,
+                                    STRING urlName,
+                                    STRING outputfile,
+                                    STRING content_type,
                                     void * context );
 extern void GotoNextHTML ( Document doc,
                            View view );
 extern void AddDocHistory ( Document doc,
-                            char *url,
-                            char *form_data,
+                            STRING url,
+                            STRING form_data,
                             ClickEvent method );
 
 #else /* __STDC__ */
@@ -43,23 +43,23 @@ extern int RelativePosition (/* Document doc,
                                 int *distance */);
 extern void GotoPreviousHTML_callback (/* int newdoc,
                                           int status,
-                                          char *urlName,
-                                          char *outputfile,
-                                          char *content_type,
+                                          STRING urlName,
+                                          STRING outputfile,
+                                          STRING content_type,
                                           void * context */);
 extern void GotoPreviousHTML (/* Document doc,
                                  View view */);
 extern void GotoNextHTML_callback (/* int newdoc,
                                       int status,
-                                      char *urlName,
-                                      char *outputfile,
-                                      char *content_type,
+                                      STRING urlName,
+                                      STRING outputfile,
+                                      STRING content_type,
                                       void * context */);
 extern void GotoNextHTML (/* Document doc,
                              View view */);
 extern void AddDocHistory (/* Document doc,
-                              char *url,
-                              char *form_data,
+                              STRING url,
+                              STRING form_data,
                               ClickEvent method */);
 
 #endif /* __STDC__ */

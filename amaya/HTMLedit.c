@@ -19,7 +19,7 @@
 #include "css.h"
 #include "presentdriver.h"
 
-static char        *TargetDocumentURL = NULL;
+static STRING       TargetDocumentURL = NULL;
 static int          OldWidth;
 static int          OldHeight;
 #define buflen 50
@@ -60,9 +60,9 @@ Attribute           attrNAME;
    /* the document that issues the command Set target becomes the target doc */
    if (TargetDocumentURL != NULL)
       TtaFreeMemory (TargetDocumentURL);
-   length = strlen (DocumentURLs[doc]);
+   length = ustrlen (DocumentURLs[doc]);
    TargetDocumentURL = TtaGetMemory (length + 1);
-   strcpy (TargetDocumentURL, DocumentURLs[doc]);
+   ustrcpy (TargetDocumentURL, DocumentURLs[doc]);
 
    if (TargetName != NULL)
      {
@@ -97,8 +97,8 @@ Document            targetDoc;
 {
    AttributeType       attrType;
    Attribute           attr;
-   char               *value, *base;
-   char*               tempURL = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
+   STRING              value, base;
+   STRING               tempURL = (STRING) TtaGetMemory (sizeof (CHAR) * MAX_LENGTH);
 
    attrType.AttrSSchema = TtaGetSSchema ("HTML", document);
    attrType.AttrTypeNum = HTML_ATTR_HREF_;
@@ -118,7 +118,7 @@ Document            targetDoc;
 	else
 	  {
 	     tempURL[0] = '#';
-	     strcpy (&tempURL[1], TargetName);
+	     ustrcpy (&tempURL[1], TargetName);
 	  }
 	TtaSetAttributeText (attr, tempURL, element, document);
      }
@@ -126,13 +126,13 @@ Document            targetDoc;
      {
 	/* external link */
 	if (TargetDocumentURL != NULL)
-	   strcpy (tempURL, TargetDocumentURL);
+	   ustrcpy (tempURL, TargetDocumentURL);
 	else
 	   tempURL[0] = EOS;
 	if (TargetName != NULL)
 	  {
-	     strcat (tempURL, "#");
-	     strcat (tempURL, TargetName);
+	     ustrcat (tempURL, "#");
+	     ustrcat (tempURL, TargetName);
 	  }
 	/* set the relative value or URL in attribute HREF */
 	base = GetBaseURL (document);
@@ -221,14 +221,14 @@ Element             el;
    Element             elText;
    SSchema	       HTMLSSchema;
    Language            lang;
-   char               *text;
-   char*               url = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
+   STRING              text;
+   STRING               url = (STRING) TtaGetMemory (sizeof (CHAR) * MAX_LENGTH);
    int                 length, i, space;
    boolean             found;
    boolean             withinHTML;
 
    elType = TtaGetElementType (el);
-   withinHTML = (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
+   withinHTML = (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
 
    /* get a NAME or ID attribute */
    HTMLSSchema = TtaGetSSchema ("HTML", doc);
@@ -250,12 +250,12 @@ Element             el;
    if (withinHTML && elType.ElTypeNum == HTML_EL_MAP)
      {
        /* mapxxx for a map element */
-       strcpy (url, "map");
+       ustrcpy (url, "map");
      }
    else if (withinHTML && elType.ElTypeNum == HTML_EL_LINK)
      {
        /* linkxxx for a link element */
-       strcpy (url, "link");
+       ustrcpy (url, "link");
      }
    else
        /* get the content for other elements */
@@ -284,7 +284,7 @@ Element             el;
 			  i = space + 10;
 			url[i] = EOS;
 			if (space != 0)
-			  strcpy (url, &url[space]);
+			  ustrcpy (url, &url[space]);
 		      }
 		    i++;
 		    space = i;
@@ -297,14 +297,14 @@ Element             el;
 	      {
 		/* label of the element */
 		text = TtaGetElementLabel (el);
-		strcpy (url, text);
+		ustrcpy (url, text);
 	      }
 	  }
 	else
 	  {
 	    /* get the element's label if there is no text */
 	    text = TtaGetElementLabel (el);
-	    strcpy (url, text);
+	    ustrcpy (url, text);
 	  }
      }
    /* copie the text into the NAME attribute */
@@ -337,7 +337,7 @@ Document            doc;
   attrType.AttrTypeNum = 0;
   elType = TtaGetElementType (el);
 #ifdef MATHML
-  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
      {
      MapMathMLAttribute ("link", &attrType, "", doc);
      MapMathMLAttributeValue ("simple", attrType, &val);
@@ -345,7 +345,7 @@ Document            doc;
   else
 #endif
 #ifdef GRAPHML
-   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
      {
      MapGraphMLAttribute ("link", &attrType, "", doc);
      MapGraphMLAttributeValue ("simple", attrType, &val);
@@ -634,14 +634,14 @@ Document     doc;
   AttributeType     attrType;
   SSchema	    HTMLSSchema;
   Attribute         attr;
-  char             *value;
-  char              url[MAX_LENGTH];
+  STRING            value;
+  CHAR              url[MAX_LENGTH];
   int               length, i;
   boolean           change, isHTML;
 
   HTMLSSchema = TtaGetSSchema ("HTML", doc);
   elType = TtaGetElementType (el);
-  isHTML = (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
+  isHTML = (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
   attrType.AttrSSchema = HTMLSSchema;
    if (isHTML &&
        (elType.ElTypeNum == HTML_EL_Anchor || elType.ElTypeNum == HTML_EL_MAP))
@@ -684,11 +684,11 @@ Document     doc;
 		     {
 		       i = MAX_LENGTH;
 		       TtaGiveTextAttributeValue (attr, url, &i);
-		       if (i == length+1 && strncmp (&url[1], value, length) == 0)
+		       if (i == length+1 && ustrncmp (&url[1], value, length) == 0)
 			 {
 			   /* Change the USEMAP of the image */
 			   attr = TtaGetAttribute (image, attrType);
-			   strcpy (&url[1], value);
+			   ustrcpy (&url[1], value);
 			   TtaSetAttributeText (attr, url, image, doc);
 			 }
 		     }
@@ -858,10 +858,10 @@ NotifyElement      *event;
   AttributeType       attrType;
   Attribute           attr;
   SSchema             HTMLschema;
-  char               *value, *base;
-  char               *documentURL;
-  char               *tempURL;
-  char               *path;
+  STRING              value, base;
+  STRING              documentURL;
+  STRING              tempURL;
+  STRING              path;
   int                 length, i, iName;
   int                 oldStructureChecking;
 
@@ -924,9 +924,9 @@ NotifyElement      *event;
 
   if (anchor != NULL)
     {
-      tempURL = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
-      documentURL = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
-      path = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
+      tempURL = (STRING) TtaGetMemory (sizeof (CHAR) * MAX_LENGTH);
+      documentURL = (STRING) TtaGetMemory (sizeof (CHAR) * MAX_LENGTH);
+      path = (STRING) TtaGetMemory (sizeof (CHAR) * MAX_LENGTH);
       TtaSetDisplayMode (doc, DeferredDisplay);
       oldStructureChecking = TtaGetStructureChecking (doc);
       TtaSetStructureChecking (0, doc);
@@ -985,13 +985,13 @@ NotifyElement      *event;
 			    {
 			      /* the target element is local in the document */
 			      /* origin convert internal link into external link */
-			      strcpy (tempURL, DocumentURLs[originDocument]);
+			      ustrcpy (tempURL, DocumentURLs[originDocument]);
 			      iName = 0;
 			    }
 			  else
 			    {
 			      /* the target element is in another document */
-			      strcpy (documentURL, value);
+			      ustrcpy (documentURL, value);
 			      /* looks for a '#' in the value */
 			      i = length;
 			      while (value[i] != '#' && i > 0)
@@ -1015,11 +1015,11 @@ NotifyElement      *event;
 			    }
 			  if (value[iName] == '#')
 			    {
-			      if (!strcmp (tempURL, DocumentURLs[doc]))
+			      if (!ustrcmp (tempURL, DocumentURLs[doc]))
 				/* convert external link into internal link */
-				strcpy (tempURL, &value[iName]);
+				ustrcpy (tempURL, &value[iName]);
 			      else
-				strcat (tempURL, &value[iName]);
+				ustrcat (tempURL, &value[iName]);
 			    }
 			  TtaFreeMemory (value);
 			  /* set the relative value or URL in attribute HREF */
@@ -1141,7 +1141,7 @@ NotifyAttribute    *event;
    ElementType         elType;
    AttributeType       attrType;
    Attribute	       attr;
-   char		       buffer[15];
+   CHAR		       buffer[15];
 
    el = event->element;
    elType = TtaGetElementType (el);
@@ -1264,10 +1264,10 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-  char               *buffer;
+  STRING              buffer;
   int                 length;
    length = buflen - 1;
-   buffer = (char*) TtaGetMemory (buflen);
+   buffer = (STRING) TtaGetMemory (buflen);
    TtaGiveTextAttributeValue (event->attribute, buffer, &length);
    CreateAttrWidthPercentPxl (buffer, event->element, event->document, OldWidth);
    TtaFreeMemory (buffer);
@@ -1286,7 +1286,7 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   char*               buffer = (char*) TtaGetMemory (sizeof (char) * buflen);
+   STRING               buffer = (STRING) TtaGetMemory (sizeof (CHAR) * buflen);
    int                 length;
    DisplayMode         dispMode;
 
@@ -1346,7 +1346,7 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   char*               value = (char*) TtaGetMemory (sizeof (char) * buflen);
+   STRING               value = (STRING) TtaGetMemory (sizeof (CHAR) * buflen);
    int                 length;
 
    value[0] = EOS;
@@ -2003,17 +2003,17 @@ boolaen             link;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                UpdateAtom (Document doc, char *url, char *title)
+void                UpdateAtom (Document doc, STRING url, STRING title)
 #else  /* __STDC__ */
 void                UpdateAtom (doc, url, title)
 Document            doc;
-char               *url;
-char               *title;
+STRING              url;
+STRING              title;
 
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS
-   char               *v;
+   STRING              v;
    int                 v_size;
    ThotWidget	       frame;
    static Atom         property_name = 0;
@@ -2024,9 +2024,9 @@ char               *title;
    if (frame == 0)
       return;
    win = XtWindow (XtParent (XtParent (XtParent (frame))));
-   /* 13 is strlen("URL=0TITLE=00") */
-   v_size = strlen (title) + strlen (url) + 13;
-   v = (char *) TtaGetMemory (v_size);
+   /* 13 is ustrlen("URL=0TITLE=00") */
+   v_size = ustrlen (title) + ustrlen (url) + 13;
+   v = (STRING) TtaGetMemory (v_size);
    sprintf (v, "URL=%s%cTITLE=%s%c", url, 0, title, 0);
    if (!property_name)
       property_name = XInternAtom (dpy, "BROWSER_HISTORY_INFO", FALSE);

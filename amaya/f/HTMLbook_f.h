@@ -11,7 +11,7 @@ extern void PrintAs ( Document document,
                       View view );
 extern void CallbackPrint ( int ref,
                             int typedata,
-                            char *data );
+                            STRING data );
 extern void InitPrint ( void );
 extern void SetupAndPrint ( Document document,
                             View view );
@@ -19,9 +19,9 @@ extern void SectionNumbering ( Document document,
                                View view );
 extern void GetIncludedDocuments_callback ( int newdoc,
                                             int status,
-                                            char *urlName,
-                                            char *outputfile,
-                                            char *content_type,
+                                            STRING urlName,
+                                            STRING outputfile,
+                                            STRING content_type,
                                             void * context );
 extern void MakeBook_callback ( Document document );
 extern void MakeBook ( Document document,
@@ -34,7 +34,7 @@ extern void PrintAs (/* Document document,
                         View view */);
 extern void CallbackPrint (/* int ref,
                               int typedata,
-                              char *data */);
+                              STRING data */);
 extern void InitPrint (/* void */);
 extern void SetupAndPrint (/* Document document,
                               View view */);
@@ -42,9 +42,9 @@ extern void SectionNumbering (/* Document document,
                                  View view */);
 extern void GetIncludedDocuments_callback (/* int newdoc,
                                               int status,
-                                              char *urlName,
-                                              char *outputfile,
-                                              char *content_type,
+                                              STRING urlName,
+                                              STRING outputfile,
+                                              STRING content_type,
                                               void * context */);
 extern void MakeBook_callback (/* Document document */);
 extern void MakeBook (/* Document document,

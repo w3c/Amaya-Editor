@@ -6,14 +6,14 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Document IsDocumentLoaded ( char *documentURL,
-                                   char *form_data );
+extern Document IsDocumentLoaded ( STRING documentURL,
+                                   STRING form_data );
 extern boolean CanReplaceCurrentDocument ( Document document,
                                            View view );
-extern void ExtractParameters ( char *aName,
-                                char *parameters );
-extern void ExtractSuffix ( char *aName,
-                            char *aSuffix );
+extern void ExtractParameters ( STRING aName,
+                                STRING parameters );
+extern void ExtractSuffix ( STRING aName,
+                            STRING aSuffix );
 extern void SetArrowButton ( Document document,
                              boolean back,
                              boolean on );
@@ -35,16 +35,16 @@ extern void InitFormAnswer ( Document document,
                              View view );
 extern void InitConfirm ( Document document,
                           View view,
-                          char *label );
+                          STRING label );
 extern void OpenDocInNewWindow ( Document document,
                                  View view );
 extern void OpenDoc ( Document document,
                       View view );
 extern void Reload_callback ( int doc,
                               int status,
-                              char *urlName,
-                              char *outputfile,
-                              char *content_type,
+                              STRING urlName,
+                              STRING outputfile,
+                              STRING content_type,
                               void * context );
 extern void Reload ( Document document,
                      View view );
@@ -65,12 +65,12 @@ extern void ShowToC ( Document document,
 extern boolean ViewToClose ( NotifyDialog * event );
 extern void GetHTMLDocument_callback ( int newdoc,
                                        int status,
-                                       char *urlName,
-                                       char *outputfile,
-                                       char *content_type,
+                                       STRING urlName,
+                                       STRING outputfile,
+                                       STRING content_type,
                                        void * context );
-extern Document GetHTMLDocument ( const char *documentPath,
-                                  char *form_data,
+extern Document GetHTMLDocument ( const STRING documentPath,
+                                  STRING form_data,
                                   Document doc,
                                   Document baseDoc,
                                   ClickEvent CE_event,
@@ -79,10 +79,10 @@ extern Document GetHTMLDocument ( const char *documentPath,
                                   void *ctx_cbf );
 extern void CallbackDialogue ( int ref,
                                int typedata,
-                               char *data );
+                               STRING data );
 extern int RestoreOneAmayaDoc ( Document doc,
-                                char *tempdoc,
-                                char *docname );
+                                STRING tempdoc,
+                                STRING docname );
 extern void InitAmaya ( NotifyEvent * event );
 extern void ChangeAttrOnRoot ( Document document,
                                int attrNum );
@@ -133,14 +133,14 @@ extern void AmayaClose ( Document document,
 
 #else /* __STDC__ */
 
-extern Document IsDocumentLoaded (/* char *documentURL,
-                                     char *form_data */);
+extern Document IsDocumentLoaded (/* STRING documentURL,
+                                     STRING form_data */);
 extern boolean CanReplaceCurrentDocument (/* Document document,
                                              View view */);
-extern void ExtractParameters (/* char *aName,
-                                  char *parameters */);
-extern void ExtractSuffix (/* char *aName,
-                              char *aSuffix */);
+extern void ExtractParameters (/* STRING aName,
+                                  STRING parameters */);
+extern void ExtractSuffix (/* STRING aName,
+                              STRING aSuffix */);
 extern void SetArrowButton (/* Document document,
                                boolean back,
                                boolean on */);
@@ -162,16 +162,16 @@ extern void InitFormAnswer (/* Document document,
                                View view */);
 extern void InitConfirm (/* Document document,
                             View view,
-                            char *label */);
+                            STRING label */);
 extern void OpenDocInNewWindow (/* Document document,
                                    View view */);
 extern void OpenDoc (/* Document document,
                         View view */);
 extern void Reload_callback (/* int doc,
                                 int status,
-                                char *urlName,
-                                char *outputfile,
-                                char *content_type,
+                                STRING urlName,
+                                STRING outputfile,
+                                STRING content_type,
                                 void * context */);
 extern void Reload (/* Document document,
                        View view */);
@@ -192,12 +192,12 @@ extern void ShowToC (/* Document document,
 extern boolean ViewToClose (/* NotifyDialog * event */);
 extern void GetHTMLDocument_callback (/* int newdoc,
                                          int status,
-                                         char *urlName,
-                                         char *outputfile,
-                                         char *content_type,
+                                         STRING urlName,
+                                         STRING outputfile,
+                                         STRING content_type,
                                          void * context */);
-extern Document GetHTMLDocument (/* const char *documentPath,
-                                    char *form_data,
+extern Document GetHTMLDocument (/* const STRING documentPath,
+                                    STRING form_data,
                                     Document doc,
                                     Document baseDoc,
                                     ClickEvent CE_event,
@@ -206,10 +206,10 @@ extern Document GetHTMLDocument (/* const char *documentPath,
                                     void *ctx_cbf */);
 extern void CallbackDialogue (/* int ref,
                                  int typedata,
-                                 char *data */);
+                                 STRING data */);
 extern int RestoreOneAmayaDoc (/* Document doc,
-                                  char *tempdoc,
-                                  char *docname */);
+                                  STRING tempdoc,
+                                  STRING docname */);
 extern void InitAmaya (/* NotifyEvent * event */);
 extern void ChangeAttrOnRoot (/* Document document,
                                  int attrNum */);

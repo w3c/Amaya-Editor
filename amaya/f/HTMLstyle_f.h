@@ -6,49 +6,49 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char *SkipProperty ( char *ptr );
-extern char *GetCSSName ( Element el,
-                          Document doc );
+extern STRING SkipProperty ( STRING ptr );
+extern STRING GetCSSName ( Element el,
+                           Document doc );
 extern void PresentationSettingsToCSS ( PresentationSetting settings,
-                                        char *buffer,
+                                        STRING buffer,
                                         int len );
 extern void GetHTMLStyleString ( Element el,
                                  Document doc,
-                                 char *buf,
+                                 STRING buf,
                                  int *len );
 extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element el,
-                                              char *file,
+                                              STRING file,
                                               void *extra );
-extern char *UpdateCSSBackgroundImage ( char *oldpath,
-                                        char *newpath,
-                                        char *imgpath,
-                                        char *styleString );
-extern char *GetCSSBackgroundURL ( char *styleString );
+extern STRING UpdateCSSBackgroundImage ( STRING oldpath,
+                                         STRING newpath,
+                                         STRING imgpath,
+                                         STRING styleString );
+extern STRING GetCSSBackgroundURL ( STRING styleString );
 extern void ParseHTMLSpecificStyle ( Element elem,
-                                     char *cssRule,
+                                     STRING cssRule,
                                      Document doc,
                                      boolean destroy );
 extern int EvaluateClassContext ( Element el,
-                                  char *class,
-                                  char *selector,
+                                  STRING class,
+                                  STRING selector,
                                   Document doc );
 extern int EvaluateClassSelector ( Element el,
-                                   char *class,
-                                   char *selector,
+                                   STRING class,
+                                   STRING selector,
                                    Document doc );
-extern int IsImplicitClassName ( char *class,
+extern int IsImplicitClassName ( STRING class,
                                  Document doc );
 extern void HTMLSetBackgroundColor ( Document doc,
                                      Element el,
-                                     char *color );
+                                     STRING color );
 extern void HTMLSetBackgroundImage ( Document doc,
                                      Element el,
                                      int repeat,
-                                     char *image );
+                                     STRING image );
 extern void HTMLSetForegroundColor ( Document doc,
                                      Element el,
-                                     char *color );
+                                     STRING color );
 extern void HTMLResetBackgroundColor ( Document doc,
                                        Element el );
 extern void HTMLResetBackgroundImage ( Document doc,
@@ -56,68 +56,68 @@ extern void HTMLResetBackgroundImage ( Document doc,
 extern void HTMLResetForegroundColor ( Document doc,
                                        Element el );
 extern void HTMLSetAlinkColor ( Document doc,
-                                char *color );
+                                STRING color );
 extern void HTMLSetAactiveColor ( Document doc,
-                                  char *color );
+                                  STRING color );
 extern void HTMLSetAvisitedColor ( Document doc,
-                                   char *color );
+                                   STRING color );
 extern void HTMLResetAlinkColor ( Document doc );
 extern void HTMLResetAactiveColor ( Document doc );
 extern void HTMLResetAvisitedColor ( Document doc );
 extern void ApplyCSSRules ( Element el,
-                            char *cssRule,
+                            STRING cssRule,
                             Document doc,
                             boolean destroy );
-extern char ReadCSSRules ( Document doc,
+extern CHAR ReadCSSRules ( Document doc,
                            Document docRef,
                            CSSInfoPtr css,
-                           char *buffer );
+                           STRING buffer );
 
 #else /* __STDC__ */
 
-extern char *SkipProperty (/* char *ptr */);
-extern char *GetCSSName (/* Element el,
-                            Document doc */);
+extern STRING SkipProperty (/* STRING ptr */);
+extern STRING GetCSSName (/* Element el,
+                             Document doc */);
 extern void PresentationSettingsToCSS (/* PresentationSetting settings,
-                                          char *buffer,
+                                          STRING buffer,
                                           int len */);
 extern void GetHTMLStyleString (/* Element el,
                                    Document doc,
-                                   char *buf,
+                                   STRING buf,
                                    int *len */);
 extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 Element el,
-                                                char *file,
+                                                STRING file,
                                                 void *extra */);
-extern char *UpdateCSSBackgroundImage (/* char *oldpath,
-                                          char *newpath,
-                                          char *imgpath,
-                                          char *styleString */);
-extern char *GetCSSBackgroundURL (/* char *styleString */);
+extern STRING UpdateCSSBackgroundImage (/* STRING oldpath,
+                                           STRING newpath,
+                                           STRING imgpath,
+                                           STRING styleString */);
+extern STRING GetCSSBackgroundURL (/* STRING styleString */);
 extern void ParseHTMLSpecificStyle (/* Element elem,
-                                       char *cssRule,
+                                       STRING cssRule,
                                        Document doc,
                                        boolean destroy */);
 extern int EvaluateClassContext (/* Element el,
-                                    char *class,
-                                    char *selector,
+                                    STRING class,
+                                    STRING selector,
                                     Document doc */);
 extern int EvaluateClassSelector (/* Element el,
-                                     char *class,
-                                     char *selector,
+                                     STRING class,
+                                     STRING selector,
                                      Document doc */);
-extern int IsImplicitClassName (/* char *class,
+extern int IsImplicitClassName (/* STRING class,
                                    Document doc */);
 extern void HTMLSetBackgroundColor (/* Document doc,
                                        Element el,
-                                       char *color */);
+                                       STRING color */);
 extern void HTMLSetBackgroundImage (/* Document doc,
                                        Element el,
                                        int repeat,
-                                       char *image */);
+                                       STRING image */);
 extern void HTMLSetForegroundColor (/* Document doc,
                                        Element el,
-                                       char *color */);
+                                       STRING color */);
 extern void HTMLResetBackgroundColor (/* Document doc,
                                          Element el */);
 extern void HTMLResetBackgroundImage (/* Document doc,
@@ -125,22 +125,22 @@ extern void HTMLResetBackgroundImage (/* Document doc,
 extern void HTMLResetForegroundColor (/* Document doc,
                                          Element el */);
 extern void HTMLSetAlinkColor (/* Document doc,
-                                  char *color */);
+                                  STRING color */);
 extern void HTMLSetAactiveColor (/* Document doc,
-                                    char *color */);
+                                    STRING color */);
 extern void HTMLSetAvisitedColor (/* Document doc,
-                                     char *color */);
+                                     STRING color */);
 extern void HTMLResetAlinkColor (/* Document doc */);
 extern void HTMLResetAactiveColor (/* Document doc */);
 extern void HTMLResetAvisitedColor (/* Document doc */);
 extern void ApplyCSSRules (/* Element el,
-                              char *cssRule,
+                              STRING cssRule,
                               Document doc,
                               boolean destroy */);
-extern char ReadCSSRules (/* Document doc,
+extern CHAR ReadCSSRules (/* Document doc,
                              Document docRef,
                              CSSInfoPtr css,
-                             char *buffer */);
+                             STRING buffer */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

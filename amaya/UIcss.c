@@ -40,8 +40,8 @@ View                view;
 #endif
 {
   CSSInfoPtr          css;
-  char                buf[400];
-  char               *ptr;
+  CHAR                buf[400];
+  STRING              ptr;
   int                 len, nb;
   int                 index, size;
 
@@ -65,11 +65,11 @@ View                view;
 	    ptr = css->localName;
 	  else
 	    ptr = css->url;
-	  len = strlen (ptr);
+	  len = ustrlen (ptr);
 	  len++;
 	  if (size < len)
 	    break;
-	  strcpy (&buf[index], ptr);
+	  ustrcpy (&buf[index], ptr);
 	  index += len;
 	  nb++;
 	  size -= len;

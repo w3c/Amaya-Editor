@@ -87,8 +87,8 @@ extern Element SearchAnchor ( Document doc,
                               Element element,
                               boolean link );
 extern void UpdateAtom ( Document doc,
-                         char *url,
-                         char *title );
+                         STRING url,
+                         STRING title );
 extern void TitleModified ( NotifyOnTarget * event );
 
 #else /* __STDC__ */
@@ -174,8 +174,8 @@ extern Element SearchAnchor (/* Document doc,
                                 Element element,
                                 boolean link */);
 extern void UpdateAtom (/* Document doc,
-                           char *url,
-                           char *title */);
+                           STRING url,
+                           STRING title */);
 extern void TitleModified (/* NotifyOnTarget * event */);
 
 #endif /* __STDC__ */

@@ -278,7 +278,7 @@ static void UpdatePointsAttribute (el, doc, minX, minY, maxX, maxY)
   AttributeType	        attrType;
   Attribute		attr, attrX, attrY;
   TypeUnit		unit;
-  char			buffer[512], buffer1[8];
+  CHAR			buffer[512], buffer1[8];
   int			nbPoints, point, x, y, posX, posY;
   int                   mainView;
 
@@ -338,12 +338,12 @@ static void UpdatePointsAttribute (el, doc, minX, minY, maxX, maxY)
 	  if (y < *minY)
 	    *minY = y;
 	  if (point > 1)
-	    strcat (buffer, " ");
+	    ustrcat (buffer, " ");
 	  sprintf (buffer1, "%d", x + posX);
-	  strcat (buffer, buffer1);
-	  strcat (buffer, ",");
+	  ustrcat (buffer, buffer1);
+	  ustrcat (buffer, ",");
 	  sprintf (buffer1, "%d", y + posY);
-	  strcat (buffer, buffer1);
+	  ustrcat (buffer, buffer1);
 	}
       attrType.AttrTypeNum = GraphML_ATTR_points;
       attr = TtaGetAttribute (el, attrType);
@@ -372,7 +372,7 @@ static void UpdatePositionAttribute (attr, el, doc)
 {
    AttributeType	attrType;
    ElementType		elType;
-   char			buffer[32], buffer1[8];
+   CHAR			buffer[32], buffer1[8];
    int			attrKind, posX, posY, minX, minY, maxX, maxY;
    boolean		changePoints;
 
@@ -397,8 +397,8 @@ static void UpdatePositionAttribute (attr, el, doc)
        else
 	 posY = TtaGetAttributeValue (attr);
        sprintf (buffer1, "%d", posY);
-       strcat (buffer, ", ");
-       strcat (buffer, buffer1);
+       ustrcat (buffer, ", ");
+       ustrcat (buffer, buffer1);
        attrType.AttrTypeNum = GraphML_ATTR_position;
        attr = TtaGetAttribute (el, attrType);
        if (attr == NULL)
@@ -475,7 +475,7 @@ static void UpdateWidthHeightAttribute (attr, el, doc)
   ElementType           elType;
    AttributeType	attrType;
    Attribute		extAttr;
-   char			buffer[10];
+   CHAR			buffer[10];
    int			attrKind, val;
    int                  minX, minY, maxX, maxY;
 
@@ -826,7 +826,7 @@ int                 construct;
    Attribute	        attr;
    SSchema	        docSchema, GraphMLSSchema;
    DisplayMode	        dispMode;
-   char		        shape;
+   CHAR		        shape;
    int		        c1, c2, i, j, w, h, minX, minY, maxX, maxY;
    boolean	        found, automaticPlacement;
    int	                oldStructureChecking;
@@ -852,7 +852,7 @@ int                 construct;
       /* the current selection is not in a GraphML element, create one */
       {
       wrapperType = TtaGetElementType (first);
-      if (strcmp (TtaGetSSchemaName (wrapperType.ElSSchema), "HTML"))
+      if (ustrcmp (TtaGetSSchemaName (wrapperType.ElSSchema), "HTML"))
 	 /* selection is not in an HTML element. */
          return;
       wrapperType.ElTypeNum = HTML_EL_XMLGraphics;
@@ -1236,12 +1236,12 @@ static void         CreateGroup ()
    CallbackGraph: manage Graph dialogue events.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CallbackGraph (int ref, int typedata, char *data)
+static void         CallbackGraph (int ref, int typedata, STRING data)
 #else
 static void         CallbackGraph (ref, typedata, data)
 int                 ref;
 int                 typedata;
-char               *data;
+STRING              data;
  
 #endif
 {
