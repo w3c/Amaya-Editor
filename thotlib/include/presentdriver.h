@@ -106,7 +106,7 @@ typedef enum
      DRIVERP_RELATIVE_WIDTH,
      DRIVERP_IN_LINE,
      DRIVERP_SHOW,
-     DRIVERP_BOX,
+     DRIVERP_BOX
   }
 PresentationType;
 

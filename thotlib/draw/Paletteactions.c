@@ -39,6 +39,11 @@
 #include "Palette.h"
 #include "boutons.h"
 
+#include "utilitaires_f.h"
+#include "liens_f.h"
+#include "objets_f.h"
+#include "registry_f.h"
+
 /****************************************************************************/
 /*----------------------- LOCAL DEFINES AND TYPES --------------------------*/
 /****************************************************************************/

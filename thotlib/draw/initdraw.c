@@ -48,6 +48,9 @@
 #include "utilitaires.h"
 #include "drawmsg.h"
 
+#include "message_f.h"
+#include "boutons_f.h"
+
 /*!BF
    ------------------------------------------------------------------------------
    *

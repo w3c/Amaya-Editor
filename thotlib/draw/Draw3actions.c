@@ -67,6 +67,10 @@
 #include "boutons.h"
 #include "initdraw.h"
 
+#include "Paletteactions_f.h"
+#include "Draw3actions_f.h"
+#include "liens_f.h"
+#include "boutons_f.h"
 
 /*!BF
    ------------------------------------------------------------------------------
@@ -828,7 +832,7 @@ void ModifAttributsRectangle (event)
    event->document);
  */
       break;
-    default:
+    default: break ;
     }
   return;
 }

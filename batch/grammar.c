@@ -830,7 +830,7 @@ char              **argv;
 		  /* marque la fin reelle de la ligne */
 		  inputLine[i - 1] = '\0';
 		  /* garde une copie de la ligne avant traduction */
-		  strncpy (sourceLine, inputLine, LINE_LENGTH);
+		  strncpy ((char*)sourceLine, (char*)inputLine, LINE_LENGTH);
 		  LineNum++;
 		  /* traduit les caracteres de la ligne */
 		  OctalToChar ();

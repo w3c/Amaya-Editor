@@ -121,7 +121,7 @@ SyntacticCode            *ret;
    do
      {
 	if (Keywords[i].SrcKeywordLen == len)
-	   if (strncasecmp (&inputLine[index - 1], Keywords[i].SrcKeyword, len) == 0)
+	   if (strncasecmp ((char*)(&inputLine[index - 1]), Keywords[i].SrcKeyword, len) == 0)
 	      *ret = Keywords[i].SrcKeywordCode;
 	i++;
      }
@@ -145,8 +145,8 @@ static void         CheckIdent (indLine index, indLine len, SyntacticCode * ret,
 static void         CheckIdent (index, len, ret, rank)
 indLine               index;
 indLine               len;
-SyntacticCode            *ret;
-int                *rank;
+SyntacticCode        *ret;
+int                  *rank;
 
 #endif /* __STDC__ */
 
@@ -159,7 +159,7 @@ int                *rank;
    do
      {
 	if (Identifier[i].SrcIdentLen == len)
-	   if (strncmp (&inputLine[index - 1], Identifier[i].SrcIdentifier, len) == 0)
+	   if (strncmp ((char*)(&inputLine[index - 1]), Identifier[i].SrcIdentifier, len) == 0)
 	     {
 		*rank = i + 1;
 		*ret = Identifier[i].SrcIdentCode;
@@ -232,7 +232,7 @@ indLine               len;
 {
    int                 num;
 
-   sscanf (&inputLine[index - 1], "%d", &num);
+   sscanf ((char*)(&inputLine[index - 1]), "%d", &num);
    if (num > 65535)
      {
 	CompilerError (index, COMPIL, FATAL, NUMBER_OVERFLOW, inputLine, LineNum);
