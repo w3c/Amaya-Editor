@@ -41,7 +41,7 @@ char               *data;
 
 #endif /* __STDC__ */
 {
-   if ((int) data > 0)
+   if ((int) data >= 0)
       if (ViewToOpenDoc != NULL)
 	 if (ViewToOpenDoc->DocSSchema != NULL)
 	   {
