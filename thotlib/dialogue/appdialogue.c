@@ -2501,6 +2501,8 @@ gint selection_clear ( GtkWidget         *widget,
     if (Xbuffer != NULL)
        free(Xbuffer);
    Xbuffer = NULL;
+   ClipboardLength = 0;
+   TtaClearViewSelections ();
   return TRUE;
 }
  
@@ -3073,10 +3075,10 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	     I've posted in the gtk-devel-list in order to have clues...
 	    */
 
-	   /*  gtk_signal_connect (GTK_OBJECT(drawing_area),  */
-	   /* 	       "selection_clear_event", */
-	   /* 	       GTK_SIGNAL_FUNC (selection_clear),  */
-	   /* 	       NULL);    */
+	     gtk_signal_connect (GTK_OBJECT(drawing_area), 
+	    	       "selection_clear_event", 
+	    	       GTK_SIGNAL_FUNC (selection_clear),  
+	    	       NULL);    
 
 	   /* register as a selection handler */
 	   gtk_selection_add_target (GTK_WIDGET(drawing_area),
