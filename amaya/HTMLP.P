@@ -8706,7 +8706,12 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_HEIGHT);
 	CreateBefore(VALUE_HEIGHT);
-	Height: Height_ px;
+	if Data_cell
+	   Height: Height_ px min;
+        if Heading_cell
+	   Height: Height_ px min;
+        If NOT Data_cell and NOT Heading_cell
+	   Height: Height_ px;
 	IN Structure_view BEGIN
 	   If PICTURE_UNIT
 	        Height: 1 px;
