@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -38,7 +42,7 @@
 extern int          UserErrorCode;
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetTextContent
 
    Changes the content of a Text basic element. The full content (if any) is
@@ -52,7 +56,7 @@ extern int          UserErrorCode;
    language: language of that Text element.
    document: the document containing that element.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetTextContent (Element element, char *content, Language language, Document document)
 
@@ -217,12 +221,12 @@ Document            document;
      }
 }
 
-/* -----------------------------------------------------
+/*----------------------------------------------------------------------
    InsertText   inserts the string "content" in the element 
    pEl (which must be of type text), at the position
    "position". If "document" is null, we have not to consider
    the selction nor the displaying
-   -----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                InsertText (PtrElement pEl, int position, char *content, Document document)
@@ -381,7 +385,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaAppendTextContent
 
    Appends a character string at the end of a Text basic element.
@@ -391,7 +395,7 @@ Document            document;
    content: the character string to be appended.
    document: the document containing that element.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaAppendTextContent (Element element, char *content, Document document)
@@ -427,7 +431,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaInsertTextContent
 
    Inserts a character string in a text basic element.
@@ -439,7 +443,7 @@ Document            document;
    content: the character string to be inserted.
    document: the document containing the text element.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaInsertTextContent (Element element, int position, char *content, Document document)
@@ -473,7 +477,7 @@ Document            document;
       InsertText ((PtrElement) element, position, content, document);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaDeleteTextContent
 
    Deletes a character string in a text basic element.
@@ -484,7 +488,7 @@ Document            document;
    length: length of the character string to be deleted.
    document: the document containing the text element.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaDeleteTextContent (Element element, int position, int length, Document document)
@@ -705,7 +709,7 @@ Document            document;
      }
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSplitText
 
    Divides a text element into two elements.
@@ -716,7 +720,7 @@ Document            document;
    position: rank of the character after which the element must be cut.
    document: the document to which the element belongs.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaSplitText (Element element, int position, Document document)
@@ -772,7 +776,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaMergeText
 
    Merges two text elements.
@@ -785,7 +789,7 @@ Document            document;
    Return value:
    TRUE if merging has been done.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             TtaMergeText (Element element, Document document)
@@ -857,7 +861,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetGraphicsShape
 
    Changes the shape of a Graphics or Symbol basic element.
@@ -868,7 +872,7 @@ Document            document;
    shape: new shape for that element.
    document: the document containing that element.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -1016,7 +1020,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaAddPointInPolyline
 
    Adds a new point in a Polyline basic element.
@@ -1033,7 +1037,7 @@ Document            document;
    must be positive or null.
    unit: UnPixel or UnPoint.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaAddPointInPolyline (Element element, int rank, TypeUnit unit, int x, int y, Document document)
 #else  /* __STDC__ */
@@ -1083,7 +1087,7 @@ Document            document;
 	}
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaDeletePointInPolyline
 
    Deletes a point in a Polyline basic element.
@@ -1096,7 +1100,7 @@ Document            document;
    rank must be strictly positive.
    document: the document containing the polyline element.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaDeletePointInPolyline (Element element, int rank, Document document)
 #else  /* __STDC__ */
@@ -1132,7 +1136,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaModifyPointInPolyline
 
    Changes the coordinates of a point in a Polyline basic element.
@@ -1149,7 +1153,7 @@ Document            document;
    document: the document containing the polyline element.
    unit: UnPixel or UnPoint.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaModifyPointInPolyline (Element element, int rank, TypeUnit unit, int x, int y, Document document)
@@ -1189,7 +1193,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaChangeLimitOfPolyline
 
    Changes the coordinates of the lower left corner of the box containing
@@ -1205,7 +1209,7 @@ Document            document;
    points of the polyline.
    document: the document containing the polyline element.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaChangeLimitOfPolyline (Element element, TypeUnit unit, int x, int y, Document document)
 #else  /* __STDC__ */
@@ -1265,7 +1269,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaCopyPage
 
    Copies the page element source into the page element destination.
@@ -1275,7 +1279,7 @@ Document            document;
    destination: identifier of the page element to be modified.
    source : identifier of the source page element.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaCopyPage (Element destination, Element source)
 
@@ -1314,7 +1318,7 @@ Element             source;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetTextLength
 
    Returns the length of a Text basic element.
@@ -1327,7 +1331,7 @@ Element             source;
    textLength (number of characters) of the character string
    contained in the element.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaGetTextLength (Element element)
@@ -1361,7 +1365,7 @@ Element             element;
    return textLength;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGiveTextContent
 
    Returns the content of a Text basic element.
@@ -1377,7 +1381,7 @@ Element             element;
    length: actual length of the text in the buffer.
    language: language of the text.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaGiveTextContent (Element element, char *buffer, int *length, Language * language)
 #else  /* __STDC__ */
@@ -1433,7 +1437,7 @@ Language           *language;
      }
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGiveSubString
 
    Returns a substring from a Text basic element.
@@ -1450,7 +1454,7 @@ Language           *language;
    Return parameter:
    buffer: (the buffer contains the substring).
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaGiveSubString (Element element, char *buffer, int position, int length)
@@ -1519,7 +1523,7 @@ int                 length;
      }
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetGraphicsShape
 
    Returns the content of a Graphics or Symbol basic element.
@@ -1532,7 +1536,7 @@ int                 length;
    a single character representing the shape of the graphics element or
    symbol contained in the element.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 char                TtaGetGraphicsShape (Element element)
 
@@ -1567,7 +1571,7 @@ Element             element;
    return content;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetPolylineLength
 
    Returns the number of points in a Polyline basic element.
@@ -1576,7 +1580,7 @@ Element             element;
    element: the Polyline element. This element must
    be a basic element of type Polyline.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaGetPolylineLength (Element element)
@@ -1601,7 +1605,7 @@ Element             element;
    return (0);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGivePolylinePoint
 
    Returns the coordinates of a point in a Polyline basic element.
@@ -1618,7 +1622,7 @@ Element             element;
    x, y: coordinates of the point, in unit, relatively to
    the upper left corner of the enclosing rectangle.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaGivePolylinePoint (Element element, int rank, TypeUnit unit, int *x, int *y)
 #else  /* __STDC__ */
@@ -1672,7 +1676,7 @@ int                *y;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetPageNumber
 
    Returns the page number of a Page basic element.
@@ -1683,7 +1687,7 @@ int                *y;
    Return value:
    page number of that page element.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaGetPageNumber (Element pageElement)
@@ -1716,7 +1720,7 @@ Element             pageElement;
    return pageNumber;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetPageView
 
    Returns the view corresponding to a Page basic element.
@@ -1727,7 +1731,7 @@ Element             pageElement;
    Return value:
    view of that page.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaGetPageView (Element pageElement)

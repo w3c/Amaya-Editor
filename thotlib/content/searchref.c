@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    Module traitant les recherches de references
  */
 
@@ -46,43 +50,43 @@
 
 #define MAX_ITEM_MENU_REF 10
 
-/* ---------------------------------------------------------------------- */
-/* |    NextReferenceToEl retourne la prochaine reference qui designe	| */
-/* |         l'element pEl.                                             | */
-/* |         - pDoc est le document auquel appartient pEl.              | */
-/* |         - processNotLoaded indique si on prend en compte les 	| */
-/* |           documents referencant non charge's (TRUE) ou si au    	| */
-/* |           contraire on les ignore (FALSE).                      	| */
-/* |         - pPrevRef contient la reference courante a l'appel.    	| */
-/* |           Si pPrevRef est NULL et *pExtDoc est NULL, la fonction   | */
-/* |           retourne la premiere reference a` l'element pEl, sinon 	| */
-/* |           elle retourne la reference qui suit celle qui est     	| */
-/* |           pointee par pPrevRef.                                 	| */
-/* |         - pDocRef contient au retour un pointeur sur le         	| */
-/* |           contexte du document auquel appartient la reference   	| */
-/* |           retournee. Seulement si la valeur de retour n'est pas 	| */
-/* |           NULL.                                                 	| */
-/* |         - pExtDoc est le document externe precedemment traite' (si | */
-/* |           nextExtDoc est TRUE) ou celui qu'on veut traiter   	| */
-/* |           (si nextExtDoc est FALSE). pExtDoc doit etre NULL si     | */
-/* |           nextExtDoc est TRUE et qu'on n'a pas encore traite'	| */
-/* |           de references externes.                               	| */
-/* |           Au retour, pExtDoc vaut NULL si la reference retournee   | */
-/* |           appartient au meme document que l'element pEl; sinon  	| */
-/* |           pExtDoc est le document externe auquel appartient la     | */
-/* |           reference trouvee. pExtDoc ne doit pas etre modifie'     | */
-/* |           entre les appels successifs de la fonction.           	| */
-/* |         - nextExtDoc indique si on passe au document         	| */
-/* |           referencant suivant celui decrit par pExtDoc (TRUE) ou si| */
-/* |           on traite le document decrit par pExtDoc (FALSE).        | */
-/* |         Retourne un pointeur sur la premiere reference trouvee. 	| */
-/* |         Si la valeur de retour est NULL et                      	| */
-/* |            si pExtDoc est NULL : on n'a rien trouve'.              | */
-/* |            si pExtDoc n'est pas NULL : il y a des references a`    | */
-/* |                 l'element pEl dans le document designe' par pExtDoc| */
-/* |                 mais ce document n'est pas charge' (cela ne se  	| */
-/* |                 produit que si processNotLoaded est TRUE).       	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NextReferenceToEl retourne la prochaine reference qui designe	
+   l'element pEl.                                             
+   - pDoc est le document auquel appartient pEl.              
+   - processNotLoaded indique si on prend en compte les 	
+   documents referencant non charge's (TRUE) ou si au    	
+   contraire on les ignore (FALSE).                      	
+   - pPrevRef contient la reference courante a l'appel.    	
+   Si pPrevRef est NULL et *pExtDoc est NULL, la fonction   
+   retourne la premiere reference a` l'element pEl, sinon 	
+   elle retourne la reference qui suit celle qui est     	
+   pointee par pPrevRef.                                 	
+   - pDocRef contient au retour un pointeur sur le         	
+   contexte du document auquel appartient la reference   	
+   retournee. Seulement si la valeur de retour n'est pas 	
+   NULL.                                                 	
+   - pExtDoc est le document externe precedemment traite' (si 
+   nextExtDoc est TRUE) ou celui qu'on veut traiter   	
+   (si nextExtDoc est FALSE). pExtDoc doit etre NULL si     
+   nextExtDoc est TRUE et qu'on n'a pas encore traite'	
+   de references externes.                               	
+   Au retour, pExtDoc vaut NULL si la reference retournee   
+   appartient au meme document que l'element pEl; sinon  	
+   pExtDoc est le document externe auquel appartient la     
+   reference trouvee. pExtDoc ne doit pas etre modifie'     
+   entre les appels successifs de la fonction.           	
+   - nextExtDoc indique si on passe au document         	
+   referencant suivant celui decrit par pExtDoc (TRUE) ou si
+   on traite le document decrit par pExtDoc (FALSE).        
+   Retourne un pointeur sur la premiere reference trouvee. 	
+   Si la valeur de retour est NULL et                      	
+   si pExtDoc est NULL : on n'a rien trouve'.              
+   si pExtDoc n'est pas NULL : il y a des references a`    
+   l'element pEl dans le document designe' par pExtDoc
+   mais ce document n'est pas charge' (cela ne se  	
+   produit que si processNotLoaded est TRUE).       	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrReference        NextReferenceToEl (PtrElement pEl, PtrDocument pDoc, boolean processNotLoaded, PtrReference pPrevRef, PtrDocument * pDocRef, PtrExternalDoc * pExtDoc, boolean nextExtDoc)
 #else  /* __STDC__ */
@@ -122,41 +126,41 @@ boolean             nextExtDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FindReference cherche une reference a` l'element selectionne'.       | */
-/* |       A l'appel:                                                   | */
-/* |            - pPrevRef: pointeur sur la derniere reference trouvee  | */
-/* |              ou NULL si on cherche la premiere reference (dans ce  | */
-/* |              cas, pExtDoc doit aussi etre NULL).                   | */
-/* |            - pReferredEl: l'element dont on cherche les references,| */
-/* |              NULL si on cherche la premiere reference.             | */
-/* |            - pDocReferredEl: le document auquel appartient         | */
-/* |              l'element dont on cherche les references, NULL si on  | */
-/* |              cherche la premiere reference.                        | */
-/* |            - pExtDoc: pointeur sur le descripteur de document      | */
-/* |              externe contenant la reference pPrevRef, NULL si on   | */
-/* |              cherche la premiere reference.                        | */
-/* |            - nextExtDoc indique si on cherche une reference        | */
-/* |              dans le document externe decrit par pExtDoc           | */
-/* |              (FALSE) ou dans le document externe suivant.          | */
-/* |       Au retour:                                                   | */
-/* |            - pPrevRef: pointeur sur la reference trouvee ou NULL   | */
-/* |              si on n'a pas trouve' de reference.                   | */
-/* |            - pDocPrevRef: document auquel appartient la            | */
-/* |              reference trouvee.                                    | */
-/* |            - pReferredEl: l'element dont on cherche les references.| */
-/* |            - pDocReferredEl: le document auquel appartient         | */
-/* |              l'element dont on cherche les references.             | */
-/* |            - pExtDoc: document externe dans lequel on a trouve'    | */
-/* |              une reference. Peut etre non NULL meme si pPrevRef    | */
-/* |              est NULL, dans le cas ou ce document externe n'est    | */
-/* |              pas charge':                                          | */
-/* |            Si pPrevRef est NULL et                                 | */
-/* |                si pExtDoc est NULL : on n'a rien trouve'.          | */
-/* |                si pExtDoc n'est pas NULL : il y a des              | */
-/* |                    references dans le document designe' par        | */
-/* |                    pExtDoc, mais ce document n'est pas charge'     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FindReference cherche une reference a` l'element selectionne'.       
+   A l'appel:                                                   
+   - pPrevRef: pointeur sur la derniere reference trouvee  
+   ou NULL si on cherche la premiere reference (dans ce  
+   cas, pExtDoc doit aussi etre NULL).                   
+   - pReferredEl: l'element dont on cherche les references,
+   NULL si on cherche la premiere reference.             
+   - pDocReferredEl: le document auquel appartient         
+   l'element dont on cherche les references, NULL si on  
+   cherche la premiere reference.                        
+   - pExtDoc: pointeur sur le descripteur de document      
+   externe contenant la reference pPrevRef, NULL si on   
+   cherche la premiere reference.                        
+   - nextExtDoc indique si on cherche une reference        
+   dans le document externe decrit par pExtDoc           
+   (FALSE) ou dans le document externe suivant.          
+   Au retour:                                                   
+   - pPrevRef: pointeur sur la reference trouvee ou NULL   
+   si on n'a pas trouve' de reference.                   
+   - pDocPrevRef: document auquel appartient la            
+   reference trouvee.                                    
+   - pReferredEl: l'element dont on cherche les references.
+   - pDocReferredEl: le document auquel appartient         
+   l'element dont on cherche les references.             
+   - pExtDoc: document externe dans lequel on a trouve'    
+   une reference. Peut etre non NULL meme si pPrevRef    
+   est NULL, dans le cas ou ce document externe n'est    
+   pas charge':                                          
+   Si pPrevRef est NULL et                                 
+   si pExtDoc est NULL : on n'a rien trouve'.          
+   si pExtDoc n'est pas NULL : il y a des              
+   references dans le document designe' par        
+   pExtDoc, mais ce document n'est pas charge'     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FindReference (PtrReference * pPrevRef, PtrDocument * pDocPrevRef, PtrElement * pReferredEl, PtrDocument * pDocReferredEl, PtrExternalDoc * pExtDoc, boolean nextExtDoc)
 #else  /* __STDC__ */
@@ -259,11 +263,11 @@ boolean             nextExtDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FindReferredEl cherche l'element qui est reference' par la         | */
-/* |            reference selectionnee ou par un attribut reference du  | */
-/* |            premier element selectionne'.                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FindReferredEl cherche l'element qui est reference' par la         
+   reference selectionnee ou par un attribut reference du  
+   premier element selectionne'.                           
+  ----------------------------------------------------------------------*/
 void                FindReferredEl ()
 {
    PtrElement          firstSel;
@@ -393,16 +397,16 @@ void                FindReferredEl ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RegisterPastedReferredElem					| */
-/* |	L'element pEl vient d'etre colle'				| */
-/* |    dans le document pDoc et l'original vient d'un document		| */
-/* |    different. S'il possede des elements reference's par d'autres   | */
-/* |    documents, on note dans le contexte du document pDoc que cet    | */
-/* |    element a change' de document. Ce sera utile lorsqu'on sauvera  | */
-/* |    le document pDoc pour mettre a jour les fichiers .REF des       | */
-/* |    documents referencant les elements deplace's.                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RegisterPastedReferredElem					
+   	L'element pEl vient d'etre colle'				
+   dans le document pDoc et l'original vient d'un document		
+   different. S'il possede des elements reference's par d'autres   
+   documents, on note dans le contexte du document pDoc que cet    
+   element a change' de document. Ce sera utile lorsqu'on sauvera  
+   le document pDoc pour mettre a jour les fichiers .REF des       
+   documents referencant les elements deplace's.                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         RegisterPastedReferredElem (PtrElement pEl, PtrDocument pDoc, LabelString oldLabel)
 #else  /* __STDC__ */
@@ -435,11 +439,11 @@ LabelString         oldLabel;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckReferences        On vient de coller le sous-arbre de racine	| */
-/* |    pRoot dans le document pDoc. Verifie la coherence des elements	| */
-/* |    reference's et des references presents dans ce sous-arbre.      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckReferences        On vient de coller le sous-arbre de racine	
+   pRoot dans le document pDoc. Verifie la coherence des elements	
+   reference's et des references presents dans ce sous-arbre.      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CheckReferences (PtrElement pRoot, PtrDocument pDoc)
 #else  /* __STDC__ */

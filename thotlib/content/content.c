@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    This module handles document contents: text and graphics
 
 */
@@ -18,12 +22,12 @@
 #include "select_tv.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |	NewTextBuffer acquiert un nouveau buffer de texte, l'initialise	| */
-/* |	le chaine apres le buffer pBuf et le rattache au meme element	| */
-/* |	feuille.							| */
-/* |	Retourne un pointeur sur le nouveau buffer.			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	NewTextBuffer acquiert un nouveau buffer de texte, l'initialise	
+   	le chaine apres le buffer pBuf et le rattache au meme element	
+   	feuille.							
+   	Retourne un pointeur sur le nouveau buffer.			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrTextBuffer      NewTextBuffer (PtrTextBuffer pBuf)
 
@@ -46,11 +50,11 @@ PtrTextBuffer      pBuf;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	CreateTextBuffer  cree un premier buffer de texte pour un 	| */
-/* |	element feuille							| */
-/* |	pEl est l'element feuille qui doit etre de type texte.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	CreateTextBuffer  cree un premier buffer de texte pour un 	
+   	element feuille							
+   	pEl est l'element feuille qui doit etre de type texte.		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateTextBuffer (PtrElement pEl)
 
@@ -69,10 +73,10 @@ PtrElement          pEl;
    pEl->ElText = pBuf;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	DeleteTextBuffer  supprime un buffer de texte dont le pointeur est	| */
-/* |	passe' en parametre.						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	DeleteTextBuffer  supprime un buffer de texte dont le pointeur est	
+   	passe' en parametre.						
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DeleteTextBuffer (PtrTextBuffer * pBuf)
@@ -96,12 +100,12 @@ PtrTextBuffer     *pBuf;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	SplitTextElement   coupe en deux un element feuille de type texte.	| */
-/* |	pEl: l'element de texte a couper.				| */
-/* |	rank: indice du caractere devant lequel on coupe		| */
-/* |	pDoc: document auquel appartient l'element a couper		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	SplitTextElement   coupe en deux un element feuille de type texte.	
+   	pEl: l'element de texte a couper.				
+   	rank: indice du caractere devant lequel on coupe		
+   	pDoc: document auquel appartient l'element a couper		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc, boolean withAppEvent)
@@ -265,13 +269,13 @@ boolean             withAppEvent;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	MergeTextElements   si l'element pEl est une feuille de texte et si	| */
-/* |	son suivant est egalement une feuille de texte dans le meme	| */
-/* |	alphabet, reunit les deux elements sucessifs en un seul.	| */
-/* |	Le deuxieme element, devenu vide, n'est pas libere' et un	| */
-/* |	pointeur sur cet element est retourne dans pFreeEl.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	MergeTextElements   si l'element pEl est une feuille de texte et si	
+   	son suivant est egalement une feuille de texte dans le meme	
+   	alphabet, reunit les deux elements sucessifs en un seul.	
+   	Le deuxieme element, devenu vide, n'est pas libere' et un	
+   	pointeur sur cet element est retourne dans pFreeEl.		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                MergeTextElements (PtrElement pEl, PtrElement * pFreeEl, PtrDocument pDoc,
@@ -473,11 +477,11 @@ boolean             withAppEvent;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	CopyText   cree, pour l'element pEl, une copie de la chaine	| */
-/* |	de buffers de texte pointee par pBuf et retourne un pointeur	| */
-/* |	sur le premier buffer de la copie realisee.			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	CopyText   cree, pour l'element pEl, une copie de la chaine	
+   	de buffers de texte pointee par pBuf et retourne un pointeur	
+   	sur le premier buffer de la copie realisee.			
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrTextBuffer      CopyText (PtrTextBuffer pBuf, PtrElement pEl)
@@ -515,11 +519,11 @@ PtrElement          pEl;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    StringAndTextEqual compare une chaine de caracteres (String) et | */
-/* |    un texte contenu dans une suite de buffers. Retourne TRUE si    | */
-/* |    les contenus sont egaux.                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   StringAndTextEqual compare une chaine de caracteres (String) et 
+   un texte contenu dans une suite de buffers. Retourne TRUE si    
+   les contenus sont egaux.                                        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             StringAndTextEqual (char *String, PtrTextBuffer pBuf)
@@ -575,10 +579,10 @@ PtrTextBuffer      pBuf;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TextsEqual compare deux textes contenus dans des suites de     | */
-/* |    buffers. Retourne TRUE si les deux textes sont egaux.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TextsEqual compare deux textes contenus dans des suites de     
+   buffers. Retourne TRUE si les deux textes sont egaux.		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             TextsEqual (PtrTextBuffer pBuf1, PtrTextBuffer pBuf2)
@@ -650,14 +654,14 @@ PtrTextBuffer      pBuf2;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CopyTextToText copie a la fin de la suite de buffers       | */
-/* |    commencant au buffer pCopyBuf le texte contenu dans le buffer	| */
-/* |    pSrceBuf et dans les buffers suivants. Ajoute eventuellement	| */
-/* |    de nouveaux buffers a la fin de la suite de buffers pointee par	| */
-/* |    pCopyBuf.							| */
-/* |    Retourne dans len le nombre de caracteres copie's.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CopyTextToText copie a la fin de la suite de buffers       
+   commencant au buffer pCopyBuf le texte contenu dans le buffer	
+   pSrceBuf et dans les buffers suivants. Ajoute eventuellement	
+   de nouveaux buffers a la fin de la suite de buffers pointee par	
+   pCopyBuf.							
+   Retourne dans len le nombre de caracteres copie's.		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CopyTextToText (PtrTextBuffer pSrceBuf, PtrTextBuffer pCopyBuf, int *len)
@@ -703,13 +707,13 @@ int                *len;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CopyStringToText copie a la fin de la suite de buffers      | */
-/* |    commencant au buffer pCopyBuf le contenu de la chaine srceStrn.	| */
-/* |    Ajoute eventuellement de nouveaux buffers a la fin de la suite  | */
-/* |    de buffers.                                                     | */
-/* |    Retourne dans LgCopiee le nombre de caracteres copie's.         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CopyStringToText copie a la fin de la suite de buffers      
+   commencant au buffer pCopyBuf le contenu de la chaine srceStrn.	
+   Ajoute eventuellement de nouveaux buffers a la fin de la suite  
+   de buffers.                                                     
+   Retourne dans LgCopiee le nombre de caracteres copie's.         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CopyStringToText (char *srceStrn, PtrTextBuffer pCopyBuf, int *LgCopiee)
@@ -768,12 +772,12 @@ int                *LgCopiee;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CopyTextToString copie dans la chaine pStrCpy le texte	| */
-/* |    contenu dans le buffer pSrceBuf et dans les buffers suivants.	| */
-/* |    A l'appel, len contient la longueur maximum a copier.           | */
-/* |    Au retour, len contient le nombre de caracteres copie's.        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CopyTextToString copie dans la chaine pStrCpy le texte	
+   contenu dans le buffer pSrceBuf et dans les buffers suivants.	
+   A l'appel, len contient la longueur maximum a copier.           
+   Au retour, len contient le nombre de caracteres copie's.        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CopyTextToString (PtrTextBuffer pSrceBuf, char *pStrCpy, int *len)
@@ -820,10 +824,10 @@ int                *len;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ClearText annule le texte contenu dans le buffer pBuf  | */
-/* |    et libere les buffers suivants.                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ClearText annule le texte contenu dans le buffer pBuf  
+   et libere les buffers suivants.                                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ClearText (PtrTextBuffer pBuf)
@@ -854,11 +858,11 @@ PtrTextBuffer      pBuf;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    AddPointInPolyline ajoute un point de rang rank dans la liste   | */
-/* |            des points de contro^le de la polyline.                 | */
-/* |            On saute le point 0 (coordonnees du point limite).      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AddPointInPolyline ajoute un point de rang rank dans la liste   
+   des points de contro^le de la polyline.                 
+   On saute le point 0 (coordonnees du point limite).      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y)
@@ -960,13 +964,13 @@ int                 y;
       firstBuffer->BuPoints[0].YCoord = y;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DeletePointInPolyline detruit le point de rang rank dans la     | */
-/* |            liste des points de contro^le de la polyline.           | */
-/* |            On saute le point 0 (coordonnees du point limite).      | */
-/* |            Le pointeur firstBuffer peut e^tre modifie' par la      | */
-/* |            proce'dure.                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DeletePointInPolyline detruit le point de rang rank dans la     
+   liste des points de contro^le de la polyline.           
+   On saute le point 0 (coordonnees du point limite).      
+   Le pointeur firstBuffer peut e^tre modifie' par la      
+   proce'dure.                                             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DeletePointInPolyline (PtrTextBuffer * firstBuffer, int rank)
@@ -1012,11 +1016,11 @@ int                 rank;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ModifyPointInPolyline ajoute un point de rang rank dans la      | */
-/* |            liste des points de contro^le de la polyline.           | */
-/* |            On saute le point 0 (coordonnees du point limite).      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ModifyPointInPolyline ajoute un point de rang rank dans la      
+   liste des points de contro^le de la polyline.           
+   On saute le point 0 (coordonnees du point limite).      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ModifyPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y)

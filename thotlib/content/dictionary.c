@@ -1,11 +1,15 @@
-/*=======================================================================*/
-/*|                                                                     | */
-/*|     Thot Toolkit: Application Program Interface                     | */
-/*|     --->Dictionnary managment                                       | */
-/*|                                                                     | */
-/*|                     I. Vatton       November 93                     | */
-/*|                                                                     | */
-/*=======================================================================*/
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*----------------------------------------------------------------------
+   
+   Thot Toolkit: Application Program Interface                     
+   --->Dictionnary managment                                       
+   
+   I. Vatton       November 93                     
+   
+  ----------------------------------------------------------------------*/
 
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -162,10 +166,10 @@ PtrDico             dict;
 }				/*Corr_pretraitement */
 
 
-/* ---------------------------------------------------------------------  */
-/* |    ReleaseDictionary: Releases dictionaries which descriptor is    | */
-/* |                       referenced by pDictionary.                   | */
-/* ---------------------------------------------------------------------  */
+/*----------------------------------------------------------------------
+   ReleaseDictionary: Releases dictionaries which descriptor is    
+   referenced by pDictionary.                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ReleaseDictionary (PtrDico * pDictionary)
 #else  /* __STDC__ */
@@ -194,11 +198,11 @@ PtrDico            *pDictionary;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* CreateDictionary: Gets and intializes a dictionary context.            */
-/* In return, pDictionary referenes the dictionary context or NULL if     */
-/* there is a lack of memory.                                             */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateDictionary: Gets and intializes a dictionary context.            
+   In return, pDictionary referenes the dictionary context or NULL if     
+   there is a lack of memory.                                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CreateDictionary (PtrDico * pDictionary, PtrDocument document)
 #else  /* __STDC__ */
@@ -250,10 +254,10 @@ PtrDocument         document;
 }				/*CreateDictionary */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SearchDictName: Looks for a dictionary by its name and returns  | */
-/* |      a pointer (pDictionary) referencing its descriptor or NULL    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchDictName: Looks for a dictionary by its name and returns  
+   a pointer (pDictionary) referencing its descriptor or NULL    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SearchDictName (PtrDico * pDictionary, char *dictName, char *dictDirectory)
 #else  /* __STDC__ */
@@ -282,12 +286,12 @@ char               *dictDirectory;
 }				/*SearchDictName */
 
 
-/* ---------------------------------------------------------------------- */
-/* |  TestDictionary verifies if the file which name is dictName exists | */
-/* |  returns -1 if the file is not found (inaccessible)                | */
-/* |  returns  0 if the file .DIC exists (not treated yet)              | */
-/* |  returns  1 if the file .DIC exists (treated)                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TestDictionary verifies if the file which name is dictName exists 
+   returns -1 if the file is not found (inaccessible)                
+   returns  0 if the file .DIC exists (not treated yet)              
+   returns  1 if the file .DIC exists (treated)                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          TestDictionary (char *dictName, char *dictDirectory)
 #else  /* __STDC__ */
@@ -323,10 +327,11 @@ char               *dictDirectory;
 }				/*TestDictionary */
 
 
-/****************************** Create *************************************/
-/* Creates a dictionary from a pre-treated file.                           */
-/* PROCEDURE PORTABLE ON VAX                                               */
-/***************************************************************************/
+/*----------------------------------------------------------------------
+   Create                                                                  
+   Creates a dictionary from a pre-treated file.                           
+   PROCEDURE PORTABLE ON VAX                                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          Create (FILE * dictFile, PtrDico dict)
 #else  /* __STDC__ */
@@ -365,9 +370,10 @@ PtrDico             dict;
 }				/* end of Create */
 
 
-/********************************** Load ******************************/
-/*  Returns 1 if a dictionary is loaded else returs 0                 */
-/**********************************************************************/
+/*----------------------------------------------------------------------
+   Load                                                               
+   Returns 1 if a dictionary is loaded else returs 0                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          Load (FILE * dictFile, PtrDico dict)
 #else  /* __STDC__ */
@@ -439,12 +445,12 @@ PtrDico             dict;
 }				/*Load */
 
 
-/* ---------------------------------------------------------------------- */
-/* | PrepareDictionary : cherche a charger le dictionnaire dictName         | */
-/* |  de langue lang et de type tdico                                   | */
-/* |  Traite le dico si toTreat = TRUE.                                | */
-/* | retourne dans pDictionary le pointeur sur son descripteur ou NULL        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PrepareDictionary : cherche a charger le dictionnaire dictName         
+   de langue lang et de type tdico                                   
+   Traite le dico si toTreat = TRUE.                                
+   retourne dans pDictionary le pointeur sur son descripteur ou NULL        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PrepareDictionary (PtrDico * pDictionary, char *dictName, PtrDocument document, char *dictDirectory, Language lang, boolean readonly, boolean treated, boolean toTreat)
 #else  /* __STDC__ */
@@ -609,14 +615,14 @@ boolean             toTreat;
 }				/*PrepareDictionary */
 
 
-/* ---------------------------------------------------------------------- */
-/* |   LoadDico                                                         | */
-/* |  Returns -1 if the dictionary can't be loaded.                     | */
-/* |           0 if the dictionary was already loaded.                  | */
-/* |           1 if the dictionary is loaded.                           | */
-/* |  returns in pdico : a pointer to dictionary                        | */
-/* |   cree le dictionnaire si toCreate = TRUE                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LoadDico                                                         
+   Returns -1 if the dictionary can't be loaded.                     
+   0 if the dictionary was already loaded.                  
+   1 if the dictionary is loaded.                           
+   returns in pdico : a pointer to dictionary                        
+   cree le dictionnaire si toCreate = TRUE                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          LoadDico (PtrDico * pDictionary, Language lang, PtrDocument document, char *dictName, char *dictDirectory, boolean readonly, boolean toCreate)
@@ -694,10 +700,10 @@ boolean             toCreate;
 }				/*LoadDico */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Corr_ReloadDico: reload a dictionary                            | */
-/* | returns TRUE if the FILE dictionary is found and well loaded       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Corr_ReloadDico: reload a dictionary                            
+   returns TRUE if the FILE dictionary is found and well loaded       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             Corr_ReloadDico (PtrDico * pDictionary)
@@ -747,9 +753,9 @@ PtrDico            *pDictionary;
 }				/*Corr_ReloadDico */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Dico_Init                                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Dico_Init                                                       
+  ----------------------------------------------------------------------*/
 void                Dico_Init ()
 {
    int                 i;
@@ -771,11 +777,11 @@ void                Dico_Init ()
 }				/* end proc Dico_Init */
 
 
-/* ---------------------------------------------------------------------- */
-/* |  TtaLoadDocumentDictionary loads the document dictionary.          | */
-/* |  Returns -1 if the dictionary can't be loaded.                     | */
-/* |  Returns 1 if the dictionary is loaded.                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaLoadDocumentDictionary loads the document dictionary.          
+   Returns -1 if the dictionary can't be loaded.                     
+   Returns 1 if the dictionary is loaded.                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             TtaLoadDocumentDictionary (PtrDocument document, int *pDictionary, boolean ToCreate)
 #else  /* __STDC__ */
@@ -802,7 +808,7 @@ boolean             ToCreate;
 }				/*TtaLoadDocumentDictionary */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaLoadLanguageDictionaries
 
    Loads the dictionary associated with a language, if it is not loaded yet
@@ -815,7 +821,7 @@ boolean             ToCreate;
    Parameters:
    languageId: name of the concerned language.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             TtaLoadLanguageDictionaries (Language languageId)
@@ -864,7 +870,7 @@ Language            languageId;
 }				/*TtaLoadLanguageDictionaries */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaLoadTypoDictionaries
 
    Loads the dictionary associated with a typolanguage, if it is not loaded yet
@@ -877,7 +883,7 @@ Language            languageId;
    Parameters:
    languageId: name of the concerned language.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             TtaLoadTypoDictionaries (Language languageId)
 
@@ -928,7 +934,7 @@ Language            languageId;
 }				/*TtaLoadTypoDictionaries */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaUnLoadLanguageDictionaries
 
    Unloads dictionaries associated with a given language.
@@ -936,7 +942,7 @@ Language            languageId;
    Parameters:
    languageId: identifier of the language.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaUnLoadLanguageDictionaries (Language languageId)
@@ -960,7 +966,7 @@ Language            languageId;
 }				/*TtaUnLoadDictionaries */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaUnLoadTypoDictionaries
 
    Unloads dictionaries associated with a given language.
@@ -968,7 +974,7 @@ Language            languageId;
    Parameters:
    languageId: identifier of the language.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaUnLoadTypoDictionaries (Language languageId)
@@ -992,7 +998,7 @@ Language            languageId;
 }				/*TtaUnLoadTypoDictionaries */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetPrincipalDictionary
 
    Returns a pointer to the principal dictionary associated to a language.
@@ -1001,7 +1007,7 @@ Language            languageId;
    the pointer to that dictionary or NULL if there is no dictionary for
    this language.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 Dictionary          TtaGetPrincipalDictionary (Language languageId)
@@ -1029,7 +1035,7 @@ Language            languageId;
 }				/*TtaGetPrincipalDictionary */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetPrincipalTypoDictionary
 
    Returns a pointer to the principal dictionary associated to a language.
@@ -1038,7 +1044,7 @@ Language            languageId;
    the pointer to that dictionary or NULL if there is no dictionary for
    this language.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 Dictionary          TtaGetPrincipalTypoDictionary (Language languageId)
@@ -1066,7 +1072,7 @@ Language            languageId;
 }				/*TtaGetPrincipalTypoDictionary */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetSecondaryDictionary
 
    Returns a pointer to the secondary dictionary associated to a language.
@@ -1075,7 +1081,7 @@ Language            languageId;
    the pointer to that dictionary or NULL if there is no dictionary for
    this language.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 Dictionary          TtaGetSecondaryDictionary (Language languageId)
@@ -1100,7 +1106,7 @@ Language            languageId;
 }				/*TtaGetSecondaryDictionary */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetSecondaryTypoDictionary
 
    Returns a pointer to the secondary dictionary associated to a language.
@@ -1109,7 +1115,7 @@ Language            languageId;
    the pointer to that dictionary or NULL if there is no dictionary for
    this language.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 Dictionary          TtaGetSecondaryTypoDictionary (Language languageId)

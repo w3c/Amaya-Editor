@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
   This module processes regular expressions.
 
  */
@@ -383,10 +387,10 @@ static void         InitSyntaxTable ()
       pending_exact += c; \
       }
 
-/* ---------------------------------------------------------------------- */
-/* | Store where `from' points a jump operation to jump to where `to'   | */
-/* |   points. `opcode' is the opcode to store.                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Store where `from' points a jump operation to jump to where `to'   
+   points. `opcode' is the opcode to store.                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         store_jump (char *from, char opcode, char *to)
@@ -405,13 +409,13 @@ char               *to;
    from[2] = (to - (from + 3)) >> 8;
 }
 
-/* ---------------------------------------------------------------------- */
-/* | Open up space at char FROM, and insert there a jump to TO.         | */
-/* |    CURRENT_END gives te end of the storage no in use,              | */
-/* |    so we know how much data to copy up.                            | */
-/* |    OP is the opcode of the jump to insert.                         | */
-/* |    If you call this function, you must zero out pending_exact.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Open up space at char FROM, and insert there a jump to TO.         
+   CURRENT_END gives te end of the storage no in use,              
+   so we know how much data to copy up.                            
+   OP is the opcode of the jump to insert.                         
+   If you call this function, you must zero out pending_exact.     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         insert_jump (char op, char *from, char *to, char *current_end)
@@ -434,12 +438,12 @@ char               *current_end;
    store_jump (from, op, to);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | ReCompilePattern takes a regular-expression string and converts    | */
-/* |   it into a buffer full of byte commands for matching.             | */
-/* |   if the regular-expression is correctly compiled, it returns 0;   | */
-/* |   otherwise, it returns a number of an error message.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReCompilePattern takes a regular-expression string and converts    
+   it into a buffer full of byte commands for matching.             
+   if the regular-expression is correctly compiled, it returns 0;   
+   otherwise, it returns a number of an error message.              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          ReCompilePattern (char *pattern, int size, struct re_pattern_buffer *bufp)
@@ -844,13 +848,13 @@ struct re_pattern_buffer *bufp;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |   ReCompileFastmap Given a pattern, compute a fastmap from it.     | */
-/* |      The fastmap records which of the (1 << BYTEWIDTH) possible    | */
-/* |      characters can start a string that matches the pattern.       | */
-/* |      This fastmap is used by re_search to skip quickly over totally| */
-/* |      implausible text.                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReCompileFastmap Given a pattern, compute a fastmap from it.     
+   The fastmap records which of the (1 << BYTEWIDTH) possible    
+   characters can start a string that matches the pattern.       
+   This fastmap is used by re_search to skip quickly over totally
+   implausible text.                                             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ReCompileFastmap (struct re_pattern_buffer *bufp)
@@ -1042,11 +1046,11 @@ struct re_pattern_buffer *bufp;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    NextStruct: Advances pEl in the next element in any direction.  | */
-/* |            If the next element is a text element return TRUE       | */
-/* |            Otherwise return FALSE.                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NextStruct: Advances pEl in the next element in any direction.  
+   If the next element is a text element return TRUE       
+   Otherwise return FALSE.                                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      NextStruct (boolean Forward, PtrElement * pEl, int *charNb)
@@ -1134,11 +1138,11 @@ int                *charNb;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetOrd: Gets the ordinate value of the character charNb pointed | */
-/* |            to by pEl. The value is placed in textChar. If pEl is   | */
-/* |            not a text-struct, -1 is returned in textChar.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetOrd: Gets the ordinate value of the character charNb pointed 
+   to by pEl. The value is placed in textChar. If pEl is   
+   not a text-struct, -1 is returned in textChar.          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         GetOrd (int *textChar, PtrElement pEl, int charNb)
@@ -1177,13 +1181,13 @@ int                 charNb;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    NextChar finds the next character and returns it in textChar    | */
-/* |            If it doesn't find a character it returns -1 in         | */
-/* |            textChar (textChar contain ordinate-value of the char)  | */
-/* |            While advancing through the text pEl and charNb is      | */
-/* |            kept up to date.                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NextChar finds the next character and returns it in textChar    
+   If it doesn't find a character it returns -1 in         
+   textChar (textChar contain ordinate-value of the char)  
+   While advancing through the text pEl and charNb is      
+   kept up to date.                                        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         NextChar (boolean Forward, int *textChar, PtrElement * pEl, int *charNb)
@@ -1242,11 +1246,11 @@ int                *charNb;
       *textChar = -1;
 }
 
-/* ---------------------------------------------------------------------- */
-/* | nbmatch computes the number of characters in the expression found	| */
-/* |	and returns that number.					| */
-/* |    Used in backwards search.					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   nbmatch computes the number of characters in the expression found	
+   	and returns that number.					
+   Used in backwards search.					
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          nbmatch (PtrElement pEl1, int pos1, PtrElement pEl2, int pos2)
@@ -1272,14 +1276,14 @@ int                 pos2;
    return nbmatched;
 }
 
-/* ---------------------------------------------------------------------- */
-/* | ReMatch matchs the pattern described by PBUFP against data which   | */
-/* |      start at the position described by pEl1 and pos1.             | */
-/* |       1 is returned if thers is a match.                            | */
-/* |      -1 is returned if there is no match.                          | */
-/* |      -2 is returned if there is an error (such as match stack      | */
-/* |      overflow).                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReMatch matchs the pattern described by PBUFP against data which   
+   start at the position described by pEl1 and pos1.             
+   1 is returned if thers is a match.                            
+   -1 is returned if there is no match.                          
+   -2 is returned if there is an error (such as match stack      
+   overflow).                                                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          ReMatch (struct re_pattern_buffer *pbufp, PtrElement pEl1, int pos1, PtrElement * pEl2, int *pos2, PtrElement pEndEl, int endCharNb, boolean forw)
@@ -1883,9 +1887,9 @@ boolean             forw;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  SearchRegularExpression	search a regular expression				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchRegularExpression	search a regular expression				
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             SearchRegularExpression (PtrElement * firstEl, int *firstChar, PtrElement * lastEl, int *lastChar, boolean forward, boolean caseEquiv, char *expression)

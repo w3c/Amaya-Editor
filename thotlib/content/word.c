@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 
 /*
 
@@ -20,12 +24,12 @@ static int          lastCharInitialSelection;
 #include "tree_f.h"
 #include "hyphen_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* | NextCharacter retourne le caractere qui suit le caractere courant     | */
-/* |            buffer[rank] et met a jour buffer et rank.              | */
-/* |            S'il n'y a pas de caractere suivant retourne le         | */
-/* |            caractere NULL.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NextCharacter retourne le caractere qui suit le caractere courant     
+   buffer[rank] et met a jour buffer et rank.              
+   S'il n'y a pas de caractere suivant retourne le         
+   caractere NULL.                                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 unsigned char       NextCharacter (PtrTextBuffer * buffer, int *rank)
@@ -60,12 +64,12 @@ int                *rank;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PreviousCharacter retourne le caractere qui precede le caractere        | */
-/* |            courant buffer[rank] et met a jour buffer et rank.      | */
-/* |            S'il n'y a pas de caractere precedent retourne le       | */
-/* |            caractere `\0`.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PreviousCharacter retourne le caractere qui precede le caractere        
+   courant buffer[rank] et met a jour buffer et rank.      
+   S'il n'y a pas de caractere precedent retourne le       
+   caractere `\0`.                                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 unsigned char       PreviousCharacter (PtrTextBuffer * buffer, int *rank)
@@ -102,9 +106,9 @@ int               *rank;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    MotOk teste que la chaine designee constitue bien un MOT.       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MotOk teste que la chaine designee constitue bien un MOT.       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             MotOk (PtrElement firstEl, int firstChar, PtrElement lastEl, int lastChar)
@@ -136,16 +140,16 @@ int                 lastChar;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | InitSearchDomain rend vrai si l'initialisation s'est bien passee   | */
-/* |    Le parame`tre domain vaut :                                     | */
-/* |      0 si on recherche avant la selection                          | */
-/* |      1 si on recherche dans la selection                           | */
-/* |      2 si on recherche apres la selection                          | */
-/* |      3 si on recherche dans tout le document.                      | */
-/* |    Le parame`tre context pointe sur le contexte de domaine de      | */
-/* |    recherche a` initialiser.                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitSearchDomain rend vrai si l'initialisation s'est bien passee   
+   Le parame`tre domain vaut :                                     
+   0 si on recherche avant la selection                          
+   1 si on recherche dans la selection                           
+   2 si on recherche apres la selection                          
+   3 si on recherche dans tout le document.                      
+   Le parame`tre context pointe sur le contexte de domaine de      
+   recherche a` initialiser.                                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             InitSearchDomain (int domain, PtrSearchContext context)
@@ -247,9 +251,9 @@ PtrSearchContext           context;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | UpdateDuringSearch met a jour la selection initiale                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateDuringSearch met a jour la selection initiale                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                UpdateDuringSearch (PtrElement pEl, int len)
@@ -270,9 +274,9 @@ int                 len;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | RestoreAfterSearch re'tablit la se'lection initiale et nettoie     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RestoreAfterSearch re'tablit la se'lection initiale et nettoie     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RestoreAfterSearch ()
@@ -305,16 +309,16 @@ void                RestoreAfterSearch ()
       ExtendSelection (lastElInitialSelection, endChar, TRUE, FALSE, FALSE);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NextTree Pour le contexte de recherche context, cherche le  | */
-/* |    prochain arbre a traiter, lorsqu'on est dans une recherche qui  | */
-/* |    porte sur tout le document.                                     | */
-/* |    Met a jour le contexte de recherche pour pouvoir relancer la    | */
-/* |    recherche dans le nouvel arbre a traiter.                       | */
-/* |    Retourne TRUE si un arbre suivant a ete trouve' et, dans ce cas,| */
-/* |    elCourant et carCourant representent la position ou il faut     | */
-/* |    relancer la recherche.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NextTree Pour le contexte de recherche context, cherche le  
+   prochain arbre a traiter, lorsqu'on est dans une recherche qui  
+   porte sur tout le document.                                     
+   Met a jour le contexte de recherche pour pouvoir relancer la    
+   recherche dans le nouvel arbre a traiter.                       
+   Retourne TRUE si un arbre suivant a ete trouve' et, dans ce cas,
+   elCourant et carCourant representent la position ou il faut     
+   relancer la recherche.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             NextTree (PtrElement * pEl, int *charIndx, PtrSearchContext context)
@@ -378,14 +382,14 @@ PtrSearchContext           context;
 
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  SearchNextWord recherche dans le domaine de recherche le mot qui	| */
-/* |    suit la position courante.                                  	| */
-/* |    Retourne le mot selectionne et met a jour le pointeur           | */
-/* |    a la fin du mot selectionne.                                    | */
-/* |    Le parame`tre context pointe sur le contexte de domaine de      | */
-/* |    recherche concerne' ou NULL si aucun domaine fixe'.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchNextWord recherche dans le domaine de recherche le mot qui	
+   suit la position courante.                                  	
+   Retourne le mot selectionne et met a jour le pointeur           
+   a la fin du mot selectionne.                                    
+   Le parame`tre context pointe sur le contexte de domaine de      
+   recherche concerne' ou NULL si aucun domaine fixe'.             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             SearchNextWord (PtrElement * curEl, int *curChar, char word[MAX_WORD_LEN], PtrSearchContext context)
@@ -537,14 +541,14 @@ PtrSearchContext    context;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  SearchPreviousWord recheche dans le domaine de recherche le mot   | */
-/* |            qui precede la position courante.                       | */
-/* |            Retourne le mot selectionne et met a jour le pointeur   | */
-/* |            au debut du mot selectionne.                            | */
-/* |    Le parame`tre context pointe sur le contexte de domaine de      | */
-/* |    recherche concerne' ou NULL si aucun domaine fixe'.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchPreviousWord recheche dans le domaine de recherche le mot   
+   qui precede la position courante.                       
+   Retourne le mot selectionne et met a jour le pointeur   
+   au debut du mot selectionne.                            
+   Le parame`tre context pointe sur le contexte de domaine de      
+   recherche concerne' ou NULL si aucun domaine fixe'.             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             SearchPreviousWord (PtrElement * curEl, int *curChar, char word[MAX_WORD_LEN], PtrSearchContext context)

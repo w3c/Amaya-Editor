@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 
 /*
    Recherche dans le contenu des documents
@@ -40,12 +44,12 @@
 #include "fileaccess_f.h"
 #include "structschema_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    ReplaceString	remplace dans l'element texte pEl la chaine	| */
-/* |    commencant au caractere firstChar et de longueur stringLen par  | */
-/* |    la chaine replaceStr de longueur replaceLen.                    | */
-/* |	Selectionne la chaine remplace'e si select est True.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReplaceString	remplace dans l'element texte pEl la chaine	
+   commencant au caractere firstChar et de longueur stringLen par  
+   la chaine replaceStr de longueur replaceLen.                    
+   	Selectionne la chaine remplace'e si select est True.		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar, int stringLen, char replaceStr[MAX_CHAR], int replaceLen, boolean select)
@@ -256,10 +260,10 @@ boolean             select;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    EquivalentChar compare les caracteres c1 et c2, en confondant   | */
-/* |        les majuscules et minuscules si caseEquiv est vrai.        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   EquivalentChar compare les caracteres c1 et c2, en confondant   
+   les majuscules et minuscules si caseEquiv est vrai.        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      EquivalentChar (char c1, char c2, boolean caseEquiv)
@@ -284,10 +288,10 @@ boolean             caseEquiv;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SameString rend vrai si la chaine cherchee est a` la position   | */
-/* |            indiquee par (pBuf,ind).                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SameString rend vrai si la chaine cherchee est a` la position   
+   indiquee par (pBuf,ind).                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      SameString (PtrTextBuffer pBuf, int ind, boolean caseEquiv, char strng[MAX_CHAR], int strngLen)
 
@@ -332,10 +336,10 @@ int                 strngLen;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ContentAndStringEqual teste qu'on est bien positionne' sur une chaine de texte | */
-/* |            egale a` la chaine cherchee.                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ContentAndStringEqual teste qu'on est bien positionne' sur une chaine de texte 
+   egale a` la chaine cherchee.                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             ContentAndStringEqual (PtrElement firstEl, int firstChar, PtrElement lastEl, int lastChar, boolean caseEquiv, char strng[MAX_CHAR], int strngLen)
 #else  /* __STDC__ */
@@ -370,13 +374,13 @@ int                 strngLen;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FwdSearchString recherche une chaine en avant.                  | */
-/* |    Attention: On ne trouve pas la chaine cherchee si elle est      | */
-/* |    coupee par une marque de page ou par un changement de feuille   | */
-/* |    texte du a des regles de presentation specifiques ou des        | */
-/* |    attributs differents.                                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FwdSearchString recherche une chaine en avant.                  
+   Attention: On ne trouve pas la chaine cherchee si elle est      
+   coupee par une marque de page ou par un changement de feuille   
+   texte du a des regles de presentation specifiques ou des        
+   attributs differents.                                           
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         FwdSearchString (PtrTextBuffer pBuf, int ind, boolean * found, int *firstChar, boolean caseEquiv, char strng[MAX_CHAR])
@@ -469,9 +473,9 @@ char                strng[MAX_CHAR];
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    BackSearchString recherche une chaine en arriere.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BackSearchString recherche une chaine en arriere.               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         BackSearchString (PtrTextBuffer pBuf, int ind, boolean * found, int *firstChar, boolean caseEquiv, char strng[MAX_CHAR], int strngLen)
@@ -549,14 +553,14 @@ int                 strngLen;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SearchText recherche dans le document pDoc la chaine de		| */
-/* |    caracteres decrite par les variables strng et strngLen.		| */
-/* |    A l'appel, les variables firstEl, firstChar, lastEl,            | */
-/* |    lastChar indiquent la region ou on cherche.                     | */
-/* |    Au retour, elles indiquent la chaine trouvee si la fonction     | */
-/* |    retourne Vrai. (La fonction retourne faux en cas d'echec).      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchText recherche dans le document pDoc la chaine de		
+   caracteres decrite par les variables strng et strngLen.		
+   A l'appel, les variables firstEl, firstChar, lastEl,            
+   lastChar indiquent la region ou on cherche.                     
+   Au retour, elles indiquent la chaine trouvee si la fonction     
+   retourne Vrai. (La fonction retourne faux en cas d'echec).      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             SearchText (PtrDocument pDoc, PtrElement * firstEl, int *firstChar, PtrElement * lastEl, int *lastChar, boolean forward, boolean caseEquiv, char strng[MAX_CHAR], int strngLen)
@@ -738,12 +742,12 @@ int                 strngLen;
 
 
 #define MAX_NAT_TABLE 10
-/* ---------------------------------------------------------------------- */
-/* |    AddNatureToTable      met le schema de structure pSS dans la	| */
-/* |    table natureTable et retourne dans LgTableNat le nombre		| */
-/* |    d'entrees de la table.                                          | */
-/* |    Si onlyOne est vrai, on ne met chaque schema qu'une fois.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AddNatureToTable      met le schema de structure pSS dans la	
+   table natureTable et retourne dans LgTableNat le nombre		
+   d'entrees de la table.                                          
+   Si onlyOne est vrai, on ne met chaque schema qu'une fois.	
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         AddNatureToTable (PtrSSchema pSS, PtrSSchema natureTable[MAX_NAT_TABLE], int *natureTableLen, boolean onlyOne)
@@ -782,16 +786,16 @@ boolean             onlyOne;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SearchNatures cherche toutes les natures explicitement              | */
-/* |            mentionnees dans le schema de structure pSS et		| */
-/* |            effectivement utilises, ainsi que les schemas de nature | */
-/* |            charge's dynamiquement et les extensions de ces schemas.| */
-/* |            Met ces schemas dans la table natureTable et retourne	| */
-/* |            retourne dans natureTableLen le nombre d'entrees de la  | */
-/* |            table.                                                  | */
-/* |            Si onlyOne est vrai, on ne met chaque schema qu'une fois| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchNatures cherche toutes les natures explicitement              
+   mentionnees dans le schema de structure pSS et		
+   effectivement utilises, ainsi que les schemas de nature 
+   charge's dynamiquement et les extensions de ces schemas.
+   Met ces schemas dans la table natureTable et retourne	
+   retourne dans natureTableLen le nombre d'entrees de la  
+   table.                                                  
+   Si onlyOne est vrai, on ne met chaque schema qu'une fois
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                SearchNatures (PtrSSchema pSS, PtrSSchema natureTable[MAX_NAT_TABLE], int *natureTableLen, boolean onlyOne)
@@ -829,13 +833,13 @@ boolean             onlyOne;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SearchPageBreak recherche a partir de l'element pEl un element	| */
-/* |	BreakPage concernant la vue view. Si relative est faux, pageNum	| */
-/* |	represent le numero de la page cherchee, sinon, c'est le nombre	| */
-/* |	de pages a sauter (ce nombre peut etre negatif, pour un saut	| */
-/* |	en arriere).							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchPageBreak recherche a partir de l'element pEl un element	
+   	BreakPage concernant la vue view. Si relative est faux, pageNum	
+   	represent le numero de la page cherchee, sinon, c'est le nombre	
+   	de pages a sauter (ce nombre peut etre negatif, pour un saut	
+   	en arriere).							
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrElement          SearchPageBreak (PtrElement pEl, int view, int pageNum, boolean relative)
 #else  /* __STDC__ */
@@ -901,12 +905,12 @@ boolean             relative;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ScrollPageToTop positionne le document pDoc dans sa frame       | */
-/* |            de facon que le filet du saut de page pPage soit en	| */
-/* |            haut de la fenetre.                                     | */
-/* |            view indique la vue concernee (vue du document).      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ScrollPageToTop positionne le document pDoc dans sa frame       
+   de facon que le filet du saut de page pPage soit en	
+   haut de la fenetre.                                     
+   view indique la vue concernee (vue du document).      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ScrollPageToTop (PtrElement pPage, int view, PtrDocument pDoc)
 #else  /* __STDC__ */
