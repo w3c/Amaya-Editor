@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*=======================================================================*/
 /*|                                                                     | */
 /*|     Thot Toolkit: Application Program Interface                     | */
@@ -90,7 +87,7 @@ char              **d;
 	att.red_closeness = 40000;
 	att.green_closeness = 40000;
 	att.blue_closeness = 40000;
-	/* Pour le fond de couleur None */
+	/* None  for the background color */
 	att.numsymbols = 1;
 	att.colorsymbols = &cs;
 	cs.name = NoneTxt;
