@@ -128,6 +128,7 @@ static void start_hndl(void *data, const char *el, const char **attr)
   if (!strcmp (el, "r:RDF"))
     /* @@ need to pick up namespace declarations here */
     {
+      return;
     }
   else if (!strcmp (el, "r:Description"))
     /* the start of a new annotation, we add it to the list */
@@ -136,9 +137,10 @@ static void start_hndl(void *data, const char *el, const char **attr)
       List_add (&annot_list, (void *) annot);
       if (attr[0] && !strcmp (attr[0], "about"))
 	annot->annot_url = AnnotURI ((char*)attr[1]);
+      return;
     }
 
-  if (!annot /* @@ */ && strcmp (el, "r:RDF"))
+  if (!annot) /* @@ */
     {
       fprintf (stderr, "Got start tag %s before RDF:Description; ignoring\n",
 	       el);
@@ -290,6 +292,7 @@ List *RDF_parseFile (char *file_name, AnnotFileType type)
   ThotBool error;
 
   annot_list = NULL;
+  annot = NULL;			/* no annotation yet */
   error = FALSE;
 
   fp = fopen (file_name, "r");
