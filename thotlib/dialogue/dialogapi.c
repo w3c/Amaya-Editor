@@ -1752,7 +1752,15 @@ static void CallListGTK (ThotWidget w, struct Cat_Context *catalogue)
 #ifdef _GTK
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-gboolean CallTextEnterGTK (ThotWidget w,  GdkEventButton *bu, gpointer data)
+gboolean DeletePopShell (ThotWidget w, GdkEventButton *bu, gpointer data)
+{
+  PopShell = 0;
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+gboolean CallTextEnterGTK (ThotWidget w, GdkEventButton *bu, gpointer data)
 {  
   struct Cat_Context *catalogue;
   
@@ -1766,7 +1774,6 @@ gboolean CallTextEnterGTK (ThotWidget w,  GdkEventButton *bu, gpointer data)
 	    (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, (char *)1);
 	  return TRUE;
 	}
-      return FALSE;
     }
   return FALSE;
 }
@@ -6157,8 +6164,8 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	    gtk_widget_set_uposition (GTK_WIDGET (PopShell), ShowX, ShowY);
 	    gtk_container_set_border_width (GTK_CONTAINER (PopShell), 10);
 	    ConnectSignalGTK (GTK_OBJECT (PopShell),
-			      "delete_event",
-			      GTK_SIGNAL_FUNC (gtk_true),
+			      "destroy",
+			      GTK_SIGNAL_FUNC (DeletePopShell),
 			      (gpointer)NULL);
 #endif /* _GTK */
 	  }
