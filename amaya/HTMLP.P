@@ -1606,14 +1606,25 @@ BOXES
 	END;
 
  HR_Graph1: BEGIN
-	Content: Graphics 'h';
+	Content: Text ' ';
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top;
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
-	Foreground: Creator =;
 	LineWeight: Creator =;
 	Visibility: Creator =;
+	BorderTopWidth: 1 px;
+	BorderLeftWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderRightWidth: 1 px;
+	BorderTopColor: DarkGrey2;
+	BorderLeftColor: DarkGrey2;
+	BorderBottomColor: LightGrey1;
+	BorderRightColor: LightGrey1;
+	BorderTopStyle: Solid;
+	BorderLeftStyle: Solid;
+	BorderBottomStyle: Solid;
+	BorderRightStyle: Solid;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -3372,8 +3383,8 @@ RULES
 	Height: 2 px;
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	VertPos: Top = Previous . Bottom;
-	MarginTop: 0.2;
-	MarginBottom: 0.2;
+	MarginTop: 0.5;
+	MarginBottom: 0.5;
 	Clear: Both;
 	LineWeight: 1 px;
 	Foreground: Black;
@@ -5345,7 +5356,6 @@ ATTRIBUTES
 	BEGIN
         CreateBefore(AttrName);
         CreateBefore(AttrValue);
-	Foreground: ATTRVALUE_Color;
 	if Anchor
 	   BEGIN
 	   CreateLast(ATTR_HREF_LINKS_VIEW);
@@ -5375,6 +5385,8 @@ ATTRIBUTES
 	if Anchor
 	   Underline: Underlined;
 #endif
+	IN Links_view
+		Foreground: ATTRVALUE_Color;
 #endif
 	IN Structure_view BEGIN
 		Foreground: Enclosing =;
