@@ -1945,9 +1945,9 @@ static ThotBool IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag
 	    /* search if tag can be inserted as a child of the identity */
 	    result = IsValidHtmlChild (subTypes[0], tag, "");
 	}
-      /* any math element can be inserted under <MATH> (only row in MathML.S)*/
+      /* any math element can be inserted under <math> (only row in MathML.S)*/
       if (!result &&
-	  !strcmp (TtaGetElementTypeName (elemType), "MathML") && 
+	  !strcmp (TtaGetElementTypeName (elemType), "math") && 
 	  !strcmp (TtaGetSSchemaName (elemType.ElSSchema), "MathML"))
 	result = IsValidHtmlChild (subTypes[0], tag, "");
       break;
