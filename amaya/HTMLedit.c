@@ -1028,11 +1028,11 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 {
   Element             first, last, el, next, parent;
   Element             parag, prev, child, anchor, ancestor, duplicate;
-  SSchema             HTMLSSchema;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
   DisplayMode         dispMode;
+  char               *s;
   int                 firstChar, lastChar, lg, i, levelFirst, levelLast, min,
                       max;
   Language            lang;
@@ -1044,7 +1044,6 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
     return;
 
   parag = NULL;
-  HTMLSSchema = TtaGetSSchema ("HTML", doc);
   dispMode = TtaGetDisplayMode (doc);
 
   /* get the first and last selected element */
@@ -1056,15 +1055,21 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 
   /* Check whether the selected elements are a valid content for an anchor */
   elType = TtaGetElementType (first);
-  if (elType.ElTypeNum == HTML_EL_Anchor &&
-      TtaSameSSchemas (elType.ElSSchema, HTMLSSchema) &&
+  s = TtaGetSSchemaName (elType.ElSSchema);
+  if (elType.ElTypeNum == HTML_EL_Anchor && !strcmp (s, "HTML") &&
       first == last)
     /* add an attribute on the current anchor */
     anchor = first;
+#ifdef _SVG
+  else if (elType.ElTypeNum == SVG_EL_a && !strcmp (s, "SVG") &&
+      first == last)
+    /* add an attribute on the current anchor */
+    anchor = first;
+#endif /* _SVG */
   else
     {
       /* check whether the selection is within an anchor */
-      if (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
+      if (!strcmp (s, "HTML") || !strcmp (s, "SVG"))
 	el = SearchAnchor (doc, first, &attr, TRUE);
       else
 	el = NULL;
@@ -1079,9 +1084,9 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 	  while (!noAnchor && el != NULL)
 	    {
 	      elType = TtaGetElementType (el);
-	      if (!TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
-		noAnchor = TRUE;
-	      else if (elType.ElTypeNum != HTML_EL_TEXT_UNIT &&
+	      s = TtaGetSSchemaName (elType.ElSSchema);
+	      if (!strcmp (s, "HTML") &&
+		  elType.ElTypeNum != HTML_EL_TEXT_UNIT &&
 		  elType.ElTypeNum != HTML_EL_Teletype_text &&
 		  elType.ElTypeNum != HTML_EL_Italic_text &&
 		  elType.ElTypeNum != HTML_EL_Bold_text &&
@@ -1116,6 +1121,15 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 		  elType.ElTypeNum != HTML_EL_complex_ruby &&
 		  elType.ElTypeNum != HTML_EL_IFRAME )
 		noAnchor = TRUE;
+#ifdef _SVG
+	      else if (strcmp (s, "SVG") ||
+		       elType.ElTypeNum == SVG_EL_SVG)
+#else /* _SVG */
+	      else
+#endif /* _SVG */
+		/* don't accept to generate an anchor here */
+		noAnchor = TRUE;
+
 	      if (el == last)
 		el = NULL;
 	      else
@@ -1128,10 +1142,9 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 		{
 		elType = TtaGetElementType (first);
 		if (first == last && firstChar == 0 && lastChar == 0 &&
-		    createLink &&
-		    !TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
+		    createLink && strcmp (s, "HTML") && strcmp (s, "SVG"))
 		   /* a single element is selected and it's not a HTML elem
-		      nor a character string */
+		      nor a SVG element nor a character string */
 		  {
 		    if (UseLastTarget)
 		      /* points to the last created target */
@@ -1164,8 +1177,8 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 	      if (ancestor)
 		{
 	          elType = TtaGetElementType (ancestor);
-		  if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML")
-		      && elType.ElTypeNum == HTML_EL_Anchor)
+		  s = TtaGetSSchemaName (elType.ElSSchema);
+		  if (!strcmp (s, "HTML") && elType.ElTypeNum == HTML_EL_Anchor)
 		    ok = FALSE;
 		}
 	      if (ok)
@@ -1174,7 +1187,8 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 		  if (ancestor)
 		    {
 		      elType = TtaGetElementType (ancestor);
-		      if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML")
+		      s = TtaGetSSchemaName (elType.ElSSchema);
+		      if (!strcmp (s, "HTML")
 			  && elType.ElTypeNum == HTML_EL_Anchor)
 			ok = FALSE;
 		    }
@@ -1372,13 +1386,23 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 	    }
 
 	  /* Create the corresponding anchor */
-	  elType.ElTypeNum = HTML_EL_Anchor;
+	  s = TtaGetSSchemaName (elType.ElSSchema);
+#ifdef _SVG
+	  if (!strcmp (s, "SVG"))
+	    elType.ElTypeNum = SVG_EL_a;
+	  else
+#endif /* _SVG */
+	    elType.ElTypeNum = HTML_EL_Anchor;
 	  anchor = TtaNewElement (doc, elType);
 	  if (createLink)
 	    {
 	      /* create an attribute HREF for the new anchor */
 	      attrType.AttrSSchema = elType.ElSSchema;
+#ifdef _SVG
+	      attrType.AttrTypeNum = SVG_ATTR_xlink_href;
+#else /* _SVG */
 	      attrType.AttrTypeNum = HTML_ATTR_HREF_;
+#endif /* _SVG */
 	      attr = TtaGetAttribute (anchor, attrType);
 	      if (attr == NULL)
 		{
@@ -1389,12 +1413,14 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 	  
 	  /* Check if the first element is included within a paragraph */
 	  elType = TtaGetElementType (TtaGetParent (first));
-	  if (elType.ElTypeNum == HTML_EL_BODY ||
-	      elType.ElTypeNum == HTML_EL_Division ||
-	      elType.ElTypeNum == HTML_EL_Object_Content ||
-	      elType.ElTypeNum == HTML_EL_Data_cell ||
-	      elType.ElTypeNum == HTML_EL_Heading_cell ||
-	      elType.ElTypeNum == HTML_EL_Block_Quote)
+	  s = TtaGetSSchemaName (elType.ElSSchema);	  
+	  if (!strcmp (s, "HTML") &&
+	      (elType.ElTypeNum == HTML_EL_BODY ||
+	       elType.ElTypeNum == HTML_EL_Division ||
+	       elType.ElTypeNum == HTML_EL_Object_Content ||
+	       elType.ElTypeNum == HTML_EL_Data_cell ||
+	       elType.ElTypeNum == HTML_EL_Heading_cell ||
+	       elType.ElTypeNum == HTML_EL_Block_Quote))
 	    {
 	      elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
 	      parag = TtaNewElement (doc, elType);
@@ -1446,7 +1472,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
       child = TtaGetLastChild (anchor);
       TtaSelectString (doc, child, 1, 0);
     }
-  if (createLink )
+  if (createLink)
     {
       if (UseLastTarget)
 	/* points to the last created target */
@@ -1456,15 +1482,19 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 	SelectDestination (doc, anchor, FALSE, FALSE);
       /* The anchor element must have an HREF attribute */
       /* create an attribute PseudoClass = link */
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
-      attr = TtaGetAttribute (anchor, attrType);
-      if (attr == NULL)
+      s = TtaGetSSchemaName (elType.ElSSchema);	  
+      if (!strcmp (s, "HTML"))
 	{
-	  attr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (anchor, attr, doc);
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
+	  attr = TtaGetAttribute (anchor, attrType);
+	  if (attr == NULL)
+	    {
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (anchor, attr, doc);
+	    }
+	  TtaSetAttributeText (attr, "link", anchor, doc);
 	}
-      TtaSetAttributeText (attr, "link", anchor, doc);
     }
   else
     CreateTargetAnchor (doc, anchor, FALSE, FALSE);

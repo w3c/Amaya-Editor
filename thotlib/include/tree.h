@@ -1221,7 +1221,7 @@ extern void TtaAddEmptyBox (Element el);
 
    Returns TRUE if element white spaces should be preserved.
    ---------------------------------------------------------------------- */
-extern ThotBool TtIsaElementWithSpacePreserve (Element el);
+extern ThotBool TtaIsElementWithSpacePreserve (Element el);
 
 /*----------------------------------------------------------------------
    TtaHasXmlInLineRule
