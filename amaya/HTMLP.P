@@ -110,6 +110,7 @@ DEFAULT
 	Thickness: Enclosing =;
 	Size: Enclosing =;
 	Direction: Enclosing =;
+	UnicodeBidi: Enclosing =;
 	Adjust: Enclosing =;
 	Indent: Enclosing =;
 	Depth: Enclosing =;
@@ -2916,6 +2917,7 @@ RULES
  BDO:	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
+	UnicodeBidi: Override;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
