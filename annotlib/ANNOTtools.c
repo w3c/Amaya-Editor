@@ -675,9 +675,10 @@ Document doc;
 	  fprintf (fp, 
 		   "<r:type resource=\"http://www.w3.org/1999/xx/annotation-ns#Annotation\" />\n");
 
-	  fprintf (fp, 
-		   "<r:type resource=\"%s\" />\n",
-		   annot->type);
+	  if (annot->type)
+	    fprintf (fp, 
+		     "<r:type resource=\"%s\" />\n",
+		     annot->type);
 
 	  fprintf (fp, 
 		   "<a:annotates r:resource=\"%s\" />\n",
