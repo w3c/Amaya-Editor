@@ -40,11 +40,11 @@ int TtaDirExists (CONST char *dirpath)
   else
     status = 0;
 #else /* _WINGUI */
-  struct stat buf;
 #ifdef _WX
   if (wxDirExists(wxString(dirpath, *wxConvCurrent)))
 	status = 1;
 #else /* #ifdef _WX */
+  struct stat buf;
   status = stat (dirpath, &buf) == 0 && S_ISDIR (buf.st_mode);
 #endif /* #ifdef _WX */
 #endif /* _WINGUI */

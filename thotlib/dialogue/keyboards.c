@@ -406,7 +406,7 @@ static void KbdEndDisplay (ThotWidget w, int index, caddr_t call_d)
 void KbdCallbackHandler (ThotWidget w, unsigned int param, caddr_t call_d)
 {
    CHAR_T              car;
-   ThotWidget          wp;
+   ThotWidget          wp = NULL;
    int                 i, kbd;
 
    /* Recupere la table des items */

@@ -1058,7 +1058,7 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 #endif /* _GL */
 	  /* stretched box not already handled */
 	  if (pBox->BxHorizFlex &&
-	      (!pBox->BxAbstractBox->AbLeafType == LtCompound ||
+	      (pBox->BxAbstractBox->AbLeafType != LtCompound ||
 	       pBox->BxPacking == 0))
 	    MoveBoxEdge (pBox, NULL, OpHorizDep, delta, frame, TRUE);
 	  else
@@ -1202,7 +1202,7 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 #endif /* _GL */
 	  if (pBox->BxVertFlex &&
 	  /* stretched box not already handled */
-	      (!pBox->BxAbstractBox->AbLeafType == LtCompound ||
+	      (pBox->BxAbstractBox->AbLeafType != LtCompound ||
 	       pBox->BxPacking == 0))
 	    MoveBoxEdge (pBox, NULL, OpVertDep, delta, frame, FALSE);
 	  else
