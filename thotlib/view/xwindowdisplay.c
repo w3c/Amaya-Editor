@@ -1729,6 +1729,116 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 
 	    case PtEllipticalArc:
 	      /**** to do ****/
+	      /* draws a Bezier if it's a half or quarter of a circle */
+	      if (pPa->XRadius == pPa->YRadius)
+		/* it's an arc of a circle */
+		{
+		  x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+		  y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+		  x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+		  y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+		  if (pPa->XStart == pPa->XEnd &&
+		      abs (pPa->YEnd - pPa->YStart) == 2 * pPa->XRadius)
+		    /* half circle (vertical) */
+		    {
+		    if ((pPa->Sweep  && pPa->YEnd > pPa->YStart) ||
+			(!pPa->Sweep && pPa->YEnd < pPa->YStart))
+		      cx1 = (float) (x + PixelValue (pPa->XStart + 1.36 * pPa->XRadius, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+		    else
+		      cx1 = (float) (x + PixelValue (pPa->XStart - 1.36 * pPa->XRadius, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+		    cy1 = y1;
+		    cx2 = cx1;
+		    cy2 = y2;
+		    PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2,
+			       &points, &npoints, &maxpoints);
+		    PolyNewPoint ((int) x2, (int) y2, &points, &npoints,
+				  &maxpoints);
+		    }
+		  else if (pPa->YStart == pPa->YEnd &&
+		      abs (pPa->XEnd - pPa->XStart) == 2 * pPa->XRadius)
+		    /* half circle (horizontal) */
+		    {
+		    if ((pPa->Sweep  && pPa->XEnd < pPa->XStart) ||
+			(!pPa->Sweep && pPa->XEnd > pPa->XStart))
+		      cy1 = (float) (y + PixelValue (pPa->YStart + 1.36 * pPa->YRadius, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+		    else
+		      cy1 = (float) (y + PixelValue (pPa->YStart - 1.36 * pPa->YRadius, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+		    cy2 = cy1;
+		    cx1 = x1;
+		    cx2 = x2;
+		    PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2,
+			       &points, &npoints, &maxpoints);
+		    PolyNewPoint ((int) x2, (int) y2, &points, &npoints,
+				  &maxpoints);
+		    }
+		  else if (abs (pPa->YEnd - pPa->YStart) == pPa->YRadius &&
+			   abs (pPa->XEnd - pPa->XStart) == pPa->XRadius)
+		    /* a quarter or 3/4 of a circle */
+		    {
+		      if (!pPa->LargeArc)
+			/* a quarter of a circle */
+			{
+			  if (pPa->XStart < pPa->XEnd)
+			    if (pPa->YStart < pPa->YEnd)
+			      if (pPa->Sweep)
+			        {
+			          cx1 = x2;
+			          cy1 = y1;
+			        }
+			      else
+			        {
+			          cx1 = x1;
+			          cy1 = y2;
+			        }
+			    else
+			      if (pPa->Sweep)
+			        {
+			          cx1 = x1;
+			          cy1 = y2;
+			        }
+			      else
+			        {
+			          cx1 = x2;
+			          cy1 = y1;
+			        }
+			  else
+			    if (pPa->YStart < pPa->YEnd)
+			      if (pPa->Sweep)
+			        {
+			          cx1 = x1;
+			          cy1 = y2;
+			        }
+			      else
+			        {
+			          cx1 = x2;
+			          cy1 = y1;
+			        }
+			    else
+			      if (pPa->Sweep)
+			        {
+			          cx1 = x2;
+			          cy1 = y1;
+			        }
+			      else
+			        {
+			          cx1 = x1;
+			          cy1 = y2;
+			        }
+		        QuadraticSplit (x1, y1, cx1, cy1, x2, y2,
+					&points, &npoints, &maxpoints);
+		        PolyNewPoint ((int) x2, (int) y2, &points, &npoints,
+				      &maxpoints);
+			}
+		    }
+		}
 	      break;
 	    }
 	  pPa = pPa->PaNext;

@@ -1813,11 +1813,118 @@ static void SetPath (int frame, HDC display, int x, int y, PtrPathSeg path)
 	  break;
 
 	case PtEllipticalArc:
-	  x2 = x + PixelValue (pPa->XEnd, UnPixel, NULL,
-			       ViewFrameTable[frame - 1].FrMagnification);
-	  y2 = y + PixelValue (pPa->YEnd, UnPixel, NULL,
-			       ViewFrameTable[frame - 1].FrMagnification);
-	  LineTo (display, x2, y2); 	  /**** to do ****/
+	  /**** to do ****/
+	  /* draws a Bezier if it's a half or quarter of a circle */
+	  if (pPa->XRadius == pPa->YRadius)
+	    /* it's an arc of a circle */
+	    {
+	      x1 = x + PixelValue (pPa->XStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      y1 = y + PixelValue (pPa->YStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      x2 = x + PixelValue (pPa->XEnd, UnPixel, NULL,
+			           ViewFrameTable[frame - 1].FrMagnification);
+	      y2 = y + PixelValue (pPa->YEnd, UnPixel, NULL,
+			           ViewFrameTable[frame - 1].FrMagnification);
+	      if (pPa->XStart == pPa->XEnd &&
+		  abs (pPa->YEnd - pPa->YStart) == 2 * pPa->XRadius)
+		/* half circle (vertical) */
+		{
+		  if ((pPa->Sweep  && pPa->YEnd > pPa->YStart) ||
+		      (!pPa->Sweep && pPa->YEnd < pPa->YStart))
+		    ptCurve[0].x  = x + PixelValue (pPa->XStart + 1.36 * pPa->XRadius, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+		  else
+		    ptCurve[0].x  = x + PixelValue (pPa->XStart - 1.36 * pPa->XRadius, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+		    ptCurve[0].y = y1;
+		    ptCurve[1].x = ptCurve[0].x;
+		    ptCurve[1].y = y2;
+		    ptCurve[2].x = x2;
+		    ptCurve[2].y = y2;
+		    PolyBezierTo (display, &ptCurve[0], 3);
+		    }
+		  else if (pPa->YStart == pPa->YEnd &&
+		      abs (pPa->XEnd - pPa->XStart) == 2 * pPa->XRadius)
+		    /* half circle (horizontal) */
+		    {
+		    if ((pPa->Sweep  && pPa->XEnd < pPa->XStart) ||
+			(!pPa->Sweep && pPa->XEnd > pPa->XStart))
+		      ptCurve[0].y = y + PixelValue (pPa->YStart + 1.36 * pPa->YRadius, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+		    else
+		      ptCurve[0].y = y + PixelValue (pPa->YStart - 1.36 * pPa->YRadius, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+		    ptCurve[0].x = x1;
+		    ptCurve[1].x = x2;
+		    ptCurve[1].y = ptCurve[0].y;
+		    ptCurve[2].x = x2;
+		    ptCurve[2].y = y2;
+		    PolyBezierTo (display, &ptCurve[0], 3);
+		    }
+		  else if (abs (pPa->YEnd - pPa->YStart) == pPa->YRadius &&
+			   abs (pPa->XEnd - pPa->XStart) == pPa->XRadius)
+		    /* a quarter or 3/4 of a circle */
+		    {
+		      if (!pPa->LargeArc)
+			/* a quarter of a circle */
+			{
+			  if (pPa->XStart < pPa->XEnd)
+			    if (pPa->YStart < pPa->YEnd)
+			      if (pPa->Sweep)
+			        {
+			          cx1 = x2;
+			          cy1 = y1;
+			        }
+			      else
+			        {
+			          cx1 = x1;
+			          cy1 = y2;
+			        }
+			    else
+			      if (pPa->Sweep)
+			        {
+			          cx1 = x1;
+			          cy1 = y2;
+			        }
+			      else
+			        {
+			          cx1 = x2;
+			          cy1 = y1;
+			        }
+			  else
+			    if (pPa->YStart < pPa->YEnd)
+			      if (pPa->Sweep)
+			        {
+			          cx1 = x1;
+			          cy1 = y2;
+			        }
+			      else
+			        {
+			          cx1 = x2;
+			          cy1 = y1;
+			        }
+			    else
+			      if (pPa->Sweep)
+			        {
+			          cx1 = x2;
+			          cy1 = y1;
+			        }
+			      else
+			        {
+			          cx1 = x1;
+			          cy1 = y2;
+			        }
+			  ptCurve[0].x = x1+((2*(cx1-x1))/3);
+			  ptCurve[0].y = y1+((2*(cy1-y1))/3);
+			  ptCurve[1].x = x2+((2*(cx1-x2))/3);
+			  ptCurve[1].y = y2+((2*(cy1-y2))/3);
+			  ptCurve[2].x = x2;
+			  ptCurve[2].y = y2;
+			  PolyBezierTo (display, &ptCurve[0], 3);
+			}
+		    }
+		}
 	  break;
 	}
       pPa = pPa->PaNext;
