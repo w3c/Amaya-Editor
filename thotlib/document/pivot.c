@@ -56,9 +56,11 @@ extern int          UserErrorCode;
    Allocates a new document context.
 
    Parameter:
-   documentName: name of the document to be created (maximum length 19
-   characters). The directory name is not part of this parameter
-   (see TtaSetDocumentPath).
+   documentName: name of the document to be created (maximum length
+                 19 characters). The directory name is not part of
+                 this parameter (see TtaSetDocumentPath).
+   documentIdentifier: internal/external document identifier.
+   documentSchemasPath: Path des schemas du document.
 
    Return value:
    the allocated document.
@@ -66,13 +68,16 @@ extern int          UserErrorCode;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Document            TtaAllocateDocument (char *documentName,
-                                         char *documentIdentifier)
+                                         char *documentIdentifier,
+                                         char *documentSchemasPath)
 
 #else  /* __STDC__ */
 Document            TtaAllocateDocument (documentName,
-                                         documentIdentifier)
+                                         documentIdentifier,
+                                         documentSchemasPath)
 char               *documentName;
 char               *documentIdentifier;
+char               *documentSchemasPath;
 
 #endif /* __STDC__ */
 
@@ -93,8 +98,12 @@ char               *documentIdentifier;
 	pDoc->DocLabels = NULL;
 	/* on donne son nom au document */
 	strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
-	/* on acquiert in identificateur pour le document */
+	/* on acquiert un identificateur pour le document */
 	GetDocIdent (&pDoc->DocIdent, documentIdentifier);
+        /* on stocke le path de schemas du document */
+        strncpy (pDoc->DocSchemasPath,
+                 documentSchemasPath,
+                 MAX_PATH);
 	/* document en lecture-ecriture */
 	pDoc->DocReadOnly = FALSE;
 	doc = IdentDocument (pDoc);
