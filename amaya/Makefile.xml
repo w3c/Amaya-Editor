@@ -1,0 +1,39 @@
+#
+# Makefile.xml
+# Autoconf Fragment when using XML
+# Daniel Veillard, 1997
+#
+
+AMAYA_XML_OPTIONS=-DMATHML
+
+AMAYA_XML_OBJ= 
+
+AMAYA_XML_LIBS= 
+
+AMAYA_XML_INCLUDES= 
+
+AMAYA_XML_SCHEMAS=$(AMAYA)/MathML.STR $(AMAYA)/MathMLP.PRS \
+                  $(AMAYA)/MathMLT.TRA $(AMAYA)/MathML.h
+
+$(AMAYA)/MathML.STR : $(AMAYA)/MathML.S ../bin/str
+	STR=`pwd`/../bin/str;PRS=`pwd`/../bin/prs;TRA=`pwd`/../bin/tra;\
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$STR $(ALL_AMAYA_OPTIONS) MathML ; \
+	$$PRS $(ALL_AMAYA_OPTIONS) MathMLP ; \
+	$$TRA $(ALL_AMAYA_OPTIONS) MathMLT
+
+$(AMAYA)/MathMLP.PRS : $(AMAYA)/MathMLP.P ../bin/prs
+	PRS=`pwd`/../bin/prs;\
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$PRS $(ALL_AMAYA_OPTIONS) MathMLP
+
+$(AMAYA)/MathMLT.TRA : $(AMAYA)/MathMLT.T ../bin/tra
+	TRA=`pwd`/../bin/tra;\
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$TRA $(ALL_AMAYA_OPTIONS) MathMLT
+
+$(AMAYA)/MathML.h : $(AMAYA)/MathML.S  ../bin/printstr
+	PRINTSTR=`pwd`/../bin/printstr;\
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$PRINTSTR -h MathML > MathML.h
+

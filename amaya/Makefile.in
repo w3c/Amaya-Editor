@@ -28,6 +28,8 @@ AMAYAFILES=COPYRIGHT COPYRIGHT.html HTML.STR HTML.conf HTML.trans HTML.en \
 
 FONTSFILES=Families.list fonts.dir icones*
 
+AMAYA	= @top_srcdir@/amaya
+
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 libdir = @libdir@
@@ -56,6 +58,9 @@ force :
 
 ../bin/str : force
 	@(cd ../batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" app str prs tra)
+
+../bin/printstr: 
+	@(cd ../batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" printstr)
 
 ../thotlib/libThotEditor.a : force
 	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libThotEditor)
@@ -93,6 +98,9 @@ force :
 #include the fragments for libwww if configured in
 @www_frag@
 
+#include the fragments for xml if configured in
+@xml_frag@
+
 #########################################################################
 #									#
 #		         General rules					#
@@ -101,24 +109,25 @@ force :
 
 
 ALL_AMAYA_OPTIONS= $(AMAYA_OPTIONS) $(AMAYA_JAVA_OPTIONS) $(AMAYA_PLUGIN_OPTIONS) \
-               $(AMAYA_LIBWWW_OPTIONS)
+               $(AMAYA_LIBWWW_OPTIONS) $(AMAYA_XML_OPTIONS)
 
 AMAYA_OPTION_INCLUDES= $(AMAYA_JAVA_INCLUDES) $(AMAYA_PLUGIN_INCLUDES) \
-               $(AMAYA_LIBWWW_INCLUDES)
+               $(AMAYA_LIBWWW_INCLUDES) $(AMAYA_XML_INCLUDES)
 
 AMAYA_OPTION_OBJ= $(AMAYA_JAVA_OBJ) $(AMAYA_PLUGIN_OBJ) \
-               $(AMAYA_LIBWWW_OBJ)
+               $(AMAYA_LIBWWW_OBJ) $(AMAYA_XML_OBJ)
 
 AMAYA_OPTION_LIBS= $(AMAYA_JAVA_LIBS) $(AMAYA_PLUGIN_LIBS) \
-               $(AMAYA_LIBWWW_LIBS)
+               $(AMAYA_LIBWWW_LIBS) $(AMAYA_XML_LIBS)
+
+AMAYA_OPTION_SCHEMAS= $(AMAYA_JAVA_SCHEMAS) $(AMAYA_PLUGIN_SCHEMAS) \
+               $(AMAYA_LIBWWW_SCHEMAS) $(AMAYA_XML_SCHEMAS)
 
 AMAYA_INCLUDES= -I. -I.. -I@top_srcdir@/thotlib/include -I@srcdir@ -I@srcdir@/f \
                 -I@top_srcdir@/libpng/zlib $(AMAYA_OPTION_INCLUDES)
 
 AMAYA_LIBS= ../thotlib/libThotEditor.a ../tablelib/libThotTable.a \
             $(AMAYA_OPTION_LIBS) ../libpng.a ../libz.a ../libjpeg.a
-
-AMAYA	= @top_srcdir@/amaya
 
 #
 # Rule to build objects
@@ -195,7 +204,8 @@ $(AMAYA)/HTMLT.TRA : $(AMAYA)/HTMLT.T
 	$$TRA $(ALL_AMAYA_OPTIONS) HTMLT ;\
 	$$TRA $(ALL_AMAYA_OPTIONS) HTMLTT
 
-AMAYA_SCHEMAS= $(AMAYA)/HTML.STR $(AMAYA)/HTMLP.PRS $(AMAYA)/HTMLT.TRA
+AMAYA_SCHEMAS= $(AMAYA)/HTML.STR $(AMAYA)/HTMLP.PRS $(AMAYA)/HTMLT.TRA \
+               $(AMAYA_OPTION_SCHEMAS)
 
 #
 # Interface schemas compilation

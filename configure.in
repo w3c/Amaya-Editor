@@ -400,16 +400,33 @@ dnl
 
 AC_ARG_ENABLE(java, [  --enable-java           Add Kaffe Java virtual machine])
 AC_ARG_ENABLE(plugin, [  --enable-plugin         Add Netscape Plug-Ins support])
+AC_ARG_ENABLE(xml, [  --enable-xml            Add XML support ])
 
+dnl
+dnl java is enable by default
+dnl
 if test "$enable_java" = "no" ; then
     with_java="no"
 else
     with_java="yes"
 fi
+
+dnl
+dnl plugins are disabled by default
+dnl
 if test "$enable_plugin" = "yes" ; then
     with_plugin="yes"
 else
     with_plugin="no"
+fi
+
+dnl
+dnl xml is disabled by default
+dnl
+if test "$enable_xml" = "yes" ; then
+    with_xml="yes"
+else
+    with_xml="no"
 fi
 
 if test "$build_amaya" = "yes" ; then 
@@ -434,6 +451,15 @@ if test "$build_amaya" = "yes" ; then
 	    build_amaya="no"
 	fi
     fi
+
+    if test ! -f $srcdir/amaya/MathML.S ; then
+	if test "$with_xml" = "yes" ; then
+	    AC_MSG_WARN(MathML sources not found !!)
+	    AC_MSG_WARN(Disabling XML build !)
+	    with_xml="no"
+	    XML_OPTIONS=
+	fi
+    fi
 fi
 
 dnl
@@ -441,7 +467,7 @@ dnl The options for each library or binary
 dnl
 
 THOT_OPTIONS=
-AMAYA_OPTIONS="-DCOUGAR"
+AMAYA_OPTIONS="-DCOUGAR" $XML_OPTIONS
 PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 dnl JAVA_OPTIONS="-DDEBUG_KAFFE -DDEBUG_LOCK -DDEBUG_SELECT -DDEBUG_SELECT_CHANNELS -DDEBUG_TIMING -DSYNC_DNS"
 JAVA_OPTIONS=
@@ -508,7 +534,7 @@ else
 fi
 
 if test "$with_java" = "yes" ; then
-    AC_SUBST_FILE(java_frag)dnl
+    AC_SUBST_FILE(java_frag)
     java_frag=$srcdir/javalib/Makefile.java
     AC_SUBST_FILE(www_frag)
     www_frag=/dev/null
@@ -517,6 +543,14 @@ else
     java_frag=/dev/null
     AC_SUBST_FILE(www_frag)dnl
     www_frag=$srcdir/amaya/Makefile.libwww
+fi
+
+if test "$with_xml" = "yes" ; then
+    AC_SUBST_FILE(xml_frag)
+    xml_frag=$srcdir/amaya/Makefile.xml
+else
+    AC_SUBST_FILE(xml_frag)
+    xml_frag=/dev/null
 fi
 
 dnl  ***************************************************************
@@ -655,6 +689,9 @@ if test "$build_amaya" = "yes" ; then
 	if test "$with_plugin" = "yes" ; then
 	    echo Amaya configured with Plugins support
 	fi
+    fi
+    if test "$with_xml" = "yes" ; then
+	echo Amaya configured with XML support
     fi
 fi
 
