@@ -16,6 +16,8 @@ Extensions 2.3:
 
 *MathML:
   - When saving entities Amaya keeps the names that were read at downloading.
+  - You can enter large symbols (parentheses, integrals, arrows, etc.)
+    directly from the keyboard or the Greek palette.
 
 *CSS:
   - More complex CSS selectors are supported, including several ancestor
