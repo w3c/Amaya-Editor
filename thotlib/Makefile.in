@@ -243,6 +243,7 @@ DIALOGUE_OBJ = \
 	editing/structchange.o\
 	editing/structcommands.o \
 	editing/undo.o \
+	editing/undoapi.o \
 	editing/structcreation.o \
 	editing/structmodif.o \
 	editing/structselect.o \
