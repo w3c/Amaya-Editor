@@ -285,6 +285,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 		       int *nbpoints, int maxPoints, int width, int height,
 		       PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer)
 {
+#ifndef _GTK
   ThotWindow          w;
   ThotEvent           event;
   float               ratioX, ratioY;
@@ -670,6 +671,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 
 #endif /* !_GTK */
 #endif /* _WINDOWS */
+#endif /* !_GTK */
 }
 
 
@@ -688,6 +690,7 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
 			int width, int height, PtrTextBuffer Pbuffer,
 			PtrTextBuffer Bbuffer)
 {
+#ifndef _GTK
   ThotWindow          w;
   ThotEvent           event;
   float               ratioX, ratioY;
@@ -924,6 +927,7 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
 #else /* _GTK */
 #endif /* !_GTK */
 #endif /* _WINDOWS */
+#endif /* !_GTK */
 }
 
 
@@ -1270,6 +1274,7 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
 		      PtrBox box, int xmin, int xmax, int ymin, int ymax,
 		      int xm, int ym, int percentW, int percentH)
 {
+#ifndef _GTK
 #define C_TOP 0
 #define C_HCENTER 1
 #define C_BOTTOM 2
@@ -1824,6 +1829,7 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
     InvertEllipse (frame, *x, *y, *width, *height, *x + xref, *y + yref);
   else
     BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
+#endif /* !_GTK */
 }
 
 
@@ -1890,6 +1896,7 @@ static void Moving (int frame, int *x, int *y, int width, int height,
 		    PtrBox box, int xmin, int xmax, int ymin, int ymax,
 		    int xm, int ym)
 {
+#ifndef _GTK
    ThotEvent           event;
    ThotWindow          w;
   PtrAbstractBox      pAb;
@@ -2186,6 +2193,7 @@ static void Moving (int frame, int *x, int *y, int width, int height,
     InvertEllipse (frame, *x, *y, width, height, *x + xref, *y + yref);
   else
     BoxGeometry (frame, *x, *y, width, height, *x + xref, *y + yref);
+#endif /* !_GTK */
 }
 
 
@@ -2251,6 +2259,7 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
 		     int PosX, int PosY, int DimX, int DimY, int percentW,
 		     int percentH)
 {
+#ifndef _GTK
   ThotWindow          w;
   ThotEvent           event;
   PtrAbstractBox      pAb;
@@ -2521,6 +2530,7 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   XFlush (TtDisplay);
 #endif /* !_GTK */
 #endif /* _WINDOWS */
+#endif /* !_GTK */
 }
 
 

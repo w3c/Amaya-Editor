@@ -7311,13 +7311,6 @@ void TtaNewLabel (int ref, int ref_parent, char *text)
 	n++;*/
 	w = XmCreateLabel (w, "Dialogue", args, n);
 #else /* _GTK */
-	/*
-	 * A VERIFIER
-	 *
-	 *
-	 *
-	 *
-	 */
 	tmpw = gtk_label_new (text);
 	gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
 	gtk_widget_show (GTK_WIDGET(tmpw));
@@ -7909,17 +7902,9 @@ void TtaSetDialoguePosition ()
    wdum = RootWindow (GDp, DefaultScreen (GDp));
    XQueryPointer (GDp, wdum, &wdum, &wdum, &xdum, &ydum, &ShowX, &ShowY, &xdum);
 #else /* _GTK */
-   /* A VERIFIER
-   *
-   *
-   *
-   *
-   *
-   */
    printf("pos avant: x=%d, y=%d\n", ShowX, ShowY);
    gdk_window_get_pointer((GdkWindow *)(gdk_window_get_toplevels()->data), &ShowX, &ShowY, &flag_tmp);
    printf("pos apres: x=%d, y=%d\n", ShowX, ShowY);
-
 #endif /* !_GTK */
 #endif /* !_WINDOWS */
 }
@@ -7981,7 +7966,7 @@ void TtaShowDialogue (int ref, ThotBool remanent)
   if (XtIsManaged (w))
     XMapRaised (GDp, XtWindowOfObject (XtParent (w)));
 #else /* _GTK */
-  if (1)
+  if (GTK_WIDGET_VISIBLE(w))
     {
       gtk_widget_show_all (GTK_WIDGET(w));
       gdk_window_raise (GTK_WIDGET(w)->window);
@@ -8065,7 +8050,6 @@ void TtaShowDialogue (int ref, ThotBool remanent)
   ----------------------------------------------------------------------*/
 void TtaWaitShowDialogue ()
 {
-#ifndef _GTK
   ThotEvent              event;
 
 #ifdef _WINDOWS
@@ -8086,7 +8070,6 @@ void TtaWaitShowDialogue ()
    /* Fin de l'attente */
    CurrentWait = 0;
 #endif /* !_WINDOWS */
-#endif /* !_GTK */
 }
 
 /*----------------------------------------------------------------------

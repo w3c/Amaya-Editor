@@ -181,7 +181,7 @@ typedef GdkColor       ThotColorStruct;
 typedef GdkFont        *ptrfont;
 typedef Cursor         ThotCursor;
 typedef XPoint         ThotPoint;
-typedef XEvent         ThotEvent;
+typedef GdkEvent      *ThotEvent;
 typedef XKeyEvent      ThotKeyEvent;
 typedef XComposeStatus ThotComposeStatus;
 typedef XtAppContext   ThotAppContext;

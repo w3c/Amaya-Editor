@@ -1161,6 +1161,10 @@ void TtaFetchOneEvent (ThotEvent *ev)
   XtAppNextEvent (app_cont, ev);
 #else /* _GTK */
   printf ("-------------------TtaFetchOneEvent\n");
+
+  while (!gtk_events_pending());
+  ev = gtk_get_current_event ();
+
 #if 0
   /* free the precedent event */
   if (ev) gdk_event_free (ev);
@@ -1169,6 +1173,7 @@ void TtaFetchOneEvent (ThotEvent *ev)
   /* get the waiting event */
   ev = gdk_event_get ();
 #endif
+
 #endif /* !_GTK */
 #endif /* ! _WINDOWS */
 }
@@ -1335,8 +1340,11 @@ void TtaHandleOneEvent (ThotEvent *ev)
 	    FrameCallback (frame, ev);
 	}
     }
-#endif /* !_GTK */
 #endif /* !_WINDOWS */
+#else /* _GTK */
+  /* a main loop iteration , not blocking */
+  gtk_main_iteration_do (FALSE);
+#endif /* !_GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -1353,7 +1361,7 @@ void TtaHandlePendingEvents ()
      TtaHandleOneEvent (&ev);
 #else /* _GTK */
      while (gtk_events_pending ())
-     gtk_main_iteration ();
+       gtk_main_iteration ();
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 }
@@ -1369,7 +1377,7 @@ void TtaMainLoop ()
 #ifndef _GTK
   ThotEvent           ev;
 #else /* _GTK */
-  /* GdkEvent           *ev;*/
+  ThotEvent           ev=NULL;
 #endif /* !_GTK */
 #ifndef _GTK
   TtaInstallMultiKey ();
@@ -1385,7 +1393,6 @@ void TtaMainLoop ()
   notifyEvt.event = TteInit;
   CallEventType (&notifyEvt, FALSE);
   
-#ifndef _GTK
   /* Loop wainting for the events */
   while (1)
     {
@@ -1396,6 +1403,7 @@ void TtaMainLoop ()
 #endif /* _WINDOWS */
       TtaHandleOneEvent (&ev);
     }
+#ifndef _GTK
 #else /* _GTK */
   /* gdk_set_show_events(TRUE);*/
   gtk_main ();

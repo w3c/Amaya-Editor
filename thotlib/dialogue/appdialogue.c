@@ -2385,9 +2385,11 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    ThotWidget          vbox1;
 #ifdef _GTK
 
+#if 0
    ThotWidget handlebox1;
    ThotWidget handlebox2;
    ThotWidget handlebox3;
+#endif
    ThotWidget scrolledwindow1;
    ThotWidget viewport1;
    ThotWidget          vbox2;
@@ -2400,6 +2402,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    ThotWidget          label3;
    ThotWidget          statusbar;
    ThotWidget          toolbar;
+   ThotWidget          boxtmp;
    GdkPixmap          *amaya_pixmap;
    GdkBitmap          *amaya_mask;
    GtkAdjustment      *tmpw;
@@ -2541,6 +2544,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_container_add (GTK_CONTAINER (Main_Wd), vbox1);
 
 	   /* for the menu */
+#if 0
 	   handlebox1 = gtk_handle_box_new ();
 	   gtk_widget_show (handlebox1);
 	   /*	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "handlebox1", handlebox1,
@@ -2560,7 +2564,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   /*	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "handlebox3", handlebox3,
 		   (GtkDestroyNotify) gtk_widget_unref);*/
 	   gtk_box_pack_start (GTK_BOX (vbox1), handlebox3, FALSE, TRUE, 0);
-
+#endif
 	   /* RAJOUTER L'ICONE DE L APPLICATION */
 
 
@@ -2666,7 +2670,8 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			 /*		 	 gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "menubar", menu_bar,
 						 (GtkDestroyNotify) gtk_widget_unref);*/
 			 gtk_widget_show (menu_bar);
-			 gtk_container_add (GTK_CONTAINER (handlebox1), menu_bar);
+			 /*gtk_container_add (GTK_CONTAINER (vbox1), menu_bar);*/
+			 gtk_box_pack_start (GTK_BOX (vbox1), menu_bar, FALSE, FALSE, 0);
 #else /* _GTK */
 			 XtSetArg (argument[0], XmNbackground, BgMenu_Color);
 			 XtSetArg (argument[1], XmNspacing, 0);
@@ -2740,16 +2745,18 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
 	   gtk_widget_show (toolbar);
 	   gtk_widget_set_usize (GTK_WIDGET (toolbar),-1, 20);
-	   gtk_container_add (GTK_CONTAINER (handlebox2), toolbar);
+	   gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 0);
 
 	   for (i=1; i<MAX_BUTTON ; i++)
 	     FrameTable[frame].Button[i] = NULL;
 	   FrameTable[frame].Button[0] = toolbar;
 
 	   /* The hbox which includes the logo and text zone */
-	   hbox1 = gtk_hbox_new (FALSE, 0);
+	   hbox1 = gtk_hbox_new (FALSE, 5);
 	   gtk_widget_show (hbox1);
-	   gtk_container_add (GTK_CONTAINER (handlebox3), hbox1);
+	   gtk_box_pack_start (GTK_BOX (vbox1), hbox1, FALSE, FALSE, 5);
+	   /*gtk_misc_set_alignment (GTK_MISC (hbox1), 0.5, 0.5);*/
+
 
 	   /* Put the logo */
 	   amaya_pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window, &amaya_mask,
@@ -2759,13 +2766,13 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_widget_show (logo_pixmap);
 	   gdk_pixmap_unref (amaya_pixmap);
 	   gdk_bitmap_unref (amaya_mask);
-	   gtk_box_pack_start (GTK_BOX (hbox1), logo_pixmap, FALSE, TRUE, 0);
+	   gtk_box_pack_start (GTK_BOX (hbox1), logo_pixmap, FALSE, FALSE, 5);
 	   gtk_misc_set_alignment (GTK_MISC (logo_pixmap), 0.5, 0.5);
 	   
 	   /* Put the edit zone for the label and url edit zone */
 	   hbox2 = gtk_hbox_new (FALSE, 0);
 	   gtk_widget_show (hbox2);
-	   gtk_box_pack_start (GTK_BOX (hbox1), hbox2, TRUE, TRUE, 5);
+	   gtk_box_pack_start (GTK_BOX (hbox1), hbox2, TRUE, TRUE, 0);
 	   for (i = 1; i < MAX_TEXTZONE; i++)
 	     FrameTable[frame].Text_Zone[i] = 0;
 	   FrameTable[frame].Text_Zone[0] = hbox2;

@@ -629,6 +629,7 @@ static void EndPalette (ThotWidget w, int index, caddr_t call_d)
   ----------------------------------------------------------------------*/
 void ColorsEvent (ThotEvent * event)
 {
+#ifndef _GTK
   if (event->xbutton.window == Color_Window && Color_Window != 0)
     {
       if (event->type == Expose)
@@ -636,6 +637,7 @@ void ColorsEvent (ThotEvent * event)
       else if (event->type == ButtonPress)
 	ColorsPress (event->xbutton.button, event->xbutton.x, event->xbutton.y);
     }
+#endif /* !_GTK */
 }
 #endif /* !_WINDOWS */
 
