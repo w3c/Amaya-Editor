@@ -3379,7 +3379,7 @@ static char *ParseCSSMarginRight (Element element, PSchema tsch,
 {
   char *ptr = cssRule;
 
-  cssRule = ParseACSSMarginTop (element, tsch, context, ptr, css, isHTML);
+  cssRule = ParseACSSMarginRight (element, tsch, context, ptr, css, isHTML);
   cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid margin-right value");
   return (cssRule);
 }
