@@ -193,6 +193,7 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
   int                 nSpaces, delta;
   int                 x;
   int                 i, j, k, max;
+  int                 t, b, l, r;
   ThotBool            rtl;
 
   if (pLine->LiFirstBox == NULL)
@@ -230,7 +231,10 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 	    if (!pBox->BxAbstractBox->AbHorizEnclosing ||
 		(pBox->BxAbstractBox->AbNotInLine &&
 		 pBox->BxAbstractBox->AbDisplay != 'U'))
-	      YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
+	      {
+		GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+		YMove (pBox, NULL, baseline + t - pBox->BxHorizRef - pBox->BxYOrg, frame);
+	      }
 	    else if (!pBox->BxAbstractBox->AbNotInLine)
 	      {
 		boxes[max++] = pBox;
@@ -313,8 +317,9 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 	    {
 	      /* right-to-left wirting */
 	      x -= boxes[k]->BxWidth;
-	      XMove (boxes[k], NULL, x - boxes[k]->BxXOrg, frame);
-	      YMove (boxes[k], NULL, baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
+	      GetExtraMargins (boxes[k], NULL, &t, &b, &l, &r);
+	      XMove (boxes[k], NULL, x + l - boxes[k]->BxXOrg, frame);
+	      YMove (boxes[k], NULL, baseline + t - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
 	    }
 	}
       else if (!rtl && (boxes[i]->BxScript == 'A' || boxes[i]->BxScript == 'H' ||
@@ -329,8 +334,9 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 	  for (k = i; k >= j; k--)
 	    {
 	      /* left-to-right wirting */
-	      XMove (boxes[k], NULL, x - boxes[k]->BxXOrg, frame);
-	      YMove (boxes[k], NULL, baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
+	      GetExtraMargins (boxes[k], NULL, &t, &b, &l, &r);
+	      XMove (boxes[k], NULL, x + l - boxes[k]->BxXOrg, frame);
+	      YMove (boxes[k], NULL, baseline + t - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
 	      x += boxes[k]->BxWidth;
 	    }
 
@@ -340,8 +346,9 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 	  if (rtl)
 	    /* right-to-left wirting */
 	    x -= boxes[i]->BxWidth;
-	  XMove (boxes[i], NULL, x - boxes[i]->BxXOrg, frame);
-	  YMove (boxes[i], NULL, baseline - boxes[i]->BxHorizRef - boxes[i]->BxYOrg, frame);
+	  GetExtraMargins (boxes[i], NULL, &t, &b, &l, &r);
+	  XMove (boxes[i], NULL, x + l - boxes[i]->BxXOrg, frame);
+	  YMove (boxes[i], NULL, baseline + t - boxes[i]->BxHorizRef - boxes[i]->BxYOrg, frame);
 	  if (!rtl)
 	    /* left-to-right wirting */
 	    x += boxes[i]->BxWidth;
@@ -377,6 +384,7 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
   PtrBox              boxes[200];
   int                 baseline, x, delta = 0;
   int                 i, j, k, max;
+  int                 t, b, l, r;
   ThotBool            rtl;
 
   if (pLine->LiFirstBox == NULL)
@@ -401,7 +409,7 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
 	      else if (pParentBox->BxAbstractBox->AbAdjust == AlignLeft)
 		delta = pLine->LiXMax - pLine->LiRealLength;
 	    }
-	x = pLine->LiXOrg + pLine->LiXMax - delta;
+	  x = pLine->LiXOrg + pLine->LiXMax - delta;
 	}
     }
   else
@@ -438,7 +446,10 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
 	    if (!pBox->BxAbstractBox->AbHorizEnclosing ||
 		(pBox->BxAbstractBox->AbNotInLine &&
 		 pBox->BxAbstractBox->AbDisplay != 'U'))
-	      YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
+	      {
+		GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+		YMove (pBox, NULL, baseline + t - pBox->BxHorizRef - pBox->BxYOrg, frame);
+	      }
 	    else if (!pBox->BxAbstractBox->AbNotInLine)
 	      {
 		boxes[max++] = pBox;
@@ -470,8 +481,9 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
 	    {
 	      /* right-to-left wirting */
 	      x -= boxes[k]->BxWidth;
-	      XMove (boxes[k], NULL, x - boxes[k]->BxXOrg, frame);
-	      YMove (boxes[k], NULL, baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
+	      GetExtraMargins (boxes[k], NULL, &t, &b, &l, &r);
+	      XMove (boxes[k], NULL, x + l - boxes[k]->BxXOrg, frame);
+	      YMove (boxes[k], NULL, baseline + t - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
 	    }
 	}
       else if (!rtl && (boxes[i]->BxScript == 'A' || boxes[i]->BxScript == 'H' ||
@@ -486,8 +498,9 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
 	  for (k = i; k >= j; k--)
 	    {
 	      /* left-to-right writing */
-	      XMove (boxes[k], NULL, x - boxes[k]->BxXOrg, frame);
-	      YMove (boxes[k], NULL, baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
+	      GetExtraMargins (boxes[k], NULL, &t, &b, &l, &r);
+	      XMove (boxes[k], NULL, x + l - boxes[k]->BxXOrg, frame);
+	      YMove (boxes[k], NULL, baseline + t - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
 	      x += boxes[k]->BxWidth;
 	    }
 
@@ -497,8 +510,9 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
 	  if (rtl)
 	    /* right-to-left wirting */
 	    x -= boxes[i]->BxWidth;
-	  XMove (boxes[i], NULL, x - boxes[i]->BxXOrg, frame);
-	  YMove (boxes[i], NULL, baseline - boxes[i]->BxHorizRef - boxes[i]->BxYOrg, frame);
+	  GetExtraMargins (boxes[i], NULL, &t, &b, &l, &r);
+	  XMove (boxes[i], NULL, x + l - boxes[i]->BxXOrg, frame);
+	  YMove (boxes[i], NULL, baseline + t - boxes[i]->BxHorizRef - boxes[i]->BxYOrg, frame);
 	  if (!rtl)
 	    /* left-to-right wirting */
 	    x += boxes[i]->BxWidth;

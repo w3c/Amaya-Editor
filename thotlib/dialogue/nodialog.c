@@ -367,10 +367,8 @@ void SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool Etat)
 /*----------------------------------------------------------------------
   DisplayStringSelection the selection on a substring of text
   between leftX and rightX.
-  t, b, l, and r give top, bottom, left and right extra margins.
   ----------------------------------------------------------------------*/
-void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox,
-			     int t, int b, int l, int r)
+void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
 {
 }
 

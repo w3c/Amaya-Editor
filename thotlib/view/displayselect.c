@@ -525,16 +525,14 @@ void SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool status)
 /*----------------------------------------------------------------------
   DisplayStringSelection the selection on a substring of text
   between leftX and rightX.
-  t, b, l, and r give top, bottom, left and right extra margins.
   ----------------------------------------------------------------------*/
-void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox,
-			     int t, int b, int l, int r)
+void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
 {
   PtrBox              pParentBox;
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
   int                 width, height;
-  int                 topY, h, col;
+  int                 topY, h, col, l;
 
   pFrame = &ViewFrameTable[frame - 1];
   if (leftX > rightX)
@@ -579,7 +577,7 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox,
 	}
 
       /* don't take into account margins and borders */
-      l = l + pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+      l = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       leftX = leftX + l - pFrame->FrXOrg;
       if (leftX > width)
 	width = 0;
@@ -595,6 +593,6 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox,
 	col = BgSelColor;
       else
 	col = BgSelColor;
-      DrawRectangle (frame, 0, 0, leftX, topY + t, width, h, 0, col, 2);
+      DrawRectangle (frame, 0, 0, leftX, topY, width, h, 0, col, 2);
     }
 }

@@ -112,9 +112,9 @@ static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
       		     pBox->BxAbstractBox->AbBackground, 0);
       x = pFrame->FrXOrg;
       y = pFrame->FrYOrg;
-      xd = pBox->BxXOrg + pBox->BxLMargin + l + pBox->BxLBorder +
+      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
            pBox->BxLPadding - x;
-      yd = pBox->BxYOrg + pBox->BxTMargin + t + pBox->BxTBorder +
+      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
            pBox->BxTPadding + FrameTable[frame].FrTopMargin - y;
       width = pBox->BxW;
       height = pBox->BxH;
@@ -124,9 +124,9 @@ static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
       if (pBox->BxEndOfBloc > 0)
 	{
 	  /* fill the end of the line with dots */
-	  xd = pBox->BxXOrg + pBox->BxLMargin + l + pBox->BxLBorder +
+	  xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
                pBox->BxLPadding - x;
-	  yd = pBox->BxYOrg + t + pBox->BxHorizRef - y;
+	  yd = pBox->BxYOrg + pBox->BxHorizRef - y;
 	  DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc,
 		      pBox->BxAbstractBox->AbForeground);
 	}
@@ -140,8 +140,7 @@ static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
 	  DisplayStringSelection (frame,
 				  pFrame->FrSelectionBegin.VsXPos,
 				  pFrame->FrSelectionBegin.VsXPos + 2,
-				  pFrame->FrSelectionBegin.VsBox,
-				  t, b, l, r);
+				  pFrame->FrSelectionBegin.VsBox);
 	else
 	  DisplayPointSelection (frame, pBox, 0);
 	}
@@ -323,9 +322,9 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
       if (font != NULL)
 	{
 	  /* Position in the frame */
-	  xd = pBox->BxXOrg + pBox->BxLMargin + l + pBox->BxLBorder +
+	  xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
 	    pBox->BxLPadding - pFrame->FrXOrg;
-	  yd = pBox->BxYOrg + pBox->BxTMargin + t + pBox->BxTBorder +
+	  yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
 	    pBox->BxTPadding - pFrame->FrYOrg;
 	  
 	  /* box sizes have to be positive */
@@ -339,8 +338,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	  if (selected &&
 	      !pFrame->FrSelectOnePosition &&
 	      pFrame->FrSelectionBegin.VsXPos != pBox->BxW)
-	    DisplayStringSelection (frame, 0, pBox->BxW, pBox,
-				    t, b, l, r);
+	    DisplayStringSelection (frame, 0, pBox->BxW, pBox);
 	  
 	  /* Line thickness */
 	  i = GetLineWeight (pBox->BxAbstractBox, frame);
@@ -506,8 +504,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	       or the selection starts at the end of the box */
 	    DisplayStringSelection (frame,
 				    pFrame->FrSelectionBegin.VsXPos,
-				    pFrame->FrSelectionBegin.VsXPos + 2,
-				    pBox, t, b, l, r);
+				    pFrame->FrSelectionBegin.VsXPos + 2, pBox);
 	}
     }
 }
@@ -530,9 +527,9 @@ void DisplayEmptyBox (PtrBox pBox, int frame, ThotBool selected,
   pAb = pBox->BxAbstractBox;
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
-      xd = pBox->BxXOrg + pBox->BxLMargin + l + pBox->BxLBorder
+      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder
 	+ pBox->BxLPadding - pFrame->FrXOrg;
-      yd = pBox->BxYOrg + pBox->BxTMargin + t + pBox->BxTBorder
+      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder
 	+ pBox->BxTPadding - pFrame->FrYOrg;
       /* box sizes have to be positive */
       width = pBox->BxW;
@@ -553,7 +550,7 @@ void DisplayEmptyBox (PtrBox pBox, int frame, ThotBool selected,
 	    {
 	      PaintWithPattern (frame, xd, yd, width, height, 0,
 				pAb->AbForeground, bg, 4);
-	      DisplayStringSelection (frame, 0, 2, pBox, t, b, l, r);
+	      DisplayStringSelection (frame, 0, 2, pBox);
 	    }
 	}
       else
@@ -1244,9 +1241,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
       /* Initialization */
-      x = pBox->BxXOrg + pBox->BxLMargin + l + pBox->BxLBorder +
+      x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
 	  pBox->BxLPadding - pFrame->FrXOrg;
-      y = pBox->BxYOrg + pBox->BxTMargin + t + pBox->BxTBorder +
+      y = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
 	  pBox->BxTPadding - pFrame->FrYOrg;
       /* the base line already includes top margins, top borders, etc. */
       y1 = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
@@ -1299,8 +1296,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    right = pFrame->FrSelectionEnd.VsXPos;
 		  else
 		    right = pBox->BxW;
-		  DisplayStringSelection (frame, left, right, pBox,
-					  t, b, l, r);
+		  DisplayStringSelection (frame, left, right, pBox);
 		  left += x;
 		  right += x;
 		}
@@ -1799,7 +1795,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	}
       /* display a caret if needed */
       if (selected && right == left + 2)
-	DisplayStringSelection (frame, left, right, pBox, t, b, l, r);
+	DisplayStringSelection (frame, left, right, pBox);
       TtaFreeMemory (wbuffer);
       TtaFreeMemory (buffer);
     }
@@ -2236,8 +2232,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
 	       pAb->AbLeafType != LtPath)
 	{
 	  if (selfsel)
-	    DisplayStringSelection (frame, 0, box->BxW, box,
-				    t, b, l, r);
+	    DisplayStringSelection (frame, 0, box->BxW, box);
 	  else if (ThotLocalActions[T_emptybox])
 	    (*(Proc3)ThotLocalActions[T_emptybox]) (
 		(void *)box,

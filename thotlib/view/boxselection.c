@@ -473,7 +473,6 @@ void ComputeViewSelMarks (ViewSelection *selMark)
   int                 x;
   int                 spaces;
   int                 ind, pos;
-  int                 t, b, l, r;
 
   if (selMark->VsBox->BxAbstractBox->AbLeafType == LtText)
     {
@@ -531,8 +530,7 @@ void ComputeViewSelMarks (ViewSelection *selMark)
 	    }
 	}
 
-      GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
-      selMark->VsXPos = x + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + l;
+      selMark->VsXPos = x + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       selMark->VsNSpaces = spaces;
     }
   selMark->VsLine = SearchLine (selMark->VsBox);
@@ -558,7 +556,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel, *pViewSelEnd;
   CHAR_T              c;
-  int                 t, b, l, r;
+  int                 l;
   ThotBool            graphSel, rtl;
 
   /* Check if a paragraph should be reformatted after an edit */
@@ -615,8 +613,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		pBuffer = pAb->AbText;
 	      else
 		pBuffer = NULL;
-	      GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
-	      l += pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+	      l = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
 	      /* register selection marks */
 	      if (startSelection)
 		{
