@@ -2429,7 +2429,6 @@ int                 msgType;
      }
 #  endif /* _WINDOWS */
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    DefineCallbackDialog de'finit la proce'dure de traitement des      
@@ -2573,7 +2572,6 @@ int                 ref;
    else
       return (catval);
 }
-
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
   WIN_ListOpenDirectory
@@ -6013,7 +6011,6 @@ int                 cattype;
 }
 
 #ifdef _WINDOWS
-#ifndef _WIN_PRINT
  /*----------------------------------------------------------------------
    Callback pour un bouton du menu                                    
   ----------------------------------------------------------------------*/
@@ -6104,9 +6101,7 @@ LPARAM lParam;
            default: return (DefWindowProc (hwnDlg, msg, wParam, lParam)) ;
     }
 }
-#endif /* _WIN_PRINT */
 #endif /* _WINDOWS */
-
 
 /*----------------------------------------------------------------------
    TtaNewForm cre'e un formulaire :                                   
@@ -7685,7 +7680,6 @@ boolean             remanent;
       TtaError (ERR_invalid_reference);
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    TtaWaitShowDialogue attends le retour du catalogue affiche par     
    TtaShowDialogue.                                                   
