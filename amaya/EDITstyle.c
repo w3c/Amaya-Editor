@@ -336,8 +336,8 @@ NotifyElement      *event;
       
       /* parse and apply this new CSS to the current document */
       ParseHTMLStyleHeader (NULL, stylestring, doc, TRUE);
-	  TtaFreeMemory (stylestring);
     }
+  TtaFreeMemory (stylestring);
 }
 
 /*----------------------------------------------------------------------

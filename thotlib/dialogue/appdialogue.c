@@ -252,7 +252,7 @@ int                 number;
    char                namef1[100];
    char                namef2[100];
    char                text[100];
-   /*   char               *servername; */
+   char                alphabet;
 
 #  ifndef _WINDOWS
    Display            *Dp;
@@ -304,8 +304,9 @@ int                 number;
 
    Dict_Init ();
    ThotInitDisplay (name, 0, 0);
-   FontIdentifier ('L', 'H', 0, MenuSize, UnPoint, text, namef1);
-   FontIdentifier ('L', 'H', 1, MenuSize, UnPoint, text, namef2);
+   alphabet = TtaGetAlphabet (TtaGetDefaultLanguage ());
+   FontIdentifier (alphabet, 'H', 0, MenuSize, UnPoint, text, namef1);
+   FontIdentifier (alphabet, 'H', 1, MenuSize, UnPoint, text, namef2);
    TtaChangeDialogueFonts (namef1, namef2);
 
    /* reserve les menus de Thot */
@@ -1165,7 +1166,7 @@ Pixmap              icon;
      {
 	/* Police de caracteres utilisee dans les menus */
 #       ifndef _WINDOWS
-	DefaultFont = XmFontListCreate ((XFontStruct *) ThotLoadFont ('L', 'H', 0, MenuSize, UnPoint, 0), XmSTRING_DEFAULT_CHARSET);
+       /*DefaultFont = XmFontListCreate ((XFontStruct *) ThotLoadFont ('L', 'H', 0, MenuSize, UnPoint, 0), XmSTRING_DEFAULT_CHARSET);*/
 #       endif
 	/* Compte le nombre de menus a creer */
 	n = 0;
