@@ -8,7 +8,7 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tar.gz
 #
-AMAYAVERSION=1.3a
+AMAYAVERSION=1.4
 THOTDIR=/tahiti/diffusion/Thot
 DEST=/tahiti/thottape
 
@@ -490,6 +490,8 @@ Thot/thotlib/include/typebase.h \
 Thot/thotlib/include/view.h \
 Thot/thotlib/internals/f/*.h \
 Thot/thotlib/internals/h/*.h \
+Thot/thotlib/internals/h/*.xpm \
+Thot/thotlib/internals/h/*.xbm \
 Thot/thotlib/internals/var/*.h \
 Thot/thotlib/presentation/attrpresent.c \
 Thot/thotlib/presentation/changepresent.c \

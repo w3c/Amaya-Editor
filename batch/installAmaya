@@ -1,12 +1,12 @@
 #!/bin/sh
 cd ../..
-AMAYAVERSION=1.3
+AMAYAVERSION=1.4
 THOTDIR=/tahiti/diffusion/opera
 PLATFORMS="solaris2 SGI RS6000 osf1"
 cd $THOTDIR
 rm solaris2 LINUX-ELF
 ln -s solaris-www solaris2
-ln -s LINUX-ELF-www LINUX-ELF
+ln -s LINUX-ELF-lib6 LINUX-ELF
 cd ..
 
 DIR=/afs/.inria.fr/common/usr/local/amaya/$AMAYAVERSION
