@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya V5.0 alpha" />
+  <meta name="GENERATOR" content="amaya 5.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -183,8 +183,8 @@ vite.</p>
       chargement du document effectif. Cette commande peut aussi être
       utilisée pour créer un nouveau document local.</dd>
   <dt>Liens suivants</dt>
-    <dd><a href="#L311">Activer un lien</a>
-       pour obtenir le document correspondant.</dd>
+    <dd><a href="#Activating">Activer un lien</a> pour obtenir le document
+      correspondant.</dd>
 </dl>
 
 <h3><a name="Moving">Aller en arrière et en avant</a></h3>
