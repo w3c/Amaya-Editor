@@ -372,6 +372,15 @@ int                 frame;
 }
 
 #ifdef __STDC__
+void                TtaClearViewSelections ()
+#else  /* __STDC__ */
+void                TtaClearViewSelections ()
+
+#endif /* __STDC__ */
+{
+}
+
+#ifdef __STDC__
 void                SelectElement (PtrDocument pDoc, PtrElement pEl, boolean Debut, boolean Controle)
 
 #else  /* __STDC__ */
