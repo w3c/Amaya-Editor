@@ -575,7 +575,7 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
 
       if (is_svg)
 	{
-	  TtaSetPictureType (el, "application/svg+xml");
+	  TtaSetPictureType (el,  AM_SVG_MIME_TYPE);
 	  /* parse the SVG file and include the parsed tree at the
 	     position of the image element */
 	  ParseXmlSubTree (NULL, imageName, el, FALSE, doc, 
