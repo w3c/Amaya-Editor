@@ -2490,7 +2490,7 @@ static char *ParseCSSBackgroundColor (Element element, PSchema tsch,
   ThotBool              moved;
 
   /* move the HTML rule to the root element */
-  moved = (context->type == HTML_EL_HTML && isHTML);
+  moved = ((context->type == HTML_EL_HTML || context->type == HTML_EL_BODY) && isHTML);
   if (moved)
     {
       if (element)
@@ -2741,7 +2741,7 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
   /* default element for FetchImage */
   el = TtaGetMainRoot (context->doc);
   /* move the HTML rule to the root element */
-  moved = (context->type == HTML_EL_HTML && isHTML);
+  moved = ((context->type == HTML_EL_HTML || context->type == HTML_EL_BODY) && isHTML);
   if (moved)
     {
       if (element)
@@ -2863,7 +2863,7 @@ static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
   ThotBool            moved;
 
   /* move the HTML rule to the root element */
-  moved = (context->type == HTML_EL_HTML && isHTML);
+  moved = ((context->type == HTML_EL_HTML || context->type == HTML_EL_BODY) && isHTML);
   if (moved)
     {
       if (element)
@@ -2919,7 +2919,7 @@ static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
   ThotBool              moved;
 
   /* move the HTML rule to the root element */
-  moved = (context->type == HTML_EL_HTML && isHTML);
+  moved = ((context->type == HTML_EL_HTML || context->type == HTML_EL_BODY) && isHTML);
   if (moved)
     {
       if (element)
@@ -2958,7 +2958,7 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
   ThotBool              ok;
 
   /* move the HTML rule to the root element */
-  moved = (context->type == HTML_EL_HTML && isHTML);
+  moved = ((context->type == HTML_EL_HTML || context->type == HTML_EL_BODY) && isHTML);
   if (moved)
     {
       if (element)

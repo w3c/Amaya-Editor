@@ -340,7 +340,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 		      /* write a justified white space */
 		      NbWhiteSp++;
 		      if (fg >= 0)
-			Transcode (fout, encoding, buff[j]);
+			fputs (" ", fout);
 		    }
 		  else if (fg >= 0)
 		    /* write a fixed lenght white space */
@@ -360,12 +360,146 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
       /* store previous spaces */
       NbWhiteSp += bl;
       if (fg >= 0)
-	Transcode (fout, encoding, ' ');
+	fprintf (fout, "%c", ' ');
     }
    
   /* Is an hyphen needed ? */
   if (hyphen && fg >= 0)
-    Transcode (fout, encoding, '\255');
+    fprintf (fout, "%c", '\255');
+  /* is this the end of the box */
+  if (boxWidth != 0 && SameBox == 1)
+    {
+      /* now let Postscript justify the text with the right width */
+      if (boxWidth < 0)
+	boxWidth = - boxWidth + width;
+      else if (boxWidth < width)
+	/* not enough space to display the last piece of text */
+	boxWidth = width;
+      /* Is justification needed ? */
+      if (fg >= 0)
+	{
+	  if (NbWhiteSp == 0)
+	    fprintf (fout, ") %d %d %d s\n", boxWidth, X, -Y);
+	  else
+	    fprintf (fout, ") %d %d %d %d j\n", NbWhiteSp, boxWidth, X, -Y);
+	}
+      SameBox = 0;
+      NbWhiteSp = 0;
+    }
+  return (width);
+}
+
+/*----------------------------------------------------------------------
+   WDrawString draw a char string of lg chars beginning in buff.
+   Drawing starts at (x, y) in frame and using font.
+   boxWidth gives the width of the final box or zero,
+   this is used only by the thot formmating engine.
+   bl indicate that there are one or more spaces before the string
+   hyphen indicate whether an hyphen char has to be added.
+   StartABlock is 1 if the text is at a paragraph beginning
+   (no justification of first spaces).
+   parameter fg indicate the drawing color
+   Returns the lenght of the string drawn.
+  ----------------------------------------------------------------------*/
+int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
+		PtrFont font, int boxWidth, int bl, int hyphen,
+		int startABlock, int fg, int shadow)
+{
+  FILE               *fout;
+  int                 j, encoding, width;
+  int                 noJustifiedWhiteSp;
+
+  fout = (FILE *) FrRef[frame];
+  encoding = 0;
+  if (y < 0)
+    return 0;
+  y += FrameTable[frame].FrTopMargin;
+
+  width = 0;
+  if (lg > 0)
+    {
+      /* noJustifiedWhiteSp is > 0 if writing a fixed lenght is needed */
+      /* and equal to 0 if a justified space is to be printed */  
+      noJustifiedWhiteSp = startABlock;
+      /* Is this a new box ? */
+      if (SameBox == 0)
+	{
+	  /* store the start position for the justified box */
+	  SameBox = 1;
+	  X = x;
+	  Y = y;
+	  NbWhiteSp = 0;
+	  if (fg >= 0)
+	    {
+	      /* Do we need to change the current color ? */
+	      CurrentColor (fout, fg);
+	      /* Do we need to change the current font ? */
+	      encoding = CurrentFont (fout, font);
+	      fprintf (fout, "(");
+	    }
+	}
+      
+      if (shadow)
+	{
+	  /* replace each character by a star */
+	  j = 0;
+	  while (j < lg)
+	    {
+	      buff[j++] = '*';
+	      width += CharacterWidth (42, font);
+	    }
+	  buff[lg] = EOS;
+	  bl = 0;
+	}
+      else
+	{
+	  buff[lg] = EOS;
+	  /* Add the justified white space */
+	  if (bl > 0)
+	    {
+	      NbWhiteSp += bl;
+	      if (fg >= 0)
+		fprintf (fout, "%c", ' ');
+	    }
+	  /* Emit the chars */
+	  for (j = 0; j < lg; j++)
+	    {
+	      /* compute the width of the string */
+	      width += CharacterWidth (buff[j], font);
+	      /* enumerate the white spaces */
+	      if (buff[j] == ' ')
+		{
+		  if (noJustifiedWhiteSp == 0)
+		    {
+		      /* write a justified white space */
+		      NbWhiteSp++;
+		      if (fg >= 0)
+			fputs (" ", fout);
+		    }
+		  else if (fg >= 0)
+		    /* write a fixed lenght white space */
+		    fputs ("\\240", fout);
+		}
+	      else
+		{
+		  noJustifiedWhiteSp = 0;
+		  if (fg >= 0)
+		    fprintf (fout, "%c", (char)buff[j]);
+		}
+	    }
+	}
+    }
+  else if (bl > 0)
+    {
+      /* store previous spaces */
+      NbWhiteSp += bl;
+      if (fg >= 0)
+	fprintf (fout, "%c", ' ');
+    }
+   
+  /* Is an hyphen needed ? */
+  if (hyphen && fg >= 0)
+    fprintf (fout, "%c", '\255');
   /* is this the end of the box */
   if (boxWidth != 0 && SameBox == 1)
     {

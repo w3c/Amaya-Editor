@@ -950,14 +950,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   PtrFont             prevfont = NULL;
   PtrFont             nextfont = NULL;
   CHAR_T              bchar;
-#ifdef _TH_
-  wchar_t             wcar;
-  wchar_t            *wbuffer;
-#else /* _TH_ */
-  unsigned char       car;
-  unsigned char      *buffer;
-#endif /* _TH_ */
-  int                 restbl;
+  wchar_t            *wbuffer = NULL;
+  unsigned char      *buffer = NULL;
+  char                script;
+  int                 restbl, val;
   int                 newbl, lg;
   int                 charleft;
   int                 buffleft;
@@ -979,12 +975,12 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   indbuff = 0;
   restbl = 0;
   pAb = pBox->BxAbstractBox;
+  script = pBox->BxScript;
   /* is it a box with a right-to-left writing? */
-  car = pBox->BxScript;
   if (pAb->AbUnicodeBidi == 'O')
     rtl = (pAb->AbDirection == 'R');
   else
-    rtl = (car == 'A' || car == 'H');
+    rtl = (script == 'A' || script == 'H');
   font = pBox->BxFont;
   /* do we have to display stars instead of characters? */
   if (pAb->AbBox->BxShadow)
@@ -1062,9 +1058,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      /* skip invisible characters */
 	      restbl = newbl;
 	      x += lg;
-	      car = GetFontAndIndexFromSpec (adbuff->BuContent[indbuff],
+	      val = GetFontAndIndexFromSpec (adbuff->BuContent[indbuff],
 					     font, &nextfont);
-	      if (car == SPACE)
+	      if (val == SPACE)
 		{
 		  lg = lgspace;
 		  if (newbl > 0)
@@ -1074,7 +1070,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    } 
 		}
 	      else
-		lg = CharacterWidth (car, nextfont);
+		lg = CharacterWidth (val, nextfont);
 
 	      /* Skip to the next char */
 	      if (x + lg <= 0)
@@ -1189,11 +1185,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	}
 
       /* allocate a buffer to store converted characters */
-#ifdef _TH_
-      wbuffer = TtaGetMemory ((pBox->BxNChars + 1) * sizeof(wchar_t));
-#else /* _TH_ */
-      buffer = TtaGetMemory (pBox->BxNChars + 1);
-#endif /* _TH_ */
+      if (script == 'Z')
+	wbuffer = TtaGetMemory ((pBox->BxNChars + 1) * sizeof(wchar_t));
+      else
+	buffer = TtaGetMemory (pBox->BxNChars + 1);
       nbcar = 0;
       org = x;
       while (charleft > 0)
@@ -1203,10 +1198,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		 (!rtl && indbuff <= indmax))
 	    {
 	      bchar = adbuff->BuContent[indbuff];
-	      car = GetFontAndIndexFromSpec (bchar, font, &nextfont);
-	      if (car == INVISIBLE_CHAR)
+	      val = GetFontAndIndexFromSpec (bchar, font, &nextfont);
+	      if (val == INVISIBLE_CHAR)
 		/* do nothing */;
-	      else if (nextfont == NULL && car == UNDISPLAYED_UNICODE)
+	      else if (nextfont == NULL && val == UNDISPLAYED_UNICODE)
 		{
 		  /* display previous chars handled */
 		  if (nbcar > 0)
@@ -1216,8 +1211,12 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      org -= x;
 		      if (org == 0)
 			org = -1;
-		       x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
-					org, bl, x, blockbegin, fg, shadow);
+		      if (script == 'Z')
+			x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
+					 org, bl, x, blockbegin, fg, shadow);
+		      else
+			x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
+					 org, bl, x, blockbegin, fg, shadow);
 		      width = width - x;
 		    }
 		  nbcar = 0;
@@ -1244,9 +1243,14 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			  org -= x;
 			  if (org == 0)
 			    org = -1;
-                          x += DrawString (buffer, nbcar, frame, x, y1,
-					   prevfont, org, bl, 0, blockbegin,
-					   fg, shadow);
+			  if (script == 'Z')
+			    x += WDrawString (wbuffer, nbcar, frame, x, y1,
+					      prevfont, org, bl, 0, blockbegin,
+					      fg, shadow);
+			  else
+			    x += DrawString (buffer, nbcar, frame, x, y1,
+					     prevfont, org, bl, 0, blockbegin,
+					     fg, shadow);
 			  width = width - x;
 			  org = x;
 			  /* all previous spaces are declared */
@@ -1263,8 +1267,12 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      if (nbcar > 0)
 			{
 			  y1 = y + BoxFontBase (pBox->BxFont);
-			  x += DrawString (buffer, nbcar, frame, x, y1, prevfont,  
-					   0, bl, 0, blockbegin, fg, shadow); 
+			  if (script == 'Z')
+			    x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,  
+					      0, bl, 0, blockbegin, fg, shadow);
+			  else
+			    x += DrawString (buffer, nbcar, frame, x, y1, prevfont,  
+					     0, bl, 0, blockbegin, fg, shadow);
 			  /* all previous spaces are declared */
 			  bl = 0;
 			}
@@ -1277,19 +1285,19 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      else if (!ShowSpace)
 			{
 			  /* Show the space chars */
-			  if (car == SPACE || car == TAB) 
+			  if (val == SPACE || val == TAB) 
 			    DrawChar ((char) SHOWN_SPACE, frame, x, y, nextfont, fg);
-			  else if (car == THIN_SPACE)
+			  else if (val == THIN_SPACE)
 			    DrawChar ((char) SHOWN_THIN_SPACE, frame, x, y, nextfont, fg);
-			  else if (car == HALF_EM)
+			  else if (val == HALF_EM)
 			    DrawChar ((char) SHOWN_HALF_EM, frame, x, y, nextfont, fg);
-			  else if (car == UNBREAKABLE_SPACE)
+			  else if (val == UNBREAKABLE_SPACE)
 			    DrawChar ((char) SHOWN_UNBREAKABLE_SPACE, frame, x, y,
 				      nextfont, fg);
 			}
 		 
 		      nbcar = 0;
-		      if (car == SPACE)
+		      if (val == SPACE)
 			{
 			  if (restbl > 0)
 			    {
@@ -1300,8 +1308,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			  else
 			    lg = lgspace;
 			}
-		      else if (car != EOS)
-			lg = CharacterWidth (car, nextfont);
+		      else if (val != EOS)
+			lg = CharacterWidth (val, nextfont);
 #ifdef _WINDOWS
 			x += lg;
 #else /* _WINDOWS */
@@ -1313,9 +1321,12 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      /* a new space is handled */
 		      bl++;
 		    }
+		  else if (script == 'Z')
+		    /* add the new char */
+		    wbuffer[nbcar++] = val;
 		  else
 		    /* add the new char */
-		    buffer[nbcar++] = car;
+		    buffer[nbcar++] = val;
 		}
 	      /* Skip to next char */
 	      if (rtl)
@@ -1374,8 +1385,12 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		text of the box.
 	      */
 	      y1 = y + BoxFontBase (pBox->BxFont);
-	      x += DrawString (buffer, nbcar, frame, x, y1, prevfont, width,
-			       bl, hyphen, blockbegin, fg, shadow);
+	      if (script == 'Z')
+		x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont, width,
+				 bl, hyphen, blockbegin, fg, shadow);
+	      else
+		x += DrawString (buffer, nbcar, frame, x, y1, prevfont, width,
+				 bl, hyphen, blockbegin, fg, shadow);
 	      if (pBox->BxUnderline != 0)
 		DisplayUnderline (frame, x, y, nextfont,
 				  pBox->BxUnderline, width, fg);
@@ -1396,6 +1411,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       /* display a caret if needed */
       if (left != right)
 	DisplayStringSelection (frame, left, right, pBox);
+      TtaFreeMemory (wbuffer);
       TtaFreeMemory (buffer);
     }
 }

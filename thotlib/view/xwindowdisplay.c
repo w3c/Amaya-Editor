@@ -203,24 +203,13 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
   parameter fg indicates the drawing color
   Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
-#ifdef _TH_
-int DrawString (wchar_t *buff, int lg, int frame, int x, int y,
-		PtrFont font, int boxWidth, int bl, int hyphen,
-		int startABlock, int fg, int shadow)
-#else /* _TH_ */
 int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 		PtrFont font, int boxWidth, int bl, int hyphen,
 		int startABlock, int fg, int shadow)
-#endif /* _TH_ */
 {
   ThotWindow          w;
   int                 width;
   register int        j;
-#ifdef _TH_
-  XChar2b            *buff2b;
-
-  buff2b = TtaGetMemory (lg * sizeof(XChar2b));
-#endif /* _TH_ */
 
   w = FrRef[frame];
   y += FrameTable[frame].FrTopMargin;
@@ -248,42 +237,106 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	{
 	  buff[lg] = EOS;
 	  TranslateChars (buff);
-
 	  j = 0;
 	  while (j < lg)
 	    width += CharacterWidth (buff[j++], font);
-
 	}
       if (fg >= 0)
 	{ 
 	  LoadColor (fg);
 #ifdef _GTK
 	  gdk_draw_string (w, font,TtLineGC, x, y, buff);
-
-#else /* _GTK */
-#ifdef _TH_
-	  for (j = 0; j < lg; j++) {
-	    buff2b[j].byte1 = buff[j]>>8;
-	    buff2b[j].byte2 = buff[j];
-	  }
-	  XDrawString16 (TtDisplay, w, TtLineGC, x, y, buff2b, lg);
-#else /* _TH_ */
-	  XDrawString (TtDisplay, w, TtLineGC, x, y, buff, lg);
-#endif /* _TH_ */
-#endif /* _GTK */
 	  if (hyphen)
 	    /* draw the hyphen */
-#ifdef _GTK
 	    gdk_draw_string (w, font,TtLineGC, x + width, y, "\255");
-
 #else /* _GTK */
+	  XDrawString (TtDisplay, w, TtLineGC, x, y, buff, lg);
+	  if (hyphen)
+	    /* draw the hyphen */
 	    XDrawString (TtDisplay, w, TtLineGC, x + width, y, "\255", 1);
 #endif /* _GTK */
 	}
     }
-#ifdef _TH_
+  return (width);
+}
+
+
+/*----------------------------------------------------------------------
+  WDrawString draw a char string of lg chars beginning in buff.
+  Drawing starts at (x, y) in frame and using font.
+  boxWidth gives the width of the final box or zero,
+  this is used only by the thot formmating engine.
+  bl indicates that there are one or more spaces before the string
+  hyphen indicates whether an hyphen char has to be added.
+  startABlock is 1 if the text is at a paragraph beginning
+  (no justification of first spaces).
+  parameter fg indicates the drawing color
+  Returns the lenght of the string drawn.
+  ----------------------------------------------------------------------*/
+int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
+		 PtrFont font, int boxWidth, int bl, int hyphen,
+		 int startABlock, int fg, int shadow)
+{
+  ThotWindow          w;
+  int                 width, j;
+#ifndef _GTK
+  XChar2b            *buff2b;
+
+  buff2b = TtaGetMemory (lg * sizeof(XChar2b));
+#endif /* _GTK */
+  w = FrRef[frame];
+  y += FrameTable[frame].FrTopMargin;
+  /* compute the width of the string */
+  width = 0;
+  if (lg > 0 && w)
+    {
+      /* Dealing with BR tag for windows */
+#ifndef _GTK
+      if (fg >= 0)
+	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
+#endif /* _GTK */
+      if (shadow)
+	{
+	  /* replace each character by a star */
+	  j = 0;
+	  while (j < lg)
+	    {
+	      buff[j++] = '*';
+	      width += CharacterWidth (42, font);
+	    }
+	  buff[lg] = EOS;
+	}
+      else
+	{
+	  buff[lg] = EOS;
+	  j = 0;
+	  while (j < lg)
+	    width += CharacterWidth (buff[j++], font);
+	}
+      if (fg >= 0)
+	{ 
+	  LoadColor (fg);
+#ifdef _GTK
+	  gdk_draw_text_wc (w, font,TtLineGC, x, y, (GdkWChar *)buff, lg);
+	  if (hyphen)
+	    /* draw the hyphen */
+	    gdk_draw_string (w, font,TtLineGC, x + width, y, "\255");
+#else /* _GTK */
+	  for (j = 0; j < lg; j++)
+	    {
+	      buff2b[j].byte1 = buff[j] >> 8;
+	      buff2b[j].byte2 = buff[j];
+	    }
+	  XDrawString16 (TtDisplay, w, TtLineGC, x, y, buff2b, lg);
+	  if (hyphen)
+	    /* draw the hyphen */
+	    XDrawString (TtDisplay, w, TtLineGC, x + width, y, "\255", 1);
+#endif /* _GTK */
+	}
+    }
+#ifndef _GTK
   TtaFreeMemory (buff2b);
-#endif /* _TH */
+#endif /* _GTK */
   return (width);
 }
 

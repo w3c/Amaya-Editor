@@ -344,6 +344,80 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
       while (j < lg)
 	width += CharacterWidth (buff[j++], font);
     }
+  if (fg >= 0)
+    {
+      /* not transparent -> draw charaters */
+      y += FrameTable[frame].FrTopMargin;
+      SetTextColor (display, ColorPixel (fg));
+      SetBkMode (display, TRANSPARENT);
+      SetTextAlign (display, TA_BASELINE | TA_LEFT);
+      TextOut (display, x, y, buff, lg);
+      if (hyphen)
+	/* draw the hyphen */
+	TextOut (display, x + width, y, "\255", 1);
+    }
+
+  SelectObject (display, hOldFont);
+  DeleteObject (ActiveFont);
+  ActiveFont = 0;
+  return (width);
+}
+
+/*----------------------------------------------------------------------
+  WDrawString draw a char string of lg chars beginning in buff.
+  Drawing starts at (x, y) in frame and using font.
+  boxWidth gives the width of the final box or zero,
+  this is used only by the thot formmating engine.
+  bl indicates that there are one or more spaces before the string
+  hyphen indicates whether an hyphen char has to be added.
+  startABlock is 1 if the text is at a paragraph beginning
+  (no justification of first spaces).
+  parameter fg indicates the drawing color
+  Returns the lenght of the string drawn.
+  ----------------------------------------------------------------------*/
+int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
+		 PtrFont font, int boxWidth, int bl, int hyphen,
+		 int startABlock, int fg, int shadow)
+{
+  HDC                 display;
+  HFONT               hOldFont;
+  int                 j, width;
+
+  if (lg <= 0)
+    return 0;
+#ifdef _WIN_PRINT
+  if (y < 0)
+    return 0;
+  display = TtPrinterDC;
+#else /* _WIN_PRINT */
+  if (FrRef[frame] == NULL)
+    return 0;
+  display = TtDisplay;
+  SelectClipRgn (display, clipRgn);
+#endif /* _WIN_PRINT */
+
+  width = 0;
+  SetMapperFlags (display, 1);
+  hOldFont = WinLoadFont (display, font);
+  if (shadow)
+    {
+      /* replace each character by a star */
+      j = 0;
+      while (j < lg)
+	{
+	  buff[j++] = '*';
+	  width += CharacterWidth (42, font);
+	}
+      buff[lg] = EOS;
+    }
+  else
+    {
+      buff[lg] = EOS;
+      TranslateChars (buff);
+      j = 0;
+      while (j < lg)
+	width += CharacterWidth (buff[j++], font);
+    }
   /* get the string size
      GetTextExtentPoint (display, buff, lg, &size);
      width = size.cx;*/
