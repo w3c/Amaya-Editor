@@ -295,6 +295,20 @@ void    FreeMenus ()
 {
 }
 
+/*----------------------------------------------------------------------
+  SwitchPaste enables (on=TRUE) or disables (on=FALSE) the Paste
+  entry in all frames.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         SwitchPaste (PtrDocument pDoc, ThotBool on)
+#else  /* __STDC__ */
+void         SwitchPaste (pDoc, on)
+PtrDocument  pDoc;
+ThotBool     on;
+#endif /* __STDC__ */
+{
+}
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/

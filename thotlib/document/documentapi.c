@@ -826,7 +826,14 @@ int                 accessMode;
 		 pDoc->DocRootElement->ElAccess = AccessReadWrite;
 	     }
 #ifndef NODISPLAY
-	   SetAccessMode (LoadedDocument[document - 1], accessMode);
+	   /* update the paste entry */
+	   if (accessMode == 0)
+	     /* disable the Paste command */
+	     SwitchPaste (pDoc, FALSE);
+	   else if (FirstSavedElement != NULL || ClipboardThot.BuLength != 0)
+	     /* enable the Paste command */
+	     SwitchPaste (pDoc, TRUE);
+	   SetAccessMode (pDoc, accessMode);
 #endif
 	 }
      }
