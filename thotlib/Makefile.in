@@ -165,7 +165,6 @@ EDITOR_OBJ = \
 	dialogue/font.o \
 	dialogue/geom.o \
 	editing/scroll.o \
-	editing/selectionapi.o \
 	editing/spellchecker.o \
 	image/abspictures.o \
 	image/pictureapi.o \
