@@ -1,0 +1,194 @@
+This package is cextract, version 1, patchlevel 7.  This is the second
+official release and is being distributed through the newsgroup
+comp.sources.reviewed, with the first version [1.2] being released
+there as well.
+
+See the file INSTALL for installing on Unix systems or the file
+INSTALL.VMS for installing on VMS systems.
+
+The cextract/cextdoc program is copyright 1992 by Adam Bryant.
+
+The code is freely distributable and there are no restrictions other
+than the fact that it not be used for monetary gain and that copyright
+notices must be kept intact.
+
+The program may be used to generate proprietary source code or
+documentation, but its own source code may not be used as a part of
+any proprietary programs.
+
+All of the output created by cextract and cextdoc programs should be
+covered by the copyright notices for the source code which was read to
+create the output, since it is really a derivative work based on that
+source code.
+
+-=-=-=-=-
+
+This package contains a C prototype extractor.
+
+cextract is ideal for generating header files for large multi-file C
+programs, and will provide an automated method for generating all of
+the prototypes for all of the functions in such a program.
+
+cextract also functions as a rudimentary documentation extractor,
+generating a sorted list of all functions and their locations.
+
+-=-=-=-=-
+
+The basic method I used in this program involves the following steps:
+
+    1)  Send the file to the C preprocessor.
+    2)  Parse the output from the C preprocessor.
+    3)  Isolate any function declaration sequence.
+    4)  Determine if the parameter list is empty, contains
+        a list of K&R C style declarations, or contains a
+        list of ANSI C style declarations.
+    5a) If the list is empty, then store a "(void)" for
+        that function.
+    5b) If it is a K&R declaration, traverse both the
+        variable list and the declaration portion,
+        associating matched pairs and providing default
+        "int" type if needed.  Check for replacement
+        matches and remove variable names if desired.
+    5c) If the declaration is ANSI, separate into the
+        declaration sequences and perform any replacements
+        and/or variable name removals.
+    6)  Store the list of functions, with associated
+        declaration strings.
+    7)  Store the formatted function output, in the
+        appropriate order, in one or two memory locations
+        [Two for dual output, one otherwise].  This step
+        can be performed after all files have been parsed,
+        if needed.
+    8)  After all files have been parsed and the results
+        stored, the results are sent to the final output
+        location, either the standard output or a file.
+
+-=-=-=-=-
+
+The main advantages that I find with this program over other
+prototyping programs:
+
+  - smaller.  [You can distribute it with your own packages so that
+    other programmers can rebuild your header files.]
+
+  - fully written in C.  [You don't need a lex or yacc compiler
+    to get this going.]
+
+  - more portable.  [As far as I know, it only requires that
+    the system has a C preprocessor for it to work.]  I have even
+    provided support for VMS systems, although I wish the compiler
+    on that system allowed the comments to be retained.  [Using the
+    GNU C preprocessor on such systems is supposed to work, though.]
+
+  - reads either ANSI or K&R C code and outputs either K&R or
+    ANSI [or both!] function definitions.
+
+  - can catch all #define statements within the parameter list
+    and replace before output, if needed.  [such as
+    "#define FILE struct _iobuf"]  This feature is provided to
+    account for adjustments caused by the C preprocessor.
+
+  - automatically catches and replaces FILE and varargs stuff.
+
+  - has a built in documentation extraction program.
+
+  - supports configuration files and the automatic generation of such
+    files.
+
+-=-=-=-=-
+
+Likely disadvantages:
+
+  - it is not a fully implemented compiler, so it might not
+    complain if it is reading invalid C code.
+
+  - might barf on extremely complex code.
+
+  - could probably be a little faster.  [any speed up
+    suggestions are welcome]
+
+  - with heavily conditional (#ifdef'ed) code, it might not be
+    able to generate a "generic" header file which would work for
+    all possible code permutations.
+
+  - isn't fully C++ compatible.
+
+-=-=-=-=-
+
+List of changes from version 1.2 to version 1.6:
+
+  o Updated the documentation to handle the new features.
+  o Fixed bug which made functions with comments in a parameter list to
+     be skipped.
+  o Added support for the CPP definition within the Makefile and
+     it is now possible to change the preprocessor at runtime.
+  o Changed the "#ifdef __STDC__" to "#if __STDC__".
+  o Wrote a configuration file generation system.
+  o Check for duplicate replace commands and definition options.
+  o Swapped my use of the CFLAGS and COPTS definitions in the Makefile.
+  o Fixed problems with the 'Q' flag parsing.
+  o Automatically create the system configuration file on a "make install".
+  o Fixed problems with the NO_OPEN option being VMS specific.
+  o Fixed problems with the replacement of types.
+  o Fixed bug tagging on an extra "int" unnecessarily.
+  o Allow any style of text inside the brackets and parenthesis in the
+    variable declaration lists.
+  o Fixed typos in the font error messages. [% --> %%]
+  o Automatically remove the "register" from the parameter lists.
+  o Added an option to provide compact output of the ANSI and K&R prototypes.
+  o Added support for // single line C++ style comments.
+
+-=-=-=-=-
+
+If you have any problems, or suggestions, please feel free to get in
+touch with me.
+
+Adam Bryant
+adb@bu.edu
+
+-=-=-=-=-
+
+HOW I USE IT:
+
+  - I use this program myself in support of a project written
+    in over 60,000 lines of C code.
+
+  - Within my main header file, I have lines similar to*:
+
+#ifndef __CEXTRACT__
+#include "proto.h"
+#endif /* __CEXTRACT__ */
+
+  - In my Makefile, I have an entries similar to:
+
+#
+#	list of all files in the program
+CFILS	= a.c b.c c.c d.c e.c
+
+#
+#	build the new prototype file
+proto:
+	cextract +CaFPSc -o proto.h ${CFILS}
+
+  - and then all I need do is type "make proto" and I get an
+    automatically updated header file listing all of my functions.
+
+* The "#ifndef __CEXTRACT__" sequence is there so that I can
+  rebuild the header file even if it was somehow destroyed.
+
+ADDITIONAL NOTES:
+
+  - If you are concerned with type promotion at your site, you may
+    make use of the "replace" function.  For example, adding the
+    following lines to a configuration file will handle a number of
+    type promotions:
+
+         replace type "char" with "int"
+         replace type "unsigned char" with "unsigned int"
+         replace type "float" with "double"
+
+  - While the documentation extractor might not be ideal for full
+    production specs, it can be a useful step in an automatic generation
+    process, especially if the comments preceding each function are
+    adequately descriptive.
+

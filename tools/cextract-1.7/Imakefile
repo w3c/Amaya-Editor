@@ -1,0 +1,39 @@
+XCOMM               Edited by chrisg - basic Imakefile        
+XCOMM
+XCOMM
+XCOMM                       Target:  cextract
+XCOMM 
+
+USRLIBDIR =
+CDEBUGFLAGS = +O3
+
+XCOMM CLOBBER 
+STD_INCLUDES =
+INCLUDES =
+
+INCROOT = /usr/include
+ 
+CCOPTIONS = $(INCLUDES)
+LDOPTIONS = $(CCOPTIONS)
+
+LOCAL_LIBS1 = 
+SYS_LIBS1 = -lm
+DEPS =
+
+SRCS = \
+	parse.c \
+	main.c \
+	io.c
+
+OBJS = \
+      	parse.o \
+	main.o \
+	io.o
+ 
+AllTarget(cextract)
+NormalProgramTarget(cextract,$(OBJS),$(DEPS),$(LOCAL_LIBS1),$(SYS_LIBS1))
+
+InstallProgram(cextract,$(BINDIR))
+InstallManPage(cextract,$(MANDIR))
+XCOMM InstallManPage(cextrc,$(MANDIR))
+

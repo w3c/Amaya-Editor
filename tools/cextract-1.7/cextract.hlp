@@ -1,0 +1,400 @@
+1 CEXTRACT
+
+  CEXTRACT is a program which will extract C prototypes from source
+  code and then generate a header file or documentation file listing
+  those functions which were encountered.
+
+  The extraction mode is ideal for building header files for multiple
+  source projects, and the documentation mode is useful in helping
+  write documentation for such projects.  [Note: due to limitations in
+  the VAX compiler the comment extraction routines may not be
+  available on your system.  This would cause the documentation mode
+  to be mostly inoperable.]
+
+  Format:
+
+    CEXTRACT [/OPTIONS] file-name ...
+
+2 Parameter
+
+    file-name ...
+
+  Specify the list of files to be parsed by cextract.  Any parameter
+  not beginning with a '/', '-', or a '+' is interpreted as a file
+  name; the others will be parsed as command qualifiers.
+
+
+2 Command_Qualifiers
+
+  Command qualifiers may be prefixed by either a '/', '-' or a '+'.
+  If a '-' precedes a command qualifier, that option will be disabled,
+  if appropriate, otherwise, it will be enabled.  Also, a "no" or
+  "no-" may also be used to indicate negation.
+
+
+/ANSI-CODE
+
+ /ANSI-CODE                                     (default disabled)
+ /NOANSI-CODE
+
+ If in extraction mode, with dual-output and merge-output disabled,
+ the output should be in ANSI C format.
+
+/BREAK-AFTER-TYPES
+
+ /BREAK-TYPES					(default disabled)
+ /BREAK-AFTER-TYPES
+ /NOBREAK-TYPES
+ /NOBREAK-AFTER-TYPES
+
+ When enabled, a newline will be inserted between the function type
+ and the function name in the function declarations.
+
+/BUILD-CONFIG
+
+ Generate a configuration file in the current directory based on the
+ current program settings.
+
+/COMMENTS
+
+ /COMMENTS                                      (default disabled)
+ /NOCOMMENTS
+ /YANK-COMMENTS
+ /NOYANK-COMMENTS
+
+ Capture the comment immediately preceding the function definition and
+ use it as a description of that function.
+
+/CONFIG-FILE
+
+ /CONFIG-FILE=file_name
+
+ Read in the indicated file and parse it for configuration commands.
+
+/CPP-PROGRAM
+
+ /CPP-PROGRAM=program_name
+
+ Specify which program is to be used as a C preprocessor.  This
+ program should resolve all C defines and preprocessor statements
+ while, hopefully, leaving all of the comments in place.  Note that
+ the default VMS C preprocessor is known to remove the comments, so
+ finding an alternative is recommended.
+
+/DOC-MODE
+
+ /DOC-MODE                                      (default for cextdoc)
+
+ Format the output as a normal text documentation file.
+
+/DEFINE
+
+ /DEFINE=expression
+
+ This option defines a macro by passing it on to the C preprocessor.
+
+/DUAL-OUTPUT
+
+ /DUAL-OUTPUT                                   (default enabled)
+ /NODUAL-OUTPUT
+
+ Generate both ANSI C and K&R C output when in extraction mode.  The
+ two styles will be separated using "#if __STDC__", "#else", and
+ "#endif" constructs.  This option may be overridden by the
+ merge-output option.
+
+/EXTERNS
+
+ /EXTERNS                                       (default enabled)
+ /NOEXTERNS
+
+ Prepend an extern to each function prototype before output.
+
+/EXTRACT-MODE
+
+ /EXTRACT-MODE                                  (default mode for cextract)
+
+ Extract the prototypes to build a header file for the functions.
+
+/FIRST-COMMENTS
+
+ /FIRST-COMMENTS                                (default disabled)
+ /NOFIRST-COMMENTS
+  
+ Capture the first comment encountered in each file and include it as
+ part of the output.
+
+/FILENAME
+
+ /FILENAME                                      (default disabled)
+ /NOFILENAME
+ /PREPEND-FILENAME
+ /NOPREPEND-FILENAME
+
+ If the first_comments option is enabled, prepend the name of the file
+ to the comment.
+
+/FONT
+
+ /FONT_1_%%                                     (default="C", Courier)
+ /FONT_T_%%
+
+ Specify the title font for troff-mode output.
+
+ /FONT_2_%%                                     (default="CO", Courier Oblique)
+ /FONT_C_%%
+
+ Specify the comment font for troff-mode output.
+
+ /FONT_3_%%                                     (default="B", Times Bold)
+ /FONT_N_%%
+
+ Specify the function name font for troff-mode output.
+
+ /FONT_4_%%                                     (default="R", Times Roman)
+ /FONT_P_%%
+
+ Specify the parameter list font for troff-mode output.
+
+/HEADER-STRING
+
+ /HEADER-STRING=string                          (default disabled)
+
+ Specify a string to be used as an indicator for file inclusion.  This
+ will cause the extraction mode output to be enclosed within the
+ construct:
+
+        #ifndef string
+        #define string
+
+         /*... output ...*/
+
+        #endif /* string */
+
+ This technique is used in many system header files to assure that the
+ header file is not "#included" more than once.  If not enabled, the
+ output will be enclosed within the construct:
+
+        #ifndef __CEXTRACT__
+
+         /*... output ...*/
+
+        #endif /* __CEXTRACT__ */
+
+/INCLUDE
+
+ /INCLUDE=directory
+
+ Specify a directory to be added to the include file search path.
+ This qualifier is passed on to the C preprocessor.
+
+/MERGE-OUTPUT
+
+ /MERGE-OUTPUT                                  (default disabled)
+ /NOMERGE-OUTPUT
+
+ In extraction mode, generate the prototypes enclosed within a macro
+ so that both the ANSI C and K&R C declarations are handled on the
+ same line.  This option overrides both the dual-output and ansi-code
+ option settings.
+
+/MULTIPLE-COMMENTS
+
+ /MULTI-COMMENTS                                (default disabled)
+ /NOMULTI-COMMENTS
+ /MULTIPLE-COMMENTS
+ /NOMULTIPLE-COMMENTS 
+
+ When extracting comments, assume that consecutive comments are
+ actually a single comment.  This allows for coding styles which make
+ use of "block" comments.
+
+/OUTPUT-FILE
+
+ /OUTPUT-FILE=file_name                         (default=terminal)
+
+ Specify a file to which output should be sent.  If no file name is
+ specified as part of the qualifier, the first non-qualifier is used
+ as the name of the output file.
+
+/READ-CONFIG
+
+ /READ-CONFIG=#                                 (default=7)
+
+ Specify an octal digit representing which configuration files should
+ or should not be read.  The system file is 1, the file in the user's
+ default directory is 2, and the file in the current directory is 4.
+ Add the numbers together to read in multiple configuration files.  If
+ no number is specified a zero is assumed.
+
+/REMOVE-NAMES
+
+ /REMOVE-NAMES					(default disabled)
+ /NOREMOVE-NAMES
+ /DISCARD-NAMES
+ /NODISCARD-NAMES
+
+ Do not display the variable names in the prototype output.
+
+/ROFF-MODE
+
+ /ROFF-MODE                                     (this mode is not a default)
+ /TROFF-MODE
+
+ Generate documentation output, and use a UNIX -ms troff format.  This
+ will probably not prove too useful on a VMS system.
+
+/SETTINGS
+
+ Show all of the configuration settings.  This is very useful for
+ determining if a configuration file is working properly.
+
+/SHOW-ALL
+
+ /SHOW-ALL                                      (default enabled)
+ /NOSHOW-ALL
+ /SHOW-ANYWAY
+ /NOSHOW-ANYWAY
+
+ If any output in K&R C is generated, that output should include the
+ ANSI C prototypes enclosed within comments.
+
+/SINGLE-COMMENTS
+
+ /SINGLE-COMMENTS                               (default enabled)
+ /NOSINGLE-COMMENTS
+
+ When extracting comments, do not search for multi-line comments.
+
+/SORT
+
+ /SORT-ALL                                      (default=NOSORT)
+ /SORT-BY-FILES
+ /NOSORT
+
+ Specify a sorting method for the functions.  Sort alphabetically
+ either over all of the functions, over each file, or not at all.
+
+/STATICS
+
+ /STATICS                                       (default disabled)
+ /NOSTATICS                                     (enabled for cextdoc)
+ /STATICS=NONE
+ /STATICS=ANY
+ /STATICS=ONLY
+
+ Set how static variables should be treated by the program.  By
+ default, they are excluded from searches, but they may also be either
+ included with non-statics, or searched for alone.  Using these
+ options you can determine whether the header file is for an entire
+ program or library, or just for a single file.
+
+/SYSTEM-BUILD
+
+ Generate the system configuration file based on the current program
+ settings.
+
+/TAB-WIDTH
+
+ /TAB-WIDTH=width                               (default=0)
+
+ Specify a numeric width for the tab setting during conversion of tabs
+ to spaces for documentation generation.  A setting of 0 means to not
+ perform any conversion.
+
+/UNDEFINE
+
+ /UNDEFINE=macro
+
+ Specify a macro to undefine when calling the C preprocessor.
+
+/VERSION-INFO
+
+ /VERSION-INFO
+
+ Display the version information for the program.
+
+/WRAP-PARAMETERS
+
+ /WRAP-PARAMETERS				(default disabled)
+ /NOWRAP-PARAMETERS
+
+ If the length of the parameter list for a function would cause it to
+ exceed a given number of columns [72 by default], a newline will be
+ inserted in place of a space character, so that the function will not
+ exceed that given length.  The optional number after the command will
+ override a negation prefix if encountered.
+
+
+2 Customization Files
+
+  CEXTRACT has support for customization files which are read at
+  startup, before the qualifiers are checked, or whenever specified by
+  the /CONFIG-FILE qualifier.
+
+  Configuration files are checked for (on most VMS systems) in the
+  following locations:
+
+     sys$library:cext.cnf	- the system configuration file
+     sys$login:cext.cnf		- the initial directory upon login
+     cext.cnf			- the current directory
+
+  The file should be a normal text file, with each customization
+  command on a separate line.  Blank lines, and any line beginning
+  with a "#" will be ignored.  All commands should be in lowercase.
+
+  Any command preceded by the string "doc-only " will only be used
+  during the documentation mode, and any command preceded by
+  "extract-only " will only be used during the extraction mode.
+
+  Commands which are preceded by either a "!", the string "no", or
+  the string "no-" will be interpreted as disabling that option, if
+  appropriate.
+
+  The supported commands include all of the command qualifiers
+  (without the preceding '/', of course), except for the "read-config"
+  command, which is unsupported for obvious reasons.
+
+  In addition to the command qualifiers, the "replace" command is
+  supported to allow for the replacement of types, variables or
+  type-variable combinations after a "#define" has been expanded.
+
+  The format of the replace command is:
+
+     replace [type/variable/all] "string1" "string2"
+
+  As an example, the default replacement of FILE usually has the
+  format:
+
+     replace type "struct _iobuf" "FILE"
+
+  The varargs system is also replaced using this command.
+
+2 Examples
+
+  CEXTRACT FILEA.C
+
+  Extract the function prototypes in the default extraction format from
+  the C source file FILEA.C.
+
+  CEXTDOC FILEA.C FILEB.C
+
+  Extract the function prototypes in a normal documentation format from
+  the C source files FILEA.C and FILEB.C.
+
+  CEXTRACT /TROFF-MODE FILEA.C FILEB.C
+
+  Extract the function prototypes in a troff documentation format from
+  the C source files FILEA.C and FILEB.C.  Probably useless on a VMS
+  system.
+
+  CEXTRACT /SETTINGS
+
+  Find out what all of the default settings are.  This will show what
+  the normal environment is.
+
+  CEXTRACT /READ-CONFIG /DUAL-OUTPUT FILEA.C
+
+  Extract the function prototypes assuring that the configuration
+  files are not read in.  Also assure that both K&R and ANSI C output
+  will be used.

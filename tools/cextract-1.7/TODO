@@ -1,0 +1,42 @@
+This file lists possible future enhancements:
+
+  - Get it to properly handle a function which returns a structure
+    or structure pointer where the structure is declared along with
+    the function.  [Ack... who programs like that anyway? :-)]
+
+    Example:
+       extern struct play {int field;} *play(void) { ... } /* etc. */
+
+    [It should already handle structures within the parameter list.]
+
+  - Get it working on any systems it is not working on, such as IBM PCs.
+    [Patches welcome!]
+
+  - Find some way to improve the I/O speed.  Perhaps through the use
+    of another method for reading from the pipe?
+
+  - Capture variables and structures as well as functions.
+
+  - Enhance the documentation extraction portion.
+
+  - Get it to work with C++ code as well as C.
+
+  - Provide automatic generation of conditional header files.  [This
+    would probably be quite tricky as well as require multiple
+    passes ==> slooooow.]
+
+  - Use the standard command argument parsing routines on VMS systems.
+
+  - Better memory management for the buffers and string storage space.
+    The arbitrary arrays just don't cut it anymore.
+
+  - Provide option of taking first comment within a function instead
+    of first comment before a function.
+
+  - Provide support for very strange functional declarations.
+    [Pointers to functions with functions as parameters, far pointers, etc.]
+
+  - Handle far pointers, looking into ANSI C specs on this.
+
+  - Provide a flag to insert a copyright notice into headers automatically.
+

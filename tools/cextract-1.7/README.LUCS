@@ -1,0 +1,16 @@
+Package name:     cextract
+Version number:   1.7
+Original author:  Adam Bryant <adb@bu.edu>
+Report bugs to:   ftp@csc.liv.ac.uk
+Tested on:        HP 9000/710 running HP-UX 9.03
+C compiler used:  Version A.09.69
+Purpose:
+C prototype/documentation extractor. The cextract program is used to extract
+the function descriptions - prototypes - from a list of C source files and send
+them out to the standard output or a specified file. It may also be used to
+generate basic documentation for a list of C source files. This program was
+written to provide a method of automatically generating header files,
+containing prototypes, for all of the functions used throughout a multi-file
+project.
+Date archived:    Tue 22 Nov 1994
+Special notes:  None

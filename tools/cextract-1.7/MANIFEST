@@ -1,0 +1,24 @@
+   File Name		Archive #	Description
+-----------------------------------------------------------
+ INSTALL                    1	
+ INSTALL.VMS                1	
+ MANIFEST                   1	
+ MANIFEST.BAK               1	
+ Makefile                   1	
+ Makefile.dist              1	
+ README                     1	
+ TODO                       1	
+ build.com                  1	
+ cextdoc.1                  1	
+ cextract.1                 2	
+ cextract.doc               2	
+ cextract.hlp               2	
+ cextrc.5                   1	
+ cextrc.doc                 2	
+ io.c                       4	
+ main.c                     3	
+ newbuild.com               1	
+ parse.c                    5	
+ patchlevel.h               1	
+ proto.h                    1	
+ xtract.h                   1	

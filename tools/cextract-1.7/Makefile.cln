@@ -1,0 +1,203 @@
+#	This Makefile is for the cextract/cextdoc program.  If
+#	you should experience any problems please send mail to:
+#			adb@bu.edu
+
+#	shell used by make [some make versions need this]
+SHELL	= /bin/ksh
+
+#	compiler to build programs with
+CC	= cc
+
+#	C preprocessor, if you don't wish to use the default.
+#	[this line can usually be left commented out]
+#CPPFLG	= -DCPP=\"/lib/cpp\"
+
+#	Flag to tell the C preprocessor to not strip out comments,
+#	if the default value is not correct.
+#	[this line can usually be left commented out]
+#CPPCMT	= -DCPP_COMMENTS=\"-C\"
+
+#	If your system does not support pipes (have the "popen()"
+#	function), you should uncomment this line.  [You might need to
+#	carefully look at the definitions of PIPETMP_FMT and
+#	PIPEOUT_FMT in xtract.h]
+#PIPFLG	= -DNO_POPEN
+
+#	Compiler options, such as '-O' for cc
+#	 or '-O -g -Wall -ansi' for GNU compilers
+COPTS	= +O3 -Aa -D_HPUX_SOURCE
+
+#	sequence to get rid of ${RM} error messages [blank to see them]
+NULL	= 2>/dev/null
+
+#	System information flags; give the proper settings for your
+#	machine.  You can also add:
+#
+#		-DSETBUFFER	if your system has setbuffer(3S)
+#				and you wish to use it, in the (slim?)
+#				hope of increasing performance.
+#
+#		-DNO_PERROR	if your system does not have the
+#				perror(3) function.
+#
+#SYSFLG	= -DBSD			# Most BSD derivatives
+#SYSFLG	= -DSYSV		# Most SysV derivatives
+#SYSFLG	= -DSYSV -DBSD		# Sun OS 4.1
+#SYSFLG	= -DSYSV -DAIX		# IBM AIX operating systems
+#SYSFLG	= -DSYSV -DSGI		# Silicon Graphics machines
+#SYSFLG	= -DBSD -DULTRIX	# Digital Ultrix systems
+#SYSFLG	= -DSYSV -DCLIX		# Intergraph Clix operating systems
+SYSFLG	= -DHPUX		# Hewlett Packard HPUX systems
+#SYSFLG	= -DSYSV -DXENIX	# Xenix SysV systems
+#SYSFLG	= -DBSD -DXENIX		# Xenix BSD systems (?)
+#SYSFLG	= -DVAXC -DVMS		# Digital VAX VMS machines
+#SYSFLG = -DBSD -U__STDC__	# Apollo sites aren't really ANSI (?)
+
+#	final location of the executable
+BINDIR	= /usr/remote/bin
+
+#	prefix directory, such as "/mnt". usually left blank
+DESTDIR	=
+
+#	settings for the manual pages, change as desired
+MANDIR	= /usr/remote/man/man
+M1TAG	= 1
+M1DIR	= ${MANDIR}${M1TAG}
+M5TAG	= 5
+M5DIR	= ${MANDIR}${M5TAG}
+
+#	name of the cextractor program
+CXTRACT	= cextract
+
+#	name of the documentation extractor
+DOCTRG	= cextdoc
+
+#	name of the cextrc configuration file
+RCFILE	= .cextrc
+
+#	full path and name for the system level configuration file
+SYSRC	= /usr/remote/lib/cextract/cext.config
+
+#	== List of miscellaneous commands needed by make ==
+#
+#	check for the existence of a directory
+TESTDIR	= test -d
+#	create a new directory
+MKDIR	= mkdir
+#	install a file (used in INSTBIN and INSTMAN settings)
+INSTALL	= /usr/remote/lib/imake/scripts/install.sh
+#	echo any arguments to the standard output
+ECHO	= echo
+#	string editor
+SED	= sed
+#	search for any differences between two files
+DIFF	= diff
+#	produce readable ASCII from roff "man" source
+NROFF	= nroff -man
+#	remove any files [-f flag means to override permissions]
+RM	= /bin/rm -f
+
+#	command to install the binaries
+INSTBIN	= ${INSTALL} -s
+
+#	command to install the manual pages
+INSTMAN	= ${INSTALL} -m 444
+
+#	set permission on the configuration file after installation
+CHMOD	= chmod 644
+
+#	this command is used to create the "cextdoc" program.
+#	[If a symbolic link is available, use that, so it need
+#	 not be remade each time.  Otherwise use a normal hard link,
+#	 or just 'cp'.]
+LINK	= ln -s
+
+#
+#===== end of configurables
+#
+
+CXTOBJS	= main.o parse.o io.o
+
+all:	${CXTRACT}
+	@${ECHO} all targets done
+
+#	install the binary
+install:	${CXTRACT} ${SYSRC}
+	${TESTDIR} ${DESTDIR}${BINDIR} || ${MKDIR} ${DESTDIR}${BINDIR}
+	${INSTBIN} ${CXTRACT} ${DESTDIR}${BINDIR}
+	-(cd ${DESTDIR}${BINDIR}; ${RM} ${DOCTRG} ${NULL}; ${LINK} ${CXTRACT} ${DOCTRG})
+
+#	install the manual pages
+install.man:	cextract.tman cextrc.tman cextdoc.tman
+	${TESTDIR} ${DESTDIR}${M1DIR} || ${MKDIR} ${DESTDIR}${M1DIR}
+	${TESTDIR} ${DESTDIR}${M5DIR} || ${MKDIR} ${DESTDIR}${M5DIR}
+	${INSTMAN} cextract.tman ${DESTDIR}${M1DIR}/cextract.${M1TAG}
+	${INSTMAN} cextdoc.tman ${DESTDIR}${M1DIR}/cextdoc.${M1TAG}
+	${INSTMAN} cextrc.tman ${DESTDIR}${M5DIR}/cextrc.${M5TAG}
+
+#	build up the documentation
+docs:	cextract.tman cextrc.tman
+	${NROFF} cextract.tman > cextract.doc
+	${NROFF} cextrc.tman > cextrc.doc
+
+cextract.tman:	cextract.1 tmp.sed
+	${SED} -f tmp.sed cextract.1 > cextract.tman
+
+cextrc.tman:	cextrc.5 tmp.sed
+	${SED} -f tmp.sed cextrc.5 > cextrc.tman
+
+cextdoc.tman:	cextdoc.1 tmp.sed
+	${SED} -f tmp.sed cextdoc.1 > cextdoc.tman
+
+tmp.sed:
+	${ECHO} "s;SYSCXTRC;${SYSRC};g" > tmp.sed
+	${ECHO} "s;NORMRC;${RCFILE};g" >> tmp.sed
+	${ECHO} "s;CDOCNAME;${DOCTRG};g" >> tmp.sed
+
+${SYSRC}:	${CXTRACT}
+	@${ECHO} "Building new system wide configuration file"
+	./${CXTRACT} -B
+	${CHMOD} ${SYSRC}
+
+#	Cleaning things up
+clean:
+	${RM} *.o *~ \#* ${NULL}
+
+#	Really clean things up
+clobber:	clean
+	${RM} ${CXTRACT} testproto.h tmp.sed cextract.tman ${NULL}
+	${RM} cextdoc.tman cextrc.tman ${NULL}
+
+#	Build the header file
+proto:	
+	${CXTRACT} -o proto.h -H_proto_h_ -S +CFacPZ main.c io.c parse.c
+
+#
+test:	${CXTRACT} ${SYSRC}
+	./${CXTRACT} -o testproto.h -H_proto_h_ -S +CFacPZ main.c io.c parse.c
+	@${ECHO} ===
+	@${ECHO} === The only output from the following command should show
+	@${ECHO} === two date strings at line 5 of both files.
+	@${ECHO} ===
+	@${ECHO} === Errors from make can be ignored if this is the case.
+	@${ECHO} === 
+	-${DIFF} proto.h testproto.h
+
+#
+#	define flags for the compilation
+CFLAGS	= -DSYS_CONFIG=\"${SYSRC}\" -DCONFIG_FILE=\"${RCFILE}\" -DCEXTDOC_NAME=\"${DOCTRG}\" ${CPPFLG} ${CPPCMT} ${PIPFLG}
+
+#
+#	Rules and dependencies for this Makefile
+#
+.c.o:	$<
+	${CC} ${SYSFLG} ${COPTS} ${CFLAGS} -c $*.c
+
+#	The prototype extraction program
+${CXTRACT}:	${CXTOBJS}
+	${CC} ${COPTS} -o ${CXTRACT} ${CXTOBJS}
+
+#	Added dependencies
+${CXTOBJS}:	xtract.h proto.h
+
+#

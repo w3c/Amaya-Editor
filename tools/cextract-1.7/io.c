@@ -1,0 +1,2232 @@
+/*
+ *
+ * cextract input/output routines.
+ *
+ * Copyright (c) 1992 by Adam Bryant
+ *
+ * See the Copyright notice in the file parse.c or in the manual page.
+ *
+ */
+#include "xtract.h"
+#ifndef VAXC
+#include <pwd.h>
+#ifdef cyber
+extern struct passwd *getpwuid();
+#endif /* cyber */
+#ifdef CLIX
+extern struct passwd *getpwuid();
+#endif /* CLIX */
+#endif /* VAXC */
+
+/* declarations */
+char cur_cfg_file[FNAME_SIZE], header_string[MID_SIZE];
+int out_filenum = 0;
+
+/* storage for the temporary buffers */
+P_BUFDATA tempbuf[2] = { NULL, NULL };
+#ifdef SETBUFFER
+char outbuffer[BUFFER_SIZE], inbuffer[BUFFER_SIZE];
+#endif /* SETBUFFER */
+
+/* output file */
+FILE *fpout;
+char output_file[2][MID_SIZE];
+
+/* preprocessor */
+char cpp_prog[MID_SIZE];
+
+#ifdef NO_STRSTR
+/*
+ * This function was written to handle Xenix sites without strstr().
+ * [It is a straightforward function, which I cannot take credit for,
+ * which was given by an anonymous c.s.r reviewer.]
+ */
+char *
+strstr(hoststr, search)
+  char *hoststr;
+  char *search;
+{
+  int len1 = 0, len2 = 0, index = 0;
+  char *ptr1, *ptr2, *loc_ptr;
+
+  len1 = strlen(hoststr);
+  len2 = strlen(search);
+  while ( len1 >= len2 ) {
+    index = len2;
+    loc_ptr = hoststr;
+    ptr1 = hoststr;
+    ptr2 = search;
+    while ( (index > 0) && (loc_ptr != NULL) ) {
+      if ( (*ptr1) == (*ptr2) ) {
+	++ptr1;
+	++ptr2;
+	--index;
+      } else {
+	loc_ptr = NULL;
+      }
+    }
+    if ( loc_ptr != NULL ) {
+      return( loc_ptr );
+    } else {
+      ++hoststr;
+      --len1;
+    }
+  }
+  return( NULL );
+}
+#endif /* NO_STRSTR */
+
+/* indicate if on or off */
+static void
+quick_rc (str, mode, fp)
+  char *str;
+  int mode;
+  FILE *fp;
+{
+  sprintf(tmp_str, "%s%s\n", mode ? "":"!", str);
+  fput_string(tmp_str, fp);
+}
+
+/* check for divergent options */
+static void
+opt_quickrc (which, str, fp)
+  Optype which;
+  char *str;
+  FILE *fp;
+{
+#ifdef CHECK_INPUTS
+  if ((which < 0) ||
+      (which >= OPT_NUMBER)) {
+    fprintf(stderr, "SERIOUS ERROR: Internal option value out of range %d\n",
+	    which);
+    exit(1);
+  }
+#endif /* CHECK_INPUTS */
+  if (global_opts[0][which] != global_opts[1][which]) {
+    fput_string("extract-only ", fp);
+    quick_rc(str, global_opts[0][which], fp);
+    fput_string("doc-only ", fp);
+  }
+  quick_rc(str, global_opts[1][which], fp);
+}
+
+/* check for divergent numeric options */
+static void
+opt_numericrc (which, str, fp)
+  Optype which;
+  char *str;
+  FILE *fp;
+{
+#ifdef CHECK_INPUTS
+  if ((which < 0) ||
+      (which >= OPT_NUMBER)) {
+    fprintf(stderr, "SERIOUS ERROR: Internal option value out of range %d\n",
+	    which);
+    exit(1);
+  }
+#endif /* CHECK_INPUTS */
+  if (global_opts[0][which] != global_opts[1][which]) {
+    fput_string("extract-only ", fp);
+    sprintf(tmp_str, "%s: %d\n", str, global_opts[0][which]);
+    fput_string(tmp_str, fp);
+    fput_string("doc-only ", fp);
+  }
+  sprintf(tmp_str, "%s: %d\n", str, global_opts[1][which]);
+  fput_string(tmp_str, fp);
+}
+
+/* choose between three modes of the given option */
+static void
+opt_triplerc (which, str0, str1, str2, fp)
+  Optype which;
+  char *str0, *str1, *str2;
+  FILE *fp;
+{
+#ifdef CHECK_INPUTS
+  if ((which < 0) ||
+      (which >= OPT_NUMBER)) {
+    fprintf(stderr, "SERIOUS ERROR: Internal option value out of range %d\n",
+	    which);
+    exit(1);
+  }
+#endif /* CHECK_INPUTS */
+  if (global_opts[0][which] != global_opts[1][which]) {
+
+    /* first on */
+    fput_string("extract-only ", fp);
+    switch (global_opts[0][which]) {
+    case 1:
+      fput_string(str1, fp);
+      break;
+    case 2:
+      fput_string(str2, fp);
+      break;
+    default:
+      fput_string(str0, fp);
+      break;
+    }
+    fput_string("\ndoc-only ", fp);
+
+  }
+
+  /* second on */
+  switch (global_opts[1][which]) {
+  case 1:
+    fput_string(str1, fp);
+    break;
+  case 2:
+    fput_string(str2, fp);
+    break;
+  default:
+    fput_string(str0, fp);
+    break;
+  }
+  fput_string("\n", fp);
+}
+
+/* display string appropriately */
+static void
+opt_stringrc (ind, str, fp)
+  int ind;
+  char *str;
+  FILE *fp;
+{
+  if (ind != 2) {
+    if (ind == 1) {
+      fput_string("doc-only ", fp);
+    } else {
+      fput_string("extract-only ", fp);
+    }
+  }
+  fput_string(str, fp);
+}
+
+/* attempt build of system config file */
+static void
+build_rc (fname)
+  char *fname;
+{
+  int undlen = strlen(UNDEF_LEADER);
+  int deflen = strlen(DEF_LEADER);
+  int inclen = strlen(INC_LEADER);
+  P_MACRO macro_temp;
+  P_SUBST sub_tmp;
+  FILE *rc_fp;
+  int len;
+
+  /* open and write to config file */
+  if ((rc_fp = fopen(fname, "w")) == NULL) {
+    err_msg("unable to open system configuration file for writing");
+    exit(1);
+  }
+
+  /* provide header */
+  sprintf(tmp_str, "#\n# File: %s\n#\n", fname);
+  fput_string(tmp_str, rc_fp);
+  fput_string("#   This config file was generated by ", rc_fp);
+  sprintf(tmp_str, "version %d.%d of %s.\n",
+	  VERSION, PATCHLEVEL, prog_name);
+  fput_string(tmp_str, rc_fp);
+  fput_string("#   Edit carefully.\n", rc_fp);
+  fput_string("#\n#   Created: ", rc_fp);
+  strcpy(tmp_str, mach_time());
+  len = strlen(tmp_str);
+  if ((len > 0) && (tmp_str[len - 1] == '\n')) {
+    tmp_str[len - 1] = '\0';
+  }
+  fput_string(tmp_str, rc_fp);
+  fput_string("\n#\n", rc_fp);
+
+  /* first varargs */
+  if (vargs_find()) {
+    fprintf(stderr,
+	    "The generation of the varargs and FILE replacements might have\n");
+    fprintf(stderr,
+	    "failed.  You may want to manually enter the necessary \"replace\"\n");
+    fprintf(stderr,
+	    "commands into the system configuration file.\n");
+  }
+
+  /* begin with the CPP */
+  if (cpp_prog[0] != '\0') {
+    sprintf(tmp_str, "cpp-program: %s\n", cpp_prog);
+    fput_string(tmp_str, rc_fp);
+  }
+
+  /* handle output file */
+  if (strcmp(output_file[0], output_file[1]) != 0) {
+    if (output_file[0][0] != '\0') {
+      fput_string("extract-only ", rc_fp);
+      sprintf(tmp_str, "output-file: %s\n", output_file[0]);
+      fput_string(tmp_str, rc_fp);
+    }
+    if (output_file[1][0] != '\0') {
+      fput_string("doc-only ", rc_fp);
+    }
+  }
+  if (output_file[1][0] != '\0') {
+    sprintf(tmp_str, "output-file: %s\n", output_file[1]);
+    fput_string(tmp_str, rc_fp);
+  }
+
+  /* differentiate modes */
+#ifdef NOT_DONE
+  switch (doc_extract) {
+  case DOC_NONE:
+    fput_string("extract-mode\n", rc_fp);
+    break;
+  case DOC_NORMAL:
+    fput_string("doc-mode\n", rc_fp);
+    break;
+  case DOC_ROFF:
+    fput_string("troff-mode\n", rc_fp);
+    break;
+  default:
+    fprintf(stderr, "\tError, unknown mode.\n\n");
+    exit(1);
+    break;
+  }
+#else
+  if (doc_extract == DOC_ROFF) {
+    fput_string("doc-only troff-mode\n", rc_fp);
+  }
+#endif /* NOT_DONE */
+
+  /* output all options */
+  if (header_string[0] != '\0') {
+    sprintf(tmp_str, "header-string: %s\n", header_string);
+    fput_string(tmp_str, rc_fp);
+  }
+  opt_quickrc(OPT_COMPACT, "merge-output", rc_fp);
+  opt_quickrc(OPT_BOTHUSE, "dual-output", rc_fp);
+  opt_quickrc(OPT_STDCUSE, "ansi-code", rc_fp);
+  opt_quickrc(OPT_SHOWANYWAY, "show-anyway", rc_fp);
+  opt_triplerc(OPT_SORTMODE, "!sort", "sort-by-files", "sort-all", rc_fp);
+  opt_numericrc(OPT_WRAPPOINT, "wrap-parameters", rc_fp);
+  opt_numericrc(OPT_TABWIDTH, "tab-width", rc_fp);
+  opt_quickrc(OPT_TYPEWRAP, "break-after-types", rc_fp);
+  opt_quickrc(OPT_FIRSTCOMMENT, "first-comments", rc_fp);
+  opt_quickrc(OPT_PREPEND, "prepend-filename", rc_fp);
+  opt_quickrc(OPT_COMMENTS, "yank-comments", rc_fp);
+  opt_triplerc(OPT_STATICMODE, "statics: none", "statics: only",
+	       "statics: any", rc_fp);
+  opt_quickrc(OPT_EXTERNS, "externs", rc_fp);
+  opt_quickrc(OPT_SINGLECOMMENTS, "single-comments", rc_fp);
+
+  /* show all macros */
+  if (macro_list != NULL) {
+
+    for (macro_temp = macro_list;
+	 macro_temp != NULL;
+	 macro_temp = macro_temp->next) {
+      if (strncmp(DEF_LEADER, macro_temp->m_str, deflen) == 0) {
+	sprintf(tmp_str, "define: %s\n",
+		macro_temp->m_str + deflen);
+      } else if (strncmp(INC_LEADER, macro_temp->m_str, inclen) == 0) {
+	sprintf(tmp_str, "include: %s\n",
+		macro_temp->m_str + inclen);
+      } else if (strncmp(UNDEF_LEADER, macro_temp->m_str, undlen) == 0) {
+	sprintf(tmp_str, "undefine: %s\n",
+		macro_temp->m_str + deflen);
+      } else {
+	fprintf(stderr, "unknown macro encountered: %s\n",
+		macro_temp->m_str);
+	continue;
+      }
+      opt_stringrc(macro_temp->usewhen, tmp_str, rc_fp);
+	
+    }
+  }
+
+  /* check substitutions */
+  if (subst_list != NULL) {
+
+    for (sub_tmp = subst_list;
+	 sub_tmp != NULL;
+	 sub_tmp = sub_tmp->next) {
+
+      /* check it */
+      switch (sub_tmp->submode) {
+      case SUBST_FULL:
+	/* the full string needs replacing? */
+	sprintf(tmp_str, "replace all \"%s\" with \"%s\"\n",
+		sub_tmp->from_str, sub_tmp->to_str);
+	break;
+      case SUBST_TYPE:
+	/* the type only needs replacing? */
+	sprintf(tmp_str, "replace type \"%s\" with \"%s\"\n",
+		sub_tmp->from_str, sub_tmp->to_str);
+	break;
+      case SUBST_NAME:
+	/* the variable only needs replacing? WHY!? */
+	sprintf(tmp_str, "replace name \"%s\" with \"%s\"\n",
+		sub_tmp->from_str, sub_tmp->to_str);
+	break;
+      }
+      opt_stringrc(sub_tmp->usewhen, tmp_str, rc_fp);
+
+    }
+  }
+
+  /* done */
+  fput_string("#\n", rc_fp);
+  fclose(rc_fp);
+}
+
+/* close up properly; sending out final output */
+void
+cxt_close()
+{
+  P_BUFDATA holdbuf;
+  int len;
+
+  /* close up buffers and open file */
+  out_char(-1, '\0');
+  if (output_file[doc_extract != DOC_NONE][0] != '\0') {
+    if ((fpout = fopen(output_file[doc_extract != DOC_NONE], "w")) == NULL) {
+      sprintf(tmp_str, "unable to open output file <%s>",
+	      output_file[doc_extract != DOC_NONE]);
+      err_msg(tmp_str);
+      exit(1);
+    }
+  }
+
+#ifdef SETBUFFER
+  /* now set the buffer */
+  setbuffer(fpout, outbuffer, BUFFER_SIZE);
+#endif /* SETBUFFER */
+
+  /* send everything straight out in doc modes */
+  if (doc_extract != DOC_NONE) {
+
+    /* do all */
+    for (; tempbuf[1] != NULL; tempbuf[1] = holdbuf) {
+      /* output and free */
+      holdbuf = tempbuf[1]->next;
+      fput_string(tempbuf[1]->data, fpout);
+      free(tempbuf[1]);
+    }
+
+    /* close up */
+    if (fpout != stdout) {
+      if (fclose(fpout) == EOF) {
+	err_msg("Error in closing output file");
+	exit(1);
+      }
+    }
+    return;
+  }
+
+  /* start header */
+  fput_string("/*\n *   This file was automatically generated by ", fpout);
+  sprintf(tmp_str, "version %d.%d of %s.\n",
+	  VERSION, PATCHLEVEL, prog_name);
+  fput_string(tmp_str, fpout);
+  fput_string(" *   Manual editing not recommended.\n", fpout);
+/*** DD
+  fput_string(" *\n *   Created: ", fpout);
+  strcpy(tmp_str, mach_time());
+  len = strlen(tmp_str);
+  if ((len > 0) && (tmp_str[len - 1] == '\n')) {
+    tmp_str[len - 1] = '\0';
+  }
+  fput_string(tmp_str, fpout);
+  fput_string("\n STAR\n\n", fpout);
+***/
+  fput_string(" */\n\n", fpout);
+
+  /* enclosing directives */
+  if (header_string[0] != '\0') {
+    sprintf(tmp_str, "#ifndef %s\n", header_string);
+    fput_string(tmp_str, fpout);
+  } else {
+    fput_string("#ifndef __CEXTRACT__\n", fpout);
+  }
+  if (header_string[0] != '\0') {
+    sprintf(tmp_str, "#define %s\n", header_string);
+    fput_string(tmp_str, fpout);
+  }
+  if (get_option(OPT_COMPACT)) {
+    fput_string("#if __STDC__\n", fpout);
+    fput_string("#define PL_(x) x\n", fpout);
+    fput_string("#else\n", fpout);
+    fput_string("#define PL_(x) ( )\n", fpout);
+    fput_string("#endif /* __STDC__ */\n", fpout);
+  } else if (get_option(OPT_BOTHUSE) ||
+	     get_option(OPT_STDCUSE)) {
+    fput_string("#if __STDC__\n", fpout);
+  }
+
+  /* first region */
+  for (; tempbuf[0] != NULL; tempbuf[0] = holdbuf) {
+    /* output and free */
+    holdbuf = tempbuf[0]->next;
+    fput_string(tempbuf[0]->data, fpout);
+    free(tempbuf[0]);
+  }
+
+  /* more? */
+  if (!get_option(OPT_COMPACT) &&
+      get_option(OPT_BOTHUSE)) {
+
+    /* separator */
+    fput_string("\n#else /* __STDC__ */\n", fpout);
+
+    /* send second portion */
+    for (; tempbuf[1] != NULL; tempbuf[1] = holdbuf) {
+      /* output and free */
+      holdbuf = tempbuf[1]->next;
+      fput_string(tempbuf[1]->data, fpout);
+      free(tempbuf[1]);
+    }
+
+  }
+
+  /* finish header */
+  putc('\n', fpout);
+  if (get_option(OPT_COMPACT)) {
+    fput_string("#undef PL_\n", fpout);
+  } else if (get_option(OPT_BOTHUSE) ||
+	     get_option(OPT_STDCUSE)) {
+    fput_string("#endif /* __STDC__ */\n", fpout);
+  }
+  if (header_string[0] != '\0') {
+    sprintf(tmp_str, "#endif /* %s */\n", header_string);
+    fput_string(tmp_str, fpout);
+  } else {
+    fput_string("#endif /* __CEXTRACT__ */\n", fpout);
+  }
+
+  /* close up */
+  if (fpout != stdout) {
+    if (fclose(fpout) == EOF) {
+      err_msg("Error in closing output file");
+      exit(1);
+    }
+  }
+}
+
+/* output results of entire file search */
+void
+send_file()
+{
+  /* sort? */
+  if (get_option(OPT_SORTMODE) != SORT_NONE) {
+    sort_proto();
+  }
+
+  /* output everything */
+  while (proto_list != NULL) {
+
+    /* determine type */
+    if (doc_extract == DOC_NONE) {
+
+      /* ANSI? */
+      if (get_option(OPT_COMPACT)) {
+	out_proto(0, proto_list, MODE_ANSI, get_option(OPT_COMMENTS));
+      } else if (get_option(OPT_BOTHUSE)) {
+	out_proto(0, proto_list, MODE_ANSI, get_option(OPT_COMMENTS));
+	out_proto(1, proto_list, MODE_OLDC - get_option(OPT_SHOWANYWAY),
+		  get_option(OPT_SHOWANYWAY) *
+		  get_option(OPT_COMMENTS));
+      } else {
+	if (get_option(OPT_STDCUSE)) {
+	  out_proto(0, proto_list, MODE_ANSI, get_option(OPT_COMMENTS));
+	} else {
+	  out_proto(0, proto_list, MODE_OLDC - get_option(OPT_SHOWANYWAY),
+		    get_option(OPT_COMMENTS));
+	}
+      }
+
+    } else {
+
+      /* ANSI in docs */
+      out_proto(1, proto_list, MODE_ANSI, get_option(OPT_COMMENTS));
+
+    }
+    total_out++;
+    pop_proto();
+
+  }
+}
+
+/* does the string match a minimum number of characters */
+int
+minmatch_str(str_in, str_base, num)
+  char *str_in, *str_base;
+  int num;
+{
+  int i;
+
+  for (i = 0; (str_base[i] != '\0') && (str_in[i] != '\0') &&
+       (str_in[i] != ':') && (str_in[i] != '='); i++) {
+    if (str_base[i] != str_in[i]) return(0);
+  }
+  if (i >= num) {
+    return(i);
+  }
+  return(0);
+}
+
+/* send an error message about a config command */
+static void
+cfg_err(str, cmd_line)
+  char *str;
+  int cmd_line;
+{
+  fprintf(stderr, "%s", str);
+  if (cmd_line) {
+    fprintf(stderr, " on the command line\n");
+  } else if (cur_cfg_file[0] == '\0') {
+    fprintf(stderr, " in a configuration file\n");
+  } else {
+    fprintf(stderr, " in %s\n", cur_cfg_file);
+  }
+}
+
+/* mode selector */
+static int setmode_value;
+
+#ifndef VMS
+/* parse string for single char commands */
+static void
+singlechar_cmds(cmd_str, set_val)
+  char *cmd_str;
+  int set_val;
+{
+  int count, len = strlen(cmd_str);
+
+  for (count = 0; count < len; count++) {
+
+    switch (cmd_str[count]) {
+    case 'A':
+      if (files_parsed == 0) {
+	if (set_val) {
+	  set_option(OPT_SORTMODE, setmode_value, SORT_ALL);
+	} else {
+	  set_option(OPT_SORTMODE, setmode_value, SORT_NONE);
+	}
+      } else {
+	fprintf(stderr, "The '-A' flag must precede any file arguments\n");
+	show_usage();
+      }
+      break;
+    case 'a':
+      if (get_option(OPT_SORTMODE) != SORT_ALL) {
+	if (set_val) {
+	  set_option(OPT_SORTMODE, setmode_value, SORT_FILE);
+	} else {
+	  set_option(OPT_SORTMODE, setmode_value, SORT_NONE);
+	}
+      }
+      break;
+    case 'b':
+      build_rc(CONFIG_FILE);
+      exit(0);
+      break;
+    case 'B':
+      build_rc(SYS_CONFIG);
+      exit(0);
+    case 'C':
+      set_option(OPT_FIRSTCOMMENT, setmode_value, set_val);
+      break;
+    case 'c':
+      set_option(OPT_COMMENTS, setmode_value, set_val);
+      break;
+    case 'D':
+    case 'd':
+      /* add to macro list */
+      if (count != 0) {
+	fprintf(stderr, "The -D flag must be a separate argument\n");
+	show_usage();
+      }
+      sprintf(tmp_str, "%s%s", DEF_LEADER, cmd_str + 1);
+      add_macro(setmode_value, tmp_str);
+      return;
+    case 'E':
+      set_option(OPT_EXTERNS, setmode_value, set_val);
+      break;
+    case 'F':
+      set_option(OPT_PREPEND, setmode_value, set_val);
+      break;
+    case 'f':
+      /* set font */
+      if (count != 0) {
+	fprintf(stderr, "The -f flag must be a separate argument\n");
+	show_usage();
+      } else if (files_parsed > 0) {
+	fprintf(stderr, "The -f flag must precede any file arguments\n");
+	show_usage();
+      }
+
+      /* check format */
+      if ((strlen(cmd_str + 1) < 2) ||
+	  (strlen(cmd_str + 1) > 3)) {
+	fprintf(stderr, "A proper troff font must be specified\n");
+	show_usage();
+      }
+
+      /* check font */
+      switch (cmd_str[1]) {
+      case '1':
+      case 't':
+      case 'T':
+	/* title */
+	strncpy(ft_title, &(cmd_str[2]), 2);
+	ft_title[2] = '\0';
+	break;
+      case '2':
+      case 'c':
+      case 'C':
+	/* comment */
+	strncpy(ft_comment, &(cmd_str[2]), 2);
+	ft_comment[2] = '\0';
+	break;
+      case '3':
+      case 'n':
+      case 'N':
+	/* function name */
+	strncpy(ft_name, &(cmd_str[2]), 2);
+	ft_name[2] = '\0';
+	break;
+      case '4':
+      case 'p':
+      case 'P':
+	/* prototype list */
+	strncpy(ft_plist, &(cmd_str[2]), 2);
+	ft_plist[2] = '\0';
+	break;
+      default:
+	/* huh? */
+	fprintf(stderr, "unknown font selector '%c' in %s\n",
+		cmd_str[1], cmd_str);
+	show_usage();
+      }
+      return;
+    case 'H':
+      /* header string */
+      if (files_parsed == 0) {
+	if (count != 0) {
+	  fprintf(stderr, "The -H flag must be a separate argument\n");
+	  show_usage();
+	}
+	if (cmd_str[2] != '\0') {
+	  strcpy(header_string, cmd_str + 1);
+	} else {
+	  fprintf(stderr,
+		  "A string must be specified following the -H flag\n");
+	  show_usage();
+	}
+      } else {
+	fprintf(stderr, "The -H flag must precede any file arguments\n");
+	show_usage();
+      }
+      return;
+    case 'I':
+    case 'i':
+      /* include file */
+      if (count != 0) {
+	fprintf(stderr, "The -I flag must be a separate argument\n");
+	show_usage();
+      }
+      sprintf(tmp_str, "%s%s", INC_LEADER, cmd_str + 1);
+      add_macro(setmode_value, tmp_str);
+      return;
+    case 'm':
+      set_option(OPT_SINGLECOMMENTS, setmode_value, (TRUE ^ set_val));
+      break;
+    case 'N':
+      /* roff mode */
+      if (files_parsed > 0) {
+	fprintf(stderr, "The -N flag must precede any file arguments\n");
+	show_usage();
+      }
+      doc_extract = DOC_ROFF;
+      break;
+    case 'n':
+      /* docs mode */
+      if (files_parsed > 0) {
+	fprintf(stderr, "The -n flag must precede any file arguments\n");
+	show_usage();
+      }
+      doc_extract = DOC_NORMAL;
+      break;
+    case 'o':
+      if (out_filenum < 3) {
+	out_filenum = 1;
+      } else {
+	fprintf(stderr, "The -o flag must precede any file arguments\n");
+	show_usage();
+      }
+      break;
+    case 'p':
+      /* ANSI C prototypes */
+      if (files_parsed == 0) {
+	set_option(OPT_STDCUSE, setmode_value, set_val);
+      } else {
+	fprintf(stderr, "The -p flag must precede any file arguments\n");
+	show_usage();
+      }
+      break;
+    case 'P':
+      /* both ANSI and K&R */
+      if (files_parsed == 0) {
+	set_option(OPT_BOTHUSE, setmode_value, set_val);
+      } else {
+	fprintf(stderr, "The -P flag must precede any file arguments\n");
+	show_usage();
+      }
+      break;
+    case 'Q':
+      /* not here */
+      fprintf(stderr, "The -Q flag must be the very first argument\n");
+      show_usage();
+    case 'q':
+      /* input config file */
+      if (count != 0) {
+	fprintf(stderr, "The -q flag must be a separate argument\n");
+	show_usage();
+      }
+      if (cmd_str[1] != '\0') {
+	parse_config(cmd_str + 1);
+      } else {
+	fprintf(stderr, "No file was specified for the -q argument\n");
+	show_usage();
+      }
+      return;
+    case 'r':
+      /* remove variable names */
+      set_option(OPT_NONAMES, setmode_value, set_val);
+      break;
+    case 'S':
+      /* full info for non-ANSI */
+      set_option(OPT_SHOWANYWAY, setmode_value, set_val);
+      break;
+    case 's':
+      /* static functions */
+      if ((cmd_str[count + 1] == ':') ||
+	  (cmd_str[count + 1] == '=')) {
+	count += 2;
+	switch(cmd_str[count]) {
+	case 'a':
+	  /* all */
+	  set_option(OPT_STATICMODE, setmode_value, ANY_STATICS);
+	  if ((strncmp(cmd_str + count, "all", 3) == 0) ||
+	      (strncmp(cmd_str + count, "any", 3) == 0)) {
+	    count += 3;
+	  } else {
+	    count++;
+	  }
+	  break;
+	case 'o':
+	  /* only statics */
+	  set_option(OPT_STATICMODE, setmode_value, ONLY_STATICS);
+	  if (strncmp(cmd_str + count, "only", 4) == 0) {
+	    count += 4;
+	  } else {
+	    count++;
+	  }
+	  break;
+	case 'n':
+	  /* no statics */
+	  set_option(OPT_STATICMODE, setmode_value, NO_STATICS);
+	  if (strncmp(cmd_str + count, "none", 4) == 0) {
+	    count += 4;
+	  } else if (strncmp(cmd_str + count, "no", 2) == 0) {
+	    count += 2;
+	  } else {
+	    count++;
+	  }
+	  break;
+	default:
+	  /* huh? */
+	  count--;
+	  break;
+	}
+      } else {
+	if (set_val) {
+	  set_option(OPT_STATICMODE, setmode_value, ANY_STATICS);
+	} else {
+	  set_option(OPT_STATICMODE, setmode_value, NO_STATICS);
+	}
+      }
+      break;
+    case 'T':
+      /* tab width */
+      if (count != 0) {
+	fprintf(stderr, "The -T flag must be a separate argument\n");
+	show_usage();
+      }
+      if (len == 2) {
+	set_option(OPT_TABWIDTH, setmode_value, 8);
+      } else {
+	int tab_width = 0;
+	for (count++; count < len; count++) {
+	  if (!isdigit(cmd_str[count])) {
+	    fprintf(stderr, "Unknown tab width in argument %s\n",
+		    cmd_str);
+	    show_usage();
+	  } else {
+	    tab_width *= 10;
+	    tab_width += cmd_str[count] - '0';
+	  }
+	}
+	set_option(OPT_TABWIDTH, setmode_value, tab_width);
+      }
+      return;
+    case 'U':
+    case 'u':
+      /* undefine */
+      if (count != 0) {
+	fprintf(stderr, "The -U flag must be a separate argument\n");
+	show_usage();
+      }
+      if (removed_macro(setmode_value, cmd_str + 1) != TRUE) {
+	sprintf(tmp_str, "%s%s", UNDEF_LEADER, cmd_str + 1);
+	add_macro(setmode_value, tmp_str);
+      }
+      return;
+    case 'V':
+      show_settings();
+    case 'v':
+      show_version();
+      exit(0);
+    case 'W':
+      /* wrapping */
+      set_option(OPT_TYPEWRAP, setmode_value, set_val);
+      break;
+    case 'w':
+      /* more wrapping */
+      if (isdigit(cmd_str[count + 1])) {
+
+	/* use given wrap locale */
+	int wrap_point = 0;
+	for (count++; isdigit(cmd_str[count]); count++) {
+	  wrap_point *= 10;
+	  wrap_point += (cmd_str[count] - '0');
+	}
+	count--;
+	set_option(OPT_WRAPPOINT, setmode_value, wrap_point);	
+
+      } else {
+
+	if (set_val) {
+	  /* default */
+	  set_option(OPT_WRAPPOINT, setmode_value, 72);
+	} else {
+	  /* off */
+	  set_option(OPT_WRAPPOINT, setmode_value, 0);
+	}
+
+      }
+      break;
+    case 'x':
+      /* extraction mode */
+      if (files_parsed > 0) {
+	fprintf(stderr, "The -x flag must precede any file arguments\n");
+	show_usage();
+      }
+      doc_extract = DOC_NONE;
+      break;
+    case 'Y':
+      /* C preprocessor */
+      if (files_parsed == 0) {
+	if (count != 0) {
+	  fprintf(stderr, "The -Y flag must be a separate argument\n");
+	  show_usage();
+	}
+	if (cmd_str[2] != '\0') {
+	  strcpy(cpp_prog, cmd_str + 1);
+	} else {
+	  fprintf(stderr,
+		  "A string must be specified following the -Y flag\n");
+	  show_usage();
+	}
+      } else {
+	fprintf(stderr, "The -Y flag must precede any file arguments\n");
+	show_usage();
+      }
+      break;
+    case 'Z':
+      /* merge output */
+      if (files_parsed == 0) {
+	set_option(OPT_COMPACT, setmode_value, set_val);
+      } else {
+	fprintf(stderr, "The -Z flag must precede any file arguments\n");
+	show_usage();
+      }
+      break;
+    default:
+      /* huh? */
+      fprintf(stderr, "Unknown option '%c' in <%s>\n", cmd_str[count],
+	      cmd_str);
+      show_usage();
+    }
+  }
+}
+#endif /* VMS */
+
+/* determine the configuration command, exit if invalid */
+void
+parse_cmd (cmd_str, set_val, cmd_line)
+  char *cmd_str;
+  int set_val, cmd_line;
+{
+  int len, count, did_cmd_parse = FALSE, had_start = FALSE;
+  char t2_str[MID_SIZE];
+
+  /* clean ends of spaces */
+  trim_str(cmd_str);
+
+  /* by default, set for both */
+  setmode_value = 2;
+
+  /* non-command line */
+  if (cmd_line == FALSE) {
+
+    /* selection? */
+    if (strncmp("extract-only ", cmd_str, 13) == 0) {
+      setmode_value = 0;
+      for (count = 0; count < 13; count++)
+	cmd_str[count] = ' ';
+      trim_str(cmd_str);
+    } else if (strncmp("doc-only ", cmd_str, 9) == 0) {
+      setmode_value = 1;
+      for (count = 0; count < 9; count++)
+	cmd_str[count] = ' ';
+      trim_str(cmd_str);
+    }
+
+  }
+
+  /* off? */
+  if (cmd_str[0] == '!') {
+    cmd_str[0] = ' ';
+    trim_str(cmd_str);
+    set_val ^= TRUE;
+    had_start = TRUE;
+  } else {
+    if (strncmp("no-", cmd_str, 3) == 0) {
+      for (count = 0; count < 3; count++)
+	cmd_str[count] = ' ';
+      trim_str(cmd_str);
+      set_val ^= TRUE;
+      had_start = TRUE;
+    } else if (strncmp("no", cmd_str, 2) == 0) {
+      for (count = 0; count < 2; count++)
+	cmd_str[count] = ' ';
+      trim_str(cmd_str);
+      set_val ^= TRUE;
+      had_start = TRUE;
+    }
+  }
+  len = strlen(cmd_str);
+
+  /* parse actual command */
+  switch (cmd_str[0]) {
+  case '\0':
+  case '#':
+    /* comment */
+    did_cmd_parse = TRUE;
+    break;
+  case 'a':
+    /* ansi C code */
+    if (minmatch_str(cmd_str, "ansi-code", 4)) {
+      did_cmd_parse = TRUE;
+      if (files_parsed > 0) {
+	if (cmd_line) {
+	  fprintf(stderr, "Error, ansi-code flag found after file argument\n");
+	  exit(1);
+	}
+      } else {
+	set_option(OPT_STDCUSE, setmode_value, set_val);
+      }
+    }
+    break;
+  case 'b':
+    if (minmatch_str(cmd_str, "build-config", 5)) {
+      did_cmd_parse = TRUE;
+      if (cmd_line) {
+	build_rc(CONFIG_FILE);
+	exit(0);
+      } else {
+	cfg_err("warning, the build-config command is unsupported", cmd_line);
+      }
+    } else if (minmatch_str(cmd_str, "break-types", 5) ||
+	       minmatch_str(cmd_str, "break-after-types", 5)) {
+      set_option(OPT_TYPEWRAP, setmode_value, set_val);
+      did_cmd_parse = TRUE;
+    }
+    break;
+  case 'c':
+    /* get comments */
+    if (minmatch_str(cmd_str, "comments", 4)) {
+      set_option(OPT_COMMENTS, setmode_value, set_val);
+      did_cmd_parse = TRUE;
+    } else if (count = minmatch_str(cmd_str, "cpp-program", 3)) {
+      did_cmd_parse = TRUE;
+      if (files_parsed > 0) {
+	if (cmd_line) {
+	  fprintf(stderr,
+		  "Error: cpp-program flag found after file arguments\n");
+	  exit(1);
+	}
+      } else {
+	for (/* set by minmatch_str */; cmd_str[count] != '\0'; count++) {
+	  if ((cmd_str[count] == ':') ||
+	      (cmd_str[count] == '=')) {
+	    count++;
+	    break;
+	  }
+	}
+	strcpy(tmp_str, cmd_str + count);
+	trim_str(tmp_str);
+	if (strlen(tmp_str) > 0) {
+	  strcpy(cpp_prog, tmp_str);
+	} else {
+	  cfg_err("warning, blank cpp-program name", cmd_line);
+	}
+      }
+    } else if (count = minmatch_str(cmd_str, "config-file", 4)) {
+      did_cmd_parse = TRUE;
+      for (/* set by minmatch_str */; cmd_str[count] != '\0'; count++) {
+	if ((cmd_str[count] == ':') ||
+	    (cmd_str[count] == '=')) {
+	  count++;
+	  break;
+	}
+      }
+      strcpy(tmp_str, cmd_str + count);
+      trim_str(tmp_str);
+      if (strlen(tmp_str) > 0) {
+	parse_config(tmp_str);
+      } else {
+	cfg_err("warning, blank config file name", cmd_line);
+      }
+    }
+    break;
+  case 'd':
+    if (minmatch_str(cmd_str, "dual-output", 4)) {
+      did_cmd_parse = TRUE;
+      if (files_parsed > 0) {
+	if (cmd_line) {
+	  fprintf(stderr,
+		  "Error, dual-output flag found after file argument\n");
+	  exit(1);
+	}
+      } else {
+	set_option(OPT_BOTHUSE, setmode_value, set_val);
+      }
+    } else if (minmatch_str(cmd_str, "discard-names", 4)) {
+      set_option(OPT_NONAMES, setmode_value, set_val);
+      did_cmd_parse = TRUE;
+    } else if (minmatch_str(cmd_str, "doc-mode", 3)) {
+      did_cmd_parse = TRUE;
+      if (files_parsed > 0) {
+	if (cmd_line) {
+	  fprintf(stderr, "Error, doc-mode flag found after file argument\n");
+	  exit(1);
+	}
+      } else {
+	doc_extract = DOC_NORMAL;
+      }
+    } else if (count = minmatch_str(cmd_str, "define", 3)) {
+      did_cmd_parse = TRUE;
+      for (/* set by minmatch_str */; cmd_str[count] != '\0'; count++) {
+	if ((cmd_str[count] == ':') ||
+	    (cmd_str[count] == '=')) {
+	  count++;
+	  break;
+	}
+      }
+      strcpy(tmp_str, cmd_str + count);
+      trim_str(tmp_str);
+      if (strlen(tmp_str) > 0) {
+	sprintf(cmd_str, "%s%s", DEF_LEADER, tmp_str);
+	add_macro(setmode_value, cmd_str);
+      } else {
+	cfg_err("warning, blank define command", cmd_line);
+      }
+    }
+    break;
+  case 'e':
+    if (minmatch_str(cmd_str, "externs", 4)) {
+      /* extern prepending */
+      did_cmd_parse = TRUE;
+      set_option(OPT_EXTERNS, setmode_value, set_val);
+    } else if (minmatch_str(cmd_str, "extract-mode", 3)) {
+      /* extract mode */
+      did_cmd_parse = TRUE;
+      if (files_parsed > 0) {
+	if (cmd_line) {
+	  fprintf(stderr, "Error, extract-mode found after file argument\n");
+	  exit(1);
+	}
+      } else {
+	doc_extract = DOC_NONE;
+      }
+    }
+    break;
+  case 'f':
+    if (minmatch_str(cmd_str, "first-comments", 4)) {
+      /* grabs first comments */
+      did_cmd_parse = TRUE;
+      set_option(OPT_FIRSTCOMMENT, setmode_value, set_val);
+    } else if (minmatch_str(cmd_str, "filename", 4)) {
+      /* prepend file name */
+      did_cmd_parse = TRUE;
+      set_option(OPT_PREPEND, setmode_value, set_val);
+    } else if (strncmp("font", cmd_str, 4) == 0) {
+      /* fonts */
+      did_cmd_parse = TRUE;
+      if (files_parsed > 0) {
+	if (cmd_line) {
+	  fprintf(stderr, "Error, -font flag found after file argument\n");
+	  exit(1);
+	}
+      } else {
+	switch (cmd_str[5]) {
+	case '1':
+	case 't':
+	case 'T':
+	  /* title */
+	  if ((cmd_str[6] != '\0') &&
+	      (isalnum(cmd_str[7]) &&
+	       (isalnum(cmd_str[8]) ||
+		(cmd_str[8] == '\0')))) {
+	    ft_title[0] = cmd_str[7];
+	    ft_title[1] = cmd_str[8];
+	    ft_title[2] = '\0';
+	  } else {
+	    fprintf(stderr, "warning: improper font type in:\n");
+	    fprintf(stderr, "   ==> %s\n", cmd_str);
+	    goto prop_font;
+	  }
+	  break;
+	case '2':
+	case 'c':
+	case 'C':
+	  /* comment */
+	  if ((cmd_str[6] != '\0') &&
+	      (isalnum(cmd_str[7]) &&
+	       (isalnum(cmd_str[8]) ||
+		(cmd_str[8] == '\0')))) {
+	    ft_comment[0] = cmd_str[7];
+	    ft_comment[1] = cmd_str[8];
+	    ft_comment[2] = '\0';
+	  } else {
+	    fprintf(stderr, "warning: improper font type in:\n");
+	    fprintf(stderr, "   ==> %s\n", cmd_str);
+	    goto prop_font;
+	  }
+	  break;
+	case '3':
+	case 'n':
+	case 'N':
+	  /* function name */
+	  if ((cmd_str[6] != '\0') &&
+	      (isalnum(cmd_str[7]) &&
+	       (isalnum(cmd_str[8]) ||
+		(cmd_str[8] == '\0')))) {
+	    ft_name[0] = cmd_str[7];
+	    ft_name[1] = cmd_str[8];
+	    ft_name[2] = '\0';
+	  } else {
+	    fprintf(stderr, "warning: improper font type in:\n");
+	    fprintf(stderr, "   ==> %s\n", cmd_str);
+	    goto prop_font;
+	  }
+	  break;
+	case '4':
+	case 'p':
+	case 'P':
+	  /* parameter font */
+	  if ((cmd_str[6] != '\0') &&
+	      (isalnum(cmd_str[7]) &&
+	       (isalnum(cmd_str[8]) ||
+		(cmd_str[8] == '\0')))) {
+	    ft_plist[0] = cmd_str[7];
+	    ft_plist[1] = cmd_str[8];
+	    ft_plist[2] = '\0';
+	  } else {
+	    fprintf(stderr, "warning: improper font type in:\n");
+	    fprintf(stderr, "   ==> %s\n", cmd_str);
+	    goto prop_font;
+	  }
+	  break;
+	default:
+	  /* oops */
+	  fprintf(stderr, "warning: font format invalid\n");
+	prop_font:
+	  if (cmd_line) {
+	    fprintf(stderr, "Proper format:  -font-%%-##\n");
+	  } else {
+	    fprintf(stderr, "Proper format:  font %% ##\n");
+	  }
+	  fprintf(stderr, "Where %% = one of:\n");
+	  fprintf(stderr, "     '1' or 't'  - font for titles\n");
+	  fprintf(stderr, "     '2' or 'c'  - comment font\n");
+	  fprintf(stderr, "     '3' or 'n'  - function name font\n");
+	  fprintf(stderr, "     '4' or 'p'  - parameter list font\n");
+	  fprintf(stderr, "and ## is the one or two character roff font.\n");
+	  break;
+	}
+      }
+    }
+    break;
+  case 'h':
+    /* header string */
+    if (count = minmatch_str(cmd_str, "header-string", 4)) {
+      did_cmd_parse = TRUE;
+      /* can only replace on the command line */
+      if ((header_string[0] != '\0') && !cmd_line) break;
+      for (/* set by minmatch_str */; cmd_str[count] != '\0'; count++) {
+	if ((cmd_str[count] == ':') ||
+	    (cmd_str[count] == '=')) {
+	  count++;
+	  break;
+	}
+      }
+      strcpy(tmp_str, cmd_str + count);
+      trim_str(tmp_str);
+      if (strlen(tmp_str) > 0) {
+	strcpy(header_string, tmp_str);
+      } else {
+	cfg_err("warning: blank header-string command", cmd_line);
+      }
+    }
+    break;
+  case 'i':
+    /* include file */
+    if (count = minmatch_str(cmd_str, "include", 3)) {
+      did_cmd_parse = TRUE;
+      for (/* set by minmatch_str */; cmd_str[count] != '\0'; count++) {
+	if ((cmd_str[count] == ':') ||
+	    (cmd_str[count] == '=')) {
+	  count++;
+	  break;
+	}
+      }
+      strcpy(tmp_str, cmd_str + count);
+      trim_str(tmp_str);
+      if (strlen(tmp_str) > 0) {
+	sprintf(cmd_str, "%s%s", INC_LEADER, tmp_str);
+	add_macro(setmode_value, cmd_str);
+      } else {
+	cfg_err("warning: blank include command", cmd_line);
+      }
+    }
+    break;
+  case 'm':
+    /* multiple comments */
+    if (minmatch_str(cmd_str, "multi-comments", 4) ||
+	minmatch_str(cmd_str, "multiple-comments", 4)) {
+      did_cmd_parse = TRUE;
+      set_option(OPT_SINGLECOMMENTS, setmode_value, (TRUE ^ set_val));
+    } else if (minmatch_str(cmd_str, "merge-output", 5)) {
+      did_cmd_parse = TRUE;
+      if (files_parsed > 0) {
+	if (cmd_line) {
+	  fprintf(stderr,
+		  "Error: merge-output flag found after file argument\n");
+	  exit(1);
+	}
+      } else {
+	set_option(OPT_COMPACT, setmode_value, set_val);
+      }
+    }
+    break;
+  case 'o':
+    /* output file */
+    if (count = minmatch_str(cmd_str, "output-file", 3)) {
+      did_cmd_parse = TRUE;
+      if (files_parsed > 0) {
+	if (cmd_line) {
+	  fprintf(stderr,
+		  "Error: output-file flag found after file arguments\n");
+	  exit(1);
+	}
+      } else {
+	for (/* set by minmatch_str */; cmd_str[count] != '\0'; count++) {
+	  if ((cmd_str[count] == ':') ||
+	      (cmd_str[count] == '=')) {
+	    count++;
+	    break;
+	  }
+	}
+	strcpy(tmp_str, cmd_str + count);
+	trim_str(tmp_str);
+	if (strlen(tmp_str) > 0) {
+	  if ((setmode_value % 2) == 0) {
+	    strcpy(output_file[0], tmp_str);
+	  }
+	  if (setmode_value != 0) {
+	    strcpy(output_file[1], tmp_str);
+	  }
+	  out_filenum = 2;
+	} else if (!cmd_line) {
+	  cfg_err("warning, blank output-file specifier", cmd_line);
+	} else {
+	  out_filenum = 1;
+	}
+      }
+    }
+    break;
+  case 'p':
+    /* prepend the file name to the output */
+    if (minmatch_str(cmd_str, "prepend-filename", 4)) {
+      did_cmd_parse = TRUE;
+      set_option(OPT_PREPEND, setmode_value, set_val);
+    }
+    break;
+  case 'r':
+    if (strncmp(cmd_str, "replace", 7) == 0) {
+
+      if (cmd_line) {
+	fprintf(stderr,
+		"Error, -replace is not a valid command line option\n");
+	exit(1);
+      }
+
+      /* check type */
+      if (strncmp("all ", cmd_str + 8, 4) == 0) {
+	len = 12;
+	count = SUBST_FULL; 
+      } else if (strncmp("type ", cmd_str + 8, 5) == 0) {
+	len = 13;
+	count = SUBST_TYPE;
+      } else if (strncmp("name ", cmd_str + 8, 5) == 0) {
+	len = 13;
+	count = SUBST_NAME;
+      } else if (strncmp("variable ", cmd_str + 8, 9) == 0) {
+	len = 17;
+	count = SUBST_NAME;
+      } else {
+	cfg_err("warning, bad replace format", cmd_line);
+	fprintf(stderr, "   ==> %s\n", cmd_str);
+	count = len = 0;
+	did_cmd_parse = TRUE;
+      }
+
+      /* do it */
+      if (did_cmd_parse == FALSE) {
+
+	did_cmd_parse = TRUE;
+	if ((set_val = copy_str(tmp_str, cmd_str + len)) == -1) {
+	  cfg_err("warning, bad replace format", cmd_line);
+	  fprintf(stderr, "   ==> %s\n", cmd_str);
+	  break;
+	}
+	len += set_val;
+	if ((set_val = copy_str(t2_str, cmd_str + len)) == -1) {
+	  cfg_err("warning, bad replace format", cmd_line);
+	  fprintf(stderr, "   ==> %s\n", cmd_str);
+	  break;
+	}
+
+	/* add substitution macro */
+	add_subst(count, setmode_value, tmp_str, t2_str);
+
+      }
+
+    } else if (minmatch_str(cmd_str, "read-config", 4)) {
+      if (cmd_line) {
+	fprintf(stderr, "The -read-config flag must be the first argument\n");
+	show_usage();
+      } else {
+	cfg_err("The -read-config command is not supported", cmd_line);
+	exit(1);
+      }
+    } else if (minmatch_str(cmd_str, "remove-names", 3)) {
+      /* remove variables? */
+      set_option(OPT_NONAMES, setmode_value, set_val);
+      did_cmd_parse = TRUE;
+    } else if (minmatch_str(cmd_str, "roff-mode", 4)) {
+
+      did_cmd_parse = TRUE;
+      if (files_parsed > 0) {
+	if (cmd_line) {
+	  fprintf(stderr, "Error: -roff-mode found after file argument\n");
+	  exit(1);
+	}
+      } else {
+	doc_extract = DOC_ROFF;
+      }
+
+    }
+    break;
+  case 's':
+    if ((count = minmatch_str(cmd_str, "statics", 4))) {
+
+      /* statics? */
+      for (/* set by minmatch_str */; cmd_str[count] != '\0'; count++) {
+	if ((cmd_str[count] == ':') ||
+	    (cmd_str[count] == '=')) {
+	  count++;
+	  break;
+	}
+      }
+      strcpy(tmp_str, cmd_str + count);
+      trim_str(tmp_str);
+      if (strlen(tmp_str) > 0) {
+
+	/* which? */
+	switch(tmp_str[0]) {
+	case 'a':
+	  /* all statics are allowed */
+	  set_option(OPT_STATICMODE, setmode_value, ANY_STATICS);
+	  did_cmd_parse = TRUE;
+	  break;
+	case 'o':
+	  /* only statics are allowed */
+	  set_option(OPT_STATICMODE, setmode_value, ONLY_STATICS);
+	  did_cmd_parse = TRUE;
+	  break;
+	case 'n':
+	  /* no statics are allowed */
+	  set_option(OPT_STATICMODE, setmode_value, NO_STATICS);
+	  did_cmd_parse = TRUE;
+	  break;
+	default:
+	  /* not one that I know of */
+	  break;
+	}
+
+      } else {
+
+	/* defaults */
+	if (set_val) {
+	  set_option(OPT_STATICMODE, setmode_value, ANY_STATICS);
+	} else {
+	  set_option(OPT_STATICMODE, setmode_value, NO_STATICS);
+	}
+	did_cmd_parse = TRUE;
+
+      }
+
+    } else if (minmatch_str(cmd_str, "sort-all", 4)) {
+      /* sort? */
+      did_cmd_parse = TRUE;
+      if (set_val) {
+	set_option(OPT_SORTMODE, setmode_value, SORT_ALL);
+      } else {
+	set_option(OPT_SORTMODE, setmode_value, SORT_NONE);
+      }
+    } else if (minmatch_str(cmd_str, "show-all", 4) ||
+	       minmatch_str(cmd_str, "show-anyway", 4)) {
+      /* ANSI? */
+      set_option(OPT_SHOWANYWAY, setmode_value, set_val);
+      did_cmd_parse = TRUE;
+    } else if (minmatch_str(cmd_str, "settings", 3)) {
+      did_cmd_parse = TRUE;
+      if (cmd_line) {
+	show_settings();
+      } else {
+	cfg_err("warning, the -settings command is unsupported", cmd_line);
+      }
+    } else if (minmatch_str(cmd_str, "system-build", 6)) {
+      did_cmd_parse = TRUE;
+      if (cmd_line) {
+	build_rc(SYS_CONFIG);
+	exit(0);
+      } else {
+	cfg_err("warning, the -system-build command is unsupported", cmd_line);
+      }
+    } else if (minmatch_str(cmd_str, "sort-by-files", 6)) {
+      /* file sort? */
+      did_cmd_parse = TRUE;
+      if (global_opts[setmode_value == 1][OPT_SORTMODE] != SORT_ALL) {
+	if (set_val) {
+	  set_option(OPT_SORTMODE, setmode_value, SORT_FILE);
+	} else {
+	  set_option(OPT_SORTMODE, setmode_value, SORT_NONE);
+	}
+      }
+    } else if (minmatch_str(cmd_str, "single-comments", 3)) {
+      /* !multiple comments? */
+      did_cmd_parse = TRUE;
+      set_option(OPT_SINGLECOMMENTS, setmode_value, set_val);
+    }
+    break;
+  case 't':
+    if (count = minmatch_str(cmd_str, "tab-width", 3)) {
+      int tab_width;
+      did_cmd_parse = TRUE;
+      for (/* set by minmatch_str */; cmd_str[count] != '\0'; count++) {
+	if ((cmd_str[count] == ':') ||
+	    (cmd_str[count] == '=')) {
+	  count++;
+	  break;
+	}
+      }
+      strcpy(tmp_str, cmd_str + count);
+      trim_str(tmp_str);
+      if (sscanf(tmp_str, "%d", &tab_width) != 1) {
+	tab_width = 0;
+      }
+      set_option(OPT_TABWIDTH, setmode_value, tab_width);
+    } else if (minmatch_str(cmd_str, "troff-mode", 4)) {
+      did_cmd_parse = TRUE;
+      if (files_parsed > 0) {
+	if (cmd_line) {
+	  fprintf(stderr, "Error: -troff-mode found after file argument\n");
+	  exit(1);
+	}
+      } else {
+	doc_extract = DOC_ROFF;
+      }
+    }
+    break;
+  case 'u':
+    /* undefine macro */
+    if (count = minmatch_str(cmd_str, "undefine", 3)) {
+      did_cmd_parse = TRUE;
+      for (/* set by minmatch_str */; cmd_str[count] != '\0'; count++) {
+	if ((cmd_str[count] == ':') ||
+	    (cmd_str[count] == '=')) {
+	  count++;
+	  break;
+	}
+      }
+      strcpy(tmp_str, cmd_str + count);
+      trim_str(tmp_str);
+      if (strlen(tmp_str) > 0) {
+	if (removed_macro(setmode_value, tmp_str) != TRUE) {
+	  sprintf(cmd_str, "%s%s", UNDEF_LEADER, tmp_str);
+	  add_macro(setmode_value, cmd_str);
+	}
+      } else {
+	cfg_err("warning: blank undefine", cmd_line);
+      }
+    }
+    break;
+  case 'v':
+    if (minmatch_str(cmd_str, "version-info", 3)) {
+      did_cmd_parse = TRUE;
+      if (cmd_line) {
+	show_version();
+	exit(0);
+      } else {
+	cfg_err("warning, the -version-info command is unsupported", cmd_line);
+      }
+    }
+    break;
+  case 'w':
+    /* wrapping */
+    if (count = minmatch_str(cmd_str, "wrap-parameters", 4)) {
+      did_cmd_parse = TRUE;
+      for (/* set by minmatch_str */; cmd_str[count] != '\0'; count++) {
+	if ((cmd_str[count] == ':') ||
+	    (cmd_str[count] == '=')) {
+	  count++;
+	  break;
+	}
+      }
+      strcpy(tmp_str, cmd_str + count);
+      trim_str(tmp_str);
+      count = 0;
+      if (isdigit(tmp_str[count])) {
+	/* use given */
+	int wrap_point = 0;
+	for (; isdigit(tmp_str[count]); count++) {
+	  wrap_point *= 10;
+	  wrap_point += (tmp_str[count] - '0');
+	}
+	count--;
+	set_option(OPT_WRAPPOINT, setmode_value, wrap_point);
+      } else if (set_val) {
+	/* default */
+	set_option(OPT_WRAPPOINT, setmode_value, 72);
+      } else {
+	/* off */
+	set_option(OPT_WRAPPOINT, setmode_value, 0);
+      }
+    }
+    break;
+  case 'y':
+    /* get comments */
+    if (minmatch_str(cmd_str, "yank-comments", 4)) {
+      did_cmd_parse = TRUE;
+      set_option(OPT_COMMENTS, setmode_value, set_val);
+    }
+    break;
+  default:
+    /* huh? */
+    break;
+  }
+
+  /* find it? */
+  if (did_cmd_parse == FALSE) {
+#ifndef VMS
+    if (!cmd_line || (had_start == TRUE)) {
+#endif /* VMS */
+      cfg_err("unknown option encountered", cmd_line);
+      fprintf(stderr, "   ==> %s\n", cmd_str);
+      exit(1);
+#ifndef VMS
+    } else {
+      singlechar_cmds(cmd_str, set_val);
+    }
+#endif /* VMS */
+  }
+}
+
+/* function to parse the configuration file */
+void
+parse_config (conf_fname)
+  char *conf_fname;
+{
+  char conf_data[MID_SIZE], tmp_fname[FNAME_SIZE];
+  FILE *conf_fp;
+
+  /* check input */
+  if ((conf_fp = fopen(conf_fname, "r")) == NULL) return;
+  strcpy(tmp_fname, cur_cfg_file);
+  strcpy(cur_cfg_file, conf_fname);
+
+  /* read it all */
+  while (!feof(conf_fp)) {
+
+    /* get a line */
+    conf_data[0] = '\0';
+    if (fgets(conf_data, MID_SIZE, conf_fp) != NULL) {
+      /* parse it */
+      parse_cmd(conf_data, TRUE, FALSE);
+    }
+
+  }
+
+  /* done */
+  fclose(conf_fp);
+  strcpy(cur_cfg_file, tmp_fname);
+}
+
+/* send a system error message */
+void
+err_msg(estr)
+  char *estr;
+{
+#ifdef NO_PERROR
+  fprintf(stderr, "%s: %s\n", prog_name, estr);
+#else
+  fprintf(stderr, "%s\n", estr);
+  perror(prog_name);
+#endif /* NO_PERROR */
+}
+
+/* send a message that their was a syntax error */
+void
+syntax_err(estr)
+  char *estr;
+{
+  /* use messages similar to gcc error messages */
+  fprintf(stderr, "%s:%d: %s\n", errout_filename, line_count, estr);
+}
+
+/* routine to check return value of fputs */
+void
+fput_string (outstr, filep)
+  char *outstr;
+  FILE *filep;
+{
+  /* check the output of fputs */
+  if (fputs(outstr, filep) == EOF) {
+    err_msg("unable to write to file");
+    exit(1);
+  }
+}
+
+/* quickie function to distinquish proper switches */
+int
+is_switch (ch)
+  int ch;
+{
+  if (ch == '-') return(TRUE);
+  if (ch == '+') return(TRUE);
+#ifdef VMS
+  if (ch == '/') return(TRUE);
+#endif /* VMS */
+  return(FALSE);
+}
+
+/* call the external routine out_char() and send out all characters */
+void
+out_str(omode, str)
+  int omode;
+  char *str;
+{
+  /* simple function */
+  if (str != NULL) {
+    while (*str != '\0') {
+      out_char(omode, *str);
+      str++;
+    }
+  }
+}
+
+/* output given function prototype */
+void
+out_proto(omode, f_ptr, mode, do_comments)
+  int omode;
+  P_PROTO f_ptr;
+  int mode, do_comments;
+{
+  char *ch_out, tempstr[MID_SIZE];
+  int did_leader = FALSE;
+  int outch_cnt = 0, leader_cnt;
+  int wrap_point = get_option(OPT_WRAPPOINT);
+
+  /* stupidity? */
+  if (f_ptr == NULL) return;
+
+  /* initial comment output */
+  if (get_option(OPT_FIRSTCOMMENT) &&
+      (start_comment[0] != '\0')) {
+
+    /* first comment? */
+    strcpy(tempstr, "/*");
+    if (get_option(OPT_PREPEND)) {
+      strcat(tempstr, " ");
+      strcat(tempstr, file_name);
+      strcat(tempstr, ":");
+    }
+    send_first_comment(tempstr);
+    did_leader = TRUE;
+    start_comment[0] = '\0';
+  }
+
+  /* preamble? */
+  if (doc_extract != DOC_NONE) {
+    if (dont_space == FALSE) {
+      if (doc_extract != DOC_ROFF) {
+	out_char(omode, '\n');
+	out_char(omode, '\n');
+      } else {
+	out_str(omode, ".sp 2\n");
+      }
+    } else if (doc_extract == DOC_ROFF) {
+      init_roff(omode);
+    }
+    dont_space = FALSE;
+    if (doc_extract != DOC_ROFF) {
+      out_str(omode, "Function: ");
+      out_str(omode, f_ptr->name);
+      out_str(omode, "\nFile:     ");
+    } else {
+      if (start_block == FALSE) {
+	out_str(omode, ".KS\n");
+      } else {
+	start_block = FALSE;
+      }
+      out_str(omode, ".nf\n");
+      out_str(omode, "\\f1Function: \\f3");
+      out_str(omode, f_ptr->name);
+      out_str(omode, "\n\\f1File:     \\f3");
+    }
+    out_str(omode, f_ptr->fname);
+    out_char(omode, '\n');
+  }
+
+  /* preceeding comment? */
+  if (do_comments) {
+    if (doc_extract != DOC_ROFF) {
+      out_char(omode, '\n');
+      if (f_ptr->comment != NULL) {
+	out_str(omode, f_ptr->comment);
+	out_char(omode, '\n');
+      }
+    } else {
+      out_str(omode, ".sp\n\\f2");
+      out_str(omode, f_ptr->comment);
+      out_char(omode, '\n');
+    }
+  } else if ((doc_extract != DOC_NONE) ||
+	     (total_out == 0) ||
+	     did_leader) {
+    if (doc_extract != DOC_ROFF) {
+      out_char(omode, '\n');
+    } else {
+      out_str(omode, ".sp\n");
+    }
+  }
+
+  /* fill mode for troff? */
+  if (doc_extract == DOC_ROFF) {
+    out_str(omode, ".fi\n");
+    out_str(omode, ".in +0.5i\n");
+    out_str(omode, ".ti -0.5i\n");
+  }
+
+  /* show the full function name and type */
+  if (doc_extract == DOC_ROFF) {
+    out_str(omode, "\\f3");
+    out_str(omode, f_ptr->ftype);
+    out_str(omode, " ( \\c\n\\f4");
+  } else {
+    if (get_option(OPT_TYPEWRAP)) {
+      char *second_half;
+
+      /* split at function name */
+      if (second_half = strstr(f_ptr->ftype, f_ptr->name)) {
+	outch_cnt = strlen(second_half);
+	for (ch_out = f_ptr->ftype;
+	     (ch_out != second_half) &&
+	     ((*ch_out != ' ') ||
+	      (ch_out != second_half - 1));
+	     ch_out++) {
+	  out_char(omode, *ch_out);
+	}
+	out_char(omode, '\n');
+	out_str(omode, second_half);
+      } else {
+	/* normal output */
+	outch_cnt = strlen(f_ptr->ftype);
+	out_str(omode, f_ptr->ftype);
+      }
+    } else {
+      /* normal output */
+      outch_cnt = strlen(f_ptr->ftype);
+      out_str(omode, f_ptr->ftype);
+    }
+    if (get_option(OPT_COMPACT)) {
+      out_str(omode, " PL_((");
+      outch_cnt += 6;
+    } else {
+      out_str(omode, " (");
+      outch_cnt += 2;
+    }
+  }
+  leader_cnt = outch_cnt + 1;
+  
+  if (mode != MODE_OLDC) {
+
+    /* begin comment? */
+    if (mode == MODE_COMMENT) {
+      out_str(omode, "/*");
+      outch_cnt += 2;
+    }
+
+    /* prototype list */
+    if (doc_extract == DOC_ROFF) {
+
+      /* break at each variable */
+      for (ch_out = f_ptr->plist;
+	   *ch_out != '\0';
+	   ch_out++) {
+
+	/* send out list; breaking for ','s */
+	out_char(omode, *ch_out);
+	if (*ch_out == ',') {
+	  out_str(omode, "\\c\n");
+	}
+      }
+
+    } else if ((wrap_point > 0) &&
+	       (f_ptr->plist != NULL) &&
+	       (f_ptr->plist[0] != '\0') &&
+	       (strlen(f_ptr->plist) + outch_cnt > wrap_point - 1)) {
+      char *next_space;
+
+      /* break at appropriate positions */
+      ch_out = f_ptr->plist;
+      next_space = index(f_ptr->plist, ' ');
+      do {
+
+	/* check for break point */
+	if (next_space == NULL) {
+
+	  /* wrap point within reach? */
+	  if (strlen(ch_out) + outch_cnt > wrap_point) {
+	    out_char(omode, '\n');
+	    for (outch_cnt = 0;
+		 outch_cnt < leader_cnt - 1;
+		 outch_cnt++) {
+	      out_char(omode, ' ');
+	    }
+	  }
+	  out_char(omode, ' ');
+	  out_str(omode, ch_out);
+	  ch_out = NULL;
+
+	} else {
+
+	  /* wrap point within reach? */
+	  if (next_space - ch_out + outch_cnt > wrap_point) {
+	    out_char(omode, '\n');
+	    for (outch_cnt = 0;
+		 outch_cnt < leader_cnt;
+		 outch_cnt++) {
+	      out_char(omode, ' ');
+	    }
+	  } else {
+	    out_char(omode, ' ');
+	    outch_cnt++;
+	  }
+	  for (; ch_out < next_space; ch_out++) {
+	    out_char(omode, *ch_out);
+	    outch_cnt++;
+	  }
+	  ch_out = next_space + 1;
+
+	  /* determine the next space location */
+	  next_space = index(next_space + 1, ' ');
+
+	}
+
+      } while (ch_out != NULL);
+      out_char(omode, ' ');
+
+    } else {
+
+      /* send out parameter list */
+      out_char(omode, ' ');
+      out_str(omode, f_ptr->plist);
+      if ((f_ptr->plist) &&
+	  (f_ptr->plist[0] != '\0')) {
+	out_char(omode, ' ');
+      }
+
+    }
+
+    /* end comments? */
+    if (mode == MODE_COMMENT) {
+      out_str(omode, "*/");
+    }
+
+  }
+
+  /* close up */
+  if (doc_extract == DOC_ROFF) {
+    out_str(omode, "\\f3 );\n");
+  } else {
+    if (get_option(OPT_COMPACT)) {
+      out_char(omode, ')');
+    }
+    out_str(omode, ");\n");
+  }
+
+  /* turn off fill for troff */
+  if (doc_extract == DOC_ROFF) {
+    out_str(omode, ".nf\n");
+    out_str(omode, ".in -0.5i\n");
+    out_str(omode, ".KE\n");
+  }
+}
+
+/* set home config file path indicating success */
+static int
+set_home_config()
+{
+#ifndef VAXC
+  struct passwd *pwtemp = NULL;
+#endif /* VAXC */
+  char home_file[MID_SIZE];
+
+  if (getenv("HOME") != NULL) {
+    strcpy(home_file, (char *)getenv("HOME"));
+#ifndef VAXC
+  } else if ((pwtemp = getpwuid(getuid())) != NULL) {
+    strcpy(home_file, pwtemp->pw_dir);
+#endif /* VAXC */
+  } else {
+#ifdef VMS
+    strcpy(home_file, "sys$login:");
+#else
+    /* oops */
+    return(FALSE);
+#endif /* VMS */
+  }
+
+  /* build the file */
+  strcat(home_file, DIR_SEPARATOR);
+  strcat(home_file, CONFIG_FILE);
+
+  /* record it */
+  strcpy(tmp_str, home_file);
+  return(TRUE);
+}
+
+/* Create test file for varargs and FILE test */
+static int
+bld_testfile(fname)
+  char *fname;
+{
+  FILE *fp;
+
+  if ((fp = fopen(fname, "w")) == NULL) {
+    sprintf(tmp_str, "Error opening varargs test file <%s>", fname);
+    err_msg(tmp_str);
+    return(TRUE);
+  }
+  fput_string("#include <stdio.h>\n", fp);
+  fput_string("#include <varargs.h>\n", fp);
+  fput_string("int function1(va_alist)\nva_dcl\n", fp);
+  fput_string("{ /* empty function */ }\n", fp);
+  fput_string("int function2(fstrct)\nFILE fstrct;\n", fp);
+  fput_string("{ /* empty function */ }\n", fp);
+  if (fclose(fp) == EOF) {
+    sprintf(tmp_str, "Error closing varargs test file <%s>", fname);
+    err_msg(tmp_str);
+    return(TRUE);
+  }
+  return(FALSE);
+}
+
+/* search for expanded value of the varargs setup */
+int
+vargs_find ()
+{
+  char sys_cmd[MID_SIZE], tmpfname[MID_SIZE];
+  char t_instr[MID_SIZE], t_outstr[MID_SIZE];
+  int hold = FALSE, type_select = 0;
+  extern int dont_stop;
+
+  /* build temp file name */
+  sprintf(tmpfname, TMPFILE_FMT, getpid());
+
+  /* generate it */
+  if (bld_testfile(tmpfname)) {
+    return(TRUE);
+  }
+
+  /* launch a CPP process */
+  sprintf(sys_cmd, "%s %s", cpp_prog, tmpfname);
+  if ((fpin = open_input(sys_cmd, "r")) == NULL) {
+    sprintf(tmp_str, "unable to open CPP \"pipe\" to file <%s>",
+	   tmpfname);
+    err_msg(tmp_str);
+    return(TRUE);
+  }
+
+  /* now parse it */
+  dont_stop = TRUE;
+  parse_file();
+  dont_stop = FALSE;
+  close_input(fpin);
+  unlink(tmpfname);
+  fpin = NULL;
+
+  /* retrieve the info */
+  while (proto_list != NULL) {
+
+    /* get proper function */
+    if (strcmp(proto_list->name, "function1") == 0) {
+      /* varargs */
+      if (strcmp(proto_list->plist, "...") == 0) goto skip_it;
+      strcpy(t_instr, proto_list->plist);
+      strcpy(t_outstr, "...");
+      type_select = SUBST_FULL;
+    } else if (strcmp(proto_list->name, "function2") == 0) {
+      /* FILE structure */
+      for (type_select = strlen(proto_list->plist) - 1;
+	   type_select > 0;
+	   type_select--) {
+	if (proto_list->plist[type_select] == ' ') {
+	  proto_list->plist[type_select] = '\0';
+	  break;
+	}
+      }
+      if (strcmp(proto_list->plist, "FILE") == 0) goto skip_it;
+      strcpy(t_instr, proto_list->plist);
+      strcpy(t_outstr, "FILE");
+      type_select = SUBST_TYPE;
+    } else {
+      /* huh? */
+      fprintf(stderr,
+	      "Warning: unable to locate the FILE and varargs replacements\n");
+      hold = TRUE;
+      goto skip_it;
+    }
+
+    /* copy the information */
+    add_subst(type_select, 2, t_instr, t_outstr);
+
+  skip_it:
+    /* clean up */
+    pop_proto();
+  }
+
+  /* get out */
+  return(hold);
+}
+
+/* read in all configuration files */
+void
+do_config ()
+{
+  /* system configuration file */
+  if (cfg_switch & 1) {
+    parse_config(SYS_CONFIG);
+  }
+
+  /* personal configuration file */
+  if (cfg_switch & 2) {
+    if (set_home_config()) {
+      parse_config(tmp_str);
+    }
+  }
+
+  /* current directory */
+  if (cfg_switch & 4) {
+    parse_config(CONFIG_FILE);
+  }
+
+  /* random config file */
+  if (cfg_file[0] != '\0') {
+    parse_config(cfg_file);
+  }
+}
+
+/* return pointer to string containing the date */
+char *
+mach_time ()
+{
+  long timeval;
+
+  timeval = time(0);
+  return(ctime(&timeval));
+}
+
+#ifdef NO_POPEN
+/* strings for faking a popen call */
+char newcommand[FNAME_SIZE];
+char pipetmpfile[FNAME_SIZE];
+#endif /* NO_POPEN */
+
+/* function to open a "pipe" to the input */
+FILE *
+open_input (pname, modestr)
+  char *pname, *modestr;
+{
+#ifdef NO_POPEN
+  static int tmpnameset = FALSE;
+
+  /* build file name */
+  if (tmpnameset == FALSE) {
+    sprintf(pipetmpfile, PIPETMP_FMT, getpid());
+    tmpnameset = TRUE;
+  }
+
+  /* this "popen()" hack is only useful for reading from the "pipe" */
+  sprintf(newcommand, PIPEOUT_FMT, pname, pipetmpfile);
+  if (system(newcommand) == SYSCMD_FAILED) {
+    return((FILE *) NULL);
+  }
+  return(fopen(pipetmpfile, modestr));
+#else
+  return(popen(pname, modestr));
+#endif /* NO_POPEN */
+}
+
+/* close up the "pipe" */
+int
+close_input (stream)
+  FILE *stream;
+{
+#ifdef NO_POPEN
+  if (fclose(stream) == EOF) return(-1);
+  return(unlink(pipetmpfile));
+#else
+  return(pclose(stream));
+#endif /* NO_POPEN */
+}

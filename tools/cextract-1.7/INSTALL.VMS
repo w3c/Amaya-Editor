@@ -1,0 +1,84 @@
+Okay, so, I have to assume that you somehow got the unix shar files
+unpacked.  If you got some warnings about "wc" not being found, then
+you can ignore them, since that is a unix program which was just trying
+to do "checksums".  [hopefully everything unpacked okay :-)]
+
+Now, the way to build the programs is simple:
+
+ - first take a look at the xtract.h file and determine if any of the
+   settings need adjusting.  Pay careful attention to the following
+   definitions:
+
+        CEXTDOC_NAME      - name of the documentation extraction program
+        CONFIG_FILE       - name of the configuration file
+        SYS_CONFIG        - location of the global system configuration file
+	CPP		  - the C preprocessor to handle the "#define"s
+	CPP_COMMENT	  - the flag to tell the C preprocessor not to
+			    strip the comments out.
+
+   It should be possible to change them on the command line, using the
+   newbuild.com file, instead of build.com, but I have not been able
+   to test it.
+
+ - @build (or @newbuild) or just compile and then link the main.c and
+   parse.c files.
+
+Note that on VMS systems that I have heard about the C compilers do
+not have support for retaining the comments after preprocessing. So,
+the cextdoc program and the cextract comment functions are pretty
+useless on VMS systems.  [I have had reports that the GNU C
+preprocessor works on VMS systems, so you might want to grab that and
+use that.  You could probably make good use of it normally anyway.]
+
+I have provided a VMS help file to give a documentation method for
+normal VMS users.  It is the file:
+
+  cextract.hlp
+
+You might also want to look at the text files:
+
+  cextract.doc cextrc.doc
+
+since even though they are the documentation for a normal Unix system,
+they do document most everything in the VMS version as well.  The
+".hlp" file should be more than enough, though.
+
+Anyway, you can now place the binary wherever you want.  You can also
+copy it into "cextdoc" (or whatever you set CEXTDOC_NAME to) and
+thereby obtain a program with the documentation extractor as the
+default mode.  [It checks the name as it is called]
+
+In order to simplify access to the program(s), you will need to define
+a foreign command using:
+
+      cextract == "$the_disc:[the_directory]cextract"
+
+Where "the_disc" and "the_directory" have the values for where you
+placed the binary.  I suppose that line can be added to your LOGIN.COM
+file.
+
+You might consider building a system configuration file, using the
+"/SYSTEM-BUILD" qualifier.  You could then edit it to your taste,
+having it contain any default options you might wish to have, as well
+as any "replace" commands which your system might need.
+
+To determine what kind of things might need replacing, you can look at
+the standard header files on your system, searching for things which
+you had considered a "typedef" but which were really "#define"
+sequences.  The one noticable one on my Sun is:
+
+#define FILE struct _iobuf
+
+Since I found that FILE was defined like this on most systems, I made
+sure to automatically build the replacement into /SYSTEM-BUILD
+process.  The varargs system also uses a similiar mechanism, so I made
+sure to handle that as well.
+
+If you get any error messages or warnings, please let me know.  If you
+have any problems at all, or even just a friendly suggestion, feel
+free to send me mail about it.
+
+Adam Bryant
+adb@bu.edu
+
+

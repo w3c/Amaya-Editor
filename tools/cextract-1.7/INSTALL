@@ -1,0 +1,65 @@
+VMS sites should see the file INSTALL.VMS for installation
+instructions.
+
+The installation of the program is pretty simple:
+
+   - Read through this INSTALL file.
+   - Imake created - use xmkmf to create Makefile 
+   - Type "make".
+   - You might want to remove any old configuration files that are on
+	the system, to allow defaults to be installed properly.
+   - Test the program to be sure it works.  This can be done by
+	typing "make test" which will run a test using its own code.
+	[The system configuration file will be installed, if there is
+	not already one in place.  You will need to have permission to
+	create this file, so you might need to do this as "root".]
+   - Type "make install" to install the binary, cextdoc link and
+	to generate the system configuration file (if not already done).
+   - Type "make install.man" to install the manual pages.
+   - If necessary, edit the system configuration file for your site.
+
+  NOTE: As stated above, when the system configuration file is
+   installed, you will need permission to write to whatever
+   location was chosen for it.  So, it is likely that you will
+   need to run the "make test" or "make install" as root, or have
+   write permission to the directory where the file will be
+   placed.
+
+For those systems with a non-standard C preprocesser or for those of
+you who want to be especially thorough:
+
+	- You might need to edit the values of CPP and CPP_COMMENT in
+	  the Makefile.  These should be set to whatever C
+	  preprocessor you can get, preferably one that leaves
+	  comments intact, and the flag that leaves them intact.
+
+After you are done with the installation of the binary and
+documentation, you might want to take a look at the "cextrc" manual
+page and edit the system configuration file for your system.  The
+location and name of this header file is determined by the setting
+of "SYSRC" in the Makefile.  A default one should already have been
+built for your system with the "make install" or "make test"
+commands.
+
+This file can hold the default options you wish to implement (probably
+based on the default system compiler), as well as any system-dependent
+replacements due to "#define"s.
+
+To determine what kind of things might need replacing, you can look at
+the standard header files on your system, searching for things which
+you had considered a "typedef" but which were really "#define"
+sequences.  The one noticeable one on my Sun is:
+
+#define FILE struct _iobuf
+
+Since I found that FILE was defined like this on most systems, I made
+sure to automatically build the replacement into the default
+configuration file.  The varargs system also uses a similiar
+mechanism, so I made sure to handle that as well.
+
+If you get any error messages or warnings, please let me know.  If you
+have any problems at all, or even just a friendly suggestion, feel
+free to send me mail about it.
+
+Adam Bryant
+adb@bu.edu

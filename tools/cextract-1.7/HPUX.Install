@@ -1,0 +1,14 @@
+To build:
+
+make -f Makefile.cln
+
+or, if you would rather use the Imakefile its,
+
+xmkmf
+ then...
+make
+ and to install...
+make install install.man
+
+
+

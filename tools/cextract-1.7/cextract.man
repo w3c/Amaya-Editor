@@ -1,0 +1,242 @@
+.TH CEXTRACT 1 "30 October 1992"
+.SH NAME
+cextract, CDOCNAME \- C prototype/documentation extractor
+.SH SYNOPSIS
+.B cextract
+.RB [ " \-Q# " ]
+.RB [ " \+AaPpNnxZ "]
+.RB [ " \-o "
+.IR "ofile " ]
+.RB [ " \-H\fIstr\fB \-Y\fIprog\fB \-B \-b \-V \-v " ]
+.RB [[ " \-options " ]
+.IR filename \&.\|.\|. " " ]
+.LP
+.B CDOCNAME
+.RB [ " \-Q# " ]
+.RB [ " \+AaNnx "]
+.RB [ " \-o "
+.IR "outfile " ]
+.RB [ " \-Y\fIprogram\fB \-B \-b \-V \-v " ]
+.RB [[ " \-options " ]
+.IR filename \&.\|.\|. " " ]
+.SH DESCRIPTION
+The
+.I cextract
+program is used to extract the function descriptions (aka prototypes)
+from a list of C source files and send them out to the standard output
+or a specified file.  It may also be used to generate basic
+documentation for a list of C source files.
+.sp
+The specific reason this program was written was to provide a method
+of automatically generating header files, containing prototypes, for
+all of the functions used throughout a multi-file project.
+.sp
+Along with the standard C preprocessing options, -D, -I, and -U, there
+are options which allow more control of what form the output will
+take.
+.sp
+To allow for conditional processing, \fIcextract\fR automatically
+predefines the __CEXTRACT__ identifier.  Preprocessor commands, such
+as "#if", "#ifdef" and "#ifndef" may then be used to control what code
+is parsed by \fIcextract\fR.  If the \fICDOCNAME\fR command is used,
+the program will also define __CEXTDOC__.
+.sp
+The \fIcextract\fR program also supports the use of customization
+files.  A system configuration file will be read, and then any
+"NORMRC" file in the user's home directory, and finally any "NORMRC"
+file in the current directory.  For a description of the format of the
+customization file, see the \fIcextrc\fR(5) manual page.
+.SH COMMAND LINE OPTIONS
+The \fIcextract\fR and \fICDOCNAME\fR programs support both long and
+short command line options.  Also, a `+' sign before an option
+description means that it can be either on or off, with a `+' prefix
+enabling that option or a `-' prefix disabling it.  The prefix of
+"no-" (or "no") is also supported for disabling an option.
+.sp
+Most command line arguments may be used anywhere on the command line,
+but a few must be used before any file parsing begins [such as the -N,
++Z and -x options], and one can only be the first argument on the
+command line [the -Q flag].
+.IP "+A, +sort-all"
+Sort the output, listing all functions in alphabetical order.  This
+option is not compatible with the +C flag, since functions are sorted
+over the entire spectrum, not just for each file.
+.IP "+a, +sort-by-files"
+Sort the output, listing functions alphabetically for each file.
+Since this option sorts each file separately, it is compatible with
+the +C flag, unlike the +A option.  For \fIcextract\fR, the default is
+to not do any sorting, while the \fICDOCNAME\fR default is to sort by
+files.
+.IP "-b, -build-config"
+Automatically build a configuration file in the current directory
+based on the current program settings.
+.IP "-B, -system-build"
+Generate a system wide configuration file based on the current program
+settings.
+.IP "+C, +first-comments"
+Capture the first comment encountered in each file and include it in
+the generated output. [default off]
+.IP "+c, +comments, +yank-comments"
+Take the comment immediately preceding the function declaration and
+send it as output along with the function prototype. [default on]
+.IP "-D\fIexpression\fR, -define=\fIexpression\fR"
+Define a macro, as per the C "#define" preprocessor statement.
+.IP "+E, +externs"
+Place the string 'extern' before each function prototype. [default on]
+.IP "+F, +filename"
+Prepend the name of the file to the initial comment when it
+is processed.  This flag requires the +C option. [default off]
+.IP "-f%##, -font-%-##"
+Specify what fonts are to be used when generating troff documentation
+output.  The font name is a one or two character troff name which will
+be interpreted later by the troff processor.  Four fonts are used: `1'
+or `t' which is used only for the title words "Function:" and "File:"
+[default value of "C", Courier]; `2' or `c' which is used for comments
+[default value of "CO", Courier Oblique]; `3' or `n' which is used for
+the function name [default value of "B", Times Bold]; and `4' or `p' for
+the parameter list [default value of "R", Times Roman].  Note that the `%'
+character indicates the type being adjusted, and "##" indicates the
+one or two character font name.
+.IP "-H\fIstring\fR, -header-string=\fIstring\fR"
+During the normal extraction mode, enclose the output within the
+sequence "#ifndef \fIstring\fR", "#define \fIstring\fR", ..., "#endif
+/* \fIstring\fR */".  This method is used with many system header
+files and prevents the header file from being parsed more than once.
+If this option is not used, the output will be enclosed within a
+"#ifndef __CEXTRACT__", "#endif /* __CEXTRACT__ */" sequence instead.
+.IP "-I\fIdirectory\fR, -include=\fIdirectory\fR"
+Add the indicated directory to the search path for include files
+accessed via the "#include" preprocessor statement.  This flag is
+passed on to the C preprocessor.
+.IP "+m, +multi-comments, +multiple-comments"
+If the -c flag is set, look for a "block" of multiple comments,
+instead of a single comment.  Comments with more than one newline in
+between are considered separate. [default off]
+.IP "-N, -roff-mode, -troff-mode"
+Enable documentation mode, sending output as -ms troff format.
+.IP "-n, -doc-mode"
+Enable documentation mode, sending output as normal text.  This is the
+default mode of the \fICDOCNAME\fR program.
+.IP "-o \fIoutfile\fR, -output-file \fIoutfile\fR, -output-file=\fIoutfile\fR"
+Send output to the specified file instead of the standard output.  The
+file name need not immediately follow the `\-o' flag, but it must be
+the first non-option argument. Warning: This will overwrite any
+existing file of the same name.
+.IP "+P, +dual-output"
+In extraction mode, generate both styles of C prototypes, separated by
+using "#ifdef" and "#else" statements to test for __STDC__.  This
+option must precede any file arguments. [default on]
+.IP "+p, +ansi-code"
+Produce output in ANSI C prototype format; otherwise, produce
+old-style declarations.  This option must precede any file arguments.
+[default off]
+.IP "-q\fIfile\fR, -config-file=\fIfile\fR"
+Read in the specified file and parse it for customization commands.
+.IP "-Q#, -read-config=#"
+An octal digit specifies which configuration files should be read;
+1 for the system configuration file, 2 for the $HOME/NORMRC file and
+4 for the "NORMRC" file in the current directory.  Add values to read
+multiple files.  If no number is specified, a 0 is assumed.  This
+option must be the very first argument on the command line.  [default
+value of 7 reads all three files]
+.IP "+r, +remove-names, +discard-names"
+Strip out the variable names when sending out the prototype lists.
+.IP "+S, +show-all, +show-anyway"
+If the -p flag is off, output the prototype list anyway, but enclosed
+within comments. If the -P flag is set, comments and commented
+prototypes should also be duplicated within the non-ANSI portion of
+the output. [default on]
+.IP "+s, +s:none|all|only, +statics, +statics: none|all|only"
+Indicate how static functions are to be treated.  If "none" is chosen,
+static functions will be ignored, if "only" then any non-static
+functions will be ignored, and "any" indicates that all functions will
+be included.  If no selection is given, either "any" (`+' flag),  or
+"none" (`-' flag) will be used.
+.IP "-T#, -tab-width=#"
+Specify the tab width used during documentation output.  If no value
+is given, or a value of zero is given, tabs are passed though
+unformatted.
+.IP "-U\fIname\fR, -undefine=\fIname\fR"
+Undefine a macro.  If "-D\fIname\fR" was specified in a previous
+argument, it is removed from the argument list; otherwise, this option
+is passed on to the C preprocessor.
+.IP "-V, -settings"
+Show the current settings of the various program options.
+.IP "-v, -version-info"
+Display the version number of the program.
+.IP "+W, +break-after-types, +break-types"
+When enabled, a newline will be inserted between the function type and
+the function name in the function declarations.
+.IP "+w#, +wrap-parameters=#"
+If the length of the parameter list for a function would cause it to
+exceed a given number of columns [72 by default], a newline will be
+inserted in place of a space character, so that the function will not
+exceed that given length.  The optional number after the command will
+override a negation prefix if encountered.
+.IP "-x, -extract-mode"
+Run \fIcextract\fR or \fICDOCNAME\fR as a prototype extractor.  This is
+the default mode for \fIcextract\fR.
+.IP "-Y\fIprogram\fR -cpp-program=\fIprogram\fR"
+Specify which program to use as the C preprocessor.  This program
+should resolve all of the C defines and preprocessor statements while,
+hopefully, leaving comments intact.
+.IP "+Z, -merge-output"
+Combine the ANSI and K&R C output of the \fIcextract\fR on one line,
+to create a much more compact header file.
+.SH VMS
+Configuration files are also supported under VMS.  The default
+configuration files for VMS systems are sys$library:cext.cnf,
+sys$login:cext.cnf, and cext.cnf.
+.sp
+Since the VMS C compiler strips out comments, the documentation mode
+and comment options are not very useful.  Using the GNU C preprocessor
+instead might be a possible solution.
+.SH COPYRIGHT
+The code is freely distributable and there are no restrictions other
+than the fact that it not be used for monetary gain and that copyright
+notices must be kept intact.
+.sp
+Both \fIcextract\fR and \fICDOCNAME\fR may be used to generate
+proprietary source code or documentation, but its own source code may
+not be used as a part of any proprietary programs.
+.sp
+The header files and documentation generated by \fIcextract\fR and
+\fICDOCNAME\fR are not subject to this COPYRIGHT notice because they
+are derived from the source code which was read in by the program to
+create the output.
+.SH FILES
+.IP "SYSCXTRC, $HOME/NORMRC, NORMRC"
+The list of configuration files, and the order in which they are read
+in.
+.SH SEE ALSO
+cc(1), cextrc(5)
+.SH AUTHORS
+.nf
+Adam Bryant
+adb@cs.bu.edu
+.sp
+initial VMS port by John Carr
+jrcarr@iup.bitnet
+.sp
+special thanks to comp.sources.reviewed reviewers, without whom this
+program would be much less useful.
+.fi
+.SH VMS
+On VMS systems, only the longer command line options are available,
+and the '/' character is used to specify command line options.
+.SH BUGS
+1) As far as I know, there is no way to tell the normal VMS C compiler
+not to strip out comments.  This renders the comment extraction and
+documentation mode portions rather useless to VMS sites.  Getting the
+GNU C preprocessor for such sites is recommended.
+.sp
+2) Cextract has problems with function pointers and structure
+definitions within the parameter list, using typedefs for such
+declarations is recommended.
+.sp
+3) Does not yet fully support C++ code.
+.sp
+4) It is dependent on the given C preprocessor, so will have any
+limitations (such as maximum #defines) which the C preprocessor has.
+.sp
+If any other bugs are detected, please notify the author.
