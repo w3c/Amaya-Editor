@@ -2539,8 +2539,8 @@ ThotWindow TtaGetThotWindow (int frame)
   ----------------------------------------------------------------------*/
 void SetCursorWatch (int thotThotWindowid)
 {
-   int                 frame;
 #ifndef _WINDOWS
+   int                 frame;
    Drawable            drawable;
 #ifdef _GTK   
    ThotWidget          w;
@@ -2570,8 +2570,8 @@ void SetCursorWatch (int thotThotWindowid)
   ----------------------------------------------------------------------*/
 void ResetCursorWatch (int thotThotWindowid)
 {  
-    int                 frame;
 #ifndef _WINDOWS
+   int                 frame;
    Drawable            drawable;
 #ifdef _GTK
    ThotWidget          w;
@@ -2778,8 +2778,8 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pave)
 		       gdk_window_set_cursor(GTK_WIDGET(w)->window, ArrowCurs);
 	   }
 #endif /* _GTK */
-     }
 #endif /* _WINDOWS */
+     }
 
    *frame = ClickFrame;
    if (ClickFrame > 0 && ClickFrame <= MAX_FRAME)
@@ -2793,11 +2793,11 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pave)
   ----------------------------------------------------------------------*/
 void ChangeFrameTitle (int frame, char *text)
 {
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    if (FrMainRef [frame] != 0)
       SetWindowText (FrMainRef[frame], text);
-#  else  /* !_WINDOWS */
-#  ifndef _GTK
+#else  /* !_WINDOWS */
+#ifndef _GTK
    int                 n;
    Arg                 args[MAX_ARGS];
    ThotWidget          w;
@@ -2813,7 +2813,7 @@ void ChangeFrameTitle (int frame, char *text)
         n++;
         XtSetValues (w, args, n);
      }
-#   else /* _GTK */
+#else /* _GTK */
    ThotWidget          w;
    w = FrameTable[frame].WdFrame;
    if (w != 0)
@@ -2821,8 +2821,8 @@ void ChangeFrameTitle (int frame, char *text)
        w=gtk_widget_get_toplevel(w);
        gtk_window_set_title (GTK_WINDOW(w), text);
      }
-#   endif /* !_GTK */
-#   endif /* _WINDOWS */
+#endif /* !_GTK */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
