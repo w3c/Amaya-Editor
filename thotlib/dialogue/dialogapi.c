@@ -4519,6 +4519,8 @@ boolean             react;
 			 /*_________________________________ Creation d'un separateur __*/
 			 {
 #                           ifdef _WINDOWS
+                            AppendMenu (w, MF_SEPARATOR, 0, NULL);
+                            adbloc->E_ThotWidget[ent] = (ThotWidget) 0;
 #                           else  /* _WINDOWS */
 			    XtSetArg (args[n], XmNseparatorType, XmSINGLE_DASHED_LINE);
 			    w = XmCreateSeparator (menu, "Dialogue", args, n + 1);
