@@ -85,33 +85,6 @@ static AttSearch    SRC_attr_tab[] = {
 #endif
 };
 
-/* old generated doctype definitions */
-/*
-static char *HTMLDocTypes_1[] =
-{
-  "\"-//W3C//DTD XHTML Basic 1.0//EN\"",
-  "\"-//W3C//DTD XHTML 1.0 Strict//EN\"",
-  "\"-//W3C//DTD XHTML 1.1//EN\"",
-  "\"-//W3C//DTD XHTML 1.0 Transitional//EN\"",
-  "\"-//W3C//DTD XHTML 1.0 Frameset//EN\"",
-  "\"-//W3C//DTD HTML 4.01//EN\"",
-  "\"-//W3C//DTD HTML 4.01 Transitional//EN\"",
-  "\"-//W3C//DTD HTML 4.01 Frameset//EN\""
-};
-
-static char *HTMLDocTypes_2[] =
-{
-  "\"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">\n",
-  "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n",
-  "\"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n",
-  "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n",
-  "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd\">\n",
-  "\"http://www.w3.org/TR/html4/strict.dtd\">\n",
-  "\"http://www.w3.org/TR/html4/loose.dtd\">\n",
-  "\"http://www.w3.org/TR/html4/frameset.dtd\">\n",
-};
-*/
-
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
 #include "EDITstyle_f.h"
@@ -860,11 +833,11 @@ void SetNamespacesAndDTD (Document doc)
 	       ptr = TtaGetSSchemaName (nature);
 	       if (!strcmp (ptr, "MathML"))
 		 useMathML = TRUE;
-	       if (!strcmp (ptr, "SVG"))
+	       else if (!strcmp (ptr, "SVG"))
 		 useSVG = TRUE;
-	       if (!strcmp (ptr, "XML"))
+	       else if (!strcmp (ptr, "XML"))
 		 useXML = TRUE;
-	       if (!strcmp (ptr, "HTML"))
+	       else if (!strcmp (ptr, "HTML"))
 		 useHTML = TRUE;
 	     }
 	 }
@@ -897,18 +870,18 @@ void SetNamespacesAndDTD (Document doc)
 	 {
 	   TtaDeleteTree (doctype, doc);
 	   TtaSetDocumentProfile (doc, L_Other);
-	   if (useMathML && (strcmp (s, "HTML") == 0) &&
-	       DocumentMeta[doc]->xmlformat)
-	     {
-	       /* Create a XHTML + MathML + SVG doctype */
-	       CreateDoctype (doc, L_Xhtml11, useMathML, useSVG);
-	       TtaSetDocumentProfile (doc, L_Xhtml11);
-	       /* it's not necessary to generate a PI attribute */
-	       usePI = FALSE;
-	     }
-   	 }
+  	 }
+       if (useMathML && (strcmp (s, "HTML") == 0) &&
+	   DocumentMeta[doc]->xmlformat)
+	 {
+	   /* Create a XHTML + MathML + SVG doctype */
+	   CreateDoctype (doc, L_Xhtml11, useMathML, useSVG);
+	   TtaSetDocumentProfile (doc, L_Xhtml11);
+	   /* it's not necessary to generate a PI attribute */
+	   usePI = FALSE;
+	 }
      }
-
+   
    if (
 #ifdef ANNOTATIONS
        (DocumentTypes[doc] == docAnnot && ANNOT_bodyType (doc) == docHTML) ||
