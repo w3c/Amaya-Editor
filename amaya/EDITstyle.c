@@ -793,7 +793,8 @@ STRING      buf;
 int        *len;
 #endif
 {
-  ElementType          elType;
+  ElementType        elType;
+  STRING             name;
 
   if (buf == NULL || len == NULL || *len <= 0)
     return;
@@ -808,7 +809,8 @@ int        *len;
 
   /* BODY / HTML elements specific handling */
   elType = TtaGetElementType (el);
-  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+  name = TtaGetSSchemaName (elType.ElSSchema);
+  if (ustrcmp(name, TEXT("HTML")) == 0)
     {
       if (elType.ElTypeNum == HTML_EL_HTML)
 	{

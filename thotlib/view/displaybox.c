@@ -900,7 +900,8 @@ ThotBool            selected;
   else
     withline = FALSE;
   /* in SVG foreground and background are inverted */
-  if (!ustrcmp(pAb->AbElement->ElStructSchema->SsName, TEXT("GraphML")))
+  if (!ustrcmp(pAb->AbElement->ElStructSchema->SsName, TEXT("GraphML")) &&
+      pAb->AbDocView == 1)
     {
     bg = pAb->AbForeground;
     fg = pAb->AbBackground;

@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Edition des graphiques</title>
-  <meta name="GENERATOR" content="amaya V3.9" />
+  <meta name="GENERATOR" content="amaya V4.01" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body>
+<body xml:lang="fr" lang="fr">
 
 <table width="100%" summary="toc">
   <tbody>
@@ -30,7 +30,7 @@
 suivant la spécification Scalable Vector Graphics (<a
 href="http://www.w3.org/TR/svg/">SVG</a>). Les éléments SVG sont gérés comme
 des composants structurés, de la même façon que les éléments HTML. Donc vous
-pouvez mainpuler les graphiques SVG comme n'importe quelle autre partie des
+pouvez manipuler les graphiques SVG comme n'importe quelle autre partie des
 documents HTML. Toutes les fonctions d'édition fournies par Amaya pour éditer
 le texte sont aussi disponibles pour éditer le graphique. Il y a aussi
 quelques fonctions de contrôle supplémentaires pour créer des éléments
@@ -39,8 +39,8 @@ SVG.</p>
 <h2>Création de graphiques avec la palette</h2>
 
 <p>Pour créer un nouvel élément SVG dans un document, vous devez juste placer
-le point d'insertion (caret) à la postion où vous voulez l'insérer, et cliquer
-le bouton <strong>Graphique</strong>  <img src="../Icons/Graph.gif"
+le point d'insertion (caret) à la position où vous voulez l'insérer, et
+cliquer le bouton <strong>Graphique</strong> <img src="../Icons/Graph.gif"
 alt="Graph" />. Le bouton Graphique affiche une palette qui reste sur l'écran
 tant que vous n'avez pas cliqué sur le bouton <code>Terminer</code>.
 Choisissez juste l'élément que vous désirez créer. Les graphiques disponibles
@@ -54,12 +54,14 @@ sont :</p>
   <li>Un rectangle, <code>rect</code> en SVG sans attributs <code>rx</code> ou
     <code>ry</code>, <svg xmlns="http://www.w3.org/2000/svg" width="2cm"
     height="0.6cm">
-      <rect x="6px" width="22px" height="18px" style="fill: #FFCB69"/>
+      <rect x="6px" width="22px" height="18px"
+            style="fill: #FFCB69; stroke: #0071FF"/>
     </svg>
   </li>
   <li>Un rectangle avec des angles arrondis, <code>rect</code> en SVG, <svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <rect rx="6px" width="23px" height="18px" style="fill: #E5E500"/>
+      <rect rx="6px" width="23px" height="18px"
+            style="fill: #E5E500; stroke: #4C00E5"/>
     </svg>
   </li>
   <li>Un cercle, <code>circle</code> en SVG, <svg
@@ -78,9 +80,9 @@ sont :</p>
     </svg>
   </li>
   <li>Un polygone, <code>polygon</code> en SVG, <svg
-    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
+    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.7cm">
       <polygon points="2,16 15,0 28,12 45,4 46,16 17,16 14,11"
-               style="fill: #C8FF95"/>
+               style="fill: #C8FF95; stroke: #000000"/>
     </svg>
   </li>
   <li>Les courbes ouvertes et fermées ne sont pas encore implémentées. <svg
@@ -94,16 +96,18 @@ sont :</p>
 
         <div xmlns="http://www.w3.org/1999/xhtml">
         <ul>
-          <li style="color: #FF5F00">First item</li>
+          <li>First item</li>
           <li>Second item</li>
         </ul>
         </div>
       </foreignObject>
     </svg>
   </li>
-  <li>Un texte SVG, <code>text</code> in SVG<svg
+  <li>Un texte SVG, <code>text</code> en SVG<svg
     xmlns="http://www.w3.org/2000/svg" width="9.5cm" height="1.2cm">
-      <text y="12px" x="13px" style="stroke: #FF5F00">A simple text in SVG
+      <text y="32px" x="14px"
+      style="font-family: helvetica; font-size: 14pt; fill: #FFAA00">A simple
+        text in SVG
       </text>
     </svg>
   </li>
@@ -120,10 +124,10 @@ créer entre deux paragraphes, et éditer le source ensuite pour le
 déplacer.</p>
 
 <p>Quand l'élément sélectionné est un élément SVG, la nouvelle forme est
-ajoutée au dessin SVG. La nouvelle forme estt ajoutée après et peut couvrir
-les éléments précédents.</p>
+ajoutée au dessin SVG. La nouvelle forme est ajoutée après et peut couvrir les
+éléments précédents.</p>
 
-<p>La création d'une forme necessite quelques interactions directes avec
+<p>La création d'une forme nécessite quelques interactions directes avec
 l'utilisateur:</p>
 <ul>
   <li>Pour créer un rectangle, vous devez tout d'abord sélectionner la
@@ -144,24 +148,52 @@ l'utilisateur:</p>
 juste cliquer dans la palette Math alors que la sélection est dans le dessin
 SVG. Amaya engendrera un foreingObject pour embarquer les balises MathML.</p>
 
-<h2>Déplacer des graphiques</h2>
+<h2>Déplacer les graphiques</h2>
 <ul>
   <li>Par manipulation directe - en combinant la <strong>touche
     Control</strong> et le <strong>bouton gauche</strong> de la souris dans la
     forme, vous pourrez déplacer cette forme.</li>
-  <li>En éditant lesattributs.</li>
+  <li>En éditant les attributs.</li>
 </ul>
 
-<h2>Retailler graphiques</h2>
+<h2>Retailler les graphiques</h2>
 <ul>
   <li>Par manipulation directe - en combinant la <strong>touche
     Control</strong> et le <strong>bouton du milieu</strong> ou le
     <strong>bouton droit</strong> de la souris à l'intérieur de la forme, vous
     pourrez redimensionner cette forme.</li>
-  <li>En éditant les attributs. 
-    <p></p>
-  </li>
+  <li>En éditant les attributs. </li>
 </ul>
+
+<h2>Peindre les graphiques</h2>
+
+<p>Avec Amaya, vous pouvez peindre (c.a.d., remplir ou tracer le contour) des
+éléments SVG avec une couleur simple. La couleur de remplissage par défaut est
+<code>black</code>, et le contour est par défaut <code>transparent</code>.
+Mais vous pouvez changer ces valeurs :</p>
+<ul type="square">
+  <li>Soit en éditant les attributs SVG <code>fill</code> et
+    <code>stroke</code> (<span style="color: #E55500">exemple, </span><span
+    style="color: #E55500">fill=" #C8FF95" stroke=" #000000"</span>),</li>
+  <li>Soit en éditant l'attribut SVG <code>style</code> avec les propriétés
+    <code>fill</code> et <code>stroke</code> (<span
+    style="color: #E55500">exemple, style="fill: #C8FF95; stroke:
+    #000000"</span>)</li>
+</ul>
+
+<p>La palette affichée par l'entrée de menu <strong>Style/Couleurs</strong>
+vous permet d'engendrer l'attribut SVG <code>style</code>. Dans la palette
+Amaya, un clic avec le bouton gauche de la souris engendre la propriété stroke
+et un clic avec le bouton du milieu ou droit de la souris engendre la
+propriété fill.</p>
+
+<p>Un élément <code>text</code> SVG est considéré comme une forme graphique,
+donc la propriété <code>fill</code> peint l'intérieur du caractère et la
+propriété <code>stroke</code> peint le bord du caractère. Amaya applique la
+propriété fill aux caractères, mais pas la propriété stroke. Ceci explique
+que'un clic avec le bouton gauche de la souris n'a pas d'effet immédiat et un
+clic avec le bouton du milieu ou droit de la souris peint l'élément
+<code>text</code>.</p>
 
 <p></p>
 </div>

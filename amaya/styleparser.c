@@ -3500,8 +3500,7 @@ ThotBool            isHTML;
   CHAR_T*             p = NULL;
   int                 lg;
   unsigned int        i;
-  ElementType         elType;
-  ThotBool            found, done;
+  ThotBool            found;
 
   /* avoid too many redisplay */
   dispMode = TtaGetDisplayMode (context->doc);
@@ -3573,15 +3572,16 @@ ThotBool            isHTML;
   described in thotlib/include/presentation.h
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                 PToCss (PresentationSetting settings, CHAR_T* buffer, int len, Element el)
+void                PToCss (PresentationSetting settings, CHAR_T* buffer, int len, Element el)
 #else
-void                 PToCss (settings, buffer, len, el)
-PresentationSetting  settings;
-CHAR_T*              param;
-int                  len;
-Element              el;
+void                PToCss (settings, buffer, len, el)
+PresentationSetting settings;
+CHAR_T             *param;
+int                 len;
+Element             el;
 #endif
 {
+  ElementType         elType;
   float               fval = 0;
   unsigned short      red, green, blue;
   int                 add_unit = 0;
@@ -3749,23 +3749,30 @@ Element              el;
       break;
     case PRBackground:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      if (ustrcmp(TtaGetSSchemaName (TtaGetElementType(el).ElSSchema),
-		 TEXT("GraphML")) == 0)
-         usprintf (buffer, TEXT("fill: #%02X%02X%02X"), red, green, blue);
+      elType = TtaGetElementType(el);
+#ifdef GRAPHML
+      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
+	usprintf (buffer, TEXT("fill: #%02X%02X%02X"), red, green, blue);
       else
+#endif /* GRAPHML */
          usprintf (buffer, TEXT("background-color: #%02X%02X%02X"), red, green,
 		   blue);
       break;
     case PRForeground:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      if (ustrcmp(TtaGetSSchemaName (TtaGetElementType(el).ElSSchema),
-		  TEXT("GraphML")) == 0)
+      elType = TtaGetElementType(el);
+#ifdef GRAPHML
+      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
 	usprintf (buffer, TEXT("stroke: #%02X%02X%02X"), red, green, blue);
       else
+#endif /* GRAPHML */
 	usprintf (buffer, TEXT("color: #%02X%02X%02X"), red, green, blue);
       break;
     case PRLineWeight:
-      if (!ustrcmp(TtaGetSSchemaName (TtaGetElementType(el).ElSSchema), TEXT("GraphML")))
+      elType = TtaGetElementType(el);
+#ifdef GRAPHML
+      if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+#endif /* GRAPHML */
 	{
 	  if (real)
 	    usprintf (buffer, TEXT("stroke-width: %g"), fval);

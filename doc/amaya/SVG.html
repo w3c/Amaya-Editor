@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editing Graphics</title>
-  <meta name="GENERATOR" content="amaya V3.9" />
+  <meta name="GENERATOR" content="amaya V4.01" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body>
+<body xml:lang="en" lang="en">
 
 <table width="100%" summary="toc">
   <tbody>
@@ -50,17 +50,20 @@ create. The available graphics elements are:</p>
   <li>A rectangle, <code>rect</code> in SVG with no <code>rx</code> or
     <code>ry</code> attributes, <svg xmlns="http://www.w3.org/2000/svg"
     width="2cm" height="0.6cm">
-      <rect x="6px" width="22px" height="18px" style="fill: #FFCB69"/>
+      <rect x="6px" width="22px" height="18px"
+            style="fill: #FFCB69; stroke: #0071FF"/>
     </svg>
   </li>
   <li>A rectangle with rounded corners, <code>rect</code> in SVG, <svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <rect rx="6px" width="23px" height="18px" style="fill: #E5E500"/>
+      <rect rx="6px" width="23px" height="18px"
+            style="fill: #E5E500; stroke: #4C00E5"/>
     </svg>
   </li>
   <li>A circle, <code>circle</code> in SVG, <svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <circle cy="10px" cx="12px" r="10px" style="fill: #C1FFE9"/>
+      <circle cy="10px" cx="12px" r="10px"
+              style="fill: #C1FFE9; stroke: #FF0000"/>
     </svg>
   </li>
   <li>An ellipse, <code>ellipse</code> in SVG, <svg
@@ -70,13 +73,14 @@ create. The available graphics elements are:</p>
   </li>
   <li>A polyline, <code>polyline</code> in SVG,<svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <polyline points="4,16 23,0 37,16 55,6" style="stroke: #0000B2"/>
+      <polyline points="4,16 23,0 37,16 55,6"
+                style="stroke: #0000B2; fill: #FFA069"/>
     </svg>
   </li>
   <li>A polygon, <code>polygon</code> in SVG, <svg
-    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
+    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.7cm">
       <polygon points="2,16 15,0 28,12 45,4 46,16 17,16 14,11"
-               style="fill: #C8FF95"/>
+               style="fill: #C8FF95; stroke: #000000"/>
     </svg>
   </li>
   <li>Splines and curves are not implemented yet. <svg
@@ -90,7 +94,7 @@ create. The available graphics elements are:</p>
 
         <div xmlns="http://www.w3.org/1999/xhtml">
         <ul>
-          <li style="color: #FF5F00">First item</li>
+          <li>First item</li>
           <li>Second item</li>
         </ul>
         </div>
@@ -99,7 +103,9 @@ create. The available graphics elements are:</p>
   </li>
   <li>A SVG text, <code>text</code> in SVG<svg
     xmlns="http://www.w3.org/2000/svg" width="9.5cm" height="1.2cm">
-      <text y="12px" x="13px" style="stroke: #FF5F00">A simple text in SVG
+      <text y="33px" x="13px"
+      style="font-family: helvetica; font-size: 14pt; fill: #FFAA00">A simple
+        text in SVG
       </text>
     </svg>
   </li>
@@ -134,7 +140,7 @@ overlap previous ones.</p>
 </ul>
 
 <p>For inserting a mathematical expression into a SVG drawing, you have just
-to click in the <strong>Math</strong> palette when the selection in whitin a
+to click in the <strong>Math</strong> palette when the selection in within a
 SVG. Amaya will generate a SVG foreignObject to embed the MathML mark-up.</p>
 
 <h2>Moving graphics</h2>
@@ -152,6 +158,36 @@ SVG. Amaya will generate a SVG foreignObject to embed the MathML mark-up.</p>
     mouse within a shape allows you to resize this shape.</li>
   <li>By editing attributes.</li>
 </ul>
+
+<h2>Painting graphics</h2>
+
+<p>With Amaya, you can paint (i.e., fill or stroke) SVG elements with a single
+color. The default <code>fill</code> color is <code>black</code> and the
+default <code>stroke</code> color is <code>transparent</code>. But you can
+change these values:</p>
+<ul type="square">
+  <li>Either by editing SVG attributes <code>fill</code> and
+    <code>stroke</code> (<span style="color: #E55500">example, fill=" #C8FF95"
+    stroke=" #000000"</span>),</li>
+  <li>Or by editing the SVG attribute <code>style</code> with CSS properties
+    <code>fill</code> and <code>stroke</code> (<span
+    style="color: #E55500">example, style="fill: #C8FF95; stroke:
+    #000000"</span>).</li>
+</ul>
+
+<p>The palette displayed by the menu entry <strong>Style/Colors</strong>
+allows you to generate the SVG <code>style</code> attribute. In the Amaya
+palette, a click with the left mouse button generates the stroke property and
+a click with the middle or right mouse button generates the fill property.</p>
+
+<p>A SVG <code>text</code> is considered as a graphic shape, so the
+<code>fill</code> property paints the character contents and the
+<code>stroke</code> property paints the character border. Amaya applies the
+fill property to characters, but not the stroke property. That explains why a
+click with the left mouse button has no immediate effect, and a click with the
+middle or right mouse button paints the <code>text</code> element.</p>
+
+<p></p>
 
 <p></p>
 </div>

@@ -1146,16 +1146,11 @@ NotifyPresentation *event;
 	}
     }
 
-  if (presType == PRBackground || presType == PRForeground ||
+  if (presType == PRSize      ||  presType == PRStyle      ||
+      presType == PRWeight    ||  presType == PRFont       ||
+      presType == PRLineStyle ||  presType == PRLineWeight ||
+      presType == PRBackground || presType == PRForeground ||
       presType == PRFillPattern)
-    {
-      
-      SetStyleAttribute (doc, el);
-      TtaSetDocumentModified (doc);
-    }
-  else if (presType == PRSize      ||  presType == PRStyle    ||
-	   presType == PRWeight    ||  presType == PRFont     ||
-	   presType == PRLineStyle ||  presType == PRLineWeight)
     {
       SetStyleAttribute (doc, el);
       TtaSetDocumentModified (doc);

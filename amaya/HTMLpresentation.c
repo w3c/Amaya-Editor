@@ -369,7 +369,7 @@ Element             elem;
        attrType.AttrTypeNum = GraphML_ATTR_style_;
      }
    else
-#endif
+#endif /* GRAPHML */
       {
 	attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
 	attrType.AttrTypeNum = HTML_ATTR_Style_;
