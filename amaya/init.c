@@ -21,9 +21,17 @@
 #include "trans.h"
 #include "zlib.h"
 #include "profiles.h"
+
+/*
+* A VIRER SUREMENT PAR LA SUITE
+*
+*
+*
+**/
 #ifdef _GTK
 #include "gtkdialogapi.h"
 #endif /* _GTK */
+
 
 #ifdef _WINDOWS
 #include "resource.h"
