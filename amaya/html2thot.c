@@ -1674,21 +1674,7 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
 	  length = TtaGetTextAttributeLength (attr);
 	  buff = TtaGetMemory (length + 1);
 	  TtaGiveTextAttributeValue (attr, buff, &length);
-	  if (strstr (buff, "all") || strstr (buff, "ALL"))
-	    media = CSS_ALL;
-	  else
-	    {
-	      media = CSS_OTHER;
-	      if (strstr (buff, "screen") || strstr (buff, "SCREEN"))
-		media = CSS_SCREEN;
-	      if (strstr (buff, "print") || strstr (buff, "PRINT"))
-		{
-		  if (media == CSS_OTHER)
-		    media = CSS_PRINT;
-		  else
-		    media = CSS_ALL;
-		}
-	    }
+	  media = CheckMediaCSS (buff);
 	  TtaFreeMemory (buff);
 	}
       else

@@ -3621,7 +3621,7 @@ void      XmlStyleSheetPi (char *PiData, Element piEl)
 {
    int           length, i, j;
    char         *ptr, *end;
-   char         *buffer, *tmpbuffer;
+   char         *buffer;
    char         *css_href = NULL;
    char          delimitor;
    CSSmedia      css_media;
@@ -3648,17 +3648,13 @@ void      XmlStyleSheetPi (char *PiData, Element piEl)
        if (ptr[0] != EOS)
 	 {
 	   delimitor = ptr[0];
-	   tmpbuffer = TtaGetMemory (length + 1);
 	   end = strchr (&ptr[1], delimitor);
-	   if (end && end[0] != EOS && tmpbuffer != NULL)
+	   if (end && end[0] != EOS)
 	     {
 	       end[0] = EOS;
-	       strcpy (tmpbuffer, &ptr[1]);
-	       if (!strcmp (tmpbuffer, "text/css"))
+	       if (!strcmp (&ptr[1], "text/css"))
 		 ok = TRUE;
 	     }
-	   if (tmpbuffer != NULL)
-	     TtaFreeMemory (tmpbuffer);
 	 }
      }
 
@@ -3683,28 +3679,19 @@ void      XmlStyleSheetPi (char *PiData, Element piEl)
 	 {
 	   ptr = strstr (ptr, "=");
 	   ptr++;
-	   while (ptr[0] != EOS && ptr[0] == ' ')
+	   /* skip spaces */
+	   while (*ptr != EOS && *ptr == ' ')
 	     ptr++;
-	   if (ptr[0] != EOS)
+	   if (*ptr != EOS)
 	     {
-	       delimitor = ptr[0];
+	       /* locate delimitors */
+	       delimitor = *ptr;
 	       end = strchr (&ptr[1], delimitor);
-	       tmpbuffer = TtaGetMemory (length + 1);
-	       if (end && end[0] != EOS && tmpbuffer != NULL)
+	       if (end && *end != EOS)
 		 {
-		   end[0] = EOS;
-		   strcpy (tmpbuffer, &ptr[1]);
-		   if (!strcasecmp (tmpbuffer, "screen"))
-		     css_media = CSS_SCREEN;
-		   else if (!strcasecmp (tmpbuffer, "print"))
-		     css_media = CSS_PRINT;
-		   else if (!strcasecmp (tmpbuffer, "all"))
-		     css_media = CSS_ALL;
-		   else
-		     css_media = CSS_OTHER;
+		   *end = EOS;
+		   css_media = CheckMediaCSS (&ptr[1]);
 		 }
-	       if (tmpbuffer != NULL)
-		 TtaFreeMemory (tmpbuffer);
 	     }
 	 }
      }

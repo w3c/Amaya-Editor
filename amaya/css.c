@@ -61,6 +61,81 @@ char *ReallocUTF8String (char *url, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  CheckMediaCSS
+  Return the media given by the string
+  ----------------------------------------------------------------------*/
+CSSmedia CheckMediaCSS (char *buff)
+{
+  CSSmedia            media;
+  char               *ptr;
+  char               *screentype;
+
+  if (buff)
+    {
+      ptr = buff;
+      media = CSS_OTHER;
+      screentype = TtaGetEnvString ("SCREEN_TYPE");
+      while (*ptr != EOS)
+	{
+	  while (*ptr != EOS && *ptr == ' ')
+	    ptr++;
+	  if (!strncasecmp (ptr, "all", 3))
+	    media = CSS_ALL;
+	  else if (screentype)
+	    {
+	      /* a specific screen type is defined */
+	      if ((!strncasecmp (screentype, "handheld", 8) &&
+		   !strncasecmp (ptr, "handheld", 8)) ||
+		  (!strncasecmp (screentype, "projection", 10) &&
+		   !strncasecmp (ptr, "projection", 10)) ||
+		  (!strncasecmp (screentype, "screen", 6) &&
+		   !strncasecmp (ptr, "screen", 6)) ||
+		  (!strncasecmp (screentype, "tty", 3) &&
+		   !strncasecmp (ptr, "tty", 3)) ||
+		  (!strncasecmp (screentype, "tv", 2) &&
+		   !strncasecmp (ptr, "tv", 2)))
+		{
+		  if (media == CSS_PRINT)
+		    media = CSS_ALL;
+		  else if (media == CSS_OTHER)
+		    media = CSS_SCREEN;
+		}
+	      else if (!strncasecmp (screentype, "print", 5) &&
+		       !strncasecmp (ptr, "print", 5))
+		{
+		  if (media == CSS_SCREEN)
+		    media = CSS_ALL;
+		  else if (media == CSS_OTHER)
+		    media = CSS_PRINT;
+		}
+	    }
+	  else if (!strncasecmp (ptr, "screen", 6))
+	    {
+	      if (media == CSS_PRINT)
+		media = CSS_ALL;
+	      else if (media == CSS_OTHER)
+		media = CSS_SCREEN;
+	    }
+	  else if (!strncasecmp (ptr, "print", 5))
+	    {
+	      if (media == CSS_SCREEN)
+		media = CSS_ALL;
+	      else if (media == CSS_OTHER)
+		media = CSS_PRINT;
+	    }
+	  /* look for a separator */
+	  while (*ptr != EOS && *ptr != ',')
+	    ptr++;
+	  if (*ptr == ',')
+	    ptr++;
+	}
+      return media;
+    }
+  else
+    return CSS_ALL;
+}
+
+/*----------------------------------------------------------------------
   GetPExtension returns the Presentation Extension Schema associated with
   the document doc and the structure sSchema
   At the same time, this funciton updates the css context.

@@ -8,6 +8,7 @@
 
 extern char *ReallocUTF8String ( char *url,
                                  Document doc );
+extern CSSmedia CheckMediaCSS ( char *buff );
 extern PSchema GetPExtension ( Document doc,
                                SSchema sSchema,
                                CSSInfoPtr css );
@@ -42,6 +43,7 @@ extern void LoadStyleSheet ( char *url,
 
 extern char *ReallocUTF8String (/* char *url,
                                    Document doc */);
+extern CSSmedia CheckMediaCSS (/* char *buff */);
 extern PSchema GetPExtension (/* Document doc,
                                  SSchema sSchema,
                                  CSSInfoPtr css */);
