@@ -1496,21 +1496,41 @@ void GL_DrawAll (ThotWidget widget, int frame)
 #endif /*_GTK*/ 
 }
 
+#define GLU_ERROR_MSG "\nSorry, Amaya requires GLU 1.2 or later.\n"
+/*----------------------------------------------------------------------
+  SetGlPipelineState : Detect Opengl, Software, Hardware, 
+  Set The Openlg State machine to the fastest state possible for drawing 2d.
+  ----------------------------------------------------------------------*/
 void SetGlPipelineState ()
-{ 
-    Software_Mode = FALSE;
-    if (strncmp ("Mesa", (char *)glGetString (GL_RENDERER), 4) == 0
-	|| strncmp ("Microsoft", (char *)glGetString (GL_RENDERER), 8) == 0
-	|| strncmp ("Sgi", (char *)glGetString (GL_RENDERER), 3) == 0)
-      if (strncmp ("Mesa DRI", (char *)glGetString (GL_RENDERER), 8) != 0)
-	Software_Mode = TRUE;
+{  
+  const char *version = (const char *) gluGetString (GLU_VERSION);
+
+  Software_Mode = FALSE;
+  if (strstr ((char *) glGetString (GL_RENDERER), "Mesa")
+      || strstr ((char *) glGetString (GL_RENDERER), "Microsoft")
+      || strstr ((char *) glGetString (GL_RENDERER), "Sgi"))
+    if (!strstr ((char *) glGetString (GL_RENDERER), "Mesa DRI"))
+      Software_Mode = TRUE;  
+  if (strstr (version, "1.0") || strstr (version, "1.1")) 
+    {
+#ifdef _WINDOWS
+      WinErrorBox (NULL,  GLU_ERROR_MSG);
+#else /*  _WINDOWS */
+      fprintf( stderr, GLU_ERROR_MSG);
+#endif /* _WINDOWS */
+      exit (1);
+    }
 #ifdef _PCLDEBUG
-  g_print ("\n%s", (Software_Mode)?"    Soft":"     Hard");
+  g_print ("\n%s", (Software_Mode)?
+	   "Soft":"Hard");
   /* Display Opengl Vendor Name,  Opengl Version, Opengl Renderer*/
-  g_print ("\n%s, \n%s, \n%s\n", (char *)glGetString(GL_VENDOR), 
+  g_print ("\nVENDOR : %s\nVERSION : %s\nRENDERER : %s", 
+	   (char *)glGetString(GL_VENDOR), 
 	   (char *)glGetString(GL_VERSION), 
 	   (char *)glGetString(GL_RENDERER));
-  /* g_print( "%s\n", (char *)glGetString(GL_EXTENSIONS));  */   
+  /* g_print( "%s\n", (char *)glGetString(GL_EXTENSIONS));  */
+  g_print ("\nGLU Version : %s", 
+	   (char *)gluGetString (GLU_VERSION));
 #endif /*_PCLDEBUG*/
       glClearColor (1, 0, 0, 0.5);
       /* no fog*/
