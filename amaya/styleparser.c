@@ -4237,6 +4237,12 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	}
       else
 	{
+	  if (*selector == '>')
+	    {
+	      /* handle immediat parent as a simple parent */
+	      selector++;
+	      selector = SkipBlanksAndComments (selector);
+	    }
 	  /* shifts the list to make room for the new name */
 	  max++; /* a new level in ancestor tables */
 	  if (max == MAX_ANCESTORS)

@@ -6283,11 +6283,7 @@ void InitAmaya (NotifyEvent * event)
     */
    tempname = TtaGetMemory (MAX_LENGTH);
    sprintf (tempname, "%s%c%s.css", s, DIR_SEP, HTAppName);
-   if (TtaFileExist (tempname))
-     UserCSS = TtaStrdup (tempname);
-   else
-     /* no User preferences */
-     UserCSS = NULL;
+   UserCSS = TtaStrdup (tempname);
 
    /* Initialize environment variables if they are not defined */
    TtaSetEnvBoolean ("SECTION_NUMBERING", FALSE, FALSE);
