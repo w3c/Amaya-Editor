@@ -19,6 +19,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "message.h"
+#include "appaction.h"
 #include "appdialogue.h"
 
 #define THOT_EXPORT extern
@@ -123,13 +124,15 @@ static void SelectCurrentWord (int frame, PtrBox pBox, int pos,
 /*----------------------------------------------------------------------
   TtaSelectWord selects the word around the current point in an element
   ----------------------------------------------------------------------*/
-void TtaSelectWord (Element element, int char, Document doc, View view)
+void TtaSelectWord (Element element, int c, Document doc, View view)
 {
+  /*********
   PtrElement    pEl = (PtrElement)element;
 
   if (pEl->ElTypeNumber == 1)
     {
     }
+  ******/
 }
 
 /*----------------------------------------------------------------------
