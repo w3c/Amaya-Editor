@@ -906,17 +906,27 @@ View                view;
    ElementType	    elType;
 
    docBook = document;
+   /* stops all current transfers on this document */
+   StopTransfer (docBook, 1);
    root = TtaGetMainRoot (document);
    elType = TtaGetElementType (root);
    elType.ElTypeNum = HTML_EL_BODY;
    body = TtaSearchTypedElement (elType, SearchForward, root);
    TtaSetDocumentModified (document);
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)	&& defined (_WINDOWS)
+   /* force libwww to use the SYNC mode while doing a Makebook */
+   WinMakeBookFlag = TRUE;
+#endif /* _WINDOWS */
    el = body;
    while (el != NULL)
       el = GetIncludedDocuments (el, document);
    TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
    /* update internal links */
    SetInternalLinks (document);
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)	&& defined (_WINDOWS)
+   /* force libwww to use the SYNC mode while doing a Makebook */
+   WinMakeBookFlag = FALSE;
+#endif /* _WINDOWS */
    /* remove registered  sub-documents */
    FreeSubDocTable ();
    docBook = 0;

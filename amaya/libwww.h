@@ -137,4 +137,8 @@ THOT_EXPORT char AmayaLastHTTPErrorMsg [MAX_LENGTH];
 THOT_EXPORT HTList      *conv;	/* List of global converters */
 THOT_EXPORT AmayaContext *Amaya;	/* Amaya's request global context    */
 
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)	&& defined (_WINDOWS)
+THOT_EXPORT boolean WinMakeBookFlag; /* used to force libwww sync mode while doing a
+									 ** makebook */
+#endif /* _WINDOWS */
 #endif /* AMAYA_LIBWWW_H */

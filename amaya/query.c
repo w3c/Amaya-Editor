@@ -474,6 +474,10 @@ HTRequest           *request;
 
   me = HTRequest_context (request);
 
+
+  if (!me)
+      return HT_ERROR;
+
 #ifdef DEBUG_LIBWWW
   fprintf(stderr, "AHTOpen_file: start\n");
 #endif /* DEBUG_LIBWWW */
@@ -1499,6 +1503,13 @@ char 	     *content_type;
        HTRequest_setConversion(me->request, acceptTypes, TRUE);
    }
 
+
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)	&& defined (_WINDOWS)
+   /* forces libwww to do sync request if in MakeBook mode */
+   if (WinMakeBookFlag)
+	   mode = AMAYA_SYNC;
+#endif /* _WINDOWS */
+
    /* Common initialization */
    me->mode = mode;
    me->error_html = error_html;
@@ -1628,12 +1639,15 @@ char 	     *content_type;
 	  {
 	    status = HT_OK;
       }
-
-     /* part of the stop button handler */
-     if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC)) {
-		 AHTReqContext_delete (me);
-	 }
  
+   /* part of the stop button handler */
+     if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
+       {
+        if (HTRequest_net (me->request))
+           HTRequest_kill (me->request);
+        else
+           AHTReqContext_delete (me);
+       }
 
 #endif /* !_WINDOWS */
 
@@ -1891,7 +1905,8 @@ char               *outputfile;
 	{
 	 HTRequest_kill (me->request);
 	}
-    /* AHTReqContext_delete (me); */
+    else 
+        AHTReqContext_delete (me);
    return (status);
 }
 
@@ -1942,14 +1957,13 @@ int                 docid;
 		 reqChannel = HTChannel_find(reqSock);
 		 reqHost = HTChannel_host (reqChannel);
 		 
-		 if (HTRequest_net (me->request))
-		   {  
-		    HTRequest_kill (me->request);
-		   }
-		 else if ((me->mode & AMAYA_ISYNC) ||
-		          (me->mode & AMAYA_ASYNC))
+		 if ((me->mode & AMAYA_IASYNC) ||
+		     (me->mode & AMAYA_ASYNC))
 		   {
-		     AHTReqContext_delete (me);
+		     if (HTRequest_net (me->request))
+		       HTRequest_kill (me->request);
+		     else
+		       AHTReqContext_delete (me);		       
 		   }
 		 
 		 if (HTHost_isIdle (reqHost) ) {
@@ -1981,79 +1995,79 @@ int                 docid;
 	  {
 	     if (me->docid == docid)
 	       {
-		  /* kill this request */
+		 /* kill this request */
 
-		  switch (me->reqStatus)
-			{
-			   case HT_ABORT:
-			      break;
-
-			   case HT_BUSY:
-			      me->reqStatus = HT_ABORT;
-			      break;
-			   case HT_NEW_PENDING:
-			   case HT_WAITING:
-			   default:
-			      me->reqStatus = HT_ABORT;
-
+		 switch (me->reqStatus)
+		   {
+		   case HT_ABORT:
+		     break;
+		     
+		   case HT_BUSY:
+		     me->reqStatus = HT_ABORT;
+		     break;
+		   case HT_NEW_PENDING:
+		   case HT_WAITING:
+		   default:
+		     me->reqStatus = HT_ABORT;
+		     
 #                 ifndef _WINDOWS
-			      RequestKillAllXtevents (me);
+		     RequestKillAllXtevents (me);
 #                 endif _WINDOWS
- 
-			      reqNet = HTRequest_net (me->request);
-			      reqSock = HTNet_socket (reqNet);
-			      reqChannel = HTChannel_find(reqSock);
-			      reqHost = HTChannel_host (reqChannel);
-
-                  if (HTRequest_net (me->request))
-				    {		
-						HTRequest_kill (me->request); 
-					} else if ((me->mode & AMAYA_ASYNC) ||
-				  (me->mode & AMAYA_IASYNC))
-				{
-				   AHTReqContext_delete (me);
-				     
-				}
-
-			      /* if there are no more requests, then close
-				 the connection */
-
-			      if (HTHost_isIdle (reqHost) ) {
+		     
+		     reqNet = HTRequest_net (me->request);
+		     reqSock = HTNet_socket (reqNet);
+		     reqChannel = HTChannel_find(reqSock);
+		     reqHost = HTChannel_host (reqChannel);
+		     
+		     if ((me->mode & AMAYA_IASYNC) ||
+			 (me->mode & AMAYA_ASYNC))
+		       {
+			 if (HTRequest_net (me->request))
+			   HTRequest_kill (me->request);
+			 else
+			   AHTReqContext_delete (me);		       
+		       }
+		     
+		     
+		     /* if there are no more requests, then close
+			the connection */
+		     
+		     if (HTHost_isIdle (reqHost) ) {
 #ifdef                        DEBUG_LIBWWW
-				fprintf (stderr, "Host is idle, "
-					 "killing socket %d\n",
-					 reqSock);
+		       fprintf (stderr, "Host is idle, "
+				"killing socket %d\n",
+				reqSock);
 #endif                        /* DEBUG_LIBWWW */
-                                HTEvent_unregister (reqSock, FD_ALL);
-				HTEvent_register(reqSock,
-						 NULL,
-						 (SockOps) FD_READ,
-						 HTHost_catchClose,
-						 HT_PRIORITY_MAX);
-				close (reqSock);				
-				HTHost_clearChannel (reqHost, HT_ERROR);
-				/*
-				if (reqChannel && reqHost)
-				  HTHost_clearChannel(reqHost, HT_OK);
-				HTHost_catchClose (reqSock, NULL, FD_CLOSE);
-				*/
+		       HTEvent_unregister (reqSock, FD_ALL);
+		       HTEvent_register(reqSock,
+					NULL,
+					(SockOps) FD_READ,
+					HTHost_catchClose,
+					HT_PRIORITY_MAX);
+		       close (reqSock);				
+		       HTHost_clearChannel (reqHost, HT_ERROR);
+		       /*
+			 if (reqChannel && reqHost)
+			 HTHost_clearChannel(reqHost, HT_OK);
+			 HTHost_catchClose (reqSock, NULL, FD_CLOSE);
+			 */
 #ifdef                          DEBUG_LIBWWW				
-				fprintf (stderr, "After killing, "
-					 "HTHost_isIdle gives %d\n",
-					 HTHost_isIdle (reqHost));
+		       fprintf (stderr, "After killing, "
+				"HTHost_isIdle gives %d\n",
+				HTHost_isIdle (reqHost));
 #endif                          /* DEBUG_LIBWWW */
-			      }
-				     
-			      cur = Amaya->reqlist;
-			      open_requests--;
-
-			      break;
-
-			}	/* switch */
+		     }
+		     
+		     cur = Amaya->reqlist;
+		     open_requests--;
+		     
+		     break;
+		     
+		   }	/* switch */
 	       }		/* if me docid */
 	  }			/* while */
      }				/* if amaya open requests */
-
+   
 } /* StopRequest */
 
 /*
