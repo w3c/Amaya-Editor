@@ -60,6 +60,8 @@ typedef struct _AnnotMeta {
 		   the body is stored in this variable */
   CHAR_T *body_url; /* if the body isn't embedded, this has the URL
 		       to the body (only used for local files for the moment */
+  CHAR_T *name;  /* the value of the name tag added to the source document 
+		  for making a reverse link */
 } AnnotMeta;
 
 /* basic linked list structure */

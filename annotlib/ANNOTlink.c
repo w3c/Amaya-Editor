@@ -139,7 +139,6 @@ AnnotMeta *annot;
   Element       el, first, anchor;
   AttributeType attrType;
   Attribute     attr;
-  CHAR_T       *annotName;
   CHAR_T       *annot_user;
   CHAR_T       *tmp;
   CHAR_T       server[MAX_LENGTH];
@@ -230,13 +229,8 @@ AnnotMeta *annot;
   attrType.AttrTypeNum = HTML_ATTR_NAME;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (anchor, attr, source_doc);
-  annotName = TtaGetMemory (strlen (ANNOT_ANAME) + strlen (annot_user)
-			    + (annot->body_url ? strlen (annot->body_url) : 0)
-			    + 20);
-  sprintf (annotName, "%s_%s_%s", ANNOT_ANAME, annot_user,
-	   annot->body_url ? annot->body_url : "");
-  TtaSetAttributeText (attr, annotName, anchor, source_doc);
-  TtaFreeMemory (annotName);
+  /* set the anchor's name */
+  TtaSetAttributeText (attr, annot->name, anchor, source_doc);
   TtaUnselect (source_doc);
 
   /* add the annotation to the filter list */
@@ -417,6 +411,14 @@ AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
   annot->content_type = TtaStrdup ("text/html");
   annot->body_url = TtaStrdup (DocumentURLs[annot_doc]);
 
+  /* memorize the anchor of the reverse link target */
+  annot->name = TtaGetMemory (strlen (ANNOT_ANAME) + strlen (annot_user)
+			      + (annot->body_url 
+				 ? strlen (annot->body_url) : 0)
+			      + 20);
+  sprintf (annot->name, "%s_%s_%s", ANNOT_ANAME, annot_user,
+	   annot->body_url ? annot->body_url : "");
+
   return annot;
 }
 
@@ -481,7 +483,7 @@ void LINK_LoadAnnotationIndex (doc, annotIndex)
   while (list_ptr)
     {
       annot = (AnnotMeta *) list_ptr->object;
-      /* @@ JK: we need to do this operation,  but with the element */
+      /* @@ JK: we need to do this operation,  but with the xptr */
 #if 0
       if ((el = TtaSearchElementByLabel (annot->labf, body)) == NULL)
 	{

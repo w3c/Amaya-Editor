@@ -17,6 +17,8 @@
 
 #include "annotlib.h"
 #include "AHTURLTools_f.h"
+#include "ANNOTtools_f.h"
+
 #define DEFAULT_ALGAE_QUERY "w3c_algaeQuery=(ask '((?p ?s ?o)) :collect '(?p ?s ?o))"
 
 /* some state variables */
@@ -41,6 +43,7 @@ typedef struct _RAISESOURCEDOC_context {
 /* the structure used for storing the context of the 
    RemoteLoad_callback function */
 typedef struct _REMOTELOAD_context {
+  CHAR_T *rdf_file;
   char *remoteAnnotIndex;
 } REMOTELOAD_context;
 
@@ -629,37 +632,58 @@ void *context;
        LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex);
        ANNOT_LoadAnnotation (source_doc, doc);
 #endif /*0*/
-
+       
+       /* Using the server's metadata answer to update our local metadata
+	  and the reverse links that point to the annotation */
+       /* @@ needs more work to handle error return codes */
        if (annot)
 	 {
-	   List* listP =
-	     RDF_parseFile (ctx->remoteAnnotIndex, ANNOT_LIST);
+	   List *listP = RDF_parseFile (ctx->remoteAnnotIndex, ANNOT_LIST);
 	   if (listP)
 	     {
-	       AnnotMeta* returned_annot = (AnnotMeta *)listP->object;
+	       AnnotMeta *returned_annot = (AnnotMeta *)listP->object;
 	       if (returned_annot->source_url
 		   && strcmp(returned_annot->source_url, annot->source_url))
-		 fprintf (stderr, "?oops - POST returned an annotation for a different source: %s vs %s\n",
+		 fprintf (stderr, "PostCallback: POST returned an annotation for a different source: %s vs %s\n",
 			  returned_annot->source_url, annot->source_url);
-	       if (returned_annot->annot_url) {
-		 TtaFreeMemory(annot->annot_url);
-		 annot->annot_url = returned_annot->annot_url;
-		 returned_annot->annot_url = NULL;
-	       }
-	       if (returned_annot->body_url) {
-		 TtaFreeMemory(annot->body_url); /* @@ unlink the file */
-		 annot->body_url = returned_annot->body_url;
-		 /* @@ Update the anchor in the source doc */
-		 returned_annot->body_url = NULL;
-	       }
+	       if (returned_annot->annot_url)
+		 {
+		   TtaFreeMemory(annot->annot_url);
+		   annot->annot_url = returned_annot->annot_url;
+		   returned_annot->annot_url = NULL;
+		 }
+	       /* @@ we should unlink the previous file only if we posted a 
+		  local file to a server, and if it was a success. Should we
+		  close the annotation window and open it up again? */
+	       if (returned_annot->body_url) 
+		 {
+		   /* update the anchor in the source doc */
+		   ReplaceLinkToAnnotation (source_doc, annot->name, 
+					    returned_annot->body_url);
+		   /* unlink the previous body */
+		   TtaFileUnlink (annot->body_url);
+		   TtaFreeMemory(annot->body_url);
+		   /* update the metadata of the annotation */
+		   annot->body_url = returned_annot->body_url;
+		   returned_annot->body_url = NULL;
+		   /* update the Document metadata to point to the new
+		      body too */
+		   TtaFreeMemory (DocumentURLs[doc]);
+		   DocumentURLs[doc] = TtaStrdup (annot->body_url);
+		 }
 	       if (listP->next)
-		 fprintf (stderr, "?oops - POST returned more than one annotation\n");
+		 fprintf (stderr, "PostCallback: POST returned more than one annotation\n");
 	       AnnotList_free (listP);
 	     }
 	 }
        TtaFileUnlink (ctx->remoteAnnotIndex);
      }
 
+   /* erase the rdf container */
+   TtaFileUnlink (ctx->rdf_file);
+
+   /* free all memory associated with the context */
+   TtaFreeMemory (ctx->rdf_file);
    TtaFreeMemory (ctx->remoteAnnotIndex);
    TtaFreeMemory (ctx);
 }
@@ -681,6 +705,7 @@ View view;
 
   REMOTELOAD_context *ctx;
   int res;
+  CHAR_T *rdf_file;
 
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   /*
@@ -694,20 +719,20 @@ View view;
   ANNOT_SaveDocument (doc);
 
   /* create the RDF container */
-  ANNOT_PreparePostBody (doc);
-
+  rdf_file = ANNOT_PreparePostBody (doc);
+  if (!rdf_file)
+    /* there was an error while preparing the tmp.rdf file */
+    return;
   /* create the context for the callback */
   ctx = TtaGetMemory (sizeof (REMOTELOAD_context));
   /* make some space to store the remote file name */
   ctx->remoteAnnotIndex = TtaGetMemory (MAX_LENGTH);
+  /* store the temporary filename */
+  ctx->rdf_file = rdf_file;
   /* launch the request */
   res = GetObjectWWW (doc,
 		      annotPostServer,
-#ifdef _WINDOWS
-			  TEXT("rdf.tmp"),
-#else
-		      TEXT("/tmp/rdf.tmp"),
-#endif /* _WINDOWS */
+		      rdf_file,
 		      ctx->remoteAnnotIndex,
 		      AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
 		      NULL,
@@ -716,10 +741,10 @@ View view;
 		      (void *) ctx,
 		      NO,
 		      NULL);
+  /* @@ here we should delete the context or call the callback in case of
+     error */
   if (res)
-    {
-      fprintf (stderr, "Failed to post the annotation!\n"); /* @@ */
-    }
+    fprintf (stderr, "Failed to post the annotation!\n");
 }
 
 /*-----------------------------------------------------------------------
@@ -906,7 +931,7 @@ void ANNOT_Delete (document, view)
     return;
 
   /* Suppression de l'annotation */
-  annotName = SearchAttributeInEl (document, first, HTML_ATTR_NAME, 
+  annotName = SearchAttributeInEl (document, first, HTML_ATTR_HREF_, 
 				   TEXT("HTML"));
   /* @@ BUG annotName is not freed */
   TtaRemoveTree (first, document);

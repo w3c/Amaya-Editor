@@ -390,6 +390,8 @@ void Annot_free (AnnotMeta *annot)
     free (annot->body_url);
   if (annot->body) 
     free (annot->body);
+  if (annot->name)
+    free (annot->name);
   free (annot);
 }
  
@@ -524,12 +526,12 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
    AnnotList_preparePostBody
    Writes an RDF file made from an annotations metadata
    and the annotations HTML body. 
-   Stores the result in /tmp/rdf.tmp.
+   It returns the name of the RDF file ($APP_TMPDIR/rdf.tmp)
    ------------------------------------------------------------*/
 #ifdef __STDC__
-void ANNOT_PreparePostBody (Document doc)
+CHAR_T * ANNOT_PreparePostBody (Document doc)
 #else
-void ANNOT_PreparePostBody (doc)
+CHAR_T * ANNOT_PreparePostBody (doc)
 Document doc;
 
 #endif /* __STDC__ */
@@ -537,7 +539,7 @@ Document doc;
   FILE *fp;
   FILE *fp2;
   char tmp_str[80];
-  char *ptr;
+  CHAR_T *tmpfile, *ptr;
   
   AnnotMeta *annot;
   long content_length;
@@ -546,19 +548,18 @@ Document doc;
   annot = GetMetaData (DocumentMeta[doc]->source_doc, doc);
 
   if (!annot)
-    return;
+    return FALSE;
 
   if (IsFilePath(DocumentURLs[doc]))
-    content_length = AGetFileSize (DocumentURLs[doc]+7);	/* skip "file://" */
+    /* skip "file://" */
+    content_length = AGetFileSize (DocumentURLs[doc] + 7);
   else
     content_length = AGetFileSize (DocumentURLs[doc]);
 
-  /* %%% this is _really_ temporary, right?! */
-#ifdef _WINDOWS
-  fp = fopen ("rdf.tmp", "w");
-#else
-  fp = fopen ("/tmp/rdf.tmp", "w");
-#endif /* _WINDOWS */
+  ptr = TtaGetEnvString ("APP_TMPDIR");
+  tmpfile = TtaGetMemory (strlen (ptr) + sizeof ("rdf.tmp") + 2);
+  usprintf (tmpfile, "%s%c%s", ptr, DIR_SEP, "rdf.tmp");
+  fp = fopen (tmpfile, "w");
   /* write the prologue */
   fprintf (fp,
 	  "<?xml version=\"1.0\" ?>\n" 
@@ -582,15 +583,6 @@ Document doc;
 	  fprintf (fp, 
 		   "<a:annotates r:resource=\"%s\" />\n",
 		   annot->source_url);
-
-#if 0
-	  fprintf (fp,
-	      "<a:context>#id(%s|%d|%s|%d)</a:context>\n",
-		   annot->labf,
-		   annot->c1,
-		   annot->labl,
-		   annot->cl);
-#endif
 
 	  fprintf (fp,
 	      "<a:context>#%s</a:context>\n",
@@ -650,6 +642,7 @@ Document doc;
 	   "</r:RDF>\n");
 
   fclose (fp);  
+  return (tmpfile);
 }
 
 /* ------------------------------------------------------------
@@ -718,7 +711,7 @@ Element SearchAnnotation (doc, annotDoc)
     ancName = SearchAttributeInEl (doc, elCour, HTML_ATTR_NAME, TEXT("HTML"));
     if (ancName) 
       {
-	if (!strcmp (ancName, annotDoc))
+	if (!ustrcmp (ancName, annotDoc))
 	  break;
 	TtaFreeMemory (ancName);
       }
@@ -731,6 +724,48 @@ Element SearchAnnotation (doc, annotDoc)
     TtaFreeMemory (ancName);
 
   return elCour;
+}
+
+/*-----------------------------------------------------------------------
+   ReplaceLinkToAnnotation
+   Changes the annotation link pointing to oldAnnotURL so that it'll point
+   to newAnnotURL.
+   If no oldAnnotURL link is found, returns FALSE, otherwise returns TRUE.
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+ThotBool ReplaceLinkToAnnotation (Document doc, STRING annotName, STRING newAnnotURL)
+#else /* __STDC__*/
+ThotBool ReplaceLinkToAnnotation (doc, oldAnnotURL, newAnnotURL)
+     Document doc;
+     STRING   oldAnnotURL;
+     STRING   newAnnotURL;
+#endif /* __STDC__*/
+{
+  Element anchor;
+  ElementType elType;
+
+  AttributeType  attrType;
+  Attribute      attr;
+  
+  CHAR_T *reverse_link_name;
+
+  anchor = SearchAnnotation (doc, annotName);
+  if (!anchor)
+    {
+      TtaFreeMemory (reverse_link_name);
+      return FALSE;
+    }
+
+  elType = TtaGetElementType (anchor);
+  attrType.AttrSSchema =  elType.ElSSchema;
+  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+  attr = TtaGetAttribute (anchor, attrType);
+  if (!attr)
+    return FALSE;
+  TtaSetAttributeText (attr, newAnnotURL, anchor, doc);
+
+  return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -1120,10 +1155,12 @@ ThotBool IsAnnotationLink (document, element)
      Element  element;
 #endif /* __STDC__*/
 {
-  /* @@ is this ok? */
-  STRING text = SearchAttributeInEl (document, element, 
+  STRING text;
+
+  /* @@ is it ok to assume that the sschema will be HTML always? */
+  text = SearchAttributeInEl (document, element, 
 				     HTML_ATTR_IsAnnotation, TEXT("HTML"));
-  return !strcmp (text, "Annotation");
+  return (!strcmp (text, "Annotation"));
 }
 
 /*-----------------------------------------------------------------------
