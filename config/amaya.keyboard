@@ -93,10 +93,10 @@ Ctrl <Key>w:                       TtcCutSelection()
 Ctrl <Key>y:                       PasteBuffer() 
 Ctrl <Key>z:                       TtcUndo() 
 Shift Ctrl <Key>Z:                 TtcRedo() 
-Shift Alt <Key>%:                  TtcSearchText() 
+Ctrl <Key>f:                       TtcSearchText() 
 Ctrl <Key>c:                       TtcCopySelection() 
 Ctrl <Key>d:                       TtcDeleteSelection() 
-#Shift Ctrl <Key>*:                 SetBrowserEditor() 
+#Shift Ctrl <Key>*:                SetBrowserEditor() 
 Ctrl <Key>u , Ctrl <Key>s:         SpellCheck()
 
 #Headings sbmenu

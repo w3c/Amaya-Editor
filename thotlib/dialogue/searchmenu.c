@@ -649,12 +649,9 @@ void CallbackTextReplace (int ref, int val, char *txt)
       EndDialog (SearchW, ID_DONE);
       SearchW = NULL;
 #endif /* _WINGUI */
-#ifdef _GTK 
+#if defined(_GTK) || defined(_WX)
       TtaDestroyDialogue (NumFormSearchText);
-#endif /* _GTK */
-#ifdef _WX
-      printf ("\nCallbackTextReplace - Penser a detruire ce satane dialogue");
-#endif /* _WX */
+#endif /* _GTK || _WX */
 	  TtaFreeMemory (SString);
 	  SString = NULL;
 	  TtaFreeMemory (RString);

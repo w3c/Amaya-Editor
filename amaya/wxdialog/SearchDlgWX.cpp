@@ -71,6 +71,10 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetSelection(2);
   m_iarea = XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->GetSelection( );
 
+
+  // Give focus to first text control
+  XRCCTRL(*this, "wxID_SEARCH_FOR_TXT", wxTextCtrl)->SetFocus();
+
   Layout();
   
   SetAutoLayout( TRUE );
@@ -81,6 +85,8 @@ END_EVENT_TABLE()
   ----------------------------------------------------------------------*/
 SearchDlgWX::~SearchDlgWX()
 {
+  /* when the dialog is destroyed, It important to cleanup context */
+  ThotCallback (NumFormSearchText, INTEGER_DATA, (char*) 0); 
 }
 
 /*----------------------------------------------------------------------
