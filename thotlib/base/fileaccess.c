@@ -120,7 +120,7 @@ int                *sval;
 	}
     }
 }
-
+ 
 
 /*----------------------------------------------------------------------
    TtaReadSignedShort reads a signed short value.                  

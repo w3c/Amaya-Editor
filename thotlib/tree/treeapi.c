@@ -48,6 +48,7 @@ extern int          UserErrorCode;
 static Name         nameBuffer;
 /* int                 AvecControleStruct = 1; */
 
+#ifndef _WIN_PRINT
 #ifdef __STDC__
 extern void         CreateNewElement (int, PtrSSchema, PtrDocument, boolean);
 
@@ -55,7 +56,7 @@ extern void         CreateNewElement (int, PtrSSchema, PtrDocument, boolean);
 extern void         CreateNewElement ();
 
 #endif /* __STDC__ */
-
+#endif /* _WIN_PRINT */
 
 /* ----------------------------------------------------------------- 
    SetAssocNumber: assign the number nAssoc of the associated element 
@@ -1246,6 +1247,7 @@ Document            document;
 }
 
 #ifndef NODISPLAY
+#ifndef _WIN_PRINT
 
 /* ----------------------------------------------------------------------
    TtaCreateElement
@@ -1331,7 +1333,7 @@ Document            document;
 			(PtrSSchema) (elementType.ElSSchema),
 			LoadedDocument[document - 1], TRUE);
 }
-
+#endif /* _WIN_PRINT */
 #endif /* NODISPLAY */
 
 /* ----------------------------------------------------------------------

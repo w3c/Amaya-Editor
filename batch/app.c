@@ -1578,7 +1578,7 @@ char              **argv;
 #  endif /* _WINDOWS */
 
 #  ifdef _WINDOWS
-   hWnd = hwnd;
+   COMPWnd = hwnd;
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
    strcpy (msg, "Executing app ");

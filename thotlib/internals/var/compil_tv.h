@@ -25,6 +25,6 @@ THOT_EXPORT boolean 	error;
 
 #ifdef _WINDOWS
 THOT_EXPORT HDC compilersDC;
-THOT_EXPORT HWND hWnd;
+THOT_EXPORT HWND COMPWnd;
 THOT_EXPORT int    _CY_;
 #endif /* _WINDOWS */

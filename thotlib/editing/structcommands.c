@@ -1063,6 +1063,7 @@ PtrDocument         pDoc;
 
 #define MAX_ANCESTOR 10
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    CutCommand  traite la commande CUT				
    Supprime du document la partie selectionnee.               
@@ -1721,7 +1722,7 @@ boolean             save;
 	  }
     }
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    EmptyElement    retourne vrai si l'element pEl est vide.        
@@ -1833,7 +1834,7 @@ PtrDocument         pDoc;
    return ok;
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   DoSurround
   ----------------------------------------------------------------------*/
@@ -2072,7 +2073,7 @@ PtrSSchema          pSS;
      }
    return TRUE;
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    SearchChoiceRules cherche les regles CsChoice qui derivent de la   
@@ -2296,7 +2297,7 @@ PtrElement          pEl;
 	}
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    	ChangeTypeOfElements						
   ----------------------------------------------------------------------*/
@@ -2429,6 +2430,7 @@ PtrSSchema          newSSchema;
      }
    return done;
 }
+#endif /* _WIN_PRINT
 
 /*----------------------------------------------------------------------
   CanInsertBySplitting
@@ -2526,7 +2528,7 @@ PtrDocument	 pDoc;
    return ok;
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    CreateNewElement						
    L'utilisateur veut creer, pour le document pDoc, au voisinage   
@@ -3021,6 +3023,7 @@ boolean             Before;
 	}
     }
 }
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    AddEntrySurround ajoute, dans la table des elements a mettre    
@@ -3133,7 +3136,7 @@ PtrDocument         pDoc;
 	 AddEntrySurround (pSS, typeNum);
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    SurroundMenuInput : traite le retour du menu Surround.          
    entree est le numero de l'entree que l'utilisateur a    
@@ -3162,7 +3165,6 @@ int                 item;
 		      typeNumSurround[item], pSSSurround[item]);
    CloseHistorySequence (pDoc);
 }
-
 
 /*----------------------------------------------------------------------
    BuildSurroundMenu cree dans le buffer menuBuffer le menu Surround  
@@ -3426,6 +3428,7 @@ int                 entree;
       CancelLastEditFromHistory (pDoc);
    CloseHistorySequence (pDoc);
 }
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    BuildChangeTypeMenu   cree dans le buffer menuBuffer le menu des 
@@ -3468,7 +3471,7 @@ PtrElement   pEl;
      }
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    TtcChangeType : traite la commande "Changer en".                
   ----------------------------------------------------------------------*/
@@ -3524,3 +3527,4 @@ View                view;
 		}
 	   }
 }
+#endif /* _WIN_PRINT */

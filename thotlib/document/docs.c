@@ -498,7 +498,8 @@ void                UnloadDocument (pDoc)
 PtrDocument        *pDoc;
 #endif /* __STDC__ */
 {
-   int                 d;
+#   ifndef _WIN_PRINT
+	int                 d;
 
    if (*pDoc != NULL)
       /* cherche dans la table le descripteur de document a liberer */
@@ -522,6 +523,7 @@ PtrDocument        *pDoc;
 	    FreeAll ();
 	  }
      }
+#    endif /* _WIN_PRINT */
 }
 
 
