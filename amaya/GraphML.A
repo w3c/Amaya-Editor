@@ -82,8 +82,10 @@ ATTRIBUTES
         AttrCreate.Post -> UpdateStylePost;
         AttrModify.Post -> UpdateStylePost;
         END;
+
    Namespace:
 	AttrExport.Post -> NameSpaceGenerated;
+
    height_:
 	BEGIN
 	AttrModify.Post -> AttrWidthHeightChanged;
@@ -117,6 +119,11 @@ ATTRIBUTES
 	AttrModify.Post -> AttrTransformChanged;
 	AttrCreate.Post -> AttrTransformChanged;
 	AttrDelete.Pre ->  AttrTransformDelete;
+	END;
+   d:
+	BEGIN
+	AttrModify.Post -> AttrPathDataChanged;
+	AttrDelete.Pre ->  AttrPathDataDelete;
 	END;
    arrowhead:
 	BEGIN

@@ -175,11 +175,35 @@ ThotBool       SetEmptyShapeAttribute (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-   A new element has been selected. Synchronize selection in source view.      
+   A new element has been selected.
+   Check that this element can be selected.
+   Synchronize selection in source view.      
   ----------------------------------------------------------------------*/
 void                GraphicsSelectionChanged (NotifyElement * event)
 {
-   SynchronizeSourceView (event);
+  Element      asc, use;
+  ElementType  elType;
+
+  /* if element is within a "use" element, select the "use" element instead */
+  use = NULL;
+  asc = TtaGetParent (event->element);
+  /* look for the highest level use ancestor */
+  while (asc)
+    {
+      elType = TtaGetElementType (asc);
+      if (elType.ElTypeNum == GraphML_EL_use_ &&
+          event->elementType.ElSSchema == elType.ElSSchema)
+	use = asc;
+      asc = TtaGetParent (asc);
+    }
+  if (use)
+    /* there is a use ancestor. Select it */
+    {
+      TtaSelectElement (event->document, use);
+      event->element = use;
+      event->elementType.ElTypeNum = GraphML_EL_use_;
+    }
+  SynchronizeSourceView (event);
 }
 
 /*----------------------------------------------------------------------
@@ -309,6 +333,24 @@ ThotBool         AttrTransformDelete (NotifyAttribute * event)
   ParseTransformAttribute (event->attribute, event->element, event->document,
 			  TRUE);
   return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+ AttrPathDataChanged
+ -----------------------------------------------------------------------*/
+void             AttrPathDataChanged (NotifyAttribute *event)
+{
+   ParsePathDataAttribute (event->attribute, event->element, event->document);
+}
+
+/*----------------------------------------------------------------------
+   AttrPathDataDelete
+   The user tries to delete attribute d of a path element.
+   Don't let him/her do that!
+  ----------------------------------------------------------------------*/
+ThotBool         AttrPathDataDelete (NotifyAttribute * event)
+{
+  return TRUE; /* don't let Thot perform normal operation */
 }
 
 /*----------------------------------------------------------------------
@@ -1209,6 +1251,35 @@ void             NameSpaceGenerated (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
+ InheritAttribute
+ Check if any ancestor of element el has an attribute of type attrType.
+ Check only ancestors defined in the same Thot schema (name space) as el.
+ -----------------------------------------------------------------------*/
+ThotBool        InheritAttribute (Element el, AttributeType attrType)
+{
+  Element     asc;
+  SSchema     sch;
+  ThotBool    inherit;
+
+  inherit = FALSE;
+  sch = TtaGetElementType(el).ElSSchema;
+  asc = TtaGetParent (el);
+  while (asc && !inherit)
+    {
+      if (TtaGetElementType(asc).ElSSchema != sch)
+	asc = NULL;
+      else
+	{
+	  if (TtaGetAttribute (asc, attrType))
+	    inherit = TRUE;
+	  else
+	    asc = TtaGetParent (asc);
+	}
+    }
+  return (inherit);
+}
+
+/*----------------------------------------------------------------------
    CreateGraphicElement
    Create a Graphics element.
    entry is the number of the entry chosen by the user in the Graphics
@@ -1246,7 +1317,8 @@ void         CreateGraphicElement (int entry)
   graphSchema = GetGraphMLSSchema (doc);
   attrType.AttrSSchema = graphSchema;
   elType = TtaGetElementType (selEl);
-  if (elType.ElTypeNum == GraphML_EL_GraphML && elType.ElSSchema == graphSchema)
+  if (elType.ElTypeNum == GraphML_EL_GraphML &&
+      elType.ElSSchema == graphSchema)
     graphRoot = selEl;
   else
     {
@@ -1264,7 +1336,8 @@ void         CreateGraphicElement (int entry)
 	      TtaCancelLastRegisteredSequence (doc);
 	      return;
 	    }
-	  graphSchema = TtaNewNature (doc, docSchema, TEXT("GraphML"), TEXT("GraphMLP"));
+	  graphSchema = TtaNewNature (doc, docSchema, TEXT("GraphML"),
+				      TEXT("GraphMLP"));
 	  if (TtaIsSelectionEmpty ())
 	    {
 	      /* try to create the SVG here */
@@ -1400,6 +1473,41 @@ void         CreateGraphicElement (int entry)
       else
 	TtaInsertSibling (newEl, sibling, FALSE, doc);
       
+      /* create attributes fill and stroke if they are not inherited */
+      if (newType.ElTypeNum == GraphML_EL_line_ ||
+	  newType.ElTypeNum == GraphML_EL_rect ||
+	  newType.ElTypeNum == GraphML_EL_circle ||
+	  newType.ElTypeNum == GraphML_EL_ellipse ||
+	  newType.ElTypeNum == GraphML_EL_polyline ||
+	  newType.ElTypeNum == GraphML_EL_polygon ||
+	  newType.ElTypeNum == GraphML_EL_path)
+	{
+	  selEl = newEl;
+	  /* attribute stroke="black" */
+	  attrType.AttrTypeNum = GraphML_ATTR_stroke;
+	  if (!InheritAttribute (newEl, attrType))
+	    {
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (newEl, attr, doc);
+	      TtaSetAttributeText (attr, TEXT("black"), newEl, doc);
+	      ParseFillStrokeAttributes (attrType.AttrTypeNum, attr, newEl,
+					 doc, FALSE);
+	    }
+	  if (newType.ElTypeNum != GraphML_EL_line_)
+	    {
+	      /* attribute fill="none" */
+	      attrType.AttrTypeNum = GraphML_ATTR_fill;
+	      if (!InheritAttribute (newEl, attrType))
+		{
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (newEl, attr, doc);
+		  TtaSetAttributeText (attr, TEXT("none"), newEl, doc);
+		  ParseFillStrokeAttributes (attrType.AttrTypeNum, attr, newEl,
+					     doc, FALSE);
+		}
+	    }
+	}
+
       /* create a child for the new element */
       if (shape != EOS)
 	/* create a graphic leaf according to the element's type */
@@ -1409,7 +1517,6 @@ void         CreateGraphicElement (int entry)
 	  child = TtaNewElement (doc, childType);
 	  TtaInsertFirstChild (&child, newEl, doc);
 	  TtaSetGraphicsShape (child, shape, doc);
-	  selEl = child;
 	  if (entry == 2)
 	    /* rectangle with rounded corners */
 	    {
@@ -1468,7 +1575,8 @@ void         CreateGraphicElement (int entry)
     /* select the right element */
     TtaSelectElement (doc, selEl);
   
-  if (shape == 'S' || shape == 'p' || shape == 'B' || shape == 's' || shape == 'g')
+  if (shape == 'S' || shape == 'p' || shape == 'B' ||
+      shape == 's' || shape == 'g')
     /* multipoints element. Let the user enter the points */
     {
       if (shape != 'g')
