@@ -4,7 +4,7 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
- 
+
 /*
  *
  * SVGbuilder
@@ -22,7 +22,6 @@
 #include "parser.h"
 #include "registry.h"
 #include "style.h"
-
 
 #define MaxMsgLength 200
 
@@ -698,6 +697,136 @@ void EvaluateTestAttrs (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+   SetTextAnchorTree
+   Apply the value of a text-anchor attribute to a tree.
+  ----------------------------------------------------------------------*/
+static void SetTextAnchorTree (Element el, PresentationContext ctxt,
+			       SSchema SvgSSchema, Attribute deletedAttr)
+{
+  ElementType         elType;
+  Element             child;
+  AttributeType       attrType;
+  Attribute           attr;
+  int                 val;
+  PresentationValue   v;
+
+  attrType.AttrSSchema = SvgSSchema;
+  attrType.AttrTypeNum = SVG_ATTR_text_anchor;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr && attr == deletedAttr)
+    attr = NULL;
+  if (attr)
+    {
+      val = TtaGetAttributeValue (attr);
+      if (val == SVG_ATTR_text_anchor_VAL_inherit)
+	/* that's text-anchor="inherit". Ignore it */
+	attr = NULL;
+    }
+  if (!attr)
+    /* this element does not have a text-anchor attribute. Continue */
+    {
+      elType = TtaGetElementType (el);
+      if (elType.ElSSchema == SvgSSchema &&
+	  (elType.ElTypeNum == SVG_EL_text_ ||
+	   elType.ElTypeNum == SVG_EL_tspan /**** ||
+	   elType.ElTypeNum == SVG_EL_tref ||
+	   elType.ElTypeNum == SVG_EL_altGlyph ||
+	   elType.ElTypeNum == SVG_EL_textPath ****/))
+	/* this element is affected */
+	{
+	  v.data = 0;
+	  TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, v);
+	}
+      child = TtaGetFirstChild (el);
+      while (child)
+	{
+	  SetTextAnchorTree (child, ctxt, SvgSSchema, deletedAttr);
+	  TtaNextSibling (&child);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+   SetTextAnchor
+   Update (or create) the position rule of element el according to the
+   value of the text-anchor attribute attr.
+  ----------------------------------------------------------------------*/
+void SetTextAnchor (Attribute attr, Element el, Document doc, ThotBool delete)
+{
+   Attribute            attr1;
+   AttributeType        attrType;
+   Element              ancestor;
+   int                  val, val1, attrKind;
+   SSchema              SvgSSchema;
+   ThotBool             found;
+   PresentationContext  ctxt;
+
+   TtaGiveAttributeType (attr, &attrType, &attrKind);
+   SvgSSchema = attrType.AttrSSchema;
+   val = TtaGetAttributeValue (attr);
+   ctxt = TtaGetSpecificStyleContext (doc);
+   if (delete || val == SVG_ATTR_text_anchor_VAL_inherit)
+     /* attribute text-anchor is being deleted or inherited */
+     {
+       ctxt->type = PositionLeft;
+       /* is there a text-anchor attribute on an ancestor? */
+       ancestor = TtaGetParent (el);
+       found = FALSE;
+       while (ancestor && !found)
+	 {
+	   attr1 = TtaGetAttribute (ancestor, attrType);
+	   if (attr1)
+	     /* this ancestor has an attribute text-anchor */
+	     {
+	       val1 = TtaGetAttributeValue (attr1);
+	       if (val1 != SVG_ATTR_text_anchor_VAL_inherit)
+		 /* ignore it if it's "inherit" */
+		 {
+		   if (val1 == val)
+		     /* the inherited value is the same as the value of the
+			deleted attribute. done. */
+		     el = NULL;
+		   else
+		     /* the inherited value has to be applied to element el
+			and all its descendants */
+		     val = val1;
+		   found = TRUE; /* don't look for more ancestors */
+		 }
+	     }
+           if (!found)
+	     ancestor = TtaGetParent (ancestor);
+	 }
+       if (!found)
+	 {
+	   /* ancestors don't have attribute text-anchor */
+	   if (val == SVG_ATTR_text_anchor_VAL_start)
+	     /* removing or inheriting the default value. Done. */
+	     el = NULL;
+	   else
+	     /* apply the default value to element el and all its descendants*/
+	     val = SVG_ATTR_text_anchor_VAL_start;
+	 }
+     }
+   if (el)
+     /* applies the new value to element el and all its descendants */
+     {
+       if (val == SVG_ATTR_text_anchor_VAL_start)
+	 ctxt->type = PositionLeft;
+       else if (val == SVG_ATTR_text_anchor_VAL_middle)
+	 ctxt->type = PositionVertMiddle;
+       else if (val == SVG_ATTR_text_anchor_VAL_end_)
+	 ctxt->type = PositionRight;
+       else
+	 ctxt->type = PositionLeft;
+       ctxt->cssSpecificity = 0;
+       ctxt->important = TRUE;
+       ctxt->destroy = FALSE;
+       SetTextAnchorTree (el, ctxt, SvgSSchema, attr);
+     }
+   TtaFreeMemory (ctxt);
+}
+
+/*----------------------------------------------------------------------
    SVGElementComplete
    Check the Thot structure of the SVG element el.
   ----------------------------------------------------------------------*/
@@ -754,6 +883,25 @@ void SVGElementComplete (Element el, Document doc, int *error)
 	      SetGraphicDepths (doc, el);
 	   }
 	}
+
+     if (elType.ElTypeNum == SVG_EL_SVG ||
+	 elType.ElTypeNum == SVG_EL_g ||
+	 elType.ElTypeNum == SVG_EL_defs ||
+	 elType.ElTypeNum == SVG_EL_symbol_ ||
+	 elType.ElTypeNum == SVG_EL_use_ ||
+	 elType.ElTypeNum == SVG_EL_switch ||
+	 elType.ElTypeNum == SVG_EL_a ||
+	 elType.ElTypeNum == SVG_EL_foreignObject)
+       /* add marker, pattern mask, filter, feImage, font, glyph,
+          missing_glyph, clipPath */
+       /* this element may have a text-anchor attribute */
+       {
+	 attrType.AttrSSchema = elType.ElSSchema;
+	 attrType.AttrTypeNum = SVG_ATTR_text_anchor;
+	 attr = TtaGetAttribute (el, attrType);
+	 if (attr)
+	   SetTextAnchor (attr, el, doc, FALSE);
+       }
 
      switch (elType.ElTypeNum)
        {
@@ -1582,124 +1730,6 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
          }
        TtaFreeMemory (text);
      }
-}
-
-/*----------------------------------------------------------------------
-   SetTextAnchorTree
-   Apply the value of a text-anchor attribute to a tree.
-  ----------------------------------------------------------------------*/
-static void SetTextAnchorTree (Element el, PresentationContext ctxt,
-			       SSchema SvgSSchema, Attribute deletedAttr)
-{
-  ElementType         elType;
-  Element             child;
-  AttributeType       attrType;
-  Attribute           attr;
-  PresentationValue   v;
-
-  attrType.AttrSSchema = SvgSSchema;
-  attrType.AttrTypeNum = SVG_ATTR_text_anchor;
-  attr = TtaGetAttribute (el, attrType);
-  if (attr && attr == deletedAttr)
-    attr = NULL;
-  if (!attr)
-    /* this element does not have a text-anchor attribute. Continue */
-    {
-      elType = TtaGetElementType (el);
-      if (elType.ElSSchema == SvgSSchema &&
-	  (elType.ElTypeNum == SVG_EL_text_ ||
-	   elType.ElTypeNum == SVG_EL_tspan /**** ||
-	   elType.ElTypeNum == SVG_EL_tref ||
-	   elType.ElTypeNum == SVG_EL_altGlyph ||
-	   elType.ElTypeNum == SVG_EL_textPath ****/))
-	/* this element is affected */
-	{
-	  v.data = 0;
-	  TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, v);
-	}
-      child = TtaGetFirstChild (el);
-      while (child)
-	{
-	  SetTextAnchorTree (child, ctxt, SvgSSchema, deletedAttr);
-	  TtaNextSibling (&child);
-	}
-    }
-}
-
-/*----------------------------------------------------------------------
-   SetTextAnchor
-   Update (or create) the position rule of element el according to the
-   value of the text-anchor attribute attr.
-  ----------------------------------------------------------------------*/
-void SetTextAnchor (Attribute attr, Element el, Document doc, ThotBool delete)
-{
-   Attribute            attr1;
-   AttributeType        attrType;
-   Element              ancestor;
-   int                  val, val1, attrKind;
-   SSchema              SvgSSchema;
-   ThotBool             found;
-   PresentationContext  ctxt;
-
-   TtaGiveAttributeType (attr, &attrType, &attrKind);
-   SvgSSchema = attrType.AttrSSchema;
-   val = TtaGetAttributeValue (attr);
-   ctxt = TtaGetSpecificStyleContext (doc);
-   if (delete)
-     /* attribute text-anchor is being deleted */
-     {
-       ctxt->type = PositionLeft;
-       /* is there a text-anchor attribute on an ancestor? */
-       ancestor = TtaGetParent (el);
-       found = FALSE;
-       while (ancestor && !found)
-	 {
-	   attr1 = TtaGetAttribute (ancestor, attrType);
-	   if (attr1)
-	     /* this ancestor has an attribute text-anchor */
-	     {
-	       val1 = TtaGetAttributeValue (attr1);
-	       if (val1 == val)
-		 /* the inherited value is the same as the value of the
-		    deleted attribute. done. */
-		 el = NULL;
-	       else
-		 /* the inherited value has to be applied to element el
-		    and all its descendants */
-		 val = val1;
-	       found = TRUE; /* don't look for more ancestors */
-	     }
-           else
-	     ancestor = TtaGetParent (ancestor);
-	 }
-       if (!found)
-	 {
-	   /* ancestors don't have attribute text-anchor */
-	   if (val == SVG_ATTR_text_anchor_VAL_start)
-	     /* removing the default value. Done. */
-	     el = NULL;
-	   else
-	     /* apply the default value to element el and all its descendants*/
-	     val = SVG_ATTR_text_anchor_VAL_start;
-	 }
-     }
-   if (el)
-     /* applies the new value to element el and all its descendants */
-     {
-       if (val == SVG_ATTR_text_anchor_VAL_start)
-	 ctxt->type = PositionLeft;
-       else if (val == SVG_ATTR_text_anchor_VAL_middle)
-	 ctxt->type = PositionVertMiddle;
-       else if (val == SVG_ATTR_text_anchor_VAL_end_)
-	 ctxt->type = PositionRight;
-       else
-	 ctxt->type = PositionLeft;
-       ctxt->cssSpecificity = 0;
-       ctxt->important = TRUE;
-       ctxt->destroy = FALSE;
-       SetTextAnchorTree (el, ctxt, SvgSSchema, attr);
-     }
-   TtaFreeMemory (ctxt);
 }
 
 /*----------------------------------------------------------------------
