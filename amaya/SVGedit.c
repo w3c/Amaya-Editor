@@ -44,6 +44,7 @@
 #ifdef _SVGLIB
 #include "libmanag_f.h"
 #endif /* _SVGLIB */
+#include "SVGedit_f.h"
 
 static Pixmap   iconGraph;
 static Pixmap   iconGraphNo;
