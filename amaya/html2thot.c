@@ -314,11 +314,13 @@ CharEntityEntry        CharEntityTable[] =
 typedef struct _UnicodeFallbackEntry
   {
      int	unicodeVal;	/* the Unicode code */
-     int	EightbitCode;   /* the corresponding glyph to be used from the ISO Latin-1 or Symbol
-				   character set.
+     int	EightbitCode;   /* the corresponding glyph to be used from
+				   the ISO Latin-1 or Symbol character set.
    if 0 < EightbitCode < 255, it's the Symbol code for the correct glyph
-   if 1000 < EightbitCode < 1256, it's the ISO Latin-1 code + 1000 of an approaching glyph
-   if 2000 < EightbitCode < 2256, it's the Symbol code + 2000 of an approaching glyph	*/
+   if 1000 < EightbitCode < 1256, it's the ISO Latin-1 code + 1000 of an
+                                  approaching glyph
+   if 2000 < EightbitCode < 2256, it's the Symbol code + 2000 of an
+                                  approaching glyph */
   }
 UnicodeFallbackEntry;
 
@@ -4468,20 +4470,27 @@ CHAR_T                c;
    PutNonISOlatin1Char     put a Unicode character in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutNonISOlatin1Char (int code)
+static void         PutNonISOlatin1Char (int code, STRING prefix)
 #else
-static void         PutNonISOlatin1Char (code)
+static void         PutNonISOlatin1Char (code, prefix)
 int                 code;
-
+STRING              prefix;
 #endif
 {
-   int		i, c = 0;
-   Language	lang, l;
+   int		 i, len, c = 0;
+   Language	 lang, l;
+   ElementType	 elType;
+   Element	 elText;
+   AttributeType attrType;
+   Attribute	 attr;
+#define MAX_ENTITY_LENGTH 80
+   CHAR_T	 buffer[MAX_ENTITY_LENGTH];
 
    /* look for that code in the fallback table */
    for (i = 0; UnicodeFallbackTable[i].unicodeVal < code &&
 	       UnicodeFallbackTable[i].unicodeVal > 0;  i++);
    if (UnicodeFallbackTable[i].unicodeVal == code)
+      /* this character is on the fallback table */
       {
       if (UnicodeFallbackTable[i].EightbitCode < 255)
 	 {
@@ -4503,7 +4512,12 @@ int                 code;
 	 }
       }
    else
-     lang = TtaGetLanguageIdFromAlphabet('L');
+      /* character is not in the fallback table */
+      {
+      /* display a question mark instead */
+      lang = TtaGetLanguageIdFromAlphabet('L');
+      c = '?';
+      }
 
    if (lang == currentLanguage)
       PutInBuffer ((char)c);
@@ -4523,31 +4537,48 @@ int                 code;
 	 MergeText = FALSE;
 	 l = currentLanguage;
 	 currentLanguage = lang;
-	 PutInBuffer ((char)c);
-	 TextToDocument ();
+	 elType.ElSSchema = DocumentSSchema;
+	 elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	 elText = TtaNewElement (theDocument, elType);
+	 TtaSetElementLineNumber (elText, NumberOfLinesRead);
+	 InsertElement (&elText);
+	 lastElementClosed = TRUE;
+	 buffer[0] = (CHAR_T) c;
+         buffer[1] = EOS;
+	 /* some special cases: insert a second character */
+	 if (code == 338)		/* OE ligature */
+	    buffer[1] = 'E';
+	 else if (code == 339)	/* oe ligature */
+	    buffer[1] = 'e';
+	 else if (code == 8195)	/* em space, U+2003 ISOpub */
+	    buffer[1] = '\240';
+	 else if (code == 8220)	/* left double quotation mark */
+	    buffer[1] = '\140';
+	 else if (code == 8221)	/* right double quotation mark */
+	    buffer[1] = '\47';
+	 else if (code == 8222)	/* double low-9 quotation mark */
+	    buffer[1] = ',';
+	 else if (code == 8240)	/* per mille sign */
+	    buffer[1] = '\260';
+         buffer[2] = EOS;
+	 TtaSetTextContent (elText, buffer, lang, theDocument);
+	 TtaSetAccessRight (elText, ReadOnly, theDocument);
+	 attrType.AttrSSchema = DocumentSSchema;
+	 attrType.AttrTypeNum = HTML_ATTR_EntityName;
+	 attr = TtaNewAttribute (attrType);
+	 TtaAttachAttribute (elText, attr, theDocument);
+	 len = ustrlen (EntityName);
+	 if (len > MAX_ENTITY_LENGTH -5)
+	     EntityName[MAX_ENTITY_LENGTH -5] = EOS;
+	 buffer[0] = '&';
+         ustrcpy (&buffer[1], prefix);
+	 ustrcat (buffer, EntityName);
+	 ustrcat (buffer, TEXT(";"));
+	 TtaSetAttributeText (attr, buffer, elText, theDocument);
 	 MergeText = FALSE;
 	 currentLanguage = l;
 	 }
       }
-
-   /* some special cases: insert a second character */
-   /* this pair of characters should not be saved as is in the output file.
-      The original entity should be saved instead */
-
-   if (code == 338)		/* OE ligature */
-      PutInBuffer ('E');
-   else if (code == 339)	/* oe ligature */
-      PutInBuffer ('e');
-   else if (code == 8195)	/* em space, U+2003 ISOpub */
-      PutInBuffer ('\240');
-   else if (code == 8220)	/* left double quotation mark */
-      PutInBuffer ('\140');
-   else if (code == 8221)	/* right double quotation mark */
-      PutInBuffer ('\47');
-   else if (code == 8222)	/* double low-9 quotation mark */
-      PutInBuffer (',');
-   else if (code == 8240)	/* per mille sign */
-      PutInBuffer ('\260');
 }
 
 /*----------------------------------------------------------------------
@@ -4602,7 +4633,7 @@ CHAR_T                c;
    if (CharEntityTable[EntityTableEntry].charName[CharRank] == EOS)
       /* the entity read matches the current entry of entity table */
       if (CharEntityTable[EntityTableEntry].charCode > 255)
-	 PutNonISOlatin1Char (CharEntityTable[EntityTableEntry].charCode);
+	 PutNonISOlatin1Char (CharEntityTable[EntityTableEntry].charCode, TEXT(""));
       else
 	 PutInBuffer ((char)(CharEntityTable[EntityTableEntry].charCode));
    else
@@ -4666,8 +4697,9 @@ unsigned char       c;
         {
 	/* If we are not reading an attribute value, assume that semicolon is
 	   missing and put the corresponding char in the document content */
+	EntityName[LgEntityName] = EOS;
 	if (CharEntityTable[EntityTableEntry].charCode > 255)
-	   PutNonISOlatin1Char (CharEntityTable[EntityTableEntry].charCode);
+	   PutNonISOlatin1Char (CharEntityTable[EntityTableEntry].charCode, TEXT (""));
 	else
 	   PutInBuffer ((char)(CharEntityTable[EntityTableEntry].charCode));
 	if (c != SPACE)
@@ -4752,7 +4784,7 @@ CHAR_T                c;
    EntityName[LgEntityName] = EOS;
    sscanf (EntityName, "%d", &code);
    if (code > 255)
-      PutNonISOlatin1Char (code);
+      PutNonISOlatin1Char (code, TEXT ("#"));
    else
       PutInBuffer ((char)code);
    LgEntityName = 0;
@@ -4818,7 +4850,7 @@ CHAR_T                c;
    EntityName[LgEntityName] = EOS;
    sscanf (EntityName, "%x", &code);
    if (code > 255)
-      PutNonISOlatin1Char (code);
+      PutNonISOlatin1Char (code, TEXT ("#x"));
    else
       PutInBuffer ((char) code);
    LgEntityName = 0;
