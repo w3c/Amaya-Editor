@@ -38,17 +38,12 @@
 */
 #define SUPERSAMPLING(X)  (X / 2)
 #define SUPERSAMPLINGMUL(X) (X * 2)
-
 #else
-
 #define SUPERSAMPLING(X)  (X)
 #define SUPERSAMPLINGMUL(X) (X)
-
 #endif /*_SUPERS*/
 
 #define ANTIALIASINGDEPTH 0
-
-
 
 /*ft_kerning_unscaled*/
 /*ft_kerning_default,*/
@@ -946,14 +941,12 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
     {
       while (size > MAX_STRING)
 	{
-	  x += (float) UnicodeFontRender (gl_font, text, x, 
-					  y, MAX_STRING);
+	  x += (float) UnicodeFontRender (gl_font, text, x, y, MAX_STRING);
 	  size -= MAX_STRING;
 	  text += MAX_STRING;
 	}
       if (size)
-	x += (float) UnicodeFontRender (gl_font, text, x,
-					y, size);
+	x += (float) UnicodeFontRender (gl_font, text, x, y, size);
       return ((int) (x));
     }
   
@@ -963,38 +956,33 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
   miny = 10000;
   maxy = 0;
   pen_x = 0;
-
   for (n = 0; n < size; n++)
     {
-        /* convert character code to glyph index */
-        glyph = Char_index_lookup_cache (font, text[n], &glyph_index);
-        /* retrieve kerning distance 
-	   and move pen position */
-	if (use_kerning &&
-	    previous &&
-	    glyph_index)
+      /* convert character code to glyph index */
+      glyph = Char_index_lookup_cache (font, text[n], &glyph_index);
+      /* retrieve kerning distance 
+	 and move pen position */
+      if (use_kerning && previous && glyph_index)
         {
-          FT_Get_Kerning (font->face, 
-			  previous, glyph_index,
-			  KERNING_CHOICE,
-			  &delta);
+          FT_Get_Kerning (font->face, previous, glyph_index,
+			  KERNING_CHOICE, &delta);
           pen_x += delta.x >> 6;
 	  /* record current glyph index */
 	  previous = glyph_index;
         }
-	/* Position of the glyph in the texture*/
-	bitmap_pos[n].x = (float) pen_x + (float) glyph->pos.x;
-	bitmap_pos[n].y = (float) ( - glyph->pos.y );
-	bitmaps[n] = glyph;
-	
-	/* Compute The height of the Texture*/
-	if (miny > bitmap_pos[n].y)
-	  miny = bitmap_pos[n].y;
-	if ((glyph->dimension.y - glyph->pos.y) > maxy)
-	  maxy =  (float) (glyph->dimension.y - glyph->pos.y);
-	
-	/* increment pen position*/
-	pen_x += glyph->advance;
+      /* Position of the glyph in the texture*/
+      bitmap_pos[n].x = (float) pen_x + (float) glyph->pos.x;
+      bitmap_pos[n].y = (float) ( - glyph->pos.y );
+      bitmaps[n] = glyph;
+      
+      /* Compute The height of the Texture*/
+      if (miny > bitmap_pos[n].y)
+	miny = bitmap_pos[n].y;
+      if ((glyph->dimension.y - glyph->pos.y) > maxy)
+	maxy = (float) (glyph->dimension.y - glyph->pos.y);
+      
+      /* increment pen position*/
+      pen_x += glyph->advance;
     }
   
   maxy = maxy - miny;  
@@ -1012,17 +1000,13 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
   while (n >= 0)
     if (bitmaps[n])
       {
-	width = (int) (bitmap_pos[n].x +
-				   shift +
-		       bitmaps[n]->dimension.x);
+	width = (int) (bitmap_pos[n].x + shift + bitmaps[n]->dimension.x);
 	Width = (p2 (width));
 	break;
       }
     else 
       n--;  
-  if (Height <= 0 ||
-      Width <= 0 ||
-      fabs (miny - 10000) < 0.0001)
+  if (Height <= 0 || Width <= 0 || fabs (miny - 10000) < 0.0001)
     return 0;
   
   bitmap_alloc = sizeof (unsigned char)*Height*Width;
@@ -1038,38 +1022,23 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
   /* Load glyph image into the texture */
   for (n = 0; n < size; n++)
     {
-      if (bitmaps[n] && 
-	  bitmaps[n]->data)
-	{
-	  BitmapAppend (data, 
-			bitmaps[n]->data,
-			(int) (bitmap_pos[n].x + shift), 
-			(int) (bitmap_pos[n].y - miny),
-			(int) bitmaps[n]->dimension.x, 
-			(int) bitmaps[n]->dimension.y, 
-			Width);
-	}
+      if (bitmaps[n] && bitmaps[n]->data)
+	BitmapAppend (data, bitmaps[n]->data,
+		      (int) (bitmap_pos[n].x + shift), 
+		      (int) (bitmap_pos[n].y - miny),
+		      (int) bitmaps[n]->dimension.x, 
+		      (int) bitmaps[n]->dimension.y, 
+		      Width);
     }
   
   if (GL_NotInFeedbackMode ())
-    {         
-      GL_TextureInit (data,
-		      Width,
-		      Height);
-    }
-  if (data && bitmap_alloc > MAX_BITMAP_ALLOC)
+    GL_TextureInit (data, Width, Height);
+  if (data && bitmap_alloc >= MAX_BITMAP_ALLOC)
     TtaFreeMemory (data);
-  
+
   y -= SUPERSAMPLING (maxy + miny);
-
-  GL_TextMap ((x - SUPERSAMPLING(shift)), 
-		 y, 
-		 width, 
-		 (int) maxy, 
-		 Width, 
-		 Height);
+  GL_TextMap ((x - SUPERSAMPLING(shift)), y, width, (int) maxy, Width, Height);
   
-
   /* If there is no cache we must free
      allocated glyphs   */
   return (SUPERSAMPLING(pen_x));  

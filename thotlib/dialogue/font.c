@@ -93,11 +93,9 @@ static SpecFont   FirstFontSel = NULL;
 
 
 /*----------------------------------------------------------------------
- GL_FontIInit 
- Use Freetype2 
+ GL_FontIInit: Use Freetype2 
   ----------------------------------------------------------------------*/
-void *GL_LoadFont (char alphabet, int family, int highlight, int size,
-		   char *xlfd)
+static void *GL_LoadFont (char alphabet, int family, int highlight, int size)
 {
   char filename[2048];
   
@@ -1548,7 +1546,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 #ifdef _PCLDEBUGFONT
 	  g_print ("\n XLFD selection : %s %s", textX, text);
 #endif /*_PCLDEBUG*/
-	  ptfont = GL_LoadFont (script, family, highlight, size, textX);
+	  ptfont = GL_LoadFont (script, family, highlight, size);
 #else /*_GL*/
 #ifdef _WINDOWS
 	  /* Allocate the font structure */
@@ -1722,8 +1720,13 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 		}
 	    }
 	  /* last case the default font */
+#ifdef _GL
+	  if (ptfont == NULL)
+	    ptfont = DefaultGLFont;
+#else /* _GL */
 	  if (ptfont == NULL)
 	    ptfont = DialogFont;
+#endif /* _GL */
 	}
     }
 
@@ -2411,6 +2414,18 @@ void InitDialogueFonts (char *name)
 	LargeDialogFont = IDialogFont;
     }
 #endif /*_WINDOWS*/
+#ifdef _GL
+  /* Need a default GL font because the format is different */
+  DefaultGLFont = NULL;
+  i = 1;
+  while (DefaultGLFont == NULL && i < 3)
+    {
+      DefaultGLFont = GL_LoadFont ('L', i, 1, 0);
+      i++;
+    }
+  if (DefaultGLFont == NULL)
+    printf ("Cannot load any GL fonts\n");
+#endif /* _GL */
   FirstRemovableFont = FirstFreeFont;
 }
 

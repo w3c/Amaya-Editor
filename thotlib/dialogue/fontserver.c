@@ -37,8 +37,7 @@ static int GetFontFilenameFromConfig (char script, int family, int highlight,
   response = (char *) FontLoadFromConfig (script,  family, highlight);
   if (response == NULL || !TtaFileExist (response))
     {
-      /*Bad Configuration
-       get back to normal loading*/
+      /*Bad Configuration: get back to normal loading*/
       return 0;
     }
   strcpy (filename, response);
@@ -237,6 +236,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	  XftPatternAddString (pat, XFT_FAMILY, "Times New Roman");
 	  XftPatternAddString (pat, XFT_FAMILY, "times");
 	  XftPatternAddString (pat, XFT_FAMILY, "Times");
+	  XftPatternAddString (pat, XFT_FAMILY, "georgia");
 	  XftPatternAddString (pat, XFT_FAMILY, "lucidux");
 	  XftPatternAddString (pat, XFT_FAMILY, "Nimbus Roman No9 L");
 	  XftPatternAddString (pat, XFT_FAMILY, "terminus");
@@ -246,16 +246,15 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	  XftPatternAddString (pat, XFT_FAMILY, "Utopia");
 	  /* XftPatternAddString (pat, XFT_FAMILY, "charter"); */
 	  XftPatternAddString (pat, XFT_FAMILY, "terminal");
-	  XftPatternAddString (pat, XFT_FAMILY, "georgia");
 	  break;
 	case 2:
-	  XftPatternAddString (pat, XFT_FAMILY, "helvetica");
-	  XftPatternAddString (pat, XFT_FAMILY, "Helvetica");
-	  XftPatternAddString (pat, XFT_FAMILY, "ArmNet Helvetica");
 	  XftPatternAddString (pat, XFT_FAMILY, "Arial");
 	  XftPatternAddString (pat, XFT_FAMILY, "arial");	      
 	  XftPatternAddString (pat, XFT_FAMILY, "verdana");
 	  XftPatternAddString (pat, XFT_FAMILY, "Verdana");
+	  XftPatternAddString (pat, XFT_FAMILY, "helvetica");
+	  XftPatternAddString (pat, XFT_FAMILY, "Helvetica");
+	  XftPatternAddString (pat, XFT_FAMILY, "ArmNet Helvetica");
 	  XftPatternAddString (pat, XFT_FAMILY, "Nimbus Sans L");
 	  XftPatternAddString (pat, XFT_FAMILY, "lucidux");
 	  XftPatternAddString (pat, XFT_FAMILY, "terminus");
@@ -333,9 +332,6 @@ int GetFontFilename (char script, int family, int highlight, int size,
     XftPatternAddDouble (pat, XFT_SIZE, ((double) size) / 10.0);
 
   /* Returns a pattern more precise that let us load fonts*/
-
-
-
   match = XftFontMatch (GDK_DISPLAY(), 0, pat, &result); 
   if (match) 
     {
@@ -365,9 +361,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
   GetWindowsDirectory (filename , 1024);  
   strcat (filename, "\\fonts\\"); 
   if (script == 'G' || family == 0)
-    {
       strcat (filename, "Symbol");
-    }
   else if (script == 'E')
     {
       switch (family)
@@ -435,4 +429,3 @@ int GetFontFilename (char script, int family, int highlight, int size,
 #endif /* _GTK */
 }
 #endif /* _GL */
-

@@ -23,5 +23,9 @@ THOT_EXPORT int       FontZoom;         /* Zoom applied to fonts  */
 #ifdef _WINDOWS
 THOT_EXPORT HFONT     ActiveFont;
 #endif /* _WINDOWS */
+#ifdef _GL
+#include "openglfonts.h"
+THOT_EXPORT GL_font  *DefaultGLFont;	/* Standard font dialogue */
+#endif /* _GL */
 
 #endif

@@ -9,6 +9,7 @@
  * Module dedicated to font selection upon a user file defining the fonts
  *
  * Author: P. Cheyrou-lagreze (INRIA)
+ *         I. Vatton (INRIA) test if referred files are available
  *
  */
 
@@ -41,8 +42,6 @@
    font style*/
 typedef struct FontFamilyConfig
 {
-  ThotBool is_xlfd[MAX_FONT_STYLE];
-  ThotBool is_xlfd_checked[MAX_FONT_STYLE];
   char     *highlight[MAX_FONT_STYLE];
   /*
   char *bold;
@@ -70,36 +69,19 @@ typedef struct FontScript
 static FontScript **Fonttab = NULL;
 
 
-#ifdef O
-/*----------------------------------------------------------------------
-   FontConfigCreate
-  ----------------------------------------------------------------------*/
-static void FontConfigCreate ()
-{
-  
-}
-/*----------------------------------------------------------------------
-   FontConfigUserSelect                                                    
-  ----------------------------------------------------------------------*/
-static void FontConfigUserSelect ()
-{
-
-}
-#endif /*o*/
-
 #ifndef _GL
 /*----------------------------------------------------------------------
-   IsXLFDName                                                    
+   IsXLFDName returns TRUE if the font is an available Windows font.
   ----------------------------------------------------------------------*/
 static ThotBool IsXLFDName (char *font)
 {
   int k = 0;
     
   while (*font)
-  {
-    if (*font++ == '-')
-		k++;
-  }
+    {
+      if (*font++ == '-')
+	k++;
+    }
 #ifndef _WINDOWS
   return (k == 14) ? TRUE : FALSE;
 #else /*_WINDOWS*/
@@ -107,19 +89,20 @@ static ThotBool IsXLFDName (char *font)
 #endif /*_WINDOWS*/
 
 }
+
 /*----------------------------------------------------------------------
-   IsXLFDFont                                                    
+   IsXLFDFont returns TRUE if the font is an available X font.
   ----------------------------------------------------------------------*/
 static int IsXLFDPatterneAFont (char *pattern)
 {
 #ifndef _WINDOWS
-  char **fontlist;
-  int count=0;  
+  char    **fontlist;
+  int       count = 0;  
 
   if (IsXLFDName (pattern))
     {
       fontlist = XListFonts (TtDisplay, pattern, 1, &count);
-	 if (count)
+      if (count)
 	{
 	  XFreeFontNames(fontlist);
 	  return 1;      
@@ -131,6 +114,7 @@ static int IsXLFDPatterneAFont (char *pattern)
 #endif /*_WINDOWS*/
 }
 #endif /*_GL*/
+
 /*----------------------------------------------------------------------
    isnum                                                    
   ----------------------------------------------------------------------*/
@@ -155,12 +139,12 @@ static int PassOnComments (unsigned char *line, int indline)
     indline--;  
   return indline;
 }
+
 /*----------------------------------------------------------------------
    AdvanceNextWord                                                    
   ----------------------------------------------------------------------*/
 static int AdvanceNextWord (unsigned char *line, int indline)
 {
-  
   while (indline < MAX_TXT_LEN && line[indline] != EOS &&
 	 !isnum (line[indline]))
     {
@@ -266,6 +250,95 @@ static int getFontFamily (int indline, unsigned char *line, char *word)
    return (indline);
 }
 
+
+/*----------------------------------------------------------------------
+  FontLoadFile : Fill the structure for name - font correspondance
+  Return TRUE if all entries are correct.
+  ----------------------------------------------------------------------*/
+static ThotBool FontLoadFile ( FILE *file, FontScript **fontsscript_tab)
+{
+  char                line[MAX_TXT_LEN];
+  char                word[MAX_TXT_LEN];
+  char               *fontface;
+  int                 endfile, indline, script, style, face;
+  ThotBool            complete;
+
+  line[0] = EOS;
+  complete = TRUE;
+  while ((endfile = fread (line, 1, MAX_TXT_LEN - 1, file)))
+    {
+      line[endfile] = '\0';	 
+      indline = 0;
+      while (indline < MAX_TXT_LEN && line[indline] != EOS)
+	{
+	  /*reads the script*/
+	  indline = getWord (indline, line, word);
+	  if (indline < MAX_TXT_LEN && indline && word[0] != EOS)
+	    {
+	      script = atoi (word);
+	      if (script >= 0 && script < 30)
+		{
+		  if (fontsscript_tab[script] == NULL)
+		    {
+		    /* first loading */
+		      fontsscript_tab[script] = TtaGetMemory (sizeof (FontScript));
+		      for (face = 0; face < MAX_FONT_FACE; face++)
+			fontsscript_tab[script]->family[face] = NULL;
+		    }
+		  face = 0;
+		  /* reads all family for a script */
+		  while (indline != 0 && indline < MAX_TXT_LEN)
+		    {
+		      indline = getFontFamily (indline, line, word);
+		      if (word[0] == EOS)
+			break;
+		      face = atoi (word);
+		      if (face < MAX_FONT_FACE && face >= 0)
+			{
+			  if (fontsscript_tab[script]->family[face] == NULL)
+			    {
+			      /* first loading */
+			      fontsscript_tab[script]->family[face] = TtaGetMemory (sizeof (FontFamilyConfig));
+			      for (style = 0; style < MAX_FONT_STYLE; style++)
+				fontsscript_tab[script]->family[face]->highlight[style] = NULL;
+			    }
+			  /* reads all highlights */
+			  style = 0;
+			  while (indline != 0 && indline < MAX_TXT_LEN)
+			    {			 
+			      indline = getFontFace (indline, line, word);  
+			      if (word[0] == EOS)
+				break;
+			      style = atoi (word);
+			      if (style < MAX_FONT_STYLE && style >= 0 &&
+				  fontsscript_tab[script]->family[face]->highlight[style] == NULL)
+				{
+				  /*Get the font-face in 1=font-face string (so +1-1)*/
+				  fontface = TtaStrdup (&word[2]);
+#ifdef _GL
+				  if (!TtaFileExist (fontface))
+#else /* _GL */
+				  if (!IsXLFDPatterneAFont (fontface))
+#endif /* _GL */
+				    {
+				      complete = FALSE;
+				      /*printf ("Font file %s not found\n", fontface)*/;
+				    }
+				  else
+				    fontsscript_tab[script]->family[face]->highlight[style] = fontface;
+				}
+			    }
+			}
+		    }
+		}
+	    }
+	  else
+	    break;	     
+	}
+    }
+  return complete;
+}
+
 /*----------------------------------------------------------------------
    FontConfigLoad : Fill a structure for name - font correspondance
   ----------------------------------------------------------------------*/
@@ -273,12 +346,11 @@ static FontScript **FontConfigLoad ()
 {  
   FontScript        **fontsscript_tab;
   FILE               *file;
-  char                line[MAX_TXT_LEN];
-  char                word[MAX_TXT_LEN];
   char                fname[MAX_TXT_LEN], name[MAX_TXT_LEN];
+  char                word[50];
   char               *appHome;
-  char               *fontface;
-  int                 endfile, indline, script, font_style, font_face_index;
+  int                 script;
+  ThotBool            complete;
 
   appHome = TtaGetEnvString ("APP_HOME");
 #ifndef _GL
@@ -308,84 +380,33 @@ static FontScript **FontConfigLoad ()
       return NULL;
     }
 
-  /*Big Alloc*/
+  /*Allocate the table */
   fontsscript_tab = TtaGetMemory (31 * sizeof (FontScript *));
   for (script = 0; script < 30; script++)
     fontsscript_tab[script] = NULL;
-  memset (line, 0, MAX_TXT_LEN - 1);
-  line[0] = EOS;
-  while ((endfile = fread (line, 1, MAX_TXT_LEN - 1, file)))
-    {
-      line[endfile] = '\0';	 
-      indline = 0;
-      while (indline < MAX_TXT_LEN && line[indline] != EOS)
-	{
-	  /*reads the script*/
-	  indline = getWord (indline, line, word);
-	  if (indline < MAX_TXT_LEN && indline && word[0] != EOS)
-	    {
-	      script = atoi (word);
-	      if (script >= 0 && script < 30 &&
-		  fontsscript_tab[script] == NULL)
-		{
-		  fontsscript_tab[script] = TtaGetMemory (sizeof (FontScript));
-		  for (font_face_index = 0; font_face_index < MAX_FONT_FACE; font_face_index++)
-		    fontsscript_tab[script]->family[font_face_index] = NULL;
-		  font_face_index = 0;
-		  /*reads all family for a script*/
-		  while (indline != 0 && indline < MAX_TXT_LEN)
-		    {
-		      indline = getFontFamily (indline, line, word);
-		      if (word[0] == EOS)
-			break;
-		      font_face_index = atoi (word);	
-		      if (font_face_index < MAX_FONT_FACE && 
-			  font_face_index >= 0 &&
-			  fontsscript_tab[script]->family[font_face_index] == NULL)
-			{
-			  fontsscript_tab[script]->family[font_face_index] = 
-			    TtaGetMemory (sizeof (FontFamilyConfig));
-			  /*reads all highlights*/
-			  for (font_style = 0; font_style < MAX_FONT_STYLE; font_style++)
-			    {
-			      fontsscript_tab[script]->family[font_face_index]->highlight[font_style] = NULL;
-			      fontsscript_tab[script]->family[font_face_index]->is_xlfd_checked[font_style] = FALSE;
-			      fontsscript_tab[script]->family[font_face_index]->is_xlfd[font_style] = FALSE;
-			    }
-			  
-			  font_style = 0;
-			  while (indline != 0 && indline < MAX_TXT_LEN)
-			    {			 
-			      indline = getFontFace (indline, line, word);  
-			      if (word[0] == EOS)
-				break;
-			      font_style = atoi (word);
-			      if (font_style < MAX_FONT_STYLE &&
-				  font_style >= 0 &&
-				  fontsscript_tab[script]->family[font_face_index]->highlight[font_style] == NULL)
-				{
-				  /*Get the font-face in 1=font-face 
-				    string (so +1-1)*/
-				  fontface = TtaStrdup (&word[2]);
-				  fontsscript_tab[script]->family[font_face_index]->highlight[font_style] = fontface;
-				}
-			    }
-			}
-		    }
-		}
-	    }
-	  else
-	    break;	     
-	}
-    }
+  /* load the first config file */
+  complete = FontLoadFile (file, fontsscript_tab);
   TtaReadClose (file);
+
+  if (!complete)
+    {
+      /* try a second font file */
+      strcat (word, ".deb");
+      strcat (fname, ".deb");
+      if (!SearchFile (fname, 0, name))
+	SearchFile (word, 2, name);
+      /* open the fonts definition file */
+      file = TtaReadOpen (name);
+      if (file)
+	complete = FontLoadFile (file, fontsscript_tab);
+    }
   return fontsscript_tab;
 }
 
 /*----------------------------------------------------------------------
    FontLoadFromConfig : GEt a font dame upon its characteristics
   ----------------------------------------------------------------------*/
-char *FontLoadFromConfig (char script, int font_face_index, int font_style)
+char *FontLoadFromConfig (char script, int face, int style)
 {
   int intscript = 1;
 
@@ -405,32 +426,32 @@ char *FontLoadFromConfig (char script, int font_face_index, int font_style)
     case 'E':
       /* ESSTIX FONTS ???*/
       intscript = 21;
-      switch (font_face_index)
+      switch (face)
 	{
 	case 6:
-	  font_face_index = 2;
-	  font_style = 1;
+	  face = 2;
+	  style = 1;
 	  break;
 	case 7:
-	  font_face_index = 2;
-	  font_style = 2;
+	  face = 2;
+	  style = 2;
 	  break;	  
 	case 10:
-	  font_face_index = 3;
-	  font_style = 1;
+	  face = 3;
+	  style = 1;
 	  break;
 	default:
 	  intscript = 20;
-	  font_face_index = 1;
-	  font_style = 1;
+	  face = 1;
+	  style = 1;
 	  break;
 	}
       break;
     case 'G':
       /*Symbols*/
       intscript = 20;
-      font_face_index = 1;
-      font_style = 1;
+      face = 1;
+      style = 1;
       break;
     case 'L':
       /* Latin ? */
@@ -439,8 +460,8 @@ char *FontLoadFromConfig (char script, int font_face_index, int font_style)
     case 'Z':
       /*unicode ??*/
       intscript = 0;
-      font_face_index = 1;
-      font_style = 1;
+      face = 1;
+      style = 1;
       break;
     default:
       intscript = atoi (&script);
@@ -451,62 +472,34 @@ char *FontLoadFromConfig (char script, int font_face_index, int font_style)
 
   if (intscript != 21)
     {
-      switch (font_style)
+      switch (style)
 	{
 	case 1:
-	  font_style = 2;
+	  style = 2;
 	  break;
 	case 0:
-	  font_style = 1;
+	  style = 1;
 	  break;
 	case 2:
-	  font_style = 3;
+	  style = 3;
 	  break;
 	case 5:
-	  font_style = 2;
+	  style = 2;
 	  break;
 	default:
 	  break;
 	}
     }
   
-  if (font_face_index < 0 || font_face_index >= MAX_FONT_FACE)
-    font_face_index = 1;
+  if (face < 0 || face >= MAX_FONT_FACE)
+    face = 1;
 
   if (Fonttab[intscript] &&
-      Fonttab[intscript]->family[font_face_index] &&
-      Fonttab[intscript]->family[font_face_index]->highlight[font_style])
-    {
-#ifdef _PCLFONTDEBUG
-      g_print ("\n%s",
-	       Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
-#endif /*_PCLFONTDEBUG*/
-#ifndef _GL
-      if (Fonttab[intscript]->family[font_face_index]->is_xlfd_checked[font_style] == FALSE)
-	{
-	  Fonttab[intscript]->family[font_face_index]->is_xlfd[font_style] = IsXLFDPatterneAFont (Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
-	  Fonttab[intscript]->family[font_face_index]->is_xlfd_checked[font_style] = TRUE;
-	}
-      if (Fonttab[intscript]->family[font_face_index]->is_xlfd[font_style])
-	return (Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
-      else
-	return NULL;
-
-#else /*_GL*/
-      if (Fonttab[intscript]->family[font_face_index]->is_xlfd_checked[font_style] == FALSE)
-	{
-	  Fonttab[intscript]->family[font_face_index]->is_xlfd[font_style] = TtaFileExist (Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
-	  Fonttab[intscript]->family[font_face_index]->is_xlfd_checked[font_style] = TRUE;
-	}
-      if (Fonttab[intscript]->family[font_face_index]->is_xlfd[font_style])
-	return (Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
-      else
-	return NULL;
-
-      return  (Fonttab[intscript]->family[font_face_index]->highlight[font_style]);
-#endif /*_GL*/
-    }
-  return NULL;
+      Fonttab[intscript]->family[face] &&
+      Fonttab[intscript]->family[face]->highlight[style])
+    return (Fonttab[intscript]->family[face]->highlight[style]);
+  else
+    return NULL;
 }
 
 
@@ -515,7 +508,7 @@ char *FontLoadFromConfig (char script, int font_face_index, int font_style)
   ----------------------------------------------------------------------*/
 void FreeFontConfig ()
 {
-  int script, font_face_index, font_style;
+  int script, face, style;
   
   if (Fonttab == NULL)
     return;
@@ -525,21 +518,21 @@ void FreeFontConfig ()
     {
       if (Fonttab[script])
 	{
-	  font_face_index = 0;
-	  while (font_face_index < MAX_FONT_FACE)
+	  face = 0;
+	  while (face < MAX_FONT_FACE)
 	    {
-	      if (Fonttab[script]->family[font_face_index])
+	      if (Fonttab[script]->family[face])
 		{
-		  font_style = 0;
-		  while (font_style < MAX_FONT_STYLE)
+		  style = 0;
+		  while (style < MAX_FONT_STYLE)
 		    {
-		      if (Fonttab[script]->family[font_face_index]->highlight[font_style])
-			TtaFreeMemory (Fonttab[script]->family[font_face_index]->highlight[font_style]);
-		      font_style++;
+		      if (Fonttab[script]->family[face]->highlight[style])
+			TtaFreeMemory (Fonttab[script]->family[face]->highlight[style]);
+		      style++;
 		    }
-		  TtaFreeMemory (Fonttab[script]->family[font_face_index]);
+		  TtaFreeMemory (Fonttab[script]->family[face]);
 		}
-	      font_face_index++;
+	      face++;
 	    }
 	  TtaFreeMemory (Fonttab[script]);
 	}

@@ -16,7 +16,6 @@
  */
  
 #ifdef _GL
- 
 #define THOT_EXPORT extern
 #include "constmedia.h"
 #include "typemedia.h"
@@ -25,9 +24,7 @@
 #include "memory_f.h"
 /*for ttafileexists*/
 #include "fileaccess.h"
-
 #include "glglyph.h"
-
 #include "font_f.h"
 #include "glwindowdisplay.h"
 
@@ -40,18 +37,13 @@
 */
 #define SUPERSAMPLING(X)  (X / 2)
 #define SUPERSAMPLINGMUL(X) (X * 2)
-
 #else
-
 #define SUPERSAMPLING(X)  (X)
 #define SUPERSAMPLINGMUL(X) (X)
-
 #endif /*_SUPERS*/
 
 #define ANTIALIASINGDEPTH 0
-
 #include <GL/glu.h>
-
 
 /*win32 special*/
 #ifndef CALLBACK
@@ -60,7 +52,6 @@
 
 #define kBSTEPSIZE   0.2f
 #define ALLOC_POINTS 100
-
 
 
 /*ft_kerning_unscaled*/
@@ -90,19 +81,18 @@ typedef struct _GlyphPath {
 } GlyphPath;
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static void CALLBACK GlyphmyGL_Err (GLenum errCode, GlyphPath *path) 
 {
   if(errCode != GL_NO_ERROR)
-    {
-      printf ("\n%s :", (char*) gluErrorString (errCode));      
-    }
+    printf ("\n%s :", (char*) gluErrorString (errCode));      
 }
 
-static void CALLBACK GlyphmyCombine (GLdouble coords[3], 
-			 void *vertex_data[4], 
-			 GLfloat weight[4], 
-			 void **dataOut,
-			 GlyphPath *path)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void CALLBACK GlyphmyCombine (GLdouble coords[3], void *vertex_data[4], 
+			 GLfloat weight[4], void **dataOut, GlyphPath *path)
 {
   GlyphMesh_list *ptr = path->mesh_list;
   
@@ -116,8 +106,9 @@ static void CALLBACK GlyphmyCombine (GLdouble coords[3],
   *dataOut = ptr->data;
 }
 
-static int GlyphPolyNewPoint (FT_Pos x, FT_Pos y, 
-                  GlyphPath *path)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static int GlyphPolyNewPoint (FT_Pos x, FT_Pos y, GlyphPath *path)
 {
   GlyphThotPoint       *tmp;
   int             size;
@@ -125,12 +116,13 @@ static int GlyphPolyNewPoint (FT_Pos x, FT_Pos y,
   if (path->nsize >= path->maxpoints)
     {
       size = path->maxpoints + ALLOC_POINTS;
-      if ((tmp = (GlyphThotPoint*)realloc(path->npoints, size * sizeof(GlyphThotPoint))) ==0)
+      if ((tmp = (GlyphThotPoint*)realloc (path->npoints, size * sizeof(GlyphThotPoint))) == 0)
 	return (FALSE);
       else
 	{
 	  path->npoints = tmp;
-	  memset (path->npoints + path->maxpoints, 0, ALLOC_POINTS * sizeof(GlyphThotPoint));  
+	  memset (path->npoints + path->maxpoints, 0,
+		  ALLOC_POINTS * sizeof(GlyphThotPoint));  
 	  path->maxpoints = size;
 	}
     }
@@ -141,7 +133,9 @@ static int GlyphPolyNewPoint (FT_Pos x, FT_Pos y,
   return (1);
 }
 
-/*  De Casteljau algorithm contributed by Jed Soane */
+/*----------------------------------------------------------------------
+ De Casteljau algorithm contributed by Jed Soane
+  ----------------------------------------------------------------------*/
 static void deCasteljau (const float t, const int n, GlyphPath *path, 
 			 float bValues[4][4][2])
 {
@@ -161,7 +155,9 @@ static void deCasteljau (const float t, const int n, GlyphPath *path,
 }
 
 
-/* De Casteljau algorithm contributed by Jed Soane */
+/*----------------------------------------------------------------------
+ De Casteljau algorithm contributed by Jed Soane
+  ----------------------------------------------------------------------*/
 static void evaluateCurve (const int n, GlyphPath *path, float ctrlPtArray[4][2])
 {
   int   i,k;
@@ -182,7 +178,10 @@ static void evaluateCurve (const int n, GlyphPath *path, float ctrlPtArray[4][2]
     }
 }
 
-static int Conic (const int index, const int first, const int last, FT_Outline ftOutline, GlyphPath *path)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static int Conic (const int index, const int first, const int last,
+		  FT_Outline ftOutline, GlyphPath *path)
 {
   int   next, next2, prev;
   float x, y;
@@ -233,8 +232,10 @@ static int Conic (const int index, const int first, const int last, FT_Outline f
     }
 }
 
-
-static int Cubic (const int index, const int first, const int last, FT_Outline ftOutline, GlyphPath *path)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static int Cubic (const int index, const int first, const int last,
+		  FT_Outline ftOutline, GlyphPath *path)
 { 
   int   next, next2, prev;
   float ctrlPtArray[4][2]; /*  Magic numbers */
@@ -260,8 +261,8 @@ static int Cubic (const int index, const int first, const int last, FT_Outline f
   return 2;
 }
 
-
-
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static void GlyphMakeMesh (GlyphPath *path, int contourFlag)
 {
   GLUtesselator *tobj;
@@ -284,9 +285,8 @@ static void GlyphMakeMesh (GlyphPath *path, int contourFlag)
   gluTessCallback (tobj, GLU_TESS_ERROR_DATA,     (void (CALLBACK*)()) GlyphmyGL_Err);
  
  /*  gluTessProperty (tobj, */
-/* 		   GLU_TESS_BOUNDARY_ONLY, */
-/* 		   1); */
-
+  /* 		   GLU_TESS_BOUNDARY_ONLY, */
+  /* 		   1); */
   /*   FT_OUTLINE_EVEN_ODD_FILL   :: By default, outlines are filled using */
   /*                                 the non-zero winding rule.  If set to */
   /*                                 1, the outline will be filled using   */
@@ -333,13 +333,10 @@ static void GlyphMakeMesh (GlyphPath *path, int contourFlag)
   gluDeleteTess (tobj);
 }
 
-/*-----------------------------------------------------------
+/*----------------------------------------------------------------------
   MakePolygonGlyph : Make bitmap and struct to handle the glyph
-  
--------------------------------------------------------------*/
-void MakePolygonGlyph (GL_font *font,
-		      unsigned int g,
-		      GL_glyph *BitmapGlyph)
+  ----------------------------------------------------------------------*/
+void MakePolygonGlyph (GL_font *font, unsigned int g, GL_glyph *BitmapGlyph)
 {
   FT_Outline       ftOutline;
   FT_Glyph         Glyph;
@@ -349,15 +346,15 @@ void MakePolygonGlyph (GL_font *font,
   GLuint           *glList;
  
   if (g == 0)
-    return ;    
+    return;    
   if (FT_Load_Glyph (font->face, g, FT_LOAD_DEFAULT))
-    return ;	
+    return;	
   if (FT_Get_Glyph (font->face->glyph, &Glyph))
-    return ;    
+    return;    
   if (ft_glyph_format_outline != Glyph->format)
     {
       FT_Done_Glyph (Glyph);
-      return ;
+      return;
     }
 
   BitmapGlyph->data = 0;
@@ -365,9 +362,7 @@ void MakePolygonGlyph (GL_font *font,
   BitmapGlyph->pos.y = 0;
   ftOutline.n_contours = 0;
   ftOutline.n_points = 0;
-  FT_Glyph_Get_CBox (Glyph,  
- 		     ft_glyph_bbox_subpixels,  
- 		     &(BitmapGlyph->bbox)); 
+  FT_Glyph_Get_CBox (Glyph, ft_glyph_bbox_subpixels, &(BitmapGlyph->bbox)); 
   BitmapGlyph->advance = (int) (Glyph->advance.x >> 16);
   ftOutline = ((FT_OutlineGlyph) Glyph)->outline;
 
@@ -440,21 +435,15 @@ void MakePolygonGlyph (GL_font *font,
   FT_Done_Glyph (Glyph); 
 }
 
-/*--------------------------------------------------------
+/*----------------------------------------------------------------------
   UnicodeFontRender : Render an unicode string 
   (no more than a word)
   in a Bitmap.
   Using Two step computation :
   1) computes each glyphs position in the word (advance and kerning).
   2) place them in a bitmap.
-  
-  
-  ---------------------------------------------------------*/
-int UnicodeFontRenderPoly (void *gl_font,
-			   wchar_t *text,
-			   float x,
-			   float y, 
-			   int size)
+  ----------------------------------------------------------------------*/
+int UnicodeFontRenderPoly (void *gl_font, wchar_t *text, float x, float y, int size)
 {
   FT_Vector          delta;   
   FT_Bool            use_kerning;
@@ -485,14 +474,10 @@ int UnicodeFontRenderPoly (void *gl_font,
 	    {
 	      /* retrieve kerning distance 
 		 and move pen position */
-	      if (use_kerning &&
-		  previous &&
-		  glyph_index)
+	      if (use_kerning && previous && glyph_index)
 		{
-		  FT_Get_Kerning (font->face,
-				  previous, glyph_index,
-				  KERNING_CHOICE,
-				  &delta);
+		  FT_Get_Kerning (font->face, previous, glyph_index,
+				  KERNING_CHOICE, &delta);
 		  pen_x += delta.x >> 6;
 		  /* record current glyph index */
 		  previous = glyph_index;
@@ -501,7 +486,6 @@ int UnicodeFontRenderPoly (void *gl_font,
 	      glTranslatef (pen_x, -pen_y, 0.0f);
 	      glCallList (*((GLuint *)glyph->data));
 	      glTranslatef (-pen_x, pen_y, 0.0f);
-	      
 	    }
 	  /* increment pen position*/
 	  pen_x += glyph->advance;
