@@ -2278,14 +2278,16 @@ void TtcChangeFormat (Document document, View view)
 
    /* demande quelle est la selection courante */
    selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
-   if (!selectionOK) {
-      /* par defaut la racine du document */
-      pSelDoc = pDoc;
-      pFirstSel = pDoc->DocDocElement;
-      selectionOK = TRUE;
-   }
+   if (!selectionOK)
+     {
+	/* par defaut la racine du document */
+	pSelDoc = pDoc;
+	pFirstSel = pDoc->DocDocElement;
+	pLastSel = pFirstSel;
+	selectionOK = TRUE;
+     }
 
-   if (selectionOK && pSelDoc == pDoc) {
+   if (selectionOK) {
       /* il y a une selection */
       /* recherche le pave concerne */
       if (view > 100)
@@ -2313,7 +2315,8 @@ void TtcChangeFormat (Document document, View view)
          i += strlen (&string[i]) + 1;
          sprintf (&string[i], "%s", "Bmiiin");	/* Justify */
          i += strlen (&string[i]) + 1;
-         sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));	/* Inchange */
+         sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
+	/* Inchange */
          TtaNewSubmenu (NumMenuAlignment, NumFormPresFormat, 0,
          TtaGetMessage (LIB, TMSG_ALIGN), 5, string, NULL, TRUE);
          /* change la police des 4 premieres entrees */
