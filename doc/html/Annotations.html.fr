@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Annotations</title>
-  <meta name="GENERATOR" content="amaya 5.1" />
+  <meta name="GENERATOR" content="amaya 5.3, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -31,7 +31,7 @@
   <li><a href="Annotations.html.fr#Annotation">Menu des annotations</a></li>
   <li><a href="Annotations.html.fr#Configurat">Menu de configuration pour les
     annotations</a></li>
-  <li><a href="Annotations.html.fr#Creating1">Créer une annotation</a></li>
+  <li><a href="Annotations.html.fr#Creating">Créer une annotation</a></li>
   <li><a href="Annotations.html.fr#Deleting1">Supprimer une
   annotation</a></li>
   <li><a href="Annotations.html.fr#Loading">Charger et afficher une
@@ -39,6 +39,8 @@
   <li><a href="Annotations.html.fr#Navigating">Activer des
   annotations</a></li>
   <li><a href="Annotations.html.fr#Moving">Déplacer des annotations</a></li>
+  <li><a href="#Threads">Répondre à une annotation / fils de
+  discussion</a></li>
   <li><a href="Annotations.html.fr#Issues1">Problèmes relatifs aux
     annotations et aux documents modifiés</a></li>
 </ul>
@@ -343,6 +345,58 @@ XPointer représentant cette sélection. Enfin, dans la fenêtre d'annotation,
 utiliser le menu <strong>Annotations/Move to stored XPointer</strong> pour
 déplacer l'annotation à la nouvelle position. Comme précédemment, vous devrez
 sauver l'annotation pour rendre ce changement effectif.</p>
+
+<h3 id="Threads">Répondre aux annotations / fils de discussion</h3>
+
+<p>Les annotations peuvent être considérées comme des commentaires sur des
+documents. La commande <strong>Répondre à l'annotation</strong> élargit
+l'espace de travail collaboratif en permettant aux utilisateurs de répondre
+aux annotations des autres utilisateurs ainsi qu'aux autres réponses</p>
+
+<p>L'utilisateur peut appeler cette commande depuis la fenêtre d'une
+annotation ou depuis la fenêtre d'une réponse. Une nouvelle fenêtre de
+réponse est alors ouverte. Les champs de cette fenêtre peuvent être édités de
+le même manière que ceux d'une fenêtre d'annotation (voir <a
+href="#Creating">Créer une annotation</a>).</p>
+
+<p>Quand la réponse est terminée, l'utilisateur peut la poster sur un serveur
+par à la commande <strong>Enregistrer sur le serveur</strong> ou la sauver
+localement par la commande <strong>Fichier / Sauver</strong>. La commande
+<strong>Annotations / Détruire</strong> supprime la réponse.</p>
+
+<p>Les réponses peuvent également être annotées comme n'importe quel document
+comme expliqué dans la section <a href="#Creating">Créer une
+annotation</a>.</p>
+
+<h2>Interface utilisateur</h2>
+
+<p><img alt="An annotation with a discussion thread"
+src="../images/threads.png" /></p>
+
+<p>Toutes les réponses relatives à une même annotation sont affichées en
+dessous de celle-ci, dans une section "fil". Chaque élément du fil donne la
+date de la réponse, son auteur et son titre. Le contenu de chacune des
+réponses est accessible en double-cliquant sur la réponse dans le fil. La
+réponse sélectionnée est mise en sur-brillance et présentée dans une nouvelle
+fenêtre de réponse. Lorsqu'une autre réponse est sélectionnée, la même
+fenêtre de réponse est utilisée.</p>
+
+<h2>Problèmes connus: fils incomplets</h2>
+
+<p>Il n'y a pas encore de contrôle pour déterminer quelle réponse devrait
+être postée. Dans l'absolu, il ne devrait pas être possible de poster une
+réponse à une réponse sur un autre serveur que la réponse elle-même. De même,
+si vous supprimez une réponse vous devriez supprimer toutes les réponses se
+rapportant à l'annotation. Sans cela, vous pouvez avoir des fragments du fil
+qui ne peuvent être correctement rattachés à celui-ci. Par exemple, soit R1
+une réponse à l'annotation A1 et R2 une réponse à R1. Si vous postez R1 et
+sauvez localement R2 et si vous visualisez A1 en chargeant uniquement les
+annotations locales, alors seule R2 sera visible. A ce niveau, Amaya ne sait
+pas que R1 existe et suppose que R2 a perdu sa réponse "mère". On identifie
+ces fils "orphelins" en plaçant devant un point d'interrogation. Si par la
+suite Amaya trouve de nouveaux éléments du fil, par exemple en chargeant R1,
+il les triera correctement. Dans notre exemple, la réponse R2 deviendra fille
+de R1, comme attendu.</p>
 </div>
 
 <div id="Issues">
