@@ -807,6 +807,7 @@ EXCEPT
 	PICTURE:	MoveResize;
 	Invalid_element:NoCreate;
 	Pseudo_paragraph: ParagraphBreak, Hidden;
+	Basic_Elem:	Hidden;
 	Paragraph:	ParagraphBreak;
 	H1:		ParagraphBreak;
 	H2:		ParagraphBreak;
