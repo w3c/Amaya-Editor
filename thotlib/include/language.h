@@ -27,6 +27,7 @@ typedef int        *Dictionary;
 #ifdef __STDC__
 
 extern Language     TtaNewLanguage (char *languageName, char languageAlphabet, char *principalDictionary, char *secondDictionary);
+extern void         TtaRemoveLanguage (Language language);
 extern Language     TtaGetLanguageIdFromName (char *languageName);
 extern char        *TtaGetVarLANG (void);
 extern Language     TtaGetDefaultLanguage (void);
@@ -44,6 +45,7 @@ extern Dictionary   TtaGetSecondaryTypoDictionary (Language languageId);
 #else  /* __STDC__ */
 
 extern Language     TtaNewLanguage ( /* char *languageName, char languageAlphabet, char *principalDictionary, char *secondDictionary */ );
+extern void         TtaRemoveLanguage ( /* Language language */ );
 extern Language     TtaGetLanguageIdFromName ( /* char *languageName */ );
 extern char        *TtaGetVarLANG ( /* void */ );
 extern Language     TtaGetDefaultLanguage ( /* void */ );

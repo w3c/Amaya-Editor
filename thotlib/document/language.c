@@ -189,7 +189,8 @@ static ISO639entry	ISO639table[] =
    {"",			""}
 };
 
-
+/* this table associates the ancient language names used in Thot documents
+   with their standard code */
 static ISO639entry	OldLangTable[] =
 {
    {"American",		"EN-US"},
@@ -567,7 +568,7 @@ void                TtaRemoveLanguage (language)
       {
       LangTable[i].LangNom[0] = '\0';
       LangTable[i].LangCode[0] = '\0';
-      LangTable[i].LangAlphabet = ' ';
+      /* don't erase LangAlphabet */
       LangTable[i].LangPrincipal[0] = '\0';
       LangTable[i].LangSecondary[0] = '\0';
       LangTable[i].LangPattern[0] = '\0';
@@ -745,7 +746,7 @@ char                languageAlphabet;
 
 	if (again)
 	  {
-	     /* Tha language does not exist */
+	     /* The language does not exist */
 	     i = 0;
 	     TtaError (ERR_language_not_found);
 	  }
