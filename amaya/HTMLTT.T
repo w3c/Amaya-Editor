@@ -214,7 +214,9 @@ RULES
 
  Pseudo_paragraph:
 	BEGIN
-	Create '\12\12' After;
+	Create '\12' After;
+	if not within List_Item
+	    Create '\12' After;
 	END;
 
  TEXT_UNIT: BEGIN
