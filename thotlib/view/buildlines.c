@@ -2644,15 +2644,20 @@ static void MoveFloatingBoxes (PtrBox pBlock, int y, int delta, int frame)
   pfloat = pBlock->BxLeftFloat;
   while (pfloat && pfloat->FlBox)
     {
-      if (pfloat->FlBox->BxYOrg >= y)
+      if (pfloat->FlBox->BxAbstractBox &&
+	  pfloat->FlBox->BxAbstractBox->AbFloat == 'L' &&
+	  pfloat->FlBox->BxYOrg >= y)
 	/* change the position */
 	YMove (pfloat->FlBox, NULL, delta, frame);
       pfloat = pfloat->FlNext;
     }
+
   pfloat = pBlock->BxRightFloat;
   while (pfloat && pfloat->FlBox)
     {
-      if (pfloat->FlBox->BxYOrg >= y)
+      if (pfloat->FlBox->BxAbstractBox &&
+	  pfloat->FlBox->BxAbstractBox->AbFloat == 'R' &&
+	  pfloat->FlBox->BxYOrg >= y)
 	/* change the position */
 	YMove (pfloat->FlBox, NULL, delta, frame);
       pfloat = pfloat->FlNext;
