@@ -1836,12 +1836,12 @@
 	<message xml:lang="pt">Horizontal</message>
 </label>
 <label define="AM_ENABLE_FTP">
-	<message xml:lang="en">Enable FTP (experimental)</message>
-	<message xml:lang="fr">Support FTP (experimental)</message>
-	<message xml:lang="it">Abilita FTP (sperimentale)</message>
-	<message xml:lang="de">FTP zulassen (experimentell)</message>
-	<message xml:lang="es">Activar FTP (experimental)</message>
-	<message xml:lang="pt">Habilitar FTP (experimental)</message>
+	<message xml:lang="en">Enable FTP</message>
+	<message xml:lang="fr">Support FTP</message>
+	<message xml:lang="it">Abilita FTP</message>
+	<message xml:lang="de">FTP zulassen</message>
+	<message xml:lang="es">Activar FTP</message>
+	<message xml:lang="pt">Habilitar FTP</message>
 </label>
 <label define="AM_XML_RETRY">
 	<message xml:lang="en">Not Well-Formed XML document - Reload as HTML or show parsing errors?</message>
