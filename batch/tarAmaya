@@ -22,7 +22,7 @@ echo "Platform ------->" $MACH
    Amaya/README.amaya \
    Amaya/README.gl \
    Amaya/amaya/COPYRIGHT* \
-   Amaya/amaya/AmayaPage.html* \
+   Amaya/amaya/AmayaPage.html \
    Amaya/amaya/*.PRS \
    Amaya/amaya/*.STR \
    Amaya/amaya/*.TRA \
@@ -37,10 +37,10 @@ echo "Platform ------->" $MACH
    Amaya/annotlib/selected.gif \
    Amaya/batch/MachineType \
    Amaya/config/XKeysymDB \
-   Amaya/config/*-amayadialogue \
-   Amaya/config/*-amayamsg \
-   Amaya/config/*-libdialogue \
-   Amaya/config/*-corrdialogue \
+   Amaya/config/en-amayadialogue \
+   Amaya/config/en-amayamsg \
+   Amaya/config/en-libdialogue \
+   Amaya/config/en-corrdialogue \
    Amaya/config/*.rdf \
    Amaya/config/*thot.rc \
    Amaya/config/amaya.emacs \
@@ -54,12 +54,12 @@ echo "Platform ------->" $MACH
    Amaya/config/libconfig/*.png \
    Amaya/config/libconfig/*.lhtml \
    Amaya/config/libconfig/*.svg \
-   Amaya/dicopar/*.dic \
+   Amaya/dicopar/E*.dic \
    Amaya/dicopar/*.ptn \
    Amaya/dicopar/alphabet \
    Amaya/dicopar/clavier \
-   Amaya/doc/html/*.html* \
-   Amaya/doc/html/*/*.html* \
+   Amaya/doc/html/*.html \
+   Amaya/doc/html/*/*.html \
    Amaya/doc/html/*.css \
    Amaya/doc/images/*.gif \
    Amaya/doc/images/*.png \

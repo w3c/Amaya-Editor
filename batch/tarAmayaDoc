@@ -1,0 +1,44 @@
+#!/bin/sh
+#
+# This script builds all the binary tar files for Amaya
+#
+#       amayadoc-$AMAYAVERSION.tgz
+# 
+AMAYAVERSION=v.r
+THOTDIR=$PWD/../..
+DEST=$HOME
+TAR="tar cvzfh "
+COMPRESS="gzip -9"
+
+cd $THOTDIR
+echo "Generating doc tar files "
+
+ $TAR $DEST/amayadoc-$AMAYAVERSION.tgz \
+   Amaya/README.amaya \
+   Amaya/README.gl \
+   Amaya/amaya/COPYRIGHT* \
+   Amaya/amaya/AmayaPage.html.* \
+   Amaya/config/de-* \
+   Amaya/config/es-* \
+   Amaya/config/fi-* \
+   Amaya/config/fr-* \
+   Amaya/config/it-* \
+   Amaya/config/pt-* \
+   Amaya/config/tr-* \
+   Amaya/dicopar/F*.dic \
+   Amaya/dicopar/*.ptn \
+   Amaya/dicopar/alphabet \
+   Amaya/dicopar/clavier \
+   Amaya/doc/html/*.html* \
+   Amaya/doc/html/*/*.html* \
+   Amaya/doc/html/*.css \
+   Amaya/doc/images/*.gif \
+   Amaya/doc/images/*.png \
+   Amaya/doc/images/*.jpg \
+   Amaya/doc/images/w3c_home
+
+
+
+
+
+
