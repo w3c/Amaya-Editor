@@ -500,6 +500,8 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
   colhead = TtaNewTree (doc, elType, "");
   if (colhead != NULL)
     {
+      elType.ElTypeNum = HTML_EL_Table;
+      table = TtaGetTypedAncestor (lastcolhead, elType);
       prevCol = nextCol = lastcolhead;
       if (before)
 	TtaPreviousSibling (&prevCol);
@@ -533,8 +535,8 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 		elType.ElTypeNum = MathML_EL_TableRow;
 	      else
 		elType.ElTypeNum = HTML_EL_Table_row;
-	      currentrow = TtaSearchTypedElement (elType, SearchForward,
-						  lastcolhead);
+	      currentrow = TtaSearchTypedElement (elType, SearchInTree,
+						  table);
 	      backward = FALSE;
 	    }
 
@@ -597,8 +599,6 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 	    {
 	      groupdone = TtaGetParent (row);	/* done with this group */
 	      /* process the other row groups */
-	      elType.ElTypeNum = HTML_EL_Table;
-	      table = TtaGetTypedAncestor (groupdone, elType);
 	      /* visit all children of the Table element */
 	      block = TtaGetFirstChild (table);
 	      while (block)
@@ -783,7 +783,7 @@ ThotBool RemoveColumn (Element colhead, Document doc, ThotBool ifEmpty,
 
   table = TtaGetTypedAncestor (colhead, elType);
   elType.ElTypeNum = rowType;
-  firstrow = TtaSearchTypedElement (elType, SearchForward, table);
+  firstrow = TtaSearchTypedElement (elType, SearchInTree, table);
   if (colhead != NULL && firstrow != NULL)
     {
       empty = TRUE;  /* TRUE when all cells are empty */
@@ -955,7 +955,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
       rowType = HTML_EL_Table_row;
     }
 
-  colhead = TtaSearchTypedElement (elType, SearchForward, table);
+  colhead = TtaSearchTypedElement (elType, SearchInTree, table);
   cNumber = 0;
   while (colhead != 0 && cNumber < MAX_COLS)
     {
@@ -979,7 +979,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
       attrTypeVSpan.AttrTypeNum = HTML_ATTR_rowspan_;
     }
   elType.ElTypeNum = rowType;
-  firstrow = TtaSearchTypedElement (elType, SearchForward, table);
+  firstrow = TtaSearchTypedElement (elType, SearchInTree, table);
   if (cNumber != 0 && firstrow != NULL)
     {
     row = firstrow;
@@ -1801,7 +1801,7 @@ static void UpdateRowspanForRow (Element row, Document doc, ThotBool inMath,
     elType.ElTypeNum = MathML_EL_MColumn_head;
   else
     elType.ElTypeNum = HTML_EL_Column_head;
-  colhead = TtaSearchTypedElement (elType, SearchForward, table);
+  colhead = TtaSearchTypedElement (elType, SearchInTree, table);
   /* get the previous row, if any */
   prevRow = GetSiblingRow (row, TRUE, inMath);
   /* check the cells for all columns */
@@ -1928,7 +1928,7 @@ void RowDeleted (NotifyElement *event)
   ----------------------------------------------------------------------*/
 ThotBool DeleteColumn (NotifyElement * event)
 {
-  Element             cell, prevCell, row, colhead, prev;
+  Element             cell, prevCell, row, colhead, prev, table;
   Document            doc;
   ElementType         elType;
   Attribute           attr;
@@ -1942,6 +1942,8 @@ ThotBool DeleteColumn (NotifyElement * event)
       colhead = event->element;
       doc = event->document;
       elType = TtaGetElementType (colhead);
+      elType.ElTypeNum = HTML_EL_Table;
+      table = TtaGetTypedAncestor (colhead, elType);
       attrTypeC.AttrSSchema = elType.ElSSchema;
       attrTypeR.AttrSSchema = elType.ElSSchema;
       inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema("MathML",doc));
@@ -1958,7 +1960,7 @@ ThotBool DeleteColumn (NotifyElement * event)
 	  attrTypeR.AttrTypeNum = HTML_ATTR_rowspan_;
 	}
       /* get the first row in the table */
-      row = TtaSearchTypedElement (elType, SearchForward, colhead);
+      row = TtaSearchTypedElement (elType, SearchInTree, table);
       while (row)
 	{
 	  /* check if the cell has span values */
@@ -2269,7 +2271,7 @@ void RowPasted (NotifyElement * event)
 	  colspanType.AttrTypeNum = HTML_ATTR_colspan_;
 	}
       /* get the first column */
-      colhead = TtaSearchTypedElement (elType, SearchForward, table);
+      colhead = TtaSearchTypedElement (elType, SearchInTree, table);
       /* get the previous row, if any */
       prevRow = GetSiblingRow (row, TRUE, inMath);
       prevCell = NULL;
