@@ -430,12 +430,12 @@ void TtaQuit ()
     (*AppClosingFunction) ();
   {
 #if defined(_GTK) && !defined(NODISPLAY)
-     gtk_exit (1);
+     gtk_exit (0);
 #endif /* _GTK && !NODISPLAY */	
 #if defined(_WX) && !defined(NODISPLAY)
      /*     wxExit();*/
 #else /* _WX && !defined(NODISPLAY) */     
-     exit (1);
+     exit (0);
 #endif /* _WX && !defined(NODISPLAY) */     
   }
 }

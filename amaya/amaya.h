@@ -392,11 +392,11 @@ THOT_EXPORT Document   ParsedDoc; /* The document to which CSS are to be applied
 THOT_EXPORT Element    AttrHREFelement;
 THOT_EXPORT char      *AttrHREFvalue;
 THOT_EXPORT Document   SelectionDoc;
-THOT_EXPORT ThotBool  AttrHREFundoable;
-THOT_EXPORT ThotBool  IsNewAnchor;
-THOT_EXPORT ThotBool  UseLastTarget;
-THOT_EXPORT ThotBool  LinkAsCSS;
-THOT_EXPORT ThotBool  LinkAsXmlCSS;
+THOT_EXPORT ThotBool   AttrHREFundoable;
+THOT_EXPORT ThotBool   IsNewAnchor;
+THOT_EXPORT ThotBool   UseLastTarget;
+THOT_EXPORT ThotBool   LinkAsCSS;
+THOT_EXPORT ThotBool   LinkAsXmlCSS;
 THOT_EXPORT ThotBool   SaveAsHTML;
 THOT_EXPORT ThotBool   SaveAsXML;
 THOT_EXPORT ThotBool   SaveAsText;
@@ -404,6 +404,8 @@ THOT_EXPORT ThotBool   CopyImages;	/* should we copy images in Save As */
 THOT_EXPORT ThotBool   UpdateURLs;	/* should we update URLs in Save As */
 THOT_EXPORT ThotBool   UserAnswer;
 THOT_EXPORT ThotBool   ExtraChoice;
+THOT_EXPORT ThotBool   TableMenuActive;
+THOT_EXPORT ThotBool   MTableMenuActive;
 THOT_EXPORT ThotBool   InNewWindow;
 THOT_EXPORT ThotBool   SelectionInPRE;
 THOT_EXPORT ThotBool   SelectionInComment;

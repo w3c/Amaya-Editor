@@ -1034,39 +1034,80 @@ void UpdateEditorMenus (Document doc)
   TtaSetItemOff (doc, 1, Types, BNoScript);
   TtaSetItemOff (doc, 1, XMLTypes, BXMLComment);
   /* invalid all table edits as long as the selection is out of a table */
-  TtaSetItemOff (doc, 1, Types, BCaption);
-  TtaSetItemOff (doc, 1, Types, BColgroup);
-  TtaSetItemOff (doc, 1, Types, BCol);
-  TtaSetItemOff (doc, 1, Types, BTHead);
-  TtaSetItemOff (doc, 1, Types, BTBody);
-  TtaSetItemOff (doc, 1, Types, BTFoot);
-  TtaSetItemOff (doc, 1, Types, BDataCell);
-  TtaSetItemOff (doc, 1, Types, BHeadingCell);
-  TtaSetItemOff (doc, 1, Types, BCellHExtend);
-  TtaSetItemOff (doc, 1, Types, BCellVExtend);
-  TtaSetItemOff (doc, 1, Types, BCellHShrink);
-  TtaSetItemOff (doc, 1, Types, BCellVShrink);
-  TtaSetItemOff (doc, 1, Types, BSelectRow);
-  TtaSetItemOff (doc, 1, Types, BCreateRowB);
-  TtaSetItemOff (doc, 1, Types, BCreateRowA);
-  TtaSetItemOff (doc, 1, Types, BSelectColumn);
-  TtaSetItemOff (doc, 1, Types, BCreateColumnB);
-  TtaSetItemOff (doc, 1, Types, BCreateColumnA);
-  TtaSetItemOff (doc, 1, Types, BPasteBefore);
-  TtaSetItemOff (doc, 1, Types, BPasteAfter);
-  TtaSetItemOff (doc, 1, XMLTypes, BMCellHExtend);
-  TtaSetItemOff (doc, 1, XMLTypes, BMCellVExtend);
-  TtaSetItemOff (doc, 1, XMLTypes, BMCellHShrink);
-  TtaSetItemOff (doc, 1, XMLTypes, BMCellVShrink);
-  TtaSetItemOff (doc, 1, XMLTypes, BMSelectRow);
-  TtaSetItemOff (doc, 1, XMLTypes, BMCreateRowB);
-  TtaSetItemOff (doc, 1, XMLTypes, BMCreateRowA);
-  TtaSetItemOff (doc, 1, XMLTypes, BMSelectColumn);
-  TtaSetItemOff (doc, 1, XMLTypes, BMCreateColumnB);
-  TtaSetItemOff (doc, 1, XMLTypes, BMCreateColumnA);
-  TtaSetItemOff (doc, 1, XMLTypes, BMPasteBefore);
-  TtaSetItemOff (doc, 1, XMLTypes, BMPasteAfter);
-  
+  if (TtaIsDocumentSelected (doc))
+    {
+      if (TableMenuActive)
+	{
+	  /* a table element is selected */
+	  TtaSetItemOn (doc, 1, Types, BCaption);
+	  TtaSetItemOn (doc, 1, Types, BColgroup);
+	  TtaSetItemOn (doc, 1, Types, BCol);
+	  TtaSetItemOn (doc, 1, Types, BTHead);
+	  TtaSetItemOn (doc, 1, Types, BTBody);
+	  TtaSetItemOn (doc, 1, Types, BTFoot);
+	  TtaSetItemOn (doc, 1, Types, BDataCell);
+	  TtaSetItemOn (doc, 1, Types, BHeadingCell);
+	  TtaSetItemOn (doc, 1, Types, BCellHExtend);
+	  TtaSetItemOn (doc, 1, Types, BCellVExtend);
+	  TtaSetItemOn (doc, 1, Types, BCellHShrink);
+	  TtaSetItemOn (doc, 1, Types, BCellVShrink);
+	  TtaSetItemOn (doc, 1, Types, BSelectRow);
+	  TtaSetItemOn (doc, 1, Types, BCreateRowB);
+	  TtaSetItemOn (doc, 1, Types, BCreateRowA);
+	  TtaSetItemOn (doc, 1, Types, BSelectColumn);
+	  TtaSetItemOn (doc, 1, Types, BCreateColumnB);
+	  TtaSetItemOn (doc, 1, Types, BCreateColumnA);
+	}
+      if (MTableMenuActive)
+	{
+	  /* a matrice element is selected */
+	  TtaSetItemOn (doc, 1, XMLTypes, BMCellHExtend);
+	  TtaSetItemOn (doc, 1, XMLTypes, BMCellVExtend);
+	  TtaSetItemOn (doc, 1, XMLTypes, BMCellHShrink);
+	  TtaSetItemOn (doc, 1, XMLTypes, BMCellVShrink);
+	  TtaSetItemOn (doc, 1, XMLTypes, BMSelectRow);
+	  TtaSetItemOn (doc, 1, XMLTypes, BMCreateRowB);
+	  TtaSetItemOn (doc, 1, XMLTypes, BMCreateRowA);
+	  TtaSetItemOn (doc, 1, XMLTypes, BMSelectColumn);
+	  TtaSetItemOn (doc, 1, XMLTypes, BMCreateColumnB);
+	  TtaSetItemOn (doc, 1, XMLTypes, BMCreateColumnA);
+	}
+    }
+  else
+    {
+      TtaSetItemOff (doc, 1, Types, BCaption);
+      TtaSetItemOff (doc, 1, Types, BColgroup);
+      TtaSetItemOff (doc, 1, Types, BCol);
+      TtaSetItemOff (doc, 1, Types, BTHead);
+      TtaSetItemOff (doc, 1, Types, BTBody);
+      TtaSetItemOff (doc, 1, Types, BTFoot);
+      TtaSetItemOff (doc, 1, Types, BDataCell);
+      TtaSetItemOff (doc, 1, Types, BHeadingCell);
+      TtaSetItemOff (doc, 1, Types, BCellHExtend);
+      TtaSetItemOff (doc, 1, Types, BCellVExtend);
+      TtaSetItemOff (doc, 1, Types, BCellHShrink);
+      TtaSetItemOff (doc, 1, Types, BCellVShrink);
+      TtaSetItemOff (doc, 1, Types, BSelectRow);
+      TtaSetItemOff (doc, 1, Types, BCreateRowB);
+      TtaSetItemOff (doc, 1, Types, BCreateRowA);
+      TtaSetItemOff (doc, 1, Types, BSelectColumn);
+      TtaSetItemOff (doc, 1, Types, BCreateColumnB);
+      TtaSetItemOff (doc, 1, Types, BCreateColumnA);
+      TtaSetItemOff (doc, 1, Types, BPasteBefore);
+      TtaSetItemOff (doc, 1, Types, BPasteAfter);
+      TtaSetItemOff (doc, 1, XMLTypes, BMCellHExtend);
+      TtaSetItemOff (doc, 1, XMLTypes, BMCellVExtend);
+      TtaSetItemOff (doc, 1, XMLTypes, BMCellHShrink);
+      TtaSetItemOff (doc, 1, XMLTypes, BMCellVShrink);
+      TtaSetItemOff (doc, 1, XMLTypes, BMSelectRow);
+      TtaSetItemOff (doc, 1, XMLTypes, BMCreateRowB);
+      TtaSetItemOff (doc, 1, XMLTypes, BMCreateRowA);
+      TtaSetItemOff (doc, 1, XMLTypes, BMSelectColumn);
+      TtaSetItemOff (doc, 1, XMLTypes, BMCreateColumnB);
+      TtaSetItemOff (doc, 1, XMLTypes, BMCreateColumnA);
+      TtaSetItemOff (doc, 1, XMLTypes, BMPasteBefore);
+      TtaSetItemOff (doc, 1, XMLTypes, BMPasteAfter);
+    }
   TtaChangeButton (doc, 1, iEditor, iconEditor, TRUE);
   TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
   TtaSetItemOn (doc, 1, Edit_, BUndo);
@@ -6895,6 +6936,8 @@ void InitAmaya (NotifyEvent * event)
    SelectionInBIG = FALSE;
    SelectionInSMALL = FALSE;
    Synchronizing = FALSE;
+   TableMenuActive = FALSE;
+   MTableMenuActive = FALSE;
    IdElemName[0] = EOS;
    /* Initialize the LogFile variables */
    CleanUpParsingErrors ();

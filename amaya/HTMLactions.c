@@ -76,8 +76,6 @@ typedef struct _FollowTheLink_context {
 static Document	    HighlightDocument = 0;
 static Element	    HighlightElement = NULL;
 static Attribute    HighLightAttribute = NULL;
-static ThotBool     TableMenuActive = FALSE;
-static ThotBool     MTableMenuActive = FALSE;
 
 /*----------------------------------------------------------------------
    ResetFontOrPhraseOnText: The text element elem should
@@ -1748,9 +1746,9 @@ void FreeDocumentResource (Document doc)
   ----------------------------------------------------------------------*/
 void DocumentClosed (NotifyDialog * event)
 {
+  Document            doc;
 #ifdef _SVG
-  Document tm_doc;
-  View tm_view;
+  View                tm_view;
 #endif  /* _SVG */
 
   if (event == NULL)
@@ -1769,12 +1767,20 @@ void DocumentClosed (NotifyDialog * event)
 #endif /* DAV */
   
 #ifdef _SVG 
-  Get_timeline_of_doc(event->document, &tm_doc, &tm_view);
-  if (tm_doc) {
-    TtaCloseView (tm_doc, tm_view);
-    Free_timeline_of_doc (event->document);	   
-  }
+  Get_timeline_of_doc (event->document, &doc, &tm_view);
+  if (doc)
+    {
+      TtaCloseView (doc, tm_view);
+      Free_timeline_of_doc (event->document);	   
+    }
 #endif /* _SVG */
+  doc = TtaGetSelectedDocument ();
+  if (doc == 0 || doc == event->document)
+    {
+      /* table elements are no longuer selected */
+      TableMenuActive = FALSE;
+      MTableMenuActive = FALSE;
+    }
   FreeDocumentResource (event->document);
   CleanUpParsingErrors ();  
 }
