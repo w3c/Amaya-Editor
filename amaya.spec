@@ -35,10 +35,12 @@ need to know the HTML or CSS languages.
 
 Authors:
 --------
-    Irene.Vatton@w3.org,Ramzi.Guetari@w3.org,Jose.Kahan@w3.org,
-    Vincent.Quint@w3.org,Daniel.Veillard@w3.org
+    Irene.Vatton@w3.org,Jose.Kahan@w3.org, Vincent.Quint@w3.org,
+    Daniel.Veillard@w3.org
 
 %changelog
+* Fri Jul 30 2000 Jose Kahan <kahan@w3.org>
+- Updated the author list
 * Fri Jun 24 1999 Daniel Veillard <Daniel.Veillard@w3.org>
 - Updated for amaya-2.1
 * Fri Oct 16 1998 Daniel Veillard <Daniel.Veillard@w3.org>
