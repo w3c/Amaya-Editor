@@ -52,8 +52,8 @@ height="349">
   <text id="logo" x="304" y="162"
   style="font: 24px helvetica; font-weight: bold; fill: #488B9B;">AMAYA
   </text>
-  <text id="version" x="344px" y="306"
-  style="font: bold 16px italic; fill: #0192BF;">Release 4.3.2
+  <text id="version" x="320px" y="306"
+  style="font: bold 16px italic; fill: #0192BF;">Release 5.0 alpha
   </text>
   <g id="polygonMask" style="stroke: none;">
     <polygon style="fill: #0192BF;" points="30,60  30,230  108,208"
@@ -98,9 +98,10 @@ height="349">
 <div>
 <p><strong>Amaya</strong> est un client Web qui sert à la fois de navigateur
 et d'outil d'édition. Il a été conçu par le <a
-href="http://www.w3.org/">W3C</a> avec pour but essentiel la démonstration des
-nouvelles technologies Web dans un environnement WYSIWYG. La version courante
-supporte les recommendations HTML, XHTML, MathML, SVG, CSS, et  HTTP.</p>
+href="http://www.w3.org/">W3C</a> avec pour but essentiel la démonstration
+des nouvelles technologies Web dans un environnement WYSIWYG. La version
+courante supporte les recommendations HTML, XHTML, MathML, SVG, CSS, et
+ HTTP.</p>
 </div>
 
 <div>
@@ -114,8 +115,8 @@ créer et éditer des <a href="../doc/amaya/Math.html.fr">expressions
 mathématiques</a> complexes et des <a
 href="../doc/amaya/SVG.html.fr">graphiques SVG</a> dans les pages Web. Vous
 pouvez styler vos documents en utilisant les cascades de feuilles de style
-(CSS). Vous pouvez publier des documents HTML et XHTML sur un serveur local ou
-distant à travers HTTP.</p>
+(CSS). Vous pouvez publier des documents HTML et XHTML sur un serveur local
+ou distant à travers HTTP.</p>
 
 <p>La navigation et l'édition sont intimement intégrées. Vous pouvez naviguer
 et éditer des pages Web en même temps. Pour rendre l'édition plus aisée, un
@@ -143,9 +144,9 @@ Défaire/Refaire multi-niveaux et multi-documents.</p>
 <div>
 <h3>Manuel en ligne</h3>
 
-<p>Un manuel d'utilisation est disponible en ligne. Vous pouvez y accéder avec
-le menu Aide, qui affiche chaque section séparément. Vous pouvez également
-l'imprimer : il suffit de suivre le lien <a
+<p>Un manuel d'utilisation est disponible en ligne. Vous pouvez y accéder
+avec le menu Aide, qui affiche chaque section séparément. Vous pouvez
+également l'imprimer : il suffit de suivre le lien <a
 href="../doc/amaya/Manual.html.fr">Manuel en ligne</a>. Vous obtiendrez la
 page de garde. Construisez ensuite le livre entier à l'aide de l'entrée
 "Construire un livre" du menu Spécial et imprimez le résultat</p>
@@ -158,13 +159,13 @@ page de garde. Construisez ensuite le livre entier à l'aide de l'entrée
 logiciel et sa documentation dans n'importe quel but et sans rétribution ou
 droits d'auteur, pourvu que tout le texte de <a
 href="http://www.w3.org/Consortium/Legal/copyright-software.html">déclaration
-du droit de copie du MIT et de l'INRIA</a> apparaisse sur TOUTES les copies du
-logiciel et de sa documentation ou portions de celle-ci, incluant les
+du droit de copie du MIT et de l'INRIA</a> apparaisse sur TOUTES les copies
+du logiciel et de sa documentation ou portions de celle-ci, incluant les
 modifications que vous effectuez.</p>
 </div>
 
-<p class="buttonbar"><span class="button"><a href="http://www.w3.org/">Serveur
-W3C</a></span> <span class="button"><a
+<p class="buttonbar"><span class="button"><a
+href="http://www.w3.org/">Serveur W3C</a></span> <span class="button"><a
 href="http://www.w3.org/Amaya/">Amaya</a></span> <span class="button"><a
 href="../doc/amaya/Manual.html.fr">Manuel en ligne</a></span></p>
 </div>
