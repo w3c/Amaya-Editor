@@ -278,6 +278,21 @@ static void EndPoint (XPointerContextPtr ctx)
  **************************************************/
 
 /*----------------------------------------------------------------------
+  IsValidName
+  returns true if an identifier name can start with this character.
+  ----------------------------------------------------------------------*/
+static int IsValidName (char c)
+{
+  if (isalpha (c)
+      || c == '_'
+      || c == ':')
+    return 1;
+  else
+    return 0;
+}
+
+
+/*----------------------------------------------------------------------
   IsValidChar
   returns true if the character is a valid identifier one.
   ----------------------------------------------------------------------*/
@@ -315,7 +330,7 @@ static int LexAn (XPointerContextPtr ctx)
 	  continue;
 	}
 
-      else if (isdigit(VAL_CUR))  
+      else if (isdigit (VAL_CUR))  
 	{ 
 	  /* *s is a digit */
 	  ctx->tokval = 0;
@@ -328,7 +343,7 @@ static int LexAn (XPointerContextPtr ctx)
 	  return NUM;
 	}
 	  
-      else if (isalpha (VAL_CUR))  
+      else if (IsValidName (VAL_CUR))
 	{
 	  /* *s is a letter */
 	  int p, b = 0;
