@@ -22,8 +22,8 @@
 
 #ifdef _WINDOWS
 #include "resource.h"
-static CHAR_T         currentDocToSave[MAX_LENGTH];
-static CHAR_T         currentPathName[MAX_LENGTH];
+static CHAR_T       currentDocToSave[MAX_LENGTH];
+static CHAR_T       currentPathName[MAX_LENGTH];
 extern HINSTANCE    hInstance;
 
 #ifdef __STDC__
@@ -151,7 +151,7 @@ NotifyElement      *event;
 {
   AttributeType      attrType;
   Attribute          attr;
-  CHAR_T               buff[MAX_LENGTH];
+  CHAR_T             buff[MAX_LENGTH];
   STRING             ptr;
   int                length;
 
@@ -988,12 +988,10 @@ boolean             confirm;
 boolean             use_preconditions;
 #endif
 {
-  LoadedImageDesc *pImage;
   STRING           tempname;
   STRING           msg;
   int              remainder = 500;
-  int              index = 0, len, nb = 0;
-  int              imageType, res;
+  int              res;
 
   msg = TtaGetMemory(remainder);
   if (msg == NULL)

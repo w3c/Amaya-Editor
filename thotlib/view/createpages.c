@@ -37,26 +37,23 @@
 #include "platform_tv.h"
 #include "edit_tv.h"
 
-#include "tree_f.h"
+#include "absboxes_f.h"
+#include "applicationapi_f.h"
 #include "attributes_f.h"
 #include "attrpresent_f.h"
+#include "boxpositions_f.h"
+#include "buildboxes_f.h"
+#include "changeabsbox_f.h"
 #include "createabsbox_f.h"
 #include "createpages_f.h"
-#include "structlist_f.h"
-#include "thotmsg_f.h"
-#include "absboxes_f.h"
-#include "abspictures_f.h"
-#include "buildboxes_f.h"
 #include "memory_f.h"
-#include "structmodif_f.h"
-#include "changeabsbox_f.h"
-#include "presrules_f.h"
-#include "boxpositions_f.h"
-#include "schemas_f.h"
 #include "presvariables_f.h"
-#include "applicationapi_f.h"
-
-
+#include "presrules_f.h"
+#include "schemas_f.h"
+#include "structlist_f.h"
+#include "structmodif_f.h"
+#include "thotmsg_f.h"
+#include "tree_f.h"
 
 
 /*----------------------------------------------------------------------

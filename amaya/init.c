@@ -229,6 +229,7 @@ int            iString;
 #include "HTMLhistory_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLsave_f.h"
+#include "MENUconf_f.h"
 #include "UIcss_f.h"
 #include "styleparser_f.h"
 
@@ -1152,7 +1153,8 @@ View                view;
    /* Dialogue form for answering text, user name and password */
 #  ifndef _WINDOWS
    TtaNewForm (BaseDialog + FormAnswer, TtaGetViewFrame (document, view), 
-      TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION), TRUE, 1, 'L', D_CANCEL);
+		TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION),
+		TRUE, 1, 'L', D_CANCEL);
    TtaNewTextForm (BaseDialog + NameText, BaseDialog + FormAnswer,
 		   TtaGetMessage (AMAYA, AM_NAME), NAME_LENGTH, 1, FALSE);
    TtaNewTextForm (BaseDialog + PasswordText, BaseDialog + FormAnswer,
@@ -1216,7 +1218,7 @@ View                view;
    /* For Windoz have a look to OPENFILENAME structure and
       GetOpenFileName function */
    int               i;
-   CHAR_T              s[MAX_LENGTH];
+   CHAR_T            s[MAX_LENGTH];
 
    CurrentDocument = document;
    /* Dialogue form for open URL or local */
@@ -1227,7 +1229,8 @@ View                view;
    i += ustrlen (&s[i]) + 1;
    ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
 
-   TtaNewSheet (BaseDialog + OpenForm, TtaGetViewFrame (document, view),  TtaGetMessage (AMAYA, AM_OPEN_URL),
+   TtaNewSheet (BaseDialog + OpenForm, TtaGetViewFrame (document, view),
+		TtaGetMessage (AMAYA, AM_OPEN_URL),
 		3, s, TRUE, 2, 'L', D_CANCEL);
    TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,
 		   TtaGetMessage (AMAYA, AM_OPEN_URL), 50, 1, TRUE);
@@ -2519,7 +2522,7 @@ void                GotoZoom (delta)
 int                 delta;
 #endif
 {
-  int               zoom, zoomVal;
+  int               zoom;
   int               doc, view;
 
   /* recalibrate the zoom settings in all the active documents and

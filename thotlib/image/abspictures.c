@@ -23,13 +23,17 @@
 
 #include "ustring.h"
 #include "thot_sys.h"
-
 #include "constmedia.h"
 #include "typemedia.h"
 #include "picture.h"
 
-#include "picture_f.h"
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
+#include "picture_tv.h"
+
+#include "inites_f.h"
 #include "memory_f.h"
+#include "picture_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -163,23 +167,42 @@ int                 imagetype;
 
 
 /*----------------------------------------------------------------------
-   FreePictInfo libere le descriteur d'image.               
+   FreePictInfo  frees the Picture Info structure
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FreePictInfo (int *desc)
+void                FreePictInfo (PictInfo * imageDesc)
 #else  /* __STDC__ */
-void                FreePictInfo (desc)
-int                *desc;
+void                FreePictInfo (imageDesc)
+PictInfo           *imageDesc;
+
 #endif /* __STDC__ */
 {
-   PictInfo        *image;
+  int        i;
 
-   if (desc != NULL)
+   if (imageDesc->PicPixmap != None)
      {
-	image = (PictInfo *) desc;
-	FreePicture (image);
-	TtaFreeMemory (image);
+#      ifndef _WINDOWS
+       FreePixmap (imageDesc->PicMask);
+       imageDesc->PicMask = None;
+#      endif /* _WINDOWS */
+       FreePixmap (imageDesc->PicPixmap);
+       imageDesc->PicPixmap = None;
+       imageDesc->PicXArea = 0;
+       imageDesc->PicYArea = 0;
+       imageDesc->PicWArea = 0;
+       imageDesc->PicHArea = 0;
+       imageDesc->PicWidth = 0;
+       imageDesc->PicHeight = 0;
+       if (imageDesc->PicColors != NULL)
+	 for (i = 0; i < imageDesc->PicNbColors; i++)
+	   TtaFreeThotColor (imageDesc->PicColors[i]);
+       TtaFreeMemory (imageDesc->PicColors);
+       imageDesc->PicColors = NULL;
      }
+
+     if ((imageDesc->PicType >= InlineHandlers) &&
+	 (PictureHandlerTable[imageDesc->PicType].FreePicture != NULL))
+       (*(PictureHandlerTable[imageDesc->PicType].FreePicture)) (imageDesc);
 }
 
 

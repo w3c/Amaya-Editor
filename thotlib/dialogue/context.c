@@ -35,14 +35,14 @@ ThotColorStruct         cblack;
 static ThotColorStruct  cwhite;
 
 #include "appli_f.h"
-#include "textcommands_f.h"
-#include "editcommands_f.h"
 #include "checkermenu_f.h"
+#include "editcommands_f.h"
 #include "font_f.h"
-#include "picture_f.h"
 #include "inites_f.h"
 #include "memory_f.h"
+#include "picture_f.h"
 #include "registry_f.h"
+#include "textcommands_f.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"
@@ -203,7 +203,6 @@ unsigned short     *blue;
 {
    int                 i;
 #ifndef _WINDOWS 
-   int                 maxcolor;
    ThotColorStruct     color;
 
    /* Lookup the color name in the X color name database */
@@ -345,7 +344,7 @@ STRING              name;
    XVisualInfo        *vptr;
    XVisualInfo         vinfo;
    ThotColorStruct     col;
-   int                 i, j;
+   int                 i;
 
    vinfo.visualid = XVisualIDFromVisual (XDefaultVisual (TtDisplay, TtScreen));
    vptr = XGetVisualInfo (TtDisplay, VisualIDMask, &vinfo, &i);

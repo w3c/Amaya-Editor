@@ -8,9 +8,9 @@
 
 extern STRING TtaSkipBlanks ( STRING ptr );
 extern boolean TtaIsBlank ( STRING ptr );
-extern boolean TtaGetEnvInt ( CHAR_T *name,
+extern boolean TtaGetEnvInt ( STRING name,
                               int *value );
-extern boolean TtaGetEnvBoolean ( CHAR_T *name,
+extern boolean TtaGetEnvBoolean ( STRING name,
                                   boolean *value );
 extern STRING TtaGetEnvString ( STRING name );
 extern void TtaClearEnvString ( STRING name );
@@ -26,13 +26,13 @@ extern void TtaSetEnvString ( STRING name,
 extern void TtaSetDefEnvString ( STRING name,
                                  STRING value,
                                  int overwrite );
-extern boolean TtaGetDefEnvInt ( CHAR_T *name,
+extern boolean TtaGetDefEnvInt ( STRING name,
                                  int *value );
-extern boolean TtaGetDefEnvBoolean ( CHAR_T *name,
+extern boolean TtaGetDefEnvBoolean ( STRING name,
                                      boolean *value );
 extern STRING TtaGetDefEnvString ( STRING name );
 extern void TtaSaveAppRegistry ( void );
-extern void TtaInitializeAppRegistry ( STRING appArgv0 );
+extern void TtaInitializeAppRegistry ( char* appArgv0 );
 extern int SearchFile ( STRING fileName,
                         int dir,
                         STRING fullName );
@@ -41,9 +41,9 @@ extern int SearchFile ( STRING fileName,
 
 extern STRING TtaSkipBlanks (/* STRING ptr */);
 extern boolean TtaIsBlank (/* STRING ptr */);
-extern boolean TtaGetEnvInt (/* CHAR_T *name,
+extern boolean TtaGetEnvInt (/* STRING name,
                                 int *value */);
-extern boolean TtaGetEnvBoolean (/* CHAR_T *name,
+extern boolean TtaGetEnvBoolean (/* STRING name,
                                     boolean *value */);
 extern STRING TtaGetEnvString (/* STRING name */);
 extern void TtaClearEnvString (/* STRING name */);
@@ -59,13 +59,13 @@ extern void TtaSetEnvString (/* STRING name,
 extern void TtaSetDefEnvString (/* STRING name,
                                    STRING value,
                                    int overwrite */);
-extern boolean TtaGetDefEnvInt (/* CHAR_T *name,
+extern boolean TtaGetDefEnvInt (/* STRING name,
                                    int *value */);
-extern boolean TtaGetDefEnvBoolean (/* CHAR_T *name,
+extern boolean TtaGetDefEnvBoolean (/* STRING name,
                                        boolean *value */);
 extern STRING TtaGetDefEnvString (/* STRING name */);
 extern void TtaSaveAppRegistry (/* void */);
-extern void TtaInitializeAppRegistry (/* STRING appArgv0 */);
+extern void TtaInitializeAppRegistry (/* char* appArgv0 */);
 extern int SearchFile (/* STRING fileName,
                           int dir,
                           STRING fullName */);

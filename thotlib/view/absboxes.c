@@ -179,7 +179,7 @@ int                 frame;
 	    if (pAb->AbPresentationBox)
 	      {
 		/* c'est une boite de presentation image */
-		FreePictInfo (pAb->AbPictInfo);
+		FreePictInfo ((PictInfo *)(pAb->AbPictInfo));
 		pAb->AbPictInfo = NULL;
 	      }
 	    break;
@@ -189,7 +189,7 @@ int                 frame;
 		/* in this particular case we need to free filename */
 		TtaFreeMemory (((PictInfo *)(pAb->AbPictBackground))->PicFileName);
 		/* ce n'est pas un element image */
-		FreePictInfo (pAb->AbPictBackground);
+		FreePictInfo ((PictInfo *)(pAb->AbPictBackground));
 		pAb->AbPictBackground = NULL;
 	      }
 	    break;

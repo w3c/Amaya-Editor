@@ -40,7 +40,7 @@
 #include "changeabsbox_f.h"
 #include "content_f.h"
 #include "font_f.h"
-#include "picture_f.h"
+#include "abspictures_f.h"
 #include "memory_f.h"
 #include "structselect_f.h"
 #include "thotmsg_f.h"
@@ -210,7 +210,7 @@ Document            document;
 	         {
 		  /* Releases the  pixmap */
 		  if (((PtrElement) element)->ElPictInfo != NULL)
-		     FreePicture ((PictInfo *) (((PtrElement) element)->ElPictInfo));
+		     FreePictInfo ((PictInfo *) (((PtrElement) element)->ElPictInfo));
 	         }
 	      }
 #ifndef NODISPLAY

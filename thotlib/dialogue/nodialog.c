@@ -13,19 +13,17 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "picture.h"
 #include "frame.h"
 
 #include "memory_f.h"
 
 /* Les fonctions vides pour l'edition de lien */
-
-
 #ifdef __STDC__
 Pixmap              TtaCreatePixmapLogo (STRING *data)
 #else  /* __STDC__ */
 Pixmap              TtaCreatePixmapLogo (data)
-STRING*             data;
-
+STRING             *data;
 #endif /* __STDC__ */
 {
    return None;
@@ -37,7 +35,16 @@ void                ConfigTranslateSSchema (PtrSSchema pSS)
 #else  /* __STDC__ */
 void                ConfigTranslateSSchema (pSS)
 PtrSSchema          pSS;
+#endif /* __STDC__ */
+{
+}
 
+#ifdef __STDC__
+void                DrawAddAttr (PtrAttribute * pAttr, PtrElement pEl)
+#else  /* __STDC__ */
+void                DrawAddAttr (pAttr, pEl)
+PtrAttribute       *pAttr;
+PtrElement          pEl;
 #endif /* __STDC__ */
 {
 }
@@ -46,15 +53,12 @@ void                RedisplayCopies ()
 {
 }
 
-void                DrawAddAttr ()
-{
-}
 #ifdef __STDC__
 void                DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
 void                DrawChar (car, frame, x, y, font, RO, active, fg)
-UCHAR_T       car;
+UCHAR_T             car;
 int                 frame;
 int                 x;
 int                 y;
@@ -62,7 +66,6 @@ ptrfont             font;
 int                 RO;
 int                 active;
 int                 fg;
-
 #endif /* __STDC__ */
 {
 }

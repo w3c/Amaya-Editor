@@ -9,6 +9,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "picture.h"
 #include "language.h"
 #include "appaction.h"
 #include "fileaccess.h"
@@ -28,7 +29,6 @@ boolean             CallEventType (NotifyEvent * notifyEvent, boolean pre)
 boolean             CallEventType (notifyEvent, pre)
 NotifyEvent        *notifyEvent;
 boolean             pre;
-
 #endif /* __STDC__ */
 {
    return FALSE;
@@ -40,30 +40,16 @@ boolean             CallEventAttribute (NotifyAttribute * notifyAttr, boolean pr
 boolean             CallEventAttribute (notifyAttr, pre)
 NotifyAttribute    *notifyAttr;
 boolean             pre;
-
 #endif /* __STDC__ */
 {
    return FALSE;
 }
 
 #ifdef __STDC__
-void                FreePictInfo (int *desc)
-
+void                FreePictInfo (PictInfo *esc)
 #else  /* __STDC__ */
 void                FreePictInfo (desc)
-int                *desc;
-
-#endif /* __STDC__ */
-{
-}
-
-#ifdef __STDC__
-void                FreePicture (int *desc)
-
-#else  /* __STDC__ */
-void                FreePicture (desc)
-int                *desc;
-
+PictInfo           *desc;
 #endif /* __STDC__ */
 {
 }
@@ -75,7 +61,6 @@ void                AddInSelection (PtrElement pEl, boolean dernier)
 void                AddInSelection (pEl, dernier)
 PtrElement          pEl;
 boolean             dernier;
-
 #endif /* __STDC__ */
 {
 }
@@ -87,7 +72,6 @@ void                FreeAbEl (PtrElement pEl)
 #else  /* __STDC__ */
 void                FreeAbEl (pEl)
 PtrElement          pEl;
-
 #endif /* __STDC__ */
 {
 }
@@ -97,7 +81,6 @@ void                ConfigTranslateSSchema (PtrSSchema pSS)
 #else  /* __STDC__ */
 void                ConfigTranslateSSchema (pSS)
 PtrSSchema          pSS;
-
 #endif /* __STDC__ */
 {
 }

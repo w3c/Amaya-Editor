@@ -2624,7 +2624,7 @@ PtrDocument pDoc;
        pAb->AbPictBackground != NULL)
      {
        TtaFreeMemory ((((PictInfo *) (pAb->AbPictBackground))->PicFileName));
-       FreePictInfo ((int *) (pAb->AbPictBackground));
+       FreePictInfo ((PictInfo *) (pAb->AbPictBackground));
        pAb->AbPictBackground = NULL;
      }
    else if (pPres->PrPresFunction == FnPictureMode &&

@@ -21,6 +21,7 @@
 
 #include "EDITstyle_f.h"
 #include "HTMLimage_f.h"
+#include "html2thot_f.h"
 #include "styleparser_f.h"
 #include "undo.h"
 

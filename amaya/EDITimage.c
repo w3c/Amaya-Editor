@@ -31,16 +31,17 @@
 #define RepeatImage    10
 #define FormBackground 11
 #define ImageAlt       12
-#define IMAGE_MAX_REF  13
+#define FormAlt        13
+#define IMAGE_MAX_REF  14
 
 static Document     BgDocument;
 static int          BaseImage;
 static int          RepeatValue;
-static CHAR_T         DirectoryImage[MAX_LENGTH];
-static CHAR_T         LastURLImage[MAX_LENGTH];
-static CHAR_T         ImageName[MAX_LENGTH];
-static CHAR_T         ImgFilter[NAME_LENGTH];
-static CHAR_T         ImgAlt[NAME_LENGTH];
+static CHAR_T       DirectoryImage[MAX_LENGTH];
+static CHAR_T       LastURLImage[MAX_LENGTH];
+static CHAR_T       ImageName[MAX_LENGTH];
+static CHAR_T       ImgFilter[NAME_LENGTH];
+static CHAR_T       ImgAlt[NAME_LENGTH];
 
 #include "AHTURLTools_f.h"
 #include "HTMLactions_f.h"
@@ -126,6 +127,8 @@ STRING              data;
   val = (int) data;
   switch (ref - BaseImage)
     {
+    case FormAlt:
+      break;
     case FormImage:
     case FormBackground:
       if (val == 2)
@@ -408,12 +411,320 @@ void                InitImage ()
 
 
 /*----------------------------------------------------------------------
+   GetAlt gets the Alt value for an Area                            
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         GetAlt (Document document, View view)
+#else  /* __STDC__ */
+static void         GetAlt (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+  ImgAlt[0] = EOS;
+#ifndef _WINDOWS
+  TtaNewForm (BaseImage + FormAlt, TtaGetViewFrame (document, view),
+	       TtaGetMessage (AMAYA, AM_ALT),
+	       TRUE, 1, 'L', D_DONE);
+   TtaNewTextForm (BaseImage + ImageAlt, BaseImage + FormAlt,
+		   TtaGetMessage (AMAYA, AM_ALT), 50, 1, TRUE);
+   TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormAlt, " ");
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (BaseImage + FormAlt, FALSE);
+   TtaWaitShowDialogue ();
+   while (ImgAlt[0] == EOS)
+     {
+       TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormAlt,
+			   TtaGetMessage (AMAYA, AM_ALT_MISSING));
+       TtaShowDialogue (BaseImage + FormAlt, FALSE);
+       TtaWaitShowDialogue ();
+     }
+   TtaDestroyDialogue (BaseImage + FormAlt);
+#   
+#  else  /* _WINDOWS */
+   /*CreateAltDlgWindow (TtaGetViewFrame (document, view),
+			       BaseImage + FormAlt,
+			       TtaGetMessage (AMAYA, AM_ALT), label);
+   */
+#  endif /* _WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+  CreateAreaMap
+  create an area in a map. shape indicates the shape of the area to be
+  created:
+  'R': rectangle
+  'a': circle
+  'p': polygon
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         CreateAreaMap (Document doc, View view, STRING shape)
+#else  /* __STDC__ */
+static void         CreateAreaMap (document, view, shape)
+Document            document;
+View                view;
+STRING              shape;
+
+#endif /* __STDC__ */
+{
+   Element             el, map, parent, image, child, newElem;
+   ElementType         elType;
+   AttributeType       attrType;
+   Attribute           attr, attrRef, attrShape, attrRefimg;
+   STRING              url;
+   int                 length, w, h;
+   int                 firstchar, lastchar;
+   DisplayMode         dispMode;
+
+   /* get the first selected element */
+   TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
+   if (el == NULL)
+     /* no selection. Nothing to do */
+     return;
+
+   elType = TtaGetElementType (el);
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+     /* not within an HTML element. Nothing to do */
+     return;
+
+   /* ask Thot to stop displaying changes made in the document */
+   dispMode = TtaGetDisplayMode (doc);
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DeferredDisplay);
+
+   TtaOpenUndoSequence (doc, el, el, 0, 0);
+   newElem = NULL;
+   attrRefimg = NULL;
+
+   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+     /* an image is selected. Create an area for it */
+     {
+        url = (STRING) TtaGetMemory (MAX_LENGTH);
+	image = el;
+	/* Search the USEMAP attribute */
+	attrType.AttrSSchema = elType.ElSSchema;
+	attrType.AttrTypeNum = HTML_ATTR_USEMAP;
+	attr = TtaGetAttribute (image, attrType);
+	map = NULL;
+	if (attr != NULL)
+	  {
+	     /* Search the MAP element associated with IMG element */
+	     length = TtaGetTextAttributeLength (attr) + 1;
+	     TtaGiveTextAttributeValue (attr, url, &length);
+	     if (url[0] == '#')
+		map = SearchNAMEattribute (doc, &url[1], NULL);
+	  }
+	if (map == NULL)
+	  {
+	     /* create the MAP element */
+	     elType.ElTypeNum = HTML_EL_MAP;
+	     map = TtaNewElement (doc, elType);
+	     newElem = map;
+	     parent = image;
+	     do
+	       {
+		  el = parent;
+		  parent = TtaGetParent (el);
+		  elType = TtaGetElementType (parent);
+	       }
+	     while (elType.ElTypeNum != HTML_EL_BODY);
+	     TtaInsertSibling (map, el, FALSE, doc);
+	     CreateTargetAnchor (doc, map, FALSE);
+	     attrType.AttrTypeNum = HTML_ATTR_NAME;
+	     attr = TtaGetAttribute (map, attrType);
+
+	     /* create the USEMAP attribute for the image */
+	     length = TtaGetTextAttributeLength (attr) + 1;
+	     url[0] = '#';
+	     TtaGiveTextAttributeValue (attr, &url[1], &length);
+	     attrType.AttrTypeNum = HTML_ATTR_USEMAP;
+	     attr = TtaGetAttribute (image, attrType);
+	     if (attr == NULL)
+	       {
+		 attr = TtaNewAttribute (attrType);
+		 TtaAttachAttribute (image, attr, doc);
+	         TtaSetAttributeText (attr, url, image, doc);
+		 TtaRegisterAttributeCreate (attr, image, doc);
+	       }
+	     else
+	       {
+		 TtaRegisterAttributeReplace (attr, image, doc);
+	         TtaSetAttributeText (attr, url, image, doc);
+	       }
+	     /* create the Ref_IMG attribute */
+	     attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
+	     attrRefimg = TtaNewAttribute (attrType);
+	     TtaAttachAttribute (map, attrRefimg, doc);
+	     TtaSetAttributeReference (attrRefimg, map, doc, image, doc);
+	  }
+	TtaFreeMemory (url);
+     }
+   else
+     /* the selected element is not an image */
+     {
+	/* is the selection within a MAP element ? */
+	if (elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT)
+	  {
+	     el = TtaGetParent (el);
+	     map = TtaGetParent (el);
+	  }
+	else if (elType.ElTypeNum == HTML_EL_AREA)
+	   map = TtaGetParent (el);
+	else if (elType.ElTypeNum == HTML_EL_MAP)
+	   map = el;
+	else
+	   /* cannot create the AREA */
+	   map = NULL;
+
+	if (map)
+	  {
+	    /* Search the Ref_IMG attribute */
+	    attrType.AttrSSchema = elType.ElSSchema;
+	    attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
+	    attr = TtaGetAttribute (map, attrType);
+	    image = NULL;
+	    if (attr != NULL)
+	      {
+		/* Search the IMAGE element associated with the MAP */
+		length = MAX_LENGTH;
+		url = (STRING) TtaGetMemory (MAX_LENGTH);
+		TtaGiveReferenceAttributeValue (attr, &image, url, &length);
+		TtaFreeMemory (url);
+	      }
+	  }
+     }
+
+   if (map == NULL || image == NULL)
+     /* Nothing to do. Just reset display mode */
+     TtaSetDisplayMode (doc, dispMode);
+   else
+     /* Create an AREA element */
+     {
+	elType.ElTypeNum = HTML_EL_AREA;
+	/* Should we ask the user to give coordinates */
+	if (shape[0] == 'R' || shape[0] == 'a')
+	   TtaAskFirstCreation ();
+
+	el = TtaNewTree (doc, elType, "");
+	if (!newElem)
+	   newElem = el;
+	child = TtaGetLastChild (map);
+	if (child == NULL)
+	   TtaInsertFirstChild (&el, map, doc);
+	else
+	   TtaInsertSibling (el, child, FALSE, doc);
+	child = TtaGetFirstChild (el);
+	/* For polygons, sets the value after the Ref_IMG attribute is created */
+	if (shape[0] != 'p')
+	   TtaSetGraphicsShape (child, shape[0], doc);
+
+	/* create the shape attribute */
+	attrType.AttrTypeNum = HTML_ATTR_shape;
+	attrShape = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attrShape, doc);
+
+	/* Create the coords attribute */
+	attrType.AttrTypeNum = HTML_ATTR_coords;
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attr, doc);
+
+	if (shape[0] == 'R')
+	   TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_rectangle,
+				 el, doc);
+	else if (shape[0] == 'a')
+	   TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_circle,
+				 el, doc);
+	else if (shape[0] == 'p')
+	  {
+	     /* create the AreaRef_IMG attribute */
+	     attrType.AttrTypeNum = HTML_ATTR_AreaRef_IMG;
+	     attrRef = TtaNewAttribute (attrType);
+	     TtaAttachAttribute (el, attrRef, doc);
+	     TtaSetAttributeReference (attrRef, el, doc, image, doc);
+	     TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_polygon,
+				   el, doc);
+	     TtaGiveBoxSize (image, doc, 1, UnPixel, &w, &h);
+	     /*TtaChangeLimitOfPolyline (child, UnPixel, w, h, doc);*/
+	  }
+	/* ask Thot to display changes made in the document */
+	TtaSetDisplayMode (doc, dispMode);
+	TtaSelectElement (doc, child);
+	if (shape[0] == 'p')
+	   TtcInsertGraph (doc, 1, 'p');
+	/* Compute coords attribute */
+	SetAreaCoords (doc, el, 0);
+
+	/* create the attribute ALT */
+	attrType.AttrTypeNum = HTML_ATTR_ALT;
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attr, doc);
+	GetAlt (doc, view);
+	TtaSetAttributeText (attr, ImgAlt, el, doc);
+	ImgAlt[0] = EOS;
+	/* FrameUpdating creation of Area and selection of destination */
+	SelectDestination (doc, el, FALSE);
+     }
+   if (newElem)
+      TtaRegisterElementCreate (newElem, doc);
+   /* if a map has been created, register its Ref_IMG attribute to
+      avoid troubles when Undoing the command: function DeleteMap
+      would delete the USEMAP attribute from the IMG otherwise.
+      Undo already deletes this attribute! */
+   if (attrRefimg)
+      TtaRegisterAttributeCreate (attrRefimg, map, doc);
+   TtaCloseUndoSequence (doc);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateAreaRect (Document doc, View view)
+#else  /* __STDC__ */
+void                CreateAreaRect (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   CreateAreaMap (doc, view, "R");
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateAreaCircle (Document doc, View view)
+#else  /* __STDC__ */
+void                CreateAreaCircle (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   CreateAreaMap (doc, view, "a");
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateAreaPoly (Document doc, View view)
+#else  /* __STDC__ */
+void                CreateAreaPoly (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   CreateAreaMap (doc, view, "p");
+}
+
+/*----------------------------------------------------------------------
    GetImageURL initializes the Picture form                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 STRING              GetImageURL (Document document, View view)
 #else  /* __STDC__ */
-STRING              GetImageURL (Document document, View view)
+STRING              GetImageURL (document, view)
 Document            document;
 View                view;
 
@@ -436,7 +747,7 @@ View                view;
    TtaNewSheet (BaseImage + FormImage, TtaGetViewFrame (document, view), TtaGetMessage (AMAYA, AM_BUTTON_IMG),
 		3, s, TRUE, 2, 'L', D_CANCEL);
    TtaNewTextForm (BaseImage + ImageURL, BaseImage + FormImage,
-		   TtaGetMessage (AMAYA, AM_OPEN_URL), 50, 1, TRUE);
+		   TtaGetMessage (AMAYA, AM_BUTTON_IMG), 50, 1, TRUE);
    TtaNewLabel (BaseImage + ImageLabel, BaseImage + FormImage, " ");
    TtaNewTextForm (BaseImage + ImageAlt, BaseImage + FormImage,
 		   TtaGetMessage (AMAYA, AM_ALT), 50, 1, TRUE);

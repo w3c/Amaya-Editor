@@ -1853,7 +1853,7 @@ int                 frame;
 	     else if (pAb->AbLeafType == LtPicture)
 	       {
 		 UnmapImage((PictInfo *)pCurrentBox->BxPictInfo);
-		 FreePicture ((PictInfo *)pAb->AbPictInfo);
+		 FreePictInfo ((PictInfo *)pAb->AbPictInfo);
 	       }
 	     else if (pCurrentBox->BxType == BoSplit)
 	       {
@@ -2507,7 +2507,7 @@ int                 frame;
 			      if (pAb->AbChange)
 				{
 				   /* the picture change */
-				   FreePicture ((PictInfo *) pBox->BxPictInfo);
+				   FreePictInfo ((PictInfo *) pBox->BxPictInfo);
 				   SetCursorWatch (frame);
 				   LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
 				   ResetCursorWatch (frame);

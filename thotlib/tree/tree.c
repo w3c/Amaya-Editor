@@ -22,6 +22,7 @@
 #include "res.h"
 #include "labelAllocator.h"
 #include "appdialogue.h"
+#include "picture.h"
 
 #define THOT_EXPORT extern
 #include "select_tv.h"
@@ -3340,7 +3341,7 @@ PtrDocument         pDoc;
 	       /* frees the image descriptor */
 	       if (pEl1->ElLeafType == LtPicture)
 		 {
-		   FreePictInfo (pEl1->ElPictInfo);
+		   FreePictInfo ((PictInfo *)(pEl1->ElPictInfo));
 		   pEl1->ElPictInfo = NULL;
 		 }
 	     }

@@ -32,6 +32,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern int          TtaGetMessageTable (CONST STRING msgName, int msgNumber);
 extern STRING       TtaGetMessage (int, int);
 extern void         TtaDisplaySimpleMessage (int, int, int);
 extern void         TtaDisplaySimpleMessageString (int, int, int, STRING);
@@ -39,6 +40,7 @@ extern void         TtaDisplaySimpleMessageNum (int, int, int, int);
 extern void	        TtaDisplayMessage (int msgType, STRING fmt, ...);
 #else  /* __STDC__ */
 
+extern int          TtaGetMessageTable ();
 extern STRING       TtaGetMessage ();
 extern void         TtaDisplaySimpleMessage ();
 extern void         TtaDisplaySimpleMessageString ();

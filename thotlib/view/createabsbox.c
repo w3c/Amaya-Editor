@@ -1974,7 +1974,7 @@ boolean             completeCreator;
 		       if (!pAb->AbElement->ElTerminal ||
 			   pAb->AbElement->ElLeafType != LtPicture)
 			 /* ce n'est pas un element image */
-			 FreePictInfo (pAb->AbPictInfo);
+			 FreePictInfo ((PictInfo *)(pAb->AbPictInfo));
 		       pAb->AbPictInfo = NULL;
 		     }
 		 }
@@ -1983,7 +1983,7 @@ boolean             completeCreator;
 		 {
 		   /* in this particular case we need to free filename */
 		   TtaFreeMemory (((PictInfo *)(pAb->AbPictBackground))->PicFileName);
-		   FreePictInfo (pAb->AbPictBackground);
+		   FreePictInfo ((PictInfo *)(pAb->AbPictBackground));
 		   pAb->AbPictBackground = NULL;
 		 }
 	       FreeAbstractBox (pAb);

@@ -43,7 +43,6 @@
 #include "actions_f.h"
 #include "tree_f.h"
 #include "exceptions_f.h"
-#include "abspictures_f.h"
 #include "externalref_f.h"
 
 /*--------------------------------------------------------------
@@ -54,11 +53,9 @@
 --------------------------------------------------------------*/
 
 #ifdef __STDC__
-void      HierarchicalCheckHiddenAccess (PtrElement pEl,
-					           boolean * isHidden)
+void      HierarchicalCheckHiddenAccess (PtrElement pEl, boolean * isHidden)
 #else  /* __STDC__ */
-void      HierarchicalCheckHiddenAccess (pEl,
-					           isHidden)
+void      HierarchicalCheckHiddenAccess (pEl, isHidden)
 PtrElement pEl;
 boolean  *isHidden;
 #endif /* __STDC__ */

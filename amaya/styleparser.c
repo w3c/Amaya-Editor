@@ -597,7 +597,7 @@ int                  len
       break;
     case PRBackgroundPicture:
       if (settings->value.pointer != NULL)
-	sprintf (buffer, "background-image: url(%s)", settings->value.pointer);
+	sprintf (buffer, "background-image: url(%s)", (char *)(settings->value.pointer));
       else
 	sprintf (buffer, "background-image: none");
       break;

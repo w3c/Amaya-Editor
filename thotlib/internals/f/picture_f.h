@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void FreePixmap ( Pixmap pixmap );
 extern Picture_Report PictureFileOk ( STRING fileName,
                                       int *typeImage );
 extern void InitPictureHandlers ( boolean printing );
@@ -24,7 +25,6 @@ extern unsigned char* ZoomPicture ( unsigned char *cpic,
 extern void LoadPicture ( int frame,
                           PtrBox box,
                           PictInfo * imageDesc );
-extern void FreePicture ( PictInfo * imageDesc );
 extern int GetPictureType ( int GUIIndex );
 extern int GetPictTypeIndex ( int picType );
 extern int GetPictPresIndex ( PictureScaling picPresent );
@@ -35,6 +35,7 @@ extern void LittleXBigEndian ( unsigned char *b,
 
 #else /* __STDC__ */
 
+extern void FreePixmap (/* Pixmap pixmap */);
 extern Picture_Report PictureFileOk (/* STRING fileName,
                                         int *typeImage */);
 extern void InitPictureHandlers (/* boolean printing */);
@@ -53,7 +54,6 @@ extern unsigned char* ZoomPicture (/* unsigned char *cpic,
 extern void LoadPicture (/* int frame,
                             PtrBox box,
                             PictInfo * imageDesc */);
-extern void FreePicture (/* PictInfo * imageDesc */);
 extern int GetPictureType (/* int GUIIndex */);
 extern int GetPictTypeIndex (/* int picType */);
 extern int GetPictPresIndex (/* PictureScaling picPresent */);

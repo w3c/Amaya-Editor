@@ -9,7 +9,7 @@
 extern void NewPictInfo ( PtrAbstractBox pAb,
                           STRING filename,
                           int imagetype );
-extern void FreePictInfo ( int *desc );
+extern void FreePictInfo ( PictInfo * imageDesc );
 extern void CopyPictInfo ( int *Imdcopie,
                            int *Imdsource );
 
@@ -18,7 +18,7 @@ extern void CopyPictInfo ( int *Imdcopie,
 extern void NewPictInfo (/* PtrAbstractBox pAb,
                             STRING filename,
                             int imagetype */);
-extern void FreePictInfo (/* int *desc */);
+extern void FreePictInfo (/* PictInfo * imageDesc */);
 extern void CopyPictInfo (/* int *Imdcopie,
                              int *Imdsource */);
 

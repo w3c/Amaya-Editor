@@ -47,6 +47,7 @@
 
 static Pixmap   iconGraph;
 static Pixmap   iconGraphNo;
+static int      GraphButton;
 static Pixmap   mIcons[12];
 static int      GraphDialogue;
 static boolean  PaletteDisplayed = FALSE;
@@ -1336,6 +1337,7 @@ View                view;
   CreateGraphicsDlgWindow (GraphDialogue, FormGraph, MenuGraph, TtaGetThotWindow (GetWindowNumber (doc, view)));
 # endif /* _WINDOWS */
 }
+#endif /* GRAPHML */
 
 /*----------------------------------------------------------------------
    AddGraphicsButton    
@@ -1348,7 +1350,11 @@ Document            doc;
 View                view;
 #endif
 {
-  TtaAddButton (doc, 1, iconGraph, ShowGraphicsPalette, TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS), TBSTYLE_BUTTON, TRUE);
+#ifdef GRAPHML
+  GraphButton = TtaAddButton (doc, 1, iconGraph, ShowGraphicsPalette,
+			      TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS),
+			      TBSTYLE_BUTTON, TRUE);
+#endif /* GRAPHML */
 }
 
 /*----------------------------------------------------------------------
@@ -1362,9 +1368,10 @@ Document          doc;
 boolean           state;
 #endif /* __STDC__ */
 {
+#ifdef GRAPHML
   if (state)
-    TtaChangeButton (doc, view, 24, iconGraph, state);
+    TtaChangeButton (doc, view, GraphButton, iconGraph, state);
   else
-    TtaChangeButton (doc, view, 24, iconGraphNo, state);
-}
+    TtaChangeButton (doc, view, GraphButton, iconGraphNo, state);
 #endif /* GRAPHML */
+}

@@ -164,6 +164,186 @@ Document            doc;
   return (NULL);
 }
 
+
+/*----------------------------------------------------------------------
+   SetAreaCoords computes the coords attribute value from x, y,       
+   width and height of the box.                           
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                SetAreaCoords (Document document, Element element, int attrNum)
+#else  /* __STDC__ */
+void                SetAreaCoords (document, element, attrNum)
+Document            document;
+Element             element;
+int                 attrNum;
+#endif /* __STDC__ */
+{
+   ElementType         elType;
+   Element             child, map;
+   AttributeType       attrType;
+   Attribute           attrCoords, attrX, attrY;
+   Attribute           attrW, attrH, attrShape;
+   STRING              text, buffer;
+   int                 x1, y1, x2, y2;
+   int                 w, h;
+   int                 length, shape, i;
+
+   /* Is it an AREA element */
+   elType = TtaGetElementType (element);
+   if (elType.ElTypeNum != HTML_EL_AREA)
+      return;
+   /* get size of the map */
+   map = TtaGetParent (element);
+   TtaGiveBoxSize (map, document, 1, UnPixel, &w, &h);
+   /* Search the coords attribute */
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = HTML_ATTR_coords;
+   attrCoords = TtaGetAttribute (element, attrType);
+   if (attrCoords == NULL)
+      return;
+
+   /* Search the shape attribute */
+   attrType.AttrTypeNum = HTML_ATTR_shape;
+   attrShape = TtaGetAttribute (element, attrType);
+   if (attrShape == NULL)
+      return;
+   shape = TtaGetAttributeValue (attrShape);
+   /* prepare the coords string */
+   length = 2000;
+   text = TtaGetMemory (length);
+   if (shape == HTML_ATTR_shape_VAL_rectangle || shape == HTML_ATTR_shape_VAL_circle)
+     {
+	/* Search the x_coord attribute */
+	attrType.AttrTypeNum = HTML_ATTR_x_coord;
+	attrX = TtaGetAttribute (element, attrType);
+	if (attrX == NULL)
+	   return;
+	/* Search the y_coord attribute */
+	attrType.AttrTypeNum = HTML_ATTR_y_coord;
+	attrY = TtaGetAttribute (element, attrType);
+	if (attrY == NULL)
+	   return;
+	/* Search the width attribute */
+	attrType.AttrTypeNum = HTML_ATTR_IntWidthPxl;
+	attrW = TtaGetAttribute (element, attrType);
+	if (attrW == NULL)
+	   return;
+	/* Search the height attribute */
+	attrType.AttrTypeNum = HTML_ATTR_height_;
+	attrH = TtaGetAttribute (element, attrType);
+	if (attrH == NULL)
+	   return;
+
+	x1 = TtaGetAttributeValue (attrX);
+	if (x1 < 0)
+	  {
+	    /* out of left side */
+	    x1 = 0;
+	    TtaSetAttributeValue (attrX, x1, element, document);	    
+	  }
+	y1 = TtaGetAttributeValue (attrY);
+	if (y1 < 0)
+	  {
+	    /* out of top side */
+	    y1 = 0;
+	    TtaSetAttributeValue (attrY, y1, element, document);	    
+	  }
+	x2 = TtaGetAttributeValue (attrW);
+	if (x1 + x2 > w)
+	  {
+	    /* out of right side */
+	    if (x1 > w - 4)
+	      {
+		if (x2 < w)
+		  x1 = w - x2;
+		else
+		  {
+		    x1 = 0;
+		    x2 = w;
+		    TtaSetAttributeValue (attrW, x2, element, document);
+		  }
+		TtaSetAttributeValue (attrX, x1, element, document);	    
+	      }
+	    else
+	      {
+		x2 = w - x1;
+		TtaSetAttributeValue (attrW, x2, element, document);
+	      }	    
+	  }
+	y2 = TtaGetAttributeValue (attrH);
+	if (y1 + y2 > h)
+	  {
+	    /* out of bottom side */
+	    if (y1 > h - 4)
+	      {
+		if (y2 < h)
+		  y1 = h - y2;
+		else
+		  {
+		    y1 = 0;
+		    y2 = h;
+		    TtaSetAttributeValue (attrH, y2, element, document);
+		  }
+		TtaSetAttributeValue (attrY, y1, element, document);	    
+	      }
+	    else
+	      {
+		y2 = h - y1;
+		TtaSetAttributeValue (attrH, y2, element, document);
+	      }    
+	  }
+	if (shape == HTML_ATTR_shape_VAL_rectangle)
+	   sprintf (text, "%d,%d,%d,%d", x1, y1, x1 + x2, y1 + y2);
+	else
+	  {
+	     /* to make a circle, height and width have to be equal */
+	     if ((attrNum == 0 && x2 > y2) ||
+		 attrNum == HTML_ATTR_height_)
+	       {
+		 /* we need to update the width */
+		 w = y2;
+		 h = w / 2;
+		 TtaSetAttributeValue (attrW, w, element, document);
+	       }
+	     else if ((attrNum == 0 && x2 < y2) ||
+		      attrNum == HTML_ATTR_IntWidthPxl)
+	       {
+		 /* we need to update the height */
+		 w = x2;
+		 h = w / 2;
+		 TtaSetAttributeValue (attrH, w, element, document);
+	       }
+	     else
+	       if (x2 > y2)
+		 h = y2 / 2;
+	       else
+		 h = x2 / 2;
+	     sprintf (text, "%d,%d,%d", x1 + h, y1 + h, h);
+	  }
+     }
+   else if (shape == HTML_ATTR_shape_VAL_polygon)
+     {
+	child = TtaGetFirstChild (element);
+	length = TtaGetPolylineLength (child);
+	/* keep points */
+	i = 1;
+	buffer = (STRING) TtaGetMemory (100);
+	text[0] = EOS;
+	while (i <= length)
+	  {
+	     TtaGivePolylinePoint (child, i, UnPixel, &x1, &y1);
+	     sprintf (buffer, "%d,%d", x1, y1);
+	     ustrcat (text, buffer);
+	     if (i < length)
+	       ustrcat (text, ",");
+	     i++;
+	  }
+	TtaFreeMemory (buffer);
+     }
+   TtaSetAttributeText (attrCoords, text, element, document);
+   TtaFreeMemory (text);
+}
+
 /*----------------------------------------------------------------------
   UpdateImageMap sets or updates Ref_IMG MAP attributes for the current
   image.
@@ -798,9 +978,3 @@ int                 flags;
 
    return (stopped_flag);
 }
-
-
-
-
-
-

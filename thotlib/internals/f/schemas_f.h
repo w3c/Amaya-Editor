@@ -29,6 +29,7 @@ extern PtrSSchema LoadExtension ( Name SSchName,
 extern boolean FreeNature ( PtrSSchema pSS,
                             PtrSSchema pNatureSS );
 extern void FreeDocumentSchemas ( PtrDocument pDoc );
+extern void BuildDocNatureTable ( PtrDocument pDoc );
 
 #else /* __STDC__ */
 
@@ -55,6 +56,7 @@ extern PtrSSchema LoadExtension (/* Name SSchName,
 extern boolean FreeNature (/* PtrSSchema pSS,
                               PtrSSchema pNatureSS */);
 extern void FreeDocumentSchemas (/* PtrDocument pDoc */);
+extern void BuildDocNatureTable (/* PtrDocument pDoc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

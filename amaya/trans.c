@@ -14,6 +14,7 @@
 /* Included headerfiles */
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "message.h"
 #include "trans.h"
 #include "tree.h"
 
@@ -839,9 +840,8 @@ Element subTree;
 Document doc;
 #endif
 {
-  CHAR_T		      tmpfilename[25];
-  CHAR_T		      charRead;
-  STRING              s;
+  CHAR_T	      tmpfilename[25];
+  CHAR_T	      charRead;
   FILE		     *inputFile = NULL;
   int                 len;
   boolean	      result = FALSE;

@@ -6,10 +6,11 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Pixmap TtaCreatePixmapLogo ( char** data );
+extern Pixmap TtaCreatePixmapLogo ( STRING *data );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
+extern void DrawAddAttr ( PtrAttribute * pAttr,
+                          PtrElement pEl );
 extern void RedisplayCopies ( void );
-extern void DrawAddAttr ( void );
 extern void DrawChar ( UCHAR_T car,
                        int frame,
                        int x,
@@ -100,8 +101,9 @@ extern boolean ConfigDefaultPSchema ( STRING schema,
 
 extern Pixmap TtaCreatePixmapLogo (/* STRING *data */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
+extern void DrawAddAttr (/* PtrAttribute * pAttr,
+                            PtrElement pEl */);
 extern void RedisplayCopies (/* void */);
-extern void DrawAddAttr (/* void */);
 extern void DrawChar (/* UCHAR_T car,
                          int frame,
                          int x,

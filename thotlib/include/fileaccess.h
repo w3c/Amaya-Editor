@@ -95,6 +95,7 @@ extern boolean TtaReadInteger ( BinFile file,
                                 int *sval );
 extern boolean TtaReadName ( BinFile file,
                              STRING name );
+extern BinFile TtaReadOpen (CONST STRING filename);
 extern void TtaReadClose ( BinFile file );
 extern void TtaWriteClose ( BinFile file );
 extern boolean TtaWriteByte ( BinFile file,
@@ -140,6 +141,7 @@ extern boolean TtaReadInteger (/* BinFile file,
                                   int *sval */);
 extern boolean TtaReadName (/* BinFile file,
                                char *name */);
+extern BinFile TtaReadOpen (/* CONST STRING filename */);
 extern void TtaReadClose (/* BinFile file */);
 extern void TtaWriteClose (/* BinFile file */);
 extern boolean TtaWriteByte (/* BinFile file,

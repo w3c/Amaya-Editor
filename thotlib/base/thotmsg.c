@@ -49,6 +49,7 @@ int                 errorCode;
 
 #endif /* __STDC__ */
 {
+#ifdef THOT_DEBUG
    CHAR_T                buffer[50];
 
    UserErrorCode = errorCode;
@@ -177,6 +178,7 @@ int                 errorCode;
 #   else  /* _WINDOWS */
 	fprintf (stderr, buffer);
 #   endif /* _WINDOWS */
+#endif /* THOT_DEBUG */
      }
 }
 #endif /* _WIN_PRINT */

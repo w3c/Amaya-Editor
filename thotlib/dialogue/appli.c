@@ -449,7 +449,7 @@ Dimension           height;
 
 #endif /* __STDC__ */
 {
-   int                 n, dx, dy, view;
+   int                 dx, dy, view;
    NotifyWindow        notifyDoc;
    Document            doc;
 

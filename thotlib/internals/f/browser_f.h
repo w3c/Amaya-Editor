@@ -19,15 +19,15 @@ extern void TtaListDirectory ( STRING aDirectory,
 
 #else /* __STDC__ */
 
-extern void ExtractFileName (/* char *word */);
-extern boolean TtaIsSuffixFileIn (/* char *aDirectory,
-                                     char *suffix */);
-extern void TtaListDirectory (/* char *aDirectory,
+extern void ExtractFileName (/* STRING word */);
+extern boolean TtaIsSuffixFileIn (/* STRING aDirectory,
+                                     STRING suffix */);
+extern void TtaListDirectory (/* STRING aDirectory,
                                  int formRef,
-                                 char *dirTitle,
+                                 STRING dirTitle,
                                  int dirRef,
-                                 char *suffix,
-                                 char *fileTitle,
+                                 STRING suffix,
+                                 STRING fileTitle,
                                  int fileRef */);
 
 #endif /* __STDC__ */

@@ -10,6 +10,7 @@ extern void TtaGiveRGB ( STRING colname,
                          unsigned short *red,
                          unsigned short *green,
                          unsigned short *blue );
+extern void TtaUpdateEditorColors ( void );
 extern boolean ShowReference ( void );
 extern boolean ShowReadOnly ( void );
 extern void ThotInitDisplay ( STRING name,
@@ -24,6 +25,7 @@ extern void TtaGiveRGB (/* STRING colname,
                            unsigned short *red,
                            unsigned short *green,
                            unsigned short *blue */);
+extern void TtaUpdateEditorColors (/* void */);
 extern boolean ShowReference (/* void */);
 extern boolean ShowReadOnly (/* void */);
 extern void ThotInitDisplay (/* STRING name,

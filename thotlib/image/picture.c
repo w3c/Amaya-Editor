@@ -51,37 +51,29 @@
 #define THOT_EXPORT
 #include "picture_tv.h"
 
-#include "appli_f.h"
-#include "tree_f.h"
-#include "views_f.h"
-#include "platform_f.h"
-#include "font_f.h"
-#include "frame_f.h"
-#include "picture_f.h"
-#include "presrules_f.h"
-#include "inites_f.h"
-#include "gifhandler_f.h"
-#include "jpeghandler_f.h"
-#include "xbmhandler_f.h"
-#include "xpmhandler_f.h"
-#include "pnghandler_f.h"
-#include "epshandler_f.h"
-#include "fileaccess_f.h"
-#include "memory_f.h"
 #ifdef _WINDOWS 
 #include "units_tv.h"
 
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
-PictureHandler  PictureHandlerTable[MAX_PICT_FORMATS];
-int             PictureIdType[MAX_PICT_FORMATS];
-int             PictureMenuType[MAX_PICT_FORMATS];
-int             InlineHandlers;
-int             HandlersCounter;
-int             currentExtraHandler;
-ThotGC          GCpicture;
-Pixmap          EpsfPictureLogo ;
+#include "appli_f.h"
+#include "epshandler_f.h"
+#include "fileaccess_f.h"
+#include "font_f.h"
+#include "frame_f.h"
+#include "gifhandler_f.h"
+#include "inites_f.h"
+#include "jpeghandler_f.h"
+#include "memory_f.h"
+#include "picture_f.h"
+#include "platform_f.h"
+#include "pnghandler_f.h"
+#include "presrules_f.h"
+#include "tree_f.h"
+#include "views_f.h"
+#include "xbmhandler_f.h"
+#include "xpmhandler_f.h"
 
 static STRING   PictureMenu;
 static Pixmap   PictureLogo;
@@ -637,9 +629,9 @@ STRING              fileName;
    empty and if it is not one of the internal images        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void FreePixmap (Pixmap pixmap)
+void                FreePixmap (Pixmap pixmap)
 #else  /* __STDC__ */
-static void FreePixmap (pixmap)
+void                FreePixmap (pixmap)
 Pixmap              pixmap;
 
 #endif /* __STDC__ */
@@ -2121,44 +2113,6 @@ PictInfo           *imageDesc;
 #endif /* _WIN_PRINT */
 #endif /* _WINDOWS */
 
-
-/*----------------------------------------------------------------------
-   FreePicture frees the Picture Info structure from pixmaps        
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                FreePicture (PictInfo * imageDesc)
-#else  /* __STDC__ */
-void                FreePicture (imageDesc)
-PictInfo           *imageDesc;
-
-#endif /* __STDC__ */
-{
-  int        i;
-
-   if (imageDesc->PicPixmap != None)
-     {
-#      ifndef _WINDOWS
-       FreePixmap (imageDesc->PicMask);
-       imageDesc->PicMask = None;
-#      endif /* _WINDOWS */
-       FreePixmap (imageDesc->PicPixmap);
-       imageDesc->PicPixmap = None;
-       imageDesc->PicXArea = 0;
-       imageDesc->PicYArea = 0;
-       imageDesc->PicWArea = 0;
-       imageDesc->PicHArea = 0;
-       imageDesc->PicWidth = 0;
-       imageDesc->PicHeight = 0;
-       if (imageDesc->PicColors != NULL)
-	 for (i = 0; i < imageDesc->PicNbColors; i++)
-	   TtaFreeThotColor (imageDesc->PicColors[i]);
-       TtaFreeMemory (imageDesc->PicColors);
-       imageDesc->PicColors = NULL;
-     }
-
-     if ((imageDesc->PicType >= InlineHandlers) && (PictureHandlerTable[imageDesc->PicType].FreePicture != NULL))
-        (*(PictureHandlerTable[imageDesc->PicType].FreePicture)) (imageDesc);   
-}				
 
 /*----------------------------------------------------------------------
    GetPictureType returns the type of the image based on the index 

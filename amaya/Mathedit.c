@@ -35,6 +35,7 @@
 #else /* _WINDOWS */
 static ThotIcon	   iconMath;
 static ThotIcon	   iconMathNo;
+
 #include "Math.xpm"
 #include "MathNo.xpm"
 #include "Bmath.xpm"
@@ -53,6 +54,7 @@ static ThotIcon	   iconMathNo;
 #include "greek.xpm"
 #endif /* _WINDOWS */
 
+static int      MathButton;
 static Pixmap	mIcons[14];
 static int	MathsDialogue;
 static boolean	InitMaths;
@@ -949,6 +951,7 @@ View                view;
   CreateMathDlgWindow (TtaGetViewFrame (doc, view), MathsDialogue, TtaGetThotWindow (GetWindowNumber (doc, view)));
 # endif /* _WINDOWS */
 }
+#endif /* MATHML */
 
 
 /*----------------------------------------------------------------------
@@ -962,8 +965,11 @@ Document            doc;
 View                view;
 #endif
 {
-  TtaAddButton (doc, 1, iconMath, CreateMathMenu,
-		TtaGetMessage (AMAYA, AM_BUTTON_MATH), TBSTYLE_BUTTON, TRUE);
+#ifdef MATHML
+  MathButton = TtaAddButton (doc, 1, iconMath, CreateMathMenu,
+			     TtaGetMessage (AMAYA, AM_BUTTON_MATH),
+			     TBSTYLE_BUTTON, TRUE);
+#endif /* MATHML */
 }
 
 /*----------------------------------------------------------------------
@@ -978,12 +984,15 @@ Document          doc;
 boolean           state;
 #endif /* __STDC__ */
 {
+#ifdef MATHML
   if (state)
-    TtaChangeButton (doc, view, 24, iconMath, state);
+    TtaChangeButton (doc, view, MathButton, iconMath, state);
   else
-    TtaChangeButton (doc, view, 24, iconMathNo, state);
+    TtaChangeButton (doc, view, MathButton, iconMathNo, state);
+#endif /* MATHML */
 }
 
+#ifdef MATHML
 /*----------------------------------------------------------------------
   CreateMath
   ----------------------------------------------------------------------*/

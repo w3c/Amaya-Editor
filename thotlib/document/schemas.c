@@ -53,6 +53,7 @@ static APresentation LoadedPSchema[MAX_PSCHEMAS];
 #include "readstr_f.h"
 #include "readprs_f.h"
 #include "schemas_f.h"
+#include "tree_f.h"
 
 /*----------------------------------------------------------------------
    InitApplicationSchema						

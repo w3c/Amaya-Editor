@@ -30,7 +30,7 @@ OBJDIRS = base content dialogue document editing image presentation tree unicode
 # Rule to build standard objects
 #
 .c.o :
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) $(THOT_OPTIONS) $(INCLUDES) -c $< -o $@
 
 #
 # Rule to build specific objects for libThotKernel.a

@@ -7,9 +7,9 @@
 #ifdef __STDC__
 
 extern UCHAR_T NextCharacter ( PtrTextBuffer * buffer,
-                             int *rank );
+                               int *rank );
 extern UCHAR_T PreviousCharacter ( PtrTextBuffer * buffer,
-                                 int *rank );
+                                   int *rank );
 extern boolean MotOk ( PtrElement firstEl,
                        int firstChar,
                        PtrElement lastEl,
@@ -34,9 +34,9 @@ extern boolean SearchPreviousWord ( PtrElement * curEl,
 #else /* __STDC__ */
 
 extern UCHAR_T NextCharacter (/* PtrTextBuffer * buffer,
-                               int *rank */);
+                                 int *rank */);
 extern UCHAR_T PreviousCharacter (/* PtrTextBuffer * buffer,
-                                   int *rank */);
+                                     int *rank */);
 extern boolean MotOk (/* PtrElement firstEl,
                          int firstChar,
                          PtrElement lastEl,

@@ -38,12 +38,28 @@ extern void ConfigGetViewGeometry ( PtrDocument pDoc,
                                     int *y,
                                     int *width,
                                     int *height );
+extern void TtaGetViewWH ( Document doc,
+                           int view,
+                           int *width,
+                           int *height );
+extern void TtaGetViewGeometryRegistry ( Document document,
+                                         STRING name,
+                                         int *x,
+                                         int *y,
+                                         int *width,
+                                         int *height );
 extern void TtaGetViewGeometry ( Document document,
                                  STRING name,
                                  int *x,
                                  int *y,
                                  int *width,
                                  int *height );
+extern void TtaGetViewGeometryMM ( Document document,
+                                   STRING name,
+                                   int *x,
+                                   int *y,
+                                   int *width,
+                                   int *height );
 extern boolean ConfigGetPSchemaNature ( PtrSSchema pSS,
                                         STRING nameNature,
                                         STRING presNature );
@@ -95,12 +111,28 @@ extern void ConfigGetViewGeometry (/* PtrDocument pDoc,
                                       int *y,
                                       int *width,
                                       int *height */);
+extern void TtaGetViewWH (/* Document doc,
+                             int view,
+                             int *width,
+                             int *height */);
+extern void TtaGetViewGeometryRegistry (/* Document document,
+                                           STRING name,
+                                           int *x,
+                                           int *y,
+                                           int *width,
+                                           int *height */);
 extern void TtaGetViewGeometry (/* Document document,
                                    STRING name,
                                    int *x,
                                    int *y,
                                    int *width,
                                    int *height */);
+extern void TtaGetViewGeometryMM (/* Document document,
+                                     STRING name,
+                                     int *x,
+                                     int *y,
+                                     int *width,
+                                     int *height */);
 extern boolean ConfigGetPSchemaNature (/* PtrSSchema pSS,
                                           STRING nameNature,
                                           STRING presNature */);

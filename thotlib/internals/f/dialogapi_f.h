@@ -8,6 +8,11 @@
 
 extern int GetFrameNumber ( ThotWindow win );
 extern void MyWarningHandler ( void );
+extern void ThotXmColorProc ( ThotColorStruct *bg,
+                              ThotColorStruct *fg,
+                              ThotColorStruct *sel,
+                              ThotColorStruct *top,
+                              ThotColorStruct *bottom );
 extern void TtaInitDialogue ( STRING server,
                               ThotAppContext * app_context,
                               Display ** Dp );
@@ -151,6 +156,11 @@ extern void TtaAbortShowDialogue ( void );
 
 extern int GetFrameNumber (/* ThotWindow win */);
 extern void MyWarningHandler (/* void */);
+extern void ThotXmColorProc (/* ThotColorStruct *bg,
+                                ThotColorStruct *fg,
+                                ThotColorStruct *sel,
+                                ThotColorStruct *top,
+                                ThotColorStruct *bottom */);
 extern void TtaInitDialogue (/* STRING server,
                                 ThotAppContext * app_context,
                                 Display ** Dp */);

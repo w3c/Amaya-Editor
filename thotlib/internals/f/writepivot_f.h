@@ -21,7 +21,6 @@ extern void Externalise ( BinFile pivFile,
                           PtrElement * pEl,
                           PtrDocument pDoc,
                           boolean subTree );
-extern void BuildDocNatureTable ( PtrDocument pDoc );
 extern void WriteNomsSchemasDoc ( BinFile pivFile,
                                   PtrDocument pDoc );
 extern void WriteTableLangues ( BinFile pivFile,
@@ -61,7 +60,6 @@ extern void Externalise (/* BinFile pivFile,
                             PtrElement * pEl,
                             PtrDocument pDoc,
                             boolean subTree */);
-extern void BuildDocNatureTable (/* PtrDocument pDoc */);
 extern void WriteNomsSchemasDoc (/* BinFile pivFile,
                                     PtrDocument pDoc */);
 extern void WriteTableLangues (/* BinFile pivFile,

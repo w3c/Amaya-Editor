@@ -1089,7 +1089,7 @@ caddr_t             call_d;
    while (icatal->Cat_PtParent != NULL)
       icatal = icatal->Cat_PtParent;
 
-   if ((icatal == ShowCat) && (ShowReturn == 1))
+   if (icatal == ShowCat && ShowReturn == 1)
       ShowReturn = 0;
 }
 
@@ -1117,7 +1117,7 @@ caddr_t             call_d;
    while (icatal->Cat_PtParent != NULL)
       icatal = icatal->Cat_PtParent;
 
-   if ((icatal == ShowCat) && (ShowReturn == 1))
+   if (icatal == ShowCat && ShowReturn == 1)
       ShowReturn = 0;
 
    /* A menu entry is selected */
@@ -1576,7 +1576,7 @@ caddr_t             call_d;
 	     while (catalogue->Cat_PtParent != NULL)
 		catalogue = catalogue->Cat_PtParent;
 
-	     if ((catalogue == ShowCat) && (ShowReturn == 1))
+	     if (catalogue == ShowCat && ShowReturn == 1)
 		ShowReturn = 0;
 	  }
 
