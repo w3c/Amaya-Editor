@@ -67,7 +67,7 @@ clean :
 	$(RM) *.o *.h *.c EDITOR* HTML* TextFile* MathML* SVG* Timeline* XLink* XML* logo.* *.a
 	(for dir in $(OBJDIRS) ; do $(RM) -r $$dir/*.o ; done)
 
-directories :
+directories : force
 	@(for dir in $(OBJDIRS) ; \
 	  do if test ! -d $$dir ; then $(MKDIR) $$dir ; fi ; done)
 
