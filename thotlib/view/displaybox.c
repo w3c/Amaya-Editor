@@ -49,7 +49,7 @@ static int          GetLineWeight (PtrAbstractBox pAb)
 /*----------------------------------------------------------------------
   DisplayImage displays a empty box in the frame.
   ----------------------------------------------------------------------*/
-static void         DisplayImage (PtrBox pBox, int frame, int xmin, int xmax, int ymin, int ymax, ThotBool selected)
+static void  DisplayImage (PtrBox pBox, int frame, int xmin, int xmax, int ymin, int ymax, ThotBool selected)
 {
   ViewFrame          *pFrame;
   int                 xd, yd, x, y;
@@ -60,8 +60,8 @@ static void         DisplayImage (PtrBox pBox, int frame, int xmin, int xmax, in
     {
       /* For changing drawing color */
       DrawRectangle (frame, 0, 0, 0, 0, 0, 0,
-		     pBox->BxAbstractBox->AbForeground,
-		     pBox->BxAbstractBox->AbBackground, 0);
+      		     pBox->BxAbstractBox->AbForeground,
+      		     pBox->BxAbstractBox->AbBackground, 0);
       x = pFrame->FrXOrg;
       y = pFrame->FrYOrg;
       xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
@@ -71,7 +71,7 @@ static void         DisplayImage (PtrBox pBox, int frame, int xmin, int xmax, in
       width = pBox->BxW;
       height = pBox->BxH;
       DrawPicture (pBox, (PictInfo *) pBox->BxPictInfo, frame, xd, yd, width,
-		   height);
+	height);
       /* Should the end of de line be filled with dots */
       if (pBox->BxEndOfBloc > 0)
 	{
@@ -104,7 +104,7 @@ static void         DisplayImage (PtrBox pBox, int frame, int xmin, int xmax, in
   DisplaySymbol displays a mathematical symbols box enclosed in
   a frame. The glyphs are drawn with the Greek font and lines.
   ----------------------------------------------------------------------*/
-static void         DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
+static void    DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 {
   ptrfont             font;
   ViewFrame          *pFrame;
@@ -260,7 +260,7 @@ static void         DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
   DisplayEmptyBox shows an empty box but formatted and placed.
   A specific background is drawn in the box area.
   ----------------------------------------------------------------------*/
-void                DisplayEmptyBox (PtrBox pBox, int frame, CHAR_T modele, ThotBool selected)
+void  DisplayEmptyBox (PtrBox pBox, int frame, CHAR_T modele, ThotBool selected)
 {
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
@@ -316,9 +316,10 @@ void                DisplayEmptyBox (PtrBox pBox, int frame, CHAR_T modele, Thot
 
 
 /*----------------------------------------------------------------------
-  DisplayGraph display a graphic box enclosed in frame.
+  DisplayGraph display a graphic.
+  The parameter selected is TRUE when the graphic is selected.
   ----------------------------------------------------------------------*/
-static void         DisplayGraph (PtrBox pBox, int frame, ThotBool selected)
+void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected)
 {
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
@@ -329,12 +330,12 @@ static void         DisplayGraph (PtrBox pBox, int frame, ThotBool selected)
   int                 width, height;
 
   pAb = pBox->BxAbstractBox;
-  fg = pAb->AbForeground;
-  bg = pAb->AbBackground;
-  pat = pAb->AbFillPattern;
   pFrame = &ViewFrameTable[frame - 1];
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
+      bg = pAb->AbBackground;
+      pat = pAb->AbFillPattern;
+      fg = pAb->AbForeground;
       xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
 	   pBox->BxLPadding - pFrame->FrXOrg;
       yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
@@ -639,9 +640,10 @@ static void         PolyTransform (PtrBox pBox, int frame)
 
 
 /*----------------------------------------------------------------------
-  DrawPolyLine display a polyline constraint in frame.
+  DisplayPolyLine displays a polyline.
+  The parameter selected is TRUE when the polyline is selected.
   ----------------------------------------------------------------------*/
-static void         DrawPolyLine (PtrBox pBox, int frame, ThotBool selected)
+void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected)
 {
   PtrAbstractBox      pAb;
   ViewFrame          *pFrame;
@@ -661,9 +663,9 @@ static void         DrawPolyLine (PtrBox pBox, int frame, ThotBool selected)
   pFrame = &ViewFrameTable[frame - 1];
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
-      fg = pAb->AbForeground;
       bg = pAb->AbBackground;
       pat = pAb->AbFillPattern;
+      fg = pAb->AbForeground;
       xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
 	   pBox->BxLPadding - pFrame->FrXOrg;
       yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
@@ -770,8 +772,9 @@ static void         DrawPolyLine (PtrBox pBox, int frame, ThotBool selected)
 
 /*----------------------------------------------------------------------
   DisplayPath displays a path.
+  The parameter selected is TRUE when the polyline is selected.
   ----------------------------------------------------------------------*/
-static void         DisplayPath (PtrBox pBox, int frame, ThotBool selected)
+void DisplayPath (PtrBox pBox, int frame, ThotBool selected)
 {
   PtrAbstractBox      pAb;
   ViewFrame          *pFrame;
@@ -789,9 +792,9 @@ static void         DisplayPath (PtrBox pBox, int frame, ThotBool selected)
   pFrame = &ViewFrameTable[frame - 1];
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
-      fg = pAb->AbForeground;
       bg = pAb->AbBackground;
       pat = pAb->AbFillPattern;
+      fg = pAb->AbForeground;
       xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
 	   pBox->BxLPadding - pFrame->FrXOrg;
       yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
@@ -1505,7 +1508,7 @@ void                DisplayBox (PtrBox box, int frame, int xmin, int xmax, int y
       DisplayGraph (box, frame, selected);
   else if (pAb->AbLeafType == LtPolyLine)
     /* Polyline */
-    DrawPolyLine (box, frame, selected);
+    DisplayPolyLine (box, frame, selected);
   else if (pAb->AbLeafType == LtPath)
     /* Path */
     DisplayPath (box, frame, selected);

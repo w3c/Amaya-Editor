@@ -286,10 +286,8 @@ static void         RedrawFilledBoxes (int frame, int xmin, int xmax, int ymin, 
 		    if (yd + height > ymax)
 		      height = ymax - yd;
 		    
-		    if (yd + height >= ymin
-			&& yd <= ymax
-			&& xd + width >= xmin
-			&& xd <= xmax)
+		    if (yd + height >= ymin && yd <= ymax &&
+			xd + width >= xmin && xd <= xmax)
 		      {
 			DisplayBorders (pBoxChild, frame, xd - x, yd - y, width, height);
 			/* draw over the padding */
@@ -361,10 +359,8 @@ static void         RedrawFilledBoxes (int frame, int xmin, int xmax, int ymin, 
 	    if (yd + height > ymax)
 	      height = ymax - yd + 1;
 	    
-	    if (yd + height >= ymin
-		&& yd <= ymax
-		&& xd + width >= xmin
-		&& xd <= xmax)
+	    if (yd + height >= ymin && yd <= ymax &&
+		xd + width >= xmin && xd <= xmax)
 	      {
 		DisplayBorders (pBox, frame, xd - x, yd - y, width, height);
 		/* draw over the padding */
@@ -396,10 +392,10 @@ static void         RedrawFilledBoxes (int frame, int xmin, int xmax, int ymin, 
 		    picPresent = imageDesc->PicPresent;
 		    if (picPresent == DefaultPres)
 		      picPresent = FillFrame;
-		    if (picPresent == YRepeat ||
-			picPresent == FillFrame ||
+		    if (picPresent == YRepeat || picPresent == FillFrame ||
 			(picPresent == XRepeat && !pAb->AbTruncatedHead))
-		      DrawPicture (pBox, imageDesc, frame,  xd - x, yd - y, width, height);
+		      DrawPicture (pBox, imageDesc, frame,  xd - x, yd - y,
+				   width, height);
 		    else if (!pAb->AbTruncatedHead)
 		      /* the clipping will work automatically */
 		      DrawPicture (pBox, imageDesc, frame,
@@ -408,8 +404,7 @@ static void         RedrawFilledBoxes (int frame, int xmin, int xmax, int ymin, 
 				   pBox->BxW, pBox->BxH);
 		  }
 		else
-		  DrawRectangle (frame, 0, 0,
-				 xd - x, yd - y,
+		  DrawRectangle (frame, 0, 0, xd - x, yd - y,
 				 width, height, pAb->AbForeground,
 				 pAb->AbBackground, pAb->AbFillPattern);
 	      }
@@ -530,7 +525,13 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
 	     /* Display planes in reverse order from biggest to lowest */
 	     plane = 65536;
 	     nextplane = plane - 1;
+#ifdef IV
 	     pFirstBox = pBox;
+#else
+	     pFirstBox = pFrame->FrAbstractBox->AbBox;
+	     if (pFirstBox->BxNext)
+	       pFirstBox = pFirstBox->BxNext;
+#endif /* IV */
 	     while (plane != nextplane)
 		/* there is a new plane to display */
 	       {
@@ -572,13 +573,20 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
 				  /* redisplay plugins */
 				  DisplayBox (pBox, frame, framexmin, framexmax, frameymin, frameymax);
 			      }
-
+#ifdef IV
 			    /* Skip to next box */
 			    if (pBox->BxPrevious == pBox)
 			      /* detect cycles */
 			      pBox = NULL;
 			    else
 			      pBox = pBox->BxPrevious;
+#else
+			    if (pBox->BxNext == pBox)
+			      /* detect cycles */
+			      pBox = NULL;
+			    else
+			      pBox = pBox->BxNext;
+#endif /* IV */
 			 }
 		       else if (pBox->BxAbstractBox->AbDepth < plane)
 			 {
@@ -587,17 +595,33 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
 			       nextplane = pBox->BxAbstractBox->AbDepth;
 			    else if (pBox->BxAbstractBox->AbDepth > nextplane)
 			       nextplane = pBox->BxAbstractBox->AbDepth;
+#ifdef IV
 			    if (pBox->BxPrevious == pBox)
 			      /* detect cycles */
 			      pBox = NULL;
 			    else
 			      pBox = pBox->BxPrevious;
+#else
+			    if (pBox->BxNext == pBox)
+			      /* detect cycles */
+			      pBox = NULL;
+			    else
+			      pBox = pBox->BxNext;
+#endif /* IV */
 			 }
+#ifdef IV
 		       else if (pBox->BxPrevious == pBox)
 			 /* detect cycles */
 			 pBox = NULL;
 		       else
 			  pBox = pBox->BxPrevious;
+#else
+		       else if (pBox->BxNext == pBox)
+			 /* detect cycles */
+			 pBox = NULL;
+		       else
+			 pBox = pBox->BxNext;
+#endif /* IV */
 		    }
 	       }
 

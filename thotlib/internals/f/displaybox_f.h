@@ -10,6 +10,15 @@ extern void DisplayEmptyBox ( PtrBox pBox,
                               int frame,
                               CHAR_T modele,
                               ThotBool selected );
+extern void DisplayGraph ( PtrBox pBox,
+                           int frame,
+                           ThotBool selected );
+extern void DisplayPolyLine ( PtrBox pBox,
+                              int frame,
+                              ThotBool selected );
+extern void DisplayPath ( PtrBox pBox,
+                          int frame,
+                          ThotBool selected );
 extern void DisplayBorders ( PtrBox box,
                              int frame,
                              int x,
@@ -29,6 +38,15 @@ extern void DisplayEmptyBox (/* PtrBox pBox,
                                 int frame,
                                 CHAR_T modele,
                                 ThotBool selected */);
+extern void DisplayGraph (/* PtrBox pBox,
+                             int frame,
+                             ThotBool selected */);
+extern void DisplayPolyLine (/* PtrBox pBox,
+                                int frame,
+                                ThotBool selected */);
+extern void DisplayPath (/* PtrBox pBox,
+                            int frame,
+                            ThotBool selected */);
 extern void DisplayBorders (/* PtrBox box,
                                int frame,
                                int x,

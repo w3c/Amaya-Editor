@@ -1,7 +1,7 @@
 #ifdef GRAPHML
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -72,13 +72,7 @@ static  CHAR_T  oldXlinkHrefValue[oldHrefMaxLen];
  This attribute is used by the translation schema (GraphMLT.T) to
  generate a closing tag.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetEmptyShapeAttrSubTree (Element el, Document doc)
-#else /* __STDC__*/
-static void SetEmptyShapeAttrSubTree(el, doc)
-Element     el;
-Document    doc;
-#endif /* __STDC__*/
 {
   ElementType	elType, childType;
   AttributeType	attrType;
@@ -174,12 +168,7 @@ Document    doc;
  This attribute is used by the translation schema (GraphMLT.T) to
  generate a closing tag.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool       SetEmptyShapeAttribute (NotifyElement *event)
-#else /* __STDC__*/
-ThotBool       SetEmptyShapeAttribute(event)
-NotifyElement *event;
-#endif /* __STDC__*/
 {
   SetEmptyShapeAttrSubTree (event->element, event->document);
   return FALSE; /* let Thot perform normal operation */
@@ -188,13 +177,7 @@ NotifyElement *event;
 /*----------------------------------------------------------------------
    A new element has been selected. Synchronize selection in source view.      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                GraphicsSelectionChanged (NotifyElement * event)
-#else  /* __STDC__ */
-void                GraphicsSelectionChanged (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
 {
    SynchronizeSourceView (event);
 }
@@ -203,12 +186,7 @@ NotifyElement      *event;
  ExtendSelectGraphMLElement
  The user wants to add a new element in the current selection.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool       ExtendSelectGraphMLElement (NotifyElement *event)
-#else /* __STDC__*/
-ThotBool       ExtendSelectGraphMLElement(event)
-NotifyElement *event;
-#endif /* __STDC__*/
 {
    Element	firstSel, newFirstSel, ancestor, parent, selEl;
    ElementType	elType, ancestType, parentType;
@@ -308,12 +286,7 @@ NotifyElement *event;
 /*----------------------------------------------------------------------
  AttrCoordChanged
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void             AttrCoordChanged (NotifyAttribute *event)
-#else /* __STDC__*/
-void             AttrCoordChanged (event)
-NotifyAttribute *event;
-#endif /* __STDC__*/
 {
    ParseCoordAttribute (event->attribute, event->element, event->document);
 }
@@ -321,12 +294,7 @@ NotifyAttribute *event;
 /*----------------------------------------------------------------------
  AttrTransformChanged
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void             AttrTransformChanged (NotifyAttribute *event)
-#else /* __STDC__*/
-void             AttrTransformChanged (event)
-NotifyAttribute *event;
-#endif /* __STDC__*/
 {
    ParseTransformAttribute (event->attribute, event->element, event->document,
 			    FALSE);
@@ -336,12 +304,7 @@ NotifyAttribute *event;
    AttrTransformDelete : attribute transform will be
    deleted. Remove the corresponding style presentation.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool         AttrTransformDelete (NotifyAttribute * event)
-#else
-ThotBool         AttrTransformDelete (event)
-NotifyAttribute *event;
-#endif
 {
   ParseTransformAttribute (event->attribute, event->element, event->document,
 			  TRUE);
@@ -352,16 +315,7 @@ NotifyAttribute *event;
  TranslatePointsAttribute
  update attribute "points" for element el according its content
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void TranslatePointsAttribute (Element el, Document doc, int delta, TypeUnit unit, ThotBool horiz)
-#else /* __STDC__*/
-static void TranslatePointsAttribute (el, doc, delta, unit, horiz)
-Element     el;
-Document    doc;
-int         delta;
-TypeUnit    unit;
-ThotBool    horiz;
-#endif /* __STDC__*/
 {
   Element		child;
   ElementType		elType;
@@ -510,17 +464,7 @@ ThotBool    horiz;
   The parameter delta is TRUE when the value is 
   The parameter update is TRUE when the attribute must be parsed after the change.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, int value, ThotBool delta, ThotBool update)
-#else /* __STDC__*/
-static void   UpdateAttrText (el, doc, attrType, value, delta, update)
-Element       el;
-Document      doc;
-AttributeType attrType;
-int           value;
-ThotBool      delta;
-ThotBool      update;
-#endif /* __STDC__*/
 {
   CHAR_T		buffer[32], unit[32];
   Attribute             attr;
@@ -632,16 +576,7 @@ ThotBool      update;
  update attribute "position" for element el according its attributes
  "IntPosX" and "IntPosY".
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void UpdatePositionAttribute (Element el, Document doc, int org, int dim, ThotBool horiz)
-#else /* __STDC__*/
-static void UpdatePositionAttribute (el, doc, org, dim, horiz)
-Element     el;
-Document    doc;
-int         org;
-int         dim;
-ThotBool    horiz;
-#endif /* __STDC__*/
 {
   ElementType		elType;
   AttributeType	        attrType;
@@ -686,12 +621,7 @@ ThotBool    horiz;
 /*----------------------------------------------------------------------
  AttrWidthHeightChanged
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void             AttrWidthHeightChanged (NotifyAttribute *event)
-#else /* __STDC__*/
-void             AttrWidthHeightChanged (event)
-NotifyAttribute *event;
-#endif /* __STDC__*/
 {
    ParseWidthHeightAttribute (event->attribute, event->element,
 			      event->document, FALSE);
@@ -700,12 +630,7 @@ NotifyAttribute *event;
 /*----------------------------------------------------------------------
  AttrWidthHeightDelete
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool         AttrWidthHeightDelete (NotifyAttribute *event)
-#else /* __STDC__*/
-ThotBool         AttrWidthHeightDelete (event)
-NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   return ParseWidthHeightAttribute (event->attribute, event->element,
 				    event->document, TRUE);
@@ -716,15 +641,7 @@ NotifyAttribute *event;
  Attribute "IntWidth" or "IntHeight" has been modified for element el.
  Update the corresponding attribute "height_" or "width_" accordingly.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void UpdateWidthHeightAttribute (Element el, Document doc, int dim, ThotBool horiz)
-#else /* __STDC__*/
-static void UpdateWidthHeightAttribute (el, doc, dim, horiz)
-Element     el;
-Document    doc;
-int         dim;
-ThotBool    horiz;
-#endif /* __STDC__*/
 {
   ElementType		elType;
   AttributeType	        attrType;
@@ -777,12 +694,7 @@ ThotBool    horiz;
 /*----------------------------------------------------------------------
  AttrFillStrokeModified
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void             AttrFillStrokeModified(NotifyAttribute *event)
-#else /* __STDC__*/
-void             AttrFillStrokeModified(event)
-NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   ParseFillStrokeAttributes (event->attributeType.AttrTypeNum,
 			     event->attribute, event->element,
@@ -793,12 +705,7 @@ NotifyAttribute *event;
    AttrFillStrokeDelete : attribute fill, stroke or stroke-width will be
    deleted. Remove the corresponding style presentation.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            AttrFillStrokeDelete (NotifyAttribute * event)
-#else
-ThotBool            AttrFillStrokeDelete (event)
-NotifyAttribute    *event;
-#endif
 {
   ParseFillStrokeAttributes (event->attributeType.AttrTypeNum,
 			     event->attribute, event->element,
@@ -809,12 +716,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
  AttrArrowHeadModified
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void             AttrArrowHeadModified (NotifyAttribute *event)
-#else /* __STDC__*/
-void             AttrArrowHeadModified (event)
-NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   int		value;
   ThotBool	closed;
@@ -829,12 +731,7 @@ NotifyAttribute *event;
 /*----------------------------------------------------------------------
  DeleteAttrPoints
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool         DeleteAttrPoints (NotifyAttribute *event)
-#else /* __STDC__*/
-ThotBool         DeleteAttrPoints (event)
-NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   /* prevents Thot from deleting the points attribute */
   return TRUE;
@@ -844,12 +741,7 @@ NotifyAttribute *event;
 /*----------------------------------------------------------------------
  AttrPointsModified
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void             AttrPointsModified (NotifyAttribute *event)
-#else /* __STDC__*/
-void             AttrPointsModified (event)
-NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   CreatePoints (event->attribute, event->element, event->document);
 }
@@ -857,13 +749,7 @@ NotifyAttribute *event;
 /*----------------------------------------------------------------------
   CheckGraphMLRoot checks that the svg root element includes element el.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void             CheckGraphMLRoot (Document doc, Element el)
-#else /* __STDC__*/
-void             CheckGraphMLRoot (doc, el)
-Document         doc;
-Element          el;
-#endif /* __STDC__*/
 {
   Element          graphRoot, child;
   ElementType      elType;
@@ -1061,12 +947,7 @@ Element          el;
  An element has been pasted.
  If the element is an XLink, update the link.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void           GraphElemPasted (NotifyElement *event)
-#else /* __STDC__*/
-void           GraphElemPasted (event)
-NotifyElement *event;
-#endif /* __STDC__*/
 {
   XLinkPasted (event);
   /* check that the svg element includes that element */
@@ -1078,12 +959,7 @@ NotifyElement *event;
  GraphicsPRuleChanged
  A presentation rule is going to be changed by Thot.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                GraphicsChanged (NotifyOnValue *event)
-#else /* __STDC__*/
-void                GraphicsChanged (event)
-NotifyOnValue *event;
-#endif /* __STDC__*/
 {
   if (InCreation)
     /* don't check anything during the creation */
@@ -1098,12 +974,7 @@ NotifyOnValue *event;
  GraphicsPRuleChange
  A presentation rule is going to be changed by Thot.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            GraphicsPRuleChange (NotifyPresentation *event)
-#else /* __STDC__*/
-ThotBool            GraphicsPRuleChange (event)
-NotifyPresentation *event;
-#endif /* __STDC__*/
 {
   Element       el, span;
   PRule         presRule;
@@ -1219,12 +1090,7 @@ NotifyPresentation *event;
    A control point has been changed in a polyline or a polygon.
    Update the points attribute.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ControlPointChanged (NotifyOnValue *event)
-#else /* __STDC__*/
-void ControlPointChanged(event)
-     NotifyOnValue *event;
-#endif /* __STDC__*/
 {
   Element         el, child;
   Document        doc;
@@ -1284,12 +1150,7 @@ void ControlPointChanged(event)
  A GRAPHICS_UNIT element has been deleted. Delete its siblings
  and its parent.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void GraphLeafDeleted (NotifyElement *event)
-#else /* __STDC__*/
-void GraphLeafDeleted(event)
-     NotifyElement *event;
-#endif /* __STDC__*/
 {
    /* don't delete anything if event is sent by Undo */
    if (!event->info)
@@ -1299,12 +1160,7 @@ void GraphLeafDeleted(event)
 /*----------------------------------------------------------------------
  PastePicture
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool PastePicture (NotifyOnValue *event)
-#else /* __STDC__*/
-ThotBool PastePicture(event)
-     NotifyOnValue *event;
-#endif /* __STDC__*/
 {
   /* code to be written */
   return FALSE; /* let Thot perform normal operation */
@@ -1316,12 +1172,7 @@ ThotBool PastePicture(event)
  Associate a Namespace attribute with its child. This attribute will be
  generated with the child.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool ExportForeignObject (NotifyElement *event)
-#else /* __STDC__*/
-ThotBool ExportForeignObject (event)
-     NotifyElement *event;
-#endif /* __STDC__*/
 {
   Element       child;
   ElementType   elType;
@@ -1352,12 +1203,7 @@ ThotBool ExportForeignObject (event)
  An attribute Namespace has been generated for a child of a foreign
  element. Delete that attribute.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void             NameSpaceGenerated (NotifyAttribute *event)
-#else /* __STDC__*/
-void             NameSpaceGenerated (event)
-NotifyAttribute *event;
-#endif /* __STDC__*/
 {
    TtaRemoveAttribute (event->element, event->attribute, event->document);
 }
@@ -1368,12 +1214,7 @@ NotifyAttribute *event;
    entry is the number of the entry chosen by the user in the Graphics
    palette.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         CreateGraphicElement (int entry)
-#else
-void         CreateGraphicElement (entry)
-int          construct;
-#endif
 {
   Document	    doc;
   Element	    first, graphRoot, newEl, sibling, selEl;
@@ -1662,11 +1503,7 @@ int          construct;
    CreateGroup
    Create a g element surrounding the selected elements
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CreateGroup ()
-#else
-static void         CreateGroup ()
-#endif
 {
    Document	doc;
    Element	el, prevSel, prevChild, group;
@@ -1798,15 +1635,7 @@ static void         CreateGroup ()
 /*----------------------------------------------------------------------
    CallbackGraph: manage Graph dialogue events.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CallbackGraph (int ref, int typedata, STRING data)
-#else
-static void         CallbackGraph (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
- 
-#endif
 {
   Document           doc;
  
@@ -1863,13 +1692,7 @@ void                InitGraphML ()
 /*----------------------------------------------------------------------
    ShowGraphicsPalette displays the Graphics palette
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ShowGraphicsPalette (Document doc, View view)
-#else
-static void         ShowGraphicsPalette (doc, view)
-Document            doc;
-View                view;
-#endif
 {
    if (!TtaGetDocumentAccessMode (doc))
      /* the document is in ReadOnly mode */
@@ -1899,13 +1722,7 @@ View                view;
 /*----------------------------------------------------------------------
    AddGraphicsButton    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                AddGraphicsButton (Document doc, View view)
-#else
-void                AddGraphicsButton (doc, view)
-Document            doc;
-View                view;
-#endif
 {
 #ifdef GRAPHML
   GraphButton = TtaAddButton (doc, 1, iconGraph, ShowGraphicsPalette, "ShowGraphicsPalette",
@@ -1917,14 +1734,7 @@ View                view;
 /*----------------------------------------------------------------------
   SwitchIconGraph
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void              SwitchIconGraph (Document doc, View view, ThotBool state)
-#else  /* __STDC__ */
-void              SwitchIconGraph (doc, view, state)
-Document          doc;
- View             view;
-ThotBool          state;
-#endif /* __STDC__ */
 {
 #ifdef GRAPHML
   if (state)
@@ -1940,13 +1750,7 @@ ThotBool          state;
    It has at least two attributes (width and height) that are made
    mandatory by the S schema. Parse the value of these attributes.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SVGCreated (NotifyElement * event)
-#else  /* __STDC__ */
-void                SVGCreated (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
 {
   ElementType	elType;
   AttributeType	attrType;
@@ -1969,13 +1773,7 @@ NotifyElement      *event;
    A tspan element has been created by the user hitting a Enter key
    witihn a text element. Create attributes x and dy.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TspanCreated (NotifyElement * event)
-#else  /* __STDC__ */
-void                TspanCreated (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
 {
   ElementType	elType;
   AttributeType	attrType;
@@ -2009,12 +1807,7 @@ NotifyElement      *event;
    AttrXlinkHrefWillBeChanged: attribute xlink:href will be modified.
    Keep its initial value in case an invalid value be entered.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            AttrXlinkHrefWillBeChanged (NotifyAttribute * event)
-#else
-ThotBool            AttrXlinkHrefWillBeChanged (event)
-NotifyAttribute    *event;
-#endif
 {
    Element             el;
    int                 len;
@@ -2031,12 +1824,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
  AttrXlinkHrefChanged
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void             AttrXlinkHrefChanged (NotifyAttribute *event)
-#else /* __STDC__*/
-void             AttrXlinkHrefChanged (event)
-NotifyAttribute *event;
-#endif /* __STDC__*/
 {
    ElementType   elType;
    STRING        text;
@@ -2064,12 +1852,7 @@ NotifyAttribute *event;
 /*----------------------------------------------------------------------
  DeleteAttrXlinkHref
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool         DeleteAttrXlinkHref (NotifyAttribute *event)
-#else /* __STDC__*/
-ThotBool         DeleteAttrXlinkHref (event)
-NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   /* prevents Thot from deleting the xlink:href attribute */
   return TRUE;
@@ -2087,12 +1870,7 @@ static int oldValue = 0;
    The user is about to change a character string within a g element
    Store the number of that g element.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool TextWillChangeInGroup (NotifyOnTarget *event)
-#else /* __STDC__*/
-ThotBool TextWillChangeInGroup(event)
-     NotifyOnTarget *event;
-#endif /* __STDC__*/
 {
   Element     leaf;
   int         len;
@@ -2114,12 +1892,7 @@ ThotBool TextWillChangeInGroup(event)
    If the g element has an attribute class="animatable", exchange that g
    element with the one that has the same number.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TextChangedInGroup (NotifyOnTarget *event)
-#else
-void                TextChangedInGroup (event)
-NotifyOnTarget      *event;
-#endif
 {
   Element       group1, group2, leaf1, leaf2, parent, child;
   ElementType   elType;

@@ -43,15 +43,7 @@
    Le parametre selection indique s'il faut ge'rer la      
    selection (valeur 1) ou non (valeur 0).                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                VerticalScroll (int frame, int delta, int selection)
-#else  /* __STDC__ */
-void                VerticalScroll (frame, delta, selection)
-int                 frame;
-int                 delta;
-int                 selection;
-#endif /* __STDC__ */
-
 {
    int                 y, height;
    int                 max, width;
@@ -123,7 +115,6 @@ int                 selection;
 			  DefClip (frame, pFrame->FrXOrg, height + delta,
 				   pFrame->FrXOrg + lframe, height);
 			  add = RedrawFrameTop (frame, -delta);
-			  /* On reallume eventuellement une selection cachee */
 		       }
 		    }
 
@@ -154,17 +145,7 @@ int                 selection;
    Le parametre selection indique s'il faut gerer la       
    selection (valeur 1) ou non (valeur 0).                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                HorizontalScroll (int frame, int delta, int selection)
-
-#else  /* __STDC__ */
-void                HorizontalScroll (frame, delta, selection)
-int                 frame;
-int                 delta;
-int                 selection;
-
-#endif /* __STDC__ */
-
 {
   int                 x, height;
   int                 min, max, width;
@@ -237,15 +218,7 @@ int                 selection;
    Le parame`tre y donne la position demande'e et le       
    parame`tre haut la hauteur de la fenetree^tre.          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ShowYPosition (int frame, int y, int height)
-#else  /* __STDC__ */
-void                ShowYPosition (frame, y, height)
-int                 frame;
-int                 y;
-int                 height;
-
-#endif /* __STDC__ */
 {
    ViewFrame          *pFrame;
    PtrBox              pBox;
@@ -322,16 +295,7 @@ int                 height;
    nbCharEnd indique le nombre de carate`res apres l'image abstraite.    
    total indique le nombre total de carate`res du document.        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 PositionAbsBox (int frame, int *nbCharBegin, int *nbCharEnd, int *total)
-#else  /* __STDC__ */
-int                 PositionAbsBox (frame, nbCharBegin, nbCharEnd, total)
-int                 frame;
-int                *nbCharBegin;
-int                *nbCharEnd;
-int                *total;
-#endif /* __STDC__ */
-
 {
    ViewFrame          *pFrame;
    PtrBox              premiere;
@@ -389,19 +353,7 @@ int                *total;
    - width : la largeur de la portion de l'arbre visualise'e.    
    - height : la hauteur de la portion de l'arbre visualise'e.    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *height)
-
-#else  /* __STDC__ */
-void                ComputeDisplayedChars (frame, Xpos, Ypos, width, height)
-int                 frame;
-int                *Xpos;
-int                *Ypos;
-int                *width;
-raint              *height;
-
-#endif /* __STDC__ */
-
 {
    PtrBox              pBoxFirst;
    PtrBox              pBoxLast;
@@ -614,16 +566,7 @@ raint              *height;
    haut de la fenetre et le haut de la boite, exprimee en  
    pourcentage de la hauteur de la fenetre.                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ShowBox (int frame, PtrBox pBox, int position, int percent)
-#else  /* __STDC__ */
-void                ShowBox (frame, pBox, position, percent)
-int                 frame;
-PtrBox              pBox;
-int                 position;
-int                 percent;
-
-#endif /* __STDC__ */
 {
    int                 ymin, ymax;
    int                 width, height;
@@ -680,14 +623,7 @@ int                 percent;
    Le parame`tre selection indique s'il faut ge'rer la     
    se'lection (valeur 1) ou non (valeur 0).                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            IsScrolled (int frame, int selection)
-#else  /* __STDC__ */
-ThotBool            IsScrolled (frame, selection)
-int                 frame;
-int                 selection;
-
-#endif /* __STDC__ */
 {
    int                 xmin, xmax;
    int                 ymin, ymax;
@@ -747,14 +683,7 @@ int                 selection;
    frame et rend cette frame active si l'indicateur actif     
    est Vrai.                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ShowSelectedBox (int frame, ThotBool actif)
-#else  /* __STDC__ */
-void                ShowSelectedBox (frame, actif)
-int                 frame;
-ThotBool            actif;
-
-#endif /* __STDC__ */
 {
    ViewFrame          *pFrame;
    PtrBox              pBo1;
@@ -827,14 +756,7 @@ ThotBool            actif;
    IsAbsBoxVisible retourne Vrai si le pAb deborde de la          
    frame du document.                                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            IsAbsBoxVisible (int frame, PtrAbstractBox pAb)
-#else  /* __STDC__ */
-ThotBool            IsAbsBoxVisible (frame, pAb)
-int                 frame;
-PtrAbstractBox      pAb;
-
-#endif /* __STDC__ */
 {
    ViewFrame          *pFrame;
    int                 y, ymax;

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1998-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1998-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -53,14 +53,7 @@ static AttrValueMapping GraphMLAttrValueMappingTable[] =
    content of element named elementName.
    This element type appear with an 'X' in the ElemMappingTable.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void      GraphMLGetDTDName (STRING DTDname, STRING elementName)
-#else
-void      GraphMLGetDTDName (DTDname, elementName)
-STRING DTDname;
-STRING elementName;
- 
-#endif
 {
    if (ustrcmp (elementName, TEXT("math")) == 0)
       ustrcpy (DTDname, TEXT("MathML"));
@@ -73,17 +66,8 @@ STRING elementName;
    Search in the Attribute Mapping Table the entry for the
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void   MapGraphMLAttribute (CHAR_T *attrName, AttributeType *attrType,
 			    CHAR_T* elementName, ThotBool *level, Document doc)
-#else
-void   MapGraphMLAttribute (Attr, attrType, elementName, level, doc)
-CHAR_T        *attrName;
-AttributeType *attrType;
-CHAR_T        *elementName;
-ThotBool      *level;
-Document       doc;
-#endif
 {
   attrType->AttrSSchema = GetGraphMLSSchema (doc);
   MapXMLAttribute (GRAPH_TYPE, attrName, elementName, level, doc, &(attrType->AttrTypeNum));
@@ -94,14 +78,7 @@ Document       doc;
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void      MapGraphMLAttributeValue (CHAR_T* AttrVal, AttributeType attrType, int *value)
-#else
-void      MapGraphMLAttributeValue (AttrVal, attrType, value)
-CHAR_T*             AttrVal;
-AttributeType       attrType;
-int		   *value;
-#endif
+void    MapGraphMLAttributeValue (CHAR_T* AttrVal, AttributeType attrType, int *value)
 {
    int                 i;
 
@@ -123,14 +100,7 @@ int		   *value;
    MapGraphMLEntity
    Search that entity in the entity table and return the corresponding value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void   MapGraphMLEntity (STRING entityName, STRING entityValue, STRING alphabet)
-#else
-void   MapGraphMLEntity (entityName, entityValue, alphabet)
-STRING  entityName;
-STRING  entityValue;
-STRING  alphabet;
-#endif
 {
   entityValue[0] = EOS;
   *alphabet = EOS;
@@ -140,16 +110,9 @@ STRING  alphabet;
    MapGraphMLEntityWithExpat
    Search that entity in the entity table and return the corresponding value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void   MapGraphMLEntityWithExpat (STRING entityName,
 				  int* entityValue,
 				  STRING alphabet)
-#else
-void   MapGraphMLEntityWithExpat (entityName, entityValue, alphabet)
-STRING  entityName;
-int    *entityValue;
-STRING  alphabet;
-#endif
 {
    *alphabet = EOS;
 }
@@ -158,16 +121,8 @@ STRING  alphabet;
    GraphMLEntityCreated
    A GraphML entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void    GraphMLEntityCreated (USTRING entityValue, Language lang,
 			      STRING entityName, Document doc)
-#else
-void    GraphMLEntityCreated (entityValue, lang, entityName, doc)
-USTRING     entityValue;
-Language    lang;
-STRING      entityName;
-Document    doc;
-#endif
 {
 }
 
@@ -175,16 +130,8 @@ Document    doc;
    GraphMLEntityCreatedWithExpat
    A GraphML entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void  GraphMLEntityCreatedWithExpat (int entityValue, Language lang,
 				     STRING entityName, ParserData *XmlContext)
-#else
-void  GraphMLEntityCreatedWithExpat (entityValue, lang, entityName, XmlContext)
-int         entityValue;
-Language    lang;
-STRING      entityName;
-ParserData *XmlContext;
-#endif
 {
 }
 
@@ -193,16 +140,7 @@ ParserData *XmlContext;
    Create or update a specific presentation rule for element el that reflects
    the value of attribute attr, which is fill, stroke or stroke-width
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void      ParseFillStrokeAttributes (int attrType, Attribute attr, Element el, Document doc, ThotBool delete)
-#else
-void      ParseFillStrokeAttributes (attrType, attr, el, doc, delete)
-int             attrType;
-Attribute	attr;
-Element		el;
-Document	doc;
-ThotBoool       delete;
-#endif
+void   ParseFillStrokeAttributes (int attrType, Attribute attr, Element el, Document doc, ThotBool delete)
 {
 #define buflen 50
    CHAR_T               css_command[buflen+20];
@@ -234,15 +172,7 @@ ThotBoool       delete;
    does not exist yet.
    Return that GRAPHICS_UNIT element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static Element      CreateGraphicalLeaf (char shape, Element el, Document doc, ThotBool changeShape)
-#else
-static Element      CreateGraphicalLeaf (shape, el, doc, changeShape)
-char                shape;
-Element             el;
-Document            doc;
-ThotBool            changeShape;
-#endif
 {
   ElementType	   elType;
   Element	   leaf, child;
@@ -299,16 +229,7 @@ ThotBool            changeShape;
    Returns the created (or existing) element.
    When returning, closed indicates whether the shape is closed or not.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Element         CreateGraphicLeaf (Element el, Document doc, ThotBool *closed, int arrowHead)
-#else
-Element         CreateGraphicLeaf (el, doc, closed, arrowHead)
-Element		el;
-Document	doc;
-ThotBool       *closed;
-int		arrowHead;
-
-#endif
+Element  CreateGraphicLeaf (Element el, Document doc, ThotBool *closed, int arrowHead)
 {
    ElementType elType;
    Element     leaf;
@@ -400,15 +321,7 @@ int		arrowHead;
    position of element el and moves el and its following siblings within
    this new element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     CreateEnclosingElement (Element el, ElementType elType, Document doc)
-#else
-static void     CreateEnclosingElement (el, elType, doc)
-Element		el;
-ElementType	elType;
-Document	doc;
-
-#endif
 {
    Element	new, prev, next, child;
 
@@ -432,14 +345,9 @@ Document	doc;
 /*----------------------------------------------------------------------
   SetGraphicDepths forces a depth to each SVG child.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void             SetGraphicDepths (Document doc, Element el)
-#else /* __STDC__*/
-void             SetGraphicDepths (doc, el)
-Document         doc;
-Element          el;
-#endif /* __STDC__*/
 {
+#ifdef IV
   Element              child;
   ElementType          elType;
   SSchema	       graphSchema;
@@ -470,6 +378,7 @@ Element          el;
       pval.typed_data.value += 5;
     }
   TtaFreeMemory (ctxt);
+#endif
 }
 
 /*----------------------------------------------------------------------
@@ -477,15 +386,7 @@ Element          el;
    Copy the subtree pointed by the href URI as a subtree of element el,
    which is od type use.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void  CopyUseContent (Element el, Document doc, STRING href)
-#else
-void  CopyUseContent (el, doc, href)
-Element el;
-Document doc;
-Attribute attr;
-STRING href;
-#endif
 {
   Element              source, curEl, copy, child, elFound;
   ElementType          elType;
@@ -566,14 +467,7 @@ STRING href;
    GraphMLElementComplete
    Check the Thot structure of the GraphML element el.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void      GraphMLElementComplete (Element el, Document doc, int *error)
-#else
-void      GraphMLElementComplete (el, doc)
-Element		el;
-Document	doc;
-int             *error
-#endif
 {
    ElementType		elType, parentType, newType;
    Element		child, parent, new, leaf;
@@ -712,17 +606,7 @@ int             *error
  Set position, width and height for an element polyline or polygon.
  Change coords of control points accordingly.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
-void     UpdatePositionOfPoly (Element el, Document doc, int minX, int minY, int maxX, int maxY)
-#else /* __STDC__*/
-void     UpdatePositionOfPoly (el, doc, minX, minY, maxX, maxY)
-Element  el;
-Document doc;
-int      minX;
-int      minY;
-int      maxX;
-int      maxY;
-#endif /* __STDC__*/
+void   UpdatePositionOfPoly (Element el, Document doc, int minX, int minY, int maxX, int maxY)
 {
    PRule                pRule;
    Element              leaf;
@@ -788,15 +672,7 @@ int      maxY;
    CreatePoints
    Process the points attribute
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void            CreatePoints (Attribute attr, Element el, Document doc)
-#else
-void            CreatePoints (attr, el, doc)
-Attribute	attr;
-Element		el;
-Document	doc;
-
-#endif
 {
    Element		leaf;
    TypeUnit		unit;
@@ -856,15 +732,7 @@ Document	doc;
    Create or update a specific presentation rule for element el that reflects
    the value of the x, y, cx, cy, x1, x2, y1, y2, dx, or dy attribute attr.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void      ParseCoordAttribute (Attribute attr, Element el, Document doc)
-#else
-void      ParseCoordAttribute (attr, el, doc)
-Attribute	attr;
-Element		el;
-Document	doc;
-
-#endif
 {
    int                  length, attrKind, ruleType;
    STRING               text, ptr;
@@ -924,16 +792,7 @@ Document	doc;
    Create or update a specific presentation rule for element el that reflects
    the value of attribute attr, which is width_, height_, r, rx, or ry.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool   ParseWidthHeightAttribute (Attribute attr, Element el, Document doc, ThotBool delete)
-#else
-ThotBool   ParseWidthHeightAttribute (attr, el, doc, delete)
-Attribute  attr;
-Element	   el;
-Document   doc;
-ThotBool   delete;
-
-#endif
 {
    AttributeType	attrType;
    ElementType          elType;
@@ -1057,16 +916,7 @@ ThotBool   delete;
    ParseTransformAttribute
    Parse the value of a transform attribute
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void      ParseTransformAttribute (Attribute attr, Element el, Document doc, ThotBool delete)
-#else
-void      ParseTransformAttribute (attr, el, doc, delete)
-Attribute	attr;
-Element		el;
-Document	doc;
-ThotBool        delete
-
-#endif
 {
    int                  length, x, y;
    STRING               text, ptr;
@@ -1132,13 +982,7 @@ ThotBool        delete
    GetNumber
    Parse a coordinate value in a path expression and skip to next token
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static STRING      GetNumber (STRING ptr, int* coord)
-#else
-static STRING      GetNumber (ptr, coord)
-STRING ptr;
-int* coord;
-#endif
 {
   int      val;
   ThotBool negative;
@@ -1183,14 +1027,7 @@ int* coord;
    ParsePathDataAttribute
    Parse the value of a path data attribute
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
-#else
-void      ParsePathDataAttribute (attr, el, doc)
-Attribute	attr;
-Element		el;
-Document	doc;
-#endif
 {
    int          length, x, y, x1, y1, x2, y2, xcur, ycur, xinit, yinit,
                 x2prev, y2prev, x1prev, y1prev, rx, ry, xAxisRotation,
@@ -1501,15 +1338,7 @@ Document	doc;
    GraphMLAttributeComplete
    The XML parser has read attribute attr for element el in document doc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void      GraphMLAttributeComplete (Attribute attr, Element el, Document doc)
-#else
-void      GraphMLAttributeComplete (attr, el, doc)
-Attribute	attr;
-Element		el;
-Document	doc;
-
-#endif
 {
    AttributeType	attrType;
    ElementType          elType;
