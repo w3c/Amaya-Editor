@@ -183,13 +183,14 @@ typedef unsigned long  ThotColor;
 typedef XColor         ThotColorStruct;
 typedef GdkFont       *ptrfont;
 typedef GdkCursor     *ThotCursor;
-typedef XPoint         ThotPoint;
-typedef GdkEvent      *ThotEvent;
+typedef GdkPoint       ThotPoint;
+typedef GdkEvent       ThotEvent;
 typedef XKeyEvent      ThotKeyEvent;
 typedef XComposeStatus ThotComposeStatus;
 typedef XtAppContext   ThotAppContext;
 typedef XtTranslations ThotTranslations;
 typedef GdkPixmap     *ThotIcon;
+typedef GdkPixmap     *ThotPixmap;
 #else /* _GTK */
 typedef Widget         ThotWidget;
 typedef Window         ThotWindow;
