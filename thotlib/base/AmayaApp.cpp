@@ -161,7 +161,7 @@ bool AmayaApp::OnInit()
    * this is where the document's icons are stored (as mozilla) */
   m_pDocImageList = new wxImageList( 16, 16 );
   /* add the default document icon */
-  wxIcon default_icon( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"default_document.gif"), wxBITMAP_TYPE_GIF );
+  wxBitmap default_icon( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"default_document.gif"), wxBITMAP_TYPE_GIF );
   m_pDocImageList->Add( default_icon );
 
 #endif /* _GLPRINT */
