@@ -471,7 +471,6 @@ Display            *dpy;
 {
    extern int          errno;
 
-   perror ("*** Fatal Error");
    if (errno != EPIPE)
       TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
    else

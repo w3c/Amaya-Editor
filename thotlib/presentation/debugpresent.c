@@ -1372,10 +1372,7 @@ char               *output_file;
    /* on ouvre d'abord le fichier de sortie */
    output = fopen (output_file, "w");
    if (output == NULL)
-     {
-	perror ("fopen");
-	output = stdout;
-     }
+     output = stdout;
    ReadEnv ();			/* on utilise le directory courant */
 
    /* get the pointer to the presentation structure */

@@ -21,7 +21,7 @@
  * Author: D. Veillard (INRIA)
  *
  */
-
+#include "thotkey.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -82,22 +82,53 @@ static char         CurrentDir[MAX_PATH];
 static char        *Thot_Dir;
 
 
-/*
- * A few macro needed to help building the parser
- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *SkipToEqual (char *ptr)
+#else
+static char        *SkipToEqual (ptr)
+char               *ptr;
+#endif
+{
+  while (*ptr != EOS && *ptr != '=' && *ptr != '\n' && *ptr != '\r')
+    ptr++;
+  return (ptr);
+}
 
-#define IS_BLANK(ptr) \
-     (((*(ptr)) == ' ') || ((*(ptr)) == '\b') || \
-      ((*(ptr)) == '\n') || ((*(ptr)) == '\r'))
-#define SKIP_BLANK(ptr) \
-     { while (((*(ptr)) == ' ') || ((*(ptr)) == '\b') || \
-              ((*(ptr)) == '\n') || ((*(ptr)) == '\r')) ptr++; }
-#define GOTO_EQL(ptr) \
-     { while (((*(ptr)) != EOS) && ((*(ptr)) != '=') && \
-              ((*(ptr)) != '\n') && ((*(ptr)) != '\r')) ptr++; }
-#define GOTO_EOL(ptr) \
-     { while (((*(ptr)) != EOS) && \
-              ((*(ptr)) != '\n') && ((*(ptr)) != '\r')) ptr++; }
+/*----------------------------------------------------------------------
+   TtaSkipBlanks skips all spaces, tabs, linefeeds and newlines at the
+   beginning of the string and returns the pointer to the new position. 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+char               *TtaSkipBlanks (char *ptr)
+#else
+char               *TtaSkipBlanks (ptr)
+char               *ptr;
+#endif
+{
+  while (*ptr == _SPACE_ || *ptr == '\b' || *ptr == '\n' ||
+	  *ptr == '\t' || *ptr == '\r')
+    ptr++;
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
+   TtaIsBlank returns True if the first character is a space, a tab, a
+   linefeed or a newline.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             TtaIsBlank (char *ptr)
+#else
+boolean             TtaIsBlank (ptr)
+char               *ptr;
+#endif
+{
+  if (*ptr == _SPACE_ || *ptr == '\b' || *ptr == '\n' || *ptr == '\r')
+    return (TRUE);
+  else
+    return (FALSE);
+}
 
 /*----------------------------------------------------------------------
  DoVariableSubstitution : do the substitution on an input
@@ -152,7 +183,7 @@ int                 o_len;
 	  if CHECK_OVERFLOW
 	    break;
 	}
-      while ((*cour != ')') && (!(IS_BLANK (cour))));
+      while (*cour != ')' && !TtaIsBlank (cour));
       if CHECK_OVERFLOW
 	break;
       
@@ -664,7 +695,6 @@ void                TtaSaveAppRegistry ()
    if (output == NULL)
      {
 	fprintf (stderr, "Cannot save Registry to %s :\n", filename);
-	perror ("fopen failed");
 	return;
      }
    SortEnv ();
@@ -697,35 +727,28 @@ RegistryLevel       level;
    if (input == NULL)
      {
 	fprintf (stderr, "Cannot read Registry from %s :\n", filename);
-	perror ("fopen failed");
 	return;
      }
 
    while (1)
      {
-	/*
-	 * read one line in string buffer.
-	 */
+	/* read one line in string buffer */
 	if (fgets (&string[0], sizeof (string) - 1, input) == NULL)
 	   break;
 
-	str = &string[0];
-	SKIP_BLANK (str);
+	str = string;
+	str = TtaSkipBlanks (str);
 	string[sizeof (string) - 1] = EOS;
 
-	/*
-	 * Comment starts with a semicolumn.
-	 */
+	/* Comment starts with a semicolumn */
 	if (*str == ';')
 	   continue;
 
-	/*
-	 * sections are indicated between brackets, e.g. [amaya]
-	 */
+	/* sections are indicated between brackets, e.g. [amaya] */
 	if (*str == '[')
 	  {
 	     str++;
-	     SKIP_BLANK (str);
+	     str = TtaSkipBlanks (str);
 	     base = str;
 	     while ((*str != EOS) && (*str != ']'))
 		str++;
@@ -743,22 +766,18 @@ RegistryLevel       level;
 	     continue;
 	  }
 
-	/*
-	 * entries have the following form :
-	 *    name=value
-	 */
+	/* entries have the following form : name=value */
 	name = str;
-	GOTO_EQL (str);
+	str = SkipToEqual (str);
 	if (*str != '=')
 	   continue;
 	*str++ = EOS;
-	SKIP_BLANK (str);
+	str = TtaSkipBlanks (str);
 	value = str;
-	GOTO_EOL (str);
+	str = SkipToEqual (str);
 	*str = EOS;
 	AddRegisterEntry (appli, name, value, level, TRUE);
      }
-
    fclose (input);
 }
 

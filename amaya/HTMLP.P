@@ -1961,6 +1961,8 @@ BOXES
 	Visibility: 5;
 	IN Structure_view
 		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
 	IN Links_view
 		Visibility: 0;
 	END;
@@ -1979,6 +1981,8 @@ BOXES
 	InLine: No;
 	IN Structure_view
 		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
 	IN Links_view
 		Visibility: 0;
 	END;
@@ -1996,6 +2000,8 @@ BOXES
 	InLine: No;
 	IN Structure_view
 		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
 	IN Links_view
 		Visibility: 0;
 	END;
@@ -2012,6 +2018,8 @@ BOXES
 	Visibility: Creator =;
 	InLine: No;
 	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
 		Visibility: 0;
 	IN Links_view
 		Visibility: 0;
@@ -2034,6 +2042,8 @@ BOXES
 	InLine: No;
 	IN Structure_view
 		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
 	IN Links_view
 		Visibility: 0;
 	END;
@@ -2050,6 +2060,8 @@ BOXES
 	Visibility: Creator =;
 	InLine: No;
 	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
 		Visibility: 0;
 	IN Links_view
 		Visibility: 0;
@@ -2083,6 +2095,8 @@ BOXES
 	InLine: No;
 	IN Structure_view
 		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
 	IN Links_view
 		Visibility: 0;
 	END;
@@ -2099,6 +2113,8 @@ BOXES
 	Visibility: Creator =;
 	InLine: No;
 	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
 		Visibility: 0;
 	IN Links_view
 		Visibility: 0;
@@ -2146,6 +2162,10 @@ BOXES
 	Visibility: 4;
 	IN Structure_view
 		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Table_of_contents
+		Visibility: 5;
 	IN Links_view
 		Visibility: 5;
 	END;
@@ -2156,6 +2176,8 @@ BOXES
 	HorizPos: Left = Enclosing . Left + 0.2;
 	VertPos: HMiddle = Option . HMiddle;
 	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
 		Visibility: 0;
 	END;
 
@@ -2992,14 +3014,19 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view
 		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
 	END;
 
  Radio_gif: BEGIN
 	Content: Picture 'radio.gif';
 	HorizPos: Left = Previous . Right;
-	VertPos: HRef = Previous . HRef;
-	
+	VertPos: HRef = Previous . HRef;	
 	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Links_view
 		Visibility: 0;
 	END;
 
@@ -3008,6 +3035,10 @@ BOXES
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Links_view
 		Visibility: 0;
 	END;
 

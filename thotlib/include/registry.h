@@ -22,6 +22,17 @@
 #define THOT_REGISTRY_H
 
 #ifdef __STDC__
+/*
+ * TtaSkipBlanks skips all spaces, tabs, linefeeds and newlines at the
+ * beginning of the string and returns the pointer to the new position. 
+ */
+extern char        *TtaSkipBlanks (char *ptr);
+
+/*
+ * TtaIsBlank returns True if the first character is a space, a tab, a
+ * linefeed or a newline.
+ */
+extern boolean     TtaIsBlank (char *ptr);
 
 /*
  * TtaInitializeAppRegistry : initialize the Registry, the only argument
@@ -53,6 +64,8 @@ extern void         TtaSetEnvString (char *name, char *value, int overwrite);
 extern void         TtaSaveAppRegistry (void);
 
 #else  /* __STDC__ */
+extern char        *TtaSkipBlanks (/* char *ptr */);
+extern boolean     TtaIsBlank (/* char *ptr */);
 extern void         TtaInitializeAppRegistry ( /* char *appArgv0 */ );
 extern char        *TtaGetEnvString ( /* char *name */ );
 extern void         TtaSetEnvString ( /* char *name, char *value, int overwrite */ );

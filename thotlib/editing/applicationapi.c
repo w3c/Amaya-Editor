@@ -119,7 +119,7 @@ static void         ErrorHandler ()
 #else
    signal (SIGIOT, SIG_DFL);
 #endif
-   perror (TtaGetMessage (LIB, TMSG_DEBUG_ERROR));
+   fprintf (stderr, TtaGetMessage (LIB, TMSG_DEBUG_ERROR));
 
    if (ThotLocalActions [T_backuponfatal] != NULL)
      {

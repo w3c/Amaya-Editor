@@ -128,38 +128,6 @@ static struct unit_def CSSUnitNames[] =
 #define NB_UNITS (sizeof(CSSUnitNames) / sizeof(struct unit_def))
 
 /*----------------------------------------------------------------------
-   SkipBlanks:                                                  
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-char        *SkipBlanks (char *ptr)
-#else
-char        *SkipBlanks (ptr)
-char               *ptr;
-#endif
-{
-  while (*ptr == SPACE || *ptr == '\b' || *ptr == '\n' ||
-	  *ptr == '\t' || *ptr == '\r')
-    ptr++;
-  return (ptr);
-}
-
-/*----------------------------------------------------------------------
-   IsBlank:                                                  
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-boolean     IsBlank (char *ptr)
-#else
-boolean     IsBlank (ptr)
-char               *ptr;
-#endif
-{
-  if (*ptr == SPACE || *ptr == '\b' || *ptr == '\n' || *ptr == '\r')
-    return (TRUE);
-  else
-    return (FALSE);
-}
-
-/*----------------------------------------------------------------------
    SkipWord:                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -254,18 +222,18 @@ PresentationValue  *pval;
   int                 uni;
 
   pval->typed_data.unit = DRIVERP_UNIT_REL;
-  cssRule = SkipBlanks (cssRule);
+  cssRule = TtaSkipBlanks (cssRule);
   if (*cssRule == '-')
     {
       minus = 1;
       cssRule++;
-      cssRule = SkipBlanks (cssRule);
+      cssRule = TtaSkipBlanks (cssRule);
     }
 
   if (*cssRule == '+')
     {
       cssRule++;
-      cssRule = SkipBlanks (cssRule);
+      cssRule = TtaSkipBlanks (cssRule);
     }
 
   while ((*cssRule >= '0') && (*cssRule <= '9'))
@@ -312,7 +280,7 @@ PresentationValue  *pval;
       return (cssRule);
     }
 
-  cssRule = SkipBlanks (cssRule);
+  cssRule = TtaSkipBlanks (cssRule);
   for (uni = 0; uni < NB_UNITS; uni++)
     {
 #ifdef WWW_WINDOWS
@@ -932,13 +900,13 @@ CSSInfoPtr      css;
   /*
    * first format the first selector item, uniformizing blanks.
    */
-  selector = SkipBlanks (selector);
+  selector = TtaSkipBlanks (selector);
   while (1)
     {
       /* put one word in the sel buffer */
       while ((*selector != EOS) && (*selector != ',') &&
 	     (*selector != '.') && (*selector != ':') &&
-	     (*selector != '#') && (!IsBlank (selector)))
+	     (*selector != '#') && (!TtaIsBlank (selector)))
 	*cur++ = *selector++;
       *cur++ = EOS;
       
@@ -960,7 +928,7 @@ CSSInfoPtr      css;
 	  selector++;
 	  while ((*selector != EOS) && (*selector != ',') &&
 		 (*selector != '.') && (*selector != ':') &&
-		 (!IsBlank (selector)))
+		 (!TtaIsBlank (selector)))
 	    *cur++ = *selector++;
 	  *cur++ = EOS;
 	  cur = deb;
@@ -973,7 +941,7 @@ CSSInfoPtr      css;
 	  selector++;
 	  while ((*selector != EOS) && (*selector != ',') &&
 		 (*selector != '.') && (*selector != ':') &&
-		 (!IsBlank (selector)))
+		 (!TtaIsBlank (selector)))
 	    *cur++ = *selector++;
 	  *cur++ = EOS;
 	  cur = deb;
@@ -986,16 +954,16 @@ CSSInfoPtr      css;
 	  selector++;
 	  while ((*selector != EOS) && (*selector != ',') &&
 		 (*selector != '.') && (*selector != ':') &&
-		 (!IsBlank (selector)))
+		 (!TtaIsBlank (selector)))
 	    *cur++ = *selector++;
 	  *cur++ = EOS;
 	  cur = deb;
 	}
-      else if (IsBlank (selector))
+      else if (TtaIsBlank (selector))
 	{
 	  for (i = MAX_ANCESTORS - 1; i > 0; i--)
 	    ancestors[i] = ancestors[i - 1];
-	  selector = SkipBlanks (selector);
+	  selector = TtaSkipBlanks (selector);
 	  /* don't take class and pseudoclass into account for ancestors */
 	  class[0] = EOS;
 	  pseudoclass[0] = EOS;
@@ -1357,7 +1325,7 @@ char               *cssRule;
 {
    PresentationValue   pval;
 
-   cssRule = SkipBlanks (cssRule);
+   cssRule = TtaSkipBlanks (cssRule);
    if (!strncasecmp (cssRule, "block", 5))
      {
 	pval.typed_data.unit = DRIVERP_UNIT_REL;
@@ -1517,7 +1485,7 @@ char               *cssRule;
    justify.typed_data.value = 0;
    justify.typed_data.unit = 1;
 
-   cssRule = SkipBlanks (cssRule);
+   cssRule = TtaSkipBlanks (cssRule);
    if (!strncasecmp (cssRule, "left", 4))
      {
 	align.typed_data.value = AdjustLeft;
@@ -1578,7 +1546,7 @@ char               *cssRule;
 {
    PresentationValue   pval;
 
-   cssRule = SkipBlanks (cssRule);
+   cssRule = TtaSkipBlanks (cssRule);
    cssRule = ParseCSSUnit (cssRule, &pval);
    if (pval.typed_data.unit == DRIVERP_UNIT_INVALID)
      return (cssRule);
@@ -1636,7 +1604,7 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
-   cssRule = SkipBlanks (cssRule);
+   cssRule = TtaSkipBlanks (cssRule);
    if (!strncasecmp (cssRule, "normal", 6))
      cssRule = SkipWord (cssRule);
    else if (!strncasecmp (cssRule, "pre", 3))
@@ -1681,7 +1649,7 @@ char               *cssRule;
 {
    PresentationValue   pval;
 
-   cssRule = SkipBlanks (cssRule);
+   cssRule = TtaSkipBlanks (cssRule);
    if (!strncasecmp (cssRule, "xx-small", 8))
      {
 	pval.typed_data.unit = DRIVERP_UNIT_REL;
@@ -1760,7 +1728,7 @@ char               *cssRule;
 
   font.typed_data.value = 0;
   font.typed_data.unit = 1;
-  cssRule = SkipBlanks (cssRule);
+  cssRule = TtaSkipBlanks (cssRule);
   if (*cssRule == '"' || *cssRule == '\'')
      {
      quoteChar = *cssRule;
@@ -1789,7 +1757,7 @@ char               *cssRule;
 	 cssRule = SkipQuotedString (cssRule, quoteChar);
       else
          cssRule = SkipWord (cssRule);
-      cssRule = SkipBlanks (cssRule);
+      cssRule = TtaSkipBlanks (cssRule);
       if (*cssRule == ',')
 	{
 	cssRule++;
@@ -1827,7 +1795,7 @@ char               *cssRule;
 
    weight.typed_data.value = 0;
    weight.typed_data.unit = 1;
-   cssRule = SkipBlanks (cssRule);
+   cssRule = TtaSkipBlanks (cssRule);
    if (!strncasecmp (cssRule, "100", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = -3;
@@ -1943,7 +1911,7 @@ char               *cssRule;
 
    style.typed_data.value = 0;
    style.typed_data.unit = 1;
-   cssRule = SkipBlanks (cssRule);
+   cssRule = TtaSkipBlanks (cssRule);
    if (!strncasecmp (cssRule, "small-caps", 10))
      {
        /* Not supported yet */
@@ -1988,7 +1956,7 @@ char               *cssRule;
    style.typed_data.unit = 1;
    size.typed_data.value = 0;
    size.typed_data.unit = 1;
-   cssRule = SkipBlanks (cssRule);
+   cssRule = TtaSkipBlanks (cssRule);
    if (!strncasecmp (cssRule, "italic", 6))
      {
 	style.typed_data.value = DRIVERP_FONT_ITALICS;
@@ -2075,7 +2043,7 @@ char               *cssRule;
 {
   char             *ptr;
 
-  cssRule = SkipBlanks (cssRule);
+  cssRule = TtaSkipBlanks (cssRule);
   if (!strncasecmp (cssRule, "caption", 7))
     ;
   else if (!strncasecmp (cssRule, "icon", 4))
@@ -2100,11 +2068,11 @@ char               *cssRule;
 	if (*cssRule == '/')
 	  {
 	    cssRule++;
-	    SkipBlanks (cssRule);
+	    TtaSkipBlanks (cssRule);
 	    cssRule = SkipWord (cssRule);
 	  }
 	cssRule = ParseCSSFontFamily (target, context, cssRule);
-	cssRule = SkipBlanks (cssRule);
+	cssRule = TtaSkipBlanks (cssRule);
 	while (*cssRule != ';' && *cssRule != EOS)
 	  {
 	    /* now skip remainding info */
@@ -2165,7 +2133,7 @@ char               *cssRule;
 
    decor.typed_data.value = 0;
    decor.typed_data.unit = 1;
-   cssRule = SkipBlanks (cssRule);
+   cssRule = TtaSkipBlanks (cssRule);
    if (!strncasecmp (cssRule, "underline", strlen ("underline")))
      {
 	decor.typed_data.value = Underline;
@@ -2251,7 +2219,7 @@ PresentationValue  *val;
   int                 best = 0;	/* best color in list found */
   boolean             failed;
 
-  cssRule = SkipBlanks (cssRule);
+  cssRule = TtaSkipBlanks (cssRule);
   val->typed_data.unit = DRIVERP_UNIT_INVALID;
   val->typed_data.value = 0;
   failed = TRUE;
@@ -2295,11 +2263,11 @@ PresentationValue  *val;
   else if (!strncasecmp (cssRule, "rgb", 3))
     {
       cssRule += 3;
-      cssRule = SkipBlanks (cssRule);
+      cssRule = TtaSkipBlanks (cssRule);
       if (*cssRule == '(')
 	{
 	  cssRule++;
-	  cssRule = SkipBlanks (cssRule);
+	  cssRule = TtaSkipBlanks (cssRule);
 	  failed = FALSE;
 	  if (*cssRule == '%')
 	    {
@@ -2405,7 +2373,7 @@ char               *cssRule;
 #ifdef IV
    PresentationValue   margin;
 
-   cssRule = SkipBlanks (cssRule);
+   cssRule = TtaSkipBlanks (cssRule);
    /* first parse the attribute string */
    cssRule = ParseCSSUnit (cssRule, &margin);
    if (margin.typed_data.unit != DRIVERP_UNIT_INVALID && context->drv->SetVPos)
@@ -2432,7 +2400,7 @@ char               *cssRule;
 #ifdef IV
    PresentationValue   margin;
 
-   cssRule = SkipBlanks (cssRule);
+   cssRule = TtaSkipBlanks (cssRule);
    /* first parse the attribute string */
    cssRule = ParseCSSUnit (cssRule, &margin);
    if (margin.typed_data.unit != DRIVERP_UNIT_INVALID && context->drv->SetVPos)
@@ -2459,7 +2427,7 @@ char               *cssRule;
 #ifdef IV
    PresentationValue   margin;
 
-   cssRule = SkipBlanks (cssRule);
+   cssRule = TtaSkipBlanks (cssRule);
    /* first parse the attribute string */
    cssRule = ParseCSSUnit (cssRule, &margin);
    if (margin.typed_data.unit != DRIVERP_UNIT_INVALID && context->drv->SetHPos)
@@ -2599,7 +2567,7 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
-   cssRule = SkipBlanks (cssRule);
+   cssRule = TtaSkipBlanks (cssRule);
 
    /* first parse the attribute string */
    if (!strcasecmp (cssRule, "auto"))
@@ -2626,7 +2594,7 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
-   cssRule = SkipBlanks (cssRule);
+   cssRule = TtaSkipBlanks (cssRule);
 
    /* first parse the attribute string */
    if (!strcasecmp (cssRule, "auto"))
@@ -2825,11 +2793,11 @@ char               *styleString;
     {
       /* we need to compare this url with the new doc path */
       b += 3;
-      b = SkipBlanks (b);
+      b = TtaSkipBlanks (b);
       if (*b == '(')
 	{
 	  b++;
-	  b = SkipBlanks (b);
+	  b = TtaSkipBlanks (b);
 	  /*** Caution: Strings can either be written with double quotes or
 	       with single quotes. Only double quotes are handled here.
 	       Escaped quotes are not handled. See function SkipQuotedString */
@@ -2921,11 +2889,11 @@ char               *styleString;
   if (b != NULL)
     {
       b += 3;
-      b = SkipBlanks (b);
+      b = TtaSkipBlanks (b);
       if (*b == '(')
 	{
 	  b++;
-	  b = SkipBlanks (b);
+	  b = TtaSkipBlanks (b);
 	  /*** Caution: Strings can either be written with double quotes or
 	       with single quotes. Only double quotes are handled here.
 	       Escaped quotes are not handled. See function SkipQuotedString */
@@ -2983,15 +2951,15 @@ char               *cssRule;
   char                 *base;
 
   url = NULL;
-  cssRule = SkipBlanks (cssRule);
+  cssRule = TtaSkipBlanks (cssRule);
   if (!strncasecmp (cssRule, "url", 3))
     {  
       cssRule += 3;
-      cssRule = SkipBlanks (cssRule);
+      cssRule = TtaSkipBlanks (cssRule);
       if (*cssRule == '(')
 	{
 	  cssRule++;
-	  cssRule = SkipBlanks (cssRule);
+	  cssRule = TtaSkipBlanks (cssRule);
 	  /*** Caution: Strings can either be written with double quotes or
 	       with single quotes. Only double quotes are handled here.
 	       Escaped quotes are not handled. See function SkipQuotedString */
@@ -3098,7 +3066,7 @@ char               *cssRule;
 
   repeat.typed_data.value = 0;
   repeat.typed_data.unit = 1;
-  cssRule = SkipBlanks (cssRule);
+  cssRule = TtaSkipBlanks (cssRule);
   if (!strncasecmp (cssRule, "no-repeat", 9))
     {
       if (context->drv->GetPictureMode(target, context, &repeat) < 0)
@@ -3134,7 +3102,7 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
-   cssRule = SkipBlanks (cssRule);
+   cssRule = TtaSkipBlanks (cssRule);
    if (!strncasecmp (cssRule, "scroll", 6))
      cssRule = SkipWord (cssRule);
    else if (!strncasecmp (cssRule, "fixed", 5))
@@ -3159,7 +3127,7 @@ char               *cssRule;
   PresentationValue   repeat;
   boolean           ok;
 
-   cssRule = SkipBlanks (cssRule);
+   cssRule = TtaSkipBlanks (cssRule);
    ok = TRUE;
    if (!strncasecmp (cssRule, "left", 4))
      cssRule = SkipWord (cssRule);
@@ -3202,7 +3170,7 @@ char               *cssRule;
 {
   char             *ptr;
 
-  cssRule = SkipBlanks (cssRule);
+  cssRule = TtaSkipBlanks (cssRule);
   while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
     {
       /* perhaps a Backgroud Image */
@@ -3236,7 +3204,7 @@ char               *cssRule;
 	    /* rule not found */
 	    cssRule = SkipProperty (cssRule);
 	}
-      cssRule = SkipBlanks (cssRule);
+      cssRule = TtaSkipBlanks (cssRule);
     }
    return (cssRule);
 }
@@ -3340,7 +3308,7 @@ char               *cssRule;
 
   while (*cssRule != EOS)
     {
-      cssRule = SkipBlanks (cssRule);
+      cssRule = TtaSkipBlanks (cssRule);
       found = FALSE;
       /* look for the type of attribute */
       for (i = 0; i < NB_CSSSTYLEATTRIBUTE && !found; i++)
@@ -3359,11 +3327,11 @@ char               *cssRule;
       else
 	{
 	  /* update index and skip the ":" indicator if present */
-	  cssRule = SkipBlanks (cssRule);
+	  cssRule = TtaSkipBlanks (cssRule);
 	  if (*cssRule == ':')
 	    {
 	      cssRule++;
-	      cssRule = SkipBlanks (cssRule);
+	      cssRule = TtaSkipBlanks (cssRule);
 	    }
 	  /* try to parse the attribute associated to this attribute */
 	  if (HTMLStyleAttributes[i].parsing_function != NULL)
@@ -3377,11 +3345,11 @@ char               *cssRule;
 	  cssRule = p;
 	}
       /* next property */
-      cssRule = SkipBlanks (cssRule);
+      cssRule = TtaSkipBlanks (cssRule);
       if (*cssRule == ',' || *cssRule == ';')
 	{
 	  cssRule++;
-	  cssRule = SkipBlanks (cssRule);
+	  cssRule = TtaSkipBlanks (cssRule);
 	}
     }
 }
@@ -3412,7 +3380,7 @@ boolean             destroy;
   char                sauve2;
 
   /* separate the selectors string */
-  cssRule = SkipBlanks (cssRule);
+  cssRule = TtaSkipBlanks (cssRule);
   decl_end = cssRule;
   while ((*decl_end != EOS) && (*decl_end != '{'))
     decl_end++;
@@ -3496,7 +3464,7 @@ Document            doc;
   /*
    * look for a selector (ELEM)
    */
-  selector = SkipBlanks (selector);
+  selector = TtaSkipBlanks (selector);
   if (*selector == '(')
     {
       for (end_str = selector; *end_str; end_str++)
@@ -3611,7 +3579,7 @@ Document            doc;
 	     return (0);
 	  }
 	*cur = save;
-	cur = SkipBlanks (cur);
+	cur = TtaSkipBlanks (cur);
      }
    return (1);
 }
@@ -4101,15 +4069,15 @@ char               *buffer;
 		{
 		  /* import section */
 		  cssRule = &CSSbuffer[import+7];
-		  cssRule = SkipBlanks (cssRule);
+		  cssRule = TtaSkipBlanks (cssRule);
 		  if (!strncasecmp (cssRule, "url", 3))
 		    {
 		      cssRule += 3;
-		      cssRule = SkipBlanks (cssRule);
+		      cssRule = TtaSkipBlanks (cssRule);
 		      if (*cssRule == '(')
 			{
 			  cssRule++;
-			  cssRule = SkipBlanks (cssRule);
+			  cssRule = TtaSkipBlanks (cssRule);
 			  base = cssRule;
 			  while (*cssRule != EOS && *cssRule != ')')
 			    cssRule++;

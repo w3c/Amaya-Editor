@@ -10,10 +10,10 @@
 <pre>
 <em>ThotLib V2.1e</em></pre>
 <pre>
-Date: July 29, 1998</pre>
+Date: September 4, 1998</pre>
 
 <h1>The Thot Tool Kit API</h1>
-<address>Vincent QUINT, Ir&egrave;ne VATTON</address>
+<address>Vincent QUINT, Ir&egrave;ne VATTON - INRIA</address>
 
 <hr>
 
@@ -59,7 +59,7 @@ representing cross- references and other types of hypertext links.</p>
 <p>As the type of an element is not always sufficient for completely
 representing the role of that element in the document logical structure, the
 notion of <em>logical attribute</em> has been introduced. A logical attribute
-is an information associated with an element that adds semantics to that
+is information associated with an element that adds semantics to that
 element.</p>
 
 <p>The logical structure of a document is constrained by a model, called a
@@ -463,30 +463,6 @@ TtaQuit.</p>
 
 <hr>
 </div>
-
-<div class=Section>
-<h4><a name="sectc515">5.1.5</a> TtaGetEnvString</h4>
-<A NAME="L32637"></A>
-<p>Reads an entry from the Thot Registry. It returns a
-<strong>non-modifiable</strong> string associated to the name given as
-parameter. Thot first looks for a specific value associated to the current
-application, and if not found try to find one in the "thot" section. Hence
-settings saved in the "thot" section are shared by all applications based on
-the Thot library, but can be refined to fit each application specific needs.
-If no value is found for the requested entry, the function returns NULL.</p>
-
-<hr>
-
-<p>char *TtaGetEnvString(const char *name)</p>
-
-<hr>
-
-<dl>
-<dt>Parameters:</dt>
-
-<dd><em>name</em>: name of the entry.
-</dl>
-</div>
 </div>
 </div>
 
@@ -555,6 +531,74 @@ NAME="L677"></A>TtaGetMemory.</p>
 <dd>TtaGetMemory.
 </dl>
 </div>
+
+<div class=Section>
+<h4><a name="sectc613">6.1.3</a> TtaGetEnvString</h4>
+<A NAME="L32637"></A>
+<p>Reads an entry from the Thot Registry. It returns a
+<strong>non-modifiable</strong> string associated to the name given as
+parameter. Thot first looks for a specific value associated to the current
+application, and if not found try to find one in the "thot" section. Hence
+settings saved in the "thot" section are shared by all applications based on
+the Thot library, but can be refined to fit each application specific needs.
+If no value is found for the requested entry, the function returns NULL.</p>
+
+<hr>
+
+<p>char *TtaGetEnvString(const char *name)</p>
+
+<hr>
+
+<dl>
+<dt>Parameters:</dt>
+
+<dd><em>name</em>: name of the entry.
+</dl>
+</div>
+
+<div class=Section>
+<h4><a name="sectc614">6.1.4</a> TtaIsBlank</h4>
+<A NAME="L57533"></A>
+<p>TtaSkipBlanks skips all spaces, tabs, linefeeds and newlines at the
+beginning of the string and returns the pointer to the new position.</p>
+
+<hr>
+
+<p>boolean TtaIsBlank (char *ptr);</p>
+
+<hr>
+
+<dl>
+<dt>Parameters:</dt>
+
+<dd><em>ptr</em>: the source string.
+</dl>
+</div>
+
+<div class=Section>
+<h4><a name="sectc615">6.1.5</a> TtaSkipBlanks</h4>
+<A NAME="L57558"></A>
+<p>TtaSkipBlanks skips all spaces, tabs, linefeeds and newlines at the
+beginning of the string and returns the pointer to the new position.</p>
+
+<hr>
+
+<p>char *TtaSkipBlanks (char *ptr)</p>
+
+<hr>
+
+<dl>
+<dt>Parameters:</dt>
+
+<dd><em>ptr</em>: the source string.
+</dl>
+
+<dl>
+<dt>Return value:</dt>
+
+<dd>the pointer to the new position in the source string.
+</dl>
+</div>
 </div>
 
 <div class=Section>
@@ -608,7 +652,7 @@ not.</p>
 <div class=Section>
 <h4><a name="sectc631">6.3.1</a> TtaGetVersion</h4>
 <A NAME="L737"></A>
-<p>Returns the identifier of the current version of the Thot editing tool
+<p>Returns the identifier of the current version of the Thot eRediting tool
 kit.</p>
 
 <hr>
@@ -703,14 +747,14 @@ procedure in the same application.</p>
 <p>The <pre>callbackProcedure</pre> procedure declared  is called for each
 event concerning these specific dialogue items. It receives three parameters:
 the dialogue item reference, the data type, and the data value:</p>
+
 <pre>
-<p><br>
-  void callbakProcedure(reference, datatype, data)<br>
-     int reference;<br>
-     int datatype;</p>
-</pre><pre>
-<p>     char *data; </p>
+void callbakProcedure(reference, datatype, data)
+     int reference;
+     int datatype;
+     char *data;
 </pre>
+
 <hr>
 
 <p>int TtaSetCallback(void (*callbackProcedure) (), int numberOfRef)</p>
@@ -1502,13 +1546,11 @@ horizontally or in the same column is arranged vertically.</p>
 <div class=Section>
 <h4><a name="sectc913">9.1.3</a> <a name="L34518">TtaNewSheet</a></h4>
 <A NAME="L34519"></A>
-<p>
 <p>This function creates a sheet element attached to the ThotWidget parent.
 When the parent ThotWidget is distroyed, the ThotWidget that realizes this
 sheet is automatically destroyed. Usually the parent is the document view
 frame returned by the API function  TtaGetViewFrame (document, view)  and the
-sheet has to be destroyed before closing the document view. </p>
-</p>
+sheet has to be destroyed before closing the document view.</p>
 
 <p>A sheet is similar to a form element, but only the "cancel/done" button is
 automatically generated and other extra buttons are explicitly declared. The
@@ -1560,13 +1602,11 @@ horizontally or in the same column is arranged vertically.</p>
 <div class=Section>
 <h4><a name="sectc914">9.1.4</a> TtaNewDialogSheet</h4>
 <A NAME="L35163"></A>
-<p>
 <p>This function creates a dialog sheet element attached to the ThotWidget
 parent. When the parent ThotWidget is distroyed, the ThotWidget that realizes
 this sheet is automatically destroyed. Usually the parent is the document view
 frame returned by the API function  TtaGetViewFrame (document, view)  and the
-sheet has to be destroyed before closing the document view. </p>
-</p>
+sheet has to be destroyed before closing the document view.</p>
 
 <p>A dialog sheet is similar to a sheet element, but no "cancel/done" button
 is automatically generated.</p>

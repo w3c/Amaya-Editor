@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern char *TtaSkipBlanks ( char *ptr );
+extern boolean TtaIsBlank ( char *ptr );
 extern char *TtaGetEnvString ( char *name );
 extern void TtaSetEnvString ( char *name,
                               char *value,
@@ -18,6 +20,8 @@ extern int SearchFile ( char *fileName,
 
 #else /* __STDC__ */
 
+extern char *TtaSkipBlanks (/* char *ptr */);
+extern boolean TtaIsBlank (/* char *ptr */);
 extern char *TtaGetEnvString (/* char *name */);
 extern void TtaSetEnvString (/* char *name,
                                 char *value,
