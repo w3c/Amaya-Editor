@@ -103,6 +103,83 @@ static ThotBool ElIsHidden (Element el)
 }
 
 /*----------------------------------------------------------------------
+  GetIdValue
+
+  If the element has an id attribute, the function returns the value of
+  this attribute. It's up to the caller to free the string that's returned.
+  Returns NULL otherwise
+  ----------------------------------------------------------------------*/
+static char * GetIdValue (Element el)
+{
+  Attribute attr;
+  AttributeType attrType;
+  ElementType elType;
+  char *value;
+  int len;
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = THOT_ATTR_ID;
+
+  attr = TtaGetAttribute (el, attrType);
+  if (attr != NULL)
+    {
+      /* there's an ID attribute */
+      len = TtaGetTextAttributeLength (attr) + 1;
+      value = TtaAllocString (len);
+      TtaGiveTextAttributeValue (attr, value, &len);
+      
+    }
+  else
+    value  = NULL;
+
+  return value;
+}
+
+/*----------------------------------------------------------------------
+  TestIdValue
+
+  returns TRUE if the element has an attribute ID with value val
+  ----------------------------------------------------------------------*/
+static ThotBool TestIdValue (Element el, char *val)
+{
+  char *id_value;
+  int result;
+
+  id_value = GetIdValue (el);
+
+  if (id_value)
+    {
+      if (!strcmp (id_value, val))
+	result = TRUE;
+      TtaFreeMemory (id_value);
+    }
+  else
+    result = FALSE;
+
+  return (result);
+}
+
+/*----------------------------------------------------------------------
+  TestElName
+
+  returns TRUE if the element has a name equal to name
+  ----------------------------------------------------------------------*/
+static ThotBool TestElName (Element el, char *name)
+{
+  ElementType elType;
+  char *typeName;
+
+  elType = TtaGetElementType (el);
+  typeName = TtaGetElementTypeName (elType);
+  printf ("testing element: %s\n", typeName);
+  if (typeName && !strcmp (name, typeName))
+      return TRUE;
+  else
+    return FALSE;
+}
+
+/*----------------------------------------------------------------------
   GetParent
 
   returns the first parent element which doesn't have
@@ -147,7 +224,7 @@ static void PreviousSibling (Element *el)
     return;
 
   sibling = *el;
-  /* get the next sibling in the Thot tree */
+  /* get the previous sibling in the Thot tree */
   TtaPreviousSibling (&sibling);
   if (sibling)
     {
@@ -174,38 +251,79 @@ static void PreviousSibling (Element *el)
 }
 
 /*----------------------------------------------------------------------
-  GetIdValue
+  SearchAttrId
 
-  If the element has an id attribute, the function returns the value of
-  this attribute. It's up to the caller to free the string that's returned.
-  Returns NULL otherwise
+  returns the first element that doesn't have an exception and that
+  has an ID attribute with value val
   ----------------------------------------------------------------------*/
-static char * GetIdValue (Element el)
+static Element SearchAttrId (Element root, char *val)
 {
-  Attribute attr;
-  AttributeType attrType;
-  ElementType elType;
-  char *value;
-  int len;
+  Element sibling, result;
 
-  elType = TtaGetElementType (el);
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = THOT_ATTR_ID;
-
-  attr = TtaGetAttribute (el, attrType);
-  if (attr != NULL)
+  if (root && TestIdValue (root, val))
+    return root;
+  else if (!root)
+    return NULL;
+  
+  sibling = TtaGetFirstChild (root);
+  result = 0;
+  while (!result && sibling)
     {
-      /* there's an ID attribute */
-      len = TtaGetTextAttributeLength (attr) + 1;
-      value = TtaAllocString (len);
-      TtaGiveTextAttributeValue (attr, value, &len);
-      
+      result = SearchAttrId (sibling, val);
+      if (result)
+	break;
+      TtaNextSibling (&sibling);
     }
-  else
-    value  = NULL;
-
-  return value;
+  
+  return result;
 }
+
+/*----------------------------------------------------------------------
+  SearchChildIndex
+  ----------------------------------------------------------------------*/
+static Element SearchChildIndex (Element root, char *el_name, int index)
+{
+  Element sibling, result;
+
+  if (!root)
+    return NULL;
+  
+  if (index == 0)
+    index++;
+
+  sibling = TtaGetFirstChild (root);
+  if (!sibling)
+    return NULL;
+
+  /* get the next sibling in the Thot tree */
+  while (sibling)
+    {
+      /* if the element call the algorithm recursively from this point */
+      if (ElIsHidden (sibling))
+	  {
+	    result = SearchChildIndex (sibling, el_name, index);
+	    if (result)
+	      return result;
+	    else
+	      {
+		TtaNextSibling (&sibling);
+		continue;
+	      }
+	  }
+      /* test the current node */
+      if (TestElName (sibling, el_name))
+	{
+	  /* we found the element */
+	  if (index == 1)
+	    return sibling;
+	  index--;
+	}
+      /* go to the next sibling */
+	TtaNextSibling (&sibling);
+    }
+  return (sibling);
+}
+
 
 /*----------------------------------------------------------------------
   XPathList2Str
@@ -466,12 +584,32 @@ View view;
     TtaFreeMemory (lastXpath);
 
   fprintf (stderr, "final expression is: %s\n", xptr_expr);
-  
-  TtaFreeMemory (xptr_expr);
+
+  /* @@@ test */
+  firstEl = TtaGetMainRoot (doc);
+  firstEl = SearchAttrId (firstEl, "jose");
+  if (firstEl)
+    printf ("found id on element %d\n", firstEl);
+  else
+    printf ("no attribute found\n");
+
+  /* point to body */
+  firstEl = TtaGetMainRoot (doc);
+  firstEl = TtaGetFirstChild (firstEl);
+  TtaNextSibling (&firstEl);
+  /* point to the first child */
+  firstEl = TtaGetFirstChild (firstEl);
+
+  firstEl = SearchChildIndex (firstEl, "dt", 3);
+  if (firstEl)
+    printf ("found element %d\n", firstEl);
+  else
+    printf ("no element found\n");
+
+  /* @@@ test */
+
   /* @@ should return xptr_expr */
+  TtaFreeMemory (xptr_expr);
   return NULL;
 }
 #endif ANNOTATIONS
-
-
-
