@@ -121,7 +121,7 @@ extern Attribute TtaGetAttribute (/* Element element,
                                      AttributeType attributeType */);
 extern int TtaGetTextAttributeLength (/* Attribute attribute */);
 extern void TtaGiveTextAttributeValue (/* Attribute attribute,
-                                          char* buffer,
+                                          CHAR_T* buffer,
                                           int *length */);
 
 #endif /* __STDC__ */

@@ -309,8 +309,6 @@ extern void StorePageInfo ( int pagenum,
 extern void psBoundingBox ( int frame,
                             int width,
                             int height );
-extern int EndOfString ( char* string,
-                         char* suffix );
 extern void PaintWithPattern ( int frame,
                                int x,
                                int y,
@@ -628,8 +626,6 @@ extern void StorePageInfo (/* int pagenum,
 extern void psBoundingBox (/* int frame,
                               int width,
                               int height */);
-extern int EndOfString (/* char* string,
-                           char* suffix */);
 extern void PaintWithPattern (/* int frame,
                                  int x,
                                  int y,

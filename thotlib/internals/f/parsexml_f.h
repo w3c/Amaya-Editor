@@ -14,6 +14,7 @@ extern Element XmlInsertElement ( Element newElement );
 extern void XmlTextToDocument ( void );
 extern void FreeXmlParser ( void );
 extern Document XmlParseDoc ( STRING name );
+extern void XmlParserLoadResources ( void );
 
 #else /* __STDC__ */
 
@@ -25,6 +26,7 @@ extern Element XmlInsertElement (/* Element newElement */);
 extern void XmlTextToDocument (/* void */);
 extern void FreeXmlParser (/* void */);
 extern Document XmlParseDoc (/* STRING name */);
+extern void XmlParserLoadResources (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

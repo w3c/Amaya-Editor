@@ -15,7 +15,7 @@ extern void FreeTranslationSchema ( PtrTSchema pTSch,
 #else /* __STDC__ */
 
 extern void TSchemaError (/* int err */);
-extern PtrTSchema ReadTranslationSchema (/* Name fileName,
+extern PtrTSchema ReadTranslationSchema (/* CUSName fileName,
                                             PtrSSchema pSS */);
 extern void FreeTranslationSchema (/* PtrTSchema pTSch,
                                       PtrSSchema pSS */);

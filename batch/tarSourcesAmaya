@@ -274,7 +274,6 @@ Amaya/thotlib/presentation/*.c \
 Amaya/thotlib/tree/*.c \
 Amaya/thotlib/unicode/*.c \
 Amaya/thotlib/view/*.c \
-Amaya/thotlib/xml/*.c \
 Amaya/tools/mkdep/Makefile \
 Amaya/tools/mkdep/mkdep.c \
 Amaya/tools/cextract-1.7/HPUX.Install \

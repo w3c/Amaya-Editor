@@ -24,7 +24,7 @@ extern void DisplayPivotMessage ( STRING code );
 #else /* __STDC__ */
 
 extern CHAR_T* AsciiTranslate (/* char* pBuffer */);
-extern char* ISOAsciiTranslate ( /* char* pBuffer */);
+extern char* ISOAsciiTranslate (/* char* pBuffer */);
 extern int TtaGetMessageTable (/* CONST CharUnit* msgName,
                                   int msgNumber */);
 extern void FreeAllMessages (/* void */);

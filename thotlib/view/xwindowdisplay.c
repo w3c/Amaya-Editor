@@ -63,14 +63,13 @@ static int          stack_deep;
   accordingly to the ascent of the font used.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FontOrig (ptrfont font, CHAR_T firstchar, int *pX, int *pY)
+void          FontOrig (ptrfont font, CHAR_T firstchar, int *pX, int *pY)
 #else  /* __STDC__ */
-void                FontOrig (font, firstchar, pX, pY)
-ptrfont             font;
-CHAR_T                firstchar;
-int                *pX;
-int                *pY;
-
+void          FontOrig (font, firstchar, pX, pY)
+ptrfont       font;
+CHAR_T        firstchar;
+int          *pX;
+int          *pY;
 #endif /* __STDC__ */
 {
    if (!font)
@@ -3056,44 +3055,6 @@ int yf;
     }
 }
 
-/*----------------------------------------------------------------------
-  EndOfString check wether string end by suffix.
-
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 EndOfString (char* string, char* suffix)
-#else  /* __STDC__ */
-int                 EndOfString (string, suffix)
-char*               string;
-char*               suffix;
-
-#endif /* __STDC__ */
-{
-   int                 string_lenght, suffix_lenght;
-
-   string_lenght = strlen (string);
-   suffix_lenght = strlen (suffix);
-   if (string_lenght < suffix_lenght)
-      return 0;
-   else
-      return (strcmp (string + string_lenght - suffix_lenght, suffix) == 0);
-}
-
-/*----------------------------------------------------------------------
-  XFlushOutput enforce updating of the calculated image for frame.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                XFlushOutput (int frame)
-#else  /* __STDC__ */
-void                XFlushOutput (frame)
-int                 frame;
-
-#endif /* __STDC__ */
-{
-#ifndef _GTK
-   XFlush (TtDisplay);
-#endif /* _GTK */
-}
 
 /*----------------------------------------------------------------------
   PaintWithPattern fill the rectangle associated to a window w (or frame if w= 0)

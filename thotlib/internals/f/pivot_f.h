@@ -54,7 +54,7 @@ extern void TtaReadPivotVersion ( BinFile pivotFile,
 extern void TtaWritePivotVersion ( BinFile pivotFile,
                                    Document document );
 extern void TtaReadLabel ( BinFile pivotFile,
-                           CHAR_T byte,
+                           char byte,
                            char* labelRead );
 extern void TtaWriteLabel ( BinFile pivotFile,
                             char* label );
@@ -84,7 +84,7 @@ extern void TtaWriteSchemaNames (/* BinFile pivotFile,
                                     Document document */);
 extern void TtaReadSchemaNames (/* BinFile pivotFile,
                                    Document document,
-                                   PCHAR_T nextChar,
+                                   char* nextChar,
                                    void (*withThisPSchema) (Document document,
                                    char* natSchema,
                                    char* presentSchema) */);
@@ -102,7 +102,7 @@ extern void TtaReadTree (/* BinFile pivotFile,
                             SSchema pSchema,
                             Element element,
                             Document document,
-                            PCHAR_T byte,
+                            char* byte,
                             Element * elementRead */);
 extern void TtaWriteTree (/* BinFile pivotFile,
                              Element element,
@@ -115,13 +115,13 @@ extern void TtaReadPivotVersion (/* BinFile pivotFile,
 extern void TtaWritePivotVersion (/* BinFile pivotFile,
                                      Document document */);
 extern void TtaReadLabel (/* BinFile pivotFile,
-                             CHAR_T byte,
-                             STRING labelRead */);
+                             char byte,
+                             char* labelRead */);
 extern void TtaWriteLabel (/* BinFile pivotFile,
                               char* label */);
 extern Element TtaNewElementWithLabel (/* Document document,
                                           ElementType elemType,
-                                          STRING label */);
+                                          char* label */);
 extern int TtaGetLabelMax (/* Document document */);
 extern void TtaSetLabelMax (/* Document document,
                                int label */);

@@ -1936,20 +1936,6 @@ BOXES
 		END;
 	END;
 
- Text_Space: BEGIN
-	Content: Graphics ' ';
-	VertPos: HRef = Previous . HRef;
-	If Immediately within Form BEGIN
-	   VertPos: Top = Previous . Bottom;
-	   MarginTop: 0.4;
-	   END;
-	HorizPos: Left = Previous . Right;
-	Width: 3 px;
-	Height: 1 px;
-	IN Structure_view
-		Visibility: 0;
-	END;
-
  Text_Mark: BEGIN
 	Content: Graphics 'Z';	{ draw the top and left side of the box }
 	VertPos: Top = Enclosing . Top;
@@ -1988,135 +1974,30 @@ BOXES
 		Visibility: 0;
 	END;
 
- Button_Frame: BEGIN
-	Content: Graphics 'X';
-	VertPos: Top = Enclosing . Top- 1 px;
-	HorizPos: Left = Enclosing . Left - 1 px;
-	Width: Enclosing . Width + 2 px;
-	Height: Enclosing . Height;
-	Foreground : Black;
-	LineWeight: 2 px;
-	Depth: Creator + 1;
-	Visibility: Creator =;
-	InLine: No;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
- Button_Mark: BEGIN
-	Content: Graphics 'Z';
-	VertPos: Top = Enclosing . Top;
-	HorizPos: Left = Enclosing . Left - 1 px;
-	Width: Enclosing . Width + 2 px;
-	Height: Enclosing . Height;
-	Foreground : White;
-	LineWeight: 2 px;
-	Depth: Creator + 1;
-	Visibility: Creator =;
-	InLine: No;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
- BrowseButton_Frame: BEGIN
-	Content: Graphics 'R';
-	VertPos: Top = Creator . Top - 1 px;
-	HorizPos: Left = Creator . Right - 1 px;
-	Width: 4;
-	Height: Creator . Height;
-	Foreground : Black;
-#ifndef BLACK_WHITE
-	Background : Grey;
-	FillPattern: backgroundcolor;
-#endif
-	LineWeight: 2 px;
-	Depth: Creator + 2;
-	Visibility: Creator =;
-	InLine: No;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
- BrowseButton_Mark: BEGIN
-	Content: Graphics 'Z';
-	VertPos: Top = Creator . Top;
-	HorizPos: Left = Creator . Right;
-	Width: 4;
-	Height: Creator . Height;
-	Foreground : White;
-	LineWeight: 2 px;
-	Depth: Creator + 1;
-	Visibility: Creator =;
-	InLine: No;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
  BrowseLabel: BEGIN
 	Content: Text ' Browse...';
-	HorizPos: VMiddle = Previous BrowseButton_Mark . VMiddle;
-	VertPos: HMiddle = Previous BrowseButton_Mark . HMiddle;
+	VertPos: Top = Creator . Top;
+	HorizPos: Left = Creator . Right;
 	Width: Enclosed . Width;
+	Height: Enclosed . Height;
+	MarginTop: 1 px;
+	MarginLeft: 3 px;
+	MarginBottom: 1 px;
+	MarginRight: 3 px;
+	PaddingTop: 1 px;
+	PaddingLeft: 1 px;
+	PaddingBottom: 1 px;
+	PaddingRight: 1 px;
+	BorderTopWidth: 1 px;
+	BorderLeftWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderRightWidth: 1 px;
+	BorderTopColor: White;
+	BorderLeftColor: White;
+	BorderBottomColor: Black;
+	BorderRightColor: Black;
 	Visibility: Creator =;
 	IN Structure_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
- ButtonElem_Frame: BEGIN
-	Content: Graphics 'R';
-	VertPos: Top = Creator . Top - 2 px;
-	HorizPos: Left = Creator . Left - 2 px;
-	Width: Creator . Width + 6 px;
-	Height: Creator . Height + 4 px;
-	Foreground : Black;
-#ifndef BLACK_WHITE
-	Background : Grey;
-	FillPattern: backgroundcolor;
-#endif
-	LineWeight: 2 px;
-	Depth: Creator + 1;
-	Visibility: Creator =;
-	InLine: No;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
- ButtonElem_Mark: BEGIN
-	Content: Graphics 'Z';
-	VertPos: Top = Creator . Top - 1 px;
-	HorizPos: Left = Creator . Left - 1 px;
-	Width: Creator . Width + 6 px;
-	Height: Creator . Height + 4 px;
-	Foreground : White;
-	LineWeight: 2 px;
-	Depth: Creator + 1;
-	Visibility: Creator =;
-	InLine: No;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
 		Visibility: 0;
 	IN Links_view
 		Visibility: 0;
@@ -3024,8 +2905,30 @@ BOXES
 
  Value_Box: BEGIN
 	Content: (Value_);
-	HorizPos: VMiddle = Enclosing . VMiddle;
-	VertPos: HMiddle = Enclosing . HMiddle;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	MarginTop: 1 px;
+	MarginLeft: 3 px;
+	MarginBottom: 1 px;
+	MarginRight: 3 px;
+	PaddingTop: 1 px;
+	PaddingLeft: 3 px;
+	PaddingBottom: 1 px;
+	PaddingRight: 3 px;
+	BorderTopWidth: 1 px;
+	BorderLeftWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderRightWidth: 1 px;
+	BorderTopColor: White;
+	BorderLeftColor: White;
+	BorderBottomColor: Black;
+	BorderRightColor: Black;
+	BorderTopStyle: Solid;
+	BorderLeftStyle: Solid;
+	BorderBottomStyle: Solid;
+	BorderRightStyle: Solid;
+	Background: Creator =;
+	FillPattern: backgroundcolor;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -5464,10 +5367,6 @@ BOXES
 	Width: Creator . Width;
 	Height: Bottom = Referred Table_row . Bottom;
 	VertOverflow : Yes;
-{	PaddingTop: Creator =;
-	PaddingRight: Creator =;
-	PaddingBottom: Creator =;
-	PaddingLeft: Creator =;}
 	BorderTopWidth: Creator =;
 	BorderRightWidth: Creator =;
 	BorderBottomWidth: Creator =;
@@ -5497,10 +5396,6 @@ BOXES
 	HorizPos: Left = Creator . Left;
 	Width: Creator . Width;
 	Height: Enclosing . Height;
-{	PaddingTop: Creator =;
-	PaddingRight: Creator =;
-	PaddingBottom: Creator =;
-	PaddingLeft: Creator =;}
 	BorderTopWidth: Creator =;
 	BorderRightWidth: Creator =;
 	BorderBottomWidth: Creator =;
@@ -6153,10 +6048,11 @@ RULES
 	END;
 
  C_Empty: BEGIN
-	Width: 0;
+	Width: 1 px;
+	Height: 1 px;
+	if NOT within Frame
+	   Visibility: 0;
 	FillPattern: nopattern;
-	if within ISINDEX
-	   Height: 1 px;
 	IN Structure_view
 	   BEGIN
 	   if within ISINDEX
@@ -6178,7 +6074,7 @@ RULES
 	VertPos: Top = Previous NOT MAP . Bottom;
 	Width: Enclosing . Width;
 	MarginTop: VSpaceBeforeH1;
-	MarginBottom: 1.5;
+	MarginBottom: 0.5;
 	Size: Enclosing + 6;
 	Weight: Bold;
 	Hyphenate: No;
@@ -6796,7 +6692,8 @@ RULES
 	CreateBefore(APPLET_S);
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	VertPos: Top = Previous NOT MAP . Bottom;
+	MarginTop:  0.4;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -6825,7 +6722,8 @@ RULES
 		Visibility: 0;
 	Width: Enclosing . Width;
 	Height: 100;
-	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	VertPos: Top = Previous NOT MAP . Bottom;
+	MarginTop: 0.4;
 	LineBreak: No;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
@@ -6932,7 +6830,8 @@ RULES
 
  Math: BEGIN
 	CreateBefore(Math_S);
-	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	VertPos: Top = Previous NOT MAP . Bottom;
+	MarginTop: 0.4;
 	IF Immediately within Center
 		HorizPos: VMiddle = Enclosing . VMiddle;
 	LineBreak: No;
@@ -6967,7 +6866,8 @@ RULES
 
  XMLGraphics: BEGIN
 	CreateBefore(Graph_S);
-	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	VertPos: Top = Previous NOT MAP . Bottom;
+	MarginTop: 0.4;
 	LineBreak: No;
 	LineWeight: 0;
 	Justify: No;
@@ -7002,10 +6902,9 @@ RULES
 #endif
 	Adjust: Enclosing =;
 	Width: Enclosing . Width;
+	VertPos: Top = Previous NOT MAP . Bottom;
 	if NOT within Definition and NOT within List_Item
-	    VertPos: Top = Previous NOT MAP . Bottom + 0.4;
-	otherwise
-	    VertPos: Top = Previous NOT MAP . Bottom;
+	    MarginTop: 0.4;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7033,7 +6932,7 @@ RULES
 	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom;
 	if NOT within Definition and NOT within List_Item
-	    VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	    MarginTop: 0.4;
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
 		NoLine;
@@ -7047,7 +6946,8 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	VertPos: Top = Previous NOT MAP . Bottom;
+	MarginTop: 0.4;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7113,7 +7013,7 @@ RULES
 	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom;
 	if NOT within Definition and NOT within List_Item
-	   VertPos: Top = Previous NOT MAP . Bottom + 0.5;
+	   MarginTop: 0.5;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7138,7 +7038,7 @@ RULES
 	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom;
 	if NOT within Definition and NOT within List_Item
-	   VertPos: Top = Previous NOT MAP . Bottom + 0.5;
+	   MarginTop: 0.5;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7154,7 +7054,8 @@ RULES
 	Line;
 	Style: Italics;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom + 0.5;
+	VertPos: Top = Previous NOT MAP . Bottom;
+	MarginTop: 0.5;
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -7170,7 +7071,8 @@ RULES
  Menu:	BEGIN
 	LineBreak: No;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom + 0.5;
+	VertPos: Top = Previous NOT MAP . Bottom;
+	MarginTop: 0.5;
 	CreateBefore(MENU_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
@@ -7185,7 +7087,8 @@ RULES
  Directory: BEGIN
 	LineBreak: No;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom + 0.5;
+	VertPos: Top = Previous NOT MAP . Bottom;
+	MarginTop: 0.5;
 	CreateBefore(DIR_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
@@ -7213,7 +7116,8 @@ RULES
 	END;
 
  Preformatted: BEGIN
-	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	VertPos: Top = Previous NOT MAP . Bottom;
+	MarginTop: 0.4;
 	If within Center
 	   HorizPos: VMiddle = Enclosing . VMiddle;
 	Adjust: Left;
@@ -7248,7 +7152,8 @@ RULES
 	Width: Enclosing . Width;
 	Height: 2 px;
 	HorizPos: VMiddle = Enclosing . VMiddle;
-	VertPos: Top = Previous . Bottom + 0.2;
+	VertPos: Top = Previous . Bottom;
+	MarginTop: 0.2;
 	LineWeight: 1 px;
 	Foreground: Black;
 	IN Alternate_view
@@ -7303,7 +7208,8 @@ RULES
 	CreateBefore(OPTION_S);
 	Visibility: 0;
 	HorizPos: Left = Option_gif . Right + 0.2;	
-	VertPos: Top = Previous Option . Bottom + 0.1;
+	VertPos: Top = Previous Option . Bottom;
+	MarginTop: 0.1;
 	LineBreak: No;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
@@ -7352,7 +7258,8 @@ RULES
 	CreateBefore(FIELDSET_S);
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom + 0.2;
+	VertPos: Top = Previous NOT MAP . Bottom;
+	MarginTop: 0.2;
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -7402,30 +7309,48 @@ RULES
  Checkbox_Input: BEGIN
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Checkbox);
-	CreateBefore(Text_Space);
+	MarginTop: 1 px;
+	MarginLeft: 3 px;
+	MarginBottom: 1 px;
+	MarginRight: 3 px;
 	LineBreak: No;
 	Width: 1 px;  Height: 1 px;
 	In Structure_view BEGIN
 		Visibility: Enclosing =;
 		Height: DOC_FONTSIZE;
+		MarginTop: 0;
+		MarginLeft: 0;
+		MarginBottom: 0;
+		MarginRight: 0;
 		END;
 	END;
 
  Radio_Input: BEGIN
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Radio);
-	CreateBefore(Text_Space);
+	MarginTop: 1 px;
+	MarginLeft: 3 px;
+	MarginBottom: 1 px;
+	MarginRight: 3 px;
 	LineBreak: No;
 	Width: 1 px;  Height: 1 px;
 	In Structure_view BEGIN
 		Visibility: Enclosing =;
 		Height: DOC_FONTSIZE;
+		MarginTop: 0;
+		MarginLeft: 0;
+		MarginBottom: 0;
+		MarginRight: 0;
 		END;
 	END;
 
  Text_Input: BEGIN
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Text);
+	MarginTop: 1 px;
+	MarginLeft: 3 px;
+	MarginBottom: 1 px;
+	MarginRight: 3 px;
 	Width: 20 ex Min;
 	Height: 2 Min;
 	Font: INPUT_Font;
@@ -7439,14 +7364,16 @@ RULES
 		Width: 1 px;
 		Height: DOC_FONTSIZE;
 		Size: Enclosing =;
+		MarginTop: 0;
+		MarginLeft: 0;
+		MarginBottom: 0;
+		MarginRight: 0;
 		END;
 	END;
 
  File_Input: BEGIN
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_File);
-	CreateAfter(BrowseButton_Frame);
-	CreateAfter(BrowseButton_Mark);
 	CreateAfter(BrowseLabel);
 	Width: 20 ex Min;
 	Height: 2 Min;
@@ -7477,6 +7404,10 @@ RULES
  Password_Input: BEGIN
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Password);
+	MarginTop: 1 px;
+	MarginLeft: 3 px;
+	MarginBottom: 1 px;
+	MarginRight: 3 px;
 	Width: 20 ex Min;
 	Height: 2 Min;
 	Font: INPUT_Font;
@@ -7487,6 +7418,10 @@ RULES
 	Background : LightRed4;
 #endif
 	IN Structure_view BEGIN
+		MarginTop: 0;
+		MarginLeft: 0;
+		MarginBottom: 0;
+		MarginRight: 0;
 		Width: 1 px;
 		Height: DOC_FONTSIZE;
 		Size: Enclosing =;
@@ -7496,13 +7431,7 @@ RULES
  Reset_Input: BEGIN
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Reset);
-	CreateBefore(Text_Space);
 	CreateFirst(Value_Box);
-	CreateLast(Button_Mark);
-	CreateLast(Button_Frame);
-	CreateAfter(Text_Space);
-	Width: 4 Min;
-	Height: 1.3;
 	Depth: Enclosing + 10;
 #ifndef BLACK_WHITE
 	Background : Grey;
@@ -7518,13 +7447,7 @@ RULES
  Submit_Input: BEGIN
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Submit);
-	CreateBefore(Text_Space);
 	CreateFirst(Value_Box);
-	CreateLast(Button_Mark);
-	CreateLast(Button_Frame);
-	CreateAfter(Text_Space);
-	Width: 4 Min;
-	Height: 1.3;
 	Depth: Enclosing + 10;
 #ifndef BLACK_WHITE
 	Background : Grey;
@@ -7540,13 +7463,7 @@ RULES
  Button_Input: BEGIN
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Button);
-	CreateBefore(Text_Space);
 	CreateFirst(Value_Box);
-	CreateLast(Button_Mark);
-	CreateLast(Button_Frame);
-	CreateAfter(Text_Space);
-	Width: 4 Min;
-	Height: 1.3;
 	Depth: Enclosing + 10;
 #ifndef BLACK_WHITE
 	Background : Grey;
@@ -7574,18 +7491,48 @@ RULES
  BUTTON: BEGIN
 	CreateBefore(BUTTON_S);
 	CreateWith(VerticalLine);
-	CreateBefore(Text_Space);
-	CreateAfter(ButtonElem_Frame);
-	CreateAfter(ButtonElem_Mark);
-	CreateAfter(Text_Space);
+	MarginTop: 1 px;
+	MarginLeft: 3 px;
+	MarginBottom: 1 px;
+	MarginRight: 3 px;
+	PaddingTop: 1 px;
+	PaddingLeft: 1 px;
+	PaddingBottom: 1 px;
+	PaddingRight: 1 px;
+	BorderTopWidth: 2 px;
+	BorderLeftWidth: 2 px;
+	BorderBottomWidth: 2 px;
+	BorderRightWidth: 2 px;
+	BorderTopColor: White;
+	BorderLeftColor: White;
+	BorderBottomColor: Black;
+	BorderRightColor: Black;
+	BorderTopStyle: Solid;
+	BorderLeftStyle: Solid;
+	BorderBottomStyle: Solid;
+	BorderRightStyle: Solid;
 #ifndef BLACK_WHITE
-	Background : Grey;
+	Background: Grey;
 #endif
+	FillPattern: backgroundcolor;
+	ShowBox;
 	LineBreak: No;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
+		MarginTop: 0;
+		MarginLeft: 0;
+		MarginBottom: 0;
+		MarginRight: 0;
+		PaddingTop: 0;
+		PaddingLeft: 0;
+		PaddingBottom: 0;
+		PaddingRight: 0;
+		BorderTopWidth: 0;
+		BorderLeftWidth: 0;
+		BorderBottomWidth: 0;
+		BorderRightWidth: 0;
 		END;
 	IN Links_view
 		Visibility: 0;
@@ -7595,7 +7542,8 @@ RULES
 	CreateBefore(BLOCKQUOTE_S);
 	CreateWith(VerticalLine);
 	HorizPos: Left = Enclosing . Left + 2;	
-	VertPos: Top = Previous AnyElem . Bottom + 0.4;
+	VertPos: Top = Previous AnyElem . Bottom;
+	MarginTop: 0.4;
 	Width: Enclosing . Width - 4;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -7786,7 +7734,8 @@ RULES
 	NoBreak2 : 1;
 #endif
 	Justify: No;
-	VertPos: Top = Previous NOT MAP . Bottom + 0.5;
+	VertPos: Top = Previous NOT MAP . Bottom;
+	MarginTop: 0.5;
 	if within Center
 		HorizPos: VMiddle = Enclosing . VMiddle;
 	Width: Enclosing . Width;
@@ -8079,16 +8028,17 @@ RULES
 	CreateBefore(DIV_S);
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
+	VertPos: Top = Previous NOT MAP . Bottom;
 	IF NOT within Division
-	   VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH2;
+	   MarginTop: VSpaceBeforeH2;
 	IF within 1 Division
-	   VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH3;
+	   MarginTop: VSpaceBeforeH3;
 	IF within 2 Division
-	   VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH4;
+	   MarginTop: VSpaceBeforeH4;
 	IF within 3 Division
-	   VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH5;
+	   MarginTop: VSpaceBeforeH5;
 	IF within >3 Division
-	   VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH6;
+	   MarginTop: VSpaceBeforeH6;
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -8717,13 +8667,16 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_HSPACE);
 	CreateBefore(VALUE_HSPACE);
+	MarginLeft: hspace pt;
+	MarginRight: hspace pt;
 	END;
 
  vspace:
 	BEGIN
 	CreateBefore(ATTR_VSPACE);
 	CreateBefore(VALUE_VSPACE);
-	VertPos: Top = Previous . Bottom + vspace pt;
+	MarginTop: vspace pt;
+	MarginBottom: vspace pt;
 	In Structure_view
 	   VertPos: Top = Previous . Bottom;
 	END;
@@ -8827,33 +8780,24 @@ ATTRIBUTES
 	CreateBefore(ATTR_BORDER);
 	CreateBefore(VALUE_IMG_BORDER);
 	BorderTopWidth: Border px;
-	BorderTopStyle: Solid;
-	BorderRightWidth: Border px;
-	BorderRightStyle: Solid;
-	BorderBottomWidth: Border px;
-	BorderBottomStyle: Solid;
 	BorderLeftWidth: Border px;
+	BorderBottomWidth: Border px;
+	BorderRightWidth: Border px;
+	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
-	ShowBox;
+	BorderBottomStyle: Solid;
+	BorderRightStyle: Solid;
 	IN Structure_view BEGIN
 		BorderTopWidth: 0;
-		BorderTopStyle: None;
-		BorderRightWidth: 0;
-		BorderRightStyle: None;
-		BorderBottomWidth: 0;
-		BorderBottomStyle: None;
 		BorderLeftWidth: 0;
-		BorderLeftStyle: None;
+		BorderBottomWidth: 0;
+		BorderRightWidth: 0;
 		END;
 	IN Alternate_view BEGIN
 		BorderTopWidth: 0;
-		BorderTopStyle: None;
-		BorderRightWidth: 0;
-		BorderRightStyle: None;
-		BorderBottomWidth: 0;
-		BorderBottomStyle: None;
 		BorderLeftWidth: 0;
-		BorderLeftStyle: None;
+		BorderBottomWidth: 0;
+		BorderRightWidth: 0;
 		END;
 	END;
 
@@ -9452,7 +9396,6 @@ ATTRIBUTES
 	BorderBottomStyle: Solid;
 	BorderLeftWidth: Border px;
 	BorderLeftStyle: Solid;
-	ShowBox;
 	IN Structure_view BEGIN
 		BorderBottomWidth: 0;
 		BorderBottomStyle: None;
@@ -9473,7 +9416,6 @@ ATTRIBUTES
 	BorderBottomStyle: Solid;
 	BorderLeftWidth: Border px;
 	BorderLeftStyle: Solid;
-	ShowBox;
 	IN Structure_view BEGIN
 		BorderBottomWidth: 0;
 		BorderBottomStyle: None;
@@ -9589,7 +9531,6 @@ ATTRIBUTES
  RowExt:
 	BEGIN
 	CreateAfter(CellExtFrame);
-{	Height: Bottom = Referred Table_row . Bottom;}
 	VertOverflow: Yes;
 	IN Structure_view BEGIN
 		Height : Enclosed . Height;
@@ -9981,11 +9922,17 @@ ATTRIBUTES
   mode = display:
 	BEGIN
 	CreateBefore(ATTR_MODE_DISPLAY);
-	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	MarginTop: 0.4;
 	LineBreak: No;
+        IN Structure_view
+		MarginTop: 0;
 	END;
+
   mode = inline_math:
+	BEGIN
 	CreateBefore(ATTR_MODE_INLINE);
+	MarginTop: 0;
+	END;
 
   Class:
 	BEGIN

@@ -10,8 +10,8 @@ extern void InitNatures ( void );
 extern void LoadNatureSchema ( PtrSSchema pSS,
                                unsigned char* PSchName,
                                int rule );
-extern int CreateNature ( unsigned char* SSchName,
-                          unsigned char* PSchName,
+extern int CreateNature ( USTRING SSchName,
+                          USTRING PSchName,
                           PtrSSchema pSS );
 extern void LoadSchemas ( CharUnit* SSchName,
                           CharUnit* PSchName,
@@ -31,8 +31,8 @@ extern void InitNatures (/* void */);
 extern void LoadNatureSchema (/* PtrSSchema pSS,
                                  unsigned char* PSchName,
                                  int rule */);
-extern int CreateNature (/* unsigned char* SSchName,
-                            unsigned char* PSchName,
+extern int CreateNature (/* USTRING SSchName,
+                            USTRING PSchName,
                             PtrSSchema pSS */);
 extern void LoadSchemas (/* CharUnit* SSchName,
                             CharUnit* PSchName,

@@ -61,6 +61,168 @@ extern BOOL autoScroll;
 #include "units_f.h"
 #include "windowdisplay_f.h"
 
+#ifdef _WIN_PRINT
+/*----------------------------------------------------------------------
+   CurrentColor compares the last RGB Postscript color loaded
+   and the one asked, and load it if needed.
+   num is an index in the Thot internal color table.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void  CurrentColor (FILE * fout, int num)
+#else  /* __STDC__ */
+static void  CurrentColor (fout, num)
+FILE        *fout;
+int          num;
+#endif /* __STDC__ */
+{
+  unsigned short      red;
+  unsigned short      green;
+  unsigned short      blue;
+
+  /* Compare the color asked with the current one */
+  if (num != ColorPs)
+    {
+      /* Ask for the RedGreenBlue values */
+      TtaGiveThotRGB (num, &red, &green, &blue);
+      /* Emit the Poscript command */
+      if (TtPrinterDC)
+	SetTextColor (TtPrinterDC, RGB (red, green, blue));
+      ColorPs = num;
+    }
+}
+
+/*----------------------------------------------------------------------
+  DoPrintOneLine draw one line starting from (x1, y1) to (x2, y2) in frame.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         DoPrintOneLine (int color, int x1, int y1, int x2, int y2, int thick, int style)
+#else  /* __STDC__ */
+static void         DoPrintOneLine (color, x1, y1, x2, y2, thick, style)
+int                 color;
+int                 x1;
+int                 y1;
+int                 x2;
+int                 y2;
+int                 thick; 
+int                 style;
+#endif /* __STDC__ */
+{
+   HPEN     pen;
+   HPEN     hOldPen;
+   LOGBRUSH logBrush;
+   int      t;
+
+   t = PixelToPoint (thick);
+   if (t <= 1)
+     {
+       switch (style)
+	 {
+	 case 3:
+	   pen = CreatePen (PS_DOT, 1, RGB (RGB_colors[color].red, RGB_colors[color].green, RGB_colors[color].blue));
+	   break;
+	 case 4:
+	   pen = CreatePen (PS_DASH, 1, RGB (RGB_colors[color].red, RGB_colors[color].green, RGB_colors[color].blue)); 
+	   break;
+	 default:
+	   pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[color].red, RGB_colors[color].green, RGB_colors[color].blue));   
+	   break;
+	 }
+     }
+   else
+     {
+       logBrush.lbStyle = BS_SOLID;
+       logBrush.lbColor = RGB (RGB_colors[color].red, RGB_colors[color].green, RGB_colors[color].blue);
+       
+       switch (style)
+	 {
+	 case 3:
+	   pen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
+	   break;
+	 case 4:
+	   pen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
+	   break;
+	 default:
+	   pen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
+	   break;
+	 }
+     } 
+
+   hOldPen = SelectObject (TtPrinterDC, pen);
+   MoveToEx (TtPrinterDC, x1, y1, NULL);
+   LineTo (TtPrinterDC, x2, y2);
+
+   SelectObject (TtPrinterDC, hOldPen);
+   if (!DeleteObject (pen))
+      WinErrorBox (WIN_Main_Wd, "psdisplay.c - DoPrintOneLine");
+   pen = (HPEN) 0;
+}
+
+/*----------------------------------------------------------------------
+  DrawArrowHead draw the end of an arrow.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         DrawArrowHead (int x1, int y1, int x2, int y2, int thick, int RO, int active, int fg)
+#else  /* __STDC__ */
+static void         DrawArrowHead (x1, y1, x2, y2, thick, RO, active, fg)
+int                 x1, y1, x2, y2;
+int                 thick;
+int                 RO;
+int                 active;
+int                 fg;
+
+#endif /* __STDC__ */
+{
+   float               x, y, xb, yb, dx, dy, l, sina, cosa;
+   int                 xc, yc, xd, yd;
+   float               width, height;
+   Pixmap              pattern;
+   HPEN                hPen;
+   HPEN                hOldPen;
+   ThotPoint           point[4];
+
+   width = (float) (5 + thick);
+   height = 10;
+   dx = (float) (x2 - x1);
+   dy = (float) (y1 - y2);
+   l = (float) sqrt ((double) (dx * dx + dy * dy));
+   if (l == 0)
+      return;
+   sina = dy / l;
+   cosa = dx / l;
+   xb = x2 * cosa - y2 * sina;
+   yb = x2 * sina + y2 * cosa;
+   x = xb - height;
+   y = yb - width / 2;
+   xc = FloatToInt ((float) (x * cosa + y * sina + .5));
+   yc = FloatToInt ((float) (-x * sina + y * cosa + .5));
+   y = yb + width / 2;
+   xd = FloatToInt ((float) (x * cosa + y * sina + .5));
+   yd = FloatToInt ((float) (-x * sina + y * cosa + .5));
+
+   /* draw */
+   point[0].x = x2;
+   point[0].y = y2;
+   point[1].x = xc;
+   point[1].y = yc;
+   point[2].x = xd;
+   point[2].y = yd;
+   point[3].x = x2;
+   point[3].y = y2;
+
+   pattern = (Pixmap) CreatePattern (0, RO, active, fg, fg, 1);
+   if (pattern != 0) {
+      hPen = CreatePen (PS_SOLID, thick, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+
+      hOldPen = SelectObject (TtPrinterDC, hPen);
+      Polyline (TtPrinterDC, point, 4);
+      SelectObject (TtPrinterDC, hOldPen);
+	  if (!DeleteObject (hPen))
+         WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawArrowHead");
+      hPen = (HPEN) 0;
+   }
+}
+
+#else /* _WIN_PRINT
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -77,22 +239,22 @@ int  frame;
 }
 
 /*----------------------------------------------------------------------
-  FontOrig update and (x, y) location before DrawString
-  accordingly to the ascent of the font used.
+   SetMainWindowBackgroundColor :                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FontOrig (ptrfont font, CHAR_T firstchar, int *pX, int *pY)
+void         SetMainWindowBackgroundColor (int frame, int color)
 #else  /* __STDC__ */
-void                FontOrig (font, firstchar, pX, pY)
-ptrfont             font;
-CHAR_T                firstchar;
-int                *pX;
-int                *pY;
-
+void         SetMainWindowBackgroundColor (frame, color)
+int          frame;
+int          color;
 #endif /* __STDC__ */
 {
+   COLORREF cr;
+   WIN_GetDeviceContext (frame);
+   cr = ColorPixel (color);
+   SetBkColor (TtDisplay, (COLORREF)ColorPixel (color)); 
+   WIN_ReleaseDeviceContext ();
 }
-
 
 /*----------------------------------------------------------------------
   LoadColor load the given color in the drawing Graphic Context.
@@ -116,7 +278,6 @@ int                 fg;
    else
        TtLineGC.foreground = fg;
 }
-
 
 /*----------------------------------------------------------------------
   InitDrawing update the Graphic Context accordingly to parameters.
@@ -142,22 +303,45 @@ int                 fg;
     LoadColor (disp, RO, active, fg);
 }
 
-
 /*----------------------------------------------------------------------
-      FinishDrawing update the Graphic Context accordingly to parameters.
+  SpaceToChar substitute in text the space chars to their visual
+  equivalents.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         FinishDrawing (int disp, int RO, int active)
+static void         SpaceToChar (USTRING text)
 #else  /* __STDC__ */
-static void         FinishDrawing (disp, RO, active)
-int                 disp;
-int                 RO;
-int                 active;
-
+static void         SpaceToChar (text)
+USTRING             text;
 #endif /* __STDC__ */
 {
-}
+   int                 i;
 
+   if (text == NULL)
+      return;
+   i = 0;
+   while (text[i] != 0)
+     {
+       switch (text[i])
+	 {
+	 case BREAK_LINE:
+	   text[i] = (UCHAR_T) SHOWN_BREAK_LINE;
+	   break;
+	 case THIN_SPACE:
+	   text[i] = (UCHAR_T) SHOWN_THIN_SPACE;
+	   break;
+	 case HALF_EM:
+	   text[i] = (UCHAR_T) SHOWN_HALF_EM;
+	   break;
+	 case UNBREAKABLE_SPACE:
+	   text[i] = (UCHAR_T) SHOWN_UNBREAKABLE_SPACE;
+	   break;
+	 case SPACE:
+	   text[i] = (UCHAR_T) SHOWN_SPACE;
+	   break;
+	 }
+       i++;
+     }
+}
 
 /*----------------------------------------------------------------------
   DoDrawOneLine draw one line starting from (x1, y1) to (x2, y2) in frame.
@@ -224,73 +408,107 @@ int                 y2;
   pen = (HPEN) 0;
 }
 
-
 /*----------------------------------------------------------------------
-  SpaceToChar substitute in text the space chars to their visual
-  equivalents.
+  ArrowDrawing draw the end of an arrow.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SpaceToChar (USTRING text)
+static void         ArrowDrawing (int frame, int x1, int y1, int x2, int y2, int thick, int RO, int active, int fg)
 #else  /* __STDC__ */
-static void         SpaceToChar (text)
-USTRING             text;
-
-#endif /* __STDC__ */
-{
-   int                 i;
-
-   if (text == NULL)
-      return;
-
-   i = 0;
-   while (text[i] != 0)
-     {
-	switch (text[i])
-	      {
-		 case BREAK_LINE:
-		    text[i] = (UCHAR_T) SHOWN_BREAK_LINE;
-		    break;
-		 case THIN_SPACE:
-		    text[i] = (UCHAR_T) SHOWN_THIN_SPACE;
-		    break;
-		 case HALF_EM:
-		    text[i] = (UCHAR_T) SHOWN_HALF_EM;
-		    break;
-		 case UNBREAKABLE_SPACE:
-		    text[i] = (UCHAR_T) SHOWN_UNBREAKABLE_SPACE;
-		    break;
-		 case SPACE:
-		    text[i] = (UCHAR_T) SHOWN_SPACE;
-		    break;
-	      }
-	i++;
-     }
-}
-
-#ifndef _WIN_PRINT
-/*----------------------------------------------------------------------
-  DrawChar draw a char at location (x, y) in frame and with font.
-  RO indicates whether it's a read-only box active
-  indicates if the box is active parameter fg indicates the drawing color
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
-#else  /* __STDC__ */
-void                DrawChar (car, frame, x, y, font, RO, active, fg)
-UCHAR_T       car;
+static void         ArrowDrawing (frame, x1, y1, x2, y2, thick, RO, active, fg)
 int                 frame;
-int                 x;
-int                 y;
-ptrfont             font;
+int                 x1, y1, x2, y2;
+int                 thick;
 int                 RO;
 int                 active;
 int                 fg;
 
 #endif /* __STDC__ */
 {
-   ThotWindow          w;
-   CHAR_T                str[2] = {car, 0};
+   float               x, y, xb, yb, dx, dy, l, sina, cosa;
+   int                 xc, yc, xd, yd;
+   float               width, height;
+   Pixmap              pattern;
+   HPEN                hPen;
+   HPEN                hOldPen;
+   ThotPoint           point[4];
+   int                 result;
+
+   width = (float) (5 + thick);
+   height = 10;
+   dx = (float) (x2 - x1);
+   dy = (float) (y1 - y2);
+   l = (float) sqrt ((double) (dx * dx + dy * dy));
+   if (l == 0)
+      return;
+   sina = dy / l;
+   cosa = dx / l;
+   xb = x2 * cosa - y2 * sina;
+   yb = x2 * sina + y2 * cosa;
+   x = xb - height;
+   y = yb - width / 2;
+   xc = FloatToInt ((float)(x * cosa + y * sina + .5));
+   yc = FloatToInt ((float)(-x * sina + y * cosa + .5));
+   y = yb + width / 2;
+   xd = FloatToInt ((float)(x * cosa + y * sina + .5));
+   yd = FloatToInt ((float)(-x * sina + y * cosa + .5));
+
+   /* draw */
+   point[0].x = x2;
+   point[0].y = y2;
+   point[1].x = xc;
+   point[1].y = yc;
+   point[2].x = xd;
+   point[2].y = yd;
+   point[3].x = x2;
+   point[3].y = y2;
+
+   pattern = (Pixmap) CreatePattern (0, RO, active, fg, fg, 1);
+   if (pattern != 0)
+     {
+      WIN_GetDeviceContext (frame);
+      result = SelectClipRgn (TtDisplay, clipRgn);  
+      if (result == ERROR)
+         ClipError (frame);
+      /* if (!GetClipRgn(TtDisplay, clipRgn))
+         WinErrorBox (NULL); */
+      WinLoadGC (TtDisplay, fg, RO);
+      if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
+         WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c  - ArrowDrawing (1)"));
+      hOldPen = SelectObject (TtDisplay, hPen) ;
+      Polyline (TtDisplay, point, 4);
+      SelectObject (TtDisplay, hOldPen);
+      WIN_ReleaseDeviceContext ();
+	  if (!DeleteObject (hPen))
+         WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c  - ArrowDrawing (2)"));
+      hPen = (HPEN) 0;
+     }
+}
+#endif /* _WIN_PRINT */
+
+/*----------------------------------------------------------------------
+  DrawChar draw a char at location (x, y) in frame and with font.
+  RO indicates whether it's a read-only box active
+  indicates if the box is active parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void        DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
+#else  /* __STDC__ */
+void        DrawChar (car, frame, x, y, font, RO, active, fg)
+UCHAR_T     car;
+int         frame;
+int         x;
+int         y;
+ptrfont     font;
+int         RO;
+int         active;
+int         fg;
+
+#endif /* __STDC__ */
+{
+   CHAR_T              str[2] = {car, 0};
    HFONT               hOldFont;
+#ifndef _WIN_PRINT
+   ThotWindow          w;
    int                 result;
 
    w = FrRef[frame];
@@ -298,7 +516,6 @@ int                 fg;
       return;
 
    LoadColor (0, RO, active, fg);
-
    WIN_GetDeviceContext (frame);
    WinLoadGC (TtDisplay, fg, RO);
    SetMapperFlags (TtDisplay, 1);
@@ -306,13 +523,23 @@ int                 fg;
    result = SelectClipRgn (TtDisplay, clipRgn); 
    if (result == ERROR)
       ClipError (frame);
-   TextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, (USTRING) str, 1);   
+   TextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, (USTRING) str, 1);
    SelectObject (TtDisplay, hOldFont);
    DeleteObject (currentActiveFont);
    currentActiveFont = (HFONT)0;
    WIN_ReleaseDeviceContext ();
 
-   FinishDrawing (0, RO, active);
+#else /* _WIN_PRINT */
+   CurrentColor (NULL, fg);
+   y += FrameTable[frame].FrTopMargin;
+   WinLoadGC (TtPrinterDC, fg, RO);
+   SetMapperFlags (TtPrinterDC, 1);
+   hOldFont = WinLoadFont (TtPrinterDC, font);
+   TextOut (TtPrinterDC, x, y, (USTRING) str, 1);   
+   SelectObject (TtPrinterDC, hOldFont);
+   DeleteObject (currentActiveFont);
+   currentActiveFont = (HFONT)0;
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -351,23 +578,109 @@ int                 fg;
 int                 shadow;
 #endif /* __STDC__ */
 {
-   ThotWindow          w;
    STRING              ptcar;
-   int                 width;
-   register int        j;
+   int                 j, width;
    SIZE                size;
-   RECT                rect;
    HFONT               hOldFont;
+#ifdef _WIN_PRINT
+   int                 encoding, NonJustifiedWhiteSp;
+   FILE               *fout;
+   unsigned short      red, green, blue;
+#else  /* _WIN_PRINT */
+   ThotWindow          w;
+   RECT                rect;
    int                 result;
    UINT                outOpt; 
-#  ifdef _I18N_
+#ifdef _I18N_
    GCP_RESULTS         results;
    USHORT              auGlyphs [2000];
    CHAR_T              szNewText [2000];
    UINT                infoFlag;
    int                 anDX [2000];
-#  endif /* _I18N_ */
+#endif /* _I18N_ */
+#endif /* _WIN_PRINT */
 
+#ifdef _WIN_PRINT
+   if (TtPrinterDC == NULL)
+      fout = (FILE *) FrRef[frame];
+   encoding = 0;
+   if (y < 0)
+      return 0;
+   y += FrameTable[frame].FrTopMargin;
+   /* NonJustifiedWhiteSp is > 0 if writing a fixed lenght is needed */
+   /* and equal to 0 if a justified space is to be printed */
+
+   NonJustifiedWhiteSp = StartOfCurrentBlock;
+   /* Is this a new box ? */
+   if (SameBox == 0)
+     {
+      /* Beginning of a new box */
+      SameBox = 1;
+      X = PixelToPoint (x);
+      Y = PixelToPoint (y + FontBase (font));
+      NbWhiteSp = 0;
+
+      /* Do we need to change the current color ? */
+      if (TtPrinterDC)
+	{
+	  TtaGiveThotRGB (fg, &red, &green, &blue);
+	  SetTextColor (TtPrinterDC, RGB (red, green, blue));
+	}
+
+      /* Do we need to change the current font ? */
+      if (TtPrinterDC)
+         hOldFont = WinLoadFont (TtPrinterDC, font);
+   }
+
+   if (shadow)
+     {
+       /* replace each character by a star */
+       j = 0;
+       ptcar = TtaAllocString ((size_t) (lg + 1));
+       while (j < lg)
+	 ptcar[j++] = '*';
+       ptcar[lg] = EOS;
+       bl = 0;
+     }
+   else
+     ptcar = &buff[i - 1];
+
+   /* Add the justified white space */
+   if (TtPrinterDC) {
+      SetMapperFlags (TtPrinterDC, 1);
+      GetTextExtentPoint (TtPrinterDC, ptcar, lg, &size);
+      width = size.cx;
+      if (ptcar[0] == '\212' || ptcar[0] == '\12') {
+         /* skip the Control return char */
+         ptcar++;
+         lg--;
+	  }
+
+      if (lg > 0)
+         if (!TextOut (TtPrinterDC, x, y, (USTRING) ptcar, lg))
+            WinErrorBox (NULL, "psdisplay.c - DrawString (1)");
+
+      if (hyphen) /* draw the hyphen */
+         if (!TextOut (TtPrinterDC, x + width, y, TEXT("\255"), 1))
+            WinErrorBox (NULL, "psdisplay.c - DrawString (2)");
+      if (lgboite != 0)
+          SameBox = 0;
+   }
+   if (lg > 0)
+     {
+       /* compute the width of the string */
+       width = 0;
+       j = 0;
+       while (j < lg)
+	 width += CharacterWidth (ptcar[j++], font);
+       return (width);
+     } 
+
+   if (shadow)
+     TtaFreeMemory (ptcar);
+   return (0);
+
+#else  /* _WIN_PRINT */
    w = FrRef[frame];
    if (lg > 0 && w != None) {
       ptcar = &buff[i - 1];
@@ -511,7 +824,6 @@ int                 shadow;
          /* GetClipRgn(TtDisplay, clipRgn); */
          TextOut (TtDisplay, x + width, y + FrameTable[frame].FrTopMargin, TEXT("\255"), 1);
 	  } 
-      FinishDrawing (0, RO, active);
       SelectObject (TtDisplay, hOldFont);
       DeleteObject (currentActiveFont);
       currentActiveFont = (HFONT)0;
@@ -519,6 +831,7 @@ int                 shadow;
       return (width);
      } else
      return (0);
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -573,6 +886,52 @@ int                 fg;
    int                 height;	/* overline position     */
    int                 thickness;	/* thickness of drawing */
    int                 shift;	/* shifting of drawing   */
+#ifdef _WIN_PRINT
+   FILE               *fout;
+
+   if (y < 0)
+     return;
+   y += FrameTable[frame].FrTopMargin;
+   if (TtPrinterDC)
+     {
+       if (lg > 0)
+	 {
+         fheight = FontHeight (font);
+         ascent = FontAscent (font);
+         thickness = ((fheight / 20) + 1) * (thick + 1);
+         shift = thick * thickness;
+         height = y + shift;
+         bottom = y + ascent + 2 + shift;
+         middle = y + fheight / 2 - shift;
+
+         /*
+          * for an underline independant of the font add
+          * the following lines here :
+          *         thickness = 1;
+          *         height = y + 2 * thickness;
+          *         bottom = y + ascent + 3;
+          */
+
+         switch (type)
+	   {
+	   case 1: /* underlined */
+	     DoPrintOneLine (fg, x - lg, bottom, x, bottom, thick, 5);
+	     break;
+	     
+	   case 2: /* overlined */
+	     DoPrintOneLine (fg, x - lg, height, x, height, thick, 5);
+	     break;
+	     
+	   case 3: /* cross-over */
+	     DoPrintOneLine (fg, x - lg, middle, x, middle, thick, 5);
+	     break;
+	     
+	   default: /* not underlined */
+	     break;
+	   } 
+	 } 
+   }
+#else  /* _WIN_PRINT */
 
    if (lg > 0)
      {
@@ -619,8 +978,8 @@ int                 fg;
 		    /* not underlined */
 		    break;
 	      }
-	FinishDrawing (0, RO, active);
      }
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -642,35 +1001,69 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
-   ThotWindow          w;
-   ptrfont             font;
-   int                 xcour, width, nb;
-   STRING              ptcar;
 
-   font = ThotLoadFont ('L', 't', 0, 6, UnPoint, frame);
-   if (lgboite > 0)
-     {
-	w = FrRef[frame];
-	ptcar = TEXT(" .");
+   int                 xcour;
+#ifdef _WIN_PRINT
+   FILE              *fout = NULL;
+   HPEN               hPen, hOldPen;
+   POINT              ptArray [2];
+   unsigned short     r, g, b;
+   int                 ycour;
+#else /* _WIN_PRINT */
+  ThotWindow          w;
+  ptrfont             font;
+  int                 width, nb;
+  STRING              ptcar;
+#endif /* _WIN_PRINT */
 
-	/* compute lenght of the string " ." */
-	width = CharacterWidth (SPACE, font) + CharacterWidth (TEXT('.'), font);
+#ifdef _WIN_PRINT
+   if (y < 0)
+      return;
+   y += FrameTable[frame].FrTopMargin;
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
-	/* compute the number of string to write */
-	nb = lgboite / width;
-	xcour = x + (lgboite % width);
-	y = y + FrameTable[frame].FrTopMargin - FontBase (font);
-	LoadColor (0, RO, active, fg);
-
-	/* draw the points */
-	FontOrig (font, *ptcar, &x, &y);
-	while (nb > 0)
-	  {
-	     xcour += width;
-	     nb--;
+   if (lgboite > 0) {
+	  xcour = x;
+	  ycour = y;
+      if (TtPrinterDC) {
+         TtaGiveThotRGB (fg, &r, &g, &b);
+         /* hPen = CreatePen (PS_DOT, 1, RGB (r, g, b)); */
+         hPen = CreatePen (PS_DOT, 0, RGB ((BYTE) r, (BYTE) g, (BYTE) b)); 
+		 hOldPen = SelectObject (TtPrinterDC, hPen);
+         ptArray [0].x = xcour;
+         ptArray [0].y = ycour;
+         ptArray [1].x = xcour + lgboite;
+         ptArray [1].y = ycour;
+		 Polyline (TtPrinterDC, ptArray, 2);
+		 SelectObject (TtPrinterDC, hOldPen);
+		 DeleteObject (hPen);
 	  }
-	FinishDrawing (0, RO, active);
-     }
+   }
+#else /* _WIN_PRINT */
+  font = ThotLoadFont ('L', 't', 0, 6, UnPoint, frame);
+  if (lgboite > 0)
+    {
+      w = FrRef[frame];
+      ptcar = TEXT(" .");
+
+      /* compute lenght of the string " ." */
+      width = CharacterWidth (SPACE, font) + CharacterWidth (TEXT('.'), font);
+
+      /* compute the number of string to write */
+      nb = lgboite / width;
+      xcour = x + (lgboite % width);
+      y = y + FrameTable[frame].FrTopMargin - FontBase (font);
+      LoadColor (0, RO, active, fg);
+
+      /* draw the points */
+      while (nb > 0)
+	{
+	  xcour += width;
+	  nb--;
+	}
+    }
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -699,6 +1092,26 @@ int                 fg;
 {
    int                 xm, xp, fh;
 
+#ifdef _WIN_PRINT
+   if (y < 0)
+      return;
+   y += FrameTable[frame].FrTopMargin;
+   if (thick < 0)
+      return;
+
+   if (TtPrinterDC) {
+      fh = FontHeight (font);
+      xm = x + (fh / 2);
+      xp = x + (fh / 4);
+      /* vertical part */
+      DoPrintOneLine (fg, x, y + (2 * (h / 3)), xp - (thick / 2), y + h, thick, 5);
+
+      /* Acending part */
+      DoPrintOneLine (fg, xp, y + h, xm, y, thick, 5);
+      /* Upper part */
+      DoPrintOneLine (fg, xm, y, x + l, y, thick, 5);
+   }
+#else /* _WIN_PRINT */
    fh = FontHeight (font);
    xm = x + (fh / 2);
    xp = x + (fh / 4);
@@ -712,7 +1125,7 @@ int                 fg;
    DoDrawOneLine (frame, xp, y + h, xm, y);
    /* Upper part */
    DoDrawOneLine (frame, xm, y, x + l, y);
-   FinishDrawing (0, RO, active);
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -744,6 +1157,52 @@ int                 fg;
    int                 xm, yf, yend, exnum, delta;
    int                 wd, asc, hd;
 
+#ifdef _WIN_PRINT
+   if (y < 0)
+      return;
+   y += FrameTable[frame].FrTopMargin;
+   if (thick < 0)
+      return;
+
+   if (TtPrinterDC) {
+      exnum = 0;
+      if (FontHeight (font) *1.2 >= h) { /* display a single glyph */
+         xm = x + ((l - CharacterWidth ('\362', font)) / 2);
+         yf = y + ((h - CharacterHeight ('\362', font)) / 2) - FontAscent (font) +
+         CharacterAscent ('\362', font);
+         DrawChar ('\362', frame, xm, yf, font, RO, func, fg);
+	  } else { /* Need more than one glyph */
+           xm = x + ((l - CharacterWidth ('\363', font)) / 2);
+           yf = y - FontAscent (font) + CharacterAscent ('\363', font);
+           DrawChar ('\363', frame, xm, yf, font, RO, func, fg);
+           yend = y + h - CharacterHeight ('\365', font) - FontAscent (font) +
+           CharacterAscent ('\365', font) - 1;
+           DrawChar ('\365', frame, xm, yend, font, RO, func, fg);
+	 
+           yf += CharacterHeight ('\363', font);
+           delta = yend - yf;
+           asc = CharacterAscent ('\364', font)  - FontAscent (font) - 1;
+           hd = CharacterHeight ('\364', font) - 1;
+           wd = (CharacterWidth ('\363', font) - CharacterWidth ('\364', font)) / 2;
+           if (delta >= 0) {
+              for (yf += asc, yend -= hd; yf < yend; yf += CharacterHeight ('\364', font), exnum++)
+                  DrawChar ('\364', frame, xm+wd, yf, font, RO, func, fg);
+              if (exnum)
+                 DrawChar ('\364', frame, xm+wd, yend, font, RO, func, fg);
+              else
+                 DrawChar ('\364', frame, xm+wd, yf + ((delta - hd) / 2), font, RO, func, fg);
+		   }
+	  }
+
+      if (type == 2) /* double integral */
+         DrawIntegral (frame, thick, x + (CharacterWidth ('\364', font) / 2), y, l, h, -1, font, RO, func, fg);
+       
+      else if (type == 1) /* contour integral */
+              DrawChar ('o', frame, x + ((l - CharacterWidth ('o', font)) / 2),
+                            y + (h - CharacterHeight ('o', font)) / 2 - FontAscent (font) + CharacterAscent ('o', font),
+                            font, RO, func, fg);
+   }
+#else  /* _WIN_PRINT */
    exnum = 0;
    if (FontHeight (font) *1.2 >= h)
      /* display a single glyph */
@@ -790,8 +1249,8 @@ int                 fg;
       DrawChar (TEXT('o'), frame, x + ((l - CharacterWidth ('o', font)) / 2),
 		y + (h - CharacterHeight ('o', font)) / 2 - FontAscent (font) + CharacterAscent ('o', font),
 		font, RO, active, fg);
-}
 #endif /* _WIN_PRINT */
+}
 
 /*----------------------------------------------------------------------
   DrawMonoSymb draw a one glyph symbol.
@@ -803,7 +1262,7 @@ int                 fg;
 static void         DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l, int h, int RO, int active, ptrfont font, int fg)
 #else  /* __STDC__ */
 static void         DrawMonoSymb (symb, frame, x, y, l, h, RO, active, font, fg)
-CHAR_T                symb;
+CHAR_T              symb;
 int                 frame;
 int                 x;
 int                 y;
@@ -817,13 +1276,13 @@ int                 fg;
 {
    int                 xm, yf;
 
+   y += FrameTable[frame].FrTopMargin;
    xm = x + ((l - CharacterWidth (symb, font)) / 2);
    yf = y + ((h - CharacterHeight (symb, font)) / 2) - FontAscent (font) + CharacterAscent (symb, font);
 
    DrawChar (symb, frame, xm, yf, font, RO, active, fg);
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   DrawSigma draw a Sigma symbol.
   active indicates if the box is active
@@ -846,6 +1305,29 @@ int                 fg;
 {
    int                 xm, ym, fh;
 
+#ifdef _WIN_PRINT
+   if (y < 0)
+      return;
+   y += FrameTable[frame].FrTopMargin;
+
+   if (TtPrinterDC)
+     {
+       fh = FontHeight (font);
+       if (h < fh * 2 && l <= CharacterWidth ('\345', font)) /* Only one glyph needed */
+         DrawMonoSymb ('\345', frame, x, y, l, h, RO, func, font, fg);
+       else {
+         xm = x + (l / 3);
+         ym = y + (h / 2) - 1;
+         /* Center */
+         DoPrintOneLine (fg, x, y + 1, xm, ym, 1, 5);
+         DoPrintOneLine (fg, x, y + h - 2, xm, ym, 1, 5);
+	 
+         /* Borders */
+         DoPrintOneLine (frame, x, y, x + l, y, 1, 5);
+         DoPrintOneLine (frame, x, y + h - 2, x + l, y + h - 2, 1, 5);
+       }
+     }
+#else  /* !_WIN_PRINT */
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CharacterWidth ('\345', font))
      {
@@ -866,8 +1348,8 @@ int                 fg;
 	/* Borders */
 	DoDrawOneLine (frame, x, y, x + l, y);
 	DoDrawOneLine (frame, x, y + h - 2, x + l, y + h - 2);
-	FinishDrawing (0, RO, active);
      }
+#endif  /* !_WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -893,6 +1375,25 @@ int                 fg;
 {
    int                 fh;
 
+#ifdef _WIN_PRINT
+   if (y < 0)
+      return;
+   y += FrameTable[frame].FrTopMargin;
+
+   if (TtPrinterDC) {
+      fh = FontHeight (font);
+      if (h < fh * 2 && l <= CharacterWidth ('\325', font)) /* Only one glyph needed */
+         DrawMonoSymb ('\325', frame, x, y, l, h, RO, func, font, fg);
+      else {
+           /* Vertical part */
+           DoPrintOneLine (fg, x + 2, y + 1, x + 2, y + h, 1, 5);
+           DoPrintOneLine (fg, x + l - 3, y + 1, x + l - 3, y + h, 1, 5);
+	 
+           /* Upper part */
+           DoPrintOneLine (frame, x + 1, y + 1, x + l, y, 1, 5);
+	  }
+   } 
+#else /* _WIN_PRINT */
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CharacterWidth ('\325', font))
      {
@@ -910,8 +1411,8 @@ int                 fg;
 	InitDrawing (0, 5, 2, RO, active, fg);
 	/* Upper part */
 	DoDrawOneLine (frame, x + 1, y + 1, x + l, y);
-	FinishDrawing (0, RO, active);
      }
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -939,6 +1440,11 @@ int                 fg;
    HPEN                pen;
    HPEN                hOldPen;
 
+#ifdef _WIN_PRINT
+   if (TtPrinterDC) {
+      /* **** A FAIRE **** */
+   }
+#else  /* _WIN_PRINT */
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CharacterWidth ('\307', font))
      {
@@ -963,8 +1469,8 @@ int                 fg;
         if (!DeleteObject (pen))
           WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawIntersection"));
         pen = (HPEN) 0;
-	FinishDrawing (0, RO, active);
      }
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -992,6 +1498,32 @@ int                 fg;
    HPEN                pen;
    HPEN                hOldPen;
 
+#ifdef _WIN_PRINT 
+   if (y < 0)
+      return;
+   y += FrameTable[frame].FrTopMargin;
+   if (TtPrinterDC) {
+      fh = FontHeight (font);
+      if (h < fh * 2 && l <= CharacterWidth ('\310', font)) {
+         /* Only one glyph needed */
+         DrawMonoSymb ('\310', frame, x, y, l, h, RO, func, font, fg);
+      } else {
+             /* radius of arcs is 3mm */
+             arc = h / 4;
+             /* two vertical lines */
+             DoPrintOneLine (fg, x + 1, y, x + 1, y + h - arc, 1, 5);
+             DoPrintOneLine (fg, x + l - 2, y, x + l - 2, y + h - arc, 1, 5);
+             /* Lower part */
+             pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+             hOldPen = SelectObject (TtPrinterDC, pen);
+             Arc (TtPrinterDC, x + 1, y + h - arc , x + l - 2, y + h, x + 1, y + h - arc, x + l - 2, y + h - arc);
+             SelectObject (TtPrinterDC, hOldPen);
+             if (!DeleteObject (pen))
+                WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawUnion");
+             pen = (HPEN) 0;
+	  }
+   }
+#else /* _WIN_PRINT */
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CharacterWidth ('\310', font))
      {
@@ -1017,85 +1549,8 @@ int                 fg;
         if (!DeleteObject (pen))
           WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawUnion"));
         pen = (HPEN) 0;
-	FinishDrawing (0, RO, active);
      }
-}
 #endif /* _WIN_PRINT */
-
-/*----------------------------------------------------------------------
-  ArrowDrawing draw the end of an arrow.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ArrowDrawing (int frame, int x1, int y1, int x2, int y2, int thick, int RO, int active, int fg)
-#else  /* __STDC__ */
-static void         ArrowDrawing (frame, x1, y1, x2, y2, thick, RO, active, fg)
-int                 frame;
-int                 x1, y1, x2, y2;
-int                 thick;
-int                 RO;
-int                 active;
-int                 fg;
-
-#endif /* __STDC__ */
-{
-   float               x, y, xb, yb, dx, dy, l, sina, cosa;
-   int                 xc, yc, xd, yd;
-   float               width, height;
-   Pixmap              pattern;
-   HPEN                hPen;
-   HPEN                hOldPen;
-   ThotPoint           point[4];
-   int                 result;
-
-   width = (float) (5 + thick);
-   height = 10;
-   dx = (float) (x2 - x1);
-   dy = (float) (y1 - y2);
-   l = (float) sqrt ((double) (dx * dx + dy * dy));
-   if (l == 0)
-      return;
-   sina = dy / l;
-   cosa = dx / l;
-   xb = x2 * cosa - y2 * sina;
-   yb = x2 * sina + y2 * cosa;
-   x = xb - height;
-   y = yb - width / 2;
-   xc = FloatToInt ((float)(x * cosa + y * sina + .5));
-   yc = FloatToInt ((float)(-x * sina + y * cosa + .5));
-   y = yb + width / 2;
-   xd = FloatToInt ((float)(x * cosa + y * sina + .5));
-   yd = FloatToInt ((float)(-x * sina + y * cosa + .5));
-
-   /* draw */
-   point[0].x = x2;
-   point[0].y = y2;
-   point[1].x = xc;
-   point[1].y = yc;
-   point[2].x = xd;
-   point[2].y = yd;
-   point[3].x = x2;
-   point[3].y = y2;
-
-   pattern = (Pixmap) CreatePattern (0, RO, active, fg, fg, 1);
-   if (pattern != 0)
-     {
-      WIN_GetDeviceContext (frame);
-      result = SelectClipRgn (TtDisplay, clipRgn);  
-      if (result == ERROR)
-         ClipError (frame);
-      /* if (!GetClipRgn(TtDisplay, clipRgn))
-         WinErrorBox (NULL); */
-      WinLoadGC (TtDisplay, fg, RO);
-      if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
-         WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c  - ArrowDrawing (1)"));
-      hOldPen = SelectObject (TtDisplay, hPen) ;
-      Polyline (TtDisplay, point, 4);
-      SelectObject (TtDisplay, hOldPen);
-      WIN_ReleaseDeviceContext ();
-	  if (!DeleteObject (hPen))
-         WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c  - ArrowDrawing (2)"));
-      hPen = (HPEN) 0;
-     }
 }
 
 #ifndef _WIN_PRINT
@@ -1126,6 +1581,46 @@ int                 fg;
 {
    int                 xm, ym, xf, yf;
 
+#ifdef _WIN_PRINT
+   if (thick <= 0)
+      return;
+
+   y += FrameTable[frame].FrTopMargin;
+   xm = x + ((l - thick) / 2);
+   xf = x + l - 1;
+   ym = y + ((h - thick) / 2);
+   yf = y + h - 1;
+
+   if (direction == 0) {
+      /* draw a right arrow */
+      DoPrintOneLine (fg, x, ym, xf, ym, thick, style);
+      DrawArrowHead (x, ym, xf, ym, thick, RO, func, fg);
+   } else if (direction == 45) {
+          DoPrintOneLine (fg, x, yf, xf - thick + 1, y, thick, style);
+          DrawArrowHead (x, yf, xf - thick + 1, y, thick, RO, func, fg);
+   } else if (direction == 90) {
+          /* draw a bottom-up arrow */
+          DoPrintOneLine (fg, xm, y, xm, yf, thick, style);
+          DrawArrowHead (xm, yf, xm, y, thick, RO, func, fg);
+   } else if (direction == 135) {
+          DoPrintOneLine (fg, x, y, xf - thick + 1, yf, thick, style);
+          DrawArrowHead (xf - thick + 1, yf, x, y, thick, RO, func, fg);
+   } else if (direction == 180) {
+          /* draw a left arrow */
+          DoPrintOneLine (fg, x, ym, xf, ym, thick, style);
+          DrawArrowHead (xf, ym, x, ym, thick, RO, func, fg);
+   } else if (direction == 225) {
+          DoPrintOneLine (frame, x, yf, xf - thick + 1, y, thick, style);
+          DrawArrowHead (xf - thick + 1, y, x, yf, thick, RO, func, fg);
+   } else if (direction == 270) {
+          /* draw a top-down arrow */
+          DoPrintOneLine (fg, xm, y, xm, yf, thick, style);
+          DrawArrowHead (xm, y, xm, yf, thick, RO, func, fg);
+   } else if (direction == 315) {
+          DoPrintOneLine (frame, x, y, xf - thick + 1, yf, thick, style);
+          DrawArrowHead (x, y, xf - thick + 1, yf, thick, RO, func, fg);
+   } 
+#else  /* _WIN_PRINT */
    if (thick <= 0)
       return;
    y += FrameTable[frame].FrTopMargin;
@@ -1179,7 +1674,7 @@ int                 fg;
 	DoDrawOneLine (frame, x, y, xf - thick + 1, yf);
 	ArrowDrawing (frame, x, y, xf - thick + 1, yf, thick, RO, active, fg);
      }
-   FinishDrawing (0, RO, active);
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -1291,6 +1786,67 @@ int                 fg;
 {
    int                 xm, yf, yend, exnum, delta;
 
+#ifdef _WIN_PRINT
+   if (TtPrinterDC) {
+      exnum = 0;
+
+      if (h <= (int) (1.3 * FontHeight (font))) { /* With only one glyph */
+		 if (direction == 0) { /* draw an opening parenthesis */
+            xm = x + ((l - CharacterWidth ('(', font)) / 2);
+            yf = y + ((h - CharacterHeight ('(', font)) / 2) - FontAscent (font) + CharacterAscent ('(', font);
+            DrawChar ('(', frame, xm, yf, font, RO, func, fg);
+		 } else { /* draw a closing parenthesis */
+               xm = x + ((l - CharacterWidth (')', font)) / 2);
+               yf = y + ((h - CharacterHeight (')', font)) / 2) - FontAscent (font) + CharacterAscent (')', font);
+               DrawChar (')', frame, xm, yf, font, RO, func, fg);
+		 }
+	  } else { /* Need more than one glyph */
+             if (direction == 0) {
+                /* draw a opening parenthesis */
+                xm = x + ((l - CharacterWidth ('\346', font)) / 2);
+                yf = y - FontAscent (font) + CharacterAscent ('\346', font);
+                DrawChar ('\346', frame, xm, yf, font, RO, func, fg);
+                yend = y + h - CharacterHeight ('\350', font) - FontAscent (font) + CharacterAscent ('\350', font) - 1;
+                DrawChar ('\350', frame, xm, yend, font, RO, func, fg);
+
+                yf += CharacterHeight ('\346', font) - 1;
+                delta = yend - yf;
+                if (delta >= 0) {
+                   for (yf += CharacterAscent ('\347', font) - FontAscent (font),
+                   yend -= CharacterHeight ('\347', font) - 1;
+                   yf < yend;
+                   yf += CharacterHeight ('\347', font), exnum++)
+                   DrawChar ('\347', frame, xm, yf, font, RO, func, fg);
+                   if (exnum)
+                      DrawChar ('\347', frame, xm, yend, font, RO, func, fg);
+                   else
+                      DrawChar ('\347', frame, xm, yf + ((delta - CharacterHeight ('\347', font)) / 2), font, RO, func, fg);
+				}
+			 } else {
+                    /* draw a closing parenthesis */
+                    xm = x + ((l - CharacterWidth ('\366', font)) / 2);
+                    yf = y - FontAscent (font) + CharacterAscent ('\366', font);
+                    DrawChar ('\366', frame, xm, yf, font, RO, func, fg);
+                    yend = y + h - CharacterHeight ('\370', font) - FontAscent (font) + CharacterAscent ('\370', font) - 1;
+                    DrawChar ('\370', frame, xm, yend, font, RO, func, fg);
+
+                    yf += CharacterHeight ('\366', font) - 1;
+                    delta = yend - yf;
+                    if (delta >= 0) {
+                       for (yf += CharacterAscent ('\367', font) - FontAscent (font),
+                            yend -= CharacterHeight ('\367', font) - 1;
+                            yf < yend;
+                            yf += CharacterHeight ('\367', font), exnum++)
+                           DrawChar ('\367', frame, xm, yf, font, RO, func, fg);
+                       if (exnum)
+                          DrawChar ('\367', frame, xm, yend, font, RO, func, fg);
+                       else
+                           DrawChar ('\367', frame, xm, yf + ((delta - CharacterHeight ('\367', font)) / 2), font, RO, func, fg);
+					}
+			 }
+	  }
+   }
+#else  /* !_WIN_PRINT */
    exnum = 0;
 
    if (h <= (int) (1.3 * FontHeight (font)) )
@@ -1365,6 +1921,7 @@ int                 fg;
 	       }
 	  }
      }
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -1543,14 +2100,59 @@ int                 pattern;
 #endif /* __STDC__ */
 
 {
+#ifdef _WIN_PRINT
+   int                 xf, yf;
+#else  /* _WIN_PRINT */
+   LOGBRUSH            logBrush;
+   int                 result;
+#endif /* _WIN_PRINT */
    Pixmap              pat = (Pixmap) 0;
    HBRUSH              hBrush;
    HBRUSH              hOldBrush;
-   LOGBRUSH            logBrush;
    HPEN                hPen = 0;
    HPEN                hOldPen;
-   int                 result;
 
+#ifdef _WIN_PRINT
+
+   if (y < 0)   
+      return;
+   y += FrameTable[frame].FrTopMargin;
+
+   /* Fill in the rectangle */
+   if (TtPrinterDC) {
+      xf = x + larg;
+      yf = y + height;
+      if (larg > thick + 1)
+         larg = larg - thick - 1;
+      if (height > thick + 1)
+         height = height - thick - 1;
+      x += thick / 2;
+      y += thick / 2;
+
+      pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+      if (pat != 0) {
+         WinLoadGC (TtPrinterDC, fg, RO);
+   
+         hBrush = CreateSolidBrush (ColorPixel (bg));
+         hOldBrush = SelectObject (TtPrinterDC, hBrush);
+         PatBlt (TtPrinterDC, x, y, larg, height, PATCOPY);
+         SelectObject (TtPrinterDC, hOldBrush);
+         if (!DeleteObject (hBrush))
+            WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawRectangle (1)");
+         hBrush = (HBRUSH) 0;
+	  }
+
+      if (thick > 0) {
+         if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
+            WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawRectangle (2)");
+         hOldPen = SelectObject (TtPrinterDC, hPen) ;
+         SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH)) ;
+         Rectangle (TtPrinterDC, x, y, xf, yf);
+         SelectObject (TtPrinterDC, hOldPen);
+         DeleteObject (hPen);
+	  }
+   }
+#else  /* _WIN_PRINT */
    if (width <= 0 || height <= 0)
       return;
 
@@ -1641,6 +2243,7 @@ int                 pattern;
    if (pat != (Pixmap)0)
       if (!DeleteObject ((HGDIOBJ)pat))
          WinErrorBox (NULL, TEXT("windowdisplay.c - DrawRectangle (5)"));
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -1711,6 +2314,43 @@ int                 arrow;
    int                 i, j;
    PtrTextBuffer       adbuff;
 
+#ifdef _WIN_PRINT
+   if (thick == 0)
+      return;
+
+   y += FrameTable[frame].FrTopMargin;
+   /* Allocate a table of points */
+   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * (nb - 1));
+   adbuff = buffer;
+   j = 1;
+   for (i = 1; i < nb; i++) {
+       if (j >= adbuff->BuLength) {
+	     if (adbuff->BuNext != NULL) {
+            /* Next buffer */
+            adbuff = adbuff->BuNext;
+            j = 0;
+		 }
+	   }
+       points[i - 1].x = x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+       points[i - 1].y = y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
+       j++;
+   }
+
+   /* backward arrow  */
+   if (arrow == 2 || arrow == 3)
+      DrawArrowHead (points[1].x, points[1].y, points[0].x, points[0].y, thick, RO, active, fg);
+
+   /* Draw the border */
+   for (i = 1; i < nb - 1; i++) 
+       DoPrintOneLine (fg, points [i-1].x, points[i-1].y, points[i].x, points[i].y, thick, style);
+
+   /* Forward arrow */
+   if (arrow == 1 || arrow == 3)
+      DrawArrowHead (points[nb - 3].x, points[nb - 3].y, points[nb - 2].x, points[nb - 2].y, thick, RO, active, fg);
+
+   /* free the table of points */
+   free (points);
+#else  /* !_WIN_PRINT */
    if (thick == 0)
       return;
 
@@ -1745,7 +2385,6 @@ int                 arrow;
    for (i = 1; i < nb - 1; i++) {
        DoDrawOneLine (frame, points [i-1].x, points[i-1].y, points[i].x, points[i].y);
    }
-   FinishDrawing (0, RO, active);
 
    /* Forward arrow */
    if (arrow == 1 || arrow == 3)
@@ -1753,6 +2392,7 @@ int                 arrow;
 
    /* free the table of points */
    free (points);
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -1789,13 +2429,90 @@ int                 pattern;
    ThotPoint          *points;
    int                 i, j;
    PtrTextBuffer       adbuff;
-   Pixmap              pat = (Pixmap) 0;
    HPEN                hPen;
    HPEN                hOldPen;
    HBRUSH              hBrush;
    HBRUSH              hOldBrush;
-   int  result;
+#ifdef _WIN_PRINT
+   LOGBRUSH            logBrush;
+   int                 t;
+#else /* _WIN_PRINT */
+   Pixmap              pat = (Pixmap) 0;
+   int                 result;
+#ifdef /* _WIN_PRINT */
 
+#ifdef _WIN_PRINT
+   /* Allocate a table of points */
+   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
+   adbuff = buffer;
+   y += FrameTable[frame].FrTopMargin;
+   j = 1;
+   for (i = 1; i < nb; i++) {
+       if (j >= adbuff->BuLength) {
+          if (adbuff->BuNext != NULL) {
+             /* Next buffer */
+             adbuff = adbuff->BuNext;
+             j = 0;
+		  }
+	   }
+       points[i - 1].x = x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+       points[i - 1].y = y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
+       j++;
+   }
+   /* Close the polygone */
+   points[nb - 1].x = points[0].x;
+   points[nb - 1].y = points[0].y;
+
+   /* Fill in the polygone */
+
+   /* Draw the border */
+   if (thick > 0) {
+     t = PixelToPoint (thick);
+
+     if (t <= 1)
+       {
+	 switch (style)
+	   {
+	   case 3:
+	     hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+	     break;
+	   case 4:
+	     hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+	     break;
+	   default:
+	     hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+	     break;
+	   }
+       }
+     else
+       {
+	 logBrush.lbStyle = BS_SOLID;
+	 logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+
+	 switch (style)
+	   {
+	   case 4:
+	     hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
+	     break;
+	   case 5:
+	     hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
+	     break;
+	   default:
+	     hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
+	     break;
+	   }
+       } 
+     hOldPen = SelectObject (TtPrinterDC, hPen) ;
+     Polyline (TtPrinterDC, points, nb);
+     SelectObject (TtPrinterDC, hOldPen);
+     if (!DeleteObject (hPen))
+       WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawPolygon");
+     hPen = (HPEN) 0;
+   }
+
+   /* free the table of points */
+   free (points);
+#else  /* _WIN_PRINT */
    /* Allocate a table of points */
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
    adbuff = buffer;
@@ -1843,8 +2560,7 @@ int                 pattern;
          Polygon (TtDisplay, points, nb);
 	  }
       Polyline (TtDisplay, points, nb);
-      FinishDrawing (0, RO, active);
-	  SelectObject (TtDisplay, hOldPen);
+      SelectObject (TtDisplay, hOldPen);
       WIN_ReleaseDeviceContext ();
 	  if (!DeleteObject (hPen))
          WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawPolygon (2)"));
@@ -1863,8 +2579,9 @@ int                 pattern;
 
    /* free the table of points */
    free (points);
-}
 #endif /* _WIN_PRINT */
+}
+
 
 /*----------------------------------------------------------------------
   PolyNewPoint : add a new point to the current polyline.
@@ -2119,7 +2836,6 @@ C_points           *controls;
    if (arrow == 1 || arrow == 3)
       ArrowDrawing (frame, FloatToInt (cx2), FloatToInt (cy2), (int) x2, (int) y2, thick, RO, active, fg);
 
-   FinishDrawing (0, RO, active);
    /* free the table of points */
    WIN_ReleaseDeviceContext ();
    free (points);
@@ -2250,13 +2966,11 @@ C_points           *controls;
          Polygon (TtDisplay, points, npoints);
 	  }
       Polyline (TtDisplay, points, npoints);
-      FinishDrawing (0, RO, active);
 	  SelectObject (TtDisplay, hOldPen);
       WIN_ReleaseDeviceContext ();
 	  if (!DeleteObject (hPen))
          WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawSpline (2)"));
       hPen = (HPEN) 0;
-      FinishDrawing (0, RO, active);
    }
 
    if (hBrush) {
@@ -2308,8 +3022,100 @@ int                 pattern;
    LOGBRUSH            logBrush;
    HPEN                hPen = 0;
    HPEN                hOldPen;
+#ifdef _WIN_PRINT 
+   int                 t;
+#else /* _WIN_PRINT */
    int                 result;
+#endif /* _WIN_PRINT */
 
+#  ifdef _WIN_PRINT 
+   if (larg <= 0 || height <= 0) 
+      return;
+
+   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+
+   if (thick == 0 && pat == 0)
+      return;
+
+   y += FrameTable[frame].FrTopMargin;
+
+   arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
+
+   if (larg > thick + 1)
+      larg = larg - thick - 1;
+   if (height > thick + 1)
+      height = height - thick - 1;
+   x += thick / 2;
+   y += thick / 2;
+
+   /* Fill in the rectangle */
+   if (pat != 0) {
+      hBrush = CreateSolidBrush (ColorPixel (bg));
+      hOldBrush = SelectObject (TtPrinterDC, hBrush);
+   } else {
+         SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH));
+		 hBrush = (HBRUSH) 0;
+   }
+
+   if (thick > 0)
+     {
+       t = PixelToPoint (thick);
+
+       if (t <= 1)
+	 {
+	   switch (style)
+	     {
+	     case 3:
+	       hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+	       break;
+	     case 4:
+	       hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+	       break;
+	     default:
+	       hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+	       break;
+	     } 
+	 }
+       else
+	 {
+	   logBrush.lbStyle = BS_SOLID;
+	   logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+
+	   switch (style)
+	     {
+	     case 3:
+	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
+	       break;
+	     case 4:
+	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
+	       break;
+	     default:
+	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
+	       break;
+	     } 
+	 }  
+     }
+   else
+     {
+       if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
+	 WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawOval (1)");
+     }
+
+   hOldPen = SelectObject (TtPrinterDC, hPen) ;
+
+   if (!RoundRect (TtPrinterDC, x, y, x + larg, y + height, arc * 2, arc * 2))
+      WinErrorBox (FrRef  [frame], "psdisplay.c - DrawOval (2)");
+   SelectObject (TtPrinterDC, hOldPen);
+   if (!DeleteObject (hPen))
+      WinErrorBox (FrRef [frame], "psdisplay.c - DrawOval (3)");
+   hPen = (HPEN) 0;
+   if (hBrush) {
+      SelectObject (TtPrinterDC, hOldBrush);
+      if (!DeleteObject (hBrush))
+         WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawOval (4)");
+      hBrush = (HBRUSH)0;
+   }
+#else  /* _WIN_PRINT */
    if (width <= 0 || height <= 0) 
       return;
 
@@ -2399,6 +3205,7 @@ int                 pattern;
    if (pat != (Pixmap) 0)
       if (!DeleteObject ((HGDIOBJ) pat))
          WinErrorBox (NULL, TEXT("windowdisplay.c - DrawOval (5)"));
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -2427,14 +3234,120 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
+   Pixmap   pat = (Pixmap)0;
    HPEN     hPen;
    HPEN     hOldPen;
    HBRUSH   hBrush;
    HBRUSH   hOldBrush;
    LOGBRUSH logBrush;
+#ifdef _WIN_PRINT 
+   int      t;
+#else  /* _WIN_PRINT */
    int      result;
-   Pixmap   pat = (Pixmap)0;
+#end  /* _WIN_PRINT */
 
+#ifdef _WIN_PRINT 
+   if (y < 0)   
+      return;
+   y += FrameTable[frame].FrTopMargin;
+
+#  ifdef _WIN_PRINT 
+   if (TtPrinterDC) {
+      if (pattern > 2)
+         pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+
+      if (pattern > 2 && pat == 0 && thick <= 0)
+         return;
+
+      if (pattern <= 2) {
+         switch (pattern) {
+                case 0:  SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH));
+                         hBrush = (HBRUSH) 0;
+                         break;
+
+                case 1:  hBrush = CreateSolidBrush (ColorPixel (fg));
+                         hOldBrush = SelectObject (TtPrinterDC, hBrush);
+                         break;
+
+                case 2:  hBrush = CreateSolidBrush (ColorPixel (bg));
+                         hOldBrush = SelectObject (TtPrinterDC, hBrush);
+                         break;
+
+                default: SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH));
+                         hBrush = (HBRUSH) 0;
+                         break;
+		 }
+	  } else if (pat != 0) {
+             hBrush = CreatePatternBrush (pat); 
+             hOldBrush = SelectObject (TtPrinterDC, hBrush);
+	  } else {
+             SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH));
+		     hBrush = (HBRUSH) 0;
+	  }
+
+      xm = x + larg;
+      ym = y + height;
+
+      if (thick > 0)
+	{
+	  t = PixelToPoint (thick);
+	  
+	  if (t <= 1)
+	    {
+	      switch (style)
+		{
+		case 3:
+		  hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+		  break;
+		case 4:
+		  hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+		  break;
+		default:
+		  hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+		  break;
+		}  
+	    }
+	  else
+	    {
+	      logBrush.lbStyle = BS_SOLID;
+	      logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+	      
+	      switch (style)
+		{
+		case 3:
+		  hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
+		 break;
+		case 4:
+		  hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
+		  break;
+		default:
+		  hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
+		  break;
+		} 
+	    }  
+	}
+      else
+	{
+	  if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
+	    WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawEllips (1)");
+	}
+
+      hOldPen = SelectObject (TtPrinterDC, hPen) ;
+
+      if (!Ellipse (TtPrinterDC, x, y, x + larg, y + height))
+         WinErrorBox (FrRef  [frame], "psdisplay.c - DrawEllips (2)");
+      SelectObject (TtPrinterDC, hOldPen);
+      if (!DeleteObject (hPen))
+         WinErrorBox (FrRef [frame], "psdisplay.c - DrawEllipse (3)");
+      hPen = (HPEN) 0;
+      if (hBrush) {
+         SelectObject (TtPrinterDC, hOldBrush);
+         if (!DeleteObject (hBrush))
+            WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawEllips (4)");
+         hBrush = (HBRUSH)0;
+	  }
+   }
+#else /* _WIN_PRINT */
    width -= thick + 1;
    height -= thick + 1;
    x += thick / 2;
@@ -2539,6 +3452,7 @@ int                 pattern;
       if (!DeleteObject ((HGDIOBJ) pat))
          WinErrorBox (NULL, TEXT("windowdisplay.c - DrawEllips (5)"));
    pat = (Pixmap) 0;
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -2564,12 +3478,30 @@ int                 align;
 int                 RO;
 int                 active;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    register int        Y;
 
+#ifdef _WIN_PRINT 
+   if (y < 0)
+     return;
+   y += FrameTable[frame].FrTopMargin;
+   if (thick <= 0)
+     return;
+
+#  ifdef _WIN_PRINT 
+   if (TtPrinterDC) {
+      if (align == 1)
+         Y = y + (h - thick) / 2;
+      else if (align == 2)
+           Y = y + h - thick - 1;
+      else
+          Y = y;
+       
+      if (thick > 0)
+         DoPrintOneLine (fg, x, Y, x + l - 1, Y, thick, style);
+   }
+#else /* _WIN_PRINT */
    y += FrameTable[frame].FrTopMargin;
    if (align == 1)
       Y = y + (h - thick) / 2;
@@ -2581,8 +3513,8 @@ int                 fg;
      {
 	InitDrawing (0, style, thick, RO, active, fg);
 	DoDrawOneLine (frame, x, Y, x + l - 1, Y);
-	FinishDrawing (0, RO, active);
      }
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -2612,12 +3544,31 @@ int                 fg;
 #endif /* __STDC__ */
 
 {
-   register int        X;
+   int        X;
 
+#ifdef _WIN_PRINT
+   if (y < 0)
+      return;
+   y += FrameTable[frame].FrTopMargin;
+   if (thick <= 0)
+      return;
+
+   if (TtPrinterDC) {
+      if (align == 1)
+         X = x + (l - thick) / 2;
+      else if (align == 2)
+           X = x + l - thick - 1;
+      else
+          X = x;
+
+      if (thick > 0)
+         DoPrintOneLine (fg, X, y, X, y + h - 1, thick, style);
+   }
+#else  /* _WIN_PRINT */
    if (align == 1)
       X = x + (l - thick) / 2;
    else if (align == 2)
-      X = x + l - thick;
+      X = x + l - thick - 1;
    else
       X = x;
 
@@ -2625,9 +3576,9 @@ int                 fg;
    if (thick > 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
-	DoDrawOneLine (frame, X, y, X, y + h);
-	FinishDrawing (0, RO, active);
+	DoDrawOneLine (frame, X, y, X, y + h - 1);
      }
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -2652,12 +3603,21 @@ int                 direction;
 int                 RO;
 int                 active;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 xf, yf;
 
+#ifdef _WIN_PRINT 
+   y += FrameTable[frame].FrTopMargin;
+   xf = x + l - 1 - thick;
+   yf = y + h - 1 - thick;
+   if (thick > 0) {
+      if (direction == 0)
+         DoPrintOneLine (fg, x, yf, xf, y, thick, style);
+      else
+           DoPrintOneLine (fg, x, y, xf, yf, thick, style);
+   }
+#else  /* _WIN_PRINT */
    y += FrameTable[frame].FrTopMargin;
    xf = x + l - 1 - thick;
    yf = y + h - 1 - thick;
@@ -2668,8 +3628,8 @@ int                 fg;
 	   DoDrawOneLine (frame, x, yf, xf, y);
 	else
 	   DoDrawOneLine (frame, x, y, xf, yf);
-	FinishDrawing (0, RO, active);
      }
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -2700,9 +3660,104 @@ int                 fg;
 {
    ThotPoint           point[3];
    int                 xf, yf;
-   HPEN pen;
-   HPEN hOldPen;
+   HPEN                hPen;
+   HPEN                hOldPen;
+#ifdef _WIN_PRINT
+   int                 t;
+#endif /* _WIN_PRINT */
 
+#ifdef _WIN_PRINT
+   if (y < 0)
+      return;
+   y += FrameTable[frame].FrTopMargin;
+   if (thick <= 0)
+      return;
+
+#  ifdef _WIN_PRINT
+   if (TtPrinterDC) {
+      xf = PixelToPoint (x + l);
+      yf = PixelToPoint (y + h);
+      x  = PixelToPoint (x);
+      y  = PixelToPoint (y);
+
+      switch (corner) {
+             case 0: point[0].x = x;
+                     point[0].y = y;
+                     point[1].x = xf;
+                     point[1].y = y;
+                     point[2].x = xf;
+                     point[2].y = yf;
+                     break;
+
+             case 1: point[0].x = xf;
+                     point[0].y = y;
+                     point[1].x = xf;
+                     point[1].y = yf;
+                     point[2].x = x;
+                     point[2].y = yf;
+                     break;
+
+             case 2: point[0].x = xf;
+                     point[0].y = yf;
+                     point[1].x = x;
+                     point[1].y = yf;
+                     point[2].x = x;
+                     point[2].y = y;
+                     break;
+
+             case 3: point[0].x = x;
+                     point[0].y = yf;
+                     point[1].x = x;
+                     point[1].y = y;
+                     point[2].x = xf;
+                     point[2].y = y;
+                    break;
+	  }
+
+      t = PixelToPoint (thick);
+
+      if (t > 0)
+	{
+	  if (thick <= 1)
+	    {
+	      switch (style)
+		{
+		case 3:
+		  hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+		  break;
+		case 4:
+		  hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
+		  break;
+		default:
+		  hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+		  break;
+		} 
+	    }
+	  else
+	    {
+	      logBrush.lbStyle = BS_SOLID;
+	      logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+	      
+	      switch (style)
+		{
+		case 3:
+		  hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
+		  break;
+		case 4:
+		  hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
+		  break;
+		default:
+		  hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
+		  break;
+		} 
+	    }  
+	}
+
+      hOldPen = SelectObject (TtPrinterDC, hPen);
+      Polyline (TtPrinterDC, point, 3);
+      SelectObject (TtPrinterDC, hOldPen);
+   }
+#else  /* _WIN_PRINT */
    if (thick <= 0)
       return;
 
@@ -2747,14 +3802,15 @@ int                 fg;
 	 }
    WIN_GetDeviceContext (frame);
    WinLoadGC (TtDisplay, fg, RO);
-   pen = CreatePen (PS_SOLID, thick, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
-   hOldPen = SelectObject (TtDisplay, pen);
+   hPen = CreatePen (PS_SOLID, thick, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
+   hOldPen = SelectObject (TtDisplay, hPen);
    Polyline (TtDisplay, point, 3);
    SelectObject (TtDisplay, hOldPen);
    WIN_ReleaseDeviceContext ();
-   if (!DeleteObject (pen))
+   if (!DeleteObject (hPen))
       WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawCorner (1)"));
-   pen = (HPEN) 0;
+   hPen = (HPEN) 0;
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -2794,8 +3850,6 @@ int                 pattern;
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                DrawEllipsFrame (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 
@@ -2813,7 +3867,6 @@ int                 active;
 int                 fg;
 int                 bg;
 int                 pattern;
-
 #endif /* __STDC__ */
 
 {
@@ -2832,6 +3885,11 @@ int                 width;
 int                 height;
 #endif /* __STDC__ */
 {
+#ifdef _WIN_PRINT
+   LastPageNumber = pagenum;
+   LastPageWidth = width;
+   LastPageHeight = height;
+#endif /* WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -2845,24 +3903,6 @@ int                 width;
 int                 height;
 #endif /* __STDC__ */
 {
-}
-
-/*----------------------------------------------------------------------
-   SetMainWindowBackgroundColor :                          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void         SetMainWindowBackgroundColor (int frame, int color)
-#else  /* __STDC__ */
-void         SetMainWindowBackgroundColor (frame, color)
-int          frame;
-int          color;
-#endif /* __STDC__ */
-{
-   COLORREF cr;
-   WIN_GetDeviceContext (frame) ;
-   cr = ColorPixel (color);
-   SetBkColor (TtDisplay, (COLORREF)ColorPixel (color)); 
-   WIN_ReleaseDeviceContext ();
 }
 
 /*----------------------------------------------------------------------
@@ -2996,45 +4036,6 @@ int yf;
    }
 }
 
-#ifndef _WIN_PRINT
-/*----------------------------------------------------------------------
-  EndOfString check wether string end by suffix.
-
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 EndOfString (char* string, char* suffix)
-#else  /* __STDC__ */
-int                 EndOfString (string, suffix)
-char*               string;
-char*               suffix;
-
-#endif /* __STDC__ */
-{
-   int                 string_lenght, suffix_lenght;
-
-   string_lenght = strlen (string);
-   suffix_lenght = strlen (suffix);
-   if (string_lenght < suffix_lenght)
-      return 0;
-   else
-      return (strcmp (string + string_lenght - suffix_lenght, suffix) == 0);
-}
-#endif /* _WIN_PRINT */
-
-/*----------------------------------------------------------------------
-  XFlushOutput enforce updating of the calculated image for frame.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                XFlushOutput (int frame)
-#else  /* __STDC__ */
-void                XFlushOutput (frame)
-int                 frame;
-
-#endif /* __STDC__ */
-{
-}
-
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   PaintWithPattern fill the rectangle associated to a window w (or frame if w= 0)
   located on (x , y) and geometry width x height, using the
@@ -3063,4 +4064,3 @@ int                 pattern;
 #endif /* __STDC__ */
 {
 }
-#endif /* _WIN_PRINT */

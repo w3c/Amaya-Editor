@@ -31,7 +31,7 @@
 #include "displaybox_f.h"
 #include "picture_f.h"
 #include "buildboxes_f.h"
-#include "windowdisplay_f.h"
+#include "xwindowdisplay_f.h"
 
 /*----------------------------------------------------------------------
   GetLineWeight computes the line weight of an abstract box.
@@ -892,7 +892,11 @@ int                 frame;
 	   
       /* Do we need to draw a background */
       if (withbackground)
-	DrawRectangle (frame, 0, 0, x, y, width + pBox->BxXOrg - pFrame->FrXOrg - x, FontHeight (pBox->BxFont), 0, 0, 0, bg, 2);
+	DrawRectangle (frame, 0, 0,
+		       x - pBox->BxLPadding, y - pBox->BxTPadding,
+		       width + pBox->BxLPadding + pBox->BxRPadding,
+		       FontHeight (pBox->BxFont) + pBox->BxTPadding + pBox->BxBPadding,
+		       0, 0, 0, bg, 2);
       while (charleft > 0)
 	{
 	  /* handle each char in the buffer */
@@ -1159,7 +1163,7 @@ int                 h;
 	  DrawHorizontalLine (frame, b, pAb->AbBottomStyle,
 			      x, yFrame + box->BxHeight - box->BxBMargin - box->BxBBorder,
 			      w, b,
-			      0, 0, 0, color);
+			      2, 0, 0, color);
 	  break;
 	}
     }
@@ -1206,7 +1210,7 @@ int                 h;
 	  DrawVerticalLine (frame, r, pAb->AbRightStyle,
 			    xFrame + box->BxWidth - box->BxRMargin - box->BxRBorder, y,
 			    r, h,
-			    0, 0, 0, color);
+			    2, 0, 0, color);
 	  break;
 	}
     }

@@ -98,7 +98,7 @@ extern void TtaSplitText (/* Element element,
 extern ThotBool TtaMergeText (/* Element element,
                                  Document document */);
 extern void TtaSetGraphicsShape (/* Element element,
-                                    CHAR_T shape,
+                                    char shape,
                                     Document document */);
 extern void TtaAddPointInPolyline (/* Element element,
                                       int rank,

@@ -556,7 +556,7 @@ STRUCT
 		  onfocus; onblur) =
 		{ onfocus  onblur }
 		BEGIN
-		Frame;
+		CONSTANT C_Empty;
 		END with Value_ ?= 'Submit';
 	Reset_Input					{ INPUT / RESET }
 	   (ATTR  NAME; Value_; disabled; readonly;
@@ -566,7 +566,7 @@ STRUCT
 		  onfocus; onblur) =
 		{ onfocus  onblur }
 		BEGIN
-		Frame;
+		CONSTANT C_Empty;
 		END  - (Input) with NAME ?= 'Reset',
 				    Value_ ?= 'Reset';
         Button_Input					{ INPUT / BUTTON }
@@ -577,7 +577,7 @@ STRUCT
 		  onfocus; onblur) =
 		{ onfocus  onblur }
 		BEGIN
-		Frame;
+		CONSTANT C_Empty;
 		END;
 
         BUTTON						{ BUTTON }

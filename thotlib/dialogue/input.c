@@ -1093,6 +1093,28 @@ void FreeTranslations ()
 
 
 /*----------------------------------------------------------------------
+   EndOfString check wether string end by suffix.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int          EndOfString (char* string, char* suffix)
+#else  /* __STDC__ */
+static int          EndOfString (string, suffix)
+char*               string;
+char*               suffix;
+#endif /* __STDC__ */
+{
+   int                 string_lenght, suffix_lenght;
+
+   string_lenght = strlen (string);
+   suffix_lenght = strlen (suffix);
+   if (string_lenght < suffix_lenght)
+      return 0;
+   else
+      return (strcmp (string + string_lenght - suffix_lenght, suffix) == 0);
+}
+
+
+/*----------------------------------------------------------------------
    InitTranslations
    intializes the keybord encoding.
   ----------------------------------------------------------------------*/

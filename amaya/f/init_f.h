@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Document IsDocumentLoaded ( STRING documentURL,
+extern Document IsDocumentLoaded ( CharUnit* documentURL,
                                    STRING form_data );
 extern ThotBool CanReplaceCurrentDocument ( Document document,
                                             View view );
@@ -76,7 +76,7 @@ extern void ShowToC ( Document document,
 extern ThotBool ViewToClose ( NotifyDialog * event );
 extern void GetHTMLDocument_callback ( int newdoc,
                                        int status,
-                                       STRING urlName,
+                                       CharUnit* urlName,
                                        STRING outputfile,
                                        STRING content_type,
                                        void * context );
@@ -151,12 +151,12 @@ extern void AmayaClose ( Document document,
 
 #else /* __STDC__ */
 
-extern Document IsDocumentLoaded (/* STRING documentURL,
+extern Document IsDocumentLoaded (/* CharUnit* documentURL,
                                      STRING form_data */);
 extern ThotBool CanReplaceCurrentDocument (/* Document document,
                                               View view */);
-extern void ExtractParameters (/* STRING aName,
-                                  STRING parameters */);
+extern void ExtractParameters (/* CharUnit* aName,
+                                  CharUnit* parameters */);
 extern void SetArrowButton (/* Document document,
                                ThotBool back,
                                ThotBool on */);
@@ -221,11 +221,11 @@ extern void ShowToC (/* Document document,
 extern ThotBool ViewToClose (/* NotifyDialog * event */);
 extern void GetHTMLDocument_callback (/* int newdoc,
                                          int status,
-                                         STRING urlName,
+                                         CharUnit* urlName,
                                          STRING outputfile,
                                          STRING content_type,
                                          void * context */);
-extern Document GetHTMLDocument (/* const STRING documentPath,
+extern Document GetHTMLDocument (/* const CharUnit* documentPath,
                                     STRING form_data,
                                     Document doc,
                                     Document baseDoc,

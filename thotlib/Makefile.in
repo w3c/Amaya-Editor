@@ -23,7 +23,7 @@ bindir = @bindir@
 MACHINE= @target@
 
 SUBDIRS = include
-OBJDIRS = base content dialogue document editing image presentation tree unicode view xml
+OBJDIRS = base content dialogue document editing image presentation tree unicode view
 
 @SET_MAKE@
 
@@ -262,13 +262,7 @@ EDITOR_OBJ = \
 	view/structlocate.o\
 	view/unstructlocate.o\
 	view/viewapi.o \
-	view/xwindowdisplay.o \
-	xml/writexml.o \
-	xml/savexml.o \
-	xml/translatexml.o \
-	xml/parsexml.o \
-	xml/xmlmodule.o \
-	xml/thotmodule.o
+	view/xwindowdisplay.o
 
 base/registry.o : @srcdir@/base/registry.c
 	$(CC) $(CFLAGS) $(INCLUDES) -DCOMPILED_IN_THOTDIR=\"@top_srcdir@\" \

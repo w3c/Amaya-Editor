@@ -31,7 +31,7 @@ extern void TtcOpenDocument ( Document document,
 extern void BuildPathDocBuffer (/* STRING bufDir,
                                    CHAR_T separator,
                                    int *nbItems */);
-extern int SearchStringInBuffer (/* char* buffer,
+extern int SearchStringInBuffer (/* CharUnit* buffer,
                                     PathBuffer s,
                                     int nbStr */);
 extern void BuildSchPresNameMenu (/* PtrSSchema pSchStr,

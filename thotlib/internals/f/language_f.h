@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char* TtaGetLanguageNameFromCode ( CharUnit* code );
+extern CHAR_T* TtaGetLanguageNameFromCode ( char* code );
 extern char* TtaGetLanguageCodeFromName ( CharUnit* name );
 extern void InitLanguage ( void );
 extern Language TtaNewLanguage ( char* languageName,
@@ -33,7 +33,7 @@ extern ThotBool TtaExistPatternList ( Language languageId );
 extern CHAR_T* TtaGetLanguageNameFromCode (/* char* code */);
 extern char* TtaGetLanguageCodeFromName (/* CharUnit* name */);
 extern void InitLanguage (/* void */);
-extern Language TtaNewLanguage (/* STRING languageName,
+extern Language TtaNewLanguage (/* char* languageName,
                                    char languageAlphabet,
                                    STRING principalDictionary,
                                    STRING secondDictionary */);

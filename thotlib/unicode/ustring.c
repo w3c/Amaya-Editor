@@ -829,6 +829,8 @@ CharUnit* StringDuplicate (str)
 const CharUnit* str;
 #endif /* !__STDC__ */
 {
+     if (str == (CharUnit*)0)
+        return NULL;
 #    if defined(_WINDOWS) && defined(_I18N_)
      return (CharUnit*) _wcsdup ((wchar_t*)str);
 #    else  /* (_WINDOWS) && defined(_I18N_) */

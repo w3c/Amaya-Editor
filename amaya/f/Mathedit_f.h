@@ -47,9 +47,9 @@ extern void CreateMN ( Document document,
                        View view );
 extern void CreateMO ( Document document,
                        View view );
+extern void InitMathML ( void );
 extern void CreateMathEntity ( Document document,
                                View view );
-extern void InitMathML ( void );
 extern void MtextCreated ( NotifyElement *event );
 extern void MathStringModified ( NotifyOnTarget *event );
 extern void NewMathString ( NotifyElement *event );
@@ -116,9 +116,9 @@ extern void CreateMN (/* Document document,
                          View view */);
 extern void CreateMO (/* Document document,
                          View view */);
+extern void InitMathML (/* void */);
 extern void CreateMathEntity (/* Document document,
                                  View view */);
-extern void InitMathML (/* void */);
 extern void MtextCreated (/* NotifyElement *event */);
 extern void MathStringModified (/* NotifyOnTarget *event */);
 extern void NewMathString (/* NotifyElement *event */);

@@ -79,7 +79,7 @@ extern void CopyStringToText (/* CHAR_T* srceStrn,
                                  PtrTextBuffer pCopyBuf,
                                  int *LgCopiee */);
 extern void CopyTextToString (/* PtrTextBuffer pSrceBuf,
-                                 STRING pStrCpy,
+                                 CHAR_T* pStrCpy,
                                  int *len */);
 extern void ClearText (/* PtrTextBuffer pBuf */);
 extern void AddPointInPolyline (/* PtrTextBuffer firstBuffer,

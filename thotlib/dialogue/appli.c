@@ -321,9 +321,62 @@ LPARAM     lParam;
       }
    }
 }
-#endif /* _WINDOWS */
 
-#ifndef _WINDOWS
+/*----------------------------------------------------------------------
+   WIN_ChangeTaille : function called when a view is resized under    
+   MS-Windows.                                                   
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_ChangeViewSize (int frame, int width, int height, int top_delta, int bottom_delta)
+#else  /* !__STDC__ */
+void WIN_ChangeViewSize (frame, width, height, top_delta, bottom_delta)
+int frame; 
+int width; 
+int height; 
+int top_delta; 
+int bottom_delta;
+#endif /* __STDC__ */
+{
+   int                 view;
+   Document            doc;
+
+   if ((width <= 0) || (height <= 0))
+      return;
+
+   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+      return;
+
+   FrameToView (frame, &doc, &view);
+   FrameTable[frame].FrTopMargin = top_delta;
+
+   /* FrameTable[frame].FrWidth = (int) width - bottom_delta; */
+   FrameTable[frame].FrWidth = (int) width - bottom_delta;
+   FrameTable[frame].FrHeight = (int) height;
+
+   /* need to recompute the content of the window */
+   RebuildConcreteImage (frame);
+
+   /* recompute the scroll bars */
+    UpdateScrollbars (frame);
+}
+#else /* _WINDOWS */
+
+/*----------------------------------------------------------------------
+  XFlushOutput enforce updating of the calculated image for frame.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                XFlushOutput (int frame)
+#else  /* __STDC__ */
+void                XFlushOutput (frame)
+int                 frame;
+
+#endif /* __STDC__ */
+{
+#ifndef _GTK
+   XFlush (TtDisplay);
+#endif /* _GTK */
+}
+
 /*----------------------------------------------------------------------
    FrameToRedisplay effectue le traitement des expositions X11 des     
    frames de dialogue et de documents.                   
@@ -363,49 +416,8 @@ void               *ev;
 	 }
      }
 }
-#endif /* !_WINDOWS */
 
-#ifdef _WINDOWS
-/*----------------------------------------------------------------------
-   WIN_ChangeTaille : function called when a view is resized under    
-   MS-Windows.                                                   
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void WIN_ChangeViewSize (int frame, int width, int height, int top_delta, int bottom_delta)
-#else  /* !__STDC__ */
-void WIN_ChangeViewSize (frame, width, height, top_delta, bottom_delta)
-int frame; 
-int width; 
-int height; 
-int top_delta; 
-int bottom_delta;
-#endif /* __STDC__ */
-{
-   int                 view;
-   Document            doc;
 
-   if ((width <= 0) || (height <= 0))
-      return;
-
-   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-      return;
-
-   FrameToView (frame, &doc, &view);
-   FrameTable[frame].FrTopMargin = top_delta;
-
-   /* FrameTable[frame].FrWidth = (int) width - bottom_delta; */
-   FrameTable[frame].FrWidth = (int) width - bottom_delta;
-   FrameTable[frame].FrHeight = (int) height;
-
-   /* need to recompute the content of the window */
-   RebuildConcreteImage (frame);
-
-   /* recompute the scroll bars */
-    UpdateScrollbars (frame);
-}
-#endif /* _WINDOWS */
-
-#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   FrameRedraw
   ----------------------------------------------------------------------*/

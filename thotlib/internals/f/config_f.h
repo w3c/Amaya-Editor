@@ -27,7 +27,7 @@ extern int ConfigMakeMenuExport ( CharUnit* schema,
 extern void ConfigGetExportSchemaName ( int choix,
                                         char* schtrad );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
-extern ThotBool ConfigDefaultPSchema ( char* schstr,
+extern ThotBool ConfigDefaultPSchema ( CharUnit* schstr,
                                        char* schpres );
 extern void ConfigKeyboard ( int *x,
                              int *y );
@@ -100,7 +100,7 @@ extern int ConfigMakeMenuExport (/* CharUnit* schema,
 extern void ConfigGetExportSchemaName (/* int choix,
                                           char* schtrad */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
-extern ThotBool ConfigDefaultPSchema (/* char* schstr,
+extern ThotBool ConfigDefaultPSchema (/* CharUnit* schstr,
                                          char* schpres */);
 extern void ConfigKeyboard (/* int *x,
                                int *y */);

@@ -66,7 +66,7 @@ extern int GetPictureType (/* int GUIIndex */);
 extern int GetPictTypeIndex (/* int picType */);
 extern int GetPictPresIndex (/* PictureScaling picPresent */);
 extern void GetPictureHandlersList (/* int *count,
-                                       STRING buffer */);
+                                       char* buffer */);
 extern void LittleXBigEndian (/* unsigned char *b,
                                  long n */);
 

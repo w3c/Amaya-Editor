@@ -40,7 +40,7 @@ extern void BuildPasteMenu (/* int RefMenu,
                                STRING bufMenu,
                                WCName title,
                                int nbEntries,
-                               CHAR_T button */);
+                               char button */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -96,15 +96,15 @@ extern ThotBool TtaIsInDocumentPath (/* CharUnit* directory */);
 extern void TtaAppendDocumentPath (/* CharUnit* directory */);
 extern void TtaSetSchemaPath (/* STRING path */);
 extern SSchema TtaNewNature (/* SSchema schema,
-                                STRING natureName,
-                                STRING presentationName */);
+                                char* natureName,
+                                char* presentationName */);
 extern SSchema TtaNewSchemaExtension (/* Document document,
-                                         STRING extensionName,
-                                         STRING presentationName */);
+                                         char* extensionName,
+                                         char* presentationName */);
 extern void TtaSetPSchema (/* Document document,
-                              STRING presentationName */);
+                              char* presentationName */);
 extern void TtaSetDocumentDirectory (/* Document document,
-                                        STRING directory */);
+                                        CharUnit* directory */);
 extern void TtaSetDocumentAccessMode (/* Document document,
                                          int accessMode */);
 extern void TtaSetDocumentBackUpInterval (/* Document document,
@@ -124,7 +124,7 @@ extern void TtaGetDocumentDirectory (/* Document document,
 extern SSchema TtaGetDocumentSSchema (/* Document document */);
 extern char* TtaGetSSchemaName (/* SSchema schema */);
 extern char* TtaGetPSchemaName (/* SSchema schema */);
-extern SSchema TtaGetSSchema (/* STRING name,
+extern SSchema TtaGetSSchema (/* char* name,
                                  Document document */);
 extern int TtaSameSSchemas (/* SSchema schema1,
                                SSchema schema2 */);

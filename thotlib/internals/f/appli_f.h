@@ -12,6 +12,7 @@ extern void FrameToView ( int frame,
 extern void FrameKilled ( int *w,
                           int frame,
                           int *info );
+extern void XFlushOutput ( int frame );
 extern void FrameToRedisplay ( ThotWindow w,
                                int frame,
                                void *ev );
@@ -97,6 +98,7 @@ extern void FrameToView (/* int frame,
 extern void FrameKilled (/* int *w,
                             int frame,
                             int *info */);
+extern void XFlushOutput (/* int frame */);
 extern void FrameToRedisplay (/* ThotWindow w,
                                  int frame,
                                  void *ev */);

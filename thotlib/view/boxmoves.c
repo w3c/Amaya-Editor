@@ -2787,15 +2787,15 @@ int                 frame;
 		  {
 		     box = pFromBox->BxMoved;
 		     while (box != NULL)
-			if (box == pBox)
-			   return;
-			else if (box->BxMoved == pFromBox)
-			  {
-			     box->BxMoved = NULL;
-			     box = NULL;
-			  }
-			else
-			   box = box->BxMoved;
+		       if (box == pBox)
+			 return;
+		       else if (box->BxMoved == pFromBox)
+			 {
+printf ("XMove, box already in the list (label=%s, type=%d)\n", box->BxAbstractBox->AbElement->ElLabel,  box->BxAbstractBox->AbElement->ElTypeNumber);
+			 box = NULL;
+			 }
+		       else
+			 box = box->BxMoved;
 		  }
 		/* add the box in the history */
 		pBox->BxMoved = pFromBox;
@@ -2992,17 +2992,17 @@ int                 frame;
 		/* check if the box is in the history of moved boxes */
 		if (pFromBox != NULL)
 		  {
-		     box = pFromBox->BxMoved;
-		     while (box != NULL)
-			if (box == pBox)
-			   return;
-			else if (box->BxMoved == pFromBox)
-			  {
-			     box->BxMoved = NULL;
-			     box = NULL;
-			  }
-			else
-			   box = box->BxMoved;
+		    box = pFromBox->BxMoved;
+		    while (box != NULL)
+		      if (box == pBox)
+			return;
+		      else if (box->BxMoved == pFromBox)
+			{
+printf ("YMove, box already in the list (label=%s, type=%d)\n", box->BxAbstractBox->AbElement->ElLabel,  box->BxAbstractBox->AbElement->ElTypeNumber);
+			  box = NULL;
+			}
+		      else
+			box = box->BxMoved;
 		  }
 		/* met a jour la pile des boites traitees */
 		pBox->BxMoved = pFromBox;

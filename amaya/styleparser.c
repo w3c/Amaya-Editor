@@ -1262,7 +1262,7 @@ CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  char *ptrT, *ptrR, *ptrB, *ptrL;
+  char *ptrT, *ptrR;
 
   ptrT = SkipBlanksAndComments (cssRule);
   /* First parse Border-Top */
