@@ -21,6 +21,18 @@
 #include "platform_f.h"
 #include "registry_f.h"
 
+/* ---------------------------------------------- */
+/* |  Constants for read and write operations   | */
+/* ---------------------------------------------- */
+
+#define LMASK           0x000000ffL
+ 
+#define DECAL_3         (3 * 8)
+#define DECAL_2         (2 * 8)
+#define DECAL_1         (1 * 8)
+
+#define SIGNED_SHORT_MASK	0xffff0000L
+
 /*----------------------------------------------------------------------
    BIOreadByte reads a character (or byte) value.                  
   ----------------------------------------------------------------------*/
@@ -33,8 +45,7 @@ char               *bval;
 
 #endif /* __STDC__ */
 {
-   *bval = getc (file);
-   if (feof (file) || ferror (file))
+   if (fread (bval, sizeof (char), 1, file) == 0)
      {
 	*bval = '\0';
 	return FALSE;
@@ -54,7 +65,7 @@ boolean            *bval;
 
 #endif /* __STDC__ */
 {
-   unsigned char       b1;
+   char       b1;
 
    if (!BIOreadByte (file, &b1))
      {
@@ -78,19 +89,22 @@ int                *sval;
 
 #endif /* __STDC__ */
 {
-   unsigned char       b1, b2;
+char      car;
+ 
+   *sval = 0;
+ 
+   if (!BIOreadByte (file, &car)) {
+      *sval = 0;
+      return FALSE;
+   };
+   *sval |= ((((int) car) & LMASK) << DECAL_1);
+ 
+   if (!BIOreadByte (file, &car)) {
+      *sval = 0;
+      return FALSE;
+   };
+   *sval |= (((int) car) & LMASK);
 
-   if (!BIOreadByte (file, &b1))
-     {
-	*sval = 0;
-	return FALSE;
-     }
-   if (!BIOreadByte (file, &b2))
-     {
-	*sval = 0;
-	return FALSE;
-     }
-   *sval = 256 * ((int) b1) + ((int) b2);
    return TRUE;
 }
 
@@ -107,21 +121,24 @@ int                *sval;
 
 #endif /* __STDC__ */
 {
-   unsigned char       b1, b2;
+char      car;
+ 
+   *sval = 0;
+ 
+   if (!BIOreadByte (file, &car)) {
+      *sval = 0;
+      return FALSE;
+   };
+   if (car < 0)
+      *sval = SIGNED_SHORT_MASK;
+   *sval |= ((((int) car) & LMASK) << DECAL_1);
+ 
+   if (!BIOreadByte (file, &car)) {
+      *sval = 0;
+      return FALSE;
+   };
+   *sval |= (((int) car) & LMASK);
 
-   if (!BIOreadByte (file, &b1))
-     {
-	*sval = 0;
-	return FALSE;
-     }
-   if (!BIOreadByte (file, &b2))
-     {
-	*sval = 0;
-	return FALSE;
-     }
-   *sval = 256 * ((int) b1) + ((int) b2);
-   if (*sval > 32767)
-      *sval = *sval - 65536;
    return TRUE;
 }
 
@@ -138,19 +155,34 @@ int                *sval;
 
 #endif /* __STDC__ */
 {
-   int                 s1, s2;
+char      car;
+ 
+   *sval = 0;
+ 
+   if (!BIOreadByte (file, &car)) {
+      *sval = 0;
+      return FALSE;
+   };
+   *sval |= ((((int) car) & LMASK) << DECAL_3);
+ 
+   if (!BIOreadByte (file, &car)) {
+      *sval = 0;
+      return FALSE;
+   };
+   *sval |= ((((int) car) & LMASK) << DECAL_2);
+ 
+   if (!BIOreadByte (file, &car)) {
+      *sval = 0;
+      return FALSE;
+   };
+   *sval |= ((((int) car) & LMASK) << DECAL_1);
+ 
+   if (!BIOreadByte (file, &car)) {
+      *sval = 0;
+      return FALSE;
+   };
+   *sval |= (((int) car) & LMASK);
 
-   if (!BIOreadShort (file, &s1))
-     {
-	*sval = 0;
-	return FALSE;
-     }
-   if (!BIOreadShort (file, &s2))
-     {
-	*sval = 0;
-	return FALSE;
-     }
-   *sval = 65536 * s1 + s2;
    return TRUE;
 }
 
@@ -231,7 +263,7 @@ char               *filename;
 
 #endif /* __STDC__ */
 {
-   return fopen (filename, "w");
+   return fopen (filename, "w+");
 }
 
 
@@ -262,9 +294,63 @@ char                bval;
 
 #endif /* __STDC__ */
 {
-   if (ferror (file))
+   if (fwrite (&bval, sizeof (char), 1, file) == 0)
       return FALSE;
-   putc (bval, file);
+   return TRUE;
+}
+
+
+/*----------------------------------------------------------------------
+   BIOwriteShort reads an unsigned short value.
+   -------------------------------------------------------------------- */
+
+#ifdef __STDC__
+boolean   BIOwriteShort (BinFile file, int sval)
+#else			     /* __STDC__ */
+boolean   BIOwriteShort (file, sval)
+BinFile   file;
+int       sval;
+
+#endif			     /* __STDC__ */
+
+{
+
+   if (!BIOwriteByte (file, (char) ((sval >> DECAL_1) & LMASK)))
+      return FALSE;
+
+   if (!BIOwriteByte (file, (char) (sval & LMASK)))
+      return FALSE;
+
+   return TRUE;
+}
+
+/*----------------------------------------------------------------------
+   BIOwriteInteger writes an integer.
+   -------------------------------------------------------------------- */
+
+#ifdef __STDC__
+boolean   BIOwriteInteger (BinFile file, int lval)
+#else			     /* __STDC__ */
+boolean   BIOwriteInteger (file, lval)
+BinFile   file;
+int       lval;
+
+#endif			     /* __STDC__ */
+
+{
+
+   if (!BIOwriteByte (file, (char) ((lval >> DECAL_3) & LMASK)))
+      return FALSE;
+
+   if (!BIOwriteByte (file, (char) ((lval >> DECAL_2) & LMASK)))
+      return FALSE;
+
+   if (!BIOwriteByte (file, (char) ((lval >> DECAL_1) & LMASK)))
+      return FALSE;
+
+   if (!BIOwriteByte (file, (char) (lval & LMASK)))
+      return FALSE;
+
    return TRUE;
 }
 
@@ -674,7 +760,7 @@ char               *fileName;
 #ifdef NEW_WILLOWS
    ret = _access (fileName, 0);
 #else  /* NEW_WILLOWS */
-   ret = access (fileName, 0);
+   ret = access (fileName, F_OK);
 #endif /* NEW_WILLOWS */
    if (ret == -1)
       /* file does not exist */
@@ -685,20 +771,20 @@ char               *fileName;
 	   i--;
 	if (i < 0)
 	   /* no directory name: current directory */
-	   ret = access (".", 2);
+	   ret = access (".", R_OK | W_OK | X_OK);
 	else
 	  {
 	     /* isolate the directory name */
 	     c = fileName[i];
 	     fileName[i] = '\0';
 	     /* get access right for the directory */
-	     ret = access (fileName, 2);
+	     ret = access (fileName, R_OK | W_OK | X_OK);
 	     fileName[i] = c;
 	  }
      }
    else
       /* file exists */
-      ret = access (fileName, 2);
+      ret = access (fileName, W_OK);
    return (ret);
 }
 
