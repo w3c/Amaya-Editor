@@ -3905,7 +3905,7 @@ int   font_size;
 }
 
 /*-----------------------------------------------------------------------
- CreateAttributeRuleDlgWindow
+ CreateAttributeDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
 void CreateAttributeDlgWindow (STRING title, int curr_val, int nb_items) 
