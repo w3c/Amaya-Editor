@@ -99,6 +99,8 @@ void CallbackImage (int ref, int typedata, char *data)
   switch (ref - BaseImage)
     {
     case FormAlt:
+      if (val == 1 && ImgAlt[0] == EOS)
+	strcpy (ImgAlt, "Alt");
       break;
     case FormImage:
     case FormBackground:
@@ -378,17 +380,11 @@ static void GetAlt (Document document, View view)
 	       TRUE, 1, 'L', D_DONE);
    TtaNewTextForm (BaseImage + ImageAlt, BaseImage + FormAlt,
 		   TtaGetMessage (AMAYA, AM_ALT), 50, 1, TRUE);
-   TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormAlt, " ");
+   TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormAlt,
+		TtaGetMessage (AMAYA, AM_ALT_MISSING));
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseImage + FormAlt, FALSE);
    TtaWaitShowDialogue ();
-   while (ImgAlt[0] == EOS)
-     {
-       TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormAlt,
-			   TtaGetMessage (AMAYA, AM_ALT_MISSING));
-       TtaShowDialogue (BaseImage + FormAlt, FALSE);
-       TtaWaitShowDialogue ();
-     }
    TtaDestroyDialogue (BaseImage + FormAlt);   
 #else  /* _WINGUI */
    CreateAltDlgWindow ();
@@ -405,17 +401,17 @@ static void GetAlt (Document document, View view)
   ----------------------------------------------------------------------*/
 static void CreateAreaMap (Document doc, View view, char *shape)
 {
-   Element             el, map, parent, image, child, newElem;
+   Element             el, map, parent, image, child;
+   Element             newMap, newElem;
    ElementType         elType;
    AttributeType       attrType;
-   Attribute           attr, attrRef, attrShape, attrRefimg;
+   Attribute           attr, attrRef, attrShape, attrRefimg, newuseMap;
    char                *url;
    char                *utf8value;
    int                 length, w, h;
    int                 firstchar, lastchar;
    int                 docModified;
    DisplayMode         dispMode;
-   ThotBool            newMap;
 
    /* get the first selected element */
    TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
@@ -437,7 +433,8 @@ static void CreateAreaMap (Document doc, View view, char *shape)
    TtaOpenUndoSequence (doc, el, el, 0, 0);
    newElem = NULL;
    attrRefimg = NULL;
-   newMap = FALSE;
+   newuseMap = NULL;
+   newMap = NULL;
    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      /* an image is selected. Create an area for it */
      {
@@ -461,7 +458,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	     /* create the MAP element */
 	     elType.ElTypeNum = HTML_EL_MAP;
 	     map = TtaNewElement (doc, elType);
-	     newMap = TRUE;
+	     newMap = map;
 	     newElem = map;
 	     parent = image;
 	     do
@@ -487,6 +484,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	     if (attr == NULL)
 	       {
 		 attr = TtaNewAttribute (attrType);
+		 newuseMap = attr;
 		 TtaAttachAttribute (image, attr, doc);
 	         TtaSetAttributeText (attr, url, image, doc);
 		 TtaRegisterAttributeCreate (attr, image, doc);
@@ -602,7 +600,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	      {
 		/* the polyline doesn't have enough points */
 		if (newMap)
-		  TtaDeleteTree (map, doc);
+		  TtaDeleteTree (newMap, doc);
 		else
 		  TtaDeleteTree (el, doc);
 		TtaCancelLastRegisteredSequence (doc);
@@ -620,6 +618,19 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (el, attr, doc);
 	GetAlt (doc, view);
+	if (ImgAlt[0] == EOS)
+	  {
+	    /* abandon the creation of the area */
+	    if (newMap)
+	      TtaDeleteTree (newMap, doc);
+	    else
+	      TtaDeleteTree (el, doc);
+	    TtaCancelLastRegisteredSequence (doc);
+	    if (!docModified)
+	      TtaSetDocumentUnmodified (doc);
+	    TtaSelectElement (doc, image);
+	    return;
+	  }
 	utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)ImgAlt,
 					   TtaGetDefaultCharset ());
 	TtaSetAttributeText (attr, utf8value, el, doc);

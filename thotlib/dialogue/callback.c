@@ -906,7 +906,6 @@ void WIN_ThotCallBack (HWND hWnd, WPARAM wParam, LPARAM lParam)
 #endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK)
-
 /*----------------------------------------------------------------------
   Delete a form
   ----------------------------------------------------------------------*/
@@ -932,7 +931,6 @@ ThotBool formKillGTK (GtkWidget *w, GdkEvent *ev, struct Cat_Context *catalogue)
   return FALSE;
 #endif /* _GTK */
 }
-
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
 #ifdef _GTK
