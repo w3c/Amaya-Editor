@@ -6051,7 +6051,7 @@ void TtaWaitShowDialogue ()
   TranslateMessage (&event);
   DispatchMessage (&event);
 #endif  /* _WINGUI */
-#ifdef _GTK) 
+#ifdef _GTK
   /* a TtaWaitShowDialogue pending */
   CurrentWait = 1;
   while (ShowReturn == 1)
