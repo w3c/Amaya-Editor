@@ -57,6 +57,13 @@ extern void MathMLAttrToStyleProperty ( Document doc,
                                         Element el,
                                         STRING value,
 					int attr );
+extern void MathMLSetScriptLevel ( Document doc,
+				   Element el,
+				   STRING value );
+extern void MathMLSpacingAttr ( Document doc,
+				Element el,
+				STRING value,
+				int attr );
 extern void MathMLAttributeComplete ( Attribute attr,
                                       Element el,
                                       Document doc );
@@ -116,6 +123,13 @@ extern void MathMLAttrToStyleProperty (/* Document doc,
                                           Element el,
                                           STRING value,
 			                  int attr */);
+extern void MathMLSetScriptLevel (/* Document doc,
+				     Element el,
+				     STRING value */);
+extern void MathMLSpacingAttr (/* Document doc,
+				  Element el,
+				  STRING value,
+				  int attr */);
 extern void MathMLAttributeComplete (/* Attribute attr,
                                         Element el,
                                         Document doc */);

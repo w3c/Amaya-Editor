@@ -13,7 +13,6 @@ surrounding row: *;
         * > mrow:*;
         }
 
-
 !surround a sequence of elements with a mrow
 surrounding row: *,*+;
         {
@@ -33,7 +32,6 @@ surrounding mstyle: *;
         {
         * > mstyle:*;
         }
-
 
 !surround a sequence of elements with a mstyle
 surrounding mstyle: *,*+;

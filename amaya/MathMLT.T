@@ -444,6 +444,9 @@ RULES
 	create 'sep/>\12';
 	end;
 
+   C_Space:
+	remove;
+
    MSPACE:
 	begin
 	create SOT;

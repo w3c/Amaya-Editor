@@ -3103,6 +3103,15 @@ RULES
 		END;		
 	END;
 
+   C_Space:
+	BEGIN
+	Width: 1 px;   {***** should be 0 }
+	Height: 1 px;  {***** should be 0 }
+	HorizRef: * . Bottom;
+	IN Math_Structure_view
+		Visibility: 0;
+	END;
+
    MSPACE:
 	BEGIN
 	CreateBefore(MSPACE_S);

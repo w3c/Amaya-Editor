@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -3727,6 +3727,20 @@ ThotBool MathAttrColorDelete(event)
 }
 
 /*----------------------------------------------------------------------
+ MathAttrFormChanged
+ An attribute form has been created or modified by the user.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void MathAttrFormChanged (NotifyAttribute *event)
+#else /* __STDC__*/
+void MathAttrFormChanged (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  SetIntAddSpaceAttr (event->element, event->document);
+}
+
+/*----------------------------------------------------------------------
  MathAttrBackgroundCreated
  An attribute background has been created or modified by the user.
  -----------------------------------------------------------------------*/
@@ -3816,6 +3830,55 @@ void AttrStretchyChanged (event)
 }
 
 /*----------------------------------------------------------------------
+ AttrSpacingCreated
+ Attribute width, height or depth in a mspace or mpadded element has been
+ modified by the user.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AttrSpacingCreated (NotifyAttribute *event)
+#else /* __STDC__*/
+void AttrSpacingCreated (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  STRING           value;
+  int              length, attrKind;
+  AttributeType    attrType;
+
+  length = TtaGetTextAttributeLength (event->attribute);
+  if (length > 0)
+     {
+     value = TtaAllocString (length+1);
+     value[0] = WC_EOS;
+     TtaGiveTextAttributeValue (event->attribute, value, &length);
+     TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
+     MathMLSpacingAttr (event->document, event->element, value,
+			attrType.AttrTypeNum);
+     TtaFreeMemory (value);
+     }
+}
+
+/*----------------------------------------------------------------------
+ AttrSpacingDelete
+ The user is deleting an attribute scriptlevel.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool AttrSpacingDelete (NotifyAttribute *event)
+#else /* __STDC__*/
+ThotBool AttrSpacingDelete (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  int              attrKind;
+  AttributeType    attrType;
+
+  TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
+  MathMLSpacingAttr (event->document, event->element, NULL,
+		     attrType.AttrTypeNum);
+  return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
  AttrBevelledChanged
  Attribute bevelled in a mfrac element has been modified or deleted
  by the user.
@@ -3866,6 +3929,46 @@ void AttrBevelledChanged (event)
 	  }
       }
     }
+}
+
+/*----------------------------------------------------------------------
+ AttrScriptlevelCreated
+ An attribute scriptlevel has been created or updated by the user.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AttrScriptlevelCreated (NotifyAttribute *event)
+#else /* __STDC__*/
+void AttrScriptlevelCreated (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  STRING           value;
+  int              length;
+
+  length = TtaGetTextAttributeLength (event->attribute);
+  if (length > 0)
+     {
+     value = TtaAllocString (length+1);
+     value[0] = WC_EOS;
+     TtaGiveTextAttributeValue (event->attribute, value, &length);
+     MathMLSetScriptLevel (event->document, event->element, value);
+     TtaFreeMemory (value);
+     }
+}
+
+/*----------------------------------------------------------------------
+ AttrScriptlevelDelete
+ The user is deleting an attribute scriptlevel.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool AttrScriptlevelDelete (NotifyAttribute *event)
+#else /* __STDC__*/
+ThotBool AttrScriptlevelDelete (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  MathMLSetScriptLevel (event->document, event->element, NULL);
+  return FALSE; /* let Thot perform normal operation */
 }
 
 /*----------------------------------------------------------------------
@@ -4040,7 +4143,7 @@ void AttrScriptShiftCreated (event)
 
 /*----------------------------------------------------------------------
  AttrScriptShiftDelete
- The user is deleting an attribute suscriptshift or superscriptshift.
+ The user is deleting an attribute subscriptshift or superscriptshift.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool AttrScriptShiftDelete (NotifyAttribute *event)

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996 - 2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1342,24 +1342,26 @@ CHAR_T*             name;
 
 {
    int                 nRegle;
-   SSchema             retour;
+   SSchema             ret;
 
-   retour = NULL;
-   if (pSS != NULL)
+   ret = NULL;
+   if (pSS)
       if (ustrcmp (name, pSS->SsName) == 0)
 	 /* The schema itself */
-	 retour = (SSchema) pSS;
+	 ret = (SSchema) pSS;
       else
-	{
-	   /* Looks for the nature rule of the schema */
-	   for (nRegle = MAX_BASIC_TYPE - 1; retour == NULL && nRegle < pSS->SsNRules; nRegle++)
+	 {
+	 /* Looks for the nature rule of the schema */
+	 for (nRegle = pSS->SsNRules - 1;
+	      ret == NULL && nRegle >= MAX_BASIC_TYPE;
+	      nRegle--)
 	      if (pSS->SsRule[nRegle].SrConstruct == CsNatureSchema)
-		 retour = ChSchStruct (pSS->SsRule[nRegle].SrSSchemaNat, name);
-	   /* If not found, one search into the extension schema */
-	   if (retour == NULL)
-	      retour = ChSchStruct (pSS->SsNextExtens, name);
-	}
-   return retour;
+		 ret = ChSchStruct (pSS->SsRule[nRegle].SrSSchemaNat, name);
+	 /* If not found, one search into the extension schema */
+	 if (ret == NULL)
+	    ret = ChSchStruct (pSS->SsNextExtens, name);
+	 }
+   return ret;
 }
 
 /*----------------------------------------------------------------------

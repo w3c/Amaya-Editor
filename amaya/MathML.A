@@ -95,6 +95,13 @@ ATTRIBUTES
         AttrDelete.Pre ->  MathAttrColorDelete;
         END;
 
+   form:
+	BEGIN
+        AttrCreate.Post -> MathAttrFormChanged;
+        AttrModify.Post -> MathAttrFormChanged;
+        AttrDelete.Post -> MathAttrFormChanged;
+	END;
+
    lspace:
         BEGIN
         AttrCreate.Post -> MathPresentAttrCreated;
@@ -115,12 +122,40 @@ ATTRIBUTES
 	AttrDelete.Post -> AttrStretchyChanged;	
 	END;
 
+   width\240:
+        BEGIN
+        AttrCreate.Post -> AttrSpacingCreated;
+        AttrModify.Post -> AttrSpacingCreated;
+        AttrDelete.Pre ->  AttrSpacingDelete;
+        END;
+
+   height\240:
+        BEGIN
+        AttrCreate.Post -> AttrSpacingCreated;
+        AttrModify.Post -> AttrSpacingCreated;
+        AttrDelete.Pre ->  AttrSpacingDelete;
+        END;
+
+   depth\240:
+        BEGIN
+        AttrCreate.Post -> AttrSpacingCreated;
+        AttrModify.Post -> AttrSpacingCreated;
+        AttrDelete.Pre ->  AttrSpacingDelete;
+        END;
+
    bevelled:
 	BEGIN
 	AttrCreate.Post -> AttrBevelledChanged;
 	AttrModify.Post -> AttrBevelledChanged;
 	AttrDelete.Post -> AttrBevelledChanged;		
 	END;
+
+   scriptlevel:
+        BEGIN
+        AttrCreate.Post -> AttrScriptlevelCreated;
+        AttrModify.Post -> AttrScriptlevelCreated;
+        AttrDelete.Pre ->  AttrScriptlevelDelete;
+        END;
 
    background\240:
         BEGIN

@@ -27,6 +27,7 @@ ATTR
 
 CONST
    C_Empty = ' ';
+   C_Space = ' '; 
    MC_Head = ' ';
 
 STRUCT
@@ -90,7 +91,7 @@ STRUCT
 	  (ATTR width\240 = TEXT;
 	        height\240 = TEXT;
 	        depth\240 = TEXT)
-	  = CONSTANT C_Empty;
+	  = CONSTANT C_Space;
 
       { plschema }
       { pgenschema }
@@ -414,6 +415,7 @@ EXCEPT
    CellWrapper:		NoCut, Hidden;
    FencedSeparator:	Hidden, NoCut, NoCreate;
    C_Empty:		Hidden, NoSelect;
+   C_Space:		Hidden, NoSelect;
 
    id:			CssId;
    class:		CssClass;

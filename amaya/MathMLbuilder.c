@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -460,23 +460,24 @@ Document            doc;
    attrType->AttrSSchema = NULL;
    i = 0;
    do
-      if (ustrcasecmp (MathMLAttributeMappingTable[i].XMLattribute, Attr))
-	 i++;
-      else
-	 if (MathMLAttributeMappingTable[i].XMLelement[0] == EOS)
-	       {
-	       attrType->AttrTypeNum = MathMLAttributeMappingTable[i].ThotAttribute;
-	       attrType->AttrSSchema = GetMathMLSSchema (doc);
-	       }
-	 else if (!ustrcasecmp (MathMLAttributeMappingTable[i].XMLelement,
+     if (ustrcasecmp (MathMLAttributeMappingTable[i].XMLattribute, Attr))
+       i++;
+     else
+       if (MathMLAttributeMappingTable[i].XMLelement[0] == EOS)
+	  {
+	  attrType->AttrTypeNum = MathMLAttributeMappingTable[i].ThotAttribute;
+	  attrType->AttrSSchema = GetMathMLSSchema (doc);
+	  }
+       else if (!ustrcasecmp (MathMLAttributeMappingTable[i].XMLelement,
 			       elementName))
-	       {
-	       attrType->AttrTypeNum = MathMLAttributeMappingTable[i].ThotAttribute;
-	       attrType->AttrSSchema = GetMathMLSSchema (doc);
-	       }
-	 else
-	       i++;
-   while (attrType->AttrTypeNum <= 0 && MathMLAttributeMappingTable[i].AttrOrContent != EOS);
+	  {
+	  attrType->AttrTypeNum = MathMLAttributeMappingTable[i].ThotAttribute;
+	  attrType->AttrSSchema = GetMathMLSSchema (doc);
+	  }
+       else
+	  i++;
+   while (attrType->AttrTypeNum <= 0 &&
+	  MathMLAttributeMappingTable[i].AttrOrContent != EOS);
 }
 
 /*----------------------------------------------------------------------
@@ -1754,86 +1755,117 @@ void SetIntAddSpaceAttr (el, doc)
   Element	textEl, previous;
   ElementType	elType;
   AttributeType	attrType;
-  Attribute	attr;
-  int		len, val;
+  Attribute	attr, formAttr;
+  int		len, val, form;
 #define BUFLEN 10
   UCHAR_T    	text[BUFLEN];
   Language	lang;
   CHAR_T		alphabet;
 
+  /* get the content of the mo element */
   textEl = TtaGetFirstChild (el);
   if (textEl != NULL)
+     /* the mo element is not empty */
      {
-     /* search the IntAddSpace attribute */
+     /* does the mo element have an IntAddSpace attribute? */
      elType = TtaGetElementType (el);
      attrType.AttrSSchema = elType.ElSSchema;
      attrType.AttrTypeNum = MathML_ATTR_IntAddSpace;
      attr = TtaGetAttribute (el, attrType);
      if (attr == NULL)
+        /* no IntAddSpace Attr, create one */
 	{
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (el, attr, doc);
 	}
+     /* nospace by default */
      val = MathML_ATTR_IntAddSpace_VAL_nospace;
-     len = TtaGetTextLength (textEl);
-     if (len > 0 && len < BUFLEN)
-	{
-	len = BUFLEN;
-	TtaGiveTextContent (textEl, text, &len, &lang);
-	alphabet = TtaGetAlphabet (lang);
-	if (len == 1)
-	   if (alphabet == 'L')
-	     /* ISO-Latin 1 character */
-	     {
-	     if (text[0] == '-')
-		/* unary or binary operator? */
-		{
-		previous = el;
-		TtaPreviousSibling (&previous);
-		if (previous == NULL)
-		   /* no previous sibling => unary operator */
-		   val = MathML_ATTR_IntAddSpace_VAL_nospace;
-		else
-		   {
-		   elType = TtaGetElementType (previous);
-		   if (elType.ElTypeNum == MathML_EL_MO)
-		      /* after an operator => unary operator */
-		      val = MathML_ATTR_IntAddSpace_VAL_nospace;
-		   else
-		      /* binary operator */
-		      val = MathML_ATTR_IntAddSpace_VAL_both;
-		   }
-		}
-	     else if (text[0] == '+' ||
-	         text[0] == '&' ||
-	         text[0] == '*' ||
-	         text[0] == '<' ||
-	         text[0] == '=' ||
-	         text[0] == '>' ||
-	         text[0] == '^')
-		 /* binary operator */
-	         val = MathML_ATTR_IntAddSpace_VAL_both;
-	     else if (text[0] == ',' ||
-		      text[0] == ';')
-	         val = MathML_ATTR_IntAddSpace_VAL_spaceafter;
-	     }
-	   else if (alphabet == 'G')
-	     /* Symbol character set */
-	     if ((int)text[0] == 163 || /* less or equal */
-		 (int)text[0] == 177 ||	/* plus or minus */
-		 (int)text[0] == 179 || /* greater or equal */
-		 (int)text[0] == 180 || /* times */
-		 (int)text[0] == 184 || /* divide */
-		 (int)text[0] == 185 || /* not equal */
-		 (int)text[0] == 186 || /* identical */
-		 (int)text[0] == 187 || /* equivalent */
-		 (int)text[0] == 196 || /* circle times */
-		 (int)text[0] == 197 || /* circle plus */
-		 ((int)text[0] >= 199 && (int)text[0] <= 209) || /*  */
-		 (int)text[0] == 217 || /* and */
-		 (int)text[0] == 218 )  /* or */
-		val = MathML_ATTR_IntAddSpace_VAL_both;
-	}
+     /* does the mo element have a form attribute? */
+     attrType.AttrTypeNum = MathML_ATTR_form;
+     formAttr = TtaGetAttribute (el, attrType);
+     if (formAttr)
+       /* there is a form attribute */
+       {
+       form = TtaGetAttributeValue (formAttr);
+       switch (form)
+	 {
+	 case MathML_ATTR_form_VAL_prefix:
+	   val = MathML_ATTR_IntAddSpace_VAL_nospace;
+	   break;
+	 case MathML_ATTR_form_VAL_infix:
+	   val = MathML_ATTR_IntAddSpace_VAL_both;
+	   break;
+	 case MathML_ATTR_form_VAL_postfix:
+	   val = MathML_ATTR_IntAddSpace_VAL_spaceafter;
+	   break;
+	 } 
+       }
+     else
+       /* no form attribute. Analyze the content */
+       {
+       len = TtaGetTextLength (textEl);
+       if (len > 0 && len < BUFLEN)
+	  {
+	    len = BUFLEN;
+	    TtaGiveTextContent (textEl, text, &len, &lang);
+	    alphabet = TtaGetAlphabet (lang);
+	    if (len == 1)
+	       /* the mo element contains a single character */
+	       if (alphabet == 'L')
+	          /* ISO-Latin 1 character */
+	          {
+		  if (text[0] == '-')
+		     /* prefix or infix operator? */
+		     {
+		     previous = el;
+		     TtaPreviousSibling (&previous);
+		     if (previous == NULL)
+		        /* no previous sibling => prefix operator */
+		        val = MathML_ATTR_IntAddSpace_VAL_nospace;
+		     else
+		        {
+			elType = TtaGetElementType (previous);
+			if (elType.ElTypeNum == MathML_EL_MO)
+			   /* after an operator => prefix operator */
+		           val = MathML_ATTR_IntAddSpace_VAL_nospace;
+			else
+			   /* infix operator */
+		           val = MathML_ATTR_IntAddSpace_VAL_both;
+			}
+		     }
+		  else if (text[0] == '+' ||
+			   text[0] == '&' ||
+			   text[0] == '*' ||
+			   text[0] == '<' ||
+			   text[0] == '=' ||
+			   text[0] == '>' ||
+			   text[0] == '^')
+		     /* infix operator */
+		     val = MathML_ATTR_IntAddSpace_VAL_both;
+		  else if (text[0] == ',' ||
+			   text[0] == ';')
+		     /* separator */
+	             val = MathML_ATTR_IntAddSpace_VAL_spaceafter;
+		  }
+	       else if (alphabet == 'G')
+		  /* Symbol character set */
+		 if ((int)text[0] == 163 || /* less or equal */
+		     (int)text[0] == 177 ||	/* plus or minus */
+		     (int)text[0] == 179 || /* greater or equal */
+		     (int)text[0] == 180 || /* times */
+		     (int)text[0] == 184 || /* divide */
+		     (int)text[0] == 185 || /* not equal */
+		     (int)text[0] == 186 || /* identical */
+		     (int)text[0] == 187 || /* equivalent */
+		     (int)text[0] == 196 || /* circle times */
+		     (int)text[0] == 197 || /* circle plus */
+		     ((int)text[0] >= 199 && (int)text[0] <= 209) || /*  */
+		     (int)text[0] == 217 || /* and */
+		     (int)text[0] == 218 )  /* or */
+		    /* infix operator */
+		    val = MathML_ATTR_IntAddSpace_VAL_both;
+	  }
+       }
      TtaSetAttributeValue (attr, val, el, doc);
      }
 }
@@ -2351,7 +2383,7 @@ int             *error;
 
 #endif
 {
-   ElementType		elType, parentType;
+   ElementType		elType, parentType, childType;
    Element		child, parent, new, prev, next;
    AttributeType	attrType;
    Attribute		attr;
@@ -2403,6 +2435,13 @@ int             *error;
 	     contains a fence character, transform this MO into MF and
 	     transform the fence character into a Thot SYMBOL */
 	  CheckFence (el, doc);
+	  break;
+       case MathML_EL_MSPACE:
+	  /* create a C_Space element within the MSPACE */
+	  childType.ElSSchema = elType.ElSSchema;
+	  childType.ElTypeNum = MathML_EL_C_Space;
+	  child = TtaNewElement (doc, childType);
+	  TtaInsertFirstChild (&child, el, doc);
 	  break;
        case MathML_EL_MROW:
 	  /* Create placeholders within the MROW */
@@ -2597,6 +2636,144 @@ void MathMLAttrToStyleProperty (doc, el, value, attr)
 }
 
 /*----------------------------------------------------------------------
+ MathMLSetScriptLevel
+ A scriptlevel attribute with value value is associated with element el.
+ Generate the corresponding style property for this element.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void MathMLSetScriptLevel (Document doc, Element el, STRING value)
+#else /* __STDC__*/
+void MathMLSetScriptLevel (doc, el, value)
+  Document doc;
+  Element el;
+  STRING value;
+#endif /* __STDC__*/
+{
+  PresentationValue   pval;
+  PresentationContext ctxt;
+  ThotBool            relative;
+  int                 percentage;
+
+  ctxt = TtaGetSpecificStyleContext (doc);
+  if (!value)
+     /* remove the presentation rule */
+     {
+     ctxt->destroy = TRUE;
+     TtaSetStylePresentation (PRSize, el, NULL, ctxt, pval);
+     }
+  else
+     {
+     ctxt->destroy = FALSE;
+     /* parse the attribute value (an optional sign and an integer) */
+     value = TtaSkipWCBlanks (value);
+     relative = (value[0] == '-' || value[0] == '+');
+     value = ParseCSSUnit (value, &pval);
+     if (pval.typed_data.unit != STYLE_UNIT_REL &&
+	 pval.typed_data.real)
+       /* this is an error: it should be an integer without any unit name */
+       /* error */;
+     else
+       {
+       if (relative)
+	 {
+         if (pval.typed_data.value == 0)
+	   /* scriptlevel="+0" */
+	   percentage = 100;
+         else if (pval.typed_data.value == 1)
+	   /* scriptlevel="+1" */
+	   percentage = 71;
+	 else if (pval.typed_data.value == 2)
+	   /* scriptlevel="+2" */
+	   percentage = 50;
+	 else if (pval.typed_data.value >= 3)
+	   /* scriptlevel="+3" or more */
+	   percentage = 35;
+	 else if (pval.typed_data.value == -1)
+	   /* scriptlevel="-1" */
+	   percentage = 141;
+	 else if (pval.typed_data.value == -2)
+	   /* scriptlevel="-2" */
+	   percentage = 200;
+	 else if (pval.typed_data.value <= -3)
+	   /* scriptlevel="-3" or less */
+	   percentage = 282;
+	 pval.typed_data.value = percentage;
+	 pval.typed_data.unit = STYLE_UNIT_PERCENT;
+	 TtaSetStylePresentation (PRSize, el, NULL, ctxt, pval);       
+	 }
+       else
+	 /* absolute value */
+	 {
+	   /****  ****/;
+	 }
+       }
+     }
+  TtaFreeMemory (ctxt);
+}
+
+/*----------------------------------------------------------------------
+ MathMLSpacingAttr
+ The MathML attribute attr (height, width or depth) is associated
+ with element el (a mspace or mpadding).
+ If value is not NULL, generate the corresponding Thot presentation rule for
+ the element.
+ If value is NULL, remove the corresponding Thot presentation rule.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void MathMLSpacingAttr (Document doc, Element el, STRING value, int attr)
+#else /* __STDC__*/
+void MathMLSpacingAttr (doc, el, value, attr)
+  Document doc;
+  Element el;
+  STRING value;
+  int attr;
+#endif /* __STDC__*/
+{
+  ElementType         elType;
+  PresentationValue   pval;
+  PresentationContext ctxt;
+  int                 ruleType;
+
+  /* provisionally, handles only mspace elements */
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum != MathML_EL_MSPACE)
+     return;
+  switch (attr)
+    {
+    case MathML_ATTR_width_:
+      ruleType = PRWidth;
+      break;
+    case MathML_ATTR_height_:
+      ruleType = PRPaddingTop;
+      break;
+    case MathML_ATTR_depth_:
+      ruleType = PRPaddingBottom;
+      break;
+    default:
+      return;
+    }
+  ctxt = TtaGetSpecificStyleContext (doc);
+  if (!value)
+    /* remove the presentation rule */
+    {
+      ctxt->destroy = TRUE;
+      TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
+    }
+  else
+    {
+      ctxt->destroy = FALSE;
+      /* parse the attribute value (a number followed by a unit) */
+      value = TtaSkipWCBlanks (value);
+      value = ParseCSSUnit (value, &pval);
+      /***** we should accept namedspace for width *****/
+      if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+	TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
+    }
+  TtaFreeMemory (ctxt);
+}
+
+
+/*----------------------------------------------------------------------
    MathMLAttributeComplete
    The XML parser has completed parsing attribute attr (as well as its value)
    that is associated with element el in document doc.
@@ -2637,7 +2814,11 @@ Document	doc;
        attrType.AttrTypeNum == MathML_ATTR_fontsize ||
        attrType.AttrTypeNum == MathML_ATTR_fontfamily ||
        attrType.AttrTypeNum == MathML_ATTR_lspace ||
-       attrType.AttrTypeNum == MathML_ATTR_rspace)
+       attrType.AttrTypeNum == MathML_ATTR_rspace ||
+       attrType.AttrTypeNum == MathML_ATTR_scriptlevel ||
+       attrType.AttrTypeNum == MathML_ATTR_width_ ||
+       attrType.AttrTypeNum == MathML_ATTR_height_ ||
+       attrType.AttrTypeNum == MathML_ATTR_depth_ )
       {
       length = TtaGetTextAttributeLength (attr);
       if (length >= buflen)
@@ -2661,8 +2842,15 @@ Document	doc;
 	     case MathML_ATTR_fontsize:
 	     case MathML_ATTR_lspace:
 	     case MathML_ATTR_rspace:
-	       MathMLAttrToStyleProperty (doc, el, value,
-					  attrType.AttrTypeNum);
+	       MathMLAttrToStyleProperty (doc, el, value,attrType.AttrTypeNum);
+	       break;
+	     case MathML_ATTR_scriptlevel:
+	       MathMLSetScriptLevel (doc, el, value);
+	       break;
+             case MathML_ATTR_width_:
+	     case MathML_ATTR_height_:
+	     case MathML_ATTR_depth_:
+	       MathMLSpacingAttr (doc, el, value, attrType.AttrTypeNum);
 	       break;
 	     default:
 	       break;
