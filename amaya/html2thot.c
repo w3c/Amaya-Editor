@@ -1335,7 +1335,8 @@ static ThotBool     CheckSurrounding (Element * el, Element parent)
        || elType.ElTypeNum == HTML_EL_PICTURE_UNIT
        || elType.ElTypeNum == HTML_EL_IFRAME
        || elType.ElTypeNum == HTML_EL_Input
-       || elType.ElTypeNum == HTML_EL_Text_Area)
+       || elType.ElTypeNum == HTML_EL_Text_Area
+       || IsCharacterLevelElement (*el))
      {
 	/* the element to be inserted is a character string */
 	/* Search the ancestor that is not a character level element */
