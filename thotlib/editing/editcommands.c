@@ -864,7 +864,7 @@ static void StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox,
 		  pSelBox->BxIndChar = 0;
 		  pSelBox->BxBuffer = pNewBuffer;
 	       }
-	     else
+	     else if (pPreviousBuffer)
 	       {
 		 /* add into the existing previous buffer */
 		  pSelBox->BxIndChar = pPreviousBuffer->BuLength;

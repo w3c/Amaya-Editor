@@ -620,9 +620,9 @@ ThotBool ChangePRule (NotifyPresentation *event)
 		TtaSetDocumentModified (doc);
 		return TRUE; /* don't let Thot perform normal operation */
 	      }
-	    else if (IsCharacterLevelElement (el)
-		&& (presType == PRIndent || presType == PRLineSpacing
-		    || presType == PRAdjust || presType == PRHyphenate))
+	    else if (IsCharacterLevelElement (el) &&
+		     (presType == PRIndent || presType == PRLineSpacing
+		      || presType == PRAdjust || presType == PRHyphenate))
 	      /* if the rule is a Format rule applied to a character-level
 		 element, move it to the first enclosing non character-level
 		 element */
@@ -639,7 +639,8 @@ ThotBool ChangePRule (NotifyPresentation *event)
 		MovePRule (presRule, event->element, el, doc, TRUE);
 		ret = TRUE; /* don't let Thot perform normal operation */
 	      }	  
-	    else if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+	    else if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph ||
+		     elType.ElTypeNum == HTML_EL_Table)
 	      /* if the PRule is on a Pseudo-Paragraph, move it to the
 		 enclosing element */
 	      {

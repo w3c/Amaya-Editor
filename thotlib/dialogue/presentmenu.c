@@ -1283,7 +1283,7 @@ static void         ApplyPresentMod (int applyDomain)
 		     compound element, apply the properties to this selected
 		     element, otherwise, don't apply format properties */
 		  {
-		  if (pPrevBlock != NULL && ElemIsWithinSubtree (pEl, pPrevBlock))
+		  if (pPrevBlock && ElemIsWithinSubtree (pEl, pPrevBlock))
 		     pBlock = NULL;
 		  else
 		     {
@@ -1297,9 +1297,12 @@ static void         ApplyPresentMod (int applyDomain)
 		       if (pBlock->ElParent &&
 			   pBlock->ElPrevious == NULL &&
 			   pBlock->ElNext == NULL &&
-			   TypeHasException (ExcHidden,
-					     pBlock->ElTypeNumber,
-					     pBlock->ElStructSchema))
+			   (TypeHasException (ExcHidden,
+					      pBlock->ElTypeNumber,
+					      pBlock->ElStructSchema)/* ||
+			    TypeHasException (ExcIsTable,
+					      pBlock->ElTypeNumber,
+					      pBlock->ElStructSchema)*/))
 			 /* specific rules are linked to the parent element */
 			 pElem = pBlock->ElParent;
 		       else
@@ -1335,10 +1338,13 @@ static void         ApplyPresentMod (int applyDomain)
 
 		/* Format properties */
 		if (pBlock && chngFormat &&
-		    /* don't apply to a pseudo paragraph */
-		    !TypeHasException (ExcHidden,
+		    /* don't apply to a pseudo paragraph or a table */
+		    (!TypeHasException (ExcHidden,
 				       pBlock->ElTypeNumber,
-				       pBlock->ElStructSchema))
+				       pBlock->ElStructSchema)/* &&
+		     !TypeHasException (ExcIsTable,
+				       pBlock->ElTypeNumber,
+				       pBlock->ElStructSchema)*/))
 		  ModifyLining (pBlock, pSelDoc, SelectedView,
 				locChngAlign, Align,
 				locChngIndent, IndentValue * IndentSign,

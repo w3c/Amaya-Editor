@@ -50,6 +50,7 @@ void CleanPictInfo (PictInfo *imageDesc)
 	  /*Frees imlib struct that contains the real ref to pics */
 	  if (imageDesc->im)
 	    gdk_imlib_destroy_image (imageDesc->im);
+	  imageDesc->im = NULL;
 #endif /* _GTK */
 	  imageDesc->PicMask = None;
 	}
