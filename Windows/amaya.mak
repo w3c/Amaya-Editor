@@ -118,8 +118,8 @@ CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\thotlib\internals\h" /I\
  "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I\
  "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /D "NDEBUG" /D\
- "_SVG" /D "XML_DTD" /D "XML_NS" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D\
- "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS"\
+ "XML_DTD" /D "XML_NS" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "WWW_WIN_ASYNC"\
+ /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "_SVG" /D "ANNOTATIONS"\
  /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
@@ -327,10 +327,10 @@ CPP_PROJ=/nologo /MLd /W3 /GX /Od /I "..\..\..\libwww\modules\expat\xmlparse"\
  "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I\
  "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /D "_DEBUG" /D\
- "_AMAYA_RELEASE_" /D "EXPAT_PARSER" /D "GRAPHML" /D "XML_DTD" /D "XML_NS" /D\
+ "_AMAYA_RELEASE_" /D "EXPAT_PARSER" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D\
  "WIN32" /D "_WINDOWS" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D\
- "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "_SVG" /Fp"$(INTDIR)\amaya.pch"\
- /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /ZI /c 
+ "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /Fp"$(INTDIR)\amaya.pch" /YX\
+ /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /ZI /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
 
@@ -983,10 +983,8 @@ DEP_CPP_AHTBR=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_AHTBR=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\AHTBridge.obj" : $(SOURCE) $(DEP_CPP_AHTBR) "$(INTDIR)"
@@ -1323,10 +1321,8 @@ DEP_CPP_AHTFW=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_AHTFW=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\AHTFWrite.obj" : $(SOURCE) $(DEP_CPP_AHTFW) "$(INTDIR)"
@@ -1665,10 +1661,8 @@ DEP_CPP_AHTME=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_AHTME=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\AHTMemConv.obj" : $(SOURCE) $(DEP_CPP_AHTME) "$(INTDIR)"
@@ -2011,10 +2005,8 @@ DEP_CPP_AHTUR=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_AHTUR=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\AHTURLTools.obj" : $(SOURCE) $(DEP_CPP_AHTUR) "$(INTDIR)"
@@ -2578,10 +2570,8 @@ DEP_CPP_ANSWE=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_ANSWE=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\answer.obj" : $(SOURCE) $(DEP_CPP_ANSWE) "$(INTDIR)"
@@ -2934,10 +2924,8 @@ DEP_CPP_CSS_C=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_CSS_C=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\css.obj" : $(SOURCE) $(DEP_CPP_CSS_C) "$(INTDIR)"
@@ -3298,10 +3286,8 @@ DEP_CPP_EDITI=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_EDITI=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\EDITimage.obj" : $(SOURCE) $(DEP_CPP_EDITI) "$(INTDIR)"
@@ -3678,10 +3664,8 @@ DEP_CPP_EDITO=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_EDITO=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\EDITORactions.obj" : $(SOURCE) $(DEP_CPP_EDITO) "$(INTDIR)"
@@ -4118,10 +4102,8 @@ DEP_CPP_EDITS=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_EDITS=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\EDITstyle.obj" : $(SOURCE) $(DEP_CPP_EDITS) "$(INTDIR)"
@@ -4464,10 +4446,8 @@ DEP_CPP_FETCH=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_FETCH=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\fetchHTMLname.obj" : $(SOURCE) $(DEP_CPP_FETCH) "$(INTDIR)"
@@ -4784,6 +4764,7 @@ DEP_CPP_FETCHX=\
 	"..\amaya\mathmlentities.h"\
 	"..\amaya\mathmlnames.h"\
 	"..\amaya\parser.h"\
+	"..\amaya\svgnames.h"\
 	"..\amaya\xlinknames.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
@@ -4816,12 +4797,9 @@ DEP_CPP_FETCHX=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xlink.h"\
-	
-NODEP_CPP_FETCHX=\
-	"..\amaya\graphmlnames.h"\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\fetchXMLname.obj" : $(SOURCE) $(DEP_CPP_FETCHX) "$(INTDIR)"
@@ -5204,10 +5182,8 @@ DEP_CPP_HTML2=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_HTML2=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\html2thot.obj" : $(SOURCE) $(DEP_CPP_HTML2) "$(INTDIR)"
@@ -5585,11 +5561,9 @@ DEP_CPP_HTMLA=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xlink.h"\
-	
-NODEP_CPP_HTMLA=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\HTMLactions.obj" : $(SOURCE) $(DEP_CPP_HTMLA) "$(INTDIR)"
@@ -6010,10 +5984,8 @@ DEP_CPP_HTMLB=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_HTMLB=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\HTMLbook.obj" : $(SOURCE) $(DEP_CPP_HTMLB) "$(INTDIR)"
@@ -6355,6 +6327,7 @@ DEP_CPP_HTMLE=\
 	"..\amaya\f\mathedit_f.h"\
 	"..\amaya\f\mathmlbuilder_f.h"\
 	"..\amaya\f\styleparser_f.h"\
+	"..\amaya\f\svgbuilder_f.h"\
 	"..\amaya\f\xhtmlbuilder_f.h"\
 	"..\amaya\f\xlinkedit_f.h"\
 	"..\amaya\libwww.h"\
@@ -6392,12 +6365,9 @@ DEP_CPP_HTMLE=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xlink.h"\
-	
-NODEP_CPP_HTMLE=\
-	"..\amaya\f\graphmlbuilder_f.h"\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\HTMLedit.obj" : $(SOURCE) $(DEP_CPP_HTMLE) "$(INTDIR)"
@@ -6748,10 +6718,8 @@ DEP_CPP_HTMLF=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_HTMLF=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\HTMLform.obj" : $(SOURCE) $(DEP_CPP_HTMLF) "$(INTDIR)"
@@ -7094,10 +7062,8 @@ DEP_CPP_HTMLH=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_HTMLH=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\HTMLhistory.obj" : $(SOURCE) $(DEP_CPP_HTMLH) "$(INTDIR)"
@@ -7452,10 +7418,8 @@ DEP_CPP_HTMLI=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_HTMLI=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\HTMLimage.obj" : $(SOURCE) $(DEP_CPP_HTMLI) "$(INTDIR)"
@@ -7806,10 +7770,8 @@ DEP_CPP_HTMLP=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_HTMLP=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\HTMLpresentation.obj" : $(SOURCE) $(DEP_CPP_HTMLP) "$(INTDIR)"
@@ -8135,6 +8097,7 @@ DEP_CPP_HTMLS=\
 	"..\amaya\amayamsg.h"\
 	"..\amaya\css.h"\
 	"..\amaya\f\ahturltools_f.h"\
+	"..\amaya\f\css_f.h"\
 	"..\amaya\f\editimage_f.h"\
 	"..\amaya\f\editstyle_f.h"\
 	"..\amaya\f\html2thot_f.h"\
@@ -8151,6 +8114,7 @@ DEP_CPP_HTMLS=\
 	"..\amaya\parser.h"\
 	"..\annotlib\annotlib.h"\
 	"..\annotlib\f\annotevent_f.h"\
+	"..\annotlib\f\annottools_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -8181,14 +8145,13 @@ DEP_CPP_HTMLS=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
+	".\amaya\annot.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xlink.h"\
-	
-NODEP_CPP_HTMLS=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\HTMLsave.obj" : $(SOURCE) $(DEP_CPP_HTMLS) "$(INTDIR)"
@@ -8531,10 +8494,8 @@ DEP_CPP_HTMLT=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_HTMLT=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\HTMLtable.obj" : $(SOURCE) $(DEP_CPP_HTMLT) "$(INTDIR)"
@@ -8895,6 +8856,7 @@ DEP_CPP_INIT_=\
 	"..\amaya\f\menuconf_f.h"\
 	"..\amaya\f\query_f.h"\
 	"..\amaya\f\styleparser_f.h"\
+	"..\amaya\f\svgedit_f.h"\
 	"..\amaya\f\templates_f.h"\
 	"..\amaya\f\trans_f.h"\
 	"..\amaya\f\transparse_f.h"\
@@ -8946,11 +8908,8 @@ DEP_CPP_INIT_=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_INIT_=\
-	"..\amaya\f\graphedit_f.h"\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\init.obj" : $(SOURCE) $(DEP_CPP_INIT_) "$(INTDIR)"
@@ -9276,6 +9235,7 @@ DEP_CPP_MATHE=\
 	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\mathmlbuilder_f.h"\
 	"..\amaya\f\styleparser_f.h"\
+	"..\amaya\f\svgbuilder_f.h"\
 	"..\amaya\f\trans_f.h"\
 	"..\amaya\f\xlinkedit_f.h"\
 	"..\amaya\libwww.h"\
@@ -9314,11 +9274,8 @@ DEP_CPP_MATHE=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_MATHE=\
-	"..\amaya\f\graphmlbuilder_f.h"\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\Mathedit.obj" : $(SOURCE) $(DEP_CPP_MATHE) "$(INTDIR)"
@@ -9735,10 +9692,8 @@ DEP_CPP_MATHML=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_MATHML=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\MathMLbuilder.obj" : $(SOURCE) $(DEP_CPP_MATHML) "$(INTDIR)"
@@ -10107,10 +10062,8 @@ DEP_CPP_MENUC=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_MENUC=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\MENUconf.obj" : $(SOURCE) $(DEP_CPP_MENUC) "$(INTDIR)"
@@ -10461,10 +10414,8 @@ DEP_CPP_QUERY=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_QUERY=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\query.obj" : $(SOURCE) $(DEP_CPP_QUERY) "$(INTDIR)"
@@ -10827,10 +10778,8 @@ DEP_CPP_STYLE=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_STYLE=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\styleparser.obj" : $(SOURCE) $(DEP_CPP_STYLE) "$(INTDIR)"
@@ -10893,11 +10842,6 @@ DEP_CPP_SVGAP=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\svg.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_SVGAP=\
-	"..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\SVGAPP.obj" : $(SOURCE) $(DEP_CPP_SVGAP) "$(INTDIR)"
@@ -11123,7 +11067,6 @@ DEP_CPP_SVGBU=\
 	"..\..\libwww\library\src\htftpdir.h"\
 	"..\..\libwww\library\src\htfwrite.h"\
 	"..\..\libwww\library\src\htguess.h"\
-	"..\..\libwww\library\src\hthash.h"\
 	"..\..\libwww\library\src\htheader.h"\
 	"..\..\libwww\library\src\hthinit.h"\
 	"..\..\libwww\library\src\hthist.h"\
@@ -11160,7 +11103,6 @@ DEP_CPP_SVGBU=\
 	"..\..\libwww\library\src\htplain.h"\
 	"..\..\libwww\library\src\htprot.h"\
 	"..\..\libwww\library\src\htproxy.h"\
-	"..\..\libwww\library\src\htrdf.h"\
 	"..\..\libwww\library\src\htreader.h"\
 	"..\..\libwww\library\src\htreq.h"\
 	"..\..\libwww\library\src\htreqman.h"\
@@ -11190,11 +11132,9 @@ DEP_CPP_SVGBU=\
 	"..\..\libwww\library\src\htuu.h"\
 	"..\..\libwww\library\src\htwriter.h"\
 	"..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\libwww\library\src\htxml.h"\
 	"..\..\libwww\library\src\htxparse.h"\
 	"..\..\libwww\library\src\htzip.h"\
 	"..\..\libwww\library\src\sgml.h"\
-	"..\..\libwww\library\src\windows\config.h"\
 	"..\..\libwww\library\src\wwwapp.h"\
 	"..\..\libwww\library\src\wwwcache.h"\
 	"..\..\libwww\library\src\wwwcore.h"\
@@ -11209,9 +11149,7 @@ DEP_CPP_SVGBU=\
 	"..\..\libwww\library\src\wwwsys.h"\
 	"..\..\libwww\library\src\wwwtrans.h"\
 	"..\..\libwww\library\src\wwwutil.h"\
-	"..\..\libwww\library\src\wwwxml.h"\
 	"..\..\libwww\library\src\wwwzip.h"\
-	"..\..\libwww\modules\expat\xmlparse\xmlparse.h"\
 	"..\amaya\ahtinit.h"\
 	"..\amaya\amaya.h"\
 	"..\amaya\amayamsg.h"\
@@ -11258,12 +11196,6 @@ DEP_CPP_SVGBU=\
 	".\amaya\mathml.h"\
 	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_SVGBU=\
-	"..\..\libwww\library\src\HTVMSUtils.h"\
-	"..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\SVGbuilder.obj" : $(SOURCE) $(DEP_CPP_SVGBU) "$(INTDIR)"
@@ -11493,7 +11425,6 @@ DEP_CPP_SVGED=\
 	"..\..\libwww\library\src\htftpdir.h"\
 	"..\..\libwww\library\src\htfwrite.h"\
 	"..\..\libwww\library\src\htguess.h"\
-	"..\..\libwww\library\src\hthash.h"\
 	"..\..\libwww\library\src\htheader.h"\
 	"..\..\libwww\library\src\hthinit.h"\
 	"..\..\libwww\library\src\hthist.h"\
@@ -11530,7 +11461,6 @@ DEP_CPP_SVGED=\
 	"..\..\libwww\library\src\htplain.h"\
 	"..\..\libwww\library\src\htprot.h"\
 	"..\..\libwww\library\src\htproxy.h"\
-	"..\..\libwww\library\src\htrdf.h"\
 	"..\..\libwww\library\src\htreader.h"\
 	"..\..\libwww\library\src\htreq.h"\
 	"..\..\libwww\library\src\htreqman.h"\
@@ -11560,11 +11490,9 @@ DEP_CPP_SVGED=\
 	"..\..\libwww\library\src\htuu.h"\
 	"..\..\libwww\library\src\htwriter.h"\
 	"..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\libwww\library\src\htxml.h"\
 	"..\..\libwww\library\src\htxparse.h"\
 	"..\..\libwww\library\src\htzip.h"\
 	"..\..\libwww\library\src\sgml.h"\
-	"..\..\libwww\library\src\windows\config.h"\
 	"..\..\libwww\library\src\wwwapp.h"\
 	"..\..\libwww\library\src\wwwcache.h"\
 	"..\..\libwww\library\src\wwwcore.h"\
@@ -11579,9 +11507,7 @@ DEP_CPP_SVGED=\
 	"..\..\libwww\library\src\wwwsys.h"\
 	"..\..\libwww\library\src\wwwtrans.h"\
 	"..\..\libwww\library\src\wwwutil.h"\
-	"..\..\libwww\library\src\wwwxml.h"\
 	"..\..\libwww\library\src\wwwzip.h"\
-	"..\..\libwww\modules\expat\xmlparse\xmlparse.h"\
 	"..\amaya\ahtinit.h"\
 	"..\amaya\amaya.h"\
 	"..\amaya\amayamsg.h"\
@@ -11632,26 +11558,6 @@ DEP_CPP_SVGED=\
 	".\amaya\mathml.h"\
 	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_SVGED=\
-	"..\..\libwww\library\src\HTVMSUtils.h"\
-	"..\amaya\circle.xpm"\
-	"..\amaya\closed.xpm"\
-	"..\amaya\Graph.xpm"\
-	"..\amaya\GraphNo.xpm"\
-	"..\amaya\group.xpm"\
-	"..\amaya\label.xpm"\
-	"..\amaya\line.xpm"\
-	"..\amaya\oval.xpm"\
-	"..\amaya\polygon.xpm"\
-	"..\amaya\polyline.xpm"\
-	"..\amaya\rect.xpm"\
-	"..\amaya\roundrect.xpm"\
-	"..\amaya\spline.xpm"\
-	"..\amaya\text.xpm"\
-	"..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\SVGedit.obj" : $(SOURCE) $(DEP_CPP_SVGED) "$(INTDIR)"
@@ -12110,10 +12016,8 @@ DEP_CPP_TEMPL=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_TEMPL=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\templates.obj" : $(SOURCE) $(DEP_CPP_TEMPL) "$(INTDIR)"
@@ -12534,10 +12438,8 @@ DEP_CPP_TRANS=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_TRANS=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\trans.obj" : $(SOURCE) $(DEP_CPP_TRANS) "$(INTDIR)"
@@ -12888,10 +12790,8 @@ DEP_CPP_TRANSP=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_TRANSP=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\transparse.obj" : $(SOURCE) $(DEP_CPP_TRANSP) "$(INTDIR)"
@@ -13252,10 +13152,8 @@ DEP_CPP_UICSS=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_UICSS=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\UIcss.obj" : $(SOURCE) $(DEP_CPP_UICSS) "$(INTDIR)"
@@ -13608,10 +13506,8 @@ DEP_CPP_WINDI=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_WINDI=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\windialogapi.obj" : $(SOURCE) $(DEP_CPP_WINDI) "$(INTDIR)"
@@ -13980,10 +13876,8 @@ DEP_CPP_XHTML=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_XHTML=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\XHTMLbuilder.obj" : $(SOURCE) $(DEP_CPP_XHTML) "$(INTDIR)"
@@ -14385,11 +14279,9 @@ DEP_CPP_XLINKB=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xlink.h"\
-	
-NODEP_CPP_XLINKB=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\XLinkbuilder.obj" : $(SOURCE) $(DEP_CPP_XLINKB) "$(INTDIR)"
@@ -14729,11 +14621,9 @@ DEP_CPP_XLINKE=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xlink.h"\
-	
-NODEP_CPP_XLINKE=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\XLinkedit.obj" : $(SOURCE) $(DEP_CPP_XLINKE) "$(INTDIR)"
@@ -15071,6 +14961,7 @@ DEP_CPP_XML2T=\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\mathmlbuilder_f.h"\
 	"..\amaya\f\styleparser_f.h"\
+	"..\amaya\f\svgbuilder_f.h"\
 	"..\amaya\f\uicss_f.h"\
 	"..\amaya\f\xhtmlbuilder_f.h"\
 	"..\amaya\f\xlinkbuilder_f.h"\
@@ -15079,6 +14970,8 @@ DEP_CPP_XML2T=\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\amaya\xmlparse.h"\
+	"..\annotlib\annotlib.h"\
+	"..\annotlib\f\annottools_f.h"\
 	"..\libpng\zlib\zconf.h"\
 	"..\libpng\zlib\zlib.h"\
 	"..\thotlib\include\appaction.h"\
@@ -15113,11 +15006,8 @@ DEP_CPP_XML2T=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_XML2T=\
-	"..\amaya\f\graphmlbuilder_f.h"\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\Xml2thot.obj" : $(SOURCE) $(DEP_CPP_XML2T) "$(INTDIR)"
@@ -15473,11 +15363,9 @@ DEP_CPP_XMLBU=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xml.h"\
-	
-NODEP_CPP_XMLBU=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\Xmlbuilder.obj" : $(SOURCE) $(DEP_CPP_XMLBU) "$(INTDIR)"
@@ -15796,6 +15684,7 @@ DEP_CPP_XMLPA=\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\mathmlbuilder_f.h"\
 	"..\amaya\f\styleparser_f.h"\
+	"..\amaya\f\svgbuilder_f.h"\
 	"..\amaya\f\xlinkbuilder_f.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
@@ -15831,11 +15720,8 @@ DEP_CPP_XMLPA=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_XMLPA=\
-	"..\amaya\f\graphmlbuilder_f.h"\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\XMLparser.obj" : $(SOURCE) $(DEP_CPP_XMLPA) "$(INTDIR)"
@@ -16145,6 +16031,7 @@ DEP_CPP_XPOIN=\
 	"..\amaya\ahtinit.h"\
 	"..\amaya\amaya.h"\
 	"..\amaya\amayamsg.h"\
+	"..\amaya\f\init_f.h"\
 	"..\amaya\f\xpointer_f.h"\
 	"..\amaya\f\xpointerparse_f.h"\
 	"..\amaya\libwww.h"\
@@ -16182,11 +16069,9 @@ DEP_CPP_XPOIN=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xlink.h"\
-	
-NODEP_CPP_XPOIN=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\XPointer.obj" : $(SOURCE) $(DEP_CPP_XPOIN) "$(INTDIR)"
@@ -16529,10 +16414,8 @@ DEP_CPP_XPOINT=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
-	
-NODEP_CPP_XPOINT=\
-	".\amaya\graphml.h"\
 	
 
 "$(INTDIR)\XPointerparse.obj" : $(SOURCE) $(DEP_CPP_XPOINT) "$(INTDIR)"
