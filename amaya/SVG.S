@@ -626,9 +626,9 @@ EXCEPT
    TEXT:                NoMove, NoResize;
    Unknown_namespace:   NoCreate;
    DOCTYPE:             NoCut;
-   DOCTYPE_line:        Hidden, NoCut;
-   XMLcomment_line:     Hidden;
-   XMLPI_line:          Hidden;
+   DOCTYPE_line:        Hidden, NoSpellCheck, NoCut;
+   XMLcomment_line:     Hidden, NoSpellCheck;
+   XMLPI_line:          Hidden, NoSpellCheck;
    CDATA_line:          Hidden;
 
    id:                  CssId;

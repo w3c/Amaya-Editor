@@ -988,6 +988,9 @@ ThotBool CheckChangeSelection ()
 	c1 = ChkrIndChar;
 	ok = GetCurrentSelection (&ChkrRange->SDocument, &ChkrElement, &pElN,
 				  &cN, &ChkrIndChar);
+	if (ChkrIndChar < cN)
+	  /* selection is just a caret */
+	  ChkrIndChar = cN;
 	if (pElN && ChkrIndChar == 0)
 	  /* the whole element is selected */
 	  ChkrIndChar = pElN->ElVolume;
@@ -1233,10 +1236,7 @@ void NextSpellingError (unsigned char *word, PtrDict docDict)
 	  if (ok && ChkrElement->ElParent != NULL)
 	    novalid = (TypeHasException (ExcNoSpellCheck,
 					ChkrElement->ElParent->ElTypeNumber,
-					ChkrElement->ElParent->ElStructSchema) ||
-		       TypeHasException (ExcHidden,
-					 ChkrElement->ElParent->ElTypeNumber,
-					 ChkrElement->ElParent->ElStructSchema));
+					ChkrElement->ElParent->ElStructSchema));
 	}
 
 #ifdef _I18N_

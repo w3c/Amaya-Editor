@@ -874,7 +874,7 @@ EXCEPT
 	HEAD:		NoCut;
 	TITLE:		NoCut;
 	Document_URL:	Hidden, NoSpellCheck, NoCut;
-	C_Empty:	Hidden, NoSelect;
+	C_Empty:	Hidden, NoSpellCheck, NoSelect;
 	C_BR:		SelectParent;
 	Head_misc:	Hidden;
 	Frames:		Hidden;
@@ -886,10 +886,10 @@ EXCEPT
 	Definition_Item:Hidden;
 	Term_List:	Hidden;
 	Definitions:	Hidden;
-	Comment_line:	Hidden;
-	PI_line:	Hidden;
+	Comment_line:	Hidden, NoSpellCheck;
+	PI_line:	Hidden, NoSpellCheck;
 	DOCTYPE:	NoCut;
-	DOCTYPE_line:	Hidden, NoCut;
+	DOCTYPE_line:	Hidden, NoSpellCheck, NoCut;
         CDATA_line:     Hidden;
 	GRAPHICS:	NoMove, NoResize;
 	TEXT:		NoMove, NoResize;
