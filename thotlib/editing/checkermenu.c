@@ -75,7 +75,8 @@ static ThotWindow   hwndLanguage;
 static CHAR_T       currentWord [MAX_WORD_LEN];
 static ThotWindow   wordButton;
 static CHAR_T       currentLabel [100];
-static CHAR_T       currentRejectedchars [100]
+static CHAR_T       currentRejectedchars [100];
+static UINT         itemIndex;
 #endif /* _WINDOWS */
 
 
