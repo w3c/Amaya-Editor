@@ -1088,7 +1088,10 @@ Element SearchAnnotation (Document doc, STRING annotDoc)
 	ancName = NULL;
       }
     /* @@ JK: do we need to get the succesor? */
-    elCour = TtaGetSuccessor (elCour);
+    /* @@ RRS: apparently not.  TtaSearchTypedElement seems to start
+       with the successor.  When two annot (XLink) elements are in
+       a row, the GetSuccessor caused the second one to be skipped. */
+    /* elCour = TtaGetSuccessor (elCour); */
     elCour = TtaSearchTypedElement (elType, SearchForward, elCour);
   }
 
