@@ -549,7 +549,8 @@ static void InitSaveForm (Document document, View view, char *pathname)
    /* first line */
    if (!TextFormat && DocumentTypes[document] != docMath 
        && DocumentTypes[document] != docSVG
-       && DocumentTypes[document] != docImage)
+       && DocumentTypes[document] != docImage
+       && DocumentTypes[document] != docXml)
      {
        /* choice between html, xhtml and text */
        sprintf (buffer, "%s%c%s%c%s", "BHTML", EOS, "BXML", EOS,
@@ -570,16 +571,17 @@ static void InitSaveForm (Document document, View view, char *pathname)
 		   TtaGetMessage (AMAYA, AM_DOC_LOCATION), 50, 1, FALSE);
    TtaSetTextForm (BaseDialog + NameSave, pathname);
    /* second line */
+   /* Transform URL oprion */
    if (!TextFormat && DocumentTypes[document] != docImage)
      {
-       /* choice between html, xhtml and text */
        sprintf (buffer, "B%s%cB%s",
 		TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
 		TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
        TtaNewToggleMenu (BaseDialog + ToggleSave, BaseDialog + SaveForm,
 			 TtaGetMessage (LIB, TMSG_OPTIONS), 2, buffer,
 			 NULL, TRUE);
-       if (DocumentTypes[document] == docMath)
+       if (DocumentTypes[document] == docMath ||
+	   DocumentTypes[document] == docXml)
 	 TtaRedrawMenuEntry (BaseDialog + ToggleSave, 0, NULL, -1, FALSE);
        else
 	 TtaSetToggleMenu (BaseDialog + ToggleSave, 0, CopyImages);
@@ -588,8 +590,11 @@ static void InitSaveForm (Document document, View view, char *pathname)
    else
      TtaNewLabel (BaseDialog + ToggleSave, BaseDialog + SaveForm, "");
 
-   if (!TextFormat && DocumentTypes[document] != docMath
-       && DocumentTypes[document] != docImage)
+   /* Save images option */
+   if (!TextFormat &&
+       DocumentTypes[document] != docMath &&
+       DocumentTypes[document] != docImage &&
+       DocumentTypes[document] != docXml)
      {
        TtaNewTextForm (BaseDialog + ImgDirSave, BaseDialog + SaveForm,
 		   TtaGetMessage (AMAYA, AM_IMAGES_LOCATION), 50, 1, FALSE);
@@ -2914,7 +2919,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
   Document            doc;
   AttributeType       attrType;
   ElementType         elType;
-  Element             el, root;
+  Element             el, root, doc_url;
   char               *documentFile;
   char               *tempname, *oldLocal, *newLocal;
   char               *imagePath, *base;
@@ -3239,6 +3244,27 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	    {
 	      TtaFreeMemory (DocumentURLs[xmlDoc]);
 	      DocumentURLs[xmlDoc] = TtaStrdup (documentFile);
+	      /* Update the Document_URL element */
+	      root = TtaGetMainRoot (xmlDoc);
+	      elType = TtaGetElementType (root);
+	      doc_url == NULL;
+	      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+		{
+		  elType.ElTypeNum = HTML_EL_Document_URL;
+		  doc_url = TtaSearchTypedElement (elType, SearchInTree, root);
+		}
+	      else if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "TextFile"))
+		{
+		  elType.ElTypeNum = TextFile_EL_Document_URL;
+		  doc_url = TtaSearchTypedElement (elType, SearchInTree, root);
+		}
+	      if (doc_url != NULL)
+		{
+		  doc_url = TtaGetFirstChild (doc_url);
+		  TtaSetTextContent (doc_url, DocumentURLs[xmlDoc],
+				     TtaGetDefaultLanguage (), xmlDoc);
+		}
+     
 	      TtaSetTextZone (xmlDoc, 1, 1, DocumentURLs[xmlDoc]);
 	      if (DocumentSource[doc])
 		{

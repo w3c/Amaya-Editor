@@ -3676,7 +3676,8 @@ void  CreateSaveAsDlgWindow (ThotWindow parent, char *path_name)
     DialogBox (hInstance, MAKEINTRESOURCE (SAVEASDIALOG), parent,
 	(DLGPROC) SaveAsDlgProc);
   else if (DocumentTypes[SavingDocument] == docMath ||
-	   DocumentTypes[SavingDocument] == docSVG)
+	   DocumentTypes[SavingDocument] == docSVG ||
+	   DocumentTypes[SavingDocument] == docXml)
     DialogBox (hInstance, MAKEINTRESOURCE (SAVEASDIALOG2), parent,
 	(DLGPROC) SaveAsDlgProc);
   else
