@@ -576,8 +576,6 @@ Document            doc;
   ustrcat (stylestring, "}");
   
   TtaOpenUndoSequence (doc, ClassReference, ClassReference, 0, 0);
-  /* remove the Style attribute */
-  RemoveElementStyle (ClassReference, doc, FALSE);
 
   /* create the class attribute */
   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
@@ -592,10 +590,18 @@ Document            doc;
 	{
 	  attr = TtaNewAttribute (attrType);
 	  TtaAttachAttribute (ClassReference, attr, doc);
+          TtaSetAttributeText (attr, a_class, ClassReference, doc);
+	  TtaRegisterAttributeCreate (attr, ClassReference, doc);
 	}
-      TtaSetAttributeText (attr, a_class, ClassReference, doc);
+      else
+	{
+	  TtaRegisterAttributeReplace (attr, ClassReference, doc);
+          TtaSetAttributeText (attr, a_class, ClassReference, doc);
+	}
       TtaSetDocumentModified (doc);
     }
+  /* remove the Style attribute */
+  RemoveElementStyle (ClassReference, doc, FALSE);
   /* parse and apply this new CSS to the current document */
   /*ApplyCSSRules (NULL, stylestring, doc, FALSE);*/
   ReadCSSRules (doc, doc, NULL, stylestring, TRUE);

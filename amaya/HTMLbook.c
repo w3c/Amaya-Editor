@@ -856,7 +856,7 @@ boolean        deleteTree;
       lastInserted = TtaNewElement (destDoc, elType);
       TtaInsertSibling (lastInserted, elem, TRUE, destDoc);
       RegisterSubDoc (lastInserted, url);
-      CreateTargetAnchor (destDoc, lastInserted);
+      CreateTargetAnchor (destDoc, lastInserted, FALSE);
 
       /* do copy */
       firstInserted = NULL;

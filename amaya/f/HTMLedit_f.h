@@ -16,11 +16,13 @@ extern void SetREFattribute ( Element element,
                               STRING targetURL,
                               STRING targetName );
 extern void SelectDestination ( Document doc,
-                                Element el );
+                                Element el,
+                                boolean withUndo );
 extern Attribute GetNameAttr ( Document doc,
                                Element selectedElement );
 extern void CreateTargetAnchor ( Document doc,
-                                 Element el );
+                                 Element el,
+                                 boolean withUndo );
 extern void MakeUniqueName ( Element el,
                              Document doc );
 extern void ElementCreated ( NotifyElement * event );
@@ -109,11 +111,13 @@ extern void SetREFattribute (/* Element element,
                                 STRING targetURL,
                                 STRING targetName */);
 extern void SelectDestination (/* Document doc,
-                                  Element el */);
+                                  Element el,
+                                  boolean withUndo */);
 extern Attribute GetNameAttr (/* Document doc,
                                  Element selectedElement */);
 extern void CreateTargetAnchor (/* Document doc,
-                                   Element el */);
+                                   Element el,
+                                   boolean withUndo */);
 extern void MakeUniqueName (/* Element el,
                                Document doc */);
 extern void ElementCreated (/* NotifyElement * event */);

@@ -415,7 +415,7 @@ View                view;
     {
       /*TtaSelectElement (document, el);*/
       /* Select a new destination */
-      SelectDestination (document, el);
+      SelectDestination (document, el, FALSE);
     }
 }
 
@@ -2185,7 +2185,7 @@ STRING              shape;
 	       }
 	     while (elType.ElTypeNum != HTML_EL_BODY);
 	     TtaInsertSibling (map, el, FALSE, doc);
-	     CreateTargetAnchor (doc, map);
+	     CreateTargetAnchor (doc, map, FALSE);
 	     attrType.AttrTypeNum = HTML_ATTR_NAME;
 	     attr = TtaGetAttribute (map, attrType);
 
@@ -2297,7 +2297,7 @@ STRING              shape;
 	/* Compute coords attribute */
 	SetAreaCoords (doc, el, 0);
 	/* FrameUpdating creation of Area and selection of destination */
-	SelectDestination (doc, el);
+	SelectDestination (doc, el, FALSE);	/******* check last param *****/
      }
    else
      /* ask Thot to display changes made in the document */
@@ -2507,11 +2507,12 @@ View                view;
      {
        /* Search the anchor element */
        el = SearchAnchor (doc, el, TRUE);
-       /* Select a new destination */
        if (el == NULL)
+	 /* no anchor element, create a new link */
 	 CreateLink (doc, view);
        else
-	 SelectDestination (doc, el);
+         /* There is an anchor. Just select a new destination */
+	 SelectDestination (doc, el, TRUE);
      }
 }
 

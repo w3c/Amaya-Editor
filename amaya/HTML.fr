@@ -33,6 +33,7 @@ Basic_Elem: element
 Math: MATH
 Italic_text: I
 Bold_text: B
+Underlined_text: U
 Teletype_text: TT
 Struck_text: STRIKE
 Big_text: BIG

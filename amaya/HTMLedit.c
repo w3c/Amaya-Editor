@@ -47,6 +47,8 @@ static int          OldHeight;
 extern HWND currentWindow;
 #endif /* _WINDOWS */
 
+static boolean AttrHREFundoable = FALSE;
+
 /*----------------------------------------------------------------------
    SetTargetContent sets the new value of Target.                  
   ----------------------------------------------------------------------*/
@@ -136,6 +138,63 @@ NotifyElement      *event;
 }
 
 /*----------------------------------------------------------------------
+   SetXMLlinkAttr attach an xml:link="simple" attribute to element el
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         SetXMLlinkAttr (Element el, Document doc, boolean withUndo)
+#else  /* __STDC__ */
+static void         SetXMLlinkAttr (el, doc, withUndo)
+Element		    el;
+Document            doc;
+boolean		    withUndo;
+
+#endif /* __STDC__ */
+{
+  AttributeType	attrType;
+  ElementType	elType;
+  Attribute	attr;
+  int		val;
+  boolean	new;
+
+  attrType.AttrTypeNum = 0;
+  elType = TtaGetElementType (el);
+#ifdef MATHML
+  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+     {
+     MapMathMLAttribute ("link", &attrType, "", doc);
+     MapMathMLAttributeValue ("simple", attrType, &val);
+     }
+  else
+#endif
+#ifdef GRAPHML
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+     {
+     MapGraphMLAttribute ("link", &attrType, "", doc);
+     MapGraphMLAttributeValue ("simple", attrType, &val);
+     }
+#endif
+  if (attrType.AttrTypeNum > 0)
+     {
+     attr = TtaGetAttribute (el, attrType);
+     if (attr == NULL)
+        {
+        attr = TtaNewAttribute (attrType);
+        TtaAttachAttribute (el, attr, doc);
+	new = TRUE;
+        }
+     else
+	{
+	new = FALSE;
+	if (withUndo)
+	   TtaRegisterAttributeReplace (attr, el, doc);
+	}
+     TtaSetAttributeValue (attr, val, el, doc);
+     if (new && withUndo)
+	TtaRegisterAttributeCreate (attr, el, doc);
+     }
+}
+
+/*----------------------------------------------------------------------
    SetREFattribute  sets the HREF or CITE attribue of the element to      
    the concatenation of targetURL and targetName.
   ----------------------------------------------------------------------*/
@@ -153,12 +212,18 @@ STRING              targetName;
    ElementType	       elType;
    AttributeType       attrType;
    Attribute           attr;
+   SSchema	       HTMLSSchema;
    STRING              value, base;
    CHAR                tempURL[MAX_LENGTH];
    int                 length;
+   boolean	       new, oldStructureChecking;
 
-   elType = TtaGetElementType (AttrHREFelement);
-   attrType.AttrSSchema = elType.ElSSchema;
+   if (AttrHREFundoable)
+      TtaOpenUndoSequence (doc, element, element, 0, 0);
+
+   HTMLSSchema = TtaGetSSchema ("HTML", doc);
+   attrType.AttrSSchema = HTMLSSchema;
+   elType = TtaGetElementType (element);
    if (elType.ElTypeNum == HTML_EL_Quotation ||
        elType.ElTypeNum == HTML_EL_Block_Quote ||
        elType.ElTypeNum == HTML_EL_INS ||
@@ -172,7 +237,19 @@ STRING              targetName;
      {
 	/* create an attribute HREF for the element */
 	attr = TtaNewAttribute (attrType);
+	/* this element may be in a different namespace, so don't check
+	   validity */
+	oldStructureChecking = TtaGetStructureChecking (doc);
+	TtaSetStructureChecking (0, doc);
 	TtaAttachAttribute (element, attr, doc);
+	TtaSetStructureChecking (oldStructureChecking, doc);
+	new = TRUE;
+     }
+   else
+     {
+        new = FALSE;
+	if (AttrHREFundoable)
+           TtaRegisterAttributeReplace (attr, element, doc);
      }
 
    /* build the complete target URL */
@@ -205,8 +282,19 @@ STRING              targetName;
        else
 	 TtaSetAttributeText (attr, value, element, doc);
        TtaFreeMemory (value);
+     }
 
-       /* is it a link toward a CSS file */
+   /* register the new value of the HREF attribute in the undo queue */
+   if (AttrHREFundoable && new)
+       TtaRegisterAttributeCreate (attr, element, doc);
+
+   if (!TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
+      /* the origin of the link is not a HTML element */
+      /* create a xml:link attribute */
+      SetXMLlinkAttr (element, doc, AttrHREFundoable);
+
+   /* is it a link to a CSS file? */
+   if (tempURL[0] != EOS)
        if (elType.ElTypeNum == HTML_EL_LINK && IsCSSName (targetURL))
 	 {
 	   LoadStyleSheet (targetURL, doc, element, NULL);
@@ -217,8 +305,18 @@ STRING              targetName;
 	       /* create an attribute HREF for the element */
 	       attr = TtaNewAttribute (attrType);
 	       TtaAttachAttribute (element, attr, doc);
+	       new = TRUE;
+	     }
+	   else
+	     {
+	       new = FALSE;
+	       if (AttrHREFundoable)
+                  TtaRegisterAttributeReplace (attr, element, doc);
 	     }
 	   TtaSetAttributeText (attr, "stylesheet", element, doc);
+	   if (AttrHREFundoable && new)
+	       TtaRegisterAttributeCreate (attr, element, doc);
+
 	   attrType.AttrTypeNum = HTML_ATTR_Link_type;
 	   attr = TtaGetAttribute (element, attrType);
 	   if (attr == 0)
@@ -226,9 +324,22 @@ STRING              targetName;
 	       /* create an attribute HREF for the element */
 	       attr = TtaNewAttribute (attrType);
 	       TtaAttachAttribute (element, attr, doc);
+	       new = TRUE;
+	     }
+	   else
+	     {
+	       new = FALSE;
+	       if (AttrHREFundoable)
+                  TtaRegisterAttributeReplace (attr, element, doc);
 	     }
 	   TtaSetAttributeText (attr, "text/css", element, doc);	   
+	   if (AttrHREFundoable && new)
+	       TtaRegisterAttributeCreate (attr, element, doc);
 	 }
+   if (AttrHREFundoable)
+     {
+       TtaCloseUndoSequence (doc);
+       AttrHREFundoable = FALSE;
      }
    TtaSetDocumentModified (doc);
    TtaSetStatus (doc, 1, " ", NULL);
@@ -238,11 +349,12 @@ STRING              targetName;
    SelectDestination selects the destination of the el Anchor.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SelectDestination (Document doc, Element el)
+void                SelectDestination (Document doc, Element el, boolean withUndo)
 #else  /* __STDC__ */
-void                SelectDestination (doc, el)
+void                SelectDestination (doc, el, withUndo)
 Document            doc;
 Element             el;
+boolean		    withUndo;
 
 #endif /* __STDC__ */
 {
@@ -255,7 +367,7 @@ Element             el;
    int                 length;
    boolean             isHTML;
 
-   /* select target document and target anchor */
+   /* ask the user to select target document and target anchor */
    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SEL_TARGET), NULL);
    TtaClickElement (&targetDoc, &targetEl);
    if (targetDoc != (Document) None)
@@ -283,7 +395,14 @@ Element             el;
 
    AttrHREFelement = el;
    AttrHREFdocument = doc;
-   if (doc == targetDoc && TargetName == NULL)
+   AttrHREFundoable = withUndo;
+   if (doc != targetDoc || TargetName != NULL)
+     /* the user has clicked another document or a target element */
+     /* create the attribute HREF or CITE */
+     SetREFattribute (el, doc, TargetDocumentURL, TargetName);
+   else
+     /* the user has clicked the same document: pop up a dialogue box
+	to allow the user to type the target URI */
      {
 	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TARGET), NULL);
 	/* Dialogue form to insert HREF name */
@@ -327,9 +446,6 @@ Element             el;
 	CreateLinkDlgWindow (currentWindow, AttrHREFvalue, BaseDialog, AttrHREFForm, AttrHREFText);
 #endif  /* _WINDOWS */
      }
-   else
-     /* Ok: create the attribute HREF or CITE */
-     SetREFattribute (el, doc, TargetDocumentURL, TargetName);
 }
 
 /*----------------------------------------------------------------------
@@ -392,11 +508,12 @@ Element             selectedElement;
    value for element el.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateTargetAnchor (Document doc, Element el)
+void                CreateTargetAnchor (Document doc, Element el, boolean withUndo)
 #else  /* __STDC__ */
-void                CreateTargetAnchor (doc, el)
+void                CreateTargetAnchor (doc, el, withUndo)
 Document            doc;
 Element             el;
+Boolean		    withUndo;
 
 #endif /* __STDC__ */
 {
@@ -410,7 +527,7 @@ Element             el;
    STRING               url = (STRING) TtaGetMemory (sizeof (CHAR) * MAX_LENGTH);
    int                 length, i, space;
    boolean             found;
-   boolean             withinHTML;
+   boolean             withinHTML, new;
 
    elType = TtaGetElementType (el);
    withinHTML = (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
@@ -429,6 +546,13 @@ Element             el;
      {
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (el, attr, doc);
+	new = TRUE;
+     }
+   else
+     {
+     new = FALSE;
+     if (withUndo)
+        TtaRegisterAttributeReplace (attr, el, doc);
      }
 
    /* build a value for the new attribute */
@@ -499,53 +623,9 @@ Element             el;
    MakeUniqueName (el, doc);
    /* set this new end-anchor as the new target */
    SetTargetContent (doc, attr);
+   if (withUndo && new)
+       TtaRegisterAttributeCreate (attr, el, doc);
    TtaFreeMemory (url);
-}
-
-/*----------------------------------------------------------------------
-   SetXMLlinkAttr attach an xml:link="simple" attribute to element el
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SetXMLlinkAttr (Element el, Document doc)
-#else  /* __STDC__ */
-static void         SetXMLlinkAttr (el, doc)
-Element		    el;
-Document            doc;
-
-#endif /* __STDC__ */
-{
-  AttributeType	attrType;
-  ElementType	elType;
-  Attribute	attr;
-  int		val;
-
-  attrType.AttrTypeNum = 0;
-  elType = TtaGetElementType (el);
-#ifdef MATHML
-  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
-     {
-     MapMathMLAttribute ("link", &attrType, "", doc);
-     MapMathMLAttributeValue ("simple", attrType, &val);
-     }
-  else
-#endif
-#ifdef GRAPHML
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
-     {
-     MapGraphMLAttribute ("link", &attrType, "", doc);
-     MapGraphMLAttributeValue ("simple", attrType, &val);
-     }
-#endif
-  if (attrType.AttrTypeNum > 0)
-     {
-     attr = TtaGetAttribute (el, attrType);
-     if (attr == NULL)
-        {
-        attr = TtaNewAttribute (attrType);
-        TtaAttachAttribute (el, attr, doc);
-        }
-     TtaSetAttributeValue (attr, val, el, doc);
-     }
 }
 
 /*----------------------------------------------------------------------
@@ -569,8 +649,9 @@ boolean             createLink;
   Attribute           attr;
   DisplayMode         dispMode;
   int                 c1, cN, lg, i;
-  boolean             noAnchor, oldStructureChecking;
+  boolean             noAnchor, oldStructureChecking, new;
 
+  parag = NULL;
   HTMLSSchema = TtaGetSSchema ("HTML", doc);
   dispMode = TtaGetDisplayMode (doc);
   /* get the first and last selected element */
@@ -586,7 +667,7 @@ boolean             createLink;
     anchor = first;
   else
     {
-      /* search if the selection is within an anchor */
+      /* check whether the selection is within an anchor */
       if (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
 	el = SearchAnchor (doc, first, (boolean)(!createLink));
       else
@@ -652,31 +733,18 @@ boolean             createLink;
 		    !TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
 		   /* a single element is selected and it's not a HTML elem
 		      neither a character string */
-		   {
-	           /* create an attributeHREF for the selected element */
-	           attrType.AttrSSchema = HTMLSSchema;
-	           attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	           attr = TtaGetAttribute (first, attrType);
-	           if (attr == NULL)
-		     {
-		       attr = TtaNewAttribute (attrType);
-		       oldStructureChecking = TtaGetStructureChecking (doc);
-		       TtaSetStructureChecking (0, doc);
-		       TtaAttachAttribute (first, attr, doc);
-		       TtaSetStructureChecking (oldStructureChecking, doc);
-		     }
-		   SelectDestination (doc, first);
-		   /* create a xml:link attribute */
-		   SetXMLlinkAttr (first, doc);
-		   TtaSetDocumentModified (doc);
-		   }
+		   SelectDestination (doc, first, TRUE);
 		else
 		  /* cannot create an anchor here */
 		  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_ANCHOR1), NULL);
 		}
 	      else
 		  /* create an ID for target element */
-		  CreateTargetAnchor (doc, first);
+		{
+		  TtaOpenUndoSequence (doc, first, last, c1, cN);
+		  CreateTargetAnchor (doc, first, TRUE);
+		  TtaCloseUndoSequence (doc);
+		}
 	      return;
 	    }
 	  /* check if the anchor to be created is within an anchor element */
@@ -692,21 +760,9 @@ boolean             createLink;
 	    TtaSetDisplayMode (doc, DeferredDisplay);
 	  /* remove selection before modifications */
 	  TtaUnselect (doc);
-	  /* process the first selected element */
-	  elType = TtaGetElementType (first);
-	  if (c1 > 1 && elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	    {
-	      /* split the first selected text element */
-	      el = first;
-	      TtaSplitText (first, c1 - 1, doc);
-	      TtaNextSibling (&first);
-	      if (last == el)
-		{
-		  /* we have to change last selection because the element was split */
-		  last = first;
-		  cN = cN - c1 + 1;
-		}
-	    }
+
+	  TtaOpenUndoSequence (doc, first, last, c1, cN);
+
 	  /* process the last selected element */
 	  elType = TtaGetElementType (last);
 	  if (cN > 1 && elType.ElTypeNum == HTML_EL_TEXT_UNIT)
@@ -714,8 +770,31 @@ boolean             createLink;
 	      lg = TtaGetTextLength (last);
 	      if (cN < lg)
 		/* split the last text */
+		{
+		TtaRegisterElementReplace (last, doc);
 		TtaSplitText (last, cN, doc);
+		next = last;
+		TtaNextSibling (&next);
+		TtaRegisterElementCreate (next, doc);
+		}
 	    }
+	  /* process the first selected element */
+	  elType = TtaGetElementType (first);
+	  if (c1 > 1 && elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	    {
+	      /* split the first selected text element */
+	      el = first;
+	      TtaRegisterElementReplace (first, doc);
+	      TtaSplitText (first, c1 - 1, doc);
+	      TtaNextSibling (&first);
+	      TtaRegisterElementCreate (first, doc);
+	      if (last == el)
+		{
+		  /* we have to change last selection because the element was split */
+		  last = first;
+		}
+	    }
+
 	  /* Create the corresponding anchor */
 	  elType.ElTypeNum = HTML_EL_Anchor;
 	  anchor = TtaNewElement (doc, elType);
@@ -743,11 +822,11 @@ boolean             createLink;
 	    {
 	      elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
 	      parag = TtaNewElement (doc, elType);
-	      TtaInsertSibling (parag, first, TRUE, doc);
+	      TtaInsertSibling (parag, last, FALSE, doc);
 	      TtaInsertFirstChild (&anchor, parag, doc);
 	    }
 	  else
-	    TtaInsertSibling (anchor, first, TRUE, doc);
+	      TtaInsertSibling (anchor, last, FALSE, doc);
 	  
 	  /* move the selected elements within the new Anchor element */
 	  child = first;
@@ -759,6 +838,7 @@ boolean             createLink;
 	      next = child;
 	      TtaNextSibling (&next);
 	      /* remove the current element */
+	      TtaRegisterElementDelete (child, doc);
 	      TtaRemoveTree (child, doc);
 	      /* insert it as a child of the new anchor element */
 	      if (prev == NULL)
@@ -782,7 +862,7 @@ boolean             createLink;
   if (createLink)
     {
       /* Select the destination. The anchor element must have an HREF attribute */
-      SelectDestination (doc, anchor);
+      SelectDestination (doc, anchor, FALSE);
       /* create an attribute PseudoClass = link */
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
@@ -795,7 +875,13 @@ boolean             createLink;
       TtaSetAttributeText (attr, "link", anchor, doc);
     }
   else
-    CreateTargetAnchor (doc, anchor);
+    CreateTargetAnchor (doc, anchor, TRUE);
+
+  if (parag)
+    TtaRegisterElementCreate (parag, doc);
+  else
+    TtaRegisterElementCreate (anchor, doc);
+  TtaCloseUndoSequence (doc);
 }
 
 
