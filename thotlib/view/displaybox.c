@@ -54,22 +54,24 @@
     to the index given by ind and according to the orientation.it returns 
     space if it pass to another buffer
     -------------------------------------------------------------------------*/
-static CHAR_T Previous_Char(PtrTextBuffer *adbuff,int *ind )
+static CHAR_T Previous_Char ( PtrTextBuffer *adbuff, int *ind )
 {
   if (*ind < ( (*adbuff)->BuLength-1))
     return ((*adbuff)->BuContent[(*ind)+1]);
-  else return (0x0020);/*SPACE*/
+  else 
+    return (0x0020);/*SPACE*/
 }
 
   /*------------------------------------------------------------------------
     PreviousChar do the same as NextChar but in the opposite way.It gives
     the previous Character.
     ------------------------------------------------------------------------*/
-static CHAR_T Next_Char(PtrTextBuffer *adbuff, int *ind )
+static CHAR_T Next_Char ( PtrTextBuffer *adbuff, int *ind )
   {
     if (*ind > 0)
       return ((*adbuff)->BuContent[(*ind)-1]);
-    else return (0x0020);/*SPACE*/
+    else 
+      return (0x0020);/*SPACE*/
   }
   
 
@@ -1439,21 +1441,18 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      /* skip invisible characters */
 	      restbl = newbl;
 	      x += lg;
-
-
-  CurrentChar = adbuff->BuContent[indbuff];
-if ((( CurrentChar >= 0x0600 )&&( CurrentChar < 0x066E ))||(CurrentChar==0x06AF))
-
-{
-  prevChar=Previous_Char(&adbuff,&indbuff);
-  nextChar=Next_Char(&adbuff,&indbuff);
-  val=GetArabFontAndIndex(CurrentChar,prevChar,nextChar,font,&nextfont);
-}
-else
-  {
-	val = GetFontAndIndexFromSpec (adbuff->BuContent[indbuff],
+	      CurrentChar = adbuff->BuContent[indbuff];
+	      if ((( CurrentChar >= 0x0600 )&&( CurrentChar < 0x066E ))||(CurrentChar==0x06AF)) /*arabic character */
+		{
+		  prevChar=Previous_Char(&adbuff,&indbuff);
+		  nextChar=Next_Char(&adbuff,&indbuff);
+		  val=GetArabFontAndIndex(CurrentChar,prevChar,nextChar,font,&nextfont); /* index of the character in arabic font */
+		}
+	      else
+		{
+		  val = GetFontAndIndexFromSpec (adbuff->BuContent[indbuff],
 					     font, &nextfont);
-  }
+		}
 	      if (val == SPACE)
 		{
 		  lg = lgspace;
@@ -1597,20 +1596,16 @@ else
 		 (!rtl && indbuff <= indmax))
 	    {
 	      c = adbuff->BuContent[indbuff];
-
- if ((( c >= 0x0600 )&&( c < 0x066E ))||( c ==0x06AF))
-{/*plage des val arabes*/
-  nextChar=Previous_Char(&adbuff,&indbuff);/*caractere precedant*/
-  prevChar=Next_Char(&adbuff,&indbuff);/*caractere suivant*/
-  val=GetArabFontAndIndex( c ,prevChar,nextChar,font,&nextfont);
-}
-else
-  {
-	
-      val = GetFontAndIndexFromSpec( c, font, &nextfont);
-		
-  }
-
+	      if ((( c >= 0x0600 )&&( c < 0x066E ))||( c ==0x06AF)) /* arabic char */
+		{
+		  nextChar=Previous_Char(&adbuff,&indbuff);
+		  prevChar=Next_Char(&adbuff,&indbuff);
+		  val=GetArabFontAndIndex( c ,prevChar,nextChar,font,&nextfont);
+		}
+	      else
+		{
+		  val = GetFontAndIndexFromSpec( c, font, &nextfont);
+	       }
 	      if (val == INVISIBLE_CHAR || c == ZERO_SPACE ||
 		  c == EOL || c == BREAK_LINE)
 		/* do nothing */;
@@ -1669,11 +1664,9 @@ else
 					      prevfont, org, bl, 0, blockbegin,
 					      fg, shadow);
 			  else
-
-			     if ( prevfont== NULL )
+			    if ( prevfont== NULL )
 			      prevfont = nextfont;
-
-			    x += DrawString (buffer, nbcar, frame, x, y1,
+			  x += DrawString (buffer, nbcar, frame, x, y1,
 					     prevfont, org, bl, 0, blockbegin,
 					     fg, shadow);
 #else /*_GL*/
@@ -2682,7 +2675,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 #define Unicode_length sizeof(Unicode_Map) / sizeof(wchar_t)
 
 CHAR_T Unicode_Map[]={  
-  /* valeurs unicodes des caracteres arabes a traiter*/
+  /* unicode values of the arabic characters*/
     0x0621 , 0x0623 , 0x0624 , 0x0625 , 0x0626 , 0x0627 , 
     0x0628 , 0x0629 , 0x062A , 0x062B , 0x062C , 0x062D ,
     0x062E , 0x062F , 0x0630 , 0x0631 , 0x0632 , 0x0633 ,
@@ -2695,15 +2688,17 @@ CHAR_T Unicode_Map[]={
 
 
 #define Arab_length 51
-#define nbre_champs 5
-CHAR_T Arab_Map[Arab_length][nbre_champs]={
-  /* codes en ArabicWeb des caracteres avec leurs possibilite 
-   *  de jointure avec leurs suivants 0 ou non 1 */
+#define fields_nbre 5
+
+CHAR_T Arab_Map[Arab_length][fields_nbre]={
+  /* arabweb positions for arabic characters with the possibility 
+     to be joint with the previous and next char*/ 
+
 {0x00F4 , 0x00F4 , 0x00F4 , 0x00F4 , 1 },   /*hamza */
-{0x0045 , 0x0045 , 0x0046 , 0x0046 , 1 },   /*hamza sur alif en dessus*/ 
-{0x00E2 , 0x00E2 , 0x00E3 , 0x00E3 , 1 },   /*hamza sur waw*/
-{0x0047 , 0x0047 , 0x0048 , 0x0048 , 1 },   /*hamza sur alif en dessous*/
-{0x00EE , 0x00EF , 0x00F0 , 0x00F1 , 0 },   /*hamza sur ya*/
+{0x0045 , 0x0045 , 0x0046 , 0x0046 , 1 },   /*hamza on alif in top*/ 
+{0x00E2 , 0x00E2 , 0x00E3 , 0x00E3 , 1 },   /*hamza on waw*/
+{0x0047 , 0x0047 , 0x0048 , 0x0048 , 1 },   /*hamza on alif below*/
+{0x00EE , 0x00EF , 0x00F0 , 0x00F1 , 0 },   /*hamza on ya*/
 {0x0043 , 0x0043 , 0x0044 , 0x0044 , 1 },   /*alif*/
 {0x004B , 0x004C , 0x004D , 0x004E , 0 },   /*Ba*/    
 {0x00F5 , 0x00F5 , 0x00F5 , 0x00F6 , 1 },   /*ta marbouta*/
@@ -2720,13 +2715,13 @@ CHAR_T Arab_Map[Arab_length][nbre_champs]={
 {0x0075 , 0x0076 , 0x0077 , 0x0078 , 0 },   /*chin*/
 {0x0079 , 0x007A , 0x00A1 , 0x00A2 , 0 },   /*sad*/
 {0x00A3 , 0x00A4 , 0x00A5 , 0x00A6 , 0 },   /*dad*/
-{0x00A7 , 0x00A8 , 0x00A9 , 0x00AA , 0 },   /*ta :forcé*/
+{0x00A7 , 0x00A8 , 0x00A9 , 0x00AA , 0 },   /*ta :forced*/
 {0x00AB , 0x00AC , 0x00AE , 0x00AF , 0 },   /*zha*/
 {0x00B0 , 0x00B1 , 0x00B2 , 0x00B3 , 0 },   /*ain*/
 {0x00B4 , 0x00B5 , 0x00B7 , 0x00B8 , 0 },   /*rhain*/   
 {0x0040 , 0x0040 , 0x0040 , 0x0040 , 0 },   
 {0x00B9 , 0x00BA , 0x00BB , 0x00BC , 0 },   /*faa*/
-{0x00BD , 0x00BE , 0x00BF , 0x00C0 , 0 },   /*kaf:forcé*/
+{0x00BD , 0x00BE , 0x00BF , 0x00C0 , 0 },   /*kaf:forced*/
 {0x00C1 , 0x00C2 , 0x00C3 , 0x00C4 , 0 },   /*kaf*/
 {0x00C5 , 0x00C6 , 0x00C7 , 0x00C8 , 0 },   /*lam*/
 {0x00D4 , 0x00D5 , 0x00D6 , 0x00D7 , 0 },   /*mim*/
@@ -2744,18 +2739,21 @@ CHAR_T Arab_Map[Arab_length][nbre_champs]={
 {0x00FB , 0x00FB , 0x00FB , 0x00FB , 0 },   /*chadda*/
 {0x00FC , 0x00FC , 0x00FC , 0x00FC , 0 },   /*soukoun*/
 {0x00FF , 0x00FF , 0x00FF , 0x00FF , 0 },   /*madda*/
-{0x00FD , 0x00FD , 0x00FD , 0x00FD , 0 },   /*hamza dessous*/
-{0x007E , 0x007E , 0x007E , 0x007E , 0 },   /*hamza dessus*/
+{0x00FD , 0x00FD , 0x00FD , 0x00FD , 0 },   /*hamza above*/
+{0x007E , 0x007E , 0x007E , 0x007E , 0 },   /*hamza below*/
 {0x00DE , 0x00DF , 0x00E0 , 0x00E1 , 0 },    /*va */
 {0x00CB , 0x00CB , 0x00CC , 0x00CC , 1 },   /*lam+alif*/
-{0x00CD , 0x00CD , 0x00CE , 0x00CE , 1 },   /*lam+hamza sur alif en dessus*/
-{0x00CF , 0x00CF , 0x00D0 , 0x00D0 , 1 }    /*lam+hamza sur alif en dessous*/
+{0x00CD , 0x00CD , 0x00CE , 0x00CE , 1 },   /*lam+hamza on alif in top*/
+{0x00CF , 0x00CF , 0x00D0 , 0x00D0 , 1 }    /*lam+hamza on alif below*/
 
 
 };
 
 
-static int recherche_dicoto(CHAR_T elmt,int p,int q)
+  /*---------------------------------------------------------------
+    FindIndex give the position of a character in Unicode_Map table
+    ---------------------------------------------------------------*/
+static int recherche_dicoto (CHAR_T elmt,int p,int q)
 {
   int q1=(int)(p+q)/2;
   wchar_t res=Unicode_Map[q1];
@@ -2763,7 +2761,7 @@ static int recherche_dicoto(CHAR_T elmt,int p,int q)
   if(p >= q1) 
     return (-1);
   if(res == elmt) 
-    return(q1);
+    return q1 ;
   else
     {    
       if(res< elmt) 
@@ -2779,30 +2777,36 @@ static int recherche_dicoto(CHAR_T elmt,int p,int q)
     GetArabFontAndIndex returns the glyph corresponding to the character
     given un and it's load the arab font "arabweb".                       
     ---------------------------------------------------------------------*/
-
-int GetArabFontAndIndex(CHAR_T un ,CHAR_T prec ,CHAR_T suiv ,SpecFont fontset ,PtrFont *font)
+int GetArabFontAndIndex (CHAR_T un ,CHAR_T prec ,CHAR_T suiv ,SpecFont fontset ,PtrFont *font)
 {
-  int i,j,k; 
-
-  /*le caractere 'arabe' ga n'a pas de glyphs*/
+  int i,j,k;
+ 
+ *font=NULL;
+  /* the arabic char 'ga' has the same glyph as 'ka' */
   if ( un == 0x06AF  ) un=0x0643;
   if (prec == 0x06AF ) prec=0x0643;
   if (suiv == 0x06AF ) suiv=0x0643;
-
-  *font=NULL;
-  
-  /*CAS PARTICULIERS :a ne pas chercher l'entourage*/
-  if ((un == 0x060C)||(un == 0x066B)) 
-    {LoadingArabicFont ( fontset , font );return(0x002C);}/*vergule*/
-    if(un == 0x061F )
-      {LoadingArabicFont ( fontset , font );return (0x003F);}
-  if (un == 0x061B) 
-   {LoadingArabicFont ( fontset , font );return(0x003B);}/*point-vergule*/
-  if ((un >= 0x0660)&&(un <= 0x0669 ))
-  {LoadingArabicFont ( fontset , font );return((int)un -1584);}/*chiffres*/
-
-
-
+ 
+  if ((un == 0x060C)||(un == 0x066B)) /*comma*/
+    {
+      LoadingArabicFont ( fontset , font );
+      return(0x002C);
+    }
+  if(un == 0x061F ) /* question mark*/
+      {
+	LoadingArabicFont ( fontset , font );
+	return (0x003F);
+      }
+  if (un == 0x061B) /* semi-colon */
+   {
+     LoadingArabicFont ( fontset , font );
+     return(0x003B);
+   }
+  if ((un >= 0x0660)&&(un <= 0x0669 )) /*digits */
+    {
+    LoadingArabicFont ( fontset , font );
+    return((int)un -1584);
+    }
   i=recherche_dicoto(un,0,Unicode_length-1); 
 
   if (i==-1)
@@ -2816,46 +2820,51 @@ int GetArabFontAndIndex(CHAR_T un ,CHAR_T prec ,CHAR_T suiv ,SpecFont fontset ,P
       {
 	LoadingArabicFont ( fontset , font );
 
-	return (Arab_Map[i][0]);  /* caractere isolé */
+	return (Arab_Map[i][0]);  /* isolated char */
       }
-    else if(k==-1) {   /*pas de precedant arabe*/
-      if (j==0) /*hamza*/ 
-	{
-	  LoadingArabicFont ( fontset , font );
-	  return (Arab_Map[i][0]);
-	}
-      else 
-	{
-	 
-	  if ( i == 29 )
-	    {
-	      switch (j){
-	      case 5 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -3][0]);}
-	      case 1 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -2][0]);}
-	      case 3 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -1][0]);}
-	      default: { LoadingArabicFont ( fontset , font ); return (Arab_Map[i][1]);}
-	      }
+    else 
+      if(k==-1) {   /* previous char not arabic char*/
+	if (j==0) /*hamza*/ 
+	  {
+	    LoadingArabicFont ( fontset , font );
+	    return (Arab_Map[i][0]);
+	  }
+	else 
+	  {
+	    if ( i == 29 ) /*the current char is 'l'*/
+	      {
+	      switch (j)
+		{
+		case 5 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -3][0]);}
+		case 1 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -2][0]);}
+		case 3 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -1][0]);}
+		default: { LoadingArabicFont ( fontset , font ); return (Arab_Map[i][1]);}
+		}
 	    }
 	  else 
-	    if (((i==1)||(i==3)||(i==5))&&(k==29))
-	      {LoadingArabicFont( fontset ,font );return(0x0020);}
+	    if (((i==1)||(i==3)||(i==5))&&(k==29)) /*previous char is 'l'*/
+	      {
+		LoadingArabicFont( fontset ,font );
+		return(0x0020);
+	      }
 	    else 
 	    LoadingArabicFont ( fontset , font );
-	  return (Arab_Map[i][1]);
-	}
-    }
-    else if(j==-1){
-      if(Arab_Map[k][4])
-	{
-	  LoadingArabicFont ( fontset , font );
-	  return(Arab_Map[i][0]);
-	}
+	    return (Arab_Map[i][1]);
+	  }
+      }
       else 
-	{
-	  if (((i==1)||(i==3)||(i==5))&&(k==29))
-	    { 
+	if(j==-1){ /*the next char is not arabic char */
+	  if(Arab_Map[k][4])
+	    {
 	      LoadingArabicFont ( fontset , font );
-	      return (0x0020);
+	      return(Arab_Map[i][0]);
+	    }
+	  else 
+	    {
+	      if (((i==1)||(i==3)||(i==5))&&(k==29))
+		{ 
+		  LoadingArabicFont ( fontset , font );
+		  return (0x0020);
 	    }
 	  else 
 	    {
@@ -2868,15 +2877,19 @@ int GetArabFontAndIndex(CHAR_T un ,CHAR_T prec ,CHAR_T suiv ,SpecFont fontset ,P
       {
 	if (!Arab_Map[k][4]) 
 	  {
-	    if( (k==29) && ((i==1)||(i==3)||(i==5)))
-	      {LoadingArabicFont ( fontset, font ); return(0x0020);}
+	    if( (k==29) && ((i==1) || (i==3) || (i==5)))
+	      {
+		LoadingArabicFont ( fontset, font ); 
+		return(0x0020);
+	      }
 	    if ( i==29 ){
-		  switch ( j ) {
-		  case 1 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -2][2]);}
-		  case 3 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -1][2]);}
-		  case 5 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -3][2]);}
-		  default: { LoadingArabicFont ( fontset , font ); return (Arab_Map[i][2]);}
-		  }
+		  switch ( j ) 
+		    {
+		    case 1 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -2][2]);}
+		    case 3 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -1][2]);}
+		    case 5 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -3][2]);}
+		    default: { LoadingArabicFont ( fontset , font ); return (Arab_Map[i][2]);}
+		    }
 	    }
 	    LoadingArabicFont ( fontset , font );      
 	    return (Arab_Map[i][2]);
@@ -2886,12 +2899,13 @@ int GetArabFontAndIndex(CHAR_T un ,CHAR_T prec ,CHAR_T suiv ,SpecFont fontset ,P
 	    if(Arab_Map[k][4])
 	      {
 		if ( i==29 ){
-		  switch ( j ) {
-		  case 1 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -2][0]);}
-		  case 3 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -1][0]);}
-		  case 5 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -3][0]);}
-		  default: { LoadingArabicFont ( fontset , font ); return (Arab_Map[i][1]);}
-		  }
+		  switch ( j ) 
+		    {
+		    case 1 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -2][0]);}
+		    case 3 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -1][0]);}
+		    case 5 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -3][0]);}
+		    default: { LoadingArabicFont ( fontset , font ); return (Arab_Map[i][1]);}
+		    }
 		}
 		LoadingArabicFont ( fontset , font );
 		return (Arab_Map[i][1]);
@@ -2899,15 +2913,15 @@ int GetArabFontAndIndex(CHAR_T un ,CHAR_T prec ,CHAR_T suiv ,SpecFont fontset ,P
 	    else  
 	      {
 		if ( i == 29 ){
-
-		  switch ( j ) {
+		  switch ( j ) 
+		    {
 		    case 1 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -2][2]);}
 		    case 3 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -1][2]);}
 		    case 5 : { LoadingArabicFont ( fontset , font ); return (Arab_Map[Arab_length -3][2]);}
 		    default: { LoadingArabicFont ( fontset , font ); return (Arab_Map[i][3]);}
-		  }
+		    }
 		}
-	       LoadingArabicFont ( fontset , font );
+		LoadingArabicFont ( fontset , font );
 		return(Arab_Map[i][3]);
 	      }
 	  }
