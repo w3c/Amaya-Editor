@@ -2399,10 +2399,10 @@ int                 pattern;
   - both backward and forward arrows have to be drawn (3)
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow)
+void                DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawSegments (frame, thick, style, x, y, buffer, nb, RO, active, fg, arrow)
+void                DrawSegments (frame, thick, style, x, y, buffer, nb, RO, active, fg, arrow, bg, pattern)
 int                 frame;
 int                 thick;
 int                 style;
@@ -2414,12 +2414,16 @@ int                 RO;
 int                 active;
 int                 fg;
 int                 arrow;
+int                 bg;
+int                 pattern;
 #endif /* __STDC__ */
 {
   ThotPoint          *points;
   int                 i, j;
   PtrTextBuffer       adbuff;
 
+  /* fill the included polygon */
+  DrawPolygon (frame, 0, style, x, y, buffer, nb, RO, active, fg, bg, pattern);
   if (thick == 0 || fg < 0)
     return;
 
@@ -2779,7 +2783,7 @@ float               a1, b1, a2, b2, a3, b3, a4, b4;
 }
 
 /*----------------------------------------------------------------------
-  DrawCurb draw an open curb.
+  DrawCurve draw an open curve.
   Parameter buffer is a pointer to the list of control points.
   nb indicates the number of points.
   The first point is a fake one containing the geometry.
@@ -2794,10 +2798,10 @@ float               a1, b1, a2, b2, a3, b3, a4, b4;
   Parameter control indicates the control points.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawCurb (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow, C_points * controls)
+void                DrawCurve (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow, C_points * controls)
 
 #else  /* __STDC__ */
-void                DrawCurb (frame, thick, style, x, y, buffer, nb, RO, active, fg, arrow, controls)
+void                DrawCurve (frame, thick, style, x, y, buffer, nb, RO, active, fg, arrow, controls)
 int                 frame;
 int                 thick;
 int                 style;
@@ -2919,7 +2923,7 @@ C_points           *controls;
 }
 
 /*----------------------------------------------------------------------
-  DrawSpline draw a closed curb.
+  DrawSpline draw a closed curve.
   Parameter buffer is a pointer to the list of control points.
   nb indicates the number of points.
   The first point is a fake one containing the geometry.

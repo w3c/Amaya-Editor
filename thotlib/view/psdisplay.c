@@ -1234,9 +1234,9 @@ int                 pattern;
    - both backward and forward arrows have to be drawn (3)
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow)
+void                DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow, int bg, int pattern)
 #else  /* __STDC__ */
-void                DrawSegments (frame, thick, style, x, y, buffer, nb, RO, active, fg, arrow)
+void                DrawSegments (frame, thick, style, x, y, buffer, nb, RO, active, fg, arrow, bg, pattern)
 int                 frame;
 int                 thick;
 int                 style;
@@ -1248,6 +1248,8 @@ int                 RO;
 int                 active;
 int                 fg;
 int                 arrow;
+int                 bg;
+int                 pattern;
 #endif /* __STDC__ */
 {
    int                 i, j;
@@ -1257,22 +1259,21 @@ int                 arrow;
    PtrTextBuffer       adbuff;
    FILE               *fout;
 
-   fout = (FILE *) FrRef[frame];
-
    if (y < 0)   
       return;
+   fout = (FILE *) FrRef[frame];
+   /* fill the included polygon */
+   DrawPolygon (frame, 0, style, x, y, buffer, nb, RO, active, fg, bg, pattern);
    y += FrameTable[frame].FrTopMargin;
    xp = yp = 0;
    prevx = prevy = 0;
-   if (thick == 0 || fg < 0)
-      return;
-
+   if (fg < 0)
+     thick = 0;
    lg = HL + thick;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
    adbuff = buffer;
-
    /* backward arrow  */
    if (arrow == 2 || arrow == 3)
       fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style,
@@ -1353,13 +1354,13 @@ int                 pattern;
   if (y < 0)
     return;
    y += FrameTable[frame].FrTopMargin;
-
+   if (fg < 0)
+     thick = 0;
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
    FillWithPattern (fout, fg, bg, pattern);
    adbuff = buffer;
    j = 1;
-
    for (i = 1; i < nb; i++)
      {
 	if (j >= adbuff->BuLength)
@@ -1383,7 +1384,7 @@ int                 pattern;
 
 
 /*----------------------------------------------------------------------
-   DrawCurb draw an open curb.
+   DrawCurve draw an open curve.
    Parameter buffer is a pointer to the list of control points.
    nb indicate the number of points.
    The first point is a fake one containing the geometry.
@@ -1396,9 +1397,9 @@ int                 pattern;
    Parameter control indicate the control points.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawCurb (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow, C_points * controls)
+void                DrawCurve (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow, C_points * controls)
 #else  /* __STDC__ */
-void                DrawCurb (frame, thick, style, x, y, buffer, nb, RO, active, fg, arrow, controls)
+void                DrawCurve (frame, thick, style, x, y, buffer, nb, RO, active, fg, arrow, controls)
 int                 frame;
 int                 thick;
 int                 style;
@@ -1496,7 +1497,7 @@ C_points           *controls;
 
 
 /*----------------------------------------------------------------------
-   DrawSpline draw a closed curb.
+   DrawSpline draw a closed curve.
    Parameter buffer is a pointer to the list of control points.
    nb indicate the number of points.
    The first point is a fake one containing the geometry.

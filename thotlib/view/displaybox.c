@@ -75,10 +75,7 @@ Thotbool            selected;
   pFrame = &ViewFrameTable[frame - 1];
   if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
     {
-      if (pBox->BxAbstractBox->AbSensitive)
-	op = 1;
-      else
-	op = 0;
+      op = 0;
       RO = 0;
 
       /* For changing drawing color */
@@ -150,10 +147,7 @@ ThotBool            selected;
 	  xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
 	  yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
 	  
-	  if (pBox->BxAbstractBox->AbSensitive)
-	    op = 1;
-	  else
-	    op = 0;
+	  op = 0;
 	  RO = 0;
 
 	  /* box sizes have to be positive */
@@ -304,10 +298,7 @@ ThotBool            selected;
   pAb = pBox->BxAbstractBox;
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
-      if (pAb->AbSensitive)
-	op = 1;
-      else
-	op = 0;
+      op = 0;
       RO = 0;
 
       xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
@@ -383,10 +374,7 @@ ThotBool            selected;
     {
       xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
       yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
-      if (pAb->AbSensitive)
-	op = 1;
-      else
-	op = 0;
+      op = 0;
       RO = 0;
 
       width = pBox->BxW;
@@ -713,10 +701,7 @@ ThotBool            selected;
     {
       xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
       yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
-      if (pAb->AbSensitive)
-	op = 1;
-      else
-	op = 0;
+      op = 0;
       RO = 0;
       
       /* box sizes have to be positive */
@@ -759,7 +744,7 @@ ThotBool            selected;
 	    arrow = 2;
 	  else
 	    arrow = 3;
-	  DrawSegments (frame, i, style, xd, yd, pBox->BxBuffer, pBox->BxNChars, RO, op, fg, arrow);
+	  DrawSegments (frame, i, style, xd, yd, pBox->BxBuffer, pBox->BxNChars, RO, op, fg, arrow, bg, pat);
 	  break;
 	case 'B':	/* Beziers (open) */
 	case 'A':	/* Beziers (open) forward arrow */
@@ -776,7 +761,7 @@ ThotBool            selected;
 	  /* compute control points */
 	  if (pBox->BxPictInfo == NULL)
 	    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars, ViewFrameTable[frame - 1].FrMagnification);
-	  DrawCurb (frame, i, style, xd, yd, pBox->BxBuffer,
+	  DrawCurve (frame, i, style, xd, yd, pBox->BxBuffer,
 		    pBox->BxNChars, RO, op, fg, arrow, (C_points *) pBox->BxPictInfo);
 	  break;
 	case 'p':	/* polygon */
@@ -911,10 +896,7 @@ ThotBool            selected;
       charleft = pBox->BxNChars;
       newbl = pBox->BxNPixels;
       lg = 0;
-      if (pAb->AbSensitive)
-	op = 1;
-      else
-	op = 0;
+      op = 0;
       RO = 0;
 	   
       /* box sizes have to be positive */

@@ -341,7 +341,8 @@ EXCEPT
    polyline:            MoveResize, HighlightChildren, NoShowBox, NoCreate;
    polygon:             MoveResize, HighlightChildren, NoShowBox, NoCreate;
    image:	        MoveResize, HighlightChildren, NoShowBox, NoCreate;
-   text_:               MoveResize, NoResize, ReturnCreateWithin, NoCreate;
+   text_:               MoveResize, NoResize, NoShowBox, ReturnCreateWithin, NoCreate;
+   tspan:	        NoShowBox; 
    foreignObject:       MoveResize, NoCreate;
    PICTURE:             NoMove, NoResize;
    TEXT:                NoMove, NoResize;
