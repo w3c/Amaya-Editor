@@ -188,8 +188,10 @@ AnnotMeta *annot;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (anchor, attr, source_doc);
   annotName = TtaGetMemory (strlen (ANNOT_ANAME) + strlen (annot_user)
-			    + strlen (annot->body_url) + 20);
-  sprintf (annotName, "%s_%s_%s", ANNOT_ANAME, annot_user, annot->body_url);
+			    + (annot->body_url ? strlen (annot->body_url) : 0)
+			    + 20);
+  sprintf (annotName, "%s_%s_%s", ANNOT_ANAME, annot_user,
+	   annot->body_url ? annot->body_url : "");
   TtaSetAttributeText (attr, annotName, anchor, source_doc);
   TtaFreeMemory (annotName);
   TtaUnselect (source_doc);
