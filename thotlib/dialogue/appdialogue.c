@@ -2946,7 +2946,7 @@ char               *data;
    /* Termine l'insertion courante s'il y en a une */
    EndInsert ();
 
-   if (ref > MAX_MenuThot)
+   if (ref >= MAX_MenuThot)
      {
 	if (firstCallbackAPI == NULL)
 	   return;		/* pas de callback definis */
@@ -2955,7 +2955,7 @@ char               *data;
 	     /* recherche le bon callback */
 	     ctxCallback = firstCallbackAPI;
 	     base = MAX_MenuThot;
-	     while (ref > base + ctxCallback->callbackSet)
+	     while (ref >= base + ctxCallback->callbackSet)
 	       {
 		  if (ctxCallback->callbackNext == NULL)
 		     return;
