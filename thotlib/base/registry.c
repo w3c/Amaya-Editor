@@ -706,7 +706,7 @@ void TtaSetEnvString (char *name, char *value, int overwrite)
 }
 
 /*----------------------------------------------------------------------
- TtaSetDefEnvString : set the defaul value associated to an environment
+ TtaSetDefEnvString : set the default value associated to an environment
                       string, for the current application.
   ----------------------------------------------------------------------*/
 void TtaSetDefEnvString (char *name, char *value, int overwrite)
@@ -1226,7 +1226,6 @@ void TtaInitializeAppRegistry (char *appArgv0)
   if (appArgv0[0] == DIR_SEP)
      strncpy (&execname[0], appArgv0, sizeof (execname) / sizeof (char));
 #endif /* _WINDOWS */
-   
   /*
    * second case, the argv[0] indicate a relative path name.
    * The exec name is obtained by appending the current directory.
@@ -1374,6 +1373,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	       ok = FALSE;
 	     }
 	 } 
+
        if (ok)
 	 {
 	   *dir_end = EOS;
@@ -1565,16 +1565,16 @@ void TtaInitializeAppRegistry (char *appArgv0)
        sprintf (app_home, "%s%c.%s", ptr, DIR_SEP, AppNameW); 
 #else /* _UNIX */
 #if defined(_WX) /* SG TODO : a valider */
-	   wxString homedir;
-	   homedir = wxGetenv(wxT("USERPROFILE"));
-	   if (homedir.IsEmpty())
+       wxString homedir;
+       homedir = wxGetenv(wxT("USERPROFILE"));
+       if (homedir.IsEmpty())
          homedir = wxGetHomeDir();
 #ifdef _WINDOWS
-	   sprintf (app_home, "%s%c%s", homedir.mb_str (*wxConvCurrent),
-		    DIR_SEP, AppNameW);
+       sprintf (app_home, "%s%c%s", homedir.mb_str (*wxConvCurrent),
+		DIR_SEP, AppNameW);
 #else  /* _WINDOWS */
-	   sprintf (app_home, "%s%c.%s", homedir.mb_str (*wxConvCurrent),
-		    DIR_SEP, AppNameW);
+       sprintf (app_home, "%s%c.%s", homedir.mb_str (*wxConvCurrent),
+		DIR_SEP, AppNameW);
 #endif /* _WINDOWS */
 #endif /* _WX */
 #endif /* _UNIX */

@@ -22,30 +22,8 @@
 #include "typemedia.h"
 #include "fileaccess.h"
 
+#include "fileaccess_f.h"
 #include "memory_f.h"
-#include "ustring_f.h"
-#include "uconvert_f.h"
-
-/*----------------------------------------------------------------------
-  GetRealFileName 
-  Return the real file name expressed in the local charset
-  The returned string must be freed.
-  ----------------------------------------------------------------------*/
-char *GetRealFileName (CONST char *name)
-{
-  CHARSET  systemCharset, defaultCharset;
-  char    *realname;
-
-  systemCharset = TtaGetLocaleCharset ();
-  defaultCharset = TtaGetDefaultCharset ();
-  if (systemCharset == defaultCharset)
-    realname = TtaStrdup ((char *)name);
-  else if (systemCharset == UTF_8)
-    realname = (char *)TtaConvertByteToMbs ((unsigned char *)name, defaultCharset);
-  else
-    realname = (char *)TtaConvertMbsToByte ((unsigned char *)name, systemCharset);
-  return realname;
-}
 
 
 /*----------------------------------------------------------------------

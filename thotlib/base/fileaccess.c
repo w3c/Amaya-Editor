@@ -33,6 +33,8 @@
 #include "memory_f.h"
 #include "platform_f.h"
 #include "registry_f.h"
+#include "ustring_f.h"
+#include "uconvert_f.h"
 #ifdef _WINDOWS
 #include "winsys.h"
 #endif /* _WINDOWS */
@@ -384,6 +386,34 @@ ThotBool TtaReadName (BinFile file, unsigned char *name)
       return FALSE;
     }
   return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  GetRealFileName 
+  Return the real file name expressed in the local charset
+  The returned string must be freed.
+  ----------------------------------------------------------------------*/
+char *GetRealFileName (CONST char *name)
+{
+#ifdef NODISPLAY
+  return TtaStrdup ((char *)name);
+#else /* NODISPLAY */
+  CHARSET  systemCharset, defaultCharset;
+  char    *realname;
+
+  systemCharset = TtaGetLocaleCharset ();
+  defaultCharset = TtaGetDefaultCharset ();
+  printf ("%s \n", name);
+  if (systemCharset == defaultCharset)
+    realname = TtaStrdup ((char *)name);
+  else if (systemCharset == UTF_8)
+    realname = (char *)TtaConvertByteToMbs ((unsigned char *)name, defaultCharset);
+  else if (defaultCharset == UTF_8)
+    realname = (char *)TtaConvertMbsToByte ((unsigned char *)name, systemCharset);
+  else
+    realname = TtaStrdup ((char *)name);
+  return realname;
+#endif /* NODISPLAY */
 }
 
 #ifndef NODISPLAY

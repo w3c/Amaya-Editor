@@ -1476,7 +1476,7 @@ int       main (int argc, char **argv)
    char                cmd[800];
 #endif /* _WINDOWS */
 
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    COMPWnd = hwnd;
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
@@ -1490,7 +1490,7 @@ int       main (int argc, char **argv)
    TtaDisplayMessage (INFO, msg);
    SendMessage (statusBar, SB_SETTEXT, (WPARAM) 0, (LPARAM) &msg[0]);
    SendMessage (statusBar, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    TtaInitializeAppRegistry (argv[0]);
    /* no external action declared at that time */

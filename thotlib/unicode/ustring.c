@@ -387,44 +387,44 @@ CHARSET TtaGetLocaleCharset ()
   UINT cp;
    if (LocaleSystemCharset == UNSUPPORTED_CHARSET)
     {
-    cp = GetOEMCP ();
-    switch (cp)
+      cp = GetOEMCP ();
+      switch (cp)
 	{
-    case 437: /* Latin 1 */
-    case 850:
-    case 860:
-    case 863:
-    case 861:
+	case 437: /* Latin 1 */
+	case 850:
+	case 860:
+	case 863:
+	case 861:
 	  LocaleSystemCharset = WINDOWS_1252;
 	  break;
-    case 708:
-    case 709:
-    case 710:
-    case 720: /* Arabic */
-    case 864:
-      LocaleSystemCharset = WINDOWS_1256;
+	case 708:
+	case 709:
+	case 710:
+	case 720: /* Arabic */
+	case 864:
+	  LocaleSystemCharset = WINDOWS_1256;
 	  break;
-    case 737: /* Greek */
-    case 869:
+	case 737: /* Greek */
+	case 869:
 	  LocaleSystemCharset = WINDOWS_1253;
 	  break;
-    case 775: /* Baltic */
-    case 852:
-    case 865:
+	case 775: /* Baltic */
+	case 852:
+	case 865:
 	  LocaleSystemCharset = WINDOWS_1257;
 	  break;
-    case 855: /* Cyrillic */
-    case 866:
+	case 855: /* Cyrillic */
+	case 866:
 	  LocaleSystemCharset = WINDOWS_1251;
 	  break;
-    case 857: /* Turkish */
+	case 857: /* Turkish */
 	  LocaleSystemCharset = WINDOWS_1254;
 	  break;
-    case 862: /* Hebrew */
+	case 862: /* Hebrew */
 	  LocaleSystemCharset = WINDOWS_1255;
 	  break;
-    default:
-      LocaleSystemCharset = WINDOWS_1252;
+	default:
+	  LocaleSystemCharset = WINDOWS_1252;
 	}
    }
 #endif /* _WINDOWS */
@@ -477,16 +477,23 @@ CHARSET TtaGetDefaultCharset ()
 #else /* _WX */
 #ifdef _MACOS
     /* default macosx dialog charset is iso_8859_1 */
-    return ISO_8859_1;
+  return ISO_8859_1;
 #else /* _MACOS */
+  CHARSET   defaultCharset;
   char     *charsetname;
 
   /* it should be given by the system locale */
   charsetname = TtaGetEnvString ("Default_Charset");
   if (charsetname)
-    return TtaGetCharset (charsetname);
+    {
+      defaultCharset = TtaGetCharset (charsetname);
+      if ((defaultCharset == UNSUPPORTED_CHARSET) ||
+	  (defaultCharset == UNDEFINED_CHARSET))
+	defaultCharset = ISO_8859_1;
+    }
   else
-    return TtaGetLocaleCharset ();
+    defaultCharset = TtaGetLocaleCharset ();
+  return defaultCharset;
 #endif /* _MACOSX */
 #endif /* _WX */
 }
