@@ -25,7 +25,7 @@ static int          RepeatValue;
 static char       DirectoryImage[MAX_LENGTH];
 static char       LastURLImage[MAX_LENGTH];
 static char       ImageName[MAX_LENGTH];
-static char       ImgAlt[NAME_LENGTH];
+static char       ImgAlt[MAX_LENGTH];
 
 #include "AHTURLTools_f.h"
 #include "HTMLactions_f.h"
