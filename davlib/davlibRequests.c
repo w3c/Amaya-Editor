@@ -15,7 +15,10 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.3  2002-06-03 14:37:43  kirschpi
+ ** Revision 1.4  2002-06-04 14:52:42  kirschpi
+ ** *** empty log message ***
+ **
+ ** Revision 1.3  2002/06/03 14:37:43  kirschpi
  ** The name of some public functions have been changed to avoid conflic with
  ** other libraries.
  **
@@ -1007,7 +1010,7 @@ BOOL DoUnlockRequest (int doc, AHTDAVContext *info) {
          * after filter : FilterUnlock_handler
          * terminate callback : DAVTerminate_callback
          * incremantal callback : null
-         * preemptive : no
+         * preemptive : yes
          * mode : AMAYA_ASYNC | AMAYA_FLUSH_REQUEST | AMAYA_NOCACHE
          * We need AMAYA_ASYNC to delete the request object before  
          * the end of the application (without it, the request will 
@@ -1016,12 +1019,11 @@ BOOL DoUnlockRequest (int doc, AHTDAVContext *info) {
          * */
         context = DAVCreateDefaultContext (doc, url, info, \
                   FilterUnlock_handler, \
-                  (TTcbf *)DAVTerminate_callback, NULL, NO, \
+                  (TTcbf *)DAVTerminate_callback, NULL, YES, \
                   AMAYA_ASYNC | AMAYA_FLUSH_REQUEST | AMAYA_NOCACHE);
 
         if (context) {
             HTRequest *request = context->request;
-            HTRequest_setPreemptive (request,YES);
 
 #ifdef DEBUG_DAV    
             fprintf (stderr,"DoUnlockRequest.... setting request\n");
