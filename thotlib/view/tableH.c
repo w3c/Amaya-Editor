@@ -1673,20 +1673,20 @@ static void UpdateCellHeight (PtrAbstractBox cell, int frame)
   if (FrameTable[frame].FrView != 1)
     return;
 
-  if (Lock)
-    /* the table formatting is locked */
-    DifferFormatting (table, cell, frame);
-  else if (IsDifferredTable (table, NULL))
-    /* the table will be managed later */
-    return;
-  else
+  /* get row and table elements */
+  row = SearchEnclosingType (cell, BoRow, BoRow);
+  if (row  && row->AbBox)
     {
-      /* get row and table elements */
-      row = SearchEnclosingType (cell, BoRow, BoRow);
-      if (row  && row->AbBox)
+      table = (PtrAbstractBox) row->AbBox->BxTable;
+      if (table)
 	{
-	  table = (PtrAbstractBox) row->AbBox->BxTable;
-	  if (table)
+	  if (Lock)
+	    /* the table formatting is locked */
+	    DifferFormatting (table, cell, frame);
+	  else if (IsDifferredTable (table, NULL))
+	    /* the table will be managed later */
+	    return;
+	  else
 	    CheckRowHeights (table, frame);
 	}
     }
