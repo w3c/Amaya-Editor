@@ -2895,6 +2895,15 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				{
 				  /* the box becomes empty */
 				  /* update selection marks */
+				  if (!strcmp (pAb->AbPSchema->PsStructName,
+					       "TextFile"))
+				    {
+				      /* remove the current element */
+				      FirstSelectedChar = 1;
+				      NewContent (pAb);
+				      CutCommand (FALSE);
+				      return;
+				    }
 				  xDelta = BoxCharacterWidth (109, font);
 				  pViewSel->VsXPos = 0;
 				  pViewSel->VsIndBox = 0;
@@ -2908,7 +2917,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				}
 			      else if (previousChars == 0 && c != SPACE)
 				{
-				  /* delete a broken word or a Ctrl Return */
+				  /* delete a split word or a Ctrl Return */
 				  /* recompute the paragraph */
 				  toSplit = TRUE;
 				  /* move the selection mark to the previous box */

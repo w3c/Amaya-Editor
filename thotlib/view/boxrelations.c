@@ -789,7 +789,7 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
     {
       fprintf (stderr, "Position refers a dead box");
       pRefAb = NULL;
-    }
+    } 
   
   if (horizRef)
     {
@@ -955,6 +955,14 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	    }
 	  /* don't process this rule */
 	  pRefAb = NULL;
+	}
+      else if (pRefAb &&
+	       pRefAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
+	{
+	  /* refers an invisible box */
+	  pRefAb = NULL;
+	  rule.PosRefEdge = Top;
+	  rule.PosEdge = Top;
 	}
       
       if (pRefAb == NULL)
