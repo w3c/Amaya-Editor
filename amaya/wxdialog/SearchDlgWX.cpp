@@ -8,7 +8,7 @@
 
 #define THOT_EXPORT extern
 #include "amaya.h"
-#include "wxinclude.h"
+#include "appdialogue_wx.h"
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -35,26 +35,26 @@ SearchDlgWX::SearchDlgWX( wxWindow* parent,
   SetTitle( caption );
 
   // update dialog labels
-  XRCCTRL(*this, "wxID_SEARCH_FOR", wxStaticText)->SetLabel(wxString(TtaGetMessage (LIB, TMSG_SEARCH_FOR), AmayaApp::conv_ascii));
-  XRCCTRL(*this, "wxID_CHECK_CASE", wxCheckBox)->SetLabel(wxString(TtaGetMessage (LIB, TMSG_UPPERCASE_EQ_LOWERCASE), AmayaApp::conv_ascii));
+  XRCCTRL(*this, "wxID_SEARCH_FOR", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_SEARCH_FOR) ));
+  XRCCTRL(*this, "wxID_CHECK_CASE", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_UPPERCASE_EQ_LOWERCASE) ));
 
-  XRCCTRL(*this, "wxID_REPLACE_BY", wxStaticText)->SetLabel(wxString(TtaGetMessage (LIB, TMSG_REPLACE_BY), AmayaApp::conv_ascii));
+  XRCCTRL(*this, "wxID_REPLACE_BY", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_REPLACE_BY) ));
 
-  XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetLabel(wxString(TtaGetMessage (LIB, TMSG_REPLACE), AmayaApp::conv_ascii));
-  XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetString(0, wxString(TtaGetMessage (LIB, TMSG_NO_REPLACE), AmayaApp::conv_ascii));
-  XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetString(1, wxString(TtaGetMessage (LIB, TMSG_REPLACE_ON_REQU), AmayaApp::conv_ascii));
-  XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetString(2, wxString(TtaGetMessage (LIB, TMSG_AUTO_REPLACE), AmayaApp::conv_ascii));
+  XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_REPLACE) ));
+  XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetString(0, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_NO_REPLACE) ));
+  XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetString(1, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_REPLACE_ON_REQU) ));
+  XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetString(2, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_AUTO_REPLACE) ));
 
-  XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetLabel(wxString(TtaGetMessage (LIB, TMSG_SEARCH_WHERE), AmayaApp::conv_ascii));
-  XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetString(0, wxString(TtaGetMessage (LIB, TMSG_BEFORE_SEL), AmayaApp::conv_ascii));
-  XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetString(1, wxString(TtaGetMessage (LIB, TMSG_AFTER_SEL), AmayaApp::conv_ascii));
-  XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetString(2, wxString(TtaGetMessage (LIB, TMSG_WITHIN_SEL), AmayaApp::conv_ascii));
-  XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetString(3, wxString(TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC), AmayaApp::conv_ascii));
+  XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_SEARCH_WHERE) ));
+  XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetString(0, TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_BEFORE_SEL) ));
+  XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetString(1, TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_AFTER_SEL) ));
+  XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetString(2, TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_WITHIN_SEL) ));
+  XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetString(3, TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_IN_WHOLE_DOC) ));
 
   // update button labels
-  XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel(wxString(TtaGetMessage (LIB, TMSG_LIB_CONFIRM), AmayaApp::conv_ascii));
-  XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel(wxString(TtaGetMessage (LIB, TMSG_CANCEL), AmayaApp::conv_ascii));
-  XRCCTRL(*this, "wxID_NOREPLACEBUTTON", wxButton)->SetLabel(wxString(TtaGetMessage (LIB, TMSG_DO_NOT_REPLACE), AmayaApp::conv_ascii)); 
+  XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
+  XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
+  XRCCTRL(*this, "wxID_NOREPLACEBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_DO_NOT_REPLACE) )); 
 
   Layout();
   

@@ -6,7 +6,7 @@
 
 #define THOT_EXPORT extern
 #include "amaya.h"
-#include "wxinclude.h"
+#include "appdialogue_wx.h"
 
 #include "InitConfirmDlgWX.h"
 

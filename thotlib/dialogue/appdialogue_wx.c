@@ -12,6 +12,7 @@
 #include "registry.h"
 #include "appdialogue.h"
 #include "message.h"
+#include "appdialogue_wx.h"
 
 #include "appdialogue_f.h"
 #include "appdialogue_wx_f.h"
@@ -169,8 +170,7 @@ static void TtaMakeMenuBar( int frame_id, const char * schema_name )
 	{
 	  wxMenu * p_menu = new wxMenu;
 	  p_menu_bar->Append( p_menu,
-			      wxString( TtaGetMessage (THOT, ptrmenu->MenuID),
-					AmayaWindow::conv_ascii) );
+			      TtaConvMessageToWX( TtaGetMessage (THOT, ptrmenu->MenuID) ) );
 	  
 	  FrameTable[frame_id].WdMenus[i]      = p_menu;
 	  FrameTable[frame_id].EnabledMenus[i] = TRUE;
@@ -298,7 +298,7 @@ int TtaMakeFrame( const char * schema_name,
   
   
   /* the document title will be used to name the frame's page */
-  p_AmayaFrame->SetPageTitle( wxString(doc_name, AmayaWindow::conv_ascii) );
+  p_AmayaFrame->SetPageTitle( TtaConvMessageToWX( doc_name ) );
   
   /* Window volume in characters */
   *volume = GetCharsCapacity (width * height * 5);
@@ -743,14 +743,14 @@ void TtaSetURLBar( int frame_id,
 	  ptr1 = ptr;
 	  while (*ptr1 != EOS)
 	      ptr1++;
-	  urltoappend = wxString( ptr, AmayaWindow::conv_ascii );
+	  urltoappend = TtaConvMessageToWX( ptr );
 	  p_window->AppendURL( urltoappend );
 	  ptr = ptr1 + 1;
 	}
     }
 
   /* the first url in the list is the used one for the current frame */
-  wxString firsturl( listUrl, AmayaWindow::conv_ascii );
+  wxString firsturl = TtaConvMessageToWX( listUrl );
 
   /* setup the internal frame variable used to remember the frame's url string
    * this string is temporary and is updated each times the user modify the string.
@@ -871,7 +871,7 @@ int TtaAddToolBarButton( int window_id,
 						      ,wxDefaultPosition
 						      ,wxSize(32,32)
 						      ,wxBU_AUTODRAW | wxNO_BORDER | wxBU_EXACTFIT );
-      p_button->SetToolTip( wxString(tooltip, AmayaWindow::conv_ascii) );
+      p_button->SetToolTip( TtaConvMessageToWX( tooltip ) );
       p_toolbar->AddTool( p_button );
       WindowTable[window_id].Button[button_id]               = p_button;
       WindowTable[window_id].Button[button_id]->Enable( status );
@@ -889,3 +889,23 @@ int TtaAddToolBarButton( int window_id,
   return 0;
 #endif /* _WX */
 }
+
+/*----------------------------------------------------------------------
+  TtaConvMessageToWX - 
+  this is a specific wxWidget function which convert amaya message string into 
+  comprehensive wxWidgets wxString objects.
+  By default, input messages have UTF8 charset.
+  params:
+    + p_message : the message to convert (UTF8 by default)
+  returns:
+    + wxString : a wxString object (specific to wxWidgets)
+  ----------------------------------------------------------------------*/
+#ifdef _WX
+wxString TtaConvMessageToWX( const char * p_message )
+{
+  /* For the moment p_message is supposed to be UTF-8.
+   * If needed it's possible to add a conditionnal variable to choose the p_message encoding.
+   * See TtaGetMessageTable to understand how MessageTable are filled (in which encoding) */
+  return wxString( wxConvUTF8.cMB2WC(p_message), *wxConvCurrent );
+}
+#endif /* _WX */

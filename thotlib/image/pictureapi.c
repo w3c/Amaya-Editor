@@ -35,6 +35,7 @@
 
 #ifdef _WX
   #include "AmayaWindow.h"
+  #include "appdialogue_wx.h"
 #endif /* _WX */
 
 /*----------------------------------------------------------------------
@@ -68,7 +69,7 @@ ThotPixmap TtaCreateBitmap( const char * filename, int type )
     }
   
   /* create the picture form file */
-  pixmap = new wxBitmap( wxString( filename,AmayaWindow::conv_ascii ), wx_type );
+  pixmap = new wxBitmap( TtaConvMessageToWX( filename ), wx_type );
   return pixmap;
 #endif /* _WX */
 

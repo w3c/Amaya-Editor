@@ -8,6 +8,8 @@
   #include "wxdialog/TitleDlgWX.h"
   #include "wxdialog/SearchDlgWX.h"
   #include "AmayaApp.h"
+
+  #include "appdialogue_wx.h"
 #endif /* _WX */
 
 #define THOT_EXPORT extern
@@ -30,24 +32,24 @@ void CreateInitConfirmDlgWX ( ThotWindow parent,
 			      char *label )
 {
 #ifdef _WX
-  wxString wx_label(label, AmayaApp::conv_ascii);
-  wxString wx_title(TtaGetMessage (LIB, TMSG_LIB_CONFIRM), AmayaApp::conv_ascii);
+  wxString wx_label = TtaConvMessageToWX( label );
+  wxString wx_title = TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_LIB_CONFIRM) );
   wxString wx_extrabutton;
   wxString wx_confirmbutton;
 
   if (extrabutton && extrabutton[0] != EOS)
   {
     /* a message with 3 buttons */
-    wx_extrabutton = wxString(extrabutton, AmayaApp::conv_ascii);
+    wx_extrabutton = TtaConvMessageToWX( extrabutton );
     if (confirmbutton && confirmbutton[0] != EOS)
-      wx_confirmbutton = wxString(confirmbutton, AmayaApp::conv_ascii);
+      wx_confirmbutton = TtaConvMessageToWX( confirmbutton );
     else
-      wx_confirmbutton = wxString( TtaGetMessage(LIB, TMSG_LIB_CONFIRM), AmayaApp::conv_ascii);    
+      wx_confirmbutton = TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) );
   }
   else
   {
     /* just 2 buttons */
-    wx_extrabutton = wxString(TtaGetMessage (LIB, TMSG_LIB_CONFIRM), AmayaApp::conv_ascii);
+    wx_extrabutton = TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_LIB_CONFIRM) );
   }
 
   InitConfirmDlgWX * p_dlg = new InitConfirmDlgWX(
@@ -83,8 +85,8 @@ void CreateOpenDocDlgWX ( ThotWindow parent,
 			  DocumentType doc_type )
 {
 #ifdef _WX
-  wxString wx_title( title, AmayaApp::conv_ascii );
-  wxString wx_docName( docName, AmayaApp::conv_ascii );
+  wxString wx_title = TtaConvMessageToWX( title );
+  wxString wx_docName = TtaConvMessageToWX( docName );
 
   wxLogDebug( _T("CreateOpenDocDlgWX - title=")+wx_title+
 	      _T("\tdocName=")+wx_docName );
@@ -107,14 +109,14 @@ void CreateOpenDocDlgWX ( ThotWindow parent,
 	  ptr1 = ptr;
 	  while (*ptr1 != EOS)
 	      ptr1++;
-	  urltoappend = wxString( ptr, AmayaApp::conv_ascii );
+	  urltoappend = TtaConvMessageToWX( ptr );
 	  p_dlg->AppendURL( urltoappend );
 	  ptr = ptr1 + 1;
 	}
     }
 
   /* the first url in the list is the used one for the current frame */
-  wxString firsturl( urlList, AmayaApp::conv_ascii );
+  wxString firsturl = TtaConvMessageToWX( urlList );
   p_dlg->SetCurrentURL( firsturl );
   /* ---------------------------------------------------------- */
 
@@ -134,9 +136,8 @@ void CreateTitleDlgWX ( ThotWindow parent,
 			char *doc_title )
 {
 #ifdef _WX
-  wxString wx_title(TtaGetMessage (AMAYA, AM_CHANGE_TITLE),
-		    AmayaApp::conv_ascii);
-  wxString wx_doc_title(doc_title, AmayaApp::conv_ascii);
+  wxString wx_title = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_CHANGE_TITLE) );
+  wxString wx_doc_title = TtaConvMessageToWX( doc_title );
 
   wxLogDebug( _T("TitlelgWX - title=")+wx_title+
 	      _T("\tdoc_title=")+wx_doc_title );
@@ -160,7 +161,7 @@ void CreateTitleDlgWX ( ThotWindow parent,
 void CreateSearchDlgWX ( ThotWindow parent,  char* caption)
 {
 #ifdef _WX
-  wxString wx_caption(caption, AmayaApp::conv_ascii);
+  wxString wx_caption = TtaConvMessageToWX( caption );
 
   wxLogDebug( _T("SearchDlgWX - caption=")+wx_caption );
 

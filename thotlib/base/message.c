@@ -200,7 +200,7 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
 	  fseek (file, 0L, 0);
 	  encoding = ISO_8859_1;
 	}
-
+#ifndef _WX
       if (!strcmp (lan, "hu") || !strcmp (lan, "pl") || !strcmp (lan, "zh"))
 	/* Central Europe */
 #ifdef _WINDOWS
@@ -229,6 +229,12 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
 #else /* _WINDOWS */
 	DialogCharset = ISO_8859_1;
 #endif /* _WINDOWS */
+#endif /* _WX */
+
+#ifdef _WX
+	/* wxWidgets dialogues support utf8 strings (gtk2 feature) */
+	DialogCharset = UTF_8;
+#endif /* _WX */
 
       /* Load messages */
       while (fscanf (file, "%d %[^#\r\n]", &num, pBuff) != EOF &&
@@ -236,6 +242,7 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
 	{
     	  s = (char *)TtaGetMemory (strlen ((const char *)pBuff) + 1);
      	  strcpy (s, (const char *)AsciiTranslate ((char *)pBuff));
+#ifndef _WX
 	  if (encoding == UTF_8 && DialogCharset != UTF_8)
 	    {
 	      /* convert the string */
@@ -245,6 +252,24 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
 	    }
 	  else
 	    currenttable->TabMessages[num] = s;
+#endif /* _WX */
+
+#ifdef _WX
+	  /* now we convert every strings to UTF-8 (DialogCharset) */
+	  if (encoding == DialogCharset)
+	    {
+	      /* string source is allready in utf8 so no need to convert */
+	      currenttable->TabMessages[num] = s;
+	    }
+	  else
+	    {
+	      /* convert the string from Byte (ISO-LATIN-X) to Mbs (UTF-8) */
+	      ptr = (char *)TtaConvertByteToMbs ((unsigned char *)s, encoding);
+	      currenttable->TabMessages[num] = ptr;
+	      TtaFreeMemory (s);
+	    }
+#endif /* _WX */
+
 	}
       fclose (file);
     }

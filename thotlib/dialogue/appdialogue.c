@@ -1594,7 +1594,7 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		      wxASSERT(AmayaFrame::TOOLBAR_TOOL_START+i < AmayaFrame::TOOLBAR_TOOL_END);
 		      toolbar->AddTool(
 			AmayaFrame::TOOLBAR_TOOL_START+i, /* this is the button id => used to call the right callback when activated */
-			wxString( info, AmayaWindow::conv_ascii ),
+			TtaConvMessageToWX( (char *)info ),
 			*picture,			/* a picture (wxBitmap) generated before */
 			wxNullBitmap,
 			wxITEM_NORMAL,

@@ -12,9 +12,11 @@
  *          R. Guetari (W3C/INRIA) - Windows version
  *
  */
+
 #ifdef _WX
   #include "wx/wx.h"
 #endif /* _WX */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -35,19 +37,22 @@
 #include "callback_f.h"
 
 #ifdef _WINGUI
-#include "winsys.h"
-#include "wininclude.h"
+  #include "winsys.h"
+  #include "wininclude.h"
 #endif /* _WINGUI */
+
 #ifdef _GTK
-#include <gdk/gdkx.h>
-#include "gtk-functions.h" /* GTK prototype */
-extern int        appArgc;
-extern char**     appArgv;
-#endif /*_GTK */
+  #include <gdk/gdkx.h>
+  #include "gtk-functions.h" /* GTK prototype */
+  extern int        appArgc;
+  extern char**     appArgv;
+#endif /* _GTK */
+
 #ifdef _WX
-#include "AmayaFrame.h"
-#include "AmayaWindow.h"
-#include "AmayaCallback.h"
+  #include "AmayaFrame.h"
+  #include "AmayaWindow.h"
+  #include "AmayaCallback.h"
+  #include "appdialogue_wx.h"
 #endif /* _WX */
 
 #define THOT_EXPORT
@@ -60,13 +65,7 @@ extern char**     appArgv;
 #include "frame_tv.h"
 #include "font_tv.h"
 
-/* initialize dialogapi_tv.h global variables */
-//CallbackDialogueProc = (Proc)CallbackError;
-//WithMessages = TRUE;
-//ShowCat = NULL;
-
 #ifdef _WINGUI
-//  cyValue = 10;
 
 /*----------------------------------------------------------------------
   GetMenuParentNumber:  returns the Thot window number associated to a     
@@ -300,6 +299,7 @@ BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int 
   main (argc, argv);
   return (TRUE);
 }
+
 #endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
@@ -1188,8 +1188,8 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		    w = (ThotWidget) AmayaFrame::AppendMenuItem( 
 			menu,					/* parent */
 			ref + i,				/* id */
-			wxString( menu_item, AmayaWindow::conv_ascii ) +
-			_T("  " ) + wxString( equiv_item, AmayaWindow::conv_ascii ), 	/* label */
+			TtaConvMessageToWX( menu_item ) +
+			_T("  " ) + TtaConvMessageToWX( equiv_item ), 	/* label */
 			_T(""),					/* help */
 			wxITEM_NORMAL,				/* item kind */
 			AmayaContext(catalogue) );		/* callback context */
@@ -1235,14 +1235,14 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		    sprintf (menu_item, "%s", &text[index + 1]);
 
 		    wxLogDebug( _T("new wxMenuItem(toggle): name=") +
-			        wxString( menu_item, AmayaWindow::conv_ascii ) +
+			        TtaConvMessageToWX( menu_item ) +
 				_T("\tref=%d\tparent=%x"), ref, menu );
 
 		    w = (ThotWidget) AmayaFrame::AppendMenuItem( 
 			menu,					/* parent */
 			ref + i,				/* id */
-			wxString( menu_item, AmayaWindow::conv_ascii ) +
-			_T("  " ) + wxString( equiv_item, AmayaWindow::conv_ascii ), 	/* label */
+			TtaConvMessageToWX( menu_item ) +
+			_T("  " ) + TtaConvMessageToWX( equiv_item ), 	/* label */
 			_T(""),					/* help */
 			wxITEM_CHECK,				/* item kind */
 			AmayaContext(catalogue) );		/* callback */
@@ -1299,15 +1299,15 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		    /* En attendant le sous-menu on cree un bouton */
 #ifdef _WX
 		    sprintf (menu_item, "%s", &text[index + 1]);
-
+		    
 		    wxLogDebug( _T("new wxMenu(submenu): name=") +
-			        wxString( menu_item, AmayaWindow::conv_ascii ) +
+			        TtaConvMessageToWX( menu_item ) +
 				_T("\tref=%d\tparent=%x"), ref, menu );
 		    
 		    w = (ThotWidget) AmayaFrame::AppendSubMenu( 
 			menu, /* parent */
 			ref + i,
-			wxString( menu_item, AmayaWindow::conv_ascii ),	/* label */
+			TtaConvMessageToWX( menu_item ),	/* label */
 			_T("") ); /* help */
 
 		    /* w is a wxMenuItem ! */
@@ -2644,7 +2644,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #ifdef _WX
 	      if (!rebuilded)
 		{
-		  menu->SetTitle( wxString( title, AmayaWindow::conv_ascii ) );
+		  menu->SetTitle( TtaConvMessageToWX( title ) );
 		  
 		  /* it's not needed to free later this label */
 		  adbloc->E_ThotWidget[1] = 0;
@@ -2699,8 +2699,8 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 
 		      w = (ThotWidget) AmayaFrame::AppendMenuItem( menu,
 								   ref + i,
-								   wxString( menu_item, AmayaWindow::conv_ascii ) +
-								   _T("  " ) + wxString( equiv_item, AmayaWindow::conv_ascii ), 	/* label */
+								   TtaConvMessageToWX( menu_item ) +
+								   _T("   " ) + TtaConvMessageToWX( equiv_item ), 	/* label */
 								   _T(""),
 								   wxITEM_NORMAL,
 								   AmayaContext(catalogue) );
@@ -2759,13 +2759,13 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      sprintf (menu_item, "%s", &text[index + 1]);
 
 		      wxLogDebug( _T("new wxMenuItem(toggle): name=") +
-				  wxString( menu_item, AmayaWindow::conv_ascii ) +
+				  TtaConvMessageToWX( menu_item ) +
 				  _T("\tref=%d\tparent=%x"), ref, menu );
 
 		      w = (ThotWidget) AmayaFrame::AppendMenuItem( menu,
 								   ref + i,
-								   wxString( menu_item, AmayaWindow::conv_ascii ) +
-								   _T("  " ) + wxString( equiv_item, AmayaWindow::conv_ascii ), 	/* label */
+								   TtaConvMessageToWX( menu_item ) +
+								   _T("   " ) + TtaConvMessageToWX( equiv_item ), 	/* label */
 								   _T(""),
 								   wxITEM_CHECK,
 								   AmayaContext(catalogue) );
@@ -2825,13 +2825,13 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		    sprintf (menu_item, "%s", &text[index + 1]);
 
 		    wxLogDebug( _T("new wxMenu(submenu): name=") +
-			        wxString( menu_item, AmayaWindow::conv_ascii ) +
+			        TtaConvMessageToWX( menu_item ) +
 				_T("\tref=%d\tparent=%x"), ref, menu );
 		    
 		    w = (ThotWidget) AmayaFrame::AppendSubMenu( 
 			menu, /* parent */
 			ref + i,
-			wxString( menu_item, AmayaWindow::conv_ascii ),	/* label */
+			TtaConvMessageToWX( menu_item ),	/* label */
 			_T("") ); /* help */
 
 		    adbloc->E_ThotWidget[ent] = (ThotWidget)w;

@@ -74,6 +74,7 @@ static PtrDocument  OldDocMsgSelect;
 #ifdef _WX
   #include "AmayaWindow.h"
   #include "AmayaFrame.h"
+  #include "appdialogue_wx.h"
 #endif /* _WX */
 #ifdef _GTK
   #include "gtk-functions.h"
@@ -1620,7 +1621,7 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 	     * do not use the FrameTable[frame].WdStatus field because it's simplier
 	     * to update only the frame's parent window
 	     */
-	    FrameTable[frame].WdFrame->SetStatusBarText( wxString( s, AmayaWindow::conv_ascii ) );
+	    FrameTable[frame].WdFrame->SetStatusBarText( TtaConvMessageToWX( s ) );
 #endif /* _WX */
 	    
 	    TtaFreeMemory (s);
@@ -3342,7 +3343,7 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
 #ifdef _WX
   p_frame = FrameTable[frame].WdFrame;
   if ( p_frame )
-    p_frame->SetPageTitle( wxString((const char *)title, AmayaWindow::conv_ascii) );
+    p_frame->SetPageTitle( TtaConvMessageToWX( (char *)title ) );
 #else /* _WX */
   /* Add the Amaya version */
   s = (unsigned char *)TtaGetMemory (strlen ((const char *)title) + strlen (HTAppVersion) + 10);

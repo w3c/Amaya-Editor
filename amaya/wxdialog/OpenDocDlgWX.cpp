@@ -8,7 +8,7 @@
 
 #define THOT_EXPORT extern
 #include "amaya.h"
-#include "wxinclude.h"
+#include "appdialogue_wx.h"
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -40,10 +40,10 @@ OpenDocDlgWX::OpenDocDlgWX( wxWindow* parent,
 
   // update dialog labels with given ones
   SetTitle( title );
-  XRCCTRL(*this, "wxID_LABEL",        wxStaticText)->SetLabel(wxString(TtaGetMessage(AMAYA,AM_LOCATION),AmayaApp::conv_ascii));
-  XRCCTRL(*this, "wxID_OPENBUTTON",   wxButton)->SetLabel(wxString(TtaGetMessage(AMAYA,AM_OPEN_URL),AmayaApp::conv_ascii));
-  XRCCTRL(*this, "wxID_BROWSEBUTTON", wxButton)->SetLabel(wxString(TtaGetMessage(AMAYA,AM_BROWSE),AmayaApp::conv_ascii));
-  XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel(wxString(TtaGetMessage(LIB,TMSG_CANCEL),AmayaApp::conv_ascii));
+  XRCCTRL(*this, "wxID_LABEL",        wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_LOCATION) ));
+  XRCCTRL(*this, "wxID_OPENBUTTON",   wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_OPEN_URL) ));
+  XRCCTRL(*this, "wxID_BROWSEBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_BROWSE) ));
+  XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_CANCEL) ));
 
   // TODO ? peutetre mettre un boutton CLEAR
   // SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), TtaGetMessage (AMAYA, AM_CLEAR));
@@ -115,7 +115,7 @@ void OpenDocDlgWX::OnBrowseButton( wxCommandEvent& event )
   wxFileDialog dialog
     (
      this,
-     wxString( TtaGetMessage (AMAYA, AM_OPEN_URL), AmayaApp::conv_ascii ),
+     TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
      _T(""),
      _T(""), 
      _T("HTML files (*.htm;*.html)|*.htm;*.html")
