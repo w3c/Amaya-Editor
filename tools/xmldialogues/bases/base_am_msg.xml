@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Mon Jun  3 14:02:32 CEST 2002" version="44">
+<base last_update="Thu Jul 11 11:48:25 CEST 2002" version="45">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -2270,7 +2270,7 @@
 </label>
 <label define="AM_USE_XHTML_MIMETYPE">
 	<message xml:lang="en">Use the application/xhtml+xml MIME type for XHTML documents</message>
-	<message xml:lang="fr">Utiliser le type MIME application/xhtml+xml pour	les documents XHTML</message>
+	<message xml:lang="fr">Utiliser le type MIME application/xhtml+xml pour les documents XHTML</message>
 	<message xml:lang="de">MIME-Typ application/xhtml+xml für XHTML-Dokumente verwenden</message>
 	<message xml:lang="it">Per un documento XHTML, usa il MIME type application/xhtml+xml</message>
 	<message xml:lang="es">Para documentos XHTML utilice el tipo MIME de la aplicación xhtml+xml</message>
@@ -2308,7 +2308,7 @@
 </label>
 <label define="AM_COPY_LOCK">
 	<message xml:lang="en">Copy the lock information? </message>
-	<message xml:lang="fr">Copier les informations du verrou?? </message>
+	<message xml:lang="fr">Copier les informations du verrou??</message>
 	<message xml:lang="pt">Copiar informação da trava? </message>
 </label>
 <label define="AM_UNLOCK_BEFORE">
@@ -2338,7 +2338,7 @@
 </label>
 <label define="AM_UNLOCK_DOCUMENT">
 	<message xml:lang="en">Unlock the document? </message>
-	<message xml:lang="fr">Déverrouillé le document? </message>
+	<message xml:lang="fr">Déverrouillé le document?</message>
 	<message xml:lang="pt">Destravar o documento? </message>
 </label>
 <label define="AM_DAV_PROPERTIES">
@@ -2393,7 +2393,7 @@
 </label>
 <label define="AM_DAV_TRY_AGAIN">
 	<message xml:lang="en">Try again? </message>
-	<message xml:lang="fr">Ressayez? </message>
+	<message xml:lang="fr">Ressayez?</message>
 	<message xml:lang="pt">Tentar de novo? </message>
 </label>
 <label define="AM_DAV_PREFERENCES">
@@ -2474,6 +2474,50 @@
 <label define="AM_BUTTON_ANIM">
 	<message xml:lang="en">Timeline</message>
 	<message xml:lang="fr">Ligne de temps</message>
+</label>
+<label define="AM_BUTTON_SVG_LIBRARY">
+	<message xml:lang="en">SVG Library</message>
+	<message xml:lang="fr">Bibliotheque SVG</message>
+</label>
+<label define="AM_SVGLIB_DIALOG1">
+	<message xml:lang="en">Copy option</message>
+	<message xml:lang="fr">Option de copie</message>
+</label>
+<label define="AM_SVGLIB_COPY_SELECTION">
+	<message xml:lang="en">Copy selection</message>
+	<message xml:lang="fr">Copier</message>
+</label>
+<label define="AM_SVGLIB_REF_SELECTION">
+	<message xml:lang="en">Refer to selection</message>
+	<message xml:lang="fr">Réferencer</message>
+</label>
+<label define="AM_SVGLIB_ADD_SVG_MODEL_DIALOG">
+	<message xml:lang="en">Add new model into library</message>
+	<message xml:lang="fr">Ajouter un modèle dans la librairie</message>
+</label>
+<label define="AM_SVGLIB_CREATE_NEW_SVG_FILE">
+	<message xml:lang="en">URL of the new SVG file ...</message>
+	<message xml:lang="fr">URL du nouveau fichier SVG ...</message>
+</label>
+<label define="AM_SVGLIB_CATALOGUE_TITLE">
+	<message xml:lang="en">Library title</message>
+	<message xml:lang="fr">Titre de la librairie</message>
+</label>
+<label define="AM_SVGLIB_CATALOGUE_URL">
+	<message xml:lang="en">Library URI</message>
+	<message xml:lang="fr">URI de la librairie</message>
+</label>
+<label define="AM_SVGLIB_CREATE_NEW_CATALOGUE">
+	<message xml:lang="en">Create library</message>
+	<message xml:lang="fr">Créer une librairie</message>
+</label>
+<label define="AM_SVGLIB_ADD_NEW_CATALOGUE">
+	<message xml:lang="en">Add library</message>
+	<message xml:lang="fr">Ajouterune librairie</message>
+</label>
+<label define="AM_SVGLIB_CREATE_NEW_CATALOGUE_DIALOG">
+	<message xml:lang="en">Create or search library</message>
+	<message xml:lang="fr">Créer ou chercher une librairie</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>
