@@ -77,6 +77,7 @@
 #include "appdialogue_f.h"
 #include "docs_f.h"
 #include "frame_f.h"
+#include "closedoc_f.h"
 
 static AvailableView AllViews;
 static int          ViewMenuItem[MAX_VIEW_OPEN];
@@ -1416,18 +1417,18 @@ int                *nItems;
 
 
 /*----------------------------------------------------------------------
-   CloseView ferme la vue de numero view du document pDoc, ou le
+   CloseView ferme la vue de numero viewNb du document pDoc, ou le
    document complet s'il s'agit de la derniere vue de ce document. 
    Si assoc est vrai, view un numero d'elements associe's          
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                CloseView (PtrDocument pDoc, int view, boolean assoc)
+void                CloseView (PtrDocument pDoc, int viewNb, boolean assoc)
 
 #else  /* __STDC__ */
-void                CloseView (pDoc, view, assoc)
+void                CloseView (pDoc, viewNb, assoc)
 PtrDocument         pDoc;
-int                 view;
+int                 viewNb;
 boolean             assoc;
 
 #endif /* __STDC__ */
@@ -1435,15 +1436,20 @@ boolean             assoc;
 {
    NotifyDialog        notifyDoc;
    boolean             ok, Save;
+   View                view;
+   Document            document;
 
    if (pDoc != NULL)
      {
-	notifyDoc.event = TteViewClose;
-	notifyDoc.document = (Document) IdentDocument (pDoc);
+        document = (Document) IdentDocument (pDoc);
 	if (assoc)
-	   notifyDoc.view = view + 100;
+	   view = viewNb + 100;
 	else
-	   notifyDoc.view = view;
+	   view = viewNb;
+        
+	notifyDoc.event = TteViewClose;
+	notifyDoc.document = document;
+	notifyDoc.view = view;
 	if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	  {
 	     if (NumberOfOpenViews (pDoc) <= 1)
@@ -1453,15 +1459,19 @@ boolean             assoc;
 		  if (pDoc->DocModified)
 		    {
 		       ok = TRUE;
-		       if (ThotLocalActions[T_confirmclose] != NULL)
+		       /* Faut-il creer le formulaire TtcCloseDocument */
+		       if (ThotLocalActions[T_confirmclose] == NULL)
 			 {
-			    (*ThotLocalActions[T_confirmclose]) (pDoc, &ok, &Save);
-			    if (Save)
-			      {
-				 if (DocOfSavedElements == pDoc)
-				    FreeSavedElements ();
-				 ok = WriteDocument (pDoc, 0);
-			      }
+			   /* Connecte le traitement de la TtcCloseDocument */
+			   TteConnectAction (T_confirmclose, (Proc) AskToConfirm);
+			   TteConnectAction (T_rconfirmclose, (Proc) CallbackCloseDocMenu);
+			 }
+		       (*ThotLocalActions[T_confirmclose]) (pDoc, document, view, &ok, &Save);
+		       if (Save)
+			 {
+			   if (DocOfSavedElements == pDoc)
+			     FreeSavedElements ();
+			   ok = WriteDocument (pDoc, 0);
 			 }
 		    }
 		  else
