@@ -1047,7 +1047,7 @@ int UnicodeFontRender (void *gl_font,
   float		     maxy, miny, shift;
   int                Width, Height;
   register int       pen_x, n;
-  static int FontBind = 0;
+  int FontBind;
 
   if (text == NULL) 
     return 0;
@@ -1179,18 +1179,20 @@ int UnicodeFontRender (void *gl_font,
 	}
     }
   y -= (float) SUPERSAMPLING (miny + Height);
-  glEnable (GL_TEXTURE_2D);
-  if (FontBind == 0)
-    glGenTextures (1, &(FontBind));
-  glBindTexture (GL_TEXTURE_2D, 
-		 FontBind);
 
+  glEnable (GL_TEXTURE_2D);
+  
+  
+  glGenTextures (1, &(FontBind));
+  glBindTexture (GL_TEXTURE_2D, 
+  	 FontBind);
+  
   GL_TextureInit (data,
 		  (GLfloat) Width,
 		  (GLfloat) Height);
   if (data)
     TtaFreeMemory (data);
-  
+ 
   /*
     n--;
     pen_x = bitmap_pos[n].x + 
@@ -1206,8 +1208,9 @@ int UnicodeFontRender (void *gl_font,
   
   
   
-    glDeleteTextures (1, &(FontBind));
-  
+   glDeleteTextures (1, &(FontBind));
+   
+   
 
   /* If there is no cache we must free
      allocated glyphs   */

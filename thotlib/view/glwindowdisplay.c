@@ -32,7 +32,7 @@
 #include "appdialogue_tv.h"
 #include "thotcolor_tv.h"
 
-
+#include "appli_f.h"
 #include "buildboxes_f.h"
 #include "displaybox_f.h"
 #include "displayselect_f.h"
@@ -168,9 +168,11 @@ static int GL_Background[50];
   ----------------------------------------------------------------------*/
 void ClearAll (int frame)
 {
-  if (GL_MakeCurrent(frame))
-    return;
-  glClear (GL_COLOR_BUFFER_BIT);
+  if (GL_prepare (frame))
+    {
+      glClear (GL_COLOR_BUFFER_BIT);
+      GL_Swap (frame);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -198,17 +200,29 @@ void Clear (int frame,
 	    int width, int height,
 	    int x, int y)
 {
-  if (GL_MakeCurrent(frame))
-    return;
-  FrameTable[frame].DblBuffNeedSwap = TRUE; 
-  y = y + FrameTable[frame].FrTopMargin;
-  GL_SetForeground (GL_Background[frame]); 
-  glBegin (GL_QUADS);
-  glVertex2i (x, y); 
-  glVertex2i (x, y + height);
-  glVertex2i (x +  width, y + height);
-  glVertex2i (x + width, y);
-  glEnd ();
+  int w,h;
+  
+  if (GL_prepare (frame))
+    {
+      /*(
+      if (x == 0 && y == 0)
+	{
+	  GetSizesFrame (frame, &w, &h);
+	  if (width == w && height == h)
+	    ClearAll (frame);
+	  return;	  
+	  } 
+      */     
+      FrameTable[frame].DblBuffNeedSwap = TRUE; 
+      y = y + FrameTable[frame].FrTopMargin;
+      GL_SetForeground (GL_Background[frame]); 
+      glBegin (GL_QUADS);
+      glVertex2i (x, y); 
+      glVertex2i (x, y + height);
+      glVertex2i (x +  width, y + height);
+      glVertex2i (x + width, y);
+      glEnd ();
+    }
 }
 #endif /*_WIN_PRINT*/
 
@@ -398,18 +412,18 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
   hDC = 0;
   hDC = GetDC (hwndClient);	
   if (!hDC) 
-	{      
-		MessageBox(NULL, "ERROR!", "No device context", MB_OK); 
-		return;    
-	}
+    {      
+      MessageBox(NULL, "ERROR!", "No device context", MB_OK); 
+      return;    
+    }
   else
-  {
-   for (frame_index = 0 ; frame_index <= MAX_FRAME; frame_index++)
-	  {  
-	    if (GL_Windows[frame_index] == hDC) 
-			return;
-	  }
-  }
+    {
+      for (frame_index = 0 ; frame_index <= MAX_FRAME; frame_index++)
+	{  
+	  if (GL_Windows[frame_index] == hDC) 
+	    return;
+	}
+    }
   found = FALSE;       
   if (frame <= 0)
     {
@@ -435,8 +449,12 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
     }
   GL_SetupPixelFormat (hDC);
   hGLRC = wglCreateContext (hDC);
+  GL_Windows[frame] = hDC;
+  GL_Context[frame] = hGLRC;
+#ifdef _SHARELIST
   if (GL_Context[1]) 
     wglShareLists (GL_Context[1], hGLRC);
+#endif /*_SHARELIST*/
   if (wglMakeCurrent (hDC, hGLRC))
     {
       SetGlPipelineState ();
@@ -444,15 +462,13 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
 	{
 	  InitDialogueFonts ("");
 	  dialogfont_enabled = TRUE;
-      for (frame_index = 0 ; frame_index <= MAX_FRAME; frame_index++)
-	  {  
-	    GL_Windows[frame_index] = 0;
-        GL_Context[frame_index] = 0;
-	  }
+	  for (frame_index = 0 ; frame_index <= MAX_FRAME; frame_index++)
+	    {  
+	      GL_Windows[frame_index] = 0;
+	      GL_Context[frame_index] = 0;
+	    }
 	}
     }
-  GL_Windows[frame] = hDC;
-  GL_Context[frame] = hGLRC;
   ActiveFrame = frame;
 }
 
@@ -1154,50 +1170,42 @@ int CharacterWidth (int c, PtrFont font)
     }
   return l;
 }
-
+/*----------------------------------------------------------------------
+   GL_Swap : swap frontbuffer with backbuffer (display changes)
+  ----------------------------------------------------------------------*/
 void GL_Swap (int frame)
 {
   if (frame < MAX_FRAME)
 #ifdef _WINDOWS
-    SwapBuffers (GL_Windows[frame]);
+    if (GL_Windows[frame])
+      SwapBuffers (GL_Windows[frame]);
 #else
-  gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
+  if (FrameTable[frame].WdFrame)
+    gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
 #endif /*_WINDOWS*/
 }
-/*----------------------------------------------------------------------
-   GL_MakeCurrent : Point to correct buffer to draw into
-   If it cannot renders, return 1
-   use as
-   if (Makecurrrent) exit()
-  ----------------------------------------------------------------------*/
-int GL_MakeCurrent (int frame)
-{
-  if (frame < MAX_FRAME)
-    if (FrRef[frame])
-#ifdef _WINDOWS
-      if (!wglMakeCurrent (GL_Windows[frame], 
-			   GL_Context[frame]))
-	return 1;		
-#else /*_WINDOWS*/
-      if (!gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
-	return 1;
-#endif /*_WINDOWS*/
-      /*ActiveFrame = frame;      */
-  return 0;
-}
+
 /*----------------------------------------------------------------------
    GL_prepare: If a modif has been done
   ----------------------------------------------------------------------*/
-ThotBool GL_prepare (ThotWidget *widget, int frame)
+ThotBool GL_prepare (int frame)
 {  
 
   if (frame < MAX_FRAME)
     {
       FrameTable[frame].DblBuffNeedSwap = TRUE;
-      if (GL_MakeCurrent (frame))
-	return FALSE;
-      else
+
+    if (FrRef[frame])
+#ifdef _WINDOWS
+      if (GL_Windows[frame])
+	if (wglMakeCurrent (GL_Windows[frame], 
+			    GL_Context[frame]))
+	return TRUE;		
+#else /*_WINDOWS*/
+    if (FrameTable[frame].WdFrame)
+      if (gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
 	return TRUE;
+#endif /*_WINDOWS*/
     }
   return FALSE;
 }
@@ -1222,7 +1230,6 @@ void GL_ActivateDrawing(int frame)
   ----------------------------------------------------------------------*/
 void GL_DrawAll (ThotWidget widget, int frame)
 {  
-#ifdef _GTK
 #ifdef _PCLDEBUGTIME
 
   /* draw and calculate draw time 
@@ -1250,20 +1257,28 @@ void GL_DrawAll (ThotWidget widget, int frame)
 		    != NoComputedDisplay)
 		  {
 		    widget = FrameTable[frame].WdFrame;
-		    if (widget)
-		      if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
-			{
+		    if (GL_prepare (frame))
+		      	{
 #ifdef _PCLDEBUGTIME
 			  ftime(&before);
 
 #endif /*_PCLDEBUG*/ 
 			  GL_Drawing = TRUE;  	   
 			  
+			  RedrawFrameBottom (frame, 0, NULL);
 			  glFinish ();
-			  gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
+			  /*
+			    saveBuffer (FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
+			  */
+			  GL_Swap (frame);
 			  if (GL_Err())
+#ifdef _GTK
 			    g_print ("Bad drawing\n"); 
-			  GL_Drawing = FALSE;
+#else /*_GTK*/
+			  WinErrorBox (NULL, "Bad drawing\n");
+#endif /*_GTK*/
+			  
+
 #ifdef _PCLDEBUGTIME
 			  ftime(&after);	
 			  
@@ -1276,6 +1291,7 @@ void GL_DrawAll (ThotWidget widget, int frame)
 			    } 
 			  
 #endif /*_PCLDEBUG*/
+			  GL_Drawing = FALSE;
 			  FrameTable[frame].DblBuffNeedSwap = FALSE;
 			}
 		  }
@@ -1283,40 +1299,6 @@ void GL_DrawAll (ThotWidget widget, int frame)
 	    }
 	}
     }    
-#else /*_GTK*/
-if (!GL_Drawing && !FrameUpdating )
-    {
-      for (frame = 1 ; frame < MAX_FRAME; frame++)
-	{
-	  if (GL_Windows[frame] != 0)
-	    {
-	      
-	      if (FrameTable[frame].DblBuffNeedSwap)
-		{
-		  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] 
-		      != NoComputedDisplay)
-		    {
-		      
-		      if (wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
-			{ 
-			  GL_Drawing = TRUE; 
-			  RedrawFrameBottom (frame, 0, NULL);
-			  glFinish ();	 
-			  /*
-			    saveBuffer (FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
-			  */
-			  SwapBuffers (GL_Windows[frame]);
-			  if (GL_Err())
-			    WinErrorBox (NULL, "Bad drawing\n");
-			  GL_Drawing = FALSE;
-			}        
-		      FrameTable[frame].DblBuffNeedSwap = FALSE;
-		    }
-		}
-	    }
-	}
-    }
-#endif /*_GTK*/ 
 }
 
 #define GLU_ERROR_MSG "\nSorry, Amaya requires GLU 1.2 or later.\n"
@@ -1487,8 +1469,7 @@ void GL_window_copy_area (int frame,
 			  int height)
 {
 
-      if (GL_MakeCurrent (frame) || 
-	  FrRef[frame] == None)
+      if (GL_prepare (frame) == FALSE)
       	return;  
       /*  If not in software mode,
 	  glcopypixels is 1000x slower than a redraw	*/
@@ -1496,6 +1477,7 @@ void GL_window_copy_area (int frame,
       /*if (glMatroxBUG (frame, xf, yf, width, height))
 	return;*/
       
+
       /* Horizontal Scroll problems...*/
       if (xf < 0)
 	{
@@ -1553,6 +1535,7 @@ void GL_window_copy_area (int frame,
 	  /* Copy from backbuffer to backbuffer */
 	  glFinish ();
 	  glDisable (GL_BLEND);
+
 	  glDisable (GL_DITHER);
 	  glRasterPos2i (xf, yf+height);	  
 	  /*IF Rasterpos is outside canvas...
@@ -1569,17 +1552,17 @@ void GL_window_copy_area (int frame,
 		       -1,
 		       NULL);
 	    }
+
 	  glCopyPixels (x_source,   
 			y_source,
 			width,
 			height,
 			GL_COLOR); 
 	  glEnable (GL_BLEND);
-	  glEnable (GL_DITHER);	  
+	  glEnable (GL_DITHER);
+	  /*copy from back to front */
 	  glFinish ();
-
 	  FrameTable[frame].DblBuffNeedSwap = TRUE;
-	  
 	}
 }
 
@@ -1734,9 +1717,6 @@ int make_carre()
    glPopMatrix(); 
    return 0;
 }
-
-
-
 
 int  savetga (const char *filename, 
 		 unsigned char *Data,

@@ -36,6 +36,9 @@
 #ifdef _GL
 #include <GL/gl.h>
 #include "glwindowdisplay.h"
+#ifdef _GTK
+#include <gtkgl/gtkglarea.h>
+#endif /*_GTK*/
 #endif /*_GL*/
 
 #ifdef _WINDOWS
@@ -588,6 +591,14 @@ gboolean  GL_Destroy (ThotWidget widget, GdkEventExpose *event,
  
   frame = (int) data;
   FreeAllPicCacheFromFrame (frame);
+
+{
+GtkGLArea *gl_area;
+
+ gl_area = GTK_GL_AREA(widget);
+ gdk_gl_context_unref(gl_area->glcontext);
+}
+ 
   return TRUE ;
 }
 
@@ -600,7 +611,7 @@ gboolean  GL_Init (ThotWidget widget,
 		   gpointer data)
 {
   static ThotBool dialogfont_enabled = FALSE;
-
+ 
   if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
     {       
 
@@ -644,11 +655,8 @@ gboolean ExposeCallbackGTK (ThotWidget widget,
     return TRUE;
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return TRUE; 
-  if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
-    { 
-      glMatroxBUG (frame, x, y, width, height);
-      gtk_gl_area_swapbuffers (GTK_GL_AREA (widget));
-    }
+  if (GL_prepare (frame))
+      GL_Swap (frame);
   return TRUE;
 }
 /*----------------------------------------------------------------------
@@ -676,21 +684,17 @@ gboolean FrameResizedGTK (GtkWidget *widget,
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return TRUE; 
   if (widget)
-    if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
+    if (GL_prepare (frame))
       {
 	FrameTable[frame].FrWidth = width;
 	FrameTable[frame].FrHeight = height;
 	GLResize (width, height, 0, 0);
-	GL_ActivateDrawing (frame);
 	DefRegion (frame, 
 		   0, 0,
 		   width, height);
-	FrameRedraw (frame, width, height);
-	
+	FrameRedraw (frame, width, height);	
 	while (gtk_events_pending ()) 
-	  gtk_main_iteration ();
-	
-	
+	  gtk_main_iteration ();	
       }
   return TRUE;
 }
@@ -3408,7 +3412,6 @@ void UpdateScrollbars (int frame)
     gtk_widget_hide (GTK_WIDGET (hscroll));
   else if (width + x <= l)
     {
-      gtk_widget_show (GTK_WIDGET (hscroll));
       tmpw = gtk_range_get_adjustment (GTK_RANGE (hscroll));
       tmpw->lower = (gfloat) 0;
       tmpw->upper = (gfloat) l;
@@ -3417,15 +3420,13 @@ void UpdateScrollbars (int frame)
       tmpw->step_increment = (gfloat) 8;
       tmpw->value = (gfloat) x;
       gtk_adjustment_changed (tmpw);
+      gtk_widget_show (GTK_WIDGET (hscroll));
     }
-  else
-    gtk_widget_show (GTK_WIDGET (hscroll));
 
   if (height >= h && y == 0)
     gtk_widget_hide (GTK_WIDGET (vscroll));
   else if (height + y <= h)
     {
-      gtk_widget_show (GTK_WIDGET (vscroll));
       tmpw = gtk_range_get_adjustment (GTK_RANGE (vscroll));
       tmpw->lower = (gfloat) 0;
       tmpw->upper = (gfloat) h;
@@ -3434,9 +3435,8 @@ void UpdateScrollbars (int frame)
       tmpw->step_increment = (gfloat) 6;
       tmpw->value = (gfloat) y;
       gtk_adjustment_changed (tmpw);
+      gtk_widget_show (GTK_WIDGET (vscroll));
     }
-  else
-    gtk_widget_show (GTK_WIDGET (vscroll));
 
 #endif /*_GTK*/  
 #else  /* _WINDOWS */

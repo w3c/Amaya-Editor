@@ -135,13 +135,9 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-15");
 	  break;
 	}
-      if (highlight == 0)
+
 	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
-      else if (highlight == 2 || highlight == 3)
-	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
-	/* XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM); */
-      else
-	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);
+
       if (highlight == 0 || highlight == 1)
 	XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN);
       else

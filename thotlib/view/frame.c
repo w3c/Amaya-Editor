@@ -648,8 +648,7 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
       WIN_GetDeviceContext (frame);
 #endif /* __WINDOWS && !_WINT_PRINT */
 #ifdef _GL      
-      if (GL_prepare((ThotWidget *) FrameTable[frame].WdFrame, 
-		     frame))
+      if (GL_prepare (frame))
 	{
 #endif /* _GL */
 	  DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
@@ -834,7 +833,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
       if (xmin < xmax && ymin < ymax)
 	{ 
 #ifdef _GL
-	  if (GL_prepare((ThotWidget *) FrameTable[frame].WdFrame, frame))
+	  if (GL_prepare (frame))
 	    {
 #endif /*_GL*/
 	      
