@@ -290,87 +290,88 @@
 288 Dokumenttityypin luonti/muuttaminen saa aikaan uudellenk‰‰nt‰misen.
 289 Odottavia muutoksia ei voi kumota.
 290 K‰yt‰ application/xhtml+xml MIME tyypi‰ XHTML dokumenttien yhteydess‰
-291 Lukitus onnistui!
-292 Lukitus ep‰onnistui!
-293 Lukitaan %s...
-294 Dokumentti %s on lukittu!
-295 Dokumentin %s on lukinnut %s (aikakatkaisu %s)
-296 Korvataanko lukitustiedot?
-297 Kopioidaanko lukitustiedot?
-298 Yrit‰ poistaa lukitus ensin...
-299 Lukituksen poisto onnistui!
-300 Lukituksen poisto ep‰onnistui!
-301 Poistetaan lukitus %s...
-302 Poistettu lukitus dokumentista: %s
-303 Poista lukitus dokumentista?
-304 Dokumentin ominaisuudet
-305 Dokumentin ominaisuuksia ei saatavilla
-306 Dokumentin ominaisuuksia ei ole v‰liaikaisesti saatavilla. Yrit‰ myˆhemmin uudelleen...
-307 Haetaan dokumentin ominaisuuksia...
-308 T‰lle URL:lle ei ole WebDav-tukea %s
-309 Lukitustietojen tallennus paikallisesti ep‰onnistui
-310 Lukitustietojen poisto paikallisesti ep‰onnistui
-311 T‰m‰ toiminto ei ole k‰ytett‰viss‰ %s
-312 Pyyntˆ ep‰onnistui! Syy: Viallinen riippuvuus
-313 Pyyntˆ ep‰onnistui! Syy: %s
-314 Yrit‰ uudelleen?
-315 WebDAV asetukset
-316 K‰ytt‰j‰n henkilˆkohtainen linkki (URL)
-317 K‰ytt‰j‰n WebDAV resurssi luettelo (URL URL)
-318 Lukituksen syvyys
-319 rajattomuus
-320 Lukituksen aikakatkaisu
-321 Rajaton
-322 Muu
-323 Sekuntia
-324 Lukitse ala
-325 yksinomainen
-326 jaettu
-327 Valvetila
-328 Yleinen valvetila
-329 Valvetila poistuttaessa
-330 Aikajana
-331 SVG Kirjasto
-332 Kopioi vaihtoehto
-333 Kopioi valinta
-334 Viittaa valintaan
-335 Lis‰‰ uusi malli kirjastoon
-336 Uuden SVG-tiedoston URL...
-337 Kirjaston nimi
-338 Kirjaston URL
-339 Luo kirjasto
-340 Selaa kirjastoa
-341 Luo tai etsi kirjasto
-342 Nykyinen valinta ei sis‰ll‰ pelk‰st‰‰n SVG elementtej‰. Valitse uudelleen.
-343 Kirjaston otsikko on pakollinen
-344 Siirr‰ kursoria dokumentissa m‰‰ritt‰‰ksesi uuden avainkohdan...
-345 Avainkohta m‰‰ritelty. Siirr‰ liukukytkint‰ m‰‰ritt‰‰ksesi animaation keston...
-346 Valitse elementin alkuv‰ri...
-347 Alkuv‰ri m‰‰ritelty. Siirr‰ liukukytkint‰ m‰‰ritt‰‰ksesi animaation keston...
-348 Valitse loppuv‰ri...
-349 Animaatio m‰‰ritelty
-350 Animoitu m‰‰rittely
-351 Elementti ilman tunnusta
-352 **Add ID
-353 **Remove ID
-354 **Add/Remove IDs
-355 **Apply operation
-356 **Enter an element name
-357 **Apply CSS
-358 **Current screen type
-359 **New Topic
-360 **Bookmark Properties
-361 **Topic Properties
-362 **Topic hierarchy:
-363 Otsikko:
-364 **Recalls:
-365 **Author:
-366 **Created:
-367 **Last modified:
-368 **Description:
-369 **Please select an element
-370 **All CSS
-371 **CSS style rules applied to the <%s> element\n
-372 **Blue lines are links activated by a double (or a single) click\n
-373 **Load objects (object, embed)
-374 **No style rule for this element
+291 **Charset for new documents
+292 Lukitus onnistui!
+293 Lukitus ep‰onnistui!
+294 Lukitaan %s...
+295 Dokumentti %s on lukittu!
+296 Dokumentin %s on lukinnut %s (aikakatkaisu %s)
+297 Korvataanko lukitustiedot?
+298 Kopioidaanko lukitustiedot?
+299 Yrit‰ poistaa lukitus ensin...
+300 Lukituksen poisto onnistui!
+301 Lukituksen poisto ep‰onnistui!
+302 Poistetaan lukitus %s...
+303 Poistettu lukitus dokumentista: %s
+304 Poista lukitus dokumentista?
+305 Dokumentin ominaisuudet
+306 Dokumentin ominaisuuksia ei saatavilla
+307 Dokumentin ominaisuuksia ei ole v‰liaikaisesti saatavilla. Yrit‰ myˆhemmin uudelleen...
+308 Haetaan dokumentin ominaisuuksia...
+309 T‰lle URL:lle ei ole WebDav-tukea %s
+310 Lukitustietojen tallennus paikallisesti ep‰onnistui
+311 Lukitustietojen poisto paikallisesti ep‰onnistui
+312 T‰m‰ toiminto ei ole k‰ytett‰viss‰ %s
+313 Pyyntˆ ep‰onnistui! Syy: Viallinen riippuvuus
+314 Pyyntˆ ep‰onnistui! Syy: %s
+315 Yrit‰ uudelleen?
+316 WebDAV asetukset
+317 K‰ytt‰j‰n henkilˆkohtainen linkki (URL)
+318 K‰ytt‰j‰n WebDAV resurssi luettelo (URL URL)
+319 Lukituksen syvyys
+320 rajattomuus
+321 Lukituksen aikakatkaisu
+322 Rajaton
+323 Muu
+324 Sekuntia
+325 Lukitse ala
+326 yksinomainen
+327 jaettu
+328 Valvetila
+329 Yleinen valvetila
+330 Valvetila poistuttaessa
+331 Aikajana
+332 SVG Kirjasto
+333 Kopioi vaihtoehto
+334 Kopioi valinta
+335 Viittaa valintaan
+336 Lis‰‰ uusi malli kirjastoon
+337 Uuden SVG-tiedoston URL...
+338 Kirjaston nimi
+339 Kirjaston URL
+340 Luo kirjasto
+341 Selaa kirjastoa
+342 Luo tai etsi kirjasto
+343 Nykyinen valinta ei sis‰ll‰ pelk‰st‰‰n SVG elementtej‰. Valitse uudelleen.
+344 Kirjaston otsikko on pakollinen
+345 Siirr‰ kursoria dokumentissa m‰‰ritt‰‰ksesi uuden avainkohdan...
+346 Avainkohta m‰‰ritelty. Siirr‰ liukukytkint‰ m‰‰ritt‰‰ksesi animaation keston...
+347 Valitse elementin alkuv‰ri...
+348 Alkuv‰ri m‰‰ritelty. Siirr‰ liukukytkint‰ m‰‰ritt‰‰ksesi animaation keston...
+349 Valitse loppuv‰ri...
+350 Animaatio m‰‰ritelty
+351 Animoitu m‰‰rittely
+352 Elementti ilman tunnusta
+353 **Add ID
+354 **Remove ID
+355 **Add/Remove IDs
+356 **Apply operation
+357 **Enter an element name
+358 **Apply CSS
+359 **Current screen type
+360 **New Topic
+361 **Bookmark Properties
+362 **Topic Properties
+363 **Topic hierarchy:
+364 Otsikko:
+365 **Recalls:
+366 **Author:
+367 **Created:
+368 **Last modified:
+369 **Description:
+370 **Please select an element
+371 **All CSS
+372 **CSS style rules applied to the <%s> element\n
+373 **Blue lines are links activated by a double (or a single) click\n
+374 **Load objects (object, embed)
+375 **No style rule for this element

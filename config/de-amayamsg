@@ -290,87 +290,88 @@
 288 Beim Einfügen oder Ändern des Dokumenttyps wird das Dokument neu geparst. Nicht gespeicherte Änderungen bleiben dabei erhalten.
 289 Für XHTML application/xhtml+xml verwenden
 290 MIME-Typ application/xhtml+xml für XHTML-Dokumente verwenden
-291 Sperrung erfolgreich
-292 Sperrung fehlgeschlagen
-293 Sperre %s...
-294 Dokument %s ist gesperrt
-295 Dokument %s wurde von %s gesperrt (timeout %s)
-296 Sperrinformation überschreiben?
-297 Sperrinformation kopieren?
-298 Versuche Dokument zu entsperren...
-299 Entsperrung erfolgreich
-300 Entsperrung fehlgeschlagen
-301 Entsperre %s...
-302 Dokument ist entsperrt
-303 Dokument entsperren?
-304 Dokumenteigenschaften
-305 Dokumenteigenschaften nicht verfügbar
-306 Dokumenteigenschaften momentan nicht verfügbar. Versuchen Sie es später...
-307 Suche nach Dokumenteigenschaften...
-308 Keine WebDAV-Unterstützung für URLs vom Typ %s
-309 Konnte Sperrinformation lokal nicht speichern
-310 Konnte Sperrinformation lokal nicht entfernen
-311 Operation nicht erlaubt für %s
-312 Anforderung fehlgeschlagen: keine Abhängigkeit
-313 Anforderung fehlgeschlagen: %s
-314 Erneut versuchen?
-315 WebDAV Einstellungen
-316 Persönliche Benutzerreferenzen (URL)
-317 WebDAV Resourcenliste des Benutzers (URL)
-318 Sperrtiefe
-319 Unendlich
-320 Sperrzeitüberschreitung
-321 Unendlich
-322 Andere
-323 Sekunden
-324 Sperrbereich
-325 Exklusiv
-326 Gemeinsam
-327 Benachrichtigung
-328 Immer benachrichtigen
-329 Am Ende benachrichtigen
-330 Zeitliche Reihenfolge
-331 SVG Bibliothek
-332 Option kopieren
-333 Markierung kopieren
-334 Auf Markierung beziehen
-335 Neues Modell zu Bibliothek hinzufügen
-336 URL der neuen SVG-Datei ...
-337 Titel der Bibliothek
-338 URL der Bibliothek
-339 Bibliothek erzeugen
-340 Bibliothek durchsuchen
-341 Bibliothek erzeugen oder suchen
-342 Die Markierung enthält nicht nur SVG-Elemente. Bitte neu markieren
-343 Der Titel der Bibliothek muss angegeben werden
-344 Den Cursor an die neue Schlüsselposition bewegen...
-345 Schlüsselposition definiert. Schieber bewegen um die Dauer der Animation festzulegen...
-346 Anfangsfarbe des Elements wählen...
-347 Anfangsfarbe definiert. Schieber bewegen um die Dauer der Animation festzulegen...
-348 Endfarbe wählen...
-349 Animation definiert.
-350 Animiertes Attribut
-351 Element ohne ID
-352 **Add ID
-353 **Remove ID
-354 **Add/Remove IDs
-355 **Apply operation
-356 **Enter an element name
-357 **Apply CSS
-358 **Current screen type
-359 **New Topic
-360 **Bookmark Properties
-361 **Topic Properties
-362 **Topic hierarchy:
-363 Titel:
-364 **Recalls:
-365 Auto:r
-366 **Created:
-367 **Last modified:
-368 **Description:
-369 **Please select an element
-370 **All CSS
-371 **CSS style rules applied to the <%s> element\n
-372 **Blue lines are links activated by a double (or a single) click\n
-373 **Load objects (object, embed)
-374 **No style rule for this element
+291 **Charset for new documents
+292 Sperrung erfolgreich
+293 Sperrung fehlgeschlagen
+294 Sperre %s...
+295 Dokument %s ist gesperrt
+296 Dokument %s wurde von %s gesperrt (timeout %s)
+297 Sperrinformation überschreiben?
+298 Sperrinformation kopieren?
+299 Versuche Dokument zu entsperren...
+300 Entsperrung erfolgreich
+301 Entsperrung fehlgeschlagen
+302 Entsperre %s...
+303 Dokument ist entsperrt
+304 Dokument entsperren?
+305 Dokumenteigenschaften
+306 Dokumenteigenschaften nicht verfügbar
+307 Dokumenteigenschaften momentan nicht verfügbar. Versuchen Sie es später...
+308 Suche nach Dokumenteigenschaften...
+309 Keine WebDAV-Unterstützung für URLs vom Typ %s
+310 Konnte Sperrinformation lokal nicht speichern
+311 Konnte Sperrinformation lokal nicht entfernen
+312 Operation nicht erlaubt für %s
+313 Anforderung fehlgeschlagen: keine Abhängigkeit
+314 Anforderung fehlgeschlagen: %s
+315 Erneut versuchen?
+316 WebDAV Einstellungen
+317 Persönliche Benutzerreferenzen (URL)
+318 WebDAV Resourcenliste des Benutzers (URL)
+319 Sperrtiefe
+320 Unendlich
+321 Sperrzeitüberschreitung
+322 Unendlich
+323 Andere
+324 Sekunden
+325 Sperrbereich
+326 Exklusiv
+327 Gemeinsam
+328 Benachrichtigung
+329 Immer benachrichtigen
+330 Am Ende benachrichtigen
+331 Zeitliche Reihenfolge
+332 SVG Bibliothek
+333 Option kopieren
+334 Markierung kopieren
+335 Auf Markierung beziehen
+336 Neues Modell zu Bibliothek hinzufügen
+337 URL der neuen SVG-Datei ...
+338 Titel der Bibliothek
+339 URL der Bibliothek
+340 Bibliothek erzeugen
+341 Bibliothek durchsuchen
+342 Bibliothek erzeugen oder suchen
+343 Die Markierung enthält nicht nur SVG-Elemente. Bitte neu markieren
+344 Der Titel der Bibliothek muss angegeben werden
+345 Den Cursor an die neue Schlüsselposition bewegen...
+346 Schlüsselposition definiert. Schieber bewegen um die Dauer der Animation festzulegen...
+347 Anfangsfarbe des Elements wählen...
+348 Anfangsfarbe definiert. Schieber bewegen um die Dauer der Animation festzulegen...
+349 Endfarbe wählen...
+350 Animation definiert.
+351 Animiertes Attribut
+352 Element ohne ID
+353 **Add ID
+354 **Remove ID
+355 **Add/Remove IDs
+356 **Apply operation
+357 **Enter an element name
+358 **Apply CSS
+359 **Current screen type
+360 **New Topic
+361 **Bookmark Properties
+362 **Topic Properties
+363 **Topic hierarchy:
+364 Titel:
+365 **Recalls:
+366 Auto:r
+367 **Created:
+368 **Last modified:
+369 **Description:
+370 **Please select an element
+371 **All CSS
+372 **CSS style rules applied to the <%s> element\n
+373 **Blue lines are links activated by a double (or a single) click\n
+374 **Load objects (object, embed)
+375 **No style rule for this element

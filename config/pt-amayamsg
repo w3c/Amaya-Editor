@@ -290,87 +290,88 @@
 288 Criar ou alterar o doctype pode fazer com que o documento seja reprocessado.
 289 Modificações pendentes nção podem ser refeitas.
 290 Utilise o tipo MIME application/xhtml+xml para documentos XHTML
-291 Documento foi travado com sucesso!
-292 Documento não pode ser travado com sucesso!
-293 Travando %s...
-294 Documento %s está travado!
-295 Documento %s foi travado por %s (tempo restante %s)
-296 Sobrepor trava?
-297 Copiar informação da trava? 
-298 Tente destravar o documento...
-299 Documento foi destravado com sucesso!
-300 Documento não pode ser destravado com sucesso!
-301 Destravando %s...
-302 Documento %s está destravado!
-303 Destravar o documento? 
-304 Propriedades do documento
-305 Propriedades do documento não estão disponíveis
-306 Propriedades do documento estão temporariamente indisponíveis. Tente de novo mais tarde...
-307 Buscando as propriedades do documento...
-308 Lamento, WebDAV não supporta URLs como %s
-309 Impossível salvar informação de trava localmente
-310 Impossível remover informação de trava local
-311 Lamento, esta operação não é permitida para %s
-312 Operação falhou! Causa: Falha de dependência
-313 Operaçã falhou! Causa: %s
-314 Tentar de novo? 
-315 Preferências WebDAV
-316 Referência Pessoal do Usuário (URL)
-317 Lista de Recursos WebDAV do Usuário (URL URL)
-318 Profundidade da Trava
-319 infinita
-320 Duração da Trava
-321 Infinito
-322 Outro
-323 Segundos
-324 Escopo da Trava
-325 exclusivo
-326 compartilhado
-327 Percepção
-328 Percepção geral
-329 Percepção ao sair
-330 **Timeline
-331 **SVG Library
-332 **Copy option
-333 **Copy selection
-334 **Refer to selection
-335 **Add new model into library
-336 **URL of the new SVG file ...
-337 **Library title
-338 **Library URL
-339 **Create library
-340 **Browse library
-341 **Create or search library
-342 **The selection includes no SVG elements. Please reselect
-343 **The library title is mandatory
-344 **Move the position cursor in edited document to define a new key position...
-345 **Key position defined. Move the slider to define animation duration...
-346 **Select starting color of element...
-347 **Starting color defined. Move the slider to define animation duration...
-348 **Select ending color...
-349 **Animation defined.
-350 **Animated attribute
-351 **Element without ID
-352 **Add ID
-353 **Remove ID
-354 **Add/Remove IDs
-355 **Apply operation
-356 **Enter an element name
-357 **Apply CSS
-358 **Current screen type
-359 **New Topic
-360 **Bookmark Properties
-361 **Topic Properties
-362 **Topic hierarchy:
-363 Título:
-364 **Recalls:
-365 Autor:
-366 **Created:
-367 **Last modified:
-368 **Description:
-369 **Please select an element
-370 **All CSS
-371 **CSS style rules applied to the <%s> element\n
-372 **Blue lines are links activated by a double (or a single) click\n
-373 **Load objects (object, embed)
-374 **No style rule for this element
+291 **Charset for new documents
+292 Documento foi travado com sucesso!
+293 Documento não pode ser travado com sucesso!
+294 Travando %s...
+295 Documento %s está travado!
+296 Documento %s foi travado por %s (tempo restante %s)
+297 Sobrepor trava?
+298 Copiar informação da trava? 
+299 Tente destravar o documento...
+300 Documento foi destravado com sucesso!
+301 Documento não pode ser destravado com sucesso!
+302 Destravando %s...
+303 Documento %s está destravado!
+304 Destravar o documento? 
+305 Propriedades do documento
+306 Propriedades do documento não estão disponíveis
+307 Propriedades do documento estão temporariamente indisponíveis. Tente de novo mais tarde...
+308 Buscando as propriedades do documento...
+309 Lamento, WebDAV não supporta URLs como %s
+310 Impossível salvar informação de trava localmente
+311 Impossível remover informação de trava local
+312 Lamento, esta operação não é permitida para %s
+313 Operação falhou! Causa: Falha de dependência
+314 Operaçã falhou! Causa: %s
+315 Tentar de novo? 
+316 Preferências WebDAV
+317 Referência Pessoal do Usuário (URL)
+318 Lista de Recursos WebDAV do Usuário (URL URL)
+319 Profundidade da Trava
+320 infinita
+321 Duração da Trava
+322 Infinito
+323 Outro
+324 Segundos
+325 Escopo da Trava
+326 exclusivo
+327 compartilhado
+328 Percepção
+329 Percepção geral
+330 Percepção ao sair
+331 **Timeline
+332 **SVG Library
+333 **Copy option
+334 **Copy selection
+335 **Refer to selection
+336 **Add new model into library
+337 **URL of the new SVG file ...
+338 **Library title
+339 **Library URL
+340 **Create library
+341 **Browse library
+342 **Create or search library
+343 **The selection includes no SVG elements. Please reselect
+344 **The library title is mandatory
+345 **Move the position cursor in edited document to define a new key position...
+346 **Key position defined. Move the slider to define animation duration...
+347 **Select starting color of element...
+348 **Starting color defined. Move the slider to define animation duration...
+349 **Select ending color...
+350 **Animation defined.
+351 **Animated attribute
+352 **Element without ID
+353 **Add ID
+354 **Remove ID
+355 **Add/Remove IDs
+356 **Apply operation
+357 **Enter an element name
+358 **Apply CSS
+359 **Current screen type
+360 **New Topic
+361 **Bookmark Properties
+362 **Topic Properties
+363 **Topic hierarchy:
+364 Título:
+365 **Recalls:
+366 Autor:
+367 **Created:
+368 **Last modified:
+369 **Description:
+370 **Please select an element
+371 **All CSS
+372 **CSS style rules applied to the <%s> element\n
+373 **Blue lines are links activated by a double (or a single) click\n
+374 **Load objects (object, embed)
+375 **No style rule for this element

@@ -290,87 +290,88 @@
 288 Crear o cambiar el tipo de documento provoca que el documento sea reanalizado.
 289 No se desharán las modificaciones pendientes.
 290 En documentos XHTML usar tipo MIME application/xhtml+xml
-291 ¡Bloqueo conseguido!
-292 ¡Bloqueo fallido!
-293 Bloqueando %s...
-294 El documento %s bloqueado!
-295 El documento %s está bloqueado por % (timeout %s)
-296 ¿Sobreescribir la información de bloqueo?
-297 ¿Copiar la información de bloqueo?
-298 Intenta desbloquear el documento antes...
-299 ¡Desbloqueo conseguido!
-300 ¡Desbloqueo fallido!
-301 Desbloqueando %s...
-302 El documento %s está desbloqueado!
-303 ¿Desbloquear el documento?
-304 Propiedades del documento
-305 Las propiedades del documento no están disponibles
-306 Las propiedades del documento no están disponibles temporalmente. Inténtelo de nuevo más tarde...
-307 Buscando las propiedades del documento...
-308 Lo siento, WebDAV no soporta URLs de este tipo %s
-309 Fallo al guardar la información de bloqueo en la base local
-310 Fallo al eliminar la información de bloqueo en la base local
-311 Lo siento, esta operación no está permitida para %s
-312 ¡Solicitud suspendida! Razón: Dependencia suspendida
-313 ¡Solicitud suspendida! Razón: %s
-314 ¿Intentar de nuevo?
-315 Preferencias WebDAV
-316 Referencia Personal del Usuario (URL)
-317 Lista de Recursos WebDAV del Usuario
-318 Profundidad de bloqueo
-319 infinita
-320 Bloqueo terminado
-321 Infinita
-322 Otro
-323 Segundos
-324 Alcance del bloqueo
-325 exclusivo
-326 compartido
-327 Conocimiento
-328 Conocimiento general
-329 Conocimiento al salir
-330 Planificación
-331 Biblioteca SVG
-332 Copiar opción
-333 Copiar selección
-334 Remitir a selección
-335 Añadir nuevo modelo a la bibloteca
-336 URL del nuevo archivo SVG...
-337 Título de la bibloteca
-338 URL de la biblioteca
-339 Crear biblioteca
-340 Ojear la biblioteca
-341 Crear o buscar en la biblioteca
-342 La selección no contiene sólo elementos SVG. Por favor, vuelva a seleccionar
-343 El título de la biblioteca es obligatorio
-344 Desplace la posición del cursor en el documento editado para definir una nueva posición clave...
-345 Posición clave definida. Desplace el marcador para definir la duración de la animación...
-346 Seleccione el color inicial del elemento...
-347 Color inicial definido. Desplace el marcador para definir la duración de la animación...
-348 Seleccione color final...
-349 Animación definida.
-350 Atributo animado
-351 Elemento sin atributo id
-352 Crear atributos id
-353 Borrar atributos id
-354 Crear/Borrar atributos id
-355 Aplicar operación
-356 Escribe un nombre de etiqueta XHTML:
-357 Aplicar hojas de estilo
-358 Tipo de pantalla actual:
-359 Nuevo Tema
-360 Propiedades de marcador
-361 Propiedades de tema
-362 Jerarquía de temas:
-363 Título:
-364 Enlaza:
-365 Autor:
-366 Creado:
-367 Última modificación:
-368 Descripción:
-369 Por favor, seleccione un elemento
-370 Todos las hojas de estilo
-371 Reglas de estilo CSS aplicadas al elemento <%s>\n
-372 Cada línea azul es un enlace a la regla de estilo. Puede activar el enlace con un doble clic (o con un único clic)\n
-373 Cargar objetos (object, embed)
-374 No hay regla de estilo para este elemento
+291 **Charset for new documents
+292 ¡Bloqueo conseguido!
+293 ¡Bloqueo fallido!
+294 Bloqueando %s...
+295 El documento %s bloqueado!
+296 El documento %s está bloqueado por % (timeout %s)
+297 ¿Sobreescribir la información de bloqueo?
+298 ¿Copiar la información de bloqueo?
+299 Intenta desbloquear el documento antes...
+300 ¡Desbloqueo conseguido!
+301 ¡Desbloqueo fallido!
+302 Desbloqueando %s...
+303 El documento %s está desbloqueado!
+304 ¿Desbloquear el documento?
+305 Propiedades del documento
+306 Las propiedades del documento no están disponibles
+307 Las propiedades del documento no están disponibles temporalmente. Inténtelo de nuevo más tarde...
+308 Buscando las propiedades del documento...
+309 Lo siento, WebDAV no soporta URLs de este tipo %s
+310 Fallo al guardar la información de bloqueo en la base local
+311 Fallo al eliminar la información de bloqueo en la base local
+312 Lo siento, esta operación no está permitida para %s
+313 ¡Solicitud suspendida! Razón: Dependencia suspendida
+314 ¡Solicitud suspendida! Razón: %s
+315 ¿Intentar de nuevo?
+316 Preferencias WebDAV
+317 Referencia Personal del Usuario (URL)
+318 Lista de Recursos WebDAV del Usuario
+319 Profundidad de bloqueo
+320 infinita
+321 Bloqueo terminado
+322 Infinita
+323 Otro
+324 Segundos
+325 Alcance del bloqueo
+326 exclusivo
+327 compartido
+328 Conocimiento
+329 Conocimiento general
+330 Conocimiento al salir
+331 Planificación
+332 Biblioteca SVG
+333 Copiar opción
+334 Copiar selección
+335 Remitir a selección
+336 Añadir nuevo modelo a la bibloteca
+337 URL del nuevo archivo SVG...
+338 Título de la bibloteca
+339 URL de la biblioteca
+340 Crear biblioteca
+341 Ojear la biblioteca
+342 Crear o buscar en la biblioteca
+343 La selección no contiene sólo elementos SVG. Por favor, vuelva a seleccionar
+344 El título de la biblioteca es obligatorio
+345 Desplace la posición del cursor en el documento editado para definir una nueva posición clave...
+346 Posición clave definida. Desplace el marcador para definir la duración de la animación...
+347 Seleccione el color inicial del elemento...
+348 Color inicial definido. Desplace el marcador para definir la duración de la animación...
+349 Seleccione color final...
+350 Animación definida.
+351 Atributo animado
+352 Elemento sin atributo id
+353 Crear atributos id
+354 Borrar atributos id
+355 Crear/Borrar atributos id
+356 Aplicar operación
+357 Escribe un nombre de etiqueta XHTML:
+358 Aplicar hojas de estilo
+359 Tipo de pantalla actual:
+360 Nuevo Tema
+361 Propiedades de marcador
+362 Propiedades de tema
+363 Jerarquía de temas:
+364 Título:
+365 Enlaza:
+366 Autor:
+367 Creado:
+368 Última modificación:
+369 Descripción:
+370 Por favor, seleccione un elemento
+371 Todos las hojas de estilo
+372 Reglas de estilo CSS aplicadas al elemento <%s>\n
+373 Cada línea azul es un enlace a la regla de estilo. Puede activar el enlace con un doble clic (o con un único clic)\n
+374 Cargar objetos (object, embed)
+375 No hay regla de estilo para este elemento

@@ -2898,6 +2898,10 @@
 	<message xml:lang="fi">Käytä application/xhtml+xml MIME tyypiä XHTML dokumenttien yhteydessä</message>
 	<message xml:lang="tr">XHTML belgeleri için MIME tipi uygulama/xhtml+xml \'li kullanın</message>
 </label>
+<label define="AM_DEFAULT_CHARSET">
+	<message xml:lang="en">Charset for new documents</message>
+	<message xml:lang="fr">Charset pour les nouveaux documents</message>
+</label>
 <label define="AM_LOCK_SUCCEED">
 	<message xml:lang="en">Lock succeed!</message>
 	<message xml:lang="fr">Verrou réussit!</message>

@@ -290,87 +290,88 @@
 288 Creating or Changing the doctype causes the document to be reparsed.
 289 Pending modifications won't be undone.
 290 Use the application/xhtml+xml MIME type for XHTML documents
-291 Lock succeed!
-292 Lock failed!
-293 Locking %s...
-294 Document %s is locked!
-295 Document %s is locked by %s (timeout %s)
-296 Overwrite lock information?
-297 Copy the lock information? 
-298 Try to unlock the document before...
-299 Unlock succeed!
-300 Unlock failed!
-301 Unlocking %s...
-302 Document %s is unlocked!
-303 Unlock the document? 
-304 Document properties
-305 Document properties are not available
-306 Document properties are temporarily unavailable. Try again later...
-307 Looking for document properties...
-308 Sorry, no WebDAV support for URLs of this type %s
-309 Failed to save lock info in the local base
-310 Failed to remove lok info from local base
-311 Sorry, this operation is not allowed for %s
-312 Request failed! Reason: Failed Dependency
-313 Request failed! Reason: %s
-314 Try again? 
-315 WebDAV Preferences
-316 User's Personal Reference (URL)
-317 User's WebDAV Resource List (URL URL)
-318 Lock Depth
-319 infinity
-320 Lock Timeout
-321 Infinite
-322 Other
-323 Seconds
-324 Lock Scope
-325 exclusive
-326 shared
-327 Awarenees
-328 General awareness
-329 Awareness on exit
-330 Timeline
-331 SVG Library
-332 Copy option
-333 Copy selection
-334 Refer to selection
-335 Add new model into library
-336 URL of the new SVG file ...
-337 Library title
-338 Library URL
-339 Create library
-340 Browse library
-341 Create or search library
-342 The selection includes no SVG elements. Please reselect
-343 The library title is mandatory
-344 Move the position cursor in edited document to define a new key position...
-345 Key position defined. Move the slider to define animation duration...
-346 Select starting color of element...
-347 Starting color defined. Move the slider to define animation duration...
-348 Select ending color...
-349 Animation defined.
-350 Animated attribute
-351 Element without ID
-352 Add ID
-353 Remove ID
-354 Add/Remove IDs
-355 Apply operation
-356 Enter an element name
-357 Apply CSS
-358 Current screen type
-359 New Topic
-360 Bookmark Properties
-361 Topic Properties
-362 Topic hierarchy:
-363 Title:
-364 Recalls:
-365 Author:
-366 Created:
-367 Last modified:
-368 Description:
-369 Please select an element
-370 All CSS
-371 CSS style rules applied to the <%s> element\n
-372 Blue lines are links activated by a double (or a single) click\n
-373 Load objects (object, embed)
-374 No style rule for this element
+291 Charset for new documents
+292 Lock succeed!
+293 Lock failed!
+294 Locking %s...
+295 Document %s is locked!
+296 Document %s is locked by %s (timeout %s)
+297 Overwrite lock information?
+298 Copy the lock information? 
+299 Try to unlock the document before...
+300 Unlock succeed!
+301 Unlock failed!
+302 Unlocking %s...
+303 Document %s is unlocked!
+304 Unlock the document? 
+305 Document properties
+306 Document properties are not available
+307 Document properties are temporarily unavailable. Try again later...
+308 Looking for document properties...
+309 Sorry, no WebDAV support for URLs of this type %s
+310 Failed to save lock info in the local base
+311 Failed to remove lok info from local base
+312 Sorry, this operation is not allowed for %s
+313 Request failed! Reason: Failed Dependency
+314 Request failed! Reason: %s
+315 Try again? 
+316 WebDAV Preferences
+317 User's Personal Reference (URL)
+318 User's WebDAV Resource List (URL URL)
+319 Lock Depth
+320 infinity
+321 Lock Timeout
+322 Infinite
+323 Other
+324 Seconds
+325 Lock Scope
+326 exclusive
+327 shared
+328 Awarenees
+329 General awareness
+330 Awareness on exit
+331 Timeline
+332 SVG Library
+333 Copy option
+334 Copy selection
+335 Refer to selection
+336 Add new model into library
+337 URL of the new SVG file ...
+338 Library title
+339 Library URL
+340 Create library
+341 Browse library
+342 Create or search library
+343 The selection includes no SVG elements. Please reselect
+344 The library title is mandatory
+345 Move the position cursor in edited document to define a new key position...
+346 Key position defined. Move the slider to define animation duration...
+347 Select starting color of element...
+348 Starting color defined. Move the slider to define animation duration...
+349 Select ending color...
+350 Animation defined.
+351 Animated attribute
+352 Element without ID
+353 Add ID
+354 Remove ID
+355 Add/Remove IDs
+356 Apply operation
+357 Enter an element name
+358 Apply CSS
+359 Current screen type
+360 New Topic
+361 Bookmark Properties
+362 Topic Properties
+363 Topic hierarchy:
+364 Title:
+365 Recalls:
+366 Author:
+367 Created:
+368 Last modified:
+369 Description:
+370 Please select an element
+371 All CSS
+372 CSS style rules applied to the <%s> element\n
+373 Blue lines are links activated by a double (or a single) click\n
+374 Load objects (object, embed)
+375 No style rule for this element

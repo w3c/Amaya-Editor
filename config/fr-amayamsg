@@ -290,87 +290,88 @@
 288 Le document sera réanalysé pour prendre en compte le doctype.
 289 Les modifications en cours ne pourront être défaites.
 290 Utiliser le type MIME application/xhtml+xml pour les documents XHTML
-291 Verrou réussit!
-292 Verrou a échué!
-293 En attente d'un verrou sur %s...
-294 Document %s est verrouillé!
-295 Document %s a été verrouillé par %s (temps d'expiration %s)
-296 Surpasser le verrou?
-297 Copier les informations du verrou??
-298 Essayez déverrouillé le document...
-299 Déverrouillage a réussit!
-300 Dérrouillage a échoué!
-301 En attente d'une libération du verrou...
-302 Document %s est déverrouillé!
-303 Déverrouillé le document?
-304 Propriétes du document
-305 Propriétes du document ne sont pas disponibles
-306 Propriétes du document ne sont pas disponibles pour l'instant. Essayez de nouveau plus tard...
-307 En attente des propriétes du document...
-308 Désolé, WebDAV ne support pas URLs comme %s
-309 Sauvegarde du verrou dans la base local a échué
-310 Impossible éffacer verrou de la base local
-311 Désolé, cette opération est interdit pour %s
-312 Opération a échué! Cause: Faute de dépendence
-313 Opération a échué! Cause: %s
-314 Ressayez?
-315 Configuration WebDAV
-316 Référence Personnelle de l'utilisateur (URL)
-317 List des Ressources de l'utilisateur (URL URL)
-318 Profondeur du Verrou
-319 infini
-320 Expiration du verrou
-321 Infini
-322 Autre
-323 Secondes
-324 Type du Verrou
-325 exclusif
-326 partagée
-327 Notification
-328 Notification général
-329 Notification àla sortie
-330 Ligne de temps
-331 Bibliotheque SVG
-332 Option de copie
-333 Copier
-334 Réferencer
-335 Ajouter un modèle dans la librairie
-336 URL du nouveau fichier SVG ...
-337 Titre de la librairie
-338 URL de la librairie
-339 Créer une librairie
-340 Butiner librairies
-341 Créer ou chercher une librairie
-342 La sélection contient des éléments non SVG. Effectuer une autre sélection SVP
-343 Le titre de la librairie est obligatoire
-344 Déplacer le curseur de position dans le document édité pour définir une nouvelle position clé...
-345 Position clé définie. Déplacer le curseur de temps pour définir la durée de l'animation...
-346 Sélectionner la couleur de départ de l'élément...
-347 Couleur de départ définie. Déplacer le curseur de temps pour définir la durée de l'animation...
-348 Sélectionner la couleur de fin...
-349 Animation définie.
-350 Attribut animé
-351 Elément sans ID
-352 Ajouter ID
-353 Supprimer ID
-354 Ajouter/Supprimer IDs
-355 Appliquer opération
-356 Entrer le nom d'un élément
-357 Appliquer CSS
-358 Type d'écran courant
-359 Nouvelle Rubrique
-360 Propriétés du signet
-361 Propriétés de la rubrique
-362 Hiérarchie des rubriques:
-363 Titre:
-364 Rappele:
-365 Auteur:
-366 Crée:
-367 Dernière modification:
-368 Description:
-369 Sélectionnez un élément
-370 Toutes les CSS
-371 Règles de style CSS appliqué l'élément <%s> \n
-372 Les lignes bleues sont des liens activés par un double (ou simple) click\n
-373 Charger les objets (object, embed)
-374 Pas de règle de style pour cet élément
+291 Charset pour les nouveaux documents
+292 Verrou réussit!
+293 Verrou a échué!
+294 En attente d'un verrou sur %s...
+295 Document %s est verrouillé!
+296 Document %s a été verrouillé par %s (temps d'expiration %s)
+297 Surpasser le verrou?
+298 Copier les informations du verrou??
+299 Essayez déverrouillé le document...
+300 Déverrouillage a réussit!
+301 Dérrouillage a échoué!
+302 En attente d'une libération du verrou...
+303 Document %s est déverrouillé!
+304 Déverrouillé le document?
+305 Propriétes du document
+306 Propriétes du document ne sont pas disponibles
+307 Propriétes du document ne sont pas disponibles pour l'instant. Essayez de nouveau plus tard...
+308 En attente des propriétes du document...
+309 Désolé, WebDAV ne support pas URLs comme %s
+310 Sauvegarde du verrou dans la base local a échué
+311 Impossible éffacer verrou de la base local
+312 Désolé, cette opération est interdit pour %s
+313 Opération a échué! Cause: Faute de dépendence
+314 Opération a échué! Cause: %s
+315 Ressayez?
+316 Configuration WebDAV
+317 Référence Personnelle de l'utilisateur (URL)
+318 List des Ressources de l'utilisateur (URL URL)
+319 Profondeur du Verrou
+320 infini
+321 Expiration du verrou
+322 Infini
+323 Autre
+324 Secondes
+325 Type du Verrou
+326 exclusif
+327 partagée
+328 Notification
+329 Notification général
+330 Notification àla sortie
+331 Ligne de temps
+332 Bibliotheque SVG
+333 Option de copie
+334 Copier
+335 Réferencer
+336 Ajouter un modèle dans la librairie
+337 URL du nouveau fichier SVG ...
+338 Titre de la librairie
+339 URL de la librairie
+340 Créer une librairie
+341 Butiner librairies
+342 Créer ou chercher une librairie
+343 La sélection contient des éléments non SVG. Effectuer une autre sélection SVP
+344 Le titre de la librairie est obligatoire
+345 Déplacer le curseur de position dans le document édité pour définir une nouvelle position clé...
+346 Position clé définie. Déplacer le curseur de temps pour définir la durée de l'animation...
+347 Sélectionner la couleur de départ de l'élément...
+348 Couleur de départ définie. Déplacer le curseur de temps pour définir la durée de l'animation...
+349 Sélectionner la couleur de fin...
+350 Animation définie.
+351 Attribut animé
+352 Elément sans ID
+353 Ajouter ID
+354 Supprimer ID
+355 Ajouter/Supprimer IDs
+356 Appliquer opération
+357 Entrer le nom d'un élément
+358 Appliquer CSS
+359 Type d'écran courant
+360 Nouvelle Rubrique
+361 Propriétés du signet
+362 Propriétés de la rubrique
+363 Hiérarchie des rubriques:
+364 Titre:
+365 Rappele:
+366 Auteur:
+367 Crée:
+368 Dernière modification:
+369 Description:
+370 Sélectionnez un élément
+371 Toutes les CSS
+372 Règles de style CSS appliqué l'élément <%s> \n
+373 Les lignes bleues sont des liens activés par un double (ou simple) click\n
+374 Charger les objets (object, embed)
+375 Pas de règle de style pour cet élément

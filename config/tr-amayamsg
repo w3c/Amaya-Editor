@@ -290,87 +290,88 @@
 288 Bu belge, doctype\'ları göz önüne alınması için, yeniden analiz edilir
 289 Işlenen değişiklikler geriye dönüş yok
 290 XHTML belgeleri için MIME tipi uygulama/xhtml+xml \'li kullanın
-291 Kilitleme başarılı olmuştur!
-292 Kilitleme başarısız olmuştur!
-293 %s için kilit bekleniyor...
-294 %s belgesi kilitlenmiştir!
-295 %s belgesi %s tarafından kilitlenmiştir (son kullanma süresi %s)
-296 Kilidi geçin?
-297 Kilit bilgilerini kaydet?
-298 Belgenin kilidini açmayı deneyin...
-299 Kilit açma başarılı olmuştur!
-300 Kilit açma başarısız olmuştur!
-301 %s kilidini aç...
-302 %s belgenin kilidi açıldı!
-303 Belgenin kilidini aç?
-304 Belge özellikleri
-305 Belgenin özellikleri kullanamazsınız
-306 Belgenin özellikleri şu an kullanamazsınız. Biraz sonra yeniden deneyin...
-307 Belgenin özellikleri bekleniyor...
-308 Malesef, WebDav URL\'leri %s gibi desteklemiyor
-309 Kilidin lokal temelde kayıtı başarısız olmuştur
-310 Kilidin lokal temelde silinmesi imkansızdır
-311 Malesef bu operasion %s için yasaktır
-312 Operasion başarısız olmuştur! Neden: bağımlılık hatası
-313 Operasion başarısız olmuştur! Neden: %s
-314 Yeniden dene?
-315 WebDAV ayarları
-316 Kullanıyıcının özel referansı (URL)
-317 Kullanıyıcının referans listesi (URL URL)
-318 Kilit derinliği
-319 Sonsuz
-320 Bitiş süresi
-321 Sonsuz
-322 Diyer
-323 Saniye
-324 Kilit tipi
-325 Uyuşmaz
-326 paylaş
-327 Bildiri
-328 Genel bildiri
-329 çıkış bildirisi
-330 Zaman sırası
-331 SVG kütüphanesi
-332 Kopya opsionu
-333 Kopyala
-334 Referans et
-335 Kütüphanede yeni model ekle
-336 Yeni SVG dosyasının URL\'i...
-337 Kütüphane başlıgı
-338 URL Kütüphanesi
-339 Kütüphane yarat
-340 Kütüphane tara
-341 Kütüphane yarat veya ara
-342 Vu seçimde SVG olmayan veriler içeriyor. Lütfen başka seçim yapın
-343 Kütüphane başlıgı mecburdur
-344 Açılan belgede yeni anahtar durum tanımlamak için durum kürsörünü oynatın ...
-345 Anahtar durum tanımlaştı. Hareket zamanını tanımlamak için zaman kürsörünü oynatın...
-346 Elemanın başlangıç rengini seçin
-347 Başlangıç rengini seçin. Hareket zamanını tanımlamak için zaman kürsörünü oynatın...
-348 Bitiş rengini seçin...
-349 Hareket tanımlaştı
-350 Hareketli özellikler
-351 Tanımsız eleman
-352 **Add ID
-353 **Remove ID
-354 **Add/Remove IDs
-355 **Apply operation
-356 **Enter an element name
-357 **Apply CSS
-358 **Current screen type
-359 **New Topic
-360 **Bookmark Properties
-361 **Topic Properties
-362 **Topic hierarchy:
-363 Başlık:
-364 **Recalls:
-365 Sahip:
-366 **Created:
-367 **Last modified:
-368 **Description:
-369 **Please select an element
-370 **All CSS
-371 **CSS style rules applied to the <%s> element\n
-372 **Blue lines are links activated by a double (or a single) click\n
-373 **Load objects (object, embed)
-374 **No style rule for this element
+291 **Charset for new documents
+292 Kilitleme başarılı olmuştur!
+293 Kilitleme başarısız olmuştur!
+294 %s için kilit bekleniyor...
+295 %s belgesi kilitlenmiştir!
+296 %s belgesi %s tarafından kilitlenmiştir (son kullanma süresi %s)
+297 Kilidi geçin?
+298 Kilit bilgilerini kaydet?
+299 Belgenin kilidini açmayı deneyin...
+300 Kilit açma başarılı olmuştur!
+301 Kilit açma başarısız olmuştur!
+302 %s kilidini aç...
+303 %s belgenin kilidi açıldı!
+304 Belgenin kilidini aç?
+305 Belge özellikleri
+306 Belgenin özellikleri kullanamazsınız
+307 Belgenin özellikleri şu an kullanamazsınız. Biraz sonra yeniden deneyin...
+308 Belgenin özellikleri bekleniyor...
+309 Malesef, WebDav URL\'leri %s gibi desteklemiyor
+310 Kilidin lokal temelde kayıtı başarısız olmuştur
+311 Kilidin lokal temelde silinmesi imkansızdır
+312 Malesef bu operasion %s için yasaktır
+313 Operasion başarısız olmuştur! Neden: bağımlılık hatası
+314 Operasion başarısız olmuştur! Neden: %s
+315 Yeniden dene?
+316 WebDAV ayarları
+317 Kullanıyıcının özel referansı (URL)
+318 Kullanıyıcının referans listesi (URL URL)
+319 Kilit derinliği
+320 Sonsuz
+321 Bitiş süresi
+322 Sonsuz
+323 Diyer
+324 Saniye
+325 Kilit tipi
+326 Uyuşmaz
+327 paylaş
+328 Bildiri
+329 Genel bildiri
+330 çıkış bildirisi
+331 Zaman sırası
+332 SVG kütüphanesi
+333 Kopya opsionu
+334 Kopyala
+335 Referans et
+336 Kütüphanede yeni model ekle
+337 Yeni SVG dosyasının URL\'i...
+338 Kütüphane başlıgı
+339 URL Kütüphanesi
+340 Kütüphane yarat
+341 Kütüphane tara
+342 Kütüphane yarat veya ara
+343 Vu seçimde SVG olmayan veriler içeriyor. Lütfen başka seçim yapın
+344 Kütüphane başlıgı mecburdur
+345 Açılan belgede yeni anahtar durum tanımlamak için durum kürsörünü oynatın ...
+346 Anahtar durum tanımlaştı. Hareket zamanını tanımlamak için zaman kürsörünü oynatın...
+347 Elemanın başlangıç rengini seçin
+348 Başlangıç rengini seçin. Hareket zamanını tanımlamak için zaman kürsörünü oynatın...
+349 Bitiş rengini seçin...
+350 Hareket tanımlaştı
+351 Hareketli özellikler
+352 Tanımsız eleman
+353 **Add ID
+354 **Remove ID
+355 **Add/Remove IDs
+356 **Apply operation
+357 **Enter an element name
+358 **Apply CSS
+359 **Current screen type
+360 **New Topic
+361 **Bookmark Properties
+362 **Topic Properties
+363 **Topic hierarchy:
+364 Başlık:
+365 **Recalls:
+366 Sahip:
+367 **Created:
+368 **Last modified:
+369 **Description:
+370 **Please select an element
+371 **All CSS
+372 **CSS style rules applied to the <%s> element\n
+373 **Blue lines are links activated by a double (or a single) click\n
+374 **Load objects (object, embed)
+375 **No style rule for this element

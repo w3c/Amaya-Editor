@@ -215,12 +215,17 @@ static AM_WIN_MenuText WIN_PublishMenuText[] =
 };
 #endif /* _WINGUI */
 static int      PublishBase;
+static int      CurrentCharset;
 static ThotBool UseXHTMLMimeType;
 static ThotBool LostUpdateCheck;
 static ThotBool ExportCRLF;
 static ThotBool VerifyPublish;
 static char     SafePutRedirect[MAX_LENGTH];
-
+static char     CharsetType[MAX_LENGTH];
+static char     NewCharset[MAX_LENGTH];
+static char    *CharsetTxt[]={
+  "us-ascii", "iso-8859-1", "utf-8"
+};
 /* Color menu options */
 #ifdef _WINGUI
 static HWND     ColorHwnd = NULL;
@@ -2349,6 +2354,7 @@ static void GetPublishConf (void)
   TtaGetEnvBoolean ("EXPORT_CRLF", &ExportCRLF);
   GetEnvString ("DEFAULTNAME", DefaultName);
   GetEnvString ("SAFE_PUT_REDIRECT", SafePutRedirect);
+  GetEnvString ("DOCUMENT_CHARSET", CharsetType);
 }
 
 /*----------------------------------------------------------------------
@@ -2364,6 +2370,7 @@ static void SetPublishConf (void)
   TtaSetEnvBoolean ("EXPORT_CRLF", ExportCRLF, TRUE);
   TtaSetEnvString ("DEFAULTNAME", DefaultName, TRUE);
   TtaSetEnvString ("SAFE_PUT_REDIRECT", SafePutRedirect, TRUE);
+  TtaSetEnvString ("DOCUMENT_CHARSET", CharsetType, TRUE);
 
   TtaSaveAppRegistry ();
 }
@@ -2384,6 +2391,7 @@ static void GetDefaultPublishConf ()
 		    PublishBase + mTogglePublish, 3);
   GetDefEnvString ("DEFAULTNAME", DefaultName);
   GetDefEnvString ("SAFE_PUT_REDIRECT", SafePutRedirect);
+  GetDefEnvString ("DOCUMENT_CHARSET", CharsetType);
 }
 
 #ifdef _WINGUI
@@ -2505,6 +2513,50 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 }
 #else /* _WINGUI */
 /*----------------------------------------------------------------------
+  BuildCharsetSelector
+  builds the list allowing to select a default charset (for unix)
+  ----------------------------------------------------------------------*/
+static void BuildCharsetSelector (void)
+{
+  int         i, i_utf8;
+  int         nbcharset = sizeof(CharsetTxt) / sizeof(char *);
+  int         indx, length;
+  char       *entry;
+  char        BufMenu[MAX_LENGTH];
+
+  /* recopy the propositions  */
+  i_utf8 = -1;
+  indx = 0;
+  CurrentCharset = -1;
+  for (i = 0; i < nbcharset; i++)
+    {
+      entry = CharsetTxt[i];
+      /* keep in mind the current selected entry */
+      if (*CharsetType && !strcasecmp (CharsetType, entry))
+	CurrentCharset = i;
+      if (!strcasecmp (entry, "utf-8"))
+	i_utf8 = i;
+      length = strlen (entry) + 1;
+      if (length + indx < MAX_LENGTH)  
+	{
+	  strcpy (&BufMenu[indx], entry);
+	  indx += length;
+	}
+    }
+
+  /* Set the default charset to utf-8 if it doesn't exist */
+  if (CurrentCharset == -1)
+    CurrentCharset = i_utf8;
+
+  /* Fill in the charset form  */
+  TtaNewSizedSelector (PublishBase + mCharsetSelector, PublishBase + PublishMenu,
+		       TtaGetMessage (AMAYA, AM_DEFAULT_CHARSET), nbcharset,
+		       ((i < 2) ? (char *)"" : BufMenu), 3, 2, NULL, FALSE, FALSE);
+ if (nbcharset)
+    TtaSetSelector (PublishBase + mCharsetSelector, CurrentCharset, NULL);
+ strcpy (NewCharset, CharsetType);
+}
+/*----------------------------------------------------------------------
    callback of the Publishing menu
   ----------------------------------------------------------------------*/
 static void PublishCallbackDialog (int ref, int typedata, char *data)
@@ -2529,6 +2581,7 @@ static void PublishCallbackDialog (int ref, int typedata, char *data)
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
+	      strcpy (CharsetType, NewCharset);
 	      SetPublishConf ();
 	      libwww_updateNetworkConf (SafePutStatus);
 	      /* reset the status flag */
@@ -2576,6 +2629,11 @@ static void PublishCallbackDialog (int ref, int typedata, char *data)
 	  SafePutStatus |= AMAYA_SAFEPUT_RESTART;
 	  break;
 
+	case mCharsetSelector:
+	  /* Get the desired charset from the item number */
+	  strcpy (NewCharset, data);
+	  break;
+	  
 	default:
 	  break;
 	}
@@ -2607,6 +2665,10 @@ void PublishConfMenu (Document document, View view)
 	    TtaGetMessage (AMAYA, AM_USE_XHTML_MIMETYPE), EOS,
 	    TtaGetMessage (AMAYA, AM_USE_ETAGS), EOS, 
 	    TtaGetMessage (AMAYA, AM_VERIFY_PUT));
+   /* load the current values */
+   GetPublishConf ();
+   /* Build the charset selector */
+   BuildCharsetSelector ();
    TtaNewToggleMenu (PublishBase + mTogglePublish,
 		     PublishBase + PublishMenu,
 		     NULL,
@@ -2629,8 +2691,6 @@ void PublishConfMenu (Document document, View view)
 #endif /* !_WINGUI */
    /* reset the modified flag */
    SafePutStatus = 0;
-   /* load the current values */
-   GetPublishConf ();
 
    /* display the menu */
 #ifndef _WINGUI

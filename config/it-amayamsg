@@ -290,87 +290,88 @@
 288 Creare o cambiare il doctype fa riparsificare il documento.
 289 Le modifiche non potranno venire annullate.
 290 Per un documento XHTML, usa il MIME type application/xhtml+xml
-291 Lock riuscito!
-292 Lock fallito!
-293 Metto il lock su %s...
-294 Il documento %s ha un lock!
-295 Il documento %s ha un lock da %s (timeout %s)
-296 Sovrascrivere l'informazione di lock?
-297 Copiare l'informazione di lock?
-298 Prova a togliere prima il lock dal documento..."
-299 Lock tolto!
-300 Lock non tolto!
-301 Tolgo il lock su %s...
-302 Tolto il lock al documento %s!
-303 Tolgo il lock al documento?
-304 Proprietà del documento
-305 Le proprietà del documento non sono disponibili
-306 Le proprietà del documento non sono al momento disponibili. Riprova più tardi...
-307 Cerco le proprietà del documento...
-308 Mi spiace, non c'è supporto WebDAV per URL di questo tipo %s
-309 Impossibile salvare le informazioni di lock sulla base locale
-310 Impossibile togliere le informazioni di lock dalla base locale
-311 Mi spiace, questa operazione non è permessa per %s
-312 Richiesta fallita! Motivo: Dipendenza non riuscita
-313 Richiesta fallita! Motivo: %s
-314 Riprovo?
-315 Preferenze WebDAV
-316 Riferimento personale utente (URL)
-317 Resource List WebDAV per l'utente(URL URL)
-318 Profondità lock
-319 infinito
-320 Timeout per il lock
-321 Infinito
-322 Altro
-323 Secondi
-324 Scopo per il lock
-325 esclusivo
-326 condiviso
-327 Awarenees
-328 General awareness
-329 Awareness on exit
-330 Timeline
-331 Libreria SVG
-332 Opzione di copia
-333 Copia la selezione
-334 Riferisciti alla selezione
-335 Aggiungi un nuovo modello alla libreria
-336 URL del nuovo file SVG ...
-337 Titolo della libreria
-338 URL per la libreria
-339 Crea libreria
-340 Scorri la libreria
-341 Crea o cerca libreria
-342 La selezione non contiene solo elementi SVG. Per favore riseleziona.
-343 Il titolo della libreria è obbligatorio
-344 Muovi il cursore nel documento editato per definire la nuova posizione chiave...
-345 Posizione chiave definta. Sposta il cursore per definire la durata dell'animazione...
-346 Scegli il colore iniziale dell'elemento...
-347 Colore iniziale definito. Sposta il cursore per definire la durata dell'animazione...
-348 Scegli il colore finale...
-349 Animazione definita.
-350 Attributo animato
-351 Elemento senza ID
-352 Aggiungi ID
-353 Elimina ID
-354 Aggiungi/Elimina ID
-355 Applica l'operazione
-356 Inserisci un nome di elemento
-357 Applica il CSS
-358 Output corrente
-359 Nuova rubrica
-360 Proprietà del bookmark
-361 Proprietà della rubrica
-362 Gerarchia delle rubriche :
-363 Titolo :
-364 Richiama :
-365 Autore :
-366 Creato :
-367 Ultima modifica :
-368 Descrizione :
-369 Selezionare un elemento
-370 Tutti i CSS
-371 Regole di stile CSS applicate all'elemento <%s>\n
-372 Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n
-373 Carica oggetti (object, embed)
-374 Nessuna regola di stile per questo elemento
+291 **Charset for new documents
+292 Lock riuscito!
+293 Lock fallito!
+294 Metto il lock su %s...
+295 Il documento %s ha un lock!
+296 Il documento %s ha un lock da %s (timeout %s)
+297 Sovrascrivere l'informazione di lock?
+298 Copiare l'informazione di lock?
+299 Prova a togliere prima il lock dal documento..."
+300 Lock tolto!
+301 Lock non tolto!
+302 Tolgo il lock su %s...
+303 Tolto il lock al documento %s!
+304 Tolgo il lock al documento?
+305 Proprietà del documento
+306 Le proprietà del documento non sono disponibili
+307 Le proprietà del documento non sono al momento disponibili. Riprova più tardi...
+308 Cerco le proprietà del documento...
+309 Mi spiace, non c'è supporto WebDAV per URL di questo tipo %s
+310 Impossibile salvare le informazioni di lock sulla base locale
+311 Impossibile togliere le informazioni di lock dalla base locale
+312 Mi spiace, questa operazione non è permessa per %s
+313 Richiesta fallita! Motivo: Dipendenza non riuscita
+314 Richiesta fallita! Motivo: %s
+315 Riprovo?
+316 Preferenze WebDAV
+317 Riferimento personale utente (URL)
+318 Resource List WebDAV per l'utente(URL URL)
+319 Profondità lock
+320 infinito
+321 Timeout per il lock
+322 Infinito
+323 Altro
+324 Secondi
+325 Scopo per il lock
+326 esclusivo
+327 condiviso
+328 Awarenees
+329 General awareness
+330 Awareness on exit
+331 Timeline
+332 Libreria SVG
+333 Opzione di copia
+334 Copia la selezione
+335 Riferisciti alla selezione
+336 Aggiungi un nuovo modello alla libreria
+337 URL del nuovo file SVG ...
+338 Titolo della libreria
+339 URL per la libreria
+340 Crea libreria
+341 Scorri la libreria
+342 Crea o cerca libreria
+343 La selezione non contiene solo elementi SVG. Per favore riseleziona.
+344 Il titolo della libreria è obbligatorio
+345 Muovi il cursore nel documento editato per definire la nuova posizione chiave...
+346 Posizione chiave definta. Sposta il cursore per definire la durata dell'animazione...
+347 Scegli il colore iniziale dell'elemento...
+348 Colore iniziale definito. Sposta il cursore per definire la durata dell'animazione...
+349 Scegli il colore finale...
+350 Animazione definita.
+351 Attributo animato
+352 Elemento senza ID
+353 Aggiungi ID
+354 Elimina ID
+355 Aggiungi/Elimina ID
+356 Applica l'operazione
+357 Inserisci un nome di elemento
+358 Applica il CSS
+359 Output corrente
+360 Nuova rubrica
+361 Proprietà del bookmark
+362 Proprietà della rubrica
+363 Gerarchia delle rubriche :
+364 Titolo :
+365 Richiama :
+366 Autore :
+367 Creato :
+368 Ultima modifica :
+369 Descrizione :
+370 Selezionare un elemento
+371 Tutti i CSS
+372 Regole di stile CSS applicate all'elemento <%s>\n
+373 Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n
+374 Carica oggetti (object, embed)
+375 Nessuna regola di stile per questo elemento

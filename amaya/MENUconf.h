@@ -51,7 +51,8 @@
 #define mTogglePublish      2
 #define mDefaultName        3
 #define mSafePutRedirect    4
-#define MAX_PUBLISHMENU_DLG 5
+#define mCharsetSelector    5
+#define MAX_PUBLISHMENU_DLG 6
 
 #define ColorMenu           1
 #define mFgColor            2
