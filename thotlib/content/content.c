@@ -1184,7 +1184,7 @@ Language           *language;
    int                 len, l;
 
    UserErrorCode = 0;
-   if (element == NULL)
+   if (element == NULL || buffer == NULL)
 	TtaError (ERR_invalid_parameter);
    else if (!((PtrElement) element)->ElTerminal)
 	TtaError (ERR_invalid_element_type);
@@ -1196,17 +1196,18 @@ Language           *language;
 	len = 0;
 	pBuf = ((PtrElement) element)->ElText;
 	ptr = buffer;
-	while (pBuf != NULL && len < (*length) - 1)
-	  {
-	     if ((*length) < len + pBuf->BuLength + 1)
+	if (length > 0)
+	  while (pBuf != NULL && len < (*length) - 1)
+	    {
+	      if ((*length) < len + pBuf->BuLength + 1)
 		l = (*length) - len;
-	     else
+	      else
 		l = pBuf->BuLength + 1;
-	     ustrncpy (ptr, pBuf->BuContent, l);
-	     ptr = ptr + (l - 1);
-	     len = len + (l - 1);
-	     pBuf = pBuf->BuNext;
-	  }
+	      ustrncpy (ptr, pBuf->BuContent, l);
+	      ptr = ptr + (l - 1);
+	      len = len + (l - 1);
+	      pBuf = pBuf->BuNext;
+	    }
 	*length = len;
 	*ptr = EOS;
 	*language = ((PtrElement) element)->ElLanguage;

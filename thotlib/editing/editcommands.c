@@ -399,7 +399,8 @@ static ThotBool CloseTextInsertionWithControl ()
 
 	     /* Recherche le point d'insertion (&i non utilise) */
 	     GiveInsertPoint (NULL, frame, &pSelBox, &pBuffer, &ind, &i, &j);
-	     if (pSelBox == NULL)
+	     if (pSelBox == NULL || pSelBox->BxAbstractBox == NULL ||
+		 pSelBox->BxAbstractBox->AbLeafType != LtText)
 	       /* plus de selection courante */
 	       return (notified);
 	     /* Est-ce que le buffer d'insertion est vide ? */
@@ -1125,6 +1126,8 @@ int                 charWidth;
    int                 i;
    int                 j;
 
+   if (pBuffer == NULL)
+     return (FALSE);
    /* Si l'index debute en fin de buffer on passe au buffer suivant */
    if (ind > pBuffer->BuLength && pBuffer->BuNext != NULL)
      {

@@ -106,7 +106,8 @@ Thotbool            selected;
 
       /* show the selection on the whole image */
       if (selected)
-	if (pFrame->FrSelectOnePosition)
+	if (pFrame->FrSelectOnePosition &&
+	    pBox == pFrame->FrSelectionBegin.VsBox)
 	  /* show the selection on the beginning or the end of the image */
 	  DisplayStringSelection (frame,
 				  pFrame->FrSelectionBegin.VsXPos,
