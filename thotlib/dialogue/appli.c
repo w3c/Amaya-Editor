@@ -671,6 +671,9 @@ gboolean FrameResizedGTK (GtkWidget *widget,
 		   width+x, y+height+FrameTable[frame].FrTopMargin);
 	FrameRedraw (frame, width, height);
 	GL_DrawAll (widget, frame);
+	while (gtk_events_pending ()) 
+	  gtk_main_iteration ();
+	UpdateScrollbars (frame);
       }
   return TRUE;  
 }
@@ -685,8 +688,11 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
  
   frame = (int )data;
   width = event->width;
-  height = event->height;
+  height = event->height; 
   FrameRedraw (frame, width, height);
+  while (gtk_events_pending ()) 
+     gtk_main_iteration ();
+  UpdateScrollbars (frame);
   return TRUE;  
 }
 
@@ -3289,8 +3295,6 @@ void UpdateScrollbars (int frame)
    SCROLLINFO          scrollInfo;
 #endif /* _WINDOWS */
 
-   if (JumpInProgress)
-    return;
 
    /* Demande le volume affiche dans la fenetre */
    ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
@@ -3359,7 +3363,8 @@ void UpdateScrollbars (int frame)
      else
        {
 	 gtk_widget_show (GTK_WIDGET (vscroll));
-       }
+       } 
+   gtk_widget_queue_draw   (GTK_WIDGET (vscroll));
 #endif /*_GTK*/  
 #else  /* _WINDOWS */
    GetWindowRect (FrRef[frame], &rWindow);

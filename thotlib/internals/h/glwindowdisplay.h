@@ -23,7 +23,7 @@ typedef struct _XArc {
 
 #endif /*_WINDOWS*/
 void GL_Swap (int frame);
-void GL_MakeCurrent (int frame);
+int GL_MakeCurrent (int frame);
 void SetGlPipelineState ();
 void GLResize (int width, int height, int x, int y);
 void GL_SetForeground (int fg);

@@ -164,6 +164,7 @@ static ThotBool GL_Modif = FALSE;
 /* background color*/
 static int GL_Background[50];
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    SetMainWindowBackgroundColor :                          
   ----------------------------------------------------------------------*/
@@ -187,6 +188,7 @@ void Clear (int frame, int width, int height, int x, int y)
   glVertex2f (x + width, y);
   glEnd ();
 }
+#endif /*_WIN_PRINT*/
 
 #ifdef _WINDOWS 
 
@@ -1376,15 +1378,16 @@ void GL_Swap (int frame)
 /*----------------------------------------------------------------------
    GL_MakeCurrent : Point to correct buffer to draw into
   ----------------------------------------------------------------------*/
-void GL_MakeCurrent (int frame)
+int GL_MakeCurrent (int frame)
 {
 #ifdef _WINDOWS
  if (! wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
-    return;		
+    return 1;		
 #else
   if (!gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
-    return;
+    return 1;
 #endif /*_WINDOWS*/
+  return 0;
 }
 /*----------------------------------------------------------------------
    GL_prepare: If a modif has been done
@@ -1484,18 +1487,17 @@ void GL_DrawAll (ThotWidget widget, int frame)
 	}
 #endif /*_GTK*/ 
 }
-
 void SetGlPipelineState ()
 {
-  if (strncmp ("MESA", (char *)glGetString(GL_RENDERER), 4) == 0
-      || strncmp ("Microsoft", (char *)glGetString(GL_VENDOR), 8) == 0)
+  if (strncmp ("Mesa", (char *)glGetString(GL_RENDERER), 4) == 0
+      || strncmp ("Microsoft", (char *)glGetString(GL_RENDERER), 8) == 0
+      || strncmp ("Sgi", (char *)glGetString(GL_RENDERER), 3) == 0)
     Software_Mode = TRUE;
   else
     Software_Mode = FALSE;
-  g_print ("\n%s", (Software_Mode)?"    Hard":"     Soft");
 #ifdef _PCLDEBUG
-  /* Display Opengl Vendor Name,  Opengl Version, Opengl Renderer*/
   g_print ("\n%s", (Software_Mode)?"    Soft":"     Hard");
+  /* Display Opengl Vendor Name,  Opengl Version, Opengl Renderer*/
   g_print ("\n%s, \n%s, \n%s\n", (char *)glGetString(GL_VENDOR), 
 	   (char *)glGetString(GL_VERSION), 
 	   (char *)glGetString(GL_RENDERER));
@@ -1578,7 +1580,8 @@ BackBufferRegionSwapping
 	    on the exposed region 
 	    => opengl region buffer swapping 
 --------------------------------------------*/
-void GL_BackBufferRegionSwapping (int x, int y, int width, int height, int Totalheight)
+void GL_BackBufferRegionSwapping (int x, int y,
+				  int width, int height, int Totalheight)
 {  
 #ifndef _WINDOWS
   /* copy form bottom to top
@@ -1595,7 +1598,7 @@ void GL_BackBufferRegionSwapping (int x, int y, int width, int height, int Total
   static PFNGLADDSWAPHINTRECTWINPROC p = 0;
 	  
   if (p == 0)
-	  p = (PFNGLADDSWAPHINTRECTWINPROC) wglGetProcAddress("glAddSwapHintRectWIN");
+    p = (PFNGLADDSWAPHINTRECTWINPROC) wglGetProcAddress("glAddSwapHintRectWIN");
 
   (*p) (x, y, x+width, y+height);
   SwapBuffers (GL_Windows[ActiveFrame]);
@@ -1616,25 +1619,16 @@ void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 	       width+xd, yd+height+FrameTable[frame].FrTopMargin);
   else
     {
-#ifdef _WINDOWS
-      if (! wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
+      if (GL_MakeCurrent (frame))
 	return;
-#else /*_WINDOWS*/
-      if (!gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
-	return;
-#endif /*_WINDOWS*/
       /* Copy from backbuffer to backbuffer */
       glRasterPos2i (xf, yf + height);
       glCopyPixels (xd,  
 		    FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin 
 		    - (yd + height), 
 		    width, height, GL_COLOR);
-      glDrawBuffer (GL_FRONT);
       /*copy from back to front */
-      glCopyPixels (xd, FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin
-		    - (yd + height), 
-		    width, height, GL_COLOR);
-      glDrawBuffer (GL_BACK);
+      GL_Swap (frame);
     }
 }
 
