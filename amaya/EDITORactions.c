@@ -27,7 +27,7 @@
 #include "HTMLedit.h"
 #include "init.h"
 #include "html2thot.h"
-
+#include "f/HTMLactions_f.h"
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -86,7 +86,8 @@ View                view;
    el = TtaSearchTypedElement (elType, SearchInTree, el);
    /* and set the initial selection */
    TtaSelectElement (doc, el);
-   UpdateContextSensitiveMenus (SelectionDoc);
+   if (SelectionDoc != 0)
+       UpdateContextSensitiveMenus (SelectionDoc);
    SelectionDoc = doc;
    UpdateContextSensitiveMenus (doc);
 
