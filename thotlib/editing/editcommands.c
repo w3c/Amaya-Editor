@@ -2981,7 +2981,7 @@ int                 keyboard;
 			      TextInserting = FALSE;
 
 			      /* teste si l'on peut optimiser le reaffichage */
-			      if (IsScrollNeeded (frame, 0))
+			      if (IsScrolled (frame, 0))
 				 if (toDelete)
 				    RedrawFrameBottom (frame, 0);
 				 else

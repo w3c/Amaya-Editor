@@ -3602,7 +3602,7 @@ RULES
 	HorizPos: VMiddle = Enclosing.VMiddle;
 	Page(ThePage);
 #else
-	{Height: Enclosing . Height min;}
+	Height: Enclosing . Height min;
 	Size: DOC_FONTSIZE;
 	HorizPos: Left = Enclosing . Left;
 #endif
@@ -3682,7 +3682,7 @@ RULES
 	Hyphenate: Yes;
 #else
 	Width: Enclosing . Width - 1 cm;
-	{Height: Enclosing . Height min;}
+	Height: Enclosing . Height min;
 	HorizPos: Left = Enclosing . Left + 0.5 cm;
 	Hyphenate: No;
 #endif

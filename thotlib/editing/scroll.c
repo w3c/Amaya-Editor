@@ -25,8 +25,10 @@
 #include "constmedia.h"
 #include "typemedia.h"
 
-#define VDEBORDEMENT 40
-#define HDEBORDEMENT 40
+#define VDEBORDEMENT 0
+#define vDEBORDEMENT VDEBORDEMENT / 10
+#define HDEBORDEMENT 0
+#define hDEBORDEMENT HDEBORDEMENT / 10
 
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
@@ -52,13 +54,11 @@
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                VerticalScroll (int frame, int delta, int selection)
-
 #else  /* __STDC__ */
 void                VerticalScroll (frame, delta, selection)
 int                 frame;
 int                 delta;
 int                 selection;
-
 #endif /* __STDC__ */
 
 {
@@ -153,7 +153,8 @@ int                 selection;
 	       }
 	  }
      }
-}				/* VerticalScroll */
+}
+
 
 /*----------------------------------------------------------------------
    HorizontalScroll effectue un scroll en avant (delta > 0) ou en arriere   
@@ -163,7 +164,6 @@ int                 selection;
    Le parametre selection indique s'il faut gerer la       
    selection (valeur 1) ou non (valeur 0).                 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                HorizontalScroll (int frame, int delta, int selection)
 
@@ -244,7 +244,8 @@ int                 selection;
 		SwitchSelection (frame, TRUE);
 	  }
      }
-}				/*HorizontalScroll */
+}
+
 
 /*----------------------------------------------------------------------
    ShowXPosition force la position du bord gauche de la boi^te      
@@ -305,7 +306,7 @@ int                 large;
 	       }
 	  }
      }
-}				/*ShowXPosition */
+}
 
 
 /*----------------------------------------------------------------------
@@ -383,7 +384,7 @@ int                 height;
 	       }
 	  }
      }
-}				/*ShowYPosition */
+}
 
 
 /*----------------------------------------------------------------------
@@ -399,17 +400,14 @@ int                 height;
    nbCharEnd indique le nombre de carate`res apres l'image abstraite.    
    total indique le nombre total de carate`res du document.        
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 PositionAbsBox (int frame, int *nbCharBegin, int *nbCharEnd, int *total)
-
 #else  /* __STDC__ */
 int                 PositionAbsBox (frame, nbCharBegin, nbCharEnd, total)
 int                 frame;
 int                *nbCharBegin;
 int                *nbCharEnd;
 int                *total;
-
 #endif /* __STDC__ */
 
 {
@@ -629,12 +627,14 @@ raint              *height;
 
 	     /* Calcule le nombre de caracteres representes par un pixel */
 	     carparpix = (float) vtotal / (float) h;
-	     min = (int) ((float) min / carparpix);
-	     max = (int) ((float) max / carparpix);
+	     if (min > 0)
+	       min = (int) ((float) min / carparpix);
+	     if (max > 0)
+	       max = (int) ((float) max / carparpix);
 	     /* Portion du scroll occupee par l'Picture Concrete */
 	     h = h - min - max;
-	  }			/*else */
-     }				/*else */
+	  }
+     }
 
    /* Rapport hauteur Picture Concrete sur hauteur portion du scroll */
    ratio = (float) h / (float) pBox->BxHeight;
@@ -667,7 +667,7 @@ raint              *height;
       *width = 1;
    if (*height < 1)
       *height = 1;
-}				/*ComputeDisplayedChars */
+}
 
 
 /*----------------------------------------------------------------------
@@ -741,11 +741,11 @@ int                 percent;
       VerticalScroll (frame, dy, 1);
    else
       RedrawFrameBottom (frame, dy);
-}				/*ShowBox */
+}
 
 
 /*----------------------------------------------------------------------
-   IsScrollNeeded regarde si la marque d'insertion (de'but de se'lection) 
+   IsScrolled regarde si la marque d'insertion (de'but de se'lection) 
    est visible dans la fenetree^tre affiche'e sur l'e'cran.        
    Si c'est le cas, la fonction rend la valeur vrai.       
    Si cela n'est pas le cas, la fonction demande le        
@@ -755,9 +755,9 @@ int                 percent;
    se'lection (valeur 1) ou non (valeur 0).                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsScrollNeeded (int frame, int selection)
+boolean             IsScrolled (int frame, int selection)
 #else  /* __STDC__ */
-boolean             IsScrollNeeded (frame, selection)
+boolean             IsScrolled (frame, selection)
 int                 frame;
 int                 selection;
 
@@ -769,7 +769,6 @@ int                 selection;
    ViewFrame          *pFrame;
    PtrBox              pBo1;
    boolean             result;
-
 
    pFrame = &ViewFrameTable[frame - 1];
    pBo1 = pFrame->FrSelectionBegin.VsBox;
@@ -790,7 +789,7 @@ int                 selection;
       /* C'est une creation interactive de boite, la boite sera */
       /* automatiquement placee dans la fenetre au moment de sa creation */
       result = TRUE;
-   else if (x < xmin + 3 || x > xmax - 3)
+   else if (x < xmin + hDEBORDEMENT || x > xmax - hDEBORDEMENT)
      {
 	/* Deplacement du cadre le la fenetre */
 	HorizontalScroll (frame, x - xmin - dx, selection);
@@ -803,7 +802,7 @@ int                 selection;
       /* C'est une creation interactive de boite, la boite sera */
       /* automatiquement placee dans la fenetre au moment de sa creation */
       result = TRUE;
-   else if (y < ymin + 3 || y + h > ymax - 3)
+   else if (y < ymin + vDEBORDEMENT || y + h > ymax - vDEBORDEMENT)
      {
 	/* Deplacement du cadre le la fenetre */
 	VerticalScroll (frame, y - ymin - dy, selection);

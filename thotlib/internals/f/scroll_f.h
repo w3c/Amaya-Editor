@@ -31,8 +31,8 @@ extern void ShowBox ( int frame,
                       PtrBox pBox,
                       int position,
                       int percent );
-extern boolean IsScrollNeeded ( int frame,
-                                int selection );
+extern boolean IsScrolled ( int frame,
+			    int selection );
 extern void ShowSelectedBox ( int frame,
                               boolean actif );
 extern boolean IsAbsBoxVisible ( int frame,
@@ -65,8 +65,8 @@ extern void ShowBox (/* int frame,
                         PtrBox pBox,
                         int position,
                         int percent */);
-extern boolean IsScrollNeeded (/* int frame,
-                                  int selection */);
+extern boolean IsScrolled (/* int frame,
+			      int selection */);
 extern void ShowSelectedBox (/* int frame,
                                 boolean actif */);
 extern boolean IsAbsBoxVisible (/* int frame,

@@ -1145,7 +1145,8 @@ int                 frame;
 		  /* Si la largeur de la boite depend du contenu et qu'une des     */
 		  /* boites filles est positionnee par une relation hors-structure */
 		  /* --> il faut reevaluer la largeur correspondante.              */
-		  if (toHorizPack && pBox->BxContentWidth)
+		  if (toHorizPack &&
+		      (pBox->BxContentWidth || (!pBox->BxAbstractBox->AbWidth.DimIsPosition && pBox->BxAbstractBox->AbWidth.DimMinimum)))
 		     RecordEnclosing (pBox, TRUE);
 	       }
 	  }
@@ -1302,7 +1303,8 @@ int                 frame;
 		  /* Si la hauteur de la boite depend du contenu et qu'une des     */
 		  /* boites filles est positionnee par une relation hors-structure */
 		  /* --> il faut reevaluer la hauteur correspondante.              */
-		  if (toVertPack && pBox->BxContentHeight)
+		  if (toVertPack &&
+		      (pBox->BxContentHeight || (!pBox->BxAbstractBox->AbHeight.DimIsPosition && pBox->BxAbstractBox->AbHeight.DimMinimum)))
 		     RecordEnclosing (pBox, FALSE);
 	       }
 	  }
@@ -3065,7 +3067,8 @@ int                 frame;
    /* dans les boites de paves composes des boites de texte */
    pBox = pAb->AbBox;
    pDimAb = &pAb->AbWidth;
-   if (pBox->BxContentWidth && pBox->BxType != BoGhost)
+   if (pBox->BxType != BoGhost &&
+       (pBox->BxContentWidth || (!pDimAb->DimIsPosition && pDimAb->DimMinimum)))
      {
 	/* indique que l'englobement horizontal est en cours de traitement */
 	pBox->BxNPixels += 1;
@@ -3096,7 +3099,7 @@ int                 frame;
 	     pChildBox = pChildAb->AbBox;
 	     if (!pChildAb->AbDead && pChildBox != NULL
 		 && pChildAb->AbHorizEnclosing
-		 && pChildAb->AbWidth.DimAbRef != pAb)
+		 && (pChildAb->AbWidth.DimAbRef != pAb || pChildBox->BxContentWidth))
 	       {
 		  /* Recherche la boite dont elle depend */
 		  pRelativeBox = GetHPosRelativePos (pChildBox, NULL);
@@ -3285,7 +3288,8 @@ int                 frame;
 
    pBox = pAb->AbBox;
    pDimAb = &pAb->AbHeight;
-   if (pBox->BxContentHeight && pBox->BxType != BoGhost)
+   if (pBox->BxType != BoGhost &&
+       (pBox->BxContentHeight || (!pDimAb->DimIsPosition && pDimAb->DimMinimum)))
      {
 
 	/* indique que l'englobement vertical est en cours de traitement */
@@ -3319,7 +3323,7 @@ int                 frame;
 	     if (!pChildAb->AbDead
 		 && pChildBox != NULL
 		 && pChildAb->AbVertEnclosing
-		 && pChildAb->AbHeight.DimAbRef != pAb)
+		 && (pChildAb->AbHeight.DimAbRef != pAb || pChildBox->BxContentHeight))
 	       {
 		  /* Recherche la boite dont elle depend */
 		  pRelativeBox = GetVPosRelativeBox (pChildBox, NULL);
@@ -3341,8 +3345,8 @@ int                 frame;
 			  else if (pRelativeAb->AbVertPos.PosAbRef == pAb
 				&& (pRelativeAb->AbVertPos.PosRefEdge != Top
 				    || (pRelativeAb->AbHeight.DimAbRef == pAb
-				     && !pRelativeAb->AbHeight.DimIsPosition
-				 && pChildAb->AbVertPos.PosRefEdge != Top)))
+					&& !pRelativeAb->AbHeight.DimIsPosition
+					&& pChildAb->AbVertPos.PosRefEdge != Top)))
 			     i = y + pChildBox->BxHeight;
 			  /* La taille de la boite depend d'une boite externe ? */
 			  else if (pChildBox->BxHOutOfStruct)
@@ -3351,7 +3355,7 @@ int                 frame;
 			       if (IsParentBox (pRefAb->AbBox, pBox)
 				   && pRefAb->AbHeight.DimAbRef == NULL
 				   && pRefAb->AbHeight.DimValue == 0
-			       && pRefAb->AbBox->BxHeight == pBox->BxHeight)
+				   && pRefAb->AbBox->BxHeight == pBox->BxHeight)
 				  i = y;
 			       else
 				  /* evalue l'encadrement et l'englobement */

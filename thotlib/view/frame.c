@@ -193,31 +193,27 @@ void                TtaRefresh ()
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             RedrawFrameTop (int frame, int delta)
-
 #else  /* __STDC__ */
 boolean             RedrawFrameTop (frame, delta)
 int                 frame;
 int                 delta;
-
 #endif /* __STDC__ */
-
 {
    PtrBox              pBox;
-   PtrBox              min, max;
+   PtrBox              pTopBox, pBottomBox;
+   PtrBox              pFirstBox;
+   PtrBox              pCurrentBox;
+   ViewFrame          *pFrame;
    int                 y, x, vol, h, l;
    int                 height, bottom;
    int                 framexmin;
    int                 framexmax;
    int                 frameymin;
    int                 frameymax;
-   boolean             isbelow;
-   boolean             toadd;
    int                 plane;
    int                 nextplane;
-   PtrBox              firstbox;
-   ViewFrame          *pFrame;
-   PtrBox              pBo1;
-   PtrBox              pBo2;
+   boolean             isbelow;
+   boolean             toadd;
 
    /* are new abstract boxes needed */
    toadd = FALSE;
@@ -247,26 +243,25 @@ int                 delta;
 		/* empty document */
 		pBox = pFrame->FrAbstractBox->AbBox;
 	     isbelow = TRUE;
-	     min = NULL;
-	     max = NULL;
+	     pTopBox = NULL;
+	     pBottomBox = NULL;
 	     vol = 0;
 	     /* half a frame under the bottom of the window */
 	     x = bottom + h / 2;
 	     while (isbelow)
 	       {
-		  pBo1 = pBox;
-		  if (pBo1->BxYOrg < bottom)
+		  if (pBox->BxYOrg < bottom)
 		     isbelow = FALSE;
 		  else
 		    {
-		       if (pBo1->BxYOrg > x)
-			  if (pBo1->BxType != BoPiece && pBo1->BxType != BoDotted)
+		       if (pBox->BxYOrg > x)
+			  if (pBox->BxType != BoPiece && pBox->BxType != BoDotted)
 			     /* this is not a breaking box */
-			     vol += pBo1->BxAbstractBox->AbVolume;
-			  else if (pBo1->BxAbstractBox->AbBox->BxNexChild == pBox)
+			     vol += pBox->BxAbstractBox->AbVolume;
+			  else if (pBox->BxAbstractBox->AbBox->BxNexChild == pBox)
 			     /* this is the first breaking box */
-			     vol += pBo1->BxAbstractBox->AbVolume;
-		       if (pBo1->BxPrevious == NULL)
+			     vol += pBox->BxAbstractBox->AbVolume;
+		       if (pBox->BxPrevious == NULL)
 			  isbelow = FALSE;
                        else
 			 {
@@ -283,39 +278,38 @@ int                 delta;
 			 /* detect cycles */
 			 pBox = NULL;
 		       else
-			 pBox = pBo1->BxPrevious;
+			 pBox = pBox->BxPrevious;
 		    }
 	       }
 
 	     /* Display planes in reverse order from biggest to lowest */
 	     plane = 65536;
 	     nextplane = plane - 1;
-	     firstbox = pBox;
+	     pFirstBox = pBox;
 	     while (plane != nextplane)
 		/* there is a new plane to display */
 	       {
 		  plane = nextplane;
-		  pBox = firstbox;
+		  pBox = pFirstBox;
 		  /* browse all the boxes */
 
 		  /* Draw all the boxes not yet displayed */
 		  while (pBox != NULL)
 		    {
-		       pBo1 = pBox;
-		       if (pBo1->BxAbstractBox->AbDepth == plane)
+		       if (pBox->BxAbstractBox->AbDepth == plane)
 			  /* The box is drawn in the current plane */
 			 {
-			    y = pBo1->BxYOrg + pBo1->BxHeight;
+			    y = pBox->BxYOrg + pBox->BxHeight;
 
 			    /* take into account the filling of the end of the block */
-			    x = pBo1->BxXOrg + pBo1->BxWidth + pBo1->BxEndOfBloc;
+			    x = pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc;
 
 			    /* Save the box on top or the first not visible */
-			    if (y > height && pBo1->BxYOrg < bottom)
+			    if (y > height && pBox->BxYOrg < bottom)
 			      {
-				 if (max == NULL)
-				    max = pBox;
-				 min = pBox;
+				 if (pBottomBox == NULL)
+				    pBottomBox = pBox;
+				 pTopBox = pBox;
 			      }
                             if (pBox->BxType == BoPicture)
 			      {
@@ -328,9 +322,9 @@ int                 delta;
 				  DisplayBox (pBox, frame);
 			      }
 			    else if (y >= frameymin
-				     && pBo1->BxYOrg <= frameymax
+				     && pBox->BxYOrg <= frameymax
 				     && x >= framexmin
-				     && pBo1->BxXOrg <= framexmax)
+				     && pBox->BxXOrg <= framexmax)
 			      DisplayBox (pBox, frame);
 
 			    /* Skip to next box */
@@ -338,26 +332,26 @@ int                 delta;
 			      /* detect cycles */
 			      pBox = NULL;
 			    else
-			      pBox = pBo1->BxPrevious;
+			      pBox = pBox->BxPrevious;
 			 }
-		       else if (pBo1->BxAbstractBox->AbDepth < plane)
+		       else if (pBox->BxAbstractBox->AbDepth < plane)
 			 {
 			    /* keep the lowest value for plane depth */
 			    if (plane == nextplane)
-			       nextplane = pBo1->BxAbstractBox->AbDepth;
-			    else if (pBo1->BxAbstractBox->AbDepth > nextplane)
-			       nextplane = pBo1->BxAbstractBox->AbDepth;
+			       nextplane = pBox->BxAbstractBox->AbDepth;
+			    else if (pBox->BxAbstractBox->AbDepth > nextplane)
+			       nextplane = pBox->BxAbstractBox->AbDepth;
 			    if (pBox->BxPrevious == pBox)
 			      /* detect cycles */
 			      pBox = NULL;
 			    else
-			      pBox = pBo1->BxPrevious;
+			      pBox = pBox->BxPrevious;
 			 }
 		       else if (pBox->BxPrevious == pBox)
 			 /* detect cycles */
 			 pBox = NULL;
 		       else
-			  pBox = pBo1->BxPrevious;
+			  pBox = pBox->BxPrevious;
 		    }
 	       }
 
@@ -369,33 +363,33 @@ int                 delta;
 	     pBox = pFrame->FrAbstractBox->AbBox;
 	     if (!FrameUpdating && !TextInserting)
 	       {
-		  pBo1 = pBox;
+		  pCurrentBox = pBox;
 
 		  /* The concrete image is being filled */
 		  FrameUpdating = TRUE;
 
 		  /* Abstract image overflow of half a frame both on top and bottom */
-		  y = height - pBo1->BxYOrg;
+		  y = height - pCurrentBox->BxYOrg;
 		  x = h / 2;
 
 		  if (vol > 0 && y > x)
 		     /* Compute the volume to remove */
 		    {
-		       pBox = pBo1->BxNext;
+		       pBox = pCurrentBox->BxNext;
 		       height -= x;
 		       y = 0;
 		       while (pBox != NULL)
 			 {
-			    pBo2 = pBox;
-			    if (pBo2->BxYOrg + pBo2->BxHeight > height)
+			    pCurrentBox = pBox;
+			    if (pCurrentBox->BxYOrg + pCurrentBox->BxHeight > height)
 			       pBox = NULL;
 			    else
 			      {
-				 pBox = pBo2->BxNext;
-				 if (pBo2->BxType != BoPiece && pBo2->BxType != BoDotted)
-				    y += pBo2->BxAbstractBox->AbVolume;
-				 else if (pBo2->BxNexChild == NULL)
-				    y += pBo2->BxAbstractBox->AbVolume;
+				 pBox = pCurrentBox->BxNext;
+				 if (pCurrentBox->BxType != BoPiece && pCurrentBox->BxType != BoDotted)
+				    y += pCurrentBox->BxAbstractBox->AbVolume;
+				 else if (pCurrentBox->BxNexChild == NULL)
+				    y += pCurrentBox->BxAbstractBox->AbVolume;
 			      }
 			 }
 		       pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume - vol - y;
@@ -430,13 +424,12 @@ int                 delta;
 			    /* convert in number of chars */
 			    vol = GetCharsCapacity (vol);
 			 }
-		       if (min != NULL)
+		       if (pTopBox != NULL)
 			 {
-			    pBo2 = min;
-			    y = pBo2->BxYOrg;
+			    y = pTopBox->BxYOrg;
 
 			    /* previous frame limit */
-			    x = y + pBo2->BxHeight;
+			    x = y + pTopBox->BxHeight;
 			 }
 		       IncreaseVolume (TRUE, vol, frame);
 
@@ -444,10 +437,9 @@ int                 delta;
 		       toadd = TRUE;
 
 		       /* Recompute the loaction of the frame in the abstract image */
-		       if (min != NULL)
+		       if (pTopBox != NULL)
 			 {
-			    pBo2 = min;
-			    y = -y + pBo2->BxYOrg;
+			    y = -y + pTopBox->BxYOrg;
 
 			    /* y equal the shift of previous first box */
 			    /* What's already displayed is related to this */
@@ -456,7 +448,7 @@ int                 delta;
 
 			    /* x equal the limit of redrawing after shifting */
 			    if (y > 0)
-			       x = pBo2->BxYOrg + pBo2->BxHeight;
+			       x = pTopBox->BxYOrg + pTopBox->BxHeight;
 
 			    /* new limit */
 			    pFrame->FrClipYEnd = x;
@@ -472,9 +464,9 @@ int                 delta;
 		    }
 
 		  /* A piece of the concrete image lack at the bottom */
-		  else if (pFrame->FrAbstractBox->AbTruncatedTail && bottom > pBo1->BxYOrg + pBo1->BxHeight)
+		  else if (pFrame->FrAbstractBox->AbTruncatedTail && bottom > pCurrentBox->BxYOrg + pCurrentBox->BxHeight)
 		    {
-		       y = pBo1->BxYOrg + pBo1->BxHeight;
+		       y = pCurrentBox->BxYOrg + pCurrentBox->BxHeight;
 
 		       /* volume of the area to add */
 		       vol = (bottom - y) * l;
@@ -593,7 +585,15 @@ int                 delta;
 #endif /* __STDC__ */
 {
    PtrBox              pBox;
-   PtrBox              min;
+   PtrBox              pTopBox;
+   PtrBox              pCurrentBox;
+   PtrBox              ToCreate;
+   PtrBox              pFirstBox;
+   ViewFrame          *pFrame;
+   PtrAbstractBox      pAbbox1;
+   int                 plane;
+   int                 nextplane;
+   int                 i;
    int                 y, x, vol, h, l;
    int                 height, bottom;
    int                 framexmin;
@@ -602,15 +602,6 @@ int                 delta;
    int                 frameymax;
    boolean             ontop;
    boolean             toadd;
-   int                 plane;
-   int                 nextplane;
-   PtrBox              firstbox;
-   ViewFrame          *pFrame;
-   PtrBox              pBo1;
-   PtrAbstractBox      pAbbox1;
-   PtrBox              pBo2;
-   PtrBox              ToCreate;
-   int                 i;
 
    /* are new abstract boxes needed */
    toadd = FALSE;
@@ -635,22 +626,23 @@ int                 delta;
 	/* Search the first visible box or the one below */
 	pBox = pFrame->FrAbstractBox->AbBox->BxNext;
 	if (pBox == NULL)
-	   pBox = pFrame->FrAbstractBox->AbBox;		/* empty document */
+	  /* empty document */
+	   pBox = pFrame->FrAbstractBox->AbBox;
 
 	ontop = TRUE;
-	min = NULL;
+	pTopBox = NULL;
 	vol = 0;
 	x = height - h / 2;
 
 	/* Display planes in reverse order from biggest to lowest */
 	plane = 65536;
 	nextplane = plane - 1;
-	firstbox = pBox;
+	pFirstBox = pBox;
 	while (plane != nextplane)
 	   /* there is a new plane to display */
 	  {
 	     plane = nextplane;
-	     pBox = firstbox;
+	     pBox = pFirstBox;
 	     /* browse all the boxes */
 
 	     /* Draw all the boxes not yet displayed */
@@ -680,8 +672,8 @@ int                 delta;
 		       /* Save the first visible box */
 		       if (y > height && pBox->BxYOrg < bottom)
 			 {
-			    if (min == NULL)
-			       min = pBox;
+			    if (pTopBox == NULL)
+			       pTopBox = pBox;
 			 }
 
 		       /* If a box is drawn for the first time, check if   */
@@ -779,11 +771,11 @@ int                 delta;
 	pBox = pFrame->FrAbstractBox->AbBox;
 	if (!FrameUpdating && (!TextInserting || delta > 0))
 	  {
-	     pBo1 = pBox;
+	     pCurrentBox = pBox;
 	     FrameUpdating = TRUE;
 
 	     /* The concrete image is being filled */
-	     y = height - pBo1->BxYOrg;
+	     y = height - pCurrentBox->BxYOrg;
 
 	     if (pFrame->FrAbstractBox->AbInLine)
 		FrameUpdating = FALSE;
@@ -798,21 +790,20 @@ int                 delta;
 		  height = height * l;
 
 		  /* Volume of the area to recompute */
-		  if (min != NULL)
+		  if (pTopBox != NULL)
 		    {
-		       pBo2 = min;
-		       y = pBo2->BxYOrg;	/* previous location */
-		       x = y + pBo2->BxHeight;
+		      /* register previous location */
+		       y = pTopBox->BxYOrg;
+		       x = y + pTopBox->BxHeight;
 		    }
 		  IncreaseVolume (TRUE, GetCharsCapacity (height), frame);
 		  toadd = TRUE;
 
 		  /* Adding abstract boxes at the beginning */
 		  /* Recompute the loaction of the frame in the abstract image */
-		  if (min != NULL)
+		  if (pTopBox != NULL)
 		    {
-		       pBo2 = min;
-		       y = -y + pBo2->BxYOrg;
+		       y = -y + pTopBox->BxYOrg;
 
 		       /* y equal the shift of previous first box */
 		       /* What's already displayed is related to this */
@@ -821,35 +812,35 @@ int                 delta;
 
 		       /* x equal the limit of redrawing after shifting */
 		       if (y > 0)
-			  x = pBo2->BxYOrg + pBo2->BxHeight;
+			  x = pTopBox->BxYOrg + pTopBox->BxHeight;
 
 		       /* new limit */
 		       pFrame->FrClipYEnd = x;
 		    }
 		  ontop = RedrawFrameTop (frame, 0);
 	       }
-	     y = pFrame->FrYOrg + h - pBo1->BxYOrg - pBo1->BxHeight;
+	     y = pFrame->FrYOrg + h - pCurrentBox->BxYOrg - pCurrentBox->BxHeight;
 	     x = h / 2;
 
 	     /* Abstract image overflow of half a frame both on top and bottom */
 	     if (vol > 0 && -y > x)
 		/* compute the volume to substract */
 	       {
-		  pBox = pBo1->BxPrevious;
+		  pBox = pCurrentBox->BxPrevious;
 		  bottom += x;
 		  y = 0;
 		  while (pBox != NULL)
 		    {
-		       pBo2 = pBox;
-		       if (pBo2->BxYOrg < bottom)
+		       pCurrentBox = pBox;
+		       if (pCurrentBox->BxYOrg < bottom)
 			  pBox = NULL;
 		       else
 			 {
-			    pBox = pBo2->BxPrevious;
-			    if (pBo2->BxType != BoPiece && pBo2->BxType != BoDotted)
-			       y += pBo2->BxAbstractBox->AbVolume;
-			    else if (pBo2->BxAbstractBox->AbBox->BxNexChild == pBox)
-			       y += pBo2->BxAbstractBox->AbVolume;
+			    pBox = pCurrentBox->BxPrevious;
+			    if (pCurrentBox->BxType != BoPiece && pCurrentBox->BxType != BoDotted)
+			       y += pCurrentBox->BxAbstractBox->AbVolume;
+			    else if (pCurrentBox->BxAbstractBox->AbBox->BxNexChild == pBox)
+			       y += pCurrentBox->BxAbstractBox->AbVolume;
 			 }
 		    }
 		  pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume - vol - y;
@@ -861,14 +852,14 @@ int                 delta;
 	       {
 		  if (vol > 0 && vol < pFrame->FrAbstractBox->AbVolume)
 		    {
-		       if (min != NULL)
-			  y = min->BxYOrg;
+		       if (pTopBox != NULL)
+			  y = pTopBox->BxYOrg;
 		       DecreaseVolume (TRUE, vol, frame);
 		       DefClip (frame, 0, 0, 0, 0);
 
 		       /* check location of frame in concrete image */
-		       if (min != NULL)
-			  pFrame->FrYOrg = pFrame->FrYOrg - y + min->BxYOrg;
+		       if (pTopBox != NULL)
+			  pFrame->FrYOrg = pFrame->FrYOrg - y + pTopBox->BxYOrg;
 		    }
 		  if (pFrame->FrAbstractBox == NULL)
 		    {
@@ -887,7 +878,7 @@ int                 delta;
 		       vol = GetCharsCapacity (vol);
 		    }
 
-		  y = pBo1->BxYOrg + pBo1->BxHeight;
+		  y = pCurrentBox->BxYOrg + pCurrentBox->BxHeight;
 
 		  /* cleanup the bottom of the frame */
 		  Clear (frame, l, pFrame->FrYOrg + h - y, 0, y);
@@ -919,8 +910,6 @@ int                 delta;
 	     /* update of image is finished */
 	     FrameUpdating = FALSE;
 	  }
-
-
      }
    else if (pFrame->FrReady)
      {
@@ -933,7 +922,6 @@ int                 delta;
 #ifdef _WINDOWS
    WIN_ReleaseDeviceContext ();
 #endif /* _WINDOWS */
-
    return toadd;
 }
 

@@ -1268,7 +1268,6 @@ boolean             exceptRep;
 }
 
 #else  /* __COLPAGE__ */
-
 /*----------------------------------------------------------------------
    KillPresEnclosing supprime tous les paves de presentation           
    crees par pAb et les paves de presentation crees par   
@@ -1278,11 +1277,8 @@ boolean             exceptRep;
    Au retour volsupp indique le volume des paves de        
    presentation tues et pAbbReDisp le pave a reafficher.     
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 static void         KillPresEnclosing (PtrAbstractBox pAb, boolean head, PtrDocument pDoc, PtrAbstractBox * pAbbReDisp, int *volsupp, boolean exceptCrWith)
-
 #else  /* __STDC__ */
 static void         KillPresEnclosing (pAb, head, pDoc, pAbbReDisp, volsupp, exceptCrWith)
 PtrAbstractBox      pAb;
@@ -1291,7 +1287,6 @@ PtrDocument         pDoc;
 PtrAbstractBox     *pAbbReDisp;
 int                *volsupp;
 boolean             exceptCrWith;
-
 #endif /* __STDC__ */
 
 {
@@ -1437,7 +1432,6 @@ boolean             exceptCrWith;
 #endif /* __COLPAGE__ */
 
 
-
 /*----------------------------------------------------------------------
    SupprAbsBoxes reduit de dvol le volume du pave pAbbRoot en        
    supprimant des paves, en tete si head est vrai, en      
@@ -1447,19 +1441,15 @@ boolean             exceptCrWith;
    cette procedure est toujours appelee avec la racine de  
    la vue si le document est mis en pages.                 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         SupprAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, boolean head, int *dvol)
-
 #else  /* __STDC__ */
 static void         SupprAbsBoxes (pAbbRoot, pDoc, head, dvol)
 PtrAbstractBox      pAbbRoot;
 PtrDocument         pDoc;
 boolean             head;
 int                *dvol;
-
 #endif /* __STDC__ */
-
 {
    PtrAbstractBox      pAb, pAbbSibling, pAbbReDisp, pAbbR;
    int                 volsupp, volpres;
@@ -1646,19 +1636,15 @@ int                *dvol;
    de la vue.                                              
      pAbbRoot est une vraie racine d'image abstraite        
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         AddVolView (int VolOpt, PtrAbstractBox pAbbRoot, PtrElement pElMiddle, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 static void         AddVolView (VolOpt, pAbbRoot, pElMiddle, pDoc)
 int                 VolOpt;
 PtrAbstractBox      pAbbRoot;
 PtrElement          pElMiddle;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    boolean             add, suppress, midHead, stop;
    int                 view, volprec, dvol;
@@ -1758,17 +1744,13 @@ PtrDocument         pDoc;
    abstraites en conservant l'element pointe par pEl au    
    milieu (ou a peu pres) de l'image abstraite.            
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                AdjustVolume (PtrElement pEl, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 void                AdjustVolume (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    int                 view;
 
@@ -1852,7 +1834,6 @@ PtrDocument         pDoc;
    On cree des paves, le Mediateur se charge du            
    reaffichage                                             
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                IncreaseVolume (boolean head, int dVol, int frame)
 #else  /* __STDC__ */
@@ -1860,9 +1841,7 @@ void                IncreaseVolume (head, dVol, frame)
 boolean             head;
 int                 dVol;
 int                 frame;
-
 #endif /* __STDC__ */
-
 {
    PtrDocument         pDoc;
    int                 view, h;
@@ -1975,16 +1954,13 @@ int                 frame;
    On supprime des paves, le Mediateur se charge du        
    reaffichage                                             
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                DecreaseVolume (boolean head, int dVol, int frame)
-
 #else  /* __STDC__ */
 void                DecreaseVolume (head, dVol, frame)
 boolean             head;
 int                 dVol;
 int                 frame;
-
 #endif /* __STDC__ */
 
 {
@@ -2058,9 +2034,8 @@ int                 frame;
 		  pDoc->DocViewModifiedAb[view - 1] = NULL;
 	       }
 #endif /* __COLPAGE__ */
-	  }
      }
-
+}
 
 
 /*----------------------------------------------------------------------
@@ -2073,380 +2048,379 @@ int                 frame;
    Si affiche est Vrai, l'image est reaffichee.            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-   void                CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, boolean begin, boolean display)
+void                CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, boolean begin, boolean display)
 #else  /* __STDC__ */
-   void                CheckAbsBox (pEl, view, pDoc, begin, display)
-   PtrElement          pEl;
-   int                 view;
-   PtrDocument         pDoc;
-   boolean             begin;
-   boolean             display;
+void                CheckAbsBox (pEl, view, pDoc, begin, display)
+PtrElement          pEl;
+int                 view;
+PtrDocument         pDoc;
+boolean             begin;
+boolean             display;
 
 #endif /* __STDC__ */
-   {
-      boolean             openedView, creation, stop;
-      PtrElement          pElAscent, pElPage;
-      PtrElement          pAsc[MaxAsc];
-      int                 NumAsc, i, volsupp, frame, nAssoc, boxType, h;
-      PtrAbstractBox      pAbbDestroyed, pAbbRemain, pAbbLastEmptyCr, pAbbFirstEmptyCr,
-                          pAbbReDisp, pAbbRoot, pPrevious;
-      PtrElement          pEl1;
-      PtrAbstractBox      pAbbox1;
-      boolean             complete;
-
+{
+  boolean             openedView, creation, stop;
+  PtrElement          pElAscent, pElPage;
+  PtrElement          pAsc[MaxAsc];
+  int                 NumAsc, i, volsupp, frame, nAssoc, boxType, h;
+  PtrAbstractBox      pAbbDestroyed, pAbbRemain, pAbbLastEmptyCr, pAbbFirstEmptyCr;
+  PtrAbstractBox      pAbbReDisp, pAbbRoot, pPrevious;
+  PtrElement          pEl1;
+  PtrAbstractBox      pAbbox1;
+  boolean             complete;
+  
 #ifdef __COLPAGE__
-      int                 viewSch, cycle;
-      PtrAbstractBox      pAbbPage, pAbb;
-      PtrElement          pElRoot, pElChild, pElRef;
-      boolean             found, pagedView, isAssoc, toCreate;
-      PtrPSchema          pSchPage;
+  int                 viewSch, cycle;
+  PtrAbstractBox      pAbbPage, pAbb;
+  PtrElement          pElRoot, pElChild, pElRef;
+  boolean             found, pagedView, isAssoc, toCreate;
+  PtrPSchema          pSchPage;
 
-      pagedView = FALSE;
-      pAbbLastEmptyCr = NULL;
-      pElPage = NULL;
-      if (pEl != NULL)
+  pagedView = FALSE;
+  pAbbLastEmptyCr = NULL;
+  pElPage = NULL;
+  if (pEl != NULL)
+    {
+      nAssoc = pEl->ElAssocNum;
+      /* verifie si la vue a ete creee */
+      isAssoc = AssocView (pEl);
+      if (isAssoc)
+	/* element associe qui s'affiche dans une autre vue que */
+	/* la vue principale */
 	{
-	   nAssoc = pEl->ElAssocNum;
-	   /* verifie si la vue a ete creee */
-	   isAssoc = AssocView (pEl);
-	   if (isAssoc)
-	      /* element associe qui s'affiche dans une autre vue que */
-	      /* la vue principale */
-	     {
-		openedView = pDoc->DocAssocFrame[nAssoc - 1] != 0 && view == 1;
-		pElRoot = pDoc->DocAssocSubTree[nAssoc - 1];
-		if (pElRoot == NULL)
-		   pElRoot = pDoc->DocAssocRoot[nAssoc - 1];
-		if (pElRoot != NULL)
-		   pAbbRoot = pElRoot->ElAbstractBox[view - 1];
-		frame = pDoc->DocAssocFrame[nAssoc - 1];
-	     }
-	   else
-	     {
-		openedView = pDoc->DocView[view - 1].DvPSchemaView > 0;
-		pElRoot = pDoc->DocRootElement;
-		pAbbRoot = pElRoot->ElAbstractBox[view - 1];
-		frame = pDoc->DocViewFrame[view - 1];
-	     }
-	   /*  test si vue paginee */
-	   pEl1 = pElRoot->ElFirstChild;
-	   /* recherche le numero de vue defini dans le schema de presentation */
-	   /* Attention il faut appeler AppliedView avec pElRoot */
-	   viewSch = AppliedView (pElRoot, NULL, pDoc, view);
-	   if (GetPageBoxType (pEl1, viewSch, &pSchPage) != 0)
-	      pagedView = TRUE;
-	   toCreate = openedView;
-	   /* a priori on cree les paves de l'element */
-	   if (pagedView && toCreate)
-	      /* Vue paginee : code specifique */
-	     {
-		/* si l'element a un pave, est-ce le premier des dup ? */
-		/* si c'est le cas (le pave n'est pas coupe en tete), */
-		/* on ne cree rien car l'element a son premier pave deja cree */
-		found = FALSE;
-		pAbb = pEl->ElAbstractBox[view - 1];
-		if (pAbb != NULL)
+	  openedView = pDoc->DocAssocFrame[nAssoc - 1] != 0 && view == 1;
+	  pElRoot = pDoc->DocAssocSubTree[nAssoc - 1];
+	  if (pElRoot == NULL)
+	    pElRoot = pDoc->DocAssocRoot[nAssoc - 1];
+	  if (pElRoot != NULL)
+	    pAbbRoot = pElRoot->ElAbstractBox[view - 1];
+	  frame = pDoc->DocAssocFrame[nAssoc - 1];
+	}
+      else
+	{
+	  openedView = pDoc->DocView[view - 1].DvPSchemaView > 0;
+	  pElRoot = pDoc->DocRootElement;
+	  pAbbRoot = pElRoot->ElAbstractBox[view - 1];
+	  frame = pDoc->DocViewFrame[view - 1];
+	}
+      /*  test si vue paginee */
+      pEl1 = pElRoot->ElFirstChild;
+      /* recherche le numero de vue defini dans le schema de presentation */
+      /* Attention il faut appeler AppliedView avec pElRoot */
+      viewSch = AppliedView (pElRoot, NULL, pDoc, view);
+      if (GetPageBoxType (pEl1, viewSch, &pSchPage) != 0)
+	pagedView = TRUE;
+      toCreate = openedView;
+      /* a priori on cree les paves de l'element */
+      if (pagedView && toCreate)
+	/* Vue paginee : code specifique */
+	{
+	  /* si l'element a un pave, est-ce le premier des dup ? */
+	  /* si c'est le cas (le pave n'est pas coupe en tete), */
+	  /* on ne cree rien car l'element a son premier pave deja cree */
+	  found = FALSE;
+	  pAbb = pEl->ElAbstractBox[view - 1];
+	  if (pAbb != NULL)
+	    {
+	      toCreate = FALSE;	/* a priori rien a creer */
+	      while (pAbb != NULL && pAbb->AbPresentationBox && pAbb->AbNext != NULL)
+		pAbb = pAbb->AbNext;
+	      if (pAbb != NULL && pAbb->AbElement == pEl && pAbb->AbLeafType == LtCompound)
+		toCreate = (pAbb->AbTruncatedHead);
+	    }
+	  if (toCreate)
+	    {
+	      /* est-ce l'element racine d'un arbre d'elements associes ? */
+	      pElRef = pEl;
+	      if (pElRef->ElParent == NULL)
+		/* c'est une racine */
+		if (nAssoc != 0 && !isAssoc)
+		  /* c'est un element associe racine d'elements */
 		  {
-		     toCreate = FALSE;	/* a priori rien a creer */
-		     while (pAbb != NULL && pAbb->AbPresentationBox && pAbb->AbNext != NULL)
-			pAbb = pAbb->AbNext;
-		     if (pAbb != NULL && pAbb->AbElement == pEl && pAbb->AbLeafType == LtCompound)
-			toCreate = (pAbb->AbTruncatedHead);
+		    /* s'affichant en haut ou bas de page */
+		    /* on creera son pave sur la page de la premiere */
+		    /* reference a son premier fils */
+		    pElRef = pElRef->ElFirstChild;
+		    if (pElRef == NULL)
+		      toCreate = FALSE;
 		  }
-		if (toCreate)
+	    }
+	  if (toCreate)
+	    /* si c'est un element associe qui s'affiche en haut ou bas de page */
+	    /* il faut rechercher la premiere reference et afficher la page */
+	    /* de cet element reference. AbsBoxesCreate creera les paves de l'element */
+	    /* associe par appel de CrPavHB */
+	    if (nAssoc != 0 && !isAssoc)
+	      /* on recherche l'ascendant qui est l'element reference (pEl peut */
+	      /* etre un fils de cet element) */
+	      /* il faut utiliser pElRef et non pEl */
+	      {
+		while (pElRef->ElParent->ElParent != NULL)
+		  pElRef = pElRef->ElParent;
+		cycle = 1;
+		pEl1 = pElRef;
+		while (!found && pEl1 != NULL)
 		  {
-		     /* est-ce l'element racine d'un arbre d'elements associes ? */
-		     pElRef = pEl;
-		     if (pElRef->ElParent == NULL)
-			/* c'est une racine */
-			if (nAssoc != 0 && !isAssoc)
-			   /* c'est un element associe racine d'elements */
-			  {
-			     /* s'affichant en haut ou bas de page */
-			     /* on creera son pave sur la page de la premiere */
-			     /* reference a son premier fils */
-			     pElRef = pElRef->ElFirstChild;
-			     if (pElRef == NULL)
-				toCreate = FALSE;
-			  }
-		  }
-		if (toCreate)
-		   /* si c'est un element associe qui s'affiche en haut ou bas de page */
-		   /* il faut rechercher la premiere reference et afficher la page */
-		   /* de cet element reference. AbsBoxesCreate creera les paves de l'element */
-		   /* associe par appel de CrPavHB */
-		   if (nAssoc != 0 && !isAssoc)
-		      /* on recherche l'ascendant qui est l'element reference (pEl peut */
-		      /* etre un fils de cet element) */
-		      /* il faut utiliser pElRef et non pEl */
-		     {
-			while (pElRef->ElParent->ElParent != NULL)
-			   pElRef = pElRef->ElParent;
-			cycle = 1;
-			pEl1 = pElRef;
-			while (!found && pEl1 != NULL)
-			  {
-			     pElPage = GetPageBreakForAssoc (pEl1, viewSch, &boxType);
-			     if (pElPage == NULL)
-				/* c'est un element non reference, il faut creer son */
-				/* pave a cote d'un element reference frere */
-				/* si il n'y a aucun frere (seul elt) TODO plus tard */
-				if (cycle == 1)
-				   if (pEl1->ElPrevious != NULL)
-				      pEl1 = pEl1->ElPrevious;
-				   else
-				     {
-					cycle = 2;
-					/* au 2eme tour on prend les freres suivants */
-					pEl1 = pElRef->ElNext;
-				     }
-				else
-				  {
-				     pEl1 = pEl1->ElNext;
-				  }
-			     else	/* pElPage != NULL */
-				found = TRUE;	/* on a trouver la page a creer */
-			  }
-			if (pEl1 == NULL)
-			   toCreate = FALSE;	/* TODO plus tard */
-		     }
-
-		if (toCreate && !found)
-		  {
-		     /* on recherche la page dans laquelle se trouve pEl */
-		     found = FALSE;
-		     /* si pEl est une PageBreak, c'est fini */
-		     if (pEl->ElTypeNumber == PageBreak + 1
-			 && (pEl->ElPageType == PgBegin
-			     || pEl->ElPageType == PgComputed
-			     || pEl->ElPageType == PgUser)
-			 && pEl->ElViewPSchema == viewSch)
-		       {
-			  found = TRUE;
-			  pElPage = pEl;
-		       }
-		     else
-		       {
-			  pEl1 = pEl;
-			  while (!found && pEl1 != NULL)
-			    {
-			       pElPage = BackSearchTypedElem (pEl1, PageBreak + 1, NULL);
-			       if (pElPage != NULL && pElPage->ElViewPSchema == viewSch
-				   && (pElPage->ElPageType == PgBegin
-				       || pElPage->ElPageType == PgComputed
-				       || pElPage->ElPageType == PgUser))
-				  found = TRUE;
-			       else
-				  pEl1 = pElPage;
-			    }
-		       }
-		     if (found && pElPage->ElAbstractBox[view - 1] != NULL)
-			/* si trouve et si l'element marque page a un pave dans la vue */
-			/* c'est fini: l'element pEl n'est pas visible dans cette vue, */
-			/* sinon il aurait eu un pave */
-			toCreate = FALSE;
-		     if (!found)
-			/* si on n'a pas trouve d'element marque page precedent */
-			/* c'est que pEl est la racine ou un element marque page */
-			/* d'une autre vue */
-			/* on creera l'image a partir de la racine */
-			/* sans partir d'une marque de page */
-			/* sinon erreur */
-			if (!(pEl->ElParent == NULL
-			      || (pEl->ElTypeNumber == PageBreak + 1
-				  && pEl->ElViewPSchema != viewSch)))
-			  {
-			     printf ("peut etre erreur CheckAbsBox : pas trouve de marque page %s",
-				     pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
-			     printf ("\n");
-			     toCreate = FALSE;
-			  }
-		  }
-		if (toCreate)
-		  {
-		     /* on detruit l'i.a. sauf la racine */
-		     /* pour recreer correctement la partie de l'i.a. demandee */
-		     pAbbRoot = pElRoot->ElAbstractBox[view - 1];
-		     if (pAbbRoot != NULL)
-		       {
-			  pAbbox1 = pAbbRoot->AbFirstEnclosed;
-			  while (pAbbox1 != NULL)
-			    {
-			       SetDeadAbsBox (pAbbox1);
-			       pAbbox1 = pAbbox1->AbNext;
-			    }
-			  /* pour que sa boite soit detruite */
-			  pAbbRoot->AbDead = TRUE;
-			  h = 0;
-			  ChangeConcreteImage (frame, &h, pAbbRoot);
-			  pAbbRoot->AbDead = FALSE;
-			  pAbbRoot->AbNew = TRUE;
-			  pAbbRoot->AbTruncatedHead = TRUE;
-			  pAbbRoot->AbTruncatedTail = TRUE;
-			  FreeDeadAbstractBoxes (pAbbRoot);
-		       }
-		     else
-		       {
-			  /* la racine n'a pas de pave, on le cree (sans la descendance) */
-			  pAbbRoot = AbsBoxesCreate (pElRoot, pDoc, view, TRUE,
-						     FALSE, &complete);
-			  pDoc->DocViewRootAb[view - 1] = pAbbRoot;
-			  pAbbRoot->AbTruncatedHead = TRUE;
-			  pAbbRoot->AbTruncatedTail = TRUE;
-		       }
-		  }
-		/* on cree les paves de la Marque Page */
-		/* par construction (cf. AbsBoxesCreate), ils seront mis sous */
-		/* la racine */
-		if (found)
-		  {
-		     pAbbPage = AbsBoxesCreate (pElPage, pDoc, view, TRUE, TRUE, &complete);
-		     /* on cree les paves de ses ascendants en les marquant CT et CQ */
-		     pElAscent = pElPage->ElParent;
-		     pElChild = pElPage;
-		     NumAsc = 0;
-		     stop = FALSE;
-		     do
-			if (pElAscent == NULL)
-			   stop = TRUE;
-			else if (pElAscent->ElAbstractBox[view - 1] != NULL)
-			   /* normalement c'est la racine */
-			   stop = TRUE;
+		    pElPage = GetPageBreakForAssoc (pEl1, viewSch, &boxType);
+		    if (pElPage == NULL)
+		      /* c'est un element non reference, il faut creer son */
+		      /* pave a cote d'un element reference frere */
+		      /* si il n'y a aucun frere (seul elt) TODO plus tard */
+		      if (cycle == 1)
+			if (pEl1->ElPrevious != NULL)
+			  pEl1 = pEl1->ElPrevious;
 			else
 			  {
-			     /* on ne creera le pave de l'ascendant que si il */
-			     /* doit avoir des fils dans la page */
-			     if (!(NumAsc == 0 && pElChild->ElNext == NULL))
-			       {
-				  if (NumAsc < MaxAsc)
-				     NumAsc++;
-				  pAsc[NumAsc - 1] = pElAscent;
-			       }
-			     pElChild = pElAscent;
-			     pElAscent = pElAscent->ElParent;
+			    cycle = 2;
+			    /* au 2eme tour on prend les freres suivants */
+			    pEl1 = pElRef->ElNext;
 			  }
-		     while (!stop);
-		     /* cree les paves de ces elements, en commencant par */
-		     /* celui qui contient tous les autres.  */
-		     pAbbFirstEmptyCr = NULL;
-		     i = NumAsc;
-		     while (i > 0)
-		       {
-			  /* cree juste le pave, sans sa descendance et sans lui */
-			  /* appliquer les regles de presentation. */
-			  pPrevious = AbsBoxesCreate (pAsc[i - 1], pDoc, view, TRUE, FALSE, &complete);
-			  pPrevious = pAsc[i - 1]->ElAbstractBox[view - 1];
-			  if (pPrevious != NULL)
-			    {
-			       /* il faudra appliquer au pave ses */
-			       /* regles de presentation (sera fait par AbsBoxesCreate) */
-			       pPrevious->AbSize = -1;
-			       /* on le marque coupe */
-			       pPrevious->AbTruncatedHead = TRUE;
-			       pPrevious->AbTruncatedTail = TRUE;
-			       if (pAbbFirstEmptyCr == NULL)
-				  /* 1er pave cree' */
-				 {
-				    pAbbFirstEmptyCr = pPrevious;
-				    /* on chaine ce pave sous le corps de page */
-				    while (pAbbPage != NULL && pAbbPage->AbPresentationBox)
-				       pAbbPage = pAbbPage->AbNext;
-				    /* toujours vrai ? */
-				    if (pAbbPage != NULL)
-				      {
-					 if (pPrevious->AbEnclosing->AbFirstEnclosed ==
-					     pPrevious)
-					    pPrevious->AbEnclosing->AbFirstEnclosed =
-					       pPrevious->AbNext;
-					 if (pPrevious->AbNext != NULL)
-					    pPrevious->AbNext->AbPrevious = NULL;
-					 pPrevious->AbNext = NULL;
-					 pPrevious->AbEnclosing = pAbbPage;
-					 if (pAbbPage->AbFirstEnclosed == NULL)
-					    pAbbPage->AbFirstEnclosed = pPrevious;
-					 else
-					   {
-					      pAbbox1 = pAbbPage->AbFirstEnclosed;
-					      while (pAbbox1->AbNext != NULL)
-						 pAbbox1 = pAbbox1->AbNext;
-					      /* en queue */
-					      pAbbox1->AbNext = pPrevious;
-					      pPrevious->AbPrevious = pAbbox1;
-					   }
-				      }
-				 }
-			    }
-			  i--;
-		       }
-		  }		/* fin cas creation paves de page et des ascendants */
-		/* trouve est vrai */
-		if (found || toCreate)
-		   /* on appelle IncreaseVolume pour creer l'i.a. page a page, */
-		   /* appliquer les regles de presentation des paves deja crees et */
-		   /* et creer l'image concrete */
-		  {
-		     IncreaseVolume (FALSE, THOT_MAXINT, frame);
-		     /* on appelle ShowBox pour positionner correctement l'i.a. */
-		     /* dans la fenetre */
-		     if (display && !begin && pEl->ElAbstractBox[view - 1] != NULL)
-			/* TODO : que faire dans les autres cas */
-			ShowBox (frame, pEl->ElAbstractBox[view - 1]->AbBox, 1, 0);
-
-		     if (display)
-			DisplayFrame (frame);
+		      else
+			{
+			  pEl1 = pEl1->ElNext;
+			}
+		    else	/* pElPage != NULL */
+		      found = TRUE;	/* on a trouver la page a creer */
 		  }
-	     }
-	   else if (pEl->ElAbstractBox[view - 1] == NULL)
-	      /* vue non paginee : on garde l'ancien code */
-	     {
-#else  /* __COLPAGE__ */
-      int         nR;
-
-      pAbbLastEmptyCr = NULL;
-      if (pEl != NULL)
-	 if (pEl->ElAbstractBox[view - 1] == NULL)
-	   {
-	      nAssoc = pEl->ElAssocNum;
-	      /* verifie si la vue a ete creee */
-	      if (AssocView (pEl))
-		 /* element associe */
-		 openedView = pDoc->DocAssocFrame[nAssoc - 1] != 0 && view == 1;
+		if (pEl1 == NULL)
+		  toCreate = FALSE;	/* TODO plus tard */
+	      }
+	  
+	  if (toCreate && !found)
+	    {
+	      /* on recherche la page dans laquelle se trouve pEl */
+	      found = FALSE;
+	      /* si pEl est une PageBreak, c'est fini */
+	      if (pEl->ElTypeNumber == PageBreak + 1
+		  && (pEl->ElPageType == PgBegin
+		      || pEl->ElPageType == PgComputed
+		      || pEl->ElPageType == PgUser)
+		  && pEl->ElViewPSchema == viewSch)
+		{
+		  found = TRUE;
+		  pElPage = pEl;
+		}
 	      else
-		 openedView = pDoc->DocView[view - 1].DvPSchemaView > 0;
-	      /* est-ce l'element racine d'un arbre d'elements associes ? */
-	      pEl1 = pEl;
-	      if (pEl1->ElParent == NULL)
-		 /* c'est une racine */
-		 if (nAssoc != 0)
+		{
+		  pEl1 = pEl;
+		  while (!found && pEl1 != NULL)
+		    {
+		      pElPage = BackSearchTypedElem (pEl1, PageBreak + 1, NULL);
+		      if (pElPage != NULL && pElPage->ElViewPSchema == viewSch
+			  && (pElPage->ElPageType == PgBegin
+			      || pElPage->ElPageType == PgComputed
+			      || pElPage->ElPageType == PgUser))
+			found = TRUE;
+		      else
+			pEl1 = pElPage;
+		    }
+		}
+	      if (found && pElPage->ElAbstractBox[view - 1] != NULL)
+		/* si trouve et si l'element marque page a un pave dans la vue */
+		/* c'est fini: l'element pEl n'est pas visible dans cette vue, */
+		/* sinon il aurait eu un pave */
+		toCreate = FALSE;
+	      if (!found)
+		/* si on n'a pas trouve d'element marque page precedent */
+		/* c'est que pEl est la racine ou un element marque page */
+		/* d'une autre vue */
+		/* on creera l'image a partir de la racine */
+		/* sans partir d'une marque de page */
+		/* sinon erreur */
+		if (!(pEl->ElParent == NULL
+		      || (pEl->ElTypeNumber == PageBreak + 1
+			  && pEl->ElViewPSchema != viewSch)))
+		  {
+		    printf ("peut etre erreur CheckAbsBox : pas trouve de marque page %s",
+			    pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+		    printf ("\n");
+		    toCreate = FALSE;
+		  }
+	    }
+	  if (toCreate)
+	    {
+	      /* on detruit l'i.a. sauf la racine */
+	      /* pour recreer correctement la partie de l'i.a. demandee */
+	      pAbbRoot = pElRoot->ElAbstractBox[view - 1];
+	      if (pAbbRoot != NULL)
+		{
+		  pAbbox1 = pAbbRoot->AbFirstEnclosed;
+		  while (pAbbox1 != NULL)
+		    {
+		      SetDeadAbsBox (pAbbox1);
+		      pAbbox1 = pAbbox1->AbNext;
+		    }
+		  /* pour que sa boite soit detruite */
+		  pAbbRoot->AbDead = TRUE;
+		  h = 0;
+		  ChangeConcreteImage (frame, &h, pAbbRoot);
+		  pAbbRoot->AbDead = FALSE;
+		  pAbbRoot->AbNew = TRUE;
+		  pAbbRoot->AbTruncatedHead = TRUE;
+		  pAbbRoot->AbTruncatedTail = TRUE;
+		  FreeDeadAbstractBoxes (pAbbRoot);
+		}
+	      else
+		{
+		  /* la racine n'a pas de pave, on le cree (sans la descendance) */
+		  pAbbRoot = AbsBoxesCreate (pElRoot, pDoc, view, TRUE,
+					     FALSE, &complete);
+		  pDoc->DocViewRootAb[view - 1] = pAbbRoot;
+		  pAbbRoot->AbTruncatedHead = TRUE;
+		  pAbbRoot->AbTruncatedTail = TRUE;
+		}
+	    }
+	  /* on cree les paves de la Marque Page */
+	  /* par construction (cf. AbsBoxesCreate), ils seront mis sous */
+	  /* la racine */
+	  if (found)
+	    {
+	      pAbbPage = AbsBoxesCreate (pElPage, pDoc, view, TRUE, TRUE, &complete);
+	      /* on cree les paves de ses ascendants en les marquant CT et CQ */
+	      pElAscent = pElPage->ElParent;
+	      pElChild = pElPage;
+	      NumAsc = 0;
+	      stop = FALSE;
+	      do
+		if (pElAscent == NULL)
+		  stop = TRUE;
+		else if (pElAscent->ElAbstractBox[view - 1] != NULL)
+		  /* normalement c'est la racine */
+		  stop = TRUE;
+		else
+		  {
+		    /* on ne creera le pave de l'ascendant que si il */
+		    /* doit avoir des fils dans la page */
+		    if (!(NumAsc == 0 && pElChild->ElNext == NULL))
+		      {
+			if (NumAsc < MaxAsc)
+			  NumAsc++;
+			pAsc[NumAsc - 1] = pElAscent;
+		      }
+		    pElChild = pElAscent;
+		    pElAscent = pElAscent->ElParent;
+		  }
+	      while (!stop);
+	      /* cree les paves de ces elements, en commencant par */
+	      /* celui qui contient tous les autres.  */
+	      pAbbFirstEmptyCr = NULL;
+	      i = NumAsc;
+	      while (i > 0)
+		{
+		  /* cree juste le pave, sans sa descendance et sans lui */
+		  /* appliquer les regles de presentation. */
+		  pPrevious = AbsBoxesCreate (pAsc[i - 1], pDoc, view, TRUE, FALSE, &complete);
+		  pPrevious = pAsc[i - 1]->ElAbstractBox[view - 1];
+		  if (pPrevious != NULL)
+		    {
+		      /* il faudra appliquer au pave ses */
+		      /* regles de presentation (sera fait par AbsBoxesCreate) */
+		      pPrevious->AbSize = -1;
+		      /* on le marque coupe */
+		      pPrevious->AbTruncatedHead = TRUE;
+		      pPrevious->AbTruncatedTail = TRUE;
+		      if (pAbbFirstEmptyCr == NULL)
+			/* 1er pave cree' */
+			{
+			  pAbbFirstEmptyCr = pPrevious;
+			  /* on chaine ce pave sous le corps de page */
+			  while (pAbbPage != NULL && pAbbPage->AbPresentationBox)
+			    pAbbPage = pAbbPage->AbNext;
+			  /* toujours vrai ? */
+			  if (pAbbPage != NULL)
+			    {
+			      if (pPrevious->AbEnclosing->AbFirstEnclosed == pPrevious)
+				pPrevious->AbEnclosing->AbFirstEnclosed =
+				  pPrevious->AbNext;
+			      if (pPrevious->AbNext != NULL)
+				pPrevious->AbNext->AbPrevious = NULL;
+			      pPrevious->AbNext = NULL;
+			      pPrevious->AbEnclosing = pAbbPage;
+			      if (pAbbPage->AbFirstEnclosed == NULL)
+				pAbbPage->AbFirstEnclosed = pPrevious;
+			      else
+				{
+				  pAbbox1 = pAbbPage->AbFirstEnclosed;
+				  while (pAbbox1->AbNext != NULL)
+				    pAbbox1 = pAbbox1->AbNext;
+				  /* en queue */
+				  pAbbox1->AbNext = pPrevious;
+				  pPrevious->AbPrevious = pAbbox1;
+				}
+			    }
+			}
+		    }
+		  i--;
+		}
+	    }		/* fin cas creation paves de page et des ascendants */
+	  /* trouve est vrai */
+	  if (found || toCreate)
+	    /* on appelle IncreaseVolume pour creer l'i.a. page a page, */
+	    /* appliquer les regles de presentation des paves deja crees et */
+	    /* et creer l'image concrete */
+	    {
+	      IncreaseVolume (FALSE, THOT_MAXINT, frame);
+	      /* on appelle ShowBox pour positionner correctement l'i.a. */
+	      /* dans la fenetre */
+	      if (display && !begin && pEl->ElAbstractBox[view - 1] != NULL)
+		/* TODO : que faire dans les autres cas */
+		ShowBox (frame, pEl->ElAbstractBox[view - 1]->AbBox, 1, 0);
+	      
+	      if (display)
+		DisplayFrame (frame);
+	    }
+	}
+      else if (pEl->ElAbstractBox[view - 1] == NULL)
+	/* vue non paginee : on garde l'ancien code */
+	{
+#else  /* __COLPAGE__ */
+	  int         nR;
+	  
+	  pAbbLastEmptyCr = NULL;
+	  if (pEl != NULL)
+	    if (pEl->ElAbstractBox[view - 1] == NULL)
+	      {
+		nAssoc = pEl->ElAssocNum;
+		/* verifie si la vue a ete creee */
+		if (AssocView (pEl))
+		  /* element associe */
+		  openedView = pDoc->DocAssocFrame[nAssoc - 1] != 0 && view == 1;
+		else
+		  openedView = pDoc->DocView[view - 1].DvPSchemaView > 0;
+		/* est-ce l'element racine d'un arbre d'elements associes ? */
+		pEl1 = pEl;
+		if (pEl1->ElParent == NULL)
+		  /* c'est une racine */
+		  if (nAssoc != 0)
 		    /* c'est un element associe */
 		    /* nR: type des elements associes */
-		   {
+		    {
 		      nR = pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrListItem;
 		      /* si les elements associes s'affichent en haut ou en bas de */
 		      /* page, la racine n'a jamais de pave */
 		      openedView = !pEl1->ElStructSchema->SsPSchema->PsInPageHeaderOrFooter[nR - 1];
 		      /* si la vue n'est pas creee, il n'y a rien a faire */
-		   }
-	      if (openedView)
-		{
+		    }
+		if (openedView)
+		  {
 #endif /* __COLPAGE__ */
-		   /* cherche les elements ascendants qui n'ont pas de pave dans */
-		   /* cette vue */
-		   NumAsc = 0;
-		   /* niveau dans la pile des elements dont il faut */
-		   /* creer un pave */
-		   pElAscent = pEl;
-		   stop = FALSE;
-		   do
+		    /* cherche les elements ascendants qui n'ont pas de pave dans */
+		    /* cette vue */
+		    NumAsc = 0;
+		    /* niveau dans la pile des elements dont il faut */
+		    /* creer un pave */
+		    pElAscent = pEl;
+		    stop = FALSE;
+		    do
 		      if (pElAscent == NULL)
-			 stop = TRUE;
+			stop = TRUE;
 		      else if (pElAscent->ElAbstractBox[view - 1] != NULL)
-			 stop = TRUE;
-		   /* met un element dans la pile */
+			stop = TRUE;
+		    /* met un element dans la pile */
 		      else
 			{
-			   if (NumAsc < MaxAsc)
-			      NumAsc++;
+			  if (NumAsc < MaxAsc)
+			    NumAsc++;
 			   pAsc[NumAsc - 1] = pElAscent;
 			   /* passe a l'ascendant */
 			   pEl1 = pElAscent;
@@ -2791,79 +2765,83 @@ int                 frame;
    volTree: le volume total de l'arbre abstrait.               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-   void                VolumeTree (PtrAbstractBox pAbbRoot, PtrAbstractBox pAbbFirst, PtrAbstractBox pAbbLast, int *volBefore, int *volAfter, int *volTree)
+void                VolumeTree (PtrAbstractBox pAbbRoot, PtrAbstractBox pAbbFirst, PtrAbstractBox pAbbLast, int *volBefore, int *volAfter, int *volTree)
 #else  /* __STDC__ */
-   void                VolumeTree (pAbbRoot, pAbbFirst, pAbbLast, volBefore, volAfter, volTree)
-   PtrAbstractBox      pAbbRoot;
-   PtrAbstractBox      pAbbFirst;
-   PtrAbstractBox      pAbbLast;
-   int                *volBefore;
-   int                *volAfter;
-   int                *volTree;
-
+void                VolumeTree (pAbbRoot, pAbbFirst, pAbbLast, volBefore, volAfter, volTree)
+PtrAbstractBox      pAbbRoot;
+PtrAbstractBox      pAbbFirst;
+PtrAbstractBox      pAbbLast;
+int                *volBefore;
+int                *volAfter;
+int                *volTree;
 #endif /* __STDC__ */
-   {
-      PtrElement          pEl;
-
-      if (pAbbFirst == NULL || pAbbLast == NULL)
-	 /* les parametres d'appels sont errone's */
+{
+  PtrElement          pEl;
+  
+  if (pAbbFirst == NULL || pAbbLast == NULL)
+    /* les parametres d'appels sont errone's */
+    {
+      *volBefore = 0;
+      *volAfter = 0;
+      *volTree = 0;
+    }
+  else
+    {
+      /* calcule d'abord le volume total de l'arbre abstrait */
+      *volTree = pAbbRoot->AbElement->ElVolume;
+      
+      /* on calcule maintenant le volume de ce qui precede */
+      *volBefore = 0;
+      if (pAbbRoot->AbTruncatedHead)
 	{
-	   *volBefore = 0;
-	   *volAfter = 0;
-	   *volTree = 0;
+	  /* si le premier pave' correspond a un element associe' affiche' */
+	  /* dans un haut ou bas de page, on prend le pave' saut de page */
+	  while (pAbbFirst->AbElement->ElAssocNum != pAbbRoot->AbElement->ElAssocNum)
+	    pAbbFirst = pAbbFirst->AbEnclosing;
+	  pEl = pAbbFirst->AbElement;
+	  /* pour l'element et tous ses ascendants, on accumule le */
+	  /* volume de tous leurs freres precedents */
+	  do
+	    {
+	      /* traite tous les freres precedents */
+	      while (pEl->ElPrevious != NULL)
+		{
+		  pEl = pEl->ElPrevious;
+		  *volBefore += pEl->ElVolume;
+		}
+	      /* passe a l'ascendant */
+	      pEl = pEl->ElParent;
+	    }
+	  while (pEl != NULL);
 	}
-      else
+      
+      /* on calcule le volume de ce qui suit */
+      *volAfter = 0;
+      if (pAbbRoot->AbTruncatedTail)
 	{
-	   /* calcule d'abord le volume total de l'arbre abstrait */
-	   *volTree = pAbbRoot->AbElement->ElVolume;
-
-	   /* on calcule maintenant le volume de ce qui precede */
-	   *volBefore = 0;
-	   /* si le premier pave' correspond a un element associe' affiche' */
-	   /* dans un haut ou bas de page, on prend le pave' saut de page */
-	   while (pAbbFirst->AbElement->ElAssocNum !=
-		  pAbbRoot->AbElement->ElAssocNum)
-	      pAbbFirst = pAbbFirst->AbEnclosing;
-	   pEl = pAbbFirst->AbElement;
-	   /* pour l'element et tous ses ascendants, on accumule le */
-	   /* volume de tous leurs freres precedents */
-	   do
-	     {
-		/* traite tous les freres precedents */
-		while (pEl->ElPrevious != NULL)
-		  {
-		     pEl = pEl->ElPrevious;
-		     *volBefore += pEl->ElVolume;
-		  }
-		/* passe a l'ascendant */
-		pEl = pEl->ElParent;
-	     }
-	   while (pEl != NULL);
-
-	   /* on calcule le volume de ce qui suit */
-	   *volAfter = 0;
-	   /* si le dernier pave' correspond a un element associe' affiche' */
-	   /* dans un haut ou bas de page, on prend le pave' saut de page */
-	   while (pAbbLast->AbElement->ElAssocNum !=
-		  pAbbRoot->AbElement->ElAssocNum)
-	      pAbbLast = pAbbLast->AbEnclosing;
-	   pEl = pAbbLast->AbElement;
-	   /* pour l'element et tous ses ascendants, on accumule le */
-	   /* volume de tous leurs freres suivants */
-	   do
-	     {
-		/* traite tous les freres suivants */
-		while (pEl->ElNext != NULL)
-		  {
-		     pEl = pEl->ElNext;
-		     *volAfter += pEl->ElVolume;
-		  }
-		/* passe a l'ascendant */
-		pEl = pEl->ElParent;
-	     }
-	   while (pEl != NULL);
+	  /* si le dernier pave' correspond a un element associe' affiche' */
+	  /* dans un haut ou bas de page, on prend le pave' saut de page */
+	  while (pAbbLast->AbElement->ElAssocNum != pAbbRoot->AbElement->ElAssocNum)
+	    pAbbLast = pAbbLast->AbEnclosing;
+	  pEl = pAbbLast->AbElement;
+	  /* pour l'element et tous ses ascendants, on accumule le */
+	  /* volume de tous leurs freres suivants */
+	  do
+	    {
+	      /* traite tous les freres suivants */
+	      while (pEl->ElNext != NULL)
+		{
+		  pEl = pEl->ElNext;
+		  *volAfter += pEl->ElVolume;
+		}
+	      /* passe a l'ascendant */
+	      pEl = pEl->ElParent;
+	    }
+	  while (pEl != NULL);
 	}
-   }
+    }
+}
+
 
 /*----------------------------------------------------------------------
    JumpIntoView fait afficher dans la fenetre la partie de        
@@ -2875,159 +2853,151 @@ int                 frame;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-   void                JumpIntoView (int frame, int distance)
+void                JumpIntoView (int frame, int distance)
 
 #else  /* __STDC__ */
-   void                JumpIntoView (frame, distance)
-   int                 frame;
-   int                 distance;
-
+void                JumpIntoView (frame, distance)
+int                 frame;
+int                 distance;
 #endif /* __STDC__ */
-
-   {
-      PtrDocument         pDoc;
-      int                 view;
-      boolean             isAssoc;
-      PtrElement          pEl;
-      int                 volBefore, volPresent;
-      boolean             after;
-      int                 position;
-      PtrAbstractBox      pAbbRoot, pAb;
-      PtrElement          pElSuiv;
-
-      position = 0;
-      if (distance >= 0 && distance <= 100)
-	 /* la distance demandee est valide */
+{
+  PtrDocument         pDoc;
+  int                 view;
+  boolean             isAssoc;
+  PtrElement          pEl;
+  int                 volBefore, volPresent;
+  boolean             after;
+  int                 position;
+  PtrAbstractBox      pAbbRoot, pAb;
+  PtrElement          pElSuiv;
+  
+  position = 0;
+  if (distance >= 0 && distance <= 100)
+    /* la distance demandee est valide */
+    {
+      /* cherche le document et la vue correspondant a la fenetre */
+      GetDocAndView (frame, &pDoc, &view, &isAssoc);
+      if (pDoc != NULL)
 	{
-	   /* cherche le document et la vue correspondant a la fenetre */
-	   GetDocAndView (frame, &pDoc, &view, &isAssoc);
-	   if (pDoc != NULL)
-	     {
-		/* cherche la racine de l'arbre affiche' dans cette frame */
-		if (isAssoc)
-		  {
-		     pEl = pDoc->DocAssocRoot[view - 1];
-		     view = 1;
-		  }
-		else
-		   pEl = pDoc->DocRootElement;
-		if (pEl != NULL)
-		  {
-		     pAbbRoot = pEl->ElAbstractBox[view - 1];
-		     /* volume avant l'element a rendre visible */
-		     volBefore = (pEl->ElVolume * distance) / 100;
-		     /* cherche l'element a rendre visible */
-		     volPresent = 0;
-		     while (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
-		       {
-			  pEl = pEl->ElFirstChild;
-			  while (volPresent + pEl->ElVolume <= volBefore
-				 && pEl->ElNext != NULL)
-			    {
-			       volPresent += pEl->ElVolume;
-			       pEl = pEl->ElNext;
-			    }
-		       }
-		     if (pEl == NULL)
-			pAb = NULL;
-		     else
-		       {
-			  pAb = pEl->ElAbstractBox[view - 1];
-			  if (pAb == NULL)
-			    {
-			       CheckAbsBox (pEl, view, pDoc, FALSE, FALSE);
-			       pAb = pEl->ElAbstractBox[view - 1];
-			    }
-		       }
-		     after = TRUE;
-		     while (pEl != NULL && pAb == NULL)
-			/* pEl n'a pas de pave dans le vue traitee. */
-			/* On cherche la feuille la plus proche de pEl qui */
-			/* soit visible dans la vue */
-		       {
-			  if (after)
-			     pElSuiv = NextElement (pEl);
-			  else
-			     pElSuiv = NULL;
-			  if (pElSuiv != NULL)
-			     /* on prend la feuille pElSuivante */
-			     if (!pElSuiv->ElTerminal)
-				pEl = FirstLeaf (pElSuiv);
-			     else
-				pEl = pElSuiv;
-			  else
-			     /* on prend la feuille precedente */
-			    {
-			       after = FALSE;
-			       while (pEl->ElPrevious == NULL && pEl->ElParent != NULL)
-				  pEl = pEl->ElParent;
-			       pEl = pEl->ElPrevious;
-			       if (pEl != NULL)
-				  while (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
-				    {
-				       pEl = pEl->ElFirstChild;
-				       while (pEl->ElNext != NULL)
-					  pEl = pEl->ElNext;
-				    }
-			    }
-
-			  /* rend l'element visible dans sa frame, sans l'afficher */
-			  if (pEl != NULL)
-			    {
-			       CheckAbsBox (pEl, view, pDoc, FALSE, FALSE);
-			       pAb = pEl->ElAbstractBox[view - 1];
-			    }
-		       }
-
-		     pAb = NULL;
-		     /* positionne l'image dans sa frame, en l'affichant */
-		     if (distance == 0)
-			/* boite racine de la vue en haut de la fenetre */
-		       {
-			  position = 0;
-			  pAb = pAbbRoot;
-		       }
-		     else if (distance == 100)
-			/* boite racine de la vue en bas de la fenetre */
-		       {
-			  position = 2;
-			  pAb = pAbbRoot;
-		       }
-		     else if (pEl != NULL)
-			/* boite de l'element au milieu de la fenetre */
-		       {
-			  if (pEl->ElAbstractBox[view - 1] == NULL)
-			     /* cherche le premier element precedent qui a */
-			     /* un pave' dans la vue */
-			     pEl = BackSearchVisibleElem (pAbbRoot->AbElement, pEl, view);
-			  if (pEl != NULL)
-			     pAb = pEl->ElAbstractBox[view - 1];
-			  position = 1;
-		       }
-		     if (pAb != NULL)
-			ShowBox (frame, pAb->AbBox, position, 0);
-
-		     /* Allume la selection */
-		     HighlightSelection (FALSE);
-		  }
-	     }
+	  /* cherche la racine de l'arbre affiche' dans cette frame */
+	  if (isAssoc)
+	    {
+	      pEl = pDoc->DocAssocRoot[view - 1];
+	      view = 1;
+	    }
+	  else
+	    pEl = pDoc->DocRootElement;
+	  if (pEl != NULL)
+	    {
+	      pAbbRoot = pEl->ElAbstractBox[view - 1];
+	      /* volume avant l'element a rendre visible */
+	      volBefore = (pEl->ElVolume * distance) / 100;
+	      /* cherche l'element a rendre visible */
+	      volPresent = 0;
+	      while (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
+		{
+		  pEl = pEl->ElFirstChild;
+		  while (volPresent + pEl->ElVolume <= volBefore
+			 && pEl->ElNext != NULL)
+		    {
+		      volPresent += pEl->ElVolume;
+		      pEl = pEl->ElNext;
+		    }
+		}
+	      if (pEl == NULL)
+		pAb = NULL;
+	      else
+		{
+		  pAb = pEl->ElAbstractBox[view - 1];
+		  if (pAb == NULL)
+		    {
+		      CheckAbsBox (pEl, view, pDoc, FALSE, FALSE);
+		      pAb = pEl->ElAbstractBox[view - 1];
+		    }
+		}
+	      after = TRUE;
+	      while (pEl != NULL && pAb == NULL)
+		/* pEl n'a pas de pave dans le vue traitee. */
+		/* On cherche la feuille la plus proche de pEl qui */
+		/* soit visible dans la vue */
+		{
+		  if (after)
+		    pElSuiv = NextElement (pEl);
+		  else
+		    pElSuiv = NULL;
+		  if (pElSuiv != NULL)
+		    /* on prend la feuille pElSuivante */
+		    if (!pElSuiv->ElTerminal)
+		      pEl = FirstLeaf (pElSuiv);
+		    else
+		      pEl = pElSuiv;
+		  else
+		    /* on prend la feuille precedente */
+		    {
+		      after = FALSE;
+		      while (pEl->ElPrevious == NULL && pEl->ElParent != NULL)
+			pEl = pEl->ElParent;
+		      pEl = pEl->ElPrevious;
+		      if (pEl != NULL)
+			while (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
+			  {
+			    pEl = pEl->ElFirstChild;
+			    while (pEl->ElNext != NULL)
+			      pEl = pEl->ElNext;
+			  }
+		    }
+		  
+		  /* rend l'element visible dans sa frame, sans l'afficher */
+		  if (pEl != NULL)
+		    {
+		      CheckAbsBox (pEl, view, pDoc, FALSE, FALSE);
+		      pAb = pEl->ElAbstractBox[view - 1];
+		    }
+		}
+	      
+	      pAb = NULL;
+	      /* positionne l'image dans sa frame, en l'affichant */
+	      if (distance == 0)
+		/* boite racine de la vue en haut de la fenetre */
+		{
+		  position = 0;
+		  pAb = pAbbRoot;
+		}
+	      else if (distance == 100)
+		/* boite racine de la vue en bas de la fenetre */
+		{
+		  position = 2;
+		  pAb = pAbbRoot;
+		}
+	      else if (pEl != NULL)
+		/* boite de l'element au milieu de la fenetre */
+		{
+		  if (pEl->ElAbstractBox[view - 1] == NULL)
+		    /* cherche le premier element precedent qui a */
+		    /* un pave' dans la vue */
+		    pEl = BackSearchVisibleElem (pAbbRoot->AbElement, pEl, view);
+		  if (pEl != NULL)
+		    pAb = pEl->ElAbstractBox[view - 1];
+		  position = 1;
+		}
+	      if (pAb != NULL)
+		ShowBox (frame, pAb->AbBox, position, 0);
+	      
+	      /* Allume la selection */
+	      HighlightSelection (FALSE);
+	    }
 	}
-   }
+    }
+}
 
 #ifdef __COLPAGE__
-
-/** debut ajout */
 /* affichage du contexte de pAb pour debug */
-
 #ifdef __STDC__
    void                AffPaveDebug (PtrAbstractBox pAb)
-
 #else  /* __STDC__ */
    void                AffPaveDebug (pAb)
    PtrAbstractBox      pAb;
-
 #endif /* __STDC__ */
-
    {
       PtrElement          pEl;
 
