@@ -4,7 +4,6 @@
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
 #include "wx/string.h"
 
-
 #include "AmayaApp.h"
 #include "OpenDocDlgWX.h"
 
@@ -15,7 +14,7 @@
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(OpenDocDlgWX, wxDialog)
+BEGIN_EVENT_TABLE(OpenDocDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_OPENBUTTON"),   OpenDocDlgWX::OnOpenButton )
   EVT_BUTTON(     XRCID("wxID_BROWSEBUTTON"), OpenDocDlgWX::OnBrowseButton )
   EVT_BUTTON(     XRCID("wxID_CANCELBUTTON"), OpenDocDlgWX::OnCancelButton )
@@ -31,9 +30,11 @@ END_EVENT_TABLE()
     + docName : ??? not used
   returns:
   ----------------------------------------------------------------------*/
-OpenDocDlgWX::OpenDocDlgWX( wxWindow* parent,
+OpenDocDlgWX::OpenDocDlgWX( int ref,
+			    wxWindow* parent,
 			    const wxString & title,
-			    const wxString & docName  ) : wxDialog()
+			    const wxString & docName  ) :
+  AmayaDialog( NULL, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("OpenDocDlgWX"));
 
@@ -101,9 +102,7 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
   // give the new url to amaya (to do url completion)
   ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)buffer );
   // create or load the new document
-  ThotCallback (BaseDialog + OpenForm, INTEGER_DATA, (char*)1);
-
-  EndModal( 0 );
+  ThotCallback (m_Ref, INTEGER_DATA, (char*)1);
 }
 
 /*----------------------------------------------------------------------
@@ -140,9 +139,7 @@ void OpenDocDlgWX::OnBrowseButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnCancelButton( wxCommandEvent& event )
 {
-  ThotCallback (BaseDialog + OpenForm, INTEGER_DATA, (char*) 0);
-
-  EndModal( 0 );
+  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 }
 
 #endif /* _WX */

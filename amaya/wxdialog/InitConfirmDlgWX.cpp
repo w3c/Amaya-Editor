@@ -13,12 +13,10 @@
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(InitConfirmDlgWX, wxDialog)
+BEGIN_EVENT_TABLE(InitConfirmDlgWX, AmayaDialog)
   EVT_BUTTON( XRCID("wxID_EXTRABUTTON"), InitConfirmDlgWX::OnExtraButton )
   EVT_BUTTON( XRCID("wxID_CONFIRMBUTTON"), InitConfirmDlgWX::OnConfirmButton )
   EVT_BUTTON( XRCID("wxID_CANCELBUTTON"), InitConfirmDlgWX::OnCancelButton )
-
-  //  EVT_SIZE(   InitConfirmDlgWX::OnSize )
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -31,11 +29,13 @@ END_EVENT_TABLE()
     + label : the message to show at dialog center
   returns:
   ----------------------------------------------------------------------*/
-InitConfirmDlgWX::InitConfirmDlgWX( wxWindow* parent,
+InitConfirmDlgWX::InitConfirmDlgWX( int ref,
+				    wxWindow* parent,
 				    const wxString & title,
 				    const wxString & extrabutton,
 				    const wxString & confirmbutton,
-				    const wxString & label ) : wxDialog()
+				    const wxString & label ) :
+  AmayaDialog( NULL, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("InitConfirmDlgWX"));
   m_Label         = label;
@@ -83,6 +83,14 @@ InitConfirmDlgWX::InitConfirmDlgWX( wxWindow* parent,
   ----------------------------------------------------------------------*/
 InitConfirmDlgWX::~InitConfirmDlgWX()
 {
+  wxLogDebug( _T("InitConfirmDlgWX::~InitConfirmDlgWX") );
+
+  /* when the dialog is destroyed it's important
+     to restore these global variable to default value 
+     because if the user click on X (OnClose callback),
+     the dialog is just destroyed so precedent global stats will be used */
+  UserAnswer = 0;
+  ExtraChoice = 0;
 }
 
 /*----------------------------------------------------------------------
@@ -90,8 +98,7 @@ InitConfirmDlgWX::~InitConfirmDlgWX()
   ----------------------------------------------------------------------*/
 void InitConfirmDlgWX::OnExtraButton( wxCommandEvent& event )
 {
-  ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 1);
-  EndModal( 0 );
+  ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
 }
 
 /*----------------------------------------------------------------------
@@ -99,8 +106,7 @@ void InitConfirmDlgWX::OnExtraButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void InitConfirmDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
-  ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 2);
-  EndModal( 0 );
+  ThotCallback (m_Ref, INTEGER_DATA, (char*) 2);
 }
 
 /*----------------------------------------------------------------------
@@ -108,26 +114,7 @@ void InitConfirmDlgWX::OnConfirmButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void InitConfirmDlgWX::OnCancelButton( wxCommandEvent& event )
 {
-  ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 0); 
-  EndModal( 0 );
-}
-
-/*----------------------------------------------------------------------
-  OnSize -> not used
-  ----------------------------------------------------------------------*/
-void InitConfirmDlgWX::OnSize( wxSizeEvent& event )
-{
-  wxLogDebug(_T("InitConfirmDlgWX - OnSize: w=%d h=%d"),
-	event.GetSize().GetWidth(),
-	event.GetSize().GetHeight() );
-
-  // GetSizer()->Fit( this );
-  // GetSizer()->SetSizeHints( this );  
-  // Layout();
-  // SetSize( 100, -1 );
-
-  //  forward the event to parents
-  event.Skip();
+  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0); 
 }
 
 #endif /* _WX */

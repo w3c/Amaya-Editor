@@ -527,7 +527,14 @@ static char           wxCaption[200];
 #endif /* _WINGUI */
 
 #ifdef _WX
-  CreateSearchDlgWX( TtaGetViewFrame (document, view), wxCaption );
+ {
+   ThotBool created;
+   created = CreateSearchDlgWX( NumFormSearchText, TtaGetViewFrame (document, view), wxCaption );
+   if (created)
+     {
+       TtaShowDialogue ( NumFormSearchText, TRUE );
+     }
+ }
 #endif /* _WX */
 }
 
@@ -654,7 +661,13 @@ void CallbackTextReplace (int ref, int val, char *txt)
       if (val == 2 && WithReplace && !StartSearch)
 	DoReplace = FALSE;
       else if (val == 0)
-	return;
+	{
+#ifdef _WX
+	  /* the user has clicked on cancel button */
+	  TtaDestroyDialogue( ref );
+#endif /* _WX */
+	  return;
+	}
 
       selectionOK = GetCurrentSelection (&pDocSel, &pFirstSel,
 					 &pLastSel, &firstChar, &lastChar);

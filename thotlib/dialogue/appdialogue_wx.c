@@ -12,6 +12,8 @@
 #include "registry.h"
 #include "appdialogue.h"
 #include "message.h"
+#include "dialogapi.h"
+#include "application.h"
 #include "appdialogue_wx.h"
 
 #include "appdialogue_f.h"
@@ -25,6 +27,8 @@
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "boxparams_f.h"
+#include "thotmsg_f.h"
+#include "dialogapi_f.h"
 
 #include "AmayaCanvas.h"
 #include "AmayaFrame.h"
@@ -1032,3 +1036,49 @@ wxString TtaGetResourcePathWX( wxResourceType type, const char * filename )
   return path;
 }
 #endif /* _WX */
+
+/*----------------------------------------------------------------------
+  TtaRegisterWidgetWX - 
+  this function register a new widget into the corresponding thotlib catalog.
+  params:
+    + ref : the catalogue reference
+    + p_widget : the widget pointer
+  returns:
+    + true/false
+  ----------------------------------------------------------------------*/
+ThotBool TtaRegisterWidgetWX( int ref, void * p_widget )
+{
+#ifdef _WX
+  struct Cat_Context *catalogue;
+
+  if (ref == 0)
+    {
+      TtaError (ERR_invalid_reference);
+      return FALSE;
+    }
+  catalogue = CatEntry (ref);
+  if (catalogue == NULL)
+    {
+      TtaError (ERR_cannot_create_dialogue);
+      return FALSE;
+    }
+   else
+     {
+       /* this catalogue allready has a associated widget ? */
+       if (catalogue->Cat_Widget)
+	 {
+	   /* yes ! destroy the old dialogue */
+	   TtaDestroyDialogue (ref);
+	 }
+
+       /* now the catalogue is free , register the widget */
+       catalogue->Cat_Widget       = (ThotWindow)p_widget;
+       catalogue->Cat_ParentWidget = NULL;
+       catalogue->Cat_Ref          = ref;
+       catalogue->Cat_Type         = CAT_DIALOG;
+     }
+  return TRUE;
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}

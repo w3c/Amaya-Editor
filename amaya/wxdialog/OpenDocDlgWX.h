@@ -7,24 +7,25 @@
 // Headers
 //-----------------------------------------------------------------------------
 
-#include "wx/dialog.h"
+#include "AmayaDialog.h"
 
 //-----------------------------------------------------------------------------
 // Class definition: OpenDocDlgWX
 //-----------------------------------------------------------------------------
 
-class OpenDocDlgWX : public wxDialog
+class OpenDocDlgWX : public AmayaDialog
 {
 
 public: 
     
   // Constructor.
-  OpenDocDlgWX( wxWindow* parent,
+  OpenDocDlgWX( int ref, 
+		wxWindow* parent,
 		const wxString & title,
 		const wxString & docName );
     
   // Destructor.                  
-  ~OpenDocDlgWX();
+  virtual ~OpenDocDlgWX();
 
   void AppendURL( const wxString & url );
   void SetCurrentURL( const wxString & url );
@@ -35,11 +36,8 @@ private:
   void OnBrowseButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );
 
-  
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
-    
-private:
 };
 
 #endif  //__OPENDOCDLGWX_H__

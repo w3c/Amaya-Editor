@@ -1652,7 +1652,14 @@ void ConfirmError (Document document, View view, char *label,
 			       extrabutton, confirmbutton, label);
 #endif /* _WINGUI */
 #ifdef _WX
-  CreateInitConfirmDlgWX (TtaGetViewFrame (document, view), NULL, extrabutton, confirmbutton, label);
+  ThotBool created = CreateInitConfirmDlgWX (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view), NULL, extrabutton, confirmbutton, label);
+  if (created)
+    {
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
+      /* wait for an answer */
+      TtaWaitShowDialogue ();
+    }
 #endif /* _WX */
 }
 
@@ -1734,7 +1741,14 @@ void InitConfirm (Document document, View view, char *label)
   CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), NULL, NULL, label);
 #endif /* _WINGUI */
 #ifdef _WX
-  CreateInitConfirmDlgWX (TtaGetViewFrame (document, view), NULL, NULL, NULL, label);
+  ThotBool created = CreateInitConfirmDlgWX (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view), NULL, NULL, NULL, label);
+  if (created)
+    {
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
+      /* wait for an answer */
+      TtaWaitShowDialogue ();
+    }
 #endif /* _WX */
 }
 
@@ -2002,9 +2016,19 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
 #endif /* _WINGUI */
 
 #ifdef _WX
-  /* !! be carfull: here we pass 'URL_list', not 's' as above because we want generate a combobox choice list */
-  CreateOpenDocDlgWX( TtaGetViewFrame (doc, view), title, URL_list, name,
-		      DocSelect, DirSelect, docType );
+  {
+    ThotBool created;
+    /* !! be carfull: here we pass 'URL_list',
+       not 's' as above because we want generate a combobox choice list */
+    created = CreateOpenDocDlgWX( BaseDialog + OpenForm,
+				  TtaGetViewFrame (doc, view), title, URL_list, name,
+				  DocSelect, DirSelect, docType );
+    if (created)
+      {
+	TtaSetDialoguePosition ();
+	TtaShowDialogue (BaseDialog + OpenForm, TRUE);
+      }
+  }
 #endif /* _WX */
 
 #if defined(_GTK)
@@ -5494,6 +5518,13 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  TtaSetTextForm (BaseDialog + URLName, LastURLName);
 #endif /* defined(_GTK) || defined(_WX) */
 	}
+#ifdef _WX
+      else if (val == 0)
+	{
+	  /* if the user has clicked on Cancel button, just destroy the dialog */
+	  TtaDestroyDialogue ( ref );
+	}
+#endif /* _WX */
       else if (NewFile)
 	{
 	  /* the command is aborted */

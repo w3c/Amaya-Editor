@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(PrintDlgWX, wxDialog)
+BEGIN_EVENT_TABLE(PrintDlgWX, AmayaDialog)
   EVT_BUTTON( XRCID("wxID_CONFIRMBUTTON"),     PrintDlgWX::OnPrintButton )
   EVT_BUTTON( XRCID("wxID_CANCELBUTTON"),      PrintDlgWX::OnCancelButton )
   /*
@@ -31,8 +31,10 @@ END_EVENT_TABLE()
     + parent : parent window
     + ps_file : postscript file
   ----------------------------------------------------------------------*/
-PrintDlgWX::PrintDlgWX( wxWindow* parent,
-			 const wxString & ps_file ) : wxDialog()
+PrintDlgWX::PrintDlgWX( int ref,
+			wxWindow* parent,
+			const wxString & ps_file ) :
+  AmayaDialog( NULL, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("PrintDlgWX"));
   wxLogDebug( _T("PrintDlgWX::PrintDlgWX - ps_file=")+ps_file);
@@ -140,7 +142,6 @@ void PrintDlgWX::OnPrintButton( wxCommandEvent& event )
 void PrintDlgWX::OnCancelButton( wxCommandEvent& event )
 {
   ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (char*)0);
-  EndModal( 0 );
 }
 
 #ifdef ZOBI

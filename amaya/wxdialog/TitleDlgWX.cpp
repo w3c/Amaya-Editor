@@ -15,7 +15,7 @@
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(TitleDlgWX, wxDialog)
+BEGIN_EVENT_TABLE(TitleDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_CONFIRMBUTTON"), TitleDlgWX::OnConfirmButton )
   EVT_BUTTON(     XRCID("wxID_CANCELBUTTON"),  TitleDlgWX::OnCancelButton )
   EVT_TEXT_ENTER( XRCID("wxID_TITLE"),         TitleDlgWX::OnConfirmButton )
@@ -29,9 +29,11 @@ END_EVENT_TABLE()
     + doc_title : the current document title
   returns:
   ----------------------------------------------------------------------*/
-TitleDlgWX::TitleDlgWX( wxWindow* parent,
-			const wxString & title,
-			const wxString & doc_title ) : wxDialog()
+  TitleDlgWX::TitleDlgWX( int ref, 
+			  wxWindow* parent,
+			  const wxString & title,
+			  const wxString & doc_title ) :
+    AmayaDialog( NULL, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("TitleDlgWX"));
 
@@ -64,7 +66,7 @@ void TitleDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
   wxString new_title = XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->GetValue( );
   wxLogDebug( _T("TitleDlgWX::OnConfirmButton - new_title=")+new_title );
-  
+
   // allocate a temporary buffer to copy the 'const char *' new_title buffer 
   char buffer[512];
   wxASSERT( new_title.Len() < 512 );
@@ -74,8 +76,6 @@ void TitleDlgWX::OnConfirmButton( wxCommandEvent& event )
   ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer );
   // set the new title
   ThotCallback (BaseDialog + TitleForm, INTEGER_DATA, (char*) 1);
-
-  EndModal( 0 );
 }
 
 /*----------------------------------------------------------------------
@@ -84,7 +84,6 @@ void TitleDlgWX::OnConfirmButton( wxCommandEvent& event )
 void TitleDlgWX::OnCancelButton( wxCommandEvent& event )
 {
   ThotCallback (BaseDialog + TitleForm, INTEGER_DATA, (char*) 0); 
-  EndModal( 0 );
 }
 
 #endif /* _WX */

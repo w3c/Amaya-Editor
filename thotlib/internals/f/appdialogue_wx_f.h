@@ -61,6 +61,8 @@ extern int TtaAddToolBarButton ( int window_id,
                                  char * functionName,
                                  void (*procedure) (),
                                  ThotBool status );
+extern ThotBool TtaRegisterWidgetWX ( int ref,
+                                      void * p_widget );
 
 #else /* __STDC__ */
 
@@ -119,6 +121,8 @@ extern int TtaAddToolBarButton ( int window_id,
                                    char * functionName,
                                    void (*procedure) (),
                                    ThotBool status );
+extern ThotBool TtaRegisterWidgetWX ( int ref,
+                                        void * p_widget );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

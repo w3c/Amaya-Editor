@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(SearchDlgWX, wxDialog)
+BEGIN_EVENT_TABLE(SearchDlgWX, AmayaDialog)
   EVT_BUTTON( XRCID("wxID_CONFIRMBUTTON"),     SearchDlgWX::OnConfirmButton )
   EVT_BUTTON( XRCID("wxID_CANCELBUTTON"),      SearchDlgWX::OnCancelButton )
   EVT_BUTTON( XRCID("wxID_NOREPLACEBUTTON"),   SearchDlgWX::OnNoReplaceButton )
@@ -29,8 +29,10 @@ END_EVENT_TABLE()
     + parent : parent window
     + titlecaption : dialog caption (including the document name)
   ----------------------------------------------------------------------*/
-SearchDlgWX::SearchDlgWX( wxWindow* parent,
-			  const wxString & caption ) : wxDialog()
+  SearchDlgWX::SearchDlgWX( int ref, 
+			    wxWindow* parent,
+			    const wxString & caption ) : 
+    AmayaDialog( NULL, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("SearchDlgWX"));
   wxLogDebug( _T("SearchDlgWX::SearchDlgWX - caption=")+caption);
@@ -141,8 +143,7 @@ void SearchDlgWX::OnNoReplaceButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SearchDlgWX::OnCancelButton( wxCommandEvent& event )
 {
-  ThotCallback (BaseDialog + TitleForm, INTEGER_DATA, (char*) 0); 
-  EndModal( 0 );
+  ThotCallback (NumFormSearchText, INTEGER_DATA, (char*) 0); 
 }
 
 /*----------------------------------------------------------------------

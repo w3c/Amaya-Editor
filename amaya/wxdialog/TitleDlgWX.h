@@ -7,24 +7,25 @@
 // Headers
 //-----------------------------------------------------------------------------
 
-#include "wx/dialog.h"
+#include "AmayaDialog.h"
 
 //-----------------------------------------------------------------------------
 // Class definition: TitleDlgWX
 //-----------------------------------------------------------------------------
 
-class TitleDlgWX : public wxDialog
+class TitleDlgWX : public AmayaDialog
 {
 
 public: 
     
   // Constructor.
-  TitleDlgWX( wxWindow* parent,
+  TitleDlgWX( int ref,
+	      wxWindow* parent,
 	      const wxString & title,
 	      const wxString & doc_title );
   
   // Destructor.                  
-  ~TitleDlgWX();
+  virtual ~TitleDlgWX();
 
 private:
     // Override base class functions of a wxDialog.
@@ -33,8 +34,6 @@ private:
 
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
-    
-private:
 };
 
 #endif  //__TITLEDLGWX_H__

@@ -824,7 +824,15 @@ void SetupAndPrint (Document doc, View view)
   CreatePrintDlgWindow (TtaGetViewFrame (doc, view), PSfile);
 #endif /* _WINGUI */
 #ifdef _WX
-  CreatePrintDlgWX (TtaGetViewFrame (doc, view), PSfile);
+  {
+    ThotBool created;
+    created = CreatePrintDlgWX (BasePrint + FormPrint, TtaGetViewFrame (doc, view), PSfile);
+    if (created)
+      {
+	TtaShowDialogue (BasePrint+FormPrint, FALSE);
+      }
+  }
+  
 #endif /* _WX */
 }
 

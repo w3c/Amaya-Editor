@@ -7,43 +7,40 @@
 // Headers
 //-----------------------------------------------------------------------------
 
-#include "wx/dialog.h"
+#include "AmayaDialog.h"
 
 //-----------------------------------------------------------------------------
 // Class definition: InitConfirmDlgWX
 //-----------------------------------------------------------------------------
 
-class InitConfirmDlgWX : public wxDialog
+class InitConfirmDlgWX : public AmayaDialog
 {
 
-public: 
-    
+public:    
   // Constructor.
-  InitConfirmDlgWX( wxWindow* parent,
+  InitConfirmDlgWX( int ref,
+		    wxWindow* parent,
 		    const wxString & title,
 		    const wxString & extrabutton,
 		    const wxString & confirmbutton,
 		    const wxString & label );
-    
-  // Destructor.                  
-  ~InitConfirmDlgWX();
+  virtual ~InitConfirmDlgWX();
 
 private:
     // Override base class functions of a wxDialog.
   void OnExtraButton( wxCommandEvent& event );
   void OnConfirmButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );
-  void OnSize( wxSizeEvent& event );
 
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
     
 private:
-      wxString m_Label;
-      wxString m_Title;
-      wxString m_ExtraButton;
-      wxString m_ConfirmButton;
-      wxString m_CancelButton;
+  wxString m_Label;
+  wxString m_Title;
+  wxString m_ExtraButton;
+  wxString m_ConfirmButton;
+  wxString m_CancelButton;
 };
 
 #endif  //__INITCONFIRMDLGWX_H__

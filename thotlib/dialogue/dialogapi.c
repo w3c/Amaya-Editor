@@ -3686,6 +3686,13 @@ static int DestForm (int ref)
 #ifdef _GTK
 	  gtk_widget_destroy (catalogue->Cat_Widget);
 #endif /* _GTK */
+
+#ifdef _WX
+	  if (catalogue->Cat_Type == CAT_DIALOG)
+	    if (catalogue->Cat_Widget)
+	      catalogue->Cat_Widget->Destroy();
+#endif /* #ifdef _WX */
+
 	  /* Libere le catalogue */
 	  catalogue->Cat_Widget = 0;
 	  return (0);
@@ -3721,7 +3728,14 @@ void TtaUnmapDialogue (int ref)
 	gtk_widget_hide (GTK_WIDGET(catalogue->Cat_Widget));
     }
 #endif /* _GTK */
-  
+
+#ifdef _WX
+  /* hide the widget */
+  if (catalogue->Cat_Type == CAT_DIALOG)
+    if (catalogue->Cat_Widget)
+      catalogue->Cat_Widget->Hide();
+#endif /* _WX */
+
   /* Si le catalogue correspond au dernier TtaShowDialogue */
   if (ShowCat)
     if (ref == ShowCat->Cat_Ref)
@@ -3855,46 +3869,13 @@ void TtaDestroyDialogue (int ref)
        	if (catalogue->Cat_Type != CAT_PULL)
 	  gtk_widget_destroy (GTK_WIDGET(catalogue->Cat_Widget));
 #endif /* _GTK */
+
 #ifdef _WX
-	/*
-	if (catalogue->Cat_Type != CAT_PULL)
-	  {
-	    //	    wxASSERT(FALSE);
-
-	    wxObject * p_obj1 = wxDynamicCast(catalogue->Cat_Widget, wxObject);
-	    wxObject * p_obj2 = wxDynamicCast(parentCatalogue->Cat_Widget, wxObject);
-
-	    wxLogDebug( _T("obj1 KindOf :%s"),
-			p_obj1->GetClassInfo()->GetClassName() );
-	    wxLogDebug( _T("obj2 KindOf :%s"),
-			p_obj2->GetClassInfo()->GetClassName() );
-	
-	    wxMenuItem * p_menu_item = wxDynamicCast(catalogue->Cat_Widget, wxMenuItem);
-	    wxMenu * p_menu_parent   = wxDynamicCast(parentCatalogue->Cat_Widget, wxMenu);
-	    if ( p_menu_parent && p_menu_item )
-	      {
-		p_menu_parent->Destroy( p_menu_item );
-	      }
-	  }
-	*/
-
-	//	wxObject * p_obj = wxDynamicCast(catalogue->Cat_Widget, wxObject);
-	//	wxLogDebug( _T("catalogue->Cat_Widget KindOf :%s"),
-	//		    p_obj->GetClassInfo()->GetClassName() );
-
-	//	wxMenu * p_menu = wxDynamicCast(catalogue->Cat_Widget, wxMenu);
-	/*	if (p_menu)
-	  {
-	    wxLogDebug( _T("catalogue->Cat_Widget KindOf :%s nbitems=%d"),
-			catalogue->Cat_Widget->GetClassInfo()->GetClassName(),
-			wxDynamicCast(catalogue->Cat_Widget,wxMenu)->GetMenuItemCount() );
-	    int item_id = 0;
-	    while ( p_menu->GetMenuItemCount() )
-	      {
-		 p_menu->Destroy( p_menu->FindItemByPosition( 0 ) );
-	      }
-	      }*/
+	if (catalogue->Cat_Type == CAT_DIALOG)
+	  if (catalogue->Cat_Widget)
+	    catalogue->Cat_Widget->Destroy();
 #endif /* #ifdef _WX */
+
 	/* Libere le catalogue */
 	catalogue->Cat_Widget = 0;
      }
@@ -5847,6 +5828,19 @@ ThotWidget TtaNewComboBox (int ref, int ref_parent, char *label,
   ----------------------------------------------------------------------*/
 void TtaAbortShowDialogue ()
 {
+#if defined(_WX)
+  if (ShowReturn == 1)
+    {
+      /* Debloque l'attente courante */
+      ShowReturn = 0;
+      /* Invalide le menu ou formulaire courant */
+      if (ShowCat  && ShowCat->Cat_Widget)
+	{
+	  ShowCat->Cat_Widget->Hide();
+	}
+     }
+#endif /* _WX */
+
 #if defined(_GTK)
   if (ShowReturn == 1)
     {
@@ -5923,6 +5917,25 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 	  return;
 	} 
     }
+
+#ifdef _WX
+  if (catalogue->Cat_Type == CAT_DIALOG)
+    if (catalogue->Cat_Widget)
+      {
+	/* Faut-il invalider un TtaShowDialogue precedent */
+	TtaAbortShowDialogue ();
+	/* Memorise qu'un retour sur le catalogue est attendu et */
+	/* qu'il peut etre aborter si et seulement s'il n'est pas remanent */
+	if (!remanent)
+	  {
+	    ShowReturn = 1;
+	    ShowCat = catalogue;
+	  }
+
+	catalogue->Cat_Widget->Show();
+      }
+#endif /* _WX */
+
 #ifdef _WINGUI
   if (catalogue->Cat_Type == CAT_POPUP)
     {
@@ -6051,15 +6064,14 @@ void TtaWaitShowDialogue ()
   TranslateMessage (&event);
   DispatchMessage (&event);
 #endif  /* _WINGUI */
-#ifdef _GTK
+#if defined(_GTK) || defined(_WX)
   /* a TtaWaitShowDialogue pending */
   CurrentWait = 1;
   while (ShowReturn == 1)
     TtaHandleOneEvent (&event);
   /* Fin de l'attente */
   CurrentWait = 0;
-#endif /* _GTK */
-  
+#endif /* _GTK || _WX */
 }
 
 /*----------------------------------------------------------------------

@@ -7,22 +7,23 @@
 // Headers
 //-----------------------------------------------------------------------------
 
-#include "wx/dialog.h"
+#include "AmayaDialog.h"
 
 //-----------------------------------------------------------------------------
 // Class definition: SearchDlgWX
 //-----------------------------------------------------------------------------
 
-class SearchDlgWX : public wxDialog
+class SearchDlgWX : public AmayaDialog
 {
 public: 
     
   // Constructor.
-  SearchDlgWX( wxWindow* parent,
+  SearchDlgWX( int ref, 
+	       wxWindow* parent,
 	       const wxString & titlecaption );
   
   // Destructor.                  
-  ~SearchDlgWX();
+  virtual ~SearchDlgWX();
 
 private:
     // Override base class functions of a wxDialog.

@@ -1,44 +1,38 @@
 #ifdef _WX
 
-#ifndef __PRINTDLGWX_H__
-#define __PRINTDLGWX_H__
+#ifndef __AMAYADIALOG_H__
+#define __AMAYADIALOG_H__
 
 //-----------------------------------------------------------------------------
 // Headers
 //-----------------------------------------------------------------------------
 
-#include "AmayaDialog.h"
+#include "wx/dialog.h"
 
 //-----------------------------------------------------------------------------
-// Class definition: PrintDlgWX
+// Class definition: AmayaDialog
 //-----------------------------------------------------------------------------
 
-class PrintDlgWX : public AmayaDialog
+class AmayaDialog : public wxDialog
 {
-public: 
+ public: 
     
   // Constructor.
-  PrintDlgWX( int ref,
-	      wxWindow* parent,
-	      const wxString & ps_file );
-  
+  AmayaDialog( wxWindow * p_parent, int ref );
+    
   // Destructor.                  
-  virtual ~PrintDlgWX();
+  virtual ~AmayaDialog();
 
-private:
-    // Override base class functions of a wxDialog.
-  void OnPrintButton( wxCommandEvent& event );
-  void OnCancelButton( wxCommandEvent& event );
+ private:
+  void OnClose( wxCloseEvent& event );
 
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
-    
-private:
-  int   m_iarea;
-  int   m_ireplace;
-  bool  m_case;
+
+ protected:
+  int m_Ref;
 };
 
-#endif  //__PRINTDLGWX_H__
+#endif  // __AMAYADIALOG_H__
 
 #endif /* _WX */

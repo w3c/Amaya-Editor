@@ -622,7 +622,17 @@ void ChangeTitle (Document doc, View view)
        CreateTitleDlgWindow (TtaGetViewFrame (doc, view), Answer_text);
 #endif /* _WINGUI */
 #ifdef _WX
-       CreateTitleDlgWX (TtaGetViewFrame (doc, view), Answer_text);
+       {
+	 ThotBool created;
+	 created = CreateTitleDlgWX ( BaseDialog + TitleForm,
+				      TtaGetViewFrame (doc, view),
+				      Answer_text);
+	 if (created)
+	   {
+	     TtaSetDialoguePosition ();
+	     TtaShowDialogue (BaseDialog + TitleForm, FALSE);
+	   }
+       }   
 #endif /* _WX */
      }
 }

@@ -6,45 +6,55 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void CreateInitConfirmDlgWX ( ThotWindow parent,
-                                     char *title,
-                                     char *extrabutton,
-                                     char *confirmbutton,
-                                     char *label );
-extern void CreateOpenDocDlgWX ( ThotWindow parent,
-                                 const char *title,
-                                 const char *urlList,
-                                 const char *docName,
-                                 int doc_select,
-                                 int dir_select,
-                                 DocumentType doc_type );
-extern void CreateTitleDlgWX ( ThotWindow parent,
-                               char *doc_title );
-extern void CreateSearchDlgWX ( ThotWindow parent,
-                                char* caption );
-extern void CreatePrintDlgWX ( ThotWindow parent,
-                               char* ps_file );
+extern ThotBool CreateInitConfirmDlgWX ( int ref,
+                                         ThotWindow parent,
+                                         char *title,
+                                         char *extrabutton,
+                                         char *confirmbutton,
+                                         char *label );
+extern ThotBool CreateOpenDocDlgWX ( int ref,
+                                     ThotWindow parent,
+                                     const char *title,
+                                     const char *urlList,
+                                     const char *docName,
+                                     int doc_select,
+                                     int dir_select,
+                                     DocumentType doc_type );
+extern ThotBool CreateTitleDlgWX ( int ref,
+                                   ThotWindow parent,
+                                   char *doc_title );
+extern ThotBool CreateSearchDlgWX ( int ref,
+                                    ThotWindow parent,
+                                    char* caption );
+extern ThotBool CreatePrintDlgWX ( int ref,
+                                   ThotWindow parent,
+                                   char* ps_file );
 
 #else /* __STDC__ */
 
-extern void CreateInitConfirmDlgWX ( ThotWindow parent,
-                                       char *title,
-                                       char *extrabutton,
-                                       char *confirmbutton,
-                                       char *label );
-extern void CreateOpenDocDlgWX ( ThotWindow parent,
-                                   const char *title,
-                                   const char *urlList,
-                                   const char *docName,
-                                   int doc_select,
-                                   int dir_select,
-                                   DocumentType doc_type );
-extern void CreateTitleDlgWX ( ThotWindow parent,
-                                 char *doc_title );
-extern void CreateSearchDlgWX ( ThotWindow parent,
-                                  char* caption );
-extern void CreatePrintDlgWX ( ThotWindow parent,
-                                 char* ps_file );
+extern ThotBool CreateInitConfirmDlgWX ( int ref,
+                                           ThotWindow parent,
+                                           char *title,
+                                           char *extrabutton,
+                                           char *confirmbutton,
+                                           char *label );
+extern ThotBool CreateOpenDocDlgWX ( int ref,
+                                       ThotWindow parent,
+                                       const char *title,
+                                       const char *urlList,
+                                       const char *docName,
+                                       int doc_select,
+                                       int dir_select,
+                                       DocumentType doc_type );
+extern ThotBool CreateTitleDlgWX ( int ref,
+                                     ThotWindow parent,
+                                     char *doc_title );
+extern ThotBool CreateSearchDlgWX ( int ref,
+                                      ThotWindow parent,
+                                      char* caption );
+extern ThotBool CreatePrintDlgWX ( int ref,
+                                     ThotWindow parent,
+                                     char* ps_file );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
