@@ -613,9 +613,9 @@ PtrDocument         pDoc;
 		   for (i = 0; i < nbOldItems; i ++) {
                        RemoveMenu (FrameTable[frame].WdMenus[menu], ref + i, MF_BYCOMMAND) ;
 		   }
+#endif /* _WINDOWS */
 		  TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu], NULL,
 				  nbItemAttr, bufMenuAttr, NULL);
-#endif /* _WINDOWS */
 		  /* marque les attributs actifs */
 		  for (i = 0; i < nbItemAttr; i++)
 		     if (ActiveAttr[i] == 1)
