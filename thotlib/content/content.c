@@ -154,107 +154,112 @@ void SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc,
 		    }
 	       }
 	  }
-	/* copie l'element de texte avec attributs et presentation specifique */
-	pEl2 = ReplicateElement (pEl, pDoc);
-	pEl2->ElVolume = 0;
-	pEl2->ElTextLength = 0;
-	*pSecondPart = pEl2;
-	/* acquiert un buffer de texte pour la 2eme partie */
-	CreateTextBuffer (pEl2);
-	/* chaine le nouvel element */
-	InsertElementAfter (pEl, pEl2);
-	if (rank <= pEl->ElTextLength)
-	   /* le nouvel element n'a pas une longueur nulle */
+	if (!dontCut)
 	  {
-	     /* longueur du nouvel element */
-	     pEl2->ElTextLength = pEl->ElTextLength - rank + 1;
-	     pEl2->ElVolume = pEl2->ElTextLength;
-	     /* nouvelle longueur de l'ancien */
-	     pEl->ElTextLength = rank - 1;
-	     pEl->ElVolume = pEl->ElTextLength;
-	     /* cherche le buffer (pointe' par pBuf) ou a lieu la coupure */
-	     pBuf = pEl->ElText;
-	     i = 0;
-	     while (i + pBuf->BuLength < rank)
-	       {
-		  i += pBuf->BuLength;
-		  if (pBuf->BuNext)
-		    pBuf = pBuf->BuNext;
-		  else
-		    rank = i;
-	       }
-	     /* longueur +1 du texte qui restera dans le dernier buffer (pBuf)
-	        de la premiere partie */
-	     len = rank - i - 1;
-	     pBuf1 = pEl2->ElText;
-	     pBuf1->BuNext = pBuf->BuNext;
-	     if (pBuf1->BuNext != NULL)
-		pBuf1->BuNext->BuPrevious = pEl2->ElText;
-	     /* copie la 2eme partie du buffer coupe' dans le nouveau buffer */
-	     i = 0;
-	     do
-	       {
-		  pBuf1->BuContent[i] = pBuf->BuContent[len + i];
-		  i++;
-	       }
-	     while (pBuf1->BuContent[i - 1] != EOS);
-	     pBuf1->BuLength = i - 1;
-	     /* met a jour le dernier buffer de la premiere partie */
-	     pBuf->BuNext = NULL;
-	     pBuf->BuContent[len] = EOS;
-	     pBuf->BuLength = len;
-	     /* essaie de vider ce dernier buffer dans le precedent */
-	     pBuf1 = pBuf->BuPrevious;
-	     if (pBuf1 &&
-		 pBuf1->BuLength + pBuf->BuLength <= FULL_BUFFER)
-	       /* il y a un buffer precedent et ca peut tenir */
-	       {
-		 i = 0;
-		 while (i <= pBuf->BuLength)
-		   {
-		     pBuf1->BuContent[pBuf1->BuLength + i] = pBuf->BuContent[i];
-		     i++;
-		   }
-		 pBuf1->BuLength += pBuf->BuLength;
-		 /* supprime le dernier buffer de la premiere partie : il est */
-		 /* vide */
-		 pBuf1->BuNext = NULL;
-		 FreeTextBuffer (pBuf);
-	       }
-	     /* accroche les buffers de la deuxieme partie a leur element */
-	     pBuf = pEl2->ElText;
-	     while (pBuf)
-		pBuf = pBuf->BuNext;
-	     if (withAppEvent)
-	       {
-		  /* envoie l'evenement ElemTextModify.Post a qui le demande */
-		  pAsc = pEl;
-		  while (pAsc != NULL)
-		    {
-		       notifyTxt.event = TteElemTextModify;
-		       notifyTxt.document = (Document) IdentDocument (pDoc);
-		       notifyTxt.element = (Element) pAsc;
-		       notifyTxt.target = (Element) pEl;
-		       if (elBreak)
-		         notifyTxt.targetdocument = 0;
-		       else
-		         notifyTxt.targetdocument = (Document) IdentDocument (pDoc);
-		       CallEventType ((NotifyEvent *) & notifyTxt, FALSE);
-		       pAsc = pAsc->ElParent;
-		    }
-	       }
-	  }
-	if (withAppEvent)
-	  {
-	     /* envoie l'evenement ElemNew.Post au nouvel element de texte */
-	     notifyEl.event = TteElemNew;
-	     notifyEl.document = (Document) IdentDocument (pDoc);
-	     notifyEl.element = (Element) pEl2;
-	     notifyEl.info = 0; /* not sent by undo */
-	     notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
-	     notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElStructSchema);
-	     notifyEl.position = 0;
-	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+	    /* copie l'element de texte avec attributs et presentation
+	       specifique */
+	    pEl2 = ReplicateElement (pEl, pDoc);
+	    pEl2->ElVolume = 0;
+	    pEl2->ElTextLength = 0;
+	    *pSecondPart = pEl2;
+	    /* acquiert un buffer de texte pour la 2eme partie */
+	    CreateTextBuffer (pEl2);
+	    /* chaine le nouvel element */
+	    InsertElementAfter (pEl, pEl2);
+	    if (rank <= pEl->ElTextLength)
+	      /* le nouvel element n'a pas une longueur nulle */
+	      {
+		/* longueur du nouvel element */
+		pEl2->ElTextLength = pEl->ElTextLength - rank + 1;
+		pEl2->ElVolume = pEl2->ElTextLength;
+		/* nouvelle longueur de l'ancien */
+		pEl->ElTextLength = rank - 1;
+		pEl->ElVolume = pEl->ElTextLength;
+		/* cherche le buffer (pointe' par pBuf) ou a lieu la coupure */
+		pBuf = pEl->ElText;
+		i = 0;
+		while (i + pBuf->BuLength < rank)
+		  {
+		    i += pBuf->BuLength;
+		    if (pBuf->BuNext)
+		      pBuf = pBuf->BuNext;
+		    else
+		      rank = i;
+		  }
+		/* longueur+1 du texte qui restera dans le dernier buffer
+		   (pBuf) de la premiere partie */
+		len = rank - i - 1;
+		pBuf1 = pEl2->ElText;
+		pBuf1->BuNext = pBuf->BuNext;
+		if (pBuf1->BuNext != NULL)
+		  pBuf1->BuNext->BuPrevious = pEl2->ElText;
+		/* copie la 2eme partie du buffer coupe' dans le nouveau
+		   buffer */
+		i = 0;
+		do
+		  {
+		    pBuf1->BuContent[i] = pBuf->BuContent[len + i];
+		    i++;
+		  }
+		while (pBuf1->BuContent[i - 1] != EOS);
+		pBuf1->BuLength = i - 1;
+		/* met a jour le dernier buffer de la premiere partie */
+		pBuf->BuNext = NULL;
+		pBuf->BuContent[len] = EOS;
+		pBuf->BuLength = len;
+		/* essaie de vider ce dernier buffer dans le precedent */
+		pBuf1 = pBuf->BuPrevious;
+		if (pBuf1 &&
+		    pBuf1->BuLength + pBuf->BuLength <= FULL_BUFFER)
+		  /* il y a un buffer precedent et ca peut tenir */
+		  {
+		    i = 0;
+		    while (i <= pBuf->BuLength)
+		      {
+			pBuf1->BuContent[pBuf1->BuLength + i] = pBuf->BuContent[i];
+			i++;
+		      }
+		    pBuf1->BuLength += pBuf->BuLength;
+		    /* supprime le dernier buffer de la premiere partie :
+		       il est vide */
+		    pBuf1->BuNext = NULL;
+		    FreeTextBuffer (pBuf);
+		  }
+		/* accroche les buffers de la deuxieme partie a leur element */
+		pBuf = pEl2->ElText;
+		while (pBuf)
+		  pBuf = pBuf->BuNext;
+		if (withAppEvent)
+		  {
+		    /* envoie l'evenement ElemTextModify.Post a qui le demande */
+		    pAsc = pEl;
+		    while (pAsc != NULL)
+		      {
+			notifyTxt.event = TteElemTextModify;
+			notifyTxt.document = (Document) IdentDocument (pDoc);
+			notifyTxt.element = (Element) pAsc;
+			notifyTxt.target = (Element) pEl;
+			if (elBreak)
+			  notifyTxt.targetdocument = 0;
+			else
+			  notifyTxt.targetdocument = (Document)IdentDocument (pDoc);
+			CallEventType ((NotifyEvent *) & notifyTxt, FALSE);
+			pAsc = pAsc->ElParent;
+		      }
+		  }
+	      }
+	    if (withAppEvent)
+	      {
+		/* envoie l'evenement ElemNew.Post au nouvel element de texte*/
+		notifyEl.event = TteElemNew;
+		notifyEl.document = (Document) IdentDocument (pDoc);
+		notifyEl.element = (Element) pEl2;
+		notifyEl.info = 0; /* not sent by undo */
+		notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
+		notifyEl.elementType.ElSSchema = (SSchema)(pEl2->ElStructSchema);
+		notifyEl.position = 0;
+		CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+	      }
 	  }
      }
 }
