@@ -45,7 +45,7 @@ Amaya/amaya/Makefile.in \
 Amaya/amaya/COPYRIGHT* \
 Amaya/amaya/Makefile.libwww \
 Amaya/amaya/Makefile.math \
-Amaya/amaya/Makefile.graph \
+Amaya/amaya/Makefile.svg \
 Amaya/amaya/AmayaPage.html \
 Amaya/amaya/AmayaPage.html.fr \
 Amaya/amaya/*.c \
@@ -65,10 +65,10 @@ Amaya/amaya/MathML.S \
 Amaya/amaya/MathMLP.P \
 Amaya/amaya/MathMLT.T \
 Amaya/amaya/MathML.trans \
-Amaya/amaya/GraphML.A \
-Amaya/amaya/GraphML.S \
-Amaya/amaya/GraphMLP.P \
-Amaya/amaya/GraphMLT.T \
+Amaya/amaya/SVG.A \
+Amaya/amaya/SVG.S \
+Amaya/amaya/SVGP.P \
+Amaya/amaya/SVGT.T \
 Amaya/amaya/TextFile.A \
 Amaya/amaya/TextFile.S \
 Amaya/amaya/TextFileP.P \
@@ -186,7 +186,7 @@ Amaya/doc/html/Views.html \
 Amaya/doc/html/*.html.fr \
 Amaya/doc/images/*.gif \
 Amaya/doc/images/*.png \
-Amaya/images/w3c_home \
+Amaya/doc/images/w3c_home \
 Amaya/fonts/Families.list \
 Amaya/fonts/fonts.dir \
 Amaya/fonts/icones* \

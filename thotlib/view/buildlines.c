@@ -1937,10 +1937,11 @@ void                ComputeLines (PtrBox pBox, int frame, int *height)
   ThotBool            still;
   ThotBool            toLineSpace;
 
-  extensibleBox = pBox->BxContentWidth;
   /* Remplissage de la boite bloc de ligne */
   noWrappedWidth = 0;
   pAb = pBox->BxAbstractBox;
+  extensibleBox = (pBox->BxContentWidth ||
+		   !pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum);
   pNextBox = NULL;
   full = TRUE;
   top = pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
@@ -2179,10 +2180,13 @@ void                ComputeLines (PtrBox pBox, int frame, int *height)
 	      else
 		{
 		  x = pLine->LiXOrg;
-		  if (pAb->AbAdjust == AlignCenter)
-		    x += (pLine->LiXMax - pLine->LiRealLength) / 2;
-		  else if (pAb->AbAdjust == AlignRight)
-		    x = x + pLine->LiXMax - pLine->LiRealLength;
+		  if (!extensibleBox)
+		    {
+		      if (pAb->AbAdjust == AlignCenter)
+			x += (pLine->LiXMax - pLine->LiRealLength) / 2;
+		      else if (pAb->AbAdjust == AlignRight)
+			x = x + pLine->LiXMax - pLine->LiRealLength;
+		    }
 		  /* Decale toutes les boites de la ligne */
 		  Align (pBox, pLine, x, frame, orgXComplete, orgYComplete);
 		}

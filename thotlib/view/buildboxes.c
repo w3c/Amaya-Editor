@@ -730,18 +730,12 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
 	  pCurrentBox->BxFirstLine = NULL;
 	  pCurrentBox->BxLastLine = NULL;
 	  ComputeLines (pCurrentBox, frame, height);
-	  if (pCurrentBox->BxContentWidth)
-	    /* it's an extensible line */
-	    pCurrentBox->BxW = pCurrentBox->BxMaxWidth;
-	  else
+	  if (pCurrentBox->BxContentWidth ||
+	      (hMin && pCurrentBox->BxMaxWidth > pCurrentBox->BxW))
 	    {
-	      /* Si la largeur du contenu depasse le minimum */
-	      if (hMin && pCurrentBox->BxMaxWidth > pCurrentBox->BxW)
-		{
-		  /* Il faut prendre la largeur du contenu */
-		  pCurrentBox->BxContentWidth = TRUE;
-		  RecomputeLines (pAb, NULL, NULL, frame);
-		}
+	      /* it's an extensible line */
+	      pCurrentBox->BxContentWidth = TRUE;
+	      pCurrentBox->BxW = pCurrentBox->BxMaxWidth;
 	    }
 	}
       *width = pCurrentBox->BxW;
