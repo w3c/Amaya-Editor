@@ -2210,6 +2210,8 @@ int                 editType;
 	       }
 	     else
 		pAb = pBox->BxAbstractBox;
+	     if (pAb->AbReadOnly)
+	        return;
 	  }
         /*-- La commande coller concerne le mediateur --*/
 	if (editType == TEXT_PASTE && !FromKeyboard)
