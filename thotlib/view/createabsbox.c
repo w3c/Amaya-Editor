@@ -820,391 +820,391 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 				      int view, PtrSSchema pSS,
 				      PtrDocument pDoc)
 {
-   ThotBool            ok, currentCond, stop, equal;
-   int                 valcompt, valmaxi, valmini, i;
-   PtrPSchema          pSchP = NULL;
-   PtrElement          pElSibling, pAsc, pElem, pRoot;
-   PtrReference        pRef;
-   DocumentIdentifier  IDocExt;
-   PtrDocument         pDocExt;
-   PtrAttribute        pA;
+  ThotBool            ok, currentCond, stop, equal;
+  int                 valcompt, valmaxi, valmini, i;
+  PtrPSchema          pSchP = NULL;
+  PtrElement          pElSibling, pAsc, pElem, pRoot;
+  PtrReference        pRef;
+  DocumentIdentifier  IDocExt;
+  PtrDocument         pDocExt;
+  PtrAttribute        pA;
 
-   /* a priori les conditions sont satisfaites */
-   ok = TRUE;
-   /* on examine toutes les conditions de la chaine */
-   while (pCond != NULL && ok)
-     {
-	if (!pCond->CoTarget)
-	   pElem = pEl;
-	else
-	   /* la condition porte sur l'element pointe' par pEl ou pAttr.
-	      on cherche cet element pointe' */
+  /* a priori les conditions sont satisfaites */
+  ok = TRUE;
+  /* on examine toutes les conditions de la chaine */
+  while (pCond != NULL && ok)
+    {
+      if (!pCond->CoTarget)
+	pElem = pEl;
+      else
+	/* la condition porte sur l'element pointe' par pEl ou pAttr.
+	   on cherche cet element pointe' */
+	{
+	  pElem = NULL;
+	  if (pAttr != NULL &&
+	      pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType ==
+	      AtReferenceAttr)
+	    /* c'est un attribut reference */
+	    pRef = pAttr->AeAttrReference;
+	  else
+	    /* l'element est-il une reference ? */
+	    if (pEl->ElTerminal && pEl->ElLeafType == LtReference)
+	      pRef = pEl->ElReference;
+	    else
+	      /* c'est peut-etre une inclusion */
+	      pRef = pEl->ElSource;
+	  if (pRef != NULL)
+	    pElem = ReferredElement (pRef, &IDocExt, &pDocExt);
+	}
+      valcompt = 0;
+      if (pElem == NULL)
+	ok = FALSE;
+      else if (pCond->CoCondition == PcEven || pCond->CoCondition == PcOdd ||
+	       pCond->CoCondition == PcOne || pCond->CoCondition == PcInterval)
+	/* evalue le compteur */
+	{
+	  pSchP = PresentationSchema (pSS, pDoc);
+	  if (pSchP != NULL)
+	    valcompt = CounterVal (pCond->CoCounter, pSS, pSchP, pElem, view);
+	}
+      if (pElem != NULL)
+	switch (pCond->CoCondition)
 	  {
-	     pElem = NULL;
-	     if (pAttr != NULL &&
-		 pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType ==
-		 AtReferenceAttr)
-		/* c'est un attribut reference */
-		pRef = pAttr->AeAttrReference;
-	     else
-		/* l'element est-il une reference ? */
-	     if (pEl->ElTerminal && pEl->ElLeafType == LtReference)
-		pRef = pEl->ElReference;
-	     else
-		/* c'est peut-etre une inclusion */
-		pRef = pEl->ElSource;
-	     if (pRef != NULL)
-		pElem = ReferredElement (pRef, &IDocExt, &pDocExt);
+
+	  case PcFirst:
+	    /* on saute les marques de page precedentes */
+	    pElSibling = pElem->ElPrevious;
+	    stop = FALSE;
+	    do
+	      if (pElSibling == NULL)
+		stop = TRUE;
+	      else if (pElSibling->ElTypeNumber == PageBreak + 1)
+		pElSibling = pElSibling->ElPrevious;
+	      else
+		stop = TRUE;
+	    while (!stop);
+	    currentCond = pElSibling == NULL;
+	    break;
+
+	  case PcLast:
+	    /* on saute les marques de page suivantes */
+	    pElSibling = pElem->ElNext;
+	    stop = FALSE;
+	    do
+	      if (pElSibling == NULL)
+		stop = TRUE;
+	      else if (pElSibling->ElTypeNumber == PageBreak + 1)
+		pElSibling = pElSibling->ElNext;
+	      else
+		stop = TRUE;
+	    while (!stop);
+	    currentCond = pElSibling == NULL;
+	    /* traitement particulier pour les lignes de tableau */
+	    if (ThotLocalActions[T_condlast] != NULL)
+	      (*ThotLocalActions[T_condlast]) (pElem, &currentCond);
+	    break;
+       
+	  case PcReferred:
+	    /* la condition est satisfaite si l'element (ou le */
+	    /* premier de ses ascendants sur lequel peut porter une */
+	    /* reference) est reference' au moins une fois. */
+	    currentCond = FALSE;
+	    pAsc = pElem;
+	    do
+	      {
+		if (pAsc->ElReferredDescr != NULL)
+		  /* l'element est reference' */
+		  currentCond = TRUE;
+		if (!currentCond)
+		  /* l'element n'est pas reference' */
+		  /* on examine l'element ascendant */
+		  pAsc = pAsc->ElParent;
+	      }
+	    while (pAsc != NULL && !currentCond);
+	    break;
+
+	  case PcFirstRef:
+	  case PcLastRef:
+	    /* la condition est satisfaite s'il s'agit de la premiere ou
+	       de la derniere reference a l'element reference' */
+	    pRef = NULL;
+	    if (pAttr != NULL &&
+		pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType == AtReferenceAttr)
+	      /* c'est un attribut reference */
+	      pRef = pAttr->AeAttrReference;
+	    else if (pElem->ElTerminal && pElem->ElLeafType == LtReference)
+	      /* l'element est une reference */
+	      pRef = pElem->ElReference;
+	    if (pRef != NULL)
+	      if (pCond->CoCondition == PcFirstRef)
+		currentCond = pEl->ElReference->RdPrevious == NULL;
+	      else
+		currentCond = pEl->ElReference->RdNext == NULL;
+	    else
+	      currentCond = FALSE;
+	    break;
+
+	  case PcExternalRef:
+	  case PcInternalRef:
+	    /* la condition est satisfaite s'il s'agit d'un */
+	    /* element ou d'un attribut reference externe (ou interne) */
+	    pRef = NULL;
+	    currentCond = FALSE;
+	    if (pAttr != NULL &&
+		pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType == AtReferenceAttr)
+	      /* c'est un attribut reference */
+	      pRef = pAttr->AeAttrReference;
+	    else if (pElem->ElTerminal && pElem->ElLeafType == LtReference)
+	      /* l'element est-il une reference ? */
+	      pRef = pElem->ElReference;
+	    else
+	      /* c'est peut-etre une inclusion */
+	      pRef = pElem->ElSource;
+	    if (pRef == NULL)
+	      currentCond = FALSE;
+	    else if (pCond->CoCondition == PcInternalRef)
+	      currentCond = pRef->RdInternalRef;
+	    else
+	      currentCond = !pRef->RdInternalRef;
+	    break;
+
+	  case PcCopyRef:
+	    /* la condition est satisfaite si l'element est une copie */
+	    currentCond = pElem->ElIsCopy;
+	    break;
+
+	  case PcAnyAttributes:
+	    /* la condition est satisfaite si l'element */
+	    /* porte des attributs */
+	    currentCond = pElem->ElFirstAttr != NULL;
+	    break;
+
+	  case PcFirstAttr:
+	    /* TODO */
+	    /* la condition est satisfaite si le bloc */
+	    /* attribut pAttr est le 1er de l'element */
+	    if (pAttr && pElAttr)
+	      currentCond = pAttr == pElAttr->ElFirstAttr;
+	    break;
+
+	  case PcLastAttr:
+	    /* TODO */
+	    /* la condition est satisfaite si le bloc     */
+	    /* attribut pAttr est le dernier de l'element */
+	    if (pAttr)
+	      currentCond = pAttr->AeNext == NULL;
+	    break;
+
+	  case PcUserPage:
+	    /* la condition est satisfaite si l'element
+	       est un saut de page utilisateur */
+	    if (pElem->ElTypeNumber == PageBreak + 1)
+	      currentCond = pElem->ElPageType == PgUser;
+	    break;
+
+	  case PcStartPage:
+	    /* la condition est satisfaite si l'element
+	       est un saut de page de debut */
+	    if (pElem->ElTypeNumber == PageBreak + 1)
+	      currentCond = pElem->ElPageType == PgBegin;
+	    break;
+
+	  case PcComputedPage:
+	    /* la condition est satisfaite si l'element
+	       est un saut de page calcule */
+	    if (pElem->ElTypeNumber == PageBreak + 1)
+	      currentCond = pElem->ElPageType == PgComputed;
+	    break;
+
+	  case PcEmpty:
+	    /* la condition est satisfaite si l'element est vide */
+	    if (pElem->ElTerminal)
+	      if (pElem->ElLeafType == LtReference)
+		currentCond = pElem->ElReference == NULL;
+	      else
+		currentCond = pElem->ElVolume == 0;
+	    else
+	      currentCond = pElem->ElFirstChild == NULL;
+	    break;
+
+	  case PcRoot:
+	    /* la condition est satisfaite si le parent de l'element est
+	       le document lui-meme */
+	    currentCond = (pElem->ElParent &&
+			   pElem->ElParent->ElTypeNumber ==
+			   pElem->ElParent->ElStructSchema->SsDocument);
+	    break;
+
+	  case PcEven:
+	    currentCond = !(valcompt & 1);
+	    break;
+
+	  case PcOdd:
+	    currentCond = (valcompt & 1);
+	    break;
+
+	  case PcOne:
+	    currentCond = (valcompt == 1);
+	    break;
+
+	  case PcInterval:
+	    if (pCond->CoValCounter == CntMinVal)
+	      {
+		/* Calcule la valeur mini du compteur */
+		valmini = CounterValMinMax (pCond->CoCounter, pSS, pSchP,
+					    pElem, view, FALSE);
+		currentCond = (valmini <= pCond->CoMaxCounter) &&
+		  (valmini >= pCond->CoMinCounter);
+	      }
+	    else if (pCond->CoValCounter == CntMaxVal)
+	      {
+		/* Calcule la valeur maxi du compteur */
+		valmaxi = CounterValMinMax (pCond->CoCounter, pSS, pSchP,
+					    pElem, view, TRUE);
+		currentCond = (valmaxi <= pCond->CoMaxCounter) &&
+		  (valmaxi >= pCond->CoMinCounter);
+	      }
+	    else
+	      /* Calcule la valeur courante du compteur */
+	      currentCond = (valcompt <= pCond->CoMaxCounter) &&
+		(valcompt >= pCond->CoMinCounter);
+	    break;
+
+	  case PcWithin:
+	    /* condition sur le nombre d'ancetres d'un type donne' */
+	    pAsc = pElem->ElParent;
+	    if (pAsc == NULL)
+	      /* aucun ancetre, condition non satisfaite */
+	      currentCond = FALSE;
+	    else
+	      {
+		i = 0;
+		if (pCond->CoImmediate)
+		  /* Condition: If immediately within n element-type */
+		  /* Les n premiers ancetres successifs doivent etre du */
+		  /* type CoTypeAncestor, sans comporter d'elements */
+		  /* d'autres type */
+		  /* on compte les ancetres successifs de ce type */
+		  while (pAsc != NULL)
+		    {
+		      if (pCond->CoTypeAncestor != 0)
+			equal = (pAsc->ElTypeNumber == pCond->CoTypeAncestor &&
+				 !ustrcmp (pAsc->ElStructSchema->SsName,
+					   pSS->SsName));
+		      else
+			equal = (!ustrcmp (pCond->CoAncestorName,
+					   pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) &&
+				 !ustrcmp (pCond->CoSSchemaName,
+					   pAsc->ElStructSchema->SsName));
+		      if (equal)
+			{
+			  i++;
+			  pAsc = pAsc->ElParent;
+			}
+		      else
+			pAsc = NULL;
+		    }
+		else
+		  /* Condition: If within n element-type */
+		  /* on compte tous les ancetres de ce type */
+		  while (pAsc != NULL)
+		    {
+		      if (pCond->CoTypeAncestor != 0)
+			equal = (pAsc->ElTypeNumber == pCond->CoTypeAncestor &&
+				 !ustrcmp (pAsc->ElStructSchema->SsName,
+					   pSS->SsName));
+		      else
+			equal = (!ustrcmp (pCond->CoAncestorName,
+					   pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) &&
+				 !ustrcmp (pCond->CoSSchemaName,
+					   pAsc->ElStructSchema->SsName)); 
+		      if (equal)
+			i++;
+		      pAsc = pAsc->ElParent;  /* passe a l'element ascendant */
+		    }
+		if (pCond->CoAncestorRel == CondEquals)
+		  currentCond = i == pCond->CoRelation;
+		else if (pCond->CoAncestorRel == CondGreater)
+		  currentCond = i > pCond->CoRelation;
+		else if (pCond->CoAncestorRel == CondLess)
+		  currentCond = i < pCond->CoRelation;
+	      }
+	    break;
+
+	  case PcElemType:
+	    /* verifie si l'attribut est attache' a un element du
+	       type voulu */
+	    currentCond = (pElAttr->ElTypeNumber == pCond->CoTypeElAttr);
+	    break;
+
+	  case PcAttribute:
+	    /* verifie si l'element possede cet attribut */
+	    pA = pElem->ElFirstAttr;
+	    currentCond = FALSE;
+	    while (pA != NULL && !currentCond)
+	      /* boucle sur les attributs de l'element */
+	      {
+		if (pA->AeAttrNum == pCond->CoTypeElAttr)
+		  currentCond = TRUE;
+		else
+		  pA = pA->AeNext;		/* attribut suivant */
+	      }
+	    /* as it's impossible to set an attribute to the PAGE */
+	    if (!currentCond && pElem->ElTypeNumber == PageBreak + 1)
+	      {
+		/* get the root element */
+		if (pElem->ElParent && pElem->ElParent->ElTypeNumber ==
+		    pElem->ElParent->ElStructSchema->SsDocument)
+		  /* parent of PAGE element is the document element */
+		  {
+		    /* get the root element from the children of the
+		       document element */
+		    pRoot = pElem->ElParent->ElFirstChild;
+		    while (pRoot && 
+			   (pRoot->ElTypeNumber !=
+			    pElem->ElStructSchema->SsRootElem ||
+			    pRoot->ElStructSchema != pElem->ElStructSchema))
+		      pRoot = pRoot->ElNext;
+		  }
+		else
+		  {
+		    pAsc = pElem;
+		    pRoot = pElem;
+		    while (pAsc->ElParent != NULL)
+		      {
+			pRoot = pAsc;
+			pAsc = pAsc->ElParent;
+		      }
+		  }
+		pA = pRoot->ElFirstAttr;
+		/* check the list of attributes of the root element */
+		while (pA != NULL && !currentCond)
+		  /* boucle sur les attributs de l'element */
+		  {
+		    if (pA->AeAttrNum == pCond->CoTypeElAttr)
+		      currentCond = TRUE;
+		    else
+		      pA = pA->AeNext;	/* attribut suivant */
+		  }
+	      }
+	    break;
+
+	  case PcNoCondition:
+	    currentCond = TRUE;
+	    break;
+	    
+	  case PcDefaultCond:
+	    currentCond = TRUE;
+	    break;
 	  }
-	valcompt = 0;
-	if (pElem == NULL)
-	   ok = FALSE;
-	else if (pCond->CoCondition == PcEven || pCond->CoCondition == PcOdd
-	 || pCond->CoCondition == PcOne || pCond->CoCondition == PcInterval)
-	   /* evalue le compteur */
-	  {
-	     pSchP = PresentationSchema (pSS, pDoc);
-	     if (pSchP != NULL)
-		valcompt = CounterVal (pCond->CoCounter, pSS, pSchP, pElem, view);
-	  }
-	if (pElem != NULL)
-	   switch (pCond->CoCondition)
-	     {
-	       
-	     case PcFirst:
-	       /* on saute les marques de page precedentes */
-	       pElSibling = pElem->ElPrevious;
-	       stop = FALSE;
-	       do
-		 if (pElSibling == NULL)
-		   stop = TRUE;
-		 else if (pElSibling->ElTypeNumber == PageBreak + 1)
-		   pElSibling = pElSibling->ElPrevious;
-		 else
-		   stop = TRUE;
-	       while (!stop);
-	       currentCond = pElSibling == NULL;
-	       break;
-	       
-	     case PcLast:
-	       /* on saute les marques de page suivantes */
-	       pElSibling = pElem->ElNext;
-	       stop = FALSE;
-	       do
-		 if (pElSibling == NULL)
-		   stop = TRUE;
-		 else if (pElSibling->ElTypeNumber == PageBreak + 1)
-		   pElSibling = pElSibling->ElNext;
-		 else
-		   stop = TRUE;
-	       while (!stop);
-	       currentCond = pElSibling == NULL;
-	       /* traitement particulier pour les lignes de tableau */
-	       if (ThotLocalActions[T_condlast] != NULL)
-		 (*ThotLocalActions[T_condlast]) (pElem, &currentCond);
-	       break;
-		       
-	     case PcReferred:
-	       /* la condition est satisfaite si l'element (ou le */
-	       /* premier de ses ascendants sur lequel peut porter une */
-	       /* reference) est reference' au moins une fois. */
-	       currentCond = FALSE;
-	       pAsc = pElem;
-	       do
-		 {
-		   if (pAsc->ElReferredDescr != NULL)
-		     /* l'element est reference' */
-		     currentCond = TRUE;
-		   if (!currentCond)
-		     /* l'element n'est pas reference' */
-		     /* on examine l'element ascendant */
-		     pAsc = pAsc->ElParent;
-		 }
-	       while (pAsc != NULL && !currentCond);
-	       break;
-	       
-	     case PcFirstRef:
-	     case PcLastRef:
-	       /* la condition est satisfaite s'il s'agit de la premiere ou
-		  de la derniere reference a l'element reference' */
-	       pRef = NULL;
-	       if (pAttr != NULL &&
-		   pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType == AtReferenceAttr)
-		 /* c'est un attribut reference */
-		 pRef = pAttr->AeAttrReference;
-	       else if (pElem->ElTerminal && pElem->ElLeafType == LtReference)
-		 /* l'element est une reference */
-		 pRef = pElem->ElReference;
-	       if (pRef != NULL)
-		 if (pCond->CoCondition == PcFirstRef)
-		   currentCond = pEl->ElReference->RdPrevious == NULL;
-		 else
-		   currentCond = pEl->ElReference->RdNext == NULL;
-	       else
-		 currentCond = FALSE;
-	       break;
-	       
-	     case PcExternalRef:
-	     case PcInternalRef:
-	       /* la condition est satisfaite s'il s'agit d'un */
-	       /* element ou d'un attribut reference externe (ou interne) */
-	       pRef = NULL;
-	       currentCond = FALSE;
-	       if (pAttr != NULL &&
-		   pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType == AtReferenceAttr)
-		 /* c'est un attribut reference */
-		 pRef = pAttr->AeAttrReference;
-	       else if (pElem->ElTerminal && pElem->ElLeafType == LtReference)
-		 /* l'element est-il une reference ? */
-		 pRef = pElem->ElReference;
-	       else
-		 /* c'est peut-etre une inclusion */
-		 pRef = pElem->ElSource;
-	       if (pRef == NULL)
-		 currentCond = FALSE;
-	       else if (pCond->CoCondition == PcInternalRef)
-		 currentCond = pRef->RdInternalRef;
-	       else
-		 currentCond = !pRef->RdInternalRef;
-	       break;
-	       
-	     case PcCopyRef:
-	       /* la condition est satisfaite si l'element est une copie */
-	       currentCond = pElem->ElIsCopy;
-	       break;
-	       
-	     case PcAnyAttributes:
-	       /* la condition est satisfaite si l'element */
-	       /* porte des attributs */
-	       currentCond = pElem->ElFirstAttr != NULL;
-	       break;
-	       
-	     case PcFirstAttr:
-	       /* TODO */
-	       /* la condition est satisfaite si le bloc */
-	       /* attribut pAttr est le 1er de l'element */
-	       if (pAttr && pElAttr)
-		 currentCond = pAttr == pElAttr->ElFirstAttr;
-	       break;
-	       
-	     case PcLastAttr:
-	       /* TODO */
-	       /* la condition est satisfaite si le bloc     */
-	       /* attribut pAttr est le dernier de l'element */
-	       if (pAttr)
-		 currentCond = pAttr->AeNext == NULL;
-	       break;
-	       
-	     case PcUserPage:
-	       /* la condition est satisfaite si l'element
-		  est un saut de page utilisateur */
-	       if (pElem->ElTypeNumber == PageBreak + 1)
-		 currentCond = pElem->ElPageType == PgUser;
-	       break;
-	       
-	     case PcStartPage:
-	       /* la condition est satisfaite si l'element
-		  est un saut de page de debut */
-	       if (pElem->ElTypeNumber == PageBreak + 1)
-		 currentCond = pElem->ElPageType == PgBegin;
-	       break;
-	       
-	     case PcComputedPage:
-	       /* la condition est satisfaite si l'element
-		  est un saut de page calcule */
-	       if (pElem->ElTypeNumber == PageBreak + 1)
-		 currentCond = pElem->ElPageType == PgComputed;
-	       break;
-	       
-	     case PcEmpty:
-	       /* la condition est satisfaite si l'element est vide */
-	       if (pElem->ElTerminal)
-		 if (pElem->ElLeafType == LtReference)
-		   currentCond = pElem->ElReference == NULL;
-		 else
-		   currentCond = pElem->ElVolume == 0;
-	       else
-		 currentCond = pElem->ElFirstChild == NULL;
-	       break;
-	       
-	     case PcRoot:
-	       /* la condition est satisfaite si le parent de l'element est
-                  le document lui-meme */
-	       currentCond = (pElem->ElParent &&
-			      pElem->ElParent->ElTypeNumber ==
-			          pElem->ElParent->ElStructSchema->SsDocument);
-	       break;
 
-	     case PcEven:
-	       currentCond = !(valcompt & 1);
-	       break;
-	       
-	     case PcOdd:
-	       currentCond = (valcompt & 1);
-	       break;
-	       
-	     case PcOne:
-	       currentCond = (valcompt == 1);
-	       break;
-	       
-	     case PcInterval:
-	       if (pCond->CoValCounter == CntMinVal)
-		 {
-		   /* Calcule la valeur mini du compteur */
-		   valmini = CounterValMinMax (pCond->CoCounter, pSS, pSchP, pElem,
-					       view, FALSE);
-		   currentCond = (valmini <= pCond->CoMaxCounter) &&
-		     (valmini >= pCond->CoMinCounter);
-		 }
-	       else if (pCond->CoValCounter == CntMaxVal)
-		 {
-		   /* Calcule la valeur maxi du compteur */
-		   valmaxi = CounterValMinMax (pCond->CoCounter, pSS, pSchP, pElem,
-					       view, TRUE);
-		   currentCond = (valmaxi <= pCond->CoMaxCounter) &&
-		     (valmaxi >= pCond->CoMinCounter);
-		 }
-	       else
-		 /* Calcule la valeur courante du compteur */
-		 currentCond = (valcompt <= pCond->CoMaxCounter) &&
-		   (valcompt >= pCond->CoMinCounter);
-	       break;
+      if (!pCond->CoNotNegative)
+	currentCond = !currentCond;
+      ok = ok && currentCond;
+      pCond = pCond->CoNextCondition;
+    }
 
-	     case PcWithin:
-	       /* condition sur le nombre d'ancetres d'un type donne' */
-	       pAsc = pElem->ElParent;
-	       if (pAsc == NULL)
-		 /* aucun ancetre, condition non satisfaite */
-		 currentCond = FALSE;
-	       else
-		 {
-		   i = 0;
-		   if (pCond->CoImmediate)
-		     /* Condition: If immediately within n element-type */
-		     /* Les n premiers ancetres successifs doivent etre du */
-		     /* type CoTypeAncestor, sans comporter d'elements */
-		     /* d'autres type */
-		     /* on compte les ancetres successifs de ce type */
-		     while (pAsc != NULL)
-		       {
-			 if (pCond->CoTypeAncestor != 0)
-			   equal = (pAsc->ElTypeNumber == pCond->CoTypeAncestor &&
-				    !ustrcmp (pAsc->ElStructSchema->SsName,
-					      pSS->SsName));
-			 else
-			   equal = (!ustrcmp (pCond->CoAncestorName,
-					      pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) &&
-				    !ustrcmp (pCond->CoSSchemaName,
-					      pAsc->ElStructSchema->SsName));
-			 if (equal)
-			   {
-			     i++;
-			     pAsc = pAsc->ElParent;
-			   }
-			 else
-			   pAsc = NULL;
-		       }
-		   else
-		     /* Condition: If within n element-type */
-		     /* on compte tous les ancetres de ce type */
-		     while (pAsc != NULL)
-		       {
-			 if (pCond->CoTypeAncestor != 0)
-			   equal = (pAsc->ElTypeNumber == pCond->CoTypeAncestor &&
-				    !ustrcmp (pAsc->ElStructSchema->SsName,
-					      pSS->SsName));
-			 else
-			   equal = (!ustrcmp (pCond->CoAncestorName,
-					      pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) &&
-				    !ustrcmp (pCond->CoSSchemaName,
-					      pAsc->ElStructSchema->SsName)); 
-			 if (equal)
-			   i++;
-			 pAsc = pAsc->ElParent;	/* passe a l'element ascendant */
-		       }
-		   if (pCond->CoAncestorRel == CondEquals)
-		     currentCond = i == pCond->CoRelation;
-		   else if (pCond->CoAncestorRel == CondGreater)
-		     currentCond = i > pCond->CoRelation;
-		   else if (pCond->CoAncestorRel == CondLess)
-		     currentCond = i < pCond->CoRelation;
-		 }
-	       break;
-	       
-	     case PcElemType:
-	       /* verifie si l'attribut est attache' a un element du
-		  type voulu */
-	       currentCond = (pElAttr->ElTypeNumber == pCond->CoTypeElAttr);
-	       break;
-	       
-	     case PcAttribute:
-	       /* verifie si l'element possede cet attribut */
-	       pA = pElem->ElFirstAttr;
-	       currentCond = FALSE;
-	       while (pA != NULL && !currentCond)
-		 /* boucle sur les attributs de l'element */
-		 {
-		   if (pA->AeAttrNum == pCond->CoTypeElAttr)
-		     currentCond = TRUE;
-		   else
-		     pA = pA->AeNext;		/* attribut suivant */
-		 }
-	       /* as it's impossible to set an attribute to the PAGE */
-	       if (!currentCond && pElem->ElTypeNumber == PageBreak + 1)
-		 {
-		   /* get the root element */
-		   if (pElem->ElParent && pElem->ElParent->ElTypeNumber ==
-		                 pElem->ElParent->ElStructSchema->SsDocument)
-		     /* parent of PAGE element is the document element */
-		     {
-		       /* get the root element from the children of the
-			  document element */
-		       pRoot = pElem->ElParent->ElFirstChild;
-		       while (pRoot && 
-			      (pRoot->ElTypeNumber !=
-			                 pElem->ElStructSchema->SsRootElem ||
-			       pRoot->ElStructSchema != pElem->ElStructSchema))
-			  pRoot = pRoot->ElNext;
-		     }
-		   else
-		     {
-		     pAsc = pElem;
-		     pRoot = pElem;
-		     while (pAsc->ElParent != NULL)
-		       {
-		       pRoot = pAsc;
-		       pAsc = pAsc->ElParent;
-		       }
-		     }
-		   pA = pRoot->ElFirstAttr;
-		   /* check the list of attributes of the root element */
-		   while (pA != NULL && !currentCond)
-		     /* boucle sur les attributs de l'element */
-		     {
-		       if (pA->AeAttrNum == pCond->CoTypeElAttr)
-			 currentCond = TRUE;
-		       else
-			 pA = pA->AeNext;	/* attribut suivant */
-		     }
-		 }
-	       break;
-	       
-	     case PcNoCondition:
-	       currentCond = TRUE;
-	       break;
-	       
-	     case PcDefaultCond:
-	       currentCond = TRUE;
-	       break;
-	     }
-
-	if (!pCond->CoNotNegative)
-	   currentCond = !currentCond;
-	ok = ok && currentCond;
-	pCond = pCond->CoNextCondition;
-     }
-
-   return ok;
+  return ok;
 }
 
 /*----------------------------------------------------------------------
@@ -1854,184 +1854,243 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 /*----------------------------------------------------------------------
    AttrPresRule retourne la premiere regle de la chaine des regles
    de presentation a` appliquer pour l'attribut pAttr.     
-   - si inheritRule = true on ne s'interesse pas aux regles   
-   par defaut (pRPdef).                                    
-   - si inheritRule = false on ne s'interesse pas aux regles  
-   d'heritage (pRPherit).                                  
-   - si PAttrComp != NULL alors si l'attribut est numerique
-   et que ses regles sont des comparaisons on utilisera    
-   pAttrComp au lieu de rechercher l'attribut de           
-   comparaison dans les ascendants de pEl.                 
+   - si inheritRule = true on ne s'interesse pas aux regles par defaut
+     (pRPdef)
+   - si inheritRule = false on ne s'interesse pas aux regles d'heritage
+     (pRPherit).                                  
+   - si PAttrComp != NULL alors si l'attribut est numerique et que ses regles
+     sont des comparaisons on utilisera pAttrComp au lieu de rechercher
+     l'attribut de comparaison dans les ascendants de pEl.  
+   valueNum indicates the rank of the value to be taken into account
+   when the attribute is a text attribute whose content is considered
+   as a list of space separated values. Should be 1 for the first call.
+   valueNum is updated to indicate the rank of the next value to be
+   processed. 0 indicates that there is no more values.
   ----------------------------------------------------------------------*/
 PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 		       ThotBool inheritRule, PtrAttribute pAttrComp,
-		       PtrPSchema pSchP)
+		       PtrPSchema pSchP, int *valueNum)
 {
-   int                 i;
-   ThotBool            found;
-   PtrPRule            pRule;
-   PtrAttribute        pAt2;
-   PtrElement          pElAttr;
-   AttributePres      *pAPRule, *pPRdef, *pPRinherit;
-   NumAttrCase        *pCase;
+  int                 i, len;
+  ThotBool            found;
+  PtrPRule            pRule;
+  PtrAttribute        pAt2;
+  PtrElement          pElAttr;
+  AttributePres      *pAPRule, *pPRdef, *pPRinherit;
+  NumAttrCase        *pCase;
+  char               *attrValue, *ptr;
 
-   pRule = NULL;
-   if (pSchP == NULL)
-      return (NULL);
-   pAPRule = pSchP->PsAttrPRule[pAttr->AeAttrNum - 1];
+  pRule = NULL;
+  if (pSchP == NULL)
+    return (NULL);
+  pAPRule = pSchP->PsAttrPRule[pAttr->AeAttrNum - 1];
 
-   /* on cherche quel est le paquet de regles qui s'applique */
-   /* pPRdef designera le paquet de regles s'appliquant a tous les elements */
-   /* c'est a dire celui pour lequel pAPRule->ApElemType = 0  */
-   /* pPRinherit  designera le paquet pour lequel
-      pAPRule->ApElemType = pEl->ElTypeNumber */
+  /* on cherche quel est le paquet de regles qui s'applique */
+  /* pPRdef designera le paquet de regles s'appliquant a tous les elements */
+  /* c'est a dire celui pour lequel pAPRule->ApElemType = 0  */
+  /* pPRinherit  designera le paquet pour lequel
+     pAPRule->ApElemType = pEl->ElTypeNumber */
 
-   pPRdef = pPRinherit = NULL;
-   for (i = pSchP->PsNAttrPRule[pAttr->AeAttrNum - 1]; i-- > 0;
-	pAPRule = pAPRule->ApNextAttrPres)
-     {
-	if (pAPRule->ApElemType == 0)
+  pPRdef = pPRinherit = NULL;
+
+  if (pAttr->AeAttrType != AtTextAttr)
+    *valueNum = 0;
+  else
+    if (!AttrHasException (ExcCssClass, pAttr->AeAttrNum,pAttr->AeAttrSSchema))
+      /* the content of the attribute is considered as a single value */
+      *valueNum = 0;
+    else
+      /* the content of this text attribute is considered as a sequence of
+	 space separated values */
+      {
+	if (*valueNum == 0)
+	  return (NULL);
+	else if (!pAttr->AeAttrText)
+	  /* this attribute has no value at all */
+	  *valueNum = 0;
+	else
 	  {
-	    if ((pAttr->AeAttrType == AtTextAttr) &&
-		(pAPRule->ApString[0] != EOS))
+	    attrValue = &pAttr->AeAttrText->BuContent[0];
+	    /* skip the values already processed */
+	    for (i = 1; i < *valueNum; i++)
 	      {
-	        if (pAttr->AeAttrText != NULL)
-		 if (StringAndTextEqual (pAPRule->ApString, pAttr->AeAttrText))
-		   pPRdef = pAPRule;
+		while (*attrValue > ' ')
+		  attrValue++;
+		while (*attrValue <= ' ' && *attrValue != EOS)
+		  attrValue++;
 	      }
+	    /* get the length of the current value */
+	    ptr = attrValue;
+	    len = 0;
+	    while (*ptr > ' ')
+	      {
+	        ptr++;
+		len++;
+	      }
+	    /* skip the spaces following this value */
+	    while (*ptr <= ' ' && *ptr != EOS)
+	      ptr++;
+	    if (*ptr == EOS)
+	      /* that's the last value */
+	      *valueNum = 0;
 	    else
-	      pPRdef = pAPRule;
+	      /* there is another value after that one */
+	      (*valueNum)++;
 	  }
-	else if (pAPRule->ApElemType == pEl->ElTypeNumber)
-	  {
-	    if ((pAttr->AeAttrType == AtTextAttr) &&
-		(pAPRule->ApString[0] != EOS))
-	      {
-	        if (pAttr->AeAttrText != NULL)
-		 if (StringAndTextEqual (pAPRule->ApString, pAttr->AeAttrText))
-		   pPRinherit = pAPRule;
-	      }
+      }
+    
+  for (i = pSchP->PsNAttrPRule[pAttr->AeAttrNum - 1]; i-- > 0;
+       pAPRule = pAPRule->ApNextAttrPres)
+    {
+      if (pAPRule->ApElemType == 0 || pAPRule->ApElemType == pEl->ElTypeNumber)
+	{
+	  if ((pAttr->AeAttrType == AtTextAttr) &&
+	      (pAPRule->ApString[0] != EOS))
+	    {
+	      if (pAttr->AeAttrText != NULL)
+		{
+		/**** should be StringAndTextEqual instead of strncmp,
+		 as the value may span over several buffers ****/
+		if (strlen (pAPRule->ApString) == len &&
+		    !strncmp (pAPRule->ApString, attrValue, len))
+		  {
+		    if (pAPRule->ApElemType == 0)
+		      pPRdef = pAPRule;
+		    else
+		      pPRinherit = pAPRule;
+		  }
+		}
+	    }
+	  else
+	    if (pAPRule->ApElemType == 0)
+	      pPRdef = pAPRule;
 	    else
 	      pPRinherit = pAPRule;
-	  }
-     }
+	}
+    }
 
-   if (inheritRule)
-     {
-	if (pPRinherit != NULL)
-	   pAPRule = pPRinherit;
-	else
-	   /* ce n'est pas la peine de continuer */
-	   return (NULL);
-     }
-   else
-     {
-	if (pPRdef != NULL)
-	   pAPRule = pPRdef;
-	else
-	   /* ce n'est pas la peine de continuer */
-	   return (NULL);
-     }
+  if (inheritRule)
+    {
+      if (pPRinherit != NULL)
+	pAPRule = pPRinherit;
+      else
+	/* ce n'est pas la peine de continuer */
+	return (NULL);
+    }
+  else
+    {
+      if (pPRdef != NULL)
+	pAPRule = pPRdef;
+      else
+	/* ce n'est pas la peine de continuer */
+	return (NULL);
+    }
 
-   /* selon le type de l'attribut on cherche le debut de la chaine  */
-   /* de regles de presentation */
-   if (pAPRule)
-      switch (pAttr->AeAttrType)
-	 {
-	    case AtNumAttr:
-	       i = 1;
-	       found = FALSE;
-	       while (i <= pAPRule->ApNCases && !found)
-		 {
-		    pCase = &pAPRule->ApCase[i - 1];
-		    if (pCase->CaComparType == ComparConstant)
-		      {
-			 /* la valeur de comparaison est une cste */
-			 if (pAttr->AeAttrValue >= pCase->CaLowerBound &&
-			     pAttr->AeAttrValue <= pCase->CaUpperBound)
-			   {
-			      found = TRUE;
-			      pRule = pCase->CaFirstPRule;
-			   }
-		      }
+  /* selon le type de l'attribut on cherche le debut de la chaine  */
+  /* de regles de presentation */
+  if (pAPRule)
+    switch (pAttr->AeAttrType)
+      {
+
+      case AtNumAttr:
+	i = 1;
+	found = FALSE;
+	while (i <= pAPRule->ApNCases && !found)
+	  {
+	    pCase = &pAPRule->ApCase[i - 1];
+	    if (pCase->CaComparType == ComparConstant)
+	      {
+		/* la valeur de comparaison est une cste */
+		if (pAttr->AeAttrValue >= pCase->CaLowerBound &&
+		    pAttr->AeAttrValue <= pCase->CaUpperBound)
+		  {
+		    found = TRUE;
+		    pRule = pCase->CaFirstPRule;
+		  }
+	      }
+	    else
+	      {
+		/* la valeur de comparaison est un attribut */
+		if ((pCase->CaLowerBound != -1) && (pCase->CaUpperBound != -1))
+		  {
+		    /* attr = enclosing */
+		    if (pAttrComp != NULL)
+		      pAt2 = pAttrComp;
 		    else
-		      {
-			 /* la valeur de comparaison est un attribut */
-			 if ((pCase->CaLowerBound != -1) && (pCase->CaUpperBound != -1))
-			   {
-			      /* attr = enclosing */
-			      if (pAttrComp != NULL)
-				 pAt2 = pAttrComp;
-			      else
-				 pAt2 = GetTypedAttrAncestor (pEl, pCase->CaLowerBound,
-					    pAttr->AeAttrSSchema, &pElAttr);
-			      if (pAt2 != NULL)
-				 if (pAttr->AeAttrValue == pAt2->AeAttrValue)
-				   {
-				      found = TRUE;
-				      pRule = pCase->CaFirstPRule;
-				   }
-			   }
-			 else if (pCase->CaLowerBound == -1)
-			   {
-			      /* attr < enclosing */
-			      if (pAttrComp != NULL)
-				 pAt2 = pAttrComp;
-			      else
-				 pAt2 = GetTypedAttrAncestor (pEl, pCase->CaUpperBound,
-					    pAttr->AeAttrSSchema, &pElAttr);
-			      if (pAt2 != NULL)
-				 if (pAttr->AeAttrValue < pAt2->AeAttrValue)
-				   {
-				      found = TRUE;
-				      pRule = pCase->CaFirstPRule;
-				   }
-			   }
-			 else
-			   {
-			      /* attr > enclosing */
-			      if (pAttrComp != NULL)
-				 pAt2 = pAttrComp;
-			      else
-				 pAt2 = GetTypedAttrAncestor (pEl, pCase->CaLowerBound,
-					    pAttr->AeAttrSSchema, &pElAttr);
-			      if (pAt2 != NULL)
-				 if (pAttr->AeAttrValue > pAt2->AeAttrValue)
-				   {
-				      found = TRUE;
-				      pRule = pCase->CaFirstPRule;
-				   }
-			   }
-		      }
-		    i++;
-		 }
-	       break;
-	    case AtTextAttr:
-	       pRule = pAPRule->ApTextFirstPRule;
-	       break;
-	    case AtReferenceAttr:
-	       pRule = pAPRule->ApRefFirstPRule;
-	       break;
-	    case AtEnumAttr:
-	       /* on verifie que la valeur est correcte */
-	       if (pAttr->AeAttrValue < 0 || pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrNEnumValues < pAttr->AeAttrValue)
-		  /* valeur incorrecte, on prend les regles qui s'appliquent a */
-		  /* n'importe quelle valeur */
-		  pRule = pAPRule->ApEnumFirstPRule[0];
-	       else if (pAPRule->ApEnumFirstPRule[pAttr->AeAttrValue] == NULL)
-		  /* pas de regles pour cette valeur, on prend les regles */
-		  /* qui s'appliquent a n'importe quelle valeur */
-		  pRule = pAPRule->ApEnumFirstPRule[0];
-	       else
-		  /* on prend les regles qui s'appliquent a cette valeur */
-		  pRule = pAPRule->ApEnumFirstPRule[pAttr->AeAttrValue];
-	       break;
-	    default:
-	       pRule = NULL;
-	       break;
-	 }
+		      pAt2 = GetTypedAttrAncestor (pEl, pCase->CaLowerBound,
+					   pAttr->AeAttrSSchema, &pElAttr);
+		    if (pAt2 != NULL)
+		      if (pAttr->AeAttrValue == pAt2->AeAttrValue)
+			{
+			  found = TRUE;
+			  pRule = pCase->CaFirstPRule;
+			}
+		  }
+		else if (pCase->CaLowerBound == -1)
+		  {
+		    /* attr < enclosing */
+		    if (pAttrComp != NULL)
+		      pAt2 = pAttrComp;
+		    else
+		      pAt2 = GetTypedAttrAncestor (pEl, pCase->CaUpperBound,
+					   pAttr->AeAttrSSchema, &pElAttr);
+		    if (pAt2 != NULL)
+		      if (pAttr->AeAttrValue < pAt2->AeAttrValue)
+			{
+			  found = TRUE;
+			  pRule = pCase->CaFirstPRule;
+			}
+		  }
+		else
+		  {
+		    /* attr > enclosing */
+		    if (pAttrComp != NULL)
+		      pAt2 = pAttrComp;
+		    else
+		      pAt2 = GetTypedAttrAncestor (pEl, pCase->CaLowerBound,
+					   pAttr->AeAttrSSchema, &pElAttr);
+		    if (pAt2 != NULL)
+		      if (pAttr->AeAttrValue > pAt2->AeAttrValue)
+			{
+			  found = TRUE;
+			  pRule = pCase->CaFirstPRule;
+			}
+		  }
+	      }
+	    i++;
+	  }
+	break;
 
-   return pRule;
+      case AtTextAttr:
+	pRule = pAPRule->ApTextFirstPRule;
+	break;
+
+      case AtReferenceAttr:
+	pRule = pAPRule->ApRefFirstPRule;
+	break;
+
+      case AtEnumAttr:
+	/* on verifie que la valeur est correcte */
+	if (pAttr->AeAttrValue < 0 ||
+	    pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrNEnumValues < pAttr->AeAttrValue)
+	  /* valeur incorrecte, on prend les regles qui s'appliquent a */
+	  /* n'importe quelle valeur */
+	  pRule = pAPRule->ApEnumFirstPRule[0];
+	else if (pAPRule->ApEnumFirstPRule[pAttr->AeAttrValue] == NULL)
+	  /* pas de regles pour cette valeur, on prend les regles */
+	  /* qui s'appliquent a n'importe quelle valeur */
+	  pRule = pAPRule->ApEnumFirstPRule[0];
+	else
+	  /* on prend les regles qui s'appliquent a cette valeur */
+	  pRule = pAPRule->ApEnumFirstPRule[pAttr->AeAttrValue];
+	break;
+
+      default:
+	pRule = NULL;
+	break;
+      }
+
+  return pRule;
 }
 
 /*----------------------------------------------------------------------
@@ -2043,65 +2102,65 @@ static void ApplCrPresRule (PtrSSchema pSS, PtrPSchema pSP,
 			    PtrAttribute pAttr, PtrDocument pDoc,
 			    PtrAbstractBox pAb, ThotBool head, PtrPRule pRule)
 {
-   PtrAbstractBox      pAbb, pAbbR;
-   ThotBool            stop;
+  PtrAbstractBox      pAbb, pAbbR;
+  ThotBool            stop;
 
-   /* saute les regles precedant les fonctions */
-   stop = FALSE;
-   do
-      if (pRule == NULL)
-	 stop = TRUE;
-      else if (pRule->PrType > PtFunction)
-	{
-	   stop = TRUE;
-	   pRule = NULL;
-	   /* pas de fonction de presentation */
-	}
-      else if (pRule->PrType == PtFunction)
-	 stop = TRUE;
-      else
-	 pRule = pRule->PrNextPRule;
-   while (!stop);
-   /* cherche toutes les fonctions de creation */
-   stop = FALSE;
-   do
-      if (pRule == NULL)
-	 stop = TRUE;
-      else if (pRule->PrType != PtFunction)
-	 stop = TRUE;
-      else
-	{
-	   /* applique les fonctions de creation qui correspondent a */
-	   /* l'extremite concernee */
-	   /* si la regle de creation possede l'indication de repetition */
-	   /* on appelle la procedure de creation systematiquement */
-	   if ((head
-		&& (pRule->PrPresFunction == FnCreateBefore ||
-		    pRule->PrPresFunction == FnCreateFirst))
-	       || (!head
-		   && (pRule->PrPresFunction == FnCreateAfter ||
-		       pRule->PrPresFunction == FnCreateLast)))
-	     {
-		pAbb = CrAbsBoxesPres (pAb->AbElement, pDoc, pRule,
-			      pSS, pAttr, pAb->AbDocView, pSP, TRUE);
-		if (pAbb != NULL)
-		   /* TODO : valeur de pAbb si plusieurs paves crees avec Rep ?? */
-		  {
-		     if (!head)
-			*pAbbCreated = pAbb;
-		     else if (*pAbbCreated == NULL)
-			*pAbbCreated = pAbb;
-		     /* modifie les paves environnant */
-		     /* qui dependent du pave cree */
-		     /* TODO : si Rep est vrai, plusieurs paves ont ete crees */
-		     /* faut-il appeler ApplyRefAbsBoxNew dans CrAbsBoxesPres ?? */
-		     ApplyRefAbsBoxNew (*pAbbCreated, *pAbbCreated, &pAbbR, pDoc);
-		     /* passe a la regle suivante */
-		  }
-	     }
-	   pRule = pRule->PrNextPRule;
-	}
-   while (!stop);
+  /* saute les regles precedant les fonctions */
+  stop = FALSE;
+  do
+    if (pRule == NULL)
+      stop = TRUE;
+    else if (pRule->PrType > PtFunction)
+      {
+	stop = TRUE;
+	pRule = NULL;
+	/* pas de fonction de presentation */
+      }
+    else if (pRule->PrType == PtFunction)
+      stop = TRUE;
+    else
+      pRule = pRule->PrNextPRule;
+  while (!stop);
+  /* cherche toutes les fonctions de creation */
+  stop = FALSE;
+  do
+    if (pRule == NULL)
+      stop = TRUE;
+    else if (pRule->PrType != PtFunction)
+      stop = TRUE;
+    else
+      {
+	/* applique les fonctions de creation qui correspondent a */
+	/* l'extremite concernee */
+	/* si la regle de creation possede l'indication de repetition */
+	/* on appelle la procedure de creation systematiquement */
+	if ((head &&
+	     (pRule->PrPresFunction == FnCreateBefore ||
+	      pRule->PrPresFunction == FnCreateFirst)) ||
+	    (!head &&
+	     (pRule->PrPresFunction == FnCreateAfter ||
+	      pRule->PrPresFunction == FnCreateLast)))
+	  {
+	    pAbb = CrAbsBoxesPres (pAb->AbElement, pDoc, pRule, pSS, pAttr,
+				   pAb->AbDocView, pSP, TRUE);
+	    if (pAbb != NULL)
+	      /* TODO : valeur de pAbb si plusieurs paves crees avec Rep ?? */
+	      {
+		if (!head)
+		  *pAbbCreated = pAbb;
+		else if (*pAbbCreated == NULL)
+		  *pAbbCreated = pAbb;
+		/* modifie les paves environnant */
+		/* qui dependent du pave cree */
+		/* TODO : si Rep est vrai, plusieurs paves ont ete crees */
+		/* faut-il appeler ApplyRefAbsBoxNew dans CrAbsBoxesPres ?? */
+		ApplyRefAbsBoxNew (*pAbbCreated, *pAbbCreated, &pAbbR, pDoc);
+		/* passe a la regle suivante */
+	      }
+	  }
+	pRule = pRule->PrNextPRule;
+      }
+  while (!stop);
 }
 
 /*----------------------------------------------------------------------
@@ -2201,7 +2260,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
    PtrAbstractBox      pAbbCreated;
    PtrAttribute        pAttr;
    PtrElement          pElAttr;
-   int                 l;
+   int                 l, valNum;
    InheritAttrTable   *inheritTable;
    PtrHandlePSchema    pHd;
 
@@ -2318,11 +2377,20 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 			     pHd = NULL;
 			     while (pSchP != NULL)
 			       {
-				 pRule = AttrPresRule (pAttr, pAb->AbElement,
-						       TRUE, NULL, pSchP);
-				 ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
-						 &pAbbCreated, pAttr, pDoc, pAb,
-						 head, pRule);
+				 /* process all values of the attribute, in
+				    case of a text attribute with multiple
+				    values */
+				 valNum = 1;
+				 do
+				   {
+				   pRule = AttrPresRule (pAttr, pAb->AbElement,
+						   TRUE, NULL, pSchP, &valNum);
+				   ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
+					       &pAbbCreated, pAttr, pDoc, pAb,
+					       head, pRule);
+				   }
+				 while (valNum > 0);
+
 				 if (pHd == NULL)
 				   /* on n'a pas encore cherche' dans les schemas
 				   de presentation additionnels. On prend le
@@ -2360,10 +2428,18 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 		   pHd = NULL;
 		   while (pSchP != NULL)
 		     {
-		       pRule = AttrPresRule (pAttr, pAb->AbElement, FALSE,
-					     NULL, pSchP);
-		       ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
+		       /* process all values of the attribute, in case of a
+			  text attribute with multiple values */
+		       valNum = 1;
+		       do
+			 {
+			   pRule = AttrPresRule (pAttr, pAb->AbElement, FALSE,
+						 NULL, pSchP, &valNum);
+			   ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
 				  &pAbbCreated, pAttr, pDoc, pAb, head, pRule);
+			 }
+		       while (valNum > 0);
+
 		       if (pHd == NULL)
 			 /* on n'a pas encore cherche' dans les schemas de
 			 presentation additionnels. On prend le premier schema
@@ -2645,160 +2721,173 @@ static void ApplyAttrPresRules (PtrSSchema pSS, PtrPSchema pSchPres,
 				PtrAttribute queuePA[MAX_QUEUE_LEN],
 				PtrAbstractBox pNewAbbox, ThotBool inheritRule)
 {
-   PtrPRule            pR, pRuleView1, pRuleToApply;
-   int                 view, i;
-   PtrPSchema          pSchP;
-   PtrSSchema	       pSSattr;
-   PtrHandlePSchema    pHd;
-   ThotBool            apply;
+  PtrPRule            pR, pRuleView1, pRuleToApply;
+  int                 view, i, valNum;
+  PtrPSchema          pSchP;
+  PtrSSchema	      pSSattr;
+  PtrHandlePSchema    pHd;
+  ThotBool            apply;
 
-   apply = TRUE;
-   /* exceptions pour les attributs d'un tableau */
-   if (ThotLocalActions[T_ruleattr] != NULL)
-      (*ThotLocalActions[T_ruleattr])
-	 (pEl, pAttr, pDoc, &apply);
-   if (apply)
-     {
-	view = AppliedView (pEl, pAttr, pDoc, viewNb);
-	/* on cherchera d'abord dans le schema de presentation principal de */
-	/* l'attribut */
-	pSSattr = pAttr->AeAttrSSchema;
-	pSchP = PresentationSchema (pSSattr, pDoc);
-	pHd = NULL;
-	/* on examine le schema de presentation principal, puis les schemas */
-	/* additionnels */
-	while (pSchP != NULL)
-	  {
-	     pRuleView1 = NULL;
-	     /* 1ere regle de presentation pour cette valeur de l'attribut */
-	     pR = AttrPresRule (pAttr, pEl, inheritRule, NULL, pSchP);
+  apply = TRUE;
+  /* exceptions pour les attributs d'un tableau */
+  if (ThotLocalActions[T_ruleattr] != NULL)
+    (*ThotLocalActions[T_ruleattr])
+      (pEl, pAttr, pDoc, &apply);
+  if (apply)
+    {
+      view = AppliedView (pEl, pAttr, pDoc, viewNb);
+      /* on cherchera d'abord dans le schema de presentation principal de */
+      /* l'attribut */
+      pSSattr = pAttr->AeAttrSSchema;
+      pSchP = PresentationSchema (pSSattr, pDoc);
+      pHd = NULL;
+      /* on examine le schema de presentation principal, puis les schemas */
+      /* additionnels */
+      while (pSchP != NULL)
+	{
+	  /* process all values of the attribute, in case of a text attribute
+	     with multiple values */
+	  valNum = 1;
+	  do
+	    {
+	      pRuleView1 = NULL;
+	      /* 1ere regle de presentation pour cette valeur de l'attribut */
+	      pR = AttrPresRule (pAttr, pEl, inheritRule, NULL, pSchP,&valNum);
 
-	     /* boucle sur la liste de regles de presentation associees a cette */
-	     /* valeur de l'attribut */
-	     while (pR != NULL)
-	       {
-		  /* verifie si c'est une regle de creation et si oui applique */
-		  /* la regle de creation */
+	      /* boucle sur la liste de regles de presentation associees a */
+	      /* cette valeur de l'attribut */
+	      while (pR != NULL)
+		{
+		  /* verifie si c'est une regle de creation et si oui */
+		  /* applique la regle de creation */
 		  if (!ApplCrRule (pR, pSSattr, pSchP, pAttr, pAbbReturn,
 				   viewNb, pDoc, pEl, forward, lqueue, queuePR,
 				   queuePP, queuePS, queuePA, pNewAbbox))
 		    {
-		       /* ce n'est pas une regle de creation, applique la */
-		       /* regle si elle concerne la vue */
-		       /* ou applique la regle pour la vue 1 si elle existe */
-		       pRuleToApply = NULL;
+		      /* ce n'est pas une regle de creation, applique la */
+		      /* regle si elle concerne la vue */
+		      /* ou applique la regle pour la vue 1 si elle existe */
+		      pRuleToApply = NULL;
 
-		       if (pR->PrViewNum == 1)
-			 {
-			    /* la regle pour la vue 1 */
-			    if (pR->PrCond == NULL ||
-				CondPresentation (pR->PrCond, pEl, pAttr,
-						  pElAttr, 1, pSS, pDoc))
-			       /* la condition d'application est satisfaite */
-			      {
-				 /* On la conserve au cas ou on ne trouve pas mieux */
-				 pRuleView1 = pR;
-				 if (view == 1)
-				    /* on est dans la vue 1. Donc c'est la bone regle */
-				    pRuleToApply = pR;
-				 else
-				   {
-				      /* on cherche s'il existe une regle de meme type pour la */
-				      /* vue view, dont les conditions d'application soient */
-				      /* satisfaites */
-				      while (pR->PrNextPRule && pR->PrNextPRule->PrType ==
-					     pRuleView1->PrType)
-					{
-					   /* la boucle parcourt toutes les regles de meme type */
-					   pR = pR->PrNextPRule;
-					   if (pR->PrViewNum == view)
-					      if (pR->PrCond == NULL ||
-						  CondPresentation (pR->PrCond, pEl, pAttr, pElAttr, view, pSS, pDoc))
-						 pRuleToApply = pR;
-					}
-				      if (pRuleToApply == NULL)
-					 /* il n'y a pas de regle specifique pour la vue view. */
-					 /* on prend la vue 1 */
-					 pRuleToApply = pRuleView1;
-				   }
-			      }
-			 }
-		       else
-			  /* ce n'est pas une regle pour la vue 1 */
-			  /* cette regle ne s'applique que si le numero de vue correspond */
-		       if (view == pR->PrViewNum)
+		      if (pR->PrViewNum == 1)
+			{
+			  /* la regle pour la vue 1 */
+			  if (pR->PrCond == NULL ||
+			      CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
+						1, pSS, pDoc))
+			    /* la condition d'application est satisfaite */
+			    {
+			      /* On la conserve au cas ou on ne trouve pas mieux */
+			      pRuleView1 = pR;
+			      if (view == 1)
+				/* on est dans la vue 1. Donc c'est la bone regle*/
+				pRuleToApply = pR;
+			      else
+				{
+				  /* on cherche s'il existe une regle de meme */
+				  /* type pour la vue view, dont les conditions */
+				  /* d'application soient satisfaites */
+				  while (pR->PrNextPRule &&
+					 pR->PrNextPRule->PrType == pRuleView1->PrType)
+				    {
+				      /* la boucle parcourt toutes les regles */
+				      /* de meme type */
+				      pR = pR->PrNextPRule;
+				      if (pR->PrViewNum == view)
+					if (pR->PrCond == NULL ||
+					    CondPresentation (pR->PrCond, pEl,
+							      pAttr, pElAttr, view, pSS, pDoc))
+					  pRuleToApply = pR;
+				    }
+				  if (pRuleToApply == NULL)
+				    /* il n'y a pas de regle specifique pour */
+				    /* la vue view. On prend la vue 1 */
+				    pRuleToApply = pRuleView1;
+				}
+			    }
+			}
+		      else
+			/* ce n'est pas une regle pour la vue 1. Cette regle ne */
+			/* s'applique que si le numero de vue correspond */
+			if (view == pR->PrViewNum)
 			  if (pR->PrCond == NULL ||
 			      CondPresentation (pR->PrCond, pEl, pAttr,
 						pElAttr, view, pSS, pDoc))
-			     pRuleToApply = pR;
+			    pRuleToApply = pR;
 
-		       if (pRuleToApply && DoesViewExist (pEl, pDoc, viewNb))
-			 {
-			    /* Desapplique la regle associee au type de l'element */
-			    if (pRuleToApply->PrType == PtVertPos)
-			      {
-				 pNewAbbox->AbVertPos.PosEdge = Top;
-				 pNewAbbox->AbVertPos.PosRefEdge = Top;
-				 pNewAbbox->AbVertPos.PosDistance = 0;
-				 pNewAbbox->AbVertPos.PosUnit = UnRelative;
-				 pNewAbbox->AbVertPos.PosAbRef = NULL;
-				 pNewAbbox->AbVertPos.PosUserSpecified = FALSE;
-			      }
-			    if (pRuleToApply->PrType == PtHorizPos)
-			      {
-				 pNewAbbox->AbHorizPos.PosEdge = Left;
-				 pNewAbbox->AbHorizPos.PosRefEdge = Left;
-				 pNewAbbox->AbHorizPos.PosDistance = 0;
-				 pNewAbbox->AbHorizPos.PosUnit = UnRelative;
-				 pNewAbbox->AbHorizPos.PosAbRef = NULL;
-				 pNewAbbox->AbHorizPos.PosUserSpecified = FALSE;
-			      }
-			    /* retire la regle associee au type de */
-			    /* l'element si elle est en attente */
-			    for (i = 1; i <= *lqueue; i++)
-			       if (queuePR[i - 1] != NULL)
-				  if (queuePR[i - 1]->PrType == pRuleToApply->PrType)
-				     if (queuePP[i - 1] == pNewAbbox)
-					queuePR[i - 1] = NULL;
-			    /* applique la regle */
-			    if (!ApplyRule (pRuleToApply, pSchP, pNewAbbox, pDoc, pAttr))
-
-			       /* la regle n'a pas pu etre appliquee, on l'appliquera */
-			       /* quand les paves de la descendance auront ete crees. */
-			       WaitingRule (pRuleToApply, pNewAbbox, pSchP, pAttr, queuePA,
-					 queuePS, queuePP, queuePR, lqueue);
-			 }
+		      if (pRuleToApply && DoesViewExist (pEl, pDoc, viewNb))
+			{
+			  /* Desapplique la regle associee au type de l'element */
+			  if (pRuleToApply->PrType == PtVertPos)
+			    {
+			      pNewAbbox->AbVertPos.PosEdge = Top;
+			      pNewAbbox->AbVertPos.PosRefEdge = Top;
+			      pNewAbbox->AbVertPos.PosDistance = 0;
+			      pNewAbbox->AbVertPos.PosUnit = UnRelative;
+			      pNewAbbox->AbVertPos.PosAbRef = NULL;
+			      pNewAbbox->AbVertPos.PosUserSpecified = FALSE;
+			    }
+			  if (pRuleToApply->PrType == PtHorizPos)
+			    {
+			      pNewAbbox->AbHorizPos.PosEdge = Left;
+			      pNewAbbox->AbHorizPos.PosRefEdge = Left;
+			      pNewAbbox->AbHorizPos.PosDistance = 0;
+			      pNewAbbox->AbHorizPos.PosUnit = UnRelative;
+			      pNewAbbox->AbHorizPos.PosAbRef = NULL;
+			      pNewAbbox->AbHorizPos.PosUserSpecified = FALSE;
+			    }
+			  /* retire la regle associee au type de */
+			  /* l'element si elle est en attente */
+			  for (i = 1; i <= *lqueue; i++)
+			    if (queuePR[i - 1] != NULL)
+			      if (queuePR[i - 1]->PrType == pRuleToApply->PrType)
+				if (queuePP[i - 1] == pNewAbbox)
+				  queuePR[i - 1] = NULL;
+			  /* applique la regle */
+			  if (!ApplyRule (pRuleToApply, pSchP, pNewAbbox, pDoc,
+					  pAttr))
+			    
+			    /* la regle n'a pas pu etre appliquee, on l'appliquera
+			       quand les paves de la descendance auront ete crees*/
+			    WaitingRule (pRuleToApply, pNewAbbox, pSchP, pAttr,
+					 queuePA, queuePS, queuePP, queuePR, lqueue);
+			}
 		    }
 		  pR = pR->PrNextPRule;
-	       }
-	     if (pHd == NULL)
-	       {
-		  /* on n'a pas encore traite' les schemas de presentation additionnels.
-		     On prend le premier schema additionnel si on travaille pour la vue
-		     principale, sinon on ignore les schemas additionnels. */
-		  if (pDoc->DocView[viewNb - 1].DvPSchemaView == 1)
-		     {
-		     /* si c'est ID ou CLASS, on prend les extensions du schema
-			de presentation associe' au schema de structure du
-			document */
-	             if (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
-	                                   pAttr->AeAttrSSchema) ||
-	                 AttrHasException (ExcCssId, pAttr->AeAttrNum,
-	                                   pAttr->AeAttrSSchema))
-			pSSattr = pDoc->DocSSchema;
-		     pHd = FirstPSchemaExtension (pSSattr, pDoc);
-		     }
-	       }
-	     else
-		/* passe au schema additionnel suivant */
-		pHd = pHd->HdNextPSchema;
-	     if (pHd == NULL)
-		/* il n'y a pas (ou plus) de schemas additionnels a prendre en compte */
-		pSchP = NULL;
-	     else
-		pSchP = pHd->HdPSchema;
-	  }
-     }
+		}
+	    }
+	  while (valNum > 0);
+	  
+	  if (pHd == NULL)
+	    {
+	      /* on n'a pas encore traite' les schemas de presentation
+		 additionnels. On prend le premier schema additionnel si on
+		 travaille pour la vue principale, sinon on ignore les
+		 schemas additionnels. */
+	      if (pDoc->DocView[viewNb - 1].DvPSchemaView == 1)
+		{
+		  /* si c'est ID ou CLASS, on prend les extensions du schema
+		     de presentation associe' au schema de structure du
+		     document */
+		  if (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
+					pAttr->AeAttrSSchema) ||
+		      AttrHasException (ExcCssId, pAttr->AeAttrNum,
+					pAttr->AeAttrSSchema))
+		    pSSattr = pDoc->DocSSchema;
+		  pHd = FirstPSchemaExtension (pSSattr, pDoc);
+		}
+	    }
+	  else
+	    /* passe au schema additionnel suivant */
+	    pHd = pHd->HdNextPSchema;
+	  if (pHd == NULL)
+	    /* il n'y a pas (ou plus) de schemas additionnels a prendre en
+	       compte */
+	    pSchP = NULL;
+	  else
+	    pSchP = pHd->HdPSchema;
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2810,98 +2899,108 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
 				DocViewNumber viewNb, ThotBool *ok,
 				ThotBool inheritRule)
 {
-   PtrPRule            pR, pRuleView1;
-   int                 view;
-   ThotBool            stop, useView1;
-   PtrPSchema          pSchP;
-   PtrHandlePSchema    pHd;
-   TypeUnit            unit;
+  PtrPRule            pR, pRuleView1;
+  int                 view, valNum;
+  ThotBool            stop, useView1;
+  PtrPSchema          pSchP;
+  PtrHandlePSchema    pHd;
+  TypeUnit            unit;
 
-   /* on cherchera d'abord dans le schema de presentation principal de */
-   /* l'attribut */
-   pSchP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
-   pHd = NULL;
-   /* on examine le schema de presentation principal, puis les schemas */
-   /* additionnels */
-   while (pSchP != NULL)
-     {
-	/* cherche la premiere regle de presentation pour cette valeur */
-	/* de l'attribut, dans ce schema de presentation */
-	pR = AttrPresRule (pAttr, pEl, inheritRule, NULL, pSchP);
-	pRuleView1 = NULL;
-	if (pR != NULL)
-	   if (pR->PrType == PtVisibility)
+  /* on cherchera d'abord dans le schema de presentation principal de */
+  /* l'attribut */
+  pSchP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
+  pHd = NULL;
+  /* on examine le schema de presentation principal, puis les schemas */
+  /* additionnels */
+  while (pSchP != NULL)
+    {
+      /* process all values of the attribute, in case of a text attribute
+	 with multiple values */
+      valNum = 1;
+      do
+	{
+	  /* cherche la premiere regle de presentation pour cette valeur */
+	  /* de l'attribut, dans ce schema de presentation */
+	  pR = AttrPresRule (pAttr, pEl, inheritRule, NULL, pSchP, &valNum);
+	  pRuleView1 = NULL;
+	  if (pR != NULL)
+	    if (pR->PrType == PtVisibility)
 	      /* cette valeur d'attribut a une regle de visibilite' */
 	      /* calcule le numero de la vue concernee par l'attribut */
-	     {
+	      {
 		view = AppliedView (pEl, pAttr, pDoc, viewNb);
 		stop = FALSE;
 		useView1 = TRUE;
-
+		
 		/* cherche s'il y a une regle de visibilite pour la vue */
 		while (!stop)
 		  {
-		     if (pR->PrViewNum == 1)
-			if (pR->PrCond == NULL ||
-			    CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
-                                              1, pAttr->AeAttrSSchema, pDoc))
-			  {
-			     pRuleView1 = pR;
-			     if (view == 1)
-				stop = TRUE;
-			     else
-				/* saute les regles de visibilite' suivantes de la vue 1 */
-				while (pR->PrNextPRule != NULL &&
-				  pR->PrNextPRule->PrType == PtVisibility &&
-				       pR->PrNextPRule->PrViewNum == 1)
-				   pR = pR->PrNextPRule;
-			  }
-		     if (!stop)
-		       {
+		    if (pR->PrViewNum == 1)
+		      if (pR->PrCond == NULL ||
+			  CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
+					    1, pAttr->AeAttrSSchema, pDoc))
+			{
+			  pRuleView1 = pR;
+			  if (view == 1)
+			    stop = TRUE;
+			  else
+				/* saute les regles de visibilite' suivantes
+				   de la vue 1 */
+			    while (pR->PrNextPRule != NULL &&
+				   pR->PrNextPRule->PrType == PtVisibility &&
+				   pR->PrNextPRule->PrViewNum == 1)
+			      pR = pR->PrNextPRule;
+			}
+		    if (!stop)
+		      {
 			if (pR->PrViewNum == view &&
 			    CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
-					      view, pAttr->AeAttrSSchema, pDoc))
+					     view, pAttr->AeAttrSSchema, pDoc))
 			  {
-			     /* regle trouvee, on l'evalue */
-			     *vis = IntegerRule (pR, pEl, viewNb, ok, &unit,
-						 pAttr, NULL);
-			     useView1 = FALSE;
-			     stop = TRUE;
+			    /* regle trouvee, on l'evalue */
+			    *vis = IntegerRule (pR, pEl, viewNb, ok, &unit,
+						pAttr, NULL);
+			    useView1 = FALSE;
+			    stop = TRUE;
 			  }
 			else if (pR->PrNextPRule == NULL)
-			   stop = TRUE;
+			  stop = TRUE;
 			else
 			  {
-			     pR = pR->PrNextPRule;
-			     if (pR->PrType != PtVisibility)
-				stop = TRUE;
+			    pR = pR->PrNextPRule;
+			    if (pR->PrType != PtVisibility)
+			      stop = TRUE;
 			  }
-		       }
+		      }
 		  }
-
+		
 		if (useView1 && pRuleView1 != NULL)
-		   /* on n'a pas trouve de regle specifique pour la vue view */
-		   /* On utilise la regle de visibilite de la vue 1 si elle existe */
-		   *vis = IntegerRule (pRuleView1, pEl, viewNb, ok, &unit,
-				       pAttr, NULL);
-	     }
-	if (pHd == NULL)
-	  {
-	     /* on n'a pas encore traite' les schemas de presentation additionnels.
-	        On prend le premier schema additionnel si on travaille pour la vue
-	        principale, sinon on ignore les schemas additionnels. */
-	     if (pDoc->DocView[viewNb - 1].DvPSchemaView == 1)
-	       pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc);
-	  }
-	else
-	   /* passe au schema additionnel suivant */
-	   pHd = pHd->HdNextPSchema;
-	if (pHd == NULL)
-	   /* il n'y a pas (ou plus) de schemas additionnels a prendre en compte */
-	   pSchP = NULL;
-	else
-	   pSchP = pHd->HdPSchema;
-     }
+		  /* on n'a pas trouve de regle specifique pour la vue view */
+		  /* On utilise la regle de visibilite de la vue 1 si elle
+		     existe */
+		  *vis = IntegerRule (pRuleView1, pEl, viewNb, ok, &unit,
+				      pAttr, NULL);
+	      }
+	}
+      while (valNum > 0);
+      
+      if (pHd == NULL)
+	{
+	  /* on n'a pas encore traite' les schemas de presentation additionnels
+	     On prend le premier schema additionnel si on travaille pour la vue
+	     principale, sinon on ignore les schemas additionnels. */
+	  if (pDoc->DocView[viewNb - 1].DvPSchemaView == 1)
+	    pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc);
+	}
+      else
+	/* passe au schema additionnel suivant */
+	pHd = pHd->HdNextPSchema;
+      if (pHd == NULL)
+	/* il n'y a pas (ou plus) de schemas additionnels a prendre en compte*/
+	pSchP = NULL;
+      else
+	pSchP = pHd->HdPSchema;
+    }
 }
 
 /*----------------------------------------------------------------------

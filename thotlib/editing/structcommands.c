@@ -2974,13 +2974,14 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 /* ----------------------------------------------------------------------
    TtaCreateElement
 
-   Create an element of a given type and insert it at the current position within
-   a given document. The current position is defined by the current selection.
-   If the current position is a single position (insertion point) the new element
-   is simply inserted at that position. If one or several characters and/or
-   elements are selected, the new element is created at that position and the
-   selected characters/elements become the content of the new element, provided
-   the  structure schema allows it.
+   Create an element of a given type and insert it at the current position
+   within a given document. The current position is defined by the current
+   selection.
+   If the current position is a single position (insertion point) the new
+   element is simply inserted at that position. If one or several characters
+   and/or elements are selected, the new element is created at that position
+   and the selected characters/elements become the content of the new element,
+   provided the  structure schema allows it.
    Parameters:
    elementType: type of the element to be created.
    document: the document for which the element is created.

@@ -214,7 +214,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc, PtrPSchema *pSPR
   InheritAttrTable   *inheritTable;
   PtrPSchema          pSP;
   PtrHandlePSchema    pHd;
-  int                 l;
+  int                 l, valNum;
 
   pRule = NULL;
   *pAttr = NULL;
@@ -288,41 +288,50 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc, PtrPSchema *pSPR
 		}
 	      while (pRule == NULL && pSP != NULL)
 		{
-		  /* premiere regle de presentation de cet attribut */
-		  pR = AttrPresRule (pA, pEl, FALSE, NULL, pSP);
-		  /* parcourt les regles de presentation de l'attribut */
-		  while (pR != NULL)
+		  /* process all values of the attribute, in case of a text
+		     attribute with multiple values */
+		  valNum = 1;
+		  do
 		    {
-		      if (pR->PrType == typeRule &&
-			  (typeRule != PtFunction || typeFunc == FnAny ||
-			   pR->PrPresFunction == typeFunc) &&
-			  pR->PrViewNum == view)
-			/* regle du type cherche' pour la vue voulue */
-			if (pR->PrCond == NULL ||
-			    CondPresentation (pR->PrCond, pEl, pA, pEl, view,
-					      pA->AeAttrSSchema, pDoc))
-			  /* les conditions d'application de la regle sont */
-			  /* satisfaites. On garde cette regle et on continue */
-			  /* pour voir s'il y en a une plus specifique */
-			  {
-			    pRule = pR;
-			    *pAttr = pA;
-			    *pSPR = pSP;
-			    *pSSR = pA->AeAttrSSchema;
-			  }
-		      if (pR->PrType <= typeRule)
-			/* regle suivante */
-			pR = pR->PrNextPRule;
-		      else
-			pR = NULL;
+		      pR = AttrPresRule (pA, pEl, FALSE, NULL, pSP, &valNum);
+		      /* parcourt les regles de presentation de cette valeur
+			 de l'attribut */
+		      while (pR != NULL)
+			{
+			  if (pR->PrType == typeRule &&
+			      (typeRule != PtFunction || typeFunc == FnAny ||
+			       pR->PrPresFunction == typeFunc) &&
+			      pR->PrViewNum == view)
+			    /* regle du type cherche' pour la vue voulue */
+			    if (pR->PrCond == NULL ||
+				CondPresentation (pR->PrCond, pEl, pA, pEl,
+						view, pA->AeAttrSSchema, pDoc))
+			      /* les conditions d'application de la regle sont
+			         satisfaites. On garde cette regle et on
+				 continue pour voir s'il y en a une plus
+				 specifique */
+			      {
+				pRule = pR;
+				*pAttr = pA;
+				*pSPR = pSP;
+				*pSSR = pA->AeAttrSSchema;
+			      }
+			  if (pR->PrType <= typeRule)
+			    /* regle suivante */
+			    pR = pR->PrNextPRule;
+			  else
+			    pR = NULL;
+			}
 		    }
+		  while (valNum > 0 && !pRule);
+
 		  if (pRule == NULL)
-		    /* on n'a pas encore trouve'. On continue de chercher dans */
-		    /* les schemas de presentation de moindre priorite' */
+		    /* on n'a pas encore trouve'. On continue de chercher dans
+		       les schemas de presentation de moindre priorite' */
 		    {
 		      if (pHd == NULL)
-			/* on cherchait dans le schema de presentation principal
-			   c'est fini */
+			/* on cherchait dans le schema de presentation
+			   principal c'est fini */
 			pSP = NULL;
 		      else
 			{
@@ -393,38 +402,49 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc, PtrPSchema *pSPR
 			}
 		      while (pRule == NULL && pSP != NULL)
 			{
-			  /* premiere regle de presentation de cet
-			     attribut dans ce schema de presentation */
-			  pR = AttrPresRule (*pAttr, pEl, TRUE, NULL, pSP);
-			  /* parcourt les regles de presentation de l'attr. */
-			  while (pR != NULL)
+			  /* process all values of the attribute, in case of
+			     a text attribute with multiple values */
+			  valNum = 1;
+			  do
 			    {
-			      if (pR->PrType == typeRule &&
-				  (typeRule != PtFunction ||
-				   typeFunc == FnAny ||
-				   pR->PrPresFunction == typeFunc) &&
-				  pR->PrViewNum == view)
-				/*regle du type cherche' pour la vue voulue*/
-				if (pR->PrCond == NULL ||
-				    CondPresentation (pR->PrCond, pEl,
+			      /* premiere regle de presentation de cet
+				 attribut dans ce schema de presentation */
+			      pR = AttrPresRule (*pAttr, pEl, TRUE, NULL, pSP,
+						 &valNum);
+			      /* parcourt cette suite de regles de presentation
+				 de l'attr. */
+			      while (pR != NULL)
+				{
+				  if (pR->PrType == typeRule &&
+				      (typeRule != PtFunction ||
+				       typeFunc == FnAny ||
+				       pR->PrPresFunction == typeFunc) &&
+				      pR->PrViewNum == view)
+				    /* regle du type cherche' pour la vue
+				       voulue*/
+				    if (pR->PrCond == NULL ||
+					CondPresentation (pR->PrCond, pEl,
 						      *pAttr, pElAttr, view,
 						      (*pAttr)->AeAttrSSchema,
 						      pDoc))
-				  /*les conditions d'application de la regle
-				    sont satisfaites. On garde cette regle et
-				    on continue pour trouver les regles plus
-				    specifiques */
-				  {
-				    pRule = pR;
-				    *pSPR = pSP;
-				    *pSSR = (*pAttr)->AeAttrSSchema;
-				  }
-			      if (pR->PrType <= typeRule)
+				      /*les conditions d'application de la
+					regle sont satisfaites. On garde cette
+					regle et on continue pour trouver les
+					regles plus specifiques */
+				      {
+					pRule = pR;
+					*pSPR = pSP;
+					*pSSR = (*pAttr)->AeAttrSSchema;
+				      }
+				  if (pR->PrType <= typeRule)
 				/* regle suivante */
-				pR = pR->PrNextPRule;
-			      else
-				pR = NULL;
+				    pR = pR->PrNextPRule;
+				  else
+				    pR = NULL;
+				}
 			    }
+			  while (valNum > 0 && !pRule);
+
 			  if (pRule == NULL)
 			    /* on n'a pas encore trouve'. On continue de
 			       chercher dans les schemas de presentation de
@@ -1478,67 +1498,86 @@ static void ApplFunctionPresRules (PtrPRule pRule, PtrPSchema pSchP,
 void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
 		      ThotBool change)
 {
-   PtrPRule            pRPres;
-   PtrPSchema          pSchP, pSP;
-   PtrAttribute        pAttr;
-   PtrElement          pElAttr;
-   int                 l;
-   InheritAttrTable   *inheritTable;
+  PtrPRule            pRPres;
+  PtrPSchema          pSchP, pSP;
+  PtrAttribute        pAttr;
+  PtrElement          pElAttr;
+  int                 l, valNum;
+  InheritAttrTable   *inheritTable;
 
-   if (pEl != NULL)
-     {
-	/* cherche la 1ere fonction de presentation associee au type de */
-	/* l'element */
-	pRPres = FunctionRule (pEl, &pSchP, pDoc);
-	if (pSchP != NULL)
-	  {
-	     /* traite les regles de creation associees au type de l'element */
-	     pAttr = NULL;
-	     ApplFunctionPresRules (pRPres, pSchP, pAttr, pDoc, pEl, change, first);
-	     /* l'element herite-t-il d'attributs qui ont des fonctions de */
-	     /* presentation */
-	     pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
-	     if (pSP->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
-	       {
-		  /* il y a heritage possible */
-		  if ((inheritTable =
-		       pSP->PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
+  if (pEl != NULL)
+    {
+      /* cherche la 1ere fonction de presentation associee au type de */
+      /* l'element */
+      pRPres = FunctionRule (pEl, &pSchP, pDoc);
+      if (pSchP != NULL)
+	{
+	  /* traite les regles de creation associees au type de l'element */
+	  pAttr = NULL;
+	  ApplFunctionPresRules (pRPres, pSchP, pAttr, pDoc, pEl, change,
+				 first);
+	  /* l'element herite-t-il d'attributs qui ont des fonctions de */
+	  /* presentation */
+	  pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
+	  if (pSP->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+	    {
+	      /* il y a heritage possible */
+	      if ((inheritTable =
+		   pSP->PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
+		{
+		  /* cette table n'existe pas on la genere */
+		  CreateInheritedAttrTable (pEl, pDoc);
+		  inheritTable = pSP->PsInheritedAttr[pEl->ElTypeNumber - 1];
+		}
+	      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
+		if ((*inheritTable)[l - 1])    /* pEl herite de l'attribut l */
+		  /* cherche si l existe au dessus */
+		  if ((pAttr = GetTypedAttrAncestor (pEl,l,pEl->ElStructSchema,
+						     &pElAttr)) != NULL)
 		    {
-		       /* cette table n'existe pas on la genere */
-		       CreateInheritedAttrTable (pEl, pDoc);
-		       inheritTable = pSP->PsInheritedAttr[pEl->ElTypeNumber - 1];
+		      pSchP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
+		      /* process all values of the attribute, in case of
+			 a text attribute with multiple values */
+		      valNum = 1;
+		      do
+			{
+			  pRPres = AttrPresRule (pAttr, pEl, TRUE, NULL,
+						 pSchP, &valNum);
+			  /* traite les regles de creation associees a
+			     l'attribut*/
+			  ApplFunctionPresRules (pRPres, pSchP, pAttr, pDoc,
+						 pEl, change, first);
+			}
+		      while (valNum > 0);
 		    }
-		  for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
-		     if ((*inheritTable)[l - 1])	/* pEl herite de l'attribut l */
-			/* cherche si l existe au dessus */
-			if ((pAttr = GetTypedAttrAncestor (pEl, l, pEl->ElStructSchema,
-							 &pElAttr)) != NULL)
-			  {
-			     pSchP = PresentationSchema (pAttr->AeAttrSSchema,
-							 pDoc);
-			     pRPres = AttrPresRule (pAttr, pEl, TRUE, NULL, pSchP);
-			     /* traite les regles de creation associees a l'attribut */
-			     ApplFunctionPresRules (pRPres, pSchP, pAttr, pDoc, pEl, change, first);
-			  }
-	       }
+	    }
 
-	     /* l'element a-t-il des attributs qui ont des fonctions de */
-	     /* presentation ? */
-	     pAttr = pEl->ElFirstAttr;	/* 1er attribut de l'element */
-	     /* boucle sur les attributs de l'element */
-	     while (pAttr != NULL)
-	       {
-		  pSchP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
-		  /* cherche le debut des regles de presentation associees a */
-		  /* l'attribut */
-		  pRPres = AttrPresRule (pAttr, pEl, FALSE, NULL, pSchP);
+	  /* l'element a-t-il des attributs qui ont des fonctions de */
+	  /* presentation ? */
+	  pAttr = pEl->ElFirstAttr;	/* 1er attribut de l'element */
+	  /* boucle sur les attributs de l'element */
+	  while (pAttr != NULL)
+	    {
+	      pSchP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
+	      /* cherche le debut des regles de presentation associees a */
+	      /* l'attribut */
+	      /* process all values of the attribute, in case of a text
+		 attribute with multiple values */
+	      valNum = 1;
+	      do
+		{
+		  pRPres = AttrPresRule (pAttr, pEl, FALSE, NULL, pSchP,
+					 &valNum);
 		  /* traite les regles de creation associees a l'attribut */
-		  ApplFunctionPresRules (pRPres, pSchP, pAttr, pDoc, pEl, change, first);
-		  /* passe a l'attribut suivant de l'element */
-		  pAttr = pAttr->AeNext;
-	       }
-	  }
-     }
+		  ApplFunctionPresRules (pRPres, pSchP, pAttr, pDoc, pEl,
+					 change, first);
+		}
+	      while (valNum > 0);
+	      /* passe a l'attribut suivant de l'element */
+	      pAttr = pAttr->AeNext;
+	    }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3435,7 +3474,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
   PtrAttribute        pAttrib;
   PtrHandlePSchema    pHd;
   TypeUnit            unit;
-  int                 view, viewSch, val;
+  int                 view, viewSch, val, valNum;
   ThotBool            appl, stop, sameType, found;
   ThotBool            existingView;
   ThotBool            createBox, complete;
@@ -3450,10 +3489,14 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
   pSchP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
   while (pSchP != NULL)
     {
-      /* pR: premiere regle correspondant a l'attribut */
-      pR = AttrPresRule (pAttr, pEl, inherit, pAttrComp, pSchP);
+    /* process all values of the attribute, in case of a text attribute
+       with multiple values */
+    valNum = 1;
+    do
+      {
+      /* pR: premiere regle correspondant a cette valeur de l'attribut */
+      pR = AttrPresRule (pAttr, pEl, inherit, pAttrComp, pSchP, &valNum);
       firstOfType = pR;
-      
       /* traite toutes les regles associees a cette valeur d'attribut dans */
       /* ce schema de presentation */
       while (firstOfType != NULL)
@@ -3477,7 +3520,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 	      if (existingView)
 		{
 		  viewSch = AppliedView (pEl, pAttr, pDoc, view);
-		  /* look at additional presentation schemas for only the view 1 */
+		  /* look at additional presentation schemas only for view 1 */
 		  existingView = (pHd == NULL || viewSch == 1);
 		}
 	      if (existingView)
@@ -3485,7 +3528,8 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 		  /* if it's a creation rule it applies to all views */
 		  if (typeRule != PtFunction ||
 		      (func != FnCreateBefore && func != FnCreateFirst &&
-		       func != FnCreateWith && func == FnCreateLast && func != FnCreateAfter))
+		       func != FnCreateWith && func == FnCreateLast &&
+		       func != FnCreateAfter))
 		    /* it's not a creation rule, look for a rule of the same
 		       type and specific to that view */
 		    {
@@ -3527,19 +3571,25 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 		  /* by default nothing to redisplay */
 		  pReaff = NULL;
 		  pAb = NULL;
-		  createBox = ElemWithinImage (pEl, view, pDoc->DocViewRootAb[view - 1], pDoc);
+		  createBox = ElemWithinImage (pEl, view,
+					       pDoc->DocViewRootAb[view - 1],
+					       pDoc);
 		  if (createBox && pEl->ElAbstractBox[view - 1] == NULL &&
 		      typeRule == PtVisibility)
 		    {
-		      /* the abstract box doesn't exist and it's a rule Visibility */
-		      val = IntegerRule (pR, pEl, view, &appl, &unit, pAttr, NULL);
+		      /* the abstract box doesn't exist and it's a Visibility
+			 rule */
+		      val = IntegerRule (pR, pEl, view, &appl, &unit, pAttr,
+					 NULL);
 		      if ((!remove && val > 0) || (remove && val <= 0))
-			/* cette regle rend le pave visible et ce n'est pas une suppression
-			   ou c'est une suppression et le pave etait rendu invisible par la regle
-			   on cree le pave et ses paves de presentation eventuels */
+			/* cette regle rend le pave visible et ce n'est pas
+			   une suppression ou c'est une suppression et le pave
+			   etait rendu invisible par la regle on cree le pave
+			   et ses paves de presentation eventuels */
 			{
 			  pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
-			  pAb = AbsBoxesCreate (pEl, pDoc, view, TRUE, TRUE, &complete);
+			  pAb = AbsBoxesCreate (pEl, pDoc, view, TRUE, TRUE,
+						&complete);
 			  if (pAb != NULL)
 			    /* au moins un pave a ete cree. pAb est le
 			       premier. Cherche le dernier cree */
@@ -3559,9 +3609,11 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 		    }
 
 		  if (createBox &&
-		      pEl->ElAbstractBox[view - 1] != NULL && typeRule == PtFunction &&
+		      pEl->ElAbstractBox[view - 1] != NULL &&
+		      typeRule == PtFunction &&
 		      (func == FnCreateBefore || func == FnCreateAfter ||
-		       func == FnCreateWith || func == FnCreateFirst || func == FnCreateLast) &&
+		       func == FnCreateWith || func == FnCreateFirst ||
+		       func == FnCreateLast) &&
 		      !remove)
 		    /* il faut creer un pave de presentation */
 		    {
@@ -3574,8 +3626,9 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 
 		  /* traite les paves crees par la regle de visibilite ou de */
 		  /* creation */
-		  /* code inutile et incorrect (fait dans AbsBoxesCreate) si saut de page */
-		  /* il reste correct si on a cree seulement des paves de presentation */
+		  /* code inutile et incorrect (fait dans AbsBoxesCreate) si
+		     saut de page il reste correct si on a cree seulement des
+		     paves de presentation */
 		  if (pAb != NULL)
 		    /* les nouveaux paves doivent etre pris en compte par */
 		    /* leurs voisins */
@@ -3628,8 +3681,8 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 				{
 				  SetDeadAbsBox (pAb);
 				  /* tue un pave */
-				  /* change les regles des autres paves qui se */
-				  /* referent au pave detruit */
+				  /* change les regles des autres paves qui */
+				  /* se referent au pave detruit */
 				  ApplyRefAbsBoxSupp (pAb, &pPR, pDoc);
 				  pReaff = Enclosing (pReaff, pPR);
 				  pAb = pAb->AbNext;
@@ -3654,7 +3707,8 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 			      pAbChild = pAb->AbFirstEnclosed;
 			      while (pAbChild != NULL)
 				{
-				  ApplyInheritPresRule (pAbChild, typeRule, pDoc);
+				  ApplyInheritPresRule (pAbChild, typeRule,
+							pDoc);
 				  pAbChild = pAbChild->AbNext;
 				}
 			      /* on traite les pavés freres */
@@ -3663,7 +3717,8 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 				  pAbSibling = pAb->AbEnclosing->AbFirstEnclosed;
 				  while (pAbSibling != NULL)
 				    {
-				      ApplyInheritPresRule (pAbSibling, typeRule, pDoc);
+				      ApplyInheritPresRule (pAbSibling,
+							    typeRule, pDoc);
 				      pAbSibling = pAbSibling->AbNext;
 				    }
 				}
@@ -3678,13 +3733,14 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 			  || func == FnCreateFirst || func == FnCreateLast)
 		      && remove)
 		    /* on supprime un attribut qui portait une regle de */
-		    /* creation ; il faut detruire le pave de presentation que */
-		    /* cree la regle pR */
+		    /* creation ; il faut detruire le pave de presentation */
+		    /* que cree la regle pR */
 		    /* cherche d'abord le pave de l'element */
 		    {
 		      pAb = pEl->ElAbstractBox[view - 1];
 		      /* saute les paves de presentation de l'element */
-		      while (pAb->AbNext != NULL && pAb->AbPresentationBox && pAb->AbElement == pEl)
+		      while (pAb->AbNext != NULL && pAb->AbPresentationBox &&
+			     pAb->AbElement == pEl)
 			pAb = pAb->AbNext;
 		      /* cherche le pave de presentation a detruire */
 		      found = FALSE;
@@ -3776,29 +3832,32 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 	    pR = pR->PrNextPRule;
 	  firstOfType = pR;
 	}
-      /* on traite les schemas de presentation de plus forte priorite' */
-      if (pHd)
-	/* on prend le schema de presentation additionnel de priorite' */
-	/* superieure */
-	pHd = pHd->HdNextPSchema;
-      else
-	/* on cherchait dans le schema de presentation principal */
-	/* on prend le premier schema de presentation additionnel */
-	{
-	  pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc);
-	  /* mais si c'est ID ou CLASS, on prend les extensions du schema
-	     de presentation associe' au schema de structure du document */
-	  if (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
-				pAttr->AeAttrSSchema) ||
-	      AttrHasException (ExcCssId, pAttr->AeAttrNum,
-				pAttr->AeAttrSSchema))
-            pHd = FirstPSchemaExtension (pDoc->DocSSchema, pDoc);
-	}
-      if (pHd)
-	pSchP = pHd->HdPSchema;
-      else
-	/* plus de schemas additionnels, on arrete */
-	pSchP = NULL;
+      }
+    while (valNum > 0);  /* fin de la boucle sut les valeurs de l'attribut */
+
+    /* on traite les schemas de presentation de plus forte priorite' */
+    if (pHd)
+      /* on prend le schema de presentation additionnel de priorite' */
+      /* superieure */
+      pHd = pHd->HdNextPSchema;
+    else
+      /* on cherchait dans le schema de presentation principal */
+      /* on prend le premier schema de presentation additionnel */
+      {
+	pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc);
+	/* mais si c'est ID ou CLASS, on prend les extensions du schema
+	   de presentation associe' au schema de structure du document */
+	if (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
+			      pAttr->AeAttrSSchema) ||
+	    AttrHasException (ExcCssId, pAttr->AeAttrNum,
+			      pAttr->AeAttrSSchema))
+	  pHd = FirstPSchemaExtension (pDoc->DocSSchema, pDoc);
+      }
+    if (pHd)
+      pSchP = pHd->HdPSchema;
+    else
+      /* plus de schemas additionnels, on arrete */
+      pSchP = NULL;
     }
 }
 

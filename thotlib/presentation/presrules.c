@@ -1065,103 +1065,111 @@ static void         VerifyAbsBox (ThotBool * found, PtrPSchema pSP, RefKind refK
 }
 
 /*----------------------------------------------------------------------
-   	AttrCreatePresBox	retourne Vrai si l'une des regles de	
-   		presentation de l'attribut pointe' par pAttr cree le	
-   		pave de presentation pointe' par pAb.			
+ AttrCreatePresBox
+ retourne Vrai si l'une des regles de presentation de l'attribut pointe'
+ par pAttr cree le pave de presentation pointe' par pAb.
   ----------------------------------------------------------------------*/
 static ThotBool AttrCreatePresBox (PtrAttribute pAttr, PtrAbstractBox pAb,
 				   PtrDocument pDoc)
 {
-   ThotBool            ret, stop;
-   PtrPRule            pPRule;
-   PtrPSchema          pSchP;
-   PtrHandlePSchema    pHd;
+  ThotBool            ret, stop;
+  int                 valNum;
+  PtrPRule            pPRule;
+  PtrPSchema          pSchP;
+  PtrHandlePSchema    pHd;
 
-   ret = FALSE;
-   if (pAb->AbPresentationBox)
-     {
-	/* on cherchera d'abord dans le schema de presentation principal de */
-	/* l'attribut */
-	pSchP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
-	pHd = NULL;
-	/* on examine le schema de presentation principal, puis les schemas */
-	/* additionnels */
-	while (pSchP != NULL && !ret)
-	  {
-	     /* cherche dans ce schema de presentation le debut de la chaine */
-	     /* des regles de presentation de l'attribut */
-	     pPRule = AttrPresRule (pAttr, pAb->AbElement, FALSE, NULL, pSchP);
-	     /* saute les regles precedant les  fonctions */
-	     stop = FALSE;
-	     do
+  ret = FALSE;
+  if (pAb->AbPresentationBox)
+    {
+      /* on cherchera d'abord dans le schema de presentation principal de */
+      /* l'attribut */
+      pSchP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
+      pHd = NULL;
+      /* on examine le schema de presentation principal, puis les schemas */
+      /* additionnels */
+      while (pSchP != NULL && !ret)
+	{
+	  /* process all values of the attribute, in case of a text attribute
+	     with multiple values */
+	  valNum = 1;
+	  do
+	    {
+	      pPRule = AttrPresRule (pAttr, pAb->AbElement, FALSE, NULL, pSchP,
+				     &valNum);
+	      /* saute les regles precedant les  fonctions */
+	      stop = FALSE;
+	      do
 		if (pPRule == NULL)
-		   stop = TRUE;
+		  stop = TRUE;
 		else if (pPRule->PrType > PtFunction)
 		  {
-		     /* pas de fonction de presentation */
-		     stop = TRUE;
-		     pPRule = NULL;
+		    /* pas de fonction de presentation */
+		    stop = TRUE;
+		    pPRule = NULL;
 		  }
 		else if (pPRule->PrType == PtFunction)
-		   stop = TRUE;
+		  stop = TRUE;
 		else
-		   pPRule = pPRule->PrNextPRule;
-	     while (!stop);
-	     /* cherche toutes les fonctions de creation */
-	     stop = FALSE;
-	     do
+		  pPRule = pPRule->PrNextPRule;
+	      while (!stop);
+	      /* cherche toutes les fonctions de creation */
+	      stop = FALSE;
+	      do
 		if (pPRule == NULL)
-		   /* fin de la chaine */
-		   stop = TRUE;
+		  /* fin de la chaine */
+		  stop = TRUE;
 		else if (pPRule->PrType != PtFunction)
-		   /* fin des fonctions */
-		   stop = TRUE;
+		  /* fin des fonctions */
+		  stop = TRUE;
 		else
-		   /* c'est une regle fonction */
+		  /* c'est une regle fonction */
 		  {
-		     if (pPRule->PrPresFunction == FnCreateBefore ||
-			 pPRule->PrPresFunction == FnCreateWith ||
-			 pPRule->PrPresFunction == FnCreateEnclosing ||
-			 pPRule->PrPresFunction == FnCreateFirst ||
-			 pPRule->PrPresFunction == FnCreateAfter ||
-			 pPRule->PrPresFunction == FnCreateLast)
-			/* c'est une regle de creation */
-		       {
-			  if (!pPRule->PrElement &&
-			      pPRule->PrPresBox[0] == pAb->AbTypeNum &&
-			      pPRule->PrNPresBoxes == 1 &&
-			      pSchP == pAb->AbPSchema)
-			     /* cette regle cree notre pave, on a trouv' */
-			    {
-			       stop = TRUE;
-			       ret = TRUE;
-			    }
-		       }
-		     if (!stop)
-			/* passe a la regle suivante de la chaine */
-			pPRule = pPRule->PrNextPRule;
+		    if (pPRule->PrPresFunction == FnCreateBefore ||
+			pPRule->PrPresFunction == FnCreateWith ||
+			pPRule->PrPresFunction == FnCreateEnclosing ||
+			pPRule->PrPresFunction == FnCreateFirst ||
+			pPRule->PrPresFunction == FnCreateAfter ||
+			pPRule->PrPresFunction == FnCreateLast)
+		      /* c'est une regle de creation */
+		      {
+			if (!pPRule->PrElement &&
+			    pPRule->PrPresBox[0] == pAb->AbTypeNum &&
+			    pPRule->PrNPresBoxes == 1 &&
+			    pSchP == pAb->AbPSchema)
+			  /* cette regle cree notre pave, on a trouve' */
+			  {
+			    stop = TRUE;
+			    ret = TRUE;
+			  }
+		      }
+		    if (!stop)
+		      /* passe a la regle suivante de la chaine */
+		      pPRule = pPRule->PrNextPRule;
 		  }
-	     while (!stop);
-	     if (!ret)
-		/* on n'a pas encore trouve'. On cherche dans les schemas de */
-		/* presentation additionnels */
-	       {
-		  if (pHd == NULL)
-		     /* on n'a pas encore traite' les schemas de presentation
-		        additionnels. On prend le premier schema additionnel. */
-		     pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc);
-		  else
-		     /* passe au schema additionnel suivant */
-		     pHd = pHd->HdNextPSchema;
-		  if (pHd == NULL)
-		     /* il n'y a pas (ou plus) de schemas additionnels */
-		     pSchP = NULL;
-		  else
-		     pSchP = pHd->HdPSchema;
-	       }
-	  }
-     }
-   return ret;
+	      while (!stop);
+	    }
+	  while (valNum > 0 && !ret);
+
+	  if (!ret)
+	    /* on n'a pas encore trouve'. On cherche dans les schemas de */
+	    /* presentation additionnels */
+	    {
+	      if (pHd == NULL)
+		/* on n'a pas encore traite' les schemas de presentation
+		   additionnels. On prend le premier schema additionnel. */
+		pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc);
+	      else
+		/* passe au schema additionnel suivant */
+		pHd = pHd->HdNextPSchema;
+	      if (pHd == NULL)
+		/* il n'y a pas (ou plus) de schemas additionnels */
+		pSchP = NULL;
+	      else
+		pSchP = pHd->HdPSchema;
+	    }
+	}
+    }
+  return ret;
 }
 
 /*----------------------------------------------------------------------
@@ -1697,56 +1705,66 @@ static ThotBool PageCreateRule (PtrPRule pPRule, PtrPSchema pSPR,
 FunctionType TypeCreatedRule (PtrDocument pDoc, PtrAbstractBox pAbbCreator,
 			      PtrAbstractBox pAbbCreated)
 {
-   PtrPRule            pPRuleCre;
-   FunctionType        result;
-   PtrPSchema          pSPR;
-   PtrAttribute        pAttr;
-   PtrAttribute        pA;
-   ThotBool            ok;
-   PtrPSchema          pSchP;
-   PtrHandlePSchema    pHd;
+  PtrPRule            pPRuleCre;
+  FunctionType        result;
+  PtrPSchema          pSPR;
+  PtrAttribute        pAttr;
+  PtrAttribute        pA;
+  int                 valNum;
+  ThotBool            ok;
+  PtrPSchema          pSchP;
+  PtrHandlePSchema    pHd;
 
-   result = FnLine;
-   /* cherche les regles de creation en ignorant les attributs */
-   pPRuleCre = SearchRulepAb (pDoc, pAbbCreator, &pSPR, PtFunction, FnAny, FALSE, &pAttr);
-   if (!PageCreateRule (pPRuleCre, pSPR, pAbbCreated, &result))
-      /* on n'a pas found la regle qui cree la bonne boite */
-      /* on cherche les regles de creation associees aux attributs */
-      /* de l'element createur */
-     {
-	ok = FALSE;
-	pA = pAbbCreator->AbElement->ElFirstAttr;
-	while (pA != NULL && !ok)
-	  {
-	     pSchP = PresentationSchema (pA->AeAttrSSchema, pDoc);
-	     pHd = NULL;
-	     /* on examine le schema de presentation principal, puis les schemas */
-	     /* additionnels */
-	     while (pSchP != NULL && !ok)
-	       {
-		  /* cherche la premiere regle de presentation pour cet attribut */
-		  /* dans ce schema de presentation */
-		  pPRuleCre = AttrPresRule (pA, pAbbCreator->AbElement, FALSE, NULL, pSchP);
+  result = FnLine;
+  /* cherche les regles de creation en ignorant les attributs */
+  pPRuleCre = SearchRulepAb (pDoc, pAbbCreator, &pSPR, PtFunction, FnAny,
+			     FALSE, &pAttr);
+  if (!PageCreateRule (pPRuleCre, pSPR, pAbbCreated, &result))
+    /* on n'a pas found la regle qui cree la bonne boite */
+    /* on cherche les regles de creation associees aux attributs */
+    /* de l'element createur */
+    {
+      ok = FALSE;
+      pA = pAbbCreator->AbElement->ElFirstAttr;
+      while (pA != NULL && !ok)
+	{
+	  pSchP = PresentationSchema (pA->AeAttrSSchema, pDoc);
+	  pHd = NULL;
+	  /* on examine le schema de presentation principal, puis les schemas*/
+	  /* additionnels */
+	  while (pSchP != NULL && !ok)
+	    {
+	      /* cherche la premiere regle de presentation pour cet attribut */
+	      /* dans ce schema de presentation */
+	      /* process all values of the attribute, in case of a text
+		 attribute with multiple values */
+	      valNum = 1;
+	      do
+		{
+		  pPRuleCre = AttrPresRule (pA, pAbbCreator->AbElement, FALSE,
+					    NULL, pSchP, &valNum);
 		  ok = PageCreateRule (pPRuleCre, pSchP, pAbbCreated, &result);
-		  if (pHd == NULL)
-		     /* on n'a pas encore traite' les schemas de presentation additionnels
-		        On prend le premier schema additionnel. */
-		     pHd = FirstPSchemaExtension (pA->AeAttrSSchema, pDoc);
-		  else
-		     /* passe au schema additionnel suivant */
-		     pHd = pHd->HdNextPSchema;
-		  if (pHd == NULL)
-		     /* il n'y a pas (ou plus) de schemas additionnels */
-		     pSchP = NULL;
-		  else
-		     pSchP = pHd->HdPSchema;
-	       }
-	     if (!ok)
-		/* passe a l'attribut suivant de l'element */
-		pA = pA->AeNext;
-	  }
-     }
-   return result;
+		}
+	      while (valNum > 0);
+	      if (pHd == NULL)
+		/* on n'a pas encore traite' les schemas de presentation
+		   additionnels. On prend le premier schema additionnel. */
+		pHd = FirstPSchemaExtension (pA->AeAttrSSchema, pDoc);
+	      else
+		/* passe au schema additionnel suivant */
+		pHd = pHd->HdNextPSchema;
+	      if (pHd == NULL)
+		/* il n'y a pas (ou plus) de schemas additionnels */
+		pSchP = NULL;
+	      else
+		pSchP = pHd->HdPSchema;
+	    }
+	  if (!ok)
+	    /* passe a l'attribut suivant de l'element */
+	    pA = pA->AeNext;
+	}
+    }
+  return result;
 }
 
 /*----------------------------------------------------------------------

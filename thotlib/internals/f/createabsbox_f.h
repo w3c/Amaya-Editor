@@ -66,7 +66,8 @@ extern PtrPRule AttrPresRule ( PtrAttribute pAttr,
                                PtrElement pEl,
                                ThotBool inheritRule,
                                PtrAttribute pAttrComp,
-                               PtrPSchema pSchP );
+                               PtrPSchema pSchP,
+                               int *valueNum );
 extern PtrAbstractBox TruncateOrCompleteAbsBox ( PtrAbstractBox pAb,
                                                  ThotBool truncate,
                                                  ThotBool head,
@@ -152,7 +153,8 @@ extern PtrPRule AttrPresRule (/* PtrAttribute pAttr,
                                  PtrElement pEl,
                                  ThotBool inheritRule,
                                  PtrAttribute pAttrComp,
-                                 PtrPSchema pSchP */);
+                                 PtrPSchema pSchP,
+                                 int *valueNum */);
 extern PtrAbstractBox TruncateOrCompleteAbsBox (/* PtrAbstractBox pAb,
                                                    ThotBool truncate,
                                                    ThotBool head,
