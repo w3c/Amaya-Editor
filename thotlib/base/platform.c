@@ -90,7 +90,7 @@ CONST char         *filename;
 #endif /* __STDC__ */
 {
 #if defined(_WINDOWS) && !defined(__GNUC__)
-   return (remove (filename));
+   return (_unlink (filename));
 #else /* _WINDOWS && !__GNUC__ */
    return (unlink (filename));
 #endif /* _WINDOWS && !__GNUC__ */
