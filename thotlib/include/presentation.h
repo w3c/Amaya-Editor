@@ -114,6 +114,12 @@ typedef int        *PRule;
 
 
 /*----------------------------------------------------------------------
+  TtaSetFontZoom
+  Updates the font zoom global varialbe
+  ----------------------------------------------------------------------*/
+extern void TtaSetFontZoom (int zoom);
+
+/*----------------------------------------------------------------------
    TtaNewPRule
 
    Creates a new presentation rule of a given type for a given view of a given
@@ -527,6 +533,7 @@ extern int          TtaSamePRules (PRule pRule1, PRule pRule2);
 
 #else  /* __STDC__ */
 
+extern void         TtaSetFontZoom (/* int zoom */);
 extern PRule        TtaNewPRule ( /* int presentationType, View view, Document document */ );
 extern PRule        TtaNewPRuleForView (/* int presentationType, int view, Document document */);
 extern PRule        TtaNewPRuleForNamedView ( /* int presentationType, STRING viewName, Document document */ );

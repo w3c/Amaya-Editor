@@ -1432,6 +1432,36 @@ static void ValidateGeneralConf ()
 }
 
 /*----------------------------------------------------------------------
+  RecalibrateZoom
+  Moves the Zoom setting on all documents to the specified value
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void      RecalibrateZoom ()
+#else
+static void      RecalibrateZoom ()
+#endif
+{
+  int               zoom;
+  int               doc, view;
+
+  /* recalibrate the zoom settings in all the active documents and
+   active views*/
+  for (doc = 1; doc < DocumentTableLength; doc++)
+    {
+      if (DocumentURLs[doc])
+	{
+	  /* calculate the new zoom for each open view*/
+	  for (view = 1; view < AMAYA_MAX_VIEW_DOC; view++)
+	    if (TtaIsViewOpened (doc, view))
+	    {
+	      zoom = TtaGetZoom (doc, view);
+	      TtaSetZoom (doc, view, zoom);
+	    }
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
   SetGeneralConf
   Updates the registry General values and calls the General functions
   to take into account the changes
@@ -1449,8 +1479,9 @@ static void SetGeneralConf ()
   if (oldZoom != Zoom)
     {
       TtaSetEnvInt ("ZOOM", Zoom, TRUE);
+      TtaSetFontZoom (Zoom);
       /* recalibrate the zoom settings in all the active documents */
-      GotoZoom (Zoom - oldZoom);
+      RecalibrateZoom ();
     }
   TtaSetEnvBoolean ("ENABLE_MULTIKEY", Multikey, TRUE);
   TtaSetMultikey (Multikey);

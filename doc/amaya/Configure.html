@@ -3,7 +3,7 @@
 <html>
 <head>
   <title>Configuring Amaya</title>
-  <meta name="GENERATOR" content="amaya V2.1">
+  <meta name="GENERATOR" content="amaya V2.2">
 </head>
 
 <body lang="en">
@@ -134,6 +134,7 @@ change both the AmayaTemp and cache directories by means of the
 if Amaya crashes, the temporary files will not be deleted. This will not
 impact subsequent executions of Amaya.</p>
 <a name="preferences"></a>
+
 <h2>The Preferences Menus</h2>
 
 <p>These menus are found under the <strong>Special/Preference</strong> menu.
@@ -178,7 +179,7 @@ Preferences Menu"></p>
     </dd>
   <dt><strong>Home Page</strong></dt>
     <dd>Specifies the URI that Amaya will load when launched or when the user
-      presses the home page button. An example is 
+      presses the home page button. An example is
       <code>http://www.w3.org</code>.<br>
       <strong>Note:</strong> A complete URI must be used.<br>
       <br>
@@ -240,8 +241,7 @@ Preferences Menu"></p>
       obtain a '&atilde;' first press '~' then type 'a'. To obtain a '~' you
       have to press '~' twice. The table below gives available key sequences:
 
-      <table border="1" style="font-family : times; font-size : 24pt"
-      summary="key sequences">
+      <table border="1" style="font-family : times" summary="key sequences">
         <tbody>
           <tr>
             <td>accent-letter</td>
@@ -361,12 +361,12 @@ Preferences Menu"></p>
       your server.</dd>
   <dt><strong>Allow automatic PUT redirections on these domains</strong></dt>
     <dd>According to theHTTP/1.1 specification, PUT operations should not be
-    automatically redirected unless it can be confirmed by the user, since
-    this might change the conditions under which the request was issued. You
-    can avoid having Amaya prompt you with a PUT redirection warning by 
-    entering the name of the server's domain to which you are publishing.
-    You may specify one or more domains, each separated with a space, e.g.,
-    <code>www.w3.org groucho.marx.edu</code>.</dd>
+      automatically redirected unless it can be confirmed by the user, since
+      this might change the conditions under which the request was issued. You
+      can avoid having Amaya prompt you with a PUT redirection warning by
+      entering the name of the server's domain to which you are publishing.
+      You may specify one or more domains, each separated with a space, e.g.,
+      <code>www.w3.org groucho.marx.edu</code>.</dd>
 </dl>
 </div>
 
@@ -491,77 +491,90 @@ command.</p>
  IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;
  Char = KeyValue / OctalValue ;  OctalValue = '\' NUMBER ; </pre>
 
-<p>For an example, see the standard amaya.keyboard file, which is located in
-the config directory.</p>
+<p>For an example, see the standard files <code>amaya.keyboard</code> (for
+Unix platforms) and <code>amaya.kb</code> (for Windows platforms), which are
+by default located in the directory <code>Amaya/config</code>.</p>
 
 <p>The list of available commands is:</p>
 <ul>
   <li>Moving commands:
     <ul>
-      <li>TtcNextChar, TtcPreviousChar: move character by character.</li>
-      <li>TtcNextLine, TtcPreviousLine, TtcStartOfLine, TtcEndOfLine: move
-        line by line.</li>
-      <li>TtcNextElement, TtcPreviousElement, TtcChildElement,
-        TtcParentElement: move element by element.</li>
-      <li>TtcPageDown, TtcPageUp, TtcPageTop, TtcPageEnd: move page to
-      page.</li>
+      <li><span style="color: #E55500">TtcNextChar, TtcPreviousChar</span>:
+        move character by character.</li>
+      <li><span style="color: #E55500">TtcNextLine, TtcPreviousLine,
+        TtcStartOfLine, TtcEndOfLine</span>: move line by line.</li>
+      <li><span style="color: #E55500">TtcNextElement, TtcPreviousElement,
+        TtcChildElement, TtcParentElement</span>: move element by
+      element.</li>
+      <li><span style="color: #E55500">TtcPageDown, TtcPageUp, TtcPageTop,
+        TtcPageEn</span>d: scroll from page to page.</li>
+      <li><span style="color: #E55500">TtcLineUp, TtcLineDown</span> scroll
+        one line up or one line down.</li>
     </ul>
   </li>
+  <li>A command that allows one to follow a link or to activate a form element
+    (menu, button, etc.): <span style="color: #E55500">DoAction</span>.</li>
   <li>In <code>File</code> menu:
-    <p>New, OpenDoc, OpenDocInNewWindow, Reload, GotoPreviousHTML,
-    GotoNextHTML, SaveDocument, SaveDocumentAs, SetupAndPrint, PrintAs
-    TtcCloseDocument, AmayaClose</p>
+    <p><span style="color: #E55500">New, NewTemplate, NewCss, OpenDoc,
+    OpenDocInNewWindow, Reload, GotoPreviousHTML, GotoNextHTML, SaveDocument,
+    SaveDocumentAs, Synchronize, SetupAndPrint, PrintAs TtcCloseDocument,
+    AmayaClose</span></p>
   </li>
   <li>In Edit menu:
-    <p>TtcUndo, TtcRedo, TtcCutSelection, TtcCopySelection, TtcPaste,
-    TtcDeleteSelection, SetBrowserEditor, TtcSearchText, EnSpellCheck,
-    FrSpellCheck, TransformType.</p>
+    <p><span style="color: #E55500">TtcUndo, TtcRedo, TtcCutSelection,
+    TtcCopySelection, TtcPaste, TtcDeleteSelection, SetBrowserEditor,
+    TtcSearchText, EnSpellCheck, FrSpellCheck, TransformType</span>.</p>
   </li>
   <li>In <code>Structure Types</code> menu:
-    <p>CreateBase, CreateMeta, CreateLinkInHead, CreateScript, CreateStyle,
-    CreateComment.</p>
+    <p><span style="color: #E55500">CreateBase, CreateMeta, CreateLinkInHead,
+    CreateScript, CreateStyle, CreateComment</span>.</p>
   </li>
   <li>In Types menu:
-    <p>CreateParagraph, CreateImage, CreateHeading1, CreateHeading2,
-    CreateHeading3, CreateHeading4, CreateHeading5, CreateHeading6,
-    CreateList, CreateNumberedList, ThotCreateMenu, ThotCreateDirectory,
-    CreateDefinitionList, CreateDefinitionTerm, CreateDefinitionDef,
-    CreateHorizontalRule, CreateBlockQuote, CreatePreformatted, CreateAddress,
-    CreateToggle, CreateRadio, CreateOption, CreateTextInput, CreateTextArea,
-    CreateSubmit, CreateReset, CreateAreaRect, CreateAreaCircle,
-    CreateAreaPoly, CreateDivision, CreateNOSCRIPT, CreateObject,
-    CreateParameter, CreateIFrame, CreateInlineMath, CreateMath, CreateMROOT,
-    CreateMSQRT, CreateMFRAC, CreateMSUBSUP, CreateMSUB, CreateMSUP,
-    CreateMUNDEROVER, CreateMUNDER, CreateMOVER, CreateMROW,
-    CreateMMULTISCRIPTS, CreateMTABLE., CreateTable, CreateCaption,
-    CreateTHead, CreateTBody, CreateTFoot, CreateRow, CreateDataCell,
-    CreateHeadingCell, DeleteColumn.</p>
+    <p><span style="color: #E55500">CreateParagraph, CreateImage,
+    CreateHeading1, CreateHeading2, CreateHeading3, CreateHeading4,
+    CreateHeading5, CreateHeading6, CreateList, CreateNumberedList,
+    ThotCreateMenu, ThotCreateDirectory, CreateDefinitionList,
+    CreateDefinitionTerm, CreateDefinitionDef, CreateHorizontalRule,
+    CreateBlockQuote, CreatePreformatted, CreateAddress, CreateToggle,
+    CreateRadio, CreateOption, CreateTextInput, CreateTextArea, CreateSubmit,
+    CreateReset, CreateAreaRect, CreateAreaCircle, CreateAreaPoly,
+    CreateDivision, CreateNOSCRIPT, CreateObject, CreateParameter,
+    CreateIFrame, CreateInlineMath, CreateMath, CreateMROOT, CreateMSQRT,
+    CreateMFRAC, CreateMSUBSUP, CreateMSUB, CreateMSUP, CreateMUNDEROVER,
+    CreateMUNDER, CreateMOVER, CreateMROW, CreateMMULTISCRIPTS, CreateMTABLE.,
+    CreateTable, CreateCaption, CreateTHead, CreateTBody, CreateTFoot,
+    CreateRow, CreateDataCell, CreateHeadingCell, DeleteColumn</span>.</p>
   </li>
   <li>In <code>Links</code> menu:
-    <p>CreateOrChangeLink, CreateTarget, DeleteAnchor.</p>
+    <p><span style="color: #E55500">LinkToPreviousTarget, CreateOrChangeLink,
+    CreateTarget, DeleteAnchor</span>.</p>
   </li>
   <li>In <code>Views</code> menu:
-    <p>TtcSwitchButtonBar, TtcSwitchCommands, ShowMapAreas, ShowTargets,
-    ZoomIn, ZoomOut, ShowStructure, ShowAlternate, ShowLinks, ShowToC.</p>
+    <p><span style="color: #E55500">TtcSwitchButtonBar, TtcSwitchCommands,
+    ShowMapAreas, ShowTargets, ZoomIn, ZoomOut, ShowStructure, ShowAlternate,
+    ShowLinks, ShowToC., ShowSource</span></p>
   </li>
   <li>In <code>Style</code> menu:
-    <p>TtcChangeCharacters, TtcChangeColors, TtcChangeFormat,
-    ChangeBackgroundImage, CreateClass, ApplyClass, LinkCSS, OpenCSS,
-    DisableCSS, EnableCSS, RemoveCSS, SetOnOffEmphasis, SetOnOffStrong,
-    SetOnOffCite, SetOnOffDefinition, SetOnOffCode, SetOnOffVariable,
-    SetOnOffSample, SetOnOffKeyboard, SetOnOffAbbr, SetOnOffAcronym,
-    SetOnOffINS, SetOnOffDEL, SetOnOffItalic, SetOnOffBold,
+    <p><span style="color: #E55500">TtcChangeCharacters, TtcChangeColors,
+    TtcChangeFormat, ChangeBackgroundImage, CreateClass, ApplyClass, LinkCSS,
+    OpenCSS, DisableCSS, EnableCSS, RemoveCSS, SetOnOffEmphasis,
+    SetOnOffStrong, SetOnOffCite, SetOnOffDefinition, SetOnOffCode,
+    SetOnOffVariable, SetOnOffSample, SetOnOffKeyboard, SetOnOffAbbr,
+    SetOnOffAcronym, SetOnOffINS, SetOnOffDEL, SetOnOffItalic, SetOnOffBold,
     SetOnOffTeletype, SetOnOffBig, SetOnOffSmall, SetOnOffSub, SetOnOffSup,
-    SetOnOffQuotation, SetOnOffBDO.</p>
+    SetOnOffQuotation, SetOnOffBDO</span>.</p>
   </li>
   <li>In <code>Special</code> menu:
-    <p>SectionNumbering, MakeBook, CleanCache.</p>
+    <p><span style="color: #E55500">SectionNumbering, MakeBook, ShowLogFile,
+    ConfigGeneral, ConfigPublish, ConfigCache, ConfigProxy, ConfigColor,
+    ConfigGeometry, ConfigLanNeg, ConfigProfile, ConfigTemplates</span>.</p>
   </li>
   <li>In <code>Help</code> menu:
-    <p>HelpAmaya, HelpAtW3C, HelpBrowsing, HelpSelecting, HelpSearching,
-    HelpViews, HelpCreating, HelpLinks, HelpChanging, HelpTables, HelpMath,
-    HelpImageMaps, HelpStyleSheets, HelpAttributes, HelpPublishing,
-    HelpPrinting, HelpNumbering, HelpMakeBook, HelpConfigure.</p>
+    <p><span style="color: #E55500">HelpAmaya, HelpAtW3C, HelpBrowsing,
+    HelpSelecting, HelpSearching, HelpViews, HelpCreating, HelpLinks,
+    HelpChanging, HelpTables, HelpMath, HelpImageMaps, HelpStyleSheets,
+    HelpAttributes, HelpPublishing, HelpPrinting, HelpNumbering, HelpMakeBook,
+    HelpConfigure</span>.</p>
   </li>
 </ul>
 </div>

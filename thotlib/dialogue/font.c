@@ -33,7 +33,7 @@
 #include "font_tv.h"
 
 
-/* that table for the character glyphs */
+/* that table for the charSThotLoacter glyphs */
 static int          FirstRemovableFont = 1;
 static char         StylesTable[MAX_HIGHLIGHT] = "rbiogq";
 
@@ -632,6 +632,7 @@ CHAR_T                r_nameX[100];
    else
       ustrcpy (r_nameX, FontFamily);
 
+   /* apply the current font zoom */
    if (unit == UnRelative)
      {
 	/* La size est relative */
@@ -849,25 +850,10 @@ ThotBool            increase;
     index = size;
   else
     {
-      if (unit == UnPixel)
-	{
-	  size = PixelToPoint (size);
-	  unit = UnPoint;
-	}
-      else if (unit == UnXHeight || unit == UnPercent)
-	/* what does this mean??? set default size: 12 pt */
-	{
-	  size = 12;
-	  unit = UnPoint;
-	}
-
-      if (unit == UnPoint)
-	{
-	  /* nearest standard size lookup */
-	  index = 0;
-	  while (LogicalPointsSizes[index] < size && index <= MaxNumberOfSizes)
-	    index++;
-	}
+      /* nearest standard size lookup */
+      index = 0;
+      while (LogicalPointsSizes[index] < size && index <= MaxNumberOfSizes)
+	index++;
     }
    
   if (UseBitStreamFamily && size == 11 && unit == UnPoint)
@@ -1045,15 +1031,49 @@ TypeUnit            unit;
 int                 frame;
 #endif /* __STDC__ */
 {
-   /* pas de family inferieure a 6 points */
+  if (unit == UnPixel)
+    {
+      size = PixelToPoint (size);
+      unit = UnPoint;
+    }
+  else if (unit == UnXHeight || unit == UnPercent)
+    /* what does this mean??? set default size: 12 pt */
+    {
+      size = 12;
+      unit = UnPoint;
+    }
+
+  /* take the zoom into account */
+   if (frame && FontZoom)
+     {
+       if (unit == UnPoint)
+	 size = size + (2 * FontZoom);
+       else
+	 size = size + FontZoom;
+     }
+
+   /* the minimum size is 6 points */
    if (size < 6 && unit == UnPoint)
       size = 6;
    return LoadNearestFont (alphabet, family, highlight, size, unit, frame, TRUE);
 }
 
+/*----------------------------------------------------------------------
+  TtaSetFontZoom
+  Updates the font zoom global varialbe
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void TtaSetFontZoom (int zoom)
+#else
+void TtaSetFontZoom (zoom)
+int zoom;
+#endif /* __STDC__ */
+{
+  FontZoom = zoom;
+}
 
 /*----------------------------------------------------------------------
- *      InitDialogueFonts initialize the standard fonts used by the Thot Toolkit.
+  InitDialogueFonts initialize the standard fonts used by the Thot Toolkit.
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
@@ -1087,7 +1107,8 @@ STRING              name;
    /* is there a predefined font family ? */
    MenuSize = 12;
    alphabet = TtaGetAlphabet (TtaGetDefaultLanguage ());
-   
+   /* initialize the font zoom */
+   TtaGetEnvInt ("ZOOM",&FontZoom);
    value = TtaGetEnvString ("FontFamily");
    MaxNumberOfSizes = 10;
    if (value == NULL)

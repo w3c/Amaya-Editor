@@ -28,9 +28,11 @@ Extensions 2.2:
   mini-browser. Amaya menus and buttons are displayed according to the
   current profile.
 
-* A mechanism of templates 
-
 * User Interface:
+  - The backspace deletes the current selection when that selection is not
+    empty and delete the previous character in other cases.
+  - If there is no selection in the document which receives the current focus
+    and the user hits an arrow.
   - A new option in the Preferences/Publishing menu allows to declare a set
     of domains where a PUT may be redirected, and thus avoid having a popup
     asking a user to confirm each redirection.
@@ -39,6 +41,9 @@ Extensions 2.2:
     and the default shortcut is Alt Return.
   - A new command "Link previous target" allows one to create a link to the
     latest created target.
+
+* A mechanism of templates allows you to experiment templates provided by
+  the W3C server or to install your own template server.
 
 Fixed bugs 2.2:
 ---------------

@@ -1132,7 +1132,7 @@ PtrDocument         pDoc;
      }
 }
 
-
+#define MAX_LENGTH 550
 /*----------------------------------------------------------------------
    TtaSetStatus affiche le status de la vue du document.                      
   ----------------------------------------------------------------------*/
@@ -1147,7 +1147,7 @@ CONST STRING        name;
 #endif /* __STDC__ */
 {
    int                 frame;
-   CHAR_T              s[MAX_TXT_LEN];
+   CHAR_T              s[MAX_LENGTH];
 #ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
    XmString            title_string;
@@ -1174,7 +1174,7 @@ CONST STRING        name;
 		  usprintf (s, text, name);
 	       }
 	     else
-		ustrncpy (s, text, MAX_TXT_LEN);
+		ustrncpy (s, text, MAX_LENGTH);
 
 	     SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) & s[0]);
 	     SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);

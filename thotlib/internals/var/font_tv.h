@@ -19,6 +19,6 @@ THOT_EXPORT ptrfont   LargeFontDialogue;	/* Large font dialogue    */
 THOT_EXPORT ptrfont   SmallFontDialogue;	/* Small font dialogue    */
 THOT_EXPORT ptrfont   GraphicsIcons;	/* Graphics icons         */
 THOT_EXPORT ptrfont   SymbolIcons;	/* Symblol icons          */
-THOT_EXPORT int	      MenuSize;	/* Dialogue font size     */
-
+THOT_EXPORT int	      MenuSize;	        /* Dialogue font size     */
+THOT_EXPORT int       FontZoom;         /* Zoom applied to fonts  */
 #endif

@@ -83,7 +83,7 @@ static int           AppRegistryInitialized = 0;
 static int           AppRegistryModified = 0;
 static RegistryEntry AppRegistryEntry = NULL;
 static char*         AppRegistryEntryAppli = NULL;
-static CHAR_T          CurrentDir[MAX_PATH];
+static CHAR_T        CurrentDir[MAX_PATH];
 static STRING        Thot_Dir;
 
 PathBuffer execname;

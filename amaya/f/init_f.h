@@ -55,7 +55,6 @@ extern void ZoomIn ( Document document,
                      View view );
 extern void ZoomOut ( Document document,
                       View view );
-extern void GotoZoom ( int delta );
 extern void ShowSource ( Document document,
                          View view );
 extern void ShowStructure ( Document document,
@@ -187,7 +186,6 @@ extern void ZoomIn (/* Document document,
                        View view */);
 extern void ZoomOut (/* Document document,
                         View view */);
-extern void GotoZoom (/* int delta */);
 extern void ShowSource (/* Document document,
                            View view */);
 extern void ShowStructure (/* Document document,
