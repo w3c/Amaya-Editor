@@ -13,6 +13,7 @@
  *
  * Author: J Kahan
  *         J. K./R. Guetari. Windows NT/95 routines
+ *         J. K./S. Gully GTK routines
  *
  */
 #ifdef _GTK
@@ -33,85 +34,19 @@
 #endif
 
 #ifndef _WINDOWS
+#ifndef _GTK
 /* Amaya's X appcontext */
 extern ThotAppContext app_cont;
-#ifndef _GTK
+#endif /* !_GTK */
 
 /* Private functions */
-#ifdef __STDC__
 static void         RequestRegisterReadXtevent (SOCKET);
 static void         RequestKillReadXtevent (SOCKET);
 static void         RequestRegisterWriteXtevent ( SOCKET);
 static void         RequestKillWriteXtevent (SOCKET);
 static void         RequestRegisterExceptXtevent ( SOCKET);
 static void         RequestKillExceptXtevent (SOCKET);
-#else /* __STDC__ */
-static void         RequesAddReadXtevent ();
-static void         RequestKillReadXtevent ();
-static void         RequesAddWriteXtevent ();
-static void         RequestKillWriteXtevent ();
-static void         RequestRegisterExceptXtevent ();
-static void         RequestKillExceptXtevent ();
-#endif /* __STDC__ */
-
-#endif /* _GTK */
 #endif /* !_WINDOWS */
-
-#ifdef _GTK
-#define WWW_HIGH_PRIORITY (G_PRIORITY_HIGH_IDLE + 50)
-#define WWW_LOW_PRIORITY G_PRIORITY_LOW
-#define WWW_SCALE_PRIORITY(p) ((WWW_HIGH_PRIORITY - WWW_LOW_PRIORITY) * p \
-                          / HT_PRIORITY_MAX + WWW_LOW_PRIORITY)
-     
-#define READ_CONDITION (G_IO_IN | G_IO_HUP | G_IO_ERR)
-#define WRITE_CONDITION (G_IO_OUT | G_IO_ERR)
-#define EXCEPTION_CONDITION (G_IO_PRI)
-     
- typedef struct _SockEventInfo SockEventInfo;
- struct _SockEventInfo {
-   SOCKET s;
-   HTEventType type;
-   HTEvent *event;
-   guint io_tag;
-   guint timer_tag;
- };
- 
- typedef struct _SockInfo SockInfo;
- struct _SockInfo {
-   SOCKET s;
-   GIOChannel *io;
-   SockEventInfo ev[HTEvent_TYPES];
- };
- 
- static GHashTable *sockhash = NULL;
- 
- 
- static SockInfo *
- get_sock_info(SOCKET s, gboolean create)
- {
-   SockInfo *info;
- 
-   if (!sockhash)
-     sockhash = g_hash_table_new(g_direct_hash, g_direct_equal);
- 
-   info = g_hash_table_lookup(sockhash, GINT_TO_POINTER(s));
-   if (!info && create) {
-     info = g_new0(SockInfo, 1);
-     info->s = s;
-     info->io = g_io_channel_unix_new(s);
-     info->ev[0].s = info->ev[1].s = info->ev[2].s = s;
-     info->ev[0].type = HTEvent_READ;
-     info->ev[1].type = HTEvent_WRITE;
-     info->ev[2].type = HTEvent_OOB;
-     g_hash_table_insert(sockhash, GINT_TO_POINTER(s), info);
-   }
-   return info;
- }
- 
- static gboolean glibwww_timeout_func (gpointer data);
- static gboolean glibwww_io_func(GIOChannel *source, GIOCondition condition,
-                                 gpointer data);
-#endif /* _GTK */
 
 /* Private variables */
 
@@ -124,21 +59,29 @@ static void         RequestKillExceptXtevent ();
  * BSD Unix semantics 
  */
 
-#ifndef _GTK
 static const HTEventType ReadBits = HTEvent_READ | HTEvent_ACCEPT | HTEvent_CLOSE;
 static const HTEventType WriteBits = HTEvent_WRITE | HTEvent_CONNECT;
 static const HTEventType ExceptBits = HTEvent_OOB;
 
+#ifndef _GTK
 typedef struct sStatus {
-  XtInputId read;             /* the different XtId's */
+  XtInputId read;             /* the different Xt Id's */
   XtInputId write;
   XtInputId except;
 } SocketStatus;
+#endif /*! _GTK */
+
+#ifdef _GTK
+typedef struct sStatus {
+  gint read;             /* the different GTK Id's */
+  gint write;
+  gint except;
+} SocketStatus;
+#endif /* _GTK */
 
 #define SOCK_TABLE_SIZE 67
 #define HASH(s) ((s) % SOCK_TABLE_SIZE)
 static SocketStatus persSockets[SOCK_TABLE_SIZE];
-#endif /* _GTK */
 
 /*--------------------------------------------------------------------
   AHTCallback_bridge
@@ -158,14 +101,7 @@ static SocketStatus persSockets[SOCK_TABLE_SIZE];
   -------------------------------------------------------------------*/
 #ifndef _WINDOWS
 #ifndef _GTK
-#ifdef __STDC__
-void *AHTCallback_bridge (caddr_t cd, int *s, XtInputId * id)
-#else  /* __STDC__ */
-void *AHTCallback_bridge (cd, s, id)
-caddr_t             cd;
-int                *s;
-XtInputId          *id;
-#endif /* __STDC__ */
+static void *AHTCallback_bridge (caddr_t cd, int *s, XtInputId * id)
 {
    int                 status;  /* the status result of the libwwww call */
    HTEventType         type  = HTEvent_ALL;	
@@ -209,7 +145,50 @@ XtInputId          *id;
 
    return (0);
 }
-#endif /* _GTK */
+#else /* _GTK */
+static void AHTCallback_bridgeGTK (gpointer data,  gint source, GdkInputCondition condition)
+{
+   int                 status;  /* the status result of the libwwww call */
+   HTEventType         type  = HTEvent_ALL;	
+   int                 v;
+   int 		       socket;
+   ms_t                now = HTGetTimeInMillis();
+   
+   socket = (SOCKET) data;
+   v = HASH (socket);
+
+   /* convert the FD into an HTEventType which will allow us to find the
+      request associated with the socket */
+
+   /* I could send some other data here, like the event itself, right */
+   switch (condition) 
+     {
+     case GDK_INPUT_READ:
+       type = HTEvent_READ;
+       break;
+     case GDK_INPUT_WRITE:
+       type = HTEvent_WRITE;
+       break;
+     case GDK_INPUT_EXCEPTION:
+       type = HTEvent_OOB;
+       break;
+     default:
+       type = HTEvent_ALL; 
+       break;
+     } /* switch */
+   
+   /* Invokes the callback associated to the requests */
+   
+   /**   CanDoStop_set (FALSE); **/
+   if ((status = HTEventList_dispatch (socket, type, now)) != HT_OK)
+     {
+#ifdef DEBUG_LIBWWW
+     HTTrace ("Callback.... returned a value != HT_OK");
+#endif
+     }
+   /***   CanDoStop_set (TRUE); **/
+}
+#endif /* !_GTK */
 #endif /* !_WINDOWS */
 
 /*--------------------------------------------------------------------
@@ -218,15 +197,7 @@ XtInputId          *id;
   ended normally, the function will call any callback associated to the
   request. Otherwise, it will just mark the request as over.
   -------------------------------------------------------------------*/
-#ifdef __STDC__
 void  ProcessTerminateRequest (HTRequest * request, HTResponse * response, void *param, int status)
-#else
-void ProcessTerminateRequest (request, response, param, status)
-HTRequest *request;
-HTResponse *response;
-void *param;
-int status;
-#endif
 {   
   AHTReqContext *me = HTRequest_context (request);
 
@@ -295,18 +266,7 @@ int status;
   Consult the libwww manual for more details on the signature
   of this function.
   ----------------------------------------------------------------*/
-#ifdef __STDC__
-int                 WIN_Activate_Request (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault, void *input, HTAlertPar * reply)
-#else
-int                 WIN_Activate_Request (request, op, msgnum, dfault, input, reply)
-HTRequest          *request;
-HTAlertOpcode       op;
-int                 msgnum;
-const char         *dfault;
-void               *input;
-HTAlertPar         *reply;
-
-#endif /* __STDC__ */
+int WIN_Activate_Request (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault, void *input, HTAlertPar * reply)
 {
    AHTReqContext      *me = HTRequest_context (request);
 
@@ -354,8 +314,6 @@ HTAlertPar         *reply;
 /* #else  */ /* _WINDOWS */
 
 #ifndef _WINDOWS
-#ifndef _GTK
-
 /*----------------------------------------------------------------------
   AHTEvent_register
   callback called by libwww whenever a socket is open and associated
@@ -363,14 +321,7 @@ HTAlertPar         *reply;
   loops gets an interruption whenever there's action of the socket. 
   In addition, it registers the request with libwww.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int AHTEvent_register (SOCKET sock, HTEventType type, HTEvent *event)
-#else
-int AHTEvent_register (sock, type, event)
-SOCKET sock;
-HTEventType type;
-HTEvent *event;
-#endif /* __STDC__ */
 {
   int  status;
 
@@ -404,54 +355,8 @@ HTEvent *event;
   
   return (status);
 }
-#endif /* _GTK */
 #endif /* _WINDOWS */
 
-#ifdef _GTK
-/*----------------------------------------------------------------------
-  AHTEvent_register FOR GTK
-  callback called by libwww whenever a socket is open and associated
-  to a request. It sets the pertinent Xt events so that the Xt Event
-  loops gets an interruption whenever there's action of the socket. 
-  In addition, it registers the request with libwww.
-  ----------------------------------------------------------------------*/
-int AHTEvent_register (SOCKET s, HTEventType type, HTEvent *event)
- {
-   SockInfo *info;
-   gint priority = G_PRIORITY_DEFAULT;
-   GIOCondition condition;
- 
-   if (s == INVSOC || HTEvent_INDEX(type) >= HTEvent_TYPES)
-     return 0;
- 
-   info = get_sock_info(s, TRUE);
-   info->ev[HTEvent_INDEX(type)].event = event;
- 
-   switch (HTEvent_INDEX(type)) {
-   case HTEvent_INDEX(HTEvent_READ):
-     condition = READ_CONDITION;      break;
-   case HTEvent_INDEX(HTEvent_WRITE):
-     condition = WRITE_CONDITION;     break;
-   case HTEvent_INDEX(HTEvent_OOB):
-     condition = EXCEPTION_CONDITION; break;
-   }
-   if (event->priority != HT_PRIORITY_OFF)
-     priority = WWW_SCALE_PRIORITY(event->priority);
- 
-   info->ev[HTEvent_INDEX(type)].io_tag =
-     g_io_add_watch_full(info->io, priority, condition, glibwww_io_func,
-                          &info->ev[HTEvent_INDEX(type)], NULL);
- 
-   if (event->millis >= 0)
-     info->ev[HTEvent_INDEX(type)].timer_tag =
-       g_timeout_add_full(priority, event->millis, glibwww_timeout_func,
-                          &info->ev[HTEvent_INDEX(type)], NULL);
- 
-   return HT_OK;
- }
-#endif /* _GTK */
-
-#ifndef _GTK
 /*----------------------------------------------------------------------
   AHTEvent_unregister
   callback called by libwww each time a request is unregistered. This
@@ -459,14 +364,7 @@ int AHTEvent_register (SOCKET s, HTEventType type, HTEvent *event)
   associated with the request's socket. In addition, it unregisters
   the request from libwww.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int AHTEvent_unregister (SOCKET sock, HTEventType type)
-#else
-int AHTEvent_unregister (sock, type)
-SOCKET              sock;
-HTEventType         type;
-
-#endif /* __STDC__ */
 {
   int    status;
   
@@ -493,84 +391,8 @@ HTEventType         type;
    
    return (status);
 }
-#endif /* _GTK */
-
-#ifdef _GTK
-/*----------------------------------------------------------------------
-  AHTEvent_unregister FOR GTK
-  callback called by libwww each time a request is unregistered. This
-  function takes care of unregistering the pertinent Xt events
-  associated with the request's socket. In addition, it unregisters
-  the request from libwww.
-  ----------------------------------------------------------------------*/
-int AHTEvent_unregister (SOCKET s, HTEventType type)
- {
-   SockInfo *info;
-
-   if (s == INVSOC)
-     return HT_OK;
-
-   info = get_sock_info(s, FALSE);
- 
-   if (info) {
-     if (info->ev[HTEvent_INDEX(type)].io_tag)
-       g_source_remove(info->ev[HTEvent_INDEX(type)].io_tag);
-     if (info->ev[HTEvent_INDEX(type)].timer_tag)
-       g_source_remove(info->ev[HTEvent_INDEX(type)].timer_tag);
- 
-     info->ev[HTEvent_INDEX(type)].event = NULL;
-     info->ev[HTEvent_INDEX(type)].io_tag = 0;
-     info->ev[HTEvent_INDEX(type)].timer_tag = 0;
- 
-     /* clean up sock hash if needed */
-     if (info->ev[0].event == NULL &&
-         info->ev[1].event == NULL &&
-         info->ev[2].event == NULL) {
-       g_hash_table_remove(sockhash, GINT_TO_POINTER(s));
-       g_io_channel_unref(info->io);
-       g_free(info);
-     }
-     
-     return HT_OK;
-   }
-   return HT_ERROR;
- }
-static gboolean
-glibwww_timeout_func (gpointer data)
- {
-   SockEventInfo *info = (SockEventInfo *)data;
-   HTEvent *event = info->event;
- 
-   (* event->cbf) (info->s, event->param, HTEvent_TIMEOUT);
-   return TRUE;
- }
- 
-static gboolean
-glibwww_io_func(GIOChannel *source, GIOCondition condition, gpointer data)
- {
-   SockEventInfo *info = (SockEventInfo *)data;
-   HTEvent *event = info->event;
- 
-   if (info->timer_tag)
-       g_source_remove(info->timer_tag);
-   if (info->event->millis >= 0) {
-     gint priority = G_PRIORITY_DEFAULT;
- 
-     if (event->priority != HT_PRIORITY_OFF)
-       priority = WWW_SCALE_PRIORITY(event->priority);
-     info->timer_tag =
-       g_timeout_add_full(priority, info->event->millis, glibwww_timeout_func,
-                          info, NULL);
-   }
- 
-   (* event->cbf) (info->s, event->param, info->type);
-   return TRUE;
- }
-
-#endif /* _GTK */
 
 #ifndef _WINDOWS
-
 /* Private functions */
 
 /*----------------------------------------------------------------------
@@ -578,14 +400,8 @@ glibwww_io_func(GIOChannel *source, GIOCondition condition, gpointer data)
   front-end for kill all Xt events associated with the request pointed
   to by "me".
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RequestKillAllXtevents (AHTReqContext * me)
-#else
-void                RequestKillAllXtevents (me)
-AHTReqContext      *me;
-#endif /* __STDC__ */
+void RequestKillAllXtevents (AHTReqContext * me)
 {
-#ifndef _GTK
   int sock = INVSOC;
 
   return;
@@ -609,20 +425,13 @@ AHTReqContext      *me;
    RequestKillReadXtevent (sock);
    RequestKillWriteXtevent (sock);
    RequestKillExceptXtevent (sock);
-#endif /* _GTK */
 }
 
-#ifndef _GTK
 /*----------------------------------------------------------------------
   RequestRegisterReadXtevent
   Registers with Xt the read events associated with socket sock
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         RequestRegisterReadXtevent (SOCKET sock)
-#else
-static void         RequestRegisterReadXtevent (sock)
-SOCKET sock;
-#endif /* __STDC__ */
+static void RequestRegisterReadXtevent (SOCKET sock)
 {
   int v;
 
@@ -630,13 +439,21 @@ SOCKET sock;
 
   if (!persSockets[v].read)
     {
+#ifndef _GTK
       persSockets[v].read  =
 	XtAppAddInput (app_cont,
 		       sock,
 		       (XtPointer) XtInputReadMask,
 		       (XtInputCallbackProc) AHTCallback_bridge,
 		       (XtPointer) XtInputReadMask);
-      
+#else  /* _GTK */
+     persSockets[v].read  =
+       gdk_input_add ((gint) sock,
+		      GDK_INPUT_READ,
+		      AHTCallback_bridgeGTK,
+		      (gpointer) sock);
+#endif /* !_GTK */
+
 #ifdef DEBUG_LIBWWW
       if (THD_TRACE)
 	fprintf (stderr, "RegisterReadXtEvent: adding XtInput %lu Socket %d\n",
@@ -650,12 +467,7 @@ SOCKET sock;
   RequestKillReadXtevent
   kills any read Xt event associated with the request pointed to by "me".
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         RequestKillReadXtevent (SOCKET sock)
-#else
-static void         RequestKillReadXtevent (sock)
-SOCKET              sock;
-#endif /* __STDC__ */
+static void RequestKillReadXtevent (SOCKET sock)
 {
   int v;
 
@@ -668,8 +480,13 @@ SOCKET              sock;
 	fprintf (stderr, "UnregisterReadXtEvent: Clearing XtInput %lu\n",
 		 persSockets[v].read);
 #endif /* DEBUG_LIBWWW */
+#ifndef _GTK
       XtRemoveInput (persSockets[v].read);
       persSockets[v].read = (XtInputId) NULL;
+#else  /* _GTK */
+      gdk_input_remove (persSockets[v].read);
+      persSockets[v].read = (gint) 0;
+#endif /* !_GTK */
     }
 }
 
@@ -677,25 +494,28 @@ SOCKET              sock;
   RequestRegisterWriteXtevent
   Registers with Xt the write events associated with socket sock
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         RequestRegisterWriteXtevent (SOCKET sock)
-#else
-static void         RequestRegisterWriteXtevent (sock)
-SOCKET              sock;
-
-#endif /* __STDC__ */
+static void RequestRegisterWriteXtevent (SOCKET sock)
 {
   int v;
   v = HASH (sock);
 
   if (!persSockets[v].write)
     {   
+#ifndef _GTK
       persSockets[v].write =
 	XtAppAddInput (app_cont,
 		       sock,
 		   (XtPointer) XtInputWriteMask,
 		   (XtInputCallbackProc) AHTCallback_bridge,
 		   (XtPointer) XtInputWriteMask);
+#else  /* _GTK */
+     persSockets[v].write  =
+       gdk_input_add ((gint) sock,
+		      GDK_INPUT_WRITE,
+		      AHTCallback_bridgeGTK,
+		      (gpointer) sock);
+#endif /* !_GTK */
+
 #ifdef DEBUG_LIBWWW   
   if (THD_TRACE)
     fprintf (stderr, "RegisterWriteXtEvent: Adding XtInput %lu Socket %d\n",
@@ -710,12 +530,7 @@ SOCKET              sock;
   kills any write Xt event associated with the request pointed to
   by "me".
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         RequestKillWriteXtevent (SOCKET sock)
-#else
-static void         RequestKillWriteXtevent (sock)
-SOCKET sock;
-#endif /* __STDC__ */
+static void RequestKillWriteXtevent (SOCKET sock)
 {
   int v;
 
@@ -729,8 +544,13 @@ SOCKET sock;
 		 "%lu\n",
 		 persSockets[v].write);
 #endif /* DEBUG_LIBWWW */
+#ifndef _GTK
       XtRemoveInput (persSockets[v].write);
       persSockets[v].write =  (XtInputId) NULL;
+#else  /* _GTK */
+      gdk_input_remove (persSockets[v].write);
+      persSockets[v].write = (gint) 0;
+#endif /* !_GTK */
     }
 }
 
@@ -738,13 +558,7 @@ SOCKET sock;
   RequestRegisterExceptXtevent
   Registers with Xt the except events associated with socket sock
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         RequestRegisterExceptXtevent (SOCKET sock)
-#else
-static void         RequestRegisterExceptXtevent (sock)
-SOCKET              sock;
-
-#endif /* __STDC__ */
+static void RequestRegisterExceptXtevent (SOCKET sock)
 {
   int v;
 
@@ -752,13 +566,20 @@ SOCKET              sock;
 
    if (!persSockets[v].except)
      {
-   
+#ifndef _GTK   
        persSockets[v].except =
 	 XtAppAddInput (app_cont,
 			sock,
 			(XtPointer) XtInputExceptMask,
 			(XtInputCallbackProc) AHTCallback_bridge,
 			(XtPointer) XtInputExceptMask);
+#else  /* _GTK */
+     persSockets[v].except  =
+       gdk_input_add ((gint) sock,
+		      GDK_INPUT_EXCEPTION,
+		      AHTCallback_bridgeGTK,
+		      (gpointer) sock);
+#endif /* !_GTK */
 #ifdef DEBUG_LIBWWW      
    if (THD_TRACE)
      fprintf (stderr, "RegisterExceptXtEvent: adding XtInput %lu Socket %d\n",
@@ -772,12 +593,7 @@ SOCKET              sock;
   kills any exception Xt event associated with the request pointed to
   by "me".
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         RequestKillExceptXtevent (SOCKET sock)
-#else
-static void         RequestKillExceptXtevent (sock)
-SOCKET sock;
-#endif /* __STDC__ */
+static void RequestKillExceptXtevent (SOCKET sock)
 {
   int v;
 
@@ -789,8 +605,13 @@ SOCKET sock;
 	fprintf (stderr, "UnregisterExceptXtEvent: Clearing Except XtInputs "
 		 "%lu\n", persSockets[v].except);
 #endif /* DEBUG_LIBWWW */
+#ifndef _GTK
       XtRemoveInput (persSockets[v].except);
       persSockets[v].except = (XtInputId) NULL;
+#else  /* _GTK */
+      gdk_input_remove (persSockets[v].except);
+      persSockets[v].except = (gint) 0;
+#endif /* !_GTK */
     }
 }
 
@@ -809,7 +630,11 @@ struct _HTTimer {
 
 struct _AmayaTimer {
   HTTimer *libwww_timer;
+#ifndef _GTK
   XtIntervalId xt_timer;
+#else  /* _GTK */
+  guint  xt_timer;
+#endif /* !_GTK */
 };
 
 typedef struct _AmayaTimer AmayaTimer;
@@ -817,7 +642,11 @@ typedef struct _AmayaTimer AmayaTimer;
 static HTList *Timers = NULL;
 
 /*----------------------------------------------------------------------
+  TimerCallback
+  called by the system event loop. Timers shouldn't be restarted
+  on exiting.
   ----------------------------------------------------------------------*/
+#ifndef _GTK
 void *TimerCallback (XtPointer cdata, XtIntervalId *id)
 {
   HTList *cur, *last;
@@ -849,14 +678,49 @@ void *TimerCallback (XtPointer cdata, XtIntervalId *id)
   return (0);
 }
 
+#else  /* _GTK */
+/*----------------------------------------------------------------------
+  TimerCallbackGTK
+  ----------------------------------------------------------------------*/
+gboolean TimerCallbackGTK (gpointer id)
+{
+  HTList *cur, *last;
+  AmayaTimer *me;
+  HTTimer *libwww_timer;
+  AmayaTimer *data;
+
+  data = (AmayaTimer *) id;
+
+  if (!AmayaIsAlive () 
+      || Timers == NULL)
+    return (0);
+
+  /* find the timer from the uid */
+  last = cur = Timers;
+  while ((me = (AmayaTimer * ) HTList_nextObject (cur)))
+    {
+      if (me == data)
+	break;
+      last = cur;
+    }
+
+  if (me)
+    {
+      libwww_timer = me->libwww_timer;
+      /* remove the element from the list @@@ can be optimized later */
+      HTList_quickRemoveElement(cur, last);
+      TtaFreeMemory (me);
+      HTTimer_dispatch (libwww_timer);
+    }
+
+  return (FALSE);
+}
+#endif /* !_GTK */
+
 /*----------------------------------------------------------------------
   KillAllTimers
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void KillAllTimers (void)
-#else
-void KillAllTimers ()
-#endif /* __STDC__ */
 {
   /* @@@ maybe add something else to kill the Xt things */
   if (Timers)
@@ -867,12 +731,7 @@ void KillAllTimers ()
 /*----------------------------------------------------------------------
  AMAYA_SetTimer
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AMAYA_SetTimer (HTTimer *libwww_timer)
-#else
-void AMAYA_SetTimer (libwww_timer)
-HTTimer *libwww_timer;
-#endif /* __STDC__ */
 {
   HTList *cur, *last;
   AmayaTimer *me;
@@ -899,8 +758,13 @@ HTTimer *libwww_timer;
     /* remove the old timer */
       if (me->xt_timer) 
 	{
+#ifndef _GTK
 	  XtRemoveTimeOut (me->xt_timer);
 	  me->xt_timer = (XtIntervalId) NULL;
+#else  /* _GTK */
+	  gtk_timeout_remove (me->xt_timer);
+	  me->xt_timer = (guint) 0;
+#endif /* !_GTK */
 	}
     }
   else
@@ -913,22 +777,22 @@ HTTimer *libwww_timer;
     }
 
   /* add a new time out */
+#ifndef _GTK
   me->xt_timer = XtAppAddTimeOut (app_cont,
 				 me->libwww_timer->millis,
 				 (XtTimerCallbackProc) TimerCallback,
 				 (XtPointer *) (void *) me);
-
+#else  /* _GTK */
+  me->xt_timer = gtk_timeout_add ((guint32) me->libwww_timer->millis,
+				  (GtkFunction) TimerCallbackGTK,
+				  (gpointer) me);
+#endif /* !_GTK */
 }
 
 /*----------------------------------------------------------------------
   AMAYA_DeleteTimer
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AMAYA_DeleteTimer (HTTimer *libwww_timer)
-#else
-void AMAYA_DeleteTimer (libwww_timer)
-HTTimer *libwww_timer;
-#endif /* __STDC__ */
 {
   HTList *cur, *last;
   AmayaTimer *me;
@@ -948,12 +812,14 @@ HTTimer *libwww_timer;
   if (me)
     {
       /* remove the Xt timer */
+#ifndef _GTK
       XtRemoveTimeOut (me->xt_timer);
+#else  /* _GTK */
+      gtk_timeout_remove (me->xt_timer);
+#endif /* !_GTK */
       /* and the element from the list */
       HTList_removeObject (Timers, me);
       TtaFreeMemory (me);
     }
 }
-#endif /* _GTK */
-
 #endif /* !_WINDOWS */
