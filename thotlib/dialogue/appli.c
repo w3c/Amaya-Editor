@@ -519,6 +519,7 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
    DefRegion (frame, 0, 
  		0, width,
  		height);
+   RebuildConcreteImage (frame);
 #endif/*_GL*/
    /* recompute the scroll bars */
   UpdateScrollbars (frame);
