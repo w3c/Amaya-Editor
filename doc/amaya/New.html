@@ -7,19 +7,257 @@
 <body lang="en">
 
 <div id="head">
-<p>
-<a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"></a>
-<a href="../"><img border="0" src="../Icons/amaya.gif" alt="Amaya"></a> <a
-href="Manual.html"><img border="0" src="../Icons/doc48x.gif"
-alt="Doc"></a></p>
+
+<p><a href="../../"><img border="0" alt="W3C"
+src="../../Icons/WWW/w3c_home"></a> <a href="../"><img border="0"
+src="../Icons/amaya.gif" alt="Amaya"></a> <a href="Manual.html"><img
+border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
 </div>
-<p>
-This file indicates the new features you can find in the latest versions of
+
+<p>This file indicates the new features you can find in the latest versions of
 Amaya.</p>
 
+<h1>Amaya 2.0</h1>
+
+<p>3 May, 1999</p>
+
+<h2>Extensions 2.0:</h2>
+<ul>
+<li>
+First implementation of a multi-document, multi-level Undo/Redo command.
+</li>
+<li>
+WAI guidelines on Image and Maps.
+</li>
+<li>
+COLGROUP and COL elements are accepted and can be created within TABLE  
+elements. The rendering is not implemented yet, though.
+</li>
+<li>
+CSS properties "left-margin", "top-margin", and "display: none" are  now
+interpreted.
+</li>
+<li>
+Amaya is now able to load, edit, print and save CSS files and plain text  
+files.
+</li>
+<li>
+The entry "Style Sheets" in the menu Style allows one to
+<ul>
+<li>
+link a CSS file using the standard Amaya paragdim: Click to select the    
+target or display a form allowing us to type the URI. The corresponding    
+LINK element is automatically created and CSS properties are applied     to
+the document.
+</li>
+<li>
+open a CSS file used in a document.
+</li>
+<li>
+open a CSS file used in a document.
+</li>
+<li>
+disable CSS properties of the CSS file.
+</li>
+<li>
+enable or re-apply CSS properties of the CSS file.
+</li>
+<li>
+remove a CSS link.
+</li>
+</ul>
+</li>
+<li>
+After a "Make Book" the document is automatically switched to the Read-Only  
+mode. This will avoid the user to edit it or save it by error.
+</li>
+<li>
+Publication thru the net now uses the HTTP/1.1 etags and conditional   headers
+to avoid the lost updates problem..
+</li>
+<li>
+The 409 HTTP error message (conflict) is now shown in a popup window.
+</li>
+<li>
+Added DEFLATE content encoding support under Windows.
+</li>
+<li>
+First support of disconnected browsing mode thru the libwww cache.
+</li>
+<li>
+Command SaveAs allows you to save a document in XHTML, following the  
+specifications and guidelines of the latest XHTML draft.
+</li>
+<li>
+Adding new menu entries:
+<ul>
+<li>
+ Back and Forward: navigation commands
+</li>
+<li>
+ Editor/Browser mode: setting Amaya mode (read only or read/write)
+</li>
+<li>
+Amaya at W3C: link to the http://www.w3.org/Amaya/User/BinDist.html page    
+from the Help menu.
+</li>
+</ul>
+</li>
+<li>
+Implementing a new policy of colors allocation.
+</li>
+<li>
+First version of Preferences configuration menus.
+</li>
+<li>
+The Verfiy each PUT with a GET option is now turned off by default
+</li>
+<li>
+It's now possible to browse with a simple-click or a double-click. By default 
+ Amaya uses the double-click, but it could be switched to simple-click in the 
+General preference menu.
+</li>
+<li>
+Using the Publishing preferencesmenu, it's now possible to choose the default 
+ name for saving URLs that end in "/".
+</li>
+<li>
+ New version of the Thot API:
+<ul>
+<li>
+Changing of TtaAddButton and TtaChangeButton to merge Windows and Unix    
+dialogue API.
+</li>
+<li>
+New functions: TtaGiveNextElement, TtaGetFirstLeaf, TtaGetLastLeaf
+</li>
+<li>
+A new Thot event: TteElemClick
+</li>
+</ul>
+</li>
+<li>
+All user Amaya preferences and personal files are collected into a   home
+directory. By default this directory is $HOME/.amaya on Unix   platforms and
+C:\TEMP\amaya on Windows platforms. These files are:
+<ul>
+<li>
+a personal amaya.css
+</li>
+<li>
+a personal amaya.keyboard (amaya.kb on Windows)
+</li>
+<li>
+a personal dictionary
+</li>
+<li>
+thot.rc personal preferences. This file is generated and updated thru     the
+Special/Preferences menu
+</li>
+<li>
+other temporary files and directories used by Amaya.
+</li>
+</ul>
+</li>
+<li>
+After a paste command, the selection is now set at the end of the pasted  
+text where the user could continue to insert text.
+</li>
+<li>
+The Amaya CVS base is now available in read-only mode at   http://dev.w3.org/ 
+ The Root directory is now Amaya instead of Thot and the libwww is no longer  
+considered as a part of the Amaya code. The source tar file includes the
+libwww code (libwww is a directory next to Amaya) and one who acceedes   the
+CVS base needs to get the libwww code (cvs get libwww) to compile Amaya.
+</li>
+</ul>
+
+<h2>Fixed bugs 2.0:</h2>
+<ul>
+<li>
+Scripts can now be created within the document Body and are no longer   moved
+into the Head at parsing time.
+</li>
+<li>
+When creating a new polyline in an area map there was a bug which   generated
+wrong coords values on Windows platforms.
+</li>
+<li>
+Comments in files amaya.keyboard and amaya.kb are now allowed.
+</li>
+<li>
+When a document included the sequence
+&lt;form>..&lt;table>..&lt;/form>..&lt;/table>   Amaya closed the table at the
+end of the form. Now it reports a parsing error   on the end tag &lt;/form>
+and avoids to split the table.
+</li>
+<li>
+Copying an image from a remote document to a local document didn't work.
+</li>
+<li>
+When following a link which had a "?foo" ending, Amaya treated that   ending
+as a query string.
+</li>
+<li>
+Some attributes values appeared with strange names in the   Attribute menu.
+</li>
+<li>
+When the current position was in a sequence of empty blocks (paragraphs, for  
+instance), the Backspace key deleted two of these blocks at once and did not  
+select anything.
+</li>
+<li>
+When pasting a paragraph with an attribute at the beginning of a table cell  
+or list item, it was turned into a pseudo-paragraph, and produced wrong HTML  
+code when the document was saved.
+</li>
+<li>
+Amaya locked up when one applied the strong command to a text displayed at  
+the beginning of a line.
+</li>
+<li>
+CSS selectors like "PRE SPAN.test" didn't work.
+</li>
+<li>
+The CSS parser didn't parse well the rule url("...").
+</li>
+<li>
+SMALL elements could be displayed too small.
+</li>
+<li>
+&lt;basefont face="...."> was saved as &lt;basefont facee="....">.
+</li>
+<li>
+When putting an attribute on a text string, the attribute was generated   as
+text in the HTML output.  Now a SPAN element is generated to carry   the
+attribute.  This bug occured with attributes title, dir, and most   event
+attributes (onclick, ondblclick, onmousedown, etc.).
+</li>
+<li>
+Amaya crashed when loading an isolated image with a filename without   a
+suffix.
+</li>
+<li>
+People who compiled Amaya on Windows platforms couldn't display jpeg images.  
+The problem is fixed now.
+</li>
+<li>
+The authentication handlers were  desactivated while doing a HEAD pre-check 
+during the lost update PUT procedure.
+</li>
+<li>
+ While browsing an image, pressing the reload button didn't show the image  
+again.
+</li>
+<li>
+It wasn't possible to browse images when the request was redirected to   a URL
+having a different end name.
+</li>
+</ul>
+
 <h1>Amaya 1.4 and 1.4a</h1>
-<p>
-12 January 1999</p>
+
+<p>12 January 1999</p>
 
 <h2>New Features:</h2>
 <ul>
@@ -31,8 +269,8 @@ On Unix platforms only, the variable DOUBLECLICKDELAY of the registry
 $HOME/.thotrc allows one to control the delay (in millisecond) under which two
 mouse clicks are classed as a double-click. The default value is 500.
 </li>
-<li><p>
-OPTGROUP elements are accepted within SELECT elements. The corresponding
+<li>
+<p>OPTGROUP elements are accepted within SELECT elements. The corresponding
 cascade menus are built by Amaya and the right string is sent to the server
 when submitting a form that contains OPTGROUPs. An item in the Types/Form menu
 allows the user to create OPTGROUP elements or to wrap OPTION elements into an
@@ -121,9 +359,9 @@ When one created a table while the current selection pointed to an empty
 paragraph, Amaya tried to replace the empty paragraph by the table, but there
 was a bug which corrupted the Amaya internal structure.
 </li>
-<li><p>
-In the menu associated with a &lt;SELECT multiple> element it's now possible
-to deselect selected OPTIONs</p>
+<li>
+<p>In the menu associated with a &lt;SELECT multiple> element it's now
+possible to deselect selected OPTIONs</p>
 </li>
 <li>
 Table formatting: - Amaya wasn't able to find the correct cell width when the
@@ -165,8 +403,8 @@ The use of autoconf has been improved to make the Amaya building easier
 </ul>
 
 <h1>Amaya 1.3b</h1>
-<p>
-October 14, 1998</p>
+
+<p>October 14, 1998</p>
 
 <h2>New Features:</h2>
 <ul>
@@ -174,8 +412,8 @@ October 14, 1998</p>
 Whenever there's an authentication failure, Amaya will ask the user if he
 wants to retry or abandon the operation.
 </li>
-<li><p>
-It's now possible to configure different network related timeouts thru the
+<li>
+<p>It's now possible to configure different network related timeouts thru the
 registry file</p>
 </li>
 <li>
@@ -232,8 +470,8 @@ When MULTI_KEY is active the input method has been modified to support the
 </ul>
 
 <h1>Amaya 1.3a</h1>
-<p>
-September 25, 1998</p>
+
+<p>September 25, 1998</p>
 
 <h2>New Features:</h2>
 <ul>
@@ -393,8 +631,8 @@ Entities in URLs should be converted before being sent to the server.
 </ul>
 
 <h1>Amaya 1.3</h1>
-<p>
-July 10, 1998</p>
+
+<p>July 10, 1998</p>
 
 <h2>New Features:</h2>
 <ul>
@@ -636,8 +874,8 @@ y Y
 <li>
 Alt and Control keys are dedicated to shortcuts
 </li>
-<li><p>
-Matrices and tables (mtable) from MathML are supported.</p>
+<li>
+<p>Matrices and tables (mtable) from MathML are supported.</p>
 </li>
 <li>
 XML links (only simple links) are supported in MathML: any MathML element can
@@ -649,8 +887,8 @@ Elements deprecated in HTML 4.0 can't be created with Amaya.
 <li>
 The HTML parser replaces the obsolete elements LISTING, PLAINTEXT, XMP by PRE.
 </li>
-<li><p>
-The following HTML 4.0 elements are available: ABBR, ACRONYM, BDO, DEL,
+<li>
+<p>The following HTML 4.0 elements are available: ABBR, ACRONYM, BDO, DEL,
 IFRAME, INS, OBJECT, PARAM, Q, SPAN, TBODY, TFOOT, THEAD (BDO does not change
 the writing direction on the screen)</p>
 </li>
@@ -695,14 +933,15 @@ When reloading a page, Amaya wasn't sending any No-Cache headers
 
 
 <h1>Fixed bugs in Amaya 1.2a</h1>
-<p>
-March 27, 1998</p>
-<p>
-<strong>New</strong>: When Amaya crashes on Unix platforms, modified documents
-are now automatically saved in temporary files $HOME/.amaya/%name.html.</p>
+
+<p>March 27, 1998</p>
+
+<p><strong>New</strong>: When Amaya crashes on Unix platforms, modified
+documents are now automatically saved in temporary files
+$HOME/.amaya/%name.html.</p>
 <ul>
-<li><p>
-Sometimes when creating a link Amaya crashed.</p>
+<li>
+<p>Sometimes when creating a link Amaya crashed.</p>
 </li>
 <li>
 Amaya could also crashed if the user edited a page when Amaya was downloading
@@ -733,8 +972,8 @@ There was a problem with picture display when the document was scrolled.
 <li>
 Amaya didn't download the new image when the attribute SRC was edited.
 </li>
-<li><p>
-Areas with shape=rectangle or circle were not updated when the associated
+<li>
+<p>Areas with shape=rectangle or circle were not updated when the associated
 image was resized and Amaya didn't redisplay correctly an image when width
 and/or height attributes were deleted.</p>
 </li>
@@ -745,17 +984,18 @@ Error in area map parsing.
 Amaya didn't manage background images like other image in documents. Now Amaya
 is able to compute their relative URLs and save them.
 </li>
-<li><p>
-During parsing, when anchors were not properly closed Amaya repeated them.</p>
+<li>
+<p>During parsing, when anchors were not properly closed Amaya repeated
+them.</p>
 </li>
-<li><p>
-Hitting the Enter key several times at the end (or beginning) of a table
+<li>
+<p>Hitting the Enter key several times at the end (or beginning) of a table
 created a new, empty table. It now creates an empty element after (or before)
 the table.</p>
 </li>
-<li><p>
-Hitting the Enter key when a HR is selected created an additional HR. It now
-creates an empty element after the selected HR</p>
+<li>
+<p>Hitting the Enter key when a HR is selected created an additional HR. It
+now creates an empty element after the selected HR</p>
 </li>
 <li>
 Amaya was stuck in an infinite loop when a BR was deleted by BackSpace.
@@ -776,21 +1016,21 @@ When clicking on remove icon in CSS Dialog Amaya crashed.
 After modifying CSS the Save button popped up an infinite number of save
 windows.
 </li>
-<li><p>
-There were memory leaks in windows version.</p>
+<li>
+<p>There were memory leaks in windows version.</p>
 </li>
 </ul>
-<p>
-It's now possible to launch Amaya in German. Other European languages could
+
+<p>It's now possible to launch Amaya in German. Other European languages could
 also be supported, but dialogue files are not available yet. Please contact
 us, if you're interested.</p>
-<p>
-The same Windows distribution is available for Windows'95 and Windows NT and
-its installation is now automatic.</p>
+
+<p>The same Windows distribution is available for Windows'95 and Windows NT
+and its installation is now automatic.</p>
 
 <h1>Amaya 1.2</h1>
-<p>
-February 4, 1998</p>
+
+<p>February 4, 1998</p>
 
 <h3>Windows improvements:</h3>
 <ul>
@@ -830,8 +1070,8 @@ other minor bugs
 
 
 <h1>Fixed bugs in Amaya 1.1c</h1>
-<p>
-November 17, 1997</p>
+
+<p>November 17, 1997</p>
 
 <h3>The following points are improved in Windows version:</h3>
 <ul>
@@ -878,8 +1118,8 @@ other minor reported bugs are now fixed.
 </ul>
 
 <h1>New features in Amaya 1.1</h1>
-<p>
-July 10 and September 15, 1997</p>
+
+<p>July 10 and September 15, 1997</p>
 
 <h2>Extensions</h2>
 <ul>
@@ -922,8 +1162,8 @@ link it to another IMG element.
 </li>
 <li>
 Links:
-<p>
-The functions "Create Link" and "Change Link" create an anchor if the DTD
+
+<p>The functions "Create Link" and "Change Link" create an anchor if the DTD
 allows the insertion of an anchor as the parent of the current selection. Then
 the user can click a target anchor or a target document or a structured
 element with an ID attribute. - If it's not a valid target, Amaya displays a
@@ -931,32 +1171,32 @@ form to insert the HREF value. - If the user clicks on a valid target, Amaya
 generates automatically the HREF value. In both cases, Amaya transforms the
 HREF value to make it relative to the document base (the BASE element value or
 the current document URL).</p>
-<p>
-When an anchor with a HREF attribute is pasted, Amaya transforms the HREF
+
+<p>When an anchor with a HREF attribute is pasted, Amaya transforms the HREF
 value to make it relative to the document base.</p>
 </li>
 <li>
 Images:
-<p>
-The function "Create Image" creates the SRC value relatively to the document
-base (the BASE element value or the current document URL). Amaya also creates
-the ALT attribute and initializes its value with the image name.</p>
-<p>
-When an IMG is pasted, Amaya transforms the SRC value to make it relative to
-the document base.</p>
+
+<p>The function "Create Image" creates the SRC value relatively to the
+document base (the BASE element value or the current document URL). Amaya also
+creates the ALT attribute and initializes its value with the image name.</p>
+
+<p>When an IMG is pasted, Amaya transforms the SRC value to make it relative
+to the document base.</p>
 </li>
 <li>
 Publishing:
 <ul>
-<li><p>
-Button "Copy Images" indicates that images have to be copied into: - the new
-document directory (on the remote server or locally), - the new image
+<li>
+<p>Button "Copy Images" indicates that images have to be copied into: - the
+new document directory (on the remote server or locally), - the new image
 directory, if there is a specified image directory.</p>
 </li>
-<li><p>
-Button "Transform URLs" indicates that all URLs and SRCs are recomputed when
-saving the document. In both cases, Amaya generates relative URLs when it's
-possible.</p>
+<li>
+<p>Button "Transform URLs" indicates that all URLs and SRCs are recomputed
+when saving the document. In both cases, Amaya generates relative URLs when
+it's possible.</p>
 </li>
 </ul>
 </li>
@@ -987,29 +1227,29 @@ MS/Windows This is the first version of Amaya that runs on Microsoft Windows
 
 <h2>Fixed bugs</h2>
 <ul>
-<li><p>
-Spaces were not accepted in end tags. For instance, <code>&lt;/STRONG ></code>
-was considered invalid. It is accepted now.</p>
+<li>
+<p>Spaces were not accepted in end tags. For instance, <code>&lt;/STRONG
+></code> was considered invalid. It is accepted now.</p>
 </li>
-<li><p>
-Amaya refused to create an Image before an Image. Now it works.</p>
+<li>
+<p>Amaya refused to create an Image before an Image. Now it works.</p>
 </li>
-<li><p>
-Sometimes, active zones were not created.</p>
+<li>
+<p>Sometimes, active zones were not created.</p>
 </li>
-<li><p>
-Using Style forms, the text was displayed correctly, but the style attribute
-registered the previous style value instead of the new one.</p>
+<li>
+<p>Using Style forms, the text was displayed correctly, but the style
+attribute registered the previous style value instead of the new one.</p>
 </li>
 </ul>
-<p>
-</p>
+
+<p></p>
 <hr>
 
 
 <h1>New features in Amaya 1.0 and 1.0a</h1>
-<p>
-<em>April 3 1997 and May 7, 1997</em></p>
+
+<p><em>April 3 1997 and May 7, 1997</em></p>
 
 <h2>Extensions</h2>
 <ul>
@@ -1019,40 +1259,41 @@ A new command to create OBJECTs (HTML-Cougar) in Types menu.
 <li>
 A <a href="Plugins.html">plug-in</a> mechanism allows OBJECTs to be executed.
 </li>
-<li><p>
-Attribute LANG (HTML-Cougar) is implemented (see Attributes menu)</p>
+<li>
+<p>Attribute LANG (HTML-Cougar) is implemented (see Attributes menu)</p>
 </li>
-<li><p>
-Elements SPAN (HTML-Cougar) are automatically created and deleted</p>
+<li>
+<p>Elements SPAN (HTML-Cougar) are automatically created and deleted</p>
 </li>
-<li><p>
-Two new views are available (see the Views menu):</p>
+<li>
+<p>Two new views are available (see the Views menu):</p>
 <ul>
-<li><p>
-Links view shows and allows to edit all links in the document.</p>
+<li>
+<p>Links view shows and allows to edit all links in the document.</p>
 </li>
-<li><p>
-Table of Contents displays and allows to edit all (and only) headings
+<li>
+<p>Table of Contents displays and allows to edit all (and only) headings
 (Hn).</p>
 </li>
 </ul>
-<p>
-Like the Alternate and Structure view, these new views are "synchronised" with
-the other views of the document. These views can be printed with the document
-(see the Setup and Print command)</p>
+
+<p>Like the Alternate and Structure view, these new views are "synchronised"
+with the other views of the document. These views can be printed with the
+document (see the Setup and Print command)</p>
 </li>
-<li><p>
-The Help button loads the Amaya documentation.</p>
+<li>
+<p>The Help button loads the Amaya documentation.</p>
 </li>
-<li><p>
-New menu "Special" with the following commands:</p>
+<li>
+<p>New menu "Special" with the following commands:</p>
 <ul>
-<li><p>
-Transform (was the last item of the Types menu): structure transformations</p>
+<li>
+<p>Transform (was the last item of the Types menu): structure
+transformations</p>
 </li>
-<li><p>
-Section Numbering: numbers headings (Hn) in the main view and in the table of
-contents. Numbers are automatically updated when headers are inserted or
+<li>
+<p>Section Numbering: numbers headings (Hn) in the main view and in the table
+of contents. Numbers are automatically updated when headers are inserted or
 deleted. Section numbers are not saved with the document, but they are printed
 if numbering is active when the Print command is issued.</p>
 </li>
@@ -1126,8 +1367,8 @@ easily be integrated to the existing base.
 HTML markup is now in lowercase, to improve efficiency of compression tools.
 </li>
 </ul>
-<p>
-</p>
+
+<p></p>
 
 <h2>Fixed bug</h2>
 <ul>
@@ -1174,8 +1415,8 @@ elements.
 
 
 <h1>New features in Amaya 0.95b</h1>
-<p>
-<em>January 9, 1996</em></p>
+
+<p><em>January 9, 1996</em></p>
 
 <h2>Extensions</h2>
 <ul>
@@ -1252,8 +1493,8 @@ When publishing, Amaya did not sent a Content-Type header.
 
 
 <h1>New features in Amaya 0.9</h1>
-<p>
-<em>November 14, 1996</em></p>
+
+<p><em>November 14, 1996</em></p>
 
 <h2>Extensions</h2>
 <ul>
