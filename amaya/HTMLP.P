@@ -6490,7 +6490,7 @@ ATTRIBUTES
 
  Row_valign (Data_cell) = Row_top :
 	BEGIN
-	VertPos : Top = Next CellFrame . Top;
+	VertPos : Top = Previous AnyBox . Top;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	IN Alternate_view
@@ -6498,7 +6498,7 @@ ATTRIBUTES
 	END;
  Row_valign (Heading_cell) = Row_top :
 	BEGIN
-	VertPos : Top = Next CellFrame . Top;
+	VertPos : Top = Previous AnyBox . Top;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	IN Alternate_view
@@ -6509,7 +6509,7 @@ ATTRIBUTES
 
  Row_valign (Data_cell) = Row_middle :
 	BEGIN
-	VertPos : HMiddle = Next CellFrame . HMiddle;
+	VertPos : HMiddle = Previous AnyBox . HMiddle;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	IN Alternate_view
@@ -6517,7 +6517,7 @@ ATTRIBUTES
 	END;
  Row_valign (Heading_cell) = Row_middle :
 	BEGIN
-	VertPos : HMiddle = Next CellFrame . HMiddle;
+	VertPos : HMiddle = Previous AnyBox . HMiddle;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	IN Alternate_view
@@ -6528,7 +6528,7 @@ ATTRIBUTES
 
  Row_valign (Data_cell) = Row_bottom :
 	BEGIN
-	VertPos : Bottom = Next CellFrame . Bottom;
+	VertPos : Bottom = Previous AnyBox . Bottom;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	IN Alternate_view
@@ -6536,7 +6536,7 @@ ATTRIBUTES
 	END;
  Row_valign (Heading_cell) = Row_bottom :
 	BEGIN
-	VertPos : Bottom = Next CellFrame . Bottom;
+	VertPos : Bottom = Previous AnyBox . Bottom;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	IN Alternate_view
@@ -6547,13 +6547,13 @@ ATTRIBUTES
 
  Row_valign (Data_cell) = Row_baseline :
 	BEGIN
-	VertPos : Top = Next CellFrame . Top;
+	VertPos : Top = Previous AnyBox . Top;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	END;
  Row_valign (Heading_cell) = Row_baseline :
 	BEGIN
-	VertPos : Top = Next CellFrame . Top;
+	VertPos : Top = Previous AnyBox . Top;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	IN Alternate_view
@@ -6565,7 +6565,7 @@ ATTRIBUTES
  Cell_valign = Cell_top :
 	BEGIN
 	CreateBefore(AttrNameAndValue);
-	VertPos : Top = Next . Top;
+	VertPos : Top = Previous AnyBox . Top;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	IN Alternate_view
@@ -6575,7 +6575,7 @@ ATTRIBUTES
  Cell_valign = Cell_middle :
 	BEGIN
 	CreateBefore(AttrNameAndValue);
-	VertPos : HMiddle = Next . HMiddle;
+	VertPos : HMiddle = Previous AnyBox . HMiddle;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	IN Alternate_view
@@ -6585,7 +6585,7 @@ ATTRIBUTES
  Cell_valign = Cell_bottom :
 	BEGIN
 	CreateBefore(AttrNameAndValue);
-	VertPos : Bottom = Next . Bottom;
+	VertPos : Bottom = Previous AnyBox . Bottom;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	IN Alternate_view
@@ -6595,7 +6595,7 @@ ATTRIBUTES
  Cell_valign = Cell_baseline :
 	BEGIN
 	CreateBefore(AttrNameAndValue);
-	VertPos : Top = Next . Top;
+	VertPos : HRef = Previous Table_cell . HRef;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	IN Alternate_view
