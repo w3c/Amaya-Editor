@@ -19,7 +19,8 @@ static int          ls_fileNbr;
 static char         EmptyMsg[] = "";
 
 /*----------------------------------------------------------------------
-   ExtractFileName extrait un nom de fichier de ls_stream.             
+   ExtractFileName
+   extracts a filename from the ls_stream.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ExtractFileName (char *word)
@@ -54,8 +55,9 @@ char               *word;
 }
 
 /*----------------------------------------------------------------------
-   TtaIsSuffixFileIn retourne Vrai si le directory contient des    
-   fichiers avec le suffixe demande'.                      
+   TtaIsSuffixFileIn
+   returns TRUE if the directory contains any file with the requested
+   suffix.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             TtaIsSuffixFileIn (char *aDirectory, char *suffix)
@@ -111,17 +113,18 @@ char               *suffix;
 
 
 /*----------------------------------------------------------------------
-   TtaListDirectory lance la lecture du contenu du directory.      
-   aDirectory indique le directory concerne' (!=/afs).     
-   dirTitle donne le titre du selecteur des directories.   
-   formRef est la reference du formulaire utilise'.        
-   dirRef est la reference du selecteur des directories.   
-   suffix donne le suffixe de tri des fichiers.            
-   fileTitle donne le titre du selecteur des fichiers.     
-   fileRef est la reference du selecteur des fichiers.     
-   Si dirRef ou fileRef sont des valeurs negatives, le     
-   selecteur correspondant n'est pas cree.                 
-   Si aDirectory n'existe pas les selecteurs sont vide.    
+   TtaListDirectory
+   reads the content of a directory.
+   aDirectory specifies the directory to read  (!=/afs). 
+   dirTitle gives the title of the directory selector.
+   formRef is the reference to the form we are using.
+   dirRef is the reference to the directory selector.
+   suffix gives the sort suffix for the files
+   fileTitle gives the title of the files selector
+   fileRef is the reference of the files selector
+   If dirRef or fileRef have a negative values, the corresponding selector
+   won't be created.
+   If aDirectory doesn't exist, the selectors will be empty.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaListDirectory (char *aDirectory, int formRef, char *dirTitle, int dirRef, char *suffix, char *fileTitle, int fileRef)
