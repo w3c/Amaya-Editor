@@ -154,6 +154,7 @@ View                view;
 #endif
 {
    char                tempname[MAX_LENGTH];
+   int                 i;
 
    if (SavingDocument != (Document) None)
       return;
@@ -162,12 +163,25 @@ View                view;
 
    /* memorize the current document */
    SavingDocument = document;
-   /* if it is a W3 document use the current DirectoryName */
-   if (IsW3Path (DocumentURLs[document]))
+   strcpy (tempname, DocumentURLs[document]);
+   /* suppress compress suffixes from tempname */
+   i = strlen (tempname) - 1;
+   if (i > 2 && !strcmp (&tempname[i-2], ".gz"))
      {
-	TtaExtractName (DocumentURLs[document], DirectoryName, DocumentName);
-	strcpy (tempname, DocumentURLs[document]);
+       tempname[i-2] = EOS;
+       TtaFreeMemory (DocumentURLs[SavingDocument]);
+       DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempname);
      }
+   else if (i > 1 && !strcmp (&tempname[i-1], ".Z"))
+     {
+       tempname[i-1] = EOS;
+       TtaFreeMemory (DocumentURLs[SavingDocument]);
+       DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempname);
+     }
+
+   /* if it is a W3 document use the current DirectoryName */
+   if (IsW3Path (tempname))
+     TtaExtractName (tempname, DirectoryName, DocumentName);
    else
      {
 	TtaGetDocumentDirectory (SavingDocument, tempname, MAX_LENGTH);
@@ -443,6 +457,7 @@ View                view;
 #endif
 {
    char                tempname[MAX_LENGTH];
+   int                 i;
    boolean             ok;
 
    if (SavingDocument != (Document) None)
@@ -452,6 +467,21 @@ View                view;
 
    /* attempt to save through network if possible */
    strcpy (tempname, DocumentURLs[document]);
+   /* suppress compress suffixes from tempname */
+   i = strlen (tempname) - 1;
+   if (i > 2 && !strcmp (&tempname[i-2], ".gz"))
+     {
+       tempname[i-2] = EOS;
+       TtaFreeMemory (DocumentURLs[SavingDocument]);
+       DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempname);
+     }
+   else if (i > 1 && !strcmp (&tempname[i-1], ".Z"))
+     {
+       tempname[i-1] = EOS;
+       TtaFreeMemory (DocumentURLs[SavingDocument]);
+       DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempname);
+     }
+
    if (IsW3Path (tempname))
      {
        if (AddNoName (document, view, tempname, &ok))
