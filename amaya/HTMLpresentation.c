@@ -48,7 +48,7 @@ NotifyPresentation *event;
 {
    AttributeType       attrType;
    Attribute           styleAttr;
-   char                style[100];
+   char                style[1000];
    int                 len;
 
    /* does the element have a Style_ attribute ? */

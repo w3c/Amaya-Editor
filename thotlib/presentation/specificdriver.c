@@ -29,7 +29,11 @@
 #include "message.h"
 #include "constint.h"
 #include "typeint.h"
+#include "pschema.h"
 #include "application.h"
+
+#define THOT_EXPORT extern
+#include "edit_tv.h"
 
 #include "specificdriver.h"
 
@@ -79,6 +83,21 @@ SpecificContext     ctxt;
    TtaFreeMemory ((char *) ctxt);
 }
 
+/*
+ * GetDocumentMainPSchema : returns the main PSchema of a document
+ */
+
+#ifdef __STDC__
+static PSchema      GetDocumentMainPSchema (Document doc)
+#else  /* __STDC__ */
+static PSchema      GetDocumentMainPSchema (doc)
+Document            doc;
+
+#endif /* __STDC__ */
+{
+    return((PSchema)LoadedDocument[doc - 1]->DocSSchema->SsPSchema);
+}
+
 /*----------------------------------------------------------------------
    *									*
    *	Function used to remove all specific presentation for a given	*
@@ -90,7 +109,7 @@ SpecificContext     ctxt;
 int                 SpecificCleanPresentation (PresentationTarget t, PresentationContext c,
 					       PresentationValue v)
 #else
-int                 GenericSetWidth (t, c, v)
+int                 SpecificCleanPresentation (t, c, v)
 PresentationTarget  t;
 PresentationContext c;
 PresentationValue   v;
@@ -144,7 +163,7 @@ int                 extra;
 	  }
 	
 	/* check for extra specification in case of function rule */
-	if ((type == PresFunction) && (cur->PrPresMode != extra)) {
+	if ((type == PRFunction) && (cur->PrPresMode != extra)) {
 	    prev = cur;
 	    cur = cur->PrNextPRule;
 	    continue;
@@ -458,6 +477,62 @@ SPECIFIC_FUNCS2 (Function, FnPictureMode, PictureMode)
    *									*
   ----------------------------------------------------------------------*/
 
+#ifdef __STDC__
+int                 SpecificSetBgImage (PresentationTarget t, PresentationContext c,
+				   PresentationValue v)
+#else
+int                 SpecificSetBgImage (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue   v;
+
+#endif
+{
+   SpecificTarget       el = (SpecificTarget) t;
+   SpecificContext      ctxt = (SpecificContext) c;
+   PtrPRule            rule;
+   int                 cst;
+   PSchema             tsch = GetDocumentMainPSchema (ctxt->doc);
+
+   cst = PresConstInsert (tsch, v.pointer);
+   rule = InsertElementPRule (el, PtFunction, FnBackgroundPicture);
+   if (rule == NULL)
+      return (-1);
+   v.typed_data.unit = DRIVERP_UNIT_REL;
+   v.typed_data.value = cst;
+   etoi_convert (el, PRFunction, v, (PRule)rule , ctxt->doc, FnBackgroundPicture);
+   return (0);
+}
+
+#ifdef __STDC__
+int                 SpecificGetBgImage (PresentationTarget t, PresentationContext c,
+				   PresentationValue * v)
+#else
+int                 SpecificGetBgImage (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue  *v;
+
+#endif
+{
+   SpecificTarget      el = (SpecificTarget) t;
+   PtrPSchema          pSchemaPrs;
+   SpecificContext     ctxt = (SpecificContext) c;
+   PtrPRule            rule;
+   int                 cst;
+   PresentationValue   val;
+   PSchema             tsch = GetDocumentMainPSchema (ctxt->doc);
+
+   rule = SearchElementPRule (el, PtFunction, FnBackgroundPicture);
+   if (rule == NULL)
+      return (-1);
+   pSchemaPrs = (PtrPSchema) tsch;
+   val = PRuleToPresentationValue ((PRule) rule);
+   cst = val.typed_data.unit;
+   v->pointer = &pSchemaPrs->PsConstant[cst-1].PdString[0];
+   return (0);
+}
+
 
 /*----------------------------------------------------------------------
    *									*
@@ -535,17 +610,16 @@ PresentationStrategy SpecificStrategy =
    (PresentationGetFunction) SpecificGetShowBox,
    (PresentationSetFunction) SpecificSetShowBox,
 
-   NULL, /* (PresentationGetFunction) SpecificGetBgImage, */
-   NULL, /* (PresentationSetFunction) SpecificSetBgImage, */
+   (PresentationGetFunction) SpecificGetBgImage,
+   (PresentationSetFunction) SpecificSetBgImage,
 
    (PresentationGetFunction) SpecificGetPictureMode,
    (PresentationSetFunction) SpecificSetPictureMode,
 };
 
 /*
- * ApplyAllSpecificContext : browse all the PSchema structure,
- *      creating for each PRules list the corresponding SpecificContext 
- *      structure, and call the given handler for each one.
+ * ApplyAllSpecificContext : browse the PRules list the corresponding
+ *      SpecificContext structure, and call the given handler for each one.
  */
 
 #ifdef __STDC__
@@ -614,6 +688,18 @@ void               *param;
 	                                rule->PrPresFunction);
 	else
 	    PRuleToPresentationSetting ((PRule) rule, &setting, 0);
+
+	/*
+	 * need to do some tweaking in the case of BackgroudPicture
+	 */
+	if (setting.type == DRIVERP_BGIMAGE) {
+            int cst = setting.value.typed_data.value;
+	    PtrPSchema pSc1;
+	    pSc1 = (PtrPSchema) GetDocumentMainPSchema (ctxt->doc);
+
+            setting.value.pointer = &pSc1->PsConstant[cst-1].PdString[0];
+	}
+
 	handler (target, ctxt, &setting, param);
 	rule = rule->PrNextPRule;
      }

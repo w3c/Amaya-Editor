@@ -1063,7 +1063,7 @@ int                 extra;
 	  }
 	
 	/* check for extra specification in case of function rule */
-	if ((pres == PresFunction) && (cur->PrPresMode != extra)) {
+	if ((pres == PtFunction) && (cur->PrPresMode != extra)) {
 	    prev = cur;
 	    cur = cur->PrNextPRule;
 	    continue;
@@ -1206,15 +1206,15 @@ int                 extra;
  */
 
 #ifdef __STDC__
-static int PresConstSearch (Document doc, char *value)
+int PresConstSearch (PSchema tcsh, char *value)
 #else  /* __STDC__ */
-static int PresConstSearch (doc, value)
-Document            doc;
+int PresConstSearch (tcsh, value)
+PSchema             tcsh;
 char               *value;
 
 #endif /* !__STDC__ */
 {
-    PtrPSchema pSchemaPrs = (PtrPSchema) TtaGetDocumentSSchema (doc);
+    PtrPSchema pSchemaPrs = (PtrPSchema) tcsh;
     int i;
 
     if ((pSchemaPrs == NULL) || (value == NULL)) return(-1);
@@ -1238,15 +1238,15 @@ char               *value;
  */
 
 #ifdef __STDC__
-static int PresConstInsert (Document doc, char *value)
+int PresConstInsert (PSchema tcsh, char *value)
 #else  /* __STDC__ */
-static int PresConstInsert (doc, value)
-Document            doc;
+int PresConstInsert (doc, value)
+PSchema             tcsh;
 char               *value;
 
 #endif /* !__STDC__ */
 {
-    PtrPSchema pSchemaPrs = (PtrPSchema) TtaGetDocumentSSchema (doc);
+    PtrPSchema pSchemaPrs = (PtrPSchema) tcsh;
     int i;
 
     if ((pSchemaPrs == NULL) || (value == NULL)) return(-1);
@@ -1754,6 +1754,16 @@ void               *param;
 	                                rule->PrPresFunction);
 	else
 	    PRuleToPresentationSetting (rule, &setting, 0);
+
+	/*
+	 * need to do some tweaking in the case of BackgroudPicture
+	 */
+	if (setting.type == DRIVERP_BGIMAGE) {
+            int cst = setting.value.typed_data.value;
+
+            setting.value.pointer = &pSc1->PsConstant[cst-1].PdString[0];
+	}
+
 	handler (target, ctxt, &setting, param);
 	rule = rule->PrNextPRule;
      }
@@ -2048,7 +2058,7 @@ PresentationValue  *v;
       return (-1);
    val = PRuleToPresentationValue ((PRule) rule);
    cst = val.typed_data.unit;
-   v->pointer = &pSchemaPrs->PsConstant[cst].PdString[0];
+   v->pointer = &pSchemaPrs->PsConstant[cst-1].PdString[0];
    return (0);
 }
 

@@ -367,20 +367,20 @@ int                 specific;
 			      rule->PrNPresBoxes = 1;
 			      switch (value) {
 			          case DRIVERP_REALSIZE:
-				      rule->PrPresBox[0] = DRIVERP_REALSIZE;
+				      rule->PrPresBox[0] = RealSize;
 				      break;
 			          case DRIVERP_SCALE:
-				      rule->PrPresBox[0] = DRIVERP_SCALE;
+				      rule->PrPresBox[0] = ReScale;
 				      break;
 			          case DRIVERP_REPEAT:
-				      rule->PrPresBox[0] = DRIVERP_REPEAT;
+				      rule->PrPresBox[0] = FillFrame;
 				      break;
 			          case DRIVERP_HREPEAT:
 				      rule->PrPresBox[0] = XRepeat; break;
 			          case DRIVERP_VREPEAT:
 				      rule->PrPresBox[0] = YRepeat; break;
 				  default:
-				      rule->PrPresBox[0] = DRIVERP_REALSIZE;
+				      rule->PrPresBox[0] = RealSize;
 			      }
 			      break;
 			   default:

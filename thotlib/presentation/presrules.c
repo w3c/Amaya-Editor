@@ -3895,6 +3895,8 @@ PtrAttribute        pAttr;
 				   if (pAbb1->AbLeafType == LtCompound)
 				     if (pPRule->PrViewNum == viewSch)
 					{
+					if (pSchP == NULL)
+					    pSchP = pDoc->DocSSchema->SsPSchema;
 					pConst = &pSchP->PsConstant[pPRule->PrPresBox[0] - 1];
 					if (pConst->PdString[0] != '\0')
 					  {

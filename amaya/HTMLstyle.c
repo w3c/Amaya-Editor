@@ -1172,7 +1172,7 @@ int                *len;
     */
    buf[0] = EOS;
    ctxt = GetSpecificContext(doc);
-   ApplyAllSpecificSettings (elem, &ctxt, SpecificSettingsToCSS, &buf[0]);
+   ApplyAllSpecificSettings (elem, ctxt, SpecificSettingsToCSS, &buf[0]);
    FreeSpecificContext(ctxt);
 
    *len = strlen (buf);
@@ -3354,9 +3354,43 @@ PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseCSSBackgroundRepeat ");
-   TODO
-      return (attrstr);
+   PresentationValue   repeat;
+
+   repeat.typed_data.value = 0;
+   repeat.typed_data.unit = 1;
+   SKIP_BLANK (attrstr);
+   if (IS_WORD (attrstr, "no-repeat"))
+     {
+	repeat.typed_data.value = DRIVERP_REALSIZE;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "repeat-y"))
+     {
+	repeat.typed_data.value = DRIVERP_VREPEAT;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "repeat-x"))
+     {
+	repeat.typed_data.value = DRIVERP_HREPEAT;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "repeat"))
+     {
+	repeat.typed_data.value = DRIVERP_REPEAT;
+	SKIP_WORD (attrstr);
+     }
+   else
+     {
+	fprintf (stderr, "invalid repeat\n");
+	return (attrstr);
+     }
+
+   /*
+    * install the new presentation.
+    */
+   if (context->drv->SetPictureMode)
+       context->drv->SetPictureMode (target, context, repeat);
+   return (attrstr);
 }
 
 /*----------------------------------------------------------------------
