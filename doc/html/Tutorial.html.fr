@@ -1330,6 +1330,9 @@ modifier une règle de style&nbsp;:</p>
 <a href="Attributes.html.fr#L1073">menu <strong>Attributs</strong></a>. Ce
 menu permet aussi d'effacer un attribut de classe pour un élément ou de le
 changer : l'attribut de classe se manipule comme un autre attribut.</p>
+
+<p class="exercice"><em>Exercice 6&nbsp;:</em> Mettre de la couleur,
+appliquer une feuille de style, voir le style.</p>
 </div>
 
 <div>
@@ -1371,11 +1374,9 @@ correct, on peut alors sauver le document corrigé.</p>
 <p>Dans le 2ème exemple, le bouton <strong>Recharger</strong> permet de lire
 le document comme un document HTML au lieu de XHTML et donc éviter de bloquer
 sur le parseur XML.</p>
-
-<p>Erreur d'encodage</p>
 </div>
 <address>
-  <p>Irène Vatton $date: Friday 09 January 2004 - 16:57:00$</p>
+  <p>Irène Vatton $date: Friday 09 January 2004 - 17:34:59$</p>
 
 </address>
 
