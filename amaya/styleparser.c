@@ -2957,10 +2957,10 @@ ThotBool            isHTML;
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static CHAR_T*        ParseCSSBackgroundAttachment (Element element, PSchema tsch,
+static CHAR_T*      ParseCSSBackgroundAttachment (Element element, PSchema tsch,
 				 PresentationContext context, CHAR_T* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static CHAR_T*        ParseCSSBackgroundAttachment (element, tsch, context, cssRule, css, isHTML)
+static CHAR_T*      ParseCSSBackgroundAttachment (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;

@@ -225,6 +225,14 @@ ThotBool            UpdateStyleDelete (event)
 NotifyAttribute    *event;
 #endif
 {
+   ElementType         elType;
+   ThotBool            isHTML;
+
+   /*  A rule applying to BODY is really meant to address HTML */
+   elType = TtaGetElementType (event->element);
+   isHTML = (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0);
+   if (elType.ElTypeNum == HTML_EL_BODY && isHTML)
+     TtaCleanStylePresentation (TtaGetParent (event->element), NULL, event->document);
   TtaCleanStylePresentation (event->element, NULL, event->document);
   return FALSE;  /* let Thot perform normal operation */
 }
