@@ -102,14 +102,15 @@ View                view;
    int                 i;
    char                BufMenu[MAX_TXT_LEN];
 
+
    pDocPrint = LoadedDocument[document - 1];
+   ConnectPrint ();
    NewFirstPage = FirstPage;
    NewLastPage = LastPage;
    NewNbCopies = NbCopies;
    NewReduction = Reduction;
    NewPagesPerSheet = PagesPerSheet;
  
-   ConnectPrint ();
    if (ThotLocalActions[T_rextprint] == NULL)
      /* Connecte les actions liees au traitement de la split */
      TteConnectAction(T_rextprint, (Proc)CallbackExtPrintmenu);

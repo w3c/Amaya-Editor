@@ -1299,6 +1299,7 @@ boolean             inTree;
    SRule              *pRule;
    PtrElement          pEl1;
    boolean             ok;
+   boolean             isPageBrOrIncl;
    boolean             optional;
    boolean             stop;
    int                 compNum;
@@ -1310,18 +1311,15 @@ boolean             inTree;
       if (pEl->ElParent != NULL)
 	{
 	   /* on peut inserer une marque de page n'importe ou` */
-	   if (typeNum == PageBreak + 1)
-	      ok = TRUE;
 	   /* OK si c'est une inclusion pour l'un des ascendants */
-	   else if (AllowedIncludedElem (pEl->ElParent, typeNum, pSS))
-	      ok = TRUE;
-           else if (AllowedIncludedElem (pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
-              ok = TRUE;
-	   if (ok)
-	      /* dans le cas d'une inclusion ou d'une marque de page */
+	   if (typeNum == PageBreak + 1 || AllowedIncludedElem(pEl->ElParent,typeNum,pSS))
+	      isPageBrOrIncl = TRUE;
+	   if ( isPageBrOrIncl || AllowedIncludedElem (pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
+              /* dans le cas d'une inclusion ou d'une marque de page */
 	      /* on ne peut quand meme pas inserer comme descendant direct */
 	      /* d'un noeud CsChoice ou CsIdentity' */
 	     {
+                ok = isPageBrOrIncl; 
 		pRule = &pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1];
 		/* on ne fait pas cette verification si l'element y est deja */
 		if (!inTree)
@@ -1333,21 +1331,23 @@ boolean             inTree;
 			 /* le fils et le pere sont de type equivalent, refus */
 			 ok = FALSE;
 	     }
-	   else
+	   if(!isPageBrOrIncl)
 	     {
-		if (pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak)
-		   /* on veut inserer a cote' d'une marque de page. */
+		if ((pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak)
+                 || (AllowedIncludedElem (pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))) 
+		   /* on veut inserer a cote' d'une marque de page ou d'une inclusion. */
 		  {
 		     pEl1 = pEl;
 		     stop = FALSE;
 		     /* si on insere avant, on cherche le premier suivant */
 		     /* qui n'est pas une marque de page, sinon le precedent */
 		     while (!stop)
-			if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
-			   /* ce n'est pas une page, on a trouve' */
+			if ((!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
+                           && !AllowedIncludedElem (pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
+			   /* ce n'est pas une page, ni une inclusion, on a trouve' */
 			   stop = TRUE;
 			else
-			   /* c'est une page, on continue */
+			   /* c'est une page ou une inclusion, on continue */
 			  {
 			     if (before)
 				pEl = pEl->ElNext;
@@ -1363,11 +1363,12 @@ boolean             inTree;
 			  pEl = pEl1;
 			  stop = FALSE;
 			  while (!stop)
-			     if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
-				/* ce n'est pas une page, on a trouve' */
+			     if ((!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
+                                && !AllowedIncludedElem (pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
+				/* ce n'est pas une page ni une inclusion, on a trouve' */
 				stop = TRUE;
 			     else
-				/* c'est une page, on continue */
+				/* c'est une page ou une inclusion , on continue */
 			       {
 				  if (before)
 				     pEl = pEl->ElPrevious;
@@ -1379,7 +1380,7 @@ boolean             inTree;
 			  before = !before;
 		       }
 		     if (pEl == NULL)
-			/* il n'y a que des sauts de page, c'est comme si */
+			/* il n'y a que des sauts de page et des inclusions, c'est comme si */
 			/* l'element etait vide */
 			ok = AllowedFirstChild (pEl1->ElParent, pDoc, typeNum, pSS,
 						user, inTree);

@@ -16,8 +16,8 @@ extern void TtaListView ( Document document,
                           FILE * fileDescriptor );
 extern void NumberAbsBoxes ( PtrAbstractBox pP );
 extern void ListAbsBoxes ( PtrAbstractBox pAb,
-                         int Indent,
-                         FILE * outfile );
+                           int Indent,
+                           FILE * outfile );
 extern void ListBoxes ( Name fname,
                         int frame );
 
@@ -33,8 +33,8 @@ extern void TtaListView (/* Document document,
                             FILE * fileDescriptor */);
 extern void NumberAbsBoxes (/* PtrAbstractBox pP */);
 extern void ListAbsBoxes (/* PtrAbstractBox pAb,
-                           int Indent,
-                           FILE * outfile */);
+                             int Indent,
+                             FILE * outfile */);
 extern void ListBoxes (/* Name fname,
                           int frame */);
 

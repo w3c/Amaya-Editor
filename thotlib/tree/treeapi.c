@@ -2484,6 +2484,275 @@ ElementType         elementType;
 }
 
 /* ----------------------------------------------------------------------
+   TtaGetCardinalOfType
+
+   Returns the cardinal of an element type, e.g. the number of types
+   that participates in its definition in the structure schema.
+
+   Parameter:
+   elementType: the element type of interest.
+
+   Return value:
+   the cardinal of that element type (integer value).
+
+   ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+int           TtaGetCardinalOfType (ElementType elementType)
+#else  /* __STDC__ */
+int           TtaGetCardinalOfType (elementType)
+ElementType         elementType;
+
+#endif /* __STDC__ */
+
+{
+   int           result;
+   SRule        *pRule;
+
+   UserErrorCode = 0;
+   result = 0;
+   if (elementType.ElSSchema == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+     }
+   else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
+	    elementType.ElTypeNum < 1)
+     {
+	TtaError (ERR_invalid_element_type);
+     }
+   else
+     {
+        pRule = &(((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1]);
+        switch (pRule->SrConstruct)
+            {
+	       case CsIdentity:
+	       case CsConstant:
+	       case CsReference:
+	       case CsNatureSchema:
+	       case CsBasicElement:
+	       case CsList:
+	       case CsPairedElement:
+	       case CsExtensionRule:
+	 	  result = 1;
+		  break;
+	       case CsChoice:
+		  result = pRule->SrNChoices;
+		  break;
+	       case CsAggregate:
+	       case CsUnorderedAggregate:
+		  result = pRule->SrNComponents;
+		  break;
+               default:
+                  result = 0;
+                  break;
+             }
+     }
+  return result;
+}
+
+/* ----------------------------------------------------------------------
+   TtaGiveConstructorsOfType
+
+   Fills a array with the element types defining the given element type
+   in the structure schema.
+
+   Parameter:
+   typesArray: a pointer to an initialized ElementType array.
+   size: size of the array
+   elementType: the element type of interest.
+
+   Return value:
+   typesArray: a array of element types.
+   size: the number of types actually inserted in the array
+
+   ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void           TtaGiveConstructorsOfType (ElementType **typesArray,int *size,ElementType elementType)
+#else  /* __STDC__ */
+void           TtaGiveConstructorsOfType (typesArray,size,elementType)
+ElementType         elementType;
+ElementType       **typesArray;
+int                *size;
+#endif /* __STDC__ */
+
+{ 
+   SRule        *pRule;
+   int i;
+
+   UserErrorCode = 0;
+   if (elementType.ElSSchema == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+     }
+   else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
+	    elementType.ElTypeNum < 1)
+     {
+	TtaError (ERR_invalid_element_type);
+     }
+   else
+     {
+        pRule = &(((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1]);
+        switch (pRule->SrConstruct)
+          {
+	   case CsNatureSchema:
+		if(*size<1)
+		    TtaError(ERR_buffer_too_small);
+                else
+                   {
+                     ((*typesArray)[0]).ElSSchema = (SSchema)pRule->SrSSchemaNat;
+                     ((*typesArray)[0]).ElTypeNum = 0;
+                     *size = 1;
+                   }
+                break;
+	   case CsBasicElement:
+		if(*size<1)
+		    TtaError(ERR_buffer_too_small);
+                else
+                   {
+                     ((*typesArray)[0]).ElSSchema = elementType.ElSSchema;
+                     ((*typesArray)[0]).ElTypeNum = pRule->SrBasicType;
+                     *size = 1;
+                   }
+                break;
+	   case CsReference:
+                if(*size<1)
+		    TtaError(ERR_buffer_too_small);
+                else
+                   {
+                     if(pRule->SrRefTypeNat[0] == 0)
+                       {
+                       ((*typesArray)[0]).ElTypeNum = pRule->SrReferredType;
+                       ((*typesArray)[0]).ElSSchema = elementType.ElSSchema;
+                       }
+                     else
+                       {
+                       ((*typesArray)[0]).ElTypeNum = 0;
+                       ((*typesArray)[0]).ElSSchema = NULL;
+                       }
+                      *size =1; 
+                   }
+                 break;
+           case CsIdentity:
+		if(*size<1)
+		    TtaError(ERR_buffer_too_small);
+                else
+                   {
+                    ((*typesArray)[0]).ElSSchema = elementType.ElSSchema;
+                    ((*typesArray)[0]).ElTypeNum = pRule->SrIdentRule;
+                    *size = 1;
+                   }
+                 break;
+	   case CsList:
+		if(*size<1)
+		    TtaError(ERR_buffer_too_small);
+                else
+                   {
+                    ((*typesArray)[0]).ElSSchema = elementType.ElSSchema;
+                    ((*typesArray)[0]).ElTypeNum = pRule->SrListItem;
+                    *size = 1;
+                   }
+                 break;
+	   case CsChoice:
+		if(*size<pRule->SrNChoices)
+                   {
+		    TtaError(ERR_buffer_too_small);
+                    *size = 0;
+                   }
+                else
+                   {
+                    for (i=0; i< pRule->SrNChoices;i++)
+                      {
+                        ((*typesArray)[i]).ElSSchema = elementType.ElSSchema;
+                        ((*typesArray)[i]).ElTypeNum = pRule->SrChoice[i];
+                      }
+                    *size = i;
+                   }
+                break;
+           case CsAggregate:
+           case CsUnorderedAggregate:
+                if(*size<pRule->SrNComponents)
+                   {
+		    TtaError(ERR_buffer_too_small);
+                    *size = 0;
+                   }
+                else
+                   {
+                    for (i=0; i< pRule->SrNComponents;i++)
+                      {
+                        ((*typesArray)[i]).ElSSchema = elementType.ElSSchema;
+                        ((*typesArray)[i]).ElTypeNum = pRule->SrComponent[i];
+                      }
+                    *size = i;
+                   }
+                break;
+	   case CsConstant:
+	   case CsPairedElement:
+	   case CsExtensionRule:
+           default:
+	        TtaError (ERR_invalid_element_type);
+                break;
+          }
+     }
+}
+
+/* ----------------------------------------------------------------------
+   TtaIsOptionalInAggregate
+
+   Returns TRUE if the type of the given rank is declared optionnal in 
+   the elementType definition.
+
+   Parameter:
+   rank: the rank in the agreggate declaration.
+   elementType: the element type of interest.
+
+   Return value:
+   boolean
+
+   ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+boolean           TtaIsOptionalInAggregate (int rank, ElementType elementType)
+#else  /* __STDC__ */
+boolean           TtaIsOptionalInAggregate (rank, elementType)
+int 		    rank;
+ElementType         elementType;
+#endif /* __STDC__ */
+{
+   boolean result;
+   SRule        *pRule;
+
+   UserErrorCode = 0;
+   result = FALSE;
+   if (elementType.ElSSchema == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+     }
+   else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
+	    elementType.ElTypeNum < 1)
+     {
+	TtaError (ERR_invalid_element_type);
+     }
+   else
+     {
+        pRule = &(((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1]);
+        if (pRule->SrConstruct != CsAggregate && pRule->SrConstruct !=CsUnorderedAggregate)
+          {
+               TtaError (ERR_invalid_element_type);
+          }
+        else if(rank > pRule->SrNComponents)
+          {
+               TtaError (ERR_invalid_parameter);
+          }
+        else
+          {
+          result = pRule->SrOptComponent[rank];
+          }
+     }
+   return result;
+}
+
+/* ----------------------------------------------------------------------
    TtaGetConstruct
 
    Returns the construct of an element.

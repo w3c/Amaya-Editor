@@ -3034,7 +3034,14 @@ char               *data;
 		  (*ThotLocalActions[T_openview]) (ref, typedata, data);
 		  break;
 
-	       case NumFormPrint:
+	       case NumZoneFirstPage:
+	       case NumZoneLastPage:
+               case NumZoneNbOfCopies:
+               case NumZoneReduction:
+               case NumMenuNbPagesPerSheet:
+		   (*ThotLocalActions[T_rextprint]) (ref, (int) data, NULL);
+                   break;
+               case NumFormPrint:
 	       case NumMenuOptions:
 	       case NumMenuSupport:
 	       case NumMenuPaperFormat:

@@ -9,10 +9,6 @@
 #define EXPORT extern
 #include "amaya.h"
 #include "trans.h"
-
-#include "../thotlib/internals/h/conststr.h"
-#include "../thotlib/internals/h/typestr.h"
-
 #include "html2thot_f.h"
 #include "transparse_f.h"
  
@@ -1865,117 +1861,98 @@ char               *prevtag;
 #endif
 {
 
-   SRule              *pRegleStr;
    ElementType         elTypeChild;
-   int                 prevtypenum, typenum, i;
+   int                 cardinal, prevtypenum, typenum, i;
+   ElementType 	      *subTypes;
    boolean             result, found;
+   Construct           constOfType;
 
    result = FALSE;
    elTypeChild.ElSSchema = elType.ElSSchema;
-   pRegleStr = (SRule *) (&((StructSchema *) elType.ElSSchema)->SsRule[elType.ElTypeNum - 1]);
+   cardinal = TtaGetCardinalOfType(elType);
+   subTypes = (ElementType *)TtaGetMemory(cardinal * sizeof(ElementType));
+   TtaGiveConstructorsOfType(&subTypes,&cardinal,elType);
+   constOfType = TtaGetConstructOfType(elType);
    GIType (tag, &typenum);
    if (typenum == 0)
       return FALSE;
-   switch (pRegleStr->SrConstruct)
-	 {
-	    case CsIdentity:
-	       if (pRegleStr->SrIdentRule == typenum)
+   switch (constOfType)
+      {
+            case ConstructIdentity:
+               if (subTypes[0].ElTypeNum == typenum)
 		  result = TRUE;
-	       else
-		 {
-		    if (strcmp (GITagNameByType (pRegleStr->SrIdentRule), "???"))
-		       return FALSE;
-		    else
-		      {
-			 elTypeChild.ElTypeNum = pRegleStr->SrIdentRule;
-			 result = IsValidHtmlChild (elTypeChild, tag, "");
-		      }
-		 }
+	       else if (!strcmp (GITagNameByType (subTypes[0].ElTypeNum), "???"))
+		  /* search if tag can beinserted as a child of the identity */
+		  result = IsValidHtmlChild (subTypes[0], tag, "");
 	       break;
-	    case CsList:
-	       if (pRegleStr->SrListItem == typenum)
+
+	    case ConstructList:
+	       if (subTypes[0].ElTypeNum == typenum)
 		  result = TRUE;
-	       else
-		 {
-		    if (strcmp (GITagNameByType (pRegleStr->SrListItem), "???"))
-		       return FALSE;
-		    else
-		      {
-			 elTypeChild.ElTypeNum = pRegleStr->SrListItem;
-			 result = IsValidHtmlChild (elTypeChild, tag, "");
-		      }
-		 }
+	       else if (!strcmp (GITagNameByType (subTypes[0].ElTypeNum), "???"))
+                  result = IsValidHtmlChild (subTypes[0], tag, "");
 	       break;
-	    case CsChoice:
-	       for (i = 0; !result && i < pRegleStr->SrNChoices; i++)
+
+	    case ConstructChoice:
+	       for (i = 0; !result && i < cardinal; i++)
 		 {
-		    if (pRegleStr->SrChoice[i] == typenum)
+		    if (subTypes[i].ElTypeNum == typenum)
 		       result = TRUE;
-		    else
-		      {
-			 if (!strcmp (GITagNameByType (pRegleStr->SrChoice[i]), "???"))
-			   {
-			      elTypeChild.ElTypeNum = pRegleStr->SrChoice[i];
-			      result = IsValidHtmlChild (elTypeChild, tag, "");
-			   }
-		      }
+		    else if (!strcmp (GITagNameByType (subTypes[i].ElTypeNum),"???"))
+ 		       result = IsValidHtmlChild (subTypes[i], tag, "");
 		 }
 	       break;
-	    case CsAggregate:
+
+	    case ConstructOrderedAggregate:
 	       found = (!strcmp (prevtag, ""));
 	       GIType (prevtag, &prevtypenum);
 	       found = (prevtypenum == 0);
 	       /* on recherche la regle participant au tag precedent */
-	       for (i = 0; !found && i < pRegleStr->SrNComponents; i++)
+	       for (i = 0; !found && i < cardinal; i++)
 		 {
-		    if (prevtypenum == pRegleStr->SrComponent[i])
+		    if (prevtypenum == subTypes[i].ElTypeNum)
 		       found = TRUE;
-		    else if (strcmp (GITagNameByType (pRegleStr->SrComponent[i]), "???"))
-		       i = pRegleStr->SrNComponents;
+		    else if (strcmp (GITagNameByType (subTypes[i].ElTypeNum),"???"))
+		       i = cardinal;
 		 }
 	       if (found)
 		 {
-		    while (!result && i < pRegleStr->SrNChoices)
+		    while (!result && i < cardinal)
 		      {
-			 if (typenum == pRegleStr->SrComponent[i])
+			 if (typenum == subTypes[i].ElTypeNum)
 			    result = TRUE;
-			 else if (!strcmp (GITagNameByType (pRegleStr->SrComponent[i]), "???"))
-			   {
-			      elTypeChild.ElTypeNum = pRegleStr->SrComponent[i];
-			      result = IsValidHtmlChild (elTypeChild, tag, "");
-			   }
+			 else if (!strcmp (GITagNameByType (subTypes[i].ElTypeNum), "???"))
+			    result = IsValidHtmlChild (subTypes[i], tag, "");
 			 if (!result)
-			    if (pRegleStr->SrOptComponent[i])
+			    if (TtaIsOptionalInAggregate(i,elType)) 
 			       i++;
 			    else
-			       i = pRegleStr->SrNChoices;
+			       i = cardinal;
 		      }
 		 }
 	       break;
-	    case CsUnorderedAggregate:
-	       while (!result && i < pRegleStr->SrNChoices)
+	    case ConstructUnorderedAggregate:
+	       while (!result && i < cardinal)
 		 {
-		    if (typenum == pRegleStr->SrComponent[i])
+		    if (typenum == subTypes[i].ElTypeNum)
 		       result = TRUE;
-		    else if (!strcmp (GITagNameByType (pRegleStr->SrComponent[i]), "???"))
-		      {
-			 elTypeChild.ElTypeNum = pRegleStr->SrComponent[i];
-			 result = IsValidHtmlChild (elTypeChild, tag, "");
-		      }
+		    else if (!strcmp (GITagNameByType (subTypes[i].ElTypeNum), "???"))
+		       result = IsValidHtmlChild (subTypes[i], tag, "");
 		    if (!result)
-		       if (pRegleStr->SrOptComponent[i])
+	               if (TtaIsOptionalInAggregate(i,elType)) 
 			  i++;
 		       else
-			  i = pRegleStr->SrNChoices;
+			  i = cardinal;
 		 }
-	    case CsConstant:
-	    case CsReference:
-	    case CsBasicElement:
-	    case CsNatureSchema:
-	    case CsPairedElement:
-	    case CsExtensionRule:
+	    case ConstructConstant:
+	    case ConstructReference:
+	    case ConstructBasicType:
+	    case ConstructNature:
+	    case ConstructPair:
+            case ConstructError:
 	       break;
 	 }
+   TtaFreeMemory((char *)subTypes);
    return result;
 }
 
