@@ -108,6 +108,12 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
   /* get the parent window pointer */
   AmayaWindow * p_parent_window = TtaGetWindowFromId( parent_window_id );
   
+  wxSize window_size;
+  if (w != 0 && h != 0)
+    window_size = wxSize(w, h);
+  else
+    window_size = wxSize(800, 600);
+
   /* Create the window */
   switch ( kind )
     {
@@ -115,24 +121,19 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
       p_window = new AmayaNormalWindow( window_id,
 					p_parent_window,
 					wxDefaultPosition,
-					wxDefaultSize );
+					window_size );
       break;
     case WXAMAYAWINDOW_SIMPLE:
       p_window = new AmayaSimpleWindow( window_id,
 					p_parent_window,
 					wxDefaultPosition,
-					wxDefaultSize );
+					window_size );
       break;
     }
 
   if (!p_window)
     return -1; /* no enough memory */
-  
-  if (w != 0 && h != 0)
-    p_window->SetSize(-1, -1, w, h);
-  else
-    p_window->SetSize(-1, -1, 800, 600);
-    
+
   /* save the window reference into the global array */ 
   WindowTable[window_id].WdWindow = p_window;
   WindowTable[window_id].FrWidth  = p_window->GetSize().GetWidth();
@@ -1094,6 +1095,7 @@ int TtaAddToolBarButton( int window_id,
 						      ,wxDefaultSize
 						      /* with CVSHEAD, wxNO_BORDER style is not correctly rendered, the bitmap is cropped */
 						      /* when setting wxBU_AUTODRAW flag on windows, wxNO_BORDER flag is ignore ... */
+
 							  ,wxBU_AUTODRAW | wxNO_BORDER );
       p_button->SetToolTip( TtaConvMessageToWX( tooltip ) );
       p_toolbar->AddTool( p_button );
