@@ -625,10 +625,10 @@ void  RemoveStyleSheet (char *url, Document doc, ThotBool disabled,
   ----------------------------------------------------------------------*/
 char *GetStyleContents (Element el)
 {
-  ElementType         elType;
-  Element             text;
+  ElementType         elType, parentType;
+  Element             text, parent;
   Language            lang;
-  char               *buffer;
+  char               *buffer, *schemaName;
   int                 length, i, j;
 
   buffer = NULL;
@@ -641,14 +641,25 @@ char *GetStyleContents (Element el)
 
       /* fill the buffer */
       elType = TtaGetElementType (el);
-      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+      elType.ElTypeNum = 1 /* 1 = TEXT_UNIT element */;
       text = TtaSearchTypedElementInTree (elType, SearchForward, el, el);
       i = 0;
       while (text != NULL)
 	{
-	  j = length - i;
-	  TtaGiveTextContent (text, &buffer[i], &j, &lang);
-	  i += TtaGetTextLength (text);
+	  /* don't take into account the text elements included */
+          /* in a CDATA -> causes style parsing errors */
+	  parent = TtaGetParent (text);
+	  parentType = TtaGetElementType (parent);
+	  schemaName = TtaGetSSchemaName (parentType.ElSSchema);
+	  if (((strcmp (schemaName, "HTML") == 0) &&
+	       parentType.ElTypeNum != HTML_EL_CDATA_line) ||
+	      ((strcmp (schemaName, "SVG") == 0) &&
+	       parentType.ElTypeNum != SVG_EL_CDATA_line))
+	    {
+	      j = length - i;
+	      TtaGiveTextContent (text, &buffer[i], &j, &lang);
+	      i += TtaGetTextLength (text);
+	    }
 	  text = TtaSearchTypedElementInTree (elType, SearchForward, el, text);
 	}
       buffer[i] = EOS;
