@@ -33,8 +33,11 @@ AmayaNotebook::AmayaNotebook( wxWindow * p_parent_window,
 		       -1,
 		       wxDefaultPosition, wxDefaultSize,
 			   wxTAB_TRAVERSAL |
+
 			   wxCLIP_CHILDREN |
+
 			   wxFULL_REPAINT_ON_RESIZE |
+
 			   wxNB_MULTILINE /* only windows */ )
 	   ,m_pAmayaWindow( p_amaya_window )
 	   ,m_ShouldLostFocus( FALSE )
@@ -254,7 +257,7 @@ void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
   wxMenu * p_menu = TtaGetContextMenu( m_pAmayaWindow->GetWindowId(), tab_pos, -1 );
   PopupMenu(p_menu, ScreenToClient(event.GetPosition()));
 
-  event.Skip();
+//  event.Skip();
 }
 
 /*
