@@ -1663,7 +1663,7 @@ void TtcCreateElement (Document doc, View view)
 			}
 		  }
 	      }
-	  if (ready && list)
+	  if (ready && list && pListEl && pElReplicate)
 	    {
 	      replicate = FALSE;
 	      ReturnCreateNewElem (pListEl, pElReplicate,
@@ -1839,7 +1839,7 @@ void TtcCreateElement (Document doc, View view)
 	  if (pListEl != NULL)
 	    {
 	      /* verifie si la selection est en fin ou debut de paragraphe */
-	      if (selEnd)
+	      if (selEnd && pElReplicate)
 		/* verifie s'il faut creer le meme type d'element ou un type */
 		/* different */
 		{
@@ -1848,7 +1848,7 @@ void TtcCreateElement (Document doc, View view)
 		  ReturnCreateNewElem (pListEl, pElReplicate, FALSE, pDoc,
 				       &typeNum, &pSS);
 		}
-	      else if (selBegin)
+	      else if (selBegin && pElReplicate)
 		{
 		  replicate = FALSE;
 		  createAfter = FALSE;
