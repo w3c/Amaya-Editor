@@ -850,6 +850,25 @@ static ThotBool CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t 
   register int        entry;
   struct E_List      *adbloc;
 
+#ifdef _GTK
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)) == FALSE)
+    {
+      /* Prevent to unselect an element directly...
+	 you must select another one to unselect others  */
+      index = (guint) gtk_object_get_data (GTK_OBJECT (w),
+					   "toggled");
+      gtk_signal_handler_block (GTK_OBJECT(w), 
+				index);
+		   
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), 
+				    TRUE);
+      
+      gtk_signal_handler_unblock (GTK_OBJECT(w), 
+				  index); 
+      return TRUE;
+    }
+  
+#endif /*_GTK*/
   /* Enregistre la selection d'un toggle button */
   if (catalogue->Cat_Widget != 0)
     {
@@ -870,14 +889,44 @@ static ThotBool CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t 
 	  adbloc = adbloc->E_Next;
 	  i = 0;
 	}
+#ifdef _GTK
+      /*Deactivate All other Radio Button*/
+      adbloc = catalogue->Cat_Entries;
+      i = 2;
+      while (adbloc != NULL)
+	{
+	   while (i < C_NUMBER && 
+		  adbloc->E_ThotWidget[i])
+	     {
+	       if (adbloc->E_ThotWidget[i] != w) 
+		 {
+		   
+		   index = (guint) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]),
+							      "toggled");
+		   gtk_signal_handler_block (GTK_OBJECT(adbloc->E_ThotWidget[i]), 
+					     index);
+		   
+		   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), 
+						 FALSE);
+		   
+		   gtk_signal_handler_unblock (GTK_OBJECT(adbloc->E_ThotWidget[i]), 
+					       index); 
+		       
+		 }
+	       i++;	       
+	     }
+	  /* Go to next block */
+	   adbloc = adbloc->E_Next;
+	  i = 0;
+	}
+#endif /* _GTK */
       /*** Sauve la valeur de la derniere selection ***/
       catalogue->Cat_Data = entry;
       /* retourne la valeur si le menu est reactif */
       if (catalogue->Cat_React)
 	(*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, entry);
     }
-  return TRUE;
-  
+  return TRUE;  
 }
 
 #ifdef _WINDOWS
@@ -4412,15 +4461,14 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  adbloc->E_Type[ent] = 'B';
 		  adbloc->E_Free[ent] = 'Y';
 #ifdef _GTK
-		  /* create a radiolist */
-		  /* copy the style because every widget share the same style */
-		  /* rem: GSListTmp regroupe the widget of the radiolist*/
-		  w = gtk_radio_button_new (GSListTmp);
+		  /* create a radiolist (not using gtk radio group
+		     as it implies always a default value.)*/
+		  w = gtk_check_button_new ();	
 		  gtk_widget_show_all (GTK_WIDGET(w));
 		  tmpw = gtk_label_new (&text[index + 1]);
 		  gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
 		  gtk_widget_show_all (tmpw);
-		  current_style = gtk_style_copy(gtk_widget_get_style(tmpw));
+		  current_style = gtk_style_copy (gtk_widget_get_style (tmpw));
 		  if (current_style->font == NULL ||
 		      current_style->font->type != GDK_FONT_FONTSET)
 		    current_style->font = DefaultFont;
@@ -4430,8 +4478,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  gtk_object_set_data (GTK_OBJECT(w), "Label", (gpointer)tmpw);
 		  gtk_box_pack_start (GTK_BOX(row), GTK_WIDGET(w), FALSE, FALSE, 0);
 		  ConnectSignalGTK (GTK_OBJECT(w), "toggled", GTK_SIGNAL_FUNC(CallRadio), (gpointer)catalogue);
-		  /* add this element to the radio group */
-		  GSListTmp = gtk_radio_button_group (GTK_RADIO_BUTTON (w));
 		  adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
 #ifdef _WINDOWS
@@ -4945,6 +4991,7 @@ void TtaSetMenuForm (int ref, int val)
 						 id_toggled);
 		       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), 
 						     FALSE);
+		       
 #endif /* _GTK */
 		    }
 		  i++;
