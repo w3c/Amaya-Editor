@@ -5211,67 +5211,67 @@ void HTMLResetForegroundColor (Document doc, Element el)
 /*----------------------------------------------------------------------
    HTMLSetAlinkColor:                                             
   ----------------------------------------------------------------------*/
-void HTMLSetAlinkColor (Document doc, char *color)
+void HTMLSetAlinkColor (Document doc, Element el, char *color)
 {
    char           css_command[100];
 
    sprintf (css_command, "a:link { color: %s }", color);
-   ApplyCSSRules (NULL, css_command, doc, FALSE);
+   ApplyCSSRules (el, css_command, doc, FALSE);
 }
 
 /*----------------------------------------------------------------------
    HTMLSetAactiveColor:                                           
   ----------------------------------------------------------------------*/
-void HTMLSetAactiveColor (Document doc, char *color)
+void HTMLSetAactiveColor (Document doc, Element el, char *color)
 {
    char           css_command[100];
 
    sprintf (css_command, "a:active { color: %s }", color);
-   ApplyCSSRules (NULL, css_command, doc, FALSE);
+   ApplyCSSRules (el, css_command, doc, FALSE);
 }
 
 /*----------------------------------------------------------------------
    HTMLSetAvisitedColor:                                          
   ----------------------------------------------------------------------*/
-void HTMLSetAvisitedColor (Document doc, char *color)
+void HTMLSetAvisitedColor (Document doc, Element el, char *color)
 {
    char           css_command[100];
 
    sprintf (css_command, "a:visited { color: %s }", color);
-   ApplyCSSRules (NULL, css_command, doc, FALSE);
+   ApplyCSSRules (el, css_command, doc, FALSE);
 }
 
 /*----------------------------------------------------------------------
    HTMLResetAlinkColor:                                           
   ----------------------------------------------------------------------*/
-void HTMLResetAlinkColor (Document doc)
+void HTMLResetAlinkColor (Document doc, Element el)
 {
    char           css_command[100];
 
    sprintf (css_command, "a:link { color: red }");
-   ApplyCSSRules (NULL, css_command, doc, TRUE);
+   ApplyCSSRules (el, css_command, doc, TRUE);
 }
 
 /*----------------------------------------------------------------------
    HTMLResetAactiveColor:                                                 
   ----------------------------------------------------------------------*/
-void HTMLResetAactiveColor (Document doc)
+void HTMLResetAactiveColor (Document doc, Element el)
 {
    char           css_command[100];
 
    sprintf (css_command, "a:active { color: red }");
-   ApplyCSSRules (NULL, css_command, doc, TRUE);
+   ApplyCSSRules (el, css_command, doc, TRUE);
 }
 
 /*----------------------------------------------------------------------
    HTMLResetAvisitedColor:                                        
   ----------------------------------------------------------------------*/
-void HTMLResetAvisitedColor (Document doc)
+void HTMLResetAvisitedColor (Document doc, Element el)
 {
    char           css_command[100];
 
    sprintf (css_command, "a:visited { color: red }");
-   ApplyCSSRules (NULL, css_command, doc, TRUE);
+   ApplyCSSRules (el, css_command, doc, TRUE);
 }
 
 /*----------------------------------------------------------------------

@@ -506,36 +506,11 @@ static void CallbackCSS (int ref, int typedata, char *data)
   char           *ptr = NULL, *localname = NULL;
   int             j, firstChar, lastChar;
   int             val, category, sty;
+  ThotBool        found;
 
   val = (int) data;
   category = 0;
   sty = 0; /* document style order */
-  if (CSSpath[0] != EOS)
-    {
-      /* point the URI */
-      ptr = &CSSpath[String_length];
-      localname = TtaGetMessage (AMAYA, AM_LOCAL_CSS);
-      /* get the category */
-      while (category < DisplayCategory_length)
-	{
-	  if (!strncmp (DisplayCategory[category], CSSpath, 2))
-	    {
-	      if (category == CSS_DOCUMENT_STYLE)
-		{
-		  j = strlen (localname);
-		  /* the document style order */
-		  scanf (&ptr[j], "%d", &sty);
-		  ptr[j] = EOS;
-		}
-	      break;
-	    }
-	  else
-	    category++;
-	}
-      if (category == DisplayCategory_length)
-	category = 0;
-    }
-
   switch (ref - BaseCSS)
     {
     case CSSForm:
@@ -545,6 +520,30 @@ static void CallbackCSS (int ref, int typedata, char *data)
 	  (DocumentMeta[CSSdocument] == NULL ||
 	   DocumentMeta[CSSdocument]->method != CE_MAKEBOOK))
 	{
+	  /* point the URI */
+	  ptr = &CSSpath[String_length];
+	  localname = TtaGetMessage (AMAYA, AM_LOCAL_CSS);
+	  found = FALSE;
+	  /* get the category */
+	  while (!found && category < DisplayCategory_length)
+	    {
+	      if (!strncmp (DisplayCategory[category], CSSpath, 2))
+		{
+		  if (category == CSS_DOCUMENT_STYLE)
+		    {
+		      j = strlen (localname);
+		      /* the document style order */
+		      scanf (&ptr[j], "%d", &sty);
+		      ptr[j] = EOS;
+		    }
+		  found = TRUE;
+		}
+	      else
+		category++;
+	    }
+	  if (category == DisplayCategory_length)
+	    category = 0;
+
 	  switch (CSScase)
 	    {
 	    case 1:
@@ -555,14 +554,9 @@ static void CallbackCSS (int ref, int typedata, char *data)
 	      /* disable the CSS file, but not remove */
 	      if (category == CSS_DOCUMENT_STYLE)
 		{
-		  css = SearchCSS (CSSdocument, NULL, NULL, &pInfo);
-		  while (pInfo && sty && pInfo->PiNext)
-		    {
-		      pInfo = pInfo->PiNext;
-		      sty--;
-		    }
+		  css = SearchCSS (CSSdocument, NULL, CSSlink[sty], &pInfo);
 		  if (pInfo)
-		  RemoveStyleSheet (NULL, CSSdocument, TRUE, FALSE, pInfo->PiLink);
+		     UnlinkCSS (css, CSSdocument, CSSlink[sty], TRUE, FALSE);
 		}
 	      else
 		{
@@ -575,7 +569,7 @@ static void CallbackCSS (int ref, int typedata, char *data)
 	      if (category == CSS_DOCUMENT_STYLE)
 		{
 		  /* style element */
-		  css = SearchCSS (CSSdocument, NULL, NULL, &pInfo);
+		  css = SearchCSS (CSSdocument, NULL, CSSlink[sty], &pInfo);
 		  if (pInfo)
 		    {
 		      pInfo->PiEnabled = TRUE;

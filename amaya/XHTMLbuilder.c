@@ -1270,11 +1270,11 @@ void EndOfHTMLAttributeValue (char *attrValue,
   else
     {
       if (!strcmp (lastMappedAttr->XMLattribute, "link"))
-	HTMLSetAlinkColor (context->doc, attrValue);
+	HTMLSetAlinkColor (context->doc, context->lastElement, attrValue);
       else if (!strcmp (lastMappedAttr->XMLattribute, "alink"))
-	HTMLSetAactiveColor (context->doc, attrValue);
+	HTMLSetAactiveColor (context->doc, context->lastElement, attrValue);
       else if (!strcmp (lastMappedAttr->XMLattribute, "vlink"))
-	HTMLSetAvisitedColor (context->doc, attrValue);
+	HTMLSetAvisitedColor (context->doc, context->lastElement, attrValue);
     }
 
   if (!done)

@@ -30,11 +30,11 @@ extern CSSInfoPtr SearchCSS ( Document doc,
                               char *url,
                               Element link,
                               PInfoPtr *info );
-extern void UnlinkCSS ( CSSInfoPtr css,
-                        Document doc,
-                        Element link,
-                        ThotBool disabled,
-                        ThotBool removed );
+extern ThotBool UnlinkCSS ( CSSInfoPtr css,
+                            Document doc,
+                            Element link,
+                            ThotBool disabled,
+                            ThotBool removed );
 extern void RemoveDocCSSs ( Document doc );
 extern void RemoveStyleSheet ( char *url,
                                Document doc,
@@ -75,11 +75,11 @@ extern CSSInfoPtr SearchCSS (/* Document doc,
                                 char *url,
                                 Element link,
                                 PInfoPtr *info */);
-extern void UnlinkCSS (/* CSSInfoPtr css,
-                          Document doc,
-                          Element link,
-                          ThotBool disabled,
-                          ThotBool removed */);
+extern ThotBool UnlinkCSS (/* CSSInfoPtr css,
+                              Document doc,
+                              Element link,
+                              ThotBool disabled,
+                              ThotBool removed */);
 extern void RemoveDocCSSs (/* Document doc */);
 extern void RemoveStyleSheet (/* char *url,
                                  Document doc,

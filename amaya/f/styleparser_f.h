@@ -43,14 +43,20 @@ extern void HTMLResetBackgroundImage ( Document doc,
 extern void HTMLResetForegroundColor ( Document doc,
                                        Element el );
 extern void HTMLSetAlinkColor ( Document doc,
+                                Element el,
                                 char *color );
 extern void HTMLSetAactiveColor ( Document doc,
+                                  Element el,
                                   char *color );
 extern void HTMLSetAvisitedColor ( Document doc,
+                                   Element el,
                                    char *color );
-extern void HTMLResetAlinkColor ( Document doc );
-extern void HTMLResetAactiveColor ( Document doc );
-extern void HTMLResetAvisitedColor ( Document doc );
+extern void HTMLResetAlinkColor ( Document doc,
+                                  Element el );
+extern void HTMLResetAactiveColor ( Document doc,
+                                    Element el );
+extern void HTMLResetAvisitedColor ( Document doc,
+                                     Element el );
 extern void ApplyCSSRules ( Element el,
                             char *cssRule,
                             Document doc,
@@ -102,14 +108,20 @@ extern void HTMLResetBackgroundImage (/* Document doc,
 extern void HTMLResetForegroundColor (/* Document doc,
                                          Element el */);
 extern void HTMLSetAlinkColor (/* Document doc,
+                                  Element el,
                                   char *color */);
 extern void HTMLSetAactiveColor (/* Document doc,
+                                    Element el,
                                     char *color */);
 extern void HTMLSetAvisitedColor (/* Document doc,
+                                     Element el,
                                      char *color */);
-extern void HTMLResetAlinkColor (/* Document doc */);
-extern void HTMLResetAactiveColor (/* Document doc */);
-extern void HTMLResetAvisitedColor (/* Document doc */);
+extern void HTMLResetAlinkColor (/* Document doc,
+                                    Element el */);
+extern void HTMLResetAactiveColor (/* Document doc,
+                                      Element el */);
+extern void HTMLResetAvisitedColor (/* Document doc,
+                                       Element el */);
 extern void ApplyCSSRules (/* Element el,
                               char *cssRule,
                               Document doc,

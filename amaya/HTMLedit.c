@@ -2965,11 +2965,11 @@ void AttrColorCreated (NotifyAttribute * event)
 	    event->attributeType.AttrTypeNum == HTML_ATTR_TextColor)
       HTMLSetForegroundColor (event->document, event->element, value);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_LinkColor)
-      HTMLSetAlinkColor (event->document, value);
+      HTMLSetAlinkColor (event->document, event->element, value);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_VisitedLinkColor)
-      HTMLSetAvisitedColor (event->document, value);
+      HTMLSetAvisitedColor (event->document, event->element, value);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_ActiveLinkColor)
-      HTMLSetAactiveColor (event->document, value);
+      HTMLSetAactiveColor (event->document, event->element, value);
    TtaFreeMemory (value);
 }
 
@@ -2979,7 +2979,7 @@ void AttrColorCreated (NotifyAttribute * event)
    An attribute color, TextColor or BackgroundColor is being       
    deleted.                                                        
   ----------------------------------------------------------------------*/
-ThotBool AttrColorDelete (NotifyAttribute * event)
+ThotBool AttrColorDelete (NotifyAttribute *event)
 {
    if (event->attributeType.AttrTypeNum == HTML_ATTR_BackgroundColor)
       HTMLResetBackgroundColor (event->document, event->element);
@@ -2989,11 +2989,11 @@ ThotBool AttrColorDelete (NotifyAttribute * event)
 	    event->attributeType.AttrTypeNum == HTML_ATTR_TextColor)
       HTMLResetForegroundColor (event->document, event->element);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_LinkColor)
-      HTMLResetAlinkColor (event->document);
+      HTMLResetAlinkColor (event->document, event->element);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_VisitedLinkColor)
-      HTMLResetAvisitedColor (event->document);
+      HTMLResetAvisitedColor (event->document, event->element);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_ActiveLinkColor)
-      HTMLResetAactiveColor (event->document);
+      HTMLResetAactiveColor (event->document, event->element);
    return FALSE;		/* let Thot perform normal operation */
 }
 

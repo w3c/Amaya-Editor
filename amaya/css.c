@@ -666,9 +666,10 @@ CSSInfoPtr SearchCSS (Document doc, char *url, Element link, PInfoPtr *info)
   If this CSS is no longer used the context and attached information
   are freed.
   The parameter link specifies the link.
+  Return FALSE when the css context is freed.
   ----------------------------------------------------------------------*/
-void UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
-		ThotBool disabled, ThotBool removed)
+ThotBool UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
+		    ThotBool disabled, ThotBool removed)
 {
   CSSInfoPtr          prev;
   PInfoPtr            pInfo, prevInfo;
@@ -677,13 +678,13 @@ void UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
   ThotBool            used;
 
   if (css == NULL)
-    return;
+    return FALSE;
   else
     {
       /* look for the specific P descriptors in the css */
       pInfo = css->infos[doc];
       prevInfo = NULL;
-      if (css->doc == doc)
+      if (css->doc == doc && (pInfo == NULL || removed))
 	/* the document displays the CSS file itself */
 	/* or it includes a style element */
 	css->doc = 0;
@@ -699,18 +700,21 @@ void UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
 	  if (pInfo->PiEnabled)
 	    {
 	      /* disapply the CSS */
-	      while (pInfo->PiSchemas)
+	      pIS = pInfo->PiSchemas;
+	      while (pIS)
 		{
-		  pIS = pInfo->PiSchemas;
 		  if (pIS->PiPSchema)
 		    {
 		      TtaCleanStylePresentation (pIS->PiPSchema, doc,
 						 pIS->PiSSchema);
 		      TtaUnlinkPSchema (pIS->PiPSchema, doc,
 					pIS->PiSSchema);
-		      pInfo->PiSchemas = pIS->PiSNext;
+		      pIS = pIS->PiSNext;
+		      pInfo->PiSchemas = pIS;
 		      TtaFreeMemory (pIS);
 		    }
+		  else
+		    pIS = pIS->PiSNext;
 		}
 	    }
 	  /* the CSS is no longer applied */
@@ -738,7 +742,7 @@ void UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
 	}
       if (!used)
 	{
-	  /* remove the local copy */
+	  /* remove the local copy of the CSS file */
 	  if (!TtaIsPrinting ())
 	    TtaFileUnlink (css->localName);
 	  TtaFreeMemory (css->localName);
@@ -748,14 +752,17 @@ void UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
 	  else
 	    {
 	      prev = CSSList;
-	      while (prev != NULL && prev->NextCSS != css)
+	      while (prev && prev->NextCSS != css)
 		prev = prev->NextCSS;
-	      if (prev != NULL)
+	      if (prev)
 		prev->NextCSS = css->NextCSS;
 	    }
 	  TtaFreeMemory (css);
+	  return FALSE;
 	}
     }
+  /* there is still a CSS context */
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -774,8 +781,11 @@ void RemoveDocCSSs (Document doc)
 	/* or it includes a style element */
 	UnlinkCSS (css, doc, NULL, TRUE, TRUE);
       else
-	while (css->infos[doc])
-	  UnlinkCSS (css, doc, css->infos[doc]->PiLink, TRUE, TRUE);
+	while (css && css->infos[doc])
+	  {
+	    if (!UnlinkCSS (css, doc, css->infos[doc]->PiLink, TRUE, TRUE))
+	      css = NULL;
+	  }
       /* look at the next CSS context */
       css = next;
     }
@@ -795,7 +805,7 @@ void RemoveStyleSheet (char *url, Document doc, ThotBool disabled,
   PInfoPtr        pInfo;
   DisplayMode     dispMode;
 
-  SearchCSS (doc, url, link, &pInfo);
+  css = SearchCSS (doc, url, link, &pInfo);/********/
   if (css)
     {
       /* Change the Display Mode to take into account the new presentation */
