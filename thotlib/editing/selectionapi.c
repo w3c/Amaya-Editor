@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2002
+ *  (c) COPYRIGHT INRIA, 1996-2003
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -94,9 +94,12 @@ void TtaSelectView (Document document, View view)
   int               oldView;
 
   UserErrorCode = 0;
-  GetActiveView (&pDoc, &oldView);
-  if (LoadedDocument[document - 1] == pDoc && oldView != view)
-    SelectedView = view;
+  if (document)
+    {
+      GetActiveView (&pDoc, &oldView);
+      if (LoadedDocument[document - 1] == pDoc && oldView != view)
+	SelectedView = view;
+    }
 }
 
 /*----------------------------------------------------------------------

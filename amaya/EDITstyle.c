@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2002
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2003
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -480,7 +480,7 @@ void UpdateStylePost (NotifyAttribute * event)
 {
    Document            doc;
    Element             el, oldParent, newParent;
-#ifdef IV /* 10-dec-2001 */
+#ifdef IV /* 10-dec-2003 */
    Element             firstChild, lastChild;
    ElementType	       elType;
    Attribute           at;
@@ -497,7 +497,7 @@ void UpdateStylePost (NotifyAttribute * event)
       return;
    if (len == 0)
      {
-#ifdef IV /* 10-dec-2001 */
+#ifdef IV /* 10-dec-2003 */
 	/* empty Style attribute. Delete it */
 	elType = TtaGetElementType (el);
         /* if it's a MathML element, delete the style attribute defined in the
