@@ -63,13 +63,13 @@ extern void SelectStringWithEvent ( PtrDocument pDoc,
                                     PtrElement pEl,
                                     int firstChar,
                                     int lastChar );
-extern void ChangeSelection ( int frame,
-                              PtrAbstractBox pAb,
-                              int rank,
-                              ThotBool extension,
-                              ThotBool update,
-                              ThotBool doubleClick,
-                              ThotBool drag );
+extern ThotBool ChangeSelection ( int frame,
+                                  PtrAbstractBox pAb,
+                                  int rank,
+                                  ThotBool extension,
+                                  ThotBool update,
+                                  ThotBool doubleClick,
+                                  ThotBool drag );
 extern void PrepareSelectionMenu ( void );
 extern void BuildSelectionMessage ( void );
 extern ThotBool SelectPairInterval ( void );
@@ -142,13 +142,13 @@ extern void SelectStringWithEvent (/* PtrDocument pDoc,
                                       PtrElement pEl,
                                       int firstChar,
                                       int lastChar */);
-extern void ChangeSelection (/* int frame,
-                                PtrAbstractBox pAb,
-                                int rank,
-                                ThotBool extension,
-                                ThotBool update,
-                                ThotBool doubleClick,
-                                ThotBool drag */);
+extern ThotBool ChangeSelection (/* int frame,
+                                    PtrAbstractBox pAb,
+                                    int rank,
+                                    ThotBool extension,
+                                    ThotBool update,
+                                    ThotBool doubleClick,
+                                    ThotBool drag */);
 extern void PrepareSelectionMenu (/* void */);
 extern void BuildSelectionMessage (/* void */);
 extern ThotBool SelectPairInterval (/* void */);

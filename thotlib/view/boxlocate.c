@@ -22,6 +22,7 @@
 #include "appdialogue.h"
 
 #define THOT_EXPORT extern
+#include "edit_tv.h"
 #include "boxes_tv.h"
 #include "frame_tv.h"
 #include "units_tv.h"
@@ -43,6 +44,7 @@
 #include "font_f.h"
 #include "frame_f.h"
 #include "geom_f.h"
+#include "hyphen_f.h"
 #include "presentationapi_f.h"
 #include "structcreation_f.h"
 #include "structselect_f.h"
@@ -51,9 +53,72 @@
 #include "undo_f.h"
 #include "units_f.h"
 #include "views_f.h"
+#include "word_f.h"
 
 #define Y_RATIO 200		/* penalisation en Y */
 #define ANCHOR_SIZE 3		/* taille des ancres */
+
+
+/*----------------------------------------------------------------------
+  SelectCurrentWord
+  selects the word at the current position.
+  The current position is given by the current box, the current buffer
+  and the index in the buffer.
+  ----------------------------------------------------------------------*/
+static void SelectCurrentWord (int frame, PtrBox pBox, int pos,
+			       PtrTextBuffer pBuffer, int index)
+{
+  PtrTextBuffer       buffer;
+  PtrDocument         pDoc;
+  PtrAbstractBox      pAb;
+  UCHAR_T              c;
+  int                 first, last;
+  int                 doc, i;
+  ThotBool            isSep;
+
+  doc = FrameTable[frame].FrDoc;
+  pAb = pBox->BxAbstractBox;
+  if (frame >= 1 && doc > 0 && index > 0)
+    {
+      /* check if a leaf box is selected */
+      index--;
+      c = pBuffer->BuContent[index];
+      if (c != WC_SPACE && c != WC_EOS)
+	{
+	  /* look for the beginning of the word */
+	  buffer = pBuffer;
+	  first = pos;
+	  i = index;
+	  c = PreviousCharacter (&buffer, &i);
+	  isSep = IsSeparatorChar (c);
+	  while (first > 1 && !isSep && c != WC_EOS)
+	    {
+	      first--;
+	      c = PreviousCharacter (&buffer, &i);
+	      isSep = IsSeparatorChar (c);
+	    }
+	  /* look for the beginning of the word */
+	  buffer = pBuffer;
+	  last = pos;
+	  i = index;
+	  c = NextCharacter (&buffer, &i);
+	  isSep = IsSeparatorChar (c);
+	  while (!isSep && c != WC_EOS)
+	    {
+	      last++;
+	      c = NextCharacter (&buffer, &i);
+	      isSep = IsSeparatorChar (c);
+	    }
+	  while (c == WC_SPACE)
+	    {
+	      last++;
+	      c = NextCharacter (&buffer, &i);
+	    }
+	  pDoc = LoadedDocument[doc - 1];
+	  SelectString (pDoc, pAb->AbElement, first, last);
+	}
+    }
+}
 
 
 /*----------------------------------------------------------------------
@@ -67,7 +132,7 @@
     3 -> activate a link
     4 -> click an element
   ----------------------------------------------------------------------*/
-void                LocateSelectionInView (int frame, int x, int y, int button)
+void LocateSelectionInView (int frame, int x, int y, int button)
 {
   PtrBox              pBox;
   PtrTextBuffer       pBuffer;
@@ -119,7 +184,12 @@ void                LocateSelectionInView (int frame, int x, int y, int button)
 	{
 	  /* Initialization of the selection */
 	  if (button == 3)
-	    ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, TRUE, FALSE);
+	    {
+	      if (!ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, TRUE, FALSE) &&
+		  pAb->AbLeafType == LtText &&
+		  (!pAb->AbPresentationBox || pAb->AbCanBeModified))
+		SelectCurrentWord (frame, pBox, charsNumber, pBuffer, index);
+	    }
 	  else if (button == 2)
 	    ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, FALSE, FALSE);
 	  /* Extension of selection */
@@ -148,7 +218,7 @@ void                LocateSelectionInView (int frame, int x, int y, int button)
 		  if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 		    /* the application asks Thot to do nothing */
 		    return;
-		  /* send event TteElemActivate.Pre to the application */
+		  /* send event TteElemActivate.Post to the application */
 		  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 		}
 	    }
@@ -159,7 +229,7 @@ void                LocateSelectionInView (int frame, int x, int y, int button)
 
 /*----------------------------------------------------------------------
   GetDistance returns 0 if value is between -delta and +delta.
-  In other cases returns the absolute value of value - delta.       	       		
+  In other cases returns the absolute value of value - delta
   ----------------------------------------------------------------------*/
 static int          GetDistance (int value, int delta)
 {
@@ -2140,7 +2210,8 @@ void                DirectCreation (PtrBox pBox, int frame)
    le nombre de blancs qui le precedent dans la boite.     
    Met a jour la valeur x.                                 
   ----------------------------------------------------------------------*/
-void                LocateClickedChar (PtrBox pBox, PtrTextBuffer * pBuffer, int *x, int *index, int *charsNumber, int *spacesNumber)
+void LocateClickedChar (PtrBox pBox, PtrTextBuffer *pBuffer, int *x,
+			int *index, int *charsNumber, int *spacesNumber)
 {
    int                 dx;
    int                 length;
@@ -2151,7 +2222,6 @@ void                LocateClickedChar (PtrBox pBox, PtrTextBuffer * pBuffer, int
    ptrfont             font;
    UCHAR_T       c;
    ThotBool            notfound;
-
 
    /* Nombre de caracteres qui precedent */
    *charsNumber = 0;

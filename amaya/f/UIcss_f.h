@@ -6,16 +6,16 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern ThotBool LoadRemoteStyleSheet ( STRING url,
+extern ThotBool LoadRemoteStyleSheet ( char *url,
                                        Document doc,
                                        Element el,
                                        CSSInfoPtr css,
-                                       STRING completeURL,
-                                       STRING localfile );
+                                       char *completeURL,
+                                       char *localfile );
 extern void LoadUserStyleSheet ( Document doc );
-extern void AttrMediaChanged ( NotifyAttribute * event );
-extern STRING CssToPrint ( Document doc,
-                           STRING printdir );
+extern void AttrMediaChanged ( NotifyAttribute *event );
+extern char *CssToPrint ( Document doc,
+                          char *printdir );
 extern void InitCSS ( void );
 extern void LinkCSS ( Document doc,
                       View view );
@@ -30,16 +30,16 @@ extern void RemoveCSS ( Document doc,
 
 #else /* __STDC__ */
 
-extern ThotBool LoadRemoteStyleSheet (/* STRING url,
+extern ThotBool LoadRemoteStyleSheet (/* char *url,
                                          Document doc,
                                          Element el,
                                          CSSInfoPtr css,
-                                         STRING completeURL,
-                                         STRING localfile */);
+                                         char *completeURL,
+                                         char *localfile */);
 extern void LoadUserStyleSheet (/* Document doc */);
-extern void AttrMediaChanged (/* NotifyAttribute * event */);
-extern STRING CssToPrint (/* Document doc,
-                             STRING printdir */);
+extern void AttrMediaChanged (/* NotifyAttribute *event */);
+extern char *CssToPrint (/* Document doc,
+                            char *printdir */);
 extern void InitCSS (/* void */);
 extern void LinkCSS (/* Document doc,
                         View view */);

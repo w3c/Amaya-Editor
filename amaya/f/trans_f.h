@@ -6,10 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void InitTransform ( void );
 extern void TransCallbackDialog ( int ref,
                                   int typedata,
                                   CHAR_T* data );
+extern void InitTransform ( void );
 extern void TransformType ( Document doc,
                             View view );
 extern ThotBool TransformIntoType ( ElementType resultType,
@@ -17,10 +17,10 @@ extern ThotBool TransformIntoType ( ElementType resultType,
 
 #else /* __STDC__ */
 
-extern void InitTransform (/* void */);
 extern void TransCallbackDialog (/* int ref,
                                     int typedata,
                                     CHAR_T* data */);
+extern void InitTransform (/* void */);
 extern void TransformType (/* Document doc,
                               View view */);
 extern ThotBool TransformIntoType (/* ElementType resultType,

@@ -12,12 +12,12 @@ extern void HTTP_headers_set ( HTRequest * request,
                                HTResponse * response,
                                void *context,
                                int status );
-extern CHAR_T *HTTP_headers ( AHTHeaders *me,
-                              AHTHeaderName param );
+extern char *HTTP_headers ( AHTHeaders *me,
+                            AHTHeaderName param );
 extern ThotBool AHTReqContext_delete ( AHTReqContext * me );
 extern int AHTOpen_file ( HTRequest * request );
-extern int AHTLoadTerminate_handler ( HTRequest * request,
-                                      HTResponse * response,
+extern int AHTLoadTerminate_handler ( HTRequest *request,
+                                      HTResponse *response,
                                       void *param,
                                       int status );
 extern void libwww_CleanCache ( void );
@@ -26,28 +26,28 @@ extern void QueryClose ( void );
 extern void AHTRequest_setCustomAcceptHeader ( HTRequest *request,
                                                char *value );
 extern void InvokeGetObjectWWW_callback ( int docid,
-                                          STRING urlName,
-                                          STRING outputfile,
+                                          char *urlName,
+                                          char *outputfile,
                                           TTcbf *terminate_cbf,
                                           void *context_tcbf,
                                           int status );
 extern int GetObjectWWW ( int docid,
-                          STRING urlName,
-                          STRING formdata,
-                          STRING outputfile,
+                          char *urlName,
+                          char *formdata,
+                          char *outputfile,
                           int mode,
-                          TIcbf* incremental_cbf,
-                          void* context_icbf,
-                          TTcbf* terminate_cbf,
-                          void* context_tcbf,
+                          TIcbf *incremental_cbf,
+                          void *context_icbf,
+                          TTcbf *terminate_cbf,
+                          void *context_tcbf,
                           ThotBool error_html,
-                          STRING content_type );
+                          char *content_type );
 extern int PutObjectWWW ( int docid,
-                          STRING fileName,
-                          STRING urlName,
+                          char *fileName,
+                          char *urlName,
                           int mode,
                           PicType contentType,
-                          TTcbf * terminate_cbf,
+                          TTcbf *terminate_cbf,
                           void *context_tcbf );
 extern void StopRequest ( int docid );
 extern void StopAllRequests ( int docid );
@@ -66,12 +66,12 @@ extern void HTTP_headers_set (/* HTRequest * request,
                                  HTResponse * response,
                                  void *context,
                                  int status */);
-extern CHAR_T *HTTP_headers (/* AHTHeaders *me,
-                                AHTHeaderName param */);
+extern char *HTTP_headers (/* AHTHeaders *me,
+                              AHTHeaderName param */);
 extern ThotBool AHTReqContext_delete (/* AHTReqContext * me */);
 extern int AHTOpen_file (/* HTRequest * request */);
-extern int AHTLoadTerminate_handler (/* HTRequest * request,
-                                        HTResponse * response,
+extern int AHTLoadTerminate_handler (/* HTRequest *request,
+                                        HTResponse *response,
                                         void *param,
                                         int status */);
 extern void libwww_CleanCache (/* void */);
@@ -80,28 +80,28 @@ extern void QueryClose (/* void */);
 extern void AHTRequest_setCustomAcceptHeader (/* HTRequest *request,
                                                  char *value */);
 extern void InvokeGetObjectWWW_callback (/* int docid,
-                                            STRING urlName,
-                                            STRING outputfile,
+                                            char *urlName,
+                                            char *outputfile,
                                             TTcbf *terminate_cbf,
                                             void *context_tcbf,
                                             int status */);
 extern int GetObjectWWW (/* int docid,
-                            STRING urlName,
-                            STRING formdata,
-                            STRING outputfile,
+                            char *urlName,
+                            char *formdata,
+                            char *outputfile,
                             int mode,
-                            TIcbf* incremental_cbf,
-                            void* context_icbf,
-                            TTcbf* terminate_cbf,
-                            void* context_tcbf,
+                            TIcbf *incremental_cbf,
+                            void *context_icbf,
+                            TTcbf *terminate_cbf,
+                            void *context_tcbf,
                             ThotBool error_html,
-                            STRING content_type */);
+                            char *content_type */);
 extern int PutObjectWWW (/* int docid,
-                            STRING fileName,
-                            STRING urlName,
+                            char *fileName,
+                            char *urlName,
                             int mode,
                             PicType contentType,
-                            TTcbf * terminate_cbf,
+                            TTcbf *terminate_cbf,
                             void *context_tcbf */);
 extern void StopRequest (/* int docid */);
 extern void StopAllRequests (/* int docid */);

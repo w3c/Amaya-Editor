@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -73,13 +73,7 @@ static Func     MathMoveBackwardCursorFunction = NULL;
 /*----------------------------------------------------------------------
    IsTextLeaf teste si un pave est un pave de texte modifiable.     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     IsTextLeaf (PtrAbstractBox pave)
-#else  /* __STDC__ */
-static ThotBool     IsTextLeaf (pave)
-PtrAbstractBox      pave;
-
-#endif /* __STDC__ */
 {
    ThotBool            result;
 
@@ -96,14 +90,7 @@ PtrAbstractBox      pave;
   The parameter frame gives the concerned frame.
   The parameter toend is TRUE when moving to the end of the line.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         MoveInLine (int frame, ThotBool toend)
-#else  /* __STDC__ */
-static void         MoveInLine (frame, toend)
-int                 frame;
-ThotBool            toend;
-
-#endif /* __STDC__ */
 {
    PtrLine             pLine;
    PtrAbstractBox      pAb;
@@ -150,19 +137,8 @@ ThotBool            toend;
    if the box is still the same (pFrom) the position is shifted by
    xDelta and yDelta.                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         LocateLeafBox (int frame, View view, int x, int y, int xDelta, int yDelta, PtrBox pFrom, ThotBool extendSel)
-#else  /* __STDC__ */
-static void         LocateLeafBox (frame, view, x, y, xDelta, yDelta, pFrom, extendSel)
-int                 frame;
-View                view;
-int                 x;
-int                 y;
-int                 xDelta;
-int                 yDelta;
-PtrBox              pFrom;
-ThotBool            extendSel;
-#endif /* __STDC__ */
+static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
+			   int yDelta, PtrBox pFrom, ThotBool extendSel)
 {
    ViewFrame          *pFrame;
    PtrBox              pBox, pLastBox;
@@ -267,12 +243,7 @@ ThotBool            extendSel;
    TtaSetMoveForwardCallback permet de connecter une fonction de
    l'application a la touche de deplacement du curseur vers l'avant
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void  TtaSetMoveForwardCallback (Func callbackFunc)
-#else
-void  TtaSetMoveForwardCallback ()
-Func callbackFunc;
-#endif /* __STDC__ */
 {
    MathMoveForwardCursorFunction = callbackFunc;
 }
@@ -281,12 +252,7 @@ Func callbackFunc;
    TtaSetMoveBackwardCallback permet de connecter une fonction de
    l'application a la touche de deplacement du curseur vers l'arriere
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void  TtaSetMoveBackwardCallback (Func callbackFunc)
-#else
-void  TtaSetMoveBackwardCallback ()
-Func callbackFunc;
-#endif /* __STDC__ */
 {
    MathMoveBackwardCursorFunction = callbackFunc;
 }
@@ -294,15 +260,8 @@ Func callbackFunc;
 /*----------------------------------------------------------------------
    Commandes de deplacement                                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         MovingCommands (int code, Document document, View view, ThotBool extendSel)
-#else  /* __STDC__ */
-static void         MovingCommands (code, document, view, extendSel)
-int                 code;
-Document            document;
-View                view;
-ThotBool            extendSel;
-#endif /* __STDC__ */
+static void MovingCommands (int code, Document document, View view,
+			    ThotBool extendSel)
 {
    PtrBox              pBox, pBoxBegin, pBoxEnd;
    PtrLine             pLine;
@@ -359,7 +318,7 @@ ThotBool            extendSel;
 	     }
 	 }
 
-       /* Check if boxed are visible */
+       /* Check if boxes are visible */
        GetSizesFrame (frame, &w, &h);
        if (!RightExtended && !LeftExtended)
 	 {
@@ -422,13 +381,13 @@ ThotBool            extendSel;
 	     {
 	       if (FirstSelectedElement == FixedElement && FirstSelectedChar == FixedChar)
 		 {
-		   RightExtended = FALSE;
-		   LeftExtended = TRUE;
+		   RightExtended = TRUE;
+		   LeftExtended = FALSE;
 		 }
 	       else
 		 {
-		   RightExtended = TRUE;
-		   LeftExtended = FALSE;
+		   RightExtended = FALSE;
+		   LeftExtended = TRUE;
 		 }
 	     }
 	 }
@@ -690,6 +649,18 @@ ThotBool            extendSel;
 	       LocateLeafBox (frame, view, x, y, 0, yDelta, pBox, extendSel);
 	     }
 	   break;
+	   
+	 case 9:	/* Previous word (^<-) */
+	   break;
+	   
+	 case 10:	/* Next word (^->) */
+	   break;
+	   
+	 case 11:	/* Extend to previous word (Shift ^<-) */
+	   break;
+	   
+	 case 12:	/* Previous line (Shift ^->) */
+	   break;
 	 }
        Moving = FALSE;
      }
@@ -697,155 +668,107 @@ ThotBool            extendSel;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcPreviousChar (Document document, View view)
-#else  /* __STDC__ */
-void                TtcPreviousChar (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    MovingCommands (1, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcNextChar (Document document, View view)
-#else  /* __STDC__ */
-void                TtcNextChar (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    MovingCommands (2, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcPreviousLine (Document document, View view)
-#else  /* __STDC__ */
-void                TtcPreviousLine (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    MovingCommands (8, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcNextLine (Document document, View view)
-#else  /* __STDC__ */
-void                TtcNextLine (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    MovingCommands (7, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcStartOfLine (Document document, View view)
-#else  /* __STDC__ */
-void                TtcStartOfLine (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    MovingCommands (4, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcEndOfLine (Document document, View view)
-#else  /* __STDC__ */
-void                TtcEndOfLine (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    MovingCommands (3, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcPreviousSelChar (Document document, View view)
-#else  /* __STDC__ */
-void                TtcPreviousSelChar (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    MovingCommands (1, document, view, TRUE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcNextSelChar (Document document, View view)
-#else  /* __STDC__ */
-void                TtcNextSelChar (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    MovingCommands (2, document, view, TRUE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcPreviousSelLine (Document document, View view)
-#else  /* __STDC__ */
-void                TtcPreviousSelLine (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    MovingCommands (8, document, view, TRUE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcNextSelLine (Document document, View view)
-#else  /* __STDC__ */
-void                TtcNextSelLine (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    MovingCommands (7, document, view, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void                TtcPreviousWord (Document document, View view)
+{
+   MovingCommands (9, document, view, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void                TtcNextWord (Document document, View view)
+{
+   MovingCommands (10, document, view, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void                TtcPreviousSelWord (Document document, View view)
+{
+   MovingCommands (11, document, view, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void                TtcNextSelWord (Document document, View view)
+{
+   MovingCommands (12, document, view, TRUE);
 }
 
 /*----------------------------------------------------------------------
    CopyXClipboard insere le contenu de la selection courante dans   
    le Xbuffer pour transmettre la selection X.             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          CopyXClipboard (USTRING* buffer, View view)
-#else  /* __STDC__ */
-static int          CopyXClipboard (buffer, view)
-USTRING*            buffer;
-View                view;
-#endif /* __STDC__ */
 {
    PtrTextBuffer       clipboard;
    PtrDocument         pDoc;
@@ -1026,13 +949,7 @@ View                view;
 /*----------------------------------------------------------------------
    TtcCopyToClipboard                                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcCopyToClipboard (Document document, View view)
-#else  /* __STDC__ */
-void                TtcCopyToClipboard (document, view)
-Document            document;
-View                view;
-#endif
 {
 #  ifdef _WINDOWS
    ClipboardLength = CopyXClipboard (&Xbuffer, view);

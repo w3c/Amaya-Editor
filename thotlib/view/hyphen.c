@@ -40,16 +40,8 @@ static CHAR_T         sepcar[] =
    Si la coupure est possible, indique dans addHyphen s'il 
    faut inse'rer un tiret a` la position de coupure ou non.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          PatternHyphen (STRING word, int length, Language language, ThotBool * addHyphen)
-#else  /* __STDC__ */
-static int          PatternHyphen (word, length, language, addHyphen)
-STRING              word;
-int                 length;
-Language            language;
-ThotBool           *addHyphen;
-
-#endif /* __STDC__ */
+static int PatternHyphen (STRING word, int length, Language language,
+			  ThotBool *addHyphen)
 {
    int                 i, k;
    int                 status;
@@ -84,20 +76,15 @@ ThotBool           *addHyphen;
    retourne TRUE si c'est un separateur               
    FALSE sinon                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            IsSeparatorChar (CHAR_T c)
-#else  /* __STDC__ */
-ThotBool            IsSeparatorChar (c)
-CHAR_T                c;
-#endif /* __STDC__ */
 {
    int              i, lg;
-
+   
    lg = sizeof (sepcar);
    for (i = 0; i < lg; i++)
      {
-	if (c == sepcar[i])
-	   return (TRUE);
+       if (c == sepcar[i])
+	 return (TRUE);
      }
    return (FALSE);
 }
@@ -106,15 +93,10 @@ CHAR_T                c;
 /*----------------------------------------------------------------------
    SmallLettering convertit les caracte`res majuscules en minuscules.   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SmallLettering (STRING word)
-#else  /* __STDC__ */
-void                SmallLettering (word)
-STRING              word;
-#endif /* __STDC__ */
 {
    UCHAR_T       c;
-   int                 j;
+   int           j;
 
    j = 0;
    while (word[j] != 0)
@@ -141,17 +123,8 @@ STRING              word;
    - la longueur des se'parateurs qui pre'ce`dent le       
    de'but du mot.                                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank, CHAR_T word[THOT_MAX_CHAR], int *width)
-
-#else  /* __STDC__ */
-static int          NextWord (font, buffer, rank, word, width)
-ptrfont             font;
-PtrTextBuffer      *buffer;
-int                *rank;
-CHAR_T                word[THOT_MAX_CHAR];
-int                *width;
-#endif /* __STDC__ */
+static int NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank,
+		     CHAR_T word[THOT_MAX_CHAR], int *width)
 {
    int                 i, j;
    int                 lg, nbChars;
@@ -255,15 +228,7 @@ int                *width;
    Le parame`tre language donne l'indice de la langue dans 
    la table des langues courante.                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          WordHyphen (STRING word, int length, Language language, ThotBool * hyphen)
-#else  /* __STDC__ */
-static int          WordHyphen (word, length, language, hyphen)
-STRING              word;
-int                 length;
-Language            language;
-ThotBool           *hyphen;
-#endif /* __STDC__ */
+static int WordHyphen (STRING word, int length, Language language, ThotBool * hyphen)
 {
 
    /* Convertit le mot en minuscule */
@@ -285,17 +250,8 @@ ThotBool           *hyphen;
    - un indicateur qui vaut VRAI s'il faut engendrer un    
    tiret d'hyphe'nation.                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 HyphenLastWord (ptrfont font, Language language, PtrTextBuffer * buffer, int *rank, int *width, ThotBool * hyphen)
-#else  /* __STDC__ */
-int                 HyphenLastWord (font, language, buffer, rank, width, hyphen)
-ptrfont             font;
-Language            language;
-PtrTextBuffer      *buffer;
-int                *rank;
-int                *width;
-ThotBool           *hyphen;
-#endif /* __STDC__ */
+int HyphenLastWord (ptrfont font, Language language, PtrTextBuffer *buffer,
+		    int *rank, int *width, ThotBool *hyphen)
 {
    PtrTextBuffer       adbuff;
    int                 i, lghyphen;
@@ -404,12 +360,7 @@ ThotBool           *hyphen;
    coupure des mots et l'autorisation de coupure pour la   
    boi^te donne'e.                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            CanHyphen (PtrBox pBox)
-#else  /* __STDC__ */
-ThotBool            CanHyphen (pBox)
-PtrBox              pBox;
-#endif /* __STDC__ */
 {
   Language            language;
 

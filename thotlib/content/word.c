@@ -33,11 +33,11 @@ static int          lastCharInitialSelection;
    S'il n'y a pas de caractere suivant retourne le         
    caractere NULL.                                         
   ----------------------------------------------------------------------*/
-UCHAR_T       NextCharacter (PtrTextBuffer * buffer, int *rank)
+UCHAR_T NextCharacter (PtrTextBuffer *buffer, int *rank)
 {
 
    if (*buffer == NULL)
-      return (0);
+      return (WC_EOS);
    else
      {
 	(*rank)++;
@@ -63,11 +63,10 @@ UCHAR_T       NextCharacter (PtrTextBuffer * buffer, int *rank)
    S'il n'y a pas de caractere precedent retourne le       
    caractere `\0`.                                         
   ----------------------------------------------------------------------*/
-UCHAR_T       PreviousCharacter (PtrTextBuffer * buffer, int *rank)
+UCHAR_T PreviousCharacter (PtrTextBuffer *buffer, int *rank)
 {
-
    if (*buffer == NULL)
-      return (0);
+      return (WC_EOS);
    else
      {
 	(*rank)--;

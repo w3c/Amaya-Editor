@@ -60,12 +60,8 @@ Element		HighlightElement = NULL;
 Attribute	HighLightAttribute = NULL;
 
 /* Some prototypes */
-#ifdef __STDC__
 static ThotBool     FollowTheLink (Element anchor, Element elSource, Document doc);
-#else  /* __STDC__ */
-static ThotBool     FollowTheLink (/* anchor, elSource, doc */);
 
-#endif /* __STDC__ */
 
 /* the structure used for the Forward and Backward buttons history callbacks */
 typedef struct _FollowTheLink_context {
@@ -80,7 +76,7 @@ typedef struct _FollowTheLink_context {
    ResetFontOrPhraseOnText: The text element elem should
    not be any longer within an element of type notType.
   ----------------------------------------------------------------------*/
-static void         ResetFontOrPhraseOnText (Document document, Element elem, int notType)
+static void ResetFontOrPhraseOnText (Document document, Element elem, int notType)
 {
    ElementType         elType, parentType;
    Element             elFont, parent, prev, next, added, child, last;
@@ -449,11 +445,9 @@ Element             SearchNAMEattribute (Document doc, STRING nameVal, Attribute
    FollowTheLink_callback
    This function is called when the document is loaded
   ----------------------------------------------------------------------*/
-void               FollowTheLink_callback (int targetDocument, int status, 
-					   STRING urlName,
-					   STRING outputfile, 
-					   AHTHeaders *http_headers,
-					   void * context)
+void FollowTheLink_callback (int targetDocument, int status, STRING urlName,
+			     STRING outputfile, AHTHeaders *http_headers,
+			     void * context)
 {
   Element             elFound=NULL;
   ElementType         elType;
@@ -468,7 +462,6 @@ void               FollowTheLink_callback (int targetDocument, int status,
   FollowTheLink_context      *ctx = (FollowTheLink_context *) context;
 
   /* retrieve the context */
-
   if (ctx == NULL)
     return;
 
@@ -1186,7 +1179,7 @@ ThotBool            DoubleClick (NotifyElement *event)
     /* don't let Thot perform normal operation */
     return (ActivateElement (event->element, event->document));
   else
-    return TRUE;
+    return FALSE;
 }
 
 

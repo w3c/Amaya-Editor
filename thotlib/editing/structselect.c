@@ -2231,397 +2231,384 @@ void SelectStringWithEvent (PtrDocument pDoc, PtrElement pEl, int firstChar, int
                FALSE: the end of the current selection is extended.
    doubleClick: if TRUE, the user has double-clicked without moving the mouse.
    drag: the user extends the selection by dragging.
+   Return TRUE when the application asks Thot to do nothing.
   ----------------------------------------------------------------------*/
-void ChangeSelection (int frame, PtrAbstractBox pAb, int rank, ThotBool extension, ThotBool update, ThotBool doubleClick, ThotBool drag)
+ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
+			  ThotBool extension, ThotBool update,
+			  ThotBool doubleClick, ThotBool drag)
 {
-   PtrDocument         pDoc;
-   PtrElement          pEl, pEl1;
-   PtrAttribute        pAttr;
-   NotifyElement       notifyEl;
-   Document            doc;
-   int                 view, numassoc;
-   ThotBool            assoc, error, fixed, begin, stop, doubleClickRef;
-   ThotBool            graphSel;
+  PtrDocument         pDoc;
+  PtrElement          pEl, pEl1;
+  PtrAttribute        pAttr;
+  NotifyElement       notifyEl;
+  Document            doc;
+  int                 view, numassoc;
+  ThotBool            assoc, error, fixed, begin, stop, doubleClickRef;
+  ThotBool            graphSel, result;
 
-   numassoc = 0;
-   pEl1 = NULL;
-   /* search the document and the view corresponding to the window */
-   GetDocAndView (frame, &pDoc, &view, &assoc);
-   doc = IdentDocument (pDoc);
-   if (doubleClick && pAb != NULL)
+  numassoc = 0;
+  pEl1 = NULL;
+  /* search the document and the view corresponding to the window */
+  GetDocAndView (frame, &pDoc, &view, &assoc);
+  doc = IdentDocument (pDoc);
+  /* by default Thot applies its editing changes */
+  result = FALSE;
+  if (doubleClick && pAb != NULL)
+    {
+      pEl1 = pAb->AbElement;
+      if (pEl1 != NULL)
+	{
+	  /* send event TteElemActivate.Pre to the application */
+	  notifyEl.event = TteElemActivate;
+	  notifyEl.document = doc;
+	  notifyEl.element = (Element) pEl1;
+	  notifyEl.elementType.ElTypeNum = pEl1->ElTypeNumber;
+	  notifyEl.elementType.ElSSchema = (SSchema) (pEl1->ElStructSchema);
+	  notifyEl.position = 0;
+	  if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+	    /* the application asks Thot to do nothing */
+	    return TRUE;
+	  if (pEl1->ElHolophrast)
+	    {
+	      /* avoid to rebuild menus. It will be done by */
+	      /* SelectElement */
+	      SelectedDocument = NULL;
+	      /* switch off the previous selection */
+	      CancelSelection ();
+	      DeHolophrast (pEl1, pDoc);
+	      SelectElementWithEvent (pDoc, pEl1, TRUE, FALSE);
+	      return result;
+	    }
+	}
+    }
+
+  error = FALSE;
+  doubleClickRef = FALSE;
+  graphSel = (pAb->AbElement->ElLeafType == LtPolyLine ||
+	      (pAb->AbElement->ElLeafType == LtGraphics &&
+	       pAb->AbElement->ElGraph == 'g'));
+  /* process double clicks and extensions for polyline vertices */
+  if (pAb != NULL && pAb->AbElement->ElTerminal && graphSel)
+    /* it's a polyline or a line */
+    {
+      if (extension)
+	/* it's a selection extension */
+	{
+	  if (FirstSelectedElement == pAb->AbElement &&
+	      rank == SelectedPointInPolyline)
+	    /* same polyline and same vertex as before. Then, it's not */
+	    /* really an extension */
+	    extension = FALSE;
+	  else
+	    /* select the entire polyline */
+	    rank = 0;
+	}
+      if (doubleClick)
+	/* a double-click applies to the polyline as a whole */
+	rank = 0;
+    }
+
+  if (extension && SelectedDocument == NULL && DocSelectedAttr == NULL)
+    /* it's an extension, but there is no selection. Consider it as a new */
+    /* selection */
+    extension = FALSE;
+  
+  /* if it's a double-click, check that the element is a reference or an */
+  /* inclusion */
+  if (doubleClick && pAb != NULL && pAb->AbElement != NULL)
+    {
+      pEl1 = pAb->AbElement;
+      if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct != CsReference)
+	{
+	  /* search for an inclusion among the ancestors */
+	  pEl = pEl1;
+	  while (pEl->ElParent != NULL && pEl->ElSource == NULL)
+	    pEl = pEl->ElParent;
+	  if (pEl->ElSource != NULL)
+	    /* it's an inclusion */
+	    pEl1 = pEl;
+	}
+      if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct == CsReference ||
+	  pEl1->ElSource != NULL)
+	/* this element is a reference or an inclusion */
+	{
+	  doubleClickRef = TRUE;
+	  FirstSelectedElement = pEl1;
+	  LastSelectedElement = pEl1;
+	  SelectedPointInPolyline = 0;
+	  SelectedPictureEdge = 0;
+	}
+      else
+	{
+	  /* it's neither an inclusion nor a reference element */
+	  /* search a reference attribute with exception ActiveRef */
+	  /* among the ancestors */
+	  pEl = pEl1;
+	  do
+	    {
+	      pAttr = pEl->ElFirstAttr;
+	      /* scan all attributes of current element */
+	      while (pAttr != NULL && !doubleClickRef)
+		if (pAttr->AeAttrType == AtReferenceAttr &&
+		    AttrHasException (ExcActiveRef, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
+		  /* a reference attribute has been found */
+		  {
+		    doubleClickRef = TRUE;
+		    FirstSelectedElement = pEl;
+		    LastSelectedElement = pEl;
+		    SelectedPointInPolyline = 0;
+		    SelectedPictureEdge = 0;
+		  }
+		else
+		  /* next attribute of same element */
+		  pAttr = pAttr->AeNext;
+	      if (!doubleClickRef)
+		/* higher level ancestor */
+		pEl = pEl->ElParent;
+	    }
+	  while (pEl != NULL && !doubleClickRef);
+	}
+    }
+
+  if (pAb != NULL &&
+      pAb->AbElement->ElTerminal &&
+      (pAb->AbElement->ElLeafType == LtPairedElem || pAb->AbElement->ElLeafType == LtReference) &&
+      /* it's a reference element or a paired element */
+      (!pAb->AbPresentationBox || !pAb->AbCanBeModified))
+    /* it's not the presentation box of an attribute value */
+    /* select all the contents */
+    rank = 0;
+  
+  if (assoc)
+    {
+      numassoc = view;
+      view = 1;
+    }
+  if (!update)
+    FrameWithNoUpdate = frame;
+  if (extension || !update)
+    /* extension of current selection */
+    if (DocSelectedAttr != NULL)
+      /* the current selection is within a presentation box that displays */
+      /* an attribute value */
+      {
+	if (DocSelectedAttr == pDoc && AbsBoxSelectedAttr == pAb)
+	  /* extension is allowed only if it's within the same box */
+	  {
+	    if (rank == 0)
+	      {
+		FirstSelectedCharInAttr = 1;
+		LastSelectedCharInAttr = pAb->AbVolume;
+	      }
+	    else if (rank <= InitSelectedCharInAttr)
+	      {
+		FirstSelectedCharInAttr = rank;
+		LastSelectedCharInAttr = InitSelectedCharInAttr;
+	      }
+	    else
+	      {
+		FirstSelectedCharInAttr = InitSelectedCharInAttr;
+		LastSelectedCharInAttr = rank;
+	      }
+	    if (TtaGetDisplayMode (FrameTable[frame].FrDoc) == DisplayImmediately)
+	      SelectStringInAttr (pDoc, pAb, FirstSelectedCharInAttr,
+				  LastSelectedCharInAttr, TRUE);
+	  }
+      }
+    else
+      {
+	if (pDoc != SelectedDocument ||
+	    (assoc && numassoc != FirstSelectedElement->ElAssocNum))
+	  /* extension to a different tree is not allowed */
+	  {
+	    TtaDisplaySimpleMessage (INFO, LIB, TMSG_CHANGING_DOC_IMP);
+	    error = TRUE;
+	  }
+	else
+	  {
+	    /* same document, but is it the same tree? */
+	    if (FirstSelectedElement != NULL)
+	      /* search an enclosing abstract box that belongs to the */
+	      /* same associated tree as the first selected element */
+	      {
+		stop = FALSE;
+		do
+		  if (pAb == NULL)
+		    stop = TRUE;
+		  else if (FirstSelectedElement->ElAssocNum == pAb->AbElement->ElAssocNum)
+		    stop = TRUE;
+		  else
+		    pAb = pAb->AbEnclosing;
+		while (!stop);
+	      }
+	    if (pAb == NULL)
+	      error = TRUE;
+	    else
+	      {
+		fixed = update;
+		begin = extension;
+		pEl = pAb->AbElement;
+		if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
+		  /* the element to be selected is a constant */
+		  /* select it entirely */
+		  rank = 0;
+		/* If the element to be selected is hidden or cannot be */
+		/* selected, get the first ancestor that can be selected*/
+		if (TypeHasException (ExcNoSelect, pEl->ElTypeNumber,
+				      pEl->ElStructSchema) ||
+		    (HiddenType (pEl) &&
+		     !ElementHasAction(pEl, TteElemExtendSelect, TRUE)))
+		  {
+		    stop = FALSE;
+		    /* select the entire element */
+		    rank = 0;
+		    while (!stop)
+		      if (pEl->ElParent == NULL)
+				/* root of a tree. Select it */
+			stop = TRUE;
+		      else
+			{
+			  pEl = pEl->ElParent;
+			  if (!TypeHasException (ExcNoSelect,
+						 pEl->ElTypeNumber,
+						 pEl->ElStructSchema) &&
+			      (!HiddenType (pEl) ||
+			       ElementHasAction(pEl, TteElemExtendSelect, TRUE)))
+			    stop = TRUE;
+			}
+		  }
+		/* send event TteElemExtendSelect.Pre to the application*/
+		notifyEl.event = TteElemExtendSelect;
+		notifyEl.document = doc;
+		notifyEl.element = (Element) pEl;
+		notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+		notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+		notifyEl.position = 0;
+		result = CallEventType ((NotifyEvent *) &notifyEl, TRUE);
+		if (!result)
+		  /* application accepts selection */
+		  {
+		    /* do select */
+		    ExtendSelection (pEl, rank, fixed, begin, drag);
+		    /* send event TteElemExtendSelect.Pre to the */
+		    /* application */
+		    notifyEl.event = TteElemExtendSelect;
+		    notifyEl.document = doc;
+		    notifyEl.element = (Element) pEl;
+		    notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+		    notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+		    notifyEl.position = 0;
+		    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+		  }
+	      }
+	  }
+}
+   else
      {
-       pEl1 = pAb->AbElement;
-       if (pEl1 != NULL)
+       /* new selection */
+       if (pDoc != SelectedDocument && pDoc != DocSelectedAttr)
+	 /* in another document */
+	 TtaClearViewSelections ();
+       else if (!doubleClickRef && doubleClick && SelectedView == view &&
+		FirstSelectedElement == LastSelectedElement &&
+		pAb->AbElement == FirstSelectedElement)
+	 /* user has double-clicked on the same element */
 	 {
-	   /* send event TteElemActivate.Pre to the application */
+	   pEl1 = FirstSelectedElement;
+	   if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct == CsReference ||
+	       pEl1->ElSource != NULL)
+	     /* this element is a reference or an inclusion */
+	     doubleClickRef = TRUE;
+	 }
+       if (doubleClick)
+	 {
+	   FindReferredEl ();
+	   /* send an event TteElemActivate.Pre to the application */
 	   notifyEl.event = TteElemActivate;
 	   notifyEl.document = doc;
 	   notifyEl.element = (Element) pEl1;
 	   notifyEl.elementType.ElTypeNum = pEl1->ElTypeNumber;
 	   notifyEl.elementType.ElSSchema = (SSchema) (pEl1->ElStructSchema);
 	   notifyEl.position = 0;
-	   if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-	     /* the application asks Thot to do nothing */
-	     return;
-	   if (pEl1->ElHolophrast)
-	     {
-	       /* avoid to rebuild menus. It will be done by */
-	       /* SelectElement */
-	       SelectedDocument = NULL;
-	       /* switch off the previous selection */
-	       CancelSelection ();
-	       DeHolophrast (pEl1, pDoc);
-	       SelectElementWithEvent (pDoc, pEl1, TRUE, FALSE);
-	       return;
-	     }
-	 }
-     }
-
-   error = FALSE;
-   doubleClickRef = FALSE;
-   graphSel = (pAb->AbElement->ElLeafType == LtPolyLine ||
-	       (pAb->AbElement->ElLeafType == LtGraphics &&
-		pAb->AbElement->ElGraph == 'g'));
-   /* process double clicks and extensions for polyline vertices */
-   if (pAb != NULL && pAb->AbElement->ElTerminal && graphSel)
-     /* it's a polyline or a line */
-     {
-       if (extension)
-	 /* it's a selection extension */
-	 {
-	 if (FirstSelectedElement == pAb->AbElement &&
-	     rank == SelectedPointInPolyline)
-	   /* same polyline and same vertex as before. Then, it's not */
-	   /* really an extension */
-	   extension = FALSE;
-	 else
-	   /* select the entire polyline */
-	   rank = 0;
-	 }
-       if (doubleClick)
-	 /* a double-click applies to the polyline as a whole */
-	 rank = 0;
-     }
-
-   if (extension && SelectedDocument == NULL && DocSelectedAttr == NULL)
-      /* it's an extension, but there is no selection. Consider it as a new */
-      /* selection */
-      extension = FALSE;
-
-   /* if it's a double-click, check that the element is a reference or an */
-   /* inclusion */
-   if (doubleClick &&
-       pAb != NULL &&
-       pAb->AbElement != NULL)
-     {
-       pEl1 = pAb->AbElement;
-       if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct != CsReference)
-	 {
-	   /* search for an inclusion among the ancestors */
-	   pEl = pEl1;
-	   while (pEl->ElParent != NULL && pEl->ElSource == NULL)
-	     pEl = pEl->ElParent;
-	   if (pEl->ElSource != NULL)
-	     /* it's an inclusion */
-	     pEl1 = pEl;
-	 }
-       if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct ==
-	   CsReference || pEl1->ElSource != NULL)
-	 /* this element is a reference or an inclusion */
-	 {
-	   doubleClickRef = TRUE;
-	   FirstSelectedElement = pEl1;
-	   LastSelectedElement = pEl1;
-	   SelectedPointInPolyline = 0;
-	   SelectedPictureEdge = 0;
+	   CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	 }
        else
 	 {
-	   /* it's neither an inclusion nor a reference element */
-	   /* search a reference attribute with exception ActiveRef */
-	   /* among the ancestors */
-	   pEl = pEl1;
-	   do
+	   /* the view where the user has clicked becomes the active view */
+	   SelectedView = view;
+	   OldSelectedView = view;
+	   OldDocSelectedView = pDoc;
+	   pEl = pAb->AbElement;
+	   if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
+	     /* the element to be selected is a constant */
+	     /* Select it entirely */
+	     rank = 0;
+	   /* if the element to be selected has exception NoSelect or */
+	   /* Hidden, select the first ancestor that can be selected */
+	   /* However, if the element is hidden, but has specified a */
+	   /* callback for event Select, it is selected */
+	   if (TypeHasException (ExcNoSelect, pEl->ElTypeNumber, pEl->ElStructSchema) ||
+	       (HiddenType (pEl) && !ElementHasAction(pEl, TteElemSelect, TRUE)))
 	     {
-	       pAttr = pEl->ElFirstAttr;
-	       /* scan all attributes of current element */
-	       while (pAttr != NULL && !doubleClickRef)
-		 if (pAttr->AeAttrType == AtReferenceAttr &&
-		     AttrHasException (ExcActiveRef, pAttr->AeAttrNum,
-				       pAttr->AeAttrSSchema))
-		   /* a reference attribute has been found */
-		   {
-		     doubleClickRef = TRUE;
-		     FirstSelectedElement = pEl;
-		     LastSelectedElement = pEl;
-		     SelectedPointInPolyline = 0;
-		     SelectedPictureEdge = 0;
-		   }
+	       /* select element entirely */
+	       rank = 0;
+	       stop = FALSE;
+	       while (!stop)
+		 if (pEl->ElParent == NULL)
+		   /* that's a root. Select it */
+		   stop = TRUE;
 		 else
-		   /* next attribute of same element */
-		   pAttr = pAttr->AeNext;
-	       if (!doubleClickRef)
-		 /* higher level ancestor */
-		 pEl = pEl->ElParent;
+		   {
+		     pEl = pEl->ElParent;
+		     if (!TypeHasException (ExcNoSelect,pEl->ElTypeNumber, pEl->ElStructSchema)  &&
+			 (!HiddenType (pEl) ||
+			  ElementHasAction(pEl, TteElemSelect, TRUE)))
+		       stop = TRUE;
+		   }
 	     }
-	   while (pEl != NULL && !doubleClickRef);
+	   if (rank > 0 && pAb->AbPresentationBox && pAb->AbCanBeModified)
+	     /* user has clicked in the presentation box displaying an */
+	     /* attribute value */
+	     {
+	       CancelSelection ();
+	       /*if (TtaGetDisplayMode (FrameTable[frame].FrDoc) == DisplayImmediately)*/
+	       SelectStringInAttr (pDoc, pAb, rank, rank, FALSE);
+	       InitSelectedCharInAttr = rank;
+	     }
+	   else if (rank > 0 && pEl->ElTerminal &&
+		    (pEl->ElLeafType == LtText ||
+		     pEl->ElLeafType == LtPolyLine ||
+		     pEl->ElLeafType == LtGraphics ||
+		     pEl->ElLeafType == LtPicture))
+	     SelectPositionWithEvent (pDoc, pEl, rank);
+	   else
+	     SelectElementWithEvent (pDoc, pEl, TRUE, FALSE);
 	 }
      }
-
-   if (pAb != NULL &&
-       pAb->AbElement->ElTerminal &&
-       (pAb->AbElement->ElLeafType == LtPairedElem ||
-	pAb->AbElement->ElLeafType == LtReference) &&
-       /* it's a reference element or a paired element */
-       (!pAb->AbPresentationBox || !pAb->AbCanBeModified))
-     /* it's not the presentation box of an attribute value */
-     /* select all the contents */
-     rank = 0;
-
-   if (assoc)
-     {
-	numassoc = view;
-	view = 1;
-     }
-   if (!update)
-      FrameWithNoUpdate = frame;
-   if (extension || !update)
-      /* extension of current selection */
-      if (DocSelectedAttr != NULL)
-	 /* the current selection is within a presentation box that displays */
-	 /* an attribute value */
-	{
-	   if (DocSelectedAttr == pDoc && AbsBoxSelectedAttr == pAb)
-	      /* extension is allowed only if it's within the same box */
-	     {
-		if (rank == 0)
+  if (!doubleClick)
+    {
+      FrameWithNoUpdate = 0;
+      if (!error)
+	/* If all the contents of a text leaf is selected, then the leaf */
+	/* itself is considered as selected */
+	if (LastSelectedElement != NULL)
+	  if (LastSelectedElement == FirstSelectedElement)
+	    {
+	      pEl1 = FirstSelectedElement;
+	      if (pEl1->ElTerminal && pEl1->ElLeafType == LtText)
+		if (pEl1->ElTextLength < LastSelectedChar &&
+		    FirstSelectedChar <= 1)
 		  {
-		     FirstSelectedCharInAttr = 1;
-		     LastSelectedCharInAttr = pAb->AbVolume;
+		    LastSelectedChar = 0;
+		    FirstSelectedChar = 0;
 		  }
-		else if (rank <= InitSelectedCharInAttr)
-		  {
-		     FirstSelectedCharInAttr = rank;
-		     LastSelectedCharInAttr = InitSelectedCharInAttr;
-		  }
-		else
-		  {
-		     FirstSelectedCharInAttr = InitSelectedCharInAttr;
-		     LastSelectedCharInAttr = rank;
-		  }
-		if (TtaGetDisplayMode (FrameTable[frame].FrDoc) == DisplayImmediately)
-		  SelectStringInAttr (pDoc, pAb, FirstSelectedCharInAttr,
-				      LastSelectedCharInAttr, TRUE);
-	     }
-	}
-      else
-	{
-	   if (pDoc != SelectedDocument ||
-	       (assoc && numassoc != FirstSelectedElement->ElAssocNum))
-	     /* extension to a different tree is not allowed */
-	     {
-		TtaDisplaySimpleMessage (INFO, LIB, TMSG_CHANGING_DOC_IMP);
-		error = TRUE;
-	     }
-	   else
-	     {
-		/* same document, but is it the same tree? */
-		if (FirstSelectedElement != NULL)
-		   /* search an enclosing abstract box that belongs to the */
-		   /* same associated tree as the first selected element */
-		  {
-		     stop = FALSE;
-		     do
-			if (pAb == NULL)
-			   stop = TRUE;
-			else if (FirstSelectedElement->ElAssocNum == pAb->AbElement->ElAssocNum)
-			   stop = TRUE;
-			else
-			   pAb = pAb->AbEnclosing;
-		     while (!stop);
-		  }
-		if (pAb == NULL)
-		   error = TRUE;
-		else
-		  {
-		     fixed = update;
-		     begin = extension;
-		     pEl = pAb->AbElement;
-		     if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
-			/* the element to be selected is a constant */
-			/* select it entirely */
-			rank = 0;
-		     /* If the element to be selected is hidden or cannot be */
-		     /* selected, get the first ancestor that can be selected*/
-		     if (TypeHasException (ExcNoSelect, pEl->ElTypeNumber,
-					   pEl->ElStructSchema) ||
-			 (HiddenType (pEl) &&
-			  !ElementHasAction(pEl, TteElemExtendSelect, TRUE)))
-		       {
-			  stop = FALSE;
-			  /* select the entire element */
-			  rank = 0;
-			  while (!stop)
-			     if (pEl->ElParent == NULL)
-				/* root of a tree. Select it */
-				stop = TRUE;
-			     else
-			       {
-			       pEl = pEl->ElParent;
-			       if (!TypeHasException (ExcNoSelect,
-						      pEl->ElTypeNumber,
-						      pEl->ElStructSchema) &&
-				   (!HiddenType (pEl) ||
-				    ElementHasAction(pEl, TteElemExtendSelect, TRUE)))
-				   stop = TRUE;
-			       }
-		       }
-		     /* send event TteElemExtendSelect.Pre to the application*/
-		     notifyEl.event = TteElemExtendSelect;
-		     notifyEl.document = doc;
-		     notifyEl.element = (Element) pEl;
-		     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-		     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-		     notifyEl.position = 0;
-		     if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-		       /* application accepts selection */
-		       {
-			  /* do select */
-			  ExtendSelection (pEl, rank, fixed, begin, drag);
-			  /* send event TteElemExtendSelect.Pre to the */
-			  /* application */
-			  notifyEl.event = TteElemExtendSelect;
-			  notifyEl.document = doc;
-			  notifyEl.element = (Element) pEl;
-			  notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-			  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-			  notifyEl.position = 0;
-			  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-		       }
-		  }
-	     }
-	}
-   else
-     {
-	/* new selection */
-	if (pDoc != SelectedDocument &&
-	    pDoc != DocSelectedAttr)
-	   /* in another document */
-	   TtaClearViewSelections ();
-	else if (!doubleClickRef &&
-		 doubleClick &&
-		 SelectedView == view &&
-		 FirstSelectedElement == LastSelectedElement &&
-		 pAb->AbElement == FirstSelectedElement)
-	  /* user has double-clicked on the same element */
-	  {
-	    pEl1 = FirstSelectedElement;
-	    if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct ==
-		CsReference || pEl1->ElSource != NULL)
-	      /* this element is a reference or an inclusion */
-	      doubleClickRef = TRUE;
-	  }
-#ifdef IV
-	else if (!doubleClick &&
-		 SelectedView == view &&
-		 FirstSelectedElement == LastSelectedElement &&
-		 pAb->AbElement == FirstSelectedElement &&
-		 ((graphSel && rank == SelectedPointInPolyline) ||
-		  (!graphSel && rank == FirstSelectedChar)))
-	  /* the selection doesn't change */
-	  return;
-#endif /* IV */
-	if (doubleClick)
-	  {
-	     FindReferredEl ();
-	     /* send an event TteElemActivate.Pre to the application */
-	     notifyEl.event = TteElemActivate;
-	     notifyEl.document = doc;
-	     notifyEl.element = (Element) pEl1;
-	     notifyEl.elementType.ElTypeNum = pEl1->ElTypeNumber;
-	     notifyEl.elementType.ElSSchema = (SSchema) (pEl1->ElStructSchema);
-	     notifyEl.position = 0;
-	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-	  }
-	else
-	  {
-	     /* the view where the user has clicked becomes the active view */
-	     SelectedView = view;
-	     OldSelectedView = view;
-	     OldDocSelectedView = pDoc;
-	     pEl = pAb->AbElement;
-	     if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
-		/* the element to be selected is a constant */
-	        /* Select it entirely */
-		rank = 0;
-	     /* if the element to be selected has exception NoSelect or */
-	     /* Hidden, select the first ancestor that can be selected */
-	     /* However, if the element is hidden, but has specified a */
-             /* callback for event Select, it is selected */
-	     if (TypeHasException (ExcNoSelect, pEl->ElTypeNumber,
-				   pEl->ElStructSchema) ||
-		 (HiddenType (pEl) && !ElementHasAction(pEl, TteElemSelect,
-							TRUE)))
-	       {
-		  /* select element entirely */
-		  rank = 0;
-		  stop = FALSE;
-		  while (!stop)
-		     if (pEl->ElParent == NULL)
-			/* that's a root. Select it */
-			stop = TRUE;
-		     else
-		       {
-			  pEl = pEl->ElParent;
-			  if (!TypeHasException (ExcNoSelect,pEl->ElTypeNumber,
-						 pEl->ElStructSchema)  &&
-			      (!HiddenType (pEl) ||
-			       ElementHasAction(pEl, TteElemSelect, TRUE)))
-			     stop = TRUE;
-		       }
-	       }
-	     if (rank > 0 && pAb->AbPresentationBox && pAb->AbCanBeModified)
-		/* user has clicked in the presentation box displaying an */
-	        /* attribute value */
-	       {
-		  CancelSelection ();
-		  /*if (TtaGetDisplayMode (FrameTable[frame].FrDoc) == DisplayImmediately)*/
-		    SelectStringInAttr (pDoc, pAb, rank, rank, FALSE);
-		  InitSelectedCharInAttr = rank;
-	       }
-	     else if (rank > 0 && pEl->ElTerminal &&
-		  (pEl->ElLeafType == LtText ||
-		   pEl->ElLeafType == LtPolyLine ||
-		   pEl->ElLeafType == LtGraphics ||
-		   pEl->ElLeafType == LtPicture))
-		SelectPositionWithEvent (pDoc, pEl, rank);
-	     else
-		SelectElementWithEvent (pDoc, pEl, TRUE, FALSE);
-	  }
-     }
-   if (!doubleClick)
-     {
-	FrameWithNoUpdate = 0;
-	if (!error)
-	   /* If all the contents of a text leaf is selected, then the leaf */
-	   /* itself is considered as selected */
-	   if (LastSelectedElement != NULL)
-	      if (LastSelectedElement == FirstSelectedElement)
-		{
-		   pEl1 = FirstSelectedElement;
-		   if (pEl1->ElTerminal && pEl1->ElLeafType == LtText)
-		      if (pEl1->ElTextLength < LastSelectedChar &&
-			  FirstSelectedChar <= 1)
-			{
-			   LastSelectedChar = 0;
-			   FirstSelectedChar = 0;
-			}
-		}
-	if (FirstSelectedElement != NULL)
-	   if (FirstSelectedElement->ElAssocNum != 0)
-	      /* reset enclosing abstract boxes for associated elements */
-	      EnclosingAssocAbsBox (FirstSelectedElement);
-     }
+	    }
+      if (FirstSelectedElement != NULL)
+	if (FirstSelectedElement->ElAssocNum != 0)
+	  /* reset enclosing abstract boxes for associated elements */
+	  EnclosingAssocAbsBox (FirstSelectedElement);
+    }
+  return result;
 }
 
 /*----------------------------------------------------------------------
