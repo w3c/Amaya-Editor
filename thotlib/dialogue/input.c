@@ -150,6 +150,7 @@ static int          SpecialShiftCtrlKeys[] = {
 static KEY         *Automata_normal = NULL;
 static KEY         *Automata_ctrl    = NULL;
 static KEY         *Automata_alt     = NULL;
+static KEY         *Automata_SHIFT   = NULL;
 static KEY         *Automata_CTRL    = NULL;
 static KEY         *Automata_ALT     = NULL;
 static KEY         *Automata_current = NULL;
@@ -191,13 +192,18 @@ static char        *NameCode (char* name)
    SpecialKey
    translates the name given by the file thot.keyboard into a key value
    which Thot can use.
+   The parameter shifted is TRUE when a shifted key is selected.
+   Returns TRUE in the parameter isSpecial when it's a special key.
   ----------------------------------------------------------------------*/
-static unsigned int  SpecialKey (char *name, ThotBool *isSpecial)
+static unsigned int  SpecialKey (char *name, ThotBool shifted, ThotBool *isSpecial)
 {
    *isSpecial = TRUE;
    /* is it the name of a special character? */
    if (!strcasecmp (name, "Return"))
-     return (unsigned int) THOT_KEY_Return;
+     {
+       strcpy (name, "Enter");
+       return (unsigned int) THOT_KEY_Return;
+     }
    else if (!strcasecmp (name, "Backspace"))
      return (unsigned int) THOT_KEY_BackSpace;
    else if (!strcasecmp (name, "Space"))
@@ -208,7 +214,10 @@ static unsigned int  SpecialKey (char *name, ThotBool *isSpecial)
    else if (!strcasecmp (name, "Tab"))
    {
      *isSpecial = FALSE;
-     return (unsigned int) THOT_KEY_Tab;
+     if (shifted)
+       return (unsigned int) THOT_KEY_TAB;
+     else
+       return (unsigned int) THOT_KEY_Tab;
    }
    else if (!strcasecmp (name, "Escape"))
      return (unsigned int) THOT_KEY_Escape;
@@ -254,38 +263,6 @@ static unsigned int  SpecialKey (char *name, ThotBool *isSpecial)
       return (unsigned int) THOT_KEY_F19;
    else if (!strcasecmp (name, "F20") || !strcasecmp (name, "l10"))
       return (unsigned int) THOT_KEY_F20;
-#ifdef THOT_KEY_R1
-   else if (!strcasecmp (name, "F21") || !strcasecmp (name, "r1"))
-      return (unsigned int) THOT_KEY_R1;
-   else if (!strcasecmp (name, "F22") || !strcasecmp (name, "r2"))
-      return (unsigned int) THOT_KEY_R2;
-   else if (!strcasecmp (name, "F23") || !strcasecmp (name, "r3"))
-      return (unsigned int) THOT_KEY_R3;
-   else if (!strcasecmp (name, "F24") || !strcasecmp (name, "r4"))
-      return (unsigned int) THOT_KEY_R4;
-   else if (!strcasecmp (name, "F25") || !strcasecmp (name, "r5"))
-      return (unsigned int) THOT_KEY_R5;
-   else if (!strcasecmp (name, "F26") || !strcasecmp (name, "r6"))
-      return (unsigned int) THOT_KEY_R6;
-   else if (!strcasecmp (name, "F27") || !strcasecmp (name, "r7"))
-      return (unsigned int) THOT_KEY_R7;
-   else if (!strcasecmp (name, "F28") || !strcasecmp (name, "r8"))
-      return (unsigned int) THOT_KEY_R8;
-   else if (!strcasecmp (name, "F29") || !strcasecmp (name, "r9"))
-      return (unsigned int) THOT_KEY_R9;
-   else if (!strcasecmp (name, "F30") || !strcasecmp (name, "r10"))
-      return (unsigned int) THOT_KEY_R10;
-   else if (!strcasecmp (name, "F31") || !strcasecmp (name, "r11"))
-      return (unsigned int) THOT_KEY_R11;
-   else if (!strcasecmp (name, "F32") || !strcasecmp (name, "r12"))
-      return (unsigned int) THOT_KEY_R12;
-   else if (!strcasecmp (name, "F33") || !strcasecmp (name, "r13"))
-      return (unsigned int) THOT_KEY_R13;
-   else if (!strcasecmp (name, "F34") || !strcasecmp (name, "r14"))
-      return (unsigned int) THOT_KEY_R14;
-   else if (!strcasecmp (name, "F35") || !strcasecmp (name, "r15"))
-      return (unsigned int) THOT_KEY_R15;
-#endif /* THOT_KEY_R1 */
    else if (!strcasecmp (name, "Up"))
      return (unsigned int) THOT_KEY_Up;
    else if (!strcasecmp (name, "Down"))
@@ -333,6 +310,9 @@ static void MemoKey (int mod1, int key1, ThotBool spec1, int mod2, int key2,
 	 {
 	    case THOT_NO_MOD:
 	       addFirst = &Automata_normal;
+	       break;
+	    case THOT_MOD_SHIFT:
+	       addFirst = &Automata_SHIFT;
 	       break;
 	    case THOT_MOD_CTRL:
 	       addFirst = &Automata_ctrl;
@@ -479,7 +459,8 @@ static void MemoKey (int mod1, int key1, ThotBool spec1, int mod2, int key2,
    Decodes the MS-Window callback parameters and calls the
    generic character handling function.
   ----------------------------------------------------------------------*/
-void     WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam, LPARAM lParam, ThotBool isSpecial)
+void WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
+			  LPARAM lParam, ThotBool isSpecial)
 {
    char string[2];
    int  keyboard_mask = 0;   
@@ -795,9 +776,11 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 		}
 	      ptr = Automata_alt;
 	    }
+	  else if (modtype == THOT_MOD_SHIFT)
+	    ptr = Automata_SHIFT;
 	  else
 	    ptr = Automata_normal;
-      
+
 	    while (!found && ptr != NULL)
 	      {
 		if (ptr != NULL)
@@ -836,54 +819,30 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
       switch (key)
 	{
 	case THOT_KEY_Up:
-#ifdef THOT_KEY_R8
-	case THOT_KEY_R8:
-#endif
 	  index = MY_KEY_Up;
 	  break;
 	case THOT_KEY_Return:
 	  index = MY_KEY_Return;
 	  break;
 	case THOT_KEY_Left:
-#ifdef THOT_KEY_R10
-	case THOT_KEY_R10:
-#endif
 	  index = MY_KEY_Left;
 	  break;
 	case THOT_KEY_Right:
-#ifdef THOT_KEY_R12
-	case THOT_KEY_R12:
-#endif
 	  index = MY_KEY_Right;
 	  break;
 	case THOT_KEY_Down:
-#ifdef THOT_KEY_R14
-	case THOT_KEY_R14:
-#endif
 	  index = MY_KEY_Down;
 	  break;
 	case THOT_KEY_Prior:
-#ifdef THOT_KEY_R9
-	case THOT_KEY_R9:
-#endif
 	  index = MY_KEY_Prior;
 	  break;
 	case THOT_KEY_Next:
-#ifdef THOT_KEY_R15
-	case THOT_KEY_R15:
-#endif
 	  index = MY_KEY_Next;
 	  break;
 	case THOT_KEY_Home:
-#ifdef THOT_KEY_R7
-	case THOT_KEY_R7:
-#endif
 	  index = MY_KEY_Home;
 	  break;
 	case THOT_KEY_End:
-#ifdef THOT_KEY_R13
-	case THOT_KEY_R13:
-#endif
 	  index = MY_KEY_End;
 	  break;
 	case THOT_KEY_BackSpace:
@@ -1042,83 +1001,49 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 }
 
 
+/*----------------------------------------------------------------------
+  FreeOneTranslationsTable frees a translation table.
+  ----------------------------------------------------------------------*/
+static void FreeOneTranslationsTable (KEY *current)
+{
+   KEY                *ptr, *subkey;
+
+   while (current != NULL)
+     {
+       ptr = current;
+       while (ptr->K_Next != NULL)
+	 {
+	   subkey = ptr->K_Next;
+	   ptr->K_Next = subkey->K_Other;
+	   TtaFreeMemory (subkey);
+	 }
+       current = ptr->K_Other;
+       TtaFreeMemory (ptr);
+     }
+}
 
 /*----------------------------------------------------------------------
-   FreeTranslations remove all translation structures.
+   FreeTranslations removes all translation structures.
   ----------------------------------------------------------------------*/
 void FreeTranslations ()
 {
-   KEY                *ptr, *subkey;
    int                 i;
 
    /* free all document access keys */
    for (i = 1; i <= MAX_DOCUMENTS; i++)
      TtaRemoveDocAccessKeys (i);
-
-   while (Automata_current != NULL)
-     {
-       ptr = Automata_current;
-       while (ptr->K_Next != NULL)
-	 {
-	   subkey = ptr->K_Next;
-	   ptr->K_Next = subkey->K_Other;
-	   TtaFreeMemory (subkey);
-	 }
-       Automata_current = ptr->K_Other;
-       TtaFreeMemory (ptr);
-     }
-
-   while (Automata_ctrl != NULL)
-     {
-       ptr = Automata_ctrl;
-       while (ptr->K_Next != NULL)
-	 {
-	   subkey = ptr->K_Next;
-	   ptr->K_Next = subkey->K_Other;
-	   TtaFreeMemory (subkey);
-	 }
-       Automata_ctrl = ptr->K_Other;
-       TtaFreeMemory (ptr);
-     }
-
-   while (Automata_alt != NULL)
-     {
-       ptr = Automata_alt;
-       while (ptr->K_Next != NULL)
-	 {
-	   subkey = ptr->K_Next;
-	   ptr->K_Next = subkey->K_Other;
-	   TtaFreeMemory (subkey);
-	 }
-       Automata_alt = ptr->K_Other;
-       TtaFreeMemory (ptr);
-     }
-
-   while (Automata_CTRL != NULL)
-     {
-       ptr = Automata_CTRL;
-       while (ptr->K_Next != NULL)
-	 {
-	   subkey = ptr->K_Next;
-	   ptr->K_Next = subkey->K_Other;
-	   TtaFreeMemory (subkey);
-	 }
-       Automata_CTRL = ptr->K_Other;
-       TtaFreeMemory (ptr);
-     }
-
-   while (Automata_ALT != NULL)
-     {
-       ptr = Automata_ALT;
-       while (ptr->K_Next != NULL)
-	 {
-	   subkey = ptr->K_Next;
-	   ptr->K_Next = subkey->K_Other;
-	   TtaFreeMemory (subkey);
-	 }
-       Automata_ALT = ptr->K_Other;
-       TtaFreeMemory (ptr);
-     }
+   FreeOneTranslationsTable (Automata_normal);
+   Automata_normal = NULL;
+   FreeOneTranslationsTable (Automata_ctrl);
+   Automata_ctrl = NULL;
+   FreeOneTranslationsTable (Automata_alt);
+   Automata_alt = NULL;
+   FreeOneTranslationsTable (Automata_SHIFT);
+   Automata_SHIFT = NULL;
+   FreeOneTranslationsTable (Automata_CTRL);
+   Automata_CTRL = NULL;
+   FreeOneTranslationsTable (Automata_ALT);
+   Automata_ALT = NULL;
 }
 
 
@@ -1387,13 +1312,9 @@ ThotTranslations      InitTranslations (char *appliname)
 		    strcat (line, " ");
 		}
 
-	      /* convertion vers keysym pour l'automate */
-	      key1 = SpecialKey (transText, &isSpecialKey1);
-	      if (!strcmp (transText, "Return"))
-		/* trnalate return by enter */
-		strcat (equiv, "Enter");
-	      else
-		strcat (equiv, transText);
+	      /* convert to keysym for the automata */
+	      key1 = SpecialKey (transText, mod1 & THOT_MOD_SHIFT, &isSpecialKey1);
+	      strcat (equiv, transText);
 
 	      /* Lecture eventuelle d'une deuxieme composition */
 	      fscanf (file, "%80s", transText);
@@ -1473,12 +1394,8 @@ ThotTranslations      InitTranslations (char *appliname)
 		      else
 			strcat (line, " ");
 		    } 
-		  key2 = SpecialKey (transText, &isSpecialKey2);
-		  if (!strcmp (transText, "Return"))
-		    /* trnalate return by enter */
-		    strcat (equiv, "Enter");
-		  else
-		    strcat (equiv, transText);
+		  key2 = SpecialKey (transText, mod2 & THOT_MOD_SHIFT, &isSpecialKey2);
+		  strcat (equiv, transText);
 
 		  /* Lecture de l'action */
 		  fscanf (file, "%80s", transText);
@@ -1538,12 +1455,14 @@ ThotTranslations      InitTranslations (char *appliname)
 		  strcat (text, "\n");
 		  /* C'est un encodage de caractere */
 		  adr = AsciiTranslate (&transText[len]);
-		  MemoKey (mod1, key1, isSpecialKey1, mod2, key2, isSpecialKey2, (unsigned int) adr[0], 0);
+		  MemoKey (mod1, key1, isSpecialKey1,
+			   mod2, key2, isSpecialKey2, (unsigned int) adr[0], 0);
 		}
 	      else if (i < max)
 		{
 		  /* C'est une autre action Thot */
-		  MemoKey (mod1, key1, isSpecialKey1, mod2, key2, isSpecialKey2, /*255+i */ 0, i);
+		  MemoKey (mod1, key1, isSpecialKey1,
+			   mod2, key2, isSpecialKey2, /*255+i */ 0, i);
 		  /* On met a jour l'equivalent clavier */
 		  TtaFreeMemory (MenuActionList[i].ActionEquiv);
 		  MenuActionList[i].ActionEquiv = TtaStrdup (equiv);

@@ -59,6 +59,7 @@
 <Key>F6:            TtcCopyToClipboard() 
 <Key>F8:            TtcPasteFromClipboard() 
 <Key>Tab:           NextLinkOrFormElement()
+Shift <Key>Tab:     PreviousLinkOrFormElement()
 Ctrl <Key>p:        TtcPreviousLine() 
 Ctrl <Key>n:        TtcNextLine() 
 Ctrl <Key>a:        TtcStartOfLine() 

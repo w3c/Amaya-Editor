@@ -261,12 +261,12 @@ static PtrAttribute ChAttr (PtrElement elCour, PtrSearchContext context,
      {
 	if (context->SStartToEnd)
 	   /* Recherche en avant */
-	   pEl = FwdSearch2Attributes (pEl, GetAttributeOfElement, ValAttrCherche,
-				       ValAttrTxtCherche, 0, pSS);
+	   pEl = FwdSearch2Attributes (pEl, ValAttrCherche, ValAttrTxtCherche,
+				       GetAttributeOfElement, 0, pSS, NULL);
 	else
 	   /* Recherche en arriere */
-	   pEl = BackSearch2Attributes (pEl, GetAttributeOfElement, ValAttrCherche,
-					ValAttrTxtCherche, 0, pSS);
+	   pEl = BackSearch2Attributes (pEl, ValAttrCherche, ValAttrTxtCherche,
+					GetAttributeOfElement, 0, pSS, NULL);
 	if (pEl != NULL)
 	   /* on a trouve' un element portant l'attribut voulu, on verifie */
 	   /* que cet element ne fait pas partie d'une inclusion, n'est */

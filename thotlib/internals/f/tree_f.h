@@ -61,17 +61,19 @@ extern PtrElement BackSearchVisibleElem ( PtrElement pRoot,
                                           PtrElement pEl,
                                           int view );
 extern PtrElement FwdSearch2Attributes ( PtrElement pEl,
-                                         int attNum,
                                          int val,
                                          char *textVal,
+                                         int attNum,
                                          int attNum2,
-                                         PtrSSchema pSS );
+                                         PtrSSchema pSS,
+                                         PtrSSchema pSS2 );
 extern PtrElement BackSearch2Attributes ( PtrElement pEl,
-                                          int attNum,
                                           int val,
                                           char *textVal,
+                                          int attNum,
                                           int attNum2,
-                                          PtrSSchema pSS );
+                                          PtrSSchema pSS,
+                                          PtrSSchema pSS2 );
 extern void FwdSkipPageBreak ( PtrElement * pEl );
 extern void FwdSkipPageBreakAndExtension ( PtrElement * pEl );
 extern void SkipPageBreakBegin ( PtrElement * pEl );
@@ -202,17 +204,19 @@ extern PtrElement BackSearchVisibleElem (/* PtrElement pRoot,
                                             PtrElement pEl,
                                             int view */);
 extern PtrElement FwdSearch2Attributes (/* PtrElement pEl,
-                                           int attNum,
                                            int val,
                                            char *textVal,
+                                           int attNum,
                                            int attNum2,
-                                           PtrSSchema pSS */);
+                                           PtrSSchema pSS,
+                                           PtrSSchema pSS2 */);
 extern PtrElement BackSearch2Attributes (/* PtrElement pEl,
-                                            int attNum,
                                             int val,
                                             char *textVal,
+                                            int attNum,
                                             int attNum2,
-                                            PtrSSchema pSS */);
+                                            PtrSSchema pSS,
+                                            PtrSSchema pSS2 */);
 extern void FwdSkipPageBreak (/* PtrElement * pEl */);
 extern void FwdSkipPageBreakAndExtension (/* PtrElement * pEl */);
 extern void SkipPageBreakBegin (/* PtrElement * pEl */);

@@ -77,8 +77,12 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
     <p class="menuItems"><span style="color: #E55500">DoAction.</span></p>
   </li>
   <li>Une commande qui permet de sauter au prochain (ou au premier s'il n'y a
-    pas de sélection) lien ou élément de formulaire HTML :
+    pas de sélection) lien ou élément de formulaire HTML : 
     <p><span style="color: #E55500">NextLinkOrFormElement.</span></p>
+  </li>
+  <li>Une commande qui permet de sauter lien ou élément de formulaire HTML
+    précédent : 
+    <p><span style="color: #E55500">PreviousLinkOrFormElement.</span></p>
   </li>
   <li>Dans le menu <code>Fichier</code> :<span style="color: #FFDA95"></span> 
     <p class="menuItems"><span style="color: #E55500">New, NewTemplate,

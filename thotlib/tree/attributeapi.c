@@ -1094,13 +1094,13 @@ void TtaSearchAttribute (AttributeType searchedAttribute,
   if (ok)
     {
     if (scope == SearchBackward)
-      pEl = BackSearch2Attributes ((PtrElement) element,
-				   searchedAttribute.AttrTypeNum, 0, "", 0,
-				   (PtrSSchema) (searchedAttribute.AttrSSchema));
+      pEl = BackSearch2Attributes ((PtrElement) element, 0, "",
+				   searchedAttribute.AttrTypeNum, 0,
+				   (PtrSSchema) (searchedAttribute.AttrSSchema), NULL);
     else
-      pEl = FwdSearch2Attributes ((PtrElement) element,
-				  searchedAttribute.AttrTypeNum, 0, "", 0,
-				  (PtrSSchema) (searchedAttribute.AttrSSchema));
+      pEl = FwdSearch2Attributes ((PtrElement) element, 0, "",
+				  searchedAttribute.AttrTypeNum, 0,
+				  (PtrSSchema) (searchedAttribute.AttrSSchema), NULL);
     if (pEl != NULL && scope == SearchInTree &&
 	!ElemIsWithinSubtree (pEl, (PtrElement) element))
       pEl = NULL;
@@ -1186,15 +1186,17 @@ void TtaSearchAttributes (AttributeType searchedAtt1, AttributeType searchedAtt2
   if (ok)
     {
     if (scope == SearchBackward)
-      pEl = BackSearch2Attributes ((PtrElement) element,
-				   searchedAtt1.AttrTypeNum, 0, "",
+      pEl = BackSearch2Attributes ((PtrElement) element, 0, "",
+				   searchedAtt1.AttrTypeNum,
 				   searchedAtt2.AttrTypeNum,
-				   (PtrSSchema) (searchedAtt1.AttrSSchema));
+				   (PtrSSchema) (searchedAtt1.AttrSSchema),
+				   (PtrSSchema) (searchedAtt2.AttrSSchema));
     else
-      pEl = FwdSearch2Attributes ((PtrElement) element,
-				  searchedAtt1.AttrTypeNum, 0, "",
+      pEl = FwdSearch2Attributes ((PtrElement) element, 0, "",
+				  searchedAtt1.AttrTypeNum,
 				  searchedAtt2.AttrTypeNum,
-				  (PtrSSchema) (searchedAtt1.AttrSSchema));
+				  (PtrSSchema) (searchedAtt1.AttrSSchema),
+				  (PtrSSchema) (searchedAtt2.AttrSSchema));
     if (pEl != NULL && scope == SearchInTree &&
 	!ElemIsWithinSubtree (pEl, (PtrElement) element))
       pEl = NULL;

@@ -155,6 +155,7 @@ HelpBrowsing
 NextLinkOrFormElement
 OpenDoc
 OpenDocInNewWindow
+PreviousLinkOrFormElement
 Reload
 SaveDocumentAs
 ShowLogFile

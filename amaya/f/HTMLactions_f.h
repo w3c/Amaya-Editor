@@ -22,6 +22,8 @@ extern void DoAction ( Document doc,
 extern ThotBool AcceptTab ( NotifyOnTarget *event );
 extern void NextLinkOrFormElement ( Document doc,
                                     View view );
+extern void PreviousLinkOrFormElement ( Document doc,
+                                        View view );
 extern void AccessKeyHandler ( Document doc,
                                void *param );
 extern ThotBool IgnoreEvent ( NotifyElement *event );
@@ -58,6 +60,8 @@ extern void DoAction (/* Document doc,
 extern ThotBool AcceptTab (/* NotifyOnTarget *event */);
 extern void NextLinkOrFormElement (/* Document doc,
                                       View view */);
+extern void PreviousLinkOrFormElement (/* Document doc,
+                                          View view */);
 extern void AccessKeyHandler (/* Document doc,
                                  void *param */);
 extern ThotBool IgnoreEvent (/* NotifyElement *event */);

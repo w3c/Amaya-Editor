@@ -1210,43 +1210,43 @@ void NextLinkOrFormElement (Document doc, View view)
   Element             root, child, next, startEl, el;
   Attribute           attr;
   AttributeType       attrType1, attrType2;
+  SSchema             HTMLschema;
   ThotBool            found, cycle;
   int                 i;
   int                 firstChar, lastChar;
 
+  HTMLschema = TtaGetSSchema ("HTML", doc);
+  attrType1.AttrTypeNum = HTML_ATTR_NAME;
+  attrType1.AttrSSchema = HTMLschema;
+  attrType2.AttrTypeNum = HTML_ATTR_HREF_;
+  attrType2.AttrSSchema = HTMLschema;
   root = TtaGetRootElement (doc);
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
   if (el == NULL)
-    /* start from the root element */
-    el = root;
+    {
+      /* start from the root element */
+      el = root;
+      /* we don't accept to restart from the beginning */
+      cycle = TRUE;
+    }
+  else
+    cycle = FALSE;
+
   /* don't manage this element */
   startEl = el;
-  elType = TtaGetElementType (el);
-  attrType1.AttrTypeNum = HTML_ATTR_NAME;
-  attrType1.AttrSSchema = elType.ElSSchema;
-  attrType2.AttrTypeNum = HTML_ATTR_HREF_;
-  attrType2.AttrSSchema = elType.ElSSchema;
   /* we're looking for a next element */
-  cycle = FALSE;
   TtaSearchAttributes (attrType1, attrType2, SearchForward, el, &el, &attr);
   found = FALSE;
   while (!found)
     {
-      if (el == startEl)
+      if (el == NULL)
 	{
-	  /* we made a complete trun and no other element was found */
+	  /* end of the document */
 	  el = NULL;
 	  attr = NULL;
-	  found = TRUE;
-	}
-      else if (el == NULL)
-	{
-	  /* out of the form */
-	  el = NULL;
-	  attr = NULL;
-	  if (!cycle && startEl != root)
+	  if (!cycle)
 	    {
-	      /* restart from the beginning of the form */
+	      /* restart from the beginning of the document */
 	      cycle = TRUE;
 	      el = root;
 	    }
@@ -1254,6 +1254,13 @@ void NextLinkOrFormElement (Document doc, View view)
 	    /* stop the search */
 	    found = TRUE;
 	}  
+      else if (el == startEl)
+	{
+	  /* we made a complete cycle and no other element was found */
+	  el = NULL;
+	  attr = NULL;
+	  found = TRUE;
+	}
       else if (attr)
 	{
 	  elType = TtaGetElementType (el);
@@ -1302,6 +1309,145 @@ void NextLinkOrFormElement (Document doc, View view)
 	}
       if (!found)
 	TtaSearchAttributes (attrType1, attrType2, SearchForward, el, &el, &attr);
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  PreviousLinkOrFormElement selects the previous link or form element.
+ -----------------------------------------------------------------------*/
+void PreviousLinkOrFormElement (Document doc, View view)
+{
+  ElementType         elType;
+  Element             root, child, next, startEl, el;
+  Attribute           attr;
+  AttributeType       attrType1, attrType2;
+  SSchema             HTMLschema;
+  ThotBool            found, cycle;
+  int                 i;
+  int                 firstChar, lastChar;
+
+  HTMLschema = TtaGetSSchema ("HTML", doc);
+  attrType1.AttrTypeNum = HTML_ATTR_NAME;
+  attrType1.AttrSSchema = HTMLschema;
+  attrType2.AttrTypeNum = HTML_ATTR_HREF_;
+  attrType2.AttrSSchema = HTMLschema;
+  /* keep in mind the last element of the document */
+  root = TtaGetRootElement (doc);
+  el = TtaGetLastChild (root);
+  attr = NULL;
+  while (el)
+    {
+      root = el;
+      /* check if this element matches */
+      attr = TtaGetAttribute (el, attrType1);
+      if (attr == NULL)
+	attr = TtaGetAttribute (el, attrType2);
+      if (attr == NULL)
+	el = TtaGetLastChild (root);
+      else
+	/* a right element is found */
+	el = NULL;
+    }
+  TtaGiveLastSelectedElement (doc, &el, &firstChar, &lastChar);
+  if (el == NULL)
+    {
+      /* start from the end of the document */
+      el = root;
+      /* we don't accept to restart from the beginning */
+      cycle = TRUE;
+      /* attr != 0 if this element matches */
+      startEl = NULL;
+     }
+  else
+    {
+      cycle = FALSE;
+      attr = NULL;
+      /* don't manage this element */
+      startEl = el;
+    }
+
+  if (attr == NULL)
+    /* we're looking for a next element */
+    TtaSearchAttributes (attrType1, attrType2, SearchBackward, el, &el, &attr);
+  found = FALSE;
+  while (!found)
+    {
+      if (el == NULL)
+	{
+	  /* begginning of the document */
+	  el = NULL;
+	  attr = NULL;
+	  if (!cycle)
+	    {
+	      /* restart from the end of the document */
+	      cycle = TRUE;
+	      el = root;
+	      /* check if this element matches */
+	      attr = TtaGetAttribute (el, attrType1);
+	      if (attr == NULL)
+		attr = TtaGetAttribute (el, attrType2);
+	    }
+	  else
+	    /* stop the search */
+	    found = TRUE;
+	}  
+      else if (el == startEl)
+	{
+	  /* we made a complete cycle and no other element was found */
+	  el = NULL;
+	  attr = NULL;
+	  found = TRUE;
+	}
+      else if (attr)
+	{
+	  elType = TtaGetElementType (el);
+	  switch (elType.ElTypeNum)
+	    {
+	    case HTML_EL_Option_Menu:
+	    case HTML_EL_Checkbox_Input:
+	    case HTML_EL_Radio_Input:
+	    case HTML_EL_Submit_Input:
+	    case HTML_EL_Reset_Input:
+	    case HTML_EL_Button_Input:
+	    case HTML_EL_BUTTON_:
+	    case HTML_EL_Anchor:
+	      /* no included text: select the element itself */
+	      TtaSelectElement (doc, el);
+	      found =TRUE;
+	      break;
+	      
+	    case HTML_EL_Text_Area:
+	    case HTML_EL_Text_Input:
+	    case HTML_EL_File_Input:
+	    case HTML_EL_Password_Input:
+	      /* look for the last included text */
+	      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	      child = TtaSearchTypedElement (elType, SearchForward, el);
+	      if (child)
+		{
+		  next = child;
+		  do
+		    {
+		      child = next;
+		      next = TtaSearchTypedElementInTree (elType,
+							  SearchForward,
+							  el, child);
+		    }
+		  while (next);
+		  i = TtaGetTextLength (child);
+		  TtaSelectString (doc, child, i+1, i);
+		}
+	      found =TRUE;
+	      break;
+	      
+	    default:
+	      attr = NULL;
+	      break;
+	    }
+	}
+      if (!found && !attr)
+	TtaSearchAttributes (attrType1, attrType2, SearchBackward, el, &el, &attr);
     }
 }
 

@@ -51,6 +51,7 @@
 #Ctrl <Key>Up:      TtcLineUp()
 #Ctrl <Key>Down:    TtcLineDown()
 <Key>Tab:           NextLinkOrFormElement()
+Shift <Key>Tab:     PreviousLinkOrFormElement()
 Ctrl <Key>a:        TtcStartOfLine() 
 Ctrl <Key>e:        TtcEndOfLine() 
 Ctrl <Key>Home:     TtcPageTop() 
