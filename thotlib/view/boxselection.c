@@ -688,7 +688,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 			  pBox = pBox->BxNexChild;
 			}
 		    }
-		  else if (graphSel && firstChar > 0)
+		  else if (graphSel /* && firstChar > 0*/)
                       DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
                                pBox->BxXOrg + pBox->BxWidth,
                                pBox->BxYOrg + pBox->BxHeight);
