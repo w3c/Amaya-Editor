@@ -346,11 +346,8 @@ static void                TteFreeEventsList (PtrEventsSet eventsList)
    for (event = 0; event <= TteExit; event++)
    {
       if (current->EvSList[event])
-	  {
         TtaFreeMemory (current->EvSList[event]);
-	    current->EvSList = NULL;
-	  }
-   }
+  }
    eventsList = current->EvSNext;
    TtaFreeMemory (current);
    current = eventsList;
@@ -371,5 +368,5 @@ void                TteFreeAllEventsList (void)
   TteFreeEventsList (EditorEvents);
   EditorEvents = NULL;
   TteFreeEventsList (SchemasEvents);
-  SchemaEvents = NULL;
+  SchemasEvents = NULL;
 }
