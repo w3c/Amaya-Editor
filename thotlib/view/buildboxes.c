@@ -1082,7 +1082,8 @@ static void  TransmitFill (PtrBox pBox, ThotBool state)
   i = the added pixels at the beginning
   j =the added pixels at the end
   ----------------------------------------------------------------------*/
-static void TransmitMBP (PtrBox pBox, int frame, int i, int j, ThotBool horizontal)
+static void TransmitMBP (PtrBox pBox, int frame, int i, int j,
+			 ThotBool horizontal)
 {
   PtrAbstractBox  pAb, pCurrentAb;
 
@@ -1194,7 +1195,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 			 int *carIndex)
 {
   PtrSSchema          pSS;
-  PtrAbstractBox      pChildAb;
+  PtrAbstractBox      pChildAb, pParent;
   PtrBox              pBox;
   PtrBox              pMainBox;
   PtrBox              pCurrentBox;
@@ -1486,7 +1487,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 		SetMainWindowBackgroundColor (frame, DefaultBColor);
 	    }
 	  
-	  /* create enclosing boxes */
+	  /* create enclosed boxes */
 	  pChildAb = pAb->AbFirstEnclosed;
 	  while (pChildAb != NULL)
 	    {
@@ -1495,6 +1496,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	    }
 	  if (pCurrentBox->BxType == BoGhost)
 	    {
+	      /* the current box won't be displayed */
 	      if (pAb->AbFillBox)
 		TransmitFill (pCurrentBox, TRUE);
 	      /* transmit margins, borders and paddings */
@@ -1509,6 +1511,27 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	  break;
 	default:
 	  break;
+	}
+
+      if (pAb->AbLeafType != LtCompound)
+	{
+	  /* check if parent box transmit a background or borders */
+	  pParent = pAb->AbEnclosing;
+	  if (pParent && pParent->AbBox &&
+	      pParent->AbBox->BxType == BoGhost)
+	    {
+	      /* the current box won't be displayed */
+	      pBox = pParent->AbBox;
+	      if (pParent->AbFillBox)
+		TransmitFill (pBox, TRUE);
+	      /* transmit margins, borders and paddings */
+	      i = pBox->BxLMargin + pBox->BxLPadding + pBox->BxLBorder;
+	      j = pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
+	      TransmitMBP (pBox, frame, i, j, TRUE);
+	      i = pBox->BxTMargin + pBox->BxTPadding + pBox->BxTBorder;
+	      j = pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
+	      TransmitMBP (pBox, frame, i, j, FALSE);
+	    }
 	}
 
       /* Dimensionnement de la boite par le contenu ? */
