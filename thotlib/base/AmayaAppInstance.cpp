@@ -110,6 +110,20 @@ void AmayaAppInstance::RegisterOpenURLCallback( OpenURLCallback callback )
 
 /*
  *--------------------------------------------------------------------------------------
+ *       Class:  AmayaAppInstance
+ *      Method:  CallOpenURLCallback
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaAppInstance::CallOpenURLCallback( char * url )
+{
+  OpenURLCallback callback;
+  callback = m_pURLGrabberServer->GetOpenURLCallback();
+  (*callback)( url );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
  *       Class:  AmayaURLGrabberServer
  *      Method:  RegisterOpenURLCallback
  * Description:  
@@ -118,6 +132,18 @@ void AmayaAppInstance::RegisterOpenURLCallback( OpenURLCallback callback )
 void AmayaURLGrabberServer::RegisterOpenURLCallback( OpenURLCallback callback )
 {
   m_pURLOpenCallback = callback;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaURLGrabberServer
+ *      Method:  RegisterOpenURLCallback
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+OpenURLCallback AmayaURLGrabberServer::GetOpenURLCallback()
+{
+  return m_pURLOpenCallback;
 }
 
 /*

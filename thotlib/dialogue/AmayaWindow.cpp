@@ -464,9 +464,16 @@ void AmayaWindow::OnActivate( wxActivateEvent & event )
       if (p_frame)
 	ChangeSelFrame(p_frame->GetFrameId());
       
-      // force the focus to be back on active frame because sometime (wxWidgets bug ?)
-      // the focus disapears => big acessibility problemes.
-      TtaRedirectFocus();
+      // if the focus is on the combobox, do not redirect focus because
+      // the combobox popuplist generates a OnActivate event.
+      /*      wxWindow *       p_win_focus         = wxWindow::FindFocus();
+      wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
+      if (p_win_focus)
+      wxLogDebug( _T("AmayaWindow::OnActivate - focus=%s"), p_win_focus->GetClassInfo()->GetClassName() );
+      if (p_win_focus && !p_combo_box)*/
+	// force the focus to be back on active frame because sometime (wxWidgets bug ?)
+	// the focus disapears => big acessibility problemes.
+	TtaRedirectFocus();
     }
 
   event.Skip();

@@ -418,6 +418,18 @@ void AmayaApp::RegisterOpenURLCallback( void (*callback) (void *) )
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaApp
+ *      Method:  CallOpenURLCallback
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaApp::CallOpenURLCallback( char * url )
+{
+  m_pAmayaInstance->CallOpenURLCallback(url);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaApp
  *      Method:  OnChar
  * Description:  manage keyboard events
  *--------------------------------------------------------------------------------------

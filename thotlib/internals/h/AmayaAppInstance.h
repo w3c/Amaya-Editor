@@ -21,6 +21,7 @@ class AmayaAppInstance
   void SendURLToOtherAmayaInstance(const wxString & url);
   void StartURLGrabberServer();
   void RegisterOpenURLCallback( OpenURLCallback callback );
+  void CallOpenURLCallback( char * url );
 
  protected:
   AmayaApp * m_pAmayaApp;
@@ -54,6 +55,7 @@ class AmayaURLGrabberServer: public wxServer
     {}
   ~AmayaURLGrabberServer() {}
   void RegisterOpenURLCallback( OpenURLCallback callback );
+  OpenURLCallback GetOpenURLCallback();
   wxConnectionBase *OnAcceptConnection(const wxString& topic)
     {
       wxLogDebug(_T("OnAcceptConnection"));

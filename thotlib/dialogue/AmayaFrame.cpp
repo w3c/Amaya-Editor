@@ -44,7 +44,7 @@
 #include "AmayaCallback.h"
 //#include "AmayaTextGraber.h"
 #include "AmayaScrollBar.h"
-#include "wx/log.h"
+#include "AmayaFileDropTarget.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaFrame, wxPanel)
 
@@ -112,6 +112,9 @@ AmayaFrame::AmayaFrame(
   
   m_pVSizer->Fit(this);
   m_pVSizer->Layout();
+
+  // assign a dnd file target to each frame
+  SetDropTarget(new AmayaFileDropTarget(this));
   
   SetAutoLayout(TRUE);
 }

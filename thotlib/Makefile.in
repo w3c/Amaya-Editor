@@ -247,6 +247,7 @@ EDITOR_OBJ = \
 	dialogue/AmayaURLBar.o \
 	dialogue/AmayaToolBar.o \
 	dialogue/AmayaScrollBar.o \
+	dialogue/AmayaFileDropTarget.o \
 	dialogue/appdialogue_wx.o \
 	document/docs.o \
 	document/views.o \
