@@ -421,7 +421,7 @@ RULES
 	Create Attributes;
 	Remove;
 	Create '>';
-	if not within Preformatted Create '>\12';
+	if not within Preformatted Create '\12';
 	END;
 
  Form: BEGIN
