@@ -699,6 +699,7 @@
 #define IDC_DICONTENTTYPE               1552
 #define IDC_DICHARSET                   1553
 #define IDC_DICONTENTLEN                1554
+#define IDC_DIDTYPE                     1555
 #define IDC_DICONTENTTYPE_VAL           1556
 #define IDC_DICHARSET_VAL               1557
 #define IDC_DICONTENTLEN_VAL            1558
@@ -708,6 +709,7 @@
 #define IDC_CHARSET                     1561
 #define IDC_DICONTENTLOC_VAL            1561
 #define IDC_MIMETYPE                    1562
+#define IDC_DIDTYPE_VAL                 1562
 #define IDC_MTEDIT                      1564
 #define IDC_STATUS                      1566
 #define IDC_USASCII                     1567

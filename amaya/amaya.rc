@@ -303,24 +303,26 @@ BEGIN
     LTEXT           "status",IDC_IDSTATUS,15,68,186,8
 END
 
-DOCINFOMENU DIALOGEX 100, 100, 237, 116
+DOCINFOMENU DIALOGEX 100, 100, 237, 121
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Document Information"
 FONT 8, "MS Sans Serif"
 BEGIN
-    PUSHBUTTON      "Done",ID_DONE,93,99,50,14
-    LTEXT           "Location:",IDC_DIURL,10,11,70,8
-    EDITTEXT        IDC_DIURL_VAL,99,11,131,12,ES_AUTOHSCROLL | ES_READONLY | 
+    PUSHBUTTON      "Done",ID_DONE,90,102,50,14
+    LTEXT           "Location:",IDC_DIURL,10,11,60,8
+    EDITTEXT        IDC_DIURL_VAL,74,11,156,12,ES_AUTOHSCROLL | ES_READONLY | 
                     NOT WS_BORDER,WS_EX_CLIENTEDGE
-    LTEXT           "Content Type",IDC_DICONTENTTYPE,10,29,70,8
-    LTEXT           "Content Type value",IDC_DICONTENTTYPE_VAL,99,28,131,8
-    LTEXT           "Charset",IDC_DICHARSET,10,47,70,8
-    LTEXT           "Charset value",IDC_DICHARSET_VAL,99,45,131,8
-    LTEXT           "Content Length",IDC_DICONTENTLEN,10,63,70,8
-    LTEXT           "Content Length value",IDC_DICONTENTLEN_VAL,99,62,131,8
-    LTEXT           "Content Location",IDC_DICONTENTLOC,10,79,80,8
-    LTEXT           "Content Location value",IDC_DICONTENTLOC_VAL,99,78,131,
+    LTEXT           "Content Type",IDC_DICONTENTTYPE,10,45,60,8
+    LTEXT           "Content Type value",IDC_DICONTENTTYPE_VAL,76,45,131,8
+    LTEXT           "Charset",IDC_DICHARSET,10,57,60,8
+    LTEXT           "Charset value",IDC_DICHARSET_VAL,76,57,131,8
+    LTEXT           "Content Length",IDC_DICONTENTLEN,10,70,60,8
+    LTEXT           "Content Length value",IDC_DICONTENTLEN_VAL,76,70,131,8
+    LTEXT           "Content Location",IDC_DICONTENTLOC,10,83,60,8
+    LTEXT           "Content Location value",IDC_DICONTENTLOC_VAL,76,83,131,
                     8
+    LTEXT           "Document Type",IDC_DIDTYPE,10,33,60,8
+    LTEXT           "Document Type value",IDC_DIDTYPE_VAL,76,32,131,8
 END
 
 CHARSETDIALOG DIALOG DISCARDABLE  100, 100, 162, 81
@@ -462,7 +464,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 230
         TOPMARGIN, 7
-        BOTTOMMARGIN, 109
+        BOTTOMMARGIN, 114
     END
 
     CHARSETDIALOG, DIALOG

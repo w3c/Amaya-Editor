@@ -3446,14 +3446,12 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
 	content = TtaGetMessage (AMAYA, AM_UNKNOWN);
       SetDlgItemText (hwnDlg, IDC_DIURL_VAL, content);
 
-#if 0
       /* DocumentType */
       SetDlgItemText (hwnDlg, IDC_DIDTYPE, "Document Type");
-      content = content = DocumentTypeString (doc);
+      content = DocumentTypeString (doc);
       if (!content)
 	content = TtaGetMessage (AMAYA, AM_UNKNOWN);
       SetDlgItemText (hwnDlg, IDC_DIDTYPE_VAL, content);
-#endif
 
       /* MIME type */
       SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE, "MIME TYPE");
