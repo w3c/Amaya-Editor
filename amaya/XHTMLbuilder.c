@@ -1276,13 +1276,20 @@ void               EndOfHTMLAttributeValue (char     *attrValue,
 			     {
 			       attrType1.AttrSSchema = TtaGetDocumentSSchema (context->doc);
 			       attrType1.AttrTypeNum = HTML_ATTR_RealLang;
-			       attr = TtaNewAttribute (attrType1);
-			       TtaAttachAttribute (lastAttrElement,
-						   attr, context->doc);
-			       TtaSetAttributeValue (attr,
-						     HTML_ATTR_RealLang_VAL_Yes_,
-						     lastAttrElement,
-						     context->doc);
+			       /* this attribute could be already present,
+				  (lang and xml:lang attributes) */
+			       if (!TtaGetAttribute (lastAttrElement,
+						     attrType1))
+				 /* it's not present. Add it */
+				 {
+				   attr = TtaNewAttribute (attrType1);
+				   TtaAttachAttribute (lastAttrElement,
+						       attr, context->doc);
+				   TtaSetAttributeValue (attr,
+							 HTML_ATTR_RealLang_VAL_Yes_,
+							 lastAttrElement,
+							 context->doc);
+				 }
 			     }
 			 }
 		       else if (attrType.AttrTypeNum == HTML_ATTR_accesskey)

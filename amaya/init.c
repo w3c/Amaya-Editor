@@ -1753,7 +1753,7 @@ void GoToHome (Document doc, View view)
   else
     strcpy (LastURLName, s);
   
-  if (CanReplaceCurrentDocument (doc, view))
+  if (doc == 0 || CanReplaceCurrentDocument (doc, view))
     {
       /* load the HOME document */
       InNewWindow = FALSE;

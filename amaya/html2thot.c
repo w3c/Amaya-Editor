@@ -5601,9 +5601,12 @@ static void CheckBlocksInCharElem (Document doc)
 		 pseudo-paragraphs which are now children of a block element,
 		 remove these pseudo-paragraphs */
 	      elem = firstNotCharElem;
-	      parent = TtaGetParent (firstNotCharElem);
-	      if (parent != NULL && !IsBlockElement (parent))
-		  elem = NULL;
+	      if (firstNotCharElem)
+		{
+		  parent = TtaGetParent (firstNotCharElem);
+		  if (parent != NULL && !IsBlockElement (parent))
+		    elem = NULL;
+		}
 	      while (elem != NULL)
 		{
 		  if (elem == last)

@@ -2593,7 +2593,10 @@ Element    SearchAnchor (Document doc, Element element, ThotBool link, ThotBool 
    SSchema             HTMLschema;
 
    attr = NULL;
+   elAnchor = NULL;
    HTMLschema = TtaGetSSchema ("HTML", doc);
+   if (!HTMLschema)
+     return NULL;
    elType = TtaGetElementType (element);
    if (link && elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT &&
        TtaSameSSchemas (elType.ElSSchema, HTMLschema))
@@ -2613,7 +2616,7 @@ Element    SearchAnchor (Document doc, Element element, ThotBool link, ThotBool 
 	elAnchor = TtaGetTypedAncestor (element, elType);
      }
 
-   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrSSchema = HTMLschema;
    if (link)
       attrType.AttrTypeNum = HTML_ATTR_HREF_;
    else
