@@ -65,8 +65,12 @@ class AmayaCanvas : public wxPanel
 public:
   DECLARE_DYNAMIC_CLASS(AmayaCanvas)
 
+#ifdef _GL
   AmayaCanvas( AmayaFrame * p_parent_window = NULL,
 	       wxGLContext * p_shared_context = NULL );
+#else /* _GL */
+  AmayaCanvas( AmayaFrame * p_parent_window = NULL );
+#endif /* _GL */
   virtual ~AmayaCanvas( );
 
   bool IsParentPageActive();

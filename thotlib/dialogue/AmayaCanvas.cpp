@@ -54,15 +54,17 @@
  * Description:  construct the canvas : its a wxGLCanvas if opengl is used or a wxPanel if not
  *--------------------------------------------------------------------------------------
  */
+
+#ifdef _GL
 AmayaCanvas::AmayaCanvas( AmayaFrame *  p_parent_window,
 			  wxGLContext * p_shared_context )
-#ifdef _GL
   : wxGLCanvas( p_parent_window,
 		p_shared_context,
 		-1,
 		wxDefaultPosition, wxDefaultSize, 0, _T("AmayaCanvas"),
 		GetGL_AttrList() ),
 #else // #ifdef _GL  
+AmayaCanvas::AmayaCanvas( AmayaFrame *  p_parent_window )
   : wxPanel( p_parent_window ),
 #endif // #ifdef _GL
   m_pAmayaFrame( p_parent_window ),
@@ -325,16 +327,6 @@ void AmayaCanvas::OnMouse( wxMouseEvent& event )
       return;
     }
   }
-
-#if 0
-  // ENTER WINDOW
-  if ( event.GetEventType() == wxEVT_ENTER_WINDOW )    
-    wxLogDebug( _T("AmayaCanvas - wxEVT_ENTER_WINDOW") );
-
-  // LEAVE WINDOW  
-  if ( event.GetEventType() == wxEVT_LEAVE_WINDOW )    
-    wxLogDebug( _T("AmayaCanvas - wxEVT_LEAVE_WINDOW") );
-#endif /* 0 */
   
   // MOUSE WHEEL  
   if ( event.GetEventType() == wxEVT_MOUSEWHEEL )  
@@ -542,7 +534,10 @@ void AmayaCanvas::OnIdle( wxIdleEvent& event )
               IsParentPageActive() ? _T("true") : _T("false") );
 #endif /* 0 */
 
+#ifdef _GL
   GL_DrawAll();
+#endif /* _GL */
+
   event.Skip();
 }
 
@@ -564,8 +559,10 @@ void AmayaCanvas::Init()
   wxLogDebug( _T("AmayaCanvas::Init (init opengl canvas) : frame=%d"),
       m_pAmayaFrame->GetFrameId() );
   
+#ifdef _GL
   SetCurrent();
   SetGlPipelineState ();
+#endif /* _GL */
 
   /* 
   // now the frame is initialized, show it
