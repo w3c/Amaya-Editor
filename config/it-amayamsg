@@ -30,7 +30,7 @@
 28 Indirizzo
 29 Titolo
 30 Cambia Titolo...
-31 **Document modified - Do you want to save it?
+31 Documento modificato - salvare?
 32 Redirezione durante il caricamento di %s
 33 Ho rilevato troppe redirezioni
 34 Non posso creare il file locale %s
@@ -103,8 +103,8 @@
 101 Documento precedente
 102 Documento successivo
 103 Ricarica
-104 Salva
-105 **Don't save
+104 Salvare
+105 Non salvare
 106 Stampa
 107 Cerca
 108 Enfasi
@@ -181,7 +181,7 @@
 179 Lingua delle finestre di dialogo
 180 Incolla mantenendo le righe originali
 181 Crea copie di salvataggio
-182 **Save geometry on exit
+182 Salvare la geometria all'uscita
 183 Mostra le immagini di sfondo
 184 Mostra barra dei pulsanti
 185 Mostra indirizzo
@@ -291,7 +291,7 @@
 289 **Adding or changing the doctype will remove some elements or attributes
 290 **Do you confirm the operation ?
 291 Per un documento XHTML, usa il MIME type application/xhtml+xml
-292 **Charset for new documents
+292 Charset per i nuovi documenti
 293 Lock riuscito!
 294 Lock fallito!
 295 Metto il lock su %s...

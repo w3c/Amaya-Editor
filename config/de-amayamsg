@@ -30,7 +30,7 @@
 28 URI
 29 Titel
 30 Titel ändern
-31 **Document modified - Do you want to save it?
+31 Möchten Sie die Änderungen speichern?
 32 Lade Weiterleitung von: %s
 33 Zu viele Weiterleitungen
 34 Kann lokale Datei %s nicht anlegen
@@ -180,8 +180,8 @@
 178 Schriftzoom
 179 Dialogsprache
 180 Zeilenweises Einfügen aktivieren
-181 **Generate backup files
-182 **Save geometry on exit
+181 Backupdateien anlegen
+182 Fenstereinstellungen beim Beenden speichern
 183 Hintergrundbild anzeigen
 184 Symbolleiste anzeigen
 185 Adresszeile anzeigen
@@ -232,7 +232,7 @@
 230 Entfernte Anmerkungen automatisch laden
 231 Offline-Modus
 232 Markierung
-233 **Selection background color
+233 Hintergrundfarbe für Markierungen
 234 Ausrichtung
 235 Hochformat
 236 Querformat
@@ -291,7 +291,7 @@
 289 **Adding or changing the doctype will remove some elements or attributes
 290 **Do you confirm the operation ?
 291 MIME-Typ application/xhtml+xml für XHTML-Dokumente verwenden
-292 **Charset for new documents
+292 Standardzeichensatz für neue Dakumente
 293 Sperrung erfolgreich
 294 Sperrung fehlgeschlagen
 295 Sperre %s...
@@ -353,26 +353,26 @@
 351 Animation definiert.
 352 Animiertes Attribut
 353 Element ohne ID
-354 **Add ID
-355 **Remove ID
-356 **Add/Remove IDs
-357 **Apply operation
-358 **Enter an element name
-359 **Apply CSS
-360 **Current screen type
-361 **New Topic
-362 **Bookmark Properties
-363 **Topic Properties
-364 **Topic hierarchy:
+354 ID hinzufügen
+355 ID löschen
+356 IDs hinzufügen/löschen
+357 Operationen anwenden
+358 Elementname eingeben
+359 CSS anwenden
+360 Aktueller Bildschirmtyp
+361 Neue Überschrift
+362 Lesezeicheneigenschaften
+363 Eigenschaften der Überschriften
+364 Inhaltsverzeichnis:
 365 Titel:
-366 **Recalls:
-367 Auto:r
-368 **Created:
-369 **Last modified:
-370 **Description:
-371 **Please select an element
-372 **All CSS
-373 **CSS style rules applied to the <%s> element\n
-374 **Blue lines are links activated by a double (or a single) click\n
-375 **Load objects (object, embed)
-376 **No style rule for this element
+366 Wiederherstellungen:
+367 Autor:
+368 Erstellt am:
+369 Zuletzt geändert am:
+370 Beschreibung:
+371 Wählen Sie bitte ein Element aus
+372 CSS komplett
+373 CSS-Regeln, die für <%s> gelten\n
+374 Blaue Linien sind Verweise, die durch einen Doppel- (oder Einfach-)klick aktiviert wurden.\n
+375 Objekte laden (Objekt, eingebunden)
+376 Für dieses Element gibt es keine Formatvorlage

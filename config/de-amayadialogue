@@ -35,37 +35,37 @@
 33 Synchronisieren
 34 DTD ändern
 35 DTD entfernen
-36 **&Add a doctype
+36 Dokumenttyp &hinzufügen
 37 XHTML 1.1
 38 Dokumenttyp XHTML 1.0 Transitional zuweisen
 39 XHTML 1.0 Strict
 40 XHTML 1.0 Basic
 41 Dokumenttyp HTML 4.01 Transitional zuweisen
 42 HTML Strict
-43 **Force a Character Coding
-44 **Unicode (UTF-8)
-45 **Western (ISO-8859-1)
-46 **Western (ISO-8859-15)
-47 **Western (Windows-1252)
-48 **Central Europe (ISO-8859-2)
-49 **Central Europe (Windows-1250)
-50 **South Europe (ISO-8859-3)
-51 **Baltic (ISO-8859-4)
-52 **Baltic (Windows-1257)
-53 **Cyrillic (ISO-8859-5)
-54 **Cyrillic (Windows-1251)
-55 **Cyrillic (KOI8-R)
-56 **Arabic (ISO-8859-6)
-57 **Arabic (Windows-1256)
-58 **Greek (ISO-8859-7)
-59 **Greek (Windows-1253)
-60 **Hebrew (ISO-8859-8)
-61 **Hebrew (Windows-1255)
-62 **Turkish (ISO-8859-9)
-63 **Turkish (Windows-1254)
-64 **Japanese (ISO-2022-JP)
-65 **Japanese (EUC-JP)
-66 **Japanese (Shift-JIS)
+43 Zeichensatz erzwingen
+44 Unicode (UTF-8)
+45 Western (ISO-8859-1)
+46 Western (ISO-8859-15)
+47 Western (Windows-1252)
+48 Mitteleuropa (ISO-8859-2)
+49 Mitteleuropa (Windows-1250)
+50 Südeuropa (ISO-8859-3)
+51 Baltisch (ISO-8859-4)
+52 Baltisch (Windows-1257)
+53 Kyrillisch (ISO-8859-5)
+54 Kyrillisch (Windows-1251)
+55 Kyrillisch (KOI8-R)
+56 Arabisch (ISO-8859-6)
+57 Arabisch (Windows-1256)
+58 Griechisch (ISO-8859-7)
+59 Griechisch (Windows-1253)
+60 Hebräisch (ISO-8859-8)
+61 Hebräisch (Windows-1255)
+62 Türkisch (ISO-8859-9)
+63 Türkisch (Windows-1254)
+64 Japanisch (ISO-2022-JP)
+65 Japanisch (EUC-JP)
+66 Japanisch (Shift-JIS)
 67 Kurzinfo
 68 Druckoptionen...
 69 Drucken
@@ -126,22 +126,22 @@
 124 Kopf (thead)
 125 Körper (tbody)
 126 Fußzeile (tfoot)
-127 **Change to Data cell (td)
-128 **Change to Heading cell (th)
-129 **Join with the cell at the right
-130 **Join with the cell below
-131 **Shrink horizontal extend
-132 **Shrink vertical extend
-133 **Select the row
-134 **Insert a row before
-135 **Insert a row after
-136 **Select the column
-137 **Insert a column before
-138 **Insert a column after
-139 **Paste before
-140 **Paste after
-141 **Map area
-142 **Insert a map
+127 Umwandeln in Datenzelle (td)
+128 Umwandeln in Titelzelle (th)
+129 Zusammenfügen mit rechter Zelle
+130 Zusammenfügen mit der Zelle darunter
+131 Verkleinern der Breite
+132 Verkleinern der Breite
+133 Zeile auswählen
+134 Zeile einfügen (darüber)
+135 Zeile einfügen (dahinter)
+136 Spalte auswählen
+137 Spalte einfügen (davor)
+138 Spalte einfügen (danach)
+139 Einfügen (davor)
+140 Einfügen (danach)
+141 Bildbereich
+142 Abbildung einfügen
 143 Kreis (area)
 144 Polygon (area)
 145 Rechteck (area)
@@ -187,7 +187,7 @@
 185 Zitat (q)
 186 Textrichtung LTR/RTL (bdo)
 187 Neue Formel (math)
-188 **Basic &Elements
+188 Primäre &Elemente
 189 Text (mtext)
 190 Bezeichner (mi)
 191 Zahl (mn)
@@ -196,7 +196,7 @@
 194 Zeichen (&xxx;)
 195 Unsichtbare Multiplikation
 196 Angewendete Funktion
-197 **&Constructions
+197 &Konstrukte
 198 Wurzel (mroot)
 199 Quadratwurzel (msqrt)
 200 Einschluß (menclose)
@@ -211,18 +211,18 @@
 209 Vierfachindex (mmultiscripts)
 210 **&Matrices
 211 Matrix (mtable)
-212 **Join with the cell at the right
-213 **Join with the cell below
-214 **Shrink horizontal extend
-215 **Shrink vertical extend
-216 **Select the row
-217 **Insert a row before
-218 **Insert a row after
-219 **Select the column
-220 **Insert a column before
-221 **Insert a column after
-222 **Paste before
-223 **Paste after
+212 Zusammenfügen mit rechter Zelle
+213 Zusammenfügen mit der Zelle darunter
+214 Verkleinern der Breite
+215 Verkleinern der Breite
+216 Zeile auswählen
+217 Zeile einfügen (darüber)
+218 Zeile einfügen (dahinter)
+219 Spalte auswählen
+220 Spalte einfügen (davor)
+221 Spalte einfügen (danach)
+222 Einfügen (davor)
+223 Einfügen (danach)
 224 SVG-Bibliothek anzeigen...
 225 Markierung in SVG-Bibliothek einfügen
 226 Kommentar
@@ -250,7 +250,7 @@
 248 Hintergrundbild...
 249 Regel erzeugen...
 250 Klasse übernehmen...
-251 **Show applied style...
+251 Zugewiesenes Format anzeigen...
 252 Verknüpfen...
 253 Öffnen...
 254 Deaktivieren...
@@ -281,10 +281,10 @@
 279 Abfrage bearbeiten...
 280 Filter...
 281 Konfigurieren...
-282 **New Bookmark
-283 **New Topic
+282 Neues Lesezeichen
+283 Neue Überschrift
 284 Lesezeichen ansehen
-285 **Import a topic hierarchy
+285 Inhaltsverzeichnis importieren
 286 Resource sperren...
 287 Resource entsperren...
 288 Resourceeigenschaften anzeigen...

@@ -35,14 +35,14 @@
 33 Sincronizza
 34 Cambia/Crea doctype
 35 Elimina doctype
-36 **&Add a doctype
+36 &Aggiungi un doctype
 37 Cambia/Crea doctype XHTML 1.1
 38 Cambia/Crea doctype XHTML 1.0 Transitional
 39 Cambia/Crea doctype XHTML 1.0 Strict
 40 Cambia/Crea doctype XHTML 1.0 Basic
 41 Cambia/Crea doctype HTML 4.01 Transitional
 42 Cambia/Crea doctype HTML 4.01 Strict
-43 **Force a Character Coding
+43 Forza una codifica carattere
 44 Unicode (UTF-8)
 45 Western (ISO-8859-1)
 46 Western (ISO-8859-15)
@@ -126,22 +126,22 @@
 124 Intestazione (thead)
 125 Corpo (tbody)
 126 Piede (tfoot)
-127 **Change to Data cell (td)
-128 **Change to Heading cell (th)
-129 **Join with the cell at the right
-130 **Join with the cell below
-131 **Shrink horizontal extend
-132 **Shrink vertical extend
-133 **Select the row
-134 **Insert a row before
-135 **Insert a row after
-136 **Select the column
-137 **Insert a column before
-138 **Insert a column after
-139 **Paste before
-140 **Paste after
-141 **Map area
-142 **Insert a map
+127 Cambia la cella a Data (td)
+128 Cambia la cella a Intestazione (th)
+129 Unisci la cella a quella di destra
+130 Unisci la cella a quella sotto
+131 Riduci l'estensione orizzontale
+132 Riduci l'estensione orizzontale
+133 Seleziona la riga
+134 Inserisci una riga prima
+135 Inserisci una riga dopo
+136 Seleziona la colonna
+137 Inserisci una colonna prima
+138 Inserisci una colonna dopo
+139 Incolla prima
+140 Incolla dopo
+141 Area mappabile
+142 Inserisci una mappa
 143 Cerchio (area)
 144 Poligono (area)
 145 Rettangolo (area)
@@ -187,7 +187,7 @@
 185 Citazione (q)
 186 BiDi (bdo)
 187 Nuova formula (math)
-188 **Basic &Elements
+188 &Elementi di base
 189 Testo (mtext)
 190 Identificatore (mi)
 191 Numero (mn)
@@ -196,7 +196,7 @@
 194 Carattere (&xxx;)
 195 InvisibleTimes
 196 ApplyFunction
-197 **&Constructions
+197 &Costruzioni
 198 Radice (mroot)
 199 Radice quadrata (msqrt)
 200 Ingloba (menclose)
@@ -211,18 +211,18 @@
 209 Multiscript (mmultiscripts)
 210 **&Matrices
 211 Matrice (mtable)
-212 **Join with the cell at the right
-213 **Join with the cell below
-214 **Shrink horizontal extend
-215 **Shrink vertical extend
-216 **Select the row
-217 **Insert a row before
-218 **Insert a row after
-219 **Select the column
-220 **Insert a column before
-221 **Insert a column after
-222 **Paste before
-223 **Paste after
+212 Unisci la cella a quella di destra
+213 Unisci la cella a quella sotto
+214 Riduci l'estensione orizzontale
+215 Riduci l'estensione orizzontale
+216 Seleziona la riga
+217 Inserisci una riga prima
+218 Inserisci una riga dopo
+219 Seleziona la colonna
+220 Inserisci una colonna prima
+221 Inserisci una colonna dopo
+222 Incolla prima
+223 Incolla dopo
 224 Mostri librería SVG
 225 Aggiunga la selezione nella librería SVG
 226 Commento
