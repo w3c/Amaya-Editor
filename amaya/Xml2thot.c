@@ -1164,8 +1164,8 @@ static void      RemoveTrailingSpaces (Element el)
 static ThotBool     XmlCloseElement (char *mappedName)
 {
    int              i, error;
-   Element          el, parent;
-   ElementType      parentType;
+   Element          el, parent, pseudo;
+   ElementType      parentType, elType;
    ThotBool         ret, spacesDeleted;
 
    ret = FALSE;
@@ -1199,7 +1199,8 @@ static ThotBool     XmlCloseElement (char *mappedName)
 	       if (parent != NULL)
 		 {
 		   parentType = TtaGetElementType (parent);
-		   if (parentType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+		   if ((!strcmp (TtaGetSSchemaName (parentType.ElSSchema), "HTML")) && 
+		       parentType.ElTypeNum == HTML_EL_Pseudo_paragraph)
 		     {
 		       XMLcontext.lastElement = parent;
 		       XMLcontext.lastElementClosed = TRUE;
@@ -1243,7 +1244,23 @@ static ThotBool     XmlCloseElement (char *mappedName)
 
 	       /* Remove the trailing spaces of that element */
 	       RemoveTrailingSpaces (el);
-
+	       
+	       /* Remove the trailing spaces for included pseudo-paragraph */
+	       elType = TtaGetElementType (el);
+	       if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+		 {
+		   elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+		   pseudo = el;
+		   do
+		     {
+		       pseudo = TtaSearchTypedElementInTree (elType,
+							     SearchForward, el, pseudo);
+		       if (pseudo)
+			 RemoveTrailingSpaces (pseudo);
+		     }
+		   while (pseudo);
+		 }
+	       
 	       (*(currentParserCtxt->ElementComplete))
 		 (&XMLcontext, el, &error);
 
@@ -4847,17 +4864,13 @@ void ParseExternalDocument (char     *fileName,
     DocumentSSchema = TtaGetDocumentSSchema (doc);
   
   /* Set document URL */
-  docURL = TtaStrdup (originalName);
-  if (docURL)
+  s = TtaStrdup (originalName);
+  if (DocumentURLs[externalDoc])
     {
-      s = TtaStrdup (docURL);
-      if (DocumentURLs[externalDoc])
-	{
-	  TtaFreeMemory (DocumentURLs[externalDoc]);
-	  DocumentURLs[externalDoc] = NULL;
-	}
-      DocumentURLs[externalDoc] = s;
+      TtaFreeMemory (DocumentURLs[externalDoc]);
+      DocumentURLs[externalDoc] = NULL;
     }
+  DocumentURLs[externalDoc] = s;
   
   tempName = TtaGetMemory (strlen (fileName) + 1);
   if (use_ref)
@@ -4909,10 +4922,10 @@ void ParseExternalDocument (char     *fileName,
 	  if (!strcmp (typeName, "HTML") && !isXML)
 	    {
 	      DocumentMeta[externalDoc]->xmlformat = FALSE;
-	      htmlURL = TtaGetMemory (strlen (docURL) + 1);
+	      htmlURL = TtaGetMemory (strlen (s) + 1);
 	      if (htmlURL != NULL)
 		{
-		  strcpy (htmlURL, docURL);
+		  strcpy (htmlURL, s);
 		  ParseExternalHTMLDoc (externalDoc, infile, charset, htmlURL);
 		  TtaFreeMemory (htmlURL);
 		}
