@@ -7,7 +7,8 @@
 #ifdef __STDC__
 
 extern int NumberOfFonts ( void );
-extern int GetCharsCapacity ( int volpixel );
+extern int GetCharsCapacity ( int volpixel,
+                              int frame );
 extern int CharacterWidth ( int c,
                             ThotFont font );
 extern int SpecialCharBoxWidth ( CHAR_T c );
@@ -89,7 +90,8 @@ extern int BoxArabicCharacterWidth ( CHAR_T c,
 #else /* __STDC__ */
 
 extern int NumberOfFonts ( void );
-extern int GetCharsCapacity ( int volpixel );
+extern int GetCharsCapacity ( int volpixel,
+                                int frame );
 extern int CharacterWidth ( int c,
                               ThotFont font );
 extern int SpecialCharBoxWidth ( CHAR_T c );

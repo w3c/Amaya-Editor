@@ -887,7 +887,7 @@ void CloseView (PtrDocument pDoc, int viewNb)
 	    {
 	    /* desactive la vue si elle est active */
 	    DeactivateView (pDoc, viewNb);
-	    /* fait detruire la fenetre par le mediateur */
+	    /* free widgets and fonts */
 	    DestroyFrame (pDoc->DocViewFrame[viewNb - 1]);
 	    notifyDoc.event = TteViewClose;
 	    notifyDoc.document = (Document) IdentDocument (pDoc);

@@ -3568,10 +3568,6 @@ int GetWindowWinMainFrame (ThotWindow w)
   ----------------------------------------------------------------------*/
 void GetSizesFrame (int frame, int *width, int *height)
 {
-#ifdef _GL
-  *width = FrameTable[frame].FrWidth;
-  *height = FrameTable[frame].FrHeight;
-#else /*_GL*/
 #if defined(_GTK) || defined(_WX) 
   *width = FrameTable[frame].FrWidth;
   *height = FrameTable[frame].FrHeight;
@@ -3590,7 +3586,6 @@ void GetSizesFrame (int frame, int *width, int *height)
       *width = 0;
     }
 #endif /* _WINGUI */
-#endif /*_GL*/
 }
 
 /*----------------------------------------------------------------------

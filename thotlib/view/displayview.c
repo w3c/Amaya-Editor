@@ -1053,8 +1053,12 @@ void TtaFreeView (Document document, View view)
    else
       /* parameters look OK */
      {
-	pDoc = LoadedDocument[document - 1];
-	CleanImageView (view, pDoc, TRUE);
+       pDoc = LoadedDocument[document - 1];
+#ifdef _WX
+       /* free widgets and fonts */
+       DestroyFrame (pDoc->DocViewFrame[view - 1]);
+#endif /* _WX */
+       CleanImageView (view, pDoc, TRUE);
      }
 }
 

@@ -3371,7 +3371,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
        ChangeFrameTitle (frame, (unsigned char*)name, TtaGetDefaultCharset ());
 
        /* Window volume in characters */
-       *volume = GetCharsCapacity (width * height);
+       *volume = GetCharsCapacity (width * height, frame);
        FrameTable[frame].FrDoc = doc;
        FrameTable[frame].FrView = view;
 #ifdef _WINGUI
@@ -3477,7 +3477,7 @@ void DestroyFrame (int frame)
 	}
 #endif /* _WINGUI */
 
-      /* with WX, never realy delete the widgets */
+      /* with WX, never really delete the widgets */
       /* keep it alive in order to reuse it for the next frame */
 #ifndef _WX
       FrRef[frame] = 0;

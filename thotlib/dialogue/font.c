@@ -444,11 +444,22 @@ int NumberOfFonts ()
 }
 
 /*----------------------------------------------------------------------
-  GetCharsCapacity converts from pixel volume to char size
+  GetCharsCapacity converts a pixel volume into a character volume
   ----------------------------------------------------------------------*/
-int GetCharsCapacity (int volpixel)
+int GetCharsCapacity (int volpixel, int frame)
 {
-  return volpixel / 200;
+  int char_size = 200;
+
+  if (frame && frame < MAX_FRAME && ViewFrameTable[frame -1].FrMagnification)
+    {
+      char_size += ViewFrameTable[frame -1].FrMagnification * 10;
+      if (char_size < 100)
+	char_size = 100;
+    }
+  if (volpixel > char_size)
+    return volpixel / char_size;
+  else
+    return volpixel;
 }
 
 
@@ -2601,14 +2612,15 @@ void ThotFreeFont (int frame)
       while (i < FirstFreeFont)
 	{
 	  if (TtFontMask[i] == mask)
-	    /* free the entry */
-	    FreeAFont (i);
-	  else
 	    {
-	      /* unlink this frame */
-	      TtFontMask[i] = TtFontMask[i] & (~mask);
-	      i++;
+	      /* free the entry */
+	      FreeAFont (i);
+	      TtFontMask[i] = 0;
 	    }
+	  else
+	    /* unlink this frame */
+	    TtFontMask[i] = TtFontMask[i] & (~mask);
+	  i++;
 	}
     }
 }

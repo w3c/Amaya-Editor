@@ -2039,7 +2039,7 @@ ThotBool RedrawFrameTop (int frame, int scroll)
 			bVol = pFrame->FrVolume - pFrame->FrAbstractBox->AbVolume;
 		      
 		      /* Volume to add */
-		      top = (h / 2 - y) * l;
+		      top = (h / 4 - y) * l;
 		      delta = 0;
 		      /* Volume of the area to recompute */
 		      if (topBox)
@@ -2049,7 +2049,7 @@ ThotBool RedrawFrameTop (int frame, int scroll)
 			  delta = y + topBox->BxHeight;
 			}
 		      /* Adding abstract boxes at the beginning */
-		      IncreaseVolume (TRUE, GetCharsCapacity (top), frame);
+		      IncreaseVolume (TRUE, GetCharsCapacity (top, frame), frame);
 		      toadd = TRUE;
 		      /* Recompute the location of the frame in the abstract image */
 		      if (topBox)
@@ -2074,10 +2074,7 @@ ThotBool RedrawFrameTop (int frame, int scroll)
 		      RedrawFrameTop (frame, 0);
 		    }
 		  y = bottom - pRootBox->BxYOrg - pRootBox->BxHeight;
-		  if (pFrame->FrAbstractBox->AbTruncatedTail &&
-		      (y >= 0/* || (!pFrame->FrAbstractBox->AbHeight.DimIsPosition &&
-				pFrame->FrAbstractBox->AbHeight.DimMinimum &&
-				!pRootBox->BxContentHeight)*/))
+		  if (pFrame->FrAbstractBox->AbTruncatedTail && y >= 0)
 		    {
 		      /* it lacks some abstract image at the bottom of the frame */
 		      /* cleanup the bottom of the frame */
@@ -2085,8 +2082,8 @@ ThotBool RedrawFrameTop (int frame, int scroll)
 		      /* don't loop is volume didn't change */
 		      tVol = pFrame->FrAbstractBox->AbVolume;
 		      /* Volume to add */
-		      bottom = (y + h / 2) * l;
-		      IncreaseVolume (FALSE, GetCharsCapacity (bottom), frame);
+		      bottom = (y + h / 4) * l;
+		      IncreaseVolume (FALSE, GetCharsCapacity (bottom, frame), frame);
 		      tVol -= pFrame->FrAbstractBox->AbVolume;
 		      /* Image should be completed */
 		      FrameUpdating = FALSE;
@@ -2178,7 +2175,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
       top = pFrame->FrYOrg;
       bottom = top + h;
       tVol = bVol = 0;
-      delta = top - h / 2;
+      delta = top - h / 4;
       pRootBox = topBox = NULL;
       y = 0;
       /* used to store boxes created on the fly */
@@ -2218,7 +2215,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 			{
 			  /* it lacks a piece of the concrete image at the frame top */
 			  /* filling on top will shift the whole concrete image */
-			  top = h / 2 - y;
+			  top = h / 4 - y;
 			  /* Height to add */
 			  top = top * l;
 			  /* Volume of the area to recompute */
@@ -2229,7 +2226,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 			      delta = y + topBox->BxHeight;
 			    }
 			  /* Adding abstract boxes at the beginning */
-			  IncreaseVolume (TRUE, GetCharsCapacity (top), frame);
+			  IncreaseVolume (TRUE, GetCharsCapacity (top, frame), frame);
 			  toadd = TRUE;
 			  /* Recompute the location of the frame in the abstract image */
 			  if (topBox != NULL)
@@ -2251,6 +2248,8 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 		      if (pFrame->FrAbstractBox->AbTruncatedTail && y >= 0)
 			{
 			  /* it lacks some abstract image at the bottom of the frame */
+			  /* Volume to add */
+			  bottom = (y + h / 4) * l;
 			  if (tVol > 0 && tVol < pFrame->FrAbstractBox->AbVolume)
 			    {
 			      /* free abstract boxes on top of the frame */
@@ -2275,9 +2274,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 			    Clear (frame, l, y, 0, pRootBox->BxYOrg + pRootBox->BxHeight);
 			  /* don't loop is volume didn't change */
 			  tVol = pFrame->FrAbstractBox->AbVolume;
-			  /* Volume to add */
-			  bottom = (y + h / 2) * l;
-			  IncreaseVolume (FALSE, GetCharsCapacity (bottom), frame);
+			  IncreaseVolume (FALSE, GetCharsCapacity (bottom, frame), frame);
 			  tVol -= pFrame->FrAbstractBox->AbVolume;
 			  /* Image should be completed */
 			  FrameUpdating = FALSE;
