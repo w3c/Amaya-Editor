@@ -52,7 +52,15 @@ document.</p>
       montre l'étendue de l'élément. Les parties visualisées en noir peuvent
       être éditées directement , en cliquant et en tapant. Les parties
       visualisées en bleu peuvent être modifiées uniquement par
-      l'intermédiaire des commandes d'édition.</dd>
+      l'intermédiaire des commandes d'édition.
+      <p>La vue structure montre tous les élément du document, même ceux qui
+      ne sont pas affichés dans la vue formattée comme les commentaires, le
+      type du document (doctype), les instructions de traitement ou les
+      éléments de la section <strong>head</strong>. </p>
+      <p>Elle présente également l'adresse de l'espace de noms utilisé par
+      l'auteur lorsqu'un élément est défini dans un espace de noms différent
+      de celui de son père.</p>
+    </dd>
   <dt><a name="Alternate">Vue alternée</a></dt>
     <dd>Cette vue vous permet de voir à quoi ressemble le document quand il
       est visualisé par un navigateur en mode texte. Elle est utile pour
