@@ -225,11 +225,8 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
   DrawAAText : Using a Antialiased library if present, 
   named GDKXFT.so, it draws antialiased text.
   ----------------------------------------------------------------------*/
-int DrawAAText (int frame,
-	       PtrFont font,  
-	       const gchar *text,
-	       gint  text_length,
-	       int x,int y)
+int DrawAAText (int frame, PtrFont font, const gchar *text,
+	       gint text_length, int x,int y)
  {
    GdkWindowPrivate *drawable_private;
    GdkFontPrivate   *font_private;
@@ -244,34 +241,31 @@ int DrawAAText (int frame,
   font_private = (GdkFontPrivate*) font;
 
   if (font->type == GDK_FONT_FONT)
-  {
+    {
     xfont = (XFontStruct *) font_private->xfont;
 
     // gdk does this... we don't need it..
     //    XSetFont(drawable_private->xdisplay, gc_private->xgc, xfont->fid);
 
     if ((xfont->min_byte1 == 0) && (xfont->max_byte1 == 0))
-    {
       XDrawString (drawable_private->xdisplay, drawable_private->xwindow,
                    gc_private->xgc, x, y, text, text_length);
-    }
     else
-    {
       XDrawString16 (drawable_private->xdisplay, drawable_private->xwindow,
                      gc_private->xgc, x, y, (XChar2b *) text, text_length / 2);
     }
-  }
   else if (font->type == GDK_FONT_FONTSET)
-  {
+    {
     XFontSet fontset = (XFontSet) font_private->xfont;
     XmbDrawString (drawable_private->xdisplay, drawable_private->xwindow,
                    fontset, gc_private->xgc, x, y, text, text_length);
-  }
+    }
   else
     g_error("undefined font type\n");
   /*gdk_draw_text(drawable, font, gc, x, y, text, text_length);*/
  }
 #endif /*_GTK*/
+
 /*----------------------------------------------------------------------
   DrawString draw a char string of lg chars beginning in buff.
   Drawing starts at (x, y) in frame and using font.
@@ -286,7 +280,7 @@ int DrawAAText (int frame,
   ----------------------------------------------------------------------*/
 int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 		PtrFont font, int boxWidth, int bl, int hyphen,
-		int startABlock, int fg, int shadow)
+		int startABlock, int fg)
 {
   ThotWindow          w;
   int                 width;
@@ -303,25 +297,11 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
       if (fg >= 0)
 	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
 #endif /* _MOTIF */
-      if (shadow)
-	{
-	  /* replace each character by a star */
-	  j = 0;
-	  while (j < lg)
-	    {
-	      buff[j++] = '*';
-	      width += CharacterWidth (42, font);
-	    }
-	  buff[lg] = EOS;
-	}
-      else
-	{
-	  buff[lg] = EOS;
-	  TranslateChars (buff);
-	  j = 0;
-	  while (j < lg)
-	    width += CharacterWidth (buff[j++], font);
-	}
+      buff[lg] = EOS;
+      TranslateChars (buff);
+      j = 0;
+      while (j < lg)
+	width += CharacterWidth (buff[j++], font);
       if (fg >= 0)
 	{ 
 	  LoadColor (fg);
@@ -366,7 +346,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
   ----------------------------------------------------------------------*/
 int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 		 PtrFont font, int boxWidth, int bl, int hyphen,
-		 int startABlock, int fg, int shadow)
+		 int startABlock, int fg)
 {
   ThotWindow          w;
   int                 width, j;
@@ -389,34 +369,19 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
 #endif /* _MOTIF */
 
-      if (shadow)
-	{
-	  /* replace each character by a star */
-	  j = 0;
-	  while (j < lg)
-	    {
-	      buff[j++] = '*';
-	      width += CharacterWidth (42, font);
-	    }
-	  buff[lg] = EOS;
-	}
-      else
-	{
-	  buff[lg] = EOS;
-	  j = 0;
-	  while (j < lg)
-	    width += CharacterWidth (buff[j++], font);
-	}
+      buff[lg] = EOS;
+      j = 0;
+      while (j < lg)
+	width += CharacterWidth (buff[j++], font);
       if (fg >= 0)
 	{ 
 	  LoadColor (fg);
-    
 #ifdef _GTK
 #ifdef XFTGTK
 	  DrawAAText(frame, font, buff, lg*2, x, y);
 #else
-	gdk_draw_text_wc (w, font,TtLineGC, x, y, 
-			  (GdkWChar *)buff, lg * 2);
+	  gdk_draw_text_wc (w, font,TtLineGC, x, y, 
+			    (GdkWChar *)buff, lg * 2);
 #endif
 	  if (hyphen)
 	    /* draw the hyphen */
@@ -434,8 +399,7 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 	    /* draw the hyphen */
 	    XDrawString (TtDisplay, w, TtLineGC, x + width, y, "\255", 1);
 #endif /* _MOTIF */
-
-  }
+	}
     }
 
 #ifdef _MOTIF

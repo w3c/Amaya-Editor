@@ -840,7 +840,7 @@ return 0;
   ----------------------------------------------------------------------*/
 int GLString (unsigned char *buff, int lg, int frame, int x, int y,
 		PtrFont font, int boxWidth, int bl, int hyphen,
-	      int startABlock, int fg, int shadow)
+	      int startABlock, int fg)
 {
 return 0;
 }

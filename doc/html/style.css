@@ -23,7 +23,7 @@ small {
   }
 
 pre {
-  font-family:  'Monotype.com', Courier New, monospace;
+  font-family:  'Monotype.com', monospace;
   }
 
 pre, code, tt { font-size:  1.17em; }
@@ -336,7 +336,7 @@ dd  {
   border-bottom:  0;
   }
 
-ul ul, ol ol, li address, li dl, li ul, li ol, li p, li hr, li pre, dd ol, dd p, dd ul, dd pre, {
+ul ul, ol ol, li address, li dl, li ul, li ol, li p, li hr, li pre, dd ol, dd p, dd ul, dd pre {
   margin-top: 0;
   margin-bottom:  0;
   padding-top:  0;

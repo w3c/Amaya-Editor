@@ -1176,9 +1176,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   int                 nbcar, x, y, y1;
   int                 lgspace, whitespace;
   int                 fg, bg, fgbox, bgbox;
-  int                 shadow;
   int                 width, org, xpos;
   int                 left, right;
+  ThotBool            shadow;
   ThotBool            blockbegin, withinSel = FALSE;
   ThotBool            hyphen, rtl;
   CHAR_T              prevChar, nextChar;
@@ -1200,11 +1200,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
     rtl = (script == 'A' || script == 'H');
   font = pBox->BxFont;
   /* do we have to display stars instead of characters? */
-  if (pAb->AbBox->BxShadow)
-    shadow = 1;
-  else
-    shadow = 0;
-  
+  shadow = pAb->AbBox->BxShadow;
   /* Is this box the first of a block of text? */
   if (mbox == pBox)
     blockbegin = TRUE;
@@ -1452,8 +1448,13 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	  /* handle each char in the buffer */
 	  while ((rtl && indbuff >= indmax) || (!rtl && indbuff <= indmax))
 	    {
+	      /* get the current character */
+	      if (shadow)
+		c = '*';
+	      else
+	        c = adbuff->BuContent[indbuff];
+
 	      /* get the font index into val */
-	      c = adbuff->BuContent[indbuff];
 	      if (c == 0x28 && script == 'A') 
 		c = 0x29;
 	      else if (c == 0x29 && script == 'A')
@@ -1504,10 +1505,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      if (script == 'Z' || script == 'A')
 #endif /*_GL*/
 			x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
-					  org, bl, x, blockbegin, fg, shadow);
+					  org, bl, x, blockbegin, fg);
 		      else
 			x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
-					 org, bl, x, blockbegin, fg, shadow);
+					 org, bl, x, blockbegin, fg);
 		      width = width - x;
 		      org = x;
 		    }
@@ -1537,10 +1538,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      if (script == 'Z' || script == 'A')
 #endif /*_GL*/
 			x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
-					  org, bl, x, blockbegin, fg, shadow);
+					  org, bl, x, blockbegin, fg);
 		      else
 			x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
-					 org, bl, x, blockbegin, fg, shadow);
+					 org, bl, x, blockbegin, fg);
 		      width = width - x;
 		    }
 		  nbcar = 0;
@@ -1574,14 +1575,14 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 #endif /*_GL*/
 			    x += WDrawString (wbuffer, nbcar, frame, x, y1,
 					      prevfont, org, bl, 0, blockbegin,
-					      fg, shadow);
+					      fg);
 			  else
 			    {
 			      if ( prevfont == NULL)
 				prevfont = nextfont;
 			      x += DrawString (buffer, nbcar, frame, x, y1,
 					       prevfont, org, bl, 0, blockbegin,
-					       fg, shadow);
+					       fg);
 			    }
 			  width = width - x;
 			  org = x;
@@ -1610,16 +1611,14 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			  if (script == 'Z' || script == 'A')
 #endif /*_GL*/
 			    x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,  
-					      0, bl, 0, blockbegin, fg, shadow);
+					      0, bl, 0, blockbegin, fg);
 			  else
 			    x += DrawString (buffer, nbcar, frame, x, y1, prevfont,  
-					     0, bl, 0, blockbegin, fg, shadow);
+					     0, bl, 0, blockbegin, fg);
 			  bl = 0; /* all previous spaces are managed */
 			}
 		  
-		      if (shadow)
-			DrawChar ('*', frame, x, y, nextfont, fg);
-		      else if (!ShowSpace)
+		      if (!ShowSpace)
 			{
 			  /* Show the space chars */
 			  if (c == SPACE || c == TAB) 
@@ -1739,10 +1738,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      if (script == 'Z' || script == 'A')
 #endif /*_GL*/
 		x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont, width,
-				  bl, hyphen, blockbegin, fg, shadow);
+				  bl, hyphen, blockbegin, fg);
 	      else
 		x += DrawString (buffer, nbcar, frame, x, y1, prevfont, width,
-				 bl, hyphen, blockbegin, fg, shadow);
+				 bl, hyphen, blockbegin, fg);
 	      if (pBox->BxUnderline != 0)
 		{
 #ifdef _GL
@@ -1763,7 +1762,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	{
 	if (prevfont == NULL)
 	  prevfont = nextfont;
-	DrawString (buffer, 0, frame, x, y1, prevfont, -1, 0, 0, 1, 0, 0);
+	DrawString (buffer, 0, frame, x, y1, prevfont, -1, 0, 0, 1, 0);
 	}
 #endif /* _GL */
 

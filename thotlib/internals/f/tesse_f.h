@@ -21,7 +21,7 @@ extern void MakefloatMesh ( ThotPoint *points,
 
 extern void *GetNewMesh (/* void */);
 extern void MeshNewPoint (/* double x,
-                             doble y,
+                             double y,
                              void *v_path */);
 extern void CountourCountAdd (/* void *v_path */);
 extern void FreeMesh (/* void *v_path */);

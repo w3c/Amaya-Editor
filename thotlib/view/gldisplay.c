@@ -173,17 +173,16 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
   ----------------------------------------------------------------------*/
 int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 		PtrFont font, int boxWidth, int bl, int hyphen,
-		int startABlock, int fg, int shadow)
+		int startABlock, int fg)
 {
   ThotWindow          w;
   int                 width;
-  register int        j;
 
   w = FrRef[frame];
   y += FrameTable[frame].FrTopMargin; 
   if (Printing)
     width = GLString (buff, lg, frame, x, y, font, boxWidth, bl, hyphen, 
-		      startABlock, fg, shadow);
+		      startABlock, fg);
   else
     {
       /* compute the width of the string */
@@ -191,17 +190,6 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
       if (lg > 0 && w)
 	{
 	  /* Dealing with BR tag for windows */
-	  if (shadow)
-	    {
-	      /* replace each character by a star */
-	      j = 0;
-	      while (j < lg)
-		{
-		  buff[j++] = '*';
-		  width += CharacterWidth (42, font);
-		}
-	  
-	    }
 	  if (fg >= 0)
 	    width = GL_DrawString (fg, (CHAR_T *) buff, 
 				   (float) x, (float) y, hyphen, font, lg);
@@ -209,6 +197,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
     }
   return (width);
 }
+
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   WDrawString draw a char string of lg chars beginning in buff.
@@ -224,22 +213,14 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
   ----------------------------------------------------------------------*/
 int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 		 PtrFont font, int boxWidth, int bl, int hyphen,
-		 int startABlock, int fg, int shadow)
+		 int startABlock, int fg)
 {
-  int j;
-
   if (lg < 0)
     return 0;
   
   y += FrameTable[frame].FrTopMargin;
-  if (shadow)
-    {
-      /* replace each character by a star */
-      j = 0;
-      while (j < lg)
-	buff[j++] = '*';
-    }
-  return (GL_DrawString (fg, buff, (float) x, (float) y, hyphen, (void *) font, lg));
+  return (GL_DrawString (fg, buff, (float) x, (float) y, hyphen,
+			 (void *) font, lg));
 }
 #endif /*_WIN_PRINT*/
 

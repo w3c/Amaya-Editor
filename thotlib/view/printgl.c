@@ -696,7 +696,7 @@ static void Transcode (FILE *fout, int encoding, unsigned char car)
   ----------------------------------------------------------------------*/
 int GLString (unsigned char *buff, int lg, int frame, int x, int y,
 		PtrFont font, int boxWidth, int bl, int hyphen,
-		int startABlock, int fg, int shadow)
+		int startABlock, int fg)
 {
   FILE               *fout;
   int                 j, i, encoding, width;
@@ -736,57 +736,42 @@ int GLString (unsigned char *buff, int lg, int frame, int x, int y,
 	  }
       }
       
-      if (shadow)
+      buff[lg] = EOS;
+      /* Add the justified white space */
+      if (bl > 0)
 	{
-	  /* replace each character by a star */
-	  j = 0;
-	  while (j < lg)
+	  NbWhiteSp += bl;
+	  if (fg >= 0)
 	    {
-	      buff[j++] = '*';
-	      width += CharacterWidth (42, font);
+	      for (i = 1; i <= bl; i++)
+		fprintf (fout, "%c", ' ');
+	      /* Transcode (fout, encoding, ' '); */
 	    }
-	  buff[lg] = EOS;
-	  bl = 0;
 	}
-      else
+      /* Emit the chars */
+      for (j = 0; j < lg; j++)
 	{
-	  buff[lg] = EOS;
-	  /* Add the justified white space */
-	  if (bl > 0)
+	  /* compute the width of the string */
+	  width += CharacterWidth (buff[j], font);
+	  /* enumerate the white spaces */
+	  if (buff[j] == ' ')
 	    {
-	      NbWhiteSp += bl;
-	      if (fg >= 0)
+	      if (noJustifiedWhiteSp == 0)
 		{
-		  for (i = 1; i <= bl; i++)
-		    fprintf (fout, "%c", ' ');
-		  /* Transcode (fout, encoding, ' '); */
-		}
-	    }
-	  /* Emit the chars */
-	  for (j = 0; j < lg; j++)
-	    {
-	      /* compute the width of the string */
-	      width += CharacterWidth (buff[j], font);
-	      /* enumerate the white spaces */
-	      if (buff[j] == ' ')
-		{
-		  if (noJustifiedWhiteSp == 0)
-		    {
-		      /* write a justified white space */
-		      NbWhiteSp++;
-		      if (fg >= 0)
-			fputs (" ", fout);
-		    }
-		  else if (fg >= 0)
-		    /* write a fixed lenght white space */
-		    fputs ("\\240", fout);
-		}
-	      else
-		{
-		  noJustifiedWhiteSp = 0;
+		  /* write a justified white space */
+		  NbWhiteSp++;
 		  if (fg >= 0)
-		    Transcode (fout, encoding, buff[j]);
+		    fputs (" ", fout);
 		}
+	      else if (fg >= 0)
+		/* write a fixed lenght white space */
+		fputs ("\\240", fout);
+		}
+	  else
+	    {
+	      noJustifiedWhiteSp = 0;
+	      if (fg >= 0)
+		Transcode (fout, encoding, buff[j]);
 	    }
 	}
     }
@@ -996,23 +981,12 @@ void WinGL_Swap (HDC hDC)
    ----------------------------------------------------------------------*/
 int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 		 PtrFont font, int boxWidth, int bl, int hyphen,
-		 int startABlock, int fg, int shadow)
+		 int startABlock, int fg)
 {
-  int j;
-
   if (lg < 0)
     return 0;
   
   y += FrameTable[frame].FrTopMargin;
-  if (shadow)
-    {
-      /* replace each character by a star */
-      j = 0;
-      while (j < lg)
-	{
-	  buff[j++] = '*';
-	}
-    }
   /* Appeler un fonction win32 de rendu de texte  !!! */
   return 1;
 }

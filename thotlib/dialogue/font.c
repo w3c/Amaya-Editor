@@ -1162,12 +1162,12 @@ int FontPointSize (int size)
    return (LogicalPointsSizes[size]);
 }
 
-#if defined(_GTK) || defined(_MOTIF)
 /*----------------------------------------------------------------------
   LoadFont load a given font designed by its name.
   ----------------------------------------------------------------------*/
 PtrFont LoadFont (char *name)
 {
+#if defined(_GTK) || defined(_MOTIF)
 #ifdef _I18N_
   /*printf ("%s\n", name);*/
 #endif /* _I18N_ */
@@ -1182,9 +1182,10 @@ PtrFont LoadFont (char *name)
 #ifdef _MOTIF  
   return ((PtrFont) XLoadQueryFont (TtDisplay, name));
 #endif /* _MOTIF */
-
-}
+#else /* #if defined(_GTK) || defined(_MOTIF) */
+  return NULL;
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
+}
 
 /*----------------------------------------------------------------------
  GeneratePostcriptFont : 

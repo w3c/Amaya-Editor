@@ -5377,7 +5377,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
   char              tempname[MAX_LENGTH];
   char              sep, *tmp, *ptr;
   int               val;
-  int               i;
 
   ThotBool          change, updated;
 

@@ -22,8 +22,7 @@ extern int DrawString ( unsigned char *buff,
                         int bl,
                         int hyphen,
                         int startABlock,
-                        int fg,
-                        int shadow );
+                        int fg );
 extern int WDrawString ( wchar_t *buff,
                          int lg,
                          int frame,
@@ -34,8 +33,7 @@ extern int WDrawString ( wchar_t *buff,
                          int bl,
                          int hyphen,
                          int startABlock,
-                         int fg,
-                         int shadow );
+                         int fg );
 extern void DisplayUnderline ( int frame,
                                int x,
                                int y,
@@ -333,8 +331,7 @@ extern int DrawString (/* unsigned char *buff,
                           int bl,
                           int hyphen,
                           int startABlock,
-                          int fg,
-                          int shadow */);
+                          int fg */);
 extern int WDrawString (/* wchar_t *buff,
                            int lg,
                            int frame,
@@ -345,8 +342,7 @@ extern int WDrawString (/* wchar_t *buff,
                            int bl,
                            int hyphen,
                            int startABlock,
-                           int fg,
-                           int shadow */);
+                           int fg */);
 extern void DisplayUnderline (/* int frame,
                                  int x,
                                  int y,

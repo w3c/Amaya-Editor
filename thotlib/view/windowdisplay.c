@@ -297,7 +297,7 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
   ----------------------------------------------------------------------*/
 int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 		PtrFont font, int boxWidth, int bl, int hyphen,
-		int startABlock, int fg, int shadow)
+		int startABlock, int fg)
 {
   HDC                 display;
   HFONT               hOldFont;
@@ -319,25 +319,11 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
   width = 0;
   SetMapperFlags (display, 1);
   hOldFont = WinLoadFont (display, font);
-  if (shadow)
-    {
-      /* replace each character by a star */
-      j = 0;
-      while (j < lg)
-	{
-	  buff[j++] = '*';
-	  width += CharacterWidth (42, font);
-	}
-      buff[lg] = EOS;
-    }
-  else
-    {
-      buff[lg] = EOS;
-      TranslateChars (buff);
-      j = 0;
-      while (j < lg)
-	width += CharacterWidth (buff[j++], font);
-    }
+  buff[lg] = EOS;
+  TranslateChars (buff);
+  j = 0;
+  while (j < lg)
+    width += CharacterWidth (buff[j++], font);
   if (fg >= 0)
     {
       /* not transparent -> draw charaters */
@@ -371,7 +357,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
   ----------------------------------------------------------------------*/
 int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 		 PtrFont font, int boxWidth, int bl, int hyphen,
-		 int startABlock, int fg, int shadow)
+		 int startABlock, int fg)
 {
   HDC                 display;
   HFONT               hOldFont;
@@ -394,25 +380,11 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
   width = 0;
   SetMapperFlags (display, 1);
   hOldFont = WinLoadFont (display, font);
-  if (shadow)
-    {
-      /* replace each character by a star */
-      j = 0;
-      while (j < lg)
-	{
-	  buff[j++] = '*';
-	  width += CharacterWidth (42, font);
-	}
-      buff[lg] = EOS;
-    }
-  else
-    {
-      buff[lg] = EOS;
-      /* TranslateChars (buff); */
-      j = 0;
-      GetTextExtentPointW (display, buff, lg, (LPSIZE) (&wsize)); /* works from Win9x up */
-      width = wsize.cx;
-    }
+  buff[lg] = EOS;
+  /* TranslateChars (buff); */
+  j = 0;
+  GetTextExtentPointW (display, buff, lg, (LPSIZE) (&wsize)); /* works from Win9x up */
+  width = wsize.cx;
   if (fg >= 0)
     {
       /* not transparent -> draw charaters */
