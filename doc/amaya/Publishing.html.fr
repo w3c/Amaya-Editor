@@ -57,8 +57,8 @@ bouton <img alt="floppy" src="../Icons/floppy.gif" align="middle" border="0"
 /> . Cette commande sauve le document courant à l'adresse où il a été amené.
 Les images nouvellement ajoutées sont sauvées dans le même répertoire et
 aucune confirmation n'est demandée, excepté si le nom du document est inconnu.
-Les serveurs permettent aux utilisateurs d'importer un document quand seuls le
-nom du serveur ou le répertoire du serveur sont donnés. C'est très utile au
+Les serveurs permettent aux utilisateurs d'importer un document quand seul le
+nom du serveur ou le répertoire du serveur ont donné. C'est très utile au
 moment de la navigation, mais ça n'est pas supporté par la méthode "put". Dans
 ce cas, Amaya détecte que le nom du document manque et propose d'utiliser un
 nom par défaut pour répondre à la demande.</p>
@@ -72,31 +72,33 @@ la place.</p>
 <p>Le fait de sélectionner l'entrée <strong>Sauver comme</strong> dans le menu
 <strong>Fichier</strong> ouvre une boîte de dialogue qui vous permet de sauver
 le document courant à une adresse différente, un serveur Web lointain ou un
-fichier système local. Vous pouvez:</p>
+fichier local.</p>
+
+<p> Vous pouvez:</p>
 <ul>
   <li>sauver le document sur un disque local,</li>
   <li>sauver le document sur un URI lointain,</li>
-  <li>sauver des images encastrées dans le répertoire du document ou à une
-    adresse différente,</li>
-  <li>transformer les URIs encastrées,</li>
+  <li>sauver des images dans le répertoire du document ou à une adresse
+    différente,</li>
+  <li>transformer les URIs dans le document,</li>
 </ul>
 
 <p><img src="../Icons/SaveAs.gif" alt="SaveAs" /></p>
 
 <p>Les choix dans la boîte de dialogue, de haut en bas, de gauche à droite
-sont utilisés comme suivant:</p>
+sont utilisés comme suit:</p>
 <ul>
   <li>Le sélecteur <strong>Répertoires</strong> montre les répertoires
     contenus dans le répertoire courant. Il devrait être utilisé pour sauver
-    un fichier sur le fichier système local.</li>
+    un fichier sur le système de fichier local.</li>
   <li>Le sélecteur des <strong>Fichiers</strong> montre les fichiers contenus
     dans le répertoire local courant.</li>
   <li>Les choix <strong>HTML</strong>, <strong>XML</strong> et
-    <strong>Texte</strong> sont exclusifs. Par défaut c'est HTML qui est coché
-    et vous devez changer si vous voulez produire un document XML (Voyager) ou
-    un format texte du document courant.</li>
-  <li>Le choix <strong>Copier les Images</strong> indique si les images
-    emboîtées dans le document courant doivent être copiées avec le document à
+    <strong>Texte</strong> sont exclusifs. Si par défaut c'est HTML qui est
+    coché, vous devez changer si vous voulez produire un document XML
+    (Voyager) ou un format texte du document courant.</li>
+  <li>Le choix <strong>Copier les Images</strong> indique que les images
+    importées dans le document courant doivent être copiées avec le document à
     une nouvelle adresse. Il vaut mieux généralement garder ce bouton actif,
     autrement vous ne serez pas sûr que les images correspondantes seront
     trouvées en ouvrant le document ultérieurement. Cependant, le rendre
@@ -108,28 +110,28 @@ sont utilisés comme suivant:</p>
   <li>Le choix <strong>Transformer les URIs</strong> transforme tous les URIs
     courants en URIs relatifs quand c'est possible. Biensûr, si le document
     est sauvé dans un fichier local et si les URIs pointent sur des fichiers
-    lointains, les URIs seront absolus. Ceci assure que tous les liens dans le
-    document restent correctes après la copie. Cependant, si vous avez
+    lointains, les URIs resteront absolus. Ceci assure que tous les liens dans
+    le document restent corrects après la copie. Cependant, si vous avez
     plusieurs documents reliés aux URIs relatifs et que vous avez l'intention
     de les déplacer vers une adresse lointaine, la désactivation de la
     conversion en URI est nécessaire afin d'éviter le référencement des
     adresses initiales.</li>
   <li>Le champ <strong>Adresse du document</strong>  indique l'adresse où le
-    fichier HTML a été écrit. Ce peut être un fichier dans le fichier système
-    local (par exemple "/pub/html/welcome.html") ou le nom d'un URI lointain
-    (par exemple "http://www.w3.org/pub/WWW/Welcome.html").
+    fichier HTML a été écrit. Ce peut être un fichier dans le système du
+    fichier local (par exemple "/pub/html/welcome.html") ou le nom d'un URI
+    lointain (par exemple "http://www.w3.org/pub/WWW/Welcome.html").
     <p><strong>Notez </strong>que vous devrez donner le chemin complet comme
     si il n'y avait aucun moyen de deviner le nom de
     "http://www.w3.org/pub/WWW". Vous devrez également vous assurer que vous
-    avez le <strong>droit de faire une méthode PUT</strong> dans le cas d'une
-    adresse lointaine. Regardez la page <a
+    avez le <strong>droit d'éxécuter une méthode PUT</strong> dans le cas
+    d'une adresse lointaine. Regardez la page <a
     href="http://www.w3.org/Amaya/User/Put.html">configurez votre serveur pour
     permettre la méthode PUT</a> ou demander à votre administrateur Web.</p>
   </li>
   <li>Le champ <strong>Adresse des images</strong> vous permet de sauver des
     images (si <strong>Copier les Images</strong> a été sélectionné) à un
     autre endroit que le fichier HTML. Ce champ devrait contenir le nom d'un
-    répertoire dans le fichier système local ou une adresse dans le serveur
+    répertoire dans le système de fichier local ou une adresse dans le serveur
     lointain.
     <ul>
       <li>en utilisant un chemin relatif, les images sont stockées à une
@@ -168,9 +170,9 @@ sont utilisés comme suivant:</p>
         le proxy http n'est pas mis, ou que le serveur proxy et le <a
         href="http://www.w3.org/Amaya/User/Put.html">serveur cible sont
         configurés pour travailler avec la méthode PUT</a>.</li>
-      <li><p><b>Amaya</b> ne contacte pas couramment le serveur lointain (dans
-        le cas d'une destination "http://..." destination) pour contrôler si
-        un tel document existe déjà.</p>
+      <li><p><b>Amaya</b> ne contacte pas le serveur lointain (dans le cas
+        d'une destination "http://..." destination) pour contrôler si un tel
+        document existe déjà.</p>
       </li>
     </ul>
   </li>
@@ -180,10 +182,10 @@ sont utilisés comme suivant:</p>
 
 <p>La commande <strong>Sauver comme</strong> du menu <strong>Fichier
 </strong>visualise une boîte de dialogue permettant de sauver le document
-courant en formats variables.Le bouton <strong>Texte</strong> du menu<strong>
-Format du document</strong> sauve le document sous forme de texte, dans un
-fichier local. Une liste de tous les URIs utilisés s'affiche dans ce
-fichier.</p>
+courant dans des formats différents.Le bouton <strong>Texte</strong> du
+menu<strong> Format du document</strong> sauve le document sous forme de
+texte, dans un fichier local. La liste de tous les URIs utilisés dans le
+document est listées dans ce fichier.</p>
 </div>
 
 <p align="right"><a href="SpellChecking.html"><img alt="previous" border="0"

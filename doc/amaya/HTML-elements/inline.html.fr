@@ -35,7 +35,7 @@
 bloc peut être balisé de différentes façons, par exemple pour mettre l'accent
 dessus, ou pour souligner ce qui devrait être entré par l'utilisateur sur un
 ordinateur. La plupart de ces éléments en ligne sont décrits dans cette page,
-bien que les liens, qui sont eux aussi des éléments en ligne, soient décrits
+alors que les liens, qui sont eux aussi des éléments en ligne, soient décrits
 séparément.</p>
 
 <div>
@@ -54,12 +54,12 @@ utiliser pour changer la présentation des définitions en ligne.</p>
 <h2><a name="Inline1">Les citations en ligne</a></h2>
 
 <p>Les citations qui sont en ligne peuvent être marquées en utilisant
-l'élément d'information "quotation" - l'élément HTML <a
+l'élément d'information "citation" - l'élément HTML <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-Q"><code>Q</code></a>.
-Cet élément est sélectionné depuis le sous-menu Éléments caractères du menu
-Style, ou sur linux avec le raccourci clavier Alt-t, Alt-q. Il est possible de
-donner  l'URI de la source pour la citation, utilisant l'attribut
-<code>cite</code>.</p>
+Cet élément est sélectionné depuis le sous-menu <strong>Éléments</strong>
+caractères du menu <strong>Style</strong>, ou sur linux avec le raccourci
+clavier Alt-t, Alt-q. Il est possible de donner  l'URI de la source pour la
+citation, utilisant l'attribut <code>cite</code>.</p>
 
 <p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
 utilisées pour changer la présentation des citations en ligne. Les
@@ -81,10 +81,10 @@ href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-VAR"><code>VAR</code
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-KBD"><code>KBD</code></a>
 et <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-SAMP"><code>SAMP</code></a>.
-Ces éléments sont trouvés à l'aide du sous-menu types information du menu
-Style, et il existe des raccourcis clavier pour eux tous - Alt-t suivi de
-Alt-c pour code, Alt-v pour variables, Alt-k pour user input et Alt-s pour
-sample output.</p>
+Ces éléments sont trouvés à l'aide du sous-menu<strong> types
+information</strong> du menu <strong>Style</strong>, et il existe des
+raccourcis clavier pour tous - Alt-t suivi de Alt-c pour code, Alt-v pour
+variables, Alt-k pour user input et Alt-s pour sample output.</p>
 
 <p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
 utilisées pour changer la présentation de ces éléments.</p>
@@ -93,21 +93,21 @@ utilisées pour changer la présentation de ces éléments.</p>
 <div>
 <h2><a name="Inline">Acronymes et abréviations</a></h2>
 
-<p>Les acronymes et les abréviations devraient être marqués comme tels,
+<p>Les acronymes et les abréviations devraient être marqués comme tels, en
 utilisant les éléments <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ABBR"><code>ABBR</code></a>
 et <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ACRONYM"><code>ACRONYM</code></a>
-disponibles dans le sous-menu  types information du menu Style. Pour unix, il
-y a également le raccourci Alt-t, Alt-a pour les acronymes. Ceci permet la
-reconnaissance des différents types de systèmes. L'attribut <code>title</code>
-peut également être utilisé pour spécifier l'expansion de l'acronyme.
-Sélectionnez le texte à marquer, par exemple <acronym
-title="World Wide Web Consortium">W3C</acronym>, sélectionnez le menu Style,
-le sous-menu types information, et l'option acronyme. Puis sélectionnez
-l'élément entier (<kbd>touche Esc</kbd> sur Unix, <kbd>touche F2 </kbd> sur
-windows), ouvrez le menu Attributs, sélectionnez title, entrez <kbd>World Wide
-Web Consortium</kbd>, et appliquez le.</p>
+disponibles dans le sous-menu  <strong>types information</strong> du menu
+<strong>Style</strong>. Pour unix, il y a également le raccourci Alt-t, Alt-a
+pour les acronymes. Ceci permet la reconnaissance des différents types de
+systèmes. L'attribut <code>title</code> peut également être utilisé pour
+spécifier l'expansion de l'acronyme. Sélectionnez le texte à marquer, par
+exemple <acronym title="World Wide Web Consortium">W3C</acronym>, sélectionnez
+le menu Style, le sous-menu types information, et l'option acronyme. Puis
+sélectionnez l'élément entier (<kbd>touche Esc</kbd> sur Unix, <kbd>touche F2
+</kbd> sur windows), ouvrez le menu Attributs, sélectionnez title, entrez
+<kbd>World Wide Web Consortium</kbd>, et appliquez le.</p>
 
 <p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
 utilisées pour changer la présentation des acronymes ou des abréviations.</p>
@@ -120,47 +120,49 @@ utilisées pour changer la présentation des acronymes ou des abréviations.</p>
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-del"
 name="DEL"><code>DEL</code></a> et <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ins"><code>INS</code></a>
-sont disponibles dans le sous-menu types information du menu Style pour
-marquer le texte qui devra être effacé ou qui a <ins>déjà</ins> été
-inséré.</p>
+sont disponibles dans le sous-menu <strong>types information</strong> du menu
+<strong>Style</strong> pour marquer le texte qui devra être effacé ou qui a
+<ins>déjà</ins> été inséré.</p>
 
 <p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
 utilisées pour changer la présentation des insertions et des suppressions.</p>
 </div>
 
 <div>
-<h2><a name="Emphasis">Les éléments accentués</a></h2>
+<h2><a name="Emphasis">Les éléments de mise en évidence</a></h2>
 
-<p>HTML a des éléments pour définir deux niveaux d'accentuation:</p>
+<p>HTML a des éléments pour définir deux niveaux de mise en évidence:</p>
 <ol>
-  <li><em>L'accentuation ordinaire</em>, utilisez l'élément <a
+  <li><em>La mise en évidence ordinaire</em>, utilisez l'élément <a
     href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-EM">EM</a></li>
-  <li><strong>L'accentuation renforcée</strong>, utilisez l'élément <code><a
+  <li><strong>La mise en évidence renforcée</strong>, utilisez l'élément
+    <code><a
     href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-STRONG">STRONG</a></code>.</li>
 </ol>
 
-<p>Deux types d'accentuation peuvent être appliqués depuis la barre d'outils
-en utilisant les boutons <img src="../../Icons/Em.gif" alt="Emphasis" /> et
-<img src="../../Icons/Strong.gif" alt="Strong" /> , ou depuis le formulaire du
-sous-menu types information du menu Style. Il y a également des raccourcis
-clavier - <kbd>Shift-control-I</kbd> pour accentuer (parce que
-l'interprétation par défaut est souvent le texte en italique) et
-<kbd>Shift-control-B</kbd> pour l'accentuation renforcée (parce que
-l'interprétation par défaut est souvent le texte en gras). Si il y a une
-sélection courante, l'accentuation lui est appliquée, autrement l'élément
-approprié est créé, en tant que fils de l'élément courant.</p>
+<p>Deux types de mise en évidence peuvent être appliqués depuis la barre
+d'outils en utilisant les boutons <img src="../../Icons/Em.gif" alt="Emphasis"
+/> et <img src="../../Icons/Strong.gif" alt="Strong" /> , ou depuis le
+formulaire du sous-menu <strong>types information</strong> du menu
+<strong>Style</strong>. Il y a également des raccourcis clavier -
+<kbd>Shift-control-I</kbd> pour accentuer (parce que l'interprétation par
+défaut est souvent le texte en italique) et <kbd>Shift-control-B</kbd> pour la
+mise en évidence renforcée (parce que l'interprétation par défaut est souvent
+le texte en gras). Si il y a une sélection courante, la mise en évidence lui
+est appliquée, autrement l'élément approprié est créé, en tant que fils de
+l'élément courant.</p>
 
-<p>Les éléments d'accentuation sont sous forme de choix dans Amaya - pour
-désactiver une accentuation, sélectionnez l'élément et réappliquez
-l'accentuation appropriée. Par exemple, placez le curseur quelque part sur un
-élément <code>STRONG</code>, utilisez la touche <kbd>F2</kbd> (windows) ou la
-touche <kbd>Esc</kbd> (Unix) pour sélectionner l'élément, et ensuite utilisez
-le raccourci clavier, menu item, ou le bouton <img
+<p>Les éléments de la mise en évidence sont sous forme de choix dans Amaya -
+pour désactiver une mise en évidence, sélectionnez l'élément et réappliquez la
+mise en évidence appropriée. Par exemple, placez le curseur quelque part sur
+un élément <code>STRONG</code>, utilisez la touche <kbd>F2</kbd> (windows) ou
+la touche <kbd>Esc</kbd> (Unix) pour sélectionner l'élément, et ensuite
+utilisez le raccourci clavier, menu item, ou le bouton <img
 src="../../Icons/Strong.gif" alt="Strong" />  - l'élément <code>STRONG</code>
 sera désactivé.</p>
 
 <p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
-utilisées pour changer la présentation des deux types d'accentuation.</p>
+utilisées pour changer la présentation des deux types de mise en évidence.</p>
 </div>
 </div>
 
