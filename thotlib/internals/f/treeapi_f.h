@@ -126,6 +126,7 @@ extern Element TtaSearchNoPageBreak ( Element element,
                                       ThotBool forward );
 extern ThotBool TtaHasHiddenException ( ElementType elType );
 extern ThotBool TtaHasInvisibleException ( AttributeType attrType );
+extern ThotBool TtaHasReturnCreateNLException ( ElementType elType );
 
 #else /* __STDC__ */
 
@@ -249,6 +250,7 @@ extern Element TtaSearchNoPageBreak (/* Element element,
                                         ThotBool forward */);
 extern ThotBool TtaHasHiddenException (/* ElementType elType */);
 extern ThotBool TtaHasInvisibleException (/* AttributeType attrType */);
+extern ThotBool TtaHasReturnCreateNLException (/* ElementType elType */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

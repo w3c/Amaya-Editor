@@ -2970,3 +2970,15 @@ ThotBool            TtaHasInvisibleException (AttributeType attrType)
   return TypeHasException (ExcInvisible, attrType.AttrTypeNum, 
 			   (PtrSSchema) attrType.AttrSSchema);
 }
+
+/* ----------------------------------------------------------------------
+   TtaHasInvisibleException
+
+   Returns TRUE if the elType has the CreateNL exception
+   (Preformatted, STYLE_, SCRIPT_ andText_Area HTML elements
+   ---------------------------------------------------------------------- */
+ThotBool            TtaHasReturnCreateNLException (ElementType elType)
+{
+  return TypeHasException (ExcReturnCreateNL, elType.ElTypeNum, 
+			   (PtrSSchema) elType.ElSSchema);
+}

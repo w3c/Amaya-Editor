@@ -22,9 +22,7 @@
 #include "zlib.h"
 #include "MathML.h"
 #include "fetchHTMLname.h"
-#ifdef XML_GENERIC
 #include "tree.h"
-#endif /* XML_GENERIC */
 
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
@@ -1084,10 +1082,11 @@ void     InsertXmlElement (Element *el)
    XmlLastLeafInElement
    return the last leaf element in element el.
   ----------------------------------------------------------------------*/
-Element      XmlLastLeafInElement (Element el)
+Element        XmlLastLeafInElement (Element el)
 
 {
-   Element  child, lastLeaf;
+   Element     child, lastLeaf;
+   ElementType childType;
 
    child = el;
    lastLeaf = NULL;
@@ -1095,7 +1094,13 @@ Element      XmlLastLeafInElement (Element el)
      {
        child = TtaGetLastChild (child);
        if (child != NULL)
-	   lastLeaf = child;
+	 {
+	   childType = TtaGetElementType (child);
+	   if (TtaHasReturnCreateNLException (childType))
+	     child = NULL;
+	   else
+	     lastLeaf = child;
+	 }
      }
    return lastLeaf;
 }
@@ -1114,7 +1119,7 @@ static void      RemoveTrailingSpaces (Element el)
    Attribute     attr = NULL;
 
    /* Search the last leaf in the element's tree */
-   lastLeaf = XmlLastLeafInElement (el);
+   lastLeaf = XmlLastLeafInElement (el);   
    if (lastLeaf != NULL)
      {
        elType = TtaGetElementType (lastLeaf);

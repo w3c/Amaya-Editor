@@ -1109,6 +1109,14 @@ extern ThotBool TtaHasHiddenException (ElementType elType);
 /* ----------------------------------------------------------------------
    TtaHasInvisibleException
 
+   Returns TRUE if the elType has the CreateNL exception
+   (Preformatted, STYLE_, SCRIPT_ andText_Area HTML elements
+   ---------------------------------------------------------------------- */
+extern ThotBool TtaHasReturnCreateNLException (ElementType elType);
+
+/* ----------------------------------------------------------------------
+   TtaHasInvisibleException
+
    Parameters:
    attrType : the attribute type we want to test.
    Returns TRUE if the attrType is defined by the document schema's
