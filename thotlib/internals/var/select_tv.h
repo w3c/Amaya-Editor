@@ -72,7 +72,6 @@ THOT_EXPORT PtrDocument  DocSelectedAttr;
 THOT_EXPORT PtrAbstractBox AbsBoxSelectedAttr;
 THOT_EXPORT int          FirstSelectedCharInAttr;
 THOT_EXPORT int          LastSelectedCharInAttr;
-THOT_EXPORT int          InitSelectedCharInAttr;
 
 /* elements corresponding to the items of Selection menu */
 THOT_EXPORT PtrElement   SelMenuParentEl;
