@@ -262,12 +262,11 @@ static void AddAnnotationIndexFile (char *source_url, char *index_file)
   -----------------------------------------------------------------------*/
 void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
 {
-  Element el;
-  char s[MAX_LENGTH];
-  char previous[MAX_LENGTH];
-  char *iconName;
+  Element       el;
+  char          s[MAX_LENGTH];
+  char          previous[MAX_LENGTH];
+  char         *iconName;
   RDFStatementP iconS = (RDFStatementP) NULL;
-  Language lang;
 
   el = TtaGetFirstChild (anchor);
   
@@ -290,7 +289,7 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
   
   
   /* only substitute the icon name if it has changed */
-  TtaGiveBufferContent (el, previous, sizeof (previous) - 1, &lang);
+  TtaGiveSubString (el, previous, 0, sizeof (previous) - 1);
   if (previous[0] != EOS && strcasecmp (iconName, previous))
     TtaSetPictureContent (el, iconName, SPACE, source_doc, "image/gif");
 }

@@ -16,7 +16,9 @@
 
 /* annotlib includes */
 #include "annotlib.h"
+
 #include "ANNOTfiles_f.h"
+#include "ANNOTlink_f.h"
 #include "ANNOTschemas_f.h"
 #include "ANNOTevent_f.h"
 #include "ANNOTtools_f.h"
