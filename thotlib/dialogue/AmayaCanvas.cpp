@@ -241,6 +241,17 @@ void AmayaCanvas::OnPaint( wxPaintEvent& event )
  */
 void AmayaCanvas::OnMouse( wxMouseEvent& event )
 {
+  if ( ( event.GetEventType() == wxEVT_LEFT_DOWN ||
+	 event.GetEventType() == wxEVT_MIDDLE_DOWN ||
+	 event.GetEventType() == wxEVT_RIGHT_DOWN ) ||
+       ( event.GetEventType() == wxEVT_LEFT_DCLICK ||
+	 event.GetEventType() == wxEVT_MIDDLE_DCLICK ||
+	 event.GetEventType() == wxEVT_RIGHT_DCLICK ) )
+    {
+      // force the focus besause on debian woody, the focus do not come in when clicking on the canvas
+      SetFocus();
+    }
+
   // Do not treat this event if the canvas is not active (hiden)
   if (!IsParentFrameActive())
   {
@@ -260,9 +271,6 @@ void AmayaCanvas::OnMouse( wxMouseEvent& event )
     thot_mod_mask |= THOT_MOD_ALT;
   if (event.ShiftDown())
     thot_mod_mask |= THOT_MOD_SHIFT;
-
-  // force the focus besause on debian woody, the focus do not come in when clicking
-  SetFocus();
 
   // if a click is done into the canvas then activate the frame
   if ( ( event.GetEventType() == wxEVT_LEFT_DOWN ||
