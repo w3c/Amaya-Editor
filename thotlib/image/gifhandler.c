@@ -28,6 +28,7 @@
 #define THOT_EXPORT extern
 #include "picture_tv.h"
 #include "frame_tv.h"
+#include "edit_tv.h"
 #include "thotcolor_tv.h"
 
 #include "font_f.h"
@@ -1282,6 +1283,9 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 {
   Pixmap              pixmap = (Pixmap) 0;
   ThotColorStruct     colrs[256];
+#ifdef _WINDOWS
+  unsigned short      red, green, blue;
+#endif /* _WINDOWS */
   unsigned char      *buffer = NULL;
   unsigned char      *buffer2 = NULL;
   int                 w, h;

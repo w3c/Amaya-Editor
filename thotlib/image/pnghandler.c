@@ -28,6 +28,7 @@
 #include "font_f.h"
 #include "units_f.h"
 #include "frame_tv.h"
+#include "edit_tv.h"
 #include "picture_f.h"
 #include "gifhandler_f.h"
 #include "memory_f.h"
