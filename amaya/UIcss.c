@@ -122,7 +122,25 @@ ThotBool LoadRemoteStyleSheet (char *url, Document doc, Element el,
 
 
 /*----------------------------------------------------------------------
-   LoadUserStyleSheet : Load the user Style Sheet found in his/her   
+   InitUserStyleSheet: Generates a user Style Sheet if it doesn't exist.           
+  ----------------------------------------------------------------------*/
+void InitUserStyleSheet (char *url)
+{
+  FILE             *f;
+
+  if (!TtaFileExist (url))
+    {
+      f = fopen (url, "w");
+      if (f)
+	{
+	  fprintf (f, "/* This is the default Amaya CSS file */\n");
+	  fclose (f);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+   LoadUserStyleSheet: Load the user Style Sheet found in his/her   
    home directory or the default one in THOTDIR.           
   ----------------------------------------------------------------------*/
 void LoadUserStyleSheet (Document doc)
