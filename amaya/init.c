@@ -2500,6 +2500,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        window_id = TtaGetDocumentWindowId( doc, -1 );
        /* get the old document page id */
        TtaGetDocumentPageId( doc, -1, &page_id, &page_position );
+       /* force the document's page position because sometime oldDoc is
+	  a source document placed on the bottom part of the page */
+       page_position = 1;
 #endif /* _WX */
       if (DocumentTypes[doc] == docHTML ||
 	  DocumentTypes[doc] == docSVG ||
