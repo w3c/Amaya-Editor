@@ -8,6 +8,8 @@ have been introduced in Amaya and Thot since version 1.4 of Amaya.
 Extensions 1.5a:
 ---------------
 
+* Added DEFLATE support under Windows
+
 * First implementation of a multi-document, multi-level Undo/Redo command
 
 * WAI guidelines on Image and Maps.
@@ -18,7 +20,8 @@ Extensions 1.5a:
 * CSS properties "left-margin", "top-margin", and "display: none" are
   now interpreted.
 
-* Amaya is now able to load, edit, print  and save CSS files or simple Text files.
+* Amaya is now able to load, edit, print  and save CSS files or simple Text
+  files.
 
 * Publication thru the net now uses the HTTP/1.1 etags and conditional
   headers to avoid the lost updates problem.
@@ -42,8 +45,12 @@ Extensions 1.5a:
   The Root directory is now Amaya instead of Thot and the libwww is no longer
   considered as a part of the Amaya code. The source tar file includes the
   libwww code (libwww is a directory next to Amaya) and one who acceedes
-  the CVS base needs to get the libwww code (cvs get libwww/Library/src) to
+  the CVS base needs to get the libwww code (cvs get libwww) to
   compile Amaya.
+
+* The 409 HTTP error message (conflict) is now shown in a popup window.
+
+* The Verify_Save option is now turned off by default
 
 Fixed bugs 1.5a:
 ---------------
@@ -94,3 +101,6 @@ Fixed bugs 1.5a:
 
 * People who compiled Amaya on windows platforms couldn't display jpeg images.
   The problem is fixed now.
+
+* The authentication handlers were desactivated while doing a HEAD pre check
+  during the lost update PUT procedure
