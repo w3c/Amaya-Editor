@@ -592,6 +592,7 @@
 #define IDC_BGIMAGES                    1424
 #define IDC_AUTOSAVE                    1424
 #define IDC_DOUBLECLICK                 1425
+#define IDC_SAVE_GEOMETRY_EXIT          1425
 #define IDC_ENABLEFTP                   1426
 #define IDC_SHOWADDRESS                 1427
 #define IDC_SHOWTARGET                  1428
@@ -756,6 +757,8 @@
 #define IDC_LANGLIST                    1591
 #define IDC_ATTRNAME                    1595
 #define ID_EDITVALUE                    1596
+#define IDC_CHARSET_TITLE               1599
+#define IDC_CHARSET_LIST                1600
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -802,7 +805,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        571
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1599
+#define _APS_NEXT_CONTROL_VALUE         1601
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

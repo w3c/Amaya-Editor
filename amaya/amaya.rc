@@ -26,29 +26,33 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 // Dialog
 //
 
-PUBLISHMENU DIALOG DISCARDABLE  100, 100, 242, 151
+PUBLISHMENU DIALOG DISCARDABLE  100, 100, 255, 225
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Publishing Preferences"
 FONT 8, "MS Sans Serif"
 BEGIN
+    LTEXT           "Charset for new documents",IDC_CHARSET_TITLE,7,13,214,
+                    11
+    LISTBOX         IDC_CHARSET_LIST,7,22,163,47,LBS_SORT | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
     CONTROL         "Use the application/xhtml+xml MIME type for XHTML documents",
                     IDC_USEXHTMLMIMETYPE,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,6,228,8
+                    WS_TABSTOP,7,75,241,8
     CONTROL         "Use ETAGS and preconditions",IDC_LOSTUPDATECHECK,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,18,182,8
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,87,182,8
     CONTROL         "Verify each PUT with a GET",IDC_VERIFYPUBLISH,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,30,174,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,99,174,10
     CONTROL         "Export CR/LF",IDC_CRLF,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,42,138,10
+                    WS_TABSTOP,7,111,138,10
     LTEXT           "Default name for URLs finishing in '/'",
-                    IDC_TDEFAULTNAME,7,62,190,8
-    EDITTEXT        IDC_DEFAULTNAME,7,75,164,12,ES_AUTOHSCROLL
+                    IDC_TDEFAULTNAME,7,131,190,8
+    EDITTEXT        IDC_DEFAULTNAME,7,144,164,12,ES_AUTOHSCROLL
     LTEXT           "Allow automatic PUT redirections on these domains",
-                    IDC_TSAFEPUTREDIRECT,7,94,182,8
-    EDITTEXT        IDC_SAFEPUTREDIRECT,7,105,164,12,ES_AUTOHSCROLL
-    DEFPUSHBUTTON   "Apply",ID_APPLY,31,124,50,14
-    PUSHBUTTON      "Defaults",ID_DEFAULTS,101,124,50,14
-    PUSHBUTTON      "Done",ID_DONE,171,124,50,14
+                    IDC_TSAFEPUTREDIRECT,7,163,182,8
+    EDITTEXT        IDC_SAFEPUTREDIRECT,7,174,164,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "Apply",ID_APPLY,31,193,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,101,193,50,14
+    PUSHBUTTON      "Done",ID_DONE,171,193,50,14
 END
 
 CACHEMENU DIALOG DISCARDABLE  100, 100, 243, 178
@@ -162,11 +166,11 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Profile Preferences"
 FONT 8, "MS Sans Serif"
 BEGIN
+    EDITTEXT        IDC_PROFILENAME,3,65,163,13,ES_AUTOHSCROLL
     LTEXT           "Location of profiles definition file",
                     IDC_TPROFILESELECT,3,3,214,11
     LISTBOX         IDC_PROFILELIST,3,13,163,48,LBS_SORT | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
-    EDITTEXT        IDC_PROFILENAME,3,65,163,13,ES_AUTOHSCROLL
     LTEXT           "Location of profiles definition file",IDC_TPROFILESLOCA,
                     3,91,214,11
     EDITTEXT        IDC_PROFILESLOCATION,3,102,163,13,ES_AUTOHSCROLL
@@ -340,9 +344,9 @@ BEGIN
     PUBLISHMENU, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 235
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 144
+        RIGHTMARGIN, 248
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 218
     END
 
     CACHEMENU, DIALOG
@@ -594,42 +598,44 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Dialog
 //
 
-GENERALMENU DIALOG DISCARDABLE  100, 100, 252, 230
+GENERALMENU DIALOG DISCARDABLE  100, 100, 256, 246
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "General Preferences"
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "Amaya user directory",IDC_TAPPHOME,7,8,238,8
-    EDITTEXT        IDC_APPHOME,7,19,238,14,ES_AUTOHSCROLL | ES_READONLY
-    LTEXT           "Temporary directory",IDC_TTMPDIR,7,37,238,8
-    EDITTEXT        IDC_TMPDIR,7,48,238,14,ES_AUTOHSCROLL
-    LTEXT           "Home Page",IDC_THOMEPAGE,7,66,238,11
-    EDITTEXT        IDC_HOMEPAGE,7,77,238,13,ES_AUTOHSCROLL
+    LTEXT           "Amaya user directory",IDC_TAPPHOME,7,8,240,8
+    EDITTEXT        IDC_APPHOME,7,19,240,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Temporary directory",IDC_TTMPDIR,7,37,240,8
+    EDITTEXT        IDC_TMPDIR,7,48,240,14,ES_AUTOHSCROLL
+    LTEXT           "Home Page",IDC_THOMEPAGE,7,66,240,11
+    EDITTEXT        IDC_HOMEPAGE,7,77,240,13,ES_AUTOHSCROLL
     LTEXT           "Font zoom",IDC_TZOOM,7,97,84,10
     EDITTEXT        IDC_ZOOM,7,108,28,12,ES_AUTOHSCROLL
     LTEXT           "Dialogue language",IDC_TDIALOGUELANG,97,98,105,8
     EDITTEXT        IDC_DIALOGUELANG,97,108,33,12,ES_AUTOHSCROLL
     CONTROL         "Lines by lines",IDC_LINES,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,128,138,8
+                    WS_TABSTOP,7,127,138,8
     CONTROL         "Generate backup files",IDC_AUTOSAVE,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,140,138,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,138,138,8
+    CONTROL         "Save geometry on exit",IDC_SAVE_GEOMETRY_EXIT,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,149,138,8
     CONTROL         "Show button bar",IDC_SHOWBUTTONS,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,153,138,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,160,138,8
     CONTROL         "Show address",IDC_SHOWADDRESS,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,166,138,10
+                    WS_TABSTOP,7,171,138,8
     CONTROL         "Show targets",IDC_SHOWTARGET,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,180,138,10
+                    WS_TABSTOP,7,182,138,8
     CONTROL         "Numbering",IDC_NUMBER,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,192,138,10
-    GROUPBOX        "",IDC_ACCESSKEY,160,118,85,55
+                    WS_TABSTOP,7,193,138,8
+    GROUPBOX        "",IDC_ACCESSKEY,162,118,85,55
     CONTROL         "Alt",IDC_AALT,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,
                     168,128,24,10
     CONTROL         "Ctrl",IDC_ACTRL,"Button",BS_AUTORADIOBUTTON,168,142,26,
                     10
     CONTROL         "",IDC_ANONE,"Button",BS_AUTORADIOBUTTON,168,156,72,8
-    DEFPUSHBUTTON   "Apply",ID_APPLY,8,210,63,14
-    PUSHBUTTON      "Defaults",ID_DEFAULTS,94,210,63,14
-    PUSHBUTTON      "Done",ID_DONE,180,210,63,14
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,225,63,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,93,225,63,14
+    PUSHBUTTON      "Done",ID_DONE,183,225,63,14
 END
 
 PRINTDIALOG DIALOG DISCARDABLE  100, 100, 217, 87
@@ -1768,9 +1774,9 @@ BEGIN
     GENERALMENU, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 245
+        RIGHTMARGIN, 247
         TOPMARGIN, 7
-        BOTTOMMARGIN, 226
+        BOTTOMMARGIN, 230
     END
 
     PRINTDIALOG, DIALOG
