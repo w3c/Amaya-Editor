@@ -1,0 +1,320 @@
+GRAMMAR OF FILE STRUCT.LAN
+
+
+ rule
+number
+
+		{ This grammar defines the language S of Thot
+		  The notation used here is defined in file META.LAN
+	
+		   ' '	: keyword
+		   [ ]	: optional part
+		   < >	: optional and repeatable part
+		   /	: choice
+	
+		  V. Quint	March 1985	}
+	
+	
+    1	StructModel =	   'STRUCTURE' [ 'EXTENSION' ] ElemName ';'
+			   'DEFPRES' PresentName ';'
+			 [ 'ATTR' AttrList ]
+			 [ 'CONST' ConstList ]
+			 [ 'PARAM' RuleList ]
+			 [ 'STRUCT' RuleList ]
+			 { section STRUCT is optional only for extensions }
+			 [ 'EXTENS' ExtensList ]
+			 [ 'ASSOC' RuleList ]
+			 [ 'UNITS' RuleList ]
+			 [ 'EXPORT' ExpList ]
+			 [ 'EXCEPT' ExceptList ]
+			   'END' .
+	
+    3	PresentName =	 NAME .
+	
+    4	AttrList =	 Attribute < Attribute > .
+   10	Attribute =	 AttrName '=' AttrType ';' .
+   12	AttrType =	 'INTEGER' / 'TEXT' /
+			 'REFERENCE' '(' TypeRef ')' /
+			 ValueList .
+   13	TypeRef =	 'ANY' / [ FirstSec ] ElemName [ ExtStruct ] .
+   15	FirstSec =       'First' / 'Second' .
+   14	ValueList =	 AttrValue < ',' AttrValue > .
+	
+    5	ConstList =	 Const < Const > .
+	
+   18	Const =		 ConstName '=' ConstValue ';' .
+	
+   19	ConstName =	 NAME .
+	
+   20	ConstValue =	 STRING .
+	
+   21	BasicType =	 'TEXT' / 'GRAPHICS' / 'SYMBOL' / 'PICTURE' / 'UNIT' /
+			 'NATURE' .
+	
+    6	RuleList =	 Rule ';' < Rule ';' > .
+   22	Rule =		 ElemName [ LocAttrList ] '=' DefWith .
+	
+    2	ElemName =	 NAME .
+	
+   23	LocAttrList =	 '(' 'ATTR' LocalAttr < ';' LocalAttr > ')' .
+   25	LocalAttr = 	 [ '!' ] AttrName [ '=' AttrType ] .
+	
+   24	DefWith =	 Definition
+			 [ '+' '(' InclList ')' ] [ '-' '(' ExclList ')' ]
+			 [ 'WITH' FixedAttrList ] .
+	
+   27	InclList =	 InclElem < ',' InclElem > .
+   30	InclElem =       ElemName / BasicType .
+   28	ExclList =	 ExclElem < ',' ExclElem > .
+   31	ExclElem =       ElemName / BasicType .
+	
+   26	Definition =	 BasicType [ LocAttrList ]  / Constr / Element .
+   33	Element =	 ElemName [ ExtOrDef ] .
+   34	ExtOrDef =	 'EXTERN' / 'INCLUDED' / [ LocAttrList ] '=' Definition .
+	
+   32	Constr =	 'LIST' [ '[' min '.' '.' max ']' ] 'OF' '(' DefWith ')' /
+			 'BEGIN' OptDefList 'END' /
+			 'AGGREGATE' OptDefList 'END' /
+			 'CASE' 'OF' DefList 'END' /
+			 'REFERENCE' '(' TypeRef ')' /
+			 'CONSTANT' ConstName /
+			 'PAIR' .
+	
+   37	OptDefList =	 OptDefWith ';' < OptDefWith ';' > .
+	
+   39	OptDefWith =	 [ '?' ] DefWith .
+	
+   38	DefList =	 DefWith ';' < DefWith ';' > .
+	
+   35	min =		 Integer / '*' .
+	
+   36	max =		 Integer / '*' .
+	
+   40	Integer =	 NUMBER .
+	
+   29	FixedAttrList =	 FixedAttr < ',' FixedAttr > .
+   41	FixedAttr =	 AttrName [ FixModValue ] .
+	
+   42	FixModValue =	 ['?'] '=' FixedValue .
+   43	FixedValue =	 [ '-' ] NumValue / StrValue / AttrValue .
+	
+   11	AttrName =	 NAME .
+	
+   17	AttrValue =	 NAME .
+	
+   44	NumValue =	 NUMBER .
+	
+   45	StrValue =	 STRING .
+	
+   16	ExtStruct =	 '(' ElemName ')' .
+	
+    8	ExpList =	 Export < ',' Export > ';' .
+	
+   46	Export =	 ElemName [ 'WITH' Content ] .
+	
+   47	Content =	 'Nothing' / ElemName [ ExtStruct ] .
+	
+    9	ExceptList =	 Except ';' < Except ';' > .
+   48	Except =	 ExceptType ':' ExValList .
+   49	ExceptType =	 BasicType / [ 'EXTERN' ] [ FirstSec ] ElemName / AttrName / ConstName .
+   50	ExValList =	 ExceptVal < ',' ExceptVal > .
+   51	ExceptVal =	 'NoCut' / 'NoCreate' / 'NoHMove' / 'NoVMove' /
+			 'NoHResize' / 'NoVResize' / 
+			 'NewWidth' / 'NewHeight' /
+			 'NewHPos' / 'NewVPos' /
+	                 'Invisible' /
+			 'GraphCreation' /
+			 'Hidden' / 'IsDraw' /
+	                 'NoMove' / 'NoResize' / 'MoveResize' /
+	                 'NoSelect' / 'NoSpellCheck' /
+		         'PageBreak' / 'PageBreakAllowed' / 'PageBreakPlace' /
+		         'PageBreakRepetition' / 'PageBreakRepBefore' /
+			 'ActiveRef' /
+	                 'NoPaginate' /
+	                 'ImportLine' / 'ImportParagraph' /
+			 'ParagraphBreak' /
+	                 'HighlightChildren' / 'ExtendedSelection' /
+			 ExceptNum .
+   52	ExceptNum =	 NUMBER .
+	
+    7	ExtensList =     Extens ';' < Extens ';' > .
+   53	Extens =	 RootOrElem [ LocAttrList ]
+			 [ '+' '(' InclList ')' ] [ '-' '(' ExclList ')' ]
+			 [ 'WITH' FixedAttrList ] .
+   54	RootOrElem =     'Root' / ElemName .
+	
+	END
+	
+
+
+*** SHORT KEY-WORDS ***
+
+code  character  numbers of rules using the key-word
+
+1001      ;       1   1  10  18   6   6  23  37  37  38  38   8   9   9   7   7
+1002      =      10  18  22  25  34  42
+1003      (      12  23  24  24  32  32  16  53  53
+1004      )      12  23  24  24  32  32  16  53  53
+1005      ,      14  27  28  29   8  50
+1006      !      25
+1007      +      24  53
+1008      -      24  43  53
+1009      [      32
+1010      .      32  32
+1011      ]      32
+1012      ?      39  42
+1013      *      35  36
+1014      :      48
+
+
+
+*** LONG KEY-WORDS ***
+
+code  key-word      numbers of rules using the key-word
+
+1101  STRUCTURE             1
+1102  EXTENSION             1
+1103  DEFPRES               1
+1104  ATTR                  1  23
+1105  CONST                 1
+1106  PARAM                 1
+1107  STRUCT                1
+1108  EXTENS                1
+1109  ASSOC                 1
+1110  UNITS                 1
+1111  EXPORT                1
+1112  EXCEPT                1
+1113  END                   1  32  32  32
+1114  INTEGER              12
+1115  TEXT                 12  21
+1116  REFERENCE            12  32
+1117  ANY                  13
+1118  First                15
+1119  Second               15
+1120  GRAPHICS             21
+1121  SYMBOL               21
+1122  PICTURE              21
+1123  UNIT                 21
+1124  NATURE               21
+1125  WITH                 24  46  53
+1126  EXTERN               34  49
+1127  INCLUDED             34
+1128  LIST                 32
+1129  OF                   32  32
+1130  BEGIN                32
+1131  AGGREGATE            32
+1132  CASE                 32
+1133  CONSTANT             32
+1134  PAIR                 32
+1135  Nothing              47
+1136  NoCut                51
+1137  NoCreate             51
+1138  NoHMove              51
+1139  NoVMove              51
+1140  NoHResize            51
+1141  NoVResize            51
+1142  NewWidth             51
+1143  NewHeight            51
+1144  NewHPos              51
+1145  NewVPos              51
+1146  Invisible            51
+1147  GraphCreation        51
+1148  Hidden               51
+1149  IsDraw               51
+1150  NoMove               51
+1151  NoResize             51
+1152  MoveResize           51
+1153  NoSelect             51
+1154  NoSpellCheck         51
+1155  PageBreak            51
+1156  PageBreakAllowed     51
+1157  PageBreakPlace       51
+1158  PageBreakRepetition  51
+1159  PageBreakRepBefore   51
+1160  ActiveRef            51
+1161  NoPaginate           51
+1162  ImportLine           51
+1163  ImportParagraph      51
+1164  ParagraphBreak       51
+1165  HighlightChildren    51
+1166  ExtendedSelection    51
+1167  Root                 54
+
+
+
+*** TABLE OF RULES AND REFERENCES ***
+
+The code is the code of the symbol and the code of the rule
+where that symbol appears in the left part. For each symbole,
+the rule numbers indicate the rules that use that symbol in
+right part.
+
+ code  symbol        rule numbers
+
+    1  StructModel  
+    2  ElemName        1  13  22  30  31  33  16  46  47  49  54
+    3  PresentName     1
+    4  AttrList        1
+    5  ConstList       1
+    6  RuleList        1   1   1   1
+    7  ExtensList      1
+    8  ExpList         1
+    9  ExceptList      1
+   10  Attribute       4   4
+   11  AttrName       10  25  41  49
+   12  AttrType       10  25
+   13  TypeRef        12  32
+   14  ValueList      12
+   15  FirstSec       13  49
+   16  ExtStruct      13  47
+   17  AttrValue      14  14  43
+   18  Const           5   5
+   19  ConstName      18  32  49
+   20  ConstValue     18
+   21  BasicType      30  31  26  49
+   22  Rule            6   6
+   23  LocAttrList    22  26  34  53
+   24  DefWith        22  32  39  38  38
+   25  LocalAttr      23  23
+   26  Definition     24  34
+   27  InclList       24  53
+   28  ExclList       24  53
+   29  FixedAttrList  24  53
+   30  InclElem       27  27
+   31  ExclElem       28  28
+   32  Constr         26
+   33  Element        26
+   34  ExtOrDef       33
+   35  min            32
+   36  max            32
+   37  OptDefList     32  32
+   38  DefList        32
+   39  OptDefWith     37  37
+   40  Integer        35  36
+   41  FixedAttr      29  29
+   42  FixModValue    41
+   43  FixedValue     42
+   44  NumValue       43
+   45  StrValue       43
+   46  Export          8   8
+   47  Content        46
+   48  Except          9   9
+   49  ExceptType     48
+   50  ExValList      48
+   51  ExceptVal      50  50
+   52  ExceptNum      51
+   53  Extens          7   7
+   54  RootOrElem     53
+
+
+
+*** REFERENCES TO BASIC TYPES ***
+
+Numbers of the rules using NAME
+   3  19   2  11  17
+
+Numbers of the rules using NUMBER
+  40  44  52
+
+Numbers of the rules using STRING
+  20  45

@@ -1,0 +1,19 @@
+
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+
+/* 
+ * font.var : Variables globales du Mediateur
+ * -> pour la gestion des fontes. I. Vatton - Juillet 87
+ */
+
+
+
+EXPORT ptrfont   FontMenu;	/* Fonte utilisee pour l'interface */
+EXPORT ptrfont   FontMenu2;	/* Fonte utilisee pour l'interface */
+EXPORT ptrfont   FontMenu3;	/* Fonte utilisee pour l'interface */
+EXPORT ptrfont   FontMenu4;	/* Fonte utilisee pour l'interface */
+EXPORT ptrfont   FontGraph;	/* Fonte utilisee dans le graphique */
+EXPORT ptrfont   FontIGr;	/* Fonte des images de graphiques   */
+EXPORT ptrfont   FontIS;	/* Fonte des images de symbloles    */
+EXPORT ptrfont   FonteLeg;	/* Fonte des legendes de claviers */
+EXPORT int	  MenuSize;	/* Taille utilisee pour dialogue */

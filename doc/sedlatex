@@ -1,0 +1,39 @@
+# traitement de "oe" et "OE"
+
+/\\begin{verbatim.*}/,/\\end{verbatim.*}/!s/^\([Oo][Ee]\)/ \1/g
+/\\begin{verbatim.*}/,/\\end{verbatim.*}/!s/\([\\^]\)oe\([BbCcDdIiKkLlNnSsTtUu]\)/\1\\oe \2/g
+/\\begin{verbatim.*}/,/\\end{verbatim.*}/!s/\([\\^]\)O[eE]\([BbCcDdIiKkLlNnSsTtUu]\)/\1\\OE \2/g
+
+# traitement de "a" et de "u"
+
+/\\begin{verbatim.*}/,/\\end{verbatim.*}/!s/\([AaUu]\)\([`"^]\)/\\\2{\1}/g
+
+# traitement de "e"
+
+/\\begin{verbatim.*}/,/\\end{verbatim.*}/!s/\([Ee]\)'''/\\'{\1}''/g
+/\\begin{verbatim.*}/,/\\end{verbatim.*}/!s/\([Ee]\)''/\1{''}/g
+/\\begin{verbatim.*}/,/\\end{verbatim.*}/!s/\([Ee]\)'/\\'{\1}/g
+/\\begin{verbatim.*}/,/\\end{verbatim.*}/!s/\([Ee]\)\([`"^]\)/\\\2{\1}/g
+
+# traitement de "i"
+
+/\\begin{verbatim.*}/,/\\end{verbatim.*}/!s/i\(["^]\)/\\\1{\\i}/g
+/\\begin{verbatim.*}/,/\\end{verbatim.*}/!s/I\(["^]\)/\\\1{I}/g
+
+# traitement de "o"
+
+/\\begin{verbatim.*}/,/\\end{verbatim.*}/!s/\([Oo]\)\(["^]\)/\\\2{\1}/g
+
+# traitement de "c"
+
+/\\begin{verbatim.*}/,/\\end{verbatim.*}/!s/\([Cc]\),\([AaOoUu]\)/\\c{\1}\2/g
+
+# traitement de "..."
+
+/\\begin{verbatim.*}/,/\\end{verbatim.*}/!s/\.\.\. /\\ldots\\ /g
+/\\begin{verbatim.*}/,/\\end{verbatim.*}/!s/\.\.\./\\ldots /g
+
+# post-traitement special des accents aigus-graves en environnements "tabbing"
+
+/\\begin{tabbing}/,/\\end{tabbing}/s/\\'{\([Ee]\)}/\\a'{\1}/g
+/\\begin{tabbing}/,/\\end{tabbing}/s/\\`{\([AaEeUu]\)}/\\a`{\1}/g

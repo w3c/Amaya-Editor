@@ -1,0 +1,914 @@
+
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+/* I. Vatton    Septembre 1994 */
+/* Module de visualisation des claviers. */
+
+
+#include "thot_gui.h"
+#include "thot_sys.h"
+#include "constmedia.h"
+
+#include "typemedia.h"
+#include "constmenu.h"
+#include "appdialogue.h"
+#include "dialog.h"
+#include "message.h"
+
+#undef EXPORT
+#define EXPORT extern
+
+#include "edit.var"
+
+#include "frame.var"
+#include "font.var"
+#include "select.var"
+#include "appdialogue.var"
+
+#define MAX_ARGS 20
+#define MAX_KEYBOARD 4
+
+
+typedef struct _item
+  {
+     char                name;
+     unsigned char       value;
+     char               *legend;
+  }
+ITEM;
+
+
+static ThotWidget   Keyboards[MAX_KEYBOARD];
+static ptrfont      KbFonts[MAX_KEYBOARD];
+static int          KbX = 800;
+static int          KbY = 100;
+static ThotGC       GCkey;
+
+/* Data pour les claviers */
+/*iso */
+static ITEM         Items_Grec[] =
+{
+   {'\40', '\40', NULL},
+   {'\41', '\41', NULL},
+   {'\42', '\42', NULL},
+   {'\43', '\43', NULL},
+   {'\44', '\44', NULL},
+   {'\45', '\45', NULL},
+   {'\46', '\46', NULL},
+   {'\47', '\47', NULL},
+   {'\50', '\50', NULL},
+   {'\51', '\51', NULL},
+   {'\52', '\52', NULL},
+   {'\53', '\53', NULL},
+   {'\54', '\54', NULL},
+   {'\55', '\55', NULL},
+   {'\56', '\56', NULL},
+   {'\57', '\57', NULL},
+   {'\60', '\60', NULL},
+   {'\61', '\61', NULL},
+   {'\62', '\62', NULL},
+   {'\63', '\63', NULL},
+   {'\64', '\64', NULL},
+   {'\65', '\65', NULL},
+   {'\66', '\66', NULL},
+   {'\67', '\67', NULL},
+   {'\70', '\70', NULL},
+   {'\71', '\71', NULL},
+   {'\72', '\72', NULL},
+   {'\73', '\73', NULL},
+   {'\74', '\74', NULL},
+   {'\75', '\75', NULL},
+   {'\76', '\76', NULL},
+   {'\77', '\77', NULL},
+   {'\100', '\100', NULL},
+   {'A', 'A', NULL},
+   {'B', 'B', NULL},
+   {'C', 'C', NULL},
+   {'D', 'D', NULL},
+   {'E', 'E', NULL},
+   {'F', 'F', NULL},
+   {'G', 'G', NULL},
+   {'H', 'H', NULL},
+   {'I', 'I', NULL},
+   {'J', 'J', NULL},
+   {'K', 'K', NULL},
+   {'L', 'L', NULL},
+   {'M', 'M', NULL},
+   {'N', 'N', NULL},
+   {'O', 'O', NULL},
+   {'P', 'P', NULL},
+   {'Q', 'Q', NULL},
+   {'R', 'R', NULL},
+   {'S', 'S', NULL},
+   {'T', 'T', NULL},
+   {'U', 'U', NULL},
+   {'V', 'V', NULL},
+   {'W', 'W', NULL},
+   {'X', 'X', NULL},
+   {'Y', 'Y', NULL},
+   {'Z', 'Z', NULL},
+   {'\133', '\133', NULL},
+   {'\134', '\134', NULL},
+   {'\135', '\135', NULL},
+   {'\136', '\136', NULL},
+   {'\137', '\137', NULL},
+   {'a', 'a', NULL},
+   {'b', 'b', NULL},
+   {'c', 'c', NULL},
+   {'d', 'd', NULL},
+   {'e', 'e', NULL},
+   {'f', 'f', NULL},
+   {'g', 'g', NULL},
+   {'h', 'h', NULL},
+   {'i', 'i', NULL},
+   {'j', 'j', NULL},
+   {'k', 'k', NULL},
+   {'l', 'l', NULL},
+   {'m', 'm', NULL},
+   {'n', 'n', NULL},
+   {'o', 'o', NULL},
+   {'p', 'p', NULL},
+   {'q', 'q', NULL},
+   {'r', 'r', NULL},
+   {'s', 's', NULL},
+   {'t', 't', NULL},
+   {'u', 'u', NULL},
+   {'v', 'v', NULL},
+   {'w', 'w', NULL},
+   {'x', 'x', NULL},
+   {'y', 'y', NULL},
+   {'z', 'z', NULL},
+   {'\173', '\173', NULL},
+   {'\174', '\174', NULL},
+   {'\175', '\175', NULL},
+   {'\176', '\176', NULL},
+   {'\241', '\241', NULL},
+   {'\242', '\242', NULL},
+   {'\243', '\243', NULL},
+   {'\244', '\244', NULL},
+   {'\245', '\245', NULL},
+   {'\246', '\246', NULL},
+   {'\247', '\247', NULL},
+   {'\250', '\250', NULL},
+   {'\251', '\251', NULL},
+   {'\252', '\252', NULL},
+   {'\253', '\253', NULL},
+   {'\254', '\254', NULL},
+   {'\255', '\255', NULL},
+   {'\256', '\256', NULL},
+   {'\257', '\257', NULL},
+   {'\260', '\260', NULL},
+   {'\261', '\261', NULL},
+   {'\262', '\262', NULL},
+   {'\263', '\263', NULL},
+   {'\264', '\264', NULL},
+   {'\265', '\265', NULL},
+   {'\266', '\266', NULL},
+   {'\267', '\267', NULL},
+   {'\270', '\270', NULL},
+   {'\271', '\271', NULL},
+   {'\272', '\272', NULL},
+   {'\273', '\273', NULL},
+   {'\274', '\274', NULL},
+   {'\275', '\275', NULL},
+   {'\276', '\276', NULL},
+   {'\277', '\277', NULL},
+   {'\300', '\300', NULL},
+   {'\301', '\301', NULL},
+   {'\302', '\302', NULL},
+   {'\303', '\303', NULL},
+   {'\304', '\304', NULL},
+   {'\305', '\305', NULL},
+   {'\306', '\306', NULL},
+   {'\307', '\307', NULL},
+   {'\310', '\310', NULL},
+   {'\311', '\311', NULL},
+   {'\312', '\312', NULL},
+   {'\313', '\313', NULL},
+   {'\314', '\314', NULL},
+   {'\315', '\315', NULL},
+   {'\316', '\316', NULL},
+   {'\317', '\317', NULL},
+   {'\320', '\320', NULL},
+   {'\321', '\321', NULL},
+   {'\324', '\324', NULL},
+   {'\325', '\325', NULL},
+   {'\326', '\326', NULL},
+   {'\327', '\327', NULL},
+   {'\330', '\330', NULL},
+   {'\331', '\331', NULL},
+   {'\332', '\332', NULL},
+   {'\333', '\333', NULL},
+   {'\334', '\334', NULL},
+   {'\335', '\335', NULL},
+   {'\336', '\336', NULL},
+   {'\337', '\337', NULL},
+   {'\340', '\340', NULL},
+   {'\341', '\341', NULL},
+   {'\345', '\345', NULL},
+   {'\361', '\361', NULL},
+   {'\362', '\362', NULL}
+};
+
+/*iso */
+static ITEM         Items_Isol[] =
+{
+   {'\230', '\230', ""},
+   {'\231', '\231', ""},
+   {'\240', '\240', "^SP"},
+   {'\241', '\241', ""},
+   {'\242', '\242', ""},
+   {'\243', '\243', ""},
+   {'\244', '\244', ""},
+   {'\245', '\245', ""},
+   {'\246', '\246', ""},
+   {'\247', '\247', ""},
+   {'\251', '\251', ""},
+   {'\253', '\253', ""},
+   {'\254', '\254', ""},
+   {'\255', '\255', ""},
+   {'\256', '\256', ""},
+   {'\257', '\257', ""},
+   {'\260', '\260', ""},
+   {'\261', '\261', ""},
+   {'\265', '\265', ""},
+   {'\266', '\266', ""},
+   {'\267', '\267', ""},
+   {'\273', '\273', ""},
+   {'\274', '\274', ""},
+   {'\275', '\275', ""},
+   {'\276', '\276', ""},
+   {'\277', '\277', ""},
+   {'\300', '\300', ""},
+   {'\301', '\301', ""},
+   {'\302', '\302', ""},
+   {'\303', '\303', ""},
+   {'\304', '\304', ""},
+   {'\305', '\305', ""},
+   {'\306', '\306', ""},
+   {'\307', '\307', ""},
+   {'\310', '\310', ""},
+   {'\311', '\311', ""},
+   {'\312', '\312', ""},
+   {'\313', '\313', ""},
+   {'\314', '\314', ""},
+   {'\315', '\315', ""},
+   {'\316', '\316', ""},
+   {'\317', '\317', ""},
+   {'\320', '\320', ""},
+   {'\321', '\321', ""},
+   {'\322', '\322', ""},
+   {'\323', '\323', ""},
+   {'\324', '\324', ""},
+   {'\325', '\325', ""},
+   {'\326', '\326', ""},
+   {'\327', '\327', ""},
+   {'\330', '\330', ""},
+   {'\331', '\331', ""},
+   {'\332', '\332', ""},
+   {'\333', '\333', ""},
+   {'\334', '\334', ""},
+   {'\335', '\335', ""},
+   {'\336', '\336', ""},
+   {'\337', '\337', ""},
+   {'\340', '\340', "[a]`"},
+   {'\341', '\341', "[a]'"},
+   {'\342', '\342', "[a]6"},
+   {'\343', '\343', "[a]="},
+   {'\344', '\344', "[a];"},
+   {'\345', '\345', ""},
+   {'\346', '\346', "[a]e"},
+   {'\347', '\347', "[c],"},
+   {'\350', '\350', "[e]`"},
+   {'\351', '\351', "[e]'"},
+   {'\352', '\352', "[e]6"},
+   {'\353', '\353', "[e];"},
+   {'\354', '\354', "[i]`"},
+   {'\355', '\355', "[i]'"},
+   {'\356', '\356', "[i]6"},
+   {'\357', '\357', "[i];"},
+   {'\360', '\360', ""},
+   {'\361', '\361', "[n]="},
+   {'\362', '\362', "[o]`"},
+   {'\363', '\363', "[o]'"},
+   {'\364', '\364', "[o]6"},
+   {'\365', '\365', "[o]="},
+   {'\366', '\366', "[o];"},
+   {'\367', '\367', "[o]e"},
+   {'\370', '\370', ""},
+   {'\371', '\371', "[u]`"},
+   {'\372', '\372', "[u]'"},
+   {'\373', '\373', "[u]6"},
+   {'\374', '\374', "[u];"},
+   {'\375', '\375', ""},
+   {'\376', '\376', ""},
+   {'\377', '\377', ""},
+   {'\212', '\212', "^CR"}
+};
+
+
+static ITEM         Items_Symb[] =
+{
+   {83, 'S', NULL},		/* somme */
+   {80, 'P', NULL},		/* produit */
+   {85, 'U', NULL},		/* union */
+   {73, 'I', NULL},		/* intersection */
+   {105, 'i', NULL},		/* integ */
+   {99, 'c', NULL},		/* integ curv */
+   {100, 'd', NULL},		/* integ double */
+   {114, 'r', NULL},		/* racine */
+   {60, '<', NULL},		/* fleche < */
+   {62, '>', NULL},		/* fleche >  */
+   {118, 'V', NULL},		/* fleche V  */
+   {94, '^', NULL},		/* fleche ^  */
+   {91, '[', NULL},		/* */
+   {93, ']', NULL},		/* */
+   {40, '(', NULL},		/* */
+   {41, ')', NULL},		/* */
+   {123, '{', NULL},		/* */
+   {125, '}', NULL},		/* */
+};
+
+
+static ITEM         Items_Graph[] =
+{
+   {'C', 'C', NULL},		/* cercle, ovale */
+   {'L', 'L', NULL},		/* losange */
+   {'P', 'P', NULL},		/* ellipse barree */
+   {'Q', 'Q', NULL},		/* cercle ovale barree */
+   {'R', 'R', NULL},		/* rectangle */
+   {'W', 'W', NULL},		/* haut + droit */
+   {'X', 'X', NULL},		/* bas + droit */
+   {'Y', 'Y', NULL},		/* haut +gauche */
+   {'Z', 'Z', NULL},		/* bas + gauche */
+   {'c', 'c', NULL},		/* ellipse */
+   {'b', 'b', NULL},		/* - en bas */
+   {'h', 'h', NULL},		/* - centree */
+   {'t', 't', NULL},		/* - en haut */
+   {'l', 'l', NULL},		/* | gauche */
+   {'v', 'v', NULL},		/* | centree */
+   {'r', 'r', NULL},		/* | droite */
+   {'/', '/', NULL},		/* / */
+   {'\\', '\\', NULL},		/* \  */
+   {'<', '<', NULL},		/* fleche < */
+   {'>', '>', NULL},		/* fleche > */
+   {'V', 'V', NULL},		/* fleche V */
+   {'^', '^', NULL},		/* fleche ^ */
+   {'E', 'E', NULL},		/* fleche NE */
+   {'e', 'e', NULL},		/* fleche SE */
+   {'O', 'O', NULL},		/* fleche NO */
+   {'o', 'o', NULL},		/* fleche SO */
+   {'S', 'S', NULL},		/* segments */
+   {'U', 'U', NULL},		/* segments > */
+   {'N', 'N', NULL},		/* segments < */
+   {'M', 'M', NULL},		/* segments <> */
+   {'p', 'p', NULL},		/* polygone */
+   {'B', 'B', NULL},		/* beziers */
+   {'F', 'F', NULL},		/* beziers > */
+   {'A', 'A', NULL},		/* beziers < */
+   {'D', 'D', NULL},		/* beziers <> */
+   {'s', 's', NULL}		/* bezier fermee */
+};
+
+#include "cmd.f"
+#include "config.f"
+#include "appdialogue.f"
+#include "es.f"
+#include "font.f"
+#include "inites.f"
+#include "select.f"
+
+#ifdef __STDC__
+extern ThotWidget   XmCreateBulletinBoard (ThotWidget, char *, Arg[], int);
+
+#else  /* __STDC__ */
+extern ThotWidget   XmCreateBulletinBoard ();
+
+#endif /* __STDC__ */
+
+/* ---------------------------------------------------------------------- */
+/* |    WChar affiche le caractere ch a` la position x,y de la fenetre w| */
+/* |            en utilisant la police de caracteres font.              | */
+/* |            La fonction func indique s'il s'agit d'une boite        | */
+/* |            active (1) ou non (0).                                  | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         WChar (ThotWindow w, char ch, int x, int y, int func, ptrfont font, int disp, ThotGC GClocal)
+#else  /* __STDC__ */
+static void         WChar (w, ch, x, y, func, font, disp, GClocal)
+ThotWindow          w;
+char                ch;
+int                 x;
+int                 y;
+int                 func;
+ptrfont             font;
+int                 disp;
+ThotGC              GClocal;
+
+#endif /* __STDC__ */
+{
+   int                 longueur;
+
+   longueur = 1;
+#ifdef NEW_WILLOWS
+   /* DrawTextEx or some such thing - @@@ */
+#else
+   XSetFont (GDp (disp), GClocal, ((XFontStruct *) font)->fid);
+   FontOrig (font, ch, &x, &y);
+   XDrawString (GDp (disp), w, GClocal, x, y, &ch, longueur);
+#endif
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    FinKbd termine l'affichage du clavier.                          | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         FinKbd (ThotWidget w, int index, caddr_t call_d)
+
+#else  /* __STDC__ */
+static void         FinKbd (w, index, call_d)
+ThotWidget          w;
+int                 index;
+caddr_t             call_d;
+
+#endif /* __STDC__ */
+{
+#ifndef NEW_WILLOWS
+   XtPopdown (Keyboards[index]);
+#endif /* NEW_WILLOWS */
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    RetourKbd traite les touches du clavier.                        | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         RetourKbd (ThotWidget w, int param, caddr_t call_d)
+#else  /* __STDC__ */
+static void         RetourKbd (w, param, call_d)
+ThotWidget          w;
+int                 param;
+caddr_t             call_d;
+
+#endif /* __STDC__ */
+{
+   unsigned char       car;
+
+   /* Recupere la table des items */
+   car = (unsigned char) param % 256;
+   /* Insere le caractere selectionne */
+   if (ThotLocalActions[T_insertchar] != NULL)
+      (*ThotLocalActions[T_insertchar]) (ActifFen, car, Kbmode);
+}
+
+
+#ifndef NEW_WILLOWS
+/* ---------------------------------------------------------------------- */
+/* |    ExposeKbd affiche les touches du clavier.                       | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         ExposeKbd (ThotWidget w, int param, XmDrawnButtonCallbackStruct * infos)
+#else  /* __STDC__ */
+static void         ExposeKbd (w, param, infos)
+ThotWidget          w;
+int                 param;
+XmDrawnButtonCallbackStruct *infos;
+
+#endif /* __STDC__ */
+{
+   int                 y;
+   int                 i, kb;
+   ITEM               *it;
+
+   /* Recupere la table des items */
+   kb = param / 256;
+   switch (kb)
+	 {
+	    case 0:
+	       it = Items_Symb;
+	       break;
+	    case 1:
+	       it = Items_Graph;
+	       break;
+	    case 2:
+	       it = Items_Isol;
+	       break;
+	    case 4:
+	       it = Items_Grec;
+	       break;
+	    default:
+	       return;
+	 }
+   y = 4;
+   i = param % 256;		/* indice dans la table des items */
+   it = (ITEM *) ((int) it + (sizeof (ITEM) * i));
+   WChar (infos->window, it->name, CarWidth (87, FontMenu), y, GXcopy, KbFonts[kb], 0, GCkey);
+   if (it->legend)
+     {
+	y = FontHeight (KbFonts[kb]);
+	WChaine (infos->window, it->legend, 4, y, FontMenu, GCkey);
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    CreateKeyboard cree un clavier.                                 | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         CreateKeyboard (int number, char *title, ptrfont font, int col, int x, int y, ITEM * items, int nbitem)
+#else  /* __STDC__ */
+static void         CreateKeyboard (number, title, font, col, x, y, items, nbitem)
+int                 number;
+char               *title;
+ptrfont             font;
+int                 col;
+int                 x;
+int                 y;
+ITEM               *items;
+int                 nbitem;
+
+#endif /* __STDC__ */
+{
+   int                 n;
+   int                 i;
+   register ITEM      *it;
+   ThotWidget          w;
+   ThotWidget          row;
+   Arg                 args[MAX_ARGS];
+   XmString            title_string;
+   XmFontList          xfont;
+   char                chaine[10];
+   int                 param;
+   XGCValues           GCmodel;
+
+   n = 0;
+   sprintf (chaine, "+%d+%d", x, y);
+   XtSetArg (args[n], XmNx, (Position) x);
+   n++;
+   XtSetArg (args[n], XmNy, (Position) y);
+   n++;
+   XtSetArg (args[n], XmNallowShellResize, True);
+   n++;
+   XtSetArg (args[n], XmNuseAsyncGeometry, True);
+   n++;
+#ifdef OLD
+   w = XtCreateWidget (title, topLevelShellWidgetClass, XtParent (FrameTable[0].WdFrame), args, n);
+#else
+   w = XtCreatePopupShell (title, applicationShellWidgetClass, RootShell, args, n);
+#endif
+/*** Cree le clavier dans sa frame ***/
+   n = 0;
+   XtSetArg (args[n], XmNbackground, BgMenu_Color);
+   n++;
+   XtSetArg (args[n], XmNborderColor, Button_Color);
+   n++;
+   xfont = XmFontListCreate ((XFontStruct *) FontMenu, XmSTRING_DEFAULT_CHARSET);
+   XtSetArg (args[n], XmNfontList, xfont);
+   n++;
+   title_string = XmStringCreateSimple (title);
+   XtSetArg (args[n], XmNdialogTitle, title_string);
+   n++;
+   XtSetArg (args[n], XmNautoUnmanage, False);
+   n++;
+/**XtSetArg(args[n], XmNdefaultPosition, False); n++;**/
+   XtSetArg (args[n], XmNmarginWidth, 0);
+   n++;
+   XtSetArg (args[n], XmNmarginHeight, 0);
+   n++;
+   XtSetArg (args[n], XmNspacing, 0);
+   n++;
+   Keyboards[number] = w;
+   w = XmCreateBulletinBoard (w, "Dialogue", args, n);
+   XtManageChild (w);
+   XmStringFree (title_string);
+
+/*** Cree un Row-Column pour mettre le bouton Quit ***/
+/*** en dessous des touches du clavier.    ***/
+   n = 3;
+   XtSetArg (args[n], XmNadjustLast, False);
+   n++;
+   XtSetArg (args[n], XmNmarginWidth, 0);
+   n++;
+   XtSetArg (args[n], XmNmarginHeight, 0);
+   n++;
+/*SN */ XtSetArg (args[n], XmNpacking, XmPACK_TIGHT);
+   n++;
+   XtSetArg (args[n], XmNspacing, 0);
+   n++;
+   w = XmCreateRowColumn (w, "Dialogue", args, n);
+   XtManageChild (w);
+
+/*** Cree un Row-Column pour contenir les touches du clavier ***/
+   n = 3;
+   XtSetArg (args[n], XmNadjustLast, False);
+   n++;
+   XtSetArg (args[n], XmNmarginWidth, 0);
+   n++;
+   XtSetArg (args[n], XmNmarginHeight, 0);
+   n++;
+   XtSetArg (args[n], XmNspacing, 0);
+   n++;
+   XtSetArg (args[n], XmNpacking, XmPACK_COLUMN);
+   n++;
+   XtSetArg (args[n], XmNnumColumns, col);
+   n++;
+   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
+   n++;
+   row = XmCreateRowColumn (w, "Dialogue", args, n);
+   XtManageChild (row);
+
+/*** Cree un Row-Column pour contenir le bouton Quit ***/
+   n = 3;
+   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
+   n++;
+   XtSetArg (args[n], XmNmarginWidth, 60);
+   n++;
+   XtSetArg (args[n], XmNmarginHeight, 0);
+   n++;
+   w = XmCreateRowColumn (w, "Dialogue", args, n);
+   XtManageChild (w);
+
+   GCmodel.function = GXcopy;
+   GCmodel.foreground = Black_Color;
+   GCmodel.background = BgMenu_Color;
+   GCkey = XCreateGC (GDp (0), GRootW (0), GCForeground | GCBackground | GCFunction, &GCmodel);
+
+/*** Cree le bouton Quit ***/
+   n = 0;
+   XtSetArg (args[n], XmNbackground, Button_Color);
+   n++;
+   XtSetArg (args[n], XmNbottomShadowColor, BgMenu_Color);
+   n++;
+   XtSetArg (args[n], XmNforeground, Black_Color);
+   n++;
+   XtSetArg (args[n], XmNfontList, xfont);
+   n++;
+   w = XmCreatePushButton (w, TtaGetMessage (LIB, LIB_CANCEL), args, n);
+   XtManageChild (w);
+   XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) FinKbd, (XtPointer) number);
+   XmFontListFree (xfont);
+
+   /* Definit le bouton d'annulation comme bouton par defaut */
+   n = 0;
+   XtSetArg (args[n], XmNdefaultButton, w);
+   n++;
+   XtSetValues (Keyboards[number], args, n);
+
+   n = 0;
+   XtSetArg (args[n], XmNbackground, BgMenu_Color);
+   n++;
+   XtSetArg (args[n], XmNforeground, Black_Color);
+   n++;
+   XtSetArg (args[n], XmNborderColor, Button_Color);
+   n++;
+
+   /* Affiche les differents boutons du clavier */
+   /* ----------------------------------------- */
+   it = items;
+   /* Prepare les parametres des procedures RetourKbd et ExposeKbd */
+   param = number * 256;	/* indice du clavier */
+
+   if (it->legend == 0)
+     {
+	/* Un clavier sans legende */
+	XtSetArg (args[n], XmNmarginWidth, 4);
+	n++;
+	XtSetArg (args[n], XmNmarginHeight, 4);
+	n++;
+	xfont = XmFontListCreate ((XFontStruct *) font, XmSTRING_DEFAULT_CHARSET);
+	XtSetArg (args[n], XmNfontList, xfont);
+	n++;
+	for (i = 0; i < nbitem; i++, it++)
+	  {
+	     chaine[0] = it->name;
+	     chaine[1] = '\0';
+	     w = XmCreatePushButton (row, chaine, args, n);
+	     XtManageChild (w);
+	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) RetourKbd, (XtPointer) (param + (int) (it->value)));
+	  }			/*for */
+	XmFontListFree (xfont);
+     }
+   else
+     {
+	/* Un clavier avec legende */
+	XtSetArg (args[n], XmNmarginWidth, 0);
+	n++;
+	XtSetArg (args[n], XmNmarginHeight, 0);
+	n++;
+	XtSetArg (args[n], XmNwidth, (Dimension) CarWidth (87, FontMenu) * 3);
+	n++;
+	XtSetArg (args[n], XmNheight, (Dimension) FontHeight (font) + FontHeight (FontMenu) + 4);
+	n++;
+
+	for (i = 0; i < nbitem; i++, it++)
+	  {
+	     chaine[0] = it->name;
+	     chaine[1] = '\n';
+	     w = XmCreateDrawnButton (row, "", args, n);
+	     XtManageChild (w);
+	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) RetourKbd, (XtPointer) (param + (int) (it->value)));
+	     XtAddCallback (w, XmNexposeCallback, (XtCallbackProc) ExposeKbd, (XtPointer) (param + i));
+	  }			/*for */
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    LoadKbd charge un des claviers.                                 | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static void         LoadKbd (int number)
+
+#else  /* __STDC__ */
+static void         LoadKbd (number)
+int                 number;
+
+#endif /* __STDC__ */
+
+{
+   ptrfont             FonteAc;
+   ptrfont             FontIg;
+
+   switch (number)
+	 {
+	    case 0:		/* Symboles */
+	       KbFonts[number] = FontIS;	/* Symboles */
+	       CreateKeyboard (number, TtaGetMessage (LIB, LIB_MATH_SYMBOLS), FontIS, 3,
+		 KbX, KbY, Items_Symb, sizeof (Items_Symb) / sizeof (ITEM));
+	       break;
+	    case 1:		/* Graphiques */
+	       KbFonts[number] = FontIGr;	/* Graphique */
+	       CreateKeyboard (number, TtaGetMessage (LIB, LIB_GRAPHICS), FontIGr, 6,
+	       KbX, KbY, Items_Graph, sizeof (Items_Graph) / sizeof (ITEM));
+	       break;
+	    case 2:		/* ISO latin 1 */
+	       FonteAc = LireFonte ('L', 'T', 0, 14, UnPoint);
+	       if (!FonteAc)
+		  FonteAc = FontMenu;
+	       KbFonts[number] = FonteAc;	/* Latin */
+	       if (FonteAc != NULL)
+		  CreateKeyboard (number, TtaGetMessage (LIB, LIB_LATIN_ALPHABET), FonteAc, 13,
+		  KbX, KbY, Items_Isol, sizeof (Items_Isol) / sizeof (ITEM));
+	       break;
+	    case 3:		/* Grec */
+	       FontIg = LireFonte ('G', 'T', 0, 14, UnPoint);
+	       if (!FontIg)
+		  FontIg = FontMenu;
+	       if (FontIg != NULL)
+		  KbFonts[number] = FontIg;	/* Grec */
+	       CreateKeyboard (number, TtaGetMessage (LIB, LIB_GREEK_ALPHABET), FontIg, 16,
+		 KbX, KbY, Items_Grec, sizeof (Items_Grec) / sizeof (ITEM));
+	       break;
+	 }
+}
+#endif /* NEW_WILLOWS */
+
+
+/* ---------------------------------------------------------------------- */
+/* |    KBMap mappe un clavier.                                         | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                KBMap (int kb)
+#else  /* __STDC__ */
+void                KBMap (kb)
+int                 kb;
+
+#endif /* __STDC__ */
+{
+#ifndef NEW_WILLOWS
+   if (kb >= 0 && kb < MAX_KEYBOARD)
+     {
+	/* Faut-il charger le clavier avant de l'afficher ? */
+	if (Keyboards[kb] == 0)
+	   LoadKbd (kb);
+#ifdef OLD
+	/* Affiche le clavier si necessaire */
+	if (XtIsManaged (Keyboards[kb]))
+	   XMapRaised (GDp (0), XtWindowOfObject (Keyboards[kb]));
+	else
+	   XtManageChild (Keyboards[kb]);
+#else
+	/*    XtPopup(XtParent(Keyboards[kb]), XtGrabNonexclusive); */
+	XtPopup (Keyboards[kb], XtGrabNonexclusive);
+	XMapRaised (GDp (0), XtWindowOfObject (Keyboards[kb]));
+#endif
+     }
+#endif /* NEW_WILLOWS */
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    Initialisation des claviers.                                    | */
+/* ---------------------------------------------------------------------- */
+void                KeyboardsLoadResources ()
+{
+   int                 i;
+
+   if (ThotLocalActions[T_keyboard] == NULL)
+     {
+	TteConnectAction (T_keyboard, (Proc) KBMap);
+
+	/* Initialise la table des claviers */
+	for (i = 0; i < MAX_KEYBOARD; i++)
+	   Keyboards[i] = 0;
+
+	FontIS = LoadFont ("ivsymb");
+	if (FontIS == NULL)
+	  {
+	     /*Fonte 'ivsymb' inaccessible */
+	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_MISSING_FILE, "ivsymb");
+	     FontIS = FontMenu;
+	  }
+
+	FontIGr = LoadFont ("ivgraf");
+	if (FontIGr == NULL)
+	  {
+	     /*Fonte 'ivgraf' inaccessible */
+	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_MISSING_FILE, "ivgraf");
+	     FontIGr = FontMenu;
+	  }
+
+	if (FonteLeg == NULL)
+	   FonteLeg = LireFonte ('L', 'H', 0, 9, UnPoint);
+	if (FonteLeg == NULL)
+	   FonteLeg = FontMenu;
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | TtcDisplayMathKeyboard initialise le changement du clavier math.           | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtcDisplayMathKeyboard (Document document, View view)
+
+#else  /* __STDC__ */
+void                TtcDisplayMathKeyboard (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   KeyboardsLoadResources ();
+   /* Enregistre la position pour le dialogue */
+   TtaSetDialoguePosition ();
+   TtaSetCurrentKeyboard (0);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | TtcDisplayGraphicsKeyboard initialise le changement clavier graphics       | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtcDisplayGraphicsKeyboard (Document document, View view)
+
+#else  /* __STDC__ */
+void                TtcDisplayGraphicsKeyboard (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   KeyboardsLoadResources ();
+   /* Enregistre la position pour le dialogue */
+   TtaSetDialoguePosition ();
+   TtaSetCurrentKeyboard (1);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | TtcDisplayLatinKeyboard initialise le changement du clavier latin.         | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtcDisplayLatinKeyboard (Document document, View view)
+
+#else  /* __STDC__ */
+void                TtcDisplayLatinKeyboard (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   KeyboardsLoadResources ();
+   /* Enregistre la position pour le dialogue */
+   TtaSetDialoguePosition ();
+   TtaSetCurrentKeyboard (2);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | TtcDisplayGreekKeyboard initialise le changement du clavier greek.         | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtcDisplayGreekKeyboard (Document document, View view)
+
+#else  /* __STDC__ */
+void                TtcDisplayGreekKeyboard (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   KeyboardsLoadResources ();
+   /* Enregistre la position pour le dialogue */
+   TtaSetDialoguePosition ();
+   TtaSetCurrentKeyboard (3);
+}

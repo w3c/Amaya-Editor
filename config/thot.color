@@ -1,0 +1,152 @@
+255 255 255  White
+  0   0   0  Black
+250 250 250  LightGrey2
+225 225 225  LightGrey1
+190 190 190  Grey
+158 158 158  DarkGrey1
+118 118 118  DarkGrey2
+ 80  80  80  DarkGrey3
+255 237 237  LightRed4
+255 193 193  LightRed3
+255 149 149  LightRed2
+255 105 105  LightRed1
+255   0   0  Red
+229   0   0  DarkRed1
+178   0   0  DarkRed2
+127   0   0  DarkRed3
+255 244 237  LightCoral4
+255 216 193  LightCoral3
+255 188 149  LightCoral2
+255 160 105  LightCoral1
+255  95   0  Coral
+229  85   0  DarkCoral1
+178  66   0  DarkCoral2
+127  47   0  DarkCoral3
+255 248 237  LightOrange4
+255 233 193  LightOrange3
+255 218 149  LightOrange2
+255 203 105  LightOrange1
+255 170   0  Orange
+229 153   0  DarkOrange1
+178 119   0  DarkOrange2
+127  85   0  DarkOrange3
+255 251 237  LightGold4
+255 246 193  LightGold3
+255 241 149  LightGold2
+255 236 105  LightGold1
+255 229   0  Gold
+229 206   0  DarkGold1
+178 161   0  DarkGold2
+127 116   0  DarkGold3
+255 255 237  LightYellow4
+255 255 193  LightYellow3
+255 255 149  LightYellow2
+255 255 105  LightYellow1
+255 255   0  Yellow
+229 229   0  DarkYellow1
+178 178   0  DarkYellow2
+127 127   0  DarkYellow3
+250 255 237  LightLime4
+248 255 193  LightLime3
+246 255 149  LightLime2
+244 255 105  LightLime1
+241 255   0  Lime
+217 229   0  DarkLime1
+169 178   0  DarkLime2
+121 127   0  DarkLime3
+249 255 237  LightYellowGreen4
+239 255 193  LightYellowGreen3
+229 255 149  LightYellowGreen2
+219 255 105  LightYellowGreen1
+199 255   0  YellowGreen
+179 229   0  DarkYellowGreen1
+140 178   0  DarkYellowGreen2
+101 127   0  DarkYellowGreen3
+244 255 237  LightLawnGreen4
+222 255 193  LightLawnGreen3
+200 255 149  LightLawnGreen2
+178 255 105  LightLawnGreen1
+128 255   0  LawnGreen
+115 229   0  DarkLawnGreen1
+ 90 178   0  DarkLawnGreen2
+ 65 127   0  DarkLawnGreen3
+237 255 237  LightGreen4
+193 255 193  LightGreen3
+149 255 149  LightGreen2
+105 255 105  LightGreen1
+  0 255   0  Green
+  0 229   0  DarkGreen1
+  0 178   0  DarkGreen2
+  0 127   0  DarkGreen3
+237 255 248  LightTurquoise4
+193 255 233  LightTurquoise3
+149 255 218  LightTurquoise2
+105 255 203  LightTurquoise1
+  0 255 170  Turquoise
+  0 229 153  DarkTurquoise1
+  0 178 119  DarkTurquoise2
+  0 127  85  DarkTurquoise3
+237 255 255  LightCyan4
+193 255 255  LightCyan3
+149 255 255  LightCyan2
+105 255 255  LightCyan1
+  0 255 255  Cyan
+  0 229 229  DarkCyan1
+  0 178 178  DarkCyan2
+  0 127 127  DarkCyan3
+237 248 255  LightSkyBlue4
+193 238 255  LightSkyBlue3
+149 228 255  LightSkyBlue2
+105 218 255  LightSkyBlue1
+  0 198 255  SkyBlue
+  0 178 229  DarkSkyBlue1
+  0 139 178  DarkSkyBlue2
+  0 100 127  DarkSkyBlue3
+237 243 255  LightBlue4
+193 219 255  LightBlue3
+149 195 255  LightBlue2
+105 171 255  LightBlue1
+  0 113 255  Blue
+  0 102 229  DarkBlue1
+  0  80 178  DarkBlue2
+  0  58 127  DarkBlue3
+237 237 255  LightIndigo4
+193 193 255  LightIndigo3
+149 149 255  LightIndigo2
+105 105 255  LightIndigo1
+  0   0 255  Indigo
+  0   0 229  DarkIndigo1
+  0   0 178  DarkIndigo2
+  0   0 127  DarkIndigo3
+243 237 255  LightViolet4
+213 193 255  LightViolet3
+183 149 255  LightViolet2
+153 105 255  LightViolet1
+ 85   0 255  Violet
+ 76   0 229  DarkViolet1
+ 59   0 178  DarkViolet2
+ 42   0 127  DarkViolet3
+247 237 255  LightPurple4
+235 193 255  LightPurple3
+223 149 255  LightPurple2
+211 105 255  LightPurple1
+187   0 255  Purple
+168   0 229  DarkPurple1
+131   0 178  DarkPurple2
+ 94   0 127  DarkPurple3
+255 237 255  LightMagenta4
+255 193 255  LightMagenta3
+255 149 255  LightMagenta2
+255 105 255  LightMagenta1
+255   0 255  Magenta
+229   0 229  DarkMagenta1
+178   0 178  DarkMagenta2
+127   0 127  DarkMagenta3
+255 237 244  LightRuby4
+255 193 222  LightRuby3
+255 149 200  LightRuby2
+255 105 178  LightRuby1
+255   0 128  Ruby
+229   0 115  DarkRuby1
+178   0  90  DarkRuby2
+127   0  65  DarkRuby3

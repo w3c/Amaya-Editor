@@ -1,0 +1,14 @@
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+
+/* 
+   Variables exportees par l'analyseur syntaxique analsynt
+*/
+
+EXPORT int 		lgkwtable;	    /* longueur effective de kwtable */
+EXPORT int 		lastshortkw;	    /* rang du dernier mot-cle court 
+					       dans kwtable */
+EXPORT kwelem  	kwtable[nbkw];	    /* table des mots-cles */
+EXPORT int 		lgidenttable;	    /* longueur effective de la table*/
+EXPORT identelem 	identtable[nbident];/* table des identificateurs */
+EXPORT rnb     	lgruletable;	    /*longueur effective de ruletable*/
+EXPORT rule    	ruletable[maxrule]; /* table des regles */

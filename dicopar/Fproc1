@@ -1,0 +1,390 @@
+Received: from mururoa.imag.fr (mururoa.imag.fr [129.88.100.20]) by perles.imag.fr (8.6.8/8.6.9) with ESMTP id KAA06925 for <roisin@perles.imag.fr>; Fri, 25 Aug 1995 10:31:01 +0200
+Received: from imag.imag.fr (imag.imag.fr [129.88.30.1]) by mururoa.imag.fr (8.6.10/8.6.9) with ESMTP id KAA08682 for <roisin@mururoa.imag.fr>; Fri, 25 Aug 1995 10:25:29 +0200
+Received: from didot.irisa.fr (didot.irisa.fr [131.254.11.64]) by imag.imag.fr (8.6.11/8.6.9) with ESMTP id KAA26282 for <Cecile.Roisin@imag.fr>; Fri, 25 Aug 1995 10:35:29 +0200
+Received: from papeete.irisa.fr (papeete.irisa.fr [131.254.11.48]) by didot.irisa.fr (8.6.10/8.6.9) with ESMTP id KAA24347 for <Cecile.Roisin@imag.fr>; Fri, 25 Aug 1995 10:34:13 +0200
+From: Helene Richy <Helene.Richy@irisa.fr>
+Date: Fri, 25 Aug 1995 10:34:12 +0200
+Message-Id: <199508250834.KAA12698@papeete.irisa.fr>
+To: Cecile.Roisin@imag.fr
+Subject: procédures TCL
+Content-Type: X-sun-attachment
+
+
+
+----------
+X-Sun-Data-Type: text
+X-Sun-Data-Description: text
+X-Sun-Data-Name: text
+X-Sun-Content-Lines: 1
+
+
+----------
+X-Sun-Data-Type: default
+X-Sun-Data-Description: default
+X-Sun-Data-Name: Fproc1
+X-Sun-Content-Lines: 364
+
+# Fproc1
+
+##########text1init######
+# insertion apres la selection courante
+#
+proc add x {
+  insertion "after" $x}
+
+##########
+# insertion avant la selection courante
+#
+proc ins x {
+  insertion "before" $x}
+
+##########
+# insertion avant/apres les occurences du mot z
+#
+proc insert {x y z} {
+global visible advance 
+if { ($y != "before") && ($y != "after")} then { 
+	    error "syntax error in $y" }
+initdomain
+set visible 0
+set advance 1
+set mot [nextword]
+set i 0
+set inserauto 0
+while { $mot != 0 } {
+    if { $mot == $z } then { 
+	if { $inserauto == 0 } then {
+	    set visible 1
+	    select
+	    set rep [ask4 "Inserer ici"]
+	    set visible 0
+	    case $rep {
+		{3} { 
+		    insertion $y $x
+		    incr i 1
+		    if { $y == "before" } then { nextword }
+		    set mot [nextword]}
+		{4} {
+		    set mot [nextword] }
+		{2} { 
+		    set mot 0 }
+		{5} {
+		    set inserauto 1 ; set visible 0 }
+		default {
+		    error "error in dialogue" }
+		}
+	    } else {
+		insertion $y $x
+		incr i 1
+		if { $y == "before" } then { nextword }
+		set mot [nextword] 
+	    }
+	} else { 
+	    set mot [nextword] } 
+	}
+# affichage du resultat
+        if { $i == 0 } then {
+            set texte  "No insertion"
+        } else {
+            if { $i == 1 } then {
+                set texte "One insertion"
+            } else {
+                set texte [format "%s insertions" $i]
+            }
+        }
+	display $texte
+	return $i
+    }
+
+##########text2init######
+# Compter ponctuations dans la selection
+proc nbponct {} {
+global domain 
+    set domain 1
+    set i [stat , . ? ! : \;]
+    # affichage du resultat
+    set texte [format " %d punctuations found in this selection" $i ]
+    display $texte
+    return $i
+} 
+
+##########
+# Compter les lettres accentuees dans la selection
+proc nbaccent {}  {
+global domain case
+        set domain 1
+	set savecase $case
+	set case 1
+	set i [stat à â æ è é ê ë î ï ô ÷ ù û ä]
+    	# affichage du resultat
+	set texte [format "%d accent found in this selection" $i ]
+	display $texte
+	set case $savecase
+    	return $i
+} 
+
+##########
+# Compter ponctuations dans la selection
+proc nbponct {} {
+global domain 
+    set domain 1
+    set i [stat , . ? ! : \;]
+    # affichage du resultat
+    set texte [format " %d punctuations found in this selection" $i ]
+    display $texte
+    return $i
+} 
+
+##########
+# Compter les lettres accentuees dans la selection
+proc nbaccent {}  {
+global domain case
+        set domain 1
+	set savecase $case
+	set case 1
+	set i [stat à â æ è é ê ë î ï ô ÷ ù û ä]
+    	# affichage du resultat
+	set texte [format "%d accent found in this selection" $i ]
+	display $texte
+	set case $savecase
+    	return $i
+} 
+
+##########
+# Compter les consonnes dans la selection
+proc nbcons  {} {
+global domain case
+        set domain 1
+	set case 1
+	set i [stat b c ç d f g h j k l m n p q r s t v w x z]
+    	# affichage du resultat
+	set texte [format "%d consonant in this selection" $i ]
+	display $texte
+    	return $i
+} 
+
+##########
+# Compter les voyelles (MAJ ou min) dans la selection 
+# (y compris oe, ae et accentues)
+proc nbvowe  {} {
+global domain case
+        set domain 1
+	set savecase $case
+	set case 1
+	set i [stat a e i o u y à â æ è é ê ë î ï ô ÷ ù û ä]
+	set texte [format "%d vowes in the selection" $i ]
+	display $texte
+	set case $savecase
+    	return $i
+} 
+
+##########
+# Compter les chiffres dans la selection
+proc nbnum  {} {
+global domain
+        set domain 1
+	set i [stat 1 2 3 4 5 6 7 8 9 0]
+	set texte [format "%d numbers in this selection" $i ]
+    	# affichage du resultat
+	display $texte
+    	return $i
+} 
+##########
+# Compter les espaces dans la selection
+########## ATTENTION : ajouter les autres types d'espaces ##########
+#########
+proc nbspace  {} {
+global domain
+        set domain 1
+	set i [stat { }]
+	set texte [format "%d spaces in this selection" $i ]
+    	# affichage du resultat
+	display $texte
+    	return $i
+} 
+
+##########
+# Compter les caracteres speciaux
+proc nbspec  {} {
+global domain
+	set domain 1
+	set i [ stat , . > < ? ! : \; / \{ \} \[ \] \( \) \| \" \' \\ \# \$ \% \^ \& \* \@ ]
+	# affichage du resultat
+	set texte [format "%d special characters found in the selection" $i ]
+	display $texte
+    	return $i
+}
+
+##########text3init######
+##########
+# Compter les mots dans la selection
+proc nbmots  {} {
+global domain visible
+	set savevisible $visible
+	set visible 0
+	set domain 1; initdomain; savesel
+        # compter les mots dans cette selection 	
+	set mot [nextword]
+	set nbmot 0
+	while	{ ($mot != 0) } {
+		incr nbmot 1
+		set mot [nextword]
+		}
+	# affichage du resultat
+	set texte [format  "%s words" $nbmot]
+	display $texte 
+        # retablir la selection initiale
+ 	restoresel; set visible $savevisible ; select
+    	return $nbmot
+}
+
+##########
+# Compter les mots dans la phrase courante
+proc motsdsphrase  {} {
+global domain visible
+	set savevisible $visible
+	set visible 0
+	set domain 1
+	if { [nextsentence] != 1 } then { return }
+	savesel; set domain 1; initdomain
+        # compter les mots dans cette phrase 	
+	set mot [nextword]
+	set nbmot 0
+	while	{ ($mot != 0) } {
+		incr nbmot 1
+		set mot [nextword]
+		}
+	# affichage du resultat
+	set texte [format  "%s words" $nbmot]
+	display $texte 
+        # selectionner la phrase initiale
+ 	restoresel; set visible $savevisible ; select
+    	return $nbmot
+}
+
+ 
+##########
+# Compter les mots dans la prochaine phrase
+proc phrasesuiv  {} {
+global domain visible
+	 if { [nextsentence] != 1 } then { return }
+	 return [motsdsphrase]
+} 
+
+
+# Compter les phrases du texte selectionne'
+##########
+proc  nbphrases  {} {
+global domain visible
+	set visible 0
+	set domain 1 
+	savesel
+	set nb 0
+	while { [nextsentence] != 0 } {incr nb 1}
+        #affichage du resultat (nb de phrases)
+        set texte [format  "Total: %s sentences" $nb]
+	display $texte
+        # selectionner le texte initial 	
+ 	restoresel; set visible 1; select
+    	return $nb
+} 
+
+##########text4init######
+##########
+# mise en MAJ de la selection courante
+#
+proc MAJ {} {
+global domain
+	set domain 1
+	set ch1 [content] 
+	deletion
+	set ch2 [string toupper $ch1]
+	insertion before $ch2
+	}
+
+
+##########
+# mise en Minuscule de la selection courante
+#
+proc min {} {
+global domain
+	set domain 1
+	set ch1 [content] 
+	deletion
+	set ch2 [string tolower $ch1]
+	insertion before $ch2
+	}
+
+##########
+# mise ne capitale de la premiere lettre de chaque paragraphe
+#
+#
+proc firstcap {} {
+global visible advance domain 
+	set visible 0
+	set advance 1
+	if { [nextparag] != 1 } then { return }
+	set domain 1; nextchar;
+	set ch1 [content] 
+	set i 0
+	set inserauto 0
+  while { $ch1 != 0 } {
+    set ch2 [string toupper $ch1]
+    # est-ce deja une majuscule ?
+    if { $ch1 != $ch2 } then {
+       if { $inserauto == 0 } then {
+	    set visible 1
+	    select
+	    set rep [ask4 "MAJ ici"]
+	    set visible 0
+	    case $rep {
+		{3} { 
+		    	deletion
+			insertion before $ch2		    
+		    	incr i 1 
+			set domain 2
+	                if { [nextparag] != 1 } then { return }
+			set domain 1; nextchar
+			set ch1 [content] } 
+		{4} {
+			set domain 2 
+			if { [nextparag] != 1 } then { return }
+			set domain 1; nextchar
+			set ch1 [content] } 
+		{2} { 
+		    set ch1 0 }
+		{5} {
+		    set inserauto 1 ; set visible 0 }
+		default {
+		    error "error in dialogue" }
+		}
+	    } else {
+		deletion
+		insertion before $ch2		    
+		incr i 1 
+		set domain 2
+		if { [nextparag] != 1 } then { return }
+		set domain 1; nextchar
+		set ch1 [content]  }
+       } else {
+           # passer au paragraphe suivant
+	   set domain 2
+	   if { [nextparag] != 1 } then { return }
+	   set domain 1; nextchar
+	   set ch1 [content] } 
+    }
+# affichage du resultat
+        if { $i == 0 } then {
+            set texte  "No modification"
+        } else {
+            if { $i == 1 } then {
+                set texte "One modification"
+            } else {
+                set texte [format "%s modifications" $i]
+            }
+        }
+	display $texte
+	return $i
+    }
+
+##############

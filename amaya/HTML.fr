@@ -1,0 +1,254 @@
+extension
+
+presentation
+
+ HTMLP:  Pr\351sentation standard
+ HTMLPBW: En noir et blanc
+ HTMLPP: Avec pages A4
+ HTMLPP: Avec pages US
+
+export
+
+ HTMLT: HTML
+
+translation
+
+TEXT_UNIT: Text
+GRAPHICS_UNIT: Graphique
+SYMBOL_UNIT: Symbole
+PICTURE_UNIT: IMG
+REFERENCE_UNIT: Reference
+PAGE_BREAK: Page_break
+
+C_Empty: ?
+C_Foot: ?
+C_Head: ?
+Comment\240: Comment
+Document_URL: ?
+StyleRule: Style rule
+Block_Quote: BLOCKQUOTE
+Address: ADDRESS
+Horizontal_Rule: HR
+Basic_Set: element
+Paragraph: P
+Preformatted: PRE
+Pre_Line: line
+Anchor: A
+Basic_Elem: element
+Italic_text: I
+Bold_text: B
+Teletype_text: TT
+Struck_text: STRIKE
+Big_text: BIG
+Small_text: SMALL
+Subscript: SUB
+Superscript: SUP
+Phrase: phrase
+Emphasis: EM
+Strong: STRONG
+Def: DFN
+Code: CODE
+Sample: SAMP
+Keyboard: KBD
+Variable: VAR
+Cite: CITE
+Font_: FONT
+Applet: APPLET
+Parameter: PARAM
+Block: block
+Center: CENTER
+Division: DIV
+List_: list
+Unnumbered_List: UL
+Numbered_List: OL
+Directory: DIR
+Menu: MENU
+Definition_List: DL
+List_Item: LI
+Definition_Item: definition item
+Term_List: term list
+Term: DT
+Definition: DD
+Form: FORM
+Form_Element: form element
+Text_Area: TEXTAREA
+Option_Menu: SELECT
+Option: OPTION
+Toggle_Menu: toggle menu
+Toggle_Item: toggle item
+Checkbox_Input: INPUT
+Radio_Menu: radio menu
+Radio_Item: radio item
+Radio_Input: INPUT
+Text_Input_Line: line
+Text_Input: INPUT
+Command_Line: line
+Reset_Input: INPUT
+Space: space
+Submit_Input: INPUT
+Input: INPUT
+Hidden_Input: INPUT
+Password_Input: INPUT
+File_Input: INPUT
+Text_With_Frame: text
+Inserted_Text: text
+Frame: frame
+Table: TABLE
+CAPTION: CAPTION
+Table_head: table head
+thead: THEAD
+Table_body: table body
+tbody: TBODY
+tfoot: TFOOT
+Table_foot: table foot
+Column_head: column head
+Table_row: ROW
+Table_cell: cell
+Data_cell: TD
+Heading_cell: TH
+Table_cell_ghost: ghost
+MAP: MAP
+AREA: AREA
+Langue: Language
+Class: class
+PseudoClass: pseudo class
+Style\240: style
+Invalid_attribute: invalid attribute
+Ghost_restruct: ghost
+background_: background
+BackgroundColor: bgcolor
+TextColor: text
+LinkColor: link
+VisitedLinkColor: vlink
+ActiveLinkColor: alink
+Prompt: prompt
+Notation: type
+http_equiv: http-equiv
+meta_name: name
+meta_content: content
+HREF_: href
+REL: rel
+REV: rev
+Title: title
+METHODS: methods
+Selector: selector
+Align: align
+NoShade: noshade
+Size_: size
+Width__: width
+IntWidthPercent: ?
+IntWidthPxl: ?
+WidthElement: width
+NAME: name
+Alignment: align
+Height_: height
+Width_: width
+hspace: hspace
+vspace: vspace
+Img_border: border
+ISMAP: ismap
+USEMAP: usemap
+SRC: src
+ALT: alt
+Font_size: size
+IntSizeIncr: ?
+IntSizeDecr: ?
+IntSizeRel: ?
+color: color
+codebase: codebase
+code: code
+applet_name: name
+alt: alt
+Param_name: name
+Param_value: value
+BulletStyle: type
+COMPACT: compact
+NumberStyle: type
+Start: start
+ItemStyle: type
+IntItemStyle: ?
+ItemValue: value
+Script_URL: action
+METHOD: method
+ENCTYPE: enctype
+Rows: rows
+Columns: cols
+Multiple: multiple
+Selected: selected
+Default_Value: value
+Checked: checked
+Area_Size: size
+MaxLength: maxlength
+Border: border
+Table_align: align
+cellspacing: cellspacing
+cellpadding: cellpadding
+Position: align
+Column_width: ?
+IntMaxVol: ?
+Row_align: align
+Row_valign: valign
+Ref_column: ?
+ColExt: ?
+RowExt: ?
+colspan: colspan
+rowspan: rowspan
+Cell_align: align
+Cell_valign: valign
+Word_wrap: nowrap
+Ref_IMG: ?
+shape: shape
+coords: coords
+nohref: nohref
+x_coord: x
+y_coord: y
+width\240: width
+height\240: height
+AreaRef_IMG: ?
+left_: left
+center_: center
+right_: right
+NoShade_: noshade
+Top_: top
+Middle_: middle
+Bottom_: bottom
+Left_: left
+Right_: right
+Yes_: yes
+disc: disc
+circle: circle
+square: square
+Yes_: yes
+Arabic_: 1
+LowerAlpha: a
+UpperAlpha: A
+LowerRoman: i
+UpperRoman: I
+Get_: get
+Post_: post
+No_: no
+Align_left: left
+Center_: center
+Align_right: right
+Position_top: top
+Position_bottom: bottom
+Row_left: left
+Row_center: center
+Row_right: right
+Row_top: top
+Row_middle: middle
+Row_bottom: bottom
+Row_baseline: baseline
+Cell_left: left
+Cell_center: center
+Cell_right: rigth
+Cell_top: top
+Cell_middle: middle
+Cell_bottom: bottom
+Cell_baseline: baseline
+Wrap: wrap
+No_wrap: nowrap
+rectangle: rect
+circle: circle
+polygon: poly
+

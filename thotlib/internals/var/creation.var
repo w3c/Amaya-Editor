@@ -1,0 +1,22 @@
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+
+#include "constmenu.h"
+
+typedef struct _DescrChoix *PtrDescrChoix;
+typedef struct _DescrChoix {
+	int	DRCnumType;
+	PtrSSchema	DRCSchStr;
+	PtrDescrChoix	DRCSuivant;
+} DescrChoix;
+
+EXPORT int		NbNouveaux;	/* nombre d'elements nouvellement crees */
+EXPORT PtrElement	Nouveaux[500];	/* pointeurs sur les elements nouvellement crees */
+EXPORT boolean		IgnoreReadOnlyParent;
+
+/* donnees sur le menu de saisie des choix d'element */
+EXPORT boolean		ChoixElemNature;
+EXPORT int	ChoixElemNumType[LgMaxMenuChoix];
+EXPORT PtrSSchema	ChoixElemSchStruct[LgMaxMenuChoix];
+
+EXPORT int		TypeChoisi;    /* le type choisi */
+EXPORT PtrSSchema	SchStrTypeChoisi; /* le schema de structure de ce type */

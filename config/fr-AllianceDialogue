@@ -1,0 +1,145 @@
+  0	Quitter Alliance
+  1	Documents
+  2	Coop\351ration
+  3	Sch\351mas
+  4	Qu\352te les r\364les max
+  5	Destruction des marques de fragments
+  6	Annuler destruction
+  7	D\351truire
+  8	Ne pas d\351truire
+  9	Voulez vous d\351truire les marques de fragments ?
+ 10	Fermer un document
+ 11	Sauver document
+ 12	Fermer, sans sauvegarde
+ 13	Fermeture de la derni\350re vue du document "
+ 14	" !
+ 15	Sauver le document avant de le fermer ?
+ 16	Sauver le document "
+ 17	" avant de le fermer ?
+ 18	Confirmer
+ 19	Quitter l'application Alliance ?
+ 20	Agir sur la base de documents
+ 21	Ouvrir document
+ 22	Cr\351er document
+ 23	Modes d'\351dition
+ 24	Partage
+ 25	Modifier la base de sch\351mas
+ 26	Modifier la base de schemas
+ 27	Compl\351ter l'action
+ 28	Appliquer
+ 29	Base de sch\351mas de structure
+ 30	Base de sch\351mas de pr\351sentation
+ 31	Actions
+ 32	D\351truire un sch\351ma de structure
+ 33	Renommer un sch\351ma de structure
+ 34	D\351truire un sch\351ma de pr\351sentation
+ 35	Renommer un sch\351ma de pr\351sentation
+ 36	Charger des sch\351mas depuis Thot
+ 37	Charger des sch\351mas depuis une autre base
+ 38	R\351pertoires des sch\351mas
+ 39	Sch\351mas de structure
+ 40	Sch\351mas de pr\351sentation
+ 41	Actions
+ 42	Valider le r\351pertoire
+ 43	Retirer le r\351pertoire
+ 44	Charger tous les sch\351mas de structure
+ 45	Charger le sch\351ma de structure
+ 46	Charger tous les sch\351mas de pr\351sentation
+ 47	Charger le sch\351ma de pr\351sentation
+ 48	Outils de manipulation de la base de documents
+ 49	Base de documents
+ 50	Charger des documents depuis Thot
+ 51	Exporter des documents vers Thot
+ 52	Charger des documents depuis une autre base
+ 53	D\351truire un document
+ 54	Renommer un document
+ 55	Init coop\351ration sur document
+ 56	Appliquer
+ 57	Recherche de catalogues Unix
+ 58	Int\351grer le document !
+ 59	Copier le document !
+ 60	Exporter le document !
+ 61	Exporter document comme ouvert
+ 62	D\351truire un document
+ 63	D\351truire
+ 64	Renommer un document
+ 65	Renommer
+ 66	Futur nom du document
+ 67	Conflit de nommage d'un document
+ 68	Conflit de nommage Unix d'un document
+ 69	Confirmer renommage
+ 70	Un document "
+ 71	" existe d\351j\340 !
+ 72	Un document Thot "
+ 73	Futur nom Unix du document
+ 74	Re-init coop\351ration
+ 75	Re-initialise
+ 76	R\351pertoires Unix des documents
+ 77	Documents Thot
+ 78	Retirer le r\351pertoire
+ 79	Int\351grer tous les documents
+ 80	Int\351grer le document
+ 81	Liste des utilisateurs
+ 82	Documents de l'utilisateur
+ 83	Copier tous les documents
+ 84	Copier un document
+ 85	Exporter tous les documents
+ 86	Exporter un document
+ 87	Ouvrir document
+ 88	Autre base
+ 89	Ouvrir vue de "
+ 90	"
+ 91	Partage
+ 92	Appliquer les modifications
+ 93	Lister les utilisateurs
+ 94	Lister les groupes
+ 95	Utilisateurs/Groupes
+ 96	Groupes
+ 97	Groupes de l'utilisateur courant
+ 98	Utilisateurs du groupe courant
+ 99	Utilisateurs/groupes infos
+100	R\364le
+101	Non sp\351cifi\351
+102	R\364le Nul
+103	Lecteur
+104	R\351dacteur
+105	Gestionnaire
+106	Lister les groupes de l'utilisateur
+107	Lister les membres du groupe
+108	Lister les r\364les existants
+109	Supprimer le r\364le
+110	Couper avant la s\351lection
+111	Couper apr\350s la s\351lection
+112	Retirer la coupure
+113	Avant la s\351lection
+114	Apr\350s la s\351lection
+115	R\364les courants sur la partie s\351lectionn\351e
+116	Fragment pr\351c\351dent
+117	Fragment suivant
+118	Fragment courant
+119	Mode d'\351dition
+120	Appliquer
+121	M\351moriser
+122	D\351truire
+123	Mode courant
+124	Cacher sans notification
+125	Cacher avec notification
+126	Lire sans notification
+127	Lire avec notification
+128	Lire avec mise \340 jour
+129	\311crire
+130	G\351rer
+131	Couper avant la s\351lection
+132	Couper apr\350s la s\351lection
+133	\311dition des utilisateurs/groupes
+134	\311diter
+135	Cr\351er depuis d\351finition ...
+136	Mes documents
+137	Ma base
+138	Utilisateurs
+139	Groups
+140	Pas de r\351pertoire de schemas !
+141	Les documents source et destination sont \351gaux !
+142	Identit\351 des bases source et destination !
+143	n'est pas un directory !
+144	n'est pas un fichier standard !

@@ -1,0 +1,9 @@
+/*
+ * PaletteAPP.rc : Palette Windows Resource Script
+ * Last generated : 
+ */
+
+i
+ */#include "Palette.h"
+#include "ICONS.rc"
+

@@ -1,0 +1,277 @@
+0 Regular expression too big
+1 View not found.
+2 Error while loading the dictionary: %s\n 
+3 Missing file: %s\n
+4 Cannot write: %s
+5 Cannot find schema: %s
+6 Confirm
+7 No alphabet file
+8 Cannot open document %s
+9 Pivot format error: %s
+10 New view cannot replace the old one
+11 Incompatible schemas. Recompile %s
+12 Incorrect window number
+13 Fatal Error: Thot fonts not found
+14 Document with columns. Paginate again.
+15 Memory exhausted
+16 Fatal Error: Unable to connect to X
+17 View is modified before creation
+18 Select before
+19 No more place for the font %s
+20 Structure of document %s invalid
+21 Document %s cannot be edited nor saved
+22 Invalid regular expression
+23 Unmatched left
+24 Unmatched right
+25 Premature end of regular expression
+26 Nesting too deep
+27 Horizontal positionning mistake: %s
+28 Vertical positionning mistake: %s
+29 Rules table full.
+30 Structure schema %s has been changed
+31 Incorrect file: %s.STR
+32 Incorrect file: %s.PRS
+33 Directory not found: %s
+34 Cannot print
+35 Cannot change presentation
+36 Cannot save in PostScript
+37 Cannot import file
+38 View is empty
+39 Not allowed, read only element
+40 Cannot copy paired components
+41 Horizontal sizing mistake: %s
+42 Vertical sizing mistake: %s
+43 Creating the dictionary for document: %s
+44 Horizontal box overflow: %s
+45 Vertical box overflow: %s
+46 Horizontal positionning mistake: %s. See your presentation schema
+47 Vertical positionning mistake: %s. See your presentation schema
+48 Horizontal sizing mistake: %s. See your presentation schema
+49 Vertical sizing mistake: %s. See your presentation schema
+50 This is a copy
+51 Loading of "%s" failed
+52 Environment variable %s undefined
+53 An element cannot refer to itself
+54 Attribute required, not deleted
+55 Nature forbidden here
+56 %s : mandatory component
+57 Select only one component
+58 The element %s cannot be pasted here
+59 You cannot modify a box here
+60 %s
+61 Not any view is selected for printing
+62 Enter the presentation for %s
+63 Reading the document...
+64 Select an element
+65 File thot.keyboard not found
+66 X clipboard unchanged
+67 Cannot copy different components. Group.
+68 Not allowed, read only document
+69 A document cannot include itself
+70 Changing the box %s
+71 Moving the box %s
+72 Document written: %s
+73 Writing ...
+74 Empty reference.
+75 Don\'t copy page breaks!
+76 You have selected an element %s. You had to select an element %s.
+77 Changing directory list
+78 Printing
+79 Exporting document %s ...
+80 Loading dictionary %s
+81 Writing PostScript file ...
+82 Importing file ...
+83 Which form of the document do you want to load?
+84 At least two points in a polyline
+85 Enter a value for attribute %s
+86 Old pivot format. Save the document.
+87 Creating the box %s
+88 Not enough memory
+89 Select an element %s
+90 This element cannot be holophrasted
+91 Designate the element to be referred
+92 Too many documents.
+93 Empty document, not written.
+94 Impossible to insert here
+95 Nothing to delete
+96 Mandatory attribute.
+97 All views already created.
+98 Empty document.
+99 Don\'t change document !
+100 Too many views.
+101 Nothing to be pasted.
+102 Cannot open a new window. Close a window.
+103 *** Thot: Irrecoverable error ***
+104 modified documents, if any, will be saved on .SAV files
+105 X11 Error : %s\n
+106 No selection
+107 Unable to link the new element
+108 procedure SuppRef (refelem.c)
+109 Duplicated label : %s\n
+110 Premature EOF
+111 No bounding box in ps file %s
+112 Cannot open hyphen patterns file: %s
+113 Reading hyphen patterns file: %s
+114 Word too long for hyphenation: %s. Are you sure it's correct?
+115 Pixmap : Color error 
+116 Pixmap : Open failed
+117 Pixmap : File invalid
+118 Pixmap : No memory
+119 Pixmap : Color failed
+120 Cannot include file %s
+121 Cannot create file %s
+122 No translation schema for %s
+123 Incorrect .TRA file: %s
+124 Too many output files
+125 Create a window for view %s
+126 %s is not a valid sibling for %s (%s)
+127 %s is not a valid child for %s (%s)
+128 Attribute required %s for element %s
+129 %s, page %d
+130 %s : unknown type.
+131 Language
+132 Attributes
+133 Search reference
+134 Standard presentation
+135 Apply
+136 Characters
+137 Underline
+138 Graphics
+139 Format
+140 Unchanged
+141 Align
+142 Ident
+143 Print
+144 Manual feed
+145 Options
+146 A4
+147 US
+148 Paper format
+149 Done
+150 Document directories
+151 Document name
+152 The document %s already exists. Would you recreate it?
+153 Button 1 sets the text color
+154 Button 2 sets the background color
+155 Font family
+156 Roman
+157 Bold
+158 Italic
+159 Oblique
+160 Bold italic
+161 Bold oblique
+162 Normal
+163 Underline
+164 Cross out
+165 Body size (pts)
+166 Indent (pts)
+167 Line spacing (pts)
+168 Line spacing
+169 Justification
+170 Yes
+171 No
+172 Save document
+173 Close, don't save
+174 Character style
+175 Colors
+176 Delete
+177 Output
+178 PostScript file
+179 Printer
+180 Search for
+181 Regular expression
+182 UPPERCASE = lowercase
+183 Replace by
+184 Replace
+185 No replace
+186 Replace on request
+187 Automatic replace
+188 Search where
+189 Before selection
+190 Within selection
+191 After selection
+192 In the whole document
+193 Do not replace
+194 Default colors
+195 before closing it
+196 Close a document
+197 No_name
+198 Create a document
+199 Document type
+200 Rename
+201 Math symbols
+202 Graphics
+203 Latin alphabet
+204 Greek alphabet
+205 Presentation
+206 Files
+207 Open a document
+208 Document type
+209 Views
+210 Change filter
+211 Value not changed
+212 Increase
+213 Decrease
+214 Visibility
+215 Character size difference
+216 Zoom
+217 Save as
+218 Save
+219 Thot
+220 Format
+221 Copy
+222 Text
+223 Graphic
+224 Symbol
+225 Image
+226 Element type
+227 after
+228 before
+229 around
+230 Include
+231 Paste
+232 to create
+233 Insert
+234 Page break
+235 (Read only)
+236 Surround
+237 Change type
+238 Language of element
+239 Inherited language: 
+240 Do not change document!
+241 Not found
+242 Search in 
+243 Search empty elements
+244 Search empty references
+245 Search references to this element
+246 Link
+247 Reference in document
+248 Search
+249 Read only element
+250 Nothing to replace
+251 Open
+252 Standard characters
+253 Standard graphics
+254 Standard format
+255 Standard geometry
+256 pt
+257 Line style
+258 Line weight
+259 Fill pattern
+260 Split
+261 Object type
+262 Goto page number: 
+263 Any
+264 Attribute to search
+265 Type to search
+266 Natures
+267 Attribute value:
+268 Unknown attribute
+269 Create referenced element
+270 Show referenced element
+271 Insertion mode
+272 Cancel
+273 Error in PostScript translation
+274 Destination refused by the spooler %s
+275 Cannot create %s
+276 Document %s printed

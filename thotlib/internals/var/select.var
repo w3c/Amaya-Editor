@@ -1,0 +1,64 @@
+
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+/*
+ * variable exportee par le module select.c
+ */
+
+EXPORT int Kbmode;	/* clavier courant */
+
+/* le document auquel appartient la partie   */
+/* selectionnee, nil si rien n'est selectionne*/
+EXPORT PtrDocument SelDocument;
+
+/* numero de la vue ou l'utilisateur a selectionne' */
+EXPORT int     SelVue;
+
+/* pointeur sur le premier element selectionne' */
+EXPORT PtrElement SelPremier;
+
+/* pointeur sur le dernier element selectionne' */
+EXPORT PtrElement SelDernier;
+
+/* index du premier caractere selectionne'   */
+/* dans le 1er element selectionne'          */
+/* (seulement si texte)                      */
+EXPORT int SelPremCar;
+
+/* index du dernier caractere selectionne'   */
+/* dans le dernier element selectionne'      */
+/* (seulement si texte)                      */
+EXPORT int SelDerCar;
+
+/* la selection est une position d'insertion (sans contenu) */
+/* ou une partie du contenu du document */
+EXPORT boolean SelPosition;
+
+/* Synchronisation des vues d'un meme document */
+EXPORT boolean SynchroVues;
+
+/* On recalcule ou pas les menus qui dependent de la selection */
+EXPORT boolean SelAvecMajMenus;
+
+/* mode de selection */
+EXPORT boolean SelContinue;
+
+/* NOTE:
+	la selection est formee des elements
+	consecutifs de l'arbre abstrait compris entre SelPremier et 
+	SelDernier inclus. Si faux, les elements selectionnes sont 
+	ceux pointe's par le tableau SelElement
+ */
+
+/* les elements qui figurent dans le menu selection */
+EXPORT PtrElement MenuSelElPere;
+EXPORT PtrElement MenuSelElPredecent;
+EXPORT PtrElement MenuSelElSuivant;
+EXPORT PtrElement MenuSelElFils;
+
+#ifdef __COLPAGE__
+EXPORT PtrElement  MenuSelPageColPere;
+EXPORT PtrElement  MenuSelPageColPrec;
+EXPORT PtrElement  MenuSelPageColSuiv;
+EXPORT PtrElement  MenuSelPageColFils;
+#endif /* __COLPAGE__ */
+

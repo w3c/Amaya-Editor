@@ -1,0 +1,28 @@
+	{ Cette grammaire decrit le formalisme utilise pour decrire
+	les langages de description de schema de presentation et de structure.
+	Cette grammaire decrit egalement le formalisme dans lequel elle
+	est ecrite.
+
+	V. Quint	Juin 1984	}
+	
+Grammaire =	Regle < Regle > 'END' .		{ les signes < et > indiquent
+						une repetition }
+Regle =		Ident '=' PartieDroite '.' .	{ le point indique la fin
+						d'une regle }
+PartieDroite =	DrTerminal / DrIntermed .	{ le slash indique un choix }
+
+DrTerminal =	'NAME' / 'STRING' / 'NUMBER' .	{ partie droite d'une regle
+						terminale }
+DrIntermed =	Possibilite < '/' Possibilite > . { partie droite d'une regle
+						intermediaire }
+Possibilite =	ElRepetOpt < ElRepetOpt > .	{ les crochets delimitent une
+						partie facultative }
+ElRepetOpt =	Element / '[' Element < Element > ']' / '<' Element < Element > '>'  .
+
+Element =	Ident / MotCle .
+
+Ident =		NAME .
+
+MotCle =	STRING .
+
+END

@@ -1,0 +1,30 @@
+0 ALL INDEX
+1 Make index in 
+2 Index to build...
+3 Master index
+4 Merge the pages
+5 Delete unused descriptors
+6 Delete unused index marks
+7 INDEX: overflow, too many descriptors.
+8 INDEX: error in options for table %2d 
+9 INDEX: cross-reference undefined
+10 INDEX: building table %2d
+11 INDEX: No sort, bad key: %s
+12 INDEX: an index mark is cut, the associated descriptor still exist
+13 INDEX: index table %2d empty
+14 INDEX: loop in cross-references
+15 INDEX: do not copy an index mark
+16 Extension schema now loaded
+17 Undefined extension
+18 INDEX: too much semantics
+19 INDEX: environnement variable INDPAR undefined
+20 INDEX: sort file for table %2d unknown
+21 INDEX: bad option for table %2d : illegal group definition
+22 INDEX: index tables built
+23 INDEX: chosen sort unknown => default is ALPHA
+24 INDEX: document "%s" unknown
+25 INDEX: element index not defined in this document
+26 INDEX: cannot create table %2d
+27 INDEX: %2d descriptors deleted
+28 INDEX: %2d index marks deleted
+29 Repaginate

@@ -1,0 +1,11 @@
+#define CorrMenuOU			1
+#define CorrSaisieNC			2
+#define CorrLabelLangue			3
+#define CorrMenuIgnorer			4
+#define CorrSpecial			5
+#define CorrSelectProp			6
+#define CorrFormCorriger		7
+#define CorrFormNC			8
+#define CorrLabelDocu			9
+#define CorrLabelPasTrouve		10
+#define CorrMaxDialogue			11

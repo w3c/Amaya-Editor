@@ -1,0 +1,1 @@
+gcc -I${GRIFDIR}/api -I${GRIFDIR}/include/var -I${GRIFDIR}/include/h -I${GRIFDIR}/include/f -I/usr/X11R5/include -o traiter traiter.c

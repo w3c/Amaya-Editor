@@ -1,0 +1,12 @@
+0 Mot-cle mal forme\n
+1 Regle trop longue\n
+2 Chaine trop longue\n
+3 Table des regles saturee\n
+4 Recursivite interdite\n
+5 Table des chaines saturee\n
+6 Table des references saturee\n
+7 Fichier inconnu.\n
+8 Creation du fichier %s impossible\n
+9 Symbole non defini: %s\n
+10 Symbole non reference: %s\n
+11 C\'est bon, on cree le fichier .GRM\n

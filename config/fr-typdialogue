@@ -1,0 +1,25 @@
+0 Fichier TYP incorrect
+1 Nom trop long\n
+2 Symbole interm\351diaire\n
+3 Sch\351ma de structure inaccessible\n
+4 Attribut inconnu\n
+5 Fichier inaccessible\n
+6 Manque de m\351moire\n
+7 Ligne trop longue\n
+8 Fonction d\351j\340 d\351finie\n
+9 Mauvais sch\351ma de structure\n
+10 Mod\350le d\351j\340 d\351fini\n
+11 Type d\'\351l\351ment inconnu\n
+12 R\350gle d\351j\340 d\351finie pour ce type\n
+13 Trop de conditions\n
+14 Type d\351j\340 d\351fini\n
+15 Mod\350le de composition inconnu\n
+16 Trop de cas pour cet attribut\n
+17 R\350gles d\351j\340 d\351finies pour cet attribut\n
+18 D\351j\340 des r\350gles pour cette valeur\n
+19 Valeur d\'attribut incorrecte\n
+20 Bornes incoh\351rentes\n
+21 Ce n\'est pas un attribut num\351rique\n
+22 Nom de fonction inconnu\n
+23 Ce n\'est pas un attribut textuel\n
+24 sch\351ma de typographie \340 compiler :

@@ -1,0 +1,83 @@
+:
+# recherche du type de machine
+
+#usage ...
+# on teste pour les dec
+if [ -r /bin/machine ]
+then
+	MACH=`/bin/machine`
+	if [ "$MACH" = "mips" ]
+	then
+		echo "DEC"
+		exit 0
+	fi
+fi
+
+# on teste pour les sun
+if [ -x /bin/mach ]
+then
+	MACH=`/bin/mach`
+	if [ "$MACH" = "sparc" ]
+	then
+            if [ "`file /sbin/init | grep ELF`" != "" ]
+            then
+                echo "solaris2"
+                exit 0
+            else
+                echo "SUN4"
+                exit 0
+            fi
+	fi
+fi
+
+# on teste pour l'ibm et les dpx
+if [ -x /bin/uname ]
+then
+        if [ "$INSURE" != "" ]
+	then
+	    echo INSURE
+	    exit 0
+	fi
+	MACH=`/bin/uname`
+	if [ "$MACH" = "AIX" ]
+	then
+		echo "RS6000"
+		exit 0
+	elif [ "$MACH" = "BOSX" ]
+	then
+		echo "RS6000"
+		exit 0
+	elif [ "$MACH" = "Linux" ]
+	then
+            if [ "`file /sbin/init | grep SPARC`" != "" ]
+            then
+		echo "LINUX-SPARC"
+		exit 0
+	    else
+            if [ "`file /sbin/init | grep ELF`" != "" ]
+            then
+		echo "LINUX-ELF"
+		exit 0
+            else
+		echo "LINUX"
+		exit 0
+	    fi
+	    fi
+	elif [ "$MACH" = "HP-UX" ]
+	then
+		echo "HP"
+		exit 0
+	elif [ "$MACH" = "IRIX" ]
+	then
+		echo "SGI"
+		exit 0
+	elif [ "$MACH" = "SunOS" ]
+	then
+		echo "solaris2"
+		exit 0
+	fi
+fi
+
+echo "Unknown Host"  >&2
+exit 1
+

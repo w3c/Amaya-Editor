@@ -1,0 +1,65 @@
+0   Usage des ponctuations
+1   Emploi des capitales
+2   V\351rifications \340 effectuer
+3   O\371 v\351rifier
+4   V\351rification typographique
+5   Correction \340 la demande
+6   Correction automatique
+7   Comment corriger
+8   V\351rifier la micro-typographie dans 
+9  ... \340 ins\351rer apr\350s ?
+10  Sauter
+11  Confirmer
+12  ... \340 remplacer ?
+13  Usage des parenth\350ses
+14  Abr\351viations
+15  Utilisation des attributs
+16  Quel type d'\351l\351ment ignorer
+17  ... \340 ins\351rer avant ?
+18  R\350gles d\'espacement
+19  Options
+20  Composition standard
+21  Autre composition 
+22  WARNING
+23  ... modifier la pr\351sentation ?
+24  R\350gles typographiques
+25  V\351rifiez la parit\351
+26  ... supprimer l\'\351l\351ment vide ?
+27  ... placer dans le texte pr\351c\351dent ?
+28  ????
+29  ????
+30  ????
+31  ????
+32  Les mots contenant des chiffres
+33  Les chiffres arabes
+34  ... attribut \340 poser ?
+35  Les chiffres romains
+36  ... pr\351sentation \340 modifier ?
+37  Expliquer
+38  ... attribut \340 supprimer ?
+39  Ignorer
+40  Les indices
+41  Les mots contenant...
+42  Les mots en majuscules
+43  ... mettre en majuscule ?
+44  Erreur
+45  Noms propres et nombres
+46  Usage des exposants
+47  Nombres
+48  D\351tection uniquement
+49  ... \340 supprimer ?
+50  Proposition
+51  TYPO: Fonction de v\351rification typographique indisponible (%s)
+52  TYPO: Type inconnu
+53  TYPO: V\351rification termin\351e 
+54  TYPO: V\351rification interrompue
+55  TYPO: Probl\350me de s\351lection
+56  TYPO: Choisissez une option de v\351rification
+57  TYPO: Remplacement effectu\351 (%d)
+58  TYPO: Pas de remplacement \340 effectuer
+59  TYPO: Lexique de noms ou sigles ou acronymes inaccessible
+60  TYPO: Pas de variable d\`environnement %s
+61  TYPO: Pas de table d'espacement %s
+62  TYPO: Lexique d\'abr\351viations inaccessible
+63  TYPO: Chargement des sch\351mas en cours ...
+64  TYPO: Initialisation termin\351e

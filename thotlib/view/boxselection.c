@@ -1,0 +1,831 @@
+
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+
+/*
+   visu.c : gestion des Selections.
+   Module de gestion des Selections.
+
+   I. Vatton - Novembre 84
+   IV : Juin 93 polylines
+ */
+
+#include "thot_gui.h"
+#include "thot_sys.h"
+#include "functions.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "message.h"
+#include "appdialogue.h"
+
+#define EXPORT extern
+#include "creation.var"
+#include "img.var"
+#include "frame.var"
+#include "select.var"
+#include "appdialogue.var"
+
+#include "appli.f"
+#include "cmd.f"
+#include "cmdedit.f"
+#include "creation.f"
+#include "def.f"
+#include "dep.f"
+#include "des.f"
+#include "font.f"
+#include "img.f"
+#include "memory.f"
+#include "sel.f"
+#include "select.f"
+#include "visu.f"
+
+#ifdef __STDC__
+extern void         EndInsert (void);
+
+#else
+extern void         EndInsert ();
+
+#endif
+
+/* ---------------------------------------------------------------------- */
+/* |    RazPavSelect parcours l'arborescence pour annuler toutes les    | */
+/* |            selections de pave.                                     | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         RazPavSelect (PtrAbstractBox adpave)
+#else  /* __STDC__ */
+static void         RazPavSelect (adpave)
+PtrAbstractBox             adpave;
+
+#endif /* __STDC__ */
+{
+   PtrAbstractBox             pavefils;
+   PtrAbstractBox             pPa1;
+
+   pPa1 = adpave;
+   if (pPa1->AbSelected)
+     {
+	/* Le pave est selectionne */
+	pPa1->AbSelected = False;
+     }
+   else
+     {
+	/* Sinon on parcours le sous-arbre */
+	pavefils = pPa1->AbFirstEnclosed;
+	while (pavefils != NULL)
+	  {
+	     RazPavSelect (pavefils);
+	     pavefils = pavefils->AbNext;
+	  }
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    AnnuleMrq annule la selection courante dans la fenetre.         | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                AnnuleMrq (int frame)
+#else  /* __STDC__ */
+void                AnnuleMrq (frame)
+int                 frame;
+
+#endif /* __STDC__ */
+{
+   ViewFrame            *pFe1;
+
+   if (frame > 0)
+     {
+	pFe1 = &FntrTable[frame - 1];
+	if (pFe1->FrAbstractBox != NULL)
+	   RazPavSelect (pFe1->FrAbstractBox);
+	pFe1->FrSelectOneBox = False;
+	pFe1->FrSelectionBegin.VsBox = NULL;
+	pFe1->FrSelectionEnd.VsBox = NULL;
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    SetSelect bascule la mise en e'vidence de la se'lection dans    | */
+/* |            la fenetree^tre frame :                                 | */
+/* |            - si Allume est Vrai et que la se'lection est eteinte,  | */
+/* |            - ou si Allume est Faux et la se'lection allume'e.      | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                SetSelect (int frame, boolean allume)
+#else  /* __STDC__ */
+void                SetSelect (frame, allume)
+int                 frame;
+boolean             allume;
+
+#endif /* __STDC__ */
+{
+   /* Visualisation de la selection locale */
+   if (frame > 0)
+     {
+	/* Teste le booleen allume et l'etat de la selection */
+	if (allume && !FntrTable[frame - 1].FrSelectShown)
+	   VisuSel (frame, True);
+	else if (!allume && FntrTable[frame - 1].FrSelectShown)
+	   VisuSel (frame, True);
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    ResetSelect bascule et annule la mise en evidence de la         | */
+/* |            selection dans la fenetre.                              | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                ResetSelect (int frame)
+#else  /* __STDC__ */
+void                ResetSelect (frame)
+int                 frame;
+
+#endif /* __STDC__ */
+{
+   ViewFrame            *pFe1;
+
+   if (frame > 0)
+     {
+	pFe1 = &FntrTable[frame - 1];
+	/* On eteint la selection ssi elle est allumee */
+	if (pFe1->FrSelectShown)
+	   VisuSel (frame, False);
+	else
+	   MajPavSelect (frame, pFe1->FrAbstractBox, False);
+	pFe1->FrSelectOneBox = False;
+	pFe1->FrSelectionBegin.VsBox = NULL;
+	pFe1->FrSelectionEnd.VsBox = NULL;
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    RazSelect annule et bascule toutes les selections courantes     | */
+/* |            visualisees.                                            | */
+/* ---------------------------------------------------------------------- */
+void                RazSelect ()
+{
+   int                 i;
+
+   /* On annule et on bascule dans chaque frame la selection courante */
+   for (i = 1; i <= MAX_FRAME; i++)
+      if (FntrTable[i - 1].FrAbstractBox != NULL)
+	 ResetSelect (i);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Detruit le buffer donne en parametre, met a jour les marques de selction  | */
+/* |    et rend le pointeur sur le buffer precedent.                    | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+PtrTextBuffer      DestBuff (PtrTextBuffer adbuff, int frame)
+#else  /* __STDC__ */
+PtrTextBuffer      DestBuff (adbuff, frame)
+PtrTextBuffer      adbuff;
+int                 frame;
+
+#endif /* __STDC__ */
+{
+   PtrTextBuffer      nbuff;
+   PtrTextBuffer      pbuff;
+   int                 longueur;
+   ViewFrame            *pFe1;
+   ViewSelection            *pMa1;
+   ViewSelection            *pMa2;
+
+   nbuff = adbuff->BuNext;
+   pbuff = adbuff->BuPrevious;
+   if (pbuff != NULL)
+     {
+	pbuff->BuNext = nbuff;
+	longueur = pbuff->BuLength;
+     }
+   if (nbuff != NULL)
+      nbuff->BuPrevious = pbuff;
+
+   /* Mise a jour des marques de selection courante */
+   pFe1 = &FntrTable[frame - 1];
+   pMa1 = &pFe1->FrSelectionBegin;
+   if (pMa1->VsBuffer == adbuff)
+     {
+	if (pFe1->FrSelectionEnd.VsBuffer == pMa1->VsBuffer)
+	  {
+	     pMa2 = &pFe1->FrSelectionEnd;
+	     if (pbuff != NULL)
+	       {
+		  /* On deplace la selection dans les buffers */
+		  pMa2->VsIndBuf += longueur;
+		  pMa2->VsBuffer = pbuff;
+	       }
+	     else
+	       {
+		  pMa2->VsIndBuf = 1;
+		  pMa2->VsBuffer = nbuff;
+	       }
+	  }
+	pMa1->VsBuffer = pbuff;
+
+	if (pbuff != NULL)
+	  {
+	     /* On deplace la selection dans les buffers */
+	     pMa1->VsIndBuf += longueur;
+	     pMa1->VsBuffer = pbuff;
+	  }
+	else
+	  {
+	     pMa1->VsIndBuf = 1;
+	     pMa1->VsBuffer = nbuff;
+	  }
+     }
+
+   FreeBufTexte (adbuff);
+   return pbuff;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    MajMrq met a jour les marques de selection de la fenetre apres  | */
+/* |            insertion ou destruction de caracteres.                 | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                MajMrq (int frame, int dx, int dblanc, int dcar)
+#else  /* __STDC__ */
+void                MajMrq (frame, dx, dblanc, dcar)
+int                 frame;
+int                 dx;
+int                 dblanc;
+int                 dcar;
+
+#endif /* __STDC__ */
+{
+   ViewFrame            *pFe1;
+   ViewSelection            *pMa1;
+
+   pFe1 = &FntrTable[frame - 1];
+   pMa1 = &pFe1->FrSelectionBegin;
+   pMa1->VsXPos += dx;
+   pMa1->VsIndBox += dcar;
+   pMa1->VsNSpaces += dblanc;
+   pMa1 = &pFe1->FrSelectionEnd;
+   if (pMa1->VsBox == pFe1->FrSelectionBegin.VsBox)
+     {
+	pMa1->VsXPos += dx;
+	pMa1->VsIndBox += dcar;
+	pMa1->VsNSpaces += dblanc;
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    ReevalMrq met a jour la marque de selection connaissant la boite| */
+/* |            entiere (VsBox), le buffer (VsBuffer) et l'index du       | */
+/* |            caractere (VsIndBuf) marque'.                              | */
+/* |            Deduit l'index caractere (VsIndBox), le nombre de blancs   | */
+/* |            le precedant (VsNSpaces), la position dans la boite (VsXPos) | */
+/* |            et la ligne contenant la boite (VsLine).               | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                ReevalMrq (ViewSelection * marque)
+#else  /* __STDC__ */
+void                ReevalMrq (marque)
+ViewSelection            *marque;
+
+#endif /* __STDC__ */
+{
+   PtrTextBuffer      adbuff;
+   PtrTextBuffer      ibuff;
+   PtrBox            ibox;
+   int                 deb, x;
+   int                 carbl;
+   int                 max, i;
+   int                 saut;
+   boolean             fin;
+
+
+   if (marque->VsBox->BxAbstractBox->AbLeafType == LtText)
+     {
+	/* On note l'index et le buffer du caractere precedant la marque */
+	ibuff = marque->VsBuffer;
+	ibox = marque->VsBox;
+	if (marque->VsIndBuf == 1 && ibuff != ibox->BxBuffer)
+	  {
+	     if (ibuff->BuPrevious == NULL)
+		ibuff = ibox->BxBuffer;
+	     else
+		ibuff = ibuff->BuPrevious;	/* En debut de buffer */
+	     i = ibuff->BuLength;
+	  }
+	else
+	   i = marque->VsIndBuf - 1;	/* En fin ou en cours de buffer */
+	fin = False;
+
+	/* Est-ce une boite coupee ? */
+	if (ibox->BxType == BoSplit)
+	   ibox = ibox->BxNexChild;
+
+	/* Recherche l'index du caractere et la boite de coupure */
+	adbuff = ibox->BxBuffer;
+	deb = 1 - ibox->BxFirstChar;
+	max = ibox->BxNChars;
+	/* Calcule le saut entre cette boite et la suivante pour */
+	/* determiner si on peut selectionner en fin de boite */
+	if (ibox->BxNexChild == NULL)
+	   saut = 0;
+	else
+	   saut = ibox->BxNexChild->BxIndChar - ibox->BxIndChar - ibox->BxNChars;
+
+	/* Boucle tant que le caractere designe se trouve dans */
+	/* le buffer suivant ou dans la boite suivante */
+	while (!fin && (adbuff != ibuff || max - deb <= i - saut))
+	   if (max - deb <= i - saut)
+	     {
+		/* Box de coupure Suivante */
+		/* Cas particulier des blancs supprimes en fin de boite */
+		/* Est-ce qu'il y a une boite apres ? */
+		if (ibox->BxNexChild == NULL)
+		   fin = True;
+		/* Il existe une boite apres mais c'est une boite fantome */
+		else if (ibox->BxNexChild->BxNChars == 0 && DesLigne (ibox->BxNexChild) == NULL)
+		   fin = True;
+		else
+		   fin = max - deb + saut > i && adbuff == ibuff;
+
+		/* Est-ce que la selection est en fin de boite ? */
+		if (fin)
+		  {
+		     saut = i - max + deb;
+		     /* Position dans les blancs de fin de ligne */
+		     marque->VsIndBox = ibox->BxNChars + saut;
+		     marque->VsXPos = ibox->BxWidth;
+		     marque->VsNSpaces = ibox->BxNSpaces + saut;
+		  }
+		/* Sinon on passe a la boite suivante */
+		else
+		  {
+		     ibox = ibox->BxNexChild;
+		     deb = 1 - ibox->BxFirstChar;
+		     max = ibox->BxNChars;
+		     adbuff = ibox->BxBuffer;
+		     /* Calcule le saut entre cette boite et la suivante pour */
+		     /* determiner si on peut selectionner en fin de boite */
+		     if (ibox->BxNexChild == NULL)
+			saut = 0;
+		     else
+			saut = ibox->BxNexChild->BxIndChar - ibox->BxIndChar - ibox->BxNChars;
+		     /* Cas particulier du premier caractere d'une boite coupee */
+		     if (ibuff == adbuff->BuPrevious)
+		       {
+			  marque->VsIndBox = 0;
+			  marque->VsXPos = 0;
+			  marque->VsNSpaces = 0;
+			  fin = True;
+		       }
+		  }
+	     }
+	   else
+	     {
+		deb += adbuff->BuLength;
+		adbuff = adbuff->BuNext;
+	     }
+
+	/* On a trouve la boite de coupure */
+	if (!fin)
+	  {
+	     marque->VsIndBox = deb + i;
+	     /* Reevaluation du decalage dans la boite */
+	     x = ibox->BxSpaceWidth;	/* 0 si on prend la largeur reelle du blanc */
+	     carbl = ibox->BxFirstChar;	/* Index du premier caractere a traiter */
+	     DimTexte (ibox->BxBuffer, marque->VsIndBox, ibox->BxFont, &x, &carbl);
+	     marque->VsXPos = x;
+	     marque->VsNSpaces = carbl;
+	     /* On ajoute eventuellement les pixels repartis */
+	     if (ibox->BxSpaceWidth != 0)
+		if (marque->VsNSpaces < ibox->BxNPixels)
+		   marque->VsXPos += marque->VsNSpaces;
+		else
+		   marque->VsXPos += ibox->BxNPixels;
+	  }
+	marque->VsBox = ibox;
+     }
+   marque->VsLine = DesLigne (marque->VsBox);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    IndBuffer parcours les buffers de la boite de texte pour trouver| */
+/* |            celui qui contient le caractere d'indice global index   | */
+/* |            ainsi que son indice dans ce buffer.                    | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static void         IndBuffer (PtrTextBuffer * ibuff, int *index)
+
+#else  /* __STDC__ */
+static void         IndBuffer (ibuff, index)
+PtrTextBuffer     *ibuff;
+int                *index;
+
+#endif /* __STDC__ */
+
+{
+   boolean             encore;
+   PtrTextBuffer      pBu1;
+
+   encore = *ibuff != NULL;
+   while (encore)
+     {
+	pBu1 = *ibuff;
+	/* Est-ce le bon buffer ? */
+	if ((*ibuff)->BuLength < *index)
+	   /* Non : Il faut passer au buffer suivant */
+	   if (pBu1->BuNext == NULL)
+	     {
+		/* On arrive en fin de liste de buffers sans trouver le caractere */
+		*index = pBu1->BuLength + 1;
+		encore = False;
+	     }
+	   else
+	      /* On passe au buffer suivant */
+	     {
+		*index -= pBu1->BuLength;
+		*ibuff = pBu1->BuNext;
+	     }
+	else
+	   encore = False;
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    PoseSelect traite la selection courante sur la portion de       | */
+/* |            document visualisee dans une frame du Mediateur. Le     | */
+/* |            pave Pav correspond soit au debut de la selection       | */
+/* |            (debut est Vrai), soit la fin de la selection (fin est  | */
+/* |            vrai), soit les deux. Le parametre c1 donne l'indice    | */
+/* |            du premier caractere selectionne ou 0 si tout le pave   | */
+/* |            est selectionne.                                        | */
+/* |            Le parametre cN donne l'indice du caractere qui suit le | */
+/* |            dernier selectionne'.                                   | */
+/* |            Le parametre Unique indique que la selection reelle     | */
+/* |            donc visualisee porte sur un seul et unique pave.       | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                PoseSelect (int frame, PtrAbstractBox Pav, int c1, int cN, boolean Debut, boolean Fin, boolean Unique)
+#else  /* __STDC__ */
+void                PoseSelect (frame, Pav, c1, cN, Debut, Fin, Unique)
+int                 frame;
+PtrAbstractBox             Pav;
+int                 c1;
+int                 cN;
+boolean             Debut;
+boolean             Fin;
+boolean             Unique;
+
+#endif /* __STDC__ */
+{
+   PtrLine            adligne;
+   PtrTextBuffer      adbuff;
+   int                 ind, icar;
+   PtrBox            ibox;
+   ViewFrame            *pFe1;
+   ViewSelection            *pMa1;
+
+   /* Verifie s'il faut reformater le dernier paragraphe edite */
+   if (ThotLocalActions[T_update_paragraph] != NULL)
+      (*ThotLocalActions[T_update_paragraph]) (Pav, frame);
+
+   if (Pav != NULL && frame > 0)
+     {
+	pFe1 = &FntrTable[frame - 1];
+	if (Pav->AbBox != NULL)
+	  {
+	     /* On eteint la selection */
+	     ibox = Pav->AbBox;
+	     adligne = DesLigne (ibox);
+
+	     /* On verifie la coherence des indices de caracteres */
+	     if (Pav->AbLeafType == LtText)
+		/* C'est une feuille de texte */
+	       {
+		  if (c1 == 0 && cN != 0)
+		     c1 = 1;
+		  else if (c1 != 0 && cN == 0)
+		     cN = Pav->AbVolume;
+		  else if (c1 == 0 && Pav->AbVolume != 0)
+		    {
+		       c1 = 1;	/* On selection tout le texte du pave */
+		       cN = Pav->AbVolume;
+		    }
+	       }
+	     else if (Pav->AbLeafType != LtPlyLine && Pav->AbLeafType != LtPicture)
+		c1 = 0;
+
+	     /* On memorise si la selection relle porte sur un seul pave ou non */
+	     pFe1->FrSelectOneBox = Unique;
+	     /* et si elle indique seulement une position */
+	     pFe1->FrSelectOnePosition = SelPosition;
+
+	     /* La selection porte sur le pave complet ou un point de controle */
+	     /* de pave polyline */
+	     if (c1 == 0 || Pav->AbVolume == 0 || Pav->AbLeafType == LtPlyLine || Pav->AbLeafType == LtPicture)
+	       {
+		  /* Est-ce une boite de texte ? */
+		  if (Pav->AbLeafType == LtText)
+		    {
+		       ind = 1;
+		       adbuff = Pav->AbText;
+		    }
+		  else
+		    {
+		       ind = 0;
+		       adbuff = NULL;
+		    }
+
+		  /* On memorise les marques de selection */
+		  if (Debut)
+		    {
+		       pMa1 = &pFe1->FrSelectionBegin;
+		       pMa1->VsBox = ibox;
+		       if (Fin && Pav->AbLeafType != LtPlyLine && Pav->AbLeafType != LtPicture)
+			  pMa1->VsIndBox = 0;	/* tout selectionne */
+		       else
+			  pMa1->VsIndBox = c1;
+		       pMa1->VsIndBuf = ind;
+		       pMa1->VsBuffer = adbuff;
+		       pMa1->VsLine = adligne;
+		       if (Pav->AbLeafType == LtPicture && c1 > 0)
+			  pMa1->VsXPos = ibox->BxWidth;
+		       else
+			  pMa1->VsXPos = 0;
+		       pMa1->VsNSpaces = 0;
+		    }
+		  if (Fin)
+		    {
+		       pMa1 = &pFe1->FrSelectionEnd;
+		       pMa1->VsBox = ibox;
+		       pMa1->VsIndBox = 0;
+		       pMa1->VsIndBuf = ind;
+		       pMa1->VsBuffer = adbuff;
+		       pMa1->VsLine = adligne;
+		       if (Pav->AbLeafType == LtPicture && c1 > 0)
+			  pMa1->VsXPos = ibox->BxWidth;
+		       else
+			  pMa1->VsXPos = 0;
+		       pMa1->VsNSpaces = 0;
+		    }
+
+	       }
+	     /* La selection porte sur une sous-chaine */
+	     else
+	       {
+		  /* On recherche le buffer et l'index dans ce buffer */
+		  if (Debut)
+		     ind = c1;
+		  else
+		     ind = cN;
+		  adbuff = Pav->AbText;
+		  if (ind > Pav->AbVolume)
+		    {
+		       /* En fin de boite */
+		       icar = Pav->AbVolume;
+		       IndBuffer (&adbuff, &ind);	/* On recherche le buffer et l'indice */
+		    }
+		  else
+		    {
+		       /* Au milieu de la boite */
+		       icar = ind - 1;
+		       IndBuffer (&adbuff, &ind);	/* On recherche le buffer et l'indice */
+		    }
+
+		  /* On met a jour le debut de selection */
+		  if (Debut)
+		    {
+		       pMa1 = &pFe1->FrSelectionBegin;
+		       pMa1->VsBox = ibox;
+		       pMa1->VsIndBox = icar;
+		       pMa1->VsIndBuf = ind;
+		       pMa1->VsBuffer = adbuff;
+		       ReevalMrq (&pFe1->FrSelectionBegin);
+		    }
+		  /* On met a jour la fin de selection */
+		  if (Fin)
+		    {
+		       pMa1 = &pFe1->FrSelectionEnd;
+		       /* Debut et Fin sur le meme caractere */
+		       if (Debut && c1 >= cN)
+			 {
+			    pMa1->VsBox = pFe1->FrSelectionBegin.VsBox;
+			    pMa1->VsIndBox = pFe1->FrSelectionBegin.VsIndBox;
+			    pMa1->VsLine = pFe1->FrSelectionBegin.VsLine;
+			    pMa1->VsBuffer = pFe1->FrSelectionBegin.VsBuffer;
+			    pMa1->VsIndBuf = pFe1->FrSelectionBegin.VsIndBuf;
+			    pMa1->VsXPos = pFe1->FrSelectionBegin.VsXPos;
+			    pMa1->VsNSpaces = pFe1->FrSelectionBegin.VsNSpaces;
+			 }
+		       else
+			 {
+			    /* Debut et Fin sur deux caracteres differents */
+			    if (Debut)
+			      {
+				 adbuff = Pav->AbText;
+				 ind = cN;
+				 if (ind > Pav->AbVolume)
+				   {
+				      /* En fin de boite */
+				      icar = Pav->AbVolume;
+				      IndBuffer (&adbuff, &ind);	/* On recherche le buffer et l'indice */
+				   }
+				 else
+				   {
+				      /* Au milieu de la boite */
+				      icar = ind - 1;
+				      IndBuffer (&adbuff, &ind);	/* On recherche le buffer et l'indice */
+				   }
+			      }
+			    pMa1->VsBox = ibox;
+			    pMa1->VsIndBox = icar;
+			    pMa1->VsIndBuf = ind;
+			    pMa1->VsBuffer = adbuff;
+			    ReevalMrq (&pFe1->FrSelectionEnd);
+			 }
+
+		       /* On recherche la position limite du caractere */
+		       ibox = pMa1->VsBox;
+		       if (ibox->BxNChars == 0 && ibox->BxType == BoComplete)
+			  pMa1->VsXPos += ibox->BxWidth;
+		       else if (pMa1->VsIndBox == ibox->BxNChars)
+			  pMa1->VsXPos += 2;
+		       else
+			 {
+			    icar = (int) (pMa1->VsBuffer->BuContent[pMa1->VsIndBuf - 1]);
+			    if (icar == BLANC && ibox->BxSpaceWidth != 0)
+			       pMa1->VsXPos += ibox->BxSpaceWidth;
+			    else
+			       pMa1->VsXPos += CarWidth (icar, ibox->BxFont);
+			 }
+		    }
+	       }
+	  }
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    PoseMrq repe`re le pave' et e'ventuellement le caracte`re       | */
+/* |    se'lectionne'. La valeur de bouton, indique s'il s'agit         | */
+/* |    d'une marque initiale ou d'une extension de se'lection :        | */
+/* |    - 0 s'il s'agit d'une extension de se'lection.                  | */
+/* |    - 1 s'il s'agit d'un drag.                                      | */
+/* |    - 2 s'il s'agit d'une marque initiale.                          | */
+/* |    - 3 s'il s'agit d'un double clic.                               | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                PoseMrq (int frame, int x, int y, int bouton)
+#else  /* __STDC__ */
+void                PoseMrq (frame, x, y, bouton)
+int                 frame;
+int                 x;
+int                 y;
+int                 bouton;
+
+#endif /* __STDC__ */
+{
+   int                 indbuff;
+   PtrBox            ibox;
+
+#ifdef IV
+   PtrBox            testbox;
+
+#endif
+   PtrTextBuffer      adbuff;
+   PtrAbstractBox             paved;
+   int                 nbcar;
+   int                 nbbl;
+   ViewFrame            *pFe1;
+
+   if (frame >= 1)
+     {
+	/* On recherche si une boite terminale est designee */
+	pFe1 = &FntrTable[frame - 1];
+	x += pFe1->FrXOrg;
+	y += pFe1->FrYOrg;
+	paved = pFe1->FrAbstractBox;
+	nbcar = 0;
+	/* On recupere la boite selectionnee */
+#ifdef IV
+	ibox = DesBoiteTerm (frame, x, y);
+	/* recupere eventuellement le point controle */
+	if (ibox != NULL && ibox->BxAbstractBox != NULL
+	    && ibox->BxAbstractBox->AbLeafType == LtPlyLine)
+	   testbox = DansLaBoite (ibox->BxAbstractBox, x - 2, x, y, &nbcar);
+#else
+	if (ThotLocalActions[T_desboite] != NULL)
+	   (*ThotLocalActions[T_desboite]) (&ibox, paved, frame, x, y, &nbcar);
+#endif
+	/* S'il s'agit d'une extension de la selection */
+	/* il faut eviter de selectionner la boite englobante */
+	if (bouton == 0 || bouton == 1)
+	  {
+	     if (Parent (ibox, pFe1->FrSelectionBegin.VsBox))
+		ibox = DesBoiteTerm (frame, x, y);
+	  }
+	if (ibox != NULL)
+	  {
+	     paved = ibox->BxAbstractBox;
+	     if (paved->AbLeafType == LtText &&
+		 (!paved->AbPresentationBox || paved->AbCanBeModified))
+	       {
+		  x -= ibox->BxXOrg;
+		  DesCaractere (ibox, &adbuff, &x, &indbuff, &nbcar, &nbbl);
+		  nbcar = ibox->BxIndChar + nbcar + 1;
+	       }
+	  }
+	else
+	   paved = NULL;
+
+	EndInsert ();
+	if (paved != NULL)
+	   /* Initialisation de la selection */
+	   if (bouton == 3)
+	      SelectCour (frame, paved, nbcar, False, True, True, False);
+	   else if (bouton == 2)
+	      SelectCour (frame, paved, nbcar, False, True, False, False);
+	/* Extension de la selection */
+	   else if (bouton == 0)
+	      SelectCour (frame, paved, nbcar, True, True, False, False);
+	   else if (bouton == 1)
+	      SelectCour (frame, paved, nbcar, True, True, False, True);
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    PavPosFen rend la position en Y d'un pave par rapport a la      | */
+/* |            frame. Si axe = 0, position du haut du pave, sinon si | */
+/* |            axe = 1 du milieu sinon si axe = 2 du bas.              | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+int                 PavPosFen (PtrAbstractBox pav, int frame, int axe)
+#else  /* __STDC__ */
+int                 PavPosFen (pav, frame, axe)
+PtrAbstractBox             pav;
+int                 frame;
+int                 axe;
+
+#endif /* __STDC__ */
+{
+   int                 delta;
+   ViewFrame            *pFe1;
+   PtrBox            pBo1;
+
+   delta = -100000;
+   if (pav != NULL)
+      if (pav->AbBox != NULL)
+	{
+	   pFe1 = &FntrTable[frame - 1];
+	   pBo1 = pav->AbBox;
+	   delta = pBo1->BxYOrg - pFe1->FrYOrg;
+	   if (axe == 1)
+	      delta += (pBo1->BxHeight + 1) / 2;
+	   else if (axe == 2)
+	      delta += pBo1->BxHeight;
+	}
+   return delta;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    PaveAffiche rend la valeur vrai si le pave est affiche' dans la | */
+/* |            frame.                                          | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+boolean             PaveAffiche (PtrAbstractBox pav, int frame)
+#else  /* __STDC__ */
+boolean             PaveAffiche (pav, frame)
+PtrAbstractBox             pav;
+int                 frame;
+
+#endif /* __STDC__ */
+{
+   int                 val1, val2;
+
+   if (pav == NULL)
+      return False;
+   else
+      while (pav->AbBox == NULL)
+	 /* On remonte au pave englobant cree */
+	 if (pav->AbEnclosing == NULL)
+	    return False;
+	 else
+	    pav = pav->AbEnclosing;
+
+   /* On regarde si le pave est affiche dans la fenetre */
+   DimFenetre (frame, &val1, &val2);
+   val1 = FntrTable[frame - 1].FrYOrg;
+   val2 += val1;
+   if (pav->AbBox->BxYOrg + pav->AbBox->BxHeight < val1
+       || pav->AbBox->BxYOrg > val2)
+      return False;
+   else
+      return True;
+}
+/* End Of Module sel */

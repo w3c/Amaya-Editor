@@ -1,0 +1,69 @@
+	{ This grammar defines the language A of Thot
+	  The notation used here is defined in file META.LAN
+
+	   ' '  : keyword
+	   [ ]  : optional part
+	   < >  : optional and repeatable part
+	   /    : choice
+
+	   V. Quint	May 1989      }
+
+AppliModel = 		'APPLICATION' ElemIdent ';'
+			['USES' SchemaList]
+	   		['DEFAULT' EvtActionList]
+	   		['ELEMENTS' ElemActionsList ]
+	   		['ATTRIBUTES' AttrActionList ]
+	   		['MENUS' Menus]
+	   		'END' .
+
+SchemaList =		DocumentType < ',' DocumentType > ';' .
+EvtActionList =	 	EvtAction /
+			'BEGIN' EvtAction < EvtAction > 'END' ';' .
+EvtAction = 		EvtIdent [ '.' PostPre ] '-' '>' ActionIdent ';' .
+PostPre =               'Post' / 'Pre' .
+
+ElemActionsList =	ElemActions < ElemActions > .
+
+ElemActions = 		[ FirstSec ] ElemIdent ':' EvtActionList .
+
+FirstSec =		'First' / 'Second' .
+
+AttrActionList =        AttrActions < AttrActions > .
+
+AttrActions = 		AttrIdent ':' EvtActionList .
+
+Menus =			[ 'Main' 'Window' ':' MenuList ]
+			[ 'Document' 'Windows' ':' MenuList ]
+			< DocumentType 'Windows' ':' MenuList > .
+
+MenuList =		'BEGIN' NewMenu < NewMenu > 'END' ';' /
+			NewMenu .
+
+NewMenu =		[ 'view' ':' ViewNum ] MenuIdent
+			[ '.' SubmenuIdent] [ ItemCascade ] ';' .
+
+ItemCascade =		'Separator' / 'Button' ':' ItemAction /
+			'Toggle' ':' ItemAction /
+			'Dynamic' ':' ItemIdent .
+
+ItemAction = 		ItemIdent '-' '>' ActionIdent .
+
+DocumentType =		NAME .
+
+MenuIdent = 		NAME .
+
+SubmenuIdent = 		NAME .
+
+ItemIdent = 		NAME .
+
+ActionIdent =		NAME .
+
+ElemIdent = 		NAME .
+
+EvtIdent = 		NAME .
+
+AttrIdent = 		NAME .
+
+ViewNum =		NUMBER .
+
+END

@@ -1,0 +1,139 @@
+APPLICATION EDITOR;
+
+USES
+	HTML, Lookup, NoStructSelect;
+DEFAULT
+   Init.Post -> InitAmaya;
+
+MENUS
+   HTML Windows:
+	BEGIN
+	view:1 File button:BNew -> New;
+	view:1 File button:BOpenDoc -> OpenDoc;
+	view:1 File button:BOpenInNewWindow -> OpenDocInNewWindow;
+	view:1 File button:BReload -> Reload;
+	view:1 File button:BSave -> SaveDocument;
+	view:1 File button:BSaveAs -> SaveDocumentAs;
+	view:1 File Separator;
+	view:1 File button:BPrint -> TtcPrint;
+	view:1 File button:BPrintSetUp -> TtcPrintSetup;
+	view:1 File Separator;
+	view:1 File button:BClose -> TtcCloseDocument;
+	view:1 File button:BExit -> AmayaClose;
+
+	view:2 File2 button:BCloseView -> ShowStructure;
+	view:4 File3 button:BCloseView -> ShowAlternate;
+
+	Edit_ button:BCut -> TtcCutSelection;
+	Edit_ button:BCopy -> TtcCopySelection;
+	Edit_ button:BPaste -> TtcPaste;
+	Edit_ button:BClear -> TtcDeleteSelection;
+	Edit_ Separator;
+	Edit_ button:BFind -> TtcSearchText;
+	Edit_.SpellCheck button:BEnglis -> EnSpellCheck;
+	Edit_.SpellCheck button:BFrench -> FrSpellCheck;
+
+	view:2 StructTypes button:BIsIndex -> CreateIsIndex;
+	view:2 StructTypes button:BBase -> CreateBase;
+	view:2 StructTypes button:BMeta -> CreateMeta;
+	view:2 StructTypes button:BLink -> CreateLinkInHead;
+	view:2 StructTypes button:BComment -> CreateComment;
+	
+	Types button:BParagraph -> CreateParagraph;
+	Types button:BImage -> CreateImage;
+
+	Types.Heading button:BH1 -> CreateHeading1;
+	Types.Heading button:BH2 -> CreateHeading2;
+	Types.Heading button:BH3 -> CreateHeading3;
+	Types.Heading button:BH4 -> CreateHeading4;
+	Types.Heading button:BH5 -> CreateHeading5;
+	Types.Heading button:BH6 -> CreateHeading6;
+
+	Types.Lists button:BBulletedList -> CreateList;
+	Types.Lists button:BNumberedList -> CreateNumberedList;
+	Types.Lists button:BMenu -> ThotCreateMenu;
+	Types.Lists button:BDirectory -> ThotCreateDirectory;
+	Types.Lists button:BDefinitionList -> CreateDefinitionList;
+	Types.Lists Separator;
+	Types.Lists button:BTerm -> CreateDefinitionTerm;
+	Types.Lists button:BDefinition -> CreateDefinitionDef;
+
+	Types button:BRule -> CreateHorizontalRule;
+	Types button:BBlockQuote -> CreateBlockQuote;
+	Types button:BPreformatted -> CreatePreformatted;
+	Types button:BAddress -> CreateAddress;
+
+	Types.Table button:BTable -> CreateTable;
+	Types.Table button:BCaption -> CreateCaption;
+	Types.Table button:BTHead -> CreateTHead;
+	Types.Table button:BTBody -> CreateTBody;
+	Types.Table button:BTFoot -> CreateTFoot;
+	Types.Table button:BRow -> CreateRow;
+	Types.Table button:BDataCell -> CreateDataCell;
+	Types.Table button:BHeadingCell -> CreateHeadingCell;
+
+	Types.Form button:BToggle -> CreateToggle;
+	Types.Form button:BRadio -> CreateRadio;
+	Types.Form button:BOption -> CreateOption;
+	Types.Form button:BTextInput -> CreateTextInput;
+	Types.Form button:BTextArea -> CreateTextArea;
+	Types.Form button:BCommandLine -> CreateCommandLine;
+
+	Types.AreaMap button:BRectangle -> CreateAreaRect;
+	Types.AreaMap button:BCircle -> CreateAreaCircle;
+	Types.AreaMap button:BPoly -> CreateAreaPoly;
+
+	Types button:BDivision -> CreateDivision;
+
+	Types.Applet button:BApplet -> CreateApplet;
+	Types.Applet button:BParameter -> CreateParameter;
+
+	Types Separator;
+	Types button:BTransform -> TransformType;
+
+	view:1 Links button:BCreateLink -> CreateLink;
+	view:1 Links button:BCreateTarget -> CreateTarget;
+	view:1 Links button:BChangeLink -> ChangeLink;
+	view:1 Links button:BDeleteAnchor -> DeleteAnchor;
+
+	view:1 Views toggle:TShowButtonbar -> TtcSwitchButtonBar;
+	view:1 Views toggle:TShowTextZone -> TtcSwitchCommands;
+	view:1 Views toggle:TShowStructure -> ShowStructure;
+	view:1 Views toggle:TShowAlternate -> ShowAlternate;
+	view:1 Views toggle:TShowMapAreas -> ShowMapAreas;
+
+        view:1 Style button:BCharacterStyle -> TtcChangeCharacters;
+        view:1 Style button:BColors -> TtcChangeColors;
+        view:1 Style button:BFormat -> TtcChangeFormat;
+	view:1 Style Separator;
+
+	view:1 Style button:BCreateClass -> ChangeClass;
+	view:1 Style button:BApplyClass -> ApplyClass;
+	view:1 Style Separator;
+	view:1 Style button:BCSS -> InitCSSDialog;
+        view:1 Style Separator;
+        view:1 Style.Phrase toggle:TEmphasis -> CreateElemEmphasis;
+        view:1 Style.Phrase toggle:TStrong -> CreateElemStrong;
+        view:1 Style.Phrase toggle:TCite -> CreateElemCite;
+        view:1 Style.Phrase toggle:TDefinition -> CreateElemDefinition;
+        view:1 Style.Phrase toggle:TCode -> CreateElemCode;
+        view:1 Style.Phrase toggle:TVariable -> CreateElemVariable;
+        view:1 Style.Phrase toggle:TSample -> CreateElemSample;
+        view:1 Style.Phrase toggle:TKeyboard -> CreateElemKeyboard;
+ 
+        view:1 Style.Font toggle:TItalic -> CreateElemItalic;
+        view:1 Style.Font toggle:TBold -> CreateElemBold;
+        view:1 Style.Font toggle:TTeletype -> CreateElemTeletype;
+        view:1 Style.Font toggle:TStrikeOut -> CreateElemStrikeOut;
+        view:1 Style.Font toggle:TBig -> CreateElemBig;
+        view:1 Style.Font toggle:TSmall -> CreateElemSmall;
+        view:1 Style.Font button:BSub -> CreateSub;
+        view:1 Style.Font button:BSup -> CreateSup;
+	view:1 Style.Font button:BFont -> CreateElemFont;
+
+	Attributes_;
+
+	view:1 Help_ button:BInformation -> HelpAmaya;
+
+	END;
+END

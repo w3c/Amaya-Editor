@@ -1,0 +1,4261 @@
+
+/* -- Copyright (c) 1996 Inria -- All rights reserved -- */
+
+/*
+   Ce module effectue les manipulations des arbres abstraits
+   des documents traites par l'editeur Thot.
+ */
+
+#include "libmsg.h"
+#include "thot_sys.h"
+#include "message.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "storage.h"
+#include "res.h"		/* PCS resdyn */
+
+#define EXPORT extern
+#include "select.var"
+#include "edit.var"
+#include "res.var"		/* PCS resdyn */
+
+#include "memory.f"
+#include "schemas.f"
+#include "imabs.f"
+#include "draw.f"
+#include "textelem.f"
+#include "refelem.f"
+#include "storage.f"
+#include "structure.f"
+#include "ouvre.f"
+#include "arbabs.f"
+#include "except.f"
+#include "imagepres.f"
+#include "refext.f"
+#include "res.f"		/* PCS resdyn */
+
+/* ---------------------------------------------------------------------- */
+/* |    DocuDeElem retourne un pointeur sur le document auquel          | */
+/* |            appartient l'element pEl.                               | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrDocument         DocuDeElem (PtrElement pEl)
+
+#else  /* __STDC__ */
+PtrDocument         DocuDeElem (pEl)
+PtrElement          pEl;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pE;
+   int                 i, j;
+   PtrDocument         pDoc;
+
+   if (pEl == NULL)
+      return NULL;
+
+   pE = pEl;
+   /* remonte a la racine de l'arbre auquel appartient l'element */
+   while (pE->ElParent != NULL)
+      pE = pE->ElParent;
+
+   /* cherche parmi les racines des documents existants
+      et de leurs elements associes et parametres */
+   for (i = 0; i < MAX_DOCUMENTS; i++)
+     {
+	pDoc = TabDocuments[i];
+	if (pDoc != NULL)
+	  {
+	     if (pDoc->DocRootElement == pE)
+		/* c'est la racine de l'arbre principal */
+		return pDoc;
+	     /* cherche parmi les elements associes */
+	     for (j = 0; j < MAX_ASSOC_DOC; j++)
+		if (pDoc->DocAssocRoot[j] == pE)
+		   return pDoc;
+	     /* cherche parmi les parametres */
+	     for (j = 0; j < MAX_PARAM_DOC; j++)
+		if (pDoc->DocParameters[j] == pE)
+		   return pDoc;
+	  }
+     }
+
+   return NULL;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Protege positionne l'indicateur ElIsCopy dans tout le sous-arbre | */
+/* |            de pE.                                                  | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                Protege (PtrElement pEl)
+
+#else  /* __STDC__ */
+void                Protege (pEl)
+PtrElement          pEl;
+
+#endif /* __STDC__ */
+
+{
+   pEl->ElIsCopy = True;
+   if (!pEl->ElTerminal)
+     {
+	pEl = pEl->ElFirstChild;
+	while (pEl != NULL)
+	  {
+	     Protege (pEl);
+	     pEl = pEl->ElNext;
+	  }
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    AutreMarque                                                     | */
+/* |  retournee  un pointeur sur la marque qui fait la paire avec la    | */
+/* |  la marque pointee par pEl.                                        | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrElement          AutreMarque (PtrElement pEl)
+
+#else  /* __STDC__ */
+PtrElement          AutreMarque (pEl)
+PtrElement          pEl;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pOther;
+   PtrSSchema        pSS;
+   int                 typeNum;
+   boolean             found, begin;
+
+   pOther = NULL;
+   if (pEl != NULL)
+      if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsPairedElement)
+	 /* il s'agit bien d'un element de paire */
+	 if (pEl->ElOtherPairedEl != NULL)
+	    /* cet element a deja un pointeur vers l'autre element de la paire */
+	    pOther = pEl->ElOtherPairedEl;
+	 else
+	   {
+	      /* rechercher la marque de meme type et de meme numero */
+	      pSS = pEl->ElSructSchema;
+	      begin = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrFirstOfPair;
+	      if (begin)
+		 /* marque de debut, on cherche la marque de fin */
+		 typeNum = pEl->ElTypeNumber + 1;
+	      else
+		 /* marque de fin, on cherche la marque de debut */
+		 typeNum = pEl->ElTypeNumber - 1;
+	      found = False;
+	      pOther = pEl;
+	      /* boucle de recherche */
+	      while ((pOther != NULL) && (!found))
+		{
+		   if (begin)
+		      /* on cherche en avant */
+		      pOther = AvCherche (pOther, typeNum, pSS);
+		   else
+		      /* on cherche en arriere */
+		      pOther = ArCherche (pOther, typeNum, pSS);
+		   if (pOther != NULL)
+		      /* on a trouve' un element du type cherche' */
+		      /* c'est le bon s'il a le meme identificateur */
+		      found = (pOther->ElPairIdent == pEl->ElPairIdent ||
+				(pEl->ElPairIdent == 0 && pOther->ElOtherPairedEl == NULL));
+		}
+	      if (found)
+		 /* on a trouve'. On etablite le chainage entre les 2 elements */
+		{
+		   pEl->ElOtherPairedEl = pOther;
+		   pOther->ElOtherPairedEl = pEl;
+		   if (pEl->ElPairIdent == 0)
+		      pEl->ElPairIdent = pOther->ElPairIdent;
+		}
+	   }
+   return pOther;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    ElemReadOnly    indique si l'element pointe' par pEl est        | */
+/* |            protege' contre les modifications de l'utilisateur, ou  | */
+/* |            s'il fait partie d'un arbre protege'.                   | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+boolean             ElemReadOnly (PtrElement pEl)
+
+#else  /* __STDC__ */
+boolean             ElemReadOnly (pEl)
+PtrElement          pEl;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pAsc;
+   boolean             ret;
+   boolean             testRO;
+
+   ret = False;
+   testRO = True;
+   pAsc = pEl;
+   while (pAsc != NULL)
+      if (pAsc->ElAccess == AccessHidden ||
+	  (testRO && pAsc->ElAccess == AccessReadOnly))
+	{
+	   ret = True;
+	   pAsc = NULL;
+	}
+      else
+	{
+	   if (pAsc->ElAccess == AccessReadWrite)
+	      testRO = False;
+	   pAsc = pAsc->ElParent;
+	}
+   return ret;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    ElemHidden      indique si l'element pointe' par pEl est cache' | */
+/* |            a` l'utilisateur, ou s'il fait partie d'un arbre cache' | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+boolean             ElemHidden (PtrElement pEl)
+
+#else  /* __STDC__ */
+boolean             ElemHidden (pEl)
+PtrElement          pEl;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pAsc;
+   boolean             ret;
+
+   ret = False;
+   pAsc = pEl;
+   while (pAsc != NULL && !ret)
+      if (pAsc->ElAccess == AccessHidden)
+	 ret = True;
+      else
+	 pAsc = pAsc->ElParent;
+   return ret;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    FwdSearchTypeNameInSubtree					| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static PtrElement   FwdSearchTypeNameInSubtree (PtrElement pEl, boolean test, char *typeName)
+
+#else  /* __STDC__ */
+static PtrElement   FwdSearchTypeNameInSubtree (pEl, test, typeName)
+PtrElement          pEl;
+boolean             test;
+char               *typeName;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pRet, pChild;
+
+   pRet = NULL;
+   if (test)
+      if (strcmp (typeName, pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+	 pRet = pEl;		/* found ! C'est l'element lui-meme */
+   if (pRet == NULL && !pEl->ElTerminal)
+      /* on cherche recursivement parmi les fils de l'element */
+     {
+	pChild = pEl->ElFirstChild;
+	while (pChild != NULL && pRet == NULL)
+	  {
+	     pRet = FwdSearchTypeNameInSubtree (pChild, True, typeName);
+	     pChild = pChild->ElNext;
+	  }
+     }
+   return pRet;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    AvChNomType cherche en avant dans l'arbre, a partir de l'element| */
+/* |    pointe par pEl, un element dont le type a pour nom typeName.    | */
+/* |    La fonction rend un pointeur sur l'element trouve'              | */
+/* |    ou NULL si echec.                                               | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrElement          AvChNomType (PtrElement pEl, char *typeName)
+
+#else  /* __STDC__ */
+PtrElement          AvChNomType (pEl, typeName)
+PtrElement          pEl;
+char               *typeName;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pRet, pCur, pAsc;
+   boolean             stop;
+
+   pRet = NULL;
+   if (pEl != NULL && typeName != NULL)
+     {
+	/* cherche dans le sous-arbre de l'element */
+	pRet = FwdSearchTypeNameInSubtree (pEl, False, typeName);
+	if (pRet == NULL)
+	   /* si echec, cherche dans les sous-arbres des freres suivants */
+	   /* de l'element */
+	  {
+	     pCur = pEl->ElNext;
+	     while (pCur != NULL && pRet == NULL)
+	       {
+		  pRet = FwdSearchTypeNameInSubtree (pCur, True, typeName);
+		  pCur = pCur->ElNext;
+	       }
+	     /* si echec, cherche le premier ascendant avec un frere suivant */
+	     if (pRet == NULL)
+	       {
+		  stop = False;
+		  pAsc = pEl;
+		  do
+		    {
+		       pAsc = pAsc->ElParent;
+		       if (pAsc == NULL)
+			  stop = True;
+		       else if (pAsc->ElNext != NULL)
+			  stop = True;
+		    }
+		  while (!(stop));
+		  if (pAsc != NULL)
+		     /* cherche si cet element est celui cherche */
+		    {
+		       pAsc = pAsc->ElNext;
+		       if (pAsc != NULL)
+			  if (strcmp (typeName, pAsc->ElSructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0)
+			     pRet = pAsc;	/* found */
+			  else
+			     pRet = AvChNomType (pAsc, typeName);
+		    }
+	       }
+	  }
+     }
+   return pRet;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |     BackSearchTypeNameInSubtree					| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static PtrElement   BackSearchTypeNameInSubtree (PtrElement pEl, char *typeName)
+
+#else  /* __STDC__ */
+static PtrElement   BackSearchTypeNameInSubtree (pEl, typeName)
+PtrElement          pEl;
+char               *typeName;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pRet, pChild;
+
+   pRet = NULL;
+   /* Cherche le dernier fils */
+   if (!pEl->ElTerminal)
+     {
+	pChild = pEl->ElFirstChild;
+	if (pChild != NULL)
+	   while (pChild->ElNext != NULL)
+	      pChild = pChild->ElNext;
+	/* on cherche a partir des freres precedents */
+	while (pChild != NULL && pRet == NULL)
+	  {
+	     pRet = BackSearchTypeNameInSubtree (pChild, typeName);
+	     pChild = pChild->ElPrevious;
+	  }
+     }
+   if (pRet == NULL)
+     {
+	if (strcmp (typeName, pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+	   pRet = pEl;		/* found ! C'est l'element lui-meme */
+     }
+   return pRet;
+}
+/* ---------------------------------------------------------------------- */
+/* |    ArChNomType cherche en arriere dans l'arbre, a partir de l'elt  | */
+/* |    pointe par pEl, un element dont le nom de type est typeName.    | */
+/* |    La fonction rend un pointeur sur l'element trouve ou NULL       | */
+/* |    si echec.                                                       | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrElement          ArChNomType (PtrElement pEl, char *typeName)
+
+#else  /* __STDC__ */
+PtrElement          ArChNomType (pEl, typeName)
+PtrElement          pEl;
+char               *typeName;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pRet, pCur;
+
+   pRet = NULL;			/* pRet: futur resultat de la recherche */
+   if (pEl != NULL)
+      /* cherche dans les sous-arbres des freres precedents de l'element */
+     {
+	pCur = pEl->ElPrevious;
+	while (pCur != NULL && pRet == NULL)
+	  {
+	     pRet = BackSearchTypeNameInSubtree (pCur, typeName);
+	     pCur = pCur->ElPrevious;
+	  }
+	/* si echec, cherche si c'est le pere, puis cherche dans les */
+	/* sous-arbres des oncles de l'element */
+	if (pRet == NULL)
+	   if (pEl->ElParent != NULL)
+	     {
+		pEl = pEl->ElParent;
+		if (strcmp (typeName, pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+		   pRet = pEl;	/* found, c'est le pere */
+		else
+		   pRet = ArChNomType (pEl, typeName);
+	     }
+     }
+   return pRet;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    BackSearchVisibleSubtree                                        | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static PtrElement   BackSearchVisibleSubtree (PtrElement pEl, int *view)
+
+#else  /* __STDC__ */
+static PtrElement   BackSearchVisibleSubtree (pEl, view)
+PtrElement          pEl;
+int                *view;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pRet, pChild;
+
+   pRet = NULL;
+   if (pEl->ElAbstractBox[*view - 1] != NULL)
+      pRet = pEl;
+   else
+      /* Cherche le dernier fils */
+   if (!pEl->ElTerminal)
+     {
+	pChild = pEl->ElFirstChild;
+	if (pChild != NULL)
+	   while (pChild->ElNext != NULL)
+	      pChild = pChild->ElNext;
+	/* on cherche a partir des freres precedents */
+	while (pChild != NULL && pRet == NULL)
+	  {
+	     pRet = BackSearchVisibleSubtree (pChild, view);
+	     pChild = pChild->ElPrevious;
+	  }
+
+     }
+   return pRet;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    retourne 'vrai' si l'element pointe' par pEl est l'elt cherche'.| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static boolean      AttrFound (PtrElement pEl, char *textVal, int val, int attrNum, PtrSSchema pSS)
+
+#else  /* __STDC__ */
+static boolean      AttrFound (pEl, textVal, val, attrNum, pSS)
+PtrElement          pEl;
+char               *textVal;
+int      val;
+int     attrNum;
+PtrSSchema       pSS;
+
+#endif /* __STDC__ */
+
+{
+   PtrAttribute         pAttr;
+   boolean             ret;
+
+   ret = False;
+   if (pEl->ElFirstAttr != NULL)	/* l'element a un attribut */
+      if (pSS == NULL && attrNum == 0)
+	 /* on cherche un attribut quelconque */
+	 ret = True;		/* found ! */
+      else
+	 /* parcourt les attributs de l'element */
+	{
+	   pAttr = pEl->ElFirstAttr;
+	   while (pAttr != NULL && !ret)
+	     {
+		if ((pSS == NULL || pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
+		    && pAttr->AeAttrNum == attrNum)
+		   /* c'est l'attribut cherche */
+		   if (val == 0)
+		      /* on cherche une valeur quelconque */
+		      ret = True;	/* found ! */
+		   else
+		      switch (pAttr->AeAttrType)
+			    {
+			       case AtNumAttr:
+			       case AtEnumAttr:
+				  if (pAttr->AeAttrValue == val)
+				     /* valeur cherchee */
+
+				     ret = True;	/* found ! */
+				  break;
+			       case AtTextAttr:
+				  if (ChaineEtTexteEgaux (textVal, pAttr->AeAttrText))
+				     ret = True;
+				  break;
+			       default:
+				  break;
+			    }
+
+		pAttr = pAttr->AeNext;
+	     }
+	}
+   return ret;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    FwdSearchAttrInSubtree                                          | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static PtrElement   FwdSearchAttrInSubtree (PtrElement pEl, boolean test, PtrSSchema pSS, int attrNum, int val, char *textVal)
+
+#else  /* __STDC__ */
+static PtrElement   FwdSearchAttrInSubtree (pEl, test, pSS, attrNum, val, textVal)
+PtrElement          pEl;
+boolean             test;
+PtrSSchema       pSS;
+int     attrNum;
+int      val;
+char               *textVal;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pRet, pChild;
+
+   pRet = NULL;
+   if (test)
+      if (AttrFound (pEl, textVal, val, attrNum, pSS))
+	 pRet = pEl;
+   if (pRet == NULL)
+      if (!pEl->ElTerminal)
+	 /* on cherche parmi les fils de l'element */
+	{
+	   pChild = pEl->ElFirstChild;
+	   while (pChild != NULL && pRet == NULL)
+	     {
+		pRet = FwdSearchAttrInSubtree (pChild, True, pSS, attrNum, val, textVal);
+		pChild = pChild->ElNext;
+	     }
+	}
+   return pRet;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    BackSearchAttrInSubtree                                         | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static PtrElement   BackSearchAttrInSubtree (PtrElement pEl, char *textVal, int val, int attrNum, PtrSSchema pSS)
+
+#else  /* __STDC__ */
+static PtrElement   BackSearchAttrInSubtree (pEl, textVal, val, attrNum, pSS)
+PtrElement          pEl;
+char               *textVal;
+int       val;
+int      attrNum;
+PtrSSchema        pSS;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pRet, pChild;
+   PtrAttribute         pAttr;
+
+   pRet = NULL;
+   if (pEl->ElFirstAttr != NULL)
+      /* l'element a un attribut */
+      if (pSS == NULL && attrNum == 0)
+	 /* on cherche un attribut quelconque */
+	 pRet = pEl;		/* found ! */
+      else
+	 /* parcourt les attributs de l'element */
+	{
+	   pAttr = pEl->ElFirstAttr;
+	   while (pAttr != NULL && pRet == NULL)
+	     {
+		if ((pSS == NULL ||
+		     pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
+		    && pAttr->AeAttrNum == attrNum)
+		   /* c'est l'attribut cherche */
+		   if (val == 0)
+		      /* on cherche une valeur quelconque */
+		      pRet = pEl;	/* found ! */
+		   else
+		      switch (pAttr->AeAttrType)
+			    {
+			       case AtNumAttr:
+			       case AtEnumAttr:
+				  if (pAttr->AeAttrValue == val)
+				     /* valeur cherchee */
+				     pRet = pEl;	/* found ! */
+				  break;
+			       case AtTextAttr:
+				  if (ChaineEtTexteEgaux (textVal, pAttr->AeAttrText))
+				     pRet = pEl;	/* found ! */
+				  break;
+			       default:
+				  break;
+			    }
+
+		pAttr = pAttr->AeNext;
+	     }
+	}
+   if (pRet == NULL)		/* Cherche le dernier fils */
+      if (!pEl->ElTerminal)
+	{
+	   pChild = pEl->ElFirstChild;
+	   if (pChild != NULL)
+	      while (pChild->ElNext != NULL)
+		 pChild = pChild->ElNext;
+	   /* on cherche a partir des freres precedents */
+	   while (pChild != NULL && pRet == NULL)
+	     {
+		pRet = BackSearchAttrInSubtree (pChild, textVal, val, attrNum, pSS);
+		pChild = pChild->ElPrevious;
+	     }
+	}
+   return pRet;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    ElemIsEmptyOrRefOrPair     teste si l'element pointe' par pE    | */
+/* |            est vide (si Kind = 1) ou si c'est un element           | */
+/* |            reference (si Kind = 2) ou si c'est un element de       | */
+/* |            paire (si Kind = 3).                                    | */
+/* |            Retourne Vrai si le test est satisfait.                 | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static boolean      ElemIsEmptyOrRefOrPair (PtrElement pEl, int Kind)
+
+#else  /* __STDC__ */
+static boolean      ElemIsEmptyOrRefOrPair (pEl, Kind)
+PtrElement          pEl;
+int                 Kind;
+
+#endif /* __STDC__ */
+
+{
+   boolean             ret;
+
+   ret = False;
+   switch (Kind)
+	 {
+	    case 1:		/* element vide ? */
+	       if (!pEl->ElTerminal)
+		 {
+		    if (pEl->ElFirstChild == NULL)
+		       ret = True;
+		 }
+	       else
+		  switch (pEl->ElLeafType)
+			{
+			   case LtText:
+			   case LtPicture:
+			      if (pEl->ElTextLength == 0)
+				 ret = True;
+			      break;
+			   case LtPlyLine:
+			      if (pEl->ElNPoints == 0)
+				 ret = True;
+			      break;
+			   case LtSymbol:
+			   case LtGraphics:
+			      if (pEl->ElGraph == '\0')
+				 ret = True;
+			      break;
+			   case LtReference:
+			      if (pEl->ElReference == NULL)
+				 ret = True;
+			      break;
+			   default:
+			      break;
+			}
+	       break;
+	    case 2:		/* element reference ? */
+	       if (pEl->ElTerminal)
+		  if (pEl->ElLeafType == LtReference)
+		     ret = True;
+	       break;
+	    case 3:		/* element de paire ? */
+	       if (pEl->ElTerminal)
+		  if (pEl->ElLeafType == LtPairedElem)
+		     ret = True;
+	       break;
+	 }
+   return ret;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    FwdSearchEmptyInSubtree						| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static PtrElement   FwdSearchEmptyInSubtree (PtrElement pEl, boolean test, int Kind)
+
+#else  /* __STDC__ */
+static PtrElement   FwdSearchEmptyInSubtree (pEl, test, Kind)
+PtrElement          pEl;
+boolean             test;
+int                 Kind;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pRet, pChild;
+
+   pRet = NULL;
+   if (test)
+      if (ElemIsEmptyOrRefOrPair (pEl, Kind))
+	 pRet = pEl;
+   if (pRet == NULL && !pEl->ElTerminal)
+      /* on cherche parmi les fils de l'element */
+     {
+	pChild = pEl->ElFirstChild;
+	while (pChild != NULL && pRet == NULL)
+	  {
+	     pRet = FwdSearchEmptyInSubtree (pChild, True, Kind);
+	     pChild = pChild->ElNext;
+	  }
+     }
+   return pRet;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    AvChercheVideOuRefer    cherche en avant a partir de l'element  | */
+/* |            pEl le premier element qui soit vide (si Kind = 1)     | */
+/* |            ou la premiere CsReference (si Kind = 2)                 | */
+/* |            ou le premier element de paire (si Kind = 3).          | */
+/* |            Retourne un pointeur sur l'element trouve' ou NULL en   | */
+/* |            cas d'echec.                                            | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrElement          AvChercheVideOuRefer (PtrElement pEl, int Kind)
+
+#else  /* __STDC__ */
+PtrElement          AvChercheVideOuRefer (pEl, Kind)
+PtrElement          pEl;
+int                 Kind;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pRet, pCur, pAsc;
+   boolean             stop;
+
+   pRet = NULL;
+   if (pEl != NULL)
+      /* cherche dans le sous-arbre de l'element */
+     {
+	pRet = FwdSearchEmptyInSubtree (pEl, False, Kind);
+	if (pRet == NULL)
+	   /* si echec, cherche dans les sous-arbres des freres suivants */
+	   /* de l'element */
+	  {
+	     pCur = pEl->ElNext;
+	     while (pCur != NULL && pRet == NULL)
+	       {
+		  pRet = FwdSearchEmptyInSubtree (pCur, True, Kind);
+		  pCur = pCur->ElNext;
+	       }
+	     /* si echec, cherche le premier ascendant avec un frere suivant */
+	     if (pRet == NULL)
+	       {
+		  stop = False;
+		  pAsc = pEl;
+		  do
+		    {
+		       pAsc = pAsc->ElParent;
+		       if (pAsc == NULL)
+			  stop = True;
+		       else if (pAsc->ElNext != NULL)
+			  stop = True;
+		    }
+		  while (!(stop));
+		  if (pAsc != NULL)
+		     /* cherche si cet element est celui cherche */
+		    {
+		       pAsc = pAsc->ElNext;
+		       if (pAsc != NULL)
+			 {
+			    if (ElemIsEmptyOrRefOrPair (pAsc, Kind))
+			       pRet = pAsc;		/* found */
+			    if (pRet == NULL)
+			       pRet = AvChercheVideOuRefer (pAsc, Kind);
+			 }
+		    }
+	       }
+	  }
+     }
+   return pRet;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |     BackSearchEmptyInSubtree					| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static PtrElement   BackSearchEmptyInSubtree (PtrElement pEl, int Kind)
+
+#else  /* __STDC__ */
+static PtrElement   BackSearchEmptyInSubtree (pEl, Kind)
+PtrElement          pEl;
+int                 Kind;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pRet, pChild;
+
+   pRet = NULL;
+   /* Cherche le dernier fils */
+   if (!pEl->ElTerminal)
+     {
+	pChild = pEl->ElFirstChild;
+	if (pChild != NULL)
+	   while (pChild->ElNext != NULL)
+	      pChild = pChild->ElNext;
+	/* on cherche a partir des freres precedents */
+	while (pChild != NULL && pRet == NULL)
+	  {
+	     pRet = BackSearchEmptyInSubtree (pChild, Kind);
+	     pChild = pChild->ElPrevious;
+	  }
+     }
+   if (pRet == NULL)
+      if (ElemIsEmptyOrRefOrPair (pEl, Kind))
+	 pRet = pEl;		/* found */
+   return pRet;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    ArChercheVideOuRefer    cherche en arriere a partir de l'element| */
+/* |            pEl le premier element qui soit vide (si Kind = 1)     | */
+/* |            ou la premiere CsReference (si Kind = 2)                 | */
+/* |            ou le prochain element de paire (si Kind = 3).         | */
+/* |            Retourne un pointeur sur l'element trouve' ou NULL en   | */
+/* |            cas d'echec.                                            | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrElement          ArChercheVideOuRefer (PtrElement pEl, boolean Kind)
+
+#else  /* __STDC__ */
+PtrElement          ArChercheVideOuRefer (pEl, Kind)
+PtrElement          pEl;
+boolean             Kind;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pRet, pCur;
+
+   pRet = NULL;			/* pRet: futur resultat de la recherche */
+   if (pEl != NULL)
+      /* cherche dans les sous-arbres des freres precedents de l'element */
+     {
+	pCur = pEl->ElPrevious;
+	while (pCur != NULL && pRet == NULL)
+	  {
+	     pRet = BackSearchEmptyInSubtree (pCur, Kind);
+	     pCur = pCur->ElPrevious;
+	  }
+	/* si echec, cherche si c'est le pere, puis cherche dans les */
+	/* sous-arbres des oncles de l'element */
+	if (pRet == NULL)
+	   if (pEl->ElParent != NULL)
+	     {
+		pEl = pEl->ElParent;
+		if (ElemIsEmptyOrRefOrPair (pEl, Kind))
+		   pRet = pEl;	/* found */
+		else
+		   pRet = ArChercheVideOuRefer (pEl, Kind);
+	     }
+     }
+   return pRet;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Change la langue de toutes les feuilles de texte dans le        | */
+/* |    sous-arbre de l'element pointe' par pEl.                        | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static void         ChangeLanguageLeaves (PtrElement pEl, Language lang)
+
+#else  /* __STDC__ */
+static void         ChangeLanguageLeaves (pEl, lang)
+PtrElement          pEl;
+Language            lang;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pChild;
+
+   if (!pEl->ElTerminal)
+      /* l'element n'est pas une feuille, on traite recursivement tout */
+      /* son sous-arbre */
+     {
+	pChild = pEl->ElFirstChild;
+	while (pChild != NULL)
+	  {
+	     /* si un descendant a un attribut Langue, on ne le change pas */
+	     if (AttrWithNum (pChild, 1, NULL) == NULL)
+		ChangeLanguageLeaves (pChild, lang);
+	     pChild = pChild->ElNext;
+	  }
+     }
+   else
+      /* l'element est une feuille */ if (pEl->ElLeafType == LtText && pEl->ElLanguage != lang)
+      /* c'est du texte dans une autre langue */
+      if (TtaGetAlphabet (pEl->ElLanguage) == TtaGetAlphabet (lang))
+	 /* cette langue s'ecrit dans le meme alphabet */
+	 /* change la langue de l'element */
+	 pEl->ElLanguage = lang;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    LeavesInheritLanguage    fait heriter aux feuilles de texte du  | */
+/* |    sous-arbre de pEl la langue definie par le premier element      | */
+/* |    englobant.                                                      | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static void         LeavesInheritLanguage (PtrElement pEl)
+
+#else  /* __STDC__ */
+static void         LeavesInheritLanguage (pEl)
+PtrElement          pEl;
+
+#endif /* __STDC__ */
+
+{
+   PtrAttribute         pAttr;
+   PtrElement          pElAttr;
+   Language            lang;
+
+   if (AttrWithNum (pEl, 1, NULL) == NULL)
+      /* l'element lui-meme ne porte pas d'attribut Langue */
+     {
+	/* cherche l'attribut Langue porte' par un ascendant de pEl */
+	pAttr = GetAttrInEnclosing (pEl, 1, NULL, &pElAttr);
+	if (pAttr != NULL)
+	   /* on a trouve' un attribut langue sur un ascendant */
+	   if (pAttr->AeAttrText != NULL)
+	      if (pAttr->AeAttrText->BuContent[0] != '\0')
+		 /* cet attribut Langue a une valeur */
+		{
+		   lang = TtaGetLanguageIdFromName (pAttr->AeAttrText->BuContent);
+		   /* change la langue des feuilles de texte du sous-arbre */
+		   ChangeLanguageLeaves (pEl, lang);
+		}
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    InsDernier insere l'element pointe par pNew (et ses freres	| */
+/* |    suivants), apres le dernier element suivant celui pointe par	| */
+/* |    pOld dans l'arbre abstrait.					| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                InsDernier (PtrElement pOld, PtrElement pNew)
+
+#else  /* __STDC__ */
+void                InsDernier (pOld, pNew)
+PtrElement          pOld;
+PtrElement          pNew;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pEl;
+   PtrElement          pAsc;
+
+   if (pNew != NULL && pOld != NULL)
+     {
+	pEl = pOld;
+	while (pEl->ElNext != NULL)
+	   pEl = pEl->ElNext;
+	/* pEl pointe sur le dernier element suivant pOld */
+	pEl->ElNext = pNew;
+	pNew->ElPrevious = pEl;
+	pEl = pNew;
+	do
+	  {
+	     pEl->ElParent = pOld->ElParent;
+	     /* fait heriter aux feuilles de texte de l'element la langue */
+	     /* definie par le premier element englobant */
+	     LeavesInheritLanguage (pEl);
+	     /* met a jour le volume des elements englobants */
+	     pAsc = pEl->ElParent;
+	     while (pAsc != NULL)
+	       {
+		  pAsc->ElVolume = pAsc->ElVolume + pEl->ElVolume;
+		  pAsc = pAsc->ElParent;
+	       }
+	     pEl = pEl->ElNext;
+	  }
+	while (pEl != NULL);
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    CreateParameter   cree un parametre pour le document dont le    | */
+/* |    descripteur est pointe par pDoc.                                | */
+/* |    Le parametre a creer est du type elemType dans le schema de     | */
+/* |    structure pointe par pSS et appartient a la liste d'elements    | */
+/* |    associes assocNum.						| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static PtrElement   CreateParameter (int elemType, PtrSSchema pSS, PtrDocument pDoc, int assocNum)
+
+#else  /* __STDC__ */
+static PtrElement   CreateParameter (elemType, pSS, pDoc, assocNum)
+int         elemType;
+PtrSSchema        pSS;
+PtrDocument         pDoc;
+int                 assocNum;
+
+#endif /* __STDC__ */
+
+{
+
+   int                 par, i;
+   boolean             found;
+   PtrElement          pEl;
+
+   PtrElement          pPar;
+   SRule              *pR;
+
+   /* Cherche si ce parametre a une valeur pour le document */
+   par = 0;
+   found = False;
+   do
+     {
+	if (pDoc->DocParameters[par] != NULL)
+	  {
+	     pPar = pDoc->DocParameters[par];
+	     if (pPar->ElTypeNumber == elemType && pPar->ElSructSchema == pSS)
+		found = True;
+	  }
+	par++;
+     }
+   while (!(found || par >= MAX_PARAM_DOC));
+   if (found)
+      /* le parametre a une valeur: l'arbre pointe par DocParameters[par]. */
+      /* on copie cet arbre. */
+     {
+	pEl = CopieArbre (pDoc->DocParameters[par - 1], pDoc, assocNum, pSS, pDoc,
+			  NULL, True, False);
+
+	/* on rend la copie non modifiable */
+	if (pEl != NULL)
+	   Protege (pEl);
+     }
+   else
+      /* le parametre n'a pas de valeur, on cree un element texte contenant */
+      /* son nom entre deux caracteres '$' */
+     {
+	pEl = CreeSArbre (ord (CharString) + 1, pSS, pDoc, assocNum, True, True,
+			  True, False);
+	if (pEl != NULL)
+	  {
+	     pEl->ElTypeNumber = elemType;	/* change le type: ce n'est pas un texte */
+	     pEl->ElIsCopy = True;	/* l'element est non modifiable */
+
+	     i = 1;
+	     pR = &pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1];
+	     pEl->ElText->BuContent[0] = '$';
+	     do
+	       {
+		  i++;
+		  pEl->ElText->BuContent[i - 1] = pR->SrName[i - 2];
+	       }
+	     while (!(pEl->ElText->BuContent[i - 1] == '\0' || i == MAX_CHAR));
+	     if (i < MAX_CHAR)
+	       {
+		  pEl->ElText->BuContent[i - 1] = '$';
+		  i++;
+	       }
+
+	     else
+		pEl->ElText->BuContent[i - 2] = '$';
+	     pEl->ElText->BuContent[i - 1] = '\0';
+	     pEl->ElTextLength = i - 1;
+	     pEl->ElVolume = pEl->ElTextLength;
+	     pEl->ElText->BuLength = i - 1;
+	     pEl->ElLanguage = TtaGetDefaultLanguage ();
+	  }
+
+     }
+   return pEl;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    CopyAttributes copie les attributs de l'element pointe par pEl1 | */
+/* |    dans l'element pointe par pEl2.                                 | */
+/* |    Si Check est 'vrai', les attributs ne sont copies que si le     | */
+/* |    schema de structure qui les definit est utilise' par pEl2 ou    | */
+/* |    un de ses elements englobants.                                  | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static void         CopyAttributes (PtrElement pEl1, PtrElement pEl2, boolean Check)
+
+#else  /* __STDC__ */
+static void         CopyAttributes (pEl1, pEl2, Check)
+PtrElement          pEl1;
+PtrElement          pEl2;
+boolean             Check;
+
+#endif /* __STDC__ */
+
+{
+   PtrAttribute         pAttr1, pAttr2, pPrevAttr;
+   PtrElement          pAsc;
+   boolean             found;
+   PtrReference        rf;
+   PtrReference        pPr;
+   boolean             bool;
+   int                 len;
+
+   pEl2->ElFirstAttr = NULL;	/* pas (encore) d'attributs dans la copie */
+   if (pEl1->ElFirstAttr != NULL)
+      /* il y a des attributs dans l'original, on les copie */
+     {
+	pAttr1 = pEl1->ElFirstAttr;	/* attribut a copier */
+	pPrevAttr = NULL;	/* dernier attribut de la copie */
+	pAttr2 = NULL;
+	/* remplit et chaine tous les attributs copie */
+	do
+	  {
+	     if (pAttr2 == NULL)
+		GetAttr (&pAttr2);	/* acquiert un bloc attribut pour la copie */
+	     *pAttr2 = *pAttr1;	/* copie l'attribut */
+	     if (pAttr2->AeAttrType == AtTextAttr)
+		/* c'est un attribut texte; il n'a pas encore de buffer */
+		pAttr2->AeAttrText = NULL;
+	     pAttr2->AeNext = NULL;
+	     found = !Check;
+	     if (!found)
+		/* verifie que le schema de structure definissant l'attribut */
+		/* est bien utilise' par un element ascendant de la copie */
+	       {
+		  pAsc = pEl2;
+		  do
+
+		     if (pAsc->ElSructSchema == pAttr2->AeAttrSSchema)
+			found = True;
+		     else
+			pAsc = pAsc->ElParent;
+		  while (!(pAsc == NULL || found));
+		  if (!found)
+		     /* cherche un schema de structure de meme nom ou une */
+		     /* extension de schema de structure dans les */
+		     /* ascendants de la copie */
+		    {
+		       pAsc = pEl2;
+		       do
+			  if (strcmp (pAsc->ElSructSchema->SsName, pAttr2->
+				      AeAttrSSchema->SsName) == 0)
+			    {
+			       pAttr2->AeAttrSSchema = pAsc->ElSructSchema;
+			       found = True;
+			    }
+			  else
+			    {
+			       if (pAttr2->AeAttrSSchema->SsExtension)
+				  /* l'attribut a copier est defini dans une extension */
+				  if (ExtensionValide (pAsc, &pAttr2->AeAttrSSchema))
+				     /* cette extension s'applique au schema de l'ascendant */
+				     found = True;
+			       if (!found)
+				  pAsc = pAsc->ElParent;
+			    }
+		       while (!(pAsc == NULL || found));
+		    }
+		  if (found)
+		     found = ApplicationPossible (pEl2, NULL, pAttr1, &bool);
+	       }
+	     if (found)
+	       {
+		  if (pAttr1->AeAttrType == AtReferenceAttr)
+		     /* c'est un attribut reference, on copie la reference */
+		    {
+		       if (pAttr1->AeAttrReference == NULL)
+			  pAttr2->AeAttrReference = NULL;
+		       else
+			 {
+			    GetReference (&rf);		/* acquiert une reference */
+			    pAttr2->AeAttrReference = rf;
+			    /* remplit la nouvelle reference */
+			    pPr = pAttr2->AeAttrReference;
+			    pPr->RdElement = pEl2;
+			    pPr->RdAttribute = pAttr2;
+			    pPr->RdReferred = pAttr1->AeAttrReference->RdReferred;
+			    pPr->RdTypeRef = pAttr1->AeAttrReference->RdTypeRef;
+			    pPr->RdInternalRef = pAttr1->AeAttrReference->RdInternalRef;
+			    if (pPr->RdReferred != NULL)
+			       /* met la nouvelle reference en tete de chaine */
+			      {
+				 pPr->RdNext = pPr->RdReferred->ReFirstReference;
+				 if (pPr->RdNext != NULL)
+				    pPr->RdNext->RdPrevious = rf;
+				 pPr->RdReferred->ReFirstReference = rf;
+			      }
+			 }
+		    }
+		  else if (pAttr2->AeAttrType == AtTextAttr)
+		     /* c'est un attribut texte, on lui attache un buffer de texte */
+		     /* dans lequel on copie le contenu */
+		     if (pAttr1->AeAttrText != NULL)
+		       {
+			  GetBufTexte (&pAttr2->AeAttrText);
+			  CopieTexteDansTexte (pAttr1->AeAttrText, pAttr2->AeAttrText, &len);
+		       }
+		  /* chaine la copie */
+		  if (pPrevAttr == NULL)
+		     /* premier attribut de la copie */
+
+		     pEl2->ElFirstAttr = pAttr2;
+		  else
+		     pPrevAttr->AeNext = pAttr2;
+		  pPrevAttr = pAttr2;
+		  pAttr2 = NULL;
+	       }
+	     /* passe a l'attribut suivant de l'original */
+	     pAttr1 = pAttr1->AeNext;
+	  }
+	while (!(pAttr1 == NULL));
+	if (pAttr2 != NULL)
+	   FreeAttr (pAttr2);
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    CopyPresRules  copie les regles de presentation specifique de   | */
+/* |    l'element pointe' par pEl dans l'element pointe' par pEl2.      | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static void         CopyPresRules (PtrElement pEl, PtrElement pEl2)
+
+#else  /* __STDC__ */
+static void         CopyPresRules (pEl, pEl2)
+PtrElement          pEl;
+PtrElement          pEl2;
+
+#endif /* __STDC__ */
+
+{
+   PtrPRule        pRC1, pRC2, pRS;
+
+
+   if (pEl->ElFirstPRule == NULL)
+      pEl2->ElFirstPRule = NULL;	/* pas de presentation specifique */
+   else
+     {
+	GetReglePres (&pRC1);	/* acquiert une premiere regle */
+	pEl2->ElFirstPRule = pRC1;
+	*pRC1 = *pEl->ElFirstPRule;	/* copie la premiere regle */
+	pRS = pEl->ElFirstPRule->PrNextPRule;
+	while (pRS != NULL)
+	  {
+	     GetReglePres (&pRC2);	/* acquiert une regle pour la copie */
+	     *pRC2 = *pRS;	/* copie le contenu */
+	     pRC1->PrNextPRule = pRC2;	/* chaine cette regle a la precedente */
+	     pRC1 = pRC2;
+	     pRS = pRS->PrNextPRule;
+	  }
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    DansSArbre retourne vrai si l'element pointe par pEl appartient | */
+/* |            au sous-arbre dont la racine est pointee par pRoot.     | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+boolean             DansSArbre (PtrElement pEl, PtrElement pRoot)
+
+#else  /* __STDC__ */
+boolean             DansSArbre (pEl, pRoot)
+PtrElement          pEl;
+PtrElement          pRoot;
+
+#endif /* __STDC__ */
+
+{
+   boolean             within;
+
+   within = False;
+   while (!within && pEl != NULL)
+      if (pEl == pRoot)
+	 within = True;
+      else
+	 pEl = pEl->ElParent;
+   return within;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    TypeOK                                                          | */
+/* |    Teste si le type de pEl est coherent avec typeNum               | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+boolean             TypeOK (PtrElement pEl, int typeNum, PtrSSchema pSS)
+
+#else  /* __STDC__ */
+boolean             TypeOK (pEl, typeNum, pSS)
+PtrElement          pEl;
+int         typeNum;
+PtrSSchema        pSS;
+
+#endif /* __STDC__ */
+
+{
+   boolean             ok;
+   SRule              *pRe1;
+   SRule              *pRe2;
+   int                 i;
+   boolean             SSok;
+
+   ok = False;			/* a priori, reponse negative */
+   if (pSS == NULL)
+      SSok = True;		/* n'importe quel schema de struct. convient */
+   else
+      /* compare l'identificateur du schema de structure */
+      SSok = pEl->ElSructSchema->SsCode == pSS->SsCode;
+   if (SSok && pEl->ElTypeNumber == typeNum)
+      ok = True;
+   else if (pSS != NULL)
+     {
+	pRe1 = &pSS->SsRule[typeNum - 1];
+	/* regle definissant le type d'element cherche' */
+	if (pRe1->SrConstruct == CsChoice)
+	  {
+	     if (pRe1->SrNChoices > 0)
+		/* le type cherche' est un choix explicite (alias) */
+		/* l'element courant est defini dans le meme schema que */
+		/* le type cherche' */
+	       {
+		  i = 0;
+		  do
+		     /* compare le type de l'element aux options du choix */
+		    {
+		       if (pEl->ElTypeNumber == pRe1->SrChoice[i])
+			  ok = pEl->ElSructSchema->SsCode == pSS->SsCode;
+		       else
+			 {
+			    pRe2 = &pSS->SsRule[pRe1->SrChoice[i] - 1];
+			    if (pRe2->SrConstruct == CsNatureSchema)
+			       /* l'option du choix est un changement de nature */
+			       /* retient les elements racines de cette nature */
+			       if (pEl->ElSructSchema == pRe2->SrSSchemaNat)
+				  ok = pEl->ElTypeNumber == pEl->ElSructSchema->SsRootElem;
+			 }
+		       i++;
+		    }
+		  while ((!ok) && (i < pRe1->SrNChoices));
+
+	       }
+	  }
+	else if (pRe1->SrConstruct == CsNatureSchema)
+	  {
+	     /* le type cherche' est un changement de nature, on */
+	     /* retient les elements racines de cette nature */
+	     if (pEl->ElSructSchema == pRe1->SrSSchemaNat)
+		if (pEl->ElTypeNumber == pRe1->SrSSchemaNat->SsRootElem)
+		   ok = True;
+	  }
+     }
+   return ok;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Avant retourne vrai si l'element pointe' par pEl1 se trouve dans| */
+/* |            l'arbre avant l'element pointe par pEl2. L'element      | */
+/* |            lui-meme et ses ascendants ne sont pas consideres       | */
+/* |            comme des predecesseurs.                                | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+boolean             Avant (PtrElement pEl1, PtrElement pEl2)
+
+#else  /* __STDC__ */
+boolean             Avant (pEl1, pEl2)
+PtrElement          pEl1;
+PtrElement          pEl2;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pEl;
+   boolean             found;
+   boolean             avant;
+
+   if (pEl1 == pEl2)
+      avant = False;
+   else
+     {
+	pEl = pEl2;
+	found = False;
+	while (pEl != NULL && !found)
+	  {
+	     while (pEl->ElPrevious != NULL)
+	       {
+		  pEl = pEl->ElPrevious;
+		  if (DansSArbre (pEl1, pEl))
+		     found = True;
+	       }
+	     pEl = pEl->ElParent;
+	  }
+	avant = found;
+     }
+   return avant;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    Englobe retourne Vrai si l'element pointe par pEl1 est un	| */
+/* |            ascendant de l'element pointe par pEl2.			| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+boolean             Englobe (PtrElement pEl1, PtrElement pEl2)
+
+#else  /* __STDC__ */
+boolean             Englobe (pEl1, pEl2)
+PtrElement          pEl1;
+PtrElement          pEl2;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          p;
+   boolean             found;
+   boolean             englobe;
+
+   if (pEl1 == NULL)
+      englobe = False;
+   else if (pEl2 == NULL)
+      englobe = True;
+   else
+     {
+	found = False;
+	p = pEl2->ElParent;
+	while (!found && p != NULL)
+	   if (p == pEl1)
+	      found = True;
+	   else
+	      p = p->ElParent;
+	englobe = found;
+     }
+   return englobe;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    AncetreCommun trouve le plus petit sous arbre qui contient pEl1	| */
+/* |            pEl2.                                                   | */
+/* |            Retourne un pointeur sur la racine de ce sous-arbre ou  | */
+/* |            NULL si pEl1 et pEl2 ne sont pas dans le meme arbre.    | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrElement          AncetreCommun (PtrElement pEl1, PtrElement pEl2)
+
+#else  /* __STDC__ */
+PtrElement          AncetreCommun (pEl1, pEl2)
+PtrElement          pEl1;
+PtrElement          pEl2;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pAsc;
+   boolean             stop;
+
+   if (pEl1 == pEl2)
+      pAsc = pEl1;
+   else if (Englobe (pEl1, pEl2))
+      pAsc = pEl1;
+   else if (Englobe (pEl2, pEl1))
+      pAsc = pEl2;
+   else
+     {
+	pAsc = pEl1->ElParent;
+	stop = False;
+	while (!stop && pAsc != NULL)
+	   if (Englobe (pAsc, pEl2))
+	      stop = True;
+	   else
+	      pAsc = pAsc->ElParent;
+     }
+   return pAsc;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    PremFeuille retourne un pointeur sur le premier element sans    | */
+/* |            descendance dans le sous-arbre de l'element pointe par  | */
+/* |            pEl.                                                    | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrElement          PremFeuille (PtrElement pEl)
+
+#else  /* __STDC__ */
+PtrElement          PremFeuille (pEl)
+PtrElement          pEl;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pE;
+   boolean             stop;
+   PtrElement          pEl1;
+
+   pE = pEl;
+   if (pE != NULL)
+     {
+	stop = False;
+	do
+	  {
+	     pEl1 = pE;
+	     if (pEl1->ElTerminal)
+		if (pEl1->ElLeafType == LtPageColBreak)
+		   /* on ignore les marques de page */
+		   if (pEl1->ElNext != NULL)
+		      pE = pEl1->ElNext;
+		   else
+		     {
+			pE = pEl1->ElParent;
+			stop = True;
+		     }
+		else
+		   stop = True;
+	     else if (pEl1->ElFirstChild == NULL)
+		stop = True;
+	     else
+		pE = pEl1->ElFirstChild;
+	  }
+	while (!(stop));
+     }
+   return pE;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    DerFeuille retourne un pointeur sur le dernier element sans     | */
+/* |            descendance dans le sous-arbre de l'element pointe par  | */
+/* |            pEl.                                                    | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrElement          DerFeuille (PtrElement pRoot)
+
+#else  /* __STDC__ */
+PtrElement          DerFeuille (pRoot)
+PtrElement          pRoot;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pEl;
+
+   pEl = pRoot;
+   if (pRoot != NULL)
+      if (!pRoot->ElTerminal)
+	 if (pRoot->ElFirstChild != NULL)
+	   {
+	      pEl = pRoot->ElFirstChild;
+	      while (pEl->ElNext != NULL)
+		 pEl = pEl->ElNext;
+	      pEl = DerFeuille (pEl);
+	   }
+   return pEl;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Ascendant retourne un pointeur sur l'element ascendant de       | */
+/* |            l'element pointe par pEl et qui est du type typeNum	| */
+/* |            dans le schema de structure pointe par pSS. Retourne    | */
+/* |            NULL si un tel element n'existe pas.                    | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrElement          Ascendant (PtrElement pEl, int typeNum, PtrSSchema pSS)
+
+#else  /* __STDC__ */
+PtrElement          Ascendant (pEl, typeNum, pSS)
+PtrElement          pEl;
+int         typeNum;
+PtrSSchema        pSS;
+
+#endif /* __STDC__ */
+
+{
+   boolean             found;
+   PtrElement          pEl1;
+   PtrElement          pAsc;
+
+   found = False;
+   if (pEl != NULL && typeNum > 0 && pSS != NULL)
+      do
+	{
+	   pEl1 = pEl;
+	   if (pSS->SsRule[typeNum - 1].SrConstruct == CsNatureSchema)
+	     {
+		/* le type cherche' est une nature donnee */
+		if (pEl1->ElTypeNumber == pEl1->ElSructSchema->SsRootElem)
+		   /* l'element courant est la racine d'une nature, l'element    */
+		   /* courant convient si ce sont les memes schemas de structure */
+		   found = (strcmp (pEl1->ElSructSchema->SsName,
+				 pSS->SsRule[typeNum - 1].SrOrigNat) == 0);
+	     }
+	   else
+	      found = Equivalent (typeNum, pSS, pEl1->ElTypeNumber, pEl1->ElSructSchema, pEl);
+	   if (!found)
+	      pEl = pEl->ElParent;	/* passe au niveau superieur */
+	}
+      while (!(pEl == NULL || found));
+
+   if (found)
+     {
+	/* si l'element trouve' a seulement un type equivalent au type */
+	/* cherche', regarde si l'ascendant n'a pas le type cherche' */
+	if (typeNum != pEl->ElTypeNumber)
+	   if (pEl->ElParent != NULL)
+	      if (pEl->ElParent->ElTypeNumber == typeNum)
+		 if (pEl->ElParent->ElSructSchema->SsCode == pSS->SsCode)
+		    pEl = pEl->ElParent;
+	pAsc = pEl;
+     }
+   else
+      pAsc = NULL;
+   return pAsc;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    FwdSearch2TypesInSubtree                                        | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static PtrElement   FwdSearch2TypesInSubtree (PtrElement pEl, boolean test, int typeNum2, int typeNum1, PtrSSchema pSS2, PtrSSchema pSS1)
+
+#else  /* __STDC__ */
+static PtrElement   FwdSearch2TypesInSubtree (pEl, test, typeNum2, typeNum1, pSS2, pSS1)
+PtrElement          pEl;
+boolean             test;
+int         typeNum2;
+int         typeNum1;
+PtrSSchema        pSS2;
+PtrSSchema        pSS1;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pRet, pChild;
+
+   pRet = NULL;
+   if (test)
+     {
+	if (TypeOK (pEl, typeNum1, pSS1) || TypeOK (pEl, typeNum2, pSS2) || typeNum1 == 0)
+	   /* element found */
+	   pRet = pEl;
+     }
+   if (pRet == NULL && !pEl->ElTerminal)
+      /* search in the chidren */
+     {
+	pChild = pEl->ElFirstChild;
+	while (pChild != NULL && pRet == NULL)
+	  {
+	     pRet = FwdSearch2TypesInSubtree (pChild, True, typeNum2, typeNum1, pSS2, pSS1);
+	     pChild = pChild->ElNext;
+	  }
+     }
+   return pRet;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Av2Cherche  cherche en avant dans l'arbre, a partir de l'element| */
+/* |    pointe par pEl, un element du type typeNum1 (defini dans le schema  | */
+/* |    de structure pointe' par pSS1) ou typeNum2 (defini par le schema	| */
+/* |    de structure defini par pSS2). Si pSS1 ou pSS2 est NIL,		| */
+/* |    la recherche s'arretera sur tout element dont le numero de      | */
+/* |    type est typeNum1 ou typeNum2, quelque soit son schema de structure     | */
+/* |    (Utile pour chercher les elements de base : chaine de           | */
+/* |    caracteres, symboles, elements graphiques..).                   | */
+/* |    La fonction rend un pointeur sur l'element trouve               | */
+/* |    ou NULL si echec.                                               | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+PtrElement          Av2Cherche (PtrElement pEl, int typeNum1, int typeNum2, PtrSSchema pSS1, PtrSSchema pSS2)
+#else  /* __STDC__ */
+PtrElement          Av2Cherche (pEl, typeNum1, typeNum2, pSS1, pSS2)
+PtrElement          pEl;
+int         typeNum1;
+int         typeNum2;
+PtrSSchema        pSS1;
+PtrSSchema        pSS2;
+
+#endif /* __STDC__ */
+{
+   PtrElement          pRet, pCur, pAsc;
+   boolean             stop;
+
+   pRet = NULL;
+   if (pEl != NULL)
+      /* cherche dans le sous-arbre de l'element */
+     {
+	pRet = FwdSearch2TypesInSubtree (pEl, False, typeNum2, typeNum1, pSS2, pSS1);
+	if (pRet == NULL)
+	   /* si echec, cherche dans les sous-arbres des freres suivants */
+	   /* de l'element */
+	  {
+	     pCur = pEl->ElNext;
+	     while (pCur != NULL && pRet == NULL)
+	       {
+		  pRet = FwdSearch2TypesInSubtree (pCur, True, typeNum2, typeNum1, pSS2, pSS1);
+		  pCur = pCur->ElNext;
+	       }
+	     /* si echec, cherche le premier ascendant avec un frere suivant */
+	     if (pRet == NULL)
+	       {
+		  stop = False;
+		  pAsc = pEl;
+		  do
+		    {
+		       pAsc = pAsc->ElParent;
+		       if (pAsc == NULL)
+			  stop = True;
+		       else if (pAsc->ElNext != NULL)
+			  stop = True;
+		    }
+		  while (!(stop));
+		  if (pAsc != NULL)
+		     /* cherche si cet element est celui cherche */
+		    {
+		       pAsc = pAsc->ElNext;
+		       if (pAsc != NULL)
+			 {
+			    if (TypeOK (pAsc, typeNum1, pSS1) || TypeOK (pAsc, typeNum2, pSS2) || typeNum1 == 0)
+			       pRet = pAsc;		/* found */
+			    else
+			       pRet = Av2Cherche (pAsc, typeNum1, typeNum2, pSS1, pSS2);
+			 }
+		    }
+	       }
+	  }
+     }
+   return pRet;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | AvCherche  cherche en avant dans l'arbre, a partir de l'element    | */
+/* |     pointe par pEl un element du type typeNum defini dans le	| */
+/* |     schema de structure pointe par pSS.				| */
+/* |     Si pSS = NULL, recherche quelque soit le schema de structure	| */
+/* |     schema de structure (utile pour chercher les elements de base  | */
+/* |     comme chaine de caracteres, symboles, elements graphiques..).  | */
+/* |     La fonction rend un pointeur sur l'element trouve ou NULL.     | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+PtrElement          AvCherche (PtrElement pEl, int typeNum, PtrSSchema pSS)
+#else  /* __STDC__ */
+PtrElement          AvCherche (pEl, typeNum, pSS)
+PtrElement          pEl;
+int         typeNum;
+PtrSSchema        pSS;
+
+#endif /* __STDC__ */
+{
+   return Av2Cherche (pEl, typeNum, 0, pSS, NULL);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |     BackSearch2TypesInSubtree                                      | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static PtrElement   BackSearch2TypesInSubtree (PtrElement pEl, int typeNum2, int typeNum1, PtrSSchema pSS2, PtrSSchema pSS1)
+
+#else  /* __STDC__ */
+static PtrElement   BackSearch2TypesInSubtree (pEl, typeNum2, typeNum1, pSS2, pSS1)
+PtrElement          pEl;
+int         typeNum2;
+int         typeNum1;
+PtrSSchema        pSS2;
+PtrSSchema        pSS1;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pRet, pChild;
+
+   pRet = NULL;
+   /* Cherche le dernier fils */
+   if (!pEl->ElTerminal)
+     {
+	pChild = pEl->ElFirstChild;
+	if (pChild != NULL)
+
+	   while (pChild->ElNext != NULL)
+	      pChild = pChild->ElNext;
+	/* on cherche a partir des freres precedents */
+	while (pChild != NULL && pRet == NULL)
+	  {
+	     pRet = BackSearch2TypesInSubtree (pChild, typeNum2, typeNum1, pSS2, pSS1);
+	     pChild = pChild->ElPrevious;
+	  }
+     }
+   if (pRet == NULL)
+     {
+	if (TypeOK (pEl, typeNum1, pSS1) || TypeOK (pEl, typeNum2, pSS2) || typeNum1 == 0)
+	   pRet = pEl;		/* found */
+     }
+   return pRet;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    Ar2Cherche  cherche en arriere dans l'arbre, a partir de	| */
+/* |    l'element pEl, un element du type typeNum1 (defini dans le	| */
+/* |    schema de structure pSS1) ou typeNum2 (defini dans le schema	| */
+/* |	de structure pSS2). Si pSS1 (ou pSS2) est NULL, la recherche	| */
+/* |	s'arrete sur tout element dont le numero de type est typeNum1	| */
+/* |	(ou typeNum2), quel que soit son schema de structure		| */
+/* |    Utile pour chercher les elements de base : chaine de caracteres,| */
+/* |    symboles, elements graphiques..).                               | */
+/* |    La fonction rend un pointeur sur l'element trouve ou NULL       | */
+/* |    si echec.                                                       | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+PtrElement          Ar2Cherche (PtrElement pEl, int typeNum1, int typeNum2, PtrSSchema pSS1, PtrSSchema pSS2)
+#else  /* __STDC__ */
+PtrElement          Ar2Cherche (pEl, typeNum1, typeNum2, pSS1, pSS2)
+PtrElement          pEl;
+int         typeNum1;
+int         typeNum2;
+PtrSSchema        pSS1;
+PtrSSchema        pSS2;
+
+#endif /* __STDC__ */
+{
+   PtrElement          pRet, pCur;
+
+   pRet = NULL;			/* pRet: futur resultat de la recherche */
+   if (pEl != NULL)
+      /* cherche dans les sous-arbres des freres precedents de l'element */
+     {
+	pCur = pEl->ElPrevious;
+	while (pCur != NULL && pRet == NULL)
+	  {
+	     pRet = BackSearch2TypesInSubtree (pCur, typeNum2, typeNum1, pSS2, pSS1);
+	     pCur = pCur->ElPrevious;
+	  }
+	/* si echec, cherche si c'est le pere, puis cherche dans les */
+	/* sous-arbres des oncles de l'element */
+	if (pRet == NULL)
+	   if (pEl->ElParent != NULL)
+	     {
+		pEl = pEl->ElParent;
+		if (TypeOK (pEl, typeNum1, pSS1) || TypeOK (pEl, typeNum2, pSS2))
+		   pRet = pEl;	/* found, c'est le pere */
+		else
+		   pRet = Ar2Cherche (pEl, typeNum1, typeNum2, pSS1, pSS2);
+	     }
+     }
+   return pRet;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    ArCherche  cherche en arriere dans l'arbre, a partir de		| */
+/* |    l'element pEl, un element du type typeNum, defini dans le	| */
+/* |    schema de structure pSS. Si pSS est NULL la recherche		| */
+/* |    s'arrete sur tout element dont le numero de type est typeNum,	| */
+/* |    quel que soit son schema de structure				| */
+/* |    La fonction rend un pointeur sur l'element trouve               | */
+/* |    ou NULL si echec.                                               | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+PtrElement          ArCherche (PtrElement pEl, int typeNum, PtrSSchema pSS)
+#else  /* __STDC__ */
+PtrElement          ArCherche (pEl, typeNum, pSS)
+PtrElement          pEl;
+int         typeNum;
+PtrSSchema        pSS;
+
+#endif /* __STDC__ */
+{
+   return Ar2Cherche (pEl, typeNum, 0, pSS, NULL);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    ArChElVisible      cherche dans le sous-arbre dont la racine est| */
+/* |    pointee par pRoot un element qui soit avant l'element pointe    | */
+/* |    par pEl et qui ait un pave dans la vue view.                    | */
+/* |    Retourne un pointeur sur un tel elt ou NULL s'il n'y en a pas.  | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+PtrElement          ArChElVisible (PtrElement pRoot, PtrElement pEl, int view)
+#else  /* __STDC__ */
+PtrElement          ArChElVisible (pRoot, pEl, view)
+PtrElement          pRoot;
+PtrElement          pEl;
+int                 view;
+
+#endif /* __STDC__ */
+{
+   PtrElement          pRet, pCur;
+
+   pRet = NULL;
+   if (pEl != NULL)
+      /* cherche dans les sous-arbres des freres precedents de l'element */
+     {
+	pCur = pEl->ElPrevious;
+	while (pCur != NULL && pRet == NULL)
+	  {
+	     pRet = BackSearchVisibleSubtree (pCur, &view);
+	     pCur = pCur->ElPrevious;
+	  }
+	/* si echec, cherche dans les sous-arbres des oncles de l'element */
+	if (pRet == NULL)
+	   if (pEl->ElParent != NULL && pEl->ElParent != pRoot)
+	      pRet = ArChElVisible (pRoot, pEl->ElParent, view);
+     }
+   return pRet;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    AvAttrCherche  cherche en avant dans l'arbre, a partir de	| */
+/* |    l'element pEl, un element ayant l'attribut attrNum defini dans	| */
+/* |    le schema de structure pSS et ayant la valeur val.		| */
+/* |    Si pSS est NIL,la recherche s'arrete sur le 1er element ayant	| */
+/* |    un attribut, quel que soit cet attribut.                        | */
+/* |    Si val=0, la recherche s'arrete sur le premier element ayant	| */
+/* |    l'attribut attrNum, quelle que soit sa valeur.			| */
+/* |    La fonction rend un pointeur sur l'element trouve' ou NULL	| */
+/* |    si echec.							| */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+PtrElement          AvAttrCherche (PtrElement pEl, int attrNum, int val, char *textVal, PtrSSchema pSS)
+#else  /* __STDC__ */
+PtrElement          AvAttrCherche (pEl, attrNum, val, textVal, pSS)
+PtrElement          pEl;
+int      attrNum;
+int       val;
+char               *textVal;
+PtrSSchema        pSS;
+
+#endif /* __STDC__ */
+{
+   PtrElement          pRet, pCur, pAsc;
+   boolean             stop;
+
+   pRet = NULL;
+   if (pEl != NULL)
+      /* cherche dans le sous-arbre de l'element */
+     {
+	pRet = FwdSearchAttrInSubtree (pEl, False, pSS, attrNum, val, textVal);
+	if (pRet == NULL)
+	   /* si echec, cherche dans les sous-arbres des freres suivants */
+	   /* de l'element */
+	  {
+	     pCur = pEl->ElNext;
+	     while (pCur != NULL && pRet == NULL)
+	       {
+		  pRet = FwdSearchAttrInSubtree (pCur, True, pSS, attrNum, val, textVal);
+		  pCur = pCur->ElNext;
+	       }
+	     /* si echec, cherche le premier ascendant avec un frere suivant */
+	     if (pRet == NULL)
+	       {
+		  stop = False;
+		  pAsc = pEl;
+		  do
+		    {
+		       pAsc = pAsc->ElParent;
+		       if (pAsc == NULL)
+			  stop = True;
+		       else if (pAsc->ElNext != NULL)
+			  stop = True;
+		    }
+		  while (!(stop));
+		  if (pAsc != NULL)
+		     /* cherche si cet element est celui cherche */
+		    {
+		       pAsc = pAsc->ElNext;
+		       if (pAsc != NULL)
+			  if (AttrFound (pAsc, textVal, val, attrNum, pSS))
+			     pRet = pAsc;	/* found */
+			  else
+			     pRet = AvAttrCherche (pAsc, attrNum, val, textVal, pSS);
+		    }
+	       }
+	  }
+     }
+   return pRet;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    ArAttrCherche cherche en arriere dans l'arbre, a partir de	| */
+/* |    l'element pEl, un element ayant l'attribut attNum defini dans	| */
+/* |    le schema de structure pSS et ayant la valeur val.		| */
+/* |    Si pSS est NIL, la recherche s'arretera sur le 1er elt ayant	| */
+/* |    un attribut, quel que soit cet attribut.                        | */
+/* |    Si val=0,  la recherche s'arretera sur le  1er elt ayant        | */
+/* |    l'attribut attNum, quelle que soit sa valeur.			| */
+/* |    La fonction rend un pointeur sur l'element trouve ou NULL	| */
+/* |    si echec.							| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrElement          ArAttrCherche (PtrElement pEl, int attNum, int val, char *textVal, PtrSSchema pSS)
+
+#else  /* __STDC__ */
+PtrElement          ArAttrCherche (pEl, attNum, val, textVal, pSS)
+PtrElement          pEl;
+int      attNum;
+int       val;
+char               *textVal;
+PtrSSchema        pSS;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pRet, pCur;
+
+   pRet = NULL;
+   if (pEl != NULL)
+      /* cherche dans les sous-arbres des freres precedents de l'element */
+     {
+	pCur = pEl->ElPrevious;
+	while (pCur != NULL && pRet == NULL)
+	  {
+	     pRet = BackSearchAttrInSubtree (pCur, textVal, val, attNum, pSS);
+	     pCur = pCur->ElPrevious;
+	  }
+	/* si echec, cherche dans les sous-arbres des oncles de l'element */
+	if (pRet == NULL)
+	   if (pEl->ElParent != NULL)
+	      pRet = ArAttrCherche (pEl->ElParent, attNum, val, textVal, pSS);
+     }
+   return pRet;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    SauteMarquePage si pEl pointe sur une marque de page, retourne    | */
+/* |    dans pEl un pointeur sur le premier element qui suit et qui n'est | */
+/* |    pas une marque de page. Retourne NULL si pEl pointe sur une marque| */
+/* |    de page qui n'est suivie d'aucun element ou seulement par des     | */
+/* |    marques de page.                                                  | */
+/* |    Ne fait rien si pEl ne pointe pas une marque de page a l'appel.   | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                SauteMarquePage (PtrElement * pEl)
+
+#else  /* __STDC__ */
+void                SauteMarquePage (pEl)
+PtrElement         *pEl;
+
+#endif /* __STDC__ */
+
+{
+   boolean             stop;
+
+   stop = False;
+   do
+     {
+	if (*pEl == NULL)
+	   stop = True;
+	else if (!(*pEl)->ElTerminal)
+	   stop = True;
+	else if ((*pEl)->ElLeafType != LtPageColBreak)
+	   stop = True;
+	if (!stop)
+	   *pEl = (*pEl)->ElNext;
+     }
+   while (!(stop));
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    SautePageDebut  si pEl pointe sur une marque de page de debut,    | */
+/* |    retourne dans pEl un pointeur sur le dernier element qui precede  | */
+/* |    un element qui n'est pas une marque de page de debut.           | */
+/* |    Ne fait rien si pEl ne pointe pas une marque de page de debut     | */
+/* |    a l'appel.                                                      | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                SautePageDebut (PtrElement * pEl)
+
+#else  /* __STDC__ */
+void                SautePageDebut (pEl)
+PtrElement         *pEl;
+
+#endif /* __STDC__ */
+
+{
+   boolean             stop;
+   PtrElement          pPrev;
+
+   stop = False;
+   pPrev = *pEl;
+   do
+     {
+	if (*pEl == NULL)
+	   stop = True;
+	else if (!(*pEl)->ElTerminal)
+	   stop = True;
+	else if ((*pEl)->ElLeafType != LtPageColBreak
+		 || (*pEl)->ElPageType != PgBegin)
+	   stop = True;
+	if (!stop)
+	  {
+	     pPrev = *pEl;
+	     *pEl = (*pEl)->ElNext;
+	  }
+     }
+   while (!(stop));
+   *pEl = pPrev;
+}
+
+
+
+/* ---------------------------------------------------------------------- */
+/* |    SauteArMarquePage       si pEl pointe sur une marque de page,     | */
+/* |    retourne dans pEl un pointeur sur le premier element qui precede  | */
+/* |    et qui n'est pas une marque de page. Retourne NULL si pEl pointe  | */
+/* |    sur une marque de page qui n'est precedee que de marques        | */
+/* |    de page.                                                        | */
+/* |    Ne fait rien si pEl ne pointe pas une marque de page a l'appel.   | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                SauteArMarquePage (PtrElement * pEl)
+
+#else  /* __STDC__ */
+void                SauteArMarquePage (pEl)
+PtrElement         *pEl;
+
+#endif /* __STDC__ */
+
+{
+   boolean             stop;
+
+   stop = False;
+   do
+     {
+	if (*pEl == NULL)
+	   stop = True;
+	else if (!(*pEl)->ElTerminal)
+	   stop = True;
+	else if ((*pEl)->ElLeafType != LtPageColBreak)
+	   stop = True;
+	if (!stop)
+	   *pEl = (*pEl)->ElPrevious;
+     }
+   while (!(stop));
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Successeur      retourne un pointeur sur l'element qui se trouve| */
+/* |    apres l'element pointe par pEl.                                 | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrElement          Successeur (PtrElement pEl)
+
+#else  /* __STDC__ */
+PtrElement          Successeur (pEl)
+PtrElement          pEl;
+
+#endif /* __STDC__ */
+
+{
+   if (pEl == NULL)
+      return NULL;
+   while (pEl->ElNext == NULL && pEl->ElParent != NULL)
+      pEl = pEl->ElParent;
+   return pEl->ElNext;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    FeuillePrecedente       retourne un pointeur sur la premiere    | */
+/* |    feuille qui precede l'element pEl.                              | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrElement          FeuillePrecedente (PtrElement pEl)
+
+#else  /* __STDC__ */
+PtrElement          FeuillePrecedente (pEl)
+PtrElement          pEl;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pEl1;
+
+   pEl1 = pEl;
+   if (pEl1 != NULL)
+     {
+	while (pEl1->ElPrevious == NULL && pEl1->ElParent != NULL)
+	   pEl1 = pEl1->ElParent;
+	pEl1 = pEl1->ElPrevious;
+	if (pEl1 != NULL)
+	   while (!pEl1->ElTerminal && pEl1->ElFirstChild != NULL)
+	     {
+		pEl1 = pEl1->ElFirstChild;
+		while (pEl1->ElNext != NULL)
+		   pEl1 = pEl1->ElNext;
+	     }
+     }
+   return pEl1;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    FeuilleSuivante         retourne un pointeur sur la premiere    | */
+/* |    feuille qui suit l'element pEl.                                 | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrElement          FeuilleSuivante (PtrElement pEl)
+
+#else  /* __STDC__ */
+PtrElement          FeuilleSuivante (pEl)
+PtrElement          pEl;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pEl1;
+
+   pEl1 = pEl;
+   if (pEl1 != NULL)
+     {
+	while (pEl1->ElNext == NULL && pEl1->ElParent != NULL)
+	   pEl1 = pEl1->ElParent;
+	pEl1 = pEl1->ElNext;
+	if (pEl1 != NULL)
+	   while (!pEl1->ElTerminal && pEl1->ElFirstChild != NULL)
+	      pEl1 = pEl1->ElFirstChild;
+     }
+   return pEl1;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    InsAvant insere l'element pointe par pNew (et ses freres	| */
+/* |    suivants), avant l'element pointe par pOld dans l'arbre abstrait| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                InsAvant (PtrElement pOld, PtrElement pNew)
+
+#else  /* __STDC__ */
+void                InsAvant (pOld, pNew)
+PtrElement          pOld;
+PtrElement          pNew;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pE;
+   PtrElement          pAsc;
+
+   if (pNew != NULL && pOld != NULL)
+     {
+	pNew->ElParent = pOld->ElParent;
+	pNew->ElPrevious = pOld->ElPrevious;
+	if (pNew->ElPrevious != NULL)
+	   pNew->ElPrevious->ElNext = pNew;
+	if (pNew->ElParent != NULL)
+	   if (pNew->ElParent->ElFirstChild == pOld)
+	      pNew->ElParent->ElFirstChild = pNew;
+	/* met a jour le volume des elements englobants */
+	pAsc = pNew->ElParent;
+	while (pAsc != NULL)
+	  {
+	     pAsc->ElVolume = pAsc->ElVolume + pNew->ElVolume;
+	     pAsc = pAsc->ElParent;
+	  }
+	pE = pNew;
+	/* fait heriter aux feuilles de texte de l'element la langue */
+	/* definie par le premier element englobant */
+	LeavesInheritLanguage (pE);
+	while (pE->ElNext != NULL)
+	  {
+	     pE = pE->ElNext;
+	     pE->ElParent = pOld->ElParent;
+	     /* fait heriter aux feuilles de texte de l'element la langue */
+	     /* definie par le premier element englobant */
+	     LeavesInheritLanguage (pE);
+	     /* met a jour le volume des elements englobants */
+	     pAsc = pE->ElParent;
+	     while (pAsc != NULL)
+	       {
+		  pAsc->ElVolume = pAsc->ElVolume + pE->ElVolume;
+		  pAsc = pAsc->ElParent;
+	       }
+	  }
+	pE->ElNext = pOld;
+	pOld->ElPrevious = pE;
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    InsApres insere l'element pointe par pNew (et ses freres     | */
+/* |    suivants), apres l'element pointe par pOld dans l'arbre       | */
+/* |    abstrait.                                                       | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                InsApres (PtrElement pOld, PtrElement pNew)
+
+#else  /* __STDC__ */
+void                InsApres (pOld, pNew)
+PtrElement          pOld;
+PtrElement          pNew;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pE;
+   PtrElement          pAsc;
+
+   if (pNew != NULL && pOld != NULL)
+     {
+	pNew->ElParent = pOld->ElParent;
+	pNew->ElPrevious = pOld;
+	/* met a jour le volume des elements englobants */
+	pAsc = pNew->ElParent;
+	while (pAsc != NULL)
+	  {
+	     pAsc->ElVolume = pAsc->ElVolume + pNew->ElVolume;
+	     pAsc = pAsc->ElParent;
+	  }
+	pE = pNew;
+	/* fait heriter aux feuilles de texte de l'element la langue */
+	/* definie par le premier element englobant */
+	LeavesInheritLanguage (pE);
+	while (pE->ElNext != NULL)
+	  {
+	     pE = pE->ElNext;
+	     pE->ElParent = pOld->ElParent;
+	     /* fait heriter aux feuilles de texte de l'element la langue */
+	     /* definie par le premier element englobant */
+	     LeavesInheritLanguage (pE);
+	     /* met a jour le volume des elements englobants */
+	     pAsc = pE->ElParent;
+	     while (pAsc != NULL)
+	       {
+		  pAsc->ElVolume = pAsc->ElVolume + pE->ElVolume;
+		  pAsc = pAsc->ElParent;
+	       }
+	  }
+	pE->ElNext = pOld->ElNext;
+	if (pOld->ElNext != NULL)
+	   pOld->ElNext->ElPrevious = pE;
+	pOld->ElNext = pNew;
+     }
+}
+
+
+
+/* ---------------------------------------------------------------------- */
+/* |    AjPremFils ajoute l'element pointe par pNew (et ses freres   | */
+/* |    suivants), comme premier fils de l'element pointe par pOld    | */
+/* |    dans l'arbre abstrait.                                          | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                AjPremFils (PtrElement pOld, PtrElement pNew)
+
+#else  /* __STDC__ */
+void                AjPremFils (pOld, pNew)
+PtrElement          pOld;
+PtrElement          pNew;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pE;
+   PtrElement          pAsc;
+
+   if (pNew != NULL && pOld != NULL)
+     {
+	if (pOld->ElFirstChild != NULL)
+	   InsAvant (pOld->ElFirstChild, pNew);
+	else
+	  {
+	     pOld->ElFirstChild = pNew;
+	     pE = pNew;
+	     while (pE != NULL)
+	       {
+		  pE->ElParent = pOld;
+		  /* fait heriter aux feuilles de texte de l'element la langue */
+		  /* definie par le premier element englobant */
+		  LeavesInheritLanguage (pE);
+		  /* met a jour le volume des elements englobants */
+		  pAsc = pE->ElParent;
+		  while (pAsc != NULL)
+		    {
+		       pAsc->ElVolume = pAsc->ElVolume + pE->ElVolume;
+		       pAsc = pAsc->ElParent;
+		    }
+		  pE = pE->ElNext;
+	       }
+	  }
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    InsChoix   met le nouvel element pNew a la place de l'element   | */
+/* |    de type CHOIX pointe par pEl, sauf si celui-ci est un element	| */
+/* |    d'agregat ou la racine du schema de structure ou un element	| */
+/* |    associe.                                                        | */
+/* |    Dans ce cas, le nouvel element est chaine' comme 1er fils de    | */
+/* |    l'element pEl.							| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                InsChoix (PtrElement pEl, PtrElement * pNew, boolean del)
+
+#else  /* __STDC__ */
+void                InsChoix (pEl, pNew, del)
+PtrElement          pEl;
+PtrElement         *pNew;
+boolean             del;
+
+#endif /* __STDC__ */
+
+{
+   boolean             replace;
+   PtrTextBuffer      pTB;
+   PtrAttribute         pAttr;
+   PtrSSchema        pSS;
+   int                 T;
+   PtrElement          pE;
+   SRule              *pSRule;
+
+   /* le nouvel element remplacera l'element CHOIX */
+   replace = True;
+   if (pEl->ElParent != NULL)
+      /* ...sauf si le choix est un element d'agregat */
+	if (pEl->ElParent->ElSructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsAggregate ||
+	    pEl->ElParent->ElSructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsUnorderedAggregate)
+	   replace = False;
+   /* sauf si le choix porte des exceptions */
+   pSRule = &pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1];
+   if (pSRule->SrNInclusions > 0 || pSRule->SrNExclusions > 0)
+      replace = False;
+   /* sauf si c'est la racine du schema de structure */
+   if (pEl->ElTypeNumber == pEl->ElSructSchema->SsRootElem)
+      replace = False;
+   /* sauf si c'est la racine d'un element associe */
+   if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)
+      replace = False;
+   if (!replace)
+      if (pEl->ElTypeNumber == (*pNew)->ElTypeNumber)
+	 if (pEl->ElSructSchema->SsCode == (*pNew)->ElSructSchema->SsCode)
+	    /* les deux elements sont de meme type; l'un remplacera l'autre */
+	    replace = True;
+   if (del)
+      replace = True;
+   if (!replace)
+      /* ajoute l'element cree comme fils de l'element choix */
+      AjPremFils (pEl, *pNew);
+   else
+      /* met le nouvel element a la place de l'element CsChoice */
+     {
+	/* Echange les types des deux elements */
+	pSS = pEl->ElSructSchema;
+	T = pEl->ElTypeNumber;
+	pEl->ElSructSchema = (*pNew)->ElSructSchema;
+	pEl->ElTypeNumber = (*pNew)->ElTypeNumber;
+	(*pNew)->ElSructSchema = pSS;
+	(*pNew)->ElTypeNumber = T;
+	if ((*pNew)->ElReferredDescr != NULL)
+	   /* supprime toutes les references a l'element CHOIX et le */
+	   /* descripteur d'element reference' de l'element CHOIX */
+	  {
+	     SuppRef (pEl);
+	     SuppDescRef (pEl->ElReferredDescr);
+	     /* recupere le descripteur d'element reference' du nouvel elem. */
+	     pEl->ElReferredDescr = (*pNew)->ElReferredDescr;
+	     (*pNew)->ElReferredDescr = NULL;
+	     if (!pEl->ElReferredDescr->ReExternalRef)
+		if (pEl->ElReferredDescr->ReReferredElem == *pNew)
+		   pEl->ElReferredDescr->ReReferredElem = pEl;
+	  }
+	/* ajoute les attributs de pNew a ceux de pEl */
+	if (pEl->ElFirstAttr == NULL)
+	   /* pEl n'a pas d'attributs */
+	   pEl->ElFirstAttr = (*pNew)->ElFirstAttr;
+	else
+	   /* cherche le dernier attribut de pEl */
+	  {
+	     pAttr = pEl->ElFirstAttr;
+	     while (pAttr->AeNext != NULL)
+		pAttr = pAttr->AeNext;
+	     /* chaine les attributs de pNew^ apres ceux de pEl^ */
+	     pAttr->AeNext = (*pNew)->ElFirstAttr;
+	  }
+	/* pNew^ n'a plus d'attributs */
+	(*pNew)->ElFirstAttr = NULL;
+	if ((*pNew)->ElSource != NULL)
+	  {
+	     pEl->ElSource = (*pNew)->ElSource;
+	     (*pNew)->ElSource = NULL;
+	     if (pEl->ElSource != NULL)
+		pEl->ElSource->RdElement = pEl;
+	  }
+	pEl->ElTerminal = (*pNew)->ElTerminal;
+	if (pEl->ElTerminal)
+	  {
+	     pEl->ElLeafType = (*pNew)->ElLeafType;
+	     switch (pEl->ElLeafType)
+		   {
+		      case LtPicture:
+			 pEl->ElImageDescriptor = (*pNew)->ElImageDescriptor;
+		      case LtText:
+			 pEl->ElText = (*pNew)->ElText;
+			 pEl->ElTextLength = (*pNew)->ElTextLength;
+			 if (pEl->ElLeafType == LtText)
+			   {
+			      pEl->ElVolume = pEl->ElTextLength;
+			      pEl->ElLanguage = (*pNew)->ElLanguage;
+			   }
+			 /* ajoute le volume de l'element a celui de ses ascendants */
+
+			 if (pEl->ElVolume != 0)
+			   {
+			      pE = pEl->ElParent;
+			      while (pE != NULL)
+				{
+				   pE->ElVolume = pE->ElVolume + pEl->ElVolume;
+				   pE = pE->ElParent;
+				}
+			   }
+			 LeavesInheritLanguage (pEl);
+			 /* attache les buffers de texte de pNew a pEl */
+			 pTB = pEl->ElText;
+			 while (pTB != NULL)
+			    pTB = pTB->BuNext;
+			 (*pNew)->ElText = NULL;
+			 (*pNew)->ElTextLength = 0;
+			 break;
+		      case LtPlyLine:
+			 pEl->ElPolyLineBuffer = (*pNew)->ElPolyLineBuffer;
+			 pEl->ElNPoints = (*pNew)->ElNPoints;
+			 pEl->ElVolume = pEl->ElNPoints;
+			 /* ajoute le volume de l'element a celui de ses ascendants */
+			 if (pEl->ElVolume != 0)
+			   {
+			      pE = pEl->ElParent;
+			      while (pE != NULL)
+				{
+				   pE->ElVolume = pE->ElVolume + pEl->ElVolume;
+				   pE = pE->ElParent;
+				}
+			   }
+			 /* attache les buffers de texte de pNew a pEl */
+			 pTB = pEl->ElPolyLineBuffer;
+			 while (pTB != NULL)
+			    pTB = pTB->BuNext;
+			 (*pNew)->ElPolyLineBuffer = NULL;
+			 (*pNew)->ElNPoints = 0;
+			 break;
+		      case LtSymbol:
+		      case LtGraphics:
+		      case LtCompound:
+			 pEl->ElGraph = (*pNew)->ElGraph;
+			 break;
+		      case LtPageColBreak:
+			 pEl->ElPageModified = (*pNew)->ElPageModified;
+			 pEl->ElPageType = (*pNew)->ElPageType;
+			 pEl->ElPageNumber = (*pNew)->ElPageNumber;
+			 pEl->ElViewPSchema = (*pNew)->ElViewPSchema;
+			 break;
+		      case LtReference:
+			 pEl->ElReference = (*pNew)->ElReference;
+			 pEl->ElReference->RdElement = pEl;
+			 (*pNew)->ElReference = NULL;
+			 break;
+		      case LtPairedElem:
+			 pEl->ElPairIdent = (*pNew)->ElPairIdent;
+			 pEl->ElOtherPairedEl = (*pNew)->ElOtherPairedEl;
+			 if (pEl->ElOtherPairedEl != NULL)
+			    pEl->ElOtherPairedEl->ElOtherPairedEl = pEl;
+			 break;
+		   }
+
+	  }
+	else if ((*pNew)->ElFirstChild != NULL)
+	  {
+	     AjPremFils (pEl, (*pNew)->ElFirstChild);
+	     (*pNew)->ElFirstChild = NULL;
+	  }
+	if (!del)
+	   Supprime (pNew);
+	*pNew = pEl;
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    MetAttributsImposes     met sur l'element pointe' par pEl les   | */
+/* |    attributs impose's indique's dans la regle pRe1 du schema de    | */
+/* |    structure pSS.                                                  | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                MetAttributsImposes (PtrElement pEl, SRule * pSRule, PtrSSchema pSS, boolean withAttr, PtrDocument pDoc)
+
+#else  /* __STDC__ */
+void                MetAttributsImposes (pEl, pSRule, pSS, withAttr, pDoc)
+PtrElement          pEl;
+SRule              *pSRule;
+PtrSSchema        pSS;
+boolean             withAttr;
+PtrDocument         pDoc;
+
+#endif /* __STDC__ */
+
+{
+   int                 i;
+   int      att;
+   PtrAttribute         pAttr;
+   PtrReference        ref;
+   int                 l;
+
+   for (i = 0; i < pSRule->SrNDefAttrs; i++)
+     {
+	if (pSRule->SrDefAttrModif[i] && !withAttr)
+	   /* on est en lecture de pivot, on ne cree pas les attributs */
+	   /* avec valeur par defaut */
+	   continue;
+
+	att = pSRule->SrDefAttr[i];
+	GetAttr (&pAttr);	/* acquiert un bloc attribut */
+	/* chaine ce bloc en tete de la liste des attributs de */
+	/* l'element */
+	pAttr->AeNext = pEl->ElFirstAttr;
+	pEl->ElFirstAttr = pAttr;
+	/* remplit le bloc attribut */
+	pAttr->AeAttrSSchema = pSS;
+	pAttr->AeAttrNum = att;
+	if (!pSRule->SrDefAttrModif[i])	/* attribut a valeur fixe */
+	   pAttr->AeDefAttr = True;
+	pAttr->AeAttrType = pSS->SsAttribute[att - 1].AttrType;
+	switch (pAttr->AeAttrType)
+	      {
+		 case AtEnumAttr:
+		 case AtNumAttr:
+		    pAttr->AeAttrValue = pSRule->SrDefAttrValue[i];
+		    break;
+		 case AtTextAttr:
+		    GetBufTexte (&pAttr->AeAttrText);
+		    CopieChaineDansTexte (pSS->SsConstBuffer + pSRule->SrDefAttrValue[i] - 1,
+					  pAttr->AeAttrText, &l);
+		    break;
+		 case AtReferenceAttr:
+		    /* acquiert un descripteur de reference */
+		    GetReference (&ref);
+		    pAttr->AeAttrReference = ref;
+		    pAttr->AeAttrReference->RdElement = pEl;
+		    pAttr->AeAttrReference->RdAttribute = pAttr;
+		    break;
+	      }
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    CreeSArbre cree un sous-arbre et rend un pointeur sur le        | */
+/* |    sous-arbre cree. Si le booleen Desc vaut vrai, tout le          | */
+/* |    sous-arbre est creee d'apres le schema de structure, sinon      | */
+/* |    seule la racine du sous-arbre est creee.                        | */
+/* |    Si Root est vrai, on cree l'element racine du sous-arbre,	| */
+/* |    sinon on cree sa descendance et la fonction retourne un pointeur| */
+/* |    sur le premier descendant.                                      | */
+/* |    typeNum: Numero dans le schema de structure de la regle		| */
+/* |    definissant le type du sous-arbre a creer.                      | */
+/* |    pSS: Pointeur sur le schema de structure correspondant au       | */
+/* |    sous-arbre a creer.                                             | */
+/* |    pDoc: Pointeur sur le descripteur de document auquel            | */
+/* |    appartiendra le sous-arbre a creer.                             | */
+/* |    assocNum: Numero de la liste d'elements associes a laquelle	| */
+/* |    appartient le sous-arbre a creer. Zero si pas element asocie.   | */
+/* |    withAttr : si vrai, on cree les elements du sous-arbre		| */
+/* |    avec leurs attributs a valeur par defaut, (cas de la creation)  | */
+/* |    sinon on ne les cree pas (cas de la lecture d'un pivot)         | */
+/* |    withLabel indique s'il faut affecter a l'element un nouveau     | */
+/* |    label.                                                          | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrElement          CreeSArbre (int typeNum, PtrSSchema pSS, PtrDocument pDoc, int assocNum, boolean Desc, boolean Root, boolean withAttr, boolean withLabel)
+
+#else  /* __STDC__ */
+PtrElement          CreeSArbre (typeNum, pSS, pDoc, assocNum, Desc, Root, withAttr, withLabel)
+int         typeNum;
+PtrSSchema        pSS;
+PtrDocument         pDoc;
+int                 assocNum;
+boolean             Desc;
+boolean             Root;
+boolean             withAttr;
+boolean             withLabel;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pEl, t1, t2;
+   int                 i;
+   boolean             gener, create, error;
+   PtrReference        ref;
+   Name                 PSchName;
+   SRule              *pSRule;
+   PtrTextBuffer      pBu1;
+   SRule              *pSRule2;
+   PtrSSchema        pExtSSch;
+   SRule              *pExtRule;
+
+   pEl = NULL;			/* on n'a pas (encore) cree d'element */
+   if (Root)
+      /* regle definissant le type de l'element */
+     {
+	error = False;
+	pSRule = &pSS->SsRule[typeNum - 1];
+	if (pSRule->SrConstruct == CsNatureSchema)
+	   /* C'est une regle de changement de nature, on va creer un */
+	   /* element du type de la racine de la nature introduite */
+	  {
+	     if (pSRule->SrSSchemaNat == NULL)
+		/* Schema de nature non charge' */
+		/* charge le schema de nature */
+	       {
+		  PSchName[0] = '\0';
+		  LoadNat (pSS, PSchName, typeNum);
+	       }
+	     if (pSRule->SrSSchemaNat == NULL)
+		/* echec chargement schema */
+		error = True;
+	     else
+		/* le schema de nature est charge' */
+		/* il y a un objet de plus de cette nature */
+	       {
+		  /* change de schema de structure */
+		  pSS = pSRule->SrSSchemaNat;
+		  /* type de la racine du nouveau schema de structure */
+		  typeNum = pSS->SsRootElem;
+	       }
+	  }
+	pSRule = &pSS->SsRule[typeNum - 1];
+	if (!error)
+	   if (pSRule->SrParamElem)
+	      pEl = CreateParameter (typeNum, pSS, pDoc, assocNum);
+	   else
+	      GetElement (&pEl);	/* acquiert un element */
+	if (pEl != NULL)
+	  {
+	     if (typeNum == pSS->SsRootElem)
+		/* on cree un element construit selon la regle racine de */
+		/* son schema de structure, on incremente le compteur */
+		pSS->SsNObjects++;
+	     pEl->ElSructSchema = pSS;
+	     pEl->ElTypeNumber = typeNum;
+	     pEl->ElAssocNum = assocNum;
+	     if (withLabel)
+		/* calcule la valeur du label */
+		LabelIntToString (NewLabel (pDoc), pEl->ElLabel);
+	     /* met les valeurs des attributs imposes definis dans le */
+	     /* schema de structure definissant l'element */
+	     MetAttributsImposes (pEl, pSRule, pSS, withAttr, pDoc);
+	     /* met les valeurs des attributs imposes definis dans les */
+	     /* extensions du schema de structure definissant l'element */
+	     pExtSSch = pSS->SsNextExtens;
+	     while (pExtSSch != NULL)
+	       {
+		  pExtRule = RegleExtens (pSS, typeNum, pExtSSch);
+		  if (pExtRule != NULL)
+		     MetAttributsImposes (pEl, pExtRule, pExtSSch, withAttr, pDoc);
+		  pExtSSch = pExtSSch->SsNextExtens;
+	       }
+
+	     /* chaine les blocs specifiques du constructeur */
+	     switch (pSRule->SrConstruct)
+		   {
+		      case CsReference:
+			 pEl->ElTerminal = True;
+			 pEl->ElLeafType = LtReference;
+			 /* acquiert un descripteur de reference */
+			 GetReference (&ref);
+			 pEl->ElReference = ref;
+			 pEl->ElReference->RdElement = pEl;
+			 break;
+		      case CsPairedElement:
+			 pEl->ElTerminal = True;
+			 pEl->ElLeafType = LtPairedElem;
+			 if (pSRule->SrFirstOfPair)
+			    pDoc->DocMaxPairIdent++;
+			 pEl->ElPairIdent = pDoc->DocMaxPairIdent;
+			 pEl->ElOtherPairedEl = NULL;
+			 break;
+		      case CsBasicElement:
+			 pEl->ElTerminal = True;
+			 switch (pSRule->SrBasicType)
+			       {
+				  case CharString:
+				     CreeBufTexte (pEl);
+				     pEl->ElLeafType = LtText;
+				     pEl->ElLanguage = TtaGetDefaultLanguage ();
+				     pEl->ElVolume = 0;
+				     pEl->ElTextLength = 0;
+				     break;
+				  case Picture:
+				     CreeBufTexte (pEl);
+				     pEl->ElLeafType = LtPicture;
+				     pEl->ElVolume = 0;
+				     pEl->ElImageDescriptor = NULL;
+				     break;
+				  case GraphicElem:
+				     pEl->ElLeafType = LtGraphics;
+				     pEl->ElGraph = '\0';
+				     pEl->ElVolume = 0;
+				     break;
+				  case Symbol:
+				     pEl->ElLeafType = LtSymbol;
+				     pEl->ElGraph = '\0';
+				     pEl->ElVolume = 0;
+				     break;
+				  case PageBreak:
+				     pEl->ElLeafType = LtPageColBreak;
+				     pEl->ElPageType = PgComputed;
+				     pEl->ElPageNumber = 1;
+				     pEl->ElPageNumber = 0;
+				     pEl->ElViewPSchema = 0;
+				     pEl->ElPageModified = False;
+				     pEl->ElAssocHeader = True;
+				     pEl->ElVolume = 10;
+				     break;
+				  case Refer:
+				     break;
+				  default:
+				     break;
+			       }
+			 break;
+		      case CsConstant:
+			 pEl->ElTerminal = True;
+			 CreeBufTexte (pEl);
+			 /* copie la valeur de la constante */
+			 i = 0;
+			 pBu1 = pEl->ElText;
+			 do
+			   {
+			      pBu1->BuContent[i] = pSS->SsConstBuffer[i + pSRule->SrIndexConst - 1];
+			      i++;
+			   }
+			 while (!(pBu1->BuContent[i - 1] == '\0' || i == MAX_CHAR));
+			 pBu1->BuContent[i - 1] = '\0';
+			 pEl->ElTextLength = i - 1;
+			 pEl->ElVolume = pEl->ElTextLength;
+			 pEl->ElText->BuLength = i - 1;
+			 pEl->ElLanguage = TtaGetDefaultLanguage ();
+			 break;
+		      default:
+			 break;
+		   }
+	  }
+     }
+   /* evalue s'il faut engendrer la descendance */
+   pSRule = &pSS->SsRule[typeNum - 1];
+   if (!Desc || pSRule->SrParamElem)
+      gener = False;
+   else
+     {
+	gener = True;
+	if (pSRule->SrRecursive)
+	   /* regle recursive */
+	   if (pSRule->SrRecursDone)
+	      /* elle a deja ete appliquee */
+	      gener = False;	/* on n'engendre pas sa descendance */
+	   else
+	      /* elle n'a pas encore ete appliquee */
+	      pSRule->SrRecursDone = True;	/* on l'applique et on s'en souvient */
+     }
+   if (gener)
+      /* on engendre la descendance selon le constructeur de la regle */
+      switch (pSRule->SrConstruct)
+	    {
+	       case CsNatureSchema:
+		  /* ce cas ne se produit pas, on a */
+		  /* change' de type d'element (voir plus haut). */
+		  break;
+	       case CsIdentity:
+		  /* structure identique a celle definie par une autre regle */
+		  /* du meme schema */
+		  create = False;
+		  pSRule2 = &pSS->SsRule[pSRule->SrIdentRule - 1];
+		  if (pSRule2->SrParamElem || pSRule2->SrAssocElem || pSRule2->SrConstruct == CsBasicElement ||
+		      pSRule2->SrNInclusions > 0 || pSRule2->SrNExclusions > 0 ||
+		      pSRule2->SrConstruct == CsConstant || pSRule2->SrConstruct == CsChoice ||
+		      pSRule2->SrConstruct == CsPairedElement ||
+		      pSRule2->SrConstruct == CsReference || pSRule2->SrConstruct == CsNatureSchema)
+		     create = True;
+		  t1 = CreeSArbre (pSRule->SrIdentRule, pSS, pDoc, assocNum, Desc,
+				 create, withAttr, withLabel);
+		  if (pEl == NULL)
+		     pEl = t1;
+		  else
+		     AjPremFils (pEl, t1);
+		  break;
+	       case CsBasicElement:
+	       case CsConstant:
+	       case CsReference:
+	       case CsPairedElement:
+	       case CsChoice:
+		  break;
+	       case CsList:
+		  t1 = CreeSArbre (pSRule->SrListItem, pSS, pDoc, assocNum, Desc,
+				 True, withAttr, withLabel);
+		  if (pEl == NULL)
+		     pEl = t1;
+		  else
+		     AjPremFils (pEl, t1);
+		  if (t1 != NULL)
+		     for (i = 2; i <= pSRule->SrMinItems; i++)
+		       {
+			  t2 = CreeSArbre (pSRule->SrListItem, pSS, pDoc, assocNum, Desc,
+				 True, withAttr, withLabel);
+			  if (t2 != NULL)
+			    {
+			       InsDernier (t1, t2);
+			       t1 = t2;
+			    }
+		       }
+		  break;
+	       case CsAggregate:
+	       case CsUnorderedAggregate:
+		  t1 = NULL;
+		  for (i = 1; i <= pSRule->SrNComponents; i++)
+		     if (!pSRule->SrOptComponent[i - 1])
+			/* on ne cree pas les composants optionnels */
+		       {
+			  t2 = CreeSArbre (pSRule->SrComponent[i - 1], pSS, pDoc, assocNum, Desc, True,
+				       withAttr, withLabel);
+			  if (t2 != NULL)
+			    {
+			       if (t1 != NULL)
+				  InsDernier (t1, t2);
+			       else if (pEl == NULL)
+				  pEl = t2;
+			       else
+				  AjPremFils (pEl, t2);
+			       t1 = t2;
+			    }
+		       }
+		  break;
+	       default:
+		  break;
+	    }
+
+   if (pSRule->SrRecursive && pSRule->SrRecursDone && gener)
+      pSRule->SrRecursDone = False;	/* pour une autre fois... */
+   return pEl;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    RetireExclus retire du sous-arbre dont la racine est pointee    | */
+/* |            par pEl tous les elements exclus.			| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                RetireExclus (PtrElement * pEl)
+
+#else  /* __STDC__ */
+void                RetireExclus (pEl)
+PtrElement         *pEl;
+
+#endif /* __STDC__ */
+
+{
+   SRule              *pRule;
+   SRule              *pRuleExcl;
+   PtrElement          pAsc, pChild, pNextChild;
+   PtrSSchema        pSS, pExtSSch;
+   int                 i;
+   boolean             exclus;
+
+   if ((*pEl) != NULL)
+     {
+	/* teste tous les ascendants de l'element */
+	pAsc = (*pEl)->ElParent;
+	exclus = False;
+	while (pAsc != NULL && !exclus)
+	  {
+	     /* examine toutes les exclusions definies pour ce type d'element */
+	     /* accede d'abord a la regle de structuration */
+	     pSS = pAsc->ElSructSchema;
+	     pRule = &pSS->SsRule[pAsc->ElTypeNumber - 1];
+	     pExtSSch = NULL;
+	     do
+	       {
+		  if (pRule != NULL)
+		     /* examine toutes les exclusions definies dans la regle */
+		     for (i = 1; i <= pRule->SrNExclusions; i++)
+		       {
+			  if (pRule->SrExclusion[i - 1] == (*pEl)->ElTypeNumber)
+			     /* l'element traite' a le meme numero de type qu'un */
+			     /* type d'element exclus par l'ascendant */
+			     if ((*pEl)->ElTypeNumber <= MAX_BASIC_TYPE)
+				/* c'est un type de base, il est exclus */
+				exclus = True;
+			     else
+				/* compare les identificateurs des schemas de structure */
+			     if (pSS->SsCode == (*pEl)->ElSructSchema->SsCode)
+				/* memes schemas de structure, type exclus */
+				exclus = True;
+			  if (!exclus)
+			     if ((*pEl)->ElTypeNumber == (*pEl)->ElSructSchema->SsRootElem)
+				/* l'element traite' est l'element racine de son */
+				/* schema de structure : c'est une nature. */
+			       {
+				  /* regle de structure de l'element exclus traite' */
+				  pRuleExcl = &pSS->SsRule[pRule->SrExclusion[i - 1] - 1];
+				  if (pRuleExcl->SrConstruct == CsNatureSchema)
+				     /* l'exclusion traitee est une nature, l'exclusion */
+				     /* s'applique si les noms de nature sont les memes */
+				     exclus = (strcmp ((*pEl)->ElSructSchema->SsName,
+						pRuleExcl->SrName) == 0);
+			       }
+			  /* le 2eme element d'une paire est exclus si le 1er est exclus */
+			  if (!exclus)
+			     /* on n'a pas encore exclus notre element */
+			     if (pRule->SrExclusion[i - 1] + 1 == (*pEl)->ElTypeNumber)
+				/* le type precedent est exclus */
+				if (pSS->SsCode == (*pEl)->ElSructSchema->SsCode)
+				   /* on est bien dans le bon schema de structure */
+				   if ((*pEl)->ElSructSchema->SsRule[(*pEl)->ElTypeNumber - 1].SrConstruct == CsPairedElement)
+				      /* l'element est un membre de paire */
+				      if (!(*pEl)->ElSructSchema->SsRule[(*pEl)->ElTypeNumber - 1].SrFirstOfPair)
+					 /* c'est le 2eme membre de la paire */
+					 exclus = True;
+		       }
+		  /* passe au schema d'extension suivant */
+		  if (pExtSSch == NULL)
+		     pExtSSch = pSS->SsNextExtens;
+		  else
+		     pExtSSch = pExtSSch->SsNextExtens;
+		  if (pExtSSch != NULL)
+		     /* il y a encore un schema d'extension */
+		    {
+		       pSS = pExtSSch;
+		       /* cherche dans ce schema la regle d'extension pour l'ascendant */
+		       pRule = RegleExtens (pAsc->ElSructSchema, pAsc->ElTypeNumber, pExtSSch);
+		    }
+	       }
+	     while (pExtSSch != NULL);
+	     /* passe a l'element ascendant au-dessus */
+	     pAsc = pAsc->ElParent;
+	  }
+	if (exclus)
+	  {
+	     /* retire le sous arbre de son arbre et le libere */
+	     Supprime (pEl);
+	     *pEl = NULL;
+	  }
+	/* traite le sous arbre de pEl, s'il n'a pas ete supprime' */
+	if ((*pEl) != NULL)
+	   if (!(*pEl)->ElTerminal)
+	     {
+		pChild = (*pEl)->ElFirstChild;
+		while (pChild != NULL)
+		  {
+		     pNextChild = pChild->ElNext;
+		     RetireExclus (&pChild);
+		     pChild = pNextChild;
+		  }
+	     }
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    Retire retire le sous-arbre dont la racine est pointee par pEl  | */
+/* |            de l'arbre ou il se trouve.                             | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                Retire (PtrElement pEl)
+
+#else  /* __STDC__ */
+void                Retire (pEl)
+PtrElement          pEl;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pAsc;
+
+   if (pEl != NULL)
+     {
+	/* retire le volume de l'element du volume de ses ascendants */
+	pAsc = pEl->ElParent;
+	while (pAsc != NULL)
+	  {
+	     pAsc->ElVolume = pAsc->ElVolume - pEl->ElVolume;
+	     pAsc = pAsc->ElParent;
+	  }
+	/* retire l'element de la liste de ses freres */
+	if (pEl->ElPrevious != NULL)
+	   pEl->ElPrevious->ElNext = pEl->ElNext;
+	if (pEl->ElNext != NULL)
+	   pEl->ElNext->ElPrevious = pEl->ElPrevious;
+	/* supprime le chainage du pere si c'est le premier fils */
+	if (pEl->ElParent != NULL)
+	   if (pEl->ElParent->ElFirstChild == pEl)
+	      pEl->ElParent->ElFirstChild = pEl->ElNext;
+	pEl->ElPrevious = NULL;
+	pEl->ElNext = NULL;
+	pEl->ElParent = NULL;
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    AttrRetire retire de l'element pointe' par pEl l'attribut       | */
+/* |            pointe' par pAttr, sans liberer cet attribut            | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                AttrRetire (PtrElement pEl, PtrAttribute pAttr)
+
+#else  /* __STDC__ */
+void                AttrRetire (pEl, pAttr)
+PtrElement          pEl;
+PtrAttribute         pAttr;
+
+#endif /* __STDC__ */
+
+{
+   PtrAttribute         pPrevAttr;
+   boolean             stop;
+
+   if (pEl != NULL && pAttr != NULL)
+     {
+	/* retire l'attribut de la chaine des attributs de l'element */
+	if (pEl->ElFirstAttr == pAttr)
+	   /* c'est le premier attribut de l'element */
+	   pEl->ElFirstAttr = pAttr->AeNext;
+	else
+	   /* cherche l'attribut a supprimer dans la chaine des attributs de */
+	   /* l'element */
+	  {
+	     pPrevAttr = pEl->ElFirstAttr;
+	     stop = False;
+	     do
+		if (pPrevAttr == NULL)
+		   /* fin de chaine, on n'a pas trouve' l'attribut. Il a du etre */
+		   /* deja retire' */
+		   stop = True;
+		else if (pPrevAttr->AeNext == pAttr)
+		   /* found', on le dechaine */
+		  {
+		     pPrevAttr->AeNext = pAttr->AeNext;
+		     stop = True;
+		  }
+		else
+		   /* passe au suivant */
+		   pPrevAttr = pPrevAttr->AeNext;
+	     while (!stop);
+	  }
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    AttrSupprime supprime de l'element pointe' par pEl l'attribut   | */
+/* |            pointe' par pAttr. Supprime egalement de l'element      | */
+/* |            toutes les regles de presentation specifique relatives  | */
+/* |            a` l'attribut.                                          | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                AttrSupprime (PtrElement pEl, PtrAttribute pAttr)
+
+#else  /* __STDC__ */
+void                AttrSupprime (pEl, pAttr)
+PtrElement          pEl;
+PtrAttribute         pAttr;
+
+#endif /* __STDC__ */
+
+{
+   PtrPRule        pPR, pPRprev, pPRnext;
+   PtrTextBuffer      buf, nextbuf;
+
+   if (pEl != NULL && pAttr != NULL)
+      /* supprime les regles de presentation specifique attachees a */
+      /* l'element et qui dependent de cet attribut */
+     {
+	pPRprev = NULL;
+	pPR = pEl->ElFirstPRule;
+	while (pPR != NULL)
+	  {
+	     pPRnext = pPR->PrNextPRule;
+	     if (pPR->PrSpecifAttr == pAttr->AeAttrNum
+		 && pPR->PrSpecifAttrSSchema == pAttr->AeAttrSSchema)
+		/* la regle pPR depend de l'attribut a supprimer, on */
+		/* dechaine et libere la regle */
+	       {
+		  if (pPRprev == NULL)
+		     pEl->ElFirstPRule = pPRnext;
+		  else
+		     pPRprev->PrNextPRule = pPRnext;
+		  FreeReglePres (pPR);
+		  pPR = pPRnext;
+	       }
+	     else
+		/* passe a la regle suivante */
+	       {
+		  pPRprev = pPR;
+		  pPR = pPRnext;
+	       }
+	  }
+	/* retire l'attribut de la chaine des attributs de l'element, s'il */
+	/* n'a pas encore ete libere' */
+	AttrRetire (pEl, pAttr);
+	/* libere la memoire attachee a l'attribut */
+	if (pAttr->AeAttrType == AtReferenceAttr)
+	   /* libere la reference */
+	   if (pAttr->AeAttrReference != NULL)
+	     {
+		RefSupprime (pAttr->AeAttrReference);
+		FreeReference (pAttr->AeAttrReference);
+	     }
+	if (pAttr->AeAttrType == AtTextAttr)
+	   /* libere les buffers de texte */
+	  {
+	     buf = pAttr->AeAttrText;
+	     while (buf != NULL)
+	       {
+		  nextbuf = buf->BuNext;
+		  FreeBufTexte (buf);
+		  buf = nextbuf;
+	       }
+	  }
+	/* traitement particulier a la suppression des attributs dans un Draw*/
+	DrawSupprAttr (pAttr, pEl);
+	/* libere le bloc attribut */
+	FreeAttr (pAttr);
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Supprime supprime l'element pointe par pEl, ainsi que toute sa   | */
+/* |            descendance dans l'arbre abstrait et annule toutes les  | */
+/* |            references qui le pointent. Au retour le pointeur passe'| */
+/* |            en parametre est remis a NIL.                           | */
+/* |            Pour chaque element libere', tous les paves             | */
+/* |            correspondants, dans toutes les vues, sont liberes.     | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                Supprime (PtrElement * pEl)
+
+#else  /* __STDC__ */
+void                Supprime (pEl)
+PtrElement         *pEl;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pChild, pNextChild;
+   PtrTextBuffer      pBuf, pNextBuf;
+   int                 c, n, d;
+   PtrAttribute         pAttr, pNextAttr;
+   PtrPRule        pRule, pNextRule;
+   PtrElement          pEl1;
+   PtrCopyDescr        pCD, pNextCD;
+   PtrElement          pAsc;
+   PtrSSchema        pSS;
+   boolean             ok, stop;
+   PtrDocument         pDoc;
+
+   if (*pEl != NULL)
+     {
+	pEl1 = *pEl;
+	/* supprime le texte, si c'est une feuille de texte */
+	if (pEl1->ElTerminal)
+	  {
+	     if ((pEl1->ElLeafType == LtText || pEl1->ElLeafType == LtPicture)
+		 && pEl1->ElText != NULL)
+		/* supprime tous les buffers de texte associes a l'element */
+	       {
+		  pBuf = pEl1->ElText;
+		  c = 0;
+		  do
+		    {
+		       pNextBuf = pBuf->BuNext;
+		       c += pBuf->BuLength;
+		       SuppBufTexte (&pBuf);
+		       pBuf = pNextBuf;
+		    }
+		  while (!(c >= pEl1->ElTextLength || pBuf == NULL));
+		  pEl1->ElText = NULL;
+		  pEl1->ElTextLength = 0;
+
+		  /* Liberation du descripteur d'image */
+		  if (pEl1->ElLeafType == LtPicture)
+		    {
+		       FreeImageDescriptor (pEl1->ElImageDescriptor);
+		       pEl1->ElImageDescriptor = NULL;
+		    }
+	       }
+	     if (pEl1->ElLeafType == LtPlyLine)
+		/* supprime tous les buffers de coordonnees associes a l'element */
+	       {
+		  pBuf = pEl1->ElPolyLineBuffer;
+		  while (pBuf != NULL)
+		    {
+		       pNextBuf = pBuf->BuNext;
+		       SuppBufTexte (&pBuf);
+		       pBuf = pNextBuf;
+		    }
+		  pEl1->ElPolyLineBuffer = NULL;
+		  pEl1->ElNPoints = 0;
+	       }
+	     if (pEl1->ElLeafType == LtReference)
+		/* supprime et dechaine la reference */
+	       {
+		  RefAnnule (*pEl);
+		  if (pEl1->ElReference != NULL)
+		     FreeReference (pEl1->ElReference);
+	       }
+	     if (pEl1->ElLeafType == LtPairedElem)
+		if (pEl1->ElOtherPairedEl != NULL)
+		   pEl1->ElOtherPairedEl->ElOtherPairedEl = NULL;
+	  }
+	else
+	   /* ce n'est pas une feuille, supprime tous les fils */
+	  {
+	     pChild = pEl1->ElFirstChild;
+	     while (pChild != NULL)
+	       {
+		  pNextChild = pChild->ElNext;
+		  Supprime (&pChild);
+		  pChild = pNextChild;
+	       }
+	  }
+	/* supprime tous les descripteurs d'elements copies */
+	pCD = pEl1->ElCopyDescr;
+	while (pCD != NULL)
+	  {
+	     if (pCD->CdCopiedAb != NULL)
+		pCD->CdCopiedAb->AbCopyDescr = NULL;
+	     pNextCD = pCD->CdNext;
+	     FreeDescCopie (pCD);
+	     pCD = pNextCD;
+	  }
+
+	/* supprime la reference d'inclusion si elle existe */
+	if (pEl1->ElSource != NULL)
+	  {
+	     RefAnnule (*pEl);
+	     FreeReference (pEl1->ElSource);
+	  }
+	/* supprime tous les attributs */
+	pAttr = pEl1->ElFirstAttr;
+	while (pAttr != NULL)
+	  {
+	     pNextAttr = pAttr->AeNext;
+	     AttrSupprime (*pEl, pAttr);
+	     pAttr = pNextAttr;
+	  }
+	/* supprime toutes les regles de presentation de l'element */
+	pRule = pEl1->ElFirstPRule;
+	pEl1->ElFirstPRule = NULL;
+	while (pRule != NULL)
+	  {
+	     pNextRule = pRule->PrNextPRule;
+	     FreeReglePres (pRule);
+	     pRule = pNextRule;
+	  }
+	/* supprime le commentaire associe a l'element */
+	pBuf = pEl1->ElComment;
+	while (pBuf != NULL)
+	  {
+	     pNextBuf = pBuf->BuNext;
+	     SuppBufTexte (&pBuf);
+	     pBuf = pNextBuf;
+	  }
+	/* supprime les references sur cet element */
+	SuppRef (*pEl);
+	/* supprime le descripteur d'element referenc'e */
+	SuppDescRef (pEl1->ElReferredDescr);
+	pEl1->ElReferredDescr = NULL;
+	/* decremente le nombre d'objets si c'est un element construit selon */
+	/* la regle racine de son schema de structure. */
+	if (pEl1->ElTypeNumber == pEl1->ElSructSchema->SsRootElem)
+	   /* l'element est construit selon la regle racine de son schema */
+	  {
+	     pEl1->ElSructSchema->SsNObjects--;
+	     if (pEl1->ElSructSchema->SsNObjects == 0)	/* c'etait le dernier objet */
+		/* libere la nature */
+	       {
+		  pAsc = pEl1->ElParent;
+		  ok = False;
+		  while ((!ok) && (pAsc != NULL))
+		    {
+		       pSS = pEl1->ElSructSchema;
+		       ok = LibNature (pAsc->ElSructSchema, pSS);
+		       if (ok)
+			  /* le schema de structure a ete libere'. Il faut le */
+			  /* supprimer de la table des natures du document */
+			 {
+			    stop = False;
+			    for (d = 0; d < MAX_DOCUMENTS && !stop; d++)
+			      {
+				 pDoc = TabDocuments[d];
+				 if (pDoc != NULL)
+				   {
+				      for (n = 1; n <= pDoc->DocNNatures && !stop; n++)
+					 if (pDoc->DocNatureSSchema[n - 1] == pSS)
+					   {
+					      stop = True;
+					      while (n < pDoc->DocNNatures)
+						{
+						   strcpy (pDoc->DocNatureName[n - 1], pDoc->DocNatureName[n]);
+						   strcpy (pDoc->DocNaturePresName[n - 1], pDoc->DocNaturePresName[n]);
+						   pDoc->DocNatureSSchema[n - 1] = pDoc->DocNatureSSchema[n];
+						   n++;
+						}
+					      pDoc->DocNNatures--;
+					   }
+				   }
+			      }
+			 }
+		       else
+			  /* cette nature n'etait pas definie au niveau */
+			  /* immediatement superieur, cherche un autre schema de */
+			  /* structure englobant, ou` cette nature est une unite' */
+			 {
+			    pSS = pAsc->ElSructSchema;
+			    stop = False;
+			    do
+			      {
+				 pAsc = pAsc->ElParent;
+				 if (pAsc == NULL)
+				    stop = True;
+				 else if (pAsc->ElSructSchema != pSS)
+				    stop = True;
+			      }
+			    while (!stop);
+			 }
+		    }
+	       }
+	  }
+	/* retire l'element de l'arbre */
+	Retire (*pEl);
+	/* libere tous les paves */
+	LibPavElem (*pEl);
+	/* rend la memoire */
+	FreeElement (*pEl);
+	*pEl = NULL;
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    CopieArbre cree un arbre copie de l'arbre (ou sous-arbre)       | */
+/* |            pointe' par pSource et rend un pointeur sur la racine	| */
+/* |            de l'arbre cree, ou NULL si la creation de la copie a   | */
+/* |            echoue'. On ne copie pas les marques de page.           | */
+/* |            - pDocSource: pointeur sur le descripteur du document   | */
+/* |            auquel appartient l'arbre a` copier.                    | */
+/* |            - assocNum est le numero de la liste d'elements associes| */
+/* |            auquel doit appartenir la copie. assocNum=0 si ce n'est | */
+/* |            pas un elt associe'.                                    | */
+/* |            - pSSchema: pointeur sur le schema de structure dont	| */
+/* |            doivent dependre les elements de la copie.              | */
+/* |            - pDocCopy: pointeur sur le descripteur du document     | */
+/* |            auquel doit appartenir la copie.                        | */
+/* |            - pPere: pointeur sur l'element qui sera le pere de     | */
+/* |            l'arbre cree'.                                          | */
+/* |            Si checkAttr est vrai, on ne copie les attributs de la  | */
+/* |            source que s'ils peuvent effectivement s'appliquer a`   | */
+/* |            la copie. Si shareRef est vrai, les elements            | */
+/* |            reference's de la copie partagent leur descripteur      | */
+/* |            d'element reference' avec l'original.                   | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrElement          CopieArbre (PtrElement pSource, PtrDocument pDocSource, int assocNum, PtrSSchema pSSchema, PtrDocument pDocCopy, PtrElement pParent, boolean checkAttr, boolean shareRef)
+
+#else  /* __STDC__ */
+PtrElement          CopieArbre (pSource, pDocSource, assocNum, pSSchema, pDocCopy, pParent, checkAttr, shareRef)
+PtrElement          pSource;
+PtrDocument         pDocSource;
+int                 assocNum;
+PtrSSchema        pSSchema;
+PtrDocument         pDocCopy;
+PtrElement          pParent;
+boolean             checkAttr;
+boolean             shareRef;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pEl, pS2, pC1, pC2, pSP;
+   PtrReference        rf;
+   int         copyType, nR;
+   Name                 PSchName;
+   SRule              *pSRule;
+   PtrElement          pAsc;
+   PtrSSchema        pSS;
+   boolean             sameSSchema;
+   boolean             doCopy;
+
+   pEl = NULL;
+   /* pointeur sur l'element qui sera cree' */
+   if (pSource != NULL)
+     {
+	doCopy = True;
+	/* on ne copie pas les marques de page */
+	if (pSource->ElTerminal && pSource->ElLeafType == LtPageColBreak)
+	   doCopy = False;
+	else if (pSource->ElSource != NULL)
+	   /* cet element est une copie-inclusion */
+	   /* on ne le copie pas s'il a ete engendre' avant ou apres une */
+	   /* marque de page (comme les tetieres de tableau par exemple) */
+	   if (ExceptTypeElem (ExcPageBreakRepBefore, pSource->ElTypeNumber, pSource->ElSructSchema))
+	      doCopy = False;
+	   else if (ExceptTypeElem (ExcPageBreakRepetition, pSource->ElTypeNumber, pSource->ElSructSchema))
+	      doCopy = False;
+	if (doCopy)
+	  {
+	     copyType = pSource->ElTypeNumber;
+	     if (strcmp (pSource->ElSructSchema->SsName, pSSchema->SsName) != 0)
+		/* changement de structure generique */
+		if (pSource->ElSructSchema->SsRule[pSource->ElTypeNumber - 1].SrUnitElem ||
+		    pSource->ElSructSchema->SsExtension || pSource->ElTypeNumber <= MAX_BASIC_TYPE)
+		   /* l'element source est une unite' ou un element defini dans une */
+		   /* extension de schema */
+		   if (!checkAttr)
+		      /* on ne verifie pas les unites. La copie aura le meme */
+		      /* schema de structure que la source */
+		      pSSchema = pSource->ElSructSchema;
+		   else
+		     {
+			/* cherche si la future ascendance de la copie comporte */
+			/* un element appartenant au schema ou` est defini */
+			/* l'element source */
+			if (pParent == NULL)
+			   pAsc = pDocCopy->DocRootElement;
+			else
+			   pAsc = pParent;
+			sameSSchema = pSource->ElTypeNumber <= MAX_BASIC_TYPE;
+			if (pAsc != NULL && !sameSSchema)
+			   do
+			     {
+				if (pSource->ElSructSchema->SsCode ==
+				    pAsc->ElSructSchema->SsCode)
+				  {
+				     /* la copie aura le schema de structure de son doc. */
+				     pSSchema = pAsc->ElSructSchema;
+				     sameSSchema = True;
+				  }
+				else if (pSource->ElSructSchema->SsExtension)
+				   /* verifie si l'ascendant a cette extension de schema */
+				  {
+				     pSSchema = pSource->ElSructSchema;
+				     if (ExtensionValide (pAsc, &pSSchema))
+					sameSSchema = True;
+				  }
+				else if (pAsc->ElSructSchema->SsExtension)
+				   /* l'ascendant est une extension */
+				  {
+				     pSS = pAsc->ElSructSchema;
+				     if (ExtensionValide (pSource, &pSS))
+				       {
+					  pSSchema = pSource->ElSructSchema;
+					  sameSSchema = True;
+				       }
+				  }
+				if (!sameSSchema)
+				   /* passe a l'element ascendant au-dessus */
+				   pAsc = pAsc->ElParent;
+			     }
+			   while (pAsc != NULL && !sameSSchema);
+			if (!sameSSchema)
+			   /* il n'y a pas d'ascendant qui ait ce schema de */
+			   /* structure, l'unite' est invalide. */
+			  {
+#ifdef IV
+			     if (ResdynCt.ElSour != NULL && !pSource->ElSructSchema->SsExtension)
+				/* Si on est en cours de restructuration on recherche */
+				/* une unite compatible */
+				GDRCompatibleUnit ((Element) pSource, (Element) pParent,
+					       &copyType, (int **) &pSSchema);
+			     else
+#endif
+				copyType = 0;
+			  }
+		     }
+		else
+		   /* la source est un autre document ou une autre nature, il */
+		   /* faut charger les schemas pour la copie */
+		  {
+		     /* charge les schemas de structure et present. pour la copie */
+		     PSchName[0] = '\0';
+		     /* pas de preference pour le schema de presentation */
+		     nR = CreeNature (pSource->ElSructSchema->SsName, PSchName, pSSchema);
+		     if (nR == 0)
+			/* echec de chargement des schemas */
+			copyType = 0;
+		     else
+			/* chargement reussi, change de schema de structure pour la copie. */
+		       {
+			  pSRule = &pSSchema->SsRule[nR - 1];
+			  pSSchema = pSRule->SrSSchemaNat;
+		       }
+		  }
+	     if (copyType != 0)
+	       {
+		  /* acquiert un element pour la copie */
+		  GetElement (&pEl);
+		  /* remplit la copie */
+		  pEl->ElSructSchema = pSSchema;
+		  pEl->ElTypeNumber = copyType;
+		  if (pEl->ElTypeNumber == pEl->ElSructSchema->SsRootElem)
+		     /* on cree un element construit selon la regle racine de */
+		     /* son schema de structure, on incremente le compteur */
+		     pSSchema->SsNObjects++;
+		  pEl->ElAssocNum = assocNum;
+		  pEl->ElParent = pParent;	/* pour CopyAttributes */
+		  CopyAttributes (pSource, pEl, checkAttr);	/* copie les attributs */
+		  /* copie les regles de presentation specifique */
+		  CopyPresRules (pSource, pEl);	/* copie les regles de presentation */
+		  /* copie le commentaire associe a l'element */
+		  if (pSource->ElComment != NULL)
+		     pEl->ElComment = CopieTexte (pSource->ElComment, pEl);
+		  if (shareRef)
+		    {
+		       strncpy (pEl->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
+		       pEl->ElReferredDescr = pSource->ElReferredDescr;	/* partage (temporairement) */
+		       /* le descripteur d'element reference' entre l'element source */
+		       /*et l'element copie,pour que CmdCopy ou les procedure Coller */
+		       /* puissent relier les references copiees aux elements copies */
+		    }
+		  else
+		    {
+		       pEl->ElReferredDescr = NULL;	/* la copie n'est pas reference'e */
+		       /* calcule la valeur du label */
+		       LabelIntToString (NewLabel (pDocCopy), pEl->ElLabel);
+		    }
+		  pEl->ElIsCopy = pSource->ElIsCopy;
+		  pEl->ElAccess = AccessInherited;
+		  pEl->ElHolophrast = pSource->ElHolophrast;
+		  pEl->ElTerminal = pSource->ElTerminal;
+		  if (!pEl->ElTerminal)
+		     pEl->ElFirstChild = NULL;
+		  else
+		    {
+		       pEl->ElLeafType = pSource->ElLeafType;
+		       switch (pEl->ElLeafType)
+			     {
+				case LtPicture:
+				   pEl->ElImageDescriptor = NULL;
+				   /* copie le contenu d'un texte ou d'une image */
+				   pEl->ElText = CopieTexte (pSource->ElText, pEl);
+				   pEl->ElTextLength = pSource->ElTextLength;
+				   pEl->ElVolume = pEl->ElTextLength;
+				   break;
+				case LtText:
+				   pEl->ElLanguage = pSource->ElLanguage;
+				   /* copie le contenu d'un texte ou d'une image */
+				   pEl->ElText = CopieTexte (pSource->ElText, pEl);
+				   pEl->ElTextLength = pSource->ElTextLength;
+				   pEl->ElVolume = pEl->ElTextLength;
+				   break;
+				case LtPlyLine:
+				   pEl->ElPolyLineBuffer = CopieTexte (pSource->ElPolyLineBuffer, pEl);
+				   pEl->ElNPoints = pSource->ElNPoints;
+				   pEl->ElPolyLineType = pSource->ElPolyLineType;
+				   pEl->ElVolume = pEl->ElNPoints;
+				   break;
+				case LtSymbol:
+				case LtGraphics:
+				   pEl->ElGraph = pSource->ElGraph;
+				   break;
+				case LtPageColBreak:
+
+				   break;
+				case LtReference:
+				   if (pSource->ElReference != NULL)
+				     {
+					GetReference (&rf);	/* acquiert une reference */
+					pEl->ElReference = rf;
+					/* remplit la nouvelle reference */
+					CopieRef (pEl->ElReference, pSource->ElReference, &pEl);
+				     }
+				   break;
+				case LtPairedElem:
+				   pEl->ElPairIdent = pSource->ElPairIdent;
+				   pEl->ElOtherPairedEl = NULL;
+				   break;
+				default:
+				   break;
+			     }
+		    }
+		  if (pSource->ElSource != NULL)
+		    {
+		       GetReference (&rf);	/* acquiert une reference */
+		       pEl->ElSource = rf;
+		       /* remplit la nouvelle reference */
+		       CopieRef (pEl->ElSource, pSource->ElSource, &pEl);
+		    }
+		  /* cree les copies des elements de la descendance, s'il y en a */
+		  if (!pSource->ElTerminal)
+		     if (pSource->ElFirstChild != NULL)
+		       {
+			  pS2 = pSource->ElFirstChild;
+			  pC1 = NULL;
+			  do
+			    {
+			       pC2 = CopieArbre (pS2, pDocSource, assocNum, pSSchema,
+				      pDocCopy, pEl, checkAttr, shareRef);
+			       if (pC2 != NULL)
+				 {
+				    /* rompt le lien avec le futur pere pour que */
+				    /* le calcul du volume se passe bien */
+				    pSP = pEl->ElParent;
+				    pEl->ElParent = NULL;
+				    if (pC1 == NULL)
+				       AjPremFils (pEl, pC2);
+				    else
+				       InsApres (pC1, pC2);
+				    pC1 = pC2;
+				    /* retablit le lien avec le futur pere */
+				    pEl->ElParent = pSP;
+				 }
+			       pS2 = pS2->ElNext;
+			    }
+			  while (!(pS2 == NULL));
+		       }
+		  pEl->ElParent = NULL;	/* ElParent avait ete mis pour CopyAttributes */
+	       }
+	  }
+     }
+   return pEl;
+}
+
+/* ----------------------------------------------------------------------- */
+/* |    Rend le premier element associe de type typeNum (defini dans le  | */
+/* |    schema de structure pSS) appartenant au document pDoc ou NULL si | */
+/* |    aucun element associe' de ce type n'existe			 | */
+/* ----------------------------------------------------------------------- */
+#ifdef __STDC__
+PtrElement          FirstAssocElem (PtrDocument pDoc, int typeNum, PtrSSchema pSS)
+
+#else  /* __STDC__ */
+PtrElement          FirstAssocElem (pDoc, typeNum, pSS)
+PtrDocument         pDoc;
+int         typeNum;
+PtrSSchema        pSS;
+
+#endif /* __STDC__ */
+
+{
+   int                 a;
+   PtrElement          pEl, pEl2;
+   boolean             stop;
+
+   pEl = NULL;
+   stop = False;
+   a = 0;
+   do
+     {
+	if (pDoc->DocAssocRoot[a] != NULL)
+	   if (pDoc->DocAssocRoot[a]->ElFirstChild != NULL)
+	     {
+		pEl2 = pDoc->DocAssocRoot[a]->ElFirstChild;
+		SauteMarquePage (&pEl2);
+		if (pEl2 != NULL)
+		   if (pEl2->ElTypeNumber == typeNum &&
+		       pEl2->ElSructSchema->SsCode == pSS->SsCode)
+		     {
+			pEl = pEl2;
+			stop = True;
+		     }
+	     }
+	a++;
+     }
+   while (!(stop || a >= MAX_ASSOC_DOC));
+   return pEl;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    ChangeLabels affecte de nouveaux labels a tous les elements du  | */
+/* |            sous-arbre pEl, lui-meme exclus.                        | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static void         ChangeLabels (PtrElement pEl, PtrDocument pDoc)
+
+#else  /* __STDC__ */
+static void         ChangeLabels (pEl, pDoc)
+PtrElement          pEl;
+PtrDocument         pDoc;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pE;
+
+   if (!pEl->ElTerminal)
+     {
+	pE = pEl->ElFirstChild;
+	while (pE != NULL)
+	  {
+	     LabelIntToString (NewLabel (pDoc), pE->ElLabel);
+	     ChangeLabels (pE, pDoc);
+	     pE = pE->ElNext;
+	  }
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    CopieInclus copie l'arbre abstrait de l'element a` inclure comme| */
+/* |            sous-arbre de l'element pointe' par pEl. pEl pointe sur | */
+/* |            un element representant une inclusion. pDoc designe le  | */
+/* |            document auquel appartient l'element pointe' par pEl.   | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                CopieInclus (PtrElement pEl, PtrDocument pDoc)
+
+#else  /* __STDC__ */
+void                CopieInclus (pEl, pDoc)
+PtrElement          pEl;
+PtrDocument         pDoc;
+
+#endif /* __STDC__ */
+
+{
+   PtrReference        pRef;
+   PtrElement          pSource, pS2, pC1, pC2, pE;
+   DocumentIdentifier     docIdent;
+   PtrDocument         pDocSource;
+   boolean             done;
+
+   /* on n'a pas encore fait la copie */
+   done = False;
+   if (pEl->ElTerminal)
+      switch (pEl->ElLeafType)
+	    {
+	       case LtPicture:
+	       case LtText:
+		  done = pEl->ElTextLength > 0;
+		  break;
+	       case LtPlyLine:
+		  done = pEl->ElNPoints > 0;
+	       case LtSymbol:
+	       case LtGraphics:
+		  done = pEl->ElGraph != '\0';
+		  break;
+	       case LtPageColBreak:
+	       case LtReference:
+		  break;
+	       default:
+		  break;
+	    }
+   else
+      done = pEl->ElFirstChild != NULL;
+   if (!done)
+      /* La copie n'est pas encore faite, on la fait */
+     {
+	pRef = pEl->ElSource;	/* reference a l'element source */
+	/* cherche l'element dont il faut faire la copie : pSource */
+	pSource = ElemRefer (pRef, &docIdent, &pDocSource);
+	/* l'element a copier est pointe' par pSource, on le copie */
+	if (pSource != NULL)
+	  {
+	     if (IdentDocNul (docIdent))
+		/* l'element a copier est dans le meme document */
+		pDocSource = pDoc;
+	     if (pDocSource != NULL)
+		/* le document contenant l'element a copier est charge', */
+		/* on copie son contenu */
+	       {
+		  /* copie les attributs */
+		  CopyAttributes (pSource, pEl, True);
+		  /* copie les regles de presentation specifique */
+		  CopyPresRules (pSource, pEl);
+		  /* copie le commentaire associe a l'element */
+		  VideTexte (pEl->ElComment);
+		  FreeBufTexte (pEl->ElComment);
+		  if (pSource->ElComment != NULL)
+		     pEl->ElComment = CopieTexte (pSource->ElComment, pEl);
+		  if (pEl->ElTerminal)
+		     switch (pSource->ElLeafType)
+			   {
+			      case LtText:
+			      case LtPicture:
+			      case LtPlyLine:
+				 if (pSource->ElLeafType == LtText)
+				    pEl->ElLanguage = pSource->ElLanguage;
+				 /* copie le contenu d'un texte ou d'une image */
+				 if (pSource->ElLeafType == LtPlyLine)
+				   {
+				      if (pEl->ElLeafType == LtPlyLine &&
+					  pEl->ElPolyLineBuffer != NULL)
+					{
+					   VideTexte (pEl->ElPolyLineBuffer);
+					   FreeBufTexte (pEl->ElPolyLineBuffer);
+					}
+				      pEl->ElLeafType = LtPlyLine;
+				      pEl->ElPolyLineBuffer = CopieTexte (pSource->ElPolyLineBuffer, pEl);
+				      pEl->ElNPoints = pSource->ElNPoints;
+				      pEl->ElPolyLineType = pSource->ElPolyLineType;
+				      pEl->ElVolume = pEl->ElNPoints;
+				   }
+				 else
+				   {
+				      pEl->ElText = CopieTexte (pSource->ElText, pEl);
+				      pEl->ElTextLength = pSource->ElTextLength;
+				      pEl->ElVolume = pEl->ElTextLength;
+				   }
+				 /* ajoute le volume de l'element a celui de ses ascendants */
+				 if (pEl->ElVolume != 0)
+				   {
+				      pE = pEl->ElParent;
+				      while (pE != NULL)
+					{
+					   pE->ElVolume = pE->ElVolume + pEl->ElVolume;
+					   pE = pE->ElParent;
+					}
+				   }
+
+				 break;
+			      case LtSymbol:
+			      case LtGraphics:
+				 pEl->ElGraph = pSource->ElGraph;
+				 break;
+			      case LtPageColBreak:
+				 break;
+			      case LtReference:
+				 if (pSource->ElReference != NULL)
+				   {
+				      if (pEl->ElReference == NULL)
+					 GetReference (&pEl->ElReference);
+				      CopieRef (pEl->ElReference, pSource->ElReference, &pEl);
+				   }
+				 break;
+			      default:
+				 break;
+			   }
+		  else if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice
+			   && (pEl->ElTypeNumber != pSource->ElTypeNumber
+			       || pEl->ElSructSchema->SsCode !=
+			       pSource->ElSructSchema->SsCode))
+		    {
+		       pC1 = CopieArbre (pSource, pDocSource, pEl->ElAssocNum, pEl
+				      ->ElSructSchema, pDoc, pEl, True, True);
+		       if (pC1 != NULL)
+			 {
+			    pC1->ElReferredDescr = NULL;
+			    InsChoix (pEl, &pC1, False);
+			 }
+		    }
+		  else if (pSource->ElFirstChild == NULL)
+		     pEl->ElFirstChild = NULL;
+		  else
+		    {
+		       pS2 = pSource->ElFirstChild;
+		       pC1 = NULL;
+		       do
+			 {
+			    pC2 = CopieArbre (pS2, pDocSource, pEl->ElAssocNum,
+				   pEl->ElSructSchema, pDoc, pEl, True, True);
+			    if (pC2 != NULL)
+			      {
+				 if (pC1 == NULL)
+				    AjPremFils (pEl, pC2);
+				 else
+				    InsApres (pC1, pC2);
+				 pC1 = pC2;
+			      }
+			    pS2 = pS2->ElNext;
+			 }
+		       while (!(pS2 == NULL));
+		    }
+	       }
+	  }
+	/* Met a jour les references internes a la partie copiee */
+	TransRefInclus (pEl, pDoc, pEl, pDocSource);
+
+	/* affecte des nouveaux labels aux elements de la copie */
+	ChangeLabels (pEl, pDoc);
+
+	/* protege le sous-arbre inclus contre toute modification de */
+	/* l'utilisateur */
+	Protege (pEl);
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    DupElem duplique un noeud sans copier ses fils.                 | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrElement          DupElem (PtrElement pEl, PtrDocument pDoc)
+
+#else  /* __STDC__ */
+PtrElement          DupElem (pEl, pDoc)
+PtrElement          pEl;
+PtrDocument         pDoc;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pNew;
+   int                 view;
+
+   GetElement (&pNew);
+   *pNew = *pEl;
+   if (pNew->ElTypeNumber == pNew->ElSructSchema->SsRootElem)
+      /* on cree un element construit selon la regle racine de */
+      /* son schema de structure, on incremente le compteur */
+      pNew->ElSructSchema->SsNObjects++;
+   /* calcule la valeur du label */
+   LabelIntToString (NewLabel (pDoc), pNew->ElLabel);
+   /* copie les attributs sans verification puisqu'on reste dans le meme */
+   /* schema de structure. */
+   CopyAttributes (pEl, pNew, False);
+   /* copie les regles de presentation specifique */
+   CopyPresRules (pEl, pNew);
+   pNew->ElPrevious = NULL;
+   pNew->ElParent = NULL;
+   pNew->ElReferredDescr = NULL;
+   pNew->ElPrevious = NULL;
+   pNew->ElNext = NULL;
+   pNew->ElText = NULL;
+   pNew->ElFirstChild = NULL;
+   pNew->ElLanguage = pEl->ElLanguage;
+   pNew->ElComment = NULL;
+   pNew->ElCopyDescr = NULL;
+   pNew->ElVolume = 0;
+   for (view = 0; view < MAX_VIEW_DOC; view++)
+      pNew->ElAbstractBox[view] = NULL;
+   return pNew;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    AttrWithNum cherche parmi les attributs attaches a l'element pEl| */
+/* |            s'il en existe un du type attrNum. Retourne un pointeur | */
+/* |            sur cet attribut ou NULL s'il n'existe pas.             | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrAttribute         AttrWithNum (PtrElement pEl, int attrNum, PtrSSchema pSSattr)
+
+#else  /* __STDC__ */
+PtrAttribute         AttrWithNum (pEl, attrNum, pSSattr)
+PtrElement          pEl;
+int                 attrNum;
+PtrSSchema        pSSattr;
+
+#endif /* __STDC__ */
+
+{
+   boolean             found;
+   PtrAttribute         pAttr;
+
+   found = False;
+   pAttr = pEl->ElFirstAttr;
+   /* premier attribut de l'element */
+   while (pAttr != NULL && !found)
+     {
+	if (pAttr->AeAttrNum == attrNum)
+	   /* memes numeros d'attribut */
+	   if (attrNum == 1)
+	      /* c'est l'attribut Langue, inutile de comparer les schemas */
+	      found = True;
+	   else if (pAttr->AeAttrSSchema->SsCode == pSSattr->SsCode)
+	      /* memes schemas : c'est bien l'attribut cherche' */
+	      found = True;
+	if (!found)
+	   /* passe a l'attribut suivant du meme element */
+	   pAttr = pAttr->AeNext;
+     }
+   return pAttr;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    GetAttrInEnclosing retourne un pointeur vers l'attribut du	| */
+/* |            premier element qui englobe pEl et qui porte un		| */
+/* |            attribut de type attrNum. La fonction retourne NULL si	| */
+/* |            pas trouve'. Si on trouve, pElAttr pointe sur l'element	| */
+/* |            qui porte cet attribut.			                | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrAttribute         GetAttrInEnclosing (PtrElement pEl, int attrNum,
+			       PtrSSchema pSSattr, PtrElement * pElAttr)
+
+#else  /* __STDC__ */
+PtrAttribute         GetAttrInEnclosing (pEl, attrNum, pSSattr, pElAttr)
+PtrElement          pEl;
+int                 attrNum;
+PtrSSchema        pSSattr;
+PtrElement         *pElAttr;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pElAtt;
+   PtrAttribute         pAttr;
+
+   pAttr = NULL;
+   *pElAttr = NULL;
+   /* on commence par l'element lui-meme */
+   pElAtt = pEl;
+   /* cherche dans ses ascendants */
+   while (pElAtt != NULL && pAttr == NULL)
+      /* cherche parmi les attributs de l'element */
+      if ((pAttr = AttrWithNum (pElAtt, attrNum, pSSattr)) == NULL)
+	 /* l'element n'a pas cet attribut, passe a l'element ascendant */
+	 pElAtt = pElAtt->ElParent;
+      else
+	 *pElAttr = pElAtt;
+   return pAttr;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    VerifieLangueRacine     verifie que la racine pEl porte un      | */
+/* |    attribut Langue et si non, on en met un.                        | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                VerifieLangueRacine (PtrDocument pDoc, PtrElement pEl)
+
+#else  /* __STDC__ */
+void                VerifieLangueRacine (pDoc, pEl)
+PtrDocument         pDoc;
+PtrElement          pEl;
+
+#endif /* __STDC__ */
+
+{
+   PtrAttribute         pAttr, pA;
+   int                 len;
+   Language            lang;
+
+   if (pEl != NULL)
+      if (AttrWithNum (pEl, 1, NULL) == NULL)
+	 /* cet element n'a pas d'attribut langue */
+	{
+	   /* a priori, on prendra la langue par defaut */
+	   lang = TtaGetDefaultLanguage ();
+	   if (pEl != pDoc->DocRootElement)
+	      /* ce n'est pas la racine de l'arbre principal, on cherche si */
+	      /* l'arbre principal a un attribut langue et si oui, on prend */
+	      /* cette langue */
+	     {
+		pAttr = AttrWithNum (pDoc->DocRootElement, 1, NULL);
+		if (pAttr != NULL)
+		   if (pAttr->AeAttrText != NULL)
+		      lang = TtaGetLanguageIdFromName (pAttr->AeAttrText->BuContent);
+	     }
+	   /* change la langue des feuilles de texte */
+	   ChangeLanguageLeaves (pEl, lang);
+	   /* met l'attribut langue sur l'element */
+	   GetAttr (&pAttr);
+	   pAttr->AeAttrSSchema = pDoc->DocSSchema;
+	   pAttr->AeAttrNum = 1;
+	   pAttr->AeDefAttr = False;
+	   pAttr->AeAttrType = AtTextAttr;
+	   GetBufTexte (&pAttr->AeAttrText);
+	   CopieChaineDansTexte (TtaGetLanguageName (lang), pAttr->AeAttrText, &len);
+	   if (pEl->ElFirstAttr == NULL)
+	      /* c'est le 1er attribut de l'element */
+	      pEl->ElFirstAttr = pAttr;
+	   else
+	     {
+		pA = pEl->ElFirstAttr;	/* 1er attribut de l'element */
+		while (pA->AeNext != NULL)	/* cherche le dernier attr */
+		   pA = pA->AeNext;
+		pA->AeNext = pAttr;	/* chaine le nouvel attribut */
+	     }
+	   pAttr->AeNext = NULL;		/* c'est le dernier attribut */
+	}
+}

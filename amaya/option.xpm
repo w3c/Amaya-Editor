@@ -1,0 +1,20 @@
+/* XPM */
+static char * option_xpm[] = {
+"13 13 4 1",
+" 	c None",
+".	c #000000000000",
+"X	c #BFBFBFBFBFBF",
+"o	c #FFFFFFFFFFFF",
+"             ",
+"             ",
+"             ",
+"             ",
+"     ...     ",
+".............",
+".XXXXXXXXXXXo",
+".XXXXXXXXXXXo",
+"ooooooooooooo",
+"     ooo     ",
+"             ",
+"             ",
+"             "};

@@ -1,0 +1,78 @@
+Ce catalogue contient la documentation de Thot. On imprime les documents
+langages.tex et languages.tex en utilisant LaTeX.
+
+Les documents e'crits en franc,ais doivent d'abord e^tre transforme's en
+LaTeX pur. La transformation s'effectue avec sed, en utilisant le script
+sedlatex :
+
+   sed -f sedlatex nom.tex > tmp.tex
+   latex tmp
+
+Pour les documents en franc,ais, les conventions de saisie sont les suivantes:
+
+ACCENTS
+
+Les caracte`res accentue's suivants sont reconnus et transforme's en format
+LaTeX standard, sauf dans les environnements "verbatim" et "verbatim*" ou`
+ils restent inchange's. Dans les environnements "tabbing", cette convention
+fonctionne encore.
+
+	a`	a accent grave
+	a^	a accent circonflexe
+	a"	a trema
+	e'	e accent aigu
+	e`	e accent grave
+	e^	e accent circonflexe
+	e"	e trema
+	i^	i accent circonflexe
+	i"	i trema
+	o^	o accent circonflexe
+	o"	o trema
+	u`	u accent grave
+	u^	u accent circonflexe
+	u"	u trema
+	c,	c cedille
+
+Les me^mes conventions s'appliquent aux lettres majuscules.
+
+Laisser un espace apre`s les virgules, quand elles ne denotent pas la ce'dille
+Les cas suivants sont correctement traite's :
+	Franc,aise
+	Franc,oise
+	Gerc,ure
+	Donc, il semble
+
+Les cas suivants sont correctement traite's :
+	j'ai aime' 
+	``j'aime''
+	``j'ai aime'''
+
+LIGATURE "OE"
+
+	On essaie de reconnai^tre automatiquement quelles sont les
+	situations ou` "oe", "Oe" et "OE" doivent e^tre lie'es. 
+
+Les seules bogues constate'es concernent les mots
+	moelle (qui s'e'crit sans ligature)
+	oerstite (qui s'e'crit avec ligature)
+	OErsted (qui s'e'crit avec ligature)
+
+En revanche les exemples suivants sont correctement traite's :
+	Boer, coefficient, coercitif, foehn, foetus, Noe"l, noeud, oecumenie,
+	Oedipe, OEdipe, oeil, oekume`ne, oenante, oestre, oeuf, oeuvre,
+	poe^le, poecile, poe`te, poe'sie, soeur, voeu.
+
+L'utilisateur peut toujours forcer la ligature en e'crivant :
+	{\oe} ou {\OE}
+Il peut e'galement l'interdire en e'crivant :
+	{o}{e} ou {O}{E}
+
+LIGATURE "AE"
+
+Les ligatures "ae", "Ae" et "AE" ne sont jamais faites automatiquement.
+L'utilisateur doit les faire explicitement a` l'aide des notations.
+	{\ae} et {\AE}
+
+LIGATURES DIVERSES
+
+Ne pas utiliser " sauf pour les tre'mas. Utiliser `` et '' pour les guillemets.

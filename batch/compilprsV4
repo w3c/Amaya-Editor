@@ -1,0 +1,76 @@
+#!/bin/sh
+#( set -x
+
+BIN=${THOTDIR}/batch/
+CONFIG=${THOTDIR}/config/
+Machine=`${BIN}/MachineType`
+THOTBIN=${THOTDIR}/${Machine}/bin
+TABLE=${CONFIG}/fr--table
+
+. ${TABLE}
+
+if [ "${#}" -eq "0" ]
+then
+	echo "${0}: "${MSG51}>&2
+	echo "Usage: ${0} [-Doption] -Doption=val] Input_FILE[.P] output_FILE[.PRS]">&2
+	exit 1
+fi
+
+PWD=`pwd`
+if [ "$THOTSCH" = "" ]
+   then THOTSCH=${PWD}:${THOTDIR}/schemasV4:${THOTDIR}/schemas:${THOTDIR}/schemasOPERA
+else
+	tmp=$THOTSCH
+	THOTSCH=${PWD}:${tmp}
+fi
+export THOTSCH
+
+# construct cpp command line
+CPP="gcc -E -C"
+NB=1
+OPTION="-"
+while  [ "${OPTION}" = "-" ]
+do
+   PARAM=$1
+   OPTION=`echo ${PARAM}|cut -d"D" -f1`
+   if [ "${OPTION}" = "-" ]
+   then
+	if [ "${#}" -gt "1" ]
+	then
+	   shift
+	   NB=`expr ${NB} + 1`
+	fi
+	CPP="${CPP} ${PARAM}"
+   fi 
+done
+
+# wipe out extension
+NAME=`echo ${PARAM}|cut -d"." -f1`
+LONG=`echo ${NAME}|wc -c`
+. ${TABLE}
+if [ -f "${NAME}.P" ]
+   then
+	if [ "${#}" -gt "1" ]
+	then
+	   shift
+	   PARAM=$1
+	   OFILE=`echo ${PARAM}|cut -d"." -f1`
+	else
+           OFILE=${NAME}
+	fi
+	echo ${MSG35}
+	${CPP} ${NAME}.P > ${OFILE}.SCH
+	NAME=${OFILE}
+. ${TABLE}
+	echo ${MSG30}
+	${THOTBIN}/prsV4 ${OFILE} || { echo ${MSG28};rm ${OFILE}.SCH; exit 1; }
+	echo ${MSG29}
+	rm ${OFILE}.SCH
+else
+	if [ -f "${NAME}.PRS" ]
+	then
+		echo ${MSG34}
+	fi
+	echo ${MSG36}
+fi
+#)

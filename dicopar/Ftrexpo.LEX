@@ -1,0 +1,22 @@
+23 192
+Compagnie
+folio
+numéro
+recto
+verso
+folio
+Maître
+numéro
+recto
+verso
+Compagnie
+folios
+Mesdames
+Monseigneur
+Mademoiselle
+Madame
+numéros
+Mesdemoiselles
+Mademoiselle
+Mesdames
+Mesdemoiselles

@@ -1,0 +1,23 @@
+/* XPM */
+static char * destroy_xpm[] = {
+"28 17 3 1",
+" 	c #CFCFCBCBCFCF",
+".	c #FFFF45454141",
+"X	c #79799E9EDFDF",
+"      ... XXXXXXXXX ...     ",
+"       ...XXXXXXXXX...      ",
+"        ...XXXXXXX...       ",
+"         ...XXXXX...        ",
+"          ...XXX...         ",
+"          X...X...X         ",
+"          XX.....XX         ",
+"          XXX...XXX         ",
+"          XXX....XX         ",
+"          XX......X         ",
+"          X...XX...         ",
+"          ...XXXX...        ",
+"         ...XXXXXX...       ",
+"        ...XXXXXXXX...      ",
+"       ...XXXXXXXXX ...     ",
+"      ... XXXXXXXXX  ...    ",
+"     ...  XXXXXXXXX   ...   "};

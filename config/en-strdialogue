@@ -1,0 +1,66 @@
+0 Intermediate symbol!\n
+1 File name and structure name different\n
+2 Word too long\n
+3 Global attribute\n
+4 Only one default value\n
+5 Too many values\n
+6 Too man rules\n
+7 Too many options in the CASE statement\n
+8 Too many components in aggregate\n
+9 Constant buffer full\n
+10 Too many attributes\n
+11 This attribute has already values\n
+12 Attribute already declared\n
+13 Value already declared\n
+14 Attribute not declared\n
+15 Attribute value not declared\n
+16 Invalid value for this attribute\n
+17 Maximum lower than minimum !\n
+18 Name already declared\n
+19 First rule must be the root\n
+20 Line too long\n
+21 Rule nesting too deep\n
+22 Constant not declared\n
+23 Give a name to this element\n
+24 Attribute without value\n
+25 Invalid character\n
+26 String value not implemented\n
+27 Type unknown\n
+28 Cannot read structure schema\n
+29 Too many external documents\n
+30 Too many exceptions\n
+31 Type or attribute unknown\n
+32 Only for elements\n
+33 Only for attributes\n
+34 This number must be greater than 100\n
+35 Only for numerical attributes\n
+36 This type already has exceptions\n
+37 This attribute already has exceptions\n
+38 Too many inclusions for this element\n
+39 Too many exclusions for this element\n
+40 Not allowed here\n
+41 This element has local attributes\n
+42 Not enough memory\n
+43 No such file\n
+44 Only for reference attributes\n
+45 Root cannot be a pair\n
+46 "First" or "Second" forbidden for this type\n
+47 Only in an EXTENSION schema\n
+48 Missing STRUCT Section\n
+49 Not allowed in an extension\n
+50 External structure %s\n
+51 Recursive element %s\n
+52 Parameter %s\n
+53 Associated elements %s\n
+54 Alias %s\n
+55 %s unused\n
+56 %s : is a temporary element.\n
+57 %s : won\'t be created\n
+58 %s : won\'t be created and is referenced!?!?\n
+59 file name without \".SCH\:
+60 %s cannot be included\n
+61 %s cannot be extern\n
+62 %s : external structure not found\n
+63 The associated element %s is used in another rule!\n
+64 Cannot write %s\n
+65 Only one Import exception allowed\n

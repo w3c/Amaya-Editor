@@ -1,0 +1,3203 @@
+
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+/* I. Vatton    Septembre 1994 */
+
+#include "thot_gui.h"
+#include "thot_sys.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "modif.h"
+#include "appdialogue.h"
+#include "dialog.h"
+#include "logowindow.h"
+#include "application.h"
+#include "dialog.h"
+#include "document.h"
+#include "message.h"
+#include "libmsg.h"
+
+#define MAX_ARGS 20
+
+#ifdef NEW_WILLOWS
+#include <windows.h>
+#include <commctrl.h>
+#endif
+
+#undef EXPORT
+#define EXPORT extern
+#include "font.var"
+#include "edit.var"
+#include "frame.var"
+#include "appdialogue.var"
+/* Tant qu'il n'est pas possible de modifier la signature de la fonction
+   TtaInitialize, il faut passer par la variable globale CurrentServer
+   pour modifier le server courant par la ligne de commande */
+
+extern boolean      WithMessages;	/* partage avec le module dialog.c */
+extern Pixmap       image;
+extern int          appArgc;
+extern char       **appArgv;
+typedef void        (*Thot_ActionProc) ();
+typedef struct _CallbackCTX *PtrCallbackCTX;
+
+typedef struct _CallbackCTX
+  {
+     Thot_ActionProc     callbackProc;
+     int                 callbackSet;
+     PtrCallbackCTX      callbackNext;
+  }
+CallbackCTX;
+
+static PtrCallbackCTX firstCallbackAPI;
+static int          FreeMenuAction;
+static Pixmap       wind_pixmap;
+
+/* LISTES DES MENUS : chaque menu pointe sur une liste d'items.  */
+/* Chaque item contient le numero d'entree dans le fichier de    */
+/* dialogue (le texte pouvant varier avec la langue utilisee) et */
+/* l'indice dans la TABLE DES ACTIONS de l'action associee.      */
+/* CsList des menus attache's a la fenetre principale de l'application */
+static Menu_Ctl    *MainMenuList;
+
+/* CsList des menus attache's aux frames de documents en ge'ne'ral */
+static Menu_Ctl    *DocumentMenuList;
+
+/* CsList des menus attache's aux frames de documents particuliers */
+static SchemaMenu_Ctl *SchemasMenuList;
+
+#include "appli.f"
+#include "cmd.f"
+#include "commun.f"
+#include "creation.f"
+#include "def.f"
+#include "des.f"
+#include "dialog.f"
+#include "docvues.f"
+#include "appdialogue.f"
+#include "appexec.f"
+#include "es.f"
+#include "font.f"
+#include "imabs.f"
+#include "img.f"
+#include "input.f"
+#include "memory.f"
+#include "modif.f"
+#include "option.f"
+#include "sel.f"
+#include "select.f"
+#include "thotmsg.f"
+
+#ifdef __STDC__
+extern void         EndInsert (void);
+extern void         InitDocContexts (void);
+extern void         InitShellMsg (void);
+extern void         InitEcrans (char *, int, int);
+extern void         TteLoadApplications (void);
+extern ThotWidget   XmCreateForem (ThotWidget, char *, Arg[], int);
+
+#else
+extern void         EndInsert ();
+extern void         InitDocContexts ();
+extern void         InitShellMsg ();
+extern void         InitEcrans ();
+extern void         TteLoadApplications ();
+extern ThotWidget   XmCreateForem ();
+
+#endif
+
+/* ---------------------------------------------------------------------- */
+/* | TteConnectAction rend accessible une action locale (Callback).     | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TteConnectAction (int id, Proc procedure)
+#else  /* __STDC__ */
+void                TteConnectAction (id, procedure)
+int                 id;
+Proc                procedure;
+
+#endif /* __STDC__ */
+{
+   ThotLocalActions[id] = procedure;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | TteInitMenuActions alloue la table des actions.                    | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TteInitMenus (char *name, int number)
+#else  /* __STDC__ */
+void                TteInitMenus (name, number)
+char               *name;
+int                 number;
+
+#endif /* __STDC__ */
+{
+   int                 i;
+   char                nomf1[100];
+   char                nomf2[100];
+   char                texte[100];
+   char               *servername;
+
+#ifndef NEW_WILLOWS
+   Display            *Dp;
+
+#endif /* !NEW_WILLOWS */
+
+   /* Initialisation du  contexte serveur */
+   FrRef[0] = 0;
+
+   InitDocContexts ();
+
+
+   /* Initialise le dialogue */
+   servername = NULL;
+   if (appArgc > 2)
+     {
+	i = 1;
+	while (i < appArgc - 1)
+	   if (strcmp (appArgv[i], "-display") != 0)
+	      i++;
+	   else
+	     {
+		/* l'argument est "-display" et celui qui suit le nom du display */
+		servername = appArgv[i + 1];
+		i = appArgc;
+	     }
+     }
+#ifdef NEW_WILLOWS
+   TtaInitDialogue (servername, TtaGetMessage (LIB, LIB_CONFIRM),
+		    TtaGetMessage (LIB, LIB_CANCEL));
+#else  /* NEW_WILLOWS */
+   TtaInitDialogue (servername, TtaGetMessage (LIB, LIB_CONFIRM),
+		    TtaGetMessage (LIB, LIB_CANCEL), TtaGetMessage (LIB, LIB_DONE), &app_cont, &Dp);
+   if (!RootShell)
+     {
+	/* Connection au serveur X impossible */
+	printf ("*** Not initialized\n");
+	printf ("*** Fatal Error: X connexion refused\n");
+	exit (1);
+     }
+   GDp (0) = Dp;
+#endif /* !NEW_WILLOWS */
+
+   /* Definition de la procedure de retour des dialogues */
+   TtaDefineDialogueCallback (ThotCallback);
+
+   Dico_Init ();
+   InitShellMsg ();
+   InitEcrans (name, 0, 0);
+   NomFonte ('L', 'H', 0, MenuSize, UnPoint, texte, nomf1);
+   NomFonte ('L', 'H', 1, MenuSize, UnPoint, texte, nomf2);
+   TtaChangeDialogueFonts (nomf1, nomf2);
+
+   /* reserve les menus de Thot */
+   TtaGetReferencesBase (MAX_MenuThot);
+
+   /* Il faut ajouter les actions internes liees a la structure */
+   number += MAX_INTERNAL_CMD;
+   MaxMenuAction = number;
+   MenuActionList = (Action_Ctl *) TtaGetMemory (number * sizeof (Action_Ctl));
+   /* initialisation des equilalents clavier et validation de l'action */
+   for (FreeMenuAction = 0; FreeMenuAction < MAX_INTERNAL_CMD; FreeMenuAction++)
+     {
+	MenuActionList[FreeMenuAction].ActionEquiv = NULL;
+	for (i = 0; i < MAX_FRAME; i++)
+	   MenuActionList[FreeMenuAction].ActionActive[i] = True;
+     }
+
+   /* Initialisation des actions internes obligatoires */
+   MenuActionList[0].ActionName = CST_InsertChar;	/* action InsertChar() */
+   MenuActionList[0].Call_Action = (Proc) NULL;
+
+   MenuActionList[CMD_DeletePrevChar].ActionName = CST_DeletePrevChar;
+   MenuActionList[CMD_DeletePrevChar].Call_Action = (Proc) NULL;
+   MenuActionList[CMD_DeletePrevChar].ActionEquiv = CST_EquivBS;
+
+   MenuActionList[CMD_DeleteSelection].ActionName = CST_DeleteSelection;
+   MenuActionList[CMD_DeleteSelection].Call_Action = (Proc) NULL;
+   MenuActionList[CMD_DeleteSelection].ActionEquiv = CST_EquivDel;
+
+   MenuActionList[CMD_BackwardChar].ActionName = CST_BackwardChar;
+   MenuActionList[CMD_BackwardChar].Call_Action = (Proc) TtcPreviousChar;
+
+   MenuActionList[CMD_ForwardChar].ActionName = CST_ForwardChar;
+   MenuActionList[CMD_ForwardChar].Call_Action = (Proc) TtcNextChar;
+
+   MenuActionList[CMD_PreviousLine].ActionName = CST_PreviousLine;
+   MenuActionList[CMD_PreviousLine].Call_Action = (Proc) TtcPreviousLine;
+
+   MenuActionList[CMD_NextLine].ActionName = CST_NextLine;
+   MenuActionList[CMD_NextLine].Call_Action = (Proc) TtcNextLine;
+
+   MenuActionList[CMD_BeginningOfLine].ActionName = CST_BeginningOfLine;
+   MenuActionList[CMD_BeginningOfLine].Call_Action = (Proc) TtcStartOfLine;
+
+   MenuActionList[CMD_EndOfLine].ActionName = CST_EndOfLine;
+   MenuActionList[CMD_EndOfLine].Call_Action = (Proc) TtcEndOfLine;
+
+   MenuActionList[CMD_ParentElement].ActionName = CST_ParentElement;
+   MenuActionList[CMD_ParentElement].Call_Action = (Proc) TtcParentElement;
+
+   MenuActionList[CMD_PreviousElement].ActionName = CST_PreviousElement;
+   MenuActionList[CMD_PreviousElement].Call_Action = (Proc) TtcPreviousElement;
+
+   MenuActionList[CMD_NextElement].ActionName = CST_NextElement;
+   MenuActionList[CMD_NextElement].Call_Action = (Proc) TtcNextElement;
+
+   MenuActionList[CMD_ChildElement].ActionName = CST_ChildElement;
+   MenuActionList[CMD_ChildElement].Call_Action = (Proc) TtcChildElement;
+
+   MenuActionList[CMD_PageUp].ActionName = CST_PageUp;
+   MenuActionList[CMD_PageUp].Call_Action = (Proc) TtcPageUp;
+   MenuActionList[CMD_PageUp].ActionEquiv = CST_EquivPrior;
+
+   MenuActionList[CMD_PageDown].ActionName = CST_PageDown;
+   MenuActionList[CMD_PageDown].Call_Action = (Proc) TtcPageDown;
+   MenuActionList[CMD_PageDown].ActionEquiv = CST_EquivNext;
+
+   MenuActionList[CMD_PageTop].ActionName = CST_PageTop;
+   MenuActionList[CMD_PageTop].Call_Action = (Proc) TtcPageTop;
+   MenuActionList[CMD_PageTop].ActionEquiv = CST_EquivHome;
+
+   MenuActionList[CMD_PageEnd].ActionName = CST_PageEnd;
+   MenuActionList[CMD_PageEnd].Call_Action = (Proc) TtcPageEnd;
+   MenuActionList[CMD_PageEnd].ActionEquiv = CST_EquivEnd;
+
+   MenuActionList[CMD_CreateElement].ActionName = CST_CreateElement;
+   MenuActionList[CMD_CreateElement].Call_Action = (Proc) NULL;
+
+   MenuActionList[CMD_CopyToClipboard].ActionName = CST_CopyClipboard;
+   MenuActionList[CMD_CopyToClipboard].Call_Action = (Proc) TtcCopyToClipboard;
+
+   MenuActionList[CMD_PasteFromClipboard].ActionName = CST_PasteClipboard;
+   MenuActionList[CMD_PasteFromClipboard].Call_Action = (Proc) NULL;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | TteAddMenuAction ajoute une nouvelle action dans la table des      | */
+/* |    actions d'interface.                                            | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TteAddMenuAction (char *actionName, Proc procedure)
+
+#else  /* __STDC__ */
+void                TteAddMenuAction (actionName, procedure)
+char               *actionName;
+Proc                procedure;
+
+#endif /* __STDC__ */
+{
+   char               *ptr;
+   int                 lg;
+   int                 i;
+
+   if (actionName == NULL)
+      return;			/* pas de nom d'action declare */
+
+   lg = strlen (actionName);
+   if (FreeMenuAction < MaxMenuAction && lg != 0)
+     {
+	/* Alloue une chaine de caractere pour le nom de l'action */
+	ptr = TtaGetMemory (lg + 1);
+	strcpy (ptr, actionName);
+	MenuActionList[FreeMenuAction].ActionName = ptr;
+	MenuActionList[FreeMenuAction].Call_Action = procedure;
+	MenuActionList[FreeMenuAction].ActionEquiv = NULL;
+	/* Cette nouvelle action n'est active pour aucune frame */
+	for (i = 0; i < MAX_FRAME; i++)
+	   MenuActionList[FreeMenuAction].ActionActive[i] = False;
+	FreeMenuAction++;
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | FindMenuAction recherche l'action dans la table des actions        | */
+/* |    d'interface.                                                    | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static int          FindMenuAction (char *actionName)
+
+#else  /* __STDC__ */
+static int          FindMenuAction (actionName)
+char               *actionName;
+
+#endif /* __STDC__ */
+{
+   int                 i;
+
+   for (i = 0; i < MaxMenuAction; i++)
+     {
+	if (!strcmp (actionName, MenuActionList[i].ActionName))
+	   return (i);
+     }
+   return (i);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | TteZeroMenu signale qu'il n'y a pas de menu dans ce type de        | */
+/* |    fenentre.                                                       | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TteZeroMenu (WindowType windowtype, char *schemaName)
+
+#else  /* __STDC__ */
+void                TteZeroMenu (windowtype, schemaName)
+WindowType          windowtype;
+char               *schemaName;
+
+#endif /* __STDC__ */
+{
+   SchemaMenu_Ctl     *ptrschema;
+   boolean             ok;
+
+   if (windowtype == DocTypeWindow)
+     {
+	/* il s'agit d'un menu d'un schema particulier */
+	if (SchemasMenuList == NULL)
+	  {
+	     /* creation et initialisation du contexte specifique au schema */
+	     ptrschema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
+	     ptrschema->SchemaName = TtaGetMemory (strlen (schemaName) + 1);
+	     strcpy (ptrschema->SchemaName, schemaName);
+	     ptrschema->SchemaMenu = NULL;
+	     ptrschema->NextSchema = NULL;
+	     SchemasMenuList = ptrschema;
+	  }
+	else
+	  {
+	     ptrschema = SchemasMenuList;
+	     ok = strcmp (schemaName, ptrschema->SchemaName);
+	     while (!ok && ptrschema->NextSchema != NULL)
+	       {
+		  ptrschema = ptrschema->NextSchema;
+		  ok = strcmp (schemaName, ptrschema->SchemaName);
+	       }
+
+	     if (!ok)
+	       {
+		  /* creation et initialisation du contexte specifique au schema */
+		  ptrschema->NextSchema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
+		  ptrschema = ptrschema->NextSchema;
+		  ptrschema->SchemaName = TtaGetMemory (strlen (schemaName) + 1);
+		  strcpy (ptrschema->SchemaName, schemaName);
+		  ptrschema->SchemaMenu = NULL;
+		  ptrschema->NextSchema = NULL;
+	       }
+	  }
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | TteAddMenu ajoute un nouveau menu pour le schema donne. Si le      | */
+/* |    nom de schema est Null, il s'agit des menus pris par defaut.    | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TteAddMenu (WindowType windowtype, char *schemaName, int view, int menuID, int itemsNumber, char *menuName)
+
+#else  /* __STDC__ */
+void                TteAddMenu (windowtype, schemaName, view, menuID, itemsNumber, menuName)
+WindowType          windowtype;
+char               *schemaName;
+int                 view;
+int                 menuID;
+int                 itemsNumber;
+char               *menuName;
+
+#endif /* __STDC__ */
+{
+   Menu_Ctl           *ptrmenu;
+   Menu_Ctl           *newmenu;
+   SchemaMenu_Ctl     *ptrschema;
+   Item_Ctl           *ptr;
+   int                 i;
+   boolean             ok;
+
+   /* Creation du nouveau menu */
+   newmenu = (Menu_Ctl *) TtaGetMemory (sizeof (Menu_Ctl));
+   newmenu->MenuID = menuID;
+   newmenu->MenuView = view;
+   newmenu->ItemsNb = itemsNumber;
+   /* Enregistre les menus actifs */
+   newmenu->MenuAttr = False;
+   newmenu->MenuSelect = False;
+   newmenu->MenuHelp = False;
+   if (!strcmp (menuName, "MenuAttribute"))
+      newmenu->MenuAttr = True;
+   else if (!strcmp (menuName, "MenuSelection"))
+      newmenu->MenuSelect = True;
+   else if (!strcmp (menuName, "MenuHelp"))
+      newmenu->MenuHelp = True;
+
+   /* creation et initialisation de la table des items */
+   ptr = (Item_Ctl *) TtaGetMemory (itemsNumber * sizeof (Item_Ctl));
+   for (i = 0; i < itemsNumber; i++)
+     {
+	ptr[i].ItemID = -1;
+	ptr[i].ItemAction = -1;
+	ptr[i].ItemType = ' ';
+     }
+   newmenu->ItemsList = ptr;
+   newmenu->NextMenu = NULL;
+
+   /* Chainage du nouveau menu aux autres menus existants */
+   switch (windowtype)
+	 {
+	    case MainWindow:
+	       /* il s'agit d'un des menus principaux */
+	       if (MainMenuList == NULL)
+		 {
+		    MainMenuList = newmenu;
+		    ptrmenu = NULL;
+		 }
+	       else
+		  ptrmenu = MainMenuList;	/* simple ajout du menu dans une liste */
+	       break;
+
+	    case DocWindow:
+	       /* il s'agit d'un des menus pris par defaut */
+	       if (DocumentMenuList == NULL)
+		 {
+		    DocumentMenuList = newmenu;
+		    ptrmenu = NULL;
+		 }
+	       else
+		  ptrmenu = DocumentMenuList;	/* simple ajout du menu dans une liste */
+	       break;
+
+	    case DocTypeWindow:
+	       /* il s'agit d'un menu d'un schema particulier */
+	       if (SchemasMenuList == NULL)
+		 {
+		    /* creation et initialisation du contexte specifique au schema */
+		    ptrschema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
+		    ptrschema->SchemaName = TtaGetMemory (strlen (schemaName) + 1);
+		    strcpy (ptrschema->SchemaName, schemaName);
+		    ptrschema->SchemaMenu = newmenu;
+		    ptrschema->NextSchema = NULL;
+		    ptrmenu = NULL;
+		    SchemasMenuList = ptrschema;
+		 }
+	       else
+		 {
+		    ptrschema = SchemasMenuList;
+		    ok = strcmp (schemaName, ptrschema->SchemaName);
+		    while (ok && ptrschema->NextSchema != NULL)
+		      {
+			 ptrschema = ptrschema->NextSchema;
+			 ok = strcmp (schemaName, ptrschema->SchemaName);
+		      }
+
+		    if (ok)
+		      {
+			 /* creation et initialisation du contexte specifique au schema */
+			 ptrschema->NextSchema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
+			 ptrschema = ptrschema->NextSchema;
+			 ptrschema->SchemaName = TtaGetMemory (strlen (schemaName) + 1);
+			 strcpy (ptrschema->SchemaName, schemaName);
+			 ptrschema->SchemaMenu = newmenu;
+			 ptrschema->NextSchema = NULL;
+			 ptrmenu = NULL;
+		      }
+		    else
+		       ptrmenu = ptrschema->SchemaMenu;		/* simple ajout du menu dans une liste */
+		 }
+	       break;
+	 }
+
+   if (ptrmenu != NULL)
+     {
+	/* Ajout du nouveau menu en fin de liste */
+	while (ptrmenu->NextMenu != NULL)
+	   ptrmenu = ptrmenu->NextMenu;
+	ptrmenu->NextMenu = newmenu;
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | TteAddSubMenu ajoute un sous-menu pour le schema donne.            | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TteAddSubMenu (WindowType windowtype, char *schemaName, int menuID, int itemID, int itemsNumber)
+
+#else  /* __STDC__ */
+void                TteAddSubMenu (windowtype, schemaName, menuID, itemID, itemsNumber)
+WindowType          windowtype;
+char               *schemaName;
+int                 menuID;
+int                 itemID;
+int                 itemsNumber;
+
+#endif /* __STDC__ */
+{
+   Menu_Ctl           *ptrmenu;
+   Menu_Ctl           *newmenu;
+   SchemaMenu_Ctl     *ptrschema;
+   Item_Ctl           *ptr, *ptrItem;
+   int                 i, j;
+
+   /* Recherche la bonne liste de menus */
+   ptrmenu = NULL;
+   switch (windowtype)
+	 {
+	    case MainWindow:
+	       /* il s'agit d'un des menus principaux */
+	       if (MainMenuList != NULL)
+		  ptrmenu = MainMenuList;
+	       break;
+
+	    case DocWindow:
+	       /* il s'agit d'un des menus pris par defaut */
+	       if (DocumentMenuList != NULL)
+		  ptrmenu = DocumentMenuList;
+	       break;
+
+	    case DocTypeWindow:
+	       /* il s'agit d'un menu d'un schema particulier */
+	       ptrschema = SchemasMenuList;
+	       while (ptrschema != NULL && strcmp (schemaName, ptrschema->SchemaName))
+		  ptrschema = ptrschema->NextSchema;
+	       if (ptrschema != NULL)
+		  ptrmenu = ptrschema->SchemaMenu;
+	       break;
+	 }
+
+   /* Recherche le bon menu */
+   while (ptrmenu != NULL && menuID != ptrmenu->MenuID)
+      ptrmenu = ptrmenu->NextMenu;
+
+   if (ptrmenu != NULL)
+     {
+	/* recherche l'item dans le menu */
+	ptrItem = ptrmenu->ItemsList;
+	j = 0;
+	while (j < ptrmenu->ItemsNb && ptrItem[j].ItemType != ' ')
+	   j++;
+	if (j < ptrmenu->ItemsNb)
+	  {
+	     /* Creation du sous-menu */
+	     newmenu = (Menu_Ctl *) TtaGetMemory (sizeof (Menu_Ctl));
+	     newmenu->MenuID = 0;
+	     newmenu->MenuView = 0;
+	     newmenu->ItemsNb = itemsNumber;
+	     newmenu->MenuAttr = False;
+	     newmenu->MenuSelect = False;
+	     newmenu->MenuHelp = False;
+
+	     /* creation et initialisation de la table des items */
+	     ptr = (Item_Ctl *) TtaGetMemory (itemsNumber * sizeof (Item_Ctl));
+	     for (i = 0; i < itemsNumber; i++)
+	       {
+		  ptr[i].ItemID = -1;
+		  ptr[i].ItemAction = -1;
+		  ptr[i].ItemType = ' ';
+	       }
+	     newmenu->ItemsList = ptr;
+	     newmenu->NextMenu = NULL;
+	     /* relie le sous-menu a l'item */
+	     ptrItem[j].SubMenu = newmenu;
+	     ptrItem[j].ItemID = itemID;
+	     ptrItem[j].ItemType = 'M';
+	  }
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | TteAddMenuItem ajoute une nouvel item dans un menu.                | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TteAddMenuItem (WindowType windowtype, char *schemaName, int menuID, int subMenu, int itemID, char *actionName, char itemType)
+
+#else  /* __STDC__ */
+void                TteAddMenuItem (windowtype, schemaName, menuID, subMenu, itemID, actionName, itemType)
+WindowType          windowtype;
+char               *schemaName;
+int                 menuID;
+int                 subMenu;
+int                 itemID;
+char               *actionName;
+char                itemType;
+
+#endif /* __STDC__ */
+{
+   Menu_Ctl           *ptrmenu;
+   SchemaMenu_Ctl     *ptrschema;
+   Item_Ctl           *ptr;
+   int                 i;
+
+   /* Recherche la bonne liste de menus */
+   ptrmenu = NULL;
+   switch (windowtype)
+	 {
+	    case MainWindow:
+	       /* il s'agit d'un des menus principaux */
+	       if (MainMenuList != NULL)
+		  ptrmenu = MainMenuList;
+	       break;
+
+	    case DocWindow:
+	       /* il s'agit d'un des menus pris par defaut */
+	       if (DocumentMenuList != NULL)
+		  ptrmenu = DocumentMenuList;
+	       break;
+
+	    case DocTypeWindow:
+	       /* il s'agit d'un menu d'un schema particulier */
+	       ptrschema = SchemasMenuList;
+	       while (ptrschema != NULL && strcmp (schemaName, ptrschema->SchemaName))
+		  ptrschema = ptrschema->NextSchema;
+	       if (ptrschema != NULL)
+		  ptrmenu = ptrschema->SchemaMenu;
+	       break;
+	 }
+
+   /* Recherche le menu */
+   while (ptrmenu != NULL && menuID != ptrmenu->MenuID)
+      ptrmenu = ptrmenu->NextMenu;
+
+   if (ptrmenu != NULL && subMenu != -1)
+     {
+	/* Recherche l'entree du sous-menu dans le menu */
+	i = 0;
+	ptr = ptrmenu->ItemsList;
+	while (i < ptrmenu->ItemsNb && (ptr[i].ItemID != subMenu))
+	   i++;
+	if (i < ptrmenu->ItemsNb)
+	   ptrmenu = ptr[i].SubMenu;
+	else
+	   /* on n'a pas trouve le sous-menu */
+	   return;
+     }
+
+   /* ajoute l'item dans le menu */
+   i = 0;
+   ptr = ptrmenu->ItemsList;
+   while (i < ptrmenu->ItemsNb && ptr[i].ItemType != ' ')
+      i++;
+
+   if (i < ptrmenu->ItemsNb)
+     {
+	ptr[i].ItemID = itemID;
+	ptr[i].ItemType = itemType;
+	if (actionName != NULL)
+	   ptr[i].ItemAction = FindMenuAction (actionName);
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    mmtopixel convertit des mm en pixels.                           | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static int          mmtopixel (int N, int horiz)
+#else  /* __STDC__ */
+static int          mmtopixel (N, horiz)
+int                 N;
+int                 horiz;
+
+#endif /* __STDC__ */
+{
+   if (horiz)
+      return (PTS_POUCE * N * 10) / 254;
+   else
+      return (PTS_POUCE * N * 10) / 254;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | ConstruitSubmenu construit un sous-menu attache' a l'item item     | */
+/* |            du menu ref.                                            | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         ConstruitSubmenu (Menu_Ctl * ptrmenu, int ref, int entry, int frame)
+#else  /* __STDC__ */
+static void         ConstruitSubmenu (ptrmenu, ref, entry, frame)
+Menu_Ctl           *ptrmenu;
+int                 ref;
+int                 entry;
+int                 frame;
+
+#endif /* __STDC__ */
+{
+   int                 i, j;
+   int                 lg, sref;
+   int                 item;
+   int                 action;
+   char                chaine[700];
+   char                equiv[100];
+   boolean             avec;
+   Item_Ctl           *ptritem;
+   char               *ptr;
+
+   /* Construit le sous-menu attache a l'item */
+   item = 0;
+   i = 0;
+   j = 0;
+   avec = False;
+   equiv[0] = '\0';
+   ptritem = ptrmenu->ItemsList;
+   while (item < ptrmenu->ItemsNb)
+     {
+	/* Regarde si le texte des commandes ne deborde pas */
+	ptr = TtaGetMessage (THOT, ptritem[item].ItemID);
+	lg = strlen (ptr) + 1;
+	if (ptritem[item].ItemType == 'S' && i + 2 < 700)
+	  {
+	     strcpy (&chaine[i], "S");
+	     i += 2;
+	  }
+	else if (i + lg < 699)
+	  {
+	     if (ptritem[item].ItemType == 'D')
+		chaine[i] = 'B';
+	     else
+		chaine[i] = ptritem[item].ItemType;
+	     strcpy (&chaine[i + 1], ptr);
+	     i += lg + 1;
+	  }
+	else
+	   /* sinon on reduit le nombre d'items */
+	   ptrmenu->ItemsNb = item - 1;
+
+	/* traite le contenu de l'item de menu */
+	action = ptritem[item].ItemAction;
+	if (action != -1)
+	  {
+	     /* Active l'action correspondante pour cette fenetre */
+	     if (MenuActionList[action].ActionEquiv != NULL)
+	       {
+		  avec = True;
+		  lg = strlen (MenuActionList[action].ActionEquiv);
+		  if (lg + j < 100)
+		    {
+		       strcpy (&equiv[j], MenuActionList[action].ActionEquiv);
+		       j += lg;
+		    }
+	       }
+	     MenuActionList[action].ActionActive[frame] = True;
+	  }
+	equiv[j++] = '\0';
+	item++;
+     }
+   sref = ((entry + 1) * MAX_MENU * MAX_FRAME) + ref;
+   /* Creation du Pulldown avec ou sans equiv */
+   if (avec)
+      TtaNewSubmenu (sref, ref, entry, NULL, ptrmenu->ItemsNb, chaine, equiv, False);
+   else
+      TtaNewSubmenu (sref, ref, entry, NULL, ptrmenu->ItemsNb, chaine, NULL, False);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | ConstruitPopdown construit un menu popdown attache' au bouton      | */
+/* |            de menu.                                                | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         ConstruitPopdown (Menu_Ctl * ptrmenu, int ref, ThotWidget button, int frame)
+#else  /* __STDC__ */
+static void         ConstruitPopdown (ptrmenu, ref, button, frame)
+Menu_Ctl           *ptrmenu;
+int                 ref;
+ThotWidget          button;
+int                 frame;
+
+#endif /* __STDC__ */
+{
+   int                 i, j;
+   int                 lg;
+   int                 item;
+   int                 action;
+   char                chaine[700];
+   char                equiv[100];
+   boolean             avec;
+   Item_Ctl           *ptritem;
+   char               *ptr;
+
+   /* Construit le pulldown attache au bouton */
+   item = 0;
+   i = 0;
+   j = 0;
+   avec = False;
+   equiv[0] = '\0';
+   ptritem = ptrmenu->ItemsList;
+   while (item < ptrmenu->ItemsNb)
+     {
+	action = ptritem[item].ItemAction;
+	/* Regarde si le texte des commandes ne deborde pas */
+	ptr = TtaGetMessage (THOT, ptritem[item].ItemID);
+	lg = strlen (ptr) + 1;
+	if (ptritem[item].ItemType == 'S' && i + 2 < 700)
+	  {
+	     strcpy (&chaine[i], "S");
+	     i += 2;
+	  }
+	else if (i + lg < 699)
+	  {
+	     if (ptritem[item].ItemType == 'D')
+		chaine[i] = 'B';
+	     else
+		chaine[i] = ptritem[item].ItemType;
+	     strcpy (&chaine[i + 1], ptr);
+	     i += lg + 1;
+	  }
+	else
+	   /* sinon on reduit le nombre d'items */
+	   ptrmenu->ItemsNb = item - 1;
+
+	/* traite le contenu de l'item de menu */
+	if (action != -1)
+	  {
+	     if (ptritem[item].ItemType == 'B' || ptritem[item].ItemType == 'T')
+	       {
+		  /* Active l'action correspondante pour cette fenetre */
+		  if (MenuActionList[action].ActionEquiv != NULL)
+		    {
+		       avec = True;
+		       lg = strlen (MenuActionList[action].ActionEquiv);
+		       if (lg + j < 100)
+			 {
+			    strcpy (&equiv[j], MenuActionList[action].ActionEquiv);
+			    j += lg;
+			 }
+		    }
+		  MenuActionList[action].ActionActive[frame] = True;
+	       }
+	  }
+	equiv[j++] = '\0';
+	item++;
+     }
+
+
+   /* Creation du Pulldown avec ou sans equiv */
+   if (avec)
+      TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb, chaine, equiv);
+   else
+      TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb, chaine, NULL);
+
+   /* traite les sous-menus de l'item de menu */
+   item = 0;
+   ptritem = ptrmenu->ItemsList;
+   while (item < ptrmenu->ItemsNb)
+     {
+	action = ptritem[item].ItemAction;
+	if (action != -1)
+	  {
+	     if (ptritem[item].ItemType == 'M')
+	       {
+		  if (action != 0 && item < MAX_ITEM)
+		     /* creation du sous-menu */
+		     ConstruitSubmenu (ptritem[item].SubMenu, ref, item, frame);
+	       }
+	  }
+	item++;
+     }
+}
+
+/* ----------------------------------------------------------------------
+   TteOpenMainWindow opens the application main window.
+
+   Parameters:
+   name: the name to be displayed as the title of the main window.
+   logo: the logo pixmap to be displayed in the window or NULL.
+   icon: the icon pixmap to be displayed in the window or NULL.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
+#else  /* __STDC__ */
+void                TteOpenMainWindow (name, logo, icon)
+char               *name;
+Pixmap              logo;
+Pixmap              icon;
+
+#endif /* __STDC__ */
+{
+   int                 i, n;
+   int                 ref;
+   int                 lg;
+   char                chaine[700];
+   Menu_Ctl           *ptrmenu;
+   char               *ptr;
+
+   /* Creation de la fenetre principale */
+   UserErrorCode = 0;
+#ifndef NEW_WILLOWS
+   TtaInitDialogueTranslations (InitTranslations (name));
+#endif /* !NEW_WILLOWS */
+   TteLoadApplications ();
+#ifndef NEW_WILLOWS
+   if (GDp (0) == 0)
+     {
+	/* Connexion au serveur X impossible */
+	TtaError (ERR_cannot_open_main_window);
+	exit (1);
+     }
+   else
+#endif /* !NEW_WILLOWS */
+     {
+	/* Police de caracteres utilisee dans les menus */
+#ifndef NEW_WILLOWS
+	DefaultFont = XmFontListCreate ((XFontStruct *) ChargeFonte ('L', 'H', 0, MenuSize, UnPoint, 0), XmSTRING_DEFAULT_CHARSET);
+#endif
+	/* Compte le nombre de menus a creer */
+	n = 0;
+	i = 0;
+	ptrmenu = MainMenuList;
+	while (ptrmenu != NULL)
+	  {
+	     n++;
+	     /* Regarde si le texte des commandes ne deborde pas */
+
+	  /************************************************
+	  ptr = TtaGetMessage(EDIT_DIALOG, ptrmenu->MenuID);
+          *************************************************/
+	     ptr = TtaGetMessage (THOT, ptrmenu->MenuID);
+	     lg = strlen (ptr) + 1;
+	     if (i + lg < 700)
+	       {
+		  strcpy (&chaine[i], ptr);
+		  i += lg;
+		  ptrmenu = ptrmenu->NextMenu;
+	       }
+	     else
+		/* sinon on reduit le nombre de menus */
+		ptrmenu = NULL;
+	  }
+
+/**** creation de la fenetre principale ****/
+	if (n == 0)
+	  {
+	     WithMessages = False;
+	     TtaInitDialogueWindow (name, NULL, None, None, 0, NULL);
+	  }
+	else
+	  {
+	     WithMessages = True;
+	     TtaInitDialogueWindow (name, NULL, logo, icon, n, chaine);
+	  }
+
+	/* icone des fenetres de documents */
+#ifndef NEW_WILLOWS
+	wind_pixmap = XCreateBitmapFromData (GDp (0), XDefaultRootWindow (GDp (0)),
+		      logowindow_bits, logowindow_width, logowindow_height);
+#endif
+/**** creation des menus ****/
+	ptrmenu = MainMenuList;
+	FrameTable[0].FrMenus = ptrmenu;
+	ref = MAX_LocalMenu;	/* reference du menu construit */
+	i = 0;
+	while (ptrmenu != NULL)
+	  {
+	     /* Enregistre le widget du menu */
+	     FrameTable[0].ActifMenus[i] = True;
+	     ConstruitPopdown (ptrmenu, ref, FrameTable[0].WdMenus[i], 0);
+	     ptrmenu = ptrmenu->NextMenu;
+	     ref += MAX_FRAME;
+	     i++;
+	  }
+
+	/* Les autres entrees de menus sont inactives */
+	while (i < MAX_MENU)
+	  {
+	     FrameTable[0].ActifMenus[i] = False;
+	     i++;
+	  }
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    ButtonAction                                                    | */
+/* ---------------------------------------------------------------------- */
+#ifndef NEW_WILLOWS
+#ifdef __STDC__
+static void         APP_ButtonCallback (ThotWidget w, int frame, caddr_t call_d)
+
+#else  /* __STDC__ */
+static void         APP_ButtonCallback (w, frame, call_d)
+ThotWidget          w;
+int                 frame;
+caddr_t             call_d;
+
+#endif /* __STDC__ */
+{
+   Document            document;
+   View                view;
+   int                 i;
+
+   i = 0;
+   while (i < MAX_BUTTON && FrameTable[frame].Button[i] != w)
+      i++;
+   if (i < MAX_BUTTON)
+     {
+	EndInsert ();
+	VueDeFenetre (frame, &document, &view);
+	(*FrameTable[frame].Call_Button[i]) (document, view);
+     }
+}
+#endif /* NEW_WILLOWS */
+
+/* ----------------------------------------------------------------------
+   TtaAddButton
+
+   Adds a new button entry in a document view.
+   This function must specify a valid view of a valid document.
+
+   Parameters:
+   document: the concerned document.
+   view: the concerned view.
+   picture: label of the new entry. None creates a spave between buttons.
+   procedure: procedure to be executed when the new entry is
+   selected by the user. Null creates a cascade button.
+   Returns index
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+int                 TtaAddButton (Document document, View view, Pixmap picture, void (*procedure) ())
+#else  /* __STDC__ */
+int                 TtaAddButton (document, view, picture, procedure)
+Document            document;
+View                view;
+Pixmap              picture;
+void                (*procedure) ();
+
+#endif /* __STDC__ */
+{
+   int                 frame, i, n, index;
+
+#ifndef NEW_WILLOWS
+   XmString            title_string;
+   Arg                 args[MAX_ARGS];
+
+#endif
+   ThotWidget          w, row;
+
+   UserErrorCode = 0;
+   index = 0;
+   /* verifie le parametre document */
+   if (document == 0 && view == 0)
+      TtaError (ERR_invalid_parameter);
+   else
+     {
+	frame = GetWindowNumber (document, view);
+	if (frame == 0 || frame > MAX_FRAME)
+	   TtaError (ERR_invalid_parameter);
+	else if (FrameTable[frame].WdFrame != 0)
+	  {
+	     i = 0;
+	     while (i < MAX_BUTTON && FrameTable[frame].Button[i] != 0)
+		i++;
+	     if (i < MAX_BUTTON)
+	       {
+		  row = FrameTable[frame].Button[0];
+
+#ifndef NEW_WILLOWS
+		  /* Insere le nouveau bouton */
+		  n = 0;
+		  XtSetArg (args[n], XmNmarginWidth, 0);
+		  n++;
+		  XtSetArg (args[n], XmNmarginHeight, 0);
+		  n++;
+		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
+		  n++;
+		  XtSetArg (args[n], XmNtraversalOn, False);
+		  n++;
+		  if (picture == None)
+		    {
+		       /* insere une chaine vide */
+		       title_string = XmStringCreateSimple ("  ");
+		       XtSetArg (args[n], XmNlabelString, title_string);
+		       n++;
+		       XtSetArg (args[n], XmNforeground, Black_Color);
+		       n++;
+		       XtSetArg (args[n], XmNheight, (Dimension) 30);
+		       n++;
+		       w = XmCreateLabel (row, "Logo", args, n);
+		       XtManageChild (w);
+		       XmStringFree (title_string);
+		    }
+		  else
+		    {
+		       /* insere l'icone du bouton */
+		       XtSetArg (args[n], XmNlabelType, XmPIXMAP);
+		       n++;
+		       XtSetArg (args[n], XmNlabelPixmap, picture);
+		       n++;
+		       if (procedure == NULL)
+			 {
+			    w = XmCreateCascadeButton (row, "dialogue", args, n);
+			    XtManageChild (w);
+			 }
+		       else
+			 {
+			    w = XmCreatePushButton (row, "dialogue", args, n);
+			    XtManageChild (w);
+			    XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) APP_ButtonCallback, (XtPointer) frame);
+			    FrameTable[frame].Call_Button[i] = (Proc) procedure;
+			 }
+		    }
+		  FrameTable[frame].Button[i] = w;
+		  index = i;
+		  /* force la mise a jour de la fenetre */
+		  XtManageChild (row);
+#endif /* NEW_WILLOWS */
+	       }
+	  }
+     }
+
+   TtaHandlePendingEvents ();
+   return (index);
+}				/*TtaAddButton */
+
+
+/* ----------------------------------------------------------------------
+   TtaSwitchButton
+
+   Change the status of the button entry in a document view.
+   This function must specify a valid view of a valid document.
+
+   Parameters:
+   document: the concerned document.
+   view: the concerned view.
+   index: the index.
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtaSwitchButton (Document document, View view, int index)
+#else  /* __STDC__ */
+void                TtaSwitchButton (document, view, index)
+Document            document;
+View                view;
+int                 index;
+
+#endif /* __STDC__ */
+{
+   int                 frame;
+
+#ifndef NEW_WILLOWS
+   int                 n;
+   Pixel               top, bottom;
+   Arg                 args[MAX_ARGS];
+
+#endif
+
+   UserErrorCode = 0;
+   /* verifie le parametre document */
+   if (document == 0 && view == 0)
+      TtaError (ERR_invalid_parameter);
+   else
+     {
+	frame = GetWindowNumber (document, view);
+	if (frame == 0 || frame > MAX_FRAME)
+	   TtaError (ERR_invalid_parameter);
+	else if (FrameTable[frame].WdFrame != 0)
+	  {
+	     if (index >= MAX_BUTTON || index <= 0
+		 || FrameTable[frame].Button[index] == 0)
+		TtaError (ERR_invalid_parameter);
+	     else
+	       {
+		  /* Change l'etat du bouton */
+#ifndef NEW_WILLOWS
+		  n = 0;
+		  XtSetArg (args[n], XmNtopShadowColor, &top);
+		  n++;
+		  XtSetArg (args[n], XmNbottomShadowColor, &bottom);
+		  n++;
+		  XtGetValues (FrameTable[frame].Button[index], args, n);
+		  n = 0;
+		  XtSetArg (args[n], XmNtopShadowColor, bottom);
+		  n++;
+		  XtSetArg (args[n], XmNbottomShadowColor, top);
+		  n++;
+		  XtSetValues (FrameTable[frame].Button[index], args, n);
+#endif /* NEW_WILLOWS */
+	       }
+	  }
+     }
+}
+
+
+/* ----------------------------------------------------------------------
+   TtaChangeButton
+
+   Change the button entry in a document view.
+   This function must specify a valid view of a valid document.
+
+   Parameters:
+   document: the concerned document.
+   view: the concerned view.
+   index: the index.
+   picture: the new icon.
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtaChangeButton (Document document, View view, int index, Pixmap picture)
+#else  /* __STDC__ */
+void                TtaChangeButton (document, view, index, picture)
+Document            document;
+View                view;
+int                 index;
+Pixmap              picture;
+
+#endif /* __STDC__ */
+{
+   int                 frame, n;
+
+#ifndef NEW_WILLOWS
+   Arg                 args[MAX_ARGS];
+
+#endif
+
+   UserErrorCode = 0;
+   /* verifie le parametre document */
+   if (document == 0 && view == 0)
+      TtaError (ERR_invalid_parameter);
+   else if (picture == None)
+      TtaError (ERR_invalid_parameter);
+   else
+     {
+	frame = GetWindowNumber (document, view);
+	if (frame == 0 || frame > MAX_FRAME)
+	   TtaError (ERR_invalid_parameter);
+	else if (FrameTable[frame].WdFrame != 0)
+	  {
+	     if (index >= MAX_BUTTON || index <= 0
+		 || FrameTable[frame].Button[index] == 0)
+		TtaError (ERR_invalid_parameter);
+	     else
+	       {
+		  /* Insere le nouvel icone */
+		  n = 0;
+#ifndef NEW_WILLOWS
+		  XtSetArg (args[n], XmNlabelPixmap, picture);
+		  n++;
+		  XtSetValues (FrameTable[frame].Button[index], args, n);
+#endif /* NEW_WILLOWS */
+	       }
+	  }
+     }
+}				/*TtaChangeButton */
+
+/* ----------------------------------------------------------------------
+   TtcSwitchButtonBar
+
+   Shows the buttonbar in a document view.
+   This function must specify a valid view of a valid document.
+
+   Parameters:
+   document: identifier of the document.
+   view: identifier of the view.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtcSwitchButtonBar (Document document, View view)
+#else  /* __STDC__ */
+void                TtcSwitchButtonBar (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   int                 frame;
+
+#ifndef NEW_WILLOWS
+   Dimension           dy;
+   Arg                 args[MAX_ARGS];
+   ThotWidget          row;
+
+#endif
+
+   UserErrorCode = 0;
+   /* verifie le parametre document */
+   if (document == 0 && view == 0)
+      TtaError (ERR_invalid_parameter);
+   else
+     {
+	frame = GetWindowNumber (document, view);
+	if (frame == 0 || frame > MAX_FRAME)
+	  {
+	     TtaError (ERR_invalid_parameter);
+	     return;
+	  }
+	else if (FrameTable[frame].WdFrame == 0)
+	   return;
+     }
+
+#ifndef NEW_WILLOWS
+   row = FrameTable[frame].Button[0];
+   XtSetArg (args[0], XmNheight, &dy);
+   if (row != 0)
+     {
+	XtUnmanageChild (XtParent (XtParent (row)));
+	if (XtIsManaged (row))
+	  {
+	     XtGetValues (row, args, 1);
+	     XtUnmanageChild (row);
+	     dy = -dy;
+	     XtUnmanageChild (XtParent (row));
+	  }
+	else
+	  {
+	     XtManageChild (row);
+	     XtGetValues (row, args, 1);
+	  }
+
+	/*XChangeTaille((int *)w, frame, NULL); */
+	XtManageChild (XtParent (row));
+	XtManageChild (XtParent (XtParent (row)));
+     }
+#endif /* NEW_WILLOWS */
+   /* force la mise a jour de la fenetre */
+   TtaHandlePendingEvents ();
+}				/*TtcSwitchButtonBar */
+
+
+/* ---------------------------------------------------------------------- */
+/* |    TextAction                                                      | */
+/* ---------------------------------------------------------------------- */
+#ifndef NEW_WILLOWS
+#ifdef __STDC__
+static void         APP_TextCallback (ThotWidget w, int frame, XmTextVerifyCallbackStruct * call_d)
+#else  /* __STDC__ */
+static void         APP_TextCallback (w, frame, call_d)
+ThotWidget          w;
+int                 frame;
+XmTextVerifyCallbackStruct *call_d;
+
+#endif /* __STDC__ */
+{
+   Document            document;
+   View                view;
+   int                 i;
+   char               *text;
+
+   EndInsert ();
+   i = 0;
+   while (i < MAX_TEXTZONE && FrameTable[frame].Text_Zone[i] != w)
+      i++;
+   if (i < MAX_TEXTZONE)
+     {
+	VueDeFenetre (frame, &document, &view);
+	text = XmTextGetString (w);
+	(*FrameTable[frame].Call_Text[i]) (document, view, text);
+     }
+}
+#endif /* NEW_WILLOWS */
+
+/* ----------------------------------------------------------------------
+   TtaAddTextZone
+
+   Adds a new textual command in a document view.
+   This function must specify a valid view of a valid document.
+
+   Parameters:
+   document: the concerned document.
+   view: the concerned view.
+   label: label of the new entry.
+   procedure: procedure to be executed when the new entry is changed by the
+   user.
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+int                 TtaAddTextZone (Document document, View view, char *label, boolean editable, void (*procedure) ())
+#else  /* __STDC__ */
+int                 TtaAddTextZone (document, view, label, editable, procedure)
+Document            document;
+View                view;
+char               *label;
+boolean             editable;
+void                (*procedure) ();
+
+#endif /* __STDC__ */
+{
+   int                 frame, i, n;
+   ThotWidget          w, row, rowh;
+
+#ifndef NEW_WILLOWS
+   XmString            title_string;
+   Arg                 args[MAX_ARGS];
+
+#endif /* NEW_WILLOWS */
+   ThotWidget         *brother;
+
+
+   UserErrorCode = 0;
+   i = 0;
+   /* verifie le parametre document */
+   if (document == 0 && view == 0)
+      TtaError (ERR_invalid_parameter);
+   else
+     {
+	frame = GetWindowNumber (document, view);
+	if (frame == 0 || frame > MAX_FRAME)
+	   TtaError (ERR_invalid_parameter);
+	else if (FrameTable[frame].WdFrame != 0)
+	  {
+	     i = 0;
+	     while (i < MAX_TEXTZONE && FrameTable[frame].Text_Zone[i] != 0)
+		i++;
+	     if (i < MAX_TEXTZONE)
+	       {
+		  row = FrameTable[frame].Text_Zone[0];
+		  /*XtManageChild(row); */
+#ifndef NEW_WILLOWS
+		  XtUnmanageChild (XtParent (XtParent (row)));
+
+		  /* Insere la nouvelle zone de texte */
+		  n = 0;
+		  XtSetArg (args[n], XmNchildren, &brother);
+		  n++;
+		  XtGetValues (row, args, n);
+
+		  n = 0;
+		  XtSetArg (args[n], XmNmarginWidth, 0);
+		  n++;
+		  XtSetArg (args[n], XmNmarginHeight, 0);
+		  n++;
+		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
+		  n++;
+		  XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
+		  n++;
+		  if (brother == NULL)
+		    {
+		       XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
+		       n++;
+		    }
+		  else
+		    {
+		       XtSetArg (args[n], XmNtopAttachment, XmATTACH_WIDGET);
+		       n++;
+		       XtSetArg (args[n], XmNtopWidget, *brother);
+		       n++;
+		    }
+		  XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
+		  n++;
+		  rowh = XmCreateForm (row, "Dialogue", args, n);
+		  XtManageChild (rowh);
+		  if (label != NULL)
+		    {
+		       n = 0;
+		       XtSetArg (args[n], XmNbackground, BgMenu_Color);
+		       n++;
+		       XtSetArg (args[n], XmNforeground, Black_Color);
+		       n++;
+		       XtSetArg (args[n], XmNheight, (Dimension) FontHeight (FontMenu3));
+		       n++;
+		       XtSetArg (args[n], XmNfontList, DefaultFont);
+		       n++;
+		       title_string = XmStringCreateSimple (label);
+		       XtSetArg (args[n], XmNlabelString, title_string);
+		       n++;
+		       XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
+		       n++;
+		       XtSetArg (args[n], XmNwidth, (Dimension) 60);
+		       n++;
+		       XtSetArg (args[n], XmNalignment, XmALIGNMENT_BEGINNING);
+		       n++;
+		       w = XmCreateLabel (rowh, "Dialogue", args, n);
+		       XtManageChild (w);
+		       XmStringFree (title_string);
+		    }
+
+		  n = 0;
+		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
+		  n++;
+		  XtSetArg (args[n], XmNforeground, Black_Color);
+		  n++;
+		  XtSetArg (args[n], XmNeditMode, XmSINGLE_LINE_EDIT);
+		  n++;
+		  XtSetArg (args[n], XmNtraversalOn, True);
+		  n++;
+		  XtSetArg (args[n], XmNkeyboardFocusPolicy, XmEXPLICIT);
+		  n++;
+		  XtSetArg (args[n], XmNsensitive, True);
+		  n++;
+		  XtSetArg (args[n], XmNeditable, editable);
+		  n++;
+		  XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
+		  n++;
+		  XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
+		  n++;
+		  if (label != NULL)
+		    {
+		       XtSetArg (args[n], XmNleftAttachment, XmATTACH_WIDGET);
+		       n++;
+		       XtSetArg (args[n], XmNleftWidget, w);
+		       n++;
+		    }
+		  else
+		    {
+		       XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
+		       n++;
+		    }
+
+		  w = XmCreateText (rowh, "Dialogue", args, n);
+		  XtManageChild (w);
+		  FrameTable[frame].Text_Zone[i] = w;
+		  if (procedure != NULL)
+		    {
+		       XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) APP_TextCallback, (XtPointer) frame);
+		       FrameTable[frame].Call_Text[i] = (Proc) procedure;
+		    }
+		  XtManageChild (row);
+		  XtManageChild (XtParent (XtParent (row)));
+		  XtManageChild (XtParent (XtParent (XtParent (row))));
+#endif /* NEW_WILLOWS */
+	       }
+	     else
+		i = 0;
+	  }
+     }
+   /* force la mise a jour de la fenetre */
+   TtaHandlePendingEvents ();
+   return (i);
+}				/*TtaAddTextZone */
+
+
+/* ----------------------------------------------------------------------
+   TtaSetTextZone
+
+   Sets the text in text-zone in a document view.
+   This function must specify a valid view of a valid document.
+
+   Parameters:
+   document: identifier of the document.
+   view: identifier of the view.
+   index: 
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtaSetTextZone (Document document, View view, int index, char *text)
+#else  /* __STDC__ */
+void                TtaSetTextZone (document, view, index, text)
+Document            document;
+View                view;
+int                 index;
+char               *text;
+
+#endif /* __STDC__ */
+{
+   int                 frame;
+   ThotWidget          w;
+
+   UserErrorCode = 0;
+   /* verifie le parametre document */
+   if (document == 0 && view == 0 && (index < 1 || index >= MAX_TEXTZONE) && text != NULL)
+      TtaError (ERR_invalid_parameter);
+   else
+     {
+	frame = GetWindowNumber (document, view);
+	if (frame == 0 || frame > MAX_FRAME)
+	   TtaError (ERR_invalid_parameter);
+	else if (FrameTable[frame].WdFrame != 0)
+	  {
+	     w = FrameTable[frame].Text_Zone[index];
+	     /*XtRemoveCallback(w, XmNmodifyVerifyCallback, (XtCallbackProc)APP_TextCallback, (XtPointer)frame); */
+#ifndef NEW_WILLOWS
+	     if (w != 0)
+		XmTextSetString (w, text);
+#endif /* NEW_WILLOWS */
+	     /*XtAddCallback(w, XmNmodifyVerifyCallback, (XtCallbackProc)APP_TextCallback, (XtPointer)frame); */
+	  }
+     }
+#ifndef NEW_WILLOWS
+   XFlush (GDp (0));
+#endif /* NEW_WILLOWS */
+}				/*TtaSetTextZone */
+
+
+/* ----------------------------------------------------------------------
+   TtcSwitchCommands
+
+   Shows or hides the commands part in a document view.
+   This function must specify a valid view of a valid document.
+
+   Parameters:
+   document: identifier of the document.
+   view: identifier of the view.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtcSwitchCommands (Document document, View view)
+#else  /* __STDC__ */
+void                TtcSwitchCommands (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   int                 frame;
+
+#ifndef NEW_WILLOWS
+   Dimension           y, dy;
+   Arg                 args[MAX_ARGS];
+
+#endif
+   ThotWidget          row, w;
+
+   UserErrorCode = 0;
+   /* verifie le parametre document */
+   if (document == 0 && view == 0)
+      TtaError (ERR_invalid_parameter);
+   else
+     {
+	frame = GetWindowNumber (document, view);
+	if (frame == 0 || frame > MAX_FRAME)
+	   TtaError (ERR_invalid_parameter);
+	else if (FrameTable[frame].WdFrame != 0)
+	  {
+#ifndef NEW_WILLOWS
+	     row = XtParent (FrameTable[frame].Text_Zone[0]);
+	     XtSetArg (args[0], XmNwidth, &dy);
+	     if (row != 0)
+	       {
+		  XtUnmanageChild (XtParent (XtParent (row)));
+		  if (XtIsManaged (row))
+		    {
+		       XtGetValues (row, args, 1);
+		       XtUnmanageChild (row);
+		       dy = -dy;
+		    }
+		  else
+		    {
+		       XtManageChild (row);
+		       XtGetValues (row, args, 1);
+		    }
+		  XFlush (GDp (0));
+		  /* Il faut forcer la reevaluation de la fenetre */
+		  w = FrameTable[frame].WdFrame;
+		  XtSetArg (args[0], XmNwidth, &y);
+		  XtGetValues (row, args, 1);
+		  XtSetArg (args[0], XmNwidth, y + dy);
+		  XtSetValues (row, args, 1);
+		  XChangeTaille ((int *) w, frame, NULL);
+		  XtManageChild (XtParent (XtParent (row)));
+	       }
+#endif /* NEW_WILLOWS */
+	  }
+     }
+   /* force la mise a jour de la fenetre */
+   TtaHandlePendingEvents ();
+}				/*TtcSwitchCommands */
+
+
+/* -------------------------------------------------------------------- */
+/* | Evenement sur une frame document.                              | */
+/* -------------------------------------------------------------------- */
+#ifdef __STDC__
+void                DrawingInput (int *w, int frame, int *infos)
+#else  /* __STDC__ */
+void                DrawingInput (w, frame, infos)
+int                *w;
+int                 frame;
+int                *infos;
+
+#endif /* __STDC__ */
+{
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | Cree une frame a' la position X,Y et aux dimensions large et       | */
+/* | haut (s'ils sont positifs).                                        | */
+/* | Le parametre texte donne le titre de la fenetree^tre.                      | */
+/* | Le parametre schema donne le nom du sche'ma pour lequel on cre'e   | */
+/* | la fenetree^tre de document (NULL pour la fenetree^tre application).       | */
+/* | Le parametre name donne le titre de la fenetree^tre.                       | */
+/* | Le paramentre doc donne le numero du document.                     | */
+/* | Retourne :                                                         | */
+/* | - Le volume affichable dans la fenetre en equivalent caracteres.   | */
+/* | - L'indice de la fenetre allouee ou 0 en cas d'echec.              | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+int                 CreeFenetre (char *schema, int view, char *name, int X, int Y, int large, int haut, int *volume, int doc)
+#else  /* __STDC__ */
+int                 CreeFenetre (schema, view, name, X, Y, large, haut, volume, doc)
+char               *schema;
+int                 view;
+char               *name;
+int                 X;
+int                 Y;
+int                 large;
+int                 haut;
+int                *volume;
+int                 doc;
+
+#endif /* __STDC__ */
+{
+   int                 frame;
+
+#ifndef NEW_WILLOWS
+   Arg                 args[MAX_ARGS], argument[5];
+   XmString            title_string;
+   Dimension           dx, dy;
+
+#endif /* NEW_WILLOWS */
+   ThotWidget          Main_Wd;
+   ThotWidget          Wframe;
+   ThotWidget          shell;
+
+#ifdef NEW_WILLOWS
+   HMENU               menu_bar, w;
+   struct Cat_Context *catalogue;
+
+#else  /* NEW_WILLOWS */
+   ThotWidget          menu_bar;
+   ThotWidget          w, row1, row2, rowv;
+   ThotWidget          hscrl;
+   ThotWidget          vscrl;
+
+#endif /* NEW_WILLOWS */
+   int                 i, n;
+   int                 ref;
+   char                chaine[700];
+   SchemaMenu_Ctl     *SCHmenu;
+   Menu_Ctl           *ptrmenu;
+   boolean             trouve;
+
+#define MIN_HAUT 100
+#define MIN_LARG 200
+
+   frame = 0;
+   if (schema != NULL)
+     {
+	/* Allocation d'une entree dans la table des fenetres */
+	trouve = False;
+	frame = 1;
+	while (frame <= MAX_FRAME && !trouve)
+	  {
+	     /* Recherche une frame ouverte vide */
+	     trouve = (FrameTable[frame].FrDoc == 0 && FrameTable[frame].WdFrame != 0);
+	     if (!trouve)
+		frame++;
+	  }
+	if (!trouve)
+	  {
+	     frame = 1;
+	     while (frame <= MAX_FRAME && !trouve)
+	       {
+		  /* Recherche une frame libre */
+		  trouve = (FrameTable[frame].WdFrame == 0);
+		  if (!trouve)
+		     frame++;
+	       }
+	  }
+
+	if (!trouve)
+	   frame = 0;
+	else if (FrameTable[frame].WdFrame == 0)
+	  {
+	     /* il faut creer effectivement la fenetre */
+	     FrameTable[frame].FrLeftMargin = 0;
+	     FrameTable[frame].FrTopMargin = 0;
+	     /* Verification des dimensions */
+	     if (large == 0)
+		large = 170;	/* largeur en mm */
+	     large = mmtopixel (large, 1) + FrameTable[frame].FrLeftMargin;
+	     if (haut == 0)
+		haut = 240;	/* hauteur en mm */
+	     haut = mmtopixel (haut, 0) + FrameTable[frame].FrTopMargin;
+
+#ifndef NEW_WILLOWS
+	     if (large < MIN_LARG)
+		dx = (Dimension) MIN_LARG;
+	     else
+		dx = (Dimension) large;
+	     if (haut < MIN_HAUT)
+		dy = (Dimension) MIN_HAUT;
+	     else
+		dy = (Dimension) haut;
+	     *volume = VolumCar ((int) dx * (int) dy);	/* volume en caracteres */
+#endif /* NEW_WILLOWS */
+
+	     if (X <= 0)
+		X = 92;
+	     else
+		X = mmtopixel (X, 1);
+	     if (Y <= 0)
+		Y = 2;
+	     else
+		Y = mmtopixel (Y, 0);
+
+#ifdef NEW_WILLOWS
+	     Main_Wd = CreateWindow (tszAppName,	/* window class name */
+				     tszAppName,	/* window caption */
+				     WS_OVERLAPPEDWINDOW |
+				     WS_VSCROLL | WS_HSCROLL,	/* window style */
+				     CW_USEDEFAULT,	/* initial x pos */
+				     CW_USEDEFAULT,	/* initial y pos */
+				     large,	/* initial x size */
+				     haut,	/* initial y size */
+				     0,		/* parent window handle */
+				     0,		/* window menu handle */
+				     hInstance,		/* program instance handle */
+				     0);	/* creation parameters */
+	     if (Main_Wd == 0)
+		WinErrorBox ();
+	     else
+	       {
+		  fprintf (stderr, "Created Main_Wd %X for %d\n", Main_Wd, frame);
+		  /*
+		   * store everything.
+		   */
+		  FrRef[frame] = Main_Wd;
+
+		  /*
+		   * and show it up.
+		   */
+		  ShowWindow (Main_Wd, SW_SHOWNORMAL);
+		  UpdateWindow (Main_Wd);
+	       }
+#endif /* NEW_WILLOWS */
+
+/*** Creation la fenetre document ***/
+	     n = 0;
+#ifndef NEW_WILLOWS
+	     XtSetArg (args[n], XmNdefaultFontList, DefaultFont);
+	     n++;
+	     sprintf (chaine, "+%d+%d", X, Y);
+	     XtSetArg (args[n], XmNgeometry, (String) chaine);
+	     n++;
+	     XtSetArg (args[n], XmNwidth, dx + 4);
+	     n++;
+	     XtSetArg (args[n], XmNheight, dy + 4);
+	     n++;
+	     if (wind_pixmap != 0)
+	       {
+		  /* Creation de la fenetre icone associee */
+		  XtSetArg (args[n], XmNiconPixmap, wind_pixmap);
+		  n++;
+	       }
+	     XtSetArg (args[n], XmNmwmDecorations, MWM_DECOR_ALL);
+	     n++;
+	     XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
+	     n++;
+	     shell = XtCreatePopupShell (name, applicationShellWidgetClass, RootShell, args, n);
+
+	     n = 0;
+	     XtSetArg (args[n], XmNwidth, dx + 4);
+	     n++;
+	     XtSetArg (args[n], XmNheight, dy + 4);
+	     n++;
+	     XtSetArg (args[n], XmNbackground, Scroll_Color);
+	     n++;
+	     XtSetArg (args[n], XmNspacing, 0);
+	     n++;
+	     XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
+	     n++;
+	     Main_Wd = XmCreateMainWindow (shell, "Thot_Doc", args, n);
+
+	     XtManageChild (Main_Wd);
+	     XtAddCallback (shell, XmNdestroyCallback, (XtCallbackProc) RetourKill, (XtPointer) frame);
+#endif /* NEW_WILLOWS */
+
+	     /* Recherche la liste des menus a construire */
+	     SCHmenu = SchemasMenuList;
+	     ptrmenu = NULL;
+	     while (SCHmenu != NULL && ptrmenu == NULL)
+	       {
+		  if (!strcmp (schema, SCHmenu->SchemaName))
+		     /* c'est un document d'un type particulier */
+		     ptrmenu = SCHmenu->SchemaMenu;
+		  else
+		     SCHmenu = SCHmenu->NextSchema;	/* schema suivant */
+	       }
+	     if (ptrmenu == NULL)
+		/* c'est un document standard */
+		ptrmenu = DocumentMenuList;
+
+/**** Construction des menus ****/
+	     FrameTable[frame].FrMenus = ptrmenu;
+	     ref = frame + MAX_LocalMenu;	/* reference du menu construit */
+	     i = 0;
+	     /* Initialise les menus dynamiques */
+	     FrameTable[frame].MenuAttr = -1;
+	     FrameTable[frame].MenuSelect = -1;
+	     menu_bar = 0;
+/*** Parametres de creation des boutons menus ***/
+	     n = 0;
+#ifndef NEW_WILLOWS
+	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
+	     n++;
+	     XtSetArg (args[n], XmNforeground, Black_Color);
+	     n++;
+	     XtSetArg (args[n], XmNfontList, DefaultFont);
+	     n++;
+	     XtSetArg (args[n], XmNspacing, 0);
+	     n++;
+	     XtSetArg (args[n], XmNborderWidth, 0);
+	     n++;
+#endif /* NEW_WILLOWS */
+	     /* saute les menus qui ne concernent pas cette vue */
+	     while (ptrmenu != NULL)
+	       {
+		  /* saute les menus qui ne concernent pas cette vue */
+		  if (ptrmenu->MenuView == 0 || ptrmenu->MenuView == view)
+		    {
+		       if (menu_bar == 0)
+			 {
+/*** La barre des menus ***/
+#ifdef NEW_WILLOWS
+			    /*
+			     * Start with a fresh new Menu.
+			     */
+			    menu_bar = GetMenu (Main_Wd);
+			    if (menu_bar)
+			       DestroyMenu (menu_bar);
+
+			    menu_bar = CreateMenu ();
+			    if (menu_bar)
+			       SetMenu (Main_Wd, menu_bar);
+			    WinMenus[frame] = menu_bar;
+#else  /* NEW_WILLOWS */
+			    XtSetArg (argument[0], XmNbackground, BgMenu_Color);
+			    XtSetArg (argument[1], XmNspacing, 0);
+			    menu_bar = XmCreateMenuBar (Main_Wd, "Barre_menu", argument, 2);
+			    XtManageChild (menu_bar);
+#endif /* !NEW_WILLOWS */
+			 }
+
+		       /* construit le bouton de menu */
+#ifdef NEW_WILLOWS
+		       w = CreateMenu ();
+		       AppendMenu (menu_bar, MF_POPUP, (UINT) w,
+				   TtaGetMessage (THOT, ptrmenu->MenuID));
+#else  /* NEW_WILLOWS */
+		       w = XmCreateCascadeButton (menu_bar,
+			    TtaGetMessage (THOT, ptrmenu->MenuID), args, n);
+#endif /* !NEW_WILLOWS */
+		       FrameTable[frame].WdMenus[i] = w;
+		       FrameTable[frame].ActifMenus[i] = True;
+		       /* Evite la construction des menus dynamiques */
+		       if (ptrmenu->MenuAttr)
+			  FrameTable[frame].MenuAttr = ptrmenu->MenuID;
+		       else if (ptrmenu->MenuSelect)
+			  FrameTable[frame].MenuSelect = ptrmenu->MenuID;
+		       else
+			  ConstruitPopdown (ptrmenu, ref, w, frame);
+#ifdef NEW_WILLOWS
+		       ShowWindow (menu_bar, SW_SHOWNORMAL);
+		       UpdateWindow (menu_bar);
+#else  /* NEW_WILLOWS */
+		       XtManageChild (w);
+#endif /* !NEW_WILLOWS */
+		       /* Enregistre les menus dynamiques */
+		       if (ptrmenu->MenuHelp)
+			 {
+			    /* Cadre a droite le menu help */
+#ifdef NEW_WILLOWS
+
+#else  /* NEW_WILLOWS */
+			    XtSetArg (argument[0], XmNmenuHelpWidget, w);
+			    XtSetValues (XtParent (w), argument, 1);
+#endif /* NEW_WILLOWS */
+			 }
+
+		    }
+
+		  ptrmenu = ptrmenu->NextMenu;
+		  ref += MAX_FRAME;
+		  i++;
+	       }
+
+	     /* Les autres entrees de menus sont inactives */
+	     while (i < MAX_MENU)
+	       {
+		  FrameTable[frame].ActifMenus[i] = False;
+		  i++;
+	       }
+
+/*** La barre de scroll horizontale ***/
+	     n = 0;
+#ifndef NEW_WILLOWS
+	     XtSetArg (args[n], XmNbackground, Scroll_Color);
+	     n++;
+	     XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
+	     n++;
+	     XtSetArg (args[n], XmNvalue, 0);
+	     n++;
+	     hscrl = XmCreateScrollBar (Main_Wd, "Scroll", args, n);
+	     XtManageChild (hscrl);
+	     /*XtAddCallback (hscrl, XmNvalueChangedCallback, (XtCallbackProc) XChangeHScroll, (XtPointer) frame);*/
+	     XtAddCallback (hscrl, XmNdragCallback, (XtCallbackProc) XChangeHScroll, (XtPointer) frame);
+	     XtAddCallback (hscrl, XmNdecrementCallback, (XtCallbackProc) XChangeHScroll, (XtPointer) frame);
+	     XtAddCallback (hscrl, XmNincrementCallback, (XtCallbackProc) XChangeHScroll, (XtPointer) frame);
+	     XtAddCallback (hscrl, XmNpageDecrementCallback, (XtCallbackProc) XChangeHScroll, (XtPointer) frame);
+	     XtAddCallback (hscrl, XmNpageIncrementCallback, (XtCallbackProc) XChangeHScroll, (XtPointer) frame);
+	     XtAddCallback (hscrl, XmNtoTopCallback, (XtCallbackProc) XChangeHScroll, (XtPointer) frame);
+	     XtAddCallback (hscrl, XmNtoBottomCallback, (XtCallbackProc) XChangeHScroll, (XtPointer) frame);
+
+/*** La barre de scroll verticale ***/
+	     n = 0;
+	     XtSetArg (args[n], XmNbackground, Scroll_Color);
+	     n++;
+	     XtSetArg (args[n], XmNorientation, XmVERTICAL);
+	     n++;
+	     XtSetArg (args[n], XmNvalue, 0);
+	     n++;
+	     vscrl = XmCreateScrollBar (Main_Wd, "Scroll", args, n);
+	     XtManageChild (vscrl);
+	     /*XtAddCallback (vscrl, XmNvalueChangedCallback, (XtCallbackProc) XChangeVScroll, (XtPointer) frame);*/
+	     XtAddCallback (vscrl, XmNdragCallback, (XtCallbackProc) XChangeVScroll, (XtPointer) frame);
+	     XtAddCallback (vscrl, XmNdecrementCallback, (XtCallbackProc) XChangeVScroll, (XtPointer) frame);
+	     XtAddCallback (vscrl, XmNincrementCallback, (XtCallbackProc) XChangeVScroll, (XtPointer) frame);
+	     XtAddCallback (vscrl, XmNpageDecrementCallback, (XtCallbackProc) XChangeVScroll, (XtPointer) frame);
+	     XtAddCallback (vscrl, XmNpageIncrementCallback, (XtCallbackProc) XChangeVScroll, (XtPointer) frame);
+	     XtAddCallback (vscrl, XmNtoTopCallback, (XtCallbackProc) XChangeVScroll, (XtPointer) frame);
+	     XtAddCallback (vscrl, XmNtoBottomCallback, (XtCallbackProc) XChangeVScroll, (XtPointer) frame);
+#endif /* NEW_WILLOWS */
+
+/*** Creation de la zone boutons  ***/
+#ifdef NEW_WILLOWS
+#if 0
+	     WinToolBar[frame] = CreateWindow (
+						 TOOLBARCLASSNAME,	/* window class name */
+						 NULL,	/* window caption */
+						 WS_CHILD | WS_VISIBLE |
+						 WS_CLIPSIBLINGS | CCS_TOP |
+						 TBSTYLE_TOOLTIPS,	/* window style */
+						 0,	/* initial x pos */
+						 0,	/* initial y pos */
+						 0,	/* initial x size */
+						 0,	/* initial y size */
+						 Main_Wd,	/* parent window handle */
+						 0,	/* window menu handle */
+						 hInstance,	/* program instance handle */
+						 0);	/* creation parameters */
+#endif
+	     WinToolBar[frame] = CreateToolbarEx (
+						    Main_Wd,	/* parent window handle */
+						    WS_CHILD | WS_VISIBLE |
+						 WS_CLIPSIBLINGS | CCS_TOP |
+						    TBSTYLE_TOOLTIPS,	/* window style */
+						    1, 0,
+						    HINST_COMMCTRL,
+						    IDB_STD_SMALL_COLOR,
+						    WIN_buttons,
+						    5,	/* nb button */
+						    0, 0, 0, 0,		/* button size */
+						    sizeof (TBBUTTON));
+
+	     if (!WinToolBar[frame])
+	       {
+		  WinErrorBox ();
+	       }
+	     else
+	       {
+		  fprintf (stderr, "Created WinToolBar[%d] %X\n", frame, WinToolBar[frame]);
+	       }
+#endif
+	     /* Row vertical pour mettre le logo au dessous des boutons */
+	     n = 0;
+#ifndef NEW_WILLOWS
+	     XtSetArg (args[n], XmNmarginWidth, 0);
+	     n++;
+	     XtSetArg (args[n], XmNmarginHeight, 0);
+	     n++;
+	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
+	     n++;
+	     XtSetArg (args[n], XmNpacking, XmPACK_TIGHT);
+	     n++;
+	     XtSetArg (args[n], XmNorientation, XmVERTICAL);
+	     n++;
+	     rowv = XmCreateRowColumn (Main_Wd, "", args, n);
+
+	     XtManageChild (rowv);
+
+	     Wframe = rowv;
+	     /* Row horizontal des boutons */
+	     n = 0;
+	     XtSetArg (args[n], XmNmarginWidth, 0);
+	     n++;
+	     XtSetArg (args[n], XmNmarginHeight, 0);
+	     n++;
+	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
+	     n++;
+	     XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
+	     n++;
+	     XtSetArg (args[n], XmNspacing, 0);
+	     n++;
+	     row1 = XmCreateRowColumn (rowv, "", args, n);
+
+	     for (i = 1; i < MAX_BUTTON; i++)
+		FrameTable[frame].Button[i] = 0;
+	     FrameTable[frame].Button[0] = row1;
+
+	     /* Row horizontal pour mettre le logo a gauche des commandes */
+	     n = 0;
+	     XtSetArg (args[n], XmNmarginWidth, 5);
+	     n++;
+	     XtSetArg (args[n], XmNmarginHeight, 5);
+	     n++;
+	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
+	     n++;
+	     XtSetArg (args[n], XmNwidth, dx);
+	     n++;
+	     row1 = XmCreateForm (rowv, "", args, n);
+
+	     XtManageChild (row1);
+
+	     /* logo de l'application */
+	     if (image != 0)
+	       {
+		  n = 0;
+		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
+		  n++;
+		  XtSetArg (args[n], XmNlabelType, XmPIXMAP);
+		  n++;
+		  XtSetArg (args[n], XmNlabelPixmap, image);
+		  n++;
+		  XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
+		  n++;
+		  XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
+		  n++;
+		  w = XmCreateLabel (row1, "Logo", args, n);
+
+		  XtManageChild (w);
+	       }
+
+/*** Creation des zones texte  ***/
+	     n = 0;
+	     XtSetArg (args[n], XmNmarginWidth, 0);
+	     n++;
+	     XtSetArg (args[n], XmNmarginHeight, 0);
+	     n++;
+	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
+	     n++;
+	     XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
+	     n++;
+	     XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
+	     n++;
+	     XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
+	     n++;
+
+	     if (image != 0)
+	       {
+		  XtSetArg (args[n], XmNleftOffset, 5);
+		  n++;
+		  XtSetArg (args[n], XmNleftAttachment, XmATTACH_WIDGET);
+		  n++;
+		  XtSetArg (args[n], XmNleftWidget, w);
+		  n++;
+	       }
+	     else
+	       {
+		  XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
+		  n++;
+	       }
+
+	     rowv = XmCreateForm (row1, "", args, n);
+	     for (i = 1; i < MAX_TEXTZONE; i++)
+		FrameTable[frame].Text_Zone[i] = 0;
+	     FrameTable[frame].Text_Zone[0] = rowv;
+
+/*** Creation de la zone d'affichage du contenu du document ***/
+	     n = 0;
+	     XtSetArg (args[n], XmNmarginWidth, 0);
+	     n++;
+	     XtSetArg (args[n], XmNmarginHeight, 0);
+	     n++;
+	     XtSetArg (args[n], XmNbackground, Scroll_Color);
+	     n++;
+	     XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
+	     n++;
+	     XtSetArg (args[n], XmNtraversalOn, True);
+	     n++;
+
+	     w = XmCreateFrame (Main_Wd, "Frame", args, n);
+	     XtManageChild (w);
+	     XmMainWindowSetAreas (Main_Wd, menu_bar, Wframe, hscrl, vscrl, w);
+
+	     n = 0;
+	     XtSetArg (args[n], XmNbackground, White_Color);
+	     n++;
+	     XtSetArg (args[n], XmNfontList, DefaultFont);
+	     n++;
+	     XtSetArg (args[n], XmNmarginWidth, 0);
+	     n++;
+	     XtSetArg (args[n], XmNmarginHeight, 0);
+	     n++;
+	     XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
+	     n++;
+	     w = XmCreateDrawingArea (w, "", args, n);
+	     XtManageChild (w);
+	     XtAddCallback (w, XmNinputCallback, (XtCallbackProc) DrawingInput, (XtPointer) frame);
+#endif /* NEW_WILLOWS */
+
+#ifdef NEW_WILLOWS
+	     FrameTable[frame].WdStatus = CreateWindow (
+							  STATUSCLASSNAME,	/* window class name */
+							  NULL,		/* window caption */
+						     WS_CHILD | WS_VISIBLE |
+							  WS_CLIPSIBLINGS |
+							  CCS_BOTTOM,	/* window style */
+							  0,	/* initial x pos */
+							  0,	/* initial y pos */
+							  0,	/* initial x size */
+							  0,	/* initial y size */
+							  Main_Wd,	/* parent window handle */
+							  0,	/* window menu handle */
+							  hInstance,	/* program instance handle */
+							  0);	/* creation parameters */
+	     if (!FrameTable[frame].WdStatus)
+	       {
+		  WinErrorBox ();
+	       }
+	     else
+	       {
+		  fprintf (stderr, "Created FrameTable[%d].WdStatus %X\n", frame, FrameTable[frame].WdStatus);
+	       }
+#endif
+#ifndef NEW_WILLOWS
+	     /* Row horizontal pour les messages */
+	     n = 0;
+	     XtSetArg (args[n], XmNmarginWidth, 0);
+	     n++;
+	     XtSetArg (args[n], XmNmarginHeight, 0);
+	     n++;
+	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
+	     n++;
+	     XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
+	     n++;
+	     XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
+	     n++;
+	     row2 = XmCreateRowColumn (Main_Wd, "", args, n);
+	     XtManageChild (row2);
+	     n = 0;
+	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
+	     n++;
+	     XtSetArg (args[n], XmNforeground, Black_Color);
+	     n++;
+	     XtSetArg (args[n], XmNheight, (Dimension) FontHeight (FontMenu3));
+	     n++;
+	     XtSetArg (args[n], XmNfontList, DefaultFont);
+	     n++;
+	     title_string = XmStringCreateSimple (" ");
+	     XtSetArg (args[n], XmNlabelString, title_string);
+	     n++;
+	     FrameTable[frame].WdStatus = XmCreateLabel (row2, "Thot_MSG", args, n);
+	     XtManageChild (FrameTable[frame].WdStatus);
+	     XmStringFree (title_string);
+	     title_string = XmStringCreateSimple (" ");
+	     XtSetArg (args[n - 1], XmNlabelString, title_string);
+	     i = CarWidth ('M', FontMenu3) * 25;
+	     XtSetArg (args[n], XmNwidth, (Dimension) i);
+	     n++;
+	     FrameTable[frame].WdStatus = XmCreateLabel (row2, "Thot_MSG", args, n);
+	     XtManageChild (FrameTable[frame].WdStatus);
+	     XmStringFree (title_string);
+	     n = 0;
+	     XtSetArg (args[n], XmNmessageWindow, row2);
+	     n++;
+	     XtSetValues (Main_Wd, args, n);
+
+	     n = 0;
+	     XtSetArg (args[n], XmNx, (Position) X + 4);
+	     n++;
+	     XtSetArg (args[n], XmNy, (Position) Y + 4);
+	     n++;
+	     XtSetValues (shell, args, n);
+	     XtPopup (shell, XtGrabNonexclusive);
+
+	     XtAddCallback (w, XmNresizeCallback, (XtCallbackProc) XChangeTaille, (XtPointer) frame);
+
+	     FrameTable[frame].WdFrame = w;
+	     FrRef[frame] = XtWindowOfObject (w);
+	     FrameTable[frame].WdScrollH = hscrl;
+	     FrameTable[frame].WdScrollV = vscrl;
+
+	     n = 0;
+	     XtSetArg (args[n], XmNwidth, &dx);
+	     n++;
+	     XtGetValues (vscrl, args, n);
+	     XtSetArg (args[n], XmNheight, &dy);
+	     n++;
+	     XtGetValues ((Widget) w, args, n);
+	     FrameTable[frame].FrWidth = (int) dx;
+	     FrameTable[frame].FrHeight = (int) dy;
+#endif /* NEW_WILLOWS */
+	  }
+	else
+	   ChangeTitre (frame, name);
+
+	FrameTable[frame].FrDoc = doc;
+	FrameTable[frame].FrView = view;
+	InitVisu (frame, 5, 0);	/* Initialise la visibilite et le zoom de la fenetre */
+     }
+
+   return (frame);
+}
+
+
+/* -------------------------------------------------------------------- */
+/* | Si l'entree existe :                                             | */
+/* |    Ferme la fenetre, detruit le fichier et libere l'entree.      | */
+/* |    Libere toutes les boites allouees a la fenetre.                   | */
+/* -------------------------------------------------------------------- */
+#ifdef __STDC__
+void                DetruitFenetre (int frame)
+#else  /* __STDC__ */
+void                DetruitFenetre (frame)
+int                 frame;
+
+#endif /* __STDC__ */
+{
+   ThotWidget          w;
+   int                 action;
+   int                 ref, i;
+   int                 item;
+   Menu_Ctl           *ptrmenu;
+   Item_Ctl           *ptr;
+
+   w = FrameTable[frame].WdFrame;
+   if (w != 0)
+     {
+	/* Destruction des menus attaches a la fenetre */
+	ptrmenu = FrameTable[frame].FrMenus;
+	i = 0;
+	ref = frame + MAX_LocalMenu;	/* reference du menu construit */
+	while (ptrmenu != NULL)
+	  {
+	     /* saute les menus qui ne concernent pas cette vue */
+	     if (ptrmenu->MenuView == 0 || ptrmenu->MenuView == FrameTable[frame].FrView)
+	       {
+		  FrameTable[frame].WdMenus[i] = 0;
+		  TtaDestroyDialogue (ref);
+		  item = 0;
+		  ptr = ptrmenu->ItemsList;
+		  while (item < ptrmenu->ItemsNb)
+		    {
+		       action = ptr[item].ItemAction;
+		       if (action != -1
+			   && (ptr[item].ItemType == 'B' || ptr[item].ItemType == 'T'))
+			  /* Desactive l'action correspondante pour cette fenetre */
+			  MenuActionList[action].ActionActive[frame] = False;
+		       item++;
+		    }
+	       }
+	     ptrmenu = ptrmenu->NextMenu;
+	     ref += MAX_FRAME;
+	     i++;
+	  }
+
+
+	/* Annule eventuellement les formulaires attaches a la fenetre */
+	if (ThotLocalActions[T_rszoom] != NULL)
+	   (*ThotLocalActions[T_rszoom]) (frame);
+	if (ThotLocalActions[T_rsvisibility] != NULL)
+	   (*ThotLocalActions[T_rsvisibility]) (frame);
+	if (ThotLocalActions[T_rscorrector] != NULL)
+	   (*ThotLocalActions[T_rscorrector]) (frame);
+	if (ThotLocalActions[T_rsindex] != NULL)
+	   (*ThotLocalActions[T_rsindex]) (frame);
+
+#ifndef NEW_WILLOWS
+	XFlushOutput (0);
+	/* Detache les procedures de callback */
+	XtRemoveCallback (XtParent (XtParent (w)), XmNdestroyCallback, (XtCallbackProc) RetourKill, (XtPointer) frame);
+
+	XDestroyWindow (GDp (0), XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
+#endif /* NEW_WILLOWS */
+	FrRef[frame] = 0;
+	FrameTable[frame].WdFrame = 0;
+	FrameTable[frame].FrDoc = 0;
+	/* Elimine les evenements ButtonRelease, DestroyNotify, FocusOut */
+
+	RazVue (frame);
+	LibFont (frame);	/* On libere les polices de caracteres utilisees */
+     }				/*if */
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | GetMenu_Ctl donne le contexte du menu associe' a` la fenetree^tre. | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static Menu_Ctl    *GetMenu_Ctl (int frame, int menu)
+#else  /* __STDC__ */
+static Menu_Ctl    *GetMenu_Ctl (frame, menu)
+int                 frame;
+int                 menu;
+
+#endif /* __STDC__ */
+{
+   int                 i;
+   Menu_Ctl           *ptrmenu;
+
+   ptrmenu = FrameTable[frame].FrMenus;
+   i = 0;
+   while (i != menu && ptrmenu != NULL)
+     {
+	ptrmenu = ptrmenu->NextMenu;
+	i++;
+     }
+   return (ptrmenu);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | FindMenu recherche le menu menuID dans la fenetree^tre.            | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+int                 FindMenu (int frame, int menuID, Menu_Ctl ** ctxmenu)
+#else  /* __STDC__ */
+int                 FindMenu (frame, menuID, ctxmenu)
+int                 frame;
+int                 menuID;
+Menu_Ctl          **ctxmenu;
+
+#endif /* __STDC__ */
+{
+   Menu_Ctl           *ptrmenu;
+   int                 m;
+
+   /* Recherche le bon menu */
+   m = 1;			/* index de menu */
+   /* recherche cet item dans la liste des menus de la fenetre */
+   ptrmenu = FrameTable[frame].FrMenus;
+   while (ptrmenu != NULL && menuID != ptrmenu->MenuID)
+     {
+	m++;
+	ptrmenu = ptrmenu->NextMenu;
+     }
+
+   *ctxmenu = ptrmenu;
+   if (ptrmenu == NULL)
+      return (-1);
+   else if (ptrmenu->MenuView != 0 && ptrmenu->MenuView != FrameTable[frame].FrView)
+      return (-1);
+   else
+      return (m);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | FindItemMenu recherche le menu, et l'item de la fenetree^tre.              | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         FindItemMenu (int frame, int menuID, int itemID, int *menu, int *submenu, int *item, int *action)
+#else  /* __STDC__ */
+static void         FindItemMenu (frame, menuID, itemID, menu, submenu, item, action)
+int                 frame;
+int                 menuID;
+int                 itemID;
+int                *menu;
+int                *submenu;
+int                *item;
+int                *action;
+
+#endif /* __STDC__ */
+{
+   Menu_Ctl           *ptrmenu, *ptrsmenu;
+   Item_Ctl           *ptr;
+   int                 i, j, max;
+   int                 m, sm;
+   boolean             trouve;
+
+   m = FindMenu (frame, menuID, &ptrmenu);
+   trouve = (m != -1);
+   if (trouve)
+     {
+	/* Recherche l'item dans le menu ou un sous-menu */
+	i = 0;
+	sm = 0;
+	ptr = ptrmenu->ItemsList;
+	trouve = False;
+	max = ptrmenu->ItemsNb;
+	ptrsmenu = NULL;
+	while (ptrmenu != NULL && !trouve)
+	  {
+	     while (i < max && !trouve)
+	       {
+		  j = ptr[i].ItemAction;
+		  if (j == -1)
+		     i++;	/* separateur */
+		  else if (ptr[i].ItemType == 'M')
+		    {
+		       /* recherche dans le sous-menu */
+		       sm = i + 1;
+		       ptrsmenu = ptr[i].SubMenu;
+		       i = 0;
+		       ptr = ptrsmenu->ItemsList;
+		       max = ptrsmenu->ItemsNb;
+		    }
+		  else if (ptr[i].ItemID != itemID)
+		     i++;	/* ce n'est pas l'action */
+		  else
+		     trouve = True;
+	       }
+
+	     /* faut-il sortir du sous-menu ? */
+	     if (!trouve && ptrsmenu != NULL)
+	       {
+		  /* reprend la recherche dans le menu */
+		  i = sm;
+		  sm = 0;
+		  ptrsmenu = NULL;
+		  ptr = ptrmenu->ItemsList;
+		  max = ptrmenu->ItemsNb;
+	       }
+	     else
+		/* on a parcouru tout le menu : cet itemID n'existe pas */
+		ptrmenu = NULL;
+	  }
+     }
+
+   /* est-ce que l'on a trouve ? */
+   if (trouve)
+     {
+	*menu = m;
+	*submenu = sm;
+	*item = i;
+	*action = j;
+     }
+   else
+     {
+	*menu = -1;
+	*submenu = 0;
+	*item = 0;
+	*action = -1;
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* | TtaSetMenuOff desactive le menu (1 a n) de la vue du document ou   | */
+/* | de la fenetre principale (document = 0, view = 0).                 | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtaSetMenuOff (Document document, View view, int menuID)
+#else  /* __STDC__ */
+void                TtaSetMenuOff (document, view, menuID)
+Document            document;
+View                view;
+int                 menuID;
+
+#endif /* __STDC__ */
+{
+   ThotWidget          w;
+   int                 n, menu;
+   int                 frame;
+   int                 ref;
+   Menu_Ctl           *ptrmenu;
+
+#ifndef NEW_WILLOWS
+   XmFontList          font;
+   Arg                 args[MAX_ARGS];
+
+#endif
+
+   if (document == 0 && view == 0)
+      frame = 0;
+   else
+      frame = GetWindowNumber (document, view);
+
+   /* Si les parametres sont invalides */
+   if (frame > MAX_FRAME)
+      return;
+   else if ((FrameTable[frame].WdFrame) == 0)
+      return;
+
+   menu = FindMenu (frame, menuID, &ptrmenu);
+   if (menu != -1)
+     {
+	menu--;
+	if (FrameTable[frame].ActifMenus[menu])
+	  {
+	     /* Recupere le widget du bouton */
+	     w = FrameTable[frame].WdMenus[menu];
+	     if (w != 0)
+	       {
+		  FrameTable[frame].ActifMenus[menu] = False;
+		  ref = (menu * MAX_FRAME) + frame + MAX_LocalMenu;
+		  /* Desactive */
+		  TtaSetPulldownOff (ref, w);
+
+#ifndef NEW_WILLOWS
+		  /* Visualise le bouton inactif */
+		  if (Gdepth (0) > 1)
+		    {
+		       /* Changement de couleur */
+		       n = 0;
+		       XtSetArg (args[n], XmNforeground, InactiveB_Color);
+		       n++;
+		       XtSetValues (w, args, n);
+		       XtManageChild (w);
+		    }
+		  else
+		    {
+		       /* Changement de police de caracteres */
+		       font = XmFontListCreate ((XFontStruct *) FontMenu2, XmSTRING_DEFAULT_CHARSET);
+		       n = 0;
+		       XtSetArg (args[n], XmNfontList, font);
+		       n++;
+		       XtSetValues (w, args, n);
+		       XtManageChild (w);
+		       XmFontListFree (font);
+		    }
+#endif /* NEW_WILLOWS */
+	       }
+	  }
+     }
+}				/*TtaSetMenuOff */
+
+
+/* ---------------------------------------------------------------------- */
+/* | TtaSetMenuOn reactive le menu (1 a n) de la vue du document ou     | */
+/* | de la fenetre principale (document = 0, view = 0).                 | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtaSetMenuOn (Document document, View view, int menuID)
+#else  /* __STDC__ */
+void                TtaSetMenuOn (document, view, menuID)
+Document            document;
+View                view;
+int                 menuID;
+
+#endif /* __STDC__ */
+{
+   ThotWidget          w;
+   int                 menu;
+   int                 frame;
+   int                 ref;
+   Menu_Ctl           *ptrmenu;
+
+#ifndef NEW_WILLOWS
+   Arg                 args[MAX_ARGS];
+
+#endif
+
+   if (document == 0 && view == 0)
+      frame = 0;
+   else
+      frame = GetWindowNumber (document, view);
+
+   /* Si les parametres sont invalides */
+   if (frame > MAX_FRAME)
+      return;
+   else if ((FrameTable[frame].WdFrame) == 0)
+      return;
+
+   menu = FindMenu (frame, menuID, &ptrmenu);
+   if (menu != -1)
+     {
+	menu--;
+	if (!FrameTable[frame].ActifMenus[menu])
+	  {
+	     /* Recupere le widget du bouton */
+	     w = FrameTable[frame].WdMenus[menu];
+	     if (w != 0)
+	       {
+		  FrameTable[frame].ActifMenus[menu] = True;
+		  ref = (menu * MAX_FRAME) + frame + MAX_LocalMenu;
+		  /* Desactive */
+		  TtaSetPulldownOn (ref, w);
+
+#ifndef NEW_WILLOWS
+		  /* Visualise le bouton actif */
+		  if (Gdepth (0) > 1)
+		    {
+		       /* Changement de couleur */
+		       XtSetArg (args[0], XmNforeground, Black_Color);
+		       XtSetValues (w, args, 1);
+		       XtManageChild (w);
+		    }
+		  else
+		    {
+		       /* Changement de police de caracteres */
+		       XtSetArg (args[0], XmNfontList, DefaultFont);
+		       XtSetValues (w, args, 1);
+		       XtManageChild (w);
+		    }
+#endif
+	       }
+	  }
+     }
+}				/*TtaSetMenuOn */
+
+
+/* ---------------------------------------------------------------------- */
+/* | TtaSetToggleItem positionne l'item du menu de la vue du document   | */
+/* |            ou de la fenetre principale (document = 0, view = 0).   | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtaSetToggleItem (Document document, View view, int menuID, int itemID, boolean on)
+#else  /* __STDC__ */
+void                TtaSetToggleItem (document, view, menuID, itemID)
+Document            document;
+View                view;
+int                 menuID;
+int                 itemID;
+
+#endif /* __STDC__ */
+{
+   int                 frame;
+   int                 ref;
+   int                 menu, submenu;
+   int                 item, action;
+
+   if (menuID == 0 || itemID == 0)
+      return;
+   if (document == 0 && view == 0)
+      frame = 0;
+   else
+      frame = GetWindowNumber (document, view);
+
+   /* Si les parametres sont invalides */
+   if (frame > MAX_FRAME)
+      return;
+   else if ((FrameTable[frame].WdFrame) == 0)
+      return;
+
+
+   /* Recherche les bons indices de menu, sous-menu et item */
+   FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
+   if (menu >= 0 && item >= 0)
+     {
+	/* on a trouve */
+	ref = ((menu - 1) * MAX_FRAME) + frame + MAX_LocalMenu;
+	if (submenu != 0)
+	   ref += submenu * MAX_MENU * MAX_FRAME;
+	TtaSetToggleMenu (ref, item, on);
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | TtaSetActionOff desactive l'item actionName de la vue du document  | */
+/* |            ou de la fenetre principale (document = 0, view = 0).   | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtaSetActionOff (Document document, View view, int menuID, int itemID)
+#else  /* __STDC__ */
+void                TtaSetActionOff (document, view, menuID, itemID)
+Document            document;
+View                view;
+int                 menuID;
+int                 itemID;
+
+#endif /* __STDC__ */
+{
+   int                 frame;
+   int                 ref;
+   int                 menu, submenu;
+   int                 item;
+   int                 action;
+   char                fontname[100];
+   char                texte[20];
+
+   /* Si les parametres sont invalides */
+   if (document == 0 && view == 0)
+      frame = 0;
+   else
+      frame = GetWindowNumber (document, view);
+   if (frame > MAX_FRAME)
+      return;
+   else if ((FrameTable[frame].WdFrame) == 0)
+      return;
+
+   /* Recherche les bons indices de menu, sous-menu et item */
+   FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
+   if (action > 0)
+      /* l'action existe et le menu est actif */
+      if (MenuActionList[action].ActionActive[frame])
+	{
+	   /* desactive l'action pour la fenetre */
+	   MenuActionList[action].ActionActive[frame] = False;
+	   /* desactive l'entree de menu */
+	   ref = ((menu - 1) * MAX_FRAME) + frame + MAX_LocalMenu;
+	   if (submenu != 0)
+	      ref += submenu * MAX_MENU * MAX_FRAME;
+	   if (Gdepth (0) > 1)
+	      TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
+	   else
+	     {
+		NomFonte ('L', 'T', 2, 11, UnPoint, texte, fontname);
+		TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
+	     }
+	}
+}				/*TtaSetActionOff */
+
+
+/* ---------------------------------------------------------------------- */
+/* | TtaSetActionOn active l'item actionName de la vue du document      | */
+/* |            ou de la fenetre principale (document = 0, view = 0).   | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtaSetActionOn (Document document, View view, int menuID, int itemID)
+#else  /* __STDC__ */
+void                TtaSetActionOn (document, view, menuID, itemID)
+Document            document;
+View                view;
+int                 menuID;
+int                 itemID;
+
+#endif /* __STDC__ */
+{
+   int                 frame;
+   int                 ref;
+   int                 menu, submenu;
+   int                 item;
+   int                 action;
+
+   /* Si les parametres sont invalides */
+   if (document == 0 && view == 0)
+      frame = 0;
+   else
+      frame = GetWindowNumber (document, view);
+   if (frame > MAX_FRAME)
+      return;
+   else if ((FrameTable[frame].WdFrame) == 0)
+      return;
+
+   /* Recherche les bons indices de menu, sous-menu et item */
+   FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
+   if (action > 0)
+      /* l'action existe et le menu est actif */
+      if (!MenuActionList[action].ActionActive[frame])
+	{
+	   /* reactive l'action pour la fenetre */
+	   MenuActionList[action].ActionActive[frame] = True;
+	   /* reactive l'entree de menu */
+	   ref = ((menu - 1) * MAX_FRAME) + frame + MAX_LocalMenu;
+	   if (submenu != 0)
+	      ref += submenu * MAX_MENU * MAX_FRAME;
+	   TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
+	}
+}				/*TtaSetActionOn */
+
+
+/* ----------------------------------------------------------------------
+   TtaSetCallback
+
+   Specifies the procedure that is called when the user activates a set of forms
+   and/or menus created by the application.
+   The parameter set gives the number of forms and/or menus created by the 
+   application managed by this porcedure.
+   This function must be called before processing any event, only if the
+   application uses the Dialogue tool kit for generating specific forms or menus.
+   This function replaces the DefineCallback function in the Dialogue tool kit.
+   This procedure is called with three parameters: the menu or form reference,
+   data type, and data value.
+
+   void callbakProcedure(reference, datatype, data)
+   int reference;
+   int datatype;
+   char *data; 
+
+   Parameter:
+   callbakProcedure: the application callback procedure.
+   set: the number of forms and/or menus managed.
+   Return:
+   reference of the first form or menu.
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+int                 TtaSetCallback (void (*callbakProcedure) (), int set)
+#else  /* __STDC__ */
+int                 TtaSetCallback (callbakProcedure)
+void                (*callbakProcedure) ();
+int                 set;
+
+#endif /* __STDC__ */
+{
+   PtrCallbackCTX      ctxCallback;
+
+   UserErrorCode = 0;
+   if (firstCallbackAPI == NULL)
+     {
+	/* le premier bloc de callback */
+	firstCallbackAPI = (PtrCallbackCTX) TtaGetMemory (sizeof (CallbackCTX));
+	ctxCallback = firstCallbackAPI;
+     }
+   else
+     {
+	ctxCallback = firstCallbackAPI;
+	while (ctxCallback->callbackNext != NULL)
+	   ctxCallback = ctxCallback->callbackNext;
+	ctxCallback->callbackNext = (PtrCallbackCTX) TtaGetMemory (sizeof (CallbackCTX));
+	ctxCallback = ctxCallback->callbackNext;
+     }
+
+   ctxCallback->callbackProc = callbakProcedure;
+   ctxCallback->callbackSet = set;
+   ctxCallback->callbackNext = NULL;
+   return (TtaGetReferencesBase (set));
+}				/*TtaSetCallback */
+
+
+/* ---------------------------------------------------------------------- */
+/* |    ThotCallback ge`re tous les retours du dialogue de Thot.        | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                ThotCallback (int ref, int typedata, char *data)
+
+#else  /* __STDC__ */
+void                ThotCallback (ref, typedata, data)
+int                 ref;
+int                 typedata;
+char               *data;
+
+#endif /* __STDC__ */
+
+{
+   int                 frame, item;
+   int                 menu, base;
+   int                 menuThot;
+   Menu_Ctl           *ptrmenu;
+   int                 action, i, j;
+   Document            document;
+   View                vue;
+   PtrCallbackCTX      ctxCallback;
+
+   /* Termine l'insertion courante s'il y en a une */
+   EndInsert ();
+
+   if (ref > MAX_MenuThot)
+     {
+	if (firstCallbackAPI == NULL)
+	   return;		/* pas de callback definis */
+	else
+	  {
+	     /* recherche le bon callback */
+	     ctxCallback = firstCallbackAPI;
+	     base = MAX_MenuThot;
+	     while (ref > base + ctxCallback->callbackSet)
+	       {
+		  if (ctxCallback->callbackNext == NULL)
+		     return;
+		  else
+		    {
+		       base = base + ctxCallback->callbackSet;
+		       ctxCallback = ctxCallback->callbackNext;
+		    }
+	       }
+	     (*ctxCallback->callbackProc) (ref, typedata, data);
+	  }
+     }
+   else if (ref < MAX_LocalMenu)
+
+/*** Action interne et optionnelle de l'editeur ***/
+      switch (ref)
+	    {
+	       case NumMenuInsert:
+		  (*ThotLocalActions[T_rcreecolle]) (True, False, (int) data + 1);
+		  break;
+	       case NumMenuPaste:
+		  (*ThotLocalActions[T_rcreecolle]) (False, True, (int) data + 1);
+		  break;
+	       case NumMenuInclude:
+		  (*ThotLocalActions[T_rcreecolle]) (False, False, (int) data + 1);
+		  break;
+	       case NumMenuChoixEl:
+		  (*ThotLocalActions[T_rchoice]) ((int) data + 1, NULL);
+		  break;
+	       case NumSelectNomNature:
+		  (*ThotLocalActions[T_rchoice]) (0, (char *) data);
+		  break;
+	       case NumMenuCreerElemReference:
+		  /* Pop-up menu 'Creation element reference'' */
+		  (*ThotLocalActions[T_raskfornew]) ((int) data);
+		  break;
+
+	       case NumMenuAttrRequis:
+	       case NumMenuAttrNumRequis:
+	       case NumMenuAttrTexteRequis:
+	       case NumMenuAttrEnumRequis:
+		  (*ThotLocalActions[T_rattrreq]) (ref, (int) data, data);
+		  break;
+	       case NumMenuAttr:
+	       case NumMenuAttrNum:
+	       case NumMenuAttrText:
+	       case NumMenuAttrEnum:
+		  (*ThotLocalActions[T_rattrval]) (ref, (int) data, data);
+		  break;
+
+	       case NumSelectLangue:
+		  (*ThotLocalActions[T_rattrlang]) (ref, 0, data);
+		  break;
+	       case NumFormLangue:
+		  (*ThotLocalActions[T_rattrlang]) (ref, (int) data, NULL);
+		  break;
+
+	       case NumFormCreerDoc:
+	       case NumZoneNomDocACreer:
+	       case NumZoneDirDocACreer:
+	       case NumSelClasseDocACreer:
+		  (*ThotLocalActions[T_createdoc]) (ref, typedata, data);
+		  break;
+	       case NumFormConfirm:
+		  (*ThotLocalActions[T_confirmcreate]) (ref, typedata, data);
+		  break;
+	       case NumFormOuvrirDoc:
+	       case NumZoneDirOuvrirDoc:
+	       case NumSelDoc:
+	       case NumZoneNomDocAOuvrir:
+		  (*ThotLocalActions[T_opendoc]) (ref, typedata, data);
+		  break;
+	       case NumSelectClasseImport:
+	       case NumFormClasseImport:
+		  (*ThotLocalActions[T_import]) (ref, typedata, data);
+		  break;
+	       case NumFormSchemaPresentation:
+	       case NumZoneSchemaPresentation:
+		  (*ThotLocalActions[T_presentation]) (ref, typedata, data);
+		  break;
+	       case NumFormFermer:
+		  (*ThotLocalActions[T_rconfirmclose]) (ref, typedata, data);
+		  break;
+
+	       case NumMenuZoom:
+		  (*ThotLocalActions[T_chzoom]) (ref, typedata, data);
+		  break;
+	       case NumMenuVisibilite:
+		  (*ThotLocalActions[T_chvisibility]) (ref, typedata, data);
+		  break;
+	       case NumMenuVuesAOuvrir:
+		  (*ThotLocalActions[T_openview]) (ref, typedata, data);
+		  break;
+
+	       case NumFormImprimer:
+	       case NumMenuOptions:
+	       case NumMenuSupport:
+	       case NumMenuFormatPapier:
+		  (*ThotLocalActions[T_rprint]) (ref, (int) data, NULL);
+		  break;
+	       case NumZoneNomImprimante:
+		  (*ThotLocalActions[T_rprint]) (ref, 0, data);
+		  break;
+
+	       case NumZoneNomDocASauver:
+	       case NumZoneDirDocASauver:
+	       case NumMenuFormatDocASauver:
+	       case NumMenuCopierOuRenommer:
+	       case NumFormSauverComme:
+		  (*ThotLocalActions[T_rsavedoc]) (ref, typedata, data);
+		  break;
+	       case NumFormPresCaract:
+	       case NumFormPresFormat:
+	       case NumFormPresGraphiques:
+	       case NumFormCouleurs:
+	       case NumMenuFamilleCaract:
+	       case NumMenuStyleCaract:
+	       case NumMenuCorpsCaract:
+	       case NumMenuTypeSouligne:
+	       case NumMenuEpaisSouligne:
+	       case NumMenuAlignement:
+	       case NumMenuJustification:
+	       case NumMenuCoupureMots:
+	       case NumZoneRenfoncement:
+	       case NumMenuSensRenfoncement:
+	       case NumZoneInterligne:
+	       case NumMenuInterligne:
+	       case NumMenuStyleTraits:
+	       case NumZoneEpaisseurTraits:
+	       case NumToggleEpaisseurInchangee:
+	       case NumTogglePatternInchange:
+	       case NumToggleForegroundInchange:
+	       case NumToggleBackgroundInchange:
+		  (*ThotLocalActions[T_present]) (ref, (int) data, NULL);
+		  break;
+	       case NumSelectPattern:
+	       case NumSelectCouleurTrace:
+	       case NumSelectCouleurFond:
+		  (*ThotLocalActions[T_present]) (ref, 0, data);
+		  break;
+	       case NumFormPresentStandard:
+	       case NumMenuPresentStandard:
+		  (*ThotLocalActions[T_presentstd]) (ref, (int) data);
+		  break;
+	       case NumZoneCherchePage:
+	       case NumFormCherchePage:
+		  (*ThotLocalActions[T_searchpage]) (ref, (int) data);
+		  break;
+	       case NumFormChercheTexte:
+	       case NumMenuModeRemplacement:
+	       case NumToggleExpressionReguliere:
+	       case NumMenuChercherNature:
+		  /* sous-menu mode de remplacement */
+		  (*ThotLocalActions[T_searchtext]) (ref, (int) data, NULL);
+		  break;
+	       case NumZoneTexteCherche:
+	       case NumZoneTexteRemplacement:
+	       case NumSelTypeAChercher:
+	       case NumSelAttributAChercher:
+		  /* zone de saisie du texte de remplacement */
+		  (*ThotLocalActions[T_searchtext]) (ref, 0, data);
+		  break;
+	       case NumMenuOuChercherTexte:
+		  (*ThotLocalActions[T_locatesearch]) (ref, (int) data);
+		  break;
+
+	       default:
+		  if (ref >= NumMenuNomAttr && ref <= NumMenuNomAttr + MAX_FRAME)
+		     /* retour du menu des attributs */
+		    {
+		       TtaSetDialoguePosition ();
+		       (*ThotLocalActions[T_rattr]) (ref, (int) data, ActifFen);
+		    }
+		  break;
+	    }
+   else
+     {
+/*** Action attachee au retour du dialoque de l'application ***/
+	/* Calcule les indices menu, item et frame */
+	/* ref = (((item+1) * MAX_MENU + menu) * MAX_FRAME) + frame + MAX_LocalMenu */
+	j = ref - MAX_LocalMenu;
+	i = j / MAX_FRAME;
+	frame = j - (i * MAX_FRAME);	/* reste de la division */
+	item = i / MAX_MENU;
+	menu = i - (item * MAX_MENU);	/* reste de la division */
+	if (frame == 0)
+	  {
+	     document = 0;
+	     vue = 0;
+	  }
+	else
+	  {
+	     VueDeFenetre (frame, &document, &vue);
+	     if (document == 0)
+		return;
+	     menuThot = FindMenu (frame, FrameTable[frame].MenuAttr, &ptrmenu) - 1;
+	     if (menu == menuThot)
+	       {
+		  /* traitement du menu attribut */
+		  TtaSetDialoguePosition ();
+		  (*ThotLocalActions[T_rattr]) (ref, (int) data, frame);
+		  return;
+	       }
+	     menuThot = FindMenu (frame, FrameTable[frame].MenuSelect, &ptrmenu) - 1;
+	     if (menu == menuThot)
+	       {
+		  /* traitement du menu selection */
+		  TtaSetDialoguePosition ();
+		  (*ThotLocalActions[T_rselect]) (ref, (int) data + 1, frame);
+		  return;
+	       }
+	  }
+
+	/* Appel de l'action */
+	ptrmenu = GetMenu_Ctl (frame, menu);
+	action = 0;
+	if (ptrmenu != NULL)
+	  {
+	     if (item != 0)
+	       {
+		  item--;
+		  if (item < ptrmenu->ItemsNb && ptrmenu->ItemsList != NULL)
+		     ptrmenu = ptrmenu->ItemsList[item].SubMenu;
+	       }
+	  }
+	if (ptrmenu != NULL)
+	  {
+	     if ((int) data < ptrmenu->ItemsNb && ptrmenu->ItemsList != NULL)
+		action = ptrmenu->ItemsList[(int) data].ItemAction;
+	     /*action = GetActionItem(frame, menu, (int)data); */
+	     if (action > 0)
+		/* l'action existe et le menu est actif */
+		if (MenuActionList[action].ActionActive[frame])
+		   (*MenuActionList[action].Call_Action) (document, vue);
+	  }
+     }
+}				/*ThotCallback */
+/* End Of Module Thot */

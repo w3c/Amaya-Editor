@@ -1,0 +1,17 @@
+0 Intermediate symbol!\n
+1 The structure schema does not match\n
+2 Line too long\n
+3 Unknown type\n
+4 Cannot load structure schema\n
+5 No such file: %s.\n\n
+6 Unknown message\n
+7 Only in EDITOR.I\n
+8 Unknown attribute\n
+9 Item already exists\n
+10 Allowed only in section DEFAULT\n
+11 Missing keyword First or Second\n
+12 Not a pair\n
+13 Invalid for an element\n
+14 Invalid for an attribute\n
+15 Only .PRE is allowed here\n
+16 Too many cascade levels\n

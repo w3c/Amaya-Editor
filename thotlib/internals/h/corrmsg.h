@@ -1,0 +1,24 @@
+#define CD_Nb_Propositions	 0
+#define CD_Quoi			 1
+#define CD_Passer_Sans		 2
+#define CD_Remplacer_Avec	 3
+#define CD_Remplacer_Sans	 4
+#define CD_Garder_Inconnu	 5
+#define CD_Passer_Avec		 6
+#define CD_Speciaux		 7
+#define CD_Corriger		 8
+#define CD_Romains		 9
+#define CD_Ignorer		10
+#define CD_Capitales		11
+#define CD_Arabes		12
+#define CORR_NO_PARAM		13
+#define CORR_NO_CLAVIER		14
+#define CORR_NO_SAVE		15
+#define CORR_REFUS_MOT		16
+#define CORR_AJOUT_MOT		17
+#define CORR_FIN_CORR		18
+#define CORR_STOP_CORR		19
+#define CORR_NO_SELECT		20
+#define CORR_OK_SAVE		21
+
+#define CORR_MSG_MAX		22

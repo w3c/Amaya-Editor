@@ -1,0 +1,57 @@
+#!/bin/sh
+if [ -z "${LANG}" ]
+then
+        LANG=fr
+else
+        LANGUE_ORIG=`echo ${LANG} | cut -c-2 | tr '[A-Z]' '[a-z]'`
+        LANG=${LANGUE_ORIG}
+ 
+fi
+if [ "${LANG}" = "c" ];then
+        LANG=fr;
+fi
+export LANG
+
+BIN=${THOTDIR}/bin/
+Machine=`${BIN}/MachineType`
+THOTBIN=${THOTDIR}/bin/${Machine}
+
+. ${BIN}/${LANG}-table
+DIALOGUEFILE=${BIN}/${LANG}-thotdialogue;	export DIALOGUEFILE
+COMPFILE=${BIN}/${LANG}-compdialogue;		export COMPFILE
+
+PWD=`pwd`
+TRANSRULES=${PWD};	export TRANSRULES
+
+if [ "$THOTSCH" = "" ]
+then
+	THOTSCH=${PWD}:${THOTDIR}/schemas:${THOTDIR}/schemasOPERA
+else
+	tmp=$THOTSCH
+	THOTSCH=${PWD}:${tmp}
+fi
+export THOTSCH
+
+if [ "${#}" -eq "2" ]
+then
+    NAME1=`basename $1 .STR`
+    NAME2=`basename $2 .STR`
+    if [ -f "${NAME1}.STR" ]
+    then
+      if [ -f "${NAME2}.STR" ]
+      then
+	${THOTBIN}/compare ${NAME1} ${NAME2} || { echo ${MSG18}; exit 1; }
+	echo ${MSG19}
+      else
+	NAME=${NAME2}
+	. ${BIN}/${LANG}-table
+	echo ${MSG15}
+      fi
+    else
+	NAME=${NAME1}
+	. ${BIN}/${LANG}-table
+	echo ${MSG15}
+    fi
+else
+	echo ${MSG20}
+fi

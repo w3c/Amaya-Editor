@@ -1,0 +1,25 @@
+0 Incorrect .TYP file
+1 Too long name\n
+2 Intermediate symbol\n
+3 Structure schema not found\n
+4 Unknown attribute\n
+5 File not found\n
+6 Not enough memory\n
+7 Line too long\n
+8 Function already defined\n
+9 Structure schema does not match\n
+10 Model already defined\n
+11 Unknown type\n
+12 Rule already defined for this type\n
+13 Too many conditions\n
+14 Type already defined\n
+15 Unknown composition model\n
+16 Too many cases for this attribute\n
+17 Rules already exist for this attribute\n
+18 Rules already exist for this value\n
+19 Incorrect attribute value\n
+20 Inconsistent limits\n
+21 Not a numerical attribute\n
+22 Unknown function name\n
+23 Not a textual attribute\n
+24 Typo schema to be compiled:

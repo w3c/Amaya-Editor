@@ -1,0 +1,1542 @@
+\documentstyle[11pt,times]{article}
+
+\marginparwidth 0pt
+\oddsidemargin  1 cm
+\evensidemargin  1 cm
+\marginparsep 0pt
+\topmargin   0pt
+\textwidth   14 cm
+\textheight  22.5 cm
+
+\begin{document}
+\sloppy
+
+\date{Version du 25 fe'vrier 1993}
+\title{La repre'sentation pivot de Thot\\
+       version 4}
+\author{Vincent Quint}
+\maketitle
+
+Ce document de'crit la repre'sentation adopte'e pour le stockage des
+documents produits par Thot.
+
+\section{Notation}
+
+La notation utilise'e pour de'crire la repre'sentation pivot est celle qui
+a de'ja` e'te' utilise'e pour de'crire les langages de Thot. Rappelons que les
+parties entre crochets {\tt [ ] } sont facultatives, que les parties entre
+les signes {\tt < >} peuvent e^tre re'pe'te'es ou omises, que le caracte`re
+{\tt /} repre'sente un choix entre plusieurs possibilite's, que la juxtaposition
+des symbloles marque la concate'nation et que le point indique une fin de
+re`gle. \`{A} ces conventions, on ajoute les suivantes~:
+
+\begin{description}
+\item{\tt OCTET}
+repre'sente un octet quelconque.
+\item{\tt CHAINEOCT}
+repre'sente une chai^ne d'octets quelconques.
+\item{\tt CHAINECAR}
+repre'sente une chai^ne de caracte`res ISO-Latin-1 imprimables termine'e par un
+octet nul. Une chai^ne vide ne comprend qu'un octet nul.
+\item{\tt CARACTERE}
+repre'sente un seul caracte`re ISO-Latin-1 imprimable, c'est a` dire un caracte`re dont
+le code est supe'rieur ou e'gal a` 32 (de'cimal).
+\item{\tt NUMERO}
+repre'sente un entier positif ou nul code' sur deux octets (0-65535).
+\item{\tt O}
+suivi d'un ou deux chiffres repre'sente un octet ayant pour valeur le nombre
+de'cimal repre'sente' par le (ou les) chiffre(s) qui sui(ven)t.
+\item{\tt '~'}
+un caracte`re entre apostrophes repre'sente ce caracte`re exprime' dans le code
+ISO-Latin-1.
+\end{description}
+
+\section{Format pivot}
+
+La repre'sentation pivot d'un document est forme'e de trois fichiers~:
+
+\begin{itemize}
+\item
+{\it le fichier pivot} repre'sente la structure logique spe'cifique
+et le contenu du document. Il comporte e'galement, le cas e'che'ant,
+la pre'sentation spe'cifique du document. Son nom se termine par l'extension
+{\tt .PIV}.
+
+\item
+{\it le fichier des re'fe'rences externes entrantes} repre'sente les liens
+entre le document et d'autres documents, ou plus pre'cise'ment il repre'sente
+les e'le'ments du document qui sont de'signe's par des re'fe'rences
+appartenant a` d'autres documents. Ce fichier n'est pre'sent que si le
+document comporte au moins un e'le'ment de'signe' depuis un autre document.
+Son nom se termine par l'extension {\tt .EXT}.
+
+\item
+{\it le fichier des re'fe'rences a` modifier} repre'sente des modifications
+a` effectuer dans le document. Ces modifications ont e'te' rendues
+ne'cessaires par des ope'rations de destruction ou de de'placement
+d'e'le'ments re'fe'rence's par le document, ope'rations
+qui ont e'te' effectue'es sur d'autres documents lorsque le document auquel
+est associe' le fichier n'e'tait pas charge'.
+Les re'fe'rences du document qui de'signent ces e'le'ments de'truits ou
+de'place's doivent e^tre mises a` jour selon ce qui est indique' dans le
+fichier des re'fe'rences a` modifier.
+Ce fichier n'est pre'sent que si le document comporte au moins une
+refe'rence externe devant e^tre mise a` jour.
+Le nom du fichier se termine par l'extension {\tt .REF}.
+\end{itemize}
+
+\section{Fichier des re'fe'rences externes entrantes}
+
+Le fichier des re'fe'rences externes entrantes permet de connai^tre tous les
+e'le'ments du document qui sont de'signe's par des re'fe'rences externes
+(re'fe'rences appartenant a` d'autres documents), que ces re'fe'rences
+repre'sentent des renvois ou des inclusions, avec ou sans expansion. Ce
+fichier permet aussi de connai^tre tous les documents qui font re'fe'rence
+a` chacun de ces e'le'ments.
+
+Le fichier des re'fe'rences externes entrantes est forme' d'une suite
+d'enregistrements repre'sentant chacun un e'le'ment de'signe'
+par d'autres documents. Il y a au moins un tel enregistrement~: si aucun
+e'le'ment du document n'est de'signe' par un autre document, le fichier
+n'existe pas.
+Le e'le'ments du document qui sont de'signe's par des re'fe'rences appartenant
+au me^me document (re'fe'rences internes) ne figurent pas dans ce fichier
+puisque les liens internes sont repre'sente's dans le fichier pivot (voir
+page~\pageref{refer}).
+
+Chaque enregistrement repre'sentant un e'le'ment de'signe' par d'autres
+documents comporte le label qui identifie l'e'le'ment et la suite des
+noms des documents comportant des re'fe'rences a` cet e'le'ment.
+Il y a au moins un nom de document apre`s le label.
+Le label est le me^me que celui qui identifie l'e'le'ment en question dans
+le fichier pivot (voir page~\pageref{labelelem}).
+
+\begin{verbatim}
+Fichier-Ref-Ext =    Elem-Ref < Elem-Ref > .
+Elem-Ref =           Label Doc-Externe < Doc-Externe > .
+\end{verbatim}
+
+\label{label}
+Thot affecte un identificateur unique, appele' label, a` chaque e'le'ment
+qu'il cre'e. Les labels engendre's par Thot sont de la forme {\tt Lnnn},
+ou` nnn repre'sente un entier code' en ASCII, avec un nombre de
+chiffres variable. Cet entier qui est appele' {\em nume'ro de label}.
+
+Un label est donc une suite de caracte`res termine'e par un octet nul.
+Dans les versions pre'ce'dentes de Thot, un label e'tait
+un entier positif court (deux octets) ou long (quatre octets).
+
+Dans les fichiers, un label est pre'ce'de' d'un octet qui identifie son type~:
+{\tt Marque-Label-Chaine}. Dans les fichiers produits par d'anciennes
+versions de Thot, on peut trouver aussi {\tt Marque-Label-Court} ou
+{\tt Marque-Label-Long}, suivis d'un entier positif sur deux ou quatre
+octets selon le type de label.
+
+\begin{verbatim}
+Label =              Marque-Label-Chaine CHAINECAR /
+                     Marque-Label-Court Numero-Label-Court /
+                     Marque-Label-Long Numero-Label-Long .
+Marque-Label-Chaine = O11 .
+Marque-Label-Court =  O12 .
+Marque-Label-Long =   O13 .
+Numero-Label-Court =  NUMERO .
+Numero-Label-Long =   NUMERO NUMERO .
+\end{verbatim}
+
+Chaque nom de document externe est une simple suite de caracte`res termine'e
+par un octet nul. Il est pre'ce'de' d'une marque de document externe.
+\begin{verbatim}
+Doc-Externe =        Marque-Doc-Ext Nom-Document .
+Marque-Doc-Ext =     O15 .
+Nom-Document =       CHAINECAR .
+\end{verbatim}
+
+\section{Fichier des re'fe'rences a` modifier}
+
+Le fichier des re'fe'rences a` modifier indique tous les e'le'ments externes
+(c'est a` dire appartenant a` d'autres documents) qui sont re'fe'rence's
+par le document et qui ont change' de document ou ont e'te' de'truits.
+Les re'fe'rences qui de'signent ces e'le'ments doivent e^tre mises a` jour,
+que ces re'fe'rences repre'sentent des renvois ou des inclusions, avec ou
+sans expansion.
+
+Le fichier des re'fe'rences a` modifier est forme' d'une suite
+d'enregistrements repre'sentant chacun un e'le'ment externe de'place' ou
+de'truit. Il y a au moins un tel enregistrement~: si le document ne contient
+aucune re'fe'rence a` modifier, le fichier n'existe pas.
+
+Chaque enregistrement comporte dans l'ordre l'ancien label de l'e'le'ment,
+le nouveau label de l'e'le'ment, le nom de l'ancien document auquel
+appartenait cet e'le'ment et le nom du nouveau document auquel il appartient.
+Les labels et noms de documents sont repre'sente's comme dans le fichier
+des re'fe'rences externes entrantes.
+
+\begin{verbatim}
+Fichier-Ref-Modif = El-Ext-Modif < El-Ext-Modif > .
+El-Ext-Modif =      Ancien-Label Nouveau-Label
+                    Ancien-Doc Nouveau-Doc .
+Ancien-Label =      Label .
+Nouveau-Label =     Label .
+Ancien-Doc =        Doc-Externe .
+Nouveau-Doc =       Doc-Externe .
+\end{verbatim}
+
+L'ancien label peut e^tre nul. Dans ce cas, l'enregistrement ne repre'sente
+pas la modification d'un e'le'ment externe, mais le changement de nom
+d'un document. Le nouveau label, bien que pre'sent, n'est pas significatif.
+Les deux noms repre'sentent l'ancien nom du document et le nouveau nom du
+document. Ce type d'enregistrement doit e^tre traite' de la fac,on suivante~:
+il faut rechercher dans le document auquel correspond le fichier toutes les
+re'fe'rences sortantes qui de'signent des e'le'ments contenus dans le document
+portant l'ancien nom et, pour chacune de ces re'fe'rences, il faut changer le
+nom du document contenant l'e'le'ment de'signe' par la re'fe'rence.
+
+Si l'ancien label n'est pas nul, il s'agit de la destruction ou du
+de'placement d'un e'le'ment externe. Une destruction est indique'e par un
+nouveau label nul. Dans ce cas, le nom du nouveau document n'est pas
+significatif, bien qu'il soit pre'sent. Il faut rechercher dans le document
+auquel correspond le fichier toutes les re'fe'rences sortantes qui de'signent
+l'e'le'ment externe identifie' par l'ancien label et l'ancien document et
+annuler toutes ces re'fe'rences.
+
+Un de'placement d'e'le'ment est indique' par un ancien label non nul et
+un nouveau label non nul e'galement. Les deux noms de documents sont
+significatifs dans ce cas. Ce type d'enregistrement indique que l'e'le'ment
+qui portait l'ancien label dans l'ancien document se trouve maintenant dans le
+nouveau document et porte le nouveau label. Dans le document auquel
+correspond le fichier, il faut prendre en compte cette modification dans
+toutes les re'fe'rences sortantes qui de'signent cet e'le'ment de'place'.
+
+\section{Organisation ge'ne'rale du fichier pivot}
+
+Le fichier pivot d'un document contient en te^te une indication de version,
+la valeur du plus grand label du document, la liste des langues utilise'es
+dans le document puis, de fac,on
+facultative, un commentaire associe' a` l'ensemble du document.
+Il contient ensuite, obligatoirement, l'indication de la classe du document,
+c'est a` dire le nom du sche'ma de structure d'apre`s lequel a e'te'
+construit le document. Si le document comporte des objets de diffe'rentes
+natures, les classes de ces objets sont indique'es apre`s la classe du
+document. De me^me, si des extensions de sche'ma s'ajoutent au sche'ma du
+document, ces extensions sont indique'es apre`s la classe du document, avec
+les classes des objets.
+Apre`s les classes, apparaissent les parame`tres, puis les e'le'ments
+associe's et enfin l'arbre principal du document. Parame`tres et e'le'ments
+associe's sont facultatifs, mais l'arbre principal du document doit e^tre
+pre'sent.
+
+\begin{verbatim}
+Fichier-Pivot = [ Version ]
+                [ Label ]
+                < Marque-Langue Nom-Langue >
+                [ Commentaire ]
+                  Classe-Document
+                < Classe-Objet >
+                < Marque-Param Param >
+                < Marque-Associe Suite-Associes >
+                  Marque-Document  Le-Document  Marque-Fin-Document .
+\end{verbatim}
+
+\subsection{Version}
+\label{versionpivot}
+
+L'indication de version de la forme pivot peut e^tre absente pour les
+fichiers produits par d'anciennes versions de Thot, mais elle doit e^tre
+pre'sente dans les
+fichiers produits par les versions 2 et suivantes. Elle comporte deux fois
+l'octet {\tt Marque-Version} puis le nume'ro de la version de la forme
+pivot, sur un octet. Le nume'ro de version courant est 4.
+
+\begin{verbatim}
+Version =        Marque-Version Marque-Version Numero-Version .
+Marque-Version = O22 .
+Numero-Version = OCTET .
+\end{verbatim}
+
+\subsection{Plus grand label}
+
+De fac,on a` permettre l'affectation de labels uniques aux nouveaux e'le'ments
+du document, la forme pivot comporte, apre`s l'identification de la version,
+le nume'ro de label le plus grand qui ait e'te' attribue' par Thot a` un
+e'le'ment du document.\footnote{Il ne s'agit pas ne'cessairement du plus grand
+label qu'on rencontrera dans le document. En effet, un e'le'ment ayant un label
+supe'rieur au plus grand label du document peut avoir e'te' de'truit et il
+ne faut pas affecter son label a` un autre e'le'ment.}
+Ce nume'ro est repre'sente' dans le fichier pivot de la me^me fac,on que tout
+label (voir page~\pageref{label} pour la repre'sentation des labels).
+Dans les fichiers pivots produits avec d'anciennes versions de Thot, ce
+nume'ro de label peut e^tre absent, mais il doit e^tre pre'sent dans tous les
+fichiers produits par les dernie`res versions de l'e'diteur.
+
+\subsection{Liste des langues utilise'es dans le document}
+\label{listelangues}
+
+La liste de toutes les langues utilise'es dans le document apparai^t en te^te.
+Elle est forme'e de la suite des noms de ces langues, chaque nom e'tant
+pre'ce'de' d'un octet {\tt Marque-Langue}.
+
+\begin{verbatim}
+Marque-Langue = O8 .
+Nom-Langue = CHAINECAR .
+\end{verbatim}
+
+La langue dans laquelle est e'crit chaque e'le'ment de texte du document est
+indique'e par le rang de cette langue dans la liste des langues (voir
+section~\ref{contenu}).
+
+\subsection{Commentaires}
+\label{comment}
+
+Le commentaire attache' au document est repre'sente' de la me^me fac,on que
+les commentaires attache's aux e'le'ments du document (voir page~\pageref{prescom}).
+Un commentaire est repre'sente' par une {\tt Marque-Commentaire} suivie de la
+longueur du commentaire (sur deux octets) et du contenu du commentaire,
+qui est une suite d'octets quelconques, de la longueur indique'e.
+
+Dans les premie`res versions de Thot, les commentaires e'taient repre'sente's
+diffe'remment, par une {\tt Marque-Commentaire-Ancien} suivie d'une
+{\tt Marque-Debut} et du texte du commentaire, qui e'tait une chai^ne
+de caracte`res de longueur quelconque ne contenant pas d'octets nuls et
+termine'e par un octet nul. Cette chai^ne e'tait suivie d'une
+{\tt Marque-Fin}. De fac,on a` permettre la pre'sence d'octets nuls dans le
+contenu du commentaire, cette repre'sentation a e'te' remplace'e par celle
+qui est de'crite plus haut, qui doit de'sormais e^tre la seule produite.
+Cependant, pour assurer la compatibilite' avec les versions pre'ce'dentes,
+Thot accepte en lecture les deux formes de commentaires.
+
+\begin{verbatim}
+Commentaire =     Marque-Commentaire Longueur-Commentaire
+                         Contenu-Commentaire /
+                  Marque-Commentaire-Ancien Marque-Debut
+                         Texte-Commentaire Marque-Fin .
+Marque-Commentaire =        O5 .
+Longueur-Commentaire =      NUMERO .
+Contenu-Commentaire =       CHAINEOCT .
+Marque-Commentaire-Ancien = O3 .
+Marque-Debut =              O4 .
+Texte-Commentaire =         CHAINECAR .
+Marque-Fin =                O6 .
+\end{verbatim}
+
+Les commentaires sont ignore's par l'e'diteur Thot qui se contente de les
+conserver intacts lorsqu'un document est lu puis de les e'crire sans
+changement lorsque le document est sauve' dans un fichier. Chaque commentaire
+est vu comme une suite d'octets quelconque et n'est pas interpre'te' par
+l'e'diteur.
+
+\subsection{Classes}
+
+La classe du document, ses extensions et les classes des diffe'rentes natures
+d'objets (classes externes) sont repre'sente'es de fac,on identique~: une
+marque {\tt Marque-Classe} ou {\tt Marque-Extension} suivie du nom de sche'ma
+de structure ou d'extension (ce nom est termine' par un octet nul), du code
+de ce sche'ma et du nom du sche'ma de pre'sentation
+a` utiliser pour ce sche'ma de structure ou d'extension. Le nom de sche'ma de
+pre'sentation peut se re'duire a` un octet nul si aucun sche'ma de
+pre'sentation particulier n'est requis.
+Toutes les classes d'objets utilise'es dans le document
+(et seulement celles qui sont re'ellement utilise'es dans ce document) sont
+indique'es ainsi, qu'elles soient explicitement appele'es dans le sche'ma
+de structure du document ou qu'elles aient e'te' appele'es gra^ce a` une
+re`gle {\tt NATURE}.
+
+Le rang d'une classe ou d'une extension dans cette liste est appele'
+nume'ro de classe. On verra plus loin qu'il sert a` indiquer dans quel sche'ma
+de structure est de'fini un attribut, ou a` quelle classe appartient un objet.
+La classe du document porte le nume'ro 0 et les classes d'objets et d'extension
+sont nume'rote'es a` partir de 1.
+
+Le code qui figure apre`s le nom du sche'ma de structure ou d'extension est
+obligatoire a` partir de la version 4 de la forme pivot. C'est un
+identificateur unique code' sur deux octets qui est affecte' a` chaque
+compilation du sche'ma.
+Cela permet de ve'rifier que les sche'mas de structure charge's pour le
+document qu'on lit sont bien ceux qui ont e'te' utilise's la derniere fois
+que le document a e'te' sauve'. En cas de diffe'rence, la validite' de toute
+la structure logique du document lu est ve'rifie'e par rapport au sche'ma
+de structure. Cela e'vite de produire des documents de structure incorrecte
+lorsque le sche'ma de structure a e'te' modifie'.
+
+\begin{verbatim}
+Classe-Document = Classe .
+Classe-Objet =    Classe .
+Classe =          Marque-ClassExt Nom-Schema-Struct
+                  [ Code-Schema-Struct ] NomSchema-Pres .
+Marque-ClassExt = Marque-Classe / Marque-Extension .
+Marque-Classe =   O14 .
+Marque-Extension =O10 .
+Nom-Schema-Struct=CHAINECAR .
+Code-Schema-Struc=NUMERO .
+NomSchema-Pres =  CHAINECAR .
+\end{verbatim}
+
+\subsection{Parame`tres}
+
+Si certains parame`tres ont une valeur dans le document, ces valeurs de
+parame`tres suivent les noms des classes d'objets, ou le nom de la classe du
+document s'il n'y a pas de classes d'objets. Chaque valeur de
+parame`tre est pre'ce'de'e d'un octet {\tt Marque-Param} indiquant qu'il
+s'agit d'une valeur de parame`tre. Les valeurs de parame`tres sont
+repre'sente'es comme tout e'le'ment structure' (voir page~\pageref{elstruct}).
+Pour un document,
+les parame`tres possibles, qui sont de'finis dans le sche'ma de structure,
+n'ont pas tous une valeur. Seuls ceux qui ont une valeur apparaissent ainsi
+en te^te du fichier pivot du document. Si aucun parame`tre n'a de
+valeur, ou si aucun parame`tre n'est de'fini dans le sche'ma de structure du
+document, aucune valeur de parame`tre n'est pre'sente dans le fichier
+pivot. En revanche, si un parame`tre a une valeur, il ne peut en avoir qu'une
+pour un document et donc toutes les valeurs de parame`tres d'un document sont
+de types diffe'rents.
+
+\begin{verbatim}
+Marque-Param =    O16 .
+Param =           Element .
+\end{verbatim}
+
+\subsection{Ele'ments associe's}
+
+Apre`s les valeurs des parame`tres viennent les e'le'ments associe's du document
+(ces e'le'ments peuvent e^tre absents). Les e'le'ments associe's sont groupe's
+par type~: un document peut avoir plusieurs e'le'ments associe's de me^me type.
+Un octet {\tt Marque-Associe} pre'ce`de chaque suite d'e'le'ments du me^me
+type. Dans ces suites, les e'le'ments associe's sont repre'sente's comme tout
+e'le'ment structure'.
+
+Pour chaque type d'e'le'ments associe's, il n'y a normalement qu'un e'le'ment
+qui posse`de un ou plusieurs fils~; ce sont ces fils qui sont les e'le'ments
+associe's au sens strict. Dans les documents produits par d'anciennes versions
+de Thot, l'e'le'ment racine est absent et les e'le'ments associe's eux-me^mes
+apparaissent directement apre`s la {\tt Marque-Associe}.
+
+\begin{verbatim}
+Marque-Associe =  O2 .
+Suite-Associes =  Element < Element > .
+\end{verbatim}
+
+\subsection{Arbre principal}
+
+Les e'le'ments associe's sont suivis du document lui-me^me, ou plus exactement
+de la repre'sentation de son arbre principal. Cette repre'sentation de l'arbre
+principal est pre'ce'de'e d'un octet {\tt Marque-Document} et suivie d'un octet
+{\tt Marque-Fin-Document}. Le document est repre'sente' comme tout e'le'ment
+structure'.
+
+\begin{verbatim}
+Marque-Document = O19 .
+Le-Document =     Element .
+Marque-Fin-Document = O26 .
+\end{verbatim}
+
+\section{Ele'ments structure's}
+\label{elstruct}
+
+Rappelons que tous les types d'e'le'ments de'finis par une structure logique
+ge'ne'rique sont de'crits dans la table des types d'e'le'ments du sche'ma de
+structure. Cette table contient, dans l'ordre, les types de base (chai^ne de
+caracte`res, symbole mathe'matique, e'le'ment graphique, image, marque de
+page...), puis les constantes, puis tous les e'le'ments structure's, y compris
+les e'le'ments associe's et parame`tres. Quelle que soit sa cate'gorie, un type
+d'e'le'ment peut e^tre repe're' par son rang dans cette table (le rang  est
+e'galement appele' nume'ro du type). Ce rang indique la cate'gorie de l'e'le'ment~:
+les premiers nume'ros sont ceux des types de base, les suivants sont ceux
+des e'le'ments structure's.
+
+Dans la table des types on trouve des constantes. Comme tous les autres types
+d'e'le'ments, une constante porte un nom. De plus, elle a une valeur de'finie
+dans le sche'ma de structure~: une chai^ne de caracte`res.
+
+Les e'le'ments structure's (parame`tres, e'le'ments associe's, e'le'ments du
+document) sont tous repre'sente's de la me^me fac,on.
+
+\subsection{Type d'e'le'ment}
+
+Chaque e'le'ment commence par une indication de son type. Le type est indique'
+par un octet {\tt Marque-Type} suivi du nume'ro de type de l'e'le'ment
+(un entier positif sur deux octets).
+Dans le cas ou` le type de l'e'le'ment est de'fini dans un sche'ma de structure
+diffe'rent de celui ou` est de'fini le type de l'e'le'ment dont il est le
+descendant direct, le nouveau sche'ma de structure est indique', avant
+la {\tt Marque-Type} et le nume'ro de type, par un octet {\tt Marque-Classe}
+(me^me s'il s'agit d'une extension de sche'ma)
+suivi du nume'ro de la nouvelle classe d'objets. Rappelons que le nume'ro de
+classe est le rang du nom de la classe dans la liste des noms de classes et
+des extensions qui se trouve en te^te du document.
+
+\subsection{Inclusion}
+
+Si l'e'le'ment repre'sente l'inclusion avec expansion ou semi-expansion d'un
+autre e'le'ment,
+l'indication de type est suivie d'une {\tt Marque-Inclus} et de
+l'identification de l'e'le'ment inclus. Cette identification est compose'e,
+comme dans un e'le'ment re'fe'rence (voir section~\ref{refer}), du type de
+la re'fe'rence (dans ce cas c'est toujours une inclusion), et de la
+de'signation de l'e'le'ment inclus.
+
+Si l'e'le'ment repre'sente une inclusion avec semi-expansion, la de'signation
+de l'e'le'ment inclus est suivie d'une {\tt Marque-SemiExpansion}.
+
+\subsection{Label}
+\label{labelelem}
+
+Apre`s l'indication de type (et les e'ventuelles indications d'inclusion et
+de protection), apparai^t un label qui identifie l'e'le'ment de fac,on unique
+dans le document. Il s'agit d'une chaine de caracteres qui est utilise'e dans les
+re'fe'rences qui de'signent l'e'le'ment et dans le fichier des re'fe'rences
+externes entrantes.
+Dans les versions pre'ce'dentes de Thot, seuls certains e'le'ments portaient
+un label\footnote{Il s'agissait de l'e'le'ment racine du document, des
+e'le'ments de'signe's par une re'fe'rence interne ou externe et des e'le'ments
+exportables, me^me s'ils n'e'taient de'signe's par aucune re'fe'rence.}.
+C'est pourquoi certains fichiers pivots peuvent ne pas comporter de label
+pour tous les e'le'ments~; mais dans les fichiers pivots produits avec
+les versions re'centes de l'e'diteur Thot, {\em tous} les e'le'ments du
+document portent un label (voir page~\pageref{label} pour la repre'sentation
+du label).
+
+\subsection{Holophraste}
+
+Si l'e'le'ment est holophraste'\footnote{Tout e'le'ment peut e^tre
+holophraste'. Il est alors affiche' et imprime' de fac,on particulie`re~: son
+image est remplace'e par le nom de son type, donnant ainsi une forme plus
+compacte de l'e'le'ment.}, un octet {\tt Marque-Holophraste} apparai^t apre`s
+le label et avant les attributs.
+
+\subsection{Attributs}
+
+Chaque e'le'ment peut e^tre affecte' d'un ou plusieurs attributs, qui portent sur
+l'e'le'ment lui-me^me et tout son contenu. Seuls sont indique's dans le fichier
+pivot les attributs qui ne sont pas impose's dans le sche'ma de structure par
+une instruction {\tt WITH}. Cependant les attributs impose's de type re'fe'rence
+apparaissent dans le fichier pivot. Dans un sche'ma de structure, un attribut
+porte un nom, posse`de un type et a, selon son type, certaines valeurs
+possibles. Il y a quatre types d'attributs~:
+\begin{description}
+\item[Entier~:]
+l'attribut prend une valeur entie`re comprise entre -32000 et 32000.
+\item[Texte~:]
+l'attribut prend pour valeur une chai^ne de caracte`res.
+\item[Re'fe'rence~:]
+l'attribut prend pour valeur une re'fe'rence a` un e'le'ment d'un type donne'.
+\item[Enume're'~:]
+l'attribut prend sa valeur dans une liste donne'e des valeurs possibles.
+Chacune de ces valeurs a un nume'ro d'ordre et un nom. La valeur d'un attribut
+de type e'nume're' est de'signe'e par ce nume'ro d'ordre.
+\end{description}
+
+Un attribut est de'signe' par son rang dans la table des attributs du sche'ma
+de structure (ce rang est e'galement appele' ``nume'ro de l'attribut''). Chaque
+indication d'attribut comprend, dans l'ordre~:
+
+\begin{itemize}
+\item
+un octet {\tt Marque-Attribut},
+\item
+le nume'ro de la classe ou` l'attribut est de'fini~: ze'ro pour la classe du
+document ou le rang d'une classe d'objets dans la liste des classes figurant
+en te^te du fichier pivot,
+\item
+le nume'ro de l'attribut dans le sche'ma de structure de la classe ou` il est
+de'fini,
+\item
+la valeur de l'attribut, code'e selon le type de l'attribut~:
+   \begin{description}
+   \item[Entier~:]
+   la valeur absolue de l'attribut, code'e sur deux octets, et suivie de son
+   signe, un caracte`re {\tt '+'} ou {\tt '-'}.
+   \item[Texte~:]
+   la chai^ne de caracte`res qui repre'sente la valeur de l'attribut, termine'e
+   par un octet nul, ou un simple octet nul si l'attribut n'a pas de valeur.
+   \item[Re'fe'rence~:]
+   l'e'le'ment de'signe' par l'attribut, repre'sente' de la me^me
+   fac,on que dans un e'le'ment re'fe'rence (voir section~\ref{refer}),
+   mais il ne comporte pas l'octet Marque-Refer.
+   \item[Enume're'~:]
+   le nume'ro de la valeur de l'attribut affecte'e a` l'e'le'ment.
+   \end{description}
+\end{itemize}
+
+\subsection{Pre'sentation, commentaire et contenu}
+\label{prescom}
+
+Apre`s les attributs affecte's a` l'e'le'ment vient la liste des re`gles de
+pre'sentation qui s'appliquent spe'cifiquement a` cet e'le'ment. Un e'le'ment
+peut ne pas avoir de re`gle de pre'sentation spe'cifique, mais il peut aussi
+en avoir une ou plusieurs. Les re`gles de pre'sentation sont de'crites plus
+loin. Un commentaire associe' a` l'e'le'ment peut suivre les re`gles de
+pre'sentation spe'cifiques. Il est repre'sente' de la me^me fac,on que le
+commentaire du document (voir page~\pageref{comment}). Enfin vient le
+contenu de l'e'le'ment (voir page~\pageref{contenu})~; dans le cas ou`
+l'e'le'ment repre'sente l'inclusion d'un autre e'le'ment, il n'y a pas
+de contenu.
+
+\begin{verbatim}
+Element =         Type-Element
+                [ Marque-Inclus TypeReference
+                          Designation [ Marque-SemiExpansion ] ]
+                [ Label ]
+                [ Marque-Holophraste ]
+                < Marque-Attribut  Numero-Classe  Numero-Attribut
+                  Valeur-Attribut >
+                < Regle-Presentation >
+                [ Commentaire ]
+                [ Contenu ] .
+
+Type-Element =  [ Marque-Classe Numero-Classe ]
+                  Marque-Type Numero-Type .
+Numero-Classe =   NUMERO .
+Marque-Type =     O20 .
+Numero-Type =     NUMERO .
+
+Marque-Inclus =   O9 .
+TypeReference =   Marque-Renvoi /
+                  Marque-Inclusion /
+                  Marque-Expansion .
+Marque-Renvoi =   'r' .
+Marque-Inclusion ='i' .
+Marque-Expansion ='e' .
+Marque-SemiExpansion = O21 .
+
+Marque-Attribut = O1 .
+Numero-Attribut = NUMERO .
+Valeur-Attribut = Valeur-Absolue Signe /
+                  Valeur-Texte /
+                  TypeReference Designation /
+                  Numero-Valeur .
+Valeur-Absolue =  NUMERO .
+Signe =           '+' / '-' .
+Valeur-Texte =    CHAINECAR .
+Numero-Valeur =   NUMERO .
+\end{verbatim}
+
+\section{Re`gles de pre'sentation spe'cifiques}
+
+Dans chaque e'le'ment peuvent apparai^tre une ou plusieurs re`gles de
+pre'sentation, ou me^me aucune. S'il n'y a pas de re`gle de pre'sentation,
+l'e'le'ment sera affiche' ou imprime' selon toutes les re`gles de'finies dans le
+sche'ma de pre'sentation. Si des re`gles de pre'sentation sont pre'sentes, chacune
+sera applique'e a` l'e'le'ment a` la place de (ou modifiera) la re`gle de me^me
+type de'finie dans le sche'ma de pre'sentation, seules les re`gles du sche'ma de
+pre'sentation qui ne sont pas rede'finies dans l'e'le'ment lui e'tant applique'es
+telles quelles.
+
+Dans le fichier pivot chaque re`gle de pre'sentation spe'cifique commence par une
+{\tt Marque-Regle}. Cette marque est suivie du nume'ro de la vue a` laquelle
+se rapporte la re`gle, du type de la boi^te concerne'e et du contenu de la
+re`gle. Le nume'ro de vue {\tt Numero-Vue} est le rang de la vue dans la table
+des vues du sche'ma de pre'sentation. Le type de la boi^te {\tt Type-Boite}
+vaut 0 si la re`gle s'applique a` la boi^te de l'e'le'ment lui-me^me. Si la re`gle
+s'applique a` une boi^te de pre'sentation associe'e a` l'e'le'ment, {\tt Type-Boite}
+est le nume'ro de cette boi^te de pre'sentation (rang dans la table des boi^tes
+de pre'sentation, qui est une partie du sche'ma de pre'sentation). Le contenu de
+la re`gle diffe`re selon le type de re`gle. Ce type est indique' par un caracte`re
+au de'but du contenu.
+
+\begin{verbatim}
+Regle-Presentation= Marque-Regle Numero-Vue Type-Boite Contenu-Regle.
+Marque-Regle =    O7 .
+Numero-Vue =      NUMERO .
+Type-Boite =      NUMERO .
+Contenu-Regle =   Marque-Hauteur Dimension /
+                  Marque-Largeur Dimension /
+                  Marque-Position Distance Signe /
+                  Marque-Corps Distance /
+                  Marque-Style CARACTERE /
+                  Marque-Famille CARACTERE /
+                  Marque-NoBreak1 Distance /
+                  Marque-NoBreak2 Distance /
+                  Marque-Ajuste Alignement /
+                  Marque-Justif Booleen /
+                  Marque-CoupureMots Booleen /
+                  Marque-Retrait Distance Signe /
+                  Marque-Interligne Distance /
+                  Marque-Souligne CARACTERE /
+                  Marque-SoulEpaisseur CARACTERE /
+                  Marque-StyleTrait CARACTERE /
+                  Marque-EpaisseurTrait	Distance /
+                  Marque-TrameRemplissage Indice /
+                  Marque-CouleurFond Indice /
+                  Marque-CouleurTrace Indice /
+                  Marque-ImageDescriptor CroppingFrame 
+                                         ImagePresentation 
+                                         ImageType .
+\end{verbatim}                  
+
+\subsection{Dimensions}
+
+Une re`gle de hauteur ou une re`gle de largeur peut e^tre absolue ou
+relative. Ceci est indique' par le premier caracte`re ({\tt Type-Dimension})
+qui suit la marque de hauteur ou de largeur.
+
+Si la re`gle de hauteur ou de largeur est absolue, elle est applique'e
+{\em a` la place} de la re`gle indique'e par le sche'ma de pre'sentation et les
+parame`tres qui suivent le {\tt Type-Dimension} constituent cette re`gle de
+hauteur (ou de largeur) a` appliquer a` l'e'le'ment. La {\tt Valeur}
+(un entier sur deux octets) indique la hauteur (ou la largeur) de la boi^te
+de l'e'le'ment~; l'{\tt Unite-Dimension} indique si cette hauteur (ou
+largeur) est exprime'e en points typographiques ({\tt 'P'}) ou en dixie`mes
+de caracte`res ({\tt 'C'}), le cas {\tt Pour-Cent} e'tant exclus~; enfin le
+{\tt Signe} est toujours {\tt '+'}.
+
+Si la re`gle de hauteur ou de largeur est relative, elle {\em modifie}
+la re`gle indique'e par le sche'ma de pre'sentation~: la hauteur (ou la largeur)
+de l'e'le'ment auquel s'applique la re`gle est relative a` celle de l'e'le'ment
+(dit de re'fe'rence) indique' par la re`gle de hauteur (ou de largeur) du
+sche'ma de pre'sentation.
+Seule la relation qui lie ces dimensions est indique'e dans la re`gle
+spe'cifique. Si l'{\tt Unite-Dimension} est {\tt Pour-Cent} (code' {\tt '\%'}),
+la {\tt Valeur} indique le pourcentage de la hauteur (ou de la largeur)
+de la boi^te a` laquelle s'applique la re`gle, par rapport a` la hauteur (ou la largeur) de la boi^te de l'e'le'ment de re'fe'rence~; et dans ce cas le
+{\tt Signe} est toujours {\tt '+'}. Si l'{\tt Unite-Dimension} est
+{\tt Point-Typo} ou {\tt Caracteres}, la {\tt Valeur} indique la diffe'rence
+entre la hauteur de la boi^te de re'fe'rence et celle de l'e'le'ment auquel
+s'applique la re`gle, cette diffe'rence e'tant exprime'e en points
+typographiques ou en dixie`mes de caracte`res, selon l'{\tt Unite-Dimension}.
+Le signe indique alors si la boi^te de l'e'le'ment auquel s'applique la
+re`gle est plus petite (signe {\tt '-'}) ou plus grande (signe {\tt '+'})
+que la boi^te de re'fe'rence.
+
+Les deux unite's de longueur que sont le point typographique (1/72 pouce) et
+le dixie`me de caracte`re permettent d'exprimer des distances absolues ou
+relatives. La premie`re est une unite' absolue, la seconde est relative.
+Avec cette unite' relative, un changement de corps provoque un
+changement de la hauteur (ou de la largeur, selon le type de la re`gle),
+alors que la hauteur (ou la largeur) reste fixe si l'unite' est le point
+typographique.
+
+\begin{verbatim}
+Marque-Hauteur =  'H' .
+Marque-Largeur =  'L' .
+Dimension =       Type-Dimension Valeur Unite-Dimension Signe .
+Type-Dimension =  Absolue / Relative .
+Absolue =         'A' .
+Relative =        'R' .
+Valeur =          NUMERO .
+Unite-Dimension=  Point-Typo / Caracteres / Pour-Cent .
+Point-Typo =      'P' .
+Caracteres =      'C' .
+Pour-Cent =       '%' .
+\end{verbatim}
+
+\subsection{Position}
+\label{position}
+
+Deux types de re`gles permettent de changer la position horizontale ou
+la position verticale de la boi^te associe'e a` l'e'le'ment qui porte la re`gle.
+Comme pour une re`gle de hauteur ou de largeur relative, il s'agit d'une
+modification de la re`gle de'finie dans le sche'ma de pre'sentation. La
+re`gle de pre'sentation spe'cifique indique de quelle distance la boi^te
+doit e^tre de'cale'e par rapport a` la position de'finie dans le sche'ma de
+pre'sentation. Apre`s le type de la re`gle, apparaissent, dans l'ordre, cette
+distance de de'calage et le signe (le sens) du de'calage.
+
+\begin{verbatim}
+Marque-Position =  Marque-Position-X / Marque-Position-Y .
+Marque-Position-X = 'X' .
+Marque-Position-Y = 'Y' .
+Distance =        Valeur Unite .
+Unite =           Point-Typo / Caracteres .
+\end{verbatim}
+
+\subsection{Polices de caracte`res}
+
+Trois types de re`gles de pre'sentation permettent de de'terminer la police a`
+utiliser pour afficher le texte contenu dans un e'le'ment. La force de corps
+est indique'e par la re`gle Corps, qui est constitue'e d'une {\tt Marque-Corps}
+suivie d'une distance~: une valeur entie`re et une unite'. Cette distance
+est repre'sente'e, de la me^me fac,on que dans une re`gle de position
+(voir section~\ref{position}), par un nombre (sur deux octets) et un caracte`re
+indiquant l'unite'. Si l'unite' est le point typographique, le nombre indique
+la force de corps en points~; si l'unite' est le caracte`re, le nombre indique
+le niveau de taille (1=tout petit, 2=petit, etc.) et ce niveau de taille est
+interpre'te' par le Me'diateur pour le choix du corps re'el, en fonction d'une
+table de correspondance que l'utilisateur peut contro^ler.
+
+La forme des caracte`res est de'termine'e par deux re`gles~: la re`gle de style
+et la re`gle de famille. Chacune de ces re`gles n'a qu'un parame`tre, un
+caracte`re. Selon la re`gle, ce caracte`re repre'sente le style de la police
+a` utiliser ({\tt 'R'} = romain, {\tt 'B'} = gras, {\tt 'I'} = italique,
+{\tt 'O'} = oblique, {\tt 'G'} = gras italique, {\tt 'Q'} = gras oblique...)
+ou sa famille ({\tt 'T'} = Times, {\tt 'H'} = Helvetica, {\tt 'C'} =
+Courier...).
+
+\begin{verbatim}
+Marque-Corps =    'T' .
+Marque-Style =    'S' .
+Marque-Famille =  'F' .
+\end{verbatim}
+
+\subsection{Coupures}
+
+Une re`gle de hauteur minimum avant coupure ({\tt NoBreak1}) indique que
+la boi^te de l'e'le'ment auquel elle se rapporte ne peut e^tre coupe'e par
+un saut de page qu'au-dela` d'une certaine distance depuis le haut de la
+boi^te. L'unique parame`tre apre`s la {\tt Marque-NoBreak1} identifiant
+la re`gle est cette distance minimum avant coupure, qui est exprime'e de
+la me^me fac,on que dans une re`gle de positionnement (voir section~\ref{position}).
+
+De me^me, une re`gle de hauteur minimum apre`s coupure ({\tt NoBreak2})
+indique que la boi^te de l'e'le'ment auquel elle se rapporte ne peut e^tre
+coupe'e par un saut de page qu'avant une certaine distance du bas de la
+boi^te. Cette hauteur minimum est exprime'e de la me^me fac,on que dans
+la re`gle pre'ce'dente.
+
+\begin{verbatim}
+Marque-NoBreak1 =  '1' .
+Marque-NoBreak2 =  '2' .
+\end{verbatim}
+
+\subsection{Mise en lignes}
+
+Une re`gle d'alignement modifie le mode d'alignement des lignes de texte
+contenues dans l'e'le'ment sur lequel elle porte. Ce type de re`gle n'a qu'un
+parame`tre, le mode d'alignement, qui indique si les lignes de texte doivent
+e^tre aligne'es sur le co^te' gauche de l'e'le'ment (fer a` gauche), sur son co^te'
+droit (fer a` droite), si elles doivent e^tre centre'es dans l'e'le'ment ou encore
+aligne'es a` gauche avec des pointille's pour comple'ter la dernie`re ligne.
+
+\begin{verbatim}
+Marque-Ajuste =   'A' .
+Alignement =      Align-Gauche / Align-Droite / Centre / Pointille .
+Align-Gauche =    'G' .
+Align-Droite =    'D' .
+Centre =          'C' .
+Pointille =       'P' .
+\end{verbatim}
+
+Une re`gle de justification indique seulement si les lignes de texte contenues
+dans l'e'le'ment doivent e^tre justifie'es, c'est a` dire e'tire'es de fac,on a`
+atteindre les bords de leur boi^te englobante, ou si elles conservent leur
+longueur propre, avec un espace fixe entre les mots. Dans le cas ou` les
+lignes sont justifie'es, le mode d'alignement, spe'cifie' par une re`gle du type
+pre'ce'dent, n'a d'utilite' que pour de'terminer la position horizontale de la
+dernie`re ligne des boi^tes mises en lignes (par exemple les paragraphes),
+puisque les autres lignes occupent toute la largeur de leur boi^te
+englobante.
+Dans une re`gle de justification, la marque identifiant le type de re`gle est
+suivie d'un caracte`re qui indique si la justification doit e^tre faite
+({\tt 'V'}) ou non ({\tt 'F'}).
+
+\begin{verbatim}
+Marque-Justif =   'J' .
+Booleen =         Vrai / Faux .
+Vrai =            'V' .
+Faux =            'F' .
+\end{verbatim}
+
+Une re`gle de coupure des mots indique si les mots doivent e^tre coupe's en
+fin de ligne ou non. Cette re`gle est forme'e comme une re`gle de
+justification~: la marque identifiant le type de re`gle est suivie d'un
+caracte`re qui indique si la coupure des mots doit e^tre faite
+({\tt 'V'}) ou non ({\tt 'F'}).
+
+\begin{verbatim}
+Marque-CoupureMots = 'C' .
+\end{verbatim}
+
+Une re`gle retrait indique le de'calage horizontal du de'but de la premie`re
+ligne des boi^tes mises en lignes. Si le de'calage est positif, la premie`re
+ligne est de'cale'e a` droite, en retrait des autres~; si le de'calage est
+ne'gatif, la premie`re ligne est de'cale'e a` gauche. Apre`s l'indication du type
+de re`gle, le de'calage est repre'sente' par son amplitude (une distance
+code'e comme dans une re`gle de positionnement, voir section~\ref{position})
+et son signe (un caracte`re {\tt '+'} ou {\tt '-'}).
+
+Une re`gle interligne donne la distance qui se'pare deux lignes conse'cutives
+dans une boi^te mise en lignes. La marque indiquant le type de la re`gle est
+suivie d'une distance, code'e comme dans une re`gle de positionnement
+(voir section~\ref{position}), qui est la valeur de l'interligne.
+
+\begin{verbatim}
+Marque-Retrait =  'R' .
+Marque-Interligne='I' .
+\end{verbatim}
+
+\subsection{Soulignement}
+
+Une re`gle de soulignement modifie le mode de soulignement des lignes de texte
+contenues dans l'e'le'ment sur lequel elle porte. Ce type de re`gle n'a qu'un
+parame`tre, le mode de soulignement, qui indique si les lignes de texte doivent
+e^tre souligne'es, surligne'es ou biffe'es. Dans une re`gle de soulignement, 
+la marque identifiant le type de re`gle est suivie d'un caracte`re identifiant
+le type de soulignement ({\tt 'U'} = souligne', {\tt 'O'} = surligne', 
+{\tt 'C'} = biffe')
+
+\begin{verbatim}
+Marque-Souligne =  'U' .
+\end{verbatim}
+
+Une re`gle d'e'paisseur de soulignement modifie l'e'paisseur du trait de soulignement des lignes de texte
+contenues dans l'e'le'ment sur lequel elle porte. Ce type de re`gle n'a qu'un
+parame`tre, l'e'paisseur de soulignement, qui indique si le trait doit e^tre fin ou e'pais.
+Dans une re`gle d'e'paisseur de soulignement, 
+la marque identifiant le type de re`gle est suivie d'un caracte`re identifiant
+le type d'e'paisseur ({\tt 'N'} = fin, {\tt 'T'} = e'pais) 
+
+\begin{verbatim}
+Marque-SoulEpaisseur =  'E' .
+\end{verbatim}
+
+\subsection{Style de trait}
+
+Une re`gle de style de trait modifie le style du trace' des e'le'ments de base
+graphiques contenus dans l'e'le'ment sur lequel porte la re`gle. Ce type de
+re`gle n'a qu'un parame`tre qui indique si les traits doivent e^tre continus,
+pointille's ou tirete's. La marque identifiant le type de re`gle est suivie
+d'un caracte`re identifiant le style du trace' ({\tt 'S'} = continu',
+{\tt '-'} = tirete', {\tt '.'} = pointille').
+
+\begin{verbatim}
+Marque-StyleTrait = 'l' .
+\end{verbatim}
+
+\subsection{Epaisseur des traits}
+
+Une re`gle d'e'paisseur de trait modifie l'e'paisseur de trait des e'le'ments
+de base graphiques contenus dans l'e'le'ment sur lequel porte la re`gle.
+Ce type de re`gle n'a qu'un parame`tre qui indique l'e'paisseur des traits.
+La marque identifiant le type de re`gle est suivie de ce parame`tre
+exprime' de la me^me fac,on qu'une distance dans une re'gle de position
+(voir section~\ref{position}).
+
+\begin{verbatim}
+Marque-EpaisseurTrait = 'W' .
+\end{verbatim}
+
+\subsection{Trame de remplissage}
+
+Une re`gle trame de remplissage de'termine le motif a` utiliser pour remplir
+la surface des e'le'ments de base graphiques contenus dans l'e'le'ment sur
+lequel porte la re`gle. Ce type de re`gle n'a qu'un parame`tre qui indique
+le motif a` utiliser. Celui-ci est repre'sente' par un entier code' sur deux
+octets qui est l'indice dans la table des motifs de Thot. Cette table
+se trouve dans le fichier {\tt thot.pattern}.
+Par convention l'indice 0 indique qu'il n'y a pas de remplissage des surfaces.
+
+\begin{verbatim}
+Marque-TrameRemplissage = 'p' .
+Indice = NUMERO .
+\end{verbatim}
+
+\subsection{Couleurs}
+
+Deux re`gles diffe'rentes permettent de modifier la couleur de tous les
+e'le'ments de base contenus dans un e'le'ment. L'une modifie la couleur de
+fond, l'autre la couleur de trace'. Ces deux re'gles ont la me^me forme~:
+la marque identifiant le type de re`gle ({\tt Marque-CouleurFond} ou
+{\tt Marque-CouleurTrace}) est suivie d'un entier code' sur deux octets
+qui repre'sente la couleur a` utiliser. Cet entier est le rang de la
+couleur dans la table des couleurs de Thot qui se trouve dans le fichier
+{\tt thot.color}.
+Par convention, le rang 0 repre'sente le blanc et le rang 1 repre'sente
+le noir.
+
+\begin{verbatim}
+Marque-CouleurFond = 'b' .
+Marque-CouleurTrace = 't' .
+\end{verbatim}
+
+\subsection{Pre'sentation des images}
+
+Une re`gle de pre'sentation des images ne peut e^tre associe'e qu'a` un
+e'le'ment de base de type image. Elle indique le type de l'image auquel
+fait re'fe'rence l'e'le'ment sur lequel elle porte, le fene^trage a` appliquer 
+sur l'image externe a` laquelle on fait re'fe'rence et le type de cadrage
+qu'on applique a` cette image pour la mettre dans le document.
+Ce type de re`gle a` trois parame`tres :
+\begin{itemize}
+\item le fene^trage a` appliquer, qui de'finit la partie de l'image externe.
+Cette fene^tre est de'finie par une origine, une hauteur et une largeur,
+en points typographiques, dans un repe`re dont l'origine est en haut a`
+gauche de l'image externe avec un axe des abscisses croissantes vers
+la droite et un axe des ordonne'es croissantes vers le bas.
+\item le cadrage a` appliquer a` la fene^tre de l'image. Le cadrage 
+de'crit la manie`re dont on affiche la fene^tre pre'ce'demment de'finie dans
+l'espace
+de composition re'serve' a` l'e'le'ment logique IMAGE sur lequel porte la re`gle 
+de pre'sentation. Ce cadrage est code' sur un caracte`re~: {\tt 'S'} = sans modifications,
+{\tt 'M'} = me^mes proportions, {\tt 'P'} = plein cadre.
+\item le type de l'image externe auquel fait re'fe'rence l'e'le'ment logique IMAGE sur lequel porte la re`gle 
+de pre'sentation. Le type de l'image est code' dans la re`gle par un entier~:
+\begin{itemize}
+\item {\tt 1} = Bitmap (Xlib XReadBitmapFile format)
+\item {\tt 2} = XDump (XWD format)
+\item {\tt 3} = EPSF (Encapsulated PostScript file)
+\item {\tt 5} = CGM (ISO 8632, codage clear text ou binary )
+\item {\tt 6} = idraw (Idraw 1.15 format)
+\item {\tt 7} = gidraw (Grif Idraw 1.15 format)
+\item {\tt 8} = TIFF 5.0 (Tag Image File Format)
+\item {\tt 9} = HPGL
+\end{itemize}
+\end{itemize}
+
+\begin{verbatim}
+Marque-ImageDescriptor = 'P' .
+CroppingFrame =           X Y Largeur Hauteur .
+ImagePresentation =       CARACTERE .
+ImageType =               NUMERO .
+X =                       NUMERO .
+Y =                       NUMERO .
+Largeur =                 NUMERO .
+Hauteur =                 NUMERO .
+\end{verbatim}
+
+\section{Contenu d'un e'le'ment}
+\label{contenu}
+
+La repre'sentation du contenu des e'le'ments diffe`re selon que l'e'le'ment
+repre'sente' est une feuille de la structure, une re'fe'rence, un e'le'ment
+structure', un parame`tre ou une constante. Le sche'ma de structure permet
+d'interpre'ter correctement la repre'sentation du contenu, puisque la
+structure de chaque type d'e'le'ment y est de'finie.
+
+\begin{verbatim}
+Contenu =         Feuille / Reference / Constante /
+                  Parametre / Elem-Struct .
+\end{verbatim}
+
+S'il s'agit d'une feuille, le contenu est constitue' d'une
+indication e'ventuelle de l'alphabet ou de la langue, d'un octet
+{\tt Marque-Debut} suivi du contenu de la feuille et d'un octet
+{\tt Marque-Fin}.
+
+\begin{verbatim}
+Feuille =       [ Alphab-Langue ] Marque-Debut Contenu-Feuille
+                  Marque-Fin .
+Alphab-Langue =   Alphabet / Langue .
+Alphabet =        CARACTERE .
+Langue =          Marque-Langue Numero-Langue .
+Numero-Langue =   OCTET .
+Contenu-Feuille = CHAINECAR / CARACTERE /
+                  Indic-Page / Ident-Paire .
+\end{verbatim}
+
+\subsection{Chai^nes de caracte`res, graphiques, symboles et images}
+
+Si la feuille est du type chai^ne de caracte`res ou image (c'est indique'
+dans le sche'ma de structure), le contenu de la feuille est une suite de
+caracte`res termine'e par un octet nul. S'il s'agit d'un e'le'ment graphique
+ou d'un symbole mathe'matique, le contenu est re'duit a` un seul caracte`re
+repre'sentant l'e'le'ment graphique ou le symbole. Dans tous les cas, si la
+feuille est vide, le contenu est re'duit a` un octet nul. Le codage des
+symboles et e'le'ments graphiques est donne' page~\pageref{pagegraph}.
+
+Dans le cas d'une chai^ne de caracte`res, la {\tt Marque-Debut} est
+pre'ce'de'e d'une indication de l'alphabet ou de la langue. L'alphabet
+n'est utilise' que dans les versions 3 et pre'ce'dentes de la forme
+pivot (voir section~\ref{versionpivot}). A` partir de la version 4, c'est
+la langue qui est indique'e.
+
+Dans le cas de l'alphabet, un simple caracte`re indique l'alphabet utilise'
+({\tt 'L'}=Latin, {\tt 'G'}=Grec,...). Ce caracte`re est facultatif, son
+absence indiquant l'alphabet par de'faut, qui est l'alphabet latin.
+
+Dans le cas de la langue, un octet {\tt Marque-Langue} pre'ce`de le nume'ro
+de langue, code' sur un octet. Cette indication de la langue n'est pre'sente
+que s'il ne s'agit pas de la premie`re langue. Le nume'ro de langue est le
+rang - 1 de la langue dans la liste des langues qui figure en te^te du
+document (voir section~\ref{listelangues}).
+
+Le contenu d'une chai^ne de caracte`res est simplement la suite des codes
+des caracte`res qui constituent la chai^ne. Le code des caracte`res est
+de'fini par l'alphabet (ISO Latin-1 pour 'L' ou Symbol pour 'G') ou la langue.
+Dans le cas d'une image, ce n'est pas l'image elle-me^me qui constitue le
+contenu de la feuille, mais le nom du fichier qui la contient.
+
+\subsection{Marques de page}
+
+Si la feuille est du type marque de page (c'est indique' dans le sche'ma de
+structure), son contenu, entre {\tt Marque-Debut} et {\tt Marque-Fin}, est
+constitue', dans l'ordre, du nume'ro de page (un entier sur 2 octets), du
+nume'ro de vue (un entier sur deux octets), du type de page (un caracte`re)
+et de l'indicateur de modification de la page (un caracte`re). Ces quatre
+e'le'ments sont toujours pre'sents.
+
+\begin{verbatim}
+Indic-Page =      Numero-Page Numero-Vue Type-Page Page-Modif .
+Numero-Page =     NUMERO .
+Type-Page =       Calcule / Debut / Utilisateur / Rappel .
+Calcule =         'C' .
+Debut =           'D' .
+Utilisateur =     'U' .
+Rappel =          'R' .
+Page-Modif =      Booleen .
+\end{verbatim}
+
+Le de'coupage d'un document en pages est re'alise' pendant l'e'dition, sur
+demande explicite de l'utilisateur. Il a principalement pour effet
+d'introduire dans l'arbre abstrait du document (structure logique spe'cifique)
+des e'le'ments spe'ciaux, appele's marques de page, qui sont place's
+inde'pendemment des sche'mas de structure (structures logiques ge'ne'riques),
+la` ou` tombe la frontie`re de page dans l'image du document.
+
+Lors de la sauvegarde du document, ces marques de page sont conserve'es dans
+le fichier pivot, comme tout e'le'ment de l'arbre abstrait. Ce sont des e'le'ments
+feuilles de la structure qui contiennent quatre informations~: le nume'ro de
+page, la vue concerne'e, le type de saut de page et l'indicateur de mise a`
+jour de la page.
+
+Le nume'ro de page e'vite de recompter les marques de page pre'ce'dentes lors
+du chargement du document. La vue concerne'e est ne'cessaire puisque les
+marques de page des diffe'rentes vues se retrouvent dans le fichier pivot
+unique du document.
+
+Trois types de sauts de page peuvent e^tre repre'sente's par une marque de
+page~:
+
+\begin{itemize}
+\item
+les sauts de page qui ont e'te' calcule's lors du de'coupage du document en
+pages, en fonction de la hauteur des pages~;
+\item
+les sauts de page qui de'coulent de la structure logique du document et qui
+sont lie's au de'but de certains e'le'ments (chapitre ou annexe par exemple)~;
+\item
+les sauts de page qui sont impose's par l'utilisateur pour des
+raisons qui lui sont propres.
+\item
+les sauts de page qui rappellent un saut de page pre'ce'dent, lorsque celui-ci
+traverse plusieurs e'le'ments.
+\end{itemize}
+
+Les premiers peuvent e^tre recalcule's par l'e'diteur et sont susceptibles de
+se de'placer par rapport a` la structure logique spe'cifique et au contenu du
+document lorsqu'il est modifie'. Les seconds sont e'galement place's par
+l'e'diteur, mais ils occupent toujours la me^me place dans la structure logique
+du document. Les derniers ne peuvent e^tre ni calcule's ni de'place's
+automatiquement par l'e'diteur, qui ne peut que les inse'rer ou les supprimer
+sur demande de l'utilisateur.
+
+L'indicateur de mise a` jour de la page indique si le contenu de la page
+(tout ce qui est compris entre cette marque de page et la suivante) a e'te'
+modifie' depuis l'insertion de la marque de page dans le document. Lorsque
+l'utilisateur demande de refaire le de'coupage en pages du document, il est
+possible gra^ce a` cet indicateur de ne reformater que les pages qui le
+ne'cessitent~: on reformate depuis une marque de page portant cet indicateur
+(quel que soit le type du saut de page) jusqu'a` la prochaine marque
+correspondant a` un saut de page de type utilisateur ou de'but d'e'le'ment.
+
+\subsection{Paires de marques}
+\label{paire}
+
+Si la feuille est une marque appartenant a` une paire (c'est indique' dans
+le sche'ma de structure), son contenu, entre {\tt Marque-Debut} et
+{\tt Marque-Fin}, est un entier code' sur 4 octets qui identifie la paire
+de marques de fac,on unique dans tout le document. Ces quatre octets
+sont toujours pre'sents.
+
+\begin{verbatim}
+Ident-Paire =  NUMERO NUMERO .
+\end{verbatim}
+
+\subsection{Re'fe'rences}
+\label{refer}
+
+Si la feuille est une re'fe'rence, elle est repre'sente'e par un octet
+{\tt Marque-Refer} suivi de l'indication du type de re'fe'rence.
+Il y a trois types de re'fe'rences~:
+\begin{itemize}
+\item
+les {\it renvois} qui de'signent simplement un e'le'ment d'un document,
+\item
+les {\it inclusions sans expansion} qui repre'sentent un document qui doit
+e^tre inclus a` la position de cette re'fe'rence, mais sans copie a` l'e'cran
+du document inclus.
+\item
+les {\it inclusions avec expansion} qui repre'sentent un e'le'ment qui doit
+e^tre inclus a` la position de cette re'fe'rence, mais avec copie a` l'e'cran
+de l'e'le'ment inclus.
+\end{itemize}
+Le type de re'fe'rence est repre'sente' par un octet ({\tt Marque-Renvoi},
+{\tt Marque-Inclusion} ou {\tt Marque-Expansion}). Cet octet est suivi d'un
+boole'en marquant s'il s'agit d'une re'fe'rence interne ({\tt Vrai}) ou
+externe ({\tt Faux}).
+Il y a en effet deux sortes de re'fe'rences, inde'pendemment\footnote{Notons
+cependant que les inclusions sans expansion sont toujours des re'fe'rences
+externes puisqu'elles de'signent tout un document.} de leur type~:
+\begin{itemize}
+\item
+les re'fe'rences internes~: la re'fe'rence et l'e'le'ment qu'elle de'signe
+appartiennent au me^me document,
+\item
+les re'fe'rence externes~: la re'fe'rence et l'e'le'ment qu'elle de'signe
+appartiennent a` des documents diffe'rents.
+\end{itemize}
+Apre`s le boole'en vient le label de l'e'le'ment de'signe' par la re'fe'rence
+(voir page~\pageref{label} pour la repre'sentation du label) et, dans le cas
+des re'fe'rences externes, le nom du document contenant l'objet de'signe' par
+la re'fe'rence. Ce nom est une simple suite de caracte`res termine'e par un
+octet nul.
+
+Notons que l'e'le'ment de'signe' peut se trouver aussi bien avant qu'apre`s
+la re'fe'rence qui le de'signe. La re'fe'rence peut aussi ne pas e^tre
+affecte'e~; dans ce cas le label est une chai^ne vide.
+
+\begin{verbatim}
+Reference =         Marque-Refer TypeReference Designation .
+Marque-Refer =      O18 .
+TypeReference =     Marque-Renvoi /
+                    Marque-Inclusion /
+                    Marque-Expansion .
+Designation =       Vrai Label /
+                    Faux Label Nom-Document .
+Marque-Renvoi =     'r' .
+Marque-Inclusion =  'i' .
+Marque-Expansion =  'e' .
+\end{verbatim}
+
+\subsection{Constantes et parame`tres}
+
+S'il s'agit d'une constante, il n'y a pas de contenu, puisque
+le nume'ro de type permet de retrouver, dans le sche'ma de structure, la
+valeur de la constante utilise'e.
+
+\begin{verbatim}
+Constante =       NIL .
+\end{verbatim}
+
+De me^me, s'il s'agit de l'utilisation d'un parame`tre dans le document
+(et non de la de'finition de sa valeur, qui se trouve au de'but du fichier),
+il n'y a pas de contenu, puisque la valeur, s'il y en a une, est unique et
+a de'ja` e'te' indique'e au de'but du fichier pivot.
+
+\begin{verbatim}
+Parametre =       NIL .
+\end{verbatim}
+
+\subsection{Ele'ments structure's}
+
+S'il s'agit d'un e'le'ment structure', le contenu est forme' d'un octet
+{\tt Marque-Debut}, suivi de la suite des repre'sentations de chacun des
+e'le'ments qu'il contient au niveau imme'diatement infe'rieur, et d'un
+octet {\tt Marque-Fin}. Si cet e'le'ment est vide, son contenu est simplement
+marque' par les deux octets {\tt Marque-Debut} et {\tt Marque-Fin}.
+
+\begin{verbatim}
+Elem-Struct =     Marque-Debut  Suite-Elem  Marque-Fin .
+Suite-Elem =    < Element > .
+\end{verbatim}
+
+\section{Codage des e'le'ments graphiques et des symboles}
+
+Dans le fichier pivot des documents Thot, les e'le'ments de base graphiques et
+symboles sont repre'sente's par un caracte`re avec la convention suivante~: \\
+Graphique~:
+\label{pagegraph}
+
+\begin{description}
+\item{ {\tt 'C' } }un cercle inscrit dans la boi^te~: $\bigcirc$
+\item{ {\tt 'R' } }un rectangle qui est le contour de la boi^te
+\item{ {\tt 'c' } }un rectangle qui est le contour de la boi^te, avec les coins arondis
+\item{ {\tt '0'..'9' } }une trame a` l'inte'rieur de la boi^te, le contour de
+la boi^te est trace'
+\item{ {\tt '\verb+\+260'..'\verb+\+270' } }une trame a` l'inte'rieur de la boi^te, 
+le contour de la boi^te n'est pas trace'
+\item{ {\tt 't' } }un trait horizontal~: le co^te' supe'rieur de la boi^te~: ---
+\item{ {\tt 'h' } }un trait horizontal de la longueur de la boi^te, au milieu
+de la boi^te~: ---
+\item{ {\tt 'b' } }un trait horizontal~: le co^te' infe'rieur de la boi^te~: \_\_
+\item{ {\tt '>' } }une fle`che vers la droite au milieu de la boi^te, de la longueur de la boi^te~: $\rightarrow$
+\item{ {\tt '<' } }une fle`che vers la gauche au milieu de la boi^te, de la longueur de la boi^te~: $\leftarrow$
+\item{ {\tt 'l' } }un trait vertical~: le co^te' gauche de la boi^te~: $\mid$
+\item{ {\tt 'v' } }un trait vertical au milieu de la boi^te, de la hauteur de la boi^te~: $\mid$
+\item{ {\tt 'r' } }un trait vertical~: le co^te' droit de la boi^te~: $\mid$
+\item{ {\tt '\^{}'} } une fle`che vers le haut au milieu de la boi^te, de la hauteur de la boi^te~: $\uparrow$
+\item{ {\tt 'V' } }une fle`che vers le bas au milieu de la boi^te, de la hauteur de la boi^te~: $\downarrow$
+\item{ {\tt '/' } }la diagonale Sud-Ouest Nord-Est de la boi^te~: /
+\item{ {\tt '} $\backslash$ {\tt '} } la diagonale Nord-Ouest Sud-Est de la boi^te~: $\backslash$
+\item{ {\tt 'O' } }la diagonale Nord-Ouest Sud-Est de la boi^te, avec une fle`che en haut~: $\nwarrow$
+\item{ {\tt 'e ' } }la diagonale Nord-Ouest Sud-Est de la boi^te, avec une fle`che en bas~: $\searrow$
+\item{ {\tt 'E ' } }la diagonale Sud-Ouest Nord-Est de la boi^te, avec une fle`che en haut~: $\nearrow$
+\item{ {\tt 'o' } }la diagonale Sud-Ouest Nord-Est de la boi^te, avec une fle`che en bas~: $\swarrow$
+\item{ {\tt ' ' } }un e'le'ment transparent~:
+\item{ {\tt 'P' }} un rectangle aux coins arrondis avec une barre horizontale en haut
+\item{ {\tt 'Q' }} une ellipse avec une barre horizontale en haut~: $\bigcirc$
+\item{ {\tt 'W' }} un coin sup\'{e}rieur droit~: $\rceil$
+\item{ {\tt 'X' }} un coin inf\'{e}rieur droit~: $\rfloor$
+\item{ {\tt 'Y' }} un coin inf\'{e}rieur gauche~: $\lfloor$
+\item{ {\tt 'Z' }} un coin sup\'{e}rieur gauche~: $\lceil$
+\end{description}
+
+Symbole~:
+
+\begin{description}
+\item{ {\tt 'r' } }un radical de la taille de la boi^te~: $\surd$
+\item{ {\tt 'i' } }une inte'grale simple de la hauteur de la boi^te~: $\int$
+\item{ {\tt 'c' } }une inte'grale curviligne de la hauteur de la boi^te~: $\oint$
+\item{ {\tt 'd' } }une inte'grale double de la hauteur de la boi^te~: $\int\int$
+\item{ {\tt 't' } }une inte'grale triple de la hauteur de la boi^te~: $\int\int\int$
+\item{ {\tt 'S' } }le symbole de la sommation, de la taille de la boi^te~: $\sum$
+\item{ {\tt 'P' } }le symbole du produit de la taille de la boi^te~: $\prod$
+\item{ {\tt 'U' } }le symbole de l'union de la taille de la boi^te~: $\cup$
+\item{ {\tt 'I' } }le symbole de l'intersection de la taille de la boi^te~: $\cap$
+\item{ {\tt '>' } }une fle`che a` droite, de la longueur de la boi^te~: $\rightarrow$
+\item{ {\tt '<' } }une fle`che a` gauche, de la longueur de la boi^te~: $\leftarrow$
+\item{ {\tt '\^{}'} } une fle`che vers le haut, de la hauteur de la boi^te~: $\uparrow$
+\item{ {\tt 'V' } }une fle`che vers le bas, de la hauteur de la boi^te~: $\downarrow$
+\item{ {\tt '(' } }une parenthe`se ouvrante, de la hauteur de la boi^te~: (
+\item{ {\tt ')' } }une parenthe`se fermante, de la hauteur de la boi^te~: )
+\item{ {\tt '\{' } }une accolade ouvrante, de la hauteur de la boi^te~: \{
+\item{ {\tt '\}' } }une accolade fermante, de la hauteur de la boi^te~: \}
+\item{ {\tt '[' } }un crochet ouvrant, de la hauteur de la boi^te~: [
+\item{ {\tt ']' } }un crochet fermant, de la hauteur de la boi^te~: ]
+\end{description}
+
+\newpage
+\section{Grammaire du format pivot}
+
+Les re`gles suivantes de'finissent la structure d'un fichier de re'fe'rences
+externes entrantes.
+
+\begin{verbatim}
+Fichier-Ref-Ext =    Elem-Ref < Elem-Ref > .
+Elem-Ref =           Label Doc-Externe < Doc-Externe > .
+
+Label =              Marque-Label-Chaine CHAINECAR /
+                     Marque-Label-Court Numero-Label-Court /
+                     Marque-Label-Long Numero-Label-Long .
+Marque-Label-Chaine = O11 .
+Marque-Label-Court = O12 .
+Marque-Label-Long =  O13 .
+Numero-Label-Court = NUMERO .
+Numero-Label-Long =  NUMERO NUMERO .
+
+Doc-Externe =        Marque-Doc-Ext Nom-Document .
+Marque-Doc-Ext =     O15 .
+Nom-Document =       CHAINECAR .
+\end{verbatim}
+
+Les re`gles suivantes de'finissent la structure d'un fichier de re'fe'rences
+a` modifier.
+
+\begin{verbatim}
+Fichier-Ref-Modif = El-Ext-Modif < El-Ext-Modif > .
+El-Ext-Modif =      Ancien-Label Nouveau-Label
+                    Ancien-Doc Nouveau-Doc .
+Ancien-Label =      Label .
+Nouveau-Label =     Label .
+Ancien-Doc =        Doc-Externe .
+Nouveau-Doc =       Doc-Externe .
+\end{verbatim}
+
+Les re`gles suivantes de'finissent la structure d'un fichier pivot.
+
+\begin{verbatim}
+Fichier-Pivot = [ Version ]
+                [ Label ]
+                < Marque-Langue Nom-Langue >
+                [ Commentaire ]
+                  Classe-Document
+                < Classe-Objet >
+                < Marque-Param Param >
+                < Marque-Associe Suite-Associes >
+                  Marque-Document Le-Document Marque-Fin-Document .
+
+Version =         Marque-Version Marque-Version Numero-Version .
+Marque-Version =  O22 .
+Numero-Version =  OCTET .
+
+Marque-Langue =   O8 .
+Nom-Langue =      CHAINECAR .
+
+Commentaire =     Marque-Commentaire Longueur-Commentaire
+                         Contenu-Commentaire /
+                  Marque-Commentaire-Ancien Marque-Debut
+                         Texte-Commentaire Marque-Fin .
+Marque-Commentaire =        O5 .
+Longueur-Commentaire =      NUMERO .
+Contenu-Commentaire =       CHAINEOCT .
+Marque-Commentaire-Ancien = O3 .
+Marque-Debut =              O4 .
+Texte-Commentaire =         CHAINECAR .
+Marque-Fin =                O6 .
+
+Classe-Document = Classe .
+Classe-Objet =    Classe .
+Classe =          Marque-ClassExt Nom-Schema-Struct
+                  [ Code-Schema-Struct ] NomSchema-Pres .
+Marque-ClassExt = Marque-Classe / Marque-Extension .
+Marque-Classe =   O14 .
+Marque-Extension =O10 .
+Nom-Schema-Struct=CHAINECAR .
+Code-Schema-Struc=NUMERO .
+NomSchema-Pres =  CHAINECAR .
+
+Marque-Param =    O16 .
+Param =           Element .
+
+Marque-Associe =  O2 .
+Suite-Associes =  Element < Element > .
+
+Marque-Document = O19 .
+Le-Document =     Element .
+Marque-Fin-Document = O26 .
+
+Element =         Type-Element
+                [ Marque-Inclus TypeReference
+                          Designation [ Marque-SemiExpansion ] ]
+                [ Label ]
+                [ Marque-Holophraste ]
+                < Marque-Attribut  Numero-Classe  Numero-Attribut
+                  Valeur-Attribut >
+                < Regle-Presentation >
+                [ Commentaire ]
+                [ Contenu ] .
+
+Type-Element =  [ Marque-Classe Numero-Classe ]
+                  Marque-Type Numero-Type.
+Numero-Classe =   NUMERO .
+Marque-Type =     O20 .
+Numero-Type =     NUMERO .
+
+Marque-Inclus =   O9 .
+TypeReference =   Marque-Renvoi /
+                  Marque-Inclusion /
+                  Marque-Expansion .
+Marque-Renvoi =   'r' .
+Marque-Inclusion ='i' .
+Marque-Expansion ='e' .
+Marque-SemiExpansion = O21 .
+
+Marque-Holophraste = O23 .
+
+Marque-Attribut = O1 .
+Numero-Attribut = NUMERO .
+Valeur-Attribut = Valeur-Absolue Signe /
+                  Valeur-Texte /
+                  TypeReference Designation /
+                  Numero-Valeur .
+Valeur-Absolue =  NUMERO .
+Signe =           '+' / '-' .
+Valeur-Texte =    CHAINECAR .
+Numero-Valeur =   NUMERO .
+
+Regle-Presentation= Marque-Regle Numero-Vue
+                  Type-Boite Contenu-Regle .
+Marque-Regle =    O7 .
+Numero-Vue =      NUMERO .
+Type-Boite =      NUMERO .
+Contenu-Regle =   Marque-Hauteur Dimension /
+                  Marque-Largeur Dimension /
+                  Marque-Position Distance Signe /
+                  Marque-Corps Distance /
+                  Marque-Style CARACTERE /
+                  Marque-Famille CARACTERE /
+                  Marque-NoBreak1 Distance /
+                  Marque-NoBreak2 Distance /
+                  Marque-Ajuste Alignement /
+                  Marque-Justif Booleen /
+                  Marque-CoupureMots Booleen /
+                  Marque-Retrait Distance Signe /
+                  Marque-Interligne Distance /
+                  Marque-Souligne CARACTERE /
+                  Marque-SoulEpaisseur CARACTERE /
+                  Marque-StyleTrait CARACTERE /
+                  Marque-EpaisseurTrait	Distance /
+                  Marque-TrameRemplissage Indice /
+                  Marque-CouleurFond Indice /
+                  Marque-CouleurTrace Indice /
+                  Marque-ImageDescriptor CroppingFrame 
+                                         ImagePresentation 
+                                         ImageType .
+
+Marque-Hauteur =  'H' .
+Marque-Largeur =  'L' .
+Dimension =       Type-Dimension Valeur Unite-Dimension Signe .
+Type-Dimension =  Absolue / Relative .
+Absolue =         'A' .
+Relative =        'R' .
+Valeur =          NUMERO .
+Unite-Dimension=  Point-Typo / Caracteres / Pour-Cent .
+Point-Typo =      'P' .
+Caracteres =      'C' .
+Pour-Cent =       '%' .
+
+Marque-Position =  Marque-Position-X / Marque-Position-Y .
+Marque-Position-X = 'X' .
+Marque-Position-Y = 'Y' .
+Distance =        Valeur Unite .
+Unite =           Point-Typo / Caracteres .
+
+Marque-Corps =    'T' .
+Marque-Style =    'S' .
+Marque-Famille =  'F' .
+
+Marque-NoBreak1 = '1' .
+Marque-NoBreak2 = '2' .
+
+Marque-Ajuste =   'A' .
+Alignement =      Align-Gauche / Align-Droite / Centre / Pointille .
+Align-Gauche =    'G' .
+Align-Droite =    'D' .
+Centre =          'C' .
+Pointille =       'P' .
+
+Marque-Justif =   'J' .
+Booleen =         Vrai / Faux .
+Vrai =            'V' .
+Faux =            'F' .
+
+Marque-CoupureMots =    'C' .
+Marque-Retrait =        'R' .
+Marque-Interligne =     'I' .
+Marque-Souligne =       'U' .
+Marque-SoulEpaisseur =  'E' .
+Marque-StyleTrait =     'l' .
+Marque-EpaisseurTrait = 'W' .
+Marque-TrameRemplissage='p' .
+Marque-CouleurFond =    'b' .
+Marque-CouleurTrace =   't' .
+
+Indice =           NUMERO .
+
+Marque-ImageDescriptor = 'P' .
+CroppingFrame =     X Y Largeur Hauteur .
+ImagePresentation = CARACTERE .
+ImageType =         NUMERO .
+X =                 NUMERO .
+Y =                 NUMERO .
+Largeur =           NUMERO .
+Hauteur =           NUMERO .
+
+Contenu =         Feuille / Reference / Constante /
+                  Parametre / Elem-Struct .
+
+Feuille =       [ Alphab-Langue ] Marque-Debut Contenu-Feuille
+                  Marque-Fin.
+Alphab-Langue =   Alphabet / Langue .
+Alphabet =        CARACTERE .
+Langue =          Marque-Langue Numero-Langue .
+Numero-Langue =   OCTET .
+Contenu-Feuille = CHAINECAR / CARACTERE / Indic-Page / Ident-Paire .
+
+Indic-Page =      Numero-Page Numero-Vue Type-Page Page-Modif .
+Numero-Page =     NUMERO .
+Type-Page =       Calcule / Debut / Utilisateur / Rappel .
+Calcule =         'C' .
+Debut =           'D' .
+Utilisateur =     'U' .
+Rappel =          'R' .
+Page-Modif =      Booleen .
+
+Ident-Paire =     NUMERO NUMERO .
+
+Reference =         Marque-Refer TypeReference Designation .
+Marque-Refer =      O18 .
+Designation =       Vrai Label /
+                    Faux Label Nom-Document .
+
+Constante =       NIL .
+
+Parametre =       NIL .
+
+Elem-Struct =     Marque-Debut  Suite-Elem  Marque-Fin .
+Suite-Elem =    < Element > .
+
+END
+\end{verbatim}
+
+\newpage
+
+\tableofcontents
+
+\end{document}

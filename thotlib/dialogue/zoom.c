@@ -1,0 +1,150 @@
+
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+/* I. Vatton    Mai 1994 */
+
+#include "thot_gui.h"
+#include "thot_sys.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "constmenu.h"
+#include "app.h"
+#include "appdialogue.h"
+#include "tree.h"
+#include "message.h"
+#include "dialog.h"
+
+#define MAX_ARGS 20
+
+#undef EXPORT
+#define EXPORT extern
+#include "frame.var"
+#include "appdialogue.var"
+
+static int          Fenzoomview;
+
+#include "appdialogue.f"
+#include "option.f"
+
+#ifdef __STDC__
+extern int          GetWindowNumber (Document, View);
+
+#else  /* __STDC__ */
+extern int          GetWindowNumber ();
+
+#endif /* __STDC__ */
+
+/* ---------------------------------------------------------------------- */
+/* | changezoomview met a jour le formulaire de zoom.                   | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                changezoomview (int ref, int typedata, char *data)
+
+#else  /* __STDC__ */
+void                changezoomview (ref, typedata, data)
+int                 ref;
+int                 typedata;
+char               *data;
+
+#endif /* __STDC__ */
+{
+   int                 valvisib;
+   int                 valzoom;
+   int                 bouton;
+   char                chaine[100];
+
+   bouton = (int) data;
+   GetVisu (Fenzoomview, &valvisib, &valzoom);
+   if (bouton == 0)
+      /* Abandon du formulaire */
+      Fenzoomview = 0;
+   else if (bouton == 1 && valzoom < 10)
+     {
+	/* Augmente le zoom */
+	valzoom++;
+	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, LIB_CHANGE_ZOOM), valzoom);
+	TtaNewLabel (NumTextZoom, NumMenuZoom, chaine);
+	ModVisu (Fenzoomview, valvisib, valzoom);
+     }
+   else if (bouton == 2 && valzoom > -10)
+     {
+	/* Diminue le zoom */
+	valzoom--;
+	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, LIB_CHANGE_ZOOM), valzoom);
+	TtaNewLabel (NumTextZoom, NumMenuZoom, chaine);
+	ModVisu (Fenzoomview, valvisib, valzoom);
+     }
+   else if (bouton == 4)
+     {
+	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, LIB_CHANGE_ZOOM), valzoom);
+	TtaNewLabel (NumTextZoom, NumMenuZoom, chaine);
+     }
+   else
+     {
+	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, LIB_VALUE_NOT_CHANGED), valzoom);
+	TtaNewLabel (NumTextZoom, NumMenuZoom, chaine);
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | reTtcSetZoomView desactive le formulaire de zoom.                  | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                reTtcSetZoomView (int frame)
+
+#else  /* __STDC__ */
+void                reTtcSetZoomView (frame)
+int                 frame;
+
+#endif /* __STDC__ */
+{
+
+   if (Fenzoomview != 0 && Fenzoomview == frame)
+     {
+	/* Annule le formulaire de zoom */
+	TtaDestroyDialogue (NumMenuZoom);
+	Fenzoomview = 0;
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | TtcSetZoomView initialise le changement de Zoom.                   | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtcSetZoomView (Document document, View view)
+
+#else  /* __STDC__ */
+void                TtcSetZoomView (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   int                 i;
+   char                chaine[100];
+
+   /* Faut-il creer le formulaire Zoom */
+   if (ThotLocalActions[T_chzoom] == NULL)
+     {
+	/* Connecte les actions liees au traitement de la Zoom */
+	TteConnectAction (T_chzoom, (Proc) changezoomview);
+	TteConnectAction (T_rszoom, (Proc) reTtcSetZoomView);
+     }
+
+   /* Creation du formulaire */
+   strcpy (chaine, TtaGetMessage (LIB, LIB_INCREASE));
+   i = strlen (chaine) + 1;
+   strcpy (&chaine[i], TtaGetMessage (LIB, LIB_DECREASE));
+   TtaNewSheet (NumMenuZoom, 0, 0, 0, TtaGetMessage (LIB, LIB_ZOOM),
+		2, chaine, False, 4, 'L', D_DONE);
+
+   /* Affiche le nom du document concerne */
+   sprintf (chaine, "%s %s", TtaGetDocumentName (document),
+	    TtaGetViewName (document, view));
+   Fenzoomview = GetWindowNumber (document, view);
+   TtaNewLabel (NumDocZoom, NumMenuZoom, chaine);
+   /* Initialisation du formulaire affiche */
+   changezoomview (NumMenuZoom, INTEGER_DATA, (char *) 4);
+   TtaShowDialogue (NumMenuZoom, True);
+}

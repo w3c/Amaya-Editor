@@ -1,0 +1,28 @@
+
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+
+#ifndef __CEXTRACT__
+#ifdef __STDC__
+
+extern int IdentDocument ( PtrDocument pDoc );
+extern void TtaInitialize ( char *applicationName );
+extern void TtaQuit ( void );
+extern void TtaSetErrorMessages ( int on );
+extern char *TtaGetVersion ( void );
+extern int TtaGetErrorCode ( void );
+extern char *TtaGetStrError ( int errorCode );
+extern void TtaExtractName ( char *text, char *aDirectory, char *aName );
+
+#else /* __STDC__ */
+
+extern int IdentDocument (/* PtrDocument pDoc */);
+extern void TtaInitialize (/* char *applicationName */);
+extern void TtaQuit (/* void */);
+extern void TtaSetErrorMessages (/* int on */);
+extern char *TtaGetVersion (/* void */);
+extern int TtaGetErrorCode (/* void */);
+extern char *TtaGetStrError (/* int errorCode */);
+extern void TtaExtractName (/* char *text, char *aDirectory, char *aName */);
+
+#endif /* __STDC__ */
+#endif /* __CEXTRACT__ */

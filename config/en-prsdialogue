@@ -1,0 +1,103 @@
+0 Intermediate symbol!\n
+1 The structure schema does not match\n
+2 Word too long\n
+3 Too many views\n
+4 Too many counters\n
+5 Identifier not declared\n
+6 Too many constants\n
+7 Character string too long\n
+8 Too many variables\n
+9 Too many boxes\n
+10 Too many functions in this variable\n
+11 It\'s not an associated element\n
+12 Only for REFERENCEs\n
+13 Line too long\n
+14 Unknown attribute\n
+15 Incorrect attribute value\n
+16 Unknown type\n
+17 Too many positions\n
+18 Too many digits after \".\"\n
+19 Invalid rule for a type\n
+20 Undefined box\n
+21 Inheritage from previous not allowed\n
+22 Only one Page rule\n
+23 Inheritage from Enclosed not allowed\n
+24 Not implemented in this version\n
+25 Not allowed in default rules\n
+26 One default rule missing\n
+27 Rule defined twice\n
+28 Only \"Enclosed\" and \"*\" are allowed\n
+29 Invalid dimension rule\n
+30 Too many columns\n
+31 Name already declared\n
+32 Rule not allowed in a view\n
+33 Too many operations on this counter\n
+34 Conditions not allowed for this rule\n
+35 %s : Creation rule not allowed\n
+36 has no vertical position in the page\n
+37 %s : incorrect vertical position in page\n
+38 %s : invalid Height rule\n
+39 %s : invalid Width rule\n
+40 No reference to this element\n
+41 %s : vertical distance must be constant\n
+42 Structure schema not found\n
+43 Invalid rule for root element\n
+44 Invalid rule for a terminal element\n
+45 Dont use IN for the main view\n
+46 %s : invalid VertPos rule\n
+47 %s : invalid HorizPos rule\n
+48 %s : two different page numbers\n
+49 Invalid character\n
+50 Forbidden in Height or Width\n
+51 Incompatible in this rule\n
+52 Too many cases for this attribute\n
+53 Only one EXPORT view allowed\n
+54 Allowed only for a reference attribute\n
+55 Already defined\n
+56 Incorrect attribute type\n
+57 Invalid unit for an attribute\n
+58 No decimal part after an attribute\n
+59 Lower bound is greater !\n
+60 %s : uses different page counters\n
+61 Associated elements only\n
+62 Too many views to be printed\n
+63 Not an attribute for the root element\n
+64 %s : unused box\n
+65 Not allowed for this type of attribute\n
+66 This is not a numerical attribute\n
+67 Not enough memory\n
+68 Incorrect counter value\n
+69 Only one Content rule allowed\n
+70 %s : incorrect Content rule\n
+71 %s : content allowed only in main view\n
+72 Incorrect use of keyword FORWARD\n
+73 Too many Transmit rules for elements\n
+74 This element has a Transmit rule\n
+75 Forbidden in a presentation box\n
+76 Too many Transmit rules for this counter\n
+77 This is not an included document\n
+78 No such file: %s.\n\n
+79 Forbidden in a reference\n
+80 Only for boxes, references, and pairs\n
+81 Only one Copy or Content\n
+82 Cannot load structure schema\n
+83 Forbidden in presentation box\n
+84 Only for external references\n
+85 Content already defined\n
+86 Missing keyword "First" or "Second"\n
+87 Not a Pair\n
+88 Unknown pattern\n
+89 Only condition Within allowed\n
+90 Unknown color\n
+91 Invalid rule for a choice\n
+92 Only for presentation boxes\n
+93 Name of the schema to compile (without .SCH) :
+94 Vue Unique\n
+95 Name of the presentation schema to list (without .SCH) :
+96 Use "CreateFirst" instead\n
+97 Use "PageBreak" or "LineBreak" instead\n
+98 Dont use a type name for a box\n
+99 Not allowed in a position rule\n
+100 Unknown message\n
+101 Cannot write %s\n
+102 Only for attributes\n

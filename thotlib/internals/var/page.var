@@ -1,0 +1,58 @@
+
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+
+/*
+ * page.var -- <description>
+ */
+
+
+
+#ifdef __COLPAGE__
+/* Hauteur de la page sans le bas de page minimum */
+EXPORT int     	HauteurCoupPage; /* hauteur de la coupure corps+haut*/
+EXPORT int  HauteurHautPage; /* hauteur haut*/
+EXPORT int  HauteurTotalePage; /* hauteur totale calculee a partir */
+        /* de la hauteur du haut, du bas et du corps de page */
+        /* cette variable est reevaluee apres creation d'une */
+        /* page de type PgBegin */
+EXPORT boolean ArretAvantCreation;
+				 /* evaluation avec arret sur MP ou ref*/
+EXPORT boolean TrouveMPHB; /* pour savoir la cause de l'arret de */
+ /* creation des paves: soit volume soit MP ou d'un elt asscoc HB */
+EXPORT boolean ArretColGroupee; 
+                 /* detection d'une colonne groupee pour l'equilibrage */
+EXPORT boolean A_Equilibrer; 
+           /* demande de detection d'une colonne groupee pour l'equilibrage */
+/* Pointeur sur la reference a l' element associe'
+ * dont l'image apparait dans une boite de haut ou de bas de page
+ * et a provoque un debordement de page.
+ */
+EXPORT PtrElement 	RefAssocHBPage;
+/* Pointeur sur le pave a detruire dans le cas d'un debordement de page
+ * c'est soit le pave de l'element associe soit son englobant si c'etait
+ * le seul place dans la page. C'est le pointeur sur le pave principal, 
+ *les paves de presentation avant et apres seront detruits dans le module page.
+*/
+EXPORT PtrAbstractBox		PavAssocADetruire;
+#else __COLPAGE__
+EXPORT int     	HauteurPage; /* hauteur de la coupure corps+haut*/
+#endif __COLPAGE__
+
+EXPORT int      Hauteurffective; /* hauteur de la page pour le Mediateur */
+/* NOTE: le Mediateur ne coupe pas exactement a la hauteur indiquee par */
+/* l'editeur, pour eviter de couper une ligne de texte en deux, */
+/* par exemple. Hauteurffective est la hauteur de coupure de */
+/* page effectivement utilisee par le Mediateur. */
+
+
+/* Boites de haut de page dont la creation a ete differee */
+EXPORT int  HauteurBasPage; /* hauteur bas */
+EXPORT int     	NbBoiteHautPageACreer;
+EXPORT PtrElement      RefAssocHautPage;
+
+EXPORT PtrElement 	PageConcernee;
+EXPORT PtrPRule 	RegleCreation;
+EXPORT PtrPSchema 	SchPresRegle;
+
+
+EXPORT boolean		PaginationEnCours;

@@ -1,0 +1,91 @@
+#!/bin/sh
+
+PATH=$PATH:${HOME}/bin;				export PATH
+
+if [ -z "${LANG}" ]
+then
+        LANG=fr
+else
+        LANGUE_ORIG=`echo ${LANG} | cut -c-2 | tr '[A-Z]' '[a-z]'`
+        LANG=${LANGUE_ORIG}
+ 
+fi
+if [ "${LANG}" = "c" ];then
+        LANG=fr;
+fi
+export LANG
+ 
+# --------------------------------
+ 
+HERE=`pwd`
+ 
+FIRST_CHAR=`echo $0 | cut -c 1`
+ 
+if test "$FIRST_CHAR" = "/"
+then
+  FULL_PATHNAME="$0"
+else
+  FULL_PATHNAME="$HERE/$0"
+fi
+ 
+FULL_PATHDIR=`dirname $FULL_PATHNAME`
+cd $FULL_PATHDIR
+FULL_PATHDIR=`pwd`
+cd $HERE
+EXEC_FILENAME=`basename $FULL_PATHNAME`
+FULL_PATHNAME="$FULL_PATHDIR/$EXEC_FILENAME"
+ 
+THOTDIR=`dirname $FULL_PATHDIR`;                export THOTDIR
+ 
+# --------------------------------
+
+BIN=${THOTDIR}/batch
+CONFIG=${THOTDIR}/config
+Machine=`${BIN}/MachineType`
+THOTBIN=${THOTDIR}/${Machine}/bin
+. ${CONFIG}/${LANG}-table
+COMPILFILE=${CONFIG}/${LANG}-compildialogue;		export COMPILFILE
+DIALOGUEFILE=${CONFIG}/${LANG}-thotdialogue;     export DIALOGUEFILE
+TYPFILE=${CONFIG}/${LANG}-typdialogue;			export TYPFILE
+
+PWD=`pwd`
+
+if [ "${#}" -eq "0" ]
+then
+	echo "${0}: "${MSG66}>&2
+	echo "Usage: ${0} FILE [FILE]">&2
+	exit 1
+fi
+
+if [ "$THOTSCH" = "" ]
+   then THOTSCH=${PWD}:${THOTDIR}/schemas
+else
+	tmp=$THOTSCH
+	THOTSCH=${PWD}:${tmp}
+fi
+export THOTSCH
+
+FILELIST=${@}
+for FILE in ${FILELIST}
+do
+# wipe out extension
+NAME=`echo ${FILE}|cut -d"." -f1`
+LONG=`echo ${NAME}|wc -c`
+. ${CONFIG}/${LANG}-table
+
+if [ -f "${NAME}.Y" ]
+then
+	echo ${MSG67}
+	cpp -C ${NAME}.Y > ${NAME}.SCH
+	echo ${MSG30}	
+        ${THOTBIN}/typ ${NAME} || { echo ${MSG28}; exit 1; }
+	echo ${MSG29}
+	rm ${NAME}.SCH
+else
+	if [ -f "${NAME}.TYP" ]
+	then
+		echo ${MSG37}
+	fi
+	echo ${MSG39}
+fi
+done

@@ -1,0 +1,207 @@
+#ifndef THOT_GUI_H
+#define THOT_GUI_H
+
+#if defined(_WINDOWS) || defined(_CONSOLE)
+
+#define WWW_MSWINDOWS
+#include <windows.h>
+
+/****************************************************************
+ *								*
+ * MS-Windows specific definition, constants ...		*
+ *								*
+ ****************************************************************/
+
+#include <windows.h>
+
+/*
+ * The current HDC : the current Device context in use.
+ */
+extern HDC          WIN_curHdc;
+
+/*
+ * Emulation of a X-Windows Graphic Context in MS-Windows
+ */
+#define THOT_GC_FOREGROUND	0x01
+#define THOT_GC_BACKGROUND	0x02
+#define THOT_GC_BRUSH		0x04
+#define THOT_GC_FUNCTION	0x08
+#define THOT_GC_FONT		0x10
+#define THOT_GC_PEN		0x20
+
+typedef struct struct_ThotGC
+  {
+     int                 capabilities;
+     COLORREF            foreground;
+     COLORREF            background;
+     HBRUSH              brush;
+     DWORD               mode;
+     HFONT               font;
+     HPEN                pen;
+  }
+WIN_GC_BLK         , *WIN_GC, *ThotGC;
+
+typedef HWND        ThotWidget;
+typedef HWND        ThotWindow;
+typedef HBITMAP     ThotBitmap;
+typedef COLORREF    ThotColor;
+typedef COLORREF    ThotColorStruct;
+typedef COLORREF    Pixel;
+typedef HFONT       ptrfont;
+typedef char       *Pixmap;
+typedef HCURSOR     ThotCursor;
+typedef HBITMAP     Drawable;
+typedef POINT       ThotPoint;
+
+#define ThotColorNone ((COLORREF)~1)	/* anything in high byte is bad COLORREF */
+#define ThotBitmapNone ((ThotBitmap)NULL)
+
+#define FOR_MSW			/* for XPM stuff ! */
+
+
+#else  /* defined(_WINDOWS) || defined(_CONSOLE) */
+
+#ifdef NEW_WILLOWS
+
+/************************************************************************
+ *									*
+ * Special case : building on Unix but for a WILLOWS			*
+ * (i.e. WINDOWS) environment.						*
+ *									*
+ ************************************************************************/
+
+#include <windows.h>
+
+/*
+ * The current HDC : the current Device context in use.
+ */
+extern HDC          WIN_curHdc;
+
+/*
+ * Emulation of a X-Windows Graphic Context in MS-Windows
+ */
+#define THOT_GC_FOREGROUND	0x01
+#define THOT_GC_BACKGROUND	0x02
+#define THOT_GC_BRUSH		0x04
+#define THOT_GC_FUNCTION	0x08
+#define THOT_GC_FONT		0x10
+#define THOT_GC_PEN		0x20
+
+typedef struct struct_ThotGC
+  {
+     int                 capabilities;
+     COLORREF            foreground;
+     COLORREF            background;
+     HBRUSH              brush;
+     DWORD               mode;
+     HFONT               font;
+     HPEN                pen;
+  }
+WIN_GC_BLK         , *WIN_GC, *ThotGC;
+
+typedef HWND        ThotWidget;
+typedef HWND        ThotWindow;
+typedef HBITMAP     ThotBitmap;
+typedef COLORREF    Pixel;
+typedef COLORREF    ThotColor;
+typedef COLORREF    ThotColorStruct;
+typedef HFONT       ptrfont;
+typedef char       *Pixmap;
+typedef HCURSOR     ThotCursor;
+typedef HBITMAP     Drawable;
+typedef POINT       ThotPoint;
+
+#define ThotColorNone ((COLORREF)~1)	/* anything in high byte is bad COLORREF */
+#define ThotBitmapNone ((ThotBitmap)NULL)
+
+#define FOR_MSW			/* for XPM stuff ! */
+
+#else  /* NEW_WILLOWS */
+
+/************************************************************************
+ *									*
+ * standard Unix interface : based on Motif + Intrinsics + X-Window	*
+ *									*
+ ************************************************************************/
+
+#define WWW_XWINDOWS
+
+#include <X11/keysym.h>
+#include <X11/IntrinsicP.h>
+#include <X11/CoreP.h>
+#include <X11/Shell.h>
+#include <X11/StringDefs.h>
+#include <X11/Xatom.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/cursorfont.h>
+#include <X11/keysym.h>
+#include <X11/Intrinsic.h>
+#include <Xm/MwmUtil.h>
+#include <Xm/CascadeB.h>
+#include <Xm/DialogS.h>
+#include <Xm/DrawingA.h>
+#include <Xm/DrawnB.h>
+#include <Xm/Frame.h>
+#include <Xm/Label.h>
+#include <Xm/List.h>
+#include <Xm/MainW.h>
+#include <Xm/MenuShell.h>
+#include <Xm/PushB.h>
+#include <Xm/RowColumn.h>
+#include <Xm/Scale.h>
+#include <Xm/ScrollBar.h>
+#include <Xm/ScrolledW.h>
+#include <Xm/SelectioB.h>
+#include <Xm/Separator.h>
+#include <Xm/Text.h>
+#include <Xm/ToggleB.h>
+#include <Xm/Xm.h>
+
+/*
+ * OWN_XLOOKUPSTRING means we redefine XLookupString function
+ * (in api/interface.c) and we need internal informations on
+ * some X11 specific structures.
+ */
+
+#ifdef OWN_XLOOKUPSTRING
+#include <X11/Xlibint.h>
+#endif /* OWN_XLOOKUPSTRING */
+
+#define THOT_StaticGray		StaticGray
+#define THOT_GrayScale		GrayScale
+#define THOT_StaticColor       	StaticColor
+#define THOT_PseudoColor       	PseudoColor
+#define THOT_TrueColor		TrueColor
+#define THOT_DirectColor	DirectColor
+
+typedef Widget      ThotWidget;
+typedef Window      ThotWindow;
+typedef Drawable    ThotBitmap;
+typedef GC          ThotGC;
+typedef unsigned long ThotColor;
+typedef XColor      ThotColorStruct;
+typedef int        *ptrfont;
+typedef Cursor      ThotCursor;
+typedef XPoint      ThotPoint;
+
+#define ThotColorNone ((Pixel)-1)
+#define ThotBitmapNone ((ThotBitmap)-1)
+
+#endif /* ! NEW_WILLOWS */
+#endif /* !(defined(_WINDOWS) || defined(_CONSOLE)) */
+
+/************************************************************************
+ *									*
+ * Common definition for all the GUIs					*
+ *									*
+ ************************************************************************/
+
+typedef struct
+  {
+     int                 depth;
+     int                 class;
+  }
+THOT_VInfo;
+
+#endif /* THOT_GUI_H */

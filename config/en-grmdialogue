@@ -1,0 +1,12 @@
+0 Incorrect key-word\n
+1 Rule too long\n
+2 String too long\n
+3 Rules table full\n
+4 No recursion!\n
+5 String table full\n
+6 Reference table full\n
+7 No such file.\n
+8 Can't create header file %s\n
+9 Undefined symbol : %s\n
+10 Unreferenced symbol : %s\n
+11 Grammar OK, creating file .GRM\n

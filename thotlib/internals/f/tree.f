@@ -1,0 +1,106 @@
+
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+
+#ifndef __CEXTRACT__
+#ifdef __STDC__
+
+extern Element TtaNewElement ( Document document, ElementType elementType );
+extern Element TtaNewTree ( Document document, ElementType elementType, char *label );
+extern Element TtaCopyTree ( Element sourceElement, Document sourceDocument, Document destinationDocument, Element parent );
+extern Element TtaCreateDescent ( Document document, Element element, ElementType elementType );
+extern void TtaDeleteTree ( Element element, Document document );
+extern void TtaAttachNewTree ( Element tree, Document document );
+extern void TtaInsertSibling ( Element newElement, Element sibling, boolean before, Document document );
+extern void TtaInsertFirstChild ( Element *newElement, Element parent, Document document );
+extern void TtaRemoveTree ( Element element, Document document );
+extern void TtaSetAccessRight ( Element element, AccessRight right, Document document );
+extern void TtaHolophrastElement ( Element element, boolean holophrast, Document document );
+extern void TtaSetCheckingMode ( boolean strict );
+extern Element TtaGetMainRoot ( Document document );
+extern void TtaNextAssociatedRoot ( Document document, Element *root );
+extern Element TtaGetFirstChild ( Element parent );
+extern Element TtaGetLastChild ( Element parent );
+extern void TtaPreviousSibling ( Element *element );
+extern void TtaNextSibling ( Element *element );
+extern Element TtaGetSuccessor ( Element element );
+extern Element TtaGetPredecessor ( Element element );
+extern Element TtaGetParent ( Element element );
+extern Element TtaGetCommonAncestor ( Element element1, Element element2 );
+extern Element TtaGetTypedAncestor ( Element element, ElementType ancestorType );
+extern ElementType TtaGetElementType ( Element element );
+extern char *TtaGetElementTypeName ( ElementType elementType );
+extern void TtaGiveTypeFromName ( ElementType *elementType, char *name );
+extern int TtaSameTypes ( ElementType type1, ElementType type2 );
+extern int TtaSameSSchemas ( SSchema schema1, SSchema schema2 );
+extern int TtaIsConstant ( ElementType elementType );
+extern int TtaIsLeaf ( ElementType elementType );
+extern Construct TtaGetConstruct ( Element element );
+extern AccessRight TtaGetAccessRight ( Element element );
+extern int TtaIsHolophrasted ( Element element );
+extern int TtaIsReadOnly ( Element element );
+extern int TtaIsHidden ( Element element );
+extern int TtaIsInAnInclusion ( Element element );
+extern int TtaIsAncestor ( Element element, Element ancestor );
+extern int TtaIsBefore ( Element element1, Element element2 );
+extern int TtaIsFirstPairedElement ( Element element );
+extern Document TtaGetDocument ( Element element );
+extern void TtaNextCopiedElement ( Element *element );
+extern Document TtaGetCopiedDocument ( void );
+extern Element TtaSearchTypedElement ( ElementType searchedType, SearchDomain scope, Element element );
+extern Element TtaSearchElementByLabel ( char *searchedLabel, Element element );
+extern Element TtaSearchEmptyElement ( SearchDomain scope, Element element );
+extern Element TtaSearchOtherPairedElement ( Element element );
+extern Element TtaSearchNoPageBreak ( Element element, boolean forward );
+
+#else /* __STDC__ */
+
+extern Element TtaNewElement (/* Document document, ElementType elementType */);
+extern Element TtaNewTree (/* Document document, ElementType elementType, char *label */);
+extern Element TtaCopyTree (/* Element sourceElement, Document sourceDocument, Document destinationDocument, Element parent */);
+extern Element TtaCreateDescent (/* Document document, Element element, ElementType elementType */);
+extern void TtaDeleteTree (/* Element element, Document document */);
+extern void TtaAttachNewTree (/* Element tree, Document document */);
+extern void TtaInsertSibling (/* Element newElement, Element sibling, boolean before, Document document */);
+extern void TtaInsertFirstChild (/* Element *newElement, Element parent, Document document */);
+extern void TtaRemoveTree (/* Element element, Document document */);
+extern void TtaSetAccessRight (/* Element element, AccessRight right, Document document */);
+extern void TtaHolophrastElement (/* Element element, boolean holophrast, Document document */);
+extern void TtaSetCheckingMode (/* boolean strict */);
+extern Element TtaGetMainRoot (/* Document document */);
+extern void TtaNextAssociatedRoot (/* Document document, Element *root */);
+extern Element TtaGetFirstChild (/* Element parent */);
+extern Element TtaGetLastChild (/* Element parent */);
+extern void TtaPreviousSibling (/* Element *element */);
+extern void TtaNextSibling (/* Element *element */);
+extern Element TtaGetSuccessor (/* Element element */);
+extern Element TtaGetPredecessor (/* Element element */);
+extern Element TtaGetParent (/* Element element */);
+extern Element TtaGetCommonAncestor (/* Element element1, Element element2 */);
+extern Element TtaGetTypedAncestor (/* Element element, ElementType ancestorType */);
+extern ElementType TtaGetElementType (/* Element element */);
+extern char *TtaGetElementTypeName (/* ElementType elementType */);
+extern void TtaGiveTypeFromName (/* ElementType *elementType, char *name */);
+extern int TtaSameTypes (/* ElementType type1, ElementType type2 */);
+extern int TtaSameSSchemas (/* SSchema schema1, SSchema schema2 */);
+extern int TtaIsConstant (/* ElementType elementType */);
+extern int TtaIsLeaf (/* ElementType elementType */);
+extern Construct TtaGetConstruct (/* Element element */);
+extern AccessRight TtaGetAccessRight (/* Element element */);
+extern int TtaIsHolophrasted (/* Element element */);
+extern int TtaIsReadOnly (/* Element element */);
+extern int TtaIsHidden (/* Element element */);
+extern int TtaIsInAnInclusion (/* Element element */);
+extern int TtaIsAncestor (/* Element element, Element ancestor */);
+extern int TtaIsBefore (/* Element element1, Element element2 */);
+extern int TtaIsFirstPairedElement (/* Element element */);
+extern Document TtaGetDocument (/* Element element */);
+extern void TtaNextCopiedElement (/* Element *element */);
+extern Document TtaGetCopiedDocument (/* void */);
+extern Element TtaSearchTypedElement (/* ElementType searchedType, SearchDomain scope, Element element */);
+extern Element TtaSearchElementByLabel (/* char *searchedLabel, Element element */);
+extern Element TtaSearchEmptyElement (/* SearchDomain scope, Element element */);
+extern Element TtaSearchOtherPairedElement (/* Element element */);
+extern Element TtaSearchNoPageBreak (/* Element element, boolean forward */);
+
+#endif /* __STDC__ */
+#endif /* __CEXTRACT__ */

@@ -1,0 +1,30 @@
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+
+/*
+ * edit.var --<description>
+ * Variables exportees par le module edit
+ */
+
+
+
+/* Name par defaut du document a charger */
+EXPORT Name     	NomDocument; 
+EXPORT char		ptImprimante[MAX_NAME_LENGTH];
+EXPORT PtrDocument	pDocPrint;
+EXPORT PtrDocument	DocumentASauver;
+EXPORT PtrDocument	DocAttrRequis;
+EXPORT PtrDocument	DocAutoSave;
+EXPORT PtrDocument	DocModPresent;
+EXPORT PtrDocument	pDocLister;
+EXPORT PtrDocument	CorrDocument;
+EXPORT PtrDocument	pDocCherche;
+EXPORT int		BaseAppli;
+
+/* Table des pointeurs sur les descripteurs de documents */
+EXPORT PtrDocument 	TabDocuments[MAX_DOCUMENTS];
+EXPORT DisplayMode	documentDisplayMode[MAX_DOCUMENTS];
+
+EXPORT int		InputSpace; /* Mode de saisie des espaces (0 ou 1) */
+EXPORT int		ShowSpace;  /* Mode d'affichage des espaces (0 ou 1) */
+EXPORT boolean		ChangerLabel; /* Indicateur de modif.c */
+EXPORT boolean 	StructSelectionMode; /* Indicateur du mode selection */

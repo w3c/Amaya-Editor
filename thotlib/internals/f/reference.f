@@ -1,0 +1,42 @@
+
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+
+#ifndef __CEXTRACT__
+#ifdef __STDC__
+
+extern void TtaSetReference ( Element element, Document document, Element target, Document targetDocument );
+extern Element TtaNewInclusion ( Document document, Element target, Document targetDocument );
+extern void TtaCopyReference ( Element element, Element source );
+extern void TtaSetAttributeReference ( Attribute attribute, Element element, Document document, Element target, Document targetDocument );
+extern void TtaCopyAttributeReference ( Attribute attribute, Element element, Attribute source );
+extern void TtaGiveReferredElement ( Element element, Element *target, char *targetDocumentName, Document *targetDocument );
+extern int TtaIsElementTypeReference ( ElementType elementType );
+extern int TtaSameReferences ( Element element1, Element element2 );
+extern char *TtaGetElementLabel ( Element element );
+extern void TtaGiveReferenceAttributeValue ( Attribute attribute, Element *target, char *targetDocumentName, Document *targetDocument );
+extern int TtaIsElementReferred ( Element element );
+extern int TtaSameReferenceAttributes ( Attribute attribute1, Attribute attribute2 );
+extern void TtaNextLoadedReference ( Element target, Document targetDocument, Element * referenceElement, Attribute * referenceAttribute, Document * referenceDocument );
+extern void TtaNextUnloadedReferringDocument ( Element target, Document targetDocument, char * referringDocumentName );
+extern Element TtaSearchReferenceElement ( SearchDomain scope, Element element );
+
+#else /* __STDC__ */
+
+extern void TtaSetReference (/* Element element, Document document, Element target, Document targetDocument */);
+extern Element TtaNewInclusion (/* Document document, Element target, Document targetDocument */);
+extern void TtaCopyReference (/* Element element, Element source */);
+extern void TtaSetAttributeReference (/* Attribute attribute, Element element, Document document, Element target, Document targetDocument */);
+extern void TtaCopyAttributeReference (/* Attribute attribute, Element element, Attribute source */);
+extern void TtaGiveReferredElement (/* Element element, Element *target, char *targetDocumentName, Document *targetDocument */);
+extern int TtaIsElementTypeReference (/* ElementType elementType */);
+extern int TtaSameReferences (/* Element element1, Element element2 */);
+extern char *TtaGetElementLabel (/* Element element */);
+extern void TtaGiveReferenceAttributeValue (/* Attribute attribute, Element *target, char *targetDocumentName, Document *targetDocument */);
+extern int TtaIsElementReferred (/* Element element */);
+extern int TtaSameReferenceAttributes (/* Attribute attribute1, Attribute attribute2 */);
+extern void TtaNextLoadedReference (/* Element target, Document targetDocument, Element * referenceElement, Attribute * referenceAttribute, Document * referenceDocument */);
+extern void TtaNextUnloadedReferringDocument (/* Element target, Document targetDocument, char * referringDocumentName */);
+extern Element TtaSearchReferenceElement (/* SearchDomain scope, Element element */);
+
+#endif /* __STDC__ */
+#endif /* __CEXTRACT__ */

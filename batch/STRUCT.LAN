@@ -1,0 +1,140 @@
+	{ This grammar defines the language S of Thot
+	  The notation used here is defined in file META.LAN
+
+	   ' '	: keyword
+	   [ ]	: optional part
+	   < >	: optional and repeatable part
+	   /	: choice
+
+	  V. Quint	March 1985	}
+
+
+StructModel =	   'STRUCTURE' [ 'EXTENSION' ] ElemName ';'
+		   'DEFPRES' PresentName ';'
+		 [ 'ATTR' AttrList ]
+		 [ 'CONST' ConstList ]
+		 [ 'PARAM' RuleList ]
+		 [ 'STRUCT' RuleList ]
+		 { section STRUCT is optional only for extensions }
+		 [ 'EXTENS' ExtensList ]
+		 [ 'ASSOC' RuleList ]
+		 [ 'UNITS' RuleList ]
+		 [ 'EXPORT' ExpList ]
+		 [ 'EXCEPT' ExceptList ]
+		   'END' .
+
+PresentName =	 NAME .
+
+AttrList =	 Attribute < Attribute > .
+Attribute =	 AttrName '=' AttrType ';' .
+AttrType =	 'INTEGER' / 'TEXT' /
+		 'REFERENCE' '(' TypeRef ')' /
+		 ValueList .
+TypeRef =	 'ANY' / [ FirstSec ] ElemName [ ExtStruct ] .
+FirstSec =       'First' / 'Second' .
+ValueList =	 AttrValue < ',' AttrValue > .
+
+ConstList =	 Const < Const > .
+
+Const =		 ConstName '=' ConstValue ';' .
+
+ConstName =	 NAME .
+
+ConstValue =	 STRING .
+
+BasicType =	 'TEXT' / 'GRAPHICS' / 'SYMBOL' / 'PICTURE' / 'UNIT' /
+		 'NATURE' .
+
+RuleList =	 Rule ';' < Rule ';' > .
+Rule =		 ElemName [ LocAttrList ] '=' DefWith .
+
+ElemName =	 NAME .
+
+LocAttrList =	 '(' 'ATTR' LocalAttr < ';' LocalAttr > ')' .
+LocalAttr = 	 [ '!' ] AttrName [ '=' AttrType ] .
+
+DefWith =	 Definition
+		 [ '+' '(' InclList ')' ] [ '-' '(' ExclList ')' ]
+		 [ 'WITH' FixedAttrList ] .
+
+InclList =	 InclElem < ',' InclElem > .
+InclElem =       ElemName / BasicType .
+ExclList =	 ExclElem < ',' ExclElem > .
+ExclElem =       ElemName / BasicType .
+
+Definition =	 BasicType [ LocAttrList ]  / Constr / Element .
+Element =	 ElemName [ ExtOrDef ] .
+ExtOrDef =	 'EXTERN' / 'INCLUDED' / [ LocAttrList ] '=' Definition .
+
+Constr =	 'LIST' [ '[' min '.' '.' max ']' ] 'OF' '(' DefWith ')' /
+		 'BEGIN' OptDefList 'END' /
+		 'AGGREGATE' OptDefList 'END' /
+		 'CASE' 'OF' DefList 'END' /
+		 'REFERENCE' '(' TypeRef ')' /
+		 'CONSTANT' ConstName /
+		 'PAIR' .
+
+OptDefList =	 OptDefWith ';' < OptDefWith ';' > .
+
+OptDefWith =	 [ '?' ] DefWith .
+
+DefList =	 DefWith ';' < DefWith ';' > .
+
+min =		 Integer / '*' .
+
+max =		 Integer / '*' .
+
+Integer =	 NUMBER .
+
+FixedAttrList =	 FixedAttr < ',' FixedAttr > .
+FixedAttr =	 AttrName [ FixModValue ] .
+
+FixModValue =	 ['?'] '=' FixedValue .
+FixedValue =	 [ '-' ] NumValue / StrValue / AttrValue .
+
+AttrName =	 NAME .
+
+AttrValue =	 NAME .
+
+NumValue =	 NUMBER .
+
+StrValue =	 STRING .
+
+ExtStruct =	 '(' ElemName ')' .
+
+ExpList =	 Export < ',' Export > ';' .
+
+Export =	 ElemName [ 'WITH' Content ] .
+
+Content =	 'Nothing' / ElemName [ ExtStruct ] .
+
+ExceptList =	 Except ';' < Except ';' > .
+Except =	 ExceptType ':' ExValList .
+ExceptType =	 BasicType / [ 'EXTERN' ] [ FirstSec ] ElemName / AttrName / ConstName .
+ExValList =	 ExceptVal < ',' ExceptVal > .
+ExceptVal =	 'NoCut' / 'NoCreate' / 'NoHMove' / 'NoVMove' /
+		 'NoHResize' / 'NoVResize' / 
+		 'NewWidth' / 'NewHeight' /
+		 'NewHPos' / 'NewVPos' /
+                 'Invisible' /
+		 'GraphCreation' /
+		 'Hidden' / 'IsDraw' /
+                 'NoMove' / 'NoResize' / 'MoveResize' /
+                 'NoSelect' / 'NoSpellCheck' /
+	         'PageBreak' / 'PageBreakAllowed' / 'PageBreakPlace' /
+	         'PageBreakRepetition' / 'PageBreakRepBefore' /
+		 'ActiveRef' /
+                 'NoPaginate' /
+                 'ImportLine' / 'ImportParagraph' /
+		 'ParagraphBreak' /
+                 'HighlightChildren' / 'ExtendedSelection' /
+		 ExceptNum .
+ExceptNum =	 NUMBER .
+
+ExtensList =     Extens ';' < Extens ';' > .
+Extens =	 RootOrElem [ LocAttrList ]
+		 [ '+' '(' InclList ')' ] [ '-' '(' ExclList ')' ]
+		 [ 'WITH' FixedAttrList ] .
+RootOrElem =     'Root' / ElemName .
+
+END

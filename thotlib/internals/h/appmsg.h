@@ -1,0 +1,19 @@
+#define APP_INTERMEDIATE_SYMBOL	              0
+#define APP_THE_STRUCT_SCHEM_DOES_NOT_MATCH   1
+#define APP_LINE_TOO_LONG	              2
+#define APP_UNKNOWN_TYPE	              3
+#define APP_STRUCT_SCHEM_NOT_FOUND	      4
+#define APP_NO_SUCH_FILE	              5
+#define APP_UNKNOWN_MESSAGE	              6
+#define APP_ONLY_IN_EDITOR_I	              7
+#define APP_UNKNOWN_ATTRIBUTE	              8
+#define APP_ITEM_ALREADY_EXISTS	              9
+#define APP_NOT_IN_DEFAULT	             10
+#define APP_MISSING_FIRST_SECOND	     11
+#define APP_NOT_IN_PAIR		             12
+#define APP_INVALID_FOR_AN_ELEM	             13
+#define APP_INVALID_FOR_AN_ATTR	             14
+#define APP_ONLY_PRE_ALLOWED	             15
+#define APP_TOO_MANY_CASCADE_LEVELS	     16
+
+#define APP_MSG_MAX		             17

@@ -1,0 +1,61 @@
+#!/bin/csh
+echo -n "Numero de version:"
+set V=$<
+echo "Intallation version " &V
+set DIR=/usr/local/applis/amaya/$V
+mkdir $DIR
+cp -p COPYRIGHT $DIR
+cp -p README $DIR
+cp -p XKeysymDB $DIR
+mkdir $DIR/bin
+cp -p bin/Abort $DIR/bin
+cp -p bin/MachineType $DIR/bin
+cp -p bin/amaya $DIR/bin
+cp -p bin/amaya.css $DIR/bin
+cp -p bin/amaya.keyboard $DIR/bin
+cp -p bin/psthot.pro $DIR/bin
+cp -p bin/en-amayadialogue $DIR/bin
+cp -p bin/en-EDITORdialogue $DIR/bin
+cp -p bin/en-thotdialogue $DIR/bin
+cp -p bin/en-transdialogue $DIR/bin
+cp -p bin/fr-amayadialogue $DIR/bin
+cp -p bin/fr-EDITORdialogue $DIR/bin
+cp -p bin/fr-thotdialogue $DIR/bin
+cp -p bin/fr-transdialogue $DIR/bin
+cp -p bin/PsPrint $DIR/bin
+mkdir $DIR/amaya
+cp -p amaya/HTML.STR $DIR/amaya
+cp -p amaya/HTML.conf $DIR/amaya
+cp -p amaya/HTML.trans $DIR/amaya
+cp -p amaya/HTML.en $DIR/amaya
+cp -p amaya/HTML.fr $DIR/amaya
+cp -p amaya/HTML*.PRS $DIR/amaya
+cp -p amaya/HTML*.TRA $DIR/amaya
+mkdir $DIR/dicopar
+cp -p dicopar/alphabet $DIR/dicopar
+cp -p dicopar/*.ptn $DIR/dicopar
+mkdir mkdir $DIR/fonts
+cp -p fonts/Families.list $DIR/dicopar
+cp -p fonts/fonts.dir $DIR/fonts
+cp -p fonts/icones.* $DIR/fonts
+mkdir mkdir $DIR/bin/solaris2
+cp -p bin/solaris2/amayamain $DIR/bin/solaris2
+cp -p bin/solaris2/print $DIR/bin/solaris2
+cp -p bin/solaris2/xwakeup $DIR/bin/solaris2
+mkdir mkdir $DIR/bin/SUN4
+cp -p bin/SUN4/amayamain $DIR/bin/SUN4
+cp -p bin/SUN4/print $DIR/bin/SUN4
+cp -p bin/SUN4/xwakeup $DIR/bin/SUN4
+mkdir mkdir $DIR/bin/RS6000
+cp -p bin/RS6000/amayamain $DIR/bin/RS6000
+cp -p bin/RS6000/print $DIR/bin/RS6000
+cp -p bin/RS6000/xwakeup $DIR/bin/RS6000
+mkdir mkdir $DIR/bin/LINUX
+cp -p bin/LINUX/amayamain $DIR/bin/LINUX
+cp -p bin/LINUX/print $DIR/bin/LINUX
+cp -p bin/LINUX/xwakeup $DIR/bin/LINUX
+mkdir mkdir $DIR/bin/LINUX-ELF
+cp -p bin/LINUX-ELF/amayamain $DIR/bin/LINUX-ELF
+cp -p bin/LINUX-ELF/print $DIR/bin/LINUX-ELF
+cp -p bin/LINUX-ELF/xwakeup $DIR/bin/LINUX-ELF
+echo "Fin installation"

@@ -1,0 +1,96 @@
+0 Files
+1 Open location
+2 Clear
+3 Save local
+4 Attribute
+5 URL
+6 Get an answer
+7 Text
+8 Name
+9 Password
+10 Use as class
+11 Apply class
+12 Select a class
+13 %s created
+14 Fetching %s
+15 Loading %s
+16 Cannot load %s
+17 Finished!
+18 Document saved in %s
+19 Select the target
+20 Invalid target
+21 No document %s
+22 Access denied to %s
+23 Loading of %s interrupted
+24 Address
+25 Title
+26 Document modified. All changes will be lost. Do you want to continue ?
+27 Redirection fetching of %s
+28 Too many redirections detected
+29 Cannot create local file %s
+30 Waiting for a free socket
+31 Reading %s
+32 Writing %s
+33 Waiting for connection
+34 Contacting %s
+35 Looking up %s
+36 Unknown Status
+37 Detected an Xt Error
+38 Authentication Dialogue
+39 Authorization failure for %s
+40 %s loaded but no data is available
+41 Transfer interrupted!
+42 %s is not available at the moment. Please retry at some other time
+43 %s loaded
+44 Saving %s
+45 Cannot save %s
+46 english system errors messages
+47 An anchor cannot contain these elements
+48 Cannot create an anchor within an anchor
+49 Sorry, no GET support yet for this kind of URL: %s
+50 Sorry, no PUT support yet for this kind of URL: %s
+51 This version of Amaya does not support this feature
+52 Finished writing %s
+53 Could not normalize %s
+54 Coult not create temporary file directory %s
+55 No transformation applicable to the selection
+56 The transformation failed 
+57 syntax error in file HTML.trans line %s
+58 Add
+59 Show
+60 Browse
+61 External CSS
+62 Delete CSS
+63 Delete
+64 Save
+65 Save as
+66 Reload
+67 New
+68 CSS
+69 Saving will overwrite the following URLs:
+70 Failed to save to URL
+71 Save to disk ?
+72 BCopy Images
+73 BTransform URLs
+74 Document location
+75 Images location
+76 Object location
+77 Document style
+78 User's Preferences
+79 CSS file 1                                            
+80 Rule list for file 1                                   
+81 CSS file 2                                            
+82 Rule list for file 2                                   
+83 Select an external Style Sheet
+84 Delete a Style Sheet
+85 <HTML><HEAD>ERROR</HEAD><BODY><TITLE>ERROR: The requested URL could not be retrieved</TITLE><H2>The requested URL could not be retrieved</H2><HR><P>While trying to retrieve the URL:<A HREF=\"%s\">%s</A></P><P>The following error was encountered:</P><UL><LI><STRONG>Connection Failed</STRONG></UL><P>The system returned:</P><PRE><I>(%d) %s</I></PRE><P>This means that:</P><PRE>The remote site or server may be down or non-existant.</PRE><PRE>Please try again soon.</PRE><P></P><HR>\n</BODY></HTML>
+86 Please enter username:
+87 Password:
+88 Please give name of file to save in:
+89 Plase enter account:
+90 It might not be allowed to use this method, continue?"
+91 Location has moved, continue?
+92 A new set of rules is to be added to your setup - continue?
+93 %d outstanding requests
+94 Connection closed
+95 Garbage collecting persistent cache - please wait...

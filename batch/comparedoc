@@ -1,0 +1,33 @@
+#!/bin/sh
+if [ -z "${LANG}" ]
+then
+        LANG=fr
+else
+        LANGUE_ORIG=`echo ${LANG} | cut -c-2 | tr '[A-Z]' '[a-z]'`
+        LANG=${LANGUE_ORIG}
+ 
+fi
+if [ "${LANG}" = "c" ];then
+        LANG=fr;
+fi
+export LANG
+
+BIN=${THOTDIR}/bin
+Machine=`${BIN}/MachineType`;			export Machine
+THOTBIN=${THOTDIR}/bin/${Machine};		export THOTBIN
+
+if [ "$THOTSCH" = "" ]
+then	THOTSCH=${THOTDIR}/schemas:${THOTDIR}/schemasOPERA
+fi
+export THOTSCH
+
+if [ "$THOTDOC" = "" ]
+then	THOTDOC=`pwd`;		export THOTDOC
+fi
+
+DICOPAR=${THOTDIR}/dicopar;                      export DICOPAR
+
+DIALOGUEVERSION=${BIN}/${LANG}-thotversion;	export DIALOGUEVERSION
+DIALOGUEFILE=${BIN}/${LANG}-thotdialogue;	export DIALOGUEFILE
+EXTENSCHEMA=${LANG};				export EXTENSCHEMA
+${THOTBIN}/compdoc $*

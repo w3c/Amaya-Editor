@@ -1,0 +1,9 @@
+/*
+ * Draw3APP.rc : Draw3 Windows Resource Script
+ * Last generated : 
+ */
+
+i
+ */#include "Draw3.h"
+#include "ICONS.rc"
+

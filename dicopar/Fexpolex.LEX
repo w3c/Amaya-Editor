@@ -1,0 +1,22 @@
+23 110
+C_ie
+f_o
+n_o
+r_o
+v_o
+f_o
+M_e
+n_o
+r_o
+v_o
+C_ie
+f_os
+M_es
+M_gr
+M_lle
+M_me
+n_os
+M_lles
+M_lle
+M_mes
+M_lles

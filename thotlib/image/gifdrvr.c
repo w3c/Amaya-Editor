@@ -1,0 +1,1921 @@
+
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+
+/* +-------------------------------------------------------------------+ */
+/* |  Driver Gif : LAYAIDA Nabil 31-10-1994                            | */
+/* |               Copyright INRIA Rhone-Alpes                         | */
+/* |               Gif format of 1990.    (David Koblas Algorithm)     | */
+/* +-------------------------------------------------------------------+ */
+
+
+#include "thot_sys.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "imagedrvr.h"
+#include "frame.h"
+#include "libmsg.h"
+#include "message.h"
+#include "application.h"
+#include "xpmP.h"
+#include "xpm.h"
+
+#define EXPORT extern
+#include "imagedrvr.var"
+#include "frame.var"
+
+#include "imagedrvr.f"
+#include "gifdrvr.f"
+#include "font.f"
+
+
+#define	MAXCOLORMAPSIZE		256
+#define	TRUE	1
+#define	FALSE	0
+#define CM_RED		0
+#define CM_GREEN	1
+#define CM_BLUE		2
+#define	MAX_LWZ_BITS		12
+#define INTERLACE		0x40
+#define LOCALCOLORMAP	0x80
+#define BitSet(byte, bit)	(((byte) & (bit)) == (bit))
+
+#define	ReadOK(file,buffer,len)	(fread(buffer, len, 1, file) > 0)
+
+#define LM_to_uint(a,b)			(((b)<<8)|(a))
+#define DEF_BLACK       BlackPixel(GDp(0), DefaultScreen(GDp(0)))
+#define DEF_WHITE       WhitePixel(GDp(0), DefaultScreen(GDp(0)))
+#define	MAX_LINE	81
+
+struct
+  {
+     unsigned int        Width;
+     unsigned int        Height;
+     unsigned char       ColorMap[3][MAXCOLORMAPSIZE];
+     unsigned int        BitPixel;
+     unsigned int        ColorResolution;
+     unsigned int        Background;
+     unsigned int        AspectRatio;
+  }
+GifScreen;
+
+struct
+  {
+     int                 transparent;
+     int                 delayTime;
+     int                 inputFlag;
+     int                 disposal;
+  }
+Gif89 =
+{
+   -1, -1, -1, 0
+};
+
+int                 verbose;
+int                 showComment;
+
+unsigned char       nibMask[8] =
+{
+   1, 2, 4, 8, 16, 32, 64, 128
+};
+
+#ifdef IV
+static struct color_rec
+  {
+     int                 pixel[3];
+     int                 pixelval;
+     struct color_rec   *hash_next;
+  }
+                   *Hash[256];
+
+#endif
+
+static unsigned char *ReadGifImage ();
+
+#ifdef __STDC__
+extern void         FindOutColor (Display *, Colormap, ThotColorStruct *);
+
+#else  /* __STDC__ */
+extern void         FindOutColor ();
+
+#endif /* __STDC__ */
+
+#ifdef __STDC__
+unsigned char      *ReadGIF (FILE * fd, int *w, int *h, int *ncolors, int *cpp, ThotColorStruct colrs[256])
+
+#else  /* __STDC__ */
+unsigned char      *ReadGIF (fd, w, h, ncolors, cpp, colrs)
+FILE               *fd;
+int                *w;
+int                *h;
+int                *ncolors;
+int                *cpp;
+ThotColorStruct     colrs[256];
+
+#endif /* __STDC__ */
+
+{
+   unsigned char       buf[16];
+   unsigned char      *data;
+   unsigned char       c;
+   unsigned char       localColorMap[3][MAXCOLORMAPSIZE];
+   int                 useGlobalColormap;
+   int                 bitPixel;
+   int                 imageCount = 0;
+   char                version[4];
+   int                 imageNumber = 1;
+   int                 i;
+
+   verbose = FALSE;
+   showComment = FALSE;
+   data = NULL;
+   if (!ReadOK (fd, buf, 6))
+     {
+#if 0
+	fprintf (stderr, "error reading magic number\n");
+#endif
+	return (NULL);
+     }
+
+   if (strncmp ((char *) buf, "GIF", 3) != 0)
+     {
+#if 0
+	if (verbose)
+	   fprintf (stderr, "not a GIF file\n");
+#endif
+	return (NULL);
+     }
+
+   strncpy (version, (char *) buf + 3, 3);
+   version[3] = '\0';
+
+   if ((strcmp (version, "87a") != 0) && (strcmp (version, "89a") != 0))
+     {
+#if 0
+	fprintf (stderr, "bad version number, not '87a' or '89a'\n");
+#endif
+	return (NULL);
+     }
+
+   if (!ReadOK (fd, buf, 7))
+     {
+#if 0
+	fprintf (stderr, "failed to read screen descriptor\n");
+#endif
+	return (NULL);
+     }
+
+   GifScreen.Width = LM_to_uint (buf[0], buf[1]);
+   GifScreen.Height = LM_to_uint (buf[2], buf[3]);
+   GifScreen.BitPixel = 2 << (buf[4] & 0x07);
+/*LN */ *ncolors = GifScreen.BitPixel;
+   GifScreen.ColorResolution = (((buf[4] & 0x70) >> 3) + 1);
+   GifScreen.Background = buf[5];
+   GifScreen.AspectRatio = buf[6];
+
+   if (BitSet (buf[4], LOCALCOLORMAP))
+     {				/* Global Colormap */
+	if (ReadColorMap (fd, GifScreen.BitPixel, GifScreen.ColorMap))
+	  {
+#if 0
+	     fprintf (stderr, "error reading global colormap\n");
+#endif
+	     return (NULL);
+	  }
+	for (i = 0; i < GifScreen.BitPixel; i++)
+	  {
+	     int                 scale = 65536 / MAXCOLORMAPSIZE;
+
+#ifdef NEW_WILLOWS
+	     colrs[i] = RGB (GifScreen.ColorMap[0][i],
+			     GifScreen.ColorMap[1][i],
+			     GifScreen.ColorMap[2][i]);
+#else  /* NEW_WILLOWS */
+	     colrs[i].red = GifScreen.ColorMap[0][i] * scale;
+	     colrs[i].green = GifScreen.ColorMap[1][i] * scale;
+	     colrs[i].blue = GifScreen.ColorMap[2][i] * scale;
+	     colrs[i].pixel = i;
+	     colrs[i].flags = DoRed | DoGreen | DoBlue;
+#endif /* !NEW_WILLOWS */
+	  }
+	for (i = GifScreen.BitPixel; i < MAXCOLORMAPSIZE; i++)
+	  {
+#ifdef NEW_WILLOWS
+	     colrs[i] = RGB (0, 0, 0);
+#else  /* NEW_WILLOWS */
+	     colrs[i].red = 0;
+	     colrs[i].green = 0;
+	     colrs[i].blue = 0;
+	     colrs[i].pixel = i;
+	     colrs[i].flags = DoRed | DoGreen | DoBlue;
+#endif /* !NEW_WILLOWS */
+	  }
+
+     }
+
+   if (GifScreen.AspectRatio != 0 && GifScreen.AspectRatio != 49)
+     {
+#if 0
+	fprintf (stderr, "Warning:  non-square pixels!\n");
+#endif
+     }
+
+   for (;;)
+     {
+	if (!ReadOK (fd, &c, 1))
+	  {
+#if 0
+	     fprintf (stderr, "EOF / read error on image data\n");
+#endif
+	     return (NULL);
+	  }
+
+	if (c == ';')
+	  {			/* GIF terminator */
+	     if (imageCount < imageNumber)
+	       {
+#if 0
+		  fprintf (stderr, "No images found in file\n");
+#endif
+		  return (NULL);
+	       }
+	     break;
+	  }
+
+	if (c == '!')
+	  {			/* Extension */
+	     if (!ReadOK (fd, &c, 1))
+	       {
+#if 0
+		  fprintf (stderr, "EOF / read error on extention function code\n");
+#endif
+		  return (NULL);
+	       }
+	     DoExtension (fd, c);
+	     continue;
+	  }
+
+	if (c != ',')
+	  {			/* Not a valid start character */
+#if 0
+	     fprintf (stderr, "bogus character 0x%02x, ignoring\n",
+		      (int) c);
+#endif
+	     continue;
+	  }
+
+	++imageCount;
+
+	if (!ReadOK (fd, buf, 9))
+	  {
+#if 0
+	     fprintf (stderr, "couldn't read left/top/width/height\n");
+#endif
+	     return (NULL);
+	  }
+
+	useGlobalColormap = !BitSet (buf[8], LOCALCOLORMAP);
+
+	bitPixel = 1 << ((buf[8] & 0x07) + 1);
+
+	*w = LM_to_uint (buf[4], buf[5]);
+	*h = LM_to_uint (buf[6], buf[7]);
+	if (!useGlobalColormap)
+	  {
+	     if (ReadColorMap (fd, bitPixel, localColorMap))
+	       {
+#if 0
+		  fprintf (stderr, "error reading local colormap\n");
+#endif
+		  return (NULL);
+	       }
+	     for (i = 0; i < bitPixel; i++)
+	       {
+		  int                 scale = 65536 / MAXCOLORMAPSIZE;
+
+#ifdef NEW_WILLOWS
+		  colrs[i] = RGB (
+				    localColorMap[0][i],
+				    localColorMap[1][i],
+				    localColorMap[2][i]);
+#else  /* NEW_WILLOWS */
+		  colrs[i].red = localColorMap[0][i] * scale;
+		  colrs[i].green = localColorMap[1][i] * scale;
+		  colrs[i].blue = localColorMap[2][i] * scale;
+		  colrs[i].pixel = i;
+		  colrs[i].flags = DoRed | DoGreen | DoBlue;
+#endif /* NEW_WILLOWS */
+	       }
+	     for (i = bitPixel; i < MAXCOLORMAPSIZE; i++)
+	       {
+#ifdef NEW_WILLOWS
+		  colrs[i] = RGB (0, 0, 0);
+#else  /* NEW_WILLOWS */
+		  colrs[i].red = 0;
+		  colrs[i].green = 0;
+		  colrs[i].blue = 0;
+		  colrs[i].pixel = i;
+		  colrs[i].flags = DoRed | DoGreen | DoBlue;
+#endif /* NEW_WILLOWS */
+	       }
+	     data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
+				  LM_to_uint (buf[6], buf[7]), localColorMap,
+		     BitSet (buf[8], INTERLACE), imageCount != imageNumber);
+	     return (data);	/* anticipating the exit to prevent gif video !!! crazy netscape !! */
+	  }
+	else
+	  {
+	     data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
+			    LM_to_uint (buf[6], buf[7]), GifScreen.ColorMap,
+		     BitSet (buf[8], INTERLACE), imageCount != imageNumber);
+	     return (data);	/* anticipating the exit to prevent gif video */
+	  }
+
+     }
+   return (data);
+}
+
+#ifdef __STDC__
+int                 ReadColorMap (FILE * fd, int number, unsigned char buffer[3][MAXCOLORMAPSIZE])
+
+#else  /* __STDC__ */
+int                 ReadColorMap (fd, number, buffer)
+FILE               *fd;
+int                 number;
+unsigned char       buffer[3][MAXCOLORMAPSIZE];
+
+#endif /* __STDC__ */
+
+{
+   int                 i;
+   unsigned char       rgb[3];
+
+   for (i = 0; i < number; ++i)
+     {
+	if (!ReadOK (fd, rgb, sizeof (rgb)))
+	  {
+#if 0
+	     fprintf (stderr, "bad colormap\n");
+#endif
+	     return (TRUE);
+	  }
+
+	buffer[CM_RED][i] = rgb[0];
+	buffer[CM_GREEN][i] = rgb[1];
+	buffer[CM_BLUE][i] = rgb[2];
+     }
+   return FALSE;
+}
+
+#ifdef __STDC__
+int                 DoExtension (FILE * fd, int label)
+
+#else  /* __STDC__ */
+int                 DoExtension (fd, label)
+FILE               *fd;
+int                 label;
+
+#endif /* __STDC__ */
+
+{
+   char                buf[256];
+
+   switch (label)
+	 {
+	    case 0x01:		/* Plain Text Extension */
+#ifdef notdef
+	       if (GetDataBlock (fd, (unsigned char *) buf) == 0)
+		  ;
+
+	       lpos = LM_to_uint (buf[0], buf[1]);
+	       tpos = LM_to_uint (buf[2], buf[3]);
+	       width = LM_to_uint (buf[4], buf[5]);
+	       height = LM_to_uint (buf[6], buf[7]);
+	       cellw = buf[8];
+	       cellh = buf[9];
+	       foreground = buf[10];
+	       background = buf[11];
+
+	       while (GetDataBlock (fd, (unsigned char *) buf) != 0)
+		 {
+		    PPM_ASSIGN (image[ypos][xpos],
+				cmap[CM_RED][v],
+				cmap[CM_GREEN][v],
+				cmap[CM_BLUE][v]);
+		    ++index;
+		 }
+
+	       return FALSE;
+#else
+	       break;
+#endif
+	    case 0xff:		/* Application Extension */
+	       break;
+	    case 0xfe:		/* Comment Extension */
+	       while (GetDataBlock (fd, (unsigned char *) buf) != 0)
+		 {
+		    if (showComment)
+		      {
+#if 0
+			 fprintf (stderr, "gif comment: %s\n", buf);
+#endif
+		      }
+		 }
+	       return FALSE;
+	    case 0xf9:		/* Graphic Control Extension */
+	       (void) GetDataBlock (fd, (unsigned char *) buf);
+	       Gif89.disposal = (buf[0] >> 2) & 0x7;
+	       Gif89.inputFlag = (buf[0] >> 1) & 0x1;
+	       Gif89.delayTime = LM_to_uint (buf[1], buf[2]);
+	       if ((buf[0] & 0x1) != 0)
+		  Gif89.transparent = (int) buf[3];
+
+	       while (GetDataBlock (fd, (unsigned char *) buf) != 0)
+		  ;
+	       return FALSE;
+	    default:
+	       sprintf (buf, "UNKNOWN (0x%02x)", label);
+	       break;
+	 }
+
+
+   while (GetDataBlock (fd, (unsigned char *) buf) != 0)
+      ;
+
+   return FALSE;
+}
+int                 ZeroDataBlock = FALSE;
+
+#ifdef __STDC__
+int                 GetDataBlock (FILE * fd, unsigned char *buf)
+
+#else  /* __STDC__ */
+int                 GetDataBlock (fd, buf)
+FILE               *fd;
+unsigned char      *buf;
+
+#endif /* __STDC__ */
+
+{
+   unsigned char       count;
+
+   if (!ReadOK (fd, &count, 1))
+     {
+#if 0
+	fprintf (stderr, "error in getting DataBlock size\n");
+#endif
+	return -1;
+     }
+
+   ZeroDataBlock = count == 0;
+
+   if ((count != 0) && (!ReadOK (fd, buf, count)))
+     {
+#if 0
+	fprintf (stderr, "error in reading DataBlock\n");
+#endif
+	return -1;
+     }
+
+   return count;
+}
+
+#ifdef __STDC__
+int                 GetCode (FILE * fd, int code_size, int flag)
+
+#else  /* __STDC__ */
+int                 GetCode (fd, code_size, flag)
+FILE               *fd;
+int                 code_size;
+int                 flag;
+
+#endif /* __STDC__ */
+
+{
+   static unsigned char buf[280];
+   static int          curbit, lastbit, done, last_byte;
+   int                 i, j, ret;
+   unsigned char       count;
+
+   if (flag)
+     {
+	curbit = 0;
+	lastbit = 0;
+	done = FALSE;
+	last_byte = 2;
+	return 0;
+     }
+
+   if ((curbit + code_size) >= lastbit)
+     {
+	if (done)
+	  {
+	     if (curbit >= lastbit)
+	       {
+#if 0
+		  fprintf (stderr, "ran off the end of my bits\n");
+#endif
+	       }
+	     return -1;
+	  }
+	buf[0] = buf[last_byte - 2];
+	buf[1] = buf[last_byte - 1];
+
+	if ((count = GetDataBlock (fd, &buf[2])) == 0)
+	   done = TRUE;
+
+	last_byte = 2 + count;
+	curbit = (curbit - lastbit) + 16;
+	lastbit = (2 + count) * 8;
+     }
+
+   ret = 0;
+   for (i = curbit, j = 0; j < code_size; ++i, ++j)
+      ret |= ((buf[i >> 3] & (1 << (i % 8))) != 0) << j;
+
+   curbit += code_size;
+
+   return ret;
+}
+
+#ifdef __STDC__
+int                 LWZReadByte (FILE * fd, int flag, int input_code_size)
+
+#else  /* __STDC__ */
+int                 LWZReadByte (fd, flag, input_code_size)
+FILE               *fd;
+int                 flag;
+int                 input_code_size;
+
+#endif /* __STDC__ */
+
+{
+   static int          fresh = FALSE;
+   int                 code, incode;
+   static int          code_size, set_code_size;
+   static int          max_code, max_code_size;
+   static int          firstcode, oldcode;
+   static int          clear_code, end_code;
+   static int          table[2][(1 << MAX_LWZ_BITS)];
+   static int          stack[(1 << (MAX_LWZ_BITS)) * 2], *sp = stack;
+   register int        i;
+
+   if (flag)
+     {
+	set_code_size = input_code_size;
+	code_size = set_code_size + 1;
+	clear_code = 1 << set_code_size;
+	end_code = clear_code + 1;
+	max_code_size = 2 * clear_code;
+	max_code = clear_code + 2;
+
+	GetCode (fd, 0, TRUE);
+
+	fresh = TRUE;
+
+	for (i = 0; i < clear_code; ++i)
+	  {
+	     table[0][i] = 0;
+	     table[1][i] = i;
+	  }
+	for (; i < (1 << MAX_LWZ_BITS); ++i)
+	   table[0][i] = table[1][0] = 0;
+
+	sp = stack;
+
+	return 0;
+     }
+   else if (fresh)
+     {
+	fresh = FALSE;
+	do
+	  {
+	     firstcode = oldcode =
+		GetCode (fd, code_size, FALSE);
+	  }
+	while (firstcode == clear_code);
+	return firstcode;
+     }
+
+   if (sp > stack)
+      return *--sp;
+
+   while ((code = GetCode (fd, code_size, FALSE)) >= 0)
+     {
+	if (code == clear_code)
+	  {
+	     for (i = 0; i < clear_code; ++i)
+	       {
+		  table[0][i] = 0;
+		  table[1][i] = i;
+	       }
+	     for (; i < (1 << MAX_LWZ_BITS); ++i)
+		table[0][i] = table[1][i] = 0;
+	     code_size = set_code_size + 1;
+	     max_code_size = 2 * clear_code;
+	     max_code = clear_code + 2;
+	     sp = stack;
+	     firstcode = oldcode =
+		GetCode (fd, code_size, FALSE);
+	     return firstcode;
+	  }
+	else if (code == end_code)
+	  {
+	     int                 count;
+	     unsigned char       buf[260];
+
+	     if (ZeroDataBlock)
+		return -2;
+
+	     while ((count = GetDataBlock (fd, buf)) > 0)
+		;
+
+#if 0
+	     if (count != 0)
+		fprintf (stderr, "missing EOD in data stream (common occurence)\n");
+#endif
+	     return -2;
+	  }
+
+	incode = code;
+
+	if (code >= max_code)
+	  {
+	     *sp++ = firstcode;
+	     code = oldcode;
+	  }
+
+	while (code >= clear_code)
+	  {
+	     if ((sp - stack) >= ((1 << (MAX_LWZ_BITS)) * 2))
+		return -2;	/* stop a code dump */
+	     *sp++ = table[1][code];
+	     if (code == table[0][code])
+	       {
+#if 0
+		  fprintf (stderr, "circular table entry BIG ERROR\n");
+#endif
+		  return (code);
+	       }
+	     code = table[0][code];
+	  }
+
+	*sp++ = firstcode = table[1][code];
+
+	if ((code = max_code) < (1 << MAX_LWZ_BITS))
+	  {
+	     table[0][code] = oldcode;
+	     table[1][code] = firstcode;
+	     ++max_code;
+	     if ((max_code >= max_code_size) &&
+		 (max_code_size < (1 << MAX_LWZ_BITS)))
+	       {
+		  max_code_size *= 2;
+		  ++code_size;
+	       }
+	  }
+
+	oldcode = incode;
+
+	if (sp > stack)
+	   return *--sp;
+     }
+   return code;
+}
+
+#ifdef __STDC__
+static unsigned char *ReadGifImage (FILE * fd, int len, int height, unsigned char clmap[3][MAXCOLORMAPSIZE], int interlace, int ignore)
+
+#else  /* __STDC__ */
+static unsigned char *ReadGifImage (fd, len, height, clmap, interlace, ignore)
+FILE               *fd;
+int                 len;
+int                 height;
+unsigned char       clmap[3][MAXCOLORMAPSIZE];
+int                 interlace;
+int                 ignore;
+
+#endif /* __STDC__ */
+
+{
+   unsigned char       c;
+   int                 v;
+   int                 xpos = 0, ypos = 0, pass = 0;
+
+/*
+   pixel                **image;
+ */
+   unsigned char      *data;
+   unsigned char      *dptr;
+
+   /*
+      **  Initialize the Compression routines
+    */
+   if (!ReadOK (fd, &c, 1))
+     {
+#if 0
+	fprintf (stderr, "EOF / read error on image data\n");
+#endif
+	return (NULL);
+     }
+
+   if (LWZReadByte (fd, TRUE, c) < 0)
+     {
+#if 0
+	fprintf (stderr, "error reading image\n");
+#endif
+	return (NULL);
+     }
+
+   /*
+      **  If this is an "uninteresting picture" ignore it.
+    */
+   if (ignore)
+     {
+#if 0
+	if (verbose)
+	   fprintf (stderr, "skipping image...\n");
+#endif
+
+	while (LWZReadByte (fd, FALSE, c) >= 0)
+	   ;
+	return (NULL);
+     }
+
+/*
+   if ((image = ppm_allocarray(len, height)) == NULL)
+   {
+   fprintf(stderr, "couldn't alloc space for image\n");
+   return(NULL);
+   }
+ */
+
+   data = (unsigned char *) TtaGetMemory (sizeof (unsigned char) * len * height);
+
+   if (data == NULL)
+     {
+#if 0
+	fprintf (stderr, "Cannot allocate space for image data\n");
+#endif
+	return (NULL);
+     }
+
+#if 0
+   if (verbose)
+      fprintf (stderr, "reading %d by %d%s GIF image\n",
+	       len, height, interlace ? " interlaced" : "");
+#endif
+
+   while ((v = LWZReadByte (fd, FALSE, c)) >= 0)
+     {
+	dptr = (unsigned char *) (data + (ypos * len) + xpos);
+	*dptr = (unsigned char) v;
+/*
+   PPM_ASSIGN(image[ypos][xpos], clmap[CM_RED][v],
+   clmap[CM_GREEN][v], clmap[CM_BLUE][v]);
+ */
+
+	++xpos;
+	if (xpos == len)
+	  {
+	     xpos = 0;
+	     if (interlace)
+	       {
+		  switch (pass)
+			{
+			   case 0:
+			   case 1:
+			      ypos += 8;
+			      break;
+			   case 2:
+			      ypos += 4;
+			      break;
+			   case 3:
+			      ypos += 2;
+			      break;
+			}
+
+		  if (ypos >= height)
+		    {
+		       ++pass;
+		       switch (pass)
+			     {
+				case 1:
+				   ypos = 4;
+				   break;
+				case 2:
+				   ypos = 2;
+				   break;
+				case 3:
+				   ypos = 1;
+				   break;
+				default:
+				   goto fini;
+			     }
+		    }
+	       }
+	     else
+	       {
+		  ++ypos;
+	       }
+	  }
+	if (ypos >= height)
+	   break;
+     }
+
+ fini:
+   if (LWZReadByte (fd, FALSE, c) >= 0)
+      fprintf (stderr, "too much input data, ignoring extra...\n");
+   return (data);
+}
+
+
+#ifdef __STDC__
+static int          highbit (unsigned long ul)
+#else  /* __STDC__ */
+static int          highbit (ul)
+unsigned long       ul;
+
+#endif /* __STDC__ */
+{
+   /*
+    * returns position of highest set bit in 'ul' as an integer (0-31),
+    * or -1 if none.
+    */
+
+   int                 i;
+
+   for (i = 31; ((ul & 0x80000000) == 0) && i >= 0; i--, ul <<= 1) ;
+   return i;
+}
+
+#ifdef __STDC__
+int                 highbit16 (unsigned long ul)
+#else  /* __STDC__ */
+int                 highbit16 (ul)
+unsigned long       ul;
+
+#endif /* __STDC__ */
+{
+   /*
+    * returns position of highest set bit in 'ul' as an integer (0-31),
+    * or -1 if none.
+    */
+
+   int                 i;
+
+   for (i = 15; ((ul & 0x8000) == 0) && i >= 0; i--, ul <<= 1) ;
+   return i;
+}
+
+#ifdef __STDC__
+static int          nbbits (unsigned long ul)
+#else  /* __STDC__ */
+static int          nbbits (ul)
+unsigned long       ul;
+
+#endif /* __STDC__ */
+{
+   /*
+    * returns the width of a bit mask.
+    */
+   while (!(ul & 1))
+      ul >>= 1;
+   switch (ul)
+	 {
+	    case 0x00:
+	       return (0);
+	    case 0x01:
+	       return (1);
+	    case 0x03:
+	       return (2);
+	    case 0x07:
+	       return (3);
+	    case 0x0F:
+	       return (4);
+	    case 0x1F:
+	       return (5);
+	    case 0x3F:
+	       return (6);
+	    case 0x7F:
+	       return (7);
+	    case 0xFF:
+	       return (8);
+	    case 0x01FF:
+	       return (1 + 8);
+	    case 0x03FF:
+	       return (2 + 8);
+	    case 0x07FF:
+	       return (3 + 8);
+	    case 0x0FFF:
+	       return (4 + 8);
+	    case 0x1FFF:
+	       return (5 + 8);
+	    case 0x3FFF:
+	       return (6 + 8);
+	    case 0x7FFF:
+	       return (7 + 8);
+	    case 0xFFFF:
+	       return (8 + 8);
+	    default:
+	       fprintf (stderr, "nbbits : fuck off invalid mask\n");
+	       return (8);
+	 }
+}
+
+/*
+ * Make a shape  of depth 1 for display from image data.
+ */
+#ifdef __STDC__
+Pixmap              MakeMask (Display * dsp, char *pixelindex, int w, int h, int bg)
+#else  /* __STDC__ */
+Pixmap              MakeMask (dsp, pixelindex, w, h, bg)
+Display            *dsp;
+unsigned char      *pixelindex;
+int                 w, h;
+int                 bg;
+
+#endif /* __STDC__ */
+{
+   XImage             *newmask;
+   ThotGC              tmp_gc;
+   unsigned char      *iptr;
+   Pixmap              mask;
+   char                value;
+   char               *data;
+   int                 bpl, y;
+   unsigned char      *data_ptr, *max_data;
+   int                 diff, count, width, height;
+
+   width = w;
+   height = h;
+
+#ifndef NEW_WILLOWS
+   newmask = XCreateImage (GDp (0), theVisual, 1, ZPixmap, 0, 0,
+			   width, height, 8, 0);
+   bpl = newmask->bytes_per_line;
+   newmask->data = (char *) malloc (bpl * height);
+   data = newmask->data;
+   iptr = pixelindex;
+
+   diff = width & 7;
+
+   width >>= 3;
+
+   if (newmask->bitmap_bit_order == MSBFirst)
+      for (y = 0; y < height; y++)
+	{
+	   data_ptr = data;
+	   max_data = data_ptr + width;
+	   while (data_ptr < max_data)
+	     {
+		value = 0;
+		value = (value << 1) | (*(iptr++) != bg);
+		value = (value << 1) | (*(iptr++) != bg);
+		value = (value << 1) | (*(iptr++) != bg);
+		value = (value << 1) | (*(iptr++) != bg);
+		value = (value << 1) | (*(iptr++) != bg);
+		value = (value << 1) | (*(iptr++) != bg);
+		value = (value << 1) | (*(iptr++) != bg);
+		value = (value << 1) | (*(iptr++) != bg);
+		*(data_ptr++) = value;
+	     }
+	   if (diff)
+	     {
+		value = 0;
+		for (count = 0; count < diff; count++)
+		  {
+		     if (*(iptr++) != bg)
+			value |= (0x80 >> count);
+		  }
+		*(data_ptr++) = value;
+	     }
+	   data += bpl;
+	}
+   else
+     {
+	for (y = 0; y < height; y++)
+	  {
+	     data_ptr = data;
+	     max_data = data_ptr + width;
+	     while (data_ptr < max_data)
+	       {
+		  value = 0;
+		  iptr += 8;
+		  value = (value << 1) | (*(--iptr) != bg);
+		  value = (value << 1) | (*(--iptr) != bg);
+		  value = (value << 1) | (*(--iptr) != bg);
+		  value = (value << 1) | (*(--iptr) != bg);
+		  value = (value << 1) | (*(--iptr) != bg);
+		  value = (value << 1) | (*(--iptr) != bg);
+		  value = (value << 1) | (*(--iptr) != bg);
+		  value = (value << 1) | (*(--iptr) != bg);
+		  iptr += 8;
+		  *(data_ptr++) = value;
+	       }
+	     if (diff)
+	       {
+		  value = 0;
+		  for (count = 0; count < diff; count++)
+		    {
+		       if (*(iptr++) != bg)
+			  value |= (1 << count);
+		    }
+		  *(data_ptr++) = value;
+	       }
+	     data += bpl;
+	  }
+     }
+
+   mask = XCreatePixmap (GDp (0), GRootW (0), w, h, 1);
+
+   if ((mask == (Pixmap) None) || (newmask == NULL))
+     {
+	if (newmask != NULL)
+	  {
+	     XDestroyImage (newmask);
+	  }
+	if (mask != (Pixmap) None)
+	  {
+	     XFreePixmap (GDp (0), mask);
+	  }
+	mask = None;
+     }
+   else
+     {
+	tmp_gc = XCreateGC (GDp (0), mask, 0, NULL);
+	XPutImage (GDp (0), mask, tmp_gc, newmask, 0, 0, 0, 0, w, h);
+	XDestroyImage (newmask);
+	XFreeGC (GDp (0), tmp_gc);
+     }
+#endif /* NEW_WILLOWS */
+   return (mask);
+
+}
+/*
+ * Make an image of appropriate depth for display from image data.
+ */
+
+#ifdef __STDC__
+XImage             *MakeImage (Display * dsp, unsigned char *data, int width, int height, int depth,
+			       ThotColorStruct * colrs)
+#else  /* __STDC__ */
+XImage             *MakeImage (dsp, data, width, height, depth, colrs)
+Display            *dsp;
+unsigned char      *data;
+int                 width, height;
+int                 depth;
+ThotColorStruct    *colrs;
+
+#endif /* __STDC__ */
+{
+   int                 linepad, shiftnum;
+   int                 shiftstart, shiftstop, shiftinc;
+   int                 bytesperline;
+   int                 temp;
+   int                 w, h;
+   XImage             *newimage = NULL;
+   unsigned char      *bit_data, *bitp, *datap;
+   int                 bmap_order;
+   unsigned long       c;
+   int                 rshift, gshift, bshift;
+
+#ifndef NEW_WILLOWS
+   switch (depth)
+	 {
+	    case 6:
+	    case 8:
+	       bit_data = (unsigned char *) TtaGetMemory (width * height);
+	       bcopy (data, bit_data, (width * height));
+	       bytesperline = width;
+	       newimage = XCreateImage (dsp,
+					theVisual,
+					depth, ZPixmap, 0, (char *) bit_data,
+					width, height, 8, bytesperline);
+	       break;
+	    case 1:
+	    case 2:
+	    case 4:
+	       if (BitmapBitOrder (dsp) == LSBFirst)
+		 {
+		    shiftstart = 0;
+		    shiftstop = 8;
+		    shiftinc = depth;
+		 }
+	       else
+		 {
+		    shiftstart = 8 - depth;
+		    shiftstop = -depth;
+		    shiftinc = -depth;
+		 }
+	       linepad = 8 - (width % 8);
+	       bit_data = (unsigned char *) TtaGetMemory (((width + linepad) * height)
+							  + 1);
+	       bitp = bit_data;
+	       datap = data;
+	       *bitp = 0;
+	       shiftnum = shiftstart;
+	       for (h = 0; h < height; h++)
+		 {
+		    for (w = 0; w < width; w++)
+		      {
+			 temp = *datap++ << shiftnum;
+			 *bitp = *bitp | temp;
+			 shiftnum = shiftnum + shiftinc;
+			 if (shiftnum == shiftstop)
+			   {
+			      shiftnum = shiftstart;
+			      bitp++;
+			      *bitp = 0;
+			   }
+		      }
+		    for (w = 0; w < linepad; w++)
+		      {
+			 shiftnum = shiftnum + shiftinc;
+			 if (shiftnum == shiftstop)
+			   {
+			      shiftnum = shiftstart;
+			      bitp++;
+			      *bitp = 0;
+			   }
+		      }
+		 }
+	       bytesperline = (width + linepad) * depth / 8;
+	       newimage = XCreateImage (dsp,
+					theVisual,
+					depth, ZPixmap, 0, (char *) bit_data,
+				(width + linepad), height, 8, bytesperline);
+	       break;
+
+	    case 16:
+	       bit_data = (unsigned char *) TtaGetMemory (width * height * 2);
+	       bitp = bit_data;
+	       datap = data;
+	       rshift = 0;
+	       gshift = nbbits (theVisual->red_mask);
+	       bshift = gshift + nbbits (theVisual->green_mask);
+	       for (w = (width * height); w > 0; w--)
+		 {
+		    temp =
+		       ((colrs[(int) *datap].red & theVisual->red_mask) |
+			((colrs[(int) *datap].green >> gshift) & theVisual->green_mask) |
+			(((colrs[(int) *datap].blue >> bshift) & theVisual->blue_mask)));
+
+		    if (BitmapBitOrder (dsp) == MSBFirst)
+		      {
+			 *bitp++ = (temp >> 8) & 0xff;
+			 *bitp++ = temp & 0xff;
+		      }
+		    else
+		      {
+			 *bitp++ = temp & 0xff;
+			 *bitp++ = (temp >> 8) & 0xff;
+		      }
+
+		    datap++;
+		 }
+
+	       newimage = XCreateImage (dsp,
+					theVisual,
+					depth, ZPixmap, 0, (char *) bit_data,
+					width, height, 16, 0);
+	       break;
+	    case 24:
+	       bit_data = (unsigned char *) TtaGetMemory (width * height * 4);
+
+
+	       rshift = highbit (theVisual->red_mask) - 7;
+	       gshift = highbit (theVisual->green_mask) - 7;
+	       bshift = highbit (theVisual->blue_mask) - 7;
+	       bmap_order = BitmapBitOrder (dsp);
+
+	       bitp = bit_data;
+	       datap = data;
+	       for (w = (width * height); w > 0; w--)
+		 {
+		    c =
+		       (((colrs[(int) *datap].red >> 8) & 0xff) << rshift) |
+		       (((colrs[(int) *datap].green >> 8) & 0xff) << gshift) |
+		       (((colrs[(int) *datap].blue >> 8) & 0xff) << bshift);
+
+		    datap++;
+
+		    if (bmap_order == MSBFirst)
+		      {
+			 *bitp++ = (unsigned char) ((c >> 24) & 0xff);
+			 *bitp++ = (unsigned char) ((c >> 16) & 0xff);
+			 *bitp++ = (unsigned char) ((c >> 8) & 0xff);
+			 *bitp++ = (unsigned char) (c & 0xff);
+		      }
+		    else
+		      {
+			 *bitp++ = (unsigned char) (c & 0xff);
+			 *bitp++ = (unsigned char) ((c >> 8) & 0xff);
+			 *bitp++ = (unsigned char) ((c >> 16) & 0xff);
+			 *bitp++ = (unsigned char) ((c >> 24) & 0xff);
+		      }
+		 }
+
+	       newimage = XCreateImage (dsp,
+					theVisual,
+					depth, ZPixmap, 0, (char *) bit_data,
+					width, height, 32, 0);
+	       break;
+	    default:
+	       fprintf (stderr, "Don't know how to format image for display of depth %d\n", depth);
+	       return (None);
+	 }
+#endif /* NEW_WILLOWS */
+
+   return (newimage);
+}
+
+
+
+
+#ifdef __STDC__
+Pixmap              DataToPixmap (char *image_data, int width, int height, int num_colors,
+				  ThotColorStruct colrs[256])
+#else  /* __STDC__ */
+Pixmap              DataToPixmap (image_data, width, height, num_colors, colrs)
+char               *image_data;
+int                 width;
+int                 height;
+int                 num_colors;
+ThotColorStruct     colrs[256];
+
+#endif /* __STDC__ */
+{
+#ifdef NEW_WILLOWS
+   return (NULL);
+#else  /* NEW_WILLOWS */
+   int                 i, size;
+   int                 delta, not_right_col, not_last_row;
+   Pixmap              Img;
+   XImage             *tmpimage;
+   ThotColorStruct     tmpcolr;
+   int                *Mapping;
+   unsigned char      *tmpdata;
+   unsigned char      *ptr;
+   unsigned char      *ptr2;
+   Boolean             need_to_dither;
+   unsigned long       black_pixel = 0;
+   unsigned long       white_pixel = 0;
+
+   /* find the visual class. */
+   if (THOT_vInfo.depth == 1)
+     {
+	need_to_dither = True;
+	black_pixel = BlackPixel (GDp (0), ThotScreen (0));
+	white_pixel = WhitePixel (GDp (0), ThotScreen (0));
+     }
+   else
+     {
+	need_to_dither = False;
+     }
+
+   Mapping = (int *) TtaGetMemory (num_colors * sizeof (int));
+
+#ifndef NEW_WILLOWS
+   for (i = 0; i < num_colors; i++)
+     {
+	tmpcolr.red = colrs[i].red;
+	tmpcolr.green = colrs[i].green;
+	tmpcolr.blue = colrs[i].blue;
+	tmpcolr.flags = DoRed | DoGreen | DoBlue;
+	if ((THOT_vInfo.class == THOT_TrueColor) ||
+	    (THOT_vInfo.class == THOT_DirectColor))
+	  {
+	     Mapping[i] = i;
+	  }
+	else if (need_to_dither == True)
+	  {
+	     Mapping[i] = ((tmpcolr.red >> 5) * 11 +
+			   (tmpcolr.green >> 5) * 16 +
+			   (tmpcolr.blue >> 5) * 5) / (65504 / 64);
+	  }
+	else
+	  {
+	     FindOutColor (GDp (0),
+			   cmap (0),
+			   &tmpcolr);
+	     Mapping[i] = tmpcolr.pixel;
+	  }
+     }
+#endif /* NEW_WILLOWS */
+
+   /*
+    * Special case:  For 2 color non-black&white images, instead
+    * of 2 dither patterns, we will always drop them to be
+    * black on white.
+    */
+   if ((need_to_dither == True) && (num_colors == 2))
+     {
+	if (Mapping[0] < Mapping[1])
+	  {
+	     Mapping[0] = 0;
+	     Mapping[1] = 64;
+	  }
+	else
+	  {
+	     Mapping[0] = 64;
+	     Mapping[1] = 0;
+	  }
+     }
+
+   size = width * height;
+   if (size == 0)
+     {
+	tmpdata = NULL;
+     }
+   else
+     {
+	tmpdata = (unsigned char *) TtaGetMemory (size);
+     }
+   if (tmpdata == NULL)
+     {
+	tmpimage = None;
+	Img = (Pixmap) None;
+     }
+   else
+     {
+	ptr = image_data;
+	ptr2 = tmpdata;
+
+	if (need_to_dither == True)
+	  {
+	     int                 cx, cy;
+
+	     for (ptr2 = tmpdata, ptr = image_data;
+		  ptr2 < tmpdata + (size - 1); ptr2++, ptr++)
+	       {
+		  *ptr2 = Mapping[(int) *ptr];
+	       }
+
+	     ptr2 = tmpdata;
+	     for (cy = 0; cy < height; cy++)
+	       {
+		  for (cx = 0; cx < width; cx++)
+		    {
+		       /*
+		        * Assume high numbers are
+		        * really negative.
+		        */
+		       if (*ptr2 > 128)
+			 {
+			    *ptr2 = 0;
+			 }
+		       if (*ptr2 > 64)
+			 {
+			    *ptr2 = 64;
+			 }
+
+		       /*
+		        * Traditional Floyd-Steinberg
+		        */
+		       if (*ptr2 < 32)
+			 {
+			    delta = *ptr2;
+			    *ptr2 = black_pixel;
+			 }
+		       else
+			 {
+			    delta = *ptr2 - 64;
+			    *ptr2 = white_pixel;
+			 }
+		       if ((not_right_col = (cx < (width - 1))))
+			 {
+			    *(ptr2 + 1) += delta * 7 >> 4;
+			 }
+
+		       if ((not_last_row = (cy < (height - 1))))
+			 {
+			    (*(ptr2 + width)) += delta * 5 >> 4;
+			 }
+
+		       if (not_right_col && not_last_row)
+			 {
+			    (*(ptr2 + width + 1)) += delta >> 4;
+			 }
+
+		       if (cx && not_last_row)
+			 {
+			    (*(ptr2 + width - 1)) += delta * 3 >> 4;
+			 }
+		       ptr2++;
+		    }
+	       }
+	  }			/* end if (need_to_dither==True) */
+	else
+	  {
+
+	     for (i = 0; i < size; i++)
+	       {
+		  *ptr2++ = (unsigned char) Mapping[(int) *ptr];
+		  ptr++;
+	       }
+	  }
+	tmpimage = MakeImage (GDp (0), tmpdata,
+			      width, height,
+			      Gdepth (0), colrs);
+	TtaFreeMemory (tmpdata);
+
+	Img = XCreatePixmap (GDp (0),
+			     GRootW (0),
+			     width, height,
+			     Gdepth (0));
+     }
+
+   if ((tmpimage == None) || (Img == (Pixmap) None))
+     {
+	if (tmpimage != None)
+	  {
+	     XDestroyImage (tmpimage);
+	  }
+	if (Img != (Pixmap) None)
+	  {
+	     XFreePixmap (GDp (0), Img);
+	  }
+	Img = None;
+     }
+   else
+     {
+	XPutImage (GDp (0), Img, graphicGC (0), tmpimage, 0, 0,
+		   0, 0, width, height);
+	XDestroyImage (tmpimage);
+     }
+
+   TtaFreeMemory ((char *) Mapping);
+
+   return (Img);
+#endif /* NEW_WILLOWS */
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    ReadGifToData  Ouverture+lecture du fichier                     | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+unsigned char      *ReadGifToData (char *datafile, int *w, int *h, int *ncolors, int *cpp, ThotColorStruct colrs[256])
+
+#else  /* __STDC__ */
+unsigned char      *ReadGifToData (datafile, w, h, ncolors, cpp, colrs)
+char               *datafile;
+int                *w;
+int                *h;
+int                *ncolors;
+int                *cpp;
+ThotColorStruct     colrs[256];
+
+#endif /* __STDC__ */
+{
+   unsigned char      *bit_data;
+   FILE               *fp;
+
+
+   fp = fopen (datafile, "r");
+
+   if (fp != NULL)
+     {
+	bit_data = ReadGIF (fp, w, h, ncolors, cpp, colrs);
+	if (bit_data != NULL)
+	  {
+	     if (fp != stdin)
+		fclose (fp);
+	     return (bit_data);
+	  }
+	if (fp != stdin)
+	   fclose (fp);
+     }
+   return ((unsigned char *) NULL);
+}
+
+#ifdef IV
+/* ---------------------------------------------------------------------- */
+/* |    NormalizePix  pixmap.                                           | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         GifNormalizePix (Pixmap pixmap, int w, int h)
+
+#else  /* __STDC__ */
+static void         GifNormalizePix (pixmap, w, h)
+Pixmap              pixmap;
+int                 w;
+int                 h;
+
+#endif /* __STDC__ */
+{
+}
+#endif
+
+/* ---------------------------------------------------------------------- */
+/* |    GifOpenImageDrvr ouvre le driver.                               | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+int                 GifOpenImageDrvr (ImagingModel model)
+
+#else  /* __STDC__ */
+int                 GifOpenImageDrvr (model)
+ImagingModel        model;
+
+#endif /* __STDC__ */
+{
+}				/* Gif OpenImageDrvr */
+
+/* ---------------------------------------------------------------------- */
+/* |    GifCloseImageDrvr ferme le driver.                              | */
+/* ---------------------------------------------------------------------- */
+void                GifCloseImageDrvr ()
+{
+}				/*GifCloseImageDrvr */
+
+/* ---------------------------------------------------------------------- */
+/* |    GifInitImage initialise le driver pour une image.               | */
+/* ---------------------------------------------------------------------- */
+void                GifInitImage ()
+{
+}				/*GifInitImage */
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Messages d'erreur : On recupere les erreurs de Xpm et on envoi  | */
+/* |            vers le frame Thot Dialogue                             | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                GifPrintErrorMsg (int ErrorNumber)
+
+#else  /* __STDC__ */
+void                GifPrintErrorMsg (ErrorNumber)
+int                 ErrorNumber;
+
+#endif /* __STDC__ */
+
+{
+   switch (ErrorNumber)
+	 {
+
+	    case XpmColorError:
+	       {
+		  TtaDisplaySimpleMessage (LIB, INFO, XPM_COLOR_ERROR);
+		  break;
+	       }
+	    case XpmOpenFailed:
+	       {
+		  TtaDisplaySimpleMessage (LIB, INFO, XPM_OPEN_FAILED);
+		  break;
+	       }
+	    case XpmFileInvalid:
+	       {
+		  TtaDisplaySimpleMessage (LIB, INFO, XPM_FILE_INVALID);
+		  break;
+	       }
+	    case XpmNoMemory:
+	       {
+		  TtaDisplaySimpleMessage (LIB, INFO, XPM_NO_MEMORY);
+		  break;
+	       }
+	    case XpmColorFailed:
+	       {
+		  TtaDisplaySimpleMessage (LIB, INFO, XPM_COLOR_FAILED);
+		  break;
+	       }
+
+	 }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    GifCreateImage lit et retourne le Gif lu dans le fichier        | */
+/* |            fn. Met a` jour xif, yif, wif, hif.                     | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+ThotBitmap          GifCreateImage (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap * mask1)
+
+#else  /* __STDC__ */
+ThotBitmap          GifCreateImage (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
+char               *fn;
+PictureScaling           pres;
+int                *xif;
+int                *yif;
+int                *wif;
+int                *hif;
+unsigned long       BackGroundPixel;
+ThotBitmap         *mask1;
+
+#endif /* __STDC__ */
+
+{
+   int                 w, h;
+   Pixmap              pixmap;
+   int                 i;
+   ThotColorStruct     colrs[256];
+   unsigned char      *buffer;
+   int                 ncolors, cpp;
+
+   Gif89.transparent = -1;
+   Gif89.delayTime = -1;
+   Gif89.inputFlag = -1;
+   Gif89.disposal = 0;
+
+   buffer = ReadGifToData (fn, &w, &h, &ncolors, &cpp, colrs);
+
+   if (buffer == NULL)
+      return ThotBitmapNone;
+
+   /* transparence dans le gif !!! chouette Non !!! */
+   if (Gif89.transparent != -1)
+     {
+	if (Gif89.transparent < 0)
+	  {
+	     i = 256 + Gif89.transparent;
+	  }
+	else
+	  {
+	     i = Gif89.transparent;
+	  }
+
+#ifndef NEW_WILLOWS
+	*mask1 = MakeMask (GDp (0), buffer, w, h, i);
+#endif /* NEW_WILLOWS */
+     }
+
+   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs);
+
+   free (buffer);
+
+   if (pixmap == None)
+     {
+	return ThotBitmapNone;	/* cas d'echec de lecture prevoir les mess d'erreur (5) */
+     }
+   else
+     {
+	*wif = w;
+	*hif = h;
+
+	*xif = 0;
+	*yif = 0;
+
+	return (ThotBitmap) pixmap;
+
+     }
+}				/*GifCreateImage */
+
+
+/* ---------------------------------------------------------------------- */
+/* |    GifPrintImage convertit un Pixmap en PostScript.                | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                GifPrintImage (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int xcf, int ycf, int wcf, int hcf, int fd, unsigned long BackGroundPixel)
+
+#else  /* __STDC__ */
+void                GifPrintImage (fn, pres, xif, yif, wif, hif, xcf, ycf, wcf, hcf, fd, BackGroundPixel)
+char               *fn;
+PictureScaling           pres;
+int                 xif;
+int                 yif;
+int                 wif;
+int                 hif;
+int                 xcf;
+int                 ycf;
+int                 wcf;
+int                 hcf;
+int                 fd;
+unsigned long       BackGroundPixel;
+
+#endif /* __STDC__ */
+
+{
+   int                 delta;
+   int                 xtmp, ytmp;
+   float               Scx, Scy;
+   unsigned char      *pt;
+   int                 x, y, w, h;
+   int                 wim;
+   unsigned int        NbCharPerLine;
+
+   ThotColorStruct     colrs[256];
+   unsigned char      *buffer;
+   int                 ncolors, cpp, i;
+
+   /* lecture de la pixmap sous forme de donnees et une table de couleurs */
+   /* cela nous evite d'alouer les couleurs sur l'ecran mais de les transformer */
+   /* directement en RGB pour la generation ps */
+   Gif89.transparent = -1;
+   Gif89.delayTime = -1;
+   Gif89.inputFlag = -1;
+   Gif89.disposal = 0;
+
+   buffer = ReadGifToData (fn, &w, &h, &ncolors, &cpp, colrs);
+
+   /* transparence dans le gif !!! chouette Non !!! */
+   if (Gif89.transparent != -1)
+     {
+	if (Gif89.transparent < 0)
+	   i = 256 + Gif89.transparent;
+	else
+	   i = Gif89.transparent;
+#ifndef NEW_WILLOWS
+	colrs[i].red = 65535;
+	colrs[i].green = 65535;
+	colrs[i].blue = 65535;
+#endif /* NEW_WILLOWS */
+     }
+
+   if (!buffer)
+     {
+	/* PixmapPrintErrorMsg (XpmFileInvalid); */
+	return;
+     }
+
+   wcf = w;
+   hcf = h;
+
+   xtmp = 0;
+   ytmp = 0;
+
+   switch (pres)
+	 {
+	    case RealSize:
+
+	       /* on centre l'image en x */
+	       /* quelle place a-t-on de chaque cote ? */
+	       delta = (wif - wcf) / 2;
+	       if (delta > 0)
+		 {
+		    /* on a de la place entre l'if et le cf */
+		    /* on a pas besoin de retailler dans le pixmap */
+		    /* on va afficher le pixmap dans une boite plus petite */
+		    /* decale'e de delta vers le centre */
+		    xif += delta;
+		    /* la largeur de la boite est celle du cf */
+		    wif = wcf;
+		 }
+	       else
+		 {
+		    /* on a pas de place entre l'if et le cf */
+		    /* on va retailler dans le pixmap pour que ca rentre */
+		    /* on sauve delta pour savoir ou couper */
+		    xtmp = -delta;
+		    /* on met a jour wcf pour etre coherent */
+		    wcf = wif;
+		 }
+	       /* on centre l'image en y */
+	       delta = (hif - hcf) / 2;
+	       if (delta > 0)
+		 {
+		    /* on a de la place entre l'if et le cf */
+		    /* on a pas besoin de retailler dans le pixmap */
+		    /* on va afficher le pixmap dans une boite plus petite */
+		    /* decale'e de delta vers le centre */
+		    yif += delta;
+		    /* la hauteur de la boite est celle du cf */
+		    hif = hcf;
+		 }
+	       else
+		 {
+		    /* on a pas de place entre l'if et le cf */
+		    /* on va retailler dans le pixmap pour que ca rentre */
+		    /* on sauve delta pour savoir ou couper */
+
+		    ytmp = -delta;
+		    /* on met a jour hcf pour etre coherent */
+		    hcf = hif;
+		 }
+	       break;
+	    case ReScale:
+	       if ((float) hcf / (float) wcf <= (float) hif / (float) wif)
+		 {
+		    Scx = (float) wif / (float) wcf;
+		    yif += (hif - (hcf * Scx)) / 2;
+		    hif = hcf * Scx;
+		 }
+	       else
+		 {
+		    Scy = (float) hif / (float) hcf;
+		    xif += (wif - (wcf * Scy)) / 2;
+		    wif = wcf * Scy;
+		 }
+	       break;
+	    case FillFrame:
+	       /* DumpImage fait du plein cadre avec wif et hif */
+	       break;
+	    default:
+	       break;
+	 }
+
+   /* NL plus besoin de faire des transformations */
+   /* on transforme le pixmap en Ximage */
+   /* si xtmp ou ytmp sont non nuls, ca veut dire qu'on retaille */
+   /* dans le pixmap (cas RealSize) */
+   wim = w;
+   /*m = h; */
+
+   /* generation du poscript , header Dumpimage2 + dimensions + deplacement dans la page */
+   /* chaque pt = RRGGBB en hexa */
+   fprintf ((FILE *) fd, "gsave %d -%d translate\n", PixelEnPt (xif, 1), PixelEnPt (yif + hif, 0));
+   fprintf ((FILE *) fd, "%d %d %d %d DumpImage2\n", wcf, hcf, PixelEnPt (wif, 1), PixelEnPt (hif, 0));
+   fprintf ((FILE *) fd, "\n");
+   NbCharPerLine = wim;
+
+   for (y = 0; y < hif; y++)
+     {
+	pt = (unsigned char *) (buffer + ((ytmp + y) * NbCharPerLine) + xtmp);
+
+	for (x = 0; x < wif; x++)
+	  {
+
+	     /* generation des composantes RGB de l'image dans le poscript */
+
+#ifndef NEW_WILLOWS
+	     fprintf ((FILE *) fd, "%02x%02x%02x",
+		      (colrs[*pt].red) >> 8,
+		      (colrs[*pt].green) >> 8,
+		      (colrs[*pt].blue) >> 8);
+#endif /* NEW_WILLOWS */
+
+	     pt++;
+	  }
+	fprintf ((FILE *) fd, "\n");
+     }
+
+   fprintf ((FILE *) fd, "\n");
+   fprintf ((FILE *) fd, "grestore\n");
+   fprintf ((FILE *) fd, "\n");
+   free (buffer);
+
+}				/*GifPrintImage */
+
+/* ---------------------------------------------------------------------- */
+/* |    GifIsFormat teste si un fichier est au format image Gif .       | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+boolean             GifIsFormat (char *datafile)
+
+#else  /* __STDC__ */
+boolean             GifIsFormat (datafile)
+char               *datafile;
+
+#endif /* __STDC__ */
+{
+
+
+   unsigned char       buf[16];
+   FILE               *fp;
+   char                version[4];
+
+
+   verbose = FALSE;
+   showComment = FALSE;
+
+
+   fp = fopen (datafile, "r");
+
+   if (fp == NULL)
+     {
+	if (fp != stdin)
+	   fclose (fp);
+	return False;
+     }
+
+   if (!ReadOK (fp, buf, 6))
+     {
+#if 0
+	fprintf (stderr, "error reading magic number\n");
+#endif
+	if (fp != stdin)
+	   fclose (fp);
+	return False;
+     }
+
+   if (strncmp ((char *) buf, "GIF", 3) != 0)
+     {
+#if 0
+	if (verbose)
+	   fprintf (stderr, "not a GIF file\n");
+#endif
+	if (fp != stdin)
+	   fclose (fp);
+	return (False);
+     }
+
+   strncpy (version, (char *) buf + 3, 3);
+   version[3] = '\0';
+
+   if ((strcmp (version, "87a") != 0) && (strcmp (version, "89a") != 0))
+     {
+#if 0
+	fprintf (stderr, "bad version number, not '87a' or '89a'\n");
+#endif
+	if (fp != stdin)
+	   fclose (fp);
+	return (False);
+     }
+   else
+     {
+	if (fp != stdin)
+	   fclose (fp);
+	return (True);
+     }
+}				/*GifIsFormat */

@@ -1,0 +1,38 @@
+1  Programme TCL en cours ...
+2  Action termin\351e
+3  Erreur TCL: %d
+4  Erreur:
+5  Pas d\'interpr\351teur TCL
+6  Programme TCL absent.
+7  Chargement de l\'extension MULTIMEDIA
+8  Nom de fichier absent
+9  R\351sultat action TCL: %s
+10  Pr\351paration de l\'enregistrement ...
+11  Fichier inconnu ou inaccessible
+12  Cr\351ation de fichier impossible
+13  Fichier existant. Cr\351ation impossible.
+14  Pas de document s\351lectionn\351
+
+15  Fichier contenant le script TCL
+16  Nom du fichier son
+17  Nom du fichier photo
+18  Nom du fichier video
+19  Nom du script TCL
+20  N\'oubliez pas de sauver le son dans un fichier et de quitter audiotool !
+21  N\'oubliez pas de sauver la photo dans un fichier et de quitter phototool !
+22  N\'oubliez pas de sauver la video dans un fichier et de quitter videotool !
+23  Cr\351ez un Attribut Vers_action pour enregistrer ce script !
+24  Enregistrer le son
+25  Enregistrer une photo
+26  Enregistrer une video
+27  Script TCL
+28  Audio
+29  Photo
+30  Video
+31  Action
+32  Confirmer l\'action en cours
+
+34  Lancer
+35  Confirmer
+36  Passer
+

@@ -1,0 +1,47 @@
+0 s\351lectionner le type destination\n
+1 Restructuration dynamique\n
+2 pas de document destination
+3 rien a copier
+4 rien a retyper
+5 impossible de coller cet \351l\351ment ici
+6 impossible de remettre l'ancienne source en place
+7 la restructuration a \351chou\351
+8 pas de parent pour la source
+9 pas de frere pour la source
+10 erreur suppression marque de page
+11 on ne trouve pas le type dans l'arbre des types
+12 retructuration impossible : \351lement non vide
+13 pas d'\351l\351ment destination s\351lectionn\351
+14 impossible de trouver le type de l'ancetre
+15 impossible de trouver le frere du type
+16 impossible de supprimer la source
+17 impossible de creer la destination
+18 impossible de trouver le type des \351l\351ments a coupler
+19 impossible de trouver le type de la source
+20 impossible de trouver le type de la destination
+21 facteur trouve
+22 equivalence trouv\351e
+23 sous-type non test\351
+24 massif trouve
+25 sous_sch\351ma trouv\351
+26 les elements du buffer n'ont pas tous le meme type
+27 erreur dans la cr\351ation d'un \351l\351ment
+28 erreur lors de la copie d'un attribut
+29 erreur lors de la copie des droits d'acces
+30 erreur lors de la copie de holophraste
+31 erreur lors de la copie d'un contenu texte
+32 erreur lors de la copie d'un graphique ou d'un symbole
+33 erreur lors de la recherche de reference dans les documents fermes
+34 erreur ouverture document contenant des references
+35 erreur de recherche de reference sur document ouvert
+36 erreur recherche du parent
+37 erreur recherche du schema
+38 erreur creation d'une nouvelle nature
+39 erreur dans la creation d'un nouvel element
+40 erreur lors de la creation d'un ancetre
+41 erreur lors de la recherche d'un element reference
+42 erreur lors de la copie d'un sous-arbre
+43 erreur lors de la recherche du nouveau type
+44 erreur d'indice lors de decoupler
+45 rien a restructurer
+46 impossible de creer le descendant

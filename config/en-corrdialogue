@@ -1,0 +1,22 @@
+0 Number of proposals
+1 Cheking where
+2 Skip and next
+3 Replace (+ dic)
+4 Replace and next
+5 Other language
+6 Skip (+ dic)
+7 words containing:
+8 Spelling checking ...
+9 roman numerals
+10 Ignore
+11 words that are all caps
+12 words with digits
+13 Parameter file error
+14 No keyboard file
+15 Cannot save the document dictionary
+16 Incorrect word "%s" refused in this dictionary
+17 Word "%s" added in the document dictionary
+18 End of spell checking
+19 Spelling checking aborted
+20 Please, select a document
+21 The document dictionary "%s" has been saved

@@ -1,0 +1,181 @@
+GRAMMAR OF FILE TYP.LAN
+
+
+ rule
+number
+
+    1	SchemaTypo =	'TYPOGRAPHY' IdentType ';'
+		      [ 'ALINEA' SuiteType]
+		      [ 'FUNCTION' SuiteFunct ]
+		      [ 'COMPOSITION' SuiteMod ]
+		      [ 'ELEMENT' SuiteTypo ]
+		      [ 'ATTR' SuiteTypoAttr ]
+			'END' . 
+	
+    3	SuiteType =	IdentType < ',' IdentType > ';' .
+    4	SuiteFunct =	Funct < Funct > .
+    8	Funct =		TypeFunct ':' IdentFunct { '=' DefFunct } ';' .
+	{ DefFunct =	'BEGIN' Cmd_List 'END' . }
+    9	TypeFunct =	'Capitalization' / 'Punctuation' / 'InsertPair' /
+			'Distance' / 'Exponent' / 'Abbreviation' /
+			'Attribute' / 'Word' / 'SpaceTable' .
+   10	IdentFunct =	NAME .
+	
+   11	RegleTypo =	[ 'IF' '(' SuiteCondition ')' ] SuiteParam ';' .
+   13	SuiteParam =	'BEGIN' ParamTypo < ParamTypo > 'END' ';' / ParamTypo .
+   14	ParamTypo =	TypeFunct ':' IdFunct / IdentMod .
+   15	IdFunct =	IdentFunct / 'FunctNil' .
+	
+   12	SuiteCondition = Condition < 'AND' Condition > .
+   17	Condition =	[ 'NOT' ] ConditionElem .
+   18	ConditionElem =	'First' / 
+			'Last' / 
+			 RelType OpType IdentType /
+			'IN' IdentType /
+			'LANGUAGE' '=' Language /
+			'IS' LexicalUnit .
+   20	OpType =	'IN' / '=' .
+   19	RelType =	'Next' / 'Previous' .
+   22	LexicalUnit =	NAME .
+   21	Language =	NAME .
+	
+    5	SuiteMod =	Mod < Mod > .
+   23	Mod =		IdentMod '=' SuiteRegles . 
+   16	IdentMod =	NAME .
+   24	SuiteRegles =	'BEGIN' RegleTypo < RegleTypo > 'END' ';' / RegleTypo .
+	
+    6	SuiteTypo =	Typo < Typo > .
+   25	Typo =		IdentType ':' SuiteRegles .
+	
+    7	SuiteTypoAttr =	TransAttr < TransAttr > .
+   26	TransAttr =	AttrIdent [ '(' IdentType ')' ] [ AttrRelat ] ':'
+			SuiteRegles .
+   27	AttrIdent =	NAME .
+   28	AttrRelat =	'=' AttrValue / '>' [ '-' ] MinVal / '<' [ '-' ] MaxVal /
+			'IN' '[' ['-'] MinInterval '.' '.' ['-'] MaxInterval ']' .
+   29	AttrValue =	[ '-' ] ValEqual / TextEqual / AttrValIdent .
+   30	MinVal =	NUMBER .
+   31	MaxVal =	NUMBER .
+   32	MinInterval =	NUMBER .
+   33	MaxInterval =	NUMBER .
+   34	ValEqual =	NUMBER .
+   35	TextEqual =	STRING .
+   36	AttrValIdent =	NAME .
+    2	IdentType =	NAME .
+	
+	END
+	
+
+
+*** SHORT KEY-WORDS ***
+
+code  character  numbers of rules using the key-word
+
+1001      ;       1   3   8  11  13  24
+1002      ,       3
+1003      :       8  14  25  26
+1004      (      11  26
+1005      )      11  26
+1006      =      18  20  23  28
+1007      >      28
+1008      -      28  28  28  28  29
+1009      <      28
+1010      [      28
+1011      .      28  28
+1012      ]      28
+
+
+
+*** LONG KEY-WORDS ***
+
+code  key-word      numbers of rules using the key-word
+
+1101  TYPOGRAPHY       1
+1102  ALINEA           1
+1103  FUNCTION         1
+1104  COMPOSITION      1
+1105  ELEMENT          1
+1106  ATTR             1
+1107  END              1  13  24
+1108  Capitalization   9
+1109  Punctuation      9
+1110  InsertPair       9
+1111  Distance         9
+1112  Exponent         9
+1113  Abbreviation     9
+1114  Attribute        9
+1115  Word             9
+1116  SpaceTable       9
+1117  IF              11
+1118  BEGIN           13  24
+1119  FunctNil        15
+1120  AND             12
+1121  NOT             17
+1122  First           18
+1123  Last            18
+1124  IN              18  20  28
+1125  LANGUAGE        18
+1126  IS              18
+1127  Next            19
+1128  Previous        19
+
+
+
+*** TABLE OF RULES AND REFERENCES ***
+
+The code is the code of the symbol and the code of the rule
+where that symbol appears in the left part. For each symbole,
+the rule numbers indicate the rules that use that symbol in
+right part.
+
+ code  symbol        rule numbers
+
+    1  SchemaTypo    
+    2  IdentType        1   3   3  18  18  25  26
+    3  SuiteType        1
+    4  SuiteFunct       1
+    5  SuiteMod         1
+    6  SuiteTypo        1
+    7  SuiteTypoAttr    1
+    8  Funct            4   4
+    9  TypeFunct        8  14
+   10  IdentFunct       8  15
+   11  RegleTypo       24  24  24
+   12  SuiteCondition  11
+   13  SuiteParam      11
+   14  ParamTypo       13  13  13
+   15  IdFunct         14
+   16  IdentMod        14  23
+   17  Condition       12  12
+   18  ConditionElem   17
+   19  RelType         18
+   20  OpType          18
+   21  Language        18
+   22  LexicalUnit     18
+   23  Mod              5   5
+   24  SuiteRegles     23  25  26
+   25  Typo             6   6
+   26  TransAttr        7   7
+   27  AttrIdent       26
+   28  AttrRelat       26
+   29  AttrValue       28
+   30  MinVal          28
+   31  MaxVal          28
+   32  MinInterval     28
+   33  MaxInterval     28
+   34  ValEqual        29
+   35  TextEqual       29
+   36  AttrValIdent    29
+
+
+
+*** REFERENCES TO BASIC TYPES ***
+
+Numbers of the rules using NAME
+  10  22  21  16  27  36   2
+
+Numbers of the rules using NUMBER
+  30  31  32  33  34
+
+Numbers of the rules using STRING
+  35

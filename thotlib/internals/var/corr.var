@@ -1,0 +1,20 @@
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+
+/* corr.var
+ * variables exportees par le module corrmenu.c
+*/
+EXPORT  int	CORR; /* identification des messages du correcteur  */
+EXPORT  int	NC; /* Nbre max de corrections */
+EXPORT  char	tab_c[NbCorrMax+1][MAX_WORD_LEN];  /* Tab. corrections */
+EXPORT  char	tab_e[MAX_WORD_LEN];               /* Tab. des mots errones */
+EXPORT PtrElement CorrElTrouve;	     /* Element a corriger */
+EXPORT int	IdxCarTrouve; /* Index dans l'element trouve */
+EXPORT Language CorrLangue;     /* Langue de la correction */
+EXPORT PtrSearchContext CorrSearch;      /* Contexte du correcteur */
+EXPORT PtrDico   dicofichier;     /* dictionnaire du document en cours */
+
+EXPORT char      RefuseCar[NbRefuseCarMax];
+EXPORT boolean   CorrCap;  /* ignorer les mots contenant une capitale */
+EXPORT boolean   CorrArab;  /* ignorer les mots contenant ch. arabe */
+EXPORT boolean   CorrRomain;  /* ignorer les mots contenant ch. romain */
+EXPORT boolean   CorrSpec;  /* ignorer les mots contenant car. speciaux */

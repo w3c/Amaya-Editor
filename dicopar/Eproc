@@ -1,0 +1,539 @@
+# Eproc
+
+#---------------------------------------------------------
+#
+#        oneachelem <type> do { <cmd> <args> }
+#
+#  Pour tous les elements de ce <type> DANS la selection
+#  faire la commande <cmd> <args>
+#---------------------------------------------------------
+proc oneachelem { type do cmd { args ""} } { 
+    global domain visible curelem
+    # sauver la selection initiale
+    savesel; set domain 1; initdomain;
+    # lancer la recherche dans ce domaine 	
+    set i 0
+    set rep [next $type]
+    while { $rep == -1  && [insavedsel] == -1} {
+	incr i 1
+	uplevel "$cmd $args"
+        # rechercher le suivant apres cet element
+        set domain 2
+	set rep [next $type]
+    }
+    # retablir la selection initiale
+    restoresel; select    
+    return $i
+} 
+
+
+#---------------------------------------------------------
+#
+#        oneachword <word> do { <cmd> <args> }
+#
+#  Pour tous les mots <word> DANS la selection
+#  faire la commande <cmd> <args>
+#---------------------------------------------------------
+proc oneachword { word do cmd { args ""} } { 
+    global domain visible curelem
+    # sauver la selection initiale
+    savesel; set domain 1; initdomain;
+    # lancer la recherche dans ce domaine 	
+    set i 0
+    set rep [nextword $word]
+    while { $rep == -1  && [insavedsel] == -1} {
+	incr i 1
+	uplevel "$cmd $args"
+        # rechercher le suivant apres ce mot
+        set domain 2
+	set rep [nextword $word]
+    }
+    # retablir la selection initiale
+    restoresel; select    
+    return $i
+}
+
+
+#---------------------------------------------------------
+#
+#        oneachgroup {<word> ...<word>} do { <cmd> <args> }
+#
+#  Pour tous les groupes de mots DANS la selection
+#  faire la commande <cmd> <args>
+#---------------------------------------------------------
+proc oneachgroup { group do cmd { args ""} } { 
+    global domain visible curelem
+    # sauver la selection initiale
+    savesel; set domain 1; initdomain;
+    # lancer la recherche dans ce domaine 	
+    set i 0
+    set rep [nextgroup $group]
+    while { $rep == -1  && [insavedsel] == -1} {
+	incr i 1
+	uplevel "$cmd $args"
+        # rechercher le suivant apres ce groupe
+        set domain 2
+	set rep [nextgroup $group]
+    }
+    # retablir la selection initiale
+    restoresel; select    
+    return $i
+} 
+
+
+#---------------------------------------------------------
+#
+#        oneachsentence  do { <cmd> <args> }
+#
+#  Pour toutes les phrases DANS la selection (les elements ???)
+#  faire la commande <cmd> <args>
+#---------------------------------------------------------
+proc oneachsentence { do cmd { args ""} } { 
+    global domain visible curelem
+    # sauver la selection initiale
+    savesel; set domain 1; initdomain;
+    # lancer la recherche dans ce domaine 	
+    set i 0
+    while { [nextsentence] == -1  && [insavedsel] == -1} {
+	incr i 1
+	uplevel "$cmd $args"
+        # rechercher la phrase suivante
+    }
+    # retablir la selection initiale
+    restoresel; select    
+    return $i
+} 
+
+
+##########
+# insertion apres la selection courante
+#
+proc add x {
+  ins "after" $x}
+
+##########
+# insertion avant/apres les occurences du mot z
+#
+proc ins {x y z} {
+	global visible advance control
+	if { $y == 0} {set y before} 
+	if { ($y != "before") && ($y != "after")} then { 
+	    error "syntax error in $y" }
+	savesel; initdomain
+	set advance 1
+	set savecontrol $control; 
+	set savevisible $visible; set visible 0
+	set mot [nextword]
+	set i 0
+	while { $mot != -2 } {
+    	if { $mot == $z } then { 
+	    	if { ($control == 0) || ([accord "Insert here"] == "OK") } then {
+			#insertion
+		    	addtext $y $x
+		    	incr i 1
+		    	if { $y == "before" } then { nextword }
+			}
+              	} 
+ 		set mot [nextword]
+		}
+	set control $savecontrol;
+     	restoresel; set visible $savevisible; select
+     	return $i
+    	}
+
+##########
+# Compter ponctuations dans la selection
+#
+proc nnpunct {} {
+global domain
+    set savedomain $domain; set domain 1
+    set i [nchar , . ? ! : \;]
+    set domain $savedomain
+    return $i
+} 
+
+##########
+# Compter les lettres accentuees dans la selection
+#
+proc nnacute {}  {
+global domain
+        set savedomain $domain; set domain 1
+	set i [nchar à â æ è é ê ë î ï ô ÷ ù û ä]
+        set domain $savedomain
+    	return $i
+} 
+
+
+##########
+# Compter les consonnes dans la selection
+#
+proc nncons  {} {
+global domain
+        set savedomain $domain; set domain 1
+	set i [nchar b c ç d f g h j k l m n p q r s t v w x z]
+        set domain $savedomain
+    	return $i
+} 
+
+##########
+# Compter les voyelles dans la selection 
+# (y compris oe, ae et accentues)
+#
+proc nnvowe  {} {
+global domain
+        set savedomain $domain; set domain 1
+	set i [nchar a e i o u y à â æ è é ê ë î ï ô ÷ ù û ä]
+        set domain $savedomain
+    	return $i
+} 
+
+##########
+# Compter les chiffres dans la selection
+#
+proc nnnum  {} {
+global domain
+        set savedomain $domain; set domain 1
+	set i [nchar 1 2 3 4 5 6 7 8 9 0]
+        set domain $savedomain
+    	return $i
+} 
+##########
+# Compter les espaces dans la selection
+#  BLANC  (\40) BLANC_DUR (\240) FINE (\201) DEMI_CADRATIN (\202)
+#
+proc nnspace  {} {
+global domain
+        set savedomain $domain; set domain 1
+ 	set i [nchar { } { } {} {‚}]
+        set domain $savedomain
+    	return $i
+} 
+
+##########
+# Compter les caracteres speciaux
+#
+proc nnspec  {} {
+global domain
+	set savedomain $domain; set domain 1
+	set i [nchar , . > < ? ! : \; / \{ \} \[ \] \( \) \| \" \' \\ \# \$ \% \^ \& \* \@ ]
+        set domain $savedomain
+    	return $i
+}
+
+##########
+# Compter les mots dans la selection
+#
+proc nnword  {} {
+global domain visible
+	set savevisible $visible
+	set visible 0
+	set savedomain $domain; set domain 1; initdomain; savesel
+        # compter les mots dans cette selection 	
+	set mot [nextword]
+	set nbmot 0
+	while	{ ($mot != -2) } {
+		incr nbmot 1
+		set mot [nextword]
+		}
+        # retablir la selection initiale
+ 	restoresel; set visible $savevisible ; select
+        set domain $savedomain
+    	return $nbmot
+}
+
+##########
+# Compter les mots dans la phrase courante
+#
+proc nnwordinsent  {} {
+global domain visible
+	set savevisible $visible; set visible 0
+	set savedomain $domain; set domain 1
+	if { [nextsentence] == -2 } then { return }
+	savesel; set domain 1; initdomain
+        # compter les mots dans cette phrase 	
+	set mot [nextword]
+	set nbmot 0
+	while	{ ($mot != -2) } {
+		incr nbmot 1
+		set mot [nextword]
+		}
+        # selectionner la phrase initiale
+ 	restoresel; set visible $savevisible ; select
+        set domain $savedomain
+    	return $nbmot
+}
+
+ 
+##########
+# Compter les mots dans la prochaine phrase
+#
+proc nnwordnextsent  {} {
+	 if { [nextsentence] == -2 } then { return }
+	 return [nnwordinsent]
+} 
+
+
+##########
+# Compter les phrases du texte selectionne'
+#
+proc  nnsent  {} {
+global domain visible
+	savesel
+	set savevisible $visible; set visible 0
+	set savedomain $domain; set domain 1 
+	set nb 0
+	while { [nextsentence] == -1 } {incr nb 1}
+        # selectionner le texte initial 	
+ 	restoresel; set visible $savevisible; select
+        set domain $savedomain
+    	return $nb
+} 
+
+
+##########
+#
+# firstcap
+#
+#       Mise en capitale de la premiere lettre de chaque paragraphe
+#  (de la zone de recherche : par defaut = apres la selection courante)
+#       sous le controle de l'utilisateur
+#
+proc firstcap {} {
+global visible advance domain control 
+	savesel; initdomain
+	set advance 1
+	set savevisible $visible
+	set savecontrol $control; 
+	set visible 0
+	if { [nextparag] == -2 } then { restoresel; return }
+	set domain 1; nextchar;
+	set ch1 [gettext] 
+	set i 0
+ while { $ch1 != 0 } {
+    set ch2 [string toupper $ch1]
+    # est-ce deja une majuscule ?
+    if { $ch1 != $ch2 } then {
+	    if { ($control == 0) || ([accord "Caps here"] == "OK") } then {
+		 #remplacement par la capitale initiale
+		    # pas de controle
+		    set control 0
+		  deletion
+		    # retablir le controle
+		    set control $savecontrol
+		  addtext before $ch2		    
+		  incr i 1 
+		}
+	     }
+        # passer au paragraphe suivant
+	set domain 2; if { [nextparag] == -2 } then { restoresel; return }
+	set domain 1; nextchar;
+	set ch1 [gettext] 
+	}
+     set control $savecontrol;
+     restoresel; set visible $savevisible; select
+     return $i
+    }
+
+##############
+#
+# goto
+#
+# positionnement sur l'element indique en parametre
+#       la recherche a lieu dans tout le document, depuis la racine
+#   retourne (-1) ou (-2)
+#	(-2) si pas trouve' => la selection est inchangee
+#       (-1) si l'element est trouve => il est selectionne' (si visible est ON)
+#
+# Exemple : goto {Section 2 Item_liste 3}
+#    cherche le 3e Item_liste contenu dans la section 2 du document
+#
+#
+proc goto { L } {
+global visible domain stopsel advance
+	set savevisible $visible; set visible 0;
+	savesel;
+        # recherche dans TOUT le document
+        set domain 3
+        while {[llength $L] != 0} {
+                set T [lindex $L 0]
+                set N [lindex $L 1]
+                if {![ctype digit $N]} { 
+                        set N 1
+                        set p 1
+                } else { set p 2 }
+                while {$N >= 1} {
+                    set rep [search $T]
+		    if { ($rep == -2) } {
+		    	# pas trouve
+		    	display "Not found"
+			if { ($stopsel == 1) } {
+            	    		# retablir la selection initiale
+ 	    			restoresel;
+				}
+		    	return $rep;
+			}
+                    incr N -1; 
+		}
+                set L [lrange $L $p end]
+		set domain 1
+        }
+	#### vider le sommmet de la pile sans restaurer
+	outsel;
+	set visible $savevisible; 
+    	### selection de l'element trouve
+        select
+	return $rep
+}
+
+##########
+#
+# accord
+#
+# Cette procedure demande confirmation
+# Il est interessant de l'utiliser AVANT de faire une action irreversible
+# ATTENTION : Cette commande peut modifier control
+#             Il est donc prudent de sauvegarder control avant 
+#             et de le restaurer ensuite
+#
+proc accord { message } {    
+global visible control
+        set savevisible $visible
+## forcer la visibilite pour le dialogue
+        set visible 1 ; select
+        set r [ask4 $message]
+## retablir la visibilite apres le dialogue
+        set visible $savevisible
+        switch $r {
+                0 {
+			# ABANDON
+                        return -code break
+                }  
+                2 {
+			# CONFIRMER
+                        return OK
+                }  
+                1 {
+			# PASSER
+                        return ""
+                }  
+                3 {
+			# CONTINUER (automatique)
+                        set control 0
+                        return OK
+                }
+        }
+} 
+       
+##########
+#
+# fusionlink
+#
+# Cette procedure ne peut etre appliquee qu'a des elements frere 
+# de meme type.
+# Action : 1) report de tous les liens pointant 
+#             vers les x freres suivants l'element courant
+#             sur l'element courant
+#          2) suppression des x freres
+#
+# Resultat : - seul le premier element (element courant) est conserve 
+#              dans le document
+#            - tous les liens portant sur ses x freres suivants 
+#              sont reportes sur lui
+#
+#   retourne (0) ou (nb <= x)
+#      nb = nombre de freres supprimes
+#
+proc fusionlink { x } {
+global control curelem curelemtype visible
+        set N $x
+        if {![ctype digit $N]} then { set N 1 } else { }
+	set savecontrol $control; 
+	set savevisible $visible; set visible 0;
+        savesel
+        set elem1 $curelem
+        set rep [search $curelemtype]
+	set nb 0
+        while {$nb < $N && $rep != 0} {
+	    savesel; set found [searchsource]
+	    while {$found != 0} {
+		# modification du contenu de la reference selectionnee
+                setref $elem1
+                set found [searchsource]
+            }
+	    restoresel
+	    if { (!$control) || ([accord Delete] == "OK") } {
+		# suppression du frere suivant elem1
+		deletion 		    
+                # repositionnement sur elem1
+                copysel
+                incr nb 1;
+		set rep [search $curelemtype]
+              } else { 
+	      }
+	}
+	set control $savecontrol;
+	restoresel
+	set visible $savevisible; select;
+	return $nb
+    }
+
+##########
+#
+# delindex
+#
+#   supprime tout ce qui concerne les index
+#   element par element en mode visible avec confirmation
+#   et selectionne TOUT le document concerne'
+#
+proc delindex { } {
+global domain curdoctype
+        set domain 3; delelem Marque_Index;
+        set domain 3; delelem Option;
+        set domain 3; delelem Renvoi;
+        set domain 3; delelem I_Table ;
+	# selectionner la racine principale du document
+	root $curdoctype;
+return;
+}
+
+##########
+#
+#  delallindex
+#
+#   supprime tout ce qui concerne les index
+#   - apres confirmation generale -
+#   et selectionne TOUT le document concerne'
+#
+proc delallindex { } {
+global domain control visible curdoctype
+	set savecontrol $control; set control 0;
+	# selectionner la racine principale du document
+	root $curdoctype;
+	if { ([accord "Delete all index informations"] == "OK") } then {
+		set savevisible $visible; set visible 0;
+        	# recherche dans TOUT le document
+        	set domain 3;
+		if { [delelem Marque_Index] == -2} then {
+		display "No Index mark found" }
+		# supprimer les Descripteurs isoles restant
+	     	set domain 3; 
+		if { [delelem Option] == -2 } then { 
+		display "No isolated Descriptor found" }
+        	set domain 3;
+		if { [delelem Option] == -2 } then { 
+		display "No Option found" }
+        	set domain 3;
+		if { [delelem Renvoi] == -2 } then { 
+		display "No Cross-reference found" }
+        	set domain 3;
+		if { [delelem I_Table] == -2 } then { 
+		display "No Index table found" }
+		# Fin
+		set control $savecontrol;
+		set visible $savevisible;
+		# selectionner la racine principale du document
+		root $curdoctype;
+	}
+	return;
+}
+

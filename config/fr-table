@@ -1,0 +1,74 @@
+#Table des messages francais
+
+# Abort
+MSG1="Impression de ${realname} impossible. ${@}"
+MSG2="Sauvegarde de ${printer_or_psname} impossible. ${@}"
+MSG3="Traduction de ${realname} impossible. ${@}"
+
+# PsPrint
+MSG4="Creation du directory temporaire impossible."
+MSG5="Creation de fichier temporaire impossible."
+MSG6="Erreur dans la traduction en PostScript."
+MSG7="Refus du spooler sur la destination ${printer_or_psname}."
+MSG8="Creation impossible, fichier ${printer_or_psname}"
+MSG9="Creation de ${printer_or_psname} impossible."
+MSG10="${realname} est dans la queue du spooler."
+MSG11="Sauvegarde terminee, fichier: ${printer_or_psname}"
+
+# printsch
+MSG15="Fichier non trouve : ${NAME}.STR"
+MSG16="**Erreur de decompilation**"
+MSG17="Decompilation d'un schema STR"
+
+# comparestr
+MSG18="Erreur de comparaison des schemas STR"
+MSG19="Comparaison terminee"
+MSG20="Format : comparestr ancien[.STR] nouveau[.STR]"
+
+# convertpiv
+MSG21="Erreur de conversion"
+MSG22="Conversion terminee"
+MSG23="Format : convertpiv ancien[.PIV] nouveau[.PIV] nouveauschema[.STR]"
+
+# les compilateurs
+MSG24="Compilation d'un fichier de langage"
+MSG25="Le nom du fichier est trop long."
+MSG26="Compilation de ${NAME}.LAN"
+MSG27="Fichier ${NAME}.LAN introuvable."
+MSG28="**Erreur de compilation**"
+MSG29="Compilation terminee."
+MSG30="Compilation de ${NAME}.SCH"
+
+# compilstr
+MSG31="Un fichier ${NAME}.STR existe deja."
+MSG32="Transformation de ${NAME}.S"
+MSG33="Fichier ${NAME}.S introuvable."
+
+# compilprs
+MSG34="Un fichier ${NAME}.PRS existe deja."
+MSG35="Transformation de ${NAME}.P"
+MSG36="Fichier ${NAME}.P introuvable."
+
+# compiltra
+MSG37="Un fichier ${NAME}.TRA existe deja."
+MSG38="Transformation de ${NAME}.T"
+MSG39="Fichier ${NAME}.T introuvable."
+
+# suite des compilateurs
+MSG50="Compilation d'un schemas de structure"
+MSG51="Compilation d'un schemas de presentation"
+MSG52="Compilation d'un schemas de traduction"
+
+# complement a PsPrint
+MSG54="Erreur dans la generation du fichier PostScript."
+
+# compilitf
+MSG62="Compilation d'un schemas A d'application"
+MSG63="Un fichier ${NAME}APP.c existe deja."
+MSG64="Transformation de ${NAME}.A"
+MSG65="Fichier ${NAME}.A introuvable."
+
+# compiltyp
+MSG66="Compilation d'un schema de typographie"
+MSG67="Transformation de ${NAME}.Y"
+MSG68="Fichier ${NAME}.Y introuvable."

@@ -1,0 +1,14 @@
+APPLICATION Palette;
+DEFAULT
+	BEGIN
+		ElemSelect.Pre ->	PalSelectPre;
+		ElemActivate.Post -> 	PalActivate;
+	END;
+
+ELEMENTS
+    Palette:
+	BEGIN
+		ElemNew.Post ->		PalNew;
+		ElemRead.Post ->	PalNew;
+	END;
+END

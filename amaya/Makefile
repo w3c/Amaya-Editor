@@ -1,0 +1,67 @@
+#
+# Compilation des schemas Thot
+# I. Vatton
+#
+
+.SUFFIXES:
+
+.SUFFIXES: .STR .PRS .TRA .S .P .T
+
+#
+# Definitions
+#
+THOTDIR = ..
+THOTSCH = ${THOTDIR}/amaya:${THOTDIR}/schemas
+COMPSCH = ${THOTDIR}/amaya
+COMPSTR = ${THOTDIR}/bin/compilstr
+COMPPRS = ${THOTDIR}/bin/compilprs
+COMPTRA = ${THOTDIR}/bin/compiltra
+
+#
+# Rules
+#
+
+.S.STR :
+	$(COMPSTR) $*
+
+.P.PRS :
+	$(COMPPRS) $*
+
+.T.TRA :
+	$(COMPTRA) $*
+
+#
+# A Faire
+#
+
+all:	compHTML compHTMLP tra
+
+#
+# Les structures
+#
+
+compHTML: $(COMPSCH)/HTML.STR
+$(COMPSCH)/HTML.STR : $(COMPSCH)/HTML.S
+	$(COMPSTR) HTML
+	$(COMPPRS) HTMLP
+	$(COMPPRS) -DPAGE HTMLP HTMLPP
+	$(COMPPRS) -DUS_PAPER -DPAGE HTMLP HTMLPPUS
+	$(COMPPRS) -DBLACK_WHITE HTMLP HTMLPBW
+	$(COMPTRA) HTMLT	
+
+compHTMLP: $(COMPSCH)/HTMLP.PRS
+$(COMPSCH)/HTMLP.PRS : $(COMPSCH)/HTMLP.P
+	$(COMPPRS) HTMLP
+	$(COMPPRS) -DPAGE HTMLP HTMLPP
+	$(COMPPRS) -DUS_PAPER -DPAGE HTMLP HTMLPPUS
+	$(COMPPRS) -DBLACK_WHITE HTMLP HTMLPBW
+
+#
+# Schemas de traduction
+#
+
+SCHEMAS_DE_TRADUCTION = \
+	HTMLT.TRA
+
+tra : $(SCHEMAS_DE_TRADUCTION)
+

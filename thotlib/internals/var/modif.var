@@ -1,0 +1,12 @@
+
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+
+/* 
+ * variables exportees par le module modif.p
+ */
+
+/* pointeur sur le descripteur du premier element sauve' par Couper ou Copier*/
+EXPORT PtrPasteElem ElemSauve;
+
+/* pointeur sur le document auquel appartient la partie sauvee */
+EXPORT PtrDocument DocDeSauve;

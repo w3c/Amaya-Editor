@@ -1,0 +1,21 @@
+0 Invalid character\n
+1 Incorrect number\n
+2 ncorrect word\n
+3 Identifier table is full\n
+4 Invalid symbol\n
+5 Syntax error\n
+6 Abnormal end\n
+7 Number too great\n
+8 Already defined with a different type\n
+9 Strings cannot exceed one line\n
+10 Stack is full\n
+11 End has already been reached\n
+12 Word too long\n
+13 Grammar file (.GRM) not found\n
+14 Keyword table full\n
+15 Keyword too long\n
+16 Incorrect grammar file (.GRM)\n
+17 Grammar table full\n
+18 Grammar rule too long\n
+19 ***ERR line %d\n
+20 %s\n%s\n

@@ -1,0 +1,80 @@
+--- GRIF / DICTIONNAIRES ET MOTIFS DE CESURES -------------------------------
+
+Version du 16 juin 1994 - « Version provisoire à des fins d'expérimentation »
+
+Philippe Louarn - Irisa/Inria Rennes
+
+
+Ce répertoire contient des dictionnaires et les listes de motifs de cesures
+pour diverses langues européeenes. 
+
+(NON)Copyright
+==============
+Tous ces fichiers proviennent de distributions publiques et peuvent être
+utilisés à des fins non commerciales (personnelles, éducatives ou de recherche).
+Ils ne doivent en aucun cas être utilisés à des fins commerciales sans
+l'accord de leurs auteurs respectifs (voir liste plus loin).
+
+(NON)Garantie
+=============
+Ces fichiers, comme les listes dont ils sont issus, sont incomplets et peuvent
+contenir des erreurs. Ils sont livrés tels quels sans garantie. Ni les membres
+du projet Opéra, ni les organismes dont dépendent ces membres (INRIA, CNRS,
+IMAG, Université de Rennes 1, CRI Rennes, INPG), ni les auteurs originaux
+ainsi que leur employeurs ne sont responsables de dommages pouvant résulter
+de leur utilisation.
+
+Crédits
+=======
+Liste de mots
+-------------
+Tous les dictionnaires, hormi celles pour le francais et l'espagnol, 
+proviennent de listes de mots accessibles par ftp anonyme sur 
+gatekeeper.dec.com dans le repertoire pub/misc/stolfi-wordlists.
+Ces listes ont été collectés par Jorge Stolfi (stolfi@dcc.unicamp.ansp.br)
+à partir de listes crées par :
+Anders Ellefsrud, Andy Tannenbaum, Arjan de Vet, Barry Brachman, Dan Klein
+David Vincenzetti, Edward Vielmetti, Geoff Kuenning, H. Morrow Long, Hans Bouw
+Henk Smit, Martien Kuunders, Neal Dalton, Paul Stravers, Stefan Kutsch
+Walt Buehring et Werner Icking.
+Pour plus de details, se référer aux fichiers README accompagnant chaque liste.
+
+Le dictionnaire français est une version modifiée du dictionnaire accompagnant
+le programme "epelle" disponible sur ftp.inria.fr, du à Paul Zimmermann.
+
+Le dictionnaire espagnol provient du serveur ftp d'Oxford black.ox.ac.uk
+dans /wordlists/spanish (pas d'indication d'auteur)
+
+Motifs de césures
+-----------------
+L'ensembles des motifs de césure proviennent de distribution du domaine
+public du logiciel TeX. 
+
+Français (francais.ptn) : liste construite par divers membres
+de l'association GUTenberg, France, notamment Bernard Gaulle et Daniel Flipo,
+disponible sur ftp.univ-rennes1.fr dans /pub/GUTenberg/french
+(voir les fichiers README de la distribution).
+
+Anglais (english.ptn) : liste accompagnant la distribution de TeX disponible
+sur le serveur ftp.univ-rennes1.fr ; auteurs : D.E. Knuth + anonyme(s)
+
+Pour toutes les autres langues : fichiers de motifs de césures pour TeX
+disponibles sur les serveurs CTAN (comprehensive TeX archives network) dans
+ctan:/language/hyphenation ou ctan:/language/portuguese
+
+Américain (american.ptn) : G.D.C. Kuiken (NL) + anonyme(s)
+
+Espagnol (espanol.ptn) : Mario Widel (U. Michican) + anonyme(s) 
+
+Allemand (deutch.ptn) : Norbert Schwarz (Univ. Bochum) + Bernd Raichle (DANTE)
+
+Finnois (finish.ptn) : Kauko Saarinen (U. Jyvaskyla)
+
+Italien (italiano.ptn) : Claudio Beccari (Turin)
+
+Néerlandais (nederl.ptn) : anonymes de U. Utrecht
+
+Suédois (swedish.ptn) : Jan Michael Rynning (KTH)
+
+Portugais (portug.ptn) : Pedro J. de Rezende (Northeastern U, Boston)
+

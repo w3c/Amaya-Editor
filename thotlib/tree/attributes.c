@@ -1,0 +1,1624 @@
+
+/* -- Copyright (c) 1996 INRIA -- All rights reserved -- */
+
+/*
+   Module traitant les attributs
+
+   V. Quint     Janvier 1986
+
+   IV : Septembre 92 adaptation Tool Kit
+*/
+
+#include "libmsg.h"
+#include "thot_sys.h"
+#include "message.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "language.h"
+#include "app.h"
+#include "appdialogue.h"
+#include "typecorr.h"
+
+#undef EXPORT
+#define EXPORT extern
+#include "page.var"
+#include "select.var"
+#include "edit.var"
+#include "appdialogue.var"
+
+#include "arbabs.f"
+#include "attrherit.f"
+#include "attrmenu.f"
+#include "commun.f"
+#include "creation.f"
+#include "crimabs.f"
+#include "draw.f"
+#include "appexec.f"
+#include "except.f"
+#include "img.f"
+#include "memory.f"
+#include "modif.f"
+#include "modimabs.f"
+#include "refelem.f"
+#include "sel.f"
+#include "select.f"
+#include "structure.f"
+#include "textelem.f"
+#include "varpres.f"
+
+#ifdef __STDC__
+extern void         AfficherVue (int);
+
+#else  /* __STDC__ */
+extern void         AfficherVue ();
+
+#endif /* __STDC__ */
+
+/* ---------------------------------------------------------------------- */
+/* |    SetAttrReference fait pointer l'attribut reference pAttr sur    | */
+/* |    l'element pEl.							| */
+/* |    UNIQUEMENT pour une reference *INTERNE*                         | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         SetAttrReference (PtrAttribute pAttr, PtrElement pEl)
+
+#else  /* __STDC__ */
+static void         SetAttrReference (pAttr, pEl)
+PtrElement          pEl;
+PtrAttribute         pAttr;
+
+#endif /* __STDC__ */
+
+{
+   PtrReference        pPR1;
+
+   if (pEl != NULL)
+     {
+	pPR1 = pAttr->AeAttrReference;
+	if (pPR1 != NULL)
+	  {
+	     pPR1->RdNext = pEl->ElReferredDescr->ReFirstReference;
+	     if (pPR1->RdNext != NULL)
+		pPR1->RdNext->RdPrevious = pAttr->AeAttrReference;
+	     pPR1->RdReferred = pEl->ElReferredDescr;
+	     pPR1->RdReferred->ReFirstReference = pAttr->AeAttrReference;
+	  }
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    Met a l'element pEl l'attribut auquel est associe'              | */
+/* |    l'exception de numero ExceptNum et retourne un pointeur sur cet | */
+/* |    attribut. On ne met l'attribut que si l'element ne le possede   | */
+/* |    pas deja. Dans tous les cas, la fonction retourne un pointeur   | */
+/* |    sur l'attribut.                                                 | */
+/* |    S'il s'agit d'un attribut reference, pReferredEl designe	| */
+/* |    l'element sur lequel la reference doit pointer.			| */
+/* |    UNIQUEMENT pour une reference *INTERNE*                         | */
+/* |    Si pReferredEl est NULL, le lien de reference n'est pas etabli. | */
+/* |    Ce lien peut ensuite etre etabli par la procedure LieReference, | */
+/* |    en particulier pour un lien externe.                            | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrAttribute         MetAttribut (int ExceptNum, PtrElement pEl, PtrElement pReferredEl, PtrDocument pDoc)
+
+#else  /* __STDC__ */
+PtrAttribute         MetAttribut (ExceptNum, pEl, pReferredEl, pDoc)
+int                 ExceptNum;
+PtrElement          pEl;
+PtrElement          pReferredEl;
+PtrDocument         pDoc;
+
+#endif /* __STDC__ */
+
+{
+   PtrAttribute         pAttr;
+   int                 attrNum;
+   boolean             found;
+   PtrReference        pRef;
+   PtrElement          pOldReferredEl;
+   PtrSSchema        pSS;
+
+   /* cherche d'abord le numero de l'attribut */
+   pSS = pEl->ElSructSchema;
+   attrNum = ExceptNumAttr (ExceptNum, pSS);
+   if (attrNum == 0)
+      /* pas trouve' dans le schema de l'element, on cherche dans les */
+      /* les extensions de schema du document. */
+     {
+	pSS = pDoc->DocSSchema->SsNextExtens;
+	found = False;
+	/* parcourt tous les schemas d'extension du document */
+	while (pSS != NULL && !found)
+	  {
+	     /* cherche le numero de l'attribut dans cette extension */
+	     attrNum = ExceptNumAttr (ExceptNum, pSS);
+	     if (attrNum != 0)
+		found = True;
+	     else
+		/* passe au schema d'extension suivant */
+		pSS = pSS->SsNextExtens;
+	  }
+     }
+
+   /* cherche si l'attribut est deja present pour l'element */
+   pAttr = pEl->ElFirstAttr;
+   found = False;
+   while (!found && pAttr != NULL)
+      if (pAttr->AeAttrNum == attrNum &&
+	  /* attrNum = 1: Langue, quel que soit le schema de structure */
+	  (attrNum == 1 ||
+	   pAttr->AeAttrSSchema->SsCode == pSS->SsCode))
+	 found = True;
+      else
+	 pAttr = pAttr->AeNext;
+   if (found)
+     {
+	/* l'element porte deja cet attribut */
+	if (pAttr->AeAttrType == AtReferenceAttr && pReferredEl != NULL)
+	  {
+	     /* c'est un attribut reference, on verifie qu'il pointe bien */
+	     /* sur le bon element */
+	     /* on cherche d'abord l'element reference' par l'attribut */
+	     pOldReferredEl = NULL;
+	     /* a priori, pas d'element reference' */
+	     if (pAttr->AeAttrReference != NULL)
+		if (pAttr->AeAttrReference->RdReferred != NULL)
+		   if (!pAttr->AeAttrReference->RdReferred->ReExternalRef)
+		      pOldReferredEl = pAttr->AeAttrReference->RdReferred->ReReferredElem;
+	     if (pOldReferredEl != pReferredEl)
+	       {
+		  /* l'attribut ne designe pas le bon element */
+		  /* coupe le lien avec l'ancien element reference' */
+		  RefSupprime (pAttr->AeAttrReference);
+		  if (pReferredEl->ElReferredDescr == NULL)
+		     /* le nouvel element a referencer ne l'est pas encore */
+		     /* attache a l'element un descripteur d'element reference' */
+		    {
+		       pReferredEl->ElReferredDescr = NewRef (pDoc);
+		       pReferredEl->ElReferredDescr->ReReferredElem = pReferredEl;
+		    }
+		  /* fait pointer la reference sur l'element */
+		  SetAttrReference (pAttr, pReferredEl);
+	       }
+	  }
+     }
+   else
+     {
+	/* l'element ne porte pas cet attribut */
+	/* cree et intialise l'attribut */
+	GetAttr (&pAttr);
+	/* chaine le nouvel attribut en tete des attributs de l'element */
+	pAttr->AeNext = pEl->ElFirstAttr;
+	pEl->ElFirstAttr = pAttr;
+	pAttr->AeAttrSSchema = pSS;
+	pAttr->AeAttrNum = attrNum;
+	pAttr->AeDefAttr = False;
+	pAttr->AeAttrType = pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType;
+	if (pAttr->AeAttrType == AtReferenceAttr)
+	  {
+	     if (pReferredEl != NULL)
+		/* l'element pointe' par pReferredEl va etre reference' */
+		if (pReferredEl->ElReferredDescr == NULL)
+		   /* cet element n'a pas encore de descripteur d'element */
+		   /* reference', on lui en associe un */
+		  {
+		     pReferredEl->ElReferredDescr = NewRef (pDoc);
+		     pReferredEl->ElReferredDescr->ReReferredElem = pReferredEl;
+		  }
+	     GetReference (&pRef);
+	     pAttr->AeAttrReference = pRef;
+	     pRef->RdElement = pEl;
+	     pRef->RdAttribute = pAttr;
+	     pRef->RdTypeRef = RefFollow;
+	     pRef->RdInternalRef = True;
+	     /* fait pointer la reference sur l'element */
+	     SetAttrReference (pAttr, pReferredEl);
+	  }
+     }
+   return pAttr;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    On reaffiche un pave modifie                                    | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static void         RedisplayAbsBox (PtrAbstractBox pAbsBox, int boxNum, PtrPSchema pPSchema, int view, PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
+
+#else  /* __STDC__ */
+static void         RedisplayAbsBox (pAbsBox, boxNum, pPSchema, view, pEl, pDoc, pAttr)
+PtrAbstractBox             pAbsBox;
+int                 boxNum;
+PtrPSchema          pPSchema;
+int                 view;
+PtrElement          pEl;
+PtrDocument         pDoc;
+PtrAttribute         pAttr;
+
+#endif /* __STDC__ */
+
+{
+   int                 frame, height;
+   PtrAbstractBox             pAbChild;
+
+   if (pAbsBox->AbPresentationBox)
+     {
+	/* c'est un pave de presentation */
+	if (pAbsBox->AbTypeNum == boxNum && pAbsBox->AbPSchema == pPSchema)
+	   /* c'est bien un pave du type cherche' */
+	   /* recalcule la valeur de la variable de presentation */
+	   if (NouvVariable (pPSchema->PsPresentBox[boxNum - 1].PbContVariable,
+			     pAttr->AeAttrSSchema, pPSchema, pAbsBox, pDoc))
+
+	      /* la variable de presentation a change' de valeur */
+	     {
+		pAbsBox->AbChange = True;
+		if (VueAssoc (pEl))
+		   frame = (pDoc)->DocAssocFrame[(pEl)->ElAssocNum - 1];
+		else
+		   frame = (pDoc)->DocViewFrame[view - 1];
+#ifdef __COLPAGE__
+		height = HauteurCoupPage;
+#else  /* __COLPAGE__ */
+		height = HauteurPage;
+#endif /* __COLPAGE__ */
+		ModifVue (frame, &height, pAbsBox);
+		/* on ne reaffiche pas si on est en train de calculer les pages */
+#ifdef __COLPAGE__
+		if (HauteurCoupPage == 0)
+#else  /* __COLPAGE__ */
+		if (HauteurPage == 0)
+#endif /* __COLPAGE__ */
+		   AfficherVue (frame);
+	     }
+     }
+   else
+      /* ce n'est pas un pave' de pre'sentation */
+      /* cherche parmi les fils les paves de presentation */
+      /* de l'element et de ses descendants */
+     {
+	pAbChild = pAbsBox->AbFirstEnclosed;
+	while (pAbChild != NULL)
+	  {
+	     RedisplayAbsBox (pAbChild, boxNum, pPSchema, view, pEl, pDoc, pAttr);
+	     /* next child abstract box */
+	     pAbChild = pAbChild->AbNext;
+	  }
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    L'attribut pointe' par pAttr portant sur l'element              | */
+/* |    pointe' par pEl, dans le document pDoc, a change' de valeur.    | */
+/* |    Reafficher toutes les boites de presentation qui utilisent      | */
+/* |    la valeur de cet attribut.					| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                ReaffAttribut (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
+
+#else  /* __STDC__ */
+void                ReaffAttribut (pAttr, pEl, pDoc)
+PtrAttribute         pAttr;
+PtrElement          pEl;
+PtrDocument         pDoc;
+
+#endif /* __STDC__ */
+
+{
+   PtrPSchema          pPSchema;
+   int                 varNum, item, presBox, view;
+   boolean             found;
+   PtrAbstractBox             pAbsBox;
+   PresVariable            *pPresVar;
+
+   /* l'attribut dont la valeur a ete modifie' apparait-il dans une */
+   /* variable de presentation ? */
+   /* schema de presentation de l'attribut */
+   pPSchema = pAttr->AeAttrSSchema->SsPSchema;
+
+   if (pPSchema != NULL)
+      /* parcourt les variables de presentation du schema */
+      for (varNum = 0; varNum < pPSchema->PsNVariables; varNum++)
+	{
+	   pPresVar = &pPSchema->PsVariable[varNum];
+	   found = False;
+	   /* examine les items de la variable */
+	   for (item = 0; item < pPresVar->PvNItems && !found; item++)
+	     if (pPresVar->PvItem[item].ViType == VarAttrValue)
+		if (pPresVar->PvItem[item].ViAttr == pAttr->AeAttrNum)
+		   found = True;
+	   if (found)
+	      /* l'attribut est utilise' dans la variable */
+	      /* cherche les boites du schema de presentation qui utilisent */
+	      /* cette variable comme contenu */
+	     {
+		for (presBox = 0; presBox < pPSchema->PsNPresentBoxes; presBox++)
+		   if (pPSchema->PsPresentBox[presBox].PbContent == ContVariable
+		       && pPSchema->PsPresentBox[presBox].PbContVariable == varNum+1)
+		     /* cette boite a la variable comme contenu */
+		     /* cherche dans toutes les vues du document les paves */
+		     /* de l'element auquel correspond l'attribut qui sont */
+		     /* des instannces de cette boite de presentation */
+		     for (view = 0; view < MAX_VIEW_DOC; view++)
+			{
+			  pAbsBox = pEl->ElAbstractBox[view];
+			  while (pAbsBox != NULL)		/* parcourt les paves de l'element */
+			    if (pAbsBox->AbElement != pEl)
+			      pAbsBox = NULL;	/* on a traite' tous les paves de l'element */
+			    else
+			      /* c'est un pave' de l'element */
+			      {
+				RedisplayAbsBox (pAbsBox, presBox+1, pPSchema, view+1, pEl, pDoc, pAttr);
+				pAbsBox = pAbsBox->AbNext;
+			      }
+			}
+	     }
+	}
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    Si la selection passee en parametre commence ou finit sur des   | */
+/* |    elements partiellement selectionnes, ces elements sont coupes   | */
+/* |    en deux et leurs paves egalement.                               | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                CoupeSelection (PtrDocument pDoc, PtrElement * pFirstSel, PtrElement * pLastSel, int *firstChar, int *lastChar)
+
+#else  /* __STDC__ */
+void                CoupeSelection (pDoc, pFirstSel, pLastSel, firstChar, lastChar)
+PtrDocument         pDoc;
+PtrElement         *pFirstSel;
+PtrElement         *pLastSel;
+int                *firstChar;
+int                *lastChar;
+
+#endif /* __STDC__ */
+
+{
+   int                 view;
+
+   if (*firstChar > 1)
+      if ((*pFirstSel)->ElTerminal && (*pFirstSel)->ElLeafType == LtText)
+	 /* la selection courante commence a l'interieur du premier element */
+	 /* selectionne */
+	 /* coupe le premier element selectionne' */
+	{
+	   CoupeAvantSelection (pFirstSel, firstChar, pLastSel, lastChar, pDoc);
+
+	   /* prepare la creation des paves de la 2eme partie */
+	   for (view = 0; view < MAX_VIEW_DOC; view++)
+		if (!VueAssoc (*pFirstSel))
+		  {
+		     if (pDoc->DocView[view].DvPSchemaView > 0)
+			/* la vue est ouverte */
+			pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
+		  }
+		else
+		     if (pDoc->DocAssocFrame[(*pFirstSel)->ElAssocNum - 1] != 0)
+			pDoc->DocAssocFreeVolume[(*pFirstSel)->ElAssocNum - 1] = THOT_MAXINT;
+	   /* cree les paves de la deuxieme partie */
+	   CrPaveNouv (*pFirstSel, pDoc, 0);
+	   ApplReglesRetard (*pFirstSel, pDoc);
+	}
+   if (*lastChar > 0)
+      if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
+	 CoupeApresSelection (*pLastSel, *lastChar, pDoc);
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    Applique a l'element pointe' par pEl du document pDoc les       | */
+/* |    regles de presentation correspondant a l'attribut decrit dans   | */
+/* |    le bloc pointe' par pAttr.                                      | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                ApplReglesAttr (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr, boolean inherit)
+
+#else  /* __STDC__ */
+void                ApplReglesAttr (pEl, pDoc, pAttr, inherit)
+PtrElement          pEl;
+PtrDocument         pDoc;
+PtrAttribute         pAttr;
+boolean             inherit;
+
+#endif /* __STDC__ */
+
+{
+   PtrAttribute         pOldAttr;
+   boolean             doIt;
+
+   /* on ne traite pas les marques de page */
+   if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
+     {
+	doIt = False;
+
+	/* cherche la valeur de cet attribut pour l'element */
+	pOldAttr = Attr (pEl, pAttr);
+	if (inherit)
+	  /* traitement de la presentation par heritage */
+	  {
+	     if (pOldAttr == NULL || pOldAttr == pAttr)
+		doIt = True;
+	  }
+	else
+	  /* presentation directe */
+	  {
+	     if (pOldAttr == NULL)
+		doIt = True;
+	     /* si pour cet element, cet attribut a une valeur imposee par*/
+	     /* le schema de structure, on ne fait rien d'autre */
+	     else if (!pOldAttr->AeDefAttr)
+		doIt = True;
+	     /* s'il s'agit d'une suppression de l'attribut, on ne fait rien */
+	     if (doIt)
+		switch (pAttr->AeAttrType)
+		      {
+			 case AtEnumAttr:
+			    doIt = pAttr->AeAttrValue > 0;
+			    break;
+			 case AtNumAttr:
+			    doIt = pAttr->AeAttrValue >= -MAX_INT_ATTR_VAL
+			       && pAttr->AeAttrValue <= MAX_INT_ATTR_VAL;
+			    break;
+			 case AtTextAttr:
+			    if (pAttr->AeAttrText == NULL)
+			       doIt = False;
+			    break;
+			 case AtReferenceAttr:
+			    doIt = True;
+			    break;
+			 default:
+			    break;
+		      }
+	  }
+
+	if (doIt)
+	  {
+	     /* applique les regles de presentation de l'attribut */
+	     ChngPresAttr (pEl, pAttr, pDoc, False, inherit, NULL);
+	     /* reaffiche les variables de presentation qui utilisent */
+	     /* l'attribut */
+	     ReaffAttribut (pAttr, pEl, pDoc);
+	  }
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Applique au sous arbre pointe' par pEl du document pDoc les     | */
+/* |    regles de presentation heritees de l'attribut pAttr		| */
+/* |    On arrete la recursion quand on rencontre un fils portant       | */
+/* |    lui-meme un attribut de meme type que pAttr			| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                ApplReglesPresHeriteesAttr (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
+
+#else  /* __STDC__ */
+void                ApplReglesPresHeriteesAttr (pEl, pDoc, pAttr)
+PtrElement          pEl;
+PtrDocument         pDoc;
+PtrAttribute         pAttr;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pChild;
+   PtrAttribute         pOldAttr;
+   InheritAttrTable     *inheritedAttr;
+
+   pOldAttr = Attr (pEl, pAttr);
+   if (pOldAttr == NULL || pOldAttr == pAttr)
+     {
+	/* on traite d'abord tout le sous-arbre */
+	if (!pEl->ElTerminal)
+	   for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
+	      if (pChild->ElSructSchema == pEl->ElSructSchema)
+		 /* same structure schema */
+		 ApplReglesPresHeriteesAttr (pChild, pDoc, pAttr);
+
+	/* on traite l'element lui-meme */
+	/* on cherche d'abord si pEl herite de pAttr */
+	if (pEl->ElSructSchema->SsPSchema != NULL)
+	   if (pEl->ElSructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+	     {
+		/* pEl peut heriter d'un attribut */
+		if ((inheritedAttr = pEl->ElSructSchema->SsPSchema->
+		     PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
+		  {
+		     /* la table d'heritage n'existe pas. On la cree */
+		     CreeTabAttrHerites (pEl);
+		     inheritedAttr = pEl->ElSructSchema->SsPSchema->
+			PsInheritedAttr[pEl->ElTypeNumber - 1];
+		  }
+		if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
+		  {
+		     /* pEl herite de l'attribut pAttr */
+		     /* on lui applique la presentation correspondante */
+		     ApplReglesAttr (pEl, pDoc, pAttr, True);
+		  }
+	     }
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    Applique au sous arbre pointe' par pEl du document pDoc les     | */
+/* |    regles de presentation des attributs dont les valeurs se	| */
+/* |	comparent a pAttr.						| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                ApplReglesPresCompareesAttr (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
+
+#else  /* __STDC__ */
+void                ApplReglesPresCompareesAttr (pEl, pDoc, pAttr)
+PtrElement          pEl;
+PtrDocument         pDoc;
+PtrAttribute         pAttr;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pChild;
+   ComparAttrTable   *attrValComp;
+   int                 i;
+   PtrAttribute         pCompAttr;
+
+   if (Attr (pEl, pAttr) == NULL)
+     {
+	/* on traite d'abord les descendants */
+	if (!pEl->ElTerminal)
+	   for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
+	      if (pChild->ElSructSchema == pEl->ElSructSchema)
+		 /* meme schema de structure */
+		 ApplReglesPresCompareesAttr (pChild, pDoc, pAttr);
+     }
+
+   /* on traite l'element lui-meme */
+   /* cherche si pEl possede un attribut se comparant a pAttr */
+   if (pEl->ElSructSchema->SsPSchema != NULL)
+     {
+	if ((attrValComp = pEl->ElSructSchema->SsPSchema->
+	     PsComparAttr[pAttr->AeAttrNum - 1]) == NULL)
+	  {
+	     /* la table de comparaison n'existe pas. On la creee */
+	     CreeTabAttrComparant (pAttr);
+	     attrValComp = pEl->ElSructSchema->SsPSchema->
+		PsComparAttr[pAttr->AeAttrNum - 1];
+	  }
+	if (attrValComp != NULL)
+	   for (i = pEl->ElSructSchema->SsNAttributes; i > 0; i--)
+	     {
+		if ((*attrValComp)[i - 1])
+		   /* l'attribut de rang i se compare a pAttr */
+		   if ((pCompAttr = AttrWithNum (pEl, i, pAttr->AeAttrSSchema)) != NULL)
+		      /* pEl possede un attribut comme celui de rang i */
+		      ApplReglesAttr (pEl, pDoc, pCompAttr, False);
+	     }
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Chaine les elements liberes par les fusions de texte.           | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                ChaineLib (PtrElement pEl, PtrElement * pFirstFree)
+
+#else  /* __STDC__ */
+void                ChaineLib (pEl, pFirstFree)
+PtrElement          pEl;
+PtrElement         *pFirstFree;
+
+#endif /* __STDC__ */
+
+{
+   pEl->ElNext = *pFirstFree;
+   *pFirstFree = pEl;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Change la langue de toutes les feuilles de texte dans le        | */
+/* |    sous-arbre de l'element pointe' par pEl, appartenant au         | */
+/* |    document dont le contexte est pointe' par pDoc                  | */
+/* |    Le parametre force est vrai quand on veut forcer le changement  | */
+/* |    de langue.                                                      | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                ChngLanguage (PtrDocument pDoc, PtrElement pEl, Language lang, boolean force)
+
+#else  /* __STDC__ */
+void                ChngLanguage (pDoc, pEl, lang, force)
+PtrDocument         pDoc;
+PtrElement          pEl;
+Language            lang;
+boolean             force;
+
+#endif /* __STDC__ */
+
+{
+   int                 view;
+   PtrElement          pChild;
+   PtrAbstractBox             pAbsBox;
+
+   if (!pEl->ElTerminal)
+      /* l'element n'est pas une feuille, on traite son sous-arbre */
+     {
+	pChild = pEl->ElFirstChild;
+	while (pChild != NULL)
+	  {
+	     /* si un descendant a un attribut Langue, on ne le change pas */
+	     if (AttrWithNum (pChild, 1, NULL) == NULL)
+		ChngLanguage (pDoc, pChild, lang, force);
+	     pChild = pChild->ElNext;
+	  }
+     }
+   else
+      /* l'element est une feuille */
+     if (pEl->ElLeafType == LtText && pEl->ElLanguage != lang)
+      /* c'est du texte dans une autre langue */
+      if (force || TtaGetAlphabet (pEl->ElLanguage) == TtaGetAlphabet (lang))
+	 /* cette langue s'ecrit dans le meme alphabet ou la langue est forcee */
+	 /* change la langue de l'element */
+	{
+	   pEl->ElLanguage = lang;
+	   /* parcourt toutes les vues du document pour changer les */
+	   /* paves de l'element */
+	   for (view = 0; view < MAX_VIEW_DOC; view++)
+	      if (pEl->ElAbstractBox[view] != NULL)
+		 /* l'element a au moins un pave dans la vue */
+		{
+		   pAbsBox = pEl->ElAbstractBox[view];
+		   /* saute les paves de presentation de l'element */
+		   while (pAbsBox->AbPresentationBox && pAbsBox->AbElement == pEl)
+		      pAbsBox = pAbsBox->AbNext;
+		   if (!pAbsBox->AbDead)
+		      /* traite le pave' principal de l'element */
+		      /* change la langue du pave */
+		     {
+			pAbsBox->AbLanguage = lang;
+			pAbsBox->AbChange = True;
+			/* conserve le pointeur sur le pave a reafficher */
+			if (VueAssoc (pEl))
+			   pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
+			      Englobant (pAbsBox, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+			else
+			   pDoc->DocViewModifiedAb[view] =
+			      Englobant (pAbsBox, pDoc->DocViewModifiedAb[view]);
+		     }
+		}
+	}
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Verifie si l'attribut pointe' par pAttr et appartenant a pEl	| */
+/* |    contient un attribut qui initialise un (des) compteur(s).	| */
+/* |	Si oui, met a jour les valeurs de ce(s) compteur(s).		| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                AttrInitCompteur (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc)
+
+#else  /* __STDC__ */
+void                AttrInitCompteur (pEl, pAttr, pDoc)
+PtrElement          pEl;
+PtrAttribute         pAttr;
+PtrDocument         pDoc;
+
+#endif /* __STDC__ */
+
+{
+   int                 counter;
+   PtrPSchema          pPS;
+   Counter           *pCnt;
+
+   /* parcourt les compteurs definis dans le schema de presentation */
+   /* correspondant a l'attribut pour trouver si l'attribut est la valeur */
+   /* initiale d'un compteur */
+   {
+      /* schema de presentation qui s'applique a l'attribut */
+      pPS = pAttr->AeAttrSSchema->SsPSchema;
+      if (pPS != NULL)
+	 for (counter = 0; counter < pPS->PsNCounters; counter++)
+	   {
+	      pCnt = &pPS->PsCounter[counter];
+	      if (pCnt->CnItem[0].CiInitAttr == pAttr->AeAttrNum ||
+		  pCnt->CnItem[0].CiReinitAttr == pAttr->AeAttrNum)
+		 /* Si c'est un compteur de pages, on renumerote toutes les */
+		 /* pages de l'arbre abstrait traite' */
+		{
+		   if (pCnt->CnItem[0].CiCntrOp == CntrRank && pCnt->CnItem[0].
+		       CiElemType == ord (PageBreak) + 1)
+		      /* c'est un compteur de la forme CntrRank of Page(view) */
+		      ReNumPages (pEl, pCnt->CnItem[0].CiViewNum);
+		   else
+		      /* c'est un compteur de la forme Set...Add n on Page(view) */
+		      if (pCnt->CnItem[0].CiCntrOp == CntrSet
+			  && pCnt->CnItem[1].CiElemType == ord (PageBreak) + 1)
+		      ReNumPages (pEl, pCnt->CnItem[1].CiViewNum);
+		   /* fait reafficher toutes les boites de presentation dependant */
+		   /* de la valeur de ce compteur */
+		   ChngBtCompt (pEl, pDoc, counter+1, pPS, pEl->ElSructSchema);
+		}
+	   }
+   }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    Supprime la presentation associee a l'attribut pAttr dans les	| */
+/* |    images de l'element pEl.					| */
+/* |    Si pCompAttr != NULL, les regles de presentation dependant	| */
+/* |    de la comparaison doivent prendre pCompAttr comme attribut de   | */
+/* |    comparaison et ne pas en chercher d'autre dans les ascendants	| */
+/* |    de pEl.                                                         | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                SupprPresAttr (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr, boolean inherit, PtrAttribute pCompAttr)
+
+#else  /* __STDC__ */
+void                SupprPresAttr (pEl, pDoc, pAttr, inherit, pCompAttr)
+PtrElement          pEl;
+PtrDocument         pDoc;
+PtrAttribute         pAttr;
+boolean             inherit;
+PtrAttribute         pCompAttr;
+
+#endif /* __STDC__ */
+
+{
+   /* on ne traite pas les marques page */
+   if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
+     {
+	/* supprime la presentation attachee a la valeur de l'attribut, si */
+	/* elle n'est pas nulle */
+	ChngPresAttr (pEl, pAttr, pDoc, True, inherit, pCompAttr);
+
+	/* reaffiche les variables de presentation qui utilisent */
+	/* l'attribut */
+	ReaffAttribut (pAttr, pEl, pDoc);
+	AttrInitCompteur (pEl, pAttr, pDoc);
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    Supprime du sous arbre pEl du document pDoc les  regles de	| */
+/* |	presentation heritees de l'attribut pAttr.			| */
+/* |    Si pEl porte lui-meme un attribut de type pAttr, on arrete.	| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                SupprPresHeriteesAttr (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
+
+#else  /* __STDC__ */
+void                SupprPresHeriteesAttr (pEl, pDoc, pAttr)
+PtrElement          pEl;
+PtrDocument         pDoc;
+PtrAttribute         pAttr;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pChild;
+   InheritAttrTable     *inheritedAttr;
+
+   if (Attr (pEl, pAttr) == NULL)
+     {
+	/* pEl does not have an attribute of that type */
+	/* process the subtree */
+	if (!pEl->ElTerminal)
+	   for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
+	      if (pChild->ElSructSchema == pEl->ElSructSchema)
+		 /* same structure schema */
+		 SupprPresHeriteesAttr (pChild, pDoc, pAttr);
+
+	/* process element pEl itself */
+	if (pEl->ElSructSchema->SsPSchema != NULL)
+	   if (pEl->ElSructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+	     {
+		/* pEl can inherit some presentation rules from attributes */
+		if ((inheritedAttr = pEl->ElSructSchema->SsPSchema->
+		     PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
+		  {
+		     /* la table d'heritage n'existe pas. On la cree */
+		     CreeTabAttrHerites (pEl);
+		     inheritedAttr = pEl->ElSructSchema->SsPSchema->
+			PsInheritedAttr[pEl->ElTypeNumber - 1];
+		  }
+		if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
+		   SupprPresAttr (pEl, pDoc, pAttr, True, NULL);
+	     }
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Supprime du sous arbre pointe' par pEl du document pDoc les     | */
+/* |    regles de presentation provenant de la comparaison avec		| */
+/* |    l'attribut pAttr.						| */
+/* |    On arrete la recursion quand on rencontre un fils portant       | */
+/* |    lui-meme un attribut de meme type que pAttr			| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                SupprPresCompareeAttr (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
+
+#else  /* __STDC__ */
+void                SupprPresCompareeAttr (pEl, pDoc, pAttr)
+PtrElement          pEl;
+PtrDocument         pDoc;
+PtrAttribute         pAttr;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pChild;
+   ComparAttrTable   *attrValComp;
+   int                 i;
+   PtrAttribute         pCompAttr;
+
+   if (Attr (pEl, pAttr) == NULL)
+     {
+	/* on traite d'abord les descendants */
+	if (!pEl->ElTerminal)
+	   for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
+	      if (pChild->ElSructSchema == pEl->ElSructSchema)
+		 /* meme schema de structure */
+		 SupprPresCompareeAttr (pChild, pDoc, pAttr);
+     }
+
+   /* on traite l'element lui-meme */
+   /* cherche si pEl possede un attribut se comparant a pAttr */
+   if (pEl->ElSructSchema->SsPSchema != NULL)
+     {
+	if ((attrValComp = pEl->ElSructSchema->SsPSchema->
+	     PsComparAttr[pAttr->AeAttrNum - 1]) == NULL)
+	  {
+	     /* la table de comparaison n'existe pas. On la creee */
+	     CreeTabAttrComparant (pAttr);
+	     attrValComp = pEl->ElSructSchema->SsPSchema->
+		PsComparAttr[pAttr->AeAttrNum - 1];
+	  }
+	if (attrValComp != NULL)
+	   for (i = pEl->ElSructSchema->SsNAttributes; i > 0; i--)
+	     {
+		if ((*attrValComp)[i - 1])
+		   /* l'attribut de rang i se compare a pAttr */
+		   if ((pCompAttr = AttrWithNum (pEl, i, pAttr->AeAttrSSchema)) != NULL)
+		      /* pEl possede un attribut comme celui de rang i */
+		      SupprPresAttr (pEl, pDoc, pCompAttr, False, pAttr);
+	     }
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Ajoute un attribut pNewAttr a l'element pEl                    | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrAttribute         AjouteAttribut (PtrElement pEl, PtrAttribute pNewAttr)
+
+#else  /* __STDC__ */
+PtrAttribute         AjouteAttribut (pEl, pNewAttr)
+PtrElement          pEl;
+PtrAttribute         pNewAttr;
+
+#endif /* __STDC__ */
+
+{
+   PtrAttribute         pAttr, pA;
+   PtrReference        pRef;
+   int                 len;
+
+   GetAttr (&pAttr);
+   /* on chaine cet attribut apres le dernier attribut de  l'element */
+   if (pEl->ElFirstAttr == NULL)
+      /* c'est le 1er attribut de l'element */
+      pEl->ElFirstAttr = pAttr;
+   else
+     {
+	/* cherche le dernier attr */
+	pA = pEl->ElFirstAttr;
+	while (pA->AeNext != NULL)
+	   pA = pA->AeNext;
+	/* chaine le nouvel attribut */
+	pA->AeNext = pAttr;
+     }
+   pAttr->AeNext = NULL;	/* c'est le dernier attribut */
+   pAttr->AeAttrSSchema = pNewAttr->AeAttrSSchema;
+   pAttr->AeAttrNum = pNewAttr->AeAttrNum;
+   pAttr->AeDefAttr = False;
+   pAttr->AeAttrType = pNewAttr->AeAttrType;
+   switch (pAttr->AeAttrType)
+	 {
+	    case AtEnumAttr:
+	    case AtNumAttr:
+	       pAttr->AeAttrValue = pNewAttr->AeAttrValue;
+	       break;
+
+	    case AtTextAttr:
+	       if (pNewAttr->AeAttrText != NULL)
+		 {
+		    GetBufTexte (&pAttr->AeAttrText);
+		    CopieTexteDansTexte (pNewAttr->AeAttrText, pAttr->AeAttrText, &len);
+		 }
+	       break;
+
+	    case AtReferenceAttr:
+	       GetReference (&pRef);
+	       pAttr->AeAttrReference = pRef;
+	       pRef->RdElement = pEl;
+	       pRef->RdAttribute = pAttr;
+	       pRef->RdReferred = pNewAttr->AeAttrReference->RdReferred;
+	       pRef->RdTypeRef = pNewAttr->AeAttrReference->RdTypeRef;
+	       pRef->RdInternalRef = pNewAttr->AeAttrReference->RdInternalRef;
+	       /* chaine la reference du nouvel attribut apres celle de */
+	       /* pNewAttr. */
+	       pRef->RdNext = pNewAttr->AeAttrReference->RdNext;
+	       if (pRef->RdNext != NULL)
+		  pRef->RdNext->RdPrevious = pRef;
+	       pRef->RdPrevious = pNewAttr->AeAttrReference;
+	       if (pRef->RdPrevious != NULL)
+		  pRef->RdPrevious->RdNext = pRef;
+	       break;
+
+	    default:
+	       break;
+	 }
+   return (pAttr);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Met dans l'element pEl la valeur de l'attribut pNewAttr		| */
+/* |    Les regles de presentation de cette nouvelle valeur sont	| */
+/* |    appliquees a l'element.						| */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                PutAttributs (PtrElement pEl, PtrDocument pDoc, PtrAttribute pNewAttr)
+#else  /* __STDC__ */
+void                PutAttributs (pEl, pDoc, pNewAttr)
+PtrElement          pEl;
+PtrdocumentA         pDoc;
+PtrAttribute         pNewAttr;
+
+#endif /* __STDC__ */
+{
+   PtrAttribute         pAttr, pAttrAsc;
+   PtrElement          pChild, pElAttr;
+   boolean             suppress, compare, inherit, mandatory, create;
+   NotifyAttribute     notifyAttr;
+
+   /* l'element porte-t-il deja un attribut du meme type ? */
+   pAttr = ValAttr (pEl, pNewAttr);
+   create = (pAttr == NULL);
+
+   /* peut-on appliquer l'attribut a l'element ? */
+   if (!ApplicationPossible (pEl, pAttr, pNewAttr, &mandatory))
+      return;
+
+   /* est-ce une suppression d'attribut */
+   suppress = True;
+   switch (pNewAttr->AeAttrType)
+	 {
+	    case AtEnumAttr:
+	       if (pNewAttr->AeAttrValue != 0)
+		  suppress = False;
+	       break;
+
+	    case AtNumAttr:
+	       if (pNewAttr->AeAttrValue >= -MAX_INT_ATTR_VAL
+		   && pNewAttr->AeAttrValue <= MAX_INT_ATTR_VAL)
+		  suppress = False;
+	       break;
+
+	    case AtTextAttr:
+	       if (pNewAttr->AeAttrText != NULL)
+		  suppress = False;
+	       break;
+
+	    case AtReferenceAttr:
+	       if (pNewAttr->AeAttrReference != NULL)
+		  if (pNewAttr->AeAttrReference->RdReferred != NULL)
+		     suppress = False;
+	       break;
+
+	    default:
+	       break;
+	 }
+   if (suppress)
+     {
+	if (pAttr == NULL)
+	   /* suppression d'un attribut inexistant */
+	   return;
+	if (!mandatory)
+	   /* si c'est un attribut Langue sur un element racine, il est obligatoire */
+	   if (pEl->ElParent == NULL)
+	      if (pNewAttr->AeAttrNum == 1)
+		 mandatory = True;
+	if (mandatory)
+	  /* suppression d'un attribut obligatoire. Interdit */
+	  {
+	     TtaDisplaySimpleMessage (LIB, INFO, LIB_ATTR_REQUIRED_NOT_DELETED);
+	     return;
+	  }
+     }
+
+   /* faut-il traiter des heritages et comparaisons d'attributs */
+   inherit = False;
+   compare = False;
+   if (pNewAttr->AeAttrSSchema->SsPSchema != NULL)
+     {
+	inherit = (pNewAttr->AeAttrSSchema->SsPSchema->
+		    PsNHeirElems[pNewAttr->AeAttrNum - 1] != 0);
+	compare = (pNewAttr->AeAttrSSchema->SsPSchema->
+		       PsNComparAttrs[pNewAttr->AeAttrNum - 1] != 0);
+     }
+   if (inherit || compare)
+      /* cherche le premier attribut de meme type sur un ascendant de pEl */
+      pAttrAsc = GetAttrInEnclosing (pEl, pNewAttr->AeAttrNum,
+				     pNewAttr->AeAttrSSchema, &pElAttr);
+   else
+      pAttrAsc = NULL;
+   /* prepare et envoie l'evenement pour l'application */
+   if (create)
+      notifyAttr.event = TteAttrCreate;
+   else if (suppress)
+      notifyAttr.event = TteAttrDelete;
+   else
+      notifyAttr.event = TteAttrModify;
+   notifyAttr.document = (Document) IdentDocument (pDoc);
+   notifyAttr.element = (Element) pEl;
+   notifyAttr.attribute = (Attribute) pAttr;
+   notifyAttr.attributeType.AttrSSchema = (SSchema) (pNewAttr->AeAttrSSchema);
+   notifyAttr.attributeType.AttrTypeNum = pNewAttr->AeAttrNum;
+   if (!SendAttributeMessage (&notifyAttr, True))
+     {
+	/* l'application accepte l'operation */
+	/* on supprime sur pEl et son sous arbre les regles de presentation
+	   anciennes liees a l'heritage d'un attribut du type pAttr porte'
+	   soit par pEl soit par un ascendant */
+	if (pAttr)
+	  {
+	     /* detache l'attribut de l'element s'il y a lieu */
+	     AttrRetire (pEl, pAttr);
+	     /* heritage et comparaison sont lies a un attribut de pEl */
+	     /* On supprime d'abord les regles de presentation liees a
+	        l'attribut sur l'element lui-meme */
+	     SupprPresAttr (pEl, pDoc, pAttr, False, NULL);
+	     /* supprime l'attribut */
+	     AttrSupprime (pEl, pAttr);
+	     /* indique que le document a ete modifie' */
+	     pDoc->DocModified = True;
+	     /* un changement d'attribut vaut dix caracteres saisis */
+	     pDoc->DocNTypedChars += 10;
+	     /* On supprime de pEl de son sous-arbre  la presentation venant
+		de l'heritage de cet attribut par le sous-arbre, s'il existe
+		des elements heritants de celui-ci */
+	     if (inherit)
+		SupprPresHeriteesAttr (pEl, pDoc, pAttr);
+	     /* On supprime des elements du sous arbre pEl la presentation
+		venant de la comparaison d'un attribut du sous-arbre avec ce
+		type d'attribut */
+	     if (!pEl->ElTerminal && compare)
+		for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
+		   SupprPresCompareeAttr (pChild, pDoc, pAttr);
+	  }
+
+	else if (pAttrAsc)
+	  {
+	     /* heritage et comparaison sont dus a un attribut d'un ascendant
+		de pEl */
+	     /* on supprime du sous arbre pEl la presentation venant de
+		l'heritage de cet attribut par le sous-arbre, s'il existe des
+		elements heritants de celui-ci */
+	     if (inherit)
+		SupprPresHeriteesAttr (pEl, pDoc, pAttrAsc);
+	     /* on supprime du sous-arbre pEl la presentation venant de la
+		comparaison d'un attribut du sous-arbre avec ce type d'attribut */
+	     if (compare)
+		SupprPresCompareeAttr (pEl, pDoc, pAttrAsc);
+	  }
+
+	if (inherit || compare)
+	   /* cherche le premier attribut de meme type sur un ascendant de pEl */
+	   pAttrAsc = GetAttrInEnclosing (pEl, pNewAttr->AeAttrNum,
+					  pNewAttr->AeAttrSSchema, &pElAttr);
+	else
+	   pAttrAsc = NULL;
+
+	/* on met l'attribut */
+	if (!suppress)
+	  {
+	     pAttr = AjouteAttribut (pEl, pNewAttr);
+	     /* indique que le document a ete modifie' */
+	     pDoc->DocModified = True;
+	     /* un changement d'attribut vaut dix caracteres saisis */
+	     pDoc->DocNTypedChars += 10;
+	     /* traitement special a l'ajout d'un attribut a un element d'un
+		objet Draw */
+	     DrawAjAttr (&pAttr, pEl);
+	  }
+
+	else
+	   /* suppression */
+	  {
+	     /* traitement special a la suppression d'un attribut a un element
+		d'un objet Draw */
+	     DrawSupprAttr (pNewAttr, pEl);
+	     /* la suppression est maintenant prise en compte dans les
+		copies-inclusions de l'element */
+	     ReaffPaveCopie (pEl, pDoc, True);
+	  }
+
+	/* on applique les regles de presentation */
+	if (pAttr != NULL && !suppress)
+	  {
+	     /* applique les regles du nouvel attribut */
+	     /* applique d'abord les regles de presentation associees a
+		l'attribut sur l'element lui-meme */
+	     ApplReglesAttr (pEl, pDoc, pAttr, False);
+	     /* applique les regles de presentation venant de l'heritage de
+		cet attribut par le sous-arbre s'il existe des elements qui
+		heritent */
+	     if (inherit)
+		ApplReglesPresHeriteesAttr (pEl, pDoc, pAttr);
+	     /* applique sur les elements du sous-arbre les regles de
+		presentation venant de la comparaison d'un attribut du
+		sous-arbre avec ce type d'attribut */
+	     if (!pEl->ElTerminal && compare)
+		for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
+		   ApplReglesPresCompareesAttr (pChild, pDoc, pAttr);
+	     if (pAttr->AeAttrType == AtNumAttr)
+		/* s'il s'agit d'un attribut initialisant un compteur, il */
+		/* faut mettre a jour les boites utilisant ce compteur */
+		AttrInitCompteur (pEl, pNewAttr, pDoc);
+
+	     /* le nouvel attribut est pris en compte dans les 
+	        les copies-inclusions de l'element */
+	     ReaffPaveCopie (pEl, pDoc, True);
+	  }
+	else if (pAttrAsc != NULL && suppress)
+	  {
+	     /* applique les regles venant de l'heritage ou de la comparaison
+		avec un ascendant */
+	     /* applique sur les elements du sous-arbre les regles de
+		presentation venant de l'heritage de cet attribut par le
+		sous-arbre, s'il existe des elements qui heritent */
+	     ApplReglesPresHeriteesAttr (pEl, pDoc, pAttrAsc);
+	     /* applique sur les elements du sous-arbre les regles de
+		presentation venant de la comparaison d'un attribut de
+		sous-arbre avec ce type d'attribut */
+	     ApplReglesPresCompareesAttr (pEl, pDoc, pAttrAsc);
+	  }
+	/* prepare et envoie a l'application l'evenement TteAttrCreate.Post */
+	notifyAttr.document = (Document) IdentDocument (pDoc);
+	notifyAttr.element = (Element) pEl;
+	notifyAttr.attribute = (Attribute) pAttr;
+	notifyAttr.attributeType.AttrSSchema = (SSchema) (pNewAttr->AeAttrSSchema);
+	notifyAttr.attributeType.AttrTypeNum = pNewAttr->AeAttrNum;
+	if (create)
+	   notifyAttr.event = TteAttrCreate;
+	else if (suppress)
+	  {
+	     notifyAttr.attribute = NULL;
+	     notifyAttr.event = TteAttrDelete;
+	  }
+	else
+	   notifyAttr.event = TteAttrModify;
+	SendAttributeMessage (&notifyAttr, False);
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    ApplAttrToSel applique l'attribut pAttr a une partie de document| */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                ApplAttrToSel (PtrAttribute pAttr, int lastChar, int firstChar, PtrElement pLastSel, PtrElement pFirstSel, PtrDocument pDoc)
+#else  /* __STDC__ */
+void                ApplAttrToSel (pAttr, lastChar, firstChar, pLastSel, pFirstSel, pDoc)
+PtrAttribute         pAttr;
+int                 lastChar;
+int                 firstChar;
+PtrElement          pLastSel;
+PtrElement          pFirstSel;
+PtrDocument         pDoc;
+
+#endif /* __STDC__ */
+{
+   PtrElement          pEl;
+   Language            lang;
+   PtrAttribute         pAttrAsc;
+   PtrElement          pElAttr;
+   int                 i;
+
+   /* eteint d'abord la selection */
+   RazSelect ();
+   /* Coupe les elements du debut et de la fin de la selection s'ils */
+   /* sont partiellement selectionnes */
+   CoupeSelection (pDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
+   /* parcourt les elements selectionnes */
+   pEl = pFirstSel;
+   while (pEl != NULL)
+     {
+	/* On ne traite pas les marques de page */
+	if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
+	  {
+	     if (pAttr->AeAttrNum == 1)
+		/* c'est l'attribut langue */
+	       {
+		  /* change la langue de toutes les feuilles de texte du sous-arbre */
+		  /* de l'element */
+		  if (pAttr->AeAttrText != NULL)
+		     lang = TtaGetLanguageIdFromName (pAttr->AeAttrText->BuContent);
+		  else
+		     /* c'est une suppression de l'attribut Langue */
+		    {
+		       lang = TtaGetDefaultLanguage ();	/* langue par defaut */
+		       /* on cherche si un ascendant porte l'attribut Langue */
+		       pAttrAsc = GetAttrInEnclosing (pEl, 1, NULL, &pElAttr);
+		       if (pAttrAsc != NULL)
+			  /* un ascendant definit la langue, on prend cette langue */
+			  if (pAttrAsc->AeAttrText != NULL)
+			     lang = TtaGetLanguageIdFromName (pAttrAsc->AeAttrText->BuContent);
+		    }
+		  ChngLanguage (pDoc, pEl, lang, False);
+	       }
+
+	     /* met la nouvelle valeur de l'attribut dans l'element et */
+	     /* applique les regles de presentation de l'attribut a l'element */
+	     PutAttributs (pEl, pDoc, pAttr);
+	     if (ThotLocalActions[T_TableauAttributSpecial]!=NULL)
+	       (*ThotLocalActions[T_TableauAttributSpecial])	
+		 (pEl, pAttr, pDoc);	/* cas particulier des tableaux */
+
+	  }
+	/* cherche l'element a traiter ensuite */
+	pEl = SelSuivant (pEl, pLastSel);
+     }
+   /* si c'est un changement de langue qui s'applique a la racine de */
+   /* l'arbre principal du document, on change aussi la langue de */
+   /* tous les autres arbre de ce document */
+   if (pAttr->AeAttrNum == 1)	/* attribut Langue = 1 */
+      if (pFirstSel == pDoc->DocRootElement)
+	{
+	   for (i = 1; i <= MAX_PARAM_DOC; i++)
+	      if (pDoc->DocParameters[i - 1] != NULL)
+		 ApplAttrToSel (pAttr, 0, 0, pDoc->DocParameters[i - 1],
+				pDoc->DocParameters[i - 1], pDoc);
+	   for (i = 1; i <= MAX_ASSOC_DOC; i++)
+	      if (pDoc->DocAssocRoot[i - 1] != NULL)
+		 ApplAttrToSel (pAttr, 0, 0, pDoc->DocAssocRoot[i - 1],
+				pDoc->DocAssocRoot[i - 1], pDoc);
+	}
+   /* parcourt a nouveau les elements selectionnes pour fusionner les */
+   /* elements voisins de meme type ayant les memes attributs, reaffiche */
+   /* toutes les vues et retablit la selection */
+   FusEtSel (pDoc, pFirstSel, pLastSel, firstChar, lastChar);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    AttachMandatoryAttrSRule verifie que l'element pEl possede les  | */
+/* |    attributs requis indique's dans la regle pSRule du schema de    | */
+/* |    structure pSS et, si certains attributs requis manquent, force  | */
+/* |    l'utilisateur a leur donner une valeur et met ces attributs sur | */
+/* |    l'element pEl.                                                  | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument pDoc, SRule * pSRule, PtrSSchema pSS)
+#else  /* __STDC__ */
+static void         AttachMandatoryAttrSRule (pEl, pDoc, pSRule, pSS)
+PtrElement          pEl;
+PtrDocument         pDoc;
+SRule              *pSRule;
+PtrSSchema        pSS;
+
+#endif /* __STDC__ */
+{
+   PtrElement          pRefEl;
+   PtrAttribute         pAttr, pA;
+   int                 i, att;
+   PtrReference        pRef;
+   boolean             found;
+   boolean             MandatoryAttrOK;
+   NotifyAttribute     notifyAttr;
+   int                 len;
+
+   /* parcourt tous les attributs locaux definis dans la regle */
+   for (i = 0; i < pSRule->SrNLocalAttrs; i++)
+      if (pSRule->SrRequiredAttr[i])
+	 /* cet attribut local est obligatoire */
+	 if (pDoc->DocSSchema != NULL)
+	    /* le document n'a pas ete ferme' entre-temps */
+	   {
+	      att = pSRule->SrLocalAttr[i];
+	      /* cherche si l'element possede cet attribut */
+	      pAttr = pEl->ElFirstAttr;
+	      found = False;
+	      while (pAttr != NULL && !found)
+		 if (pAttr->AeAttrNum == att &&
+		     (att == 1 || pAttr->AeAttrSSchema->SsCode == pSS->SsCode))
+		     /* att = 1: Langue, quel que soit le schema de structure */
+		    found = True;
+		 else
+		    pAttr = pAttr->AeNext;
+	      if (!found)
+		 /* l'element ne possede pas cet attribut requis */
+		{
+		   /* envoie l'evenement AttrCreate.Pre */
+		   notifyAttr.event = TteAttrCreate;
+		   notifyAttr.document = (Document) IdentDocument (pDoc);
+		   notifyAttr.element = (Element) pEl;
+		   notifyAttr.attribute = NULL;
+		   notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
+		   notifyAttr.attributeType.AttrTypeNum = att;
+		   SendAttributeMessage (&notifyAttr, True);
+		   /* cree un nouvel attribut pour l'element */
+		   GetAttr (&pAttr);
+		   pAttr->AeAttrSSchema = pSS;
+		   pAttr->AeAttrNum = att;
+		   pAttr->AeDefAttr = False;
+		   pAttr->AeAttrType = pSS->SsAttribute[att - 1].AttrType;
+		   switch (pAttr->AeAttrType)
+			 {
+			    case AtNumAttr:
+			    case AtEnumAttr:
+			       pAttr->AeAttrValue = 0;
+			       break;
+			    case AtReferenceAttr:
+			       /* attache un bloc reference a l'attribut */
+			       GetReference (&pRef);
+			       pAttr->AeAttrReference = pRef;
+			       pRef->RdElement = pEl;
+			       pRef->RdAttribute = pAttr;
+			       break;
+			    case AtTextAttr:
+			       pAttr->AeAttrText = NULL;
+			       break;
+			    default:
+			       break;
+			 }
+		   /* attache l'attribut a l'element */
+		   if (pEl->ElFirstAttr == NULL)
+		      /* c'est le 1er attribut de l'element */
+		      pEl->ElFirstAttr = pAttr;
+		   else
+		     {
+			pA = pEl->ElFirstAttr;	/* 1er attribut de l'element */
+			while (pA->AeNext != NULL)
+			   /* cherche le dernier attribut de l'element */
+			   pA = pA->AeNext;
+			/* chaine le nouvel attribut */
+			pA->AeNext = pAttr;
+		     }
+		   /* c'est le dernier attribut de l'element */
+		   pAttr->AeNext = NULL;
+		   /* envoie l'evenement AttrModify.Pre */
+		   notifyAttr.event = TteAttrModify;
+		   notifyAttr.document = (Document) IdentDocument (pDoc);
+		   notifyAttr.element = (Element) pEl;
+		   notifyAttr.attribute = (Attribute) pAttr;
+		   notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
+		   notifyAttr.attributeType.AttrTypeNum = att;
+		   if (!SendAttributeMessage (&notifyAttr, True))
+		      /* l'application laisse l'editeur saisir la valeur de */
+		      /* l'attribut requis */
+		     {
+			MandatoryAttrOK = False;
+			do
+			  {
+			     /* demande a l'utilisateur d'entrer une valeur */
+			     /* pour l'attribut */
+			     if (pAttr->AeAttrType == AtReferenceAttr)
+				  /* demande a l'utilisateur l'element reference' */
+				  MandatoryAttrOK = RemplRefer (pEl, pAttr, pDoc, &pRefEl);
+			     else
+			       {
+				  if (ThotLocalActions[T_attrreq] != NULL)
+				     (*ThotLocalActions[T_attrreq]) (pAttr, pDoc);
+				  else
+				     switch (pAttr->AeAttrType)
+					   {
+					      case AtNumAttr:
+						 /* attribut a valeur numerique */
+						 pAttr->AeAttrValue = 0;
+						 break;
+
+					      case AtTextAttr:
+						 /* attribut a valeur textuelle */
+						 CopieChaineDansTexte (" ", pAttr->AeAttrText, &len);
+						 break;
+
+					      case AtEnumAttr:
+						 /* attribut a valeurs enumerees */
+						 pAttr->AeAttrValue = 1;
+						 break;
+
+					      default:
+						 break;
+					   }
+				  MandatoryAttrOK = True;
+			       }
+			  }
+			while (!MandatoryAttrOK && pDoc->DocSSchema != NULL);
+
+			if (MandatoryAttrOK && pDoc->DocSSchema != NULL)
+			  {
+			     /* envoie l'evenement AttrModify.Post */
+			     notifyAttr.event = TteAttrModify;
+			     notifyAttr.document = (Document) IdentDocument (pDoc);
+			     notifyAttr.element = (Element) pEl;
+			     notifyAttr.attribute = (Attribute) pAttr;
+			     notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
+			     notifyAttr.attributeType.AttrTypeNum = att;
+			     SendAttributeMessage (&notifyAttr, False);
+			  }
+		     }
+		   /* envoie l'evenement AttrCreate.Post */
+		   notifyAttr.event = TteAttrCreate;
+		   notifyAttr.document = (Document) IdentDocument (pDoc);
+		   notifyAttr.element = (Element) pEl;
+		   notifyAttr.attribute = (Attribute) pAttr;
+		   notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
+		   notifyAttr.attributeType.AttrTypeNum = att;
+		   SendAttributeMessage (&notifyAttr, False);
+		}
+	   }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Verifie que tous les elements du sous-arbre de racine pEl       | */
+/* |    possedent les attributs requis et, si certains attributs requis | */
+/* |    manquent, force l'utilisateur a leur donner une valeur et met   | */
+/* |    ces attributs sur les elements qui les requierent.              | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                AttrRequis (PtrElement pEl, PtrDocument pDoc)
+
+#else  /* __STDC__ */
+void                AttrRequis (pEl, pDoc)
+PtrElement          pEl;
+PtrDocument         pDoc;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pChild;
+   SRule              *pSRule;
+   PtrSSchema        pSS;
+
+   if (pEl != NULL)
+     {
+	/* traite d'abord les attributs requis par la regle de structure qui */
+	/* definit l'element */
+	pSS = pEl->ElSructSchema;
+	pSRule = &pSS->SsRule[pEl->ElTypeNumber - 1];
+	AttachMandatoryAttrSRule (pEl, pDoc, pSRule, pSS);
+	/* traite toutes les regles d'extension de ce type d'element */
+	pSS = pDoc->DocSSchema;
+	if (pSS != NULL)
+	  {
+	     pSS = pSS->SsNextExtens;
+	     /* parcourt tous les schemas d'extension du document */
+	     while (pSS != NULL)
+	       {
+		  /* cherche dans ce schema d'extension la regle qui concerne */
+		  /* le type de l'element */
+		  pSRule = RegleExtens (pEl->ElSructSchema, pEl->ElTypeNumber, pSS);
+		  if (pSRule != NULL)
+		     /* il y a une regle d'extension, on la traite */
+		     AttachMandatoryAttrSRule (pEl, pDoc, pSRule, pSS);
+		  if (pDoc->DocSSchema == NULL)
+		     /* le document a ete ferme' entre-temps */
+		     pSS = NULL;
+		  else
+		     /* passe au schema d'extension suivant */
+		     pSS = pSS->SsNextExtens;
+	       }
+	  }
+	/* applique le meme traitement a tous les descendants de pEl */
+	if (pDoc->DocSSchema != NULL)
+	   /* le document n'a pas ete ferme' entre-temps */
+	   if (!pEl->ElTerminal)
+	     {
+		pChild = pEl->ElFirstChild;
+		while (pChild != NULL)
+		  {
+		     AttrRequis (pChild, pDoc);
+		     if (pDoc->DocSSchema == NULL)
+			/* le document n'existe plus */
+			pChild = NULL;
+		     else
+			pChild = pChild->ElNext;
+		  }
+	     }
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    Retourne un pointeur sur l'attribut associe' a l'exception      | */
+/* |    ExceptNum et porte' par l'element pEl.				| */
+/* |	On retourne NULL si l'element n'a pas cet attribut.		| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PtrAttribute         AttrExceptElem (PtrElement pEl, int ExceptNum)
+
+#else  /* __STDC__ */
+PtrAttribute         AttrExceptElem (pEl, ExceptNum)
+PtrElement          pEl;
+int                 ExceptNum;
+
+#endif /* __STDC__ */
+
+{
+   PtrSSchema        pSS;
+   PtrAttribute         pAttr;
+   boolean             found;
+   int                 attrNum;
+
+   pSS = pEl->ElSructSchema;
+   /* on recupere le numero d'attribut associe a l'exception */
+   attrNum = ExceptNumAttr (ExceptNum, pEl->ElSructSchema);
+   if (attrNum != 0)
+     {
+	/* on cherche un attribut sur l'element */
+	pAttr = pEl->ElFirstAttr;
+	found = False;
+	while (pAttr != NULL && !found)
+	     if (pAttr->AeAttrSSchema->SsCode == pSS->SsCode && pAttr->AeAttrNum == attrNum)
+		found = True;
+	     else
+		pAttr = pAttr->AeNext;
+	return pAttr;
+     }
+   else
+	return NULL;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    Modifie la valeur d'un attribut a valeurs enumerees porte par	| */
+/* |    l'element pEl dans le document pDoc. L'attribut porte		| */
+/* |	l'exception de numero ExceptNum. La nouvelle valeur est attrVal	| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                ChngValAttr (PtrElement pEl, PtrDocument pDoc, int attrVal, int ExceptNum)
+
+#else  /* __STDC__ */
+void                ChngValAttr (pEl, pDoc, attrVal, ExceptNum)
+PtrElement          pEl;
+PtrDocument         pDoc;
+int                 attrVal;
+int                 ExceptNum;
+
+#endif /* __STDC__ */
+
+{
+   PtrAttribute         pAttr;
+
+   GetAttr (&pAttr);
+   if (pAttr != NULL)
+     {
+       pAttr->AeAttrSSchema = pEl->ElSructSchema;
+       pAttr->AeAttrNum = ExceptNumAttr (ExceptNum, pEl->ElSructSchema);
+       pAttr->AeDefAttr = False;
+       pAttr->AeAttrType = AtEnumAttr;
+       pAttr->AeAttrValue = attrVal;
+       PutAttributs (pEl, pDoc, pAttr);
+       AttrSupprime (NULL, pAttr);
+     }
+}

@@ -1,0 +1,34 @@
+dicopar contient les dictionnaires utilisés :
+ 
+- soit par le correcteur orthographique,
+- soit par le correcteur typographique,
+- soit par les deux correcteurs.
+
+Les fichiers .DIC
+= liste de mots ou expressions triées par taille ET ordre alphabetique
+
+
+Les fichiers .dic
+= resultat du pretraitement d'un fichier .DIC pour utilisation 
+par le correcteur orthographique.
+
+
+Les fichiers .LEX
+= liste de mots ou expressions classées dans un ordre imposé par le contenu
+d'un autre dictionnaire (.DIC). 
+Par exemple, Utrabbrev contient la liste des traductions
+des abreviations contenues dans le fichier Uabbrev, 
+dans l'ordre de l'abbreviation (taille et alphabetique),
+c'est à dire dans le même ordre que celui de Uabbrev.
+
+Ces fichiers ne sont pas pretraites comme les fichiers .DIC.
+Ils pourront - par la suite - etre traites lorsqu'ils contiendront, 
+en plus des chaines de caracteres, des informations typographiques :
+position des capitales, italique, etc.
+
+
+------------
+Hélène Richy 
+Irisa, Rennes      le 12 mars 1994
+-----------------------------------
+

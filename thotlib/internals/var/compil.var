@@ -1,0 +1,18 @@
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+
+/*
+ * compil.var --<description>
+ * Variables exportees par les compilateurs grm, str et prs.
+ */
+
+
+EXPORT int		COMPIL;		/* Identification des messages Compil */
+EXPORT int        	STR;		/* Identification des messages Str */
+EXPORT int        	PRS;		/* Identification des messages Prs */
+EXPORT int        	TRA;		/* Identification des messages Tra */
+EXPORT int        	GRM;		/* Identification des messages Grm */
+EXPORT int		APP;		/* Identification des messages App */
+EXPORT lineBuffer 	inputLine;	/* ligne traitee */
+EXPORT boolean 	error;		/* erreur detectee */
+EXPORT msgerr  	msg[120];	/* texte des messages d'erreur */
+

@@ -1,0 +1,652 @@
+
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+
+/*
+   filesystem.c : Acces aux fichiers Unix
+ */
+
+#include "thot_sys.h"
+#include "constmedia.h"
+#include "thotdir.h"
+#include "thotfile.h"
+
+/* ---------------------------------------------------------------------- */
+/* |    BaseName est un equivalent de la fonction Unix basename         | */
+/* |            Si filename pointe sur un nom de fichier absolu,        | */
+/* |            basename contient a` la fin, le nom simple du fichier.  | */
+/* |            delim peut etre utilise' pour donner un autre delimiteur| */
+/* |            que /. ext peut etre utilise' pour supprimer l'extension| */
+/* |            du nom. On retourne le nombre de caracteres dans        | */
+/* |            basename.                                               | */
+/* |            Exemple d'appels :                                      | */
+/* |            - Basename("/users/rascar/thot", "", 0, 0) -> thot      | */
+/* |            - Basename("/users/rascar/thot.c", "", 0, "c") -> thot  | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+int                 BaseName (char *filename, char *basename, char delim, char ext)
+
+#else  /* __STDC__ */
+int                 BaseName (filename, basename, delim, ext)
+char               *filename;
+char               *basename;
+char                delim;
+char                ext;
+
+#endif /* __STDC__ */
+
+{
+   register char      *from, *to;
+
+   if (delim == 0)
+      delim = DIR_SEP;
+
+   to = basename;
+   *to = '\0';
+   for (from = filename; *from++;) ;
+   for (--from; --from > filename;)
+     {
+	if (*from == delim)
+	  {
+	     ++from;
+	     break;
+	  }
+     }
+   if (*from == delim)
+      ++from;
+
+   if (ext == 0)
+      for (; *from;)
+	 *to++ = *from++;
+   else
+      for (; *from && *from != ext;)
+	 *to++ = *from++;
+   *to = '\0';
+
+   return (strlen (basename));
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    DirName est un equivalent de la fonction Unix dirname.          | */
+/* |            Si basename pointe sur un nom de fichier absolu,        | */
+/* |            dirname contient a` la fin, le chemin du fichier.       | */
+/* |            delim peut etre utilise' pour donner un autre delimiteur| */
+/* |            que /. On retourne le nombre de caracteres dans dirname.| */
+/* |            exemple d'appel:                                        | */
+/* |            - Dirname("/users/rascar/thot", "", 0) -> /users/rascar | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+int                 DirName (char *filename, char *dirname, char delim)
+
+#else  /* __STDC__ */
+int                 DirName (filename, dirname, delim)
+char               *filename;
+char               *dirname;
+char                delim;
+
+#endif /* __STDC__ */
+
+{
+   register char      *from, *to, *mark;
+
+   if (delim == 0)
+      delim = DIR_SEP;
+
+   to = dirname;
+   *to = '\0';
+   for (from = filename; *from++;) ;
+   for (--from; --from > filename;)
+     {
+	if (*from == delim)
+	  {
+	     ++from;
+	     break;
+	  }
+     }
+   if (*from == delim)
+      ++from;
+
+   for (mark = filename; mark < from; *to++ = *mark++) ;
+   *to = '\0';
+
+   return (strlen (dirname));
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    FileExist teste l'existence d'un fichier.                       | */
+/* |            Rend 1 si le fichier a e't'e trouve' et 0 sinon.        | */
+/* |            Si filename est un repertoire, on retourne 0.           | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+int                 FileExist (char *filename)
+
+#else  /* __STDC__ */
+int                 FileExist (filename)
+char               *filename;
+
+#endif /* __STDC__ */
+
+{
+   int                 ret = 0;
+
+#ifdef WWW_MSWINDOWS
+   DWORD               attribs;
+
+   attribs = GetFileAttributes (filename);
+   if (attribs == 0xFFFFFFFF)
+      ret = 0;
+   else if (attribs & FILE_ATTRIBUTE_DIRECTORY)
+      ret = 0;
+   else
+      ret = 1;
+#else  /* WWW_MSWINDOWS */
+   int                 filedes;
+   struct stat         statinfo;
+
+   filedes = open (filename, 0);
+   if (filedes < 0)
+      ret = 0;
+   else
+     {
+	if (fstat (filedes, &statinfo) != -1)
+	  {
+	     if (statinfo.st_mode & S_IFDIR)
+		/* on ne veut pas de directory */
+		ret = 0;
+	     else
+		ret = 1;
+	  }
+	close (filedes);
+     }
+#endif /* !WWW_MSWINDOWS */
+   return ret;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    RemoveFile : remove a file.                                     | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+int                 RemoveFile (char *filename)
+
+#else  /* __STDC__ */
+int                 RemoveFile (filename)
+char               *filename;
+
+#endif /* __STDC__ */
+
+{
+#ifdef WWW_MSWINDOWS
+   return (remove (filename));
+#else
+   return (unlink (filename));
+#endif
+}
+
+/* ---------------------------------------------------------------------- */
+/* | static ThotDirBrowse_copyFile - copy the filename from the           */
+/* |                                 platform's directory structure       */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static int          ThotDirBrowse_copyFile (ThotDirBrowse * me)
+#else  /* __STDC__ */
+static int          ThotDirBrowse_copyFileName (me)
+ThotDirBrowse      *me;
+
+#endif /* __STDC__ */
+{
+#ifdef WWW_MSWINDOWS
+   DWORD               attr;
+
+   if (strlen (me->data.cFileName) + me->dirLen > me->bufLen)
+      return -2;
+   strcpy (me->buf + me->dirLen, me->data.cFileName);
+   if ((attr = GetFileAttributes (me->buf)) == 0xFFFFFFFF)
+      return -1;
+   if (attr & FILE_ATTRIBUTE_DIRECTORY && !(me->mask & ThotDirBrowse_DIRECTORIES))
+      return 0;
+   if (attr & FILE_ATTRIBUTE_NORMAL && !(me->mask & ThotDirBrowse_FILES))
+      return 0;
+   return 1;
+#else  /* WWW_MSWINDOWS */
+   int                 i;
+   int                 ls_car;
+   BOOLEAN             notEof;
+   struct stat         fileStat;
+
+   while (TRUE)
+     {
+	ls_car = fgetc (me->ls_stream);
+	/* saute les caracteres de separation */
+	while (((char) ls_car == ' ') || ((char) ls_car == '\t') ||
+	       ((char) ls_car == '\n'))
+	   ls_car = fgetc (me->ls_stream);
+	notEof = TRUE;
+	i = 0;
+	while (((char) ls_car != ' ') && ((char) ls_car != '\t') &&
+	       ((char) ls_car != '\n') && (notEof))
+	  {
+	     if (ls_car == EOF)
+		notEof = FALSE;
+	     else
+	       {
+		  me->buf[i] = (char) ls_car;
+		  i++;
+		  if (i == me->bufLen)
+		    {
+		       me->buf[i - 1] = 0;
+		       return -2;
+		    }
+		  ls_car = fgetc (me->ls_stream);
+	       }
+	  }
+	me->buf[i] = '\0';
+	if (notEof == FALSE && !i)
+	   return 0;
+	if (stat (me->buf, &fileStat) == -1)
+	   return -1;
+	/* next if fileStat is not included in our mask */
+	if (S_ISDIR (fileStat.st_mode) && !(me->mask & ThotDirBrowse_DIRECTORIES))
+	   continue;
+	if (S_ISREG (fileStat.st_mode) && !(me->mask & ThotDirBrowse_FILES))
+	   continue;
+	return 1;
+     }
+#endif /* !WWW_MSWINDOWS */
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    ThotDirBrowse_first - get first dir/name.ext and setup            */
+/* |            platform dependent ThotDirBrowse structure                */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+int                 ThotDirBrowse_first (ThotDirBrowse * me, char *dir, char *name, char *ext)
+#else  /* __STDC__ */
+int                 ThotDirBrowse_first (me, dir, name, ext)
+ThotDirBrowse      *me;
+char               *dir;
+char               *name;
+char               *ext;
+
+#endif /* __STDC__ */
+
+{
+   char                space[MAX_PATH];
+   int                 ret;
+
+   me->dirLen = strlen (dir);
+   strcpy (me->buf, dir);
+   strcpy (me->buf + (me->dirLen++), DIR_STR);
+#ifdef WWW_MSWINDOWS
+   sprintf (space, "%s\\%s%s", dir ? dir : "", name ? name : "",
+	    ext ? ext : "");
+   me->handle = INVALID_HANDLE_VALUE;
+   if ((me->handle = FindFirstFile (space, &me->data)) ==
+       INVALID_HANDLE_VALUE)
+      return -1;
+   if ((ret = ThotDirBrowse_copyFile (me)) == 1)
+      return 1;
+   ret = ThotDirBrowse_next (me);
+   if (ret == -1)
+      FindClose (me->handle);
+   return ret;
+#else  /* WWW_MSWINDOWS */
+   /* sprintf (space, "/bin/ls%s %s/%s%s 2>/dev/null", 
+      ext && *ext ? "" : " -d", dir ? dir : "", 
+      name ? name : "", ext ? ext : ""); - EGP */
+   sprintf (space, "/bin/ls -d %s/%s%s 2>/dev/null", dir ? dir : "",
+	    name ? name : "", ext ? ext : "");
+   me->ls_stream = NULL;
+   if ((me->ls_stream = popen (space, "r")) == NULL)
+      return -1;
+   if ((ret = ThotDirBrowse_copyFile (me)) == 1)
+      return 1;
+   pclose (me->ls_stream);
+   me->ls_stream = NULL;
+#endif /* !WWW_MSWINDOWS */
+   return ret;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    ThotDirBrowse_next - get next file                                */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+int                 ThotDirBrowse_next (ThotDirBrowse * me)
+#else  /* __STDC__ */
+int                 ThotDirBrowse_next (me)
+ThotDirBrowse      *me;
+
+#endif /* __STDC__ */
+
+{
+#ifdef WWW_MSWINDOWS
+   int                 ret;
+
+   do
+     {
+	if (FindNextFile (me->handle, &me->data) != TRUE)
+	   return GetLastError () == ERROR_NO_MORE_FILES ? 0 : -1;
+     }
+   while ((ret = ThotDirBrowse_copyFile (me)) == 0);
+   return ret;
+#else  /* WWW_MSWINDOWS */
+   return ThotDirBrowse_copyFile (me);
+#endif /* !WWW_MSWINDOWS */
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    ThotDirBrowse_close - recover system resources                    */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+int                 ThotDirBrowse_close (ThotDirBrowse * me)
+#else  /* __STDC__ */
+int                 ThotDirBrowse_close (me)
+ThotDirBrowse      *me;
+
+#endif /* __STDC__ */
+
+{
+   int                 ret;
+
+#ifdef WWW_MSWINDOWS
+   if (me->handle == INVALID_HANDLE_VALUE)
+      return 0;
+   ret = (FindClose (me->handle) == 1 ? 1 : -1);
+   me->handle = INVALID_HANDLE_VALUE;
+#else  /* WWW_MSWINDOWS */
+   if (me->ls_stream == NULL)
+      return 0;
+   ret = (pclose (me->ls_stream) == -1 ? -1 : 1);
+   me->ls_stream = NULL;
+#endif /* !WWW_MSWINDOWS */
+   return ret;
+}
+
+/* uniform file access for unix, WIN32, and refrigerator
+   see ThotFile_test for sample usage
+ */
+
+#ifdef INCLUDE_TESTING_CODE
+/* ThotFile_test - use to test ThotFile on any platform
+ */
+void                ThotFile_test (char *name)
+{
+   ThotFileHandle      handle = ThotFile_BADHANDLE;
+   ThotFileOffset      offset;
+   ThotFileInfo        info;
+   int                 i;
+   char                space[16];
+   const char         *format = "%15d\0";
+
+   space[sizeof (space) - 1] = 0;
+   printf ("ThotFile_test: opening %s for CREATE/READ/WRITE\n", name);
+   handle = ThotFile_open (name, ThotFile_CREATE | ThotFile_TRUNCATE | ThotFile_READWRITE);
+   if (handle == ThotFile_BADHANDLE)
+     {
+	printf ("ThotFile_test: handle == ThotFile_BADHANDLE\n");
+	return;
+     }
+   printf ("ThotFile_test: writing %s\n", name);
+   for (i = 0; i < 100; i++)
+     {
+	sprintf (space, format, i);
+	if (ThotFile_write (handle, space, sizeof (space)) == -1)
+	  {
+	     printf ("ThotFile_test: bad write\n");
+	     break;
+	  }
+     }
+   printf ("ThotFile_test: closing %s\n", name);
+   if (ThotFile_close (handle) == 0)
+     {
+	printf ("ThotFile_test: bad write\n");
+	return;
+     }
+   printf ("ThotFile_test: reopening %s\n", name);
+   handle = ThotFile_open (name, ThotFile_READWRITE);
+   if (handle == ThotFile_BADHANDLE)
+     {
+	printf ("ThotFile_test: handle == ThotFile_BADHANDLE\n");
+	return;
+     }
+   printf ("ThotFile_test: stating %s\n", name);
+   if (ThotFile_stat (handle, &info) == 0)
+     {
+	printf ("ThotFile_stat: bad stat\n");
+	return;
+     }
+   printf ("ThotFile_test: file %s is %d bytes long\n", name, info.size);
+   printf ("ThotFile_test: seeking end of %s\n", name);
+   offset = ThotFile_seek (handle, 0, ThotFile_SEEKEND);
+   if (offset == ThotFile_BADOFFSET)
+     {
+	printf ("ThotFile_test: offset == ThotFile_BADOFFSET\n");
+	return;
+     }
+   printf ("ThotFile_test: end found at %d\n", offset);
+   printf ("ThotFile_test: seeking to offset %d in %s\n", offset - 4 * sizeof (space), name);
+   offset = ThotFile_seek (handle, offset - 4 * sizeof (space), ThotFile_SEEKSET);
+   if (offset == ThotFile_BADOFFSET)
+     {
+	printf ("ThotFile_test: offset == ThotFile_BADOFFSET\n");
+	return;
+     }
+   printf ("ThotFile_test: reading %s\n", name);
+   for (i -= 4; 1; i++)
+     {
+	int                 red;
+
+	red = ThotFile_read (handle, space, sizeof (space));
+	if (red == -1)
+	  {
+	     printf ("ThotFile_test: bad write\n");
+	     break;
+	  }
+	if (red == 0)
+	  {
+	     printf ("ThotFile_test: end of file %s\n", name);
+	     break;
+	  }
+	printf ("ThotFile_test: %s should == %d\n", space, i);
+     }
+   printf ("ThotFile_test: closing %s\n", name);
+   if (ThotFile_close (handle) == 0)
+     {
+	printf ("ThotFile_test: bad write\n");
+	return;
+     }
+}
+#endif /* INCLUDE_TESTING_CODE */
+
+/* ThotFile_open
+ * returns: ThotFile_BADHANDLE: error
+ handle:
+ */
+#ifdef __STDC__
+ThotFileHandle      ThotFile_open (char *name, ThotFileMode mode)
+#else  /* __STDC__ */
+ThotFileHandle      ThotFile_open (name, mode)
+char               *name;
+ThotFileMode        mode;
+
+#endif /* __STDC__ */
+{
+   ThotFileHandle      ret;
+
+#ifdef WWW_MSWINDOWS
+   DWORD               access = 0;	// access (read-write) mode 
+
+   SECURITY_ATTRIBUTES secAttribs;
+   DWORD               creation;	// how to create 
+
+   secAttribs.nLength = sizeof (secAttribs);
+   secAttribs.lpSecurityDescriptor = NULL;
+   secAttribs.bInheritHandle = TRUE;
+   if (mode & ThotFile_READ)
+      access |= GENERIC_READ;
+   if (mode & ThotFile_WRITE)
+      access |= GENERIC_WRITE;
+   if (mode & ThotFile_CREATE && mode & ThotFile_TRUNCATE)
+      creation = CREATE_ALWAYS;
+   else if (mode & ThotFile_CREATE && mode & ThotFile_EXCLUSIVE)
+      creation = CREATE_NEW;
+   else if (mode & ThotFile_TRUNCATE && !(mode & ThotFile_CREATE))
+      creation = TRUNCATE_EXISTING;
+   else if (mode & ThotFile_CREATE)
+      creation = OPEN_ALWAYS;
+   else
+      creation = OPEN_EXISTING;
+   ret = CreateFile (name, access, FILE_SHARE_READ, &secAttribs, creation, FILE_ATTRIBUTE_NORMAL, NULL);
+#else  /* WWW_MSWINDOWS */
+   ret = open (name, mode, 0777);
+#endif /* !WWW_MSWINDOWS */
+   return ret;
+}
+
+/* ThotFile_close
+ * returns: 0: error
+ 1: OK
+ */
+#ifdef __STDC__
+int                 ThotFile_close (ThotFileHandle handle)
+#else  /* __STDC__ */
+int                 ThotFile_close (handle)
+ThotFileHandle      handle;
+
+#endif /* __STDC__ */
+{
+   int                 ret;
+
+#ifdef WWW_MSWINDOWS
+   ret = CloseHandle (handle);
+#else  /* WWW_MSWINDOWS */
+   ret = close (handle) == 0;
+#endif /* !WWW_MSWINDOWS */
+   return ret;
+}
+
+/* ThotFile_read
+ * returns: +n: number of bytes read
+ 0: at EOF
+ -1: error
+ */
+#ifdef __STDC__
+int                 ThotFile_read (ThotFileHandle handle, void *buffer, unsigned int count)
+#else  /* __STDC__ */
+int                 ThotFile_read (handle, buffer, count)
+ThotFileHandle      handle;
+void               *buffer;
+unsigned int        count;
+
+#endif /* __STDC__ */
+{
+   int                 ret;
+
+#ifdef WWW_MSWINDOWS
+   DWORD               red;
+
+   ret = ReadFile (handle, buffer, count, &red, 0);	/* OK as long as we don't open for overlapped IO */
+   if (ret == TRUE)
+      ret = (int) red;
+   else
+      ret = -1;
+#else  /* WWW_MSWINDOWS */
+   ret = read (handle, buffer, count);
+#endif /* !WWW_MSWINDOWS */
+   return ret;
+}
+
+/* ThotFile_write
+ * returns:  n: number of bytes written
+ -1: error
+ */
+#ifdef __STDC__
+int                 ThotFile_write (ThotFileHandle handle, void *buffer, unsigned int count)
+#else  /* __STDC__ */
+int                 ThotFile_write (handle, buffer, count)
+ThotFileHandle      handle;
+void               *buffer;
+unsigned int        count;
+
+#endif /* __STDC__ */
+{
+   int                 ret;
+
+#ifdef WWW_MSWINDOWS
+   DWORD               writ;
+
+   ret = WriteFile (handle, buffer, count, &writ, NULL);	/* OK as long as we don't open for overlapped IO */
+   if (ret == TRUE)
+      ret = (int) writ;
+   else
+      ret = -1;
+#else  /* WWW_MSWINDOWS */
+   ret = write (handle, buffer, count);
+#endif /* !WWW_MSWINDOWS */
+   return ret;
+}
+
+/* ThotFile_seek
+ * returns: ThotFile_BADOFFSET: error
+ ThotFileOffset
+ */
+#ifdef __STDC__
+ThotFileOffset      ThotFile_seek (ThotFileHandle handle, ThotFileOffset offset, ThotFileOrigin origin)
+#else  /* __STDC__ */
+ThotFileOffset      ThotFile_seek (handle, offset, origin)
+ThotFileHandle      handle;
+ThotFileOffset      offset;
+ThotFileOrigin      origin;
+
+#endif /* __STDC__ */
+{
+   ThotFileOffset      ret;
+
+#ifdef WWW_MSWINDOWS
+   ret = SetFilePointer (handle, offset, 0, origin);
+#else  /* WWW_MSWINDOWS */
+   ret = lseek (handle, offset, origin);
+#endif /* !WWW_MSWINDOWS */
+   return ret;
+}
+
+/* ThotFile_seek
+ * returns: 1: your data is all there, sir
+ 0: error
+ */
+#ifdef __STDC__
+int                 ThotFile_stat (ThotFileHandle handle, ThotFileInfo * pInfo)
+#else  /* __STDC__ */
+int                 ThotFile_stat (handle, pInfo)
+ThotFileHandle      handle;
+ThotFileInfo       *pInfo;
+
+#endif /* __STDC__ */
+{
+   ThotFileOffset      ret;
+
+#ifdef WWW_MSWINDOWS
+   BY_HANDLE_FILE_INFORMATION info;
+
+   ret = GetFileInformationByHandle (handle, &info);
+   if (ret)
+     {
+	pInfo->atime = info.ftLastAccessTime;
+	pInfo->size = info.nFileSizeLow;
+     }
+#else  /* WWW_MSWINDOWS */
+   struct stat         buf;
+
+   ret = fstat (handle, &buf) == 0;
+   if (ret)
+     {
+	pInfo->atime = buf.st_atime;
+	pInfo->size = buf.st_size;
+     }
+#endif /* !WWW_MSWINDOWS */
+   return ret;
+}

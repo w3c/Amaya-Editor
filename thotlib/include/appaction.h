@@ -1,0 +1,147 @@
+#ifndef _ACTION_H_
+#define _ACTION_H_
+
+#include "document.h"
+#include "tree.h"
+#include "view.h"
+#include "attribute.h"
+#include "presentation.h"
+
+/* ********* ATTENTION ********** */
+/* Le tableau RegisteredAppEvents du module appana.c doit etre coherent avec */
+/* le type APPevent. */
+/* La constante NUMBER_OF_APP_EVENTS indique le nombre de valeurs de */
+/* l'enum APPevent */
+
+#define NUMBER_OF_APP_EVENTS 39
+typedef enum
+  {
+     TteAttrMenu,
+     TteAttrCreate,
+     TteAttrModify,
+     TteAttrRead,
+     TteAttrSave,
+     TteAttrExport,
+     TteAttrDelete,
+     TteElemMenu,
+     TteElemNew,
+     TteElemRead,
+     TteElemSave,
+     TteElemExport,
+     TteElemDelete,
+     TteElemSelect,
+     TteElemExtendSelect,
+     TteElemActivate,
+     TteElemSetReference,
+     TteElemInclude,
+     TteElemCopy,
+     TteElemPaste,
+     TteElemChange,
+     TteElemMove,
+     TteElemTextModify,
+     TteElemGraphModify,
+     TtePRuleCreate,
+     TtePRuleModify,
+     TtePRuleDelete,
+     TteDocOpen,
+     TteDocCreate,
+     TteDocClose,
+     TteDocSave,
+     TteDocExport,
+     TteViewOpen,
+     TteViewClose,
+     TteViewResize,
+     TteViewScroll,
+     TteInit,
+     TteExit,
+     TteNull
+  }
+APPevent;
+
+typedef struct
+  {
+     APPevent            event;
+  }
+NotifyEvent;
+
+typedef struct
+  {
+     APPevent            event;
+     Document            document;
+     View                view;
+  }
+NotifyDialog;
+
+typedef struct
+  {
+     APPevent            event;
+     Document            document;
+     View                view;
+     int                 verticalValue;
+     int                 horizontalValue;
+  }
+NotifyWindow;
+
+typedef struct
+  {
+     APPevent            event;
+     Document            document;
+     Element             element;
+     Attribute           attribute;
+     AttributeType       attributeType;
+  }
+NotifyAttribute;
+
+typedef struct
+  {
+     APPevent            event;
+     Document            document;
+     Element             element;
+     ElementType         elementType;
+     int                 position;
+  }
+NotifyElement;
+
+typedef struct
+  {
+     APPevent            event;
+     Document            document;
+     Element             element;
+     Element             target;
+     Document            targetdocument;
+  }
+NotifyOnTarget;
+
+typedef struct
+  {
+     APPevent            event;
+     Document            document;
+     Element             element;
+     Element             target;
+     int                 value;
+  }
+NotifyOnValue;
+
+typedef struct
+  {
+     APPevent            event;
+     Document            document;
+     Element             element;
+     PRule               pRule;
+     int                 pRuleType;
+  }
+NotifyPresentation;
+
+typedef union
+  {
+     NotifyEvent         notifyevent;
+     NotifyDialog        notifydialog;
+     NotifyWindow        notifywindow;
+     NotifyAttribute     notifyattribute;
+     NotifyElement       notifyelement;
+     NotifyOnTarget      notifyontarget;
+     NotifyPresentation  notifypresentation;
+  }
+Notify;
+
+#endif

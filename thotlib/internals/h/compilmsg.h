@@ -1,0 +1,23 @@
+#define COMPIL_INVALID_CHARACTER	                0
+#define COMPIL_INCOR_NUMBER	                        1
+#define COMPIL_NCORRECT_WORD	                        2
+#define COMPIL_IDENTIFIER_TABLE_IS_FULL	                3
+#define COMPIL_INVALID_SYMBOL	                        4
+#define COMPIL_SYNTAX_ERR	                        5
+#define COMPIL_ABNORMAL_END	                        6
+#define COMPIL_NUMBER_TOO_GREAT	                        7
+#define COMPIL_ALREADY_DEFINED_WITH_A_DIFFERENT_TYPE	8
+#define COMPIL_STRINGS_CANNOT_EXCEED_ONE_LINE	        9
+#define COMPIL_STACK_IS_FULL	                       10
+#define COMPIL_END_HAS_ALREADY_BEEN_REACHED	       11
+#define COMPIL_WORD_TOO_LONG	                       12
+#define COMPIL_GRAMMAR_FILE_GRM_NOT_FOUND	       13
+#define COMPIL_KEYWORD_TABLE_FULL	               14
+#define COMPIL_KEYWORD_TOO_LONG	                       15
+#define COMPIL_INCOR_GRAMMAR_FILE_GRM	               16
+#define COMPIL_GRAMMAR_TABLE_FULL	               17
+#define COMPIL_GRAMMAR_RULE_TOO_LONG	               18
+#define COMPIL_ERR_LINE                                19
+#define COMPIL_STRING	                               20
+
+#define COMPIL_MSG_MAX	                               21

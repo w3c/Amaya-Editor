@@ -1,0 +1,143 @@
+
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+/* I. Vatton    Mai 1994 */
+
+#include "thot_sys.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "constmenu.h"
+#include "app.h"
+#include "appdialogue.h"
+#include "tree.h"
+#include "message.h"
+#include "dialog.h"
+
+#undef EXPORT
+#define EXPORT extern
+#include "edit.var"
+#include "select.var"
+#include "appdialogue.var"
+
+#include "appli.f"
+#include "arbabs.f"
+#include "attrmenu.f"
+#include "cherche.f"
+#include "creation.f"
+#include "creationmenu.f"
+#include "crimabs.f"
+#include "docvues.f"
+#include "appdialogue.f"
+#include "edit.f"
+#include "except.f"
+#include "input.f"
+#include "keyboards.f"
+#include "menuimage.f"
+#include "modif.f"
+#include "select.f"
+#include "structure.f"
+
+
+/* ---------------------------------------------------------------------- */
+/* |    ComposeItemSplitsele compose dans le buffer BufItemSplit        | */
+/* |            l'intitule' de l'entree Split du menu Edit.             | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         ComposeItemSplit (char *BufItemSplit)
+#else  /* __STDC__ */
+static void         ComposeItemSplit (BufItemSplit)
+char               *BufItemSplit;
+
+#endif /* __STDC__ */
+{
+   PtrElement          premEl, derEl, pListe, pPointDiv, ElemADupliquer,
+                       pEl;
+   int                 premcar, dercar;
+   PtrDocument         pDoc;
+
+   BufItemSplit[0] = '\0';
+   /* verifie si la commande Split est valide pour la selection */
+   /* courante */
+   if (SelEditeur (&pDoc, &premEl, &derEl, &premcar, &dercar))
+     {
+	if (!CanSplitElement (premEl, premcar, True, &pListe, &pPointDiv,
+			      &ElemADupliquer))
+	   CanSplitElement (premEl, premcar, False, &pListe, &pPointDiv,
+			    &ElemADupliquer);
+	if (ElemADupliquer != NULL && !ElemReadOnly (pListe) &&
+	    !ElemReadOnly (ElemADupliquer))
+	   /* la commande Split est valide, on compose l'item */
+	   /* correspondant du menu Edit */
+	  {
+	     pEl = ElemADupliquer;
+	     /* si c'est un choix, on utilise le type du fils */
+	     if (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
+		if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
+		   pEl = pEl->ElFirstChild;
+	     sprintf (BufItemSplit, "%s %s", TtaGetMessage (LIB, LIB_SPLIT),
+		    pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+	  }
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    MajItemSplit    met a jour l'intitule' de l'item Split du menu  | */
+/* |            Edit dans toutes les frame du document pDoc.            | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                MajItemSplit (PtrDocument pDoc)
+#else  /* __STDC__ */
+void                MajItemSplit (pDoc)
+PtrDocument         pDoc;
+
+#endif /* __STDC__ */
+{
+   char                BufItemSplit[MAX_TXT_LEN];
+
+   BufItemSplit[0] = '\0';
+   if (pDoc == NULL || pDoc != SelDocument)
+      return;
+   else if (!pDoc->DocReadOnly)
+     {
+	/* construit l'intitule' de la commande Split en fonction de */
+	/* la selection courante */
+	ComposeItemSplit (BufItemSplit);
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* | TtcSplit coupe un element.                                         | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtcSplit (Document document, View view)
+#else  /* __STDC__ */
+void                TtcSplit (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   /* on essaie d'abord de faire comme la touche Return */
+   if (BreakElement (NULL, NULL, 0, True))
+      return;
+   /* puisque ca n'a pas marche', on essaie autre chose */
+   BreakElement (NULL, NULL, 0, False);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | StructEditingingLoadResources connecte les fonctions               | */
+/* |            de  modification de structure.                          | */
+/* ---------------------------------------------------------------------- */
+void                StructEditingLoadResources ()
+{
+   if (ThotLocalActions[T_chsplit] == NULL)
+     {
+	/* Connecte les actions liees au traitement du split */
+	TteConnectAction (T_chsplit, (Proc) MajItemSplit);
+	TteConnectAction (T_creecolle, (Proc) CreeColle);
+	TteConnectAction (T_rcreecolle, (Proc) RetMenuCreeColle);
+	TteConnectAction (T_rchoice, (Proc) RetMenuChoixElem);
+	TteConnectAction (T_raskfornew, (Proc) RetMenuAskForNew);
+	ImageMenuLoadResources ();
+     }
+}

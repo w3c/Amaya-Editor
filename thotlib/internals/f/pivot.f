@@ -1,0 +1,50 @@
+
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+
+#ifndef __CEXTRACT__
+#ifdef __STDC__
+
+extern Document TtaAllocateDocument ( char *documentName );
+extern void TtaWritePivotHeader ( BinFile pivotFile, Document document );
+extern void TtaReadPivotHeader ( BinFile pivotFile, Document document, char *nextChar );
+extern void TtaWriteLanguageTable ( BinFile pivotFile, Document document );
+extern void TtaReadLanguageTable ( BinFile pivotFile, Document document, char *nextChar );
+extern void TtaWriteSchemaNames ( BinFile pivotFile, Document document );
+extern void TtaReadSchemaNames ( BinFile pivotFile, Document document, char *nextChar );
+extern void TtaReadAttribute ( BinFile pivotFile, Element element, Document document, boolean create, Attribute *attribute );
+extern void TtaReadPRule ( BinFile pivotFile, Element element, Document document, boolean create, PRule *pRule );
+extern void TtaReadTree ( BinFile pivotFile, Element element, Document document, char *byte, Element *elementRead );
+extern void TtaWriteTree ( BinFile pivotFile, Element element, Document document );
+extern void TtaWriteElement ( BinFile pivotFile, Element element, Document document );
+extern void TtaReadPivotVersion ( BinFile pivotFile, Document document );
+extern void TtaWritePivotVersion ( BinFile pivotFile, Document document );
+extern void TtaReadLabel ( BinFile pivotFile, char byte, char *labelRead );
+extern void TtaWriteLabel ( BinFile pivotFile, char *label );
+extern Element TtaNewElementWithLabel ( Document document, ElementType elemType, char *label );
+extern int TtaGetLabelMax ( Document document );
+extern void TtaSetLabelMax ( Document document, int label );
+
+#else /* __STDC__ */
+
+extern Document TtaAllocateDocument (/* char *documentName */);
+extern void TtaWritePivotHeader (/* BinFile pivotFile, Document document */);
+extern void TtaReadPivotHeader (/* BinFile pivotFile, Document document, char *nextChar */);
+extern void TtaWriteLanguageTable (/* BinFile pivotFile, Document document */);
+extern void TtaReadLanguageTable (/* BinFile pivotFile, Document document, char *nextChar */);
+extern void TtaWriteSchemaNames (/* BinFile pivotFile, Document document */);
+extern void TtaReadSchemaNames (/* BinFile pivotFile, Document document, char *nextChar */);
+extern void TtaReadAttribute (/* BinFile pivotFile, Element element, Document document, boolean create, Attribute *attribute */);
+extern void TtaReadPRule (/* BinFile pivotFile, Element element, Document document, boolean create, PRule *pRule */);
+extern void TtaReadTree (/* BinFile pivotFile, Element element, Document document, char *byte, Element *elementRead */);
+extern void TtaWriteTree (/* BinFile pivotFile, Element element, Document document */);
+extern void TtaWriteElement (/* BinFile pivotFile, Element element, Document document */);
+extern void TtaReadPivotVersion (/* BinFile pivotFile, Document document */);
+extern void TtaWritePivotVersion (/* BinFile pivotFile, Document document */);
+extern void TtaReadLabel (/* BinFile pivotFile, char byte, char *labelRead */);
+extern void TtaWriteLabel (/* BinFile pivotFile, char *label */);
+extern Element TtaNewElementWithLabel (/* Document document, ElementType elemType, char *label */);
+extern int TtaGetLabelMax (/* Document document */);
+extern void TtaSetLabelMax (/* Document document, int label */);
+
+#endif /* __STDC__ */
+#endif /* __CEXTRACT__ */

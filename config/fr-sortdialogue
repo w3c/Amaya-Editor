@@ -1,0 +1,43 @@
+1  Trier la bibliographie
+
+2  tri 
+3  texte
+4  attribut
+5  type
+6  reference
+7  volume
+8  entrant
+9  origine
+10  destination
+11  inverse
+12  fusion
+13  -s
+14  -a
+15  -v
+16  nbobjetsinclus
+17  -p
+18  -l
+19  par
+20  -d
+
+21  Ordre des r\351f\351rences
+22  Ordre alphab\351tique des auteurs et date
+23  Type d\'ouvrage, auteur et date
+24  Nombre d\351croissant de r\351f\351rences
+25  Date
+26  Trier par ...
+27  Confirmer
+28  TRI: "%s" inconnu => non tri\351
+29  TRI: Texte vide => non tri\351
+30  TRI: Fichier %s inaccessible 
+31  Document sans bibliographie
+32  TRI: Variable d\'environnement %s absente
+33  Ouverture ou cr\351ation %s impossible
+34  TRI: Element en lecture seule
+35  TRI: Impossible de trier par valeur de %s
+36  TRI: ... termin\351
+37  TRI: Erreur param\350tre
+38  TRI: Erreur lancement
+39  TRI: Tri en cours ...
+40  TRI: Tri de %d \351l\351ments ...
+41  TRI: Pas de s\351lection courante

@@ -1,0 +1,31 @@
+0 TOUS
+1 Construction des index de 
+2 Construire les index ...
+3 Index g\351n\351ral
+4 Fusion des pages 
+5 Suppression des descripteurs inutiles
+6 Suppression des marques inutiles
+7 INDEX: d\351bordement, trop de descripteurs \340 traiter.
+8 INDEX: erreur dans les options de construction de l\'index %2d 
+9 INDEX: r\351f\351rence crois\351e non d\351finie
+10 INDEX: index %2d en cours de construction
+11 INDEX: impossible de trier la cl\351 "%s"
+12 INDEX: descripteur inutilis\351
+13 INDEX: index %2d vide
+14 INDEX: boucle dans les references croisees
+15 INDEX: ne copiez pas une marque d'index
+16 OK. Document pr\352t \340 recevoir des marques d\'index
+17 Impossible de charger l\'extension ExtIndex
+18 INDEX: impossible de trier tant d\'homographes
+19 INDEX: variable d\'environnement INDPAR non definie
+20 INDEX: fichier param\350tre du tri inaccessible (index %2d)
+21 INDEX: erreur options pour index %2d (groupe mal d\351fini)
+22 INDEX: construction des index termin\351e
+23 INDEX: tri choisi inconnu => ALPHA par d\351faut
+24 INDEX: document "%s" inaccessible
+25 INDEX: index non pr\351vu dans ce document
+26 INDEX: impossible de construire l\'index %2d
+27 INDEX: suppression de %2d descripteur(s)
+28 INDEX: suppression de %2d marque(s)
+29 Repagination
+

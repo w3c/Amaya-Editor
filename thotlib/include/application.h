@@ -1,0 +1,87 @@
+
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+
+#ifndef _APPLICATION_H_
+#define _APPLICATION_H_
+
+#include "typebase.h"
+#include "registry.h"
+
+/* error codes */
+
+#define ERR_document_name		1
+#define ERR_too_many_documents		2
+#define ERR_cannot_read_struct_schema	3
+#define ERR_empty_document		4
+#define ERR_cannot_open_pivot_file	5
+#define ERR_invalid_document_parameter	6
+#define ERR_read_only_document		8
+#define ERR_invalid_associated_root	9
+#define ERR_invalid_parameter		10
+#define ERR_not_implemented		11
+#define ERR_invalid_attribute_value	12
+#define ERR_attribute_element_mismatch	14
+#define ERR_buffer_too_small		15
+#define ERR_invalid_element_type	16
+#define ERR_element_does_not_match_DTD	17
+#define ERR_invalid_attribute_type	18
+#define ERR_duplicate_attribute		19
+#define ERR_mandatory_attribute		20
+#define ERR_cannot_set_link		21
+#define ERR_no_selection_in_document	22
+#define ERR_incorrect_tree		23
+#define ERR_cannot_open_view		24
+#define ERR_there_are_open_views	25
+#define ERR_cannot_load_pschema		26
+#define ERR_duplicate_presentation_rule	27
+#define ERR_string_too_long		28
+#define ERR_cannot_holophrast_a_root	29
+#define ERR_cannot_holophrast_that_type	30
+#define ERR_main_window_not_open	31
+#define ERR_element_already_inserted	32
+#define ERR_no_presentation_schema	33
+
+#define ERR_element_has_no_box		34
+#define ERR_no_selection_in_view	35
+#define ERR_invalid_X_connection	50
+#define ERR_cannot_open_main_window	51
+#define ERR_invalid_button		52
+#define ERR_cannot_create_dialogue	53
+#define ERR_invalid_parent_dialogue	54
+#define ERR_invalid_reference		55
+#define ERR_too_many_languages 		100
+#define ERR_language_not_found 		101
+
+#ifndef __CEXTRACT__
+#ifdef __STDC__
+
+extern void         TtaInitialize (char *applicationName);
+extern void         TtaQuit (void);
+extern void        *TtaGetMemory (unsigned int size);
+extern void         TtaFreeMemory (void *buffer);
+extern void         TtaSetErrorMessages (int on);
+extern char        *TtaGetVersion (void);
+extern int          TtaGetErrorCode (void);
+extern char        *TtaGetStrError (int errorCode);
+extern void         TtaExtractName (char *text, char *aDirectory, char *aName);
+extern boolean      TtaCheckDirectory (char *aDirectory);
+extern char        *TtaStrdup (char *str);
+
+#else  /* __STDC__ */
+
+extern void         TtaInitialize ( /* char *applicationName */ );
+extern void         TtaQuit ( /* void */ );
+extern void        *TtaGetMemory ( /* int size */ );
+extern void         TtaFreeMemory ( /* char *buffer */ );
+extern void         TtaSetErrorMessages ( /* int on */ );
+extern char        *TtaGetVersion ( /* void */ );
+extern int          TtaGetErrorCode ( /* void */ );
+extern char        *TtaGetStrError ( /* int errorCode */ );
+extern void         TtaExtractName ( /* char *text, char *aDirectory, char *aName */ );
+extern boolean      TtaCheckDirectory ( /* char *aDirectory */ );
+extern char        *TtaStrdup ( /* char *str */ );
+
+#endif /* __STDC__ */
+#endif /* __CEXTRACT__ */
+
+#endif

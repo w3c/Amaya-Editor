@@ -1,0 +1,15 @@
+#!/bin/sh
+BIN=${THOTDIR}/bin
+Machine=`${BIN}/MachineType`;			export Machine
+
+THOTBIN=${BIN}/${Machine};		export THOTBIN
+if [ "$THOTSCH" = "" ]
+   then THOTSCH=${THOTDIR}/schemas:${THOTDIR}/schemasOPERA
+fi
+export THOTSCH
+if [ "$THOTDOC" = "" ]
+   then THOTDOC=`pwd`;				export THOTDOC
+fi
+DICOPAR=${THOTDIR}/dicopar;                     export DICOPAR
+
+${THOTBIN}/art2rapmain $*

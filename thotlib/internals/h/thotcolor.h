@@ -1,0 +1,20 @@
+/*
+ * thotcolor.h : definition of the Thot palettes data structures
+ */
+
+#ifndef THOT_COLOR_H
+#define THOT_COLOR_H
+
+typedef struct _RGBstruct{
+  unsigned short red;
+  unsigned short green;
+  unsigned short blue;
+  }RGBstruct;
+
+#define MAX_COLOR 152
+
+extern RGBstruct RGB_colors[];
+extern char *Name_colors[];
+
+#endif /* THOT_COLOR_H */
+

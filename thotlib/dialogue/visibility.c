@@ -1,0 +1,150 @@
+
+/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+/* I. Vatton    Mai 1994 */
+
+#include "thot_gui.h"
+#include "thot_sys.h"
+#include "constmenu.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "app.h"
+#include "appdialogue.h"
+#include "tree.h"
+#include "message.h"
+#include "dialog.h"
+
+#define MAX_ARGS 20
+
+#undef EXPORT
+#define EXPORT extern
+#include "frame.var"
+#include "appdialogue.var"
+
+static int          Fenvisibilityview;
+
+#include "appdialogue.f"
+#include "option.f"
+
+#ifdef __STDC__
+extern int          GetWindowNumber (Document, View);
+
+#else  /* __STDC__ */
+extern int          GetWindowNumber ();
+
+#endif /* __STDC__ */
+
+/* ---------------------------------------------------------------------- */
+/* | changevisibilityview met a jour le formulaire de visibilite.               | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                changevisibilityview (int ref, int typedata, char *data)
+
+#else  /* __STDC__ */
+void                changevisibilityview (ref, typedata, data)
+int                 ref;
+int                 typedata;
+char               *data;
+
+#endif /* __STDC__ */
+{
+   int                 valvisib;
+   int                 valzoom;
+   int                 bouton;
+   char                chaine[100];
+
+   bouton = (int) data;
+   GetVisu (Fenvisibilityview, &valvisib, &valzoom);
+   if (bouton == 0)
+      /* Abandon du formulaire */
+      Fenvisibilityview = 0;
+   else if (bouton == 1 && valvisib > 0)
+     {
+	valvisib--;
+	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, LIB_CHANGE_FILTER), 10 - valvisib);
+	TtaNewLabel (NumTextVisibilite, NumMenuVisibilite, chaine);
+	ModVisu (Fenvisibilityview, valvisib, valzoom);
+     }
+   else if (bouton == 2 && valvisib < 10)
+     {
+	valvisib++;
+	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, LIB_CHANGE_FILTER), 10 - valvisib);
+	TtaNewLabel (NumTextVisibilite, NumMenuVisibilite, chaine);
+	ModVisu (Fenvisibilityview, valvisib, valzoom);
+     }
+   else if (bouton == 4)
+     {
+	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, LIB_CHANGE_FILTER), 10 - valvisib);
+	TtaNewLabel (NumTextVisibilite, NumMenuVisibilite, chaine);
+     }
+   else
+     {
+	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, LIB_VALUE_NOT_CHANGED), 10 - valvisib);
+	TtaNewLabel (NumTextVisibilite, NumMenuVisibilite, chaine);
+     }
+
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | reTtcSetVisibilityView desactive le formulaire de visibilite.              | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                reTtcSetVisibilityView (int frame)
+
+#else  /* __STDC__ */
+void                reTtcSetVisibilityView (frame)
+int                 frame;
+
+#endif /* __STDC__ */
+{
+   if (Fenvisibilityview != 0 && Fenvisibilityview == frame)
+     {
+	/* Annule le formulaire de changement de visibilite */
+	TtaDestroyDialogue (NumMenuVisibilite);
+	Fenvisibilityview = 0;
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | TtcSetVisibilityView initialise le changement de visibilite.               | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtcSetVisibilityView (Document document, View view)
+
+#else  /* __STDC__ */
+void                TtcSetVisibilityView (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   int                 i;
+   char                chaine[100];
+
+   /* Faut-il creer le formulaire visibilite */
+   if (ThotLocalActions[T_chvisibility] == NULL)
+     {
+	/* Connecte les actions locales liees au traitement de la visibilite */
+	TteConnectAction (T_chvisibility, (Proc) changevisibilityview);
+	TteConnectAction (T_rsvisibility, (Proc) reTtcSetVisibilityView);
+     }
+   /* Creation du formulaire */
+
+
+   strcpy (chaine, TtaGetMessage (LIB, LIB_INCREASE));
+   i = strlen (chaine) + 1;
+   strcpy (&chaine[i], TtaGetMessage (LIB, LIB_DECREASE));
+   TtaNewSheet (NumMenuVisibilite, 0, 0, 0, TtaGetMessage (LIB, LIB_VISIBILITY),
+		2, chaine, False, 4, 'L', D_DONE);
+
+
+   /* Affiche le nom du document concerne */
+   sprintf (chaine, "%s %s", TtaGetDocumentName (document),
+	    TtaGetViewName (document, view));
+   Fenvisibilityview = GetWindowNumber (document, view);
+   TtaNewLabel (NumDocVisibilite, NumMenuVisibilite, chaine);
+   /* Initialisation du reste du formulaire */
+   changevisibilityview (NumMenuVisibilite, INTEGER_DATA, (char *) 4);
+   TtaShowDialogue (NumMenuVisibilite, True);
+}

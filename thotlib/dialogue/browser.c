@@ -1,0 +1,256 @@
+#include "thot_gui.h"
+#include "thot_sys.h"
+#include "thotdir.h"
+#include "dialog.h"
+#include "message.h"
+#include "application.h"
+
+#define NAME_LENGTH	100
+#define MAX_NAME	 80
+#define SELECTOR_NB_ITEMS 5
+static FILE        *ls_stream;
+static int          ls_car;
+static char         ls_unixFiles[MAX_NAME * NAME_LENGTH];
+static int          ls_fileNbr;
+static char         EmptyMsg[] = "";
+
+/* ---------------------------------------------------------------------- */
+/* |    getFileName extrait un nom de fichier de ls_stream.             | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                getFileName (char *word)
+#else  /* __STDC__ */
+void                getFileName (word)
+char               *word;
+
+#endif /* __STDC__ */
+{
+   int                 i;
+   boolean             notEof;
+
+   i = 0;
+   while (((char) ls_car == ' ') || ((char) ls_car == '\t') || ((char) ls_car == '\n'))
+      ls_car = fgetc (ls_stream);
+
+   notEof = True;
+   while (((char) ls_car != ' ') && ((char) ls_car != '\t') && ((char) ls_car != '\n') && (notEof))
+     {
+	if (ls_car == EOF)
+	   notEof = False;
+	else
+	  {
+	     word[i] = (char) ls_car;
+	     i++;
+	     ls_car = fgetc (ls_stream);
+	  }
+     }
+
+   word[i] = '\0';
+   i++;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    TtaIsSuffixFileIn retourne Vrai si le directory contient des    | */
+/* |            fichiers avec le suffixe demande'.                      | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+boolean             TtaIsSuffixFileIn (char *aDirectory, char *suffix)
+#else  /* __STDC__ */
+boolean             TtaIsSuffixFileIn (aDirectory, suffix)
+char               *aDirectory;
+char               *suffix;
+
+#endif /* __STDC__ */
+{
+   boolean             ret;
+   char                command[200];
+
+   ret = False;
+   /* S'il s'agit d'un directory accessible */
+   if (TtaCheckDirectory (aDirectory))
+     {
+	ThotDirBrowse       thotDir;
+
+	thotDir.buf = command;
+	thotDir.bufLen = sizeof (command);
+	thotDir.mask = ThotDirBrowse_FILES | ThotDirBrowse_DIRECTORIES;
+	ret = ThotDirBrowse_first (&thotDir, aDirectory, "*", suffix);
+	ThotDirBrowse_close (&thotDir);
+     }
+   return (ret);
+#if 0
+#ifdef WWW_WINDOWS
+   WIN32_FIND_DATA     findData;
+   HANDLE              findNextHandle;
+
+   sprintf (command, "%s\\*.%s", aDirectory, suffix);	/* use the same space */
+   if ((findNextHandle = FindFirstFile (command, &findData)) !=
+       INVALID_HANDLE_VALUE)
+     {
+	ret = True;
+	FindClose (findNextHandle);
+     }
+#else  /* WWW_WINDOWS */
+   /* Commande ls sur le directory */
+   sprintf (command, "/bin/ls %s/*%s 2>/dev/null", aDirectory, suffix);
+   ls_stream = popen (command, "r");
+   if (ls_stream != NULL)
+     {
+	ls_car = fgetc (ls_stream);
+	if (ls_car != EOF)
+	   ret = True;
+	pclose (ls_stream);
+     }
+#endif /* !WWW_WINDOWS */
+#endif
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    TtaListDirectory lance la lecture du contenu du directory.      | */
+/* |            aDirectory indique le directory concerne' (!=/afs).     | */
+/* |            dirTitle donne le titre du selecteur des directories.   | */
+/* |            formRef est la reference du formulaire utilise'.        | */
+/* |            dirRef est la reference du selecteur des directories.   | */
+/* |            suffix donne le suffixe de tri des fichiers.            | */
+/* |            fileTitle donne le titre du selecteur des fichiers.     | */
+/* |            fileRef est la reference du selecteur des fichiers.     | */
+/* |            Si dirRef ou fileRef sont des valeurs negatives, le     | */
+/* |            selecteur correspondant n'est pas cree.                 | */
+/* |            Si aDirectory n'existe pas les selecteurs sont vide.    | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtaListDirectory (char *aDirectory, int formRef, char *dirTitle, int dirRef, char *suffix, char *fileTitle, int fileRef)
+#else  /* __STDC__ */
+void                TtaListDirectory (aDirectory, formRef, dirTitle, dirRef, suffix, fileTitle, fileRef)
+char               *aDirectory;
+int                 formRef;
+char               *dirTitle;
+int                 dirRef;
+char               *suffix;
+char               *fileTitle;
+int                 fileRef;
+
+#endif /* __STDC__ */
+{
+   struct stat;
+   char               *addr1;
+   char                word[4 * NAME_LENGTH];
+   int                 ls_currentfile;
+   int                 length;
+   boolean             stop;
+
+   if (dirTitle == NULL)
+      dirTitle = EmptyMsg;
+   if (fileTitle == NULL)
+      fileTitle = EmptyMsg;
+
+   /* S'il s'agit d'un directory accessible */
+   if (TtaCheckDirectory (aDirectory)
+       && strcmp (aDirectory, "/afs") != 0
+       && strcmp (aDirectory, "/afs/") != 0)
+     {
+	/* CsList les directories du directory */
+	/* ---------------------------------- */
+	if (dirRef >= 0)
+	  {
+	     ThotDirBrowse       thotDir;
+
+	     ls_unixFiles[0] = '\0';
+	     ls_fileNbr = 0;
+	     ls_currentfile = 0;
+	     stop = False;
+	     thotDir.buf = word;
+	     thotDir.bufLen = sizeof (word);
+	     thotDir.mask = ThotDirBrowse_DIRECTORIES;
+	     if (ThotDirBrowse_first (&thotDir, aDirectory, "*", "") == 1)
+	       {
+		  do
+		    {
+		       /* On ne garde que le nom du fichier en eliminant le path */
+		       addr1 = strrchr (word, DIR_SEP);
+		       stop = (addr1 == NULL);
+		       if (!stop)
+			 {
+			    addr1++;
+			    length = strlen (addr1) + 1;
+			    stop = (ls_currentfile + length >= MAX_NAME * NAME_LENGTH);
+			    if (!stop)
+			      {
+				 strcpy (&ls_unixFiles[ls_currentfile], addr1);
+				 ls_currentfile += strlen (addr1) + 1;
+				 ls_fileNbr++;
+			      }
+			 }
+		    }
+		  while (ThotDirBrowse_next (&thotDir) == 1);
+		  ThotDirBrowse_close (&thotDir);
+	       }
+	     if (strlen (aDirectory) == 0)
+		TtaNewSelector (dirRef, formRef,
+				dirTitle, ls_fileNbr, ls_unixFiles, SELECTOR_NB_ITEMS, "", False, True);
+	     else
+		TtaNewSelector (dirRef, formRef,
+				dirTitle, ls_fileNbr, ls_unixFiles, SELECTOR_NB_ITEMS, "..", False, True);
+	     TtaSetSelector (dirRef, -1, "");
+	  }
+	/* CsList les fichiers du directory */
+	/* ------------------------------- */
+	if (fileRef >= 0)
+	  {
+	     ThotDirBrowse       thotDir;
+
+	     thotDir.buf = word;
+	     thotDir.bufLen = sizeof (word);
+	     thotDir.mask = ThotDirBrowse_FILES;
+
+	     ls_unixFiles[0] = '\0';
+	     ls_fileNbr = 0;
+	     ls_currentfile = 0;
+	     stop = False;
+	     /* Commande ls sur le directory */
+	     if (ThotDirBrowse_first (&thotDir, aDirectory, "*", suffix) == 1)
+		do
+		  {
+		     /* c'est un fichier regulier -> compare le suffixe */
+		     /* On ne garde que le nom du fichier en eliminant le path */
+		     addr1 = strrchr (word, DIR_SEP);
+		     stop = (addr1 == NULL);
+		     if (!stop)
+		       {
+			  addr1++;
+			  length = strlen (addr1) + 1;
+			  stop = (ls_currentfile + length >= MAX_NAME * NAME_LENGTH);
+			  if (!stop)
+			    {
+			       strcpy (&ls_unixFiles[ls_currentfile], addr1);
+			       ls_currentfile += strlen (addr1) + 1;
+			       ls_fileNbr++;
+			    }
+		       }
+		  }
+		while (ThotDirBrowse_next (&thotDir) == 1);
+	     ThotDirBrowse_close (&thotDir);
+	     /* initialisation des menus */
+	     TtaNewSelector (fileRef, formRef,
+			     fileTitle, ls_fileNbr, ls_unixFiles, SELECTOR_NB_ITEMS + 1, NULL, False, True);
+	     TtaSetSelector (fileRef, -1, "");
+	  }
+     }
+   else
+     {
+	/* Ce n'est pas un directory -> annule les selecteurs */
+	if (dirRef >= 0)
+	  {
+	     TtaNewSelector (dirRef, formRef,
+		     dirTitle, 0, NULL, SELECTOR_NB_ITEMS, "", False, True);
+	     TtaSetSelector (dirRef, -1, "");
+	  }
+	if (fileRef >= 0)
+	  {
+	     TtaNewSelector (fileRef, formRef,
+	      fileTitle, 0, NULL, SELECTOR_NB_ITEMS + 1, NULL, False, True);
+	     TtaSetSelector (fileRef, -1, "");
+	  }
+     }
+}

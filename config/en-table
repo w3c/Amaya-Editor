@@ -1,0 +1,74 @@
+#Table of english messages
+
+# Abort
+MSG1="Cannot print ${realname}. ${@}"
+MSG2="Cannot save ${printer_or_psname}. ${@}"
+MSG3="Cannot translate ${realname}. ${@}"
+
+# PsPrint
+MSG4="Cannot create temporary directory."
+MSG5="Cannot create temporary file."
+MSG6="Error in PostScript translation."
+MSG7="Destination refused by the spooler ${printer_or_psname}."
+MSG8="Cannot create ${printer_or_psname}."
+MSG9="Cannot create ${printer_or_psname}."
+MSG10="${realname} is in the printer queue."
+MSG11="Saving completed, file ${printer_or_psname}"
+
+#printsch
+MSG15="File not found: ${NAME}.STR"
+MSG16="**Error detected**"
+MSG17="Structure template decompilation"
+
+# comparestr
+MSG18="Error detected in STR schemas comparison"
+MSG19="Comparison completed"
+MSG20="Format : comparestr old[.STR] new[.STR]"
+
+# convertpiv
+MSG21="Error detected in conversion"
+MSG22="Conversion completed"
+MSG23="Format: convertpiv old[.PIV] new[.PIV] newschema[.STR]"
+
+# les compilateurs
+MSG24="Language template compilation"
+MSG25="The file name is too long."
+MSG26="Processing ${NAME}.LAN"
+MSG27="Cannot find ${NAME}.LAN"
+MSG28="**Error detected**"
+MSG29="Done."
+MSG30="Compiling ${NAME}.SCH"
+
+# compilstr
+MSG31="A file ${NAME}.STR already exists."
+MSG32="Processing ${NAME}.S"
+MSG33="Cannot find ${NAME}.S"
+
+# compilprs
+MSG34="A file ${NAME}.PRS already exists."
+MSG35="Processing ${NAME}.P"
+MSG36="Cannot find ${NAME}.P"
+
+# compiltra
+MSG37="A file ${NAME}.TRA already exists."
+MSG38="Processing ${NAME}.T"
+MSG39="Cannot find ${NAME}.T"
+
+# suite des compilateurs
+MSG50="Structure template compilation"
+MSG51="Layout template compilation"
+MSG52="Translation template compilation"
+
+# complement a PsPrint
+MSG54="Error in PostScript file generation."
+
+# compilitf
+MSG62="A application schema compilation"
+MSG63="A file ${NAME}APP.c already exists."
+MSG64="Processing ${NAME}.A"
+MSG65="Cannot find ${NAME}.A"
+
+# compiltyp
+MSG66="Typography template compilation"
+MSG67="Processing ${NAME}.Y"
+MSG68="File ${NAME}.Y not found."

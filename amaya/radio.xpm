@@ -1,0 +1,20 @@
+/* XPM */
+static char * radio_xpm[] = {
+"13 13 4 1",
+" 	c None",
+".	c #FFFFFFFFFFFF",
+"X	c #000000000000",
+"o	c #BFBFBFBFBFBF",
+"      .      ",
+"     ...     ",
+"    ..o..    ",
+"   ..ooo..   ",
+"  ..ooooo..  ",
+" ..ooooooo.. ",
+"XXoooooooooXX",
+" XXoooooooXX ",
+"  XXoooooXX  ",
+"   XXoooXX   ",
+"    XXoXX    ",
+"     XXX     ",
+"      X      "};

@@ -1,0 +1,58 @@
+
+/* -- Copyright (c) 1990 - 1995 Inria/CNRS  All rights reserved. -- */
+
+#ifndef __CEXTRACT__
+#ifdef __STDC__
+
+extern void ConfigInit();
+extern void ConfigReadConfigFiles();
+extern int ConfigMakeDocTypeMenu(char *BufMenu, int *lgmenu, boolean doc);
+extern void ConfigNomExterneSSchema(char *NomUtilisateur, char *NomSchema, int Typ);
+extern void ConfigNomInterneSSchema(char *NomUtilisateur, char *NomSchema, boolean Doc);
+extern int ConfigMakeMenuPres(char *schema, char *BufMenu);
+extern void ConfigGetNomPSchema(int choix, char *schpres);
+extern int ConfigMakeImportMenu(char *BufMenu);
+extern int ConfigMakeMenuExport(char *schema, char *BufMenu);
+extern void ConfigGetNomExportSchema(int choix, char *schtrad);
+extern void ConfigTranslateSSchema(PtrSSchema pSS);
+extern boolean ConfigDefaultPSchema(char *schstr, char *schpres);
+extern void ConfigOpenFirstViews(PtrDocument pDoc);
+extern void ConfigGetViewGeometry(PtrDocument pDoc, char *vue, int *x, int *y, int *width, int *height);
+extern boolean ConfigGetPSchemaNature(PtrSSchema pSS, char *nomNature, char *presNature);
+extern void ConfigGetPresentationOption(PtrSSchema pSS, char *optionName, char *optionValue);
+extern void ConfigGetPSchemaForPageSize(PtrSSchema pSS, char *pageSize, char* schemaName);
+extern int MakeMenuPattern ( char *BufMenu, int LgMax );
+extern int MakeMenuColor ( char *BufMenu, int LgMax );
+extern boolean ConfigDefaultTypoSchema(PtrSSchema pSS, 
+				char *nomNature, 
+				char *schtypo);
+
+#else /* __STDC__ */
+
+extern void ConfigInit();
+extern void ConfigReadConfigFiles();
+extern int ConfigMakeDocTypeMenu(/* char *BufMenu, int *lgmenu, boolean doc */);
+extern void ConfigNomExterneSSchema(/* char *NomUtilisateur, char *NomSchema, int Typ */);
+extern void ConfigNomInterneSSchema(/* char *NomUtilisateur, char *NomSchema, boolean Doc */);
+extern int ConfigMakeMenuPres(/* char *schema, char *BufMenu */);
+extern void ConfigGetNomPSchema(/* int choix, char *schpres */);
+extern int ConfigMakeImportMenu(/* char *BufMenu */);
+extern int ConfigMakeMenuExport(/* char *schema, char *BufMenu */);
+extern void ConfigGetNomExportSchema(/* int choix, char *schtrad */);
+extern void ConfigTranslateSSchema(/* PtrSSchema pSS */);
+extern boolean ConfigDefaultPSchema(/* char *schstr, char *schpres */);
+extern void ConfigOpenFirstViews(/* PtrDocument pDoc */);
+extern void ConfigGetViewGeometry(/* PtrDocument pDoc, char *vue, int *x, int *y, int *width, int *height */);
+extern boolean ConfigGetPSchemaNature(/* PtrSSchema pSS, char *nomNature, char *presNature */);
+extern void ConfigGetPresentationOption(/* PtrSSchema pSS, char *optionName, char *optionValue */);
+extern void ConfigGetPSchemaForPageSize(/* PtrSSchema pSS, char *pageSize, char* schemaName */);
+extern int MakeMenuPattern (/* char *BufMenu, int LgMax */);
+extern int MakeMenuColor (/* char *BufMenu, int LgMax */);
+extern boolean ConfigDefaultTypoSchema(/* PtrSSchema pSS, 
+				char *nomNature, 
+				char *schtypo */);
+
+#endif /* __STDC__ */
+#endif /* __CEXTRACT__ */
+
+

@@ -1,0 +1,288 @@
+	{ This grammar defines the language P of Thot
+	The notation used here is defined in file META.LAN
+
+	   ' '  : keyword
+           [ ]  : optional part
+           < >  : optional and repeatable part
+           /    : choice
+
+	V. Quint	February 1985	}
+
+PresentModel =	  'PRESENTATION' TypeName ';'
+		[ 'VIEWS' ViewList ]
+		[ 'PRINT' PrintViewList ]
+		[ 'COUNTERS' CounterList ]
+		[ 'CONST' ConstList ]
+		[ 'VAR' VarList ]
+		[ 'DEFAULT' ViewRuleList ]
+		[ 'BOXES' BoxList ]
+		[ 'RULES' PresentList ]
+		[ 'ATTRIBUTES' AttrList ]
+		[ 'TRANSMIT' TransmitList ]
+		  'END' .
+
+TypeName =	  NAME .
+
+ViewList =	  DclView < ',' DclView > ';' .
+DclView =	  ViewName [ 'EXPORT' ] .
+ViewName =	  NAME .
+
+PrintViewList =	  PrintView < ',' PrintView > ';' .
+PrintView =	  ViewName / TypeName .
+
+CounterList =	  Counter < Counter > .
+Counter =	  CounterName ':' CountFunction ';' .
+CounterName =	  NAME . 
+
+CountFunction =	  'RANK' 'OF' TypeOrPage [ RelAncestorLevel ] [ 'INIT' AttrName ]
+		  [ 'REINIT' AttrName ] /
+		  SetRule < SetRule > AddRule < AddRule > [ 'INIT' AttrName ] /
+		  'RLevel' 'OF' TypeName .
+RelAncestorLevel = [ '-' ] AncestorLevel .
+AncestorLevel =	  NUMBER .
+SetRule =	  'SET' CountValue 'ON' TypeOrPage .
+AddRule =	  'ADD' CountValue 'ON' TypeOrPage .
+TypeOrPage =	  'Page' [ '(' ViewName ')' ] / [ '*' ] TypeName .
+CountValue =	  NUMBER .
+
+ConstList =	  Const < Const > .
+Const =		  ConstName '=' ConstType ConstValue ';' .
+ConstName =	  NAME .
+ConstType =	  'TEXT' [ AlphabetName ] /
+		  'SYMBOL' / 'GRAPHICS' / 
+		  'PICTURE' [ ImageType ] .
+AlphabetName =	  NAME .
+ImageType = 	  NUMBER .
+ConstValue =	  STRING .
+
+VarList =	  Variable < Variable > .
+Variable =	  VarName ':' FunctList ';' .
+VarName =	  NAME .
+FunctList =	  Function < Function > .
+Function =	  'DATE' / 'FDATE' /
+		  'DocName' / 'DirName' /
+		  'ElemName' / 'AttributeName' /
+		  'VALUE' '(' CounterAttrPage ',' CounterStyle ')' /
+		  ConstType ConstValue /
+		  ConstName / AttrName .
+CounterAttrPage = 'PageNumber' [ '(' ViewName ')' ] /
+		  [ MaxMinValue ] CounterName / AttrName .
+CounterStyle =	  'ARABIC' / 'UROMAN' / 'LROMAN' / 'UPPERCASE' /
+		  'LOWERCASE' .
+
+BoxList =	  Box < Box > .
+Box =		  'FORWARD' BoxName ';' /
+		  BoxName ':' ViewRuleList .
+BoxName =	  NAME .
+
+ViewRuleList =	  'BEGIN' < RulesAndCondRules > < ViewRules > 'END' ';' /
+		   ViewRules / CondRules / Rule .
+RulesAndCondRules = CondRules / Rule .
+
+ViewRules =	  'IN' ViewName CondRuleList .
+CondRuleList =	  'BEGIN' < RulesAndCondRules > 'END' ';' /
+		  CondRules / Rule .
+CondRules =	  CondRule  < CondRule > [ 'Otherwise' RuleList ] .
+CondRule =	  'IF' SeqCondition RuleList .
+
+RuleList =	  'BEGIN' Rule < Rule > 'END' ';' / Rule .
+
+Rule =		  Rule1 ';' / Rule2 ';' / Rule3 ';' / Rule4 ';' .
+Rule1 =	  	  'VertRef' ':' HorizPosition /
+		  'HorizRef' ':' VertPosition /
+		  'Height' ':' Dimension /
+		  'Width' ':' Dimension /
+		  'VertPos' ':' PosH /
+		  'HorizPos' ':' PosV /
+		  'Justify' ':' BoolInherit /
+		  'Hyphenate' ':' BoolInherit /
+		  'LineSpacing' ':' DistInherit .
+Rule2 =		  'Break' ':' Boolean /
+		  { Break is obsolete; replaced by PageBreak }
+		  'LineBreak' ':' Boolean /
+		  'PageBreak' ':' Boolean /
+		  'InLine' ':' Boolean /
+		  'Size'  ':' SizeInherit /
+		  'Visibility' ':' NbInherit /
+		  'Font' ':' NameInherit /
+		  'Underline' ':' UnderLineInherit /
+		  'Thickness' ':' ThicknessInherit /
+		  'Style' ':' StyleInherit /
+		  'Indent' ':' DistInherit /
+		  'Adjust' ':' AdjustInherit /
+		  'NoBreak1' ':' AbsDist /
+		  'NoBreak2' ':' AbsDist /
+		  'Content' ':' VarConst /
+		  'Gather' ':' Boolean .
+Rule3 =		  Creation '(' BoxName ')' /
+		  'Line' /
+		  'NoLine' /
+		  'Page' '(' BoxName ')' /
+		  [ 'Included' ] 'Column' '(' BoxNameList ')' /
+		  'Copy' '(' BoxTypeCopied ')' /
+		  'Depth' ':' NbInherit .
+Rule4 =		  'LineStyle' ':' LineStyleInherit /
+		  'LineWeight' ':' DistInherit /
+		  'FillPattern' ':' NameInherit /
+		  'Background' ':' NameInherit /
+		  'Foreground' ':' NameInherit .
+
+LineStyleInherit = Link '=' / 'Solid' / 'Dashed' / 'Dotted' .
+
+BoxTypeCopied =	  BoxName [ ExtStruct ] / TypeName [ ExtStruct ] .
+ExtStruct =	  '(' TypeName ')' .
+
+PosH =		  'nil' / HorizAxis '=' RefVPosition [ 'UserSpecified' ] .
+PosV =		  'nil' / VertAxis '=' RefHPosition [ 'UserSpecified' ] .
+RefVPosition =	  'Refering' [ '*' ] TypeName '.' HorizAxis [ Distance ] /
+		  VertPosition .
+RefHPosition =	  'Refering' [ '*' ] TypeName '.' VertAxis [ Distance ] /
+		  HorizPosition .
+
+VarConst =	  '(' FunctList ')' / ConstType ConstValue /
+		  VarName / ConstName / TypeName .
+
+PresentList =	  Present < Present > .
+Present =	  [ '*' ] [ FirstSec ] TypeName ':' ViewRuleList .
+FirstSec =	  'First' / 'Second' .
+
+VertPosition =	  Reference '.' HorizAxis [ Distance ] .
+HorizPosition =	  Reference '.' VertAxis [ Distance ] .
+Reference =	  'Enclosing' [ NBoxType ] /
+		  'Enclosed' [ NBoxType ] /
+		  'Previous' [ NBoxType ] /
+		  'Next' [ NBoxType ] /
+		  'Refered' [ NBoxType ] /
+		  'Referred' [ NBoxType ] /
+		  'Creator' /
+		  'Root' /
+		  '*' /
+		  BoxType .
+NBoxType =	  [ 'NOT' ] BoxType .
+BoxType =	  BoxName / [ '*' ] [ FirstSec ] TypeName / 'AnyElem' / 'AnyBox'.
+VertAxis =	  'Left' / 'VMiddle' / 'VRef' / 'Right' . 
+HorizAxis =	  'Top' / 'HMiddle' /'HRef' / 'Bottom' .
+
+Dimension =	  Reference '.' HeightWidth [ Ratio ] [ 'Min' ] / 
+		  AbsDist [ 'UserSpecified' ] [ 'Min' ] /
+		  PosH / PosV .
+HeightWidth =	  'Height' / 'Width' .
+Ratio =		  '*' DimRatioA '%' / Distance .
+DimRatioA =	  DimRatio / AttrName .
+DimRatio =	  NUMBER .
+AbsDist =	  IntPartA [ '.' DecimPart ] [ Unit ] .
+IntPartA =	  IntPart / AttrName .
+IntPart =	  NUMBER .
+DecimPart =	  NUMBER .
+Unit =		  'CM' / 'MM' / 'PT' / 'PC' / 'IN' / 'PX' / 'EM' / 'EX' / '%' .
+
+Distance =	  [ Sign ] AbsDist .
+Sign =		  '+' / '-' .
+
+Inheritage =	  Link  InheritVal .
+Link =		  'Enclosing' / 'Enclosed' / 'Previous' / 'Creator' /
+		  'GrandFather' .
+InheritVal =	  '+' PosIntegerA [ 'Max' maximumA ] /
+		  '-' NegIntegerA [ 'Min' minimumA ] /
+		  '=' .
+PosIntegerA =	  PosInteger / AttrName .
+PosInteger =	  NUMBER .
+NegIntegerA =	  NegInteger / AttrName .
+NegInteger =	  NUMBER .
+maximumA =	  maximum / AttrName .
+maximum =	  NUMBER .
+minimumA =	  minimum / AttrName .
+minimum =	  NUMBER .
+
+NbInherit =	  Integer / AttrName / Inheritage .
+Integer =	  NUMBER .
+Boolean =	  'Yes' / 'No' .
+
+DistInherit =	  Link InheritDist / Distance .
+InheritDist =	  '=' / '+' AbsDist / '-' AbsDist .
+
+BoolInherit =	  Boolean / Link '=' .
+
+AdjustInherit =	  Adjustment / Link '=' .
+Adjustment =	  'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' .
+
+SizeInherit =	  SizeA [ 'PT' ] / Link  InheritSize .
+InheritSize =	  '+' PosSizeA [ 'PT' ] [ 'Max' MaxSizeA ] /
+		  '-' NegSizeA [ 'PT' ] [ 'Min' MinSizeA ] /
+		  '=' .
+SizeA =		  Size / AttrName .
+Size =		  NUMBER .
+PosSizeA =	  PosSize / AttrName .
+PosSize =	  NUMBER .
+NegSizeA =	  NegSize / AttrName .
+NegSize =	  NUMBER .
+MaxSizeA =	  MaxSize / AttrName .
+MaxSize =	  NUMBER .
+MinSizeA =	  MinSize / AttrName .
+MinSize =	  NUMBER .
+
+NameInherit =	  Link '=' / FontStyleName .
+FontStyleName =	  NAME .
+StyleInherit =	  Link '=' / 'Roman' / 'Bold' / 'Italics' / 'BoldItalics' /
+		  'Oblique' / 'BoldOblique' .
+UnderLineInherit = Link '=' / 'NoUnderline' / 'Underlined' / 'Overlined' /
+		  'CrossedOut' .
+ThicknessInherit = Link '=' / 'Thick' / 'Thin' .
+
+AttrList =	  Attr < Attr > .
+Attr =		  AttrName [ '(' FSTypeName ')' ] [ AttrRelat ] ':'
+		  ViewRuleList .
+AttrName =	  NAME .
+FSTypeName =	  [ FirstSec ] TypeName .
+AttrRelat =	  '=' AttrValue / '>' [ '-' ] MinVal / '<' [ '-' ] MaxVal /
+		  'IN' '[' ['-'] MinInterval '.' '.' ['-'] MaxInterval ']' /
+		  'GREATER' AttrName / 'LESS' AttrName / 'EQUAL' AttrName .
+AttrValue =	  [ '-' ] ValEqual / TextEqual / AttrVal .
+MinVal =	  NUMBER .
+MaxVal =	  NUMBER .
+MinInterval =	  NUMBER .
+MaxInterval =	  NUMBER .
+ValEqual =	  NUMBER .
+TextEqual =	  STRING .
+AttrVal =	  NAME .
+
+Creation =	  Create [ 'Repeated' ] .
+SeqCondition =	  Condition < 'AND' Condition > .
+Condition =	  [ 'NOT' ] [ 'Target' ] ElemCondition .
+ElemCondition =	  'First' / 'Last' /
+		  'Referred' / 'FirstRef' / 'LastRef' /
+		  'ExternalRef' / 'InternalRef' / 'CopyRef' /
+		  'AnyAttributes' / 'FirstAttr' / 'LastAttr' /
+		  'UserPage' / 'StartPage' / 'ComputedPage' /
+		  'Empty' /
+		  '(' [ MaxMinValue ] CounterName CounterCond ')' /
+		  CondPage '(' CounterName ')' /
+		  [ 'Immediately' ] 'Within' [ ParentLevel ] TypeName
+		  [ ExtStruct ] /
+		  TypeName / AttrName .
+
+ParentLevel =	  [ GreaterLess ] RelLevel .
+GreaterLess =	  '>' / '<' .
+RelLevel =	  NUMBER.
+MaxMinValue =	  'MaxRangeVal' / 'MinRangeVal' .
+CounterCond =	  '<' MaxCounterVal / '>' MinCounterVal / '=' CounterValEqual / 
+                  'IN' '[' ['-'] MinCounterInter '.' '.' ['-'] MaxCounterInter ']' .
+CondPage =	  'Even' / 'Odd' / 'One' .
+Create =	  'Create' / 'CreateBefore' / 'CreateAfter' /
+		  'CreateLast' / 'CreateFirst' / 'CreateWith' /
+		  'CreateEnclosing'.
+		  { Create is obsolete; replaced by CreateFirst }
+MaxCounterVal =	  NUMBER .
+MinCounterVal =	  NUMBER .
+CounterValEqual = NUMBER .
+MaxCounterInter = NUMBER .
+MinCounterInter = NUMBER .
+
+BoxNameList =	  BoxName < ',' BoxName > .
+
+TransmitList =	  Transmit < Transmit > .
+Transmit =	  TypeOrCounter 'To' ExternalAttr '(' TypeName ')' ';' .
+TypeOrCounter =	  CounterName / TypeName .
+ExternalAttr =	  NAME .
+
+END
