@@ -15,7 +15,13 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.6  2002-06-11 17:34:52  kirschpi
+ ** Revision 1.7  2002-06-12 10:29:07  kirschpi
+ ** - adjusts in code format
+ ** - new commentaries
+ ** - small fixes
+ ** Manuele
+ **
+ ** Revision 1.6  2002/06/11 17:34:52  kirschpi
  ** improving commentaries and format (for WebDAV code).
  ** update DAV Resources list automatically
  ** Manuele
@@ -165,7 +171,6 @@ BOOL DAVAddResource (char *new_resource, char *list, char sep, int len)
     int i;
     BOOL status = NO;
     
-    fprintf (stderr,"list: %s resource %s\n",list,new_resource);
     if (new_resource && *new_resource && list) 
      {
         sprintf (buf,"%c%s",sep,new_resource);
@@ -181,7 +186,6 @@ BOOL DAVAddResource (char *new_resource, char *list, char sep, int len)
             status = YES;
          }        
      }
-    fprintf (stderr,"list: %s resource %s\n",list,new_resource);
 
     return status;
 }

@@ -15,7 +15,13 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.7  2002-06-11 17:34:52  kirschpi
+ ** Revision 1.8  2002-06-12 10:29:07  kirschpi
+ ** - adjusts in code format
+ ** - new commentaries
+ ** - small fixes
+ ** Manuele
+ **
+ ** Revision 1.7  2002/06/11 17:34:52  kirschpi
  ** improving commentaries and format (for WebDAV code).
  ** update DAV Resources list automatically
  ** Manuele
@@ -1071,6 +1077,11 @@ AHTDAVContext * GetUnlockInfo (int document)
         AHTDAVContext *info: informations for the request
    Returns:
         BOOL: YES, if suceed, No, if fails
+
+   Note: when doing a unlock request when exiting the application,
+         the request will be killed under Windows machines, and
+         under unix/linux machines, it will not, since preemptive
+         is true (see DAVCreateDefaultContext parameters). 
   ----------------------------------------------------------------------*/
 BOOL DoUnlockRequest (int doc, AHTDAVContext *info) 
 {

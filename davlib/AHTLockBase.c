@@ -963,12 +963,16 @@ PUBLIC BOOL removeFromBase (char *filename, LockLine *line)
          {
             /* close and remove old file */
             fclose (fp);
-            REMOVE (path); /*portable unlink version defined by libwww*/
             fp = NULL;
             
-            /* if we have something to write, create a new file */
-            if (list && !HTList_isEmpty (list)) 
+            /* try to remove the old file, to write a new one.
+             * if remove failed, we force the creation of a new empty file.
+             * if we have something to write, create a new file */
+            if ((remove(path)<0) || (list && !HTList_isEmpty (list))) 
                 fp = fopen (path,"w");
+
+            if (fp)
+                fprintf (fp,"");    
          }      
 	
 

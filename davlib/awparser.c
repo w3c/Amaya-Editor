@@ -12,7 +12,13 @@
  ** $Author$
  ** $Revision$
  ** $Log$
- ** Revision 1.3  2002-06-03 14:37:42  kirschpi
+ ** Revision 1.4  2002-06-12 10:29:07  kirschpi
+ ** - adjusts in code format
+ ** - new commentaries
+ ** - small fixes
+ ** Manuele
+ **
+ ** Revision 1.3  2002/06/03 14:37:42  kirschpi
  ** The name of some public functions have been changed to avoid conflic with
  ** other libraries.
  **
@@ -44,14 +50,16 @@
  * --------------------------------------------------------
  */
 
-extern int verifyString (char *data) {
+extern int verifyString (char *data) 
+{
     int i = 0;
     int sum = 0;
 
-    for (i=0; (unsigned)i<strlen (data); i++) {
+    for (i=0; (unsigned)i<strlen (data); i++) 
+     {
         if ( isalnum(data[i]) && !isspace(data[i]) )
             sum++;
-    }
+     }
     return sum;
 }
 
@@ -71,7 +79,8 @@ extern int verifyString (char *data) {
  *               (NULL if an error is produced)
  * --------------------------------------------------------
  */
-AwNode *AwParser_makeNode (char *data, char **attr,int len, int type) {
+AwNode *AwParser_makeNode (char *data, char **attr,int len, int type) 
+{
    AwNode *node=NULL;
    AwString info,val;
    AwPair *pair=NULL;
@@ -83,15 +92,18 @@ AwNode *AwParser_makeNode (char *data, char **attr,int len, int type) {
        return NULL;
    
    node = AwNode_new(NUM_OF_NODES,NUM_OF_NODES,len+1);   
-   if (AwNode_setInfo (node,info) < 0 || AwNode_setType (node,type)< 0) {          
+   if (AwNode_setInfo (node,info) < 0 || AwNode_setType (node,type)< 0) 
+    {          
        AwNode_delete (node);
        return NULL;
-   }
+    }
                    
    AwString_delete (info);
 
-   if (attr!=NULL) {
-       for (i = 0; attr[i]; i += 2) {           /* set the node's attributes */
+   if (attr!=NULL) 
+    {
+       for (i = 0; attr[i]; i += 2) 
+        {           /* set the node's attributes */
                
            info = AwString_new (strlen(attr[i]));
            val = AwString_new (strlen(attr[i+1]));
@@ -114,15 +126,16 @@ AwNode *AwParser_makeNode (char *data, char **attr,int len, int type) {
            AwString_delete (info);
            AwString_delete (val);
            
-           if (flag<0) {                        /* some error have been produced */ 
+           if (flag<0) 
+            {                        /* some error have been produced */ 
                AwPair_delete (pair);
                AwNode_delete (node);
                return NULL;            
-           }
+            }
            
            AwNode_putAttribute (node,pair);
-       }
-   }
+        }
+    }
 
    return node;
 }
@@ -137,7 +150,8 @@ AwNode *AwParser_makeNode (char *data, char **attr,int len, int type) {
  *      int len : s vector length
  * --------------------------------------------------------
  */
-extern void AwParser_textElement (void *userData,const XML_Char *s,int len) {
+extern void AwParser_textElement (void *userData,const XML_Char *s,int len) 
+{
     AwTree *tree = userData;
     AwNode *node;
     char *data;
@@ -176,7 +190,8 @@ extern void AwParser_textElement (void *userData,const XML_Char *s,int len) {
  *      char **attr : element attributes
  * --------------------------------------------------------
  */
-extern void AwParser_startElement(void *userData, const char *name, const char **attr) {
+extern void AwParser_startElement(void *userData, const char *name, const char **attr) 
+{
     AwTree *tree = userData;
     AwNode *node;
 #ifdef DEBUG
@@ -197,12 +212,13 @@ extern void AwParser_startElement(void *userData, const char *name, const char *
     fprintf (stderr,"%s\n", AwNode_getInfo(node));
     AwNode_resetAttributes(node);
     pair = AwNode_nextAttribute(node);
-    while (pair!=NULL) {
+    while (pair!=NULL) 
+     {
         for (i = 0; i < AwNode_getLevel(node) + 1 ; i++)
             fprintf(stderr,"\t");
         fprintf (stderr,"%s = %s \n",AwPair_getName(pair),AwPair_getValue(pair));
         pair = AwNode_nextAttribute(node);
-    }
+     }
 #endif              
 
 }
@@ -217,7 +233,8 @@ extern void AwParser_startElement(void *userData, const char *name, const char *
  *      XML_char *name : element readed
  * --------------------------------------------------------
  */
-extern void AwParser_endElement(void *userData, const char *name) {
+extern void AwParser_endElement(void *userData, const char *name) 
+{
     AwTree *tree = userData;
     AwNode *last = NULL;
 
@@ -225,13 +242,14 @@ extern void AwParser_endElement(void *userData, const char *name) {
            return;
 
     last = AwTree_getLast(tree);
-    if (AwNode_getType(last)!=XML_ELEMENT){             /* with text element, we need to get up twice */
-                                                        /* to reach the last xml element */       
+    if (AwNode_getType(last)!=XML_ELEMENT)
+     {                                           /* with text element, we need to get up twice */
+                                                 /* to reach the last xml element */       
 #ifdef DEBUG 
         fprintf (stderr,"going up twice\n");
 #endif      
         AwTree_up(tree);                                
-    }   
+     }   
 
      AwTree_up(tree);
 }
@@ -245,7 +263,8 @@ extern void AwParser_endElement(void *userData, const char *name) {
  *      AwTree *tree : tree to be removed
  * --------------------------------------------------------
  */
-extern void AwParser_freeTree (AwTree *tree) {
+extern void AwParser_freeTree (AwTree *tree) 
+{
     AwParser_freeNode (AwTree_getRoot(tree));
     AwTree_delete (tree);
 }
@@ -260,7 +279,8 @@ extern void AwParser_freeTree (AwTree *tree) {
  *      AwNode *node : node to be removed
  * --------------------------------------------------------
  */
-extern void AwParser_freeNode (AwNode *n) {
+extern void AwParser_freeNode (AwNode *n) 
+{
     AwNode *child=NULL;
     AwPair *atr=NULL;
 
@@ -270,24 +290,26 @@ extern void AwParser_freeNode (AwNode *n) {
 
     AwNode_resetAttributes(n);
     atr = AwNode_nextAttribute(n);
-    while (atr!=NULL) {
+    while (atr!=NULL) 
+     {
 #ifdef DEBUG        
         fprintf (stderr,".");
 #endif  
         AwPair_delete (atr);
         atr = AwNode_nextAttribute(n);
-    }
+     }
 
     AwNode_resetChildren (n);
     child = AwNode_nextChild(n);
-    while (child!=NULL) {
-            AwParser_freeNode(child);
-            child = AwNode_nextChild(n);
-    }
+    while (child!=NULL) 
+     {
+       AwParser_freeNode(child);
+       child = AwNode_nextChild(n);
+     }
 
     AwNode_delete(n);
 #ifdef DEBUG        
-        fprintf (stderr,".");
+    fprintf (stderr,".");
 #endif  
 }
 
@@ -305,7 +327,8 @@ extern void AwParser_freeNode (AwNode *n) {
  *                      protocol.
  * --------------------------------------------------------
  */
-extern AwString AwParser_mountMessage (AwTree *tree) {
+extern AwString AwParser_mountMessage (AwTree *tree) 
+{
     return (AwParser_mountElement(AwTree_getRoot(tree)));        
 }
         
@@ -324,7 +347,8 @@ extern AwString AwParser_mountMessage (AwTree *tree) {
  *                 (NULL if some problem occurs)        
  * --------------------------------------------------------
  */
-extern AwString AwParser_mountElement (AwNode *node) {
+extern AwString AwParser_mountElement (AwNode *node) 
+{
     AwNode *child;
     AwPair *atr;
     int flag=1;
@@ -336,7 +360,8 @@ extern AwString AwParser_mountElement (AwNode *node) {
     fprintf (stderr,"Mounting string for node %s and its children\n",AwNode_getInfo(node));
 #endif    
     
-    if (AwNode_getType(node)==XML_ELEMENT) {    /* if is a xml_element, introduce the < */
+    if (AwNode_getType(node)==XML_ELEMENT) 
+     {    /* if is a xml_element, introduce the < */
 #ifdef DEBUG
         fprintf (stderr,"node is a XML element\n");
 #endif    
@@ -344,14 +369,15 @@ extern AwString AwParser_mountElement (AwNode *node) {
         flag *= AwString_set (s,"<");
         elem = AwString_cat (s,AwNode_getInfo(node));   
         flag *= AwString_delete(s);
-    }
-    else {
+     }
+    else
+     {
 #ifdef DEBUG
         fprintf (stderr,"node is a text element (size %d)\n",AwString_len(AwNode_getInfo(node)));
 #endif    
         elem = AwString_new (AwString_len(AwNode_getInfo(node)));
         flag *= AwString_copy (elem,AwNode_getInfo(node));
-    }
+     }
     
     if (flag<0 || elem==NULL)                   /* in case of problems, exits */
             return NULL;
@@ -359,7 +385,8 @@ extern AwString AwParser_mountElement (AwNode *node) {
     
     AwNode_resetAttributes(node);                       /* introduce the node attributes */
     atr = AwNode_nextAttribute(node);
-    while (atr!=NULL) {
+    while (atr!=NULL) 
+     {
 #ifdef DEBUG
         fprintf (stderr,"node attribute %s=%s\n",AwPair_getName(atr),AwPair_getValue(atr));
 #endif    
@@ -397,9 +424,10 @@ extern AwString AwParser_mountElement (AwNode *node) {
                 return NULL;
         
         atr = AwNode_nextAttribute(node);
-    }
+     }
 
-    if (AwNode_getType(node)==XML_ELEMENT) {            /* introduce the ">" in the xml elements */
+    if (AwNode_getType(node)==XML_ELEMENT) 
+     {            /* introduce the ">" in the xml elements */
 #ifdef DEBUG
         fprintf (stderr,"closing >\n");
 #endif    
@@ -411,12 +439,13 @@ extern AwString AwParser_mountElement (AwNode *node) {
         flag *= AwString_delete (s);        
         if (flag<0 || elem==NULL)
                 return NULL;
-    } 
+     } 
 
     
-    AwNode_resetChildren (node);                        /* introduce data from children elements */
+    AwNode_resetChildren (node);                     /* introduce data from children elements */
     child = AwNode_nextChild(node);
-    while (child!=NULL) {
+    while (child!=NULL) 
+     {
 #ifdef DEBUG
         fprintf (stderr,"node child %s\n",AwNode_getInfo(child));
 #endif    
@@ -429,10 +458,11 @@ extern AwString AwParser_mountElement (AwNode *node) {
                 return NULL;
         
         child = AwNode_nextChild(node);
-    }
+     }
 
     
-    if (AwNode_getType(node)==XML_ELEMENT) {            /* close, if it is a XML element */
+    if (AwNode_getType(node)==XML_ELEMENT) 
+     {            /* close, if it is a XML element */
 #ifdef DEBUG
         fprintf (stderr,"closing xml element\n");
 #endif    
@@ -456,7 +486,7 @@ extern AwString AwParser_mountElement (AwNode *node) {
         
         if (flag<0 || elem==NULL)
                 return NULL;
-    }
+     }
 
     
 #ifdef DEBUG
@@ -482,13 +512,15 @@ extern AwString AwParser_mountElement (AwNode *node) {
  *      information already parsed is returned.
  * --------------------------------------------------------
  */
-extern AwTree *AwParser_umountMessage (AwString message) {
+extern AwTree *AwParser_umountMessage (AwString message) 
+{
    AwTree *tree = NULL;
    XML_Parser parser;
    char *input;
 
    tree = AwTree_new ();
-   if (tree != NULL) {
+   if (tree != NULL) 
+    {
 #ifdef DEBUG
        fprintf (stderr,"Creating XML parser for %s \n",(char *) message);
 #endif       
@@ -499,11 +531,12 @@ extern AwTree *AwParser_umountMessage (AwString message) {
 
        input = AwString_get (message);
        /*do {*/
-           if (!XML_Parse(parser, input, strlen(input), 0 )) {
+           if (!XML_Parse(parser, input, strlen(input), 0 )) 
+            {
                fprintf(stderr, "%s at line %d\n", \
                               XML_ErrorString(XML_GetErrorCode(parser)), \
                               XML_GetCurrentLineNumber(parser));
-           }
+            }
        /*while ();*/
 
 #ifdef DEBUG
@@ -511,7 +544,7 @@ extern AwTree *AwParser_umountMessage (AwString message) {
 #endif       
        XML_ParserFree(parser);
        AW_FREE(input);
-   }   
+    }   
    return tree;
 }
 
@@ -520,30 +553,34 @@ extern AwTree *AwParser_umountMessage (AwString message) {
  * This function searches the value of an element in a XML
  * tree. It returns a new string with the value or NULL.
  * ----------------------------------------------------------- */
-extern char * AwParser_searchInTree (AwTree *tree, char *elem) {
+extern char * AwParser_searchInTree (AwTree *tree, char *elem) 
+{
     AwString pattern;
     AwString value;
     AwNode * node=NULL, *father=NULL;
     char *cvalue = NULL;
     
-    if (tree && elem) {
+    if (tree && elem) 
+     {
         pattern = AwString_new (strlen(elem)+1);
         AwString_set (pattern,elem);
         
         /*if the pattern "elem" is in the node,
          *then its value is in its child */
         father =  AwTree_search(AwTree_getRoot(tree),pattern);
-        if (father) {
+        if (father) 
+         {
                 node = AwNode_nextChild (father);
                 AwNode_resetChildren (father);
-        }
-        if (node) {
+         }
+        if (node) 
+         {
                 value = AwNode_getInfo (node);
                 cvalue = AwString_get(value);
                 AwString_delete(value);
-        }
+         }
         AwString_delete(pattern);
-    }
+     }
 
     return cvalue;
 }

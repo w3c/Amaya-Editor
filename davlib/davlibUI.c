@@ -15,7 +15,13 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.6  2002-06-06 17:10:46  kirschpi
+ ** Revision 1.7  2002-06-12 10:29:07  kirschpi
+ ** - adjusts in code format
+ ** - new commentaries
+ ** - small fixes
+ ** Manuele
+ **
+ ** Revision 1.6  2002/06/06 17:10:46  kirschpi
  ** Breaking the user messages in three lines
  ** Fixing some code format problems
  ** Fixing DAVLockIndicator, when Lock discovery is disabled.
@@ -400,17 +406,10 @@ void DAVShowInfo (AHTReqContext *context)
                     /*-400 Bad Request */
                     else if (davctx->status == DAV_BAD_REQUEST) 
                      {
-                        if (DAVConfirmDialog (context->docid,TtaGetMessage (AMAYA, AM_UNLOCK_FAILED),
-                                              TtaGetMessage (AMAYA, AM_DAV_TRY_AGAIN), " ")) 
-                         {        
-                            context->dav_context = NULL;
-                            DAVRedo (context);
-                         }
-                        else 
-                         {
-                            /*set the status line */
-                            status_msg = TtaGetMessage (AMAYA, AM_UNLOCK_FAILED);
-                         }
+                        DAVDisplayMessage (TtaGetMessage (AMAYA, AM_UNLOCK_FAILED),NULL); 
+
+                        /*set the status line */
+                        status_msg = TtaGetMessage (AMAYA, AM_UNLOCK_FAILED);
                      }
                     else 
                      { /* other error codes */    
