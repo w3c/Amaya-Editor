@@ -4020,7 +4020,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
     }
 }
 
-#ifdef _WINDOWS
+#ifdef _WINDOWS0
 /*----------------------------------------------------------------------
    TtaNewScrollPopup cre'e un pop-up menu :                                 
    The parameter ref donne la re'fe'rence pour l'application.         
@@ -5318,9 +5318,9 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #ifdef _WINDOWS
 		      WIN_AddFrameCatalogue (FrMainRef[currentFrame], catalogue);
 		      if (!IsMenu (catalogue->Cat_Widget))
-			catalogue->Cat_Widget = w;
-#else  /* _WINDOWS */
-#ifndef _GTK
+else  /* _WINDOWS */
+			  catalogue->Cat_Widget = w;
+##ifndef _GTK
 		      n = 0;
 		      XtSetArg (args[n], XmNsubMenuId, menu);
 		      n++;

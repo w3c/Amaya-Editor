@@ -610,7 +610,7 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
       /* Create static window for the title */
       hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
 			       WS_CHILD | WS_VISIBLE | SS_LEFT,
-			       10, 10, 160, 240, hwnd, (HMENU) 1,
+			       10, 5, 160, 240, hwnd, (HMENU) 1,
 			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
       /* set the font of the window */
       if(newFont)
@@ -620,7 +620,7 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
       hwnEdit = CreateWindow ("EDIT", NULL, 
 			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT |
 			         ES_AUTOHSCROLL,
-			      10, 30, 120, 20, hwnd, (HMENU) ID_EDITVALUE,
+			      10, 20, 120, 20, hwnd, (HMENU) ID_EDITVALUE,
 			      ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       /* set the font of the window */
       if(newFont)
@@ -1418,7 +1418,9 @@ static void AttachAttrToElem (PtrAttribute pAttr, PtrElement pEl, PtrDocument pD
 /*----------------------------------------------------------------------
    AttachAttrToRange applique l'attribut pAttr a une partie de document
   ----------------------------------------------------------------------*/
-static void         AttachAttrToRange (PtrAttribute pAttr, int lastChar, int firstChar, PtrElement pLastSel, PtrElement pFirstSel, PtrDocument pDoc, ThotBool reDisplay)
+static void AttachAttrToRange (PtrAttribute pAttr, int lastChar, 
+							   int firstChar, PtrElement pLastSel, 
+							   PtrElement pFirstSel, PtrDocument pDoc, ThotBool reDisplay)
 {
    PtrElement          pEl;
 
