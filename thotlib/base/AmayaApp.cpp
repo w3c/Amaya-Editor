@@ -213,7 +213,7 @@ bool AmayaApp::OnInit()
 
   /* setup the app icon */
 #ifdef _WINDOWS
-  m_AppIcon = wxIcon( TtaGetResourcePathWX( WX_RESOURCES_ICON_22X22, "logo.ico"), wxBITMAP_TYPE_ICO );
+  m_AppIcon = wxIcon( TtaGetResourcePathWX( WX_RESOURCES_ICON_MISC, "logo.ico"), wxBITMAP_TYPE_ICO );
 #else /* _WINDOWS */
   m_AppIcon = wxIcon( TtaGetResourcePathWX( WX_RESOURCES_ICON_22X22, "logo.png"), wxBITMAP_TYPE_PNG );
 #endif /* _WINDOWS */

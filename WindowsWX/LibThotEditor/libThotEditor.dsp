@@ -487,6 +487,10 @@ SOURCE=..\..\thotlib\document\language.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\base\logdebug.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\base\memory.c
 # End Source File
 # Begin Source File
