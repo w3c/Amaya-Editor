@@ -1223,7 +1223,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 			     element */
 			  notifyEl.element = (Element) (pE->ElParent);
 			  notifyEl.position = NSiblings;
-			  notifyEl.info = 0;
+			  notifyEl.info = 2;
 			  CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
 			  InsertElementAfter (pPrevEl, pClose);
 			  pPrevEl = pClose;

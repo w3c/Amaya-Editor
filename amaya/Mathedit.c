@@ -3588,8 +3588,8 @@ void MathElementDeleted (NotifyElement *event)
    int		i, newTypeNum;
    int          oldStructureChecking;
 
-   if (event->info == 1)
-      /* call from Undo command. Don't do anything */
+   if (event->info == 1 || event->info == 2)
+      /* call from Undo command or Return key. Don't do anything */
       return;
    parent = event->element; /* parent of the deleted element */
    parentType = TtaGetElementType (parent);
