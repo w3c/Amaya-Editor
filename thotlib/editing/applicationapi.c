@@ -63,6 +63,7 @@
 #include "searchmenu_f.h"
 #include "structschema_f.h"
 #include "structselect_f.h"
+#include "thotmsg_f.h"
 #include "tree_f.h"
 
 #define VersionId TEXT ("V2.1")

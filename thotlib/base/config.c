@@ -46,13 +46,13 @@
 
 #define MAX_ITEM_CONF 100
 
-#include "views_f.h"
-
+#include "applicationapi_f.h"
+#include "fileaccess_f.h"
 #include "inites_f.h"
 #include "memory_f.h"
 #include "message_f.h"
 #include "thotmsg_f.h"
-#include "fileaccess_f.h"
+#include "views_f.h"
 
 static char*        doc_items[MAX_ITEM_CONF];
 static ThotBool     doc_import[MAX_ITEM_CONF];
