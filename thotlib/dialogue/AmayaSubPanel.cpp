@@ -252,7 +252,7 @@ void AmayaSubPanel::RefreshToolTips()
  */
 bool AmayaSubPanel::IsExpanded()
 {
-  return (m_State & wxAMAYA_SPANEL_EXPANDED);
+  return (m_State & wxAMAYA_SPANEL_EXPANDED) != 0;
 }
 
 /*
@@ -264,7 +264,7 @@ bool AmayaSubPanel::IsExpanded()
  */
 bool AmayaSubPanel::IsFloating()
 {
-  return (m_State & wxAMAYA_SPANEL_FLOATING);
+  return (m_State & wxAMAYA_SPANEL_FLOATING) != 0;
 }
 
 /*
