@@ -1104,23 +1104,26 @@ Document       doc;
 
   if (DocumentURLs[doc] != NULL)
     {
-      /* remove the temporary copy of the file */
-      tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
-      TtaFileUnlink (tempdocument);
-      TtaFreeMemory (tempdocument);
-
-      if (IsHTTPPath (DocumentURLs[doc]))
+      if (DocumentTypes[doc] != docLog)
 	{
-	  usprintf (htmlErrFile, TEXT("%s%c%d%cHTML.ERR"), TempFileDirectory, DIR_SEP, doc, DIR_SEP);
-	  if (TtaFileExist (htmlErrFile))
-	    TtaFileUnlink (htmlErrFile);
+	  /* remove the temporary copy of the file */
+	  tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
+	  TtaFileUnlink (tempdocument);
+	  TtaFreeMemory (tempdocument);
+
+	  if (IsHTTPPath (DocumentURLs[doc]))
+	    {
+	      usprintf (htmlErrFile, TEXT("%s%c%d%cHTML.ERR"),
+			TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+	      if (TtaFileExist (htmlErrFile))
+		TtaFileUnlink (htmlErrFile);
+	    }
+
+	  if (DocumentTypes[doc] == docImage)
+	    DocumentTypes[doc] = docHTML;
+	  else if (DocumentTypes[doc] == docImageRO)
+	    DocumentTypes[doc] = docHTMLRO;
 	}
-
-      if (DocumentTypes[doc] == docImage)
-	DocumentTypes[doc] = docHTML;
-      else if (DocumentTypes[doc] == docImageRO)
-	DocumentTypes[doc] = docHTMLRO;
-
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = NULL;
       if (DocumentMeta[doc])
@@ -1135,34 +1138,36 @@ Document       doc;
 #endif /* ANNOTATIONS */
       if (HighlightDocument == doc)
 	ResetHighlightedElement ();
-      if (DocumentSource[doc])
+      if (DocumentTypes[doc] != docLog)
 	{
-	  if (DocumentTypes[doc] != docLog)
+	  if (DocumentSource[doc])
 	    {
-	      sourceDoc = DocumentSource[doc];
-	      TtcCloseDocument (sourceDoc, 1);
-	      FreeDocumentResource (sourceDoc);
+	      if (DocumentTypes[doc] != docLog)
+		{
+		  sourceDoc = DocumentSource[doc];
+		  TtcCloseDocument (sourceDoc, 1);
+		  FreeDocumentResource (sourceDoc);
+		}
+	      DocumentSource[doc] = 0;
 	    }
-	  DocumentSource[doc] = 0;
+	  /* is this document the source of another document? */
+	  for (i = 1; i < DocumentTableLength; i++)
+	    if (DocumentURLs[i] != NULL)
+	      if (DocumentSource[i] == doc)
+		{
+		  DocumentSource[i] = 0;
+		  if (DocumentTypes[i] == docLog)
+		    {
+		      TtaCloseDocument (i);
+		      TtaFreeMemory (DocumentURLs[i]);
+		      DocumentURLs[i] = NULL;
+		    }
+		}
+	  RemoveDocCSSs (doc);
+	  /* avoid to free images of backup documents */
+	  if (BackupDocument != doc)
+	    RemoveDocumentImages (doc);
 	}
-      /* is this document the source of another document? */
-      for (i = 1; i < DocumentTableLength; i++)
-         if (DocumentURLs[i] != NULL)
-	    if (DocumentSource[i] == doc)
-	      {
-		DocumentSource[i] = 0;
-		if (DocumentTypes[i] == docLog)
-		  {
-		    TtaCloseDocument (i);
-		    TtaFreeMemory (DocumentURLs[i]);
-		    DocumentURLs[i] = NULL;
-		  }
-
-	      }
-      RemoveDocCSSs (doc);
-      /* avoid to free images of backup documents */
-      if (BackupDocument != doc)
-	RemoveDocumentImages (doc);
     }
 }
  
