@@ -2083,7 +2083,7 @@ void CellHorizExtend (Document doc, View view)
 	  TtaRegisterAttributeCreate (attr, cell, doc);
 	}
       ChangeColspan (cell, span, span+1, doc);
-      SetColExt (cell, span+1, doc, inMath);
+      SetColExt (cell, span+1, doc, inMath, FALSE);
       TtaCloseUndoSequence (doc);
       TtaSetDocumentModified (doc);
     }
@@ -2176,7 +2176,7 @@ void CellHorizShrink (Document doc, View view)
 	      TtaSetAttributeValue (attr, span-1, cell, doc);
 	    }
 	  ChangeColspan (cell, span, span-1, doc);
-	  SetColExt (cell, span-1, doc, inMath);
+	  SetColExt (cell, span-1, doc, inMath, FALSE);
 	}
       TtaCloseUndoSequence (doc);
       TtaSetDocumentModified (doc);

@@ -10,10 +10,11 @@ extern void SetRowExt ( Element cell,
                         int span,
                         Document doc,
                         ThotBool inMath );
-extern void SetColExt ( Element cell,
-                        int span,
-                        Document doc,
-                        ThotBool inMath );
+extern int SetColExt ( Element cell,
+		       int span,
+		       Document doc,
+		       ThotBool inMath,
+		       ThotBool deletingLastCol );
 extern Element NewColumnHead ( Element lastcolhead,
                                ThotBool before,
                                ThotBool last,
@@ -72,10 +73,11 @@ extern void SetRowExt ( Element cell,
                           int span,
                           Document doc,
                           ThotBool inMath );
-extern void SetColExt ( Element cell,
-                          int span,
-                          Document doc,
-                          ThotBool inMath );
+extern int SetColExt ( Element cell,
+		       int span,
+		       Document doc,
+		       ThotBool inMath,
+		       ThotBool deletingLastCol );
 extern Element NewColumnHead ( Element lastcolhead,
                                  ThotBool before,
                                  ThotBool last,
