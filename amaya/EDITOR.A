@@ -7,6 +7,7 @@ USES
 #endif
 #ifdef ANNOTATIONS
        , Annot
+       , XLink
 #endif
        , MathML
 #ifdef GRAPHML

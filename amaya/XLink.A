@@ -1,5 +1,13 @@
 APPLICATION XLink;
 
+ELEMENTS
+
+    XLink:
+	BEGIN
+	   ElemDelete.Pre -> IgnoreEvent;
+	   ElemClick.Pre -> AnnotSimpleClick;
+	END;
+
 ATTRIBUTES
 
    { This is just to make the APP compiler happy: it would not compile an empty

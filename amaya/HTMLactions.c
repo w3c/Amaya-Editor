@@ -1035,6 +1035,20 @@ View            view;
 }
 
 /*----------------------------------------------------------------------
+  IgnoreEvent       An empty function to be able to ignore events.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool            IgnoreEvent (NotifyElement *event)
+#else  /* __STDC__ */
+ThotBool            IgnoreEvent (event)
+NotifyElement      *event;
+#endif /* __STDC__ */
+{
+  /* don't let Thot perform it's normal operation */
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
   DoubleClick     The user has double-clicked an element.         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1068,11 +1082,6 @@ NotifyElement      *event;
 {
   ThotBool usedouble;
 
-#ifdef ANNOTATIONS
-  /* if it's an annotation link, highlight the selection */
-  ANNOT_SelectSourceDoc (event->document, event->element);
-#endif /* ANNOTATIONS */
-
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);  
   if (usedouble)
     return TRUE;
@@ -1080,6 +1089,27 @@ NotifyElement      *event;
     /* don't let Thot perform normal operation */
     return (ActivateElement (event->element, event->document));
 }
+
+/*----------------------------------------------------------------------
+  AnnotClick     The user has clicked on an annotation icon
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool            AnnotSimpleClick (NotifyElement *event)
+#else  /* __STDC__ */
+ThotBool            AnnotSimpleClick (event)
+NotifyElement      *event;
+
+#endif /* __STDC__ */
+{
+  ThotBool usedouble;
+
+#ifdef ANNOTATIONS
+  /* if it's an annotation link, highlight the selection */
+  ANNOT_SelectSourceDoc (event->document, event->element);
+#endif /* ANNOTATIONS */
+  return SimpleClick (event);
+}
+
 
 /*----------------------------------------------------------------------
    UpdateTitle update the content of the Title field on top of the 
