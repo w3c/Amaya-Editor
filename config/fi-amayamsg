@@ -80,253 +80,252 @@
 78 Linkkien päivitys: %s%% onnistui
 79 Ei mitään tallennettavaa
 80 toista-y
-81 <HTML><HEAD><TITLE>VIRHE: URL ei saatavissa</TITLE></HEAD><BODY><H1>Pyydettyä URL:ää ei voida hakea</H1><HR><P>Yritettäessä saavuttaa seuraavaa URL:ää:<A HREF=\"%s\">%s</A></P><P>Tapahtui virhe:</P><UL><LI><STRONG>Yhteydenmuodostus epäonnistui</STRONG></UL><P>Järjestelmä virhesanoma:</P><PRE><I>(%d) %s</I></PRE><P>Luultavasti:</P><PRE>Kohde ei ole tavoitettavissa tai sitä ei ole olemasssa</PRE><PRE>Yrittäkää myöhemmin uudelleen</PRE><P></P><HR>\n</BODY></HTML>
-82 Syöttäkää kayttäjätunnus:
-83 %d selvittämätön pyyntö
-84 Ei CSS-tiedostoa saatavilla
-85 Keskeytä tiedonsiirto
-86 Edellinen dokumentti
-87 Seuraava dokumentti
-88 Päivitä
-89 Tallenna
-90 Tulosta
-91 Etsi
-92 Korosta
-93 Lihavoi
-94 Vakio fontti
-95 ei toistoa
-96 Syötä kuva
-97 Otsikkokoko 1
-98 Otsikkokoko 2
-99 Otsikkokoko 3
-100 Pisteellinen luettelo
-101 Numeroituluettelo
-102 Määrittelyluettelo
-103 Linkki
-104 Taulukko
-105 Dokumentilla ei ole nimeä. Tallennetaan nimellä:
-106 Pluginit
-107 Tuntematon virhe tallennettaessa URL:ää %s
-108 Palvelinyhteyden muodostus epäonnistui
-109 Pääsy tietoon %s on kielletty palvelimen toimesta
-110 Toiminto onnistui %s
-111 %s on luotu
-112 %s on päivitetty
-113 Toiminto suoritettu %s palautteella
-114 Palvelin ei ymmärrä pyyntöä
-115 Palvelimella ei ole uudempaa tietoa
-116 Tämä menettely on kielletty
-117 Tunnistus vaaditaan %s käsittelyyn
-118 Tarkistetaan ...
-119 Tallennus %s epäonnistui, Tallenetaanko levylle?
-120 Tallenne %s vaikuttaa virheelliseltä, ohita?
-121 URL %s välitetään edelleen %s, ohita?
-122 %s päivitys epäonnistui, ohita?
-123 Palvelinvirhe 501: %s
-124 Palvelinvirhe 501
-125 Palvelin ei tue tätä pyyntöä
-126 Suodatin
-127 aktiiviset tiedonsiirrot
-128 jonottavat tiedonsiirrot
-129 Sisällysluettelo
-130 Linkkiluettelo
-131 Toistotila
-132 toista
-133 toista-x
-134 Amayan sammuttaminen epäonnistui. Haluatko palauttaa varmuuskopioidut dokumentit?
-135 Tunnistus epäonnistui, Yritä uudelleen?
-136 Toiminto välitetään. Haluatko jatkaa?
-137 Rivien lukumäärä
-138 Sarakkeiden lukumäärä
-139 Reunus
-140 Vuorottainen teksti
-141 Vuorottainen teksti on välttämätön
-142 Tulosta URL
-143 Käytä
-144 Oletus
-145 Tyhjennä välimuisti
-146 Välimuistin asetukset
-147 Käytä välimuistia
-148 Aseta suojatut tiedostot välimuistiin
-149 Katkaistu tila
-150 Ohita vanhentumiset: header
-151 Välimuistin sijainti
-152 Välimuistin koko (Mb)
-153 Välimuistiin tallennettavan tiedoston kokorajoitus (Mb)
-154 Välityspalvelimen asetukset
-155 HTTP välityspalvelin (e.g., www.w3.org:1234)
-156 Välityspalvelimen domain luettelo (e.g., lists.w3.org)
-157 Yleiset asetukset
-158 Aloitussivu
-159 Painikevihjeen viive (ms)
-160 Kaksoisnapautuksen viive (ms)
-161 Valikon fonttikoko
-162 Fonttikoko
-163 Kielikoodi
-164 Käytä näppäinyhdistelmiä (`+a=à)
-165 Näytä taustakuvat
-166 Vienti CR/LF
-167 Selaus asetukset
-168 Lataa kuvat
-169 Kaksoisklikkaus aktivoi linkin
-170 Julkaisu asetukset
-171 Käytä ETAGS:ia ja ennakkoehtoja
-172 Tarkista jokainen PUT suorittamalla GET
-173 Oletus nimi URL:lle jotka päättyvät '/'
-174 Geometria asetukset
-175 Tallenna nykyinen geometria
-176 Palauta oletus geometria
-177 Muutos tulee voimaan avatessasi uuden ikkunan
-178 Väri asetukset
-179 Dokumentin piirtoväri
-180 Dokumentin taustaväri
-181 Valikon piirtoväri
-182 Valikon taustaväri
-183 Välimuistin käynnistys epäonnistui.Välimuistin hakemisto on viallinen tai toinen Amaya-prosessi käyttää välimuistia.
-184 Aloitussivu
-185 Luettelo valituista kielistä "fi, en":
-186 Profiilien määrittelytiedoston sijainti
-187 Profiilin valinta
-188 Muutokset tulevat voimaan Amayan uudelleenkäynnistämisen jälkeen.
-189 Profiilin asetukset
-190 Syötä mallipalvelimen osoite
-191 Mallien asetukset
-192 Salli automaattinen PUT-komentojen välitys näissä domaineissa
-193 Ohita tyylitiedostot
-194 Muunnoksen tyyppi
-195 (erota syötteet välilyönnein)
-196 Älä käytä välityspalvelinta näihin domaineihin
-197 Käytä vain välityspalvelinta näihin domaineihin
-198 Henkilön nimi
-199 Amaya käyttäjän hakemisto
-200 Väliaikaisten tiedostojen hakemisto
-201 Käytä palettia
-202 Kieliasetukset
-203 Huomautuksien asetukset
-204 Käyttäjän huomautukset
-205 Postipalvelimen huomautukset
-206 Palvelimien merkinnät
-207 Lataa paikalliset merkinnät automaattisesti
-208 Lataa etämerkinnät automaattisesti
-209 Poista etälataus käytöstä käynnistyksen yhteydessä (etätyötä varten)
-210 Valintaväri
-211 Caret väri
-212 Suunta
-213 Pysty
-214 Vaaka
-215 Ota FTP käyttöön
-216 Huonosti muotoiltu XML-dokumentti - Ladataanko HTML:nä vai näytetään virheellisenä?
-217 Huonosti muotoiltu XML-dokumentti - Näytetäänkö virheet?
-218 Virheellisiä merkkejä - Ladataanko HTML:nä vai näytetään virheellisenä?
-219 Virheellisiä merkkejä
-220 Dokumentin profiili:
-221 Jotkut tagit/määrittelyt ohitettiin - katso Näytä/Näytä käännösvirheet
-222 Amaya ei tue dokumentin tyyppiä
-223 Muokkaus ja tallennus muuttavat dokumentin tyypin
-224 Ei saatavilla
-225 Selaa
-226 Selaa tiedostoja
-227 Valinta
-228 Merkintä paikallissuodatusvalikko
-229 Näytä
-230 Piilota
-231 Näytä kaikki
-232 Piilota kaikki
-233 * tarkoittaa piilotettua, - tarkoittaa osittain piilotettua
-234 Suodatusvalinnat
-235 Tekijän mukaan
-236 Tyypin mukaan
-237 Palvelimen mukaan
-238 Access näppäimet
-239 Ohita
-240 Tyyli elementti
-241 Ei voi luoda XPointeria
-242 Mahdotonta liittää aloittavaa XPointeria sisäisesti lisättyyn elementtiin
-243 Mahdotonta liittää lopettavaa XPointeria sisäisesti lisättyyn elementtiin
-244 Merkinnän kohdepaikkaa ei löydy
-245 Merkintää ei voi siirtää toiseen dokumenttiin
-246 Et voi merkitä muutettua dokumenttia. Tallenna dokumentti ensin.
-247 Merkinnän käyttäjää ei valittu. Valitse käyttäjä Merkinnät/Määritä asetukset
-248 XPointerin luonti merkintää varten epäonnistui
-249 Uusi merkintä
-250 Merkinnän lähetys epäonnistui
-251 Merkinnän poisto epäonnistui
-252 Merkintä poistettu
-253 Merkintäluettelon lataus epäonnistui
-254 Virhe
-255 Valitse Charset
-256 Valitse MIME tyyppi
-257 Muuta Charset
-258 Muuta MIME tyypi
-259 Muuta
-260 Tämä dokumenttityyppi ei tue charset:iä
-261 Kohteen täytyy olla HTTP URL tämän valinna kanssa
-262 Virhe: epäkelpo MIME tyyppi
-263 Tuntematon
-264 Tyylit ohitetaan - katso Näytä/Näytä käännösvirheet
-265 Tämä dokumentti on avattu jo toiseen ikkunaan
-266 Tämän instanssin tallennus saattaa aiheuttaa kadonneen päivityksen ongelman
-267 Dokumenttityypin luonti/muuttaminen saa aikaan uudellenkääntämisen.
-268 Odottavia muutoksia ei voi kumota.
-269 Käytä application/xhtml+xml MIME tyypiä XHTML dokumenttien yhteydessä
-270 Lukitus onnistui!
-271 Lukitus epäonnistui!
-272 Lukitaan %s...
-273 Dokumentti %s on lukittu!
-274 Dokumentin %s on lukinnut %s (aikakatkaisu %s)
-275 Korvataanko lukitustiedot?
-276 Kopioidaanko lukitustiedot?
-277 Yritä poistaa lukitus ensin...
-278 Lukituksen poisto onnistui!
-279 Lukituksen poisto epäonnistui!
-280 Poistetaan lukitus %s...
-281 Poistettu lukitus dokumentista: %s
-282 Poista lukitus dokumentista?
-283 Dokumentin ominaisuudet
-284 Dokumentin ominaisuuksia ei saatavilla
-285 Dokumentin ominaisuuksia ei ole väliaikaisesti saatavilla. Yritä myöhemmin uudelleen...
-286 Haetaan dokumentin ominaisuuksia...
-287 Tälle URL:lle ei ole WebDav-tukea %s
-288 Lukitustietojen tallennus paikallisesti epäonnistui
-289 Lukitustietojen poisto paikallisesti epäonnistui
-290 Tämä toiminto ei ole käytettävissä %s
-291 Pyyntö epäonnistui! Syy: Viallinen riippuvuus
-292 Pyyntö epäonnistui! Syy: %s
-293 Yritä uudelleen?
-294 WebDAV asetukset
-295 Käyttäjän henkilökohtainen linkki (URL)
-296 Käyttäjän WebDAV resurssi luettelo (URL URL)
-297 Lukituksen syvyys
-298 rajattomuus
-299 Lukituksen aikakatkaisu
-300 Rajaton
-301 Muu
-302 Sekuntia
-303 Lukitse ala
-304 yksinomainen
-305 jaettu
-306 Valvetila
-307 Yleinen valvetila
-308 Valvetila poistuttaessa
-309 Aikajana
-310 SVG Kirjasto
-311 Kopioi vaihtoehto
-312 Kopioi valinta
-313 Viittaa valintaan
-314 Lisää uusi malli kirjastoon
-315 Uuden SVG-tiedoston URL...
-316 Kirjaston nimi
-317 Kirjaston URL
-318 Luo kirjasto
-319 Selaa kirjastoa
-320 Luo tai etsi kirjasto
-321 Nykyinen valinta ei sisällä pelkästään SVG elementtejä. Valitse uudelleen.
-322 Kirjaston otsikko on pakollinen
-323 Siirrä kursoria dokumentissa määrittääksesi uuden avainkohdan...
-324 Avainkohta määritelty. Siirrä liukukytkintä määrittääksesi animaation keston...
-325 Valitse elementin alkuväri...
-326 Alkuväri määritelty. Siirrä liukukytkintä määrittääksesi animaation keston...
-327 Valitse loppuväri...
-328 Animaatio määritelty
-329 Animoitu määrittely
-330 Elementti ilman tunnusta
+81 Syöttäkää kayttäjätunnus:
+82 %d selvittämätön pyyntö
+83 Ei CSS-tiedostoa saatavilla
+84 Keskeytä tiedonsiirto
+85 Edellinen dokumentti
+86 Seuraava dokumentti
+87 Päivitä
+88 Tallenna
+89 Tulosta
+90 Etsi
+91 Korosta
+92 Lihavoi
+93 Vakio fontti
+94 ei toistoa
+95 Syötä kuva
+96 Otsikkokoko 1
+97 Otsikkokoko 2
+98 Otsikkokoko 3
+99 Pisteellinen luettelo
+100 Numeroituluettelo
+101 Määrittelyluettelo
+102 Linkki
+103 Taulukko
+104 Dokumentilla ei ole nimeä. Tallennetaan nimellä:
+105 Pluginit
+106 Tuntematon virhe tallennettaessa URL:ää %s
+107 Palvelinyhteyden muodostus epäonnistui
+108 Pääsy tietoon %s on kielletty palvelimen toimesta
+109 Toiminto onnistui %s
+110 %s on luotu
+111 %s on päivitetty
+112 Toiminto suoritettu %s palautteella
+113 Palvelin ei ymmärrä pyyntöä
+114 Palvelimella ei ole uudempaa tietoa
+115 Tämä menettely on kielletty
+116 Tunnistus vaaditaan %s käsittelyyn
+117 Tarkistetaan ...
+118 Tallennus %s epäonnistui, Tallenetaanko levylle?
+119 Tallenne %s vaikuttaa virheelliseltä, ohita?
+120 URL %s välitetään edelleen %s, ohita?
+121 %s päivitys epäonnistui, ohita?
+122 Palvelinvirhe 501: %s
+123 Palvelinvirhe 501
+124 Palvelin ei tue tätä pyyntöä
+125 Suodatin
+126 aktiiviset tiedonsiirrot
+127 jonottavat tiedonsiirrot
+128 Sisällysluettelo
+129 Linkkiluettelo
+130 Toistotila
+131 toista
+132 toista-x
+133 Amayan sammuttaminen epäonnistui. Haluatko palauttaa varmuuskopioidut dokumentit?
+134 Tunnistus epäonnistui, Yritä uudelleen?
+135 Toiminto välitetään. Haluatko jatkaa?
+136 Rivien lukumäärä
+137 Sarakkeiden lukumäärä
+138 Reunus
+139 Vuorottainen teksti
+140 Vuorottainen teksti on välttämätön
+141 Tulosta URL
+142 Käytä
+143 Oletus
+144 Tyhjennä välimuisti
+145 Välimuistin asetukset
+146 Käytä välimuistia
+147 Aseta suojatut tiedostot välimuistiin
+148 Katkaistu tila
+149 Ohita vanhentumiset: header
+150 Välimuistin sijainti
+151 Välimuistin koko (Mb)
+152 Välimuistiin tallennettavan tiedoston kokorajoitus (Mb)
+153 Välityspalvelimen asetukset
+154 HTTP välityspalvelin (e.g., www.w3.org:1234)
+155 Välityspalvelimen domain luettelo (e.g., lists.w3.org)
+156 Yleiset asetukset
+157 Aloitussivu
+158 Painikevihjeen viive (ms)
+159 Kaksoisnapautuksen viive (ms)
+160 Valikon fonttikoko
+161 Fonttikoko
+162 Kielikoodi
+163 Käytä näppäinyhdistelmiä (`+a=à)
+164 Näytä taustakuvat
+165 Vienti CR/LF
+166 Selaus asetukset
+167 Lataa kuvat
+168 Kaksoisklikkaus aktivoi linkin
+169 Julkaisu asetukset
+170 Käytä ETAGS:ia ja ennakkoehtoja
+171 Tarkista jokainen PUT suorittamalla GET
+172 Oletus nimi URL:lle jotka päättyvät '/'
+173 Geometria asetukset
+174 Tallenna nykyinen geometria
+175 Palauta oletus geometria
+176 Muutos tulee voimaan avatessasi uuden ikkunan
+177 Väri asetukset
+178 Dokumentin piirtoväri
+179 Dokumentin taustaväri
+180 Valikon piirtoväri
+181 Valikon taustaväri
+182 Välimuistin käynnistys epäonnistui.Välimuistin hakemisto on viallinen tai toinen Amaya-prosessi käyttää välimuistia.
+183 Aloitussivu
+184 Luettelo valituista kielistä "fi, en":
+185 Profiilien määrittelytiedoston sijainti
+186 Profiilin valinta
+187 Muutokset tulevat voimaan Amayan uudelleenkäynnistämisen jälkeen.
+188 Profiilin asetukset
+189 Syötä mallipalvelimen osoite
+190 Mallien asetukset
+191 Salli automaattinen PUT-komentojen välitys näissä domaineissa
+192 Ohita tyylitiedostot
+193 Muunnoksen tyyppi
+194 (erota syötteet välilyönnein)
+195 Älä käytä välityspalvelinta näihin domaineihin
+196 Käytä vain välityspalvelinta näihin domaineihin
+197 Henkilön nimi
+198 Amaya käyttäjän hakemisto
+199 Väliaikaisten tiedostojen hakemisto
+200 Käytä palettia
+201 Kieliasetukset
+202 Huomautuksien asetukset
+203 Käyttäjän huomautukset
+204 Postipalvelimen huomautukset
+205 Palvelimien merkinnät
+206 Lataa paikalliset merkinnät automaattisesti
+207 Lataa etämerkinnät automaattisesti
+208 Poista etälataus käytöstä käynnistyksen yhteydessä (etätyötä varten)
+209 Valintaväri
+210 Caret väri
+211 Suunta
+212 Pysty
+213 Vaaka
+214 Ota FTP käyttöön
+215 Huonosti muotoiltu XML-dokumentti - Ladataanko HTML:nä vai näytetään virheellisenä?
+216 Huonosti muotoiltu XML-dokumentti - Näytetäänkö virheet?
+217 Virheellisiä merkkejä - Ladataanko HTML:nä vai näytetään virheellisenä?
+218 Virheellisiä merkkejä
+219 Dokumentin profiili:
+220 Jotkut tagit/määrittelyt ohitettiin - katso Näytä/Näytä käännösvirheet
+221 Amaya ei tue dokumentin tyyppiä
+222 Muokkaus ja tallennus muuttavat dokumentin tyypin
+223 Ei saatavilla
+224 Selaa
+225 Selaa tiedostoja
+226 Valinta
+227 Merkintä paikallissuodatusvalikko
+228 Näytä
+229 Piilota
+230 Näytä kaikki
+231 Piilota kaikki
+232 * tarkoittaa piilotettua, - tarkoittaa osittain piilotettua
+233 Suodatusvalinnat
+234 Tekijän mukaan
+235 Tyypin mukaan
+236 Palvelimen mukaan
+237 Access näppäimet
+238 Ohita
+239 Tyyli elementti
+240 Ei voi luoda XPointeria
+241 Mahdotonta liittää aloittavaa XPointeria sisäisesti lisättyyn elementtiin
+242 Mahdotonta liittää lopettavaa XPointeria sisäisesti lisättyyn elementtiin
+243 Merkinnän kohdepaikkaa ei löydy
+244 Merkintää ei voi siirtää toiseen dokumenttiin
+245 Et voi merkitä muutettua dokumenttia. Tallenna dokumentti ensin.
+246 Merkinnän käyttäjää ei valittu. Valitse käyttäjä Merkinnät/Määritä asetukset
+247 XPointerin luonti merkintää varten epäonnistui
+248 Uusi merkintä
+249 Merkinnän lähetys epäonnistui
+250 Merkinnän poisto epäonnistui
+251 Merkintä poistettu
+252 Merkintäluettelon lataus epäonnistui
+253 Virhe
+254 Valitse Charset
+255 Valitse MIME tyyppi
+256 Muuta Charset
+257 Muuta MIME tyypi
+258 Muuta
+259 Tämä dokumenttityyppi ei tue charset:iä
+260 Kohteen täytyy olla HTTP URL tämän valinna kanssa
+261 Virhe: epäkelpo MIME tyyppi
+262 Tuntematon
+263 Tyylit ohitetaan - katso Näytä/Näytä käännösvirheet
+264 Tämä dokumentti on avattu jo toiseen ikkunaan
+265 Tämän instanssin tallennus saattaa aiheuttaa kadonneen päivityksen ongelman
+266 Dokumenttityypin luonti/muuttaminen saa aikaan uudellenkääntämisen.
+267 Odottavia muutoksia ei voi kumota.
+268 Käytä application/xhtml+xml MIME tyypiä XHTML dokumenttien yhteydessä
+269 Lukitus onnistui!
+270 Lukitus epäonnistui!
+271 Lukitaan %s...
+272 Dokumentti %s on lukittu!
+273 Dokumentin %s on lukinnut %s (aikakatkaisu %s)
+274 Korvataanko lukitustiedot?
+275 Kopioidaanko lukitustiedot?
+276 Yritä poistaa lukitus ensin...
+277 Lukituksen poisto onnistui!
+278 Lukituksen poisto epäonnistui!
+279 Poistetaan lukitus %s...
+280 Poistettu lukitus dokumentista: %s
+281 Poista lukitus dokumentista?
+282 Dokumentin ominaisuudet
+283 Dokumentin ominaisuuksia ei saatavilla
+284 Dokumentin ominaisuuksia ei ole väliaikaisesti saatavilla. Yritä myöhemmin uudelleen...
+285 Haetaan dokumentin ominaisuuksia...
+286 Tälle URL:lle ei ole WebDav-tukea %s
+287 Lukitustietojen tallennus paikallisesti epäonnistui
+288 Lukitustietojen poisto paikallisesti epäonnistui
+289 Tämä toiminto ei ole käytettävissä %s
+290 Pyyntö epäonnistui! Syy: Viallinen riippuvuus
+291 Pyyntö epäonnistui! Syy: %s
+292 Yritä uudelleen?
+293 WebDAV asetukset
+294 Käyttäjän henkilökohtainen linkki (URL)
+295 Käyttäjän WebDAV resurssi luettelo (URL URL)
+296 Lukituksen syvyys
+297 rajattomuus
+298 Lukituksen aikakatkaisu
+299 Rajaton
+300 Muu
+301 Sekuntia
+302 Lukitse ala
+303 yksinomainen
+304 jaettu
+305 Valvetila
+306 Yleinen valvetila
+307 Valvetila poistuttaessa
+308 Aikajana
+309 SVG Kirjasto
+310 Kopioi vaihtoehto
+311 Kopioi valinta
+312 Viittaa valintaan
+313 Lisää uusi malli kirjastoon
+314 Uuden SVG-tiedoston URL...
+315 Kirjaston nimi
+316 Kirjaston URL
+317 Luo kirjasto
+318 Selaa kirjastoa
+319 Luo tai etsi kirjasto
+320 Nykyinen valinta ei sisällä pelkästään SVG elementtejä. Valitse uudelleen.
+321 Kirjaston otsikko on pakollinen
+322 Siirrä kursoria dokumentissa määrittääksesi uuden avainkohdan...
+323 Avainkohta määritelty. Siirrä liukukytkintä määrittääksesi animaation keston...
+324 Valitse elementin alkuväri...
+325 Alkuväri määritelty. Siirrä liukukytkintä määrittääksesi animaation keston...
+326 Valitse loppuväri...
+327 Animaatio määritelty
+328 Animoitu määrittely
+329 Elementti ilman tunnusta

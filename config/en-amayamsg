@@ -80,253 +80,252 @@
 78 Links update: %s%% has been done
 79 Nothing new to be saved
 80 repeat-y
-81 <HTML><HEAD><TITLE>ERROR: Cannot access a URL</TITLE></HEAD><BODY><H1>The requested URL could not be retrieved</H1><HR><P>While trying to retrieve the URL:<A HREF=\"%s\">%s</A></P><P>The following error was encountered:</P><UL><LI><STRONG>Connection Failed</STRONG></UL><P>The system returned:</P><PRE><I>(%d) %s</I></PRE><P>This means that:</P><PRE>The remote site or server may be down or non-existent.</PRE><PRE>Please try again soon.</PRE><P></P><HR>\n</BODY></HTML>
-82 Please enter username:
-83 %d outstanding requests
-84 No CSS file available
-85 Interrupt transfer
-86 Previous document
-87 Next document
-88 Reload
-89 Save
-90 Print
-91 Search
-92 Emphasis
-93 Strong
-94 Fixed font
-95 no-repeat
-96 Insert image
-97 Heading level 1
-98 Heading level 2
-99 Heading level 3
-100 Bulleted list
-101 Numbered list
-102 Definition list
-103 Link
-104 Table
-105 Document doesn't have a name. Saving to:
-106 Plugins
-107 Unknown error while saving URL %s
-108 Cannot make a connection to the server
-109 Access to %s is forbidden by the server
-110 Operation succeeded for %s
-111 %s has been created
-112 %s has been updated
-113 Operation completed with a %s status code
-114 Server did not understand the request syntax
-115 Server has no new information to send back
-116 This method is not allowed
-117 Please authenticate to access %s
-118 Verifying ...
-119 Saving to %s failed, Save to disk?
-120 Saving to %s seems corrupted, ignore?
-121 URL %s redirected to %s, ignore?
-122 Reload of %s failed, ignore?
-123 Server reports a 501 error: %s
-124 Server reports a 501 error
-125 Server does not support this request method
-126 Filter
-127 active transfers
-128 queued transfers
-129 Table of contents
-130 Table of links
-131 Repeat Mode
-132 repeat
-133 repeat-x
-134 Your previous Amaya session failed. Do you want to reload backup documents?
-135 Authentication failed. Retry?
-136 Operation will be redirected. Continue?
-137 Number of Rows
-138 Number of Columns
-139 Border
-140 Alternate text
-141 The Alternate text is mandatory
-142 Print URL
-143 Apply
-144 Defaults
-145 Flush cache
-146 Cache Preferences
-147 Enable cache
-148 Cache protected documents
-149 Disconnected mode
-150 Ignore Expires: header
-151 Cache directory
-152 Cache size (Mb)
-153 Cache entry size limit (Mb)
-154 Proxy Preferences
-155 HTTP proxy (e.g., www.w3.org:1234)
-156 Proxy domain list (e.g., lists.w3.org)
-157 General Preferences
-158 Home Page
-159 ToolTip delay (ms)
-160 Double click delay (ms)
-161 Menu font size
-162 Font zoom
-163 Dialogue language
-164 Enable multi-key (`+a=à)
-165 Show background images
-166 Export CR/LF
-167 Browsing Preferences
-168 Load images
-169 Double click activates link
-170 Publishing Preferences
-171 Use ETAGS and preconditions
-172 Verify each PUT with a GET
-173 Default name for URLs finishing in '/'
-174 Geometry Preferences
-175 Save current geometry
-176 Restore default geometry
-177 The change will be effective when you open a new window.
-178 Color Preferences
-179 Document foreground color
-180 Document background color
-181 Menu foreground color
-182 Menu background color
-183 Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.
-184 Home
-185 List of preferred languages like "en, fr":
-186 Location of profiles definition file
-187 Profile Selection
-188 These changes won't be effective until Amaya is restarted
-189 Profiles Preferences
-190 Enter the URL of the templates server
-191 Templates Preferences
-192 Allow automatic PUT redirections on these domains
-193 Ignore style sheets
-194 Transform type
-195 (separate each entry with a space)
-196 No proxy on these domains
-197 Only proxy these domains
-198 Character name
-199 Amaya user directory
-200 Temporary directory
-201 Use palette
-202 Language Negotiation
-203 Configuration for annotations
-204 Annotation user
-205 Annotation post server
-206 Annotation servers
-207 Autoload local annotations
-208 Autoload remote annotations
-209 Disable remote autoload at each startup (for off-line work)
-210 Selection color
-211 Caret color
-212 Orientation
-213 Portrait
-214 Landscape
-215 Enable FTP
-216 Not Well-Formed XML document - Reload as HTML or show parsing errors?
-217 Not Well-Formed XML document - Show parsing errors?
-218 Invalid characters - Reload as HTML or show parsing errors?
-219 Invalid characters
-220 Document profile:
-221 Some tags/attributes are ignored - see Views/Show parsing errors
-222 The encoding of this document is not supported by Amaya
-223 Editing and saving this document will change its type
-224 Not available
-225 Browse
-226 File Browser
-227 Selection
-228 Annotation Local Filter Menu
-229 Show
-230 Hide
-231 Show all
-232 Hide all
-233 * means hidden, - means partially hidden
-234 Filter options
-235 By author
-236 By type
-237 By server
-238 Access keys
-239 Ignore
-240 Style element
-241 Cannot create an XPointer
-242 Impossible to attach a start XPointer on an internal added element
-243 Impossible to attach an end XPointer on an internal added element
-244 Cannot find where to move the annotation
-245 Cannot move the annotation to a different document
-246 You cannot annotate a modified document. Please save it first.
-247 No annotation user declared. Please open the Annotations/Configure menu.
-248 Unable to build an XPointer for this annotation
-249 Make a new annotation
-250 Failed to post the annotation
-251 Failed to delete the annotation
-252 Annotation deleted!
-253 Failed to load the annotation index
-254 Error
-255 Select a Charset
-256 Select a MIME type
-257 Change Charset
-258 Change MIME type
-259 Change
-260 This type of document doesn't support charsets
-261 The target must be an HTTP URL to use this option
-262 Error: invalid MIME type
-263 Unknown
-264 Styles are ignored - see Views/Show parsing errors
-265 This document is already loaded in another Window
-266 Saving that instance may cause a lost update problem
-267 Creating or Changing the doctype causes the document to be reparsed.
-268 Pending modifications won't be undone.
-269 Use the application/xhtml+xml MIME type for XHTML documents
-270 Lock succeed!
-271 Lock failed!
-272 Locking %s...
-273 Document %s is locked!
-274 Document %s is locked by %s (timeout %s)
-275 Overwrite lock information?
-276 Copy the lock information? 
-277 Try to unlock the document before...
-278 Unlock succeed!
-279 Unlock failed!
-280 Unlocking %s...
-281 Document %s is unlocked!
-282 Unlock the document? 
-283 Document properties
-284 Document properties are not available
-285 Document properties are temporarily unavailable. Try again later...
-286 Looking for document properties...
-287 Sorry, no WebDAV support for URLs of this type %s
-288 Failed to save lock info in the local base
-289 Failed to remove lok info from local base
-290 Sorry, this operation is not allowed for %s
-291 Request failed! Reason: Failed Dependency
-292 Request failed! Reason: %s
-293 Try again? 
-294 WebDAV Preferences
-295 User's Personal Reference (URL)
-296 User's WebDAV Resource List (URL URL)
-297 Lock Depth
-298 infinity
-299 Lock Timeout
-300 Infinite
-301 Other
-302 Seconds
-303 Lock Scope
-304 exclusive
-305 shared
-306 Awarenees
-307 General awareness
-308 Awareness on exit
-309 Timeline
-310 SVG Library
-311 Copy option
-312 Copy selection
-313 Refer to selection
-314 Add new model into library
-315 URL of the new SVG file ...
-316 Library title
-317 Library URL
-318 Create library
-319 Browse library
-320 Create or search library
-321 The current selection not contain only SVG elements. Please reselect
-322 The library title is mandatory
-323 Move the position cursor in edited document to define a new key position...
-324 Key position defined. Move the slider to define animation duration...
-325 Select starting color of element...
-326 Starting color defined. Move the slider to define animation duration...
-327 Select ending color...
-328 Animation defined.
-329 Animated attribute
-330 Element without id
+81 Please enter username:
+82 %d outstanding requests
+83 No CSS file available
+84 Interrupt transfer
+85 Previous document
+86 Next document
+87 Reload
+88 Save
+89 Print
+90 Search
+91 Emphasis
+92 Strong
+93 Fixed font
+94 no-repeat
+95 Insert image
+96 Heading level 1
+97 Heading level 2
+98 Heading level 3
+99 Bulleted list
+100 Numbered list
+101 Definition list
+102 Link
+103 Table
+104 Document doesn't have a name. Saving to:
+105 Plugins
+106 Unknown error while saving URL %s
+107 Cannot make a connection to the server
+108 Access to %s is forbidden by the server
+109 Operation succeeded for %s
+110 %s has been created
+111 %s has been updated
+112 Operation completed with a %s status code
+113 Server did not understand the request syntax
+114 Server has no new information to send back
+115 This method is not allowed
+116 Please authenticate to access %s
+117 Verifying ...
+118 Saving to %s failed, Save to disk?
+119 Saving to %s seems corrupted, ignore?
+120 URL %s redirected to %s, ignore?
+121 Reload of %s failed, ignore?
+122 Server reports a 501 error: %s
+123 Server reports a 501 error
+124 Server does not support this request method
+125 Filter
+126 active transfers
+127 queued transfers
+128 Table of contents
+129 Table of links
+130 Repeat Mode
+131 repeat
+132 repeat-x
+133 Your previous Amaya session failed. Do you want to reload backup documents?
+134 Authentication failed. Retry?
+135 Operation will be redirected. Continue?
+136 Number of Rows
+137 Number of Columns
+138 Border
+139 Alternate text
+140 The Alternate text is mandatory
+141 Print URL
+142 Apply
+143 Defaults
+144 Flush cache
+145 Cache Preferences
+146 Enable cache
+147 Cache protected documents
+148 Disconnected mode
+149 Ignore Expires: header
+150 Cache directory
+151 Cache size (Mb)
+152 Cache entry size limit (Mb)
+153 Proxy Preferences
+154 HTTP proxy (e.g., www.w3.org:1234)
+155 Proxy domain list (e.g., lists.w3.org)
+156 General Preferences
+157 Home Page
+158 ToolTip delay (ms)
+159 Double click delay (ms)
+160 Menu font size
+161 Font zoom
+162 Dialogue language
+163 Enable multi-key (`+a=à)
+164 Show background images
+165 Export CR/LF
+166 Browsing Preferences
+167 Load images
+168 Double click activates link
+169 Publishing Preferences
+170 Use ETAGS and preconditions
+171 Verify each PUT with a GET
+172 Default name for URLs finishing in '/'
+173 Geometry Preferences
+174 Save current geometry
+175 Restore default geometry
+176 The change will be effective when you open a new window.
+177 Color Preferences
+178 Document foreground color
+179 Document background color
+180 Menu foreground color
+181 Menu background color
+182 Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.
+183 Home
+184 List of preferred languages like "en, fr":
+185 Location of profiles definition file
+186 Profile Selection
+187 These changes won't be effective until Amaya is restarted
+188 Profiles Preferences
+189 Enter the URL of the templates server
+190 Templates Preferences
+191 Allow automatic PUT redirections on these domains
+192 Ignore style sheets
+193 Transform type
+194 (separate each entry with a space)
+195 No proxy on these domains
+196 Only proxy these domains
+197 Character name
+198 Amaya user directory
+199 Temporary directory
+200 Use palette
+201 Language Negotiation
+202 Configuration for annotations
+203 Annotation user
+204 Annotation post server
+205 Annotation servers
+206 Autoload local annotations
+207 Autoload remote annotations
+208 Disable remote autoload at each startup (for off-line work)
+209 Selection color
+210 Caret color
+211 Orientation
+212 Portrait
+213 Landscape
+214 Enable FTP
+215 Not Well-Formed XML document - Reload as HTML or show parsing errors?
+216 Not Well-Formed XML document - Show parsing errors?
+217 Invalid characters - Reload as HTML or show parsing errors?
+218 Invalid characters
+219 Document profile:
+220 Some tags/attributes are ignored - see Views/Show parsing errors
+221 The encoding of this document is not supported by Amaya
+222 Editing and saving this document will change its type
+223 Not available
+224 Browse
+225 File Browser
+226 Selection
+227 Annotation Local Filter Menu
+228 Show
+229 Hide
+230 Show all
+231 Hide all
+232 * means hidden, - means partially hidden
+233 Filter options
+234 By author
+235 By type
+236 By server
+237 Access keys
+238 Ignore
+239 Style element
+240 Cannot create an XPointer
+241 Impossible to attach a start XPointer on an internal added element
+242 Impossible to attach an end XPointer on an internal added element
+243 Cannot find where to move the annotation
+244 Cannot move the annotation to a different document
+245 You cannot annotate a modified document. Please save it first.
+246 No annotation user declared. Please open the Annotations/Configure menu.
+247 Unable to build an XPointer for this annotation
+248 Make a new annotation
+249 Failed to post the annotation
+250 Failed to delete the annotation
+251 Annotation deleted!
+252 Failed to load the annotation index
+253 Error
+254 Select a Charset
+255 Select a MIME type
+256 Change Charset
+257 Change MIME type
+258 Change
+259 This type of document doesn't support charsets
+260 The target must be an HTTP URL to use this option
+261 Error: invalid MIME type
+262 Unknown
+263 Styles are ignored - see Views/Show parsing errors
+264 This document is already loaded in another Window
+265 Saving that instance may cause a lost update problem
+266 Creating or Changing the doctype causes the document to be reparsed.
+267 Pending modifications won't be undone.
+268 Use the application/xhtml+xml MIME type for XHTML documents
+269 Lock succeed!
+270 Lock failed!
+271 Locking %s...
+272 Document %s is locked!
+273 Document %s is locked by %s (timeout %s)
+274 Overwrite lock information?
+275 Copy the lock information? 
+276 Try to unlock the document before...
+277 Unlock succeed!
+278 Unlock failed!
+279 Unlocking %s...
+280 Document %s is unlocked!
+281 Unlock the document? 
+282 Document properties
+283 Document properties are not available
+284 Document properties are temporarily unavailable. Try again later...
+285 Looking for document properties...
+286 Sorry, no WebDAV support for URLs of this type %s
+287 Failed to save lock info in the local base
+288 Failed to remove lok info from local base
+289 Sorry, this operation is not allowed for %s
+290 Request failed! Reason: Failed Dependency
+291 Request failed! Reason: %s
+292 Try again? 
+293 WebDAV Preferences
+294 User's Personal Reference (URL)
+295 User's WebDAV Resource List (URL URL)
+296 Lock Depth
+297 infinity
+298 Lock Timeout
+299 Infinite
+300 Other
+301 Seconds
+302 Lock Scope
+303 exclusive
+304 shared
+305 Awarenees
+306 General awareness
+307 Awareness on exit
+308 Timeline
+309 SVG Library
+310 Copy option
+311 Copy selection
+312 Refer to selection
+313 Add new model into library
+314 URL of the new SVG file ...
+315 Library title
+316 Library URL
+317 Create library
+318 Browse library
+319 Create or search library
+320 The current selection not contain only SVG elements. Please reselect
+321 The library title is mandatory
+322 Move the position cursor in edited document to define a new key position...
+323 Key position defined. Move the slider to define animation duration...
+324 Select starting color of element...
+325 Starting color defined. Move the slider to define animation duration...
+326 Select ending color...
+327 Animation defined.
+328 Animated attribute
+329 Element without id

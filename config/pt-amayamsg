@@ -80,253 +80,252 @@
 78 Atualização de enlaces: %s%% foi tratado
 79 Nada novo a ser salvo
 80 Repetir-y
-81 <HTML><HEAD><TITLE>ERRO: Não é possível acessar URL</TITLE></HEAD><BODY><H1>A URL requisitada não pôde ser recuperada</H1><HR><P>Ao tentar recuperar a URL:<A HREF=\"%s\">%s</A></P><P>O seguinte erro foi encontrado:</P><UL><LI><STRONG>A Conexão falhou</STRONG></UL><P>O sistema retornou:</P><PRE><I>(%d) %s</I></PRE><P>Isto significa que:</P><PRE>O site ou servidor remoto pode estar inativo ou não existir.</PRE><PRE>Por favor tente de novo logo mais.</PRE><P></P><HR>\n</BODY></HTML>
-82 Por favor insira nome de usuário:
-83 %d requisições pendentes
-84 Não há arquivo CSS disponível
-85 Interromper transferência
-86 Documento precedente
-87 Documento seguinte
-88 Recarregar
-89 Salvar
-90 Imprimir
-91 Buscar
-92 Ênfase
-93 Forte
-94 Tipo (font) fixo
-95 Não repetir
-96 Inserir imagem
-97 Cabeçalho nível 1
-98 Cabeçalho nível 2
-99 Cabeçalho nível 3
-100 Lista com bolinhas
-101 Lista numerada
-102 Lista de definição
-103 Enlace
-104 Tabela
-105 O documento não tem nome. Salvando em:
-106 Plugins
-107 Erro desconhecido ao salvar a URL %s
-108 Não é possível criar uma conexão ao servidor
-109 O acesso a %s é proibido pelo servidor
-110 Operação bem sucedida para %s
-111 %s foi criado
-112 %s foi atualizado
-113 Operação completada com código de estado %s
-114 O servidor não entendeu a sintaxe da requisição
-115 O servidor não tem informação nova para devolver
-116 Este método não é permitido
-117 Por favor autenticar para acessar %s
-118 Verificando ...
-119 A salvação em %s falhou. Salvar no disco?
-120 A salvação em %s parece corrompida. Ignorar?
-121 URL %s redirecionada para %s. Ignorar?
-122 A recarga de %s falhou. Ignorar?
-123 O servidor responde com um erro 501: %s
-124 O servidor responde com um erro 501
-125 O servidor não suporta este método de requisição
-126 Filtro
-127 Transferências ativas
-128 Transferências enfileiradas
-129 Índice dos conteúdos
-130 Tabela de enlaces
-131 Modo repetiçao
-132 repetir
-133 repetir-x
-134 Sua sessão Amaya precedente falhou. Quer recarregar as cópias de segurança dos documentos?
-135 A autenticação falhou. Tentar novamente?
-136 A operação será redirecionada. Continuar?
-137 Número de linhas
-138 Número de colunas
-139 Borda
-140 Texto alternativo
-141 O texto alternativo é mandatório
-142 Imprimir URL
-143 Aplicar
-144 Valores padrão
-145 Esvaziar cache
-146 Preferências de cache
-147 Habilitar cache
-148 Documentos protegidos em cache
-149 Modo desconectado
-150 Ignorar fim de validade (Expires): cabeçalho
-151 Diretório cache
-152 Tamanho de cache (MB)
-153 Tamanho limite de entrada de cache (MB)
-154 Preferências de proxy
-155 Proxy HTTP (por exemplo www.w3.org:1234)
-156 Lista de domínios proxy (por exemplo lists.w3.org)
-157 Preferências gerais
-158 Página principal
-159 Retardo de mensagens de apoio (ToolTip) (ms)
-160 Retardo de duplo clique (ms)
-161 Tamnho do tipo (font) do menu
-162 Zoom de tipo (font)
-163 Linguagem de diálogo
-164 Ativar multitecla (`+a=à)
-165 Exibir imagens de fundo
-166 Exportar CR/LF
-167 **Browsing Preferences
-168 **Load images
-169 Duplo clique ativa enlace
-170 Preferências de publicação
-171 Usar ETAGS e pré-condições
-172 Verificar cada PUT com um GET
-173 Nome padrão para URLs terminadas em '/'
-174 Preferências de geometria
-175 Salvar geometria atual
-176 restaurar geometria padrão
-177 As mudanças serão efetivadas quando uma nova janela abrir.
-178 Preferências de cor
-179 Cor do plano frontal do documento
-180 Cor de fundo do documento
-181 Cor do plano frontal do menu
-182 Cor de fundo do menu
-183 Não foi possível inicializar o cache. Você pode ter especificado um diretório de cache inválido ou tem outro Amaya usando o cache.
-184 Home
-185 Lista de idiomas preferidos como "pt, en":
-186 Localização do arquivo de definição de perfís
-187 Seleção de perfil
-188 Estas modificações não serão modificadas até que se reinicialize Amaya.
-189 Preferências de perfís
-190 Introduzir a URL do servidor de gabaritos
-191 Preferências de gabaritos
-192 Permitir redirecionamentos PUT automáticos nestes domínios
-193 Ignorar folhas de estilo
-194 Tipo de transformação
-195 (separar cada entrada com um espaço)
-196 Não há proxy nestes domínios
-197 Somente com proxy estes domínios
-198 Nome de carácter
-199 Diretório de usuário Amaya
-200 Diretório temporário
-201 Usar paleta
-202 Negociação de idioma
-203 Configuração para anotações
-204 Usuário anotador
-205 Servidor de publicação de anotações
-206 Servidores de anotações
-207 Autocarregar anotações locais
-208 Autocarregar anotações remotas
-209 Desabilitar autocarga remota em cada partida (para trabalho off-line)
-210 Cor de seleção
-211 Cor do cursor de inserção
-212 Orientação
-213 Vertical
-214 Horizontal
-215 Habilitar FTP
-216 XML inválido - recarregar como HTML ou mostrar erros sintáticos?
-217 XML inválido - mostrar erros na leitura?
-218 Caracteres inválidos - recarregar como HTML ou mostrar erros sintáticos?
-219 Caracteres inválidos
-220 Perfil del documento:
-221 Algumas marcas(tags)/atributos são ignorados - veja Vistas/Exibir erros de gramática (parsing)
-222 A codificação deste documento não é suportada por Amaya
-223 Editar ou salvar este documento vai mudar seu tipo
-224 Indisponível
-225 Navegar
-226 Navegador de arquivos
-227 Seleção
-228 Menu filtro local de anotações
-229 Exibir
-230 Esconder
-231 Exibir tudo
-232 Esconder tudo
-233 * significa escondido, - significa parcialmente escondido
-234 Opções de filtragem
-235 Por autor
-236 Por tipo
-237 Por servidor
-238 Teclas de acesso
-239 Ignorar
-240 Elemento de estilo
-241 Não é possível criar um XPointer
-242 Impossível anexar um XPointer inicial a um elemento adicionado internamente
-243 Impossível anexar um XPointer final a um elemento adicionado internamente
-244 Não é possível achar para onde mover a anotação
-245 Não é possível mover a anotação para outro documento
-246 Você não pode fazer anotações em um documento modificado. Por favor salve-o antes.
-247 Não foi declarado o usuário da anotação. Por favor abra o menu Anotações/Configurar
-248 Incapaz de construir um XPointer para esta anotação
-249 Fazer uma nova anotação
-250 A postagem da anotação falhou
-251 A supressão da anotação falhou
-252 Anotação suprimida!
-253 Carregamento do índice de anotação falhou
-254 Erro
-255 Selecionar um conjunto de caracteres (charset)
-256 Selecionar o tipo MIME
-257 Mudar conjunto de caracteres (Charset)
-258 Mudar o tipo MIME
-259 Modificar
-260 este tipo de documento não suporta conjuntos de caracteres (charsets)
-261 O destino deve ser uma URL HTTP para usar esta opção
-262 Erro: tipo MIME inválido
-263 Desconhecido
-264 Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)
-265 Este documento já está carregado em outra Janela
-266 Salvar esta instância pode causar um problema de perda de atualização
-267 Criar ou alterar o doctype pode fazer com que o documento seja reprocessado.
-268 Modificações pendentes nção podem ser refeitas.
-269 Utilise o tipo MIME application/xhtml+xml para documentos XHTML
-270 Documento foi travado com sucesso!
-271 Documento não pode ser travado com sucesso!
-272 Travando %s...
-273 Documento %s está travado!
-274 Documento %s foi travado por %s (tempo restante %s)
-275 Sobrepor trava?
-276 Copiar informação da trava? 
-277 Tente destravar o documento...
-278 Documento foi destravado com sucesso!
-279 Documento não pode ser destravado com sucesso!
-280 Destravando %s...
-281 Documento %s está destravado!
-282 Destravar o documento? 
-283 Propriedades do documento
-284 Propriedades do documento não estão disponíveis
-285 Propriedades do documento estão temporariamente indisponíveis. Tente de novo mais tarde...
-286 Buscando as propriedades do documento...
-287 Lamento, WebDAV não supporta URLs como %s
-288 Impossível salvar informação de trava localmente
-289 Impossível remover informação de trava local
-290 Lamento, esta operação não é permitida para %s
-291 Operação falhou! Causa: Falha de dependência
-292 Operaçã falhou! Causa: %s
-293 Tentar de novo? 
-294 Preferências WebDAV
-295 Referência Pessoal do Usuário (URL)
-296 Lista de Recursos WebDAV do Usuário (URL URL)
-297 Profundidade da Trava
-298 infinita
-299 Duração da Trava
-300 Infinito
-301 Outro
-302 Segundos
-303 Escopo da Trava
-304 exclusivo
-305 compartilhado
-306 Percepção
-307 Percepção geral
-308 Percepção ao sair
-309 **Timeline
-310 **SVG Library
-311 **Copy option
-312 **Copy selection
-313 **Refer to selection
-314 **Add new model into library
-315 **URL of the new SVG file ...
-316 **Library title
-317 **Library URL
-318 **Create library
-319 **Browse library
-320 **Create or search library
-321 **The current selection not contain only SVG elements. Please reselect
-322 **The library title is mandatory
-323 **Move the position cursor in edited document to define a new key position...
-324 **Key position defined. Move the slider to define animation duration...
-325 **Select starting color of element...
-326 **Starting color defined. Move the slider to define animation duration...
-327 **Select ending color...
-328 **Animation defined.
-329 **Animated attribute
-330 **Element without id
+81 Por favor insira nome de usuário:
+82 %d requisições pendentes
+83 Não há arquivo CSS disponível
+84 Interromper transferência
+85 Documento precedente
+86 Documento seguinte
+87 Recarregar
+88 Salvar
+89 Imprimir
+90 Buscar
+91 Ênfase
+92 Forte
+93 Tipo (font) fixo
+94 Não repetir
+95 Inserir imagem
+96 Cabeçalho nível 1
+97 Cabeçalho nível 2
+98 Cabeçalho nível 3
+99 Lista com bolinhas
+100 Lista numerada
+101 Lista de definição
+102 Enlace
+103 Tabela
+104 O documento não tem nome. Salvando em:
+105 Plugins
+106 Erro desconhecido ao salvar a URL %s
+107 Não é possível criar uma conexão ao servidor
+108 O acesso a %s é proibido pelo servidor
+109 Operação bem sucedida para %s
+110 %s foi criado
+111 %s foi atualizado
+112 Operação completada com código de estado %s
+113 O servidor não entendeu a sintaxe da requisição
+114 O servidor não tem informação nova para devolver
+115 Este método não é permitido
+116 Por favor autenticar para acessar %s
+117 Verificando ...
+118 A salvação em %s falhou. Salvar no disco?
+119 A salvação em %s parece corrompida. Ignorar?
+120 URL %s redirecionada para %s. Ignorar?
+121 A recarga de %s falhou. Ignorar?
+122 O servidor responde com um erro 501: %s
+123 O servidor responde com um erro 501
+124 O servidor não suporta este método de requisição
+125 Filtro
+126 Transferências ativas
+127 Transferências enfileiradas
+128 Índice dos conteúdos
+129 Tabela de enlaces
+130 Modo repetiçao
+131 repetir
+132 repetir-x
+133 Sua sessão Amaya precedente falhou. Quer recarregar as cópias de segurança dos documentos?
+134 A autenticação falhou. Tentar novamente?
+135 A operação será redirecionada. Continuar?
+136 Número de linhas
+137 Número de colunas
+138 Borda
+139 Texto alternativo
+140 O texto alternativo é mandatório
+141 Imprimir URL
+142 Aplicar
+143 Valores padrão
+144 Esvaziar cache
+145 Preferências de cache
+146 Habilitar cache
+147 Documentos protegidos em cache
+148 Modo desconectado
+149 Ignorar fim de validade (Expires): cabeçalho
+150 Diretório cache
+151 Tamanho de cache (MB)
+152 Tamanho limite de entrada de cache (MB)
+153 Preferências de proxy
+154 Proxy HTTP (por exemplo www.w3.org:1234)
+155 Lista de domínios proxy (por exemplo lists.w3.org)
+156 Preferências gerais
+157 Página principal
+158 Retardo de mensagens de apoio (ToolTip) (ms)
+159 Retardo de duplo clique (ms)
+160 Tamnho do tipo (font) do menu
+161 Zoom de tipo (font)
+162 Linguagem de diálogo
+163 Ativar multitecla (`+a=à)
+164 Exibir imagens de fundo
+165 Exportar CR/LF
+166 **Browsing Preferences
+167 **Load images
+168 Duplo clique ativa enlace
+169 Preferências de publicação
+170 Usar ETAGS e pré-condições
+171 Verificar cada PUT com um GET
+172 Nome padrão para URLs terminadas em '/'
+173 Preferências de geometria
+174 Salvar geometria atual
+175 restaurar geometria padrão
+176 As mudanças serão efetivadas quando uma nova janela abrir.
+177 Preferências de cor
+178 Cor do plano frontal do documento
+179 Cor de fundo do documento
+180 Cor do plano frontal do menu
+181 Cor de fundo do menu
+182 Não foi possível inicializar o cache. Você pode ter especificado um diretório de cache inválido ou tem outro Amaya usando o cache.
+183 Home
+184 Lista de idiomas preferidos como "pt, en":
+185 Localização do arquivo de definição de perfís
+186 Seleção de perfil
+187 Estas modificações não serão modificadas até que se reinicialize Amaya.
+188 Preferências de perfís
+189 Introduzir a URL do servidor de gabaritos
+190 Preferências de gabaritos
+191 Permitir redirecionamentos PUT automáticos nestes domínios
+192 Ignorar folhas de estilo
+193 Tipo de transformação
+194 (separar cada entrada com um espaço)
+195 Não há proxy nestes domínios
+196 Somente com proxy estes domínios
+197 Nome de carácter
+198 Diretório de usuário Amaya
+199 Diretório temporário
+200 Usar paleta
+201 Negociação de idioma
+202 Configuração para anotações
+203 Usuário anotador
+204 Servidor de publicação de anotações
+205 Servidores de anotações
+206 Autocarregar anotações locais
+207 Autocarregar anotações remotas
+208 Desabilitar autocarga remota em cada partida (para trabalho off-line)
+209 Cor de seleção
+210 Cor do cursor de inserção
+211 Orientação
+212 Vertical
+213 Horizontal
+214 Habilitar FTP
+215 XML inválido - recarregar como HTML ou mostrar erros sintáticos?
+216 XML inválido - mostrar erros na leitura?
+217 Caracteres inválidos - recarregar como HTML ou mostrar erros sintáticos?
+218 Caracteres inválidos
+219 Perfil del documento:
+220 Algumas marcas(tags)/atributos são ignorados - veja Vistas/Exibir erros de gramática (parsing)
+221 A codificação deste documento não é suportada por Amaya
+222 Editar ou salvar este documento vai mudar seu tipo
+223 Indisponível
+224 Navegar
+225 Navegador de arquivos
+226 Seleção
+227 Menu filtro local de anotações
+228 Exibir
+229 Esconder
+230 Exibir tudo
+231 Esconder tudo
+232 * significa escondido, - significa parcialmente escondido
+233 Opções de filtragem
+234 Por autor
+235 Por tipo
+236 Por servidor
+237 Teclas de acesso
+238 Ignorar
+239 Elemento de estilo
+240 Não é possível criar um XPointer
+241 Impossível anexar um XPointer inicial a um elemento adicionado internamente
+242 Impossível anexar um XPointer final a um elemento adicionado internamente
+243 Não é possível achar para onde mover a anotação
+244 Não é possível mover a anotação para outro documento
+245 Você não pode fazer anotações em um documento modificado. Por favor salve-o antes.
+246 Não foi declarado o usuário da anotação. Por favor abra o menu Anotações/Configurar
+247 Incapaz de construir um XPointer para esta anotação
+248 Fazer uma nova anotação
+249 A postagem da anotação falhou
+250 A supressão da anotação falhou
+251 Anotação suprimida!
+252 Carregamento do índice de anotação falhou
+253 Erro
+254 Selecionar um conjunto de caracteres (charset)
+255 Selecionar o tipo MIME
+256 Mudar conjunto de caracteres (Charset)
+257 Mudar o tipo MIME
+258 Modificar
+259 este tipo de documento não suporta conjuntos de caracteres (charsets)
+260 O destino deve ser uma URL HTTP para usar esta opção
+261 Erro: tipo MIME inválido
+262 Desconhecido
+263 Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)
+264 Este documento já está carregado em outra Janela
+265 Salvar esta instância pode causar um problema de perda de atualização
+266 Criar ou alterar o doctype pode fazer com que o documento seja reprocessado.
+267 Modificações pendentes nção podem ser refeitas.
+268 Utilise o tipo MIME application/xhtml+xml para documentos XHTML
+269 Documento foi travado com sucesso!
+270 Documento não pode ser travado com sucesso!
+271 Travando %s...
+272 Documento %s está travado!
+273 Documento %s foi travado por %s (tempo restante %s)
+274 Sobrepor trava?
+275 Copiar informação da trava? 
+276 Tente destravar o documento...
+277 Documento foi destravado com sucesso!
+278 Documento não pode ser destravado com sucesso!
+279 Destravando %s...
+280 Documento %s está destravado!
+281 Destravar o documento? 
+282 Propriedades do documento
+283 Propriedades do documento não estão disponíveis
+284 Propriedades do documento estão temporariamente indisponíveis. Tente de novo mais tarde...
+285 Buscando as propriedades do documento...
+286 Lamento, WebDAV não supporta URLs como %s
+287 Impossível salvar informação de trava localmente
+288 Impossível remover informação de trava local
+289 Lamento, esta operação não é permitida para %s
+290 Operação falhou! Causa: Falha de dependência
+291 Operaçã falhou! Causa: %s
+292 Tentar de novo? 
+293 Preferências WebDAV
+294 Referência Pessoal do Usuário (URL)
+295 Lista de Recursos WebDAV do Usuário (URL URL)
+296 Profundidade da Trava
+297 infinita
+298 Duração da Trava
+299 Infinito
+300 Outro
+301 Segundos
+302 Escopo da Trava
+303 exclusivo
+304 compartilhado
+305 Percepção
+306 Percepção geral
+307 Percepção ao sair
+308 **Timeline
+309 **SVG Library
+310 **Copy option
+311 **Copy selection
+312 **Refer to selection
+313 **Add new model into library
+314 **URL of the new SVG file ...
+315 **Library title
+316 **Library URL
+317 **Create library
+318 **Browse library
+319 **Create or search library
+320 **The current selection not contain only SVG elements. Please reselect
+321 **The library title is mandatory
+322 **Move the position cursor in edited document to define a new key position...
+323 **Key position defined. Move the slider to define animation duration...
+324 **Select starting color of element...
+325 **Starting color defined. Move the slider to define animation duration...
+326 **Select ending color...
+327 **Animation defined.
+328 **Animated attribute
+329 **Element without id
