@@ -212,6 +212,7 @@ Document doc;
 
   if (descendTree->TId != ancestTree->TId)
     {
+      firstChild = NULL;
       if (ancestTree->TChild != NULL)
 	firstChild = ancestTree->TChild;
       else if (ancestTree->TPrintSymb == '@')
