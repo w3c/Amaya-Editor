@@ -308,7 +308,7 @@ typedef struct _PathSeg
 /* Descriptor representing an element that is kept after a Cut or Copy
    operation and is to be Pasted */
 typedef struct _PasteElemDescr *PtrPasteElem;
-#define MAX_PASTE_LEVEL 5
+#define MAX_PASTE_LEVEL 16
 
 typedef struct _PasteElemDescr
 {
