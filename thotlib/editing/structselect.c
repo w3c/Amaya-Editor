@@ -4,15 +4,6 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
-
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
  
 /*
    This module handles selection in abstract trees
@@ -77,8 +68,8 @@ static PtrDocument  OldDocSelectedView;	/* the document to which the old active
 					   view belongs */
 static int          SelectedPointInPolyline;	/* if the current selection is
 					   a PolyLine, rank of the selected
-					   point, or 0 if the whole PolyLine is
-					   selected */
+					   vertex, or 0 if the whole PolyLine
+					   is selected */
 static int          SelectedPictureEdge;/* if the current selection is a
 					   picture, 1 means that the caret is
 					   on the right side, 0 means that it
@@ -857,9 +848,9 @@ boolean             showBegin;
 /*----------------------------------------------------------------------
    SetActiveView
 
-   cherche une vue du document selectionne' ou`    
-   le debut de la selection est visible. Si exceptView
-   n'est pas nul, evite de choisir cette vue.
+   Search for the selected document a view where the beginning of
+   current selection os visible.
+   If exceptView is not null, avoid to choose that view.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetActiveView (int exceptView)
@@ -872,16 +863,18 @@ int                 exceptView;
    int                 view;
    boolean             stop;
 
+   /* there is no longer any active view */
    SelectedView = 0;
-   /* plus de vue active */
-   /* l'ancienne vue active convient-elle ? */
+   /* is the former active view OK? */
    if (OldDocSelectedView == SelectedDocument)
-      /* l'ancienne vue active concerne bien le document selectionne' */
+      /* the former active view displays the selected document */
       if (OldSelectedView != 0 && OldSelectedView != exceptView)
 	 if (FirstSelectedElement->ElAbstractBox[OldSelectedView - 1] != NULL)
+	   /* the first selected element has an abstract box in this view */
+	   /* keep this view */
 	    SelectedView = OldSelectedView;
    if (SelectedView == 0)
-      /* l'ancienne vue active ne convient pas, on en cherche une autre */
+      /* the former active view is not OK. Search another one */
      {
 	stop = FALSE;
 	view = 0;
@@ -891,7 +884,8 @@ int                 exceptView;
 	     if (view != exceptView)
 		if (FirstSelectedElement->ElAbstractBox[view - 1] != NULL)
 		  {
-		     /* c'est la nouvelle vue active */
+		     /* the first selected element has an abstract box in */
+		     /* view. Take it as the active view */
 		     SelectedView = view;
 		     OldDocSelectedView = SelectedDocument;
 		     OldSelectedView = view;
@@ -906,8 +900,12 @@ int                 exceptView;
 
 
 /*----------------------------------------------------------------------
-   DeactivateView la vue de numero view du document pDoc est detruite,
-   on change de vue active si c'est possible.              
+   DeactivateView
+
+   A view has been closed for document pDoc. Change active view if the
+   closed view was the active one.
+   view is the number of the view, or, if assoc is TRUE, the number of the
+   associated tree whose view has been closed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DeactivateView (PtrDocument pDoc, int view, boolean assoc)
@@ -921,40 +919,40 @@ boolean             assoc;
 {
 
    if (pDoc == SelectedDocument)
-      /* la selection se trouve dans le document dont on detruit une vue */
+      /* the current selection is in that document */
       if (assoc)
-	 /* on detruit une vue d'elements associes */
+	 /* it's a view for an associated tree */
 	{
 	   if (FirstSelectedElement->ElAssocNum == view)
-	      /* ce sont les elements associes ou se trouve la selection */
+	      /* the current selection is in that associated tree */
 	     {
-		/* pour eviter de mettre a jour les menus */
+		/* there is no other view to show the current selection, as */
+	        /* each associated tree has only one view */
 		SelectedDocument = NULL;
 		CancelSelection ();
-		/* on annule donc la selection */
 		SelectedView = 0;
-		/* plus de vue active */
 		OldSelectedView = 0;
 		OldDocSelectedView = pDoc;
 	     }
 	}
       else
-	 /* on detruit une vue de l'arbre principal */
-      if (view == SelectedView)
-	 /* c'est la vue active */
-	{
-	   SetActiveView (view);
-	   /* cherche une nouvelle vue active */
-	   if (SelectedView != 0)
-	      /* signale la nouvelle vue active au Mediateur */
-	      HighlightSelection (TRUE);
-	}
+	 /* it's a view of the main tree */
+         if (view == SelectedView)
+	    /* it's the active view */
+	   {
+	     /* search another active view */
+	     SetActiveView (view);
+	     if (SelectedView != 0)
+	       /* highlight the current selection in the new active view */
+	       HighlightSelection (TRUE);
+	   }
 }
 
 
 /*----------------------------------------------------------------------
-   WithinAbsBox   renvoie Vrai si le pave pAb est dans le          
-   sous-arbre du pave' pRootAb.                                    
+   WithinAbsBox
+
+   return TRUE if abstract box pAB is in the subtree of abstract box pRootAb.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -982,8 +980,10 @@ PtrAbstractBox      pRootAb;
 
 
 /*----------------------------------------------------------------------
-   GetAbsBoxSelectedAttr retourne le pave' qui, dans la vue view
-   affiche le meme attribut que AbsBoxSelectedAttr.        
+   GetAbsBoxSelectedAttr
+
+   returns the abstract box that displays the same attribute as
+   AbsBoxSelectedAttr, but in view view.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -1002,7 +1002,7 @@ int                 view;
       pAbView = AbsBoxSelectedAttr;
    else
      {
-	/* cherche le pave correspondant dans la vue : pAbView */
+	/* search the corresponding abstract box in the view: pAbView */
 	pAbView = NULL;
 	if (AbsBoxSelectedAttr->AbElement == NULL)
 	   pAb = NULL;
@@ -1012,22 +1012,24 @@ int                 view;
 	       pAb->AbElement == AbsBoxSelectedAttr->AbElement)
 	  {
 	     if (pAb->AbPresentationBox)
-		/* un pave de presentation de l'element auquel est attache' */
-		/* l'attribut */
+		/* pAb is a presentation abstract box for the element */
+	        /* to which the attibute is attached */
 	       {
 		  if (pAb->AbCanBeModified &&
 		    pAb->AbCreatorAttr == AbsBoxSelectedAttr->AbCreatorAttr)
 		     pAbView = pAb;
 	       }
 	     else
-		/* le pave principal de l'element auquel est attache' l'attribut */
+		/* pAb is the main abstract box for the element to which */
+	        /* the attribute is attached */
 	       {
 		  pAb = pAb->AbFirstEnclosed;
 		  while (pAbView == NULL && pAb != NULL &&
 			 pAb->AbElement == AbsBoxSelectedAttr->AbElement)
 		    {
 		       if (pAb->AbPresentationBox && pAb->AbCanBeModified)
-			  if (pAb->AbCreatorAttr == AbsBoxSelectedAttr->AbCreatorAttr)
+			  if (pAb->AbCreatorAttr ==
+			      		AbsBoxSelectedAttr->AbCreatorAttr)
 			     pAbView = pAb;
 		       pAb = pAb->AbNext;
 		    }
@@ -1043,11 +1045,12 @@ int                 view;
 
 
 /*----------------------------------------------------------------------
-   ShowSelection allume, dans le sous-arbre de paves de racine     
-   pRootAb, toutes les chaines et les paves qui font partie
-   de la selection courante. Si visible est vrai, on       
-   demande au Mediateur de rendre visible a l'utilisateur  
-   le debut de la selection.                               
+   ShowSelection
+
+   Highlight all character strings and boxes that are part of the
+   current selection and belong to the subtree of pRootAb.
+   If visible is TRUE, the beginning of the selection should be made
+   visible to the user.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -1073,14 +1076,14 @@ boolean             visible;
 
    view = pRootAb->AbDocView;
    if (AssocView (pRootAb->AbElement))
-      /* vue d'elements associes */
+      /* it's an associated tree that is displayed in its own view */
       assoc = TRUE;
    else
       assoc = FALSE;
    if (SelectedDocument != NULL && FirstSelectedElement != NULL &&
        pRootAb != NULL)
      {
-	/* il y a bien une selection */
+	/* there is a current selection */
 	if (assoc)
 	   frame = SelectedDocument->DocAssocFrame[pRootAb->AbElement->ElAssocNum - 1];
 	else
@@ -1088,88 +1091,86 @@ boolean             visible;
 	selBegin = TRUE;
 	selEnd = FALSE;
 	unique = FirstSelectedElement == LastSelectedElement;
-	/* cherche le 1er pave de la selection visible dans la vue et */
-	/* appartenant au sous-arbre */
+	/* search the first abstract box of the current selection that is */
+	/* visible in the view and that belongs to the subtree */
 	pEl = FirstSelectedElement;
 	if (WithinAbsBox (pEl->ElAbstractBox[view - 1], pRootAb))
-	   /* 1er pave de cet element dans la vue */
+	   /* first abstract box of this element in the view */
 	   pAb = pEl->ElAbstractBox[view - 1];
 	else
 	   pAb = NULL;
 	pNextEl = pEl;
 	while (pAb == NULL && pNextEl != NULL)
 	  {
+	     /* get the next element in the current selection */
 	     stop = FALSE;
 	     do
-		/* cherche l'element suivant de la selection */
 	       {
 		  pNextEl = NextInSelection (pNextEl, LastSelectedElement);
 		  if (pNextEl == NULL)
 		     stop = TRUE;
 		  else if (pNextEl->ElAbstractBox[view - 1] != NULL)
+		     /* this element has an abstract box in the view */
 		     stop = TRUE;
 	       }
 	     while (!stop);
 	     if (pNextEl != NULL)
-		/* 1er element de la selection qui a un pave dans la vue */
 		if (WithinAbsBox (pNextEl->ElAbstractBox[view - 1], pRootAb))
-		   /* le pave est dans le sous-arbre, on a trouve' */
+		   /* the abstract box is part of the subtree */
 		  {
+		     /* first element to be processed */
 		     pEl = pNextEl;
-		     /* 1er element a traiter */
+		     /* first abstract box to be processed */
 		     pAb = pNextEl->ElAbstractBox[view - 1];
-		     /* 1er pave a traiter */
 		  }
 	  }
 	if (pAb != NULL)
-	   /* eteint la selection dans la vue */
+	   /* switch current selection off in the view */
 	   ClearViewSelection (frame);
-	/* traite successivement tous les paves de tous les elements de la */
-	/* selection, a partir du premier pave visible dans la vue */
+	/* process all abstract boxes of all elements belonging to the */
+	/* current selection, starting with the first visible in the view */
 	while (pAb != NULL)
 	  {
 	     if (pEl == FirstSelectedElement)
-		/* c'est le premier element de la selection */
+		/* first element in current selection */
 		firstChar = FirstSelectedChar;
 	     else
 		firstChar = 0;
 	     if (pEl == LastSelectedElement)
-		/* c'est le dernier element de la selection */
+		/* last element in current selection */
 		lastChar = LastSelectedChar;
 	     else
 		lastChar = 0;
-	     /* cherche si c'est le dernier pave visible de la selection */
+	     /* is that the last visible abstract box of the selection? */
 	     pNextAb = pAb->AbNext;
 #ifdef __COLPAGE__
 	     if (!pAb->AbPresentationBox)
-		/* pour parcours des dup */
+		/* for scanning all repeated boxes */
 		pSavedAb = pAb;
 	     pNextAb = pAb->AbNext;
 	     if (pNextAb != NULL)
 	       {
-		  /* il y a un pave suivant */
 		  if (pNextAb->AbElement != pEl)
 		     pNextAb = pSavedAb->AbNextRepeated;
-		  /* on parcourt aussi les dupliques */
+		  /* scan also repeated boxes */
 	       }
 	     else
 		pNextAb = pSavedAb->AbNextRepeated;
 #else  /* __COLPAGE__ */
 	     if (pNextAb != NULL)
-		/* il y a un pave suivant */
 		if (pNextAb->AbElement != pEl)
+	           /* the next abstract box does not belong to the element */
 		   pNextAb = NULL;
 #endif /* __COLPAGE__ */
-	     /* il n'appartient pas a l'element */
 	     if (pNextAb == NULL)
-		/* cherche l'element suivant de la selection ayant un pave dans */
-		/* le sous-arbre */
+		/* search the next element in the selection having an */
+	        /* abstract box in the subtree */
 	       {
 		  pNextEl = pEl;
 		  stop = FALSE;
 		  do
 		    {
-		       pNextEl = NextInSelection (pNextEl, LastSelectedElement);
+		       pNextEl = NextInSelection (pNextEl,LastSelectedElement);
 		       if (pNextEl == NULL)
 			  stop = TRUE;
 		       else if (pNextEl->ElAbstractBox[view - 1] != NULL)
@@ -1177,23 +1178,23 @@ boolean             visible;
 		    }
 		  while (!stop);
 		  if (pNextEl != NULL)
-		     /* il y a un element suivant de la selection qui a un pave */
-		     /* dans la vue */
+		     /* there is a next element in the selection having an */
+		     /* abstract box in the view */
 		     if (WithinAbsBox (pNextEl->ElAbstractBox[view - 1], pRootAb))
-			/* ce pave est dans le sous-arbre, ce sera le prochain */
-			/* pave traite' */
+			/* this abstract box is in the subtree */
+		        /* It's the next to be processed */
 		       {
 			  pNextAb = pNextEl->ElAbstractBox[view - 1];
 			  pEl = pNextEl;
 		       }
 	       }
 	     selEnd = pNextAb == NULL;
-	     /* signale la selection de l'element a l'afficheur */
+	     /* indicate that selected element to the display module */
 	     if (selBegin || selEnd)
 	       {
 		  InsertViewSelMarks (frame, pAb, firstChar, lastChar,
 				      selBegin, selEnd, unique);
-		  /* vue active */
+		  /* active view */
 		  active = view == SelectedView;
 		  if (visible)
 		     if (assoc || SelectedDocument->DocView[view - 1].DvSync || active)
@@ -1202,16 +1203,16 @@ boolean             visible;
 		  selBegin = FALSE;
 		  visible = FALSE;
 		  if (selEnd)
-		     /* allume la selection */
+		     /* highlight selection */
 		     SwitchSelection (frame, TRUE);
 	       }
 	     pAb->AbSelected = TRUE;
-	     /* passe au pave suivant a allumer */
+	     /* next abstract box to be highlighted */
 	     pAb = pNextAb;
 	  }
      }
    else if (DocSelectedAttr != NULL && AbsBoxSelectedAttr != NULL)
-      /* il y a une selection dans une valeur d'attribut */
+      /* the current selection is within an attribute value */
      {
 	if (assoc)
 	   frame = DocSelectedAttr->DocAssocFrame[pRootAb->AbElement->ElAssocNum - 1];
@@ -1230,7 +1231,9 @@ boolean             visible;
 }
 
 /*----------------------------------------------------------------------
-   DisplaySel		
+   DisplaySel
+
+   Highlight the selected element pEl in view view.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -1258,25 +1261,25 @@ boolean            *abExist;
 
    first = TRUE;
    pAb = pEl->ElAbstractBox[view - 1];
-   /* premier pave de l'element dans la vue */
+   /* first abstract box of elemenebt in the view */
    if (pAb != NULL)
      {
 	partialSel = FALSE;
 	if (pEl == FirstSelectedElement)
-	   /* c'est le premier element de la selection */
+	   /* it's the firqt elemenebt in the current selection */
 	   if (pEl->ElTerminal)
 	      if (pEl->ElLeafType == LtText)
-		 /* le premier element de la selection est un texte */
+		 /* that first element is a text leaf */
 		{
 		   if (FirstSelectedChar > 1 && pEl->ElTextLength > 0)
-		      /* le texte n'est selectionne' que partiellement */
+		      /* the text leaf is partly selected */
 		      partialSel = TRUE;
 		}
 	      else if (pEl->ElLeafType == LtPolyLine)
 		 if (SelectedPointInPolyline > 0)
 		    partialSel = TRUE;
 	if (partialSel)
-	   /* on saute les paves de presentation crees avant */
+	   /* skip presentation abtract boxes created before the main box */
 	  {
 	     while (pAb->AbPresentationBox && pAb->AbNext != NULL)
 		pAb = pAb->AbNext;
@@ -1284,27 +1287,27 @@ boolean            *abExist;
 		if (pAb->AbElement != pEl)
 		   pAb = NULL;
 	  }
-	/* l'element a au moins un pave */
+	/* the element has at least one abstract box in the view */
 	*abExist = pAb != NULL;
      }
-   /* boucle sur les paves de l'element dans la vue */
+   /* handles all abstract box of the element in the view */
    while (pAb != NULL)
      {
 	if (!pAb->AbSelected)
 	   if (!pAb->AbPresentationBox && pEl->ElAssocNum != 0)
-	      /* retablit le pave englobant des elements associes */
+	      /* it's an assiciated element. Reset its enclosing abst. boxes */
 	      EnclosingAssocAbsBox (pEl);
-	/* cherche le pave suivant a selectionner */
+	/* search the next selected element */
 	partialSel = FALSE;
 	if (pEl == LastSelectedElement)
-	   /* c'est le dernier element de la selection */
+	   /* that's the last element in the current selection */
 	   if (pEl->ElTerminal)
 	      if (pEl->ElLeafType == LtText)
-		 /* et c'est un texte */
+		 /* that's a text leaf */
 		{
 		   if (LastSelectedChar < pEl->ElTextLength
 		       && pEl->ElTextLength > 0 && LastSelectedChar > 0)
-		      /* le texte n'est selectionne' que partiellement */
+		      /* that text leaf is partly selected */
 		      partialSel = TRUE;
 		}
 	      else if (pEl->ElLeafType == LtPolyLine)
@@ -1320,20 +1323,20 @@ boolean            *abExist;
 	if (pNextAb != NULL)
 	  {
 	     if (pNextAb->AbElement != pEl)
-		/* le pave suivant n'appartient pas a l'element */
+		/* the next abstract box does not belong to the element */
 		pNextAb = pSavedAb->AbNextRepeated;
 	  }
-	/* si pNextAb = NULL, le pave a peut-etre un dup */
+	/* if pNextAb = NULL, the abstract box may have a repeated box */
 	else
 	   pNextAb = pSavedAb->AbNextRepeated;
 #else  /* __COLPAGE__ */
 	if (pNextAb != NULL)
 	   if (pNextAb->AbElement != pEl)
-	      /* le pave suivant n'appartient pas a l'element */
+	      /* the next abstract box does not belong to the element */
 	      pNextAb = NULL;
 #endif /* __COLPAGE__ */
 	last = pNextAb == NULL;
-	/* indique la selection du pave au Mediateur */
+	/* indicate that this abstract box is selected to the display module */
 	if (first || last)
 	  {
 	     if (pEl == FirstSelectedElement)
@@ -1365,30 +1368,31 @@ boolean            *abExist;
 	     unique = FirstSelectedElement == LastSelectedElement;
 	     InsertViewSelMarks (frame, pAb, firstChar, lastChar, first, last,
 				 unique);
-	     /* faut-il que le pave selectionne' soit amene' */
-	     /* dans la partie visible de l'image (scroll) ? */
+	     /* should this abstract box be made visible to the user? (scroll) */
 	     active = view == SelectedView;
 	     if (first)
 		if (assoc || active || SelectedDocument->DocView[view - 1].DvSync)
 		   ShowSelectedBox (frame, active);
 	     first = FALSE;
 	     if (last)
-		/* allume la selection */
+		/* highlight selection */
 		SwitchSelection (frame, TRUE);
 	  }
+	/* this abstract box is selected */
 	pAb->AbSelected = TRUE;
-	/* marque le pave selectionne' */
-	/* passe au pave suivant de l'element s'il y en a un */
+	/* next abstract box of the element */
 	pAb = pNextAb;
      }
 }
 
 
 /*----------------------------------------------------------------------
-   SelectAbsBoxes selectionne, dans toutes les vues, tous les
-   paves de l'element pEl. Si aucun pave n'existe pour cet
-   element, on essaie de creer une vue ou` cet element ait un
-   pave' a` condition que createView soit vrai.
+   SelectAbsBoxes
+
+   Select in all views all abstract boxes of element pEl.
+   If no abstract exists currently for this element in any view, try
+   to to open a view where this element would have an abstract box, but
+   only if createView is TRUE.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -1410,33 +1414,31 @@ boolean             createView;
    DocViewNumber       docView, freeView;
    boolean             abExist, done, assoc, deleteView;
 
-   /* on n'a pas (encore) trouve' de pave' */
+   /* there is not any abstract box yet */
    abExist = FALSE;
    if (pEl != NULL)
      {
 	if (AssocView (pEl))
-	   /* les elements associes n'ont qu'une vue, la vue 1 */
+	   /* associated elements have only one view, view 1 */
 	  {
 	     assoc = TRUE;
 	     lastView = 1;
 	  }
 	else
-	   /* pour les autres elements on traite toutes les vues */
+	   /* for other elements, all views are considered */
 	  {
 	     assoc = FALSE;
 	     lastView = MAX_VIEW_DOC;
 	  }
-	/* on fait deux fois le tour des vues. Au premier tour on selectionne */
-	/* les paves de l'element qui existent, au deuxieme tour on cree ceux */
-	/* qui n'existent pas. */
+	/* views are scanned twice. In the first run, existing abstract */
+	/* boxes are selected. In the second run, new abstract boxes are */
+	/* created if necessary */
 	for (run = 1; run <= 2; run++)
-	   /* deux fois le tour des vues */
 	   for (view = 0; view < lastView; view++)
-	      /* numero de la fenetre du Mediateur ou la selection sera */
-	      /* visualisee */
 	     {
+	        /* frame: window where the selection will be shown */
 		if (assoc)
-		   /* vue d'elements associes */
+		   /* view for associated elements */
 		   frame = SelectedDocument->DocAssocFrame[pEl->ElAssocNum - 1];
 		else if (SelectedDocument->DocView[view].DvPSchemaView > 0)
 		   frame = SelectedDocument->DocViewFrame[view];
@@ -1447,25 +1449,25 @@ boolean             createView;
 		     if (run == 1)
 			ClearViewSelection (frame);
 		     done = FALSE;
-		     /* au deuxieme tour, on cree les paves absents */
 		     if (run == 2)
+		       /* second run. Create missing abstract boxes */
 			if (pEl->ElAbstractBox[view] != NULL)
 			  {
 			     done = TRUE;
-			     /* l'element a au moins un pave */
+			     /* the element has at least one abstract box */
 			     abExist = TRUE;
 			  }
 			else
-			   /* cree les paves de l'element pointe' par pEl pour */
-			   /* la vue view s'il faut synchroniser cette vue */
-			if (assoc || SelectedDocument->DocView[view].DvSync)
-			   /* si pEl est une marque page, inutile d'appeler */
-			   /* CheckAbsBox si ElViewPSchema n'est pas egal a la */
-			   /* VueSch correspondant a view */
-			   if (pEl->ElTypeNumber != PageBreak + 1 ||
+			   /* create the abstract boxes for view view if */
+			   /* this view is synchronized */
+			  if (assoc || SelectedDocument->DocView[view].DvSync)
+			    /* if pEl is a page break, don't call CheckAbsBox*/
+			    /* if this break is not for the right view */
+			    if (pEl->ElTypeNumber != PageBreak + 1 ||
 			       pEl->ElViewPSchema == SelectedDocument->DocView[view].DvPSchemaView)
 			     {
-				CheckAbsBox (pEl, view + 1, SelectedDocument, FALSE, TRUE);
+				CheckAbsBox (pEl, view + 1, SelectedDocument,
+					     FALSE, TRUE);
 				if (SelectedView == 0)
 				   if (pEl->ElAbstractBox[view] != NULL)
 				      SetActiveView (0);
@@ -1480,53 +1482,57 @@ boolean             createView;
 	     }
 
 	if (!abExist)
-	   /* on n'a pas trouve' de pave' pour l'element */
+	   /* there is no existing abstract box for this element */
 	   if (createView)
-	      /* on essaie de creer une vue ou l'element ait un pave' */
+	      /* try to create a view where this element has an abstract box */
 	      if (AssocView (pEl))
-		 /* l'element s'affiche dans une vue d'elements associes */
+		 /* the element is displayed in an view for associated
+		    elements */
 		{
-		   /* la vue d'elements associes est-elle deja creee ? */
+		   /* does this view for associated element already exist? */
 		   if (SelectedDocument->DocAssocFrame[pEl->ElAssocNum - 1] == 0)
-		      /* la vue n'est pas encore creee, on tente de la creer */
-		      /* cherche la racine de l'arbre d'elements associes */
+		      /* The view does not exist. try to create it */
 		     {
+		        /* first, search the root of the associated tree */
 			pRoot = pEl;
 			while (pRoot->ElParent != NULL)
 			   pRoot = pRoot->ElParent;
-			/* cherche dans le fichier de configuration de ce type */
-			/* de document la position et la dimension de la fenetre */
-			/* ou s'affiche cette vue d'elements associes */
+			/* search in the config file the position and the */
+			/* size of the corresponding window */
 			ConfigGetViewGeometry (SelectedDocument,
 					       pRoot->ElStructSchema->SsRule[pRoot->ElTypeNumber - 1].SrName,
 					       &X, &Y, &width, &height);
+			/* send qan event to the application before opening */
+			/* the view */
 			notifyDoc.event = TteViewOpen;
 			notifyDoc.document = (Document) IdentDocument (SelectedDocument);
 			notifyDoc.view = 0;
 			if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
+			  /* the application accepts */
 			  {
+			     /* open the view */
 			     createdView = CreateAbstractImage (SelectedDocument, 0, pRoot->ElTypeNumber,
 				      pRoot->ElStructSchema, 0, TRUE, NULL);
 			     OpenCreatedView (SelectedDocument, createdView,
 					      TRUE, X, Y, width, height);
+			     /* tell the application that the view has */
+			     /* been opened */
 			     notifyDoc.event = TteViewOpen;
 			     notifyDoc.document = (Document) IdentDocument (SelectedDocument);
 			     notifyDoc.view = createdView + 100;
 			     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-			     /* et on essaie a nouveau */
+			     /* and try to select the element in this view */
 			     abExist = SelectAbsBoxes (pEl, FALSE);
 			  }
 		     }
 		}
 	      else
-		 /* l'element s'affiche dans une vue de l'arbre principal */
+		 /* the element is part of the main tree */
 		{
-		   /* on essaie d'ouvrir successivement toutes les vues */
-		   /* definies dans le schema de presentation et qui ne sont */
-		   /* pas encore ouvertes, jusqu'a en trouver une ou` */
-		   /* l'element ait un pave' */
-		   /* cherche d'abord s'il existe une vue libre dans le */
-		   /* descripteur du document */
+		   /* try to open all views defined in the presentation */
+		   /* schema that are not open yet, until the element may */
+		   /* have an abstract box in a view */
+		   /* first, search a free view in the document descriptor */
 		   docView = 1;
 		   freeView = 0;
 		   while (freeView == 0 && docView <= MAX_VIEW_DOC)
@@ -1535,38 +1541,39 @@ boolean             createView;
 		      else
 			 docView++;
 		   if (freeView != 0)
-		      /* il y a de la place au moins pour une vue de l'arbre */
-		      /* principal */
+		      /* there is room for a new view */
 		     {
-			/* construit la liste de toutes les vues possibles pour */
-			/* le document */
+			/* build the list of all possible views for the */
+		        /* document */
 			nViews = BuildDocumentViewList (SelectedDocument, viewTable);
-			/* essaie toutes ces vues successivement */
 			for (i = 0; i < nViews && !abExist; i++)
 			  {
-			     /* on n'essaie que les vues de l'arbre principal */
-			     /* qui ne sont pas deja ouvertes */
 			     if (!viewTable[i].VdAssoc)
+			       /* it's a view of the main tree */
 				if (!viewTable[i].VdOpen)
+				  /* it's not open yet */
 				  {
-				     /* cree la vue */
+				     /* create that view */
 				     createdView = CreateAbstractImage (SelectedDocument,
 						     viewTable[i].VdView, 0,
 						  viewTable[i].VdSSchema, 1,
 							       FALSE, NULL);
-				     /* on essaie a nouveau de selectionner l'element */
+				     /* now, try to select the elment */
 				     abExist = SelectAbsBoxes (pEl, FALSE);
 				     deleteView = TRUE;
 				     if (pEl->ElAbstractBox[createdView - 1] != NULL)
-					/* il y a un pave visible pour l'element */
+					/* there is an abstract box for */
+				        /* the element! */
 				       {
 					  deleteView = FALSE;
-					  /* on a reussi, on s'arrete */
 					  abExist = TRUE;
-					  /* cherche la geometrie de la vue dans le */
-					  /* fichier de configuration du type de doc */
+					  /* search in the config file the */
+					  /* position and size of the view */
+					  /* to be open */
 					  ConfigGetViewGeometry (SelectedDocument,
-								 viewTable[i].VdViewName, &X, &Y, &width, &height);
+						      viewTable[i].VdViewName,
+						      &X, &Y, &width, &height);
+					  /* send an event to the application*/
 					  notifyDoc.event = TteViewOpen;
 					  notifyDoc.document =
 					     (Document) IdentDocument (SelectedDocument);
@@ -1578,8 +1585,11 @@ boolean             createView;
 					    deleteView = TRUE;
 					  else
 					    {
+					      /* open the new view */
 					       OpenCreatedView (SelectedDocument, createdView, assoc, X, Y,
 							     width, height);
+					       /* tell the application that */
+					       /* the view has been opened */
 					       notifyDoc.event = TteViewOpen;
 					       notifyDoc.document =
 						  (Document) IdentDocument (SelectedDocument);
@@ -1589,17 +1599,19 @@ boolean             createView;
 					    }
 				       }
 				     if (deleteView)
-					/* l'element n'est pas visible dans cette vue */
-					/* or the application has created the view */
-					/* on detruit l'image creee et on continue... */
-				     if (assoc)
-				       {
+					/* the element is not visible in  */
+				        /* this view */
+					/* or the application does not want */
+				        /* the view to be opened */
+					/* delete the created abstract image */
+				       if (assoc)
+				         {
 					  LibAbbView (SelectedDocument->DocAssocRoot[createdView - 1]
 						      ->ElAbstractBox[0]);
 					  SelectedDocument->DocAssocFrame[createdView - 1] = 0;
-				       }
-				     else
-					FreeView (SelectedDocument, createdView);
+				         }
+				       else
+					  FreeView (SelectedDocument, createdView);
 				  }
 			  }
 		     }
@@ -1611,6 +1623,8 @@ boolean             createView;
 
 /*----------------------------------------------------------------------
    HighlightVisibleAncestor
+
+   Highlight the first ancestor of element pEl that has an abstract box.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -1631,25 +1645,24 @@ PtrElement          pEl;
    if (pEl != NULL)
      {
 	if (AssocView (pEl))
-	   /* les elements associes n'ont qu'une vue, la vue 1 */
+	   /* associated elements have only one view */
 	  {
 	     assoc = TRUE;
 	     lastView = 1;
 	  }
 	else
-	   /* pour les autres elements on traite toutes les vues */
+	   /* consider all views for other elements */
 	  {
 	     assoc = FALSE;
 	     lastView = MAX_VIEW_DOC;
 	  }
 	found = FALSE;
 	pAncest = pEl->ElParent;
-	/* cherche le premier element englobant pEl qui ait un pave dans au */
-	/* moins une vue */
+	/* search the first ancestor that has an abstract box in a view */
 	while (!found && pAncest != NULL)
 	  {
 	     view = 1;
-	     /* parcourt toutes les vues */
+	     /* scan all views */
 	     while (view <= lastView && !found)
 		if (pAncest->ElAbstractBox[view - 1] != NULL)
 		   found = TRUE;
@@ -1659,16 +1672,16 @@ PtrElement          pEl;
 		pAncest = pAncest->ElParent;
 	  }
 	if (pAncest != NULL)
-	   /* on a trouve un englobant qui ait un pave' */
+	   /* there is an ancestor with an abstract box */
 	  {
 	     if (assoc)
-		/* vue d'elements associes */
+		/* associated element view */
 		frame = SelectedDocument->DocAssocFrame[pEl->ElAssocNum - 1];
 	     else if (SelectedDocument->DocView[view - 1].DvPSchemaView > 0)
 		frame = SelectedDocument->DocViewFrame[view - 1];
 	     else
 		frame = 0;
-	     /* allume l'element englobant trouve' */
+	     /* highlight the ancestor found */
 	     DisplaySel (pAncest, view, frame, assoc, &abExist);
 	  }
      }
@@ -1676,11 +1689,13 @@ PtrElement          pEl;
 
 
 /*----------------------------------------------------------------------
-   SelectStringInAttr la selection courante devient la chaine de
-   caracteres allant du caractere de rang Prem au caractere
-   de rang lastChar dans le buffer de texte du pave pAb.
-   pAb est un pave de presentation contenant la valeur     
-   d'un attribut numerique ou textuel.                     
+   SelectStringInAttr
+
+   The new current selection is now the character string contained
+   in the text buffer of abstract box pAb, starting at rank firstChar
+   and ending at rank last Char.
+   pAb is a presentation abstract box that contains the value of a
+   numerical or textual attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstChar, int lastChar, boolean string)
@@ -1703,9 +1718,9 @@ boolean             string;
       return;
    pEl = pAb->AbElement;
    if (pEl->ElIsCopy)
-      /* la chaine a selectionner est dans un element copie' */
-      /* on selectionne tout cet element. SelectElement selectionnera le */
-      /* premier englobant qui n'est pas une copie. */
+      /* the string to be selected is in a copy element */
+      /* Select the whole element. SelectElement will select the first */
+      /* ancestor that is not a copy */
       SelectElement (pDoc, pEl, TRUE, TRUE);
    else
      {
@@ -1713,35 +1728,36 @@ boolean             string;
 	AbsBoxSelectedAttr = pAb;
 	FirstSelectedCharInAttr = firstChar;
 	LastSelectedCharInAttr = lastChar;
-	/* determine les vues a traiter */
+	/* determine the views to be processed */
 	assoc = AssocView (AbsBoxSelectedAttr->AbElement);
 	if (assoc)
-	   /* vue d'elements associes, on ne traite que la vue 1 */
+	   /* associated elements have only one view */
 	   lastView = 1;
 	else
-	   /* on traite toutes les vues du document */
+	   /* for other elements, process all views */
 	   lastView = MAX_VIEW_DOC;
 	SelPosition = !string;
-	/* pour chaque vue a traiter, allume la nouvelle selection */
+	/* highlight the new selection in all views */
 	for (view = 1; view <= lastView; view++)
 	  {
-	     /* calcule le numero de la fenetre ou est affichee la vue */
+	     /* frame: window where the view is displayed */
 	     if (assoc)
 		frame = pDoc->DocAssocFrame[pAb->AbElement->ElAssocNum - 1];
 	     else if (pDoc->DocView[view - 1].DvPSchemaView > 0)
 		frame = pDoc->DocViewFrame[view - 1];
 	     else
 		frame = 0;	/* vue non creee */
-	     /* si la vue est creee, traite la selection dans cette vue */
+	     /* if the view exists, highlight selection in that view */
 	     if (frame > 0)
 	       {
-		  /* cherche dans la vue le pave de presentation d'attribut */
-		  /* correspondant a AbsBoxSelectedAttr */
+		  /* search in the view the presentation abstract box that */
+		  /* contains an attribute value */
 		  pAbView = GetAbsBoxSelectedAttr (view);
-		  /* eteint toute la selection dans cette vue */
+		  /* switch the former selection off in that view */
 		  ClearViewSelection (frame);
 		  if (pAbView != NULL)
 		    {
+		      /* highlight the new selection */
 		       InsertViewSelMarks (frame, pAbView, firstChar,
 					   lastChar, TRUE, TRUE, TRUE);
 		       ShowSelectedBox (frame, TRUE);
@@ -1759,14 +1775,13 @@ boolean             string;
 }
 
 /*----------------------------------------------------------------------
-   SelectString la selection courante devient la chaine allant du  
-   caractere de rang firstChar au caractere de rang
-   		lastChar dans l'element texte pointe par pEl dans le
-   		document pDoc.	
-   S'il s'agit d'une feuille Polyline, c'est le point de   
-   rang firstChar qui est selectionne'.                    
-   string indique si on selectionne une chaine ou une
-   position entre deux caracteres.                         
+   SelectString
+
+   Set the current selection to the string beginning at position firstChar
+   and ending at position lastChar in the text element pEl.
+   If pEl is a polyline, the vertex having rank firstChar is selected.
+   string indicates if a string is selected (TRUE) or a position between
+   two characters.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar, boolean string)
@@ -1787,8 +1802,8 @@ boolean             string;
    PtrElement          pAncest;
    boolean             holophrast;
 
-   /* Si l'element est dans un arbre holophraste', on prend */
-   /* l'ascendant qui est holophraste' */
+   /* If the selected element is in a holophrasted subtree, the root of that */
+   /* subtree is selected */
    pAncest = pEl;
    holophrast = FALSE;
    while (pAncest != NULL && !holophrast)
@@ -1798,11 +1813,11 @@ boolean             string;
 	 pAncest = pAncest->ElParent;
 
    if (pEl != NULL && pDoc != NULL)
-      /* ignorer l'exception NoSelect */
+      /* ignore exception NoSelect */
       if (pEl->ElIsCopy || holophrast)
-	 /* la chaine a selectionner est dans un element copie' ou holophraste' */
-	 /* on selectionne tout cet element. SelectElement selectionnera le */
-	 /* premier englobant qui n'est pas une copie. */
+	 /* the string to be selected is in a copy or holophrasted element */
+	 /* select that element: SelectElement will select the first */
+	 /* that can be selected */
 	 SelectElement (pDoc, pEl, TRUE, TRUE);
       else
 	{
@@ -1817,8 +1832,7 @@ boolean             string;
 		   lastChar = firstChar;
 		   firstChar = i;
 		}
-	   /* la nouvelle selection est-elle dans un arbre different de */
-	   /* l'ancienne ? */
+	   /* Is the new selection in the same tree as the former seelction */
 	   FirstSelectedElement = pEl;
 	   if (pDoc != SelectedDocument)
 	     {
@@ -1852,22 +1866,20 @@ boolean             string;
 		FirstSelectedChar = firstChar;
 		LastSelectedChar = lastChar;
 	     }
-	   /* element fixe de la selection */
+	   /* pEl becomes the fixed element of the selection */
 	   FixedElement = pEl;
-	   /* caractere fixe de la selection */
 	   FixedChar = FirstSelectedChar;
 	   SelContinue = TRUE;
 	   NSelectedElements = 0;
 	   SelPosition = !string;
-	   /* allume les paves de la selection courante */
+	   /* highlight boxes of current selection */
 	   elVisible = SelectAbsBoxes (pEl, TRUE);
 	   if (!elVisible)
-	      /* la selection n'est pas visible, on allume le premier element */
-	      /* englobant visible */
+	      /* the current selection is not visible. Highlight the first */
+	      /* ancestor that is visible */
 	      HighlightVisibleAncestor (pEl);
 
-	   /* met a jour les menus qui doivent changer dans toutes les vues */
-	   /* ouvertes */
+	   /* update all menus that must change in all open views */
 	   if (SelectionUpdatesMenus && oldFirstSelEl != FirstSelectedElement)
 	     {
 		PrepareSelectionMenu ();
@@ -1878,27 +1890,26 @@ boolean             string;
 		   (*ThotLocalActions[T_chattr]) (pDoc);
 	     }
 	   else
-	      /* la selection demarre dans le meme element que precedemment */
+	      /* the new selection starts in the same element as before */
 	      if ((oldFirstSelChar <= 1 && FirstSelectedChar > 1) ||
 		  (oldFirstSelChar > 1 && FirstSelectedChar <= 1))
-	      /* la selection etait au debut de l'element et n'y est plus */
-	      /* ou elle etait a l'interieur de l'element et elle est */
-	      /* maintenant au debut */
-	      /* l'entree Split du menu Edit doit etre mise a jour */
-	      if (SelectionUpdatesMenus)
-		 if (ThotLocalActions[T_chsplit] != NULL)
-		    (*ThotLocalActions[T_chsplit]) (pDoc);
+	         /* the selection was at the beginning of the element and */
+		 /* it is no longer at the beginnig or it was within the  */
+		 /* element and it is now at the beginning */
+	         /* Item Split in  the Edit menu must be updated */
+	         if (SelectionUpdatesMenus)
+		    if (ThotLocalActions[T_chsplit] != NULL)
+		       (*ThotLocalActions[T_chsplit]) (pDoc);
 	}
 }
 
 
 /*----------------------------------------------------------------------
-   MoveCaret		
-   		la selection courante devient la position du caractere
-   		de rang firstChar dans l'element texte pointe par pEl
-   dans le document pDoc.
-   S'il s'agit d'une feuille Polyline, c'est le point de   
-   rang firstChar qui est selectionne'.                    
+   MoveCaret
+
+   Set the current selection to the position before the character of rank
+   firstChar in the text element pEl.
+   If pEl is a polyline element, the vertex of rank firstChar is selected.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                MoveCaret (PtrDocument pDoc, PtrElement pEl, int firstChar)
@@ -1914,11 +1925,11 @@ int                 firstChar;
 }
 
 /*----------------------------------------------------------------------
-   SelectString la selection courante devient la chaine allant du  
-   caractere de rang firstChar au caractere de rang lastChar dans  
-   l'element texte pointe par pEl dans le document pDoc.   
-   S'il s'agit d'une feuille Polyline, c'est le point de   
-   rang firstChar qui est selectionne'.                    
+   SelectString
+
+   Set the current selection to the string beginning at position firstChar
+   and ending at position lastChar in the text element pEl.
+   If pEl is a polyline, the vertex of rank firstChar is selected.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SelectString (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar)
@@ -1943,11 +1954,12 @@ int                 lastChar;
 
 
 /*----------------------------------------------------------------------
-   SelectElement l'element pointe par pEl dans le document pDoc devient
-   l'element selectionne. Dans le cas ou cet element ne    
-   doit pas etre montre' a l'utilisateur, c'est son premier
-   ou dernier fils qui est selectionne' (selon le booleen  
-   begin), sauf si check est faux.                         
+   SelectElement
+
+   Set the current selection to element pEl in document pDoc.
+   If this element is not supposed to be shown to the user, its first or
+   last child is selected instead, depending on parameter begin, except
+   when check is FALSE.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SelectElement (PtrDocument pDoc, PtrElement pEl, boolean begin, boolean check)
@@ -1967,41 +1979,39 @@ boolean             check;
      {
 	if (check)
 	  {
-	     /* on ne selectionne que ce qui est presentable a l'utilisateur */
 	     stop = FALSE;
 	     while (!stop)
 		if (!TypeHasException (ExcHidden, pEl->ElTypeNumber, pEl->ElStructSchema))
+		  /* exception Hidden is not associated with this elment type*/
 		  {
-		     /* ce type d'element ne porte pas l'exception Hidden */
 		     stop = TRUE;
 		     if (pEl->ElFirstChild != NULL)
-			/* accede a la regle qui definit le type de l'element */
+			/* get the structure rule defining the element type */
 			if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct ==
 			    CsChoice)
 			  {
-			     /* c'est un choix avec un fils, on prend le fils */
+			     /* it's a Choice with a child. Select the child */
 			     pEl = pEl->ElFirstChild;
 			     stop = FALSE;
 			  }
 		  }
 		else
-		   /* ce type d'element porte l'exception Hidden */
+		   /* this element type has exception Hidden */
 		if (pEl->ElTerminal || pEl->ElFirstChild == NULL)
-		   /* l'element n'a pas de fils */
+		   /* the element has no child */
 		   stop = TRUE;
 		else
 		  {
-		     /* on prend le premier ou le dernier fils de */
-		     /* l'element selon le booleen begin */
+		     /* choose the first or last child, according to */
+		     /* parameter begin */
 		     pEl = pEl->ElFirstChild;
 		     if (!begin)
 			while (pEl->ElNext != NULL)
 			   pEl = pEl->ElNext;
 		  }
-
 	  }
-	/* Si l'element a selectionner est une copie protegee, change pour */
-	/* l'element englobant protege' de plus haut niveau. */
+	/* If the element to be selected is a protected copy, select the */
+	/* highest level protected ancestor */
 	if (pEl->ElIsCopy)
 	  {
 	     pAncest = pEl->ElParent;
@@ -2017,8 +2027,8 @@ boolean             check;
 		     pAncest = pAncest->ElParent;
 		  }
 	  }
-	/* Si l'element est dans un arbre holophraste', on prend */
-	/* l'ascendant qui est holophraste' */
+	/* If the element is in a holophrasted tree, selected the */
+	/* holphrasted ancestor */
 	pAncest = pEl;
 	do
 	  {
@@ -2032,10 +2042,10 @@ boolean             check;
 	  }
 	while (pAncest != NULL);
 
-	/* la nouvelle selection est-elle dans un arbre different de */
-	/* l'ancienne ? */
+	/* Is the new selected element in the same tree as the previous one? */
 	FirstSelectedElement = pEl;
 	if (pDoc != SelectedDocument)
+	  /* the new selection is in a different document */
 	  {
 	     CancelSelection ();
 	     SelectedDocument = pDoc;
@@ -2049,8 +2059,8 @@ boolean             check;
 		TtaClearViewSelections ();
 		SetActiveView (0);
 	     }
-	/* si la selection reste dans le meme arbre, SelectAbsBoxes eteindra */
-	/* l'ancienne selection */
+	/* If the new selection is in the same tree, SelectAbsBoxes will */
+	/* switch the previous selection off */
 	/* ignorer l'exception NoSelect */
 	SelContinue = TRUE;
 	NSelectedElements = 0;
@@ -2059,11 +2069,10 @@ boolean             check;
 	SelectedPictureEdge = 0;
 	FirstSelectedChar = 0;
 	LastSelectedChar = 0;
-	FixedElement = pEl;	/* element fixe de la selection */
-	FixedChar = 0;		/* caractere fixe de la selection */
-	/* si l'element est vide on considere que c'est un point d'insertion */
-	/* dans l'element et non pas une selection de l'element */
-	/* de meme si c'est une image */
+	FixedElement = pEl;
+	FixedChar = 0;
+	/* If the selected element is empty or is a picture, the new */
+	/* selection is simply considered as an insertion position */
 	if ((pEl->ElTerminal &&
 	     (pEl->ElVolume == 0 || pEl->ElLeafType == LtPicture)) ||
 	    (!pEl->ElTerminal && pEl->ElFirstChild == NULL))
@@ -2072,24 +2081,23 @@ boolean             check;
 	   SelPosition = FALSE;
 	elVisible = SelectAbsBoxes (FirstSelectedElement, TRUE);
 	if (!elVisible)
-	   /* la selection n'est pas visible, on allume le premier element */
-	   /* englobant visible */
+	   /* the selection is not visible, highlight the first visible */
+	   /* ancestor */
 	   HighlightVisibleAncestor (FirstSelectedElement);
-	/* cherche une nouvelle vue active */
-	/* appelle la procedure traitant les exceptions pour la selection */
-	/* dans les tableaux */
+	/* call the procedure handling selection in tables */
 	if (ThotLocalActions[T_selecttable] != NULL)
 	   (*ThotLocalActions[T_selecttable]) (FirstSelectedElement,
 					    SelectedDocument, FALSE, &bool);
-	/* si c'est une marque qui est selectionnee, on selectionne aussi */
-	/* la marque qui fait la paire */
+	/* if the selected element is a paired element, select the other */
+	/* element of the pair too */
 	if (FirstSelectedElement->ElStructSchema->SsRule[FirstSelectedElement->ElTypeNumber - 1].SrConstruct ==
 	    CsPairedElement)
 	  {
 	     AddInSelection (GetOtherPairedElement (FirstSelectedElement), TRUE);
-	     if (!FirstSelectedElement->ElStructSchema->SsRule[FirstSelectedElement->ElTypeNumber - 1].
-		 SrFirstOfPair)
-		/* le premier selectionne' est une marque de fin, on permute */
+	     if (!FirstSelectedElement->ElStructSchema->
+		  SsRule[FirstSelectedElement->ElTypeNumber - 1].SrFirstOfPair)
+		/* the first selected element is the second element of the */
+	        /* pair. Exchange first and last selected elements */
 	       {
 		  pE = FirstSelectedElement;
 		  FirstSelectedElement = LastSelectedElement;
@@ -2103,17 +2111,16 @@ boolean             check;
 	   if (FirstSelectedElement->ElTerminal)
 	     {
 		if (FirstSelectedElement->ElLeafType == LtSymbol)
-		   /* affiche le clavier des symboles math. */
+		   /* a symbol is selected, display the symbol palette */
 		   TtaSetCurrentKeyboard (0);
 		else if (FirstSelectedElement->ElLeafType == LtGraphics)
-		   /* affiche le clavier des graphiques */
+		   /* a graphic shape is selected, display the graphic palette */
 		   TtaSetCurrentKeyboard (1);
 		else if (FirstSelectedElement->ElLeafType == LtPolyLine)
-		   /* affiche le clavier des graphiques */
+		   /* a polyline is selected, display the graphic palette */
 		   TtaSetCurrentKeyboard (1);
 	     }
-	/* met a jour les menus qui dependent de la selection dans */
-	/* toutes les vues ouvertes */
+	/* update all the menus that depend on the current selection */
 	if (SelectionUpdatesMenus)
 	  {
 	     PrepareSelectionMenu ();
@@ -2128,19 +2135,20 @@ boolean             check;
 
 
 /*----------------------------------------------------------------------
-   ExtendSelection etend la selection courante jusqu'a l'element
-   pEl, ce dernier etant entierement selectionne' si
-   rank=0, ou selectionne jusqu'au caractere de rang       
-   rank sinon. Si fixed est vrai, la nouvelle selection    
-   est la partie entre le point fixe courant et le point   
-   d'extension passe' en parametre. Le parametre begin n'a 
-   pas de signification dans ce cas. Si fixed est faux,    
-   le debut de la selection est etendu jusqu'au point      
-   d'extension dans le cas ou begin est vrai, ou la fin de 
-   la selection est etendue jusqu'au point d'extension si  
-   begin est faux.                                         
-   Si drag est vrai, l'extension de selection se fait par  
-   dragging: on fait un traitement minimum.                
+   ExtendSelection
+
+   Extend current selection to element pEl.
+   If rank = 0, element pEl is entirely selected.
+   If rank > 0, extend selection to the character having that rank in the
+   text element pEl.
+   If fixed is TRUE, the new selection is between the current fixed point and
+   element pEl; parameter begin is meaningless.
+   If fixed is FALSE,
+      if begin is TRUE, the beginning of the curent selection is moved to
+              element pEl
+      if begin is FALSE, the end of the current selection is extended to
+              element pEl.
+   If drag is TRUE, only the minimum processing is done.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -2163,16 +2171,14 @@ boolean             drag;
 
    sel = TRUE;
    if (pEl != NULL)
-      /* appelle la procedure traitant les exceptions pour la selection */
-      /* dans les tableaux */
+      /* call procedure handling selection in tables, if it is present */
       if (ThotLocalActions[T_selecttable] != NULL)
-	 (*ThotLocalActions[T_selecttable]) (pEl, SelectedDocument, TRUE, &sel);
+	 (*ThotLocalActions[T_selecttable]) (pEl, SelectedDocument, TRUE,&sel);
    if (sel)
-      /* appelle la procedure traitant les exceptions pour la selection */
-      /* dans les dessins */
      {
 	done = FALSE;
 	if (!SelContinue || pEl != FirstSelectedElement)
+	  /* call the procedure handling selection in drawing */
 	   if (DrawEtendSelection (pEl, SelectedDocument))
 	      done = TRUE;
 	if (!done)
@@ -2184,10 +2190,10 @@ boolean             drag;
 	     SelectedPointInPolyline = 0;
 	     SelectedPictureEdge = 0;
 	     if (pEl->ElHolophrast)
-		/* on est dans un element holophraste',on le selectionne en entier */
+		/* element pEl is holophrasted, select it entirely */
 		rank = 0;
 	     if (!fixed && begin)
-		/* on change le point fixe, en le mettant d'abord a la fin */
+		/* change fixed point by moving it first to the end */
 	       {
 		  FixedElement = LastSelectedElement;
 		  if (LastSelectedChar < rank)
@@ -2195,7 +2201,7 @@ boolean             drag;
 		  FixedChar = LastSelectedChar;
 	       }
 	     if (pEl == FixedElement)
-		/* extension dans l'element fixe */
+		/* extension within fixed element */
 	       {
 		  FirstSelectedElement = pEl;
 		  FirstSelectedChar = 0;
@@ -2213,11 +2219,9 @@ boolean             drag;
 			  LastSelectedChar = rank;
 		       }
 	       }
-	     else
-		/* extension en dehors de l'element fixe */
-	     if (ElemIsAnAncestor (pEl, FixedElement))
-		/* on a designe' un englobant de l'element fixe, on selectionne */
-		/* cet element englobant */
+	     else if (ElemIsAnAncestor (pEl, FixedElement))
+		/* extension to an ancestor of the fixed point. Select that */
+	        /* ancestor */
 	       {
 		  FirstSelectedElement = pEl;
 		  FirstSelectedChar = 0;
@@ -2226,9 +2230,8 @@ boolean             drag;
 		  FixedElement = pEl;
 		  FixedChar = 0;
 	       }
-	     else
-		/* cherche s'il est avant l'element fixe */
-	     if (ElemIsBefore (pEl, FixedElement))
+	     else  if (ElemIsBefore (pEl, FixedElement))
+	       /* pEl is before the fixed point */
 	       {
 		  FirstSelectedElement = pEl;
 		  FirstSelectedChar = rank;
@@ -2236,58 +2239,64 @@ boolean             drag;
 		  LastSelectedChar = FixedChar;
 	       }
 	     else
-		/* il est apres l'element fixe */
+	       /* pEl is after the fixed point */
 	       {
 		  LastSelectedElement = pEl;
 		  LastSelectedChar = rank;
 		  FirstSelectedElement = FixedElement;
 		  FirstSelectedChar = FixedChar;
 	       }
-	     /* ajuste la selection */
+	     /* adjust selection */
 	     if (FirstSelectedElement->ElTerminal &&
 		 FirstSelectedElement->ElLeafType == LtText &&
 		 FirstSelectedElement->ElTextLength > 0 &&
 		 FirstSelectedElement->ElTextLength < FirstSelectedChar &&
 		 FirstSelectedElement != LastSelectedElement)
-		/* Le debut de selection est a la fin de l'element de texte */
-		/* FirstSelectedElement et ce n'est pas la fin de la selection */
-		/* On met le debut de selection au debut de l'element suivant */
-	       {
-		  FirstSelectedElement = FirstLeaf (NextElement (FirstSelectedElement));
-		  if (FirstSelectedElement->ElTerminal && FirstSelectedElement->ElLeafType == LtText)
+		/* the beginning of the selection is at the end of text */
+		/* element FirstSelectedElement and it's not the selection */
+		/* end. Set the beginning of selection to the beginning of */
+	        /* next element */
+	        {
+		  FirstSelectedElement =
+		             FirstLeaf (NextElement (FirstSelectedElement));
+		  if (FirstSelectedElement->ElTerminal &&
+		      FirstSelectedElement->ElLeafType == LtText)
 		     FirstSelectedChar = 1;
 		  else
 		     FirstSelectedChar = 0;
-	       }
+	        }
 	     if (StructSelectionMode)
-		/* on normalise la selection: le premier et le dernier element */
-		/* selectionne's doivent etre des freres dans l'arbre abstrait */
-		if (FirstSelectedElement->ElParent != LastSelectedElement->ElParent)
+	        /* selection is structured mode */
+		/* normalize selection: the first and last selected elements */
+		/* must be siblings in the abstract tree */
+		if (FirstSelectedElement->ElParent !=
+		                                LastSelectedElement->ElParent)
 		  {
-		     /* remonte les ascendants du premier element de la selection */
+		     /* consider the ancestors of the first selected element */
 		     pElP = FirstSelectedElement->ElParent;
 		     while (pElP != NULL)
 			if (ElemIsAnAncestor (pElP, LastSelectedElement))
-			   /* cet ascendant (pElP) du premier selectionne' est aussi */
-			   /* un ascendant du dernier selectionne' */
+			   /* this ancestor (pElP) is an ancestor of the */
+			   /* selected element */
 			  {
 			     if (LastSelectedElement->ElParent != pElP)
 				LastSelectedChar = 0;
-			     /* on retient comme dernier l'ascendant du dernier qui a */
-			     /* pElP pour pere */
+			     /* the last selected is now the ancestor of the */
+			     /* last selected element whose parent is pElP */
 			     while (LastSelectedElement->ElParent != pElP)
-				LastSelectedElement = LastSelectedElement->ElParent;
-			     /* on a fini */
+				LastSelectedElement =
+				                LastSelectedElement->ElParent;
+			     /* finished */
 			     pElP = NULL;
 			  }
 			else
-			   /* cet ascendant (pElP) du premier selectionne' n'est pas */
-			   /* un ascendant du dernier selectionne' */
+			   /* this ancestor (pElP) is not an ancestor of the */
+			   /* last selected element */
 			  {
-			     /* on retient pour l'instant pElP et on va regarder si */
-			     /* son pere est un ascendant du dernier selectionne' */
+			     /* keep pElP and check whether is parent is an */
+			     /* ancestor of the last selected element */
 			     FirstSelectedElement = pElP;
-			     /* on retient l'element entier */
+			     /* keep the entire element */
 			     FirstSelectedChar = 0;
 			     pElP = pElP->ElParent;
 			  }
@@ -2329,12 +2338,11 @@ boolean             drag;
 		      SelPosition = TRUE;
 
 	     if (change || !drag)
-		/* la nouvelle selection est differente de l'ancienne */
-		/* on la visualise */
+		/* the new selection is not the same as the previous one */
+		/* highlight it */
 		HighlightSelection (FirstSelectedElement != oldFirstEl);
 	     if (!drag)
-		/* met a jour les menus qui dependent de la selection dans */
-		/* toutes les vues ouvertes */
+		/* update all menus that change with the selection */
 		if (SelectionUpdatesMenus)
 		   if (oldFirstEl != FirstSelectedElement ||
 		       oldLastEl != LastSelectedElement)
@@ -2347,7 +2355,7 @@ boolean             drag;
 			   (*ThotLocalActions[T_chattr]) (SelectedDocument);
 		     }
 	     if (!fixed && begin)
-		/* on change le point fixe, en le mettant au debut */
+		/* change the fixed point: move it to the begining */
 	       {
 		  FixedElement = FirstSelectedElement;
 		  FixedChar = FirstSelectedChar;
@@ -2358,8 +2366,10 @@ boolean             drag;
 
 
 /*----------------------------------------------------------------------
-   ReverseSelect   allume ou eteint (selon le booleen highlight) tous
-   les paves de l'element pEl du document pDoc.    
+   ReverseSelect
+
+   Highlight or switch off (according to parameter highlight) all
+   boxes of element pEl in document pDoc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ReverseSelect (PtrElement pEl, PtrDocument pDoc, boolean highlight)
@@ -2382,47 +2392,44 @@ boolean             highlight;
    int                 lastView, view, frame;
 
    if (AssocView (pEl))
-      /* les elements associes n'ont qu'une vue, la vue 1 */
+      /* associated elements have only one view */
       lastView = 1;
    else
-      /* pour les autres elements on traite toutes les vues */
+      /* for other elements, consider all views */
       lastView = MAX_VIEW_DOC;
    for (view = 0; view < lastView; view++)
      {
-	/* cherche le numero de la fenetre correspondant a la vue view */
+	/* get the window corresponding to the view */
 	if (AssocView (pEl))
-	   /* vue d'elements associes */
 	   frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
 	else if (pDoc->DocView[view].DvPSchemaView > 0)
 	   frame = pDoc->DocViewFrame[view];
 	else
 	   frame = 0;
-	/* boucle sur les paves de l'element dans la vue */
+	/* scan all abstract boxes of the element in the view */
 	pAb = pEl->ElAbstractBox[view];
 	while (pAb != NULL)
 	  {
-	     /* marque le pave */
 	     pAb->AbSelected = highlight;
 	     SetNewSelectionStatus (frame, pAb, highlight);
-	     /* passe au pave suivant de l'element s'il y en a un */
+	     /* get the next abstract box for the element */
 #ifdef __COLPAGE__
 	     if (!pAb->AbPresentationBox)
-		pSavedAb = pAb;	/* pour parcours des dups */
+		pSavedAb = pAb;
 	     pNextAb = pAb->AbNext;
 	     if (pNextAb != NULL)
 		if (pNextAb->AbElement != pEl)
-		   /* le pave suivant n'appartient pas a l'element */
+		   /* next abstract box does not belong to the element */
 		   pAb = pSavedAb->AbNextRepeated;
 		else
 		   pAb = pNextAb;
 	     else
-		/* pNextAb est NULL, le pave a peut-etre un dup */
 		pAb = pSavedAb->AbNextRepeated;
 #else  /* __COLPAGE__ */
 	     pAb = pAb->AbNext;
 	     if (pAb != NULL)
 		if (pAb->AbElement != pEl)
-		   /* le pave suivant n'appartient pas a l'element */
+		   /* next abstract box does not belong to the element */
 		   pAb = NULL;
 #endif /* __COLPAGE__ */
 	  }
@@ -2430,9 +2437,11 @@ boolean             highlight;
 }
 
 /*----------------------------------------------------------------------
-   AddInSelection ajoute a la selection courante l'element pEl.    
-   last indique s'il s'agit du dernier element ajoute' a la
-   selection courante.                                             
+   AddInSelection
+
+   Add element pEl to the current selection.
+   Parameter last indicates if it's the last element added to the current
+   selection.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AddInSelection (PtrElement pEl, boolean last)
@@ -2450,8 +2459,8 @@ boolean             last;
      {
 	if (SelContinue)
 	  {
-	     /* la selection etait continue, on passe a une selection */
-	     /* discontinue */
+	     /* the selection was a sequence of elements. Change to a */
+	     /* discrete selection */
 	     NSelectedElements = 0;
 	     if (FirstSelectedElement != NULL)
 	       {
@@ -2468,7 +2477,7 @@ boolean             last;
 	  }
 	SelectedPointInPolyline = 0;
 	SelectedPictureEdge = 0;
-	/* verifie que l'element a ajouter n'est pas deja dans la selection */
+	/* check that the element to be added is not yet in the selection */
 	i = 1;
 	ok = TRUE;
 	do
@@ -2482,12 +2491,13 @@ boolean             last;
 	     NSelectedElements++;
 	     SelectedElement[NSelectedElements - 1] = pEl;
 	     LastSelectedElement = pEl;
-	     /* allume l'element dans toutes les vues ou il est visible */
+	     /* highlight the new selected element in all views where is */
+	     /* is visible */
 	     ReverseSelect (pEl, SelectedDocument, TRUE);
 	     if (last && SelectionUpdatesMenus)
 	       {
-		  /* met a jour les menus qui dependent de la selection dans */
-		  /* toutes les vues ouvertes */
+		  /* update all the menus that depend on the current */
+		  /* selection */
 		  if (ThotLocalActions[T_chselect] != NULL)
 		     (*ThotLocalActions[T_chselect]) (SelectedDocument);
 		  if (ThotLocalActions[T_chattr] != NULL)
@@ -2498,8 +2508,10 @@ boolean             last;
 }
 
 /*----------------------------------------------------------------------
-   RemoveFromSelection retire l'element pEl de la selection courante, 
-   mais seulement si la selection est discontinue. 
+   RemoveFromSelection
+
+   Remove element pEl from the current selection, but only if the
+   current selection is discrete.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RemoveFromSelection (PtrElement pEl, PtrDocument pDoc)
@@ -2513,18 +2525,17 @@ PtrDocument         pDoc;
 {
    int                 i, j;
 
-   /* on ne traite que le cas de la selection discontinue */
    if (SelContinue)
       return;
-   /* cherche l'element parmi ceux de la selection */
+   /* search that element in the selected elements */
    for (i = 0; i < NSelectedElements && SelectedElement[i] != pEl; i++) ;
    if (SelectedElement[i] == pEl)
      {
-	/* supprime l'element de la selection */
+	/* remove that element from the list of selected elements */
 	for (j = i + 1; j < NSelectedElements; j++)
 	   SelectedElement[j - 1] = SelectedElement[j];
 	NSelectedElements--;
-	/* eteint l'element dans toutes les vues ou` il est visible */
+	/* switch selection off */
 	ReverseSelect (pEl, pDoc, FALSE);
 	if (LatestReturned == i + 1)
 	   LatestReturned = i;
@@ -2532,7 +2543,10 @@ PtrDocument         pDoc;
 }
 
 /*----------------------------------------------------------------------
-   	SelectElementWithEvent	
+  SelectElementWithEvent
+
+  Same function as SelectElement, but send  events TteElemSelect.Pre and
+   TteElemSelect.Post to the application
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SelectElementWithEvent (PtrDocument pDoc, PtrElement pEl, boolean begin, boolean check)
@@ -2572,9 +2586,10 @@ boolean             check;
 }
 
 /*----------------------------------------------------------------------
-   SelectPositionWithEvent   agit comme MoveCaret, mais envoie
-   en plus les evenements TteElemSelect.Pre et             
-   TteElemSelect.Post                                      
+   SelectPositionWithEvent
+
+   Same function as MoveCaret, but send  events TteElemSelect.Pre and
+   TteElemSelect.Post to the application.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SelectPositionWithEvent (PtrDocument pDoc, PtrElement pEl, int first)
@@ -2613,9 +2628,10 @@ int                 first;
 }
 
 /*----------------------------------------------------------------------
-   SelectStringWithEvent     agit comme SelectString, mais envoie
-   en plus les evenements TteElemSelect.Pre et             
-   TteElemSelect.Post                                      
+   SelectStringWithEvent
+
+   Same function as SelectString, but send events TteElemSelect.Pre and
+   TteElemSelect.Post to the application
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SelectStringWithEvent (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar)
@@ -2656,26 +2672,22 @@ int                 lastChar;
 
 
 /*----------------------------------------------------------------------
-   ChangeSelection		
-   l'utilisateur veut faire une nouvelle selection ou une  
-   extension de la selection courante (selon le parametre  
-   extension).                                             
-   frame: numero de la fenetre ou l'utilisateur a clique'
-   pAb: pointeur sur le pave ou l'utilisateur a clique'.
-   rank: rang du caractere sur lequel l'utilisateur a      
-   clique', ou 0 si tout le pave a ete designe'.           
-   update: le Mediateur demande qu'on lui mette a jour sa  
-   selection. Si update est faux, il s'agit                
-   necessairement d'une extension et le parametre extension
-   est interprete comme 'debut' : s'il est Vrai il s'agit  
-   d'une extension du debut, sinon d'une extension de la   
-   fin de la selection.                                    
-   Si doubleClick est vrai, il s'agit d'un double clic sans
-   mouvement de la souris.                                 
-   Si drag est vrai, il s'agit d'une extension de selection
-   par dragging.                                           
-  ----------------------------------------------------------------------*/
+   ChangeSelection
 
+   The user wants to make a new selection or an extension to the current
+   selection, according to parameter extension.
+   frame: the window where the user has clicked.
+   pAb: the abstract box where the user has clicked.
+   rank: rank of the character on which the user has clicked, or 0 if the
+         whole abstract box has been designated.
+   update: the display module asks for the selection to be updated.
+         if update is FALSE, the user wants to extend the current selection
+         and parameter extension means:
+               TRUE: the beginning of the current selection is extended,
+               FALSE: the end of the current selection is extended.
+   doubleClick: if TRUE, the user has double-clicked without moving the mouse.
+   drag: the user extends the selection by dragging.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ChangeSelection (int frame, PtrAbstractBox pAb, int rank, boolean extension, boolean update, boolean doubleClick, boolean drag)
@@ -2697,19 +2709,20 @@ boolean             drag;
    PtrElement          pEl, pEl1;
    PtrAttribute        pAttr;
    NotifyElement       notifyEl;
-   int                 vue, numassoc;
+   int                 view, numassoc;
    boolean             assoc, error, fixed, begin, stop, doubleClickRef;
 
    numassoc = 0;
    pEl1 = NULL;
-   /* cherche le document et la vue auxquels correspond la fenetre */
-   GetDocAndView (frame, &pDoc, &vue, &assoc);
+   /* search the document and the view corresponding to the window */
+   GetDocAndView (frame, &pDoc, &view, &assoc);
    if (doubleClick)
       if (pAb != NULL)
 	{
 	   pEl1 = pAb->AbElement;
 	   if (pEl1 != NULL)
 	     {
+	       /* send event TteElemActivate.Pre to the application */
 		notifyEl.event = TteElemActivate;
 		notifyEl.document = (Document) IdentDocument (pDoc);
 		notifyEl.element = (Element) pEl1;
@@ -2717,13 +2730,14 @@ boolean             drag;
 		notifyEl.elementType.ElSSchema = (SSchema) (pEl1->ElStructSchema);
 		notifyEl.position = 0;
 		if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		  /* the application asks Thot to do nothing */
 		   return;
 		if (pEl1->ElHolophrast)
 		  {
-		     /* pour eviter de recalculer les menus: */
-		     /* ce sera fait par SelectElement */
+		     /* avoid to rebuild menus. It will be done by */
+		     /* SelectElement */
 		     SelectedDocument = NULL;
-		     /* eteint la selection precedente */
+		     /* switch off the previous selection */
 		     CancelSelection ();
 		     DeHolophrast (pEl1, pDoc);
 		     SelectElementWithEvent (pDoc, pEl1, TRUE, FALSE);
@@ -2734,32 +2748,32 @@ boolean             drag;
 
    error = FALSE;
    doubleClickRef = FALSE;
-   /* verifie les doubles clics et extensions sur les points de */
-   /* controle des polylines */
+   /* process double clicks and extensions for polyline vertices */
    if (pAb != NULL)
       if (pAb->AbElement->ElTerminal &&
 	  pAb->AbElement->ElLeafType == LtPolyLine)
-	 /* il s'agit bien d'une polyline */
+	 /* it's a polyline */
 	{
 	   if (extension)
-	      /* c'est bien une extension */
-	      if (FirstSelectedElement == pAb->AbElement && rank == SelectedPointInPolyline)
-		 /* c'est la meme polyline et le meme point que precedemment, */
-		 /* ce n'est pas vraiment une extension */
+	      /* it's a selection extension */
+	      if (FirstSelectedElement == pAb->AbElement &&
+		  rank == SelectedPointInPolyline)
+		 /* same polyline and same vertex as before. Then, it's not */
+		 /* really an extension */
 		 extension = FALSE;
 	      else
-		 /* on etend jusqu'a la PolyLine entiere */
+		 /* select the entire polyline */
 		 rank = 0;
 	   if (doubleClick)
-	      /* un double-clic concerne une PolyLine entiere */
+	      /* a double-click applies to the polyline as a whole */
 	      rank = 0;
 	}
    if (extension && SelectedDocument == NULL && DocSelectedAttr == NULL)
-      /* on veut etendre une selection qui n'existe pas ! On fait comme si */
-      /* il s'agissait d'une nouvelle selection */
+      /* it's an extension, but there is no selection. Consider it as a new */
+      /* selection */
       extension = FALSE;
-   /* si c'est un double clic, on verife qu'il s'agit bien d'une reference */
-   /* ou d'une inclusion */
+   /* if it's a double-click, check that the element is a reference or an */
+   /* inclusion */
    if (doubleClick)
       if (pAb != NULL)
 	 if (pAb->AbElement != NULL)
@@ -2767,17 +2781,17 @@ boolean             drag;
 	      pEl1 = pAb->AbElement;
 	      if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct != CsReference)
 		{
-		   /* cherche si un element englobant est une inclusion */
+		   /* search for an inclusion among the ancestors */
 		   pEl = pEl1;
 		   while (pEl->ElParent != NULL && pEl->ElSource == NULL)
 		      pEl = pEl->ElParent;
 		   if (pEl->ElSource != NULL)
+		     /* it's an inclusion */
 		      pEl1 = pEl;
 		}
 	      if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct ==
 		  CsReference || pEl1->ElSource != NULL)
-		 /* cet element est une reference ou une */
-		 /* inclusion : double clic sur une reference */
+		 /* this element is a reference or an inclusion */
 		{
 		   doubleClickRef = TRUE;
 		   FirstSelectedElement = pEl1;
@@ -2787,18 +2801,18 @@ boolean             drag;
 		}
 	      else
 		{
-		   /* ce n'est ni une inclusion ni un element reference */
-		   /* l'element ou l'un de ses ascendants a-t-il un */
-		   /* attribut reference ayant l'exception ActiveRef ? */
+		   /* it's neither an inclusion nor a reference element */
+		   /* search a reference attribute with exception ActiveRef */
+		   /* among the ancestors */
 		   pEl = pEl1;
 		   do
 		     {
 			pAttr = pEl->ElFirstAttr;
-			/* parcourt les attributs de l'element */
+			/* scan all attributes of current element */
 			while (pAttr != NULL && !doubleClickRef)
 			   if (pAttr->AeAttrType == AtReferenceAttr &&
 			       AttrHasException (ExcActiveRef, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
-			      /* trouve' */
+			      /* a reference attribute has been found */
 			     {
 				doubleClickRef = TRUE;
 				FirstSelectedElement = pEl;
@@ -2807,10 +2821,10 @@ boolean             drag;
 				SelectedPictureEdge = 0;
 			     }
 			   else
-			      /* passe a l'attribut suivant de l'element */
+			      /* next attribute of same element */
 			      pAttr = pAttr->AeNext;
 			if (!doubleClickRef)
-			   /* passe a l'element pere */
+			   /* higher level ancestor */
 			   pEl = pEl->ElParent;
 		     }
 		   while (pEl != NULL && !doubleClickRef);
@@ -2820,29 +2834,26 @@ boolean             drag;
       if (pAb->AbElement->ElTerminal)
 	 if (pAb->AbElement->ElLeafType == LtPairedElem ||
 	     pAb->AbElement->ElLeafType == LtReference)
-	    /* c'est une feuille reference ou marque de paire */
+	    /* it's a reference element or a paired element */
 	    if (!pAb->AbPresentationBox || !pAb->AbCanBeModified)
-	       /* ce n'est pas la boite de presentation d'une valeur d'attribut */
-	       /* on selectionne tout le contenu */
+	       /* it's not the presentation box of an attribute value */
+	       /* select all the contents */
 	       rank = 0;
    if (assoc)
-      /* frame d'elements associes */
      {
-	/* numero d'element associe' */
-	numassoc = vue;
-	vue = 1;
+	numassoc = view;
+	view = 1;
      }
    if (!update)
       FrameWithNoUpdate = frame;
    if (extension || !update)
-      /* extension de la selection courante */
+      /* extension of current selection */
       if (DocSelectedAttr != NULL)
-	 /* extension de la selection dans une boite de presentation */
-	 /* affichant une valeur d'attribut */
+	 /* the current selection is within a presentation box that displays */
+	 /* an attribute value */
 	{
 	   if (DocSelectedAttr == pDoc && AbsBoxSelectedAttr == pAb)
-	      /* l'extension n'est prise en compte que si elle a lieu dans le meme */
-	      /* pave de presentation */
+	      /* extension is allowed only if it's within the same box */
 	     {
 		if (rank == 0)
 		  {
@@ -2859,34 +2870,35 @@ boolean             drag;
 		     FirstSelectedCharInAttr = InitSelectedCharInAttr;
 		     LastSelectedCharInAttr = rank;
 		  }
-		SelectStringInAttr (pDoc, pAb, FirstSelectedCharInAttr, LastSelectedCharInAttr, TRUE);
+		SelectStringInAttr (pDoc, pAb, FirstSelectedCharInAttr,
+				    LastSelectedCharInAttr, TRUE);
 	     }
 	}
       else
-	 /* la selection n'est pas dans une boite de presentation affichant */
-	 /* une valeur d'attribut */
 	{
-	   if (pDoc != SelectedDocument || (assoc && numassoc != FirstSelectedElement->ElAssocNum))
+	   if (pDoc != SelectedDocument ||
+	       (assoc && numassoc != FirstSelectedElement->ElAssocNum))
+	     /* extension to a different tree is not allowed */
 	     {
 		TtaDisplaySimpleMessage (INFO, LIB, TMSG_CHANGING_DOC_IMP);
-		/* message 'Ne changez pas de document' */
 		error = TRUE;
 	     }
 	   else
 	     {
-		/* meme document: mais est-ce le meme arbre ? */
+		/* same document, but is it the same tree? */
 		if (FirstSelectedElement != NULL)
-		   /* on cherche un pave englobant qui appartienne au meme type */
-		   /* d'element associe' que le premier element selectionne' */
+		   /* search an enclosing abstract box that belongs to the */
+		   /* same associated tree as the first selected element */
 		  {
 		     stop = FALSE;
 		     do
 			if (pAb == NULL)
-			   stop = TRUE;		/* echec */
-			else if (FirstSelectedElement->ElAssocNum == pAb->AbElement->ElAssocNum)
-			   stop = TRUE;		/* meme type d'element associe */
+			   stop = TRUE;
+			else if (FirstSelectedElement->ElAssocNum ==
+				 pAb->AbElement->ElAssocNum)
+			   stop = TRUE;
 			else
-			   pAb = pAb->AbEnclosing;	/* passe a l'englobant */
+			   pAb = pAb->AbEnclosing;
 		     while (!stop);
 		  }
 		if (pAb == NULL)
@@ -2897,29 +2909,33 @@ boolean             drag;
 		     begin = extension;
 		     pEl = pAb->AbElement;
 		     if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
-			/* l'element a selectionner est une constante, on le */
-			/* selectionne en entier */
+			/* the element to be selected is a constant */
+			/* select it entirely */
 			rank = 0;
-		     /* Si l'element a selectionner est cache' ou non selectionnable, */
-		     /* on change pour le premier element englobant qui ne l'est pas */
-		     if (TypeHasException (ExcNoSelect, pEl->ElTypeNumber, pEl->ElStructSchema)
+		     /* If the element to be selected is hidden or cannot be */
+		     /* selected, get the first ancestor that can be selected*/
+		     if (TypeHasException (ExcNoSelect, pEl->ElTypeNumber,
+					   pEl->ElStructSchema)
 			 || HiddenType (pEl))
 		       {
 			  stop = FALSE;
-			  rank = 0;	/* selectionne tout l'element */
+			  /* select the entire element */
+			  rank = 0;
 			  while (!stop)
 			     if (pEl->ElParent == NULL)
-				/* c'est la racine de l'arbre, on la selectionne */
+				/* root of a tree. Select it */
 				stop = TRUE;
 			     else
 			       {
 				  pEl = pEl->ElParent;
-				  if (!TypeHasException (ExcNoSelect, pEl->ElTypeNumber,
+				  if (!TypeHasException (ExcNoSelect,
+							 pEl->ElTypeNumber,
 							 pEl->ElStructSchema)
 				      && !HiddenType (pEl))
 				     stop = TRUE;
 			       }
 		       }
+		     /* send event TteElemExtendSelect.Pre to the application*/
 		     notifyEl.event = TteElemExtendSelect;
 		     notifyEl.document = (Document) IdentDocument (pDoc);
 		     notifyEl.element = (Element) pEl;
@@ -2927,8 +2943,12 @@ boolean             drag;
 		     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 		     notifyEl.position = 0;
 		     if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		       /* application accepts selection */
 		       {
+			  /* do select */
 			  ExtendSelection (pEl, rank, fixed, begin, drag);
+			  /* send event TteElemExtendSelect.Pre to the */
+			  /* application */
 			  notifyEl.event = TteElemExtendSelect;
 			  notifyEl.document = (Document) IdentDocument (pDoc);
 			  notifyEl.element = (Element) pEl;
@@ -2942,30 +2962,31 @@ boolean             drag;
 	}
    else
      {
-	/* nouvelle selection */
+	/* new selection */
 	if (pDoc != SelectedDocument)
-	   /* on change de document */
-	   TtaClearViewSelections ();	/* eteint la selection precedente */
+	   /* in another document */
+	   TtaClearViewSelections ();
 	else if (!doubleClickRef)
-	   /* selection dans le meme document que precedemment */
-	   if (doubleClick)	/* l'utilisateur a clique' double */
-	      if (SelectedView == vue)	/* dans la meme vue */
-		 /* un seul element selectionne' */
+	   /* selection in the same document as before */
+	   if (doubleClick)
+	      /* user has double-clicked */
+	      if (SelectedView == view)
+		 /* in same view */
 		 if (FirstSelectedElement == LastSelectedElement)
-		    /* c'est le meme */
+		   /* only one element was selected */
 		    if (pAb->AbElement == FirstSelectedElement)
+		      /* the new selected element is the same as before */
 		      {
 			 pEl1 = FirstSelectedElement;
 			 if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct ==
 			     CsReference || pEl1->ElSource != NULL)
-			    /* cet element est une reference ou une copie par */
-			    /* inclusion : double clic sur une   reference */
+			    /* this element is a reference or an inclusion */
 			    doubleClickRef = TRUE;
 		      }
 	if (doubleClick)
 	  {
-	     /* cherche l'element reference' */
 	     FindReferredEl ();
+	     /* send an event TteElemActivate.Pre to the application */
 	     notifyEl.event = TteElemActivate;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
 	     notifyEl.element = (Element) pEl1;
@@ -2976,42 +2997,40 @@ boolean             drag;
 	  }
 	else
 	  {
-	     SelectedView = vue;
-	     /* la vue active est celle ou l'utilisateur */
-	     /* a choisi le debut de la selection */
-	     OldSelectedView = vue;
-	     /* on essaiera de reselectionner dans cette vue */
+	     /* the view where the user has clicked becomes the active view */
+	     SelectedView = view;
+	     OldSelectedView = view;
 	     OldDocSelectedView = pDoc;
 	     pEl = pAb->AbElement;
 	     if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
-		/* l'element a selectionner est une constante, on le */
-		/* selectionne en entier */
+		/* the element to be selected is a constant */
+	        /* Select it entirely */
 		rank = 0;
-	     /* Si l'element a selectionner possede l'exception NoSelect ou */
-	     /* est cache', on change pour le premier element englobant qui ne */
-	     /* l'est pas */
+	     /* if the element to be selected has exception NoSelect or */
+	     /* is hidden, select the first ancestor that can be selected */
 	     if (TypeHasException (ExcNoSelect, pEl->ElTypeNumber,
 				   pEl->ElStructSchema)
 		 || HiddenType (pEl))
 	       {
+		  /* select element entirely */
+		  rank = 0;
 		  stop = FALSE;
-		  rank = 0;	/* selectionne tout l'element */
 		  while (!stop)
 		     if (pEl->ElParent == NULL)
-			/* c'est la racine de l'arbre, on la selectionne */
+			/* that's a root. Select it */
 			stop = TRUE;
 		     else
 		       {
 			  pEl = pEl->ElParent;
-			  if (!TypeHasException (ExcNoSelect, pEl->ElTypeNumber,
+			  if (!TypeHasException (ExcNoSelect,pEl->ElTypeNumber,
 						 pEl->ElStructSchema)
 			      && !HiddenType (pEl))
 			     stop = TRUE;
 		       }
 	       }
 	     if (rank > 0 && pAb->AbPresentationBox && pAb->AbCanBeModified)
-		/* l'utilisateur a clique' dans une boite de presentation d'une
-		   valeur d'attribut */
+		/* user has clicked in the presentation box displaying an */
+	        /* attribute value */
 	       {
 		  CancelSelection ();
 		  SelectStringInAttr (pDoc, pAb, rank, rank, FALSE);
@@ -3029,8 +3048,8 @@ boolean             drag;
      {
 	FrameWithNoUpdate = 0;
 	if (!error)
-	   /* Si tout le contenu d'une feuille de texte est selectionne', */
-	   /* c'est la feuille elle-meme qui est selectionnee */
+	   /* If all the contents of a text leaf is selected, then the leaf */
+	   /* itself is considered as selected */
 	   if (LastSelectedElement != NULL)
 	      if (LastSelectedElement == FirstSelectedElement)
 		{
@@ -3045,16 +3064,16 @@ boolean             drag;
 		}
 	if (FirstSelectedElement != NULL)
 	   if (FirstSelectedElement->ElAssocNum != 0)
-	      /* retablit le pave englobant des elements associes */
+	      /* reset enclosing abstract boxes for associated elements */
 	      EnclosingAssocAbsBox (FirstSelectedElement);
      }
 }
 
 #ifdef __COLPAGE__
 /*----------------------------------------------------------------------
-   ColPageType rend un pointeur sur la chaine donnant le type de
-   la page pPage (utilise pour la construction de la
-   ligne de selection et le menu selection.
+   ColPageType
+
+   Return a string representing the type of the pPage page break element.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -3074,25 +3093,25 @@ PtrElement          pPage;
       switch (pPage->ElPageType)
 	    {
 	       case PgBegin:
-		  typepage = "PgBegin";
+		  typepage = "BeginPage";
 		  break;
 	       case PgComputed:
-		  typepage = "PgComputed";
+		  typepage = "ComputedPage";
 		  break;
 	       case PgUser:
-		  typepage = "PgUser";
+		  typepage = "UserPage";
 		  break;
 	       case ColBegin:
-		  typepage = "ColonneDebut";
+		  typepage = "BeginColumn";
 		  break;
 	       case ColComputed:
-		  typepage = "ColonneCalculee";
+		  typepage = "ComputedColumn";
 		  break;
 	       case ColUser:
-		  typepage = "ColonneUtilisateur";
+		  typepage = "UserColumn";
 		  break;
 	       case ColGroup:
-		  typepage = "ColonnesGroupees";
+		  typepage = "ColumnGroup";
 		  break;
 	       default:
 		  typepage = "PageBreak";
@@ -3105,8 +3124,9 @@ PtrElement          pPage;
 #endif /* __COLPAGE__ */
 
 /*----------------------------------------------------------------------
-   PrepareSelectionMenu recherche les elements qui vont composer     
-   le menu selection.                                            
+   PrepareSelectionMenu
+
+   Search elements to be put in the Select menu.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -3122,8 +3142,9 @@ void                PrepareSelectionMenu ()
    boolean             stop;
    boolean             stop1;
 
-   /* on ignore l'exception NoSelect */
-   /* cherche le premier element englobant non cache' */
+   /* ignore exception NoSelect */
+   /* search the first ancestor of the first selected element that is */
+   /* not hidden */
    SelMenuParentEl = NULL;
    if (FirstSelectedElement != NULL)
       if (FirstSelectedElement->ElParent != NULL)
@@ -3141,7 +3162,7 @@ void                PrepareSelectionMenu ()
 	      SelMenuParentEl = pEl1;
 	}
 
-   /* cherche le type de l'element selectionable precedent */
+   /* search the previous element that can be selected */
    SelMenuPreviousEl = NULL;
    stop = FALSE;
    pEl1 = FirstSelectedElement;
@@ -3185,7 +3206,7 @@ void                PrepareSelectionMenu ()
    if (pEl1 != NULL)
       SelMenuPreviousEl = pEl1;
 
-   /* cherche le type de l'element selectionable suivant */
+   /* search the next element that can be selected */
    SelMenuNextEl = NULL;
    stop = FALSE;
    pEl1 = LastSelectedElement;
@@ -3227,24 +3248,21 @@ void                PrepareSelectionMenu ()
    if (pEl1 != NULL)
       SelMenuNextEl = pEl1;
 
-   /* cherche le type du 1er element englobe' selectionable */
+   /* search the first descendent that can be selected */
    SelMenuChildEl = NULL;
    stop = FALSE;
    pEl1 = FirstSelectedElement;
    while (!stop && pEl1 != NULL)
-      /* interdit la selection du contenu d'une copie ou d'un */
-      /* element protege' */
+      /* cannot select the contents of a copy or hidden element */
       if (pEl1->ElIsCopy || ElementIsHidden (pEl1))
 	 pEl1 = NULL;
       else if (pEl1->ElTerminal)
-	 /* pas de descendant */
 	 pEl1 = NULL;
       else
 	{
-	   /* on passe au descendant */
+	  /* search the first child that is not hidden */
 	   pEl1 = pEl1->ElFirstChild;
 	   stop1 = FALSE;
-	   /* on cherche le premier frere non protege' */
 	   while (!stop1 && pEl1 != NULL)
 	      if (!ElementIsHidden (pEl1))
 		 stop1 = TRUE;
@@ -3252,7 +3270,7 @@ void                PrepareSelectionMenu ()
 		 pEl1 = pEl1->ElNext;
 	   if (pEl1 != NULL)
 	      if (!HiddenType (pEl1))
-		 /* cet element est bien presentable a l'utilisateur */
+		 /* this element can be selected */
 		 stop = TRUE;
 	}
    if (pEl1 != NULL)
@@ -3263,8 +3281,10 @@ static char         OldMsgSelect[MAX_TXT_LEN];
 static PtrDocument  OldDocMsgSelect = NULL;
 
 /*----------------------------------------------------------------------
-   BuildSelectionMessage construit et affiche le texte du          
-   message de selection correspondant a la selection courante.     
+   BuildSelectionMessage
+
+   build the selection message according to the current selection
+   and display that message
   ----------------------------------------------------------------------*/
 void                BuildSelectionMessage ()
 {
@@ -3274,8 +3294,8 @@ void                BuildSelectionMessage ()
    int                 nbasc;
 
    if (DocSelectedAttr != NULL && AbsBoxSelectedAttr != NULL)
-      /* il y a une selection dans une valeur d'attribut */
-      /* on selectionne l'element sur lequel porte l'attribut */
+      /* current selection is within an attribute value */
+      /* present the element to which the attribute is attached */
      {
 	pDoc = DocSelectedAttr;
 	pEl = AbsBoxSelectedAttr->AbElement;
@@ -3285,43 +3305,39 @@ void                BuildSelectionMessage ()
 	pDoc = SelectedDocument;
 	pEl = FirstSelectedElement;
      }
-   /* on met d'abord le nom du type du premier element selectionne' */
+   /* put the type name of the first selected element */
 #ifdef __COLPAGE__
-   /* dans le cas d'un element de type SAUT PAGE, on affiche */
-   /* le type de saut de page (PgBegin, PgComputed, */
-   /* PgUser, ColBegin, ColComputed, ColUser, */
-   /* ou ColGroup */
+   /* if it's a page break, display the break type */
    if (pEl->ElTypeNumber == PageBreak + 1)
       strncpy (msgBuf, TypePageCol (pEl), MAX_NAME_LENGTH);
    else
 #endif /* __COLPAGE__ */
       strncpy (msgBuf, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
 	       MAX_NAME_LENGTH);
-   /* ajoute les types des elements englobants */
+   /* add the types of the ancestors */
    pEl = pEl->ElParent;
    nbasc = 1;
    while (pEl != NULL)
      {
-	/* on saute l'element s'il est cache' */
+	/* skip that ancestor if it is hidden */
 	if (!HiddenType (pEl))
 	  {
-	     /* un caractere pour separer les niveaux */
+	     /* put a separator */
 	     strcat (&msgBuf[strlen (msgBuf)], " \\ ");
-	     /* ajoute le type de l'element */
+	     /* put the element type */
 	     strcat (&msgBuf[strlen (msgBuf)], pEl->ElStructSchema->
 		     SsRule[pEl->ElTypeNumber - 1].SrName);
-	     nbasc++;		/* nombre d'elements traites */
+	     nbasc++;
 	  }
 	if (nbasc >= MAX_ITEM_MSG_SEL)
-	   pEl = NULL;		/* on arrete */
+	   pEl = NULL;
 	else
-	   pEl = pEl->ElParent;	/* passe au pere */
+	   pEl = pEl->ElParent;
      }
-   /* si le message Selection ou le document selectionne' ont change'
-      depuis la derniere fois, on affiche le message de Selection */
+   /* if the Selection message or the selected document have changed, */
+   /* display this new message */
    if (pDoc != OldDocMsgSelect || strcmp (OldMsgSelect, msgBuf) != 0)
      {
-	/* affiche le message Selection en haut de la fenetre */
 	DisplaySelMessage (msgBuf);
 	OldDocMsgSelect = pDoc;
 	strncpy (OldMsgSelect, msgBuf, MAX_TXT_LEN);
@@ -3331,10 +3347,13 @@ void                BuildSelectionMessage ()
 
 /*----------------------------------------------------------------------
    SelectPairInterval                               
-   Si la selection courante est une paire de marques, on           
-   selectionne tous les elements compris entre les deux marques,   
-   les marques comprises, et on retourne Vrai.                     
-   Sinon, on ne fait rien et on retourne Faux.                     
+
+   If the current selection is a paired element, select all elements
+      comprised between the two elements of the pair, and the paired
+      elements themselves, and return TRUE
+   else
+      just return FALSE
+
   ----------------------------------------------------------------------*/
 
 boolean             SelectPairInterval ()
@@ -3343,12 +3362,10 @@ boolean             SelectPairInterval ()
 
    ret = FALSE;
    if (!SelContinue)
-      /* la selection courante est une selection discrete */
       if (NSelectedElements == 2)
-	 /* seulement deux elements sont selectionne's */
+	 /* only two elements are selected */
 	 if (SelectedElement[0] == GetOtherPairedElement (SelectedElement[1]))
-	    /* les 2 elements sont des elements de paire et ils */
-	    /* appartiennent a` la meme paire */
+	    /* they are paired elements */
 	   {
 	      SelContinue = TRUE;
 	      LastSelectedElement = FirstSelectedElement;
@@ -3360,11 +3377,14 @@ boolean             SelectPairInterval ()
 
 
 /*----------------------------------------------------------------------
-   SelectAround se'lectionne autour de l'e'le'ment courant.
-   - le pe`re si val=1                                             
-   - le pre'ce'dent si val=2                                       
-   - le suivant si val=3                                           
-   - le premier fils si val=4                                      
+   SelectAround
+
+   Select an element relatively to current selection:
+
+   - parent of first selected element if val = 1
+   - previous element if val = 2
+   - next element if val = 3
+   - child of first selected element if val = 4
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SelectAround (int val)
@@ -3376,99 +3396,105 @@ int                 val;
 {
    PtrElement          pEl, pParent, pFirst, pLast;
 
-   /*boolean     stop; */
-
    pEl = NULL;
-   /*stop = FALSE; */
    switch (val)
 	 {
 	    case 1:
-	       /* Enclosing */
+	       /* select parent */
 	       if (SelectPairInterval ())
 		  pEl = NULL;
 	       else
 		 {
 		    if (DocSelectedAttr != NULL && AbsBoxSelectedAttr != NULL)
-		       /* il y a une selection dans une valeur d'attribut */
-		       /* on selectionne l'element sur lequel porte l'attribut */
+		       /* current selection is within an attribute value */
+		       /* select the element to which the attribute is */
+		       /* attached */
 		       SelectElementWithEvent (DocSelectedAttr,
 				AbsBoxSelectedAttr->AbElement, TRUE, FALSE);
 		    else
-		       /* si le premier et le dernier selectionne's ne sont 
-		          pas freres on normalise la selection: le premier et
-		          le dernier element selectionne's doivent etre des
-		          freres dans l'arbre abstrait */
-		    if (!StructSelectionMode)
-		      {
+		       if (StructSelectionMode)
+		         pEl = SelMenuParentEl;
+		       else
+			 /* selection is not always "normalized". Select the */
+			 /* parent only if the selection is "normalized", */
+			 /* normalize it otherwise. */
+		         {
 			 if (FirstSelectedElement != NULL &&
 			     LastSelectedElement != NULL)
-			    if (FirstSelectedElement->ElParent !=
+			    if (FirstSelectedElement->ElParent ==
 				LastSelectedElement->ElParent)
+			      /* selection is normalized */
+			       pEl = SelMenuParentEl;
+			    else
+		              /* The first and last selected elements are */
+		              /* not siblings. Change the selection so that */
+		              /* first and last selected elements be siblings*/
 			      {
 				 pFirst = FirstSelectedElement;
 				 pLast = LastSelectedElement;
-				 /* remonte les ascendants du premier element
-				    de la selection */
+				 /* get the ancestors of the first selected */
+				 /* element */
 				 pParent = pFirst->ElParent;
 				 while (pParent != NULL)
 				    if (ElemIsAnAncestor (pParent, pLast))
-				       /* cet ascendant (pParent) du premier
-				          selectionne' est aussi un ascendant
-				          du dernier selectionne' */
+				      /* this ancestor (pParent) of first */
+				      /* selected element is also an ancestor*/
+				      /* of the last selected element */
 				      {
-					 /* on retient comme dernier
-					    l'ascendant du dernier qui a
-					    pParent pour pere */
+					/* replace the last selected element*/
+					/* by its ancestor whose parent is */
+					/* pParent */
 					 while (pLast->ElParent != pParent)
 					    pLast = pLast->ElParent;
-					 /* on a fini */
+					 /* finished */
 					 pParent = NULL;
 				      }
 				    else
-				       /* cet ascendant (pParent) du premier
-				          selectionne' n'est pas un ascendant
-				          du dernier selectionne' */
+				      /* this ancestor (pParent) of the first*/
+				      /* selected element is not an ancestor */
+				      /* of the last selected element */
 				      {
-					 /* on retient pour l'instant pParent
-					    et on va regarder si son pere est
-					    un ascendant du dernier selectionne' */
+					/* replace priovisionally the first */
+					/* selected element by pParent and */
+					/* whether its parent is an ancestor */
+					/* of the last selected element */
 					 pFirst = pParent;
 					 pParent = pParent->ElParent;
 				      }
 				 SelectElementWithEvent (SelectedDocument,
-						       pFirst, TRUE, FALSE);
+						         pFirst, TRUE, FALSE);
 				 if (pFirst != pLast)
 				    ExtendSelection (pLast, 0, FALSE, TRUE, FALSE);
 			      }
-			    else
-			       pEl = SelMenuParentEl;
-		      }
-		    else
-		       pEl = SelMenuParentEl;
+		         }
 		 }
 	       break;
 	    case 2:
-	       /* RlPrevious */
+	       /* Previous */
 	       pEl = SelMenuPreviousEl;
 	       break;
 	    case 3:
-	       /* RlNext */
+	       /* Next */
 	       pEl = SelMenuNextEl;
 	       break;
-	    case 4 /* ElemIsAnAncestor */ :
+	    case 4 /* child */ :
 	       pEl = SelMenuChildEl;
 	       break;
 #ifdef __COLPAGE__
-	    case 6:		/* structure physique englobante */
+	    case 6:
+	       /* enclosing page or column box */
 	       pEl = SelMenuPageColParent;
 	       break;
-	    case 7:		/* structure physique precedente */
+	    case 7:
+	       /* previous page or column box */
 	       pEl = SelMenuPageColPrev;
 	       break;
-	    case 8:		/* structure physique suivante */
+	    case 8:
+	       /* next page or column box */
 	       pEl = SelMenuPageColNext;
 	       break;
-	    case 9:		/* structure physique englobee */
+	    case 9:
+	       /* child page or column box */
 	       pEl = SelMenuPageColChild;
 	       break;
 #endif /* __COLPAGE__ */
@@ -3482,7 +3508,9 @@ int                 val;
 
 
 /*----------------------------------------------------------------------
-   TtcParentElement                                                
+   TtcParentElement
+
+   Select the parent of the first selected element
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcParentElement (Document document, View view)
@@ -3499,7 +3527,9 @@ char                c;
 
 
 /*----------------------------------------------------------------------
-   TtcPreviousElement                                              
+   TtcPreviousElement
+
+   Select the element preceding the first selected element
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcPreviousElement (Document document, View view)
@@ -3516,7 +3546,9 @@ char                c;
 
 
 /*----------------------------------------------------------------------
-   TtcNextElement                                                  
+   TtcNextElement
+
+   Select the element following the last selected element
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcNextElement (Document document, View view)
@@ -3532,7 +3564,9 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   TtcChildElement                                                 
+   TtcChildElement
+
+   Select the first child of the first selected element
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcChildElement (Document document, View view)
@@ -3546,3 +3580,4 @@ char                c;
 {
    SelectAround (4);
 }
+
