@@ -806,8 +806,6 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
      case HTML_EL_Option_Menu:
        /* Check that at least one option has a SELECTED attribute */
        OnlyOneOptionSelected (el, doc, TRUE);
-       /* Check the mandatory name attribute */
-       CheckMandatoryAttribute (el, doc, HTML_ATTR_NAME);
        break;
 
      case HTML_EL_OptGroup:
