@@ -1563,8 +1563,11 @@ ATTRIBUTES
 
   Language:
 	BEGIN
-        CreateBefore(AttrName);
-	CreateBefore(AttrValue);
+	IF MathML and RealLang
+	    BEGIN
+            CreateBefore(AttrName);
+	    CreateBefore(AttrValue);
+	    END;
 	END;
 
   Unknown_attribute:
