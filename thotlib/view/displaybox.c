@@ -590,7 +590,8 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
   pFrame = &ViewFrameTable[frame - 1];
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
-      if (selected && pAb->AbPresentationBox)
+      if (selected && pAb->AbPresentationBox &&
+	  (FrameTable[frame].FrView == 1 || !pAb->AbSelected))
 	{
 	/* paint with selection colors */
 	  bg = BgSelColor;

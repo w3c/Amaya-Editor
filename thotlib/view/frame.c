@@ -412,8 +412,9 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
   if (pBox == NULL || pFrom == NULL || pFrom->AbBox == NULL)
     return;
   else if (pFrom->AbElement == NULL ||
-	   TypeHasException (ExcNoShowBox, pFrom->AbElement->ElTypeNumber,
-			     pFrom->AbElement->ElStructSchema))
+	   (FrameTable[frame].FrView == 1 &&
+	    TypeHasException (ExcNoShowBox, pFrom->AbElement->ElTypeNumber,
+			      pFrom->AbElement->ElStructSchema)))
     return;
   from = pFrom->AbBox;
   pAb = pBox->BxAbstractBox;

@@ -1384,7 +1384,7 @@ static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
     {
       partialSel = FALSE;
       if (pEl == FirstSelectedElement && pEl->ElTerminal)
-	/* it's the firqt element in the current selection */
+	/* it's the first element in the current selection */
 	{
 	  if (pEl->ElLeafType == LtText &&
 	      FirstSelectedChar > 1 && pEl->ElTextLength > 0)
@@ -1398,7 +1398,7 @@ static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
 	}
 
       if (partialSel)
-	/* skip presentation abtract boxes created before the main box */
+	/* skip presentation abstract boxes created before the main box */
 	{
 	  while (pAb->AbPresentationBox && pAb->AbNext != NULL)
 	    pAb = pAb->AbNext;
