@@ -1109,12 +1109,13 @@ Document            document;
 	 }
        while (anchor == NULL && ancestor != NULL);
      }
-   
+
    /* Search the HREF attribute */
    if (anchor != NULL)
      {
        elType = TtaGetElementType (anchor);
        attrType.AttrSSchema = HTMLschema;
+	isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLschema);
        /* search the HREF or CITE attribute */
        if (isHTML &&
 	   (elType.ElTypeNum == HTML_EL_Quotation ||
