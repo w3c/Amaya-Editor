@@ -24,8 +24,10 @@ typedef unsigned long ms_t;
 /************/
 
 #ifndef _WINDOWS
+#ifdef _GTK
 #if !defined(BOOL)
 typedef char BOOL;
+#endif
 #endif
 #endif
 
