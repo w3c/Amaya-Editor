@@ -112,10 +112,10 @@ suivants:</p>
 
 <p><strong>Note:</strong> les fichiers
 <strong>amaya.keyboard/amaya.kb</strong> et <strong>amaya.css</strong> sont
-chargés au moment du lancement. Si vous les changer, vous devrez quitter et
+chargés au moment du démarrage. Si vous les changer, vous devrez quitter et
 redémarrer Amaya pour les prendre en compte.</p>
 
-<h4><a name="AmayaTemp">Le répertoire AmayaTemp </a></h4>
+<h4><a name="AmayaTemp">Le répertoire AmayaTemp</a></h4>
 
 <p>Amaya stocke tous les fichiers temporaires qu'il crée durant l'éxécution
 dans un répertoire que nous appelons le répertoire e
@@ -210,203 +210,217 @@ alt="General Preferences Menu" /></p>
       <br />
     </dd>
   <dt><strong>Home Page</strong></dt>
-    <dd>Specifies the URI that Amaya will load when launched or when the user
-      presses the home page button. An example is
+    <dd>Spécifie l'URI qu'Amaya chargera au démarrage ou quand l'utilisateur
+      pressera le bouton Home. Un exemple est
       <code>http://www.w3.org</code>.<br />
-      <strong>Note:</strong> A complete URI must be used.<br />
+      <strong>Note:</strong> Un URI complet doit être utilisé.<br />
       <br />
     </dd>
-  <dt><strong><a name="Enable">Enable multi-key</a></strong></dt>
-    <dd>Enables or disables the optional multi-key input method.
-      <p>The optional input method (Multi-Key) is based on a two key sequence
-      beginning with the "accent" followed by the "letter". For example to
-      obtain a 'ã' first press '~' then type 'a'. To obtain a '~' you have to
-      press '~' twice.</p>
-      <p>Character sequences used by the standard multi-key input method and
-      the optional multi-key input method are summarized in <a
-      href="Keyboard.html#Keyboard">two different tables</a>.</p>
+  <dt><strong><a name="Enable">Activer le multi-touche</a></strong></dt>
+    <dd>Activer ou désactiver la méthode optionnelle d'entrée multi-touches.
+      <p>La méthode optionnelle d'entrée  (Multi-Key) est basée sur une
+      séquence de deux touches commençant avec "l'accent" suivi de la
+      "lettre". Par exemple pour obtenir un 'ã' taper d'abord '~' puis taper
+      'a'. Pour obtenir un '~' vous devez taper '~' deux fois.</p>
+      <p>Les séquences de caractères utilisées par les méthodes d'entrée
+      multi-touches standard et optionnelle sont résumées dans <a
+      href="Keyboard.html#Keyboard">deux tables différentes</a>.</p>
       <p></p>
     </dd>
-  <dt> <strong>Show background images</strong></dt>
-    <dd>Controls whether background images should be shown. This option is
-      only effective when loading a new document.
+  <dt> <strong>Montrer les images en arrière plan</strong></dt>
+    <dd>Contrôle si les images en arrière plan doivent être montrées ou non.
+      Cette option est effective uniquement quand on charge un nouveau
+      document.</dd>
+</dl>
+
+<h3><span style="font-size: 12pt">Le double clic active les liens</span></h3>
+<dl>
+    <dd>Depuis la première version d'Amaya, les utilisateurs ont besoin de
+      double cliquer sur un lien pour l'activer. Celà permet de différencier
+      l'édition d'un lien de son activation. Vous pouvez passer outre ce
+      comportement en désactivant cette option.
       <p></p>
     </dd>
-  <dt><strong>Double click activates link</strong></dt>
-    <dd>Since the first version of Amaya, users need to double click on a link
-      to activate it. This allows one to differentiate between the edition of
-      a link or its activation. You can override this behavior by deactivating
-      this option.
-      <p></p>
+  <dt><strong>Activer le FTP (experimental)</strong></dt>
+    <dd>Amaya permet de suivre les URLs FTP. Ce soutien est expérimental et il
+      n'est pas encore débugué. Par exemple,   les URLs FTP nécessitent une
+      authentification de l'utilisateur, l'authentication de l'information
+      n'étant pas toujours mémorisée. Aussi, le fait de taper sur le bouton
+      Stop pendant un téléchargement FTP peut faire planter Amaya. Malgré ces
+      problèmes, nous avons rajouter cette option dans Amaya afin que les
+      autres développeurs puissent nous aider à le débuguer rapidement. Par
+      défaut, cette option est inactive.<br />
     </dd>
-  <dt><strong>Enable FTP (experimental)</strong></dt>
-    <dd>Allows Amaya to follow FTP URLs. This support is experimental and it's
-      not yet fully debugged. For example, for FTP URLs needing user
-      authentication, the authentication information is not always memorized.
-      Also, pressing the Stop button during an FTP download may crash Amaya.
-      Albeit these problems, we added this option to Amaya so that other
-      developer's may help us to debug it faster. By default this option is
-      turned off.<br />
-    </dd>
-  <dt><strong>Menu Font size</strong> (Unix platforms only)</dt>
-    <dd>Specifies the font size of all the Amaya menus. This option is only
-      taken into account at launch time.
+  <dt><strong>Menu de la taille de la police de caractère</strong> (stations
+  Unix uniquement)</dt>
+    <dd>Spécifie la taille de la police de caractère dans tous les menus
+      d'Amaya. Cette option est aussi prise en compte au démarrage.
       <p><br />
       </p>
     </dd>
-  <dt><strong>Font Zoom</strong></dt>
-    <dd>It's possible to zoom in and zoom out, document window by document
-      window. Each document (text and images) displayed within a zoomed window
-      will be displayed larger or smaller than its real size according of the
-      current zoom.<br />
-      That option allows you to change the default font zoom for all windows.
-      This change affects only font sizes but not images and is reflected
-      immediately in all open document windows.<br />
+  <dt><strong>Zoom sur les caractères</strong></dt>
+    <dd>Il est possible d'augmenter et de diminuer l'effet de zoom, fenêtre de
+      document par fenêtre de document. Chaque document (texte et images)
+      visualisé à l'intérieur d'une fenêtre zoomée sera visualisée plus gros
+      ou plus petit que sa taille réelle selon le zoom courant.<br />
+      Cette option vous permet de changer le zoom par défaut pour toutes les
+      fenêtres. Çe changement affecte uniquement les tailles des polices de
+      caractères mais pas les images et c'est reflété immédiatement sur tous
+      les documents ouverts.<br />
       <br />
     </dd>
-  <dt><strong>Double click delay</strong> (Unix platforms only)</dt>
-    <dd>This option allows one to control the delay for which two mouse clicks
-      are classed as a double-click. This option is only taken into account at
-      launch time.<br />
+  <dt><strong>Le délai du double clic</strong> (stations Unix uniquement)</dt>
+    <dd>Cette option permet de contrôler le délai pour lequel deux clics de
+      souris sont considérés comme un double clic. Cette option est prise en
+      compte uniquement au démarrage.<br />
       <br />
     </dd>
-  <dt><strong>Dialogue language</strong></dt>
-    <dd>Specifies the language for all of Amaya's menus and dialogue messages.
-      The default language is American English (value <code>en_US</code>). At
-      the present time only three alternate languages are available: English
-      (<code>en</code>), French (<code>fr</code>), and German
-      (<code>de</code>). When launched, Amaya loads dialogue files according
-      to the current dialogue language: en-, fr-, or de- files. These dialogue
-      files are located in the <strong>Amaya/config</strong> directory.
-      <p>In Thot, a document is specified according to a schema. In Amaya, the
-      dialogue messages that are displayed when parsing a document or when
-      saving it under a specific schema are located in the
-      <strong>Amaya/amaya/HTML.<em>code</em></strong> file, where the
-      <em>code</em> suffix is a language abbreviation (e.g. <code>en</code> or
-      <code>fr</code>). This file has 4 sections:</p>
+  <dt><strong>Langue du dialogue</strong></dt>
+    <dd>Spécifie la langue de tous les menus d'Amaya et les messages des
+      dialogues. La langue par défaut est l'Anglais Américain (valeur
+      <code>en_US</code>). A ce moment précis, seulement trois langues sont
+      disponibles: Anglais (<code>en</code>), Français (<code>fr</code>), et
+      Allemand (<code>de</code>). Au démarrage, Amaya charge les fichiers de
+      dialogue selon la langue de dialogue courante:les fichiers en-, fr-, ou
+      de- . Ces fichiers de dialogue se trouvent dans le répertoire
+      <strong>Amaya/config</strong>.
+      <p>Dans Thot, un document est spécifié selon un schéma. Dans Amaya, les
+      messages de dialogue qui sont visualisés quand on analyse un document ou
+      quand on le sauve sous un schéma spécifique, se trouvent dans le fichier
+      <strong>Amaya/amaya/HTML.<em>code</em></strong>, où le suffixe
+      <em>code</em> est une abbréviation d'une langue (par exemple
+      <code>en</code> ou <code>fr</code>). Ce fichier possède 4 sections:</p>
       <ul>
-        <li><strong>extension:</strong> not used by Amaya</li>
-        <li><strong>presentation:</strong> not used by Amaya</li>
-        <li><strong>export</strong>: give the text displayed for each
-          translation schema ("Save As" command)</li>
-        <li><strong>translation</strong>: give the text displayed for each
-          element and attribute in the Thot HTML structure.</li>
+        <li><strong>extension:</strong> non utilisé par Amaya</li>
+        <li><strong>présentation:</strong> non utilisé par Amaya</li>
+        <li><strong>exportation</strong>: donne le texte visualisé pour chaque
+          schéma de traduction (la commande "Sauver comme")</li>
+        <li><strong>traduction</strong>: donne le texte visualisé pour chaque
+          élément et attribut dans la structure HTML de Thot.</li>
       </ul>
-      <p>It is possible to adapt Amaya to new ISO-Latin-1 languages by writing
-      corresponding dialogue files. These dialogue files have to be located in
-      the same directory (i.e. <strong>Amaya/config</strong>) and must use the
-      correct ISO 639 code as a prefix (it- for Italian, de- for German,
-      etc.). The specific HTML.code file also has to be created.</p>
+      <p>Il est possible d'adapter Amaya aux nouvelles langues ISO-Latin-1 en
+      écrivant les fichiers de dialogue correspondant.. Ces fichiers de
+      dialogue doivent se trouver dans le même répertoire (c'est à dire
+      <strong>Amaya/config</strong>) et doivent utililser le code correct ISO
+      639 comme préfixe (it- pour Italien, de- pour Allemand, etc.). Le
+      fichier code spécifique HTML doit aussi être créé.</p>
       <p></p>
     </dd>
 </dl>
 
-<h4><a name="Publishing">Publishing preferences</a></h4>
+<h4><a name="Publishing">Pré</a><a name="Publishing1">férences de
+publication</a></h4>
 
 <p style="text-align: center"><img src="../Icons/PublishMenu.gif"
 alt="Publish Preferences Menu" /></p>
 <dl>
-  <dt><strong>Use ETAGS and preconditions</strong></dt>
-    <dd>HTTP/1.1 introduces new headers that allow to avoid the <a
-      href="http://www.w3.org/WinCom/NoMoreLostUpdates.html">lost updates</a>
-      problem when publishing. With this mechanism, you can detect conflicts
-      when two users are publishing the same document.</dd>
-  <dt><strong>Verify each PUT with a GET</strong></dt>
-    <dd>If you don't trust your server, this option tells Amaya to retrieve
-      each document as soon as it has been published and compare it with the
-      copy stored in your workstation. If the documents differ, Amaya will
-      warn you.</dd>
-  <dt><strong>Default name for URLs finishing in '/'</strong></dt>
-    <dd>An HTTP server usually associate the URLs that finish in  '/' with a
-      default name, e.g., Overview.html. This option allows specifying the
-      default name that Amaya should use when publishing such a URL. Please
-      consult with your Webmaster to find out what the default name is for
-      your server.</dd>
-  <dt><strong>Allow automatic PUT redirections on these domains</strong></dt>
-    <dd>According to the HTTP/1.1 specification, PUT operations should not be
-      automatically redirected unless it can be confirmed by the user, since
-      this might change the conditions under which the request was issued. You
-      can avoid having Amaya prompt with a PUT redirection warning by entering
-      the name of the server's domain to which you are publishing. You may
-      specify one or more domains, each separated with a <em>space</em>, e.g.,
-      <code>www.w3.org groucho.marx.edu</code>.</dd>
+  <dt><strong>Utiliser les ETAGS et les conditions requises</strong></dt>
+    <dd>HTTP/1.1 introduit des nouvelles entêtes qui permettent d'éviter le
+      problème de <a href="http://www.w3.org/WinCom/NoMoreLostUpdates.html">la
+      perte des mises à jour</a> en publiant. Avec ce mécanisme, vous pouvez
+      détecter les conflits quand deux utilisateurs publient le même
+    document.</dd>
+  <dt><strong>Vérifie chaque PUT avec un GET</strong></dt>
+    <dd>Si vous n'avez pas confiance en votre serveur, cette option dit à
+      Amaya de rétablir chaque document dès qu'il a été publié et le compare à
+      la copie stockée dans votre station de travail. Si les documents
+      diffèrent, Amaya vous alertera.</dd>
+  <dt><strong>Nom par dé</strong><strong>faut pour les URLs finissant par
+  '/'</strong></dt>
+    <dd>Un serveur HTTP associe habituellement les URLs qui finissent par '/'
+      à un nom par défaut, par exemple, Overview.html. Cette option permet la
+      spécification du nom par défaut qu'Amaya devrait utiliser quand on
+      publiera un tels URL. S'il vous plaît, consultez votre Webmaster pour
+      découvrir quel est le nom par défaut de votre serveur.</dd>
+  <dt><strong>Permettre des redirections PUT automatiques sur ces
+  domaines</strong></dt>
+    <dd>Selon la spécification HTTP/1.1, les opérations PUT ne devraient pas
+      être redirectionnées automatiquement à moins qu'elles puissent être
+      confirmées par l'utilisateur, puisque ça peut changer les conditions
+      sous lesquelles la requête est issue. Vous pouvez éviter d'avoir un
+      avertissement d'Amaya avec une alerte de redirection PUT en entrant le
+      nom du domaine du serveur duquel vous publiez.redirection. Vous pouvez
+      spécifier un ou plusieurs domaines, chacun séparé d'un <em>espace</em>,
+      par exemple, <code>www.w3.org groucho.marx.edu</code>.</dd>
+  <dt><a name="Cache"><strong>Préférences de cache</strong></a></dt>
 </dl>
-
-<h4><a name="Cache">Cache preferences</a></h4>
 
 <p style="text-align: center"><img src="../Icons/CacheMenu.gif"
 alt="Cache Preferences Menu" /></p>
 
-<p>Amaya provides a cache through libwww. By default, the cache is enabled by
-default and is stored in the <strong>AmayaTemp/libwww-cache</strong>
-directory. This menu also provides a <strong>Flush Cache</strong> button, for
-erasing the cache directory.</p>
+<p>Amaya fournit un cache par l'intermédiaire de la libwww. Par défaut, le
+cache est activé et est stocké dans le répertoire
+<strong>AmayaTemp/libwww-cache</strong>. Ce menu fournit également un bouton
+<strong>Nettoyage du Cache</strong>, pour effacer le répertoire du cache.</p>
 <dl>
-  <dt><strong>Enable cache</strong></dt>
-    <dd>Activates or deactivates the cache</dd>
-  <dt><strong>Cache protected documents</strong></dt>
-    <dd>By default, documents which are protected by a password are stored in
-      the cache. Use this flag to override this behavior.</dd>
-  <dt><strong>Disconnected mode</strong></dt>
-    <dd>Always retrieves documents from the cache.</dd>
-  <dt><strong>Ignore Expires: header</strong></dt>
-    <dd>Does not expire cache entries.</dd>
-  <dt><strong>Cache  directory</strong></dt>
-    <dd>Gives the parent directory for the libwww-cache directory. Changing
-      this directory does not erase the contents of the previous one. You will
-      have to remove it yourself.<br />
-      <strong>Note:</strong> File protection mechanisms prevent the use of NFS
-      (Network File System) directories for the cache directory as NFS allows
-      reuse by multiple processes or users.  Use a 'local' directory for the
+  <dt><strong>Activer le cache</strong></dt>
+    <dd>Active or désactive le cache</dd>
+  <dt><strong>Cache des documents protégés</strong></dt>
+    <dd>Par défaut, les documents qui sont protégés par un mot de passe sont
+      stockés dans le cache. Utiliser ce drapeau pour passer outre ce
+      comportement.</dd>
+  <dt><strong>Mode déconnecté</strong></dt>
+    <dd>Récupère toujours les documents depuis le cache.</dd>
+  <dt><strong>Ignorer les expiration: entête</strong></dt>
+    <dd>N'expire pas les entrées de cache.</dd>
+  <dt><strong>Répertoire du cache  </strong></dt>
+    <dd>Donne le répertoire parent pour le répertoire libwww-cache directory.
+      Le fait de changer ce répertoire n'effacera pas le contenu du précédant.
+      Vous aurez à le supprimer vous même.<br />
+      <strong>Note:</strong> On ne peut pas utiliser des répertoires NFS
+      (Network File System) pour le répertoire du cache en raison de leurs
+      mécanismes de verrouillage. Utiliser un répertoire 'local' pour le
       cache.</dd>
-  <dt><strong>Cache size</strong></dt>
-    <dd>Gives the size, in megabytes, of the cache repository.</dd>
-  <dt><strong>Cache entry size limit</strong></dt>
-    <dd>Gives the maximum size for a cache entry.</dd>
+  <dt><strong>Taille du cache </strong></dt>
+    <dd>Donner la taille, en megabytes, du dépôt du cache.</dd>
+  <dt><strong>Taille limite de l'entrée du cache</strong></dt>
+    <dd>Donne la taille maximum d'entrée d'un cache.</dd>
 </dl>
 
-<h4><a name="Proxy">Proxy preferences</a></h4>
+<h4><a name="Proxy">Préférences proxy</a></h4>
 
 <p style="text-align: center"><img src="../Icons/ProxyMenu.gif"
 alt="Proxy Preferences Menu" /></p>
 
-<p>You can specify a proxy and a set of domains where the proxy should or
-should not be used by means of this menu.</p>
+<p>Vous pouvez spécifié un proxy et une série de domaines où le proxy devrait
+ou ne devrait pas être utilisé par le biais de ce menu.</p>
 <dl>
-  <dt><strong>HTTP proxy</strong></dt>
-    <dd>Gives the proxy that should be used for HTTP requests. You must
-      specify the full name of the server. If the server is running in a port
-      other than 80, then, like in a URL, you need to add a ":" char to the
-      proxy name, followed by the port number. For example::
+  <dt><strong>Proxy HTTP</strong></dt>
+    <dd>Donnes le proxy qui devrait être utilisé pour les requêtes HTTP. Vous
+      devez spécifier le nom du serveur en entier. Si le serveur est en train
+      de fonctionner sur un port autre que 80, alors, comme un URL, vous devez
+      ajouter un charactère ":" au nom du proxy, suivi par le numéro du port.
+      Par exemple::
       <pre>   groucho.marx.edu
             </pre>
-      <p>declares a proxy called groucho.marx.edu running at the default port
-      80, and</p>
+      <p>déclare un proxy appelé groucho.marx.edu fonctionne par défaut sur le
+      port 80, et</p>
       <pre>   groucho.marx.edu:1234
             </pre>
-      <p>declares a proxy called groucho.marx.edu, running at port 1234</p>
+      <p>déclare un proxy appelé groucho.marx.edu, fonctionnant sur le port
+      1234</p>
     </dd>
 </dl>
 <dl>
-  <dt><strong>Proxy domain list</strong></dt>
-    <dd>Gives a list of space separated domains where you want to use or not
-      use your proxy. For example:
+  <dt><strong>Liste du domaine proxy </strong></dt>
+    <dd>Donne une liste des domaines séparés par des espaces où vous voulez
+      utililser votre proxy. Par exemple:
       <pre>harpo.marx.edu zeppo.marx.edu chico.marx.edu
-              ^--------------^----&gt; space separated entries
+              ^--------------^----&gt; entrées séparées par des espaces
             </pre>
-      <p>Use the switch buttons to specify if the proxy should or shouldn't be
-      used with this domain list.</p>
+      <p>Utillisez les intérupteurs pour spécifier si le proxy doit ou ne doit
+      pas être utilisé avec cette liste de domaines.</p>
     </dd>
 </dl>
 
-<h4><a name="color">Color preferences</a></h4>
+<h4><a name="color">Préférences des couleurs</a></h4>
 
 <p style="text-align: center"><img src="../Icons/ColorMenu.gif"
 alt="Color Preferences Menu" /></p>
 
-<p>This menu allows selection of the default foreground and background colors
-for documents. It allows also to control the colors: used by Amaya to display
-the current selection</p>
+<p>Ce menu permet la sélection des couleurs du premier plan et de l'arrière
+plan par défaut pour les documents. Il permet également de contrôler les
+couleurs: utilisez Amaya pour visualiser la sélection courante.</p>
 <ul type="square">
   <li><strong>Caret color</strong> gives the foreground color that shows the
     selection when it's limited to an insert point;</li>

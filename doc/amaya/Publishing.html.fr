@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Publier</title>
+  <title>Publication</title>
   <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
@@ -127,7 +127,7 @@ sont utilisés comme suivant:</p>
     permettre la méthode PUT</a> ou demander à votre administrateur Web.</p>
   </li>
   <li>Le champ <strong>Adresse des images</strong> vous permet de sauver des
-    images (si <strong>Copier les Images</strong> a été sélectionné) à un 
+    images (si <strong>Copier les Images</strong> a été sélectionné) à un
     autre endroit que le fichier HTML. Ce camp devrait contenir le nom d'un
     répertoire dans le fichier système local ou une adresse dans le serveur
     lointain.
