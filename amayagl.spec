@@ -44,38 +44,6 @@ Authors:
     Irene.Vatton@inria.fr, Laurent.Carcone@w3.org
     Vincent.Quint@inria.fr
 
-%changelog
-* Thu Oct 01 2003 Irene Vatton <Irene.Vatton@inria.fr>
-  updated the authors list
-* Thu Aug 21 2003 Irene Vatton <Irene.Vatton@w3.org>
-  changed the optimization flags to "" as there is a crash
-  due to the version of compiler.
-* Mon Jul 7 2003 Jose Kahan <jose@w3.org>
-  Updated for Amaya 8.1. Added the bookmark compilation rules.
-  changed the optimization flags to Os as there is a crash on
-  with O2 on Redhat 8.0, probably due to the version of compiler.
-* Fri Apr 23 2003 Irene Vatton <Irene.Vatton@w3.org> 
-  adaptation to redhat 8.0
-* Fri Jan 30 2003 Nabil Layaida (Nabil.Layaida@inria.fr>
-  adaptation to rpmbuild
-* Mon Sep 16 2002 Irene Vatton <Irene.Vatton@w3.org>
-  GTK options.
-* Fri Nov 9 2001  Irene Vatton <Irene.Vatton@w3.org>
-  integration of English and French dictionaries
-* Mon Feb 28 2001 Irene Vatton <Irene.Vatton@w3.org>
-  updated for amaya-4.2.1
-* Mon Jan 8 2001 Irene Vatton <Irene.Vatton@w3.org>
-  updated for amaya-4.1
-* Sat Nov 11 2000 Daniel Veillard <Daniel.Veillard@w3.org>
-  updated for amaya-4.0
-* Tue Jul 04 2000 Daniel Veillard <Daniel.Veillard@w3.org>
-  Updated for amaya-3.2
-  Removed Ramzi Guetari and Daniel Veillard from authors
-* Fri Jun 24 1999 Daniel Veillard <Daniel.Veillard@w3.org>
-  Updated for amaya-2.1
-* Fri Oct 16 1998 Daniel Veillard <Daniel.Veillard@w3.org>
-  took the spec file coming from SuSE-1.3 and updated it for RedHat,
-  description, license, and version 1.3b
 
 %prep
 %setup -n Amaya
@@ -105,4 +73,37 @@ make install prefix=$RPM_BUILD_ROOT/usr/share
 /bin/ln -s /usr/share/Amaya/applis/bin/amaya /usr/bin/amaya
 %postun
 rm -f /usr/bin/amaya
+
+%changelog
+* Thu Oct 01 2003 Irene Vatton <Irene.Vatton@inria.fr>
+  updated the authors list
+* Thu Aug 21 2003 Irene Vatton <Irene.Vatton@w3.org>
+  changed the optimization flags to "" as there is a crash
+  due to the version of compiler.
+* Mon Jul 7 2003 Jose Kahan <jose@w3.org>
+  Updated for Amaya 8.1. Added the bookmark compilation rules.
+  changed the optimization flags to Os as there is a crash on
+  with O2 on Redhat 8.0, probably due to the version of compiler.
+* Fri Apr 23 2003 Irene Vatton <Irene.Vatton@w3.org> 
+  adaptation to redhat 8.0
+* Fri Jan 30 2003 Nabil Layaida <Nabil.Layaida@inria.fr>
+  adaptation to rpmbuild
+* Mon Sep 16 2002 Irene Vatton <Irene.Vatton@w3.org>
+  GTK options.
+* Fri Nov 9 2001  Irene Vatton <Irene.Vatton@w3.org>
+  integration of English and French dictionaries
+* Mon Feb 28 2001 Irene Vatton <Irene.Vatton@w3.org>
+  updated for amaya-4.2.1
+* Mon Jan 8 2001 Irene Vatton <Irene.Vatton@w3.org>
+  updated for amaya-4.1
+* Sat Nov 11 2000 Daniel Veillard <Daniel.Veillard@w3.org>
+  updated for amaya-4.0
+* Tue Jul 04 2000 Daniel Veillard <Daniel.Veillard@w3.org>
+  Updated for amaya-3.2
+  Removed Ramzi Guetari and Daniel Veillard from authors
+* Fri Jun 24 1999 Daniel Veillard <Daniel.Veillard@w3.org>
+  Updated for amaya-2.1
+* Fri Oct 16 1998 Daniel Veillard <Daniel.Veillard@w3.org>
+  took the spec file coming from SuSE-1.3 and updated it for RedHat,
+  description, license, and version 1.3b
 
