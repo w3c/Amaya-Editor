@@ -109,10 +109,11 @@ static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
 }
 
 #ifdef _WINDOWS
-#define DrawStixIntegral(A,B,C,D,E,F,G,H) DrawIntegral(A,B,C,D,E,F,G,H) 
-#define DrawStixBrace(A,B,C,D,E,F,G,H) DrawBrace(A,B,C,D,E,F,G,H)
-#define DrawStixParenthesis(A,B,C,D,E,F,G,H) DrawParenthesis(A,B,C,D,E,F,G,H)
-#define DrawStixPointyBracket(A,B,C,D,E,F,G,H) DrawPointyBracket(A,B,C,D,E,F,G,H)
+#define DrawStixIntegral(A,B,C,D,E,F,G,H,I) DrawIntegral(A,B,C,D,E,F,G,H,I) 
+#define DrawStixBrace(A,B,C,D,E,F,G,H,I) DrawBrace(A,B,C,D,E,F,G,H,I)
+#define DrawStixParenthesis(A,B,C,D,E,F,G,H,I) DrawParenthesis(A,B,C,D,E,F,G,H,I)
+#define DrawStixPointyBracket(A,B,C,D,E,F,G,H,I) DrawPointyBracket(A,B,C,D,E,F,G,H,I)
+#define DrawStixBracket(A,B,C,D,E,F,G,H,I) DrawBracket(A,B,C,D,E,F,G,H,I)
 #endif /*_WINDOWS*/
 
 /*----------------------------------------------------------------------
