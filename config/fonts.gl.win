@@ -7,66 +7,66 @@
 #5 = fantasy;normale face;bold face;italic face  
 
 1;#Latin1 (West European)
-1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
-2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
-3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;4=c:\windows\fonts\timesbi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;4=c:\windows\fonts\arialbi.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;4=c:\windows\fonts\courbi.ttf;
 
 2;#Latin2 (East European)
-1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
-2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
-3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;4=c:\windows\fonts\timesbi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;4=c:\windows\fonts\arialbi.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;4=c:\windows\fonts\courbi.ttf;
 
 3;#Latin3 (South European)
-1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
-2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
-3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;4=c:\windows\fonts\timesbi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;4=c:\windows\fonts\arialbi.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;4=c:\windows\fonts\courbi.ttf;
 
 
 
 4;#Latin4 (North European)
-1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
-2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
-3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;4=c:\windows\fonts\timesbi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;4=c:\windows\fonts\arialbi.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;4=c:\windows\fonts\courbi.ttf;
 
 
 
 5;#Cyrillic
-1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
-2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
-3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;4=c:\windows\fonts\timesbi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;4=c:\windows\fonts\arialbi.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;4=c:\windows\fonts\courbi.ttf;
 
 
 
 6;#Arabic
-1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
-2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
-3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;4=c:\windows\fonts\timesbi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;4=c:\windows\fonts\arialbi.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;4=c:\windows\fonts\courbi.ttf;
 
 
 7;#Greek
-1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
-2;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
-3;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;4=c:\windows\fonts\timesbi.ttf;
+2;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;4=c:\windows\fonts\arialbi.ttf;
+3;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;4=c:\windows\fonts\courbi.ttf;
 
 
 8;#Hebrew
-1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
-2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
-3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;4=c:\windows\fonts\timesbi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;4=c:\windows\fonts\arialbi.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;4=c:\windows\fonts\courbi.ttf;
 
 
 
 9;#Latin9 (Turkish)
-1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
-2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
-3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;4=c:\windows\fonts\timesbi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;4=c:\windows\fonts\arialbi.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;4=c:\windows\fonts\courbi.ttf;
 
 
 
 10;#Latin6 (Nordic)
-1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
-2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
-3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;4=c:\windows\fonts\timesbi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;4=c:\windows\fonts\arialbi.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;4=c:\windows\fonts\courbi.ttf;
 
 
 
