@@ -2567,6 +2567,7 @@ View                view;
 #endif
 {
 #ifdef ANNOTATIONS
+ANNOT_ShowHideAnnotations (document, view);
 #endif /* ANNOTATIONS */
 }
 

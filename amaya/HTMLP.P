@@ -3385,7 +3385,7 @@ BOXES
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+	        Visibility: ATTR_Visibility; Foreground: ATTR_Color; 
 		END;
 	END;
  VALUE_NAME: BEGIN
@@ -8303,18 +8303,21 @@ ATTRIBUTES
 
  HREF_:
 	BEGIN
-	CreateBefore(ATTR_HREF);
-	CreateBefore(VALUE_HREF);
-	IF Anchor
+	if not AnnotationHide
+	   BEGIN
+	   CreateBefore(ATTR_HREF);
+	   CreateBefore(VALUE_HREF);
+	   END;
+	IF Anchor and not AnnotationHide
 	   BEGIN
 	   CreateLast(ATTR_HREF_LINKS_VIEW);
 	   CreateLast(VALUE_HREF_LINKS_VIEW);
 	   END;
-	If Annotation
+	If Annotation and not AnnotationHide
 	   CreateFirst(Annot_gif);
 
 #ifdef LINK_NUMBER
-        IF Anchor and not InternalLink
+        IF Anchor and not InternalLink and not AnnotationHide
            BEGIN
            CreateFirst(AnchorNumInLinkView);
            CreateAfter(AnchorNumInFormattedView);
