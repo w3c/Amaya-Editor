@@ -6543,12 +6543,16 @@ ATTRIBUTES
 	if not Document
 	    CreateBefore(AttrNameAndValue);
 	Direction: ltr;
+	Adjust: Left;
 	END;
   dir = rtl_:
 	BEGIN
         if not Document
 	    CreateBefore(AttrNameAndValue);
 	Direction: rtl;
+	Adjust: Right;
+	IN Structure_view
+	    Adjust: Left;
 	END;
   dir (Embed_) = ltr_:
 	BEGIN
@@ -6567,61 +6571,45 @@ ATTRIBUTES
   dir (Paragraph) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
-	Adjust: Left;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
-		Adjust: Left;
-		END;
 	END;
   dir (Paragraph) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
-	Adjust: Right;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
-		Adjust: Right;
-		END;
 	END;
   dir (Pseudo_paragraph) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
-	Adjust: Left;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
-		Adjust: Left;
-		END;
 	END;
   dir (Pseudo_paragraph) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
-	Adjust: Right;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
-		Adjust: Right;
-		END;
 	END;
   dir (H1) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
-	Adjust: Left;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
-		Adjust: Left;
-		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
 		Adjust: VMiddle;
 		HorizPos: Left = Enclosing . Left;
 #else
-		Adjust: Left;
 		HorizPos: Left = Enclosing . Left + 1;
 #endif
 		END;
@@ -6629,22 +6617,16 @@ ATTRIBUTES
   dir (H1) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
-	Adjust: Right;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
-		Adjust: Right;
-		END;
-	IN Table_of_contents BEGIN
+	IN Table_of_contents
 #ifdef PAGE
-		Adjust: VMiddle;
 		HorizPos: Right = Enclosing . Right;
 #else
-		Adjust: Right;
 		HorizPos: Right = Enclosing . Right - 1;
 #endif
-		END;
 	END;
   dir (H2) = ltr_:
 	BEGIN
@@ -6652,13 +6634,10 @@ ATTRIBUTES
 	CreateAfter (HeadingPageNumberRight);
 #endif
 	HorizPos: Left = Enclosing . Left;
-	Adjust: Left;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
-		Adjust: Left;
-		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
 		Adjust: LeftWithDots;
@@ -6673,19 +6652,15 @@ ATTRIBUTES
 	CreateAfter (HeadingPageNumberLeft);
 #endif
 	HorizPos: Right = Enclosing . Right;
-	Adjust: Right;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
-		Adjust: Right;
-		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
 		Width: Left = Enclosing . Left + 28 pt;
 #endif
 		HorizPos: Right = Enclosing . Right - 1;
-		Adjust: Right;
 		END;
 	END;
   dir (H3) = ltr_:
@@ -6694,13 +6669,10 @@ ATTRIBUTES
 	CreateAfter (HeadingPageNumberRight);
 #endif
 	HorizPos: Left = Enclosing . Left;
-	Adjust: Left;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
-		Adjust: Left;
-		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
 		Adjust: LeftWithDots;
@@ -6715,19 +6687,15 @@ ATTRIBUTES
 	CreateAfter (HeadingPageNumberLeft);
 #endif
 	HorizPos: Right = Enclosing . Right;
-	Adjust: Right;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
-		Adjust: Right;
-		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
 		Width: Left = Enclosing . Left + 28 pt;
 #endif
 		HorizPos: Right = Enclosing . Right - 2;
-		Adjust: Right;
 		END;
 	END;
   dir (H4) = ltr_:
@@ -6736,13 +6704,10 @@ ATTRIBUTES
 	CreateAfter (HeadingPageNumberRight);
 #endif
 	HorizPos: Left = Enclosing . Left;
-	Adjust: Left;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
-		Adjust: Left;
-		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
 		Adjust: LeftWithDots;
@@ -6757,19 +6722,15 @@ ATTRIBUTES
 	CreateAfter (HeadingPageNumberLeft);
 #endif
 	HorizPos: Right = Enclosing . Right;
-	Adjust: Right;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
-		Adjust: Right;
-		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
 		Width: Left = Enclosing . Left + 28 pt;
 #endif
 		HorizPos: Right = Enclosing . Right - 3;
-		Adjust: Right;
 		END;
 	END;
   dir (H5) = ltr_:
@@ -6778,13 +6739,10 @@ ATTRIBUTES
 	CreateAfter (HeadingPageNumberRight);
 #endif
 	HorizPos: Left = Enclosing . Left;
-	Adjust: Left;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
-		Adjust: Left;
-		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
 		Adjust: LeftWithDots;
@@ -6799,19 +6757,15 @@ ATTRIBUTES
 	CreateAfter (HeadingPageNumberLeft);
 #endif
 	HorizPos: Right = Enclosing . Right;
-	Adjust: Right;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
-		Adjust: Right;
-		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
 		Width: Left = Enclosing . Left + 28 pt;
 #endif
 		HorizPos: Right = Enclosing . Right - 4;
-		Adjust: Right;
 		END;
 	END;
   dir (H6) = ltr_:
@@ -6820,13 +6774,10 @@ ATTRIBUTES
 	CreateAfter (HeadingPageNumberRight);
 #endif
 	HorizPos: Left = Enclosing . Left;
-	Adjust: Left;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
-		Adjust: Left;
-		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
 		Adjust: LeftWithDots;
@@ -6841,42 +6792,32 @@ ATTRIBUTES
 	CreateAfter (HeadingPageNumberLeft);
 #endif
 	HorizPos: Right = Enclosing . Right;
-	Adjust: Right;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
-		Adjust: Right;
-		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
 		Width: Left = Enclosing . Left + 28 pt;
 #endif
 		HorizPos: Right = Enclosing . Right - 5;
-		Adjust: Right;
 		END;
 	END;
   dir (Preformatted) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
-	Adjust: Left;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
-		Adjust: Left;
-		END;
 	END;
   dir (Preformatted) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
-	Adjust: Right;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
-		Adjust: Right;
-		END;
 	END;
   dir (Object) = ltr_:
 	BEGIN
@@ -6946,24 +6887,18 @@ ATTRIBUTES
   dir (Term) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
-	Adjust: Left;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
-		Adjust: Left;
-		END;
 	END;
   dir (Term) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
-	Adjust: Right;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
-		Adjust: Right;
-		END;
 	END;
   dir (Definition) = ltr_:
 	BEGIN
@@ -7129,18 +7064,6 @@ ATTRIBUTES
 	HorizPos: Left = Enclosing . Left;
   dir (Table_foot) = rtl_:
 	HorizPos: Right = Enclosing . Right;
-  dir (FRAME) = ltr_:
-	BEGIN
-	Adjust: Left;
-	IN Alternate_view
-		Adjust: Left;
-	END;
-  dir (FRAME) = rtl_:
-	BEGIN
-	Adjust: Right;
-	IN Alternate_view
-		Adjust: Right;
-	END;
 
   onclick:
 	BEGIN
