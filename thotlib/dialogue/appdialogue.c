@@ -1475,10 +1475,12 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		  if (info != NULL && procedure != NULL)
 		    XcgLiteClueAddWidget(liteClue, w,  info, strlen(info), 0);
 #endif /* _GTK */
+	      FrameTable[frame].CheckedButton[i] = FALSE;
 #else  /* _WINDOWS */
 		  w = (ThotButton) TtaGetMemory (sizeof (TBBUTTON));
 		  FrameTable[frame].Button[i] = w;
 		  FrameTable[frame].Call_Button[i] = (Proc) procedure;
+	      FrameTable[frame].CheckedButton[i] = FALSE;
 		  if (!w)
 		    WinErrorBox (NULL, "TtaAddButton");
 		  else
