@@ -86,10 +86,12 @@ typedef struct _RDFResource
 
 /* the info we're interested in in an annotation */
 typedef struct _AnnotMeta {
-  ThotBool is_visible; /* if set, this annotation is not shown
-			 on the filters */
+  ThotBool is_visible; /* if not set, this annotation is only used when
+			  saving the local annotations */
   ThotBool is_orphan; /* set to true if the XPointer for this annotation
 			 doesn't resolve anymore */
+  ThotBool show;      /* this annotation is visible in the formatted view */
+
   CHAR_T *annot_url; /* url of the annotation node */
   CHAR_T *source_url; /* document that was annotated */
   /* the internal Amaya Xpath */

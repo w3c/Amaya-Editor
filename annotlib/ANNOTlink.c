@@ -549,6 +549,13 @@ ThotBool useDocRoot;
     }
   else
     annot->body_url = TtaStrdup (DocumentURLs[annot_doc]);
+
+  /* the annotation is visible to the user */
+  annot->is_visible = TRUE;
+  /* display the annotation */
+  annot->show = TRUE;
+  /* it's not an orphan */
+  annot->is_orphan = FALSE;
   
   /* create the reverse link name */
   LINK_CreateAName (annot);
@@ -642,6 +649,7 @@ void LINK_LoadAnnotationIndex (doc, annotIndex, mark_visible)
 	      if (! LINK_AddLinkToSource (doc, annot))
 		orphan_count++;
 	      annot->is_visible = TRUE;
+	      annot->show = TRUE;
 	    }
 	  else
 	    annot->is_visible = FALSE;

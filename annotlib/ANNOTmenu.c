@@ -507,7 +507,7 @@ ThotBool show;
       annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations, 
 				     annot_url, AM_BODY_URL);
       TtaFreeMemory (annot_url);
-      if (!annot)
+      if (!annot || !(annot->is_visible) || annot->is_orphan)
 	continue;
       
       switch (selector) 
@@ -536,7 +536,7 @@ ThotBool show;
 	  if (attr)
 	    {
 	      TtaRemoveAttribute (el, attr, doc);  
-	      annot->is_visible = TRUE;
+	      annot->show = TRUE;
 	    }
 	}
       else
@@ -546,7 +546,7 @@ ThotBool show;
 	    {
 	      attr = TtaNewAttribute (attrType);
 	      TtaAttachAttribute (el, attr, doc);  
-	      annot->is_visible = FALSE;
+	      annot->show = FALSE;
 	    }
 	}
     }
@@ -614,8 +614,8 @@ ThotBool show;
   for (; list_item; list_item = list_item->next)
     {
       AnnotMeta *annot = list_item->object;
-      if (annot && !(annot->is_orphan))
-	annot->is_visible = show;
+      if (annot && annot->is_visible && !(annot->is_orphan))
+	annot->show = show;
     }
 
   /*

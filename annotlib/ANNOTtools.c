@@ -393,8 +393,11 @@ int AnnotFilter_status (Document doc, SelType selector, void *object)
   for (; list_item; list_item = list_item->next)
     {
       annot = list_item->object;
-      if (annot->is_orphan)
+      /* skip those annotations that are not shown in the formatted
+	 view (or that are invisible to the user */
+      if (!(annot->is_visible) || annot->is_orphan)
 	continue;
+      
       switch (selector)
 	{
 	case BY_TYPE:
@@ -417,9 +420,9 @@ int AnnotFilter_status (Document doc, SelType selector, void *object)
 	{
 	  if (show == -1)
 	    /* it's the first one we compare */
-	    show = (annot->is_visible) ? 1 : 0;
-	  else if ((annot->is_visible && show == 0)
-		   || (!(annot->is_visible) && show == 1))
+	    show = (annot->show) ? 1 : 0;
+	  else if ((annot->show && show == 0)
+		   || (!(annot->show) && show == 1))
 	    /* different status */
 	    {
 	      show = 2;
