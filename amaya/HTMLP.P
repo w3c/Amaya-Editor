@@ -716,6 +716,95 @@ BOXES
 		END;
 	END;
 
+ CHECKBOX_ALT: BEGIN
+	Content: Text '[ ]';
+	Visibility: 0;
+	IN Alternate_view BEGIN
+		Visibility: Creator =;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		END;
+	END;
+
+ CHECKBOXCHECKED_ALT: BEGIN
+	Content: Text '[X]';
+	Visibility: 0;
+	IN Alternate_view BEGIN
+		Visibility: Creator =;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		END;
+	END;
+
+ RADIO_ALT: BEGIN
+	Content: Text '( )';
+	Visibility: 0;
+	IN Alternate_view BEGIN
+		Visibility: Creator =;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		END;
+	END;
+
+ RADIOCHECKED_ALT: BEGIN
+	Content: Text '(*)';
+	Visibility: 0;
+	IN Alternate_view BEGIN
+		Visibility: Creator =;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		END;
+	END;
+
+ INSERTED_ALT: BEGIN
+	Content: Text ' __________________ ';
+	Visibility: 0;
+	IN Alternate_view BEGIN
+		Visibility: Creator =;
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Enclosing . Top;
+		END;
+	END;
+
+ INSERTED_TEXTAREA_ALT: BEGIN
+	Content: Text ' _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ';
+	Visibility: 0;
+	IN Alternate_view BEGIN
+		Visibility: Creator =;
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Enclosing . Top;
+		END;
+	END;
+
+ NEW_LINE: BEGIN
+	Content: Text '\12';
+	Visibility: 0;
+	IN Alternate_view BEGIN
+		Visibility: Creator =;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		END;
+	END;
+
+ START_SELECT_ALT: BEGIN
+	Content: Text '[';
+	Visibility: 0;
+	IN Alternate_view BEGIN
+		Visibility: Creator =;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		END;
+	END;
+ END_SELECT_ALT: BEGIN
+	Content: Text ']';
+	Visibility: 0;
+	IN Alternate_view BEGIN
+		Visibility: Creator =;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		END;
+	END;
+
  ATTR_Radio: BEGIN
 	Content: Text ' type=radio';
 	HorizPos: Left = Previous . Right;
@@ -746,10 +835,6 @@ BOXES
 	HorizPos: Left = Creator . Right;
 	Width: Enclosed . Width;
 	Height: Enclosed . Height;
-	MarginTop: 0;
-	MarginLeft: 0;
-	MarginBottom: 0;
-	MarginRight: 2 px;
 	PaddingTop: 1 px;
 	PaddingBottom: 1 px;
 	PaddingLeft: 0.3;
@@ -771,6 +856,8 @@ BOXES
 	Background : Grey;
 #endif
 	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
 		Visibility: 0;
 	IN Links_view
 		Visibility: 0;
@@ -808,7 +895,7 @@ BOXES
 
  Option_gif_left: BEGIN
 	Content: Picture 'option.gif';
-	HorizPos: Left = Enclosing . Left;
+	HorizPos: Right = Previous . Left;
 	VertPos: HMiddle = Enclosing . Top + 0.5;
         HorizRef: * . Bottom;	
 	IN Structure_view
@@ -818,7 +905,7 @@ BOXES
 	END;
  Option_gif_right: BEGIN
 	Content: Picture 'option.gif';
-	HorizPos: Right = Enclosing . Right;
+	HorizPos: Left = Previous . Right;
 	VertPos: HMiddle = Enclosing . Top + 0.5;
         HorizRef: * . Bottom;	
 	IN Structure_view
@@ -955,7 +1042,7 @@ BOXES
 
  IMG_ALT: BEGIN
 	Visibility: 0;
-	Content: (ALT);
+	Content: (Text ' ' ALT);
 {****	IN Links_view
 		Visibility: 7; ****}
 	IN Alternate_view
@@ -1079,6 +1166,16 @@ BOXES
 		END;
 	END;
 
+ BUTTON_ALT: BEGIN
+	Content: Text '[BUTTON] ';
+	Visibility: 0;
+	IN Alternate_view BEGIN
+		Visibility: Creator =;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		END;
+	END;
+	
  Value_Box: BEGIN
 	Content: (Value_);
 	HorizPos: Left = Enclosing . Left;
@@ -1104,10 +1201,19 @@ BOXES
 	END;
 
  SelectedInAltView: BEGIN
-        Content: Text '* ';
+        Content: Text '[X] ';
 	Visibility: 0;
-	IN Alternate_view
+	IN Alternate_view BEGIN
 		Visibility: Enclosing =;
+		END;
+	END;
+
+ UnselectedInAltView: BEGIN
+        Content: Text '[ ] ';
+	Visibility: 0;
+	IN Alternate_view BEGIN
+		Visibility: Enclosing =;
+		END;
 	END;
 
  Toggle_gif: BEGIN
@@ -3435,22 +3541,30 @@ RULES
  Option_Menu: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
+	if not Multiple BEGIN
+		CreateBefore(START_SELECT_ALT);
+		CreateAfter(END_SELECT_ALT);
+		END;
+	if Multiple BEGIN
+        	CreateBefore(NEW_LINE);
+		CreateAfter(NEW_LINE);
+		END;
 	ShowBox;
 	Background : White;
 	Foreground : Black;
-	FillPattern: nopattern;
-	PaddingTop: 0.1;
-	PaddingLeft: 0.4;
-	PaddingRight: 0.4;
-	PaddingBottom: 0.2;
+	FillPattern: backgroundcolor;
+	PaddingTop: 1 px;
+	PaddingLeft: 0;
+	PaddingRight: 0;
+	PaddingBottom: 1 px;
 	BorderTopWidth: 1 px;
 	BorderRightWidth: 1 px;
 	BorderBottomWidth: 1 px;
 	BorderLeftWidth: 1 px;
-	BorderTopColor: LightGrey1;
-	BorderRightColor: DarkGrey3;
-	BorderBottomColor: DarkGrey3;
-	BorderLeftColor: LightGrey1;
+	BorderTopColor: DarkGrey3;
+	BorderRightColor: LightGrey1;
+	BorderBottomColor: LightGrey1;
+	BorderLeftColor: DarkGrey3;
 	BorderTopStyle: Solid;
 	BorderRightStyle: Solid;
 	BorderBottomStyle: Solid;
@@ -3458,10 +3572,12 @@ RULES
 	Width: Enclosed . Width;
 	Height: Enclosed . Height;
 	LineBreak: No;
-	HorizPos: Left = Enclosing . Left + 0.2;	
-	VertPos: Top = Enclosing . Top + 0.4;
+	HorizPos: Left = Previous . Right;	
+	VertPos: HRef = Previous . HRef;
 	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
+		Background : Enclosing =;
+		Foreground : Enclosing =;
 		PaddingTop: 0;
 		PaddingLeft: 0;
 		PaddingBottom: 0;
@@ -3474,7 +3590,8 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		END;
 	IN Alternate_view BEGIN
-		Background : Transparent;
+		Background : Enclosing =;
+		Foreground : Enclosing =;
 		PaddingTop: 0;
 		PaddingLeft: 0;
 		PaddingBottom: 0;
@@ -3492,17 +3609,22 @@ RULES
  Option: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	Visibility: 0;	{ attribute selected makes it visible }
+	Visibility: 0;	{ attribute Selected makes it visible }
+	PaddingLeft: 0.2;
+	PaddingRight: 0.2;
 	HorizRef: Enclosed . HRef;
 	LineBreak: No;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
+		PaddingLeft: 0;
+		PaddingRight: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	IN Alternate_view BEGIN
-		Visibility: Enclosing =;
-		HorizPos: Left = Enclosing . Left + 1;
+		PaddingLeft: 0;
+		PaddingRight: 0;		
+		HorizPos: Left = Enclosing . Left;
 		END;
 	END;
 
@@ -3522,10 +3644,8 @@ RULES
 
  Text_Area: BEGIN
 	CreateBefore(ElementName);
-	MarginTop: 0;
-	MarginLeft: 2 px;
-	MarginBottom: 0;
-	MarginRight: 2 px;
+        CreateBefore(NEW_LINE);
+	CreateAfter(NEW_LINE);
 	BorderTopWidth: 1 px;
 	BorderLeftWidth: 1 px;
 	BorderBottomWidth: 1 px;
@@ -3548,10 +3668,6 @@ RULES
 	Depth: Enclosing - 1;
 	HorizRef: * . Bottom - 0.3;
 	IN Structure_view BEGIN
-		MarginTop: 0;
-		MarginLeft: 0;
-		MarginBottom: 0;
-		MarginRight: 0;
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
 		BorderBottomWidth: 0;
@@ -3562,10 +3678,6 @@ RULES
 		Depth: 0;
 		END;
 	IN Alternate_view BEGIN
-		MarginTop: 0;
-		MarginLeft: 0;
-		MarginBottom: 0;
-		MarginRight: 0;
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
 		BorderBottomWidth: 0;
@@ -3579,14 +3691,9 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
-	VertPos: Top = Previous not MAP . Bottom;
-	MarginTop: 0.2;
-	PaddingTop: 0.1;
-	PaddingLeft: 0.4;
-	BorderTopWidth: 1 px;
-	BorderRightWidth: 1 px;
-	BorderBottomWidth: 1 px;
-	BorderLeftWidth: 1 px;
+	VertPos: Top = Previous not MAP . Bottom + 0.6;
+	MarginTop: 0.5;
+	MarginBottom: 0.5;
 	BorderTopColor: DarkGrey2;
 	BorderRightColor: DarkGrey2;
 	BorderBottomColor: DarkGrey2;
@@ -3595,6 +3702,13 @@ RULES
 	BorderRightStyle: Solid;
 	BorderBottomStyle: Solid;
 	BorderLeftStyle: Solid;
+	BorderTopWidth: 1 px;
+	BorderRightWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderLeftWidth: 1 px;
+        PaddingRight: 0.6;
+        PaddingBottom: 0.4;
+        PaddingLeft: 0.6;
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -3609,31 +3723,53 @@ RULES
 		END;
 	IN Links_view
 		Visibility: 0;
-	IN Alternate_view
-		VertPos: Top = Previous . Bottom;
+	IN Alternate_view BEGIN
+		VertPos: Top = Previous . Bottom + 0.8;
+		MarginBottom: 0.8;
+		MarginTop: 0;
+		PaddingTop: 0;
+		PaddingLeft: 0;
+	        PaddingBottom: 0.;
+		BorderTopWidth: 0;
+		BorderRightWidth: 0;
+		BorderBottomWidth: 0;
+		BorderLeftWidth: 0;		
+		END;
 	END;
 
  LEGEND: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	Line;
-#ifdef PAGE
-	PageBreak: No;
-	NoBreak1 : 2;
-	NoBreak2 : 2;
-#endif
 	Width: Enclosed . Width;
-	VertPos: Top = Previous . Bottom - 0.5;
-	{MarginTop: -2;}
+	VertPos: Top = Enclosing . Top - 0.6;
+	HorizPos: Left = Enclosing . Left;
+        PaddingLeft: 0.3;
+        PaddingRight: 0.3;
+	MarginBottom: 0.5;
+	Background: Enclosing =;
+        Showbox;
+	FillPattern: backgroundcolor;
+        Depth: Enclosing - 2;
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		NoLine;
 		END;
+	IN Alternate_view BEGIN
+		VertPos: Top = Enclosing . Top;
+       		PaddingLeft: 0;
+        	PaddingRight: 0;
+	        PaddingBottom: 0;
+		MarginBottom: 0.8;
+		END;
 	END;
 
  Inserted_Text: BEGIN
+	IF within Text_Area
+		CreateLast (INSERTED_TEXTAREA_ALT);
+	IF not within Text_Area
+		CreateLast (INSERTED_ALT);
 	Line;
 	VertPos: Top = Enclosing . Top;
 	HorizPos: Left = Enclosing . Left + 0.3;
@@ -3647,7 +3783,11 @@ RULES
 		Width: Enclosing . Width;
 		END;
 	IN Alternate_view BEGIN
-		Width: Enclosing . Width;
+		IF within Text_Area
+		    Width: Enclosing . Width;
+		IF not within Text_Area
+		    Width: Enclosed . Width;
+		HorizPos: Left = Enclosing . Left;
 		END;
 	END;
 
@@ -3655,9 +3795,7 @@ RULES
 	{ attribute Checked generates the right picture }
 	CreateBefore(ElementName);
 	CreateBefore(ATTR_Checkbox);
-	MarginTop: 1 px;
 	MarginLeft: 3 px;
-	MarginBottom: 1 px;
 	MarginRight: 3 px;
 	LineBreak: No;
 	Width: 0;
@@ -3665,9 +3803,11 @@ RULES
 	In Structure_view BEGIN
 		Visibility: Enclosing =;
 		Height: DOC_FONTSIZE;
-		MarginTop: 0;
 		MarginLeft: 0;
-		MarginBottom: 0;
+		MarginRight: 0;
+		END;
+	IN Alternate_view BEGIN
+		MarginLeft: 0;
 		MarginRight: 0;
 		END;
 	END;
@@ -3676,9 +3816,7 @@ RULES
 	{ attribute Checked generates the right picture }
 	CreateBefore(ElementName);
 	CreateBefore(ATTR_Radio);
-	MarginTop: 1 px;
 	MarginLeft: 3 px;
-	MarginBottom: 1 px;
 	MarginRight: 3 px;
 	LineBreak: No;
 	Width: 0;
@@ -3686,9 +3824,11 @@ RULES
 	In Structure_view BEGIN
 		Visibility: Enclosing =;
 		Height: DOC_FONTSIZE;
-		MarginTop: 0;
 		MarginLeft: 0;
-		MarginBottom: 0;
+		MarginRight: 0;
+		END;
+	IN Alternate_view BEGIN
+		MarginLeft: 0;
 		MarginRight: 0;
 		END;
 	END;
@@ -3696,9 +3836,7 @@ RULES
  Text_Input: BEGIN
 	CreateBefore(ElementName);
 	CreateBefore(ATTR_Text);
-	MarginTop: 0;
 	MarginLeft: 2 px;
-	MarginBottom: 0;
 	MarginRight: 2 px;
 	PaddingTop: 1 px;
 	PaddingBottom: 1 px;
@@ -3725,9 +3863,7 @@ RULES
 	IN Structure_view BEGIN
 		Width: 0;
 		Height: DOC_FONTSIZE;
-		MarginTop: 0;
 		MarginLeft: 0;
-		MarginBottom: 0;
 		MarginRight: 0;
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
@@ -3736,15 +3872,19 @@ RULES
 		Depth: 0;
 		END;
 	IN Alternate_view BEGIN
-		MarginTop: 0;
+		Width: Enclosed . Width;
+		Height: Enclosed . Height;
 		MarginLeft: 0;
-		MarginBottom: 0;
 		MarginRight: 0;
+		PaddingTop: 0;
+		PaddingBottom: 0;
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
 		BorderBottomWidth: 0;
 		BorderLeftWidth: 0;
-		Depth: 0;
+		Background: Enclosing =;
+		FillPattern: nopattern;
+		Depth: Enclosing =;
 		END;	
 	END;
 
@@ -3752,14 +3892,11 @@ RULES
 	CreateBefore(ElementName);
 	CreateBefore(ATTR_File);
 	CreateAfter(BrowseLabel);
-	MarginTop: 1 px;
-	MarginLeft: 3 px;
-	MarginBottom: 1 px;
-	MarginRight: 0;
-	BorderTopWidth: 2 px;
-	BorderLeftWidth: 2 px;
-	BorderBottomWidth: 2 px;
-	BorderRightWidth: 2 px;
+	PaddingTop: 1 px;
+	BorderTopWidth: 1 px;
+	BorderLeftWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderRightWidth: 1 px;
 	BorderTopColor: DarkGrey3;
 	BorderLeftColor: DarkGrey3;
 	BorderBottomColor: LightGrey1;
@@ -3780,15 +3917,24 @@ RULES
 		Width: 0;
 		Height: DOC_FONTSIZE;
 		Size: Enclosing =;
-		MarginTop: 0;
-		MarginLeft: 0;
-		MarginBottom: 0;
-		MarginRight: 0;
+		PaddingTop: 0;
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
 		BorderBottomWidth: 0;
 		BorderLeftWidth: 0;
 		Depth: 0;
+		END;
+	IN Alternate_view BEGIN
+		Width: Enclosed . Width;
+		Height: Enclosed . Height;
+		PaddingTop: 0;
+		BorderTopWidth: 0;
+		BorderRightWidth: 0;
+		BorderBottomWidth: 0;
+		BorderLeftWidth: 0;
+		Background: Enclosing =;
+		FillPattern: nopattern;
+		Depth: Enclosing =;
 		END;
 	END;
 
@@ -3805,9 +3951,7 @@ RULES
  Password_Input: BEGIN
 	CreateBefore(ElementName);
 	CreateBefore(ATTR_Password);
-	MarginTop: 0;
 	MarginLeft: 2 px;
-	MarginBottom: 0;
 	MarginRight: 2 px;
 	PaddingTop: 1 px;
 	PaddingBottom: 1 px;
@@ -3834,9 +3978,7 @@ RULES
 	IN Structure_view BEGIN
 		Width: 0;
 		Height: DOC_FONTSIZE;
-		MarginTop: 0;
 		MarginLeft: 0;
-		MarginBottom: 0;
 		MarginRight: 0;
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
@@ -3845,15 +3987,19 @@ RULES
 		Depth: 0;
 		END;
 	IN Alternate_view BEGIN
-		MarginTop: 0;
+		Width: Enclosed . Width;
+		Height: Enclosed . Height;
 		MarginLeft: 0;
-		MarginBottom: 0;
 		MarginRight: 0;
+		PaddingTop: 0;
+		PaddingBottom: 0;
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
 		BorderBottomWidth: 0;
 		BorderLeftWidth: 0;
-		Depth: 0;
+		Background: Enclosing =;
+		FillPattern: nopattern;
+		Depth: Enclosing =;
 		END;
 	END;
 
@@ -3862,10 +4008,6 @@ RULES
 	CreateBefore(ATTR_Reset);
 	CreateFirst(Value_Box);
 	CreateFirst(Value_Box_Alt);
-	MarginTop: 0;
-	MarginLeft: 2 px;
-	MarginBottom: 0;
-	MarginRight: 2 px;
 	PaddingTop: 1 px;
 	PaddingLeft: 0.3;
 	PaddingBottom: 1 px;
@@ -3892,10 +4034,6 @@ RULES
 	HorizPos: Left = Previous . Right;	
 	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
-		MarginTop: 0;
-		MarginLeft: 0;
-		MarginBottom: 0;
-		MarginRight: 0;
 		PaddingTop: 0;
 		PaddingLeft: 0;
 		PaddingBottom: 0;
@@ -3910,6 +4048,16 @@ RULES
 		Height: DOC_FONTSIZE;
 		Depth: 0;
 		END;
+	IN Alternate_view BEGIN
+		PaddingTop: 0;
+		PaddingLeft: 0;
+		PaddingBottom: 0;
+		PaddingRight: 0;
+		BorderTopWidth: 0;
+		BorderLeftWidth: 0;
+		BorderBottomWidth: 0;
+		BorderRightWidth: 0;
+		END;
 	END;
 
  Submit_Input: BEGIN
@@ -3917,10 +4065,6 @@ RULES
 	CreateBefore(ATTR_Submit);
 	CreateFirst(Value_Box);
 	CreateFirst(Value_Box_Alt);
-	MarginTop: 0;
-	MarginLeft: 2 px;
-	MarginBottom: 0;
-	MarginRight: 2 px;
 	PaddingTop: 1 px;
 	PaddingLeft: 0.3;
 	PaddingBottom: 1 px;
@@ -3948,10 +4092,6 @@ RULES
 	VertPos: HRef = Previous . HRef;
 	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
-		MarginTop: 0;
-		MarginLeft: 0;
-		MarginBottom: 0;
-		MarginRight: 0;
 		PaddingTop: 0;
 		PaddingLeft: 0;
 		PaddingBottom: 0;
@@ -3966,6 +4106,16 @@ RULES
 		Height: DOC_FONTSIZE;
 		Depth: 0;
 		END;
+	IN Alternate_view BEGIN
+		PaddingTop: 0;
+		PaddingLeft: 0;
+		PaddingBottom: 0;
+		PaddingRight: 0;
+		BorderTopWidth: 0;
+		BorderLeftWidth: 0;
+		BorderBottomWidth: 0;
+		BorderRightWidth: 0;
+		END;
 	END;
 
  Button_Input: BEGIN
@@ -3973,10 +4123,6 @@ RULES
 	CreateBefore(ATTR_Button);
 	CreateFirst(Value_Box);
 	CreateFirst(Value_Box_Alt);
-	MarginTop: 0;
-	MarginLeft: 2 px;
-	MarginBottom: 0;
-	MarginRight: 2 px;
 	PaddingTop: 1 px;
 	PaddingBottom: 1 px;
 	PaddingLeft: 0.3;
@@ -4010,6 +4156,16 @@ RULES
 		Height: DOC_FONTSIZE;
 		Depth: 0;
 		END;
+	IN Alternate_view BEGIN
+		PaddingTop: 0;
+		PaddingBottom: 0;
+		PaddingLeft: 0;
+		PaddingRight: 0;
+		BorderTopWidth: 0;
+		BorderLeftWidth: 0;
+		BorderBottomWidth: 0;
+		BorderRightWidth: 0;
+		END;
 	END;
 
  LABEL: BEGIN
@@ -4027,10 +4183,9 @@ RULES
  BUTTON_: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	MarginTop: 0;
+        CreateBefore(BUTTON_ALT);
 	MarginLeft: 2 px;
-	MarginBottom: 0;
-	MarginRight: 1 px;
+	MarginRight: 2 px;
 	PaddingTop: 1 px;
 	PaddingLeft: 0.3;
 	PaddingBottom: 1 px;
@@ -4057,9 +4212,19 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
-		MarginTop: 0;
 		MarginLeft: 0;
-		MarginBottom: 0;
+		MarginRight: 0;
+		PaddingTop: 0;
+		PaddingLeft: 0;
+		PaddingBottom: 0;
+		PaddingRight: 0;
+		BorderTopWidth: 0;
+		BorderLeftWidth: 0;
+		BorderBottomWidth: 0;
+		BorderRightWidth: 0;
+		END;
+	IN Alternate_view BEGIN
+		MarginLeft: 0;
 		MarginRight: 0;
 		PaddingTop: 0;
 		PaddingLeft: 0;
@@ -6235,6 +6400,18 @@ ATTRIBUTES
 	END;
  Multiple:
 	CreateBefore(AttrNameOnly);
+ Multiple (Option_Menu):
+	IN Alternate_view
+		LineBreak: No;
+ Multiple (Option):
+	BEGIN
+	IF not Selected
+	        CreateFirst (UnselectedInAltView);
+	IN Alternate_view BEGIN
+		Visibility: Enclosing =;
+		END;
+	END;
+
  MenuSize:
 	BEGIN
 	CreateBefore(AttrName);
@@ -6244,7 +6421,8 @@ ATTRIBUTES
  Selected:
 	BEGIN
 	CreateBefore(AttrNameOnly);
-	CreateFirst (SelectedInAltView);
+	IF Option and inherited Multiple
+	        CreateFirst (SelectedInAltView);
 	Visibility: 5 {*****};
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
@@ -6263,18 +6441,26 @@ ATTRIBUTES
 
  Checked = Yes_:
 	BEGIN
-	if Checkbox_Input
-	  CreateBefore(ToggleS_gif);
-	if Radio_Input
-	  CreateBefore(RadioS_gif);
+	if Checkbox_Input BEGIN
+	   CreateBefore(CHECKBOXCHECKED_ALT);
+	   CreateBefore(ToggleS_gif);
+	   end;
+	if Radio_Input BEGIN
+	   CreateBefore(RADIOCHECKED_ALT);
+	   CreateBefore(RadioS_gif);
+	   END;
 	CreateBefore(AttrNameOnly);
 	END;
  Checked = No_:
 	BEGIN
-	if Checkbox_Input
-	  CreateBefore(Toggle_gif);
-	if Radio_Input
-	  CreateBefore(Radio_gif);
+	if Checkbox_Input BEGIN
+	   CreateBefore(CHECKBOX_ALT);
+	   CreateBefore(Toggle_gif);
+	   END;
+	if Radio_Input BEGIN
+	   CreateBefore(RADIO_ALT);
+	   CreateBefore(Radio_gif);
+	   END;
 	END;
 
  disabled:
@@ -7586,13 +7772,17 @@ ATTRIBUTES
 		HorizPos: Right = Enclosing . Right - DEFINITION_INDENT;
 		END;
 	END;
+  dir (LEGEND*) = ltr_:
+	HorizPos: Left = Enclosing . Left;
+  dir (LEGEND*) = rtl_:
+	HorizPos: Right = Enclosing . Right;
   dir (Option_Menu*) = ltr_:
-	CreateLast(Option_gif_left);
-  dir (Option_Menu*) = rtl_:
 	CreateLast(Option_gif_right);
+  dir (Option_Menu*) = rtl_:
+	CreateLast(Option_gif_left);
   dir (Option*) = ltr_:
 	BEGIN
-	HorizPos: Left = Enclosing . Left + 20 px;	
+	HorizPos: Left = Enclosing . Left + 0.2;	
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	IN Alternate_view
@@ -7600,7 +7790,7 @@ ATTRIBUTES
 	END;
   dir (Option*) = rtl_:
 	BEGIN
-	HorizPos: Right = Enclosing . Right - 20 px;	
+	HorizPos: Right = Enclosing . Right - 0.2;	
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	IN Alternate_view

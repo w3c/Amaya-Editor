@@ -69,7 +69,7 @@ void InsertBefore (Document doc, View view)
   ----------------------------------------------------------------------*/
 void InsertAfter (Document doc, View view)
 {
-  /****** TODO : see SRuleForSibling in structschema.c  *******/
+  /****** TODO : see SRuleForSibling in structschema.c *******/
 }
 
 /*----------------------------------------------------------------------
@@ -2544,7 +2544,7 @@ void CheckNewLines (NotifyOnTarget *event)
               prevCharEOL;
   ThotBool    PasteLineByLine;
 
-  TtaGetEnvBoolean ("PREVERVE_SPACE", &pre);
+  TtaGetEnvBoolean ("PRESERVE_SPACE", &pre);
   if (pre)
     return;
   if (!event->target)
