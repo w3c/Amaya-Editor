@@ -59,7 +59,7 @@
 #include "units_tv.h"
 
 int          PRINT;	/* Identification des messages */
-PtrFont      PoscriptFont;
+PtrFont      PostscriptFont;
 int          ColorPs;
 int          LastPageNumber, LastPageWidth, LastPageHeight;
 
@@ -403,7 +403,7 @@ static void DrawPage (FILE *fout)
 	      LastPageWidth, LastPageHeight, NumberOfPages, NumberOfPages);
      fflush (fout);
      /* Enforce loading the font when starting a new page */
-     PoscriptFont = NULL;
+     PostscriptFont = NULL;
      ColorPs = -1;
      }
 #else  /* _WINDOWS */
@@ -411,7 +411,7 @@ static void DrawPage (FILE *fout)
 	   LastPageWidth, LastPageHeight, NumberOfPages, NumberOfPages);
   fflush (fout);
   /* Enforce loading the font when starting a new page */
-  PoscriptFont = NULL;
+  PostscriptFont = NULL;
   ColorPs = -1;
 #endif /* _WINDOWS */
 }
@@ -2239,7 +2239,7 @@ int main (int argc, char **argv)
   Zoom           = 100;
   strcpy (pageSize, "A4");
   Orientation    = "Portrait";
-  PoscriptFont = NULL;
+  PostscriptFont = NULL;
   ColorPs = -1;
   Printing = TRUE;
   ShowSpace = 1;  /* Restitution des espaces */

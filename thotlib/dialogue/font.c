@@ -726,7 +726,7 @@ void FontIdentifier (char alphabet, int family, int highlight, int size,
       /* La size est relative */
       if (size > MaxNumberOfSizes)
 	size = LogicalPointsSizes[MaxNumberOfSizes];
-      else if (size > 0)
+      else if (size >= 0)
 	size = LogicalPointsSizes[size];
     }
   else if (unit == UnPixel)

@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void DrawChar ( CHAR_T car,
+extern void DrawChar ( char car,
                        int frame,
                        int x,
                        int y,
@@ -311,7 +311,7 @@ extern void PaintWithPattern ( int frame,
 
 #else /* __STDC__ */
 
-extern void DrawChar (/* CHAR_T car,
+extern void DrawChar (/* char car,
                          int frame,
                          int x,
                          int y,

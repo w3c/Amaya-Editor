@@ -59,7 +59,7 @@ static char*       Patterns_PS[] =
 
 
 /* Handling of loaded fonts */
-extern PtrFont      PoscriptFont;
+extern PtrFont      PostscriptFont;
 extern int          ColorPs;
 extern int          LastPageNumber, LastPageWidth, LastPageHeight;
 static char        *Scale = NULL;
@@ -80,7 +80,7 @@ static int          NbWhiteSp;
    and the one asked, and load it if needed.
    num is an index in the Thot internal color table.
   ----------------------------------------------------------------------*/
-static void CurrentColor (FILE * fout, int num)
+static void CurrentColor (FILE *fout, int num)
 {
   unsigned short      red;
   unsigned short      green;
@@ -96,7 +96,7 @@ static void CurrentColor (FILE * fout, int num)
 	fprintf (fout, "0 setgray\n");
       else
 	{
-	  /* write the Poscript command */
+	  /* write the Postscript command */
 	  fact = 255;
 	  fprintf (fout, "%f %f %f setrgbcolor\n", ((float) red) / fact, ((float) green) / fact, ((float) blue) / fact);
 	}
@@ -110,10 +110,10 @@ static void CurrentColor (FILE * fout, int num)
    and emit the code to load it, if necessary.
    Returns 0 if it is a Latin font and 1 for a Greek one.
   ----------------------------------------------------------------------*/
-static int CurrentFont (FILE * fout, PtrFont font)
+static int CurrentFont (FILE *fout, PtrFont font)
 {
   int                 i, result;
-  CHAR_T              c1, c2;
+  char                c1, c2;
 
   /* browse the table of fonts */
   i = 0;
@@ -123,9 +123,9 @@ static int CurrentFont (FILE * fout, PtrFont font)
   if (i >= MAX_FONT)
     i = 0;
   i = i * 8;
-  if (font != PoscriptFont)
+  if (font != PostscriptFont)
     {
-      PoscriptFont = font;
+      PostscriptFont = font;
       if (TtPsFontName[i] == 'g')  /* Greek alphabet */
 	{
 	  c1 = TtPsFontName[i];
@@ -157,7 +157,7 @@ static int CurrentFont (FILE * fout, PtrFont font)
   DrawChar draw a char at location (x, y) in frame and with font.
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawChar (CHAR_T car, int frame, int x, int y, PtrFont font, int fg)
+void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
 {
    FILE               *fout;
    int                 w;
@@ -181,7 +181,7 @@ void DrawChar (CHAR_T car, int frame, int x, int y, PtrFont font, int fg)
 /*----------------------------------------------------------------------
    Transcode emit the PostScript code for the given char.
   ----------------------------------------------------------------------*/
-static void Transcode (FILE * fout, int encoding, CHAR_T car)
+static void Transcode (FILE *fout, int encoding, unsigned char car)
 {
   switch (car)
     {
@@ -217,7 +217,7 @@ static void Transcode (FILE * fout, int encoding, CHAR_T car)
    pattern, or the drawing color, or the background color,
    or keep it transparent, depending on pattern value.
   ----------------------------------------------------------------------*/
-static void FillWithPattern (FILE * fout, int fg, int bg, int pattern)
+static void FillWithPattern (FILE *fout, int fg, int bg, int pattern)
 {
    unsigned short      red;
    unsigned short      green;
@@ -233,7 +233,7 @@ static void FillWithPattern (FILE * fout, int fg, int bg, int pattern)
      {
 	/* Ask for the RedGreenBlue values */
 	TtaGiveThotRGB (fg, &red, &green, &blue);
-	/* Emit the Poscript command */
+	/* Emit the Postscript command */
 	fprintf (fout, "%f %f %f -1\n", ((float) red) / fact,
 		 ((float) green) / fact, ((float) blue) / fact);
      }
@@ -241,7 +241,7 @@ static void FillWithPattern (FILE * fout, int fg, int bg, int pattern)
      {
 	/* Ask for the RedGreenBlue values */
 	TtaGiveThotRGB (bg, &red, &green, &blue);
-	/* Emit the Poscript command */
+	/* Emit the Postscript command */
 	fprintf (fout, "%f %f %f -1\n", ((float) red) / fact,
 		 ((float) green) / fact, ((float) blue) / fact);
      }
@@ -581,7 +581,7 @@ void DrawSigma (int frame, int x, int y, int l, int h, PtrFont font, int fg)
    CurrentColor (fout, fg);
 
    /* Change the current font */
-   PoscriptFont = NULL;
+   PostscriptFont = NULL;
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
    x = x + (l / 2);
    y = y + h - FontHeight (font + FontBase (font));
@@ -605,7 +605,7 @@ void DrawPi (int frame, int x, int y, int l, int h, PtrFont font, int fg)
    CurrentColor (fout, fg);
 
    /* Change the current font */
-   PoscriptFont = NULL;
+   PostscriptFont = NULL;
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
    x = x + (l / 2);
    y = y + h - FontHeight (font + FontBase (font));
@@ -629,7 +629,7 @@ void DrawUnion (int frame, int x, int y, int l, int h, PtrFont font, int fg)
    CurrentColor (fout, fg);
 
    /* Change the current font */
-   PoscriptFont = NULL;
+   PostscriptFont = NULL;
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
    x = x + (l / 2);
    y = y + h - FontHeight (font + FontBase (font));
@@ -653,7 +653,7 @@ void DrawIntersection (int frame, int x, int y, int l, int h, PtrFont font,
    CurrentColor (fout, fg);
 
    /* Change the current font */
-   PoscriptFont = NULL;
+   PostscriptFont = NULL;
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
    x = x + (l / 2);
    y = y + h - FontHeight (font + FontBase (font));
