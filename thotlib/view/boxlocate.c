@@ -449,9 +449,9 @@ static ThotBool PopStack (float *x1, float *y1, float *x2, float *y2,
 /*----------------------------------------------------------------------
   PolySplit : split a polyline and push the results on the stack.
   ----------------------------------------------------------------------*/
-void        PolySplit (float a1, float b1, float a2, float b2,
-		       float a3, float b3, float a4, float b4,
-		       ThotPoint **points, int *npoints, int *maxpoints)
+void PolySplit (float a1, float b1, float a2, float b2,
+		float a3, float b3, float a4, float b4,
+		ThotPoint **points, int *npoints, int *maxpoints)
 {
    register float      tx, ty;
    float               x1, y1, x2, y2, x3, y3, x4, y4;
@@ -715,7 +715,7 @@ static int CrossLine (int x, int y, int prevX, int prevY, int nextX,
 /*----------------------------------------------------------------------
   IsWithinPolyline returns TRUE if the point x, y is within the polyline pAb
   ----------------------------------------------------------------------*/
-static ThotBool  IsWithinPolyline (PtrAbstractBox pAb, int x, int y, int frame)
+static ThotBool IsWithinPolyline (PtrAbstractBox pAb, int x, int y, int frame)
 {
    PtrTextBuffer       buff, pLastBuffer;
    int                 cross;
@@ -975,8 +975,8 @@ static PtrBox  GetPolylinePoint (PtrAbstractBox pAb, int x, int y, int frame,
    subpath, subpathStart is a table of integers: each of them is the rank
    of the first point of each subpath in the list of points returned.
   ----------------------------------------------------------------------*/
-static ThotPoint*  BuildPolygonForPath (PtrPathSeg pPa, int frame,
-					int* npoints, int **subpathStart)
+static ThotPoint *BuildPolygonForPath (PtrPathSeg pPa, int frame,
+				       int* npoints, int **subpathStart)
 {
   float               x1, y1, cx1, cy1, x2, y2, cx2, cy2;
   int                 ix1, ix2, iy1, iy2;
@@ -1097,7 +1097,7 @@ static ThotPoint*  BuildPolygonForPath (PtrPathSeg pPa, int frame,
 /*----------------------------------------------------------------------
   IsInShape returns TRUE if the point x, y is included by the drawing.
   ----------------------------------------------------------------------*/
-static ThotBool     IsInShape (PtrAbstractBox pAb, int x, int y)
+static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
 {
   int                 point[8][2];
   int                 cross;
@@ -1263,11 +1263,12 @@ static ThotBool     IsInShape (PtrAbstractBox pAb, int x, int y)
   If yes, returns the box address, NULL in other cases.
   Return the control point for lines.
   ----------------------------------------------------------------------*/
-static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
+static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 {
+  PtrFont             font;
   PtrBox              pBox;
   int                 controlPoint;
-  int                 arc;
+  int                 arc, xm, xp;
   float               value1, value2, value3;
 
   /* relative coords of the box (easy work) */
@@ -1316,7 +1317,19 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
     controlPoint = 0;
 
   /* Est-ce un point caracteristique specifique du graphique ? */
-  switch (pAb->AbRealShape)
+  if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
+    {
+      GetFontAndIndexFromSpec (32, pBox->BxFont, &font);
+      xp =  FontHeight (font);
+      xm = xp / 2;
+      xp = xp / 4;
+      if (IsOnSegment (x, y, 1, 2 * (pBox->BxHeight / 3), xp, pBox->BxHeight) ||
+	  IsOnSegment (x, y, xp, pBox->BxHeight, xm, 1) ||
+	  IsOnSegment (x, y, xm, 1, pBox->BxWidth, 1))
+	return (pBox);
+    }
+  else
+    switch (pAb->AbRealShape)
     {
     case SPACE:
     case 'R':
@@ -1568,10 +1581,12 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 	/* dummy box */
 	return (NULL);
       else if (pAb->AbLeafType == LtGraphics &&
-	       (pAb->AbPresentationBox) &&
-	       pAb->AbShape == '0')
+	       pAb->AbPresentationBox && pAb->AbShape == '0')
 	/* it's also a dummy box */
 	return (NULL);
+      else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
+	/* a radical */
+	return (IsOnShape (pAb, lowerX, y, pointselect));
       else if (pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtPath ||
 	       /* If the box is not a polyline or a path, it must include
 		  the point */
