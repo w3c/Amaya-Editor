@@ -75,6 +75,7 @@ static ThotBool InCreation = FALSE;
 /* used for the close palette callback*/
 ThotWidget CatWidget(int ref);
 #endif/*  _GTK */
+
 #ifdef _SVG
 /*----------------------------------------------------------------------
  SetEmptyShapeAttrSubTree
@@ -1100,6 +1101,8 @@ void GraphElemPasted (NotifyElement *event)
 {
   ElementType    elType;
   SSchema	 SvgSchema;
+  AttributeType  attrType;
+  Attribute      attr;
   Element        parent;
 
   XLinkPasted (event);
@@ -1120,12 +1123,19 @@ void GraphElemPasted (NotifyElement *event)
 	{
 	  elType = TtaGetElementType (parent);
 	  if (elType.ElSSchema != SvgSchema)
-	    /* the parent element is not in the SVG namespace. Put a
-	       namespace declaration on the pasted <svg> element */
+	    /* the parent element is not in the SVG namespace */
 	    {
+	      /* Put a namespace declaration on the pasted <svg> element */
 	      TtaSetUriSSchema (elType.ElSSchema, SVG_URI);
 	      TtaSetANamespaceDeclaration (event->document, event->element,
 					   NULL, SVG_URI);
+	      /* put a version attribute on the <svg> element */
+	      attrType.AttrSSchema = SvgSchema;
+	      attrType.AttrTypeNum = SVG_ATTR_version;
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (event->element, attr, event->document);
+	      TtaSetAttributeText (attr, SVG_VERSION, event->element,
+				   event->document);
 	    }
 	}
     }
@@ -1621,15 +1631,16 @@ void CreateGraphicElement (int entry)
 		  TtaCancelLastRegisteredSequence (doc);
 		  return;
 		}
-
 	    }
-	  SvgSchema = TtaNewNature (doc, docSchema, "SVG",
-				      "SVGP");
+	  SvgSchema = TtaNewNature (doc, docSchema, "SVG", "SVGP");
 	  if (TtaIsSelectionEmpty ())
 	    {
 	      /* try to create the SVG here */
 	      TtaCreateElement (elType, doc);
-	      TtaGiveFirstSelectedElement (doc, &SvgRoot, &c1, &i);
+	      TtaGiveFirstSelectedElement (doc, &elem, &c1, &i);
+	      selType = TtaGetElementType (elem);
+	      if (selType.ElTypeNum != elType.ElTypeNum)
+		SvgRoot = TtaGetTypedAncestor (elem, elType);
 	    }
 	  else
 	    {
@@ -1649,6 +1660,14 @@ void CreateGraphicElement (int entry)
 	      TtaInsertSibling (SvgRoot, first, FALSE, doc);
 	      first = SvgRoot;
 	      newGraph = TRUE;
+	    }
+	  if (SvgRoot)
+	    /* a root SVG element was created. Create the required attributes*/
+	    {
+	      attrType.AttrTypeNum = SVG_ATTR_version;
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (SvgRoot, attr, doc);
+	      TtaSetAttributeText (attr, SVG_VERSION, SvgRoot, doc);
 	    }
 	}
     }
@@ -2170,7 +2189,7 @@ static void ShowGraphicsPalette (Document doc, View view)
 void InitSVG ()
 {
 #ifdef _SVG
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    iconGraph = TtaCreatePixmapLogo (Graph_xpm);
    iconGraphNo = TtaCreatePixmapLogo (GraphNo_xpm);
    mIcons[0] = TtaCreatePixmapLogo (line_xpm);
@@ -2185,7 +2204,7 @@ void InitSVG ()
    mIcons[9] = TtaCreatePixmapLogo (label_xpm);
    mIcons[10] = TtaCreatePixmapLogo (text_xpm);
    mIcons[11] = TtaCreatePixmapLogo (group_xpm);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    GraphDialogue = TtaSetCallback (CallbackGraph, MAX_GRAPH);
 #endif /* _SVG */
 }

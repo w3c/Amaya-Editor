@@ -450,6 +450,18 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       TtaSetUriSSchema (elType.ElSSchema, SVG_URI);
       TtaSetANamespaceDeclaration (doc, root, NULL, SVG_URI);
 
+      /* Set the version attribute */
+      elType.ElTypeNum = SVG_EL_SVG;
+      root = TtaSearchTypedElement (elType, SearchInTree, docEl);
+      if (root)
+	{
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = SVG_ATTR_version;
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (root, attr, doc);
+	  TtaSetAttributeText (attr, SVG_VERSION, root, doc);
+	}
+
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;
       /* Search the last element to set the initial selection */
