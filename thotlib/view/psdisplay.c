@@ -113,7 +113,7 @@ static void CurrentColor (FILE *fout, int num)
 static int CurrentFont (FILE *fout, PtrFont font)
 {
   int                 i, result;
-  char                c1, c2;
+  char                c0, c1, c2;
 
   /* browse the table of fonts */
   i = 0;
@@ -128,6 +128,7 @@ static int CurrentFont (FILE *fout, PtrFont font)
       PostscriptFont = font;
       if (TtPsFontName[i] == 'g')  /* Greek script */
 	{
+	  c0 = TtPsFontName[i];
 	  c1 = TtPsFontName[i];
 	  c2 = 'r';	     /* Symbol only has one style available */
 	  result = 1;
@@ -135,6 +136,7 @@ static int CurrentFont (FILE *fout, PtrFont font)
       else
 	{
 	  /* Latin Script */
+	  c0 = 'l';
 	  c1 = TtPsFontName[i + 1]; /* font Helvetica Times Courrier */
 	  /* convert lowercase to uppercase */
 	  c2 = TtPsFontName[i + 2]; /* Style normal bold italique */
@@ -143,7 +145,7 @@ static int CurrentFont (FILE *fout, PtrFont font)
       
       /* update the scaling factor */
       Scale = &TtPsFontName[i + 3];
-      fprintf (fout, "%c%c%c %s sf\n", TtPsFontName[i], c1, c2, Scale);
+      fprintf (fout, "%c%c%c %s sf\n", c0, c1, c2, Scale);
       return result;
     }
   /* returns the indicator for the family of fonts */

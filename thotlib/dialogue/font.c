@@ -52,17 +52,23 @@ static char         GreekFontScript;
 static ThotBool     UseLucidaFamily;
 static ThotBool     UseAdobeFamily;
 #ifdef _WINDOWS
-typedef struct FontCharacteristics {
-        int   highlight; 
-        int   size;
-        int   family; 
-        char  script; 
-}FontCharacteristics;
 
-typedef FontCharacteristics* ptrFC;
+typedef struct _FontInfo {
+  int   FiHeight;
+  int   FiAscent;
+  int   FiFirstChar;
+  int   FiLastChar;
+  int  *FiHeights;
+  int  *FiWidths;
+  int   FiHighlight; 
+  int   FiSize;
+  char  FiScript; 
+  char  FiFamily; 
+} FontInfo;
+typedef FontInfo      *PtrFont;
 
-static ptrFC LastUsedFont = (ptrFC)0;
-static HFONT OldFont;
+static PtrFont    LastUsedFont = NULL;
+static HFONT      OldFont;
 #endif /* _WINDOWS */
 
 #ifdef _I18N_
@@ -119,11 +125,9 @@ void *GL_LoadFont (char alphabet, int family,
 #include "wininclude.h"
 
 /*----------------------------------------------------------------------
-  WIN_LoadFont :  load a Windows TrueType with a defined set of
-  characteristics.
+  WIN_LoadFont loads a Windows TrueType with a defined set of characteristics.
   ----------------------------------------------------------------------*/
-static HFONT WIN_LoadFont (char script, int family, int highlight,
-			   int size)
+static HFONT WIN_LoadFont (char script, int family, int highlight, int size)
 {
    HFONT      hFont;
    DWORD      charset;
@@ -141,7 +145,6 @@ static HFONT WIN_LoadFont (char script, int family, int highlight,
    fdwItalic = FALSE;
    fdwUnderline = FALSE;
    fdwStrikeOut = FALSE;
-
    switch (script)
      {
      case 'G':
@@ -196,9 +199,8 @@ static HFONT WIN_LoadFont (char script, int family, int highlight,
         sprintf (&lpszFace[0], "Arial");
      }
 
-   if (script == 'Z') {
+   if (script == 'Z')
      sprintf (&lpszFace[0], "Arial Unicode MS");
-   }
 
    switch (highlight)
      {
@@ -223,8 +225,8 @@ static HFONT WIN_LoadFont (char script, int family, int highlight,
                        charset, OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS,
                        PROOF_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
                        lpszFace);
-   if (hFont == (HFONT)0)
-	WinErrorBox (NULL, "CreateFont");
+   if (hFont == NULL)
+     WinErrorBox (NULL, "CreateFont");
    return (hFont);
 }
 
@@ -233,40 +235,18 @@ static HFONT WIN_LoadFont (char script, int family, int highlight,
   ----------------------------------------------------------------------*/
 HFONT WinLoadFont (HDC hdc, PtrFont font)
 {
-  if (LastUsedFont == (ptrFC)0)
+  if (font && LastUsedFont != font)
     {
-      LastUsedFont = (ptrFC) TtaGetMemory (sizeof (FontCharacteristics));
-      LastUsedFont->highlight = font->highlight; 
-      LastUsedFont->size = font->size;
-      LastUsedFont->script = font->script; 
-      LastUsedFont->family = font->family; 
-      
+      LastUsedFont = font; 
       if (ActiveFont)
 	{
-	  if (!DeleteObject (SelectObject (hdc, GetStockObject (SYSTEM_FONT))))
-            WinErrorBox (NULL, "WinLoadFont (1)");
+	  SelectObject (hdc, GetStockObject (SYSTEM_FONT));
+	  DeleteObject (ActiveFont);
 	  ActiveFont = 0;
-	}
+	} 
+      ActiveFont = WIN_LoadFont (font->FiScript, font->FiFamily,
+				 font->FiHighlight, font->FiSize);
     }
-  else if (LastUsedFont->highlight != font->highlight ||
-	   LastUsedFont->size != font->size ||
-	   LastUsedFont->script != font->script ||
-	   LastUsedFont->family != font->family)
-    {
-    if (ActiveFont)
-      {
-	SelectObject (hdc, GetStockObject (SYSTEM_FONT));
-	DeleteObject (ActiveFont);
-	ActiveFont = 0;
-	LastUsedFont->highlight = font->highlight; 
-	LastUsedFont->size      = font->size;
-	LastUsedFont->script  = font->script; 
-	LastUsedFont->family    = font->family; 
-      } 
-   }
-
-   ActiveFont = WIN_LoadFont (font->script, font->family,
-				 font->highlight, font->size);
   return (OldFont = SelectObject (hdc, ActiveFont));
 }
 #endif /* _WINDOWS */
@@ -327,7 +307,7 @@ int CharacterWidth (int c, PtrFont font)
   XFontStruct        *xf = (XFontStruct *) font;
   XCharStruct        *xc;
 #endif /* !defined(_WINDOWS) && !defined(_GTK) */
-  int                 i = 0, l;
+  int                 i = 0, l = 0;
 
   if (font == NULL)
     return 0;
@@ -346,12 +326,17 @@ int CharacterWidth (int c, PtrFont font)
   else
     {
 #ifdef _WINDOWS
-      if (c == THIN_SPACE)
-	l = (font->FiWidths[32] + 3) / 4;
-      else if (c == HALF_EM)
-	l = (font->FiWidths[32] + 3) / 2;
-      else
-	l = font->FiWidths[c];
+      if (32 >= font->FiFirstChar && 32 <= font->FiLastChar &&
+	  (c == THIN_SPACE || c == HALF_EM))
+	{
+	  l = font->FiWidths[32 - font->FiFirstChar] + 3;
+	  if (c == HALF_EM)
+	    l = l / 2;
+	  else
+	    l = l / 4;
+	}
+      else if (c >= font->FiFirstChar && c <= font->FiLastChar)
+	l = font->FiWidths[c - font->FiFirstChar];
 #else  /* _WINDOWS */
 #ifdef _GTK
       if (c == THIN_SPACE)
@@ -1085,24 +1070,26 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 #else /*_GL*/
 #ifdef _WINDOWS
 	  /* Allocate the font structure */
-	  ptfont = TtaGetMemory (sizeof (FontInfo));
-	  ptfont->script = script;
-	  ptfont->family = family;
-	  ptfont->highlight = highlight;
 	  val = LogicalPointsSizes[size];
-	  ptfont->size = val;
 	  ActiveFont = WIN_LoadFont (script, family, highlight, val);
-	  if (TtPrinterDC != NULL)
+	  if (ActiveFont)
 	    {
-	      display = TtPrinterDC;
-	      hOldFont = SelectObject (TtPrinterDC, ActiveFont);
-	    }
-	  else
-	    {
-	      display = GetDC(FrRef[frame]);
-	      hOldFont = SelectObject (display, ActiveFont);
-	    }
-	  if (GetTextMetrics (display, &textMetric))
+	      if (TtPrinterDC != NULL)
+		{
+		  display = TtPrinterDC;
+		  hOldFont = SelectObject (TtPrinterDC, ActiveFont);
+		}
+	      else
+		{
+		  display = GetDC(FrRef[frame]);
+		  hOldFont = SelectObject (display, ActiveFont);
+		}
+	      ptfont = TtaGetMemory (sizeof (FontInfo));
+	      ptfont->FiScript = script;
+	      ptfont->FiFamily = family;
+	      ptfont->FiHighlight = highlight;
+	      ptfont->FiSize = val;
+	      if (GetTextMetrics (display, &textMetric))
 		{
 		  ptfont->FiAscent = textMetric.tmAscent;
 		  ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
@@ -1112,18 +1099,25 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 		  ptfont->FiAscent = 0;
 		  ptfont->FiHeight = 0;
 		}
-	      for (c = 0; c < 256; c++)
+	      ptfont->FiFirstChar = textMetric.tmFirstChar;
+	      ptfont->FiLastChar = textMetric.tmLastChar;
+	      val = textMetric.tmLastChar - textMetric.tmFirstChar + 1;
+	      ptfont->FiWidths = (int[]) TtaGetMemory (val * sizeof (int));
+	      ptfont->FiHeights = (int[]) TtaGetMemory (val * sizeof (int));
+	      for (c = 0; c < val; c++)
 		{
 		  GetTextExtentPoint (display, (LPCTSTR) (&c),
 				      1, (LPSIZE) (&wsize));
 		  ptfont->FiWidths[c] = wsize.cx;
 		  ptfont->FiHeights[c] = wsize.cy;
 		}
-	      if (ActiveFont)
-	       DeleteObject (ActiveFont);
+	      DeleteObject (ActiveFont);
 	      ActiveFont = 0;
-	  if (TtPrinterDC == NULL && display)
+	      if (TtPrinterDC == NULL && display)
 		ReleaseDC (FrRef[frame], display);
+	    }
+	  else
+	    ptfont = NULL;
 #else  /* _WINDOWS */
 	  ptfont = LoadFont (textX);
 #endif /* !_WINDOWS */
@@ -1822,7 +1816,9 @@ static void FreeAFont (int i)
       if (!found)
 	/* we free this font */
 #ifdef _WINDOWS
-#ifndef _GL 
+#ifndef _GL
+	TtaFreeMemory (TtFonts[i]->FiWidths);
+	TtaFreeMemory (TtFonts[i]->FiHeights);
 	TtaFreeMemory (TtFonts[i]);
 #else /*_GL */
 	gl_font_delete (TtFonts[i]);

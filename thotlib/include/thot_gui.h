@@ -57,23 +57,6 @@ typedef struct struct_ThotGC {
         int style;
 } WIN_GC_BLK, *WIN_GC, *ThotGC;
 
-typedef struct _FontInfo {
-        int   FiHeight;
-        int   FiAscent;
-        int   FiHeights[256];
-        int   FiWidths[256];
-        int   PFiHeight;
-        int   PFiAscent;
-        int   PFiHeights[256];
-        int   PFiWidths[256];
-        int   highlight; 
-        int   size;
-        char  script; 
-        char  family; 
-        /* HFONT FiFont; */
-} FontInfo;
-
-typedef FontInfo      *PtrFont;
 typedef void          *ThotWidget;
 typedef HWND           ThotWindow;
 typedef TBBUTTON      *ThotButton;
