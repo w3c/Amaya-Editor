@@ -3044,30 +3044,52 @@ int              length;
 
 {
    unsigned char *buffer;
-   CHAR_T        *bufferwc;
-   int            i;
+   int            i, j;
+   wchar_t        wcharRead;
+   char           charRead;
+   int            nbBytesRead = 0;
+   unsigned char  *srcbuf;
 
 #ifdef EXPAT_PARSER_DEBUG
    printf ("\n Hndl_CharacterData - length = %d - ", length);
 #endif /* EXPAT_PARSER_DEBUG */
 
    buffer = TtaAllocString (length + 1);
-   bufferwc = TtaAllocString (length + 1);
+   j = 0;
+   i = 0;
+   buffer[j] = WC_EOS;
 
-   for (i=0; i<length; i++)
+   while (i < length)
      {
-       buffer[i] = data[i];
+       srcbuf = (unsigned char *) &data[i];
+       nbBytesRead = TtaGetNextWideCharFromMultibyteString (&wcharRead,
+							    &srcbuf,
+							    UTF_8);
+       i += nbBytesRead;
+       if (wcharRead < 0x100)
+	 {
+	   /* It's an ISO Latin character */
+	   charRead = (char) wcharRead;
+	   buffer[j++] = charRead;
+	 }
+       else
+	 {
+	   if (buffer[0] != WC_EOS)
+	     {
+	       buffer[j] = WC_EOS;
+	       PutInXmlElement (buffer);
+	       buffer[0] = WC_EOS;
+	     }
+	 }
      }
-   buffer[length] = WC_EOS;
 
-   /* Transform UTF_8 coded buffer into WC coded buffer */
-   TtaMBS2WCS (&buffer, &bufferwc, UTF_8);
-
-   /* Put tha data into the Thot element */
-   PutInXmlElement (bufferwc);
+   if (buffer[0] != WC_EOS)
+     {
+       buffer[j] = WC_EOS;
+       PutInXmlElement (buffer);
+     }
 
    TtaFreeMemory (buffer);
-   TtaFreeMemory (bufferwc);
 }
 
 /*----------------------------------------------------------------------
