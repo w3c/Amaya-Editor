@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Draft//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
 <TITLE>The Languages of Thot</TITLE>
@@ -10,15 +10,220 @@
 
 <H3>Vincent Quint</H3>
 
-<H4>translated from French by Ethan Munson</H4>
+<H4>Translated from French by Ethan Munson</H4>
 
 <H4>Version of December 14, 1996</H4>
+
+<P>&copy; 1996 INRIA
 
 <HR>
 </DIV>
 
+<DIV class="tableofcontents">
+<H2><A href="languages.toc.html">Contents</A></H2>
+<UL>
+<LI><BIG><A href="#sect2">The document model of Thot</A></BIG>
+  <UL>
+  <LI><STRONG><A href="#sectb21">The logical structure of documents</A></STRONG>
+  <LI><STRONG><A href="#sectb22">Generic and specific structures</A></STRONG>
+  <LI><STRONG><A href="#sectb23">Logical structure and physical structure</A></STRONG>
+  <LI><STRONG><A href="#sectb24">Document structures and object structures</A></STRONG>
+  </UL>
+
+<LI><BIG><A href="#sect3">The S language</A></BIG>
+  <UL>
+  <LI><STRONG><A href="#sectb31">Document meta-structure</A></STRONG>
+    <UL>
+    <LI><A href="#sectc311">The basic types</A>
+    <LI><A href="#sectc312">Constructed elements</A>
+    <LI><A href="#sectc313">Logical structure constructors</A>
+      <UL>
+      <LI><SMALL><A href="#sectd3131">Aggregate and List</A></SMALL>
+      <LI><SMALL><A href="#sectd3132">Choice, Schema, and Unit</A></SMALL>
+      <LI><SMALL><A href="#sectd3133">Reference and Inclusion</A></SMALL>
+      <LI><SMALL><A href="#sectd3134">Mark pairs</A></SMALL>
+      <LI><SMALL><A href="#sectd3135">Restrictions and Extensions</A></SMALL>
+      <LI><SMALL><A href="#sectd3136">Summary</A></SMALL>
+      </UL>
+    <LI><A href="#sectc314">Associated Elements</A>
+    <LI><A href="#sectc315">Attributes</A>
+    <LI><A href="#sectc316">Discussion of the model</A>
+    </UL>
+  <LI><STRONG><A href="#sectb32">The definition language for generic structures</A></STRONG>
+    <UL>
+    <LI><A href="#sectc321">Writing Conventions</A>
+    <LI><A href="#sectc322">Extension schemas</A>
+    <LI><A href="#sectc323">The general organization of structure schemas</A>
+    <LI><A href="#sectc324">The default presentation</A>
+    <LI><A href="#sectc325">Global Attributes</A>
+    <LI><A href="#sectc326">Parameters</A>
+    <LI><A href="#sectc327">Structured elements</A>
+    <LI><A href="#sectc328">Structure definitions</A>
+      <UL>
+      <LI><SMALL><A href="#sectd3281">List</A></SMALL>
+      <LI><SMALL><A href="#sectd3282">Aggregate</A></SMALL>
+      <LI><SMALL><A href="#sectd3283">Choice</A></SMALL>
+      <LI><SMALL><A href="#sectd3284">Reference</A></SMALL>
+      <LI><SMALL><A href="#sectd3285">Mark pairs</A></SMALL>
+      </UL>
+    <LI><A href="#sectc329">Imports</A>
+    <LI><A href="#sectc3210">Extension rules</A>
+    <LI><A href="#sectc3211">Associated elements</A>
+    <LI><A href="#sectc3212">Units</A>
+    <LI><A href="#sectc3213">Skeleton elements</A>
+    <LI><A href="#sectc3214">Exceptions</A>
+    </UL>
+  <LI><STRONG><A href="#sectb33">Some examples</A></STRONG>
+    <UL>
+    <LI><A href="#sectc331">A class of documents: articles</A>
+    <LI><A href="#sectc332">A class of objects: mathematical formulas</A>
+  </UL>
+
+<LI><BIG><A href="#sect4">The P Language</A></BIG>
+  <UL>
+  <LI><STRONG><A href="#sectb41">Document presentation</A></STRONG>
+    <UL>
+    <LI><A href="#sectc411">Two levels of presentation</A>
+    <LI><A href="#sectc412">Boxes</A>
+    <LI><A href="#sectc413">Views and visibility</A>
+    <LI><A href="#sectc414">Pages</A>
+    <LI><A href="#sectc415">Numbering</A>
+    <LI><A href="#sectc416">Presentation parameters</A>
+    </UL>
+  <LI><STRONG><A href="#sectb42">Presentation description language</A></STRONG>
+    <UL>
+    <LI><A href="#sectc421">The organization of a presentation schema</A>
+    <LI><A href="#sectc422">Views</A>
+    <LI><A href="#sectc423">Print Views</A>
+    <LI><A href="#sectc424">Counters</A>
+    <LI><A href="#sectc425">Presentation constants</A>
+    <LI><A href="#sectc426">Variables</A>
+    <LI><A href="#sectc427">Default presentation rules</A>
+    <LI><A href="#sectc428">Presentation and page layout boxes</A>
+    <LI><A href="#sectc429">Presentation of structured elements</A>
+    <LI><A href="#sectc4210">Logical attribute presentation</A>
+    <LI><A href="#sectc4212">Value transmission rules</A>
+    <LI><A href="#sectc4213">Presentation rules</A>
+    <LI><A href="#sectc4214">Conditions applying to presentation rules</A>
+      <UL>
+      <LI><SMALL><A href="#sectd42141">Conditions based on the logical position of the element</A></SMALL>
+      <LI><SMALL><A href="#sectd42142">Conditions on references</A></SMALL>
+      <LI><SMALL><A href="#sectd42143">Conditions on logical attributes</A></SMALL>
+      <LI><SMALL><A href="#sectd42144">Conditions on page breaks</A></SMALL>
+      <LI><SMALL><A href="#sectd42145">Conditions on the element's content</A></SMALL>
+      <LI><SMALL><A href="#sectd42146">Conditions on counters</A></SMALL>
+      </UL>
+    <LI><A href="#sectc4215">A presentation rule</A>
+    <LI><A href="#sectc4216">Box axes</A>
+    <LI><A href="#sectc4217">Distance units</A>
+    <LI><A href="#sectc4218">Relative positions</A>
+    <LI><A href="#sectc4219">Box extents</A>
+      <UL>
+      <LI><SMALL><A href="#sectd42191">Fixed extents</A></SMALL>
+      <LI><SMALL><A href="#sectd42192">Relative extents</A></SMALL>
+      <LI><SMALL><A href="#sectd42193">Elastic extents</A></SMALL>
+      </UL>
+    <LI><A href="#sectc4220">Overflow</A>
+    <LI><A href="#sectc4221">Inheritance</A>
+    <LI><A href="#sectc4222">Line breaking</A>
+      <UL>
+      <LI><SMALL><A href="#sectd42221">Line spacing</A></SMALL>
+      <LI><SMALL><A href="#sectd42222">First line indentation</A></SMALL>
+      <LI><SMALL><A href="#sectd42223">Alignment</A></SMALL>
+      <LI><SMALL><A href="#sectd42224">Justification</A></SMALL>
+      <LI><SMALL><A href="#sectd42225">Hyphenation</A></SMALL>
+      <LI><SMALL><A href="#sectd42226">Avoiding line breaking</A></SMALL>
+      </UL>
+    <LI><A href="#sectc4223">Page breaking and line breaking conditions</A>
+    <LI><A href="#sectc4224">Visibility</A>
+    <LI><A href="#sectc4225">Character style parameters</A>
+      <UL>
+      <LI><SMALL><A href="#sectd42251">Character size</A></SMALL>
+      <LI><SMALL><A href="#sectd42252">Font and character style</A></SMALL>
+      <LI><SMALL><A href="#sectd42253">Underlining</A></SMALL>
+      </UL>
+    <LI><A href="#sectc4226">Stacking order</A>
+    <LI><A href="#sectc4227">Line Style</A>
+    <LI><A href="#sectc4228">Line thickness</A>
+    <LI><A href="#sectc4229">Fill pattern</A>
+    <LI><A href="#sectc4230">Colors</A>
+    <LI><A href="#sectc4231">Presentation box content</A>
+    <LI><A href="#sectc4232">Presentation box creation</A>
+    <LI><A href="#sectc4233">Page layout</A>
+    <LI><A href="#sectc4234">Box copies</A>
+    </UL>
+  </UL>
+
+<LI><BIG><A href="#sect5">The T language</A></BIG>
+  <UL>
+  <LI><STRONG><A href="#sectb51">Document translation</A></STRONG>
+    <UL>
+    <LI><A href="#sectc511">Translation principles</A>
+    <LI><A href="#sectc512">Translation procedure</A>
+    </UL>
+  <LI><STRONG><A href="#sectb52">Translation definition language</A></STRONG>
+    <UL>
+    <LI><A href="#sectc521">Organization of a translation schema</A>
+    <LI><A href="#sectc522">Line length</A>
+    <LI><A href="#sectc523">Buffers</A>
+    <LI><A href="#sectc524">Counters</A>
+    <LI><A href="#sectc525">Constants</A>
+    <LI><A href="#sectc526">Variables</A>
+    <LI><A href="#sectc527">Translating structure elements</A>
+    <LI><A href="#sectc528">Conditional rules</A>
+      <UL>
+      <LI><SMALL><A href="#sectd5281">Conditions based on the logical position of the element</A></SMALL>
+      <LI><SMALL><A href="#sectd5282">Conditions on references</A></SMALL>
+      <LI><SMALL><A href="#sectd5283">Conditions on the parameters</A></SMALL>
+      <LI><SMALL><A href="#sectd5284">Conditions on the alphabets</A></SMALL>
+      <LI><SMALL><A href="#sectd5285">Conditions on page breaks</A></SMALL>
+      <LI><SMALL><A href="#sectd5286">Conditions on the element's content</A></SMALL>
+      <LI><SMALL><A href="#sectd5287">Conditions on the presence of comments</A></SMALL>
+      <LI><SMALL><A href="#sectd5288">Conditions on the presence of specific presentation rules</A></SMALL>
+      <LI><SMALL><A href="#sectd5289">Conditions on the presence of logical attributes</A></SMALL>
+      <LI><SMALL><A href="#sectd52810">Conditions on logical attributes</A></SMALL>
+      <LI><SMALL><A href="#sectd52811">Conditions on specific presentation rules</A></SMALL>
+      </UL>
+    <LI><A href="#sectc529">Translation rules</A>
+    <LI><A href="#sectc5210">The <TT>Create</TT> rule</A>
+    <LI><A href="#sectc5211">The <TT>Write</TT> rule</A>
+    <LI><A href="#sectc5212">The <TT>Read</TT> rule</A>
+    <LI><A href="#sectc5213">The <TT>Include</TT> rule</A>
+    <LI><A href="#sectc5214">The <TT>Get</TT> rule</A>
+    <LI><A href="#sectc5215">The <TT>Copy</TT> rule</A>
+    <LI><A href="#sectc5216">The <TT>Use</TT> rule</A>
+    <LI><A href="#sectc5217">The <TT>Remove</TT> rule</A>
+    <LI><A href="#sectc5218">The <TT>NoTranslation</TT> rule</A>
+    <LI><A href="#sectc5219">The <TT>NoLineBreak</TT> rule</A>
+    <LI><A href="#sectc5220">The <TT>ChangeMainFile</TT> rule</A>
+    <LI><A href="#sectc5221">The <TT>Set</TT> and <TT>Add</TT> rules</A>
+    <LI><A href="#sectc5222">Rule application order</A>
+    <LI><A href="#sectc5223">Translation of logical attributes</A>
+    <LI><A href="#sectc5224">Translation of specific presentations</A>
+    <LI><A href="#sectc5225">Recoding of characters, symbols and graphics</A>
+    </UL>
+  </UL>
+
+<LI><BIG><A href="#sect6">Language grammars</A></BIG>
+  <UL>
+  <LI><STRONG><A href="#sectb61">The M meta-language</A></STRONG>
+  <LI><STRONG><A href="#sectb62">The S language</A></STRONG>
+  <LI><STRONG><A href="#sectb63">The P language</A></STRONG>
+  <LI><STRONG><A href="#sectb64">The T language</A></STRONG>
+  </UL>
+
+<LI><BIG><A href="#sect7">Character coding</A></BIG>
+  <UL>
+  <LI><STRONG><A href="#sectb71">Characters</A></STRONG>
+  <LI><STRONG><A href="#sectb72">Symbols</A></STRONG>
+  <LI><STRONG><A href="#sectb73">Graphical elements</A></STRONG>
+  </UL>
+</UL>
+<HR>
+</DIV>
+
 <DIV class="chapter">
-<H1>The document model of Thot</H1>
+<H1><A name=sect2>The document model of Thot</A></H1>
 
 <P>
 All of the services which Thot provides to the user are based on the system's
@@ -28,7 +233,7 @@ to the description of the languages which permit the generic specification of
 documents.</P>
 
 <DIV class="section">
-<H2>The logical structure of documents</H2>
+<H2><A name=sectb21>The logical structure of documents</A></H2>
 
 <P>
 The document model of Thot is primarily designed to allow the user to operate
@@ -88,7 +293,7 @@ of widely used entities.</P>
 </DIV>
 
 <DIV class="section">
-<H2>Generic and specific structures</H2>
+<H2><A name=sectb22>Generic and specific structures</A></H2>
 
 <P>
 Thus, it is apparently impossible to construct an exhaustive inventory of all
@@ -162,7 +367,7 @@ precise.</P>
 </DIV>
 
 <DIV class="section">
-<H2>Logical structure and physical structure</H2>
+<H2><A name=sectb23>Logical structure and physical structure</A></H2>
 
 <P>
 Generic structures only describe the <EM>logical</EM> organization of
@@ -238,7 +443,7 @@ appearance at the time of editing or printing.</P>
 </DIV>
 
 <DIV class="section">
-<H2>Document structures and object structures</H2>
+<H2><A name=sectb24>Document structures and object structures</A></H2>
 
 <P>
 So far, we have only discussed the global structure of documents and have not
@@ -304,11 +509,11 @@ include.</P>
 </DIV>
 
 <DIV class="chapter">
-<H1>The S language</H1>
+<H1><A name=sect3>The S language</A></H1>
 
 
 <DIV class="section">
-<H2>Document meta-structure</H2>
+<H2><A name=sectb31>Document meta-structure</A></H2>
 
 <P>
 Since the concept of meta-structure is well suited to the task of describing
@@ -319,7 +524,7 @@ specifies the ways in which these basic elements are assembled into structures
 representing complete documents and objects.</P>
 
 <DIV class="subsection">
-<H3>The basic types</H3>
+<H3><A name=sectc311>The basic types</A></H3>
 
 <P>
 At the lowest level of a document's structure, the first atom considered is
@@ -380,7 +585,7 @@ documents and structured objects are:</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Constructed elements</H3>
+<H3><A name=sectc312>Constructed elements</A></H3>
 
 <P>
 A document is evidently formed from primitive elements.  But the model of Thot
@@ -423,7 +628,7 @@ strings) and/or constructed elements like equations.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Logical structure constructors</H3>
+<H3><A name=sectc313>Logical structure constructors</A></H3>
 
 <P>
 Having defined the primitive elements and the constructed elements, it is now
@@ -438,7 +643,7 @@ In defining the overall organization of documents, the first two constructors
 considered are the aggregate and the list.</P>
 
 <DIV class="subsubsection">
-<H4>Aggregate and List</H4>
+<H4><A name=sectd3131>Aggregate and List</A></H4>
 
 <P>
 The <EM>aggregate</EM> constructor is used to define constructed element types
@@ -464,7 +669,7 @@ structure; thus other constructors supplement them.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4><A name="schemasandunits">Choice, Schema, and Unit</A></H4>
+<H4><A name=sectd3132>Choice, Schema, and Unit</A></H4>
 
 <P>
 The <EM>choice</EM> constructor is used to define the structure of an element
@@ -506,7 +711,7 @@ environment into which they are inserted.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Reference and Inclusion</H4>
+<H4><A name=sectd3133>Reference and Inclusion</A></H4>
 
 <P>
 The <EM>reference</EM> is used to define document
@@ -535,7 +740,7 @@ editing, inclusions without expansion are represented on the screen by the
 name of the included document, in a special color, while inclusions with
 expansion (full or partial) are represented by a copy (full or partial) of the
 included element (also in a special color). The on-screen representation of a
-partial inclusion is a <A href="#skeleton">``skeleton''</A> image of the
+partial inclusion is a <A href="#sectc3213">``skeleton''</A> image of the
 included document.</P>
 <P>
 Inclusion with complete expansion can be used to include parts of the same
@@ -564,12 +769,12 @@ given position in a document.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Mark pairs</H4>
+<H4><A name=sectd3134>Mark pairs</A></H4>
 
 <P>
 It is often useful to delimit certain parts of a document independently from
 the logical structure.  For example, one might wish to attach some information
-(in the form of an <A href="#attributes">attribute</A>) or a particular
+(in the form of an <A href="#sectc315">attribute</A>) or a particular
 treatment to a group of words or a set of consecutive paragraphs. <EM>Mark
 pairs</EM> are used to do this.</P>
 <P>
@@ -581,7 +786,7 @@ section), they can be used quite freely.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4><A name="restrictionextensions">Restrictions and Extensions</A></H4>
+<H4><A name=sectd3135>Restrictions and Extensions</A></H4>
 
 <P>
 The primitive types and the constructors presented so far permit the
@@ -604,7 +809,7 @@ of its components do not authorize them otherwise.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Summary</H4>
+<H4><A name=sectd3136>Summary</A></H4>
 
 <P>
 Thus, four constructors are used to construct a document:</P>
@@ -635,7 +840,7 @@ documents, thus creating a hypertext structure.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="assocelem">Associated Elements</A></H3>
+<H3><A name=sectc314>Associated Elements</A></H3>
 
 <P>
 Thanks to the list, aggregate and choice constructors, the organization of the
@@ -677,7 +882,7 @@ primary structure.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="attributes">Attributes</A></H3>
+<H3><A name=sectc315>Attributes</A></H3>
 
 <P>
 There remain logical aspects of documents that are not entirely described by
@@ -761,7 +966,7 @@ as a whole, but are actually attached to the first mark.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Discussion of the model</H3>
+<H3><A name=sectc316>Discussion of the model</A></H3>
 
 <P>
 The notions of attribute, constructor, structured element, and associated
@@ -844,7 +1049,7 @@ expressions.  The document model of Thot allows both types of structure.</P>
 </DIV>
 
 <DIV class="section">
-<H2>The definition language for generic structures</H2>
+<H2><A name=sectb32>The definition language for generic structures</A></H2>
 
 <P>
 Generic structures, which form the basis of the document model of Thot, are
@@ -857,7 +1062,7 @@ specified by a file, written in the S language, which is called a
 structure tables, which are used by Thot and which determine its behavior.</P>
 
 <DIV class="subsection">
-<H3><A name="metalang">Writing Conventions</A></H3>
+<H3><A name=sectc321>Writing Conventions</A></H3>
 
 <P>
 The grammar of S, like those of the languages P and T presented later, is
@@ -954,7 +1159,7 @@ END
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="extsch">Extension schemas</A></H3>
+<H3><A name=sectc322>Extension schemas</A></H3>
 
 <P>
 A structure schema defines the generic logical structure of a class of
@@ -978,7 +1183,7 @@ extensions when the corresponding applications are not available.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>The general organization of structure schemas</H3>
+<H3><A name=sectc323>The general organization of structure schemas</A></H3>
 
 <P>
 Every structure schema begins with the keyword <TT>STRUCTURE</TT> and ends
@@ -1036,7 +1241,7 @@ or</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>The default presentation</H3>
+<H3><A name=sectc324>The default presentation</A></H3>
 
 <P>
 It was shown <A href="#mulpres">above</A> that many different presentations
@@ -1044,7 +1249,7 @@ are possible for documents and objects of the same class.  The structure
 schema defines a preferred presentation for the class, called the <EM>default
 presentation</EM>.  Like generic structures, presentations are described by
 programs, called <EM>presentation schemas</EM>, which are written in a
-specific language, P, presented <A href="#langp">later</A> in this document.
+specific language, P, presented <A href="#sectb42">later</A> in this document.
 The name appearing after the keyword <TT>DEFPRES</TT> is the name of the
 default presentation schema.  When a new document is created, Thot will use
 this presentation schema by default, but the user remains free to choose
@@ -1055,7 +1260,7 @@ another if s/he wishes.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="globalattr">Global Attributes</A></H3>
+<H3><A name=sectc325>Global Attributes</A></H3>
 
 <P>
 If the generic structure includes global attributes of its own, they are
@@ -1071,13 +1276,13 @@ In the case of a reference attribute, the keyword <TT>REFERENCE</TT> is
 followed by the type of the referenced element in parentheses.  It can refer
 to any type at all, specified by using the keyword <TT>ANY</TT>, or to a
 specific type.  In the latter case, the element type designated by the
-reference can be defined either in the <A href="#structelem"><TT>STRUCT</TT>
+reference can be defined either in the <A href="#sectc327"><TT>STRUCT</TT>
 section</A> of the same structure schema or in the <TT>STRUCT</TT> section of
 another structure schema.  When the type is defined in another schema, the
 element type is followed by the name of the structure schema (within
 parentheses) in which it is defined.  The name of the designated element type
 can be preceded by the keyword <TT>First</TT> or <TT>Second</TT>, but only in
-the case where the type is defined as <A href="#pairs">a pair</A>.  These
+the case where the type is defined as <A href="#sectd3285">a pair</A>.  These
 keywords indicate whether the attribute must designate the first mark of the
 pair or the second.  If the reference refers to a pair and neither of these
 two keywords is present, then the first mark is used.</P>
@@ -1119,13 +1324,13 @@ The following specification defines the global enumeration attribute
 WordType.</P>
 <PRE>
 ATTR
-   WordType    = Definition, IndexWord, DocumentTitle;
+   WordType = Definition, IndexWord, DocumentTitle;
 </PRE>
 </BLOCKQUOTE>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="param">Parameters</A></H3>
+<H3><A name=sectc326>Parameters</A></H3>
 
 <P>
 A parameter is a document element which can appear many times in the document,
@@ -1137,7 +1342,7 @@ be able to be changed by a ``mail-merge'' application.</P>
 <P>
 Parameters are not needed for every document class, but if the schema includes
 parameters they are declared after the keyword <TT>PARAM</TT>. Each parameter
-declaration is made in the same way as a <A href="#structelem">structure
+declaration is made in the same way as a <A href="#sectc327">structure
 element declaration</A>.</P>
 <P>
 During editing, Thot permits the insertion of parameters wherever the
@@ -1149,7 +1354,7 @@ document.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="structelem">Structured elements</A></H3>
+<H3><A name=sectc327>Structured elements</A></H3>
 
 <P>
 The rules for defining structured elements are required, except in an
@@ -1176,7 +1381,7 @@ equals sign.  The parentheses contain, first, the keyword <TT>ATTR</TT>, then
 the list of local attributes, separated by commas.  Each local attribute is
 composed of the name of the attribute followed by an equals sign and the
 definition of the attribute's type, just as in the definition of <A
-href="#globalattr">global attributes</A>.  The name of the attribute can be
+href="#sectc325">global attributes</A>.  The name of the attribute can be
 preceded by an exclamation point to indicate that the attribute must always be
 present for this element type.  The same attribute, identified by its name,
 can be defined  as a local attribute for multiple element types.  In this
@@ -1184,7 +1389,7 @@ case, the equals sign and definition of the attribute type need only appear in
 the first occurrence of the attribute.  It should be noted that global
 attributes cannot also be defined as local attributes.</P>
 <P>
-If any <A href="#restrictionextensions">extensions</A> are defined for this
+If any <A href="#sectd3135">extensions</A> are defined for this
 element type, a plus sign follows the structure definition and the names of
 the extension element types appear between parentheses after the plus.  If
 there are multiple extensions, they are separated by commas.  These types can
@@ -1192,7 +1397,7 @@ either be defined in the same schema, defined in other schemas, or they may be
 base types identified by the keywords <TT>TEXT</TT>, <TT>GRAPHICS</TT>,
 <TT>SYMBOL</TT>, or <TT>PICTURE</TT>.</P>
 <P>
-<A href="#restrictionextensions">Restrictions</A> are indicated in the same
+<A href="#sectd3135">Restrictions</A> are indicated in the same
 manner as extensions, but they are introduced by a minus sign and they come
 after the extensions, or if there are no extensions, after the structure
 definition.</P>
@@ -1232,7 +1437,7 @@ attribute.  For the other attribute types, the fixed value is indicated by a
 signed integer (numeric attributes), a character string between apostrophes
 (textual attributes) or the name of a value (enumeration attributes).</P>
 <P>
-Fixed-value attributes can either be <A href="#globalattr">global</A> or local
+Fixed-value attributes can either be <A href="#sectc325">global</A> or local
 to the element type for which they are fixed, but they must be declared before
 they are used.</P>
 <PRE>
@@ -1246,7 +1451,7 @@ they are used.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="structdef">Structure definitions</A></H3>
+<H3><A name=sectc328>Structure definitions</A></H3>
 
 <P>
 The structure of an element type can be a simple base type or a constructed
@@ -1271,7 +1476,7 @@ If the element type defined is a simple base type, this is indicated by one of
 the keywords <TT>TEXT</TT>, <TT>GRAPHICS</TT>, <TT>SYMBOL</TT>, or
 <TT>PICTURE</TT>.  If some local attributes must be associated with a base
 type, the keyword of the base type is followed by the declaration of the local
-attributes using the syntax <A href="#structelem">presented above.</A></P>
+attributes using the syntax <A href="#sectc327">presented above.</A></P>
 <P>
 In the case of an open choice, the type is indicated by the keyword
 <TT>UNIT</TT> for units or the keyword <TT>NATURE</TT> for objects having a
@@ -1282,8 +1487,8 @@ A unit represents one of the two following categories:</P>
 <LI>a base type: text, graphical element, symbol, picture,
 <LI>an element whose type is chosen from among the types defined as units in
 the <TT>UNITS</TT> section of the document's structure schema.  It can also be
-chosen from among the types defined as <A href="#schemasandunits">units</A> in
-the <A href="#units"><TT>UNITS</TT> section</A> of the structure schemas that
+chosen from among the types defined as <A href="#sectd3132">units</A> in
+the <A href="#sectc3212"><TT>UNITS</TT> section</A> of the structure schemas that
 defines the ancestors of the element to which the rule is applied.
 </UL>
 <P>
@@ -1306,7 +1511,7 @@ begins with a keyword identifying the constructor.  This keyword is followed
 by a syntax specific to each constructor.</P>
 <P>
 The local attribute definitions appear after the name of the element type
-being defined, if this element type has <A href="#structelem">local
+being defined, if this element type has <A href="#sectc327">local
 attributes</A>.</P>
 <PRE>
    Definition = BaseType [ LocAttrSeq ] / Constr / Element .
@@ -1325,7 +1530,7 @@ attributes</A>.</P>
 </PRE>
 
 <DIV class="subsubsection">
-<H4>List</H4>
+<H4><A name=sectd3281>List</A></H4>
 
 <P>
 The list constructor permits the definition of an element type composed of a
@@ -1366,7 +1571,7 @@ Section_contents = LIST OF (Paragraph);
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Aggregate</H4>
+<H4><A name=sectd3282>Aggregate</A></H4>
 
 <P>
 The aggregate constructor is used to define an element type as a collection of
@@ -1413,7 +1618,7 @@ Bilingual_paragraph = BEGIN
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Choice</H4>
+<H4><A name=sectd3283>Choice</A></H4>
 
 <P>
 The choice constructor permits the definition of an element type which is
@@ -1438,8 +1643,8 @@ keyboard. In this case, the editor uses the first element type which can
 contain an atom of the character string type.</P>
 <P>
 The two special cases of the choice constructor, the <A
-href="#structdef"><EM>schema</EM></A> and the <A
-href="#units"><EM>unit</EM></A> are discussed elsewhere.</P>
+href="#sectc328"><EM>schema</EM></A> and the <A
+href="#sectc3212"><EM>unit</EM></A> are discussed elsewhere.</P>
 <BLOCKQUOTE class="example">
 <P>
 <STRONG>Example:</STRONG></P>
@@ -1461,7 +1666,7 @@ Paragraph = CASE OF
 </DIV>
 
 <DIV class="subsubsection">
-<H4><A name="references">Reference</A></H4>
+<H4><A name=sectd3284>Reference</A></H4>
 
 <P>
 Like all elements in Thot, references are typed.  An element type defined as a
@@ -1471,7 +1676,7 @@ parentheses.  When the type which is being cross-referenced is defined in
 another structure schema, the type name is itself followed by the name of the
 external structure schema in which it is defined.</P>
 <P>
-When the designated element type is a <A href="#pairs">mark pair</A>, it can
+When the designated element type is a <A href="#sectd3285">mark pair</A>, it can
 be preceded by a <TT>FIRST</TT> or <TT>SECOND</TT> keyword.  These keywords
 indicate whether the reference points to the first or second mark of the pair.
 If the reference points to a pair and neither of these two keywords is
@@ -1520,23 +1725,23 @@ sections of the included articles.  In the Collection structure schema, the
 definitions are:</P>
 <PRE>
 Collection = BEGIN
-          Collection_title = TEXT;
-          Introduction = LIST OF (Elem = CASE OF
+             Collection_title = TEXT;
+             Introduction = LIST OF (Elem = CASE OF
                                            TEXT;
                                            Ref_sect;
                                            END);
-          Body = LIST OF (Article INCLUDED);
-          END;
-Ref_sect = REFERENCE (Section (Article));
+             Body = LIST OF (Article INCLUDED);
+             END;
+Ref_sect   = REFERENCE (Section (Article));
 </PRE>
 <P>
 Here we define a Folder document class which has a title and includes
 documents of different types, particularly Folders:</P>
 <PRE>
-Folder = BEGIN
-          Folder_title    = TEXT;
-          Folder_contents = LIST OF (Document);
-          END;
+Folder   = BEGIN
+           Folder_title    = TEXT;
+           Folder_contents = LIST OF (Document);
+           END;
 
 Document = CASE OF
               Article EXTERN;
@@ -1553,7 +1758,7 @@ in front of the type name (here, Folder) indicates an included document.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4><A name="pairs">Mark pairs</A></H4>
+<H4><A name=sectd3285>Mark pairs</A></H4>
 
 <P>
 Like other elements, mark pairs are typed.  The two marks of the pair have the
@@ -1571,7 +1776,7 @@ permits intertwining mark pairs without risk of ambiguity.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Imports</H3>
+<H3><A name=sectc329>Imports</A></H3>
 
 <P>
 Because of schema constructors, it is possible, before editing a document, to
@@ -1589,14 +1794,14 @@ in the schema, the following two rules indicate that a formula has the
 structure of an object defined by the structure schema Math and that a table
 element has the structure of an object defined by the Table schema.</P>
 <PRE>
-Formula = Math;
+Formula    = Math;
 Table_elem = Table;
 </PRE>
 </BLOCKQUOTE>
 </DIV>
 
 <DIV class="subsection">
-<H3>Extension rules</H3>
+<H3><A name=sectc3210>Extension rules</A></H3>
 
 <P>
 The <TT>EXTENS</TT> section, which can only appear in an extension schema,
@@ -1610,20 +1815,20 @@ designated by the keyword <TT>Root</TT>, or to any other explicitly named
 rule.</P>
 <P>
 Extension rules are separated from each other by a semicolon and each
-extension rule has the same syntax as a <A href="#structelem">structure
+extension rule has the same syntax as a <A href="#sectc327">structure
 rule</A>, but the part which defines the constructor is absent.</P>
 <PRE>
      ExtenRuleSeq = ExtensRule ';' &lt; ExtensRule ';' > .
-     ExtensRule =      RootOrElem [ LocAttrSeq ]
-                        [ '+' '(' ExtensionSeq ')' ]
-                        [ '-' '(' RestrictSeq ')' ]
-                        [ 'WITH' FixedAttrSeq ] .
-     RootOrElem =       'Root' / ElemID .
+     ExtensRule   = RootOrElem [ LocAttrSeq ]
+                    [ '+' '(' ExtensionSeq ')' ]
+                    [ '-' '(' RestrictSeq ')' ]
+                    [ 'WITH' FixedAttrSeq ] .
+     RootOrElem   = 'Root' / ElemID .
 </PRE>
 </DIV>
 
 <DIV class="subsection">
-<H3>Associated elements</H3>
+<H3><A name=sectc3211>Associated elements</A></H3>
 
 <P>
 If associated elements are necessary, they must be declared in a specific
@@ -1634,7 +1839,7 @@ except in <TT>REFERENCE</TT> rules.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="units">Units</A></H3>
+<H3><A name=sectc3212>Units</A></H3>
 
 <P>
 The <TT>UNITS</TT> section of the structure schema contains the declarations
@@ -1656,14 +1861,15 @@ UNITS
 then it is possible to use references to notes in a cell of a table, even when
 <TT>Table</TT> is an external structure schema.  The <TT>Table</TT> schema must
 declare a cell to be a sequence of units, which can then be base element types
-(text, for example) or references to notes in the document. <PRE>
+(text, for example) or references to notes in the document.</P>
+<PRE>
 Cell = LIST OF (UNITS);
 </PRE>
 </BLOCKQUOTE>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="skeleton">Skeleton elements</A></H3>
+<H3><A name=sectc3213>Skeleton elements</A></H3>
 
 <P>
 When editing a document which contains or must contain external references to
@@ -1730,7 +1936,7 @@ EXPORT
 </DIV>
 
 <DIV class="subsection">
-<H3>Exceptions</H3>
+<H3><A name=sectc3214>Exceptions</A></H3>
 
 <P>
 The behavior of the Thot editor and the actions that it performs are
@@ -1749,13 +1955,13 @@ with the keyword <TT>EXCEPT</TT> and is composed of a sequence of exception
 declarations, separated by semicolons.  Each declaration of an exception
 begins with the name of an element type or attribute followed by a colon. This
 indicates the element type or attribute to which the following exceptions
-apply.  When the given element type name is a <A href="#pairs">mark pair</A>,
+apply.  When the given element type name is a <A href="#sectd3285">mark pair</A>,
 and only in this case, the type name can be preceded by the keyword
 <TT>First</TT> or <TT>Second</TT>, to indicate if the exceptions which follow
 are associated with the first mark of the pair or the second.  In the absence
 of this keyword, the first mark is used.</P>
 <P>
-When placed in an <A href="#extsch">extension schema</A>, the keyword
+When placed in an <A href="#sectc322">extension schema</A>, the keyword
 <TT>EXTERN</TT> indicates that the type name which follows is found in the
 principal schema (the schema being extended by the extension schema).  The
 exceptions are indicated by a name.  They are separated by semicolons.</P>
@@ -1930,7 +2136,7 @@ EXCEPT
 </DIV>
 
 <DIV class="section">
-<H2>Some examples</H2>
+<H2><A name=sectb33>Some examples</A></H2>
 
 <P>
 In order to illustrate the principles of the document model and the syntax of
@@ -1938,7 +2144,7 @@ the S language, this section presents two examples of structure schemas. One
 defines a class of documents, the other defines a class of objects.</P>
 
 <DIV class="subsection">
-<H3>A class of documents: articles</H3>
+<H3><A name=sectc331>A class of documents: articles</A></H3>
 
 <P>
 This example shows a possible structure for articles published in a journal.
@@ -2085,7 +2291,7 @@ elements, since a paragraph can contain an enumeration in which each element
 </DIV>
 
 <DIV class="subsection">
-<H3>A class of objects: mathematical formulas</H3>
+<H3><A name=sectc332>A class of objects: mathematical formulas</A></H3>
 
 <P>
 The example below defines the <TT>Formula</TT> class which is used in Article
@@ -2110,7 +2316,7 @@ STRUCT
                   Exponent = Expression;
                   Fraction =
                         BEGIN
-                        Numerator  = Expression;
+                        Numerator   = Expression;
                         Denominator = Expression;
                         END;
                   Root = 
@@ -2171,11 +2377,11 @@ etc.</P>
 </DIV>
 
 <DIV class="chapter">
-<H1>The P Language</H1>
+<H1><A name=sect4>The P Language</A></H1>
 
 
 <DIV class="section">
-<H2>Document presentation</H2>
+<H2><A name=sectb41>Document presentation</A></H2>
 
 <P>
 Because of the model adopted for Thot, the presentation of documents is
@@ -2188,7 +2394,7 @@ it on paper.  Like logical structure, document presentation is defined
 generically with the help of a language, called P.</P>
 
 <DIV class="subsection">
-<H3>Two levels of presentation</H3>
+<H3><A name=sectc411>Two levels of presentation</A></H3>
 
 <P>
 The link between structure and presentation is clear: the logical organization
@@ -2225,7 +2431,7 @@ justification, font changes, etc.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Boxes</H3>
+<H3><A name=sectc412>Boxes</A></H3>
 
 <P>
 To assure the homogeneity of tools, all presentation in Thot, for documents as
@@ -2310,7 +2516,7 @@ There are three types of boxes:</P>
 are those which linked to each of the elements (base or structured) of the
 logical structure of the document.  Such a box contains all the contents of
 the element to which it corresponds (there is an exception: see
-<A href="#overflow">rules <TT>VertOverflow</TT> and
+<A href="#sectc4220">rules <TT>VertOverflow</TT> and
 <TT>HorizOverflow</TT></A>).  These boxes form a
 tree-like structure, identical to that of the structural elements to which
 they correspond.  This tree expresses the inclusion relationships between the
@@ -2349,7 +2555,7 @@ paper.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Views and visibility</H3>
+<H3><A name=sectc413>Views and visibility</A></H3>
 
 <P>
 One of the operations that one might wish to perform on a document is to view
@@ -2394,7 +2600,7 @@ printed.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Pages</H3>
+<H3><A name=sectc414>Pages</A></H3>
 
 <P>
 Presentation schemas can be defined which display the document as a long
@@ -2429,7 +2635,7 @@ presentation.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Numbering</H3>
+<H3><A name=sectc415>Numbering</A></H3>
 
 <P>
 Many elements are numbered in documents: pages, chapters, sections, formulas,
@@ -2446,7 +2652,7 @@ relations on these elements.</P>
 If the structure schema defines the body of a document as a sequence of at
 least two chapters:</P>
 <PRE>
-Body = LIST [2..*] OF Chapter ;
+Body = LIST [2..*] OF Chapter;
 </PRE>
 <P>
 the sequence defined by the list constructor is ordered and each chapter can be
@@ -2482,7 +2688,7 @@ appears at the head of every document's summary.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Presentation parameters</H3>
+<H3><A name=sectc416>Presentation parameters</A></H3>
 
 <P>
 The principal parameters which determine document presentation are the
@@ -2535,7 +2741,7 @@ indicate the color of lines and the background color.</P>
 </DIV>
 
 <DIV class="section">
-<H2><A name="langp">Presentation description language</A></H2>
+<H2><A name=sectb42>Presentation description language</A></H2>
 
 <P>
 A generic presentation defines the values of presentation parameters (or the
@@ -2545,7 +2751,7 @@ generic structure.  This definition of the presentation parameters is made
 with the P language.  A program written in this language, that is a generic
 presentation expressed in P, is call a <EM>presentation schema</EM>. This
 section describes the syntax and semantics of the language, using the same <A
-href="#metalang">meta-language</A> as was used for the definition of the S
+href="#sectc321">meta-language</A> as was used for the definition of the S
 language.</P>
 <P>
 Recall that it is possible to write many different presentation schemas for
@@ -2554,7 +2760,7 @@ document the graphical appearance  which best suits their type of work or
 their personal taste.</P>
 
 <DIV class="subsection">
-<H3>The organization of a presentation schema</H3>
+<H3><A name=sectc421>The organization of a presentation schema</A></H3>
 
 <P>
 A presentation schema begins with the word <TT>PRESENTATION</TT> and ends with
@@ -2596,12 +2802,12 @@ sequence of declarations.  Every section is optional.</P>
                [ 'ATTRIBUTES' PresAttrSeq ]
                [ 'TRANSMIT' TransmitSeq ]
                  'END' .
-     ElemID  = NAME .
+     ElemID     = NAME .
 </PRE>
 </DIV>
 
 <DIV class="subsection">
-<H3>Views</H3>
+<H3><A name=sectc422>Views</A></H3>
 
 <P>
 Each of the possible views must be declared in the presentation schema.  As
@@ -2616,7 +2822,7 @@ and terminated by a semi-colon.</P>
 <P>
 One of the view names (and only one) can be followed by the keyword
 <TT>EXPORT</TT>.  This keyword identifies the view which presents the members
-of the document class in <A href="#skeleton">skeleton form</A>.  The graphical
+of the document class in <A href="#sectc3213">skeleton form</A>.  The graphical
 appearance  and the content of this view is defined just as with other views,
 but it is useless to specify presentation rules concerning this view for the
 elements which are not loaded in the skeleton form.</P>
@@ -2630,13 +2836,13 @@ href="#inkeyword">instruction <TT>IN</TT></A>).</P>
 The principal view is the the one which the editor presents on the screen when
 the user asks to create or edit a document.  Thus, it makes sense to put the
 most frequently used view at the head of the list.  But if the structure
-schema contains <A href="#skeleton">skeleton elements</A> and is loaded in its
+schema contains <A href="#sectc3213">skeleton elements</A> and is loaded in its
 skeleton form, the view whose name is followed by the keyword <TT>EXPORT</TT>
 will be opened and no other views can be opened.</P>
 <PRE>
-                     'VIEWS' ViewSeq
+                      'VIEWS' ViewSeq
      ViewSeq         = ViewDeclaration
-                      &lt; ',' ViewDeclaration > ';' .
+                       &lt; ',' ViewDeclaration > ';' .
      ViewDeclaration = ViewID [ 'EXPORT' ] .
      ViewID          = NAME .
 </PRE>
@@ -2659,7 +2865,7 @@ schema.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Print Views</H3>
+<H3><A name=sectc423>Print Views</A></H3>
 
 <P>
 When editing a document, each view is presented in a different window.  In
@@ -2708,7 +2914,7 @@ PRINT
 </DIV>
 
 <DIV class="subsection">
-<H3>Counters</H3>
+<H3><A name=sectc424>Counters</A></H3>
 
 <P>
 A presentation has a <EM>counter</EM> for each type of number in the
@@ -2729,7 +2935,7 @@ RANK OF ElemID [ LevelAsc ] [ INIT AttrID ]
 </PRE>
 <P>
 indicates that when an element creates, by a creation rule (see the <A
-href="#creation"><TT>Create</TT> instructions</A>), a presentation box
+href="#sectc4232"><TT>Create</TT> instructions</A>), a presentation box
 containing  the counter value, this value is the rank of the creating element,
 if it is of type <TT>ElemID</TT>, otherwise the rank of the first element of
 type <TT>ElemID</TT> which encloses the creating element in the logical
@@ -2737,7 +2943,7 @@ structure of the document.</P>
 <P>
 The type name can be preceded by a star in the special case where the
 structure schema defines an element of whose <TT>ElemID</TT> is the same as
-that of an <A href="#references">inclusion</A> without expansion or with
+that of an <A href="#sectd3284">inclusion</A> without expansion or with
 partial expansion.  To resolve this ambiguity, the <TT>ElemID</TT> alone
 refers to the type defined in the structure schema while the <TT>ElemID</TT>
 preceded by a star refers to the included type.</P>
@@ -2866,10 +3072,10 @@ SectionCtr : RANK OF Section;
 </PRE>
 <P>
 and the display of the section number before the section title is obtained by a
-<A href="#creation"><TT>CreateBefore</TT> rule</A> attached the
+<A href="#sectc4232"><TT>CreateBefore</TT> rule</A> attached the
 <TT>Section_Title</TT> type, which creates a presentation box whose content is
 the value of the <TT>SectionCtr</TT> counter (see the <A
-href="#content"><TT>Content</TT> instruction</A>).</P>
+href="#sectc4231"><TT>Content</TT> instruction</A>).</P>
 <P>
 In order to number the formulas separately within each chapter, the formula
 counter is declared:</P>
@@ -2893,7 +3099,7 @@ If there is also a chapter counter</P>
 ChapterCtr : RANK OF Chapter;
 </PRE>
 <P>
-the <A href="#content">content</A> of a presentation box created at the top of
+the <A href="#sectc4231">content</A> of a presentation box created at the top of
 each page could be defined as:</P>
 <PRE>
 Content : (VALUE(ChapterCtr, URoman) TEXT '-'
@@ -2918,12 +3124,12 @@ CommonCtr : SET 0 ON Chapter ADD 1 ON Table
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="presconst">Presentation constants</A></H3>
+<H3><A name=sectc425>Presentation constants</A></H3>
 
 <P>
 Presentation constants are used in the definition of the content of
-presentation boxes.  This content is used in <A href="#variables">variable
-definitions</A> and in the <A href="#content"><TT>Content</TT> rule</A>.  The
+presentation boxes.  This content is used in <A href="#sectc426">variable
+definitions</A> and in the <A href="#sectc4231"><TT>Content</TT> rule</A>.  The
 only presentation constants which can be used are character strings,
 mathematical symbols, graphical elements, and pictures, that is to say, base
 elements.</P>
@@ -2968,7 +3174,7 @@ In the case of a symbol or graphical element, the value only contains a single
 character, between apostrophes, which indicates the form of the element which
 must be drawn in the box whose content is the constant.  The symbol or
 graphical element takes the dimensions of the box, which are determined by the
-<TT>Height</TT> and <TT>Width</TT> rules. See <A href="#symbolcoding">table of
+<TT>Height</TT> and <TT>Width</TT> rules. See <A href="#sectb72">table of
 codes</A> for the symbols and graphical elements.</P>
 <BLOCKQUOTE class="example">
 <P>
@@ -2985,7 +3191,7 @@ CONST
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="variables">Variables</A></H3>
+<H3><A name=sectc426>Variables</A></H3>
 
 <P>
 Variables permit the definition of computed content for presentation boxes. A
@@ -3020,7 +3226,7 @@ presentation box whose contents are the variable.</P>
 Another function simply returns the value of a presentation constant. For any
 constant declared in the <TT>CONST</TT> section, it is sufficient to give the
 name of the constant.  Otherwise, the type and value of the constant must be
-given, using the same form as in a <A href="#presconst">constant
+given, using the same form as in a <A href="#sectc425">constant
 declaration</A>. If the constant is not of type text, (types <TT>Symbol</TT>,
 <TT>Graphics</TT> or <TT>Picture</TT>), it must be alone in the variable
 definition; only constants of type <TT>Text</TT> can be mixed with other
@@ -3057,25 +3263,25 @@ that the value returned by the function is the maximum (minimum resp.) value
 taken by the counter in the whole document, not the value for the element
 concerned by the function.</P>
 <PRE>
-     Function =     'DATE' / 'FDATE' /
+     Function     = 'DATE' / 'FDATE' /
                     'DocName' / 'DirName' /
                     'ElemName' / 'AttributeName' /
                      ConstID / ConstType ConstValue /
                      AttrID /
                     'VALUE' '(' PageAttrCtr ','
                                 CounterStyle ')' .
-     PageAttrCtr =  'PageNumber' [ '(' ViewID ')' ] /
+     PageAttrCtr  = 'PageNumber' [ '(' ViewID ')' ] /
                      [ MinMax ] CounterID / AttrID .
      CounterStyle = 'Arabic' / 'LRoman' / 'URoman' /
                     'Uppercase' / 'Lowercase' .
-     MinMax =       'MaxRangeVal' / 'MinRangeVal' .
+     MinMax       = 'MaxRangeVal' / 'MinRangeVal' .
 </PRE>
 <BLOCKQUOTE class="example">
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
 To make today's date appear at the top of the first page of a report, a <A
-href="#creation"><TT>CREATE</TT> rule</A> associated with the Report_Title
+href="#sectc4232"><TT>CREATE</TT> rule</A> associated with the Report_Title
 element type generates a presentation box whose content (specified by the
 <TT>Content</TT> rule of that presentation box) is the variable:</P>
 <PRE>
@@ -3113,7 +3319,7 @@ VAR
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="defaultpresrules">Default presentation rules</A></H3>
+<H3><A name=sectc427>Default presentation rules</A></H3>
 
 <P>
 In order to avoid having to specify, for each element type defined in the
@@ -3126,41 +3332,41 @@ default need to be specified in other sections of the presentation schema.</P>
 <P>
 For the primary view, the default rules can define every presentation
 parameter, but not the <A href="#presfunct">presentation functions</A> or the
-<A href="#breakcond">linebreaking conditions</A> (the <TT>NoBreak1</TT>,
+<A href="#sectc4223">linebreaking conditions</A> (the <TT>NoBreak1</TT>,
 <TT>NoBreak2</TT>, and <TT>Gather</TT> rules).</P>
 <P>
 In a presentation schema, the default presentation rules section is optional;
 in this case, the <TT>DEFAULT</TT> keyword is also absent and the following
 rules are considered to be the default rules:</P>
 <PRE>
-   Visibility: Enclosing =;
-   VertRef: * . Left;
-   HorizRef: Enclosed . HRef;
-   Height: Enclosed . Height;
-   Width: Enclosed . Width;
-   VertPos: Top = Previous . Bottom;
-   HorizPos: Left = Enclosing . Left;
-   VertOverflow: No;
+   Visibility:    Enclosing =;
+   VertRef:       * . Left;
+   HorizRef:      Enclosed . HRef;
+   Height:        Enclosed . Height;
+   Width:         Enclosed . Width;
+   VertPos:       Top = Previous . Bottom;
+   HorizPos:      Left = Enclosing . Left;
+   VertOverflow:  No;
    HorizOverflow: No;
-   Size: Enclosing =;
-   Style: Enclosing =;
-   Font: Enclosing =;
-   Underline: Enclosing =;
-   Thickness: Enclosing =;
-   Indent: Enclosing =;
-   LineSpacing: Enclosing =;
-   Adjust: Enclosing =;
-   Justify: Enclosing =;
-   Hyphenate: Enclosing =;
-   PageBreak: Yes;
-   LineBreak: Yes;
-   InLine: Yes;
-   Depth: 0;
-   LineStyle: Enclosing =;
-   LineWeight: Enclosing =;
-   FillPattern: Enclosing =;
-   Background: Enclosing =;
-   Foreground: Enclosing =;
+   Size:          Enclosing =;
+   Style:         Enclosing =;
+   Font:          Enclosing =;
+   Underline:     Enclosing =;
+   Thickness:     Enclosing =;
+   Indent:        Enclosing =;
+   LineSpacing:   Enclosing =;
+   Adjust:        Enclosing =;
+   Justify:       Enclosing =;
+   Hyphenate:     Enclosing =;
+   PageBreak:     Yes;
+   LineBreak:     Yes;
+   InLine:        Yes;
+   Depth:         0;
+   LineStyle:     Enclosing =;
+   LineWeight:    Enclosing =;
+   FillPattern:   Enclosing =;
+   Background:    Enclosing =;
+   Foreground:    Enclosing =;
 </PRE>
 <P>
 If other values are desired for the default rules, they must be defined
@@ -3172,12 +3378,12 @@ Default rules for views other than the primary  view can also be specified.
 Otherwise, the default rules for the primary views are applied to the other
 views.</P>
 <P>
-Default rules are expressed in the same way as <A href="#presrule">explicit
+Default rules are expressed in the same way as <A href="#sectc4215">explicit
 rules for document elements</A>.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Presentation and page layout boxes</H3>
+<H3><A name=sectc428>Presentation and page layout boxes</A></H3>
 
 <P>
 The presentation process uses elements which are not part of the logical
@@ -3190,7 +3396,7 @@ After the word <TT>BOXES</TT>, each presentation or page layout box is defined
 by its name and a sequence of presentation rules which indicate how they must
 be displayed.  These rules are the same as those which define the boxes
 associated with element of the logical structure of the document, with a
-single exception, the <A href="#content"><TT>Content</TT> rule</A> which is
+single exception, the <A href="#sectc4231"><TT>Content</TT> rule</A> which is
 used only to specify the content of presentation boxes.  The content of boxes
 associated with elements of the document structure is defined in each document
 or object and thus is not specified in the presentation schema, which applies
@@ -3202,7 +3408,7 @@ designated box is defined after the box which designates it, a
 <TT>FORWARD</TT> instruction followed by the name of the designated box must
 appear before the designation.</P>
 <PRE>
-              'BOXES' BoxSeq
+             'BOXES' BoxSeq
      BoxSeq = Box &lt; Box > .
      Box    ='FORWARD' BoxID ';' /
               BoxID ':' ViewRuleSeq .
@@ -3211,13 +3417,13 @@ appear before the designation.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Presentation of structured elements</H3>
+<H3><A name=sectc429>Presentation of structured elements</A></H3>
 
 <P>
 After the words <TT>RULES</TT>, the presentation schema gives the presentation
 rules that apply to the elements whose types are defined in the structure
 schema.  Only those rules which differ from the <A
-href="#defaultpresrules">default</A> must be specified in the <TT>RULES</TT>
+href="#sectc427">default</A> must be specified in the <TT>RULES</TT>
 section.</P>
 <P>
 The rule definitions for each element type are composed of the name of the
@@ -3225,20 +3431,20 @@ element type (as specified in the structure schema) followed by a colon and
 the set of rules specific to that type.</P>
 <P>
 The type name can be preceded by a star in the special case where the
-structure schema defines an <A href="#references">inclusion</A> without
+structure schema defines an <A href="#sectd3284">inclusion</A> without
 expansion (or with partial expansion) of a type with the same name as an
 element of defined in the structure schema.</P>
 <P>
-In the case where the element is a <A href="#pairs">mark pair</A>, but only in
+In the case where the element is a <A href="#sectd3285">mark pair</A>, but only in
 this case, the type name can be preceded by the keywords <TT>First</TT> or
 <TT>Second</TT>.  These keywords indicate whether the rules that follow apply
 to the first or second mark of the pair.</P>
 <PRE>
-                   'RULES' PresentSeq
+                 'RULES' PresentSeq
      PresentSeq = Present &lt; Present > .
-     Present      = [ '*' ] [ FirstSec ] ElemID ':'
-                    ViewRuleSeq .
-     FirstSec     = 'First' / 'Second' .
+     Present    = [ '*' ] [ FirstSec ] ElemID ':'
+                  ViewRuleSeq .
+     FirstSec   = 'First' / 'Second' .
 </PRE>
 <P>
 A presentation schema can define presentation rules for base elements, which
@@ -3251,7 +3457,7 @@ letters.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="presattributes">Logical attribute presentation</A></H3>
+<H3><A name=sectc4210>Logical attribute presentation</A></H3>
 
 <P>
 After the keyword <TT>ATTRIBUTES</TT>, all attributes which are to have some
@@ -3283,7 +3489,7 @@ element having the attribute, the name of the affected element type is given,
 between parentheses, after the attribute name.  This way, the presentation
 rules for the attribute will be applied to the element having the attribute,
 if it is of the given type, and to all of its descendants of the given type.
-In the case where this type is a <A href="#pairs">mark pair</A>, but only in
+In the case where this type is a <A href="#sectd3285">mark pair</A>, but only in
 this case, the type name can be preceded by the keywords <TT>First</TT> or
 <TT>Second</TT>.  These keywords indicate whether the rules that follow apply
 to the first or second mark of the pair. If the rule must apply to several
@@ -3376,7 +3582,7 @@ visibility, the depth (z-order), or the character set.</P>
 The presentation rules associated with reference attributes, it is possible to
 use the element designated by the attribute as a reference box in a positional
 or extent rule.  This element is represented in the <A
-href="#position">position</A> or <A href="#dimension">extent</A> rule by the
+href="#sectc4218">position</A> or <A href="#sectc4219">extent</A> rule by the
 keyword <TT>Referred</TT>.</P>
 <BLOCKQUOTE class="example">
 <P>
@@ -3394,15 +3600,15 @@ English text be displayed in italics:</P>
 <PRE>
 ATTRIBUTES
      Language = 'French' :
-              Style : Roman;
+                Style : Roman;
      Language = 'English' :
-              Style : Italics;
+                Style : Italics;
 </PRE>
 <P>
 Using these rules, when the user puts the Language attribute with the value
 'English' on the summary of a document, every character string (terminal
 elements) contained in the summary are displayed in italics.  See the <A
-href="#style"><TT>Style</TT> rule</A>.</P>
+href="sectd42252"><TT>Style</TT> rule</A>.</P>
 </BLOCKQUOTE>
 <BLOCKQUOTE class="example">
 <P>
@@ -3504,7 +3710,7 @@ ATTRIBUTES
 </DIV>
 
 <DIV class="subsection">
-<H3>Value transmission rules</H3>
+<H3><A name=sectc4212>Value transmission rules</A></H3>
 
 <P>
 The last section of a presentation schema, which is optional, serves to
@@ -3556,10 +3762,10 @@ STRUCT
    Chapter (ATTR FirstPageNum = Integer;
                  ChapterNum = Integer;
                  CurrentTitle   = Text) =
-           BEGIN
-           ChapterTitle = Text;
-           ...
-           END;
+          BEGIN
+          ChapterTitle = Text;
+          ...
+          END;
    ...
 </PRE>
 <P>
@@ -3590,7 +3796,7 @@ the book at the top of each page.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Presentation rules</H3>
+<H3><A name=sectc4213>Presentation rules</A></H3>
 
 <P>
 Whether defining the appearance of a presentation or page layout box, an
@@ -3600,7 +3806,7 @@ is always defined in the same way.</P>
 Normally, a set of presentation rules is placed between the keywords
 <TT>BEGIN</TT> and <TT>END</TT>, the keyword <TT>END</TT> being followed by a
 semicolon.  The first section of this block defines the rules that apply to
-the primary view, if the <A href="#defaultpresrules">default rules</A> are not
+the primary view, if the <A href="#sectc427">default rules</A> are not
 completely suitable.  Next comes the rules which apply to specific other
 views, with a rule sequence for each view for which the default rules are not
 satisfactory.  If the default rules are suitable for the non-primary views,
@@ -3629,7 +3835,7 @@ the <TT>IF</TT> keyword.  If such a conditional block contains only one rule,
 the keywords <TT>BEGIN</TT> and <TT>END</TT> can be omitted.</P>
 <P>
 Although the syntax allows any presentation rule to appear in a conditional
-block, only <A href="#creation">creation rules</A> are allowed after any
+block, only <A href="#sectc4232">creation rules</A> are allowed after any
 condition; other rules are allowed only after conditions <TT>Within</TT> and
 ElemID.  In addition, the following rules cannot be conditional:
 <TT>PageBreak, LineBreak, Inline, Gather</TT>.</P>
@@ -3659,7 +3865,7 @@ block concerning the same view.</P>
 <P>
 The following rules for a report's title make the title visible in the primary
 view and invisible in the table of contents and in the formula views (see the
-<A href="#visib"><TT>Visibility</TT> rule</A>).</P>
+<A href="#sectc4224"><TT>Visibility</TT> rule</A>).</P>
 <PRE>
 Title : BEGIN
         Visibility : 1;
@@ -3674,7 +3880,7 @@ Title : BEGIN
 </DIV>
 
 <DIV class="subsection">
-<H3>Conditions applying to presentation rules</H3>
+<H3><A name=sectc4214>Conditions applying to presentation rules</A></H3>
 
 <P>
 Many conditions can be applied to presentation rules.  Conditions allow
@@ -3702,7 +3908,7 @@ element referred by this reference.  The <TT>Target</TT> keyword is used for
 that purpose.  It must appear before the keyword defining the condition
 type.</P>
 <PRE>
-     CondRule     = 'IF' ConditionSeq RuleSeq .
+     CondRule      ='IF' ConditionSeq RuleSeq .
      ConditionSeq  = Condition &lt; 'AND' Condition > .
      Condition     = [ 'NOT' ] [ 'Target' ] ConditionElem .
      ConditionElem ='First' / 'Last' /
@@ -3717,9 +3923,9 @@ type.</P>
                     '(' [ MinMax ] CounterName CounterCond ')' /
                      CondPage '(' CounterID ')' .
      NumParent     = [ GreaterLess ] NParent .
-     GreaterLess   = '>' / '&lt;' .
+     GreaterLess   ='>' / '&lt;' .
      NParent       = NUMBER.
-     ExtStruct     = '(' ElemID ')' .
+     ExtStruct     ='(' ElemID ')' .
      CounterCond   ='&lt;' MaxCtrVal / '>' MinCtrVal /
                     '=' EqCtrVal / 
                     'IN' '[' ['-'] MinCtrBound '.' '.'
@@ -3733,14 +3939,14 @@ type.</P>
 </PRE>
 
 <DIV class="subsubsection">
-<H4>Conditions based on the logical position of the element</H4>
+<H4><A name=sectd42141>Conditions based on the logical position of the element</A></H4>
 
 <P>
 The condition can be on the position of the element in the document's logical
 structure tree.  It is possible to test whether the element is the first
 (<TT>First</TT>) or last (<TT>Last</TT>) among its siblings or if it is not
 the first (<TT>NOT First</TT>) or not the last (<TT>NOT Last</TT>). These
-conditions can be associated only with <A href="#creation">creation
+conditions can be associated only with <A href="#sectc4232">creation
 rules</A>.</P>
 <P>
 It is also possible to test if the element is contained in an element of a
@@ -3774,7 +3980,7 @@ only if the element is not of the type indicated.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Conditions on references</H4>
+<H4><A name=sectd42142>Conditions on references</A></H4>
 
 <P>
 References may be taken into account in conditions, which can be based on the
@@ -3792,11 +3998,11 @@ href="#inclusion">inclusion</A>.  This is noted (<TT>CopyRef</TT>).</P>
 <P>
 Like all conditions, conditions on references can be inverted by the
 <TT>NOT</TT> keyword. These conditions can be associated only with <A
-href="#creation">creation rules</A>.</P>
+href="#sectc4232">creation rules</A>.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Conditions on logical attributes</H4>
+<H4><A name=sectd42143>Conditions on logical attributes</A></H4>
 
 <P>
 The condition can be based on the presence or absence of attributes associated
@@ -3808,16 +4014,16 @@ If the condition appears in the presentation rules of an attribute, the
 the rules must only be applied if this attribute is the first attribute for
 the element or if it is the last (respectively).  These conditions can also be
 inverted by the <TT>NOT</TT> keyword. These conditions can be associated only
-with <A href="#creation">creation rules</A>.</P>
+with <A href="#sectc4232">creation rules</A>.</P>
 <P>
 It is also possible to apply certain presentation rules only when the element
 being processed or one of its ancestors has a certain attribute, perhaps with
 a certain value.  This can be done in the <A
-href="#presattributes"><TT>ATTRIBUTES</TT> section</A>.</P>
+href="#sectc4210"><TT>ATTRIBUTES</TT> section</A>.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Conditions on page breaks</H4>
+<H4><A name=sectd42144>Conditions on page breaks</A></H4>
 
 <P>
 The page break base type (and only this type) can use the following
@@ -3828,29 +4034,29 @@ should apply if the page break was created automatically by Thot;  the
 element by the <TT>Page</TT> rule; and the <TT>UserPage</TT> condition applies
 if the page break was inserted by the user.</P>
 <P>
-These conditions can be associated only with <A href="#creation">creation
+These conditions can be associated only with <A href="#sectc4232">creation
 rules</A>.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Conditions on the element's content</H4>
+<H4><A name=sectd42145>Conditions on the element's content</A></H4>
 
 <P>
 The condition can be based on whether or not the element is empty.  An element
 which has no children or whose leaves are all empty is considered to be empty
 itself.  This condition is expressed by the <TT>Empty</TT> keyword, optionally
 preceded by the <TT>NOT</TT> keyword. This condition can be associated only
-with <A href="#creation">creation rules</A>.</P>
+with <A href="#sectc4232">creation rules</A>.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Conditions on counters</H4>
+<H4><A name=sectd42146>Conditions on counters</A></H4>
 
 <P>
 Presentation rules can apply when the counter's value is one, is even or odd,
 is equal, greater than or less than a given value or falls in a range of
 values.  This is particularly useful for creating header and footer boxes.
-These conditions can be associated only with <A href="#creation">creation
+These conditions can be associated only with <A href="#sectc4232">creation
 rules</A>.</P>
 <P>
 To compare the value of a counter to a given value, a comparison is given
@@ -3905,7 +4111,7 @@ are syntactically correct but can be expressed more simply by <TT>Odd</TT> and
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="presrule">A presentation rule</A></H3>
+<H3><A name=sectc4215>A presentation rule</A></H3>
 
 <P>
 A presentation rule defines either a presentation parameter or presentation
@@ -3936,7 +4142,7 @@ The <A name="presfunct">presentation functions</A>are:</P>
 </UL>
 <P>
 For each box and each view, every presentation parameter is defined once and
-only once, either explicitly or by the <A href="#defaultpresrules">default
+only once, either explicitly or by the <A href="#sectc427">default
 rules</A>.  In contrast, presentation functions are not obligatory and can
 appear many times for the same element.  for example an element can create
 many presentation boxes.  Another element may not use any presentation
@@ -3947,39 +4153,39 @@ a colon. the keyword indicates the parameter which is the subject of the rule.
 After the keyword and the colon, the remainder of the rule varies.  All rules
 are terminated by a semicolon.</P>
 <PRE>
-     Rule     = PresParam ';' / PresFunc ';' .
-     PresParam ='VertRef' ':' PositionHoriz /
-                'HorizRef' ':' PositionVert /
-                'VertPos' ':' VPos /
-                'HorizPos' ':' HPos /
-                'Height' ':' Dimension /
-                'Width' ':' Dimension /
-                'VertOverflow' ':' Boolean /
+     Rule      = PresParam ';' / PresFunc ';' .
+     PresParam ='VertRef' ':'       PositionHoriz /
+                'HorizRef' ':'      PositionVert /
+                'VertPos' ':'       VPos /
+                'HorizPos' ':'      HPos /
+                'Height' ':'        Dimension /
+                'Width' ':'         Dimension /
+                'VertOverflow' ':'  Boolean /
                 'HorizOverflow' ':' Boolean /
-                'LineSpacing' ':' DistanceInherit /
-                'Indent' ':' DistanceInherit /
-                'Adjust' ':' AdjustInherit /
-                'Justify' ':' BoolInherit /
-                'Hyphenate' ':' BoolInherit /
-                'PageBreak' ':' Boolean /
-                'LineBreak' ':' Boolean /
-                'InLine' ':' Boolean /
-                'NoBreak1' ':' AbsDist /
-                'NoBreak2' ':' AbsDist /
-                'Gather' ':' Boolean /
-                'Visibility' ':' NumberInherit /
-                'Size'  ':' SizeInherit /
-                'Font' ':' NameInherit /
-                'Style' ':' StyleInherit /
-                'Underline' ':' UnderLineInherit /
-                'Thickness' ':' ThicknessInherit /
-                'Depth' ':' NumberInherit /
-                'LineStyle' ':' LineStyleInherit /
-                'LineWeight' ':' DistanceInherit /
-                'FillPattern' ':' NameInherit /
-                'Background' ':' NameInherit /
-                'Foreground' ':' NameInherit .
-                'Content' ':' VarConst .
+                'LineSpacing' ':'   DistanceInherit /
+                'Indent' ':'        DistanceInherit /
+                'Adjust' ':'        AdjustInherit /
+                'Justify' ':'       BoolInherit /
+                'Hyphenate' ':'     BoolInherit /
+                'PageBreak' ':'     Boolean /
+                'LineBreak' ':'     Boolean /
+                'InLine' ':'        Boolean /
+                'NoBreak1' ':'      AbsDist /
+                'NoBreak2' ':'      AbsDist /
+                'Gather' ':'        Boolean /
+                'Visibility' ':'    NumberInherit /
+                'Size'  ':'         SizeInherit /
+                'Font' ':'          NameInherit /
+                'Style' ':'         StyleInherit /
+                'Underline' ':'     UnderLineInherit /
+                'Thickness' ':'     ThicknessInherit /
+                'Depth' ':'         NumberInherit /
+                'LineStyle' ':'     LineStyleInherit /
+                'LineWeight' ':'    DistanceInherit /
+                'FillPattern' ':'   NameInherit /
+                'Background' ':'    NameInherit /
+                'Foreground' ':'    NameInherit .
+                'Content' ':'       VarConst .
      PresFunc = Creation '(' BoxID ')' /
                 'Line' /
                 'NoLine' /
@@ -3989,7 +4195,7 @@ are terminated by a semicolon.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Box axes</H3>
+<H3><A name=sectc4216>Box axes</A></H3>
 
 <P>
 The position of the middle axes <TT>VMiddle</TT> and <TT>HMiddle</TT> in
@@ -3997,7 +4203,7 @@ relation to their box is always calculated automatically as a function of the
 height and width of the box and is not specified by the presentation rules. In
 the presentation schema, these middle axes are used only to position their box
 with respect to another by specifying the distance between the middle axis and
-an axis or a side of another box (see the <A href="#position">relative
+an axis or a side of another box (see the <A href="#sectc4218">relative
 position</A>).</P>
 <P>
 The reference axes of a box are also used to position their box in relation to
@@ -4016,7 +4222,7 @@ and <TT>HorizRef</TT> rules which specify the <A href="#distance">distance</A>
 between the reference axis and an axis or parallel side of the same box or of
 an enclosed box.</P>
 <PRE>
-               'VertRef' ':' PositionHoriz
+               'VertRef'  ':' PositionHoriz
                'HorizRef' ':' PositionVert
 </PRE>
 <BLOCKQUOTE class="example">
@@ -4054,7 +4260,7 @@ Column :
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="distunits">Distance units</A></H3>
+<H3><A name=sectc4217>Distance units</A></H3>
 
 <P>
 Some distances and dimensions appear in many rules of a presentation schema,
@@ -4126,13 +4332,13 @@ The following rules specify that a box has a height of 10.5 centimeters and a
 width of 5.3 ems:</P>
 <PRE>
 Height : 10.5 cm;
-Width : 5.3;
+Width  : 5.3;
 </PRE>
 </BLOCKQUOTE>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="position">Relative positions</A></H3>
+<H3><A name=sectc4218>Relative positions</A></H3>
 
 <P>
 The positioning of boxes uses the eight axes and sides, the sides generally
@@ -4152,12 +4358,12 @@ parallel axis or side of another box, called the reference box.  The box for
 which the rule is written will be positioned relative to the reference
 box.</P>
 <PRE>
-                'VertPos' ':' VPos
-                'HorizPos' ':' HPos
-     HPos     = 'nil' / VertAxis '=' HorizPosition
-                [ 'UserSpecified' ].
-     VPos     = 'nil' / HorizAxis '=' VertPosition
-                [ 'UserSpecified' ].
+                 'VertPos' ':' VPos
+                 'HorizPos' ':' HPos
+     HPos      = 'nil' / VertAxis '=' HorizPosition
+                 [ 'UserSpecified' ].
+     VPos      = 'nil' / HorizAxis '=' VertPosition
+                 [ 'UserSpecified' ].
      VertAxis  = 'Left' / 'VMiddle' / 'VRef' / 'Right' .
      HorizAxis = 'Top' / 'HMiddle' / 'HRef' / 'Bottom' .
 </PRE>
@@ -4191,9 +4397,9 @@ keywords <TT>AnyElem</TT> and <TT>AnyBox</TT> can be used, representing
 respectively, any structured element box and any presentation box.  A type
 name may be preceded by a star in order to resolve the ambiguity in the
 special case where the structure schema defines an <A
-href="#references">inclusion</A> without expansion (or with partial expansion)
+href="#sectd3284">inclusion</A> without expansion (or with partial expansion)
 of the same type as an element of the scheme.  For mark pairs (and only for <A
-href="#pairs">mark pairs</A>) the type name <EM>must</EM> be preceded by the
+href="#sectd3285">mark pairs</A>) the type name <EM>must</EM> be preceded by the
 <TT>First</TT> or <TT>Second</TT> keyword, which indicates which of the two
 marks of the pair  should be used as the reference box.</P>
 <P>
@@ -4256,31 +4462,31 @@ If a <A name="expos1">report</A> is defined by the following
 structure schema:</P>
 <PRE>
 Report = BEGIN
-          Title  = Text;
-          Summary = Text;
-          Keywords = Text;
-          ...
-          END;
+         Title  = Text;
+         Summary = Text;
+         Keywords = Text;
+         ...
+         END;
 </PRE>
 <P>
 then the presentation schema could contain the rules:</P>
 <PRE>
 Report : BEGIN
-          VertPos  : Top = Enclosing . Top;
-          HorizPos : Left = Enclosing . Left;
-          ...
-          END;
+         VertPos  : Top = Enclosing . Top;
+         HorizPos : Left = Enclosing . Left;
+         ...
+         END;
 </PRE>
 <P>
 These rules place the <A name="reportexample">report</A> in the upper left
 corner of the enclosing box, which is the window in which the document is being
 edited.</P>
 <PRE>
-Title :   BEGIN
-          VertPos  : Top = Enclosing . Top + 1;
-          HorizPos : VMiddle = Enclosing . VMiddle;
-          ...
-          END;
+Title :  BEGIN
+         VertPos  : Top = Enclosing . Top + 1;
+         HorizPos : VMiddle = Enclosing . VMiddle;
+         ...
+         END;
 </PRE>
 <P>
 The top of the title is one line (a line has the height of the characters of
@@ -4288,7 +4494,7 @@ the title) from the top of the report, which is also the top of the editing
 window.  The title is centered horizontally in the window (see <A
 href="#posdim">figure</A>).</P>
 <PRE>
-Summary :  BEGIN
+Summary : BEGIN
           VertPos  : Top = Title . Bottom + 1.5;
           HorizPos : Left = Enclosing . Left + 2 cm;
           ...
@@ -4326,7 +4532,7 @@ simply by moving the mouse.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="dimension">Box extents</A></H3>
+<H3><A name=sectc4219>Box extents</A></H3>
 
 <P>
 The extents (height and width) of each box are defined by the two rules
@@ -4334,11 +4540,11 @@ The extents (height and width) of each box are defined by the two rules
 relative, and elastic.</P>
 
 <DIV class="subsubsection">
-<H4>Fixed extents</H4>
+<H4><A name=sectd42191>Fixed extents</A></H4>
 
 <P>
 A fixed dimension sets the height or width of the box independently of all
-other boxes.  It is expressed in <A href="#distunits">distance units</A>.  The
+other boxes.  It is expressed in <A href="#sectc4217">distance units</A>.  The
 extent can be followed by the <TT>UserSpecified</TT> keyword which indicates
 that when the element to which the rule applies is being created, the editor
 will ask the user to specify the extent himself, using the mouse.  In this
@@ -4364,7 +4570,7 @@ allow the user to choose the size of each graphical element as it is
 created:</P>
 <PRE>
 ElemGraph : BEGIN
-            Width : 2 cm UserSpecified;
+            Width :  2 cm UserSpecified;
             Height : 1 cm UserSpecified;
             ...
             END;
@@ -4387,7 +4593,7 @@ Keywords : BEGIN
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Relative extents</H4>
+<H4><A name=sectd42192>Relative extents</A></H4>
 
 <P>
 A relative extent determines the extent as a function of the extent of another
@@ -4431,7 +4637,7 @@ must use the sum of the widths of the characters which compose them as their
 width, which is expressed by the rule:</P>
 <PRE>
 TEXT_UNIT :
-   Width  : Enclosed . Width;
+     Width : Enclosed . Width;
 </PRE>
 <P>
 If this rule is not the default <TT>Width</TT> rule, it must be given
@@ -4465,7 +4671,7 @@ Report :  BEGIN
 <P>
 Then, the following rules make the title occupy 60% of the width of the report
 (which is that of the window) and is broken into centered lines of this width
-(see the <A href="#linerule"><TT>Line</TT> rule</A>).</P>
+(see the <A href="#sectc4222"><TT>Line</TT> rule</A>).</P>
 <PRE>
 Title :   BEGIN
           Width : Enclosing . Width * 60%;
@@ -4522,7 +4728,7 @@ href="#posdim">figure</A>.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Elastic extents</H4>
+<H4><A name=sectd42193>Elastic extents</A></H4>
 
 <P>
 The last type of extent is the elastic extent.  Either one or both extents can
@@ -4539,9 +4745,9 @@ of the elastic box move to the right of its right side.  This is not
 important.  The only requirement is that the two sides of the elastic box used
 in the position and extent rule are opposite sides of the box.</P>
 <PRE>
-                  'Height' ':' Extent
-                  'Width' ':' Extent
-     Extent   = HPos / VPos / ...
+             'Height' ':' Extent
+             'Width' ':' Extent
+     Extent = HPos / VPos / ...
 </PRE>
 <BLOCKQUOTE class="example">
 <P>
@@ -4555,10 +4761,10 @@ with the upper left corner of B (dimension rules):</P>
 <PRE>
 LinkedBox :
    BEGIN
-   VertPos : Top = A .Bottom;
+   VertPos  : Top = A .Bottom;
    HorizPos : Left = A . VMiddle;
-   Height : Bottom = B . Top;
-   Width : Right = B . Left;
+   Height   : Bottom = B . Top;
+   Width    : Right = B . Left;
    END;
 </PRE>
 </BLOCKQUOTE>
@@ -4594,7 +4800,7 @@ SectionTitle :
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="overflow">Overflow</A></H3>
+<H3><A name="sectc4220">Overflow</A></H3>
 
 <P>
 A boxes corresponding to a structural element normally contain all boxes
@@ -4613,7 +4819,7 @@ keyword <TT>Yes</TT> or <TT>No</TT>.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Inheritance</H3>
+<H3><A name=sectc4221>Inheritance</A></H3>
 
 <P>
 A presentation parameter can be defined by reference to the same parameter of
@@ -4630,7 +4836,7 @@ in terms of the tree of boxes.  The presentation box cannot transmit any of
 their parameters by inheritance; only structured element boxes can do so. As
 an example, consider an element B which follows an element A in the logical
 structure.  The element B creates a presentation box P in front of itself,
-using the <TT>CreateBefore</TT> rule (see the <A href="#creation">creation
+using the <TT>CreateBefore</TT> rule (see the <A href="#sectc4232">creation
 rules</A>).  If element B's box inherits its character style using the
 <TT>Previous</TT> kinship operation, it gets its character style from A's box,
 not from P's box.  Inheritance works differently for positions and extents,
@@ -4649,20 +4855,20 @@ subtract can be replaced by the attribute name.  The value of a maximum or
 minimum may also be replaced by an attribute name.  In these cases, the value
 of the attribute is used.</P>
 <PRE>
-  Inheritance   = Kinship  InheritedValue .
-  Kinship       ='Enclosing' / 'GrandFather' / 'Enclosed' /
-                 'Previous' / 'Creator' .
+  Inheritance    = Kinship  InheritedValue .
+  Kinship        ='Enclosing' / 'GrandFather' / 'Enclosed' /
+                  'Previous' / 'Creator' .
   InheritedValue ='+' PosIntAttr [ 'Max' maximumA ] /
-                 '-' NegIntAttr [ 'Min' minimumA ] /
-                 '=' .
-  PosIntAttr    = PosInt / AttrID .
-  PosInt        = NUMBER .
-  NegIntAttr    = NegInt / AttrID .
-  NegInt        = NUMBER .
-  maximumA      = maximum / AttrID .
-  maximum       = NUMBER .
-  minimumA      = minimum / AttrID .
-  minimum       = NUMBER .
+                  '-' NegIntAttr [ 'Min' minimumA ] /
+                  '=' .
+  PosIntAttr     = PosInt / AttrID .
+  PosInt         = NUMBER .
+  NegIntAttr     = NegInt / AttrID .
+  NegInt         = NUMBER .
+  maximumA       = maximum / AttrID .
+  maximum        = NUMBER .
+  minimumA       = minimum / AttrID .
+  minimum        = NUMBER .
 </PRE>
 <P>
 The parameters which can be obtained by inheritance are justification,
@@ -4673,7 +4879,7 @@ lines and characters.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="linerule">Line breaking</A></H3>
+<H3><A name=sectc4222>Line breaking</A></H3>
 
 <P>
 The <TT>Line</TT> rule specifies that the contents of the box should be broken
@@ -4685,11 +4891,11 @@ is attached.</P>
 <P>
 When an included box overflows the current line, it is either carried forward
 to the next line, cur, or left the way it is.  The <A
-href="#breakcond"><TT>LineBreak</TT> rule</A> is used to allow or prevent the
+href="#sectc4223"><TT>LineBreak</TT> rule</A> is used to allow or prevent the
 breaking of included boxes.  If the included box is not breakable but is
 longer than the space remaining on the line, it is left as is.  When a
 character string box is breakable, the line is broken between words or, if
-necessary, by <A href="#hyphenaterule">hyphenating a word</A>.  When a
+necessary, by <A href="#sectd42225">hyphenating a word</A>.  When a
 compound box is breakable, the box is transparent in regard to line breaking.
 The boxes included in the compound box are treated just like included boxes
 which have the <TT>LineBreak</TT> rule.  Thus, it is possible to traverse a
@@ -4702,7 +4908,7 @@ will be placed according to the line breaking rules.</P>
 The <TT>Line</TT> rule does not have a parameter.  The characteristics of the
 lines that will be constructed are determined by the <TT>LineSpacing</TT>,
 <TT>Indent</TT>, <TT>Adjust</TT>, <TT>Justify</TT>, and <TT>Hyphenate</TT>
-rules.  Moreover, the <A href="#inlinerule"><TT>Inline</TT> rule</A> permits
+rules.  Moreover, the <A href="#insectd42226"><TT>Inline</TT> rule</A> permits
 the exclusion of certain elements from the line breaking process.</P>
 <P>
 When the <TT>Line</TT> rule appears in the rules sequence of a non-primary
@@ -4715,12 +4921,12 @@ not be used with the primary view because the absence of the <TT>Line</TT>
 rule has the same effect. Like the <TT>Line</TT> rule, the <TT>NoLine</TT>
 rule does not take any parameters.</P>
 <PRE>
-                 'Line'
-                 'NoLine'
+              'Line'
+              'NoLine'
 </PRE>
 
 <DIV class="subsubsection">
-<H4><A name="linespacing">Line spacing</A></H4>
+<H4><A name=sectd42221>Line spacing</A></H4>
 
 <P>
 The <TT>LineSpacing</TT> rule defines the line spacing to be used in the line
@@ -4728,16 +4934,16 @@ breaking process.  The line spacing is the distance between the baselines
 (horizontal reference axis) of the successive lines produced by the
 <TT>Line</TT> rule.  The value of the line spacing can be specified as a
 constant or by inheritance.  It is expressed in any of the available <A
-href="#distunits">distance units</A>.</P>
+href="#sectc4217">distance units</A>.</P>
 <P>
 Inheritance allows the value to be obtained from a relative in the structure
 tree, either without change (an equals sign appears after the inheritance
 keyword), with a positive difference (a plus sign), or a negative difference
 (a minus sign).  When the rule uses a difference, the value of the difference
-follows the sign and is expressed as a <A href="#distunits">distance</A>.</P>
+follows the sign and is expressed as a <A href="#sectc4217">distance</A>.</P>
 <PRE>
-                      'LineSpacing' ':' DistOrInherit
-     DistOrInherit =   Kinship InheritedDist / Distance .
+                     'LineSpacing' ':' DistOrInherit
+     DistOrInherit =  Kinship InheritedDist / Distance .
      InheritedDist = '=' / '+' AbsDist / '-' AbsDist .
 </PRE>
 <P>
@@ -4752,7 +4958,7 @@ depending on the desired effect.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>First line indentation</H4>
+<H4><A name=sectd42222>First line indentation</A></H4>
 
 <P>
 The <TT>Indent</TT> rule is used to specify the indentation of the first line
@@ -4761,20 +4967,20 @@ indentation determines how far the first line of the element is shifted with
 respect to the other lines of the same element.  It can be specified as a
 constant or by inheritance.  The constant value is a positive integer (shifted
 to the right; the sign is optional), a negative integer (shifted to the left)
-or zero (no shift).  All available <A href="#distunits">units</A> can be
+or zero (no shift).  All available <A href="#sectc4217">units</A> can be
 used.</P>
 <P>
 Indentation can be defined for any box, regardless of whether the box is line
 broken, and transmitted by inheritance to elements that are line broken. The
 size of the indentation is specified in the same manner as the <A
-href="#linespacing">line spacing</A>.</P>
+href="#sectd42221">line spacing</A>.</P>
 <PRE>
-                 'Indent' ':' DistOrInherit
+              'Indent' ':' DistOrInherit
 </PRE>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Alignment</H4>
+<H4><A name=sectd42223>Alignment</A></H4>
 
 <P>
 The alignment style of the lines constructed during line breaking is defined
@@ -4791,7 +4997,7 @@ last line up to the right edge of the line breaking box.
 An inherited value can only be the same as that of the reference box and is
 specified by a kinship keyword followed by an equals sign.</P>
 <PRE>
-                  'Adjust' ':' AlignOrInherit
+                      'Adjust' ':' AlignOrInherit
      AlignOrInherit = Kinship '=' / Alignment .
      Alignment      = 'Left' / 'Right' / 'VMiddle' /
                       'LeftWithDots' .
@@ -4799,7 +5005,7 @@ specified by a kinship keyword followed by an equals sign.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Justification</H4>
+<H4><A name=sectd42224>Justification</A></H4>
 
 <P>
 The <TT>Justify</TT> rule indicates whether the lines contained in the box and
@@ -4813,9 +5019,9 @@ or inherited.  A constant boolean value is expressed by either the
 same as that of the reference box and is specified by a kinship keyword
 followed by an equals sign.</P>
 <PRE>
-                   'Justify' ':' BoolInherit
+                  'Justify' ':' BoolInherit
      BoolInherit = Boolean / Kinship '=' .
-     Boolean      ='Yes' / 'No' .
+     Boolean     ='Yes' / 'No' .
 </PRE>
 <P>
 When the lines are justified, the alignment parameter specified in the
@@ -4867,7 +5073,7 @@ paragraph defined in the logical structure schema.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4><A name="hyphenaterule">Hyphenation</A></H4>
+<H4><A name=sectd42225>Hyphenation</A></H4>
 
 <P>
 The <TT>Hyphenate</TT> rule indicates whether or not words should be broken by
@@ -4888,7 +5094,7 @@ followed by an equals sign.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4><A name="inlinerule">Avoiding line breaking</A></H4>
+<H4><A name=sectd42226>Avoiding line breaking</A></H4>
 
 <P>
 The <TT>InLine</TT> rule is used to specify that a box that would otherwise
@@ -4951,11 +5157,11 @@ ATTRIBUTES
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="breakcond">Page breaking and line breaking conditions</A></H3>
+<H3><A name=sectc4223>Page breaking and line breaking conditions</A></H3>
 
 <P>
 Pages are constructed by the editor in accordance with the model specified by
-a <A href="#page"><TT>Page</TT> rule</A>.  The page model describes only the
+a <A href="#sectc4233"><TT>Page</TT> rule</A>.  The page model describes only the
 composition of the pages but does not give any rules for breaking different
 element types across pages.  Now, it is possible that certain elements must
 not be cut by page breaks, while others can be cut anywhere. The
@@ -4998,7 +5204,7 @@ which page breaks are prohibited.</P>
 <P>
 The <TT>NoBreak1</TT> and <TT>NoBreak2</TT> rules give the height of the zone
 in which page breaking is prohibited.  The height is given as a constant value
-using any of the <A href="#distunits">available units</A>, absolute or
+using any of the <A href="#sectc4217">available units</A>, absolute or
 relative.  The value may not be inherited.</P>
 <PRE>
                    'NoBreak1' ':' AbsDist .
@@ -5049,7 +5255,7 @@ The <TT>Gather</TT> rule is used to remedy this problem.  When the rule
 elements is constructed as a block by the editor: it is never split up.</P>
 <P>
 The <TT>Gather</TT> rule may not appear in the <A
-href="#defaultpresrules">default rules</A>.  Elements which do not have the
+href="#sectc427">default rules</A>.  Elements which do not have the
 <TT>Gather</TT> rule are considered susceptible to being split up during
 display.  Thus, it is not necessary to use the <TT>Gather : No;</TT> form.
 This rule must be used prudently and only for those elements which truly need
@@ -5066,7 +5272,7 @@ defined in the presentation schema.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="visib">Visibility</A></H3>
+<H3><A name=sectc4224>Visibility</A></H3>
 
 <P>
 The visibility parameter is used to control which elements should or should
@@ -5089,9 +5295,9 @@ If it is a numeric attribute's presentation rule, the visibility can be
 specified by the attribute's name, in which case the value of the attribute is
 used.</P>
 <PRE>
-                  'Visibility' ':' NumberInherit
+                   'Visibility' ':' NumberInherit
      NumberInherit = Integer / AttrID / Inheritance .
-     Integer      = NUMBER .
+     Integer       = NUMBER .
 </PRE>
 <BLOCKQUOTE class="example">
 <P>
@@ -5116,18 +5322,18 @@ which makes formulas, and only formulas, visible.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Character style parameters</H3>
+<H3><A name=sectc4225>Character style parameters</A></H3>
 
 <P>
 Four parameters are used to determine which characters are used to display
 text.  They are size, font, style, and underlining.</P>
 
 <DIV class="subsubsection">
-<H4>Character size</H4>
+<H4><A name=sectd42251>Character size</A></H4>
 
 <P>
 The size parameter has two effects.  First, it is used to specify the actual
-size and distance units for boxes defined in <A href="#distunits">relative
+size and distance units for boxes defined in <A href="#sectc4217">relative
 units</A>.  Second, it defines the size of the characters contained in the
 box.</P>
 <P>
@@ -5167,12 +5373,12 @@ minimum or maximum size.</P>
                     '-' SizeAttr [ 'pt' ]
                      [ 'Min' MinSizeAttr ] /
                     '=' .
-     SizeAttr       = Size / AttrID .
-     Size        = NUMBER .
-     MaxSizeAttr    = MaxSize / AttrID .
-     MaxSize     = NUMBER .
-     MinSizeAttr    = MinSize / AttrID .
-     MinSize     = NUMBER .
+     SizeAttr      = Size / AttrID .
+     Size          = NUMBER .
+     MaxSizeAttr   = MaxSize / AttrID .
+     MaxSize       = NUMBER .
+     MinSizeAttr   = MinSize / AttrID .
+     MinSize       = NUMBER .
 </PRE>
 <BLOCKQUOTE class="example">
 <P>
@@ -5206,7 +5412,7 @@ between the sizes of the different elements.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4><A name="style">Font and character style</A></H4>
+<H4><A name=sectd42252>Font and character style</A></H4>
 
 <P>
 The <TT>Font</TT> rule determines the font family to be used to display the
@@ -5239,7 +5445,7 @@ Summary :
 </DIV>
 
 <DIV class="subsubsection">
-<H4><A name="underline">Underlining</A></H4>
+<H4><A name=sectd42253>Underlining</A></H4>
 
 <P>
 The <TT>Underline</TT> rule is used to specify if the characters contained in
@@ -5264,7 +5470,7 @@ ThicknessInherit = Kinship '=' / 'Thick' / 'Thin' .
 </DIV>
 
 <DIV class="subsection">
-<H3>Stacking order</H3>
+<H3><A name=sectc4226>Stacking order</A></H3>
 
 <P>
 The <TT>Depth</TT> rule is used to define the stacking order of terminal boxes
@@ -5277,12 +5483,12 @@ depths.  For non-terminal boxes, the depth is not interpreted during display,
 but it is used to calculate the depth of terminal boxes by inheritance.</P>
 <P>
 Like most other rules, the depth rule is defined in the <A
-href="#defaultpresrules">default rules</A> of each presentation schema.  Thus,
+href="#sectc427">default rules</A> of each presentation schema.  Thus,
 there is always a depth value, even when it is not necessary because there is
 no overlapping.  To avoid useless operations, a zero value can be given to the
 depth parameter, which signifies that overlapping is never a problem.</P>
 <P>
-The depth rule has the same form as the <A href="#visib">visibility rule</A>.
+The depth rule has the same form as the <A href="#sectc4224">visibility rule</A>.
 It can be defined by inheritance or by a constant numeric value. When the rule
 is attached to a numeric attribute, it can take the value of that
 attribute.</P>
@@ -5334,7 +5540,7 @@ the reverse).</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Line Style</H3>
+<H3><A name=sectc4227>Line Style</A></H3>
 
 <P>
 The <TT>LineStyle</TT> rule determines the style of line which should be used
@@ -5371,7 +5577,7 @@ and the elements composing figures are given an inheritance rule:</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Line thickness</H3>
+<H3><A name=sectc4228>Line thickness</A></H3>
 
 <P>
 The <TT>LineWeight</TT> rule determines the thickness of the lines  of all
@@ -5379,8 +5585,8 @@ graphical elements which appear in the box, no matter what their line style.
 Line thickness can be specified by a constant value or by inheritance.  A
 constant value is a positive number followed by an optional unit specification
 (which is absent when using relative units).  All available <A
-href="#distunits">distance units</A> can be used.  Line thickness is expressed
-in the same way as <A href="#linespacing">line spacing</A>.</P>
+href="#sectc4217">distance units</A> can be used.  Line thickness is expressed
+in the same way as <A href="#sectd42221">line spacing</A>.</P>
 <PRE>
                  'LineWeight' ':' DistOrInherit
 </PRE>
@@ -5407,7 +5613,7 @@ and the elements composing figures are given an inheritance rule:</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="pattern">Fill pattern</A></H3>
+<H3><A name=sectc4229>Fill pattern</A></H3>
 
 <P>
 The <TT>FillPattern</TT> rule determines the pattern used to fill closed
@@ -5430,10 +5636,10 @@ text characters, symbols and graphics should be colored.  For these element
 types (text, symbols, and graphics), the only valid values are nopattern,
 foregroundcolor, and backgroundcolor.  When <TT>FillPattern</TT> has the value
 <TT>backgroundcolor</TT>, text characters, symbols, and bitmaps are given the
-color specified by the <A href="#colors"><TT>Background</TT> rule</A> which
+color specified by the <A href="#sectc4230"><TT>Background</TT> rule</A> which
 applies to these elements.  When <TT>FillPattern</TT> has the value
 <TT>foregroundcolor</TT>, these same elements are given the color specified by
-the <A href="#colors"><TT>Foreground</TT> rule</A> which applies to these
+the <A href="#sectc4230"><TT>Foreground</TT> rule</A> which applies to these
 elements.  In all other case, text characters are not colored.</P>
 <PRE>
                  'FillPattern' ':' NameInherit
@@ -5458,7 +5664,7 @@ and the elements composing figures are given an inheritance rule:</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="colors">Colors</A></H3>
+<H3><A name=sectc4230>Colors</A></H3>
 
 <P>
 The <TT>Foreground</TT> and <TT>Background</TT> rules determine the foreground
@@ -5479,7 +5685,7 @@ allowed.</P>
 </PRE>
 <P>
 <STRONG>Note:</STRONG> text colors only appear for text elements whose <A
-href="#pattern">fill pattern</A> does not prevent the use of color.</P>
+href="#sectc4229">fill pattern</A> does not prevent the use of color.</P>
 <BLOCKQUOTE class="example">
 <P>
 <STRONG>Example:</STRONG></P>
@@ -5505,12 +5711,12 @@ and the elements composing figures are given inheritance rules:</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="content">Presentation box content</A></H3>
+<H3><A name=sectc4231>Presentation box content</A></H3>
 
 <P>
 The <TT>Content</TT> rule applies to presentation boxes.  It indicates the
 content given to a box.  This content is either a variable's value or a
-constant value.  In the special case of <A href="#page">header or footer
+constant value.  In the special case of <A href="#sectc4233">header or footer
 boxes</A>, the content can also be a structured element type.</P>
 <P>
 If the content is a constant, it can be specified, as in a variable
@@ -5521,7 +5727,7 @@ content.</P>
 Similarly, if it is a variable, the name of a variable declared in
 <TT>VAR</TT> section can be given or the variable may be defined within
 parentheses.  The content inside the parentheses has the same syntax as a <A
-href="#variables">variable declaration</A>.</P>
+href="#sectc426">variable declaration</A>.</P>
 <P>
 When the content is a structured element type, the name of the element type is
 given after the colon.  In this case,  the box's content is all elements of
@@ -5547,7 +5753,7 @@ The <TT>Content</TT> rule also applies to elements defined as references in
 the structure schema.  In this case, the content defined by the rule  must be
 a constant.  It is this content which appears on the screen or paper to
 represent references of the type to which the rule applies.  A reference can
-have a <TT>Content</TT> rule or a <A href="#copyrule"><TT>Copy</TT> rule</A>
+have a <TT>Content</TT> rule or a <A href="#sectc4234"><TT>Copy</TT> rule</A>
 for each view.  If neither of these rules appears, the reference is displayed
 as <TT>[*]</TT>, which is equivalent to the rule:</P>
 <PRE>
@@ -5598,7 +5804,7 @@ NotesFooterBox is created by a page box of the primary view.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="creation">Presentation box creation</A></H3>
+<H3><A name=sectc4232>Presentation box creation</A></H3>
 
 <P>
 A creation rule specifies that a presentation box should be created when an
@@ -5645,10 +5851,10 @@ first part of the creating element (<TT>CreateFirst</TT> and
 The type of presentation to be created is specified at the end of the rule
 between parentheses.</P>
 <P>
-Creation rules cannot appear in the <A href="#defaultpresrules">default
+Creation rules cannot appear in the <A href="#sectc427">default
 presentation rules</A>.  The boxes being created should have a
 <TT>Content</TT> rule which indicates their <A
-href="#content">content</A>.</P>
+href="#sectc4231">content</A>.</P>
 <P>
 Creation rules can only appear in the block of rules for the primary view;
 creation is provoked by a document element for all views. However, for each
@@ -5723,24 +5929,24 @@ BOXES
                 END;
 
 RULES
-     Column  : BEGIN
-               CreateBefore (VertLine);
-               IF LAST CreateAfter (VertLine);
-               Width : 2.8 cm;
-               Height : Enclosed . Height;
-               VertPos : Top = Enclosing . Top;
-               HorizPos : Left = Previous . Right;
-               END;
+     Column   : BEGIN
+                CreateBefore (VertLine);
+                IF LAST CreateAfter (VertLine);
+                Width : 2.8 cm;
+                Height : Enclosed . Height;
+                VertPos : Top = Enclosing . Top;
+                HorizPos : Left = Previous . Right;
+                END;
 
-     Cell    : BEGIN
-               IF NOT FIRST CreateBefore (HorizLine);
-               Width : Enclosing . Width;
-               Height : Enclosed . Height;
-               VertPos : Top = Previous . Bottom;
-               HorizPos : Left = Enclosing . Left;
-               Line;
-               Adjust : VMiddle;
-               END;
+     Cell     : BEGIN
+                IF NOT FIRST CreateBefore (HorizLine);
+                Width : Enclosing . Width;
+                Height : Enclosed . Height;
+                VertPos : Top = Previous . Bottom;
+                HorizPos : Left = Enclosing . Left;
+                Line;
+                Adjust : VMiddle;
+                END;
 </PRE>
 <P>
 It is useful to note that the horizontal position rule of the first vertical
@@ -5750,7 +5956,7 @@ box is simply placed on the left side of the enclosing box.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="page">Page layout</A></H3>
+<H3><A name=sectc4233>Page layout</A></H3>
 
 <P>
 The page models specified in the <TT>Page</TT> rule are defined by boxes
@@ -5829,7 +6035,7 @@ without pages.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="copyrule">Box copies</A></H3>
+<H3><A name=sectc4234>Box copies</A></H3>
 
 <P>
 The <TT>Copy</TT> rule can be used for an element which is defined as a
@@ -5860,14 +6066,14 @@ by default, the box of this type which precedes the presentation box.  This
 last facility is used, for example, to define the running titles in headers or
 footers.</P>
 <PRE>
-               'Copy' '(' BoxTypeToCopy ')' .
+                  'Copy' '(' BoxTypeToCopy ')' .
   BoxTypeToCopy = BoxID [ ExtStruct ] /
-                     ElemID [ ExtStruct ] .
-  ExtStruct        = '(' ElemID ')' .
+                  ElemID [ ExtStruct ] .
+  ExtStruct     = '(' ElemID ')' .
 </PRE>
 <P>
 Like the creation rules, the <TT>Copy</TT> rule cannot appear in the <A
-href="#defaultpresrules">default presentation rules</A>.  Moreover, this rule
+href="#sectc427">default presentation rules</A>.  Moreover, this rule
 can only appear in the primary view's block of rules; the copy rule is applied
 to all views.</P>
 <BLOCKQUOTE class="example">
@@ -5930,11 +6136,11 @@ BOXES
 </DIV>
 
 <DIV class="chapter">
-<H1>The T language</H1>
+<H1><A name=sect5>The T language</A></H1>
 
 
 <DIV class="section">
-<H2>Document translation</H2>
+<H2><A name=sectb51>Document translation</A></H2>
 
 <P>
 Because of its document model, Thot can produce documents in a high-level
@@ -5948,7 +6154,7 @@ also be used to export documents from Thot to systems using other
 formalisms.</P>
 
 <DIV class="subsection">
-<H3>Translation principles</H3>
+<H3><A name=sectc511>Translation principles</A></H3>
 
 <P>
 Document translation allows the export of documents to other systems which do
@@ -5975,7 +6181,7 @@ or objects of that class.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Translation procedure</H3>
+<H3><A name=sectc512>Translation procedure</A></H3>
 
 <P>
 The translator works on the specific logical structure of the document being
@@ -6013,12 +6219,12 @@ an element,
 </DIV>
 
 <DIV class="section">
-<H2>Translation definition language</H2>
+<H2><A name=sectb52>Translation definition language</A></H2>
 
 <P>
 Translation schemas are written in a custom language, called T, which is
 described in the rest of this chapter.  The grammar of T is specified using
-the same <A href="#metalang">meta-language</A> as was used for the S and P
+the same <A href="#sectc321">meta-language</A> as was used for the S and P
 languages and the translation schemas are written using the same conventions
 as the structure and presentation schemas.  In particular, the keywords of the
 T language (the stings between apostrophes in the following syntax rules) can
@@ -6027,7 +6233,7 @@ identifiers created by the programmer must always be written in the same
 way.</P>
 
 <DIV class="subsection">
-<H3>Organization of a translation schema</H3>
+<H3><A name=sectc521>Organization of a translation schema</A></H3>
 
 <P>
 A translation schema is begun by the <TT>TRANSLATION</TT> keyword and is
@@ -6083,7 +6289,7 @@ particular alphabet.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="linelength">Line length</A></H3>
+<H3><A name=sectc522>Line length</A></H3>
 
 <P>
 If a <TT>LINELENGTH</TT> instruction is present after the structure
@@ -6119,12 +6325,12 @@ LineLength 80;
 </DIV>
 
 <DIV class="subsection">
-<H3>Buffers</H3>
+<H3><A name=sectc523>Buffers</A></H3>
 
 <P>
 A buffer is a  unit of memory managed by the translator, which can either
 contain text read from the terminal during the translation (see the <A
-href="#readrule"><TT>Read</TT> rule</A>), or the name of the last picture
+href="#sectc5212"><TT>Read</TT> rule</A>), or the name of the last picture
 (bit-map) encountered by the translator in its traversal of the document.
 Remember the pictures are stored in files that are separate for the document
 files and that the canonical form contains only the names of the files in
@@ -6163,18 +6369,18 @@ BUFFERS
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="counters">Counters</A></H3>
+<H3><A name=sectc524>Counters</A></H3>
 
 <P>
 Certain translation rules generate text that varies according to the context
 of the element to which the rules apply.  Variable text is defined either in
-the <A href="#varsect"><TT>VAR</TT> section</A> of the translation schema or
+the <A href="#sectc526"><TT>VAR</TT> section</A> of the translation schema or
 in the rule itself (see the <TT>Create</TT> and <TT>Write</TT> rules).  Both
 types of definition rely on counters for the calculation of variable
 material.</P>
 <P>
 There are two types of counter: counters whose value is explicitely computed
-by applying <A href="#setandadd"><TT>Set</TT> and <TT>Add</TT> rules</A>, and
+by applying <A href="#sectc5221"><TT>Set</TT> and <TT>Add</TT> rules</A>, and
 counters whose value is computed by a function associated with the counter.
 Those functions allow the same calculations as can be used in presentation
 schemas. As in a presentation schema, counters must be defined in the
@@ -6289,16 +6495,16 @@ sections, whatever their hierarchic level:</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Constants</H3>
+<H3><A name=sectc525>Constants</A></H3>
 
 <P>
 A common feature of translation rules is the generation of constant text. This
 text can be defined in the rule that generates it (see for example the <A
-href="#create"><TT>Create</TT></A> and <A href="#writerule"><TT>Write</TT></A>
+href="#sectc5210"><TT>Create</TT></A> and <A href="#sectc5211"><TT>Write</TT></A>
 rules); but it can also be defined once in the constant declaration section
 and used many times in different rules.  The latter option is preferable when
 the same text is used in several rules or several <A
-href="#varsect">variables</A>.</P>
+href="#sectc526">variables</A>.</P>
 <P>
 The <TT>CONST</TT> keyword begins the constant declaration section of the
 translation schema.  It must be omitted if no constants are declared. Each
@@ -6325,7 +6531,7 @@ CONST
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="varsect">Variables</A></H3>
+<H3><A name=sectc526>Variables</A></H3>
 
 <P>
 Variables allow to define file names or variable text which is generated by
@@ -6438,7 +6644,7 @@ section. It used the constant defined above.</P>
 <A href="#levelexample"><TT>TxtLevel</TT></A>).</P>
 <P>
 To generate the translation of each section in a different file (see
-<A href="#changemainfile">rule <TT>ChangeMainFile</TT></A>), the name of these
+<A href="#sectc5220">rule <TT>ChangeMainFile</TT></A>), the name of these
 files might be defined by the following variable:</P>
 <PRE>
      VarOutpuFile : FileName Value(SectionNumber)
@@ -6452,7 +6658,7 @@ are written in files <TT>output1.txt</TT>, <TT>output2.txt</TT>, etc.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>Translating structure elements</H3>
+<H3><A name=sectc527>Translating structure elements</A></H3>
 
 <P>
 The <TT>RULES</TT> keyword introduces the translation rules which will be
@@ -6467,11 +6673,11 @@ If there are no translation rules for an element type, the elements that it
 contains (and which may have rules themselves) will still be translated, but
 the translator will produce nothing for the element itself.  To make the
 translator completely ignore the content of an element the <A
-href="#remove"><TT>Remove</TT> rule</A> must be used.</P>
+href="#sectc5217"><TT>Remove</TT> rule</A> must be used.</P>
 <P>
 The translation rules for an element type defined in the structure schema are
 written using the name of the type followed by a colon and the list of
-applicable rules.  When the element  type is a <A href="#pairs">mark pair</A>,
+applicable rules.  When the element  type is a <A href="#sectd3285">mark pair</A>,
 but only in this case, the type name must be preceded by the <TT>First</TT> or
 <TT>Second</TT> keyword.  This keyword indicates whether the rules that follow
 apply to the first or second mark of the pair.</P>
@@ -6495,7 +6701,7 @@ each followed by one or more simple rules.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="transcond">Conditional rules</A></H3>
+<H3><A name=sectc528>Conditional rules</A></H3>
 
 <P>
 In a translation schema, the translation rules are either associated with
@@ -6552,7 +6758,7 @@ The form of an elementary condition varies according to the type of
 condition.</P>
 
 <DIV class="subsubsection">
-<H4>Conditions based on the logical position of the element</H4>
+<H4><A name=sectd5281>Conditions based on the logical position of the element</A></H4>
 
 <P>
 The condition can be on the position of the element in the document's logical
@@ -6584,7 +6790,7 @@ this number is missing, it is equivalent to > 0.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Conditions on references</H4>
+<H4><A name=sectd5282>Conditions on references</A></H4>
 
 <P>
 References may be taken into account in conditions, which can be based on the
@@ -6600,16 +6806,16 @@ keyword.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Conditions on the parameters</H4>
+<H4><A name=sectd5283>Conditions on the parameters</A></H4>
 
 <P>
-Elements which are <A href="#param">parameters</A> can be given a particular
+Elements which are <A href="#sectc326">parameters</A> can be given a particular
 condition which is based on whether or not the parameter is given a value in
 the document (<TT>Defined</TT> or <TT>NOT Defined</TT>, respectively).</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Conditions on the alphabets</H4>
+<H4><A name=sectd5284>Conditions on the alphabets</A></H4>
 
 <P>
 The character string base type (and only this type) can use the condition
@@ -6624,7 +6830,7 @@ In the current implementation of Thot, the available alphabets are the
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Conditions on page breaks</H4>
+<H4><A name=sectd5285>Conditions on page breaks</A></H4>
 
 <P>
 The page break base type (and only this type) can use the following
@@ -6639,7 +6845,7 @@ of page breaking.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Conditions on the element's content</H4>
+<H4><A name=sectd5286>Conditions on the element's content</A></H4>
 
 <P>
 The condition can be based on whether or not the element is empty.  An element
@@ -6649,7 +6855,7 @@ preceded by the <TT>NOT</TT> keyword.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Conditions on the presence of comments</H4>
+<H4><A name=sectd5287>Conditions on the presence of comments</A></H4>
 
 <P>
 The condition can be based on the presence or absence of comments associated
@@ -6658,7 +6864,7 @@ with the translated element.  This condition is expressed by the keyword
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Conditions on the presence of specific presentation rules</H4>
+<H4><A name=sectd5288>Conditions on the presence of specific presentation rules</A></H4>
 
 <P>
 The condition can be based on the presence or absence of specific presentation
@@ -6668,7 +6874,7 @@ or their number.  This condition is expressed by the keyword
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Conditions on the presence of logical attributes</H4>
+<H4><A name=sectd5289>Conditions on the presence of logical attributes</A></H4>
 
 <P>
 In the same way, the condition can be based on the presence or absence of
@@ -6678,7 +6884,7 @@ condition.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Conditions on logical attributes</H4>
+<H4><A name=sectd52810>Conditions on logical attributes</A></H4>
 
 <P>
 If the condition appears in the translation rules of an attribute, the
@@ -6724,7 +6930,7 @@ Both local and global attributes can be used in conditions.</P>
 </DIV>
 
 <DIV class="subsubsection">
-<H4>Conditions on specific presentation rules</H4>
+<H4><A name=sectd52811>Conditions on specific presentation rules</A></H4>
 
 <P>
 It is possible to apply translation rules only when the element being
@@ -6780,7 +6986,7 @@ names of fill patterns (the <TT>FillPattern</TT> rule) and of colors (the
 as in the P language.</P>
 <P>
 The syntax of conditions based on the specific presentation is the same as the
-syntax used to express the <A href="#prestrans">translation of specific
+syntax used to express the <A href="#sectc5224">translation of specific
 presentation rules</A>.</P>
 <P>
 When a condition has only one rule, the condition is simply followed by that
@@ -6845,7 +7051,7 @@ RULES
       Create ('\label{Sect' Value(UniqueSectNum) '}\12') After;
 </PRE>
 <P>
-(the declaration of the <A href="#prestrans"><TT>UniqueSectNum</TT>
+(the declaration of the <A href="#sectc5224"><TT>UniqueSectNum</TT>
 counter</A> is given above).  The string <TT>\12</TT> represents a line
 break.</P>
 </BLOCKQUOTE>
@@ -6875,7 +7081,7 @@ RULES
 </DIV>
 
 <DIV class="subsection">
-<H3>Translation rules</H3>
+<H3><A name=sectc529>Translation rules</A></H3>
 
 <P>
 Thirteen types of translation rules can be associated with element types and
@@ -6909,7 +7115,7 @@ own syntax, although they are all based on very similar models.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="create">The <TT>Create</TT> rule</A></H3>
+<H3><A name=sectc5210>The <TT>Create</TT> rule</A></H3>
 
 <P>
 The most frequently used rule is undoubtedly the <TT>Create</TT> rule, which
@@ -6918,7 +7124,7 @@ file.  The generated text can be made to appear either before or after the
 content of the element to which the rule applies. The rule begins with the
 <TT>Create</TT> keyword, followed by a specifier for the object and a keyword
 (<TT>Before</TT> or <TT>After</TT>) indicating the position of the generated
-text (<A href="#order">before or after</A> the element's content).  If the
+text (<A href="#sectc5222">before or after</A> the element's content).  If the
 position is not indicated, the object will be generated before the element's
 content.  This rule, like all translation rules, is terminated by a
 semicolon.</P>
@@ -6983,11 +7189,11 @@ of the translated element.  This is specified by the <TT>Content</TT> keyword;
 comment, nothing is generated.  This is indicated by the <TT>Comment</TT>
 keyword;
 <LI>the translation of all attributes of the element (which is primarily used
-to apply the attribute translation rules <A href="#order">before</A> those of
+to apply the attribute translation rules <A href="#sectc5222">before</A> those of
 the element type).  This is specified by the <TT>Attributes</TT> keyword.
 <LI>the translation of all of the element's specific presentation rules (which
 is primarily used to apply the translation rules for the specific presentation
-rules <A href="#order">before</A> those of the element or its attributes). 
+rules <A href="#sectc5222">before</A> those of the element or its attributes). 
 This option is specified by the <TT>Presentation</TT> keyword;
 <LI>The value of the reference's identifier.<BR>Thot associates a unique
 identifier with each element in a document.  This identifier (called
@@ -6998,7 +7204,7 @@ reference's identifier of the element to which the translation rule is
 applied, or the reference's identifier of its first ancestor that is referred
 by a reference or that can be referred by a reference.
 <LI>the value of a mark pair's unique identifier.  This may only be used for
-<A href="#pairs">mark pairs</A> and is indicated by the <TT>PairId</TT>
+<A href="#sectd3285">mark pairs</A> and is indicated by the <TT>PairId</TT>
 keyword.
 <LI>the directory containing the file being generated (this string includes an
 ending '/', if it is not empty).  This is indicated by the <TT>FileDir</TT>
@@ -7037,7 +7243,7 @@ directory that contains the document of the referred element.
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="writerule">The <TT>Write</TT> rule</A></H3>
+<H3><A name=sectc5211>The <TT>Write</TT> rule</A></H3>
 
 <P>
 The <TT>Write</TT> has the same syntax as the <TT>Create</TT> rule.  It also
@@ -7081,7 +7287,7 @@ END;
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="readrule">The <TT>Read</TT> rule</A></H3>
+<H3><A name=sectc5212>The <TT>Read</TT> rule</A></H3>
 
 <P>
 The <TT>Read</TT> rule reads text from the terminal during the translation of
@@ -7118,7 +7324,7 @@ END;
 </DIV>
 
 <DIV class="subsection">
-<H3>The <TT>Include</TT> rule</H3>
+<H3><A name=sectc5213>The <TT>Include</TT> rule</A></H3>
 
 <P>
 The <TT>Include</TT> rule, like the <TT>Create</TT> rule, is used to produce
@@ -7146,9 +7352,9 @@ directory path (indicated by the environment variable <TT>THOTSCH</TT>).  The
 file name is normally only composed of a simple name, without specification of
 a complete file path.</P>
 <PRE>
-                 'Include' File [ Position ] ';'
-     File      = FileName / BufferID .
-     FileName  = STRING .
+                'Include' File [ Position ] ';'
+     File     = FileName / BufferID .
+     FileName = STRING .
 </PRE>
 <BLOCKQUOTE class="example">
 <P>
@@ -7170,7 +7376,7 @@ Article : BEGIN
 </DIV>
 
 <DIV class="subsection">
-<H3>The <TT>Get</TT> rule</H3>
+<H3><A name=sectc5214>The <TT>Get</TT> rule</A></H3>
 
 <P>
 The <TT>Get</TT> rule is used to change the order in which the elements appear
@@ -7195,7 +7401,7 @@ type contained within the element designated by the reference.
 </DD>
 <DT>no keyword</DT>
 <DD>If the element to be moved is an associated element, defined in the <A
-href="#assocelem"><TT>ASSOC</TT> section</A> of the structure schema, all
+href="#sectc314"><TT>ASSOC</TT> section</A> of the structure schema, all
 associated elements of this type which have not been translated yet are then
 translated.  Certain elements may in fact have already been translated by a
 <TT>Get Referred</TT> rule.
@@ -7213,10 +7419,10 @@ object with a different schema), the type name of this element must be
 followed, between parentheses, by the name of the structure schema which
 defines it.</P>
 <PRE>
-                  'Get' [ RelPosition ] ElemID 
-                        [ ExtStruct ]
-                        [ Position ] ';' /
-     RelPosition ='Included' / 'Referred' .
+                   'Get' [ RelPosition ] ElemID 
+                         [ ExtStruct ]
+                         [ Position ] ';' /
+     RelPosition = 'Included' / 'Referred' .
      ExtStruct   = '(' ElemID ')' .
 </PRE>
 <P>
@@ -7249,10 +7455,10 @@ figures, using elements of the <TT>RefFigure</TT> type:</P>
      ...
      RefFigure = REFERENCE(Figure);
 ASSOC
-     Figure = BEGIN
-              Content = NATURE;
-              Caption = Text;
-              END;
+     Figure    = BEGIN
+                 Content = NATURE;
+                 Caption = Text;
+                 END;
      ...
 </PRE>
 <P>
@@ -7279,7 +7485,7 @@ Content :   BEGIN
 </DIV>
 
 <DIV class="subsection">
-<H3>The <TT>Copy</TT> rule</H3>
+<H3><A name=sectc5215>The <TT>Copy</TT> rule</A></H3>
 
 <P>
 Like the <TT>Get</TT> rule, the <TT>Copy</TT> rule generates the translation
@@ -7293,7 +7499,7 @@ the same syntax.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3>The <TT>Use</TT> rule</H3>
+<H3><A name=sectc5216>The <TT>Use</TT> rule</A></H3>
 
 <P>
 The <TT>Use</TT> rule specifies the translation schema to be applied to
@@ -7363,7 +7569,7 @@ RULES
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="remove">The <TT>Remove</TT> rule</A></H3>
+<H3><A name=sectc5217>The <TT>Remove</TT> rule</A></H3>
 
 <P>
 The <TT>Remove</TT> rule indicates that nothing should be generated, in the
@@ -7380,7 +7586,7 @@ It is terminated, like all rules, by a semicolon.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="notrans">The <TT>NoTranslation</TT> rule</A></H3>
+<H3><A name=sectc5218>The <TT>NoTranslation</TT> rule</A></H3>
 
 <P>
 The <TT>NoTranslation</TT> rule indicates to the translator that it must not
@@ -7389,7 +7595,7 @@ contrast to the <TT>Remove</TT> rule, it does not suppress the content of the
 element, but it inhibits the translation of character strings, symbols, and
 graphical elements contained in the element.  These are retrieved so that
 after the translation of the document, the rules of the <A
-href="#texttrans"><TT>TEXTTRANSLATE</TT>, <TT>SYMBTRANSLATE</TT> and
+href="#sectc5225"><TT>TEXTTRANSLATE</TT>, <TT>SYMBTRANSLATE</TT> and
 <TT>GRAPHTRANSLATE</TT> sections</A> will not be applied to them.</P>
 <P>
 The <TT>NoTranslation</TT> rule is written with the <TT>NoTranslation</TT>
@@ -7400,12 +7606,12 @@ keyword followed by a semicolon.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="nolinebreak">The <TT>NoLineBreak</TT> rule</A></H3>
+<H3><A name=sectc5219>The <TT>NoLineBreak</TT> rule</A></H3>
 
 <P>
 The <TT>NoLineBreak</TT> rule indicates to the translator that it must not
 generate additional line breaks in the output produced for the element to
-which it applies.  This is as if it was an <A href="#linelength">instruction
+which it applies.  This is as if it was an <A href="#sectc522">instruction
 <TT>LINELENGTH 0;</TT></A> at the beginning of the translation schema, but
 only for the current element.</P>
 <P>
@@ -7417,11 +7623,11 @@ followed by a semicolon.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="changemainfile">The <TT>ChangeMainFile</TT> rule</A></H3>
+<H3><A name=sectc5220>The <TT>ChangeMainFile</TT> rule</A></H3>
 
 <P>
 When the translation program starts, it opens a main output file, whose name
-is given as a parameter of the program. All <A href="#create"><TT>Create</TT>
+is given as a parameter of the program. All <A href="#sectc5210"><TT>Create</TT>
 rules</A> without explicit indication of the output file write sequentially in
 this file. When a <TT>ChangeMainFile</TT> rule is executed, the main output
 file is closed and it is replaced by a new one, whose name is specified in the
@@ -7458,11 +7664,11 @@ the translation program, translated sections are written in files
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="setandadd">The <TT>Set</TT> and <TT>Add</TT> rules</A></H3>
+<H3><A name=sectc5221>The <TT>Set</TT> and <TT>Add</TT> rules</A></H3>
 
 <P>
 The <TT>Set</TT> and <TT>Add</TT> rules are used for modifying the value of
-counters that have no <A href="#counters">counting function</A>.  Only this
+counters that have no <A href="#sectc524">counting function</A>.  Only this
 type of counter can be used in the <TT>Set</TT> and <TT>Add</TT> rules.</P>
 <P>
 Both rules have the same syntax: after the keyword <TT>Set</TT> or
@@ -7479,7 +7685,7 @@ the rule.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="order">Rule application order</A></H3>
+<H3><A name=sectc5222>Rule application order</A></H3>
 
 <P>
 The translator translates the elements which comprise the document in the
@@ -7491,7 +7697,7 @@ keyword or which have no position keyword).  If several rules meet these
 criteria, the translator applies them in the order in where they appear in the
 translation schema.</P>
 <P>
-It then applies all <A href="#transattr">rules for the attributes</A> which
+It then applies all <A href="#sectc5223">rules for the attributes</A> which
 the element has and which must be applied before the translation of the
 element's content (rules ending with the <TT>Before</TT> keyword or which have
 no position keyword).  For one attribute value, the translator applies the
@@ -7519,12 +7725,12 @@ element is done, the translator procedes to translate the following
 element.</P>
 <P>
 This order can be changed with the <TT>Attributes</TT> and
-<TT>Presentation</TT> options of the <A href="#create"><TT>Create</TT>
+<TT>Presentation</TT> options of the <A href="#sectc5210"><TT>Create</TT>
 rule</A>.</P>
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="transattr">Translation of logical attributes</A></H3>
+<H3><A name=sectc5223>Translation of logical attributes</A></H3>
 
 <P>
 After the rules for the element types, the translation schema defines rules
@@ -7546,7 +7752,7 @@ If values are given after the attribute name (or after the name of the element
 type), the rules are applied only when the attribute has the indicated values.
 The same attribute can appear several times, with different values and
 different translation rules.  Attribute values are indicated in the same way
-as in <A href="#transcond">conditions</A> and are followed by a colon before
+as in <A href="#sectc528">conditions</A> and are followed by a colon before
 the block of rules.</P>
 <P>
 The rule block associated with an attribute is either a simple rule or a
@@ -7557,8 +7763,8 @@ Translation rules are not required for all attributes (or their values)
 defined in a structure schema.  Only those attributes for which a particular
 action must be performed by the translator must have such rules.  The rules
 that can be used are those described above, from <A
-href="#create"><TT>Create</TT></A> to <A
-href="#notrans"><TT>NoTranslation</TT></A>.</P>
+href="#sectc5210"><TT>Create</TT></A> to <A
+href="#sectc5218"><TT>NoTranslation</TT></A>.</P>
 <PRE>
      AttrSeq       = TransAttr &lt; TransAttr > .
      TransAttr     = AttrID [ '(' ElemID ')' ] 
@@ -7585,7 +7791,7 @@ ATTRIBUTES
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="prestrans">Translation of specific presentations</A></H3>
+<H3><A name=sectc5224>Translation of specific presentations</A></H3>
 
 <P>
 After the rules for attributes, the translation schema defines rules for the
@@ -7674,7 +7880,7 @@ followed by the name of the value.  The names of the fill patterns (the
      UnderLineVal   = 'NoUnderline' / 'UnderLined' /
                       'OverLined' / 'CrossedOut' .
      ThicknessVal   = 'Thick' / 'Thin' .
-     LineStyleVal   =  'Solid' / 'Dashed' / 'Dotted' .
+     LineStyleVal   = 'Solid' / 'Dashed' / 'Dotted' .
      Pattern        = NAME .
      Color          = NAME .
      PresMinimum    = NUMBER .
@@ -7720,7 +7926,7 @@ PRESENTATION
 </DIV>
 
 <DIV class="subsection">
-<H3><A name="texttrans">Recoding of characters, symbols and graphics</A></H3>
+<H3><A name=sectc5225>Recoding of characters, symbols and graphics</A></H3>
 
 <P>
 The coding of characters, graphical elements and symbols as defined in Thot
@@ -7771,7 +7977,7 @@ respectively, by the <TT>SYMBTRANSLATE</TT> and <TT>GRAPHTRANSLATE</TT> and so
 not require a specification of the alphabet. Their source string is limited to
 one character, since, in Thot, each symbol and each graphical element is
 represented by a single character.  The symbol and graphical element codes are
-defined along with the <A href="#charcoding">non-standard character
+defined along with the <A href="#sect7">non-standard character
 codes</A>.</P>
 <BLOCKQUOTE class="example">
 <P>
@@ -7783,7 +7989,7 @@ characters``&eacute;'' (octal code 351 in Thot) and ``&egrave;'' (octal code
 350 in Thot)  must be converted to their representation
 in L<SUP>A</SUP>T<SUB><BIG>E</BIG></SUB>X:</P>
 <PRE>
-TEXTTRANSLATE        Latin
+TEXTTRANSLATE Latin
      BEGIN
      '\350' -> '\`{e}';    { e grave }
      '\351' -> '\''{e}';   { e acute }
@@ -7796,7 +8002,7 @@ TEXTTRANSLATE        Latin
 </DIV>
 
 <DIV class="chapter">
-<H1>Language grammars</H1>
+<H1><A name=sect6>Language grammars</A></H1>
 
 <P>
 This chapter gives the complete grammars of the languages of Thot. The
@@ -7805,7 +8011,7 @@ specify the semantics of the languages.  This section gives only the
 syntax.</P>
 
 <DIV class="section">
-<H2>The M meta-language</H2>
+<H2><A name=sectb61>The M meta-language</A></H2>
 
 <P>
 The language grammars are all expressed in the same formalism, the M
@@ -7838,7 +8044,7 @@ END
 </DIV>
 
 <DIV class="section">
-<H2>The S language</H2>
+<H2><A name=sectb62>The S language</A></H2>
 
 <P>
 The S language is used to write structure schemas, which contain the generic
@@ -7953,7 +8159,7 @@ END
 </DIV>
 
 <DIV class="section">
-<H2>The P language</H2>
+<H2><A name=sectb63>The P language</A></H2>
 
 <P>
 The P language is used to write presentation schemas, which define the
@@ -8068,32 +8274,32 @@ CondRules       = CondRule &lt; CondRule >
 CondRule        = 'IF' ConditionSeq RuleSeq .
 RulesSeq        = 'BEGIN' Rule &lt; Rule > 'END' ';' / Rule .
 
-ConditionSeq   = Condition &lt; 'AND' Condition > .
-Condition      = [ 'NOT' ] [ 'Target' ] ConditionElem .
-ConditionElem  = 'First' / 'Last' /
-                 [ 'Immediately' ] 'Within' [ NumParent ]
-                                    ElemID [ ExtStruct ] /
-                  ElemID /
-                 'Referred' / 'FirstRef' / 'LastRef' /
-                 'ExternalRef' / 'InternalRef' / 'CopyRef' /
-                 'AnyAttributes' / 'FirstAttr' / 'LastAttr' /
-                 'UserPage' / 'StartPage' / 'ComputedPage' /
-                 'Empty' /
-                 '(' [ MinMax ] CounterName CounterCond ')' /
-                 CondPage '(' CounterID ')' .
-NumParent      = [ GreaterLess ] NParent .
-GreaterLess    = '>' / '&lt;' .
-NParent        = NUMBER.
-CounterCond    = '&lt;' MaxCtrVal / '>' MinCtrVal /
-                 '=' EqCtrVal / 
-                 'IN' '[' ['-'] MinCtrBound '..' 
-                 ['-'] MaxCtrBound ']' .
-PageCond       = 'Even' / 'Odd' / 'One' .
-MaxCtrVal      = NUMBER .
-MinCtrVal      = NUMBER .
-EqCtrVal       = NUMBER .
-MaxCtrBound    = NUMBER .
-MinCtrBound    = NUMBER .
+ConditionSeq    = Condition &lt; 'AND' Condition > .
+Condition       = [ 'NOT' ] [ 'Target' ] ConditionElem .
+ConditionElem   = 'First' / 'Last' /
+                  [ 'Immediately' ] 'Within' [ NumParent ]
+                                     ElemID [ ExtStruct ] /
+                   ElemID /
+                  'Referred' / 'FirstRef' / 'LastRef' /
+                  'ExternalRef' / 'InternalRef' / 'CopyRef' /
+                  'AnyAttributes' / 'FirstAttr' / 'LastAttr' /
+                  'UserPage' / 'StartPage' / 'ComputedPage' /
+                  'Empty' /
+                  '(' [ MinMax ] CounterName CounterCond ')' /
+                  CondPage '(' CounterID ')' .
+NumParent       = [ GreaterLess ] NParent .
+GreaterLess     = '>' / '&lt;' .
+NParent         = NUMBER.
+CounterCond     = '&lt;' MaxCtrVal / '>' MinCtrVal /
+                  '=' EqCtrVal / 
+                  'IN' '[' ['-'] MinCtrBound '..' 
+                  ['-'] MaxCtrBound ']' .
+PageCond        = 'Even' / 'Odd' / 'One' .
+MaxCtrVal       = NUMBER .
+MinCtrVal       = NUMBER .
+EqCtrVal        = NUMBER .
+MaxCtrBound     = NUMBER .
+MinCtrBound     = NUMBER .
 
 Rule            = PresParam ';' / PresFunc ';' .
 PresParam       = 'VertRef' ':' HorizPosition /
@@ -8155,106 +8361,106 @@ VPos            = 'nil' / HorizAxis '=' VertPosition
 VertAxis        = 'Left' / 'VMiddle' / 'VRef' / 'Right' .
 HorizAxis       = 'Top' / 'HMiddle' / 'HRef' / 'Bottom' .
 
-VertPosition   = Reference '.' HorizAxis [ Distance ] .
-HorizPosition  = Reference '.' VertAxis [ Distance ] .
-Reference      = 'Enclosing' [ BoxTypeNot ] /
-                 'Enclosed' [ BoxTypeNot ] /
-                 'Previous' [ BoxTypeNot ] /
-                 'Next' [ BoxTypeNot ] /
-                 'Referred' [ BoxTypeNot ] /
-                 'Creator' /
-                 'Root' /
-                 '*' /
-                 BoxOrType .
-BoxOrType      = BoxID /
-                 [ '*' ] [ FirstSec ] ElemID /
-                 'AnyElem' / 'AnyBox' .
-BoxTypeNot     = [ 'NOT' ] BoxOrType .
+VertPosition    = Reference '.' HorizAxis [ Distance ] .
+HorizPosition   = Reference '.' VertAxis [ Distance ] .
+Reference       = 'Enclosing' [ BoxTypeNot ] /
+                  'Enclosed' [ BoxTypeNot ] /
+                  'Previous' [ BoxTypeNot ] /
+                  'Next' [ BoxTypeNot ] /
+                  'Referred' [ BoxTypeNot ] /
+                  'Creator' /
+                  'Root' /
+                  '*' /
+                  BoxOrType .
+BoxOrType       = BoxID /
+                  [ '*' ] [ FirstSec ] ElemID /
+                  'AnyElem' / 'AnyBox' .
+BoxTypeNot      = [ 'NOT' ] BoxOrType .
 
-Extent         = Reference '.' HeightWidth
-                 [ Relation ] [ 'Min' ] /
-                 AbsDist [ 'UserSpecified' ] [ 'Min' ] /
-                 HPos / VPos .
-HeightWidth    = 'Height' / 'Width' .
-Relation       = '*' ExtentAttr '%' / Distance .
-ExtentAttr     = ExtentVal / AttrID .
-ExtentVal      = NUMBER .
+Extent          = Reference '.' HeightWidth
+                  [ Relation ] [ 'Min' ] /
+                  AbsDist [ 'UserSpecified' ] [ 'Min' ] /
+                  HPos / VPos .
+HeightWidth     = 'Height' / 'Width' .
+Relation        = '*' ExtentAttr '%' / Distance .
+ExtentAttr      = ExtentVal / AttrID .
+ExtentVal       = NUMBER .
 
-Inheritance    = Kinship  InheritedValue .
-Kinship        = 'Enclosing' / 'GrandFather'/ 'Enclosed' /
-                 'Previous' / 'Creator' .
-InheritedValue = '+' PosIntAttr [ 'Max' maximumA ] /
-                 '-' NegIntAttr [ 'Min' minimumA ] /
-                 '=' .
-PosIntAttr     = PosInt / AttrID .
-PosInt         = NUMBER .
-NegIntAttr     = NegInt / AttrID .
-NegInt         = NUMBER .
-maximumA       = maximum / AttrID .
-maximum        = NUMBER .
-minimumA       = minimum / AttrID .
-minimum        = NUMBER .
+Inheritance     = Kinship  InheritedValue .
+Kinship         = 'Enclosing' / 'GrandFather'/ 'Enclosed' /
+                  'Previous' / 'Creator' .
+InheritedValue  = '+' PosIntAttr [ 'Max' maximumA ] /
+                  '-' NegIntAttr [ 'Min' minimumA ] /
+                  '=' .
+PosIntAttr      = PosInt / AttrID .
+PosInt          = NUMBER .
+NegIntAttr      = NegInt / AttrID .
+NegInt          = NUMBER .
+maximumA        = maximum / AttrID .
+maximum         = NUMBER .
+minimumA        = minimum / AttrID .
+minimum         = NUMBER .
 
-AlignOrInherit = Kinship '=' / Alignment .
-Alignment      = 'Left' / 'Right' / 'VMiddle' /
-                 'LeftWithDots' .
+AlignOrInherit  = Kinship '=' / Alignment .
+Alignment       = 'Left' / 'Right' / 'VMiddle' /
+                  'LeftWithDots' .
 
-DistOrInherit  = Kinship InheritedDist / Distance .
-InheritedDist  = '=' / '+' AbsDist / '-' AbsDist .
+DistOrInherit   = Kinship InheritedDist / Distance .
+InheritedDist   = '=' / '+' AbsDist / '-' AbsDist .
 
-BoolInherit    = Boolean / Kinship '=' .
-Boolean        = 'Yes' / 'No' .
+BoolInherit     = Boolean / Kinship '=' .
+Boolean         = 'Yes' / 'No' .
 
-NumberInherit  = Integer / AttrID / Inheritance .
-Integer        = NUMBER .
+NumberInherit   = Integer / AttrID / Inheritance .
+Integer         = NUMBER .
 
 LineStyleInherit= Kinship '=' / 'Solid' / 'Dashed' /
                   'Dotted' .
 
-SizeInherit    = SizeAttr [ 'pt' ] / Kinship InheritedSize .
-InheritedSize  = '+' SizeAttr [ 'pt' ]
-                     [ 'Max' MaxSizeAttr ] /
-                 '-' SizeAttr [ 'pt' ]
-                     [ 'Min' MinSizeAttr ] /
-                 '=' .
-SizeAttr       = Size / AttrID .
-Size           = NUMBER .
-MaxSizeAttr    = MaxSize / AttrID .
-MaxSize        = NUMBER .
-MinSizeAttr    = MinSize / AttrID .
-MinSize        = NUMBER .
+SizeInherit     = SizeAttr [ 'pt' ] / Kinship InheritedSize .
+InheritedSize   = '+' SizeAttr [ 'pt' ]
+                      [ 'Max' MaxSizeAttr ] /
+                  '-' SizeAttr [ 'pt' ]
+                      [ 'Min' MinSizeAttr ] /
+                  '=' .
+SizeAttr        = Size / AttrID .
+Size            = NUMBER .
+MaxSizeAttr     = MaxSize / AttrID .
+MaxSize         = NUMBER .
+MinSizeAttr     = MinSize / AttrID .
+MinSize         = NUMBER .
 
-NameInherit    = Kinship '=' / FontName .
-FontName       = NAME .
-StyleInherit   = Kinship '=' /
-                 'Roman' / 'Bold' / 'Italics' / 
-                 'BoldItalics' / 'Oblique' / 'BoldOblique' .
+NameInherit     = Kinship '=' / FontName .
+FontName        = NAME .
+StyleInherit    = Kinship '=' /
+                  'Roman' / 'Bold' / 'Italics' / 
+                  'BoldItalics' / 'Oblique' / 'BoldOblique' .
 UnderLineInherit= Kinship '=' /
-                 'NoUnderline' / 'Underlined' / 
-                 'Overlined' / 'CrossedOut' .
+                  'NoUnderline' / 'Underlined' / 
+                  'Overlined' / 'CrossedOut' .
 ThicknessInherit= Kinship '=' / 'Thick' / 'Thin' .
 
-VarConst       = ConstID / ConstType ConstValue /
-                 VarID / '(' FunctionSeq ')' /
-                 ElemID .
+VarConst        = ConstID / ConstType ConstValue /
+                  VarID / '(' FunctionSeq ')' /
+                  ElemID .
 
-Creation       = Create [ 'Repeated' ] .
-Create         = 'CreateFirst' / 'CreateLast' /
-                 'CreateBefore' / 'CreateAfter' /
-                 'CreateEnclosing' .
+Creation        = Create [ 'Repeated' ] .
+Create          = 'CreateFirst' / 'CreateLast' /
+                  'CreateBefore' / 'CreateAfter' /
+                  'CreateEnclosing' .
 
-TransmitSeq    = Transmit &lt; Transmit > .
-Transmit       = TypeOrCounter 'To' ExternAttr
-                 '(' ElemID ')' ';' .
-TypeOrCounter  = CounterID / ElemID .
-ExternAttr     = NAME .
+TransmitSeq     = Transmit &lt; Transmit > .
+Transmit        = TypeOrCounter 'To' ExternAttr
+                  '(' ElemID ')' ';' .
+TypeOrCounter   = CounterID / ElemID .
+ExternAttr      = NAME .
 
 END
 </PRE>
 </DIV>
 
 <DIV class="section">
-<H2>The T language</H2>
+<H2><A name=sectb64>The T language</A></H2>
 
 <PRE>
 TransSchema   = 'TRANSLATION' ElemID ';'
@@ -8370,9 +8576,9 @@ SimpleRule    = 'Create' [ 'IN' VarID ] Object
                 'Write' Object [ Position ] ';' /
                 'Read' BufferID [ Position ] ';' /
                 'Include' File [ Position ] ';' /
-                'Get' [ RelPosition ] ElemID 
-                      [ ExtStruct ] 
-                      [ Position ] ';' /
+                'Get'  [ RelPosition ] ElemID 
+                       [ ExtStruct ] 
+                       [ Position ] ';' /
                 'Copy' [ RelPosition ] ElemID 
                        [ ExtStruct ] 
                        [ Position ] ';' /
@@ -8403,84 +8609,84 @@ Object        = ConstID / CharString /
                 [ 'Referred' ] ReferredObject .
 Position      = 'After' / 'Before' .
 
-ReferredObject = VarID /
-                 ElemID [ ExtStruct ] /
-                 'RefId' /
-                 'DocumentName' / 'DocumentDir' .                
+ReferredObject= VarID /
+                ElemID [ ExtStruct ] /
+                'RefId' /
+                'DocumentName' / 'DocumentDir' .                
 
-File           = FileName / BufferID .
-FileName       = STRING .
+File          = FileName / BufferID .
+FileName      = STRING .
 
-RelPosition    = 'Included' / 'Referred' .
-ExtStruct      = '(' ElemID ')' .
+RelPosition   = 'Included' / 'Referred' .
+ExtStruct     = '(' ElemID ')' .
 
-TrSchema       = NAME .
+TrSchema      = NAME .
 
-AttrSeq        = TransAttr &lt; TransAttr > .
-TransAttr      = AttrID [ '(' ElemID ')' ] 
-                 [ RelatAttr ] ':' RuleSeq .
+AttrSeq       = TransAttr &lt; TransAttr > .
+TransAttr     = AttrID [ '(' ElemID ')' ] 
+                [ RelatAttr ] ':' RuleSeq .
 
-PresSeq        = PresTrans &lt; PresTrans > .
-PresTrans      = PresRule ':' RuleSeq .
-PresRule       = 'Size' [ PresRelation ] /
-                 'Indent' [ PresRelation ] /
-                 'LineSpacing' [ PresRelation ] /
-                 'Adjust' [ '=' AdjustVal ] /
-                 'Justify' [ '=' BoolVal ] /
-                 'Hyphenate' [ '=' BoolVal ] /
-                 'Style' [ '=' StyleVal ] /
-                 'Font' [ '=' FontVal ] /
-                 'UnderLine' [ '=' UnderLineVal ] /
-                 'Thickness' [ '=' ThicknessVal ] /
-                 'LineStyle' [ '=' LineStyleVal ] /
-                 'LineWeight' [ PresRelation ] /
-                 'FillPattern' [ '=' Pattern ] /
-                 'Background' [ '=' Color ] /
-                 'Foreground' [ '=' Color ] .
+PresSeq       = PresTrans &lt; PresTrans > .
+PresTrans     = PresRule ':' RuleSeq .
+PresRule      = 'Size' [ PresRelation ] /
+                'Indent' [ PresRelation ] /
+                'LineSpacing' [ PresRelation ] /
+                'Adjust' [ '=' AdjustVal ] /
+                'Justify' [ '=' BoolVal ] /
+                'Hyphenate' [ '=' BoolVal ] /
+                'Style' [ '=' StyleVal ] /
+                'Font' [ '=' FontVal ] /
+                'UnderLine' [ '=' UnderLineVal ] /
+                'Thickness' [ '=' ThicknessVal ] /
+                'LineStyle' [ '=' LineStyleVal ] /
+                'LineWeight' [ PresRelation ] /
+                'FillPattern' [ '=' Pattern ] /
+                'Background' [ '=' Color ] /
+                'Foreground' [ '=' Color ] .
 
-PresRelation   = '=' PresValue /
-                 '>' [ '-' ] PresMinimum /
-                 '&lt;' [ '-' ] PresMaximum /
-                 'IN' '[' [ '-' ] PresIntervalMin '..'
-                          [ '-' ] PresIntervalMax ']' .
-AdjustVal      = 'Left' / 'Right' / 'VMiddle' / 
-                 'LeftWithDots' .
-BoolVal        = 'Yes' / 'No' .
-StyleVal       = 'Bold' / 'Italics' / 'Roman' /
-                 'BoldItalics' / 'Oblique' /
-                 'BoldOblique' .
-FontVal        = 'Times' / 'Helvetica' / 'Courier' .
-UnderLineVal   = 'NoUnderline' / 'UnderLined' /
-                 'OverLined' / 'CrossedOut' .
-ThicknessVal   = 'Thick' / 'Thin' .
-LineStyleVal   = 'Solid' / 'Dashed' / 'Dotted' .
-Pattern        = NAME .
-Color          = NAME .
-PresMinimum    = NUMBER .
-PresMaximum    = NUMBER .
+PresRelation  = '=' PresValue /
+                '>' [ '-' ] PresMinimum /
+                '&lt;' [ '-' ] PresMaximum /
+                'IN' '[' [ '-' ] PresIntervalMin '..'
+                         [ '-' ] PresIntervalMax ']' .
+AdjustVal     = 'Left' / 'Right' / 'VMiddle' / 
+                'LeftWithDots' .
+BoolVal       = 'Yes' / 'No' .
+StyleVal      = 'Bold' / 'Italics' / 'Roman' /
+                'BoldItalics' / 'Oblique' /
+                'BoldOblique' .
+FontVal       = 'Times' / 'Helvetica' / 'Courier' .
+UnderLineVal  = 'NoUnderline' / 'UnderLined' /
+                'OverLined' / 'CrossedOut' .
+ThicknessVal  = 'Thick' / 'Thin' .
+LineStyleVal  = 'Solid' / 'Dashed' / 'Dotted' .
+Pattern       = NAME .
+Color         = NAME .
+PresMinimum   = NUMBER .
+PresMaximum   = NUMBER .
 PresIntervalMin= NUMBER .
 PresIntervalMax= NUMBER .
-PresValue      = [ '-' ] PresVal .
-PresVal        = NUMBER .
+PresValue     = [ '-' ] PresVal .
+PresVal       = NUMBER .
 
-TextTransSeq   = [ Alphabet ] TransSeq .
-Alphabet       = NAME .
-TransSeq       = 'BEGIN' &lt; Translation > 'END' ';' /
-                 Translation .
-Translation    = Source [ '->' Target ] ';' .
-Source         = STRING .
-Target         = STRING .
+TextTransSeq  = [ Alphabet ] TransSeq .
+Alphabet      = NAME .
+TransSeq      = 'BEGIN' &lt; Translation > 'END' ';' /
+                Translation .
+Translation   = Source [ '->' Target ] ';' .
+Source        = STRING .
+Target        = STRING .
 </PRE>
 </DIV>
 <HR>
 </DIV>
 
 <DIV class="chapter">
-<H1><A name="charcoding">Character coding</A></H1>
+<H1><A name=sect7>Character coding</A></H1>
 
 
 <DIV class="section">
-<H2>Characters</H2>
+<H2><A name=sectb71>Characters</A></H2>
 
 <P>
 The characters of the Latin alphabet follow the encoding defined in the ISO
@@ -8501,7 +8707,7 @@ replaced by a line break.</P>
 </DIV>
 
 <DIV class="section">
-<H2><A name="symbolcoding">Symbols</A></H2>
+<H2><A name=sectb72>Symbols</A></H2>
 
 <P>
 The table below gives the codes for the symbols of Thot.  Symbols can be used
@@ -8531,7 +8737,7 @@ schemas.  Each symbol is represented by a single character.</P>
 </DIV>
 
 <DIV class="section">
-<H2>Graphical elements</H2>
+<H2><A name=sectb73>Graphical elements</A></H2>
 
 <P>
 The table below gives the codes for the graphical elements of Thot. These
