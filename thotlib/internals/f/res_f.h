@@ -6,6 +6,14 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void RestInsertNode ( TypeTree child,
+                             TypeTree parent );
+extern void RestReorderChild ( TypeTree child );
+extern void RestFreeTree ( TypeTree tree );
+extern void RestPrintType ( void *restruct,
+                            int bufsize,
+                            boolean isSource );
+extern Restruct RestNewRestruct ( ElementType typeDest );
 extern boolean RestInitMatch ( Element elemFirst,
                                Element elemLast );
 extern boolean RestMatchElements ( Element elemFirst,
@@ -19,6 +27,14 @@ extern boolean RestChangeType ( Element elem,
 
 #else /* __STDC__ */
 
+extern void RestInsertNode (/* TypeTree child,
+                               TypeTree parent */);
+extern void RestReorderChild (/* TypeTree child */);
+extern void RestFreeTree (/* TypeTree tree */);
+extern void RestPrintType (/* void *restruct,
+                              int bufsize,
+                              boolean isSource */);
+extern Restruct RestNewRestruct (/* ElementType typeDest */);
 extern boolean RestInitMatch (/* Element elemFirst,
                                  Element elemLast */);
 extern boolean RestMatchElements (/* Element elemFirst,

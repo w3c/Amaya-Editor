@@ -40,10 +40,6 @@ extern void TtaChangeBoxPosition ( Element element,
                                    int deltaX,
                                    int deltaY,
                                    TypeUnit unit );
-extern int TtaGetBoxMaxSize ( Element element,
-                              Document document,
-                              View view,
-                              TypeUnit unit );
 extern void TtaGiveBoxSize ( Element element,
                              Document document,
                              View view,
@@ -102,10 +98,6 @@ extern void TtaChangeBoxPosition (/* Element element,
                                      int deltaX,
                                      int deltaY,
                                      TypeUnit unit */);
-extern int TtaGetBoxMaxSize (/* Element element,
-                                Document document,
-                                View view,
-                                TypeUnit unit */);
 extern void TtaGiveBoxSize (/* Element element,
                                Document document,
                                View view,

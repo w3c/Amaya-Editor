@@ -12,7 +12,7 @@
 #include "resmatch_f.h"
 
 #ifdef __STDC__
-static boolean RestTransformChildren (Restruct restr, Element oldElem, Element newElem, TypeTree typeTree, Document doc);
+static boolean RestTransformChildren (Restruct restr, Element oldElem, Element newElem, TypeTree typeTree, Document srcDoc, Document dstDoc);
 #else  /* __STDC__ */
 static boolean RestTransformChildren (/* restr, oldElem, newElem, typeTree, doc */);
 #endif  /* __STDC__ */
@@ -285,9 +285,9 @@ Element *elem;
   newElem retourne l'element de plus bas niveau cree
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element RestCreateDescent (Element ancestor, TypeTree ancestTree, TypeTree descendTree, Document doc)
+ Element RestCreateDescent (Element ancestor, TypeTree ancestTree, TypeTree descendTree, Document doc)
 #else  /* __STDC__ */
-static boolean RestCreateDescent (ancestor, ancestTree, descendTree, doc)
+ Element RestCreateDescent (ancestor, ancestTree, descendTree, doc)
 Element ancestor;
 Element *newElem;
 TypeTree ancestTree;
@@ -382,9 +382,9 @@ static boolean RestTransAttr (Element oldElem, Element newElem, Document doc)
   RestTarget
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static TypeTree RestTarget (TypeTree source, Restruct restr)
+ TypeTree RestTarget (TypeTree source, Restruct restr)
 #else  /* __STDC__ */
-static TypeTree RestTarget (source, restr)
+ TypeTree RestTarget (source, restr)
 TypeTree source;
 Restruct restr;
 #endif  /* __STDC__ */
@@ -436,15 +436,16 @@ Element rootElem;
   dans le document doc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean RestTransformElement (Restruct restr, Element elSource, Element elDestParent, TypeTree sourceTree, TypeTree parentTree, Document doc)
+static boolean RestTransformElement (Restruct restr, Element elSource, Element elDestParent, TypeTree sourceTree, TypeTree parentTree, Document srcDoc, Document dstDoc)
 #else  /* __STDC__ */
-static boolean RestTransformElement (restr, elSource, elDestParent, sourceTree, parentTree, doc)
+static boolean RestTransformElement (restr, elSource, elDestParent, sourceTree, parentTree, srcDoc, dstDoc)
 Restruct restr;
 Element elSource;
 Element elDestParent;
 TypeTree sourceTree;
 TypeTree parentTree;
-Document doc;
+Document srcDoc;
+Document dstDoc;
 #endif  /* __STDC__ */
 {
   ElementType elType, targetType;
@@ -484,7 +485,7 @@ Document doc;
 	targetParent = restr->RDestTree;
       if (target != NULL)
 	{
-	  elTarget = RestCreateDescent (elDestParent, targetParent, target, doc);
+	  elTarget = RestCreateDescent (elDestParent, targetParent, target, dstDoc);
 #ifdef DEBUG
 	  targetType.ElSSchema = restr->RDestType.ElSSchema;
 	  targetType.ElTypeNum = target->TypeNum;
@@ -513,27 +514,27 @@ Document doc;
 	      prev = elTarget;
 	      TtaPreviousSibling (&prev);
 	      elParent = TtaGetParent (elTarget);
-	      TtaDeleteTree (elTarget, doc);
+	      TtaDeleteTree (elTarget, dstDoc);
 	    }
 	  else
 	    {
 	      elParent = elDestParent;
 	      prev = TtaGetLastChild (elParent);
 	    }
-	  elTarget = TtaCopyTree (elSource, doc, doc, elParent);
+	  elTarget = TtaCopyTree (elSource, srcDoc, dstDoc, elParent);
 	  /* on insere la copie */
 	  if (prev == NULL)
-	    TtaInsertFirstChild (&elTarget, elParent, doc);
+	    TtaInsertFirstChild (&elTarget, elParent, dstDoc);
 	  else
-	    TtaInsertSibling (elTarget, prev, FALSE, doc);
+	    TtaInsertSibling (elTarget, prev, FALSE, dstDoc);
 	  result = !TtaGetErrorCode();
 	}
       else if (TtaIsLeaf(elType))
 	{
 	  /* RestTransferContent (elSource, elTarget, doc);*/
-	  prev = TtaCopyTree (elSource, doc, doc, elTarget);
+	  prev = TtaCopyTree (elSource, srcDoc, dstDoc, elTarget);
 	  if (prev != NULL)
-	    TtaInsertFirstChild (&prev, elTarget, doc);
+	    TtaInsertFirstChild (&prev, elTarget, dstDoc);
 	  result =!TtaGetErrorCode();
 	}
       else
@@ -546,14 +547,15 @@ Document doc;
 	  result = RestTransformChildren (restr, 
 					  elSource, 
 					  elParent, 
-					  sourceTree, 
-					  doc);
+					  sourceTree,
+					  srcDoc,
+					  dstDoc);
 	  if (result) 
 	    result = RestTransAttr (elSource, 
 				    elParent, 
-				    doc);
+				    dstDoc);
 	  if (TtaGetElementVolume (elParent) == 0)
-	    TtaDeleteTree (elParent, doc);
+	    TtaDeleteTree (elParent, dstDoc);
 	} 
     }
   else /* sourceTree == NULL */
@@ -575,7 +577,8 @@ Document doc;
 				      elDestParent,
 				      treeChild,
 				      parentTree, 
-				      doc));
+				      srcDoc,
+				      dstDoc));
     }
   return result;
 }
@@ -586,14 +589,15 @@ Document doc;
   et les insere comme descendants de newElem
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean RestTransformChildren (Restruct restr, Element srcElem, Element newElem, TypeTree typeTree, Document doc)
+static boolean RestTransformChildren (Restruct restr, Element srcElem, Element newElem, TypeTree typeTree, Document srcDoc, Document dstDoc)
 #else  /* __STDC__ */
-static boolean RestTransformChildren (restr, srcElem, newElem, typeTree, doc)
+static boolean RestTransformChildren (restr, srcElem, newElem, typeTree, srcDoc, dstDoc)
 Restruct restr;
 Element srcElem;
 Element newElem;
 TypeTree typeTree;
-Document doc;
+Document srcDoc;
+Document dstDoc;
 #endif  /* __STDC__ */
 {
   Element elChild, elCopy, prev;
@@ -620,16 +624,16 @@ Document doc;
 	childTree = childTree->TChild;
       if (childTree != NULL)
 	result = (result && 
-		  RestTransformElement (restr, elChild, newElem, childTree, typeTree, doc));
+		  RestTransformElement (restr, elChild, newElem, childTree, typeTree, srcDoc, dstDoc));
       else if (TtaIsLeaf (elType))
 	{
-	  elCopy = TtaCopyTree (elChild, doc, doc, newElem);
+	  elCopy = TtaCopyTree (elChild, srcDoc, dstDoc, newElem);
 	  prev = TtaGetLastChild (newElem);
 	  if (elCopy != NULL)
 	    if (prev == NULL)
-	      TtaInsertFirstChild (&elCopy, newElem, doc);
+	      TtaInsertFirstChild (&elCopy, newElem, dstDoc);
 	    else
-	      TtaInsertSibling (elCopy, prev, FALSE, doc);
+	      TtaInsertSibling (elCopy, prev, FALSE, dstDoc);
       	  result = !TtaGetErrorCode();
 	}
       else
@@ -694,7 +698,7 @@ Restruct restruct;
     else
       /* source multiples : transforme chacun des elements */
       if (ptrTree->TPrintSymb == '*')
-	result = result && RestTransformElement (restruct, RContext->COldElems[i], newInstance, ptrTree->TChild, ptrTree, doc);
+	result = result && RestTransformElement (restruct, RContext->COldElems[i], newInstance, ptrTree->TChild, ptrTree, doc, doc);
       else
 	{
 	  /* element source unique */
@@ -702,7 +706,7 @@ Restruct restruct;
 	  if (target == NULL || target->TypeNum != ptrTree->TypeNum)
 	    /* le type de la racine source n'est pas couple avec un noeud */
 	    /* de meme type : engage la transformation */
-	    result = result && RestTransformChildren (restruct, RContext->COldElems[i], newInstance, ptrTree, doc);
+	    result = result && RestTransformChildren (restruct, RContext->COldElems[i], newInstance, ptrTree, doc, doc);
 	  else
 	    {
 	      /* le type de la racine source est couple avec un noeud */
@@ -751,3 +755,101 @@ Restruct restruct;
 }
 
 
+/*----------------------------------------------------------------------  
+  RestChangeToType
+  applique la transformation restruct pour changement type 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean RestChangeToType (Document sourceDoc, Document destDoc, Element destParent, Element destSibling, Restruct restruct)
+#else  /* __STDC__ */
+boolean RestChangeToType (sourceDoc, destDoc, destParent, destSibling, restruct)
+Document sourceDoc;
+Document destDoc;
+Element destParent;
+Element destSibling;
+Restruct restruct;
+#endif  /* __STDC__ */
+{
+  Element newInstance, elChild, elTargetParent, tprev, tfather;
+  ElementType destType, targetType;
+  Attribute attrDst, attrMandatory = NULL;
+  TypeTree ptrTree, target;
+  int i;
+  boolean result = TRUE;
+  
+  destType = restruct->RDestType;
+  ptrTree =  restruct->RSrcPrint->STree;
+  
+#ifdef DEBUG
+  printf ("Application de la transformation :\n");
+  printf (" source : %s\n", restruct->RSrcPrint->SPrint);
+  printf (" cible  : %s\n\n", restruct->RDestPrint);
+#endif
+ if (destParent == NULL)
+   {
+     newInstance = TtaGetMainRoot (destDoc);
+     elChild = TtaGetFirstChild (newInstance);
+     while (elChild != NULL)
+       {
+	 TtaDeleteTree (elChild, destDoc);
+	 elChild = TtaGetFirstChild (newInstance);
+       }
+     attrDst = NULL;
+     TtaNextAttribute (newInstance, &attrDst);
+     while (attrDst!=NULL)
+       {
+	 TtaRemoveAttribute (newInstance, attrDst, destDoc);
+	 if (TtaGetErrorCode != 0)
+	   attrMandatory = attrDst;
+	 attrDst = attrMandatory;
+	 TtaNextAttribute (newInstance, &attrDst);
+       }
+   }
+ else
+   {
+     newInstance = TtaNewElement (destDoc, destType);
+     if (destSibling == NULL)
+       TtaInsertFirstChild (&newInstance, destParent, destDoc);
+     else
+       TtaInsertSibling (newInstance, destSibling, FALSE, destDoc);
+   }
+
+   /* transforme la descendance */
+ for (i = 0; i < RContext->CNbOldElems; i++)
+   if (TtaIsLeaf (TtaGetElementType(RContext->COldElems[i])))
+     /* cas des feuilles : diretement transferees */
+     result = result && RestTransferContent (RContext->COldElems[i], newInstance, destDoc);
+   else
+     /* source multiples : transforme chacun des elements */
+     if (ptrTree->TPrintSymb == '*')
+       result = result && RestTransformElement (restruct, RContext->COldElems[i], newInstance, ptrTree->TChild, ptrTree, sourceDoc, destDoc);
+     else
+       {
+	 /* element source unique */
+	 target = RestTarget (ptrTree, restruct);
+	 if (target == NULL || target->TypeNum != ptrTree->TypeNum)
+	   /* le type de la racine source n'est pas couple avec un noeud */
+	   /* de meme type : engage la transformation */
+	   result = result && RestTransformChildren (restruct, RContext->COldElems[i], newInstance, ptrTree, sourceDoc, destDoc);
+	 else
+	   {
+	     /* le type de la racine source est couple avec un noeud */
+	     /* de meme type : cree une descendance et copie l'element */
+	     targetType.ElSSchema = destType.ElSSchema;
+	     targetType.ElTypeNum = target->TypeNum;
+	     elTargetParent = RestCreateDescent (newInstance, NULL, target, destDoc);
+	     tprev = elTargetParent;
+	     TtaPreviousSibling (&tprev);
+	     if (tprev == NULL)
+	       tfather = TtaGetParent (elTargetParent);
+	     TtaDeleteTree (elTargetParent, destDoc);
+	     
+	     newInstance = TtaCopyTree (RContext->COldElems[i], sourceDoc, destDoc, tfather); 
+	     if (tprev == NULL)
+	       TtaInsertFirstChild (&newInstance, tfather, destDoc);
+	     else
+	       TtaInsertSibling (newInstance, tprev, FALSE, destDoc);
+	   }
+       }
+ return result;
+}

@@ -656,18 +656,19 @@ PtrDocument         pDoc;
 
 /*----------------------------------------------------------------------
    Assure la presence d'un atome texte de la bonne langue a la      
-   position indiquee (qui doit etre un atome texte)                 
+   position indiquee (qui doit etre un atome texte), cree l'attribut
+   langue sur cet atome si setLangAttr est vrai.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                NewTextLanguage (PtrAbstractBox pAb, int charIndex, Language lang)
+void                NewTextLanguage (PtrAbstractBox pAb, int charIndex, Language lang, boolean setLangAttr)
 
 #else  /* __STDC__ */
-void                NewTextLanguage (pAb, charIndex, lang)
+void                NewTextLanguage (pAb, charIndex, lang, setLangAttr)
 PtrAbstractBox      pAb;
 int                 charIndex;
 Language            lang;
-
+boolean		    setLangAttr;
 #endif /* __STDC__ */
 
 {
@@ -707,8 +708,15 @@ Language            lang;
 	    pAttr->AeAttrNum = 1;
 	    pAttr->AeDefAttr = FALSE;
 	    pAttr->AeAttrType = AtTextAttr;
-	    GetTextBuffer (&pAttr->AeAttrText);
-	    CopyStringToText (TtaGetLanguageName (lang), pAttr->AeAttrText, &len);
+	    if (setLangAttr)
+	      {
+		GetTextBuffer (&pAttr->AeAttrText);
+		CopyStringToText (TtaGetLanguageName (lang), pAttr->AeAttrText, &len);
+	      }
+	    else
+	      {
+		pAttr->AeAttrText = NULL;
+	      }
 	    AttachAttrWithValue (pEl, pDoc, pAttr);
 	    DeleteAttribute (NULL, pAttr);
 	    AbstractImageUpdated (pDoc);

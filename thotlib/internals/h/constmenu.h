@@ -183,7 +183,8 @@
 #define NumFormLanguage		178
 #define NumSelectLanguage		179
 #define NumLabelHeritedLanguage	180
-#define NumMenuAttrName		181
+#define NumMenuAlphaLanguage    181
+#define NumMenuAttrName		182
 #define MAX_LocalMenu		190
 
 /* Number of references reserved by Thot       				*/

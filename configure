@@ -5282,6 +5282,11 @@ if test "$build_thot" = "yes" ;  then
 	if test -f $srcdir/misc/annotations/Makefile.in ; then
 	    build_annotations="yes"
 	fi
+   build_xmlstr="no"
+        if test -f $srcdir/xmlstr/Makefile.in ; then
+            build_xmlstr="yes"
+        fi
+
 	if test -f $srcdir/misc/util/Makefile.in ; then
 	    build_util="yes"
 	    build_tableaux="no"
@@ -5689,6 +5694,12 @@ $srcdir/misc/Makefile.in"
 	    make_output="$make_output misc/annotations/Makefile"
 	    EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
 $srcdir/misc/annotations/Makefile.in"
+	fi
+
+	if test "$build_xmlstr" = "yes" ; then
+	    make_output="$make_output xmlstr/Makefile"
+	    EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
+$srcdir/xmlstr/Makefile.in"
 	fi
 
 	if test "$build_util" = "yes" ; then

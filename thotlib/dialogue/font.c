@@ -709,6 +709,8 @@ char                r_nameX[100];
 
 	if ((char) TOLOWER (alphabet) == 'l')
 	   strcat (r_nameX, "-iso8859-1");
+	else if ((char) TOLOWER (alphabet) == 'e')
+	   strcat (r_nameX, "-iso8859-2");
 	else
 	   strcat (r_nameX, "-*-fontspecific");		/*adobe */
      }

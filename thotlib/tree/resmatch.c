@@ -287,9 +287,9 @@ Restruct resctx;
   LgU = strlen (CSrc);
   LgV = strlen (CDst);
   if (LgU > LgV)
-     LgMax = LgU;
+    LgMax = LgU;
   else
-     LgMax = LgV;
+    LgMax = LgV;
   /* creer la pile de massif a vide */
   TopMS = 0;
   ClusterStack = (TyClusterStack *) TtaGetMemory((LgMax + 1) * sizeof (TyClusterStack));
@@ -302,8 +302,8 @@ Restruct resctx;
   j = 1;
   while ((i <= LgU) && (j <= LgV))
     {
-     rel = RestMatchSymb (resctx, i - 1, j - 1);
-     if (rel != NONE) /*== EQUIVALENCE)*/
+      rel = RestMatchSymb (resctx, i - 1, j - 1);
+      if (rel != NONE) /*== EQUIVALENCE)*/
         {
           if (V[j] == ClusterStack[TopMS].Inverse)
             if (ClusterStack[TopMS].Compteur == 0)    /*180794 */
@@ -316,16 +316,16 @@ Restruct resctx;
               ClusterStack[TopMS].Compteur -= 1;     /*180794 */
           else if ((V[j] == '{') || (V[j] == '(') || (V[j] == '['))
             {                /* on n'empile que les constructeurs */
-              TopMS += 1;   /* empiler */
+              TopMS += 1;    /* empiler */
               ClusterStack[TopMS].Emp = V[j];
               switch (V[j])
                 {
                 case '{':
                   ClusterStack[TopMS].Inverse = '}';
                   break;
-               case '(':
-                 ClusterStack[TopMS].Inverse = ')';
-		 break;
+		case '(':
+		  ClusterStack[TopMS].Inverse = ')';
+		  break;
 		case '[':
                   ClusterStack[TopMS].Inverse = ']';
                   break;
@@ -335,7 +335,7 @@ Restruct resctx;
               ClusterStack[TopMS].Retour = i;
               ClusterStack[TopMS].Compteur = 0;
 	      RestCoupler (resctx, i - 1, j - 1);
-
+	      
 	      if (rel == IDENTITE)
 		{
 		  if (CSrc[i - 1] != '@')
@@ -369,7 +369,7 @@ Restruct resctx;
 			  if (!stop)
 			    {
 			      if (V[j] == ClusterStack[TopMS].Inverse)
-			    level--;
+				level--;
 			      if (V[j] == ClusterStack[TopMS].Emp)
 				level++;
 			      j++;
@@ -377,10 +377,8 @@ Restruct resctx;
 			}
 		    }
 		}
-
 	      i += 1;
-	   
-            }
+	    }
           else
             { 
 	      RestCoupler (resctx, i - 1, j - 1);
@@ -388,31 +386,31 @@ Restruct resctx;
             }
         }
       else
-        {
-          if (V[j] == ClusterStack[TopMS].Inverse)
-            if (ClusterStack[TopMS].Compteur > 0)
-              ClusterStack[TopMS].Compteur -= 1;
-            else
-              {
-                int                k;
-                /* retour en arriere, supprimer les couplages errones */
-                for (k = i - 1; k >= ClusterStack[TopMS].Retour; k--)
-                  if (!RestDeCoupler (resctx, k - 1))
-                    {
-                      RestEraseCouple (resctx);
-                      resctx->RRelation = NONE;
-                      return;
-                    }
-                i = ClusterStack[TopMS].Retour;
-                TopMS -= 1;        /* Depiler */
-              }
-          if (V[j] == ClusterStack[TopMS].Emp)         /*180794 */
-            ClusterStack[TopMS].Compteur += 1;
-        }
+	{
+	  if (V[j] == ClusterStack[TopMS].Inverse)
+	    if (ClusterStack[TopMS].Compteur > 0)
+	      ClusterStack[TopMS].Compteur -= 1;
+	    else
+	      {
+		int                k;
+		/* retour en arriere, supprimer les couplages errones */
+		for (k = i - 1; k >= ClusterStack[TopMS].Retour; k--)
+		  if (!RestDeCoupler (resctx, k - 1))
+		    {
+		      RestEraseCouple (resctx);
+		      resctx->RRelation = NONE;
+		      return;
+		    }
+		i = ClusterStack[TopMS].Retour;
+		TopMS -= 1;        /* Depiler */
+	      }
+	  if (V[j] == ClusterStack[TopMS].Emp)         /*180794 */
+	    ClusterStack[TopMS].Compteur += 1;
+	}
       j += 1;
     }
   TtaFreeMemory ((char *)ClusterStack);
-
+  
   if (i > LgU)
     {
 #ifdef DEBUG
@@ -422,11 +420,11 @@ Restruct resctx;
       return;
     }
   else
-   {
-     RestEraseCouple (resctx);
-     resctx->RRelation = NONE;
-     return;
-   }
+    {
+      RestEraseCouple (resctx);
+      resctx->RRelation = NONE;
+      return;
+    }
 }     
 
 /*----------------------------------------------------------------------  

@@ -40,6 +40,7 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "constres.h"
 #include "creation_tv.h"
 #include "modif_tv.h"
 #include "select_tv.h"

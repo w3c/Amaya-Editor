@@ -26,7 +26,8 @@ extern void DeHolophrast ( PtrElement pEl,
                            PtrDocument pDoc );
 extern void NewTextLanguage ( PtrAbstractBox pAb,
                               int charIndex,
-                              Language lang );
+                              Language lang,
+                              boolean setLangAttr );
 extern boolean CompleteElement ( PtrElement pEl,
                                  PtrDocument pDoc );
 extern boolean BreakElement ( PtrElement pElReplicate,
@@ -64,7 +65,8 @@ extern void DeHolophrast (/* PtrElement pEl,
                              PtrDocument pDoc */);
 extern void NewTextLanguage (/* PtrAbstractBox pAb,
                                 int charIndex,
-                                Language lang */);
+                                Language lang,
+                                boolean setLangAttr */);
 extern boolean CompleteElement (/* PtrElement pEl,
                                    PtrDocument pDoc */);
 extern boolean BreakElement (/* PtrElement pElReplicate,

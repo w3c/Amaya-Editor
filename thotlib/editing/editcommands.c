@@ -936,15 +936,33 @@ int                 keyboard;
 {
   PtrAbstractBox      pSelAb;
   PtrBox              pBox;
+  PtrAttribute        pHeritAttr;
+  PtrElement          pElAttr;  
   ViewSelection      *pViewSel;
   Language            language;
   int                 index;
   boolean             cut;
   boolean             notification;
+  boolean	      setAttribute = TRUE;
 
   pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
   notification = FALSE;
-  if (keyboard == -1 || keyboard == 2)
+  if (keyboard == -1)
+    if ((*pAb)->AbLanguage < TtaGetFirstUserLanguage())
+      /* le contenu du pave a ete saisi par palette */
+      /* et on a saisi au clavier : recherche la langue dans les ancetres */
+      {
+	pHeritAttr = GetTypedAttrAncestor ((*pAb)->AbElement->ElParent, 1, NULL, &pElAttr); 
+	if (pHeritAttr != NULL)
+	  if (pHeritAttr->AeAttrText != NULL)
+	    {
+	      language = TtaGetLanguageIdFromName (pHeritAttr->AeAttrText->BuContent);
+	      setAttribute = FALSE;
+	    }
+      }
+    else
+      language = (*pAb)->AbLanguage;
+  else if (keyboard == 2)
     /* une langue latine saisie */
     if (TtaGetAlphabet ((*pAb)->AbLanguage) == 'L')
       language = (*pAb)->AbLanguage;
@@ -984,7 +1002,7 @@ int                 keyboard;
 		
 		/* S'il faut couper, on appelle l'editeur */
 		if (cut)
-		  NewTextLanguage (*pAb, index, language);
+		  NewTextLanguage (*pAb, index, language, setAttribute);
 		/* la boite peut avoir change */
 		pBox = pViewSel->VsBox;
 		if (pBox != NULL)
@@ -2427,7 +2445,7 @@ int                 editType;
 		  if (pAb->AbLeafType != LtText && pAb->AbLanguage != ClipboardLanguage)
 		    {
 		       /* charsDelta contient le nombre de carateres qui precedent dans la boite */
-		       NewTextLanguage (pAb, charsDelta + pBox->BxIndChar + 1, ClipboardLanguage);
+		       NewTextLanguage (pAb, charsDelta + pBox->BxIndChar + 1, ClipboardLanguage, TRUE);
 		       pBox = pViewSel->VsBox;
 		       if (pBox != NULL)
 			 {

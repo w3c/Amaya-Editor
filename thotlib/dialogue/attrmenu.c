@@ -44,7 +44,9 @@
 /* flags to show the existence of the TtAttribute forms*/
 static boolean      AttrFormExists = FALSE;
 static boolean      MandatoryAttrFormExists = FALSE;
+#ifdef _WINDOWS
 static boolean      dlgInitialized = FALSE; 
+#  endif /* _WINDOWS */
 
 /* the menu attributes */
 static PtrSSchema   AttrStruct[LgMaxAttributeMenu];
@@ -56,7 +58,7 @@ static PtrSSchema   SchCurrentAttr = NULL;
 static int          NumCurrentAttr = 0;
 static int          ActiveAttr[100];
 static int          CurrentAttr;
-
+static int	    MenuAlphaLangValue;
 /* return value of the input form */
 static int          NumAttrValue;
 
@@ -137,7 +139,7 @@ PtrAttribute        currAttr;
 
 #endif /* __STDC__ */
 {
-   int                 i, defItem, nbItem, nbLanguages, length;
+   int                 i, defItem, nbItem, nbLanguages, firstLanguage, length;
    char                bufMenu[MAX_TXT_LEN];
    char                string[MAX_TXT_LEN];
    char               *ptr;
@@ -166,7 +168,8 @@ PtrAttribute        currAttr;
    nbItem = 0;
    defItem = -1;
    nbLanguages = TtaGetNumberOfLanguages ();
-   for (language = 0; language < nbLanguages; language++)
+   firstLanguage = TtaGetFirstUserLanguage ();
+   for (language = firstLanguage; language < nbLanguages; language++)
      {
 	strcpy (string, TtaGetLanguageName (language));
 	length = strlen (string);
@@ -187,11 +190,13 @@ PtrAttribute        currAttr;
    if (nbItem == 0)
      {
 	/* pas de langue definie, on cree une simple zone de saisie de texte */
+       MenuAlphaLangValue = 0;
 #   ifndef _WINDOWS 
 	TtaNewTextForm (NumSelectLanguage, NumFormLanguage,
 			TtaGetMessage (LIB, TMSG_LANGUAGE), 30, 1, FALSE);
 	TtaSetTextForm (NumFormLanguage, languageValue);
 #   endif /* !_WINDOWS */
+	
      }
    else
       /* on cree un selecteur */
@@ -203,14 +208,20 @@ PtrAttribute        currAttr;
 #   ifndef _WINDOWS 
 	TtaNewSelector (NumSelectLanguage, NumFormLanguage,
 		      TtaGetMessage (LIB, TMSG_LANG_OF_EL), nbItem, bufMenu,
-			length, NULL, TRUE, FALSE);
+			length, NULL, TRUE, TRUE);
 #   endif /* !_WINDOWS */
 	if (languageValue[0] == '\0' || defItem < 0)
-	   TtaSetSelector (NumSelectLanguage, -1, NULL);
+	  {
+	    TtaSetSelector (NumSelectLanguage, -1, NULL);
+	    MenuAlphaLangValue = -1;
+	  }
 	else
 	   /* initialise le selecteur sur l'entree correspondante a la valeur
 	      courante de l'attribut langue. */
-	   TtaSetSelector (NumSelectLanguage, defItem, languageValue);
+	  {
+	    TtaSetSelector (NumSelectLanguage, defItem, languageValue);
+	    MenuAlphaLangValue = TtaGetLanguageIdFromAlphabet(TtaGetAlphabet (defItem));
+	  }
      }
 
    /* cherche la valeur heritee de l'attribut Langue */
@@ -223,10 +234,34 @@ PtrAttribute        currAttr;
 	 /* a language name */
 	 language = TtaGetLanguageIdFromName (pHeritAttr->AeAttrText->BuContent);
 	 strcat (Lab, TtaGetLanguageName(language));
+	 if (MenuAlphaLangValue == -1)
+	   MenuAlphaLangValue = TtaGetLanguageIdFromAlphabet(TtaGetAlphabet (language));
 	 }
 
 #  ifndef _WINDOWS 
    TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, Lab);
+   
+   /* label alphabet */
+   /* TtaNewLabel (NumLabelAlphaLanguage, NumFormLanguage, TtaGetMessage (LIB, TMSG_CHAR_ENCODING));*/
+
+   /* construction du menu alphabet */
+   ptr = &bufMenu[0];
+   nbItem = 0;
+   nbLanguages = TtaGetFirstUserLanguage ();
+   for (language = 0; language < nbLanguages; language++)
+     {
+	strcpy (string, TtaGetLanguageName (language));
+	length = strlen (string);
+	if (length > 0)
+	  {
+	    nbItem++;
+	    sprintf(ptr, "T%s", string);
+	    ptr += length + 2;
+	  }
+     }
+   TtaNewSubmenu (NumMenuAlphaLanguage, NumFormLanguage, 0 ,TtaGetMessage (LIB, TMSG_CHAR_ENCODING), nbItem, bufMenu, NULL, TRUE);
+   TtaSetMenuForm (NumMenuAlphaLanguage, MenuAlphaLangValue);	      
+
    /* affiche le formulaire */
    TtaShowDialogue (NumFormLanguage, TRUE);
 #  else  /* _WINDOWS */
@@ -1470,36 +1505,50 @@ char               *txt;
 
 #endif /* __STDC__ */
 {
-   Language		i;
+  Language		i;
+  char			alphabet;
 
-   switch (ref)
-	 {
-	    case NumSelectLanguage:
-	       /* retour de la langue choise par l'utilisateur */
-	       if (txt == NULL)
-		  TextAttrValue[0] = '\0';
-	       else
-		  {
-		  i = TtaGetLanguageIdFromName (txt);
-		  strncpy (TextAttrValue, TtaGetLanguageCode (i), LgMaxAttrText);
-		  }
-	       break;
-	    case NumFormLanguage:
-	       /* retour du formulaire lui-meme */
-
-	       switch (val)
-		     {
-			case 0:
-			   /* abandon du formulaire */
-			   break;
-			case 1:
-			case 2:
-			   /* appliquer la nouvelle valeur */
-			   CallbackValAttrMenu (NumMenuAttr, val, NULL);
-			   break;
-		     }
-	       break;
-	 }
+  switch (ref)
+    {
+    case NumSelectLanguage:
+      /* retour de la langue choisie par l'utilisateur */
+      if (txt == NULL)
+	TextAttrValue[0] = '\0';
+      else
+	{
+	  i = TtaGetLanguageIdFromName (txt);
+	  strncpy (TextAttrValue, TtaGetLanguageCode (i), LgMaxAttrText);
+	  i = TtaGetLanguageIdFromAlphabet(TtaGetAlphabet (i));
+	  if ((int)i != MenuAlphaLangValue)
+	    {
+	      TtaSetMenuForm (NumMenuAlphaLanguage, (int)i);
+	      MenuAlphaLangValue = (int)i;
+	    }
+	}
+      CallbackValAttrMenu (NumMenuAttr, 1, NULL);
+      break;
+    case NumMenuAlphaLanguage:
+      /* retour de l'alphabet choisi par l'utilisateur */
+      strncpy (TextAttrValue, TtaGetLanguageCode ((int)val), LgMaxAttrText);
+      TtaSetSelector (NumSelectLanguage, -1, TtaGetMessage (LIB, TMSG_NO_LANGUAGE));
+      CallbackValAttrMenu (NumMenuAttr, 1, NULL);
+      MenuAlphaLangValue =  (int)val;
+      break;
+    case NumFormLanguage:
+      /* retour du formulaire lui-meme */
+      switch (val)
+	{
+	case 0:
+	  /* abandon du formulaire */
+	  break;
+	case 1:
+	case 2:
+	  /* appliquer la nouvelle valeur */
+	  CallbackValAttrMenu (NumMenuAttr, val, NULL);
+	  break;
+	}
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------

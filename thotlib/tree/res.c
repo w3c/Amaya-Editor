@@ -15,9 +15,23 @@
 
 #define NBSYMB 15
 
-char IndexSymols[] = {'T', 'G', 'S', 'R', 'P', 
-		      '2', 'U', 'C', '{', 
-		      '[', '(', 'N', 'E', '@', '*', '\0'};
+char IndexSymols[] = {'%', /* pre couplage */
+		      'T', /* text */
+		      'G', /* graphics */
+		      'S', /* symbol */
+		      'R', /* reference */
+		      'P', /* picture */
+		      '2', /* pair */
+		      'U', /* unit */
+		      'C', /* constant */
+		      '{', /* aggregate */ 
+		      '[', /* choice */
+		      '(', /* list */
+		      'N', /* nature */
+		      'E', /* extension */
+		      '@', /* recursive */
+		      '*', /* source root (fictive) */
+		      '\0'};
 
 static StrUnitDesc *ListUnitDesc = NULL;
 static TypeTree BuildStack[MAXDEPTH];
@@ -97,9 +111,9 @@ TypeTree second;
   insere le noeud child dans l'arbre de types comme fils de parent
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void RestInsertNode (TypeTree child, TypeTree parent) 
+void RestInsertNode (TypeTree child, TypeTree parent) 
 #else  /* __STDC__ */
-static void RestInsertNode (child, parent) 
+void RestInsertNode (child, parent) 
 TypeTree child;
 TypeTree parent;
 #endif  /* __STDC__ */
@@ -147,9 +161,9 @@ TypeTree parent;
   detache et re-insere le noeud child dans l'arbre de types 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void RestReorderChild (TypeTree child) 
+void RestReorderChild (TypeTree child) 
 #else  /* __STDC__ */
-static void RestReorderChild (child) 
+void RestReorderChild (child) 
 TypeTree child;
 #endif  /* __STDC__ */
 {
@@ -194,16 +208,31 @@ ElementType elemType;
   theTree->TDepth = 0;
   return theTree;
 }
+/*----------------------------------------------------------------------
+  RestSearchPreCouple
+  recherche si typeNode est compatible avec un précouplage
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void RestSearchPreCouple (TypeTree typeNode, boolean isSource) 
+#else  /* __STDC__ */
+static void RestSearchPreCouple (typeNode, isSource) 
+TypeTree typeNode;
+boolean isSource;
+#endif  /* __STDC__ */
+{
+  
+}
 
 /*----------------------------------------------------------------------
   RecBuildTypeTree
   construit l'arbre des types du type elemType
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static TypeTree RecBuildTypeTree(ElementType elemType) 
+static TypeTree RecBuildTypeTree (ElementType elemType, boolean isSource) 
 #else  /* __STDC__ */
-static TypeTree RecBuildTypeTree(elemType) 
+static TypeTree RecBuildTypeTree (elemType, isSource) 
 ElementType elemType;
+boolean isSource;
 #endif  /* __STDC__ */
 {
   TypeTree theTree = NULL;
@@ -226,6 +255,7 @@ ElementType elemType;
 	      theTree->TPrintSymb = '@';
 	    }
 	}
+      
       /* construit un noeud */
       if (theTree == NULL)
 	{
@@ -235,7 +265,7 @@ ElementType elemType;
 	    {
 	      /* c'est une identite, on ne cree pas de noeud */
 	      childType.ElTypeNum = (strRule->SrIdentRule);
-	      theTree = RecBuildTypeTree (childType);
+	      theTree = RecBuildTypeTree (childType, isSource);
 	      theTree->TypeNum = elemType.ElTypeNum;
 	    }
 	  else
@@ -249,7 +279,7 @@ ElementType elemType;
 		case CsList:
 		  theTree->TPrintSymb = '(';
 		  childType.ElTypeNum = strRule->SrListItem;
-		  newNode = RecBuildTypeTree (childType);
+		  newNode = RecBuildTypeTree (childType, isSource);
 		  RestInsertNode (newNode, theTree);
 		  break;
 		case CsChoice:
@@ -259,7 +289,7 @@ ElementType elemType;
 		      for (i = 0; i < strRule->SrNChoices; i++)
 			{
 			  childType.ElTypeNum = strRule->SrChoice[i];
-			  newNode = RecBuildTypeTree (childType);
+			  newNode = RecBuildTypeTree (childType, isSource);
 			  RestInsertNode (newNode, theTree);
 			}
 		    }
@@ -280,7 +310,7 @@ ElementType elemType;
 		      for (i = 0; i < strRule->SrNComponents; i++)
 			{
 			  childType.ElTypeNum = strRule->SrComponent[i];
-			  newNode = RecBuildTypeTree (childType);
+			  newNode = RecBuildTypeTree (childType, isSource);
 			  RestInsertNode (newNode, theTree);
 			}
 		    }
@@ -325,9 +355,28 @@ ElementType elemType;
 	      BuildStack[BuildStackTop--] = NULL;
 	    } 
 	}
+      RestSearchPreCouple (theTree, isSource);
     }
   return theTree;
 }
+
+/*----------------------------------------------------------------------  
+  GetTypeTree
+  retourne un pointeur sur le noeud de l'arbre de type du schema 
+  correspondant au type d'element elemType 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static TypeTree GetTypeTree(ElementType elemType, boolean isSource)
+#else  /* __STDC__ */
+static TypeTree GetTypeTree(elemType, isSource)
+ElementType elemType;
+boolean isSource;
+#endif  /* __STDC__ */
+{
+  BuildStackTop = -1; 
+  return RecBuildTypeTree (elemType, isSource); 
+}
+
 
 /*----------------------------------------------------------------------
   FindTypeInTree
@@ -356,6 +405,7 @@ TypeTree tree;
     }
   return res;
 }
+
 
 /*----------------------------------------------------------------------  
   GetElemSourceTree
@@ -391,8 +441,7 @@ static TypeTree GetElemSourceTree()
 	i++;
       if (i == nbTypes)
 	{
-	  BuildStackTop = -1;
-	  child = RecBuildTypeTree (elType);
+	  child = GetTypeTree (elType, TRUE);
 	  RestInsertNode (child, theTree);
 	  tabTypes[nbTypes++] = elType;
 	}  
@@ -407,31 +456,15 @@ static TypeTree GetElemSourceTree()
     return theTree; 
 }
 
-/*----------------------------------------------------------------------  
-  GetTypeTree
-  retourne un pointeur sur le noeud de l'arbre de type du schema 
-  correspondant au type d'element elemType 
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static TypeTree GetTypeTree(ElementType elemType)
-#else  /* __STDC__ */
-static TypeTree GetTypeTree(elemType)
-ElementType elemType;
-#endif  /* __STDC__ */
-{
-  BuildStackTop = -1; 
-  return RecBuildTypeTree (elemType); 
-}
-
 
 /*----------------------------------------------------------------------  
   RestFreeTree
   libere un arbre de types
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void RestFreeTree(TypeTree tree)
+void RestFreeTree(TypeTree tree)
 #else  /* __STDC__ */
-static void RestFreeTree(tree)
+void RestFreeTree(tree)
 TypeTree tree;
 #endif  /* __STDC__ */
 {
@@ -449,7 +482,7 @@ TypeTree tree;
     }
 }
 /*----------------------------------------------------------------------  
-  GetUDescSymbGetUDescSymb 
+  GetUDescSymb
   retourne le symbole correspondant au noeud unite tree ('U' si aucune
   information n'est presente pour ce noeud).
   ----------------------------------------------------------------------*/
@@ -620,9 +653,9 @@ PrintMethod method;
   si effective est vrai cree l'empreinte des types effectifs 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void RestPrintType(void *restruct, int bufsize, boolean isSource)
+void RestPrintType(void *restruct, int bufsize, boolean isSource)
 #else  /* __STDC__ */
-static void RestPrintType(restruct, bufsize, isSource)
+void RestPrintType(restruct, bufsize, isSource)
 void *restruct;
 int bufsize;
 boolean isSource;
@@ -941,9 +974,9 @@ PrintMethod method;
   RestNewRestruct
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Restruct RestNewRestruct (ElementType typeDest)
+Restruct RestNewRestruct (ElementType typeDest)
 #else  /* __STDC__ */
-static Restruct RestNewRestruct (typeDest)
+Restruct RestNewRestruct (typeDest)
 ElementType typeDest;
 #endif  /* __STDC__ */
 {
@@ -960,7 +993,7 @@ ElementType typeDest;
       restruct->RDestNodes[i] = 
       restruct->RCoupledNodes[i] = NULL;
     }
-  restruct->RDestTree = GetTypeTree (typeDest);
+  restruct->RDestTree = GetTypeTree (typeDest, FALSE);
   RestPrintType (restruct, SIZEPRINT, FALSE);
   return restruct;
 }
@@ -1039,11 +1072,11 @@ Element elemLast;
       RContext->CPrintMethod[1] = PM_EFFECTIF;
       /* RContext->CPrintMethod[2] = PM_EFFECTIF | PM_PUREEFF;*/
       RContext->CPrintMethod[2] = PM_EFFECTIF | PM_WTHTLIST;
-      /*   RContext->CPrintMethod[4] = PM_EFFECTIF | PM_PUREEFF | PM_WTHTCHOICE; */
+      /* RContext->CPrintMethod[4] = PM_EFFECTIF | PM_PUREEFF | PM_WTHTCHOICE;*/
       RContext->CPrintMethod[3] = PM_EFFECTIF | PM_WTHTCHOICE;
-      /*   RContext->CPrintMethod[6] = PM_EFFECTIF | PM_PUREEFF | PM_WTHTLIST; */
+      /* RContext->CPrintMethod[6] = PM_EFFECTIF | PM_PUREEFF | PM_WTHTLIST; */
       RContext->CPrintMethod[4] = PM_EFFECTIF | PM_WTHTCHOICE | PM_WTHTLIST;
-      /*   RContext->CPrintMethod[8] = PM_EFFECTIF | PM_PUREEFF | PM_WTHTCHOICE | PM_WTHTLIST; */
+      /* RContext->CPrintMethod[8] = PM_EFFECTIF | PM_PUREEFF | PM_WTHTCHOICE | PM_WTHTLIST; */
       RContext->CNbPrintMethod = 5;
     }
   return ok;

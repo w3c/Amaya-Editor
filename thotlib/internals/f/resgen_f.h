@@ -8,15 +8,37 @@
 
 extern TypeTree RestNextEffNode ( TypeTree tree,
                                   TypeTree lastNode );
+extern Element RestCreateDescent ( Element ancestor,
+                                   TypeTree ancestTree,
+                                   TypeTree descendTree,
+                                   Document doc );
+extern TypeTree RestTarget ( TypeTree source,
+                             Restruct restr );
 extern boolean RestChangeOnPlace ( Document doc,
                                    Restruct restruct );
+extern boolean RestChangeToType ( Document sourceDoc,
+                                  Document destDoc,
+                                  Element destParent,
+                                  Element destSibling,
+                                  Restruct restruct );
 
 #else /* __STDC__ */
 
 extern TypeTree RestNextEffNode (/* TypeTree tree,
                                     TypeTree lastNode */);
+extern Element RestCreateDescent (/* Element ancestor,
+                                     TypeTree ancestTree,
+                                     TypeTree descendTree,
+                                     Document doc */);
+extern TypeTree RestTarget (/* TypeTree source,
+                               Restruct restr */);
 extern boolean RestChangeOnPlace (/* Document doc,
                                      Restruct restruct */);
+extern boolean RestChangeToType (/* Document sourceDoc,
+                                    Document destDoc,
+                                    Element destParent,
+                                    Element destSibling,
+                                    Restruct restruct */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

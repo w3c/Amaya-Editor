@@ -679,6 +679,7 @@ boolean             force;
    int                 view;
    PtrElement          pChild;
    PtrAbstractBox      pAbsBox;
+   Language	       oldElLang;
 
    if (pEl == NULL)
       return;
@@ -699,10 +700,9 @@ boolean             force;
       /* l'element est une feuille */
    if (pEl->ElLeafType == LtText && pEl->ElLanguage != lang)
       /* c'est du texte dans une autre langue */
-      if (force || TtaGetAlphabet (pEl->ElLanguage) == TtaGetAlphabet (lang))
-	 /* cette langue s'ecrit dans le meme alphabet ou la langue est forcee */
-	 /* change la langue de l'element */
+    	 /* change la langue de l'element */
 	{
+	  oldElLang = pEl->ElLanguage;
 	   pEl->ElLanguage = lang;
 	   /* parcourt toutes les vues du document pour changer les */
 	   /* paves de l'element */
@@ -719,14 +719,19 @@ boolean             force;
 		      /* change la langue du pave */
 		     {
 			pAbsBox->AbLanguage = lang;
-			pAbsBox->AbChange = TRUE;
-			/* conserve le pointeur sur le pave a reafficher */
-			if (AssocView (pEl))
-			   pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-			      Enclosing (pAbsBox, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
-			else
-			   pDoc->DocViewModifiedAb[view] =
-			      Enclosing (pAbsBox, pDoc->DocViewModifiedAb[view]);
+			if (force || TtaGetAlphabet (oldElLang) != TtaGetAlphabet (lang))
+			  /* cette langue s'ecrit dans un alphabet different */
+			  /* ou la langue est forcee */
+			  {
+			    pAbsBox->AbChange = TRUE;
+			    /* conserve le pointeur sur le pave a reafficher */
+			    if (AssocView (pEl))
+			      pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
+				Enclosing (pAbsBox, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+			    else
+			      pDoc->DocViewModifiedAb[view] =
+				Enclosing (pAbsBox, pDoc->DocViewModifiedAb[view]);
+			  }
 		     }
 		}
 	}
@@ -1300,7 +1305,11 @@ boolean		    reDisplay;
 		    {
 		       lang = TtaGetDefaultLanguage ();		/* langue par defaut */
 		       /* on cherche si un ascendant porte l'attribut Langue */
-		       pAttrAsc = GetTypedAttrAncestor (pEl, 1, NULL, &pElAttr);
+		       if (pEl->ElParent != NULL)
+			 pAttrAsc = GetTypedAttrAncestor (pEl->ElParent, 1, NULL, &pElAttr);
+		       else
+			 pAttrAsc = GetTypedAttrAncestor (pEl->ElParent, 1, NULL, &pElAttr);
+
 		       if (pAttrAsc != NULL)
 			  /* un ascendant definit la langue, on prend cette langue */
 			  if (pAttrAsc->AeAttrText != NULL)

@@ -3529,10 +3529,11 @@ char               *data;
 		  break;
 
 	       case NumSelectLanguage:
-		  (*ThotLocalActions[T_rattrlang]) (ref, 0, data);
+		 (*ThotLocalActions[T_rattrlang]) (ref, 0, data);
 		  break;
 	       case NumFormLanguage:
-		  (*ThotLocalActions[T_rattrlang]) (ref, (int) data, NULL);
+	       case NumMenuAlphaLanguage:
+		 (*ThotLocalActions[T_rattrlang]) (ref, (int) data, NULL);
 		  break;
 
 	       case NumFormCreateDoc:

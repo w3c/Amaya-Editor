@@ -23,9 +23,24 @@
 #define PM_WTHTCHOICE 4
 #define PM_WTHTLIST 8
 
-/* domaines de valeurs */
-typedef enum {IDENTITE, EQUIVALENCE, FACTOR, SUB_TYPE, CLUSTER, SUB_SCHEMA, NONE} TyRelation;
+#define MAXNODECOUPLE 8
 
+/* domaines de valeurs */
+typedef enum {IDENTITE, EQUIVALENCE, FACTOR, SUB_TYPE, CLUSTER, SUB_SCHEMA, PRE_COUPLED, NONE} TyRelation;
+
+/* pre couplages de noeuds */
+typedef struct _TypeAtom
+{
+  ElementType ElType;
+  struct _TypeAtom *Parent;
+} TypeAtom;
+
+typedef struct _PreCouple PreCouple;
+typedef struct _PreCouple
+{
+  TypeAtom *SourceContext;
+  TypeAtom *DestContext;
+} StrPreCouple;
 
 /* arbre de types */
 typedef struct _StrTypeTree *TypeTree;
@@ -38,6 +53,7 @@ typedef struct _StrTypeTree
   TypeTree TNext;
   TypeTree TPrevious;
   TypeTree TRecursive;
+  PreCouple TPreCouple[MAXNODECOUPLE];
   boolean TEffective;
   boolean TRecursApplied;
   char TPrintSymb;
@@ -98,7 +114,6 @@ typedef struct _StrUnitDesc
   int TypeNumber;
   struct _StrUnitDesc *Next;
 } StrUnitDesc;
-
 
 
 THOT_EXPORT RestContext RContext;

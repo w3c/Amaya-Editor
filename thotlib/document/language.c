@@ -25,6 +25,7 @@ struct Langue_Ctl   LangTable[MAX_LANGUAGES];
 struct Langue_Ctl   TypoLangTable[MAX_LANGUAGES];
 int                 FreeEntry;
 int                 FreeTypoEntry;
+int		    FirstUserLang;
 static char         Langbuffer[2 * MAX_NAME_LENGTH];
 static int          breakPoints[MAX_POINT_COUP];
 static char         StandardLANG[3];
@@ -71,7 +72,7 @@ static ISO639entry	ISO639table[] =
    {"CHINESE",		"ZH"},
    {"CORSICAN",		"CO"},
    {"CROATIAN",		"HR"},
-   {"CZECH",		"CS"},
+   {"Czech",		"CS"},
    {"DANISH",		"DA"},
    {"Dutch",		"NL"},
    {"English",		"EN"},
@@ -134,7 +135,7 @@ static ISO639entry	ISO639table[] =
    {"PASHTO",		"PS"},
    {"PUSHTO",		"PS"},
    {"PERSIAN",		"FA"},
-   {"POLISH",		"PL"},
+   {"Polish",		"PL"},
    {"Portuguese",	"PT"},
    {"PUNJABI",		"PA"},
    {"QUECHUA",		"QU"},
@@ -198,6 +199,7 @@ static ISO639entry	OldLangTable[] =
    {"Espa\361ol",	"ES"},
    {"Fran\347ais",	"FR"},
    {"ISO_latin_1",	"x-Latin1"},
+   {"ISO_latin_2",	"x-Latin2"},
    {"Italiano",		"IT"},
    {"Symbol",		"x-Symbol"},
    {"",			""}
@@ -346,96 +348,115 @@ void                InitLanguage ()
 	LangTable[i].LangPattern[0] = '\0';
 	LangTable[i].LangTabPattern.Charge = 0;
      }
-   /* Loading the default languages */
+   /* Loading the default system languages */
    strcpy (LangTable[0].LangNom, "ISO_latin_1");
    strcpy (LangTable[0].LangCode, "x-Latin1");
    LangTable[0].LangAlphabet = 'L';
    strcpy (LangTable[0].LangPrincipal, "Usigle");
    strcpy (LangTable[0].LangSecondary, "Uname");
 
-   strcpy (LangTable[1].LangNom, "French");
-   strcpy (LangTable[1].LangCode, "fr");
-   LangTable[1].LangAlphabet = 'L';
-   strcpy (LangTable[1].LangPrincipal, "Fprinc");
-   strcpy (LangTable[1].LangSecondary, "Fperso");
-   strcpy (LangTable[1].LangPattern, "francais.ptn");
+   strcpy (LangTable[1].LangNom, "ISO_latin_2");
+   strcpy (LangTable[1].LangCode, "x-Latin2");
+   LangTable[1].LangAlphabet = 'E';
+   LangTable[1].LangPrincipal[0] = '\0';
+   LangTable[1].LangSecondary[0] = '\0';
 
-   strcpy (LangTable[2].LangNom, "English");
-   strcpy (LangTable[2].LangCode, "en");
-   LangTable[2].LangAlphabet = 'L';
-   strcpy (LangTable[2].LangPrincipal, "Eprinc");
-   strcpy (LangTable[2].LangSecondary, "Eperso");
-   strcpy (LangTable[2].LangPattern, "english.ptn");
-
-   strcpy (LangTable[3].LangNom, "American");
-   strcpy (LangTable[3].LangCode, "en-US");
+   strcpy (LangTable[2].LangNom, "Symbol");
+   strcpy (LangTable[2].LangCode, "x-Symbol");
+   LangTable[2].LangAlphabet = 'G';
+   LangTable[2].LangPrincipal[0] = '\0';
+   LangTable[2].LangSecondary[0] = '\0';
+   /* Loading the default user languages */
+   strcpy (LangTable[3].LangNom, "French");
+   strcpy (LangTable[3].LangCode, "fr");
    LangTable[3].LangAlphabet = 'L';
-   strcpy (LangTable[3].LangPrincipal, "Eprinc");
-   strcpy (LangTable[3].LangSecondary, "Eperso");
-   strcpy (LangTable[3].LangPattern, "american.ptn");
+   strcpy (LangTable[3].LangPrincipal, "Fprinc");
+   strcpy (LangTable[3].LangSecondary, "Fperso");
+   strcpy (LangTable[3].LangPattern, "francais.ptn");
 
-   strcpy (LangTable[4].LangNom, "German");
-   strcpy (LangTable[4].LangCode, "de");
+   strcpy (LangTable[4].LangNom, "English");
+   strcpy (LangTable[4].LangCode, "en");
    LangTable[4].LangAlphabet = 'L';
-   strcpy (LangTable[4].LangPrincipal, "Gprinc");
-   LangTable[4].LangSecondary[0] = '\0';
-   strcpy (LangTable[4].LangPattern, "deutsch.ptn");
+   strcpy (LangTable[4].LangPrincipal, "Eprinc");
+   strcpy (LangTable[4].LangSecondary, "Eperso");
+   strcpy (LangTable[4].LangPattern, "english.ptn");
 
-   strcpy (LangTable[5].LangNom, "Italian");
-   strcpy (LangTable[5].LangCode, "it");
+   strcpy (LangTable[5].LangNom, "American");
+   strcpy (LangTable[5].LangCode, "en-US");
    LangTable[5].LangAlphabet = 'L';
-   strcpy (LangTable[5].LangPrincipal, "Iprinc");
-   LangTable[5].LangSecondary[0] = '\0';
-   strcpy (LangTable[5].LangPattern, "italiano.ptn");
+   strcpy (LangTable[5].LangPrincipal, "Eprinc");
+   strcpy (LangTable[5].LangSecondary, "Eperso");
+   strcpy (LangTable[5].LangPattern, "american.ptn");
 
-   strcpy (LangTable[6].LangNom, "Spanish");
-   strcpy (LangTable[6].LangCode, "es");
+   strcpy (LangTable[6].LangNom, "German");
+   strcpy (LangTable[6].LangCode, "de");
    LangTable[6].LangAlphabet = 'L';
-   strcpy (LangTable[6].LangPrincipal, "Sprinc");
+   strcpy (LangTable[6].LangPrincipal, "Gprinc");
    LangTable[6].LangSecondary[0] = '\0';
-   strcpy (LangTable[6].LangPattern, "espanol.ptn");
+   strcpy (LangTable[6].LangPattern, "deutsch.ptn");
 
-   strcpy (LangTable[7].LangNom, "Portuguese");
-   strcpy (LangTable[7].LangCode, "pt");
+   strcpy (LangTable[7].LangNom, "Italian");
+   strcpy (LangTable[7].LangCode, "it");
    LangTable[7].LangAlphabet = 'L';
-   LangTable[7].LangPrincipal[0] = '\0';
+   strcpy (LangTable[7].LangPrincipal, "Iprinc");
    LangTable[7].LangSecondary[0] = '\0';
-   strcpy (LangTable[7].LangPattern, "portug.ptn");
+   strcpy (LangTable[7].LangPattern, "italiano.ptn");
 
-   strcpy (LangTable[8].LangNom, "Dutch");
-   strcpy (LangTable[8].LangCode, "nl");
+   strcpy (LangTable[8].LangNom, "Spanish");
+   strcpy (LangTable[8].LangCode, "es");
    LangTable[8].LangAlphabet = 'L';
-   strcpy (LangTable[8].LangPrincipal, "Nprinc");
+   strcpy (LangTable[8].LangPrincipal, "Sprinc");
    LangTable[8].LangSecondary[0] = '\0';
-   strcpy (LangTable[8].LangPattern, "nederl.ptn");
+   strcpy (LangTable[8].LangPattern, "espanol.ptn");
 
-   strcpy (LangTable[9].LangNom, "Swedish");
-   strcpy (LangTable[9].LangCode, "sv");
+   strcpy (LangTable[9].LangNom, "Portuguese");
+   strcpy (LangTable[9].LangCode, "pt");
    LangTable[9].LangAlphabet = 'L';
-   strcpy (LangTable[9].LangPrincipal, "Wprinc");
+   LangTable[9].LangPrincipal[0] = '\0';
    LangTable[9].LangSecondary[0] = '\0';
-   strcpy (LangTable[9].LangPattern, "swedish.ptn");
+   strcpy (LangTable[9].LangPattern, "portug.ptn");
 
-   strcpy (LangTable[10].LangNom, "Finnish");
-   strcpy (LangTable[10].LangCode, "fi");
+   strcpy (LangTable[10].LangNom, "Dutch");
+   strcpy (LangTable[10].LangCode, "nl");
    LangTable[10].LangAlphabet = 'L';
-   LangTable[10].LangPrincipal[0] = '\0';
+   strcpy (LangTable[10].LangPrincipal, "Nprinc");
    LangTable[10].LangSecondary[0] = '\0';
-   strcpy (LangTable[10].LangPattern, "finish.ptn");
+   strcpy (LangTable[10].LangPattern, "nederl.ptn");
 
-   strcpy (LangTable[11].LangNom, "Symbol");
-   strcpy (LangTable[11].LangCode, "x-Symbol");
-   LangTable[11].LangAlphabet = 'G';
-   LangTable[11].LangPrincipal[0] = '\0';
+   strcpy (LangTable[11].LangNom, "Swedish");
+   strcpy (LangTable[11].LangCode, "sv");
+   LangTable[11].LangAlphabet = 'L';
+   strcpy (LangTable[11].LangPrincipal, "Wprinc");
    LangTable[11].LangSecondary[0] = '\0';
+   strcpy (LangTable[11].LangPattern, "swedish.ptn");
 
-   strcpy (LangTable[12].LangNom, "Greek");
-   strcpy (LangTable[12].LangCode, "el");
-   LangTable[12].LangAlphabet = 'G';
+   strcpy (LangTable[12].LangNom, "Finnish");
+   strcpy (LangTable[12].LangCode, "fi");
+   LangTable[12].LangAlphabet = 'L';
    LangTable[12].LangPrincipal[0] = '\0';
    LangTable[12].LangSecondary[0] = '\0';
+   strcpy (LangTable[12].LangPattern, "finish.ptn");
 
-   FreeEntry = 13;
+   strcpy (LangTable[13].LangNom, "Greek");
+   strcpy (LangTable[13].LangCode, "el");
+   LangTable[13].LangAlphabet = 'G';
+   LangTable[13].LangPrincipal[0] = '\0';
+   LangTable[13].LangSecondary[0] = '\0';
+
+   strcpy (LangTable[14].LangNom, "Czech");
+   strcpy (LangTable[14].LangCode, "cs");
+   LangTable[14].LangAlphabet = 'E';
+   LangTable[14].LangPrincipal[0] = '\0';
+   LangTable[14].LangSecondary[0] = '\0';
+
+   strcpy (LangTable[15].LangNom, "Polish");
+   strcpy (LangTable[15].LangCode, "pl");
+   LangTable[15].LangAlphabet = 'E';
+   LangTable[15].LangPrincipal[0] = '\0';
+   LangTable[15].LangSecondary[0] = '\0';
+
+   FreeEntry = 16;
+   FirstUserLang = 3;
 
    for (i = 1; i < FreeEntry; i++)
        strcpy (LangTable[i].LangNom, TtaGetLanguageNameFromCode(LangTable[i].LangCode));
@@ -729,7 +750,7 @@ char                languageAlphabet;
 
    i = 0;
    /* Avoids error cases */
-   if (languageAlphabet != 'L' && languageAlphabet != 'G')
+   if (languageAlphabet != 'L' && languageAlphabet != 'G' && languageAlphabet != 'E')
       TtaError (ERR_invalid_parameter);
    else
      {
@@ -885,6 +906,26 @@ int                 TtaGetNumberOfLanguages ()
 #endif				/* __STDC__ */
 {
    return FreeEntry;
+}
+
+
+/*----------------------------------------------------------------------
+   TtaGetFirstUserLanguage
+
+   Not available for TYPO languages.
+
+   Returns the first user language known by Thot.
+
+   Return value:
+   the first user language number.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 TtaGetFirstUserLanguage ()
+#else  /* __STDC__ */
+int                 TtaGetFirstUserLanguage ()
+#endif				/* __STDC__ */
+{
+   return FirstUserLang;
 }
 
 
