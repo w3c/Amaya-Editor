@@ -1112,24 +1112,27 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	      ptfont->FiFamily = family;
 	      ptfont->FiHighlight = highlight;
 	      ptfont->FiSize = val;
-	      /* insert code for GetTextMetricsW */
-	      if (GetTextMetrics (display, &textMetric))
+#ifdef VERYSLOW
+	      if (script != 'Z')
+	      {
+#endif /* VERYSLOW */
+	        if (GetTextMetrics (display, &textMetric))
 		{
 		  ptfont->FiAscent = textMetric.tmAscent;
 		  ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
 		}
-	      else
+	        else
 		{
 		  ptfont->FiAscent = 0;
 		  ptfont->FiHeight = 0;
 		}
-	      ptfont->FiFirstChar = textMetric.tmFirstChar;
-	      ptfont->FiLastChar = textMetric.tmLastChar;
-	      val = textMetric.tmLastChar - textMetric.tmFirstChar + 1;
-	      ptfont->FiWidths = (int *) TtaGetMemory (val * sizeof (int));
-	      ptfont->FiHeights = (int *) TtaGetMemory (val * sizeof (int));
+	        ptfont->FiFirstChar = textMetric.tmFirstChar;
+	        ptfont->FiLastChar = textMetric.tmLastChar;
+	        val = textMetric.tmLastChar - textMetric.tmFirstChar + 1;
+	        ptfont->FiWidths = (int *) TtaGetMemory (val * sizeof (int));
+	        ptfont->FiHeights = (int *) TtaGetMemory (val * sizeof (int));
 		  c = textMetric.tmFirstChar;
-	      for (ind = 0; ind < val; ind ++)
+	        for (ind = 0; ind < val; ind ++)
 		{
 		  GetTextExtentPoint (display, (LPCTSTR) (&c),
 				      1, (LPSIZE) (&wsize));
@@ -1140,6 +1143,50 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 		  ptfont->FiHeights[ind] = wsize.cy;
 		  c++;
 		}
+	      }
+#ifdef VERYSLOW
+	      /* this gives very good spacing, but is very slow for each
+	         new font (about 2 min for a Japanese press release on a 450mhz box */
+	      else {
+		TEXTMETRICW textMetric;
+		int spacewidth, spaceheight;
+		GetTextExtentPointW (display, (LPWORD) (&space),
+					1, (LPSIZE) (&wsize));
+		spacewidth = wsize.cx;
+		spaceheight = wsize.cy;
+	        /* insert code for GetTextMetricsW */
+	        if (GetTextMetricsW (display, &textMetric))
+		{
+		  ptfont->FiAscent = textMetric.tmAscent;
+		  ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
+		}
+	        else
+		{
+		  ptfont->FiAscent = 0;
+		  ptfont->FiHeight = 0;
+		}
+	        ptfont->FiFirstChar = textMetric.tmFirstChar;
+	        ptfont->FiLastChar = textMetric.tmLastChar;
+	        val = textMetric.tmLastChar - textMetric.tmFirstChar + 1;
+	        ptfont->FiWidths = (int *) TtaGetMemory (val * sizeof (int));
+	        ptfont->FiHeights = (int *) TtaGetMemory (val * sizeof (int));
+		c = textMetric.tmFirstChar;
+	        for (ind = 0; ind < val; ind ++)
+		{
+		  GetTextExtentPointW (display, (LPWORD) (&c),
+				      1, (LPSIZE) (&wsize));
+		  if (wsize.cx == 0) {
+		    ptfont->FiWidths[ind] = spacewidth;
+		    ptfont->FiHeights[ind] = spaceheight;
+		  }
+		  else {
+		    ptfont->FiWidths[ind] = wsize.cx;
+		    ptfont->FiHeights[ind] = wsize.cy;
+		  }
+		  c++;
+		}
+	      }
+#endif /* VERYSLOW */
 	      DeleteObject (ActiveFont);
 	      ActiveFont = 0;
 	      if (TtPrinterDC == NULL && display)
