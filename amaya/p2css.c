@@ -1,7 +1,9 @@
-/***
- *** Copyright (c) 1996 INRIA, All rights reserved
- ***/
-
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
 
 /*
  * p2css.c : file used to analyse a PSchema and translate it to CSS or

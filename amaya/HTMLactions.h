@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
 #ifdef __STDC__
 extern void         DisplayImage (Document doc, Element el, char *imageName);
 extern void         FetchImage (Document doc, Element el);

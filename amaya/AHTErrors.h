@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
 char               *SysErrorTmpl = "<HTML><HEAD>ERROR</HEAD><BODY>"
 "<TITLE>ERROR: The requested URL could not be retrieved</TITLE>\n"
 "<H2>The requested URL could not be retrieved</H2>\n"

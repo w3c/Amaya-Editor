@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
 #ifndef AHTURL_TOOLS_F
 #define AHTURL_TOOLS_F
 

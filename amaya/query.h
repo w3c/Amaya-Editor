@@ -1,12 +1,16 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
 /*                                                                 Public QUERY
    OBJECT PUBLIC
    PUBLIC DECLARATION OF QUERY MODULE
 
  */
-/*
-   **  Copyright (c) 1994-1995 Inria/CNRS  All rights reserved. 
-   **      Please first read the full copyright statement in the file COPYRIGH.
- */
+
 /*
    Module comment
  */

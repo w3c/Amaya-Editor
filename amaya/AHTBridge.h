@@ -1,12 +1,14 @@
+/*
+ *
+ *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
 /*                                  Amaya Source Code
 
    BRIDGE INTERFACE WITH XT, AMAYA AND LIBWWW
 
- */
-
-/*
-   **      (c) COPYRIGHT 
-   **      Please first read the full copyright statement in the file COPYRIGH.
  */
 
 /*
