@@ -384,12 +384,6 @@ static void BookmarkMenuSelect_cbf (ThotWidget w, ThotBool state, void *cdata)
   if (url)
     {
       BM_topicSelectToggle (BTopicTree, url, state);
-      
-      /* @@ JK: just for debugging */
-      if (state)
-	printf ("Selected URL %s\n", url);
-      else
-	printf ("Deselected URL %s\n", url);
       TtaFreeMemory (url);
     }
 }
@@ -666,7 +660,7 @@ static void InitTopicMenu (Document doc, BookmarkP bookmark)
 static void RefreshTopicMenu ()
 {
   /* set the menu entries to the current values */
-  TtaSetTextForm (TopicBase + mTMParentTopic, BM_bufferContent (aDynTopic->parent_url));
+  /* TtaSetTextForm (TopicBase + mTMParentTopic, BM_bufferContent (aDynTopic->parent_url)); */
   TtaSetTextForm (TopicBase + mTMTitle, BM_bufferContent (aDynTopic->title));
   TtaSetTextForm (TopicBase + mTMAuthor, BM_bufferContent (aDynTopic->author));
   TtaSetTextForm (TopicBase + mTMDescription, BM_bufferContent (aDynTopic->description));
@@ -684,13 +678,9 @@ static void TopicMenuSelect_cbf (ThotWidget w, ThotBool state, void *cdata)
   
   if (url)
     {
-      if (state)
-	printf ("Selected URL %s\n", url);
-      else
-	printf ("Deselected URL %s\n", url);
       BM_bufferCopy (aDynTopic->parent_url, url);
       /* @@ JK: just for debugging */
-      TtaSetTextForm (TopicBase + mTMParentTopic, BM_bufferContent (aDynTopic->parent_url));
+      /* TtaSetTextForm (TopicBase + mTMParentTopic, BM_bufferContent (aDynTopic->parent_url)); */
       TtaFreeMemory (url);
     }
 }
@@ -836,6 +826,7 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
    if (tree)
      BM_InitTreeWidget (tree, TTopicTree, (void *) TopicMenuSelect_cbf);
 
+#if 0 
    /* parent topic */
    label = "Parent Topic:";
    TtaNewPaddedLabel (TopicBase + mTMParentTopicL,  TopicBase + TopicMenu,
@@ -846,6 +837,7 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
 		   30,
 		   1,
 		   TRUE);
+#endif
 
    /* topic title */
    label = "Topic Title:";
