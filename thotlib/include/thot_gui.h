@@ -182,7 +182,6 @@ typedef UINT        ThotComposeStatus;
 #include <Xm/Text.h>
 #include <Xm/ToggleB.h>
 #include <Xm/Xm.h>
-#include <Xm/XmAll.h>
 #include <Xm/PushBG.h>
 
 /*
