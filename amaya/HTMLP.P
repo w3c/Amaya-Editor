@@ -1314,1048 +1314,7 @@ BOXES
 	END;
 #endif
 
- VALUE_APPLET_NAME: BEGIN
-	Content: (applet_name);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- VALUE_PARAM_NAME: BEGIN
-	Content: (Param_name);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- VALUE_PARAM_VALUE: BEGIN
-	Content: (Param_value);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_VALUETYPE_DATA: BEGIN
-	Content: Text ' valuetype=data';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- ATTR_VALUETYPE_REF: BEGIN
-	Content: Text ' valuetype=ref';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- ATTR_VALUETYPE_OBJECT: BEGIN
-	Content: Text ' valuetype=object';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_PARAM_TYPE: BEGIN
-	Content: (Param_type);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_CLASSID: BEGIN
-	Content: Text ' classid=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
- VALUE_CLASSID: BEGIN
-	Content: (classid);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_DATA: BEGIN
-	Content: Text ' data=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
- VALUE_DATA: BEGIN
-	Content: (data);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- VALUE_OBJECT_TYPE: BEGIN
-	Content: (Object_type);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_ARCHIVE: BEGIN
-	Content: Text ' archive=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_ARCHIVE: BEGIN
-	Content: (archive);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_STANDBY: BEGIN
-	Content: Text ' standby=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_STANDBY: BEGIN
-	Content: (standby);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- VALUE_LINK_TYPE: BEGIN
-	Content: (Link_type);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_CODETYPE: BEGIN
-	Content: Text ' codetype=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
- VALUE_CODETYPE: BEGIN
-	Content: (codetype);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_NOSHADE: BEGIN
-	Content: Text ' noshade';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- ATTR_TYPE_ARABIC: BEGIN
-	Content: Text ' type=1';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- ATTR_TYPE_LALPHA: BEGIN
-	Content: Text ' type=a';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- ATTR_TYPE_UALPHA: BEGIN
-	Content: Text ' type=A';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- ATTR_TYPE_LROMAN: BEGIN
-	Content: Text ' type=i';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- ATTR_TYPE_UROMAN: BEGIN
-	Content: Text ' type=I';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- ATTR_TYPE_DISC: BEGIN
-	Content: Text ' type=disc';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- ATTR_TYPE_SQUARE: BEGIN
-	Content: Text ' type=square';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- ATTR_TYPE_CIRCLE: BEGIN
-	Content: Text ' type=circle';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- ATTR_START: BEGIN
-	Content: Text ' start=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_START: BEGIN
-	Content: (Start);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_COMPACT: BEGIN
-	Content: Text ' compact';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_SIZE: BEGIN
-	Content: (Size_);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_COLOR: BEGIN
-	Content: Text ' color=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_COLOR: BEGIN
-	Content: (color);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- VALUE_BASEFONTCOLOR: BEGIN
-	Content: (BaseFontColor);
-	HorizPos: Left = Previous . Right;
-	VertPos: HRef = Previous . HRef;
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_BACKGROUND: BEGIN
-	Content: Text ' background=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_BACKGROUND: BEGIN
-	Content: (background_);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_BGCOLOR: BEGIN
-	Content: Text ' bgcolor=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_BGCOLOR: BEGIN
-	Content: (BackgroundColor);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_TEXTCOLOR: BEGIN
-	Content: Text ' text=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_TEXTCOLOR: BEGIN
-	Content: (TextColor);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_LINKCOLOR: BEGIN
-	Content: Text ' link=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_LINKCOLOR: BEGIN
-	Content: (LinkColor);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_VLINKCOLOR: BEGIN
-	Content: Text ' vlink=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_VLINKCOLOR: BEGIN
-	Content: (VisitedLinkColor);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_ALINKCOLOR: BEGIN
-	Content: Text ' alink=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_ALINKCOLOR: BEGIN
-	Content: (ActiveLinkColor);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
 { ---- Table ---- }
-
- ATTR_SUMMARY: BEGIN
-	Content: Text ' summary=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_SUMMARY: BEGIN
-	Content: (summary);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_BORDER: BEGIN
-	Content: Text ' border=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- FRAME_VOID: BEGIN
-	Content: Text ' frame=void';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- FRAME_ABOVE: BEGIN
-	Content: Text ' frame=above';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- FRAME_BELOW: BEGIN
-	Content: Text ' frame=below';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- FRAME_HSIDES: BEGIN
-	Content: Text ' frame=hsides';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- FRAME_LHS: BEGIN
-	Content: Text ' frame=lhs';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- FRAME_RHS: BEGIN
-	Content: Text ' frame=rhs';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- FRAME_VSIDES: BEGIN
-	Content: Text ' frame=vsides';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- FRAME_BOX: BEGIN
-	Content: Text ' frame=box';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- FRAME_BORDER: BEGIN
-	Content: Text ' frame=border';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- RULES_NONE: BEGIN
-	Content: Text ' rules=none';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- RULES_GROUPS: BEGIN
-	Content: Text ' rules=groups';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- RULES_ROWS: BEGIN
-	Content: Text ' rules=rows';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- RULES_COLS: BEGIN
-	Content: Text ' rules=cols';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- RULES_ALL: BEGIN
-	Content: Text ' rules=all';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_BORDER: BEGIN
-	Content: (Border);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_CELLSPACING: BEGIN
-	Content: Text ' cellspacing=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_CELLSPACING: BEGIN
-	Content: (cellspacing);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_CELLPADDING: BEGIN
-	Content: Text ' cellpadding=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_CELLPADDING: BEGIN
-	Content: (cellpadding);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_DATAPAGESIZE: BEGIN
-	Content: Text ' datapagesize=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_DATAPAGESIZE: BEGIN
-	Content: (datapagesize);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- VALUE_IMG_BORDER: BEGIN
-	Content: (Img_border);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_ABBR: BEGIN
-	Content: Text ' abbr=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_ABBR: BEGIN
-	Content: (abbr);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_AXIS: BEGIN
-	Content: Text ' axis=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_AXIS: BEGIN
-	Content: (axis);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_HEADERS: BEGIN
-	Content: Text ' headers=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_HEADERS: BEGIN
-	Content: (headers);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_SCOPE: BEGIN
-	Content: Text ' scope=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_SCOPE: BEGIN
-	Content: (scope);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_SPAN: BEGIN
-	Content: Text ' span=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_SPAN: BEGIN
-	Content: (span_);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_ROWSPAN: BEGIN
-	Content: Text ' rowspan=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_ROWSPAN: BEGIN
-	Content: (rowspan_);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_COLSPAN: BEGIN
-	Content: Text ' colspan=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_COLSPAN: BEGIN
-	Content: (colspan_);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_NOWRAP: BEGIN
-	Content: Text ' nowrap';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
 
  CellExtFrame: BEGIN
 	Content: Graphics '0';
@@ -2426,78 +1385,6 @@ BOXES
 		Visibility: 0;
 	IN Alternate_view
 		Visibility: 0;
-	END;
-
- ATTR_SHAPE_RECT: BEGIN
-	Content: Text ' shape=rect';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- ATTR_SHAPE_CIRCLE: BEGIN
-	Content: Text ' shape=circle';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- ATTR_SHAPE_POLY: BEGIN
-	Content: Text ' shape=poly';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- ATTR_COORDS: BEGIN
-	Content: Text ' coords=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_COORDS: BEGIN
-	Content: (coords);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- ATTR_NOHREF: BEGIN
-	Content: Text ' nohref';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
 	END;
 
 { ---- Pages ---- }
@@ -4788,12 +3675,19 @@ RULES
 	Width: Enclosing . Width;
 	Height: Enclosed . Height;
 	IN Structure_view BEGIN
+		Gather: No;
 		VertPos: Top = Previous . Bottom;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		END;
-	IN Links_view
+	IN Alternate_view
+		Gather: No;
+        IN Table_of_contents
+		Gather: No;
+	IN Links_view BEGIN
+		Gather: No;
 		Visibility: 0;
+		END;
 	END;
 
  CAPTION:
@@ -5490,16 +4384,8 @@ ATTRIBUTES
 
  Langue:
 	BEGIN
-	If HTML and RealLang
-	   BEGIN
-	   CreateFirst(AttrName);
-	   CreateFirst(AttrValue);
-	   END;
-	If not HTML
-	   BEGIN
-	   CreateBefore(AttrName);
-	   CreateBefore(AttrValue);
-	   END;
+        CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  HREF_:
@@ -5827,7 +4713,7 @@ ATTRIBUTES
 
  COMPACT:
 	BEGIN
-	CreateBefore(ATTR_COMPACT);
+	CreateBefore(AttrNameOnly);
 	END;
 
  REL:
@@ -5967,80 +4853,76 @@ ATTRIBUTES
  applet_name:
 	BEGIN
 	CreateBefore(AttrName);
-	CreateBefore(VALUE_APPLET_NAME);
+	CreateBefore(AttrValue);
 	END;
 
  Param_name:
 	BEGIN
 	CreateBefore(AttrName);
-	CreateBefore(VALUE_PARAM_NAME);
+	CreateBefore(AttrValue);
 	END;
 
  Param_value:
 	BEGIN
 	CreateBefore(AttrName);
-	CreateBefore(VALUE_PARAM_VALUE);
+	CreateBefore(AttrValue);
 	END;
 
- valuetype = data_:
-	CreateBefore(ATTR_VALUETYPE_DATA);
- valuetype = ref:
-	CreateBefore(ATTR_VALUETYPE_REF);
- valuetype = object_:
-	CreateBefore(ATTR_VALUETYPE_OBJECT);
+ valuetype:
+	CreateBefore(AttrNameAndValue);
 
  Param_type:
 	BEGIN
 	CreateBefore(AttrName);
-	CreateBefore(VALUE_PARAM_TYPE);
+	CreateBefore(AttrValue);
 	END;
 
  classid:
 	BEGIN
-	CreateBefore(ATTR_CLASSID);
-	CreateBefore(VALUE_CLASSID);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  data:
 	BEGIN
-	CreateBefore(ATTR_DATA);
-	CreateBefore(VALUE_DATA);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  Object_type:
 	BEGIN
 	CreateBefore(AttrName);
-	CreateBefore(VALUE_OBJECT_TYPE);
+	CreateBefore(AttrValue);
 	END;
 
  Link_type:
 	BEGIN
 	CreateBefore(AttrName);
-	CreateBefore(VALUE_LINK_TYPE);
+	CreateBefore(AttrValue);
 	END;
 
  codetype:
 	BEGIN
-	CreateBefore(ATTR_CODETYPE);
-	CreateBefore(VALUE_CODETYPE);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  archive:
 	BEGIN
-	CreateBefore(ATTR_ARCHIVE);
-	CreateBefore(VALUE_ARCHIVE);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  standby:
 	BEGIN
-	CreateBefore(ATTR_STANDBY);
-	CreateBefore(VALUE_STANDBY);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  Img_border:
 	BEGIN
-	CreateBefore(ATTR_BORDER);
-	CreateBefore(VALUE_IMG_BORDER);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	BorderTopWidth: Border px;
 	BorderLeftWidth: Border px;
 	BorderBottomWidth: Border px;
@@ -6064,12 +4946,12 @@ ATTRIBUTES
 	END;
 
  NoShade:
-	CreateBefore(ATTR_NOSHADE);
+	CreateBefore(AttrNameOnly);
 
  Size_ < 2:
 	BEGIN
 	CreateBefore(AttrName);
-	CreateBefore(VALUE_SIZE);
+	CreateBefore(AttrValue);
 	Height: 2 pt;
 #ifdef PAGE
 	LineWeight: Size_ pt;
@@ -6086,7 +4968,7 @@ ATTRIBUTES
  Size_ > 1:
 	BEGIN
 	CreateBefore(AttrName);
-	CreateBefore(VALUE_SIZE);
+	CreateBefore(AttrValue);
 	Height: Size_ pt;
 #ifdef PAGE
 	LineWeight: Size_ pt;
@@ -6100,40 +4982,14 @@ ATTRIBUTES
 		Height: 0;
 	END;
 
- NumberStyle = Arabic_ :
-	CreateBefore(ATTR_TYPE_ARABIC);
- NumberStyle = LowerAlpha :
-	CreateBefore(ATTR_TYPE_LALPHA);
- NumberStyle = UpperAlpha :
-	CreateBefore(ATTR_TYPE_UALPHA);
- NumberStyle = LowerRoman :
-	CreateBefore(ATTR_TYPE_LROMAN);
- NumberStyle = UpperRoman :
-	CreateBefore(ATTR_TYPE_UROMAN);
+ NumberStyle:
+	CreateBefore(AttrNameAndValue);
 
- BulletStyle = disc :
-	CreateBefore(ATTR_TYPE_DISC);
- BulletStyle = square :
-	CreateBefore(ATTR_TYPE_SQUARE);
- BulletStyle = circle :
-	CreateBefore(ATTR_TYPE_CIRCLE);
+ BulletStyle:
+	CreateBefore(AttrNameAndValue);
 
- ItemStyle = Arabic_ :
-	CreateBefore(ATTR_TYPE_ARABIC);
- ItemStyle = LowerAlpha :
-	CreateBefore(ATTR_TYPE_LALPHA);
- ItemStyle = UpperAlpha :
-	CreateBefore(ATTR_TYPE_UALPHA);
- ItemStyle = LowerRoman :
-	CreateBefore(ATTR_TYPE_LROMAN);
- ItemStyle = UpperRoman :
-	CreateBefore(ATTR_TYPE_UROMAN);
- ItemStyle = disc :
-	CreateBefore(ATTR_TYPE_DISC);
- ItemStyle = square :
-	CreateBefore(ATTR_TYPE_SQUARE);
- ItemStyle = circle :
-	CreateBefore(ATTR_TYPE_CIRCLE);
+ ItemStyle:
+	CreateBefore(AttrNameAndValue);
 
  IntItemStyle = Arabic_ :
 	CreateBefore(OL_NUM_ARABIC);
@@ -6154,8 +5010,8 @@ ATTRIBUTES
 
  Start:
 	BEGIN
-	CreateBefore(ATTR_START);
-	CreateBefore(VALUE_START);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  Clear:
@@ -6281,8 +5137,8 @@ ATTRIBUTES
 	END;
  BaseFontColor:
 	BEGIN
-	CreateBefore(ATTR_COLOR);
-	CreateBefore(VALUE_BASEFONTCOLOR);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
  BaseFontFace:
 	BEGIN
@@ -6333,44 +5189,44 @@ ATTRIBUTES
 
  color:
 	BEGIN
-	CreateBefore(ATTR_COLOR);
-	CreateBefore(VALUE_COLOR);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  background_:
 	BEGIN
-	CreateBefore(ATTR_BACKGROUND);
-	CreateBefore(VALUE_BACKGROUND);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  BackgroundColor:
 	BEGIN
-	CreateBefore(ATTR_BGCOLOR);
-	CreateBefore(VALUE_BGCOLOR);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  TextColor:
 	BEGIN
-	CreateBefore(ATTR_TEXTCOLOR);
-	CreateBefore(VALUE_TEXTCOLOR);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  LinkColor:
 	BEGIN
-	CreateBefore(ATTR_LINKCOLOR);
-	CreateBefore(VALUE_LINKCOLOR);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  VisitedLinkColor:
 	BEGIN
-	CreateBefore(ATTR_VLINKCOLOR);
-	CreateBefore(VALUE_VLINKCOLOR);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  ActiveLinkColor:
 	BEGIN
-	CreateBefore(ATTR_ALINKCOLOR);
-	CreateBefore(VALUE_ALINKCOLOR);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  Value_:
@@ -6519,39 +5375,15 @@ ATTRIBUTES
 
  summary:
 	BEGIN
-	CreateBefore(ATTR_SUMMARY);
-	CreateBefore(VALUE_SUMMARY);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
- frame = void:
-	CreateBefore(FRAME_VOID);
- frame = above:
-	CreateBefore(FRAME_ABOVE);
- frame = below:
-	CreateBefore(FRAME_BELOW);
- frame = hsides:
-	CreateBefore(FRAME_HSIDES);
- frame = lhs:
-	CreateBefore(FRAME_LHS);
- frame = rhs:
-	CreateBefore(FRAME_RHS);
- frame = vsides:
-	CreateBefore(FRAME_VSIDES);
- frame = box:
-	CreateBefore(FRAME_BOX);
- frame = border:
-	CreateBefore(FRAME_BORDER);
+ frame:
+	CreateBefore(AttrNameAndValue);
 
- rules_ = none_:
-	CreateBefore(RULES_NONE);
- rules_ = groups:
-	CreateBefore(RULES_GROUPS);
- rules_ = rows:
-	CreateBefore(RULES_ROWS);
- rules_ = cols:
-	CreateBefore(RULES_COLS);
- rules_ = all:
-	CreateBefore(RULES_ALL);
+ rules_:
+	CreateBefore(AttrNameAndValue);
 
  cellspacing (Table_head) > 0:
 	BEGIN
@@ -6701,8 +5533,8 @@ ATTRIBUTES
 	END;
  cellspacing:
 	BEGIN
-	CreateBefore(ATTR_CELLSPACING);
-	CreateBefore(VALUE_CELLSPACING);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  cellpadding (Data_cell):
@@ -6746,8 +5578,8 @@ ATTRIBUTES
 	END;
  cellpadding:
 	BEGIN
-	CreateBefore(ATTR_CELLPADDING);
-	CreateBefore(VALUE_CELLPADDING);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  Border (Table_head)> 0:
@@ -6825,14 +5657,14 @@ ATTRIBUTES
 	END;
  Border:
 	BEGIN
-	CreateBefore(ATTR_BORDER);
-	CreateBefore(VALUE_BORDER);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  datapagesize:
 	BEGIN
-	CreateBefore(ATTR_DATAPAGESIZE);
-	CreateBefore(VALUE_DATAPAGESIZE);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  Ref_column:
@@ -6879,44 +5711,44 @@ ATTRIBUTES
 
  abbr:
 	BEGIN
-	CreateBefore(ATTR_ABBR);
-	CreateBefore(VALUE_ABBR);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  axis:
 	BEGIN
-	CreateBefore(ATTR_AXIS);
-	CreateBefore(VALUE_AXIS);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  headers:
 	BEGIN
-	CreateBefore(ATTR_HEADERS);
-	CreateBefore(VALUE_HEADERS);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  scope:
 	BEGIN
-	CreateBefore(ATTR_SCOPE);
-	CreateBefore(VALUE_SCOPE);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  span_:
 	BEGIN
-	CreateBefore(ATTR_SPAN);
-	CreateBefore(VALUE_SPAN);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  rowspan_:
 	BEGIN
-	CreateBefore(ATTR_ROWSPAN);
-	CreateBefore(VALUE_ROWSPAN);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  colspan_:
 	BEGIN
-	CreateBefore(ATTR_COLSPAN);
-	CreateBefore(VALUE_COLSPAN);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
  Position = Position_top :
@@ -7141,7 +5973,7 @@ ATTRIBUTES
 
  No_wrap = no_wrap :
 	BEGIN
-	CreateBefore(ATTR_NOWRAP);
+	CreateBefore(AttrNameOnly);
 	Hyphenate: No;
 	END;
 
@@ -7207,21 +6039,17 @@ ATTRIBUTES
 	   Height: Enclosed . Height;
 	END;
 
-  shape = rectangle:
-	CreateBefore(ATTR_SHAPE_RECT);
-  shape = circle:
-	CreateBefore(ATTR_SHAPE_CIRCLE);
-  shape = polygon:
-	CreateBefore(ATTR_SHAPE_POLY);
+  shape:
+	CreateBefore(AttrNameAndValue);
 
   coords:
 	BEGIN
-	CreateBefore(ATTR_COORDS);
-	CreateBefore(VALUE_COORDS);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
 
   nohref:
-	CreateBefore(ATTR_NOHREF);
+	CreateBefore(AttrNameOnly);
 
   Style\240:
 	BEGIN
