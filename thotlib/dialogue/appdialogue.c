@@ -1806,17 +1806,18 @@ void APP_TextCallbackGTK (GtkWidget *w, int frame)
 int TtaAddTextZone (Document document, View view, char *label,
 		    ThotBool editable, void (*procedure) ())
 {
-  int                 frame, i;
-  ThotWidget          w, row;
+  int            frame, i;
+  ThotWidget     w, row;
 #ifndef _WINDOWS
-  int                 n;
-  ThotWidget          rowh;
-  ThotWidget         *brother;
-  XmString            title_string;
-  Arg                 args[MAX_ARGS];
+  int            n;
+  ThotWidget     rowh;
+  ThotWidget    *brother;
+  XmString       title_string;
+  Arg            args[MAX_ARGS];
 #else /* _WINDOWS */
-  RECT                rect;
-  ThotWidget          wLabel;
+  HFONT          newFont;
+  RECT           rect;
+  ThotWidget     wLabel;
 #endif /* _WINDOWS */
 
   UserErrorCode = 0;
@@ -1981,6 +1982,11 @@ int TtaAddTextZone (Document document, View view, char *label,
 	      w = CreateWindow ("EDIT", "",
 				WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
 				0, 0, 0, 0, FrMainRef[frame], (HMENU) i, hInstance, NULL);
+	      /* get the default GUI font */
+	      newFont = GetStockObject (DEFAULT_GUI_FONT); 
+	      /* set the font of the window */
+	      if(newFont)
+		SendMessage (w, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
 	      FrameTable[frame].Text_Zone[i] = w;
 	      FrameTable[frame].Call_Text[i] = (Proc) procedure;
 

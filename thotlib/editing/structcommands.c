@@ -1113,11 +1113,11 @@ void                CutCommand (ThotBool save)
 	    /* cherche si l'un des elements selectionne's est protege' */
 	    pEl = firstSel;
 	    stop = FALSE;
-	    while (!stop && pEl != NULL)
-	      if (ElementIsReadOnly (pEl))
+	    if (firstSel && firstChar > 1 && ElementIsReadOnly (firstSel))
 		stop = TRUE;
-	      else
-		pEl = NextInSelection (pEl, lastSel);
+	    if (lastSel && lastChar != 0 && lastChar < lastSel->ElVolume &&
+		ElementIsReadOnly (lastSel))
+		stop = TRUE;
 	    if (!stop)
 	      /* pas d'element protege', on peut couper */
 	      {
