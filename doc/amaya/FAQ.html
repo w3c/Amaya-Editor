@@ -149,15 +149,14 @@ the XML mode, Amaya works on the document tree, not on its textual
 representation, which is generated only at save time, in the syntax you choose
 (plain text, HTML, XML).</p>
 
-<p> Amaya allows one to open the source view of the document and to edit tags.
-This is done in a separated document. Amaya is able to show what part of the
-source document is concerned by a current selection in the formatted document
-and .what part of the formatted document is concerned by a current selection
-in the source document. Either thesource document or the formatted document
-can be edited but not at the same time. As soon as the source document or the
-formatted document is edited the second one is set in read-only mode.
-Documents must be synchronized to change the editing access. The
-synchronisation is done by an explicit command or when the document is
+<p>Amaya allows one to open the source view of the document and to edit tags.
+This is done in a separated but synchronized document. Amaya is able to show
+what part of the source document is concerned by a current selection in the
+formatted document and .what part of the formatted document is concerned by a
+current selection in the source document. Both the source document and the
+formatted document can be edited.  Modification one within the source view or
+the formatted view can be reported in the other view by the command
+Synchronize.. The synchronisation is also performed when the document is
 saved.</p>
 
 <p></p>
@@ -168,12 +167,14 @@ saved.</p>
 
 <p>With Amaya you can zoom in and zoom out, document window by document
 window. So each document displayed in a zoomed window will be displayed larger
-or smaller than its normal size according of the current zoom factor. The
-Views menu allows you to change the zoom factor for a single window.</p>
+or smaller than its normal size according of the current zoom factor. That
+zoom factor acts on all the displayed information (fonts, images, etc.).
+Commands that chage the zoom factor are located in the menu Views.</p>
 
-<p>You can also change the zoom factor permanently. By default the zoom factor
-is 0 (documents are displayed with their own size). This default value can be
-modified by means of the <em>Special/Preferences/General</em> menu.</p>
+<p>The <em>Special/Preferences/General</em> menu allows you to change the font
+zoom factor permanently. By default that zoom factor is 0 (documents are
+displayed with their own size). That zoom factor affects only font sizes but
+not other elements (images, etc.).</p>
 
 <p></p>
 <hr>
@@ -337,9 +338,9 @@ height="31" width="88"></a></p>
   href="http://www.lcs.mit.edu/">MIT</a>, <a
   href="http://www.inria.fr/">INRIA</a>, <a
   href="http://www.keio.ac.jp/">Keio</a> ), All Rights Reserved. W3C <a
-  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal  
+  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal    
   Disclaimer">liability,</a> <a
-  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C  
+  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C    
   Trademarks">trademark</a>, <a
   href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
   use </a>and <a

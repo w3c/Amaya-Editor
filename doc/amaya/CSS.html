@@ -3,8 +3,7 @@
 <html>
 <head>
   <title>CSS support in Amaya</title>
-  <style>
-    BODY { background-color : #FFFFFF }
+  <style>    BODY { background-color : #FFFFFF }
     H1 { color : #00647F }
     H3 { color : #0050B2 }
     P { text-align: justify; line-height : 16pt; text-indent : 15pt }
@@ -129,7 +128,7 @@ element</strong>).</p>
       <li>The entry <strong>Enable</strong> allows one to re-apply effects of
         one of the external CSS style sheets to the current document. This
         command doesn't affect the CSS link in the document.</li>
-      <li>The entry <strong>Remove</strong> allows one to remove one of the 
+      <li>The entry <strong>Remove</strong> allows one to remove one of the
         external CSS style sheets. This command acts as the Disable command
         but in addition to that the element link which attaches the external
         CSS style sheet is removed.</li>
@@ -142,6 +141,10 @@ element</strong>).</p>
     available".</p>
     <p><img src="../Icons/css.gif" alt="css.gif"></p>
   </li>
+  <li>By default Amaya prints documents with CSS. The @media is interpreted to
+    select what style rules are applied by the  printing process  and what
+    style rules are used on the screen only. Nevertheless the user can ask the
+    Amaya printing to ignore  all CSS style sheets.</li>
 </ul>
 
 <h3><a name="L394">Current State</a></h3>
@@ -175,12 +178,14 @@ element</strong>).</p>
       version.</li>
     </ul>
   </li>
+  <li>The attribute MEDIA attached to CSS links is not interpreted.</li>
+  <li>Page rules are not interpreted too.</li>
 </ul>
 
 <p>There is support for user's preference which can be provided in</p>
 
 <p><tt><code>$(HOME)/.amaya/amaya.css</code></tt> (Unix) or
-<code>c:\.amaya/amaya.css</code> (Windows).</p>
+<code>Amaya\users\username\amaya.css</code> (Windows).</p>
 
 <h3><a name="L395">What's lacking</a></h3>
 
