@@ -403,7 +403,7 @@ void InitAmayaDefEnv (void)
   TtaSetDefEnvString ("THOTPRINT", "lpr", FALSE);
 #endif
   /* network configuration */
-  TtaSetDefEnvString ("ENABLE_XHTML_MIMETYPE", "no", FALSE);
+  TtaSetDefEnvString ("ENABLE_XHTML_MIMETYPE", "yes", FALSE);
   TtaSetDefEnvString ("SAFE_PUT_REDIRECT", "", FALSE);
   TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "yes", FALSE);
   TtaSetDefEnvString ("ENABLE_PIPELINING", "yes", FALSE);
