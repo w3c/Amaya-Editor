@@ -1353,12 +1353,12 @@ void SetGlPipelineState ()
   ThotBool badbuffer = FALSE;
 
   Software_Mode = FALSE;
-  if (strstr (renderer, "Mesa")
+  if ( renderer && ( strstr (renderer, "Mesa")
       || strstr (renderer, "Microsoft")
-      || strstr (renderer, "Sgi"))
+      || strstr (renderer, "Sgi")) )
     if (!strstr (renderer, "Mesa DRI"))
       Software_Mode = TRUE;  
-  if (strstr (version, "1.0") || strstr (version, "1.1")) 
+  if (version && (strstr (version, "1.0") || strstr (version, "1.1")) ) 
     {
 
 #ifdef _WINGUI
