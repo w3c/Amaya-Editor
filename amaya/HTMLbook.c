@@ -538,7 +538,7 @@ STRING              data;
 	  /* update the environment variable */
 	  TtaSetEnvString ("THOTPRINT", pPrinter, TRUE);
 	  TtaSetEnvInt ("PAPERSIZE", PageSize, TRUE);
-	  PrintAs (docPrint, 1);
+	  PrintDocument (docPrint, 1);
 	  break;
 	case 0:
 	  PaperPrint = (TtaGetPrintParameter (PP_Destination)) ? PP_PRINTER : PP_PS;
