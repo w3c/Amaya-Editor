@@ -2007,6 +2007,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   int                 y;
   int                 l;*/
   int                 frame;
+  GtkEntry           *textzone;
 
   /*PtrDocument         docsel;*/
   /*  PtrElement          firstSel, lastSel;*/
@@ -2018,7 +2019,8 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 #ifdef _GTK
   /*  printf("FrameCallbackGTK\n");*/
   frame = (int )data;
-  gtk_widget_grab_focus (widget);
+
+  //gtk_widget_grab_focus (widget);
 #endif /* _GTK */
 
   /* ne pas traiter si le document est en mode NoComputedDisplay */
@@ -2073,6 +2075,15 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
     return FALSE;
 #endif /* !_GTK */
 
+/* 
+Set the drawing area Focused
+By setting the focus on the text zone
+If another action specifically need focus, 
+w'ell grab it with the action
+*/
+textzone = gtk_object_get_data (GTK_OBJECT (widget), "Text_catcher");
+gtk_widget_grab_focus (GTK_WIDGET(textzone));  
+
 #ifndef _GTK
   switch (ev->type)
     {
@@ -2091,9 +2102,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	{
 	case Button1:
 #else /* _GTK */
-	  /* Set the drawing area active for the keyboard */	  
-	  gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)TRUE);
-
 	  switch (event->button)
 	    {
 	    case 1:
