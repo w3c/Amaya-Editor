@@ -2943,7 +2943,7 @@ PtrAbstractBox      pAb;
 
    result = TRUE;
    document = FrameTable[frame].FrDoc;
-   if (document == 0 || documentDisplayMode[document - 1] == NoComputedDisplay)
+   if (document == 0)
      return result;
 
    pLine = NULL;
@@ -2973,7 +2973,8 @@ PtrAbstractBox      pAb;
 		 && pAb->AbNew)
 	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_OLD_VIEW_NOT_REPLACED);
 	/* Dans les autres cas */
-	else
+	/* nothing to be done if in mode NoComputedDisplay */
+	else if (documentDisplayMode[document - 1] != NoComputedDisplay)
 	  {
 	     /* Traitement de la premiere creation */
 	     if (pFrame->FrAbstractBox == NULL)
