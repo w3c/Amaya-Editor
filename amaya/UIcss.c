@@ -633,7 +633,7 @@ static void InitCSSDialog (Document doc, char *s)
 	i = nb + 1;
       TtaNewSizedSelector (BaseCSS + CSSSelect, BaseCSS + CSSForm,
 			   TtaGetMessage (AMAYA, AM_CSS_FILE),
-			   nb, buf, 200, i, NULL, FALSE, TRUE);
+			   nb, buf, 350, i, NULL, FALSE, TRUE);
     }
   else
     TtaNewLabel (BaseCSS + CSSSelect, BaseCSS + CSSForm,
@@ -652,10 +652,9 @@ void                LinkCSS (Document doc, View view)
 {
   SSchema           docSchema;
 
+  docSchema = TtaGetDocumentSSchema (doc);
   /* LinkAsCSS and LinkAsXmlCSS will be cleared by
      SetREFattribute or by CallbackDialogue */
-
-  docSchema = TtaGetDocumentSSchema (doc);  
   if (strcmp(TtaGetSSchemaName (docSchema), "HTML") != 0)
     {
       /* Create a style within a XML document */

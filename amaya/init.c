@@ -1914,6 +1914,12 @@ static void BrowserForm (Document doc, View view, char *urlname)
        strcat (s, DIR_STR);
        strcat (s, DocumentName);
      }
+
+   if (LinkAsXmlCSS || LinkAsCSS)
+     strcpy (ScanFilter, "*.css");
+   else
+     strcpy (ScanFilter, "*.*htm*");
+
    TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseDialog + BrowserDirSelect, ScanFilter,

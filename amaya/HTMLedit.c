@@ -227,8 +227,7 @@ ThotBool DeleteLink (NotifyElement * event)
 void SetREFattribute (Element element, Document doc, char *targetURL,
 		      char *targetName)
 {
-   ElementType	       elType, textType;
-   Element             text;
+   ElementType	       elType;
    AttributeType       attrType;
    Attribute           attr;
    SSchema	       HTMLSSchema;
@@ -248,7 +247,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
    else
      isHTML = FALSE;
 
-   /* Is a link to an xml stylesheet */
+   /* Ii isn't a link to an xml stylesheet */
    if (!LinkAsXmlCSS)
      {
        if (isHTML)
@@ -318,25 +317,22 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
      {
        if ((tempURL[0] != EOS) && (IsCSSName (targetURL)))
 	 {
-	   /* set the relative value or URL in attribute HREF */
+	   /* set the relative value or URL in PI */
 	   base = GetBaseURL (doc);
 	   value = MakeRelativeURL (tempURL, base);
 	   LinkAsXmlCSS = FALSE;
 
 	   /* Load the CSS style sheet */
 	   LoadStyleSheet (targetURL, doc, element, NULL, CSS_ALL, FALSE);
-
-	   /* Create a text element with the name of that style sheet */
-	   textType.ElSSchema = elType.ElSSchema;
-	   textType.ElTypeNum = 1;
-	   text = TtaNewElement (doc, textType);
-	   TtaInsertFirstChild (&text, element, doc);
 	   /* We use the Latin_Script language to avoid the spell_chekcer */
 	   /* to check this element */
 	   strcpy (buffer, "xml-stylesheet type=\"text/css\" href=\"");
-	   strcat (buffer, value);
+	   if (*value == EOS)
+	     strcat (buffer, "./");
+	   else
+	     strcat (buffer, value);
 	   strcat (buffer, "\"");
-	   TtaSetTextContent (text, buffer, Latin_Script, doc);
+	   TtaSetTextContent (element, buffer, Latin_Script, doc);
 	 }
      }
    else
@@ -361,11 +357,11 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 	     TtaSetAttributeText (attr, value, element, doc);
 	   TtaFreeMemory (value);
 	 }
-     }
 
-   /* register the new value of the HREF attribute in the undo queue */
-   if (AttrHREFundoable && new)
-      TtaRegisterAttributeCreate (attr, element, doc);
+       /* register the new value of the HREF attribute in the undo queue */
+       if (AttrHREFundoable && new)
+	 TtaRegisterAttributeCreate (attr, element, doc);
+     }
 
    /* is it a html link to a CSS file? */
    if (tempURL[0] != EOS)

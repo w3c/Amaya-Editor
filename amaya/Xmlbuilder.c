@@ -177,8 +177,10 @@ void  MapGenericXmlElement (char *XMLName, ElementType *elType,
   ----------------------------------------------------------------------*/
 Element InsertCssInXml (Document doc, View view)
 {
-  Element      piEl, root, el;
+  Element      piEl, piLine, root, el;
   ElementType  elType;
+  int          j, firstChar, lastChar;
+  Element      firstSel, lastSel;
 
   /* Check the Thot abstract tree against the structure schema. */
   TtaSetStructureChecking (0, doc);
@@ -187,7 +189,13 @@ Element InsertCssInXml (Document doc, View view)
   el = NULL;
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   elType.ElTypeNum = XML_EL_xmlpi;
+  /* give current position */
+  TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &j);
+  TtaGiveLastSelectedElement (doc, &lastSel, &j, &lastChar);
   piEl = TtaNewElement (doc, elType);
+  /* register this element in the editing history */
+  TtaOpenUndoSequence (doc, firstSel, lastSel, firstChar, lastChar);
+  TtaRegisterElementCreate (piEl, doc);
   if (piEl != NULL)
     {
       root = TtaGetRootElement (doc);
@@ -201,14 +209,21 @@ Element InsertCssInXml (Document doc, View view)
 	}
       /* Create a xmlpi_line element as the first child of element xmlpi */
       elType.ElTypeNum = XML_EL_xmlpi_line;
-      el = TtaNewElement (doc, elType);
-      if (el != NULL)
+      piLine = TtaNewElement (doc, elType);
+      TtaRegisterElementCreate (piLine, doc);
+      if (piLine != NULL)
 	{
-	  TtaInsertFirstChild (&el, piEl, doc);
+	  TtaInsertFirstChild (&piLine, piEl, doc);
+	  /* Create a text element with the name of that style sheet */
+	  elType.ElTypeNum = 1;
+	  el = TtaNewElement (doc, elType);
+	  TtaRegisterElementCreate (el, doc);
+	  TtaInsertFirstChild (&el, piLine, doc);
 	  /* Select a new destination */
 	  SelectDestination (doc, el, FALSE);
 	}
     }
+  TtaCloseUndoSequence (doc);
   TtaSetStructureChecking (1, doc);
  
   return (el);
