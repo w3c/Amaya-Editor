@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Wed Sep 11 16:39:05 CEST 2002" version="10">
+<base last_update="Fri Jan 31 08:44:01 CET 2003" version="11">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">de</language>
@@ -17,7 +17,7 @@
 	<message xml:lang="fr">Nombre de propositions</message>
 	<message xml:lang="it">Numero di proposte alternative</message>
 	<message xml:lang="tr">Önerilerin sayýsý</message>
-	<message xml:lang="es">Number of proposals</message>
+	<message xml:lang="es">Número de propuestas</message>
 	<message xml:lang="pt">Número de propostas</message>
 	<message xml:lang="fi">Ehdotuksien lukumäärä</message>
 </label>
@@ -27,7 +27,7 @@
 	<message xml:lang="fr">Où corriger</message>
 	<message xml:lang="it">Controlla</message>
 	<message xml:lang="tr">Kontrol ediliyor</message>
-	<message xml:lang="es">Checking</message>
+	<message xml:lang="es">Comprobar</message>
 	<message xml:lang="pt">Verificação</message>
 	<message xml:lang="fi">Tarkistetaan</message>
 </label>
@@ -147,7 +147,7 @@
 	<message xml:lang="fr">Erreur dans le fichier des paramètres</message>
 	<message xml:lang="it">Errore nel file dei parametri</message>
 	<message xml:lang="tr">Parametre dosya hatasý</message>
-	<message xml:lang="es">Error fichero de parametro</message>
+	<message xml:lang="es">Error en archivo de parámetro</message>
 	<message xml:lang="pt">Erro em arquivo de parâmetros</message>
 	<message xml:lang="fi">Parametritiedosto virhe</message>
 </label>
@@ -157,7 +157,7 @@
 	<message xml:lang="fr">Absence de fichier clavier</message>
 	<message xml:lang="it">Il file della tastiera non esiste</message>
 	<message xml:lang="tr">Tuþtakýmý dosyasý yok</message>
-	<message xml:lang="es">No hay fichero de teclado</message>
+	<message xml:lang="es">No hay archivo de teclado</message>
 	<message xml:lang="pt">Não há arquivo de teclado</message>
 	<message xml:lang="fi">Ei näppäimistötiedostoa</message>
 </label>
@@ -177,7 +177,7 @@
 	<message xml:lang="fr">Mot "%s" incorrect refusé dans ce dictionnaire</message>
 	<message xml:lang="it">Parola scorretta "%s" rifiutata in questo dizionario</message>
 	<message xml:lang="tr">Yanlýþ sözcük "%s" bu sözlükte kabul edilmiyor</message>
-	<message xml:lang="es">Palabra incorrecta "%s" recahzada en este dictionario</message>
+	<message xml:lang="es">Palabra incorrecta "%s" rechazada en este diccionario</message>
 	<message xml:lang="pt">Palavra incorreta "%s" recusada neste dicionário</message>
 	<message xml:lang="fi">Kelpaamaton sana "%s", ei ole hyväksytty tässä sanastossa</message>
 </label>
@@ -187,7 +187,7 @@
 	<message xml:lang="fr">Mot "%s" ajouté dans le dictionnaire du document</message>
 	<message xml:lang="it">Parola "%s" aggiunta nel dizionario del documento</message>
 	<message xml:lang="tr">"%s" sözcüðü belge sözlüðüne eklendi</message>
-	<message xml:lang="es">La palabra "%s" añadida al diccionario del documento</message>
+	<message xml:lang="es">Palabra "%s" añadida al diccionario del documento</message>
 	<message xml:lang="pt">Palavra "%s" adicionada ao dicionário do documento</message>
 	<message xml:lang="fi">Sana "%s" lisätty dokumentin sanastoon</message>
 </label>

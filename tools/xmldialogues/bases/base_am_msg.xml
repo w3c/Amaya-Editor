@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Fri Jan 24 12:49:32 CET 2003" version="51">
+<base last_update="Fri Jan 31 08:41:44 CET 2003" version="52">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -207,7 +207,7 @@
 	<message xml:lang="de">Alle Änderungen gehen verloren - Möchten Sie fortfahren ?</message>
 	<message xml:lang="it">Il documento è stato modificato. Tutte le modifiche andranno perdute. Vuoi continuare ugualmente?</message>
 	<message xml:lang="tr">Tüm deðiþiklikleri kaybedeceksiniz, devam etmek istiyor musunuz?</message>
-	<message xml:lang="es">Documento modificado. ¡Se perderán todos los cambios!. ¿Quiere seguir?</message>
+	<message xml:lang="es">Documento modificado. ¡Se perderán todos los cambios! ¿Quiere seguir?</message>
 	<message xml:lang="pt">Documento modificado. Todas as alterações serão perdidas. Quer continuar?</message>
 	<message xml:lang="fi">Tiedostoa on muutettu. Haluatko poistua tallentamatta?</message>
 </label>
@@ -237,7 +237,7 @@
 	<message xml:lang="de">Kann lokale Datei %s nicht anlegen</message>
 	<message xml:lang="it">Non posso creare il file locale %s</message>
 	<message xml:lang="tr">Yerel dosya %s yaratýlamýyor</message>
-	<message xml:lang="es">No puedo crear fichero local %s</message>
+	<message xml:lang="es">No puedo crear archivo local %s</message>
 	<message xml:lang="pt">Não é possível criar arquivo local %s</message>
 	<message xml:lang="fi">Ei voida luoda paikallista tiedostoa %s</message>
 </label>
@@ -317,7 +317,7 @@
 	<message xml:lang="de">Unbekannter Status</message>
 	<message xml:lang="it">Stato sconosciuto</message>
 	<message xml:lang="tr">Belirsiz durum</message>
-	<message xml:lang="es">Estatus desconocido</message>
+	<message xml:lang="es">Estado desconocido</message>
 	<message xml:lang="pt">Estado desconhecido</message>
 	<message xml:lang="fi">Tuntematon tila</message>
 </label>
@@ -327,7 +327,7 @@
 	<message xml:lang="de">Anmeldung</message>
 	<message xml:lang="it">Dialogo di autenticazione</message>
 	<message xml:lang="tr">Güvenlik istemi</message>
-	<message xml:lang="es">Diálogo de Autentificación</message>
+	<message xml:lang="es">Diálogo de autentificación</message>
 	<message xml:lang="pt">Diálogo de Autenticação</message>
 	<message xml:lang="fi">Tunnistus ikkuna</message>
 </label>
@@ -366,7 +366,7 @@
 	<message xml:lang="de">Übertragung unterbrochen!</message>
 	<message xml:lang="it">Trasferimento interrotto!</message>
 	<message xml:lang="tr">Aktarým kesildi!</message>
-	<message xml:lang="es">Transferencia interrumpida</message>
+	<message xml:lang="es">¡Transferencia interrumpida!</message>
 	<message xml:lang="pt">Transferência interrompida!</message>
 	<message xml:lang="fi">Tiedonsiirto keskeytetty!</message>
 </label>
@@ -376,7 +376,7 @@
 	<message xml:lang="de">%s ist im Moment nicht verfügbar. Bitte später nochmal versuchen!</message>
 	<message xml:lang="it">%s è indisponibile al momento. Riprova piú tardi</message>
 	<message xml:lang="tr">%s: þu anda eriþilemiyor, baþka bir zaman deneyin</message>
-	<message xml:lang="es">%s no está disponible en este momento. Por favor inténtelo en otro momento</message>
+	<message xml:lang="es">%s no está disponible en este momento. Por favor, inténtelo en otro momento</message>
 	<message xml:lang="pt">%s Não está disponível no momento. Por favor tente novamente mais tarde.</message>
 	<message xml:lang="fi">%s yhteyttä ei voi muodostaa. Yrittäkää myöhemmin uudelleen.</message>
 </label>
@@ -416,7 +416,7 @@
 	<message xml:lang="de">Deutsche Systemfehlermeldungen</message>
 	<message xml:lang="it">italian system errors messages</message>
 	<message xml:lang="tr">Türkçe sistem hata mesajlarý</message>
-	<message xml:lang="es">Error en el sistema de mensajes (English)</message>
+	<message xml:lang="es">Mensajes de errores de sistema en inglés</message>
 	<message xml:lang="pt">Mensagens de erro do sistema em português</message>
 	<message xml:lang="fi">Englantilaisen järjestelmän virhesanomat.</message>
 </label>
@@ -476,7 +476,7 @@
 	<message xml:lang="de">Schreiben auf %s beendet</message>
 	<message xml:lang="it">Scrittura di %s terminata</message>
 	<message xml:lang="tr">%s\'in yazýmý tamamlandý</message>
-	<message xml:lang="es">Finalizado escritura %s</message>
+	<message xml:lang="es">Finalizada escritura de %s</message>
 	<message xml:lang="pt">Terminada a gravação de %s</message>
 	<message xml:lang="fi">Kirjoitus valmis %s</message>
 </label>
@@ -496,7 +496,7 @@
 	<message xml:lang="de">Temporäres Verzeichnis %s konnte nicht angelegt werden</message>
 	<message xml:lang="it">Impossibile creare la directory dei file temporanei %s</message>
 	<message xml:lang="tr">%s geçici dosya dizini yaratýlamadý</message>
-	<message xml:lang="es">No pude crear directorio de ficheros temporales %s</message>
+	<message xml:lang="es">No pude crear directorio de archivos temporales %s</message>
 	<message xml:lang="pt">Não foi possível criar o diretório de arquivos temporários %s</message>
 	<message xml:lang="fi">Ei voinut luoda väliaikaista hakemistoa %s</message>
 </label>
@@ -565,7 +565,7 @@
 	<message xml:lang="fr">Authentification requise pour le domaine \'%s\' du serveur \'%s\'</message>
 	<message xml:lang="de">Bitte auf der Domäne \'%s\', Server \'%s\' einloggen:</message>
 	<message xml:lang="it">Autenticazione per il dominio \'%s\' sul server \'%s\'</message>
-	<message xml:lang="es">Por favor valide para \'%s\' en el servidor \'%s\'</message>
+	<message xml:lang="es">Por favor, valide para \'%s\' en el servidor \'%s\'</message>
 	<message xml:lang="pt">Por favor autenticar para o domínio \'%s\' no servidor \'%s\'</message>
 	<message xml:lang="fi">Anna tunnistetiedot alueelle \'%s\' palvelimella \'%s\'</message>
 </label>
@@ -655,7 +655,7 @@
 	<message xml:lang="en">Saving will save following images too?</message>
 	<message xml:lang="fr">La sauvegarde sauvera aussi les images suivantes ?</message>
 	<message xml:lang="it">Il salvataggio salverà anche le immagini successive?</message>
-	<message xml:lang="es">¿Guardar también las siguientes imágenes al guardar?</message>
+	<message xml:lang="es">¿Guardar también las imágenes siguientes al guardar?</message>
 	<message xml:lang="de">Folgende Bilder ebenfalls speichern?</message>
 </label>
 <label define="AM_URL_SAVE_FAILED">
@@ -684,7 +684,7 @@
 	<message xml:lang="de">Bilder kopieren</message>
 	<message xml:lang="it">Copia immagini</message>
 	<message xml:lang="tr">Görüntüleri kopyala</message>
-	<message xml:lang="es">Copiar Imágenes</message>
+	<message xml:lang="es">Copiar imágenes</message>
 	<message xml:lang="pt">Copiar imagens</message>
 	<message xml:lang="fi">Kopioi kuvat</message>
 </label>
@@ -694,7 +694,7 @@
 	<message xml:lang="de">URIs transformieren</message>
 	<message xml:lang="it">Trasforma URL</message>
 	<message xml:lang="tr">URL\'leri dönüþtür</message>
-	<message xml:lang="es">Transformar URL</message>
+	<message xml:lang="es">Transformar URLs</message>
 	<message xml:lang="pt">Transformar URLs</message>
 	<message xml:lang="fi">Muuta URL:t</message>
 </label>
@@ -714,7 +714,7 @@
 	<message xml:lang="de">Bilder</message>
 	<message xml:lang="it">Directory delle immagini</message>
 	<message xml:lang="tr">Görüntü dizini</message>
-	<message xml:lang="es">Directorio de Imágenes</message>
+	<message xml:lang="es">Directorio de imágenes</message>
 	<message xml:lang="pt">Diretório de imagens</message>
 	<message xml:lang="fi">Kuvahakemisto</message>
 </label>
@@ -734,7 +734,7 @@
 	<message xml:lang="de">Formatvorlagen</message>
 	<message xml:lang="it">CSS file</message>
 	<message xml:lang="tr">CSS dosyasý 1</message>
-	<message xml:lang="es">ficheros CSS</message>
+	<message xml:lang="es">Archivos CSS</message>
 	<message xml:lang="pt">Arquivos CSS</message>
 	<message xml:lang="fi">CSS tyylitiedostot</message>
 </label>
@@ -753,7 +753,7 @@
 	<message xml:lang="fr">(envoyez vos questions à www-amaya@w3.org)</message>
 	<message xml:lang="de">(Probleme an www-amaya@w3.org senden)</message>
 	<message xml:lang="it">(scrivere a www-amaya@w3.org per informazioni)</message>
-	<message xml:lang="es">(salida de correo para www-amaya@w3.org)</message>
+	<message xml:lang="es">(enviar cuestión a www-amaya@w3.org)</message>
 	<message xml:lang="pt">(envie questões para www-amaya@w3.org)</message>
 	<message xml:lang="fi">(ilmoita virheistä www-amaya@w3.org)</message>
 </label>
@@ -803,7 +803,7 @@
 	<message xml:lang="de">Wiederholung y</message>
 	<message xml:lang="it">repeat-y</message>
 	<message xml:lang="tr">y\'de tekrar</message>
-	<message xml:lang="es">repetir-y</message>
+	<message xml:lang="es">Repetir-y (repeat-y)</message>
 	<message xml:lang="pt">Repetir-y</message>
 	<message xml:lang="fi">toista-y</message>
 </label>
@@ -832,7 +832,7 @@
 	<message xml:lang="fr">Pas de fichier CSS possible</message>
 	<message xml:lang="de">Keine Formatvorlage vorhanden</message>
 	<message xml:lang="it">Non è disponibile nessun file CSS</message>
-	<message xml:lang="es">No hay fichero CSS disponible</message>
+	<message xml:lang="es">No hay archivo CSS disponible</message>
 	<message xml:lang="pt">Não há arquivo CSS disponível</message>
 	<message xml:lang="fi">Ei CSS-tiedostoa saatavilla</message>
 </label>
@@ -852,7 +852,7 @@
 	<message xml:lang="de">Zurück</message>
 	<message xml:lang="it">Documento precedente</message>
 	<message xml:lang="tr">Önceki belge</message>
-	<message xml:lang="es">Documento previo</message>
+	<message xml:lang="es">Documento anterior</message>
 	<message xml:lang="pt">Documento precedente</message>
 	<message xml:lang="fi">Edellinen dokumentti</message>
 </label>
@@ -862,7 +862,7 @@
 	<message xml:lang="de">Vorwärts</message>
 	<message xml:lang="it">Documento successivo</message>
 	<message xml:lang="tr">Sonraki belge</message>
-	<message xml:lang="es">Siguiente documento</message>
+	<message xml:lang="es">Documento siguiente</message>
 	<message xml:lang="pt">Documento seguinte</message>
 	<message xml:lang="fi">Seuraava dokumentti</message>
 </label>
@@ -912,7 +912,7 @@
 	<message xml:lang="de">Betont</message>
 	<message xml:lang="it">Enfasi</message>
 	<message xml:lang="tr">Vurgu</message>
-	<message xml:lang="es">Énfasis</message>
+	<message xml:lang="es">Énfasis (emphasis)</message>
 	<message xml:lang="pt">Ênfase</message>
 	<message xml:lang="fi">Korosta</message>
 </label>
@@ -922,7 +922,7 @@
 	<message xml:lang="de">Hervorgehoben</message>
 	<message xml:lang="it">Forte</message>
 	<message xml:lang="tr">Kuvvetli</message>
-	<message xml:lang="es">Strong</message>
+	<message xml:lang="es">Enérgico (strong)</message>
 	<message xml:lang="pt">Forte</message>
 	<message xml:lang="fi">Lihavoi</message>
 </label>
@@ -942,7 +942,7 @@
 	<message xml:lang="de">keine Wiederholung</message>
 	<message xml:lang="it">no-repeat</message>
 	<message xml:lang="tr">tekrar yok</message>
-	<message xml:lang="es">no repetir</message>
+	<message xml:lang="es">No repetir (no-repeat)</message>
 	<message xml:lang="pt">Não repetir</message>
 	<message xml:lang="fi">ei toistoa</message>
 </label>
@@ -1072,7 +1072,7 @@
 	<message xml:lang="de">Keine Verbindung zum Server</message>
 	<message xml:lang="it">Impossibile connettersi al server</message>
 	<message xml:lang="tr">Sunucuya baðlantý yapýlamýyor</message>
-	<message xml:lang="es">No puedo crear una conexión al servidor</message>
+	<message xml:lang="es">No puedo establecer conexión con el servidor</message>
 	<message xml:lang="pt">Não é possível criar uma conexão ao servidor</message>
 	<message xml:lang="fi">Palvelinyhteyden muodostus epäonnistui</message>
 </label>
@@ -1162,7 +1162,7 @@
 	<message xml:lang="de">Bitte für den Zugriff auf %s einloggen</message>
 	<message xml:lang="it">Identificazione richiesta per accedere a %s</message>
 	<message xml:lang="tr">%s eriþimi için lütfen kendinizi tanýtýn</message>
-	<message xml:lang="es">Por favor identifíquese para acceder a %s</message>
+	<message xml:lang="es">Por favor, identifíquese para acceder a %s</message>
 	<message xml:lang="pt">Por favor autenticar para acessar %s</message>
 	<message xml:lang="fi">Tunnistus vaaditaan %s käsittelyyn</message>
 </label>
@@ -1262,7 +1262,7 @@
 	<message xml:lang="de">Aktive Übertragungen</message>
 	<message xml:lang="it">trasferimenti attivi</message>
 	<message xml:lang="tr">etkin aktarýmlar</message>
-	<message xml:lang="es">activar transferencias</message>
+	<message xml:lang="es">transferencias activas</message>
 	<message xml:lang="pt">Transferências ativas</message>
 	<message xml:lang="fi">aktiiviset tiedonsiirrot</message>
 </label>
@@ -1272,7 +1272,7 @@
 	<message xml:lang="de">Wartende Übertragungen</message>
 	<message xml:lang="it">trasferimenti in coda</message>
 	<message xml:lang="tr">kuyruktaki aktarýmlar</message>
-	<message xml:lang="es">transferencias encoladas</message>
+	<message xml:lang="es">transferencias en cola</message>
 	<message xml:lang="pt">Transferências enfileiradas</message>
 	<message xml:lang="fi">jonottavat tiedonsiirrot</message>
 </label>
@@ -1301,7 +1301,7 @@
 	<message xml:lang="de">Wiederholungsmodus</message>
 	<message xml:lang="it">Repeat Mode</message>
 	<message xml:lang="tr">Tekrar Kipi</message>
-	<message xml:lang="es">Modo repetición</message>
+	<message xml:lang="es">Modo de repetición</message>
 	<message xml:lang="pt">Modo repetiçao</message>
 	<message xml:lang="fi">Toistotila</message>
 </label>
@@ -1311,7 +1311,7 @@
 	<message xml:lang="de">Wiederholung</message>
 	<message xml:lang="it">repeat</message>
 	<message xml:lang="tr">tekrar</message>
-	<message xml:lang="es">repetir</message>
+	<message xml:lang="es">Repetir (repeat)</message>
 	<message xml:lang="pt">repetir</message>
 	<message xml:lang="fi">toista</message>
 </label>
@@ -1321,7 +1321,7 @@
 	<message xml:lang="de">Wiederholung x</message>
 	<message xml:lang="it">repeat-x</message>
 	<message xml:lang="tr">x\'te tekrar</message>
-	<message xml:lang="es">repetir-x</message>
+	<message xml:lang="es">Repetir-x (repeat-x)</message>
 	<message xml:lang="pt">repetir-x</message>
 	<message xml:lang="fi">toista-x</message>
 </label>
@@ -1330,7 +1330,7 @@
 	<message xml:lang="fr">La précédente session Amaya s'est mal terminée. Voulez-vous recharger les documents modifiés ?</message>
 	<message xml:lang="de">Ihr letzter Amaya-Prozeß wurde abgebrochen. Möchten Sie Sicherungskopien laden?</message>
 	<message xml:lang="it">La precedente sessione con Amaya non è terminata correttamente. Vuoi ricaricare i documenti di backup?</message>
-	<message xml:lang="es">Su sesión previa de Amaya falló. ¿Quiere recargar la copia de seguridad de los documentos?</message>
+	<message xml:lang="es">Su sesión anterior de Amaya falló. ¿Quiere recargar la copia de seguridad de los documentos?</message>
 	<message xml:lang="pt">Sua sessão Amaya precedente falhou. Quer recarregar as cópias de segurança dos documentos?</message>
 	<message xml:lang="fi">Amayan sammuttaminen epäonnistui. Haluatko palauttaa varmuuskopioidut dokumentit?</message>
 </label>
@@ -1357,7 +1357,7 @@
 	<message xml:lang="fr">Nombre de lignes</message>
 	<message xml:lang="de">Zeilen:</message>
 	<message xml:lang="it">Numero di righe</message>
-	<message xml:lang="es">Numero de filas</message>
+	<message xml:lang="es">Número de filas</message>
 	<message xml:lang="pt">Número de linhas</message>
 	<message xml:lang="fi">Rivien lukumäärä</message>
 </label>
@@ -1366,7 +1366,7 @@
 	<message xml:lang="fr">Nombre de colonnes</message>
 	<message xml:lang="de">Spalten:</message>
 	<message xml:lang="it">Numero di colonne</message>
-	<message xml:lang="es">Numero de columnas</message>
+	<message xml:lang="es">Número de columnas</message>
 	<message xml:lang="pt">Número de colunas</message>
 	<message xml:lang="fi">Sarakkeiden lukumäärä</message>
 </label>
@@ -1429,7 +1429,7 @@
 	<message xml:lang="fr">Vider le cache</message>
 	<message xml:lang="de">Cache leeren</message>
 	<message xml:lang="it">Svuota la cache</message>
-	<message xml:lang="es">Vaciar Caché</message>
+	<message xml:lang="es">Vaciar caché</message>
 	<message xml:lang="pt">Esvaziar cache</message>
 	<message xml:lang="fi">Tyhjennä välimuisti</message>
 </label>
@@ -1438,7 +1438,7 @@
 	<message xml:lang="fr">Configuration du cache</message>
 	<message xml:lang="de">Cache</message>
 	<message xml:lang="it">Preferenze sulla cache</message>
-	<message xml:lang="es">Preferencias de Caché</message>
+	<message xml:lang="es">Preferencias de caché</message>
 	<message xml:lang="pt">Preferências de cache</message>
 	<message xml:lang="fi">Välimuistin asetukset</message>
 </label>
@@ -1447,7 +1447,7 @@
 	<message xml:lang="fr">Activer le cache</message>
 	<message xml:lang="de">Cache aktivieren</message>
 	<message xml:lang="it">Abilita la cache</message>
-	<message xml:lang="es">Activar Caché</message>
+	<message xml:lang="es">Activar caché</message>
 	<message xml:lang="pt">Habilitar cache</message>
 	<message xml:lang="fi">Käytä välimuistia</message>
 </label>
@@ -1456,7 +1456,7 @@
 	<message xml:lang="fr">Stocker dans le cache les documents protégés</message>
 	<message xml:lang="de">Geschützte Dokumente cachen</message>
 	<message xml:lang="it">Proteggi i documenti nella cache</message>
-	<message xml:lang="es">documentos protegidos del Caché</message>
+	<message xml:lang="es">Documentos protegidos en la caché</message>
 	<message xml:lang="pt">Documentos protegidos em cache</message>
 	<message xml:lang="fi">Aseta suojatut tiedostot välimuistiin</message>
 </label>
@@ -1483,7 +1483,7 @@
 	<message xml:lang="fr">Répertoire du cache</message>
 	<message xml:lang="de">Verzeichnis</message>
 	<message xml:lang="it">Directory della cache</message>
-	<message xml:lang="es">directorio caché</message>
+	<message xml:lang="es">Directorio caché</message>
 	<message xml:lang="pt">Diretório cache</message>
 	<message xml:lang="fi">Välimuistin sijainti</message>
 </label>
@@ -1492,7 +1492,7 @@
 	<message xml:lang="fr">Taille du cache (Mo)</message>
 	<message xml:lang="de">Cachegröße (MB)</message>
 	<message xml:lang="it">Dimensione della cache (Mb)</message>
-	<message xml:lang="es">Tamaño de caché(Mb)</message>
+	<message xml:lang="es">Tamaño de caché (Mb)</message>
 	<message xml:lang="pt">Tamanho de cache (MB)</message>
 	<message xml:lang="fi">Välimuistin koko (Mb)</message>
 </label>
@@ -1519,7 +1519,7 @@
 	<message xml:lang="fr">Proxy HTTP</message>
 	<message xml:lang="de">HTTP-Proxy</message>
 	<message xml:lang="it">HTTP proxy (es., http://groucho.marx.edu)</message>
-	<message xml:lang="es">HTTP proxy (v.g., www.w3.org:1234)</message>
+	<message xml:lang="es">HTTP proxy (p.e., www.w3.org:1234)</message>
 	<message xml:lang="pt">Proxy HTTP (por exemplo www.w3.org:1234)</message>
 	<message xml:lang="fi">HTTP välityspalvelin (e.g., www.w3.org:1234)</message>
 </label>
@@ -1528,7 +1528,7 @@
 	<message xml:lang="fr">Liste des domaines du proxy (e.g., lists.w3.org)</message>
 	<message xml:lang="de">Proxy-Domänen</message>
 	<message xml:lang="it">Domini di proxy (es., www.w3.org)</message>
-	<message xml:lang="es">Lista de dominios proxy (e.g., lists.w3.org)</message>
+	<message xml:lang="es">Lista de dominios proxy (p.e., lists.w3.org)</message>
 	<message xml:lang="pt">Lista de domínios proxy (por exemplo lists.w3.org)</message>
 	<message xml:lang="fi">Välityspalvelimen domain luettelo (e.g., lists.w3.org)</message>
 </label>
@@ -1546,7 +1546,7 @@
 	<message xml:lang="fr">Page de démarrage</message>
 	<message xml:lang="de">Startseite</message>
 	<message xml:lang="it">Home Page</message>
-	<message xml:lang="es">Página principal</message>
+	<message xml:lang="es">Página de inicio</message>
 	<message xml:lang="pt">Página principal</message>
 	<message xml:lang="fi">Aloitussivu</message>
 </label>
@@ -1591,7 +1591,7 @@
 	<message xml:lang="fr">Langue des dialogues</message>
 	<message xml:lang="de">Dialogsprache</message>
 	<message xml:lang="it">Lingua delle finestre di dialogo</message>
-	<message xml:lang="es">Idioma de dialogo</message>
+	<message xml:lang="es">Idioma de diálogo</message>
 	<message xml:lang="pt">Linguagem de diálogo</message>
 	<message xml:lang="fi">Kielikoodi</message>
 </label>
@@ -1751,7 +1751,7 @@
 	<message xml:lang="fr">Couleur d'avant-plan des menus</message>
 	<message xml:lang="de">Schrift (Menüs)</message>
 	<message xml:lang="it">Colore in primo piano nei menu</message>
-	<message xml:lang="es">Menú color de documento</message>
+	<message xml:lang="es">Color del menú</message>
 	<message xml:lang="pt">Cor do plano frontal do menu</message>
 	<message xml:lang="fi">Valikon piirtoväri</message>
 </label>
@@ -1760,7 +1760,7 @@
 	<message xml:lang="fr">Couleur d'arrière-plan des menus</message>
 	<message xml:lang="de">Hintergrund (Menüs)</message>
 	<message xml:lang="it">Colore dello sfondo nei menu</message>
-	<message xml:lang="es">Menú color de fondo</message>
+	<message xml:lang="es">Color del fondo del menú</message>
 	<message xml:lang="pt">Cor de fundo do menu</message>
 	<message xml:lang="fi">Valikon taustaväri</message>
 </label>
@@ -1778,7 +1778,7 @@
 	<message xml:lang="fr">Page personelle</message>
 	<message xml:lang="de">Startseite</message>
 	<message xml:lang="it">Home</message>
-	<message xml:lang="es">Principal</message>
+	<message xml:lang="es">Inicio</message>
 	<message xml:lang="pt">Home</message>
 	<message xml:lang="fi">Aloitussivu</message>
 </label>
@@ -1796,7 +1796,7 @@
 	<message xml:lang="fr">Emplacement du fichier de définition de profils</message>
 	<message xml:lang="de">Datei der Profildefinitionen</message>
 	<message xml:lang="it">File di definizione dei profili</message>
-	<message xml:lang="es">Ubicación de fichero de definición de perfiles</message>
+	<message xml:lang="es">Ubicación de archivo de definición de perfiles</message>
 	<message xml:lang="pt">Localização do arquivo de definição de perfís</message>
 	<message xml:lang="fi">Profiilien määrittelytiedoston sijainti</message>
 </label>
@@ -1887,7 +1887,7 @@
 	<message xml:lang="fr">Ne pas utiliser le proxy dans ces domaines</message>
 	<message xml:lang="de">Ausschließen</message>
 	<message xml:lang="it">Escludi l'utilizzo del proxy su questi domini</message>
-	<message xml:lang="es">No hay proxy es estos dominios</message>
+	<message xml:lang="es">No utilizar proxy es estos dominios</message>
 	<message xml:lang="pt">Não há proxy nestes domínios</message>
 	<message xml:lang="fi">Älä käytä välityspalvelinta näihin domaineihin</message>
 </label>
@@ -1896,7 +1896,7 @@
 	<message xml:lang="fr">Utiliser le proxy uniquement dans ces domaines</message>
 	<message xml:lang="de">Zulassen</message>
 	<message xml:lang="it">Utilizza il proxy solo su questi domini</message>
-	<message xml:lang="es">Sólo proxy en estos dominios</message>
+	<message xml:lang="es">Utilizar proxy sólo en estos dominios</message>
 	<message xml:lang="pt">Somente com proxy estes domínios</message>
 	<message xml:lang="fi">Käytä vain välityspalvelinta näihin domaineihin</message>
 </label>
@@ -2002,7 +2002,7 @@
 <label define="AM_ANNOT_RAUTOLOAD_RST">
 	<message xml:lang="en">Disable remote autoload at each startup (for off-line work)</message>
 	<message xml:lang="fr">Désactiver le chargement automatique des annotations distantes au démarrage</message>
-	<message xml:lang="es">Deshabilitar autorecarga remota en cada inicio (para trabajo off line)</message>
+	<message xml:lang="es">Deshabilitar la recarga automática remota en cada inicio (para trabajo sin conexión)</message>
 	<message xml:lang="it">Disabilita il caricamento remoto automatico alla partenza (per lavorare offline)</message>
 	<message xml:lang="de">Offline-Modus</message>
 	<message xml:lang="pt">Desabilitar autocarga remota em cada partida (para trabalho off-line)</message>
@@ -2022,7 +2022,7 @@
 	<message xml:lang="fr">Couleur du curseur d'insertion</message>
 	<message xml:lang="de">Cursor</message>
 	<message xml:lang="it">Colore del cursore</message>
-	<message xml:lang="es">Caret color</message>
+	<message xml:lang="es">Color del cursor de texto</message>
 	<message xml:lang="pt">Cor do cursor de inserção</message>
 	<message xml:lang="fi">Caret väri</message>
 </label>
@@ -2112,7 +2112,7 @@
 	<message xml:lang="fr">Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs</message>
 	<message xml:lang="it">I tag/attributi sono ignorati - vedi Viste/Mostra le errore</message>
 	<message xml:lang="de">Einige Tags/Attribute wurden ignoriert - siehe Ansicht/Parserfehler anzeigen</message>
-	<message xml:lang="es">Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log</message>
+	<message xml:lang="es">Se ignoran Tags/atributos - vea Vistas/Mostrar errores sintácticos</message>
 	<message xml:lang="pt">Algumas marcas(tags)/atributos são ignorados - veja Vistas/Exibir erros de gramática (parsing)</message>
 	<message xml:lang="fi">Jotkut tagit/määrittelyt ohitettiin - katso Näytä/Näytä käännösvirheet</message>
 </label>
@@ -2157,7 +2157,7 @@
 	<message xml:lang="fr">Sélecteur de fichiers</message>
 	<message xml:lang="it">File Browser</message>
 	<message xml:lang="de">Durchsuchen</message>
-	<message xml:lang="es">Navegador de ficheros</message>
+	<message xml:lang="es">Buscador de archivos</message>
 	<message xml:lang="pt">Navegador de arquivos</message>
 	<message xml:lang="fi">Selaa tiedostoja</message>
 </label>
@@ -2192,7 +2192,7 @@
 	<message xml:lang="en">Hide</message>
 	<message xml:lang="de">Verbergen</message>
 	<message xml:lang="fr">Cacher</message>
-	<message xml:lang="es">Esconder</message>
+	<message xml:lang="es">Ocultar</message>
 	<message xml:lang="it">Nascondi</message>
 	<message xml:lang="pt">Esconder</message>
 	<message xml:lang="fi">Piilota</message>
@@ -2210,7 +2210,7 @@
 	<message xml:lang="en">Hide all</message>
 	<message xml:lang="de">Keine</message>
 	<message xml:lang="fr">Cacher tout</message>
-	<message xml:lang="es">Esconder todo</message>
+	<message xml:lang="es">Ocultar todo</message>
 	<message xml:lang="it">Nascondi tutto</message>
 	<message xml:lang="pt">Esconder tudo</message>
 	<message xml:lang="fi">Piilota kaikki</message>
@@ -2219,7 +2219,7 @@
 	<message xml:lang="en">* means hidden, - means partially hidden</message>
 	<message xml:lang="de">* = verborgen, - = teilweise verborgen</message>
 	<message xml:lang="fr">* signifie caché, - signifie partiellement caché</message>
-	<message xml:lang="es">* significa escondido, - significa parcialmente escondido</message>
+	<message xml:lang="es">* significa oculto, - significa parcialmente oculto</message>
 	<message xml:lang="it">* significa nascosto, - significa parzialmente nascosto</message>
 	<message xml:lang="pt">* significa escondido, - significa parcialmente escondido</message>
 	<message xml:lang="fi">* tarkoittaa piilotettua, - tarkoittaa osittain piilotettua</message>
@@ -2337,7 +2337,7 @@
 	<message xml:lang="fr">Vous ne pouvez pas annoter un document modifié. Sauver le d'abord.</message>
 	<message xml:lang="it">Non puoi annotare un documento modificato. Prima salvalo.</message>
 	<message xml:lang="de">Anmerkung an geändertes Dokument ist nicht möglich, bitte erst speichern</message>
-	<message xml:lang="es">No puede comentar un documento modificado. Por favor guárdelo primero.</message>
+	<message xml:lang="es">No puede comentar un documento modificado. Por favor, guárdelo primero.</message>
 	<message xml:lang="pt">Você não pode fazer anotações em um documento modificado. Por favor salve-o antes.</message>
 	<message xml:lang="fi">Et voi merkitä muutettua dokumenttia. Tallenna dokumentti ensin.</message>
 </label>
@@ -2346,7 +2346,7 @@
 	<message xml:lang="fr">Pas de nom d'utilisateur déclaré. Voir le menu Annotations/Configure.</message>
 	<message xml:lang="it">Non sono state dichiarate annotazioni utente. Apri il menu Annotazioni/Configura.</message>
 	<message xml:lang="de">Kein Ersteller für Anmerkung konfiguriert, bitte das Menü "Anmerkungen/Konfiguration" öffnen</message>
-	<message xml:lang="es">No hay comentarios de usuario declarado. Por favor abra el menú de configuración de Comentarios</message>
+	<message xml:lang="es">No hay comentarios de usuario declarados. Por favor, abra el menú de configuración de Comentarios</message>
 	<message xml:lang="pt">Não foi declarado o usuário da anotação. Por favor abra o menu Anotações/Configurar</message>
 	<message xml:lang="fi">Merkinnän käyttäjää ei valittu. Valitse käyttäjä Merkinnät/Määritä asetukset</message>
 </label>
@@ -2464,7 +2464,7 @@
 	<message xml:lang="fr">Ce type de document n'a pas de charset</message>
 	<message xml:lang="it">Questo tipo di documento non supporta i charset</message>
 	<message xml:lang="de">Dieser Dokumenttyp unterstützt keine Zeichensätze</message>
-	<message xml:lang="es">Este tipo de documento no soporta charsets</message>
+	<message xml:lang="es">Este tipo de documento no soporta juegos de caracteres</message>
 	<message xml:lang="pt">este tipo de documento não suporta conjuntos de caracteres (charsets)</message>
 	<message xml:lang="fi">Tämä dokumenttityyppi ei tue charset:iä</message>
 </label>
@@ -2500,7 +2500,7 @@
 	<message xml:lang="fr">Styles ignorés - voir Vues/Montrer les erreurs</message>
 	<message xml:lang="it">I stili sono ignorati - vedi Viste/Mostra le errore</message>
 	<message xml:lang="de">Formatvorlagen wurden ignoriert - siehe Ansicht/Parserfehler anzeigen</message>
-	<message xml:lang="es">Se ignoran estilos - vea Vistas/Mostrar fichero log</message>
+	<message xml:lang="es">Se ignoran los estilos - vea Vistas/Mostrar errores sintácticos</message>
 	<message xml:lang="pt">Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)</message>
 	<message xml:lang="fi">Tyylit ohitetaan - katso Näytä/Näytä käännösvirheet</message>
 </label>
@@ -2574,7 +2574,7 @@
 	<message xml:lang="de">Sperre %s...</message>
 	<message xml:lang="fi">Lukitaan %s...</message>
 	<message xml:lang="it">Metto il lock su %s...</message>
-	<message xml:lang="es">Bloquear %s...</message>
+	<message xml:lang="es">Bloqueando %s...</message>
 </label>
 <label define="AM_LOCKED">
 	<message xml:lang="en">Document %s is locked!</message>
@@ -2601,7 +2601,7 @@
 	<message xml:lang="de">Sperrinformation überschreiben?</message>
 	<message xml:lang="fi">Korvataanko lukitustiedot?</message>
 	<message xml:lang="it">Sovrascrivere l'informazione di lock?</message>
-	<message xml:lang="es">¿Sobreescribir información de bloqueo?</message>
+	<message xml:lang="es">¿Sobreescribir la información de bloqueo?</message>
 </label>
 <label define="AM_COPY_LOCK">
 	<message xml:lang="en">Copy the lock information? </message>
@@ -2646,7 +2646,7 @@
 	<message xml:lang="de">Entsperre %s...</message>
 	<message xml:lang="fi">Poistetaan lukitus %s...</message>
 	<message xml:lang="it">Tolgo il lock su %s...</message>
-	<message xml:lang="es">Desbloqueado %s...</message>
+	<message xml:lang="es">Desbloqueando %s...</message>
 </label>
 <label define="AM_UNLOCKED">
 	<message xml:lang="en">Document %s is unlocked!</message>
@@ -2664,7 +2664,7 @@
 	<message xml:lang="de">Dokument entsperren?</message>
 	<message xml:lang="fi">Poista lukitus dokumentista?</message>
 	<message xml:lang="it">Tolgo il lock al documento?</message>
-	<message xml:lang="es">Desbloquear el documento?</message>
+	<message xml:lang="es">¿Desbloquear el documento?</message>
 </label>
 <label define="AM_DAV_PROPERTIES">
 	<message xml:lang="en">Document properties</message>
@@ -2673,7 +2673,7 @@
 	<message xml:lang="de">Dokumenteigenschaften</message>
 	<message xml:lang="fi">Dokumentin ominaisuudet</message>
 	<message xml:lang="it">Proprietà del documento</message>
-	<message xml:lang="es">Propiedades de documento</message>
+	<message xml:lang="es">Propiedades del documento</message>
 </label>
 <label define="AM_PROPFIND_FAILED">
 	<message xml:lang="en">Document properties are not available</message>
@@ -2682,7 +2682,7 @@
 	<message xml:lang="de">Dokumenteigenschaften nicht verfügbar</message>
 	<message xml:lang="fi">Dokumentin ominaisuuksia ei saatavilla</message>
 	<message xml:lang="it">Le proprietà del documento non sono disponibili</message>
-	<message xml:lang="es">Las propiedades de documento no están disponibles</message>
+	<message xml:lang="es">Las propiedades del documento no están disponibles</message>
 </label>
 <label define="AM_PROPFIND_FAILED_TEMP">
 	<message xml:lang="en">Document properties are temporarily unavailable. Try again later...</message>
@@ -2691,7 +2691,7 @@
 	<message xml:lang="de">Dokumenteigenschaften momentan nicht verfügbar. Versuchen Sie es später...</message>
 	<message xml:lang="fi">Dokumentin ominaisuuksia ei ole väliaikaisesti saatavilla. Yritä myöhemmin uudelleen...</message>
 	<message xml:lang="it">Le proprietà del documento non sono al momento disponibili. Riprova più tardi...</message>
-	<message xml:lang="es">Las propiedades de documento no están disponibles temporalmente. Inténtalo de nuevo más tarde...</message>
+	<message xml:lang="es">Las propiedades del documento no están disponibles temporalmente. Inténtelo de nuevo más tarde...</message>
 </label>
 <label define="AM_FINDING_PROPERTIES">
 	<message xml:lang="en">Looking for document properties...</message>
@@ -2700,7 +2700,7 @@
 	<message xml:lang="de">Suche nach Dokumenteigenschaften...</message>
 	<message xml:lang="fi">Haetaan dokumentin ominaisuuksia...</message>
 	<message xml:lang="it">Cerco le proprietà del documento...</message>
-	<message xml:lang="es">Buscando las propiedades de documento...</message>
+	<message xml:lang="es">Buscando las propiedades del documento...</message>
 </label>
 <label define="AM_DAV_UNSUPPORTED_PROTOCOL">
 	<message xml:lang="en">Sorry, no WebDAV support for URLs of this type %s</message>
@@ -2736,7 +2736,7 @@
 	<message xml:lang="de">Operation nicht erlaubt für %s</message>
 	<message xml:lang="fi">Tämä toiminto ei ole käytettävissä %s</message>
 	<message xml:lang="it">Mi spiace, questa operazione non è permessa per %s</message>
-	<message xml:lang="es">Lo siento, no está permitida esta operación parar %s</message>
+	<message xml:lang="es">Lo siento, esta operación no está permitida para %s</message>
 </label>
 <label define="AM_FAILED_DEPENDENCY">
 	<message xml:lang="en">Request failed! Reason: Failed Dependency</message>
@@ -2763,7 +2763,7 @@
 	<message xml:lang="de">Erneut versuchen?</message>
 	<message xml:lang="fi">Yritä uudelleen?</message>
 	<message xml:lang="it">Riprovo?</message>
-	<message xml:lang="es">¿Otro intento?</message>
+	<message xml:lang="es">¿Intentar de nuevo?</message>
 </label>
 <label define="AM_DAV_PREFERENCES">
 	<message xml:lang="en">WebDAV Preferences</message>
@@ -2914,7 +2914,7 @@
 	<message xml:lang="de">SVG Bibliothek</message>
 	<message xml:lang="fi">SVG Kirjasto</message>
 	<message xml:lang="it">Libreria SVG</message>
-	<message xml:lang="es">Librería SVG</message>
+	<message xml:lang="es">Biblioteca SVG</message>
 </label>
 <label define="AM_SVGLIB_DIALOG1">
 	<message xml:lang="en">Copy option</message>
@@ -2922,7 +2922,7 @@
 	<message xml:lang="de">Option kopieren</message>
 	<message xml:lang="fi">Kopioi vaihtoehto</message>
 	<message xml:lang="it">Opzione di copia</message>
-	<message xml:lang="es">Opción Copiar</message>
+	<message xml:lang="es">Copiar opción</message>
 </label>
 <label define="AM_SVGLIB_COPY_SELECTION">
 	<message xml:lang="en">Copy selection</message>
@@ -2930,7 +2930,7 @@
 	<message xml:lang="de">Markierung kopieren</message>
 	<message xml:lang="fi">Kopioi valinta</message>
 	<message xml:lang="it">Copia la selezione</message>
-	<message xml:lang="es">Selección Copiar</message>
+	<message xml:lang="es">Copiar selección</message>
 </label>
 <label define="AM_SVGLIB_REF_SELECTION">
 	<message xml:lang="en">Refer to selection</message>
@@ -2946,7 +2946,7 @@
 	<message xml:lang="de">Neues Modell zu Bibliothek hinzufügen</message>
 	<message xml:lang="fi">Lisää uusi malli kirjastoon</message>
 	<message xml:lang="it">Aggiungi un nuovo modello alla libreria</message>
-	<message xml:lang="es">Añadir nuevo modelo a la librería</message>
+	<message xml:lang="es">Añadir nuevo modelo a la bibloteca</message>
 </label>
 <label define="AM_SVGLIB_CREATE_NEW_SVG_FILE">
 	<message xml:lang="en">URL of the new SVG file ...</message>
@@ -2962,7 +2962,7 @@
 	<message xml:lang="de">Titel der Bibliothek</message>
 	<message xml:lang="fi">Kirjaston nimi</message>
 	<message xml:lang="it">Titolo della libreria</message>
-	<message xml:lang="es">Título de la librería</message>
+	<message xml:lang="es">Título de la bibloteca</message>
 </label>
 <label define="AM_SVGLIB_CATALOGUE_URL">
 	<message xml:lang="en">Library URL</message>
@@ -2970,7 +2970,7 @@
 	<message xml:lang="de">URL der Bibliothek</message>
 	<message xml:lang="fi">Kirjaston URL</message>
 	<message xml:lang="it">URL per la libreria</message>
-	<message xml:lang="es">URL de la librería</message>
+	<message xml:lang="es">URL de la biblioteca</message>
 </label>
 <label define="AM_SVGLIB_CREATE_NEW_CATALOGUE">
 	<message xml:lang="en">Create library</message>
@@ -2978,7 +2978,7 @@
 	<message xml:lang="de">Bibliothek erzeugen</message>
 	<message xml:lang="fi">Luo kirjasto</message>
 	<message xml:lang="it">Crea libreria</message>
-	<message xml:lang="es">Crear librería</message>
+	<message xml:lang="es">Crear biblioteca</message>
 </label>
 <label define="AM_SVGLIB_ADD_NEW_CATALOGUE">
 	<message xml:lang="en">Browse library</message>
@@ -2986,7 +2986,7 @@
 	<message xml:lang="de">Bibliothek durchsuchen</message>
 	<message xml:lang="fi">Selaa kirjastoa</message>
 	<message xml:lang="it">Scorri la libreria</message>
-	<message xml:lang="es">Ojear la librería</message>
+	<message xml:lang="es">Ojear la biblioteca</message>
 </label>
 <label define="AM_SVGLIB_CREATE_NEW_CATALOGUE_DIALOG">
 	<message xml:lang="en">Create or search library</message>
@@ -2994,7 +2994,7 @@
 	<message xml:lang="de">Bibliothek erzeugen oder suchen</message>
 	<message xml:lang="fi">Luo tai etsi kirjasto</message>
 	<message xml:lang="it">Crea o cerca libreria</message>
-	<message xml:lang="es">Crear o buscar en la librería</message>
+	<message xml:lang="es">Crear o buscar en la biblioteca</message>
 </label>
 <label define="AM_SVGLIB_NO_SVG_SELECTION">
 	<message xml:lang="en">The current selection not contain only SVG elements. Please reselect</message>
@@ -3002,7 +3002,7 @@
 	<message xml:lang="de">Die Markierung enthält nicht nur SVG-Elemente. Bitte neu markieren</message>
 	<message xml:lang="fi">Nykyinen valinta ei sisällä pelkästään SVG elementtejä. Valitse uudelleen.</message>
 	<message xml:lang="it">La selezione corrente non contiene solo elementi SVG. Per favore riseleziona.</message>
-	<message xml:lang="es">La selección actual no contiene sólo elementos SVG. Por favor, vuelve a seleccionar</message>
+	<message xml:lang="es">La selección actual no contiene sólo elementos SVG. Por favor, vuelva a seleccionar</message>
 </label>
 <label define="AM_SVGLIB_MISSING_TITLE">
 	<message xml:lang="en">The library title is mandatory</message>
@@ -3010,7 +3010,7 @@
 	<message xml:lang="de">Der Titel der Bibliothek muss angegeben werden</message>
 	<message xml:lang="fi">Kirjaston otsikko on pakollinen</message>
 	<message xml:lang="it">Il titolo della libreria è obbligatorio</message>
-	<message xml:lang="es">El título de la librería es obligatorio</message>
+	<message xml:lang="es">El título de la biblioteca es obligatorio</message>
 </label>
 <label define="AM_SVGANIM_MOTION_HINT1">
 	<message xml:lang="en">Move the position cursor in edited document to define a new key position...</message>
@@ -3018,7 +3018,7 @@
 	<message xml:lang="de">Den Cursor an die neue Schlüsselposition bewegen...</message>
 	<message xml:lang="fi">Siirrä kursoria dokumentissa määrittääksesi uuden avainkohdan...</message>
 	<message xml:lang="it">Muovi il cursore nel documento editato per definire la nuova posizione chiave...</message>
-	<message xml:lang="es">Mover la posición del cursor en el documento editado para definir una nueva posición clave...</message>
+	<message xml:lang="es">Desplace la posición del cursor en el documento editado para definir una nueva posición clave...</message>
 </label>
 <label define="AM_SVGANIM_MOTION_HINT2">
 	<message xml:lang="en">Key position defined. Move the slider to define animation duration...</message>
@@ -3026,7 +3026,7 @@
 	<message xml:lang="de">Schlüsselposition definiert. Schieber bewegen um die Dauer der Animation festzulegen...</message>
 	<message xml:lang="fi">Avainkohta määritelty. Siirrä liukukytkintä määrittääksesi animaation keston...</message>
 	<message xml:lang="it">Posizione chiave definta. Sposta il cursore per definire la durata dell'animazione...</message>
-	<message xml:lang="es">Posición clave definida. Mover el calculador para definir la duración de la animación...</message>
+	<message xml:lang="es">Posición clave definida. Desplace el marcador para definir la duración de la animación...</message>
 </label>
 <label define="AM_SVGANIM_COLOR_HINT1">
 	<message xml:lang="en">Select starting color of element...</message>
@@ -3034,7 +3034,7 @@
 	<message xml:lang="de">Anfangsfarbe des Elements wählen...</message>
 	<message xml:lang="fi">Valitse elementin alkuväri...</message>
 	<message xml:lang="it">Scegli il colore iniziale dell'elemento...</message>
-	<message xml:lang="es">Seleccionar el color de comienzo del elemento...</message>
+	<message xml:lang="es">Seleccione el color inicial del elemento...</message>
 </label>
 <label define="AM_SVGANIM_COLOR_HINT2">
 	<message xml:lang="en">Starting color defined. Move the slider to define animation duration...</message>
@@ -3042,7 +3042,7 @@
 	<message xml:lang="de">Anfangsfarbe definiert. Schieber bewegen um die Dauer der Animation festzulegen...</message>
 	<message xml:lang="fi">Alkuväri määritelty. Siirrä liukukytkintä määrittääksesi animaation keston...</message>
 	<message xml:lang="it">Colore iniziale definito. Sposta il cursore per definire la durata dell'animazione...</message>
-	<message xml:lang="es">Color de comienzo definido. Mover el calculador para definir la duración de la animación...</message>
+	<message xml:lang="es">Color inicial definido. Desplace el marcador para definir la duración de la animación...</message>
 </label>
 <label define="AM_SVGANIM_COLOR_HINT3">
 	<message xml:lang="en">Select ending color...</message>
@@ -3050,7 +3050,7 @@
 	<message xml:lang="de">Endfarbe wählen...</message>
 	<message xml:lang="fi">Valitse loppuväri...</message>
 	<message xml:lang="it">Scegli il colore finale...</message>
-	<message xml:lang="es">Selección color final...</message>
+	<message xml:lang="es">Seleccione color final...</message>
 </label>
 <label define="AM_SVGANIM_ANIM_DEFINED">
 	<message xml:lang="en">Animation defined.</message>

@@ -8,13 +8,13 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 7.1
+%define version 7.2
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
 Name:         amaya_gtk
 Release:      1
-Copyright:    Copyright 1995-2002 (MIT) (INRIA), (L)GPL compatible
+Copyright:    Copyright 1995-2003 (MIT) (INRIA), (L)GPL compatible
 Group:        X11/Applications/Networking
 URL:          http://www.w3.org/Amaya/
 Autoreqprov:  on
@@ -30,7 +30,6 @@ Source2: ftp://ftp.w3.org/pub/amaya/Spanish.tgz
 Source3: ftp://ftp.w3.org/pub/amaya/Italian.tgz
 Source4: ftp://ftp.w3.org/pub/amaya/Swedish.tgz
 Source5: ftp://ftp.w3.org/pub/amaya/German.tgz
-Source6: ftp://ftp.w3.org/pub/amaya/amayadoc-%{version}.tgz
 # Patch: amaya-src-%{version}.diff
 %description
 
@@ -45,6 +44,8 @@ Authors:
     Vincent.Quint@w3.org, Laurent.Carcone@w3.org
 
 %changelog
+* Fri Jan 30 2003 Nabil Layaida (Nabil.Layaida@inria.fr>
+  Adaptation to rpmbuild
 * Mon Sep 16 2002 Irene Vatton <Irene.Vatton@w3.org>
   GTK options.
 * Fri Nov 9 2001  Irene Vatton <Irene.Vatton@w3.org>
@@ -69,15 +70,12 @@ Authors:
 # %patch
 %build
 export CFLAGS=-O2
-# rm -R libjpeg
-# rm -R libpng
 mkdir -p $RPM_BUILD_ROOT/usr/share/
 autoconf
 mkdir linux
 cd linux
-#ln -s /usr/lib/libpng.a
 export HOME=`pwd`
-.../configure --with-gtk --prefix=/usr/share --exec=/usr/share
+../configure --with-gtk --prefix=/usr/share --exec=/usr/share
 #cp Options.orig Options
 make all
 %install
@@ -87,10 +85,7 @@ fi
 cd linux
 make install prefix=$RPM_BUILD_ROOT/usr/share
 #cd ..
-#cp -a amaya/AmayaPage.html /usr/share/Amaya/amaya
 %files
-#/usr/bin/amaya
-#/usr/share/Amaya/
 %doc README.amaya
 /usr/share/Amaya/
 %post 

@@ -5377,7 +5377,9 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		      cssRule++;
 		      cssRule = TtaSkipBlanks (cssRule);
 		      base = cssRule;
-		      while (*cssRule != EOS && *cssRule != '"')
+		      while (*cssRule != EOS &&
+			     (*cssRule != '"' ||
+			      (*cssRule == '"' && cssRule[-1] == '\'')))
 			cssRule++;
 		      /* isolate the file name */
 		      *cssRule = EOS;

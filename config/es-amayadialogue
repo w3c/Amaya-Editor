@@ -28,22 +28,22 @@
 26 Abrir documento...
 27 Abrir en ventana nueva...
 28 Recargar documento
-29 Volver
-30 Avanzar
+29 Atrás
+30 Adelante
 31 Guardar
 32 Guardar como...
-33 Sinchronizar
+33 Sincronizar
 34 Modificar doctype
 35 Eliminar doctype
-36 Cambiar/Crear doctype XHTML 1.1
+36 Cambiar doctype a XHTML 1.1
 37 Cambiar/Crear doctype XHTML 1.0 Transicional
-38 Cambiar/Crear doctype XHTML 1.0 Estricto
-39 Cambiar/Crear doctype XHTML 1.0 Básico
+38 Cambiar doctype a XHTML 1.0 Strict
+39 Cambiar doctype a XHTML 1.0 Basic
 40 Cambiar/Crear doctype HTML 4.01 Transicional
-41 Cambiar/Crear doctype HTML 4.01 Estricto
-42 Cambiar/Crear doctype XHTML 1.1 + MathML 2.0
-43 Cambiar/Crear doctype MathML 2.0
-44 Cambiar/Crear doctype SVG 1.0
+41 Cambiar doctype a HTML 4.01 Strict
+42 Combiar doctype a XHTML 1.1 + MathML 2.0
+43 Cambiar doctype a MathML 2.0
+44 Cambiar doctype a SVG 1.0
 45 Información de documento
 46 Configurar e imprimir...
 47 Imprimir
@@ -55,20 +55,20 @@
 53 Cortar
 54 Copiar
 55 Pegar
-56 Borrar
-57 Modo Editor
+56 Eliminar
+57 Modo Edición
 58 Buscar...
 59 Verificar ortografía...
 60 Transformar...
 61 base
 62 meta
-63 link
+63 Enlace (link)
 64 script
-65 stilo
+65 Estilo (style)
 66 Comentario
 67 Cambiar Título...
-68 dirección
-69 área
+68 Dirección (address)
+69 Área (area)
 70 Círculo
 71 Polígono
 72 Rectángulo
@@ -76,23 +76,23 @@
 74 Salto línea (br)
 75 División (div)
 76 Formulario
-77 formulario
+77 Formulario (form)
 78 Botón (input)
-79 Casilla verificacion (input)
-80 Selector de Fichero (input)
+79 Casilla de verificación (input)
+80 Selector de Archivo (input)
 81 Oculto (Hidden input)
 82 Imagen (input)...
-83 Password (input)
+83 Contraseña (input)
 84 Radio (input)
 85 Reset (input)
-86 Aceptar (input)
+86 Enviar (input)
 87 Texto (input)
-88 campos
-89 etiqueta
-90 Menu (option)
-91 Submenu (optgroup)
-92 textarea
-93 Cabecera
+88 Campos (fieldset)
+89 Etiqueta (label)
+90 Menú (option)
+91 Submenú (optgroup)
+92 Área de texto (textarea)
+93 Cabecera (heading)
 94 h1
 95 h2
 96 h3
@@ -103,55 +103,55 @@
 101 Inline frame (iframe)
 102 Imagen (img)...
 103 Lista
-104 Lista con boliche (ul)
+104 Lista con viñeta (ul)
 105 List numerada (ol)
 106 Lista de Definición (dl)
-107 Term (dt)
-108 Definicion (dd)
+107 Término (dt)
+108 Definición (dd)
 109 noscript
 110 Objeto
-111 objeto
+111 Objeto (objet)
 112 Parámetro (param)
 113 Párrafo (p)
-114 Preformateado (pre)
+114 Pre-formateado (pre)
 115 ruby
 116 Tabla
-117 tabla
-118 título
-119 colgroup
-120 col
+117 Tabla (table)
+118 Leyenda (caption)
+119 Grupo de columnas (colgroup)
+120 Columna (col)
 121 thead
 122 tbody
 123 tfoot
 124 Fila (tr)
-125 Celda datos (td)
+125 Celda de datos (td)
 126 Celda cabecera (th)
 127 Eliminar columna de tabla
 128 Tipo de Información
-129 Enfasis (em)
-130 strong
-131 cite
+129 Énfasis (em)
+130 Enérgico (strong)
+131 Cita (cite)
 132 Definición (dfn)
-133 código
+133 Código (code)
 134 Variable (var)
 135 Ejemplo (samp)
 136 Teclado (kbd)
 137 Abreviatura (abbr)
-138 acrónimo
+138 Acrónimo (acronym)
 139 Inserción (ins)
 140 Borrado (del)
 141 Elemento carácter
 142 Itálica (i)
 143 Negrita (b)
 144 Teletipo (tt)
-145 grande
-146 pequeña
+145 Grande (big)
+146 Pequeña (small)
 147 Subíndice (sub)
 148 Superíndice (sup)
 149 Remarcado (Quotation q)
 150 BiDi override (bdo)
 151 Matemáticas
-152 Fórmula nueva(math)
+152 Fórmula nueva (math)
 153 Texto simple (mtext)
 154 Identificador (mi)
 155 Número (mn)
@@ -164,7 +164,7 @@
 162 Raíz cuadrada (msqrt)
 163 Enclose (menclose)
 164 Fracción (mfrac)
-165 Subíndice and superíndice (msubsup)
+165 Subíndice y superíndice (msubsup)
 166 Subíndice (msub)
 167 Superíndice (msup)
 168 Bajo y sobre (munderover)
@@ -175,8 +175,8 @@
 173 Matriz (mtable)
 174 Eliminar columna de matriz
 175 SVG
-176 Mostrar librería SVG
-177 Añadir la selección a la librería SVG
+176 Mostrar Biblioteca SVG
+177 Añadir la selección a la Biblioteca SVG
 178 Elementos XML...
 179 Enlazar el destino previo
 180 Crear o cambiar enlace...
@@ -189,7 +189,7 @@
 187 Mostrar destinos
 188 Zoom mas
 189 Zoom menos
-190 Mostrar fichero log
+190 Mostrar errores sintácticos
 191 Mostrar estructura
 192 Mostrar alternativo
 193 Mostrar enlaces
@@ -208,10 +208,10 @@
 206 Eliminar...
 207 Numeracón de sección
 208 Hacer libro
-209 Crear/Suprimir attributos ID...
+209 Crear/Suprimir atributos id...
 210 Preferencias
 211 General...
-212 Navegando...
+212 Navegar...
 213 Publicar...
 214 Cache...
 215 Proxy...
@@ -225,7 +225,7 @@
 223 Mover a selección
 224 Mover a XPointer guardado
 225 Responder a anotación
-226 Salvar en el servidor
+226 Enviar al servidor
 227 Borrar
 228 Cargar
 229 Personalizar consulta...
@@ -237,22 +237,22 @@
 235 Copiar información de bloqueo
 236 ¿Bloqueado?
 237 Preferencias...
-238 Sobre Amaya
-239 Sobre Amaya en W3C
+238 Acerca de Amaya
+239 Acerca de Amaya en W3C
 240 Índice
-241 Hojear
+241 Navegar
 242 Vistas
 243 Seleccionar
 244 Documento
-245 Creación de elementos
+245 Crear elementos
 246 Atributos
 247 Caracteres
-248 Restructuración
+248 Reestructurar
 249 Enlaces
 250 Tablas
 251 Mapas de imagen
 252 Matemáticas
-253 Graficas
+253 Gráficos
 254 Soporte XML
 255 Hojas de estilo
 256 Buscar

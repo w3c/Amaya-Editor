@@ -1,36 +1,36 @@
 # encoding= latin1
 0 Error de X11 : %s\n
 1 Confirme
-2 No hay fichero de alfabeto
-3 La nueva vista no pede sustituir la previa
+2 No hay archivo de alfabeto
+3 La nueva vista no puede sustituir la anterior
 4 Esquemas incompatibles. Recompile %s
-5 Error Fatal: Las fuentes no encontradas
-6 Memory agotada
-7 Error Fatal Error: No puedo conectar a X
+5 Error Fatal: Fuentes no encontradas
+6 Memoria agotada
+7 Error Fatal: No puedo conectar a X
 8 La vista está modificada entes de la creación
-9 Tabla de reglas completa.
-10 Fichero incorrecto: %s.STR
-11 Fichero incorrecto: %s.PRS
+9 Tabla de reglas completa
+10 Archivo incorrecto: %s.STR
+11 Archivo incorrecto: %s.PRS
 12 Documento %s imprimido
-13 Disposicion
-14 1 pagina/hoja
-15 2 pagina/hoja
-16 4 pagina/hoja
+13 Disposición
+14 1 página/hoja
+15 2 páginas/hoja
+16 4 páginas/hoja
 17 %s
 18 No hay suficiente memoria
 19 *** Amaya: Error Irrecuperable ***
-20 documentos modificados, si hay, serán guardados
-21 Incorrecto. Fichero TRA: %s
+20 si hay documentos modificados, se guardarán
+21 Archivo .TRA incorrecto: %s
 22 %s no es un hermano válido para %s (%s)
-23 %s no es un hijo valido para %s (%s)
-24 %s, pagina %d
+23 %s no es un hijo válido para %s (%s)
+24 %s, página %d
 25 Idioma
 26 Atributos
-27 Presentación estandar
+27 Presentación estándar
 28 Aplicar
 29 Caracteres
 30 Subrayado
-31 Grapicos
+31 Gráficos
 32 Formato
 33 Por omisión
 34 Alineación
@@ -41,7 +41,7 @@
 39 A4
 40 US
 41 Formato de papel
-42 Hecho
+42 Aceptar
 43 Directorios
 44 El documento %s ya existe. ¿Quiere sobreescribirlo?
 45 El botón izquierdo fija el color del texto
@@ -55,42 +55,42 @@
 53 Negrita
 54 Normal
 55 Subrayado
-56 Cross out
+56 Tachado
 57 Tamaño del cuerpo (pt)
-58 Sangrar (pt)
-59 Espacio de líneas (pt)
-60 Espaciado de líneas
+58 Sangrado (pt)
+59 Interlineado (pt)
+60 Interlineado
 61 Guardar documento
 62 Cerrar, no guardar
-63 Estilo de caracter
+63 Estilo de carácter
 64 Colores
 65 Borrar
-66 Output
-67 Fichero PostScript
+66 Salida
+67 Archivo PostScript
 68 Impresora
 69 Buscar
-70 MAYÚSCULAS = minusculas
+70 MAYÚSCULAS = minúsculas
 71 Sustituir por
 72 Sustituir
 73 No sustituir
 74 Sustituir a solicitud
-75 Sustitución automatica
-76 Buscar donde
-77 Antes selección
-78 En seleccion
-79 Tras seleccion
+75 Sustitución automática
+76 Dónde buscar...
+77 Antes de la selección
+78 En la selección
+79 Tras la selección
 80 En todo el documento
 81 No sustituir
 82 Colores por omisión
 83 antes de cerrarlo
-84 Cierre un documento
+84 Cerrar un documento
 85 Símbolos matemáticos
-86 Graficos
+86 Gráficos
 87 Alfabeto latino
-88 Alfabet griego
+88 Alfabeto griego
 89 Guardar
 90 Texto
-91 Grafico
+91 Gráfico
 92 Símbolo
 93 Imagen
 94 Tipo de elemento
@@ -99,43 +99,43 @@
 97 alrededor
 98 Incluir
 99 Pegar
-100 crear
+100 para crear
 101 Insertar
-102 Fin de página
-103 Idioma de elemento
+102 Salto de página
+103 Idioma del elemento
 104 Idioma heredado:
 105 No encontrado
 106 Buscar en
 107 Buscar
 108 Elemento de sólo lectura
 109 Nada que sustituir
-110 Caracteres estandar
-111 Graficos estandar
-112 Formato etandar
-113 Geometria estandar
+110 Caracteres estándar
+111 Gráficos estándar
+112 Formato estándar
+113 Geometría estándar
 114 pt
 115 Estilo de línea
-116 Ancho de línea
-117 Rellenar modelo
+116 Grosor de línea
+117 Patrón de relleno
 118 Dividir
 119 Tipo de objeto
 120 Ir a página número:
 121 Cualquiera
-122 Atributo para buscar
-123 Tipo para buscar
+122 Atributo a buscar
+123 Tipo a buscar
 124 Natures
 125 Valores de atributo:
 126 Atributo desconocido
 127 Cancelar
-128 Error in traducción PostScript
+128 Error en traducción PostScript
 129 Orden rechazada por el spooler "%s"
 130 No puedo crear "%s"
 131 Overline
 132 Formato de documento
 133 Eventos
-134 Eliminar atributos
+134 Eliminar atributo
 135 El botón izquierdo fija el color de la selección
-136 El botón central o derecho fija el color intercalado
+136 El botón central o derecho fija el color del cursor de texto
 137 Más ...
 138 Obtener
 139 Color

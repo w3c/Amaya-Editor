@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Wed Sep 11 16:39:05 CEST 2002" version="27">
+<base last_update="Fri Jan 31 08:41:44 CET 2003" version="28">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -37,7 +37,7 @@
 	<message xml:lang="de">Keine Alphabetdatei</message>
 	<message xml:lang="it">Il file dell'alfabeto è inesistente</message>
 	<message xml:lang="tr">Alfabe dosyasý yok</message>
-	<message xml:lang="es">No hay fichero de alfabeto</message>
+	<message xml:lang="es">No hay archivo de alfabeto</message>
 	<message xml:lang="pt">Não há arquivo de alfabeto</message>
 	<message xml:lang="fi">Ei aakkostiedostoa</message>
 </label>
@@ -47,7 +47,7 @@
 	<message xml:lang="de">Neue Ansicht kann bisherige nicht ersetzen</message>
 	<message xml:lang="it">La nuova vista non può rimpiazzare la vecchia</message>
 	<message xml:lang="tr">Yeni görünüm eskisinin yerini alamaz</message>
-	<message xml:lang="es">La nueva vista no pede sustituir la previa</message>
+	<message xml:lang="es">La nueva vista no puede sustituir la anterior</message>
 	<message xml:lang="pt">A nova vista não pode substituir a vista precedente</message>
 	<message xml:lang="fi">Uusi näkymä ei voi korvata vanhaa</message>
 </label>
@@ -67,7 +67,7 @@
 	<message xml:lang="de">Fataler Fehler: Schriften nicht gefunden</message>
 	<message xml:lang="it">Errore fatale: fonti non trovate</message>
 	<message xml:lang="tr">Ölümcül hata: yazýtipleri bulunamadý</message>
-	<message xml:lang="es">Error Fatal: Las fuentes no encontradas</message>
+	<message xml:lang="es">Error Fatal: Fuentes no encontradas</message>
 	<message xml:lang="pt">Erro fatal: Tipos (fonts) não encontrados</message>
 	<message xml:lang="fi">Virhe: fontteja ei löydetty</message>
 </label>
@@ -77,7 +77,7 @@
 	<message xml:lang="de">Arbeitsspeicher erschöpft</message>
 	<message xml:lang="it">Memoria esaurita</message>
 	<message xml:lang="tr">Bellek tükendi</message>
-	<message xml:lang="es">Memory agotada</message>
+	<message xml:lang="es">Memoria agotada</message>
 	<message xml:lang="pt">Memória esgotada</message>
 	<message xml:lang="fi">Muisti loppunut</message>
 </label>
@@ -87,7 +87,7 @@
 	<message xml:lang="de">Fataler Fehler: kein Zugriff zum X-Server</message>
 	<message xml:lang="it">Errore fatale: impossibile connettersi a X</message>
 	<message xml:lang="tr">Ölümcül Hata: X sistemine baðlanýlamýyor</message>
-	<message xml:lang="es">Error Fatal Error: No puedo conectar a X</message>
+	<message xml:lang="es">Error Fatal: No puedo conectar a X</message>
 	<message xml:lang="pt">Erro fatal: Incapaz de conectar a X</message>
 	<message xml:lang="fi">Virhe: Ei voida yhdistää X:ään</message>
 </label>
@@ -107,7 +107,7 @@
 	<message xml:lang="de">Regeltabelle voll.</message>
 	<message xml:lang="it">Tabella delle regole piena.</message>
 	<message xml:lang="tr">Kural tablosu dolu.</message>
-	<message xml:lang="es">Tabla de reglas completa.</message>
+	<message xml:lang="es">Tabla de reglas completa</message>
 	<message xml:lang="pt">Tabela de regras cheia.</message>
 	<message xml:lang="fi">Rules-taulukko täynnä.</message>
 </label>
@@ -117,7 +117,7 @@
 	<message xml:lang="de">Fehlerhafte Datei: %s.STR</message>
 	<message xml:lang="it">File non corretto: %s.STR</message>
 	<message xml:lang="tr">Yanlýþ dosya: %s.STR</message>
-	<message xml:lang="es">Fichero incorrecto: %s.STR</message>
+	<message xml:lang="es">Archivo incorrecto: %s.STR</message>
 	<message xml:lang="pt">Arquivo incorreto: %s.STR</message>
 	<message xml:lang="fi">Virheellinen tiedosto: %s.STR</message>
 </label>
@@ -127,7 +127,7 @@
 	<message xml:lang="de">Fehlerhafte Datei: %s.PRS</message>
 	<message xml:lang="it">File non corretto: %s.PRS</message>
 	<message xml:lang="tr">Yanlýþ dosya: %s.PRS</message>
-	<message xml:lang="es">Fichero incorrecto: %s.PRS</message>
+	<message xml:lang="es">Archivo incorrecto: %s.PRS</message>
 	<message xml:lang="pt">Arquivo incorreto: %s.PRS</message>
 	<message xml:lang="fi">Virheellinen tiedosto: %s.PRS</message>
 </label>
@@ -147,7 +147,7 @@
 	<message xml:lang="de">Einteilung (%)</message>
 	<message xml:lang="it">Scala (%)</message>
 	<message xml:lang="tr">Ölçek (%)</message>
-	<message xml:lang="es">Disposicion</message>
+	<message xml:lang="es">Disposición</message>
 	<message xml:lang="pt">Disposição</message>
 	<message xml:lang="fi">Jäsentely</message>
 </label>
@@ -157,7 +157,7 @@
 	<message xml:lang="de">1 Seite/Blatt</message>
 	<message xml:lang="it">1 pagina per foglio</message>
 	<message xml:lang="tr">1 sayfa/kaðýt</message>
-	<message xml:lang="es">1 pagina/hoja</message>
+	<message xml:lang="es">1 página/hoja</message>
 	<message xml:lang="pt">1 página/folha</message>
 	<message xml:lang="fi">1 sivu/arkille</message>
 </label>
@@ -167,7 +167,7 @@
 	<message xml:lang="de">2 Seiten/Blatt</message>
 	<message xml:lang="it">2 pagine per foglio</message>
 	<message xml:lang="tr">2 sayfa/kaðýt</message>
-	<message xml:lang="es">2 pagina/hoja</message>
+	<message xml:lang="es">2 páginas/hoja</message>
 	<message xml:lang="pt">2 páginas/folha</message>
 	<message xml:lang="fi">2 sivua/arkille</message>
 </label>
@@ -177,7 +177,7 @@
 	<message xml:lang="de">4 Seiten/Blatt</message>
 	<message xml:lang="it">4 pagine per foglio</message>
 	<message xml:lang="tr">4 sayfa/kaðýt</message>
-	<message xml:lang="es">4 pagina/hoja</message>
+	<message xml:lang="es">4 páginas/hoja</message>
 	<message xml:lang="pt">4 páginas/folha</message>
 	<message xml:lang="fi">4 sivua/arkille</message>
 </label>
@@ -217,7 +217,7 @@
 	<message xml:lang="de">Geänderte Dokumente werden gespeichert</message>
 	<message xml:lang="it">i documenti modificati, se ve ne sono, saranno salvati</message>
 	<message xml:lang="tr">deðiþtirilen belgeler varsa kaydedilecek</message>
-	<message xml:lang="es">documentos modificados, si hay, serán guardados</message>
+	<message xml:lang="es">si hay documentos modificados, se guardarán</message>
 	<message xml:lang="pt">Quaisquer documentos modificados serão salvos</message>
 	<message xml:lang="fi">muokatut dokumentit, jos on, tallennetaan</message>
 </label>
@@ -227,7 +227,7 @@
 	<message xml:lang="de">Fehlerhafte Datei %s.TRA</message>
 	<message xml:lang="it">File .TRA incorretto: %s</message>
 	<message xml:lang="tr">Geçersiz.TRA dosyasý: %s</message>
-	<message xml:lang="es">Incorrecto. Fichero TRA: %s</message>
+	<message xml:lang="es">Archivo .TRA incorrecto: %s</message>
 	<message xml:lang="pt">Arquivo .TRA incorreto: %s</message>
 	<message xml:lang="fi">Virheellinen .TRA file: %s</message>
 </label>
@@ -247,7 +247,7 @@
 	<message xml:lang="de">%s ist kein gültiges Kind von %s (%s)</message>
 	<message xml:lang="it">%s non è un figlio valido per %s (%s)</message>
 	<message xml:lang="tr">%s is not a valid child for %s (%s)</message>
-	<message xml:lang="es">%s no es un hijo valido para %s (%s)</message>
+	<message xml:lang="es">%s no es un hijo válido para %s (%s)</message>
 	<message xml:lang="pt">%s não é um filho válido para %s (%s)</message>
 	<message xml:lang="fi">%s ei ole käypä lapsi tälle:%s (%s)</message>
 </label>
@@ -257,7 +257,7 @@
 	<message xml:lang="de">%s, Seite %d</message>
 	<message xml:lang="it">%s, pagina %d</message>
 	<message xml:lang="tr">%s, sayfa %d</message>
-	<message xml:lang="es">%s, pagina %d</message>
+	<message xml:lang="es">%s, página %d</message>
 	<message xml:lang="pt">%s, página %d</message>
 	<message xml:lang="fi">%s, sivu %d</message>
 </label>
@@ -287,7 +287,7 @@
 	<message xml:lang="de">Standarddarstellung</message>
 	<message xml:lang="it">Presentazione standard</message>
 	<message xml:lang="tr">Standart sunum</message>
-	<message xml:lang="es">Presentación estandar</message>
+	<message xml:lang="es">Presentación estándar</message>
 	<message xml:lang="pt">Apresentação padrão</message>
 	<message xml:lang="fi">Vakio esitys</message>
 </label>
@@ -327,7 +327,7 @@
 	<message xml:lang="de">Grafiken</message>
 	<message xml:lang="it">Grafica</message>
 	<message xml:lang="tr">Grafikler</message>
-	<message xml:lang="es">Grapicos</message>
+	<message xml:lang="es">Gráficos</message>
 	<message xml:lang="pt">Gráficos</message>
 	<message xml:lang="fi">Grafiikka</message>
 </label>
@@ -437,7 +437,7 @@
 	<message xml:lang="de">Beenden</message>
 	<message xml:lang="it">Fatto</message>
 	<message xml:lang="tr">Tamam</message>
-	<message xml:lang="es">Hecho</message>
+	<message xml:lang="es">Aceptar</message>
 	<message xml:lang="pt">Feito</message>
 	<message xml:lang="fi">Valmis</message>
 </label>
@@ -577,7 +577,7 @@
 	<message xml:lang="de">Durchgestrichen</message>
 	<message xml:lang="it">Sbarrato</message>
 	<message xml:lang="tr">Cross out</message>
-	<message xml:lang="es">Cross out</message>
+	<message xml:lang="es">Tachado</message>
 	<message xml:lang="pt">Cortado (cross out)</message>
 	<message xml:lang="fi">Vedä yli</message>
 </label>
@@ -597,7 +597,7 @@
 	<message xml:lang="de">Einrücken (pt)</message>
 	<message xml:lang="it">Indentazione (pt)</message>
 	<message xml:lang="tr">Ýçeriden (pt)</message>
-	<message xml:lang="es">Sangrar (pt)</message>
+	<message xml:lang="es">Sangrado (pt)</message>
 	<message xml:lang="pt">Indentação (pt)</message>
 	<message xml:lang="fi">Sisennä (pt)</message>
 </label>
@@ -607,7 +607,7 @@
 	<message xml:lang="de">Zeilenabstand (pt)</message>
 	<message xml:lang="it">Interlinea (pt)</message>
 	<message xml:lang="tr">Satýr aralýðý (pt)</message>
-	<message xml:lang="es">Espacio de líneas (pt)</message>
+	<message xml:lang="es">Interlineado (pt)</message>
 	<message xml:lang="pt">Espaçamento entre linhas (pt)</message>
 	<message xml:lang="fi">Riviväli (pt)</message>
 </label>
@@ -617,7 +617,7 @@
 	<message xml:lang="de">Zeilenabstand</message>
 	<message xml:lang="it">Interlinea</message>
 	<message xml:lang="tr">Satýr aralýðý</message>
-	<message xml:lang="es">Espaciado de líneas</message>
+	<message xml:lang="es">Interlineado</message>
 	<message xml:lang="pt">Espaçamento entre linhas</message>
 	<message xml:lang="fi">Riviväli</message>
 </label>
@@ -647,7 +647,7 @@
 	<message xml:lang="de">Schräge</message>
 	<message xml:lang="it">Stile dei caratteri</message>
 	<message xml:lang="tr">Karakter tarzý</message>
-	<message xml:lang="es">Estilo de caracter</message>
+	<message xml:lang="es">Estilo de carácter</message>
 	<message xml:lang="pt">Estilo de carácter</message>
 	<message xml:lang="fi">Merkkityyli</message>
 </label>
@@ -677,7 +677,7 @@
 	<message xml:lang="de">Ausgabe</message>
 	<message xml:lang="it">Destinazione</message>
 	<message xml:lang="tr">Çýktý</message>
-	<message xml:lang="es">Output</message>
+	<message xml:lang="es">Salida</message>
 	<message xml:lang="pt">Destino (Output)</message>
 	<message xml:lang="fi">Tuloste</message>
 </label>
@@ -687,7 +687,7 @@
 	<message xml:lang="de">PostScript-Datei</message>
 	<message xml:lang="it">File PostScript</message>
 	<message xml:lang="tr">PostScript dosya</message>
-	<message xml:lang="es">Fichero PostScript</message>
+	<message xml:lang="es">Archivo PostScript</message>
 	<message xml:lang="pt">Arquivo PostScript</message>
 	<message xml:lang="fi">PostScript tiedosto</message>
 </label>
@@ -713,7 +713,7 @@
 </label>
 <label define="TMSG_UPPERCASE_EQ_LOWERCASE">
 	<message xml:lang="en">UPPERCASE = lowercase</message>
-	<message xml:lang="es">MAYÚSCULAS = minusculas</message>
+	<message xml:lang="es">MAYÚSCULAS = minúsculas</message>
 	<message xml:lang="fr">MAJUSCULES = minuscules</message>
 	<message xml:lang="de">Buchstabenlage ignorieren</message>
 	<message xml:lang="it">MAIUSCOLE = minuscole</message>
@@ -767,7 +767,7 @@
 	<message xml:lang="de">Alle ersetzen</message>
 	<message xml:lang="it">Rimpiazzamento automatico</message>
 	<message xml:lang="tr">Otomatik olarak deðiþtir</message>
-	<message xml:lang="es">Sustitución automatica</message>
+	<message xml:lang="es">Sustitución automática</message>
 	<message xml:lang="pt">Substituição Automática</message>
 	<message xml:lang="fi">Automaattinen korvus</message>
 </label>
@@ -777,7 +777,7 @@
 	<message xml:lang="de">Suchraum</message>
 	<message xml:lang="it">Dove cercare</message>
 	<message xml:lang="tr">Arama nerede</message>
-	<message xml:lang="es">Buscar donde</message>
+	<message xml:lang="es">Dónde buscar...</message>
 	<message xml:lang="pt">Onde buscar</message>
 	<message xml:lang="fi">Etsi missä</message>
 </label>
@@ -787,7 +787,7 @@
 	<message xml:lang="de">Oberhalb der Markierung</message>
 	<message xml:lang="it">Prima della selezione</message>
 	<message xml:lang="tr">Seçimden önce</message>
-	<message xml:lang="es">Antes selección</message>
+	<message xml:lang="es">Antes de la selección</message>
 	<message xml:lang="pt">Antes da seleção</message>
 	<message xml:lang="fi">Ennen valintaa</message>
 </label>
@@ -797,7 +797,7 @@
 	<message xml:lang="de">Innerhalb der Markierung</message>
 	<message xml:lang="it">Nella selezione</message>
 	<message xml:lang="tr">Seçim içi</message>
-	<message xml:lang="es">En seleccion</message>
+	<message xml:lang="es">En la selección</message>
 	<message xml:lang="pt">Dentro da seleção</message>
 	<message xml:lang="fi">Valinnan sisällä</message>
 </label>
@@ -807,7 +807,7 @@
 	<message xml:lang="de">Unterhalb der Markierung</message>
 	<message xml:lang="it">Dopo la selezione</message>
 	<message xml:lang="tr">Seçimden sonra</message>
-	<message xml:lang="es">Tras seleccion</message>
+	<message xml:lang="es">Tras la selección</message>
 	<message xml:lang="pt">Depois da seleção</message>
 	<message xml:lang="fi">Valinnan jälkeen</message>
 </label>
@@ -857,7 +857,7 @@
 	<message xml:lang="de">Dokument schließen</message>
 	<message xml:lang="it">Chiudi un documento</message>
 	<message xml:lang="tr">Belgeyi kapa</message>
-	<message xml:lang="es">Cierre un documento</message>
+	<message xml:lang="es">Cerrar un documento</message>
 	<message xml:lang="pt">Fechar um documento</message>
 	<message xml:lang="fi">Sulje dokumentti</message>
 </label>
@@ -877,7 +877,7 @@
 	<message xml:lang="de">Grafik</message>
 	<message xml:lang="it">Grafica</message>
 	<message xml:lang="tr">Grafik</message>
-	<message xml:lang="es">Graficos</message>
+	<message xml:lang="es">Gráficos</message>
 	<message xml:lang="pt">Gráficos</message>
 	<message xml:lang="fi">Grafiikka</message>
 </label>
@@ -897,7 +897,7 @@
 	<message xml:lang="de">Griechiches Alphabet</message>
 	<message xml:lang="it">Alfabeto greco</message>
 	<message xml:lang="tr">Yunan alfabesi</message>
-	<message xml:lang="es">Alfabet griego</message>
+	<message xml:lang="es">Alfabeto griego</message>
 	<message xml:lang="pt">Alfabeto Grego</message>
 	<message xml:lang="fi">Kreikkalaiset aakkoset</message>
 </label>
@@ -927,7 +927,7 @@
 	<message xml:lang="de">Zeichnung</message>
 	<message xml:lang="it">Grafica</message>
 	<message xml:lang="tr">Grafik</message>
-	<message xml:lang="es">Grafico</message>
+	<message xml:lang="es">Gráfico</message>
 	<message xml:lang="pt">Gráfico</message>
 	<message xml:lang="fi">Grafiikkaa</message>
 </label>
@@ -1017,7 +1017,7 @@
 	<message xml:lang="de">Erzeugen</message>
 	<message xml:lang="it">da creare</message>
 	<message xml:lang="tr">to create</message>
-	<message xml:lang="es">crear</message>
+	<message xml:lang="es">para crear</message>
 	<message xml:lang="pt">criar</message>
 	<message xml:lang="fi">luoda</message>
 </label>
@@ -1037,7 +1037,7 @@
 	<message xml:lang="de">Seitenumbruch</message>
 	<message xml:lang="it">Salto pagina</message>
 	<message xml:lang="tr">Sayfa kesmesi</message>
-	<message xml:lang="es">Fin de página</message>
+	<message xml:lang="es">Salto de página</message>
 	<message xml:lang="pt">Quebra de página</message>
 	<message xml:lang="fi">Katkaise sivu</message>
 </label>
@@ -1047,7 +1047,7 @@
 	<message xml:lang="de">Sprache des Elements</message>
 	<message xml:lang="it">Lingua dell'elemento</message>
 	<message xml:lang="tr">Birimin dili</message>
-	<message xml:lang="es">Idioma de elemento</message>
+	<message xml:lang="es">Idioma del elemento</message>
 	<message xml:lang="pt">Idioma do elemento</message>
 	<message xml:lang="fi">Elementin kieli</message>
 </label>
@@ -1117,7 +1117,7 @@
 	<message xml:lang="de">Standardzeichensatz</message>
 	<message xml:lang="it">Caratteri standard</message>
 	<message xml:lang="tr">Standart karakterler</message>
-	<message xml:lang="es">Caracteres estandar</message>
+	<message xml:lang="es">Caracteres estándar</message>
 	<message xml:lang="pt">Caracteres padrão</message>
 	<message xml:lang="fi">Vakiomerkit</message>
 </label>
@@ -1127,7 +1127,7 @@
 	<message xml:lang="de">Standardgrafik</message>
 	<message xml:lang="it">Grafica standard</message>
 	<message xml:lang="tr">Standart grafikler</message>
-	<message xml:lang="es">Graficos estandar</message>
+	<message xml:lang="es">Gráficos estándar</message>
 	<message xml:lang="pt">Gráficos padrão</message>
 	<message xml:lang="fi">Vakiografiikka</message>
 </label>
@@ -1137,7 +1137,7 @@
 	<message xml:lang="de">Standardformat</message>
 	<message xml:lang="it">Formato standard</message>
 	<message xml:lang="tr">Standart biçim</message>
-	<message xml:lang="es">Formato etandar</message>
+	<message xml:lang="es">Formato estándar</message>
 	<message xml:lang="pt">Formato padrão</message>
 	<message xml:lang="fi">Vakiomuoto</message>
 </label>
@@ -1147,7 +1147,7 @@
 	<message xml:lang="de">Standardgeometrie</message>
 	<message xml:lang="it">Geometria standard</message>
 	<message xml:lang="tr">Standart geometri</message>
-	<message xml:lang="es">Geometria estandar</message>
+	<message xml:lang="es">Geometría estándar</message>
 	<message xml:lang="pt">Geometria padrão</message>
 	<message xml:lang="fi">Vakiogeometria</message>
 </label>
@@ -1177,7 +1177,7 @@
 	<message xml:lang="de">Linienstärke</message>
 	<message xml:lang="it">Spessore delle linee</message>
 	<message xml:lang="tr">Çizgi aðýrlýðý</message>
-	<message xml:lang="es">Ancho de línea</message>
+	<message xml:lang="es">Grosor de línea</message>
 	<message xml:lang="pt">espessura da linha</message>
 	<message xml:lang="fi">Viivapaksuus</message>
 </label>
@@ -1187,7 +1187,7 @@
 	<message xml:lang="de">Füllmuster</message>
 	<message xml:lang="it">Motivo di riempimento</message>
 	<message xml:lang="tr">Doldurma þekli</message>
-	<message xml:lang="es">Rellenar modelo</message>
+	<message xml:lang="es">Patrón de relleno</message>
 	<message xml:lang="pt">Padrão de preenchimento</message>
 	<message xml:lang="fi">Täyttökuvio</message>
 </label>
@@ -1237,7 +1237,7 @@
 	<message xml:lang="de">Attribut suchen</message>
 	<message xml:lang="it">Attributo da cercare</message>
 	<message xml:lang="tr">Aranacak olan özellik</message>
-	<message xml:lang="es">Atributo para buscar</message>
+	<message xml:lang="es">Atributo a buscar</message>
 	<message xml:lang="pt">Atributo a buscar</message>
 	<message xml:lang="fi">Määre etsintään</message>
 </label>
@@ -1247,7 +1247,7 @@
 	<message xml:lang="de">Suche nach Typ</message>
 	<message xml:lang="it">Tipo da cercare</message>
 	<message xml:lang="tr">Aranacak olan tip</message>
-	<message xml:lang="es">Tipo para buscar</message>
+	<message xml:lang="es">Tipo a buscar</message>
 	<message xml:lang="pt">Tipo a buscar</message>
 	<message xml:lang="fi">Tyyppi etsintään</message>
 </label>
@@ -1297,7 +1297,7 @@
 	<message xml:lang="de">Fehler in der PostScript-Erkennung</message>
 	<message xml:lang="it">Errore nella traduzione in PostScript</message>
 	<message xml:lang="tr">PostScript dönüþümünde hata</message>
-	<message xml:lang="es">Error in traducción PostScript</message>
+	<message xml:lang="es">Error en traducción PostScript</message>
 	<message xml:lang="pt">Erro em tradução PostScript</message>
 	<message xml:lang="fi">Virhe PostScript käännöksessä</message>
 </label>
@@ -1355,7 +1355,7 @@
 	<message xml:lang="fr">Retire l'attribut</message>
 	<message xml:lang="de">Löschen</message>
 	<message xml:lang="it">Rimuovi l\'attributo</message>
-	<message xml:lang="es">Eliminar atributos</message>
+	<message xml:lang="es">Eliminar atributo</message>
 	<message xml:lang="pt">Remover atributo</message>
 	<message xml:lang="fi">Poista määritys</message>
 </label>
@@ -1373,7 +1373,7 @@
 	<message xml:lang="fr">Bouton milieu ou droit change la couleur du curseur</message>
 	<message xml:lang="de">Mittlere oder rechte Maustaste: Cursorfarbe</message>
 	<message xml:lang="it">l tasto centrale o di destra setta il colore del cursore</message>
-	<message xml:lang="es">El botón central o derecho fija el color intercalado</message>
+	<message xml:lang="es">El botón central o derecho fija el color del cursor de texto</message>
 	<message xml:lang="pt">Botão do meio ou da direita fixa a cor do cursor</message>
 	<message xml:lang="fi">Hiiren keskimmäinen tai oikea näppäin asettaa caret värin</message>
 </label>

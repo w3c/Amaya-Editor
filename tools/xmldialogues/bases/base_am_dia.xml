@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Mon Jan 27 10:49:51 CET 2003" version="52">
+<base last_update="Fri Jan 31 08:40:11 CET 2003" version="53">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -296,7 +296,7 @@
 	<message xml:lang="fr">Précédent</message>
 	<message xml:lang="de">Zurück</message>
 	<message xml:lang="it">Precedente</message>
-	<message xml:lang="es">Volver</message>
+	<message xml:lang="es">Atrás</message>
 	<message xml:lang="pt">Voltar</message>
 	<message xml:lang="fi">Takaisin</message>
 </label>
@@ -305,7 +305,7 @@
 	<message xml:lang="fr">Suivant</message>
 	<message xml:lang="de">Vorwärts</message>
 	<message xml:lang="it">Successivo</message>
-	<message xml:lang="es">Avanzar</message>
+	<message xml:lang="es">Adelante</message>
 	<message xml:lang="pt">Avançar</message>
 	<message xml:lang="fi">Eteenpäin</message>
 </label>
@@ -334,7 +334,7 @@
 	<message xml:lang="fr">Synchroniser</message>
 	<message xml:lang="de">Synchronisieren</message>
 	<message xml:lang="it">Sincronizza</message>
-	<message xml:lang="es">Sinchronizar</message>
+	<message xml:lang="es">Sincronizar</message>
 	<message xml:lang="pt">Sincronizar</message>
 	<message xml:lang="fi">Päivitä</message>
 </label>
@@ -361,7 +361,7 @@
 	<message xml:lang="fr">Changer/Créer doctype XHTML 1.1</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.1</message>
 	<message xml:lang="de">XHTML 1.1</message>
-	<message xml:lang="es">Cambiar/Crear doctype XHTML 1.1</message>
+	<message xml:lang="es">Cambiar doctype a XHTML 1.1</message>
 	<message xml:lang="pt">Alterar doctype para XHTML 1.1</message>
 	<message xml:lang="fi">Aseta tyypiksi XHTML 1.1</message>
 </label>
@@ -378,7 +378,7 @@
 	<message xml:lang="fr">Changer/Créer doctype XHTML 1.0 Strict</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Strict</message>
 	<message xml:lang="de">XHTML 1.0 Strict</message>
-	<message xml:lang="es">Cambiar/Crear doctype XHTML 1.0 Estricto</message>
+	<message xml:lang="es">Cambiar doctype a XHTML 1.0 Strict</message>
 	<message xml:lang="pt">Alterar doctype para XHTML 1.0 Strict</message>
 	<message xml:lang="fi">Aseta tyypiksi XHTML 1.0 Strict</message>
 </label>
@@ -387,7 +387,7 @@
 	<message xml:lang="fr">Changer/Créer doctype XHTML 1.0 Basic</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Basic</message>
 	<message xml:lang="de">XHTML 1.0 Basic</message>
-	<message xml:lang="es">Cambiar/Crear doctype XHTML 1.0 Básico</message>
+	<message xml:lang="es">Cambiar doctype a XHTML 1.0 Basic</message>
 	<message xml:lang="pt">Alterar doctype para XHTML 1.0 Basic</message>
 	<message xml:lang="fi">Aseta tyypiksi XHTML 1.0 Basic</message>
 </label>
@@ -404,7 +404,7 @@
 	<message xml:lang="fr">Changer/Créer doctype HTML 4.01 Strict</message>
 	<message xml:lang="it">Cambia/Crea doctype HTML 4.01 Strict</message>
 	<message xml:lang="de">HTML Strict</message>
-	<message xml:lang="es">Cambiar/Crear doctype HTML 4.01 Estricto</message>
+	<message xml:lang="es">Cambiar doctype a HTML 4.01 Strict</message>
 	<message xml:lang="pt">Alterar doctype para HTML 4.01 Strict</message>
 	<message xml:lang="fi">Aseta tyypiksi HTML 4.01 Strict</message>
 </label>
@@ -413,7 +413,7 @@
 	<message xml:lang="fr">Changer/Créer doctype XHTML 1.1 + MathML 2.0</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.1 + MathML 2.0</message>
 	<message xml:lang="de">XHTML 1.1 + MathML</message>
-	<message xml:lang="es">Cambiar/Crear doctype XHTML 1.1 + MathML 2.0</message>
+	<message xml:lang="es">Combiar doctype a XHTML 1.1 + MathML 2.0</message>
 	<message xml:lang="pt">Alterar doctype para XHTML 1.1 + MathML 2.0</message>
 	<message xml:lang="fi">Aseta tyypiksi XHTML 1.1 + MathML 2.0</message>
 </label>
@@ -422,7 +422,7 @@
 	<message xml:lang="fr">Changer/Créer doctype MathML 2.0</message>
 	<message xml:lang="it">Cambia/Crea doctype MathML 2.0</message>
 	<message xml:lang="de">MathML</message>
-	<message xml:lang="es">Cambiar/Crear doctype MathML 2.0</message>
+	<message xml:lang="es">Cambiar doctype a MathML 2.0</message>
 	<message xml:lang="pt">Alterar doctype para XHTML 1.1 + MathML 2.0</message>
 	<message xml:lang="fi">Aseta tyypiksi MathML 2.0</message>
 </label>
@@ -431,7 +431,7 @@
 	<message xml:lang="fr">Changer/Créer doctype SVG 1.0</message>
 	<message xml:lang="it">Cambia/Crea doctype SVG 1.0</message>
 	<message xml:lang="de">SVG</message>
-	<message xml:lang="es">Cambiar/Crear doctype SVG 1.0</message>
+	<message xml:lang="es">Cambiar doctype a SVG 1.0</message>
 	<message xml:lang="pt">Alterar doctype para SVG</message>
 	<message xml:lang="fi">Aseta tyypiksi SVG 1.0</message>
 </label>
@@ -547,7 +547,7 @@
 	<message xml:lang="de">Löschen</message>
 	<message xml:lang="it">Cancella</message>
 	<message xml:lang="tr">Temizle</message>
-	<message xml:lang="es">Borrar</message>
+	<message xml:lang="es">Eliminar</message>
 	<message xml:lang="pt">Apagar</message>
 	<message xml:lang="fi">Poista</message>
 </label>
@@ -556,7 +556,7 @@
 	<message xml:lang="fr">Mode éditeur</message>
 	<message xml:lang="de">Editormodus</message>
 	<message xml:lang="it">Modo Editor</message>
-	<message xml:lang="es">Modo Editor</message>
+	<message xml:lang="es">Modo Edición</message>
 	<message xml:lang="pt">Modo Editor</message>
 	<message xml:lang="fi">Muokkaustila</message>
 </label>
@@ -616,7 +616,7 @@
 	<message xml:lang="de">Verweis (link)</message>
 	<message xml:lang="it">link</message>
 	<message xml:lang="tr">Baðlantý (link)</message>
-	<message xml:lang="es">link</message>
+	<message xml:lang="es">Enlace (link)</message>
 	<message xml:lang="pt">enlace (link)</message>
 	<message xml:lang="fi">linkki</message>
 </label>
@@ -636,7 +636,7 @@
 	<message xml:lang="de">Inline-Style (style)</message>
 	<message xml:lang="it">style</message>
 	<message xml:lang="tr">style</message>
-	<message xml:lang="es">stilo</message>
+	<message xml:lang="es">Estilo (style)</message>
 	<message xml:lang="pt">estilo</message>
 	<message xml:lang="fi">tyyli</message>
 </label>
@@ -665,7 +665,7 @@
 	<message xml:lang="de">Autorenadresse (address)</message>
 	<message xml:lang="it">Indirizzo (address)</message>
 	<message xml:lang="tr">Adres (address)</message>
-	<message xml:lang="es">dirección</message>
+	<message xml:lang="es">Dirección (address)</message>
 	<message xml:lang="pt">endereço</message>
 	<message xml:lang="fi">osoite</message>
 </label>
@@ -675,7 +675,7 @@
 	<message xml:lang="de">Aktiver Bildbereich (area)</message>
 	<message xml:lang="it">Zona attiva (area)</message>
 	<message xml:lang="tr">Alan haritasý (area)</message>
-	<message xml:lang="es">área</message>
+	<message xml:lang="es">Área (area)</message>
 	<message xml:lang="pt">Área</message>
 	<message xml:lang="fi">Kuvio</message>
 </label>
@@ -755,7 +755,7 @@
 	<message xml:lang="de">Neues Formular (form)</message>
 	<message xml:lang="it">form</message>
 	<message xml:lang="tr">form</message>
-	<message xml:lang="es">formulario</message>
+	<message xml:lang="es">Formulario (form)</message>
 	<message xml:lang="pt">Formulário</message>
 	<message xml:lang="fi">lomake</message>
 </label>
@@ -774,7 +774,7 @@
 	<message xml:lang="de">Ankreuzkästchen (checkbox)</message>
 	<message xml:lang="it">Checkbox (input)</message>
 	<message xml:lang="tr">Deðiþtir (input)</message>
-	<message xml:lang="es">Casilla verificacion (input)</message>
+	<message xml:lang="es">Casilla de verificación (input)</message>
 	<message xml:lang="pt">Caixa de verificação (Checkbox) (input)</message>
 	<message xml:lang="fi">Valintalaatikko (input)</message>
 </label>
@@ -783,7 +783,7 @@
 	<message xml:lang="fr">Sélecteur fichier (input)</message>
 	<message xml:lang="de">Feld für Dateiname (file)</message>
 	<message xml:lang="it">Selettore di file (input)</message>
-	<message xml:lang="es">Selector de Fichero (input)</message>
+	<message xml:lang="es">Selector de Archivo (input)</message>
 	<message xml:lang="pt">Seletor de arquivo (input)</message>
 	<message xml:lang="fi">Tiedosto valikko (input)</message>
 </label>
@@ -811,7 +811,7 @@
 	<message xml:lang="fr">Mot de passe (input)</message>
 	<message xml:lang="de">Kennwortfeld (password)</message>
 	<message xml:lang="it">Password (input)</message>
-	<message xml:lang="es">Password (input)</message>
+	<message xml:lang="es">Contraseña (input)</message>
 	<message xml:lang="pt">Senha (password) (input)</message>
 	<message xml:lang="fi">Salasana (input)</message>
 </label>
@@ -841,7 +841,7 @@
 	<message xml:lang="de">Absenden (submit)</message>
 	<message xml:lang="it">Invia (input)</message>
 	<message xml:lang="tr">Submit (input)</message>
-	<message xml:lang="es">Aceptar (input)</message>
+	<message xml:lang="es">Enviar (input)</message>
 	<message xml:lang="pt">Submeter (input)</message>
 	<message xml:lang="fi">Lähetä (input)</message>
 </label>
@@ -861,7 +861,7 @@
 	<message xml:lang="de">Feldgruppe (fieldset)</message>
 	<message xml:lang="it">Gruppo di campi (fieldset)</message>
 	<message xml:lang="tr">fieldset</message>
-	<message xml:lang="es">campos</message>
+	<message xml:lang="es">Campos (fieldset)</message>
 	<message xml:lang="pt">Grupo de campos (fieldset)</message>
 	<message xml:lang="fi">kenttäasetus</message>
 </label>
@@ -871,7 +871,7 @@
 	<message xml:lang="de">Feldbeschriftung (label)</message>
 	<message xml:lang="it">Etichetta (label)</message>
 	<message xml:lang="tr">label</message>
-	<message xml:lang="es">etiqueta</message>
+	<message xml:lang="es">Etiqueta (label)</message>
 	<message xml:lang="pt">Etiqueta (label)</message>
 	<message xml:lang="fi">nimike</message>
 </label>
@@ -881,7 +881,7 @@
 	<message xml:lang="de">Menü (option)</message>
 	<message xml:lang="it">Menu (option)</message>
 	<message xml:lang="tr">Seçenek (option)</message>
-	<message xml:lang="es">Menu (option)</message>
+	<message xml:lang="es">Menú (option)</message>
 	<message xml:lang="pt">Menu (option)</message>
 	<message xml:lang="fi">Valikko (option)</message>
 </label>
@@ -890,7 +890,7 @@
 	<message xml:lang="fr">Sous-menu (optgroup)</message>
 	<message xml:lang="de">Untermenü (optgroup)</message>
 	<message xml:lang="it">Sottomenu (optgroup)</message>
-	<message xml:lang="es">Submenu (optgroup)</message>
+	<message xml:lang="es">Submenú (optgroup)</message>
 	<message xml:lang="pt">Submenu (optgroup)</message>
 	<message xml:lang="fi">Alavalikko (optgroup)</message>
 </label>
@@ -900,7 +900,7 @@
 	<message xml:lang="de">Eingabefeld (textarea)</message>
 	<message xml:lang="it">Area testo (textarea)</message>
 	<message xml:lang="tr">Metin alaný (textarea)</message>
-	<message xml:lang="es">textarea</message>
+	<message xml:lang="es">Área de texto (textarea)</message>
 	<message xml:lang="pt">Área de texto (textarea)</message>
 	<message xml:lang="fi">tekstialue</message>
 </label>
@@ -910,7 +910,7 @@
 	<message xml:lang="de">Überschrift</message>
 	<message xml:lang="it">Intestazione</message>
 	<message xml:lang="tr">Baþlýk</message>
-	<message xml:lang="es">Cabecera</message>
+	<message xml:lang="es">Cabecera (heading)</message>
 	<message xml:lang="pt">Cabeçalho</message>
 	<message xml:lang="fi">Otsakke koolla</message>
 </label>
@@ -1019,7 +1019,7 @@
 	<message xml:lang="de">Ungeordnete Liste (ul)</message>
 	<message xml:lang="it">Lista puntata (ul)</message>
 	<message xml:lang="tr">Noktalý liste (ul)</message>
-	<message xml:lang="es">Lista con boliche (ul)</message>
+	<message xml:lang="es">Lista con viñeta (ul)</message>
 	<message xml:lang="pt">Lista com bolinhas (ul)</message>
 	<message xml:lang="fi">Pistein erotettu luettelo (ul)</message>
 </label>
@@ -1049,7 +1049,7 @@
 	<message xml:lang="de">Begriff (dt)</message>
 	<message xml:lang="it">Termine (dt)</message>
 	<message xml:lang="tr">Terim (dt)</message>
-	<message xml:lang="es">Term (dt)</message>
+	<message xml:lang="es">Término (dt)</message>
 	<message xml:lang="pt">Termo (dt)</message>
 	<message xml:lang="fi">Lopetus (dt)</message>
 </label>
@@ -1059,7 +1059,7 @@
 	<message xml:lang="de">Definition (dd)</message>
 	<message xml:lang="it">Definizione (dd)</message>
 	<message xml:lang="tr">Taným (dd)</message>
-	<message xml:lang="es">Definicion (dd)</message>
+	<message xml:lang="es">Definición (dd)</message>
 	<message xml:lang="pt">Definição (dd)</message>
 	<message xml:lang="fi">Määrittely (dd)</message>
 </label>
@@ -1089,7 +1089,7 @@
 	<message xml:lang="de">Objekt (object)</message>
 	<message xml:lang="it">Oggetto (object)</message>
 	<message xml:lang="tr">object</message>
-	<message xml:lang="es">objeto</message>
+	<message xml:lang="es">Objeto (objet)</message>
 	<message xml:lang="pt">objeto</message>
 	<message xml:lang="fi">objekti</message>
 </label>
@@ -1119,7 +1119,7 @@
 	<message xml:lang="de">Formatierter Text (pre)</message>
 	<message xml:lang="it">Preformattato (pre)</message>
 	<message xml:lang="tr">Preformatted (pre)</message>
-	<message xml:lang="es">Preformateado (pre)</message>
+	<message xml:lang="es">Pre-formateado (pre)</message>
 	<message xml:lang="pt">Preformatado (pre)</message>
 	<message xml:lang="fi">Valmiiksi muotoiltu (pre)</message>
 </label>
@@ -1149,7 +1149,7 @@
 	<message xml:lang="de">Neue Tabelle (table)</message>
 	<message xml:lang="it">Tabella (table)</message>
 	<message xml:lang="tr">table</message>
-	<message xml:lang="es">tabla</message>
+	<message xml:lang="es">Tabla (table)</message>
 	<message xml:lang="pt">tabela</message>
 	<message xml:lang="fi">taulukko</message>
 </label>
@@ -1159,7 +1159,7 @@
 	<message xml:lang="de">Überschrift (caption)</message>
 	<message xml:lang="it">Legenda (caption)</message>
 	<message xml:lang="tr">Altyazý (caption)</message>
-	<message xml:lang="es">título</message>
+	<message xml:lang="es">Leyenda (caption)</message>
 	<message xml:lang="pt">Legenda (caption)</message>
 	<message xml:lang="fi">nimike</message>
 </label>
@@ -1169,7 +1169,7 @@
 	<message xml:lang="de">Spaltengruppe (colgroup)</message>
 	<message xml:lang="it">colgroup</message>
 	<message xml:lang="tr">colgroup</message>
-	<message xml:lang="es">colgroup</message>
+	<message xml:lang="es">Grupo de columnas (colgroup)</message>
 	<message xml:lang="pt">Grupo de colunas (colgroup)</message>
 	<message xml:lang="fi">pystyriviryhmä</message>
 </label>
@@ -1179,7 +1179,7 @@
 	<message xml:lang="de">Spalte (col)</message>
 	<message xml:lang="it">col</message>
 	<message xml:lang="tr">col</message>
-	<message xml:lang="es">col</message>
+	<message xml:lang="es">Columna (col)</message>
 	<message xml:lang="pt">Coluna (col)</message>
 	<message xml:lang="fi">pystyrivi</message>
 </label>
@@ -1229,7 +1229,7 @@
 	<message xml:lang="de">Zelle (td)</message>
 	<message xml:lang="it">Cella dati (td)</message>
 	<message xml:lang="tr">Veri hücresi (td)</message>
-	<message xml:lang="es">Celda datos (td)</message>
+	<message xml:lang="es">Celda de datos (td)</message>
 	<message xml:lang="pt">Célula de dados (td)</message>
 	<message xml:lang="fi">Sisältö solu (td)</message>
 </label>
@@ -1268,7 +1268,7 @@
 	<message xml:lang="de">Betont (em)</message>
 	<message xml:lang="it">Enfasi (em)</message>
 	<message xml:lang="tr">Vurgu (em)</message>
-	<message xml:lang="es">Enfasis (em)</message>
+	<message xml:lang="es">Énfasis (em)</message>
 	<message xml:lang="pt">Ênfase (em)</message>
 	<message xml:lang="fi">Korostus (em)</message>
 </label>
@@ -1278,7 +1278,7 @@
 	<message xml:lang="de">Hervorgehoben (strong)</message>
 	<message xml:lang="it">Forte (strong)</message>
 	<message xml:lang="tr">Kuvvetli (strong)</message>
-	<message xml:lang="es">strong</message>
+	<message xml:lang="es">Enérgico (strong)</message>
 	<message xml:lang="pt">Forte (strong)</message>
 	<message xml:lang="fi">voimakas</message>
 </label>
@@ -1288,7 +1288,7 @@
 	<message xml:lang="de">Zitatquelle (cite)</message>
 	<message xml:lang="it">Cita (cite)</message>
 	<message xml:lang="tr">Cite (cite)</message>
-	<message xml:lang="es">cite</message>
+	<message xml:lang="es">Cita (cite)</message>
 	<message xml:lang="pt">Citação (cite)</message>
 	<message xml:lang="fi">siteeraus</message>
 </label>
@@ -1308,7 +1308,7 @@
 	<message xml:lang="de">Programmtext (code)</message>
 	<message xml:lang="it">Codice (code)</message>
 	<message xml:lang="tr">Kod (code)</message>
-	<message xml:lang="es">código</message>
+	<message xml:lang="es">Código (code)</message>
 	<message xml:lang="pt">Código (code)</message>
 	<message xml:lang="fi">koodi</message>
 </label>
@@ -1356,7 +1356,7 @@
 	<message xml:lang="fr">Acronyme (acronym)</message>
 	<message xml:lang="de">Akronym (acronym)</message>
 	<message xml:lang="it">Acronimo (acronym)</message>
-	<message xml:lang="es">acrónimo</message>
+	<message xml:lang="es">Acrónimo (acronym)</message>
 	<message xml:lang="pt">Acrônimo (acronym)</message>
 	<message xml:lang="fi">kirjainsana</message>
 </label>
@@ -1424,7 +1424,7 @@
 	<message xml:lang="de">Groß (big)</message>
 	<message xml:lang="it">Grande (big)</message>
 	<message xml:lang="tr">Büyük (big)</message>
-	<message xml:lang="es">grande</message>
+	<message xml:lang="es">Grande (big)</message>
 	<message xml:lang="pt">Grande (big)</message>
 	<message xml:lang="fi">iso</message>
 </label>
@@ -1434,7 +1434,7 @@
 	<message xml:lang="de">Klein (small)</message>
 	<message xml:lang="it">Piccolo (small)</message>
 	<message xml:lang="tr">Küçük (small)</message>
-	<message xml:lang="es">pequeña</message>
+	<message xml:lang="es">Pequeña (small)</message>
 	<message xml:lang="pt">Pequeno (small)</message>
 	<message xml:lang="fi">pieni</message>
 </label>
@@ -1492,7 +1492,7 @@
 	<message xml:lang="de">Neue Formel (math)</message>
 	<message xml:lang="it">Nuova formula (math)</message>
 	<message xml:lang="tr">Matematik (math)</message>
-	<message xml:lang="es">Fórmula nueva(math)</message>
+	<message xml:lang="es">Fórmula nueva (math)</message>
 	<message xml:lang="pt">Nova fórmula (math)</message>
 	<message xml:lang="fi">Uusi kaava (math)</message>
 </label>
@@ -1613,7 +1613,7 @@
 	<message xml:lang="de">Index und Exponent (msubsup)</message>
 	<message xml:lang="it">Pedice e indice (msubsup)</message>
 	<message xml:lang="tr">Alt ve üstyazý (msubsup)</message>
-	<message xml:lang="es">Subíndice and superíndice (msubsup)</message>
+	<message xml:lang="es">Subíndice y superíndice (msubsup)</message>
 	<message xml:lang="pt">Índice e Expoente (msubsup)</message>
 	<message xml:lang="fi">Ala- ja yläindeksi (msubsup)</message>
 </label>
@@ -1720,14 +1720,14 @@
 	<message xml:lang="en">Show SVG Library</message>
 	<message xml:lang="fr">Montrer la librairie SVG</message>
 	<message xml:lang="it">Mostri librería SVG</message>
-	<message xml:lang="es">Mostrar librería SVG</message>
+	<message xml:lang="es">Mostrar Biblioteca SVG</message>
 	<message xml:lang="de">SVG-Bibliothek anzeigen...</message>
 </label>
 <label define="BAddNewModel">
 	<message xml:lang="en">Add selection in SVG Library</message>
 	<message xml:lang="fr">Ajouter la sélection dans une librairie</message>
 	<message xml:lang="it">Aggiunga la selezione nella librería SVG</message>
-	<message xml:lang="es">Añadir la selección a la librería SVG</message>
+	<message xml:lang="es">Añadir la selección a la Biblioteca SVG</message>
 	<message xml:lang="de">Markierung in SVG-Bibliothek einfügen</message>
 </label>
 <label define="BXMLElement">
@@ -1849,7 +1849,7 @@
 	<message xml:lang="fr">Montrer les erreurs</message>
 	<message xml:lang="de">Parserfehler anzeigen</message>
 	<message xml:lang="it">Mostra le errore</message>
-	<message xml:lang="es">Mostrar fichero log</message>
+	<message xml:lang="es">Mostrar errores sintácticos</message>
 	<message xml:lang="pt">Exibir erros de gramática (parsing)</message>
 	<message xml:lang="fi">Näytä käännösvirheet</message>
 </label>
@@ -2030,7 +2030,7 @@
 <label define="BMakeID">
 	<message xml:lang="en">Add/Remove IDs...</message>
 	<message xml:lang="fr">Ajouter/Retirer des attributs ID...</message>
-	<message xml:lang="es">Crear/Suprimir attributos ID...</message>
+	<message xml:lang="es">Crear/Suprimir atributos id...</message>
 	<message xml:lang="it">Aggiungi/Togli ID...</message>
 	<message xml:lang="de">Id hinzufügen/entfernen...</message>
 	<message xml:lang="pt">Adicionar/Remover IDs...</message>
@@ -2060,7 +2060,7 @@
 	<message xml:lang="de">Browser...</message>
 	<message xml:lang="fi">Selaus...</message>
 	<message xml:lang="it">Visualizzazione...</message>
-	<message xml:lang="es">Navegando...</message>
+	<message xml:lang="es">Navegar...</message>
 </label>
 <label define="BConfigPublish">
 	<message xml:lang="en">Publishing...</message>
@@ -2184,7 +2184,7 @@
 	<message xml:lang="fr">Enregister sur le serveur</message>
 	<message xml:lang="de">Veröffentlichen</message>
 	<message xml:lang="it">Registra</message>
-	<message xml:lang="es">Salvar en el servidor</message>
+	<message xml:lang="es">Enviar al servidor</message>
 	<message xml:lang="pt">Registrar</message>
 	<message xml:lang="fi">Lähetä palvelimelle</message>
 </label>
@@ -2291,7 +2291,7 @@
 	<message xml:lang="fr">À propos de Amaya</message>
 	<message xml:lang="de">Info</message>
 	<message xml:lang="it">Informazioni su Amaya</message>
-	<message xml:lang="es">Sobre Amaya</message>
+	<message xml:lang="es">Acerca de Amaya</message>
 	<message xml:lang="pt">Sobre Amaya</message>
 	<message xml:lang="fi">Tietoja Amayasta</message>
 </label>
@@ -2301,7 +2301,7 @@
 	<message xml:lang="de">Über Amaya</message>
 	<message xml:lang="it">Informazioni su Amaya al W3C</message>
 	<message xml:lang="tr">Amaya hakkýnda</message>
-	<message xml:lang="es">Sobre Amaya en W3C</message>
+	<message xml:lang="es">Acerca de Amaya en W3C</message>
 	<message xml:lang="pt">Sobre Amaya no W3C</message>
 	<message xml:lang="fi">Lisätietoa Amayasta W3C:ssä</message>
 </label>
@@ -2319,7 +2319,7 @@
 	<message xml:lang="fr">Navigation</message>
 	<message xml:lang="de">Browsen</message>
 	<message xml:lang="it">Navigazione</message>
-	<message xml:lang="es">Hojear</message>
+	<message xml:lang="es">Navegar</message>
 	<message xml:lang="pt">Navegar</message>
 	<message xml:lang="fi">Selaaminen</message>
 </label>
@@ -2358,7 +2358,7 @@
 	<message xml:lang="de">Elemente</message>
 	<message xml:lang="it">Creazione elementi</message>
 	<message xml:lang="tr">Görünümler</message>
-	<message xml:lang="es">Creación de elementos</message>
+	<message xml:lang="es">Crear elementos</message>
 	<message xml:lang="pt">Criar elementos</message>
 	<message xml:lang="fi">Elementtien luominen</message>
 </label>
@@ -2387,7 +2387,7 @@
 	<message xml:lang="de">Transformieren</message>
 	<message xml:lang="it">Ristrutturazione</message>
 	<message xml:lang="tr">Baðlantýlar</message>
-	<message xml:lang="es">Restructuración</message>
+	<message xml:lang="es">Reestructurar</message>
 	<message xml:lang="pt">Reestruturar</message>
 	<message xml:lang="fi">Rakenteen muunto</message>
 </label>
@@ -2434,7 +2434,7 @@
 <label define="BHelpSVG">
 	<message xml:lang="en">Graphics</message>
 	<message xml:lang="fr">Graphiques</message>
-	<message xml:lang="es">Graficas</message>
+	<message xml:lang="es">Gráficos</message>
 	<message xml:lang="de">SVG</message>
 	<message xml:lang="it">Graphics</message>
 	<message xml:lang="pt">Gráficos</message>
