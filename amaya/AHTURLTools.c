@@ -34,6 +34,9 @@ typedef struct _HTURI
 
 #ifdef _WINDOWS
 #define TMPDIR "TMP"
+#define stat _stat
+#define uint64_t unsigned __int64
+#define getpid _getpid
 #else
 #define TMPDIR "TMPDIR"
 #endif /* _WINDOWS */
@@ -2302,16 +2305,6 @@ ThotBool AM_UseXHTMLMimeType (void)
  for generating a tmpnam.
 *********************************************/
 
-/* Return nonzero if DIR is an existent directory.  */
-static int
-direxists (const char *dir)
-{
-  struct stat buf;
-
-  return stat (dir, &buf) == 0 && S_ISDIR (buf.st_mode);
-}
-
-
 /* These are the characters used in temporary filenames.  */
 static const char letters[] =
 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -2425,7 +2418,7 @@ char *GetTempName (const char *dir, const char *prefix)
   int count;
   int i;
 
-  if (!dir || *dir == EOS || !direxists (dir))
+  if (!dir || *dir == EOS || !TtaDirExists (dir))
     return NULL;
 
   /* make sure that the name is no bigger than FILENAME_MAX */
