@@ -154,14 +154,16 @@ static AM_WIN_MenuText WIN_GeneralMenuText[] =
 static int      GeneralBase;
 static int      DoubleClickDelay;
 static int      Zoom;
-static ThotBool Multikey;
 static char     DefaultName [MAX_LENGTH];
-static ThotBool BgImages;
-static ThotBool DoubleClick;
 static char     DialogueLang [MAX_LENGTH];
 static int      AccesskeyMod;
 static int      FontMenuSize;
 static char     HomePage [MAX_LENGTH];
+static ThotBool Multikey;
+static ThotBool BgImages;
+static ThotBool DoubleClick;
+static ThotBool S_Targets;
+static ThotBool S_Numbers;
 static ThotBool EnableFTP;
 
 /* Publish menu options */
@@ -1535,6 +1537,8 @@ static void GetGeneralConf (void)
   TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &BgImages);
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   TtaGetEnvBoolean ("ENABLE_FTP", &EnableFTP);
+  TtaGetEnvBoolean ("SHOW_TARGET", &S_Targets);
+  TtaGetEnvBoolean ("SECTION_NUMBERING", &S_Numbers);
   GetEnvString ("HOME_PAGE", HomePage);
   GetEnvString ("LANG", DialogueLang);
   GetEnvString ("ACCESSKEY_MOD", ptr);
@@ -1720,6 +1724,8 @@ static void SetGeneralConf (void)
   /* @@@ */
   TtaSetEnvBoolean ("ENABLE_FTP", EnableFTP, TRUE);
   AHTFTPURL_flag_set (EnableFTP);
+  TtaSetEnvBoolean ("SHOW_TARGET", S_Targets, TRUE);
+  TtaSetEnvBoolean ("SECTION_NUMBERING", S_Numbers, TRUE);
   TtaSetEnvString ("HOME_PAGE", HomePage, TRUE);
   TtaSetEnvString ("LANG", DialogueLang, TRUE);
   if (AccesskeyMod == 0)
@@ -1754,8 +1760,12 @@ static void GetDefaultGeneralConf ()
 		       GeneralBase + mToggleGeneral, 1);
   GetDefEnvToggle ("ENABLE_DOUBLECLICK", &DoubleClick,
 		       GeneralBase + mToggleGeneral, 2);
-  GetDefEnvToggle ("ENABLE_FTP", &EnableFTP,
+  GetDefEnvToggle ("SHOW_TARGET", &S_Targets,
 		       GeneralBase + mToggleGeneral, 3);
+  GetDefEnvToggle ("SECTION_NUMBERING", &S_Numbers,
+		       GeneralBase + mToggleGeneral, 4);
+  GetDefEnvToggle ("ENABLE_FTP", &EnableFTP,
+		       GeneralBase + mToggleGeneral, 5);
   GetDefEnvString ("HOME_PAGE", HomePage);
   GetDefEnvString ("LANG", DialogueLang);
   GetDefEnvString ("ACCESSKEY_MOD", ptr);
@@ -1788,18 +1798,22 @@ void WIN_RefreshGeneralMenu (HWND hwnDlg)
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_ENABLEFTP, (EnableFTP) 
 		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_SHOWTARGETS, (S_Targets) 
+		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_NUMBERS, (S_Numbers) 
+		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang);
   switch (AccesskeyMod)
-  {
-  case 0:
-	  CheckRadioButton (hwnDlg, IDC_AALT, IDC_ANONE, IDC_AALT);
-	  break;
-   case 1:
-   	  CheckRadioButton (hwnDlg, IDC_AALT, IDC_ANONE, IDC_ACTRL);
-	   break;
-   case 2:
-	  CheckRadioButton (hwnDlg, IDC_AALT, IDC_ANONE, IDC_ANONE);
-       break;
+    {
+    case 0:
+      CheckRadioButton (hwnDlg, IDC_AALT, IDC_ANONE, IDC_AALT);
+      break;
+    case 1:
+      CheckRadioButton (hwnDlg, IDC_AALT, IDC_ANONE, IDC_ACTRL);
+      break;
+    case 2:
+      CheckRadioButton (hwnDlg, IDC_AALT, IDC_ANONE, IDC_ANONE);
+      break;
   }
   SetDlgItemInt (hwnDlg, IDC_ZOOM, Zoom, TRUE);
   SetDlgItemText (hwnDlg, IDC_TMPDIR, AppTmpDir);
@@ -1817,7 +1831,9 @@ static void RefreshGeneralMenu ()
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 0, Multikey);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 1, BgImages);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 2, DoubleClick);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 3, EnableFTP);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 3, S_Targets);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 4, S_Numbers);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 5, EnableFTP);
   TtaSetTextForm (GeneralBase + mHomePage, HomePage);
   TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
   TtaSetMenuForm (GeneralBase + mGeneralAccessKey, AccesskeyMod);
@@ -1839,6 +1855,10 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       GeneralHwnd = hwnDlg;
       /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_GeneralMenuText);
+      SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWTARGETS),
+		     TtaGetMessage (1, TShowTargets));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_NUMBERS),
+		     TtaGetMessage (1, TSectionNumber));
       /* write the current values in the dialog entries */
       WIN_RefreshGeneralMenu (hwnDlg);
       break;
@@ -1895,6 +1915,12 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  break;
 	case IDC_DOUBLECLICK:
 	  DoubleClick = !DoubleClick;
+	  break;
+	case IDC_SHOWTARGETS:
+	  S_Targets = !S_Targets;
+	  break;
+	case IDC_NUMBERS:
+	  S_Numbers = !S_Numbers;
 	  break;
 	case IDC_ENABLEFTP:
 	  EnableFTP = !EnableFTP;
@@ -1987,6 +2013,12 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
 	      DoubleClick = !DoubleClick;
 	      break;
 	    case 3:
+	      S_Targets = !S_Targets;
+	      break;
+	    case 4:
+	      S_Numbers = !S_Numbers;
+	      break;
+	    case 5:
 	      EnableFTP = !EnableFTP;
 	      break;
 	    }
@@ -2018,7 +2050,7 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
   Build and display the Browsing Editing conf Menu dialog box and prepare 
   for input.
   ----------------------------------------------------------------------*/
-void         GeneralConfMenu (Document document, View view)
+void GeneralConfMenu (Document document, View view)
 {
 #ifndef _WINDOWS 
    int              i;
@@ -2042,32 +2074,6 @@ void         GeneralConfMenu (Document document, View view)
 		   FALSE);
    TtaNewLabel (GeneralBase + mGeneralEmpty1, GeneralBase + GeneralMenu, " ");
    TtaNewLabel (GeneralBase + mGeneralEmpty2, GeneralBase + GeneralMenu, " ");
-   /* second line */
-   sprintf (s, "B%s%cB%s%cB%s%cB%s", 
-	     TtaGetMessage (AMAYA, AM_ENABLE_MULTIKEY), EOS, 
-	     TtaGetMessage (AMAYA, AM_SHOW_BG_IMAGES), EOS, 
-	     TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK), EOS,
-	     TtaGetMessage (AMAYA, AM_ENABLE_FTP));
-
-   TtaNewToggleMenu (GeneralBase + mToggleGeneral,
-		     GeneralBase + GeneralMenu,
-		     NULL,
-		     4,
-		     s,
-		     NULL,
-		     FALSE);
-   TtaNewLabel (GeneralBase + mGeneralEmpty3, GeneralBase + GeneralMenu, " ");
-   sprintf (s, "BAlt%cBCtrl%cB%s", EOS, EOS,
-	    TtaGetMessage (AMAYA, AM_NONE));   
-   TtaNewSubmenu (GeneralBase + mGeneralAccessKey,
-		  GeneralBase + GeneralMenu,
-		  0,
-		  TtaGetMessage (AMAYA, AM_ACCESSKEY),
-		  3,
-		  s,
-		  NULL,
-		  FALSE);
-
    /* third line */
    TtaNewNumberForm (GeneralBase + mFontMenuSize,
 		     GeneralBase + GeneralMenu,
@@ -2095,6 +2101,35 @@ void         GeneralConfMenu (Document document, View view)
 		   3,
 		   1,
 		   FALSE);
+   TtaNewLabel (GeneralBase + mGeneralEmpty3, GeneralBase + GeneralMenu, " ");
+   TtaNewLabel (GeneralBase + mGeneralEmpty4, GeneralBase + GeneralMenu, " ");
+   /* second line */
+   sprintf (s, "B%s%cB%s%cB%s%cB%s%cB%s%cB%s", 
+	     TtaGetMessage (AMAYA, AM_ENABLE_MULTIKEY), EOS, 
+	     TtaGetMessage (AMAYA, AM_SHOW_BG_IMAGES), EOS, 
+	     TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK), EOS,
+	     TtaGetMessage (1, TShowTargets), EOS,
+	     TtaGetMessage (1, TSectionNumber), EOS,
+	     TtaGetMessage (AMAYA, AM_ENABLE_FTP));
+
+   TtaNewToggleMenu (GeneralBase + mToggleGeneral,
+		     GeneralBase + GeneralMenu,
+		     NULL,
+		     6,
+		     s,
+		     NULL,
+		     FALSE);
+   sprintf (s, "BAlt%cBCtrl%cB%s", EOS, EOS,
+	    TtaGetMessage (AMAYA, AM_NONE));   
+   TtaNewSubmenu (GeneralBase + mGeneralAccessKey,
+		  GeneralBase + GeneralMenu,
+		  0,
+		  TtaGetMessage (AMAYA, AM_ACCESSKEY),
+		  3,
+		  s,
+		  NULL,
+		  FALSE);
+
 #endif /* !_WINDOWS */
    /* load the current values */
    GetGeneralConf ();

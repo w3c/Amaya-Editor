@@ -39,9 +39,10 @@
 #define mGeneralEmpty1       7
 #define mGeneralEmpty2       8
 #define mGeneralEmpty3       9
-#define mGeneralAccessKey    10
-#define mToggleGeneral       11
-#define MAX_GENERALMENU_DLG  12
+#define mGeneralEmpty4       10
+#define mGeneralAccessKey    11
+#define mToggleGeneral       12
+#define MAX_GENERALMENU_DLG  13
 
 #define PublishMenu         1
 #define mTogglePublish      2
