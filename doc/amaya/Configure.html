@@ -3,7 +3,8 @@
 <html>
 <head>
   <title>Configuring Amaya</title>
-  <style type="text/css">.menuItems { color: #E55500}</style>
+  <style type="text/css">
+.menuItems { color: #E55500}</style>
   <meta name="GENERATOR" content="amaya V3.2">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
@@ -177,6 +178,7 @@ summary="action button chart">
 <p style="text-align: center"><img src="../Icons/GeneralMenu.gif"
 alt="General Preferences Menu"></p>
 <dl>
+  <dt></dt>
   <dt><strong>Amaya user directory</strong> (Windows platforms only, not shown
   in the included figure)</dt>
     <dd>Specifies the directory where the user preferences are stored.<br>
@@ -202,12 +204,38 @@ alt="General Preferences Menu"></p>
       <strong>Note:</strong> A complete URI must be used.<br>
       <br>
     </dd>
-  <dt><strong>Double click delay</strong> (Unix platforms only)</dt>
-    <dd>This option allows one to control the delay for which two mouse clicks
-      are classed as a double-click. This option is only taken into account at
-      launch time.<br>
-      <br>
+  <dt><strong><a name="Enable">Enable multi-key</a></strong></dt>
+    <dd>Enables or disables the optional multi-key input method.
+      <p>The optional input method (Multi-Key) is based on a two key sequence
+      beginning with the "accent" followed by the "letter". For example to
+      obtain a 'ã' first press '~' then type 'a'. To obtain a '~' you have to
+      press '~' twice.</p>
+      <p>Character sequences used by the standard multi-key input method and
+      the optional multi-key input method are summarized in <a
+      href="Keyboard.html#Keyboard">two different tables</a>.</p>
+      <p></p>
     </dd>
+  <dt> <strong>Show background images</strong></dt>
+    <dd>Controls whether background images should be shown. This option is
+      only effective when loading a new document.
+      <p></p>
+    </dd>
+  <dt><strong>Double click activates link</strong></dt>
+    <dd>Since the first version of Amaya, users need to double click on a link
+      to activate it. This allows one to differentiate between the edition of
+      a link or its activation. You can override this behavior by deactivating
+      this option.
+      <p></p>
+    </dd>
+  <dt><strong>Enable FTP (experimental)</strong></dt>
+    <dd>Allows Amaya to follow FTP URLs. This support is experimental and it's
+      not yet fully debugged. For example, for FTP URLs needing user
+      authentication, the authentication information is not always memorized.
+      Also, pressing the Stop button during an FTP download may crash Amaya.
+      Albeit these problems, we added this option to Amaya so that other
+      developer's may help us to debug it faster. By default this option is
+      turned off.<br>
+       </dd>
   <dt><strong>Menu Font size</strong> (Unix platforms only)</dt>
     <dd>Specifies the font size of all the Amaya menus. This option is only
       taken into account at launch time.
@@ -222,6 +250,13 @@ alt="General Preferences Menu"></p>
       That option allows you to change the default font zoom for all windows.
       This change affects only font sizes but not images and is reflected
       immediately in all open document windows.<br>
+      <br>
+    </dd>
+  <dt><strong>Double click delay</strong> (Unix platforms only)</dt>
+    <dd>This option allows one to control the delay for which two mouse clicks
+      are classed as a double-click. This option is only taken into account at
+      launch time.<br>
+      <br>
     </dd>
   <dt><strong>Dialogue language</strong></dt>
     <dd>Specifies the language for all of Amaya's menus and dialogue messages.
@@ -250,29 +285,6 @@ alt="General Preferences Menu"></p>
       the same directory (i.e. <strong>Amaya/config</strong>) and must use the
       correct ISO 639 code as a prefix (it- for Italian, de- for German,
       etc.). The specific HTML.code file also has to be created.</p>
-      <p></p>
-    </dd>
-  <dt><strong><a name="Enable">Enable multi-key</a></strong></dt>
-    <dd>Enables or disables the optional multi-key input method.
-      <p>The optional input method (Multi-Key) is based on a two key sequence
-      beginning with the "accent" followed by the "letter". For example to
-      obtain a 'ã' first press '~' then type 'a'. To obtain a '~' you have to
-      press '~' twice.</p>
-      <p>Character sequences used by the standard multi-key input method and
-      the optional multi-key input method are summarized in <a
-      href="Keyboard.html#Keyboard">two different tables</a>.</p>
-      <p></p>
-    </dd>
-  <dt> <strong>Show background images</strong></dt>
-    <dd>Controls whether background images should be shown. This option is
-      only effective when loading a new document.
-      <p></p>
-    </dd>
-  <dt><strong>Double click activates link</strong></dt>
-    <dd>Since the first version of Amaya, users need to double click on a link
-      to activate it. This allows one to differentiate between the edition of
-      a link or its activation. You can override this behavior by deactivating
-      this option.
       <p></p>
     </dd>
 </dl>
@@ -417,12 +429,12 @@ done through the Amaya.css style sheet.</p>
 <p style="text-align: center"><img src="../Icons/GeomMenu.gif"
 alt="Geometry Preferences Menu"></p>
 
-<p>This menu allows you to save the current window size of the different views
-of a document (formatted, structure, alternate, links, and Table of Contents.)
-or to restore the default values. Note that the values that are saved are
-those belonging to the views of the document where you called this menu. Also,
-note that the position of the windows on the screen isn't saved yet. These
-changes will be reflected when you open new document windows.</p>
+<p>This menu allows you to save the current window position and size size of
+the different views of a document (formatted, structure, alternate, links, and
+Table of Contents.) or to restore the default values. Note that the values
+that are saved are those belonging to the views of the document where you
+called this menu. These changes will be reflected when you open new document
+windows.</p>
 
 <h4><a name="lang">Language negotiation preferences</a></h4>
 
