@@ -1406,9 +1406,9 @@ strNode            *TN;
 
 #endif
 {
-  ElementType		elType;
-  strAttrDesc           *AD;
-  strGenStack          *NS;
+  ElementType	      elType;
+  strAttrDesc        *AD;
+  strGenStack        *NS;
   STRING              attrValue, tag;
   strNode            *ancestor;
   ThotBool            found;
@@ -1418,8 +1418,6 @@ strNode            *TN;
   ThotBool	      res = TRUE;
   
   attrType.AttrSSchema = TtaGetDocumentSSchema (TransDoc);
-  attrValue = TtaAllocString (NAME_LENGTH);
-  tag = TtaAllocString (NAME_LENGTH);
   /* push the new tag on the generation stack */
   generationStack[topGenerStack]->Nbc++;
   NS = (strGenStack *) TtaGetMemory (sizeof (strGenStack));
@@ -1475,31 +1473,29 @@ strNode            *TN;
 		ancestor = ancestor->Parent;
 	    }
 	  if (found)
-	    {		/* searching for an ancestor of the source element which have the wanted attribute  */
-	      if (ancestor != NULL)
-		{
-		  ustrcpy (tag, GITagNameByType (TtaGetElementType (ancestor->Elem)));
-		  attrType.AttrTypeNum = MapThotAttr (AD->AttrAttr, tag);
-		}
+	    {
+	      /* searching for an ancestor of the source element which have the wanted attribute  */
 	      attr = NULL;
 	      found = FALSE;
 	      while (!found && ancestor != NULL)
 		{
+		  attrType.AttrTypeNum = -1;
+		  if (ancestor != NULL)
+		    {
+		      tag = TtaAllocString (NAME_LENGTH);
+		      ustrcpy (tag, GITagNameByType (TtaGetElementType (ancestor->Elem)));
+		      attrType.AttrTypeNum = MapThotAttr (AD->AttrAttr, tag);
+		      TtaFreeMemory (tag);
+		    }
 		  if (attrType.AttrTypeNum != -1)
 		    attr = TtaGetAttribute (ancestor->Elem, attrType);
 		  found = (attr != NULL);
 		  if (!found)
-		    {
-		      ancestor = ancestor->Parent;
-		      if (ancestor != NULL)
-			{
-			  ustrcpy (tag, GITagNameByType (TtaGetElementType (ancestor->Elem)));
-			  attrType.AttrTypeNum = MapThotAttr (AD->AttrAttr, tag);
-			}
-		    }
+		    ancestor = ancestor->Parent;
 		}
 	      if (found)
-		{		/* the attribute has been found, writing the attribute name */
+		{
+		  /* the attribute has been found, writing the attribute name */
 		  res = res && PutInHtmlBuffer (TEXT(" "));
 		  res = res && PutInHtmlBuffer (AD->AttrAttr);
 		  res = res && PutInHtmlBuffer (TEXT("="));
@@ -1508,30 +1504,37 @@ strNode            *TN;
 		  if (attrKind == 2)
 		    {	/* text attribute */
 		      l = TtaGetTextAttributeLength (attr);
+		      attrValue = TtaAllocString (l+1);
 		      TtaGiveTextAttributeValue (attr, attrValue, &l);
 		      res = res && PutInHtmlBuffer (attrValue);
+		      TtaFreeMemory (attrValue);
 		    }
 		  else
-		    {	/* int attribute */
+		    {
+		      /* int attribute */
+		      attrValue = TtaAllocString (NAME_LENGTH);
 		      usprintf (attrValue, TEXT("%d"), TtaGetAttributeValue (attr));
 		      res = res && PutInHtmlBuffer (attrValue);
+		      TtaFreeMemory (attrValue);
 		    }
 		}
 	    }
 	  if (!found)
-	    {
-	      fprintf (stderr, "can't transfer attribute %s\n", AD->AttrAttr);
-	    }
+	    fprintf (stderr, "can't transfer attribute %s\n", AD->AttrAttr);
 	}
       else
-	{			/* creation of an attribute */
+	{
+	  /* creation of an attribute */
 	  res = res && PutInHtmlBuffer (TEXT(" "));
 	  res = res && PutInHtmlBuffer (AD->NameAttr);
 	  res = res && PutInHtmlBuffer (TEXT("="));
 	  if (AD->IsInt)
-	    {		/* int attribute */
+	    {
+	      /* int attribute */
+	      attrValue = TtaAllocString (NAME_LENGTH);
 	      usprintf (attrValue, TEXT("%d"), AD->IntVal);
 	      res = res && PutInHtmlBuffer (attrValue);
+	      TtaFreeMemory (attrValue);
 	    }
 	  else
 	    {		/* text attribute */
@@ -1559,8 +1562,6 @@ strNode            *TN;
       TtaFreeMemory ( NS->Attributes);
     }
   NS->Attributes = NULL;
-  TtaFreeMemory (attrValue);
-  TtaFreeMemory (tag);
   return res;
 }
 
