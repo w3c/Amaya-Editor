@@ -3,11 +3,10 @@
       "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Über das Konfigurationsverzeichnis und Dateikonventionen</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -69,9 +68,11 @@ den verschiedenen Plattformen zu finden ist:</p>
       Benutzer sich nicht angemeldet hat
       <code>AMAYA-INSTALL-DIR\users\default</code></dd>
   <dt>Windows NT</dt>
-    <dd><code>C:\winnt\profiles\username\Amaya</code></dd>
+    <dd><code>$HOMEDRIVE:\$HOMEPATH\\Amaya\config</code></dd>
   <dt>Windows 2000</dt>
-    <dd><code>C:\Program Files\Amaya\config</code></dd>
+    <dd><code>$HOMEDRIVE:\$HOMEPATH\\Amaya\config</code></dd>
+  <dt>Windows XP</dt>
+    <dd>$HOMEDRIVE:\$HOMEPATH\\Amaya\config</dd>
 </dl>
 
 <p>Dieses Verzeichnis wird bei einer Neuinstallation (neue Version) von Amaya

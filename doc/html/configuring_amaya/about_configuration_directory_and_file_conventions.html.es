@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Directorio de configuración y convenciones de archivo</title>
-  
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -74,20 +73,21 @@ operativos.</p>
       <td><p class="TableText">Windows NT</p>
       </td>
       <td><p
-        class="TableText"><code>C:\winnt\profiles\username\Amaya</code></p>
+        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\\Amaya\config</code></p>
       </td>
     </tr>
     <tr>
       <td><p class="TableText">Windows 2000</p>
       </td>
-      <td><p class="TableText"><code>C:\Program Files\Amaya\config</code></p>
+      <td><p
+        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\\Amaya\config</code></p>
       </td>
     </tr>
     <tr>
       <td><p class="TableText">Windows XP</p>
       </td>
       <td><p
-        class="TableText"><code>C:\WINDOWS\profiles\username\amaya</code></p>
+        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\\Amaya\config</code></p>
       </td>
     </tr>
   </tbody>
@@ -116,7 +116,7 @@ de Amaya. Contiene los siguientes archivos:</p>
     personal.</li>
 </ul>
 
-<p class="Note"><strong>Nota:</strong>  Los archivos
+<p class="Note"><strong>Nota:</strong> Los archivos
 <code>amaya.keyboard</code>, <code>amaya.kb</code>, y <code>amaya.css</code>
 files se cargan al iniciar Amaya. Si los cambias, debes cerrar y reiniciar
 Amaya para que los cambios tengan efecto.</p>

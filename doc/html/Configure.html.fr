@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Configurer Amaya</title>
-  <meta name="GENERATOR" content="amaya 6.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -78,12 +78,11 @@ stocké dans les différentes architectures :</p>
       </td>
     </tr>
     <tr>
-      <td>Windows NT</td>
-      <td>c :\winnt\profiles\username\amaya</td>
-    </tr>
-    <tr>
-      <td>Windows XP</td>
-      <td>c ::\WINDOWS\profiles\username\amaya</td>
+      <td>Windows NT/ Windows 2000/
+
+        <p>Windows XP</p>
+      </td>
+      <td><code>$HOMEDRIVE:\$HOMEPATH\\Amaya\config</code></td>
     </tr>
   </tbody>
 </table>
