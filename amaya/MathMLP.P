@@ -727,7 +727,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	CreateFirst (Bar);
-	LineWeight: 1 pt;
+	LineWeight: 0.5 pt;
 	HorizRef: Enclosed Bar . Bottom + 0.1;
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
         if within MFRAC
@@ -1364,8 +1364,6 @@ RULES
    C_Space:
 	BEGIN
 	Width: 0;
-	{Height: 0;}
-	HorizRef: * . Bottom;
 	IN Structure_view 
 		Visibility: 0;
 	END;

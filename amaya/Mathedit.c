@@ -1274,7 +1274,8 @@ static void         CreateMathConstruct (int construct)
 	  attr =  TtaNewAttribute (attrType);
 	  TtaAttachAttribute (el, attr, doc);
 	  TtaSetAttributeText (attr, DEFAULT_MSPACE_WIDTH, el, doc);
-	  MathMLSpacingAttr (doc, el, DEFAULT_MSPACE_WIDTH, attrType.AttrTypeNum);
+	  MathMLSpacingAttr (doc, el, DEFAULT_MSPACE_WIDTH,
+			     attrType.AttrTypeNum);
 	}
 
       /* if the new element is a child of a FencedExpression element,
@@ -1294,20 +1295,29 @@ static void         CreateMathConstruct (int construct)
       /* check the Thot abstract tree against the structure schema. */
       TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
 	  
-      /* selected the leaf in the first (or second) child of the new
-	 element */
-      child = TtaGetFirstChild (el);
-      if (!selectFirstChild)
-	/* get the second child */
-	TtaNextSibling (&child);
-      leaf = NULL;
-      while (child != NULL)
+      if (newType.ElTypeNum == MathML_EL_MSPACE ||
+	  elType.ElTypeNum == MathML_EL_MGLYPH ||
+	  elType.ElTypeNum == MathML_EL_MALIGNMARK ||
+	  elType.ElTypeNum == MathML_EL_MALIGNGROUP)
+	/* select the new element itself */
+	TtaSelectElement (doc, el);
+      else
 	{
-	  leaf = child;
-	  child = TtaGetFirstChild (child);
+	  /* select the leaf in the first (or second) child of the new
+	     element */
+	  child = TtaGetFirstChild (el);
+	  if (!selectFirstChild)
+	    /* get the second child */
+	    TtaNextSibling (&child);
+	  leaf = NULL;
+	  while (child != NULL)
+	    {
+	      leaf = child;
+	      child = TtaGetFirstChild (child);
+	    }
+	  if (leaf)
+	    TtaSelectElement (doc, leaf);
 	}
-      if (leaf)
-	TtaSelectElement (doc, leaf);
     }
 
   TtaCloseUndoSequence (doc);

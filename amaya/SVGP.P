@@ -650,7 +650,7 @@ RULES
 	HorizPos: Left = Previous . Right;
 	VertPos:  HRef = Previous . HRef;
 	HorizRef: Enclosed . HRef;
-	HorizOverflow : Yes;
+	HorizOverflow: Yes;
 	IN Structure_view BEGIN
 	        if within use_
 	            Visibility: 0;
