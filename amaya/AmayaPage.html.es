@@ -29,10 +29,7 @@
      width="600" height="349">
   <rect x="464" y="4" width="138" height="330" style="fill: #E1E1E1"/>
   <g style="fill:#dc5b53; font: bold 16px"
-    transform="translate(477,0) scale(0.1)">
-    <animateTransform attributeName="transform" attributeType="XML"
-                      type="scale" from="0.1" to="1" additive="sum"
-                      begin="0s" dur="10s" fill="freeze"/>
+    transform="translate(477,0)">
     <a xlink:href="http://www.w3.org/Amaya">
       <text y="38px" x="0px">Amaya en el W3C
       </text>
@@ -88,16 +85,7 @@
         </text>
       </symbol>
     </defs>
-    <g transform="translate(-50,-20)"
-      style="font-family:Times New Roman;font-size:96">
-      <use xlink:href="#amayatext"/>
-      <use opacity="20%" transform="matrix( 1 0 -1 -1 80 160 )"
-           xlink:href="#amayatext"/>
-    </g>
     <g id="cubes">
-      <animateColor attributeName="fill" attributeType="CSS"
-                    from="rgb(0,0,255)" to="rgb(128,0,0)" begin="0s" dur="6s"
-                    fill="freeze"/>
       <use x="200" y="112" xlink:href="#cube" style="fill: #0192BF"
            opacity="20%"/>
       <use x="230" y="112" xlink:href="#cube" style="fill: #2B9FC3"
@@ -115,6 +103,13 @@
       <use x="350" y="172" xlink:href="#cube" style="fill: #DAAFAC"/>
       <use x="380" y="172" xlink:href="#cube" style="fill: #DF8984"/>
       <use x="410" y="172" xlink:href="#cube" style="fill: #DC5B53"/>
+    </g>
+<g transform="translate(312,156)"
+      style="font: 24px helvetica; font-weight: bold; fill: #488B9B;">
+      <text id="logo">AMAYA
+      </text>
+      <text transform="scale(1,-1)skewX(-50)" opacity=".2">AMAYA
+      </text>
     </g>
     <text id="version" x="360px" y="320"
           style="font: bold 16px italic; fill: #0192BF;">Versión 8.0
@@ -162,45 +157,6 @@
         </foreignObject>
       </switch>
     </g>
-  </g>
-  <g id="logo"
-    style="font: 68px helvetica; font-weight: bold; fill: #488B9B;"
-    transform="translate(0,200)">
-    <text opacity="0" transform="rotate(-90, 0, 0) translate(13,0)">A 
-      <animate attributeName="opacity" attributeType="CSS" from="0" to="1"
-               begin="0s" dur="3s" fill="freeze"/>
-      <animateTransform attributeName="transform" attributeType="XML"
-                        type="scale" from="1" to="0.5" additive="sum"
-                        begin="0s" dur="3s" fill="freeze"/>
-    </text>
-    <text opacity="0" transform="rotate(-90, 0, 0) translate(33,0)">M 
-      <animate attributeName="opacity" attributeType="CSS" from="0" to="1"
-               begin="1s" dur="3s" fill="freeze"/>
-      <animateTransform attributeName="transform" attributeType="XML"
-                        type="scale" from="1" to="0.5" additive="sum"
-                        begin="1s" dur="3s" fill="freeze"/>
-    </text>
-    <text opacity="0" transform="rotate(-90, 0, 0) translate(60,0)">A 
-      <animate attributeName="opacity" attributeType="CSS" from="0" to="1"
-               begin="2s" dur="3s" fill="freeze"/>
-      <animateTransform attributeName="transform" attributeType="XML"
-                        type="scale" from="1" to="0.5" additive="sum"
-                        begin="2s" dur="3s" fill="freeze"/>
-    </text>
-    <text opacity="0" transform="rotate(-90, 0, 0) translate(80,0)">Y 
-      <animate attributeName="opacity" attributeType="CSS" from="0" to="1"
-               begin="3s" dur="3s" fill="freeze"/>
-      <animateTransform attributeName="transform" attributeType="XML"
-                        type="scale" from="1" to="0.5" additive="sum"
-                        begin="3s" dur="3s" fill="freeze"/>
-    </text>
-    <text opacity="0" transform="rotate(-90, 0, 0) translate(100,0)">A 
-      <animate attributeName="opacity" attributeType="CSS" from="0" to="1"
-               begin="4s" dur="3s" fill="freeze"/>
-      <animateTransform attributeName="transform" attributeType="XML"
-                        type="scale" from="1" to="0.5" additive="sum"
-                        begin="4s" dur="3s" fill="freeze"/>
-    </text>
   </g>
 </svg>
 </p>
