@@ -209,10 +209,15 @@ typedef unsigned int JDIMENSION;
  * explicit coding is needed; see uses of the NEED_FAR_POINTERS symbol.
  */
 
+#include "thot_sys.h"
+#include "typebase.h"
+
+#ifndef FAR
 #ifdef NEED_FAR_POINTERS
 #define FAR  far
 #else
 #define FAR
+#endif
 #endif
 
 
@@ -223,8 +228,6 @@ typedef unsigned int JDIMENSION;
  * Defining HAVE_BOOLEAN before including jpeglib.h should make it work.
  */
 /* need compatibility with Thot definitions */
-#include "thot_sys.h"
-#include "typebase.h"
 
 /*
  * The remaining options affect code selection within the JPEG library,
