@@ -1711,6 +1711,7 @@ void FreeDocumentResource (Document doc)
 	  TtaFreeMemory (tempdocument);
 	  /* remove the Parsing errors file */
 	  RemoveParsingErrors (doc);
+	  ClearMathFrame (doc);
 #ifdef ANNOTATIONS
 	  ANNOT_FreeDocumentResource (doc);
 #endif /* ANNOTATIONS */

@@ -878,6 +878,18 @@ void UnFrameMath ()
 }
 
 /*----------------------------------------------------------------------
+  ClearMathFrame 
+ -----------------------------------------------------------------------*/
+void ClearMathFrame (Document doc)
+{
+  if (doc == DocMathElementSelected)
+    {
+      MathElementSelected = NULL;
+      DocMathElementSelected = 0;
+    }  
+}
+
+/*----------------------------------------------------------------------
    MathSelectionChanged
    A new element has been selected. Synchronize selection in source view.      
   ----------------------------------------------------------------------*/

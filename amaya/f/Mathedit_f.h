@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern void UnFrameMath ( void );
+extern void ClearMathFrame ( Document doc );
 extern void MathSelectionChanged ( NotifyElement *event );
 extern void MathElementCreated ( NotifyElement *event );
 extern void AddMathButton ( Document doc,
@@ -130,6 +131,7 @@ extern void HandleColAndRowAlignAttributes ( Element row,
 #else /* __STDC__ */
 
 extern void UnFrameMath ( void );
+extern void ClearMathFrame ( Document doc );
 extern void MathSelectionChanged ( NotifyElement *event );
 extern void MathElementCreated ( NotifyElement *event );
 extern void AddMathButton ( Document doc,
