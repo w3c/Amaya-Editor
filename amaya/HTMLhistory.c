@@ -24,6 +24,7 @@
 typedef struct _HistElement
 {
      STRING HistUrl;        /* document URL */
+     STRING HistInitialUrl; /* document URL */
      STRING form_data;      /* data associated with forms */
      int    method;         /* method used to request this URL */
      int    HistPosition;	/* volume preceding the first element to be
@@ -43,6 +44,7 @@ typedef struct _GotoHistory_context
   int                  prevnext;
   ThotBool	       last;
   ThotBool             next_doc_loaded;
+  STRING               initial_url;
 } GotoHistory_context;
 
 /* the history of all windows */
@@ -227,7 +229,23 @@ ClickEvent  CE_event;
   else
     NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
 
-  loaded = IsDocumentLoaded (pathname, form_data);
+   /* check if the user is already browsing the document in another window */
+   if (CE_event == CE_FORM_GET || CE_event == CE_FORM_POST)
+     {
+       loaded = IsDocumentLoaded (pathname, form_data);
+       /* we don't concatenate the new parameters as we give preference
+	  to the form data */
+     }
+   else
+     {
+       /* concatenate the parameters before making the test */
+       if (parameters[0] != WC_EOS)
+	 {
+	   ustrcat (pathname, TEXT("?"));
+	   ustrcat (pathname, parameters);
+	 }
+       loaded = IsDocumentLoaded (pathname, NULL);
+     }
 
   TtaFreeMemory (pathname);
   TtaFreeMemory (tempdocument);
@@ -281,6 +299,10 @@ void *context;
       if (ctx->last)
 	SetArrowButton (doc, FALSE, TRUE);
     }
+  if (!DocumentMeta[doc]->initial_url)
+    DocumentMeta[doc]->initial_url = ctx->initial_url;
+  else
+    TtaFreeMemory (ctx->initial_url);
   TtaFreeMemory (ctx);
 }
 
@@ -298,6 +320,7 @@ View                view;
 {
    GotoHistory_context *ctx;
    STRING              url = NULL;
+   STRING              initial_url = NULL;
    STRING              form_data = NULL;
    int                 prev, i;
    int                 method;
@@ -324,6 +347,7 @@ View                view;
 
    /* get the previous document information*/
    url = DocHistory[doc][prev].HistUrl;
+   initial_url = DocHistory[doc][prev].HistInitialUrl;
    form_data = DocHistory[doc][prev].form_data;
    method = DocHistory[doc][prev].method;
 
@@ -386,6 +410,7 @@ View                view;
    ctx->last = last;
    ctx->doc = doc;
    ctx->next_doc_loaded = next_doc_loaded;
+   ctx->initial_url = TtaStrdup (initial_url);
 
    /* 
    ** load (or jump to) the previous document 
@@ -394,7 +419,8 @@ View                view;
      {
      if (hist)
        /* record the current position in the history */
-       AddDocHistory (doc, DocumentURLs[doc], DocumentMeta[doc]->form_data, DocumentMeta[doc]->method);
+       AddDocHistory (doc, DocumentURLs[doc], DocumentMeta[doc]->initial_url,
+		      DocumentMeta[doc]->form_data, DocumentMeta[doc]->method);
      
      DocHistoryIndex[doc] = prev;
      }
@@ -453,6 +479,10 @@ void *context;
       el = ElementAtPosition (doc, DocHistory[doc][next].HistPosition);
       TtaShowElement (doc, 1, el, DocHistory[doc][next].HistDistance);
     }
+  if (!DocumentMeta[doc]->initial_url)
+    DocumentMeta[doc]->initial_url = ctx->initial_url;
+  else
+    TtaFreeMemory (ctx->initial_url);
   TtaFreeMemory (ctx);
 }
 
@@ -470,6 +500,7 @@ View                view;
 {
    GotoHistory_context  *ctx;
    STRING        url = NULL;
+   STRING        initial_url = NULL;
    STRING        form_data = NULL;
    int           method;
    int		 next, i;
@@ -493,6 +524,7 @@ View                view;
 
    /* Get the next document information */
    url = DocHistory[doc][next].HistUrl;
+   initial_url = DocHistory[doc][next].HistInitialUrl;
    form_data = DocHistory[doc][next].form_data;
    method = DocHistory[doc][next].method;
 
@@ -553,6 +585,7 @@ View                view;
    ctx->prevnext = next;
    ctx->doc = doc;
    ctx->next_doc_loaded = next_doc_loaded;
+   ctx->initial_url = TtaStrdup (initial_url);
 
    /* is it the current document ? */
    if (DocumentURLs[doc] && !ustrcmp (url, DocumentURLs[doc]) && same_form_data)
@@ -570,11 +603,12 @@ View                view;
    Add a new URL in the history associated with the window of document doc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                AddDocHistory (Document doc, STRING url, STRING form_data, ClickEvent method)
+void                AddDocHistory (Document doc, STRING url, STRING initial_url, STRING form_data, ClickEvent method)
 #else  /* __STDC__ */
-void                AddDocHistory (doc, url, form_data, method)
+void                AddDocHistory (doc, url, initial_url, form_data, method)
 Document	    doc;
 STRING              url;
+STRING              initial_url;
 STRING              form_data;
 ClickEvent          method;
 
@@ -618,10 +652,13 @@ ClickEvent          method;
    /* store the URL and the associated form data */
    if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl)
      TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistUrl);
+   if (DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl)
+     TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl);
    if (DocHistory[doc][DocHistoryIndex[doc]].form_data)
      TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].form_data);
    
    DocHistory[doc][DocHistoryIndex[doc]].HistUrl = TtaWCSdup (url);
+   DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl = TtaWCSdup (initial_url);
    DocHistory[doc][DocHistoryIndex[doc]].form_data = TtaWCSdup (form_data);
    DocHistory[doc][DocHistoryIndex[doc]].method = method;
 
@@ -635,13 +672,21 @@ ClickEvent          method;
    /* delete the next entry in the history */
    if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl)
        TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistUrl);
+   if (DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl)
+       TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl);
+
    if (DocHistory[doc][DocHistoryIndex[doc]].form_data)
        TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].form_data);
 
    DocHistory[doc][DocHistoryIndex[doc]].HistUrl = NULL;
+   DocHistory[doc][DocHistoryIndex[doc]].HistInitialUrl = NULL;
    DocHistory[doc][DocHistoryIndex[doc]].form_data = NULL;
    DocHistory[doc][DocHistoryIndex[doc]].method = CE_ABSOLUTE;
 
    /* set the Forward button off */
    SetArrowButton (doc, FALSE, FALSE);
 }
+
+
+
+

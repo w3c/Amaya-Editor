@@ -568,7 +568,10 @@ void *context;
 		{
 		/* jump in the same document */
 		  /* record current position in the history */
-		  AddDocHistory (doc, DocumentURLs[doc], DocumentMeta[doc]->form_data, DocumentMeta[doc]->method);
+		  AddDocHistory (doc, DocumentURLs[doc], 
+				 DocumentMeta[doc]->initial_url, 
+				 DocumentMeta[doc]->form_data,
+				 DocumentMeta[doc]->method);
 		}
 	      /* show the target element in all views */
 	      for (view = 1; view < 6; view++)

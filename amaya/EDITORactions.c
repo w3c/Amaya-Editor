@@ -109,7 +109,7 @@ ThotBool            isHTML;
   DocumentURLs[doc] = s;
   DocumentMeta[doc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
   DocumentMeta[doc]->form_data = NULL;
-  DocumentMeta[doc]->initial_pathname = NULL;
+  DocumentMeta[doc]->initial_url = NULL;
   DocumentMeta[doc]->method = CE_ABSOLUTE;
   DocumentMeta[doc]->put_default_name = FALSE;
   /* by default the document will be saved in XHTML */

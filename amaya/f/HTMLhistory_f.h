@@ -30,6 +30,7 @@ extern void GotoNextHTML ( Document doc,
                            View view );
 extern void AddDocHistory ( Document doc,
                             STRING url,
+                            STRING initial_url,
                             STRING form_data,
                             ClickEvent method );
 
@@ -59,6 +60,7 @@ extern void GotoNextHTML (/* Document doc,
                              View view */);
 extern void AddDocHistory (/* Document doc,
                               STRING url,
+                              STRING initial_url,
                               STRING form_data,
                               ClickEvent method */);
 

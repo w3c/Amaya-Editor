@@ -2665,6 +2665,7 @@ void                DoSaveAs ()
 	    TtaCancelLastRegisteredSequence (doc);
 	  /* add to the history the data of the previous document */
 	  AddDocHistory (doc, DocumentURLs[doc], 
+			 DocumentMeta[doc]->initial_url,
 			 DocumentMeta[doc]->form_data,
 			 DocumentMeta[doc]->method);
 	  /* change the document url */

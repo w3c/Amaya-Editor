@@ -252,7 +252,7 @@ typedef struct _GETHTMLDocument_context {
   ThotBool   local_link;
   CHAR_T*    target;
   CHAR_T*    documentname;
-  CHAR_T*    initial_pathname;
+  CHAR_T*    initial_url;
   CHAR_T*     form_data;
   ClickEvent method;
   CHAR_T*    tempdocument;
@@ -291,10 +291,10 @@ DocumentMetaDataElement *me;
       TtaFreeMemory (me->form_data);
       me->form_data = NULL;
     }
-  if (me->initial_pathname)
+  if (me->initial_url)
     {
-      TtaFreeMemory (me->initial_pathname);
-      me->initial_pathname = NULL;
+      TtaFreeMemory (me->initial_url);
+      me->initial_url = NULL;
     }
 }
 
@@ -327,7 +327,7 @@ CHAR_T*              form_data;
 	{
 	  /* compare the url */
 	  found = (!ustrcmp (documentURL, DocumentURLs[i]) ||
-		   (DocumentMeta[i]->initial_pathname && !ustrcmp (documentURL, DocumentMeta[i]->initial_pathname)));
+		   (DocumentMeta[i]->initial_url && !ustrcmp (documentURL, DocumentMeta[i]->initial_url)));
 	  /* compare the form_data */
 	  if (found && (!((!form_data && !DocumentMeta[i]->form_data) ||
 		 (form_data && DocumentMeta[i]->form_data &&
@@ -2133,13 +2133,13 @@ CHAR_T* documentname;
   contains the current copy of the remote file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Document     LoadHTMLDocument (Document doc, CHAR_T* pathname, CHAR_T* form_data, CHAR_T* initial_pathname, int method, CHAR_T* tempfile, CHAR_T* documentname, AHTHeaders *http_headers, ThotBool history)
+static Document     LoadHTMLDocument (Document doc, CHAR_T* pathname, CHAR_T* form_data, CHAR_T* initial_url, int method, CHAR_T* tempfile, CHAR_T* documentname, AHTHeaders *http_headers, ThotBool history)
 #else
-static Document     LoadHTMLDocument (doc, pathname, form_data, initial_pathname, method, tempfile, documentname, http_headers, history)
+static Document     LoadHTMLDocument (doc, pathname, form_data, initial_url, method, tempfile, documentname, http_headers, history)
 Document            doc;
 CHAR_T*             pathname;
 CHAR_T*             form_data;
-CHAR_T*             initial_pathname;
+CHAR_T*             initial_url;
 int                 method;
 CHAR_T*             tempfile;
 CHAR_T*             documentname;
@@ -2323,6 +2323,7 @@ ThotBool            history;
 		 modified */
 	      if (history && !TtaIsDocumentModified (doc))
 		AddDocHistory (doc, DocumentURLs[doc], 
+			       DocumentMeta[doc]->initial_url,
 			       DocumentMeta[doc]->form_data,
 			       DocumentMeta[doc]->method);
 	    }
@@ -2456,10 +2457,10 @@ ThotBool            history;
       else
 	DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
       DocumentMeta[newdoc]->form_data = TtaWCSdup (form_data);
-      if (initial_pathname && ustrcmp (pathname, initial_pathname))
-	DocumentMeta[newdoc]->initial_pathname = TtaWCSdup (initial_pathname);
+      if (initial_url && ustrcmp (pathname, initial_url))
+	DocumentMeta[newdoc]->initial_url = TtaWCSdup (initial_url);
       else
-	DocumentMeta[newdoc]->initial_pathname = NULL;
+	DocumentMeta[newdoc]->initial_url = NULL;
       DocumentMeta[newdoc]->method = (ClickEvent) method;
       DocumentMeta[newdoc]->put_default_name = FALSE;
       DocumentMeta[newdoc]->xmlformat = isXML;
@@ -2594,7 +2595,7 @@ void *context;
   CHAR_T* tempfile;
   CHAR_T* documentname;
   CHAR_T* form_data;
-  CHAR_T* initial_pathname;
+  CHAR_T* initial_url;
   ClickEvent method;
   Document res;
   Element el;
@@ -2617,17 +2618,17 @@ void *context;
      {
        TtaSetCursorWatch (0, 0);
 
-       /* a bit of acrobatics so that we can retain the initial_pathname
+       /* a bit of acrobatics so that we can retain the initial_url
 	  without reallocating memory */
-       initial_pathname = DocumentMeta[doc]->initial_pathname;
-       DocumentMeta[doc]->initial_pathname = NULL;
+       initial_url = DocumentMeta[doc]->initial_url;
+       DocumentMeta[doc]->initial_url = NULL;
 
        /* parse and display the document */
        res = LoadHTMLDocument (newdoc, pathname, form_data, NULL, method,
 			       tempfile, documentname, http_headers, FALSE);
 
-       /* restore the initial_pathname */
-       DocumentMeta[doc]->initial_pathname = initial_pathname;
+       /* restore the initial_url */
+       DocumentMeta[doc]->initial_url = initial_url;
 
 	W3Loading = 0;		/* loading is complete now */
 	TtaHandlePendingEvents ();
@@ -2920,7 +2921,7 @@ View                view;
 	 DocumentURLs[sourceDoc] = s;
 	 DocumentMeta[sourceDoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
 	 DocumentMeta[sourceDoc]->form_data = NULL;
-	 DocumentMeta[sourceDoc]->initial_pathname = NULL;
+	 DocumentMeta[sourceDoc]->initial_url = NULL;
 	 DocumentMeta[sourceDoc]->method = CE_ABSOLUTE;
 	 DocumentMeta[sourceDoc]->put_default_name =
 	                            DocumentMeta[document]->put_default_name;
@@ -3208,7 +3209,7 @@ void*     context;
    CHAR_T*             tempfile;
    CHAR_T*             target;
    CHAR_T*             pathname;
-   CHAR_T*             initial_pathname;
+   CHAR_T*             initial_url;
    CHAR_T*             documentname;
    CHAR_T*             form_data;
    ClickEvent          method;
@@ -3235,7 +3236,7 @@ void*     context;
    history = ctx->history;
    target = ctx->target;
    documentname = ctx->documentname;
-   initial_pathname = ctx->initial_pathname;
+   initial_url = ctx->initial_url;
    form_data = ctx->form_data;
    method = ctx->method;
    tempdocument = ctx->tempdocument;
@@ -3266,7 +3267,7 @@ void*     context;
 	   
 	   /* parse and display the document */
 	   res = LoadHTMLDocument (newdoc, pathname, form_data, 
-				   initial_pathname, method,
+				   initial_url, method,
 				   tempfile, documentname,
 				   http_headers, history);
 	   W3Loading = 0;		/* loading is complete now */
@@ -3298,10 +3299,10 @@ void*     context;
 	       else
 		 DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
 	       DocumentMeta[newdoc]->form_data = TtaWCSdup (form_data);
-	       if (ustrcmp (pathname, initial_pathname))
-		 DocumentMeta[newdoc]->initial_pathname = TtaWCSdup (initial_pathname);
+	       if (ustrcmp (pathname, initial_url))
+		 DocumentMeta[newdoc]->initial_url = TtaWCSdup (initial_url);
 	       else
-		 DocumentMeta[newdoc]->initial_pathname = NULL;
+		 DocumentMeta[newdoc]->initial_url = NULL;
 	       DocumentMeta[newdoc]->method = method;
 	       DocumentMeta[newdoc]->put_default_name = FALSE;
 	       DocumentMeta[newdoc]->xmlformat = FALSE;
@@ -3344,7 +3345,7 @@ void*     context;
 
    TtaFreeMemory (target);
    TtaFreeMemory (documentname);
-   TtaFreeMemory (initial_pathname);
+   TtaFreeMemory (initial_url);
    TtaFreeMemory (pathname);
    TtaFreeMemory (tempfile);
    TtaFreeMemory (tempdocument);
@@ -3480,6 +3481,7 @@ void               *ctx_cbf;
 	   if (history)
 	     /* record the current position in the history */
 	     AddDocHistory (newdoc, DocumentURLs[newdoc], 
+			    DocumentMeta[doc]->initial_url,
 			    DocumentMeta[newdoc]->form_data,
 			    DocumentMeta[newdoc]->method);
 	 }
@@ -3503,7 +3505,7 @@ void               *ctx_cbf;
        ctx->history = history;
        ctx->target = target;
        ctx->documentname = documentname;
-       ctx->initial_pathname = TtaWCSdup (pathname);
+       ctx->initial_url = TtaWCSdup (pathname);
        if (form_data)
           ctx->form_data = TtaWCSdup (form_data);
        else
@@ -3639,7 +3641,7 @@ void               *ctx_cbf;
      {
        if (ctx->form_data)
 	 TtaFreeMemory (ctx->form_data);
-       TtaFreeMemory (ctx->initial_pathname);
+       TtaFreeMemory (ctx->initial_url);
        if (ctx)
 	 TtaFreeMemory (ctx);
        if (cbf)

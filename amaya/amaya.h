@@ -337,7 +337,7 @@ typedef enum
 /* a record for data associated with a request */
 typedef struct _DocumentMetaDataElement
 {
-  CHAR_T*    initial_pathname;  /* if the server returns a different URL name
+  CHAR_T*    initial_url;      /* if the server returns a different URL name
 				  after a redirection, we store here the one
 				  that the browser first asked */
   CHAR_T*    form_data;        /* form data associated with a URL               */
