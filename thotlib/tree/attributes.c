@@ -1295,7 +1295,8 @@ int TtaGetAttributeKind (AttributeType attType)
   int                 attrKind = 2;
 
   UserErrorCode = 0;
-  if (attType.AttrSSchema == NULL || attType.AttrTypeNum == 0)
+  if (attType.AttrSSchema == NULL || attType.AttrTypeNum <= 0 ||
+      attType.AttrTypeNum > ((PtrSSchema)(attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_parameter);
   else
     {
