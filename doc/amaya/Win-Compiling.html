@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
 <title>
@@ -12,52 +12,30 @@ Compiling Amaya on Windows NT</title>
 <div id="head">
 <p>
 <a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"></a>
-<a href="../"><img border="0" src="../Icons/amaya.gif" alt="Amaya"></a> <a href="Manual.html"><img
-border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
+<a href="../"><img border="0" src="../Icons/amaya.gif" alt="Amaya"></a> <a
+href="Manual.html"><img border="0" src="../Icons/doc48x.gif"
+alt="Doc"></a></p>
 </div>
 
 <h1>Compiling Amaya On Windows NT</h1>
 <p style="text-align: justify">
-This is the first alpha release of Amaya running on Windows NT. We cannot
-guarantee that it runs correctly under Windows 95. It was developed with
-MSVC++. The project workspace is completely different than the Makefile
-delivered for Unix platforms. For example, we cannot run the compilers app,
-str, prs from the project workspace.</p>
-<p style="text-align: justify">
-At the present time, different components of Amaya project workspace are
-compiled independently . These components are: libwww, the Thot library,
-libjpeg, libpng (with libz) and the Amaya application. Libwww and Thot library
-are not yet sub-projects of Amaya in this release. This version of Amaya does
-not include the compilers (this will be done in the next release).</p>
-<p style="text-align: justify">
-To compile Amaya, we have first to compile the libwww project which provides
-different dynamic (.DLL) and static (.LIB) libraries corresponding to
-different protocols (http, ftp, etc.). Then we have to compile lib jpeg,
-libz/libpng and Thot library. Finally we can compile Amaya application by
-including in its workspace project C files in the Thot/amaya directory, all
-the static libraries provided by the libwww, libjpeg.lib, libpng.lib and
-LibThotEditor.lib. This release includes make files for libwww, thot library
-and Amaya application.</p>
-<p style="text-align: justify">
-To execute Amaya, move all the dynamic libraries (www*.dll) provided after
-compiling libwww in the directory containing amaya.exe file</p>
+This release of Amaya running on Windows NT  and  95 is developed with MSVC++.
+The project workspace is completely different than the Makefile delivered for
+Unix platforms. For example, we cannot run the compilers app, str, prs from
+the project workspace.</p>
 <p>
-Some of Amaya features are not yet supported under Windows:</p>
-<ul>
-<li>
-Printing, 
-<li>
-CSS dialogue (amaya supports of course CSS but the the item CSS in the menu
-styles is not connected). 
-<li>
-Spell checking (the dialogue already exists but it is not connected), 
-<li>
-Plugins, 
-<li>
-Client side image maps. 
-</ul>
-<p>
-All these features will be available in the next release.</p>
+First you have to download additional files needed to build amaya on Windows
+from <a
+href="ftp://opera.inrialpes.fr/pub/sources/amaya/amaya-compil-1.2a.ZIP">here</a>.
+Put both the source tar file and the additional files in the same directory
+and unzip them (use a Win32 tool to unzip files).</p>
+<p style="text-align: justify">
+if you use the MSVC++ 4.x,, different components of Amaya project workspace
+have to be compiled independently. These components are: libwww, the Thot
+library, libjpeg, libpng (with libz) and the Amaya application. If yopu are
+using MSVC++ 5.0 you have to dowload amaya project and build it. It includes
+all other sub-worspaces. This version of Amaya does not include the compilers
+(this will be done in the next release).</p>
 <address>
 <a href="mailto:Ramzi.Guetari@w3.org">Ramzi Guetari</a><br>
 <a href="../../Help/Webmaster">Webmaster</a><br>
