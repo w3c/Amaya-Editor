@@ -5721,8 +5721,6 @@ ThotBool*     endOfFile;
 	  NumberOfLinesRead++;
 	  NumberOfCharRead = 0;
 	}
-      else
-	NumberOfCharRead++;
     }
   return charRead;
 }
