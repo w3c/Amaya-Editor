@@ -8,8 +8,8 @@
 /*
  * This module contains editing functions for handling MathML objects.
  *
- * Author: I. Vatton
- *         R. Guetari (W3C/INRIA) - Windows routines.
+ * Authors: I. Vatton, V. Quint
+ *          R. Guetari - Windows routines.
  */
  
 /* Included headerfiles */
@@ -627,6 +627,10 @@ int                 construct;
 		     selectFirstChild, displayTableForm, mrowCreated;
 
       doc = TtaGetSelectedDocument ();
+      if (!TtaGetDocumentAccessMode (doc))
+	 /* the document is in ReadOnly mode */
+	 return;
+
       TtaGiveLastSelectedElement (doc, &last, &c2, &j);
       TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i); 
     
@@ -1620,6 +1624,10 @@ static void CreateCharStringElement (typeNum, doc)
                   leaf, lastLeaf, nextLeaf, parent, selEl;
    int            firstChar, lastChar, i, j, oldStructureChecking;
    ThotBool       nonEmptySel, done, mrowCreated, same;
+
+   if (!TtaGetDocumentAccessMode (doc))
+      /* the document is in ReadOnly mode */
+      return;
 
    done = FALSE;
    /* get the current selection */
@@ -2783,6 +2791,10 @@ void CreateMCHAR (document, view)
    CHAR_T        alphabet;
    Language      lang;
 
+   if (!TtaGetDocumentAccessMode (document))
+      /* the document is in ReadOnly mode */
+      return;
+
    if (!TtaIsSelectionEmpty ())
       return;
    TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
@@ -3263,6 +3275,10 @@ View                view;
    CHAR_T                name[50];
    int                 firstchar, lastchar, len;
    ThotBool            selBefore;
+
+   if (!TtaGetDocumentAccessMode (document))
+      /* the document is in ReadOnly mode */
+      return;
 
    /* get the first selected element */
    TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
