@@ -1088,16 +1088,20 @@ boolean		    history;
    PlainText = FALSE;
    HTMLfile = FALSE;
    if (content_type == NULL || content_type[0] == EOS)
-      /* local document or no content type from the server */
-      /* try to guess the document type after its file name extension */
+      /* no content type */
       {
-      if (IsTextName (pathname))
-	 {
-	 PlainText = TRUE;
-	 HTMLfile = FALSE;
-	 }
+      if (tempfile[0] != EOS)
+	  /* It's a document loaded from the Web */
+	  /* Let's suppose it's HTML */
+          HTMLfile = TRUE;
       else
-	 HTMLfile = TRUE;
+          /* local document */
+          /* try to guess the document type after its file name extension */
+          if (IsHTMLName (pathname))
+	     HTMLfile = TRUE;
+	  else
+	     if (!IsImageName (pathname))
+	        PlainText = TRUE;
       }
    else
       /* the server returned a content type */
