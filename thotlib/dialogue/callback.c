@@ -310,6 +310,7 @@ ThotBool CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
     case TteExit:
       break;
     default:
+	return FALSE;
       break;
     }
   return CallAction (notifyEvent, notifyEvent->event, pre, elType, element, schStruct, FALSE);
