@@ -71,12 +71,18 @@ KEY;
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 
-/* Actions table */
+#ifdef _GTK
+#include "gtk-functions.h"
+#else /* !_GTK */
 #include "appli_f.h"
+#include "input_f.h"
+#endif /* !_GTK */
+
+
+/* Actions table */
 #include "applicationapi_f.h"
 #include "context_f.h"
 #include "editcommands_f.h"
-#include "input_f.h"
 #include "memory_f.h"
 #include "message_f.h"
 #include "registry_f.h"

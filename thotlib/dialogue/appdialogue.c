@@ -55,7 +55,6 @@
 #include "absboxes_f.h"
 #include "actions_f.h"
 #include "appdialogue_f.h"
-#include "appli_f.h"
 #include "applicationapi_f.h"
 #include "boxlocate_f.h"
 #include "boxparams_f.h"
@@ -67,7 +66,13 @@
 #include "dictionary_f.h"
 #include "font_f.h"
 #include "inites_f.h"
+#ifdef _GTK
+#include "gtk-functions.h"
+#else /* !_GTK */
 #include "input_f.h"
+#include "appli_f.h"
+#endif /* !_GTK */
+
 #ifndef _WINDOWS
 #include "LiteClue_f.h"
 #include "xwindowdisplay_f.h"
