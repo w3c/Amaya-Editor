@@ -25,6 +25,9 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+RSC=rc.exe
+
 !IF  "$(CFG)" == "annotlib - Win32 Release"
 
 OUTDIR=.\Release
@@ -59,40 +62,7 @@ CLEAN :
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\annotlib" /I "..\..\annotlib\f" /I "..\..\libraptor" /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\var" /I "..\..\thotlib\include" /I "..\thotlib\internals\f" /I "..\..\..\libwww\Library\src" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\annotlib" /I "..\annotlib\f" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "__STDC__" /D "ANNOTATIONS" /D "WIN32" /D "_WINDOWS" /D "_I18N_" /D "RAPTOR_RDF_PARSER" /Fp"$(INTDIR)\annotlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\annotlib.bsc" 
 BSC32_SBRS= \
@@ -152,8 +122,33 @@ CLEAN :
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\annotlib" /I "..\..\annotlib\f" /I "..\..\libraptor" /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\var" /I "..\..\thotlib\include" /I "..\thotlib\internals\f" /I "..\..\..\libwww\Library\src" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\annotlib" /I "..\annotlib\f" /D "ANNOT_ON_ANNOT" /D "__STDC__" /D "ANNOTATIONS" /D "_I18N_" /D "RAPTOR_RDF_PARSER" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\annotlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
+BSC32=bscmake.exe
+BSC32_FLAGS=/nologo /o"$(OUTDIR)\annotlib.bsc" 
+BSC32_SBRS= \
+	
+LIB32=link.exe -lib
+LIB32_FLAGS=/nologo /out:"..\annotlib.lib" 
+LIB32_OBJS= \
+	"$(INTDIR)\AHTrdf2annot.obj" \
+	"$(INTDIR)\AnnotAPP.obj" \
+	"$(INTDIR)\ANNOTevent.obj" \
+	"$(INTDIR)\ANNOTfiles.obj" \
+	"$(INTDIR)\ANNOTlink.obj" \
+	"$(INTDIR)\ANNOTmenu.obj" \
+	"$(INTDIR)\ANNOTschemas.obj" \
+	"$(INTDIR)\ANNOTtools.obj" \
+	"..\libThotEditor.lib" \
+	"..\libThotTable.lib" \
+	"..\libwww.lib" \
+	"..\libraptor.lib"
+
+"..\annotlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
+    $(LIB32) @<<
+  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
+<<
+
+!ENDIF 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -185,34 +180,6 @@ CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\annotlib" /I "..\..\annotlib\f" 
    $(CPP_PROJ) $< 
 <<
 
-RSC=rc.exe
-BSC32=bscmake.exe
-BSC32_FLAGS=/nologo /o"$(OUTDIR)\annotlib.bsc" 
-BSC32_SBRS= \
-	
-LIB32=link.exe -lib
-LIB32_FLAGS=/nologo /out:"..\annotlib.lib" 
-LIB32_OBJS= \
-	"$(INTDIR)\AHTrdf2annot.obj" \
-	"$(INTDIR)\AnnotAPP.obj" \
-	"$(INTDIR)\ANNOTevent.obj" \
-	"$(INTDIR)\ANNOTfiles.obj" \
-	"$(INTDIR)\ANNOTlink.obj" \
-	"$(INTDIR)\ANNOTmenu.obj" \
-	"$(INTDIR)\ANNOTschemas.obj" \
-	"$(INTDIR)\ANNOTtools.obj" \
-	"..\libThotEditor.lib" \
-	"..\libThotTable.lib" \
-	"..\libwww.lib" \
-	"..\libraptor.lib"
-
-"..\annotlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
-    $(LIB32) @<<
-  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
-<<
-
-!ENDIF 
-
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"
 !IF EXISTS("annotlib.dep")
@@ -228,24 +195,24 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "annotlib - Win32 Release"
 
 "Compilers - Win32 Release" : 
-   cd "\src\Amaya\Windows\Compilers"
+   cd "\Amaya\Windows\Compilers"
    $(MAKE) /$(MAKEFLAGS) /F .\Compilers.mak CFG="Compilers - Win32 Release" 
    cd "..\annotlib"
 
 "Compilers - Win32 ReleaseCLEAN" : 
-   cd "\src\Amaya\Windows\Compilers"
+   cd "\Amaya\Windows\Compilers"
    $(MAKE) /$(MAKEFLAGS) /F .\Compilers.mak CFG="Compilers - Win32 Release" RECURSE=1 CLEAN 
    cd "..\annotlib"
 
 !ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
 
 "Compilers - Win32 Debug" : 
-   cd "\src\Amaya\Windows\Compilers"
+   cd "\Amaya\Windows\Compilers"
    $(MAKE) /$(MAKEFLAGS) /F .\Compilers.mak CFG="Compilers - Win32 Debug" 
    cd "..\annotlib"
 
 "Compilers - Win32 DebugCLEAN" : 
-   cd "\src\Amaya\Windows\Compilers"
+   cd "\Amaya\Windows\Compilers"
    $(MAKE) /$(MAKEFLAGS) /F .\Compilers.mak CFG="Compilers - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\annotlib"
 
@@ -254,24 +221,24 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "annotlib - Win32 Release"
 
 "libThotEditor - Win32 Release" : 
-   cd "\src\Amaya\Windows\LibThotEditor"
+   cd "\Amaya\Windows\LibThotEditor"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotEditor.mak CFG="libThotEditor - Win32 Release" 
    cd "..\annotlib"
 
 "libThotEditor - Win32 ReleaseCLEAN" : 
-   cd "\src\Amaya\Windows\LibThotEditor"
+   cd "\Amaya\Windows\LibThotEditor"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotEditor.mak CFG="libThotEditor - Win32 Release" RECURSE=1 CLEAN 
    cd "..\annotlib"
 
 !ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
 
 "libThotEditor - Win32 Debug" : 
-   cd "\src\Amaya\Windows\LibThotEditor"
+   cd "\Amaya\Windows\LibThotEditor"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotEditor.mak CFG="libThotEditor - Win32 Debug" 
    cd "..\annotlib"
 
 "libThotEditor - Win32 DebugCLEAN" : 
-   cd "\src\Amaya\Windows\LibThotEditor"
+   cd "\Amaya\Windows\LibThotEditor"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotEditor.mak CFG="libThotEditor - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\annotlib"
 
@@ -280,24 +247,24 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "annotlib - Win32 Release"
 
 "libThotTable - Win32 Release" : 
-   cd "\src\Amaya\Windows\libThotTable"
+   cd "\Amaya\Windows\libThotTable"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Release" 
    cd "..\annotlib"
 
 "libThotTable - Win32 ReleaseCLEAN" : 
-   cd "\src\Amaya\Windows\libThotTable"
+   cd "\Amaya\Windows\libThotTable"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Release" RECURSE=1 CLEAN 
    cd "..\annotlib"
 
 !ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
 
 "libThotTable - Win32 Debug" : 
-   cd "\src\Amaya\Windows\libThotTable"
+   cd "\Amaya\Windows\libThotTable"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug" 
    cd "..\annotlib"
 
 "libThotTable - Win32 DebugCLEAN" : 
-   cd "\src\Amaya\Windows\libThotTable"
+   cd "\Amaya\Windows\libThotTable"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\annotlib"
 
@@ -306,24 +273,24 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "annotlib - Win32 Release"
 
 "libwww - Win32 Release" : 
-   cd "\src\Amaya\Windows\libwww"
+   cd "\Amaya\Windows\libwww"
    $(MAKE) /$(MAKEFLAGS) /F .\libwww.mak CFG="libwww - Win32 Release" 
    cd "..\annotlib"
 
 "libwww - Win32 ReleaseCLEAN" : 
-   cd "\src\Amaya\Windows\libwww"
+   cd "\Amaya\Windows\libwww"
    $(MAKE) /$(MAKEFLAGS) /F .\libwww.mak CFG="libwww - Win32 Release" RECURSE=1 CLEAN 
    cd "..\annotlib"
 
 !ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
 
 "libwww - Win32 Debug" : 
-   cd "\src\Amaya\Windows\libwww"
+   cd "\Amaya\Windows\libwww"
    $(MAKE) /$(MAKEFLAGS) /F .\libwww.mak CFG="libwww - Win32 Debug" 
    cd "..\annotlib"
 
 "libwww - Win32 DebugCLEAN" : 
-   cd "\src\Amaya\Windows\libwww"
+   cd "\Amaya\Windows\libwww"
    $(MAKE) /$(MAKEFLAGS) /F .\libwww.mak CFG="libwww - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\annotlib"
 
@@ -332,24 +299,24 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "annotlib - Win32 Release"
 
 "libraptor - Win32 Release" : 
-   cd "\src\Amaya\Windows\libraptor"
+   cd "\Amaya\Windows\libraptor"
    $(MAKE) /$(MAKEFLAGS) /F .\libraptor.mak CFG="libraptor - Win32 Release" 
    cd "..\annotlib"
 
 "libraptor - Win32 ReleaseCLEAN" : 
-   cd "\src\Amaya\Windows\libraptor"
+   cd "\Amaya\Windows\libraptor"
    $(MAKE) /$(MAKEFLAGS) /F .\libraptor.mak CFG="libraptor - Win32 Release" RECURSE=1 CLEAN 
    cd "..\annotlib"
 
 !ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
 
 "libraptor - Win32 Debug" : 
-   cd "\src\Amaya\Windows\libraptor"
+   cd "\Amaya\Windows\libraptor"
    $(MAKE) /$(MAKEFLAGS) /F .\libraptor.mak CFG="libraptor - Win32 Debug" 
    cd "..\annotlib"
 
 "libraptor - Win32 DebugCLEAN" : 
-   cd "\src\Amaya\Windows\libraptor"
+   cd "\Amaya\Windows\libraptor"
    $(MAKE) /$(MAKEFLAGS) /F .\libraptor.mak CFG="libraptor - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\annotlib"
 

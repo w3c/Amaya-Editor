@@ -25,6 +25,9 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+RSC=rc.exe
+
 !IF  "$(CFG)" == "libwww - Win32 Release"
 
 OUTDIR=.\..
@@ -48,7 +51,6 @@ CLEAN :"zlib - Win32 ReleaseCLEAN"
 !ELSE 
 CLEAN :
 !ENDIF 
-	-@erase "$(INTDIR)\hashtable.obj"
 	-@erase "$(INTDIR)\HTAABrow.obj"
 	-@erase "$(INTDIR)\HTAAUtil.obj"
 	-@erase "$(INTDIR)\HTAccess.obj"
@@ -129,7 +131,6 @@ CLEAN :
 	-@erase "$(INTDIR)\HTProfil.obj"
 	-@erase "$(INTDIR)\HTProt.obj"
 	-@erase "$(INTDIR)\HTProxy.obj"
-	-@erase "$(INTDIR)\HTRDF.obj"
 	-@erase "$(INTDIR)\HTReader.obj"
 	-@erase "$(INTDIR)\HTReqMan.obj"
 	-@erase "$(INTDIR)\HTResponse.obj"
@@ -175,40 +176,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\..\libwww\Library\src" /I "..\..\libpng\zlib" /D "NDEBUG" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "NDEBUG" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libwww.bsc" 
 BSC32_SBRS= \
@@ -216,7 +184,6 @@ BSC32_SBRS= \
 LIB32=link.exe -lib
 LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libwww.lib" 
 LIB32_OBJS= \
-	"$(INTDIR)\hashtable.obj" \
 	"$(INTDIR)\HTAABrow.obj" \
 	"$(INTDIR)\HTAAUtil.obj" \
 	"$(INTDIR)\HTAccess.obj" \
@@ -297,7 +264,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\HTProfil.obj" \
 	"$(INTDIR)\HTProt.obj" \
 	"$(INTDIR)\HTProxy.obj" \
-	"$(INTDIR)\HTRDF.obj" \
 	"$(INTDIR)\HTReader.obj" \
 	"$(INTDIR)\HTReqMan.obj" \
 	"$(INTDIR)\HTResponse.obj" \
@@ -326,14 +292,14 @@ LIB32_OBJS= \
 	"$(INTDIR)\HTWriter.obj" \
 	"$(INTDIR)\HTWSRC.obj" \
 	"$(INTDIR)\HTWWWStr.obj" \
-	"$(INTDIR)\HTXML.obj" \
 	"$(INTDIR)\HTXParse.obj" \
 	"$(INTDIR)\HTZip.obj" \
 	"$(INTDIR)\md5.obj" \
 	"$(INTDIR)\SGML.obj" \
+	"$(INTDIR)\xmltok.obj" \
 	"$(INTDIR)\xmlparse.obj" \
 	"$(INTDIR)\xmlrole.obj" \
-	"$(INTDIR)\xmltok.obj" \
+	"$(INTDIR)\HTXML.obj" \
 	"$(OUTDIR)\zlib.lib"
 
 "$(OUTDIR)\libwww.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
@@ -364,7 +330,6 @@ CLEAN :"zlib - Win32 DebugCLEAN"
 !ELSE 
 CLEAN :
 !ENDIF 
-	-@erase "$(INTDIR)\hashtable.obj"
 	-@erase "$(INTDIR)\HTAABrow.obj"
 	-@erase "$(INTDIR)\HTAAUtil.obj"
 	-@erase "$(INTDIR)\HTAccess.obj"
@@ -445,7 +410,6 @@ CLEAN :
 	-@erase "$(INTDIR)\HTProfil.obj"
 	-@erase "$(INTDIR)\HTProt.obj"
 	-@erase "$(INTDIR)\HTProxy.obj"
-	-@erase "$(INTDIR)\HTRDF.obj"
 	-@erase "$(INTDIR)\HTReader.obj"
 	-@erase "$(INTDIR)\HTReqMan.obj"
 	-@erase "$(INTDIR)\HTResponse.obj"
@@ -491,40 +455,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
-CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "_I18N_" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
+CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "_I18N_" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libwww.bsc" 
 BSC32_SBRS= \
@@ -532,7 +463,6 @@ BSC32_SBRS= \
 LIB32=link.exe -lib
 LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libwww.lib" 
 LIB32_OBJS= \
-	"$(INTDIR)\hashtable.obj" \
 	"$(INTDIR)\HTAABrow.obj" \
 	"$(INTDIR)\HTAAUtil.obj" \
 	"$(INTDIR)\HTAccess.obj" \
@@ -613,7 +543,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\HTProfil.obj" \
 	"$(INTDIR)\HTProt.obj" \
 	"$(INTDIR)\HTProxy.obj" \
-	"$(INTDIR)\HTRDF.obj" \
 	"$(INTDIR)\HTReader.obj" \
 	"$(INTDIR)\HTReqMan.obj" \
 	"$(INTDIR)\HTResponse.obj" \
@@ -642,14 +571,14 @@ LIB32_OBJS= \
 	"$(INTDIR)\HTWriter.obj" \
 	"$(INTDIR)\HTWSRC.obj" \
 	"$(INTDIR)\HTWWWStr.obj" \
-	"$(INTDIR)\HTXML.obj" \
 	"$(INTDIR)\HTXParse.obj" \
 	"$(INTDIR)\HTZip.obj" \
 	"$(INTDIR)\md5.obj" \
 	"$(INTDIR)\SGML.obj" \
+	"$(INTDIR)\xmltok.obj" \
 	"$(INTDIR)\xmlparse.obj" \
 	"$(INTDIR)\xmlrole.obj" \
-	"$(INTDIR)\xmltok.obj" \
+	"$(INTDIR)\HTXML.obj" \
 	"$(OUTDIR)\zlib.lib"
 
 "$(OUTDIR)\libwww.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
@@ -658,6 +587,36 @@ LIB32_OBJS= \
 <<
 
 !ENDIF 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"
@@ -674,34 +633,28 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "libwww - Win32 Release"
 
 "zlib - Win32 Release" : 
-   cd "\src\Amaya\Windows\zlib"
+   cd "\Amaya\Windows\zlib"
    $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Release" 
    cd "..\libwww"
 
 "zlib - Win32 ReleaseCLEAN" : 
-   cd "\src\Amaya\Windows\zlib"
+   cd "\Amaya\Windows\zlib"
    $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Release" RECURSE=1 CLEAN 
    cd "..\libwww"
 
 !ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
 
 "zlib - Win32 Debug" : 
-   cd "\src\Amaya\Windows\zlib"
+   cd "\Amaya\Windows\zlib"
    $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Debug" 
    cd "..\libwww"
 
 "zlib - Win32 DebugCLEAN" : 
-   cd "\src\Amaya\Windows\zlib"
+   cd "\Amaya\Windows\zlib"
    $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\libwww"
 
 !ENDIF 
-
-SOURCE=..\..\..\Libwww\Modules\Expat\Xmlparse\hashtable.c
-
-"$(INTDIR)\hashtable.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
 
 SOURCE=..\..\..\libwww\Library\src\HTAABrow.c
 
@@ -989,7 +942,7 @@ SOURCE=..\..\..\libwww\Library\src\HTInit.c
 
 !IF  "$(CFG)" == "libwww - Win32 Release"
 
-CPP_SWITCHES=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\..\libwww\Library\src" /I "..\..\libpng\zlib" /D "NDEBUG" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_SWITCHES=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "NDEBUG" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 "$(INTDIR)\HTInit.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) @<<
@@ -999,7 +952,7 @@ CPP_SWITCHES=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\
 
 !ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
 
-CPP_SWITCHES=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\libpng\zlib" /I "..\..\..\..\libwww\Library\src" /D "_I18N_" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_SWITCHES=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\..\libwww\Library\src" /D "_I18N_" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 "$(INTDIR)\HTInit.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) @<<
@@ -1201,12 +1154,6 @@ SOURCE=..\..\..\libwww\Library\src\HTProxy.c
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\..\Libwww\Library\Src\HTRDF.c
-
-"$(INTDIR)\HTRDF.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
 SOURCE=..\..\..\libwww\Library\src\HTReader.c
 
 "$(INTDIR)\HTReader.obj" : $(SOURCE) "$(INTDIR)"
@@ -1375,7 +1322,7 @@ SOURCE=..\..\..\libwww\Library\src\HTWWWStr.c
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\..\Libwww\Library\Src\HTXML.c
+SOURCE=..\..\..\libwww\Library\src\HTXML.c
 
 "$(INTDIR)\HTXML.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1405,23 +1352,77 @@ SOURCE=..\..\..\libwww\Library\src\SGML.c
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\..\Libwww\Modules\Expat\Xmlparse\xmlparse.c
+SOURCE=..\..\..\libwww\modules\expat\lib\xmlparse.c
+
+!IF  "$(CFG)" == "libwww - Win32 Release"
+
+CPP_SWITCHES=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "NDEBUG" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "WIN32" /D "_WINDOWS" /D "COMPILED_FROM_DSP" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 "$(INTDIR)\xmlparse.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
+	$(CPP) @<<
+  $(CPP_SWITCHES) $(SOURCE)
+<<
 
 
-SOURCE=..\..\..\Libwww\Modules\Expat\Xmltok\xmlrole.c
+!ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
+
+CPP_SWITCHES=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "_I18N_" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "COMPILED_FROM_DSP" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+"$(INTDIR)\xmlparse.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) @<<
+  $(CPP_SWITCHES) $(SOURCE)
+<<
+
+
+!ENDIF 
+
+SOURCE=..\..\..\libwww\modules\expat\lib\xmlrole.c
+
+!IF  "$(CFG)" == "libwww - Win32 Release"
+
+CPP_SWITCHES=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "NDEBUG" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "WIN32" /D "_WINDOWS" /D "COMPILED_FROM_DSP" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 "$(INTDIR)\xmlrole.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
+	$(CPP) @<<
+  $(CPP_SWITCHES) $(SOURCE)
+<<
 
 
-SOURCE=..\..\..\Libwww\Modules\Expat\Xmltok\xmltok.c
+!ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
+
+CPP_SWITCHES=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "_I18N_" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "COMPILED_FROM_DSP" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+"$(INTDIR)\xmlrole.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) @<<
+  $(CPP_SWITCHES) $(SOURCE)
+<<
+
+
+!ENDIF 
+
+SOURCE=..\..\..\libwww\modules\expat\lib\xmltok.c
+
+!IF  "$(CFG)" == "libwww - Win32 Release"
+
+CPP_SWITCHES=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "NDEBUG" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "WIN32" /D "_WINDOWS" /D "COMPILED_FROM_DSP" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 "$(INTDIR)\xmltok.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
+	$(CPP) @<<
+  $(CPP_SWITCHES) $(SOURCE)
+<<
 
+
+!ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
+
+CPP_SWITCHES=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "_I18N_" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "COMPILED_FROM_DSP" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+"$(INTDIR)\xmltok.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) @<<
+  $(CPP_SWITCHES) $(SOURCE)
+<<
+
+
+!ENDIF 
 
 
 !ENDIF 
