@@ -1,20 +1,11 @@
-
-/* -- Copyright (c) 1996 Inria  -- All rights reserved. -- */
-
-/* ======================================================================= */
-/* |                                                                    | */
-/* |                           Projet THOT                              | */
-/* |                                                                    | */
-/* |    Le programme TRA compile un schema de traduction,               | */
-/* |    contenu dans un fichier de type .SCH.                           | */
-/* |    TRA est dirige' par la grammaire du langage de traduction       | */
-/* |    contenue, sous forme codee, dans le fichier TRANS.GRM.          | */
-/* |    Ce fichier .GRM est produit par le programme GRM.               | */
-/* |    TRA produit un fichier de type .TRA qui sera ensuite utilise    | */
-/* |    par le traducteur, pour guider sa traduction.                   | */
-/* |                                                                    | */
-/* ======================================================================= */
-
+/*
+   Ce programme compile un schema de traduction contenu dans un fichier
+   de type .T
+   Il est dirige' par la grammaire du langage de 
+   contenue, sous forme codee, dans le fichier TRANS.GRM.
+   Il produit un fichier de type .TRA qui sera ensuite utilise'
+   par le traducteur, pour guider sa traduction.
+ */
 
 #include "thot_sys.h"
 #include "TRANS.h"
@@ -3188,7 +3179,7 @@ char              **argv;
 		       /* ecrit le schema compile' dans le fichier de sortie */
 		       /* le directory des schemas est le directory courant */
 		       strcat (srceFileName, ".TRA");
-		       fileOK = WriteTranslationSchemas (srceFileName, pTSchema, pSSchema);
+		       fileOK = WriteTranslationSchema (srceFileName, pTSchema, pSSchema);
 		       if (!fileOK)
 			  TtaDisplayMessage (FATAL, TtaGetMessage(TRA, CANT_WRITE), srceFileName);
 		    }

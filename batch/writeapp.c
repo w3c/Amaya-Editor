@@ -14,7 +14,7 @@
 #include "appevents_tv.h"
 
 extern PtrEventsSet pAppli;
-extern PtrSSchema pSSchema;
+extern PtrSSchema   pSSchema;
 extern char        *RegisteredAppEvents[];
 extern PtrAppName   SchemasUsed;
 extern PtrAppName   MenusUsed;
@@ -25,14 +25,12 @@ extern PtrAppMenu   DocWindowMenus;
 extern PtrAppDocType DocTypeMenus;
 
 static FILE        *AppFile;
-#define APP_NOOPCHAR "NoOp"
-
 
 #include "platform_f.h"
 #include "memory_f.h"
 
 /* ---------------------------------------------------------------------- */
-/* |   WriteIncludes writes Thot includes.      		        | */
+/* |   WriteIncludes writes include files 	     		        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static void         WriteIncludes (char *fname, FILE * file)
@@ -44,7 +42,7 @@ FILE               *file;
 {
    PtrAppName          menuAction;
 
-   fprintf (file, "/* Included headerfiles */\n");
+   fprintf (file, "/* Included files */\n");
    fprintf (file, "#include \"thot_gui.h\"\n");
    fprintf (file, "#include \"thot_sys.h\"\n");
    fprintf (file, "#include \"application.h\"\n");
@@ -347,7 +345,7 @@ PtrEventsSet  pAppli;
 
 
 /* ---------------------------------------------------------------------- */
-/* |                                                                    | */
+/* |    WriteActionList                                                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static void         WriteActionList (char *fname)
@@ -395,7 +393,7 @@ char               *fname;
 	fprintf (actionFile, "#ifdef __STDC__\n");
 	strcpy (s, "#else /* __STDC__*/\n");
 	fprintf (AppFile, "extern ");
-	if (strcmp (action->ActName, APP_NOOPCHAR))
+	if (strcmp (action->ActName, "NoAction"))
 	  {
 	     /* Output the data to the actions-file */
 	     if (action->ActPre)
@@ -504,7 +502,7 @@ char               *fname;
 		   }
 	     fprintf (actionFile, s);
 	     fprintf (actionFile, "#endif /* __STDC__*/\n{\n");
-	     fprintf (actionFile, "  /* This function has to be written */\n");
+	     fprintf (actionFile, "  /* code to be written */\n");
 	     if (action->ActPre)
 		fprintf (actionFile, "  return False; /* let Thot perform normal operation */\n");
 	     fprintf (actionFile, "}\n\n");
@@ -518,7 +516,7 @@ char               *fname;
    while (action != NULL)
      {
 	fprintf (AppFile, "extern ");
-	if (strcmp (action->ActName, APP_NOOPCHAR))
+	if (strcmp (action->ActName, "NoAction"))
 	  {
 	     /* Output the data to the actions-file */
 	     if (action->ActPre)
@@ -780,12 +778,12 @@ char               *fname;
 
 
 /* ---------------------------------------------------------------------- */
-/* |                                                                    | */
+/* |    WriteIncludeFile                                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         WriteDotHFile (FILE * dotHFile, FILE * dialogueFile)
+static void         WriteIncludeFile (FILE * dotHFile, FILE * dialogueFile)
 #else  /* __STDC__ */
-static void         WriteDotHFile (dotHFile, dialogueFile)
+static void         WriteIncludeFile (dotHFile, dialogueFile)
 FILE               *dotHFile;
 FILE               *dialogueFile;
 
@@ -866,7 +864,7 @@ PtrEventsSet        pAppli;
      {
 	dotHFile = fopen ("EDITOR.h", "w");
 	infoFILE = fopen ("EDITORdialogue", "w");
-	WriteDotHFile (dotHFile, infoFILE);
+	WriteIncludeFile (dotHFile, infoFILE);
 	fclose (infoFILE);
 	fclose (dotHFile);
 	if (!ThotFile_exist ("logo.xpm"))

@@ -1,19 +1,11 @@
-
-/* -- Copyright (c) 1996 Inria -- All rights reserved -- */
-
-/* ====================================================================== */
-/* |                                                                    | */
-/* |                           Projet THOT                              | */
-/* |                                                                    | */
-/* |    Le programme STR compile un schema de structure, contenu dans   | */
-/* |    un fichier de type .S                                           | */
-/* |    STR est dirige' par la grammaire du langage de structure        | */
-/* |    contenue, sous forme codee, dans le fichier STRUCT.GRM.         | */
-/* |    Ce fichier .GRM est produit par le programme GRM.               | */
-/* |    STR produit un fichier de type .STR qui sera ensuite utilise'   | */
-/* |    par l'editeur Thot.						| */
-/* |                                                                    | */
-/* ====================================================================== */
+/*
+   Ce programme compile un schema de structure contenu dans un fichier
+   de type .S.
+   Il est dirige' par la grammaire du langage de structure
+   contenue, sous forme codee, dans le fichier STRUCT.GRM.
+   Il produit un fichier de type .STR qui sera ensuite utilise'
+   par l'editeur Thot.
+ */
 
 #include "thot_sys.h"
 #include "STRUCT.h"

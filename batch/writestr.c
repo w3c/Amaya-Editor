@@ -1,17 +1,7 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-/* ======================================================================= */
-/* |                                                                    | */
-/* |                           Projet THOT                              | */
-/* |                                                                    | */
-/* |    Ce module sauve un schema de structure compile'.                | */
-/* |                                                                    | */
-/* |                                                                    | */
-/* |                    V. Quint        Juin 1984                       | */
-/* |                                                                    | */
-/* ======================================================================= */
-
+/*
+   Ce module sauve dans un fichier un schema de structure qui a ete compile'
+   en memoire.
+ */
 
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -25,8 +15,11 @@ static BinFile      outfile;
 #include "fileaccess_f.h"
 #include "writestr_f.h"
 
-/* retourne un nombre entier qui sera utilise comme un identificateur */
-/* unique */
+/* ---------------------------------------------------------------------- */
+/* |	UniqueIdent	retourne un nombre entier qui sera utilise	| */
+/* |	comme un identificateur unique du schema compile'.		| */
+/* ---------------------------------------------------------------------- */
+
 #ifdef __STDC__
 int                 UniqueIdent ()
 
@@ -37,13 +30,15 @@ int                 UniqueIdent ()
 {
    int                 r;
 
-   /* heure en secondes (nombre aleatoire) */
+   /* l'heure en secondes est considere'e comme un nombre aleatoire */
    r = time (NULL);
    return (r % 65536);
 }
 
 
-/* WriteShort      ecrit l'entier n dans le fichier .STR */
+/* ---------------------------------------------------------------------- */
+/* |	WriteShort      ecrit l'entier n				| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                WriteShort (int n)
 
@@ -54,13 +49,14 @@ int                 n;
 #endif /* __STDC__ */
 
 {
-
    BIOwriteByte (outfile, (char) (n / 256));
    BIOwriteByte (outfile, (char) (n % 256));
 }
 
 
-/* WriteSignedShort  ecrit l'entier signe' n dans le fichier .STR */
+/* ---------------------------------------------------------------------- */
+/* |	WriteSignedShort  ecrit l'entier signe' n			| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                WriteSignedShort (int n)
 
@@ -71,7 +67,6 @@ int                 n;
 #endif /* __STDC__ */
 
 {
-
    if (n >= 0)
       WriteShort (n);
    else
@@ -79,28 +74,31 @@ int                 n;
 }
 
 
-/* wrNom                ecrit le nom n dans le fichier .STR */
+/* ---------------------------------------------------------------------- */
+/* |	WriteName       ecrit le nom name				| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                wrNom (Name n)
+void                WriteName (Name name)
 
 #else  /* __STDC__ */
-void                wrNom (n)
-Name                 n;
+void                WriteName (name)
+Name                 name;
 
 #endif /* __STDC__ */
 
 {
-   int                 k;
+   int                 i;
 
-
-   k = 0;
+   i = 0;
    do
-	BIOwriteByte (outfile, n[k++]);
-   while (n[k - 1] != '\0');
+	BIOwriteByte (outfile, name[i++]);
+   while (name[i - 1] != '\0');
 }
 
 
-/* WriteBoolean       ecrit le booleen b dans le fichier .STR */
+/* ---------------------------------------------------------------------- */
+/* |	WriteBoolean       ecrit le booleen b dans le fichier		| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                WriteBoolean (boolean b)
 
@@ -111,7 +109,6 @@ boolean             b;
 #endif /* __STDC__ */
 
 {
-
    if (b)
       BIOwriteByte (outfile, '\1');
    else
@@ -119,19 +116,21 @@ boolean             b;
 }
 
 
-/* WriteAttributeType   ecrit le type d'attribut T dans le fichier .STR */
+/* ---------------------------------------------------------------------- */
+/* |	WriteAttributeType   ecrit un type d'attribut			| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                WriteAttributeType (AttribType T)
+void                WriteAttributeType (AttribType typ)
 
 #else  /* __STDC__ */
-void                WriteAttributeType (T)
-AttribType        T;
+void                WriteAttributeType (typ)
+AttribType        typ;
 
 #endif /* __STDC__ */
 
 {
 
-   switch (T)
+   switch (typ)
 	 {
 	    case AtNumAttr:
 	       BIOwriteByte (outfile, C_INT_ATTR);
@@ -146,23 +145,23 @@ AttribType        T;
 	       BIOwriteByte (outfile, C_ENUM_ATTR);
 	       break;
 	 }
-
 }
 
 
-/* WriteConstructor       ecrit le constructeur C dans le fichier .STR */
+/* ---------------------------------------------------------------------- */
+/* |	WriteConstructor       ecrit un constructeur			| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                WriteConstructor (RConstruct C)
+void                WriteConstructor (RConstruct constr)
 
 #else  /* __STDC__ */
-void                WriteConstructor (C)
-RConstruct        C;
+void                WriteConstructor (constr)
+RConstruct        constr;
 
 #endif /* __STDC__ */
 
 {
-
-   switch (C)
+   switch (constr)
 	 {
 	    case CsIdentity:
 	       BIOwriteByte (outfile, C_IDENTITY_CONSTR);
@@ -198,23 +197,23 @@ RConstruct        C;
 	       BIOwriteByte (outfile, C_EXTENS_CONSTR);
 	       break;
 	 }
-
 }
 
 
-/* WriteBasicType   ecrit le type de base T dans le fichier .STR */
+/* ---------------------------------------------------------------------- */
+/* |	WriteBasicType   ecrit un type de base				| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                WriteBasicType (BasicType T)
+void                WriteBasicType (BasicType typ)
 
 #else  /* __STDC__ */
-void                WriteBasicType (T)
-BasicType          T;
+void                WriteBasicType (typ)
+BasicType          typ;
 
 #endif /* __STDC__ */
 
 {
-
-   switch (T)
+   switch (typ)
 	 {
 	    case CharString:
 	       BIOwriteByte (outfile, C_CHAR_STRING);
@@ -238,96 +237,96 @@ BasicType          T;
 	       BIOwriteByte (outfile, C_UNUSED);
 	       break;
 	 }
-
 }
 
 
-/*  wrRegle     ecrit une regle de structure dans le fichier .STR */
+/* ---------------------------------------------------------------------- */
+/* |	WriteRule     ecrit une regle de structure			| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrRegle (SRule * pRe1)
+static void         WriteRule (SRule * pSRule)
 
 #else  /* __STDC__ */
-static void         wrRegle (pRe1)
-SRule              *pRe1;
+static void         WriteRule (pSRule)
+SRule              *pSRule;
 
 #endif /* __STDC__ */
 
 {
    int                 j;
 
-   wrNom (pRe1->SrName);
-   WriteShort (pRe1->SrNDefAttrs);
-   for (j = 1; j <= pRe1->SrNDefAttrs; j++)
-      WriteShort (pRe1->SrDefAttr[j - 1]);
-   for (j = 1; j <= pRe1->SrNDefAttrs; j++)
-      WriteSignedShort (pRe1->SrDefAttrValue[j - 1]);
-   for (j = 1; j <= pRe1->SrNDefAttrs; j++)
-      WriteBoolean (pRe1->SrDefAttrModif[j - 1]);
-   WriteShort (pRe1->SrNLocalAttrs);
-   for (j = 1; j <= pRe1->SrNLocalAttrs; j++)
-      WriteShort (pRe1->SrLocalAttr[j - 1]);
-   for (j = 1; j <= pRe1->SrNLocalAttrs; j++)
-      WriteBoolean (pRe1->SrRequiredAttr[j - 1]);
-   WriteBoolean (pRe1->SrAssocElem);
-   WriteBoolean (pRe1->SrParamElem);
-   WriteBoolean (pRe1->SrUnitElem);
-   WriteBoolean (pRe1->SrRecursive);	/* SrRecursDone */
-   WriteBoolean (pRe1->SrExportedElem);
-   if (pRe1->SrExportedElem)
+   WriteName (pSRule->SrName);
+   WriteShort (pSRule->SrNDefAttrs);
+   for (j = 0; j < pSRule->SrNDefAttrs; j++)
+      WriteShort (pSRule->SrDefAttr[j]);
+   for (j = 0; j < pSRule->SrNDefAttrs; j++)
+      WriteSignedShort (pSRule->SrDefAttrValue[j]);
+   for (j = 0; j < pSRule->SrNDefAttrs; j++)
+      WriteBoolean (pSRule->SrDefAttrModif[j]);
+   WriteShort (pSRule->SrNLocalAttrs);
+   for (j = 0; j < pSRule->SrNLocalAttrs; j++)
+      WriteShort (pSRule->SrLocalAttr[j]);
+   for (j = 0; j < pSRule->SrNLocalAttrs; j++)
+      WriteBoolean (pSRule->SrRequiredAttr[j]);
+   WriteBoolean (pSRule->SrAssocElem);
+   WriteBoolean (pSRule->SrParamElem);
+   WriteBoolean (pSRule->SrUnitElem);
+   WriteBoolean (pSRule->SrRecursive);
+   WriteBoolean (pSRule->SrExportedElem);
+   if (pSRule->SrExportedElem)
      {
-	WriteShort (pRe1->SrExportContent);
-	wrNom (pRe1->SrNatExpContent);
+	WriteShort (pSRule->SrExportContent);
+	WriteName (pSRule->SrNatExpContent);
      }
-   WriteShort (pRe1->SrFirstExcept);
-   WriteShort (pRe1->SrLastExcept);
-   WriteShort (pRe1->SrNInclusions);
-   for (j = 1; j <= pRe1->SrNInclusions; j++)
-      WriteShort (pRe1->SrInclusion[j - 1]);
-   WriteShort (pRe1->SrNExclusions);
-   for (j = 1; j <= pRe1->SrNExclusions; j++)
-      WriteShort (pRe1->SrExclusion[j - 1]);
-   WriteBoolean (pRe1->SrRefImportedDoc);
-   WriteConstructor (pRe1->SrConstruct);
-   switch (pRe1->SrConstruct)
+   WriteShort (pSRule->SrFirstExcept);
+   WriteShort (pSRule->SrLastExcept);
+   WriteShort (pSRule->SrNInclusions);
+   for (j = 0; j < pSRule->SrNInclusions; j++)
+      WriteShort (pSRule->SrInclusion[j]);
+   WriteShort (pSRule->SrNExclusions);
+   for (j = 0; j < pSRule->SrNExclusions; j++)
+      WriteShort (pSRule->SrExclusion[j]);
+   WriteBoolean (pSRule->SrRefImportedDoc);
+   WriteConstructor (pSRule->SrConstruct);
+   switch (pSRule->SrConstruct)
 	 {
 	    case CsNatureSchema:
-
+	       /* don't write anything */
 	       break;
 	    case CsBasicElement:
-	       WriteBasicType (pRe1->SrBasicType);
+	       WriteBasicType (pSRule->SrBasicType);
 	       break;
 	    case CsReference:
-	       WriteShort (pRe1->SrReferredType);
-	       wrNom (pRe1->SrRefTypeNat);
-
+	       WriteShort (pSRule->SrReferredType);
+	       WriteName (pSRule->SrRefTypeNat);
 	       break;
 	    case CsIdentity:
-	       WriteShort (pRe1->SrIdentRule);
+	       WriteShort (pSRule->SrIdentRule);
 	       break;
 	    case CsList:
-	       WriteShort (pRe1->SrListItem);
-	       WriteShort (pRe1->SrMinItems);
-	       WriteShort (pRe1->SrMaxItems);
+	       WriteShort (pSRule->SrListItem);
+	       WriteShort (pSRule->SrMinItems);
+	       WriteShort (pSRule->SrMaxItems);
 	       break;
 	    case CsChoice:
-	       WriteSignedShort (pRe1->SrNChoices);
-	       if (pRe1->SrNChoices > 0)
-		  for (j = 1; j <= pRe1->SrNChoices; j++)
-		     WriteShort (pRe1->SrChoice[j - 1]);
+	       WriteSignedShort (pSRule->SrNChoices);
+	       if (pSRule->SrNChoices > 0)
+		  for (j = 0; j < pSRule->SrNChoices; j++)
+		     WriteShort (pSRule->SrChoice[j]);
 	       break;
 	    case CsAggregate:
 	    case CsUnorderedAggregate:
-	       WriteShort (pRe1->SrNComponents);
-	       for (j = 1; j <= pRe1->SrNComponents; j++)
-		  WriteShort (pRe1->SrComponent[j - 1]);
-	       for (j = 1; j <= pRe1->SrNComponents; j++)
-		  WriteBoolean (pRe1->SrOptComponent[j - 1]);
+	       WriteShort (pSRule->SrNComponents);
+	       for (j = 0; j < pSRule->SrNComponents; j++)
+		  WriteShort (pSRule->SrComponent[j]);
+	       for (j = 0; j < pSRule->SrNComponents; j++)
+		  WriteBoolean (pSRule->SrOptComponent[j]);
 	       break;
 	    case CsConstant:
-	       WriteShort (pRe1->SrIndexConst);
+	       WriteShort (pSRule->SrIndexConst);
 	       break;
 	    case CsPairedElement:
-	       WriteBoolean (pRe1->SrFirstOfPair);
+	       WriteBoolean (pSRule->SrFirstOfPair);
 	       break;
 	    case CsExtensionRule:
 	       break;
@@ -335,96 +334,97 @@ SRule              *pRe1;
 }
 
 
-/* WriteStructureSchema  ecrit le schema de structure pointe' par pSchStr dans */
-/* le fichier de nom fname. Ajoute le suffixe .STR au nom de fichier. */
-/* Si Code est nul, ecrit le schema avec un nouveau code d'identification */
-/* sinon avec Code comme code d'identification. */
+/* ---------------------------------------------------------------------- */
+/* |	WriteStructureSchema						| */
+/* |	ecrit le schema de structure pointe' par pSS dans le fichier	| */
+/* |	de nom fileName.						| */
+/* |	Si code est nul, ecrit le schema avec un nouveau code		| */
+/* |	d'identification, sinon avec code comme code d'identification.	| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             WriteStructureSchema (Name fname, PtrSSchema pSchStr, int Code)
+boolean             WriteStructureSchema (Name fileName, PtrSSchema pSS,
+					  int code)
 
 #else  /* __STDC__ */
-boolean             WriteStructureSchema (fname, pSchStr, Code)
-Name                 fname;
-PtrSSchema        pSchStr;
-int                 Code;
+boolean             WriteStructureSchema (fileName, pSS, code)
+Name                fileName;
+PtrSSchema          pSS;
+int                 code;
 
 #endif /* __STDC__ */
 
 {
-   int                 i, j;	/* met le suffixe STR a la fin du nom
-
-				 * de fichier */
-   PtrSSchema        pSc1;
-   TtAttribute           *pAt1;
+   TtAttribute      *pAttr;
+   int              i, j;
 
    /* ouvre le fichier */
-   outfile = BIOwriteOpen (fname);
+   outfile = BIOwriteOpen (fileName);
    if (outfile == 0)
       return False;
-   pSc1 = pSchStr;
+
    /* ecrit la partie fixe du schema de structure */
-   wrNom (pSc1->SsName);
-   if (Code == 0)
+   WriteName (pSS->SsName);
+   if (code == 0)
       /* alloue un nouveau code d'identification au schema compile' */
-      WriteShort (UniqueIdent ());	/* SsCode */
+      WriteShort (UniqueIdent ());
    else
-      /* le schema compile' a le code d'identification Code */
-      WriteShort (Code);
-   wrNom (pSc1->SsDefaultPSchema);
-   /* SsPSchema */
-   WriteBoolean (pSc1->SsExtension);
-   WriteShort (pSc1->SsRootElem);
-   WriteShort (pSc1->SsNAttributes);
-   WriteShort (pSc1->SsNRules);
-   WriteBoolean (pSc1->SsExport);
-   WriteShort (pSc1->SsNExceptions);
-   for (i = 1; i <= pSc1->SsNExceptions; i++)
-      WriteShort (pSc1->SsException[i - 1]);	/* ecrit le texte des
-						 * constantes */
+      /* le schema compile' a le code d'identification code */
+      WriteShort (code);
+   WriteName (pSS->SsDefaultPSchema);
+   WriteBoolean (pSS->SsExtension);
+   WriteShort (pSS->SsRootElem);
+   WriteShort (pSS->SsNAttributes);
+   WriteShort (pSS->SsNRules);
+   WriteBoolean (pSS->SsExport);
+
+   WriteShort (pSS->SsNExceptions);
+   for (i = 0; i < pSS->SsNExceptions; i++)
+      WriteShort (pSS->SsException[i]);
+
+   /* ecrit le texte des constantes */
    i = 0;
    do
-     {
-	i++;
-	BIOwriteByte (outfile, pSc1->SsConstBuffer[i - 1]);
-     }
-   while (pSc1->SsConstBuffer[i - 1] != '\0' || pSc1->SsConstBuffer[i] != '\0');
-   BIOwriteByte (outfile, '\0');	/* SsFirstDynNature */
+	BIOwriteByte (outfile, pSS->SsConstBuffer[i++]);
+   while (pSS->SsConstBuffer[i - 1] != '\0' || pSS->SsConstBuffer[i] != '\0');
+
+   /* SsFirstDynNature */
+   BIOwriteByte (outfile, '\0');
+
    /* ecrit les attributs */
-   for (i = 1; i <= pSc1->SsNAttributes; i++)
+   for (i = 0; i < pSS->SsNAttributes; i++)
      {
-	pAt1 = &pSc1->SsAttribute[i - 1];
-	wrNom (pAt1->AttrName);
-	WriteBoolean (pAt1->AttrGlobal);
-	WriteShort (pAt1->AttrFirstExcept);
-	WriteShort (pAt1->AttrLastExcept);
-	WriteAttributeType (pAt1->AttrType);
-	switch (pAt1->AttrType)
+	pAttr = &pSS->SsAttribute[i];
+	WriteName (pAttr->AttrName);
+	WriteBoolean (pAttr->AttrGlobal);
+	WriteShort (pAttr->AttrFirstExcept);
+	WriteShort (pAttr->AttrLastExcept);
+	WriteAttributeType (pAttr->AttrType);
+	switch (pAttr->AttrType)
 	      {
 		 case AtNumAttr:
 		 case AtTextAttr:
-
 		    break;
 		 case AtReferenceAttr:
-		    WriteShort (pAt1->AttrTypeRef);
-		    wrNom (pAt1->AttrTypeRefNature);
+		    WriteShort (pAttr->AttrTypeRef);
+		    WriteName (pAttr->AttrTypeRefNature);
 		    break;
 		 case AtEnumAttr:
-		    WriteShort (pAt1->AttrNEnumValues);
-		    for (j = 1; j <= pAt1->AttrNEnumValues; j++)
-		       wrNom (pAt1->AttrEnumValue[j - 1]);
+		    WriteShort (pAttr->AttrNEnumValues);
+		    for (j = 0; j < pAttr->AttrNEnumValues; j++)
+		       WriteName (pAttr->AttrEnumValue[j]);
 		    break;
 	      }
-
      }
-   /* ecrit les regles de structuration */
-   for (i = 1; i <= pSc1->SsNRules; i++)
-      wrRegle (&pSc1->SsRule[i - 1]);
-   if (pSc1->SsExtension)
+   /* ecrit les regles de structure */
+   for (i = 0; i < pSS->SsNRules; i++)
+      WriteRule (&pSS->SsRule[i]);
+
+   /* ecrit les regles d'extension */
+   if (pSS->SsExtension)
      {
-	WriteShort (pSc1->SsNExtensRules);
-	/* ecrit les regles d'extension */
-	for (i = 1; i <= pSc1->SsNExtensRules; i++)
-	   wrRegle (&pSc1->SsExtensBlock->EbExtensRule[i - 1]);
+	WriteShort (pSS->SsNExtensRules);
+	for (i = 0; i < pSS->SsNExtensRules; i++)
+	   WriteRule (&pSS->SsExtensBlock->EbExtensRule[i]);
      }
    BIOwriteClose (outfile);
    return True;

@@ -52,7 +52,7 @@ static char        *Patterns_PS[] =
    "11b87c3a11a3c78b"		/*bottomket */
 };
 
-extern int          NbPage;
+extern int          NumberOfPages;
 extern int          EndOfPage;
 int                 X, Y;
 static int          LastPageNumber, LastPageWidth, LastPageHeight;
@@ -297,8 +297,8 @@ FILE               *fout;
 {
    if (EndOfPage == 1)
      {
-	NbPage++;
-	fprintf (fout, "%d %d %d nwpage\n%%%%Page: %d %d\n", LastPageNumber, LastPageWidth, LastPageHeight, NbPage, NbPage);
+	NumberOfPages++;
+	fprintf (fout, "%d %d %d nwpage\n%%%%Page: %d %d\n", LastPageNumber, LastPageWidth, LastPageHeight, NumberOfPages, NumberOfPages);
 	EndOfPage = 0;
 	/* Enforce loading the font when starting a new page */
 	PoscriptFont = NULL;

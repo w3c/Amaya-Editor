@@ -1,17 +1,7 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-/* ======================================================================= */
-/* |                                                                    | */
-/* |                           Projet THOT                              | */
-/* |                                                                    | */
-/* |    Ce module sauve un schema de presentation compile'.             | */
-/* |                                                                    | */
-/* |                                                                    | */
-/* |                    V. Quint        Juin 1984                       | */
-/* |                                                                    | */
-/* ======================================================================= */
-
+/*
+    Ce module sauve dans un fichier un schema de presentation qui a
+    ete compile' en memoire
+ */
 
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -25,6 +15,7 @@ static BinFile      outfile;
 #include "writeprs_f.h"
 
 /* ---------------------------------------------------------------------- */
+/* |	WriteShort							| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static void         WriteShort (int n)
@@ -39,6 +30,7 @@ int                 n;
 }
 
 /* ---------------------------------------------------------------------- */
+/* |	WriteSignedShort						| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static void         WriteSignedShort (int n)
@@ -55,11 +47,12 @@ int             n;
 }
 
 /* ---------------------------------------------------------------------- */
+/* |	WriteName							| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrnom (Name n)
+static void         WriteName (Name n)
 #else  /* __STDC__ */
-static void         wrnom (n)
+static void         WriteName (n)
 Name                 n;
 
 #endif /* __STDC__ */
@@ -74,11 +67,12 @@ Name                 n;
 
 
 /* ---------------------------------------------------------------------- */
+/* |	WriteRulePtr							| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrptrreg (PtrPRule p)
+static void         WriteRulePtr (PtrPRule p)
 #else  /* __STDC__ */
-static void         wrptrreg (p)
+static void         WriteRulePtr (p)
 PtrPRule        p;
 
 #endif /* __STDC__ */
@@ -91,11 +85,12 @@ PtrPRule        p;
 
 
 /* ---------------------------------------------------------------------- */
+/* |	WriteBoolean							| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrbool (boolean b)
+static void         WriteBoolean (boolean b)
 #else  /* __STDC__ */
-static void         wrbool (b)
+static void         WriteBoolean (b)
 boolean             b;
 
 #endif /* __STDC__ */
@@ -107,12 +102,12 @@ boolean             b;
 }
 
 /* ---------------------------------------------------------------------- */
-/* | wrUnit ecrit une unite dans le fichier sur un octet                | */
+/* |	WriteUnit ecrit une unite dans le fichier sur un octet          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrUnit (TypeUnit unit)
+static void         WriteUnit (TypeUnit unit)
 #else  /* __STDC__ */
-static void         wrUnit (unit)
+static void         WriteUnit (unit)
 BinFile             file;
 TypeUnit            unit;
 
@@ -143,17 +138,17 @@ TypeUnit            unit;
 }
 
 /* ---------------------------------------------------------------------- */
-/* WritePRuleType  ecrit un type de regle de presentation dans le fichier */
+/* |	WritePRuleType  ecrit un type de regle de presentation		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                WritePRuleType (PRuleType T)
+void                WritePRuleType (PRuleType ruleType)
 #else  /* __STDC__ */
-void                WritePRuleType (T)
-PRuleType           T;
+void                WritePRuleType (ruleType)
+PRuleType           ruleType;
 
 #endif /* __STDC__ */
 {
-   switch (T)
+   switch (ruleType)
 	 {
 	    case PtVisibility:
 	       BIOwriteByte (outfile, C_PR_VISIBILITY);
@@ -234,23 +229,25 @@ PRuleType           T;
 	       BIOwriteByte (outfile, C_PR_FOREGROUND);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid rule type %X\n", T);
+	       fprintf (stderr, "Invalid rule type %X\n", ruleType);
 	       break;
 	 }
 }
 
 
-/* wrModeCalcul ecrit un mode de calcul dans le fichier */
+/* ---------------------------------------------------------------------- */
+/* |	WritePresMode ecrit un mode de calcul dans le fichier		| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrModeCalcul (PresMode M)
+static void         WritePresMode (PresMode mode)
 
 #else  /* __STDC__ */
-static void         wrModeCalcul (M)
-PresMode          M;
+static void         WritePresMode (mode)
+PresMode          mode;
 
 #endif /* __STDC__ */
 {
-   switch (M)
+   switch (mode)
 	 {
 	    case PresImmediate:
 	       BIOwriteByte (outfile, C_IMMEDIATE);
@@ -262,22 +259,24 @@ PresMode          M;
 	       BIOwriteByte (outfile, C_PRES_FUNCTION);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid mode %X\n", M);
+	       fprintf (stderr, "Invalid mode %X\n", mode);
 	       break;
 	 }
 }
 
 
-/* wrTypeHeritage       ecrit un type d'heritage dans le fichier */
+/* ---------------------------------------------------------------------- */
+/* |	WriteInheritMode       ecrit un type d'heritage dans le fichier	|*/
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrTypeHeritage (InheritMode T)
+static void         WriteInheritMode (InheritMode mode)
 #else  /* __STDC__ */
-static void         wrTypeHeritage (T)
-InheritMode        T;
+static void         WriteInheritMode (mode)
+InheritMode        mode;
 
 #endif /* __STDC__ */
 {
-   switch (T)
+   switch (mode)
 	 {
 	    case InheritParent:
 	       BIOwriteByte (outfile, C_INH_ASCEND);
@@ -295,25 +294,26 @@ InheritMode        T;
 	       BIOwriteByte (outfile, C_INH_GRAND_FATHER);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid inherit %X\n", T);
+	       fprintf (stderr, "Invalid inherit %X\n", mode);
 	       break;
 	 }
 }
 
 
-/* wrTypeFonct  ecrit un type de fonction de presentation dans le */
-/* fichier */
+/* ---------------------------------------------------------------------- */
+/* |	WriteFunctionType  ecrit un type de fonction de presentation	| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrTypeFonct (FunctionType T, boolean rep)
+static void         WriteFunctionType (FunctionType functType, boolean rep)
 
 #else  /* __STDC__ */
-static void         wrTypeFonct (T, rep)
-FunctionType           T;
+static void         WriteFunctionType (functType, rep)
+FunctionType        functType;
 boolean             rep;
 
 #endif /* __STDC__ */
 {
-   switch (T)
+   switch (functType)
 	 {
 	    case FnLine:
 	       BIOwriteByte (outfile, C_PF_LINE);
@@ -370,22 +370,24 @@ boolean             rep;
 	       BIOwriteByte (outfile, C_PF_NOLINE);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid function %X\n", T);
+	       fprintf (stderr, "Invalid function %X\n", functType);
 	       break;
 	 }
 }
 
 
-/* wrCadrage    ecrit un mode de cadrage de lignes dans le fichier */
+/* ---------------------------------------------------------------------- */
+/* |	WriteAlignment    ecrit un mode d'alignement de lignes		| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrCadrage (BAlignment C)
+static void         WriteAlignment (BAlignment align)
 #else  /* __STDC__ */
-static void         wrCadrage (C)
-BAlignment             C;
+static void         WriteAlignment (align)
+BAlignment          align;
 
 #endif /* __STDC__ */
 {
-   switch (C)
+   switch (align)
 	 {
 	    case AlignLeft:
 	       BIOwriteByte (outfile, C_PIV_LEFT);
@@ -400,22 +402,24 @@ BAlignment             C;
 	       BIOwriteByte (outfile, C_PIV_LEFTDOT);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid alignment %X\n", C);
+	       fprintf (stderr, "Invalid alignment %X\n", align);
 	       break;
 	 }
 }
 
 
-/* WritePresCondition      ecrit un type de condition dans le fichier */
+/* ---------------------------------------------------------------------- */
+/* |	WritePresCondition      ecrit un type de condition		| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                WritePresCondition (PresCondition T)
+void                WritePresCondition (PresCondition cond)
 #else  /* __STDC__ */
-void                WritePresCondition (T)
-PresCondition       T;
+void                WritePresCondition (cond)
+PresCondition       cond;
 
 #endif /* __STDC__ */
 {
-   switch (T)
+   switch (cond)
 	 {
 	    case PcFirst:
 	       BIOwriteByte (outfile, C_COND_FIRST);
@@ -490,22 +494,24 @@ PresCondition       T;
 	       BIOwriteByte (outfile, C_COND_DEFAULT);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid condition %X\n", T);
+	       fprintf (stderr, "Invalid condition %X\n", cond);
 	       break;
 	 }
 }
 
 
-/* wrNatValCmpt ecrit la nature de la condition sur un compteur */
+/* ---------------------------------------------------------------------- */
+/* |	WriteCounterValue ecrit la nature de la condition sur un compteur | */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrNatValCmpt (CounterValue T)
+static void         WriteCounterValue (CounterValue val)
 #else  /* __STDC__ */
-static void         wrNatValCmpt (T)
-CounterValue      T;
+static void         WriteCounterValue (val)
+CounterValue      val;
 
 #endif /* __STDC__ */
 {
-   switch (T)
+   switch (val)
 	 {
 	    case CntMaxVal:
 	       BIOwriteByte (outfile, C_VAL_MAX);
@@ -517,22 +523,24 @@ CounterValue      T;
 	       BIOwriteByte (outfile, C_VAL_CUR);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid counter cond. %X\n", T);
+	       fprintf (stderr, "Invalid counter cond. %X\n", val);
 	       break;
 	 }
 }
 
 
-/* wrRelationParent     ecrit la relation de la condition Within */
+/* ---------------------------------------------------------------------- */
+/* |	WriteArithRel     ecrit la relation de la condition Within	| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrRelationParent (ArithRel R)
+static void         WriteArithRel (ArithRel rel)
 #else  /* __STDC__ */
-static void         wrRelationParent (R)
-ArithRel          R;
+static void         WriteArithRel (rel)
+ArithRel          rel;
 
 #endif /* __STDC__ */
 {
-   switch (R)
+   switch (rel)
 	 {
 	    case CondGreater:
 	       BIOwriteByte (outfile, C_WITHIN_GT);
@@ -544,21 +552,23 @@ ArithRel          R;
 	       BIOwriteByte (outfile, C_WITHIN_EQ);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid relationship %X\n", R);
+	       fprintf (stderr, "Invalid relationship %X\n", rel);
 	       break;
 	 }
 }
 
-/* wrRepereBoite                ecrit un repere de boite dans le fichier */
+/* ---------------------------------------------------------------------- */
+/* |	WriteBoxEdge      ecrit un repere de boite			| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrRepereBoite (BoxEdge R)
+static void         WriteBoxEdge (BoxEdge edge)
 #else  /* __STDC__ */
-static void         wrRepereBoite (R)
-BoxEdge         R;
+static void         WriteBoxEdge (edge)
+BoxEdge         edge;
 
 #endif /* __STDC__ */
 {
-   switch (R)
+   switch (edge)
 	 {
 	    case Top:
 	       BIOwriteByte (outfile, C_AX_TOP);
@@ -588,22 +598,24 @@ BoxEdge         R;
 	       BIOwriteByte (outfile, C_AX_NULL);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid side %X\n", R);
+	       fprintf (stderr, "Invalid side %X\n", edge);
 	       break;
 	 }
 }
 
 
-/* wrNiveau     ecrit un niveau relatif de boite dans le fichier */
+/* ---------------------------------------------------------------------- */
+/* |	WriteLevel     ecrit un niveau relatif de boite			| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrNiveau (Level N)
+static void         WriteLevel (Level level)
 #else  /* __STDC__ */
-static void         wrNiveau (N)
-Level              N;
+static void         WriteLevel (level)
+Level              level;
 
 #endif /* __STDC__ */
 {
-   switch (N)
+   switch (level)
 	 {
 	    case RlEnclosing:
 	       BIOwriteByte (outfile, C_PARENT);
@@ -636,22 +648,24 @@ Level              N;
 	       BIOwriteByte (outfile, C_CREATOR);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid level %X\n", N);
+	       fprintf (stderr, "Invalid level %X\n", level);
 	       break;
 	 }
 }
 
 
-/* wrCptTypeOp  ecrit un type d'operation sur compteur dans le fichier */
+/* ---------------------------------------------------------------------- */
+/* |	WriteCounterOp  ecrit un type d'operation sur compteur		| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrCptTypeOp (CounterOp T)
+static void         WriteCounterOp (CounterOp op)
 #else  /* __STDC__ */
-static void         wrCptTypeOp (T)
-CounterOp           T;
+static void         WriteCounterOp (op)
+CounterOp           op;
 
 #endif /* __STDC__ */
 {
-   switch (T)
+   switch (op)
 	 {
 	    case CntrSet:
 	       BIOwriteByte (outfile, C_CNT_SET);
@@ -666,22 +680,24 @@ CounterOp           T;
 	       BIOwriteByte (outfile, C_CNT_RLEVEL);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid operator %X\n", T);
+	       fprintf (stderr, "Invalid operator %X\n", op);
 	       break;
 	 }
 }
 
 
-/* wrTypeDeBase ecrit un type de base dans le fichier */
+/* ---------------------------------------------------------------------- */
+/* |	WriteBasicType ecrit un type de base				| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrTypeDeBase (BasicType T)
+static void         WriteBasicType (BasicType typ)
 #else  /* __STDC__ */
-static void         wrTypeDeBase (T)
-BasicType          T;
+static void         WriteBasicType (typ)
+BasicType          typ;
 
 #endif /* __STDC__ */
 {
-   switch (T)
+   switch (typ)
 	 {
 	    case CharString:
 	       BIOwriteByte (outfile, C_CHAR_STRING);
@@ -702,22 +718,24 @@ BasicType          T;
 	       BIOwriteByte (outfile, C_PAGE_BREAK);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid type %X\n", T);
+	       fprintf (stderr, "Invalid type %X\n", typ);
 	       break;
 	 }
 }
 
 
-/* WriteVariableType    ecrit un type de variable dans le fichier */
+/* ---------------------------------------------------------------------- */
+/* |	WriteVariableType    ecrit un type de variable			| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                WriteVariableType (VariableType T)
+void                WriteVariableType (VariableType typ)
 #else  /* __STDC__ */
-void                WriteVariableType (T)
-VariableType             T;
+void                WriteVariableType (typ)
+VariableType             typ;
 
 #endif /* __STDC__ */
 {
-   switch (T)
+   switch (typ)
 	 {
 	    case VarText:
 	       BIOwriteByte (outfile, C_VAR_TEXT);
@@ -750,22 +768,24 @@ VariableType             T;
 	       BIOwriteByte (outfile, C_VAR_PAGENUMBER);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid variable %X\n", T);
+	       fprintf (stderr, "Invalid variable %X\n", typ);
 	       break;
 	 }
 }
 
 
-/* WriteCounterStyle ecrit un style de compteur dans le fichier */
+/* ---------------------------------------------------------------------- */
+/* |	WriteCounterStyle ecrit un style de compteur			| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         WriteCounterStyle (CounterStyle S)
+static void         WriteCounterStyle (CounterStyle style)
 #else  /* __STDC__ */
-static void         WriteCounterStyle (S)
-CounterStyle          S;
+static void         WriteCounterStyle (style)
+CounterStyle          style;
 
 #endif /* __STDC__ */
 {
-   switch (S)
+   switch (style)
 	 {
 	    case CntArabic:
 	       BIOwriteByte (outfile, C_NUM_ARABIC);
@@ -783,22 +803,24 @@ CounterStyle          S;
 	       BIOwriteByte (outfile, C_NUM_LOWERCASE);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid style %X\n", S);
+	       fprintf (stderr, "Invalid style %X\n", style);
 	       break;
 	 }
 }
 
 
-/* WriteContentType                ecrit un type de contenu dans le fichier */
+/* ---------------------------------------------------------------------- */
+/* |	WriteContentType   ecrit un type de contenu			| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                WriteContentType (ContentType T)
+void                WriteContentType (ContentType typ)
 #else  /* __STDC__ */
-void                WriteContentType (T)
-ContentType         T;
+void                WriteContentType (typ)
+ContentType         typ;
 
 #endif /* __STDC__ */
 {
-   switch (T)
+   switch (typ)
 	 {
 	    case FreeContent:
 	       BIOwriteByte (outfile, C_CONT_FREE);
@@ -813,23 +835,24 @@ ContentType         T;
 	       BIOwriteByte (outfile, C_CONT_ELEM);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid content %X\n", T);
+	       fprintf (stderr, "Invalid content %X\n", typ);
 	       break;
 	 }
 }
 
 
-/* wrCompAttr    un type de comparaison de valeur d'attribut
- * dans le fichier */
+/* ---------------------------------------------------------------------- */
+/* |	WriteAttrComparType						| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrComparAttr (AttrComparType C)
+static void         WriteAttrComparType (AttrComparType typ)
 #else  /* __STDC__ */
-static void         wrComparAttr (C)
-AttrComparType      C;
+static void         WriteAttrComparType (typ)
+AttrComparType      typ;
 
 #endif /* __STDC__ */
 {
-   switch (C)
+   switch (typ)
 	 {
 	    case ComparConstant:
 	       BIOwriteByte (outfile, C_COMP_CONST);
@@ -838,70 +861,66 @@ AttrComparType      C;
 	       BIOwriteByte (outfile, C_COMP_ATTR);
 	       break;
 	    default:
-	       fprintf (stderr, "Invalid comparison %X\n", C);
+	       fprintf (stderr, "Invalid comparison %X\n", typ);
 	       break;
 	 }
 }
 
 /* ---------------------------------------------------------------------- */
-/* wrPosition   ecrit un positionnement relatif */
+/* |	WritePosRule   ecrit un positionnement relatif			| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrPosition_WriteRules (PosRule RP)
+static void         WritePosRule (PosRule posRule)
 #else  /* __STDC__ */
-static void         wrPosition_WriteRules (RP)
-PosRule            RP;
+static void         WritePosRule (posRule)
+PosRule            posRule;
 
 #endif /* __STDC__ */
 {
-   PosRule           *pRe1;
-
-   pRe1 = &RP;
-   wrRepereBoite (pRe1->PoPosDef);
-   wrRepereBoite (pRe1->PoPosRef);
-   wrUnit (pRe1->PoDistUnit);
-   wrbool (pRe1->PoDistAttr);
-   WriteSignedShort (pRe1->PoDistance);
-   wrNiveau (pRe1->PoRelation);
-   wrbool (pRe1->PoNotRel);
-   wrbool (pRe1->PoUserSpecified);
-   wrbool (pRe1->PoRefElem);
-   if (pRe1->PoRefElem)
-      WriteShort (pRe1->PoTypeRefElem);
+   WriteBoxEdge (posRule.PoPosDef);
+   WriteBoxEdge (posRule.PoPosRef);
+   WriteUnit (posRule.PoDistUnit);
+   WriteBoolean (posRule.PoDistAttr);
+   WriteSignedShort (posRule.PoDistance);
+   WriteLevel (posRule.PoRelation);
+   WriteBoolean (posRule.PoNotRel);
+   WriteBoolean (posRule.PoUserSpecified);
+   WriteBoolean (posRule.PoRefElem);
+   if (posRule.PoRefElem)
+      WriteShort (posRule.PoTypeRefElem);
    else
-      WriteShort (pRe1->PoRefPresBox);
+      WriteShort (posRule.PoRefPresBox);
 }
 
 
-/* WritePRules   ecrit la chaine de regle de presentation qui */
-/* commence par la regle pointee par pR. */
+/* ---------------------------------------------------------------------- */
+/* |	WritePRules   ecrit la chaine de regle de presentation qui	| */
+/* |	commence par la regle pointee par pPRule.			| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                WritePRules (PtrPRule pR)
+void                WritePRules (PtrPRule pPRule)
 #else  /* __STDC__ */
-void                WritePRules (pR)
-PtrPRule        pR;
+void                WritePRules (pPRule)
+PtrPRule        pPRule;
 
 #endif /* __STDC__ */
 {
-   PtrPRule        cR, nR;
-   int                 i;
-   PtrPRule        pRe1;
+   PtrPRule            currentRule, nextRule;
    PtrCondition        pCond;
-   DimensionRule       *pRelD1;
+   DimensionRule       *pDim;
+   int                 i;
 
-   /* debut de la procedure WritePRules */
-   cR = pR;
-   while (cR != NULL)
+   currentRule = pPRule;
+   while (currentRule != NULL)
      {
-	pRe1 = cR;
-	WritePRuleType (pRe1->PrType);
-	wrptrreg (pRe1->PrNextPRule);
-	pCond = pRe1->PrCond;
+	WritePRuleType (currentRule->PrType);
+	WriteRulePtr (currentRule->PrNextPRule);
+	pCond = currentRule->PrCond;
 	while (pCond != NULL)
 	  {
 	     WritePresCondition (pCond->CoCondition);
-	     wrbool (pCond->CoNotNegative);
-	     wrbool (pCond->CoTarget);
+	     WriteBoolean (pCond->CoNotNegative);
+	     WriteBoolean (pCond->CoTarget);
 	     switch (pCond->CoCondition)
 		   {
 		      case PcEven:
@@ -913,17 +932,17 @@ PtrPRule        pR;
 			 WriteShort (pCond->CoCounter);
 			 WriteSignedShort (pCond->CoMinCounter);
 			 WriteSignedShort (pCond->CoMaxCounter);
-			 wrNatValCmpt (pCond->CoValCounter);
+			 WriteCounterValue (pCond->CoValCounter);
 			 break;
 		      case PcWithin:
-			 wrbool (pCond->CoImmediate);
+			 WriteBoolean (pCond->CoImmediate);
 			 WriteShort (pCond->CoRelation);
-			 wrRelationParent (pCond->CoAncestorRel);
+			 WriteArithRel (pCond->CoAncestorRel);
 			 WriteSignedShort (pCond->CoTypeAncestor);
 			 if (pCond->CoTypeAncestor == 0)
 			   {
-			      wrnom (pCond->CoAncestorName);
-			      wrnom (pCond->CoSSchemaName);
+			      WriteName (pCond->CoAncestorName);
+			      WriteName (pCond->CoSSchemaName);
 			   }
 			 break;
 		      case PcElemType:
@@ -936,35 +955,36 @@ PtrPRule        pR;
 	     pCond = pCond->CoNextCondition;
 	  }
 	WritePresCondition (PcNoCondition);
-	WriteShort (pRe1->PrViewNum);
-	wrModeCalcul (pRe1->PrPresMode);
-	switch (pRe1->PrPresMode)
+	WriteShort (currentRule->PrViewNum);
+	WritePresMode (currentRule->PrPresMode);
+	switch (currentRule->PrPresMode)
 	      {
 		 case PresInherit:
-		    wrTypeHeritage (pRe1->PrInheritMode);
-		    wrbool (pRe1->PrInhAttr);
-		    WriteSignedShort (pRe1->PrInhDelta);
-		    wrbool (pRe1->PrMinMaxAttr);
-		    WriteSignedShort (pRe1->PrInhMinOrMax);
-		    wrUnit (pRe1->PrInhUnit);
+		    WriteInheritMode (currentRule->PrInheritMode);
+		    WriteBoolean (currentRule->PrInhAttr);
+		    WriteSignedShort (currentRule->PrInhDelta);
+		    WriteBoolean (currentRule->PrMinMaxAttr);
+		    WriteSignedShort (currentRule->PrInhMinOrMax);
+		    WriteUnit (currentRule->PrInhUnit);
 		    break;
 		 case PresFunction:
-		    wrTypeFonct (pRe1->PrPresFunction, pRe1->PrPresBoxRepeat);
-		    if (pRe1->PrPresFunction != FnLine
-			&& pRe1->PrPresFunction != FnNoLine)
+		    WriteFunctionType (currentRule->PrPresFunction,
+				       currentRule->PrPresBoxRepeat);
+		    if (currentRule->PrPresFunction != FnLine
+			&& currentRule->PrPresFunction != FnNoLine)
 		      {
-			 wrbool (pRe1->PrExternal);
-			 wrbool (pRe1->PrElement);
-			 WriteShort (pRe1->PrNPresBoxes);
-			 if (pRe1->PrNPresBoxes == 0)
-			    wrnom (pRe1->PrPresBoxName);
+			 WriteBoolean (currentRule->PrExternal);
+			 WriteBoolean (currentRule->PrElement);
+			 WriteShort (currentRule->PrNPresBoxes);
+			 if (currentRule->PrNPresBoxes == 0)
+			    WriteName (currentRule->PrPresBoxName);
 			 else
-			    for (i = 1; i <= pRe1->PrNPresBoxes; i++)
-			       WriteShort (pRe1->PrPresBox[i - 1]);
+			    for (i = 0; i < currentRule->PrNPresBoxes; i++)
+			       WriteShort (currentRule->PrPresBox[i]);
 		      }
 		    break;
 		 case PresImmediate:
-		    switch (pRe1->PrType)
+		    switch (currentRule->PrType)
 			  {
 			     case PtVisibility:
 			     case PtDepth:
@@ -972,15 +992,15 @@ PtrPRule        pR;
 			     case PtFillPattern:
 			     case PtBackground:
 			     case PtForeground:
-				wrbool (pRe1->PrAttrValue);
-				WriteSignedShort (pRe1->PrIntValue);
+				WriteBoolean (currentRule->PrAttrValue);
+				WriteSignedShort (currentRule->PrIntValue);
 				break;
 			     case PtFont:
 			     case PtStyle:
 			     case PtUnderline:
 			     case PtThickness:
 			     case PtLineStyle:
-				BIOwriteByte (outfile, pRe1->PrChrValue);
+				BIOwriteByte (outfile, currentRule->PrChrValue);
 				break;
 			     case PtBreak1:
 			     case PtBreak2:
@@ -988,46 +1008,46 @@ PtrPRule        pR;
 			     case PtSize:
 			     case PtLineSpacing:
 			     case PtLineWeight:
-				wrUnit (pRe1->PrMinUnit);
-				wrbool (pRe1->PrMinAttr);
-				WriteSignedShort (pRe1->PrMinValue);
+				WriteUnit (currentRule->PrMinUnit);
+				WriteBoolean (currentRule->PrMinAttr);
+				WriteSignedShort (currentRule->PrMinValue);
 				break;
 			     case PtVertRef:
 			     case PtHorizRef:
 			     case PtVertPos:
 			     case PtHorizPos:
-				wrPosition_WriteRules (pRe1->PrPosRule);
+				WritePosRule (currentRule->PrPosRule);
 				break;
 			     case PtHeight:
 			     case PtWidth:
-				pRelD1 = &pRe1->PrDimRule;
-				wrbool (pRelD1->DrPosition);
-				if (pRelD1->DrPosition)
-				   wrPosition_WriteRules (pRelD1->DrPosRule);
+				pDim = &currentRule->PrDimRule;
+				WriteBoolean (pDim->DrPosition);
+				if (pDim->DrPosition)
+				   WritePosRule (pDim->DrPosRule);
 				else
 				  {
-				     wrbool (pRelD1->DrAbsolute);
-				     wrbool (pRelD1->DrSameDimens);
-				     wrUnit (pRelD1->DrUnit);
-				     wrbool (pRelD1->DrAttr);
-				     wrbool (pRelD1->DrMin);
-				     wrbool (pRelD1->DrUserSpecified);
-				     WriteSignedShort (pRelD1->DrValue);
-				     wrNiveau (pRelD1->DrRelation);
-				     wrbool (pRelD1->DrNotRelat);
-				     wrbool (pRelD1->DrRefElement);
-				     if (pRelD1->DrRefElement)
-					WriteShort (pRelD1->DrTypeRefElem);
+				     WriteBoolean (pDim->DrAbsolute);
+				     WriteBoolean (pDim->DrSameDimens);
+				     WriteUnit (pDim->DrUnit);
+				     WriteBoolean (pDim->DrAttr);
+				     WriteBoolean (pDim->DrMin);
+				     WriteBoolean (pDim->DrUserSpecified);
+				     WriteSignedShort (pDim->DrValue);
+				     WriteLevel (pDim->DrRelation);
+				     WriteBoolean (pDim->DrNotRelat);
+				     WriteBoolean (pDim->DrRefElement);
+				     if (pDim->DrRefElement)
+					WriteShort (pDim->DrTypeRefElem);
 				     else
-					WriteShort (pRelD1->DrRefPresBox);
+					WriteShort (pDim->DrRefPresBox);
 				  }
 				break;
 			     case PtAdjust:
-				wrCadrage (pRe1->PrAdjust);
+				WriteAlignment (currentRule->PrAdjust);
 				break;
 			     case PtJustify:
 			     case PtHyphenate:
-				wrbool (pRe1->PrJustify);
+				WriteBoolean (currentRule->PrJustify);
 				break;
 			     case PtPictInfo:
 				break;
@@ -1036,160 +1056,157 @@ PtrPRule        pR;
 		    break;
 	      }
 
-	nR = pRe1->PrNextPRule;
-	free (cR);
-	cR = nR;
+	nextRule = currentRule->PrNextPRule;
+	free (currentRule);
+	currentRule = nextRule;
      }
 }
 
 
-/* WritePresentationSchema    cree le fichier de sortie et y ecrit le schema de */
-/* presentation */
+/* ---------------------------------------------------------------------- */
+/* |	WritePresentationSchema    cree le fichier de sortie et y ecrit	| */
+/* |	le schema de presentation					| */
+/* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             WritePresentationSchema (Name fname, PtrPSchema pSchPres, PtrSSchema pSchStr)
+boolean             WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-boolean             WritePresentationSchema (fname, pSchPres, pSchStr)
-Name                 fname;
-PtrPSchema          pSchPres;
-PtrSSchema        pSchStr;
+boolean             WritePresentationSchema (fileName, pPSch, pSS)
+Name                fileName;
+PtrPSchema          pPSch;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
 {
-   int                 i, j, l;
-   PtrPSchema          pSc1;
-   Counter           *pCo1;
-   CntrItem            *pCp1;
-   PresConstant          *pPr1;
-   PresVariable            *pPres1;
-   PresVarItem            *pVa1;
-   PresentationBox             *pBo1;
-   AttributePres      *pRP1;
-   NumAttrCase         *pCa1;
+   Counter             *pCntr;
+   CntrItem            *pCItem;
+   PresConstant        *pConst;
+   PresVariable        *pVar;
+   PresVarItem         *pVarItem;
+   PresentationBox     *pBox;
+   AttributePres       *pAttPres;
+   NumAttrCase         *pCase;
+   int                 i, j, k;
 
    /* cree le fichier */
-   outfile = BIOwriteOpen (fname);
+   outfile = BIOwriteOpen (fileName);
    if (outfile == 0)
       /* echec */
       return False;
-   /* recopie le code d'identification du schema de structure */
-   pSchPres->PsStructCode = pSchStr->SsCode;
+   /* copie le code d'identification du schema de structure */
+   pPSch->PsStructCode = pSS->SsCode;
 
    /* ecrit la partie fixe */
-   pSc1 = pSchPres;
-   wrnom (pSc1->PsStructName);
-   WriteShort (pSc1->PsStructCode);
-   WriteShort (pSc1->PsNViews);
-   for (i = 1; i <= pSc1->PsNViews; i++)
-      wrnom (pSc1->PsView[i - 1]);
-   for (i = 1; i <= pSc1->PsNViews; i++)
-      wrbool (pSc1->PsPaginatedView[i - 1]);
+   WriteName (pPSch->PsStructName);
+   WriteShort (pPSch->PsStructCode);
+   WriteShort (pPSch->PsNViews);
+   for (i = 0; i < pPSch->PsNViews; i++)
+      WriteName (pPSch->PsView[i]);
+   for (i = 0; i < pPSch->PsNViews; i++)
+      WriteBoolean (pPSch->PsPaginatedView[i]);
    /* significatif uniquement dans la V4 */
-   for (i = 1; i <= pSc1->PsNViews; i++)
-      wrbool (pSc1->PsColumnView[i - 1]);
-   WriteShort (pSc1->PsNPrintedViews);
-   for (i = 1; i <= pSc1->PsNPrintedViews; i++)
+   for (i = 0; i < pPSch->PsNViews; i++)
+      WriteBoolean (pPSch->PsColumnView[i]);
+   WriteShort (pPSch->PsNPrintedViews);
+   for (i = 0; i < pPSch->PsNPrintedViews; i++)
      {
-	wrbool (pSc1->PsPrintedView[i - 1].VpAssoc);
-	WriteShort (pSc1->PsPrintedView[i - 1].VpNumber);
+	WriteBoolean (pPSch->PsPrintedView[i].VpAssoc);
+	WriteShort (pPSch->PsPrintedView[i].VpNumber);
      }
-   for (i = 1; i <= pSc1->PsNViews; i++)
-      wrbool (pSc1->PsExportView[i - 1]);
-   WriteShort (pSc1->PsNCounters);
-   WriteShort (pSc1->PsNConstants);
-   WriteShort (pSc1->PsNVariables);
-   WriteShort (pSc1->PsNPresentBoxes);
-   wrptrreg (pSc1->PsFirstDefaultPRule);
+   for (i = 0; i < pPSch->PsNViews; i++)
+      WriteBoolean (pPSch->PsExportView[i]);
+   WriteShort (pPSch->PsNCounters);
+   WriteShort (pPSch->PsNConstants);
+   WriteShort (pPSch->PsNVariables);
+   WriteShort (pPSch->PsNPresentBoxes);
+   WriteRulePtr (pPSch->PsFirstDefaultPRule);
 
    /* ecrit les compteurs */
-   for (i = 1; i <= pSc1->PsNCounters; i++)
+   for (i = 0; i < pPSch->PsNCounters; i++)
      {
-	pCo1 = &pSc1->PsCounter[i - 1];
-	WriteShort (pCo1->CnNItems);
-	for (j = 1; j <= pCo1->CnNItems; j++)
+	pCntr = &pPSch->PsCounter[i];
+	WriteShort (pCntr->CnNItems);
+	for (j = 0; j < pCntr->CnNItems; j++)
 	  {
-	     pCp1 = &pCo1->CnItem[j - 1];
-	     wrCptTypeOp (pCp1->CiCntrOp);
-	     WriteShort (pCp1->CiElemType);
-	     WriteSignedShort (pCp1->CiAscendLevel);
-	     WriteShort (pCp1->CiViewNum);
-	     WriteSignedShort (pCp1->CiParamValue);
-	     WriteShort (pCp1->CiInitAttr);
-	     WriteShort (pCp1->CiReinitAttr);
+	     pCItem = &pCntr->CnItem[j];
+	     WriteCounterOp (pCItem->CiCntrOp);
+	     WriteShort (pCItem->CiElemType);
+	     WriteSignedShort (pCItem->CiAscendLevel);
+	     WriteShort (pCItem->CiViewNum);
+	     WriteSignedShort (pCItem->CiParamValue);
+	     WriteShort (pCItem->CiInitAttr);
+	     WriteShort (pCItem->CiReinitAttr);
 	  }
-	WriteShort (pCo1->CnNPresBoxes);
-	for (j = 1; j <= pCo1->CnNPresBoxes; j++)
+	WriteShort (pCntr->CnNPresBoxes);
+	for (j = 0; j < pCntr->CnNPresBoxes; j++)
 	  {
-	     WriteShort (pCo1->CnPresBox[j - 1]);
-	     wrbool (pCo1->CnMinMaxPresBox[j - 1]);
+	     WriteShort (pCntr->CnPresBox[j]);
+	     WriteBoolean (pCntr->CnMinMaxPresBox[j]);
 	  }
-	WriteShort (pCo1->CnNTransmAttrs);
-	for (j = 1; j <= pCo1->CnNTransmAttrs; j++)
+	WriteShort (pCntr->CnNTransmAttrs);
+	for (j = 0; j < pCntr->CnNTransmAttrs; j++)
 	  {
-	     wrnom (pCo1->CnTransmAttr[j - 1]);
-	     WriteShort (pCo1->CnTransmSSchemaAttr[j - 1]);
+	     WriteName (pCntr->CnTransmAttr[j]);
+	     WriteShort (pCntr->CnTransmSSchemaAttr[j]);
 	  }
-	WriteShort (pCo1->CnNCreators);
-	for (j = 1; j <= pCo1->CnNCreators; j++)
+	WriteShort (pCntr->CnNCreators);
+	for (j = 0; j < pCntr->CnNCreators; j++)
 	  {
-	     WriteShort (pCo1->CnCreator[j - 1]);
-	     wrbool (pCo1->CnMinMaxCreator[j - 1]);
+	     WriteShort (pCntr->CnCreator[j]);
+	     WriteBoolean (pCntr->CnMinMaxCreator[j]);
 	  }
-	for (j = 1; j <= pCo1->CnNCreators; j++)
-	   wrbool (pCo1->CnPresBoxCreator[j - 1]);
-	WriteShort (pCo1->CnNCreatedBoxes);
-	for (j = 1; j <= pCo1->CnNCreatedBoxes; j++)
+	for (j = 0; j < pCntr->CnNCreators; j++)
+	   WriteBoolean (pCntr->CnPresBoxCreator[j]);
+	WriteShort (pCntr->CnNCreatedBoxes);
+	for (j = 0; j < pCntr->CnNCreatedBoxes; j++)
 	  {
-	     WriteShort (pCo1->CnCreatedBox[j - 1]);
-	     wrbool (pCo1->CnMinMaxCreatedBox[j - 1]);
+	     WriteShort (pCntr->CnCreatedBox[j]);
+	     WriteBoolean (pCntr->CnMinMaxCreatedBox[j]);
 	  }
-	wrbool (pCo1->CnPageFooter);
+	WriteBoolean (pCntr->CnPageFooter);
      }
 
    /* ecrit les constantes de presentation */
-   for (i = 1; i <= pSc1->PsNConstants; i++)
+   for (i = 0; i < pPSch->PsNConstants; i++)
      {
-	pPr1 = &pSc1->PsConstant[i - 1];
-	wrTypeDeBase (pPr1->PdType);
-	BIOwriteByte (outfile, pPr1->PdAlphabet);
+	pConst = &pPSch->PsConstant[i];
+	WriteBasicType (pConst->PdType);
+	BIOwriteByte (outfile, pConst->PdAlphabet);
 	j = 0;
 	do
-	  {
-	     j++;
-	     BIOwriteByte (outfile, pPr1->PdString[j - 1]);
-	  }
-	while (pPr1->PdString[j - 1] != '\0');
+	     BIOwriteByte (outfile, pConst->PdString[j++]);
+	while (pConst->PdString[j - 1] != '\0');
      }
 
    /* ecrit les variables de presentation */
-   for (i = 1; i <= pSc1->PsNVariables; i++)
+   for (i = 0; i < pPSch->PsNVariables; i++)
      {
-	pPres1 = &pSc1->PsVariable[i - 1];
-	WriteShort (pPres1->PvNItems);
-	for (j = 1; j <= pPres1->PvNItems; j++)
+	pVar = &pPSch->PsVariable[i];
+	WriteShort (pVar->PvNItems);
+	for (j = 0; j < pVar->PvNItems; j++)
 	  {
-	     pVa1 = &pPres1->PvItem[j - 1];
-	     WriteVariableType (pVa1->ViType);
-	     switch (pVa1->ViType)
+	     pVarItem = &pVar->PvItem[j];
+	     WriteVariableType (pVarItem->ViType);
+	     switch (pVarItem->ViType)
 		   {
 		      case VarText:
-			 WriteShort (pVa1->ViConstant);
+			 WriteShort (pVarItem->ViConstant);
 			 break;
 		      case VarCounter:
-			 WriteShort (pVa1->ViCounter);
-			 WriteCounterStyle (pVa1->ViStyle);
-			 wrNatValCmpt (pVa1->ViCounterVal);
+			 WriteShort (pVarItem->ViCounter);
+			 WriteCounterStyle (pVarItem->ViStyle);
+			 WriteCounterValue (pVarItem->ViCounterVal);
 			 break;
 		      case VarAttrValue:
-			 WriteShort (pVa1->ViAttr);
-			 WriteCounterStyle (pVa1->ViStyle);
+			 WriteShort (pVarItem->ViAttr);
+			 WriteCounterStyle (pVarItem->ViStyle);
 
 			 break;
 		      case VarPageNumber:
-			 WriteShort (pVa1->ViView);
-			 WriteCounterStyle (pVa1->ViStyle);
+			 WriteShort (pVarItem->ViView);
+			 WriteCounterStyle (pVarItem->ViStyle);
 			 break;
 		      default:
 			 break;
@@ -1197,73 +1214,74 @@ PtrSSchema        pSchStr;
 	  }
      }
 
-   /* ecrit les boites de presentation et numerotation */
-   for (i = 1; i <= pSc1->PsNPresentBoxes; i++)
+   /* ecrit les boites de presentation */
+   for (i = 0; i < pPSch->PsNPresentBoxes; i++)
      {
-	pBo1 = &pSc1->PsPresentBox[i - 1];
-	wrnom (pBo1->PbName);
-	wrptrreg (pBo1->PbFirstPRule);
-	wrbool (pBo1->PbAcceptPageBreak);
-	wrbool (pBo1->PbAcceptLineBreak);
-	wrbool (pBo1->PbBuildAll);
-	wrbool (pBo1->PbNotInLine);
-	wrbool (pBo1->PbPageFooter);
-	wrbool (pBo1->PbPageHeader);
-	wrbool (pBo1->PbPageBox);
-	WriteShort (pBo1->PbFooterHeight);
-	WriteShort (pBo1->PbHeaderHeight);
-	WriteShort (pBo1->PbPageCounter);
-	WriteContentType (pBo1->PbContent);
-	switch (pBo1->PbContent)
+	pBox = &pPSch->PsPresentBox[i];
+	WriteName (pBox->PbName);
+	WriteRulePtr (pBox->PbFirstPRule);
+	WriteBoolean (pBox->PbAcceptPageBreak);
+	WriteBoolean (pBox->PbAcceptLineBreak);
+	WriteBoolean (pBox->PbBuildAll);
+	WriteBoolean (pBox->PbNotInLine);
+	WriteBoolean (pBox->PbPageFooter);
+	WriteBoolean (pBox->PbPageHeader);
+	WriteBoolean (pBox->PbPageBox);
+	WriteShort (pBox->PbFooterHeight);
+	WriteShort (pBox->PbHeaderHeight);
+	WriteShort (pBox->PbPageCounter);
+	WriteContentType (pBox->PbContent);
+	switch (pBox->PbContent)
 	      {
 		 case ContVariable:
-		    WriteShort (pBo1->PbContVariable);
+		    WriteShort (pBox->PbContVariable);
 		    break;
 		 case ContConst:
-		    WriteShort (pBo1->PbContConstant);
+		    WriteShort (pBox->PbContConstant);
 		    break;
 		 case ContElement:
-		    WriteShort (pBo1->PbContElem);
-		    WriteShort (pBo1->PbContRefElem);
+		    WriteShort (pBox->PbContElem);
+		    WriteShort (pBox->PbContRefElem);
 		    break;
 		 default:
 		    break;
 	      }
      }
 
-   /* ecrit les presentations des attributs semantiques */
-   for (i = 1; i <= pSchStr->SsNAttributes; i++)
-      WriteShort (pSc1->PsNAttrPRule[i - 1]);
+   /* ecrit les presentations des attributs */
+   for (i = 0; i < pSS->SsNAttributes; i++)
+      WriteShort (pPSch->PsNAttrPRule[i]);
 
-   for (i = 1; i <= pSchStr->SsNAttributes; i++)
+   for (i = 0; i < pSS->SsNAttributes; i++)
      {
-	pRP1 = pSc1->PsAttrPRule[i - 1];
-	for (l = pSc1->PsNAttrPRule[i - 1]; l-- > 0; pRP1 = pRP1->ApNextAttrPres)
+	pAttPres = pPSch->PsAttrPRule[i];
+	for (k = pPSch->PsNAttrPRule[i]; k-- > 0;
+	     pAttPres = pAttPres->ApNextAttrPres)
 	  {
-	     WriteShort (pRP1->ApElemType);
-	     switch (pSchStr->SsAttribute[i - 1].AttrType)
+	     WriteShort (pAttPres->ApElemType);
+	     switch (pSS->SsAttribute[i].AttrType)
 		   {
 		      case AtNumAttr:
-			 WriteShort (pRP1->ApNCases);
-			 for (j = 1; j <= pRP1->ApNCases; j++)
+			 WriteShort (pAttPres->ApNCases);
+			 for (j = 0; j < pAttPres->ApNCases; j++)
 			   {
-			      pCa1 = &pRP1->ApCase[j - 1];
-			      wrComparAttr (pCa1->CaComparType);
-			      WriteSignedShort (pCa1->CaLowerBound);
-			      WriteSignedShort (pCa1->CaUpperBound);
-			      wrptrreg (pCa1->CaFirstPRule);
+			      pCase = &pAttPres->ApCase[j];
+			      WriteAttrComparType (pCase->CaComparType);
+			      WriteSignedShort (pCase->CaLowerBound);
+			      WriteSignedShort (pCase->CaUpperBound);
+			      WriteRulePtr (pCase->CaFirstPRule);
 			   }
 			 break;
 		      case AtReferenceAttr:
-			 wrptrreg (pRP1->ApRefFirstPRule);
+			 WriteRulePtr (pAttPres->ApRefFirstPRule);
 			 break;
 		      case AtTextAttr:
-			 wrnom (pRP1->ApString);
-			 wrptrreg (pRP1->ApTextFirstPRule);
+			 WriteName (pAttPres->ApString);
+			 WriteRulePtr (pAttPres->ApTextFirstPRule);
 			 break;
 		      case AtEnumAttr:
-			 for (j = 0; j <= pSchStr->SsAttribute[i - 1].AttrNEnumValues; j++)
-			    wrptrreg (pRP1->ApEnumFirstPRule[j]);
+			 for (j = 0; j <= pSS->SsAttribute[i].AttrNEnumValues; j++)
+			    WriteRulePtr (pAttPres->ApEnumFirstPRule[j]);
 			 break;
 		   }
 	  }
@@ -1271,84 +1289,85 @@ PtrSSchema        pSchStr;
 
    /* ecrit la table des pointeurs de regle de chaque type du schema de */
    /* structure */
-   for (i = 1; i <= pSchStr->SsNRules; i++)
-      wrptrreg (pSc1->PsElemPRule[i - 1]);
+   for (i = 0; i < pSS->SsNRules; i++)
+      WriteRulePtr (pPSch->PsElemPRule[i]);
 
    /* ecrit toutes les regles de presentation */
    /* ecrit les regles standard */
-   WritePRules (pSc1->PsFirstDefaultPRule);
+   WritePRules (pPSch->PsFirstDefaultPRule);
 
    /* ecrit les regles des boites */
-   for (i = 1; i <= pSc1->PsNPresentBoxes; i++)
-      WritePRules (pSc1->PsPresentBox[i - 1].PbFirstPRule);
+   for (i = 0; i < pPSch->PsNPresentBoxes; i++)
+      WritePRules (pPSch->PsPresentBox[i].PbFirstPRule);
 
    /* ecrit les regles des attributs */
-   for (i = 1; i <= pSchStr->SsNAttributes; i++)
+   for (i = 0; i < pSS->SsNAttributes; i++)
      {
-	pRP1 = pSc1->PsAttrPRule[i - 1];
-	for (l = pSc1->PsNAttrPRule[i - 1]; l-- > 0; pRP1 = pRP1->ApNextAttrPres)
+	pAttPres = pPSch->PsAttrPRule[i];
+	for (k = pPSch->PsNAttrPRule[i]; k-- > 0;
+	     pAttPres = pAttPres->ApNextAttrPres)
 	  {
-	     switch (pSchStr->SsAttribute[i - 1].AttrType)
+	     switch (pSS->SsAttribute[i].AttrType)
 		   {
 		      case AtNumAttr:
-			 for (j = 1; j <= pRP1->ApNCases; j++)
-			    WritePRules (pRP1->ApCase[j - 1].CaFirstPRule);
+			 for (j = 0; j < pAttPres->ApNCases; j++)
+			    WritePRules (pAttPres->ApCase[j].CaFirstPRule);
 			 break;
 		      case AtReferenceAttr:
-			 WritePRules (pRP1->ApRefFirstPRule);
+			 WritePRules (pAttPres->ApRefFirstPRule);
 			 break;
 		      case AtTextAttr:
-			 WritePRules (pRP1->ApTextFirstPRule);
+			 WritePRules (pAttPres->ApTextFirstPRule);
 			 break;
 		      case AtEnumAttr:
-			 for (j = 0; j <= pSchStr->SsAttribute[i - 1].AttrNEnumValues; j++)
-			    WritePRules (pRP1->ApEnumFirstPRule[j]);
+			 for (j = 0; j <= pSS->SsAttribute[i].AttrNEnumValues; j++)
+			    WritePRules (pAttPres->ApEnumFirstPRule[j]);
 			 break;
 		   }
 	  }
      }
 
-   /* ecrit les regles des elements structures */
-   for (i = 1; i <= pSchStr->SsNRules; i++)
-      WritePRules (pSc1->PsElemPRule[i - 1]);
+   /* ecrit les regles des elements */
+   for (i = 0; i < pSS->SsNRules; i++)
+      WritePRules (pPSch->PsElemPRule[i]);
 
-   for (i = 1; i <= pSchStr->SsNAttributes; i++)
-      WriteShort (pSc1->PsNHeirElems[i - 1]);
+   for (i = 0; i < pSS->SsNAttributes; i++)
+      WriteShort (pPSch->PsNHeirElems[i]);
 
-   for (i = 1; i <= pSchStr->SsNRules; i++)
-      WriteShort (pSc1->PsNInheritedAttrs[i - 1]);
+   for (i = 0; i < pSS->SsNRules; i++)
+      WriteShort (pPSch->PsNInheritedAttrs[i]);
 
-   for (i = 1; i <= pSchStr->SsNAttributes; i++)
-      WriteShort (pSc1->PsNComparAttrs[i - 1]);
+   for (i = 0; i < pSS->SsNAttributes; i++)
+      WriteShort (pPSch->PsNComparAttrs[i]);
 
-   for (i = 1; i <= pSchStr->SsNRules; i++)
-      wrbool (pSc1->PsAcceptPageBreak[i - 1]);
+   for (i = 0; i < pSS->SsNRules; i++)
+      WriteBoolean (pPSch->PsAcceptPageBreak[i]);
 
-   for (i = 1; i <= pSchStr->SsNRules; i++)
-      wrbool (pSc1->PsAcceptLineBreak[i - 1]);
+   for (i = 0; i < pSS->SsNRules; i++)
+      WriteBoolean (pPSch->PsAcceptLineBreak[i]);
 
-   for (i = 1; i <= pSchStr->SsNRules; i++)
-      wrbool (pSc1->PsBuildAll[i - 1]);
+   for (i = 0; i < pSS->SsNRules; i++)
+      WriteBoolean (pPSch->PsBuildAll[i]);
 
-   for (i = 1; i <= pSchStr->SsNRules; i++)
-      wrbool (pSc1->PsNotInLine[i - 1]);
+   for (i = 0; i < pSS->SsNRules; i++)
+      WriteBoolean (pPSch->PsNotInLine[i]);
 
-   for (i = 1; i <= pSchStr->SsNRules; i++)
-      wrbool (pSc1->PsInPageHeaderOrFooter[i - 1]);
+   for (i = 0; i < pSS->SsNRules; i++)
+      WriteBoolean (pPSch->PsInPageHeaderOrFooter[i]);
 
-   for (i = 1; i <= pSchStr->SsNRules; i++)
-      wrbool (pSc1->PsAssocPaginated[i - 1]);
-   /* for (i = 1; i <= pSchStr->SsNRules; i++) *//* TODO */
-   /* wrbool(pSc1->SPVueAssocAvecCol[i - 1]); *//* TODO */
-   for (i = 1; i <= pSchStr->SsNRules; i++)
-      WriteShort (pSc1->PsElemTransmit[i - 1]);
-   WriteShort (pSc1->PsNTransmElems);
-   for (i = 1; i <= pSc1->PsNTransmElems; i++)
+   for (i = 0; i < pSS->SsNRules; i++)
+      WriteBoolean (pPSch->PsAssocPaginated[i]);
+   /* for (i = 0; i < pSS->SsNRules; i++) */		/* TODO */
+   /* WriteBoolean (pPSch->SPVueAssocAvecCol[i]); */	/* TODO */
+   for (i = 0; i < pSS->SsNRules; i++)
+      WriteShort (pPSch->PsElemTransmit[i]);
+   WriteShort (pPSch->PsNTransmElems);
+   for (i = 0; i < pPSch->PsNTransmElems; i++)
      {
-	WriteShort (pSc1->PsTransmElem[i - 1].TeTargetDoc);
-	wrnom (pSc1->PsTransmElem[i - 1].TeTargetAttr);
+	WriteShort (pPSch->PsTransmElem[i].TeTargetDoc);
+	WriteName (pPSch->PsTransmElem[i].TeTargetAttr);
      }
    BIOwriteClose (outfile);
    return True;
 }
-/* End Of Module wrschprs */
+

@@ -1,19 +1,11 @@
-
-/* -- Copyright (c) 1996 Inria  --  All rights reserved  -- */
-
-/* ====================================================================== */
-/* |                                                                    | */
-/* |                           Projet THOT                              | */
-/* |                                                                    | */
-/* |   Le programme PRS compile un schema de presentation, contenu	| */
-/* |   dans un fichier de type .S					| */
-/* |   PRS est dirige par la grammaire du langage de presentation       | */
-/* |   contenue, sous forme codee, dans le fichier PRESEN.GRM.          | */
-/* |   Ce fichier PRESEN.GRM est produit par le programme GRM.          | */
-/* |   PRS produit un fichier de type .PRS qui sera ensuite utilise     | */
-/* |   par l'Editeur.                                                   | */
-/* |                                                                    | */
-/* ====================================================================== */
+*/
+   Ce programme compile un schema de presentation contenu dans un fichier
+   de type .P
+   Il est dirige par la grammaire du langage de presentation
+   contenue, sous forme codee, dans le fichier PRESEN.GRM.
+   Il produit un fichier de type .PRS qui sera ensuite utilise
+   par l'Editeur.
+ */
 
 #include "thot_sys.h"
 #include "constgrm.h"
