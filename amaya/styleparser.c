@@ -3340,8 +3340,20 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
   cssRule = SkipBlanksAndComments (cssRule);
   if (!strncasecmp (cssRule, "none", 4))
     {
-      image.pointer = NULL;
-      TtaSetStylePresentation (PRBackgroundPicture, element, tsch, ctxt, image);
+      if (DoApply)
+	{
+	  /* no background image */
+	  image.pointer = NULL;
+	  TtaSetStylePresentation (PRBackgroundPicture, element, tsch, ctxt, image);
+	  /* no background color */
+	  value.typed_data.unit = UNIT_INVALID;
+	  value.typed_data.real = FALSE;
+	  value.typed_data.value = PATTERN_NONE;
+	  value.typed_data.unit = UNIT_REL;
+	  if (tsch)
+	    cssRule = CheckImportantRule (cssRule, ctxt);
+	  TtaSetStylePresentation (PRFillPattern, element, tsch, ctxt, value);
+	}
       cssRule += 4;
     }
   else if (!strncasecmp (cssRule, "url", 3))
