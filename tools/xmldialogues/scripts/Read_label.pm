@@ -35,10 +35,10 @@ sub init_label {
 #2)the list of the labels @list_of_label
 #3)the list of the hash variable %label_refs
 
+	$in_labelfile  = shift; #name of the label file
+	my $comment_for_begining_of_h_file = shift;
 
 
-	 $in_labelfile  = shift; #name of the label file
-	
 	my $line = "";
 	my $line_count = 0; # used to indicate the line of an error
 	my $continue = 1; # to indicate that one label at least is rcognise 
@@ -57,15 +57,28 @@ sub init_label {
 #	comments have to be either empty lines either don't begin with "#define" 
 			while ( $continue && defined ($line = <LABEL>)  ) {
 				$line_count++;
-				if ($line && $line =~ /^\/\*that is the real begin of labels used\*\//i ) {
-					$continue = 0 ;
+				chomp ($line);
+				if (defined ($line) 
+					&& defined ( $comment_for_begining_of_h_file) 
+					&& $line eq $comment_for_begining_of_h_file ) {
+						$continue = 0 ;
 				}		
 			} 
 #	the first line in witch we are interested can be (but not necessary)read	now
 			if ( $continue) {
 				do {
+					unless (defined ( $comment_for_begining_of_h_file) ) {
+						
+							print "There must be a specific commentary at the begining like:\n"
+									. "/*that is the real begin of labels used*/\n"
+									."please fill the $comment_for_begining_of_h_file variables into"
+									."Am_dial_managment and verify that this parameter is given to"
+									."Read_label::init_label\nNow press <ctrl>-c and restart the
+									proram\n";
+									<STDIN>;
+					}
 					print "\n\tPlease write this line at the begining of the good labels:\n",
-							"/*that is the real begin of labels used*/\n",
+							"$comment_for_begining_of_h_file\n",
 							"\tInto $in_labelfile \n",
 							"\tAre you ok? (Yes/No):\t";
 					$_ = <STDIN>;
@@ -73,7 +86,7 @@ sub init_label {
 				}
 				while (!defined ($_) || $_ !~ /^y/i );
 				close (LABEL) || warn "problem during LABEL'file $in_labelfile is closed: $!\n";
-				init_label ($in_labelfile) ; ##warning : recursivity, can do some errors
+				init_label ($in_labelfile, $comment_for_begining_of_h_file) ; ##warning : recursivity, can do some errors
 			}
 			else { #continue == 0
 #	reads and adds all the labels
@@ -95,12 +108,12 @@ sub init_label {
 						);
 			}
 			else {
-				print "problem during the reading of $in_labelfile\n";
+				print "\tProblem during the reading of $in_labelfile\n";
 			}
 		}#end else open...	
 	}	 
 	else  {   #(!(-r $in_labelfile))
-		print "file $in_labelfile not found\n";
+		print "\tFile $in_labelfile not found\n";
 	}
 } #end initlabel
 ################################################################################
@@ -123,7 +136,16 @@ sub addlabel {
 		{} # it's normal
 	elsif ( $line ne "" && $line !~ /^\/\*/ && $line =~ /^#define/i ) {
 		($_,$label,$label_ref,@else) = split (/\s+/, $line);
-		if (defined $label_ref &&  !(defined ( $label_refs{$label} )) ) {
+		if (	defined $label_ref 
+				&&  !(defined ( $label_refs{$label} )) 
+			############ used to treat the specific file EDITOR.h manualy
+			#	&& $label ne "TEXT_UNIT"
+			#	&&	$label ne "GRAPHICS_UNIT"
+			#	&&	$label ne "SYMBOL_UNIT"
+			#	&&	$label ne "PICTURE_UNIT"
+			#	&&	$label ne "REFERENCE_UNIT"
+			#	&&	$label ne "PAGE_BREAK" 
+			) {
 			$num_of_label += 1;
 			push (@list_of_label, $label );
 			$label_refs{$label} = $label_ref;
@@ -148,6 +170,8 @@ sub addlabel {
 1;
 __END__
 that is the good way to use it :
+use Read_label qw (&init_label);
+
 {
 my @a = (); # sorted list
 my %b = (); # table keys/values
@@ -155,17 +179,20 @@ my @list = Read_label::init_label ("/home/ehuck/opera/Amaya/amaya/amayamsg.h");
 my $total = $list[0];
 
 my $i = 1;
+	
 	do {
 		push (@a, $list[$i]  );
 		$i++;
 	}while ( $i <= $total );
+	#or : WARNING it's not the same 
+	
 	$i = $total + 1;
 	do {
 		$b{$list[$i]} = $list[$i+1];
 		$i += 2;
 	}while ( $i <= ($total * 3) );
 
-
+}
 #------------------end of file Read_label.pm-------------------------------
 
 

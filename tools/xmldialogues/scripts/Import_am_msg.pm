@@ -84,6 +84,7 @@ use Read_text qw ( &init_text );
 sub import_a_language {
 	$language_code = shift;
 	$end_label = shift;
+	 my $comment_at_the_begining = shift;
 	if (shift) {
 		$debug = 1;
 	}
@@ -115,7 +116,7 @@ sub import_a_language {
 # to load the label and their references
 	my @list = ();
 	do {
-		$_ = @list = Read_label::init_label ($in_labelfile);
+		$_ = @list = Read_label::init_label ($in_labelfile, $comment_at_the_begining);
 	}while ($_ == 0);	
 	#to fill the hach %labels :
 	my $i = $list[0] + 1;
@@ -143,8 +144,6 @@ sub import_a_language {
 	
 	close (IN) || die "problem during $basefile.old is closed: $!";
 	close (OUT) || die "problem during $newbasefile is closed: $!";
-	rename ( $newbasefile, $basefile )  || 	
-		 	die "can't rename $newbasefile to $basefile because of: $! \nthe old base still exist, the new base name is $newbasefile\n";							
 			
 	debug ( "the encodage is $encodage ");
 	print "\tEnd Add/Update a language\n";
@@ -155,6 +154,8 @@ sub import_a_language {
 			print $_ . " ";
 		}
 	}
+	rename ( $newbasefile, $basefile )  || 	
+		 	die "can't rename $newbasefile to $basefile because of: $! \nthe old base still exist, the new base name is $newbasefile\n";							
 	
 } #end sub import_a_language
 

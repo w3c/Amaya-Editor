@@ -34,11 +34,11 @@ BEGIN {
 ################
 ## sub  main
 ################
-	my $base = "/home/ehuck/opera/Amaya/tools/xmldialogues/base_am_msg.xml"; #complete name of the base
-	my $where = "/home/ehuck/xmldoc/"; # directory where the result files are putting
-	my $sufix = "-amayamsg"; # sufix of the dialogues files = result
-	my $specific_sufix = ".amaya.trans"; #used to indicate those specific files
-	my $head_name = "amayamsg.h";#name of the label file created
+	my $base ;#= "/home/ehuck/opera/Amaya/tools/xmldialogues/base_am_msg.xml"; #complete name of the base
+	my $where ;#= "/home/ehuck/xmldoc/"; # directory where the result files are putting
+	my $sufix ;#= "-amayamsg"; # sufix of the dialogues files = result
+	my $specific_sufix ;#= ".amaya.trans"; #used to indicate those specific files
+	my $head_name ;#= "amayamsg.h";#name of the label file created
 
 	my $prefix = ""; # the prefix for a lamguage
 	my @list_of_files_created = ();
@@ -53,6 +53,7 @@ sub edition {
 	$where = shift ;
 	$sufix = shift ;
 	$head_name = shift;
+	$specific_sufix = shift;
 
 	do {
 		print "What the prefix of the new language?\n";

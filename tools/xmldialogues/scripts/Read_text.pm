@@ -183,7 +183,7 @@ __END__
 
 
 my %b = (); # table keys/values
-my @list = Read_text::init_label ("$file", $encoding);
+my @list = Read_text::init_text ("$file", $encoding);
 unless ($encoding) {$encoding = $list[0]}
 my $total = $list[1];
 my $i = 2;

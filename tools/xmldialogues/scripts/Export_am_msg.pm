@@ -42,8 +42,8 @@ BEGIN {
 	my $head_name = "";#complete name of the ".h" file
 	
 	my @list_of_lang_occur = ();
-	my $current_label;
-	my $current_language ;
+	my $current_label = "";
+	my $current_language = "";
 	my $current_element; #to know in wuitch tag we are to treat texts
 	my $reference_value = 0;
 
@@ -54,15 +54,18 @@ BEGIN {
 									
 	my %record_verification = (); 	#To remember what kind of languages are allready
 										#read for the same label, it can be some lake
-	my $english_text_reference; #somes languages don't have text for a label
+	my $english_text_reference = ""; #somes languages don't have text for a label
 	
 	my @text_patches = (); #used because with the html, the text is cut in several patches
 	
 	my %language_out_codages = (); 	#To indicate in which cadage the output file are
 										#some needs encoding utf-8 to iso-latin1
 	my $codage ; 	#because the codage is an attribute of <language> and the
-						#coresspondig language is nown after as a char
+						#coresspondig language is known after as a char
+	
+	#for small particularyty
 	my $label_ending = "";
+	my $comment_for_begining_of_h_file  = "";
 	
 ################################################################################
 ## 									sub  main
@@ -73,9 +76,16 @@ sub export {
 	$sufix = shift ; # sufix of messages files
 	$head_name = shift; # location/name of the ".h"
 	$label_ending = shift; #name of the last label
+	$comment_for_begining_of_h_file = shift;
 		
-	$reference_value = 0;# to avoid problem when many calls
-
+# to avoid problem when many calls
+	$reference_value = 0;
+	@list_handles = (); 
+	%handle_names_ref = ();	
+	@list_of_dialogues_files = ();
+	@list_of_lang_occur = ();
+	
+	
 # declaration of the parser
 	my $parser = new XML::Parser (
 				ErrorContext  => 0 ,	#number of lines shown 
@@ -100,7 +110,7 @@ sub export {
 	
 	$parser->parse (*IN); 
 	
-	close ( IN ) || die "can't close $head_name because: $! \n";
+	close ( IN ) || die "Can't close $head_name because: $! \n";
 	
 	my $number = @list_of_lang_occur;
 	print "\tThis is the $number languages occured : @list_of_lang_occur \n"
@@ -291,7 +301,7 @@ sub end_hndl { #	do the modification if necessary
 		foreach $prefix (@list_of_lang_occur) {
 			# must close as many files as  present languages
 		 	close ( $list_handles [$handle_names_ref {$prefix} ] ) 
-			|| die "===>can't close $prefix$sufix\n";
+			|| warn "===>can't close $prefix$sufix because : $!\n";
 		}
 	}	
 	else { ; #nothing

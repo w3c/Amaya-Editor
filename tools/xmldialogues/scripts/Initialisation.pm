@@ -29,7 +29,7 @@ my @list_of_label = ();
 sub create_base {	
 #function that read amayamsg.h file and write it on the base_am_msg.xml
 # after recognizing the different elements
-#	WARNING : need those 4 parameters
+#	WARNING : need those 5 parameters
 	my $head_directory = shift;
 	my $head_file = shift;
    my $in_headfile = $head_directory . $head_file ;
@@ -37,6 +37,8 @@ sub create_base {
 	my $base_directory = shift;
 	my $base_name = shift;
 	my $out_basename = $base_directory . $base_name ;
+	
+	my $comment_at_the_begining =shift; #for the function  ::init_label
 
 # to avoid pb with %label if 2 call to this function 	
 	%label = ();
@@ -66,7 +68,7 @@ sub create_base {
 #	read the file source only if it exists and is readable
 	my @list = ();
 	do {
-	 	$_ = @list = Read_label::init_label ($in_headfile);
+	 	$_ = @list = Read_label::init_label ($in_headfile,$comment_at_the_begining);
 	}while ($_ == 0);
 	my $total = $list[0];
 	my $i = 1;	

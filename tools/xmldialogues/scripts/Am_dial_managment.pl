@@ -9,7 +9,8 @@ my $home = $ENV{"HOME"} . "/";
 my $config_file = "$home.amaya/am_dialogues.conf.xml";
 my $rep_amaya = ""; # way between $home and the Repertory Amaya and libwww
 my $rep_obj = ""; #name of the object direcitriy for Amaya
-
+	( $rep_amaya,$rep_obj) = load_parameters($home, $config_file);
+	
 
 #### 	for all the bases
 # directory for bases 
@@ -17,6 +18,13 @@ my $BASE_directory = "$home$rep_amaya/Amaya/tools/xmldialogues/bases/";
 # directory  translated NEW  files
 my $OUT_MSG_directory = "$home$rep_amaya/Amaya/config/";
 
+#	sufix for the generated file created into /docs to help translation
+my $specific_sufix = ".amaya.trans"; #used to indicate those specific files
+# commentary for begining of the ".h" file
+my $comment_for_begining_of_h_file  = "/*that is the real begin of labels used*/";
+
+
+############# TABLES key/value
 my %base_name ;	# table for the name of the bases 
 	
 my %head_dir ; 	# table for the name of the directories where ".h" files are
@@ -25,10 +33,20 @@ my %head_name ;	# table for the name of the ".h" files
 my %lang_dir ;		# table for the name of the directories where translated texts are
 my %lang_sufix ;	# table for the sufix name of the translated texts
 
+
+
+### for messages of the interface 
+	my %types = ();
+	$types {1} = "Amaya dialogues";	
+	$types {2} = "Amaya general messages";	
+	$types {3} = "Thot library dialogues";	
+	$types {4} = "Spell checker dialogues";
+#######and for the dynamic parameters
 my %index =qw ( 	1	dia
 						2	msg
 						3	lib
 						4	corrd);
+
 # to store the particulary labels that ends the label files used by Amaya
 my %ending_label = qw (	dia MAX_EDITOR_LABEL
 								msg AMAYA_MSG_MAX
@@ -64,12 +82,6 @@ my %ending_label = qw (	dia MAX_EDITOR_LABEL
  $lang_sufix {'corrd'} = '-corrdialogue' ;
  $base_name {'corrd'} = 'base_am_corrd.xml';
  
-### for messages of the interface 
-	my %types = ();
-	$types {1} = "Amaya dialogues";	
-	$types {2} = "Amaya general messages";	
-	$types {3} = "Thot library dialogues";	
-	$types {4} = "Spell checker dialogues";
 
 
 ################################################################################
@@ -93,7 +105,6 @@ use Configfile qw ( &load_parameters );
 
 #launch		
 
-	( $rep_amaya,$rep_obj) = load_parameters($home, $config_file);
 	menu () ;
 
 }
@@ -178,15 +189,16 @@ do { # to continue to treat the same type of dialogue
 			Initialisation::create_base ( $head_dir{ $of_what }, 
 													$head_name{ $of_what },
 													$BASE_directory, 
-													$base_name { $of_what });
+													$base_name { $of_what },
+													$comment_for_begining_of_h_file);
 			# to initialise with english
-			#print "\n\tNow,fill the base with english by default\n\n";
-			#$Import_am_msg::in_labelfile = $head_dir{ $index{ $last_choice}} . $head_name{ $index{ $last_choice}};
-			#$Import_am_msg::basefile = $BASE_directory . $base_name { $index{ $last_choice}};
-			#$Import_am_msg::in_textdirectory = $lang_dir { $index{ $last_choice}};
-			#$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};
-			#$Import_am_msg::encodage = "latin1";
-			#Import_am_msg::import_a_language ("en", $ending_label{ $index{ $last_choice}}) ;
+			print "\n\tNow,fill the base with english by default\n\n";
+			$Import_am_msg::in_labelfile = $head_dir{ $index{ $last_choice}} . $head_name{ $index{ $last_choice}};
+			$Import_am_msg::basefile = $BASE_directory . $base_name { $index{ $last_choice}};
+			$Import_am_msg::in_textdirectory = $lang_dir { $index{ $last_choice}};
+			$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};
+			$Import_am_msg::encodage = "latin1";
+			Import_am_msg::import_a_language ("en", $ending_label{ $index{ $last_choice}}) ;
 		}
 
 		$choice = -1; #to avoid problem		
@@ -255,7 +267,8 @@ do { # to continue to treat the same type of dialogue
 			Forcer::forcer ( 	$BASE_directory,
 									$base_name{ $of_what},
 									$head_dir{ $of_what},
-									$head_name{ $of_what}
+									$head_name{ $of_what},
+									$comment_for_begining_of_h_file
 								);	
 		}
 		$choice = -1; #to avoid problem		
