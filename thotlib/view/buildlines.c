@@ -1849,28 +1849,16 @@ int                *height;
       /* recherche la premiere boite mise en ligne */
       pChildAb = pAb->AbFirstEnclosed;
       still = (pChildAb != NULL);
+      pNextBox = NULL;
       while (still)
+	if (pChildAb == NULL)
+	  still = FALSE;
 	/* Est-ce que le pave est mort ? */
-	if (pChildAb->AbDead)
-	  {
-	    pNextBox = GetNextBox (pChildAb);
-	    still = FALSE;
-	  }
+	else if (pChildAb->AbDead || pChildAb->AbNotInLine)
+	  pChildAb = pChildAb->AbNext;
 	else if (pChildAb->AbBox->BxType == BoGhost)
-	  {
-	    /* descend la hierarchie */
-	    pChildAb = pChildAb->AbFirstEnclosed;
-	    still = pChildAb != NULL;
-	  }
-	else if (pChildAb->AbNotInLine)
-	  {
-	    /* skip over the box */
-	    while (still && pChildAb->AbNotInLine)
-	      {
-		pChildAb = pChildAb->AbNext;
-		still = (pChildAb != NULL);
-	      }
-	  }
+	  /* descend la hierarchie */
+	  pChildAb = pChildAb->AbFirstEnclosed;
 	else
 	  {
 	    /* Sinon c'est la boite du pave */
@@ -2143,8 +2131,10 @@ int                *height;
   else
     {
       *height = FontHeight (pBox->BxFont);
-      while (pNextBox != NULL && pNextBox->BxAbstractBox->AbNotInLine)
-	pNextBox = GetNextBox (pNextBox->BxAbstractBox);
+      if (pNextBox != NULL && !pNextBox->BxAbstractBox->AbHorizEnclosing)
+	do
+	  pNextBox = GetNextBox (pNextBox->BxAbstractBox);
+	while (pNextBox != NULL && pNextBox->BxAbstractBox->AbNotInLine);
       if (pNextBox != NULL)
 	{
 	  /* compute minimum and maximum width of the paragraph */
