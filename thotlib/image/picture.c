@@ -2212,7 +2212,7 @@ ThotBool TtaFileCopyUncompress (CONST char *sourceFile, CONST char *targetFile)
 	    {
 	      /* cannot read the source file */
 	      TtaWriteClose (targetf);
-	      unlink (targetFile);
+	      TtaFileUnlink (targetFile);
 	      return FALSE;
 	    }
 	  else

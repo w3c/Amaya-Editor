@@ -843,7 +843,7 @@ void LINK_DeleteLink (Document source_doc, ThotBool isReplyTo)
 
       /* rename the main index file */
       TtaFileUnlink (main_index_file_old);
-      rename (main_index_file_new, main_index_file_old);
+      TtaFileRename (main_index_file_new, main_index_file_old);
       /* remove the index file */
       TtaFileUnlink (doc_index);
     }

@@ -14,6 +14,7 @@
  */
 #ifdef _WX
   #include "wx/utils.h"
+  #include "wx/file.h"
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -22,6 +23,7 @@
 #include "typemedia.h"
 #include "fileaccess.h"
 #include "zlib.h"
+#include "message_wx.h"
 
 #include "fileaccess_f.h"
 #include "memory_f.h"
@@ -34,6 +36,10 @@
   ----------------------------------------------------------------------*/
 int ThotDirExists (CONST char *name)
 {
+#ifdef _WX
+  wxASSERT_MSG(FALSE, _T("unused funtion"));
+  return FALSE;
+#else /* _WX */
   int         status = 0;
 #ifdef _WINGUI
   DWORD       attribs;
@@ -48,15 +54,11 @@ int ThotDirExists (CONST char *name)
   else
     status = 0;
 #else /* _WINGUI */
-#ifdef _WX
-  if (wxDirExists(wxString(name, *wxConvCurrent)))
-    status = 1;
-#else /* #ifdef _WX */
   struct stat buf;
   status = stat (name, &buf) == 0 && S_ISDIR (buf.st_mode);
-#endif /* #ifdef _WX */
 #endif /* _WINGUI */
   return status;
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -66,12 +68,16 @@ int ThotDirExists (CONST char *name)
   ----------------------------------------------------------------------*/
 int TtaDirExists (CONST char *dirpath)
 {
+#ifdef _WX
+  return wxDirExists(TtaConvMessageToWX(dirpath));
+#else /* #ifdef _WX */
   int         status = 0;
   char       *name;
-
   name = GetRealFileName (dirpath);
   status = ThotDirExists (name);
+  TtaFreeMemory (name);
   return status;
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -80,6 +86,10 @@ int TtaDirExists (CONST char *dirpath)
   ----------------------------------------------------------------------*/
 int ThotFileExist (CONST char *name)
 {
+#ifdef _WX
+  wxASSERT_MSG(FALSE, _T("unused function"));
+  return FALSE;
+#else /* _WX */
   int         status = 0;
 #ifdef _WINGUI
   DWORD       attribs;
@@ -120,6 +130,7 @@ int ThotFileExist (CONST char *name)
     }
 #endif /* _WINGUI */
   return status;
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -129,20 +140,30 @@ int ThotFileExist (CONST char *name)
   ----------------------------------------------------------------------*/
 int TtaFileExist (CONST char *filename)
 {
+#ifdef _WX
+  return wxFile::Exists(TtaConvMessageToWX(filename));
+#else /* _WX */
   char       *name;
   int         status = 0;
 
   name = GetRealFileName (filename);
   status = ThotFileExist (name);
   TtaFreeMemory (name);
+
   return status;
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
-   TtaFileUnlink : remove a file.                                     
+   TtaFileUnlink : remove a file.                             
+   return 0 if succesfull
+   return -1 if error
   ----------------------------------------------------------------------*/
 int TtaFileUnlink (CONST char *filename)
 {
+#ifdef _WX
+	return wxRemoveFile(TtaConvMessageToWX(filename)) ? 0 : -1;
+#else /* _WX */
   int         ret;
   char       *name;
 
@@ -154,7 +175,20 @@ int TtaFileUnlink (CONST char *filename)
       return ret;
     }
   else
-    return 0;
+    return -1;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+   TtaFileRename rename oldname to newname, returns true if succesfull
+  ----------------------------------------------------------------------*/
+ThotBool TtaFileRename( const char * oldname, const char * newname )
+{
+#ifdef _WX
+  return wxRenameFile(TtaConvMessageToWX(oldname), TtaConvMessageToWX(newname));
+#else /* _WX */
+  return ( rename( oldname, newname ) == 0 );
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -162,6 +196,10 @@ int TtaFileUnlink (CONST char *filename)
   ----------------------------------------------------------------------*/
 static ThotFileHandle TtaFileOpen (CONST char *name, ThotFileMode mode)
 {
+#ifdef _WX
+   wxASSERT_MSG(FALSE, _T("unused function"));
+   return 0;
+#else /* _WX */
    ThotFileHandle      ret;
 #ifdef _WINGUI
    DWORD               access = 0;	/* access (read-write) mode  */
@@ -194,6 +232,7 @@ static ThotFileHandle TtaFileOpen (CONST char *name, ThotFileMode mode)
 #endif /* _WINDOWS */
 #endif /* _WINGUI */
    return ret;
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -216,6 +255,10 @@ static int TtaFileClose (ThotFileHandle handle)
   ----------------------------------------------------------------------*/
 unsigned long TtaGetFileSize (char *filename)
 {
+#ifdef _WX
+  wxFile file(TtaConvMessageToWX(filename));
+  return file.Length();
+#else /* _WX */
   ThotFileOffset      ret;
   char               *name;
   unsigned long       file_size = 0L;
@@ -242,6 +285,7 @@ unsigned long TtaGetFileSize (char *filename)
     }
    TtaFreeMemory (name);
    return file_size;
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -250,6 +294,9 @@ unsigned long TtaGetFileSize (char *filename)
   ----------------------------------------------------------------------*/
 ThotBool TtaFileCopy (CONST char *sourceFileName, CONST char *targetFileName)
 {
+#ifdef _WX
+  return wxCopyFile(TtaConvMessageToWX(sourceFileName), TtaConvMessageToWX(targetFileName), TRUE);
+#else /* _WX */
   FILE               *targetf, *sourcef;
   int                 size;
   char                buffer[8192];
@@ -281,6 +328,7 @@ ThotBool TtaFileCopy (CONST char *sourceFileName, CONST char *targetFileName)
 	}
     }
   return TRUE;
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------

@@ -70,6 +70,7 @@ typedef long ThotFileOffset;
 extern int TtaDirExists ( CONST char *dirpath );
 extern int TtaFileExist ( CONST char *filename );
 extern int TtaFileUnlink ( CONST char *filename );
+extern ThotBool TtaFileRename( const char * oldname, const char * newname );
 extern unsigned long TtaGetFileSize (char *filename);
 extern ThotBool TtaFileCopy ( CONST char *sourceFileName,
 			      CONST char *targetFileName );
@@ -96,6 +97,8 @@ extern ThotBool TtaReadInteger ( BinFile file,
                                 int *sval );
 extern ThotBool TtaReadName ( BinFile file,
                              unsigned char *name );
+extern char * TtaGetRealFileName(CONST char *name);
+
 #ifndef NODISPLAY
 extern gzFile TtaGZOpen (CONST char *filename);
 extern void TtaGZClose (gzFile file);

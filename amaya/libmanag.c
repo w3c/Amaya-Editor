@@ -93,10 +93,10 @@ static int y_box = 10000;
 static int width_box = 0;
 static int height_box = 0;
 
-#ifndef _WINGUI
+#ifdef _GTK
 #include  "Libsvg.xpm"
 #include  "LibsvgNo.xpm"
-#endif /* _WINGUI */
+#endif /* _GTK */
 
 static ThotIcon   iconLibsvg;
 static ThotIcon   iconLibsvgNo;
@@ -1836,10 +1836,10 @@ void ChangeSVGLibraryLinePresentation (Document doc, Element El)
 void InitLibrary (void)
 {
 #ifdef _SVG
-#ifndef _WINGUI
+#ifdef _GTK
   iconLibsvg = TtaCreatePixmapLogo (libsvg_xpm);
   iconLibsvgNo = TtaCreatePixmapLogo (libsvgNo_xpm);
-#endif /* _WINGUI */
+#endif /* _GTK */
 
   BaseLibrary = TtaSetCallback ((Proc)CallbackLibrary, LIBRARY_MAX_REF);
 #endif /* _SVG */

@@ -61,7 +61,7 @@
 
 #include "appdialogue_wx.h"
 
-#if defined(_GTK) || defined(_WX) 
+#if defined(_GTK)
 #include "stopN.xpm"
 #include "stopR.xpm"
 #include "save.xpm"
@@ -98,7 +98,7 @@
 #include "Table.xpm"
 #include "TableNo.xpm"
 #include "home.xpm"
-#endif /* #if defned(_GTK) || defined(_WX) */
+#endif /* #if defned(_GTK) */
 
 #ifdef _WINGUI
 /*
@@ -4027,7 +4027,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	    /* now we can rename the local name of a remote document */
 	  else
 	    /* now we can rename the local name of a remote document */
-	    rename (tempfile, localdoc);
+	    TtaFileRename (tempfile, localdoc);
 	}
       else
 	{
@@ -7464,6 +7464,10 @@ void InitAmaya (NotifyEvent * event)
    DirectoryName[0] = EOS;
    SavedDocumentURL = NULL;
    /* set path on current directory */
+#ifdef _WX
+   wxString homedir = TtaGetHomeDir();
+   sprintf (DirectoryName, "%s", homedir.mb_str(wxConvUTF8));
+#else /* _WX */
 #ifdef _WINDOWS
    s = getenv ("HOMEDRIVE");
    ptr = getenv ("HOMEPATH");
@@ -7481,6 +7485,7 @@ void InitAmaya (NotifyEvent * event)
        s = NULL;
      }
 #endif /* _WINDOWS */
+#endif /* _WX */
    if (DirectoryName[0] == EOS || !TtaDirExists (DirectoryName))
      getcwd (DirectoryName, MAX_LENGTH);
    DocumentName = (char *)TtaGetMemory (MAX_LENGTH);
@@ -8057,7 +8062,7 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
   int            i, j, len, nb, end;
   FILE          *file = NULL;
   unsigned char *localname;
-  CHARSET        encoding = TtaGetLocaleCharset ();
+  CHARSET        encoding;
 
   if (pathname == NULL || pathname[0] == EOS)
     return;
@@ -8071,7 +8076,14 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
   urlstring = (char *) TtaGetMemory (MAX_LENGTH);
   /* open the file list_url.dat into APP_HOME directory */
   app_home = TtaGetEnvString ("APP_HOME");
+#ifdef _WX
+   /* force url encoding to utf8 */
+  sprintf (urlstring, "%s%clist_url_utf8.dat", app_home, DIR_SEP);
+  encoding = UTF_8;
+#else /* _WX */
   sprintf (urlstring, "%s%clist_url.dat", app_home, DIR_SEP);
+  encoding = TtaGetLocaleCharset();
+#endif /* _WX */
   /* keep the previous list */
   ptr = URL_list;
   /* create a new list */
@@ -8145,7 +8157,7 @@ void InitStringForCombobox ()
   CHAR_T             wc;
   FILE              *file;
   int                i, nb, len, l;
-  CHARSET            encoding = TtaGetLocaleCharset ();
+  CHARSET            encoding;
 
   /* remove the previous list */
   TtaFreeMemory (URL_list);
@@ -8153,7 +8165,16 @@ void InitStringForCombobox ()
   urlstring = (unsigned char *) TtaGetMemory (MAX_LENGTH);
   /* open the file list_url.dat into APP_HOME directory */
   app_home = TtaGetEnvString ("APP_HOME");
+
+#ifdef _WX
+   /* force url encoding to utf8 */
+  sprintf ((char *)urlstring, "%s%clist_url_utf8.dat", app_home, DIR_SEP);
+  encoding = UTF_8;
+#else /* _WX */
   sprintf ((char *)urlstring, "%s%clist_url.dat", app_home, DIR_SEP);
+  encoding = TtaGetLocaleCharset();
+#endif /* _WX */
+  
   file = TtaReadOpen ((char *)urlstring);
   *urlstring = EOS;
   if (file)
@@ -8179,17 +8200,6 @@ void InitStringForCombobox ()
 		    urlstring[len] = EOS;
 		  else if (c == 13)
 		    urlstring[len] = EOS;
-#ifdef _WX
-		  else if (c > 127 && encoding != UTF_8)
-		  {
-			/* URL list uses the locale encoding */
-            ptr = &c;
-            TtaGetNextWCFromString (&wc, &ptr, encoding);
-			ptr = &urlstring[len];
-            l = TtaWCToMBstring (wc, &ptr);
-			len += l;
-		  }
-#endif /* _WX */
 		  else
 		    urlstring[len++] = (char)c;
 		}

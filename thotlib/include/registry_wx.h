@@ -12,6 +12,8 @@ typedef enum
   } wxResourceType;
 
 extern wxString TtaGetResourcePathWX( wxResourceType type, const char * filename );
+extern wxString TtaGetHomeDir();
+
 #endif /* _WX */
 
 #endif	/* __REGISTRY_WX_H__ */

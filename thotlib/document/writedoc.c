@@ -218,6 +218,7 @@ ThotBool StoreDocument (PtrDocument pDoc, PathBuffer docName,
    NotifyDialog        notifyDoc;
    char                buf[MAX_TXT_LEN];
    int                 i;
+   ThotBool            rename_ok;
    ThotBool            sameFile, status, ok;
 
    CloseTextInsertion ();
@@ -272,12 +273,12 @@ ThotBool StoreDocument (PtrDocument pDoc, PathBuffer docName,
 	     if (!copy)
 	       {
 		  FindCompleteName (pDoc->DocDName, "OLD", oldDir, backName, &i);
-		  i = rename (pivName, backName);
+		  rename_ok = TtaFileRename (pivName, backName);
 	       }
 	     /* 2- faire mv du .Tmp sur le .PIV */
 	     FindCompleteName (docName, "PIV", dirName, pivName, &i);
-	     i = rename (tempName, pivName);
-	     if (i >= 0)
+	     rename_ok = TtaFileRename (tempName, pivName);
+	     if (rename_ok)
 		/* >> tout s'est bien passe' << */
 		/* detruit l'ancienne sauvegarde */
 	       {

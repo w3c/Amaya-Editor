@@ -124,6 +124,16 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    int                     i, lg, j = 0;
    int                     frame;
 
+#ifdef _WX
+   name         = TtaGetRealFileName(name);
+   dir          = TtaGetRealFileName(dir);
+   thotSch      = TtaGetRealFileName(thotSch);
+   thotDoc      = TtaGetRealFileName(thotDoc);
+   realName     = TtaGetRealFileName(realName);
+   output       = TtaGetRealFileName(output);
+   cssToPrint   = TtaGetRealFileName(cssToPrint);
+#endif /* _WX */
+
    /* initialize the print command */
    ptr = TtaGetEnvString ("LANG");
 #ifdef _WINDOWS
@@ -584,29 +594,27 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    }
 #else /* _WX */
    hLib = LoadLibrary ("thotprinter");
-   if (!hLib)
-      return /* FATAL_EXIT_CODE */;
-   ptrMainProc = (MYPROC) GetProcAddress (hLib, "PrintDoc");
-   if (!ptrMainProc)
-     {
-       FreeLibrary (hLib);
-       return /* FATAL_EXIT_CODE */;
-     }
-   
-   EnableWindow  (FrRef[frame], FALSE);
-   if (TtPrinterDC)
-   (ptrMainProc) (FrRef[frame], printArgc, printArgv,
-		TtPrinterDC, TtIsTrueColor, 
-		TtWDepth, name, dir, hInstance, buttonCommand);
+   if (hLib)
+   {
+     ptrMainProc = (MYPROC) GetProcAddress (hLib, "PrintDoc");
+     if (ptrMainProc)
+	 {
+       EnableWindow  (FrRef[frame], FALSE);
+       if (TtPrinterDC)
+         (ptrMainProc) (FrRef[frame], printArgc, printArgv,
+		    TtPrinterDC, TtIsTrueColor, 
+		    TtWDepth, name, dir, hInstance, buttonCommand);
 
-   FreeLibrary (hLib);
-   EnableWindow (FrRef[frame], TRUE);
-   SetFocus (FrRef[frame]);
-   if (TtPrinterDC)
-     {
-       DeleteDC (TtPrinterDC);
-       TtPrinterDC = (HDC) 0;
-     }
+       EnableWindow (FrRef[frame], TRUE);
+       SetFocus (FrRef[frame]);
+       if (TtPrinterDC)
+	   {
+         DeleteDC (TtPrinterDC);
+         TtPrinterDC = (HDC) 0;
+	   }
+	 }
+     FreeLibrary (hLib);
+   }
 #endif /* _WX */
    for (i = 0; i < printArgc; i++)
        TtaFreeMemory (printArgv[i]);
@@ -622,6 +630,16 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (res == -1) 
      TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
 #endif /*_WINDOWS*/
+
+#ifdef _WX
+   TtaFreeMemory(name);
+   TtaFreeMemory(dir);
+   TtaFreeMemory(thotSch);
+   TtaFreeMemory(thotDoc);
+   TtaFreeMemory(realName);
+   TtaFreeMemory(output);
+   TtaFreeMemory(cssToPrint);
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------

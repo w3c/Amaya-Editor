@@ -9,6 +9,7 @@
 #include "wx/wx.h"
 #include "wx/string.h"
 #include "wx/strconv.h"
+#include "wx/utils.h"
 
 #include "thot_gui.h"
 #include "thotkey.h"
@@ -86,4 +87,50 @@ wxString TtaGetResourcePathWX( wxResourceType type, const char * filename )
   return path;
 }
 
+/*----------------------------------------------------------------------
+  TtaGetHomeDir - 
+  this function returns the user homedir
+  on windows something like : C:\Doc... adn.. settings\username
+  on unix something like : /home/username
+  ----------------------------------------------------------------------*/
+wxString TtaGetHomeDir()
+{
+#ifdef _WINDOWS
+	wxChar      buffer[MAX_PATH+1];
+	DWORD       dwSize;
+
+   typedef BOOL (STDMETHODCALLTYPE FAR * LPFNGETPROFILESDIRECTORY) (
+				LPTSTR lpProfileDir,
+				LPDWORD lpcchSize
+		  );
+   HMODULE                  g_hUserEnvLib          = NULL;
+   LPFNGETPROFILESDIRECTORY GetProfilesDirectory   = NULL;
+
+   buffer[0] = EOS;
+
+   g_hUserEnvLib = LoadLibrary (_T("userenv.dll"));
+   if (g_hUserEnvLib)
+	 {
+	   GetProfilesDirectory =
+	 (LPFNGETPROFILESDIRECTORY) GetProcAddress (g_hUserEnvLib,
+                                             "GetProfilesDirectoryW");
+	   dwSize = MAX_PATH;
+	   GetProfilesDirectory (buffer, &dwSize);
+	 }
+   if (buffer[0] == EOS)
+	 GetWindowsDirectory (buffer, dwSize);
+
+   wxString wx_win_profiles_dir(buffer);
+
+   wxGetUserName(buffer, sizeof(buffer));
+   wxString wx_win_username(buffer);
+
+   wxString wx_win_homedir = wx_win_profiles_dir + _T("\\") + wx_win_username;
+   return wx_win_homedir;
+#endif /* _WINDOWS */
+
+#ifdef _UNIX
+   return wxGetHomeDir();
+#endif /* _UNIX */
+}
 #endif /* _WX */

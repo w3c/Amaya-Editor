@@ -36,6 +36,7 @@
 #include "registry.h"
 #include "application.h"
 #include "zlib.h"
+#include "registry_wx.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -1232,7 +1233,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
    * second case, the argv[0] indicate a relative path name.
    * The exec name is obtained by appending the current directory.
    */
-  else if (ThotFileExist (appArgv0))
+  else if (TtaFileExist (appArgv0))
     {
       getcwd (&execname[0], sizeof (execname) / sizeof (char));
       strcat (execname, DIR_STR);
@@ -1420,7 +1421,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
    /* load the system settings, stored in THOTDIR/config/thot.ini */
    sprintf (filename, "%s%c%s%c%s", execname, DIR_SEP, THOT_CONFIG_FILENAME,
 	    DIR_SEP, THOT_INI_FILENAME);
-   if (ThotFileExist (filename))
+   if (TtaFileExist (filename))
      {
 #ifdef DEBUG_REGISTRY
        fprintf (stderr, "reading system %s from %s\n", THOT_INI_FILENAME, filename);
@@ -1498,10 +1499,10 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	   /* Windows NT convention */
 	   sprintf (app_home, "%s\\profiles\\%s\\%s", windir, ptr, AppNameW);
 	   ptr2 = getenv ("HOMEDRIVE");
-	   if (!ThotDirExists (app_home))
+	   if (!TtaDirExists (app_home))
 	   {
 	     sprintf (app_home, "%s\\%s\\%s", windir, ptr, AppNameW);
-	     if (!ThotDirExists (app_home))
+	     if (!TtaDirExists (app_home))
 	       app_home[0] = EOS;
 	   }
 	   if (app_home[0] == EOS)
@@ -1511,7 +1512,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	       if (ptr2 && *ptr2 && ptr3)
 		 {
 		   sprintf (app_home, "%s%s\\%s", ptr2, ptr3, AppNameW);
-		   if (!ThotDirExists (app_home))
+		   if (!TtaDirExists (app_home))
 		     app_home[0] = EOS;
 		 }
 	     }
@@ -1540,7 +1541,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
 		 sprintf (app_home, "%s\\Documents and Settings\\%s",
 			  windir, ptr);
 
-	       if (!ThotDirExists (app_home))
+	       if (!TtaDirExists (app_home))
 		 /* the Windows NT convention */
 		 sprintf (app_home, "%s\\profiles\\%s", windir, ptr);
 
@@ -1568,38 +1569,9 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #else /* _UNIX */
 
 #if defined(_WX) && defined(_WINDOWS)
-	wxChar      buffer[MAX_PATH+1];
-	DWORD       dwSize;
-
-   typedef BOOL (STDMETHODCALLTYPE FAR * LPFNGETPROFILESDIRECTORY) (
-				LPTSTR lpProfileDir,
-				LPDWORD lpcchSize
-		  );
-   HMODULE                  g_hUserEnvLib          = NULL;
-   LPFNGETPROFILESDIRECTORY GetProfilesDirectory   = NULL;
-
-   buffer[0] = EOS;
-
-   g_hUserEnvLib = LoadLibrary (_T("userenv.dll"));
-   if (g_hUserEnvLib)
-	 {
-	   GetProfilesDirectory =
-	 (LPFNGETPROFILESDIRECTORY) GetProcAddress (g_hUserEnvLib,
-                                             "GetProfilesDirectoryW");
-	   dwSize = MAX_PATH;
-	   GetProfilesDirectory (buffer, &dwSize);
-	 }
-   if (buffer[0] == EOS)
-	 GetWindowsDirectory (buffer, dwSize);
-
-
-   wxString wx_win_profiles_dir(buffer);
-   wxGetUserName(buffer,sizeof(buffer));
-   wxString wx_win_username(buffer);
-   sprintf (app_home, "%s%c%s%c%s", 
-			wx_win_profiles_dir.mb_str(wxConvUTF8), DIR_SEP,
-			wx_win_username.mb_str(wxConvUTF8), DIR_SEP,
-			AppNameW);
+   wxString wx_win_homedir = TtaGetHomeDir();
+   sprintf (app_home, "%s%c%s", 
+			wx_win_homedir.mb_str(wxConvUTF8), DIR_SEP,	AppNameW);
 #endif /* _WX && _WINDOWS */
 
 #endif /* _UNIX */
@@ -1621,7 +1593,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
    if (app_home && *app_home != EOS)
      {
        sprintf (filename, "%s%c%s", app_home, DIR_SEP, THOT_RC_FILENAME);
-       if (ThotFileExist (&filename[0]))
+       if (TtaFileExist (&filename[0]))
 	 {
 #ifdef DEBUG_REGISTRY
 	   fprintf (stderr, "reading user's %s from %s\n",

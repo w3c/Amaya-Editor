@@ -22,7 +22,7 @@ int main(int argc, char **argv)
     {
       strcpy(name, argv[1]);
       strcat(name, ".old");
-      if (rename (argv[1], name))
+      if (!TtaFileRename (argv[1], name))
 	{
 	  printf("cannot rename %s into %s.old\n", argv[1], argv[1]);
 	  exit (-1);
@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 	{
 	  printf("cannot open %s or %s.new\n", argv[1], argv[1]);
 	  /* restore the old name */
-	  rename (name, argv[1]);
+	  TtaFileRename (name, argv[1]);
 	}
       else
 	{

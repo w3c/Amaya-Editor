@@ -3319,7 +3319,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
       if (secondaryFileName[0] != EOS)
 	{
 	  sprintf (fname, "%s%c%s", fileDirectory, DIR_SEP, secondaryFileName);
-	  unlink (fname);
+	  TtaFileUnlink (fname);
 	}
       break;
     case TSetCounter:

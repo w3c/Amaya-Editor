@@ -30,7 +30,7 @@
 #include "SVG.h"
 #include "HTML.h"
 
-#if defined(_GTK) || defined(_WX)
+#if defined(_GTK)
 #include "Graph.xpm"
 #include "GraphNo.xpm"
 #include "line.xpm"
@@ -45,7 +45,7 @@
 #include "label.xpm"
 #include "text.xpm"
 #include "group.xpm"
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) */
 
 #include "libmanag_f.h"
 #include "anim_f.h"
@@ -2181,7 +2181,7 @@ void FreeSVG ()
 void InitSVG ()
 {
 #ifdef _SVG
-#if defined(_GTK) || defined(_WX)
+#if defined(_GTK)
    iconGraph = TtaCreatePixmapLogo (Graph_xpm);
    iconGraphNo = TtaCreatePixmapLogo (GraphNo_xpm);
    mIcons[0] = TtaCreatePixmapLogo (line_xpm);
@@ -2196,7 +2196,7 @@ void InitSVG ()
    mIcons[9] = TtaCreatePixmapLogo (label_xpm);
    mIcons[10] = TtaCreatePixmapLogo (text_xpm);
    mIcons[11] = TtaCreatePixmapLogo (group_xpm);
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) */
    
    GraphDialogue = TtaSetCallback ((Proc)CallbackGraph, MAX_GRAPH);
 #endif /* _SVG */

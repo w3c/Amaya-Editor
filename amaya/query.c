@@ -222,7 +222,7 @@ static int test_cachelock (char *filename)
 {
 #ifdef _WINDOWS
   /* if the lock is set, we can't unlink the file under Windows */
-  if (!TtaFileUnlink (filename))
+  if (TtaFileUnlink(filename) == 0)
     return 0;
   else
     return -1;
@@ -2182,7 +2182,11 @@ int i;
     HTCacheMode_setProtected (NO);
 
   /* get the cache dir (or use a default one) */
+#ifdef _WX
+  strptr = TtaGetRealFileName(TtaGetEnvString ("CACHE_DIR"));
+#else /* _WX */
   strptr = TtaGetEnvString ("CACHE_DIR");
+#endif /* _WX */
   if (strptr && *strptr) 
     {
       real_dir = (char *)TtaGetMemory (strlen (strptr) + strlen (CACHE_DIR_NAME) + 20);
@@ -2195,6 +2199,9 @@ int i;
       real_dir = (char *)TtaGetMemory (strlen (TempFileDirectory) + strlen (CACHE_DIR_NAME) + 20);
       sprintf (real_dir, "%s%s", TempFileDirectory, CACHE_DIR_NAME);
     }
+#ifdef _WX
+  TtaFreeMemory(strptr);
+#endif /* _WX */
 
   /* compatiblity with previous versions of Amaya: does real_dir
      include CACHE_DIR_NAME? If not, add it */
@@ -3510,8 +3517,15 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
        me->outputfile = (char  *) NULL; 
      }
 
+#ifdef _WX
+  char * localfilename = TtaGetRealFileName (fileName);
+  /* @@IV 18/08/2004 eencode spaces in the local filename */
+  fileURL = EscapeURL (localfilename);
+  TtaFreeMemory(localfilename);
+#else /* _WX */
    /* @@IV 18/08/2004 eencode spaces in the local filename */
    fileURL = EscapeURL (fileName);
+#endif /* _WX */
    if (fileURL)
    {
      strcpy (file_name, fileURL);

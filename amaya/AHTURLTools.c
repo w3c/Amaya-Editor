@@ -1269,7 +1269,7 @@ char *GetLocalPath (Document doc, char  *url)
 	}
       TtaFreeMemory (documentname);
       /* substitute invalid chars in file names by a _ */
-      n = ptr;
+      n = strrchr(ptr,DIR_SEP);
       while (*n)
 	{
 	  if (*n == '*' || *n == ',')

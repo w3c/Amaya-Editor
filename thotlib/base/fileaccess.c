@@ -16,6 +16,7 @@
   #include "wx/wx.h"
   #include "wx/dir.h"
   #include "wx/utils.h"
+  #include "wx/file.h"
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -390,13 +391,23 @@ ThotBool TtaReadName (BinFile file, unsigned char *name)
 }
 
 /*----------------------------------------------------------------------
+  TtaGetRealFileName 
+  Return the real file name expressed in the local charset
+  The returned string must be freed.
+  ----------------------------------------------------------------------*/
+char * TtaGetRealFileName(CONST char *name)
+{
+  return GetRealFileName (name);
+}
+
+/*----------------------------------------------------------------------
   GetRealFileName 
   Return the real file name expressed in the local charset
   The returned string must be freed.
   ----------------------------------------------------------------------*/
 char *GetRealFileName (CONST char *name)
 {
-#ifdef NODISPLAY
+#if defined(NODISPLAY)
   return TtaStrdup ((char *)name);
 #else /* NODISPLAY */
   CHARSET  systemCharset, defaultCharset;
@@ -422,14 +433,21 @@ char *GetRealFileName (CONST char *name)
   ----------------------------------------------------------------------*/
 gzFile TtaGZOpen (CONST char *filename)
 {
-  char    *name;
   gzFile   file;
+  char *   name;
 
   if (filename && filename[0] != EOS)
     {
+#ifdef _WX
+	  wxFile wx_file(TtaConvMessageToWX(filename));
+      int fd = wx_file.fd();
+	  wx_file.Detach();
+	  file = gzdopen (fd, "r");
+#else /* _WX */
       name = GetRealFileName (filename);
       file = gzopen (name, "r");
-      TtaFreeMemory (name);
+	  TtaFreeMemory (name);
+#endif /* _WX */
       return file;
     }
   else
@@ -457,13 +475,26 @@ BinFile TtaReadOpen (CONST char *filename)
 
   if (filename && filename[0] != EOS)
     {
-      name = GetRealFileName (filename);
+#ifdef _WX
+
+#ifdef _WINDOWS
+      file = wxFopen( TtaConvMessageToWX(filename), _T("rb"));
+#else /* _WINDOWS */
+      file = wxFopen( TtaConvMessageToWX(filename), _T("r"));
+#endif /* _WINDOWS */
+
+#else /* _WX */
+      
+	  name = GetRealFileName (filename);
 #ifdef _WINDOWS
       file = fopen (name, "rb");
 #else /* _WINDOWS */
       file = fopen (name, "r");
 #endif /* _WINDOWS */
       TtaFreeMemory (name);
+
+#endif /* _WX */
+
       return file;
     }
   else
@@ -491,6 +522,16 @@ BinFile TtaWriteOpen (CONST char *filename)
 
   if (filename && filename[0] != EOS)
     {
+#ifdef _WX
+
+#ifdef _WINDOWS
+      file = wxFopen( TtaConvMessageToWX(filename), _T("wb+"));
+#else /* _WINDOWS */
+      file = wxFopen( TtaConvMessageToWX(filename), _T("w+"));
+#endif /* _WINDOWS */
+
+#else /* _WX */
+
       name = GetRealFileName (filename);
 #ifdef _WINDOWS
       file = fopen (name, "wb+");
@@ -498,6 +539,8 @@ BinFile TtaWriteOpen (CONST char *filename)
       file = fopen (name, "w+");
 #endif /* _WINDOWS */
       TtaFreeMemory (name);
+
+#endif /* _WX */
       return file;
     }
   else
@@ -525,9 +568,13 @@ BinFile TtaRWOpen (CONST char *filename)
 
   if (filename && filename[0] != EOS)
     {
+#ifdef _WX
+      file = wxFopen( TtaConvMessageToWX(filename), _T("r+"));
+#else /* _WX */
       name = GetRealFileName (filename);
       file = fopen (name, "r+");
       TtaFreeMemory (name);
+#endif /* _WX */
       return file;
     }
   else
