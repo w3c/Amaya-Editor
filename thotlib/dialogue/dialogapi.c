@@ -181,9 +181,9 @@ typedef struct FrCatalogue {
 
 FrCatalogue FrameCatList [MAX_FRAME + 1] ;
 
-extern int       ReturnOption;
+/* extern int       ReturnOption;
 extern Document  opDoc;
-extern Element   opOption [200];
+extern Element   opOption [200]; */
 
 #ifdef __STDC__
 LRESULT CALLBACK WndProc        (HWND, UINT, WPARAM, LPARAM) ;
@@ -862,7 +862,7 @@ int        ref;
 
    catalogue = FrameCatList[frame].Cat_Table [0];
    while (icat < MAX_FRAMECAT) {
-         if (catalogue && (catalogue->Cat_Ref == ref || catalogue->Cat_Ref == ref - 1))
+         if (catalogue && catalogue->Cat_Ref == ref)
             return catalogue ;
          if (catalogue && FrameCatList[frame].Cat_Table [icat] &&
              (FrameCatList[frame].Cat_Table[icat]->Cat_Ref > ref) && (catalogue->Cat_Ref <= ref))
@@ -1151,8 +1151,20 @@ caddr_t             call_d;
 	     {
 		while ((entry == -1) && (i < C_NUMBER))
 		  {
+#            ifdef _WINDOWS
+             if (IsMenu (adbloc->E_ThotWidget[i])) {
+                int  ndx;
+                UINT menuEntry;
+                int nbMenuItem = GetMenuItemCount (adbloc->E_ThotWidget[i]);
+                for (ndx = 0; ndx < nbMenuItem; ndx++) {
+                    menuEntry = GetMenuItemID (adbloc->E_ThotWidget[i], ndx);
+                    if (menuEntry == (catalogue->Cat_Ref + (UINT)w))
+                       entry = ndx;
+				}
+			 } else
+#            endif /* _WINDOWS */
 		     if (adbloc->E_ThotWidget[i] == w)
-			entry = index;
+                entry = index;
 		     i++;
 		     index++;
 		  }
@@ -3486,7 +3498,9 @@ CHAR                button;
 #   ifdef _WINDOWS
     nbOldItems = GetMenuItemCount (menu);
     for (ndx = 0; ndx < nbOldItems; ndx ++)
-        RemoveMenu (menu, ref + ndx, MF_BYCOMMAND) ;
+        if (!DeleteMenu (menu, ref + ndx, MF_BYCOMMAND))
+           DeleteMenu (menu, ndx, MF_BYPOSITION);
+        /* RemoveMenu (menu, ref + ndx, MF_BYCOMMAND) ; */
 #   endif /* _WINDOWS */
 
 	i = 0;
@@ -4308,6 +4322,8 @@ boolean             react;
 			    w = adbloc->E_ThotWidget[ent];
 			    n = 0;
 #                           ifdef _WINDOWS
+                if (!IsMenu (catalogue->Cat_Widget))
+                   catalogue->Cat_Widget = w;
 #                           else  /* _WINDOWS */
 			    XtSetArg (args[n], XmNsubMenuId, menu);
 			    n++;
@@ -4463,7 +4479,8 @@ boolean             react;
                                  AppendMenu (w, MF_STRING, ref + i, &text[index + 1]);
 			    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
                             copyCat = catalogue;
-                            WIN_AddFrameCatalogue (currentMenu, copyCat) ;
+                            /* WIN_AddFrameCatalogue (currentMenu, copyCat) ; */
+                            WIN_AddFrameCatalogue (FrMainRef [currentFrame], copyCat) ;
 #                           else  /* _WINDOWS */
 			    w = XmCreatePushButton (menu, &text[index + 1], args, n);
 			    XtManageChild (w);
@@ -4482,8 +4499,10 @@ boolean             react;
                             } else 
                                  AppendMenu (w, MF_STRING | MF_UNCHECKED, ref + i, &text[index + 1]);
                             adbloc->E_ThotWidget[ent] = (ThotWidget) i;
+                            adbloc->E_ThotWidget[ent + 1] = (ThotWidget) -1;
                             copyCat = catalogue;
-                            WIN_AddFrameCatalogue (currentMenu, copyCat) ;
+                            /* WIN_AddFrameCatalogue (currentMenu, copyCat) ; */
+                            WIN_AddFrameCatalogue (FrMainRef [currentFrame], copyCat) ;
 #                           else  /* _WINDOWS */
 			    /* un toggle a faux */
 			    XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
@@ -4950,8 +4969,12 @@ boolean             on;
 #  ifdef _WINDOWS 
    struct Cat_Context *catalogue;
    HMENU              hMenu;
+   struct E_List      *adbloc;
+   int                ent = 2;
 
    catalogue = CatEntry (ref);
+   adbloc    = catalogue->Cat_Entries;
+
    if (catalogue == NULL)
       TtaError (ERR_invalid_reference);
    else if (catalogue->Cat_Widget == 0)
@@ -4959,17 +4982,30 @@ boolean             on;
    else {
         hMenu = catalogue->Cat_Widget;
         if (on) {
-			if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF) {
-               hMenu = GetMenu (owner);
-               if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF)
-                  WinErrorBox (NULL);
+			if (IsMenu (adbloc->E_ThotWidget[ent + val])) {
+              if (CheckMenuItem (adbloc->E_ThotWidget[ent], ref + val + 1, MF_CHECKED) == 0xFFFFFFFF) 
+				  WinErrorBox (NULL);
+			} else if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF) {
+                   hMenu = GetMenu (owner);
+                   if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF) 
+                      WinErrorBox (NULL);
 			}
         } else {
+			if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF) {
+               hMenu = GetMenu (owner);
                if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF) {
+                  if (IsMenu (adbloc->E_ThotWidget[ent + val]))
+                     if (CheckMenuItem (adbloc->E_ThotWidget[ent], ref + val + 1, MF_UNCHECKED) == 0xFFFFFFFF) 
+                         WinErrorBox (NULL);
+			   }
+			}
+
+			
+			/* if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF) {
                   hMenu = GetMenu (owner);
                   if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF)
                      WinErrorBox (NULL);
-			}
+			}*/
 		}
    }
 #  else  /* !_WINDOWS  */
@@ -5528,7 +5564,8 @@ int                 ref;
                  nbMenuItems = GetMenuItemCount (w);
                  for (itNdx = 0; itNdx < nbMenuItems; itNdx ++) 
                      if (!DeleteMenu (w, ref + itNdx, MF_BYCOMMAND))
-                        DeleteMenu (w, ref + itNdx, MF_BYPOSITION);
+                        if (!DeleteMenu (w, ref + itNdx, MF_BYPOSITION))
+                           WinErrorBox (NULL);;
                      /* RemoveMenu (w, ref + itNdx, MF_BYCOMMAND); */
                  DestroyMenu (w);
                  subMenuID [currentFrame] = (UINT)w;
