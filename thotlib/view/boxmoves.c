@@ -980,7 +980,9 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 	      if (!pBox->BxAbstractBox->AbHorizEnclosing && ReadyToDisplay)
 		{
 		  /* Update the clipping zone */
-		  if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
+		  if (pBox->BxLMargin < 0)
+		    i = - pBox->BxLMargin;
+		  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
 		    i = EXTRA_GRAPH;
 		  else
 		    i = 0;
@@ -1131,7 +1133,9 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 	      if (!pBox->BxAbstractBox->AbVertEnclosing && ReadyToDisplay)
 		{
 		  /* Update the clipping zone */
-		  if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
+		  if (pBox->BxLMargin < 0)
+		    i = - pBox->BxLMargin;
+		  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
 		    i = EXTRA_GRAPH;
 		  else
 		    i = 0;
@@ -1294,7 +1298,9 @@ void MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 			  i = pBox->BxXOrg;
 			  j = pBox->BxXOrg + pBox->BxWidth;
 			  /* add margins for graphics */
-			  if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
+			  if (pBox->BxLMargin < 0)
+			    k = - pBox->BxLMargin;
+			  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
 			    k = EXTRA_GRAPH;
 			  else
 			    k = 0;
@@ -1506,7 +1512,9 @@ void MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 			  i = pBox->BxYOrg;
 			  j = pBox->BxYOrg + pBox->BxHeight;
 			  /* add margins for graphics */
-			  if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
+			  if (pBox->BxLMargin < 0)
+			    k = - pBox->BxLMargin;
+			  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
 			    k = EXTRA_GRAPH;
 			  else
 			    k = 0;
@@ -1796,7 +1804,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      else
 		{
 		  /* add an extra margin for graphics */
-		  if (pCurrentAb->AbLeafType == LtGraphics)
+		  if (pBox->BxLMargin < 0)
+		    k = - pBox->BxLMargin;
+		  else if (pCurrentAb->AbLeafType == LtGraphics)
 		    k = EXTRA_GRAPH;
 		  else
 		    k = 0;
@@ -1805,7 +1815,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		  if (endTrans > 0)
 		    j += endTrans;
 		}
-	      
 	      DefClip (frame, i - k, pBox->BxYOrg - k, j + k,
 		       pBox->BxYOrg + pBox->BxHeight + k);
 	    }
@@ -2273,7 +2282,9 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      else
 		{
 		  /* add an extra margin for graphics */
-		  if (pCurrentAb->AbLeafType == LtGraphics)
+		  if (pBox->BxLMargin < 0)
+		    k = - pBox->BxLMargin;
+		  else if (pCurrentAb->AbLeafType == LtGraphics)
 		    k = EXTRA_GRAPH;
 		  else
 		    k = 0;
@@ -2701,7 +2712,9 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 		  i = pBox->BxXOrg;
 		  j = pBox->BxXOrg + pBox->BxWidth;
 		  /* add margins for graphics */
-		  if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
+		  if (pBox->BxLMargin < 0)
+		    k = - pBox->BxLMargin;
+		  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
 		    k = EXTRA_GRAPH;
 		  else
 		    k = 0;
@@ -2716,13 +2729,17 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 	      /* Is the box not included? */
 	      else if (!pCurrentAb->AbVertEnclosing)
 		{
+		  if (pBox->BxLMargin < 0)
+		    i = pBox->BxLMargin;
+		  else
+		    i = 0;
 		  if (delta > 0)
-		    DefClip (frame, pBox->BxXOrg - delta, pBox->BxYOrg,
-			     pBox->BxXOrg + pBox->BxWidth,
+		    DefClip (frame, pBox->BxXOrg + i - delta, pBox->BxYOrg,
+			     pBox->BxXOrg + pBox->BxWidth + i,
 			     pBox->BxYOrg + pBox->BxHeight);
 		  else
-		    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-			     pBox->BxXOrg + pBox->BxWidth - delta,
+		    DefClip (frame, pBox->BxXOrg + i, pBox->BxYOrg,
+			     pBox->BxXOrg + pBox->BxWidth - delta + i,
 			     pBox->BxYOrg + pBox->BxHeight);
 		}
 	    }
@@ -2918,7 +2935,9 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 		  i = pBox->BxYOrg;
 		  j = pBox->BxYOrg + pBox->BxHeight;
 		  /* add margins for graphics */
-		  if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
+		  if (pBox->BxLMargin < 0)
+		    k = - pBox->BxLMargin;
+		  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
 		    k = EXTRA_GRAPH;
 		  else
 		    k = 0;
@@ -2933,13 +2952,17 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 	      /* Is the box not included? */
 	      else if (!pCurrentAb->AbHorizEnclosing)
 		{
+		  if (pBox->BxLMargin < 0)
+		    i = pBox->BxLMargin;
+		  else
+		    i = 0;
 		  if (delta > 0)
-		    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg - delta,
-			     pBox->BxXOrg + pBox->BxWidth,
+		    DefClip (frame, pBox->BxXOrg + i, pBox->BxYOrg - delta,
+			     pBox->BxXOrg + pBox->BxWidth + i,
 			     pBox->BxYOrg + pBox->BxHeight);
 		  else
-		    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-			     pBox->BxXOrg + pBox->BxWidth, 
+		    DefClip (frame, pBox->BxXOrg + i, pBox->BxYOrg,
+			     pBox->BxXOrg + pBox->BxWidth + i, 
 			     pBox->BxYOrg + pBox->BxHeight - delta);
 		}
 	    }
@@ -3229,53 +3252,57 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 		
 		/* look for the box which relies the box to its enclosing */
 		pRelativeBox = GetHPosRelativePos (pChildBox, NULL);
-		if (pRelativeBox != NULL)
-		  if (pRelativeBox->BxAbstractBox != NULL)
-		    if (pRelativeBox->BxAbstractBox->AbHorizPos.PosAbRef == NULL)
+		if (pRelativeBox && pRelativeBox->BxAbstractBox &&
+		    pRelativeBox->BxAbstractBox->AbHorizPos.PosAbRef == NULL)
+		  {
+		    /* update the clipping area for the future */
+		    if (ReadyToDisplay)
 		      {
-			/* update the clipping area for the future */
-			if (ReadyToDisplay)
-			  {
-			    /* Add extra margins for graphics */
-			    if (pChildBox->BxAbstractBox->AbLeafType == LtGraphics)
-			      k = EXTRA_GRAPH;
-			    else
-			      k = 0;
-			    i = pChildBox->BxXOrg;
-			    j = pChildBox->BxXOrg + pChildBox->BxWidth;
-			    if (val > 0)
-			      j += val;
-			    else
-			      i += val;
-			    DefClip (frame, i - k, pChildBox->BxYOrg - k, j + k, pChildBox->BxYOrg + pChildBox->BxHeight + k);
-			  }
-			
-			if (IsXPosComplete (pChildBox))
-			  /* move all included boxes */
-			  XMoveAllEnclosed (pChildBox, val, frame);
+			/* Add extra margins for graphics */
+			if (pBox->BxLMargin < 0)
+			  k = - pBox->BxLMargin;
+			else if (pChildBox->BxAbstractBox->AbLeafType == LtGraphics)
+			  k = EXTRA_GRAPH;
 			else
-			  pChildBox->BxXOrg += val;
-			
-		        /* Does it move the enclosing box? */
-			pPosAb = &pAb->AbVertRef;
-			if (pPosAb->PosAbRef == pChildAb)
+			  k = 0;
+			i = pChildBox->BxXOrg;
+			j = pChildBox->BxXOrg + pChildBox->BxWidth;
+			if (val > 0)
+			  j += val;
+			else
+			  i += val;
+			DefClip (frame, i - k, pChildBox->BxYOrg - k, j + k,
+				 pChildBox->BxYOrg + pChildBox->BxHeight + k);
+		      }
+		    
+		    if (IsXPosComplete (pChildBox))
+		      /* move all included boxes */
+		      XMoveAllEnclosed (pChildBox, val, frame);
+		    else
+		      pChildBox->BxXOrg += val;
+		    
+		    /* Does it move the enclosing box? */
+		    pPosAb = &pAb->AbVertRef;
+		    if (pPosAb->PosAbRef == pChildAb)
+		      {
+			toMove = TRUE;
+			pChildBox->BxMoved = NULL;
+			if (pPosAb->PosRefEdge != VertRef)
+			  MoveVertRef (pBox, pChildBox, val, frame);
+			else
 			  {
-			    toMove = TRUE;
-			    pChildBox->BxMoved = NULL;
-			    if (pPosAb->PosRefEdge != VertRef)
-			      MoveVertRef (pBox, pChildBox, val, frame);
-			    else
-			      {
 				/* change the baseline */
-				if (pPosAb->PosUnit == UnPercent)
-				  i = PixelValue (pPosAb->PosDistance, UnPercent, (PtrAbstractBox) pAb->AbBox->BxW, 0);
-				else
-				  i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-				i = i + pChildBox->BxXOrg + pChildBox->BxVertRef - pBox->BxXOrg;
-				MoveVertRef (pBox, pChildBox, i - pBox->BxVertRef, frame);
-			      }
+			    if (pPosAb->PosUnit == UnPercent)
+			      i = PixelValue (pPosAb->PosDistance, UnPercent,
+					      (PtrAbstractBox) pAb->AbBox->BxW, 0);
+			    else
+			      i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb,
+					      ViewFrameTable[frame - 1].FrMagnification);
+			    i = i + pChildBox->BxXOrg + pChildBox->BxVertRef - pBox->BxXOrg;
+			    MoveVertRef (pBox, pChildBox, i - pBox->BxVertRef, frame);
 			  }
 		      }
+		  }
 	      }
 	    pChildAb = pChildAb->AbNext;
 	  }
@@ -3457,54 +3484,55 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	      {
 		/* look for the box which relies the box to its enclosing */
 		pRelativeBox = GetVPosRelativeBox (pChildBox, NULL);
-		if (pRelativeBox != NULL)
-		  if (pRelativeBox->BxAbstractBox != NULL)
-		    if (pRelativeBox->BxAbstractBox->AbVertPos.PosAbRef == NULL)
+		if (pRelativeBox && pRelativeBox->BxAbstractBox &&
+		    pRelativeBox->BxAbstractBox->AbVertPos.PosAbRef == NULL)
+		  {
+		    /* update the clipping area for the redisplay */
+		    if (ReadyToDisplay)
 		      {
-			/* update the clipping area for the redisplay */
-			if (ReadyToDisplay)
-			  {
-			    i = pChildBox->BxYOrg;
-			    j = pChildBox->BxYOrg + pChildBox->BxHeight;
-			    /* Add extra margins for graphics */
-			    if (pChildBox->BxAbstractBox->AbLeafType == LtGraphics)
-			      k = EXTRA_GRAPH;
-			    else
-			      k = 0;
-			    if (val > 0)
-			      j += val;
-			    else
-			      i += val;
-			    DefClip (frame, pChildBox->BxXOrg - k, i - k, pChildBox->BxXOrg
-				     + pChildBox->BxWidth + k, j + k);
-			  }
-			
-			if (IsYPosComplete (pChildBox))
-			  /* move all included boxes */
-			  YMoveAllEnclosed (pChildBox, val, frame);
+			i = pChildBox->BxYOrg;
+			j = pChildBox->BxYOrg + pChildBox->BxHeight;
+			/* Add extra margins for graphics */
+			if (pBox->BxLMargin < 0)
+			  k = - pBox->BxLMargin;
+			else if (pChildBox->BxAbstractBox->AbLeafType == LtGraphics)
+			  k = EXTRA_GRAPH;
 			else
-			  pChildBox->BxYOrg += val;
-			
-		        /* Does it move the enclosing box? */
-			pPosAb = &pAb->AbHorizRef;
-			if (pPosAb->PosAbRef == pChildAb)
+			  k = 0;
+			if (val > 0)
+			  j += val;
+			else
+			  i += val;
+			DefClip (frame, pChildBox->BxXOrg - k, i - k,
+				 pChildBox->BxXOrg + pChildBox->BxWidth + k, j + k);
+		      }
+		    
+		    if (IsYPosComplete (pChildBox))
+		      /* move all included boxes */
+		      YMoveAllEnclosed (pChildBox, val, frame);
+		    else
+		      pChildBox->BxYOrg += val;
+		    
+		    /* Does it move the enclosing box? */
+		    pPosAb = &pAb->AbHorizRef;
+		    if (pPosAb->PosAbRef == pChildAb)
+		      {
+			toMove = TRUE;
+			pChildBox->BxMoved = NULL;
+			if (pPosAb->PosRefEdge != HorizRef)
+			  MoveHorizRef (pBox, pChildBox, val, frame);
+			else
 			  {
-			    toMove = TRUE;
-			    pChildBox->BxMoved = NULL;
-			    if (pPosAb->PosRefEdge != HorizRef)
-			      MoveHorizRef (pBox, pChildBox, val, frame);
-			    else
-			      {
 				/* change the vertical axis */
-				if (pPosAb->PosUnit == UnPercent)
-				  i = PixelValue (pPosAb->PosDistance, UnPercent, (PtrAbstractBox) pAb->AbBox->BxH, 0);
-				else
-				  i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-				i = i + pChildBox->BxYOrg + pChildBox->BxHorizRef - pBox->BxYOrg;
-				MoveHorizRef (pBox, pChildBox, i - pBox->BxHorizRef, frame);
-			      }
+			    if (pPosAb->PosUnit == UnPercent)
+			      i = PixelValue (pPosAb->PosDistance, UnPercent, (PtrAbstractBox) pAb->AbBox->BxH, 0);
+			    else
+			      i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+			    i = i + pChildBox->BxYOrg + pChildBox->BxHorizRef - pBox->BxYOrg;
+			    MoveHorizRef (pBox, pChildBox, i - pBox->BxHorizRef, frame);
 			  }
 		      }
+		  }
 	      }
 	    pChildAb = pChildAb->AbNext;
 	  }

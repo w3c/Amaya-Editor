@@ -2245,10 +2245,17 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
 	 ChangeDefaultHeight (pBox, pBox, pBox->BxH + hDelta, frame);
      }
    else if (pBox->BxW > 0 && pBox->BxH > 0)
+     {
      /* Si la largeur de la boite ne depend pas de son contenu  */
      /* on doit forcer le reaffichage jusqua la fin de la boite */
-     DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-   
+     if (pBox->BxLMargin < 0)
+       DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
+		pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
+		pBox->BxYOrg + pBox->BxHeight);
+     else
+       DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+		pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+     }
    Propagate = savpropage;
 }
 
@@ -2555,9 +2562,17 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    pCurrentBox = pCurrentBox->BxNexChild;
 	  if ((pCurrentBox->BxWidth > 0 && pCurrentBox->BxHeight > 0) ||
 	      pCurrentBox->BxType == BoPicture)
-	    DefClip (frame, pCurrentBox->BxXOrg, pCurrentBox->BxYOrg,
-		     pCurrentBox->BxXOrg + pCurrentBox->BxWidth,
-		     pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
+	    {
+	      if (pCurrentBox->BxLMargin)
+		DefClip (frame, pCurrentBox->BxXOrg + pCurrentBox->BxLMargin,
+			 pCurrentBox->BxYOrg,
+			 pCurrentBox->BxXOrg + pCurrentBox->BxWidth + pCurrentBox->BxLMargin,
+			 pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
+	      else
+		DefClip (frame, pCurrentBox->BxXOrg, pCurrentBox->BxYOrg,
+			 pCurrentBox->BxXOrg + pCurrentBox->BxWidth,
+			 pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
+	    }
 	}
     }
 
@@ -2676,6 +2691,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    condition = !pCurrentAb->AbInLine;
 	  if (condition)
 	    {
+	      if (pBox->BxLMargin < 0)
+		DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
+			 pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
+			 pBox->BxYOrg + pBox->BxHeight);
 	      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 		       pBox->BxXOrg + pBox->BxWidth,
 		       pBox->BxYOrg + pBox->BxHeight);
@@ -2852,9 +2871,17 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		}
 	      /* mark the zone to be displayed */
 	      if (pCurrentBox->BxWidth > 0 && pCurrentBox->BxHeight > 0)
-		DefClip (frame, pCurrentBox->BxXOrg, pCurrentBox->BxYOrg,
-			 pCurrentBox->BxXOrg + pCurrentBox->BxWidth,
-			 pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
+		{
+		  if (pBox->BxLMargin < 0)
+		    DefClip (frame, pCurrentBox->BxXOrg + pBox->BxLMargin,
+			     pCurrentBox->BxYOrg,
+			     pCurrentBox->BxXOrg + pCurrentBox->BxWidth + pBox->BxLMargin,
+			     pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
+		  else
+		    DefClip (frame, pCurrentBox->BxXOrg, pCurrentBox->BxYOrg,
+			     pCurrentBox->BxXOrg + pCurrentBox->BxWidth,
+			     pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
+		}
 	    }
 	  else if (pAb->AbLeafType == LtCompound)
 	    {
@@ -2868,9 +2895,14 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		}
 	      
 	      /* mark the zone to be displayed */
-	      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-		       pBox->BxXOrg + pBox->BxWidth,
-		       pBox->BxYOrg + pBox->BxHeight);
+	      if (pBox->BxLMargin < 0)
+		DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
+			 pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
+			 pBox->BxYOrg + pBox->BxHeight);
+	      else
+		DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+			 pBox->BxXOrg + pBox->BxWidth,
+			 pBox->BxYOrg + pBox->BxHeight);
 	    }
 	  else if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C')
 	    {
@@ -2878,9 +2910,14 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      ComputeRadius (pAb, frame, TRUE);
 	      ComputeRadius (pAb, frame, FALSE);
 	      /* mark the zone to be displayed */
-	      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-		       pBox->BxXOrg + pBox->BxWidth,
-		       pBox->BxYOrg + pBox->BxHeight);
+	      if (pBox->BxLMargin < 0)
+		DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
+			 pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
+			 pBox->BxYOrg + pBox->BxHeight);
+	      else
+		DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+			 pBox->BxXOrg + pBox->BxWidth,
+			 pBox->BxYOrg + pBox->BxHeight);
 	    }
 
 	  /* Is it a filled box ? */
@@ -3629,6 +3666,11 @@ static void ClearFlexibility (PtrAbstractBox pAb, int frame)
 	/* Faut-il reevaluer les regles d'une boite elastique */
 	if (pBox->BxHorizFlex && pAb->AbWidthChange)
 	  {
+	    if (pBox->BxLMargin < 0)
+	     DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
+		      pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
+		      pBox->BxYOrg + pBox->BxHeight);
+	    else
 	     DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 		      pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
 
@@ -3648,8 +3690,16 @@ static void ClearFlexibility (PtrAbstractBox pAb, int frame)
 	if (pBox->BxVertFlex && pAb->AbHeightChange)
 	  {
 	     if (!pBox->BxHorizFlex || !pAb->AbWidthChange)
-		DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-			 pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+	       {
+		 if (pBox->BxLMargin < 0)
+		   DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
+			    pBox->BxXOrg + pBox->BxWidth,
+			    pBox->BxYOrg + pBox->BxHeight);
+		 else
+		   DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+			    pBox->BxXOrg + pBox->BxWidth,
+			    pBox->BxYOrg + pBox->BxHeight);
+	       }
 	     /* Annulation et reevaluation de la position */
 	     if (pAb->AbVertPosChange)
 	       {

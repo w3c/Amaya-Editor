@@ -2875,6 +2875,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			  toDelete = FALSE;
 #ifdef _I18N_
 			  script = TtaGetCharacterScript (c);
+#ifdef IV /* not enough stable */
 			  if  (script != ' ' && script != 'D' &&
 			       pSelBox && pSelBox->BxScript != EOS &&
 			       pSelBox->BxScript != script)
@@ -2938,6 +2939,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			      pSelBox = pAb->AbBox;
 			      toSplit = TRUE;
 			    }
+#endif /* IV */
 #endif /* _I18N_ */
 			  
 			  /* Si la selection debutait sur une boite de presentation */
