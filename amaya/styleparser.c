@@ -2117,7 +2117,7 @@ static char *ParseCSSFontFamily (Element element, PSchema tsch,
    we expect the input string describing the attribute to be     
    normal, bold, bolder, lighter, 100, 200, 300, ... 900, inherit.
   ----------------------------------------------------------------------*/
-static char *ParseCSSFontWeight (Element element, PSchema tsch,
+static char *ParseACSSFontWeight (Element element, PSchema tsch,
 				 PresentationContext context, char *cssRule,
 				 CSSInfoPtr css, ThotBool isHTML)
 {
@@ -2201,11 +2201,29 @@ static char *ParseCSSFontWeight (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
+   ParseCSSFontWeight: parse a CSS font weight string   
+   we expect the input string describing the attribute to be     
+   normal, bold, bolder, lighter, 100, 200, 300, ... 900, inherit.
+  ----------------------------------------------------------------------*/
+static char *ParseCSSFontWeight (Element element, PSchema tsch,
+				 PresentationContext context, char *cssRule,
+				 CSSInfoPtr css, ThotBool isHTML)
+{
+  char           *ptr;
+  
+  ptr = cssRule;
+  cssRule = ParseACSSFontWeight (element, tsch, context, cssRule, css, isHTML);
+  if (ptr == cssRule)
+    cssRule = SkipValue ("Invalid font-weight value", cssRule);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
    ParseCSSFontVariant: parse a CSS font variant string     
    we expect the input string describing the attribute to be     
    normal or small-caps
   ----------------------------------------------------------------------*/
-static char *ParseCSSFontVariant (Element element, PSchema tsch,
+static char *ParseACSSFontVariant (Element element, PSchema tsch,
 				  PresentationContext context, char *cssRule,
 				  CSSInfoPtr css, ThotBool isHTML)
 {
@@ -2230,10 +2248,25 @@ static char *ParseCSSFontVariant (Element element, PSchema tsch,
        /* Not supported yet */
        cssRule = SkipWord (cssRule);
      }
-   else
-       return (cssRule);
-
    return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSFontVariant: parse a CSS font variant string     
+   we expect the input string describing the attribute to be     
+   normal or small-caps
+  ----------------------------------------------------------------------*/
+static char *ParseCSSFontVariant (Element element, PSchema tsch,
+				  PresentationContext context, char *cssRule,
+				  CSSInfoPtr css, ThotBool isHTML)
+{
+  char           *ptr;
+  
+  ptr = cssRule;
+  cssRule = ParseACSSFontVariant (element, tsch, context, cssRule, css, isHTML);
+  if (ptr == cssRule)
+    cssRule = SkipValue ("Invalid font-variant value", cssRule);
+  return (cssRule);
 }
 
 
@@ -2242,7 +2275,7 @@ static char *ParseCSSFontVariant (Element element, PSchema tsch,
    we expect the input string describing the attribute to be     
    italic, oblique or normal                         
   ----------------------------------------------------------------------*/
-static char *ParseCSSFontStyle (Element element, PSchema tsch,
+static char *ParseACSSFontStyle (Element element, PSchema tsch,
 				PresentationContext context, char *cssRule,
 				CSSInfoPtr css, ThotBool isHTML)
 {
@@ -2278,10 +2311,8 @@ static char *ParseCSSFontStyle (Element element, PSchema tsch,
        return (cssRule);
      }
    else
-     {
-       /* invalid font style */
-       return (cssRule);
-     }
+     /* invalid font style */
+     return (cssRule);
 
    /*
     * install the new presentation.
@@ -2312,6 +2343,24 @@ static char *ParseCSSFontStyle (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
+   ParseCSSFontStyle: parse a CSS font style string     
+   we expect the input string describing the attribute to be     
+   italic, oblique or normal                         
+  ----------------------------------------------------------------------*/
+static char *ParseCSSFontStyle (Element element, PSchema tsch,
+				PresentationContext context, char *cssRule,
+				CSSInfoPtr css, ThotBool isHTML)
+{
+  char           *ptr;
+  
+  ptr = cssRule;
+  cssRule = ParseACSSFontStyle (element, tsch, context, cssRule, css, isHTML);
+  if (ptr == cssRule)
+    cssRule = SkipValue ("Invalid font-style value", cssRule);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
   ParseCSSFont: parse a CSS font attribute string
   we expect the input string describing the attribute to be
   !!!!!!                                  
@@ -2325,49 +2374,40 @@ static char *ParseCSSFont (Element element, PSchema tsch,
 
   cssRule = SkipBlanksAndComments (cssRule);
   if (!strncasecmp (cssRule, "caption", 7))
-    ;
+    cssRule += 7;
   else if (!strncasecmp (cssRule, "icon", 4))
-    ;
+    cssRule += 4;
   else if (!strncasecmp (cssRule, "menu", 4))
-    ;
+    cssRule += 4;
   else if (!strncasecmp (cssRule, "message-box", 11))
-    ;
+    cssRule += 11;
   else if (!strncasecmp (cssRule, "small-caption", 13))
-    ;
+    cssRule += 13;
   else if (!strncasecmp (cssRule, "status-bar", 10))
-    ;
+    cssRule += 10;
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    cssRule += 7;
   else
     {
-      while (*cssRule != ';' && *cssRule != EOS)
-	{
-	  ptr = cssRule;
-	  skippedNL = NewLineSkipped;
-	  cssRule = ParseCSSFontStyle (element, tsch, context, cssRule, css, isHTML);
-	  if (ptr == cssRule)
-	    {
-	      NewLineSkipped = skippedNL;
-	      cssRule = ParseCSSFontVariant (element, tsch, context, cssRule, css, isHTML);
-	    }
-	  if (ptr == cssRule)
-	    {
-	      NewLineSkipped = skippedNL;
-	      cssRule = ParseCSSFontWeight (element, tsch, context, cssRule, css, isHTML);
-	    }
-	  if (ptr == cssRule)
-	    {
-	      NewLineSkipped = skippedNL;
-	      cssRule = ParseCSSFontSize (element, tsch, context, cssRule, css, isHTML);
-	    }
-	  if (ptr == cssRule)
-	    {
-	      NewLineSkipped = skippedNL;
-	      cssRule = ParseCSSFontFamily (element, tsch, context, cssRule, css, isHTML);
-	    }
-	  if (ptr == cssRule)
-	    cssRule = SkipValue ("Invalid font value", cssRule);
-	  cssRule = SkipBlanksAndComments (cssRule);
-	}
+      skippedNL = NewLineSkipped;
+      cssRule = ParseACSSFontStyle (element, tsch, context, cssRule, css, isHTML);
+      NewLineSkipped = skippedNL;
+      cssRule = ParseACSSFontVariant (element, tsch, context, cssRule, css, isHTML);
+      NewLineSkipped = skippedNL;
+      cssRule = ParseACSSFontWeight (element, tsch, context, cssRule, css, isHTML);
+      NewLineSkipped = skippedNL;
+      ptr = cssRule;
+      if (*cssRule != ';' && *cssRule != EOS)
+	cssRule = ParseCSSFontSize (element, tsch, context, cssRule, css, isHTML);
+      NewLineSkipped = skippedNL;
+      if (*cssRule != ';' && *cssRule != EOS)
+      cssRule = ParseCSSFontFamily (element, tsch, context, cssRule, css, isHTML);
+      if (ptr == cssRule)
+	cssRule = SkipValue ("Invalid font value", cssRule);
     }
+  cssRule = SkipBlanksAndComments (cssRule);
+  if (*cssRule != ';' && *cssRule != EOS)
+    cssRule = SkipValue ("Invalid font value", cssRule);
   return (cssRule);
 }
 
@@ -4543,7 +4583,11 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 			}
 		  }
 		else
-		  pseudoclasses[0] = deb;
+		  {
+		    pseudoclasses[0] = deb;
+		    /* a "pseudo-class" attribute must match */
+		    attrmatch[0] = Txtmatch;
+		  }
 		if (names[0] && !strcmp (names[0], "*"))
 		  names[0] = NULL;
 	      }
