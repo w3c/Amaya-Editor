@@ -11,7 +11,6 @@ extern int ExceptNumType ( int NumExcept, PtrSSchema pSS );
 extern boolean ExcAttrib ( int NumExcept, PtrElement pEl );
 extern PtrDocument SearchFirstDocExcepted ( int NumExcept );
 extern PtrElement ExceptionIsAbove ( int NumExcept, PtrElement pEl, PtrDocument pDoc );
-extern PtrElement FindExceptedElement ( int NumExcept, PtrElement pEl, PtrSSchema pSS );
 
 #else /* __STDC__ */
 
@@ -22,7 +21,6 @@ extern int ExceptNumType (/* int NumExcept, PtrSSchema pSS */);
 extern boolean ExcAttrib (/* int NumExcept, PtrElement pEl */);
 extern PtrDocument SearchFirstDocExcepted (/* int NumExcept */);
 extern PtrElement ExceptionIsAbove (/* int NumExcept, PtrElement pEl, PtrDocument pDoc */);
-extern PtrElement FindExceptedElement (/* int NumExcept, PtrElement pEl, PtrSSchema pSS */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

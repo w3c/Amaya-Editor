@@ -195,32 +195,3 @@ PtrSSchema        pSS;
    return ret;
 }
 
-
-#ifdef __STDC__
-PtrElement          FindExceptedElement (int exceptNum, PtrElement pEl, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-PtrElement          FindExceptedElement (exceptNum, pEl, pSS)
-int                 exceptNum;
-PtrElement          pEl;
-PtrSSchema        pSS;
-
-#endif /* __STDC__ */
-
-{
-   PtrElement          p, s;
-
-   p = NULL;
-   if (ExceptTypeElem (exceptNum, pEl->ElTypeNumber, pSS))
-      p = pEl;
-   if (p == NULL && !pEl->ElTerminal)
-     {
-	s = pEl->ElFirstChild;
-	while (s != NULL && p == NULL)
-	  {
-	     p = FindExceptedElement (exceptNum, s, pSS);
-	     s = s->ElNext;
-	  }
-     }
-   return (p);
-}
