@@ -401,12 +401,12 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaAppendTextContent (Element element, STRING content, Document document)
+void                TtaAppendTextContent (Element element, char* content, Document document)
 
 #else  /* __STDC__ */
 void                TtaAppendTextContent (element, content, document)
 Element             element;
-STRING              content;
+char*               content;
 Document            document;
 
 #endif /* __STDC__ */

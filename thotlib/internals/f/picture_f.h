@@ -11,7 +11,7 @@ extern Picture_Report PictureFileOk ( STRING fileName,
                                       int *typeImage );
 extern void InitPictureHandlers ( ThotBool printing );
 extern void GetPictHandlersList ( int *count,
-                                  STRING buffer );
+                                  char* buffer );
 extern void DrawPicture ( PtrBox box,
                           PictInfo *imageDesc,
                           int frame,
@@ -44,7 +44,7 @@ extern Picture_Report PictureFileOk (/* STRING fileName,
                                         int *typeImage */);
 extern void InitPictureHandlers (/* ThotBool printing */);
 extern void GetPictHandlersList (/* int *count,
-                                    STRING buffer */);
+                                    char* buffer */);
 extern void DrawPicture (/* PtrBox box,
                             PictInfo *imageDesc,
                             int frame,

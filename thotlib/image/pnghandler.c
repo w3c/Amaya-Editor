@@ -954,7 +954,7 @@ int            zoom;
     
   if (buffer == NULL) {
 #     ifdef _WINDOWS
-      WinErrorBox (NULL, "PngCreate: (1)");
+      WinErrorBox (NULL, TEXT("PngCreate: (1)"));
 #     endif /* _WINDOWS */
     return (ThotBitmapNone);
   }
@@ -975,7 +975,7 @@ int            zoom;
   TtaFreeMemory (buffer);
   if (pixmap == None) {
 #    ifdef _WINDOWS
-     WinErrorBox (NULL, "PngCreate: (2)");
+     WinErrorBox (NULL, TEXT("PngCreate: (2)"));
 #    endif /* _WINDOWS */
     return (ThotBitmapNone); 
   } else

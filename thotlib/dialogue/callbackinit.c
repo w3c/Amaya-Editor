@@ -60,8 +60,7 @@ PtrSSchema          pSS;
    if (pSS->SsName[0] != EOS)
      {
 	schemaActions = SchemasEvents;
-	while (schemaActions != NULL &&
-	       StringCompare (schemaActions->EvSName, schemaName) != 0)
+	while (schemaActions != NULL && StringCompare (schemaActions->EvSName, schemaName) != 0)
 	   schemaActions = schemaActions->EvSNext;
 	if (schemaActions != NULL)
 	   pSS->SsActionList = schemaActions;

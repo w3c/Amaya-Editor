@@ -1487,11 +1487,11 @@ STRING name;
 #endif
 {
   BinFile             file;
-  CHAR_T              charRead;
+  char                charRead;
   ThotBool            match;
   PtrTransition       trans;
-  ThotBool	      endOfFile;
-  ThotBool	      error;
+  ThotBool            endOfFile;
+  ThotBool            error;
   CHAR_T              tempDocName[200];
   int                 i;
   int                 firstNameChar = 0;

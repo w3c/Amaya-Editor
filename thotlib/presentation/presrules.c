@@ -3478,7 +3478,7 @@ PtrAttribute        pAttr;
 	      }
 	    if (pAb->AbFont >= 'a' && pAb->AbFont <= 'z')
 	      /* on n'utilise que des majuscules pour les noms de police */
-	      pAb->AbFont = (CHAR_T) ((int) (pAb->AbFont) - 32);
+	      pAb->AbFont = (char) ((int) (pAb->AbFont) - 32);
 	    break;
 
 	  case PtStyle:

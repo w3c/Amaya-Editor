@@ -640,8 +640,8 @@ Document document;
 #endif /* __STDC__ */
 {
    PtrDocument pDoc;
-   char*               ptr;
-   int                 lg;
+   CharUnit*   ptr;
+   int         lg;
 
    if (document == 0)
      pDoc = 0;
@@ -655,9 +655,9 @@ Document document;
        /* read DEFAULTPRINTER variable */
        ptr = TtaGetEnvString ("THOTPRINT");
        if (ptr == NULL)
-	 ustrcpy (pPrinter,_EMPTYSTR_);
+          StringCopy (pPrinter, CUSTEXT(""));
        else
-	 ustrcpy (pPrinter, ptr);
+           StringCopy (pPrinter, ptr);
        PSdir[0] = EOS;
        PrintingDoc = 0;
        defPaperPrint = TRUE;
@@ -757,7 +757,7 @@ STRING          *printDirName;
 #endif /* __STDC__ */
 {
    ThotPid             pid = ThotPid_get ();
-   char*               dirString;
+   CharUnit*           dirString;
    int                 lg;
 
    *printDocName = PrintDocName;
@@ -771,7 +771,7 @@ STRING          *printDirName;
      { 
        if (!TtaCheckDirectory (dirString))
 	 TtaMakeDirectory (dirString);
-       ustrcpy (PrintDirName, dirString);
+       StringCopy (PrintDirName, dirString);
        lg = ustrlen(PrintDirName);
        if (PrintDirName[lg - 1] == DIR_SEP)
          PrintDirName[--lg] = EOS;

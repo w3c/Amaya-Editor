@@ -15,7 +15,7 @@ extern void InsertText ( PtrElement pEl,
                          STRING content,
                          Document document );
 extern void TtaAppendTextContent ( Element element,
-                                   STRING content,
+                                   char* content,
                                    Document document );
 extern void TtaInsertTextContent ( Element element,
                                    int position,

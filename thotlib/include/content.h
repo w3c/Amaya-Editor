@@ -57,7 +57,7 @@ extern void         TtaSetTextContent (Element element, STRING content, Language
    document: the document containing that element.
 
   ----------------------------------------------------------------------*/
-extern void         TtaAppendTextContent (Element element, STRING content, Document document);
+extern void         TtaAppendTextContent (Element element, char* content, Document document);
 
 /*----------------------------------------------------------------------
    TtaInsertTextContent

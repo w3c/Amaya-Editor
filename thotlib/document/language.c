@@ -211,10 +211,10 @@ static ISO639entry	OldLangTable[] =
    Returns the full name of a language whose RFC-1766 code is known
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-STRING          TtaGetLanguageNameFromCode (STRING code)
+char*          TtaGetLanguageNameFromCode (char* code)
 #else  /* __STDC__ */
-STRING          TtaGetLanguageNameFromCode (code)
-STRING          code;
+char*          TtaGetLanguageNameFromCode (code)
+char*          code;
 #endif /* __STDC__ */
 
 {
@@ -224,15 +224,15 @@ STRING          code;
    for (i = 0; Langbuffer[0] == EOS; i++)
       if (ISO639table[i].code[0] == EOS)
 	    break;
-      else if (ustrcasecmp (code, ISO639table[i].code) == 0)
-	 ustrcpy (Langbuffer, ISO639table[i].fullName);
+      else if (strcasecmp (code, ISO639table[i].code) == 0)
+           strcpy (Langbuffer, ISO639table[i].fullName);
    if (Langbuffer[0] == EOS)
       for (i = 0; Langbuffer[0] == EOS; i++)
          if (OldLangTable[i].code[0] == EOS)
 	    break;
          else
-            if (ustrcasecmp (code, OldLangTable[i].code) == 0)
-	       ustrcpy (Langbuffer, OldLangTable[i].fullName);
+            if (strcasecmp (code, OldLangTable[i].code) == 0)
+               strcpy (Langbuffer, OldLangTable[i].fullName);
    return Langbuffer;
 }
 
@@ -551,7 +551,7 @@ STRING              secondDictionary;
 	      /* The language is already defined */
 	      return i;
 	  StringCopy (LangTable[FreeEntry].LangName, languageName);
-	  StringCopy (LangTable[FreeEntry].LangCode, TtaGetLanguageCodeFromName(languageName));
+	  StringCopy (LangTable[FreeEntry].LangCode, TtaGetLanguageCodeFromName (languageName));
 	  }
 	else
 	  {
@@ -850,7 +850,7 @@ Language            languageId;
 	Langbuffer[0] = EOS;
      }
    else
-      ustrcpy (Langbuffer, LangTable[i].LangName);
+      strcpy (Langbuffer, LangTable[i].LangName);
    return Langbuffer;
 }
 
@@ -949,9 +949,9 @@ Language            langageId;
    int                 i, lg;
    UCHAR_T             patternGot[MAX_LET_PATTERN];
    CHAR_T              weightGot[MAX_LET_PATTERN + 1];
-   CHAR_T              patternFileName[THOT_MAX_CHAR];
-   static char*        dictPath;	/* Environment variable DICOPAR */
-   STRING              ptPattern;
+   CharUnit            patternFileName[THOT_MAX_CHAR];
+   static CharUnit*    dictPath;	/* Environment variable DICOPAR */
+   CharUnit*           ptPattern;
    FILE               *in;
 
    dictPath = TtaGetEnvString ("DICOPAR");
@@ -962,12 +962,12 @@ Language            langageId;
 	return (FALSE);
      }
 
-   ustrcpy (patternFileName, dictPath);
-   ustrcat (patternFileName, DIR_STR);
+   StringCopy (patternFileName, dictPath);
+   StringConcat (patternFileName, CUS_DIR_STR);
    lang = (int) langageId;
    ptPattern = LangTable[lang].LangPattern;
-   ustrcat (patternFileName, ptPattern);
-   if ((in = fopen (patternFileName, "r")) == NULL)
+   StringConcat (patternFileName, ptPattern);
+   if ((in = cus_fopen (patternFileName, CUSTEXT("r"))) == NULL)
      {
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_HYPHEN_FILE_NOT_OPEN), LangTable[lang].LangPattern);
 	return (FALSE);

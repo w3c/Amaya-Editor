@@ -61,7 +61,7 @@ extern gint ExposeEvent (ThotWidget widget, GdkEventExpose *event, gpointer data
    des entre'es du menu.                                              
    Retourne un code d'erreur.                                         
   ----------------------------------------------------------------------*/
-extern void         TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING text, STRING equiv);
+extern void         TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING text, char* equiv);
 
 /*----------------------------------------------------------------------
    TtaSetPulldownOff suspend le pulldown                           
@@ -103,7 +103,7 @@ extern void         TtaNewPopup (int ref, ThotWidget parent, STRING title, int n
    Quand le parame`tre react est vrai, tout changement de se'lection  
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
-extern void         TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title, int number, STRING text, STRING equiv, ThotBool react);
+extern void         TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title, int number, STRING text, char* equiv, ThotBool react);
 
 /*----------------------------------------------------------------------
    TtaNewIconMenu cre'e un sous-menu :                                        

@@ -61,7 +61,7 @@ struct Langue_Ctl
   CHAR_T             LangPrincipal[MAX_NAME_LENGTH]; /* Name du dictionnaire principal             */
   CHAR_T             LangSecondary[MAX_NAME_LENGTH]; /* Name du dictionnaire secondaire            */
   Dictionary         LangDict[MAX_DICTS];            /* Pointeurs vers les dictionnaires           */
-  CHAR_T             LangPattern[MAX_NAME_LENGTH];   /* Name de la liste de patterns d'hyphenation */
+  CharUnit           LangPattern[MAX_NAME_LENGTH];   /* Name de la liste de patterns d'hyphenation */
   struct PatternList LangTabPattern;                 /* Pointeur sur la liste de patterns          */
 };
 

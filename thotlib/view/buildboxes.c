@@ -1292,7 +1292,7 @@ int                *carIndex;
    ptrfont             font;
    PictInfo           *picture;
    BoxType             tableType;
-   CHAR_T                alphabet = 'L';
+   char                alphabet = 'L';
    int                 width, i;
    int                 height;
    ThotBool            enclosedWidth;
@@ -1322,7 +1322,7 @@ int                *carIndex;
    /* teste l'unite */
    font = ThotLoadFont (alphabet, pAb->AbFont, FontStyleAndWeight(pAb),
 			height, unit, frame);
-
+ 
    /* Creation */
    pCurrentBox = pAb->AbBox;
    if (pCurrentBox == NULL)

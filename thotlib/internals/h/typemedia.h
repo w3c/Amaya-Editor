@@ -341,7 +341,7 @@ typedef struct _AbstractBox
   PtrAbstractBox  AbPreviousRepeated; /* Linking towards the previous
 					 repeated abstract box */
   PtrPSchema      AbPSchema;	/* Presentation schema of the abstract box */
-  int		  AbDocView;	/* Document view number */
+  int             AbDocView;	/* Document view number */
   PtrCopyDescr	  AbCopyDescr;	/* Descriptor of the copied element if the
 				   abstract box is produced by a Copy rule */
   PtrAttribute    AbCreatorAttr;/* Pointer on the attribute that created the
@@ -357,19 +357,19 @@ typedef struct _AbstractBox
   AbPosition      AbHorizPos;	/* Horizontal position in the box */
   AbDimension     AbHeight;	/* Box height */
   AbDimension     AbWidth;	/* Box width */
-  int		  AbUnderline;	/* Underlining type */
-  int		  AbThickness;	/* Underlining thickness */
+  int             AbUnderline;	/* Underlining type */
+  int             AbThickness;	/* Underlining thickness */
   int             AbIndent;	/* Indentation for line breaking */
   int             AbDepth;	/* Abstract box display plane */
   int	          AbVisibility; /* Abstract box visibility degree */
-  int		  AbFontStyle;	/* Font style: roman, italic, oblique */
-  int		  AbFontWeight;	/* Font weight: normal, bold */
-  int		  AbSize;	/* Character logical/real size */
+  int             AbFontStyle;	/* Font style: roman, italic, oblique */
+  int             AbFontWeight;	/* Font weight: normal, bold */
+  int             AbSize;	/* Character logical/real size */
   int             AbLineWeight; /* Line thickness */
   int             AbLineSpacing;/* Interlining */
-  int		  AbFillPattern;/* Fill pattern */	
-  int		  AbBackground; /* Background color */
-  int		  AbForeground; /* Drawing color */
+  int             AbFillPattern;/* Fill pattern */	
+  int             AbBackground; /* Background color */
+  int             AbForeground; /* Drawing color */
 
   int             AbTopBColor;     /* Border Top color */
   int             AbRightBColor;   /* Border Right color */
@@ -393,12 +393,12 @@ typedef struct _AbstractBox
   int             AbBottomBorder;  /* Bottom Border */
   int             AbLeftBorder;    /* Left Border */
 
-  CHAR_T          AbFont;	      /* Characteristics of the font used */
-  CHAR_T	  AbLineStyle;        /* Line style */
+  char            AbFont;	      /* Characteristics of the font used */
+  CHAR_T          AbLineStyle;        /* Line style */
   BAlignment      AbAdjust;	      /* Alignment of lines in the box */
   TypeUnit        AbSizeUnit;         /* Unit for the size */
   TypeUnit        AbIndentUnit;       /* Indentation unit */
-  TypeUnit	  AbLineWeightUnit;   /* Unit of thickness */
+  TypeUnit        AbLineWeightUnit;   /* Unit of thickness */
   TypeUnit        AbLineSpacingUnit;  /* Interlining unit */
 
   TypeUnit        AbTopMarginUnit;    /* Top Margin Unit */
@@ -416,19 +416,19 @@ typedef struct _AbstractBox
 
   ThotBool        AbJustify;	/* Lines are justified */
   ThotBool        AbAcceptLineBreak;    /* Can be split in lines */
-  ThotBool	  AbAcceptPageBreak;    /* Can be split by page breaks */
-  ThotBool	  AbHyphenate;	/* Contents can be hyphenated */
+  ThotBool        AbAcceptPageBreak;    /* Can be split by page breaks */
+  ThotBool        AbHyphenate;	/* Contents can be hyphenated */
   ThotBool        AbOnPageBreak;	/* The box crosses the page limit */
   ThotBool        AbAfterPageBreak;	/* Abstract box beyond the page limit*/
-  ThotBool	  AbNotInLine;	/* The abstract box is not part of the line */
+  ThotBool        AbNotInLine;	/* The abstract box is not part of the line */
   ThotBool        AbHorizEnclosing;	/* True: horizontally enclosed box */
   ThotBool        AbVertEnclosing;	/* True: vertically enclosed box */
   ThotBool        AbCanBeModified;	/* Modification is allowed */
   ThotBool        AbSelected;		/* The abstract box is selected */
   ThotBool        AbPresentationBox;	/* A presentation box */
-  ThotBool	  AbRepeatedPresBox;	/* A repeated presentation box */
+  ThotBool        AbRepeatedPresBox;	/* A repeated presentation box */
   ThotBool        AbSensitive;	/* True: the abstract box is active */
-  ThotBool	  AbReadOnly;	/* Abstract box is read only */
+  ThotBool        AbReadOnly;	/* Abstract box is read only */
   /* Indications of modification for the abstract box */
   ThotBool        AbNew;	/* Newly created abstract box */
   ThotBool        AbDead;       /* Abstract box to be destroyed */

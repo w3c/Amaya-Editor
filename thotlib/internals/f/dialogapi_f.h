@@ -35,7 +35,7 @@ extern void TtaNewPulldown ( int ref,
                              STRING title,
                              int number,
                              STRING text,
-                             STRING equiv );
+                             char* equiv );
 extern void TtaSetPulldownOff ( int ref,
                                 ThotWidget parent );
 extern void TtaSetPulldownOn ( int ref,
@@ -60,7 +60,7 @@ extern void TtaNewSubmenu ( int ref,
                             STRING title,
                             int number,
                             STRING text,
-                            STRING equiv,
+                            char* equiv,
                             ThotBool react );
 extern void TtaSetMenuForm ( int ref,
                              int val );
@@ -183,7 +183,7 @@ extern void TtaNewPulldown (/* int ref,
                                STRING title,
                                int number,
                                STRING text,
-                               STRING equiv */);
+                               char* equiv */);
 extern void TtaSetPulldownOff (/* int ref,
                                   ThotWidget parent */);
 extern void TtaSetPulldownOn (/* int ref,
@@ -208,7 +208,7 @@ extern void TtaNewSubmenu (/* int ref,
                               STRING title,
                               int number,
                               STRING text,
-                              STRING equiv,
+                              char* equiv,
                               ThotBool react */);
 extern void TtaSetMenuForm (/* int ref,
                                int val */);

@@ -88,7 +88,7 @@ extern void TteLoadApplications ( void );
 extern ThotBool     WithMessages;	/* partage avec le module dialog.c */
 extern Pixmap       image;
 extern int          appArgc;
-extern char**       appArgv;
+extern CharUnit**   appArgv;
 extern int          iString;
 typedef void        (*Thot_ActionProc) ();
 typedef struct _CallbackCTX *PtrCallbackCTX;
@@ -257,7 +257,7 @@ int                 number;
      {
 	i = 1;
 	while (i < appArgc - 1)
-	   if (strcmp (appArgv[i], "-display") != 0)
+	   if (StringCompare (appArgv[i], CUSTEXT("-display")) != 0)
 	      i++;
 	   else
 	     {
@@ -1088,7 +1088,7 @@ int                 frame;
    int                 action;
    CHAR_T              string[700];
 #define MaxEquivLen 200
-   CHAR_T              equiv[MaxEquivLen];
+   char                equiv[MaxEquivLen];
    ThotBool            withEquiv;
    Item_Ctl           *ptritem;
    STRING              ptr;
@@ -1141,7 +1141,7 @@ int                 frame;
 	       lg = strlen (MenuActionList[action].ActionEquiv);
 	       if (lg + j < MaxEquivLen)
 		 {
-		   ustrcpy (&equiv[j], MenuActionList[action].ActionEquiv);
+		   strcpy (&equiv[j], MenuActionList[action].ActionEquiv);
 		   j += lg;
 		 }
 	     }
@@ -1181,7 +1181,7 @@ int                 doc;
    int                 item;
    int                 action;
    CHAR_T              string[700];
-   CHAR_T              equiv[MaxEquivLen];
+   char                equiv[MaxEquivLen];
    ThotBool            withEquiv;
    Item_Ctl           *ptritem;
    CHAR_T*             ptr;
@@ -1246,10 +1246,10 @@ int                 doc;
 	       if (MenuActionList[action].ActionEquiv != NULL)
 		 {
 		   withEquiv = TRUE;
-		   lg = ustrlen (MenuActionList[action].ActionEquiv);
+		   lg = strlen (MenuActionList[action].ActionEquiv);
 		   if (lg + j < MaxEquivLen)
 		     {
-		       ustrcpy (&equiv[j], MenuActionList[action].ActionEquiv);
+		       strcpy (&equiv[j], MenuActionList[action].ActionEquiv);
 		       j += lg;
 		     }
 		 }
@@ -3466,7 +3466,7 @@ int                 doc;
 	     zoomVal = 0;
 	   else
 	     {
-	       zoomVal = atoi (zoomStr);
+	       zoomVal = custoi (zoomStr);
 	       if (zoomVal > 10 || zoomVal < -10)
 		 zoomVal = 0;
 	     }
@@ -3475,7 +3475,7 @@ int                 doc;
 	     visiVal = 5;
 	   else
 	     {
-	       visiVal = atoi (visiStr);
+	       visiVal = custoi (visiStr);
 	       if (visiVal < 0 || visiVal > 10)
 		 visiVal = 5;
 	     }

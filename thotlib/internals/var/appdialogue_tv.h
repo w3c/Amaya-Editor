@@ -46,6 +46,6 @@ THOT_EXPORT int		       MaxMenuAction;
 
 /* return events for Application and Document windows			  */
 THOT_EXPORT int                ClickIsDone;
-THOT_EXPORT STRING             servername ;
+THOT_EXPORT CharUnit*          servername ;
 #endif /* !NODISPLAY */
 #endif /* THOT_APPDIALOGUE_VAR */

@@ -120,7 +120,7 @@ struct Cat_List
 
 #ifdef _GTK
 extern int          appArgc;
-extern STRING       *appArgv;
+extern CharUnit**   appArgv;
 #endif /*_GTK */
 
 /* Declarations des options de dialogue */
@@ -2572,7 +2572,7 @@ return 0; /*rajouté pour tester gtk */
    Retourne un code d'erreur.                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING text, STRING equiv)
+void                TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING text, char* equiv)
 #else  /* __STDC__ */
 void                TtaNewPulldown (ref, parent, title, number, text, equiv)
 int                 ref;
@@ -2580,7 +2580,7 @@ ThotMenu            parent;
 STRING              title;
 int                 number;
 STRING              text;
-STRING              equiv;
+char*               equiv;
 
 #endif /* __STDC__ */
 {
@@ -2834,11 +2834,11 @@ STRING              equiv;
                           if (&equiv[eindex] != EOS) 
                              usprintf (equiv_item, TEXT("%s"), &equiv[eindex]); 
                           
-                          eindex += ustrlen (&equiv[eindex]) + 1;
+                          eindex += strlen (&equiv[eindex]) + 1;
 #                         else  /* !_WINDOWS */
 #ifndef _GTK
 			  title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
-			  eindex += ustrlen (&equiv[eindex]) + 1;
+			  eindex += strlen (&equiv[eindex]) + 1;
 			  XtSetArg (args[n - 1], XmNacceleratorText, title_string);
 #endif /* _GTK */
 #                         endif /* _WINDOWS */
@@ -3837,7 +3837,7 @@ ThotBool            horizontal;
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title, int number, STRING text, STRING equiv, ThotBool react)
+void                TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title, int number, STRING text, char* equiv, ThotBool react)
 #else  /* __STDC__ */
 void                TtaNewSubmenu (ref, ref_parent, entry, title, number, text, equiv, react)
 int                 ref;
@@ -3846,7 +3846,7 @@ int                 entry;
 STRING              title;
 int                 number;
 STRING              text;
-STRING              equiv;
+char*               equiv;
 ThotBool            react;
 
 #endif /* __STDC__ */
@@ -4056,7 +4056,7 @@ ThotBool            react;
                          /* Note l'accelerateur */
                          if (equiv != NULL) {
 #                           ifdef _WINDOWS
-                            eindex += ustrlen (&equiv[eindex]) + 1;
+                            eindex += strlen (&equiv[eindex]) + 1;
 #                           else  /* _WINDOWS */
                             title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
                             XtSetArg (args[n + 1], XmNacceleratorText, title_string);
@@ -4288,7 +4288,7 @@ ThotBool            react;
                                if (&equiv[eindex] != EOS) {
                                   usprintf (equiv_item, TEXT("%s"), &equiv[eindex]);
 							   } 
-                               eindex += ustrlen (&equiv[eindex]) + 1;
+                               eindex += strlen (&equiv[eindex]) + 1;
 #                              else  /* !_WINDOWS */
 #ifdef _GTK
 			       /* TODO : penser aux accelerateurs de GTK */

@@ -53,7 +53,7 @@ typedef struct _EventsSet *PtrEventsSet;
 typedef struct _EventsSet
 {
   int                 EvSStructId;/* Identifier of SSchema */
-  char*               EvSName;	/* Name of the events set */
+  CharUnit*           EvSName;	/* Name of the events set */
   PtrActionEvent      EvSList[NUMBER_OF_APP_EVENTS];
   PtrEventsSet        EvSNext;	/* Next EventsSet in the list */
 } EventsSet;
