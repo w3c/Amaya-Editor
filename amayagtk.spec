@@ -44,6 +44,10 @@ Authors:
     Vincent.Quint@w3.org, Laurent.Carcone@w3.org
 
 %changelog
+* Mon Jul 7 2003 Jose Kahan <jose@w3.org>
+  Updated for Amaya 8.1. Added the bookmark compilation rules.
+  Changed the optimization flags to Os as there is a crash on
+  with O2 on Redhat 8.0, probably due to the version of compiler.
 * Fri Jan 30 2003 Nabil Layaida (Nabil.Layaida@inria.fr>
   Adaptation to rpmbuild
 * Mon Sep 16 2002 Irene Vatton <Irene.Vatton@w3.org>
@@ -69,13 +73,14 @@ Authors:
 %setup -n Amaya
 # %patch
 %build
-export CFLAGS=-O2
+export CFLAGS=-Os
 mkdir -p $RPM_BUILD_ROOT/usr/share/
 autoconf
 mkdir linux
 cd linux
 export HOME=`pwd`
-../configure --with-gtk --prefix=/usr/share --exec=/usr/share
+../configure --with-gtk --prefix=/usr/share --exec=/usr/share \
+             --enable-redland --enable-bookmarks
 #cp Options.orig Options
 make all
 %install

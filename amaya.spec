@@ -63,7 +63,7 @@ Authors:
 %setup -n Amaya
 # %patch
 %build
-export CFLAGS=-O2
+export CFLAGS=-Os
 # rm -R libjpeg
 # rm -R libpng
 autoconf
@@ -71,7 +71,8 @@ mkdir linux
 cd linux
 ln -s /usr/X11R6/lib/libXm.a
 export HOME=`pwd`
-../configure --prefix=/usr/share --exec-prefix=/usr 
+../configure --prefix=/usr/share --exec-prefix=/usr \
+             --enable-redland --enable-bookmarks
 #cp Options.orig Options
 make all
 %install
