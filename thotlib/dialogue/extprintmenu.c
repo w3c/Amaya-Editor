@@ -293,7 +293,7 @@ View                view;
    TtaNewToggleMenu(NumMenuViewsToPrint,
 		    NumFormPrint,
 		    TtaGetMessage(LIB, TMSG_VIEWS_TO_PRINT),
-		    NbPrintViews,BufMenu,NULL,FALSE);
+		    NbPrintViews,BufMenu,NULL,TRUE);
    for(i=0;i<NbPrintViews;i++)
      if(LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdOpen)
        TtaSetToggleMenu(NumMenuViewsToPrint,i,1);

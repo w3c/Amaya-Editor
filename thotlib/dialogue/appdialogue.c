@@ -3117,6 +3117,7 @@ char               *data;
                case NumZoneNbOfCopies:
                case NumZoneReduction:
                case NumMenuNbPagesPerSheet:
+	       case NumMenuViewsToPrint:
 		   (*ThotLocalActions[T_rextprint]) (ref, (int) data, NULL);
                    break;
                case NumFormPrint:
