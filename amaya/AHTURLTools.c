@@ -2125,13 +2125,16 @@ char      *MakeRelativeURL (char *aName, char *relatedName)
   after_access = NULL;
   p = aName;
   q = relatedName;
-  for (; *p && !strncasecmp (p, q, 1); p++, q++)
+  len = 0;
+  for (; *p && !strncasecmp (p, q, 1); p++, q++, len++)
     {
       /* Find extent of match */
       if (*p == ':')
 	  {
 	  after_access = p + 1;
-	  slashes++;
+	  if (len == 1)
+	    /* it's a local Windows path like c:... */
+	    slashes++;
 	  }
       if (*p == DIR_SEP)
 	{
