@@ -1087,9 +1087,10 @@ Document          doc;
   CHAR_T	      tempdir[MAX_LENGTH];
   NotifyElement       event;
 
-  if (DocumentTypes[doc] == docHTML)
-    /* It's a HTML document */
-    {
+  if (DocumentTypes[doc] == docHTML ||
+      DocumentTypes[doc] == docSVG ||
+      DocumentTypes[doc] == docMath)
+    /* it's a structured document */
     if (DocumentSource[doc])
        /* The source code of this document is currently displayed */
        {
@@ -1106,7 +1107,6 @@ Document          doc;
 	  SetWindowTitle (doc, DocumentSource[doc], 0);
 	  TtaFreeMemory (localFile);
        }
-    }
 }
 
 /*----------------------------------------------------------------------
