@@ -330,6 +330,7 @@ RULES
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Width: Enclosed . Width;
+		Foreground: TAG_Color;
 		END;
 	END;
 
