@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Creating elements</title>
-  <meta name="GENERATOR" content="amaya V3.2" />
+  <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -26,9 +26,6 @@
 </table>
 
 <div id="Creating">
-<h2><a href="Keyboard.html#Keyboard" rel="Chapter">Entering ISO-Latin-1
-characters in Amaya</a></h2>
-
 <h2>Creating new elements</h2>
 
 <h3><a name="Types">Buttons and types</a> menu</h3>
@@ -168,10 +165,38 @@ href="Manual.html">creating tables</a>.</p>
 anchor or a character string in bold, italic or other such style - moving the
 insertion point to the end and typing appends characters to the anchor or the
 styled string. If you want to exit this styled element and enter plain text,
-just press Enter and continue typing.</p>
+just press Enter to exit from the anchor or styled element, and continue
+typing.</p>
 
 <p>The same method can be used to enter plain text at the <em>beginning</em>
 of a block starting with an anchor or styled characters.</p>
+
+<h4>Editing definition lists (dl/dt/dd)</h4>
+
+<p>The Enter key is also useful for editing definitions lists. Consider the
+following example:</p>
+
+<blockquote>
+  <dl>
+    <dt>Term1</dt>
+    <dt>Term2</dt>
+      <dd>Definition of both terms.</dd>
+  </dl>
+</blockquote>
+
+<p>It is a definition list (<code>dl</code>) containing two terms
+(<code>dt</code>) followed by a definition (<code>dd</code>). To add a new
+paragraph within the definition (<code>dd</code>), put the caret at the end
+(after word "terms") and hit the Enter key. If you hit Enter twice, you exit
+from the current definition (<code>dd</code>) and you create a new term
+(<code>dt</code>). At the end of that new term, pressing Enter once allows you
+to create another new term (<code>dt</code>). Pressing Enter twice creates a
+new definition (<code>dd</code>) instead.</p>
+
+<p>If you want to create a new term and its definition <em>before</em> Term1,
+put the caret at the beginning of "Term1" and press Enter. Type the new term
+(<code>dt</code>). Then press Enter twice: a new definition (<code>dd</code>)
+is created right after the new term.</p>
 
 <h4><a name="Changing">Changing the document Title</a></h4>
 
