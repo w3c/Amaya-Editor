@@ -2849,7 +2849,8 @@ void RowCreated (NotifyElement *event)
   inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
   if (inMath)
     {
-      if (elType.ElTypeNum == MathML_EL_MLABELEDTR)
+      if (elType.ElTypeNum == MathML_EL_MLABELEDTR ||
+	  elType.ElTypeNum == MathML_EL_TableRow)
 	/* change a mlabeledtr into a mtr */
 	TtaChangeElementType (row, MathML_EL_MTR);
       elType.ElTypeNum = MathML_EL_MTABLE;

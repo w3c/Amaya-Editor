@@ -49,6 +49,13 @@ ELEMENTS
 	ElemDelete.Pre -> DeleteColumn;
 	ElemDelete.Post -> ColumnDeleted;
 	END;
+   TableRow:
+	BEGIN
+	ElemNew.Post -> RowCreated;
+	ElemPaste.Post -> RowPasted;
+	ElemDelete.Pre -> DeleteRow;
+	ElemDelete.Post -> RowDeleted;
+	END;
    MTR:
 	BEGIN
 	ElemNew.Post -> RowCreated;
