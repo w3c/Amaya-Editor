@@ -4117,7 +4117,8 @@ void TtcPaste (Document doc, View view)
 	      wchar_t* lpData = (wchar_t*) GlobalLock (hMem);
 	      char *dest;
 	      lpDatalength = wcslen (lpData);
-	      dest = TtaConvertWCToByte (lpData, UTF_8);
+	      /* dest = TtaConvertWCToByte (lpData, UTF_8); */
+		  dest = TtaConvertWCToByte (lpData, TtaGetDefaultCharset ());
 	      if (Xbuffer == NULL || dest == NULL || strncmp (Xbuffer, dest, 100))
   	        PasteXClipboardW (lpData, lpDatalength);
 	      else 
