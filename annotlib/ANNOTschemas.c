@@ -84,7 +84,10 @@ static void _AddStatement( RDFResourceP s, RDFPropertyP p, RDFResourceP o )
 static void _AddInstance( RDFClassP class, RDFResourceP instance )
 {
   if (!class->class)
-      class->class = (RDFClassExtP)TtaGetMemory (sizeof(RDFClassExt));
+    {
+      class->class = (RDFClassExtP) TtaGetMemory (sizeof(RDFClassExt));
+      memset (class->class, 0, sizeof (RDFClassExt));
+    }
 
   List_add (&class->class->instances, (void*)instance);
 }
