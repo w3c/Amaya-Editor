@@ -669,6 +669,29 @@ RULES
    SpanElement:
 	HorizRef: Enclosed . HRef;
 
+   tref:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	HorizPos: Left = Previous . Right;
+	VertPos:  HRef = Previous . HRef;
+	HorizRef: Enclosed . HRef;
+	IN Structure_view BEGIN
+	        if within use_
+	            Visibility: 0;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	IN Alternate_view BEGIN
+		Height: Enclosed . Height;
+	        Width: Enclosed . Width;
+		HorizPos: Left = Previous . Right;
+		VertPos:  HRef = Previous . HRef;
+		END;	
+	END;
+
    clipPath:
 	BEGIN
 	CreateBefore (ElementName);
@@ -948,7 +971,8 @@ RULES
 	Width: Enclosed . Width;
         Height: Enclosed . Height;
 	IN Structure_view BEGIN
-		if NOT within XMLcomment_line AND NOT within XMLPI_line AND NOT within DOCTYPE_line AND NOT within CDATA_line
+		if NOT within XMLcomment_line AND NOT within XMLPI_line AND
+                   NOT within DOCTYPE_line AND NOT within CDATA_line
 		   BEGIN
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous . Bottom;
@@ -969,6 +993,8 @@ RULES
 		   HorizPos: Left = Previous . Right;
                    VertPos: HRef = Previous . HRef;
                    END;
+		if immediately within tref
+		   Visibility: 0;
 		END;
 	IN Alternate_view BEGIN
 	        Width: Enclosed . Width;
@@ -1296,10 +1322,14 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
-	if not text_
+	if not text_ and not tspan and not tref 
            VertPos:  Top = Enclosing not text_ . Top;
 	if text_
 	   VertPos:  HRef = Enclosing . Top;
+	if tspan
+	   VertPos:  HRef = Enclosing not text_ . Top;
+	if tref
+	   VertPos:  HRef = Enclosing not text_ . Top;
    	IN Structure_view
 	   VertPos: Top = Previous . Bottom;
 	IN Alternate_view

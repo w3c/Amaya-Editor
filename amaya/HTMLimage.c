@@ -596,7 +596,8 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
 	  UpdateImageMap (el, doc, -1, -1);
 	}
     }
-  else if ((elType.ElTypeNum == SVG_EL_use_) &&
+  else if ((elType.ElTypeNum == SVG_EL_use_ ||
+	    elType.ElTypeNum == SVG_EL_tref) &&
 	   (strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG")  == 0))
     {
       /* parse the SVG file and include the parsed sub-tree at the
@@ -1104,7 +1105,8 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 	       /* get the PICTURE_UNIT or use_ element within the image element */
 	       elType = TtaGetElementType (el);
 	       if ((!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG")) &&
-		   (elType.ElTypeNum == SVG_EL_use_))
+		   (elType.ElTypeNum == SVG_EL_use_ ||
+		    elType.ElTypeNum == SVG_EL_tref))
 		 pic = el;
 	       else
 		 {

@@ -920,6 +920,7 @@ static ThotBool ActivateElement (Element element, Document document)
      ok = TRUE;
    else if (isSVG &&
 	    (elType.ElTypeNum == SVG_EL_use_ ||
+	     elType.ElTypeNum == SVG_EL_tref ||
 	     elType.ElTypeNum == SVG_EL_a))
      ok = TRUE;
 

@@ -38,6 +38,7 @@ static ElemMapping    SVGElemMappingTable[] =
    {"symbol", SPACE, SVG_EL_symbol_, L_OtherValue, FALSE},
    {"text", SPACE, SVG_EL_text_, L_OtherValue, FALSE},
    {"title", SPACE, SVG_EL_title, L_OtherValue, FALSE},
+   {"tref", SPACE, SVG_EL_tref, L_OtherValue, FALSE},
    {"tspan", SPACE, SVG_EL_tspan, L_OtherValue, FALSE},
    {"use", SPACE, SVG_EL_use_, L_OtherValue, FALSE},
    {"xmlcomment", SPACE, SVG_EL_XMLcomment, L_OtherValue, FALSE},

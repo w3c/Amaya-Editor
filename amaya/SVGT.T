@@ -343,6 +343,25 @@ RULES
 	create 'tspan>\12' after;
 	END;
 
+   tref:
+	BEGIN
+	create SOT;
+	create 'tref';
+	indent +6;
+	create attributes;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -6;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'tref>\12' after;
+		END;
+	END;
+
    clipPath:
 	BEGIN
 	create SOT;
@@ -574,8 +593,13 @@ RULES
 	END;
 
    TEXT_UNIT:
+	BEGIN
+	if within tref and
+           not within desc and not within metadata and not within title
+            Ignore;
         if immediately within text_
 	    create '\12' after;
+	END;
 
    GRAPHICS_UNIT:
 	Remove;

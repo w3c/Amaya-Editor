@@ -264,7 +264,11 @@ STRUCT
 	      y;
 	      dx = text;
 	      dy = text)
-         = LIST OF (TextComponent);
+        = LIST OF (CASE OF
+		   TEXT; desc; title; metadata;
+	           tspan; tref; a;
+	           animate; set_; animateMotion; animateColor; animateTransform;
+		   END);
 
    tspan  { not in SVG Tiny }
 	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
@@ -280,12 +284,27 @@ STRUCT
 	= LIST OF (SpanElement = CASE OF
 		      TEXT;
 		      desc; title; metadata;
-		      tspan;
+		      tspan; tref;
 		      a;
-		      animate; set; animateColor;
+		      animate; set_; animateColor;
 		      END);
-	
-   { tref }
+   tref
+	(ATTR xlink_href;
+	      requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      fill; stroke; stroke_width;
+	      font_family; font_size; font_style; font_variant; font_weight;
+	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      writing_mode;
+	      x;
+              y;
+	      dx;
+	      dy)
+	= LIST OF (CASE OF
+		   desc; title; metadata;
+	           animate; set_; animateColor;
+		   END);
+
    { textPath }
    { altGlyph }
    { altGlyphDef }
@@ -322,7 +341,7 @@ STRUCT
 	    LIST OF
 	      (CASE OF
 	         path; text_; rect; circle; ellipse; line_; polyline; polygon;
-	         use_; animate; set; animateMotion; animateColor;
+	         use_; animate; set_; animateMotion; animateColor;
 	         animateTransform;
 	       END);
 	  END;
@@ -374,8 +393,9 @@ STRUCT
 	      { graphicsElementEvents }
 	      target_ = text)
 	= LIST OF (CASE OF
-		      GraphicsElement; TextComponent;
-	              END);
+		   TEXT; 
+		   GraphicsElement;
+	           END);
    { view }
 
 { Scripting }
@@ -489,7 +509,7 @@ STRUCT
 	      desc; title; metadata;
 	  END;
 
-   Anim = CASE OF animate; set; animateMotion; animateColor; animateTransform;
+   Anim = CASE OF animate; set_; animateMotion; animateColor; animateTransform;
 	  END;
 { Fonts }
 
@@ -536,18 +556,8 @@ STRUCT
 	      path; text_; rect; circle; ellipse; line_; polyline; polygon;
 	      use_; image; SVG; g; switch; a;
 	      script_; style__; symbol_; clipPath;
-	      animate; set; animateMotion; animateColor; animateTransform; 
+	      animate; set_; animateMotion; animateColor; animateTransform; 
 	      XLink;
-	      END;
-
-   TextComponent
-	= CASE OF
-	      tspan;	{ must be the first option, to allow the Return key
-			  to create tspan elements }
-	      TEXT; 
-	      desc; title; metadata;
-	      a;
-	      animate; set; animateMotion; animateColor; animateTransform; 
 	      END;
 
    DOCTYPE = LIST OF (DOCTYPE_line = TEXT);	

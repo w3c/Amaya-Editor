@@ -3070,10 +3070,11 @@ Element SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
 	   found = FALSE;
 	   if (elType.ElTypeNum == SVG_EL_a)
 	     found = TRUE;
-	   else if (elType.ElTypeNum == SVG_EL_use_)
-	     /* it's a use element. Consider it only if the active view is the
-		Structure view, to allow anchors to be activated in the main
-		view, even if they contain a use element */
+	   else if (elType.ElTypeNum == SVG_EL_use_ ||
+		    elType.ElTypeNum == SVG_EL_tref)
+	     /* it's a use or tref element. Consider it only if the active
+		view is the Structure view, to allow anchors to be activated
+		in the main view, even if they contain a use element */
 	     {
 	       TtaGetActiveView (&activeDoc, &activeView);
 	       if (activeDoc == doc && activeView != 0)

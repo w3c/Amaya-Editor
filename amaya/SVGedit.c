@@ -107,6 +107,7 @@ static void SetEmptyShapeAttrSubTree (Element el, Document doc)
 	    elType.ElTypeNum == SVG_EL_polyline ||
 	    elType.ElTypeNum == SVG_EL_polygon ||
 	    elType.ElTypeNum == SVG_EL_use_ ||
+	    elType.ElTypeNum == SVG_EL_tref ||
 	    elType.ElTypeNum == SVG_EL_image)
 	   /* this element is concerned by the IntEmptyShape attribute */
 	   {
@@ -125,10 +126,12 @@ static void SetEmptyShapeAttrSubTree (Element el, Document doc)
 		     childType.ElTypeNum != SVG_EL_XMLcomment)
 		   {
 		   /* this is not a Thot graphics leaf nor a comment */
-		   if (elType.ElTypeNum != SVG_EL_use_)
+		   if (elType.ElTypeNum != SVG_EL_use_ &&
+		       elType.ElTypeNum != SVG_EL_tref)
 		      empty = FALSE;
 	           else
-		      /* in a use element, transcluded elements don't count */
+		      /* in a use or tref element, transcluded elements don't
+			 count */
 		      if (!TtaIsTranscludedElement (content))
 			 empty = FALSE;
 		   }
@@ -229,25 +232,41 @@ void GraphicsSelectionChanged (NotifyElement * event)
 {
   Element      asc, use;
   ElementType  elType;
+  int          elemType;
 
-  /* if element is within a "use" element, select the "use" element instead */
+  /* if element is within a "use" or "tref" element, select that element
+     instead */
   use = NULL;
   asc = TtaGetParent (event->element);
   /* look for the highest level use ancestor */
   while (asc)
     {
       elType = TtaGetElementType (asc);
-      if (elType.ElTypeNum == SVG_EL_use_ &&
-          event->elementType.ElSSchema == elType.ElSSchema)
-	use = asc;
-      asc = TtaGetParent (asc);
+      if (event->elementType.ElSSchema == elType.ElSSchema)
+	{
+	  if (elType.ElTypeNum == SVG_EL_use_ ||
+	      elType.ElTypeNum == SVG_EL_tref)
+	    {
+	      use = asc;
+	      elemType = elType.ElTypeNum;
+	    }
+	  else if (elType.ElTypeNum == SVG_EL_desc ||
+		   elType.ElTypeNum == SVG_EL_title ||
+		   elType.ElTypeNum == SVG_EL_metadata)
+	    /* even if a desc, title, or metadata is within a use or tref
+	       element, selection is allowed within the desc, title, or
+	       metadata element */
+	    asc = NULL;
+	}
+      if (asc)
+        asc = TtaGetParent (asc);
     }
   if (use)
     /* there is a use ancestor. Select it */
     {
       TtaSelectElement (event->document, use);
       event->element = use;
-      event->elementType.ElTypeNum = SVG_EL_use_;
+      event->elementType.ElTypeNum = elemType;
     }
   SynchronizeSourceView (event);
 }
@@ -2138,7 +2157,8 @@ void AttrXlinkHrefChanged (NotifyAttribute *event)
    if (elType.ElTypeNum == SVG_EL_image)
      ComputeSRCattribute (event->element, event->document, 0, event->attribute,
 			  text);
-   else if (elType.ElTypeNum == SVG_EL_use_)
+   else if (elType.ElTypeNum == SVG_EL_use_ ||
+	    elType.ElTypeNum == SVG_EL_tref)
      CopyUseContent (event->element, event->document, text);
    TtaFreeMemory (text);
 }

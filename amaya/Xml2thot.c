@@ -4504,7 +4504,8 @@ static Element  SetExternalElementType (Element el, Document doc,
 	}
     }
   else if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0) &&
-	   elType.ElTypeNum == SVG_EL_use_)
+	   (elType.ElTypeNum == SVG_EL_use_ ||
+	    elType.ElTypeNum == SVG_EL_tref))
     {
       /* We are parsing an external SVG use element */
       elemContent = el;

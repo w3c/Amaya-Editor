@@ -385,21 +385,23 @@ void             SetGraphicDepths (Document doc, Element el)
 /*----------------------------------------------------------------------
    CopyUseContent
    Copy the subtree pointed by the href URI as a subtree of element el,
-   which is od type use.
+   which is of type use or tref.
   ----------------------------------------------------------------------*/
 void  CopyUseContent (Element el, Document doc, char *href)
 {
-  Element              source, curEl, copy, child, elFound;
-  ElementType          elType;
+  Element              source, curEl, copy, child, nextChild, text, elFound;
+  ElementType          elType, commentType;
   Attribute            attr;
   AttributeType        attrType;
   SearchDomain         direction;
   int                  i, length, oldStructureChecking;
-  char *              id;
+  char *               id;
+  ThotBool             isUse;
 
   /* look for an element with an id attribute with the same value as the
      href attribute */
   elType = TtaGetElementType (el);
+  isUse = (elType.ElTypeNum == SVG_EL_use_);
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = SVG_ATTR_id;
   /* search backwards first */
@@ -432,34 +434,69 @@ void  CopyUseContent (Element el, Document doc, char *href)
 	direction = SearchForward;
       }
   if (source)
-    /* the element to be copied in the use element has been found */
+    /* the element to be copied in the use or tref element has been found */
     {
       /* remove the old copy if there is one */
       child = TtaGetFirstChild (el);
       while (child)
+	{
+	  nextChild = child;
+	  TtaNextSibling (&nextChild);
 	  if (TtaIsTranscludedElement (child))
-	    /* that's the old copy. remove it */
-	    {
-	      TtaRemoveTree (child, doc);
-	      child = NULL;
-	    }
-	  else
-	    TtaNextSibling (&child);
+	    /* that's an old copy. remove it */
+	    TtaRemoveTree (child, doc);
+	  child = nextChild;
+	}
 
-      /* make a copy of the source element */
-      copy = TtaNewTranscludedElement (doc, source);
-      /* remove the id attribute from the copy */
-      attr = TtaGetAttribute (copy, attrType);
-      /* insert it as the last child of the use element */
-      if (attr)
-	TtaRemoveAttribute (copy, attr, doc);
-      child = TtaGetLastChild (el);
       oldStructureChecking = TtaGetStructureChecking (doc);
       TtaSetStructureChecking (0, doc);
-      if (child)
-	TtaInsertSibling (copy, child, FALSE, doc);
+
+      if (isUse)
+	/* it's a use element. Copy the source element itself */
+	{
+	  /* make a copy of the source element */
+	  copy = TtaNewTranscludedElement (doc, source);
+	  /* remove the id attribute from the copy */
+	  attr = TtaGetAttribute (copy, attrType);
+	  if (attr)
+	    TtaRemoveAttribute (copy, attr, doc);
+	  /* insert it as the last child of the use element */
+	  child = TtaGetLastChild (el);
+	  if (child)
+	    TtaInsertSibling (copy, child, FALSE, doc);
+	  else
+	    TtaInsertFirstChild (&copy, el, doc);
+	}
       else
-	TtaInsertFirstChild (&copy, el, doc);
+	/* it's a tref element. Copy all the contents of the source element */
+	{
+	  text = source;
+	  elType.ElTypeNum = SVG_EL_TEXT_UNIT;
+	  commentType.ElSSchema = elType.ElSSchema;
+	  commentType.ElTypeNum = SVG_EL_XMLcomment;
+	  do
+	    {
+	      text = TtaSearchTypedElementInTree (elType, SearchForward,
+						  source, text);
+	      /* ignore text elements that are within comments */
+	      if (text && !TtaGetTypedAncestor (text, commentType))
+		{
+		  copy = TtaNewTranscludedElement (doc, text);
+		  /* remove the id attribute from the copy */
+		  attr = TtaGetAttribute (copy, attrType);
+		  if (attr)
+		    TtaRemoveAttribute (copy, attr, doc);
+		  /* insert it as the last child of the tref element */
+		  child = TtaGetLastChild (el);
+		  if (child)
+		    TtaInsertSibling (copy, child, FALSE, doc);
+		  else
+		    TtaInsertFirstChild (&copy, el, doc);
+		}
+	    }
+	  while (text);
+	}
+
       TtaSetStructureChecking (oldStructureChecking, doc);
     }
 }
@@ -732,20 +769,24 @@ static void SetTextAnchorTree (Element el, PresentationContext ctxt,
       elType = TtaGetElementType (el);
       if (elType.ElSSchema == SvgSSchema &&
 	  (elType.ElTypeNum == SVG_EL_text_ ||
-	   elType.ElTypeNum == SVG_EL_tspan /**** ||
-	   elType.ElTypeNum == SVG_EL_tref ||
+	   elType.ElTypeNum == SVG_EL_tspan ||
+	   elType.ElTypeNum == SVG_EL_tref /**** ||
 	   elType.ElTypeNum == SVG_EL_altGlyph ||
 	   elType.ElTypeNum == SVG_EL_textPath ****/))
-	/* this element is affected */
+	/* this element is interested */
 	{
 	  v.data = 0;
 	  TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, v);
 	}
-      child = TtaGetFirstChild (el);
-      while (child)
+      else
+	/* look further for an interested element */
 	{
-	  SetTextAnchorTree (child, ctxt, SvgSSchema, deletedAttr);
-	  TtaNextSibling (&child);
+	  child = TtaGetFirstChild (el);
+	  while (child)
+	    {
+	      SetTextAnchorTree (child, ctxt, SvgSSchema, deletedAttr);
+	      TtaNextSibling (&child);
+	    }
 	}
     }
 }
@@ -897,8 +938,9 @@ void SVGElementComplete (Element el, Document doc, int *error)
 	 elType.ElTypeNum == SVG_EL_a ||
 	 elType.ElTypeNum == SVG_EL_text_ ||
 	 elType.ElTypeNum == SVG_EL_tspan ||
+	 elType.ElTypeNum == SVG_EL_tref ||
 	 elType.ElTypeNum == SVG_EL_foreignObject)
-       /* add tref, textPath, altGlyph, clipPath, marker, pattern, mask,
+       /* add textPath, altGlyph, clipPath, marker, pattern, mask,
 	  filter, feImage, font, glyph, missing_glyph */
        /* this element may have a text-anchor attribute */
        {
@@ -924,6 +966,7 @@ void SVGElementComplete (Element el, Document doc, int *error)
 	 break;
 
        case SVG_EL_use_:
+       case SVG_EL_tref:
 	 /* it's a use element */
 	 /* if it has a href attribute from the XLink namespace, replace
 	    that attribute by a href attribute from the SVG namespace */
