@@ -702,18 +702,20 @@ int                 value;
    int                 valvisib, valzoom;
 
    UserErrorCode = 0;
-   frame = GetWindowNumber (document, view);
-   if (frame != 0)
+   if (valvisib < 0 || valvisib > 10)
+     TtaError (ERR_invalid_parameter);
+   else
      {
-	GetFrameParams (frame, &valvisib, &valzoom);
-	/* Translation of the sensibility into threshold */
-	valvisib = 10 - value;
-	if (valvisib < 1 || valvisib > 10)
-	   TtaError (ERR_invalid_parameter);
-	else
+       frame = GetWindowNumber (document, view);
+       if (frame != 0)
+	 {
+	   GetFrameParams (frame, &valvisib, &valzoom);
+	   /* Translation of the sensibility into threshold */
+	   valvisib = 10 - value;
 	   SetFrameParams (frame, valvisib, valzoom);
+	 }
      }
-}				/*TtaSetSensibility */
+}
 
 
 /*----------------------------------------------------------------------
@@ -728,35 +730,33 @@ int                 value;
    value: new value of the zoom.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaSetZoom (Document document, View view, int value)
-
 #else  /* __STDC__ */
 void                TtaSetZoom (document, view, value)
 Document            document;
 View                view;
 int                 value;
-
 #endif /* __STDC__ */
-
 {
-   int                 frame;
-   int                 valvisib, valzoom;
+  int                 frame;
+  int                 valvisib, valzoom;
 
-   UserErrorCode = 0;
-   frame = GetWindowNumber (document, view);
-   if (frame != 0)
-     {
-	GetFrameParams (frame, &valvisib, &valzoom);
-	/* Translation of the sensibility into threshold */
-	valzoom += value;
-	if (valzoom < 1 || valzoom > 10)
-	   TtaError (ERR_invalid_parameter);
-	else
-	   SetFrameParams (frame, valvisib, valzoom);
-     }
-}				/*TtaSetZoom */
+  UserErrorCode = 0;
+  if (valzoom < 0 || valzoom > 10)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      frame = GetWindowNumber (document, view);
+      if (frame != 0)
+	{
+	  GetFrameParams (frame, &valvisib, &valzoom);
+	  /* Translation of the sensibility into threshold */
+	  valzoom = value;
+	  SetFrameParams (frame, valvisib, valzoom);
+	}
+    }
+}
 
 
 /*----------------------------------------------------------------------

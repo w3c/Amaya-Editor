@@ -612,7 +612,6 @@ char               *url;
 /*----------------------------------------------------------------------
    ClearCSS                                                       
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                ClearCSS (CSSInfoPtr css)
 #else
@@ -642,13 +641,11 @@ CSSInfoPtr          css;
    RebuildCSS : rebuild the whole internal structures with the    
    original CSS rules.                                    
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                RebuildCSS (CSSInfoPtr css)
 #else
 void                RebuildCSS (css)
 CSSInfoPtr          css;
-
 #endif
 {
    if (css->css_rule == NULL)
@@ -704,13 +701,11 @@ CSSInfoPtr          css;
    inserted if necessary. In this case the pschema field  
    remains NULL.                                          
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 CSSInfoPtr          GetDocumentStyle (Document doc)
 #else
 CSSInfoPtr          GetDocumentStyle (doc)
 Document            doc;
-
 #endif
 {
    CSSInfoPtr          css = ListCSS;
@@ -913,123 +908,122 @@ Element             elem;
 char               *attrstr;
 Document            doc;
 boolean                rebuild;
-
 #endif
 {
-   AttributeType       newAtType;
-   Attribute           newAt;
-   char               *decl_end;
-   char                saved;
-   PSchema             gPres;
-   PSchema             cour, prev = NULL;
-   CSSInfoPtr          style;
+  AttributeType       newAtType;
+  Attribute           newAt;
+  char               *decl_end;
+  char                saved;
+  PSchema             gPres;
+  PSchema             cour, prev = NULL;
+  CSSInfoPtr          style;
 
-   /*
-    * Create a specific Presentation structure for this document
-    * and add it at the end of the list (sorted by increased priority).
-    */
-   style = GetDocumentStyle (doc);
-   if (style->pschema == NULL)
-     {
-	gPres = TtaNewPSchema ();
-	style->name = TtaGetMessage (AMAYA, AM_DOC_STYLE);
-	style->pschema = gPres;
-	style->category = CSS_DOCUMENT_STYLE;
-	style->documents[doc] = TRUE;
-	style->url = TtaStrdup (DocumentURLs[doc]);
-	style->css_rule = TtaStrdup (attrstr);
-	cour = TtaGetFirstPSchema (doc);
-	while (cour != NULL)
-	  {
-	     prev = cour;
-	     TtaNextPSchema (&cour, doc);
-	  }
-	TtaAddPSchema (gPres, prev, FALSE, doc);
-     }
-   else
-     {
-	gPres = style->pschema;
-	if (!rebuild)
-	  {
-	     if (style->css_rule == NULL)
-		style->css_rule = TtaStrdup (attrstr);
-	     else
-	       {
-		  /*
-		   * concatenate the existing css rule with the next fragment.
-		   */
-		  char               *buf = style->css_rule;
-		  int                 len = strlen (style->css_rule) + 1 + strlen (attrstr) + 1;
-
-		  style->css_rule = TtaGetMemory (len);
-		  if (style->css_rule == NULL)
-		     style->css_rule = buf;
-		  else
-		    {
-		       sprintf (style->css_rule, "%s\n%s", buf, attrstr);
-		       TtaFreeMemory (buf);
-		    }
-	       }
-	  }
-     }
-
-   /*
-    * Set the attribute style to the content of the string.
-    */
-   if (elem != NULL)
-     {
-	newAtType.AttrSSchema = TtaGetDocumentSSchema (doc);
-	newAtType.AttrTypeNum = HTML_ATTR_Style_;
-	newAt = TtaGetAttribute (elem, newAtType);
-	if (newAt == NULL)
-	  {
-	     newAt = TtaNewAttribute (newAtType);
-	     TtaAttachAttribute (elem, newAt, doc);
-	  }
-	TtaSetAttributeText (newAt, attrstr, elem, doc);
-     }
-   /*
-    * now, parse the the whole string ...
-    * we need to split it in a set of style declaration.
-    */
-   SKIP_BLANK (attrstr);
-   while (*attrstr != 0)
-     {
-	SKIP_BLANK (attrstr);
-	decl_end = attrstr;
-	while ((*decl_end != 0) && (*decl_end != '}'))
-	   decl_end++;
-	if (*decl_end == 0)
-	  {
-	     fprintf (stderr, "Invalid STYLE header : %s\n", attrstr);
-	     return;
-	  }
-	/*
-	 * add a 0 to split, treat the declaration,
-	 * put back the char and continue from this point.
-	 */
+  /*
+   * Create a specific Presentation structure for this document
+   * and add it at the end of the list (sorted by increased priority).
+   */
+  style = GetDocumentStyle (doc);
+  if (style->pschema == NULL)
+    {
+      gPres = TtaNewPSchema ();
+      style->name = TtaGetMessage (AMAYA, AM_DOC_STYLE);
+      style->pschema = gPres;
+      style->category = CSS_DOCUMENT_STYLE;
+      style->documents[doc] = TRUE;
+      style->url = TtaStrdup (DocumentURLs[doc]);
+      style->css_rule = TtaStrdup (attrstr);
+      cour = TtaGetFirstPSchema (doc);
+      while (cour != NULL)
+	{
+	  prev = cour;
+	  TtaNextPSchema (&cour, doc);
+	}
+      TtaAddPSchema (gPres, prev, FALSE, doc);
+    }
+  else
+    {
+      gPres = style->pschema;
+      if (!rebuild)
+	{
+	  if (style->css_rule == NULL)
+	    style->css_rule = TtaStrdup (attrstr);
+	  else
+	    {
+	      /*
+	       * concatenate the existing css rule with the next fragment.
+	       */
+	      char               *buf = style->css_rule;
+	      int                 len = strlen (style->css_rule) + 1 + strlen (attrstr) + 1;
+	      
+	      style->css_rule = TtaGetMemory (len);
+	      if (style->css_rule == NULL)
+		style->css_rule = buf;
+	      else
+		{
+		  sprintf (style->css_rule, "%s\n%s", buf, attrstr);
+		  TtaFreeMemory (buf);
+		}
+	    }
+	}
+    }
+  
+  /*
+   * Set the attribute style to the content of the string.
+   */
+  if (elem != NULL)
+    {
+      newAtType.AttrSSchema = TtaGetDocumentSSchema (doc);
+      newAtType.AttrTypeNum = HTML_ATTR_Style_;
+      newAt = TtaGetAttribute (elem, newAtType);
+      if (newAt == NULL)
+	{
+	  newAt = TtaNewAttribute (newAtType);
+	  TtaAttachAttribute (elem, newAt, doc);
+	}
+      TtaSetAttributeText (newAt, attrstr, elem, doc);
+    }
+  /*
+   * now, parse the the whole string ...
+   * we need to split it in a set of style declaration.
+   */
+  SKIP_BLANK (attrstr);
+  while (*attrstr != 0)
+    {
+      SKIP_BLANK (attrstr);
+      decl_end = attrstr;
+      while ((*decl_end != 0) && (*decl_end != '}'))
 	decl_end++;
-	saved = *decl_end;
-	*decl_end = 0;
-	ParseHTMLStyleDeclaration (elem, attrstr, doc, gPres);
-
-	*decl_end = saved;
-	attrstr = decl_end;
-	SKIP_BLANK (attrstr);
-     }
-
-   /*
-    * Rebuild the Styles tree in the Document structure.
-    */
-   if (rebuild)
-      RebuildHTMLStyleHeader (doc);
-   if (NonPPresentChanged)
-      ApplyExtraPresentation (doc);
-
+      if (*decl_end == 0)
+	{
+	  fprintf (stderr, "Invalid STYLE header : %s\n", attrstr);
+	  return;
+	}
+      /*
+       * add a 0 to split, treat the declaration,
+       * put back the char and continue from this point.
+       */
+      decl_end++;
+      saved = *decl_end;
+      *decl_end = 0;
+      ParseHTMLStyleDeclaration (elem, attrstr, doc, gPres);
+      
+      *decl_end = saved;
+      attrstr = decl_end;
+      SKIP_BLANK (attrstr);
+    }
+  
+  /*
+   * Rebuild the Styles tree in the Document structure.
+   */
+  if (rebuild)
+    RebuildHTMLStyleHeader (doc);
+  if (NonPPresentChanged)
+    ApplyExtraPresentation (doc);
+  
 #if 0
-   DebugPresent (doc, gPres, "/tmp/generic.styles");
-   PSchema2CSS (doc, gPres, style->magnification, style->view_background_color,
-		"/tmp/generic.css");
+  DebugPresent (doc, gPres, "/tmp/generic.styles");
+  PSchema2CSS (doc, gPres, style->magnification, style->view_background_color,
+	       "/tmp/generic.css");
 #endif
 }
 
@@ -1151,9 +1145,6 @@ Document            doc;
    ParseHTMLStyleSheet (buffer, doc, gPres);
    TtaFreeMemory (buffer);
 
-   if (NonPPresentChanged)
-      ApplyExtraPresentation (doc);
-
 #if 0
    DebugPresent (doc, gPres, "/tmp/external.styles");
    PSchema2CSS (doc, gPres, css->magnification, css->view_background_color,
@@ -1173,13 +1164,11 @@ void                LoadHTMLExternalStyleSheet (URL, doc, int merge)
 char               *URL;
 Document            doc;
 int                 merge;
-
 #endif
 {
    char                tempfile[MAX_LENGTH];
    char                tempname[MAX_LENGTH];
    char                tempURL[MAX_LENGTH];
-
    struct stat         buf;
    char               *buffer = NULL;
    FILE               *res;
@@ -1326,15 +1315,9 @@ int                 merge;
 	first = TtaGetFirstPSchema (doc);
 	user = GetUserGenericPresentation ();
 	if ((user != NULL) && (user->pschema == first))
-	  {
 	     TtaAddPSchema (gPres, first, FALSE, doc);
-	  }
 	else
-	  {
 	     TtaAddPSchema (gPres, first, TRUE, doc);
-	  }
-	if (NonPPresentChanged)
-	   ApplyExtraPresentation (doc);
      }
 #if 0
    DebugPresent (doc, gPres, "/tmp/external.styles");
@@ -1352,7 +1335,6 @@ void                LoadUserStyleSheet (Document doc)
 #else
 void                LoadUserStyleSheet (doc)
 Document            doc;
-
 #endif
 {
    char                tempfile[MAX_LENGTH];
@@ -1458,11 +1440,8 @@ Document            doc;
    css->url = TtaStrdup (tempfile);
    css->css_rule = buffer;
    AddCSS (css);
-   ParseHTMLStyleSheet (buffer, doc, gPres);
    User_CSS = css;
-
-   if (NonPPresentChanged)
-      ApplyExtraPresentation (doc);
+   ParseHTMLStyleSheet (buffer, doc, gPres);
 
 #if 0
    DebugPresent (doc, gPres, "/tmp/user.styles");
@@ -1475,7 +1454,6 @@ Document            doc;
    CSSSetBackground : called by the parser when a Background is    
    specified by a CSS, this is not supported at the P level.    
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                CSSSetBackground (Document doc, PSchema gpres, int color)
 #else
@@ -1483,7 +1461,6 @@ void                CSSSetBackground (doc, gpres, color)
 Document            doc;
 PSchema             gpres;
 int                 color;
-
 #endif
 {
    CSSInfoPtr          css = ListCSS;
@@ -1509,7 +1486,6 @@ int                 color;
    CSSSetMagnification : called by the parser when a Magnification 
    is specified by a CSS, this is not supported at the P level. 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                CSSSetMagnification (Document doc, PSchema gpres, int zoom)
 #else
@@ -1546,7 +1522,6 @@ void                ApplyFinalStyle (Document doc)
 #else
 void                ApplyFinalStyle (doc)
 Document            doc;
-
 #endif
 {
    PSchema             next;
@@ -1561,7 +1536,14 @@ Document            doc;
 
    RebuildHTMLStyleHeader (doc);
    LoadUserStyleSheet (doc);
-
+   css = GetDocumentStyle (doc);
+   if (css->pschema != NULL)
+     {
+	next = TtaGetFirstPSchema (doc);
+	TtaAddPSchema (css->pschema, next, TRUE, doc);
+	css->documents[doc] = TRUE;
+     }
+#ifdef IV
    css = GetDocumentStyle (doc);
    if (css->pschema != NULL)
      {
@@ -1637,13 +1619,13 @@ Document            doc;
    FrameResized ((int *) TtaGetViewFrame (doc, 1), frame, NULL);
 #endif /* _WINDOWS */
 #endif /* linux */
+#endif
 }
 
 /*----------------------------------------------------------------------
    MergeNewCSS : parse a set of HTML3 CSS rules and add them to an 
    existing pschema.                                              
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                MergeNewCSS (char *attrstr, Document doc, PSchema gPres)
 #else
