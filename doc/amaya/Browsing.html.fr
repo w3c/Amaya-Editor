@@ -1,23 +1,24 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
-                      "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya V3.2.1">
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body lang="fr">
+<body xml:lang="fr">
 
 <table border="0" width="100%">
   <tbody>
     <tr>
-      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"> <img
-        border="0" alt="Amaya" src="../Icons/amaya.gif"></p>
+      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
+        border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="Manual.html"><img alt="" border="0"
-        src="../Icons/up.gif"></a> <a href="Selecting.html"><img alt="next"
-        border="0" src="../Icons/right.gif"></a></p>
+        src="../Icons/up.gif" /></a> <a href="Selecting.html"><img alt="next"
+        border="0" src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -33,12 +34,12 @@ href="#L311">activer les liens</a>. Lors d'une opération normale,
 <strong>Amaya</strong>  vous permet de naviguer et d´éditer  des documents
 simultanément, mais vous pouvez changer ce comportement standard pour chaque
 fenêtre de document  indépendamment. Le bouton <img src="../Icons/Editor.gif"
-alt="editor-mode">  indique que la fenêtre est en mode éditeur: vous pouvez
+alt="editor-mode" />  indique que la fenêtre est en mode éditeur: vous pouvez
 éditer le document courant et naviguer  dans cette fenêtre. En cliquant sur ce
 bouton, vous faites passer la fenêtre en mode navigation. Le bouton prend
-ainsi cette représentation <img src="../Icons/Browser.gif" alt="browser-mode">
-et vous pouvez seulement naviguer et remplir les formulaires. cette option est
-également disponible à partir de l'option<strong> Mode Editeur</strong> du
+ainsi cette représentation <img src="../Icons/Browser.gif" alt="browser-mode"
+/> et vous pouvez seulement naviguer et remplir les formulaires. cette option
+est également disponible à partir de l'option<strong> Mode Editeur</strong> du
 menu d'Édition, ou bien par le raccourci clavier (Shift-Control-asterisk par
 défaut pour Linux).</p>
 
@@ -67,8 +68,8 @@ d'éviter la perte des derniers changements.</p>
 <h3><a name="L515">Ancres cibles</a></h3>
 
 <p>Certaines parties du texte  peuvent être affichées avec une icône en forme
-de cible<a name="target"> <img src="../Icons/target.gif" alt=" target "></a>.
-Ces icônes ne font pas partie du document et peuvent donc être soit
+de cible<a name="target"> <img src="../Icons/target.gif" alt=" target "
+/></a>. Ces icônes ne font pas partie du document et peuvent donc être soit
 visualisées soit cachées juste en modifiant  le statut  <strong>Montrer les
 cibles</strong> de la fenêtre courante, qui est une option du menu
 <strong>Vues</strong>.</p>
@@ -121,9 +122,9 @@ chargées:</p>
     Linux.</dd>
   <dt>Barre des boutons</dt>
     <dd>Deux boutons: <img alt="Back " border="0" src="../Icons/Back.gif"
-      align="middle"> et <img alt="Forward " border="0"
-      src="../Icons/Forward.gif" align="middle"> vous permettent de retourner
-      à la page précédente ou d'aller à la page suivante.</dd>
+      align="middle" /> et <img alt="Forward " border="0"
+      src="../Icons/Forward.gif" align="middle" /> vous permettent de
+      retourner à la page précédente ou d'aller à la page suivante.</dd>
 </dl>
 
 <h3><a name="Reloading">Recharger une page</a></h3>
@@ -131,7 +132,7 @@ chargées:</p>
 <p>Les documents peuvent être rechargés en utilisant l'option
 <strong>Recharger le document</strong> du menu <strong>Fichier</strong>, le
 raccourci clavier (Alt-R par défaut) ou le bouton <img
-src="../Icons/Reload.png" alt="reload">  de la barre des boutons.</p>
+src="../Icons/Reload.png" alt="reload" />  de la barre des boutons.</p>
 
 <h3><a name="Keyboard">Contrôle clavier</a></h3>
 
@@ -142,6 +143,6 @@ Amaya</a> décrit comment changer les valeurs par défaut, et les raccourcis
 clavier sont affichés à côté des entrées auxquelles ils sont associés.</p>
 </div>
 
-<p align="right"><a href="Manual.html"><img alt=""></a></p>
+<p align="right"><a href="Manual.html"><img alt="" /></a></p>
 </body>
 </html>
