@@ -41,7 +41,7 @@ char               *filename;
 {
    int                 status = 0;
 
-#ifdef WWW_MSWINDOWS
+#if defined(_WINDOWS) && !defined(__GNUC__)
    DWORD               attribs;
 
    attribs = GetFileAttributes (filename);
@@ -85,7 +85,7 @@ char               *filename;
 
 #endif /* __STDC__ */
 {
-#ifdef WWW_MSWINDOWS
+#if defined(_WINDOWS) && !defined(__GNUC__)
    return (remove (filename));
 #else
    return (unlink (filename));
@@ -104,7 +104,7 @@ ThotDirBrowse      *me;
 
 #endif /* __STDC__ */
 {
-#ifdef WWW_MSWINDOWS
+#if defined(_WINDOWS) && !defined(__GNUC__)
    DWORD               attr;
 
    if (strlen (me->data.cFileName) + me->dirLen > me->bufLen)
@@ -185,7 +185,7 @@ char               *ext;
    me->dirLen = strlen (dir);
    strcpy (me->buf, dir);
    strcpy (me->buf + (me->dirLen++), DIR_STR);
-#ifdef WWW_MSWINDOWS
+#if defined(_WINDOWS) && !defined(__GNUC__)
    sprintf (space, "%s\\%s%s", dir ? dir : "", name ? name : "",
 	    ext ? ext : "");
    me->handle = INVALID_HANDLE_VALUE;
@@ -226,7 +226,7 @@ ThotDirBrowse      *me;
 
 #endif /* __STDC__ */
 {
-#ifdef WWW_MSWINDOWS
+#if defined(_WINDOWS) && !defined(__GNUC__)
    int                 ret;
 
    do
@@ -254,7 +254,7 @@ ThotDirBrowse      *me;
 {
    int                 ret;
 
-#ifdef WWW_MSWINDOWS
+#if defined(_WINDOWS) && !defined(__GNUC__)
    if (me->handle == INVALID_HANDLE_VALUE)
       return 0;
    ret = (FindClose (me->handle) == 1 ? 1 : -1);
@@ -458,7 +458,7 @@ ThotFileMode        mode;
 {
    ThotFileHandle      ret;
 
-#ifdef WWW_MSWINDOWS
+#if defined(_WINDOWS) && !defined(__GNUC__)
    DWORD               access = 0;	/* access (read-write) mode  */
 
    SECURITY_ATTRIBUTES secAttribs;
@@ -501,7 +501,7 @@ ThotFileHandle      handle;
 {
    int                 ret;
 
-#ifdef WWW_MSWINDOWS
+#if defined(_WINDOWS) && !defined(__GNUC__)
    ret = CloseHandle (handle);
 #else  /* WWW_MSWINDOWS */
    ret = close (handle) == 0;
@@ -524,7 +524,7 @@ unsigned int        count;
 {
    int                 ret;
 
-#ifdef WWW_MSWINDOWS
+#if defined(_WINDOWS) && !defined(__GNUC__)
    DWORD               red;
 
    ret = ReadFile (handle, buffer, count, &red, 0);	/* OK as long as we don't open for overlapped IO */
@@ -553,7 +553,7 @@ unsigned int        count;
 {
    int                 ret;
 
-#ifdef WWW_MSWINDOWS
+#if defined(_WINDOWS) && !defined(__GNUC__)
    DWORD               writ;
 
    /* OK as long as we don't open for overlapped IO */
@@ -583,7 +583,7 @@ ThotFileOrigin      origin;
 {
    ThotFileOffset      ret;
 
-#ifdef WWW_MSWINDOWS
+#if defined(_WINDOWS) && !defined(__GNUC__)
    ret = SetFilePointer (handle, offset, 0, origin);
 #else  /* WWW_MSWINDOWS */
    ret = lseek (handle, offset, origin);
@@ -605,7 +605,7 @@ ThotFileInfo       *pInfo;
 {
    ThotFileOffset      ret;
 
-#ifdef WWW_MSWINDOWS
+#if defined(_WINDOWS) && !defined(__GNUC__)
    BY_HANDLE_FILE_INFORMATION info;
 
    ret = GetFileInformationByHandle (handle, &info);
