@@ -130,12 +130,12 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
   if (rdfp && triple) 
     {
       char * predicate = HTTriple_predicate(triple);
-#ifdef _DEBUG
+#ifdef _RDFDEBUG
       char * subject = HTTriple_subject(triple);
 #endif
       char * object = HTTriple_object(triple);
 
-#ifdef _DEBUG
+#ifdef _RDFDEBUG
       fprintf (stdout, "PRD = %s\n", predicate);
       fprintf (stdout, "SUB = %s\n", subject);
       fprintf (stdout, "OBJ = %s\n", object);
@@ -229,7 +229,7 @@ List *RDF_parseFile (char *file_name, AnnotFileType type)
   return (annot_list);
 }
 
-#ifdef _DEBUG
+#ifdef _RDFDEBUG
 /* ------------------------------------------------------------
    main 
 
@@ -254,5 +254,5 @@ int main (int argc, char *argv[])
         fprintf(stderr, "ERROR: Parse Failure of %s\n", argv[i]);
     }
 }
-#endif /* _DEBUG */
+#endif /* _RDFDEBUG */
 
