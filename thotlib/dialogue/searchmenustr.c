@@ -752,7 +752,7 @@ PtrSearchContext           DomaineCherche;
 	     /* message 'Type inconnu' dans la feuille de saisie */
 	     TtaNewLabel (NumLabelAttributeValue,
 			  NumFormSearchText,
-			  TtaGetMessage (LIB, UNKNOWN_TYPE));
+			  TtaGetMessage (LIB, LIB_UNKNOWN_TYPE));
 	     NomTypeAChercher[0] = '\0';
 	     *erreur = TRUE;
 	  }

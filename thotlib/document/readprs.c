@@ -1,16 +1,7 @@
-/* ======================================================================= */
-/* |                                                                    | */
-/* |                           Projet THOT                              | */
-/* |                                                                    | */
-/* |               Chargement des schemas de presentation               | */
-/* |                                                                    | */
-/* |                                                                    | */
-/* |                    V. Quint        Juillet 1987                    | */
-/* |                                                                    | */
-/* |               France Logiciel no de depot 88-39-001-00             | */
-/* |                                                                    | */
-/* ======================================================================= */
+/*
+   This module loads a presentation schema from a .PRS file
 
+ */
 
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -22,7 +13,8 @@
 
 #define EXPORT extern
 #include "platform_tv.h"
-static boolean      erreur;
+
+static boolean      error;
 
 #include "dofile_f.h"
 #include "fileaccess_f.h"
@@ -32,29 +24,13 @@ static boolean      erreur;
 
 
 /* ---------------------------------------------------------------------- */
-/* procedures pour la lecture des fichiers schemas */
-/* Gestion d'erreur */
+/* |	ReadrdTypeRegle  lit un type de regle de presentation et	| */
+/* |	retourne sa valeur.						| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         Erreur_Present (int Erreur)
+static PRuleType    ReadrdTypeRegle (BinFile file)
 #else  /* __STDC__ */
-static void         Erreur_Present (Erreur)
-int                 Erreur;
-
-#endif /* __STDC__ */
-{
-   erreur = TRUE;
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* rdTypeRegle  lit un type de regle de presentation dans le fichier */
-/* et retourne sa valeur. */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-static PRuleType    rdTypeRegle (BinFile file)
-#else  /* __STDC__ */
-static PRuleType    rdTypeRegle (file)
+static PRuleType    ReadrdTypeRegle (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -64,7 +40,7 @@ BinFile             file;
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	Erreur_Present (1);
+	error = True;
      }
    switch (c)
 	 {
@@ -147,21 +123,19 @@ BinFile             file;
 	       return PtForeground;
 	       break;
 	    default:
-	       Erreur_Present (1);	/* erreur de codage */
+	       error = True;
 	       return PtVisibility;
 	       break;
 	 }
 }
 
-
 /* ---------------------------------------------------------------------- */
-/* rdModeCalcul lit un mode de calcul dans le fichier et */
-/* retourne sa valeur. */
+/* |	ReadPresMode lit un mode de presentation et retourne sa valeur.	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static PresMode   rdModeCalcul (BinFile file)
+static PresMode   ReadPresMode (BinFile file)
 #else  /* __STDC__ */
-static PresMode   rdModeCalcul (file)
+static PresMode   ReadPresMode (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -171,7 +145,7 @@ BinFile             file;
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	Erreur_Present (1);
+	error = True;
      }
    switch (c)
 	 {
@@ -185,7 +159,7 @@ BinFile             file;
 	       return PresFunction;
 	       break;
 	    default:
-	       Erreur_Present (1);	/* erreur de codage */
+	       error = True;
 	       return PresImmediate;
 	       break;
 	 }
@@ -208,7 +182,7 @@ BinFile             file;
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	Erreur_Present (1);
+	error = True;
      }
    switch (c)
 	 {
@@ -228,20 +202,19 @@ BinFile             file;
 	       return UnPercent;
 	       break;
 	    default:
-	       Erreur_Present (1);	/* erreur de codage */
+	       error = True;
 	       return UnPoint;
 	       break;
 	 }
 }
 
 /* ---------------------------------------------------------------------- */
-/* | rdTypeHeritage lit un type d'heritage dans le fichier              | */
-/* |            et retourne sa valeur.                                  | */
+/* | ReadInheritMode lit un mode d'heritage et retourne sa valeur.	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static InheritMode rdTypeHeritage (BinFile file)
+static InheritMode ReadInheritMode (BinFile file)
 #else  /* __STDC__ */
-static InheritMode rdTypeHeritage (file)
+static InheritMode ReadInheritMode (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -251,7 +224,7 @@ BinFile             file;
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	Erreur_Present (1);
+	error = True;
      }
    switch (c)
 	 {
@@ -271,7 +244,7 @@ BinFile             file;
 	       return InheritGrandFather;
 	       break;
 	    default:
-	       Erreur_Present (1);	/* erreur de codage */
+	       error = True;
 	       return InheritParent;
 	       break;
 	 }
@@ -279,115 +252,116 @@ BinFile             file;
 
 
 /* ---------------------------------------------------------------------- */
-/* rdTypeFonct  lit un type de fonction de presentation dans le fichier */
-/* et retourne sa valeur. */
+/* |	ReadFunctionType  lit un type de fonction de presentation et	| */
+/* |	retourne sa valeur.						| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static FunctionType    rdTypeFonct (BinFile file, boolean * rep)
+static FunctionType    ReadFunctionType (BinFile file, boolean * repeat)
 #else  /* __STDC__ */
-static FunctionType    rdTypeFonct (file, rep)
+static FunctionType    ReadFunctionType (file, repeat)
 BinFile             file;
-boolean            *rep;
+boolean            *repeat;
 
 #endif /* __STDC__ */
 {
    char                c;
-   FunctionType           tf;
+   FunctionType        functType;
 
-   *rep = FALSE;
+   *repeat = FALSE;
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	Erreur_Present (1);
+	error = True;
      }
    switch (c)
 	 {
 	    case C_PF_LINE:
-	       tf = FnLine;
+	       functType = FnLine;
 	       break;
 	    case C_PF_PAGE:
-	       tf = FnPage;
+	       functType = FnPage;
 	       break;
 	    case C_PF_CR_BEFORE:
-	       tf = FnCreateBefore;
+	       functType = FnCreateBefore;
 	       break;
 	    case C_PF_CR_BEFORE_REP:
-	       tf = FnCreateBefore;
-	       *rep = TRUE;
+	       functType = FnCreateBefore;
+	       *repeat = TRUE;
 	       break;
 	    case C_PF_CR_WITH:
-	       tf = FnCreateWith;
+	       functType = FnCreateWith;
 	       break;
 	    case C_PF_CR_FIRST:
-	       tf = FnCreateFirst;
+	       functType = FnCreateFirst;
 	       break;
 	    case C_PF_CR_FIRST_REP:
-	       tf = FnCreateFirst;
-	       *rep = TRUE;
+	       functType = FnCreateFirst;
+	       *repeat = TRUE;
 	       break;
 	    case C_PF_CR_LAST:
-	       tf = FnCreateLast;
+	       functType = FnCreateLast;
 	       break;
 	    case C_PF_CR_LAST_REP:
-	       tf = FnCreateLast;
-	       *rep = TRUE;
+	       functType = FnCreateLast;
+	       *repeat = TRUE;
 	       break;
 	    case C_PF_CR_AFTER:
-	       tf = FnCreateAfter;
+	       functType = FnCreateAfter;
 	       break;
 	    case C_PF_CR_AFTER_REP:
-	       tf = FnCreateAfter;
-	       *rep = TRUE;
+	       functType = FnCreateAfter;
+	       *repeat = TRUE;
 	       break;
 	    case C_PF_CR_ENCLOSING:
-	       tf = FnCreateEnclosing;
+	       functType = FnCreateEnclosing;
 	       break;
 	    case C_PF_CR_ENCLOSING_REP:
-	       tf = FnCreateEnclosing;
-	       *rep = TRUE;
+	       functType = FnCreateEnclosing;
+	       *repeat = TRUE;
 	       break;
 	    case C_PF_COLUMN:
-	       tf = FnColumn;
+	       functType = FnColumn;
 	       break;
 	    case C_PF_SUBCOLUMN:
-	       tf = FnSubColumn;
+	       functType = FnSubColumn;
 	       break;
 	    case C_PF_COPY:
-	       tf = FnCopy;
+	       functType = FnCopy;
 	       break;
 	    case C_PF_REF_CONTENT:
-	       tf = FnContentRef;
+	       functType = FnContentRef;
 	       break;
 	    case C_PF_NOLINE:
-	       tf = FnNoLine;
+	       functType = FnNoLine;
 	       break;
 	    default:
-	       Erreur_Present (1);	/* erreur de codage */
-	       tf = FnLine;
+	       error = True;
+	       functType = FnLine;
 	       break;
 	 }
-
-   return tf;
+   return functType;
 }
 
 
-/* rdCadrage    lit un mode de cadrage de lignes dans le fichier */
-/* et retourne sa valeur. */
+/* ---------------------------------------------------------------------- */
+/* |	ReadAlignment   lit un mode d'alignement des lignes et retourne	| */
+/* |	sa valeur.							| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static BAlignment      rdCadrage (BinFile file)
+static BAlignment      ReadAlignment (BinFile file)
 #else  /* __STDC__ */
-static BAlignment      rdCadrage (file)
+static BAlignment      ReadAlignment (file)
 BinFile             file;
 
 #endif /* __STDC__ */
 {
    char                c;
-   BAlignment             align;
+   BAlignment          align;
 
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	Erreur_Present (1);
+	error = True;
      }
    switch (c)
 	 {
@@ -404,7 +378,7 @@ BinFile             file;
 	       align = AlignLeftDots;
 	       break;
 	    default:
-	       Erreur_Present (1);	/* erreur de codage */
+	       error = True;
 	       align = AlignLeft;
 	       break;
 	 }
@@ -413,12 +387,14 @@ BinFile             file;
 }
 
 
-/* rdTypeCondition      lit un type de condition dans le fichier */
-/* et retourne sa valeur. */
+/* ---------------------------------------------------------------------- */
+/* |	ReadPresCondition      lit un type de condition et retourne	| */
+/* |	sa valeur.							| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static PresCondition rdTypeCondition (BinFile file)
+static PresCondition ReadPresCondition (BinFile file)
 #else  /* __STDC__ */
-static PresCondition rdTypeCondition (file)
+static PresCondition ReadPresCondition (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -429,7 +405,7 @@ BinFile             file;
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	Erreur_Present (1);
+	error = True;
      }
    switch (c)
 	 {
@@ -506,7 +482,7 @@ BinFile             file;
 	       condtype = PcDefaultCond;
 	       break;
 	    default:
-	       Erreur_Present (1);	/* erreur de codage */
+	       error = True;
 	       condtype = PcFirst;
 	       break;
 	 }
@@ -514,54 +490,57 @@ BinFile             file;
 }
 
 
-/* rdRelationParent     lit la relation d'une condition Within */
+/* ---------------------------------------------------------------------- */
+/* |	ReadArithRel     lit la relation d'une condition Within		| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static ArithRel   rdRelationParent (BinFile file)
+static ArithRel   ReadArithRel (BinFile file)
 #else  /* __STDC__ */
-static ArithRel   rdRelationParent (file)
-BinFile             file;
+static ArithRel   ReadArithRel (file)
+BinFile           file;
 
 #endif /* __STDC__ */
 {
-   char                c;
-   ArithRel          ret;
+   char              c;
+   ArithRel          rel;
 
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	Erreur_Present (1);
+	error = True;
      }
    switch (c)
 	 {
 	    case C_WITHIN_GT:
-	       ret = CondGreater;
+	       rel = CondGreater;
 	       break;
 	    case C_WITHIN_LT:
-	       ret = CondLess;
+	       rel = CondLess;
 	    case C_WITHIN_EQ:
-	       ret = CondEquals;
+	       rel = CondEquals;
 	 }
-   return ret;
+   return rel;
 }
 
 
-/* rdRepereBoite                lit un repere de boite dans le fichier */
-/* et retourne sa valeur. */
+/* ---------------------------------------------------------------------- */
+/* |	ReadBoxEdge   lit un repere de boite et retourne sa valeur.	| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static BoxEdge  rdRepereBoite (BinFile file)
+static BoxEdge  ReadBoxEdge (BinFile file)
 #else  /* __STDC__ */
-static BoxEdge  rdRepereBoite (file)
-BinFile             file;
+static BoxEdge  ReadBoxEdge (file)
+BinFile         file;
 
 #endif /* __STDC__ */
 {
-   char                c;
+   char            c;
    BoxEdge         edge;
 
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	Erreur_Present (1);
+	error = True;
      }
    switch (c)
 	 {
@@ -593,7 +572,7 @@ BinFile             file;
 	       edge = NoEdge;
 	       break;
 	    default:
-	       Erreur_Present (1);	/* erreur de codage */
+	       error = True;
 	       edge = Top;
 	       break;
 	 }
@@ -601,13 +580,15 @@ BinFile             file;
 }
 
 
-/* rdNiveau     lit un niveau relatif de boite dans le fichier */
-/* et retourne sa valeur. */
+/* ---------------------------------------------------------------------- */
+/* |	ReadLevel     lit un niveau relatif de boite et retourn		| */
+/* |	sa valeur.							| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static Level       rdNiveau (BinFile file)
+static Level       ReadLevel (BinFile file)
 
 #else  /* __STDC__ */
-static Level       rdNiveau (file)
+static Level       ReadLevel (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -618,7 +599,7 @@ BinFile             file;
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	Erreur_Present (1);
+	error = True;
      }
    switch (c)
 	 {
@@ -653,20 +634,21 @@ BinFile             file;
 	       level = RlCreator;
 	       break;
 	    default:
-	       Erreur_Present (1);	/* erreur de codage */
+	       error = True;
 	       level = RlSameLevel;
 	       break;
 	 }
    return level;
 }
 
-
-/* rdCptTypeOp  lit un type d'operation sur compteur dans le fichier */
-/* et retourne sa valeur. */
+/* ---------------------------------------------------------------------- */
+/* |	ReadCounterOp  lit un type d'operation sur compteur et retourne	| */
+/* |	sa valeur.							| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static CounterOp    rdCptTypeOp (BinFile file)
+static CounterOp    ReadCounterOp (BinFile file)
 #else  /* __STDC__ */
-static CounterOp    rdCptTypeOp (file)
+static CounterOp    ReadCounterOp (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -677,7 +659,7 @@ BinFile             file;
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	Erreur_Present (1);
+	error = True;
      }
    switch (c)
 	 {
@@ -694,7 +676,7 @@ BinFile             file;
 	       optype = CntrRLevel;
 	       break;
 	    default:
-	       Erreur_Present (1);	/* erreur de codage */
+	       error = True;
 	       optype = CntrRank;
 	       break;
 	 }
@@ -702,12 +684,14 @@ BinFile             file;
 }
 
 
-/* rdTypeDeBase lit un type de base dans le fichier et retourne */
-/* sa valeur. */
+/* ---------------------------------------------------------------------- */
+/* |	ReadBasicType lit un type de base dans le fichier et retourne	| */
+/* |	sa valeur.							| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static BasicType   rdTypeDeBase (BinFile file)
+static BasicType   ReadBasicType (BinFile file)
 #else  /* __STDC__ */
-static BasicType   rdTypeDeBase (file)
+static BasicType   ReadBasicType (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -718,7 +702,7 @@ BinFile             file;
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	Erreur_Present (1);
+	error = True;
      }
    switch (c)
 	 {
@@ -741,33 +725,33 @@ BinFile             file;
 	       basictyp = PageBreak;
 	       break;
 	    default:
-	       Erreur_Present (1);	/* erreur de codage */
+	       error = True;
 	       basictyp = CharString;
 	       break;
 	 }
-
    return basictyp;
 }
 
 
-/* rdVarType    lit un type de variable dans le fichier et */
-/* retourne sa valeur. */
+/* ---------------------------------------------------------------------- */
+/* |	ReadVariableType  lit un type de variable et retourne sa valeur	| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static VariableType      rdVarType (BinFile file)
+static VariableType      ReadVariableType (BinFile file)
 
 #else  /* __STDC__ */
-static VariableType      rdVarType (file)
-BinFile             file;
+static VariableType      ReadVariableType (file)
+BinFile                  file;
 
 #endif /* __STDC__ */
 {
    char                c;
-   VariableType             vartyp;
+   VariableType        vartyp;
 
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	Erreur_Present (1);
+	error = True;
      }
    switch (c)
 	 {
@@ -803,7 +787,7 @@ BinFile             file;
 	       vartyp = VarPageNumber;
 	       break;
 	    default:
-	       Erreur_Present (1);	/* erreur de codage */
+	       error = True;
 	       vartyp = VarText;
 	       break;
 	 }
@@ -811,23 +795,24 @@ BinFile             file;
 }
 
 
-/* rdComptStyle lit un style de compteur dans le fichier et */
-/* retourne sa valeur. */
+/* ---------------------------------------------------------------------- */
+/* |	ReadCounterStyle lit un style de compteur et retourne sa valeur	| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static CounterStyle   rdComptStyle (BinFile file)
+static CounterStyle   ReadCounterStyle (BinFile file)
 #else  /* __STDC__ */
-static CounterStyle   rdComptStyle (file)
-BinFile             file;
+static CounterStyle   ReadCounterStyle (file)
+BinFile               file;
 
 #endif /* __STDC__ */
 {
    char                c;
-   CounterStyle          countstyle;
+   CounterStyle        countstyle;
 
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	Erreur_Present (1);
+	error = True;
      }
    switch (c)
 	 {
@@ -847,7 +832,7 @@ BinFile             file;
 	       countstyle = CntLowercase;
 	       break;
 	    default:
-	       Erreur_Present (1);	/* erreur de codage */
+	       error = True;
 	       countstyle = CntArabic;
 	       break;
 	 }
@@ -855,47 +840,49 @@ BinFile             file;
 }
 
 
-/* rdNatValCmpt         lit la nature du compteur inclus dans une variable */
-/* et retourne sa valeur. */
+/* ---------------------------------------------------------------------- */
+/* |	ReadCounterValue    lit la nature du compteur inclus dans une	| */
+/* |	variable et retourne sa valeur.					| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static CounterValue rdNatValCmpt (BinFile file)
+static CounterValue ReadCounterValue (BinFile file)
 #else  /* __STDC__ */
-static CounterValue rdNatValCmpt (file)
+static CounterValue ReadCounterValue (file)
 BinFile             file;
 
 #endif /* __STDC__ */
 {
    char                c;
-   CounterValue      nature;
-
+   CounterValue      value;
 
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	Erreur_Present (1);
+	error = True;
      }
    switch (c)
 	 {
 	    case C_VAL_MAX:
-	       nature = CntMaxVal;
+	       value = CntMaxVal;
 	       break;
 	    case C_VAL_MIN:
-	       nature = CntMinVal;
+	       value = CntMinVal;
 	       break;
 	    case C_VAL_CUR:
-	       nature = CntCurVal;
+	       value = CntCurVal;
 	       break;
 	    default:
-	       Erreur_Present (1);	/* erreur de codage */
-	       nature = CntCurVal;
+	       error = True;
+	       value = CntCurVal;
 	       break;
 	 }
-   return nature;
+   return value;
 }
 
 
-/* ReadContentType                lit un type de contenu dans le fichier */
-/* et retourne sa valeur. */
+/* ---------------------------------------------------------------------- */
+/* |	ReadContentType	lit un type de contenu retourne sa valeur.	| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 ContentType         ReadContentType (BinFile file)
 
@@ -911,7 +898,7 @@ BinFile             file;
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	Erreur_Present (1);
+	error = True;
      }
    switch (c)
 	 {
@@ -928,7 +915,7 @@ BinFile             file;
 	       conttype = ContElement;
 	       break;
 	    default:
-	       Erreur_Present (1);	/* erreur de codage */
+	       error = True;
 	       conttype = FreeContent;
 	       break;
 	 }
@@ -936,15 +923,17 @@ BinFile             file;
 }
 
 
-/* ReadRulePtr     retourne un pointeur sur la regle suivante ou NULL */
-/* s'il n'y a pas de regle suivante. */
+/* ---------------------------------------------------------------------- */
+/* |	ReadPRulePtr	retourne un pointeur sur la regle suivante ou	| */
+/* |	s'il n'y a pas de regle suivante.				| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrPRule        ReadRulePtr (BinFile file, PtrPRule * nextr)
+PtrPRule        ReadPRulePtr (BinFile file, PtrPRule * pNextPRule)
 
 #else  /* __STDC__ */
-PtrPRule        ReadRulePtr (file, nextr)
-BinFile             file;
-PtrPRule       *nextr;
+PtrPRule        ReadPRulePtr (file, pNextPRule)
+BinFile         file;
+PtrPRule       *pNextPRule;
 
 #endif /* __STDC__ */
 {
@@ -955,42 +944,43 @@ PtrPRule       *nextr;
    else if (c == '\0')
       return NULL;
    else
-      return *nextr;
+      return *pNextPRule;
 }
 
 
-/* ReadPosition   lit un positionnement relatif */
+/* ---------------------------------------------------------------------- */
+/* |	ReadPosRule   lit un positionnement relatif			| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ReadPosition (BinFile file, PosRule * RP)
+void                ReadPosRule (BinFile file, PosRule * pPosRule)
 #else  /* __STDC__ */
-void                ReadPosition (file, RP)
+void                ReadPosRule (file, pPosRule)
 BinFile             file;
-PosRule           *RP;
+PosRule            *pPosRule;
 
 #endif /* __STDC__ */
 {
-   PosRule           *pRe1;
-
-   pRe1 = RP;
-   pRe1->PoPosDef = rdRepereBoite (file);
-   pRe1->PoPosRef = rdRepereBoite (file);
-   pRe1->PoDistUnit = rdUnit (file);
-   BIOreadBool (file, &pRe1->PoDistAttr);
-   BIOreadSignedShort (file, &pRe1->PoDistance);
-   pRe1->PoRelation = rdNiveau (file);
-   BIOreadBool (file, &pRe1->PoNotRel);
-   BIOreadBool (file, &pRe1->PoUserSpecified);
-   BIOreadBool (file, &pRe1->PoRefElem);
-   if (pRe1->PoRefElem)
-      BIOreadShort (file, &pRe1->PoTypeRefElem);
+   pPosRule->PoPosDef = ReadBoxEdge (file);
+   pPosRule->PoPosRef = ReadBoxEdge (file);
+   pPosRule->PoDistUnit = rdUnit (file);
+   BIOreadBool (file, &pPosRule->PoDistAttr);
+   BIOreadSignedShort (file, &pPosRule->PoDistance);
+   pPosRule->PoRelation = ReadLevel (file);
+   BIOreadBool (file, &pPosRule->PoNotRel);
+   BIOreadBool (file, &pPosRule->PoUserSpecified);
+   BIOreadBool (file, &pPosRule->PoRefElem);
+   if (pPosRule->PoRefElem)
+      BIOreadShort (file, &pPosRule->PoTypeRefElem);
    else
-      BIOreadShort (file, &pRe1->PoRefPresBox);
+      BIOreadShort (file, &pPosRule->PoRefPresBox);
 
 }
 
 
-/* ReadAttrCompar lit un type de comparaison pour les valeurs d'attributs */
-/* retourne sa valeur. */
+/* ---------------------------------------------------------------------- */
+/* |	ReadAttrCompar lit un type de comparaison pour les valeurs	| */
+/* |	d'attributs retourne sa valeur.					| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 AttrComparType      ReadAttrCompar (BinFile file)
 #else  /* __STDC__ */
@@ -1012,52 +1002,54 @@ BinFile             file;
 	       return (ComparAttr);
 	       break;
 	    default:
-	       Erreur_Present (1);	/* erreur de codage */
+	       error = True;
 	       return (ComparConstant);
 	       break;
 	 }
 }
 
 
-/* ReadRules    lit une suite de regles chainees et fait pointer le */
-/* pointeur pR sur la premiere regle de la suite de regles lues. */
+/* ---------------------------------------------------------------------- */
+/* |	ReadPRules    lit une suite de regles chainees et fait pointer	| */
+/* |	le pointeur pPRule sur la premiere regle de la suite de regles lues	| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ReadRules (BinFile file, PtrPRule * pR, PtrPRule * nextr)
+void                ReadPRules (BinFile file, PtrPRule * pPRule, PtrPRule * pNextPRule)
 #else  /* __STDC__ */
-void                ReadRules (file, pR, nextr)
+void                ReadPRules (file, pPRule, pNextPRule)
 BinFile             file;
-PtrPRule       *pR;
-PtrPRule       *nextr;
+PtrPRule            *pPRule;
+PtrPRule            *pNextPRule;
 
 #endif /* __STDC__ */
 {
-   PtrPRule        r;
-   int                 i;
-   PtrPRule        pRe1;
-   PtrCondition        pCond;
-   PresCondition       typeCond;
-   DimensionRule       *pRelD1;
+   PtrPRule         pPR;
+   PtrCondition     pCond;
+   PresCondition    typeCond;
+   DimensionRule    *pDim;
+   int              i;
 
-   if (*pR != NULL && !erreur)
+   if (*pPRule != NULL && !error)
       /* pointeur sur la premiere regle qui va etre lue */
      {
-	*pR = *nextr;		/* lecture de la suite de regles */
+	*pPRule = *pNextPRule;
+	/* lecture de la suite de regles */
 	do
 	  {
-	     r = *nextr;	/* acquiert un buffer pour la regle suivante */
-	     GetPresentRule (nextr);
-	     (*nextr)->PrCond = NULL;
+	     pPR = *pNextPRule;
+	     /* acquiert un buffer pour la regle suivante */
+	     GetPresentRule (pNextPRule);
+	     (*pNextPRule)->PrCond = NULL;
 	     /* lit une regle */
-	     pRe1 = r;
-	     pRe1->PrType = rdTypeRegle (file);
-	     pRe1->PrNextPRule = ReadRulePtr (file, nextr);
-	     pRe1->PrCond = NULL;
-	     typeCond = rdTypeCondition (file);
-	     while (typeCond != PcNoCondition && !erreur)
+	     pPR->PrType = ReadrdTypeRegle (file);
+	     pPR->PrNextPRule = ReadPRulePtr (file, pNextPRule);
+	     pPR->PrCond = NULL;
+	     typeCond = ReadPresCondition (file);
+	     while (typeCond != PcNoCondition && !error)
 	       {
 		  GetPresentRuleCond (&pCond);
-		  pCond->CoNextCondition = pRe1->PrCond;
-		  pRe1->PrCond = pCond;
+		  pCond->CoNextCondition = pPR->PrCond;
+		  pPR->PrCond = pCond;
 		  pCond->CoCondition = typeCond;
 		  BIOreadBool (file, &pCond->CoNotNegative);
 		  BIOreadBool (file, &pCond->CoTarget);
@@ -1072,12 +1064,12 @@ PtrPRule       *nextr;
 			      BIOreadShort (file, &pCond->CoCounter);
 			      BIOreadSignedShort (file, &pCond->CoMinCounter);
 			      BIOreadSignedShort (file, &pCond->CoMaxCounter);
-			      pCond->CoValCounter = rdNatValCmpt (file);
+			      pCond->CoValCounter = ReadCounterValue (file);
 			      break;
 			   case PcWithin:
 			      BIOreadBool (file, &pCond->CoImmediate);
 			      BIOreadShort (file, &pCond->CoRelation);
-			      pCond->CoAncestorRel = rdRelationParent (file);
+			      pCond->CoAncestorRel = ReadArithRel (file);
 			      BIOreadSignedShort (file, &pCond->CoTypeAncestor);
 			      if (pCond->CoTypeAncestor == 0)
 				{
@@ -1097,43 +1089,43 @@ PtrPRule       *nextr;
 			   default:
 			      break;
 			}
-		  typeCond = rdTypeCondition (file);
+		  typeCond = ReadPresCondition (file);
 	       }
-	     BIOreadShort (file, &pRe1->PrViewNum);
-	     pRe1->PrPresMode = rdModeCalcul (file);
-	     if (!erreur)
-		switch (pRe1->PrPresMode)
+	     BIOreadShort (file, &pPR->PrViewNum);
+	     pPR->PrPresMode = ReadPresMode (file);
+	     if (!error)
+		switch (pPR->PrPresMode)
 		      {
 			 case PresInherit:
-			    pRe1->PrInheritMode = rdTypeHeritage (file);
-			    BIOreadBool (file, &pRe1->PrInhAttr);
-			    BIOreadSignedShort (file, &pRe1->PrInhDelta);
-			    BIOreadBool (file, &pRe1->PrMinMaxAttr);
-			    BIOreadSignedShort (file, &pRe1->PrInhMinOrMax);
-			    pRe1->PrInhUnit = rdUnit (file);
+			    pPR->PrInheritMode = ReadInheritMode (file);
+			    BIOreadBool (file, &pPR->PrInhAttr);
+			    BIOreadSignedShort (file, &pPR->PrInhDelta);
+			    BIOreadBool (file, &pPR->PrMinMaxAttr);
+			    BIOreadSignedShort (file, &pPR->PrInhMinOrMax);
+			    pPR->PrInhUnit = rdUnit (file);
 			    break;
 			 case PresFunction:
-			    pRe1->PrPresBoxRepeat = FALSE;
-			    pRe1->PrPresFunction = rdTypeFonct (file, &pRe1->PrPresBoxRepeat);
-			    if (pRe1->PrPresFunction != FnLine
-				&& pRe1->PrPresFunction != FnNoLine)
+			    pPR->PrPresBoxRepeat = FALSE;
+			    pPR->PrPresFunction = ReadFunctionType (file, &pPR->PrPresBoxRepeat);
+			    if (pPR->PrPresFunction != FnLine
+				&& pPR->PrPresFunction != FnNoLine)
 			      {
-				 BIOreadBool (file, &pRe1->PrExternal);
-				 BIOreadBool (file, &pRe1->PrElement);
-				 erreur = !BIOreadShort (file, &pRe1->PrNPresBoxes);
-				 if (!erreur)
-				    if (pRe1->PrNPresBoxes == 0)
-				       BIOreadName (file, pRe1->PrPresBoxName);
+				 BIOreadBool (file, &pPR->PrExternal);
+				 BIOreadBool (file, &pPR->PrElement);
+				 error = !BIOreadShort (file, &pPR->PrNPresBoxes);
+				 if (!error)
+				    if (pPR->PrNPresBoxes == 0)
+				       BIOreadName (file, pPR->PrPresBoxName);
 				    else
 				      {
-					 for (i = 1; i <= pRe1->PrNPresBoxes; i++)
-					    BIOreadShort (file, &pRe1->PrPresBox[i - 1]);
-					 pRe1->PrPresBoxName[0] = '\0';
+					 for (i = 0; i < pPR->PrNPresBoxes; i++)
+					    BIOreadShort (file, &pPR->PrPresBox[i]);
+					 pPR->PrPresBoxName[0] = '\0';
 				      }
 			      }
 			    break;
 			 case PresImmediate:
-			    switch (pRe1->PrType)
+			    switch (pPR->PrType)
 				  {
 				     case PtVisibility:
 				     case PtDepth:
@@ -1141,16 +1133,16 @@ PtrPRule       *nextr;
 				     case PtFillPattern:
 				     case PtBackground:
 				     case PtForeground:
-					BIOreadBool (file, &pRe1->PrAttrValue);
-					BIOreadSignedShort (file, &pRe1->PrIntValue);
+					BIOreadBool (file, &pPR->PrAttrValue);
+					BIOreadSignedShort (file, &pPR->PrIntValue);
 					break;
 				     case PtFont:
 				     case PtStyle:
 				     case PtUnderline:
 				     case PtThickness:
 				     case PtLineStyle:
-					if (!BIOreadByte (file, &pRe1->PrChrValue))
-					   Erreur_Present (1);
+					if (!BIOreadByte (file, &pPR->PrChrValue))
+					   error = True;
 					break;
 				     case PtBreak1:
 				     case PtBreak2:
@@ -1158,46 +1150,46 @@ PtrPRule       *nextr;
 				     case PtSize:
 				     case PtLineSpacing:
 				     case PtLineWeight:
-					pRe1->PrMinUnit = rdUnit (file);
-					BIOreadBool (file, &pRe1->PrMinAttr);
-					BIOreadSignedShort (file, &pRe1->PrMinValue);
+					pPR->PrMinUnit = rdUnit (file);
+					BIOreadBool (file, &pPR->PrMinAttr);
+					BIOreadSignedShort (file, &pPR->PrMinValue);
 					break;
 				     case PtVertRef:
 				     case PtHorizRef:
 				     case PtVertPos:
 				     case PtHorizPos:
-					ReadPosition (file, &pRe1->PrPosRule);
+					ReadPosRule (file, &pPR->PrPosRule);
 					break;
 				     case PtHeight:
 				     case PtWidth:
-					pRelD1 = &pRe1->PrDimRule;
-					BIOreadBool (file, &pRelD1->DrPosition);
-					if (pRelD1->DrPosition)
-					   ReadPosition (file, &pRelD1->DrPosRule);
+					pDim = &pPR->PrDimRule;
+					BIOreadBool (file, &pDim->DrPosition);
+					if (pDim->DrPosition)
+					   ReadPosRule (file, &pDim->DrPosRule);
 					else
 					  {
-					     BIOreadBool (file, &pRelD1->DrAbsolute);
-					     BIOreadBool (file, &pRelD1->DrSameDimens);
-					     pRelD1->DrUnit = rdUnit (file);
-					     BIOreadBool (file, &pRelD1->DrAttr);
-					     BIOreadBool (file, &pRelD1->DrMin);
-					     BIOreadBool (file, &pRelD1->DrUserSpecified);
-					     BIOreadSignedShort (file, &pRelD1->DrValue);
-					     pRelD1->DrRelation = rdNiveau (file);
-					     BIOreadBool (file, &pRelD1->DrNotRelat);
-					     BIOreadBool (file, &pRelD1->DrRefElement);
-					     if (pRelD1->DrRefElement)
-						BIOreadShort (file, &pRelD1->DrTypeRefElem);
+					     BIOreadBool (file, &pDim->DrAbsolute);
+					     BIOreadBool (file, &pDim->DrSameDimens);
+					     pDim->DrUnit = rdUnit (file);
+					     BIOreadBool (file, &pDim->DrAttr);
+					     BIOreadBool (file, &pDim->DrMin);
+					     BIOreadBool (file, &pDim->DrUserSpecified);
+					     BIOreadSignedShort (file, &pDim->DrValue);
+					     pDim->DrRelation = ReadLevel (file);
+					     BIOreadBool (file, &pDim->DrNotRelat);
+					     BIOreadBool (file, &pDim->DrRefElement);
+					     if (pDim->DrRefElement)
+						BIOreadShort (file, &pDim->DrTypeRefElem);
 					     else
-						BIOreadShort (file, &pRelD1->DrRefPresBox);
+						BIOreadShort (file, &pDim->DrRefPresBox);
 					  }
 					break;
 				     case PtAdjust:
-					pRe1->PrAdjust = rdCadrage (file);
+					pPR->PrAdjust = ReadAlignment (file);
 					break;
 				     case PtJustify:
 				     case PtHyphenate:
-					BIOreadBool (file, &pRe1->PrJustify);
+					BIOreadBool (file, &pPR->PrJustify);
 					break;
 				     default:
 					break;
@@ -1205,330 +1197,321 @@ PtrPRule       *nextr;
 			    /* passe a la regle suivante */
 			    break;
 		      }
-
-	     if (pRe1->PrNextPRule != NULL)
-		pRe1->PrNextPRule = *nextr;
+	     if (pPR->PrNextPRule != NULL)
+		pPR->PrNextPRule = *pNextPRule;
 	  }
-	while (!(r->PrNextPRule == NULL || erreur));
+	while (pPR->PrNextPRule != NULL && ! error);
      }
 }
 
 
-/* ReadPresentationSchema    lit un fichier contenant un schema de presentation */
-/* et le charge en memoire. */
-/* fname: nom du fichier a lire, sans le suffixe .PRS */
-/* SS: pointeur sur le schema de structure correspondant, */
-/* deja rempli si SsRootElem n'est pas nul, */
-/* a charger si SsRootElem est nul. */
-/* Retourne un pointeur sur le schema de presentation en memoire si */
-/* chargement reussi, NULL si echec. */
+/* ---------------------------------------------------------------------- */
+/* |	ReadPresentationSchema 						| */
+/* |	lit un fichier contenant un schema de presentation et le charge	| */
+/* |	en memoire.							| */
+/* |	fileName: nom du fichier a lire.				| */
+/* |	pSS: pointeur sur le schema de structure correspondant, deja	| */
+/* |	rempli si SsRootElem n'est pas nul, a charger si SsRootElem	| */
+/* |	est nul.							| */
+/* |	Retourne un pointeur sur le schema de presentation en memoire	| */
+/* |	chargement reussi, NULL si echec.				| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrPSchema          ReadPresentationSchema (Name fname, PtrSSchema SS)
+PtrPSchema          ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 #else  /* __STDC__ */
-PtrPSchema          ReadPresentationSchema (fname, SS)
-Name                 fname;
-PtrSSchema        SS;
+PtrPSchema          ReadPresentationSchema (fileName, pSS)
+Name                fileName;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 {
-   int                 i, j, l;
-   PtrPRule        nextr;
-   PtrPSchema          pSchP;
-   boolean             ret;
-   PtrPSchema          pSc1;
-   Counter           *pCo1;
-   CntrItem            *pCp1;
-   PresConstant          *pPr1;
-   PresVariable            *pPres1;
-   PresVarItem            *pVa1;
-   PresentationBox             *pBo1;
-   AttributePres      *pRP1;
-   NumAttrCase         *pCa1;
-   PathBuffer          DirBuffer;
-   BinFile             file;
-   char                texte[MAX_TXT_LEN];
-   int                 NbElemStructInitial;
+   PtrPRule         pNextPRule;
+   PtrPSchema       pPSch;
+   Counter          *pCntr;
+   CntrItem         *pCntrItem;
+   PresConstant     *pConst;
+   PresVariable     *pVar;
+   PresVarItem      *pVarItem;
+   PresentationBox  *pBox;
+   AttributePres    *pAttrP;
+   NumAttrCase      *pCase;
+   PathBuffer       dirBuffer;
+   BinFile          file;
+   char             buf[MAX_TXT_LEN];
+   int              InitialNElems, i, j, l;
+   boolean          ret;
 
-   erreur = FALSE;
-   pSchP = NULL;
-
-   /* compose le nom du fichier a ouvrir avec le nom du directory */
-   /* des schemas... */
-   strncpy (DirBuffer, SchemaPath, MAX_PATH);
-   MakeCompleteName (fname, "PRS", DirBuffer, texte, &i);
+   error = FALSE;
+   pPSch = NULL;
+   /* compose le nom du fichier a ouvrir */
+   strncpy (dirBuffer, SchemaPath, MAX_PATH);
+   MakeCompleteName (fileName, "PRS", dirBuffer, buf, &i);
 
    /* teste si le fichier existe */
-
-   file = BIOreadOpen (texte);
+   file = BIOreadOpen (buf);
    if (file == 0)
      {
 	/* message 'Fichier inaccessible' */
-	strncpy (texte, fname, MAX_NAME_LENGTH);
-	strcat (texte, ".PRS");
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), texte);
+	strncpy (buf, fileName, MAX_NAME_LENGTH);
+	strcat (buf, ".PRS");
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), buf);
      }
    else
      {
 	/* supprime le suffixe .PRS a la fin du nom de fichier */
-
-	texte[i - 4] = '\0';
-	GetSchPres (&pSchP);
-	GetPresentRule (&nextr);	/* ce sera la prochaine regle lue */
-	nextr->PrCond = NULL;
+	buf[i - 4] = '\0';
+	GetSchPres (&pPSch);
+	/* acquiert un bloc pour la prochaine regle lue */
+	GetPresentRule (&pNextPRule);
+	pNextPRule->PrCond = NULL;
 	/* met son nom dans le schema de presentation */
-	strncpy (pSchP->PsPresentName, fname, MAX_NAME_LENGTH - 1);
+	strncpy (pPSch->PsPresentName, fileName, MAX_NAME_LENGTH - 1);
 	/* lit la partie fixe du schema de presentation */
-	pSc1 = pSchP;
 	/* lit le nom du schema de structure correspondant */
-	BIOreadName (file, pSc1->PsStructName);
-	BIOreadShort (file, &pSc1->PsStructCode);
-	erreur = !BIOreadShort (file, &pSc1->PsNViews);
-	if (!erreur)
-	   for (i = 1; i <= pSc1->PsNViews; i++)
-	      BIOreadName (file, pSc1->PsView[i - 1]);
-	if (!erreur)
-	   for (i = 1; i <= pSc1->PsNViews; i++)
-	      BIOreadBool (file, &pSc1->PsPaginatedView[i - 1]);
+	BIOreadName (file, pPSch->PsStructName);
+	BIOreadShort (file, &pPSch->PsStructCode);
+	error = !BIOreadShort (file, &pPSch->PsNViews);
+	if (!error)
+	   for (i = 0; i < pPSch->PsNViews; i++)
+	      BIOreadName (file, pPSch->PsView[i]);
+	if (!error)
+	   for (i = 0; i < pPSch->PsNViews; i++)
+	      BIOreadBool (file, &pPSch->PsPaginatedView[i]);
 	/* significatif uniquement dans la V4 */
-	if (!erreur)
-	   for (i = 1; i <= pSc1->PsNViews; i++)
-	      BIOreadBool (file, &pSc1->PsColumnView[i - 1]);
-	erreur = !BIOreadShort (file, &pSc1->PsNPrintedViews);
-	if (!erreur)
-	   for (i = 1; i <= pSc1->PsNPrintedViews; i++)
+	if (!error)
+	   for (i = 0; i < pPSch->PsNViews; i++)
+	      BIOreadBool (file, &pPSch->PsColumnView[i]);
+	error = !BIOreadShort (file, &pPSch->PsNPrintedViews);
+	if (!error)
+	   for (i = 0; i < pPSch->PsNPrintedViews; i++)
 	     {
-		BIOreadBool (file, &pSc1->PsPrintedView[i - 1].VpAssoc);
-		erreur = !BIOreadShort (file, &pSc1->PsPrintedView[i - 1].VpNumber);
+		BIOreadBool (file, &pPSch->PsPrintedView[i].VpAssoc);
+		error = !BIOreadShort (file, &pPSch->PsPrintedView[i].VpNumber);
 	     }
-	if (!erreur)
-	   for (i = 1; i <= pSc1->PsNViews; i++)
-	      BIOreadBool (file, &pSc1->PsExportView[i - 1]);
-	BIOreadShort (file, &pSc1->PsNCounters);
-	BIOreadShort (file, &pSc1->PsNConstants);
-	BIOreadShort (file, &pSc1->PsNVariables);
-	BIOreadShort (file, &pSc1->PsNPresentBoxes);
-	pSc1->PsFirstDefaultPRule = ReadRulePtr (file, &nextr);
-	ret = !erreur;
-	if (SS->SsRootElem == 0)
-	   ret = ReadStructureSchema (pSc1->PsStructName, SS);
-	if (!ret || pSchP->PsStructCode != SS->SsCode)
+	if (!error)
+	   for (i = 0; i < pPSch->PsNViews; i++)
+	      BIOreadBool (file, &pPSch->PsExportView[i]);
+	BIOreadShort (file, &pPSch->PsNCounters);
+	BIOreadShort (file, &pPSch->PsNConstants);
+	BIOreadShort (file, &pPSch->PsNVariables);
+	BIOreadShort (file, &pPSch->PsNPresentBoxes);
+	pPSch->PsFirstDefaultPRule = ReadPRulePtr (file, &pNextPRule);
+	ret = !error;
+	if (pSS->SsRootElem == 0)
+	   ret = ReadStructureSchema (pPSch->PsStructName, pSS);
+	if (!ret || pPSch->PsStructCode != pSS->SsCode)
 	  {
-	     FreeSchPres (pSchP);
-	     FreePresentRule (nextr);
-	     nextr = NULL;
-	     pSchP = NULL;
+	     FreeSchPres (pPSch);
+	     FreePresentRule (pNextPRule);
+	     pNextPRule = NULL;
+	     pPSch = NULL;
 	     /* Schemas incompatibles */
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, OLD_SCH_TO_RECOMP), texte);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, OLD_SCH_TO_RECOMP),
+				buf);
 	  }
-
 	else
 	  {
-	     pSc1 = pSchP;
 	     /* lit les compteurs */
-	     if (!erreur)
-		for (i = 1; i <= pSc1->PsNCounters; i++)
+	     if (!error)
+		for (i = 0; i < pPSch->PsNCounters; i++)
 		  {
-		     pCo1 = &pSc1->PsCounter[i - 1];
-		     erreur = !BIOreadShort (file, &pCo1->CnNItems);
-		     if (!erreur)
-			for (j = 1; j <= pCo1->CnNItems; j++)
+		     pCntr = &pPSch->PsCounter[i];
+		     error = !BIOreadShort (file, &pCntr->CnNItems);
+		     if (!error)
+			for (j = 0; j < pCntr->CnNItems; j++)
 			  {
-			     pCp1 = &pCo1->CnItem[j - 1];
-			     pCp1->CiCntrOp = rdCptTypeOp (file);
-			     BIOreadShort (file, &pCp1->CiElemType);
-			     BIOreadSignedShort (file, &pCp1->CiAscendLevel);
-			     BIOreadShort (file, &pCp1->CiViewNum);
-			     BIOreadSignedShort (file, &pCp1->CiParamValue);
-			     BIOreadShort (file, &pCp1->CiInitAttr);
-			     BIOreadShort (file, &pCp1->CiReinitAttr);
+			     pCntrItem = &pCntr->CnItem[j];
+			     pCntrItem->CiCntrOp = ReadCounterOp (file);
+			     BIOreadShort (file, &pCntrItem->CiElemType);
+			     BIOreadSignedShort (file, &pCntrItem->CiAscendLevel);
+			     BIOreadShort (file, &pCntrItem->CiViewNum);
+			     BIOreadSignedShort (file, &pCntrItem->CiParamValue);
+			     BIOreadShort (file, &pCntrItem->CiInitAttr);
+			     BIOreadShort (file, &pCntrItem->CiReinitAttr);
 			  }
-		     erreur = !BIOreadShort (file, &pCo1->CnNPresBoxes);
-		     if (!erreur)
-			for (j = 1; j <= pCo1->CnNPresBoxes; j++)
+		     error = !BIOreadShort (file, &pCntr->CnNPresBoxes);
+		     if (!error)
+			for (j = 0; j < pCntr->CnNPresBoxes; j++)
 			  {
-			     BIOreadShort (file, &pCo1->CnPresBox[j - 1]);
-			     erreur = !BIOreadBool (file, &pCo1->CnMinMaxPresBox[j - 1]);
+			     BIOreadShort (file, &pCntr->CnPresBox[j]);
+			     error = !BIOreadBool (file, &pCntr->CnMinMaxPresBox[j]);
 			  }
-		     erreur = !BIOreadShort (file, &pCo1->CnNTransmAttrs);
-		     if (!erreur)
-			for (j = 1; j <= pCo1->CnNTransmAttrs; j++)
+		     error = !BIOreadShort (file, &pCntr->CnNTransmAttrs);
+		     if (!error)
+			for (j = 0; j < pCntr->CnNTransmAttrs; j++)
 			  {
-			     BIOreadName (file, pCo1->CnTransmAttr[j - 1]);
-			     BIOreadShort (file, &pCo1->CnTransmSSchemaAttr[j - 1]);
+			     BIOreadName (file, pCntr->CnTransmAttr[j]);
+			     BIOreadShort (file, &pCntr->CnTransmSSchemaAttr[j]);
 			  }
-		     erreur = !BIOreadShort (file, &pCo1->CnNCreators);
-		     if (!erreur)
-			for (j = 1; j <= pCo1->CnNCreators; j++)
+		     error = !BIOreadShort (file, &pCntr->CnNCreators);
+		     if (!error)
+			for (j = 0; j < pCntr->CnNCreators; j++)
 			  {
-			     erreur = !BIOreadShort (file, &pCo1->CnCreator[j - 1]);
-			     erreur = !BIOreadBool (file, &pCo1->CnMinMaxCreator[j - 1]);
+			     error = !BIOreadShort (file, &pCntr->CnCreator[j]);
+			     error = !BIOreadBool (file, &pCntr->CnMinMaxCreator[j]);
 			  }
-		     if (!erreur)
-			for (j = 1; j <= pCo1->CnNCreators; j++)
-			   BIOreadBool (file, &pCo1->CnPresBoxCreator[j - 1]);
-		     erreur = !BIOreadShort (file, &pCo1->CnNCreatedBoxes);
-		     if (!erreur)
-			for (j = 1; j <= pCo1->CnNCreatedBoxes; j++)
+		     if (!error)
+			for (j = 0; j < pCntr->CnNCreators; j++)
+			   BIOreadBool (file, &pCntr->CnPresBoxCreator[j]);
+		     error = !BIOreadShort (file, &pCntr->CnNCreatedBoxes);
+		     if (!error)
+			for (j = 0; j < pCntr->CnNCreatedBoxes; j++)
 			  {
-			     BIOreadShort (file, &pCo1->CnCreatedBox[j - 1]);
-			     erreur = !BIOreadBool (file, &pCo1->CnMinMaxCreatedBox[j - 1]);
+			     BIOreadShort (file, &pCntr->CnCreatedBox[j]);
+			     error = !BIOreadBool (file, &pCntr->CnMinMaxCreatedBox[j]);
 			  }
-		     erreur = !BIOreadBool (file, &pCo1->CnPageFooter);
+		     error = !BIOreadBool (file, &pCntr->CnPageFooter);
 		  }
-
 	     /* lit les constantes de presentation */
-	     if (!erreur)
-		for (i = 1; i <= pSc1->PsNConstants; i++)
+	     if (!error)
+		for (i = 0; i < pPSch->PsNConstants; i++)
 		  {
-		     pPr1 = &pSc1->PsConstant[i - 1];
-		     pPr1->PdType = rdTypeDeBase (file);
-		     if (!BIOreadByte (file, &pPr1->PdAlphabet))
-			Erreur_Present (1);
+		     pConst = &pPSch->PsConstant[i];
+		     pConst->PdType = ReadBasicType (file);
+		     if (!BIOreadByte (file, &pConst->PdAlphabet))
+			error = True;
 		     j = 0;
-		     if (!erreur)
+		     if (!error)
 			do
-			   if (!BIOreadByte (file, &pPr1->PdString[j++]))
-			      Erreur_Present (1);
-			while (!(pPr1->PdString[j - 1] == '\0' || erreur)) ;
+			   if (!BIOreadByte (file, &pConst->PdString[j++]))
+			      error = True;
+			while (pConst->PdString[j - 1] != '\0' && !error);
 		  }
 
 	     /* lit les variables de presentation */
-	     if (!erreur)
-		for (i = 1; i <= pSc1->PsNVariables; i++)
+	     if (!error)
+		for (i = 0; i < pPSch->PsNVariables; i++)
 		  {
-		     pPres1 = &pSc1->PsVariable[i - 1];
-		     erreur = !BIOreadShort (file, &pPres1->PvNItems);
-		     if (!erreur)
-			for (j = 1; j <= pPres1->PvNItems; j++)
+		     pVar = &pPSch->PsVariable[i];
+		     error = !BIOreadShort (file, &pVar->PvNItems);
+		     if (!error)
+			for (j = 0; j < pVar->PvNItems; j++)
 			  {
-			     pVa1 = &pPres1->PvItem[j - 1];
-			     pVa1->ViType = rdVarType (file);
-			     switch (pVa1->ViType)
+			     pVarItem = &pVar->PvItem[j];
+			     pVarItem->ViType = ReadVariableType (file);
+			     switch (pVarItem->ViType)
 				   {
 				      case VarText:
-					 BIOreadShort (file, &pVa1->ViConstant);
+					 BIOreadShort (file, &pVarItem->ViConstant);
 					 break;
 				      case VarCounter:
-					 BIOreadShort (file, &pVa1->ViCounter);
-					 pVa1->ViStyle = rdComptStyle (file);
-					 pVa1->ViCounterVal = rdNatValCmpt (file);
+					 BIOreadShort (file, &pVarItem->ViCounter);
+					 pVarItem->ViStyle = ReadCounterStyle (file);
+					 pVarItem->ViCounterVal = ReadCounterValue (file);
 					 break;
 				      case VarAttrValue:
-					 BIOreadShort (file, &pVa1->ViAttr);
-					 pVa1->ViStyle = rdComptStyle (file);
+					 BIOreadShort (file, &pVarItem->ViAttr);
+					 pVarItem->ViStyle = ReadCounterStyle (file);
 
 					 break;
 				      case VarPageNumber:
-					 BIOreadShort (file, &pVa1->ViView);
-					 pVa1->ViStyle = rdComptStyle (file);
+					 BIOreadShort (file, &pVarItem->ViView);
+					 pVarItem->ViStyle = ReadCounterStyle (file);
 					 break;
 				      default:
 					 break;
 				   }
 			  }
 		  }
-
 	     /* lit les boites de presentation et de mise en page */
-	     if (!erreur)
-		for (i = 1; i <= pSc1->PsNPresentBoxes; i++)
+	     if (!error)
+		for (i = 0; i < pPSch->PsNPresentBoxes; i++)
 		  {
-		     pBo1 = &pSc1->PsPresentBox[i - 1];
-		     BIOreadName (file, pBo1->PbName);
-		     pBo1->PbFirstPRule = ReadRulePtr (file, &nextr);
-		     BIOreadBool (file, &pBo1->PbAcceptPageBreak);
-		     BIOreadBool (file, &pBo1->PbAcceptLineBreak);
-		     BIOreadBool (file, &pBo1->PbBuildAll);
-		     BIOreadBool (file, &pBo1->PbNotInLine);
-		     BIOreadBool (file, &pBo1->PbPageFooter);
-		     BIOreadBool (file, &pBo1->PbPageHeader);
-		     BIOreadBool (file, &pBo1->PbPageBox);
-		     BIOreadShort (file, &pBo1->PbFooterHeight);
-		     BIOreadShort (file, &pBo1->PbHeaderHeight);
-		     BIOreadShort (file, &pBo1->PbPageCounter);
-		     pBo1->PbContent = ReadContentType (file);
-		     if (!erreur)
-			switch (pBo1->PbContent)
+		     pBox = &pPSch->PsPresentBox[i];
+		     BIOreadName (file, pBox->PbName);
+		     pBox->PbFirstPRule = ReadPRulePtr (file, &pNextPRule);
+		     BIOreadBool (file, &pBox->PbAcceptPageBreak);
+		     BIOreadBool (file, &pBox->PbAcceptLineBreak);
+		     BIOreadBool (file, &pBox->PbBuildAll);
+		     BIOreadBool (file, &pBox->PbNotInLine);
+		     BIOreadBool (file, &pBox->PbPageFooter);
+		     BIOreadBool (file, &pBox->PbPageHeader);
+		     BIOreadBool (file, &pBox->PbPageBox);
+		     BIOreadShort (file, &pBox->PbFooterHeight);
+		     BIOreadShort (file, &pBox->PbHeaderHeight);
+		     BIOreadShort (file, &pBox->PbPageCounter);
+		     pBox->PbContent = ReadContentType (file);
+		     if (!error)
+			switch (pBox->PbContent)
 			      {
 				 case ContVariable:
-				    BIOreadShort (file, &pBo1->PbContVariable);
+				    BIOreadShort (file, &pBox->PbContVariable);
 				    break;
 				 case ContConst:
-				    BIOreadShort (file, &pBo1->PbContConstant);
+				    BIOreadShort (file, &pBox->PbContConstant);
 				    break;
 				 case ContElement:
-				    BIOreadShort (file, &pBo1->PbContElem);
-				    BIOreadShort (file, &pBo1->PbContRefElem);
+				    BIOreadShort (file, &pBox->PbContElem);
+				    BIOreadShort (file, &pBox->PbContRefElem);
 				    break;
 				 default:
 				    break;
 			      }
 		  }
-
-	     /* lit les presentations des attributs semantiques */
-	     if (!erreur)
+	     /* lit les presentations des attributs */
+	     if (!error)
 	       {
-		  for (i = 1; i <= SS->SsNAttributes; i++)
-		     if (!erreur)
+		  for (i = 0; i < pSS->SsNAttributes; i++)
+		     if (!error)
 		       {
 			  /* lecture du nombre de paquet de regles differentes */
-			  BIOreadShort (file, &pSc1->PsNAttrPRule[i - 1]);
-			  if (pSc1->PsNAttrPRule[i - 1] > 0)
+			  BIOreadShort (file, &pPSch->PsNAttrPRule[i]);
+			  if (pPSch->PsNAttrPRule[i] > 0)
 			    {
 			       /* allocation des regles */
-			       pSc1->PsAttrPRule[i - 1] =
-				  (AttributePres *) TtaGetMemory (pSc1->PsNAttrPRule[i - 1] * sizeof (AttributePres));
-			       if ((pRP1 = pSc1->PsAttrPRule[i - 1]) != NULL)
+			       pPSch->PsAttrPRule[i] =
+				  (AttributePres *) TtaGetMemory (pPSch->PsNAttrPRule[i] * sizeof (AttributePres));
+			       if ((pAttrP = pPSch->PsAttrPRule[i]) != NULL)
 				 {
 				    /* chainage des regles */
-				    for (l = pSc1->PsNAttrPRule[i - 1]; --l > 0; pRP1 = pRP1->ApNextAttrPres)
-				       pRP1->ApNextAttrPres = pRP1 + 1;
+				    for (l = pPSch->PsNAttrPRule[i]; --l > 0; pAttrP = pAttrP->ApNextAttrPres)
+				       pAttrP->ApNextAttrPres = pAttrP + 1;
 				    /* la derniere pointe sur NULL */
-				    pRP1->ApNextAttrPres = NULL;
+				    pAttrP->ApNextAttrPres = NULL;
 				 }
 			       else	/* l'allocation a echouee */
-				  erreur = TRUE;
+				  error = TRUE;
 			    }
 			  else
-			     pSc1->PsAttrPRule[i - 1] = NULL;
+			     pPSch->PsAttrPRule[i] = NULL;
 		       }
-
-		  for (i = 1; i <= SS->SsNAttributes; i++)
-		     if (!erreur)
+		  for (i = 0; i < pSS->SsNAttributes; i++)
+		     if (!error)
 		       {
-			  pRP1 = pSc1->PsAttrPRule[i - 1];
-			  for (l = pSc1->PsNAttrPRule[i - 1]; l-- > 0; pRP1 = pRP1->ApNextAttrPres)
+			  pAttrP = pPSch->PsAttrPRule[i];
+			  for (l = pPSch->PsNAttrPRule[i]; l-- > 0; pAttrP = pAttrP->ApNextAttrPres)
 			    {
-			       if (!erreur)
+			       if (!error)
 				 {
-				    erreur = !BIOreadShort (file, &pRP1->ApElemType);
-				    switch (SS->SsAttribute[i - 1].AttrType)
+				    error = !BIOreadShort (file, &pAttrP->ApElemType);
+				    switch (pSS->SsAttribute[i].AttrType)
 					  {
 					     case AtNumAttr:
 						for (j = 0; j < MAX_PRES_ATTR_CASE; j++)
-						   pRP1->ApCase[j].CaFirstPRule = NULL;
-						erreur = !BIOreadShort (file, &pRP1->ApNCases);
-						if (!erreur)
-						   for (j = 1; j <= pRP1->ApNCases; j++)
+						   pAttrP->ApCase[j].CaFirstPRule = NULL;
+						error = !BIOreadShort (file, &pAttrP->ApNCases);
+						if (!error)
+						   for (j = 0; j < pAttrP->ApNCases; j++)
 						     {
-							pCa1 = &pRP1->ApCase[j - 1];
-							pCa1->CaComparType = ReadAttrCompar (file);
-							BIOreadSignedShort (file, &pCa1->CaLowerBound);
-							BIOreadSignedShort (file, &pCa1->CaUpperBound);
-							pCa1->CaFirstPRule = ReadRulePtr (file, &nextr);
+							pCase = &pAttrP->ApCase[j];
+							pCase->CaComparType = ReadAttrCompar (file);
+							BIOreadSignedShort (file, &pCase->CaLowerBound);
+							BIOreadSignedShort (file, &pCase->CaUpperBound);
+							pCase->CaFirstPRule = ReadPRulePtr (file, &pNextPRule);
 						     }
 						break;
 					     case AtReferenceAttr:
-						pRP1->ApRefFirstPRule = ReadRulePtr (file, &nextr);
+						pAttrP->ApRefFirstPRule = ReadPRulePtr (file, &pNextPRule);
 						break;
 					     case AtTextAttr:
-						BIOreadName (file, pRP1->ApString);
-						pRP1->ApTextFirstPRule = ReadRulePtr (file, &nextr);
+						BIOreadName (file, pAttrP->ApString);
+						pAttrP->ApTextFirstPRule = ReadPRulePtr (file, &pNextPRule);
 						break;
 					     case AtEnumAttr:
 						for (j = 0; j <= MAX_ATTR_VAL; j++)
-						   pRP1->ApEnumFirstPRule[j] = NULL;
-						for (j = 0; j <= SS->SsAttribute[i - 1].AttrNEnumValues; j++)
-						   pRP1->ApEnumFirstPRule[j] = ReadRulePtr (file, &nextr);
+						   pAttrP->ApEnumFirstPRule[j] = NULL;
+						for (j = 0; j <= pSS->SsAttribute[i].AttrNEnumValues; j++)
+						   pAttrP->ApEnumFirstPRule[j] = ReadPRulePtr (file, &pNextPRule);
 						break;
 					  }
 				 }
@@ -1536,128 +1519,126 @@ PtrSSchema        SS;
 		       }
 	       }
 
-	     if (SS->SsFirstDynNature == 0)
-		NbElemStructInitial = SS->SsNRules;
+	     if (pSS->SsFirstDynNature == 0)
+		InitialNElems = pSS->SsNRules;
 	     else
-		NbElemStructInitial = SS->SsFirstDynNature - 1;
+		InitialNElems = pSS->SsFirstDynNature - 1;
 
 	     /* lit la table des pointeurs de regle de chaque type du */
 	     /* schema de structure */
-	     if (!erreur)
-		for (i = 1; i <= NbElemStructInitial; i++)
-		   pSc1->PsElemPRule[i - 1] = ReadRulePtr (file, &nextr);
+	     if (!error)
+		for (i = 0; i < InitialNElems; i++)
+		   pPSch->PsElemPRule[i] = ReadPRulePtr (file, &pNextPRule);
 
 	     /* lit toutes les regles de presentation */
 	     /* lit les regles standard */
-	     if (!erreur)
-		ReadRules (file, &pSc1->PsFirstDefaultPRule, &nextr);
+	     if (!error)
+		ReadPRules (file, &pPSch->PsFirstDefaultPRule, &pNextPRule);
 
 	     /* les regles des boites */
-	     if (!erreur)
-		for (i = 1; i <= pSc1->PsNPresentBoxes; i++)
-		   ReadRules (file, &pSc1->PsPresentBox[i - 1].PbFirstPRule, &nextr);
+	     if (!error)
+		for (i = 0; i < pPSch->PsNPresentBoxes; i++)
+		   ReadPRules (file, &pPSch->PsPresentBox[i].PbFirstPRule, &pNextPRule);
 
 	     /* lit les regles des attributs */
-	     if (!erreur)
-		for (i = 1; i <= SS->SsNAttributes; i++)
-		   if (!erreur)
+	     if (!error)
+		for (i = 0; i < pSS->SsNAttributes; i++)
+		   if (!error)
 		     {
-			pRP1 = pSc1->PsAttrPRule[i - 1];
-			for (l = pSc1->PsNAttrPRule[i - 1]; l-- > 0; pRP1 = pRP1->ApNextAttrPres)
+			pAttrP = pPSch->PsAttrPRule[i];
+			for (l = pPSch->PsNAttrPRule[i]; l-- > 0; pAttrP = pAttrP->ApNextAttrPres)
 			  {
-			     if (!erreur)
-				switch (SS->SsAttribute[i - 1].AttrType)
+			     if (!error)
+				switch (pSS->SsAttribute[i].AttrType)
 				      {
 					 case AtNumAttr:
-					    for (j = 1; j <= pRP1->ApNCases; j++)
-					       ReadRules (file, &pRP1->ApCase[j - 1].CaFirstPRule, &nextr);
+					    for (j = 0; j < pAttrP->ApNCases; j++)
+					       ReadPRules (file, &pAttrP->ApCase[j].CaFirstPRule, &pNextPRule);
 					    break;
 					 case AtReferenceAttr:
-					    ReadRules (file, &pRP1->ApRefFirstPRule, &nextr);
+					    ReadPRules (file, &pAttrP->ApRefFirstPRule, &pNextPRule);
 					    break;
 					 case AtTextAttr:
-					    ReadRules (file, &pRP1->ApTextFirstPRule, &nextr);
+					    ReadPRules (file, &pAttrP->ApTextFirstPRule, &pNextPRule);
 					    break;
 					 case AtEnumAttr:
-					    for (j = 0; j <= SS->SsAttribute[i - 1].AttrNEnumValues; j++)
-					       ReadRules (file, &pRP1->ApEnumFirstPRule[j], &nextr);
-					    /* lit les regles des elements structures */
+					    for (j = 0; j <= pSS->SsAttribute[i].AttrNEnumValues; j++)
+					       ReadPRules (file, &pAttrP->ApEnumFirstPRule[j], &pNextPRule);
 					    break;
 				      }
 			  }
 		     }
 
-	     if (!erreur)
-		for (i = 0; i < NbElemStructInitial; i++)
-		   ReadRules (file, &pSc1->PsElemPRule[i], &nextr);
+	     /* lit les regles des elements structures */
+	     if (!error)
+		for (i = 0; i < InitialNElems; i++)
+		   ReadPRules (file, &pPSch->PsElemPRule[i], &pNextPRule);
 
-	     if (!erreur)
-		for (i = 0; i < SS->SsNAttributes; i++)
-		   BIOreadShort (file, &pSc1->PsNHeirElems[i]);
+	     if (!error)
+		for (i = 0; i < pSS->SsNAttributes; i++)
+		   BIOreadShort (file, &pPSch->PsNHeirElems[i]);
 
-	     if (!erreur)
-		for (i = 0; i < NbElemStructInitial; i++)
+	     if (!error)
+		for (i = 0; i < InitialNElems; i++)
 		  {
-		     BIOreadShort (file, &pSc1->PsNInheritedAttrs[i]);
-		     pSc1->PsInheritedAttr[i] = NULL;
+		     BIOreadShort (file, &pPSch->PsNInheritedAttrs[i]);
+		     pPSch->PsInheritedAttr[i] = NULL;
 		  }
 
-	     if (!erreur)
-		for (i = 0; i < SS->SsNAttributes; i++)
+	     if (!error)
+		for (i = 0; i < pSS->SsNAttributes; i++)
 		  {
-		     BIOreadShort (file, &pSc1->PsNComparAttrs[i]);
-		     pSc1->PsComparAttr[i] = NULL;
+		     BIOreadShort (file, &pPSch->PsNComparAttrs[i]);
+		     pPSch->PsComparAttr[i] = NULL;
 		  }
 
-	     if (!erreur)
-		for (i = 0; i < NbElemStructInitial; i++)
-		   BIOreadBool (file, &pSc1->PsAcceptPageBreak[i]);
+	     if (!error)
+		for (i = 0; i < InitialNElems; i++)
+		   BIOreadBool (file, &pPSch->PsAcceptPageBreak[i]);
 
-	     if (!erreur)
-		for (i = 0; i < NbElemStructInitial; i++)
-		   BIOreadBool (file, &pSc1->PsAcceptLineBreak[i]);
+	     if (!error)
+		for (i = 0; i < InitialNElems; i++)
+		   BIOreadBool (file, &pPSch->PsAcceptLineBreak[i]);
 
-	     if (!erreur)
-		for (i = 0; i < NbElemStructInitial; i++)
-		   BIOreadBool (file, &pSc1->PsBuildAll[i]);
+	     if (!error)
+		for (i = 0; i < InitialNElems; i++)
+		   BIOreadBool (file, &pPSch->PsBuildAll[i]);
 
-	     if (!erreur)
-		for (i = 0; i < NbElemStructInitial; i++)
-		   BIOreadBool (file, &pSc1->PsNotInLine[i]);
+	     if (!error)
+		for (i = 0; i < InitialNElems; i++)
+		   BIOreadBool (file, &pPSch->PsNotInLine[i]);
 
-	     if (!erreur)
-		for (i = 0; i < NbElemStructInitial; i++)
-		   BIOreadBool (file, &pSc1->PsInPageHeaderOrFooter[i]);
+	     if (!error)
+		for (i = 0; i < InitialNElems; i++)
+		   BIOreadBool (file, &pPSch->PsInPageHeaderOrFooter[i]);
 
-	     if (!erreur)
-		for (i = 0; i < NbElemStructInitial; i++)
-		   BIOreadBool (file, &pSc1->PsAssocPaginated[i]);
-	     if (!erreur)
-		for (i = 0; i < NbElemStructInitial; i++)
-		   BIOreadShort (file, &pSc1->PsElemTransmit[i]);
-	     if (!erreur)
-		BIOreadShort (file, &pSc1->PsNTransmElems);
-	     if (!erreur)
-		for (i = 0; i < pSc1->PsNTransmElems; i++)
+	     if (!error)
+		for (i = 0; i < InitialNElems; i++)
+		   BIOreadBool (file, &pPSch->PsAssocPaginated[i]);
+	     if (!error)
+		for (i = 0; i < InitialNElems; i++)
+		   BIOreadShort (file, &pPSch->PsElemTransmit[i]);
+	     if (!error)
+		BIOreadShort (file, &pPSch->PsNTransmElems);
+	     if (!error)
+		for (i = 0; i < pPSch->PsNTransmElems; i++)
 		  {
-		     BIOreadShort (file, &pSc1->PsTransmElem[i].TeTargetDoc);
-		     BIOreadName (file, pSc1->PsTransmElem[i].TeTargetAttr);
+		     BIOreadShort (file, &pPSch->PsTransmElem[i].TeTargetDoc);
+		     BIOreadName (file, pPSch->PsTransmElem[i].TeTargetAttr);
 		  }
-	     FreePresentRule (nextr);
+	     FreePresentRule (pNextPRule);
 	  }
-
 	/* ferme le fichier */
 	BIOreadClose (file);
      }
-
-   if (erreur)
+   if (error)
      {
 	/* message 'Schema incorrect' */
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_PRS_FILE), fname);
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_PRS_FILE),
+			   fileName);
 	return NULL;
      }
-
    else
-      return pSchP;
+      return pPSch;
 }
-/* End Of Module rdschprs */
+

@@ -3,11 +3,7 @@
 	/*      permettent de lire ou d'ecrire certaines parties de     */
 	/*      la forme pivot des documents.                           */
 	/*                                                              */
-	/*      Utilise' en particulier par Thotfon, le comparateur     */
-	/*      et le fusionneur de documents                           */
-	/*                                                              */
-	/*      V. Quint        Juin 1992                               */
-	/*                                                              */
+
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -758,7 +754,6 @@ char               *label;
 }
 
 
-/**** les fonctions suivantes sont utilisees par le fusionneur de Anne Denys ****/
 /* ----------------------------------------------------------------------
    TtaNewElementWithLabel
 
@@ -887,5 +882,3 @@ int                 label;
       /* parametre document correct */
       SetCurrentLabel (LoadedDocument[document - 1], label);
 }
-
-/* fin du module */

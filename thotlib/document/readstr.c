@@ -1,8 +1,5 @@
 /*
- * Chargement des schemas de structure.
- *
- * Global Functions:
- * ReadStructureSchema
+   Ce module charge un schema de structure depuis un fichier .STR
  */
 
 #include "thot_sys.h"
@@ -21,19 +18,18 @@
 #include "readstr_f.h"
 #include "memory_f.h"
 
-
 /* ---------------------------------------------------------------------- */
-/* |    rdTypeAttr                                                      | */
-/* |    lit un type d'attribut dans le fichier et retourne sa valeur.   | */
+/* |    ReadAttribType                                                  | */
+/* |    lit un type d'attribut et retourne sa valeur.   		| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static boolean      rdTypeAttr (BinFile file, AttribType * value)
+static boolean      ReadAttribType (BinFile file, AttribType * attrType)
 
 #else  /* __STDC__ */
-static boolean      rdTypeAttr (file, value)
+static boolean      ReadAttribType (file, attrType)
 BinFile             file;
-AttribType       *value;
+AttribType       *attrType;
 
 #endif /* __STDC__ */
 
@@ -44,19 +40,19 @@ AttribType       *value;
    switch (c)
 	 {
 	    case C_INT_ATTR:
-	       *value = AtNumAttr;
+	       *attrType = AtNumAttr;
 	       break;
 	    case C_TEXT_ATTR:
-	       *value = AtTextAttr;
+	       *attrType = AtTextAttr;
 	       break;
 	    case C_REF_ATTR:
-	       *value = AtReferenceAttr;
+	       *attrType = AtReferenceAttr;
 	       break;
 	    case C_ENUM_ATTR:
-	       *value = AtEnumAttr;
+	       *attrType = AtEnumAttr;
 	       break;
 	    default:
-	       *value = AtEnumAttr;
+	       *attrType = AtEnumAttr;
 	       return FALSE;
 	       break;
 	 }
@@ -65,17 +61,17 @@ AttribType       *value;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    rdConstructeur  lit un constructeur dans le fichier             | */
-/* |    et retourne sa valeur.                                          | */
+/* |    ReadRConstruct							| */
+/* |	lit un constructeur et retourne sa valeur.                      | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static boolean      rdConstructeur (BinFile file, RConstruct * value)
+static boolean      ReadRConstruct (BinFile file, RConstruct * constr)
 
 #else  /* __STDC__ */
-static boolean      rdConstructeur (file, value)
+static boolean      ReadRConstruct (file, constr)
 BinFile             file;
-RConstruct       *value;
+RConstruct       *constr;
 
 #endif /* __STDC__ */
 
@@ -86,40 +82,40 @@ RConstruct       *value;
    switch (c)
 	 {
 	    case C_IDENTITY_CONSTR:
-	       *value = CsIdentity;
+	       *constr = CsIdentity;
 	       break;
 	    case C_LIST_CONSTR:
-	       *value = CsList;
+	       *constr = CsList;
 	       break;
 	    case C_CHOICE_CONSTR:
-	       *value = CsChoice;
+	       *constr = CsChoice;
 	       break;
 	    case C_AGG_CONSTR:
-	       *value = CsAggregate;
+	       *constr = CsAggregate;
 	       break;
 	    case C_UNORD_AGG_CONSTR:
-	       *value = CsUnorderedAggregate;
+	       *constr = CsUnorderedAggregate;
 	       break;
 	    case C_CONST_CONSTR:
-	       *value = CsConstant;
+	       *constr = CsConstant;
 	       break;
 	    case C_REF_CONSTR:
-	       *value = CsReference;
+	       *constr = CsReference;
 	       break;
 	    case C_BASIC_TYPE_CONSTR:
-	       *value = CsBasicElement;
+	       *constr = CsBasicElement;
 	       break;
 	    case C_NATURE_CONSTR:
-	       *value = CsNatureSchema;
+	       *constr = CsNatureSchema;
 	       break;
 	    case C_PAIR_CONSTR:
-	       *value = CsPairedElement;
+	       *constr = CsPairedElement;
 	       break;
 	    case C_EXTENS_CONSTR:
-	       *value = CsExtensionRule;
+	       *constr = CsExtensionRule;
 	       break;
 	    default:
-	       *value = CsIdentity;
+	       *constr = CsIdentity;
 	       return FALSE;
 	 }
    return TRUE;
@@ -127,17 +123,17 @@ RConstruct       *value;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    rdTypeBase                                                      | */
-/* |    lit un type de base dans le fichier et retourne sa valeur.      | */
+/* |    ReadBasicType                                                   | */
+/* |    lit un type de base et retourne sa valeur.      		| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static boolean      rdTypeBase (BinFile file, BasicType * value)
+static boolean      ReadBasicType (BinFile file, BasicType * typ)
 
 #else  /* __STDC__ */
-static boolean      rdTypeBase (file, value)
+static boolean      ReadBasicType (file, typ)
 BinFile             file;
-BasicType         *value;
+BasicType         *typ;
 
 #endif /* __STDC__ */
 
@@ -148,28 +144,28 @@ BasicType         *value;
    switch (c)
 	 {
 	    case C_CHAR_STRING:
-	       *value = CharString;
+	       *typ = CharString;
 	       break;
 	    case C_GRAPHICS:
-	       *value = GraphicElem;
+	       *typ = GraphicElem;
 	       break;
 	    case C_SYMBOL:
-	       *value = Symbol;
+	       *typ = Symbol;
 	       break;
 	    case C_PICTURE:
-	       *value = Picture;
+	       *typ = Picture;
 	       break;
 	    case C_REFER:
-	       *value = Refer;
+	       *typ = Refer;
 	       break;
 	    case C_PAGE_BREAK:
-	       *value = PageBreak;
+	       *typ = PageBreak;
 	       break;
 	    case C_UNUSED:
-	       *value = UnusedBasicType;
+	       *typ = UnusedBasicType;
 	       break;
 	    default:
-	       *value = CharString;
+	       *typ = CharString;
 	       return FALSE;
 	 }
    return TRUE;
@@ -177,31 +173,31 @@ BasicType         *value;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    read description of an attribute                                | */
+/* |    ReadAttribute                                			| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static boolean      rdAttributeDef (BinFile file, TtAttribute * pAttr)
+static boolean      ReadAttribute (BinFile file, TtAttribute * pAttr)
 
 #else  /* __STDC__ */
-static boolean      rdAttributeDef (file, pAttr)
+static boolean      ReadAttribute (file, pAttr)
 BinFile             file;
-TtAttribute           *pAttr;
+TtAttribute         *pAttr;
 
 #endif /* __STDC__ */
 
 {
-   AttribType        type;
-   int                 j;
+   AttribType        attrType;
+   int               j;
 
    BIOreadName (file, pAttr->AttrName);
    strcpy (pAttr->AttrOrigName, pAttr->AttrName);
    BIOreadBool (file, &pAttr->AttrGlobal);
    BIOreadShort (file, &pAttr->AttrFirstExcept);
    BIOreadShort (file, &pAttr->AttrLastExcept);
-   if (rdTypeAttr (file, &type))
+   if (ReadAttribType (file, &attrType))
      {
-	pAttr->AttrType = type;
+	pAttr->AttrType = attrType;
 	switch (pAttr->AttrType)
 	      {
 		 case AtNumAttr:
@@ -220,113 +216,112 @@ TtAttribute           *pAttr;
      }
    else
       return FALSE;
-
    return TRUE;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    read description of an element                                  | */
+/* |    ReadSRule                                  			| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static boolean      rdElementDef (BinFile file, SRule * pRule)
+static boolean      ReadSRule (BinFile file, SRule * pSRule)
 
 #else  /* __STDC__ */
-static boolean      rdElementDef (file, pRule)
+static boolean      ReadSRule (file, pSRule)
 BinFile             file;
-SRule              *pRule;
+SRule              *pSRule;
 
 #endif /* __STDC__ */
 
 {
    RConstruct        constr;
-   int                 j;
+   int               j;
 
-   BIOreadName (file, pRule->SrName);
-   BIOreadShort (file, &pRule->SrNDefAttrs);
-   for (j = 0; j < pRule->SrNDefAttrs; j++)
-      BIOreadShort (file, &pRule->SrDefAttr[j]);
-   for (j = 0; j < pRule->SrNDefAttrs; j++)
-      BIOreadSignedShort (file, &pRule->SrDefAttrValue[j]);
-   for (j = 0; j < pRule->SrNDefAttrs; j++)
-      BIOreadBool (file, &pRule->SrDefAttrModif[j]);
+   BIOreadName (file, pSRule->SrName);
+   BIOreadShort (file, &pSRule->SrNDefAttrs);
+   for (j = 0; j < pSRule->SrNDefAttrs; j++)
+      BIOreadShort (file, &pSRule->SrDefAttr[j]);
+   for (j = 0; j < pSRule->SrNDefAttrs; j++)
+      BIOreadSignedShort (file, &pSRule->SrDefAttrValue[j]);
+   for (j = 0; j < pSRule->SrNDefAttrs; j++)
+      BIOreadBool (file, &pSRule->SrDefAttrModif[j]);
 
-   BIOreadShort (file, &pRule->SrNLocalAttrs);
-   for (j = 0; j < pRule->SrNLocalAttrs; j++)
-      BIOreadShort (file, &pRule->SrLocalAttr[j]);
-   for (j = 0; j < pRule->SrNLocalAttrs; j++)
-      BIOreadBool (file, &pRule->SrRequiredAttr[j]);
+   BIOreadShort (file, &pSRule->SrNLocalAttrs);
+   for (j = 0; j < pSRule->SrNLocalAttrs; j++)
+      BIOreadShort (file, &pSRule->SrLocalAttr[j]);
+   for (j = 0; j < pSRule->SrNLocalAttrs; j++)
+      BIOreadBool (file, &pSRule->SrRequiredAttr[j]);
 
-   BIOreadBool (file, &pRule->SrAssocElem);
-   BIOreadBool (file, &pRule->SrParamElem);
-   BIOreadBool (file, &pRule->SrUnitElem);
-   BIOreadBool (file, &pRule->SrRecursive);
-   pRule->SrRecursDone = FALSE;
+   BIOreadBool (file, &pSRule->SrAssocElem);
+   BIOreadBool (file, &pSRule->SrParamElem);
+   BIOreadBool (file, &pSRule->SrUnitElem);
+   BIOreadBool (file, &pSRule->SrRecursive);
+   pSRule->SrRecursDone = FALSE;
 
-   BIOreadBool (file, &pRule->SrExportedElem);
-   if (pRule->SrExportedElem)
+   BIOreadBool (file, &pSRule->SrExportedElem);
+   if (pSRule->SrExportedElem)
      {
-	BIOreadShort (file, &pRule->SrExportContent);
-	BIOreadName (file, pRule->SrNatExpContent);
+	BIOreadShort (file, &pSRule->SrExportContent);
+	BIOreadName (file, pSRule->SrNatExpContent);
      }
 
-   BIOreadShort (file, &pRule->SrFirstExcept);
-   BIOreadShort (file, &pRule->SrLastExcept);
+   BIOreadShort (file, &pSRule->SrFirstExcept);
+   BIOreadShort (file, &pSRule->SrLastExcept);
 
-   BIOreadShort (file, &pRule->SrNInclusions);
-   for (j = 0; j < pRule->SrNInclusions; j++)
-      BIOreadShort (file, &pRule->SrInclusion[j]);
+   BIOreadShort (file, &pSRule->SrNInclusions);
+   for (j = 0; j < pSRule->SrNInclusions; j++)
+      BIOreadShort (file, &pSRule->SrInclusion[j]);
 
-   BIOreadShort (file, &pRule->SrNExclusions);
-   for (j = 0; j < pRule->SrNExclusions; j++)
-      BIOreadShort (file, &pRule->SrExclusion[j]);
-   BIOreadBool (file, &pRule->SrRefImportedDoc);
-   if (!rdConstructeur (file, &constr))
+   BIOreadShort (file, &pSRule->SrNExclusions);
+   for (j = 0; j < pSRule->SrNExclusions; j++)
+      BIOreadShort (file, &pSRule->SrExclusion[j]);
+   BIOreadBool (file, &pSRule->SrRefImportedDoc);
+   if (!ReadRConstruct (file, &constr))
       return FALSE;
 
-   pRule->SrConstruct = constr;
-   switch (pRule->SrConstruct)
+   pSRule->SrConstruct = constr;
+   switch (pSRule->SrConstruct)
 	 {
 	    case CsNatureSchema:
-	       strcpy (pRule->SrOrigNat, pRule->SrName);
-	       pRule->SrSSchemaNat = NULL;
+	       strcpy (pSRule->SrOrigNat, pSRule->SrName);
+	       pSRule->SrSSchemaNat = NULL;
 	       break;
 	    case CsBasicElement:
-	       if (!rdTypeBase (file, &pRule->SrBasicType))
+	       if (!ReadBasicType (file, &pSRule->SrBasicType))
 		  return FALSE;
 	       break;
 	    case CsReference:
-	       BIOreadShort (file, &pRule->SrReferredType);
-	       BIOreadName (file, pRule->SrRefTypeNat);
+	       BIOreadShort (file, &pSRule->SrReferredType);
+	       BIOreadName (file, pSRule->SrRefTypeNat);
 
 	       break;
 	    case CsIdentity:
-	       BIOreadShort (file, &pRule->SrIdentRule);
+	       BIOreadShort (file, &pSRule->SrIdentRule);
 	       break;
 	    case CsList:
-	       BIOreadShort (file, &pRule->SrListItem);
-	       BIOreadShort (file, &pRule->SrMinItems);
-	       BIOreadShort (file, &pRule->SrMaxItems);
+	       BIOreadShort (file, &pSRule->SrListItem);
+	       BIOreadShort (file, &pSRule->SrMinItems);
+	       BIOreadShort (file, &pSRule->SrMaxItems);
 	       break;
 	    case CsChoice:
-	       BIOreadSignedShort (file, &pRule->SrNChoices);
-	       for (j = 1; j <= pRule->SrNChoices; j++)
-		  BIOreadShort (file, &pRule->SrChoice[j - 1]);
+	       BIOreadSignedShort (file, &pSRule->SrNChoices);
+	       for (j = 0; j < pSRule->SrNChoices; j++)
+		  BIOreadShort (file, &pSRule->SrChoice[j]);
 	       break;
 	    case CsAggregate:
 	    case CsUnorderedAggregate:
-	       BIOreadShort (file, &pRule->SrNComponents);
-	       for (j = 1; j <= pRule->SrNComponents; j++)
-		  BIOreadShort (file, &pRule->SrComponent[j - 1]);
-	       for (j = 1; j <= pRule->SrNComponents; j++)
-		  BIOreadBool (file, &pRule->SrOptComponent[j - 1]);
+	       BIOreadShort (file, &pSRule->SrNComponents);
+	       for (j = 0; j < pSRule->SrNComponents; j++)
+		  BIOreadShort (file, &pSRule->SrComponent[j]);
+	       for (j = 0; j < pSRule->SrNComponents; j++)
+		  BIOreadBool (file, &pSRule->SrOptComponent[j]);
 	       break;
 	    case CsConstant:
-	       BIOreadShort (file, &pRule->SrIndexConst);
+	       BIOreadShort (file, &pSRule->SrIndexConst);
 	       break;
 	    case CsPairedElement:
-	       BIOreadBool (file, &pRule->SrFirstOfPair);
+	       BIOreadBool (file, &pSRule->SrFirstOfPair);
 	       break;
 	    case CsExtensionRule:
 	       break;
@@ -335,16 +330,16 @@ SRule              *pRule;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    read Text of constants                                          | */
+/* |    ReadConstants                                          		| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static boolean      rdConstantText (BinFile file, PtrSSchema scheme)
+static boolean      ReadConstants (BinFile file, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-static boolean      rdConstantText (file, scheme)
+static boolean      ReadConstants (file, pSS)
 BinFile             file;
-PtrSSchema        scheme;
+PtrSSchema        pSS;
 
 #endif /* __STDC__ */
 
@@ -358,11 +353,11 @@ PtrSSchema        scheme;
 	do
 	  {
 	     BIOreadByte (file, &c);
-	     scheme->SsConstBuffer[i++] = c;
+	     pSS->SsConstBuffer[i++] = c;
 	  }
 	while (c != '\0' && i < MAX_LEN_ALL_CONST);
 	BIOreadByte (file, &c);
-	scheme->SsConstBuffer[i++] = c;
+	pSS->SsConstBuffer[i++] = c;
      }
    while (c != '\0' && i < MAX_LEN_ALL_CONST);
    if (i >= MAX_LEN_ALL_CONST)
@@ -373,116 +368,113 @@ PtrSSchema        scheme;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ReadStructureSchema                                                     | */
+/* |    ReadStructureSchema                                             | */
 /* |    lit un fichier contenant un schema de structure et charge       | */
 /* |    ce schema en memoire.                                           | */
-/* |    fname: nom du fichier a lire, sans le suffixe .STR              | */
-/* |    scheme: schema de structure en memoire a remplir.               | */
+/* |    fileName: nom du fichier a lire, sans le suffixe .STR       	| */
+/* |    pSS: schema de structure en memoire a remplir.               	| */
 /* |    Retourne VRAI si chargement reussi, FAUX si echec.              | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             ReadStructureSchema (Name fname, PtrSSchema scheme)
+boolean             ReadStructureSchema (Name fileName, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-boolean             ReadStructureSchema (fname, scheme)
-Name                 fname;
-PtrSSchema        scheme;
+boolean             ReadStructureSchema (fileName, pSS)
+Name                fileName;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
 {
+   BinFile             file;
+   PathBuffer          buf;
+   PathBuffer          dirBuffer;
    int                 i;
-   PathBuffer          filename;
-   BinFile             strfile;
-   PathBuffer          DirBuffer;
 
-   /* compose le nom du fichier a ouvrir avec le nom du directory */
-   /* des schemas... */
-   strncpy (DirBuffer, SchemaPath, MAX_PATH);
-   MakeCompleteName (fname, "STR", DirBuffer, filename, &i);
+   /* compose le nom du fichier a ouvrir */
+   strncpy (dirBuffer, SchemaPath, MAX_PATH);
+   MakeCompleteName (fileName, "STR", dirBuffer, buf, &i);
 
    /* ouvre le fichier */
-   strfile = BIOreadOpen (filename);
-   if (strfile == 0)
+   file = BIOreadOpen (buf);
+   if (file == 0)
       /* echec */
      {
-	strncpy (filename, fname, MAX_PATH);
-	strcat (filename, ".STR");
-	/* message 'Fichier inaccessible' */
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), filename);
+	strncpy (buf, fileName, MAX_PATH);
+	strcat (buf, ".STR");
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), buf);
 	return FALSE;
      }
    else
      {
-	scheme->SsActionList = NULL;
+	pSS->SsActionList = NULL;
 	/* lit la partie fixe du schema de structure */
-	BIOreadName (strfile, scheme->SsName);
-	BIOreadShort (strfile, &scheme->SsCode);
-	BIOreadName (strfile, scheme->SsDefaultPSchema);
-	scheme->SsPSchema = NULL;
-	BIOreadBool (strfile, &scheme->SsExtension);
-	scheme->SsNExtensRules = 0;
-	scheme->SsExtensBlock = NULL;
-	BIOreadShort (strfile, &scheme->SsRootElem);
-	scheme->SsNObjects = 0;
-	BIOreadShort (strfile, &scheme->SsNAttributes);
-	BIOreadShort (strfile, &scheme->SsNRules);
-	BIOreadBool (strfile, &scheme->SsExport);
-	BIOreadShort (strfile, &scheme->SsNExceptions);
-	for (i = 1; i <= scheme->SsNExceptions; i++)
-	   BIOreadShort (strfile, &scheme->SsException[i - 1]);
+	BIOreadName (file, pSS->SsName);
+	BIOreadShort (file, &pSS->SsCode);
+	BIOreadName (file, pSS->SsDefaultPSchema);
+	pSS->SsPSchema = NULL;
+	BIOreadBool (file, &pSS->SsExtension);
+	pSS->SsNExtensRules = 0;
+	pSS->SsExtensBlock = NULL;
+	BIOreadShort (file, &pSS->SsRootElem);
+	pSS->SsNObjects = 0;
+	BIOreadShort (file, &pSS->SsNAttributes);
+	BIOreadShort (file, &pSS->SsNRules);
+	BIOreadBool (file, &pSS->SsExport);
+	BIOreadShort (file, &pSS->SsNExceptions);
+	for (i = 0; i < pSS->SsNExceptions; i++)
+	   BIOreadShort (file, &pSS->SsException[i]);
 
 	/* lit le texte des constantes */
-	if (!rdConstantText (strfile, scheme))
+	if (!ReadConstants (file, pSS))
 	  {
 	     /* message 'Fichier .STR incorrect ' */
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_STR_FILE), fname);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_STR_FILE),
+				fileName);
 	     return FALSE;
 	  }
 
 	/* il n'y a pas encore de nature chargee dynamiquement */
-	scheme->SsFirstDynNature = 0;
+	pSS->SsFirstDynNature = 0;
 
 	/* lit les attributs */
-	for (i = 0; i < scheme->SsNAttributes; i++)
-	   if (!rdAttributeDef (strfile, &scheme->SsAttribute[i]))
+	for (i = 0; i < pSS->SsNAttributes; i++)
+	   if (!ReadAttribute (file, &pSS->SsAttribute[i]))
 	     {
 		/* message 'Fichier .STR incorrect ' */
-		TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_STR_FILE), fname);
+		TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_STR_FILE), fileName);
 		return FALSE;
 	     }
 
 	/* lit les elements */
-	for (i = 0; i < scheme->SsNRules; i++)
-	   if (!rdElementDef (strfile, &scheme->SsRule[i]))
+	for (i = 0; i < pSS->SsNRules; i++)
+	   if (!ReadSRule (file, &pSS->SsRule[i]))
 	     {
 		/* message 'Fichier .STR incorrect ' */
-		TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_STR_FILE), fname);
+		TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_STR_FILE), fileName);
 		return FALSE;
 	     }
-	if (scheme->SsExtension)
+	if (pSS->SsExtension)
 	  {
-	     if (BIOreadShort (strfile, &scheme->SsNExtensRules))
-		if (scheme->SsNExtensRules > 0)
+	     if (BIOreadShort (file, &pSS->SsNExtensRules))
+		if (pSS->SsNExtensRules > 0)
 		  {
 		     /* acquiert un bloc d'extension */
-		     GetExternalBlock (&scheme->SsExtensBlock);
-		     if (scheme->SsExtensBlock != NULL)
+		     GetExternalBlock (&pSS->SsExtensBlock);
+		     if (pSS->SsExtensBlock != NULL)
 			/* lit les regles d'extension */
-			for (i = 0; i < scheme->SsNExtensRules; i++)
-			   if (!rdElementDef (strfile, &scheme->SsExtensBlock->EbExtensRule[i]))
+			for (i = 0; i < pSS->SsNExtensRules; i++)
+			   if (!ReadSRule (file, &pSS->SsExtensBlock->EbExtensRule[i]))
 			     {
 				/* message 'Fichier .STR incorrect ' */
-				TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_STR_FILE), fname);
+				TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_STR_FILE), fileName);
 				return FALSE;
 			     }
 		  }
 	  }
 
-	BIOreadClose (strfile);
+	BIOreadClose (file);
 	return TRUE;
      }
 }
-
-/* End Of Module rdschstr */

@@ -1,11 +1,6 @@
 /*
-   rdschtrad.c : chargement des schemas de traduction
-   Chargement des schemas de traduction
-   V. Quint     Janvier 1988
-   France Logiciel no de depot 88-39-001-00     
-
+   Ce module charge un schema de traduction depuis un fichier .TRA
  */
-
 
 #include "thot_sys.h"
 #include "libmsg.h"
@@ -19,7 +14,7 @@
 #define EXPORT extern
 #include "platform_tv.h"
 
-static boolean      erreurTra = FALSE;
+static boolean      error = FALSE;
 
 #include "dofile_f.h"
 #include "readtra_f.h"
@@ -29,386 +24,384 @@ static boolean      erreurTra = FALSE;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    TranslationError positionne erreurTra dans le cas d'une erreur de   | */
-/* |            lecture.                                                | */
+/* |    TSchemaError positionne error dans le cas d'une erreur de lecture| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                TranslationError (int err)
+void                TSchemaError (int err)
 
 #else  /* __STDC__ */
-void                TranslationError (err)
+void                TSchemaError (err)
 int                 err;
 
 #endif /* __STDC__ */
 
 {
    printf ("Error %d in translation schema\n", err);
-   erreurTra = TRUE;
+   error = TRUE;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    RdTypeCondTrad lit un type de condition d'application de regle  | */
-/* |            de traduction.                                          | */
+/* |    ReadTransCondition lit un type de condition d'application de	| */
+/* |            regle de traduction.					| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static TransCondition RdTypeCondTrad (BinFile fich)
+static TransCondition ReadTransCondition (BinFile file)
 
 #else  /* __STDC__ */
-static TransCondition RdTypeCondTrad (fich)
-BinFile             fich;
+static TransCondition ReadTransCondition (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 
 {
    char                c;
-   TransCondition        type;
+   TransCondition      cond;
 
-   type = TcondFirst;
-   if (!BIOreadByte (fich, &c))
-      TranslationError (1);
+   cond = TcondFirst;
+   if (!BIOreadByte (file, &c))
+      TSchemaError (1);
    else
       switch (c)
 	    {
 	       case C_TR_FIRST:
-		  type = TcondFirst;
+		  cond = TcondFirst;
 		  break;
 	       case C_TR_LAST:
-		  type = TcondLast;
+		  cond = TcondLast;
 		  break;
 	       case C_TR_DEFINED:
-		  type = TcondDefined;
+		  cond = TcondDefined;
 		  break;
 	       case C_TR_REFERRED:
-		  type = TcondReferred;
+		  cond = TcondReferred;
 		  break;
 	       case C_TR_FIRSTREF:
-		  type = TcondFirstRef;
+		  cond = TcondFirstRef;
 		  break;
 	       case C_TR_LAST_REF:
-		  type = TcondLastRef;
+		  cond = TcondLastRef;
 		  break;
 	       case C_TR_WITHIN:
-		  type = TcondWithin;
+		  cond = TcondWithin;
 		  break;
 	       case C_TR_FIRST_WITHIN:
-		  type = TcondFirstWithin;
+		  cond = TcondFirstWithin;
 		  break;
 	       case C_TR_ATTRIBUTE:
-		  type = TcondAttr;
+		  cond = TcondAttr;
 		  break;
 	       case C_TR_PRESENT:
-		  type = TcondPresentation;
+		  cond = TcondPresentation;
 		  break;
 	       case C_TR_PRULE:
-		  type = TcondPRule;
+		  cond = TcondPRule;
 		  break;
 	       case C_TR_COMMENT:
-		  type = TcondComment;
+		  cond = TcondComment;
 		  break;
 	       case C_TR_ALPHABET:
-		  type = TcondAlphabet;
+		  cond = TcondAlphabet;
 		  break;
 	       case C_TR_ATTRIBUTES:
-		  type = TcondAttributes;
+		  cond = TcondAttributes;
 		  break;
 	       case C_TR_FIRSTATTR:
-		  type = TcondFirstAttr;
+		  cond = TcondFirstAttr;
 		  break;
 	       case C_TR_LASTATTR:
-		  type = TcondLastAttr;
+		  cond = TcondLastAttr;
 		  break;
 	       case C_TR_COMPUTEDPAGE:
-		  type = TcondComputedPage;
+		  cond = TcondComputedPage;
 		  break;
 	       case C_TR_STARTPAGE:
-		  type = TcondStartPage;
+		  cond = TcondStartPage;
 		  break;
 	       case C_TR_USERPAGE:
-		  type = TcondUserPage;
+		  cond = TcondUserPage;
 		  break;
 	       case C_TR_REMINDERPAGE:
-		  type = TcondReminderPage;
+		  cond = TcondReminderPage;
 		  break;
 	       case C_TR_EMPTY:
-		  type = TcondEmpty;
+		  cond = TcondEmpty;
 		  break;
 	       case C_TR_EXTERNALREF:
-		  type = TcondExternalRef;
+		  cond = TcondExternalRef;
 		  break;
 	       default:
-		  TranslationError (2);	/* erreur de codage */
-		  type = TcondFirst;
+		  TSchemaError (2);
+		  cond = TcondFirst;
 		  break;
 	    }
-
-   return type;
+   return cond;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    RdTypeRegleTrad lit un type de regle de traduction.             | */
+/* |    ReadTRuleType lit un type de regle de traduction.             | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static TRuleType RdTypeRegleTrad (BinFile fich)
+static TRuleType ReadTRuleType (BinFile file)
 
 #else  /* __STDC__ */
-static TRuleType RdTypeRegleTrad (fich)
-BinFile             fich;
+static TRuleType ReadTRuleType (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 
 {
-   char                c;
-   TRuleType       type;
+   char            c;
+   TRuleType       ruleType;
 
-   type = TRemove;
-   if (!BIOreadByte (fich, &c))
-      TranslationError (3);
+   ruleType = TRemove;
+   if (!BIOreadByte (file, &c))
+      TSchemaError (3);
    else
       switch (c)
 	    {
 	       case C_TR_CREATE:
-		  type = TCreate;
+		  ruleType = TCreate;
 		  break;
 	       case C_TR_GET:
-		  type = TGet;
+		  ruleType = TGet;
 		  break;
 	       case C_TR_USE:
-		  type = TUse;
+		  ruleType = TUse;
 		  break;
 	       case C_TR_REMOVE:
-		  type = TRemove;
+		  ruleType = TRemove;
 		  break;
 	       case C_TR_WRITE:
-		  type = TWrite;
+		  ruleType = TWrite;
 		  break;
 	       case C_TR_READ:
-		  type = TRead;
+		  ruleType = TRead;
 		  break;
 	       case C_TR_INCLUDE:
-		  type = TInclude;
+		  ruleType = TInclude;
 		  break;
 	       case C_TR_NOTRANSL:
-		  type = TNoTranslation;
+		  ruleType = TNoTranslation;
 		  break;
 	       case C_TR_NOLINEBREAK:
-		  type = TNoLineBreak;
+		  ruleType = TNoLineBreak;
 		  break;
 	       case C_TR_COPY:
-		  type = TCopy;
+		  ruleType = TCopy;
 		  break;
 	       case C_TR_CHANGEFILE:
-		  type = TChangeMainFile;
+		  ruleType = TChangeMainFile;
 		  break;
 	       case C_TR_SET_COUNTER:
-		  type = TSetCounter;
+		  ruleType = TSetCounter;
 		  break;
 	       case C_TR_ADD_COUNTER:
-		  type = TAddCounter;
+		  ruleType = TAddCounter;
 		  break;
 	       default:
-		  TranslationError (4);	/* erreur de codage */
-		  type = TRemove;
+		  TSchemaError (4);
+		  ruleType = TRemove;
 		  break;
 	    }
 
-   return type;
+   return ruleType;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    RdRelatNivAsc                                                   | */
+/* |    ReadRelatNAscend                                                | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static RelatNAscend  RdRelatNivAsc (BinFile fich)
+static RelatNAscend  ReadRelatNAscend (BinFile file)
 
 #else  /* __STDC__ */
-static RelatNAscend  RdRelatNivAsc (fich)
-BinFile             fich;
+static RelatNAscend  ReadRelatNAscend (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 
 {
    char                c;
-   RelatNAscend         ret;
+   RelatNAscend        relat;
 
-   ret = RelEquals;		/* valeur par defaut ? */
-   if (!BIOreadByte (fich, &c))
-      TranslationError (3);
+   relat = RelEquals;		/* valeur par defaut */
+   if (!BIOreadByte (file, &c))
+      TSchemaError (3);
    else
       switch (c)
 	    {
 	       case C_WITHIN_GT:
-		  ret = RelGreater;
+		  relat = RelGreater;
 		  break;
 	       case C_WITHIN_LT:
-		  ret = RelLess;
+		  relat = RelLess;
 		  break;
 	       case C_WITHIN_EQ:
-		  ret = RelEquals;
+		  relat = RelEquals;
 		  break;
 	    }
-   return ret;
+   return relat;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    RdTrPosition lit la position ou` il faut creer les chaines      | */
+/* |    ReadTOrder lit la position ou` il faut creer les chaines	| */
 /* |            produites par le traducteur.                            | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static TOrder   RdTrPosition (BinFile fich)
+static TOrder   ReadTOrder (BinFile file)
 
 #else  /* __STDC__ */
-static TOrder   RdTrPosition (fich)
-BinFile             fich;
+static TOrder   ReadTOrder (file)
+BinFile         file;
 
 #endif /* __STDC__ */
 
 {
-   char                c;
-   TOrder          position;
+   char            c;
+   TOrder          order;
 
-   position = TAfter;
-   if (!BIOreadByte (fich, &c))
-      TranslationError (5);
+   order = TAfter;
+   if (!BIOreadByte (file, &c))
+      TSchemaError (5);
    else
       switch (c)
 	    {
 	       case C_TR_AFTER:
-		  position = TAfter;
+		  order = TAfter;
 		  break;
 	       case C_TR_BEFORE:
-		  position = TBefore;
+		  order = TBefore;
 		  break;
 	       default:
-		  TranslationError (6);	/* erreur de codage */
-		  position = TAfter;
+		  TSchemaError (6);
+		  order = TAfter;
 		  break;
 	    }
 
-   return position;
+   return order;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    RdTypeCree lit le type de chose a` creer dans le fichier de     | */
-/* |            sortie ou au terminal.                                  | */
+/* |    ReadCreatedObject lit le type de chose a` creer dans le fichier | */
+/* |            de sortie.                                  		| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static CreatedObject     RdTypeCree (BinFile fich)
+static CreatedObject     ReadCreatedObject (BinFile file)
 
 #else  /* __STDC__ */
-static CreatedObject     RdTypeCree (fich)
-BinFile             fich;
+static CreatedObject     ReadCreatedObject (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 
 {
    char                c;
-   CreatedObject            type;
+   CreatedObject       obj;
 
-   type = ToConst;
-   if (!BIOreadByte (fich, &c))
-      TranslationError (7);
+   obj = ToConst;
+   if (!BIOreadByte (file, &c))
+      TSchemaError (7);
    else
       switch (c)
 	    {
 	       case C_OB_CONST:
-		  type = ToConst;
+		  obj = ToConst;
 		  break;
 	       case C_OB_BUFFER:
-		  type = ToBuffer;
+		  obj = ToBuffer;
 		  break;
 	       case C_OB_VAR:
-		  type = ToVariable;
+		  obj = ToVariable;
 		  break;
 	       case C_OB_ATTR:
-		  type = ToAttr;
+		  obj = ToAttr;
 		  break;
 	       case C_OB_CONTENT:
-		  type = ToContent;
+		  obj = ToContent;
 		  break;
 	       case C_OB_COMMENT:
-		  type = ToComment;
+		  obj = ToComment;
 		  break;
 	       case C_OB_ATTRIBUTES:
-		  type = ToAllAttr;
+		  obj = ToAllAttr;
 		  break;
 	       case C_OB_PRES_VAL:
-		  type = ToPRuleValue;
+		  obj = ToPRuleValue;
 		  break;
 	       case C_OB_PRESENTATION:
-		  type = ToAllPRules;
+		  obj = ToAllPRules;
 		  break;
 	       case C_OB_REFID:
-		  type = ToRefId;
+		  obj = ToRefId;
 		  break;
 	       case C_OB_PAIRID:
-		  type = ToPairId;
+		  obj = ToPairId;
 		  break;
 	       case C_OB_REFERRED_ELEM:
-		  type = ToReferredElem;
+		  obj = ToReferredElem;
 		  break;
 	       case C_OB_FILEDIR:
-		  type = ToFileDir;
+		  obj = ToFileDir;
 		  break;
 	       case C_OB_FILENAME:
-		  type = ToFileName;
+		  obj = ToFileName;
 		  break;
 	       case C_OB_EXTENSION:
-		  type = ToExtension;
+		  obj = ToExtension;
 		  break;
 	       case C_OB_DOCUMENTNAME:
-		  type = ToDocumentName;
+		  obj = ToDocumentName;
 		  break;
 	       case C_OB_DOCUMENTDIR:
-		  type = ToDocumentDir;
+		  obj = ToDocumentDir;
 		  break;
 	       case C_OB_REFERRED_DOCNAME:
-		  type = ToReferredDocumentName;
+		  obj = ToReferredDocumentName;
 		  break;
 	       case C_OB_REFERRED_DOCDIR:
-		  type = ToReferredDocumentDir;
+		  obj = ToReferredDocumentDir;
 		  break;
 	       case C_OB_REFERRED_REFID:
-		  type = ToReferredRefId;
+		  obj = ToReferredRefId;
 		  break;
 	       default:
-		  TranslationError (8);	/* erreur de codage */
-		  type = ToConst;
+		  TSchemaError (8);
+		  obj = ToConst;
 		  break;
 	    }
 
-   return type;
+   return obj;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    RdRelatPos lit la position relative d'un element a` prendre.    | */
+/* | ReadTRelatPosition lit la position relative d'un element a` prendre | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static TRelatPosition     RdRelatPos (BinFile fich)
+static TRelatPosition     ReadTRelatPosition (BinFile file)
 
 #else  /* __STDC__ */
-static TRelatPosition     RdRelatPos (fich)
-BinFile             fich;
+static TRelatPosition     ReadTRelatPosition (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 
 {
    char                c;
-   TRelatPosition            position;
+   TRelatPosition      position;
 
    position = RpSibling;
-   if (!BIOreadByte (fich, &c))
-      TranslationError (9);
+   if (!BIOreadByte (file, &c))
+      TSchemaError (9);
    else
       switch (c)
 	    {
@@ -425,250 +418,246 @@ BinFile             fich;
 		  position = RpAssoc;
 		  break;
 	       default:
-		  TranslationError (10);	/* erreur de codage */
+		  TSchemaError (10);
 		  position = RpSibling;
 		  break;
 	    }
-
    return position;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    RdTrCptTypeOp lit le type d'une operation sur un compteur.      | */
+/* |    ReadTCounterOp lit le type< d'une operation sur un compteur.    | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static TCounterOp  RdTrCptTypeOp (BinFile fich)
+static TCounterOp  ReadTCounterOp (BinFile file)
 
 #else  /* __STDC__ */
-static TCounterOp  RdTrCptTypeOp (fich)
-BinFile             fich;
+static TCounterOp  ReadTCounterOp (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 
 {
-   char                c;
-   TCounterOp         type;
+   char               c;
+   TCounterOp         op;
 
-   type = TCntrNoOp;
-   if (!BIOreadByte (fich, &c))
-      TranslationError (11);
+   op = TCntrNoOp;
+   if (!BIOreadByte (file, &c))
+      TSchemaError (11);
    else
       switch (c)
 	    {
 	       case C_TR_RANK:
-		  type = TCntrRank;
+		  op = TCntrRank;
 		  break;
 	       case C_TR_RLEVEL:
-		  type = TCntrRLevel;
+		  op = TCntrRLevel;
 		  break;
 	       case C_TR_SET:
-		  type = TCntrSet;
+		  op = TCntrSet;
 		  break;
 	       case C_TR_NOOP:
-		  type = TCntrNoOp;
+		  op = TCntrNoOp;
 		  break;
 	       default:
-		  TranslationError (12);	/* erreur de codage */
-		  type = TCntrNoOp;
+		  TSchemaError (12);
+		  op = TCntrNoOp;
 		  break;
 	    }
-
-   return type;
+   return op;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    RdVarTradType lit le type des elements de variables de          | */
+/* |    ReadTranslVarType lit le type des elements de variables de      | */
 /* |            traduction.                                             | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static TranslVarType  RdVarTradType (BinFile fich)
+static TranslVarType  ReadTranslVarType (BinFile file)
 
 #else  /* __STDC__ */
-static TranslVarType  RdVarTradType (fich)
-BinFile             fich;
+static TranslVarType  ReadTranslVarType (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 
 {
    char                c;
-   TranslVarType         type;
+   TranslVarType       varType;
 
-   type = VtText;
-   if (!BIOreadByte (fich, &c))
-      TranslationError (13);
+   varType = VtText;
+   if (!BIOreadByte (file, &c))
+      TSchemaError (13);
    else
       switch (c)
 	    {
 	       case C_TR_CONST:
-		  type = VtText;
+		  varType = VtText;
 		  break;
 	       case C_TR_COUNTER:
-		  type = VtCounter;
+		  varType = VtCounter;
 		  break;
 	       case C_TR_BUFFER:
-		  type = VtBuffer;
+		  varType = VtBuffer;
 		  break;
 	       case C_TR_ATTR:
-		  type = VtAttrVal;
+		  varType = VtAttrVal;
 		  break;
 	       case C_TR_FILEDIR:
-		  type = VtFileDir;
+		  varType = VtFileDir;
 		  break;
 	       case C_TR_FILENAME:
-		  type = VtFileName;
+		  varType = VtFileName;
 		  break;
 	       case C_TR_EXTENSION:
-		  type = VtExtension;
+		  varType = VtExtension;
 		  break;
 	       case C_TR_DOCUMENTNAME:
-		  type = VtDocumentName;
+		  varType = VtDocumentName;
 		  break;
 	       case C_TR_DOCUMENTDIR:
-		  type = VtDocumentDir;
+		  varType = VtDocumentDir;
 		  break;
 	       default:
-		  TranslationError (14);	/* erreur de codage */
-		  type = VtText;
+		  TSchemaError (14);
+		  varType = VtText;
 		  break;
 	    }
 
-   return type;
+   return varType;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    RdComptStyle    lit un style de compteur dans le fichier et     | */
+/* |    ReadCounterStyle  lit un style de compteur dans le fichier et   | */
 /* |            retourne sa valeur.                                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static CounterStyle   RdComptStyle (BinFile file)
+static CounterStyle   ReadCounterStyle (BinFile file)
 
 #else  /* __STDC__ */
-static CounterStyle   RdComptStyle (file)
+static CounterStyle   ReadCounterStyle (file)
 BinFile             file;
 
 #endif /* __STDC__ */
 {
    char                c;
-   CounterStyle          ret;
+   CounterStyle        style;
 
 
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	TranslationError (15);
+	TSchemaError (15);
      }
    switch (c)
 	 {
 	    case C_NUM_ARABIC:
-	       ret = CntArabic;
+	       style = CntArabic;
 	       break;
 	    case C_NUM_ROMAN:
-	       ret = CntURoman;
+	       style = CntURoman;
 	       break;
 	    case C_NUM_LOWER_ROMAN:
-	       ret = CntLRoman;
+	       style = CntLRoman;
 	       break;
 	    case C_NUM_UPPERCASE:
-	       ret = CntUppercase;
+	       style = CntUppercase;
 	       break;
 	    case C_NUM_LOWERCASE:
-	       ret = CntLowercase;
+	       style = CntLowercase;
 	       break;
 	    default:
-	       TranslationError (16);	/* erreur de codage */
-	       ret = CntArabic;
+	       TSchemaError (16);
+	       style = CntArabic;
 	       break;
 	 }
-
-   return ret;
+   return style;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    Rdptrregle retourne un pointeur sur la regle suivante ou NULL   | */
+/* |    ReadPtrTRule retourne un pointeur sur la regle suivante ou NULL   | */
 /* |            s'il n'y a pas de regle suivante.                       | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static PtrTRule RdPtrRegle (BinFile fich, PtrTRule * nextr)
+static PtrTRule ReadPtrTRule (BinFile file, PtrTRule * pNextTRule)
 
 #else  /* __STDC__ */
-static PtrTRule RdPtrRegle (fich, nextr)
-BinFile             fich;
-PtrTRule       *nextr;
+static PtrTRule ReadPtrTRule (file, pNextTRule)
+BinFile             file;
+PtrTRule            *pNextTRule;
 
 #endif /* __STDC__ */
 
 {
-   char                c;
-   PtrTRule        regle;
+   char             c;
+   PtrTRule         pTRule;
 
-   if (!BIOreadByte (fich, &c))
-      TranslationError (17);
+   if (!BIOreadByte (file, &c))
+      TSchemaError (17);
    if (c == '\0')
-      regle = NULL;
+      pTRule = NULL;
    else
-      regle = *nextr;
-   return regle;
+      pTRule = *pNextTRule;
+   return pTRule;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ReadRules ecrit une suite de regles chainees et fait pointer le | */
-/* |            pR sur la premiere regle de la suite de regles lues.    | */
+/* |    ReadTRules ecrit une suite de regles chainees et fait pointer	| */
+/* |    pFirstTRule sur la premiere regle de la suite de regles lues.   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         ReadRules (BinFile fich, PtrTRule * pR, PtrTRule * nextr)
+static void         ReadTRules (BinFile file, PtrTRule * pFirstTRule, PtrTRule * pNextTRule)
 
 #else  /* __STDC__ */
-static void         ReadRules (fich, pR, nextr)
-BinFile             fich;
-PtrTRule       *pR;
-PtrTRule       *nextr;
+static void         ReadTRules (file, pFirstTRule, pNextTRule)
+BinFile             file;
+PtrTRule            *pFirstTRule;
+PtrTRule            *pNextTRule;
 
 #endif /* __STDC__ */
-
 {
-   PtrTRule        r;	/* pointeur sur la premiere regle qui va etre lue */
-   PtrTRule        pRe1;
+   PtrTRule        pTRule;
 
-   *pR = *nextr;		/* lecture de la suite de regles */
-   if (!erreurTra)
+   *pFirstTRule = *pNextTRule;
+   /* lecture de la suite de regles */
+   if (!error)
       do
 	{
-	   r = *nextr;		/* acquiert un buffer pour la regle suivante */
-	   if ((*nextr = (PtrTRule) TtaGetMemory (sizeof (TranslRule))) == NULL)
-	      TranslationError (18);
+	   pTRule = *pNextTRule;
+	   /* acquiert un buffer pour la regle suivante */
+	   if ((*pNextTRule = (PtrTRule) TtaGetMemory (sizeof (TranslRule))) == NULL)
+	      TSchemaError (18);
 	   /* lit une regle */
-	   pRe1 = r;
-	   pRe1->TrNextTRule = RdPtrRegle (fich, nextr);
-	   pRe1->TrOrder = RdTrPosition (fich);
-	   pRe1->TrType = RdTypeRegleTrad (fich);
-	   if (!erreurTra)
-	      switch (pRe1->TrType)
+	   pTRule->TrNextTRule = ReadPtrTRule (file, pNextTRule);
+	   pTRule->TrOrder = ReadTOrder (file);
+	   pTRule->TrType = ReadTRuleType (file);
+	   if (!error)
+	      switch (pTRule->TrType)
 		    {
 		       case TCreate:
 		       case TWrite:
-			  pRe1->TrObject = RdTypeCree (fich);
-			  BIOreadShort (fich, &pRe1->TrObjectNum);
-			  BIOreadName (fich, (char *) &pRe1->TrObjectNature);
-			  BIOreadBool (fich, &pRe1->TrReferredObj);
-			  BIOreadShort (fich, &pRe1->TrFileNameVar);
+			  pTRule->TrObject = ReadCreatedObject (file);
+			  BIOreadShort (file, &pTRule->TrObjectNum);
+			  BIOreadName (file, (char *) &pTRule->TrObjectNature);
+			  BIOreadBool (file, &pTRule->TrReferredObj);
+			  BIOreadShort (file, &pTRule->TrFileNameVar);
 			  break;
 		       case TGet:
 		       case TCopy:
-			  BIOreadShort (fich, &pRe1->TrElemType);
-			  BIOreadName (fich, (char *) &pRe1->TrElemNature);
-			  pRe1->TrRelPosition = RdRelatPos (fich);
+			  BIOreadShort (file, &pTRule->TrElemType);
+			  BIOreadName (file, (char *) &pTRule->TrElemNature);
+			  pTRule->TrRelPosition = ReadTRelatPosition (file);
 			  break;
 		       case TUse:
-			  BIOreadName (fich, (char *) &pRe1->TrNature);
-			  BIOreadName (fich, (char *) &pRe1->TrTranslSchemaName);
+			  BIOreadName (file, (char *) &pTRule->TrNature);
+			  BIOreadName (file, (char *) &pTRule->TrTranslSchemaName);
 			  break;
 		       case TRemove:
 		       case TNoTranslation:
@@ -676,161 +665,156 @@ PtrTRule       *nextr;
 
 			  break;
 		       case TRead:
-			  BIOreadShort (fich, &pRe1->TrBuffer);
+			  BIOreadShort (file, &pTRule->TrBuffer);
 			  break;
 		       case TInclude:
-			  pRe1->TrBufOrConst = RdTypeCree (fich);
-			  BIOreadShort (fich, &pRe1->TrInclFile);
+			  pTRule->TrBufOrConst = ReadCreatedObject (file);
+			  BIOreadShort (file, &pTRule->TrInclFile);
 			  break;
 		       case TChangeMainFile:
-			  BIOreadShort (fich, &pRe1->TrNewFileVar);
+			  BIOreadShort (file, &pTRule->TrNewFileVar);
 			  break;
 		       case TSetCounter:
 		       case TAddCounter:
-			  BIOreadShort (fich, &pRe1->TrCounterNum);
-			  BIOreadShort (fich, &pRe1->TrCounterParam);
+			  BIOreadShort (file, &pTRule->TrCounterNum);
+			  BIOreadShort (file, &pTRule->TrCounterParam);
 			  break;
 		       default:
 			  break;
 		    }
 	   /* passe a la regle suivante */
-	   if (pRe1->TrNextTRule != NULL)
-	      pRe1->TrNextTRule = *nextr;
+	   if (pTRule->TrNextTRule != NULL)
+	      pTRule->TrNextTRule = *pNextTRule;
 	}
-      while (!(r->TrNextTRule == NULL || erreurTra));
+      while (pTRule->TrNextTRule != NULL && !error);
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    LibereRegles    libere une suite de regles chainees.            | */
+/* |    FreeTRules    libere une suite de regles chainees.              | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         LibereRegles (PtrTRule pR)
+static void         FreeTRules (PtrTRule pTRule)
 
 #else  /* __STDC__ */
-static void         LibereRegles (pR)
-PtrTRule        pR;
+static void         FreeTRules (pTRule)
+PtrTRule        pTRule;
 
 #endif /* __STDC__ */
 
 {
-   PtrTRule        rule, nextRule;
+   PtrTRule        nextRule;
 
-   rule = pR;
-   while (rule != NULL)
+   while (pTRule != NULL)
      {
-	nextRule = rule->TrNextTRule;
-	TtaFreeMemory ((char *) rule);
-	rule = nextRule;
+	nextRule = pTRule->TrNextTRule;
+	TtaFreeMemory ((char *) pTRule);
+	pTRule = nextRule;
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    RdPtrBloc retourne un pointeur sur le bloc de regles suivant ou | */
-/* |            NULL s'il n'y a pas de bloc suivant.                    | */
+/* |    ReadPtrTRuleBlock retourne un pointeur sur le bloc de regles	| */
+/* |	suivant ou NULL s'il n'y a pas de bloc suivant.                 | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
-static PtrTRuleBlock RdPtrBloc (BinFile fich, PtrTRuleBlock * nextb)
+static PtrTRuleBlock ReadPtrTRuleBlock (BinFile file, PtrTRuleBlock * pNextBlock)
 
 #else  /* __STDC__ */
-static PtrTRuleBlock RdPtrBloc (fich, nextb)
-BinFile             fich;
-PtrTRuleBlock      *nextb;
+static PtrTRuleBlock ReadPtrTRuleBlock (file, pNextBlock)
+BinFile             file;
+PtrTRuleBlock      *pNextBlock;
 
 #endif /* __STDC__ */
 
 {
    char                c;
-   PtrTRuleBlock       bloc;
 
-   BIOreadByte (fich, &c);
+   BIOreadByte (file, &c);
    if (c == '\0')
-      bloc = NULL;
+      return NULL;
    else
-      bloc = *nextb;
-   return bloc;
+      return (*pNextBlock);
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ReadBlocs lit une suite de blocs de regles.                     | */
+/* |    ReadBlocks lit une suite de blocs de regles.                    | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         ReadBlocs (BinFile fich, PtrTRuleBlock * pB, PtrTRule * nextr, PtrSSchema * SS, PtrTRuleBlock * nextb)
+static void         ReadBlocks (BinFile file, PtrTRuleBlock * pBlock, PtrTRule * pNextTRule, PtrSSchema * pSS, PtrTRuleBlock * pNextBlock)
 
 #else  /* __STDC__ */
-static void         ReadBlocs (fich, pB, nextr, SS, nextb)
-BinFile             fich;
-PtrTRuleBlock      *pB;
-PtrTRule       *nextr;
-PtrSSchema       *SS;
-PtrTRuleBlock      *nextb;
+static void         ReadBlocks (file, pBlock, pNextTRule, pSS, pNextBlock)
+BinFile             file;
+PtrTRuleBlock       *pBlock;
+PtrTRule            *pNextTRule;
+PtrSSchema          *pSS;
+PtrTRuleBlock       *pNextBlock;
 
 #endif /* __STDC__ */
 
 {
-   PtrTRuleBlock       b;
-   PtrTRuleBlock       pBl1;
-   int                 ncond;
-   TranslCondition        *Cond;
+   PtrTRuleBlock       pBl;
+   TranslCondition     *pCond;
+   int                 cond;
 
-   if (*pB != NULL && !erreurTra)
+   if (*pBlock != NULL && !error)
       /* pointeur sur le premier bloc qui va etre lu */
      {
-	*pB = *nextb;		/* lecture de la suite des blocs */
+	*pBlock = *pNextBlock;
+	/* lecture de la suite des blocs */
 	do
 	  {
-	     b = *nextb;
+	     pBl = *pNextBlock;
 	     /* acquiert un buffer pour le bloc suivant */
-	     if ((*nextb = (PtrTRuleBlock) TtaGetMemory (sizeof (TRuleBlock))) == NULL)
-		TranslationError (19);
+	     if ((*pNextBlock = (PtrTRuleBlock) TtaGetMemory (sizeof (TRuleBlock))) == NULL)
+		TSchemaError (19);
 	     /* lit un bloc */
-	     pBl1 = b;
-	     pBl1->TbNextBlock = RdPtrBloc (fich, nextb);
-	     BIOreadShort (fich, &pBl1->TbNConditions);
-	     for (ncond = 1; ncond <= pBl1->TbNConditions; ncond++)
+	     pBl->TbNextBlock = ReadPtrTRuleBlock (file, pNextBlock);
+	     BIOreadShort (file, &pBl->TbNConditions);
+	     for (cond = 0; cond < pBl->TbNConditions; cond++)
 	       {
-		  Cond = &pBl1->TbCondition[ncond - 1];
-		  Cond->TcCondition = RdTypeCondTrad (fich);
-		  BIOreadBool (fich, &Cond->TcNegativeCond);
-		  BIOreadBool (fich, &Cond->TcTarget);
-		  BIOreadShort (fich, &Cond->TcAscendType);
-		  BIOreadName (fich, (char *) &Cond->TcAscendNature);
-		  BIOreadSignedShort (fich, &Cond->TcAscendRelLevel);
-		  switch (Cond->TcCondition)
+		  pCond = &pBl->TbCondition[cond];
+		  pCond->TcCondition = ReadTransCondition (file);
+		  BIOreadBool (file, &pCond->TcNegativeCond);
+		  BIOreadBool (file, &pCond->TcTarget);
+		  BIOreadShort (file, &pCond->TcAscendType);
+		  BIOreadName (file, (char *) &pCond->TcAscendNature);
+		  BIOreadSignedShort (file, &pCond->TcAscendRelLevel);
+		  switch (pCond->TcCondition)
 			{
 			   case TcondAlphabet:
-			      BIOreadByte (fich, &Cond->TcAlphabet);
+			      BIOreadByte (file, &pCond->TcAlphabet);
 			      break;
 			   case TcondWithin:
 			   case TcondFirstWithin:
-			      BIOreadShort (fich, &Cond->TcElemType);
-			      BIOreadName (fich, (char *) &Cond->TcElemNature);
-			      BIOreadBool (fich, &Cond->TcImmediatelyWithin);
-			      Cond->TcAscendRel = RdRelatNivAsc (fich);
-			      BIOreadShort (fich, &Cond->TcAscendLevel);
+			      BIOreadShort (file, &pCond->TcElemType);
+			      BIOreadName (file, (char *) &pCond->TcElemNature);
+			      BIOreadBool (file, &pCond->TcImmediatelyWithin);
+			      pCond->TcAscendRel = ReadRelatNAscend (file);
+			      BIOreadShort (file, &pCond->TcAscendLevel);
 			      break;
 			   case TcondAttr:
-			      BIOreadShort (fich, &Cond->TcAttr);
-			      if (!erreurTra)
-				 switch ((*SS)->SsAttribute[Cond->TcAttr - 1].AttrType)
+			      BIOreadShort (file, &pCond->TcAttr);
+			      if (!error)
+				 switch ((*pSS)->SsAttribute[pCond->TcAttr - 1].AttrType)
 				       {
 					  case AtNumAttr:
-					     BIOreadSignedShort (fich, &Cond->TcLowerBound);
-					     BIOreadSignedShort (fich, &Cond->TcUpperBound);
+					     BIOreadSignedShort (file, &pCond->TcLowerBound);
+					     BIOreadSignedShort (file, &pCond->TcUpperBound);
 					     break;
 					  case AtTextAttr:
-					     BIOreadName (fich, (char *) &Cond->TcTextValue);
+					     BIOreadName (file, (char *) &pCond->TcTextValue);
 					     break;
 					  case AtReferenceAttr:
 
 					     break;
 					  case AtEnumAttr:
-					     BIOreadShort (fich, &Cond->TcAttrValue);
+					     BIOreadShort (file, &pCond->TcAttrValue);
 					     break;
 					  default:
 					     break;
@@ -838,113 +822,116 @@ PtrTRuleBlock      *nextb;
 
 			      break;
 			   case TcondPRule:
-			      BIOreadShort (fich, &Cond->TcAttr);
-			      if (!erreurTra)
-				 if (Cond->TcAttr == PtSize ||
-				     Cond->TcAttr == PtIndent ||
-				     Cond->TcAttr == PtLineSpacing ||
-				     Cond->TcAttr == PtLineWeight ||
-				     Cond->TcAttr == PtFillPattern ||
-				     Cond->TcAttr == PtBackground ||
-				     Cond->TcAttr == PtForeground)
+			      BIOreadShort (file, &pCond->TcAttr);
+			      if (!error)
+				 if (pCond->TcAttr == PtSize ||
+				     pCond->TcAttr == PtIndent ||
+				     pCond->TcAttr == PtLineSpacing ||
+				     pCond->TcAttr == PtLineWeight ||
+				     pCond->TcAttr == PtFillPattern ||
+				     pCond->TcAttr == PtBackground ||
+				     pCond->TcAttr == PtForeground)
 				   {
-				      BIOreadSignedShort (fich, &Cond->TcLowerBound);
-				      BIOreadSignedShort (fich, &Cond->TcUpperBound);
+				      BIOreadSignedShort (file, &pCond->TcLowerBound);
+				      BIOreadSignedShort (file, &pCond->TcUpperBound);
 				   }
 				 else
-				    BIOreadByte (fich, &Cond->TcPresValue);
+				    BIOreadByte (file, &pCond->TcPresValue);
 			      break;
 			   default:
 			      break;
 			}
 	       }
-	     ReadRules (fich, &pBl1->TbFirstTRule, nextr);
+	     ReadTRules (file, &pBl->TbFirstTRule, pNextTRule);
 	     /* passe a la regle suivante */
-	     if (pBl1->TbNextBlock != NULL)
-		pBl1->TbNextBlock = *nextb;
+	     if (pBl->TbNextBlock != NULL)
+		pBl->TbNextBlock = *pNextBlock;
 	  }
-	while (!(b->TbNextBlock == NULL || erreurTra));
+	while (pBl->TbNextBlock != NULL && !error);
      }
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    LibereBlocs     libere une suite de blocs de regles ainsi que   | */
+/* |    FreeBlocks     libere une suite de blocs de regles ainsi que    | */
 /* |            les regles attachees.                                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         LibereBlocs (PtrTRuleBlock pB)
+static void         FreeBlocks (PtrTRuleBlock pBlock)
 
 #else  /* __STDC__ */
-static void         LibereBlocs (pB)
-PtrTRuleBlock       pB;
+static void         FreeBlocks (pBlock)
+PtrTRuleBlock       pBlock;
 
 #endif /* __STDC__ */
 
 {
-   PtrTRuleBlock       Bloc, nextBloc;
+   PtrTRuleBlock       pNextBlock;
 
-   Bloc = pB;
-   while (Bloc != NULL)
+   while (pBlock != NULL)
      {
-	nextBloc = Bloc->TbNextBlock;
-	LibereRegles (Bloc->TbFirstTRule);
-	TtaFreeMemory ((char *) Bloc);
-	Bloc = nextBloc;
+	pNextBlock = pBlock->TbNextBlock;
+	FreeTRules (pBlock->TbFirstTRule);
+	TtaFreeMemory ((char *) pBlock);
+	pBlock = pNextBlock;
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ReadReglesAttr lit les regles de traduction de l'attribut de    | */
-/* |            numero att appartenant au schema de structure SS.       | */
+/* |    ReadAttrTRules lit les regles de traduction de l'attribut de    | */
+/* |            numero att appartenant au schema de structure pSS.      | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         ReadReglesAttr (BinFile fich, int att, PtrTRuleBlock * nextb, PtrTRule * nextr, PtrSSchema * SS, PtrTSchema * pSchT)
+static void         ReadAttrTRules (BinFile file, int att, PtrTRuleBlock * pNextBlock, PtrTRule * pNextTRule, PtrSSchema * pSS, PtrTSchema * pTSch)
 
 #else  /* __STDC__ */
-static void         ReadReglesAttr (fich, att, nextb, nextr, SS, pSchT)
-BinFile             fich;
+static void         ReadAttrTRules (file, att, pNextBlock, pNextTRule, pSS, pTSch)
+BinFile             file;
 int                 att;
-PtrTRuleBlock      *nextb;
-PtrTRule       *nextr;
-PtrSSchema       *SS;
-PtrTSchema       *pSchT;
+PtrTRuleBlock       *pNextBlock;
+PtrTRule            *pNextTRule;
+PtrSSchema          *pSS;
+PtrTSchema          *pTSch;
 
 #endif /* __STDC__ */
 
 {
+   AttributeTransl     *pAttrT;
+   TranslNumAttrCase   *pCase;
    int                 i;
-   AttributeTransl      *pRT1;
-   TranslNumAttrCase        *pTC1;
 
-   if (!erreurTra)
+   if (!error)
      {
-	pRT1 = &(*pSchT)->TsAttrTRule[att - 1];
-	BIOreadShort (fich, &pRT1->AtrElemType);
-	switch ((*SS)->SsAttribute[att - 1].AttrType)
+	pAttrT = &(*pTSch)->TsAttrTRule[att];
+	BIOreadShort (file, &pAttrT->AtrElemType);
+	switch ((*pSS)->SsAttribute[att].AttrType)
 	      {
 		 case AtNumAttr:
-		    BIOreadShort (fich, &pRT1->AtrNCases);
-		    for (i = 1; i <= pRT1->AtrNCases; i++)
-		       if (!erreurTra)
+		    BIOreadShort (file, &pAttrT->AtrNCases);
+		    for (i = 0; i < pAttrT->AtrNCases; i++)
+		       if (!error)
 			 {
-			    pTC1 = &pRT1->AtrCase[i - 1];
-			    BIOreadSignedShort (fich, &pTC1->TaLowerBound);
-			    BIOreadSignedShort (fich, &pTC1->TaUpperBound);
-			    ReadBlocs (fich, &pTC1->TaTRuleBlock, nextr, SS, nextb);
+			    pCase = &pAttrT->AtrCase[i];
+			    BIOreadSignedShort (file, &pCase->TaLowerBound);
+			    BIOreadSignedShort (file, &pCase->TaUpperBound);
+			    ReadBlocks (file, &pCase->TaTRuleBlock, pNextTRule,
+					pSS, pNextBlock);
 			 }
 		    break;
 		 case AtTextAttr:
-		    BIOreadName (fich, (char *) &pRT1->AtrTextValue);
-		    ReadBlocs (fich, &pRT1->AtrTxtTRuleBlock, nextr, SS, nextb);
+		    BIOreadName (file, (char *) &pAttrT->AtrTextValue);
+		    ReadBlocks (file, &pAttrT->AtrTxtTRuleBlock, pNextTRule,
+				pSS, pNextBlock);
 		    break;
 		 case AtReferenceAttr:
-		    ReadBlocs (fich, &pRT1->AtrRefTRuleBlock, nextr, SS, nextb);
+		    ReadBlocks (file, &pAttrT->AtrRefTRuleBlock, pNextTRule,
+				pSS, pNextBlock);
 		    break;
 		 case AtEnumAttr:
-		    for (i = 0; i <= (*SS)->SsAttribute[att - 1].AttrNEnumValues; i++)
-		       ReadBlocs (fich, &pRT1->AtrEnuTRuleBlock[i], nextr, SS, nextb);
+		    for (i = 0; i <= (*pSS)->SsAttribute[att].AttrNEnumValues; i++)
+		       ReadBlocks (file, &pAttrT->AtrEnuTRuleBlock[i],
+				   pNextTRule, pSS, pNextBlock);
 		    break;
 		 default:
 		    break;
@@ -953,37 +940,37 @@ PtrTSchema       *pSchT;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    LibereReglesAttr libere les regles de traduction d'unattribut.  | */
+/* |    FreeTRulesAttr libere les regles de traduction d'un attribut.   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         LibereReglesAttr (AttributeTransl * pRT1, TtAttribute * pAtt)
+static void         FreeTRulesAttr (AttributeTransl * pAttrT, TtAttribute * pAttr)
 
 #else  /* __STDC__ */
-static void         LibereReglesAttr (pRT1, pAtt)
-AttributeTransl      *pRT1;
-TtAttribute           *pAtt;
+static void         FreeTRulesAttr (pAttrT, pAttr)
+AttributeTransl     *pAttrT;
+TtAttribute         *pAttr;
 
 #endif /* __STDC__ */
 
 {
    int                 i;
 
-   switch (pAtt->AttrType)
+   switch (pAttr->AttrType)
 	 {
 	    case AtNumAttr:
-	       for (i = 0; i < pRT1->AtrNCases; i++)
-		  LibereBlocs (pRT1->AtrCase[i].TaTRuleBlock);
+	       for (i = 0; i < pAttrT->AtrNCases; i++)
+		  FreeBlocks (pAttrT->AtrCase[i].TaTRuleBlock);
 	       break;
 	    case AtTextAttr:
-	       LibereBlocs (pRT1->AtrTxtTRuleBlock);
+	       FreeBlocks (pAttrT->AtrTxtTRuleBlock);
 	       break;
 	    case AtReferenceAttr:
-	       LibereBlocs (pRT1->AtrRefTRuleBlock);
+	       FreeBlocks (pAttrT->AtrRefTRuleBlock);
 	       break;
 	    case AtEnumAttr:
-	       for (i = 0; i <= pAtt->AttrNEnumValues; i++)
-		  LibereBlocs (pRT1->AtrEnuTRuleBlock[i]);
+	       for (i = 0; i <= pAttr->AttrNEnumValues; i++)
+		  FreeBlocks (pAttrT->AtrEnuTRuleBlock[i]);
 	       break;
 	    default:
 	       break;
@@ -991,380 +978,383 @@ TtAttribute           *pAtt;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    ReadReglesPres lit les regles de traduction de la presentation  | */
-/* |            de numero pres appartenant au schema de structure SS.   | */
+/* |    ReadPresTRules lit les regles de traduction de la presentation  | */
+/* |            de numero pres appartenant au schema de structure pSS.  | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         ReadReglesPres (BinFile fich, int pres, PtrTRuleBlock * nextb, PtrTRule * nextr, PtrSSchema * SS, PtrTSchema * pSchT)
+static void         ReadPresTRules (BinFile file, int pres, PtrTRuleBlock * pNextBlock, PtrTRule * pNextTRule, PtrSSchema * pSS, PtrTSchema * pTSch)
 
 #else  /* __STDC__ */
-static void         ReadReglesPres (fich, pres, nextb, nextr, SS, pSchT)
-BinFile             fich;
+static void         ReadPresTRules (file, pres, pNextBlock, pNextTRule, pSS, pTSch)
+BinFile             file;
 int                 pres;
-PtrTRuleBlock      *nextb;
-PtrTRule       *nextr;
-PtrSSchema       *SS;
-PtrTSchema       *pSchT;
+PtrTRuleBlock       *pNextBlock;
+PtrTRule            *pNextTRule;
+PtrSSchema          *pSS;
+PtrTSchema          *pTSch;
 
 #endif /* __STDC__ */
 
 {
+   PRuleTransl         *pPruleTr;
+   TranslNumAttrCase   *pCase;
    int                 i;
-   PRuleTransl       *pRT1;
-   TranslNumAttrCase        *pTC1;
 
-   if (!erreurTra)
+   if (!error)
      {
-	pRT1 = &(*pSchT)->TsPresTRule[pres - 1];
-	if (pRT1->RtExist)
-	   if (pres == PtSize + 1 || pres == PtIndent + 1 ||
-	       pres == PtLineSpacing + 1 || pres == PtLineWeight + 1 ||
-	       pres == PtFillPattern + 1 || pres == PtBackground + 1 ||
-	       pres == PtForeground + 1)
+	pPruleTr = &(*pTSch)->TsPresTRule[pres];
+	if (pPruleTr->RtExist)
+	   if (pres == PtSize || pres == PtIndent ||
+	       pres == PtLineSpacing || pres == PtLineWeight ||
+	       pres == PtFillPattern || pres == PtBackground ||
+	       pres == PtForeground)
 	      /* presentation a valeur numerique */
 	     {
-		BIOreadShort (fich, &pRT1->RtNCase);
-		for (i = 0; i < pRT1->RtNCase; i++)
-		   if (!erreurTra)
+		BIOreadShort (file, &pPruleTr->RtNCase);
+		for (i = 0; i < pPruleTr->RtNCase; i++)
+		   if (!error)
 		     {
-			pTC1 = &pRT1->RtCase[i];
-			BIOreadSignedShort (fich, &pTC1->TaLowerBound);
-			BIOreadSignedShort (fich, &pTC1->TaUpperBound);
-			ReadBlocs (fich, &pTC1->TaTRuleBlock, nextr, SS, nextb);
+			pCase = &pPruleTr->RtCase[i];
+			BIOreadSignedShort (file, &pCase->TaLowerBound);
+			BIOreadSignedShort (file, &pCase->TaUpperBound);
+			ReadBlocks (file, &pCase->TaTRuleBlock, pNextTRule,
+				    pSS, pNextBlock);
 		     }
 	     }
 	   else
 	      for (i = 0; i <= MAX_TRANSL_PRES_VAL; i++)
 		{
-		   BIOreadByte (fich, &pRT1->RtPRuleValue[i]);
-		   ReadBlocs (fich, &pRT1->RtPRuleValueBlock[i], nextr, SS, nextb);
+		   BIOreadByte (file, &pPruleTr->RtPRuleValue[i]);
+		   ReadBlocks (file, &pPruleTr->RtPRuleValueBlock[i],
+			       pNextTRule, pSS, pNextBlock);
 		}
-
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    LibereReglesPres libere les regles de traduction d'une regle de | */
+/* |    FreeTRulesPres libere les regles de traduction d'une regle de	| */
 /* |            presentation                                            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         LibereReglesPres (int pres, PRuleTransl * pRT1)
+static void         FreeTRulesPres (int pres, PRuleTransl * pPruleTr)
 
 #else  /* __STDC__ */
-static void         LibereReglesPres (pres, pRT1)
+static void         FreeTRulesPres (pres, pPruleTr)
 int                 pres;
-PRuleTransl       *pRT1;
+PRuleTransl         *pPruleTr;
 
 #endif /* __STDC__ */
 
 {
    int                 i;
 
-   if (pRT1->RtExist)
+   if (pPruleTr->RtExist)
       if (pres == PtSize + 1 || pres == PtIndent + 1 ||
 	  pres == PtLineSpacing + 1 || pres == PtLineWeight + 1 ||
 	  pres == PtFillPattern + 1 || pres == PtBackground + 1 ||
 	  pres == PtForeground + 1)
 	 /* presentation a valeur numerique */
-	 for (i = 0; i < pRT1->RtNCase; i++)
-	    LibereBlocs (pRT1->RtCase[i].TaTRuleBlock);
+	 for (i = 0; i < pPruleTr->RtNCase; i++)
+	    FreeBlocks (pPruleTr->RtCase[i].TaTRuleBlock);
       else
 	 for (i = 0; i <= MAX_TRANSL_PRES_VAL; i++)
-	    LibereBlocs (pRT1->RtPRuleValueBlock[i]);
+	    FreeBlocks (pPruleTr->RtPRuleValueBlock[i]);
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ReadTranslationSchema lit un fichier contenant un schema de traduction et   | */
+/* |    ReadTranslationSchema						| */
+/* |		lit un fichier contenant un schema de traduction et     | */
 /* |            le charge en memoire. Retourne un pointeur sur le       | */
 /* |            schema de presentation en memoire si chargement reussi, | */
 /* |            NULL si echec.                                          | */
-/* |            - fname: nom du fichier a lire, sans le suffixe .TRA    | */
-/* |            - SS: schema de structure correspondant, deja rempli.   | */
+/* |            - fileName: nom du fichier a lire, sans le suffixe .TRA | */
+/* |            - pSS: schema de structure correspondant, deja rempli.  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrTSchema        ReadTranslationSchema (Name fname, PtrSSchema SS)
+PtrTSchema        ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-PtrTSchema        ReadTranslationSchema (fname, SS)
-Name                 fname;
-PtrSSchema        SS;
-
-#endif /* __STDC__ */
-
-{
-   int                 i, j;
-   PtrTRule        nextr;
-   PtrTRuleBlock       nextb;
-   PtrTSchema        pSchT;
-   PtrTSchema        pSc1;
-   TCounter         *pTr1;
-   TranslVariable            *pVa1;
-   TranslVarItem        *pVarT1;
-   AttributeTransl      *pRT1;
-   AlphabetTransl            *pTrad1;
-   StringTransl            *pTradCa6;
-   PtrTSchema        schematrad;
-   PRuleTransl       *pRTP1;
-   PathBuffer          DirBuffer;
-   BinFile             fich;
-   char                texte[MAX_TXT_LEN];
-   int                 NbElemStructInitial;
-
-   erreurTra = FALSE;
-   pSchT = NULL;
-   /* compose le nom du fichier a ouvrir avec le nom du directory */
-   /* des schemas... */
-   strncpy (DirBuffer, (char *) SchemaPath, MAX_PATH);
-   MakeCompleteName (fname, "TRA", DirBuffer, texte, &i);
-
-   /* ouvre le fichier */
-   fich = BIOreadOpen (texte);
-   if (fich == 0)
-     {
-	strncpy (texte, fname, MAX_PATH);
-	strcat (texte, ".TRA");
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), texte);
-     }
-   else
-     {
-	if ((pSchT = (PtrTSchema) TtaGetMemory (sizeof (TranslSchema))) == NULL)
-	   TranslationError (20);
-	if ((nextr = (PtrTRule) TtaGetMemory (sizeof (TranslRule))) == NULL)
-	   TranslationError (19);
-	if ((nextb = (PtrTRuleBlock) TtaGetMemory (sizeof (TRuleBlock))) == NULL)
-	   TranslationError (21);
-
-	/* lit la partie fixe du schema de traduction */
-	pSc1 = pSchT;
-	BIOreadName (fich, (char *) &pSc1->TsStructName);
-	BIOreadShort (fich, &pSc1->TsStructCode);
-	BIOreadShort (fich, &pSc1->TsLineLength);
-	BIOreadName (fich, (char *) &pSc1->TsEOL);
-	BIOreadName (fich, (char *) &pSc1->TsTranslEOL);
-	BIOreadShort (fich, &pSc1->TsNConstants);
-	BIOreadShort (fich, &pSc1->TsNCounters);
-	BIOreadShort (fich, &pSc1->TsNVariables);
-	BIOreadShort (fich, &pSc1->TsNBuffers);
-	if (!erreurTra)
-	   for (i = 1; i <= pSc1->TsNConstants; i++)
-	      BIOreadShort (fich, &pSc1->TsConstBegin[i - 1]);
-	if (!erreurTra)
-	   for (i = 1; i <= pSc1->TsNCounters; i++)
-	     {
-		pTr1 = &pSc1->TsCounter[i - 1];
-		pTr1->TnOperation = RdTrCptTypeOp (fich);
-		if (pTr1->TnOperation == TCntrNoOp)
-		   pTr1->TnParam1 = 0;
-		else
-		   BIOreadShort (fich, &pTr1->TnElemType1);
-		if (pTr1->TnOperation == TCntrSet)
-		  {
-		     BIOreadShort (fich, &pTr1->TnElemType2);
-		     BIOreadShort (fich, &pTr1->TnParam1);
-		     BIOreadShort (fich, &pTr1->TnParam2);
-		  }
-		else if (pTr1->TnOperation == TCntrRank)
-		   BIOreadSignedShort (fich, &pTr1->TnAcestorLevel);
-		BIOreadShort (fich, &pTr1->TnAttrInit);
-	     }
-	if (!erreurTra)
-	   for (i = 1; i <= pSc1->TsNVariables; i++)
-	     {
-		pVa1 = &pSc1->TsVariable[i - 1];
-		BIOreadShort (fich, &pVa1->TrvNItems);
-		if (!erreurTra)
-		   for (j = 1; j <= pVa1->TrvNItems; j++)
-		     {
-			pVarT1 = &pVa1->TrvItem[j - 1];
-			pVarT1->TvType = RdVarTradType (fich);
-			BIOreadShort (fich, &pVarT1->TvItem);
-			if (pVarT1->TvType == VtCounter)
-			  {
-			     BIOreadShort (fich, &pVarT1->TvLength);
-			     pVarT1->TvCounterStyle = RdComptStyle (fich);
-			  }
-		     }
-	     }
-	BIOreadShort (fich, &pSc1->TsPictureBuffer);
-	for (i = 1; i <= MAX_TRANSL_BUFFER; i++)
-	   pSc1->TsBuffer[i - 1][0] = '\0';
-	if (SS->SsFirstDynNature == 0)
-	   NbElemStructInitial = SS->SsNRules;
-	else
-	  {
-	     NbElemStructInitial = SS->SsFirstDynNature - 1;
-	     for (j = NbElemStructInitial + 1; j <= SS->SsNRules; j++)
-		pSc1->TsElemTRule[j - 1] = NULL;
-	  }
-	if (!erreurTra)
-	   for (i = 1; i <= NbElemStructInitial; i++)
-	      pSc1->TsElemTRule[i - 1] = RdPtrBloc (fich, &nextb);
-	if (!erreurTra)
-	   for (i = 1; i <= NbElemStructInitial; i++)
-	      BIOreadBool (fich, &pSc1->TsInheritAttr[i - 1]);
-	if (!erreurTra)
-	   for (i = 1; i <= SS->SsNAttributes; i++)
-	      if (!erreurTra)
-		{
-		   pRT1 = &pSc1->TsAttrTRule[i - 1];
-		   switch (SS->SsAttribute[i - 1].AttrType)
-			 {
-			    case AtNumAttr:
-			       BIOreadShort (fich, &pRT1->AtrNCases);
-			       if (!erreurTra)
-				  for (j = 1; j <= pRT1->AtrNCases; j++)
-				     pRT1->AtrCase[j - 1].TaTRuleBlock =
-					RdPtrBloc (fich, &nextb);
-			       break;
-			    case AtTextAttr:
-			       pRT1->AtrTxtTRuleBlock = RdPtrBloc (fich, &nextb);
-			       break;
-			    case AtReferenceAttr:
-			       pRT1->AtrRefTRuleBlock = RdPtrBloc (fich, &nextb);
-			       break;
-			    case AtEnumAttr:
-			       for (j = 0; j <= SS->SsAttribute[i - 1].AttrNEnumValues; j++)
-				  pRT1->AtrEnuTRuleBlock[j] = RdPtrBloc (fich, &nextb);
-			       break;
-			    default:
-			       break;
-			 }
-		}
-	if (!erreurTra)
-	   for (i = 1; i <= MAX_TRANSL_PRULE; i++)
-	      if (!erreurTra)
-		{
-		   pRTP1 = &pSc1->TsPresTRule[i - 1];
-		   BIOreadBool (fich, &pRTP1->RtExist);
-		   if (pRTP1->RtExist)
-		      if (i == PtSize + 1 || i == PtIndent + 1 ||
-			  i == PtLineSpacing + 1 ||
-			  i == PtLineWeight + 1 || i == PtFillPattern + 1 ||
-			  i == PtBackground + 1 || i == PtForeground + 1)
-			 /* presentation a valeur numerique */
-			{
-			   BIOreadShort (fich, &pRTP1->RtNCase);
-			   if (!erreurTra)
-			      for (j = 1; j <= pRTP1->RtNCase; j++)
-				 pRTP1->RtCase[j - 1].TaTRuleBlock =
-				    RdPtrBloc (fich, &nextb);
-			}
-		      else
-			 for (j = 0; j <= MAX_TRANSL_PRES_VAL; j++)
-			    pRTP1->RtPRuleValueBlock[j] = RdPtrBloc (fich, &nextb);
-		}
-	BIOreadShort (fich, &pSc1->TsNTranslAlphabets);
-	if (!erreurTra)
-	   for (i = 1; i <= pSc1->TsNTranslAlphabets; i++)
-	     {
-		pTrad1 = &pSc1->TsTranslAlphabet[i - 1];
-		BIOreadByte (fich, &pTrad1->AlAlphabet);
-		BIOreadShort (fich, &pTrad1->AlBegin);
-		BIOreadShort (fich, &pTrad1->AlEnd);
-	     }
-	BIOreadShort (fich, &pSc1->TsSymbolFirst);
-	BIOreadShort (fich, &pSc1->TsSymbolLast);
-	BIOreadShort (fich, &pSc1->TsGraphicsFirst);
-	BIOreadShort (fich, &pSc1->TsGraphicsLast);
-	BIOreadShort (fich, &pSc1->TsNCharTransls);
-	/* lit les tables de traduction de caracteres */
-	if (!erreurTra)
-	   for (i = 1; i <= pSc1->TsNCharTransls; i++)
-	     {
-		pTradCa6 = &pSc1->TsCharTransl[i - 1];
-		/* lit la chaine source */
-		j = 0;
-		do
-		  {
-		     BIOreadByte (fich, &pTradCa6->StSource[j]);
-		     j++;
-		  }
-		while (!(pTradCa6->StSource[j - 1] == '\0'));
-		/* lit la chaine cible */
-		j = 0;
-		do
-		  {
-		     BIOreadByte (fich, &pTradCa6->StTarget[j]);
-		     j++;
-		  }
-		while (!(pTradCa6->StTarget[j - 1] == '\0'));
-	     }
-	if (!erreurTra)
-	   /* lit les constantes */
-	   for (i = 1; i <= pSc1->TsNConstants; i++)
-	     {
-		j = pSc1->TsConstBegin[i - 1] - 1;
-		do
-		  {
-		     j++;
-		     BIOreadByte (fich, &pSc1->TsConstant[j - 1]);
-		  }
-		while (!(pSc1->TsConstant[j - 1] == '\0'));
-		/* lit les blocs de regles des elements structures */
-	     }
-	if (!erreurTra)
-	   for (i = 1; i <= NbElemStructInitial; i++)
-	      ReadBlocs (fich, &pSc1->TsElemTRule[i - 1], &nextr, &SS, &nextb);
-	/* lit les blocs de regles des attributs */
-	for (i = 1; i <= SS->SsNAttributes; i++)
-	   if (!erreurTra)
-	      ReadReglesAttr (fich, i, &nextb, &nextr, &SS, &pSchT);
-	/* lit les blocs de regles des presentation */
-	for (i = 1; i <= MAX_TRANSL_PRULE; i++)
-	   if (!erreurTra)
-	      ReadReglesPres (fich, i, &nextb, &nextr, &SS, &pSchT);
-	TtaFreeMemory ((char *) nextr);		/* on avait anticipe... */
-	TtaFreeMemory ((char *) nextb);		/* on avait anticipe... */
-
-	/* ferme le fichier */
-	BIOreadClose (fich);
-     }
-   if (erreurTra)
-     {
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TRA_FILE_INCORRECT), fname);
-	schematrad = NULL;
-     }
-   else
-      schematrad = pSchT;	/* rend la valeur de retour */
-   return schematrad;
-}
-
-/* ---------------------------------------------------------------------- */
-/* |    FreeTranslationSchema   libere le schema de traduction pSchT            | */
-/* |            correspondant au schema de structure pSS.               | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                FreeTranslationSchema (PtrTSchema pSchT, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-void                FreeTranslationSchema (pSchT, pSS)
-PtrTSchema        pSchT;
+PtrTSchema        ReadTranslationSchema (fileName, pSS)
+Name              fileName;
 PtrSSchema        pSS;
 
 #endif /* __STDC__ */
 
 {
-   int                 NbElemStructInitial;
+   BinFile             file;
+   PtrTRule            pNextTRule;
+   PtrTRuleBlock       pNextBlock;
+   PtrTSchema          pTSch;
+   TCounter            *pCntr;
+   TranslVariable      *pVar;
+   TranslVarItem       *pVarItem;
+   AttributeTransl     *pAttrTr;
+   AlphabetTransl      *pAlphTr;
+   StringTransl        *pStringTr;
+   PRuleTransl         *pPRuleTr;
+   PathBuffer          dirBuffer;
+   char                buf[MAX_TXT_LEN];
+   int                 InitialNElems, i, j;
+
+   error = FALSE;
+   pTSch = NULL;
+   /* compose le nom du fichier a ouvrir */
+   strncpy (dirBuffer, (char *) SchemaPath, MAX_PATH);
+   MakeCompleteName (fileName, "TRA", dirBuffer, buf, &i);
+
+   /* ouvre le fichier */
+   file = BIOreadOpen (buf);
+   if (file == 0)
+     {
+	strncpy (buf, fileName, MAX_PATH);
+	strcat (buf, ".TRA");
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), buf);
+     }
+   else
+     {
+	if ((pTSch = (PtrTSchema) TtaGetMemory (sizeof (TranslSchema))) == NULL)
+	   {
+	   TSchemaError (20);
+	   return NULL;
+	   }
+	if ((pNextTRule = (PtrTRule) TtaGetMemory (sizeof (TranslRule))) == NULL)
+	   {
+	   TSchemaError (19);
+	   return NULL;
+	   }
+	if ((pNextBlock = (PtrTRuleBlock) TtaGetMemory (sizeof (TRuleBlock))) == NULL)
+	   {
+	   TSchemaError (21);
+	   return NULL;
+	   }
+
+	/* lit la partie fixe du schema de traduction */
+	BIOreadName (file, (char *) &pTSch->TsStructName);
+	BIOreadShort (file, &pTSch->TsStructCode);
+	BIOreadShort (file, &pTSch->TsLineLength);
+	BIOreadName (file, (char *) &pTSch->TsEOL);
+	BIOreadName (file, (char *) &pTSch->TsTranslEOL);
+	BIOreadShort (file, &pTSch->TsNConstants);
+	BIOreadShort (file, &pTSch->TsNCounters);
+	BIOreadShort (file, &pTSch->TsNVariables);
+	BIOreadShort (file, &pTSch->TsNBuffers);
+	if (!error)
+	   for (i = 0; i < pTSch->TsNConstants; i++)
+	      BIOreadShort (file, &pTSch->TsConstBegin[i]);
+	if (!error)
+	   for (i = 0; i < pTSch->TsNCounters; i++)
+	     {
+		pCntr = &pTSch->TsCounter[i];
+		pCntr->TnOperation = ReadTCounterOp (file);
+		if (pCntr->TnOperation == TCntrNoOp)
+		   pCntr->TnParam1 = 0;
+		else
+		   BIOreadShort (file, &pCntr->TnElemType1);
+		if (pCntr->TnOperation == TCntrSet)
+		  {
+		     BIOreadShort (file, &pCntr->TnElemType2);
+		     BIOreadShort (file, &pCntr->TnParam1);
+		     BIOreadShort (file, &pCntr->TnParam2);
+		  }
+		else if (pCntr->TnOperation == TCntrRank)
+		   BIOreadSignedShort (file, &pCntr->TnAcestorLevel);
+		BIOreadShort (file, &pCntr->TnAttrInit);
+	     }
+	if (!error)
+	   for (i = 0; i < pTSch->TsNVariables; i++)
+	     {
+		pVar = &pTSch->TsVariable[i];
+		BIOreadShort (file, &pVar->TrvNItems);
+		if (!error)
+		   for (j = 0; j < pVar->TrvNItems; j++)
+		     {
+			pVarItem = &pVar->TrvItem[j];
+			pVarItem->TvType = ReadTranslVarType (file);
+			BIOreadShort (file, &pVarItem->TvItem);
+			if (pVarItem->TvType == VtCounter)
+			  {
+			     BIOreadShort (file, &pVarItem->TvLength);
+			     pVarItem->TvCounterStyle = ReadCounterStyle (file);
+			  }
+		     }
+	     }
+	BIOreadShort (file, &pTSch->TsPictureBuffer);
+	for (i = 0; i < MAX_TRANSL_BUFFER; i++)
+	   pTSch->TsBuffer[i][0] = '\0';
+	if (pSS->SsFirstDynNature == 0)
+	   InitialNElems = pSS->SsNRules;
+	else
+	  {
+	     InitialNElems = pSS->SsFirstDynNature - 1;
+	     for (j = InitialNElems; j < pSS->SsNRules; j++)
+		pTSch->TsElemTRule[j] = NULL;
+	  }
+	if (!error)
+	   for (i = 0; i < InitialNElems; i++)
+	      pTSch->TsElemTRule[i] = ReadPtrTRuleBlock (file, &pNextBlock);
+	if (!error)
+	   for (i = 0; i < InitialNElems; i++)
+	      BIOreadBool (file, &pTSch->TsInheritAttr[i]);
+	if (!error)
+	   for (i = 0; i < pSS->SsNAttributes; i++)
+	      if (!error)
+		{
+		   pAttrTr = &pTSch->TsAttrTRule[i];
+		   switch (pSS->SsAttribute[i].AttrType)
+			 {
+			    case AtNumAttr:
+			       BIOreadShort (file, &pAttrTr->AtrNCases);
+			       if (!error)
+				  for (j = 0; j < pAttrTr->AtrNCases; j++)
+				     pAttrTr->AtrCase[j].TaTRuleBlock =
+					ReadPtrTRuleBlock (file, &pNextBlock);
+			       break;
+			    case AtTextAttr:
+			       pAttrTr->AtrTxtTRuleBlock =
+					ReadPtrTRuleBlock (file, &pNextBlock);
+			       break;
+			    case AtReferenceAttr:
+			       pAttrTr->AtrRefTRuleBlock =
+					ReadPtrTRuleBlock (file, &pNextBlock);
+			       break;
+			    case AtEnumAttr:
+			       for (j = 0; j <= pSS->SsAttribute[i].AttrNEnumValues; j++)
+				  pAttrTr->AtrEnuTRuleBlock[j] =
+					ReadPtrTRuleBlock (file, &pNextBlock);
+			       break;
+			    default:
+			       break;
+			 }
+		}
+	if (!error)
+	   for (i = 0; i < MAX_TRANSL_PRULE; i++)
+	      if (!error)
+		{
+		   pPRuleTr = &pTSch->TsPresTRule[i];
+		   BIOreadBool (file, &pPRuleTr->RtExist);
+		   if (pPRuleTr->RtExist)
+		      if (i == PtSize || i == PtIndent || i == PtLineSpacing  ||
+			  i == PtLineWeight || i == PtFillPattern ||
+			  i == PtBackground || i == PtForeground)
+			 /* presentation a valeur numerique */
+			{
+			   BIOreadShort (file, &pPRuleTr->RtNCase);
+			   if (!error)
+			      for (j = 0; j < pPRuleTr->RtNCase; j++)
+				 pPRuleTr->RtCase[j].TaTRuleBlock =
+				    ReadPtrTRuleBlock (file, &pNextBlock);
+			}
+		      else
+			 for (j = 0; j <= MAX_TRANSL_PRES_VAL; j++)
+			    pPRuleTr->RtPRuleValueBlock[j] =
+					ReadPtrTRuleBlock (file, &pNextBlock);
+		}
+	BIOreadShort (file, &pTSch->TsNTranslAlphabets);
+	if (!error)
+	   for (i = 0; i < pTSch->TsNTranslAlphabets; i++)
+	     {
+		pAlphTr = &pTSch->TsTranslAlphabet[i];
+		BIOreadByte (file, &pAlphTr->AlAlphabet);
+		BIOreadShort (file, &pAlphTr->AlBegin);
+		BIOreadShort (file, &pAlphTr->AlEnd);
+	     }
+	BIOreadShort (file, &pTSch->TsSymbolFirst);
+	BIOreadShort (file, &pTSch->TsSymbolLast);
+	BIOreadShort (file, &pTSch->TsGraphicsFirst);
+	BIOreadShort (file, &pTSch->TsGraphicsLast);
+	BIOreadShort (file, &pTSch->TsNCharTransls);
+	/* lit les tables de traduction de caracteres */
+	if (!error)
+	   for (i = 0; i < pTSch->TsNCharTransls; i++)
+	     {
+		pStringTr = &pTSch->TsCharTransl[i];
+		/* lit la chaine source */
+		j = 0;
+		do
+		   BIOreadByte (file, &pStringTr->StSource[j++]);
+		while (pStringTr->StSource[j - 1] != '\0');
+		/* lit la chaine cible */
+		j = 0;
+		do
+		   BIOreadByte (file, &pStringTr->StTarget[j++]);
+		while (pStringTr->StTarget[j - 1] != '\0');
+	     }
+	if (!error)
+	   /* lit les constantes */
+	   for (i = 0; i < pTSch->TsNConstants; i++)
+	     {
+		j = pTSch->TsConstBegin[i] - 1;
+		do
+		     BIOreadByte (file, &pTSch->TsConstant[j++]);
+		while (pTSch->TsConstant[j - 1] != '\0');
+	     }
+	/* lit les blocs de regles des elements */
+	if (!error)
+	   for (i = 0; i < InitialNElems; i++)
+	      ReadBlocks (file, &pTSch->TsElemTRule[i], &pNextTRule, &pSS,
+			  &pNextBlock);
+	/* lit les blocs de regles des attributs */
+	for (i = 0; i < pSS->SsNAttributes; i++)
+	   if (!error)
+	      ReadAttrTRules (file, i, &pNextBlock, &pNextTRule, &pSS,
+			      &pTSch);
+	/* lit les blocs de regles des presentation */
+	for (i = 0; i < MAX_TRANSL_PRULE; i++)
+	   if (!error)
+	      ReadPresTRules (file, i, &pNextBlock, &pNextTRule, &pSS,
+			      &pTSch);
+	TtaFreeMemory ((char *) pNextTRule);
+	TtaFreeMemory ((char *) pNextBlock);
+
+	/* ferme le fichier */
+	BIOreadClose (file);
+     }
+   if (error)
+     {
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TRA_FILE_INCORRECT),
+			   fileName);
+	if (pTSch != NULL)
+	    FreeTranslationSchema(pTSch, pSS);
+	pTSch = NULL;
+     }
+   return pTSch;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    FreeTranslationSchema   libere le schema de traduction pTSch    | */
+/* |            correspondant au schema de structure pSS.               | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                FreeTranslationSchema (PtrTSchema pTSch, PtrSSchema pSS)
+
+#else  /* __STDC__ */
+void                FreeTranslationSchema (pTSch, pSS)
+PtrTSchema        pTSch;
+PtrSSchema        pSS;
+
+#endif /* __STDC__ */
+
+{
+   int                 InitialNElems;
    int                 i;
 
    if (pSS->SsFirstDynNature == 0)
-      NbElemStructInitial = pSS->SsNRules;
+      InitialNElems = pSS->SsNRules;
    else
-      NbElemStructInitial = pSS->SsFirstDynNature - 1;
+      InitialNElems = pSS->SsFirstDynNature - 1;
    /* libere les blocs de regles  des elements */
-   for (i = 0; i < NbElemStructInitial; i++)
-      LibereBlocs (pSchT->TsElemTRule[i]);
+   for (i = 0; i < InitialNElems; i++)
+      FreeBlocks (pTSch->TsElemTRule[i]);
    /* libere les blocs de regles des attributs */
    for (i = 0; i < pSS->SsNAttributes; i++)
-      LibereReglesAttr (&pSchT->TsAttrTRule[i], &pSS->SsAttribute[i]);
+      FreeTRulesAttr (&pTSch->TsAttrTRule[i], &pSS->SsAttribute[i]);
    /* libere les blocs de regles des presentations */
    for (i = 0; i < MAX_TRANSL_PRULE; i++)
-      LibereReglesPres (i + 1, &pSchT->TsPresTRule[i]);
+      FreeTRulesPres (i + 1, &pTSch->TsPresTRule[i]);
    /* libere le schema de traduction lui-meme */
-   TtaFreeMemory ((char *) pSchT);
+   TtaFreeMemory ((char *) pTSch);
 }
 
-/* End Of Module rdschtra */
