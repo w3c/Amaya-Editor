@@ -2182,13 +2182,14 @@ static ThotBool UpdateDocImage (Document doc, ThotBool src_is_local,
 				ThotBool dst_is_local, char *newURL)
 {
   Element       el;
+  ElementType   elType;
   Attribute     attr;
   AttributeType attrType;
   char          *ptr;
   char          *localName;
   char          *internalURL;
   LoadedImageDesc    *pImage;
-
+  Language      lang = 0;
 
   /* get the URL of the image and the element */
   if (! ImageElement (doc, NULL, &el))
@@ -2197,10 +2198,28 @@ static ThotBool UpdateDocImage (Document doc, ThotBool src_is_local,
   /* change the value of the src attribute */
   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
   attrType.AttrTypeNum = HTML_ATTR_SRC;
-
   attr = TtaGetAttribute (el, attrType);
   TtaRegisterAttributeReplace (attr, el, doc);
   TtaSetAttributeText (attr, newURL, el, doc);
+
+  /* change the title of the document */
+  elType.ElSSchema = attrType.AttrSSchema;
+  elType.ElTypeNum = HTML_EL_TITLE;
+  el = TtaGetRootElement (doc);
+  el = TtaSearchTypedElement (elType, SearchInTree, el);
+  if (el)
+    {
+      el = TtaGetFirstChild (el);
+      localName = GetLocalPath (doc, newURL);
+      ptr = strrchr (localName, DIR_SEP);
+      if (ptr)
+	{
+	  ptr++;
+	  TtaRegisterElementReplace (el, doc);
+	  TtaSetTextContent (el, ptr, lang, doc);
+	}
+      TtaFreeMemory (localName);
+    }
 
   /* copy the file to the amaya cache if it's a remote save */
   if (!dst_is_local)
