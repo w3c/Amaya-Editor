@@ -1800,8 +1800,27 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	  pCurrentBox->BxNChars = pAb->AbVolume;
 	  pCurrentBox->BxXRatio = 1;
 	  pCurrentBox->BxYRatio = 1;
-	  width = pCurrentBox->BxAbstractBox->AbEnclosing->AbBox->BxWidth;
-	  height = pCurrentBox->BxAbstractBox->AbEnclosing->AbBox->BxHeight;
+	  if (pAb->AbEnclosing)
+	    {
+	      /* the direct parent is the SVG path element */
+	      pParent = pAb->AbEnclosing->AbEnclosing;
+	      while (pParent &&
+		     TypeHasException (ExcIsGroup, pParent->AbElement->ElTypeNumber,
+				       pParent->AbElement->ElStructSchema))
+		pParent = pParent->AbEnclosing;
+	      width = pParent->AbBox->BxWidth;
+	      height = pParent->AbBox->BxHeight;
+	      pAb->AbBox->BxWidth = width;
+	      pAb->AbBox->BxHeight = height;
+	      pParent = pAb->AbEnclosing;
+	      pParent->AbBox->BxWidth = width;
+	      pParent->AbBox->BxHeight = height;
+	    }
+	  else
+	    {
+	      width = 0;
+	      height = 0;
+	    }
 	  break;
 	case LtCompound:
 	  if (TypeHasException (ExcIsTable, pAb->AbElement->ElTypeNumber,
@@ -2503,7 +2522,7 @@ void RecordEnclosing (PtrBox pBox, ThotBool horizRef)
 ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 {
   PtrLine             pLine;
-  PtrAbstractBox      pCurrentAb, pCell, pBlock;
+  PtrAbstractBox      pCurrentAb, pCell, pBlock, pParent;
   PtrBox              pNextBox;
   PtrBox              pCurrentBox = NULL;
   PtrBox              pMainBox;
@@ -3182,34 +3201,34 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 				    &width, &height);
 		  break;
 		case LtPath:
+		  /* by default don't change the size */
+		  width = pAb->AbBox->BxWidth;
+		  height = pAb->AbBox->BxHeight;
 		  if (pAb->AbChange)
 		    {
-		      /* Libere les anciens descripteurs de path */
+		      /* free the old path descriptor */
 		      FreePath (pBox);
-		      /* Recopie les descripteurs depuis le pave */
+		      /* copy the new one from the abstract box */
 		      pBox->BxFirstPathSeg = CopyPath (pAb->AbFirstPathSeg);
 		      pBox->BxNChars = pAb->AbVolume;
-		      /* remonte a la recherche d'un ancetre elastique */
-		      pCurrentAb = pAb;
-		      while (pCurrentAb != NULL)
+		      if (pAb->AbEnclosing)
 			{
-			  pCurrentBox = pCurrentAb->AbBox;
-			  if (pCurrentBox->BxHorizFlex ||
-			      pCurrentBox->BxVertFlex)
-			    {
-			      MirrorShape (pAb,
-					   pCurrentBox->BxHorizInverted,
-					   pCurrentBox->BxVertInverted,
-					   FALSE);
-			      /* on arrete */
-			      pCurrentAb = NULL;	
-			    }
-			  else
-			    pCurrentAb = pCurrentAb->AbEnclosing;
+			  /* the direct parent is the SVG path element */
+			  pParent = pAb->AbEnclosing->AbEnclosing;
+			  while (pParent &&
+				 TypeHasException (ExcIsGroup,
+						   pParent->AbElement->ElTypeNumber,
+						   pParent->AbElement->ElStructSchema))
+			    pParent = pParent->AbEnclosing;
+			  width = pParent->AbBox->BxWidth;
+			  height = pParent->AbBox->BxHeight;
+			  pAb->AbBox->BxWidth = width;
+			  pAb->AbBox->BxHeight = height;
+			  pParent = pAb->AbEnclosing;
+			  pParent->AbBox->BxWidth = width;
+			  pParent->AbBox->BxHeight = height;
 			}
 		    }
-		  width = 0;   /********/
-		  height = 0;  /********/
 		  break;
 		default:
 		  break;
