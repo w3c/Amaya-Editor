@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Über inhaltsorientierte Formate</title>
-  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <style type="text/css">
   </style>
@@ -13,19 +13,19 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5">
-  <tbody>
-    <tr>
-      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../../resources/icons/22x22/logo.png" /></td>
-      <td><a href="address.html.de"><img alt="vorherige Seite"
-        src="../../../resources/icons/misc/left.png" /></a> <a href="../Document.html.de"><img
-        alt="erste Seite" src="../../../resources/icons/misc/up.png" /></a> <a
-        href="40styling.html.de"><img alt="nächste Seite"
-        src="../../../resources/icons/misc/right.png" /></a></td>
-    </tr>
-  </tbody>
-</table>
+<div>
+</div>
+
+<div>
+<img alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
+
+<p class="nav"><a href="address.html.de"><img alt="vorherige Seite"
+src="../../../resources/icons/misc/left.png" /></a> <a
+href="../Document.html.de"><img alt="erste Seite"
+src="../../../resources/icons/misc/up.png" /></a> <a
+href="40styling.html.de"><img alt="nächste Seite"
+src="../../../resources/icons/misc/right.png" /></a></p>
+</div>
 
 <div id="page_body">
 <h1>Über inhaltsorientierte Formate</h1>
@@ -99,11 +99,10 @@ herangezogen werden: man möchte beispielsweise den Text <acronym
 title="World Wide Web Consortium">W3C</acronym>, als Akronym auszeichnen. Aus
 dem Untermenü <strong>Inhaltsorientiert</strong> des Menüs
 <strong>XHTML</strong> den Befehl <strong>Akronym</strong> wählen, das ganze
-Element mittels <kbd>F2</kbd>
-markieren, aus dem Menü <strong>Attribute</strong> das Attribut
-<strong>title</strong> wählen, den Text <code>World Wide Web
-Consortium</code> eingeben und den Knopf <strong>Übernehmen</strong>
-drücken.</p>
+Element mittels <kbd>F2</kbd> markieren, aus dem Menü
+<strong>Attribute</strong> das Attribut <strong>title</strong> wählen, den
+Text <code>World Wide Web Consortium</code> eingeben und den Knopf
+<strong>Übernehmen</strong> drücken.</p>
 
 <p>Man kann <a href="../StyleSheets.html.de">Formatvorlagen</a> verwenden um
 die Darstellung dieser Elemente zu ändern.</p>
@@ -133,9 +132,10 @@ die Darstellung dieser Elemente zu ändern.</p>
     href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-STRONG">strong.</a></code></li>
 </ol>
 
-<p>Beide können über die Knöpfe <img src="../../../resources/icons/22x22/XHTML_I.png" alt="Emphasis"
-/> und <img src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" /> der Knopfleiste
-oder das Untermenü <strong>Inhaltsorientiert</strong> des Menüs
+<p>Beide können über die Knöpfe <img
+src="../../../resources/icons/22x22/XHTML_I.png" alt="Emphasis" /> und <img
+src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" /> der
+Knopfleiste oder das Untermenü <strong>Inhaltsorientiert</strong> des Menüs
 <strong>XHTML</strong> angewendet werden. Außerdem stehen als Tastenkürzel
 <kbd>Strg i</kbd> <kbd>Strg e</kbd> zur Verfügung. Besteht eine Markierung,
 dann wird die Betonung darauf angewendet. Anderenfalls wird das Element als
@@ -143,9 +143,9 @@ Kind des bestehenden Elementes erzeugt.</p>
 
 <p>Die Elemente zur Betonung werden unter Amaya wie ein Umschalter behandelt.
 Plaziert man den Cursor beispielsweise innerhalb des Elements
-<code>strong</code>, markiert das Ganze mit <kbd>F2</kbd> und klickt den Knopf
-<img src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" /> in der Knopfleiste, dann wird
-das Element <code>strong</code> entfernt.</p>
+<code>strong</code>, markiert das Ganze mit <kbd>F2</kbd> und klickt den
+Knopf <img src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" />
+in der Knopfleiste, dann wird das Element <code>strong</code> entfernt.</p>
 
 <p>Man kann <a href="../StyleSheets.html.de">Formatvorlagen</a> verwenden um
 die Darstellung dieser Elemente zu ändern.</p>

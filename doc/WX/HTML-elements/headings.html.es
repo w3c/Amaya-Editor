@@ -5,27 +5,22 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Elementos de encabezado</title>
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="es" lang="es">
 
-<table border="0" width="100%" summary="toc">
-  <tbody>
-    <tr>
-      <td> <img
-        border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
-      </td>
-      <td><p align="right"><a href="structure.html.es"><img alt="anterior"
-        border="0" src="../../../resources/icons/misc/left.png" /></a> <a
-        href="../HTML.html.es"><img alt="superior" border="0"
-        src="../../../resources/icons/misc/up.png" /></a> <a href="lists.html.es"><img
-        alt="siguiente" border="0" src="../../../resources/icons/misc/right.png" /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
+
+<p class="nav"><a href="structure.html.es"><img alt="anterior" border="0"
+src="../../../resources/icons/misc/left.png" /></a> <a
+href="../HTML.html.es"><img alt="superior" border="0"
+src="../../../resources/icons/misc/up.png" /></a> <a
+href="lists.html.es"><img alt="siguiente" border="0"
+src="../../../resources/icons/misc/right.png" /></a></p>
+</div>
 
 <div id="page_body">
 <h1>Elementos de encabezado</h1>
@@ -39,13 +34,15 @@ como hijos de elementos cuyo contenido pueda ser de tipo bloque. Fíjate en
 que las tablas tienen elementos especiales para marcar los encabezados.</p>
 
 <p>Los tres primeros niveles de encabezado pueden crearse con la barra de
-botones mediante los botones <img src="../../../resources/icons/22x22/XHTML_H1.png" alt="Botón h1"
-/>, <img src="../../../resources/icons/22x22/XHTML_H2.png" alt="Botón h2" />, <img
-src="../../../resources/icons/22x22/XHTML_H3.png" alt="Botón h3" />. Desde el menú
-<strong>XHTML</strong>, o mediante atajos de teclado, puede crearse cualquier
-nivel de encabezado. Los atajos de teclado por omisión son <kbd>Ctrl 1</kbd>
-para <code>h1</code>, <kbd>Ctrl 2</kbd> para <code>h2</code>, y así
-sucesivamente hasta <kbd>Ctrl 6</kbd> para <code>h6</code>.</p>
+botones mediante los botones <img
+src="../../../resources/icons/22x22/XHTML_H1.png" alt="Botón h1" />, <img
+src="../../../resources/icons/22x22/XHTML_H2.png" alt="Botón h2" />, <img
+src="../../../resources/icons/22x22/XHTML_H3.png" alt="Botón h3" />. Desde el
+menú <strong>XHTML</strong>, o mediante atajos de teclado, puede crearse
+cualquier nivel de encabezado. Los atajos de teclado por omisión son
+<kbd>Ctrl 1</kbd> para <code>h1</code>, <kbd>Ctrl 2</kbd> para
+<code>h2</code>, y así sucesivamente hasta <kbd>Ctrl 6</kbd> para
+<code>h6</code>.</p>
 
 <p>La mayoría de navegadores utilizan estilos por omisión para distinguir los
 diferentes encabezamientos, pero el autor puede también utilizar <a

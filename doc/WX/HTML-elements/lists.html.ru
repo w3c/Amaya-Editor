@@ -5,8 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <title>Список элементов</title>
-  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <style type="text/css">
 
   </style>
@@ -15,21 +14,16 @@
 
 <body xml:lang="ru" lang="ru">
 
-<table border="0" width="100%" summary="toc">
-  <tbody>
-    <tr>
-      <td> <img
-        border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
-      </td>
-      <td><p align="right"><a href="headings.html.ru"><img alt="Предыдущий"
-        border="0" src="../../../resources/icons/misc/left.png" /></a> <a
-        href="../HTML.html.ru"><img alt="Вверх" border="0"
-        src="../../../resources/icons/misc/up.png" /></a> <a href="address.html.ru"><img
-        alt="Следующий" border="0" src="../../../resources/icons/misc/right.png" /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
+
+<p class="nav"><a href="headings.html.ru"><img alt="Предыдущий" border="0"
+src="../../../resources/icons/misc/left.png" /></a> <a
+href="../HTML.html.ru"><img alt="Вверх" border="0"
+src="../../../resources/icons/misc/up.png" /></a> <a
+href="address.html.ru"><img alt="Следующий" border="0"
+src="../../../resources/icons/misc/right.png" /></a></p>
+</div>
 
 <div id="page_body">
 <h1>Список элементов</h1>

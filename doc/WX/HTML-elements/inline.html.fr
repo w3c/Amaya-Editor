@@ -3,30 +3,22 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Types en ligne</title>
-  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="fr" lang="fr">
 
-<table border="0" width="100%" summary="toc">
-  <tbody>
-    <tr>
-      <td> <img
-        border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
-      </td>
-      <td><p align="right"><a href="../Manual.html.fr"></a></p>
+<div>
+<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
 
-        <p align="right"><a href="address.html.fr"><img alt="previous"
-        border="0" src="../../../resources/icons/misc/left.png" /></a> <a
-        href="../Manual.html.fr#There"><img alt="top" border="0"
-        src="../../../resources/icons/misc/up.png" /></a> <a href="40styling.html.fr"><img
-        alt="next" border="0" src="../../../resources/icons/misc/right.png" /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<p class="nav"><a href="address.html.fr"><img alt="previous" border="0"
+src="../../../resources/icons/misc/left.png" /></a> <a
+href="../Manual.html.fr#There"><img alt="top" border="0"
+src="../../../resources/icons/misc/up.png" /></a> <a
+href="40styling.html.fr"><img alt="next" border="0"
+src="../../../resources/icons/misc/right.png" /></a></p>
+</div>
 
 <div id="Inline3">
 <h1>Types en ligne</h1>
@@ -143,9 +135,10 @@ utilisées pour changer la présentation des insertions et des suppressions.</p>
 </ol>
 
 <p>Deux types de mise en évidence peuvent être appliqués depuis la barre
-d'outils en utilisant les boutons <img src="../../../resources/icons/22x22/XHTML_I.png"
-alt="Emphasis" /> et <img src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" /> , ou
-depuis le formulaire du sous-menu <strong>Types information</strong> du menu
+d'outils en utilisant les boutons <img
+src="../../../resources/icons/22x22/XHTML_I.png" alt="Emphasis" /> et <img
+src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" /> , ou depuis
+le formulaire du sous-menu <strong>Types information</strong> du menu
 <strong>XHTML</strong>. Il y a également des raccourcis clavier - <kbd>Ctrl i
 Cltr e</kbd> pour accentuer (parce que l'interprétation par défaut est
 souvent le texte en italique) et <kbd>Ctrl i Ctrl s</kbd> pour la mise en
@@ -160,8 +153,8 @@ la mise en évidence appropriée. Par exemple, placez le curseur quelque part
 sur un élément <code>strong</code>, utilisez la touche <kbd>F2</kbd>
 (Windows) ou la touche <kbd>Esc</kbd> (Unix) pour sélectionner l'élément, et
 ensuite utilisez le raccourci clavier, menu item, ou le bouton <img
-src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" /> - l'élément <code>strong</code>
-sera désactivé.</p>
+src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" /> - l'élément
+<code>strong</code> sera désactivé.</p>
 
 <p><a href="../StyleSheets.html.fr">Les feuilles de style</a> peuvent être
 utilisées pour changer la présentation des deux types de mise en évidence.</p>

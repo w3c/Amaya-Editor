@@ -5,8 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <title>Элементы Заголовок</title>
-  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <style type="text/css">
 
   </style>
@@ -15,21 +14,16 @@
 
 <body xml:lang="ru" lang="ru">
 
-<table border="0" width="100%" summary="toc">
-  <tbody>
-    <tr>
-      <td> <img
-        border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
-      </td>
-      <td><p align="right"><a href="structure.html.ru"><img alt="Предыдущий"
-        border="0" src="../../../resources/icons/misc/left.png" /></a> <a
-        href="../HTML.html.ru"><img alt="Вверх" border="0"
-        src="../../../resources/icons/misc/up.png" /></a> <a href="lists.html.ru"><img
-        alt="Следующий" border="0" src="../../../resources/icons/misc/right.png" /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
+
+<p class="nav"><a href="structure.html.ru"><img alt="Предыдущий" border="0"
+src="../../../resources/icons/misc/left.png" /></a> <a
+href="../HTML.html.ru"><img alt="Вверх" border="0"
+src="../../../resources/icons/misc/up.png" /></a> <a
+href="lists.html.ru"><img alt="Следующий" border="0"
+src="../../../resources/icons/misc/right.png" /></a></p>
+</div>
 
 <div id="page_body">
 <h1>Элементы Заголовок</h1>
@@ -43,13 +37,14 @@ H2, H3, H4, H5, и H6</code></a>. Они должны использоваться для маркировки
 данных существуют специальные элементы для маркировки заголовков таблиц.</p>
 
 <p>Первые три уровня заголовка могут быть созданы из панели инструментов,
-используя для этого кнопки изображения <img src="../../../resources/icons/22x22/XHTML_H1.png"
-alt="H1 button" />, <img src="../../../resources/icons/22x22/XHTML_H2.png" alt="H2 button" />, <img
-src="../../../resources/icons/22x22/XHTML_H3.png" alt="H3 button" />. Все уровни заголовка могут быть
-созданы из меню <strong>XHTML</strong>, или используя комбинации кнопок.
-Принятыми по умолчанию комбинациями кнопок являются <kbd>Ctrl 1</kbd> для
-<code>H1</code>, <kbd>Ctrl 2</kbd> для <code>h2</code>, и так далее до
-<kbd>Ctrl 6</kbd> для <code>h6</code>.</p>
+используя для этого кнопки изображения <img
+src="../../../resources/icons/22x22/XHTML_H1.png" alt="H1 button" />, <img
+src="../../../resources/icons/22x22/XHTML_H2.png" alt="H2 button" />, <img
+src="../../../resources/icons/22x22/XHTML_H3.png" alt="H3 button" />. Все
+уровни заголовка могут быть созданы из меню <strong>XHTML</strong>, или
+используя комбинации кнопок. Принятыми по умолчанию комбинациями кнопок
+являются <kbd>Ctrl 1</kbd> для <code>H1</code>, <kbd>Ctrl 2</kbd> для
+<code>h2</code>, и так далее до <kbd>Ctrl 6</kbd> для <code>h6</code>.</p>
 
 <p>Заданные по умолчанию уровни заголовков отображаются в большинстве
 браузеров, что указывает на их относительную важность, но автор может

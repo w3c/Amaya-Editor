@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Informationen über den Autor</title>
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <style type="text/css">
   </style>
@@ -14,21 +13,19 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5">
-  <tbody>
-    <tr>
-      <td><img alt="W3C" src="../../images/w3c_home" /> <img
-        alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
-      </td>
-      <td><a href="lists.html.de"><img alt="vorherige Seite"
-        src="../../../resources/icons/misc/left.png" /></a> <a
-        href="../Document.html.de"><img alt="erste Seite"
-        src="../../../resources/icons/misc/up.png" /></a> <a href="inline.html.de"><img
-        alt="nächste Seite" src="../../../resources/icons/misc/right.png" /></a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+</div>
+
+<div>
+<img alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
+
+<p class="nav"><a href="lists.html.de"><img alt="vorherige Seite"
+src="../../../resources/icons/misc/left.png" /></a> <a
+href="../Document.html.de"><img alt="erste Seite"
+src="../../../resources/icons/misc/up.png" /></a> <a
+href="inline.html.de"><img alt="nächste Seite"
+src="../../../resources/icons/misc/right.png" /></a></p>
+</div>
 
 <div id="page_body">
 <h1>Informationen über den Autor</h1>

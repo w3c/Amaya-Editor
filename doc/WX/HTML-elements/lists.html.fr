@@ -2,29 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>éléments d'une liste</title>
-  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="en" lang="en">
 
-<table border="0" width="100%" summary="toc">
-  <tbody>
-    <tr>
-      <td> <img
-        border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
-      </td>
-      <td><p align="right"><a href="headings.html.fr"><img alt="previous"
-        border="0" src="../../../resources/icons/misc/left.png" /></a> <a
-        href="../Manual.html.fr#There"><img alt="top" border="0"
-        src="../../../resources/icons/misc/up.png" /></a> <a href="address.html.fr"><img
-        alt="next" border="0" src="../../../resources/icons/misc/right.png" /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
+
+<p class="nav"><a href="headings.html.fr"><img alt="previous" border="0"
+src="../../../resources/icons/misc/left.png" /></a> <a
+href="../Manual.html.fr#There"><img alt="top" border="0"
+src="../../../resources/icons/misc/up.png" /></a> <a
+href="address.html.fr"><img alt="next" border="0"
+src="../../../resources/icons/misc/right.png" /></a></p>
+</div>
 
 <div id="List">
 <h1>Éléments de liste</h1>

@@ -1,29 +1,24 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Elementos de estilo de carácter en HTML</title>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="es" lang="es">
 
-<table border="0" width="100%" summary="toc">
-  <tbody>
-    <tr>
-      <td> <img
-        border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
-      </td>
-      <td><p align="right"><a href="inline.html.es"><img alt="anterior"
-        border="0" src="../../../resources/icons/misc/left.png" /></a> <a
-        href="../HTML.html.es"><img alt="superior" border="0"
-        src="../../../resources/icons/misc/up.png" /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
+
+<p class="nav"><a href="inline.html.es"><img alt="anterior" border="0"
+src="../../../resources/icons/misc/left.png" /></a> <a
+href="../HTML.html.es"><img alt="superior" border="0"
+src="../../../resources/icons/misc/up.png" /></a></p>
+</div>
 
 <div id="page_body">
 <h1>Elementos de estilo de carácter en HTML</h1>

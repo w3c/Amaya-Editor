@@ -1,30 +1,26 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Marcado en línea</title>
-  <meta name="GENERATOR" content="amaya 8.7, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="es" lang="es">
 
-<table border="0" width="100%" summary="toc">
-  <tbody>
-    <tr>
-      <td> <img
-        border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
-      </td>
-      <td><p align="right"><a href="address.html.es"><img alt="anterior"
-        border="0" src="../../../resources/icons/misc/left.png" /></a> <a
-        href="../HTML.html.es"><img alt="superior" border="0"
-        src="../../../resources/icons/misc/up.png" /></a> <a href="40styling.html.es"><img
-        alt="siguiente" border="0" src="../../../resources/icons/misc/right.png" /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
+
+<p class="nav"><a href="address.html.es"><img alt="anterior" border="0"
+src="../../../resources/icons/misc/left.png" /></a> <a
+href="../HTML.html.es"><img alt="superior" border="0"
+src="../../../resources/icons/misc/up.png" /></a> <a
+href="40styling.html.es"><img alt="siguiente" border="0"
+src="../../../resources/icons/misc/right.png" /></a></p>
+</div>
 
 <div id="page_body">
 <h1>Marcado en línea</h1>
@@ -138,22 +134,22 @@ modificar el formato de añadidos y eliminaciones.</p>
 
 <p>Puedes aplicar ambos tipos de énfasis mediante los botones <img
 src="../../../resources/icons/22x22/XHTML_I.png" alt="Emphasis" /> y <img
-src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" /> de la barra de botones, o
-mediante el submenú <strong>XHTML &gt; Tipo de información</strong>. Los
-atajos de teclado correspondientes son <kbd>Ctrl i Ctrl e</kbd> para el
-énfasis normal (el énfasis se suele mostrar a menudo mediante itálicas) y
-<kbd>Ctrl i Ctrl s</kbd> para el énfasis fuerte (el énfasis fuerte se suele
-mostrar mediante negrita). Si hay texto seleccionado, el énfasis se aplica al
-texto seleccionado, y si no, se crea el elemento como hijo del elemento
-actual.</p>
+src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" /> de la barra
+de botones, o mediante el submenú <strong>XHTML &gt; Tipo de
+información</strong>. Los atajos de teclado correspondientes son <kbd>Ctrl i
+Ctrl e</kbd> para el énfasis normal (el énfasis se suele mostrar a menudo
+mediante itálicas) y <kbd>Ctrl i Ctrl s</kbd> para el énfasis fuerte (el
+énfasis fuerte se suele mostrar mediante negrita). Si hay texto seleccionado,
+el énfasis se aplica al texto seleccionado, y si no, se crea el elemento como
+hijo del elemento actual.</p>
 
 <p>Los elementos de énfasis conmutan, es decir, puedes eliminar el énfasis de
 un elemento seleccionando el elemento y aplicando el énfasis correspondiente.
 Por ejemplo, sitúa el cursor en el interior de un elemento
 <code>strong</code>, pulsa <kbd>F2</kbd> para seleccionar el elemento y
 utiliza el atajo de teclado, la opción del menú o el botón <img
-src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" /> para eliminar el elemento
-<code>strong</code>.</p>
+src="../../../resources/icons/22x22/XHTML_B.png" alt="Strong" /> para
+eliminar el elemento <code>strong</code>.</p>
 
 <p>Puedes utilizar <a href="../StyleSheets.html.es">hojas de estilo</a> para
 modificar el formato de ambos tipos de énfasis.</p>

@@ -5,27 +5,22 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Estructura de un documento HTML</title>
-  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="es" lang="es">
 
-<table border="0" width="100%" summary="toc">
-  <tbody>
-    <tr>
-      <td> <img
-        border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
-      </td>
-      <td><p align="right"><a href="infoTypes.html.es"><img alt="anterior"
-        border="0" src="../../../resources/icons/misc/left.png" /></a> <a
-        href="../HTML.html.es"><img alt="superior" border="0"
-        src="../../../resources/icons/misc/up.png" /></a> <a href="headings.html.es"><img
-        alt="siguiente" border="0" src="../../../resources/icons/misc/right.png" /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
+
+<p class="nav"><a href="infoTypes.html.es"><img alt="anterior" border="0"
+src="../../../resources/icons/misc/left.png" /></a> <a
+href="../HTML.html.es"><img alt="superior" border="0"
+src="../../../resources/icons/misc/up.png" /></a> <a
+href="headings.html.es"><img alt="siguiente" border="0"
+src="../../../resources/icons/misc/right.png" /></a></p>
+</div>
 
 <div id="page_body">
 <h1>Estructura de un documento HTML</h1>

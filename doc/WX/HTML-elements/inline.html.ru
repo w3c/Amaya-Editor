@@ -5,8 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <title>Встроенная маркировка</title>
-  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <style type="text/css">
   </style>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -14,21 +13,16 @@
 
 <body xml:lang="ru" lang="ru">
 
-<table border="0" width="100%" summary="toc">
-  <tbody>
-    <tr>
-      <td> <img
-        border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
-      </td>
-      <td><p align="right"><a href="address.html.ru"><img alt="Предыдущий"
-        border="0" src="../../../resources/icons/misc/left.png" /></a> <a
-        href="../HTML.html.ru"><img alt="Вверх" border="0"
-        src="../../../resources/icons/misc/up.png" /></a> <a href="40styling.html.ru"><img
-        alt="Следующий" border="0" src="../../../resources/icons/misc/right.png" /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
+
+<p class="nav"><a href="address.html.ru"><img alt="Предыдущий" border="0"
+src="../../../resources/icons/misc/left.png" /></a> <a
+href="../HTML.html.ru"><img alt="Вверх" border="0"
+src="../../../resources/icons/misc/up.png" /></a> <a
+href="40styling.html.ru"><img alt="Следующий" border="0"
+src="../../../resources/icons/misc/right.png" /></a></p>
+</div>
 
 <div id="page_body">
 <h1>Встроенная маркировка</h1>
@@ -143,24 +137,25 @@ href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ins"><code>ins</code
 </ol>
 
 <p>Оба типа акцентирования могут быть применены из панели инструментов с
-помощью кнопок <img src="../../../resources/icons/22x22/XHTML_I.png" alt="Акцент" /> и <img
-src="../../../resources/icons/22x22/XHTML_B.png" alt="Строгий" /> , или в подменю
-<strong>Информационный тип</strong> из меню <strong>XHTML</strong>.
-Существуют стандартные комбинации кнопок - <kbd>Ctrl i Ctrl e</kbd> для ввода
-обычного акцентирования (потому что комбинация кнопок используемая по
-умолчанию часто выделяет текст) и <kbd>Ctrl i Ctrl s</kbd> для строгого
-акцентирования (потому что комбинация кнопок используемая по умолчанию
-выделяет как полужирный текст). Если что то выбрано, то акцентирование
-применяется именно к нему, в противном случае, соответствующий элемент
-создаётся как потомок текущего элемента.</p>
+помощью кнопок <img src="../../../resources/icons/22x22/XHTML_I.png"
+alt="Акцент" /> и <img src="../../../resources/icons/22x22/XHTML_B.png"
+alt="Строгий" /> , или в подменю <strong>Информационный тип</strong> из меню
+<strong>XHTML</strong>. Существуют стандартные комбинации кнопок - <kbd>Ctrl
+i Ctrl e</kbd> для ввода обычного акцентирования (потому что комбинация
+кнопок используемая по умолчанию часто выделяет текст) и <kbd>Ctrl i Ctrl
+s</kbd> для строгого акцентирования (потому что комбинация кнопок
+используемая по умолчанию выделяет как полужирный текст). Если что то
+выбрано, то акцентирование применяется именно к нему, в противном случае,
+соответствующий элемент создаётся как потомок текущего элемента.</p>
 
 <p>В Amaya элементы акцентирования переключаемы - для удаления
 акцентирования, выбирают элемент и повторно применяют к нему другое, нужное
 акцентирование. Для примера, поместите курсор где-нибудь в элементе
 <code>STRONG</code>, используйте кнопки <kbd>F2</kbd> (Windows) или
 <kbd>Escape</kbd> (Unix) для выбора элемента, и затем используйте комбинации
-кнопок, пункт меню, или кнопку <img src="../../../resources/icons/22x22/XHTML_B.png"
-alt="Строгий" /> - для удаления элемента <code>STRONG</code>.</p>
+кнопок, пункт меню, или кнопку <img
+src="../../../resources/icons/22x22/XHTML_B.png" alt="Строгий" /> - для
+удаления элемента <code>STRONG</code>.</p>
 
 <p><a href="../StyleSheets.html.ru">Таблица стилей</a> может использоваться
 для изменения представления обоих типов акцентирования.</p>

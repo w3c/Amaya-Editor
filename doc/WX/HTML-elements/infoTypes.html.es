@@ -3,28 +3,22 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Tipos de información en HTML</title>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="es" lang="es">
 
-<table border="0" width="100%" summary="toc">
-  <tbody>
-    <tr>
-      <td> <img
-        border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
-      </td>
-      <td><p align="right"><a href="../HTML.html.es"><img alt="superior"
-        border="0" src="../../../resources/icons/misc/up.png" /></a> <a
-        href="structure.html.es"><img alt="siguiente" border="0"
-        src="../../../resources/icons/misc/right.png" /></a></p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div>
+<img border="0" alt="Amaya" src="../../../resources/icons/22x22/logo.png" />
+
+<p class="nav"><a href="../HTML.html.es"><img alt="superior" border="0"
+src="../../../resources/icons/misc/up.png" /></a> <a
+href="structure.html.es"><img alt="siguiente" border="0"
+src="../../../resources/icons/misc/right.png" /></a></p>
+</div>
 
 <div id="page_body">
 <h1>Tipos de información en HTML</h1>
@@ -73,8 +67,9 @@ información que se pueden representar por elementos HTML son:</p>
     <dd>Existen elementos para identificar abreviaturas y acrónimos.</dd>
   <dt><a href="inline.html.es#Inline2">Añadidos y eliminaciones</a></dt>
     <dd>Existen elementos para marcar el texto que ha sido insertado, o que
-      será eliminado. <ins>(Estos elementos resultan útiles para la edición</ins>
-<del>sub-edición</del> <ins>entre varias personas)</ins></dd>
+      será eliminado. <ins>(Estos elementos resultan útiles para la
+      edición</ins> <del>sub-edición</del> <ins>entre varias
+    personas)</ins></dd>
   <dt><a href="inline.html.es#Emphasis">Énfasis</a></dt>
     <dd>En HTML existen dos niveles de énfasis: <em>énfasis normal</em> y
       <strong>énfasis fuerte</strong>.</dd>
