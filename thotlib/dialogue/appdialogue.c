@@ -47,7 +47,9 @@
 
 #include "applicationapi_f.h"
 #include "inites_f.h"
+#ifndef _WINDOWS 
 #include "LiteClue_f.h"
+#endif /* _WINDOWS */
 
 extern boolean      WithMessages;	/* partage avec le module dialog.c */
 extern Pixmap       image;

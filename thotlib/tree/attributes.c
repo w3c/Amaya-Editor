@@ -58,6 +58,7 @@
 #include "presvariables_f.h"
 #include "applicationapi_f.h"
 #include "frame_f.h"
+#include "attributes_f.h"
 
 /*----------------------------------------------------------------------
    SetAttrReference fait pointer l'attribut reference pAttr sur    
