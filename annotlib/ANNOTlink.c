@@ -703,8 +703,10 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
   DisplayMode dispMode;
   /* counts the number of orphan annotations in the document */
   int orphan_count = 0;
+#ifdef ANNOT_ON_ANNOT
   Document doc_thread;
   AnnotThreadList *thread;
+#endif /* ANNOT_ON_ANNOT */
 
   if (!annotIndex || !(TtaFileExist (annotIndex)))
     /* there are no annotations */

@@ -746,6 +746,8 @@ Document ANNOT_GetThreadDoc (Document thread_doc)
       TtaFreeMemory (url);
     }
   return doc_annot;
+#else
+  return 0;
 #endif
 }
 
@@ -809,8 +811,10 @@ void  ANNOT_InitDocumentStructure (Document doc, Document docAnnot,
 {
   char *source_doc_title;
   char *text;
+#ifdef ANNOT_ON_ANNOT
   Element el;
   ElementType elType;
+#endif /* ANNOT_ON_ANNOT */
 
   /* avoid refreshing the document while we're constructing it */
   TtaSetDisplayMode (docAnnot, NoComputedDisplay);
