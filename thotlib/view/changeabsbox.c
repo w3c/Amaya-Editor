@@ -5943,12 +5943,14 @@ PtrAttribute        pAttrComp;
 	       }
 
 	     /* passe a la premiere regle de presentation suivante d'un
-		type different */
+		type different sauf s'il s'agit d'une regle conditionnelle */
 	     pR = firstOfType;
              while (pR != NULL &&
-		    pR->PrType == firstOfType->PrType &&
+		    pR->PrType == firstOfType->PrType && pR->PrCond == firstOfType->PrCond &&
 		    (pR->PrType != PtFunction || pR->PrPresFunction == TFonct))
-	        pR = pR->PrNextPRule;
+	       {
+		 pR = pR->PrNextPRule;
+	       }
 	     firstOfType = pR;
 	  }
 	/* on traite les schemas de presentation de moindre priorite' */
