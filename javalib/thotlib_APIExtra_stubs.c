@@ -27,8 +27,8 @@ thotlib_Extra_TtaRemoveSchemaExtension(struct Hthotlib_Extra* none,
  * The C Callback interface.
  */
 void
-thotlib_Extra_Java2CCallback(struct Hthotlib_Extra* none, jlong callback,
-                             struct Hjava_lang_Object* arg)
+thotlib_Extra_Java2CCallback(struct Hthotlib_Extra* none,
+                             struct Hjava_lang_Object* arg, jlong callback)
 {
     Java2CCallback callback_func = (Java2CCallback)((void *) callback);
 

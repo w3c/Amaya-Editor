@@ -80,6 +80,7 @@ char               *outputfile;
 
     request = CreateHTTPRequest();
 
+    if (doc == 0) doc = 1;
     unhand(request)->doc = doc;
     unhand(request)->urlName = urlName;
     unhand(request)->filename = filename;
@@ -252,6 +253,7 @@ boolean             error_html;
     JavaThotlibRelease();
     switch (mode) {
         case AMAYA_SYNC:
+	    unhand(request)->callback = (jlong) 0;
 	    do_execute_java_method(0, (void *) request, "Get", "(I)I",
 	                           0, 0, flag);
 	    break;
