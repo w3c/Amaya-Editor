@@ -4560,49 +4560,49 @@ STRING              prefix;
 #define MAX_ENTITY_LENGTH 80
    CHAR_T	 buffer[MAX_ENTITY_LENGTH];
 
-   if (lang == currentLanguage) 
-      PutInBuffer ((char)c);
+   if (ReadingAnAttrValue)
+     /* this entity belongs to an attribute value */
+     {
+       /* Thot can't mix different languages in the same attribute value */
+       /* just discard that character */
+       ;
+     }
    else
-      {
-      if (ReadingAnAttrValue)
-	 /* this entity belongs to an attribute value */
-	 {
-	 /* Thot can't mix different languages in the same attribute value */
-	 /* just discard that character */
-	 ;
-	 }
-      else
-	 /* this entity belongs to the element contents */
-	 {
-	 TextToDocument ();
-	 MergeText = FALSE;
-	 l = currentLanguage;
-	 currentLanguage = lang;
-	 elType.ElSSchema = DocumentSSchema;
-	 elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	 elText = TtaNewElement (theDocument, elType);
-	 TtaSetElementLineNumber (elText, NumberOfLinesRead);
-	 InsertElement (&elText);
-	 lastElementClosed = TRUE;
-	 GetFallbackCharacter (code, buffer, &lang);
-	 TtaSetTextContent (elText, buffer, lang, theDocument);
-	 TtaSetAccessRight (elText, ReadOnly, theDocument);
-	 attrType.AttrSSchema = DocumentSSchema;
-	 attrType.AttrTypeNum = HTML_ATTR_EntityName;
-	 attr = TtaNewAttribute (attrType);
-	 TtaAttachAttribute (elText, attr, theDocument);
-	 len = ustrlen (EntityName);
-	 if (len > MAX_ENTITY_LENGTH -5)
-	     EntityName[MAX_ENTITY_LENGTH -5] = WC_EOS;
-	 buffer[0] = '&';
-         ustrcpy (&buffer[1], prefix);
-	 ustrcat (buffer, EntityName);
-	 ustrcat (buffer, TEXT(";"));
-	 TtaSetAttributeText (attr, buffer, elText, theDocument);
-	 MergeText = FALSE;
-	 currentLanguage = l;
-	 }
-      }
+     /* this entity belongs to the element contents */
+     {
+       /* put the current content of the input buffer into the document */
+       TextToDocument ();
+       MergeText = FALSE;
+       /* create a new text leaf */
+       elType.ElSSchema = DocumentSSchema;
+       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+       elText = TtaNewElement (theDocument, elType);
+       TtaSetElementLineNumber (elText, NumberOfLinesRead);
+       InsertElement (&elText);
+       lastElementClosed = TRUE;
+       /* try to find a fallback character */
+       l = currentLanguage;
+       GetFallbackCharacter (code, buffer, &lang);
+       /* put that fallback character in the new text leaf */
+       TtaSetTextContent (elText, buffer, lang, theDocument);
+       currentLanguage = l;
+       /* make that text leaf read-only */
+       TtaSetAccessRight (elText, ReadOnly, theDocument);
+       /* associate an attribute EntityName with the new text leaf */
+       attrType.AttrSSchema = DocumentSSchema;
+       attrType.AttrTypeNum = HTML_ATTR_EntityName;
+       attr = TtaNewAttribute (attrType);
+       TtaAttachAttribute (elText, attr, theDocument);
+       len = ustrlen (EntityName);
+       if (len > MAX_ENTITY_LENGTH -5)
+	 EntityName[MAX_ENTITY_LENGTH -5] = WC_EOS;
+       buffer[0] = '&';
+       ustrcpy (&buffer[1], prefix);
+       ustrcat (buffer, EntityName);
+       ustrcat (buffer, TEXT(";"));
+       TtaSetAttributeText (attr, buffer, elText, theDocument);
+       MergeText = FALSE;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -4691,7 +4691,7 @@ unsigned char       c;
 {
    int                 i;
    CHAR_T              msgBuffer[MaxMsgLength];
-   ThotBool	           OK, done, stop;
+   ThotBool	       OK, done, stop;
 
    done = FALSE;
    if (CharEntityTable[EntityTableEntry].charName[CharRank] == EOS)
