@@ -1374,6 +1374,10 @@ View                view;
        TtaExtractName (tempdocument, tempdir, documentname);
        StartParser (htmlDoc, tempdocument, documentname, tempdir, tempdocument,
 		    FALSE);
+       /* fetch and display all images referred by the document */
+       DocNetworkStatus[htmlDoc] = AMAYA_NET_ACTIVE;
+       FetchAndDisplayImages (htmlDoc, AMAYA_LOAD_IMAGE);
+       DocNetworkStatus[htmlDoc] = AMAYA_NET_INACTIVE;
        /* the source document is now up to date */
        TtaSetDocumentUnmodified (document);
        /* but the document can be saved */
