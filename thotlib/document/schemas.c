@@ -668,7 +668,7 @@ void UnlinkAllSchemasExtens (PtrElement pEl)
   if (pEl->ElFirstSchDescr)
     {
       pPfS = pEl->ElFirstSchDescr;
-      if (pEl->ElParent && pEl->ElParent->ElFirstSchDescr == pPfS)
+      if (pEl->ElParent == NULL  || pEl->ElParent->ElFirstSchDescr == pPfS)
 	/* don't remove schema extensions linked by enclosing elements */
 	pPfS = NULL;
       /* remove the link in the whole hierarchy */

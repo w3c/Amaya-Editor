@@ -781,6 +781,7 @@ void FreeElement (PtrElement pEl)
        while (pPa);
      }
    pEl->ElStructSchema = NULL;
+   pEl->ElFirstSchDescr = NULL;
 #ifdef DEBUG_MEMORY
    TtaFreeMemory (pEl);
 #else

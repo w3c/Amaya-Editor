@@ -3214,8 +3214,10 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			  else
 			    pViewSel->VsXPos = xDelta;
 			  pViewSelEnd->VsXPos = pViewSel->VsXPos + 2;
-			  pViewSel->VsIndBox = 0;
-			  pViewSelEnd->VsIndBox = 0;
+			  pViewSel->VsIndBox = previousInd + 1;
+			  pViewSelEnd->VsIndBox = previousInd + 1;
+			  pViewSel->VsBuffer = pBuffer;
+			  pViewSelEnd->VsBuffer = pBuffer;
 			  pViewSel->VsNSpaces = 0;
 			  pViewSelEnd->VsNSpaces = 0;
 			}
