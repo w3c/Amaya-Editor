@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA  1996-2002
+ *  (c) COPYRIGHT INRIA  1996-2003
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -121,184 +121,183 @@ static void WriteUnit (TypeUnit unit)
   ----------------------------------------------------------------------*/
 void                WritePRuleType (PRuleType ruleType)
 {
-   switch (ruleType)
-	 {
-	    case PtVisibility:
-	       TtaWriteByte (outfile, C_PR_VISIBILITY);
-	       break;
-	    case PtFunction:
-	       TtaWriteByte (outfile, C_PR_FUNCTION);
-	       break;
-	    case PtHorizOverflow:
-	       TtaWriteByte (outfile, C_PR_HORIZOVERFLOW);
-	       break;
-	    case PtVertOverflow:
-	       TtaWriteByte (outfile, C_PR_VERTOVERFLOW);
-	       break;
-	    case PtVertRef:
-	       TtaWriteByte (outfile, C_PR_VREF);
-	       break;
-	    case PtHorizRef:
-	       TtaWriteByte (outfile, C_PR_HREF);
-	       break;
-	    case PtHeight:
-	       TtaWriteByte (outfile, C_PR_HEIGHT);
-	       break;
-	    case PtWidth:
-	       TtaWriteByte (outfile, C_PR_WIDTH);
-	       break;
-	    case PtVertPos:
-	       TtaWriteByte (outfile, C_PR_VPOS);
-	       break;
-	    case PtHorizPos:
-	       TtaWriteByte (outfile, C_PR_HPOS);
-	       break;
-            case PtMarginTop:
-               TtaWriteByte (outfile, C_PR_MARGINTOP);
-               break;
-            case PtMarginRight:
-               TtaWriteByte (outfile, C_PR_MARGINRIGHT);
-               break;
-            case PtMarginBottom:
-               TtaWriteByte (outfile, C_PR_MARGINBOTTOM);
-               break;
-            case PtMarginLeft:
-               TtaWriteByte (outfile, C_PR_MARGINLEFT);
-               break;
-            case PtPaddingTop:
-               TtaWriteByte (outfile, C_PR_PADDINGTOP);
-               break;
-            case PtPaddingRight:
-               TtaWriteByte (outfile, C_PR_PADDINGRIGHT);
-               break;
-            case PtPaddingBottom:
-               TtaWriteByte (outfile, C_PR_PADDINGBOTTOM);
-               break;
-            case PtPaddingLeft:
-               TtaWriteByte (outfile, C_PR_PADDINGLEFT);
-               break;
-            case PtBorderTopWidth:
-               TtaWriteByte (outfile, C_PR_BORDERTOPWIDTH);
-               break;
-            case PtBorderRightWidth:
-               TtaWriteByte (outfile, C_PR_BORDERRIGHTWIDTH);
-               break;
-            case PtBorderBottomWidth:
-               TtaWriteByte (outfile, C_PR_BORDERBOTTOMWIDTH);
-               break;
-            case PtBorderLeftWidth:
-               TtaWriteByte (outfile, C_PR_BORDERLEFTWIDTH);
-               break;
-            case PtBorderTopColor:
-               TtaWriteByte (outfile, C_PR_BORDERTOPCOLOR);
-               break;
-            case PtBorderRightColor:
-               TtaWriteByte (outfile, C_PR_BORDERRIGHTCOLOR);
-               break;
-            case PtBorderBottomColor:
-               TtaWriteByte (outfile, C_PR_BORDERBOTTOMCOLOR);
-               break;
-            case PtBorderLeftColor:
-               TtaWriteByte (outfile, C_PR_BORDERLEFTCOLOR);
-               break;
-            case PtBorderTopStyle:
-               TtaWriteByte (outfile, C_PR_BORDERTOPSTYLE);
-               break;
-            case PtBorderRightStyle:
-               TtaWriteByte (outfile, C_PR_BORDERRIGHTSTYLE);
-               break;
-            case PtBorderBottomStyle:
-               TtaWriteByte (outfile, C_PR_BORDERBOTTOMSTYLE);
-               break;
-            case PtBorderLeftStyle:
-               TtaWriteByte (outfile, C_PR_BORDERLEFTSTYLE);
-               break;
-	    case PtSize:
-	       TtaWriteByte (outfile, C_PR_SIZE);
-	       break;
-	    case PtStyle:
-	       TtaWriteByte (outfile, C_PR_STYLE);
-	       break;
-	    case PtWeight:
-	       TtaWriteByte (outfile, C_PR_WEIGHT);
-	       break;
-	    case PtFont:
-	       TtaWriteByte (outfile, C_PR_FONT);
-	       break;
-	    case PtUnderline:
-	       TtaWriteByte (outfile, C_PR_UNDERLINE);
-	       break;
-	    case PtThickness:
-	       TtaWriteByte (outfile, C_PR_UNDER_THICK);
-	       break;
-	    case PtIndent:
-	       TtaWriteByte (outfile, C_PR_INDENT);
-	       break;
-	    case PtLineSpacing:
-	       TtaWriteByte (outfile, C_PR_LINESPACING);
-	       break;
-	    case PtDepth:
-	       TtaWriteByte (outfile, C_PR_DEPTH);
-	       break;
-	    case PtAdjust:
-	       TtaWriteByte (outfile, C_PR_ADJUST);
-	       break;
-	    case PtDirection:
-	       TtaWriteByte (outfile, C_PR_DIRECTION);
-	       break;
-	    case PtUnicodeBidi:
-	       TtaWriteByte (outfile, C_PR_UNICODEBIDI);
-	       break;
-	    case PtLineStyle:
-	       TtaWriteByte (outfile, C_PR_LINESTYLE);
-	       break;
-	    case PtLineWeight:
-	       TtaWriteByte (outfile, C_PR_LINEWEIGHT);
-	       break;
-	    case PtFillPattern:
-	       TtaWriteByte (outfile, C_PR_FILLPATTERN);
-	       break;
-	    case PtOpacity:
-	       TtaWriteByte (outfile, C_PR_OPACITY);
-	       break;
-	 case PtStrokeOpacity:
-	       TtaWriteByte (outfile, C_PR_STROKE_OPACITY);
-	       break;
-	 case PtFillOpacity:
-	       TtaWriteByte (outfile, C_PR_FILL_OPACITY);
-	       break;
-	    case PtBackground:
-	       TtaWriteByte (outfile, C_PR_BACKGROUND);
-	       break;
-	    case PtForeground:
-	       TtaWriteByte (outfile, C_PR_FOREGROUND);
-	       break;
-	    case PtHyphenate:
-	       TtaWriteByte (outfile, C_PR_HYPHENATE);
-	       break;
-	    case PtPageBreak:
-	       TtaWriteByte (outfile, C_PR_PAGEBREAK);
-	       break;
-	    case PtLineBreak:
-	       TtaWriteByte (outfile, C_PR_LINEBREAK);
-	       break;
-	    case PtGather:
-	       TtaWriteByte (outfile, C_PR_GATHER);
-	       break;
-
-	    case PtDisplay:
-	       TtaWriteByte (outfile, C_PR_DISPLAY);
-	       break;
-	    case PtBreak1:
-	       TtaWriteByte (outfile, C_PR_BREAK1);
-	       break;
-	    case PtBreak2:
-	       TtaWriteByte (outfile, C_PR_BREAK2);
-	       break;
-	    default:
-	       fprintf (stderr, "Invalid rule type %X\n", (int)ruleType);
-	       break;
-	 }
+  switch (ruleType)
+    {
+    case PtVisibility:
+      TtaWriteByte (outfile, C_PR_VISIBILITY);
+      break;
+    case PtFunction:
+      TtaWriteByte (outfile, C_PR_FUNCTION);
+      break;
+    case PtHorizOverflow:
+      TtaWriteByte (outfile, C_PR_HORIZOVERFLOW);
+      break;
+    case PtVertOverflow:
+      TtaWriteByte (outfile, C_PR_VERTOVERFLOW);
+      break;
+    case PtVertRef:
+      TtaWriteByte (outfile, C_PR_VREF);
+      break;
+    case PtHorizRef:
+      TtaWriteByte (outfile, C_PR_HREF);
+      break;
+    case PtHeight:
+      TtaWriteByte (outfile, C_PR_HEIGHT);
+      break;
+    case PtWidth:
+      TtaWriteByte (outfile, C_PR_WIDTH);
+      break;
+    case PtVertPos:
+      TtaWriteByte (outfile, C_PR_VPOS);
+      break;
+    case PtHorizPos:
+      TtaWriteByte (outfile, C_PR_HPOS);
+      break;
+    case PtMarginTop:
+      TtaWriteByte (outfile, C_PR_MARGINTOP);
+      break;
+    case PtMarginRight:
+      TtaWriteByte (outfile, C_PR_MARGINRIGHT);
+      break;
+    case PtMarginBottom:
+      TtaWriteByte (outfile, C_PR_MARGINBOTTOM);
+      break;
+    case PtMarginLeft:
+      TtaWriteByte (outfile, C_PR_MARGINLEFT);
+      break;
+    case PtPaddingTop:
+      TtaWriteByte (outfile, C_PR_PADDINGTOP);
+      break;
+    case PtPaddingRight:
+      TtaWriteByte (outfile, C_PR_PADDINGRIGHT);
+      break;
+    case PtPaddingBottom:
+      TtaWriteByte (outfile, C_PR_PADDINGBOTTOM);
+      break;
+    case PtPaddingLeft:
+      TtaWriteByte (outfile, C_PR_PADDINGLEFT);
+      break;
+    case PtBorderTopWidth:
+      TtaWriteByte (outfile, C_PR_BORDERTOPWIDTH);
+      break;
+    case PtBorderRightWidth:
+      TtaWriteByte (outfile, C_PR_BORDERRIGHTWIDTH);
+      break;
+    case PtBorderBottomWidth:
+      TtaWriteByte (outfile, C_PR_BORDERBOTTOMWIDTH);
+      break;
+    case PtBorderLeftWidth:
+      TtaWriteByte (outfile, C_PR_BORDERLEFTWIDTH);
+      break;
+    case PtBorderTopColor:
+      TtaWriteByte (outfile, C_PR_BORDERTOPCOLOR);
+      break;
+    case PtBorderRightColor:
+      TtaWriteByte (outfile, C_PR_BORDERRIGHTCOLOR);
+      break;
+    case PtBorderBottomColor:
+      TtaWriteByte (outfile, C_PR_BORDERBOTTOMCOLOR);
+      break;
+    case PtBorderLeftColor:
+      TtaWriteByte (outfile, C_PR_BORDERLEFTCOLOR);
+      break;
+    case PtBorderTopStyle:
+      TtaWriteByte (outfile, C_PR_BORDERTOPSTYLE);
+      break;
+    case PtBorderRightStyle:
+      TtaWriteByte (outfile, C_PR_BORDERRIGHTSTYLE);
+      break;
+    case PtBorderBottomStyle:
+      TtaWriteByte (outfile, C_PR_BORDERBOTTOMSTYLE);
+      break;
+    case PtBorderLeftStyle:
+      TtaWriteByte (outfile, C_PR_BORDERLEFTSTYLE);
+      break;
+    case PtSize:
+      TtaWriteByte (outfile, C_PR_SIZE);
+      break;
+    case PtStyle:
+      TtaWriteByte (outfile, C_PR_STYLE);
+      break;
+    case PtWeight:
+      TtaWriteByte (outfile, C_PR_WEIGHT);
+      break;
+    case PtFont:
+      TtaWriteByte (outfile, C_PR_FONT);
+      break;
+    case PtUnderline:
+      TtaWriteByte (outfile, C_PR_UNDERLINE);
+      break;
+    case PtThickness:
+      TtaWriteByte (outfile, C_PR_UNDER_THICK);
+      break;
+    case PtIndent:
+      TtaWriteByte (outfile, C_PR_INDENT);
+      break;
+    case PtLineSpacing:
+      TtaWriteByte (outfile, C_PR_LINESPACING);
+      break;
+    case PtDepth:
+      TtaWriteByte (outfile, C_PR_DEPTH);
+      break;
+    case PtAdjust:
+      TtaWriteByte (outfile, C_PR_ADJUST);
+      break;
+    case PtDirection:
+      TtaWriteByte (outfile, C_PR_DIRECTION);
+      break;
+    case PtUnicodeBidi:
+      TtaWriteByte (outfile, C_PR_UNICODEBIDI);
+      break;
+    case PtLineStyle:
+      TtaWriteByte (outfile, C_PR_LINESTYLE);
+      break;
+    case PtLineWeight:
+      TtaWriteByte (outfile, C_PR_LINEWEIGHT);
+      break;
+    case PtFillPattern:
+      TtaWriteByte (outfile, C_PR_FILLPATTERN);
+      break;
+    case PtOpacity:
+      TtaWriteByte (outfile, C_PR_OPACITY);
+      break;
+    case PtStrokeOpacity:
+      TtaWriteByte (outfile, C_PR_STROKE_OPACITY);
+      break;
+    case PtFillOpacity:
+      TtaWriteByte (outfile, C_PR_FILL_OPACITY);
+      break;
+    case PtBackground:
+      TtaWriteByte (outfile, C_PR_BACKGROUND);
+      break;
+    case PtForeground:
+      TtaWriteByte (outfile, C_PR_FOREGROUND);
+      break;
+    case PtHyphenate:
+      TtaWriteByte (outfile, C_PR_HYPHENATE);
+      break;
+    case PtPageBreak:
+      TtaWriteByte (outfile, C_PR_PAGEBREAK);
+      break;
+    case PtLineBreak:
+      TtaWriteByte (outfile, C_PR_LINEBREAK);
+      break;
+    case PtGather:
+      TtaWriteByte (outfile, C_PR_GATHER);
+      break;
+    case PtDisplay:
+      TtaWriteByte (outfile, C_PR_DISPLAY);
+      break;
+    case PtBreak1:
+      TtaWriteByte (outfile, C_PR_BREAK1);
+      break;
+    case PtBreak2:
+      TtaWriteByte (outfile, C_PR_BREAK2);
+      break;
+    default:
+      fprintf (stderr, "Invalid rule type %X\n", (int)ruleType);
+      break;
+    }
 }
 
 

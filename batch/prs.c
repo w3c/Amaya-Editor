@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996-2002
+ *  (c) COPYRIGHT INRIA 1996-2003
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -356,123 +356,123 @@ static void         CreatePRule (PRuleType t, indLine wi)
    CurRule->PrViewNum = CurView;
    CurRule->PrPresMode = PresImmediate;
    switch (t)
-	 {
-	    case PtVisibility:
-	    case PtDepth:
-	    case PtFillPattern:
-	    case PtBackground:
-	    case PtForeground:
-	    case PtBorderTopColor:
-	    case PtBorderRightColor:
-	    case PtBorderBottomColor:
-	    case PtBorderLeftColor:
-	       CurRule->PrAttrValue = False;
-	       CurRule->PrIntValue = 0;
-	       break;
-	 case PtOpacity:
-	 case PtStrokeOpacity:
-	 case PtFillOpacity:
-	   CurRule->PrAttrValue = False;
-	   CurRule->PrIntValue = 1000;	   
-	    case PtFont:
-	       CurRule->PrChrValue = 'T';	/* Times par defaut */
-	       break;
-	    case PtStyle:
-	       CurRule->PrChrValue = 'R';	/* Romain par defaut */
-	       break;
-	    case PtWeight:
-	       CurRule->PrChrValue = 'N';	/* Normal par defaut */
-	       break;
-	    case PtUnderline:
-	       CurRule->PrChrValue = 'N';	/* Pas de souligne par defaut*/
-	       break;
-	    case PtThickness:
-	       CurRule->PrChrValue = 'N';	/* souligne mince par defaut */
-	       break;
-	    case PtDirection:
-	       CurRule->PrChrValue = 'L';       /* Left to right by default */
-	       break;
-	    case PtUnicodeBidi:
-	       CurRule->PrChrValue = 'N';       /* Normal by default */
-	       break;
-	    case PtLineStyle:
-	    case PtBorderTopStyle:
-	    case PtBorderRightStyle:
-	    case PtBorderBottomStyle:
-	    case PtBorderLeftStyle:
-	       CurRule->PrChrValue = 'S';	/* trait continu par defaut */
-	       break;
-	    case PtBreak1:
-	    case PtBreak2:
-	    case PtIndent:
-	    case PtSize:
-	    case PtLineSpacing:
-	    case PtLineWeight:
-	    case PtMarginTop:
-	    case PtMarginRight:
-	    case PtMarginBottom:
-	    case PtMarginLeft:
-	    case PtPaddingTop:
-	    case PtPaddingRight:
-	    case PtPaddingBottom:
-	    case PtPaddingLeft:
-	    case PtBorderTopWidth:
-	    case PtBorderRightWidth:
-	    case PtBorderBottomWidth:
-	    case PtBorderLeftWidth:
-	       CurRule->PrMinUnit = UnRelative;
-	       CurRule->PrMinAttr = False;
-	       CurRule->PrMinValue = 0;
-	       break;
-	    case PtAdjust:
-	       CurRule->PrAdjust = AlignLeft;
-	       break;
-	    case PtVertRef:
-	    case PtHorizRef:
-	    case PtVertPos:
-	    case PtHorizPos:
-	       CurRule->PrPosRule.PoPosDef = NoEdge;
-	       CurRule->PrPosRule.PoPosRef = NoEdge;
-	       CurRule->PrPosRule.PoDistUnit = UnRelative;
-	       CurRule->PrPosRule.PoDistAttr = False;
-	       CurRule->PrPosRule.PoDistance = 0;
-	       CurRule->PrPosRule.PoRelation = RlSameLevel;
-	       CurRule->PrPosRule.PoNotRel = False;
-	       CurRule->PrPosRule.PoRefKind = RkPresBox;
-	       CurRule->PrPosRule.PoUserSpecified = False;
-	       CurRule->PrPosRule.PoRefIdent = 0;
-	       break;
-	    case PtHeight:
-	    case PtWidth:
-	       CurRule->PrDimRule.DrPosition = False;
-	       CurRule->PrDimRule.DrAbsolute = True;
-	       CurRule->PrDimRule.DrUnit = UnRelative;
-	       CurRule->PrDimRule.DrAttr = False;
-	       CurRule->PrDimRule.DrValue = 0;
-	       CurRule->PrDimRule.DrRelation = RlSameLevel;
-	       CurRule->PrDimRule.DrNotRelat = False;
-	       CurRule->PrDimRule.DrRefKind = RkPresBox;
-	       CurRule->PrDimRule.DrMin = False;
-	       CurRule->PrDimRule.DrUserSpecified = False;
-	       CurRule->PrDimRule.DrRefIdent = 0;
-	       break;
-	    default:
-	       break;
-	 }
+     {
+     case PtVisibility:
+     case PtDepth:
+     case PtFillPattern:
+     case PtBackground:
+     case PtForeground:
+     case PtBorderTopColor:
+     case PtBorderRightColor:
+     case PtBorderBottomColor:
+     case PtBorderLeftColor:
+       CurRule->PrAttrValue = False;
+       CurRule->PrIntValue = 0;
+       break;
+     case PtOpacity:
+     case PtStrokeOpacity:
+     case PtFillOpacity:
+       CurRule->PrAttrValue = False;
+       CurRule->PrIntValue = 1000;	   
+     case PtFont:
+       CurRule->PrChrValue = 'T';	/* Times par defaut */
+       break;
+     case PtStyle:
+       CurRule->PrChrValue = 'R';	/* Romain par defaut */
+       break;
+     case PtWeight:
+       CurRule->PrChrValue = 'N';	/* Normal par defaut */
+       break;
+     case PtUnderline:
+       CurRule->PrChrValue = 'N';	/* Pas de souligne par defaut*/
+       break;
+     case PtThickness:
+       CurRule->PrChrValue = 'N';	/* souligne mince par defaut */
+       break;
+     case PtDirection:
+       CurRule->PrChrValue = 'L';       /* Left to right by default */
+       break;
+     case PtUnicodeBidi:
+       CurRule->PrChrValue = 'N';       /* Normal by default */
+       break;
+     case PtLineStyle:
+     case PtBorderTopStyle:
+     case PtBorderRightStyle:
+     case PtBorderBottomStyle:
+     case PtBorderLeftStyle:
+       CurRule->PrChrValue = 'S';	/* trait continu par defaut */
+       break;
+     case PtBreak1:
+     case PtBreak2:
+     case PtIndent:
+     case PtSize:
+     case PtLineSpacing:
+     case PtLineWeight:
+     case PtMarginTop:
+     case PtMarginRight:
+     case PtMarginBottom:
+     case PtMarginLeft:
+     case PtPaddingTop:
+     case PtPaddingRight:
+     case PtPaddingBottom:
+     case PtPaddingLeft:
+     case PtBorderTopWidth:
+     case PtBorderRightWidth:
+     case PtBorderBottomWidth:
+     case PtBorderLeftWidth:
+       CurRule->PrMinUnit = UnRelative;
+       CurRule->PrMinAttr = False;
+       CurRule->PrMinValue = 0;
+       break;
+     case PtAdjust:
+       CurRule->PrAdjust = AlignLeft;
+       break;
+     case PtVertRef:
+     case PtHorizRef:
+     case PtVertPos:
+     case PtHorizPos:
+       CurRule->PrPosRule.PoPosDef = NoEdge;
+       CurRule->PrPosRule.PoPosRef = NoEdge;
+       CurRule->PrPosRule.PoDistUnit = UnRelative;
+       CurRule->PrPosRule.PoDistAttr = False;
+       CurRule->PrPosRule.PoDistance = 0;
+       CurRule->PrPosRule.PoRelation = RlSameLevel;
+       CurRule->PrPosRule.PoNotRel = False;
+       CurRule->PrPosRule.PoRefKind = RkPresBox;
+       CurRule->PrPosRule.PoUserSpecified = False;
+       CurRule->PrPosRule.PoRefIdent = 0;
+       break;
+     case PtHeight:
+     case PtWidth:
+       CurRule->PrDimRule.DrPosition = False;
+       CurRule->PrDimRule.DrAbsolute = True;
+       CurRule->PrDimRule.DrUnit = UnRelative;
+       CurRule->PrDimRule.DrAttr = False;
+       CurRule->PrDimRule.DrValue = 0;
+       CurRule->PrDimRule.DrRelation = RlSameLevel;
+       CurRule->PrDimRule.DrNotRelat = False;
+       CurRule->PrDimRule.DrRefKind = RkPresBox;
+       CurRule->PrDimRule.DrMin = False;
+       CurRule->PrDimRule.DrUserSpecified = False;
+       CurRule->PrDimRule.DrRefIdent = 0;
+       break;
+     default:
+       break;
+     }
    /* verifie que cette regle n'est pas deja presente pour cette vue */
    pPRuleV = FirstRule;
    while (pPRuleV != NULL && pPRuleV != CurRule)
      {
-      if (pPRuleV->PrViewNum == CurView)
+       if (pPRuleV->PrViewNum == CurView)
 	 if (pPRuleV->PrType == t)
-	    if (t != PtFunction)
-	       /* seules les fonctions peuvent etre en plusieurs exemplaires */
-	       if (CurRule->PrCond == NULL)
-		  /* les regles sans condition ne peuvent pas figurer en
-		     plusieurs exemplaires */
-		  CompilerMessage (wi, PRS, FATAL, RULE_ALREADY_DEFINED,
-				   inputLine, LineNum);
-      pPRuleV = pPRuleV->PrNextPRule;
+	   if (t != PtFunction)
+	     /* seules les fonctions peuvent etre en plusieurs exemplaires */
+	     if (CurRule->PrCond == NULL)
+	       /* les regles sans condition ne peuvent pas figurer en
+		  plusieurs exemplaires */
+	       CompilerMessage (wi, PRS, FATAL, RULE_ALREADY_DEFINED,
+				inputLine, LineNum);
+       pPRuleV = pPRuleV->PrNextPRule;
      }
 }
 
@@ -2181,7 +2181,7 @@ static void         CheckDefaultRules ()
      }
    if (GetTypedRule (PtOpacity, pPSchema->PsFirstDefaultPRule) == NULL)
      /*  pas de regle Opacity par defaut, on en cree une : */
-     /*       Opacity: Enclosing =; */
+     /*  Opacity: 100%; */
      {
 	CreateDefaultRule ();
 	CurRule->PrType = PtOpacity;
@@ -2190,7 +2190,7 @@ static void         CheckDefaultRules ()
      }
    if (GetTypedRule (PtFillOpacity, pPSchema->PsFirstDefaultPRule) == NULL)
      /*  pas de regle Opacity par defaut, on en cree une : */
-     /*       FillOpacity: Enclosing =; */
+     /*  FillOpacity: Enclosing =; */
      {
 	CreateDefaultRule ();
 	CurRule->PrType = PtFillOpacity;
@@ -2198,7 +2198,7 @@ static void         CheckDefaultRules ()
      }
    if (GetTypedRule (PtStrokeOpacity, pPSchema->PsFirstDefaultPRule) == NULL)
      /*  pas de regle Opacity par defaut, on en cree une : */
-     /*       StrokeOpacity: Enclosing =; */
+     /*  StrokeOpacity: Enclosing =; */
      {
 	CreateDefaultRule ();
 	CurRule->PrType = PtStrokeOpacity;
@@ -3171,6 +3171,15 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	    CurRule->PrIntValue = -1;   /* -1 means Foreground color */
 	  }
 	break;
+      case KWD_Opacity:
+	CreatePRule (PtOpacity, wi);
+	break;
+      case KWD_FillOpacity:
+	CreatePRule (PtFillOpacity, wi);
+	break;
+      case KWD_StrokeOpacity:
+	CreatePRule (PtStrokeOpacity, wi);
+	break;
       case KWD_ShowBox:
 	LayoutRule (FnShowBox, wi);
 	break;
@@ -4053,7 +4062,8 @@ static void         IntAttribute (int attr, SyntacticCode prevRule, indLine wi)
 	    /* prevRule = number of the rule where the attribute name appears*/
 	    {
 	       case RULE_NbInherit:
-		  /* Integer */
+	       case RULE_OpacityInherit:
+		  /* Integer or OpacityInherit */
 		  CurRule->PrIntValue = attr;
 		  CurRule->PrAttrValue = True;
 		  break;
@@ -5287,6 +5297,19 @@ static void ProcessInteger (SyntacticCode gCode, indLine wl, indLine wi)
       /* Integer */
       CurRule->PrIntValue = n;
       CurRule->PrAttrValue = False;
+      break;
+    case RULE_OpPercent:
+      /* OpPercent */
+      /* opacity values in the source P file are in percent, while the
+	 internal values are in permil */
+      if (n < 0 || n > 100)
+	CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
+			 LineNum);   /**** should be INVALID_OPACITY_VALUE ***/
+      else
+	{
+	  CurRule->PrIntValue = n * 10;
+	  CurRule->PrAttrValue = False;
+	}
       break;
     case RULE_Size:
       /* Size */

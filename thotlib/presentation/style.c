@@ -1392,17 +1392,13 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     case PtBorderRightColor:
     case PtBorderBottomColor:
     case PtBorderLeftColor:
-      rule->PrPresMode = PresImmediate;
-      rule->PrAttrValue = 0;
-      rule->PrIntValue = value;
-      break;
     case PtStrokeOpacity:
     case PtFillOpacity:
     case PtOpacity:
       rule->PrPresMode = PresImmediate;
-      rule->PrAttrValue = 0;
+      rule->PrAttrValue = FALSE;
       rule->PrIntValue = value;
-      break; 
+      break;
     case PtFont:
       rule->PrPresMode = PresImmediate;
       switch (value)

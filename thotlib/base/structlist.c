@@ -250,13 +250,13 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
       fprintf (fileDescriptor, "FillPattern");
       break;
     case PtOpacity:
-      fprintf (fileDescriptor, "PtOpacity");
+      fprintf (fileDescriptor, "Opacity");
       break;
     case PtFillOpacity:
-      fprintf (fileDescriptor, "PtFillOpacity");
+      fprintf (fileDescriptor, "FillOpacity");
       break;
     case PtStrokeOpacity:
-      fprintf (fileDescriptor, "PtStrokeOpacity");
+      fprintf (fileDescriptor, "StrokeOpacity");
       break;
     case PtBackground:
       fprintf (fileDescriptor, "Background");
@@ -1231,9 +1231,9 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
-	fprintf (fileDescriptor, " Opacity:%d", pAb->AbOpacity);
-	fprintf (fileDescriptor, " fill-opacity:%d", pAb->AbFillOpacity);
-	fprintf (fileDescriptor, " stroke-opacity:%d", pAb->AbStrokeOpacity);
+	fprintf (fileDescriptor, "Opacity:%d", pAb->AbOpacity);
+	fprintf (fileDescriptor, " FillOpacity:%d", pAb->AbFillOpacity);
+	fprintf (fileDescriptor, " StrokeOpacity:%d", pAb->AbStrokeOpacity);
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)

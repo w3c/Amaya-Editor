@@ -131,6 +131,9 @@ Rule4 =		  'LineStyle' ':' LineStyleInherit /
 		  'FillPattern' ':' NameInherit /
 		  'Background' ':' Color /
 		  'Foreground' ':' Color /
+                  'Opacity' ':' OpacityInherit /
+                  'FillOpacity' ':' OpacityInherit /
+                  'StrokeOpacity' ':' OpacityInherit /
 		  'ShowBox' /
 		  'BackgroundPicture' ':' FileName /
 		  'PictureMode' ':' PictMode .
@@ -244,6 +247,9 @@ minimum =	  NUMBER .
 NbInherit =	  Integer / AttrName / Inheritage .
 Integer =	  NUMBER .
 Boolean =	  'Yes' / 'No' .
+
+OpacityInherit =  OpPercent '%' / AttrName / Inheritage .
+OpPercent =       NUMBER .
 
 DistInherit =	  Link InheritDist / Distance .
 InheritDist =	  '=' / '+' AbsDist / '-' AbsDist .

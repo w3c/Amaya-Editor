@@ -15,9 +15,9 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of October 21, 2002</h4>
+<h4>Version of Febuary 15, 2003</h4>
 
-<p>© 1996-2002 INRIA</p>
+<p>© 1996-2003 INRIA</p>
 <hr />
 </div>
 
@@ -4065,6 +4065,9 @@ rules are terminated by a semicolon.</p>
                 'FillPattern' ':'   NameInherit /
                 'Background' ':'    NameInherit /
                 'Foreground' ':'    NameInherit /
+                'Opacity' ':'       OpacityInherit /
+                'FillOpacity' ':'   OpacityInherit /
+                'StrokeOpacity' ':' OpacityInherit /
                 'Content' ':'       VarConst .
      PresFunc = Creation '(' BoxID ')' /
                 'Line' /
@@ -5542,6 +5545,19 @@ same element. This rule may take one of the following values:</p>
 <p>The <tt>BackgroundPicture</tt> and <tt>PictureMode</tt> rules apply only
 to the element with which they are associated. They are not inherited nor
 transmitted to children elements.</p>
+</div>
+
+<div class="subsection">
+<h3><a name="sectc4230c" id="sectc4230c">Opacity</a></h3>
+
+<p>To be written @@@@ </p>
+
+<pre>                  'Opacity' ':' OpacityInherit /
+                  'FillOpacity' ':' OpacityInherit /
+                  'StrokeOpacity' ':' OpacityInherit /
+OpacityInherit  = OpPercent '%' / AttrID / Inheritance .
+OpPercent       = NUMBER .</pre>
+
 </div>
 
 <div class="subsection">
@@ -8054,6 +8070,9 @@ Property        = 'VertRef' ':' HorizPosition /
                   'FillPattern' ':' NameInherit /
                   'Background' ':' Color /
                   'Foreground' ':' Color /
+                  'Opacity' ':' OpacityInherit /
+                  'FillOpacity' ':' OpacityInherit /
+                  'StrokeOpacity' ':' OpacityInherit /
                   'Content' ':' VarConst .
 PresFunc        = Creation '(' BoxID ')' /
                   'Line' /
@@ -8175,6 +8194,8 @@ PercentSize     = NUMBER .
 NameInherit     = Kinship '=' / FontName .
 FontName        = NAME .
 Color           = 'Transparent' / Kinship '=' / FontName .
+OpacityInherit  = OpPercent '%' / AttrID / Inheritance .
+OpPercent       = NUMBER .
 StyleInherit    = Kinship '=' /
                   'Roman' / 'Italics' / 'Oblique' .
 WeightInherit   = Kinship '=' /
