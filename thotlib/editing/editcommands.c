@@ -351,7 +351,9 @@ static boolean CloseTextInsertionWithControl ()
 
 	     /* Recherche le point d'insertion (&i non utilise) */
 	     GiveInsertPoint (NULL, frame, &pSelBox, &pBuffer, &ind, &i, &j);
-
+	     if (pSelBox ==NULL)
+	       /* plus de selection courante */
+	       return;
 	     /* Est-ce que le buffer d'insertion est vide ? */
 	     if ((pBuffer != NULL) && (ind > 1 || ind > pBuffer->BuLength))
 	       {
