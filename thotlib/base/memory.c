@@ -1983,7 +1983,7 @@ PtrBox FreeBox (PtrBox pBox)
      nextBox = pBox->BxNexChild;
    else
      nextBox = NULL;
-   pBox->BxType == BoComplete;
+   pBox->BxType = BoComplete;
    /* Free remaining relation blocks */
    pPosRel = pBox->BxPosRelations;
    while (pPosRel != NULL)
@@ -2085,6 +2085,7 @@ void FreeLine (PtrLine pLine)
    pLine->LiFirstPiece = NULL;
    pLine->LiLastBox = NULL;
    pLine->LiLastPiece = NULL;
+   pLine->LiNext = NULL;
    NbFree_Line++;
 #endif
    NbUsed_Line--;
