@@ -190,7 +190,6 @@ static ThotBool     RemoveContiguousSpace = FALSE;
 
 /* "Extra" counters for the characters and the lines read */
 static int          extraLineRead = 0;
-static int          extraCharRead = 0;
 static int          extraOffset = 0;
 static int          htmlLineRead = 0;
 static int          htmlCharRead = 0;
@@ -210,12 +209,10 @@ static  int         SUBTREE_ROOT_LEN = 20;
 
 #ifdef __STDC__
 static void   StartOfXmlStartElement (CHAR_T *GIname);
-static void   InsertElement (Element *el);
 static void   XmlInsertElement (Element *el);
 static void   DisableExpatParser ();
 #else
 static void   StartOfXmlStartElement (GIname);
-static void   InsertElement (el);
 static void   XmlInsertElement (el);
 static void   DisableExpatParser ();
 #endif
@@ -676,8 +673,7 @@ CHAR_T     *attrValue,
 static ThotBool  XmlWithinStack (int ThotType,
 				 SSchema ThotSSchema)
 #else
-static ThotBool  XmlWithinStack (ThotType,
-				 ThotSSchema)
+static ThotBool  XmlWithinStack (ThotType, ThotSSchema)
 int       ThotType;
 SSchema	  ThotSSchema;
 
@@ -811,7 +807,7 @@ Document     doc;
 		newEl = TtaNewElement (doc, newElType);
 		XmlSetElemLineNumber (newEl);
 		/* insert the new Pseudo_paragraph element */
-		InsertElement (&newEl);
+		InsertXmlElement (&newEl);
 		if (newEl != NULL)
 		  {
 		    /* insert the Text element in the tree */
@@ -868,7 +864,7 @@ Document     doc;
 	     newElType.ElTypeNum = HTML_EL_Inserted_Text;
 	     newEl = TtaNewElement (doc, newElType);
 	     XmlSetElemLineNumber (newEl);
-	     InsertElement (&newEl);
+	     InsertXmlElement (&newEl);
 	     if (newEl != NULL)
 	       {
 		 TtaInsertFirstChild (el, newEl, doc);
@@ -937,16 +933,15 @@ Element    *el;
        TtaInsertFirstChild (el, XMLcontext.lastElement, XMLcontext.doc);
 }
 
-/*----------------------------------------------------------------------
-   InsertElement   
-   Inserts element el in the abstract tree of the Thot document,
-   at the current position.
-  ----------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------
+   InsertXmlElement   
+   Inserts an element el in the Thot abstract tree , at the current position.
+  ---------------------------------------------------------------------------*/
 #ifdef __STDC__
-static void     InsertElement (Element *el)
+void     InsertXmlElement (Element *el)
 #else
-static void     InsertElement (el)
-Element    *el;
+void     InsertXmlElement (el)
+Element  *el;
 
 #endif
 {
@@ -968,22 +963,19 @@ Element    *el;
    Schema = NULL if not found.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void       GetXmlElType (STRING XMLname,
+static void       GetXmlElType (STRING       XMLname,
 				ElementType *elType,
-				STRING *mappedName,
-				CHAR_T *content,
-				Document doc)
+				STRING      *mappedName,
+				CHAR_T      *content,
+				Document     doc)
 #else
-static void       GetXmlElType (XMLname,
-				elType,
-				mappedName,
-				content,
-				doc)
-STRING           XMLname;
-ElementType     *elType;
-STRING          *mappedName;
-CHAR_T          *content;
-Document         doc;
+static void       GetXmlElType (XMLname, elType, mappedName, content, doc)
+
+STRING         XMLname;
+ElementType   *elType;
+STRING        *mappedName;
+CHAR_T        *content;
+Document       doc;
 #endif
 {
  /* initialize all parser contexts if not done yet */
@@ -1158,13 +1150,13 @@ Element el;
 }
 
 /*----------------------------------------------------------------------
-   CloseElement
-   Terminate corresponding Thot element.
+   XmlCloseElement
+   Terminate the corresponding Thot element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     CloseElement (USTRING mappedName)
+static ThotBool   XmlCloseElement (USTRING mappedName)
 #else
-static ThotBool     CloseElement (mappedName)
+static ThotBool   XmlCloseElement (mappedName)
 USTRING          mappedName;
 #endif
 {
@@ -1174,9 +1166,6 @@ USTRING          mappedName;
    ThotBool            ret, spacesDeleted;
 
    ret = FALSE;
-#ifdef LC2
-   printf ("\nCloseElement %s \n", mappedName);
-#endif /* LC */
 
    if (stackLevel > 0)
      {
@@ -1471,7 +1460,7 @@ CHAR_T*             GIname;
 	    newElement = TtaNewElement (XMLcontext.doc, elType);
 	  
 	  XmlSetElemLineNumber (newElement);
-	  InsertElement (&newElement);
+	  InsertXmlElement (&newElement);
 	  if (newElement != NULL)
 	    {
 	      /* an empty Text element has been created. */
@@ -1628,7 +1617,7 @@ CHAR_T     *GIname;
    else
      {
        /* element found in the corresponding DTD */
-       if (!CloseElement (mappedName))
+       if (!XmlCloseElement (mappedName))
 	 /* the end tag does not close any current element */
 	 {
 	   usprintf (msgBuffer, TEXT("Unexpected end tag %s"), GIname);
@@ -1838,7 +1827,7 @@ STRING      data;
 	       elType.ElTypeNum = 1;
 	       elText = TtaNewElement (XMLcontext.doc, elType);
 	       XmlSetElemLineNumber (elText);
-	       InsertElement (&elText);
+	       InsertXmlElement (&elText);
 	       XMLcontext.lastElementClosed = TRUE;
 	       XMLcontext.mergeText = TRUE;
 	       /* put the content of the input buffer into the TEXT element */
@@ -1861,29 +1850,25 @@ STRING      data;
    Create an attribute of type attrType for the element el.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         XhtmlCreateAttr (Element el,
+static void         XhtmlCreateAttr (Element       el,
 				     AttributeType attrType,
-				     CHAR_T*  text,
-				     ThotBool invalid,
-				     Document doc)
+				     CHAR_T*       text,
+				     ThotBool      invalid,
+				     Document      doc)
 #else
-static void         XhtmlCreateAttr (el,
-				     attrType,
-				     text,
-				     invalid,
-				     doc)
-Element          el;
-AttributeType    attrType;
-CHAR_T*          text;
-ThotBool         invalid;
-Document         doc;
+static void         XhtmlCreateAttr (el, attrType, text, invalid, doc)
+Element        el;
+AttributeType  attrType;
+CHAR_T*        text;
+ThotBool       invalid;
+Document       doc;
 
 #endif
 {
-  int            attrKind;
-  int            length;
-  CHAR_T*        buffer;
-  Attribute      attr, oldAttr;
+  int          attrKind;
+  int          length;
+  CHAR_T*      buffer;
+  Attribute    attr, oldAttr;
 
   if (attrType.AttrTypeNum != 0)
     {
@@ -2045,8 +2030,8 @@ Document  doc;
    End of a XML attribute that doesn't belongs to the XHTML DTD
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void     XmlEndOfAttrName (CHAR_T *attrName,
-				  Element el,
+static void     XmlEndOfAttrName (CHAR_T  *attrName,
+				  Element  el,
 				  Document doc)
 #else
 static void     XmlEndOfAttrName (attrName, el, doc)
@@ -2669,21 +2654,21 @@ Document  doc;
   CHAR_T	 buffer[MAX_ENTITY_LENGTH];
   
   if (lang < 0)
-    /* unknown entity */
+    /* Unknown entity */
     {
-      /* by default display a question mark */
+      /* By default display a question mark */
       entityValue[0] = '?';
       entityValue[1] = WC_EOS;
       lang = TtaGetLanguageIdFromAlphabet('L');
-      /* let's see if we can do more */
+      /* Let's see if we can do more */
       if (entityName[0] == '#')
-	/* it's a number */
+	/* It's a number */
 	{
 	  if (entityName[1] == 'x')
-	    /* it's a hexadecimal number */
+	    /* It's a hexadecimal number */
 	    usscanf (&entityName[2], TEXT("%x"), &code);
 	  else
-	    /* it's a decimal number */
+	    /* It's a decimal number */
 	    usscanf (&entityName[1], TEXT("%d"), &code);
 	  
 	  GetFallbackCharacter (code, entityValue, &lang);
@@ -2694,15 +2679,15 @@ Document  doc;
   elType.ElSSchema = GetMathMLSSchema (doc);
   elText = TtaNewElement (doc, elType);
   XmlSetElemLineNumber (elText);
-  InsertElement (&elText);
-  XMLcontext.lastElementClosed = TRUE;
+  InsertXmlElement (&elText);
   TtaSetTextContent (elText, entityValue, lang, doc);
+  XMLcontext.lastElementClosed = TRUE;
   XMLcontext.mergeText = FALSE; 
   
-  /* make that text leaf read-only */
+  /* Make that text leaf read-only */
   TtaSetAccessRight (elText, ReadOnly, doc);
   
-  /* associate an attribute EntityName with the new text leaf */
+  /* Associate an attribute EntityName with the new text leaf */
   attrType.AttrSSchema = GetMathMLSSchema (doc);
   attrType.AttrTypeNum = MathML_ATTR_EntityName;
   attr = TtaNewAttribute (attrType);
@@ -2716,7 +2701,6 @@ Document  doc;
   buffer[len+1] = ';';
   buffer[len+2] = WC_EOS;
   TtaSetAttributeText (attr, buffer, elText, doc);
-  XMLcontext.mergeText = FALSE; 
 }
 
 /*----------------------------------------------------------------------
@@ -2754,13 +2738,9 @@ STRING              entityName;
    
    
    if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
-       XhtmlMapEntity (buffer,
-		       &entityVal,
-		       &alphabet);
+       XhtmlMapEntity (buffer, &entityVal, &alphabet);
    else
-       (*(currentParserCtxt->MapEntity)) (buffer,
-					  entityValue,
-					  &alphabet);
+       (*(currentParserCtxt->MapEntity)) (buffer, entityValue, &alphabet);
    
    lang = 0;
    if (alphabet == WC_EOS)
@@ -2768,10 +2748,7 @@ STRING              entityName;
        /* Unknown entity */
        entityValue[0] = WC_EOS;
        lang = -1;
-       /* print an error message */
-       usprintf (msgBuffer,
-		 TEXT("Unknown entity %s"),
-		 entityName);
+       usprintf (msgBuffer, TEXT("Unknown entity %s;"), entityName);
        XmlParseError (XMLcontext.doc, msgBuffer, 0);
      }
    else
@@ -2781,15 +2758,10 @@ STRING              entityName;
      }
    
    if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
-       XhtmlEntityCreated (entityVal,
-			   lang,
-			   entityName,
-			   &XMLcontext);
+       XhtmlEntityCreated (entityVal, lang, entityName, &XMLcontext);
    else
-       (*(currentParserCtxt->EntityCreated)) (entityValue,
-					      lang,
-					      buffer,
-					      XMLcontext.doc);       
+       (*(currentParserCtxt->EntityCreated)) (entityValue, lang,
+					      buffer, XMLcontext.doc);       
    TtaFreeMemory (buffer);
 }
 /*--------------------  Entities  (end)  ---------------------*/
@@ -2815,7 +2787,7 @@ CHAR_T     *commentValue;
    UCHAR_T       msgBuffer[MaxMsgLength];
    int           start, i, error;
 
-   /* create a Thot element for the comment */
+   /* Create a Thot element for the comment */
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
    GetXmlElType (TEXT("XMLcomment"), &elType,
@@ -2831,10 +2803,10 @@ CHAR_T     *commentValue;
      {
        commentEl = TtaNewElement (XMLcontext.doc, elType);
        XmlSetElemLineNumber (commentEl);
-       InsertElement (&commentEl);
+       InsertXmlElement (&commentEl);
 
-       /* create a XMLcomment_line element as the first child of */
-       /* element XMLcomment */
+       /* Create a XMLcomment_line element as the first child of */
+       /* Element XMLcomment */
        elType.ElSSchema = NULL;
        elType.ElTypeNum = 0;
        GetXmlElType (TEXT("XMLcomment_line"), &elType,
@@ -2843,7 +2815,7 @@ CHAR_T     *commentValue;
        XmlSetElemLineNumber (commentLineEl);
        TtaInsertFirstChild (&commentLineEl, commentEl, XMLcontext.doc);
 
-       /* create a TEXT element as the first child of element XMLcomment_line*/
+       /* Create a TEXT element as the first child of element XMLcomment_line*/
        elTypeTxt.ElSSchema = elType.ElSSchema;
        elTypeTxt.ElTypeNum = 1;
        commentText = TtaNewElement (XMLcontext.doc, elTypeTxt);
@@ -2851,39 +2823,38 @@ CHAR_T     *commentValue;
        TtaInsertFirstChild (&commentText, commentLineEl, XMLcontext.doc);
        TtaSetTextContent (commentText, TEXT(""), XMLcontext.language,
 			  XMLcontext.doc);
-       /* look for line break in the comment and create as many XMLcomment_line
-	  elements as needed */
+       /* Look for line break in the comment and create as many */
+       /* XMLcomment_line elements as needed */
        i = 0; start = 0;
        do
 	 {
 	   if ((int)commentValue[i] == EOL || (int)commentValue[i] == __CR__)
-	     /* new line */
+	     /* New line */
 	     {
 	       commentValue[i] = EOS;
 	       TtaAppendTextContent (commentText, &commentValue[start],
 				     XMLcontext.doc);
-	       /* create a new XMLcomment_line element */
+	       /* Create a new XMLcomment_line element */
 	       commentLineEl = TtaNewElement (XMLcontext.doc, elType);
-	       SetElemLineNumber (commentLineEl);
-	       /* inserts the new XMLcomment_line after the previous one */
+	       XmlSetElemLineNumber (commentLineEl);
+	       /* Inserts the new XMLcomment_line after the previous one */
 	       TtaInsertSibling (commentLineEl, TtaGetParent (commentText),
 				 FALSE, XMLcontext.doc);
-	       /* create a TEXT element as the first child of new element
-		  XMLcomment_line */
+	       /* Create a TEXT element as the first child of new XMLcomment_line element */
 	       commentText = TtaNewElement (XMLcontext.doc, elTypeTxt);
-	       SetElemLineNumber (commentText);
+	       XmlSetElemLineNumber (commentText);
 	       TtaInsertFirstChild (&commentText, commentLineEl,
 				    XMLcontext.doc);
 	       TtaSetTextContent (commentText, TEXT(""), XMLcontext.language,
 				  XMLcontext.doc);
 	       i++;
-	       start = i;   /* start of next comment line */
+	       start = i;   /* Start of next comment line */
 	     }
 	   else if (commentValue[i] != EOS)
 	     i++;
 	 }
        while (commentValue[i] != EOS);
-       /* process last line */
+       /* Process last line */
        if (i > start + 1)
 	 TtaAppendTextContent (commentText, &commentValue[start],
 			       XMLcontext.doc);
@@ -2895,7 +2866,7 @@ CHAR_T     *commentValue;
 /*--------------------  Comments  (end)  ---------------------*/
 
 
-/*-----------  Handlers associated with Amaya  ---------------*/
+/*-----------  EXPAT handlers associated with Amaya  ---------------*/
 
 /*----------------------------------------------------------------------
    Hndl_CdataStart
@@ -2940,11 +2911,9 @@ void            *userData;
 #ifdef __STDC__
 static void     Hndl_CharacterData (void *userData,
 				    const XML_Char *data,
-				    int length)
+				    int   length)
 #else  /* __STDC__ */
-static void     Hndl_CharacterData (userData,
-				    data,
-				    length)
+static void     Hndl_CharacterData (userData, data, length)
 void            *userData; 
 const XML_Char  *data;
 int              length;
@@ -3013,11 +2982,9 @@ const XML_Char  *data;
 #ifdef __STDC__
 static void     Hndl_Default (void *userData,
 			      const XML_Char *data,
-			      int length)
+			      int   length)
 #else  /* __STDC__ */
-static void     Hndl_Default (userData,
-			      data,
-			      length)
+static void     Hndl_Default (userData, data, length)
 void            *userData; 
 const XML_Char  *data;
 int              length;
@@ -3043,11 +3010,9 @@ int              length;
 #ifdef __STDC__
 static void     Hndl_DefaultExpand (void *userData,
 				    const XML_Char *data,
-				    int length)
+				    int   length)
 #else  /* __STDC__ */
-static void     Hndl_DefaultExpand (userData,
-				    data,
-				    length)
+static void     Hndl_DefaultExpand (userData, data, length)
 void            *userData; 
 const XML_Char  *data;
 int              length;
@@ -3064,7 +3029,7 @@ int              length;
        printf ("%c", data[i]);
 #endif /* LC */
    
-   /* Treatment of the entities */
+   /* Treatment for the entities */
    if (length > 1 && data[0] == '&')
      {
        buffer = TtaAllocString (length + 1);
@@ -3085,8 +3050,7 @@ int              length;
 static void     Hndl_DoctypeStart (void *userData,
 				   const XML_Char *doctypeName)
 #else  /* __STDC__ */
-static void     Hndl_DoctypeStart (userData,
-				   doctypeName)
+static void     Hndl_DoctypeStart (userData, doctypeName)
 void            *userData; 
 const XML_Char  *doctypeName;
 #endif  /* __STDC__ */
@@ -3126,9 +3090,7 @@ static void     Hndl_ElementStart (void *userData,
 				   const XML_Char *name,
 				   const XML_Char **attlist)
 #else  /* __STDC__ */
-static void     Hndl_ElementStart (userData,
-				   name,
-				   attlist)
+static void     Hndl_ElementStart (userData, name, attlist)
 void            *userData; 
 const XML_Char  *name;
 const XML_Char **attlist;
@@ -3147,7 +3109,7 @@ const XML_Char **attlist;
    printf ("\n Hndl_ElementStart '%s'\n", name);
 #endif /* LC */
   
-   /* initialize root element name and parser context if not done yet */
+   /* Initialize root element name and parser context if not done yet */
    if (XMLrootName[0] == WC_EOS)
      strcpy (XMLrootName, (CHAR_T*) name);
 
@@ -3159,7 +3121,7 @@ const XML_Char **attlist;
      }
    else
      {
-       /* look for the context associated with that element */
+       /* Look for the context associated with that element */
        buffer = TtaGetMemory ((strlen (name) + 1));
        ustrcpy (buffer, (CHAR_T*) name);
        if ((ptr = ustrrchr (buffer, NS_SEP)))
@@ -3255,8 +3217,7 @@ const XML_Char **attlist;
 static void     Hndl_ElementEnd (void *userData,
 				 const XML_Char *name)
 #else  /* __STDC__ */
-static void     Hndl_ElementEnd (userData,
-				 name)
+static void     Hndl_ElementEnd (userData, name)
 void            *userData; 
 const XML_Char  *name
 #endif  /* __STDC__ */
@@ -3272,7 +3233,7 @@ const XML_Char  *name
 
    ImmediatelyAfterTag = FALSE;
 
-   /* look for the context associated with that element */
+   /* Look for the context associated with that element */
    buffer = TtaGetMemory ((strlen (name) + 1));
    ustrcpy (buffer, (CHAR_T*) name);
    if ((ptr = ustrrchr (buffer, NS_SEP)))
@@ -3351,9 +3312,7 @@ static void     Hndl_NameSpaceStart (void *userData,
 				     const XML_Char *prefix,
 				     const XML_Char *uri)
 #else  /* __STDC__ */
-static void     Hndl_NameSpaceStart (userData,
-				     prefix,
-				     uri)
+static void     Hndl_NameSpaceStart (userData, prefix, uri)
 void            *userData; 
 const XML_Char  *prefix;
 const XML_Char  *uri;
@@ -3375,8 +3334,7 @@ const XML_Char  *uri;
 static void     Hndl_NameSpaceEnd (void *userData,
 				   const XML_Char *prefix)
 #else  /* __STDC__ */
-static void     Hndl_NameSpaceEnd (userData,
-				   prefix)
+static void     Hndl_NameSpaceEnd (userData, prefix)
 void            *userData; 
 const XML_Char  *prefix;
 #endif  /* __STDC__ */
@@ -3456,9 +3414,7 @@ static void     Hndl_PI (void *userData,
 			 const XML_Char *target,
 			 const XML_Char *pidata)
 #else  /* __STDC__ */
-static void     Hndl_PI (userData,
-			 target,
-			 pidata)
+static void     Hndl_PI (userData, target, pidata)
 void            *userData; 
 const XML_Char  *target;
 const XML_Char  *pidata;
@@ -3478,13 +3434,11 @@ const XML_Char  *pidata;
    Handler to deal with encodings other than the built in
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int     Hndl_UnknownEncoding (void *encodingData,
+static int     Hndl_UnknownEncoding (void           *encodingData,
 				     const XML_Char *name,
-				     XML_Encoding *info)
+				     XML_Encoding   *info)
 #else  /* __STDC__ */
-static int     Hndl_UnknownEncoding (userData,
-				     data,
-				     length)
+static int     Hndl_UnknownEncoding (userData, data, length)
 void            *encodingData; 
 const XML_Char  *name;
 XML_Encoding    *info
@@ -3648,8 +3602,8 @@ static void         InitializeExpatParser ()
   
   /* Set default handler with  no expansion of internal entity references */
   /* 
-  XML_SetDefaultHandler (parser,
-                         Hndl_Default);
+     XML_SetDefaultHandler (parser,
+                            Hndl_Default);
   */
   
   /* Set a default handler with expansion of internal entity references */
@@ -3725,8 +3679,10 @@ ThotBool   isSubTree;
   
   /* initialize global variables */
   XMLcontext.readingAnAttrValue = FALSE;
+  XMLcontext.parsingTextArea = FALSE;
   XMLcontext.parsingCSS = FALSE;
   XMLcontext.mergeText = FALSE;
+  XMLcontext.withinTable = 0;
   currentAttribute = NULL;
   lastAttrElement = NULL;
   lastMappedAttr = NULL;
@@ -3774,7 +3730,7 @@ Language   lang;
   if (xmlBuffer == NULL)
     return FALSE;
 
-  /* generic initialization */
+  /* general initialization */
   rootElement = NULL;
   InitializeXmlParsingContext (doc, *el, *isclosed, TRUE);
 
@@ -3894,7 +3850,7 @@ Language  lang;
   if (infile == NULL && htmlBuffer == NULL)
     return TRUE;
 
-  /* generic initialization */
+  /* general initialization */
   /* If htmlBuffer isn't null, we are parging a html sub-tree */
   /* including XML elements */ 
   rootElement = NULL;
@@ -4044,11 +4000,10 @@ Language  lang;
   return (!XMLabort);
 }
 
-/*----------------------------------------------------------------------
+/*---------------------------------------------------------------------------
    XmlParse
-   Parse either the XML file infile and build the equivalent
-   Thot abstract tree.
-  ----------------------------------------------------------------------*/
+   Parses the XML file infile and builds the equivalent Thot abstract tree.
+  ---------------------------------------------------------------------------*/
 #ifdef __STDC__
 static void        XmlParse (FILE *infile,
 			     ThotBool xmlDec,
@@ -4078,8 +4033,6 @@ ThotBool   withDoctype;
    else
        return;
 
-   XMLabort = FALSE;
-
    /* Initialize local counters */
    extraLineRead = 0;
    extraOffset = 0;
@@ -4096,7 +4049,7 @@ ThotBool   withDoctype;
        if (!withDoctype)
 	 /* There is no DOCTYPE Declaration 
 	    We include a virtual DOCTYPE declaration so that EXPAT parser
-	    doesn't stop processing when it find an external entity */	  
+	    doesn't stop processing when it finds an external entity */	  
 	 {
 	   if (xmlDec)
 	     /* There is a XML declaration */
@@ -4133,7 +4086,7 @@ ThotBool   withDoctype;
 	   extraLineRead = XML_GetCurrentLineNumber (parser) - tmpLineRead;
 	 }
 
-       /* 'normal' EXPAT processing */
+       /* Standard EXPAT processing */
        if (!XML_Parse (parser, bufferRead, res, endOfFile))
 	 {
 	   XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
@@ -4191,12 +4144,12 @@ ThotBool    withDoctype;
   int             length, error;
   ThotBool        isXHTML;
 
-  /* generic initialization */
+  /* General initialization */
   rootElement = TtaGetMainRoot (doc);
   rootElType = TtaGetElementType (rootElement);     
   InitializeXmlParsingContext (doc, rootElement, FALSE, FALSE);
 
-  /* specific Initialization */
+  /* Specific Initialization */
   XMLcontext.language = TtaGetDefaultLanguage ();
   DocumentSSchema = TtaGetDocumentSSchema (doc);
   
@@ -4206,14 +4159,13 @@ ThotBool    withDoctype;
 
   if (stream != 0)
     {
-      XMLcontext.withinTable = 0;
       if (documentName[0] == WC_EOS &&
 	  !TtaCheckDirectory (documentDirectory))
 	{
 	  ustrcpy (documentName, documentDirectory);
 	  documentDirectory[0] = WC_EOS;
 	  s = TtaGetEnvString ("PWD");
-	  /* set path on current directory */
+	  /* Set path on current directory */
 	  if (s != NULL)
 	    ustrcpy (documentDirectory, s);
 	  else
@@ -4221,125 +4173,124 @@ ThotBool    withDoctype;
 	}
       TtaAppendDocumentPath (documentDirectory);
 
-      /* the Thot document has been successfully created */
-      {
-	length = ustrlen (pathURL);
-	if (ustrcmp (pathURL, htmlFileName) == 0)
-	  {
-	    docURL = TtaAllocString (length + 1);
-	    ustrcpy (docURL, pathURL);
-	  }
-	else
-	  {
-	    length += ustrlen (htmlFileName) + 20;
-	    docURL = TtaAllocString (length+1);
-	    usprintf (docURL, TEXT("%s temp file: %s"), pathURL, htmlFileName);
-	  }
+      /* Set document URL */
+      length = ustrlen (pathURL);
+      if (ustrcmp (pathURL, htmlFileName) == 0)
+	{
+	  docURL = TtaAllocString (length + 1);
+	  ustrcpy (docURL, pathURL);
+	}
+      else
+	{
+	  length += ustrlen (htmlFileName) + 20;
+	  docURL = TtaAllocString (length+1);
+	  usprintf (docURL, TEXT("%s temp file: %s"), pathURL, htmlFileName);
+	}
 
-	/* do not check the Thot abstract tree against the structure */
-	/* schema while building the Thot document. Some valid XML documents */
-        /* could be considered as invalid Thot documents. For example, */
-        /* a <tbody> as a child of a <table> would be considered invalid */
-        /* because the Thot SSchema requires a Table_body element in between */
-	TtaSetStructureChecking (0, doc);
+      /* Do not check the Thot abstract tree against the structure */
+      /* schema while building the Thot document. */
+      /* Some valid XHTML documents could be considered as invalid Thot documents */
+      /* For example, a <tbody> as a child of a <table> would be considered */
+      /* invalid because the Thot SSchema requires a Table_body element in between */
+      TtaSetStructureChecking (0, doc);
 
-	/* set the notification mode for the new document */
-	TtaSetNotificationMode (doc, 1);
+      /* Set the notification mode for the new document */
+      TtaSetNotificationMode (doc, 1);
 
-	/* is the current document a XHTML document */
-	isXHTML = (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
-			    TEXT("HTML")) == 0);	
-	if (isXHTML)
-	  {
-	    strcpy (XMLrootName, (TEXT("html")));
-	    /* add the default attribute PrintURL */
-	    attrType.AttrSSchema = DocumentSSchema;
-	    attrType.AttrTypeNum = HTML_ATTR_PrintURL;
-	    attr = TtaGetAttribute (rootElement, attrType);
-	    if (!attr)
-	      {
-		attr = TtaNewAttribute (attrType);
-		TtaAttachAttribute (rootElement, attr, doc);
-	      }
-	  }
-	    
-	LoadUserStyleSheet (doc);
+      /* Is the current document a XHTML document */
+      isXHTML = (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
+			  TEXT("HTML")) == 0);	
+      if (isXHTML)
+	{
+	  strcpy (XMLrootName, (TEXT("html")));
+	  /* Add the default attribute PrintURL */
+	  attrType.AttrSSchema = DocumentSSchema;
+	  attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+	  attr = TtaGetAttribute (rootElement, attrType);
+	  if (!attr)
+	    {
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (rootElement, attr, doc);
+	    }
+	}
 
-	TtaSetDisplayMode (doc, NoComputedDisplay);
+      LoadUserStyleSheet (doc);
 
-	/* delete all element except the root element */
-	el = TtaGetFirstChild (rootElement);
-	while (el != NULL)
-	  {
-	    oldel = el;
-	    TtaNextSibling (&el);
-	    TtaDeleteTree (oldel, doc);
-	  }
+      TtaSetDisplayMode (doc, NoComputedDisplay);
+
+      /* Delete all element except the root element */
+      el = TtaGetFirstChild (rootElement);
+      while (el != NULL)
+	{
+	  oldel = el;
+	  TtaNextSibling (&el);
+	  TtaDeleteTree (oldel, doc);
+	}
 	
-	/* save the path or URL of the document */
-	TtaExtractName (pathURL, temppath, tempname);
-	TtaSetDocumentDirectory (doc, temppath);
+      /* Save the path or URL of the document */
+      TtaExtractName (pathURL, temppath, tempname);
+      TtaSetDocumentDirectory (doc, temppath);
 
-	/* disable auto save */
-	TtaSetDocumentBackUpInterval (doc, 0);
+      /* Disable auto save */
+      TtaSetDocumentBackUpInterval (doc, 0);
 
-	/* initialize all parser contexts if not done yet */
-	if (firstParserCtxt == NULL)
-	  InitXmlParserContexts ();
+      /* Initialize all parser contexts if not done yet */
+      if (firstParserCtxt == NULL)
+	InitXmlParserContexts ();
 
-	/* Select root context */
-	if (ustrcmp (TtaGetSSchemaName (DocumentSSchema), TEXT("GraphML")) == 0)
-	  ChangeXmlParserContextDTD (TEXT("GraphML"));
-	else if (ustrcmp (TtaGetSSchemaName (DocumentSSchema), TEXT("MathML")) == 0)
-	  ChangeXmlParserContextDTD (TEXT("MathML"));
-	else
-	  ChangeXmlParserContextDTD (TEXT("HTML"));
-
-	/* initialize the error file */
-	ErrFile = (FILE*) 0;
-	ErrFileName[0] = WC_EOS;
-
-	/* Specific initialization for expat */
-	InitializeExpatParser ();
+      /* Select root context */
+      if (ustrcmp (TtaGetSSchemaName (DocumentSSchema), TEXT("GraphML")) == 0)
+	ChangeXmlParserContextDTD (TEXT("GraphML"));
+      else if (ustrcmp (TtaGetSSchemaName (DocumentSSchema), TEXT("MathML")) == 0)
+	ChangeXmlParserContextDTD (TEXT("MathML"));
+      else
+	ChangeXmlParserContextDTD (TEXT("HTML"));
+      
+      /* Initialize the error file */
+      ErrFile = (FILE*) 0;
+      ErrFileName[0] = WC_EOS;
+      
+      /* Specific initialization for expat */
+      InitializeExpatParser ();
 	
-	/* parse the input file and build the Thot document */
-	XmlParse (stream, xmlDec, withDoctype);
-	
-	if (currentParserCtxt != NULL)
-	  /* completes all unclosed elements */
-	  {
-	    el = XMLcontext.lastElement;
-	    while (el != NULL)
-	      {
+      /* Parse the input file and build the Thot document */
+      XmlParse (stream, xmlDec, withDoctype);
+      
+      /* Completes all unclosed elements */
+      if (currentParserCtxt != NULL)
+	{
+	  el = XMLcontext.lastElement;
+	  while (el != NULL)
+	    {
 		(*(currentParserCtxt->ElementComplete)) (el, XMLcontext.doc, &error);
 		el = TtaGetParent (el);
-	      }
-	  }
-	
-	/* check the Thot abstract tree */
-	if (isXHTML)
-	  CheckAbstractTree (pathURL, XMLcontext.doc);
-	
-	FreeExpatParser ();
-	FreeXmlParserContexts ();
+	    }
+	}
+      
+      /* Check the Thot abstract tree for XHTML documents*/
+      if (isXHTML)
+	CheckAbstractTree (pathURL, XMLcontext.doc);
+      
+      FreeExpatParser ();
+      FreeXmlParserContexts ();
 
-	gzclose (stream);
-	if (docURL != NULL)
-	  {
-	    TtaFreeMemory (docURL);
-	    docURL = NULL;
-	  }
+      gzclose (stream);
 
-	TtaSetDisplayMode (doc, DisplayImmediately);
+      if (docURL != NULL)
+	{
+	  TtaFreeMemory (docURL);
+	  docURL = NULL;
+	}
+      
+      TtaSetDisplayMode (doc, DisplayImmediately);
 
-	/* check the Thot abstract tree against the structure schema. */
-	TtaSetStructureChecking (1, doc);
-	DocumentSSchema = NULL;
-      }
+      /* Check the Thot abstract tree against the structure schema. */
+      TtaSetStructureChecking (1, doc);
+      DocumentSSchema = NULL;
     }
    TtaSetDocumentUnmodified (doc);
 
-   /* display a warning if an error was found */
+   /* Display a warning if an error was found */
    if (XMLabort)
      {
        profile = TtaGetEnvString ("Profile");

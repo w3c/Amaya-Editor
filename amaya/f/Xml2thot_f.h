@@ -16,6 +16,7 @@ extern void SetParsingTextArea ( ThotBool value );
 extern int IsWithinTable ( void );
 extern void SubWithinTable ( void );
 extern void XhtmlInsertElement ( Element *el );
+extern void InsertXmlElement ( Element *el );
 extern Element XmlLastLeafInElement ( Element el );
 extern void PutInXmlElement ( STRING data );
 extern void PutMathMLEntity ( USTRING entityValue,
@@ -63,6 +64,7 @@ extern void SetParsingTextArea (/* ThotBool value */);
 extern int IsWithinTable (/* void */);
 extern void SubWithinTable (/* void */);
 extern void XhtmlInsertElement (/* Element *el */);
+extern void InsertXmlElement (/* Element *el */);
 extern Element XmlLastLeafInElement (/* Element el */);
 extern void PutInXmlElement (/* STRING data */);
 extern void PutMathMLEntity (/* USTRING entityValue,
