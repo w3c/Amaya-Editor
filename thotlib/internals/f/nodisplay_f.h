@@ -13,11 +13,11 @@ extern boolean CallEventAttribute ( NotifyAttribute * notifyAttr,
 extern void FreeImageDescriptor ( int *desc );
 extern void FreeImage ( int *desc );
 extern int Corr_Charger ( Language langue );
-extern void SelAjoute ( PtrElement pEl,
+extern void AddInSelection ( PtrElement pEl,
                         boolean dernier );
 extern void LibAbbEl ( PtrElement pEl );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
-extern PtrPRule ReglePEl ( PtrElement pEl,
+extern PtrPRule GlobalSearchRulepEl ( PtrElement pEl,
                            PtrPSchema * pSPR,
                            int NumPres,
                            PtrPSchema pSchP,
@@ -30,10 +30,10 @@ extern boolean FormeComplete ( void );
 extern void CacheRemoveImage ( PtrElement element );
 extern int PixelEnPt ( int x );
 extern int PtEnPixel ( int x );
-extern boolean DansTampon ( PtrElement pEl );
+extern boolean IsASavedElement ( PtrElement pEl );
 extern boolean MemesRegleSpecif ( PtrElement pEl1,
                                   PtrElement pEl2 );
-extern void LibDocument ( PtrDocument * pDoc );
+extern void UnloadDocument ( PtrDocument * pDoc );
 
 #else /* __STDC__ */
 
@@ -44,11 +44,11 @@ extern boolean CallEventAttribute (/* NotifyAttribute * notifyAttr,
 extern void FreeImageDescriptor (/* int *desc */);
 extern void FreeImage (/* int *desc */);
 extern int Corr_Charger (/* Language langue */);
-extern void SelAjoute (/* PtrElement pEl,
+extern void AddInSelection (/* PtrElement pEl,
                           boolean dernier */);
 extern void LibAbbEl (/* PtrElement pEl */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
-extern PtrPRule ReglePEl (/* PtrElement pEl,
+extern PtrPRule GlobalSearchRulepEl (/* PtrElement pEl,
                              PtrPSchema * pSPR,
                              int NumPres,
                              PtrPSchema pSchP,
@@ -61,10 +61,10 @@ extern boolean FormeComplete (/* void */);
 extern void CacheRemoveImage (/* PtrElement element */);
 extern int PixelEnPt (/* int x */);
 extern int PtEnPixel (/* int x */);
-extern boolean DansTampon (/* PtrElement pEl */);
+extern boolean IsASavedElement (/* PtrElement pEl */);
 extern boolean MemesRegleSpecif (/* PtrElement pEl1,
                                     PtrElement pEl2 */);
-extern void LibDocument (/* PtrDocument * pDoc */);
+extern void UnloadDocument (/* PtrDocument * pDoc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

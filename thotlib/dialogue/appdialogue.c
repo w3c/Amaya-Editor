@@ -176,8 +176,8 @@ int                 number;
 
    Dico_Init ();
    ThotInitDisplay (name, 0, 0);
-   NomFonte ('L', 'H', 0, MenuSize, UnPoint, text, namef1);
-   NomFonte ('L', 'H', 1, MenuSize, UnPoint, text, namef2);
+   FontIdentifier ('L', 'H', 0, MenuSize, UnPoint, text, namef1);
+   FontIdentifier ('L', 'H', 1, MenuSize, UnPoint, text, namef2);
    TtaChangeDialogueFonts (namef1, namef2);
 
    /* reserve les menus de Thot */
@@ -1472,7 +1472,7 @@ void                (*procedure) ();
 		       n++;
 		       XtSetArg (args[n], XmNforeground, Black_Color);
 		       n++;
-		       XtSetArg (args[n], XmNheight, (Dimension) FontHeight (FontMenu3));
+		       XtSetArg (args[n], XmNheight, (Dimension) FontHeight (LargeFontDialogue));
 		       n++;
 		       XtSetArg (args[n], XmNfontList, DefaultFont);
 		       n++;
@@ -1798,7 +1798,7 @@ int                 doc;
 		dy = (Dimension) MIN_HAUT;
 	     else
 		dy = (Dimension) haut;
-	     *volume = VolumCar ((int) dx * (int) dy);	/* volume en caracteres */
+	     *volume = GetCharsCapacity ((int) dx * (int) dy);	/* volume en caracteres */
 #endif /* NEW_WILLOWS */
 
 	     if (X <= 0)
@@ -2259,7 +2259,7 @@ int                 doc;
 	     n++;
 	     XtSetArg (args[n], XmNforeground, Black_Color);
 	     n++;
-	     XtSetArg (args[n], XmNheight, (Dimension) FontHeight (FontMenu3));
+	     XtSetArg (args[n], XmNheight, (Dimension) FontHeight (LargeFontDialogue));
 	     n++;
 	     XtSetArg (args[n], XmNfontList, DefaultFont);
 	     n++;
@@ -2271,7 +2271,7 @@ int                 doc;
 	     XmStringFree (title_string);
 	     title_string = XmStringCreateSimple (" ");
 	     XtSetArg (args[n - 1], XmNlabelString, title_string);
-	     i = CarWidth ('M', FontMenu3) * 25;
+	     i = CarWidth ('M', LargeFontDialogue) * 25;
 	     XtSetArg (args[n], XmNwidth, (Dimension) i);
 	     n++;
 	     FrameTable[frame].WdStatus = XmCreateLabel (row2, "Thot_MSG", args, n);
@@ -2617,7 +2617,7 @@ int                 menuID;
 		  else
 		    {
 		       /* Changement de police de caracteres */
-		       font = XmFontListCreate ((XFontStruct *) FontMenu2, XmSTRING_DEFAULT_CHARSET);
+		       font = XmFontListCreate ((XFontStruct *) IFontDialogue, XmSTRING_DEFAULT_CHARSET);
 		       n = 0;
 		       XtSetArg (args[n], XmNfontList, font);
 		       n++;
@@ -2802,7 +2802,7 @@ int                 itemID;
 	      TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 	   else
 	     {
-		NomFonte ('L', 'T', 2, 11, UnPoint, text, fontname);
+		FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
 		TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
 	     }
 	}
@@ -3123,7 +3123,7 @@ char               *data;
 		     /* retour du menu des attributs */
 		    {
 		       TtaSetDialoguePosition ();
-		       (*ThotLocalActions[T_rattr]) (ref, (int) data, ActifFen);
+		       (*ThotLocalActions[T_rattr]) (ref, (int) data, ActiveFrame);
 		    }
 		  break;
 	    }

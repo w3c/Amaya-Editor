@@ -861,7 +861,7 @@ PtrDocument         pDoc;
 			       {
 				  case AtNumAttr:
 				     /* traduit l'entier en ASCII selon le style voulu */
-				     ConvertitNombre (pAttr->AeAttrValue, pVa1->ViStyle, Nombre, &l);
+				     GetCounterValue (pAttr->AeAttrValue, pVa1->ViStyle, Nombre, &l);
 				     CopyStringToText (Nombre, pAb->AbText, &l);
 				     pAb->AbVolume += l;
 				     pAb->AbCreatorAttr = pAttr;
@@ -924,7 +924,7 @@ PtrDocument         pDoc;
 			     i -= pCo1->CnItem[1].CiParamValue;
 #endif /* __COLPAGE__ */
 		    /* traduit l'entier en ASCII */
-		    ConvertitNombre (i, pVa1->ViStyle, Nombre, &l);
+		    GetCounterValue (i, pVa1->ViStyle, Nombre, &l);
 		    CopyStringToText (Nombre, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    break;
@@ -934,17 +934,17 @@ PtrDocument         pDoc;
 		    *pt = time (NULL);
 		    ptm = localtime (pt);
 
-		    ConvertitNombre (ptm->tm_year, CntArabic, Nombre, &l);
+		    GetCounterValue (ptm->tm_year, CntArabic, Nombre, &l);
 		    CopyStringToText (Nombre, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    CopyStringToText ("/", pAb->AbText, &l);
 		    pAb->AbVolume += l;
-		    ConvertitNombre (ptm->tm_mon + 1, CntArabic, Nombre, &l);
+		    GetCounterValue (ptm->tm_mon + 1, CntArabic, Nombre, &l);
 		    CopyStringToText (Nombre, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    CopyStringToText ("/", pAb->AbText, &l);
 		    pAb->AbVolume += l;
-		    ConvertitNombre (ptm->tm_mday, CntArabic, Nombre, &l);
+		    GetCounterValue (ptm->tm_mday, CntArabic, Nombre, &l);
 		    CopyStringToText (Nombre, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    break;
@@ -953,17 +953,17 @@ PtrDocument         pDoc;
 		    pt = &tod;
 		    *pt = time (NULL);
 		    ptm = localtime (pt);
-		    ConvertitNombre (ptm->tm_mday, CntArabic, Nombre, &l);
+		    GetCounterValue (ptm->tm_mday, CntArabic, Nombre, &l);
 		    CopyStringToText (Nombre, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    CopyStringToText ("/", pAb->AbText, &l);
 		    pAb->AbVolume += l;
-		    ConvertitNombre (ptm->tm_mon + 1, CntArabic, Nombre, &l);
+		    GetCounterValue (ptm->tm_mon + 1, CntArabic, Nombre, &l);
 		    CopyStringToText (Nombre, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    CopyStringToText ("/", pAb->AbText, &l);
 		    pAb->AbVolume += l;
-		    ConvertitNombre (ptm->tm_year, CntArabic, Nombre, &l);
+		    GetCounterValue (ptm->tm_year, CntArabic, Nombre, &l);
 		    CopyStringToText (Nombre, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    break;
@@ -1008,7 +1008,7 @@ PtrDocument         pDoc;
 		    else
 		       i = pEl->ElPageNumber;	/* numero de la page trouvee */
 		    /* traduit le numero de page en ASCII selon le style voulu */
-		    ConvertitNombre (i, pVa1->ViStyle, Nombre, &l);
+		    GetCounterValue (i, pVa1->ViStyle, Nombre, &l);
 		    CopyStringToText (Nombre, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    break;

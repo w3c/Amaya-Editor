@@ -897,13 +897,13 @@ BinFile             file;
 }
 
 
-/* rdTypeContenu                lit un type de contenu dans le fichier */
+/* ReadContentType                lit un type de contenu dans le fichier */
 /* et retourne sa valeur. */
 #ifdef __STDC__
-ContentType         rdTypeContenu (BinFile file)
+ContentType         ReadContentType (BinFile file)
 
 #else  /* __STDC__ */
-ContentType         rdTypeContenu (file)
+ContentType         ReadContentType (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -939,13 +939,13 @@ BinFile             file;
 }
 
 
-/* rdptrreg     retourne un pointeur sur la regle suivante ou NULL */
+/* ReadRulePtr     retourne un pointeur sur la regle suivante ou NULL */
 /* s'il n'y a pas de regle suivante. */
 #ifdef __STDC__
-PtrPRule        rdptrreg (BinFile file, PtrPRule * nextr)
+PtrPRule        ReadRulePtr (BinFile file, PtrPRule * nextr)
 
 #else  /* __STDC__ */
-PtrPRule        rdptrreg (file, nextr)
+PtrPRule        ReadRulePtr (file, nextr)
 BinFile             file;
 PtrPRule       *nextr;
 
@@ -962,11 +962,11 @@ PtrPRule       *nextr;
 }
 
 
-/* rdPosition   lit un positionnement relatif */
+/* ReadPosition   lit un positionnement relatif */
 #ifdef __STDC__
-void                rdPosition (BinFile file, PosRule * RP)
+void                ReadPosition (BinFile file, PosRule * RP)
 #else  /* __STDC__ */
-void                rdPosition (file, RP)
+void                ReadPosition (file, RP)
 BinFile             file;
 PosRule           *RP;
 
@@ -992,12 +992,12 @@ PosRule           *RP;
 }
 
 
-/* rdComparAttr lit un type de comparaison pour les valeurs d'attributs */
+/* ReadAttrCompar lit un type de comparaison pour les valeurs d'attributs */
 /* retourne sa valeur. */
 #ifdef __STDC__
-AttrComparType      rdComparAttr (BinFile file)
+AttrComparType      ReadAttrCompar (BinFile file)
 #else  /* __STDC__ */
-AttrComparType      rdComparAttr (file)
+AttrComparType      ReadAttrCompar (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -1053,7 +1053,7 @@ PtrPRule       *nextr;
 	     /* lit une regle */
 	     pRe1 = r;
 	     pRe1->PrType = rdTypeRegle (file);
-	     pRe1->PrNextPRule = rdptrreg (file, nextr);
+	     pRe1->PrNextPRule = ReadRulePtr (file, nextr);
 	     pRe1->PrCond = NULL;
 	     typeCond = rdTypeCondition (file);
 	     while (typeCond != PcNoCondition && !erreur)
@@ -1169,14 +1169,14 @@ PtrPRule       *nextr;
 				     case PtHorizRef:
 				     case PtVertPos:
 				     case PtHorizPos:
-					rdPosition (file, &pRe1->PrPosRule);
+					ReadPosition (file, &pRe1->PrPosRule);
 					break;
 				     case PtHeight:
 				     case PtWidth:
 					pRelD1 = &pRe1->PrDimRule;
 					BIOreadBool (file, &pRelD1->DrPosition);
 					if (pRelD1->DrPosition)
-					   rdPosition (file, &pRelD1->DrPosRule);
+					   ReadPosition (file, &pRelD1->DrPosRule);
 					else
 					  {
 					     BIOreadBool (file, &pRelD1->DrAbsolute);
@@ -1217,7 +1217,7 @@ PtrPRule       *nextr;
 }
 
 
-/* RdSchPres    lit un fichier contenant un schema de presentation */
+/* ReadPresentationSchema    lit un fichier contenant un schema de presentation */
 /* et le charge en memoire. */
 /* fname: nom du fichier a lire, sans le suffixe .PRS */
 /* SS: pointeur sur le schema de structure correspondant, */
@@ -1226,9 +1226,9 @@ PtrPRule       *nextr;
 /* Retourne un pointeur sur le schema de presentation en memoire si */
 /* chargement reussi, NULL si echec. */
 #ifdef __STDC__
-PtrPSchema          RdSchPres (Name fname, PtrSSchema SS)
+PtrPSchema          ReadPresentationSchema (Name fname, PtrSSchema SS)
 #else  /* __STDC__ */
-PtrPSchema          RdSchPres (fname, SS)
+PtrPSchema          ReadPresentationSchema (fname, SS)
 Name                 fname;
 PtrSSchema        SS;
 
@@ -1310,10 +1310,10 @@ PtrSSchema        SS;
 	BIOreadShort (file, &pSc1->PsNConstants);
 	BIOreadShort (file, &pSc1->PsNVariables);
 	BIOreadShort (file, &pSc1->PsNPresentBoxes);
-	pSc1->PsFirstDefaultPRule = rdptrreg (file, &nextr);
+	pSc1->PsFirstDefaultPRule = ReadRulePtr (file, &nextr);
 	ret = !erreur;
 	if (SS->SsRootElem == 0)
-	   ret = RdSchStruct (pSc1->PsStructName, SS);
+	   ret = ReadStructureSchema (pSc1->PsStructName, SS);
 	if (!ret || pSchP->PsStructCode != SS->SsCode)
 	  {
 	     FreeSPres (pSchP);
@@ -1437,7 +1437,7 @@ PtrSSchema        SS;
 		  {
 		     pBo1 = &pSc1->PsPresentBox[i - 1];
 		     BIOreadName (file, pBo1->PbName);
-		     pBo1->PbFirstPRule = rdptrreg (file, &nextr);
+		     pBo1->PbFirstPRule = ReadRulePtr (file, &nextr);
 		     BIOreadBool (file, &pBo1->PbAcceptPageBreak);
 		     BIOreadBool (file, &pBo1->PbAcceptLineBreak);
 		     BIOreadBool (file, &pBo1->PbBuildAll);
@@ -1448,7 +1448,7 @@ PtrSSchema        SS;
 		     BIOreadShort (file, &pBo1->PbFooterHeight);
 		     BIOreadShort (file, &pBo1->PbHeaderHeight);
 		     BIOreadShort (file, &pBo1->PbPageCounter);
-		     pBo1->PbContent = rdTypeContenu (file);
+		     pBo1->PbContent = ReadContentType (file);
 		     if (!erreur)
 			switch (pBo1->PbContent)
 			      {
@@ -1514,24 +1514,24 @@ PtrSSchema        SS;
 						   for (j = 1; j <= pRP1->ApNCases; j++)
 						     {
 							pCa1 = &pRP1->ApCase[j - 1];
-							pCa1->CaComparType = rdComparAttr (file);
+							pCa1->CaComparType = ReadAttrCompar (file);
 							BIOreadSignedShort (file, &pCa1->CaLowerBound);
 							BIOreadSignedShort (file, &pCa1->CaUpperBound);
-							pCa1->CaFirstPRule = rdptrreg (file, &nextr);
+							pCa1->CaFirstPRule = ReadRulePtr (file, &nextr);
 						     }
 						break;
 					     case AtReferenceAttr:
-						pRP1->ApRefFirstPRule = rdptrreg (file, &nextr);
+						pRP1->ApRefFirstPRule = ReadRulePtr (file, &nextr);
 						break;
 					     case AtTextAttr:
 						BIOreadName (file, pRP1->ApString);
-						pRP1->ApTextFirstPRule = rdptrreg (file, &nextr);
+						pRP1->ApTextFirstPRule = ReadRulePtr (file, &nextr);
 						break;
 					     case AtEnumAttr:
 						for (j = 0; j <= MAX_ATTR_VAL; j++)
 						   pRP1->ApEnumFirstPRule[j] = NULL;
 						for (j = 0; j <= SS->SsAttribute[i - 1].AttrNEnumValues; j++)
-						   pRP1->ApEnumFirstPRule[j] = rdptrreg (file, &nextr);
+						   pRP1->ApEnumFirstPRule[j] = ReadRulePtr (file, &nextr);
 						break;
 					  }
 				 }
@@ -1548,7 +1548,7 @@ PtrSSchema        SS;
 	     /* schema de structure */
 	     if (!erreur)
 		for (i = 1; i <= NbElemStructInitial; i++)
-		   pSc1->PsElemPRule[i - 1] = rdptrreg (file, &nextr);
+		   pSc1->PsElemPRule[i - 1] = ReadRulePtr (file, &nextr);
 
 	     /* lit toutes les regles de presentation */
 	     /* lit les regles standard */

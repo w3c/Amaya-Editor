@@ -393,7 +393,7 @@ int                *lastChar;
 		     if (pDoc->DocAssocFrame[(*pFirstSel)->ElAssocNum - 1] != 0)
 			pDoc->DocAssocFreeVolume[(*pFirstSel)->ElAssocNum - 1] = THOT_MAXINT;
 	   /* cree les paves de la deuxieme partie */
-	   CrPaveNouv (*pFirstSel, pDoc, 0);
+	   CreateNewAbsBoxes (*pFirstSel, pDoc, 0);
 	   ApplDelayedRule (*pFirstSel, pDoc);
 	}
    if (*lastChar > 0)
@@ -402,7 +402,7 @@ int                *lastChar;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    Applique a l'element pointe' par pEl du document pDoc les       | */
+/* |    ApplyRule a l'element pointe' par pEl du document pDoc les       | */
 /* |    regles de presentation correspondant a l'attribut decrit dans   | */
 /* |    le bloc pointe' par pAttr.                                      | */
 /* ---------------------------------------------------------------------- */
@@ -481,7 +481,7 @@ boolean             inherit;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    Applique au sous arbre pointe' par pEl du document pDoc les     | */
+/* |    ApplyRule au sous arbre pointe' par pEl du document pDoc les     | */
 /* |    regles de presentation heritees de l'attribut pAttr		| */
 /* |    On arrete la recursion quand on rencontre un fils portant       | */
 /* |    lui-meme un attribut de meme type que pAttr			| */
@@ -538,7 +538,7 @@ PtrAttribute         pAttr;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    Applique au sous arbre pointe' par pEl du document pDoc les     | */
+/* |    ApplyRule au sous arbre pointe' par pEl du document pDoc les     | */
 /* |    regles de presentation des attributs dont les valeurs se	| */
 /* |	comparent a pAttr.						| */
 /* ---------------------------------------------------------------------- */
@@ -680,10 +680,10 @@ boolean             force;
 			/* conserve le pointeur sur le pave a reafficher */
 			if (AssocView (pEl))
 			   pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-			      Englobant (pAbsBox, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+			      Enclosing (pAbsBox, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 			else
 			   pDoc->DocViewModifiedAb[view] =
-			      Englobant (pAbsBox, pDoc->DocViewModifiedAb[view]);
+			      Enclosing (pAbsBox, pDoc->DocViewModifiedAb[view]);
 		     }
 		}
 	}
@@ -1149,7 +1149,7 @@ PtrAttribute         pNewAttr;
 	     DrawSupprAttr (pNewAttr, pEl);
 	     /* la suppression est maintenant prise en compte dans les
 		copies-inclusions de l'element */
-	     ReaffPaveCopie (pEl, pDoc, TRUE);
+	     RedisplayCopies (pEl, pDoc, TRUE);
 	  }
 
 	/* on applique les regles de presentation */
@@ -1177,7 +1177,7 @@ PtrAttribute         pNewAttr;
 
 	     /* le nouvel attribut est pris en compte dans les 
 	        les copies-inclusions de l'element */
-	     ReaffPaveCopie (pEl, pDoc, TRUE);
+	     RedisplayCopies (pEl, pDoc, TRUE);
 	  }
 	else if (pAttrAsc != NULL && suppress)
 	  {
@@ -1275,7 +1275,7 @@ PtrDocument         pDoc;
 
 	  }
 	/* cherche l'element a traiter ensuite */
-	pEl = SelSuivant (pEl, pLastSel);
+	pEl = NextInSelection (pEl, pLastSel);
      }
    /* si c'est un changement de langue qui s'applique a la racine de */
    /* l'arbre principal du document, on change aussi la langue de */
@@ -1295,7 +1295,7 @@ PtrDocument         pDoc;
    /* parcourt a nouveau les elements selectionnes pour fusionner les */
    /* elements voisins de meme type ayant les memes attributs, reaffiche */
    /* toutes les vues et retablit la selection */
-   FusEtSel (pDoc, pFirstSel, pLastSel, firstChar, lastChar);
+   MergeAndSelect (pDoc, pFirstSel, pLastSel, firstChar, lastChar);
 }
 
 

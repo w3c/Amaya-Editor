@@ -7,22 +7,22 @@
 #if __STDC__
 
 extern void InitSave ( void );
-extern boolean DansTampon ( PtrElement pEl );
-extern void ReaffPaveCopie ( PtrElement pEl,
+extern boolean IsASavedElement ( PtrElement pEl );
+extern void RedisplayCopies ( PtrElement pEl,
                              PtrDocument pDoc,
                              boolean reaff );
-extern boolean EstNouveau ( PtrElement pE );
-extern boolean DansNouveaux ( PtrElement pE );
-extern void PresAttrRef ( PtrElement pRac,
+extern boolean IsANewElement ( PtrElement pE );
+extern boolean IsWithinANewElement ( PtrElement pE );
+extern void UpdateRefAttributes ( PtrElement pRac,
                           PtrDocument pDoc );
-extern void CalculeIdentPaire ( PtrElement pRac,
+extern void AssignPairIdentifiers ( PtrElement pRac,
                                 PtrDocument pDoc );
-extern void ReaffRef ( PtrElement pElR,
+extern void RedisplayEmptyReferences ( PtrElement pElR,
                        PtrDocument * docsel,
                        boolean reaff );
 extern void TtcHolophrast ( Document document,
                             View view );
-extern void DeHolophraste ( PtrElement pEl,
+extern void DeHolophrast ( PtrElement pEl,
                             PtrDocument pDoc );
 extern void NewTextLanguage ( PtrAbstractBox pav,
                               int indexc,
@@ -33,10 +33,10 @@ extern boolean BreakElement ( PtrElement ElemADupliquer,
                               PtrElement ElemCoupure,
                               int carcoupure,
                               boolean Paragraph );
-extern void Fusionne ( PtrElement * pEl,
+extern void MergeTextLeaves ( PtrElement * pEl,
                        PtrElement * PremLib,
                        PtrDocument * SelDoc );
-extern void FusEtSel ( PtrDocument SelDoc,
+extern void MergeAndSelect ( PtrDocument SelDoc,
                        PtrElement PremSel,
                        PtrElement DerSel,
                        int premcar,
@@ -45,22 +45,22 @@ extern void FusEtSel ( PtrDocument SelDoc,
 #else /* __STDC__ */
 
 extern void InitSave (/* void */);
-extern boolean DansTampon (/* PtrElement pEl */);
-extern void ReaffPaveCopie (/* PtrElement pEl,
+extern boolean IsASavedElement (/* PtrElement pEl */);
+extern void RedisplayCopies (/* PtrElement pEl,
                                PtrDocument pDoc,
                                boolean reaff */);
-extern boolean EstNouveau (/* PtrElement pE */);
-extern boolean DansNouveaux (/* PtrElement pE */);
-extern void PresAttrRef (/* PtrElement pRac,
+extern boolean IsANewElement (/* PtrElement pE */);
+extern boolean IsWithinANewElement (/* PtrElement pE */);
+extern void UpdateRefAttributes (/* PtrElement pRac,
                             PtrDocument pDoc */);
-extern void CalculeIdentPaire (/* PtrElement pRac,
+extern void AssignPairIdentifiers (/* PtrElement pRac,
                                   PtrDocument pDoc */);
-extern void ReaffRef (/* PtrElement pElR,
+extern void RedisplayEmptyReferences (/* PtrElement pElR,
                          PtrDocument * docsel,
                          boolean reaff */);
 extern void TtcHolophrast (/* Document document,
                               View view */);
-extern void DeHolophraste (/* PtrElement pEl,
+extern void DeHolophrast (/* PtrElement pEl,
                               PtrDocument pDoc */);
 extern void NewTextLanguage (/* PtrAbstractBox pav,
                                 int indexc,
@@ -71,10 +71,10 @@ extern boolean BreakElement (/* PtrElement ElemADupliquer,
                                 PtrElement ElemCoupure,
                                 int carcoupure,
                                 boolean Paragraph */);
-extern void Fusionne (/* PtrElement * pEl,
+extern void MergeTextLeaves (/* PtrElement * pEl,
                          PtrElement * PremLib,
                          PtrDocument * SelDoc */);
-extern void FusEtSel (/* PtrDocument SelDoc,
+extern void MergeAndSelect (/* PtrDocument SelDoc,
                          PtrElement PremSel,
                          PtrElement DerSel,
                          int premcar,

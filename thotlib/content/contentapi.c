@@ -109,7 +109,7 @@ Document            document;
 	  {
 #ifndef NODISPLAY
 	     /* modifies the selection if the element is within it */
-	     selOk = SelEditeur (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
+	     selOk = GetCurrentSelection (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
 	     changeSelection = FALSE;
 	     if (selOk)
 		if (selDoc == LoadedDocument[document - 1])
@@ -182,7 +182,7 @@ Document            document;
 #ifdef NODISPLAY
 		  FreeBufTexte (pBuf);
 #else
-		  DeleteBuffer (pBuf, ActifFen);
+		  DeleteBuffer (pBuf, ActiveFrame);
 #endif
 		  pBuf =pNextBuff;
 	       }
@@ -260,7 +260,7 @@ Document            document;
 	if (document > 0)
 	  {
 	     /* modifies the selection if the element belongs to it */
-	     selOk = SelEditeur (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
+	     selOk = GetCurrentSelection (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
 	     changeSelection = FALSE;
 	     if (selOk)
 		if (selDoc == LoadedDocument[document - 1])
@@ -539,7 +539,7 @@ Document            document;
 	   length = ((PtrElement) element)->ElTextLength - position + 1;
 #ifndef NODISPLAY
 	/* modifies the selection if the element belongs to it */
-	selOk = SelEditeur (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
+	selOk = GetCurrentSelection (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
 	changeSelection = FALSE;
 	if (selOk)
 	   if (selDoc == LoadedDocument[document - 1])
@@ -606,7 +606,7 @@ Document            document;
 #ifdef NODISPLAY
 		  FreeBufTexte (pBufLast);
 #else
-		  DeleteBuffer (pBufLast, ActifFen);
+		  DeleteBuffer (pBufLast, ActiveFrame);
 #endif
 		  pBufLast = pBufNext;
 	       }
@@ -658,7 +658,7 @@ Document            document;
 #ifdef NODISPLAY
 	     FreeBufTexte (pBufFirst);
 #else
-	     DeleteBuffer (pBufFirst, ActifFen);
+	     DeleteBuffer (pBufFirst, ActiveFrame);
 #endif
 	  }
 	if (pBufFirst != pBufLast)
@@ -675,7 +675,7 @@ Document            document;
 #ifdef NODISPLAY
 		FreeBufTexte (pBufLast);
 #else
-		DeleteBuffer (pBufLast, ActifFen);
+		DeleteBuffer (pBufLast, ActiveFrame);
 #endif
 	     }
 	/* Updates the volumes of the ancestors */
@@ -841,7 +841,7 @@ Document            document;
 			       {
 #ifndef NODISPLAY
 				  /* destroy the second element of the text */
-				  DetrPaves (pEl2, LoadedDocument[document - 1], FALSE);
+				  DestroyAbsBoxes (pEl2, LoadedDocument[document - 1], FALSE);
 #endif
 				  MergeTextElements ((PtrElement) element, &FreeElement,
 					 LoadedDocument[document - 1], FALSE);

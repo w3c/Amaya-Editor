@@ -8,7 +8,7 @@
 
 extern int NumberOfFonts ( void );
 extern int PointToPixel ( int value );
-extern int VolumCar ( int volpixel );
+extern int GetCharsCapacity ( int volpixel );
 extern int PixelToPoint ( int value );
 extern int CarWidth ( unsigned char c,
                       ptrfont font );
@@ -28,14 +28,14 @@ extern int FontBase ( ptrfont font );
 extern int FontRelSize ( int size );
 extern int FontPointSize ( int size );
 extern ptrfont LoadFont ( char name[100] );
-extern void NomFonte ( char alphabet,
+extern void FontIdentifier ( char alphabet,
                        char family,
                        int highlight,
                        int size,
                        TypeUnit unit,
                        char r_name[10],
                        char r_nameX[100] );
-extern ptrfont LireFonte ( char alphabet,
+extern ptrfont ReadFont ( char alphabet,
                            char family,
                            int highlight,
                            int size,
@@ -46,14 +46,14 @@ extern ptrfont ThotLoadFont ( char alphabet,
                               int size,
                               TypeUnit unit,
                               int frame );
-extern void InitFont ( char *name );
+extern void InitDialogueFonts ( char *name );
 extern void ThotFreeFont ( int frame );
 
 #else /* __STDC__ */
 
 extern int NumberOfFonts (/* void */);
 extern int PointToPixel (/* int value */);
-extern int VolumCar (/* int volpixel */);
+extern int GetCharsCapacity (/* int volpixel */);
 extern int PixelToPoint (/* int value */);
 extern int CarWidth (/* unsigned char c,
                         ptrfont font */);
@@ -73,14 +73,14 @@ extern int FontBase (/* ptrfont font */);
 extern int FontRelSize (/* int size */);
 extern int FontPointSize (/* int size */);
 extern ptrfont LoadFont (/* char name[100] */);
-extern void NomFonte (/* char alphabet,
+extern void FontIdentifier (/* char alphabet,
                          char family,
                          int highlight,
                          int size,
                          TypeUnit unit,
                          char r_name[10],
                          char r_nameX[100] */);
-extern ptrfont LireFonte (/* char alphabet,
+extern ptrfont ReadFont (/* char alphabet,
                              char family,
                              int highlight,
                              int size,
@@ -91,7 +91,7 @@ extern ptrfont ThotLoadFont (/* char alphabet,
                                 int size,
                                 TypeUnit unit,
                                 int frame */);
-extern void InitFont (/* char *name */);
+extern void InitDialogueFonts (/* char *name */);
 extern void ThotFreeFont (/* int frame */);
 
 #endif /* __STDC__ */

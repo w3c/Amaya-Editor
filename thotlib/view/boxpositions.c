@@ -58,7 +58,7 @@ int                 frame;
 		  {
 		     /* La boite distante va etre placee */
 		     pRelation->ReBox->BxYToCompute = FALSE;
-		     Placer (pRelation->ReBox->BxAbstractBox, visibility, frame, FALSE, TRUE);
+		     AddBoxTranslations (pRelation->ReBox->BxAbstractBox, visibility, frame, FALSE, TRUE);
 		     SetYCompleteForOutOfStruct (pRelation->ReBox, visibility, frame);
 		  }
 	     i++;
@@ -107,7 +107,7 @@ int                 frame;
 		  {
 		     /* La boite distante va etre placee */
 		     pRelation->ReBox->BxXToCompute = FALSE;
-		     Placer (pRelation->ReBox->BxAbstractBox, visibility, frame, TRUE, FALSE);
+		     AddBoxTranslations (pRelation->ReBox->BxAbstractBox, visibility, frame, TRUE, FALSE);
 		     SetXCompleteForOutOfStruct (pRelation->ReBox, visibility, frame);
 		  }
 	     i++;
@@ -328,9 +328,9 @@ boolean            *isPageBreakChanged;
 /* |            page.                                                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             MarqueCoupure (PtrAbstractBox pAb, int *page)
+boolean             SetPageBreakPosition (PtrAbstractBox pAb, int *page)
 #else  /* __STDC__ */
-boolean             MarqueCoupure (pAb, page)
+boolean             SetPageBreakPosition (pAb, page)
 PtrAbstractBox      pAb;
 int                *page;
 #endif /* __STDC__ */
@@ -366,9 +366,9 @@ int                *page;
 /* |            Si ne'cessaire, la proce'dure ve'rifie l'englobement.   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                Placer (PtrAbstractBox pAb, int visibility, int frame, boolean horizRef, boolean vertRef)
+void                AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame, boolean horizRef, boolean vertRef)
 #else  /* __STDC__ */
-void                Placer (pAb, visibility, frame, horizRef, vertRef)
+void                AddBoxTranslations (pAb, visibility, frame, horizRef, vertRef)
 PtrAbstractBox      pAb;
 int                 visibility;
 int                 frame;
@@ -722,7 +722,7 @@ boolean             vertRef;
 		       }
 		     /* traite les origines des boites de niveau inferieur */
 		     if (placeenX || placeenY)
-			Placer (pChildAb, visibility, frame, placeenX, placeenY);
+			AddBoxTranslations (pChildAb, visibility, frame, placeenX, placeenY);
 		  }
 	     }
 	   /* passe au suivant */
@@ -1002,9 +1002,9 @@ int                *yCoord;
 /* |            placement.                                              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MarqueAPlacer (PtrAbstractBox pAb, boolean horizRef, boolean vertRef)
+void                SetBoxToTranslate (PtrAbstractBox pAb, boolean horizRef, boolean vertRef)
 #else  /* __STDC__ */
-void                MarqueAPlacer (pAb, horizRef, vertRef)
+void                SetBoxToTranslate (pAb, horizRef, vertRef)
 PtrAbstractBox      pAb;
 boolean             horizRef;
 boolean             vertRef;
@@ -1035,7 +1035,7 @@ boolean             vertRef;
    pChildAb = pAb->AbFirstEnclosed;
    while (pChildAb != NULL)
      {
-	MarqueAPlacer (pChildAb, horizRef, vertRef);
+	SetBoxToTranslate (pChildAb, horizRef, vertRef);
 	pChildAb = pChildAb->AbNext;
      }
 }

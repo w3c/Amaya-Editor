@@ -3039,7 +3039,7 @@ Element            *element;
    next = NULL;
    if (*element == NULL)
       next = FirstSavedElement;
-   else if (!DansTampon ((PtrElement) (*element)))
+   else if (!IsASavedElement ((PtrElement) (*element)))
       /* element is not in the clipboard */
       TtaError (ERR_invalid_parameter);
    else if (((PtrElement) (*element))->ElParent != NULL)

@@ -202,10 +202,10 @@ boolean             select;
 	     visible = TRUE;
 	     pAb->AbChange = TRUE;
 	     if (!AssocView (pEl))
-		pDoc->DocViewModifiedAb[view] = Englobant (pAb, pDoc->DocViewModifiedAb[view]);
+		pDoc->DocViewModifiedAb[view] = Enclosing (pAb, pDoc->DocViewModifiedAb[view]);
 	     else
 		pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-		Englobant (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+		Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 	     dvol = pAb->AbVolume - pEl->ElTextLength;
 	     do
 	       {
@@ -227,7 +227,7 @@ boolean             select;
    /* si l'element TEXTE modifie' appartient soit a un element copie' */
    /* dans des paves par une regle Copy, soit a un element inclus */
    /* dans d'autres, il faut reafficher ses copies */
-   ReaffPaveCopie (pEl, pDoc, TRUE);
+   RedisplayCopies (pEl, pDoc, TRUE);
 
    /* selectionne la chaine remplacee */
    if (select)
@@ -236,7 +236,7 @@ boolean             select;
 	   i = firstChar;
 	else
 	   i = firstChar + replaceLen - 1;
-	SelectStringWithAPP (pDoc, pEl, firstChar, i);
+	SelectStringWithEvent (pDoc, pEl, firstChar, i);
      }
    /* le document a ete modifie' */
    pDoc->DocModified = TRUE;

@@ -6,21 +6,21 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void AjoutePageEnFin ( PtrElement pElRacine,
+extern void AddLastPageBreak ( PtrElement pElRacine,
                               int VueSch,
                               PtrDocument pDoc,
                               boolean withAPP );
-extern void Pages ( PtrDocument pDoc,
+extern void PaginateView ( PtrDocument pDoc,
                     int Vue,
                     boolean Assoc );
 
 #else /* __STDC__ */
 
-extern void AjoutePageEnFin (/* PtrElement pElRacine,
+extern void AddLastPageBreak (/* PtrElement pElRacine,
                                 int VueSch,
                                 PtrDocument pDoc,
                                 boolean withAPP */);
-extern void Pages (/* PtrDocument pDoc,
+extern void PaginateView (/* PtrDocument pDoc,
                       int Vue,
                       boolean Assoc */);
 

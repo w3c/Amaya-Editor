@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void ColleVoisin ( PtrElement * retour,
+extern void PasteBeforeOrAfter ( PtrElement * retour,
                           PtrDocument pDoc,
                           PtrElement pElem,
                           boolean Dev,
@@ -16,7 +16,7 @@ extern void ColleVoisin ( PtrElement * retour,
                           int *PremCarColle,
                           int nR,
                           PtrSSchema pS );
-extern void ColleDedans ( PtrElement * retour,
+extern void PasteWithin ( PtrElement * retour,
                           PtrDocument pDoc,
                           PtrElement pEl,
                           PtrElement * pLib );
@@ -26,13 +26,13 @@ extern void CanCopyOrCut ( boolean * result,
                            PtrElement dersel,
                            int premcar,
                            int dercar );
-extern void StrCmdPaste ( void );
-extern void StrCarriage ( void );
+extern void StructPasteCommand ( void );
+extern void StructReturnKey ( void );
 extern void StructSelectLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void ColleVoisin (/* PtrElement * retour,
+extern void PasteBeforeOrAfter (/* PtrElement * retour,
                             PtrDocument pDoc,
                             PtrElement pElem,
                             boolean Dev,
@@ -42,7 +42,7 @@ extern void ColleVoisin (/* PtrElement * retour,
                             int *PremCarColle,
                             int nR,
                             PtrSSchema pS */);
-extern void ColleDedans (/* PtrElement * retour,
+extern void PasteWithin (/* PtrElement * retour,
                             PtrDocument pDoc,
                             PtrElement pEl,
                             PtrElement * pLib */);
@@ -52,8 +52,8 @@ extern void CanCopyOrCut (/* boolean * result,
                              PtrElement dersel,
                              int premcar,
                              int dercar */);
-extern void StrCmdPaste (/* void */);
-extern void StrCarriage (/* void */);
+extern void StructPasteCommand (/* void */);
+extern void StructReturnKey (/* void */);
 extern void StructSelectLoadResources (/* void */);
 
 #endif /* __STDC__ */

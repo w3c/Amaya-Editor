@@ -1131,7 +1131,7 @@ SyntRuleNum                 pr;
 				      /* le schema de typographie */
 				     {
 					/* lit le schema de structure compile' */
-					if (!RdSchStruct (n, pSchStr))
+					if (!ReadStructureSchema (n, pSchStr))
 					   TtaDisplaySimpleMessage (FATAL, TYP, TYP_CANNOT_READ_STRUCT_SCHEM);	/* echec lecture du  schema de structure */
 					else if (strncmp (pSchStr->SsName, n, MAX_NAME_LENGTH) != 0)
 					   CompilerError (wi, TYP, FATAL, TYP_STRUCT_SCHEM_DOES_NOT_MATCH, inputLine, LineNum);

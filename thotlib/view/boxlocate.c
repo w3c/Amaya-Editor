@@ -83,7 +83,7 @@ int                 button;
 	if (button == 0 || button == 1)
 	  {
 	     if (IsParentBox (pBox, pFrame->FrSelectionBegin.VsBox))
-		pBox = DesBoiteTerm (frame, x, y);
+		pBox = GetClickedLeafBox (frame, x, y);
 	  }
 	if (pBox != NULL)
 	  {
@@ -92,7 +92,7 @@ int                 button;
 		 (!pAb->AbPresentationBox || pAb->AbCanBeModified))
 	       {
 		  x -= pBox->BxXOrg;
-		  DesCaractere (pBox, &pBuffer, &x, &index, &charsNumber, &spacesNumber);
+		  LocateClickedChar (pBox, &pBuffer, &x, &index, &charsNumber, &spacesNumber);
 		  charsNumber = pBox->BxIndChar + charsNumber + 1;
 	       }
 	  }
@@ -103,14 +103,14 @@ int                 button;
 	if (pAb != NULL)
 	   /* Initialisation de la selection */
 	   if (button == 3)
-	      SelectCour (frame, pAb, charsNumber, FALSE, TRUE, TRUE, FALSE);
+	      ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, TRUE, FALSE);
 	   else if (button == 2)
-	      SelectCour (frame, pAb, charsNumber, FALSE, TRUE, FALSE, FALSE);
+	      ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, FALSE, FALSE);
 	/* Extension de la selection */
 	   else if (button == 0)
-	      SelectCour (frame, pAb, charsNumber, TRUE, TRUE, FALSE, FALSE);
+	      ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, FALSE);
 	   else if (button == 1)
-	      SelectCour (frame, pAb, charsNumber, TRUE, TRUE, FALSE, TRUE);
+	      ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, TRUE);
      }
 }
 
@@ -795,9 +795,9 @@ int                 y;
 /* |            des paves qui englobe le point designe ou NULL.         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrAbstractBox             DesPave (int frame, int xRef, int yRef)
+PtrAbstractBox             GetClickedAbsBox (int frame, int xRef, int yRef)
 #else  /* __STDC__ */
-PtrAbstractBox             DesPave (frame, xRef, yRef)
+PtrAbstractBox             GetClickedAbsBox (frame, xRef, yRef)
 int                 frame;
 int                 xRef;
 int                 yRef;
@@ -828,9 +828,9 @@ int                 yRef;
 /* |    sinon, la valeur NULL.                                          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrBox            DansLaBoite (PtrAbstractBox pAb, int higherX, int lowerX, int y, int *pointselect)
+PtrBox            GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX, int lowerX, int y, int *pointselect)
 #else  /* __STDC__ */
-PtrBox            DansLaBoite (pAb, higherX, lowerX, y, pointselect)
+PtrBox            GetEnclosingClickedBox (pAb, higherX, lowerX, y, pointselect)
 PtrAbstractBox      pAb;
 int                 higherX;
 int                 lowerX;
@@ -903,13 +903,13 @@ int                *pointselect;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    Pave_Suivant retourne le premier pave fils ou le suivant ou le  | */
+/* |    SearchNextAbsBox retourne le premier pave fils ou le suivant ou le  | */
 /* |            suivant du pere.                                        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrAbstractBox             Pave_Suivant (PtrAbstractBox pAb)
+PtrAbstractBox             SearchNextAbsBox (PtrAbstractBox pAb)
 #else  /* __STDC__ */
-PtrAbstractBox             Pave_Suivant (pAb)
+PtrAbstractBox             SearchNextAbsBox (pAb)
 PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
@@ -969,9 +969,9 @@ int                 dist;
 /* |            Rend la distance de la boite au point.                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 DistGraphique (int xRef, int yRef, PtrBox pBox, int value)
+int                 GetShapeDistance (int xRef, int yRef, PtrBox pBox, int value)
 #else  /* __STDC__ */
-int                 DistGraphique (xRef, yRef, pBox, value)
+int                 GetShapeDistance (xRef, yRef, pBox, value)
 int                 xRef;
 int                 yRef;
 PtrBox            pBox;
@@ -1094,9 +1094,9 @@ int                 value;
 /* |    xRef,yRef dans l'image concrete.                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrBox            DesBoiteTerm (int frame, int xRef, int yRef)
+PtrBox            GetClickedLeafBox (int frame, int xRef, int yRef)
 #else  /* __STDC__ */
-PtrBox            DesBoiteTerm (frame, xRef, yRef)
+PtrBox            GetClickedLeafBox (frame, xRef, yRef)
 int                 frame;
 int                 xRef;
 int                 yRef;
@@ -1130,7 +1130,7 @@ int                 yRef;
 	       {
 		  if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPlyLine)
 		    {
-		       pCurrentBox = DansLaBoite (pAb, xRef, xRef, yRef, &pointIndex);
+		       pCurrentBox = GetEnclosingClickedBox (pAb, xRef, xRef, yRef, &pointIndex);
 		       if (pCurrentBox == NULL)
 			  d = max + 1;
 		       else
@@ -1138,7 +1138,7 @@ int                 yRef;
 		    }
 		  else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
 		     /* glitch pour le symbole racine */
-		     d = DistGraphique (xRef, yRef, pBox, 1);
+		     d = GetShapeDistance (xRef, yRef, pBox, 1);
 		  else if (pAb->AbLeafType == LtText
 			   || pAb->AbLeafType == LtSymbol
 			   || pAb->AbLeafType == LtPicture
@@ -1406,7 +1406,7 @@ boolean             pre;
    boolean             assoc;
    boolean             ok;
 
-   DocVueFen (frame, &pDoc, &vue, &assoc);
+   GetDocAndView (frame, &pDoc, &vue, &assoc);
    result = FALSE;
    pAsc = pEl;
    while (pAsc != NULL)
@@ -1425,15 +1425,15 @@ boolean             pre;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    DesBPosition recherche la boite selectionnee pour un changement | */
+/* |    ApplyDirectTranslate recherche la boite selectionnee pour un changement | */
 /* |            de position. Si la plus petite boite englobant le point | */
 /* |            xm,ym de la fenetre frame ne peut pas etre deplacee, la | */
 /* |            procedure prend la boite englobante et ainsi de suite.  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DesBPosition (int frame, int xm, int ym)
+void                ApplyDirectTranslate (int frame, int xm, int ym)
 #else  /* __STDC__ */
-void                DesBPosition (frame, xm, ym)
+void                ApplyDirectTranslate (frame, xm, ym)
 int                 frame;
 int                 xm;
 int                 ym;
@@ -1703,9 +1703,9 @@ int                *max;
 /* |          suite.                                                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DesBDimension (int frame, int xm, int ym)
+void                ApplyDirectResize (int frame, int xm, int ym)
 #else  /* __STDC__ */
-void                DesBDimension (frame, xm, ym)
+void                ApplyDirectResize (frame, xm, ym)
 int                 frame;
 int                 xm;
 int                 ym;
@@ -1855,9 +1855,9 @@ int                 ym;
 /* |            interactive des boi^tes.                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ModeCreation (PtrBox pBox, int frame)
+void                DirectCreation (PtrBox pBox, int frame)
 #else  /* __STDC__ */
-void                ModeCreation (pBox, frame)
+void                DirectCreation (pBox, frame)
 PtrBox            pBox;
 int                 frame;
 #endif /* __STDC__ */
@@ -1996,9 +1996,9 @@ int                 frame;
 /* |            Met a jour la valeur x.                                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DesCaractere (PtrBox pBox, PtrTextBuffer * pBuffer, int *x, int *index, int *charsNumber, int *spacesNumber)
+void                LocateClickedChar (PtrBox pBox, PtrTextBuffer * pBuffer, int *x, int *index, int *charsNumber, int *spacesNumber)
 #else  /* __STDC__ */
-void                DesCaractere (pBox, pBuffer, x, index, charsNumber, spacesNumber)
+void                LocateClickedChar (pBox, pBuffer, x, index, charsNumber, spacesNumber)
 PtrBox            pBox;
 PtrTextBuffer     *pBuffer;
 int                *x;
@@ -2040,7 +2040,7 @@ int                *spacesNumber;
 	/* Calcule la largeur des blancs */
 	if (pBox->BxSpaceWidth == 0)
 	  {
-	     spaceWidth = CarWidth (BLANC, font);
+	     spaceWidth = CarWidth (_SPACE_, font);
 	     extraSpace = 0;
 	  }
 	else
@@ -2057,7 +2057,7 @@ int                *spacesNumber;
 	c = (unsigned char) ((*pBuffer)->BuContent[newIndex - 1]);
 	if (c == 0)
 	   charWidth = 0;
-	else if (c == BLANC)
+	else if (c == _SPACE_)
 	   charWidth = spaceWidth;
 	else
 	   charWidth = CarWidth (c, font);
@@ -2070,13 +2070,13 @@ int                *spacesNumber;
 	     c = (unsigned char) ((*pBuffer)->BuContent[newIndex - 1]);
 	     if (c == 0)
 		charWidth = 0;
-	     else if (c == BLANC)
+	     else if (c == _SPACE_)
 		charWidth = spaceWidth;
 	     else
 		charWidth = CarWidth (c, font);
 #endif
 
-	     if (c == BLANC)
+	     if (c == _SPACE_)
 	       {
 		  (*spacesNumber)++;
 		  if (extraSpace > 0)
@@ -2111,7 +2111,7 @@ int                *spacesNumber;
 	     c = (unsigned char) ((*pBuffer)->BuContent[newIndex - 1]);
 	     if (c == 0)
 		charWidth = 0;
-	     else if (c == BLANC)
+	     else if (c == _SPACE_)
 		charWidth = spaceWidth;
 	     else
 		charWidth = CarWidth (c, font);
@@ -2128,7 +2128,7 @@ int                *spacesNumber;
 #ifdef STRUCT_EDIT
 	    /* BAlignment sur le caractere */
 	     *x = dx - charWidth;
-	     if (c == BLANC)
+	     if (c == _SPACE_)
 	       {
 		  if (*spacesNumber > 0 && pBox->BxNPixels >= *spacesNumber)
 		     (*x)--;

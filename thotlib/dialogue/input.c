@@ -752,33 +752,33 @@ int                 key;
 	       }
 
 /*** Sequence de traitement des espaces ***/
-	     if (value == SAUT_DE_LIGNE
-		 || (InputSpace && value == SeeCtrlRC))
+	     if (value == BREAK_LINE
+		 || (InputSpace && value == SHOWN_BREAK_LINE))
 	       {
 		  if (MenuActionList[0].Call_Action)
-		     (*MenuActionList[0].Call_Action) (document, view, SAUT_DE_LIGNE);
+		     (*MenuActionList[0].Call_Action) (document, view, BREAK_LINE);
 	       }
-	     else if (value == FINE || (InputSpace && value == SeeFine))
+	     else if (value == THIN_SPACE || (InputSpace && value == SHOWN_THIN_SPACE))
 	       {
 		  if (MenuActionList[0].Call_Action)
-		     (*MenuActionList[0].Call_Action) (document, view, FINE);
+		     (*MenuActionList[0].Call_Action) (document, view, THIN_SPACE);
 	       }
-	     else if (value == DEMI_CADRATIN
-		      || (InputSpace && value == SeeDemiCadratin))
+	     else if (value == HALF_EM
+		      || (InputSpace && value == SHOWN_HALF_EM))
 	       {
 		  if (MenuActionList[0].Call_Action)
-		     (*MenuActionList[0].Call_Action) (document, view, DEMI_CADRATIN);
+		     (*MenuActionList[0].Call_Action) (document, view, HALF_EM);
 	       }
-	     else if (value == BLANC_DUR
-		      || (InputSpace && value == SeeBlancDur))
+	     else if (value == UNBREAKABLE_SPACE
+		      || (InputSpace && value == SHOWN_UNBREAKABLE_SPACE))
 	       {
 		  if (MenuActionList[0].Call_Action)
-		     (*MenuActionList[0].Call_Action) (document, view, BLANC_DUR);
+		     (*MenuActionList[0].Call_Action) (document, view, UNBREAKABLE_SPACE);
 	       }
-	     else if ((InputSpace && value == SeeBlanc))
+	     else if ((InputSpace && value == SHOWN_SPACE))
 	       {
 		  if (MenuActionList[0].Call_Action)
-		     (*MenuActionList[0].Call_Action) (document, view, BLANC);
+		     (*MenuActionList[0].Call_Action) (document, view, _SPACE_);
 	       }
 
 	     else if ((value >= 32 && value < 128)

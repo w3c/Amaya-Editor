@@ -118,7 +118,7 @@ static void         AppliqueModPresent ()
    int                 i;
    int                 Signe;
 
-   selok = SelEditeur (&SelDoc, &PremSel, &DerSel, &premcar, &dercar);
+   selok = GetCurrentSelection (&SelDoc, &PremSel, &DerSel, &premcar, &dercar);
    if (selok && SelDoc != NULL)
       if (SelDoc->DocSSchema != NULL)
 	 /* il y a bien une selection et le document selectionne' n'a pas */
@@ -336,16 +336,16 @@ static void         AppliqueModPresent ()
 			SupprPresSpec (pEl, SelDoc, ReglesGeom, SelectedView);
 		     /* si on est dans un element copie' par inclusion,   */
 		     /* on met a jour les copies de cet element.          */
-		     ReaffPaveCopie (pEl, SelDoc, TRUE);
+		     RedisplayCopies (pEl, SelDoc, TRUE);
 		     /* cherche l'element a traiter ensuite */
-		     pEl = SelSuivant (pEl, DerSel);
+		     pEl = NextInSelection (pEl, DerSel);
 		  }
 		/* fin de la boucle de parcours et traitement des */
 		/* elements selectionnes */
 	     }
 	   /* tente de fusionner les elements voisins et reaffiche les paves */
 	   /* modifie's et la selection */
-	   FusEtSel (SelDoc, PremSel, DerSel, premcar, dercar);
+	   MergeAndSelect (SelDoc, PremSel, DerSel, premcar, dercar);
 	}
 }
 
@@ -739,7 +739,7 @@ View                view;
    pDoc = LoadedDocument[document - 1];
 
    /* demande quelle est la selection courante */
-   selok = SelEditeur (&SelDoc, &PremSel, &DerSel, &premcar, &dercar);
+   selok = GetCurrentSelection (&SelDoc, &PremSel, &DerSel, &premcar, &dercar);
    if (!selok)
      {
 	/* par defaut la racine du document */
@@ -759,7 +759,7 @@ View                view;
 	   if (ElementIsReadOnly (pEl))
 	      selok = FALSE;
 	   else
-	      pEl = SelSuivant (pEl, DerSel);
+	      pEl = NextInSelection (pEl, DerSel);
      }
 
    if (selok)
@@ -907,7 +907,7 @@ View                view;
    pDoc = LoadedDocument[document - 1];
 
    /* demande quelle est la selection courante */
-   selok = SelEditeur (&SelDoc, &PremSel, &DerSel, &premcar, &dercar);
+   selok = GetCurrentSelection (&SelDoc, &PremSel, &DerSel, &premcar, &dercar);
    if (!selok)
      {
 	/* par defaut la racine du document */
@@ -1048,7 +1048,7 @@ View                view;
    pDoc = LoadedDocument[document - 1];
 
    /* demande quelle est la selection courante */
-   selok = SelEditeur (&SelDoc, &PremSel, &DerSel, &premcar, &dercar);
+   selok = GetCurrentSelection (&SelDoc, &PremSel, &DerSel, &premcar, &dercar);
    if (!selok)
      {
 	/* par defaut la racine du document */

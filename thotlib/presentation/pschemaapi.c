@@ -124,7 +124,7 @@ Document            document;
 	pSchP->PsStructCode--;	/* number of documents using this schema */
 	if (pSchP->PsStructCode == 0)
 	   /* this presentation schema is no longer used */
-	   SupprSchPrs (pSchP, LoadedDocument[document - 1]->DocSSchema);
+	   FreePresentationSchema (pSchP, LoadedDocument[document - 1]->DocSSchema);
 	FreeHandleSchPres (pHd);
      }
 }

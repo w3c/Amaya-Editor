@@ -52,23 +52,23 @@ boolean             withborder;
 
    if (width > 0)
       /*upper border */
-      Invideo (frame, width, 1, x, y);
+      VideoInvert (frame, width, 1, x, y);
    if (height > 1)
      {
-	Invideo (frame, 1, height - 1, x, y + 1); /* left border */
-	Invideo (frame, 1, height - 1, x + width - 1, y + 1); /* right border */
+	VideoInvert (frame, 1, height - 1, x, y + 1); /* left border */
+	VideoInvert (frame, 1, height - 1, x + width - 1, y + 1); /* right border */
      }
    if (width > 1)
-      Invideo (frame, width - 1, 1, x + 1, y + height - 1); /* bottom */
+      VideoInvert (frame, width - 1, 1, x + 1, y + height - 1); /* bottom */
    /* reference point */
-   Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xr, yr);
+   VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, xr, yr);
 #ifdef IV
    if (withborder)
      {
 	for (i = step; i < width; i += step)
-	   Invideo (frame, 1, height - 1, x + i, y + 1);
+	   VideoInvert (frame, 1, height - 1, x + i, y + 1);
 	for (i = step; i < height; i += step)
-	   Invideo (frame, width - 1, 1, x + 1, y + i);
+	   VideoInvert (frame, width - 1, 1, x + 1, y + i);
      }
 #endif
 }

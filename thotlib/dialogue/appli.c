@@ -66,13 +66,13 @@ static XmString     null_string;
 extern void         EndInsert (void);
 extern void         DefRegion (int, int, int, int, int);
 extern boolean      RedrawFrameBottom (int, int);
-extern PtrAbstractBox      DesPave (int, int, int);
+extern PtrAbstractBox      GetClickedAbsBox (int, int, int);
 
 #else
 extern void         EndInsert ();
 extern void         DefRegion ();
 extern boolean      RedrawFrameBottom ();
-extern PtrAbstractBox      DesPave ();
+extern PtrAbstractBox      GetClickedAbsBox ();
 
 #endif
 
@@ -105,7 +105,7 @@ int                *view;
 	*view = 0;
 	if (pDoc != NULL)
 	  {
-	     VueFen (frame, pDoc, &i, &assoc);
+	     GetViewFromFrame (frame, pDoc, &i, &assoc);
 	     if (assoc)
 		*view = i + 100;
 	     else
@@ -133,7 +133,7 @@ int                *info;
    /* Enleve la procedure de Callback */
    /* Detruit la fenetre si elle existe encore */
    if (FrRef[frame] != 0 && frame > 0)
-      DestVue (frame);
+      ViewClosed (frame);
 }
 
 
@@ -737,10 +737,10 @@ void                InitAutreContexts ()
 	FrameTable[i].FrDoc = 0;
      }
 
-   DesReturn = 0;
-   DesFen = 0;
-   DesX = 0;
-   DesY = 0;
+   ClickIsDone = 0;
+   ClickFrame = 0;
+   ClickX = 0;
+   ClickY = 0;
    /* message de selection vide */
 #ifndef NEW_WILLOWS
    null_string = XmStringCreateSimple ("");
@@ -822,9 +822,9 @@ char               *text;
    int                 doc;
    int                 view;
 
-   if (ActifFen != 0)
+   if (ActiveFrame != 0)
      {
-	doc = FrameTable[ActifFen].FrDoc;	/* recupere le document concerne */
+	doc = FrameTable[ActiveFrame].FrDoc;	/* recupere le document concerne */
 	for (view = 1; view <= MAX_VIEW_DOC; view++)
 	  {
 	  /****frame = LoadedDocument[doc-1]->DocView[view - 1].DvPSchemaView;
@@ -926,13 +926,13 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     * If are waiting for the user to explicitely point to a document,
     * store the location and return.
     */
-   if (DesReturn == 1 &&
+   if (ClickIsDone == 1 &&
        ((msg == WM_LBUTTONDOWN) || (msg == WM_RBUTTONDOWN)))
      {
-	DesReturn = 0;
-	DesFen = frame;
-	DesX = LOWORD (lParam);
-	DesY = HIWORD (lParam);
+	ClickIsDone = 0;
+	ClickFrame = frame;
+	ClickX = LOWORD (lParam);
+	ClickY = HIWORD (lParam);
 	return (DefWindowProc (hWnd, msg, wParam, lParam));
      }
 
@@ -975,16 +975,16 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	       if (GetKeyState (VK_CONTROL))
 		 {
 		    /* changes the box position */
-		    DesBPosition (frame, LOWORD (lParam), HIWORD (lParam));
+		    ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
 
 		    /* This is the beginning of a selection */
 		 }
 	       else
 		 {
-		    DesFen = frame;
-		    DesX = LOWORD (lParam);
-		    DesY = HIWORD (lParam);
-		    LocateSelectionInView (frame, DesX, DesY, 2);
+		    ClickFrame = frame;
+		    ClickX = LOWORD (lParam);
+		    ClickY = HIWORD (lParam);
+		    LocateSelectionInView (frame, ClickX, ClickY, 2);
 		 }
 	       return (0);
 
@@ -1006,10 +1006,10 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	       TtaAbortShowDialogue ();
 
 	       /* memorise la position de la souris */
-	       DesFen = frame;
-	       DesX = LOWORD (lParam);
-	       DesY = HIWORD (lParam);
-	       LocateSelectionInView (frame, DesX, DesY, 3);
+	       ClickFrame = frame;
+	       ClickX = LOWORD (lParam);
+	       ClickY = HIWORD (lParam);
+	       LocateSelectionInView (frame, ClickX, ClickY, 3);
 	       return (0);
 
 
@@ -1021,7 +1021,7 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	       if (GetKeyState (VK_CONTROL))
 		 {
 		    /* changes the box size */
-		    DesBDimension (frame, LOWORD (lParam), HIWORD (lParam));
+		    ApplyDirectResize (frame, LOWORD (lParam), HIWORD (lParam));
 
 		    /* memorize the click position */
 		 }
@@ -1102,12 +1102,12 @@ XEvent             *ev;
    else if (ev == NULL)
       return;
 /*_______> Si une designation de pave est attendue*/
-   else if (DesReturn == 1 && ev->type == ButtonPress)
+   else if (ClickIsDone == 1 && ev->type == ButtonPress)
      {
-	DesReturn = 0;
-	DesFen = frame;
-	DesX = ev->xbutton.x;
-	DesY = ev->xbutton.y;
+	ClickIsDone = 0;
+	ClickFrame = frame;
+	ClickX = ev->xbutton.x;
+	ClickY = ev->xbutton.y;
 	return;
      }				/*else if */
 
@@ -1132,7 +1132,7 @@ XEvent             *ev;
 			   if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
 			     {
 				/* On change la position d'une boite */
-				DesBPosition (frame, ev->xbutton.x, ev->xbutton.y);
+				ApplyDirectTranslate (frame, ev->xbutton.x, ev->xbutton.y);
 			     }
 			   /* Est-ce un double clic */
 			   else if (t1 + (Time) 500 > ev->xbutton.time)
@@ -1146,27 +1146,27 @@ XEvent             *ev;
 				  }	/*while */
 
 				/* memorise la position de la souris */
-				DesFen = frame;
-				DesX = ev->xbutton.x;
-				DesY = ev->xbutton.y;
-				LocateSelectionInView (frame, DesX, DesY, 3);
+				ClickFrame = frame;
+				ClickX = ev->xbutton.x;
+				ClickY = ev->xbutton.y;
+				LocateSelectionInView (frame, ClickX, ClickY, 3);
 			     }
 			   /* Sinon c'est une selection normale */
 			   else
 			     {
 				t1 = ev->xbutton.time;
-				DesFen = frame;
-				DesX = ev->xbutton.x;
-				DesY = ev->xbutton.y;
-				LocateSelectionInView (frame, DesX, DesY, 2);
+				ClickFrame = frame;
+				ClickX = ev->xbutton.x;
+				ClickY = ev->xbutton.y;
+				LocateSelectionInView (frame, ClickX, ClickY, 2);
 
 				/* Regarde s'il s'agit d'un drag ou d'une simple marque d'insertion */
 				comm = 0;	/* il n'y a pas de drag */
 				XtAppNextEvent (app_cont, &event);
 				while (event.type != ButtonRelease)
 				  {
-				     dx = event.xbutton.x - DesX;
-				     dy = event.xbutton.y - DesY;
+				     dx = event.xbutton.x - ClickX;
+				     dy = event.xbutton.y - ClickY;
 				     if (event.type == MotionNotify
 					 && (dx > 2 || dx < -2 || dy > 2 || dy < -2))
 				       {
@@ -1193,7 +1193,7 @@ XEvent             *ev;
 			   if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
 			     {
 				/* On modifie les dimensions d'une boite */
-				DesBDimension (frame, ev->xbutton.x, ev->xbutton.y);
+				ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
 			     }
 			   else
 			     {
@@ -1207,7 +1207,7 @@ XEvent             *ev;
 			   /* Termine l'insertion courante s'il y en a une */
 			   EndInsert ();
 			   TtaSetDialoguePosition ();
-			   if (!SelEditeur (&docsel, &firstSel, &lastSel, &firstCar, &lastCar))
+			   if (!GetCurrentSelection (&docsel, &firstSel, &lastSel, &firstCar, &lastCar))
 			      TtaDisplaySimpleMessage (INFO, LIB, SEL_EL);
 			   /* non, message 'Selectionnez' */
 			   else if (docsel->DocReadOnly)
@@ -1472,11 +1472,11 @@ int                *pave;
      }
 
    /* Boucle d'attente de designation */
-   DesReturn = 1;
-   DesFen = 0;
-   DesX = 0;
-   DesY = 0;
-   while (DesReturn == 1)
+   ClickIsDone = 1;
+   ClickFrame = 0;
+   ClickX = 0;
+   ClickY = 0;
+   while (ClickIsDone == 1)
      {
 #ifndef NEW_WILLOWS
 	XtAppNextEvent (app_cont, &event);
@@ -1494,9 +1494,9 @@ int                *pave;
 #endif /* NEW_WILLOWS */
      }
 
-   *frame = DesFen;
-   if (DesFen > 0 && DesFen <= MAX_FRAME)
-      *pave = (int) DesPave (DesFen, DesX, DesY);
+   *frame = ClickFrame;
+   if (ClickFrame > 0 && ClickFrame <= MAX_FRAME)
+      *pave = (int) GetClickedAbsBox (ClickFrame, ClickX, ClickY);
    else
       *pave = 0;
 }				/*DesignationPave */
@@ -1548,9 +1548,9 @@ int                 frame;
 {
    ThotWidget          w;
 
-   if (ActifFen != frame)
+   if (ActiveFrame != frame)
      {
-	ActifFen = frame;
+	ActiveFrame = frame;
 	if (frame != 0)
 	  {
 	     w = FrameTable[frame].WdFrame;

@@ -6,30 +6,30 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern ContentType rdTypeContenu ( BinFile file );
-extern PtrPRule rdptrreg ( BinFile file,
+extern ContentType ReadContentType ( BinFile file );
+extern PtrPRule ReadRulePtr ( BinFile file,
                            PtrPRule * nextr );
-extern void rdPosition ( BinFile file,
+extern void ReadPosition ( BinFile file,
                          PosRule * RP );
-extern AttrComparType rdComparAttr ( BinFile file );
+extern AttrComparType ReadAttrCompar ( BinFile file );
 extern void ReadRules ( BinFile file,
                         PtrPRule * pR,
                         PtrPRule * nextr );
-extern PtrPSchema RdSchPres ( Name fname,
+extern PtrPSchema ReadPresentationSchema ( Name fname,
                               PtrSSchema SS );
 
 #else /* __STDC__ */
 
-extern ContentType rdTypeContenu (/* BinFile file */);
-extern PtrPRule rdptrreg (/* BinFile file,
+extern ContentType ReadContentType (/* BinFile file */);
+extern PtrPRule ReadRulePtr (/* BinFile file,
                              PtrPRule * nextr */);
-extern void rdPosition (/* BinFile file,
+extern void ReadPosition (/* BinFile file,
                            PosRule * RP */);
-extern AttrComparType rdComparAttr (/* BinFile file */);
+extern AttrComparType ReadAttrCompar (/* BinFile file */);
 extern void ReadRules (/* BinFile file,
                           PtrPRule * pR,
                           PtrPRule * nextr */);
-extern PtrPSchema RdSchPres (/* Name fname,
+extern PtrPSchema ReadPresentationSchema (/* Name fname,
                                 PtrSSchema SS */);
 
 #endif /* __STDC__ */

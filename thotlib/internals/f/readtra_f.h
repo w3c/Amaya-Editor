@@ -6,18 +6,18 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void erreurTraduc ( int err );
-extern PtrTSchema RdSchTrad ( Name fname,
+extern void TranslationError ( int err );
+extern PtrTSchema ReadTranslationSchema ( Name fname,
                               PtrSSchema SS );
-extern void LibereSchTrad ( PtrTSchema pSchT,
+extern void FreeTranslationSchema ( PtrTSchema pSchT,
                             PtrSSchema pSS );
 
 #else /* __STDC__ */
 
-extern void erreurTraduc (/* int err */);
-extern PtrTSchema RdSchTrad (/* Name fname,
+extern void TranslationError (/* int err */);
+extern PtrTSchema ReadTranslationSchema (/* Name fname,
                                 PtrSSchema SS */);
-extern void LibereSchTrad (/* PtrTSchema pSchT,
+extern void FreeTranslationSchema (/* PtrTSchema pSchT,
                               PtrSSchema pSS */);
 
 #endif /* __STDC__ */

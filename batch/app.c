@@ -768,7 +768,7 @@ indLine               wi;
 			 /* TypeName est ici le nom de la structure generique */
 			 /* => on lit le schema de structure compile' */
 			 pSSchema = (PtrSSchema) TtaGetMemory (sizeof (StructSchema));
-			 if (!RdSchStruct (name, pSSchema))
+			 if (!ReadStructureSchema (name, pSSchema))
 			    CompilerError (wi, APP, FATAL, APP_STRUCT_SCHEM_NOT_FOUND,
 					   inputLine, LineNum);
 			 else if (strcmp (name, pSSchema->SsName) != 0)

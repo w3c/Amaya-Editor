@@ -279,7 +279,7 @@ PtrDocument         pDoc;
 	{
 	   /* c'est un lien d'inclusion d'un document externe */
 	   /* cherche le schema de presentation qui s'applique a` l'element */
-	   ChSchemaPres (pEl, &pPSch, &entry, &pSS);
+	   SearchPresSchema (pEl, &pPSch, &entry, &pSS);
 	   /* ce schema contient-il une regle Transmit qui transmet le */
 	   /* contenu d'un type d'element a des documents de la classe du */
 	   /* document inclus ? */

@@ -86,13 +86,13 @@ int                 value;
 }
 
 /**
- *      VolumCar converts from pixel volume to char size
+ *      GetCharsCapacity converts from pixel volume to char size
  **/
 #ifdef __STDC__
-int                 VolumCar (int volpixel)
+int                 GetCharsCapacity (int volpixel)
 
 #else  /* __STDC__ */
-int                 VolumCar (volpixel)
+int                 GetCharsCapacity (volpixel)
 int                 volpixel;
 
 #endif /* __STDC__ */
@@ -483,30 +483,30 @@ char                name[100];
 	{
 	   mincar = result->min_char_or_byte2;
 	   spacewd = result->per_char[32 - mincar].width;
-	   if (result->max_char_or_byte2 > BLANC_DUR)
+	   if (result->max_char_or_byte2 > UNBREAKABLE_SPACE)
 	      /* largeur(Ctrl Space) = largeur(Space) */
-	      result->per_char[BLANC_DUR - mincar].width = spacewd;
-	   if (result->max_char_or_byte2 > SAUT_DE_LIGNE)
+	      result->per_char[UNBREAKABLE_SPACE - mincar].width = spacewd;
+	   if (result->max_char_or_byte2 > BREAK_LINE)
 	      /* largeur(Ctrl Return) = largeur(Space) */
-	      result->per_char[SAUT_DE_LIGNE - mincar].width = spacewd;
-	   if (result->max_char_or_byte2 > FINE)
+	      result->per_char[BREAK_LINE - mincar].width = spacewd;
+	   if (result->max_char_or_byte2 > THIN_SPACE)
 	      /* largeur(Fine) = 1/4largeur(Space) */
-	      result->per_char[FINE - mincar].width = (spacewd + 3) / 4;
-	   if (result->max_char_or_byte2 > DEMI_CADRATIN)
+	      result->per_char[THIN_SPACE - mincar].width = (spacewd + 3) / 4;
+	   if (result->max_char_or_byte2 > HALF_EM)
 	      /* largeur(DemiCadratin) = 1/2largeur(Space) */
-	      result->per_char[DEMI_CADRATIN - mincar].width = (spacewd + 1) / 2;
+	      result->per_char[HALF_EM - mincar].width = (spacewd + 1) / 2;
 	}
    return ((ptrfont) result);
 #endif /* !NEW_WILLOWS */
 }
 
 /**
- *      NomFonte computes the name of a Thot font.
+ *      FontIdentifier computes the name of a Thot font.
  **/
 #ifdef __STDC__
-void                NomFonte (char alphabet, char family, int highlight, int size, TypeUnit unit, char r_name[10], char r_nameX[100])
+void                FontIdentifier (char alphabet, char family, int highlight, int size, TypeUnit unit, char r_name[10], char r_nameX[100])
 #else  /* __STDC__ */
-void                NomFonte (alphabet, family, highlight, size, unit, r_name, r_nameX)
+void                FontIdentifier (alphabet, family, highlight, size, unit, r_name, r_nameX)
 char                alphabet;
 char                family;
 int                 highlight;
@@ -634,12 +634,12 @@ char                r_nameX[100];
 }
 
 /**
- *      LireFonte do a raw Thot font loading (bypasses the font cache).
+ *      ReadFont do a raw Thot font loading (bypasses the font cache).
  **/
 #ifdef __STDC__
-ptrfont             LireFonte (char alphabet, char family, int highlight, int size, TypeUnit unit)
+ptrfont             ReadFont (char alphabet, char family, int highlight, int size, TypeUnit unit)
 #else  /* __STDC__ */
-ptrfont             LireFonte (alphabet, family, highlight, size, unit)
+ptrfont             ReadFont (alphabet, family, highlight, size, unit)
 char                alphabet;
 char                family;
 int                 highlight;
@@ -650,7 +650,7 @@ TypeUnit            unit;
 {
    char                name[10], nameX[100];
 
-   NomFonte (alphabet, family, highlight, size, unit, name, nameX);
+   FontIdentifier (alphabet, family, highlight, size, unit, name, nameX);
    return LoadFont (nameX);
 }
 
@@ -795,9 +795,9 @@ boolean             increase;
 
    if (UseBitStreamFamily && size == 11)
       /* in the case of Bitstream, accept 11 points font size */
-      NomFonte (alphabet, family, highlight, size, TRUE, text, textX);
+      FontIdentifier (alphabet, family, highlight, size, TRUE, text, textX);
    else
-      NomFonte (alphabet, family, highlight, index, FALSE, text, textX);
+      FontIdentifier (alphabet, family, highlight, index, FALSE, text, textX);
 
    /* initialize the Proscript font name */
    strcpy (PsName, text);
@@ -817,7 +817,7 @@ boolean             increase;
 	  }
 	else
 	   i++;
-	deb += MAX_NFONT;
+	deb += MAX_FONTNAME;
      }
 
    /* Load a new font */
@@ -828,7 +828,7 @@ boolean             increase;
 	   TtaDisplayMessage (INFO, TtaGetMessage(LIB, NO_PLACE_FOR_FONT), textX);
 	else
 	  {
-	     strcpy (&TtFontName[i * MAX_NFONT], text);
+	     strcpy (&TtFontName[i * MAX_FONTNAME], text);
 	     strcpy (&TtPsFontName[i * 8], PsName);
 
 #ifdef NEW_WILLOWS
@@ -869,7 +869,7 @@ boolean             increase;
 	       {
 		  if (TtFonts[j] == NULL)
 		     j = MAX_FONT;
-		  else if (TtFontName[j * MAX_NFONT] == alphabet)
+		  else if (TtFontName[j * MAX_FONTNAME] == alphabet)
 		    {
 		       ptfont = TtFonts[j];
 		       j = MAX_FONT;
@@ -881,7 +881,7 @@ boolean             increase;
 	     /* last case the default font */
 	     if (ptfont == NULL)
 	       {
-		  ptfont = FontMenu;
+		  ptfont = FontDialogue;
 		  j = 0;
 	       }
 	  }
@@ -929,12 +929,12 @@ int                 frame;
 
 
 /**
- *      InitFont initialize the standard fonts used by the Thot Toolkit.
+ *      InitDialogueFonts initialize the standard fonts used by the Thot Toolkit.
  **/
 #ifdef __STDC__
-void                InitFont (char *name)
+void                InitDialogueFonts (char *name)
 #else  /* __STDC__ */
-void                InitFont (name)
+void                InitDialogueFonts (name)
 char               *name;
 
 #endif /* __STDC__ */
@@ -1033,38 +1033,38 @@ char               *name;
 #endif /* NEW_WILLOWS */
 
    /* Initialize the Thot Lib standards fonts */
-   FontMenu = FontMenu2 = FontMenu3 = NULL;
-   FontIS = NULL;
-   FontIGr = NULL;
-   FonteLeg = NULL;
+   FontDialogue = IFontDialogue = LargeFontDialogue = NULL;
+   SymbolIcons = NULL;
+   GraphicsIcons = NULL;
+   SmallFontDialogue = NULL;
 
    /* Initialize the font table */
    for (i = 0; i < MAX_FONT; i++)
       TtFonts[i] = NULL;
 
    /* load first five predefined fonts */
-   FontMenu = ThotLoadFont ('L', 't', 0, MenuSize, UnPoint, 0);
-   if (FontMenu == NULL)
+   FontDialogue = ThotLoadFont ('L', 't', 0, MenuSize, UnPoint, 0);
+   if (FontDialogue == NULL)
      {
-	FontMenu = ThotLoadFont ('L', 'l', 0, MenuSize, UnPoint, 0);
-	if (FontMenu == NULL)
+	FontDialogue = ThotLoadFont ('L', 'l', 0, MenuSize, UnPoint, 0);
+	if (FontDialogue == NULL)
 	   TtaDisplaySimpleMessage (FATAL, LIB, MISSING_FONT);
      }
 
-   FontMenu2 = ThotLoadFont ('L', 't', 2, MenuSize, UnPoint, 0);
-   if (FontMenu2 == NULL)
+   IFontDialogue = ThotLoadFont ('L', 't', 2, MenuSize, UnPoint, 0);
+   if (IFontDialogue == NULL)
      {
-	FontMenu2 = ThotLoadFont ('L', 'l', 2, MenuSize, UnPoint, 0);
-	if (FontMenu2 == NULL)
-	   FontMenu2 = FontMenu;
+	IFontDialogue = ThotLoadFont ('L', 'l', 2, MenuSize, UnPoint, 0);
+	if (IFontDialogue == NULL)
+	   IFontDialogue = FontDialogue;
      }
 
-   FontMenu3 = ThotLoadFont ('L', 't', 1, f3, UnPoint, 0);
-   if (FontMenu3 == NULL)
+   LargeFontDialogue = ThotLoadFont ('L', 't', 1, f3, UnPoint, 0);
+   if (LargeFontDialogue == NULL)
      {
-	FontMenu3 = ThotLoadFont ('L', 't', 1, f3, UnPoint, 0);
-	if (FontMenu3 == NULL)
-	   FontMenu3 = FontMenu2;
+	LargeFontDialogue = ThotLoadFont ('L', 't', 1, f3, UnPoint, 0);
+	if (LargeFontDialogue == NULL)
+	   LargeFontDialogue = IFontDialogue;
      }
    FirstRemovableFont = 3;
 }
@@ -1146,7 +1146,7 @@ int                 frame;
 		  TtFonts[j] = TtFonts[i];
 		  TtFonts[i] = NULL;
 		  TtFontFrames[j] = TtFontFrames[i];
-		  strcpy (&TtFontName[j * MAX_NFONT], &TtFontName[i * MAX_NFONT]);
+		  strcpy (&TtFontName[j * MAX_FONTNAME], &TtFontName[i * MAX_FONTNAME]);
 		  i--;
 		  j++;
 	       }

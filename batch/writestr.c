@@ -28,10 +28,10 @@ static BinFile      outfile;
 /* retourne un nombre entier qui sera utilise comme un identificateur */
 /* unique */
 #ifdef __STDC__
-int                 uniqueident ()
+int                 UniqueIdent ()
 
 #else  /* __STDC__ */
-int                 uniqueident ()
+int                 UniqueIdent ()
 #endif				/* __STDC__ */
 
 {
@@ -43,12 +43,12 @@ int                 uniqueident ()
 }
 
 
-/* wrshort      ecrit l'entier n dans le fichier .STR */
+/* WriteShort      ecrit l'entier n dans le fichier .STR */
 #ifdef __STDC__
-void                wrshort (int n)
+void                WriteShort (int n)
 
 #else  /* __STDC__ */
-void                wrshort (n)
+void                WriteShort (n)
 int                 n;
 
 #endif /* __STDC__ */
@@ -60,12 +60,12 @@ int                 n;
 }
 
 
-/* wrsignshort  ecrit l'entier signe' n dans le fichier .STR */
+/* WriteSignedShort  ecrit l'entier signe' n dans le fichier .STR */
 #ifdef __STDC__
-void                wrsignshort (int n)
+void                WriteSignedShort (int n)
 
 #else  /* __STDC__ */
-void                wrsignshort (n)
+void                WriteSignedShort (n)
 int                 n;
 
 #endif /* __STDC__ */
@@ -73,9 +73,9 @@ int                 n;
 {
 
    if (n >= 0)
-      wrshort (n);
+      WriteShort (n);
    else
-      wrshort (n + 65536);
+      WriteShort (n + 65536);
 }
 
 
@@ -100,12 +100,12 @@ Name                 n;
 }
 
 
-/* wrBool       ecrit le booleen b dans le fichier .STR */
+/* WriteBoolean       ecrit le booleen b dans le fichier .STR */
 #ifdef __STDC__
-void                wrBool (boolean b)
+void                WriteBoolean (boolean b)
 
 #else  /* __STDC__ */
-void                wrBool (b)
+void                WriteBoolean (b)
 boolean             b;
 
 #endif /* __STDC__ */
@@ -119,12 +119,12 @@ boolean             b;
 }
 
 
-/* wrTypeAttr   ecrit le type d'attribut T dans le fichier .STR */
+/* WriteAttributeType   ecrit le type d'attribut T dans le fichier .STR */
 #ifdef __STDC__
-void                wrTypeAttr (AttribType T)
+void                WriteAttributeType (AttribType T)
 
 #else  /* __STDC__ */
-void                wrTypeAttr (T)
+void                WriteAttributeType (T)
 AttribType        T;
 
 #endif /* __STDC__ */
@@ -150,12 +150,12 @@ AttribType        T;
 }
 
 
-/* wrConstructeur       ecrit le constructeur C dans le fichier .STR */
+/* WriteConstructor       ecrit le constructeur C dans le fichier .STR */
 #ifdef __STDC__
-void                wrConstructeur (RConstruct C)
+void                WriteConstructor (RConstruct C)
 
 #else  /* __STDC__ */
-void                wrConstructeur (C)
+void                WriteConstructor (C)
 RConstruct        C;
 
 #endif /* __STDC__ */
@@ -202,12 +202,12 @@ RConstruct        C;
 }
 
 
-/* wrTypeBase   ecrit le type de base T dans le fichier .STR */
+/* WriteBasicType   ecrit le type de base T dans le fichier .STR */
 #ifdef __STDC__
-void                wrTypeBase (BasicType T)
+void                WriteBasicType (BasicType T)
 
 #else  /* __STDC__ */
-void                wrTypeBase (T)
+void                WriteBasicType (T)
 BasicType          T;
 
 #endif /* __STDC__ */
@@ -256,78 +256,78 @@ SRule              *pRe1;
    int                 j;
 
    wrNom (pRe1->SrName);
-   wrshort (pRe1->SrNDefAttrs);
+   WriteShort (pRe1->SrNDefAttrs);
    for (j = 1; j <= pRe1->SrNDefAttrs; j++)
-      wrshort (pRe1->SrDefAttr[j - 1]);
+      WriteShort (pRe1->SrDefAttr[j - 1]);
    for (j = 1; j <= pRe1->SrNDefAttrs; j++)
-      wrsignshort (pRe1->SrDefAttrValue[j - 1]);
+      WriteSignedShort (pRe1->SrDefAttrValue[j - 1]);
    for (j = 1; j <= pRe1->SrNDefAttrs; j++)
-      wrBool (pRe1->SrDefAttrModif[j - 1]);
-   wrshort (pRe1->SrNLocalAttrs);
+      WriteBoolean (pRe1->SrDefAttrModif[j - 1]);
+   WriteShort (pRe1->SrNLocalAttrs);
    for (j = 1; j <= pRe1->SrNLocalAttrs; j++)
-      wrshort (pRe1->SrLocalAttr[j - 1]);
+      WriteShort (pRe1->SrLocalAttr[j - 1]);
    for (j = 1; j <= pRe1->SrNLocalAttrs; j++)
-      wrBool (pRe1->SrRequiredAttr[j - 1]);
-   wrBool (pRe1->SrAssocElem);
-   wrBool (pRe1->SrParamElem);
-   wrBool (pRe1->SrUnitElem);
-   wrBool (pRe1->SrRecursive);	/* SrRecursDone */
-   wrBool (pRe1->SrExportedElem);
+      WriteBoolean (pRe1->SrRequiredAttr[j - 1]);
+   WriteBoolean (pRe1->SrAssocElem);
+   WriteBoolean (pRe1->SrParamElem);
+   WriteBoolean (pRe1->SrUnitElem);
+   WriteBoolean (pRe1->SrRecursive);	/* SrRecursDone */
+   WriteBoolean (pRe1->SrExportedElem);
    if (pRe1->SrExportedElem)
      {
-	wrshort (pRe1->SrExportContent);
+	WriteShort (pRe1->SrExportContent);
 	wrNom (pRe1->SrNatExpContent);
      }
-   wrshort (pRe1->SrFirstExcept);
-   wrshort (pRe1->SrLastExcept);
-   wrshort (pRe1->SrNInclusions);
+   WriteShort (pRe1->SrFirstExcept);
+   WriteShort (pRe1->SrLastExcept);
+   WriteShort (pRe1->SrNInclusions);
    for (j = 1; j <= pRe1->SrNInclusions; j++)
-      wrshort (pRe1->SrInclusion[j - 1]);
-   wrshort (pRe1->SrNExclusions);
+      WriteShort (pRe1->SrInclusion[j - 1]);
+   WriteShort (pRe1->SrNExclusions);
    for (j = 1; j <= pRe1->SrNExclusions; j++)
-      wrshort (pRe1->SrExclusion[j - 1]);
-   wrBool (pRe1->SrRefImportedDoc);
-   wrConstructeur (pRe1->SrConstruct);
+      WriteShort (pRe1->SrExclusion[j - 1]);
+   WriteBoolean (pRe1->SrRefImportedDoc);
+   WriteConstructor (pRe1->SrConstruct);
    switch (pRe1->SrConstruct)
 	 {
 	    case CsNatureSchema:
 
 	       break;
 	    case CsBasicElement:
-	       wrTypeBase (pRe1->SrBasicType);
+	       WriteBasicType (pRe1->SrBasicType);
 	       break;
 	    case CsReference:
-	       wrshort (pRe1->SrReferredType);
+	       WriteShort (pRe1->SrReferredType);
 	       wrNom (pRe1->SrRefTypeNat);
 
 	       break;
 	    case CsIdentity:
-	       wrshort (pRe1->SrIdentRule);
+	       WriteShort (pRe1->SrIdentRule);
 	       break;
 	    case CsList:
-	       wrshort (pRe1->SrListItem);
-	       wrshort (pRe1->SrMinItems);
-	       wrshort (pRe1->SrMaxItems);
+	       WriteShort (pRe1->SrListItem);
+	       WriteShort (pRe1->SrMinItems);
+	       WriteShort (pRe1->SrMaxItems);
 	       break;
 	    case CsChoice:
-	       wrsignshort (pRe1->SrNChoices);
+	       WriteSignedShort (pRe1->SrNChoices);
 	       if (pRe1->SrNChoices > 0)
 		  for (j = 1; j <= pRe1->SrNChoices; j++)
-		     wrshort (pRe1->SrChoice[j - 1]);
+		     WriteShort (pRe1->SrChoice[j - 1]);
 	       break;
 	    case CsAggregate:
 	    case CsUnorderedAggregate:
-	       wrshort (pRe1->SrNComponents);
+	       WriteShort (pRe1->SrNComponents);
 	       for (j = 1; j <= pRe1->SrNComponents; j++)
-		  wrshort (pRe1->SrComponent[j - 1]);
+		  WriteShort (pRe1->SrComponent[j - 1]);
 	       for (j = 1; j <= pRe1->SrNComponents; j++)
-		  wrBool (pRe1->SrOptComponent[j - 1]);
+		  WriteBoolean (pRe1->SrOptComponent[j - 1]);
 	       break;
 	    case CsConstant:
-	       wrshort (pRe1->SrIndexConst);
+	       WriteShort (pRe1->SrIndexConst);
 	       break;
 	    case CsPairedElement:
-	       wrBool (pRe1->SrFirstOfPair);
+	       WriteBoolean (pRe1->SrFirstOfPair);
 	       break;
 	    case CsExtensionRule:
 	       break;
@@ -335,15 +335,15 @@ SRule              *pRe1;
 }
 
 
-/* WrSchStruct  ecrit le schema de structure pointe' par pSchStr dans */
+/* WriteStructureSchema  ecrit le schema de structure pointe' par pSchStr dans */
 /* le fichier de nom fname. Ajoute le suffixe .STR au nom de fichier. */
 /* Si Code est nul, ecrit le schema avec un nouveau code d'identification */
 /* sinon avec Code comme code d'identification. */
 #ifdef __STDC__
-boolean             WrSchStruct (Name fname, PtrSSchema pSchStr, int Code)
+boolean             WriteStructureSchema (Name fname, PtrSSchema pSchStr, int Code)
 
 #else  /* __STDC__ */
-boolean             WrSchStruct (fname, pSchStr, Code)
+boolean             WriteStructureSchema (fname, pSchStr, Code)
 Name                 fname;
 PtrSSchema        pSchStr;
 int                 Code;
@@ -366,20 +366,20 @@ int                 Code;
    wrNom (pSc1->SsName);
    if (Code == 0)
       /* alloue un nouveau code d'identification au schema compile' */
-      wrshort (uniqueident ());	/* SsCode */
+      WriteShort (UniqueIdent ());	/* SsCode */
    else
       /* le schema compile' a le code d'identification Code */
-      wrshort (Code);
+      WriteShort (Code);
    wrNom (pSc1->SsDefaultPSchema);
    /* SsPSchema */
-   wrBool (pSc1->SsExtension);
-   wrshort (pSc1->SsRootElem);
-   wrshort (pSc1->SsNAttributes);
-   wrshort (pSc1->SsNRules);
-   wrBool (pSc1->SsExport);
-   wrshort (pSc1->SsNExceptions);
+   WriteBoolean (pSc1->SsExtension);
+   WriteShort (pSc1->SsRootElem);
+   WriteShort (pSc1->SsNAttributes);
+   WriteShort (pSc1->SsNRules);
+   WriteBoolean (pSc1->SsExport);
+   WriteShort (pSc1->SsNExceptions);
    for (i = 1; i <= pSc1->SsNExceptions; i++)
-      wrshort (pSc1->SsException[i - 1]);	/* ecrit le texte des
+      WriteShort (pSc1->SsException[i - 1]);	/* ecrit le texte des
 						 * constantes */
    i = 0;
    do
@@ -394,10 +394,10 @@ int                 Code;
      {
 	pAt1 = &pSc1->SsAttribute[i - 1];
 	wrNom (pAt1->AttrName);
-	wrBool (pAt1->AttrGlobal);
-	wrshort (pAt1->AttrFirstExcept);
-	wrshort (pAt1->AttrLastExcept);
-	wrTypeAttr (pAt1->AttrType);
+	WriteBoolean (pAt1->AttrGlobal);
+	WriteShort (pAt1->AttrFirstExcept);
+	WriteShort (pAt1->AttrLastExcept);
+	WriteAttributeType (pAt1->AttrType);
 	switch (pAt1->AttrType)
 	      {
 		 case AtNumAttr:
@@ -405,11 +405,11 @@ int                 Code;
 
 		    break;
 		 case AtReferenceAttr:
-		    wrshort (pAt1->AttrTypeRef);
+		    WriteShort (pAt1->AttrTypeRef);
 		    wrNom (pAt1->AttrTypeRefNature);
 		    break;
 		 case AtEnumAttr:
-		    wrshort (pAt1->AttrNEnumValues);
+		    WriteShort (pAt1->AttrNEnumValues);
 		    for (j = 1; j <= pAt1->AttrNEnumValues; j++)
 		       wrNom (pAt1->AttrEnumValue[j - 1]);
 		    break;
@@ -421,7 +421,7 @@ int                 Code;
       wrRegle (&pSc1->SsRule[i - 1]);
    if (pSc1->SsExtension)
      {
-	wrshort (pSc1->SsNExtensRules);
+	WriteShort (pSc1->SsNExtensRules);
 	/* ecrit les regles d'extension */
 	for (i = 1; i <= pSc1->SsNExtensRules; i++)
 	   wrRegle (&pSc1->SsExtensBlock->EbExtensRule[i - 1]);

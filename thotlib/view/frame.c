@@ -381,7 +381,7 @@ int                 delta;
 			    /* volume of the area to add */
 			    vol = x * l;
 			    /* convert in number of chars */
-			    vol = VolumCar (vol);
+			    vol = GetCharsCapacity (vol);
 			 }
 		       if (min != NULL)
 			 {
@@ -433,7 +433,7 @@ int                 delta;
 		       vol = (bottom - y) * l;
 
 		       /* convert in number of chars */
-		       vol = VolumCar (vol);
+		       vol = GetCharsCapacity (vol);
 
 		       /* cleanup the bottom of the frame */
 		       Clear (frame, l, pFrame->FrYOrg + h - y, 0, y);
@@ -704,7 +704,7 @@ int                 delta;
 	/* Interractive creation of boxes missing */
 	if (ToCreate != NULL)
 	  {
-	     ModeCreation (ToCreate, frame);
+	     DirectCreation (ToCreate, frame);
 	     /* Should the son's boxes being handled too ? */
 	     pAbbox1 = ToCreate->BxAbstractBox;
 	     if (pAbbox1 != NULL)
@@ -717,7 +717,7 @@ int                 delta;
 		      || (pAbbox1->AbHeight.DimUserSpecified))
 		    {
 		       ToCreate = pAbbox1->AbBox;
-		       ModeCreation (ToCreate, frame);
+		       DirectCreation (ToCreate, frame);
 		    }
 		  else
 		     pAbbox1 = pAbbox1->AbNext;
@@ -758,7 +758,7 @@ int                 delta;
 		       y = pBo2->BxYOrg;	/* previous location */
 		       x = y + pBo2->BxHeight;
 		    }
-		  IncreaseVolume (TRUE, VolumCar (height), frame);
+		  IncreaseVolume (TRUE, GetCharsCapacity (height), frame);
 		  toadd = TRUE;
 
 		  /* Adding abstract boxes at the beginning */
@@ -838,7 +838,7 @@ int                 delta;
 		       /* volume of the area to add */
 		       vol = (y + x) * l;
 		       /* convert in number of chars */
-		       vol = VolumCar (vol);
+		       vol = GetCharsCapacity (vol);
 		    }
 
 		  y = pBo1->BxYOrg + pBo1->BxHeight;

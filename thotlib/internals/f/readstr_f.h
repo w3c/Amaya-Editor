@@ -6,12 +6,12 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern boolean RdSchStruct ( Name fname,
+extern boolean ReadStructureSchema ( Name fname,
                              PtrSSchema scheme );
 
 #else /* __STDC__ */
 
-extern boolean RdSchStruct (/* Name fname,
+extern boolean ReadStructureSchema (/* Name fname,
                                PtrSSchema scheme */);
 
 #endif /* __STDC__ */

@@ -1136,7 +1136,7 @@ TraiterEvtPaletteLien (ref, typedata, data)
    * typedata   int             Type du parametre
    * data               char*           parametre
    *
-   * Functionality : Applique les parametres a une forme polygone ou rectangle
+   * Functionality : ApplyRule les parametres a une forme polygone ou rectangle
    *
    ------------------------------------------------------------------------------
    !EF */
@@ -1218,7 +1218,7 @@ AppliquerFeuilleRectangle (ref, typedata, data)
    * typedata   int             Type du parametre
    * data               char*           parametre
    *
-   * Functionality : Applique les parametres a une forme polygone ou rectangle
+   * Functionality : ApplyRule les parametres a une forme polygone ou rectangle
    *
    ------------------------------------------------------------------------------
    !EF */

@@ -6,18 +6,18 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void MajPavSelect ( int frame,
+extern void SetNewSelectionStatus ( int frame,
                            PtrAbstractBox pAb,
                            boolean status );
-extern void VisuSel ( int frame,
+extern void DisplayCurrentSelection ( int frame,
                       boolean status );
 
 #else /* __STDC__ */
 
-extern void MajPavSelect (/* int frame,
+extern void SetNewSelectionStatus (/* int frame,
                              PtrAbstractBox pAb,
                              boolean status */);
-extern void VisuSel (/* int frame,
+extern void DisplayCurrentSelection (/* int frame,
                         boolean status */);
 
 #endif /* __STDC__ */

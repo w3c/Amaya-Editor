@@ -28,8 +28,8 @@ static boolean      SaveDocWithMove;
 static PtrDocument  DocumentToSave;
 
 #ifdef __STDC__
-extern void         NomFonte (char, char, int, int, TypeUnit, char[], char[]);
-extern boolean      SauverDoc (PtrDocument, Name, PathBuffer, boolean, boolean);
+extern void         FontIdentifier (char, char, int, int, TypeUnit, char[], char[]);
+extern boolean      StoreDocument (PtrDocument, Name, PathBuffer, boolean, boolean);
 extern int          IdentDocument (PtrDocument);
 extern boolean      CallEventType (NotifyEvent *, boolean);
 extern void         DoFileName (Name, char *, PathBuffer, PathBuffer, int *);
@@ -40,11 +40,11 @@ extern int          FileExist (char *);
 extern int          ConfigMakeMenuExport (char *, char *);
 extern void         EntreeMenu (int *, char *, char[]);
 extern int          GetWindowNumber (Document, View);
-extern boolean      SauveDocument (PtrDocument, int);
+extern boolean      WriteDocument (PtrDocument, int);
 
 #else  /* __STDC__ */
-extern void         NomFonte ();
-extern boolean      SauverDoc ();
+extern void         FontIdentifier ();
+extern boolean      StoreDocument ();
 extern int          IdentDocument ();
 extern boolean      CallEventType ();
 extern void         DoFileName ();
@@ -55,7 +55,7 @@ extern int          FileExist ();
 extern int          ConfigMakeMenuExport ();
 extern void         EntreeMenu ();
 extern int          GetWindowNumber ();
-extern boolean      SauveDocument ();
+extern boolean      WriteDocument ();
 
 #endif /* __STDC__ */
 
@@ -79,7 +79,7 @@ int                 ent;
       TtaRedrawMenuEntry (ref, ent, NULL, InactiveB_Color, 0);
    else
      {
-	NomFonte ('L', 'T', 2, 11, 1, text, fontname);
+	FontIdentifier ('L', 'T', 2, 11, 1, text, fontname);
 	TtaRedrawMenuEntry (ref, ent, fontname, -1, 0);
      }
 }				/*DesactiveEntree */
@@ -102,7 +102,7 @@ void                TraiteSauverDoc ()
       /* sauver en format Thot */
      {
 	strcat (outputFileName, ".PIV");
-	(void) SauverDoc (DocumentToSave,
+	(void) StoreDocument (DocumentToSave,
 			  SaveFileName, SaveDirectoryName,
 			  SaveDocWithCopy, SaveDocWithMove);
      }
@@ -467,7 +467,7 @@ View                view;
 	     frame = GetWindowNumber (document, view);
 	     if (ThotLocalActions[T_updateparagraph] != NULL)
 		(*ThotLocalActions[T_updateparagraph]) (ViewFrameTable[frame - 1].FrAbstractBox, frame);
-	     pDoc->DocModified = !SauveDocument (pDoc, 4);
+	     pDoc->DocModified = !WriteDocument (pDoc, 4);
 	  }
      }
 }

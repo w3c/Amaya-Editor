@@ -27,9 +27,9 @@ static BinFile      outfile;
 /* ---------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrshort (int n)
+static void         WriteShort (int n)
 #else  /* __STDC__ */
-static void         wrshort (n)
+static void         WriteShort (n)
 int                 n;
 
 #endif /* __STDC__ */
@@ -41,17 +41,17 @@ int                 n;
 /* ---------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrsignshort (int n)
+static void         WriteSignedShort (int n)
 #else  /* __STDC__ */
-static void         wrsignshort (n)
+static void         WriteSignedShort (n)
 int             n;
 
 #endif /* __STDC__ */
 {
    if (n >= 0)
-      wrshort (n);
+      WriteShort (n);
    else
-      wrshort (n + 65536);
+      WriteShort (n + 65536);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -143,12 +143,12 @@ TypeUnit            unit;
 }
 
 /* ---------------------------------------------------------------------- */
-/* wrTypeRegle  ecrit un type de regle de presentation dans le fichier */
+/* WritePRuleType  ecrit un type de regle de presentation dans le fichier */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                wrTypeRegle (PRuleType T)
+void                WritePRuleType (PRuleType T)
 #else  /* __STDC__ */
-void                wrTypeRegle (T)
+void                WritePRuleType (T)
 PRuleType           T;
 
 #endif /* __STDC__ */
@@ -406,11 +406,11 @@ BAlignment             C;
 }
 
 
-/* wrTypeCondition      ecrit un type de condition dans le fichier */
+/* WritePresCondition      ecrit un type de condition dans le fichier */
 #ifdef __STDC__
-void                wrTypeCondition (PresCondition T)
+void                WritePresCondition (PresCondition T)
 #else  /* __STDC__ */
-void                wrTypeCondition (T)
+void                WritePresCondition (T)
 PresCondition       T;
 
 #endif /* __STDC__ */
@@ -708,11 +708,11 @@ BasicType          T;
 }
 
 
-/* wrVarType    ecrit un type de variable dans le fichier */
+/* WriteVariableType    ecrit un type de variable dans le fichier */
 #ifdef __STDC__
-void                wrVarType (VariableType T)
+void                WriteVariableType (VariableType T)
 #else  /* __STDC__ */
-void                wrVarType (T)
+void                WriteVariableType (T)
 VariableType             T;
 
 #endif /* __STDC__ */
@@ -756,11 +756,11 @@ VariableType             T;
 }
 
 
-/* wrComptStyle ecrit un style de compteur dans le fichier */
+/* WriteCounterStyle ecrit un style de compteur dans le fichier */
 #ifdef __STDC__
-static void         wrComptStyle (CounterStyle S)
+static void         WriteCounterStyle (CounterStyle S)
 #else  /* __STDC__ */
-static void         wrComptStyle (S)
+static void         WriteCounterStyle (S)
 CounterStyle          S;
 
 #endif /* __STDC__ */
@@ -789,11 +789,11 @@ CounterStyle          S;
 }
 
 
-/* wrTypeContenu                ecrit un type de contenu dans le fichier */
+/* WriteContentType                ecrit un type de contenu dans le fichier */
 #ifdef __STDC__
-void                wrTypeContenu (ContentType T)
+void                WriteContentType (ContentType T)
 #else  /* __STDC__ */
-void                wrTypeContenu (T)
+void                WriteContentType (T)
 ContentType         T;
 
 #endif /* __STDC__ */
@@ -861,24 +861,24 @@ PosRule            RP;
    wrRepereBoite (pRe1->PoPosRef);
    wrUnit (pRe1->PoDistUnit);
    wrbool (pRe1->PoDistAttr);
-   wrsignshort (pRe1->PoDistance);
+   WriteSignedShort (pRe1->PoDistance);
    wrNiveau (pRe1->PoRelation);
    wrbool (pRe1->PoNotRel);
    wrbool (pRe1->PoUserSpecified);
    wrbool (pRe1->PoRefElem);
    if (pRe1->PoRefElem)
-      wrshort (pRe1->PoTypeRefElem);
+      WriteShort (pRe1->PoTypeRefElem);
    else
-      wrshort (pRe1->PoRefPresBox);
+      WriteShort (pRe1->PoRefPresBox);
 }
 
 
-/* WriteRules   ecrit la chaine de regle de presentation qui */
+/* WritePRules   ecrit la chaine de regle de presentation qui */
 /* commence par la regle pointee par pR. */
 #ifdef __STDC__
-void                WriteRules (PtrPRule pR)
+void                WritePRules (PtrPRule pR)
 #else  /* __STDC__ */
-void                WriteRules (pR)
+void                WritePRules (pR)
 PtrPRule        pR;
 
 #endif /* __STDC__ */
@@ -889,17 +889,17 @@ PtrPRule        pR;
    PtrCondition        pCond;
    DimensionRule       *pRelD1;
 
-   /* debut de la procedure WriteRules */
+   /* debut de la procedure WritePRules */
    cR = pR;
    while (cR != NULL)
      {
 	pRe1 = cR;
-	wrTypeRegle (pRe1->PrType);
+	WritePRuleType (pRe1->PrType);
 	wrptrreg (pRe1->PrNextPRule);
 	pCond = pRe1->PrCond;
 	while (pCond != NULL)
 	  {
-	     wrTypeCondition (pCond->CoCondition);
+	     WritePresCondition (pCond->CoCondition);
 	     wrbool (pCond->CoNotNegative);
 	     wrbool (pCond->CoTarget);
 	     switch (pCond->CoCondition)
@@ -907,19 +907,19 @@ PtrPRule        pR;
 		      case PcEven:
 		      case PcOdd:
 		      case PcOne:
-			 wrshort (pCond->CoCounter);
+			 WriteShort (pCond->CoCounter);
 			 break;
 		      case PcInterval:
-			 wrshort (pCond->CoCounter);
-			 wrsignshort (pCond->CoMinCounter);
-			 wrsignshort (pCond->CoMaxCounter);
+			 WriteShort (pCond->CoCounter);
+			 WriteSignedShort (pCond->CoMinCounter);
+			 WriteSignedShort (pCond->CoMaxCounter);
 			 wrNatValCmpt (pCond->CoValCounter);
 			 break;
 		      case PcWithin:
 			 wrbool (pCond->CoImmediate);
-			 wrshort (pCond->CoRelation);
+			 WriteShort (pCond->CoRelation);
 			 wrRelationParent (pCond->CoAncestorRel);
-			 wrsignshort (pCond->CoTypeAncestor);
+			 WriteSignedShort (pCond->CoTypeAncestor);
 			 if (pCond->CoTypeAncestor == 0)
 			   {
 			      wrnom (pCond->CoAncestorName);
@@ -928,24 +928,24 @@ PtrPRule        pR;
 			 break;
 		      case PcElemType:
 		      case PcAttribute:
-			 wrsignshort (pCond->CoTypeElAttr);
+			 WriteSignedShort (pCond->CoTypeElAttr);
 			 break;
 		      default:
 			 break;
 		   }
 	     pCond = pCond->CoNextCondition;
 	  }
-	wrTypeCondition (PcNoCondition);
-	wrshort (pRe1->PrViewNum);
+	WritePresCondition (PcNoCondition);
+	WriteShort (pRe1->PrViewNum);
 	wrModeCalcul (pRe1->PrPresMode);
 	switch (pRe1->PrPresMode)
 	      {
 		 case PresInherit:
 		    wrTypeHeritage (pRe1->PrInheritMode);
 		    wrbool (pRe1->PrInhAttr);
-		    wrsignshort (pRe1->PrInhDelta);
+		    WriteSignedShort (pRe1->PrInhDelta);
 		    wrbool (pRe1->PrMinMaxAttr);
-		    wrsignshort (pRe1->PrInhMinOrMax);
+		    WriteSignedShort (pRe1->PrInhMinOrMax);
 		    wrUnit (pRe1->PrInhUnit);
 		    break;
 		 case PresFunction:
@@ -955,12 +955,12 @@ PtrPRule        pR;
 		      {
 			 wrbool (pRe1->PrExternal);
 			 wrbool (pRe1->PrElement);
-			 wrshort (pRe1->PrNPresBoxes);
+			 WriteShort (pRe1->PrNPresBoxes);
 			 if (pRe1->PrNPresBoxes == 0)
 			    wrnom (pRe1->PrPresBoxName);
 			 else
 			    for (i = 1; i <= pRe1->PrNPresBoxes; i++)
-			       wrshort (pRe1->PrPresBox[i - 1]);
+			       WriteShort (pRe1->PrPresBox[i - 1]);
 		      }
 		    break;
 		 case PresImmediate:
@@ -973,7 +973,7 @@ PtrPRule        pR;
 			     case PtBackground:
 			     case PtForeground:
 				wrbool (pRe1->PrAttrValue);
-				wrsignshort (pRe1->PrIntValue);
+				WriteSignedShort (pRe1->PrIntValue);
 				break;
 			     case PtFont:
 			     case PtStyle:
@@ -990,7 +990,7 @@ PtrPRule        pR;
 			     case PtLineWeight:
 				wrUnit (pRe1->PrMinUnit);
 				wrbool (pRe1->PrMinAttr);
-				wrsignshort (pRe1->PrMinValue);
+				WriteSignedShort (pRe1->PrMinValue);
 				break;
 			     case PtVertRef:
 			     case PtHorizRef:
@@ -1012,14 +1012,14 @@ PtrPRule        pR;
 				     wrbool (pRelD1->DrAttr);
 				     wrbool (pRelD1->DrMin);
 				     wrbool (pRelD1->DrUserSpecified);
-				     wrsignshort (pRelD1->DrValue);
+				     WriteSignedShort (pRelD1->DrValue);
 				     wrNiveau (pRelD1->DrRelation);
 				     wrbool (pRelD1->DrNotRelat);
 				     wrbool (pRelD1->DrRefElement);
 				     if (pRelD1->DrRefElement)
-					wrshort (pRelD1->DrTypeRefElem);
+					WriteShort (pRelD1->DrTypeRefElem);
 				     else
-					wrshort (pRelD1->DrRefPresBox);
+					WriteShort (pRelD1->DrRefPresBox);
 				  }
 				break;
 			     case PtAdjust:
@@ -1043,14 +1043,14 @@ PtrPRule        pR;
 }
 
 
-/* WrSchPres    cree le fichier de sortie et y ecrit le schema de */
+/* WritePresentationSchema    cree le fichier de sortie et y ecrit le schema de */
 /* presentation */
 
 #ifdef __STDC__
-boolean             WrSchPres (Name fname, PtrPSchema pSchPres, PtrSSchema pSchStr)
+boolean             WritePresentationSchema (Name fname, PtrPSchema pSchPres, PtrSSchema pSchStr)
 
 #else  /* __STDC__ */
-boolean             WrSchPres (fname, pSchPres, pSchStr)
+boolean             WritePresentationSchema (fname, pSchPres, pSchStr)
 Name                 fname;
 PtrPSchema          pSchPres;
 PtrSSchema        pSchStr;
@@ -1080,8 +1080,8 @@ PtrSSchema        pSchStr;
    /* ecrit la partie fixe */
    pSc1 = pSchPres;
    wrnom (pSc1->PsStructName);
-   wrshort (pSc1->PsStructCode);
-   wrshort (pSc1->PsNViews);
+   WriteShort (pSc1->PsStructCode);
+   WriteShort (pSc1->PsNViews);
    for (i = 1; i <= pSc1->PsNViews; i++)
       wrnom (pSc1->PsView[i - 1]);
    for (i = 1; i <= pSc1->PsNViews; i++)
@@ -1089,60 +1089,60 @@ PtrSSchema        pSchStr;
    /* significatif uniquement dans la V4 */
    for (i = 1; i <= pSc1->PsNViews; i++)
       wrbool (pSc1->PsColumnView[i - 1]);
-   wrshort (pSc1->PsNPrintedViews);
+   WriteShort (pSc1->PsNPrintedViews);
    for (i = 1; i <= pSc1->PsNPrintedViews; i++)
      {
 	wrbool (pSc1->PsPrintedView[i - 1].VpAssoc);
-	wrshort (pSc1->PsPrintedView[i - 1].VpNumber);
+	WriteShort (pSc1->PsPrintedView[i - 1].VpNumber);
      }
    for (i = 1; i <= pSc1->PsNViews; i++)
       wrbool (pSc1->PsExportView[i - 1]);
-   wrshort (pSc1->PsNCounters);
-   wrshort (pSc1->PsNConstants);
-   wrshort (pSc1->PsNVariables);
-   wrshort (pSc1->PsNPresentBoxes);
+   WriteShort (pSc1->PsNCounters);
+   WriteShort (pSc1->PsNConstants);
+   WriteShort (pSc1->PsNVariables);
+   WriteShort (pSc1->PsNPresentBoxes);
    wrptrreg (pSc1->PsFirstDefaultPRule);
 
    /* ecrit les compteurs */
    for (i = 1; i <= pSc1->PsNCounters; i++)
      {
 	pCo1 = &pSc1->PsCounter[i - 1];
-	wrshort (pCo1->CnNItems);
+	WriteShort (pCo1->CnNItems);
 	for (j = 1; j <= pCo1->CnNItems; j++)
 	  {
 	     pCp1 = &pCo1->CnItem[j - 1];
 	     wrCptTypeOp (pCp1->CiCntrOp);
-	     wrshort (pCp1->CiElemType);
-	     wrsignshort (pCp1->CiAscendLevel);
-	     wrshort (pCp1->CiViewNum);
-	     wrsignshort (pCp1->CiParamValue);
-	     wrshort (pCp1->CiInitAttr);
-	     wrshort (pCp1->CiReinitAttr);
+	     WriteShort (pCp1->CiElemType);
+	     WriteSignedShort (pCp1->CiAscendLevel);
+	     WriteShort (pCp1->CiViewNum);
+	     WriteSignedShort (pCp1->CiParamValue);
+	     WriteShort (pCp1->CiInitAttr);
+	     WriteShort (pCp1->CiReinitAttr);
 	  }
-	wrshort (pCo1->CnNPresBoxes);
+	WriteShort (pCo1->CnNPresBoxes);
 	for (j = 1; j <= pCo1->CnNPresBoxes; j++)
 	  {
-	     wrshort (pCo1->CnPresBox[j - 1]);
+	     WriteShort (pCo1->CnPresBox[j - 1]);
 	     wrbool (pCo1->CnMinMaxPresBox[j - 1]);
 	  }
-	wrshort (pCo1->CnNTransmAttrs);
+	WriteShort (pCo1->CnNTransmAttrs);
 	for (j = 1; j <= pCo1->CnNTransmAttrs; j++)
 	  {
 	     wrnom (pCo1->CnTransmAttr[j - 1]);
-	     wrshort (pCo1->CnTransmSSchemaAttr[j - 1]);
+	     WriteShort (pCo1->CnTransmSSchemaAttr[j - 1]);
 	  }
-	wrshort (pCo1->CnNCreators);
+	WriteShort (pCo1->CnNCreators);
 	for (j = 1; j <= pCo1->CnNCreators; j++)
 	  {
-	     wrshort (pCo1->CnCreator[j - 1]);
+	     WriteShort (pCo1->CnCreator[j - 1]);
 	     wrbool (pCo1->CnMinMaxCreator[j - 1]);
 	  }
 	for (j = 1; j <= pCo1->CnNCreators; j++)
 	   wrbool (pCo1->CnPresBoxCreator[j - 1]);
-	wrshort (pCo1->CnNCreatedBoxes);
+	WriteShort (pCo1->CnNCreatedBoxes);
 	for (j = 1; j <= pCo1->CnNCreatedBoxes; j++)
 	  {
-	     wrshort (pCo1->CnCreatedBox[j - 1]);
+	     WriteShort (pCo1->CnCreatedBox[j - 1]);
 	     wrbool (pCo1->CnMinMaxCreatedBox[j - 1]);
 	  }
 	wrbool (pCo1->CnPageFooter);
@@ -1167,29 +1167,29 @@ PtrSSchema        pSchStr;
    for (i = 1; i <= pSc1->PsNVariables; i++)
      {
 	pPres1 = &pSc1->PsVariable[i - 1];
-	wrshort (pPres1->PvNItems);
+	WriteShort (pPres1->PvNItems);
 	for (j = 1; j <= pPres1->PvNItems; j++)
 	  {
 	     pVa1 = &pPres1->PvItem[j - 1];
-	     wrVarType (pVa1->ViType);
+	     WriteVariableType (pVa1->ViType);
 	     switch (pVa1->ViType)
 		   {
 		      case VarText:
-			 wrshort (pVa1->ViConstant);
+			 WriteShort (pVa1->ViConstant);
 			 break;
 		      case VarCounter:
-			 wrshort (pVa1->ViCounter);
-			 wrComptStyle (pVa1->ViStyle);
+			 WriteShort (pVa1->ViCounter);
+			 WriteCounterStyle (pVa1->ViStyle);
 			 wrNatValCmpt (pVa1->ViCounterVal);
 			 break;
 		      case VarAttrValue:
-			 wrshort (pVa1->ViAttr);
-			 wrComptStyle (pVa1->ViStyle);
+			 WriteShort (pVa1->ViAttr);
+			 WriteCounterStyle (pVa1->ViStyle);
 
 			 break;
 		      case VarPageNumber:
-			 wrshort (pVa1->ViView);
-			 wrComptStyle (pVa1->ViStyle);
+			 WriteShort (pVa1->ViView);
+			 WriteCounterStyle (pVa1->ViStyle);
 			 break;
 		      default:
 			 break;
@@ -1210,21 +1210,21 @@ PtrSSchema        pSchStr;
 	wrbool (pBo1->PbPageFooter);
 	wrbool (pBo1->PbPageHeader);
 	wrbool (pBo1->PbPageBox);
-	wrshort (pBo1->PbFooterHeight);
-	wrshort (pBo1->PbHeaderHeight);
-	wrshort (pBo1->PbPageCounter);
-	wrTypeContenu (pBo1->PbContent);
+	WriteShort (pBo1->PbFooterHeight);
+	WriteShort (pBo1->PbHeaderHeight);
+	WriteShort (pBo1->PbPageCounter);
+	WriteContentType (pBo1->PbContent);
 	switch (pBo1->PbContent)
 	      {
 		 case ContVariable:
-		    wrshort (pBo1->PbContVariable);
+		    WriteShort (pBo1->PbContVariable);
 		    break;
 		 case ContConst:
-		    wrshort (pBo1->PbContConstant);
+		    WriteShort (pBo1->PbContConstant);
 		    break;
 		 case ContElement:
-		    wrshort (pBo1->PbContElem);
-		    wrshort (pBo1->PbContRefElem);
+		    WriteShort (pBo1->PbContElem);
+		    WriteShort (pBo1->PbContRefElem);
 		    break;
 		 default:
 		    break;
@@ -1233,24 +1233,24 @@ PtrSSchema        pSchStr;
 
    /* ecrit les presentations des attributs semantiques */
    for (i = 1; i <= pSchStr->SsNAttributes; i++)
-      wrshort (pSc1->PsNAttrPRule[i - 1]);
+      WriteShort (pSc1->PsNAttrPRule[i - 1]);
 
    for (i = 1; i <= pSchStr->SsNAttributes; i++)
      {
 	pRP1 = pSc1->PsAttrPRule[i - 1];
 	for (l = pSc1->PsNAttrPRule[i - 1]; l-- > 0; pRP1 = pRP1->ApNextAttrPres)
 	  {
-	     wrshort (pRP1->ApElemType);
+	     WriteShort (pRP1->ApElemType);
 	     switch (pSchStr->SsAttribute[i - 1].AttrType)
 		   {
 		      case AtNumAttr:
-			 wrshort (pRP1->ApNCases);
+			 WriteShort (pRP1->ApNCases);
 			 for (j = 1; j <= pRP1->ApNCases; j++)
 			   {
 			      pCa1 = &pRP1->ApCase[j - 1];
 			      wrComparAttr (pCa1->CaComparType);
-			      wrsignshort (pCa1->CaLowerBound);
-			      wrsignshort (pCa1->CaUpperBound);
+			      WriteSignedShort (pCa1->CaLowerBound);
+			      WriteSignedShort (pCa1->CaUpperBound);
 			      wrptrreg (pCa1->CaFirstPRule);
 			   }
 			 break;
@@ -1276,11 +1276,11 @@ PtrSSchema        pSchStr;
 
    /* ecrit toutes les regles de presentation */
    /* ecrit les regles standard */
-   WriteRules (pSc1->PsFirstDefaultPRule);
+   WritePRules (pSc1->PsFirstDefaultPRule);
 
    /* ecrit les regles des boites */
    for (i = 1; i <= pSc1->PsNPresentBoxes; i++)
-      WriteRules (pSc1->PsPresentBox[i - 1].PbFirstPRule);
+      WritePRules (pSc1->PsPresentBox[i - 1].PbFirstPRule);
 
    /* ecrit les regles des attributs */
    for (i = 1; i <= pSchStr->SsNAttributes; i++)
@@ -1292,17 +1292,17 @@ PtrSSchema        pSchStr;
 		   {
 		      case AtNumAttr:
 			 for (j = 1; j <= pRP1->ApNCases; j++)
-			    WriteRules (pRP1->ApCase[j - 1].CaFirstPRule);
+			    WritePRules (pRP1->ApCase[j - 1].CaFirstPRule);
 			 break;
 		      case AtReferenceAttr:
-			 WriteRules (pRP1->ApRefFirstPRule);
+			 WritePRules (pRP1->ApRefFirstPRule);
 			 break;
 		      case AtTextAttr:
-			 WriteRules (pRP1->ApTextFirstPRule);
+			 WritePRules (pRP1->ApTextFirstPRule);
 			 break;
 		      case AtEnumAttr:
 			 for (j = 0; j <= pSchStr->SsAttribute[i - 1].AttrNEnumValues; j++)
-			    WriteRules (pRP1->ApEnumFirstPRule[j]);
+			    WritePRules (pRP1->ApEnumFirstPRule[j]);
 			 break;
 		   }
 	  }
@@ -1310,16 +1310,16 @@ PtrSSchema        pSchStr;
 
    /* ecrit les regles des elements structures */
    for (i = 1; i <= pSchStr->SsNRules; i++)
-      WriteRules (pSc1->PsElemPRule[i - 1]);
+      WritePRules (pSc1->PsElemPRule[i - 1]);
 
    for (i = 1; i <= pSchStr->SsNAttributes; i++)
-      wrshort (pSc1->PsNHeirElems[i - 1]);
+      WriteShort (pSc1->PsNHeirElems[i - 1]);
 
    for (i = 1; i <= pSchStr->SsNRules; i++)
-      wrshort (pSc1->PsNInheritedAttrs[i - 1]);
+      WriteShort (pSc1->PsNInheritedAttrs[i - 1]);
 
    for (i = 1; i <= pSchStr->SsNAttributes; i++)
-      wrshort (pSc1->PsNComparAttrs[i - 1]);
+      WriteShort (pSc1->PsNComparAttrs[i - 1]);
 
    for (i = 1; i <= pSchStr->SsNRules; i++)
       wrbool (pSc1->PsAcceptPageBreak[i - 1]);
@@ -1341,11 +1341,11 @@ PtrSSchema        pSchStr;
    /* for (i = 1; i <= pSchStr->SsNRules; i++) *//* TODO */
    /* wrbool(pSc1->SPVueAssocAvecCol[i - 1]); *//* TODO */
    for (i = 1; i <= pSchStr->SsNRules; i++)
-      wrshort (pSc1->PsElemTransmit[i - 1]);
-   wrshort (pSc1->PsNTransmElems);
+      WriteShort (pSc1->PsElemTransmit[i - 1]);
+   WriteShort (pSc1->PsNTransmElems);
    for (i = 1; i <= pSc1->PsNTransmElems; i++)
      {
-	wrshort (pSc1->PsTransmElem[i - 1].TeTargetDoc);
+	WriteShort (pSc1->PsTransmElem[i - 1].TeTargetDoc);
 	wrnom (pSc1->PsTransmElem[i - 1].TeTargetAttr);
      }
    BIOwriteClose (outfile);

@@ -676,12 +676,12 @@ int                 hlogo;
    XDrawRectangle (TtDisplay, drawable, TtLineGC, xif, yif, wif - 1, hif - 1);
    /* Drawing the filename in the bottom of the Picture Box */
    BaseName (imageDesc->PicFileName, filename, 0, 0);
-   fileNameWidth = XTextWidth ((XFontStruct *) FontMenu, filename, strlen (filename));
-   if ((fileNameWidth + wlogo <= wif) && (FontHeight (FontMenu) + hlogo <= hif))
+   fileNameWidth = XTextWidth ((XFontStruct *) FontDialogue, filename, strlen (filename));
+   if ((fileNameWidth + wlogo <= wif) && (FontHeight (FontDialogue) + hlogo <= hif))
      {
 	fnposx = (wif - fileNameWidth) / 2 + xif;
 	fnposy = hif - 5 + yif;
-	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) FontMenu)->fid);
+	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) FontDialogue)->fid);
 	XDrawString (TtDisplay, drawable, TtLineGC, fnposx, fnposy, filename, strlen (filename));
      }
 #endif /* NEW_WILLOWS */
@@ -876,7 +876,7 @@ PictInfo    *imageDesc;
 		      {
 			 if (noCroppingFrame)
 			   {
-			      NouvDimImage (box->BxAbstractBox);
+			      NewDimPicture (box->BxAbstractBox);
 			   }
 			 w = wif;
 			 h = hif;

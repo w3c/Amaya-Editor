@@ -1466,7 +1466,7 @@ PtrDocument         pDoc;
 	     /* frame ou doit s'afficher la vue */
 	     if (getXYWidthHeight (line, pDoc, &x, &y, &width, &height))
 		/* lecture reussie, on ouvre la vue */
-		CreVueNommee (pDoc, nomvue, x, y, width, height);
+		OpenViewByName (pDoc, nomvue, x, y, width, height);
 	  }
 	fclose (file);
      }

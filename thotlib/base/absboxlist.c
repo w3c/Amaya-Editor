@@ -501,7 +501,7 @@ int                 frame;
       /* Une petite cuisine pour passer le nom du fichier en parametre */
      {
 	/* On teste le droit d'ecriture du fichier */
-	i = OuvrEcr (fname);
+	i = FileWriteAccess (fname);
 	if (i != 0)
 	  {
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, WRITING_IMP), fname);

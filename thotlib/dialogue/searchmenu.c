@@ -280,7 +280,7 @@ PtrSearchContext           context;
 		 /* fait comme si on n'avait pas trouve' */
 		 pEl = NULL;
 	if (pEl != NULL)
-	   SelectWithAPP (context->SDocument, pEl, TRUE, FALSE);
+	   SelectElementWithEvent (context->SDocument, pEl, TRUE, FALSE);
      }
    ok = (pEl != NULL);
    if (!trouve)
@@ -362,7 +362,7 @@ PtrSearchContext           context;
 		      trouve = TRUE;
 		   else if (pEl->ElReference->RdInternalRef)
 		      if (!pEl->ElReference->RdReferred->ReExternalRef)
-			 if (DansTampon (pEl->ElReference->RdReferred->ReReferredElem))
+			 if (IsASavedElement (pEl->ElReference->RdReferred->ReReferredElem))
 			    /* l'element reference' est dans le buffer des */
 			    /* elements coupe's */
 			    trouve = TRUE;
@@ -392,7 +392,7 @@ PtrSearchContext           context;
 		 /* fait comme si on n'avait pas trouve' */
 		 pEl = NULL;
 	if (pEl != NULL)
-	   SelectWithAPP (context->SDocument, pEl, TRUE, FALSE);
+	   SelectElementWithEvent (context->SDocument, pEl, TRUE, FALSE);
      }
    ok = (pEl != NULL);
    if (!trouve)
@@ -444,7 +444,7 @@ int                 val;
 		}
 	      else
 		{
-		   ok = SelEditeur (&docsel, &premsel, &dersel, &premcar,
+		   ok = GetCurrentSelection (&docsel, &premsel, &dersel, &premcar,
 				    &dercar);
 		   if (!ok || docsel != DomaineCherche->SDocument)
 		      /* la selection a change' de document, on refuse */
@@ -507,7 +507,7 @@ View                view;
    pDoc = LoadedDocument[document - 1];
    SearchLoadResources ();
 
-   ok = SelEditeur (&docsel, &premsel, &dersel, &premcar, &dercar);
+   ok = GetCurrentSelection (&docsel, &premsel, &dersel, &premcar, &dercar);
    if (!ok)
      {
 	docsel = pDoc;
@@ -584,7 +584,7 @@ int                 val;
 		  }
 		else
 		  {
-		     ok = SelEditeur (&docsel, &premsel, &dersel, &premcar, &dercar);
+		     ok = GetCurrentSelection (&docsel, &premsel, &dersel, &premcar, &dercar);
 		     if (!ok || docsel != DomaineCherche->SDocument)
 			/* la selection a change' de document, on refuse */
 		       {
@@ -650,7 +650,7 @@ View                view;
    pDoc = LoadedDocument[document - 1];
    SearchLoadResources ();
 
-   ok = SelEditeur (&docsel, &premsel, &dersel, &premcar, &dercar);
+   ok = GetCurrentSelection (&docsel, &premsel, &dersel, &premcar, &dercar);
    if (!ok)
      {
 	docsel = pDoc;
@@ -803,7 +803,7 @@ PtrDocument         pDoc;
    char                buftext[200];
    boolean             trouve;
 
-   if (!SelEditeur (&docsel, &premsel, &dersel, &premcar, &dercar))
+   if (!GetCurrentSelection (&docsel, &premsel, &dersel, &premcar, &dercar))
       /* message 'Pas de selection' */
       TtaDisplaySimpleMessage (INFO, LIB, DEBUG_NO_SEL);
    else
@@ -920,7 +920,7 @@ int                 Data;
 		  if (ReferCour == NULL && pDocExtCour != NULL)
 		     /* il s'agit bien d'une reference dans un document externe */
 		     /* non charge' */
-		     if (!IdentDocNul (pDocExtCour->EdDocIdent))
+		     if (!DocIdentIsNull (pDocExtCour->EdDocIdent))
 		       {
 			  /* acquiert et initialise un descripteur de document */
 			  CreateDocument (&pDoc);
@@ -970,7 +970,7 @@ View                view;
 
    pDoc = LoadedDocument[document - 1];
 
-   ok = SelEditeur (&docsel, &premsel, &dersel, &premcar, &dercar);
+   ok = GetCurrentSelection (&docsel, &premsel, &dersel, &premcar, &dercar);
    if (ok)
       if (pDoc != docsel)
 	 ok = FALSE;
@@ -1165,7 +1165,7 @@ char               *txt;
 			/* Abandon de la recherhce */
 			return;
 
-		     selok = SelEditeur (&docsel, &premsel, &dersel, &premcar, &dercar);
+		     selok = GetCurrentSelection (&docsel, &premsel, &dersel, &premcar, &dercar);
 		     if (selok)
 			if (docsel != DomaineCherche->SDocument)
 			   selok = FALSE;
@@ -1256,7 +1256,7 @@ char               *txt;
 						 /* recupere les parametres de la nouvelle */
 						 /* chaine */
 						 if (!RemplacementAutomatique)
-						    selok = SelEditeur (&docsel, &premsel, &dersel,
+						    selok = GetCurrentSelection (&docsel, &premsel, &dersel,
 							 &premcar, &dercar);
 					      }
 					 }
@@ -1334,7 +1334,7 @@ char               *txt;
 					 if (!RemplacementAutomatique)
 					   {
 					      /* selectionne la chaine trouvee */
-					      SelectStringWithAPP (DomaineCherche->SDocument,
+					      SelectStringWithEvent (DomaineCherche->SDocument,
 						  premsel, premcar, dercar);
 					      /* arrete la boucle de recherche */
 					      stop = TRUE;
@@ -1477,7 +1477,7 @@ int                 func;
    PP = NULL;
    if (frame > 0)
      {
-	DocVueFen (frame, &docsel, &VueDoc, &assoc);
+	GetDocAndView (frame, &docsel, &VueDoc, &assoc);
 	if (assoc)
 	   /* c'est une vue d'elements associes */
 	   /* les elements associes n'ont qu'une vue */

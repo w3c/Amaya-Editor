@@ -36,7 +36,7 @@ EXPORT Action_Ctl	*MenuActionList;
 EXPORT int		MaxMenuAction;
 
 /* Gestion des evenements de retour sur les fenetres Application et Documents */
-EXPORT int      DesReturn;
+EXPORT int      ClickIsDone;
 
 #endif /* !NODISPLAY */
 

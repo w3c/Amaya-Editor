@@ -330,7 +330,7 @@ PtrDocument         pDoc;
 	   /* Les_Colonnes, Colonne_Simple ou Colonne_Composee */
 	  {
 	     /* on cherche sa regle de hauteur */
-	     pRegle = LaRegle (pDoc, pAb, &pSPR, PtHeight, TRUE, &pAttr);
+	     pRegle = SearchRulepAb (pDoc, pAb, &pSPR, PtHeight, TRUE, &pAttr);
 	     if (pRegle->PrDimRule.DrPosition)
 		/* c'est une hauteur elastique */
 		if (pRegle->PrDimRule.DrPosRule.PoRefElem)
@@ -339,18 +339,18 @@ PtrDocument         pDoc;
 		      /* la regle exprime une position par rapport a un */
 		      /* element Bas_tableau */
 		      /*c'est bien un filet vertical, on reapplique la regle */
-		      if (Applique (pRegle, pSPR, pAb, pDoc, pAttr))
+		      if (ApplyRule (pRegle, pSPR, pAb, pDoc, pAttr))
 			{
 			   /* indique que la hauteur du pave' a change' */
 			   pAb->AbHeightChange = TRUE;
 			   /* conserve le pointeur sur le pave a reafficher */
 			   if (AssocView (pEl))
 			      pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-				 Englobant (pAb, pDoc->DocAssocModifiedAb[pEl->
+				 Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->
 							   ElAssocNum - 1]);
 			   else
 			      pDoc->DocViewModifiedAb[Vue - 1] =
-				 Englobant (pAb, pDoc->DocViewModifiedAb[Vue - 1]);
+				 Enclosing (pAb, pDoc->DocViewModifiedAb[Vue - 1]);
 			}
 	  }
      }
@@ -459,15 +459,15 @@ PtrDocument         pDoc;
 	      if (trouve)
 		{
 		   /* detruit le pave trouve' */
-		   TuePave (pAb);
+		   SetDeadAbsBox (pAb);
 		   /* conserve le pointeur sur le pave a reafficher */
 		   if (AssocView (pEl))
 		      pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-			 Englobant (pAb, pDoc->DocAssocModifiedAb[pEl->
+			 Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->
 							   ElAssocNum - 1]);
 		   else
 		      pDoc->DocViewModifiedAb[vue - 1] =
-			 Englobant (pAb, pDoc->DocViewModifiedAb[vue - 1]);
+			 Enclosing (pAb, pDoc->DocViewModifiedAb[vue - 1]);
 		}
 	   }
 }
@@ -599,7 +599,7 @@ boolean             *coupe;
 			       /* l'element a inclure est connu, on le copie */
 			       CopyIncludedElem (pEl, pDoc);
 			    /* cree les paves du nouvel element */
-			    CreeTousPaves (pEl, pDoc);
+			    CreateAllAbsBoxesOfEl (pEl, pDoc);
 			 }
 		       if (VueNb == 0)
 			  /* cas particulier des tableaux */
@@ -610,7 +610,7 @@ boolean             *coupe;
 		    }
 		  if (VueNb > 0)
 		     /* cree les paves du saut de page */
-		     CrPaveNouv (pElPage, pDoc, VueNb);
+		     CreateNewAbsBoxes (pElPage, pDoc, VueNb);
 
 		  /*cherche l'element a repeter */
 		  pACopier = ChercheRepetition (pSpecial, pElPage, ExcPageBreakRepetition, FALSE);
@@ -635,7 +635,7 @@ boolean             *coupe;
 			       /* l'element a inclure est connu, on le copie */
 			       CopyIncludedElem (pEl, pDoc);
 			    /* cree les paves du nouvel element */
-			    CreeTousPaves (pEl, pDoc);
+			    CreateAllAbsBoxesOfEl (pEl, pDoc);
 			 }
 		    }
 	       }
@@ -747,7 +747,7 @@ int                 VueNb;
 	else
 	   /* c'est bien un element repete', on detruit ses paves */
 	  {
-	     DetPavVue (Prec, pDoc, FALSE, VueNb);
+	     DestroyAbsBoxesView (Prec, pDoc, FALSE, VueNb);
 	     Prec = Prec->ElPrevious;
 	  }
      }
@@ -768,7 +768,7 @@ int                 VueNb;
 	else
 	   /* c'est bien un element repete', on detruit ses paves */
 	  {
-	     DetPavVue (Suiv, pDoc, FALSE, VueNb);
+	     DestroyAbsBoxesView (Suiv, pDoc, FALSE, VueNb);
 	     Suiv = Suiv->ElNext;
 	  }
      }

@@ -217,7 +217,7 @@ char               *data;
 	       if (val == 0)
 		  return;	/* abandon */
 	       /* le nom du fichier a importer a deja ete saisie par "Ouvrir" */
-	       TraiteMenuImporter (SchStrImport, DirectoryName, DefaultDocumentName);
+	       ImportDocument (SchStrImport, DirectoryName, DefaultDocumentName);
 	       break;
 	 }
 }

@@ -410,7 +410,7 @@ int                 ActiveAttr[];
 
    nbOfEntries = 0;
    /* demande quelle est la selection courante */
-   selok = SelEditeur (&SelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
+   selok = GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
    if (selok && SelDoc == pDoc)
       /* il y a une selection et elle est dans le document traite' */
      {
@@ -671,7 +671,7 @@ char               *valtext;
 	       else
 		  /* ce n'est pas une simple fermeture de la feuille de dialogue */
 		  /* demande quelle est la selection courante */
-	       if (SelEditeur (&SelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+	       if (GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
 		  /* il y a bien une selection */
 		 {
 		    GetAttr (&pAttrNew);
@@ -770,7 +770,7 @@ int                 frame;
    VueDeFenetre (frame, &doc, &view);
 
    if (att >= 0)
-      if (SelEditeur (&SelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+      if (GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
 	{
 	   GetAttr (&pAttrNew);
 	   pAttrNew->AeAttrSSchema = AttrStruct[att];
@@ -793,7 +793,7 @@ int                 frame;
 		      (pAttrNew, firstSel, lastSel, FALSE);
 		if (AssocCreated != NULL)
 		  {
-		     CreeTousPaves (AssocCreated, SelDoc);
+		     CreateAllAbsBoxesOfEl (AssocCreated, SelDoc);
 		     AbstractImageUpdated (SelDoc);
 		  }
 		/* applique l'attribut a la partie selectionnee */

@@ -6,14 +6,14 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern PtrAbstractBox Englobant ( PtrAbstractBox pAbb1,
+extern PtrAbstractBox Enclosing ( PtrAbstractBox pAbb1,
                                   PtrAbstractBox pAbb2 );
-extern void ChercheReglePEl ( PtrPRule * pRuleView1,
+extern void SimpleSearchRulepEl ( PtrPRule * pRuleView1,
                               PtrElement pEl,
                               int view,
                               PRuleType typeRule,
                               PtrPRule * pRule );
-extern PtrPRule ReglePEl ( PtrElement pEl,
+extern PtrPRule GlobalSearchRulepEl ( PtrElement pEl,
                            PtrPSchema * pSPR,
                            PtrSSchema * pSSR,
                            int presNum,
@@ -23,39 +23,39 @@ extern PtrPRule ReglePEl ( PtrElement pEl,
                            boolean isElPage,
                            boolean attr,
                            PtrAttribute * pAttr );
-extern PtrPRule LaRegle ( PtrDocument pDoc,
+extern PtrPRule SearchRulepAb ( PtrDocument pDoc,
                           PtrAbstractBox pAb,
                           PtrPSchema * pSPR,
                           PRuleType typeRule,
                           boolean attr,
                           PtrAttribute * pAttr );
-extern PtrPRule RegleFonction ( PtrElement pEl,
+extern PtrPRule FunctionRule ( PtrElement pEl,
                                 PtrPSchema * pSchP );
-extern void TuePave ( PtrAbstractBox pAb );
-extern void SuppRfPave ( PtrAbstractBox pAb,
+extern void SetDeadAbsBox ( PtrAbstractBox pAb );
+extern void ApplyRefAbsBoxSupp ( PtrAbstractBox pAb,
                          PtrAbstractBox * pAbbReDisp,
                          PtrDocument pDoc );
-extern void NouvRfPave ( PtrAbstractBox pAbbFirst,
+extern void ApplyRefAbsBoxNew ( PtrAbstractBox pAbbFirst,
                          PtrAbstractBox pAbbLast,
                          PtrAbstractBox * pAbbReDisp,
                          PtrDocument pDoc );
-extern void PlusPremDer ( PtrElement pEl,
+extern void ChangeFirstLast ( PtrElement pEl,
                           PtrDocument pDoc,
                           boolean first,
                           boolean change );
 extern PtrElement PageElAssoc ( PtrElement pEl,
                                 int viewNb,
                                 int *boxType );
-extern void CreeTousPaves ( PtrElement pE,
+extern void CreateAllAbsBoxesOfEl ( PtrElement pE,
                             PtrDocument pDoc );
-extern void CrPaveNouv ( PtrElement pEl,
+extern void CreateNewAbsBoxes ( PtrElement pEl,
                          PtrDocument pDoc,
                          int viewNb );
-extern void DetPavVue ( PtrElement pEl,
+extern void DestroyAbsBoxesView ( PtrElement pEl,
                         PtrDocument pDoc,
                         boolean verify,
                         int view );
-extern void DetrPaves ( PtrElement pEl,
+extern void DestroyAbsBoxes ( PtrElement pEl,
                         PtrDocument pDoc,
                         boolean verify );
 extern void ReafReference ( PtrReference pRef,
@@ -97,14 +97,14 @@ extern boolean MemeTexte ( PtrElement pEl,
 
 #else /* __STDC__ */
 
-extern PtrAbstractBox Englobant (/* PtrAbstractBox pAbb1,
+extern PtrAbstractBox Enclosing (/* PtrAbstractBox pAbb1,
                                     PtrAbstractBox pAbb2 */);
-extern void ChercheReglePEl (/* PtrPRule * pRuleView1,
+extern void SimpleSearchRulepEl (/* PtrPRule * pRuleView1,
                                 PtrElement pEl,
                                 int view,
                                 PRuleType typeRule,
                                 PtrPRule * pRule */);
-extern PtrPRule ReglePEl (/* PtrElement pEl,
+extern PtrPRule GlobalSearchRulepEl (/* PtrElement pEl,
                              PtrPSchema * pSPR,
                              PtrSSchema * pSSR,
                              int presNum,
@@ -114,39 +114,39 @@ extern PtrPRule ReglePEl (/* PtrElement pEl,
                              boolean isElPage,
                              boolean attr,
                              PtrAttribute * pAttr */);
-extern PtrPRule LaRegle (/* PtrDocument pDoc,
+extern PtrPRule SearchRulepAb (/* PtrDocument pDoc,
                             PtrAbstractBox pAb,
                             PtrPSchema * pSPR,
                             PRuleType typeRule,
                             boolean attr,
                             PtrAttribute * pAttr */);
-extern PtrPRule RegleFonction (/* PtrElement pEl,
+extern PtrPRule FunctionRule (/* PtrElement pEl,
                                   PtrPSchema * pSchP */);
-extern void TuePave (/* PtrAbstractBox pAb */);
-extern void SuppRfPave (/* PtrAbstractBox pAb,
+extern void SetDeadAbsBox (/* PtrAbstractBox pAb */);
+extern void ApplyRefAbsBoxSupp (/* PtrAbstractBox pAb,
                            PtrAbstractBox * pAbbReDisp,
                            PtrDocument pDoc */);
-extern void NouvRfPave (/* PtrAbstractBox pAbbFirst,
+extern void ApplyRefAbsBoxNew (/* PtrAbstractBox pAbbFirst,
                            PtrAbstractBox pAbbLast,
                            PtrAbstractBox * pAbbReDisp,
                            PtrDocument pDoc */);
-extern void PlusPremDer (/* PtrElement pEl,
+extern void ChangeFirstLast (/* PtrElement pEl,
                             PtrDocument pDoc,
                             boolean first,
                             boolean change */);
 extern PtrElement PageElAssoc (/* PtrElement pEl,
                                   int viewNb,
                                   int *boxType */);
-extern void CreeTousPaves (/* PtrElement pE,
+extern void CreateAllAbsBoxesOfEl (/* PtrElement pE,
                               PtrDocument pDoc */);
-extern void CrPaveNouv (/* PtrElement pEl,
+extern void CreateNewAbsBoxes (/* PtrElement pEl,
                            PtrDocument pDoc,
                            int viewNb */);
-extern void DetPavVue (/* PtrElement pEl,
+extern void DestroyAbsBoxesView (/* PtrElement pEl,
                           PtrDocument pDoc,
                           boolean verify,
                           int view */);
-extern void DetrPaves (/* PtrElement pEl,
+extern void DestroyAbsBoxes (/* PtrElement pEl,
                           PtrDocument pDoc,
                           boolean verify */);
 extern void ReafReference (/* PtrReference pRef,

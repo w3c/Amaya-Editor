@@ -209,7 +209,7 @@ boolean             forward;
 #ifdef __COLPAGE__
 
  /* nouvelle procedure du module crimabs, utilisee dans AbsBoxesCreate  */
- /* et Applique                                                    */
+ /* et ApplyRule                                                    */
 /* ---------------------------------------------------------------------- */
 /* |    RechPavPageCol retourne le premier pave corps de page ou colonne| */
 /* |            qui precede (si forward) ou suit (si non forward)       | */
@@ -355,7 +355,7 @@ PtrPSchema         *pSchPPage;
 		     /* portait la regle page correspondante */
 		     if (pNext != NULL)
 		       {
-			  ChSchemaPres (pNext, pSchPPage, &index, &pSchS);
+			  SearchPresSchema (pNext, pSchPPage, &index, &pSchS);
 			  pRule = (*pSchPPage)->PsElemPRule[index - 1];
 			  stop = FALSE;
 			  do
@@ -396,7 +396,7 @@ PtrPSchema         *pSchPPage;
 		   /* cherche une regle Page parmi les regles de */
 		   /* presentation de l'element pElAscent */
 		  {
-		     ChSchemaPres (pElAscent, pSchPPage, &index, &pSchS);
+		     SearchPresSchema (pElAscent, pSchPPage, &index, &pSchS);
 		     pRule = (*pSchPPage)->PsElemPRule[index - 1];
 		     stop = FALSE;
 		     do
@@ -530,7 +530,7 @@ int                *NbCol;
 			   pNext = pNext->ElNext;
 			if (pNext != NULL)	/* pNext n'est pas une marque page */
 			  {
-			     ChSchemaPres (pNext, pSchPPage, &index, &pSchS);
+			     SearchPresSchema (pNext, pSchPPage, &index, &pSchS);
 			     pRule = (*pSchPPage)->PsElemPRule[index - 1];
 			     stop = FALSE;
 			     do
@@ -596,7 +596,7 @@ int                *NbCol;
 			  pRule = (*pSchPPage)->PsPresentBox[TypeP - 1].PbFirstPRule;
 			  /* on recherche la regle colonne de la page */
 			  typeRule = PtFunction;
-			  ChercheReglePEl (&pRule, pPrevious, viewNb, typeRule, &pRule);
+			  SimpleSearchRulepEl (&pRule, pPrevious, viewNb, typeRule, &pRule);
 			  stop = FALSE;
 			  while (!stop && pRule != NULL)
 			     if (pRule->PrType != PtFunction)
@@ -624,7 +624,7 @@ int                *NbCol;
 		   /* cherche une regle Page ou FnColumn parmi les regles de */
 		   /* presentation de l'element pElAscent */
 		  {
-		     ChSchemaPres (pElAscent, pSchPPage, &index, &pSchS);
+		     SearchPresSchema (pElAscent, pSchPPage, &index, &pSchS);
 		     pRule = (*pSchPPage)->PsElemPRule[index - 1];
 		     stop = FALSE;
 		     do
@@ -647,7 +647,7 @@ int                *NbCol;
 				     .PbFirstPRule;
 				  /* on recherche la regle colonne de la page */
 				  typeRule = PtFunction;
-				  ChercheReglePEl (&pRule, pElAscent, viewNb, typeRule, &pRule);
+				  SimpleSearchRulepEl (&pRule, pElAscent, viewNb, typeRule, &pRule);
 				  while (!stop && pRule != NULL)
 				     if (pRule->PrType != PtFunction)
 					pRule = NULL;
@@ -968,8 +968,8 @@ boolean             forward;
 						      /* pAb est vide, on le marque mort */
 						      /* et on passe a l'englobant */
 						     {
-							TuePave (pAb);		/* et mise a jour du volume */
-							SuppRfPave (pAb, &pAbbReDisp, pDoc);
+							SetDeadAbsBox (pAb);		/* et mise a jour du volume */
+							ApplyRefAbsBoxSupp (pAb, &pAbbReDisp, pDoc);
 							pAbbDestroy = pAb;
 							pAb = pAb->AbEnclosing;
 						     }
@@ -1054,7 +1054,7 @@ DocViewNumber           viewNb;
 			     {
 				pRef = pRef->RdPrevious;
 				if (pRef->RdElement != NULL)
-				   if (!DansTampon (pRef->RdElement))
+				   if (!IsASavedElement (pRef->RdElement))
 				      if (pRef->RdElement->ElAssocNum == 0)
 					 /* il y a une reference precedente qui */
 					 /* n'est pas dans le tampon */
@@ -1067,7 +1067,7 @@ DocViewNumber           viewNb;
 			      /* si l'element reference' est dans le tampon */
 			      /* couper/coller, on l'ignore */
 
-			      if (!DansTampon (pE))
+			      if (!IsASavedElement (pE))
 				 Ret = pE;
 			}
 		}
@@ -1134,7 +1134,7 @@ boolean             forward;
 	   /* on recherche s'il a une regle de creation d'elements */
 	   /* associes */
 	   stop = FALSE;
-	   pRCre = ReglePEl (pElPage, &pSPR, &pSS, 0,
+	   pRCre = GlobalSearchRulepEl (pElPage, &pSPR, &pSS, 0,
 			     NULL, viewSch, PtFunction, TRUE, FALSE, &pAttr);
 	   do
 	      if (pRCre == NULL)
@@ -1366,7 +1366,7 @@ boolean             forward;
 		     while (pAbbLast->AbNext != NULL
 			    && pAbbLast->AbNext->AbElement == pEl)
 			pAbbLast = pAbbLast->AbNext;
-		     NouvRfPave (pAbb1, pAbbLast, &pAbbReDisp, pDoc);
+		     ApplyRefAbsBoxNew (pAbb1, pAbbLast, &pAbbReDisp, pDoc);
 
 		     /* verifie les elements associes voisins */
 		     pVoisin = pEl->ElNext;
@@ -1415,7 +1415,7 @@ boolean             forward;
 				    while (pAbbLast->AbNext != NULL
 					   && pAbbLast->AbNext->AbElement == pVoisin)
 				       pAbbLast = pAbbLast->AbNext;
-				    NouvRfPave (pAbb1, pAbbLast, &pAbbReDisp, pDoc);
+				    ApplyRefAbsBoxNew (pAbb1, pAbbLast, &pAbbReDisp, pDoc);
 				    if (premtour)
 				       pVoisin = pVoisin->ElNext;
 				    else
@@ -1438,7 +1438,7 @@ boolean             forward;
 		     /* necessaire si c'est un pave resultat d'une duplication */
 		     /* pRS : premiere regle de presentation */
 		     /* specifique de la boite a creer */
-		     ChSchemaPres (pEl->ElParent, &pSPR, &index, &pSS);
+		     SearchPresSchema (pEl->ElParent, &pSPR, &index, &pSS);
 		     pRS = pSPR->PsElemPRule[index - 1];
 		     /* pRD : premiere regle de presentation par defaut du schema de
 		      */
@@ -1470,7 +1470,7 @@ boolean             forward;
 					  /* cree le pave de presentation */
 					  pAbb1 = CrAbsBoxesPres (pEl->ElParent, pDoc, pRV, pSS,
 					    NULL, viewNb, pSPR, FALSE, TRUE);
-				       else if (!Applique (pRV, pSPR, pElAscent, pDoc, NULL, &bool))
+				       else if (!ApplyRule (pRV, pSPR, pElAscent, pDoc, NULL, &bool))
 					  /* on n'a pas pu appliquer la regle, on */
 					  /* l'appliquera lorsque le pave pere sera */
 					  /* termine' */
@@ -1513,7 +1513,7 @@ boolean             forward;
 			       pPRP2 = pAbb;
 			       GetDelayedRule (&pRule, &pSPR, &pAbb, &pAttr);
 			       if (pRule != NULL)
-				  if (!Applique (pRule, pSPR, pAbb, pDoc, pAttr, &bool))
+				  if (!ApplyRule (pRule, pSPR, pAbb, pDoc, pAttr, &bool))
 				     /* cette regle n'a pas pu etre appliquee           */
 				     /* c'est une regle correspondant a un attribut, on */
 				     /* l'appliquera lorsque l'englobant sera complete   */
@@ -1524,7 +1524,7 @@ boolean             forward;
 				    }
 			    }
 			  while (pRule != NULL);
-			  NouvRfPave (pPRP1, pPRP2, &pAbbReDisp, pDoc);
+			  ApplyRefAbsBoxNew (pPRP1, pPRP2, &pAbbReDisp, pDoc);
 			  pPRP = pPRP->AbNextRepeated;
 		       }
 
@@ -1562,10 +1562,10 @@ boolean             forward;
 		     /* mise a jour de la hauteur du corps de page */
 		     /* on met (ou on modifie) une regle de presentation specifique */
 		     /* cherche d'abord la regle qui s'applique a l'element */
-		     pRStd = ReglePEl (pElPage, &pSPR, &pSS, 0, NULL, viewSch,
+		     pRStd = GlobalSearchRulepEl (pElPage, &pSPR, &pSS, 0, NULL, viewSch,
 				       PtHeight, FALSE, TRUE, &pAttr);
 		     /* cherche si l'element a deja une regle de hauteur specifique */
-		     pRuleDimV = ChReglePres (pElPage, PtHeight, &nouveau, pDoc, viewNb);
+		     pRuleDimV = SearchPresRule (pElPage, PtHeight, &nouveau, pDoc, viewNb);
 		     if (nouveau)
 			/* on a cree' une regle de hauteur pour l'element */
 		       {
@@ -1584,7 +1584,7 @@ boolean             forward;
 		     /* pAbb = pave du corps de page */
 		     /* applique la nouvelle regle specifique Verticale */
 		     if (pRuleDimV != NULL)
-			Applique (pRuleDimV, pSPR, pAbb, pDoc, pAttr, &bool);
+			ApplyRule (pRuleDimV, pSPR, pAbb, pDoc, pAttr, &bool);
 		     pDimAb = &pAbb->AbHeight;
 		     pDimAb->DimMinimum = TRUE;	/* regle de hauteur minimum */
 		     /* TODO inutile, a supprimer car fait par applique */
@@ -2034,7 +2034,7 @@ PtrElement         *pElSauv;
 
 #ifndef __COLPAGE__
 /* ---------------------------------------------------------------------- */
-/* | ApplPage    Applique les regles de presentation au pave            | */
+/* | ApplPage    ApplyRule les regles de presentation au pave            | */
 /* |       cree quand c'est une marque de page TypeP                    | */
 /* |       et pSchPPage ont ete initialises dans ChercheVisib           | */
 /* ---------------------------------------------------------------------- */
@@ -2117,7 +2117,7 @@ PtrAbstractBox             pNewAbbox;
 		     {
 			if (pRegleV == NULL)
 			   pRegleV = pRule;
-			Applique (pRegleV, pSchPPage, pAbbChild,
+			ApplyRule (pRegleV, pSchPPage, pAbbChild,
 				  pDoc, NULL);
 		     }
 		}
@@ -2424,9 +2424,9 @@ boolean            *arret;
 				   for (typeRule = PtVertRef; typeRule <= PtHorizPos; typeRule++)
 				     {
 					/* recherche de la regle */
-					pRule = LaRegle (pDoc, pPsuiv, &pSPres, typeRule, TRUE, &pAttr);
+					pRule = SearchRulepAb (pDoc, pPsuiv, &pSPres, typeRule, TRUE, &pAttr);
 					/* application de la regle */
-					if (!Applique (pRule, pSPres, pPsuiv, pDoc, pAttr, &bool))
+					if (!ApplyRule (pRule, pSPres, pPsuiv, pDoc, pAttr, &bool))
 					   Delay (pRule, pSPres, pPsuiv, pAttr, pNewAbbox);
 				     }
 				   pPsuiv = pPsuiv->AbNext;
@@ -2491,8 +2491,8 @@ boolean            *arret;
 			  while (pAb != NULL && pAb->AbPresentationBox
 			       && pAb->AbElement == pAbbRoot->AbElement)
 			    {
-			       TuePave (pAb);
-			       SuppRfPave (pAb, &pAbb, pDoc);
+			       SetDeadAbsBox (pAb);
+			       ApplyRefAbsBoxSupp (pAb, &pAbb, pDoc);
 			       pAb = pAb->AbNext;
 			    }
 			  h = 0;
@@ -2505,7 +2505,7 @@ boolean            *arret;
 			  /* on met les regles de creation en attente */
 			  /* pour provoquer la recreation des paves de pres */
 			  /* on cherche les regles a retarder */
-			  ChSchemaPres (pEl->ElParent, &pSPres, &index, &pSchS);
+			  SearchPresSchema (pEl->ElParent, &pSPres, &index, &pSchS);
 			  pRule = pSPres->PsElemPRule[index - 1];
 			  do
 			    {
@@ -2877,7 +2877,7 @@ boolean            *arret;
 			    }
 			  if (adetruire)
 			    {
-			       TuePave (pAb);
+			       SetDeadAbsBox (pAb);
 			       /* recherche du premier pave avant pAb */
 			       pAbb = pAb;
 			       stop = FALSE;
@@ -2985,7 +2985,7 @@ boolean            *arret;
 			       /*reapplique les regles de pres des paves qui */
 			       /* faisaient reference a pAb */
 			       /* est-ce utile ? */
-			       SuppRfPave (pAb, &pAbb, pDoc);
+			       ApplyRefAbsBoxSupp (pAb, &pAbb, pDoc);
 			       /* suppression du pave pAb, ne pas le signaler */
 			       /* au mediateur s'il n'a pas ete affiche */
 			       if (!pAb->AbNew)
@@ -3031,7 +3031,7 @@ boolean            *arret;
 					   {
 					      /* recherche la regle correspondant au pave */
 					      /* de presentation pAbb ; */
-					      pRCre = ReglePEl (pDupPav->AbElement,
+					      pRCre = GlobalSearchRulepEl (pDupPav->AbElement,
 								&pSPres, &pSchS, 0, NULL, viewSch,
 								PtFunction, TRUE, FALSE, &pAttr);
 					      stop = FALSE;
@@ -3158,15 +3158,15 @@ boolean            *arret;
 		  for (typeRule = PtVertRef; typeRule <= PtHorizPos; typeRule++)
 		    {
 		       /* recherche de la regle */
-		       pRule = LaRegle (pDoc, pAbb, &pSPres, typeRule, TRUE, &pAttr);
+		       pRule = SearchRulepAb (pDoc, pAbb, &pSPres, typeRule, TRUE, &pAttr);
 		       /* application de la regle */
-		       if (!Applique (pRule, pSPres, pAbb, pDoc, pAttr, &bool))
+		       if (!ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr, &bool))
 			  Delay (pRule, pSPres, pAbb, pAttr, pNewAbbox);
 		    }
 		  if (!pAbb->AbPresentationBox)
 		    {
 		       /* application des regles de creation repetees */
-		       pRule = LaRegle (pDoc, pAbb, &pSPres, PtFunction, TRUE, &pAttr);
+		       pRule = SearchRulepAb (pDoc, pAbb, &pSPres, PtFunction, TRUE, &pAttr);
 		       /* pRule est la premiere regle de creation si il y en a */
 		       do
 			  if (pRule != NULL)
@@ -3274,7 +3274,7 @@ boolean            *arret;
 			  {
 			     if (pRegleV == NULL)
 				pRegleV = pRule;
-			     if (!Applique (pRegleV, pSchPPage,
+			     if (!ApplyRule (pRegleV, pSchPPage,
 					    pNewAbbox, pDoc, NULL, arret))
 				WaitingRule (pRegleV, pNewAbbox, pSchPPage,
 					 NULL, queuePA, queuePS,
@@ -3349,7 +3349,7 @@ boolean            *arret;
 	     BreakPageHeight = WholePageHeight - PageFooterHeight;
 	  }			/* fin init WholePageHeight si RunningPaginate */
 
-	/* Applique les regles de presentation specifiques */
+	/* ApplyRule les regles de presentation specifiques */
 	/* de cet element */
 	pRule = pEl->ElFirstPRule;
 	while (pRule != NULL)
@@ -3358,7 +3358,7 @@ boolean            *arret;
 	     if (pRule->PrViewNum == viewSch && pNewAbbox != NULL
 		 && DoesViewExist (pEl, pDoc, viewNb))
 		/* on ne considere pas les attributs */
-		if (!Applique (pRule, pSchPPage, pNewAbbox, pDoc, NULL, &bool))
+		if (!ApplyRule (pRule, pSchPPage, pNewAbbox, pDoc, NULL, &bool))
 		   WaitingRule (pRule, pNewAbbox, pSchPPage, NULL, queuePA,
 			    queuePS, queuePP, queuePR, lqueue);
 	     pRule = pRule->PrNextPRule;

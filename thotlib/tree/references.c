@@ -99,7 +99,7 @@ PtrDocument        *pDoc;
 
    pEl = NULL;
    modif = FALSE;
-   NulIdentDoc (docIdent);
+   ClearDocIdent (docIdent);
    *pDoc = NULL;
    if (pRef != NULL)
       if (pRef->RdReferred != NULL)
@@ -112,7 +112,7 @@ PtrDocument        *pDoc;
 	      /* l'element reference' est dans un autre document */
 	      /* on retourne le nom du document externe */
 	     {
-		CopyIdentDoc (docIdent, pRefD1->ReExtDocument);
+		CopyDocIdent (docIdent, pRefD1->ReExtDocument);
 		/* le document est-il charge'? */
 		*pDoc = GetPtrDocument (pRefD1->ReExtDocument);
 		if (*pDoc != NULL)
@@ -293,7 +293,7 @@ boolean             nextExtDoc;
 	       {
 		  if (pRefD->ReExternalRef)
 		     if (strcmp (pRefD->ReReferredLabel, pEl->ElLabel) == 0)
-			if (MemeIdentDoc (pRefD->ReExtDocument, pDocEl->DocIdent))
+			if (SameDocIdent (pRefD->ReExtDocument, pDocEl->DocIdent))
 			   found = TRUE;
 		  if (!found)
 		     pRefD = pRefD->ReNext;
@@ -789,7 +789,7 @@ boolean             new;
 	      while (pRefSort != NULL && !found)
 		{
 		   if (strcmp (pRefSort->OrLabel, pDElemRef->ReReferredLabel) == 0)
-		      if (MemeIdentDoc (pRefSort->OrDocIdent, pDElemRef->ReExtDocument))
+		      if (SameDocIdent (pRefSort->OrDocIdent, pDElemRef->ReExtDocument))
 			 found = TRUE;
 		   if (!found)
 		     {
@@ -822,7 +822,7 @@ boolean             new;
 		   GetRefSortante (&pRefSort);
 		   /* remplit ce descripteur */
 		   strncpy (pRefSort->OrLabel, pDElemRef->ReReferredLabel, MAX_LABEL_LEN);
-		   CopyIdentDoc (&(pRefSort->OrDocIdent), pDElemRef->ReExtDocument);
+		   CopyDocIdent (&(pRefSort->OrDocIdent), pDElemRef->ReExtDocument);
 		   /* on l'insere en tete de sa liste */
 		   if (new)
 		     {
@@ -933,7 +933,7 @@ PtrDocument         pDoc2;
 		 GetDocExterne (&pExtDoc);
 		 pEl->ElReferredDescr->ReExtDocRef = pExtDoc;
 		 if (pExtDoc != NULL)
-		    CopyIdentDoc (&(pExtDoc->EdDocIdent), docIdent);
+		    CopyDocIdent (&(pExtDoc->EdDocIdent), docIdent);
 	      }
 	    else
 	       /* cherche si le document qui reference l'element est deja dans */
@@ -942,20 +942,20 @@ PtrDocument         pDoc2;
 		 pExtDoc = pEl->ElReferredDescr->ReExtDocRef;
 		 found = FALSE;
 		 do
-		    if (MemeIdentDoc (pExtDoc->EdDocIdent, docIdent))
+		    if (SameDocIdent (pExtDoc->EdDocIdent, docIdent))
 		       found = TRUE;
 		    else if (pExtDoc->EdNext != NULL)
 		       pExtDoc = pExtDoc->EdNext;
 		 while (!found && pExtDoc->EdNext != NULL);
 		 if (!found)
-		    found = MemeIdentDoc (pExtDoc->EdDocIdent, docIdent);
+		    found = SameDocIdent (pExtDoc->EdDocIdent, docIdent);
 		 if (!found)
 		    /* ajoute un descripteur de document externe qui reference */
 		    /* l'element */
 		   {
 		      GetDocExterne (&pExtDoc->EdNext);
 		      if (pExtDoc->EdNext != NULL)
-			 CopyIdentDoc (&(pExtDoc->EdNext->EdDocIdent), docIdent);
+			 CopyDocIdent (&(pExtDoc->EdNext->EdDocIdent), docIdent);
 		   }
 	      }
 }
@@ -1126,7 +1126,7 @@ boolean             withAppEvent;
 			       stop = TRUE;
 			    else if (pRefD->ReExternalRef)
 			       if (strcmp (pRefD->ReReferredLabel, pEl->ElLabel) == 0)
-				  if (MemeIdentDoc (pRefD->ReExtDocument,
+				  if (SameDocIdent (pRefD->ReExtDocument,
 						    pTargetDoc->DocIdent))
 				     stop = TRUE;
 			    if (!stop)
@@ -1141,7 +1141,7 @@ boolean             withAppEvent;
 			    pRefD = NewReferredElDescr (pDoc);
 			    pRefD->ReExternalRef = TRUE;
 			    strncpy (pRefD->ReReferredLabel, pEl->ElLabel, MAX_LABEL_LEN);
-			    CopyIdentDoc (&(pRefD->ReExtDocument), pTargetDoc->DocIdent);
+			    CopyDocIdent (&(pRefD->ReExtDocument), pTargetDoc->DocIdent);
 			 }
 		       /* on ajoute la nouvelle reference en tete de la chaine */
 		       /* des references a cet element */
@@ -1211,7 +1211,7 @@ PtrChangedReferredEl      pChngRef;
    while (pExtDocSrc != NULL)
      {
 	GetDocExterne (&pExtDoc);
-	CopyIdentDoc (&(pExtDoc->EdDocIdent), pExtDocSrc->EdDocIdent);
+	CopyDocIdent (&(pExtDoc->EdDocIdent), pExtDocSrc->EdDocIdent);
 	if (pPrevExtDoc == NULL)
 	   pChngRef->CrReferringDoc = pExtDoc;
 	else
@@ -1252,8 +1252,8 @@ PtrDocument         pDoc;
 	   GetElemRefChng (&pChngRef);
 	   strncpy (pChngRef->CrOldLabel, pEl->ElLabel, MAX_LABEL_LEN);
 	   pChngRef->CrNewLabel[0] = '\0';
-	   CopyIdentDoc (&(pChngRef->CrOldDocument), pDoc->DocIdent);
-	   NulIdentDoc (&(pChngRef->CrNewDocument));
+	   CopyDocIdent (&(pChngRef->CrOldDocument), pDoc->DocIdent);
+	   ClearDocIdent (&(pChngRef->CrNewDocument));
 	   pChngRef->CrReferringDoc = NULL;
 	   /* chaine ce descripteur */
 	   pChngRef->CrNext = pDoc->DocChangedReferredEl;

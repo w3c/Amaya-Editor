@@ -77,7 +77,7 @@ int                 pointselect;
 
 	     if (pAb == NULL)
 		/* C'est une boite sans pave */
-		Invideo (frame, rightX - leftX, bottomY - topY, leftX, topY);
+		VideoInvert (frame, rightX - leftX, bottomY - topY, leftX, topY);
 	     else if (pAb->AbLeafType == LtPlyLine && pBox->BxNChars > 1)
 	       {
 		  /* C'est une boite polyline */
@@ -100,7 +100,7 @@ int                 pointselect;
 			      }
 			 }
 		       if (pointselect == 0 || pointselect == i)
-			  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH,
+			  VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH,
 				   leftX + PointToPixel (pBuffer->BuPoints[j].XCoord / 1000) - 2,
 				   topY + PointToPixel (pBuffer->BuPoints[j].YCoord / 1000) - 2);
 		       j++;
@@ -109,14 +109,14 @@ int                 pointselect;
 	     else if (pAb->AbLeafType == LtPicture)
 	       {
 		  /* 4 points caracteristiques */
-		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
-		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
-		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
-		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
-		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
-		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
-		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
-		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
+		  VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
+		  VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
+		  VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
+		  VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
+		  VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
+		  VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
+		  VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
+		  VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
 	       }
 	     else if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
 		/* C'est une boite graphique */
@@ -135,14 +135,14 @@ int                 pointselect;
 			 case '7':
 			 case '8':
 			    /* 8 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
 			    break;
 			 case 'C':
 			 case 'L':
@@ -150,90 +150,90 @@ int                 pointselect;
 			 case 'P':
 			 case 'Q':
 			    /* 4 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
 			    break;
 			 case 'W':
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 2);
 			    break;
 			 case 'X':
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 2);
 			    break;
 			 case 'Y':
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
 			    break;
 			 case 'Z':
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
 			    break;
 
 			 case 'h':
 			 case '<':
 			 case '>':
 			    /* 2 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
 			    break;
 			 case 't':
 			    /* 3 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
 			    break;
 			 case 'b':
 			    /* 3 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
 			    break;
 			 case 'v':
 			 case '^':
 			 case 'V':
 			    /* 2 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, bottomY - 3);
 			    break;
 			 case 'l':
 			    /* 3 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, middleY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
 			    break;
 			 case 'r':
 			    /* 3 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, middleY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
 			    break;
 			 case '\\':
 			 case 'O':
 			 case 'e':
 			    /* 2 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, bottomY - 3);
 			    break;
 			 case '/':
 			 case 'o':
 			 case 'E':
 			    /* 2 points caracteristiques */
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
-			    Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, rightX - 3, topY - 2);
+			    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, bottomY - 3);
 			    break;
 			 default:
 			    break;
 		      }
 	     /* C'est une boite d'un autre type */
 	     else
-		Invideo (frame, rightX - leftX, bottomY - topY, leftX, topY);
+		VideoInvert (frame, rightX - leftX, bottomY - topY, leftX, topY);
 	  }
 	else
 	  {
@@ -256,9 +256,9 @@ int                 pointselect;
 /* |            etat de selection.                                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MajPavSelect (int frame, PtrAbstractBox pAb, boolean status)
+void                SetNewSelectionStatus (int frame, PtrAbstractBox pAb, boolean status)
 #else  /* __STDC__ */
-void                MajPavSelect (frame, pAb, status)
+void                SetNewSelectionStatus (frame, pAb, status)
 int                 frame;
 PtrAbstractBox      pAb;
 boolean             status;
@@ -288,7 +288,7 @@ boolean             status;
 	     pChildAb = pAb->AbFirstEnclosed;
 	     while (pChildAb != NULL)
 	       {
-		  MajPavSelect (frame, pChildAb, status);
+		  SetNewSelectionStatus (frame, pChildAb, status);
 		  pChildAb = pChildAb->AbNext;
 	       }
 	  }
@@ -359,7 +359,7 @@ PtrBox            pBox;
 	     else
 		width = rightX - leftX;
 	  }
-	Invideo (frame, width, h, leftX, topY);
+	VideoInvert (frame, width, h, leftX, topY);
      }
 }
 
@@ -369,9 +369,9 @@ PtrBox            pBox;
 /* |             dans le frame.                                         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                VisuSel (int frame, boolean status)
+void                DisplayCurrentSelection (int frame, boolean status)
 #else  /* __STDC__ */
-void                VisuSel (frame, status)
+void                DisplayCurrentSelection (frame, status)
 int                 frame;
 boolean             status;
 
@@ -454,7 +454,7 @@ boolean             status;
 	/* Bascule l'indicateur de la selection allumee */
 	pFrame->FrSelectShown = !pFrame->FrSelectShown;
 
-	MajPavSelect (frame, pFrame->FrAbstractBox, status);
+	SetNewSelectionStatus (frame, pFrame->FrAbstractBox, status);
      }
    else if (status == FALSE)
       /* Annule la selection meme s'il n'y a plus de boite selectionnee */

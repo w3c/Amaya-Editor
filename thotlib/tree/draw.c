@@ -107,7 +107,7 @@ PtrDocument         pDoc;
 	 /* l'element est dans un Dessin ou dans un Groupe a l'interieur */
 	 /* d'un dessin */
 	{
-	   SelAjoute (pEl, TRUE);
+	   AddInSelection (pEl, TRUE);
 	   ret = TRUE;
 	}
    return ret;

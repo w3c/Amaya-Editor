@@ -169,7 +169,7 @@ PtrSearchContext           context;
      }
 
    /* get curreent selection */
-   ok = SelEditeur (&DocInitialSelection,
+   ok = GetCurrentSelection (&DocInitialSelection,
 		    &firstElInitialSelection, &lastElInitialSelection,
 		    &firstCharInitialSelection, &lastCharInitialSelection);
    /* store the word search domain */
@@ -284,7 +284,7 @@ void                RestoreAfterSearch ()
 {
    int                 prevLen, endChar;
 
-   AnnuleSelect ();
+   CancelSelection ();
    endChar = lastCharInitialSelection;
    if (endChar > 0)
 
@@ -298,11 +298,11 @@ void                RestoreAfterSearch ()
 		      firstCharInitialSelection, prevLen);
      }
    else
-      SelectEl (DocInitialSelection, firstElInitialSelection, TRUE, TRUE);
+      SelectElement (DocInitialSelection, firstElInitialSelection, TRUE, TRUE);
 
    if (lastElInitialSelection != firstElInitialSelection &&
        lastElInitialSelection != NULL)
-      SelEtend (lastElInitialSelection, endChar, TRUE, FALSE, FALSE);
+      ExtendSelection (lastElInitialSelection, endChar, TRUE, FALSE, FALSE);
 }
 
 /* ---------------------------------------------------------------------- */

@@ -5,7 +5,7 @@
  * Chargement des schemas de structure.
  *
  * Global Functions:
- * RdSchStruct
+ * ReadStructureSchema
  */
 
 #include "thot_sys.h"
@@ -376,7 +376,7 @@ PtrSSchema        scheme;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    RdSchStruct                                                     | */
+/* |    ReadStructureSchema                                                     | */
 /* |    lit un fichier contenant un schema de structure et charge       | */
 /* |    ce schema en memoire.                                           | */
 /* |    fname: nom du fichier a lire, sans le suffixe .STR              | */
@@ -385,10 +385,10 @@ PtrSSchema        scheme;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             RdSchStruct (Name fname, PtrSSchema scheme)
+boolean             ReadStructureSchema (Name fname, PtrSSchema scheme)
 
 #else  /* __STDC__ */
-boolean             RdSchStruct (fname, scheme)
+boolean             ReadStructureSchema (fname, scheme)
 Name                 fname;
 PtrSSchema        scheme;
 

@@ -6,24 +6,24 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern PtrTextBuffer readComment ( BinFile fich,
+extern PtrTextBuffer ReadCommentPiv ( BinFile fich,
                                    boolean effectif,
                                    boolean oldformat );
 extern void LabelStringToInt ( LabelString strn,
                                int *num );
-extern void ReadAttribut ( BinFile fichpiv,
+extern void ReadAttributePiv ( BinFile fichpiv,
                            PtrElement pEl,
                            PtrDocument pDoc,
                            boolean cree,
                            PtrAttribute * pAttrLu,
                            PtrAttribute * pAttr );
-extern void rdReglePres ( PtrDocument pDoc,
+extern void ReadPRulePiv ( PtrDocument pDoc,
                           BinFile fichpiv,
                           PtrElement pEl,
                           boolean cree,
                           PtrPRule * pRegleLue,
                           boolean Attache );
-extern PtrElement Internalise ( BinFile fichpiv,
+extern PtrElement ReadTreePiv ( BinFile fichpiv,
                                 PtrSSchema pSchStr,
                                 PtrDocument pDoc,
                                 char *marque,
@@ -37,22 +37,22 @@ extern PtrElement Internalise ( BinFile fichpiv,
                                 boolean creepage,
                                 PtrElement Pere,
                                 boolean creedesc );
-extern boolean ArbreCorrect ( PtrElement pEl,
+extern boolean AbstractTreeOK ( PtrElement pEl,
                               PtrDocument pDoc );
-extern void AccouplePaires ( PtrElement pRacine );
-extern void rdNomsSchemas ( BinFile fich,
+extern void AssociatePairs ( PtrElement pRacine );
+extern void ReadSchemaNamesPiv ( BinFile fich,
                             PtrDocument pDoc,
                             char *marque,
                             PtrSSchema pSCharge );
-extern void rdTableLangues ( BinFile fich,
+extern void ReadLanguageTablePiv ( BinFile fich,
                              PtrDocument pDoc,
                              char *marque );
-extern int rdVersionNumber ( BinFile fich,
+extern int ReadVersionNumberPiv ( BinFile fich,
                              PtrDocument pDoc );
-extern void rdPivotHeader ( BinFile fich,
+extern void ReadPivotHeader ( BinFile fich,
                             PtrDocument pDoc,
                             char *marque );
-extern void ChargeDoc ( BinFile fich,
+extern void LoadDocumentPiv ( BinFile fich,
                         PtrDocument pDoc,
                         boolean ChargeDocExt,
                         boolean Squelette,
@@ -61,24 +61,24 @@ extern void ChargeDoc ( BinFile fich,
 
 #else /* __STDC__ */
 
-extern PtrTextBuffer readComment (/* BinFile fich,
+extern PtrTextBuffer ReadCommentPiv (/* BinFile fich,
                                      boolean effectif,
                                      boolean oldformat */);
 extern void LabelStringToInt (/* LabelString strn,
                                  int *num */);
-extern void ReadAttribut (/* BinFile fichpiv,
+extern void ReadAttributePiv (/* BinFile fichpiv,
                              PtrElement pEl,
                              PtrDocument pDoc,
                              boolean cree,
                              PtrAttribute * pAttrLu,
                              PtrAttribute * pAttr */);
-extern void rdReglePres (/* PtrDocument pDoc,
+extern void ReadPRulePiv (/* PtrDocument pDoc,
                             BinFile fichpiv,
                             PtrElement pEl,
                             boolean cree,
                             PtrPRule * pRegleLue,
                             boolean Attache */);
-extern PtrElement Internalise (/* BinFile fichpiv,
+extern PtrElement ReadTreePiv (/* BinFile fichpiv,
                                   PtrSSchema pSchStr,
                                   PtrDocument pDoc,
                                   char *marque,
@@ -92,22 +92,22 @@ extern PtrElement Internalise (/* BinFile fichpiv,
                                   boolean creepage,
                                   PtrElement Pere,
                                   boolean creedesc */);
-extern boolean ArbreCorrect (/* PtrElement pEl,
+extern boolean AbstractTreeOK (/* PtrElement pEl,
                                 PtrDocument pDoc */);
-extern void AccouplePaires (/* PtrElement pRacine */);
-extern void rdNomsSchemas (/* BinFile fich,
+extern void AssociatePairs (/* PtrElement pRacine */);
+extern void ReadSchemaNamesPiv (/* BinFile fich,
                               PtrDocument pDoc,
                               char *marque,
                               PtrSSchema pSCharge */);
-extern void rdTableLangues (/* BinFile fich,
+extern void ReadLanguageTablePiv (/* BinFile fich,
                                PtrDocument pDoc,
                                char *marque */);
-extern int rdVersionNumber (/* BinFile fich,
+extern int ReadVersionNumberPiv (/* BinFile fich,
                                PtrDocument pDoc */);
-extern void rdPivotHeader (/* BinFile fich,
+extern void ReadPivotHeader (/* BinFile fich,
                               PtrDocument pDoc,
                               char *marque */);
-extern void ChargeDoc (/* BinFile fich,
+extern void LoadDocumentPiv (/* BinFile fich,
                           PtrDocument pDoc,
                           boolean ChargeDocExt,
                           boolean Squelette,

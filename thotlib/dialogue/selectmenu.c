@@ -570,7 +570,7 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   SelectionAutour (val);
+   SelectAround (val);
 }
 
 /* ---------------------------------------------------------------------- */

@@ -20,11 +20,11 @@ static BinFile      outfile;
 #include "fileaccess_f.h"
 #include "writetra_f.h"
 
-/* wrshort      ecrit dans le fichier de sortie un entier sur 2 octets */
+/* WriteShort      ecrit dans le fichier de sortie un entier sur 2 octets */
 #ifdef __STDC__
-void                wrshort (int n)
+void                WriteShort (int n)
 #else  /* __STDC__ */
-void                wrshort (n)
+void                WriteShort (n)
 int                 n;
 
 #endif /* __STDC__ */
@@ -33,22 +33,22 @@ int                 n;
    BIOwriteByte (outfile, (char) (n % 256));
 }
 
-/* wrsignshort  ecrit dans le fichier de sortie un entier signe' sur */
+/* WriteSignedShort  ecrit dans le fichier de sortie un entier signe' sur */
 /* 2 octets */
 #ifdef __STDC__
-void                wrsignshort (int n)
+void                WriteSignedShort (int n)
 
 #else  /* __STDC__ */
-void                wrsignshort (n)
+void                WriteSignedShort (n)
 int             n;
 
 #endif /* __STDC__ */
 
 {
    if (n >= 0)
-      wrshort (n);
+      WriteShort (n);
    else
-      wrshort (n + 65536);
+      WriteShort (n + 65536);
 }
 
 /* wrnom                ecrit un nom dans le fichier de sortie */
@@ -93,14 +93,14 @@ boolean             b;
 }
 
 
-/* wrTypeCondTrad  ecrit un type de condition d'application de regle de */
+/* WriteTransCondition  ecrit un type de condition d'application de regle de */
 /* traduction */
 
 #ifdef __STDC__
-void                wrTypeCondTrad (TransCondition T)
+void                WriteTransCondition (TransCondition T)
 
 #else  /* __STDC__ */
-void                wrTypeCondTrad (T)
+void                WriteTransCondition (T)
 TransCondition        T;
 
 #endif /* __STDC__ */
@@ -180,13 +180,13 @@ TransCondition        T;
 }
 
 
-/* wrRelatNivAsc */
+/* WriteRelatNivAsc */
 
 #ifdef __STDC__
-void                wrRelatNivAsc (RelatNAscend R)
+void                WriteRelatNivAsc (RelatNAscend R)
 
 #else  /* __STDC__ */
-void                wrRelatNivAsc (R)
+void                WriteRelatNivAsc (R)
 RelatNAscend         R;
 
 #endif /* __STDC__ */
@@ -207,13 +207,13 @@ RelatNAscend         R;
 }
 
 
-/* wrTypeRegleTrad      ecrit un type de regle de traduction */
+/* WriteTRuleType      ecrit un type de regle de traduction */
 
 #ifdef __STDC__
-void                wrTypeRegleTrad (TRuleType T)
+void                WriteTRuleType (TRuleType T)
 
 #else  /* __STDC__ */
-void                wrTypeRegleTrad (T)
+void                WriteTRuleType (T)
 TRuleType       T;
 
 #endif /* __STDC__ */
@@ -266,14 +266,14 @@ TRuleType       T;
 }
 
 
-/* wrTrPosition ecrit la position ou il faut creer les chaines */
+/* WriteTOrder ecrit la position ou il faut creer les chaines */
 /* produites par le traducteur */
 
 #ifdef __STDC__
-void                wrTrPosition (TOrder P)
+void                WriteTOrder (TOrder P)
 
 #else  /* __STDC__ */
-void                wrTrPosition (P)
+void                WriteTOrder (P)
 TOrder          P;
 
 #endif /* __STDC__ */
@@ -293,14 +293,14 @@ TOrder          P;
 }
 
 
-/* wrTypeCree   ecrit le type de chose a creer dans le fichier de */
+/* WriteCreatedObject   ecrit le type de chose a creer dans le fichier de */
 /* sortie ou au terminal */
 
 #ifdef __STDC__
-void                wrTypeCree (CreatedObject T)
+void                WriteCreatedObject (CreatedObject T)
 
 #else  /* __STDC__ */
-void                wrTypeCree (T)
+void                WriteCreatedObject (T)
 CreatedObject            T;
 
 #endif /* __STDC__ */
@@ -374,14 +374,14 @@ CreatedObject            T;
 }
 
 
-/* wrRelatPos   ecrit la position relative dans le fichier de */
+/* WriteRelativePosition   ecrit la position relative dans le fichier de */
 /* sortie ou au terminal */
 
 #ifdef __STDC__
-void                wrRelatPos (TRelatPosition P)
+void                WriteRelativePosition (TRelatPosition P)
 
 #else  /* __STDC__ */
-void                wrRelatPos (P)
+void                WriteRelativePosition (P)
 TRelatPosition            P;
 
 #endif /* __STDC__ */
@@ -407,13 +407,13 @@ TRelatPosition            P;
 }
 
 
-/* wrTrCptTypeOp        ecrit le type d'une operation sur un compteur */
+/* WriteTCounterOp        ecrit le type d'une operation sur un compteur */
 
 #ifdef __STDC__
-void                wrTrCptTypeOp (TCounterOp T)
+void                WriteTCounterOp (TCounterOp T)
 
 #else  /* __STDC__ */
-void                wrTrCptTypeOp (T)
+void                WriteTCounterOp (T)
 TCounterOp         T;
 
 #endif /* __STDC__ */
@@ -439,13 +439,13 @@ TCounterOp         T;
 }
 
 
-/* wrVarTradType        ecrit le type des elements de variables de traduction */
+/* WriteTVarType        ecrit le type des elements de variables de traduction */
 
 #ifdef __STDC__
-void                wrVarTradType (TranslVarType T)
+void                WriteTVarType (TranslVarType T)
 
 #else  /* __STDC__ */
-void                wrVarTradType (T)
+void                WriteTVarType (T)
 TranslVarType         T;
 
 #endif /* __STDC__ */
@@ -483,13 +483,13 @@ TranslVarType         T;
 	 }
 }
 
-/* wrComptStyle ecrit un style de compteur dans le fichier */
+/* WriteCounterStyle ecrit un style de compteur dans le fichier */
 
 #ifdef __STDC__
-void                wrComptStyle (CounterStyle S)
+void                WriteCounterStyle (CounterStyle S)
 
 #else  /* __STDC__ */
-void                wrComptStyle (S)
+void                WriteCounterStyle (S)
 CounterStyle          S;
 
 #endif /* __STDC__ */
@@ -556,23 +556,23 @@ PtrTRule        pR;
      {
 	pRe1 = CurRegle;
 	wrptrregle (pRe1->TrNextTRule);
-	wrTrPosition (pRe1->TrOrder);
-	wrTypeRegleTrad (pRe1->TrType);
+	WriteTOrder (pRe1->TrOrder);
+	WriteTRuleType (pRe1->TrType);
 	switch (pRe1->TrType)
 	      {
 		 case TCreate:
 		 case TWrite:
-		    wrTypeCree (pRe1->TrObject);
-		    wrshort (pRe1->TrObjectNum);
+		    WriteCreatedObject (pRe1->TrObject);
+		    WriteShort (pRe1->TrObjectNum);
 		    wrnom (pRe1->TrObjectNature);
 		    wrbool (pRe1->TrReferredObj);
-		    wrshort (pRe1->TrFileNameVar);
+		    WriteShort (pRe1->TrFileNameVar);
 		    break;
 		 case TGet:
 		 case TCopy:
-		    wrshort (pRe1->TrElemType);
+		    WriteShort (pRe1->TrElemType);
 		    wrnom (pRe1->TrElemNature);
-		    wrRelatPos (pRe1->TrRelPosition);
+		    WriteRelativePosition (pRe1->TrRelPosition);
 		    break;
 		 case TUse:
 		    wrnom (pRe1->TrNature);
@@ -584,19 +584,19 @@ PtrTRule        pR;
 
 		    break;
 		 case TRead:
-		    wrshort (pRe1->TrBuffer);
+		    WriteShort (pRe1->TrBuffer);
 		    break;
 		 case TInclude:
-		    wrTypeCree (pRe1->TrBufOrConst);
-		    wrshort (pRe1->TrInclFile);
+		    WriteCreatedObject (pRe1->TrBufOrConst);
+		    WriteShort (pRe1->TrInclFile);
 		    break;
 		 case TChangeMainFile:
-		    wrshort (pRe1->TrNewFileVar);
+		    WriteShort (pRe1->TrNewFileVar);
 		    break;
 		 case TSetCounter:
 		 case TAddCounter:
-		    wrshort (pRe1->TrCounterNum);
-		    wrshort (pRe1->TrCounterParam);
+		    WriteShort (pRe1->TrCounterNum);
+		    WriteShort (pRe1->TrCounterParam);
 		    break;
 		 default:
 		    break;
@@ -626,13 +626,13 @@ PtrTRuleBlock       b;
 }
 
 
-/* WriteBlocs   ecrit une suite de blocs de regles */
+/* WriteBlocks   ecrit une suite de blocs de regles */
 
 #ifdef __STDC__
-void                WriteBlocs (PtrTRuleBlock pB, PtrSSchema pSchStr)
+void                WriteBlocks (PtrTRuleBlock pB, PtrSSchema pSchStr)
 
 #else  /* __STDC__ */
-void                WriteBlocs (pB, pSchStr)
+void                WriteBlocks (pB, pSchStr)
 PtrTRuleBlock       pB;
 PtrSSchema        pSchStr;
 
@@ -647,17 +647,17 @@ PtrSSchema        pSchStr;
    while (CurBloc != NULL)
      {
 	wrptrbloc (CurBloc->TbNextBlock);
-	wrshort (CurBloc->TbNConditions);
+	WriteShort (CurBloc->TbNConditions);
 	/* ecrit les conditions d'application des regles du bloc */
 	for (ncond = 1; ncond <= CurBloc->TbNConditions; ncond++)
 	  {
 	     Cond = &CurBloc->TbCondition[ncond - 1];
-	     wrTypeCondTrad (Cond->TcCondition);
+	     WriteTransCondition (Cond->TcCondition);
 	     wrbool (Cond->TcNegativeCond);
 	     wrbool (Cond->TcTarget);
-	     wrshort (Cond->TcAscendType);
+	     WriteShort (Cond->TcAscendType);
 	     wrnom (Cond->TcAscendNature);
-	     wrsignshort (Cond->TcAscendRelLevel);
+	     WriteSignedShort (Cond->TcAscendRelLevel);
 	     switch (Cond->TcCondition)
 		   {
 		      case TcondAlphabet:
@@ -665,19 +665,19 @@ PtrSSchema        pSchStr;
 			 break;
 		      case TcondWithin:
 		      case TcondFirstWithin:
-			 wrshort (Cond->TcElemType);
+			 WriteShort (Cond->TcElemType);
 			 wrnom (Cond->TcElemNature);
 			 wrbool (Cond->TcImmediatelyWithin);
-			 wrRelatNivAsc (Cond->TcAscendRel);
-			 wrshort (Cond->TcAscendLevel);
+			 WriteRelatNivAsc (Cond->TcAscendRel);
+			 WriteShort (Cond->TcAscendLevel);
 			 break;
 		      case TcondAttr:
-			 wrshort (Cond->TcAttr);
+			 WriteShort (Cond->TcAttr);
 			 switch (pSchStr->SsAttribute[Cond->TcAttr - 1].AttrType)
 			       {
 				  case AtNumAttr:
-				     wrsignshort (Cond->TcLowerBound);
-				     wrsignshort (Cond->TcUpperBound);
+				     WriteSignedShort (Cond->TcLowerBound);
+				     WriteSignedShort (Cond->TcUpperBound);
 				     break;
 				  case AtTextAttr:
 				     wrnom (Cond->TcTextValue);
@@ -686,7 +686,7 @@ PtrSSchema        pSchStr;
 
 				     break;
 				  case AtEnumAttr:
-				     wrshort (Cond->TcAttrValue);
+				     WriteShort (Cond->TcAttrValue);
 				     break;
 				  default:
 				     break;
@@ -694,7 +694,7 @@ PtrSSchema        pSchStr;
 
 			 break;
 		      case TcondPRule:
-			 wrshort (Cond->TcAttr);
+			 WriteShort (Cond->TcAttr);
 			 if (Cond->TcAttr == PtSize ||
 			     Cond->TcAttr == PtIndent ||
 			     Cond->TcAttr == PtLineSpacing ||
@@ -703,8 +703,8 @@ PtrSSchema        pSchStr;
 			     Cond->TcAttr == PtBackground ||
 			     Cond->TcAttr == PtForeground)
 			   {
-			      wrsignshort (Cond->TcLowerBound);
-			      wrsignshort (Cond->TcUpperBound);
+			      WriteSignedShort (Cond->TcLowerBound);
+			      WriteSignedShort (Cond->TcUpperBound);
 			   }
 			 else
 			    BIOwriteByte (outfile, Cond->TcPresValue);
@@ -742,29 +742,29 @@ PtrTSchema        pSchTra;
 
 
    pRT1 = &pSchTra->TsAttrTRule[att - 1];
-   wrshort (pRT1->AtrElemType);
+   WriteShort (pRT1->AtrElemType);
    switch (pSchStr->SsAttribute[att - 1].AttrType)
 	 {
 	    case AtNumAttr:
-	       wrshort (pRT1->AtrNCases);
+	       WriteShort (pRT1->AtrNCases);
 	       for (i = 1; i <= pRT1->AtrNCases; i++)
 		 {
 		    pTC1 = &pRT1->AtrCase[i - 1];
-		    wrsignshort (pTC1->TaLowerBound);
-		    wrsignshort (pTC1->TaUpperBound);
-		    WriteBlocs (pTC1->TaTRuleBlock, pSchStr);
+		    WriteSignedShort (pTC1->TaLowerBound);
+		    WriteSignedShort (pTC1->TaUpperBound);
+		    WriteBlocks (pTC1->TaTRuleBlock, pSchStr);
 		 }
 	       break;
 	    case AtTextAttr:
 	       wrnom (pRT1->AtrTextValue);
-	       WriteBlocs (pRT1->AtrTxtTRuleBlock, pSchStr);
+	       WriteBlocks (pRT1->AtrTxtTRuleBlock, pSchStr);
 	       break;
 	    case AtReferenceAttr:
-	       WriteBlocs (pRT1->AtrRefTRuleBlock, pSchStr);
+	       WriteBlocks (pRT1->AtrRefTRuleBlock, pSchStr);
 	       break;
 	    case AtEnumAttr:
 	       for (i = 0; i <= pSchStr->SsAttribute[att - 1].AttrNEnumValues; i++)
-		  WriteBlocs (pRT1->AtrEnuTRuleBlock[i], pSchStr);
+		  WriteBlocks (pRT1->AtrEnuTRuleBlock[i], pSchStr);
 	       break;
 	    default:
 	       break;
@@ -799,31 +799,31 @@ PtrTSchema        pSchTra;
 	  pres == PtForeground + 1)
 	 /* presentation a valeur numerique */
 	{
-	   wrshort (pRT1->RtNCase);
+	   WriteShort (pRT1->RtNCase);
 	   for (i = 1; i <= pRT1->RtNCase; i++)
 	     {
 		pTC1 = &pRT1->RtCase[i - 1];
-		wrsignshort (pTC1->TaLowerBound);
-		wrsignshort (pTC1->TaUpperBound);
-		WriteBlocs (pTC1->TaTRuleBlock, pSchStr);
+		WriteSignedShort (pTC1->TaLowerBound);
+		WriteSignedShort (pTC1->TaUpperBound);
+		WriteBlocks (pTC1->TaTRuleBlock, pSchStr);
 	     }
 	}
       else
 	 for (i = 0; i <= MAX_TRANSL_PRES_VAL; i++)
 	   {
 	      BIOwriteByte (outfile, pRT1->RtPRuleValue[i]);
-	      WriteBlocs (pRT1->RtPRuleValueBlock[i], pSchStr);
+	      WriteBlocks (pRT1->RtPRuleValueBlock[i], pSchStr);
 	   }
 }
 
 
-/* WrSchTrad    cree le fichier de sortie et y ecrit le schema de */
+/* WriteTranslationSchemas    cree le fichier de sortie et y ecrit le schema de */
 /* traduction */
 #ifdef __STDC__
-boolean             WrSchTrad (Name fname, PtrTSchema pSchTra, PtrSSchema pSchStr)
+boolean             WriteTranslationSchemas (Name fname, PtrTSchema pSchTra, PtrSSchema pSchStr)
 
 #else  /* __STDC__ */
-boolean             WrSchTrad (fname, pSchTra, pSchStr)
+boolean             WriteTranslationSchemas (fname, pSchTra, pSchStr)
 Name                 fname;
 PtrTSchema        pSchTra;
 PtrSSchema        pSchStr;
@@ -851,49 +851,49 @@ PtrSSchema        pSchStr;
    pSchTra->TsStructCode = pSchStr->SsCode;		/* ecrit la partie fixe */
    pSc1 = pSchTra;
    wrnom (pSc1->TsStructName);
-   wrshort (pSc1->TsStructCode);
-   wrshort (pSc1->TsLineLength);
+   WriteShort (pSc1->TsStructCode);
+   WriteShort (pSc1->TsLineLength);
    wrnom (pSc1->TsEOL);
    wrnom (pSc1->TsTranslEOL);
-   wrshort (pSc1->TsNConstants);
-   wrshort (pSc1->TsNCounters);
-   wrshort (pSc1->TsNVariables);
-   wrshort (pSc1->TsNBuffers);
+   WriteShort (pSc1->TsNConstants);
+   WriteShort (pSc1->TsNCounters);
+   WriteShort (pSc1->TsNVariables);
+   WriteShort (pSc1->TsNBuffers);
    for (i = 1; i <= pSc1->TsNConstants; i++)
-      wrshort (pSc1->TsConstBegin[i - 1]);
+      WriteShort (pSc1->TsConstBegin[i - 1]);
    for (i = 1; i <= pSc1->TsNCounters; i++)
      {
 	pTr1 = &pSc1->TsCounter[i - 1];
-	wrTrCptTypeOp (pTr1->TnOperation);
+	WriteTCounterOp (pTr1->TnOperation);
 	if (pTr1->TnOperation != TCntrNoOp)
-	   wrshort (pTr1->TnElemType1);
+	   WriteShort (pTr1->TnElemType1);
 	if (pTr1->TnOperation == TCntrSet)
 	  {
-	     wrshort (pTr1->TnElemType2);
-	     wrshort (pTr1->TnParam1);
-	     wrshort (pTr1->TnParam2);
+	     WriteShort (pTr1->TnElemType2);
+	     WriteShort (pTr1->TnParam1);
+	     WriteShort (pTr1->TnParam2);
 	  }
 	else if (pTr1->TnOperation == TCntrRank)
-	   wrsignshort (pTr1->TnAcestorLevel);
-	wrshort (pTr1->TnAttrInit);
+	   WriteSignedShort (pTr1->TnAcestorLevel);
+	WriteShort (pTr1->TnAttrInit);
      }
    for (i = 1; i <= pSc1->TsNVariables; i++)
      {
 	pVa1 = &pSc1->TsVariable[i - 1];
-	wrshort (pVa1->TrvNItems);
+	WriteShort (pVa1->TrvNItems);
 	for (j = 1; j <= pVa1->TrvNItems; j++)
 	  {
 	     pVarT1 = &pVa1->TrvItem[j - 1];
-	     wrVarTradType (pVarT1->TvType);
-	     wrshort (pVarT1->TvItem);
+	     WriteTVarType (pVarT1->TvType);
+	     WriteShort (pVarT1->TvItem);
 	     if (pVarT1->TvType == VtCounter)
 	       {
-		  wrshort (pVarT1->TvLength);
-		  wrComptStyle (pVarT1->TvCounterStyle);
+		  WriteShort (pVarT1->TvLength);
+		  WriteCounterStyle (pVarT1->TvCounterStyle);
 	       }
 	  }
      }
-   wrshort (pSc1->TsPictureBuffer);
+   WriteShort (pSc1->TsPictureBuffer);
    for (i = 1; i <= pSchStr->SsNRules; i++)
       wrptrbloc (pSc1->TsElemTRule[i - 1]);
    for (i = 1; i <= pSchStr->SsNRules; i++)
@@ -904,7 +904,7 @@ PtrSSchema        pSchStr;
 	switch (pSchStr->SsAttribute[i - 1].AttrType)
 	      {
 		 case AtNumAttr:
-		    wrshort (pRT1->AtrNCases);
+		    WriteShort (pRT1->AtrNCases);
 		    for (j = 1; j <= pRT1->AtrNCases; j++)
 		       wrptrbloc (pRT1->AtrCase[j - 1].TaTRuleBlock);
 		    break;
@@ -934,7 +934,7 @@ PtrSSchema        pSchStr;
 	       i == PtBackground + 1 || i == PtForeground + 1)
 	      /* presentation a valeur numerique */
 	     {
-		wrshort (pRTP1->RtNCase);
+		WriteShort (pRTP1->RtNCase);
 		for (j = 1; j <= pRTP1->RtNCase; j++)
 		   wrptrbloc (pRTP1->RtCase[j - 1].TaTRuleBlock);
 	     }
@@ -942,19 +942,19 @@ PtrSSchema        pSchStr;
 	      for (j = 0; j <= MAX_TRANSL_PRES_VAL; j++)
 		 wrptrbloc (pRTP1->RtPRuleValueBlock[j]);
      }
-   wrshort (pSc1->TsNTranslAlphabets);
+   WriteShort (pSc1->TsNTranslAlphabets);
    for (i = 1; i <= pSc1->TsNTranslAlphabets; i++)
      {
 	pTrad1 = &pSc1->TsTranslAlphabet[i - 1];
 	BIOwriteByte (outfile, pTrad1->AlAlphabet);
-	wrshort (pTrad1->AlBegin);
-	wrshort (pTrad1->AlEnd);
+	WriteShort (pTrad1->AlBegin);
+	WriteShort (pTrad1->AlEnd);
      }
-   wrshort (pSc1->TsSymbolFirst);
-   wrshort (pSc1->TsSymbolLast);
-   wrshort (pSc1->TsGraphicsFirst);
-   wrshort (pSc1->TsGraphicsLast);
-   wrshort (pSc1->TsNCharTransls);
+   WriteShort (pSc1->TsSymbolFirst);
+   WriteShort (pSc1->TsSymbolLast);
+   WriteShort (pSc1->TsGraphicsFirst);
+   WriteShort (pSc1->TsGraphicsLast);
+   WriteShort (pSc1->TsNCharTransls);
    for (i = 1; i <= pSc1->TsNCharTransls; i++)
      {
 	pTradCa6 = &pSc1->TsCharTransl[i - 1];
@@ -975,7 +975,7 @@ PtrSSchema        pSchStr;
 	while (pSc1->TsConstant[j - 1] != '\0');
      }
    for (i = 0; i < pSchStr->SsNRules; i++)
-      WriteBlocs (pSc1->TsElemTRule[i], pSchStr);
+      WriteBlocks (pSc1->TsElemTRule[i], pSchStr);
    for (i = 0; i < pSchStr->SsNAttributes; i++)
       WriteReglesAttr (i+1, pSchStr, pSchTra);
    for (i = 0; i < MAX_TRANSL_PRULE; i++)

@@ -522,7 +522,7 @@ Document           *targetDocument;
 	if (((PtrElement) element)->ElReference != NULL)
 	   *target = (Element) ReferredElement (((PtrElement) element)->ElReference,
 					  &iDocExt, &pDocExt);
-	if (!IdentDocNul (iDocExt))
+	if (!DocIdentIsNull (iDocExt))
 	  {
 	     strncpy (targetDocumentName, iDocExt, MAX_DOC_IDENT_LEN);
 	     targetDocumentName[MAX_DOC_IDENT_LEN - 1] = '\0';
@@ -699,7 +699,7 @@ Document           *targetDocument;
 	if (((PtrAttribute) attribute)->AeAttrReference != NULL)
 	   *target = (Element) ReferredElement (((PtrAttribute) attribute)->AeAttrReference,
 					  &iDocExt, &pDocExt);
-	if (!IdentDocNul (iDocExt))
+	if (!DocIdentIsNull (iDocExt))
 	  {
 	     strncpy (targetDocumentName, iDocExt, MAX_DOC_IDENT_LEN);
 	     targetDocumentName[MAX_DOC_IDENT_LEN - 1] = '\0';
@@ -954,7 +954,7 @@ Document           *referenceDocument;
 				 found = FALSE;
 				 while (pDE != NULL && !found)
 				   {
-				      if (MemeIdentDoc (pDE->EdDocIdent,
+				      if (SameDocIdent (pDE->EdDocIdent,
 							LoadedDocument[*referenceDocument - 1]->DocIdent))
 					 found = TRUE;
 				      pDE = pDE->EdNext;
@@ -988,7 +988,7 @@ Document           *referenceDocument;
 	*referenceElement = (Element) (pRef->RdElement);
 	*referenceAttribute = (Attribute) (pRef->RdAttribute);
 	/* If the reference is into the Copy/paste buffer, one search the following one */
-	if (DansTampon ((PtrElement) * referenceElement))
+	if (IsASavedElement ((PtrElement) * referenceElement))
 	   TtaNextLoadedReference (target, targetDocument, referenceElement,
 				   referenceAttribute, referenceDocument);
      }

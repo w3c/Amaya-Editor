@@ -64,7 +64,7 @@ PtrSSchema        pSS;
 {
 }
 
-void                ReaffPaveCopie ()
+void                RedisplayCopies ()
 {
 }
 
@@ -113,9 +113,9 @@ PtrAttribute         pNewAttr;
 }
 
 #ifdef __STDC__
-boolean             DansTampon (PtrElement pEl)
+boolean             IsASavedElement (PtrElement pEl)
 #else  /* __STDC__ */
-boolean             DansTampon (pEl)
+boolean             IsASavedElement (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
@@ -266,9 +266,9 @@ void                EndInsert ()
 }
 
 #ifdef __STDC__
-void                FinInsertParagraph (PtrAbstractBox pAb, int frame)
+void                CloseParagraphInsertion (PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
-void                FinInsertParagraph (pAb, frame)
+void                CloseParagraphInsertion (pAb, frame)
 PtrAbstractBox             pAb;
 int                 frame;
 
@@ -298,9 +298,9 @@ int                 code;
 }
 
 #ifdef __STDC__
-void                EditionEtSpecials (int numero, boolean IsCar)
+void                ContentEditing (int numero, boolean IsCar)
 #else  /* __STDC__ */
-void                EditionEtSpecials (numero, IsCar)
+void                ContentEditing (numero, IsCar)
 int                 numero;
 boolean             IsCar;
 
@@ -309,9 +309,9 @@ boolean             IsCar;
 }
 
 #ifdef __STDC__
-void                CollerXBuffer (unsigned char *Xbuffer, int nbytes)
+void                PasteXClipboard (unsigned char *Xbuffer, int nbytes)
 #else  /* __STDC__ */
-void                CollerXBuffer (Xbuffer, nbytes)
+void                PasteXClipboard (Xbuffer, nbytes)
 unsigned char      *Xbuffer;
 int                 nbytes;
 
@@ -412,9 +412,9 @@ PtrDocument         pDoc;
 }
 
 #ifdef __STDC__
-void                VisuSelect (PtrAbstractBox PavRac, boolean Visible)
+void                ShowSelection (PtrAbstractBox PavRac, boolean Visible)
 #else  /* __STDC__ */
-void                VisuSelect (PavRac, Visible)
+void                ShowSelection (PavRac, Visible)
 PtrAbstractBox             PavRac;
 boolean             Visible;
 
@@ -434,10 +434,10 @@ boolean             Allume;
 }
 
 #ifdef __STDC__
-PtrElement          SelSuivant (PtrElement pEl, PtrElement PcLast)
+PtrElement          NextInSelection (PtrElement pEl, PtrElement PcLast)
 
 #else  /* __STDC__ */
-PtrElement          SelSuivant (pEl, PcLast)
+PtrElement          NextInSelection (pEl, PcLast)
 PtrElement          pEl;
 PtrElement          PcLast;
 
@@ -447,10 +447,10 @@ PtrElement          PcLast;
 }
 
 #ifdef __STDC__
-void                SelAjoute (PtrElement pEl, boolean dernier)
+void                AddInSelection (PtrElement pEl, boolean dernier)
 
 #else  /* __STDC__ */
-void                SelAjoute (pEl, dernier)
+void                AddInSelection (pEl, dernier)
 PtrElement          pEl;
 boolean             dernier;
 
@@ -470,10 +470,10 @@ int                 frame;
 }
 
 #ifdef __STDC__
-void                SelectEl (PtrDocument pDoc, PtrElement pEl, boolean Debut, boolean Controle)
+void                SelectElement (PtrDocument pDoc, PtrElement pEl, boolean Debut, boolean Controle)
 
 #else  /* __STDC__ */
-void                SelectEl (pDoc, pEl, Debut, Controle)
+void                SelectElement (pDoc, pEl, Debut, Controle)
 PtrDocument         pDoc;
 PtrElement          pEl;
 boolean             Debut;
@@ -496,9 +496,9 @@ ViewSelection            *marque;
 
 
 #ifdef __STDC__
-void                AllumeSelection (boolean DebVisible, boolean drag)
+void                HighlightSelection (boolean DebVisible, boolean drag)
 #else  /* __STDC__ */
-void                AllumeSelection (DebVisible, drag)
+void                HighlightSelection (DebVisible, drag)
 boolean             DebVisible;
 boolean             drag;
 
@@ -507,20 +507,20 @@ boolean             drag;
 }
 
 #ifdef __STDC__
-void                AnnuleSelect ()
+void                CancelSelection ()
 
 #else  /* __STDC__ */
-void                AnnuleSelect ()
+void                CancelSelection ()
 #endif				/* __STDC__ */
 {
 }
 
 
 #ifdef __STDC__
-void                FusEtSel (PtrDocument SelDoc, PtrElement PremSel, PtrElement DerSel, int premcar, int dercar)
+void                MergeAndSelect (PtrDocument SelDoc, PtrElement PremSel, PtrElement DerSel, int premcar, int dercar)
 
 #else  /* __STDC__ */
-void                FusEtSel (SelDoc, PremSel, DerSel, premcar, dercar)
+void                MergeAndSelect (SelDoc, PremSel, DerSel, premcar, dercar)
 PtrDocument         SelDoc;
 PtrElement          PremSel;
 PtrElement          DerSel;
@@ -533,9 +533,9 @@ int                 dercar;
 
 
 #ifdef __STDC__
-void                MajPavSelect (int frame, PtrAbstractBox pAb, boolean Etat)
+void                SetNewSelectionStatus (int frame, PtrAbstractBox pAb, boolean Etat)
 #else  /* __STDC__ */
-void                MajPavSelect (frame, pAb, Etat)
+void                SetNewSelectionStatus (frame, pAb, Etat)
 int                 frame;
 PtrAbstractBox             pAb;
 boolean             Etat;
@@ -545,9 +545,9 @@ boolean             Etat;
 }
 
 #ifdef __STDC__
-void                ModeCreation (PtrBox pBox, int frame)
+void                DirectCreation (PtrBox pBox, int frame)
 #else  /* __STDC__ */
-void                ModeCreation (pBox, frame)
+void                DirectCreation (pBox, frame)
 PtrBox            pBox;
 int                 frame;
 

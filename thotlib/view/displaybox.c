@@ -870,7 +870,7 @@ int                 frame;
 
 	      lgspace = pBox->BxSpaceWidth;
 	      if (lgspace == 0)
-		 lgspace = CarWidth (BLANC, pBox->BxFont);
+		 lgspace = CarWidth (_SPACE_, pBox->BxFont);
 
 	      /* Search the first displayable char */
 	      /* --------------------------------- */
@@ -883,7 +883,7 @@ int                 frame;
 		      restbl = newbl;
 		      x += lg;
 		      car = (unsigned char) (pBu1->BuContent[indbuff - 1]);
-		      if (car == BLANC)
+		      if (car == _SPACE_)
 			{
 			   lg = lgspace;
 			   if (newbl > 0)
@@ -940,8 +940,8 @@ int                 frame;
 		     {
 			car = (unsigned char) (pBu1->BuContent[indbuff - 1]);
 
-			if (car == BLANC || car == FINE
-			    || car == DEMI_CADRATIN || car == BLANC_DUR)
+			if (car == _SPACE_ || car == THIN_SPACE
+			    || car == HALF_EM || car == UNBREAKABLE_SPACE)
 			  {
 			     /* display the last chars handled */
 			     dc = indbuff - nbcar;
@@ -951,18 +951,18 @@ int                 frame;
 			     if (!ShowSpace)
 			       {
 				  /* Show the space chars */
-				  if (car == BLANC)
-				     DrawChar (SeeBlanc, frame, x, y, pBox->BxFont, RO, op, fg);
-				  else if (car == FINE)
-				     DrawChar (SeeFine, frame, x, y, pBox->BxFont, RO, op, fg);
-				  else if (car == DEMI_CADRATIN)
-				     DrawChar (SeeDemiCadratin, frame, x, y, pBox->BxFont, RO, op, fg);
-				  else if (car == BLANC_DUR)
-				     DrawChar (SeeBlancDur, frame, x, y, pBox->BxFont, RO, op, fg);
+				  if (car == _SPACE_)
+				     DrawChar (SHOWN_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
+				  else if (car == THIN_SPACE)
+				     DrawChar (SHOWN_THIN_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
+				  else if (car == HALF_EM)
+				     DrawChar (SHOWN_HALF_EM, frame, x, y, pBox->BxFont, RO, op, fg);
+				  else if (car == UNBREAKABLE_SPACE)
+				     DrawChar (SHOWN_UNBREAKABLE_SPACE, frame, x, y, pBox->BxFont, RO, op, fg);
 			       }
 
 			     nbcar = 0;
-			     if (car == BLANC)
+			     if (car == _SPACE_)
 				if (restbl > 0)
 				  {
 				     /* Pixel space splitting */
@@ -995,8 +995,8 @@ int                 frame;
 			DisplayUnderline (frame, x, y, pBox->BxFont, pBox->BxUnderline,
 				pBox->BxThickness, pBox->BxWidth, RO, op, fg);
 			/* Next char lookup */
-			if ((unsigned char) pBu1->BuContent[indbuff - 1] == SAUT_DE_LIGNE && !ShowSpace)
-			   DrawChar (SeeCtrlRC, frame, x, y, pBox->BxFont, RO, op, fg);
+			if ((unsigned char) pBu1->BuContent[indbuff - 1] == BREAK_LINE && !ShowSpace)
+			   DrawChar (SHOWN_BREAK_LINE, frame, x, y, pBox->BxFont, RO, op, fg);
 		     }
 		   else
 		     {

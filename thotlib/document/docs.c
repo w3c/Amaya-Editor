@@ -213,7 +213,7 @@ char               *fileName;
 	if (!ok)
 	  {
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, OPEN_DOC_IMP), DefaultDocumentName);
-	     LibDocument (pDoc);
+	     UnloadDocument (pDoc);
 	     *pDoc = NULL;
 	  }
      }
@@ -222,7 +222,7 @@ char               *fileName;
 	/* conserve le path actuel des schemas dans le contexte du document */
 	strncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
 	/* ouvre les vues a ouvrir */
-	OuvreVuesInit (*pDoc);
+	OpenDefaultViews (*pDoc);
 	if ((*pDoc)->DocRootElement != NULL)
 	   /* Pour tous les elements du document que l'on vient de */
 	   /* charger qui sont designe's par des references, cherche */
@@ -267,7 +267,7 @@ PathBuffer          directory;
    if (*pDoc != NULL)
       if (SSchemaName == NULL || SSchemaName[0] == '\0')
 	 /* L'utilisateur n'a pas fourni de nom de schema */
-	 LibDocument (pDoc);
+	 UnloadDocument (pDoc);
       else
 	{
 	   strncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
@@ -329,7 +329,7 @@ PathBuffer          directory;
 	     }
 	   if ((*pDoc)->DocRootElement == NULL)
 	      /* echec creation document */
-	      LibDocument (pDoc);
+	      UnloadDocument (pDoc);
 	   else
 	     {
 
@@ -347,7 +347,7 @@ PathBuffer          directory;
 		for (view = 0; view < pPSchema->PsNViews; view++)
 		   if (pPSchema->PsPaginatedView[view])
 		      /* cette vue est mise en page */
-		      AjoutePageEnFin ((*pDoc)->DocRootElement, view+1, *pDoc, TRUE);
+		      AddLastPageBreak ((*pDoc)->DocRootElement, view+1, *pDoc, TRUE);
 #endif /* __COLPAGE__ */
 		/* le document appartient au directory courant */
 		if (directory[0] != '\0')
@@ -385,10 +385,10 @@ PathBuffer          directory;
 		      (*ThotLocalActions[T_createtable])
 			((*pDoc)->DocRootElement, *pDoc);
 		     /* ouvre les vues du document cree' */
-		     OuvreVuesInit (*pDoc);
+		     OpenDefaultViews (*pDoc);
 		     /* selectionne la 1ere feuille */
 		     pEl = FirstLeaf ((*pDoc)->DocRootElement);
-		     SelectEl (*pDoc, pEl, TRUE, TRUE);
+		     SelectElement (*pDoc, pEl, TRUE, TRUE);
 		  }
 	     }
 	}
@@ -440,13 +440,13 @@ int                 accessMode;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    MajAccessMode met a` jour le mode d'acces sur tout les pave's   | */
+/* |    SetAccessMode met a` jour le mode d'acces sur tout les pave's   | */
 /* |          de tous les elements de toutes les vues du document pDoc. | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MajAccessMode (PtrDocument pDoc, int accessMode)
+void                SetAccessMode (PtrDocument pDoc, int accessMode)
 #else  /* __STDC__ */
-void                MajAccessMode (pDoc, accessMode)
+void                SetAccessMode (pDoc, accessMode)
 PtrDocument         pDoc;
 int                 accessMode;
 
@@ -475,12 +475,12 @@ int                 accessMode;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    LibDocument libere le document pDoc				| */
+/* |    UnloadDocument libere le document pDoc				| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                LibDocument (PtrDocument * pDoc)
+void                UnloadDocument (PtrDocument * pDoc)
 #else  /* __STDC__ */
-void                LibDocument (pDoc)
+void                UnloadDocument (pDoc)
 PtrDocument        *pDoc;
 
 #endif /* __STDC__ */
@@ -496,14 +496,14 @@ PtrDocument        *pDoc;
 	if (LoadedDocument[d] == *pDoc)
 	  {
 	     /* enleve la selection de ce document */
-	     DeSelDoc (*pDoc);
+	     ResetSelection (*pDoc);
 	     /* libere le contenu du buffer s'il s'agit d'une partie de ce docum. */
 	     if (DocOfSavedElements == *pDoc)
-		LibBufEditeur ();
+		FreeSavedElements ();
 	     /* libere tous les arbres abstraits */
 	     DeleteAllTrees (*pDoc);
 	     /* libere les schemas */
-	     LibSchemas (*pDoc);
+	     FreeDocumentSchemas (*pDoc);
 	     FreeDocument (LoadedDocument[d]);
 	     LoadedDocument[d] = NULL;
 	     *pDoc = NULL;
@@ -513,14 +513,14 @@ PtrDocument        *pDoc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    PaginerDoc	pagine toutes les vues du document pDoc		| */
+/* |    PaginateDocument	pagine toutes les vues du document pDoc		| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                PaginerDoc (PtrDocument pDoc)
+void                PaginateDocument (PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                PaginerDoc (pDoc)
+void                PaginateDocument (pDoc)
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -530,7 +530,7 @@ PtrDocument         pDoc;
    int                 i, nViews, docView;
    boolean             found;
 
-   nViews = LesVuesDunDoc (pDoc, viewList);
+   nViews = BuildDocumentViewList (pDoc, viewList);
    for (i = 0; i < nViews; i++)
       if (viewList[i].VdOpen)
 	 if (viewList[i].VdPaginated)
@@ -553,17 +553,17 @@ PtrDocument         pDoc;
 			      found = TRUE;
 		   }
 		 /* pagine la vue */
-		 Pages (pDoc, docView+1, viewList[i].VdAssoc);
+		 PaginateView (pDoc, docView+1, viewList[i].VdAssoc);
 	      }
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    docModify positionne le flag modification d'un document a` TRUE.| */
+/* |    DocumentModified positionne le flag modification d'un document a` TRUE.| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                docModify (PtrDocument pDoc, PtrElement pEl)
+void                DocumentModified (PtrDocument pDoc, PtrElement pEl)
 #else  /* __STDC__ */
-void                docModify (pDoc, pEl)
+void                DocumentModified (pDoc, pEl)
 PtrDocument         pDoc;
 PtrElement          pEl;
 
@@ -635,13 +635,13 @@ boolean             withAPP;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    MajElInclus met a` jour et reaffiche l'element pEl inclus dans  | */
+/* |    UpdateIncludedElement met a` jour et reaffiche l'element pEl inclus dans  | */
 /* |            le document pDoc.                                       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MajElInclus (PtrElement pEl, PtrDocument pDoc)
+void                UpdateIncludedElement (PtrElement pEl, PtrDocument pDoc)
 #else  /* __STDC__ */
-void                MajElInclus (pEl, pDoc)
+void                UpdateIncludedElement (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 
@@ -660,7 +660,7 @@ PtrDocument         pDoc;
       /* vue d'elements associes */
       ToCreate[0] = pEl->ElAbstractBox[0] != NULL;
    /* detruit les paves de l'element */
-   DetrPaves (pEl, pDoc, FALSE);
+   DestroyAbsBoxes (pEl, pDoc, FALSE);
    AbstractImageUpdated (pDoc);
    if (pEl->ElTerminal)
       switch (pEl->ElLeafType)
@@ -717,7 +717,7 @@ PtrDocument         pDoc;
 	   if (ToCreate[view])
 	     {
 		pDoc->DocViewFreeVolume[view] = pDoc->DocViewVolume[view];
-		CrPaveNouv (pEl, pDoc, view+1);
+		CreateNewAbsBoxes (pEl, pDoc, view+1);
 	     }
      }
    else
@@ -726,7 +726,7 @@ PtrDocument         pDoc;
      {
 	pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] =
 	   pDoc->DocAssocVolume[pEl->ElAssocNum - 1];
-	CrPaveNouv (pEl, pDoc, 1);
+	CreateNewAbsBoxes (pEl, pDoc, 1);
      }
    ApplDelayedRule (pEl, pDoc);
    /* reaffiche l'element dans toutes les vues ou il existe */
@@ -794,7 +794,7 @@ PtrDocument         pDoc;
 					setSelect = TRUE;
 				     }
 				   /* refait la copie de l'element inclus */
-				   MajElInclus (pRef->RdElement, pRefDoc);
+				   UpdateIncludedElement (pRef->RdElement, pRefDoc);
 				}
 	       }
 	     while (pRef != NULL);
@@ -805,7 +805,7 @@ PtrDocument         pDoc;
      }
    if (setSelect)
       /* rallume la selection */
-      AllumeSelection (FALSE, FALSE);
+      HighlightSelection (FALSE, FALSE);
 }
 
 
@@ -843,12 +843,12 @@ char               *extension;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    SauverDoc       effectue la sauvegarde du document pDoc         | */
+/* |    StoreDocument       effectue la sauvegarde du document pDoc         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             SauverDoc (PtrDocument pDoc, Name NomDuDocument, PathBuffer NomDirectory, boolean SauveDocAvecCopie, boolean SauveDocAvecMove)
+boolean             StoreDocument (PtrDocument pDoc, Name NomDuDocument, PathBuffer NomDirectory, boolean SauveDocAvecCopie, boolean SauveDocAvecMove)
 #else  /* __STDC__ */
-boolean             SauverDoc (pDoc, NomDuDocument, NomDirectory, SauveDocAvecCopie, SauveDocAvecMove)
+boolean             StoreDocument (pDoc, NomDuDocument, NomDirectory, SauveDocAvecCopie, SauveDocAvecMove)
 PtrDocument         pDoc;
 Name                 NomDuDocument;
 PathBuffer          NomDirectory;
@@ -892,12 +892,12 @@ boolean             SauveDocAvecMove;
 	/*     On fait ensuite des renommages                    */
 	DoFileName (NomDuDocument, "PIV", NomDirectory, buffer, &i);
 	/* on teste d'abord le droit d'ecriture sur le .PIV */
-	ok = OuvrEcr (buffer) == 0;
+	ok = FileWriteAccess (buffer) == 0;
 	if (ok)
 	  {
 	     DoFileName (NomDuDocument, "Tmp", NomDirectory, NomTemporaire, &i);
 	     /* on teste le droit d'ecriture sur le .Tmp */
-	     ok = OuvrEcr (NomTemporaire) == 0;
+	     ok = FileWriteAccess (NomTemporaire) == 0;
 	     if (ok)
 	       {
 		  TtaDisplaySimpleMessage (INFO, LIB, WRITING);
@@ -1002,7 +1002,7 @@ boolean             SauveDocAvecMove;
 		       strncpy (pDoc->DocDName, NomDuDocument, MAX_NAME_LENGTH);
 		       strncpy (pDoc->DocIdent, NomDuDocument, MAX_DOC_IDENT_LEN);
 		       strncpy (pDoc->DocDirectory, NomDirectory, MAX_PATH);
-		       changenomdoc (pDoc, NomDuDocument);
+		       ChangeDocumentName (pDoc, NomDuDocument);
 		    }
 	       }
 	     notifyDoc.event = TteDocSave;
@@ -1050,7 +1050,7 @@ boolean             ask;
 	/* recherche le nom du fichier en proposant le nom courant */
 	ok = !ask;
 	if (ok && !pDoc->DocReadOnly)
-	   status = SauverDoc (pDoc, docName, directory, FALSE, FALSE);
+	   status = StoreDocument (pDoc, docName, directory, FALSE, FALSE);
      }
    if (status && ask)
 	{
@@ -1062,7 +1062,7 @@ boolean             ask;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    SauveDocument sauve sous forme pivot le document pointe' par    | */
+/* |    WriteDocument sauve sous forme pivot le document pointe' par    | */
 /* |            pDoc. Retourne Vrai si le document a pu etre sauve,     | */
 /* |            Faux si echec.                                          | */
 /* |            - Mode = 0 : demander le nom de fichier a` l'utilisateur| */
@@ -1073,10 +1073,10 @@ boolean             ask;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             SauveDocument (PtrDocument pDoc, int Mode)
+boolean             WriteDocument (PtrDocument pDoc, int Mode)
 
 #else  /* __STDC__ */
-boolean             SauveDocument (pDoc, Mode)
+boolean             WriteDocument (pDoc, Mode)
 PtrDocument         pDoc;
 int                 Mode;
 

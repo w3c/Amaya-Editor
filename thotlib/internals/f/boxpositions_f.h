@@ -6,12 +6,12 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void Placer ( PtrAbstractBox pAb,
+extern void AddBoxTranslations ( PtrAbstractBox pAb,
                      int SeuilVisu,
                      int frame,
                      boolean EnX,
                      boolean EnY );
-extern boolean MarqueCoupure ( PtrAbstractBox Pv,
+extern boolean SetPageBreakPosition ( PtrAbstractBox Pv,
                                int *page );
 extern void HautCoupure ( PtrAbstractBox Pv,
                           boolean EnPt,
@@ -24,18 +24,18 @@ extern void PosPavePt ( PtrAbstractBox Pv,
 extern void DimPavePt ( PtrAbstractBox Pv,
                         int *hauteur,
                         int *largeur );
-extern void MarqueAPlacer ( PtrAbstractBox pAb,
+extern void SetBoxToTranslate ( PtrAbstractBox pAb,
                             boolean EnX,
                             boolean EnY );
 
 #else /* __STDC__ */
 
-extern void Placer (/* PtrAbstractBox pAb,
+extern void AddBoxTranslations (/* PtrAbstractBox pAb,
                        int SeuilVisu,
                        int frame,
                        boolean EnX,
                        boolean EnY */);
-extern boolean MarqueCoupure (/* PtrAbstractBox Pv,
+extern boolean SetPageBreakPosition (/* PtrAbstractBox Pv,
                                  int *page */);
 extern void HautCoupure (/* PtrAbstractBox Pv,
                             boolean EnPt,
@@ -48,7 +48,7 @@ extern void PosPavePt (/* PtrAbstractBox Pv,
 extern void DimPavePt (/* PtrAbstractBox Pv,
                           int *hauteur,
                           int *largeur */);
-extern void MarqueAPlacer (/* PtrAbstractBox pAb,
+extern void SetBoxToTranslate (/* PtrAbstractBox pAb,
                               boolean EnX,
                               boolean EnY */);
 

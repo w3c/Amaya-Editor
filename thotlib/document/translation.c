@@ -2135,7 +2135,7 @@ boolean             lineBreak;
 			   }
 		      }
 		    /* convertit la valeur du compteur dans le style demande' */
-		    ConvertitNombre (i, varItem->TvCounterStyle, number, &j);
+		    GetCounterValue (i, varItem->TvCounterStyle, number, &j);
 		    /* sort la valeur du compteur */
 		    for (k = 0; k < j; k++)
 		       PutChar (number[k], fileNum, outBuffer, pDoc, lineBreak);

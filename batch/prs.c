@@ -3697,7 +3697,7 @@ indLine               wi;
 		    /* lit le schema de structure compile' */
 		    if ((pSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
 		       TtaDisplaySimpleMessage (FATAL, PRS, NO_MORE_MEM_LEFT);	/* memoire insuffisante */
-		    if (!RdSchStruct (n, pSSchema))
+		    if (!ReadStructureSchema (n, pSSchema))
 		       TtaDisplaySimpleMessage (FATAL, PRS, MISSING_STRUCT_SCHEM);
 		    /* echec lecture du schema de structure */
 		    else if (strcmp (n, pSSchema->SsName))
@@ -3713,7 +3713,7 @@ indLine               wi;
 		    /* verifier que ce schema de structure externe existe et qu'il */
 		    /* contient bien le type CopyType */
 		    CopyName (n, wi, wl);
-		    if (!RdSchStruct (n, pExternalSS))
+		    if (!ReadStructureSchema (n, pExternalSS))
 		       /* echec lecture du schema de structure */
 		       CompilerError (wi, PRS, FATAL, CANT_LOAD_SCHEMA, inputLine, LineNum);
 		    else
@@ -6240,7 +6240,7 @@ char              **argv;
 		  strcpy (fname, srceFileName);
 		  strcat (fname, ".PRS");
 		  /* ecrit le schema compile' dans le directory courant */
-		  fileOK = WrSchPres (fname, pPSchema, pSSchema);
+		  fileOK = WritePresentationSchema (fname, pPSchema, pSSchema);
 		  if (!fileOK)
 		     TtaDisplayMessage (FATAL, TtaGetMessage(PRS, WRITE_ERROR), fname);
 	       }

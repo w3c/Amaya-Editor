@@ -46,7 +46,7 @@ char               *data;
 	 if (DocVueAOuvrir->DocSSchema != NULL)
 	   {
 	      NumeroVueAOuvrir = (int) data;
-	      TraiteRetMenuVues (DocVueAOuvrir, NumeroVueAOuvrir,
+	      OpenViewByMenu (DocVueAOuvrir, NumeroVueAOuvrir,
 				 SousArbreVueAOuvrir, VueDeReference);
 	   }
 }
@@ -86,7 +86,7 @@ View                vue;
    if (DocVueAOuvrir != NULL)
      {
 	/* construit le menus des vues que l'on peut ouvrir */
-	MenuVuesAOuvrir (pDoc, Buf, &nbitem);
+	BuildViewList (pDoc, Buf, &nbitem);
 	if (nbitem == 0)
 	   TtaDisplaySimpleMessage (INFO, LIB, ALL_VIEWS_ALREADY_CREATED);
 	else
@@ -132,7 +132,7 @@ View                view;
    if (pDoc != NULL)
      {
 	GetViewInfo (document, view, &vue, &assoc);
-	FermerVueDoc (pDoc, vue, assoc);
+	CloseView (pDoc, vue, assoc);
      }
 }
 

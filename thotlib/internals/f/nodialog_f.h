@@ -12,7 +12,7 @@ extern void Ind_VerifMarque ( PtrElement * pEl,
                               PtrDocument pDoc );
 extern Pixmap TtaCreatePixmapLogo ( char **data );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
-extern void ReaffPaveCopie ( void );
+extern void RedisplayCopies ( void );
 extern void DrawAjAttr ( void );
 extern void DrawChar ( char car,
                        int frame,
@@ -27,7 +27,7 @@ extern void DrawSupprAttr ( PtrAttribute pAttr,
 extern void AttachAttrWithValue ( PtrElement pEl,
                                   PtrDocument pDoc,
                                   PtrAttribute pNewAttr );
-extern boolean DansTampon ( PtrElement pEl );
+extern boolean IsASavedElement ( PtrElement pEl );
 extern void SaisitNomSchPres ( PtrSSchema pSchStr,
                                Name name );
 extern boolean LinkReference ( void );
@@ -58,14 +58,14 @@ extern boolean CallEventType ( int *notifyEvent,
 extern boolean CallEventAttribute ( NotifyAttribute * notifyAttr,
                                     boolean pre );
 extern void EndInsert ( void );
-extern void FinInsertParagraph ( PtrAbstractBox pAb,
+extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                  int frame );
 extern void InsertChar ( unsigned char car,
                          int clavier );
 extern void EmacsCommand ( int code );
-extern void EditionEtSpecials ( int numero,
+extern void ContentEditing ( int numero,
                                 boolean IsCar );
-extern void CollerXBuffer ( unsigned char *Xbuffer,
+extern void PasteXClipboard ( unsigned char *Xbuffer,
                             int nbytes );
 extern int CopierXBuffer ( unsigned char **buffer );
 extern void MajScrolls ( int frame );
@@ -84,32 +84,32 @@ extern void ResetCursorWatch ( int thotWindowid );
 extern void InsertOption ( PtrElement pEl,
                            PtrElement * p,
                            PtrDocument pDoc );
-extern void VisuSelect ( PtrAbstractBox PavRac,
+extern void ShowSelection ( PtrAbstractBox PavRac,
                          boolean Visible );
 extern void SwitchSelection ( int frame,
                               boolean Allume );
-extern PtrElement SelSuivant ( PtrElement pEl,
+extern PtrElement NextInSelection ( PtrElement pEl,
                                PtrElement PcLast );
-extern void SelAjoute ( PtrElement pEl,
+extern void AddInSelection ( PtrElement pEl,
                         boolean dernier );
 extern void ClearViewSelection ( int frame );
-extern void SelectEl ( PtrDocument pDoc,
+extern void SelectElement ( PtrDocument pDoc,
                        PtrElement pEl,
                        boolean Debut,
                        boolean Controle );
 extern void ComputeViewSelMarks ( ViewSelection * marque );
-extern void AllumeSelection ( boolean DebVisible,
+extern void HighlightSelection ( boolean DebVisible,
                               boolean drag );
-extern void AnnuleSelect ( void );
-extern void FusEtSel ( PtrDocument SelDoc,
+extern void CancelSelection ( void );
+extern void MergeAndSelect ( PtrDocument SelDoc,
                        PtrElement PremSel,
                        PtrElement DerSel,
                        int premcar,
                        int dercar );
-extern void MajPavSelect ( int frame,
+extern void SetNewSelectionStatus ( int frame,
                            PtrAbstractBox pAb,
                            boolean Etat );
-extern void ModeCreation ( PtrBox pBox,
+extern void DirectCreation ( PtrBox pBox,
                            int frame );
 extern boolean IsAbstractBoxDisplayed ( PtrAbstractBox pav,
                                         int frame );
@@ -181,7 +181,7 @@ extern void Ind_VerifMarque (/* PtrElement * pEl,
                                 PtrDocument pDoc */);
 extern Pixmap TtaCreatePixmapLogo (/* char **data */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
-extern void ReaffPaveCopie (/* void */);
+extern void RedisplayCopies (/* void */);
 extern void DrawAjAttr (/* void */);
 extern void DrawChar (/* char car,
                          int frame,
@@ -196,7 +196,7 @@ extern void DrawSupprAttr (/* PtrAttribute pAttr,
 extern void AttachAttrWithValue (/* PtrElement pEl,
                                     PtrDocument pDoc,
                                     PtrAttribute pNewAttr */);
-extern boolean DansTampon (/* PtrElement pEl */);
+extern boolean IsASavedElement (/* PtrElement pEl */);
 extern void SaisitNomSchPres (/* PtrSSchema pSchStr,
                                  Name name */);
 extern boolean LinkReference (/* void */);
@@ -227,14 +227,14 @@ extern boolean CallEventType (/* int *notifyEvent,
 extern boolean CallEventAttribute (/* NotifyAttribute * notifyAttr,
                                       boolean pre */);
 extern void EndInsert (/* void */);
-extern void FinInsertParagraph (/* PtrAbstractBox pAb,
+extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
                                    int frame */);
 extern void InsertChar (/* unsigned char car,
                            int clavier */);
 extern void EmacsCommand (/* int code */);
-extern void EditionEtSpecials (/* int numero,
+extern void ContentEditing (/* int numero,
                                   boolean IsCar */);
-extern void CollerXBuffer (/* unsigned char *Xbuffer,
+extern void PasteXClipboard (/* unsigned char *Xbuffer,
                               int nbytes */);
 extern int CopierXBuffer (/* unsigned char **buffer */);
 extern void MajScrolls (/* int frame */);
@@ -253,32 +253,32 @@ extern void ResetCursorWatch (/* int thotWindowid */);
 extern void InsertOption (/* PtrElement pEl,
                              PtrElement * p,
                              PtrDocument pDoc */);
-extern void VisuSelect (/* PtrAbstractBox PavRac,
+extern void ShowSelection (/* PtrAbstractBox PavRac,
                            boolean Visible */);
 extern void SwitchSelection (/* int frame,
                                 boolean Allume */);
-extern PtrElement SelSuivant (/* PtrElement pEl,
+extern PtrElement NextInSelection (/* PtrElement pEl,
                                  PtrElement PcLast */);
-extern void SelAjoute (/* PtrElement pEl,
+extern void AddInSelection (/* PtrElement pEl,
                           boolean dernier */);
 extern void ClearViewSelection (/* int frame */);
-extern void SelectEl (/* PtrDocument pDoc,
+extern void SelectElement (/* PtrDocument pDoc,
                          PtrElement pEl,
                          boolean Debut,
                          boolean Controle */);
 extern void ComputeViewSelMarks (/* ViewSelection * marque */);
-extern void AllumeSelection (/* boolean DebVisible,
+extern void HighlightSelection (/* boolean DebVisible,
                                 boolean drag */);
-extern void AnnuleSelect (/* void */);
-extern void FusEtSel (/* PtrDocument SelDoc,
+extern void CancelSelection (/* void */);
+extern void MergeAndSelect (/* PtrDocument SelDoc,
                          PtrElement PremSel,
                          PtrElement DerSel,
                          int premcar,
                          int dercar */);
-extern void MajPavSelect (/* int frame,
+extern void SetNewSelectionStatus (/* int frame,
                              PtrAbstractBox pAb,
                              boolean Etat */);
-extern void ModeCreation (/* PtrBox pBox,
+extern void DirectCreation (/* PtrBox pBox,
                              int frame */);
 extern boolean IsAbstractBoxDisplayed (/* PtrAbstractBox pav,
                                           int frame */);

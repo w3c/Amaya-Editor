@@ -53,7 +53,7 @@ EXPORT ThotGC     TtGraphicGC;	/* Graphic context pour les images      */
 
 EXPORT ThotWindow TtRootWindow; /* Identification de la fenetre racine 	*/
 EXPORT int        TtWDepth;	/* Nombre de plans de l'ecran  		*/
-EXPORT char       TtFontName[MAX_FONT * MAX_NFONT];/* Name X-Window 	*/
+EXPORT char       TtFontName[MAX_FONT * MAX_FONTNAME];/* Name X-Window 	*/
 EXPORT char       TtPsFontName[MAX_FONT * 8];	/* Name PostScript 	*/
 EXPORT ptrfont    TtFonts[MAX_FONT];/* fontes chargees dans le serveur 	*/
 EXPORT int 	  TtFontFrames[MAX_FONT];
@@ -64,13 +64,13 @@ EXPORT ThotCursor HCurs;	/* Curseur modification presentation 	*/
 EXPORT ThotCursor HVCurs;	/* Curseur modification presentation 	*/
 
 EXPORT int     DefaultBColor;		/* default background color index   */
-EXPORT int     ActifFen;		/* Numero de fenetre document active */
-EXPORT int     DesFen;			/* ViewFrame designee par la selection */
-EXPORT int     DesX;			/* Position X de la selection  */
-EXPORT int     DesY;			/* Position X de la selection  */
-EXPORT int     DesReturn;		/* Indicateur de selection     */
+EXPORT int     ActiveFrame;		/* Numero de fenetre document active */
+EXPORT int     ClickFrame;			/* ViewFrame designee par la selection */
+EXPORT int     ClickX;			/* Position X de la selection  */
+EXPORT int     ClickY;			/* Position X de la selection  */
+EXPORT int     ClickIsDone;		/* Indicateur de selection     */
 EXPORT unsigned char	*Xbuffer;	/* Buffer pour echanges avec X */
-EXPORT int		LgXbuffer;
+EXPORT int		ClipboardLength;
 EXPORT Proc		CurrentCallbackAPI;
 
 #ifdef NEW_WILLOWS

@@ -46,15 +46,15 @@ static UnePresent   TabSchPres[MAX_PSCHEMAS];
 #include "schemas_f.h"
 
 /* ---------------------------------------------------------------------- */
-/* |    InitSchAppli(pSchema)                                            | */
+/* |    InitApplicationSchema(pSchema)                                            | */
 /* |            Initialises the application pointer in the StructSchema    | */
 /* |            if there is an application for this schema. If not,     | */
 /* |            the pointer is set to NULL.                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                InitSchAppli (PtrSSchema pSchema)
+void                InitApplicationSchema (PtrSSchema pSchema)
 #else  /* __STDC__ */
-void                InitSchAppli (pSchema)
+void                InitApplicationSchema (pSchema)
 PtrSSchema        pSchema;
 #endif /* __STDC__ */
 {
@@ -99,16 +99,16 @@ void                InitNatures ()
 
 
 /* ---------------------------------------------------------------------- */
-/* |    LdSchPres       charge le schema de presentation de nom fname   | */
+/* |    LoadPresentationSchema       charge le schema de presentation de nom fname   | */
 /* |                    pour le schema de structure pointe' par SS et   | */
 /* |                    retourne un pointeur sur le schema charge' ou   | */
 /* |                    NULL si echec.                                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrPSchema          LdSchPres (Name fname, PtrSSchema SS)
+PtrPSchema          LoadPresentationSchema (Name fname, PtrSSchema SS)
 
 #else  /* __STDC__ */
-PtrPSchema          LdSchPres (fname, SS)
+PtrPSchema          LoadPresentationSchema (fname, SS)
 Name                 fname;
 PtrSSchema        SS;
 
@@ -141,7 +141,7 @@ PtrSSchema        SS;
    else
       /* c'est un nouveau schema, il faut le charger */
      {
-	pSchP = RdSchPres (fname, SS);
+	pSchP = ReadPresentationSchema (fname, SS);
 	if (pSchP != NULL)
 	   /* met le nouveau schema dans la table des schemas charges */
 	   /* cherche une entree libre dans la table */
@@ -194,16 +194,16 @@ PtrPRule       *arp;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    SupprSchPrs     libere le schema de presentation pointe par     | */
+/* |    FreePresentationSchema     libere le schema de presentation pointe par     | */
 /* |    pSch, ainsi que toutes les regles de presentation qu'il pointe. | */
 /* |    pSS pointe le schema de structure auquel le schema de           | */
 /* |    presentation a liberer est associe.                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                SupprSchPrs (PtrPSchema pSch, PtrSSchema pSS)
+void                FreePresentationSchema (PtrPSchema pSch, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-void                SupprSchPrs (pSch, pSS)
+void                FreePresentationSchema (pSch, pSS)
 PtrPSchema          pSch;
 PtrSSchema        pSS;
 
@@ -282,17 +282,17 @@ PtrSSchema        pSS;
 
 
 /* ---------------------------------------------------------------------- */
-/* | LoadNat    Charge la nature definie dans la regle r du schema de   | */
+/* | LoadNatureSchema    Charge la nature definie dans la regle r du schema de   | */
 /* | structure pointe par PSchStr. Si le 1er octet de NomSchPrs est nul | */
 /* | on propose a l'utilisateur le schema de presentation par defaut    | */
 /* | defini dans le schema de structure, sinon on propose le schema de  | */
 /* | presentation de nom NomSchPrs.                                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                LoadNat (PtrSSchema PSchStr, Name NomSchPrs, int r)
+void                LoadNatureSchema (PtrSSchema PSchStr, Name NomSchPrs, int r)
 
 #else  /* __STDC__ */
-void                LoadNat (PSchStr, NomSchPrs, r)
+void                LoadNatureSchema (PSchStr, NomSchPrs, r)
 PtrSSchema        PSchStr;
 Name                 NomSchPrs;
 int         r;
@@ -309,7 +309,7 @@ int         r;
    /* cree un schema de structure et le charge depuis le fichier */
    GetSchStruct (&PtrStrNat);
 
-   if (!RdSchStruct (fname, PtrStrNat))
+   if (!ReadStructureSchema (fname, PtrStrNat))
       /* echec */
      {
 	TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND), fname);
@@ -326,7 +326,7 @@ int         r;
 	   /* l'appelant indique un schema de presentation, on essaie de le charger */
 	  {
 	     strncpy (fname, NomSchPrs, MAX_NAME_LENGTH);
-	     PtrStrNat->SsPSchema = LdSchPres (fname, PtrStrNat);
+	     PtrStrNat->SsPSchema = LoadPresentationSchema (fname, PtrStrNat);
 	  }
 	if (NomSchPrs[0] == '\0' || PtrStrNat->SsPSchema == NULL)
 	   /* pas de schema de presentation particulier demande' par l'appelant */
@@ -343,7 +343,7 @@ int         r;
 		     (*ThotLocalActions[T_presentchoice]) (PtrStrNat, fname);
 	       }
 	     /* cree un nouveau schema de presentation et le charge depuis le fichier */
-	     PtrStrNat->SsPSchema = LdSchPres (fname, PtrStrNat);
+	     PtrStrNat->SsPSchema = LoadPresentationSchema (fname, PtrStrNat);
 	  }
 	if (PtrStrNat->SsPSchema == NULL)
 	   /* echec chargement schema */
@@ -352,7 +352,7 @@ int         r;
 	     FreeSStruct (PtrStrNat);
 	     PSchStr->SsRule[r - 1].SrSSchemaNat = NULL;
 	  }
-	InitSchAppli (PtrStrNat);
+	InitApplicationSchema (PtrStrNat);
      }
 }
 
@@ -390,7 +390,7 @@ PtrSSchema        pSS;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    CreeNature      retourne le numero de la regle definissant le   | */
+/* |    CreateNature      retourne le numero de la regle definissant le   | */
 /* |    type de nom NomSchStr dans le schema de structure pointe par    | */
 /* |    pSS.                                                            | */
 /* |    S'il n'existe pas de type de ce nom, ajoute une regle de type   | */
@@ -403,10 +403,10 @@ PtrSSchema        pSS;
 /* |    structure, sauf si le premier octet de NomSchPrs est nul.       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int         CreeNature (Name NomSchStr, Name NomSchPrs, PtrSSchema pSS)
+int         CreateNature (Name NomSchStr, Name NomSchPrs, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-int         CreeNature (NomSchStr, NomSchPrs, pSS)
+int         CreateNature (NomSchStr, NomSchPrs, pSS)
 Name                 NomSchStr;
 Name                 NomSchPrs;
 PtrSSchema        pSS;
@@ -476,7 +476,7 @@ PtrSSchema        pSS;
 	      /* charge les schemas de structure et de presentation */
 	      /* de la nouvelle nature */
 	     {
-		LoadNat (pSS, NomSchPrs, ret);
+		LoadNatureSchema (pSS, NomSchPrs, ret);
 		if (pRule->SrSSchemaNat == NULL)
 		   ret = 0;
 		/* echec chargement */
@@ -519,7 +519,7 @@ boolean             Extension;
    if (pSCharge == NULL)
      {
 	GetSchStruct (pSS);
-	if (!RdSchStruct (fname, *pSS))
+	if (!ReadStructureSchema (fname, *pSS))
 	  {
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND), fname);
 	     FreeSStruct (*pSS);
@@ -535,7 +535,7 @@ boolean             Extension;
 	  {
 	     /* traduit les noms du schema dans la langue de l'utilisateur */
 	     ConfigTranslateSSchema (*pSS);
-	     InitSchAppli (*pSS);
+	     InitApplicationSchema (*pSS);
 	  }
      }
    else
@@ -543,14 +543,14 @@ boolean             Extension;
    if (*pSS)
      {
 	if ((*pSS)->SsExtension)
-	   /* pour eviter que RdSchPres recharge le schema de structure */
+	   /* pour eviter que ReadPresentationSchema recharge le schema de structure */
 	   (*pSS)->SsRootElem = 1;
 	if (NomSchPrs[0] != '\0')
 	   /* l'appelant specifie le schema de presentation a prendre, on essaie
 	      de le charger */
 	  {
 	     strncpy (fname, NomSchPrs, MAX_NAME_LENGTH);
-	     (*pSS)->SsPSchema = LdSchPres (fname, *pSS);
+	     (*pSS)->SsPSchema = LoadPresentationSchema (fname, *pSS);
 	  }
 	if (NomSchPrs[0] == '\0' || (*pSS)->SsPSchema == NULL)
 	   /* pas de presentation specifiee par l'appelant, ou schema specifie'
@@ -567,7 +567,7 @@ boolean             Extension;
 		     (*ThotLocalActions[T_presentchoice]) (*pSS, fname);
 	       }
 	     /* charge le schema de presentation depuis le fichier */
-	     (*pSS)->SsPSchema = LdSchPres (fname, *pSS);
+	     (*pSS)->SsPSchema = LoadPresentationSchema (fname, *pSS);
 	  }
 	if ((*pSS)->SsPSchema == NULL)
 	   /* echec chargement schema */
@@ -687,17 +687,17 @@ PtrSSchema        pSS;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    LibNature    Si le schema de structure pointe' par pSPere       | */
+/* |    FreeNature    Si le schema de structure pointe' par pSPere       | */
 /* |    contient une regle de nature pour le schema pointe' par pSS,    | */
 /* |    retourne Vrai et libere le schema de structure pointe par pSS   | */
 /* |    et son schema de presentation.                                  | */
 /* |    Retourne faux sinon.                                            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             LibNature (PtrSSchema pSPere, PtrSSchema pSS)
+boolean             FreeNature (PtrSSchema pSPere, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-boolean             LibNature (pSPere, pSS)
+boolean             FreeNature (pSPere, pSS)
 PtrSSchema        pSPere;
 PtrSSchema        pSS;
 
@@ -713,7 +713,7 @@ PtrSSchema        pSS;
 	ret = TRUE;
 	if (pSS->SsPSchema != NULL)
 	   /* libere le schema de presentation associe' */
-	   SupprSchPrs (pSS->SsPSchema, pSS);
+	   FreePresentationSchema (pSS->SsPSchema, pSS);
 	/* rend la memoire */
 	FreeSStruct (pSS);
      }
@@ -722,17 +722,17 @@ PtrSSchema        pSS;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    LibSchemas      libere tous les schemas de structure et de      | */
+/* |    FreeDocumentSchemas      libere tous les schemas de structure et de      | */
 /* |    presentation utilises par le document dont le descripteur est   | */
 /* |    pointe par pDoc.                                                | */
 /* |    Pour les schemas de presentation, la liberation n'est effective | */
 /* |    que s'ils ne sont pas utilises par d'autres documents.          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                LibSchemas (PtrDocument pDoc)
+void                FreeDocumentSchemas (PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                LibSchemas (pDoc)
+void                FreeDocumentSchemas (pDoc)
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -753,11 +753,11 @@ PtrDocument         pDoc;
 	     pRule = &pSc1->SsRule[i];
 	     if (pRule->SrConstruct == CsNatureSchema)
 		if (pRule->SrSSchemaNat != NULL)
-		   LibNature (pSc1, pRule->SrSSchemaNat);
+		   FreeNature (pSc1, pRule->SrSSchemaNat);
 	  }
 	/* libere le schema de presentation et de structure */
 	if (pSc1->SsPSchema != NULL)
-	   SupprSchPrs (pSc1->SsPSchema, pSc1);
+	   FreePresentationSchema (pSc1->SsPSchema, pSc1);
 	FreeSStruct (pSc1);
 	pSc1 = pSSuiv;
      }

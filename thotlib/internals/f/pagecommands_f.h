@@ -6,46 +6,46 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern PtrPRule ReglePage ( PtrElement pEl,
+extern PtrPRule GetPageRule ( PtrElement pEl,
                             int Vue,
                             PtrPSchema * pSchP );
-extern PtrPRule RegleType_HautPage ( PRuleType TypeR,
+extern PtrPRule GetPRulePage ( PRuleType TypeR,
                                      int b,
                                      PtrPSchema pSchP );
-extern void HautPage ( PtrElement pElPage,
+extern void PageHeaderFooter ( PtrElement pElPage,
                        int Vue,
                        int *b,
                        PtrPSchema * pSchP );
-extern void DansPage ( PtrAbstractBox pAb );
-extern void TuePavesAuDessus ( PtrAbstractBox pP,
+extern void TagAbsBoxInPage ( PtrAbstractBox pAb );
+extern void KillAbsBoxAboveLimit ( PtrAbstractBox pP,
                                int limite,
                                int VueNb,
                                PtrDocument pDoc,
-                               PtrAbstractBox * PavReaff );
-extern boolean TueAvantPage ( PtrAbstractBox pPage,
+                               PtrAbstractBox * RedispAbsBox );
+extern boolean KillAbsBoxBeforePage ( PtrAbstractBox pPage,
                               int frame,
                               PtrDocument pDoc,
                               int VueNb );
 
 #else /* __STDC__ */
 
-extern PtrPRule ReglePage (/* PtrElement pEl,
+extern PtrPRule GetPageRule (/* PtrElement pEl,
                               int Vue,
                               PtrPSchema * pSchP */);
-extern PtrPRule RegleType_HautPage (/* PRuleType TypeR,
+extern PtrPRule GetPRulePage (/* PRuleType TypeR,
                                        int b,
                                        PtrPSchema pSchP */);
-extern void HautPage (/* PtrElement pElPage,
+extern void PageHeaderFooter (/* PtrElement pElPage,
                          int Vue,
                          int *b,
                          PtrPSchema * pSchP */);
-extern void DansPage (/* PtrAbstractBox pAb */);
-extern void TuePavesAuDessus (/* PtrAbstractBox pP,
+extern void TagAbsBoxInPage (/* PtrAbstractBox pAb */);
+extern void KillAbsBoxAboveLimit (/* PtrAbstractBox pP,
                                  int limite,
                                  int VueNb,
                                  PtrDocument pDoc,
-                                 PtrAbstractBox * PavReaff */);
-extern boolean TueAvantPage (/* PtrAbstractBox pPage,
+                                 PtrAbstractBox * RedispAbsBox */);
+extern boolean KillAbsBoxBeforePage (/* PtrAbstractBox pPage,
                                 int frame,
                                 PtrDocument pDoc,
                                 int VueNb */);

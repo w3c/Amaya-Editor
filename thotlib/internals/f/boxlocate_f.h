@@ -16,35 +16,35 @@ extern int GetBoxDistance ( int xRef,
                             int y,
                             int width,
                             int height );
-extern PtrAbstractBox DesPave ( int frame,
+extern PtrAbstractBox GetClickedAbsBox ( int frame,
                                 int xRef,
                                 int yRef );
-extern PtrBox DansLaBoite ( PtrAbstractBox pAb,
+extern PtrBox GetEnclosingClickedBox ( PtrAbstractBox pAb,
                             int higherX,
                             int lowerX,
                             int y,
                             int *pointselect );
-extern PtrAbstractBox Pave_Suivant ( PtrAbstractBox pAb );
-extern int DistGraphique ( int xRef,
+extern PtrAbstractBox SearchNextAbsBox ( PtrAbstractBox pAb );
+extern int GetShapeDistance ( int xRef,
                            int yRef,
                            PtrBox pBox,
                            int value );
-extern PtrBox DesBoiteTerm ( int frame,
+extern PtrBox GetClickedLeafBox ( int frame,
                              int xRef,
                              int yRef );
 extern boolean APPgraphicModify ( PtrElement pEl,
                                   int value,
                                   int frame,
                                   boolean pre );
-extern void DesBPosition ( int frame,
+extern void ApplyDirectTranslate ( int frame,
                            int xm,
                            int ym );
-extern void DesBDimension ( int frame,
+extern void ApplyDirectResize ( int frame,
                             int xm,
                             int ym );
-extern void ModeCreation ( PtrBox pBox,
+extern void DirectCreation ( PtrBox pBox,
                            int frame );
-extern void DesCaractere ( PtrBox pBox,
+extern void LocateClickedChar ( PtrBox pBox,
                            PtrTextBuffer * pBuffer,
                            int *x,
                            int *index,
@@ -63,35 +63,35 @@ extern int GetBoxDistance (/* int xRef,
                               int y,
                               int width,
                               int height */);
-extern PtrAbstractBox DesPave (/* int frame,
+extern PtrAbstractBox GetClickedAbsBox (/* int frame,
                                   int xRef,
                                   int yRef */);
-extern PtrBox DansLaBoite (/* PtrAbstractBox pAb,
+extern PtrBox GetEnclosingClickedBox (/* PtrAbstractBox pAb,
                               int higherX,
                               int lowerX,
                               int y,
                               int *pointselect */);
-extern PtrAbstractBox Pave_Suivant (/* PtrAbstractBox pAb */);
-extern int DistGraphique (/* int xRef,
+extern PtrAbstractBox SearchNextAbsBox (/* PtrAbstractBox pAb */);
+extern int GetShapeDistance (/* int xRef,
                              int yRef,
                              PtrBox pBox,
                              int value */);
-extern PtrBox DesBoiteTerm (/* int frame,
+extern PtrBox GetClickedLeafBox (/* int frame,
                                int xRef,
                                int yRef */);
 extern boolean APPgraphicModify (/* PtrElement pEl,
                                     int value,
                                     int frame,
                                     boolean pre */);
-extern void DesBPosition (/* int frame,
+extern void ApplyDirectTranslate (/* int frame,
                              int xm,
                              int ym */);
-extern void DesBDimension (/* int frame,
+extern void ApplyDirectResize (/* int frame,
                               int xm,
                               int ym */);
-extern void ModeCreation (/* PtrBox pBox,
+extern void DirectCreation (/* PtrBox pBox,
                              int frame */);
-extern void DesCaractere (/* PtrBox pBox,
+extern void LocateClickedChar (/* PtrBox pBox,
                              PtrTextBuffer * pBuffer,
                              int *x,
                              int *index,

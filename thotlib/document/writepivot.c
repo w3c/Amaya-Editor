@@ -565,7 +565,7 @@ PtrReference        pRef;
 	     PutLabel (pivFile, pRefD->ReReferredLabel);
 	     /* ecrit l'identificateur du document auquel appartient l'objet */
 	     /* designe' */
-	     BIOwriteIdentDoc (pivFile, pRefD->ReExtDocument);
+	     BIOwriteDocIdent (pivFile, pRefD->ReExtDocument);
 	  }
 	else
 	   /* l'objet designe' est dans le meme document */
@@ -576,7 +576,7 @@ PtrReference        pRef;
 	     else
 		/* cherche si l'element reference' */
 		/* est dans le buffer (a la suite d'un Couper). */
-	     if (DansTampon (pRefD->ReReferredElem))
+	     if (IsASavedElement (pRefD->ReReferredElem))
 		label[0] = '\0';
 	     else
 		/* label: label de l'element designe' */
@@ -626,7 +626,7 @@ PtrDocument         pDoc;
 	   pEl = ReferredElement (pAttr->AeAttrReference, &docIdent, &pDocRef);
 	   if (pEl == NULL)
 	      attrOK = FALSE;
-	   else if (DansTampon (pEl))
+	   else if (IsASavedElement (pEl))
 	      attrOK = FALSE;
 	}
    if (attrOK)
@@ -1586,7 +1586,7 @@ PtrDocument         pDoc;
 		/* on ignore les references qui sont dans */
 		/* le tampon de couper-coller */
 	       {
-		  if (!DansTampon (pRef->RdElement))
+		  if (!IsASavedElement (pRef->RdElement))
 		    {
 		       noExtRef = FALSE;
 		       /* au moins une reference sortante */
@@ -1658,11 +1658,11 @@ PathBuffer          fileName;
 	     /* ecrit une marque de nom de document */
 	     BIOwriteByte (refFile, (char) C_PIV_DOCNAME);
 	     /* ecrit le nom de l'ancien document de l'element */
-	     BIOwriteIdentDoc (refFile, pChnRef->CrOldDocument);
+	     BIOwriteDocIdent (refFile, pChnRef->CrOldDocument);
 	     /* ecrit une marque de nom de document */
 	     BIOwriteByte (refFile, (char) C_PIV_DOCNAME);
 	     /* ecrit l'identificateur du nouveau document de l'element */
-	     BIOwriteIdentDoc (refFile, pChnRef->CrNewDocument);
+	     BIOwriteDocIdent (refFile, pChnRef->CrNewDocument);
 	     /* on libere le descripteur qu'on vient d'ecrire */
 	     pNextChnRef = pChnRef->CrNext;
 	     FreeElemRefChng (pChnRef);
@@ -1732,7 +1732,7 @@ PathBuffer          fileName;
 		       /* ecrit une marque de nom de document */
 		       BIOwriteByte (extFile, (char) C_PIV_DOCNAME);
 		       /* ecrit le nom du document referencant */
-		       BIOwriteIdentDoc (extFile, pExtDoc->EdDocIdent);
+		       BIOwriteDocIdent (extFile, pExtDoc->EdDocIdent);
 		       /* passe au descripteur de document referencant suivant */
 		       pExtDoc = pExtDoc->EdNext;
 		    }
@@ -1816,9 +1816,9 @@ PtrDocument         pDoc;
 	pPrevDeadRef = NULL;
 	/* prend le nom du document externe qui est en tete de liste */
 	if (pCreatedRef != NULL)
-	   CopyIdentDoc (&extDocIdent, pCreatedRef->OrDocIdent);
+	   CopyDocIdent (&extDocIdent, pCreatedRef->OrDocIdent);
 	else
-	   CopyIdentDoc (&extDocIdent, pDeadRef->OrDocIdent);
+	   CopyDocIdent (&extDocIdent, pDeadRef->OrDocIdent);
 	pFirstRefD = NULL;
 	/* Charge le fichier .EXT du document externe */
 	/* demande d'abord dans quel directory se trouve le fichier .PIV */
@@ -1845,7 +1845,7 @@ PtrDocument         pDoc;
 		pOutRef = pCreatedRef;
 	     else
 		pOutRef = pDeadRef;
-	     if (!MemeIdentDoc (pOutRef->OrDocIdent, extDocIdent))
+	     if (!SameDocIdent (pOutRef->OrDocIdent, extDocIdent))
 		/* cette reference sortante ne designe pas le document */
 		/* externe courant, on passe a la suivante */
 		if (pOutRef == pCreatedRef)
@@ -1890,7 +1890,7 @@ PtrDocument         pDoc;
 			    /* associe a ce descripteur un 1er descripteur de */
 			    /* document referencant */
 			    GetDocExterne (&pExtDoc);
-			    CopyIdentDoc (&pExtDoc->EdDocIdent, pDoc->DocIdent);
+			    CopyDocIdent (&pExtDoc->EdDocIdent, pDoc->DocIdent);
 			    pRefD->ReExtDocRef = pExtDoc;
 			 }
 		       /* s'il s'agit d'une reference detruite, on ne devrait */
@@ -1905,7 +1905,7 @@ PtrDocument         pDoc;
 		       pPrevExtDoc = NULL;
 		       found = FALSE;
 		       while (!found && pExtDoc != NULL)
-			  if (MemeIdentDoc (pExtDoc->EdDocIdent, pDoc->DocIdent))
+			  if (SameDocIdent (pExtDoc->EdDocIdent, pDoc->DocIdent))
 			     found = TRUE;
 			  else
 			    {
@@ -1960,7 +1960,7 @@ PtrDocument         pDoc;
 			  /* descripteur de document referencant */
 			 {
 			    GetDocExterne (&pExtDoc);
-			    CopyIdentDoc (&pExtDoc->EdDocIdent, pDoc->DocIdent);
+			    CopyDocIdent (&pExtDoc->EdDocIdent, pDoc->DocIdent);
 			    pExtDoc->EdNext = pRefD->ReExtDocRef;
 			    pRefD->ReExtDocRef = pExtDoc;
 			 }
@@ -2040,7 +2040,7 @@ PtrDocument         pDoc;
 	DoFileName (pDoc->DocDName, "EXT", directoryName, fileName, &i);
 	/* initialise le descripteur du fichier .EXT */
 	pExtFileD->ErFirstReferredEl = NULL;
-	CopyIdentDoc (&pExtFileD->ErDocIdent, pDoc->DocIdent);
+	CopyDocIdent (&pExtFileD->ErDocIdent, pDoc->DocIdent);
 	strncpy (pExtFileD->ErFileName, fileName, MAX_PATH);
 	if (fileName[0] != '\0')
 	  {
@@ -2112,7 +2112,7 @@ PtrDocument         pDoc;
 		  while (pOriginExtDoc != NULL)
 		    {
 		       GetDocExterne (&pExtDoc);
-		       CopyIdentDoc (&pExtDoc->EdDocIdent, pOriginExtDoc->EdDocIdent);
+		       CopyDocIdent (&pExtDoc->EdDocIdent, pOriginExtDoc->EdDocIdent);
 		       /* chaine la copie */
 		       if (pPrevExtDoc == NULL)
 			  pRefD->ReExtDocRef = pExtDoc;
@@ -2131,7 +2131,7 @@ PtrDocument         pDoc;
 		  found = FALSE;
 		  pFile = pFirstFile;
 		  while (pFile != NULL && !found)
-		     if (MemeIdentDoc (pExtDoc->EdDocIdent, pFile->RcDocIdent))
+		     if (SameDocIdent (pExtDoc->EdDocIdent, pFile->RcDocIdent))
 			found = TRUE;
 		     else
 			pFile = pFile->RcNext;
@@ -2142,7 +2142,7 @@ PtrDocument         pDoc;
 		       pFile->RcNext = pFirstFile;
 		       pFirstFile = pFile;
 		       pFile->RcFirstChange = NULL;
-		       CopyIdentDoc (&pFile->RcDocIdent, pExtDoc->EdDocIdent);
+		       CopyDocIdent (&pFile->RcDocIdent, pExtDoc->EdDocIdent);
 		       /* demande d'abord dans quel directory se trouve le */
 		       /* fichier .PIV de ce document */
 		       strncpy (directoryName, DocumentPath, MAX_PATH);
@@ -2171,7 +2171,7 @@ PtrDocument         pDoc;
 		       while (pChnRefRead != NULL && !found)
 			 {
 			    if (strcmp (pChnRefRead->CrOldLabel, pChnRef->CrOldLabel) == 0)
-			       if (MemeIdentDoc (pChnRefRead->CrOldDocument, pChnRef->CrOldDocument))
+			       if (SameDocIdent (pChnRefRead->CrOldDocument, pChnRef->CrOldDocument))
 				  /* il s'agit du meme ancien element */
 				  if (pChnRefRead->CrNewLabel[0] == '\0')
 				     /* on a lu une destruction */
@@ -2183,7 +2183,7 @@ PtrDocument         pDoc;
 					 {
 					    strncpy (pChnRefRead->CrNewLabel,
 						     pChnRef->CrNewLabel, MAX_LABEL_LEN);
-					    CopyIdentDoc (&pChnRefRead->CrNewDocument,
+					    CopyDocIdent (&pChnRefRead->CrNewDocument,
 							pChnRef->CrNewDocument);
 					 }
 				    }
@@ -2201,13 +2201,13 @@ PtrDocument         pDoc;
 				   pChnRef->CrNewLabel[0] != '\0')
 				  /* ce sont deux deplacements d'element */
 				  if (strcmp (pChnRefRead->CrNewLabel, pChnRef->CrOldLabel) == 0)
-				     if (MemeIdentDoc (pChnRefRead->CrNewDocument, pChnRef->CrOldDocument))
+				     if (SameDocIdent (pChnRefRead->CrNewDocument, pChnRef->CrOldDocument))
 					/* deux deplacements successifs du meme element */
 					/* on reduit a un seul deplacement */
 				       {
 					  found = TRUE;
 					  strncpy (pChnRefRead->CrNewLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
-					  CopyIdentDoc (&pChnRefRead->CrNewDocument,
+					  CopyDocIdent (&pChnRefRead->CrNewDocument,
 							pChnRef->CrNewDocument);
 				       }
 			    if (!found)
@@ -2221,8 +2221,8 @@ PtrDocument         pDoc;
 			    pFile->RcFirstChange = pNewChnRef;
 			    strncpy (pNewChnRef->CrOldLabel, pChnRef->CrOldLabel, MAX_LABEL_LEN);
 			    strncpy (pNewChnRef->CrNewLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
-			    CopyIdentDoc (&pNewChnRef->CrOldDocument, pChnRef->CrOldDocument);
-			    CopyIdentDoc (&pNewChnRef->CrNewDocument, pChnRef->CrNewDocument);
+			    CopyDocIdent (&pNewChnRef->CrOldDocument, pChnRef->CrOldDocument);
+			    CopyDocIdent (&pNewChnRef->CrNewDocument, pChnRef->CrNewDocument);
 			 }
 		    }
 		  pNextExtDoc = pExtDoc->EdNext;
@@ -2339,12 +2339,12 @@ boolean             copyDoc;
 		       pExtDoc = pElemRefD->ReExtDocRef;
 		       while (pExtDoc != NULL && !found)
 			 {
-			    if (MemeIdentDoc (pExtDoc->EdDocIdent, pDoc->DocIdent))
+			    if (SameDocIdent (pExtDoc->EdDocIdent, pDoc->DocIdent))
 			      {
 				 found = TRUE;
 				 /* met a jour le nom du document dans le */
 				 /* descripteur de document externe */
-				 CopyIdentDoc (&pExtDoc->EdDocIdent, newName);
+				 CopyDocIdent (&pExtDoc->EdDocIdent, newName);
 			      }
 			    else
 			       pExtDoc = pExtDoc->EdNext;
@@ -2357,7 +2357,7 @@ boolean             copyDoc;
 	     pInRef = pFirstInRef;
 	     /* parcourt la liste des fichiers .EXT charge's */
 	     while (pInRef != NULL && !load)
-		if (MemeIdentDoc (pInRef->ErDocIdent, pRefD->ReExtDocument))
+		if (SameDocIdent (pInRef->ErDocIdent, pRefD->ReExtDocument))
 		   load = TRUE;
 		else
 		   pInRef = pInRef->ErNext;
@@ -2392,7 +2392,7 @@ boolean             copyDoc;
 		       pInRef->ErNext = pFirstInRef;
 		       pFirstInRef = pInRef;
 		       pInRef->ErFirstReferredEl = pFirstRefD;
-		       CopyIdentDoc (&pInRef->ErDocIdent, pRefD->ReExtDocument);
+		       CopyDocIdent (&pInRef->ErDocIdent, pRefD->ReExtDocument);
 		       strncpy (pInRef->ErFileName, fileName, MAX_PATH);
 		    }
 	       }
@@ -2413,7 +2413,7 @@ boolean             copyDoc;
 	     pExtDoc = pRefD->ReExtDocRef;
 	     while (pExtDoc != NULL)
 	       {
-		  if (MemeIdentDoc (pExtDoc->EdDocIdent, pDoc->DocIdent))
+		  if (SameDocIdent (pExtDoc->EdDocIdent, pDoc->DocIdent))
 		     /* il s'agit de notre document */
 		    {
 		       if (copyDoc)
@@ -2425,7 +2425,7 @@ boolean             copyDoc;
 			    pOriginExtDoc->EdNext = pExtDoc;
 			 }
 		       /* met le nouveau nom du document referencant */
-		       CopyIdentDoc (&pExtDoc->EdDocIdent, newName);
+		       CopyDocIdent (&pExtDoc->EdDocIdent, newName);
 		    }
 		  pExtDoc = pExtDoc->EdNext;
 	       }
@@ -2491,7 +2491,7 @@ Name                 newName;
 		  found = FALSE;
 		  pFile = pFirstREFfile;
 		  while (pFile != NULL && !found)
-		     if (MemeIdentDoc (pExtDoc->EdDocIdent, pFile->RcDocIdent))
+		     if (SameDocIdent (pExtDoc->EdDocIdent, pFile->RcDocIdent))
 			found = TRUE;
 		     else
 			pFile = pFile->RcNext;
@@ -2503,7 +2503,7 @@ Name                 newName;
 		       pFile->RcNext = pFirstREFfile;
 		       pFirstREFfile = pFile;
 		       pFile->RcFirstChange = NULL;
-		       CopyIdentDoc (&pFile->RcDocIdent, pExtDoc->EdDocIdent);
+		       CopyDocIdent (&pFile->RcDocIdent, pExtDoc->EdDocIdent);
 		       /* demande dans quel directory se trouve le fichier */
 		       /* .PIV de ce document */
 		       strncpy (directoryName, DocumentPath, MAX_PATH);
@@ -2579,8 +2579,8 @@ Name                 newName;
 	/* changement de nom de document referencant. */
 	pChnRef->CrOldLabel[0] = '\0';
 	pChnRef->CrNewLabel[0] = '\0';
-	CopyIdentDoc (&pChnRef->CrOldDocument, pDoc->DocIdent);
-	CopyIdentDoc (&pChnRef->CrNewDocument, newName);
+	CopyDocIdent (&pChnRef->CrOldDocument, pDoc->DocIdent);
+	CopyDocIdent (&pChnRef->CrNewDocument, newName);
 	/* ecrit le fichier .REF */
 	SauveRef (pFile->RcFirstChange, pFile->RcFileName);
 	pNextFile = pFile->RcNext;

@@ -80,7 +80,7 @@ void                ClearTableSchTrad ()
      {
 	if (TabSchTrad[i].TradPtrSchT != NULL)
 	  {
-	     LibereSchTrad (TabSchTrad[i].TradPtrSchT, TabSchTrad[i].TradPtrSchS);
+	     FreeTranslationSchema (TabSchTrad[i].TradPtrSchT, TabSchTrad[i].TradPtrSchS);
 	     TabSchTrad[i].TradPtrSchT = NULL;
 	  }
 	TabSchTrad[i].TradPtrSchS = NULL;
@@ -134,7 +134,7 @@ PtrSSchema        SS;
 	   /* on a trouve une entree libre */
 	  {
 	     /* on charge le schema de traduction */
-	     pSchT = RdSchTrad (fname, SS);
+	     pSchT = ReadTranslationSchema (fname, SS);
 	     if (pSchT != NULL)
 		/* met le nouveau schema dans la table des schemas charges */
 	       {

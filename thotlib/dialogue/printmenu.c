@@ -338,7 +338,7 @@ View                view;
    mktemp (pDocPrint->DocDName);
 #endif /* !WWW_MSWINDOWS */
 
-   ok = SauveDocument (pDocPrint, 2);
+   ok = WriteDocument (pDocPrint, 2);
 
    /* restaure le schema de presentation */
    strcpy (pDocPrint->DocSSchema->SsDefaultPSchema, savePres);

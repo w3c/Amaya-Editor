@@ -7,7 +7,7 @@
 #include "constmenu.h"
 
 #define MAX_FONT    60
-#define MAX_NFONT   10
+#define MAX_FONTNAME   10
 #define MAX_BUTTON  25
 #define MAX_TEXTZONE 3
 typedef struct _Frame_Ctl

@@ -75,9 +75,9 @@ Language            langue;
 }
 
 #ifdef __STDC__
-void                SelAjoute (PtrElement pEl, boolean dernier)
+void                AddInSelection (PtrElement pEl, boolean dernier)
 #else  /* __STDC__ */
-void                SelAjoute (pEl, dernier)
+void                AddInSelection (pEl, dernier)
 PtrElement          pEl;
 boolean             dernier;
 
@@ -107,11 +107,11 @@ PtrSSchema        pSS;
 {
 }
 
-/* ReglePEl est appele' par le module pivlec */
+/* GlobalSearchRulepEl est appele' par le module pivlec */
 #ifdef __STDC__
-PtrPRule        ReglePEl (PtrElement pEl, PtrPSchema * pSPR, int NumPres, PtrPSchema pSchP, int Vue, PRuleType TRegle, boolean Pag, boolean attr, PtrAttribute * pAttr)
+PtrPRule        GlobalSearchRulepEl (PtrElement pEl, PtrPSchema * pSPR, int NumPres, PtrPSchema pSchP, int Vue, PRuleType TRegle, boolean Pag, boolean attr, PtrAttribute * pAttr)
 #else  /* __STDC__ */
-PtrPRule        ReglePEl (pEl, pSPR, NumPres, pSchP, Vue, TRegle, Pag, attr, pAttr)
+PtrPRule        GlobalSearchRulepEl (pEl, pSPR, NumPres, pSchP, Vue, TRegle, Pag, attr, pAttr)
 PtrElement          pEl;
 PtrPSchema         *pSPR;
 int                 NumPres;
@@ -169,9 +169,9 @@ int                 x;
 }
 
 #ifdef __STDC__
-boolean             DansTampon (PtrElement pEl)
+boolean             IsASavedElement (PtrElement pEl)
 #else  /* __STDC__ */
-boolean             DansTampon (pEl)
+boolean             IsASavedElement (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
@@ -196,13 +196,13 @@ PtrElement          pEl2;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    LibDocument libere le document dont le descripteur est pointe'  | */
+/* |    UnloadDocument libere le document dont le descripteur est pointe'  | */
 /* |            par pDoc.                                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                LibDocument (PtrDocument * pDoc)
+void                UnloadDocument (PtrDocument * pDoc)
 #else  /* __STDC__ */
-void                LibDocument (pDoc)
+void                UnloadDocument (pDoc)
 PtrDocument        *pDoc;
 
 #endif /* __STDC__ */
@@ -221,7 +221,7 @@ PtrDocument        *pDoc;
 	     /* liberer tout l'arbre interne */
 	     DeleteAllTrees (*pDoc);
 	     /* liberer les schemas : document, natures, presentations */
-	     LibSchemas (*pDoc);
+	     FreeDocumentSchemas (*pDoc);
 	     FreeDocument (LoadedDocument[d - 1]);
 	     LoadedDocument[d - 1] = NULL;
 	     *pDoc = NULL;

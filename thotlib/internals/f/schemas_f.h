@@ -6,16 +6,16 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void InitSchAppli ( PtrSSchema pSchema );
+extern void InitApplicationSchema ( PtrSSchema pSchema );
 extern void InitNatures ( void );
-extern PtrPSchema LdSchPres ( Name fname,
+extern PtrPSchema LoadPresentationSchema ( Name fname,
                               PtrSSchema SS );
-extern void SupprSchPrs ( PtrPSchema pSch,
+extern void FreePresentationSchema ( PtrPSchema pSch,
                           PtrSSchema pSS );
-extern void LoadNat ( PtrSSchema PSchStr,
+extern void LoadNatureSchema ( PtrSSchema PSchStr,
                       Name NomSchPrs,
                       int r );
-extern int CreeNature ( Name NomSchStr,
+extern int CreateNature ( Name NomSchStr,
                         Name NomSchPrs,
                         PtrSSchema pSS );
 extern void LoadSchemas ( Name NomSchStr,
@@ -26,22 +26,22 @@ extern void LoadSchemas ( Name NomSchStr,
 extern PtrSSchema LoadExtension ( Name NomSchStr,
                                   Name NomSchPrs,
                                   PtrDocument pDoc );
-extern boolean LibNature ( PtrSSchema pSPere,
+extern boolean FreeNature ( PtrSSchema pSPere,
                            PtrSSchema pSS );
-extern void LibSchemas ( PtrDocument pDoc );
+extern void FreeDocumentSchemas ( PtrDocument pDoc );
 
 #else /* __STDC__ */
 
-extern void InitSchAppli (/* PtrSSchema pSchema */);
+extern void InitApplicationSchema (/* PtrSSchema pSchema */);
 extern void InitNatures (/* void */);
-extern PtrPSchema LdSchPres (/* Name fname,
+extern PtrPSchema LoadPresentationSchema (/* Name fname,
                                 PtrSSchema SS */);
-extern void SupprSchPrs (/* PtrPSchema pSch,
+extern void FreePresentationSchema (/* PtrPSchema pSch,
                             PtrSSchema pSS */);
-extern void LoadNat (/* PtrSSchema PSchStr,
+extern void LoadNatureSchema (/* PtrSSchema PSchStr,
                         Name NomSchPrs,
                         int r */);
-extern int CreeNature (/* Name NomSchStr,
+extern int CreateNature (/* Name NomSchStr,
                           Name NomSchPrs,
                           PtrSSchema pSS */);
 extern void LoadSchemas (/* Name NomSchStr,
@@ -52,9 +52,9 @@ extern void LoadSchemas (/* Name NomSchStr,
 extern PtrSSchema LoadExtension (/* Name NomSchStr,
                                     Name NomSchPrs,
                                     PtrDocument pDoc */);
-extern boolean LibNature (/* PtrSSchema pSPere,
+extern boolean FreeNature (/* PtrSSchema pSPere,
                              PtrSSchema pSS */);
-extern void LibSchemas (/* PtrDocument pDoc */);
+extern void FreeDocumentSchemas (/* PtrDocument pDoc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -57,7 +57,7 @@ char               *BufItemSplit;
    BufItemSplit[0] = '\0';
    /* verifie si la commande Split est valide pour la selection */
    /* courante */
-   if (SelEditeur (&pDoc, &premEl, &derEl, &premcar, &dercar))
+   if (GetCurrentSelection (&pDoc, &premEl, &derEl, &premcar, &dercar))
      {
 	if (!CanSplitElement (premEl, premcar, TRUE, &pListe, &pPointDiv,
 			      &ElemADupliquer))

@@ -81,7 +81,7 @@ DocumentIdentifier     docIdent;
    pDoc = NULL;
    for (doc = 0; doc < MAX_DOCUMENTS; doc++)
       if (LoadedDocument[doc] != NULL)
-	 if (MemeIdentDoc (LoadedDocument[doc]->DocIdent, docIdent))
+	 if (SameDocIdent (LoadedDocument[doc]->DocIdent, docIdent))
 	    pDoc = LoadedDocument[doc];
    return pDoc;
 }
@@ -121,7 +121,7 @@ boolean             withAppEvent;
    ret = FALSE;
    if (pDoc != NULL)
      {
-	if (!IdentDocNul (pDoc->DocIdent))
+	if (!DocIdentIsNull (pDoc->DocIdent))
 	   /* l'identificateur du document est connu, on accede au document par */
 	   /* cet identificateur */
 	  {
@@ -156,7 +156,7 @@ boolean             withAppEvent;
 	       {
 		  /* le document appartient au directory courant */
 		  strncpy (pDoc->DocDirectory, directoryName, MAX_PATH);
-		  ChargeDoc (pivotFile, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent);
+		  LoadDocumentPiv (pivotFile, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent);
 		  BIOreadClose (pivotFile);
 		  if (pDoc->DocRootElement != NULL)
 		     /* le document lu n'est pas vide */

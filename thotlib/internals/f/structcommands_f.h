@@ -10,24 +10,24 @@ extern boolean SendEventSubTree ( APPevent AppEvent,
                                   PtrDocument pDoc,
                                   PtrElement pEl,
                                   int fin );
-extern void LibBufEditeur ( void );
-extern void CmdCopy ( void );
+extern void FreeSavedElements ( void );
+extern void CopyCommand ( void );
 extern PtrElement NextNotPage ( PtrElement pEl );
 extern PtrElement PreviousNotPage ( PtrElement pEl );
-extern void TraitePremierDernier ( PtrElement pPrec,
+extern void ProcessFirstLast ( PtrElement pPrec,
                                    PtrElement pSuiv,
                                    PtrDocument pDoc );
-extern void CmdCut ( boolean sauve );
+extern void CutCommand ( boolean sauve );
 extern boolean EmptyElement ( PtrElement pEl );
 extern void CreateNewElement ( int NumTypeACreer,
                                PtrSSchema SchTypeACreer,
                                PtrDocument pDoc,
                                boolean Before );
-extern void CmdImportAsciiFile ( void );
-extern void RetMenuSurround ( int entree );
+extern void ImportAsciiFile ( void );
+extern void SurroundMenuInput ( int entree );
 extern void TtcSurround ( Document document,
                           View view );
-extern void RetMenuChangeType ( int entree );
+extern void ChangeTypeMenuInput ( int entree );
 extern void TtcChangeType ( Document document,
                             View view );
 
@@ -37,24 +37,24 @@ extern boolean SendEventSubTree (/* APPevent AppEvent,
                                     PtrDocument pDoc,
                                     PtrElement pEl,
                                     int fin */);
-extern void LibBufEditeur (/* void */);
-extern void CmdCopy (/* void */);
+extern void FreeSavedElements (/* void */);
+extern void CopyCommand (/* void */);
 extern PtrElement NextNotPage (/* PtrElement pEl */);
 extern PtrElement PreviousNotPage (/* PtrElement pEl */);
-extern void TraitePremierDernier (/* PtrElement pPrec,
+extern void ProcessFirstLast (/* PtrElement pPrec,
                                      PtrElement pSuiv,
                                      PtrDocument pDoc */);
-extern void CmdCut (/* boolean sauve */);
+extern void CutCommand (/* boolean sauve */);
 extern boolean EmptyElement (/* PtrElement pEl */);
 extern void CreateNewElement (/* int NumTypeACreer,
                                  PtrSSchema SchTypeACreer,
                                  PtrDocument pDoc,
                                  boolean Before */);
-extern void CmdImportAsciiFile (/* void */);
-extern void RetMenuSurround (/* int entree */);
+extern void ImportAsciiFile (/* void */);
+extern void SurroundMenuInput (/* int entree */);
 extern void TtcSurround (/* Document document,
                             View view */);
-extern void RetMenuChangeType (/* int entree */);
+extern void ChangeTypeMenuInput (/* int entree */);
 extern void TtcChangeType (/* Document document,
                               View view */);
 

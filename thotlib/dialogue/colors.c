@@ -63,12 +63,12 @@ int                 fground;
 
    if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
-      wcase = CarWidth ('m', FontMenu) * 12;
+      wcase = CarWidth ('m', FontDialogue) * 12;
    else
       /* Affiche les couleurs sur un ecran couleur */
-      wcase = CarWidth ('m', FontMenu) * 4;
+      wcase = CarWidth ('m', FontDialogue) * 4;
 
-   hcase = FontHeight (FontMenu);
+   hcase = FontHeight (FontDialogue);
    if (lastBg != -1 && lastBg != bground)
      {
 	/* eteint le background precedent */
@@ -195,13 +195,13 @@ static void         ColorsExpose ()
 
    if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
-      wcase = CarWidth ('m', FontMenu) * 12;
+      wcase = CarWidth ('m', FontDialogue) * 12;
    else
       /* Affiche les couleurs sur un ecran couleur */
-      wcase = CarWidth ('m', FontMenu) * 4;
+      wcase = CarWidth ('m', FontDialogue) * 4;
 
    w = wcase * COLORS_COL;
-   hcase = FontHeight (FontMenu);
+   hcase = FontHeight (FontDialogue);
    max = NumberOfColors ();
    y = hcase;
    h = (max + COLORS_COL - 1) / COLORS_COL * hcase + y;
@@ -209,15 +209,15 @@ static void         ColorsExpose ()
    XClearWindow (TtDisplay, Color_Window);
 
    /* entree couleur standard */
-   if (FonteLeg == NULL)
+   if (SmallFontDialogue == NULL)
       KeyboardsLoadResources ();
    XSetForeground (TtDisplay, TtLineGC, ColorPixel (0));
    XFillRectangle (TtDisplay, Color_Window, TtLineGC, 0, 0, w, hcase - 2);
    XSetForeground (TtDisplay, TtLineGC, ColorPixel (1));
    ptr = TtaGetMessage (LIB, STD_COLORS);
    WChaine (Color_Window, ptr,
-   (w / 2) - (XTextWidth ((XFontStruct *) FonteLeg, ptr, strlen (ptr)) / 2),
-	    0, FontMenu, TtLineGC);
+   (w / 2) - (XTextWidth ((XFontStruct *) SmallFontDialogue, ptr, strlen (ptr)) / 2),
+	    0, FontDialogue, TtLineGC);
 
    /* grille */
    XSetLineAttributes (TtDisplay, TtLineGC, 1, LineSolid, CapButt, JoinMiter);
@@ -233,8 +233,8 @@ static void         ColorsExpose ()
 	   x = (i % COLORS_COL) * wcase;
 	   y = ((i / COLORS_COL) + 1) * hcase;
 	   WChaine (Color_Window, ColorName (i),
-		    x + (wcase / 2) - (XTextWidth ((XFontStruct *) FonteLeg, ColorName (i), strlen (ColorName (i))) / 2),
-		    y, FonteLeg, TtLineGC);
+		    x + (wcase / 2) - (XTextWidth ((XFontStruct *) SmallFontDialogue, ColorName (i), strlen (ColorName (i))) / 2),
+		    y, SmallFontDialogue, TtLineGC);
 	}
    else
       for (i = 0; i < max; i++)
@@ -273,11 +273,11 @@ int                 y;
 
    if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
-      wcase = CarWidth ('m', FontMenu) * 12;
+      wcase = CarWidth ('m', FontDialogue) * 12;
    else
       /* Affiche les couleurs sur un ecran couleur */
-      wcase = CarWidth ('m', FontMenu) * 4;
-   hcase = FontHeight (FontMenu);
+      wcase = CarWidth ('m', FontDialogue) * 4;
+   hcase = FontHeight (FontDialogue);
 
    /* Regarde si on n'a pas clique dans le titre */
    if (y < hcase)
@@ -366,9 +366,9 @@ int                 y;
    XGCValues           GCmodel;
    char                chaine[10];
 
-   xfont = XmFontListCreate ((XFontStruct *) FontMenu, XmSTRING_DEFAULT_CHARSET);
-   if (FonteLeg == NULL)
-      FonteLeg = LireFonte ('L', 'H', 0, 9, UnPoint);
+   xfont = XmFontListCreate ((XFontStruct *) FontDialogue, XmSTRING_DEFAULT_CHARSET);
+   if (SmallFontDialogue == NULL)
+      SmallFontDialogue = ReadFont ('L', 'H', 0, 9, UnPoint);
 
    n = 0;
    sprintf (chaine, "+%d+%d", x, y);
@@ -468,11 +468,11 @@ int                 y;
    n = 0;
    if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
-      width = CarWidth ('m', FontMenu) * 12 * COLORS_COL;
+      width = CarWidth ('m', FontDialogue) * 12 * COLORS_COL;
    else
       /* Affiche les couleurs sur un ecran couleur */
-      width = CarWidth ('m', FontMenu) * 4 * COLORS_COL;
-   height = ((NumberOfColors () + COLORS_COL - 1) / COLORS_COL + 1) * FontHeight (FontMenu);
+      width = CarWidth ('m', FontDialogue) * 4 * COLORS_COL;
+   height = ((NumberOfColors () + COLORS_COL - 1) / COLORS_COL + 1) * FontHeight (FontDialogue);
 
 /*** Cree un DrawingArea pour contenir les touches de la palette ***/
    n = 0;
@@ -609,7 +609,7 @@ View                view;
 
    pDoc = LoadedDocument[document - 1];
    /* demande quelle est la selection courante */
-   selok = SelEditeur (&SelDoc, &PremSel, &DerSel, &premcar, &dercar);
+   selok = GetCurrentSelection (&SelDoc, &PremSel, &DerSel, &premcar, &dercar);
    if (!selok)
      {
 	/* par defaut la racine du document */

@@ -189,7 +189,7 @@ boolean             nextExtDoc;
       /* pas de reference courante */
      {
 	/* prend la selection courante */
-	ok = SelEditeur (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
+	ok = GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
 	if (!ok)
 	   /* pas de selection, message 'Selectionnez' */
 	   TtaDisplaySimpleMessage (INFO, LIB, SEL_EL);
@@ -246,7 +246,7 @@ boolean             nextExtDoc;
 	      ok = FALSE;
 	/* on ignore les references qui sont dans le tampon de Copier-Couper */
 	if (ok)
-	   if (DansTampon ((*pPrevRef)->RdElement))
+	   if (IsASavedElement ((*pPrevRef)->RdElement))
 	      ok = FALSE;
 	if (!ok)
 	   /* cherche la reference suivante au meme element */
@@ -254,7 +254,7 @@ boolean             nextExtDoc;
 		     pExtDoc, TRUE);
 	else
 	   /* selectionne la reference trouvee */
-	   SelectWithAPP (*pDocPrevRef, (*pPrevRef)->RdElement, FALSE, FALSE);
+	   SelectElementWithEvent (*pDocPrevRef, (*pPrevRef)->RdElement, FALSE, FALSE);
      }
 }
 
@@ -283,13 +283,13 @@ void                FindReferredEl ()
    int                 chosenItem;
 
    /* y-a-t'il une selection au niveau editeur ou mediateur ? */
-   if (!SelEditeur (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
       TtaDisplaySimpleMessage (INFO, LIB, SEL_EL);
    else
      {
 	pEl = NULL;
 	pRef = NULL;
-	NulIdentDoc (&docIdent);
+	ClearDocIdent (&docIdent);
 	nMenuItems = 0;
 	menuBufLen = 0;
 	if (firstSel->ElTerminal && firstSel->ElLeafType == LtReference)
@@ -343,7 +343,7 @@ void                FindReferredEl ()
 	     pEl = ReferredElement (pRef, &docIdent, &pDoc);
 	     if (pEl == NULL)
 		/* il n'y a pas d'element reference' */
-		if (IdentDocNul (docIdent) || pDoc != NULL)
+		if (DocIdentIsNull (docIdent) || pDoc != NULL)
 		   /* ce n'est pas une reference externe ou c'est une reference vide */
 		   TtaDisplaySimpleMessage (INFO, LIB, EMPTY_REF);
 		else
@@ -355,7 +355,7 @@ void                FindReferredEl ()
 		     CreateDocument (&pDoc);
 		     if (pDoc != NULL)
 		       {
-			  CopyIdentDoc (&pDoc->DocIdent, docIdent);
+			  CopyDocIdent (&pDoc->DocIdent, docIdent);
 			  /* annule la selection */
 			  ClearAllViewSelection ();
 			  LoadDocument (&pDoc, NULL);
@@ -372,7 +372,7 @@ void                FindReferredEl ()
 		  }
 	     else
 		/* l'element reference est-il dans le buffer de sauvegarde ? */
-	     if (DansTampon (pEl))
+	     if (IsASavedElement (pEl))
 	       {
 		  pEl = NULL;
 		  /* message 'CsReference vide' */
@@ -381,13 +381,13 @@ void                FindReferredEl ()
 	  }
 	if (pEl != NULL)
 	  {
-	     if (!IdentDocNul (docIdent))
+	     if (!DocIdentIsNull (docIdent))
 		/* l'element reference' est dans un autre document */
 		pSelDoc = GetPtrDocument (docIdent);
-	     SelectWithAPP (pSelDoc, pEl, TRUE, TRUE);
+	     SelectElementWithEvent (pSelDoc, pEl, TRUE, TRUE);
 	     /* dans le cas ou c'est un element d'une paire de marques, on */
 	     /* selectionne l'intervalle compris entre ces marques. */
-	     SelectIntervallePaire ();
+	     SelectPairInterval ();
 	  }
      }
 }
@@ -423,8 +423,8 @@ LabelString         oldLabel;
 	   GetElemRefChng (&pChnRef);
 	   strncpy (pChnRef->CrOldLabel, oldLabel, MAX_LABEL_LEN);
 	   strncpy (pChnRef->CrNewLabel, pEl->ElLabel, MAX_LABEL_LEN);
-	   CopyIdentDoc (&pChnRef->CrOldDocument, DocOfSavedElements->DocIdent);
-	   CopyIdentDoc (&pChnRef->CrNewDocument, pDoc->DocIdent);
+	   CopyDocIdent (&pChnRef->CrOldDocument, DocOfSavedElements->DocIdent);
+	   CopyDocIdent (&pChnRef->CrNewDocument, pDoc->DocIdent);
 	   pChnRef->CrReferringDoc = NULL;
 	   /* chaine ce descripteur */
 	   pChnRef->CrNext = pDoc->DocChangedReferredEl;
@@ -501,7 +501,7 @@ PtrDocument         pDoc;
 	     while (pExtDoc != NULL)
 	       {
 		  /* on ne considere pas le document lui-meme comme externe... */
-		  if (!MemeIdentDoc (pExtDoc->EdDocIdent, pDoc->DocIdent))
+		  if (!SameDocIdent (pExtDoc->EdDocIdent, pDoc->DocIdent))
 		     AddDocOfExternalRef (pRoot, pExtDoc->EdDocIdent, pDoc);
 		  pExtDoc = pExtDoc->EdNext;
 	       }
@@ -522,10 +522,10 @@ PtrDocument         pDoc;
 	     /* si elle est dans le tampon, on n'y touche pas : sa copie dans */
 	     /* le document ou on colle a deja ete traitee ou sera traitee dans */
 	     /* cette boucle */
-	     if (!DansTampon (pRef->RdElement))
+	     if (!IsASavedElement (pRef->RdElement))
 		/* on fait pointer la reference sur l'element colle' */
 	       {
-		  if (DansNouveaux (pRef->RdElement))
+		  if (IsWithinANewElement (pRef->RdElement))
 		     pDocRef = pDoc;
 		  if (pRef->RdAttribute != NULL)
 		     pElemRef = NULL;
@@ -565,8 +565,8 @@ PtrDocument         pDoc;
 	     /* si l'element reference' est aussi colle', */
 	     /* on ne fait rien: ce cas est traite' plus haut */
 	     if (pElRef != NULL)
-		if (!DansTampon (pElRef))
-		   if (!DansNouveaux (pElRef))
+		if (!IsASavedElement (pElRef))
+		   if (!IsWithinANewElement (pElRef))
 		     {
 			/* verifie la validite de l'attribut dans le cas des */
 			/* extensions de cellule des tableaux */
@@ -605,7 +605,7 @@ PtrDocument         pDoc;
 	  {
 	     pRefClipboard = pRef->RdNext;
 	     if (pRefClipboard != NULL
-		 && DansTampon (pRefClipboard->RdElement))
+		 && IsASavedElement (pRefClipboard->RdElement))
 		/* il faut retirer pRefClipboard du chainage */
 	       {
 		  pRef->RdNext = pRefClipboard->RdNext;
@@ -630,14 +630,14 @@ PtrDocument         pDoc;
 	   if (pRef->RdReferred != NULL)
 	     {
 		pElRef = ReferredElement (pRef, &docIdentRef, &pDocRef);
-		if (pElRef == NULL && IdentDocNul (docIdentRef))
+		if (pElRef == NULL && DocIdentIsNull (docIdentRef))
 		   /* la reference ne designe rien */
 		   pRef->RdReferred = NULL;
 		else
 		  {
 		     if (pElRef != NULL)
-			if (!DansTampon (pElRef))
-			   if (DansNouveaux (pElRef))
+			if (!IsASavedElement (pElRef))
+			   if (IsWithinANewElement (pElRef))
 			      /* l'element reference' est aussi colle' */
 			      pDocRef = pDoc;
 		     if (pRef->RdInternalRef)
@@ -648,7 +648,7 @@ PtrDocument         pDoc;
 		     else
 			/* l'original etait une reference externe a son document */
 			/* d'origine */
-		     if (MemeIdentDoc (pDoc->DocIdent, docIdentRef))
+		     if (SameDocIdent (pDoc->DocIdent, docIdentRef))
 			/* l'element reference' et la reference sont dans le */
 			/* meme document */
 			pDocRef = pDoc;
@@ -666,10 +666,10 @@ PtrDocument         pDoc;
 			    {
 			       sameDoc = FALSE;
 			       if (pElRef != NULL)
-				  if (!DansTampon (pElRef))
+				  if (!IsASavedElement (pElRef))
 				     /* l'element reference' est aussi colle', on ne fait */
 				     /* rien : ce cas est traite' plus haut */
-				     sameDoc = DansNouveaux (pElRef);
+				     sameDoc = IsWithinANewElement (pElRef);
 			       if (!sameDoc)
 
 				  /* etablit le lien entre la reference copie'e et */

@@ -7,82 +7,82 @@
 #if __STDC__
 
 extern int AttrValue ( PtrAttribute pAttr );
-extern int valintregle ( PtrPRule pRegle,
+extern int IntegerRule ( PtrPRule pRegle,
                          PtrElement pEl,
                          DocViewNumber nv,
                          boolean *ok,
                          TypeUnit *unit,
                          PtrAttribute pAttr );
 extern void GetBufConst ( PtrAbstractBox pAb );
-extern void MajVolLibre ( PtrAbstractBox pAb,
+extern void UpdateFreeVol ( PtrAbstractBox pAb,
                           PtrDocument pDoc );
-extern void Contenu( PtrElement pEl, 
+extern void FillContent( PtrElement pEl, 
 		     PtrAbstractBox pAb, 
 		     PtrDocument pDoc);
-extern FunctionType RegleCree ( PtrDocument pDoc,
+extern FunctionType TypeCreatedRule ( PtrDocument pDoc,
                                 PtrAbstractBox pCreateur,
                                 PtrAbstractBox pCree );
-extern void ChSchemaPres ( PtrElement pEl,
+extern void SearchPresSchema ( PtrElement pEl,
                            PtrPSchema *pSchP,
                            int *NumEntree,
                            PtrSSchema *pSchS );
-extern void applCopie ( PtrDocument pDoc,
+extern void ApplyCopy ( PtrDocument pDoc,
                         PtrPRule pRegle,
                         PtrAbstractBox pAb,
                         boolean AvecDescCopie );
-extern boolean Applique ( PtrPRule pRegle,
+extern boolean ApplyRule ( PtrPRule pRegle,
                           PtrPSchema pSchP,
                           PtrAbstractBox pAb,
                           PtrDocument pDoc,
                           PtrAttribute pAttr );
-extern PtrPRule ChReglePres ( PtrElement pEl,
+extern PtrPRule SearchPresRule ( PtrElement pEl,
                               PRuleType TypeR,
                               boolean *Nouveau,
                               PtrDocument pDoc,
                               int Vue );
-extern void PavReaff ( PtrAbstractBox pAb,
+extern void RedispAbsBox ( PtrAbstractBox pAb,
                        PtrDocument pDoc );
-extern void NouvDimImage ( PtrAbstractBox pAb );
+extern void NewDimPicture ( PtrAbstractBox pAb );
 
 #else /* __STDC__ */
 
 extern int AttrValue (/* PtrAttribute pAttr */);
-extern int valintregle (/* PtrPRule pRegle,
+extern int IntegerRule (/* PtrPRule pRegle,
                            PtrElement pEl,
                            DocViewNumber nv,
                            boolean *ok,
                            TypeUnit *unit,
                            PtrAttribute pAttr */);
 extern void GetBufConst (/* PtrAbstractBox pAb */);
-extern void MajVolLibre (/* PtrAbstractBox pAb,
+extern void UpdateFreeVol (/* PtrAbstractBox pAb,
                             PtrDocument pDoc */);
-extern void Contenu (/* PtrElement pEl, 
+extern void FillContent (/* PtrElement pEl, 
 		     PtrAbstractBox pAb, 
 		     PtrDocument pDoc */);
-extern FunctionType RegleCree (/* PtrDocument pDoc,
+extern FunctionType TypeCreatedRule (/* PtrDocument pDoc,
                                   PtrAbstractBox pCreateur,
                                   PtrAbstractBox pCree */);
-extern void ChSchemaPres (/* PtrElement pEl,
+extern void SearchPresSchema (/* PtrElement pEl,
                              PtrPSchema *pSchP,
                              int *NumEntree,
                              PtrSSchema *pSchS */);
-extern void applCopie (/* PtrDocument pDoc,
+extern void ApplyCopy (/* PtrDocument pDoc,
                           PtrPRule pRegle,
                           PtrAbstractBox pAb,
                           boolean AvecDescCopie */);
-extern boolean Applique (/* PtrPRule pRegle,
+extern boolean ApplyRule (/* PtrPRule pRegle,
                             PtrPSchema pSchP,
                             PtrAbstractBox pAb,
                             PtrDocument pDoc,
                             PtrAttribute pAttr */);
-extern PtrPRule ChReglePres (/* PtrElement pEl,
+extern PtrPRule SearchPresRule (/* PtrElement pEl,
                                 PRuleType TypeR,
                                 boolean *Nouveau,
                                 PtrDocument pDoc,
                                 int Vue */);
-extern void PavReaff (/* PtrAbstractBox pAb,
+extern void RedispAbsBox (/* PtrAbstractBox pAb,
                          PtrDocument pDoc */);
-extern void NouvDimImage (/* PtrAbstractBox pAb */);
+extern void NewDimPicture (/* PtrAbstractBox pAb */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

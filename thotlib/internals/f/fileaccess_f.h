@@ -24,22 +24,22 @@ extern BinFile BIOwriteOpen ( char *filename );
 extern void BIOwriteClose ( BinFile file );
 extern boolean BIOwriteByte ( BinFile file,
                               char bval );
-extern void BIOwriteIdentDoc ( BinFile file,
+extern void BIOwriteDocIdent ( BinFile file,
                                DocumentIdentifier Ident );
-extern void BIOreadIdentDoc ( BinFile file,
+extern void BIOreadDocIdent ( BinFile file,
                               DocumentIdentifier * Ident );
-extern void CopyIdentDoc ( DocumentIdentifier * Dest,
+extern void CopyDocIdent ( DocumentIdentifier * Dest,
                            DocumentIdentifier Source );
-extern boolean MemeIdentDoc ( DocumentIdentifier Ident1,
+extern boolean SameDocIdent ( DocumentIdentifier Ident1,
                               DocumentIdentifier Ident2 );
-extern void NulIdentDoc ( DocumentIdentifier * Ident );
-extern boolean IdentDocNul ( DocumentIdentifier Ident );
+extern void ClearDocIdent ( DocumentIdentifier * Ident );
+extern boolean DocIdentIsNull ( DocumentIdentifier Ident );
 extern void GetDocIdent ( DocumentIdentifier * Ident,
                           Name NomDoc );
 extern void GetDocName ( DocumentIdentifier Ident,
                          Name NomDoc );
-extern int OuvrEcr ( char *fichier );
-extern void ConvertitNombre ( int nb,
+extern int FileWriteAccess ( char *fichier );
+extern void GetCounterValue ( int nb,
                               CounterStyle Style,
                               char *Chaine,
                               int *lg );
@@ -64,22 +64,22 @@ extern BinFile BIOwriteOpen (/* char *filename */);
 extern void BIOwriteClose (/* BinFile file */);
 extern boolean BIOwriteByte (/* BinFile file,
                                 char bval */);
-extern void BIOwriteIdentDoc (/* BinFile file,
+extern void BIOwriteDocIdent (/* BinFile file,
                                  DocumentIdentifier Ident */);
-extern void BIOreadIdentDoc (/* BinFile file,
+extern void BIOreadDocIdent (/* BinFile file,
                                 DocumentIdentifier * Ident */);
-extern void CopyIdentDoc (/* DocumentIdentifier * Dest,
+extern void CopyDocIdent (/* DocumentIdentifier * Dest,
                              DocumentIdentifier Source */);
-extern boolean MemeIdentDoc (/* DocumentIdentifier Ident1,
+extern boolean SameDocIdent (/* DocumentIdentifier Ident1,
                                 DocumentIdentifier Ident2 */);
-extern void NulIdentDoc (/* DocumentIdentifier * Ident */);
-extern boolean IdentDocNul (/* DocumentIdentifier Ident */);
+extern void ClearDocIdent (/* DocumentIdentifier * Ident */);
+extern boolean DocIdentIsNull (/* DocumentIdentifier Ident */);
 extern void GetDocIdent (/* DocumentIdentifier * Ident,
                             Name NomDoc */);
 extern void GetDocName (/* DocumentIdentifier Ident,
                            Name NomDoc */);
-extern int OuvrEcr (/* char *fichier */);
-extern void ConvertitNombre (/* int nb,
+extern int FileWriteAccess (/* char *fichier */);
+extern void GetCounterValue (/* int nb,
                                 CounterStyle Style,
                                 char *Chaine,
                                 int *lg */);

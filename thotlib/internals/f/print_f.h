@@ -14,7 +14,7 @@ extern PtrReference NextReferenceToEl ( PtrElement pEl,
                                         PtrDocument * pDocRef,
                                         PtrExternalDoc * pDE,
                                         boolean DocExtSuivant );
-extern boolean SelEditeur ( PtrDocument * SDoc,
+extern boolean GetCurrentSelection ( PtrDocument * SDoc,
                             PtrElement * PrEl,
                             PtrElement * DerEl,
                             int *PrCar,
@@ -23,7 +23,7 @@ extern void DimFenetre ( int frame,
                          int *larg,
                          int *haut );
 extern ThotWindow TtaGetThotWindow ( int frame );
-extern void DocVueFen ( int nframe,
+extern void GetDocAndView ( int nframe,
                         PtrDocument * pD,
                         int *nv,
                         boolean * assoc );
@@ -48,7 +48,7 @@ extern PtrReference NextReferenceToEl (/* PtrElement pEl,
                                           PtrDocument * pDocRef,
                                           PtrExternalDoc * pDE,
                                           boolean DocExtSuivant */);
-extern boolean SelEditeur (/* PtrDocument * SDoc,
+extern boolean GetCurrentSelection (/* PtrDocument * SDoc,
                               PtrElement * PrEl,
                               PtrElement * DerEl,
                               int *PrCar,
@@ -57,7 +57,7 @@ extern void DimFenetre (/* int frame,
                            int *larg,
                            int *haut */);
 extern ThotWindow TtaGetThotWindow (/* int frame */);
-extern void DocVueFen (/* int nframe,
+extern void GetDocAndView (/* int nframe,
                           PtrDocument * pD,
                           int *nv,
                           boolean * assoc */);

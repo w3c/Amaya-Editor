@@ -43,9 +43,9 @@
 /* |            le pave fils qui l'emporte.                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                StrDesBoite (PtrBox * result, PtrAbstractBox pRootAb, int frame, int x, int y, int *pointselect)
+void                GetClickedStructBox (PtrBox * result, PtrAbstractBox pRootAb, int frame, int x, int y, int *pointselect)
 #else  /* __STDC__ */
-void                StrDesBoite (result, pRootAb, frame, x, y, pointselect)
+void                GetClickedStructBox (result, pRootAb, frame, x, y, pointselect)
 PtrBox           *result;
 PtrAbstractBox             pRootAb;
 int                 frame;
@@ -72,7 +72,7 @@ int                *pointselect;
 	/* Est-ce le pave selectionne ? */
 	if (pAb->AbVisibility >= pFrame->FrVisibility)
 	  {
-	     pBox = DansLaBoite (pAb, dist, x, y, &pointIndex);
+	     pBox = GetEnclosingClickedBox (pAb, dist, x, y, &pointIndex);
 	     if (pBox != NULL)
 		/* Si c'est le premier pave trouve */
 		if (pSelBox == NULL)
@@ -93,8 +93,8 @@ int                *pointselect;
 		else
 		  {
 		     /* Verifie que le point designe est strictement dans la boite */
-		     pBox = DansLaBoite (pAb, x, x, y, &pointIndex);
-		     pCurrentBox = DansLaBoite (pSelBox->BxAbstractBox, x, x, y, &pointIndex);
+		     pBox = GetEnclosingClickedBox (pAb, x, x, y, &pointIndex);
+		     pCurrentBox = GetEnclosingClickedBox (pSelBox->BxAbstractBox, x, x, y, &pointIndex);
 		     if (pCurrentBox == NULL && pBox != NULL)
 		       {
 			  pSelBox = pBox;
@@ -104,7 +104,7 @@ int                *pointselect;
 		  }
 	  }
 	/* On teste un autre pave de l'arbre */
-	pAb = Pave_Suivant (pAb);
+	pAb = SearchNextAbsBox (pAb);
      }
    *result = pSelBox;
 }

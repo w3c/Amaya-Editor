@@ -335,7 +335,7 @@ Name                 N;
      }
    else
      {
-	if (!RdSchStruct (N, pSchStrExt))
+	if (!ReadStructureSchema (N, pSchStrExt))
 	   printf ("******");
 	else
 	  {
@@ -991,7 +991,7 @@ char              **argv;
 
    ReadEnv ();
    /* on utilise le directory courant */
-   if (!RdSchStruct (fn, pSchStr))
+   if (!ReadStructureSchema (fn, pSchStr))
       TtaDisplaySimpleMessage (FATAL, STR, STR_CANNOT_READ_STRUCT_SCHEM);
    else if (!optionl)
      {

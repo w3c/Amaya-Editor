@@ -1058,14 +1058,14 @@ PtrPRule        pR;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    wrComptStyle ecrit au terminal un style de compteur.            | */
+/* |    WriteCounterStyle ecrit au terminal un style de compteur.            | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         wrComptStyle (CounterStyle St)
+static void         WriteCounterStyle (CounterStyle St)
 
 #else  /* __STDC__ */
-static void         wrComptStyle (St)
+static void         WriteCounterStyle (St)
 CounterStyle          St;
 
 #endif /* __STDC__ */
@@ -1283,7 +1283,7 @@ char              **argv;
    GetSchStruct (&pSchemaStr);
    pSchemaStr->SsRootElem = 0;
    /* lit le schema de presentation et le schema de structure correspondant */
-   pSchemaPrs = RdSchPres (filename, pSchemaStr);
+   pSchemaPrs = ReadPresentationSchema (filename, pSchemaStr);
    if (pSchemaPrs == NULL)
       TtaDisplaySimpleMessage (FATAL, PRS, UNKNOWN_FILE);
 #else  /* !STANDALONE */
@@ -1525,12 +1525,12 @@ char               *output_file;
 				      fprintf (output, "MinRangeVal ");
 				   fprintf (output, "Cpt");
 				   wrnb (pVa1->ViCounter);
-				   wrComptStyle (pVa1->ViStyle);
+				   WriteCounterStyle (pVa1->ViStyle);
 				   break;
 				case VarAttrValue:
 				   fprintf (output, " VALUE(");
 				   wrnomattr (pVa1->ViAttr);
-				   wrComptStyle (pVa1->ViStyle);
+				   WriteCounterStyle (pVa1->ViStyle);
 				   break;
 				case VarDate:
 				   fprintf (output, " VarDate");
@@ -1554,7 +1554,7 @@ char               *output_file;
 				   fprintf (output, " VALUE(PageNumber(");
 				   wrnom (pSc1->PsView[pVa1->ViView - 1]);
 				   fprintf (output, ")");
-				   wrComptStyle (pVa1->ViStyle);
+				   WriteCounterStyle (pVa1->ViStyle);
 				   break;
 			     }
 

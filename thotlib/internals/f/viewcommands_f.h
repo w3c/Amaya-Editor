@@ -13,7 +13,7 @@ extern void SavePath ( PtrDocument pDoc,
 extern void RestorePath ( PtrDocument pDoc,
                           char *savedir,
                           char *savename );
-extern int CrFenTitre ( PtrDocument pDoc,
+extern int CreateWindowWithTitle ( PtrDocument pDoc,
                         int view,
                         Name VdViewName,
                         int *vol,
@@ -21,20 +21,20 @@ extern int CrFenTitre ( PtrDocument pDoc,
                         int Y,
                         int L,
                         int H );
-extern void TraiteCommandeLister ( PtrDocument pDoc,
+extern void ListCommand ( PtrDocument pDoc,
                                    int nv,
                                    boolean assoc,
                                    Name NomFichierListe,
                                    int TypeFichierListe );
 extern void BackupAll ( void );
-extern boolean AuMoinsUnDoc ( void );
-extern void TraiteMenuImporter ( Name SchStrImport,
+extern boolean AtLeastOneDocument ( void );
+extern void ImportDocument ( Name SchStrImport,
                                  PathBuffer DirectoryDocImport,
                                  Name NomDocImport );
-extern void FermeToutesVuesDoc ( PtrDocument pDoc );
-extern void ChangerDocPres ( PtrDocument pDoc,
+extern void CloseAllViewsDoc ( PtrDocument pDoc );
+extern void ChangeDocumentPSchema ( PtrDocument pDoc,
                              Name NewSchPres );
-extern void ChangerNatPres ( PtrDocument pDoc,
+extern void ChangeNaturePSchema ( PtrDocument pDoc,
                              PtrSSchema pSchNat,
                              Name NewSchPres );
 extern void QuitEditor ( void );
@@ -48,7 +48,7 @@ extern void SavePath (/* PtrDocument pDoc,
 extern void RestorePath (/* PtrDocument pDoc,
                             char *savedir,
                             char *savename */);
-extern int CrFenTitre (/* PtrDocument pDoc,
+extern int CreateWindowWithTitle (/* PtrDocument pDoc,
                           int view,
                           Name VdViewName,
                           int *vol,
@@ -56,20 +56,20 @@ extern int CrFenTitre (/* PtrDocument pDoc,
                           int Y,
                           int L,
                           int H */);
-extern void TraiteCommandeLister (/* PtrDocument pDoc,
+extern void ListCommand (/* PtrDocument pDoc,
                                      int nv,
                                      boolean assoc,
                                      Name NomFichierListe,
                                      int TypeFichierListe */);
 extern void BackupAll (/* void */);
-extern boolean AuMoinsUnDoc (/* void */);
-extern void TraiteMenuImporter (/* Name SchStrImport,
+extern boolean AtLeastOneDocument (/* void */);
+extern void ImportDocument (/* Name SchStrImport,
                                    PathBuffer DirectoryDocImport,
                                    Name NomDocImport */);
-extern void FermeToutesVuesDoc (/* PtrDocument pDoc */);
-extern void ChangerDocPres (/* PtrDocument pDoc,
+extern void CloseAllViewsDoc (/* PtrDocument pDoc */);
+extern void ChangeDocumentPSchema (/* PtrDocument pDoc,
                                Name NewSchPres */);
-extern void ChangerNatPres (/* PtrDocument pDoc,
+extern void ChangeNaturePSchema (/* PtrDocument pDoc,
                                PtrSSchema pSchNat,
                                Name NewSchPres */);
 extern void QuitEditor (/* void */);

@@ -6,12 +6,12 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void CmdPaste ( void );
-extern void RemonteSelection ( PtrElement * firstEl,
+extern void PasteCommand ( void );
+extern void SelectSiblings ( PtrElement * firstEl,
                                PtrElement * lastEl,
                                int *firstChar,
                                int *lastChar );
-extern void Carriage ( void );
+extern void ReturnKey ( void );
 extern void DeleteNextChar ( int frame,
                              PtrElement pEl,
                              boolean Before );
@@ -19,12 +19,12 @@ extern void NoStructSelectLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void CmdPaste (/* void */);
-extern void RemonteSelection (/* PtrElement * firstEl,
+extern void PasteCommand (/* void */);
+extern void SelectSiblings (/* PtrElement * firstEl,
                                  PtrElement * lastEl,
                                  int *firstChar,
                                  int *lastChar */);
-extern void Carriage (/* void */);
+extern void ReturnKey (/* void */);
 extern void DeleteNextChar (/* int frame,
                                PtrElement pEl,
                                boolean Before */);

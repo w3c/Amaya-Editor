@@ -465,7 +465,7 @@ static boolean BoolRule(pPRule, pEl, view, ok)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	valintregle evalue une regle de presentation de type entier pour| */
+/* |	IntegerRule evalue une regle de presentation de type entier pour| */
 /* |		la vue view. La regle a evaluer est pointee par pPRule,	| */
 /* |		et l'element auquel elle s'applique est pointe par pEl.	| */
 /* |		Au result, ok indique si l'evaluation a pu etre faite et| */
@@ -478,9 +478,9 @@ static boolean BoolRule(pPRule, pEl, view, ok)
 /* |		Fonction utilisee dans crimabs				| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int valintregle(PtrPRule pPRule, PtrElement pEl, DocViewNumber view, boolean *ok, TypeUnit *unit, PtrAttribute pAttr)
+int IntegerRule(PtrPRule pPRule, PtrElement pEl, DocViewNumber view, boolean *ok, TypeUnit *unit, PtrAttribute pAttr)
 #else /* __STDC__ */
-int valintregle(pPRule, pEl, view, ok, unit, pAttr)
+int IntegerRule(pPRule, pEl, view, ok, unit, pAttr)
 	PtrPRule pPRule;
 	PtrElement pEl;
 	DocViewNumber view;
@@ -1237,16 +1237,16 @@ void GetBufConst(pAb)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	MajVolLibre	met a jour le volume libre restant dans la vue	| */
+/* |	UpdateFreeVol	met a jour le volume libre restant dans la vue	| */
 /* |		du pave pAb, en prenant en compte le volume de ce	| */
 /* |		nouveau pave feuille.					| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void MajVolLibre(PtrAbstractBox pAb, PtrDocument pDoc)
+void UpdateFreeVol(PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else /* __STDC__ */
-void MajVolLibre(pAb, pDoc)
+void UpdateFreeVol(pAb, pDoc)
 	PtrAbstractBox pAb;
 	PtrDocument pDoc;
 #endif /* __STDC__ */
@@ -1265,15 +1265,15 @@ void MajVolLibre(pAb, pDoc)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	Contenu met dans le pave pointe par pAb le contenu de l'element| */
+/* |	FillContent met dans le pave pointe par pAb le contenu de l'element| */
 /* |		feuille pointe par pEl.					| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void Contenu(PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
+void FillContent(PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else /* __STDC__ */
-void Contenu(pEl, pAb, pDoc)
+void FillContent(pEl, pAb, pDoc)
 	PtrElement pEl;
 	PtrAbstractBox pAb;
 	PtrDocument pDoc;
@@ -1301,7 +1301,7 @@ void Contenu(pEl, pAb, pDoc)
     pAb->AbCanBeModified = FALSE;
     pAb->AbSensitive = TRUE;
     /* met a jour le volume libre restant dans la vue */
-    MajVolLibre(pAb, pDoc);
+    UpdateFreeVol(pAb, pDoc);
     }
   else if (pEl->ElTerminal)
     {
@@ -1355,7 +1355,7 @@ void Contenu(pEl, pAb, pDoc)
 		{
 		  if (pPR1->RdReferred != NULL)
 		    if (!pPR1->RdReferred->ReExternalRef)
-		      if (!DansTampon(pPR1->RdReferred->ReReferredElem))
+		      if (!IsASavedElement(pPR1->RdReferred->ReReferredElem))
 			/* l'element reference' n'est pas dans le */
 			/* buffer des elements coupe's */
 			pBu1->BuContent[lg - 1] = '*';
@@ -1419,7 +1419,7 @@ void Contenu(pEl, pAb, pDoc)
 	  break;	
 	}
       /* met a jour le volume libre restant dans la vue */
-      MajVolLibre(pAb, pDoc);
+      UpdateFreeVol(pAb, pDoc);
     }
 }
 
@@ -1487,15 +1487,15 @@ static boolean PageCreateRule(pPRule, pSPR, pCree, TypeCreation)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	RegleCree retourne le type de la regle de presentation appelee	| */
+/* |	TypeCreatedRule retourne le type de la regle de presentation appelee	| */
 /* |		par le pave pAbbCreator et qui a cree le pave pAbbCreated.	| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-FunctionType RegleCree(PtrDocument pDoc, PtrAbstractBox pAbbCreator, PtrAbstractBox pAbbCreated)
+FunctionType TypeCreatedRule(PtrDocument pDoc, PtrAbstractBox pAbbCreator, PtrAbstractBox pAbbCreated)
 
 #else /* __STDC__ */
-FunctionType RegleCree(pDoc, pAbbCreator, pAbbCreated)
+FunctionType TypeCreatedRule(pDoc, pAbbCreator, pAbbCreated)
 	PtrDocument pDoc;
 	PtrAbstractBox pAbbCreator;
 	PtrAbstractBox pAbbCreated;
@@ -1513,7 +1513,7 @@ FunctionType RegleCree(pDoc, pAbbCreator, pAbbCreated)
 
   result = FnLine;	
   /* cherche les regles de creation en ignorant les attributs */
-  pPRuleCre = LaRegle(pDoc, pAbbCreator, &pSPR, PtFunction, FALSE, &pAttr);
+  pPRuleCre = SearchRulepAb(pDoc, pAbbCreator, &pSPR, PtFunction, FALSE, &pAttr);
   if (!PageCreateRule(pPRuleCre, pSPR, pAbbCreated, &result))
     /* on n'a pas found la regle qui cree la bonne boite */
     /* on cherche les regles de creation associees aux attributs */
@@ -1557,7 +1557,7 @@ FunctionType RegleCree(pDoc, pAbbCreator, pAbbCreated)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	ChSchemaPres	cherche le schema de presentation a appliquer a	| */
+/* |	SearchPresSchema	cherche le schema de presentation a appliquer a	| */
 /* |		l'element pointe par pEl. Retourne dans pSchP un	| */
 /* |		pointeur sur ce schema, dans indexElType le numero de	| */
 /* |		l'entree correspondant a l'element dans ce schema et	| */
@@ -1565,9 +1565,9 @@ FunctionType RegleCree(pDoc, pAbbCreator, pAbbCreated)
 /* |		correspond le schema de presentation retourne'.		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void ChSchemaPres(PtrElement pEl, PtrPSchema *pSchP, int *indexElType, PtrSSchema *pSchS)
+void SearchPresSchema(PtrElement pEl, PtrPSchema *pSchP, int *indexElType, PtrSSchema *pSchS)
 #else /* __STDC__ */
-void ChSchemaPres(pEl, pSchP, indexElType, pSchS)
+void SearchPresSchema(pEl, pSchP, indexElType, pSchS)
 	PtrElement pEl;
 	PtrPSchema *pSchP;
 	int *indexElType;
@@ -2261,8 +2261,8 @@ static boolean ApplyCol(pDoc, pAb, viewSch, pPRule)
 				pP = pElCol->ElAbstractBox[view-1];
 	                        while (pP != NULL && pP->AbElement == pElCol)
 	                          {
-	                            TuePave(pP);
-	                            SuppRfPave(pP, &pAbbR, pDoc);
+	                            SetDeadAbsBox(pP);
+	                            ApplyRefAbsBoxSupp(pP, &pAbbR, pDoc);
 	                            pP = pP->AbNext;
 	                          }
 			      }
@@ -2390,8 +2390,8 @@ static boolean ApplyCol(pDoc, pAb, viewSch, pPRule)
 	     destroyedAb = TRUE; /* code result */
 	   while (pP != NULL && pP->AbElement == pEl)
 	     {
-	       TuePave(pP);
-	       SuppRfPave(pP, &pAbbR, pDoc);
+	       SetDeadAbsBox(pP);
+	       ApplyRefAbsBoxSupp(pP, &pAbbR, pDoc);
 	       pP = pP->AbNext;
 	     }
            if (AssocView(pEl))
@@ -2649,8 +2649,8 @@ static void ApplyPage(pDoc, pAb, viewSch, pPRule, pageType)
 	          destroyedAb = TRUE; /* code result */
 	          while (pP != NULL && pP->AbElement == pEl)
 	            {
-	              TuePave(pP);
-	              SuppRfPave(pP, &pAbbR, pDoc);
+	              SetDeadAbsBox(pP);
+	              ApplyRefAbsBoxSupp(pP, &pAbbR, pDoc);
 	              pP = pP->AbNext;
 	            }
 	          if (!pAb->AbNew)
@@ -2828,7 +2828,7 @@ static boolean SearchElCrPresBoxCopy(presBoxType, pSchP, pSchS, presBoxName, pEl
   
   result = FALSE;		
   /* cherche toutes les regles de  creation de cet element */
-  pPRuleCre = ReglePEl(*pEl, &pSP, &pSS, 0, NULL, 1, PtFunction, FALSE, FALSE, &pA);
+  pPRuleCre = GlobalSearchRulepEl(*pEl, &pSP, &pSS, 0, NULL, 1, PtFunction, FALSE, FALSE, &pA);
   stop = FALSE;
   do
     if (pPRuleCre == NULL)
@@ -3047,13 +3047,13 @@ static PtrPRule GetRuleCopy(pPRule)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	applCopie applique une regle de copie.				| */
+/* |	ApplyCopy applique une regle de copie.				| */
 /* |		  Procedure appelee aussi dans modif.c			| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void applCopie(PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb, boolean withDescCopy)
+void ApplyCopy(PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb, boolean withDescCopy)
 #else /* __STDC__ */
-void applCopie(pDoc, pPRule, pAb, withDescCopy)
+void ApplyCopy(pDoc, pPRule, pAb, withDescCopy)
 	PtrDocument pDoc;
 	PtrPRule pPRule;
 	PtrAbstractBox pAb;
@@ -3117,7 +3117,7 @@ void applCopie(pDoc, pPRule, pAb, withDescCopy)
 	  /* il faut copier une boite de presentation */
 	  /* prend le schema de presentation qui s'applique a la reference */
 	  {
-	    ChSchemaPres(pAb->AbElement, &pSchP, &i, &pSchS);
+	    SearchPresSchema(pAb->AbElement, &pSchP, &i, &pSchS);
 	    if (pPRule->PrNPresBoxes == 0)
 	      /* la boite de presentation a copier est definie par son nom */
 	      {
@@ -3166,7 +3166,7 @@ void applCopie(pDoc, pPRule, pAb, withDescCopy)
 	      }
 	    else
 	      /* on n'a pas trouve le pave a copier */
-	      if (!DansTampon(pE))
+	      if (!IsASavedElement(pE))
 		/* on ne fait rien si l'element reference' est dans le buffer*/
 		/* de Couper-Coller */
 		/* on cherche dans le sous-arbre abstrait de l'element */
@@ -3203,7 +3203,7 @@ void applCopie(pDoc, pPRule, pAb, withDescCopy)
 			  {
 			  pElSv = pAb->AbElement;
 			  pAb->AbElement = pE;
-			  applCopie(pDoc, pPRule1, pAb, TRUE);
+			  ApplyCopy(pDoc, pPRule1, pAb, TRUE);
 			  pAb->AbElement = pElSv;
 			  pE = NULL;
 			  }
@@ -3285,7 +3285,7 @@ void applCopie(pDoc, pPRule, pAb, withDescCopy)
 	pPRule1 = NULL;
 	if (pE->ElStructSchema->SsRule[pE->ElTypeNumber - 1].SrConstruct == CsReference)
 	   {
-	   pPRule1 = ReglePEl(pE, &pSchP, &pSchS, 0, NULL, 1, PtFunction, FALSE, FALSE, &pAttr);
+	   pPRule1 = GlobalSearchRulepEl(pE, &pSchP, &pSchS, 0, NULL, 1, PtFunction, FALSE, FALSE, &pAttr);
 	   pPRule1 = GetRuleCopy(pPRule1);
 	   }
 	if (pPRule1 == NULL)
@@ -3296,7 +3296,7 @@ void applCopie(pDoc, pPRule, pAb, withDescCopy)
 	  {
 	  pElSv = pAb->AbElement;
 	  pAb->AbElement = pE;
-	  applCopie(pDoc, pPRule1, pAb, FALSE);
+	  ApplyCopy(pDoc, pPRule1, pAb, FALSE);
 	  pAb->AbElement = pElSv;
 	  }
 	}
@@ -3319,7 +3319,7 @@ void applCopie(pDoc, pPRule, pAb, withDescCopy)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	Applique   applique au pave pointe par pAb la regle pointee par| */
+/* |	ApplyRule   applique au pave pointe par pAb la regle pointee par| */
 /* |		pPRule dans le schema de presentation pointe par pSchP.	| */
 /* |		Si pAttr n'est pas NULL, c'est un pointeur sur le bloc	| */
 /* |		attribut auquel correspond la regle a appliquer.	| */
@@ -3331,9 +3331,9 @@ void applCopie(pDoc, pPRule, pAb, withDescCopy)
 /* ---------------------------------------------------------------------- */
 #ifdef __COLPAGE__
 #ifdef __STDC__
-boolean Applique(PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb, PtrDocument pDoc, PtrAttribute pAttr, boolean *destroyedAb)
+boolean ApplyRule(PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb, PtrDocument pDoc, PtrAttribute pAttr, boolean *destroyedAb)
 #else /* __STDC__ */
-boolean Applique(pPRule, pSchP, pAb, pDoc, pAttr, destroyedAb)
+boolean ApplyRule(pPRule, pSchP, pAb, pDoc, pAttr, destroyedAb)
 	PtrPRule pPRule;
 	PtrPSchema pSchP;
 	PtrAbstractBox pAb;
@@ -3343,9 +3343,9 @@ boolean Applique(pPRule, pSchP, pAb, pDoc, pAttr, destroyedAb)
 #endif /* __STDC__ */
 #else /* __COLPAGE__ */
 #ifdef __STDC__
-boolean Applique(PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb, PtrDocument pDoc, PtrAttribute pAttr)
+boolean ApplyRule(PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb, PtrDocument pDoc, PtrAttribute pAttr)
 #else /* __STDC__ */
-boolean Applique(pPRule, pSchP, pAb, pDoc, pAttr)
+boolean ApplyRule(pPRule, pSchP, pAb, pDoc, pAttr)
 	PtrPRule pPRule;
 	PtrPSchema pSchP;
 	PtrAbstractBox pAb;
@@ -3387,7 +3387,7 @@ boolean Applique(pPRule, pSchP, pAb, pDoc, pAttr)
 	    (*ThotLocalActions[T_vertspan])(pPRule, pAb);
 	  break;
 	case PtVisibility:
-	  pAbb1->AbVisibility = valintregle(pPRule, pAbb1->AbElement, 
+	  pAbb1->AbVisibility = IntegerRule(pPRule, pAbb1->AbElement, 
 					    pAbb1->AbDocView, &appl, &unit, pAttr);
 	  if (!appl && pAbb1->AbElement->ElParent == NULL)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3397,7 +3397,7 @@ boolean Applique(pPRule, pSchP, pAb, pDoc, pAttr)
 	    }
 	  break;
 	case PtDepth:
-	  pAbb1->AbDepth = valintregle(pPRule, pAbb1->AbElement, pAbb1->AbDocView, 
+	  pAbb1->AbDepth = IntegerRule(pPRule, pAbb1->AbElement, pAbb1->AbDocView, 
 				      &appl, &unit, pAttr);
 	  if (!appl && pAbb1->AbElement->ElParent == NULL)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3407,7 +3407,7 @@ boolean Applique(pPRule, pSchP, pAb, pDoc, pAttr)
 	    }
 	  break;
 	case PtFillPattern:
-	  pAbb1->AbFillPattern = valintregle(pPRule, pAbb1->AbElement, 
+	  pAbb1->AbFillPattern = IntegerRule(pPRule, pAbb1->AbElement, 
 					 pAbb1->AbDocView, &appl, &unit, pAttr);
 	  if (!appl && pAbb1->AbElement->ElParent == NULL)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3417,7 +3417,7 @@ boolean Applique(pPRule, pSchP, pAb, pDoc, pAttr)
 	    }
 	  break;
 	case PtBackground:
-	  pAbb1->AbBackground = valintregle(pPRule, pAbb1->AbElement, 
+	  pAbb1->AbBackground = IntegerRule(pPRule, pAbb1->AbElement, 
 					    pAbb1->AbDocView, &appl, &unit, pAttr);
 	  if (!appl && pAbb1->AbElement->ElParent == NULL)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3427,7 +3427,7 @@ boolean Applique(pPRule, pSchP, pAb, pDoc, pAttr)
 	    }
 	  break;
 	case PtForeground:
-	  pAbb1->AbForeground = valintregle(pPRule, pAbb1->AbElement, 
+	  pAbb1->AbForeground = IntegerRule(pPRule, pAbb1->AbElement, 
 					    pAbb1->AbDocView, &appl, &unit, pAttr);
 	  if (!appl && pAbb1->AbElement->ElParent == NULL)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3564,7 +3564,7 @@ boolean Applique(pPRule, pSchP, pAb, pDoc, pAttr)
 	  break;
 	case PtSize:
 	  /* on applique la regle de taille */
-	  pAbb1->AbSize = valintregle(pPRule, pAbb1->AbElement, 
+	  pAbb1->AbSize = IntegerRule(pPRule, pAbb1->AbElement, 
 					pAbb1->AbDocView, &appl, &unit, pAttr);
 	  if (appl)
 	    pAbb1->AbSizeUnit = unit;
@@ -3578,7 +3578,7 @@ boolean Applique(pPRule, pSchP, pAb, pDoc, pAttr)
 	      }
 	  break;
 	case PtIndent:
-	  pAbb1->AbIndent = valintregle(pPRule, pAbb1->AbElement, 
+	  pAbb1->AbIndent = IntegerRule(pPRule, pAbb1->AbElement, 
 					pAbb1->AbDocView, &appl, &unit, pAttr);
 	  pAbb1->AbIndentUnit = unit;
 	  if (!appl && pAbb1->AbElement->ElParent == NULL)
@@ -3589,7 +3589,7 @@ boolean Applique(pPRule, pSchP, pAb, pDoc, pAttr)
 	    }
 	  break;
 	case PtLineSpacing:
-	  pAbb1->AbLineSpacing = valintregle(pPRule, pAbb1->AbElement, 
+	  pAbb1->AbLineSpacing = IntegerRule(pPRule, pAbb1->AbElement, 
 					    pAbb1->AbDocView, &appl, &unit, pAttr);
 	  pAbb1->AbLineSpacingUnit = unit;
 	  if (!appl && pAbb1->AbElement->ElParent == NULL)
@@ -3601,7 +3601,7 @@ boolean Applique(pPRule, pSchP, pAb, pDoc, pAttr)
 	    }
 	  break;
 	case PtLineWeight:
-	  pAbb1->AbLineWeight = valintregle(pPRule, pAbb1->AbElement, 
+	  pAbb1->AbLineWeight = IntegerRule(pPRule, pAbb1->AbElement, 
 					    pAbb1->AbDocView, &appl, &unit, pAttr);
 	  pAbb1->AbLineWeightUnit = unit;
 	  if (!appl && pAbb1->AbElement->ElParent == NULL)
@@ -3779,7 +3779,7 @@ boolean Applique(pPRule, pSchP, pAb, pDoc, pAttr)
           case FnCopy:
 	      if (!pAb->AbElement->ElHolophrast)
 	        /* on n'applique pas la regle copie a un element holophraste'*/
-	        applCopie(pDoc, pPRule, pAb, TRUE);
+	        ApplyCopy(pDoc, pPRule, pAb, TRUE);
 	      break;
 	  case FnContentRef:
 	      ConstantCopy(pPRule->PrPresBox[0], pSchP, pAb);
@@ -3804,7 +3804,7 @@ boolean Applique(pPRule, pSchP, pAb, pDoc, pAttr)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	ChReglePres	Cherche si la regle de presentation specifique	| */
+/* |	SearchPresRule	Cherche si la regle de presentation specifique	| */
 /* |		de type ruleType concernant la vue de numero view existe	| */
 /* |		pour l'element pEl.					| */
 /* |		Retourne un pointeur sur cette regle si elle existe,	| */
@@ -3815,9 +3815,9 @@ boolean Applique(pPRule, pSchP, pAb, pDoc, pAttr)
 /* |		nouvellement creee ou non.				| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrPRule ChReglePres(PtrElement pEl, PRuleType ruleType, boolean *isNew, PtrDocument pDoc, int view)
+PtrPRule SearchPresRule(PtrElement pEl, PRuleType ruleType, boolean *isNew, PtrDocument pDoc, int view)
 #else /* __STDC__ */
-PtrPRule ChReglePres(pEl, ruleType, isNew, pDoc, view)
+PtrPRule SearchPresRule(pEl, ruleType, isNew, pDoc, view)
 	PtrElement pEl;
 	PRuleType ruleType;
 	boolean *isNew;
@@ -3875,15 +3875,15 @@ PtrPRule ChReglePres(pEl, ruleType, isNew, pDoc, view)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	PavReaff indique dans le contexte du document que le pave pAb	| */
+/* |	RedispAbsBox indique dans le contexte du document que le pave pAb	| */
 /* |		est a reafficher					| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void PavReaff(PtrAbstractBox pAb, PtrDocument pDoc)
+void RedispAbsBox(PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else /* __STDC__ */
-void PavReaff(pAb, pDoc)
+void RedispAbsBox(pAb, pDoc)
 	PtrAbstractBox pAb;
 	PtrDocument pDoc;
 #endif /* __STDC__ */
@@ -3893,17 +3893,17 @@ void PavReaff(pAb, pDoc)
   
   if (!AssocView(pAb->AbElement))
     pDoc->DocViewModifiedAb[pAb->AbDocView - 1] =
-      Englobant(pAb, pDoc->DocViewModifiedAb[pAb->AbDocView-1]);
+      Enclosing(pAb, pDoc->DocViewModifiedAb[pAb->AbDocView-1]);
   else
     pDoc->DocAssocModifiedAb[pAb->AbElement->ElAssocNum - 1] =
-      Englobant(pAb,pDoc->DocAssocModifiedAb[pAb->
+      Enclosing(pAb,pDoc->DocAssocModifiedAb[pAb->
 					  AbElement->ElAssocNum-1]);
 }
 
 
 
 /* ---------------------------------------------------------------------- */
-/* |	NouvDimImage fixe les dimensions d'un pave-image  lorsque	| */
+/* |	NewDimPicture fixe les dimensions d'un pave-image  lorsque	| */
 /* |		le driver d'image ne sait pas donner une dimension a	| */
 /* |		cette image. C'est le cas lorsqu'on ne tient pas compte	| */
 /* |		de la cropping frame  (pour le CGM, par exemple.)	| */
@@ -3914,9 +3914,9 @@ void PavReaff(pAb, pDoc)
 /* |		contenu comme si c'etait une dimension fixe.		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void NouvDimImage(PtrAbstractBox pAb)
+void NewDimPicture(PtrAbstractBox pAb)
 #else /* __STDC__ */
-void NouvDimImage(pAb)
+void NewDimPicture(pAb)
 	PtrAbstractBox pAb;
 #endif /* __STDC__ */
 {
@@ -3956,7 +3956,7 @@ void NouvDimImage(pAb)
   /* traite le changement de largeur */
   
   /* cherche d'abord la regle de dimension qui s'applique a l'element */
-  pRStd = ReglePEl(pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtWidth, FALSE, TRUE, &pAttr);
+  pRStd = GlobalSearchRulepEl(pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtWidth, FALSE, TRUE, &pAttr);
   /* on ne s'occupe que du cas ou l'image est dimensionnee par le contenu */
   ok = FALSE;
   if (!pRStd->PrDimRule.DrPosition)
@@ -3968,7 +3968,7 @@ void NouvDimImage(pAb)
   if (ok)
     {
       /* cherche si l'element a deja une regle de largeur specifique */
-      pPRuleDimH = ChReglePres(pEl, PtWidth, &new, pDoc, view);
+      pPRuleDimH = SearchPresRule(pEl, PtWidth, &new, pDoc, view);
       if (new)
 	/* on a cree' une regle de largeur pour l'element */
 	{
@@ -3991,7 +3991,7 @@ void NouvDimImage(pAb)
   /* traite le changement de hauteur de la boite */
   
   /* cherche d'abord la regle de dimension qui s'applique a l'element */
-  pRStd = ReglePEl(pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtHeight, FALSE, TRUE, &pAttr);
+  pRStd = GlobalSearchRulepEl(pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtHeight, FALSE, TRUE, &pAttr);
   /* on ne s'occupe que du cas ou l'image est dimensionnee par le contenu */
   ok = FALSE;
   if (!pRStd->PrDimRule.DrPosition)
@@ -4003,7 +4003,7 @@ void NouvDimImage(pAb)
   if (ok)
     {
       /* cherche si l'element a deja une regle de hauteur specifique */
-      pPRuleDimV = ChReglePres(pEl, PtHeight, &new, pDoc, view);
+      pPRuleDimV = SearchPresRule(pEl, PtHeight, &new, pDoc, view);
       if (new)
 	/* on a cree' une regle de hauteur pour l'element */
 	{
@@ -4054,21 +4054,21 @@ void NouvDimImage(pAb)
 		  /* applique la nouvelle regle specifique Horizontale */
 		  if (pPRuleDimH != NULL)
 #ifdef __COLPAGE__
-		    if (Applique(pPRuleDimH, pSPR, pAbb, pDoc, pAttr, &bool))
+		    if (ApplyRule(pPRuleDimH, pSPR, pAbb, pDoc, pAttr, &bool))
 #else /* __COLPAGE__ */
-		    if (Applique(pPRuleDimH, pSPR, pAbb, pDoc, pAttr))
+		    if (ApplyRule(pPRuleDimH, pSPR, pAbb, pDoc, pAttr))
 #endif /* __COLPAGE__ */
 		      pAbb->AbWidthChange = TRUE;
 		  /* applique la nouvelle regle specifique Verticale */
 		  if (pPRuleDimV != NULL)
 #ifdef __COLPAGE__
-		    if (Applique(pPRuleDimV, pSPR, pAbb, pDoc, pAttr, &bool))
+		    if (ApplyRule(pPRuleDimV, pSPR, pAbb, pDoc, pAttr, &bool))
 #else /* __COLPAGE__ */
-		    if (Applique(pPRuleDimV, pSPR, pAbb, pDoc, pAttr))
+		    if (ApplyRule(pPRuleDimV, pSPR, pAbb, pDoc, pAttr))
 #endif /* __COLPAGE__ */
 		      pAbb->AbHeightChange = TRUE;
 		  
-		  PavReaff(pAbb, pDoc); /* indique le pave a reafficherv */
+		  RedispAbsBox(pAbb, pDoc); /* indique le pave a reafficherv */
 		  if (!AssocView(pEl))
 		    frame[viewDoc -1] = pDoc->DocViewFrame[viewDoc -1];
 		  else

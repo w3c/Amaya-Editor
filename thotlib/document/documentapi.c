@@ -121,14 +121,14 @@ char               *documentName;
 	     /* charge le schema de structure */
 	     GetSchStruct (&pDoc->DocSSchema);
 	     pDoc->DocSSchema->SsExtension = FALSE;
-	     if (!RdSchStruct (structureSchema, pDoc->DocSSchema) ||
+	     if (!ReadStructureSchema (structureSchema, pDoc->DocSSchema) ||
 		 pDoc->DocSSchema->SsExtension)
 		/* failure while reading the structure schema or while loading
                    a schema extension */
 	       {
 		  FreeSStruct (pDoc->DocSSchema);
 		  pDoc->DocSSchema = NULL;
-		  LibDocument (&pDoc);
+		  UnloadDocument (&pDoc);
 		  TtaError (ERR_cannot_read_struct_schema);
 	       }
 	     else
@@ -137,7 +137,7 @@ char               *documentName;
 		  /* The structure schema is translated into the user language */
 		  ConfigTranslateSSchema (pDoc->DocSSchema);
 #ifndef NODISPLAY
-		  InitSchAppli (pDoc->DocSSchema);
+		  InitApplicationSchema (pDoc->DocSSchema);
 #endif
 		  /* One create the internal representation of an empty document */
 		  pDoc->DocRootElement = NewSubtree (pDoc->DocSSchema->SsRootElem,
@@ -146,7 +146,7 @@ char               *documentName;
 		  RemoveExcludedElem (&pDoc->DocRootElement);
 		  if (pDoc->DocRootElement == NULL)
 		    {
-		       LibDocument (&pDoc);
+		       UnloadDocument (&pDoc);
 		       TtaError (ERR_empty_document);
 		    }
 		  else
@@ -244,7 +244,7 @@ int                 accessMode;
 	     if (!ok)
 		/* acces failure to an objectpivot */
 	       {
-		  LibDocument (&pDoc);
+		  UnloadDocument (&pDoc);
 		  TtaError (ERR_cannot_open_pivot_file);
 	       }
 	     else
@@ -345,7 +345,7 @@ char               *documentName;
 		       strncpy (pDoc->DocIdent, documentName, MAX_DOC_IDENT_LEN);
 #ifndef NODISPLAY
 		       /* changes the title of frames */
-		       changenomdoc (pDoc, documentName);
+		       ChangeDocumentName (pDoc, documentName);
 #endif
 		    }
 	       }
@@ -459,7 +459,7 @@ Document            document;
 		CloseDocumentView (pDoc, numassoc, TRUE, FALSE);
 	     }
 #endif
-	LibDocument (&LoadedDocument[document - 1]);
+	UnloadDocument (&LoadedDocument[document - 1]);
      }
 }
 
@@ -560,7 +560,7 @@ Document            document;
 		CloseDocumentView (pDoc, numassoc, TRUE, FALSE);
 	     }
 #endif
-	LibDocument (&LoadedDocument[document - 1]);
+	UnloadDocument (&LoadedDocument[document - 1]);
      }
 }
 
@@ -849,7 +849,7 @@ char               *presentationName;
      }
    else
      {
-	natureRule = CreeNature (natureName, presentationName,
+	natureRule = CreateNature (natureName, presentationName,
 				  (PtrSSchema) schema);
 	if (natureRule == 0)
 	  {
@@ -1072,7 +1072,7 @@ int                *removedAttributes;
 	     if (curExtension->SsNextExtens != NULL)
 		curExtension->SsNextExtens->SsPrevExtens = previousSSchema;
 #ifndef NODISPLAY
-	     SupprSchPrs (curExtension->SsPSchema, curExtension);
+	     FreePresentationSchema (curExtension->SsPSchema, curExtension);
 #endif
 	     FreeSStruct (curExtension);
 	  }
@@ -1151,14 +1151,14 @@ char               *presentationName;
 	     if (pDoc->DocSSchema->SsPSchema != NULL)
 		/* a presentation schema already exist. One release it */
 	       {
-		  SupprSchPrs (pDoc->DocSSchema->SsPSchema, pDoc->DocSSchema);
+		  FreePresentationSchema (pDoc->DocSSchema->SsPSchema, pDoc->DocSSchema);
 		  pDoc->DocSSchema->SsPSchema = NULL;
 	       }
 	     /* Load the presentation schema */
 	     if (pDoc->DocSSchema->SsExtension)
-		/* to avoid that RdSchPres reloades the structure schema */
+		/* to avoid that ReadPresentationSchema reloades the structure schema */
 		pDoc->DocSSchema->SsRootElem = 1;
-	     pDoc->DocSSchema->SsPSchema = LdSchPres (presentationName,
+	     pDoc->DocSSchema->SsPSchema = LoadPresentationSchema (presentationName,
 							 pDoc->DocSSchema);
 	     if (pDoc->DocSSchema->SsPSchema == NULL)
 		/* Failure while loading schema */
@@ -1256,7 +1256,7 @@ char               *documentName;
 	else
 	  {
 #ifndef NODISPLAY
-	     changenomdoc (LoadedDocument[document - 1], documentName);
+	     ChangeDocumentName (LoadedDocument[document - 1], documentName);
 #else
 	     strncpy (LoadedDocument[document - 1]->DocDName, documentName, MAX_NAME_LENGTH);
 	     strncpy (LoadedDocument[document - 1]->DocIdent, documentName, MAX_DOC_IDENT_LEN);
@@ -1303,7 +1303,7 @@ int                 accessMode;
      {
 	LoadedDocument[document - 1]->DocReadOnly = (accessMode == 0);
 #ifndef NODISPLAY
-	MajAccessMode (LoadedDocument[document - 1], accessMode);
+	SetAccessMode (LoadedDocument[document - 1], accessMode);
 #endif
      }
 }

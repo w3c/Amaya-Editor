@@ -825,11 +825,11 @@ PtrDocument         pDoc;
 	       {
 		  do
 		    {
-		       /* la procedure Applique modifie pAbb, on le retablit */
+		       /* la procedure ApplyRule modifie pAbb, on le retablit */
 		       pAbb = pAb;
 		       GetDelayedRule (&pRule, &pSPres, &pAbb, &pAttr);
 		       if (pRule != NULL)
-			  Applique (pRule, pSPres, pAbb, pDoc, pAttr, &bool);
+			  ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr, &bool);
 		    }
 		  while (pRule != NULL);
 		  pAb = pAb->AbEnclosing;
@@ -885,11 +885,11 @@ PtrDocument         pDoc;
 		   pAb = pAb->AbEnclosing;
 		do
 		  {
-		     /* la procedure Applique modifie pAb, on le retablit */
+		     /* la procedure ApplyRule modifie pAb, on le retablit */
 		     pAbb = pAb;
 		     GetDelayedRule (&pRule, &pSPres, &pAbb, &pAttr);
 		     if (pRule != NULL)
-			Applique (pRule, pSPres, pAbb, pDoc, pAttr);
+			ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr);
 		  }
 		while (pRule != NULL);
 	     }
@@ -1328,7 +1328,7 @@ int                *viewSch;
 		     {
 			pRef = pRef->RdPrevious;
 			if (pRef->RdElement != NULL)
-			   if (!DansTampon (pRef->RdElement))
+			   if (!IsASavedElement (pRef->RdElement))
 			      if (pRef->RdElement->ElAssocNum == 0)
 				 /* il y a une reference precedente qui */
 				 /* n'est pas dans le tampon */
@@ -1347,7 +1347,7 @@ int                *viewSch;
 			   else
 			      pElRet = (*pElRef)->ElReference->RdReferred->ReReferredElem;
 			   if (pElRet != NULL)
-			      if (DansTampon (pElRet))
+			      if (IsASavedElement (pElRet))
 				 pElRet = NULL;
 			   /* l'element reference' est */
 			   /* dans le buffer couper-coller */
@@ -1479,7 +1479,7 @@ boolean             completeCreator;
 			     /* et le pave cree herite du createur, on */
 			     /* differe l'application de la regle */
 			     Delay (pRV, pSchP, pAb, NULL, pAb);
-			  else if (!Applique (pRV, pSchP, pAb, pDoc, NULL, &bool))
+			  else if (!ApplyRule (pRV, pSchP, pAb, pDoc, NULL, &bool))
 			     /* on n'a pas pu appliquer la regle, on */
 			     /* l'appliquera lorsque le pave pere */
 			     /* sera  termine' */
@@ -1516,7 +1516,7 @@ boolean             completeCreator;
 	     pAb1 = pAb;
 	     GetDelayedRule (&pR, &pSP, &pAb1, &pA);
 	     if (pR != NULL)
-		if (!Applique (pR, pSP, pAb1, pDoc, pA, &bool))
+		if (!ApplyRule (pR, pSP, pAb1, pDoc, pA, &bool))
 		   Delay (pR, pSP, pAb1, pA, pAb);
 	  }
 	while (pR != NULL);
@@ -1532,7 +1532,7 @@ boolean             completeCreator;
 	       }
 	  }
 	/* met a jour le volume libre restant dans la view */
-	MajVolLibre (pAb, pDoc);
+	UpdateFreeVol (pAb, pDoc);
      }
 }
 #endif /* __COLPAGE__ */
@@ -1702,7 +1702,7 @@ boolean             completeCreator;
 	     if (view == viewSch)
 	       {
 		  /* c'est la regle de la vue traitee */
-		  vis = valintregle (pR, pEl, viewNb, &ok, &unit, NULL);
+		  vis = IntegerRule (pR, pEl, viewNb, &ok, &unit, NULL);
 		  /* si la regle de visibilite n'a pas pu etre appliquee, */
 		  /* on prend la visibilite du pave de l'element createur */
 		  if (!ok)
@@ -2227,7 +2227,7 @@ boolean             completeCreator;
 		       }
 		     else
 			/* on a trouve' dans la page une reference */
-		     if (DansTampon (pER))
+		     if (IsASavedElement (pER))
 			/* l'element reference' est dans le buffer des elements */
 			/* coupe's, il n'apparait donc pas dans la boite a creer */
 			/* et on cherche un autre element reference' dans la page */
@@ -2308,7 +2308,7 @@ boolean             completeCreator;
 	     if (view == viewSch)
 	       {
 		  /* c'est la regle de la vue traitee */
-		  vis = valintregle (pR, pEl, viewNb, &ok, &unit, NULL);
+		  vis = IntegerRule (pR, pEl, viewNb, &ok, &unit, NULL);
 		  /* si la regle de visibilite n'a pas pu etre appliquee, */
 		  /* on prend la visibilite du pave de l'element createur */
 		  if (!ok)
@@ -2657,7 +2657,7 @@ boolean             completeCreator;
 				       /* et le pave cree herite du createur, on */
 				       /* differe l'application de la regle */
 				       Delay (pRV, pSchP, pAbbCreated, NULL, pAbbCreated);
-				    else if (!Applique (pRV, pSchP, pAbbCreated, pDoc, NULL))
+				    else if (!ApplyRule (pRV, pSchP, pAbbCreated, pDoc, NULL))
 				       /* on n'a pas pu appliquer la regle, on */
 				       /* l'appliquera lorsque le pave pere */
 				       /* sera  termine' */
@@ -2698,7 +2698,7 @@ boolean             completeCreator;
 				      stop = TRUE;
 				   else
 				      /* on a trouve' une reference */
-				   if (!DansTampon (pER))
+				   if (!IsASavedElement (pER))
 				      /* on ne traite pas l'element reference' s'il fait */
 				      /* partie des elements qui ont ete coupe's */
 				      if (pER->ElAbstractBox[viewNb - 1] == NULL)
@@ -2802,7 +2802,7 @@ boolean             completeCreator;
 		       pAbb1 = pAbbCreated;
 		       GetDelayedRule (&pR, &pSP, &pAbb1, &pA);
 		       if (pR != NULL)
-			  if (!Applique (pR, pSP, pAbb1, pDoc, pA))
+			  if (!ApplyRule (pR, pSP, pAbb1, pDoc, pA))
 			     Delay (pR, pSP, pAbb1, pA, pAbbCreated);
 		    }
 		  while (pR != NULL);
@@ -2821,7 +2821,7 @@ boolean             completeCreator;
 			 }
 		    }
 		  /* met a jour le volume libre restant dans la vue */
-		  MajVolLibre (pAbbCreated, pDoc);
+		  UpdateFreeVol (pAbbCreated, pDoc);
 		  if (pEl->ElTypeNumber == PageBreak + 1)
 		     /* c'est une boite de haut ou bas de page. Sa creation */
 		     /* affecte peut-etre les autres boites de haut ou bas de page */
@@ -2829,11 +2829,11 @@ boolean             completeCreator;
 		     if (InAssocBox && !pAbbCreated->AbEnclosing->AbPresentationBox)
 		       {
 			  pAbbCreated->AbEnclosing->AbPresentationBox = TRUE;
-			  NouvRfPave (pAbbCreated, pAbbCreated, &pAbb1, pDoc);
+			  ApplyRefAbsBoxNew (pAbbCreated, pAbbCreated, &pAbb1, pDoc);
 			  pAbbCreated->AbEnclosing->AbPresentationBox = FALSE;
 		       }
 		     else
-			NouvRfPave (pAbbCreated, pAbbCreated, &pAbb1, pDoc);
+			ApplyRefAbsBoxNew (pAbbCreated, pAbbCreated, &pAbb1, pDoc);
 
 		  /* si c'est une boite contenant une image, choisit le mode */
 		  /* de presentation de l'image en accord avec les regle de */
@@ -3135,8 +3135,8 @@ PtrPRule        pRule;
 		     /* modifie les paves environnant */
 		     /* qui dependent du pave cree */
 		     /* TODO : si Rep est vrai, plusieurs paves ont ete crees */
-		     /* faut-il appeler NouvRfPave dans CrAbsBoxesPres ?? */
-		     NouvRfPave (*pAbbCreated, *pAbbCreated, &pAbbR, pDoc);
+		     /* faut-il appeler ApplyRefAbsBoxNew dans CrAbsBoxesPres ?? */
+		     ApplyRefAbsBoxNew (*pAbbCreated, *pAbbCreated, &pAbbR, pDoc);
 		     /* passe a la regle suivante */
 		  }
 	     }
@@ -3208,7 +3208,7 @@ PtrDocument         pDoc;
 			/* paves de presentation a` cette extremite. */
 			/* cherche la 1ere regle de presentation associee a ce type */
 			/* d'element */
-			ChSchemaPres (pAb->AbElement, &pSchP, &index, &pSchS);
+			SearchPresSchema (pAb->AbElement, &pSchP, &index, &pSchS);
 			pRule = pSchP->PsElemPRule[index - 1];
 
 			/* traite les regles de creation associees au type de l'element */
@@ -3840,10 +3840,10 @@ boolean             inheritRule;
 					queuePR[i - 1] = NULL;
 			    /* applique la regle */
 #ifdef __COLPAGE__
-			    if (!Applique (pRuleToApply, pSchP, pNewAbbox, pDoc, pAttr,
+			    if (!ApplyRule (pRuleToApply, pSchP, pNewAbbox, pDoc, pAttr,
 					   &bool))
 #else  /* __COLPAGE__ */
-			    if (!Applique (pRuleToApply, pSchP, pNewAbbox, pDoc, pAttr))
+			    if (!ApplyRule (pRuleToApply, pSchP, pNewAbbox, pDoc, pAttr))
 #endif /* __COLPAGE__ */
 
 			       /* la regle n'a pas pu etre appliquee, on l'appliquera */
@@ -3948,7 +3948,7 @@ boolean             inheritRule;
 					      pAttr->AeAttrSSchema))
 			  {
 			     /* regle trouvee, on l'evalue */
-			     *vis = valintregle (pR, pEl, viewNb, ok, &unit, pAttr);
+			     *vis = IntegerRule (pR, pEl, viewNb, ok, &unit, pAttr);
 			     useView1 = FALSE;
 			     stop = TRUE;
 			  }
@@ -3965,7 +3965,7 @@ boolean             inheritRule;
 		if (useView1 && pRuleView1 != NULL)
 		   /* on n'a pas trouve de regle specifique pour la vue view */
 		   /* On utilise la regle de visibilite de la vue 1 si elle existe */
-		   *vis = valintregle (pRuleView1, pEl, viewNb, ok, &unit, pAttr);
+		   *vis = IntegerRule (pRuleView1, pEl, viewNb, ok, &unit, pAttr);
 	     }
 	if (pHd == NULL)
 	  {
@@ -4049,10 +4049,10 @@ PtrPSchema         *pSchPPage;
 	   /* s'il y a une regle de visibilite pour cette vue, on */
 	   /* la prend */
 	   if (pRegleV != NULL)
-	      *vis = valintregle (pRegleV, pEl, viewNb, &ok, &unit, NULL);
+	      *vis = IntegerRule (pRegleV, pEl, viewNb, &ok, &unit, NULL);
 	/* sinon, on prend celle de la vue 1 */
 	   else
-	      *vis = valintregle (pRule, pEl, viewNb, &ok, &unit, NULL);
+	      *vis = IntegerRule (pRule, pEl, viewNb, &ok, &unit, NULL);
      }
 
    /* cherche si les attributs herites par l'element modifient la */
@@ -4271,7 +4271,7 @@ PtrPSchema         *pSchPPage;
 
 
 /* ---------------------------------------------------------------------- */
-/* | ApplPresRules   Applique les regles de presentation au pave cree  | */
+/* | ApplPresRules   ApplyRule les regles de presentation au pave cree  | */
 /* |                                                                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
@@ -4346,9 +4346,9 @@ PtrAbstractBox             pNewAbbox;
 			if (pRuleView == NULL)
 			   pRuleView = pRule;
 #ifdef __COLPAGE__
-			if (!Applique (pRuleView, pSchP, pNewAbbox, pDoc, NULL, &bool))
+			if (!ApplyRule (pRuleView, pSchP, pNewAbbox, pDoc, NULL, &bool))
 #else  /* __COLPAGE__ */
-			if (!Applique (pRuleView, pSchP, pNewAbbox, pDoc, NULL))
+			if (!ApplyRule (pRuleView, pSchP, pNewAbbox, pDoc, NULL))
 #endif /* __COLPAGE__ */
 			   WaitingRule (pRuleView, pNewAbbox, pSchP, NULL,
 				    queuePA, queuePS, queuePP,
@@ -4358,7 +4358,7 @@ PtrAbstractBox             pNewAbbox;
      }
    while (pRule != NULL);
 
-   /* Applique les regles de presentation pour ce type d'element contenues */
+   /* ApplyRule les regles de presentation pour ce type d'element contenues */
    /* dans les schemas de presentation additionnels du document */
    /* On n'applique les schemas additionnels que pour la vue principale d'un */
    /* document */
@@ -4381,9 +4381,9 @@ PtrAbstractBox             pNewAbbox;
 			  /* les conditions d'application de la regle sont satisfaites, */
 
 #ifdef __COLPAGE__
-			  if (!Applique (pRule, pSchPadd, pNewAbbox, pDoc, NULL, &bool))
+			  if (!ApplyRule (pRule, pSchPadd, pNewAbbox, pDoc, NULL, &bool))
 #else  /* __COLPAGE__ */
-			  if (!Applique (pRule, pSchPadd, pNewAbbox, pDoc, NULL))
+			  if (!ApplyRule (pRule, pSchPadd, pNewAbbox, pDoc, NULL))
 #endif /* __COLPAGE__ */
 			     WaitingRule (pRuleView, pNewAbbox, pSchP, NULL, queuePA, queuePS,
 				      queuePP, queuePR, lqueue);
@@ -4394,7 +4394,7 @@ PtrAbstractBox             pNewAbbox;
 	  }
      }
 
-   /* Applique les regles de presentation heritees des attributs  */
+   /* ApplyRule les regles de presentation heritees des attributs  */
    /* poses sur les elements englobants s'il y a heritage, */
    /* alors la table a deja ete calcule precedemment */
    /* on remet l'affectation pour decouper le code */
@@ -4412,7 +4412,7 @@ PtrAbstractBox             pNewAbbox;
 				      forward, lqueue, queuePR,
 				      queuePP, queuePS, queuePA,
 				      pNewAbbox, TRUE);
-   /* Applique les regles de presentation des attributs de l'element. */
+   /* ApplyRule les regles de presentation des attributs de l'element. */
    pAttr = pEl->ElFirstAttr;	/* 1er attribut de l'element */
    if (pNewAbbox != NULL)
       while (pAttr != NULL)	/* boucle sur les attributs de l'element */
@@ -4425,7 +4425,7 @@ PtrAbstractBox             pNewAbbox;
 	   pAttr = pAttr->AeNext;
 	}
 
-   /* Applique les regles de presentation specifiques associees a cet */
+   /* ApplyRule les regles de presentation specifiques associees a cet */
    /* element */
    pR = pEl->ElFirstPRule;
    while (pR != NULL)
@@ -4455,9 +4455,9 @@ PtrAbstractBox             pNewAbbox;
 			   pAttr = pAttr->AeNext;
 		  }
 #ifdef __COLPAGE__
-		if (!Applique (pR, pSchP, pNewAbbox, pDoc, pAttr, &bool))
+		if (!ApplyRule (pR, pSchP, pNewAbbox, pDoc, pAttr, &bool))
 #else  /* __COLPAGE__ */
-		if (!Applique (pR, pSchP, pNewAbbox, pDoc, pAttr))
+		if (!ApplyRule (pR, pSchP, pNewAbbox, pDoc, pAttr))
 #endif /* __COLPAGE__ */
 		   WaitingRule (pR, pNewAbbox, pSchP, pAttr, queuePA,
 			    queuePS, queuePP, queuePR, lqueue);
@@ -4745,7 +4745,7 @@ static void Chaine(pAb, pEl, nv, viewSch, pDoc, forward)
                           == PageBreak + 1)
                          && (pP->AbElement
                           == pPa1->AbEnclosing->AbEnclosing->AbElement)))
-		      if (RegleCree(pDoc, pPa1->AbEnclosing, pP) == FnCreateLast)
+		      if (TypeCreatedRule(pDoc, pPa1->AbEnclosing, pP) == FnCreateLast)
 			/* le pave existant doit etre le dernier, on insere */
 			/* le nouveau pave devant lui */
 			{
@@ -4773,7 +4773,7 @@ static void Chaine(pAb, pEl, nv, viewSch, pDoc, forward)
                                   pPa1->AbEnclosing->AbElement)
 			        stop = TRUE;
 			      else
-				if (RegleCree(pDoc, pPa1->AbEnclosing, pP->AbNext) == 
+				if (TypeCreatedRule(pDoc, pPa1->AbEnclosing, pP->AbNext) == 
 				    FnCreateLast)
 				  /* le pave suivant doit etre le dernier */
 				  stop = TRUE;
@@ -4824,7 +4824,7 @@ static void Chaine(pAb, pEl, nv, viewSch, pDoc, forward)
     /* met le contenu de l'element dans le pave, sauf si c'est un */
     /* element de haut ou de bas de page */
     {
-      Contenu(pEl, pAb, pDoc);
+      FillContent(pEl, pAb, pDoc);
       /* ajoute le volume du pave a celui de tous ses englobants */
       if (pPa1->AbVolume > 0)
 	{
@@ -4999,7 +4999,7 @@ static void Attach(pAb, pEl, nv, pDoc)
 		    while (!stop);
 		    if (pP != NULL)
 		      if (pP->AbElement == pPa1->AbEnclosing->AbElement)
-			if (RegleCree(pDoc, pPa1->AbEnclosing, pP) == FnCreateLast)
+			if (TypeCreatedRule(pDoc, pPa1->AbEnclosing, pP) == FnCreateLast)
 			  /* le pave existant doit etre le dernier, on insere */
 			  /* le nouveau pave devant lui */
 			  {
@@ -5017,7 +5017,7 @@ static void Attach(pAb, pEl, nv, pDoc)
 			      else if (pP->AbNext->AbElement != 
 				       pPa1->AbEnclosing->AbElement)
 				stop = TRUE;
-			      else if (RegleCree(pDoc, pPa1->AbEnclosing, pP->AbNext) == 
+			      else if (TypeCreatedRule(pDoc, pPa1->AbEnclosing, pP->AbNext) == 
 				       FnCreateLast)
 				/* le pave suivant doit etre le dernier */
 				stop = TRUE;
@@ -5074,7 +5074,7 @@ static void Attach(pAb, pEl, nv, pDoc)
     /* met le contenu de l'element dans le pave, sauf si c'est un */
     /* element de haut ou de bas de page */
     {
-      Contenu(pEl, pAb, pDoc);
+      FillContent(pEl, pAb, pDoc);
       /* ajoute le volume du pave a celui de tous ses englobants */
       if (pPa1->AbVolume > 0)
 	{
@@ -5225,7 +5225,7 @@ boolean            *complete;
 	if (Creation || ApplyRules)
 	   /* cherche le schema de presentation a appliquer */
 	  {
-	     ChSchemaPres (pEl, &pSchP, &index, &pSchS);
+	     SearchPresSchema (pEl, &pSchP, &index, &pSchS);
 	     /* pRSpec: premiere regle de presentation specifique. */
 	     pRSpec = pSchP->PsElemPRule[index - 1];
 	     /* premiere regle de presentation par defaut */
@@ -5334,7 +5334,7 @@ boolean            *complete;
 			Attach (pNewAbbox, pEl, viewNb, viewSch, pDoc, forward);
 
 		     /* si ce pave modifie la position de paves voisins, on applique */
-		     /* les regles correspondantes : appel de NouvRfPave */
+		     /* les regles correspondantes : appel de ApplyRefAbsBoxNew */
 		     /* y compris dans le cas ou pNewAbbox est un pave corps de page */
 		     if (pNewAbbox != NULL &&
 			 ((pNewAbbox->AbPrevious != NULL &&
@@ -5343,7 +5343,7 @@ boolean            *complete;
 			      !pNewAbbox->AbEnclosing->AbNew)
 			  || (pNewAbbox->AbNext != NULL &&
 			      !pNewAbbox->AbNext->AbNew)))
-			NouvRfPave (pNewAbbox, pNewAbbox, &pAbb, pDoc);	/* pAbb inutilise */
+			ApplyRefAbsBoxNew (pNewAbbox, pNewAbbox, &pAbb, pDoc);	/* pAbb inutilise */
 		     /* si le pave cree est la racine, on met a jour pAbbRoot */
 		     if (pAbbRoot == NULL && pNewAbbox != NULL
 			 && pEl->ElParent == NULL)
@@ -6058,7 +6058,7 @@ boolean            *complete;
 			  if (!crAbsBox)
 			     /* ce n'est pas une regle de creation */
 #ifdef __COLPAGE__
-			     if (!Applique (pRule, pSPres, pAbb, pDoc, pAttr, &bool))
+			     if (!ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr, &bool))
 				/* regles retardees a la racine */
 				/* TODO est-ce necessaire ? */
 			       {
@@ -6070,7 +6070,7 @@ boolean            *complete;
 				  Delay (pRule, pSPres, pAbb, pAttr, pAb);
 			       }
 #else  /* __COLPAGE__ */
-			     if (!Applique (pRule, pSPres, pAbb, pDoc, pAttr))
+			     if (!ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr))
 				Delay (pRule, pSPres, pAbb, pAttr, pAbb);
 #endif /* __COLPAGE__ */
 		       }
@@ -6110,7 +6110,7 @@ boolean            *complete;
 				    {
 				       if (pRuleView == NULL)
 					  pRuleView = pRule;
-				       if (!Applique (pRuleView, pSchP, pNewAbbox, pDoc, NULL, &bool))
+				       if (!ApplyRule (pRuleView, pSchP, pNewAbbox, pDoc, NULL, &bool))
 					  WaitingRule (pRuleView, pNewAbbox, pSchP, NULL,
 						   queuePA, queuePS, queuePP,
 						   queuePR, &lqueue);
@@ -6176,7 +6176,7 @@ boolean            *complete;
 				  pAbb1 = CrAbsBoxesPres (pAbb->AbElement, pDoc, pRule,
 					 pAbb->AbElement->ElStructSchema, pAttr,
 					       viewNb, pSPres, FALSE, FALSE);
-			       else if (!Applique (pRule, pSPres, pAbb, pDoc, pAttr, &bool))
+			       else if (!ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr, &bool))
 				  /* cette regle n'a pas pu etre appliquee           */
 				  /* c'est une regle correspondant a un attribut, on */
 				  /* l'appliquera lorsque l'englobant sera complete   */
@@ -6212,7 +6212,7 @@ boolean            *complete;
 		     pPRP = pAbb;
 		     GetDelayedRule (&pRule, &pSPres, &pAbb, &pAttr);
 		     if (pRule != NULL)
-			if (!Applique (pRule, pSPres, pAbb, pDoc, pAttr))
+			if (!ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr))
 			   /* cette regle n'a pas pu etre appliquee           */
 			   /* c'est une regle correspondant a un attribut, on */
 			   /* l'appliquera lorsque l'englobant sera complete   */

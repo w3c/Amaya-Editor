@@ -851,7 +851,7 @@ PtrExternalDoc      *pDE;
    pDo1 = *pDE;
    memset (pDo1, 0, sizeof (ExternalDoc));
    pDo1->EdNext = NULL;
-   NulIdentDoc (&pDo1->EdDocIdent);
+   ClearDocIdent (&pDo1->EdDocIdent);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -961,7 +961,7 @@ PtrOutReference     *pRS;
    memset (pRs1, 0, sizeof (OutReference));
    pRs1->OrNext = NULL;
    pRs1->OrLabel[0] = '\0';
-   NulIdentDoc (&pRs1->OrDocIdent);
+   ClearDocIdent (&pRs1->OrDocIdent);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1014,8 +1014,8 @@ PtrChangedReferredEl     *pER;
    pEr1->CrNext = NULL;
    pEr1->CrOldLabel[0] = '\0';
    pEr1->CrNewLabel[0] = '\0';
-   NulIdentDoc (&pEr1->CrOldDocument);
-   NulIdentDoc (&pEr1->CrNewDocument);
+   ClearDocIdent (&pEr1->CrOldDocument);
+   ClearDocIdent (&pEr1->CrNewDocument);
    pEr1->CrReferringDoc = NULL;
 }
 
@@ -1068,7 +1068,7 @@ PtrEnteringReferences    *pRE;
    memset (pRe1, 0, sizeof (RefEntrantes));
    pRe1->ErNext = NULL;
    pRe1->ErFirstReferredEl = NULL;
-   NulIdentDoc (&pRe1->ErDocIdent);
+   ClearDocIdent (&pRe1->ErDocIdent);
    pRe1->ErFileName[0] = '\0';
 }
 
@@ -1122,7 +1122,7 @@ PtrReferenceChange     *pFRC;
    memset (pFrc1, 0, sizeof (ReferenceChange));
    pFrc1->RcNext = NULL;
    pFrc1->RcFirstChange = NULL;
-   NulIdentDoc (&pFrc1->RcDocIdent);
+   ClearDocIdent (&pFrc1->RcDocIdent);
    pFrc1->RcFileName[0] = '\0';
 }
 
@@ -1279,7 +1279,7 @@ PtrDocument        *pDoc;
 	pDo1->DocViewModifiedAb[i] = NULL;
      }
    pDo1->DocDName[0] = '\0';
-   NulIdentDoc (&pDo1->DocIdent);
+   ClearDocIdent (&pDo1->DocIdent);
    pDo1->DocDirectory[0] = '\0';
    pDo1->DocSchemasPath[0] = '\0';
    pDo1->DocBackUpInterval = 0;

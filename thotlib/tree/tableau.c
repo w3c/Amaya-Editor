@@ -133,7 +133,7 @@ PtrDocument         SelDoc;
 		     if (pAttr->AeAttrReference != NULL
 			 && pAttr->AeAttrReference->RdReferred != NULL)
 		       {
-			  SelectEl (SelDoc, pAttr->AeAttrReference->RdReferred->ReReferredElem, TRUE, TRUE);
+			  SelectElement (SelDoc, pAttr->AeAttrReference->RdReferred->ReReferredElem, TRUE, TRUE);
 			  return TRUE;
 		       }
 		  }
@@ -219,9 +219,9 @@ PtrDocument         pDoc;
    if (TypeHasException (EXC_ID_Tableau, pEl->ElTypeNumber, pEl->ElStructSchema)
    && pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Type_Tableau, pEl->ElStructSchema))
      {
-	DetrPaves (pEl, pDoc, FALSE);
+	DestroyAbsBoxes (pEl, pDoc, FALSE);
 	AbstractImageUpdated (pDoc);
-	CreeTousPaves (pEl, pDoc);
+	CreateAllAbsBoxesOfEl (pEl, pDoc);
 	AbstractImageUpdated (pDoc);
      }
 
@@ -608,7 +608,7 @@ PtrDocument         pDoc;
    if (pEl->ElFirstChild != NULL)
       Tableau_MetAttrTitreColonne (pEl->ElFirstChild, pDoc);
    /* cree les paves de l'element */
-   CreeTousPaves (pEl, pDoc);
+   CreateAllAbsBoxesOfEl (pEl, pDoc);
 
    /* remonte a l'element En_Tetes */
    NType = GetElemWithException (EXC_ID_En_Tetes, pEl->ElStructSchema);
@@ -708,7 +708,7 @@ PtrDocument         pDoc;
 		Tableau_MetAttrCellule (pNCell, pEl, pDoc);
 		/* traite les attributs requis */
 		AttachMandatoryAttributes (pNCell, pDoc);
-		CreeTousPaves (pNCell, pDoc);
+		CreateAllAbsBoxesOfEl (pNCell, pDoc);
 	     }
      }
 }
@@ -986,7 +986,7 @@ PtrDocument         pDoc;
 	/* met les attributs sur le Titre_colonne_comp */
 	Tableau_MetAttrTitreColonne (pEl->ElFirstChild, pDoc);
 	/* cree les paves de l'element */
-	CreeTousPaves (pEl, pDoc);
+	CreateAllAbsBoxesOfEl (pEl, pDoc);
 	AbstractImageUpdated (pDoc);
 	/* descend a la premiere Colonne */
 	pE = pEl->ElFirstChild->ElNext->ElFirstChild;
@@ -1161,7 +1161,7 @@ PtrElement          pEl;
 				  {
 				     /* l'attribut La_colonne de cette cellule reference */
 				     /* la colonne simple traitee, on selectionne cette cellule */
-				     SelAjoute (pCell, (pLigneSuiv == NULL));
+				     AddInSelection (pCell, (pLigneSuiv == NULL));
 				     pCell = NULL;	/* arrete la recherche des cellules */
 				  }
 			  pAttr = NULL;		/* arrete la recherche des attributs */
@@ -1617,7 +1617,7 @@ PtrDocument         pDoc;
 		  NbColPreced++;
 		  pColSimple = FwdSearchTypedElem (pColSimple, TypeColSimple, pColle->ElStructSchema);
 	       }
-	     *pElSv = NULL;	/* empeche ColleVoisin de coller les cellules */
+	     *pElSv = NULL;	/* empeche PasteBeforeOrAfter de coller les cellules */
 	  }
 
 	else
@@ -1646,7 +1646,7 @@ PtrDocument         pDoc;
      }
 }
 
-/* Exc_page_break_couper est appele' par CmdCut qui effectue le traitement */
+/* Exc_page_break_couper est appele' par CutCommand qui effectue le traitement */
 /* de la commande Couper. */
 /* PremSel et DerSel pointent le premier et le dernier element */
 /* selectionne's, qui doivent etre coupe's. */
@@ -1655,7 +1655,7 @@ PtrDocument         pDoc;
 /* pages, on etend la selection a l'element portant l'exception */
 /* PageBreakRepBefore qui precede ce saut de page et a l'element */
 /* portant l'exception PageBreakRepetition qui */
-/* suit, pour que CmdCut coupe les 3 elements a la fois. */
+/* suit, pour que CutCommand coupe les 3 elements a la fois. */
 /* Dans ce cas, on met Sauve a Faux (on ne sauvera pas les elements */
 /* coupe's dans le buffer Couper-Copier-Coller) et DetruirePage a */
 /* Vrai (on detruira le saut de page bien qu'il ne soit plus le seul */
@@ -1838,7 +1838,7 @@ boolean             SupprimeAttr;
 		/* l'element ne precede pas l'element designe', erreur */
 		erreur = TRUE;
 	     if (!erreur)
-		pEl = SelSuivant (pEl, DerEl);	/* element suivant */
+		pEl = NextInSelection (pEl, DerEl);	/* element suivant */
 	  }
 	if (!erreur)
 	   /* verifie qu'il s'agit bien du meme tableau */

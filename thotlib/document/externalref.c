@@ -194,12 +194,12 @@ boolean             labelsOnly;
 	while (c == (char) C_PIV_DOCNAME && !error)
 	   /* lit l'identificateur du document referencant */
 	  {
-	     BIOreadIdentDoc (file, &docIdent);
+	     BIOreadDocIdent (file, &docIdent);
 	     if (pRefD != NULL && !error && !labelsOnly)
 		/* cree et chaine un descripteur d'element referencant */
 	       {
 		  GetDocExterne (&pNewExtDoc);
-		  CopyIdentDoc (&pNewExtDoc->EdDocIdent, docIdent);
+		  CopyDocIdent (&pNewExtDoc->EdDocIdent, docIdent);
 		  if (pRefD->ReExtDocRef == NULL)
 		     /* premier descripteur de document referencant */
 		     pRefD->ReExtDocRef = pNewExtDoc;
@@ -283,7 +283,7 @@ PtrChangedReferredEl     *Anchor;
 	     else
 		/* read the name */
 	       {
-		  BIOreadIdentDoc (file, &pChnRef->CrOldDocument);
+		  BIOreadDocIdent (file, &pChnRef->CrOldDocument);
 		  /* lit le nom du nouveau document */
 		  if (!error)
 		     /* lit la marque de nom de document */
@@ -298,7 +298,7 @@ PtrChangedReferredEl     *Anchor;
 		  else
 		     /* lit le nom */
 		    {
-		       BIOreadIdentDoc (file, &pChnRef->CrNewDocument);
+		       BIOreadDocIdent (file, &pChnRef->CrNewDocument);
 		       /* lit l'octet qui suit le nom */
 		       if (!error)
 			  if (!BIOreadByte (file, &c))
@@ -349,11 +349,11 @@ PtrDocument         pDoc;
 	       {
 		  if (pRefD->ReExternalRef)
 		     /* c'est un descripteur d'element reference' externe */
-		     if (MemeIdentDoc (pRefD->ReExtDocument, pChnRef->CrOldDocument))
+		     if (SameDocIdent (pRefD->ReExtDocument, pChnRef->CrOldDocument))
 			/* l'element reference' appartient au document qui a */
 			/* change' de nom, on change le nom dans le */
 			/* descripteur */
-			CopyIdentDoc (&pRefD->ReExtDocument, pChnRef->CrNewDocument);
+			CopyDocIdent (&pRefD->ReExtDocument, pChnRef->CrNewDocument);
 		  /* passe au descripteur d'element reference' suivant */
 		  pRefD = pRefD->ReNext;
 	       }
@@ -367,7 +367,7 @@ PtrDocument         pDoc;
 	       {
 		  if (pRefD->ReExternalRef)
 		     if (strcmp (pRefD->ReReferredLabel, pChnRef->CrOldLabel) == 0)
-			if (MemeIdentDoc (pRefD->ReExtDocument, pChnRef->CrOldDocument))
+			if (SameDocIdent (pRefD->ReExtDocument, pChnRef->CrOldDocument))
 			   found = TRUE;
 		  if (!found)
 		     pRefD = pRefD->ReNext;
@@ -379,7 +379,7 @@ PtrDocument         pDoc;
 		     /* l'element reference' a change' de document */
 		    {
 		       strncpy (pRefD->ReReferredLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
-		       CopyIdentDoc (&pRefD->ReExtDocument, pChnRef->CrNewDocument);
+		       CopyDocIdent (&pRefD->ReExtDocument, pChnRef->CrNewDocument);
 		    }
 		  else
 		     /* l'element reference' a ete detruit */

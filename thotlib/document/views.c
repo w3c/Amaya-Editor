@@ -65,14 +65,14 @@ static AvailableView    AllViews;
 static int          ViewMenuItem[MAX_VIEW_OPEN];
 
 /* ---------------------------------------------------------------------- */
-/* |    VueAvecPage rend vrai si la vue Vue du document pDoc est une	| */
+/* |    PaginatedView rend vrai si la vue Vue du document pDoc est une	| */
 /* |		vue paginee						| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             VueAvecPage (PtrDocument pDoc, int view, boolean assoc)
+boolean             PaginatedView (PtrDocument pDoc, int view, boolean assoc)
 
 #else  /* __STDC__ */
-boolean             VueAvecPage (pDoc, view, assoc)
+boolean             PaginatedView (pDoc, view, assoc)
 PtrDocument         pDoc;
 int                 view;
 boolean             assoc;
@@ -107,16 +107,16 @@ boolean             assoc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    VueFen retourne le pointeur sur le numero de vue (viewNum)      | */
+/* |    GetViewFromFrame retourne le pointeur sur le numero de vue (viewNum)      | */
 /* |        dans le document pDoc, correspondant a`                 	| */
 /* |        la fenetre de numero nframe. Si c'est une frame         	| */
 /* |        d'elements associes, rend assoc vrai et viewNum = numero	| */
 /* |        d'element associe, sinon rend assoc faux.               	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                VueFen (int nframe, PtrDocument pDoc, int *viewNum, boolean * assoc)
+void                GetViewFromFrame (int nframe, PtrDocument pDoc, int *viewNum, boolean * assoc)
 #else  /* __STDC__ */
-void                VueFen (nframe, pDoc, viewNum, assoc)
+void                GetViewFromFrame (nframe, pDoc, viewNum, assoc)
 int                 nframe;
 PtrDocument         pDoc;
 int                *viewNum;
@@ -159,7 +159,7 @@ boolean            *assoc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    DocVueFen retourne le pointeur sur le document (pDoc) et le	| */
+/* |    GetDocAndView retourne le pointeur sur le document (pDoc) et le	| */
 /* |    numero de vue (viewNum) dans ce document, correspondant a	| */
 /* |    la fenetre de numero nframe. Si c'est une fenetre		| */
 /* |    d'elements associes, rend assoc vrai et viewNum = numero	| */
@@ -167,9 +167,9 @@ boolean            *assoc;
 /* |    Rend pDoc = NULL si la selection a echoue.			| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DocVueFen (int frame, PtrDocument * pDoc, int *viewNum, boolean * assoc)
+void                GetDocAndView (int frame, PtrDocument * pDoc, int *viewNum, boolean * assoc)
 #else  /* __STDC__ */
-void                DocVueFen (frame, pDoc, viewNum, assoc)
+void                GetDocAndView (frame, pDoc, viewNum, assoc)
 int                 nframe;
 PtrDocument        *pDoc;
 int                *viewNum;
@@ -187,7 +187,7 @@ boolean            *assoc;
 	if (pD != NULL)
 	  {
 	     /* il y a un document pour cette entree de la table des documents */
-	     VueFen (frame, pD, viewNum, assoc);
+	     GetViewFromFrame (frame, pD, viewNum, assoc);
 	  }
      }
    if (*viewNum == 0)
@@ -198,13 +198,13 @@ boolean            *assoc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    LesVuesDunSchStr						| */
+/* |    BuildSSchemaViewList						| */
 /* |	Construit la liste des vues possibles d'un document.		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         LesVuesDunSchStr (PtrDocument pDoc, PtrSSchema pSS, AvailableView viewList, int *nViews, boolean nature)
+static void         BuildSSchemaViewList (PtrDocument pDoc, PtrSSchema pSS, AvailableView viewList, int *nViews, boolean nature)
 #else  /* __STDC__ */
-static void         LesVuesDunSchStr (pDoc, pSS, viewList, nViews, nature)
+static void         BuildSSchemaViewList (pDoc, pSS, viewList, nViews, nature)
 PtrDocument         pDoc;
 PtrSSchema          pSS;
 AvailableView       viewList;
@@ -308,7 +308,7 @@ PtrDocument         pDoc;
 		   /* Il existe au moins un objet de cette nature dans le document */
 
 		   /* les vues non principales de cette nature */
-		   LesVuesDunSchStr (pDoc, pSRule->SrSSchemaNat, viewList, nViews, TRUE);
+		   BuildSSchemaViewList (pDoc, pSRule->SrSSchemaNat, viewList, nViews, TRUE);
 
 		   /* les vues des natures contenues dans cette nature */
 		   BuildNatureList (pSRule->SrSSchemaNat, nViews, viewList, pDoc);
@@ -317,16 +317,16 @@ PtrDocument         pDoc;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    LesVuesDunDoc	construit la liste des vues definies pour	| */
+/* |    BuildDocumentViewList	construit la liste des vues definies pour	| */
 /* |	le document pDoc: vues de l'arbre principal, vues des elements	| */
 /* |	assoocies et vues des natures.                                  | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-int                 LesVuesDunDoc (PtrDocument pDoc, AvailableView viewList)
+int                 BuildDocumentViewList (PtrDocument pDoc, AvailableView viewList)
 
 #else  /* __STDC__ */
-int                 LesVuesDunDoc (pDoc, viewList)
+int                 BuildDocumentViewList (pDoc, viewList)
 PtrDocument         pDoc;
 AvailableView       viewList;
 
@@ -342,12 +342,12 @@ AvailableView       viewList;
    if (pDoc->DocSSchema != NULL)
      {
 	/* vues du schema de presentation de l'arbre principal */
-	LesVuesDunSchStr (pDoc, pDoc->DocSSchema, viewList, &nViews, FALSE);
+	BuildSSchemaViewList (pDoc, pDoc->DocSSchema, viewList, &nViews, FALSE);
 	/* vues definies pour les extensions du schema du document */
 	pSS = pDoc->DocSSchema->SsNextExtens;
 	while (pSS != NULL)
 	  {
-	     LesVuesDunSchStr (pDoc, pSS, viewList, &nViews, FALSE);
+	     BuildSSchemaViewList (pDoc, pSS, viewList, &nViews, FALSE);
 	     pSS = pSS->SsNextExtens;
 	  }
 	/* vues des natures contenues dans le document */
@@ -366,7 +366,7 @@ AvailableView       viewList;
 		   if (pSRule->SrSSchemaNat->SsNObjects > 0)
 		      /* il existe au moins un objet de cette nature dans
 			 le document */
-		      LesVuesDunSchStr (pDoc, pSRule->SrSSchemaNat, viewList,
+		      BuildSSchemaViewList (pDoc, pSRule->SrSSchemaNat, viewList,
 					&nViews, TRUE);
 	  }
 
@@ -468,13 +468,13 @@ PtrDocument         pDoc;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    dest1vue libere les paves et le contexte de la vue view du	| */
+/* |    FreeView libere les paves et le contexte de la vue view du	| */
 /* |            document pDoc.						| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                dest1vue (PtrDocument pDoc, DocViewNumber view)
+void                FreeView (PtrDocument pDoc, DocViewNumber view)
 #else  /* __STDC__ */
-void                dest1vue (pDoc, view)
+void                FreeView (pDoc, view)
 PtrDocument         pDoc;
 DocViewNumber           view;
 
@@ -517,7 +517,7 @@ boolean             closeDoc;
       /* on detruit la vue */
      {
 	if (!assoc)
-	   dest1vue (pDoc, view);
+	   FreeView (pDoc, view);
 	else
 	  {
 	     LibAbbView (pDoc->DocAssocRoot[view - 1]->ElAbstractBox[0]);
@@ -539,7 +539,7 @@ boolean             closeDoc;
 		     notifyDoc.document = (Document) IdentDocument (pDoc);
 		     notifyDoc.view = 0;
 		     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-		     LibDocument (&pDoc);
+		     UnloadDocument (&pDoc);
 		  }
 	     }
      }
@@ -547,12 +547,12 @@ boolean             closeDoc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    changenomdoc change le nom d'un document pDoc en newName	| */
+/* |    ChangeDocumentName change le nom d'un document pDoc en newName	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                changenomdoc (PtrDocument pDoc, char *newName)
+void                ChangeDocumentName (PtrDocument pDoc, char *newName)
 #else  /* __STDC__ */
-void                changenomdoc (pDoc, newName)
+void                ChangeDocumentName (pDoc, newName)
 PtrDocument         pDoc;
 char               *newName;
 
@@ -598,16 +598,16 @@ char               *newName;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    DestVue	libere tous les paves de la vue correspondant a 	| */
+/* |    ViewClosed	libere tous les paves de la vue correspondant a 	| */
 /* |          la fenetre de numero nframe. Appele lorsque l'utilisateur	| */
 /* |	      ferme une fenetre.					| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                DestVue (int nFrame)
+void                ViewClosed (int nFrame)
 
 #else  /* __STDC__ */
-void                DestVue (nFrame)
+void                ViewClosed (nFrame)
 int                 nFrame;
 
 #endif /* __STDC__ */
@@ -619,7 +619,7 @@ int                 nFrame;
    boolean             assoc;
 
    /* cherche le document auquel appartient la fenetre detruite */
-   DocVueFen (nFrame, &pDoc, &view, &assoc);
+   GetDocAndView (nFrame, &pDoc, &view, &assoc);
    if (pDoc != NULL)
      {
 	notifyDoc.event = TteViewClose;
@@ -630,7 +630,7 @@ int                 nFrame;
 	   notifyDoc.view = view;
 	CallEventType ((NotifyEvent *) & notifyDoc, TRUE);
 	/* desactive la vue si elle est active */
-	DesactVue (pDoc, view, assoc);
+	DeactivateView (pDoc, view, assoc);
 	/* detruit la fenetre */
 	DestroyFrame (nFrame);
 	CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
@@ -641,14 +641,14 @@ int                 nFrame;
 
 
 /* ---------------------------------------------------------------------- */
-/* | OuvreVuesInit ouvre, pour le document pDoc, toutes les vues	| */
+/* | OpenDefaultViews ouvre, pour le document pDoc, toutes les vues	| */
 /* |            qui doivent etre ouvertes a l'ouverture du document.    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                OuvreVuesInit (PtrDocument pDoc)
+void                OpenDefaultViews (PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                OuvreVuesInit (pDoc)
+void                OpenDefaultViews (pDoc)
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -686,14 +686,14 @@ PtrDocument         pDoc;
    if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
      {
 	schView = pDoc->DocView[view - 1].DvPSchemaView;
-	pDoc->DocViewFrame[0] = CrFenTitre (pDoc, schView,
+	pDoc->DocViewFrame[0] = CreateWindowWithTitle (pDoc, schView,
 			    pDoc->DocSSchema->SsPSchema->PsView[view - 1],
 			    &pDoc->DocViewVolume[0], X, Y, width, height);
      }
    if (pDoc->DocViewFrame[0] == 0)
       /* echec creation fenetre */
      {
-	LibDocument (&pDoc);
+	UnloadDocument (&pDoc);
 	TtaDisplaySimpleMessage (INFO, LIB, OPENING_NEW_FRAME_IMP);
      }
    else
@@ -738,7 +738,7 @@ PtrDocument         pDoc;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    CreeImageAbstraite cree l'image abstraite pour une vue du       | */
+/* |    CreateAbstractImage cree l'image abstraite pour une vue du       | */
 /* |            document pDoc. Si v est nul, il                         | */
 /* |            s'agit d'une vue d'elements associes de type r,         | */
 /* |            appartenant au schema de structure pSS; sinon c'est la  | */
@@ -751,9 +751,9 @@ PtrDocument         pDoc;
 /* |            numero d'element associe' de la vue creee.              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 CreeImageAbstraite (PtrDocument pDoc, int v, int r, PtrSSchema pSS, int chosenView, boolean begin, PtrElement viewRoot)
+int                 CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS, int chosenView, boolean begin, PtrElement viewRoot)
 #else  /* __STDC__ */
-int                 CreeImageAbstraite (pDoc, v, r, pSS, chosenView, begin, viewRoot)
+int                 CreateAbstractImage (pDoc, v, r, pSS, chosenView, begin, viewRoot)
 PtrDocument         pDoc;
 int                 v;
 int                 r;
@@ -866,7 +866,7 @@ PtrElement          viewRoot;
 			    if (pDoc->DocSSchema != NULL)
 			      {
 				 /* Ajoute un saut de page a la fin si necessaire */
-				 AjoutePageEnFin (pDoc->DocAssocRoot[assoc - 1],
+				 AddLastPageBreak (pDoc->DocAssocRoot[assoc - 1],
 						  1, pDoc, TRUE);
 			      }
 #endif /* __COLPAGE__ */
@@ -895,7 +895,7 @@ PtrElement          viewRoot;
 	     if (!begin)
 	       {
 		  /* prend la selection courante */
-		  sel = SelEditeur (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
+		  sel = GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
 		  if (!sel)
 		     /* pas de selection, on construit l'image du debut */
 		     begin = TRUE;
@@ -959,7 +959,7 @@ PtrElement          viewRoot;
 	     /* celle affichee dans la fenetre designee par */
 	     /* l'utilisateur. */
 	     /* prend la selection courante */
-	     sel = SelEditeur (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
+	     sel = GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
 	     selInMainTree = FALSE;
 	     if (sel)
 		if (pSelDoc == pDoc && firstSel->ElAssocNum == 0)
@@ -1027,7 +1027,7 @@ PtrElement          viewRoot;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    OuvreVueCreee ouvre une vue dont on a deja cree' l'image        | */
+/* |    OpenCreatedView ouvre une vue dont on a deja cree' l'image        | */
 /* |            pDoc: document concerne'.                               | */
 /* |            view: si assoc est faux, numero de la vue,              | */
 /* |                 si assoc est vrai, numero des elements associes    | */
@@ -1036,9 +1036,9 @@ PtrElement          viewRoot;
 /* |		     fenetre en mm.					| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                OuvreVueCreee (PtrDocument pDoc, int view, boolean assoc, int X, int Y, int width, int height)
+void                OpenCreatedView (PtrDocument pDoc, int view, boolean assoc, int X, int Y, int width, int height)
 #else  /* __STDC__ */
-void                OuvreVueCreee (pDoc, view, assoc, X, Y, width, height)
+void                OpenCreatedView (pDoc, view, assoc, X, Y, width, height)
 PtrDocument         pDoc;
 int                 view;
 boolean             assoc;
@@ -1072,7 +1072,7 @@ int                 height;
 	     strncpy (viewName, pDoc->DocView[view - 1].DvSSchema->SsPSchema->PsView[schView - 1], MAX_NAME_LENGTH);
 	  }
 	/* creation d'une fenetre pour la vue */
-	frame = CrFenTitre (pDoc, schView, viewName, &volume, X, Y, width, height);
+	frame = CreateWindowWithTitle (pDoc, schView, viewName, &volume, X, Y, width, height);
      }
    if (frame == 0)
       /* on n'a pas pu creer la fenetre, echec */
@@ -1094,7 +1094,7 @@ int                 height;
 	     pDoc->DocAssocVolume[view - 1] = volume;
 	     ChangeConcreteImage (frame, &h, pDoc->DocAssocRoot[view - 1]->ElAbstractBox[0]);
 	     DisplayFrame (frame);
-	     VisuSelect (pDoc->DocAssocRoot[view - 1]->ElAbstractBox[0], TRUE);
+	     ShowSelection (pDoc->DocAssocRoot[view - 1]->ElAbstractBox[0], TRUE);
 	  }
 	else
 	   /* vue de l'arbre principal */
@@ -1103,7 +1103,7 @@ int                 height;
 	     pDoc->DocViewVolume[view - 1] = volume;
 	     ChangeConcreteImage (frame, &h, pDoc->DocViewRootAb[view - 1]);
 	     DisplayFrame (frame);
-	     VisuSelect (pDoc->DocViewRootAb[view - 1], TRUE);
+	     ShowSelection (pDoc->DocViewRootAb[view - 1], TRUE);
 	  }
 	/* met a jour les menus de la fenetre */
 	if (ThotLocalActions[T_chselect] != NULL)
@@ -1216,12 +1216,12 @@ PtrSSchema         *pSS;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    CreVueNommee ouvre la vue de nom viewName			| */
+/* |    OpenViewByName ouvre la vue de nom viewName			| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 CreVueNommee (PtrDocument pDoc, Name viewName, int X, int Y, int width, int height)
+int                 OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y, int width, int height)
 #else  /* __STDC__ */
-int                 CreVueNommee (pDoc, viewName, X, Y, width, height)
+int                 OpenViewByName (pDoc, viewName, X, Y, width, height)
 PtrDocument         pDoc;
 Name                viewName;
 int                 X;
@@ -1256,8 +1256,8 @@ int                 height;
 	     notifyDoc.view = 0;
 	     if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	       {
-		  ret = CreeImageAbstraite (pDoc, view, 0, pSS, 1, assoc, NULL);
-		  OuvreVueCreee (pDoc, ret, assoc, X, Y, width, height);
+		  ret = CreateAbstractImage (pDoc, view, 0, pSS, 1, assoc, NULL);
+		  OpenCreatedView (pDoc, ret, assoc, X, Y, width, height);
 		  notifyDoc.event = TteViewOpen;
 		  notifyDoc.document = (Document) IdentDocument (pDoc);
 		  if (assoc)
@@ -1274,15 +1274,15 @@ int                 height;
 }
 
 /* ---------------------------------------------------------------------- */
-/* | TraiteRetMenuVues ouvre effectivement une vue apres les retours	| */
+/* | OpenViewByMenu ouvre effectivement une vue apres les retours	| */
 /* |            des menus d'ouverture de Vues                           | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                TraiteRetMenuVues (PtrDocument pDoc, int menuItem, PtrElement subTree, DocViewNumber selectedView)
+void                OpenViewByMenu (PtrDocument pDoc, int menuItem, PtrElement subTree, DocViewNumber selectedView)
 
 #else  /* __STDC__ */
-void                TraiteRetMenuVues (pDoc, menuItem, subTree, selectedView)
+void                OpenViewByMenu (pDoc, menuItem, subTree, selectedView)
 PtrDocument         pDoc;
 int                 menuItem;
 PtrElement          subTree;
@@ -1310,18 +1310,18 @@ DocViewNumber       selectedView;
 	     /* cree effectivement la vue */
 	     if (AllViews[theView - 1].VdAssoc)
 	       {
-		  view = CreeImageAbstraite (pDoc, 0, AllViews[theView - 1].VdAssocNum,
+		  view = CreateAbstractImage (pDoc, 0, AllViews[theView - 1].VdAssocNum,
 					    AllViews[theView - 1].VdSSchema, selectedView,
 					    TRUE, subTree);
-		  OuvreVueCreee (pDoc, view, TRUE, X, Y, width, height);
+		  OpenCreatedView (pDoc, view, TRUE, X, Y, width, height);
 		  view += 100;
 	       }
 	     else
 	       {
-		  view = CreeImageAbstraite (pDoc, AllViews[theView - 1].VdView, 0,
+		  view = CreateAbstractImage (pDoc, AllViews[theView - 1].VdView, 0,
 					    AllViews[theView - 1].VdSSchema, selectedView,
 					    FALSE, subTree);
-		  OuvreVueCreee (pDoc, view, FALSE, X, Y, width, height);
+		  OpenCreatedView (pDoc, view, FALSE, X, Y, width, height);
 	       }
 	     notifyDoc.event = TteViewOpen;
 	     notifyDoc.document = (Document) IdentDocument (pDoc);
@@ -1333,17 +1333,17 @@ DocViewNumber       selectedView;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    MenuVuesAOuvrir construit le menu des vues qu'il est possible	| */
+/* |    BuildViewList construit le menu des vues qu'il est possible	| */
 /* |    d'ouvrir pour le document pDoc.                                 | */
 /* |    buffer: buffer pour le texte du menu.                           | */
 /* |    Au retour nItems indique le nombre d'items dans le menu.        | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                MenuVuesAOuvrir (PtrDocument pDoc, char *buffer, int *nItems)
+void                BuildViewList (PtrDocument pDoc, char *buffer, int *nItems)
 
 #else  /* __STDC__ */
-void                MenuVuesAOuvrir (pDoc, buffer, nItems)
+void                BuildViewList (pDoc, buffer, nItems)
 PtrDocument         pDoc;
 char               *buffer;
 int                *nItems;
@@ -1372,7 +1372,7 @@ int                *nItems;
 	i = 0;			
 	/* nItems: nombre d'entrees dans le menu */
 	*nItems = 0;
-	nViews = LesVuesDunDoc (pDoc, AllViews);
+	nViews = BuildDocumentViewList (pDoc, AllViews);
 	for (j = 0; j < nViews; j++)
 	  {
 	     /* Si une vue Assoc n'est pas ouverte ou s'il reste des vues */
@@ -1406,16 +1406,16 @@ int                *nItems;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    FermerVueDoc ferme la vue de numero view du document pDoc, ou le| */
+/* |    CloseView ferme la vue de numero view du document pDoc, ou le| */
 /* |    document complet s'il s'agit de la derniere vue de ce document. | */
 /* |    Si assoc est vrai, view un numero d'elements associe's          | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                FermerVueDoc (PtrDocument pDoc, int view, boolean assoc)
+void                CloseView (PtrDocument pDoc, int view, boolean assoc)
 
 #else  /* __STDC__ */
-void                FermerVueDoc (pDoc, view, assoc)
+void                CloseView (pDoc, view, assoc)
 PtrDocument         pDoc;
 int                 view;
 boolean             assoc;
@@ -1449,8 +1449,8 @@ boolean             assoc;
 			    if (Save)
 			      {
 				 if (DocOfSavedElements == pDoc)
-				    LibBufEditeur ();
-				 ok = SauveDocument (pDoc, 0);
+				    FreeSavedElements ();
+				 ok = WriteDocument (pDoc, 0);
 			      }
 			 }
 		    }
@@ -1462,7 +1462,7 @@ boolean             assoc;
 	     if (ok)
 	       {
 		  /* desactive la vue si elle est active */
-		  DesactVue (pDoc, view, assoc);
+		  DeactivateView (pDoc, view, assoc);
 		  /* fait detruire la fenetre par le mediateur */
 		  if (assoc)
 		     DestroyFrame (pDoc->DocAssocFrame[view - 1]);

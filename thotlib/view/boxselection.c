@@ -87,9 +87,9 @@ boolean             toShow;
 	pFrame = &ViewFrameTable[frame - 1];
 	/* compare le booleen toShow et l'etat de la selection */
 	if (toShow && !pFrame->FrSelectShown)
-	   VisuSel (frame, TRUE);
+	   DisplayCurrentSelection (frame, TRUE);
 	else if (!toShow && pFrame->FrSelectShown)
-	   VisuSel (frame, TRUE);
+	   DisplayCurrentSelection (frame, TRUE);
      }
 }
 
@@ -137,9 +137,9 @@ int                 frame;
 	pFrame = &ViewFrameTable[frame - 1];
 	/* eteint la selection ssi elle est allumee */
 	if (pFrame->FrSelectShown)
-	   VisuSel (frame, FALSE);
+	   DisplayCurrentSelection (frame, FALSE);
 	else
-	   MajPavSelect (frame, pFrame->FrAbstractBox, FALSE);
+	   SetNewSelectionStatus (frame, pFrame->FrAbstractBox, FALSE);
 	pFrame->FrSelectOneBox = FALSE;
 	pFrame->FrSelectionBegin.VsBox = NULL;
 	pFrame->FrSelectionEnd.VsBox = NULL;
@@ -646,7 +646,7 @@ boolean             alone;
 		       else
 			 {
 			    charIndex = (int) (pViewSel->VsBuffer->BuContent[pViewSel->VsIndBuf - 1]);
-			    if (charIndex == BLANC && pBox->BxSpaceWidth != 0)
+			    if (charIndex == _SPACE_ && pBox->BxSpaceWidth != 0)
 			       pViewSel->VsXPos += pBox->BxSpaceWidth;
 			    else
 			       pViewSel->VsXPos += CarWidth (charIndex, pBox->BxFont);

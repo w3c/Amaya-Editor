@@ -340,7 +340,7 @@ PtrSSchema        pSS;
 		 pEl = NULL;
 	if (pEl != NULL)
 	   /* on selectionne l'element trouve' */
-	   SelectWithAPP (context->SDocument, pEl, TRUE, FALSE);
+	   SelectElementWithEvent (context->SDocument, pEl, TRUE, FALSE);
      }
    return (pAttr);
 }
@@ -674,7 +674,7 @@ PtrAttribute        *AttrTrouve;
    *AttrTrouve = pAttrTrouve;
    if (pEl != NULL && trouve)
       /* on a trouve' */
-      SelectWithAPP (context->SDocument, pEl, TRUE, FALSE);
+      SelectElementWithEvent (context->SDocument, pEl, TRUE, FALSE);
    if (!trouve)
       if (context->SWholeDocument)
 	 /* il faut rechercher dans tout le document */

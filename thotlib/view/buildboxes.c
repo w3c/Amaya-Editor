@@ -248,7 +248,7 @@ int                *nSpaces;
 
    /* Calcule la largeur des blancs */
    if (*nSpaces == 0)
-      spaceWidth = CarWidth (BLANC, font);
+      spaceWidth = CarWidth (_SPACE_, font);
    else
       spaceWidth = *nSpaces;
    i = *width;	/* Index dans le buffer */
@@ -260,7 +260,7 @@ int                *nSpaces;
      {
 	/* On traite les differents caracteres */
 	car = (unsigned char) (pBuffer->BuContent[i - 1]);
-	if (car == BLANC)
+	if (car == _SPACE_)
 	  {
 	     (*nSpaces)++;	/* caractere blanc */
 	     charWidth = spaceWidth;
@@ -337,7 +337,7 @@ int                *height;
    if (pAb->AbVolume == 0)
      {
 	/* Symbol vide */
-	*width = CarWidth (BLANC, font);
+	*width = CarWidth (_SPACE_, font);
 	*height = hfont * 2;
      }
    else
@@ -388,7 +388,7 @@ int                *height;
 		    *width = CarWidth (109, font);	/*'m' */
 		    break;
 		 default:
-		    *width = CarWidth (BLANC, font);
+		    *width = CarWidth (_SPACE_, font);
 		    *height = hfont;
 		    break;
 	      }
@@ -1013,7 +1013,7 @@ int                *carIndex;
 	font = ThotLoadFont (alphabet, pAb->AbFont, pAb->AbHighlight, height, unit, frame);
      }
    else
-      font = FontMenu;
+      font = FontDialogue;
 
    /* Creation */
    pCurrentBox = pAb->AbBox;
@@ -1737,11 +1737,11 @@ int                 frame;
 	     if (!orgXComplete || !orgYComplete)
 	       {
 		  /* Initialise le placement des boites creees */
-		  MarqueAPlacer (pAb, !orgXComplete, !orgYComplete);
+		  SetBoxToTranslate (pAb, !orgXComplete, !orgYComplete);
 		  /* La boite racine va etre placee */
 		  pBox->BxXToCompute = FALSE;
 		  pBox->BxYToCompute = FALSE;
-		  Placer (pAb, pFrame->FrVisibility, frame, !orgXComplete, !orgYComplete);
+		  AddBoxTranslations (pAb, pFrame->FrVisibility, frame, !orgXComplete, !orgYComplete);
 	       }
 
 	     /* On prepare le reaffichage */
@@ -1928,7 +1928,7 @@ int                 frame;
 			      /* Si la boite est justifiee */
 			      if (pBox->BxSpaceWidth != 0)
 				{
-				   i = pBox->BxSpaceWidth - CarWidth (BLANC, pBox->BxFont);
+				   i = pBox->BxSpaceWidth - CarWidth (_SPACE_, pBox->BxFont);
 				   /* Ecart de largeur */
 				   adjustDelta = width + i * nSpaces + pBox->BxNPixels - pBox->BxWidth;
 				   width = pBox->BxWidth;	/* On prend la largeur justifiee */
@@ -2451,7 +2451,7 @@ int                 frame;
 	     /* Affichage de toute la fenetre */
 	     RedrawFrameBottom (frame, 0);
 	     /* Restaure la selection */
-	     VisuSelect (pAb, FALSE);
+	     ShowSelection (pAb, FALSE);
 	  }
      }
 }
@@ -2941,7 +2941,7 @@ PtrAbstractBox      pAb;
 	     if (*pageHeight > 0)
 	       /* changement de la signification de page */
 	       /* si superieur a 0 : mode pagination et coupure demandee */
-	       result = MarqueCoupure (pFrame->FrAbstractBox, pageHeight);
+	       result = SetPageBreakPosition (pFrame->FrAbstractBox, pageHeight);
 	     if (*pageHeight != 0)
 	       {
 		  /* retablit le zoom et la visibilite courants */

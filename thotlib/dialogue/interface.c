@@ -1069,8 +1069,8 @@ XEvent             *ev;
 		     TtcQuit (0, 0);
 		  else if (frame <= MAX_FRAME)
 		    {
-		       DocVueFen (frame, &pDoc, &vue, &assoc);
-		       FermerVueDoc (pDoc, vue, assoc);
+		       GetDocAndView (frame, &pDoc, &vue, &assoc);
+		       CloseView (pDoc, vue, assoc);
 		    }
 		  return;
 	       }
@@ -1316,7 +1316,7 @@ Element            *element;
 	else
 	  {
 	     *element = (Element) absBox->AbElement;
-	     DocVueFen (frame, &pDoc, &view, &Assoc);
+	     GetDocAndView (frame, &pDoc, &view, &Assoc);
 	     *document = (Document) IdentDocument (pDoc);
 	  }
      }
@@ -1353,7 +1353,7 @@ int                *Y;
    else
      {
 	frame = GetWindowNumber (document, view);
-	if (frame != DesFen)
+	if (frame != ClickFrame)
 	   TtaError (ERR_no_selection_in_view);
 	else
 	  {
@@ -1366,8 +1366,8 @@ int                *Y;
 	       {
 		  while (pAb->AbPresentationBox && pAb->AbNext != NULL)
 		     pAb = pAb->AbNext;
-		  *X = DesX + pFrame->FrXOrg - pAb->AbBox->BxXOrg;
-		  *Y = DesY + pFrame->FrYOrg - pAb->AbBox->BxYOrg;
+		  *X = ClickX + pFrame->FrXOrg - pAb->AbBox->BxXOrg;
+		  *Y = ClickY + pFrame->FrYOrg - pAb->AbBox->BxYOrg;
 	       }
 	  }
      }

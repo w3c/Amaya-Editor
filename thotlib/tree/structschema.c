@@ -245,7 +245,7 @@ PtrElement          pEl;
 			  /* structure schema of nature is not loaded. Load it */
 			 {
 			    name[0] = '\0';
-			    LoadNat (pSS1, name, typeNum1);
+			    LoadNatureSchema (pSS1, name, typeNum1);
 			 }
 		       if (pSRule->SrSSchemaNat == NULL)
 			  /* structure schema loading failed */
@@ -1112,7 +1112,7 @@ int        *typeNum;
 	     {
 		presName[0] = '\0';
 		/* pas de schema de presentation prefere' */
-		referredNature = CreeNature (pRule->SrRefTypeNat, presName, *pSS);
+		referredNature = CreateNature (pRule->SrRefTypeNat, presName, *pSS);
 		if (referredNature == 0)
 		   *pSS = NULL;
 		else
@@ -1143,7 +1143,7 @@ int        *typeNum;
 	  {
 	     presName[0] = '\0';
 	     /* pas de schema de presentation prefere' */
-	     referredNature = CreeNature (pAtt->AttrTypeRefNature, presName, *pSS);
+	     referredNature = CreateNature (pAtt->AttrTypeRefNature, presName, *pSS);
 	     if (referredNature == 0)
 		*pSS = NULL;
 	     else
@@ -1970,7 +1970,7 @@ PtrSSchema        pDescSS;
 			 {
 			    N[0] = '\0';
 			    /* pas de schema de presentation prefere' */
-			    LoadNat (pSS, N, typeNum);
+			    LoadNatureSchema (pSS, N, typeNum);
 			 }
 		       if (pRule1->SrSSchemaNat != NULL)
 			 {

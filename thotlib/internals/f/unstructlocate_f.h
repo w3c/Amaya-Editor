@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void DesBoite ( PtrBox * result,
+extern void GetClickedBox ( PtrBox * result,
                        PtrAbstractBox pRootAb,
                        int frame,
                        int x,
@@ -15,7 +15,7 @@ extern void DesBoite ( PtrBox * result,
 
 #else /* __STDC__ */
 
-extern void DesBoite (/* PtrBox * result,
+extern void GetClickedBox (/* PtrBox * result,
                          PtrAbstractBox pRootAb,
                          int frame,
                          int x,

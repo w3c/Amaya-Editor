@@ -33,14 +33,14 @@ void                InitNatures ()
 }
 
 /* ---------------------------------------------------------------------- */
-/* | LoadNat    Charge la nature definie dans la regle r du schema de   | */
+/* | LoadNatureSchema    Charge la nature definie dans la regle r du schema de   | */
 /* | structure pointe par PSchStr.                                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                LoadNat (PtrSSchema PSchStr, Name NomSchPrs, int r)
+void                LoadNatureSchema (PtrSSchema PSchStr, Name NomSchPrs, int r)
 
 #else  /* __STDC__ */
-void                LoadNat (PSchStr, NomSchPrs, r)
+void                LoadNatureSchema (PSchStr, NomSchPrs, r)
 PtrSSchema        PSchStr;
 Name                 NomSchPrs;
 int         r;
@@ -56,7 +56,7 @@ int         r;
    strncpy (fname, PSchStr->SsRule[r - 1].SrOrigNat, MAX_NAME_LENGTH);
    /* cree un schema de structure et le charge depuis le fichier */
    GetSchStruct (&PtrStrNat);
-   if (!RdSchStruct (fname, PtrStrNat))
+   if (!ReadStructureSchema (fname, PtrStrNat))
       /* echec */
      {
 	FreeSStruct (PtrStrNat);
@@ -113,7 +113,7 @@ PtrSSchema        pSS;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    CreeNature   retourne le numero de la regle definissant le type | */
+/* |    CreateNature   retourne le numero de la regle definissant le type | */
 /* |    de nom NomSchStr dans le schema de structure pointe par pSS.    | */
 /* |    S'il n'existe pas de type de ce nom, ajoute une regle de type   | */
 /* |    CsNatureSchema au schema de structure et charge le schema de         | */
@@ -121,10 +121,10 @@ PtrSSchema        pSS;
 /* |    creee ou 0 si echec creation.                                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int         CreeNature (Name NomSchStr, Name NomSchPrs, PtrSSchema pSS)
+int         CreateNature (Name NomSchStr, Name NomSchPrs, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-int         CreeNature (NomSchStr, NomSchPrs, pSS)
+int         CreateNature (NomSchStr, NomSchPrs, pSS)
 Name                 NomSchStr;
 Name                 NomSchPrs;
 PtrSSchema        pSS;
@@ -192,7 +192,7 @@ PtrSSchema        pSS;
 	      /* charge les schemas de structure et de presentation */
 	      /* de la nouvelle nature */
 	     {
-		LoadNat (pSS, NomSchPrs, ret);
+		LoadNatureSchema (pSS, NomSchPrs, ret);
 		if (pRule->SrSSchemaNat == NULL)
 		   ret = 0;
 		/* echec chargement */
@@ -229,7 +229,7 @@ boolean             Extension;
    if (pSCharge == NULL)
      {
 	GetSchStruct (pSS);
-	if (!RdSchStruct (fname, *pSS))
+	if (!ReadStructureSchema (fname, *pSS))
 	  {
 	     FreeSStruct (*pSS);
 	     *pSS = NULL;
@@ -330,17 +330,17 @@ PtrSSchema        pSS;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    LibNature       Si le schema de structure pointe' par pSPere    | */
+/* |    FreeNature       Si le schema de structure pointe' par pSPere    | */
 /* |    contient une regle de nature pour le schema pointe' par pSS,    | */
 /* |    retourne Vrai et libere le schema de structure pointe par pSS   | */
 /* |    et son schema de presentation.                                  | */
 /* |    Retourne faux sinon.                                            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             LibNature (PtrSSchema pSPere, PtrSSchema pSS)
+boolean             FreeNature (PtrSSchema pSPere, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-boolean             LibNature (pSPere, pSS)
+boolean             FreeNature (pSPere, pSS)
 PtrSSchema        pSPere;
 PtrSSchema        pSS;
 
@@ -361,16 +361,16 @@ PtrSSchema        pSS;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    LibSchemas      libere tous les schemas de structure et de      | */
+/* |    FreeDocumentSchemas      libere tous les schemas de structure et de      | */
 /* |    presentation utilises par le document dont le descripteur est   | */
 /* |    pointe par pDoc.                                                | */
 /* |    Pour les schemas de presentation, la liberation n'est effective | */
 /* |    que s'ils ne sont pas utilises par d'autres documents.          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                LibSchemas (PtrDocument pDoc)
+void                FreeDocumentSchemas (PtrDocument pDoc)
 #else  /* __STDC__ */
-void                LibSchemas (pDoc)
+void                FreeDocumentSchemas (pDoc)
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */

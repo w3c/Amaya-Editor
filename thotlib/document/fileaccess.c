@@ -258,12 +258,12 @@ char                bval;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    BIOwriteIdentDoc writes a document identifier.                  | */
+/* |    BIOwriteDocIdent writes a document identifier.                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                BIOwriteIdentDoc (BinFile file, DocumentIdentifier Ident)
+void                BIOwriteDocIdent (BinFile file, DocumentIdentifier Ident)
 #else  /* __STDC__ */
-void                BIOwriteIdentDoc (file, Ident)
+void                BIOwriteDocIdent (file, Ident)
 BinFile             file;
 DocumentIdentifier     Ident;
 
@@ -282,12 +282,12 @@ DocumentIdentifier     Ident;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    BIOreadIdentDoc                                                 | */
+/* |    BIOreadDocIdent                                                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                BIOreadIdentDoc (BinFile file, DocumentIdentifier * Ident)
+void                BIOreadDocIdent (BinFile file, DocumentIdentifier * Ident)
 #else  /* __STDC__ */
-void                BIOreadIdentDoc (file, Ident)
+void                BIOreadDocIdent (file, Ident)
 BinFile             file;
 DocumentIdentifier    *Ident;
 
@@ -303,12 +303,12 @@ DocumentIdentifier    *Ident;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    CopyIdentDoc                                                    | */
+/* |    CopyDocIdent                                                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                CopyIdentDoc (DocumentIdentifier * Dest, DocumentIdentifier Source)
+void                CopyDocIdent (DocumentIdentifier * Dest, DocumentIdentifier Source)
 #else  /* __STDC__ */
-void                CopyIdentDoc (Dest, Source)
+void                CopyDocIdent (Dest, Source)
 DocumentIdentifier    *Dest;
 DocumentIdentifier     Source;
 
@@ -318,12 +318,12 @@ DocumentIdentifier     Source;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    MemeIdentDoc                                                    | */
+/* |    SameDocIdent                                                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             MemeIdentDoc (DocumentIdentifier Ident1, DocumentIdentifier Ident2)
+boolean             SameDocIdent (DocumentIdentifier Ident1, DocumentIdentifier Ident2)
 #else  /* __STDC__ */
-boolean             MemeIdentDoc (Ident1, Ident2)
+boolean             SameDocIdent (Ident1, Ident2)
 DocumentIdentifier     Ident1;
 DocumentIdentifier     Ident2;
 
@@ -336,12 +336,12 @@ DocumentIdentifier     Ident2;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    NulIdentDoc                                                     | */
+/* |    ClearDocIdent                                                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                NulIdentDoc (DocumentIdentifier * Ident)
+void                ClearDocIdent (DocumentIdentifier * Ident)
 #else  /* __STDC__ */
-void                NulIdentDoc (Ident)
+void                ClearDocIdent (Ident)
 DocumentIdentifier    *Ident;
 
 #endif /* __STDC__ */
@@ -350,12 +350,12 @@ DocumentIdentifier    *Ident;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    IdentDocNul                                                     | */
+/* |    DocIdentIsNull                                                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             IdentDocNul (DocumentIdentifier Ident)
+boolean             DocIdentIsNull (DocumentIdentifier Ident)
 #else  /* __STDC__ */
-boolean             IdentDocNul (Ident)
+boolean             DocIdentIsNull (Ident)
 DocumentIdentifier     Ident;
 
 #endif /* __STDC__ */
@@ -399,12 +399,12 @@ Name                 docName;
 
 
 /* ---------------------------------------------------------------------- */
-/* |     OuvrEcr	returns the write access right for a file	| */
+/* |     FileWriteAccess	returns the write access right for a file	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 OuvrEcr (char *fileName)
+int                 FileWriteAccess (char *fileName)
 #else  /* __STDC__ */
-int                 OuvrEcr (fileName)
+int                 FileWriteAccess (fileName)
 char               *fileName;
 
 #endif /* __STDC__ */
@@ -444,13 +444,13 @@ char               *fileName;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |	ConvertitNombre	converts the value number into a character	| */
+/* |	GetCounterValue	converts the value number into a character	| */
 /* |	string according to a given style (arabic, roman, letter).	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ConvertitNombre (int number, CounterStyle style, char *string, int *len)
+void                GetCounterValue (int number, CounterStyle style, char *string, int *len)
 #else  /* __STDC__ */
-void                ConvertitNombre (number, style, string, len)
+void                GetCounterValue (number, style, string, len)
 int                 number;
 CounterStyle        style;
 char               *string;

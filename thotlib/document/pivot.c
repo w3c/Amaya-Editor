@@ -158,7 +158,7 @@ char               *nextChar;
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      rdPivotHeader (pivotFile, LoadedDocument[document - 1], nextChar);
+      ReadPivotHeader (pivotFile, LoadedDocument[document - 1], nextChar);
 }
 
 
@@ -233,7 +233,7 @@ char               *nextChar;
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      rdTableLangues (pivotFile, LoadedDocument[document - 1], nextChar);
+      ReadLanguageTablePiv (pivotFile, LoadedDocument[document - 1], nextChar);
 }
 
 /* ----------------------------------------------------------------------
@@ -309,7 +309,7 @@ char               *nextChar;
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      rdNomsSchemas (pivotFile, LoadedDocument[document - 1], nextChar, NULL);
+      ReadSchemaNamesPiv (pivotFile, LoadedDocument[document - 1], nextChar, NULL);
 }
 
 /* ----------------------------------------------------------------------
@@ -359,7 +359,7 @@ Attribute          *attribute;
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      ReadAttribut (pivotFile, (PtrElement) element,
+      ReadAttributePiv (pivotFile, (PtrElement) element,
 		    LoadedDocument[document - 1], create,
 		    (PtrAttribute *) attribute, &pAttr);
 }
@@ -406,7 +406,7 @@ PRule              *pRule;
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      rdReglePres (LoadedDocument[document - 1], pivotFile,
+      ReadPRulePiv (LoadedDocument[document - 1], pivotFile,
 		(PtrElement) element, create, (PtrPRule *) pRule, TRUE);
 }
 
@@ -472,7 +472,7 @@ Element            *elementRead;
 	     NumAssoc = ((PtrElement) element)->ElAssocNum;
 	     pSS = ((PtrElement) element)->ElStructSchema;
 	  }
-	*elementRead = (Element) Internalise (pivotFile, pSS,
+	*elementRead = (Element) ReadTreePiv (pivotFile, pSS,
 				 LoadedDocument[document - 1], byte, NumAssoc,
 			      FALSE, TRUE, &TypeCont, &pSchStrCont, &TypeLu,
 			       &SchStrLu, TRUE, (PtrElement) element, TRUE);
@@ -660,7 +660,7 @@ Document            document;
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      UserErrorCode = rdVersionNumber (pivotFile, LoadedDocument[document - 1]);
+      UserErrorCode = ReadVersionNumberPiv (pivotFile, LoadedDocument[document - 1]);
 }
 
 

@@ -441,7 +441,7 @@ PtrAbstractBox             pAb;
 #ifdef __COLPAGE__
  /* procedure de reevaluation des regles recursives */
  /* ---------------------------------------------------------- */
- /* |     RecursEvalCP appelle NouvRfPave pour tous les paves | */
+ /* |     RecursEvalCP appelle ApplyRefAbsBoxNew pour tous les paves | */
  /* |                du sous-arbre pAb                     | */
  /* ---------------------------------------------------------- */
 
@@ -462,7 +462,7 @@ PtrDocument         pDoc;
    pAbb = pAb;
    if (pAbb != NULL)
      {
-	NouvRfPave (pAbb, pAbb, &pAbbR, pDoc);
+	ApplyRefAbsBoxNew (pAbb, pAbb, &pAbbR, pDoc);
 	pAbb = pAbb->AbFirstEnclosed;
 	while (pAbb != NULL)
 	  {
@@ -562,16 +562,16 @@ boolean             head;
 		/* plusieurs paves crees, on reaffichera l'englobant */
 		pAbbReDisp = pAb->AbEnclosing;
 	     /* modifie les paves environnant les paves crees */
-	     NouvRfPave (PcFirst, PcLast, &pAbbR, pDoc);
-	     pAbbReDisp = Englobant (pAbbReDisp, pAbbR);	/* conserve le pointeur sur le pave a reafficher */
+	     ApplyRefAbsBoxNew (PcFirst, PcLast, &pAbbR, pDoc);
+	     pAbbReDisp = Enclosing (pAbbReDisp, pAbbR);	/* conserve le pointeur sur le pave a reafficher */
 
 	     pEl = pAbbRoot->AbElement;
 	     if (AssocView (pAbbRoot->AbElement))
 		pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-		   Englobant (pAbbReDisp, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+		   Enclosing (pAbbReDisp, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 	     else
 		pDoc->DocViewModifiedAb[pAbbRoot->AbDocView - 1] =
-		   Englobant (pAbbReDisp, pDoc->DocViewModifiedAb[pAbbRoot->AbDocView - 1]);
+		   Enclosing (pAbbReDisp, pDoc->DocViewModifiedAb[pAbbRoot->AbDocView - 1]);
 	     /* passe au niveau inferieur */
 	     if (head)
 		pAb = PcLast->AbNext;
@@ -714,7 +714,7 @@ PtrAbstractBox             pAb;
 	if (!result)
 #endif /* __COLPAGE__ */
 	  {
-	     ChSchemaPres (pAbbox1->AbElement, &pSchP, &index, &pSchS);
+	     SearchPresSchema (pAbbox1->AbElement, &pSchP, &index, &pSchS);
 	     result = (pSchP->PsBuildAll[index - 1]);
 	  }
 	pAb = pAbbox1->AbEnclosing;
@@ -800,9 +800,9 @@ PtrDocument         pDoc;
 		       {
 			  if (!pAbb->AbRepeatedPresBox)
 			    {
-			       TuePave (pAbb);
+			       SetDeadAbsBox (pAbb);
 			       /* traite les paves qui se referent au pave detruit */
-			       SuppRfPave (pAbb, &pAbbR, pDoc);
+			       ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
 			    }
 			  pAbb = pAbb->AbPrevious;
 		       }
@@ -821,9 +821,9 @@ PtrDocument         pDoc;
 		       {
 			  if (!pAbb->AbRepeatedPresBox)
 			    {
-			       TuePave (pAbb);
+			       SetDeadAbsBox (pAbb);
 			       /* traite les paves qui se referent au pave detruit */
-			       SuppRfPave (pAbb, &pAbbR, pDoc);
+			       ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
 			    }
 			  pAbb = pAbb->AbNext;
 		       }
@@ -873,8 +873,8 @@ PtrDocument         pDoc;
 	/* en mettant a jour le booleen AbTruncatedTail */
 	KillPresRight (pAbb1, pDoc);
 	/* on tue pAbb1 */
-	TuePave (pAbb1);
-	SuppRfPave (pAbb1, &pAbbR, pDoc);
+	SetDeadAbsBox (pAbb1);
+	ApplyRefAbsBoxSupp (pAbb1, &pAbbR, pDoc);
 	/* on tue tous les paves a droite en remontant l'arbre */
 	while (pAbb1->AbEnclosing != NULL
 	       && !(pAbb1->AbElement->ElTypeNumber == PageBreak + 1
@@ -887,8 +887,8 @@ PtrDocument         pDoc;
 	     pAbb2 = pAbb1->AbNext;
 	     while (pAbb2 != NULL)
 	       {
-		  TuePave (pAbb2);
-		  SuppRfPave (pAbb2, &pAbbR, pDoc);
+		  SetDeadAbsBox (pAbb2);
+		  ApplyRefAbsBoxSupp (pAbb2, &pAbbR, pDoc);
 		  pAbb2 = pAbb2->AbNext;
 	       }
 	     pAbb1 = pAbb1->AbEnclosing;
@@ -917,8 +917,8 @@ PtrDocument         pDoc;
 	PavRac = pAbb1->AbEnclosing;
 	while (pAbb1 != NULL)
 	  {
-	     TuePave (pAbb1);
-	     SuppRfPave (pAbb1, &pAbbR, pDoc);
+	     SetDeadAbsBox (pAbb1);
+	     ApplyRefAbsBoxSupp (pAbb1, &pAbbR, pDoc);
 	     pAbb1 = pAbb1->AbNext;
 	  }
      }
@@ -970,11 +970,11 @@ boolean             exceptRep;
 	      if (!(exceptRep && pAbbSibling->AbRepeatedPresBox))
 		{
 		   *volsupp += pAbbSibling->AbVolume;
-		   TuePave (pAbbSibling);
-		   *pAbbReDisp = Englobant (*pAbbReDisp, pAbbSibling);
+		   SetDeadAbsBox (pAbbSibling);
+		   *pAbbReDisp = Enclosing (*pAbbReDisp, pAbbSibling);
 		   /* traite les paves qui se referent au pave detruit */
-		   SuppRfPave (pAbbSibling, pAbbR, pDoc);
-		   *pAbbReDisp = Englobant (*pAbbReDisp, *pAbbR);
+		   ApplyRefAbsBoxSupp (pAbbSibling, pAbbR, pDoc);
+		   *pAbbReDisp = Enclosing (*pAbbReDisp, *pAbbR);
 		}
 	   if (ElemIsBefore)
 	      pAbbSibling = pAbbSibling->AbPrevious;
@@ -1020,14 +1020,14 @@ boolean             exceptCrWith;
       else
 	{
 	   if (pAbbSibling->AbPresentationBox)
-	      if (!exceptCrWith || RegleCree (pDoc, pAb, pAbbSibling) != FnCreateWith)
+	      if (!exceptCrWith || TypeCreatedRule (pDoc, pAb, pAbbSibling) != FnCreateWith)
 		{
 		   *volsupp += pAbbSibling->AbVolume;
-		   TuePave (pAbbSibling);
-		   *pAbbReDisp = Englobant (*pAbbReDisp, pAbbSibling);
+		   SetDeadAbsBox (pAbbSibling);
+		   *pAbbReDisp = Enclosing (*pAbbReDisp, pAbbSibling);
 		   /* traite les paves qui se referent au pave detruit */
-		   SuppRfPave (pAbbSibling, pAbbR, pDoc);
-		   *pAbbReDisp = Englobant (*pAbbReDisp, *pAbbR);
+		   ApplyRefAbsBoxSupp (pAbbSibling, pAbbR, pDoc);
+		   *pAbbReDisp = Enclosing (*pAbbReDisp, *pAbbR);
 		}
 	   if (ElemIsBefore)
 	      pAbbSibling = pAbbSibling->AbPrevious;
@@ -1132,11 +1132,11 @@ boolean             exceptRep;
 			   if (!pAbb->AbRepeatedPresBox)
 			     {
 				*volsupp += pAbb->AbVolume;
-				TuePave (pAbb);
-				*pAbbReDisp = Englobant (*pAbbReDisp, pAbb);
+				SetDeadAbsBox (pAbb);
+				*pAbbReDisp = Enclosing (*pAbbReDisp, pAbb);
 				/* traite les paves qui se referent au pave detruit */
-				SuppRfPave (pAbb, &pAbbR, pDoc);
-				*pAbbReDisp = Englobant (*pAbbReDisp, pAbbR);
+				ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
+				*pAbbReDisp = Enclosing (*pAbbReDisp, pAbbR);
 			     }
 			   pAbb = pAbb->AbNext;
 			}
@@ -1156,11 +1156,11 @@ boolean             exceptRep;
 			   if (!pAbb->AbRepeatedPresBox)
 			     {
 				*volsupp += pAbb->AbVolume;
-				TuePave (pAbb);
-				*pAbbReDisp = Englobant (*pAbbReDisp, pAbb);
+				SetDeadAbsBox (pAbb);
+				*pAbbReDisp = Enclosing (*pAbbReDisp, pAbb);
 				/* traite les paves qui se referent au pave detruit */
-				SuppRfPave (pAbb, &pAbbR, pDoc);
-				*pAbbReDisp = Englobant (*pAbbReDisp, pAbbR);
+				ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
+				*pAbbReDisp = Enclosing (*pAbbReDisp, pAbbR);
 			     }
 			   pAbb = pAbb->AbPrevious;
 			}
@@ -1213,11 +1213,11 @@ boolean             exceptRep;
 			   if (!pAbb->AbRepeatedPresBox)
 			     {
 				*volsupp += pAbb->AbVolume;
-				TuePave (pAbb);
-				*pAbbReDisp = Englobant (*pAbbReDisp, pAbb);
+				SetDeadAbsBox (pAbb);
+				*pAbbReDisp = Enclosing (*pAbbReDisp, pAbb);
 				/* traite les paves qui se referent au pave detruit */
-				SuppRfPave (pAbb, &pAbbR, pDoc);
-				*pAbbReDisp = Englobant (*pAbbReDisp, pAbbR);
+				ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
+				*pAbbReDisp = Enclosing (*pAbbReDisp, pAbbR);
 			     }
 			   pAbb = pAbb->AbPrevious;
 			}
@@ -1238,11 +1238,11 @@ boolean             exceptRep;
 			   if (!pAbb->AbRepeatedPresBox)
 			     {
 				*volsupp += pAbb->AbVolume;
-				TuePave (pAbb);
-				*pAbbReDisp = Englobant (*pAbbReDisp, pAbb);
+				SetDeadAbsBox (pAbb);
+				*pAbbReDisp = Enclosing (*pAbbReDisp, pAbb);
 				/* traite les paves qui se referent au pave detruit */
-				SuppRfPave (pAbb, &pAbbR, pDoc);
-				*pAbbReDisp = Englobant (*pAbbReDisp, pAbbR);
+				ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
+				*pAbbReDisp = Enclosing (*pAbbReDisp, pAbbR);
 			     }
 			   pAbb = pAbb->AbNext;
 			}
@@ -1325,11 +1325,11 @@ boolean             exceptCrWith;
 		      else
 			{
 			   *volsupp += pAbb->AbVolume;
-			   TuePave (pAbb);
-			   *pAbbReDisp = Englobant (*pAbbReDisp, pAbb);
+			   SetDeadAbsBox (pAbb);
+			   *pAbbReDisp = Enclosing (*pAbbReDisp, pAbb);
 			   /* traite les paves qui se referent au pave detruit */
-			   SuppRfPave (pAbb, &pAbbR, pDoc);
-			   *pAbbReDisp = Englobant (*pAbbReDisp, pAbbR);
+			   ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
+			   *pAbbReDisp = Enclosing (*pAbbReDisp, pAbbR);
 			   pAbb = pAbb->AbNext;
 			}
 		   while (!(stop));
@@ -1345,14 +1345,14 @@ boolean             exceptCrWith;
 			 stop = TRUE;
 		      else
 			{
-			   if (RegleCree (pDoc, pAbbEnclosing, pAbb) != FnCreateWith)
+			   if (TypeCreatedRule (pDoc, pAbbEnclosing, pAbb) != FnCreateWith)
 			     {
 				*volsupp += pAbb->AbVolume;
-				TuePave (pAbb);
-				*pAbbReDisp = Englobant (*pAbbReDisp, pAbb);
+				SetDeadAbsBox (pAbb);
+				*pAbbReDisp = Enclosing (*pAbbReDisp, pAbb);
 				/* traite les paves qui se referent au pave detruit */
-				SuppRfPave (pAbb, &pAbbR, pDoc);
-				*pAbbReDisp = Englobant (*pAbbReDisp, pAbbR);
+				ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
+				*pAbbReDisp = Enclosing (*pAbbReDisp, pAbbR);
 			     }
 			   pAbb = pAbb->AbPrevious;
 			}
@@ -1383,11 +1383,11 @@ boolean             exceptCrWith;
 		      else
 			{
 			   *volsupp += pAbb->AbVolume;
-			   TuePave (pAbb);
-			   *pAbbReDisp = Englobant (*pAbbReDisp, pAbb);
+			   SetDeadAbsBox (pAbb);
+			   *pAbbReDisp = Enclosing (*pAbbReDisp, pAbb);
 			   /* traite les paves qui se referent au pave detruit */
-			   SuppRfPave (pAbb, &pAbbR, pDoc);
-			   *pAbbReDisp = Englobant (*pAbbReDisp, pAbbR);
+			   ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
+			   *pAbbReDisp = Enclosing (*pAbbReDisp, pAbbR);
 			   pAbb = pAbb->AbPrevious;
 			}
 		   while (!(stop));
@@ -1403,14 +1403,14 @@ boolean             exceptCrWith;
 			 stop = TRUE;
 		      else
 			{
-			   if (RegleCree (pDoc, pAbbEnclosing, pAbb) != FnCreateWith)
+			   if (TypeCreatedRule (pDoc, pAbbEnclosing, pAbb) != FnCreateWith)
 			     {
 				*volsupp += pAbb->AbVolume;
-				TuePave (pAbb);
-				*pAbbReDisp = Englobant (*pAbbReDisp, pAbb);
+				SetDeadAbsBox (pAbb);
+				*pAbbReDisp = Enclosing (*pAbbReDisp, pAbb);
 				/* traite les paves qui se referent au pave detruit */
-				SuppRfPave (pAbb, &pAbbR, pDoc);
-				*pAbbReDisp = Englobant (*pAbbReDisp, pAbbR);
+				ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
+				*pAbbReDisp = Enclosing (*pAbbReDisp, pAbbR);
 			     }
 			   pAbb = pAbb->AbNext;
 			}
@@ -1549,8 +1549,8 @@ int                *dvol;
 				  *dvol -= pAbb->AbVolume;
 				  KillPresEnclosing (pAbb, head, pDoc, &pAbbReDisp, &volsupp, FALSE);
 				  *dvol -= volsupp;
-				  TuePave (pAbb);
-				  SuppRfPave (pAbb, &pAbbR, pDoc);
+				  SetDeadAbsBox (pAbb);
+				  ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
 				  nbpages--;
 			       }
 			     else
@@ -1585,7 +1585,7 @@ int                *dvol;
 		  KillPresEnclosing (pAb, head, pDoc, &pAbbReDisp, &volsupp, FALSE);
 		  *dvol -= volsupp;
 		  /* detruit le pave trouve' et toute sa descendance */
-		  TuePave (pAb);
+		  SetDeadAbsBox (pAb);
 		  /* detruit les paves freres tant qu'il reste du volume a supprimer */
 		  pAbbSibling = pAb;
 		  while (*dvol > 0 && pAbbSibling != NULL)
@@ -1603,15 +1603,15 @@ int                *dvol;
 			     SupprAbsBoxes (pAbbSibling, pDoc, head, dvol);
 		       /* traite ensuite les paves qui se referent au pave detruit */
 		    }
-		  SuppRfPave (pAb, &pAbbR, pDoc);
-		  pAbbReDisp = Englobant (pAbbReDisp, pAbbR);
+		  ApplyRefAbsBoxSupp (pAb, &pAbbR, pDoc);
+		  pAbbReDisp = Enclosing (pAbbReDisp, pAbbR);
 		  pEl1 = pAbbRoot->AbElement;
 		  if (AssocView (pAbbRoot->AbElement))
 		     pDoc->DocAssocModifiedAb[pEl1->ElAssocNum - 1] =
-			Englobant (pAbbReDisp, pDoc->DocAssocModifiedAb[pEl1->ElAssocNum - 1]);
+			Enclosing (pAbbReDisp, pDoc->DocAssocModifiedAb[pEl1->ElAssocNum - 1]);
 		  else
 		     pDoc->DocViewModifiedAb[pAbbRoot->AbDocView - 1] =
-			Englobant (pAbbReDisp, pDoc->DocViewModifiedAb[pAbbRoot->AbDocView - 1]);
+			Enclosing (pAbbReDisp, pDoc->DocViewModifiedAb[pAbbRoot->AbDocView - 1]);
 		  *dvol = 0;
 #ifdef __COLPAGE__
 	       }		/* fin cas sans pages */
@@ -1863,7 +1863,7 @@ int                 frame;
 #endif /* __COLPAGE__ */
 
 
-   DocVueFen (frame, &pDoc, &vue, &assoc);
+   GetDocAndView (frame, &pDoc, &vue, &assoc);
    /* met a jour la nouvelle capacite de la vue, indique dans le contexte */
    /* du document le volume des paves a creer et cherche le pave racine de */
    /* la vue */
@@ -1983,7 +1983,7 @@ int                 frame;
 
 #endif /* __COLPAGE__ */
 
-   DocVueFen (frame, &pDoc, &vue, &assoc);
+   GetDocAndView (frame, &pDoc, &vue, &assoc);
    /* met a jour la nouvelle capacite de la vue et cherche le pave racine */
    /* de la vue */
    if (pDoc == NULL)
@@ -2264,7 +2264,7 @@ int                 frame;
 			  pAbbox1 = pAbbRoot->AbFirstEnclosed;
 			  while (pAbbox1 != NULL)
 			    {
-			       TuePave (pAbbox1);
+			       SetDeadAbsBox (pAbbox1);
 			       pAbbox1 = pAbbox1->AbNext;
 			    }
 			  pAbbRoot->AbDead = TRUE;	/* pour que sa boite soit */
@@ -2569,9 +2569,9 @@ int                 frame;
 					  /* on ne detruit pas les paves des elements restant */
 					  if (pAbbDestroyed->AbElement != pAbbRemain->AbElement)
 					    {
-					       TuePave (pAbbDestroyed);
+					       SetDeadAbsBox (pAbbDestroyed);
 					       pAbbReDisp = NULL;
-					       SuppRfPave (pAbbDestroyed, &pAbbReDisp, pDoc);
+					       ApplyRefAbsBoxSupp (pAbbDestroyed, &pAbbReDisp, pDoc);
 					    }
 				       pAbbDestroyed = pAbbDestroyed->AbPrevious;
 				    }
@@ -2582,9 +2582,9 @@ int                 frame;
 					  /* on ne detruit pas les paves des elements restant */
 					  if (pAbbDestroyed->AbElement != pAbbRemain->AbElement)
 					    {
-					       TuePave (pAbbDestroyed);
+					       SetDeadAbsBox (pAbbDestroyed);
 					       pAbbReDisp = NULL;
-					       SuppRfPave (pAbbDestroyed, &pAbbReDisp, pDoc);
+					       ApplyRefAbsBoxSupp (pAbbDestroyed, &pAbbReDisp, pDoc);
 					    }
 				       pAbbDestroyed = pAbbDestroyed->AbNext;
 				    }
@@ -2892,7 +2892,7 @@ int                 frame;
 	 /* la distance demandee est valide */
 	{
 	   /* cherche le document et la vue correspondant a la fenetre */
-	   DocVueFen (frame, &pDoc, &Vue, &Assoc);
+	   GetDocAndView (frame, &pDoc, &Vue, &Assoc);
 	   if (pDoc != NULL)
 	     {
 		/* cherche la racine de l'arbre affiche' dans cette frame */
@@ -3000,7 +3000,7 @@ int                 frame;
 			MontrerBoite (frame, pAb->AbBox, position, 0);
 
 		     /* Allume la selection */
-		     AllumeSelection (FALSE, FALSE);
+		     HighlightSelection (FALSE, FALSE);
 		  }
 	     }
 	}

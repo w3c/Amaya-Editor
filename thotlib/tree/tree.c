@@ -2801,7 +2801,7 @@ boolean             withLabel;
 		/* charge le schema de nature */
 	       {
 		  PSchName[0] = '\0';
-		  LoadNat (pSS, PSchName, typeNum);
+		  LoadNatureSchema (pSS, PSchName, typeNum);
 	       }
 	     if (pSRule->SrSSchemaNat == NULL)
 		/* echec chargement schema */
@@ -3473,7 +3473,7 @@ PtrElement         *pEl;
 		  while ((!ok) && (pAsc != NULL))
 		    {
 		       pSS = pEl1->ElStructSchema;
-		       ok = LibNature (pAsc->ElStructSchema, pSS);
+		       ok = FreeNature (pAsc->ElStructSchema, pSS);
 		       if (ok)
 			  /* le schema de structure a ete libere'. Il faut le */
 			  /* supprimer de la table des natures du document */
@@ -3674,7 +3674,7 @@ boolean             shareRef;
 		     /* charge les schemas de structure et present. pour la copie */
 		     PSchName[0] = '\0';
 		     /* pas de preference pour le schema de presentation */
-		     nR = CreeNature (pSource->ElStructSchema->SsName, PSchName, pSSchema);
+		     nR = CreateNature (pSource->ElStructSchema->SsName, PSchName, pSSchema);
 		     if (nR == 0)
 			/* echec de chargement des schemas */
 			copyType = 0;
@@ -3709,7 +3709,7 @@ boolean             shareRef;
 		       strncpy (pEl->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
 		       pEl->ElReferredDescr = pSource->ElReferredDescr;	/* partage (temporairement) */
 		       /* le descripteur d'element reference' entre l'element source */
-		       /*et l'element copie,pour que CmdCopy ou les procedure Coller */
+		       /*et l'element copie,pour que CopyCommand ou les procedure Coller */
 		       /* puissent relier les references copiees aux elements copies */
 		    }
 		  else
@@ -3948,7 +3948,7 @@ PtrDocument         pDoc;
 	/* l'element a copier est pointe' par pSource, on le copie */
 	if (pSource != NULL)
 	  {
-	     if (IdentDocNul (docIdent))
+	     if (DocIdentIsNull (docIdent))
 		/* l'element a copier est dans le meme document */
 		pDocSource = pDoc;
 	     if (pDocSource != NULL)

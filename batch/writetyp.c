@@ -23,17 +23,17 @@ static BinFile      outfile;
 
 #ifdef __STDC__
 /* ---------------------------------------------------------------------- */
-/* |    wrshort ecrit un entier court sur deux octets dans le fichier   | */
+/* |    WriteShort ecrit un entier court sur deux octets dans le fichier   | */
 /* |            de sortie.                                              | */
 /* ---------------------------------------------------------------------- */
-void                wrshort (int n)
+void                WriteShort (int n)
 
 #else  /* __STDC__ */
 /* ---------------------------------------------------------------------- */
-/* |    wrshort ecrit un entier court sur deux octets dans le fichier   | */
+/* |    WriteShort ecrit un entier court sur deux octets dans le fichier   | */
 /* |            de sortie.                                              | */
 /* ---------------------------------------------------------------------- */
-void                wrshort (n)
+void                WriteShort (n)
 int                 n;
 
 #endif /* __STDC__ */
@@ -44,15 +44,15 @@ int                 n;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |  wrsignshort  ecrit dans le fichier de sortie un entier signe' sur | */
+/* |  WriteSignedShort  ecrit dans le fichier de sortie un entier signe' sur | */
 /* |                2 octets                                            | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                wrsignshort (int n)
+void                WriteSignedShort (int n)
 
 #else  /* __STDC__ */
-void                wrsignshort (n)
+void                WriteSignedShort (n)
 int             n;
 
 #endif /* __STDC__ */
@@ -60,9 +60,9 @@ int             n;
 {
 
    if (n >= 0)
-      wrshort (n);
+      WriteShort (n);
    else
-      wrshort (n + 65536);
+      WriteShort (n + 65536);
 }
 
 
@@ -376,13 +376,13 @@ PtrRegleTypo        pR;
 	wrptrregle (pRe1->RTyRegleSuiv);
 	wrTypeRegleTypo (pRe1->RTyTypeFunct);
 	wrnomproc (pRe1->RTyIdentFunct);
-	wrshort (pRe1->RTyNbCond);
+	WriteShort (pRe1->RTyNbCond);
 	for (nbcond = 1; nbcond <= pRe1->RTyNbCond; nbcond++)
 	  {
 	     TCond = &pRe1->RTyCondition[nbcond - 1];
 	     wrTypeCondTypo (TCond->CondTypeCond);
 	     wrbool (TCond->CondNegative);
-	     wrshort (TCond->CondTypeElem);
+	     WriteShort (TCond->CondTypeElem);
 	     switch (TCond->CondTypeCond)
 		   {
 		      case TyAvantType:
@@ -429,18 +429,18 @@ PtrSSchema        pSchStr;
    if (pA != NULL)
      {
 	pRTy1 = pA;
-	wrshort (pRTy1->RTyATypeElem);
+	WriteShort (pRTy1->RTyATypeElem);
 	switch (pSchStr->SsAttribute[att - 1].AttrType)
 	      {
 		 case AtNumAttr:
-		    wrshort (pRTy1->RTyANbCas);
+		    WriteShort (pRTy1->RTyANbCas);
 		    for (i = 1; i <= pRTy1->RTyANbCas; i++)
 		       wrptrbloctypo (pRTy1->RTyACas[i - 1].TyANBlocRegles);
 		    for (i = 1; i <= pRTy1->RTyANbCas; i++)
 		      {
 			 pTC1 = &pRTy1->RTyACas[i - 1];
-			 wrsignshort (pTC1->TyANBorneInf);
-			 wrsignshort (pTC1->TyANBorneSup);
+			 WriteSignedShort (pTC1->TyANBorneInf);
+			 WriteSignedShort (pTC1->TyANBorneSup);
 			 WriteReglesTypo (pTC1->TyANBlocRegles);
 		      }
 		    break;
@@ -498,7 +498,7 @@ PtrSSchema        pSchStr;
    outfile = BIOwriteOpen (fname);
 
    wrnom (pSchTypo->STyNomStruct);
-   wrshort (pSchTypo->STyStructCode);
+   WriteShort (pSchTypo->STyStructCode);
    for (i = 1; i <= pSchStr->SsNRules; i++)
       wrbool (pSchTypo->STyElemAlinea[i - 1]);
    wrlistfunction (pSchTypo->STyFunction);

@@ -32,14 +32,14 @@ static boolean      erreurTra = FALSE;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    erreurTraduc positionne erreurTra dans le cas d'une erreur de   | */
+/* |    TranslationError positionne erreurTra dans le cas d'une erreur de   | */
 /* |            lecture.                                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                erreurTraduc (int err)
+void                TranslationError (int err)
 
 #else  /* __STDC__ */
-void                erreurTraduc (err)
+void                TranslationError (err)
 int                 err;
 
 #endif /* __STDC__ */
@@ -69,7 +69,7 @@ BinFile             fich;
 
    type = TcondFirst;
    if (!BIOreadByte (fich, &c))
-      erreurTraduc (1);
+      TranslationError (1);
    else
       switch (c)
 	    {
@@ -140,7 +140,7 @@ BinFile             fich;
 		  type = TcondExternalRef;
 		  break;
 	       default:
-		  erreurTraduc (2);	/* erreur de codage */
+		  TranslationError (2);	/* erreur de codage */
 		  type = TcondFirst;
 		  break;
 	    }
@@ -168,7 +168,7 @@ BinFile             fich;
 
    type = TRemove;
    if (!BIOreadByte (fich, &c))
-      erreurTraduc (3);
+      TranslationError (3);
    else
       switch (c)
 	    {
@@ -212,7 +212,7 @@ BinFile             fich;
 		  type = TAddCounter;
 		  break;
 	       default:
-		  erreurTraduc (4);	/* erreur de codage */
+		  TranslationError (4);	/* erreur de codage */
 		  type = TRemove;
 		  break;
 	    }
@@ -240,7 +240,7 @@ BinFile             fich;
 
    ret = RelEquals;		/* valeur par defaut ? */
    if (!BIOreadByte (fich, &c))
-      erreurTraduc (3);
+      TranslationError (3);
    else
       switch (c)
 	    {
@@ -278,7 +278,7 @@ BinFile             fich;
 
    position = TAfter;
    if (!BIOreadByte (fich, &c))
-      erreurTraduc (5);
+      TranslationError (5);
    else
       switch (c)
 	    {
@@ -289,7 +289,7 @@ BinFile             fich;
 		  position = TBefore;
 		  break;
 	       default:
-		  erreurTraduc (6);	/* erreur de codage */
+		  TranslationError (6);	/* erreur de codage */
 		  position = TAfter;
 		  break;
 	    }
@@ -318,7 +318,7 @@ BinFile             fich;
 
    type = ToConst;
    if (!BIOreadByte (fich, &c))
-      erreurTraduc (7);
+      TranslationError (7);
    else
       switch (c)
 	    {
@@ -383,7 +383,7 @@ BinFile             fich;
 		  type = ToReferredRefId;
 		  break;
 	       default:
-		  erreurTraduc (8);	/* erreur de codage */
+		  TranslationError (8);	/* erreur de codage */
 		  type = ToConst;
 		  break;
 	    }
@@ -411,7 +411,7 @@ BinFile             fich;
 
    position = RpSibling;
    if (!BIOreadByte (fich, &c))
-      erreurTraduc (9);
+      TranslationError (9);
    else
       switch (c)
 	    {
@@ -428,7 +428,7 @@ BinFile             fich;
 		  position = RpAssoc;
 		  break;
 	       default:
-		  erreurTraduc (10);	/* erreur de codage */
+		  TranslationError (10);	/* erreur de codage */
 		  position = RpSibling;
 		  break;
 	    }
@@ -456,7 +456,7 @@ BinFile             fich;
 
    type = TCntrNoOp;
    if (!BIOreadByte (fich, &c))
-      erreurTraduc (11);
+      TranslationError (11);
    else
       switch (c)
 	    {
@@ -473,7 +473,7 @@ BinFile             fich;
 		  type = TCntrNoOp;
 		  break;
 	       default:
-		  erreurTraduc (12);	/* erreur de codage */
+		  TranslationError (12);	/* erreur de codage */
 		  type = TCntrNoOp;
 		  break;
 	    }
@@ -502,7 +502,7 @@ BinFile             fich;
 
    type = VtText;
    if (!BIOreadByte (fich, &c))
-      erreurTraduc (13);
+      TranslationError (13);
    else
       switch (c)
 	    {
@@ -534,7 +534,7 @@ BinFile             fich;
 		  type = VtDocumentDir;
 		  break;
 	       default:
-		  erreurTraduc (14);	/* erreur de codage */
+		  TranslationError (14);	/* erreur de codage */
 		  type = VtText;
 		  break;
 	    }
@@ -563,7 +563,7 @@ BinFile             file;
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
-	erreurTraduc (15);
+	TranslationError (15);
      }
    switch (c)
 	 {
@@ -583,7 +583,7 @@ BinFile             file;
 	       ret = CntLowercase;
 	       break;
 	    default:
-	       erreurTraduc (16);	/* erreur de codage */
+	       TranslationError (16);	/* erreur de codage */
 	       ret = CntArabic;
 	       break;
 	 }
@@ -611,7 +611,7 @@ PtrTRule       *nextr;
    PtrTRule        regle;
 
    if (!BIOreadByte (fich, &c))
-      erreurTraduc (17);
+      TranslationError (17);
    if (c == '\0')
       regle = NULL;
    else
@@ -646,7 +646,7 @@ PtrTRule       *nextr;
 	{
 	   r = *nextr;		/* acquiert un buffer pour la regle suivante */
 	   if ((*nextr = (PtrTRule) TtaGetMemory (sizeof (TranslRule))) == NULL)
-	      erreurTraduc (18);
+	      TranslationError (18);
 	   /* lit une regle */
 	   pRe1 = r;
 	   pRe1->TrNextTRule = RdPtrRegle (fich, nextr);
@@ -790,7 +790,7 @@ PtrTRuleBlock      *nextb;
 	     b = *nextb;
 	     /* acquiert un buffer pour le bloc suivant */
 	     if ((*nextb = (PtrTRuleBlock) TtaGetMemory (sizeof (TRuleBlock))) == NULL)
-		erreurTraduc (19);
+		TranslationError (19);
 	     /* lit un bloc */
 	     pBl1 = b;
 	     pBl1->TbNextBlock = RdPtrBloc (fich, nextb);
@@ -1080,7 +1080,7 @@ PRuleTransl       *pRT1;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    RdSchTrad lit un fichier contenant un schema de traduction et   | */
+/* |    ReadTranslationSchema lit un fichier contenant un schema de traduction et   | */
 /* |            le charge en memoire. Retourne un pointeur sur le       | */
 /* |            schema de presentation en memoire si chargement reussi, | */
 /* |            NULL si echec.                                          | */
@@ -1088,10 +1088,10 @@ PRuleTransl       *pRT1;
 /* |            - SS: schema de structure correspondant, deja rempli.   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrTSchema        RdSchTrad (Name fname, PtrSSchema SS)
+PtrTSchema        ReadTranslationSchema (Name fname, PtrSSchema SS)
 
 #else  /* __STDC__ */
-PtrTSchema        RdSchTrad (fname, SS)
+PtrTSchema        ReadTranslationSchema (fname, SS)
 Name                 fname;
 PtrSSchema        SS;
 
@@ -1134,11 +1134,11 @@ PtrSSchema        SS;
    else
      {
 	if ((pSchT = (PtrTSchema) TtaGetMemory (sizeof (TranslSchema))) == NULL)
-	   erreurTraduc (20);
+	   TranslationError (20);
 	if ((nextr = (PtrTRule) TtaGetMemory (sizeof (TranslRule))) == NULL)
-	   erreurTraduc (19);
+	   TranslationError (19);
 	if ((nextb = (PtrTRuleBlock) TtaGetMemory (sizeof (TRuleBlock))) == NULL)
-	   erreurTraduc (21);
+	   TranslationError (21);
 
 	/* lit la partie fixe du schema de traduction */
 	pSc1 = pSchT;
@@ -1336,14 +1336,14 @@ PtrSSchema        SS;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    LibereSchTrad   libere le schema de traduction pSchT            | */
+/* |    FreeTranslationSchema   libere le schema de traduction pSchT            | */
 /* |            correspondant au schema de structure pSS.               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                LibereSchTrad (PtrTSchema pSchT, PtrSSchema pSS)
+void                FreeTranslationSchema (PtrTSchema pSchT, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-void                LibereSchTrad (pSchT, pSS)
+void                FreeTranslationSchema (pSchT, pSS)
 PtrTSchema        pSchT;
 PtrSSchema        pSS;
 

@@ -1958,7 +1958,7 @@ SyntRuleNum                 pr;
 				   CopyWord (N, wi, wl);
 				   /* recupere le nom du schema externe */
 				   /* lit le schema de structure externe */
-				   if (!RdSchStruct (N, pExternSSchema))
+				   if (!ReadStructureSchema (N, pExternSSchema))
 				      CompilerError (wi, STR, FATAL, STR_CANNOT_READ_STRUCT_SCHEM, inputLine, LineNum);
 				   /* echec lecture du schema */
 				   else
@@ -2096,7 +2096,7 @@ SyntRuleNum                 pr;
 				   else
 				      /* le contenu est un objet construit selon un */
 				      /* autre schema de structure, on lit ce schema */
-				   if (!RdSchStruct (pSSchema->SsRule[i - 1].SrName, pExternSSchema))
+				   if (!ReadStructureSchema (pSSchema->SsRule[i - 1].SrName, pExternSSchema))
 				      CompilerError (wi, STR, FATAL, STR_CANNOT_READ_STRUCT_SCHEM, inputLine, LineNum);
 				   /* echec lecture du schema */
 				   else
@@ -2503,7 +2503,7 @@ static void         ExternalTypes ()
 	else
 	   /* transforme la regle CsNatureSchema */
 	  {
-	     if (!RdSchStruct (pRule->SrName, pExternSSchema))
+	     if (!ReadStructureSchema (pRule->SrName, pExternSSchema))
 	       {
 		  /* echec lecture du schema externe */
 		  CompilerErrorString (0, STR, INFO, STR_EXTERNAL_STRUCT_NOT_FOUND, inputLine, LineNum, pRule->SrName);
@@ -3007,7 +3007,7 @@ char              **argv;
 		       if (!error)
 			 {
 			    strcat (srceFileName, ".STR");
-			    fileOK = WrSchStruct (srceFileName, pSSchema, 0);
+			    fileOK = WriteStructureSchema (srceFileName, pSSchema, 0);
 			    if (!fileOK)
 			       TtaDisplayMessage (FATAL, TtaGetMessage(STR, STR_CANNOT_WRITE), srceFileName);
 			 }

@@ -679,7 +679,7 @@ int                 dy;
    InitColors (name);
    InitGraphicContexts ();
    InitCurs ();
-   InitFont (name);
+   InitDialogueFonts (name);
 
    /* Initialization of Picture Drivers */
    InitPictureHandlers (FALSE);
@@ -743,7 +743,7 @@ XSelectionEvent    *event;
 			 /* free the buffer */
 			 free (Xbuffer);
 			 Xbuffer = NULL;
-			 LgXbuffer = 0;
+			 ClipboardLength = 0;
 		      }
 		 }
 	       break;
@@ -822,13 +822,13 @@ XSelectionEvent    *event;
 		    else if (request->property == None)
 		      {
 			 /* there is no such property */
-			 XStoreBuffer (request->display, Xbuffer, LgXbuffer, 0);
+			 XStoreBuffer (request->display, Xbuffer, ClipboardLength, 0);
 		      }
 		    else
 		      {
 			 /* store the value in the given property */
 			 XChangeProperty (request->display, request->requestor, request->property,
-			 XA_STRING, 8, PropModeReplace, Xbuffer, LgXbuffer);
+			 XA_STRING, 8, PropModeReplace, Xbuffer, ClipboardLength);
 			 /* signal the completion of the action */
 			 notify.property = request->property;
 			 XSendEvent (request->display, request->requestor, TRUE, NoEventMask, (XEvent *) & notify);

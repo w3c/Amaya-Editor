@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void DebInsert ( void );
+extern void StartTextInsertion ( void );
 extern void InsertChar ( int frame,
                          unsigned char car,
                          int clavier );
@@ -15,13 +15,13 @@ extern void TtcInsertChar ( Document document,
                             char c );
 extern void TtcDeletePreviousChar ( Document document,
                                     View view );
-extern void FinInsertText ( void );
-extern void FinInsertParagraph ( PtrAbstractBox pAb,
+extern void CloseTextInsertion ( void );
+extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                  int frame );
-extern void ClearRegistre ( PtrTextBuffer registre );
-extern void EditionEtSpecials ( int numero,
+extern void ClearClipboard ( PtrTextBuffer registre );
+extern void ContentEditing ( int numero,
                                 boolean IsCar );
-extern void CollerXBuffer ( unsigned char *Xbuffer,
+extern void PasteXClipboard ( unsigned char *Xbuffer,
                             int nbytes );
 extern void TtcCutSelection ( Document document,
                               View view );
@@ -41,7 +41,7 @@ extern void EditingLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void DebInsert (/* void */);
+extern void StartTextInsertion (/* void */);
 extern void InsertChar (/* int frame,
                            unsigned char car,
                            int clavier */);
@@ -50,13 +50,13 @@ extern void TtcInsertChar (/* Document document,
                               char c */);
 extern void TtcDeletePreviousChar (/* Document document,
                                       View view */);
-extern void FinInsertText (/* void */);
-extern void FinInsertParagraph (/* PtrAbstractBox pAb,
+extern void CloseTextInsertion (/* void */);
+extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
                                    int frame */);
-extern void ClearRegistre (/* PtrTextBuffer registre */);
-extern void EditionEtSpecials (/* int numero,
+extern void ClearClipboard (/* PtrTextBuffer registre */);
+extern void ContentEditing (/* int numero,
                                   boolean IsCar */);
-extern void CollerXBuffer (/* unsigned char *Xbuffer,
+extern void PasteXClipboard (/* unsigned char *Xbuffer,
                               int nbytes */);
 extern void TtcCutSelection (/* Document document,
                                 View view */);

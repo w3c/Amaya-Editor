@@ -455,7 +455,7 @@ caddr_t             call_d;
    car = (unsigned char) param % 256;
    /* Insere le caractere selectionne */
    if (ThotLocalActions[T_insertchar] != NULL)
-      (*ThotLocalActions[T_insertchar]) (ActifFen, car, KeyboardMode);
+      (*ThotLocalActions[T_insertchar]) (ActiveFrame, car, KeyboardMode);
 }
 
 
@@ -499,11 +499,11 @@ XmDrawnButtonCallbackStruct *infos;
    y = 4;
    i = param % 256;		/* indice dans la table des items */
    it = (ITEM *) ((int) it + (sizeof (ITEM) * i));
-   WChar (infos->window, it->name, CarWidth (87, FontMenu), y, GXcopy, KbFonts[kb], 0, GCkey);
+   WChar (infos->window, it->name, CarWidth (87, FontDialogue), y, GXcopy, KbFonts[kb], 0, GCkey);
    if (it->legend)
      {
 	y = FontHeight (KbFonts[kb]);
-	WChaine (infos->window, it->legend, 4, y, FontMenu, GCkey);
+	WChaine (infos->window, it->legend, 4, y, FontDialogue, GCkey);
      }
 }
 
@@ -559,7 +559,7 @@ int                 nbitem;
    n++;
    XtSetArg (args[n], XmNborderColor, Button_Color);
    n++;
-   xfont = XmFontListCreate ((XFontStruct *) FontMenu, XmSTRING_DEFAULT_CHARSET);
+   xfont = XmFontListCreate ((XFontStruct *) FontDialogue, XmSTRING_DEFAULT_CHARSET);
    XtSetArg (args[n], XmNfontList, xfont);
    n++;
    title_string = XmStringCreateSimple (title);
@@ -692,9 +692,9 @@ int                 nbitem;
 	n++;
 	XtSetArg (args[n], XmNmarginHeight, 0);
 	n++;
-	XtSetArg (args[n], XmNwidth, (Dimension) CarWidth (87, FontMenu) * 3);
+	XtSetArg (args[n], XmNwidth, (Dimension) CarWidth (87, FontDialogue) * 3);
 	n++;
-	XtSetArg (args[n], XmNheight, (Dimension) FontHeight (font) + FontHeight (FontMenu) + 4);
+	XtSetArg (args[n], XmNheight, (Dimension) FontHeight (font) + FontHeight (FontDialogue) + 4);
 	n++;
 
 	for (i = 0; i < nbitem; i++, it++)
@@ -730,28 +730,28 @@ int                 number;
    switch (number)
 	 {
 	    case 0:		/* Symboles */
-	       KbFonts[number] = FontIS;	/* Symboles */
-	       CreateKeyboard (number, TtaGetMessage (LIB, MATH_SYMBOLS), FontIS, 3,
+	       KbFonts[number] = SymbolIcons;	/* Symboles */
+	       CreateKeyboard (number, TtaGetMessage (LIB, MATH_SYMBOLS), SymbolIcons, 3,
 		 KbX, KbY, Items_Symb, sizeof (Items_Symb) / sizeof (ITEM));
 	       break;
 	    case 1:		/* Graphiques */
-	       KbFonts[number] = FontIGr;	/* Graphique */
-	       CreateKeyboard (number, TtaGetMessage (LIB, GRAPHICS), FontIGr, 6,
+	       KbFonts[number] = GraphicsIcons;	/* Graphique */
+	       CreateKeyboard (number, TtaGetMessage (LIB, GRAPHICS), GraphicsIcons, 6,
 	       KbX, KbY, Items_Graph, sizeof (Items_Graph) / sizeof (ITEM));
 	       break;
 	    case 2:		/* ISO latin 1 */
-	       FonteAc = LireFonte ('L', 'T', 0, 14, UnPoint);
+	       FonteAc = ReadFont ('L', 'T', 0, 14, UnPoint);
 	       if (!FonteAc)
-		  FonteAc = FontMenu;
+		  FonteAc = FontDialogue;
 	       KbFonts[number] = FonteAc;	/* Latin */
 	       if (FonteAc != NULL)
 		  CreateKeyboard (number, TtaGetMessage (LIB, LATIN_ALPHABET), FonteAc, 13,
 		  KbX, KbY, Items_Isol, sizeof (Items_Isol) / sizeof (ITEM));
 	       break;
 	    case 3:		/* Grec */
-	       FontIg = LireFonte ('G', 'T', 0, 14, UnPoint);
+	       FontIg = ReadFont ('G', 'T', 0, 14, UnPoint);
 	       if (!FontIg)
-		  FontIg = FontMenu;
+		  FontIg = FontDialogue;
 	       if (FontIg != NULL)
 		  KbFonts[number] = FontIg;	/* Grec */
 	       CreateKeyboard (number, TtaGetMessage (LIB, GREEK_ALPHABET), FontIg, 16,
@@ -809,26 +809,26 @@ void                KeyboardsLoadResources ()
 	for (i = 0; i < MAX_KEYBOARD; i++)
 	   Keyboards[i] = 0;
 
-	FontIS = LoadFont ("ivsymb");
-	if (FontIS == NULL)
+	SymbolIcons = LoadFont ("ivsymb");
+	if (SymbolIcons == NULL)
 	  {
 	     /*Fonte 'ivsymb' inaccessible */
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), "ivsymb");
-	     FontIS = FontMenu;
+	     SymbolIcons = FontDialogue;
 	  }
 
-	FontIGr = LoadFont ("ivgraf");
-	if (FontIGr == NULL)
+	GraphicsIcons = LoadFont ("ivgraf");
+	if (GraphicsIcons == NULL)
 	  {
 	     /*Fonte 'ivgraf' inaccessible */
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), "ivgraf");
-	     FontIGr = FontMenu;
+	     GraphicsIcons = FontDialogue;
 	  }
 
-	if (FonteLeg == NULL)
-	   FonteLeg = LireFonte ('L', 'H', 0, 9, UnPoint);
-	if (FonteLeg == NULL)
-	   FonteLeg = FontMenu;
+	if (SmallFontDialogue == NULL)
+	   SmallFontDialogue = ReadFont ('L', 'H', 0, 9, UnPoint);
+	if (SmallFontDialogue == NULL)
+	   SmallFontDialogue = FontDialogue;
      }
 }
 

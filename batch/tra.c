@@ -2120,7 +2120,7 @@ SyntRuleNum                 pr;
 				     {
 					CopyWord (pTSchema->TsStructName, wi, wl);
 					/* lit le schema de structure compile' */
-					if (!RdSchStruct (pTSchema->TsStructName, pSSchema))
+					if (!ReadStructureSchema (pTSchema->TsStructName, pSSchema))
 					   TtaDisplaySimpleMessage (FATAL, TRA, TRA_CANNOT_READ_STRUCT_SCHEM);	/* echec lecture du  schema de structure */
 					else if (strcmp (pTSchema->TsStructName, pSSchema->SsName) != 0)
 					   CompilerError (wi, TRA, FATAL, TRA_STRUCT_SCHEM_DOES_NOT_MATCH, inputLine, LineNum);
@@ -2148,7 +2148,7 @@ SyntRuleNum                 pr;
 					     /* recupere dans n le nom du schema externe */
 					     CopyWord (n, wi, wl);
 					     /* lit le schema de structure externe */
-					     if (!RdSchStruct (n, pExtSSchema))
+					     if (!ReadStructureSchema (n, pExtSSchema))
 						CompilerError (wi, TRA, FATAL, TRA_CANNOT_READ_STRUCT_SCHEM, inputLine, LineNum);
 					     /* echec lecture du schema */
 					     else
@@ -2176,7 +2176,7 @@ SyntRuleNum                 pr;
 					     /* recupere dans n le nom du schema externe */
 					     CopyWord (n, wi, wl);
 					     /* lit le schema de structure externe */
-					     if (!RdSchStruct (n, pExtSSchema))
+					     if (!ReadStructureSchema (n, pExtSSchema))
 						CompilerError (wi, TRA, FATAL, TRA_CANNOT_READ_STRUCT_SCHEM, inputLine, LineNum);
 					     /* echec lecture du schema */
 					     else
@@ -2209,7 +2209,7 @@ SyntRuleNum                 pr;
 						CopyWord (n, wi, wl);
 						/* recupere dans n le nom du schema externe */
 						/* lit le schema de structure externe */
-						if (!RdSchStruct (n, pExtSSchema))
+						if (!ReadStructureSchema (n, pExtSSchema))
 						   CompilerError (wi, TRA, FATAL, TRA_CANNOT_READ_STRUCT_SCHEM, inputLine, LineNum);
 						/* echec lecture du schema */
 						else
@@ -3188,7 +3188,7 @@ char              **argv;
 		       /* ecrit le schema compile' dans le fichier de sortie */
 		       /* le directory des schemas est le directory courant */
 		       strcat (srceFileName, ".TRA");
-		       fileOK = WrSchTrad (srceFileName, pTSchema, pSSchema);
+		       fileOK = WriteTranslationSchemas (srceFileName, pTSchema, pSSchema);
 		       if (!fileOK)
 			  TtaDisplayMessage (FATAL, TtaGetMessage(TRA, TRA_CANNOT_WRITE), srceFileName);
 		    }

@@ -224,20 +224,20 @@ unsigned char      *text;
      {
 	switch (text[i])
 	      {
-		 case SAUT_DE_LIGNE:
-		    text[i] = (unsigned char) SeeCtrlRC;
+		 case BREAK_LINE:
+		    text[i] = (unsigned char) SHOWN_BREAK_LINE;
 		    break;
-		 case FINE:
-		    text[i] = (unsigned char) SeeFine;
+		 case THIN_SPACE:
+		    text[i] = (unsigned char) SHOWN_THIN_SPACE;
 		    break;
-		 case DEMI_CADRATIN:
-		    text[i] = (unsigned char) SeeDemiCadratin;
+		 case HALF_EM:
+		    text[i] = (unsigned char) SHOWN_HALF_EM;
 		    break;
-		 case BLANC_DUR:
-		    text[i] = (unsigned char) SeeBlancDur;
+		 case UNBREAKABLE_SPACE:
+		    text[i] = (unsigned char) SHOWN_UNBREAKABLE_SPACE;
 		    break;
-		 case BLANC:
-		    text[i] = (unsigned char) SeeBlanc;
+		 case _SPACE_:
+		    text[i] = (unsigned char) SHOWN_SPACE;
 		    break;
 	      }
 	i++;
@@ -2886,13 +2886,13 @@ ThotGC              GClocal;
 
 
 /**
- *      Invideo switch to inverse video the area of frame located at
+ *      VideoInvert switch to inverse video the area of frame located at
  *		(x,y) and of size width x height.
  **/
 #ifdef __STDC__
-void                Invideo (int frame, int width, int height, int x, int y)
+void                VideoInvert (int frame, int width, int height, int x, int y)
 #else  /* __STDC__ */
-void                Invideo (frame, width, height, x, y)
+void                VideoInvert (frame, width, height, x, y)
 int                 frame;
 int                 width;
 int                 height;

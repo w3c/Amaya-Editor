@@ -43,9 +43,9 @@
 /* |            le pave fils qui l'emporte.                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DesBoite (PtrBox * result, PtrAbstractBox pRootAb, int frame, int x, int y, int *pointselect)
+void                GetClickedBox (PtrBox * result, PtrAbstractBox pRootAb, int frame, int x, int y, int *pointselect)
 #else  /* __STDC__ */
-void                DesBoite (result, pRootAb, frame, x, y, pointselect)
+void                GetClickedBox (result, pRootAb, frame, x, y, pointselect)
 PtrBox           *result;
 PtrAbstractBox             pRootAb;
 int                 frame;
@@ -82,7 +82,7 @@ int                *pointselect;
 	       {
 		  if (pAb->AbPresentationBox || pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPlyLine)
 		    {
-		       pCurrentBox = DansLaBoite (pAb, x, x, y, &pointIndex);
+		       pCurrentBox = GetEnclosingClickedBox (pAb, x, x, y, &pointIndex);
 		       if (pCurrentBox == NULL)
 			  d = dist + 1;
 		       else
@@ -90,7 +90,7 @@ int                *pointselect;
 		    }
 		  else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
 		     /* glitch pour le symbole racine */
-		     d = DistGraphique (x, y, pBox, 1);
+		     d = GetShapeDistance (x, y, pBox, 1);
 		  else if (pAb->AbLeafType == LtText
 			   || pAb->AbLeafType == LtSymbol
 			   || pAb->AbLeafType == LtPicture

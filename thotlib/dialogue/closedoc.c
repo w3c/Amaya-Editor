@@ -152,7 +152,7 @@ View                view;
 		    {
 		       if (save)
 			  /* l'utilisateur demande a sauver le document */
-			  ok = SauveDocument (pDoc, 4);
+			  ok = WriteDocument (pDoc, 4);
 		       if (ok)
 			  /* tout va bien, on ferme ce document */
 			  FermerDocument (pDoc);
