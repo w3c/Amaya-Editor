@@ -208,8 +208,9 @@ void TteAddActionEvent (PtrEventsSet eventsList, int typeId,
   ----------------------------------------------------------------------*/
 static void TteFreeEventsList (PtrEventsSet eventsList)
 {
-  PtrEventsSet current;
-  int event;
+  PtrEventsSet   current;
+  PtrActionEvent actevent, nextactevent;
+  int            event;
 
   current = eventsList;
   while (current)
@@ -217,7 +218,16 @@ static void TteFreeEventsList (PtrEventsSet eventsList)
    for (event = 0; event <= TteExit; event++)
    {
       if (current->EvSList[event])
-        TtaFreeMemory (current->EvSList[event]);
+	{
+	  /* free lists of couples action/event */
+	  actevent = current->EvSList[event];
+	  while (actevent)
+	    {
+	      nextactevent = actevent->AEvNext;
+	      TtaFreeMemory (actevent);
+	      actevent = nextactevent;
+	    }
+	}
   }
    eventsList = current->EvSNext;
    TtaFreeMemory (current);
