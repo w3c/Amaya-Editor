@@ -1,4 +1,6 @@
-/* -- Copyright (c) 1994-1995 Inria/CNRS  All rights reserved. -- */
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
 
 /* Amaya includes */
 
@@ -104,10 +106,10 @@ static void         AHTAlertInit ();
 
 #ifdef CATCH_SIG
 
-/*+------------------------------------------------------------------+ */
-/*| SetSignal: This function sets up signal handlers. This might not | */
-/*| be necessary to call if the application has its own handlers.    | */
-/*+------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   SetSignal: This function sets up signal handlers. This might not 
+   be necessary to call if the application has its own handlers.    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetSignal (void)
 #else
@@ -128,11 +130,10 @@ static void         SetSignal ()
 }
 #endif /* CATCH_SIG */
 
-/* ---------------------------------------------------------------------- */
-/*      Create a new Amaya Context Object
-   **      ----------------------------
- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Create a new Amaya Context Object
+ 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static AHTReqContext *AHTReqContext_new (int docid)
 #else
@@ -200,9 +201,9 @@ int                 docid;
    return me;
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     Delete an Amaya Context Object                                 | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   Delete an Amaya Context Object                                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 BOOL                AHTReqContext_delete (AHTReqContext * me)
@@ -285,9 +286,9 @@ HTStream           *target;
 }
 
 
-/*+--------------------------------------------------------------------+ */
-/*|      Gets the status associated to a docid                         | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   Gets the status associated to a docid                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 AHTDocId_Status    *GetDocIdStatus (int docid, HTList * documents)
 #else
@@ -312,9 +313,9 @@ HTList             *documents;
 
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|  This function deletes the whole list of active threads.           | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   This function deletes the whole list of active threads.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         Thread_deleteAll (void)
 #else
@@ -352,11 +353,11 @@ static void         Thread_deleteAll ()
    }
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     authentication_handler                                         | */
-/*|     This function is registered to handle access authentication,   | */
-/*|     for example for HTTP                                           | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   authentication_handler                                         
+   This function is registered to handle access authentication,   
+   for example for HTTP                                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          authentication_handler (HTRequest * request, void *context, int status)
 #else
@@ -422,18 +423,17 @@ int                 status;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/*      redirection_handler
-   **      -------------------
+/*----------------------------------------------------------------------
+   redirection_handler
    **      This function is registered to handle permanent and temporary
    **      redirections
- */
-/*
+ 
+
    [x] Verfiy Put, Post
    [ ] Verify if NormalizeURL is not redundant
    [ ] Errors, should be done here or in terminate handler??
- */
-/* ---------------------------------------------------------------------- */
+ 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          redirection_handler (HTRequest * request, HTResponse *response, void *param, int status)
 #else
@@ -531,12 +531,11 @@ int                 status;
    return HT_ERROR;
 }
 
-/* ---------------------------------------------------------------------- */
-/*      terminate_handler
-   **   -----------------
+/*----------------------------------------------------------------------
+   terminate_handler
    **   This function is registered to handle the result of the request
- */
-/* ---------------------------------------------------------------------- */
+ 
+  ----------------------------------------------------------------------*/
 #if __STDC__
 static int          terminate_handler (HTRequest * request, HTResponse *response, void *context, int status)
 #else
@@ -555,7 +554,7 @@ int                 status;
 
    /* output any errors from the server */
 
-    /*************************
+    /***
     ** me->output = output file which will receive an html file
     ** me->error_html = yes, output HTML errors in the screen
     ** request->error_stack == if there are any errors, they will be here
@@ -655,12 +654,11 @@ int                 status;
    return HT_OK;
 }
 
-/*-------------------------------------------------------------------*/
-/*      Application "AFTER" Callback                                 */
-/*      -----------------------------                                */
-/*      This function uses all the functionaly that the app part of  */
-/*      the Library gives for handling AFTER a request.              */
-/*-------------------------------------------------------------------*/
+/*----------------------------------------------------------------------
+   Application "AFTER" Callback                                 
+   This function uses all the functionaly that the app part of  
+   the Library gives for handling AFTER a request.              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          AHTLoadTerminate_handler (HTRequest * request, HTResponse *response, void *param, int status)
@@ -804,9 +802,9 @@ static int          AHTSaveFilter (HTRequest * request, HTResponse *response, vo
 }
 
 
-/*------------------------------------------------------------------------ */
-/* BINDINGS BETWEEN A SOURCE MEDIA TYPE AND A DEST MEDIA TYPE (CONVERSION) */
-/* ----------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BINDINGS BETWEEN A SOURCE MEDIA TYPE AND A DEST MEDIA TYPE (CONVERSION) 
+  ----------------------------------------------------------------------*/
 
 static void         AHTConverterInit (HTList * c)
 {
@@ -879,13 +877,11 @@ static void         AHTConverterInit (HTList * c)
 }
 
 /*      REGISTER BEFORE AND AFTER FILTERS
-   **      ---------------------------------
    **      We register a commonly used set of BEFORE and AFTER filters.
    **      Not done automaticly - may be done by application!
  */
 
 /*      REGISTER ALL AMAYA SUPPORTED PROTOCOLS
-   **   -------------------------------------------
  */
 static void         AHTProtocolInit (void)
 {
@@ -911,7 +907,6 @@ static void         AHTNetInit (void)
 {
 
 /*      Register BEFORE filters
-   **      -----------------------
    **      The BEFORE filters handle proxies, caches, rule files etc.
    **      The filters are called in the order by which the are registered
    **      Not done automaticly - may be done by application!
@@ -925,7 +920,6 @@ static void         AHTNetInit (void)
   /*#endif */
 
 /*      register AFTER filters
-   **      ----------------------
    **      The AFTER filters handle error messages, logging, redirection,
    **      authentication etc.
    **      The filters are called in the order by which the are registered
@@ -1002,7 +996,8 @@ static void         AHTProfile_newAmaya (const char *AppName, const char *AppVer
    HTAlert_setInteractive (YES);
 }
 
-/* ------------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         AHTProfile_delete (void)
@@ -1024,9 +1019,11 @@ static void         AHTProfile_delete ()
 }
 
 /*      REGISTER CALLBACKS FOR THE ALERT MANAGER
-   **      ----------------------------------------
    **      We register a set of alert messages
  */
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         AHTAlertInit (void)
@@ -1049,8 +1046,8 @@ static void         AHTAlertInit ()
 
 }
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                QueryInit ()
 #else
@@ -1120,8 +1117,8 @@ void                QueryInit ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void                QueryClose ()
 {
 /** HTConversion_deleteAll(converters); **/
@@ -1140,22 +1137,22 @@ void                QueryClose ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | GetObjectWWW loads the file designated by urlName in a temporary   | */
-/* |              file.                                                 | */
-/* |                                                                    | */
-/* | 4  file retrieval modes are proposed:                              | */
-/* |              AMAYA_SYNC : blocking mode                            | */
-/* |              AMAYA_ISYNC : incremental, blocking mode              | */
-/* |              AMAYA_ASYNC : non-blocking mode                       | */
-/* |              AMAYA_IASYNC : incremental, non-blocking mode         | */
-/* |                                                                    | */
-/* | In the incremental mode, each time a package arrives, it will be   | */
-/* | stored in the temporary file. In addition, if an                   | */
-/* | incremental_callback function is defined, this function will be    | */
-/* | called and handled a copy of the newly received data package.      | */
-/* | Finally, if a terminate_callback function is defined, it will be   | */
-/* | invoked when the request terminates. The caller of this function
+/*----------------------------------------------------------------------
+   GetObjectWWW loads the file designated by urlName in a temporary   
+   file.                                                 
+   
+   4  file retrieval modes are proposed:                              
+   AMAYA_SYNC : blocking mode                            
+   AMAYA_ISYNC : incremental, blocking mode              
+   AMAYA_ASYNC : non-blocking mode                       
+   AMAYA_IASYNC : incremental, non-blocking mode         
+   
+   In the incremental mode, each time a package arrives, it will be   
+   stored in the temporary file. In addition, if an                   
+   incremental_callback function is defined, this function will be    
+   called and handled a copy of the newly received data package.      
+   Finally, if a terminate_callback function is defined, it will be   
+   invoked when the request terminates. The caller of this function
    can define two different contexts to be passed to the callback
    functions.
 
@@ -1191,8 +1188,8 @@ void                QueryClose ()
    Returns:
    HT_ERROR
    HT_OK
- */
-/* ---------------------------------------------------------------------- */
+ 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GetObjectWWW (int docid, char *urlName, char *postString,
 				  char *outputfile, int mode,
@@ -1473,14 +1470,14 @@ generated
    return (status);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | PutObjectWWW uploads a file into a URL                             | */
-/* |                                                                    | */
-/* | 2 upload modes are proposed:                                       | */
-/* |              AMAYA_SYNC : blocking mode                            | */
-/* |              AMAYA_ASYNC : non-blocking mode                       | */
-/* |                                                                    | */
-/*
+/*----------------------------------------------------------------------
+   PutObjectWWW uploads a file into a URL                             
+   
+   2 upload modes are proposed:                                       
+   AMAYA_SYNC : blocking mode                            
+   AMAYA_ASYNC : non-blocking mode                       
+   
+
    When the function is called with the SYNC mode, the function will
    return only when the file has been uploaded.
    The ASYNC mode will immediately return after setting up the
@@ -1512,8 +1509,8 @@ generated
    Returns:
    HT_ERROR
    HT_OK
- */
-/* ---------------------------------------------------------------------- */
+ 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 PutObjectWWW (int docid, char *fileName, char *urlName, int mode,
 				  TTcbf * terminate_cbf, void *context_tcbf)
@@ -1607,6 +1604,9 @@ void               *context_tcbf;
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+
 #ifdef __STDC__
 int                 UploadMemWWW (int docid, HTMethod method,
 		     char *urlName, char *mem_ptr, unsigned long block_size,
@@ -1680,10 +1680,10 @@ char               *outputfile;
    HTAnchor_setFormat ( (HTParentAnchor *) me->anchor, HTAtom_for ("text/html") ); /* test */
    HTAnchor_setLength ( (HTParentAnchor *) me->anchor, me->block_size);
    HTRequest_setEntityAnchor (me->request, me->anchor);
-   /****
+   /*
    HTRequest_addAfter (me->request, AHTSaveFilter, NULL, NULL, HT_ALL, 
 		       HT_FILTER_FIRST, NO);
-		       ****/
+   */
    status = HTLoadAbsolute (urlName, me->request);
 
    if (status == HT_ERROR || me->reqStatus == HT_END
@@ -1725,9 +1725,9 @@ char               *outputfile;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* Stop Request stops (kills) all active requests associated with a docid */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Stop Request stops (kills) all active requests associated with a docid 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                StopRequest (int docid)
 #else
@@ -1799,6 +1799,8 @@ int                 docid;
 }				/* StopRequest */
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          LoopForStop (AHTReqContext * me)

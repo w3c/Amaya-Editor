@@ -1,3 +1,7 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
 /* Included headerfiles */
 #include "app.h"
 #include "HTML.h"
@@ -9,10 +13,10 @@
 static Element      CurrentPastedRow = NULL;
 static Element      CurrentCreatedRow = NULL;
 
-/* ---------------------------------------------------------------------- */
-/* |    GetCellFromColumnHead   returns the cell that corresponds to    | */
-/* |            Column_head colhead in a given row.                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetCellFromColumnHead   returns the cell that corresponds to    
+   Column_head colhead in a given row.                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static Element      GetCellFromColumnHead (Element row, Element colhead)
 #else
@@ -52,11 +56,11 @@ Element             colhead;
    return cell;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SetColumnWidth  computes the value of attribute Column_width    | */
-/* |            for each column of the table whose first Column_head is | */
-/* |            firstcolhead.                                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetColumnWidth  computes the value of attribute Column_width    
+   for each column of the table whose first Column_head is 
+   firstcolhead.                                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetColumnWidth (Element firstcolhead, Element newcolhead,
 				    Document doc)
@@ -286,10 +290,10 @@ Document            doc;
 #endif
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RelateCellWithColumnHead        relates a cell with a           | */
-/* |            Column_head.                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RelateCellWithColumnHead        relates a cell with a           
+   Column_head.                                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         RelateCellWithColumnHead (Element cell, Element colhead, Document doc)
 #else
@@ -319,10 +323,10 @@ Document            doc;
       TtaSetAttributeReference (attr, cell, doc, colhead, doc);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    AddCellGhostInRow       add a Table_cell_ghost element at the   | */
-/* |    end of the given row and relates it to the given Column_head.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AddCellGhostInRow       add a Table_cell_ghost element at the   
+   end of the given row and relates it to the given Column_head.   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AddCellGhostInRow (Element row, Element colhead, Document doc)
 #else
@@ -358,11 +362,11 @@ Document            doc;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NewColumnHead   create a new last Column_head and returns it.   | */
-/* |            If all == TRUE, create an additional Cell_ghost in all  | */
-/* |            rows, except the row indicated.                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewColumnHead   create a new last Column_head and returns it.   
+   If all == TRUE, create an additional Cell_ghost in all  
+   rows, except the row indicated.                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static Element      NewColumnHead (Element lastcolhead, Document doc, boolean all, Element row)
 #else
@@ -444,12 +448,12 @@ Element             row;
    return colhead;
 }
 
-/* -------------------------------------------------------------- */
-/* |    ShiftByRowSpan  returns the width of the cell that spans| */
-/* |            a given cell of a given row.                    | */
-/* |            Return 0 if the cell is not spanned by a cell   | */
-/* |            above.                                          | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ShiftByRowSpan  returns the width of the cell that spans
+   a given cell of a given row.                    
+   Return 0 if the cell is not spanned by a cell   
+   above.                                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          ShiftByRowSpan (Element cell, Element row, Element colhead)
 #else
@@ -522,9 +526,9 @@ Element             colhead;
 }
 
 
-/* -------------------------------------------------------------- */
-/* |    CompleteRow                                             | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CompleteRow                                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CompleteRow (Element row, Document doc, boolean rowspan)
 #else
@@ -625,11 +629,11 @@ boolean             rowspan;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SetRowExt       Sets the attribute RowExt of cell "cell" in row | */
-/* |            "row", according to span. Return the row which is the   | */
-/* |            bottom of the spanning cell.                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetRowExt       Sets the attribute RowExt of cell "cell" in row 
+   "row", according to span. Return the row which is the   
+   bottom of the spanning cell.                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static Element      SetRowExt (Element cell, Element row, int span, Document doc)
 #else
@@ -675,9 +679,9 @@ Document            doc;
    return ret;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SetColExt       update attribute ColExt of cell                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetColExt       update attribute ColExt of cell                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetColExt (Element cell, Element * colhead, Document doc, int *span,
 			       boolean all)
@@ -741,10 +745,10 @@ boolean             all;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetFirstColumnHead      search the first Column_head element    | */
-/* |            in the table to which el belongs.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetFirstColumnHead      search the first Column_head element    
+   in the table to which el belongs.                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static Element      GetFirstColumnHead (Element el)
 #else
@@ -777,9 +781,9 @@ Element             el;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FormatRow       reformat an entire row.                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FormatRow       reformat an entire row.                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         FormatRow (Element row, Element firstcolhead, Document doc, boolean rowspan)
 #else
@@ -896,9 +900,9 @@ boolean             rowspan;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RemoveCellGhost remove all Table_cell_ghost elements in a row   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RemoveCellGhost remove all Table_cell_ghost elements in a row   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         RemoveCellGhost (Element row, Document doc)
 #else
@@ -927,9 +931,9 @@ Document            doc;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    MaximumRowSpan                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MaximumRowSpan                                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          MaximumRowSpan (Element row, int span)
 #else
@@ -977,10 +981,10 @@ int                 span;
    return max;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ShiftCellsRight shift a given cell and all following cells      | */
-/* |            in the row by npos positions to the right.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ShiftCellsRight shift a given cell and all following cells      
+   in the row by npos positions to the right.              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ShiftCellsRight (Element theCell, Element row, int npos, boolean all, Document doc, Element firstcolhead)
 #else
@@ -1113,10 +1117,10 @@ Element             firstcolhead;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    MinimizeGhosts  Remove all Table_Cell_ghost element which are   | */
-/* |            not necessary in a given table.                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MinimizeGhosts  Remove all Table_Cell_ghost element which are   
+   not necessary in a given table.                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                MinimizeGhosts (Element table, Document doc)
 #else
@@ -1261,9 +1265,9 @@ Document            doc;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckTable      Check a table and create the missing elements.  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckTable      Check a table and create the missing elements.  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CheckTable (Element table, Document doc)
 #else
@@ -1573,10 +1577,10 @@ Document            doc;
    TtaSetStructureChecking (PreviousStuctureChecking, doc);
 }
 
-/* -------------------------------------------------------------- */
-/* |    NewCell         a new cell has been created in a        | */
-/* |                    HTML table.                             | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewCell         a new cell has been created in a        
+   HTML table.                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         NewCell (Element cell, Document doc)
 #else
@@ -1693,10 +1697,10 @@ Document            doc;
 }
 
 
-/* -------------------------------------------------------------- */
-/* |    CellCreated     a new cell has been created in a        | */
-/* |                    HTML3 table.                            | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CellCreated     a new cell has been created in a        
+   HTML3 table.                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CellCreated (NotifyElement * event)
 #else
@@ -1719,9 +1723,9 @@ NotifyElement      *event;
       NewCell (cell, doc);
 }
 
-/* -------------------------------------------------------------- */
-/* |    CellPasted                                              | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CellPasted                                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CellPasted (NotifyElement * event)
 #else
@@ -1795,9 +1799,9 @@ NotifyElement      *event;
 }
 
 
-/* -------------------------------------------------------------- */
-/* |    UpdateRowExt                                            | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateRowExt                                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateRowExt (Element row, Document doc, boolean NewRow)
 #else
@@ -1876,9 +1880,9 @@ boolean             NewRow;
 
 static int          maxrowspan;
 
-/* -------------------------------------------------------------- */
-/* |    PreDeleteRow                                            | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PreDeleteRow                                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                PreDeleteRow (Element row)
 #else
@@ -1917,9 +1921,9 @@ Element             row;
    maxrowspan = MaximumRowSpan (row, maxrowspan);
 }
 
-/* -------------------------------------------------------------- */
-/* |    DeleteRow                                               | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DeleteRow                                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             DeleteRow (NotifyElement * event)
 #else
@@ -1932,9 +1936,9 @@ NotifyElement      *event;
    return FALSE;		/* let Thot perform normal operation */
 }
 
-/* -------------------------------------------------------------- */
-/* |    PostDeleteRow                                           | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PostDeleteRow                                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                PostDeleteRow (Element row, Element table, Document doc)
 #else
@@ -1965,9 +1969,9 @@ Document            doc;
       MinimizeGhosts (table, doc);
 }
 
-/* -------------------------------------------------------------- */
-/* |    RowDeleted                                              | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RowDeleted                                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RowDeleted (NotifyElement * event)
 #else
@@ -1998,9 +2002,9 @@ NotifyElement      *event;
    PostDeleteRow (row, table, doc);
 }
 
-/* -------------------------------------------------------------- */
-/* |    MaxRowSpanNextCells                                     | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MaxRowSpanNextCells                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          MaxRowSpanNextCells (Element cell)
 #else
@@ -2036,9 +2040,9 @@ Element             cell;
 
 static int          maxcellspan;
 
-/* -------------------------------------------------------------- */
-/* |    DeleteCell                                              | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DeleteCell                                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             DeleteCell (NotifyElement * event)
 #else
@@ -2053,9 +2057,9 @@ NotifyElement      *event;
    return FALSE;		/* let Thot perform normal operation */
 }
 
-/* -------------------------------------------------------------- */
-/* |    CellDeleted                                             | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CellDeleted                                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CellDeleted (NotifyElement * event)
 #else
@@ -2114,9 +2118,9 @@ NotifyElement      *event;
    }
 }
 
-/* -------------------------------------------------------------- */
-/* |    TableCreated                                            | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TableCreated                                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TableCreated (NotifyElement * event)
 #else
@@ -2146,9 +2150,9 @@ NotifyElement      *event;
 }
 
 
-/* -------------------------------------------------------------- */
-/* |    RowCreated                                              | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RowCreated                                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RowCreated (NotifyElement * event)
 #else
@@ -2171,11 +2175,11 @@ NotifyElement      *event;
    CurrentCreatedRow = row;
 }
 
-/* -------------------------------------------------------------- */
-/* |    CheckGhosts     in the table to which row belongs, add  | */
-/* |            Table_cell_ghost elements where needed and      | */
-/* |            delete unnecessary Table_cell_ghost elements.   | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckGhosts     in the table to which row belongs, add  
+   Table_cell_ghost elements where needed and      
+   delete unnecessary Table_cell_ghost elements.   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void static         CheckGhosts (Element row, Document doc)
 #else
@@ -2226,9 +2230,9 @@ Document            doc;
    }
 }
 
-/* -------------------------------------------------------------- */
-/* |    RowPasted                                               | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RowPasted                                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RowPasted (NotifyElement * event)
 #else
@@ -2294,9 +2298,9 @@ NotifyElement      *event;
    CurrentPastedRow = row;
 }
 
-/* -------------------------------------------------------------- */
-/* |    ChangeColSpan                                           | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChangeColSpan                                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ChangeColSpan (Element cell, int oldspan, int newspan, Document doc)
 #else
@@ -2372,9 +2376,9 @@ Document            doc;
    CheckGhosts (row, doc);
 }
 
-/* -------------------------------------------------------------- */
-/* |    ColspanCreated                                          | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ColspanCreated                                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ColspanCreated (NotifyAttribute * event)
 #else
@@ -2395,9 +2399,9 @@ NotifyAttribute    *event;
 
 static int          PreviousColSpan;
 
-/* -------------------------------------------------------------- */
-/* |    RegisterColspan                                         | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RegisterColspan                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             RegisterColspan (NotifyAttribute * event)
 #else
@@ -2413,9 +2417,9 @@ NotifyAttribute    *event;
    return FALSE;		/* let Thot perform normal operation */
 }
 
-/* -------------------------------------------------------------- */
-/* |    ColspanModified                                         | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ColspanModified                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ColspanModified (NotifyAttribute * event)
 #else
@@ -2443,9 +2447,9 @@ NotifyAttribute    *event;
       TtaRemoveAttribute (cell, attr, doc);
 }
 
-/* -------------------------------------------------------------- */
-/* |    ColspanDelete                                           | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ColspanDelete                                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             ColspanDelete (NotifyAttribute * event)
 #else
@@ -2465,9 +2469,9 @@ NotifyAttribute    *event;
       return FALSE;		/* let Thot perform normal operation */
 }
 
-/* -------------------------------------------------------------- */
-/* |    ChangeRowSpan                                           | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChangeRowSpan                                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ChangeRowSpan (Element cell, int oldspan, int newspan, Document doc)
 #else
@@ -2536,9 +2540,9 @@ Document            doc;
 }
 
 
-/* -------------------------------------------------------------- */
-/* |    RowspanCreated                                          | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RowspanCreated                                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RowspanCreated (NotifyAttribute * event)
 #else
@@ -2559,9 +2563,9 @@ NotifyAttribute    *event;
 
 static int          PreviousRowSpan;
 
-/* -------------------------------------------------------------- */
-/* |    RegisterRowspan                                         | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RegisterRowspan                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             RegisterRowspan (NotifyAttribute * event)
 #else
@@ -2576,9 +2580,9 @@ NotifyAttribute    *event;
    PreviousRowSpan = TtaGetAttributeValue (attr);
    return FALSE;		/* let Thot perform normal operation */
 }
-/* -------------------------------------------------------------- */
-/* |    RowspanModified                                         | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RowspanModified                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RowspanModified (NotifyAttribute * event)
 #else
@@ -2606,9 +2610,9 @@ NotifyAttribute    *event;
       TtaRemoveAttribute (cell, attr, doc);
 }
 
-/* -------------------------------------------------------------- */
-/* |    RowspanDelete                                           | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RowspanDelete                                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             RowspanDelete (NotifyAttribute * event)
 #else

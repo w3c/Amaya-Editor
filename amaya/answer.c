@@ -1,3 +1,7 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
 /* Included headerfiles */
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -22,9 +26,9 @@ struct _HTError {
     char*          where;          /* Which function */
 };
 
-/* ---------------------------------------------------------------------- */
-/* AHTProgress: Prints in the status bar the current state of a request   */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AHTProgress: Prints in the status bar the current state of a request   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PUBLIC BOOL AHTProgress (HTRequest* request, HTAlertOpcode op, int msgnum, const char* dfault, 
                          void* input, HTAlertPar* reply)
@@ -114,8 +118,8 @@ HTAlertPar*   reply;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PUBLIC BOOL AHTConfirm (HTRequest* request, HTAlertOpcode op, int msgnum, const char* dfault, 
                         void* input, HTAlertPar* reply)
@@ -142,9 +146,9 @@ HTAlertPar*   reply;
   else return(FALSE);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	Prompt for answer and get text back				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	Prompt for answer and get text back				
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PUBLIC BOOL AHTPrompt (HTRequest* request, HTAlertOpcode op, int msgnum, const char* dfault, 
                        void* input, HTAlertPar * reply)
@@ -187,9 +191,9 @@ HTAlertPar*   reply;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	Prompt for password without echoing the reply			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	Prompt for password without echoing the reply			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PUBLIC BOOL AHTPromptPassword (HTRequest* request, HTAlertOpcode op, int msgnum, const char* dfault, 
                                void* input, HTAlertPar* reply)
@@ -229,15 +233,15 @@ HTAlertPar*   reply;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	Prompt both username and password				| */
-/* |		Msg is the prompting message.				| */
-/* |		*username and *password	are char pointers; they are	| */
-/* |		changed to point to result strings.			| */
-/* |		If *username is not NULL, it is taken to point to a	| */
-/* |		default value.						| */
-/* |		Initial value of *password is completely discarded.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	Prompt both username and password				
+   		Msg is the prompting message.				
+   		*username and *password	are char pointers; they are	
+   		changed to point to result strings.			
+   		If *username is not NULL, it is taken to point to a	
+   		default value.						
+   		Initial value of *password is completely discarded.	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PUBLIC BOOL AHTPromptUsernameAndPassword (HTRequest* request, HTAlertOpcode op, int msgnum, 
                                           const char* dfault, void* input, HTAlertPar* reply)
@@ -277,13 +281,13 @@ HTAlertPar*   reply;
     return NO;
 }
 
-/* ---------------------------------------------------------------------- */
-/* | AHTError_print (hacked from HTError_print): Default function that  | */
-/* | creates an error message using HTAlert() to put out the contents of| */
-/* | the error_stack messages. Furthermore, the error_info structure    | */
-/* | contains a name of a help file that might be put up as a link.     | */
-/* | This file can then be multi-linguistic.                            | */
-/*  --------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AHTError_print (hacked from HTError_print): Default function that  
+   creates an error message using HTAlert() to put out the contents of
+   the error_stack messages. Furthermore, the error_info structure    
+   contains a name of a help file that might be put up as a link.     
+   This file can then be multi-linguistic.                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 BOOL AHTError_print (HTRequest* request, HTAlertOpcode op, int msgnum, const char* dfault, 
                      void* input, HTAlertPar * reply)
@@ -315,9 +319,9 @@ HTAlertPar*   reply;
     return YES;
 }
 
-/*+---------------------------------------------------------+*/
-/*|      AHTError_MemPrint (hacked from HTError_print)      |*/
-/*+---------------------------------------------------------+*/
+/*----------------------------------------------------------------------
+   AHTError_MemPrint (hacked from HTError_print)      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void AHTError_MemPrint (HTRequest* request)
 #else /* __STDC__ */
@@ -351,9 +355,9 @@ HTRequest* request;
     }
 }
 
-/*+---------------------------------------------------------+*/
-/*|      AHTPrintPendingRequestStatus                       |*/
-/*+---------------------------------------------------------+*/
+/*----------------------------------------------------------------------
+   AHTPrintPendingRequestStatus                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void AHTPrintPendingRequestStatus (Document docid, boolean last_seconds_of_life)
 #else

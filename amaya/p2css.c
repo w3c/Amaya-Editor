@@ -1,3 +1,7 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
 
 /*
  * p2css.c : file used to analyse a PSchema and translate it to CSS or
@@ -24,12 +28,12 @@ static char        *last_message = NULL;
 #define MSG(msg) last_message = msg
 #endif
 
-/************************************************************************
- *									*
- * Unit definition : must be keep in sync with HTML3UnitNames from	*
- * HTMLstyle.c and the presentation driver units available.		*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   * Unit definition : must be keep in sync with HTML3UnitNames from	*
+   * HTMLstyle.c and the presentation driver units available.		*
+   *									*
+  ----------------------------------------------------------------------*/
 
 struct unit_def {
    char               *sign;
@@ -50,21 +54,21 @@ static struct unit_def HTML3UnitNames[] =
 
 #define NB_UNITS (sizeof(HTML3UnitNames) / sizeof(struct unit_def))
 
-/************************************************************************
- *									*
- * RPI handling : RPI are structures containing a generic CSS rule,	*
- *	i.e. the selector, the presentation rules, a pointer to the	*
- *	associated generic context and control data.			*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   * RPI handling : RPI are structures containing a generic CSS rule,	*
+   *	i.e. the selector, the presentation rules, a pointer to the	*
+   *	associated generic context and control data.			*
+   *									*
+  ----------------------------------------------------------------------*/
 
 
 static FILE        *output = stderr;
 
 
-/* ---------------------------------------------------------------------- */
-/* |    PrintRPI                                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PrintRPI                                                        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                PrintRPI (PRuleInfoPtr rpi)
@@ -92,9 +96,9 @@ PRuleInfoPtr        rpi;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    PrintListRPI                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PrintListRPI                                                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                PrintListRPI (PRuleInfoPtr list)
@@ -113,9 +117,9 @@ PRuleInfoPtr        list;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    AddRPI                                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AddRPI                                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                AddRPI (PRuleInfoPtr rpi, PRuleInfoPtr * list)
@@ -133,9 +137,9 @@ PRuleInfoPtr        list;
    *list = rpi;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    FreeRPI                                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FreeRPI                                                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                FreeRPI (PRuleInfoPtr rpi)
@@ -155,9 +159,9 @@ PRuleInfoPtr        rpi;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CleanListRPI                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CleanListRPI                                                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CleanListRPI (PRuleInfoPtr * list)
@@ -178,9 +182,9 @@ PRuleInfoPtr       *list;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NewRPI                                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewRPI                                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PRuleInfoPtr        NewRPI (Document doc)
@@ -207,9 +211,9 @@ Document            doc;
    return (rpi);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CmpRPI                                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CmpRPI                                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 CmpRPI (PRuleInfoPtr cour, PRuleInfoPtr rpi)
@@ -245,9 +249,9 @@ PRuleInfoPtr        rpi;
    return (0);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SearchRPI                                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchRPI                                                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PRuleInfoPtr        SearchRPI (PRuleInfoPtr cour, PRuleInfoPtr list)
@@ -271,9 +275,9 @@ PRuleInfoPtr        cour;
    return (NULL);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RemoveRPI                                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RemoveRPI                                                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RemoveRPI (Document doc, PRuleInfoPtr cour)
@@ -305,13 +309,13 @@ PRuleInfoPtr        cour;
    cour->state = RemovedRPI;
 }
 
-/************************************************************************
- *									*
- * RPI scanning : These two functions are used to scan a PSchema and	*
- *	extract all the generic CSS rules it contains and store them	*
- *	in a RPI list.							*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   * RPI scanning : These two functions are used to scan a PSchema and	*
+   *	extract all the generic CSS rules it contains and store them	*
+   *	in a RPI list.							*
+   *									*
+  ----------------------------------------------------------------------*/
 
 
 /*
@@ -653,16 +657,16 @@ void               *param;
 #endif
 }
 
-/************************************************************************
- *									*
- * RPI scanning front-end : these function are used to actually		*
- *	retrieve or print RPI lists associated to documents.		*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   * RPI scanning front-end : these function are used to actually	*
+   *	retrieve or print RPI lists associated to documents.		*
+   *									*
+  ----------------------------------------------------------------------*/
 
-/* ---------------------------------------------------------------------- */
-/* |  PSchema2RPI : return the list of all RPI associated to a PSchema  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PSchema2RPI : return the list of all RPI associated to a PSchema  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PRuleInfoPtr        PSchema2RPI (Document doc, PSchema gPres, int zoom, int background)
@@ -723,9 +727,9 @@ int                 background;
    return (lrpi);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    PSchema2CSS                                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PSchema2CSS                                                     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 PSchema2CSS (Document doc, PSchema gPres, int zoom, int background,
@@ -763,9 +767,9 @@ int                 background;
    return (0);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  BuildRPIList : Build the whole list of CSS in use by a document   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildRPIList : Build the whole list of CSS in use by a document   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 BuildRPIList (Document doc, PSchema gPres, int zoom, int background,
 				  char *buf, int size, char *first)

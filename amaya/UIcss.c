@@ -1,3 +1,7 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
 #include "cssInc.h"
 
 #include "rcopy.xpm"
@@ -38,9 +42,9 @@ static Bool         RListRPIModified;
 #include "css.h"
 
 
-/*+--------------------------------------------------------------------+ */
-/*|     InitCSSDialog                                                  | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   InitCSSDialog                                                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                InitCSSDialog (Document doc, View view)
@@ -91,9 +95,9 @@ View                view;
    TtaShowDialogue (BaseCSSDialog + FormCSS, TRUE);
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|  DeleteExternalCSS : dialog used to delete an external CSS file.   | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   DeleteExternalCSS : dialog used to delete an external CSS file.   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DeleteExternalCSS (Document doc, View view)
@@ -123,10 +127,10 @@ View                view;
    TtaShowDialogue (BaseCSSDialog + FormDeleteCSS, TRUE);
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|   SelectExternalCSS : dialog used to select and load an external   | */
-/*|                       CSS file.                                    | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   SelectExternalCSS : dialog used to select and load an external   
+   CSS file.                                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                SelectExternalCSS (Document doc, View view)
@@ -159,9 +163,9 @@ View                view;
    TtaShowDialogue (BaseCSSDialog + FormExternalCSS, TRUE);
 }
 
-/*+--------------------------------------------------------------------+ */
-/*| CSSConfirm                                                         | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   CSSConfirm                                                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CSSConfirm (Document document, View view, char *label)
@@ -183,11 +187,11 @@ char               *label;
    TtaWaitShowDialogue ();
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|  RedisplayDocument : force the Thot kernel to rebuild the internal | */
-/*|                      image representation to reflect changes in    | */
-/*|                      the generic presentation for example.         | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   RedisplayDocument : force the Thot kernel to rebuild the internal 
+   image representation to reflect changes in    
+   the generic presentation for example.         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RedisplayDocument (Document doc)
@@ -201,11 +205,11 @@ Document            doc;
    TtaSetDisplayMode (doc, DisplayImmediately);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplyExtraPresentation : Change the presentation attributes     | */
-/* |            of the document which are not handled by P structures,  | */
-/* |            like the background color and the magnification.        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyExtraPresentation : Change the presentation attributes     
+   of the document which are not handled by P structures,  
+   like the background color and the magnification.        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplyExtraPresentation (Document doc)
 #else
@@ -262,10 +266,10 @@ Document            doc;
    NonPPresentChanged = FALSE;
 }
 
-/*+----------------------------------------------------------------------+ */
-/*|    InitBrowse : dialog used to save an external CSS file, the user's | */
-/*|                 preferences or the HTML File itself.                 | */
-/*+----------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   InitBrowse : dialog used to save an external CSS file, the user's 
+   preferences or the HTML File itself.                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                InitBrowse (Document doc, View view, char *url)
@@ -336,9 +340,9 @@ char               *url;
    TtaShowDialogue (BaseCSSDialog + CSSFormSauver, FALSE);
 }
 
-/*+--------------------------------------------------------------------+ */
-/*| CSSCallbackDialogue : procedure for style dialogue events          | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   CSSCallbackDialogue : procedure for style dialogue events          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CSSCallbackDialogue (int ref, int typedata, char *data)
@@ -570,11 +574,11 @@ char               *data;
 	     TtaDestroyDialogue (BaseCSSDialog + CSSFormConfirm);
 	     break;
 
-  /**********************************************************************
+  /*----------------------------------------------------------------------
    *									*
    *		Handling of the Save CSS Form				*
    *									*
-   **********************************************************************/
+  ----------------------------------------------------------------------*/
 	  case CSSSauvDir:
 	     if (!strcmp (data, "..")) {
 		/* suppress last directory */

@@ -1,3 +1,7 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
 /* Included headerfiles */
 #include "amaya.h"
 #include "interface.h"
@@ -24,9 +28,9 @@
 
 extern char        *TargetName;
 
-/* -------------------------------------------------------------- */
-/* |    SetFontOrPhraseOnElement                                | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetFontOrPhraseOnElement                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetFontOrPhraseOnElement (Document document, Element elem,
 					      int eltype, boolean remove)
@@ -59,9 +63,9 @@ boolean             remove;
     }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DoubleClick     The user has double-clicked an element.         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DoubleClick     The user has double-clicked an element.         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             DoubleClick (NotifyElement * event)
 #else  /* __STDC__ */
@@ -267,9 +271,9 @@ NotifyElement      *event;
   return FALSE;			/* let Thot perform normal operation */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DocumentClosed                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DocumentClosed                                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DocumentClosed (NotifyDialog * event)
 #else  /* __STDC__ */
@@ -322,9 +326,9 @@ NotifyDialog       *event;
     }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    A new element has been selected. Update menus accordingly.      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   A new element has been selected. Update menus accordingly.      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateContextSensitiveMenus (Document doc)
 #else  /* __STDC__ */
@@ -637,9 +641,9 @@ Document            doc
     }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    A new element has been selected. Update menus accordingly.      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   A new element has been selected. Update menus accordingly.      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SelectionChanged (NotifyElement * event)
 #else  /* __STDC__ */
@@ -659,9 +663,9 @@ NotifyElement      *event;
   UpdateContextSensitiveMenus (event->document);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CreateAnchor creates a link or target element.                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateAnchor creates a link or target element.                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateAnchor (Document doc, View view, boolean createLink)
 #else  /* __STDC__ */
@@ -837,10 +841,10 @@ boolean             createLink;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    an HTML attribute "size" has been modified for a Font element.  | */
-/* |    Create the corresponding internal attribute and delete the old. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   an HTML attribute "size" has been modified for a Font element.  
+   Create the corresponding internal attribute and delete the old. 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AttrFontSizeModified (NotifyAttribute * event)
 #else  /* __STDC__ */
@@ -855,9 +859,9 @@ NotifyAttribute    *event;
   TtaSetDisplayMode (event->document, DisplayImmediately);
 }
 
-/* -------------------------------------------------------------- */
-/* |    SetCharFontOrPhrase                                     | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetCharFontOrPhrase                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetCharFontOrPhrase (int document, int eltype)
 #else  /* __STDC__ */
@@ -1031,9 +1035,9 @@ int                 eltype;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SelectDestination selects the destination of the el Anchor.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SelectDestination selects the destination of the el Anchor.     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SelectDestination (Document doc, Element el)
 #else  /* __STDC__ */

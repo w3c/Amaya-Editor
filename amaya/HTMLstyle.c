@@ -885,10 +885,10 @@ int                *len;
    int                 nb_rules;
    char                mybuf[100];
 
-/*******************
+/*******
     AttributeType   atType;
     Attribute       at;
- *******************/
+ *******/
    ElementType         elType;
    SpecificContextBlock block;
    PresentationContext context;
@@ -899,7 +899,7 @@ int                *len;
    free = *len - 1;
    buf[0] = 0;
 
-/*******************
+/******
     atType.AttrSSchema = TtaGetDocumentSSchema(doc);
     atType.AttrTypeNum = HTML_ATTR_Class;
     at = TtaGetAttribute(elem,atType);
@@ -914,7 +914,7 @@ int                *len;
         *len = 0;
         return;
     }
- ********************/
+ ******/
 
    elType = TtaGetElementType (elem);
 
@@ -934,7 +934,7 @@ int                *len;
       if (rule) {
 	 type = TtaGetPRuleType (rule);
 	 switch (type) {
-	    /**********************************************************
+	    /******
                 case PRHeight :
                     if ((context->drv->GetHeight == NULL) ||
 		         context->drv->GetHeight(elem,context,&pval))
@@ -947,7 +947,7 @@ int                *len;
 		        break;
                     sprintf(mybuf,"width : %dpt",pval.value);
                     break;
-	     **********************************************************/
+	     *****/
 		case PRForeground:
 		   if ((context->drv->GetForegroundColor == NULL) ||
 		    context->drv->GetForegroundColor (elem, context, &pval))
@@ -3373,7 +3373,7 @@ int                 type;
     * post processing : eg create child ...
     */
    switch (type) {
-	/***********************************************
+	/******
         case HTML_EL_StyleRule: {
 	    Element         contenu;
 
@@ -3383,7 +3383,7 @@ int                 type;
 	    TtaInsertFirstChild(&contenu, el, doc);
             break;
         }
-	 ***********************************************/
+	 *****/
 	  default:
 	     break;
    }

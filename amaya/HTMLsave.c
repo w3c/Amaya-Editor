@@ -1,3 +1,7 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
 /* Included headerfiles */
 #include "amaya.h"
 #include "content.h"
@@ -59,9 +63,9 @@ URL_elem            URL_elem_tab[] =
 
 #define NB_URL_PAIR ((sizeof(URL_elem_tab)) / (sizeof(URL_elem)))
 
-/* ---------------------------------------------------------------------- */
-/* |    SetAbsoluteURLs : change relative URLs to absolute ones.        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetAbsoluteURLs : change relative URLs to absolute ones.        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetAbsoluteURLs (Document document, View view)
 #else
@@ -135,9 +139,9 @@ View                view;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SaveHTMLDocumentAs                                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SaveHTMLDocumentAs                                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SaveDocumentAs (Document document, View view)
 #else
@@ -175,9 +179,9 @@ View                view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SaveinHTML save the local document in HTML format               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SaveinHTML save the local document in HTML format               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SaveInHTML (char *directoryName, char *documentName)
 #else
@@ -202,8 +206,8 @@ char               *documentName;
    TtaSetDocumentUnmodified (SavingDocument);
 }
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitSaveForm (Document document, View view, char *pathname)
 #else
@@ -244,8 +248,8 @@ char               *pathname;
    TtaShowDialogue (BaseDialog + FormSauver, FALSE);
 }
 
-/* -------------------------------------------------------------- */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 SaveDocumentThroughNet (Document document, View view, Boolean confirm)
 #else
@@ -389,8 +393,8 @@ Boolean             confirm;
    return (0);
 }
 
-/* -------------------------------------------------------------- */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SaveDocument (Document document, View view)
 #else
@@ -430,7 +434,8 @@ View                view;
    SavingDocument = (Document) None;
 }
  
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean DocumentToSave(NotifyDialog *event)
 #else /* __STDC__*/
@@ -443,10 +448,10 @@ boolean DocumentToSave(event)
   return True;
 }
 
-/* -------------------------------------------------------------- */
-/* | CreateNewImagePaths : calculates the new URL and the new   | */
-/* |     path to an Picture contained in a document.              | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateNewImagePaths : calculates the new URL and the new   
+   path to an Picture contained in a document.              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateNewImagePaths (char *DocUrl, char *OldPath,
 					 char *NewUrl, char *NewPath)
@@ -461,8 +466,8 @@ char               *NewPath;
 {
 }
 
-/* -------------------------------------------------------------- */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DoSaveAs (void)
 #else
@@ -536,11 +541,11 @@ void                DoSaveAs ()
       }
    }
    if (src_is_local && dst_is_local) {
-    /********************************************
-     *           Local to Local                 *
-     *						*
-     *   Just dump HTML to another directory    *
-     ********************************************/
+  /*----------------------------------------------------------------------
+   *           Local to Local                 
+   *						
+   *   Just dump HTML to another directory    
+   ----------------------------------------------------------------------*/
 
       /*
        * Moving a document locally : don't change anything on URL or images.
@@ -568,12 +573,12 @@ void                DoSaveAs ()
 
       SavingDocument = (Document) None;
    } else if ((!src_is_local) && dst_is_local) {
-    /********************************************
-     *           Remote to Local                *
-     *						*
-     *   + copy images				*
-     *   + move URLs to absolutes ones.		*
-     ********************************************/
+  /*----------------------------------------------------------------------
+   *           Remote to Local                
+   *						
+   *   + copy images				
+   *   + move URLs to absolutes ones.		
+   ----------------------------------------------------------------------*/
 
       /*
        * verify that we don't overwite anything and ask for confirmation
@@ -660,11 +665,11 @@ void                DoSaveAs ()
 
       SavingDocument = (Document) None;
    } else if (src_is_local && (!dst_is_local)) {
-    /********************************************
-     *           Local to Remote                *
-     *						*
-     *   + copy images				*
-     ********************************************/
+  /*----------------------------------------------------------------------
+   *           Local to Remote                
+   *						
+   *   + copy images				
+   ----------------------------------------------------------------------*/
 
       /*
        * change all Picture SRC to the remote URL.
@@ -738,12 +743,12 @@ void                DoSaveAs ()
 	 SavingDocument = (Document) None;
       }
    } else {			/* ! src_is_local && ! dst_is_local */
-    /********************************************
-     *           Remote to Remote               *
-     *						*
-     *   + copy images				*
-     *   + move URLs to absolutes ones.		*
-     ********************************************/
+  /*----------------------------------------------------------------------
+   *           Remote to Remote               
+   *						
+   *   + copy images				
+   *   + move URLs to absolutes ones.		
+   ----------------------------------------------------------------------*/
 
       /*
        * Transform all URLs to absolute ones.
@@ -836,8 +841,8 @@ void                DoSaveAs ()
 
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitSaveObjectForm (Document document, View view, char *object,
 					char *pathname)
@@ -875,6 +880,8 @@ char               *pathname;
    TtaShowDialogue (BaseDialog + FormSauver, FALSE);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DoSaveObjectAs (void)
 #else

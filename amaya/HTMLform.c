@@ -1,3 +1,7 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
 /* Included headerfiles */
 #include "amaya.h"
 #include "interface.h"
@@ -23,9 +27,9 @@ static char        *buffer;
 static int         lgbuffer;
 
 
-/* ---------------------------------------------------------------------- */
-/* |	writes the equivalent escape code of a car in a string		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	writes the equivalent escape code of a car in a string		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         escape_char (char *string, unsigned char c)
 #else
@@ -38,9 +42,9 @@ unsigned char       c;
    sprintf (string, "%02x", (unsigned int) c);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	reallocates memory and concatenates a string into buffer	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	reallocates memory and concatenates a string into buffer	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void        AddToBuffer (char *orig)
 #else
@@ -71,9 +75,9 @@ char               *orig;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	add a string into the query buffer				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	add a string into the query buffer				
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         add_element (unsigned char *element)
 #else
@@ -117,9 +121,9 @@ unsigned char      *element;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	add a name=value pair, and a trailling & into the query buffer	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	add a name=value pair, and a trailling & into the query buffer	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         add_NameValue (char *name, char *value)
 #else
@@ -134,10 +138,10 @@ char               *name, *value,
    AddToBuffer ("&");
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	allocates a text buffer and fills it with the value of the text	| */
-/* |	attribute attr							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	allocates a text buffer and fills it with the value of the text	
+   	attribute attr							
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         GetAttrValue (char **value, Attribute attr)
 #else
@@ -161,10 +165,10 @@ Attribute           attr;
        *value = (char *) NULL;
 }
 
-/* ---------------------------------------------------------------------- */
-/* | parse_form traverses the tree of element, applying the parse_input | */
-/* | function to each element with an attribute NAME                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   parse_form traverses the tree of element, applying the parse_input 
+   function to each element with an attribute NAME                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         parse_form (Document doc, Element el, int mode)
 #else
@@ -350,9 +354,9 @@ int                 mode;
       }
     }
 
-/* ---------------------------------------------------------------------- */
-/* |	submit a form : builds URL and get the result			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	submit a form : builds URL and get the result			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void          do_submit (Document doc, int method, char *action)
 #else
@@ -421,10 +425,10 @@ char               *action;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |	starts the parsing of the form containing the element and sends	| */
-/* |	the query to the server						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	starts the parsing of the form containing the element and sends	
+   	the query to the server						
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void            SubmitForm (Document doc, Element element)
 #else
@@ -538,9 +542,9 @@ Element             element;
   return;
 }
 
-/* ---------------------------------------------------------------------- */
-/* | SelectCheckbox selects a Checkbox input				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SelectCheckbox selects a Checkbox input				
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void         SelectCheckbox (Document doc, Element el)
 #else
@@ -589,9 +593,9 @@ Element             el;
     }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | SelectOneRadio selects one Radio input				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SelectOneRadio selects one Radio input				
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void         SelectOneRadio (Document doc, Element el)
 #else
@@ -692,7 +696,8 @@ Element             el;
 }
 
 
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean FrameToSelect(NotifyElement *event)
 #else /* __STDC__*/
@@ -711,9 +716,9 @@ boolean FrameToSelect(event)
   return True; /* refuse to select the frame */
 }
 
-/* ---------------------------------------------------------------------- */
-/* | SelectOneOption selects an option in option menu			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SelectOneOption selects an option in option menu			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void         SelectOneOption (Document doc, Element el)
 #else

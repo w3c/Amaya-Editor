@@ -1,3 +1,7 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
 /* Included headerfiles */
 #include "amaya.h"
 #include "content.h"
@@ -66,8 +70,9 @@ void                TransCallbackDialog (int ref, int typedata, char *data);
 #else
 void                TransCallbackDialog ( /* int ref, int typedata, char *data */ );
 #endif
-/* ---------------------------------------------------------------------- */
-/* liberation d'un arbre de tags. */
+/*----------------------------------------------------------------------
+   liberation d'un arbre de tags. 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         freeTagTree (TagTree t)
 #else
@@ -106,8 +111,9 @@ TagTree             t;
 }
 
 
-/* --------------------------------------------------------------------- */
-/* liberation de l'environnement de matching. */
+/*----------------------------------------------------------------------
+   liberation de l'environnement de matching. 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         FreeMatchEnv ()
 #else
@@ -131,9 +137,9 @@ static void         FreeMatchEnv ()
    match_env.subjecttree = NULL;
 }
 
-/* ---------------------------------------------------------------------- */
-/* initialisation de l'application */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   initialisation de l'application 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitTransform ()
 #else
@@ -145,9 +151,9 @@ void                InitTransform ()
    timeLastWrite = (time_t) 0;
 }
 
-/* ---------------------------------------------------------------------- */
-/* construction et affichage des TagTrees     */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   construction et affichage des TagTrees     
+  ----------------------------------------------------------------------*/
 /* allocation d'un noeud */
 #ifdef __STDC__
 static TagTree      newNode (char *tag)
@@ -175,9 +181,9 @@ char               *tag;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* arbre thot -> arbre tag */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   arbre thot -> arbre tag 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         BuildTagTree (Element elem, Document doc, TagTree father, int maxdepth, int depth)
 #else
@@ -230,11 +236,9 @@ int                 depth;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
-/* fonctions de pattern matching */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   fonctions de pattern matching 
+  ----------------------------------------------------------------------*/
 
 
 /* construit la liste res intersection dedes listes l1 et l2 : */
@@ -282,7 +286,9 @@ strmatch           *MS;
 
 
 
-/* pile de noeuds  pour l'algo de pattern matching (children_match) */
+/*----------------------------------------------------------------------
+   pile de noeuds  pour l'algo de pattern matching (children_match) 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void init_pile (void) 
 #else
@@ -316,6 +322,8 @@ ListSymb* v ;
 
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void depile (Tagnode ** t, ListSymb ** v)
 #else
@@ -335,10 +343,10 @@ ListSymb** v ;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/*       constlistmatch(node,symb) ajoute symb a la liste des matches du noeud  node    */
-/*      la liste des fils est mise a jour avec le contenu de la pile */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   constlistmatch(node,symb) ajoute symb a la liste des matches du noeud  node    
+   la liste des fils est mise a jour avec le contenu de la pile 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         constlistmatch (Tagnode * node, SymbDesc * symb)
 #else
@@ -380,9 +388,9 @@ SymbDesc           *symb;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* children_match retourne TRUE si les fils du noeud n sont compatibles avec ceux de p */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   children_match retourne TRUE si les fils du noeud n sont compatibles avec ceux de p 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      children_match (Tagnode * n, SymbDesc * p)
@@ -479,7 +487,8 @@ SymbDesc           *p;
    return matchfound;
 }
 
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      matchattr (SymbDesc * pSymb, Element elem)
 #else
@@ -523,11 +532,11 @@ Element             elem;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/*matchnode : construit la liste des pointeurs sur la pattern correspondant aux */
-/* matching possibles du noeud. Cette liste est calculee en fonction des                */
-/* du noeud et du constructeur dans la pattern                          */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   matchnode : construit la liste des pointeurs sur la pattern correspondant aux 
+   matching possibles du noeud. Cette liste est calculee en fonction des                
+   du noeud et du constructeur dans la pattern                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      matchnode (Tagnode * n)
 #else
@@ -560,13 +569,13 @@ Tagnode            *n;
    return TRUE;
 }
 
-/* ---------------------------------------------------------------------- */
-/* parcours postfixe de l'arbre, applicant la fonction booleenne f a tous les   */
-/* noeuds de l'arbre t                                                  */
-/* cond ition d'arret sur un noeud n : f(n) = FALSE                             */
-/* retourne le noeud sur lequel le parcours s'est arrete, NULL si l'arbre entier a      */
-/* ete parcouru                                                         */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   parcours postfixe de l'arbre, applicant la fonction booleenne f a tous les   
+   noeuds de l'arbre t                                                  
+   cond ition d'arret sur un noeud n : f(n) = FALSE                             
+   retourne le noeud sur lequel le parcours s'est arrete, NULL si l'arbre entier a      
+   ete parcouru                                                         
+  ----------------------------------------------------------------------*/
 static Tagnode     *ppostfix (TagTree t, boolean (*f) (Tagnode *));
 
 #ifdef __STDC__
@@ -589,7 +598,8 @@ boolean (*f) (Tagnode *);
       return res;
 }
 
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static Tagnode     *ppostfix (TagTree t, boolean (*f) (Tagnode *))
 #else
@@ -615,11 +625,8 @@ boolean (*f) (Tagnode *);
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
-
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AddListSubTree (Element elem, int idf, int rank)
 #else
@@ -650,7 +657,8 @@ int                 rank;
    pprec->next = pcour;
 }
 
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static Element      FindListSTreeByLabel (char *label)
 #else
@@ -674,10 +682,10 @@ char               *label;
       return pcour->element;
 }
 
-/* ---------------------------------------------------------------------- */
-/* search for the next element with the identifier id in the listSubTrees, searches the first one if */
-/* *elem =NULL */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   search for the next element with the identifier id in the listSubTrees, searches the first one if 
+   *elem =NULL 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          FindListSubTree (int id, Element * elem)
 #else
@@ -720,10 +728,10 @@ Element            *elem;
    return result;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    MyStartParser initializes  parsing environement in order to parse the HTML      | */
-/* |    fragment in buffer in the context of a last descendance of the element ElFather | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MyStartParser initializes  parsing environement in order to parse the HTML      
+   fragment in buffer in the context of a last descendance of the element ElFather 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      MyStartParser (strmatchchildren * sMatch, Document doc)
 #else
@@ -817,17 +825,15 @@ Document            doc;
    return res;
 }
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
-/* fonctions de conversion automatique des sous-arbres pendants */
-/* ---------------------------------------------------------------------- */
-/* ApplatitEtInsereElement : tente d'applatir le sous-arbre a transferer */
-/*  el source : racine du sous arbre */
-/*  elDest : voisin precendent ou pere dans la destination */
-/*  voisin : si vrai : elDest est le prcedent sinon c;est le pere */
-/* Last created : retourne le dernier element cree */
-/* nbcreated : retourne le nombre d'element crees au plus haut niveau */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   fonctions de conversion automatique des sous-arbres pendants 
+   ApplatitEtInsereElement : tente d'applatir le sous-arbre a transferer 
+   el source : racine du sous arbre 
+   elDest : voisin precendent ou pere dans la destination 
+   voisin : si vrai : elDest est le prcedent sinon c;est le pere 
+   Last created : retourne le dernier element cree 
+   nbcreated : retourne le nombre d'element crees au plus haut niveau 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      ApplatitEtInsereElement (Element elSource, Element elDest, boolean voisin, Document doc, Element * LastCreated, int *nbcreated)
 #else
@@ -886,20 +892,20 @@ int                *nbcreated;
    else
       return res;
 }
-/* ----------------------------------------------------------------------
-RankedInsertion
+/*----------------------------------------------------------------------
+   RankedInsertion
 
 
-Inserts an element as a given child or sibling of an element, creating a descendance 
-between the two elements if necesary. 
+   Inserts an element as a given child or sibling of an element, creating a descendance 
+   between the two elements if necesary. 
 
-Parameters:
-    newEl: the element to be inserted
-    parent: the element in which newEl will be inserted
-    prevEl : the element after which newEl will be inserted
-    rank:  rank of newEl 
-    doc: document in which newwEl have to be inserted
----------------------------------------------------------------------- */
+   Parameters:
+   newEl: the element to be inserted
+   parent: the element in which newEl will be inserted
+   prevEl : the element after which newEl will be inserted
+   rank:  rank of newEl 
+   doc: document in which newwEl have to be inserted
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      RankedInsertion (Element newEl, Element parent, Element prevEl, int *rank, Document doc)
@@ -999,6 +1005,8 @@ Document            doc;
    return result;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CopySTreeChildren (Element father, Document doc)
 #else
@@ -1038,6 +1046,8 @@ Document            doc;
    }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CopieSousArbres (Tagnode * Root, Document doc)
 #else
@@ -1097,10 +1107,10 @@ Document            doc;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
-/* PutBeginTag,PutEndTag,TransfertNode */
-/* fill the HTML buffer with the generated nodes */
+/*----------------------------------------------------------------------
+   PutBeginTag,PutEndTag,TransfertNode 
+   fill the HTML buffer with the generated nodes 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      PutInHTMLBuf (char *s)
@@ -1118,6 +1128,8 @@ char               *s;
    }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutBeginTag (NodeDesc * ND, Tagnode * TN)
 #else
@@ -1251,9 +1263,9 @@ NodStack           *ND;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* TransfertChildren : copies the children of node into the result instance */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TransfertChildren : copies the children of node into the result instance 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         TransfertChildren (Tagnode * node)
@@ -1276,9 +1288,9 @@ Tagnode            *node;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* TransfertNode : copies a node and its content into the result instance */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TransfertNode : copies a node and its content into the result instance 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         TransfertNode (Tagnode * node, boolean inplace)
@@ -1305,11 +1317,9 @@ boolean             inplace;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
-/* |  Fonctions de transformation par regles            | */
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Fonctions de transformation par regles            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         TransformNode (strmatchchildren * sm);
@@ -1358,6 +1368,8 @@ strmatchchildren   *smc;
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         TransformNode (strmatchchildren * sm)
 #else
@@ -1427,10 +1439,10 @@ strmatchchildren   *sm;
    }
 }
 
-/*---------------------------------------------------------------------- */
-/* parcours de l'arbre source upside down en appliquant la transformation d'indice t */
-/* dans TabPatterns */
-/*---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   parcours de l'arbre source upside down en appliquant la transformation d'indice t 
+   dans TabPatterns 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      ApplyTransformation (strmatch * sm, Document doc)
 #else
@@ -1492,10 +1504,10 @@ Document            doc;
    return res;
 }
 
-/* ---------------------------------------------------------------------- */
-/* CheckSelection : checks if all the selected element are at the same level. Extends the selction  */
-/*      to an element if all its children are selected                                       */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckSelection : checks if all the selected element are at the same level. Extends the selction  
+   to an element if all its children are selected                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      CheckSelectionLevel (Document doc)
 #else
@@ -1585,9 +1597,9 @@ Document            doc;
    return result;
 }
 
-/* ---------------------------------------------------------------------- */
-/*  Give the next selected element, accordingly  to extension given by CheckSelectionLevel */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Give the next selected element, accordingly  to extension given by CheckSelectionLevel 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         MyNextSelectedElement (Document doc, Element * elselect)
 #else
@@ -1619,11 +1631,11 @@ Element*            elselect;
 	 *elselect = elfirst;
    }
 }
-/* ---------------------------------------------------------------------- */
-/* IsValidHtmlChild(element, tag)                                       */
-/* returns TRUE if the tag is valid as a direct descendant of an element of type elType */
-/*              */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsValidHtmlChild(element, tag)                                       
+   returns TRUE if the tag is valid as a direct descendant of an element of type elType 
+   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      IsValidHtmlChild (ElementType elType, char *tag, char *prevtag)
 #else
@@ -1735,11 +1747,11 @@ char               *prevtag;
    return result;
 }
 
-/* ---------------------------------------------------------------------- */
-/* CheckValidTransRoot                                                  */
-/* checks if the higher-level generated elements are possible children of the   */
-/* transformation root element                                          */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckValidTransRoot                                                  
+   checks if the higher-level generated elements are possible children of the   
+   transformation root element                                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      CheckValidTransRoot (strmatch * sm, ElementType elTypeRoot, char *prevTag)
 #else
@@ -1811,9 +1823,9 @@ char               *prevTag;
    return result;
 }
 
-/* ---------------------------------------------------------------------- */
-/* callback of the transformation selection menu */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   callback of the transformation selection menu 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TransCallbackDialog (int ref, int typedata, char *data)
 #else
@@ -1870,9 +1882,9 @@ char               *data;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* callback of  the tranform entry of type menu */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   callback of  the tranform entry of type menu 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TransformType (Document doc, View view)
 #else
@@ -1959,14 +1971,14 @@ View                view;
 
 
 
-/*-------------------------------------------------------------------- */
-/* TransformIntoType:                                                           */
-/* fonction de changement de type sur place                                             */
-/* tente de changer la selection courante dans le document doc dans le type DestType    */
-/* methode : on selectionne les transformation qui produisent le type demande           */
-/* effectue un pattern matching de ces transformations sur la selection,                        */
-/* applique la premiere transformation trouvee                                  */
-/*-------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TransformIntoType:                                                           
+   fonction de changement de type sur place                                             
+   tente de changer la selection courante dans le document doc dans le type DestType    
+   methode : on selectionne les transformation qui produisent le type demande           
+   effectue un pattern matching de ces transformations sur la selection,                        
+   applique la premiere transformation trouvee                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             TransformIntoType (ElementType resultType, Document doc)
 #else

@@ -1,8 +1,12 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
 
-/*+---------------------------------------------------------------+ */
-/*| CSS.c : Handle all the dialogs and interface functions needed | */
-/*|         to manipulate CSS.                                    | */
-/*+---------------------------------------------------------------+ */
+
+/*----------------------------------------------------------------------
+   CSS.c : Handle all the dialogs and interface functions needed 
+   to manipulate CSS.                                    
+  ----------------------------------------------------------------------*/
 
 /*
  * HOTLIST :
@@ -99,10 +103,10 @@ void                __assert_fail (char *expression, char *file, unsigned int li
 
 #endif
 
-/* +--------------------------------------------------------------------+ */
-/* |    CSSClassChanged : the user has removed or modified an attribute | */
-/* |                      Class.                                        | */
-/* +--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   CSSClassChanged : the user has removed or modified an attribute 
+   Class.                                        
+  ----------------------------------------------------------------------*/
 
 /*ARGUSED */
 
@@ -117,9 +121,9 @@ NotifyAttribute    *event;
    /* This function has to be written ****** */
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     ExplodeURL :                                                   | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   ExplodeURL :                                                   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ExplodeURL (char *url, char **proto, char **host, char **dir, char **file)
@@ -174,7 +178,7 @@ char              **file;
    if (cour < url)
       goto finished;
 
-   /* search for the "//" indicating the host name start */
+   /* search for the "/" indicating the host name start */
    while ((cour > url) && ((*cour != DIR_SEP) || (*(cour + 1) != DIR_SEP)))
       cour--;
 
@@ -227,9 +231,9 @@ char              **file;
 
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     PrintCSS                                                       | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   PrintCSS                                                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                PrintCSS (CSSInfoPtr css, FILE * output)
@@ -276,9 +280,9 @@ FILE               *output;
    fprintf (output, "\n");
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     DumpCSSToFile                                                  | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   DumpCSSToFile                                                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 DumpCSSToFile (Document doc, CSSInfoPtr css, char *filename)
@@ -403,9 +407,9 @@ char               *filename;
    return (0);
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     PrintListCSS                                                   | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   PrintListCSS                                                   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                PrintListCSS (FILE * output)
@@ -424,9 +428,9 @@ FILE               *output;
    }
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     IsLoaded                                                       | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   IsLoaded                                                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          IsLoaded (char *url)
@@ -447,9 +451,9 @@ char               *url;
    return (FALSE);
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     GotoPreviousHTML                                               | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   GotoPreviousHTML                                               
+  ----------------------------------------------------------------------*/
 /*ARGUSED */
 #ifdef __STDC__
 void                GotoPreviousHTML (Document doc, View view)
@@ -494,9 +498,9 @@ View                view;
       (void) GetHTMLDocument (url, NULL, doc, DC_FALSE);
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     GotoNextHTML                                                   | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   GotoNextHTML                                                   
+  ----------------------------------------------------------------------*/
 /*ARGUSED */
 #ifdef __STDC__
 void                GotoNextHTML (Document doc, View view)
@@ -530,9 +534,9 @@ View                view;
       (void) GetHTMLDocument (url, NULL, doc, DC_FALSE);
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     AddCSS                                                         | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   AddCSS                                                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                AddCSS (CSSInfoPtr css)
@@ -550,9 +554,9 @@ CSSInfoPtr          css;
    AddCSSHistory (css);
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     FreeCSS                                                        | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   FreeCSS                                                        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                FreeCSS (CSSInfoPtr css)
@@ -583,9 +587,9 @@ CSSInfoPtr          css;
    }
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     InitDocumentCSS                                                | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   InitDocumentCSS                                                
+  ----------------------------------------------------------------------*/
 /* ARGUSED */
 #ifdef __STDC__
 void                InitDocumentCSS (Document doc)
@@ -606,9 +610,9 @@ Document            doc;
 #endif
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     CleanDocumentCSS                                               | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   CleanDocumentCSS                                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CleanDocumentCSS (Document doc)
@@ -676,9 +680,9 @@ Document            doc;
    }
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     CleanListCSS                                                   | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   CleanListCSS                                                   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CleanListCSS (void)
@@ -695,9 +699,9 @@ void                CleanListCSS ()
    }
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     NewCSS                                                         | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   NewCSS                                                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 CSSInfoPtr          NewCSS (void)
@@ -725,9 +729,9 @@ CSSInfoPtr          NewCSS ()
    return (css);
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     CmpCSS                                                         | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   CmpCSS                                                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 CmpCSS (CSSInfoPtr css, CSSInfoPtr cour)
@@ -746,9 +750,9 @@ CSSInfoPtr          cour;
 }
 
 
-/*+--------------------------------------------------------------------+ */
-/*|     SearchCSS                                                      | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   SearchCSS                                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 CSSInfoPtr          SearchCSS (Document doc, CSSCategory category, char *url)
@@ -784,9 +788,9 @@ char               *url;
    return (NULL);
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     ClearCSS                                                       | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   ClearCSS                                                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ClearCSS (CSSInfoPtr css)
@@ -812,10 +816,10 @@ CSSInfoPtr          css;
    CleanListRPI (&list);
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     RebuildCSS : rebuild the whole internal structures with the    | */
-/*|             original CSS rules.                                    | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   RebuildCSS : rebuild the whole internal structures with the    
+   original CSS rules.                                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RebuildCSS (CSSInfoPtr css)
@@ -868,12 +872,12 @@ CSSInfoPtr          css;
    }
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     GetDocumentStyle : Returns the current CSS document style.     | */
-/*|             Should never return NULL, a new one is allocated and   | */
-/*|             inserted if necessary. In this case the pschema field  | */
-/*|             remains NULL.                                          | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   GetDocumentStyle : Returns the current CSS document style.     
+   Should never return NULL, a new one is allocated and   
+   inserted if necessary. In this case the pschema field  
+   remains NULL.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 CSSInfoPtr          GetDocumentStyle (Document doc)
@@ -906,9 +910,9 @@ Document            doc;
    AddCSS (css);
    return (css);
 }
-/*+--------------------------------------------------------------------+ */
-/*|     GetDocumentGenericPresentation                                 | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   GetDocumentGenericPresentation                                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PSchema             GetDocumentGenericPresentation (Document doc)
@@ -937,9 +941,9 @@ Document            doc;
    return (NULL);
 }
 
-/*+--------------------------------------------------------------------+ */
-/*|     GetUserGenericPresentation                                     | */
-/*+--------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   GetUserGenericPresentation                                     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 CSSInfoPtr          GetUserGenericPresentation (void)
@@ -965,10 +969,10 @@ CSSInfoPtr          GetUserGenericPresentation ()
    return (NULL);
 }
 
-/*+---------------------------------------------------------------------+ */
-/*|     RebuildHTMLStyleHeader : Rebuild the Style header of a document | */
-/*|             using the current state of the associated PSchema.      | */
-/*+---------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   RebuildHTMLStyleHeader : Rebuild the Style header of a document 
+   using the current state of the associated PSchema.      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RebuildHTMLStyleHeader (Document doc)
 #else
@@ -1054,13 +1058,13 @@ Document            doc;
    CleanListRPI (&list);
 }
 
-/*+---------------------------------------------------------------------+ */
-/*|     ParseHTMLStyleHeader : parse an HTML3 Style description stored  | */
-/*|      in the header of a HTML document                               | */
-/*|   We expect the style string to be of the form :                    | */
-/*|   [                                                                 | */
-/*|   e.g: H2 { color: blue } pinky { color: pink }                     | */
-/*+--------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParseHTMLStyleHeader : parse an HTML3 Style description stored  
+   in the header of a HTML document                               
+   We expect the style string to be of the form :                    
+   [                                                                 
+   e.g: H2 { color: blue } pinky { color: pink }                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ParseHTMLStyleHeader (Element elem, char *attrstr, Document doc, Bool rebuild)
 #else
@@ -1178,10 +1182,10 @@ Bool                rebuild;
 #endif
 }
 
-/*+---------------------------------------------------------------------+ */
-/*|     LoadHTMLStyleSheet : Load an external Style Sheet found at the  | */
-/*|      URL given in argument.                                         | */
-/*+---------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   LoadHTMLStyleSheet : Load an external Style Sheet found at the  
+   URL given in argument.                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                LoadHTMLStyleSheet (char *URL, Document doc)
 #else
@@ -1299,11 +1303,11 @@ Document            doc;
 #endif
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    LoadHTMLExternalStyleSheet : Load an external Style Sheet found | */
-/* |      at the URL given in argument, but do not link it to the       | */
-/* |      document.                                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LoadHTMLExternalStyleSheet : Load an external Style Sheet found 
+   at the URL given in argument, but do not link it to the       
+   document.                                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                LoadHTMLExternalStyleSheet (char *URL, Document doc, int merge)
 #else
@@ -1467,10 +1471,10 @@ int                 merge;
 #endif
 }
 
-/*+---------------------------------------------------------------------+ */
-/*|     LoadUserStyleSheet : Load the user Style Sheet found in it's    | */
-/*|             home directory or the default one in THOTDIR.           | */
-/*+---------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   LoadUserStyleSheet : Load the user Style Sheet found in it's    
+   home directory or the default one in THOTDIR.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                LoadUserStyleSheet (Document doc)
 #else
@@ -1587,10 +1591,10 @@ Document            doc;
 #endif
 }
 
-/*+---------------------------------------------------------------------+ */
-/*|     CSSSetBackground : called by the parser when a Background is    | */
-/*|        specified by a CSS, this is not supported at the P level.    | */
-/*+---------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   CSSSetBackground : called by the parser when a Background is    
+   specified by a CSS, this is not supported at the P level.    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CSSSetBackground (Document doc, PSchema gpres, int color)
@@ -1619,10 +1623,10 @@ int                 color;
    }
 }
 
-/*+---------------------------------------------------------------------+ */
-/*|     CSSSetMagnification : called by the parser when a Magnification | */
-/*|        is specified by a CSS, this is not supported at the P level. | */
-/*+---------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   CSSSetMagnification : called by the parser when a Magnification 
+   is specified by a CSS, this is not supported at the P level. 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CSSSetMagnification (Document doc, PSchema gpres, int zoom)
@@ -1646,13 +1650,13 @@ int                 zoom;
    }
 }
 
-/*+---------------------------------------------------------------------+ */
-/*|     ApplyFinalStyle : Change the presentation attributes of the     | */
-/*|             whole document to reflect the style rules. To respect   | */
-/*|             the order imposed by CSS, the User's defined rule are   | */
-/*|             stored at the head, then the external style sheets,     | */
-/*|             and last the document own styles if any.                | */
-/*+---------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   ApplyFinalStyle : Change the presentation attributes of the     
+   whole document to reflect the style rules. To respect   
+   the order imposed by CSS, the User's defined rule are   
+   stored at the head, then the external style sheets,     
+   and last the document own styles if any.                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplyFinalStyle (Document doc)
 #else
@@ -1742,10 +1746,10 @@ Document            doc;
 #endif /* linux */
 }
 
-/*+---------------------------------------------------------------------+ */
-/*|     MergeNewCSS : parse a set of HTML3 CSS rules and add them to an | */
-/*|      existing pschema.                                              | */
-/*+---------------------------------------------------------------------+ */
+/*----------------------------------------------------------------------
+   MergeNewCSS : parse a set of HTML3 CSS rules and add them to an 
+   existing pschema.                                              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                MergeNewCSS (char *attrstr, Document doc, PSchema gPres)
@@ -1813,9 +1817,9 @@ PSchema             gPres;
 #endif
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RemoveCSS : remove an existing CSS file from a document.        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RemoveCSS : remove an existing CSS file from a document.        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RemoveCSS (char *name, Document doc)
@@ -1890,9 +1894,9 @@ Document            doc;
 
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  SearchRPISel : Search an RPI based on the value of it's selector  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchRPISel : Search an RPI based on the value of it's selector  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PRuleInfoPtr        SearchRPISel (char *selector, PRuleInfoPtr list)
@@ -1911,10 +1915,10 @@ PRuleInfoPtr        list;
    return (NULL);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  SelectRPIEntry : show the current entry selected, left, right or  | */
-/* |            bottom.                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SelectRPIEntry : show the current entry selected, left, right or  
+   bottom.                                                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                SelectRPIEntry (char which, int index, char *value)
@@ -2011,9 +2015,9 @@ char               *value;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  BuildCSSList : Build the whole list of CSS in use by a document   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildCSSList : Build the whole list of CSS in use by a document   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 BuildCSSList (Document doc, char *buf, int size, char *first)
@@ -2093,9 +2097,9 @@ char               *first;
    return (nb);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    GetlistEntry                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetlistEntry                                                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 char               *GetlistEntry (char *list, int entry)
@@ -2114,9 +2118,9 @@ int                 entry;
    return (list);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RedrawLCSS                                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RedrawLCSS                                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RedrawLCSS (char *name)
@@ -2185,9 +2189,9 @@ char               *name;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RedrawLRPI                                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RedrawLRPI                                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RedrawLRPI (char *name)
@@ -2231,9 +2235,9 @@ char               *name;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RedrawRCSS                                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RedrawRCSS                                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RedrawRCSS (char *name)
@@ -2302,9 +2306,9 @@ char               *name;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RedrawRRPI                                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RedrawRRPI                                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RedrawRRPI (char *name)
@@ -2347,9 +2351,9 @@ char               *name;
    SelectRPIEntry ('R', index, name);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | CSSHandleMerge : procedure used as a front end for merge operations| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CSSHandleMerge : procedure used as a front end for merge operations
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CSSHandleMerge (char which, Bool copy)
@@ -2486,10 +2490,10 @@ Bool                copy;
 
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RebuildAllCSS : rebuild the whole internal structures with the  | */
-/* |            all the original CSS rules.                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RebuildAllCSS : rebuild the whole internal structures with the  
+   all the original CSS rules.                                     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RebuildAllCSS (void)
@@ -2511,9 +2515,9 @@ void                RebuildAllCSS ()
    RedrawRRPI (NULL);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SaveCSSThroughNet : Use The PUT method to save a CSS file       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SaveCSSThroughNet : Use The PUT method to save a CSS file       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 SaveCSSThroughNet (Document doc, View view, CSSInfoPtr css)
@@ -2551,9 +2555,9 @@ CSSInfoPtr          css;
    return (-1);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    InitCSS                                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitCSS                                                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                InitCSS (void)
@@ -2649,9 +2653,9 @@ It is used for publishing when saving throught the network is unavailable\n\
    CSSDocumentName = TtaGetMemory (MAX_LENGTH);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CloseCSS                                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CloseCSS                                                        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CloseCSS (void)

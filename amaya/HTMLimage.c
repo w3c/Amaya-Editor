@@ -1,3 +1,7 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
 /* Included headerfiles */
 #include "amaya.h"
 
@@ -22,15 +26,15 @@
 
 #include "f/EDITimage_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* | AddLoadedImage adds a new image into image descriptor table.	| */
-/* |    Local images are not stored into this table and the function    | */
-/* |    returns no descriptor and the value FALSE.                      | */
-/* |    If the remote image is new, adds a descriptor for this image    | */
-/* |    notes its local name and returns TRUE.                          | */
-/* |    For already loaded remote images the functions returns the      | */
-/* |    descriptor entry and the value FALSE.                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AddLoadedImage adds a new image into image descriptor table.	
+   Local images are not stored into this table and the function    
+   returns no descriptor and the value FALSE.                      
+   If the remote image is new, adds a descriptor for this image    
+   notes its local name and returns TRUE.                          
+   For already loaded remote images the functions returns the      
+   descriptor entry and the value FALSE.                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             AddLoadedImage (char *name, char *pathname, Document doc, LoadedImageDesc ** desc)
 #else  /* __STDC__ */
@@ -116,8 +120,8 @@ LoadedImageDesc   **desc;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void           DisplayImage (Document doc, Element el, char *imageName)
 #else  /* __STDC__ */
@@ -147,10 +151,10 @@ char          *imageName;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | ImageLoaded is the callback procedure when the image is loaded	| */
-/* |		from the web.						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ImageLoaded is the callback procedure when the image is loaded	
+   		from the web.						
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void           ImageLoaded (AHTReqContext * context, int status)
 #else  /* __STDC__ */
@@ -204,9 +208,9 @@ int            status;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | FetchImage loads an IMG from local file or from the web.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FetchImage loads an IMG from local file or from the web.		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void           FetchImage (Document doc, Element el)
 #else  /* __STDC__ */
@@ -290,10 +294,10 @@ Element        el;
    TtaHandlePendingEvents ();
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    FetchAndDisplayImages   fetch and display all images referred   | */
-/* |            by document doc.                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FetchAndDisplayImages   fetch and display all images referred   
+   by document doc.                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FetchAndDisplayImages (Document doc)
 #else  /* __STDC__ */

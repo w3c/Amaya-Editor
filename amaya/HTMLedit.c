@@ -1,3 +1,7 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
 /* Included headerfiles */
 #include "amaya.h"
 
@@ -29,9 +33,9 @@ char               *TargetName = NULL;
 #include "css.h"
 #include "EDITimage.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    SetTargetContent sets the new value of Target.                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetTargetContent sets the new value of Target.                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetTargetContent (Document doc, Attribute attrNAME)
 #else  /* __STDC__ */
@@ -64,11 +68,11 @@ Attribute           attrNAME;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SetHREFattribute  sets the HREF attribue of the element to      | */
-/* |            the current target. If the HREF attribute does not      | */
-/* |            exist the function creates it.                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetHREFattribute  sets the HREF attribue of the element to      
+   the current target. If the HREF attribute does not      
+   exist the function creates it.                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetHREFattribute (Element element, Document document, Document targetDoc)
 #else  /* __STDC__ */
@@ -123,10 +127,10 @@ Document            targetDoc;
    TtaFreeMemory (tempURL);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    GetNameAttr return the NAME attribute of the enclosing Anchor   | */
-/* |            element or NULL.                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetNameAttr return the NAME attribute of the enclosing Anchor   
+   element or NULL.                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Attribute           GetNameAttr (Document doc, Element selectedElement)
 #else  /* __STDC__ */
@@ -160,10 +164,10 @@ Element             selectedElement;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CreateTargetAnchor creates the NAME attribute with a default    | */
-/* |            value (Label of the element).                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateTargetAnchor creates the NAME attribute with a default    
+   value (Label of the element).                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateTargetAnchor (Document doc, Element el)
 #else  /* __STDC__ */
@@ -194,11 +198,11 @@ Element             el;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ElementPasted   an element has been pasted in a HTML document.  | */
-/* |            If the pasted element has a NAME attribute, change its  | */
-/* |            value to keep it unique.                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ElementPasted   an element has been pasted in a HTML document.  
+   If the pasted element has a NAME attribute, change its  
+   value to keep it unique.                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ElementPasted (NotifyElement * event)
 #else  /* __STDC__ */
@@ -332,9 +336,9 @@ NotifyElement      *event;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CreateLink creates a link element.                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateLink creates a link element.                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateLink (Document doc, View view)
 #else  /* __STDC__ */
@@ -348,9 +352,9 @@ View                view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CreateTarget creates a target element.                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateTarget creates a target element.                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateTarget (Document doc, View view)
 #else  /* __STDC__ */
@@ -364,10 +368,10 @@ View                view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    coordsModified  updates x_ccord, y_coord, width, height or      | */
-/* |            polyline according to the new coords value.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   coordsModified  updates x_ccord, y_coord, width, height or      
+   polyline according to the new coords value.             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                coordsModified (NotifyAttribute * event)
 #else  /* __STDC__ */
@@ -380,10 +384,10 @@ NotifyAttribute    *event;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    graphicsModified        updates coords attribute value          | */
-/* |            according to the new coord value.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   graphicsModified        updates coords attribute value          
+   according to the new coord value.                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                graphicsModified (NotifyAttribute * event)
 #else  /* __STDC__ */
@@ -403,11 +407,11 @@ NotifyAttribute    *event;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    AttrWidthCreated        An attribute Width__ has been created.  | */
-/* |            Create the corresponding attribute IntWidthPercent or   | */
-/* |            IntWidthPxl.                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AttrWidthCreated        An attribute Width__ has been created.  
+   Create the corresponding attribute IntWidthPercent or   
+   IntWidthPxl.                                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AttrWidthCreated (NotifyAttribute * event)
 #else  /* __STDC__ */
@@ -424,11 +428,11 @@ NotifyAttribute    *event;
    CreateAttrWidthPercentPxl (buffer, event->element, event->document);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    AttrWidthDelete         An attribute Width__ will be deleted.   | */
-/* |            Delete the corresponding attribute IntWidthPercent or   | */
-/* |            IntWidthPxl.                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AttrWidthDelete         An attribute Width__ will be deleted.   
+   Delete the corresponding attribute IntWidthPercent or   
+   IntWidthPxl.                                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             AttrWidthDelete (NotifyAttribute * event)
 #else  /* __STDC__ */
@@ -452,11 +456,11 @@ NotifyAttribute    *event;
    return FALSE;		/* let Thot perform normal operation */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    AttrWidthModified       An attribute Width__ has been modified. | */
-/* |            Update the corresponding attribute IntWidthPercent or   | */
-/* |            IntWidthPxl.                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AttrWidthModified       An attribute Width__ has been modified. 
+   Update the corresponding attribute IntWidthPercent or   
+   IntWidthPxl.                                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AttrWidthModified (NotifyAttribute * event)
 #else  /* __STDC__ */
@@ -469,10 +473,10 @@ NotifyAttribute    *event;
    AttrWidthCreated (event);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    an HTML attribute "size" has been created for a Font element.   | */
-/* |    Create the corresponding internal attribute.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   an HTML attribute "size" has been created for a Font element.   
+   Create the corresponding internal attribute.                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AttrFontSizeCreated (NotifyAttribute * event)
 #else  /* __STDC__ */
@@ -489,10 +493,10 @@ NotifyAttribute    *event;
    CreateAttrIntSize (buffer, event->element, event->document);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    an HTML attribute "size" has been deleted for a Font element.   | */
-/* |    Delete the corresponding internal attribute.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   an HTML attribute "size" has been deleted for a Font element.   
+   Delete the corresponding internal attribute.                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             AttrFontSizeDelete (NotifyAttribute * event)
 #else  /* __STDC__ */
@@ -520,10 +524,10 @@ NotifyAttribute    *event;
    return FALSE;		/* let Thot perform normal operation */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    an attribute color, TextColor or BackgroundColor has been       | */
-/* |    created or modified.                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   an attribute color, TextColor or BackgroundColor has been       
+   created or modified.                                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AttrColorCreated (NotifyAttribute * event)
 #else  /* __STDC__ */
@@ -555,10 +559,10 @@ NotifyAttribute    *event;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    an attribute color, TextColor or BackgroundColor is being       | */
-/* |    deleted.                                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   an attribute color, TextColor or BackgroundColor is being       
+   deleted.                                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             AttrColorDelete (NotifyAttribute * event)
 #else  /* __STDC__ */
@@ -581,10 +585,10 @@ NotifyAttribute    *event;
    return FALSE;		/* let Thot perform normal operation */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    An element List_Item has been created or pasted. Set its        | */
-/* |    IntItemStyle attribute according to its surrounding elements.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   An element List_Item has been created or pasted. Set its        
+   IntItemStyle attribute according to its surrounding elements.   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ListItemCreated (NotifyElement * event)
 #else  /* __STDC__ */
@@ -596,10 +600,10 @@ NotifyElement      *event;
    SetAttrIntItemStyle (event->element, event->document);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    Set the IntItemStyle attribute of all List_Item elements in the | */
-/* |    el subtree.                                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Set the IntItemStyle attribute of all List_Item elements in the 
+   el subtree.                                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetItemStyleSubtree (Element el, Document doc)
 #else  /* __STDC__ */
@@ -622,10 +626,10 @@ Document            doc;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    An element Unnumbered_List or Numbered_List has changed type.   | */
-/* |    Set the IntItemStyle attribute for all enclosed List_Items      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   An element Unnumbered_List or Numbered_List has changed type.   
+   Set the IntItemStyle attribute for all enclosed List_Items      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ListChangedType (NotifyElement * event)
 #else  /* __STDC__ */
@@ -637,11 +641,11 @@ NotifyElement      *event;
    SetItemStyleSubtree (event->element, event->document);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    An attribute BulletStyle or NumberStyle has been created,       | */
-/* |    deleted or modified for a list. Create or updated the           | */
-/* |    corresponding IntItemStyle attribute for all items of the list. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   An attribute BulletStyle or NumberStyle has been created,       
+   deleted or modified for a list. Create or updated the           
+   corresponding IntItemStyle attribute for all items of the list. 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateAttrIntItemStyle (NotifyAttribute * event)
 #else  /* __STDC__ */
@@ -659,10 +663,10 @@ NotifyAttribute    *event;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    An attribute ItemStyle has been created, updated or deleted.    | */
-/* |    Create or update the corresponding IntItemStyle attribute.      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   An attribute ItemStyle has been created, updated or deleted.    
+   Create or update the corresponding IntItemStyle attribute.      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AttrItemStyle (NotifyAttribute * event)
 #else  /* __STDC__ */
@@ -680,9 +684,9 @@ NotifyAttribute    *event;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    AttrNAMEinMenu                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AttrNAMEinMenu                                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             AttrNAMEinMenu (NotifyAttribute * event)
 #else  /* __STDC__ */
@@ -703,11 +707,11 @@ NotifyAttribute    *event;
       return FALSE;		/* let Thot perform normal operation */
 }
 
-/* -------------------------------------------------------------- */
-/* |    ResetFontOrPhraseOnText: The text element elem should   | */
-/* |            not be any longer within an element of type     | */
-/* |            notType.                                        | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ResetFontOrPhraseOnText: The text element elem should   
+   not be any longer within an element of type     
+   notType.                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ResetFontOrPhraseOnText (Document document, Element elem, int notType)
 #else  /* __STDC__ */
@@ -774,10 +778,10 @@ int                 notType;
 }
 
 
-/* -------------------------------------------------------------- */
-/* |    SetFontOrPhraseOnText: The text element *elem should be | */
-/* |            within an element of type newtype.              | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetFontOrPhraseOnText: The text element *elem should be 
+   within an element of type newtype.              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetFontOrPhraseOnText (Document document, Element * elem, int newtype)
 #else  /* __STDC__ */
@@ -866,8 +870,8 @@ int                 newtype;
    }
 }
 
-/* -------------------------------------------------------------- */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateElemEmphasis (Document document, View view)
 #else  /* __STDC__ */
@@ -880,8 +884,8 @@ View                view;
    SetCharFontOrPhrase (document, HTML_EL_Emphasis);
 }
 
-/* -------------------------------------------------------------- */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateElemStrong (Document document, View view)
 #else  /* __STDC__ */
@@ -894,7 +898,8 @@ View                view;
    SetCharFontOrPhrase (document, HTML_EL_Strong);
 }
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateElemCite (Document document, View view)
 #else  /* __STDC__ */
@@ -908,7 +913,8 @@ View                view;
 }
 
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateElemDefinition (Document document, View view)
 #else  /* __STDC__ */
@@ -922,7 +928,8 @@ View                view;
 }
 
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateElemCode (Document document, View view)
 #else  /* __STDC__ */
@@ -936,7 +943,8 @@ View                view;
 }
 
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateElemVariable (Document document, View view)
 #else  /* __STDC__ */
@@ -950,7 +958,8 @@ View                view;
 }
 
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateElemSample (Document document, View view)
 #else  /* __STDC__ */
@@ -964,7 +973,8 @@ View                view;
 }
 
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateElemKeyboard (Document document, View view)
 #else  /* __STDC__ */
@@ -978,7 +988,8 @@ View                view;
 }
 
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateElemItalic (Document document, View view)
 #else  /* __STDC__ */
@@ -992,7 +1003,8 @@ View                view;
 }
 
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateElemBold (Document document, View view)
 #else  /* __STDC__ */
@@ -1006,7 +1018,8 @@ View                view;
 }
 
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateElemTeletype (Document document, View view)
 #else  /* __STDC__ */
@@ -1020,7 +1033,8 @@ View                view;
 }
 
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateElemStrikeOut (Document document, View view)
 #else  /* __STDC__ */
@@ -1034,7 +1048,8 @@ View                view;
 }
 
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateElemBig (Document document, View view)
 #else  /* __STDC__ */
@@ -1048,7 +1063,8 @@ View                view;
 }
 
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateElemSmall (Document document, View view)
 #else  /* __STDC__ */
@@ -1062,7 +1078,8 @@ View                view;
 }
 
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateSub (Document document, View view)
 #else  /* __STDC__ */
@@ -1080,7 +1097,8 @@ View                view;
 }
 
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateSup (Document document, View view)
 #else  /* __STDC__ */
@@ -1098,7 +1116,8 @@ View                view;
 }
 
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateElemFont (Document document, View view)
 #else  /* __STDC__ */
@@ -1116,13 +1135,13 @@ View                view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SearchNAMEattribute     search in document doc an element       | */
-/* |            having an attribut NAME whose value is nameVal.         | */
-/* |            Return that element or NULL if not found.               | */
-/* |            If ignore is not NULL, it is an attribute that should   | */
-/* |            be ignored when comparing NAME attributes.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchNAMEattribute     search in document doc an element       
+   having an attribut NAME whose value is nameVal.         
+   Return that element or NULL if not found.               
+   If ignore is not NULL, it is an attribute that should   
+   be ignored when comparing NAME attributes.              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Element             SearchNAMEattribute (Document doc, char *nameVal, Attribute ignore)
 #else  /* __STDC__ */
@@ -1169,10 +1188,10 @@ Attribute           ignore;
       return NULL;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SearchAnchor return the enclosing Anchor element with an        | */
-/* |            HREF attribute if link is TRUE or an NAME attribute.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchAnchor return the enclosing Anchor element with an        
+   HREF attribute if link is TRUE or an NAME attribute.    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Element             SearchAnchor (Document doc, Element element, boolean link)
 #else  /* __STDC__ */
@@ -1220,11 +1239,11 @@ boolaen             link;
    return elAnchor;
 }
 
-/* ---------------------------------------------------------------------- */
-/* | GetActiveImageInfo returns the URL information if the current      | */
-/* |            element is an image map and NULL if it is not.          | */
-/* |            The non-null returned string has the form "?X,Y"        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetActiveImageInfo returns the URL information if the current      
+   element is an image map and NULL if it is not.          
+   The non-null returned string has the form "?X,Y"        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 char               *GetActiveImageInfo (Document document, Element element)
 #else  /* __STDC__ */
@@ -1264,11 +1283,11 @@ Element             element;
    return ptr;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    UpdateAtom : on X-Windows, update the content of atom           | */
-/* |            BROWSER_HISTORY_INFO with title and url of current doc  | */
-/* |      c.f: http://zenon.inria.fr/koala/colas/browser-history/       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateAtom : on X-Windows, update the content of atom           
+   BROWSER_HISTORY_INFO with title and url of current doc  
+   c.f: http://zenon.inria.fr/koala/colas/browser-history/       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                UpdateAtom (Document doc, char *url, char *title)
@@ -1299,10 +1318,10 @@ char               *title;
 #endif /* WWW_XWINDOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    UpdateTitle update the content of the Title field on top of the | */
-/* |            main window, according to the contents of element el.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateTitle update the content of the Title field on top of the 
+   main window, according to the contents of element el.   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateTitle (Element el, Document doc)
 #else  /* __STDC__ */
@@ -1328,10 +1347,10 @@ Document            doc;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | The user has modified the contents of element TITLE. Update the    | */
-/* |    the Title field on top of the window.                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   The user has modified the contents of element TITLE. Update the    
+   the Title field on top of the window.                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TitleModified (NotifyOnTarget * event)
 #else  /* __STDC__ */

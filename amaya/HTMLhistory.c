@@ -1,3 +1,7 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
 #include "cssInc.h"
 #include "HTMLhistory.h"
 
@@ -13,9 +17,9 @@ static char *last_message = NULL;
 #define MSG(msg) last_message = msg
 #endif
 
-/*+--------------------------------------------------------------------+*/
-/*| AddCSSHistory                                                      |*/
-/*+--------------------------------------------------------------------+*/
+/*----------------------------------------------------------------------
+   AddCSSHistory                                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void AddCSSHistory (CSSInfoPtr css)
@@ -50,9 +54,9 @@ CSSInfoPtr css;
 
 }
 
-/*+--------------------------------------------------------------------+*/
-/*|     AddHTMLHistory                                                 |*/
-/*+--------------------------------------------------------------------+*/
+/*----------------------------------------------------------------------
+   AddHTMLHistory                                                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void AddHTMLHistory (char* url)
@@ -82,9 +86,9 @@ char* url;
     HTMLHistory [HTMLHistoryIndex] = TtaStrdup (url);
 }
 
-/*+--------------------------------------------------------------------+*/
-/*|  BuildCSSHistoryList : Build the whole list of CSS in the history  |*/
-/*+--------------------------------------------------------------------+*/
+/*----------------------------------------------------------------------
+   BuildCSSHistoryList : Build the whole list of CSS in the history  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int BuildCSSHistoryList (Document doc, char* buf, int size, char* first)
