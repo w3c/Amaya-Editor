@@ -50,12 +50,7 @@
 #include "ANNOTtools_f.h"
 #endif /* ANNOTATIONS */
 
-#ifdef NEW_EXPAT
 #include "expat.h"
-#else
-#include "xmlparse.h"
-#endif /* NEW_EXPAT */
-
 #define NS_SEP '|'
 
 /* ---------------------- static variables ---------------------- */
@@ -3927,8 +3922,6 @@ static void Hndl_DefaultExpand (void *userData,
 				const XML_Char *data,
 				int   length)
 {
-  unsigned char *ptr;
-
 #ifdef EXPAT_PARSER_DEBUG
    int i;
    printf ("Hndl_DefaultExpand - length = %d - '", length);
@@ -3936,19 +3929,6 @@ static void Hndl_DefaultExpand (void *userData,
        printf ("%c", data[i]);
    printf ("'\n");
 #endif /* EXPAT_PARSER_DEBUG */
-#ifndef NEW_EXPAT
-   if (WithinDoctype)
-     {
-       ptr = (unsigned char *) data;
-       ParseDoctypeContent (ptr, length);
-     }
-   else
-     {
-       /* Specific treatment for the entities */
-       if (length > 1 && data[0] == '&')
-	 CreateXmlEntity ((char*) data, length);
-     }
-#endif /* !NEW_EXPAT */
 }
 
 /*----------------------------------------------------------------------
@@ -3956,7 +3936,6 @@ static void Hndl_DefaultExpand (void *userData,
    Handler for the start of the DOCTYPE declaration.
    It is called when the name of the DOCTYPE is encountered.
   ----------------------------------------------------------------------*/
-#ifdef NEW_EXPAT
 static void Hndl_DoctypeStart (void *userData,
 			       const XML_Char *doctypeName,
                                const XML_Char *sysid,
@@ -3977,21 +3956,6 @@ static void Hndl_DoctypeStart (void *userData,
        WithinDoctype = TRUE;
      }
 }
-#else /* NEW_EXPAT */
-static void Hndl_DoctypeStart (void *userData,
-			       const XML_Char *doctypeName)
-{
-#ifdef EXPAT_PARSER_DEBUG
-   printf ("Hndl_DoctypeStart %s\n", doctypeName);
-#endif /* EXPAT_PARSER_DEBUG */
-   /* The content of this doctype has not to be parsed */
-   if (!VirtualDoctype)
-     {
-       CreateDoctypeElement (NULL, NULL, NULL);
-       WithinDoctype = TRUE;
-     }
-}
-#endif /* NEW_EXPAT */
 
 /*----------------------------------------------------------------------
    Hndl_DoctypeEnd
@@ -4129,19 +4093,11 @@ static void     Hndl_ElementEnd (void *userData, const XML_Char *name)
    Handler for external entity references.
    his handler is also called for processing an external DTD subset.
   ----------------------------------------------------------------------*/
-#ifdef NEW_EXPAT
 static int     Hndl_ExternalEntityRef(XML_Parser p,
 				      const XML_Char *context,
 				      const XML_Char *base,
 				      const XML_Char *systemId,
 				      const XML_Char *publicId)
-#else
-static int     Hndl_ExternalEntityRef (void *userData,
-				       const XML_Char *context,
-				       const XML_Char *base,
-				       const XML_Char *systemId,
-				       const XML_Char *publicId)
-#endif /* NEW_EXPAT */
 {
 #ifdef EXPAT_PARSER_DEBUG
   printf ("\nHndl_ExternalEntityRef\n");
@@ -4255,7 +4211,6 @@ static void     Hndl_PI (void *userData,
     CreateXmlPi ((char*) target, (char*) pidata);
 }
 
-#ifdef NEW_EXPAT
 /*----------------------------------------------------------------------
   Hndl_SkippedEntityHandler
   This is called in two situations:
@@ -4295,7 +4250,6 @@ static void Hndl_SkippedEntityHandler(void *userData,
 	}
     }
 }
-#endif /* NEW_EXPAT */
 
 /*----------------------------------------------------------------------
    Hndl_UnknownEncoding
@@ -4337,7 +4291,6 @@ static void Hndl_UnparsedEntity (void *userData,
 #endif /* EXPAT_PARSER_DEBUG */
 }
 
-#ifdef NEW_EXPAT
 /*----------------------------------------------------------------------
   Hndl_XML_XmlDeclHandler
   The XML declaration handler is called for *both* XML declarations
@@ -4360,7 +4313,6 @@ static void Hndl_XmlDeclHandler (void  *userData,
   printf ("  standalone : %d\n", standalone);
 #endif /* EXPAT_PARSER_DEBUG */
 }
-#endif /* NEW_EXPAT */
 
 /*---------------- End of Handler definition ----------------*/
 
@@ -4576,7 +4528,6 @@ static void  InitializeExpatParser (CHARSET charset)
   XML_SetUnparsedEntityDeclHandler (Parser,
 				    Hndl_UnparsedEntity);
   
-#ifdef NEW_EXPAT
   /* Set an handler that is called for XML declarations */
   XML_SetXmlDeclHandler (Parser,
 			 Hndl_XmlDeclHandler);
@@ -4584,7 +4535,6 @@ static void  InitializeExpatParser (CHARSET charset)
   /* Set a skipped entity handler */
   XML_SetSkippedEntityHandler (Parser,
 			       Hndl_SkippedEntityHandler);
-#endif /* NEW_EXPAT */ 
 }
 
 /*----------------------------------------------------------------------
