@@ -42,6 +42,7 @@ int                 specific;
 {
    int                 value;
    int                 unit;
+   TypeUnit            int_unit;
    int                 real;
    PtrPRule            rule = (PtrPRule) pRule;
 
@@ -74,44 +75,44 @@ int                 specific;
 	    case DRIVERP_UNIT_REL:
 	       break;
 	    case DRIVERP_UNIT_EM:
-	       unit = UnRelative;
+	       int_unit = UnRelative;
 	       value *= 10;
 	       break;
 	    case DRIVERP_UNIT_PT:
-	       unit = UnPoint;
+	       int_unit = UnPoint;
 	       break;
 	    case DRIVERP_UNIT_PC:
-	       unit = UnPoint;
+	       int_unit = UnPoint;
 	       value *= 12;
 	       break;
 	    case DRIVERP_UNIT_IN:
-	       unit = UnPoint;
+	       int_unit = UnPoint;
 	       value *= 72;
 	       break;
 	    case DRIVERP_UNIT_CM:
-	       unit = UnPoint;
+	       int_unit = UnPoint;
 	       value *= 28;
 	       break;
 	    case DRIVERP_UNIT_MM:
-	       unit = UnPoint;
+	       int_unit = UnPoint;
 	       value *= 28;
 	       value /= 10;
 	       break;
 	    case DRIVERP_UNIT_PX:
-	       unit = UnPixel;
+	       int_unit = UnPixel;
 	       break;
 	    case DRIVERP_UNIT_PERCENT:
-	       unit = UnPercent;
+	       int_unit = UnPercent;
 	       break;
 	    case DRIVERP_UNIT_XHEIGHT:
-	       unit = UnXHeight;
+	       int_unit = UnXHeight;
 	       value *= 10;
 	       break;
 	    case DRIVERP_UNIT_BOX:
-	       unit = UnRelative;	/* unused */
+	       int_unit = UnRelative;	/* unused */
 	       break;
 	    default:
-	       unit = UnRelative;
+	       int_unit = UnRelative;
 	       break;
 	 }
    if (real)
@@ -379,9 +380,9 @@ PRule               pRule;
 #endif
 {
    PresentationValue   val;
-   int                 valid = 0;
    int                 value = 0;
    int                 unit = -1;
+   TypeUnit            int_unit = -1;
    PtrPRule            rule = (PtrPRule) pRule;
 
    /*
@@ -408,21 +409,19 @@ PRule               pRule;
 	    case PtSize:
 	    case PtLineSpacing:
 	    case PtLineWeight:
-	       unit = rule->PrMinUnit;
+	       int_unit = rule->PrMinUnit;
 	       value = rule->PrMinValue;
-	       valid = 1;
 	       break;
 	    case PtVertRef:
 	    case PtHorizRef:
 	    case PtVertPos:
 	    case PtHorizPos:
-	       unit = rule->PrPosRule.PoDistUnit;
+	       int_unit = rule->PrPosRule.PoDistUnit;
 	       value = rule->PrPosRule.PoDistance;
-	       valid = 1;
 	       break;
 	    case PtHeight:
 	    case PtWidth:
-	       unit = rule->PrDimRule.DrUnit;
+	       int_unit = rule->PrDimRule.DrUnit;
 	       value = rule->PrDimRule.DrValue;
 	       break;
 	    case PtJustify:
@@ -439,49 +438,49 @@ PRule               pRule;
    /*
     * translate to external units.
     */
-   switch (unit)
-	 {
-	    case UnRelative:
-	       unit = DRIVERP_UNIT_REL;
-	       if (value % 10)
-		 {
-		    DRIVERP_UNIT_SET_FLOAT (unit);
-		    value *= 100;
-		 }
-	       else
-		 {
-		    value /= 10;
-		 }
-	       break;
-	    case UnXHeight:
-	       unit = DRIVERP_UNIT_XHEIGHT;
-	       if (value % 10)
-		 {
-		    DRIVERP_UNIT_SET_FLOAT (unit);
-		    value *= 100;
-		 }
-	       else
-		 {
-		    value /= 10;
-		 }
-	       break;
-	    case UnPoint:
-	       unit = DRIVERP_UNIT_PT;
-	       break;
-	    case UnPixel:
-	       unit = DRIVERP_UNIT_PX;
-	       break;
-	    case UnPercent:
-	       unit = DRIVERP_UNIT_PERCENT;
-	       break;
-	    default:
-	       unit = DRIVERP_UNIT_INVALID;
-	       break;
-	 }
+   switch (int_unit)
+      {
+	 case UnRelative:
+	    unit = DRIVERP_UNIT_REL;
+	    if (value % 10)
+	      {
+		 DRIVERP_UNIT_SET_FLOAT (unit);
+		 value *= 100;
+	      }
+	    else
+	      {
+		 value /= 10;
+	      }
+	    break;
+	 case UnXHeight:
+	    unit = DRIVERP_UNIT_XHEIGHT;
+	    if (value % 10)
+	      {
+		 DRIVERP_UNIT_SET_FLOAT (unit);
+		 value *= 100;
+	      }
+	    else
+	      {
+		 value /= 10;
+	      }
+	    break;
+	 case UnPoint:
+	    unit = DRIVERP_UNIT_PT;
+	    break;
+	 case UnPixel:
+	    unit = DRIVERP_UNIT_PX;
+	    break;
+	 case UnPercent:
+	    unit = DRIVERP_UNIT_PERCENT;
+	    break;
+	 default:
+	    unit = DRIVERP_UNIT_INVALID;
+	    break;
+      }
 
    /*
-    * If not a 
-    * between external and internal value.
+    * Specific case for converting between
+    * internal and external value.
     */
 
    switch (rule->PrType)
