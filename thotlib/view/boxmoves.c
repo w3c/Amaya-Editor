@@ -40,15 +40,7 @@
   enclosing box is stretchable or depends on an out-of-strucure box
   (not included by its ancestor).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                IsXYPosComplete (PtrBox pBox, ThotBool *horizRef, ThotBool *vertRef)
-#else  /* __STDC__ */
-void                IsXYPosComplete (pBox, horizRef, vertRef)
-PtrBox              pBox;
-ThotBool           *horizRef;
-ThotBool           *vertRef;
-
-#endif /* __STDC__ */
+void IsXYPosComplete (PtrBox pBox, ThotBool *horizRef, ThotBool *vertRef)
 {
   PtrBox              pParentBox;
 
@@ -81,12 +73,7 @@ ThotBool           *vertRef;
   enclosing box is stretchable or depends on an out-of-strucure box
   (not included by its ancestor).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            IsXPosComplete (PtrBox pBox)
-#else  /* __STDC__ */
-ThotBool            IsXPosComplete (pBox)
-PtrBox              pBox;
-#endif /* __STDC__ */
 {
   PtrBox              pParentBox;
   ThotBool            Ok;
@@ -113,13 +100,7 @@ PtrBox              pBox;
   enclosing box is stretchable or depends on an out-of-strucure box
   (not included by its ancestor).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            IsYPosComplete (PtrBox pBox)
-#else  /* __STDC__ */
-ThotBool            IsYPosComplete (pBox)
-PtrBox              pBox;
-
-#endif /* __STDC__ */
 {
   PtrBox              pParentBox;
   ThotBool            Ok;
@@ -143,13 +124,7 @@ PtrBox              pBox;
    IsParentBox returns TRUE when pAncestor is an ancestor of pChild or
    pChild itself.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            IsParentBox (PtrBox pAncestor, PtrBox pChild)
-#else  /* __STDC__ */
-ThotBool            IsParentBox (pAncestor, pChild)
-PtrBox              pAncestor;
-PtrBox              pChild;
-#endif /* __STDC__ */
 {
   PtrAbstractBox      pAb;
   ThotBool            equal;
@@ -175,13 +150,7 @@ PtrBox              pChild;
   IsSiblingBox returns TRUE if pBox is a sibling (same parent but not
   pRefBox itself) of pRefBox.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     IsSiblingBox (PtrBox pBox, PtrBox pRefBox)
-#else  /* __STDC__ */
-static ThotBool     IsSiblingBox (pBox, pRefBox)
-PtrBox              pBox;
-PtrBox              pRefBox;
-#endif /* __STDC__ */
 {
   if (pRefBox == pBox)
     return (FALSE);
@@ -201,15 +170,8 @@ PtrBox              pRefBox;
   The parameter inAbtractBox is TRUE when the invertion concerns the
   abstract box instead of the box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         MirrorPolyline (PtrAbstractBox pAb, ThotBool horizRef, ThotBool vertRef, ThotBool inAbtractBox)
-#else  /* __STDC__ */
-static void         MirrorPolyline (pAb, horizRef, vertRef, inAbtractBox)
-PtrAbstractBox      pAb;
-ThotBool            horizRef;
-ThotBool            vertRef;
-ThotBool            inAbtractBox;
-#endif /* __STDC__ */
+static void MirrorPolyline (PtrAbstractBox pAb, ThotBool horizRef,
+			    ThotBool vertRef, ThotBool inAbtractBox)
 {
   PtrTextBuffer       pSourceBuff, pTargetBuff;
   PtrBox              pBox;
@@ -293,16 +255,8 @@ ThotBool            inAbtractBox;
   The parameter inAbtractBox is TRUE when the invertion concerns the
   abstract box instead of the box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                MirrorShape (PtrAbstractBox pAb, ThotBool horizRef, ThotBool vertRef, ThotBool inAbtractBox)
-#else  /* __STDC__ */
-void                MirrorShape (pAb, horizRef, vertRef, inAbtractBox)
-PtrAbstractBox      pAb;
-ThotBool            horizRef;
-ThotBool            vertRef;
-ThotBool            inAbtractBox;
-
-#endif /* __STDC__ */
+void MirrorShape (PtrAbstractBox pAb, ThotBool horizRef, ThotBool vertRef,
+		  ThotBool inAbtractBox)
 {
   PtrAbstractBox      pChildAb;
   char                shape;
@@ -444,14 +398,7 @@ ThotBool            inAbtractBox;
 /*----------------------------------------------------------------------
   XEdgesExchange inverts horizontal edges and the width of the box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                XEdgesExchange (PtrBox pBox, OpRelation op)
-#else  /* __STDC__ */
-void                XEdgesExchange (pBox, op)
-PtrBox              pBox;
-OpRelation          op;
-
-#endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
    PtrPosRelations     pPosRel;
@@ -532,14 +479,7 @@ OpRelation          op;
 /*----------------------------------------------------------------------
   YEdgesExchange inverts vertical edges and the height of the box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                YEdgesExchange (PtrBox pBox, OpRelation op)
-#else  /* __STDC__ */
-void                YEdgesExchange (pBox, op)
-PtrBox              pBox;
-OpRelation          op;
-
-#endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
    PtrPosRelations     pPosRel;
@@ -621,15 +561,8 @@ OpRelation          op;
   Check if the rule of the mininmum is respected and eventually exchange
   the real and the constrainted height.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ChangeDefaultHeight (PtrBox pBox, PtrBox pSourceBox, int height, int frame)
-#else  /* __STDC__ */
-void                ChangeDefaultHeight (pBox, pSourceBox, height, frame)
-PtrBox              pBox;
-PtrBox              pSourceBox;
-int                 height;
-int                 frame;
-#endif /* __STDC__ */
+void ChangeDefaultHeight (PtrBox pBox, PtrBox pSourceBox, int height,
+			  int frame)
 {
    int                 delta;
 
@@ -674,17 +607,8 @@ int                 frame;
   Check if the rule of the mininmum is respected and eventually exchange
   the real and the constrainted width.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ChangeDefaultWidth (PtrBox pBox, PtrBox pSourceBox, int width, int spaceDelta, int frame)
-#else  /* __STDC__ */
-void                ChangeDefaultWidth (pBox, pSourceBox, width, spaceDelta, frame)
-PtrBox              pBox;
-PtrBox              pSourceBox;
-int                 width;
-int                 spaceDelta;
-int                 frame;
-
-#endif /* __STDC__ */
+void ChangeDefaultWidth (PtrBox pBox, PtrBox pSourceBox, int width,
+			 int spaceDelta, int frame)
 {
    int                 delta;
 
@@ -729,17 +653,8 @@ int                 frame;
   Check if the rule of the mininmum is respected and eventually exchange
   the real and the constrainted width.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int spaceDelta, int frame)
-#else  /* __STDC__ */
-void                ChangeWidth (pBox, pSourceBox, pFromBox, delta, spaceDelta, frame)
-PtrBox              pBox;
-PtrBox              pSourceBox;
-PtrBox              pFromBox;
-int                 delta;
-int                 spaceDelta;
-int                 frame;
-#endif /* __STDC__ */
+void ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
+		  int delta, int spaceDelta, int frame)
 {
   int                 width;
   ThotBool            minimumRule;
@@ -806,16 +721,8 @@ printf ("ChangeWidth (column=%s, value=%d)\n", pBox->BxAbstractBox->AbElement->E
   Check if the rule of the mininmum is respected and eventually exchange
   the real and the constrainted height.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ChangeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int frame)
-#else  /* __STDC__ */
-void                ChangeHeight (pBox, pSourceBox, pFromBox, delta, frame)
-PtrBox              pBox;
-PtrBox              pSourceBox;
-PtrBox              pFromBox;
-int                 delta;
-int                 frame;
-#endif /* __STDC__ */
+void ChangeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
+		   int delta, int frame)
 {
   int                 height;
   ThotBool            minimumRule;
@@ -875,17 +782,8 @@ int                 frame;
   Invert box edges and the drawing of the box when a dimension becomes
   negative.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta, int frame, ThotBool horizRef)
-#else  /* __STDC__ */
-void                MoveBoxEdge (pBox, pSourceBox, op, delta, frame, horizRef)
-PtrBox              pBox;
-PtrBox              pSourceBox;
-OpRelation          op;
-int                 delta;
-int                 frame;
-ThotBool            horizRef;
-#endif /* __STDC__ */
+void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
+		  int frame, ThotBool horizRef)
 {
   PtrAbstractBox      pAb;
   BoxEdge             oldPosEdge;
@@ -1015,15 +913,7 @@ ThotBool            horizRef;
 /*----------------------------------------------------------------------
   XMoveAllEnclosed moves horizontally all enclosed boxes.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
-#else  /* __STDC__ */
-void                XMoveAllEnclosed (pBox, delta, frame)
-PtrBox              pBox;
-int                 delta;
-int                 frame;
-
-#endif /* __STDC__ */
+void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 {
    PtrAbstractBox      pChildAb;
    PtrBox              pChildBox;
@@ -1131,11 +1021,13 @@ int                 frame;
 		  pChildAb = pBox->BxAbstractBox->AbFirstEnclosed;
 		  /* Traite le niveau inferieur */
 		  toHorizPack = FALSE;
-		  /* Si la boite est en cours de deplacement -> il faut transmettre */
-		  /* la valeur de l'origine plutot que la valeur du decalage        */
+		  /* if the box position is not completed
+		     transmit the box position instead of the shift */
 		  if (pBox->BxXToCompute)
-		     delta = pBox->BxXOrg;
-
+		    {
+		      delta = pBox->BxXOrg;
+		      pBox->BxXToCompute = FALSE;
+		    }
 		  while (pChildAb != NULL)
 		    {
 		       if (pChildAb->AbBox != NULL)
@@ -1153,7 +1045,6 @@ int                 frame;
 			 }
 		       pChildAb = pChildAb->AbNext;
 		    }
-		  pBox->BxXToCompute = FALSE;	/* le decalage eventuel est pris en compte */
 
 		  /* Si la largeur de la boite depend du contenu et qu'une des     */
 		  /* boites filles est positionnee par une relation hors-structure */
@@ -1172,15 +1063,7 @@ int                 frame;
 /*----------------------------------------------------------------------
   YMoveAllEnclosed moves vertically all enclosed boxes.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
-#else  /* __STDC__ */
-void                YMoveAllEnclosed (pBox, delta, frame)
-PtrBox              pBox;
-int                 delta;
-int                 frame;
-
-#endif /* __STDC__ */
+void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 {
    PtrAbstractBox      pChildAb;
    PtrBox              pChildBox;
@@ -1290,10 +1173,13 @@ int                 frame;
 		  /* Traite le niveau inferieur */
 		  pChildAb = pBox->BxAbstractBox->AbFirstEnclosed;
 		  toVertPack = FALSE;
-		  /* Si la boite est en cours de deplacement -> il faut transmettre */
-		  /* la valeur de l'origine plutot que la valeur du decalage        */
+		  /* if the box position is not completed
+		     transmit the box position instead of the shift */
 		  if (pBox->BxYToCompute)
-		     delta = pBox->BxYOrg;
+		    {
+		      delta = pBox->BxYOrg;
+		      pBox->BxYToCompute = FALSE;
+		    }
 		  while (pChildAb != NULL)
 		    {
 		       if (pChildAb->AbBox != NULL)
@@ -1310,7 +1196,6 @@ int                 frame;
 			 }
 		       pChildAb = pChildAb->AbNext;
 		    }
-		  pBox->BxYToCompute = FALSE;	/* le decalage eventuel est pris en compte */
 
 		  /* Si la hauteur de la boite depend du contenu et qu'une des     */
 		  /* boites filles est positionnee par une relation hors-structure */
@@ -1330,16 +1215,7 @@ int                 frame;
   MoveVertRef moves the vertical reference axis of the box.
   All boxes attached to that axis are moved.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
-#else  /* __STDC__ */
-void                MoveVertRef (pBox, pFromBox, delta, frame)
-PtrBox              pBox;
-PtrBox              pFromBox;
-int                 delta;
-int                 frame;
-
-#endif /* __STDC__ */
+void MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 {
   int                 i, j, k;
   PtrAbstractBox      pAb;
@@ -1551,16 +1427,7 @@ int                 frame;
   MoveHorizRef moves the baseline of the box.
   All boxes attached to that axis are moved.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
-#else  /* __STDC__ */
-void                MoveHorizRef (pBox, pFromBox, delta, frame)
-PtrBox              pBox;
-PtrBox              pFromBox;
-int                 delta;
-int                 frame;
-
-#endif /* __STDC__ */
+void MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 {
   int                 i, j, k;
   PtrAbstractBox      pAb;
@@ -1784,20 +1651,8 @@ int                 frame;
   The parameter spaceDelta gives the number of spaces added (>0) or removed
   only if it's a text box included within a justified line.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int l, int r, int spaceDelta, int frame)
-#else  /* __STDC__ */
-void                ResizeWidth (pBox, pSourceBox, pFromBox, delta, l, r, spaceDelta, frame)
-PtrBox              pBox;
-PtrBox              pSourceBox;
-PtrBox              pFromBox;
-int                 delta;
-int                 l;
-int                 r;
-int                 spaceDelta;
-int                 frame;
-
-#endif /* __STDC__ */
+void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
+		  int delta, int l, int r, int spaceDelta, int frame)
 {
   PtrBox              box;
   PtrLine             pLine;
@@ -2270,19 +2125,8 @@ int                 frame;
   The parameters delta, t, b gives changes of the height, top, and bottom
   extra (margin, border, padding)
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int t, int b, int frame)
-#else  /* __STDC__ */
-void                ResizeHeight (pBox, pSourceBox, pFromBox, delta, t, b, frame)
-PtrBox              pBox;
-PtrBox              pSourceBox;
-PtrBox              pFromBox;
-int                 delta;
-int                 t;
-int                 b;
-int                 frame;
-
-#endif /* __STDC__ */
+void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
+		   int delta, int t, int b, int frame)
 {
   PtrBox              box;
   PtrLine             pLine;
@@ -2787,16 +2631,7 @@ int                 frame;
   XMove moves horizontally the box.
   Check positionning constraints.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
-#else  /* __STDC__ */
-void                XMove (pBox, pFromBox, delta, frame)
-PtrBox              pBox;
-PtrBox              pFromBox;
-int                 delta;
-int                 frame;
-
-#endif /* __STDC__ */
+void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 {
    PtrBox              box;
    PtrAbstractBox      pAb;
@@ -3002,16 +2837,7 @@ int                 frame;
   YMove moves vertically the box.
   Check positionning constraints.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
-#else  /* __STDC__ */
-void                YMove (pBox, pFromBox, delta, frame)
-PtrBox              pBox;
-PtrBox              pFromBox;
-int                 delta;
-int                 frame;
-
-#endif /* __STDC__ */
+void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 {
    PtrBox              box;
    PtrAbstractBox      pAb;
@@ -3219,15 +3045,7 @@ int                 frame;
 /*----------------------------------------------------------------------
   WidthPack checks the horizontal inclusion of nested boxes.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
-#else  /* __STDC__ */
-void                WidthPack (pAb, pSourceBox, frame)
-PtrAbstractBox      pAb;
-PtrBox              pSourceBox;
-int                 frame;
-
-#endif /* __STDC__ */
+void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 {
   PtrAbstractBox      pChildAb;
   PtrAbstractBox      pRelativeAb;
@@ -3457,15 +3275,7 @@ int                 frame;
 /*----------------------------------------------------------------------
   HeightPack checks the vertical inclusion of nested boxes.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
-#else  /* __STDC__ */
-void                HeightPack (pAb, pSourceBox, frame)
-PtrAbstractBox      pAb;
-PtrBox              pSourceBox;
-int                 frame;
-
-#endif /* __STDC__ */
+void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 {
   PtrAbstractBox      pChildAb;
   PtrAbstractBox      pRelativeAb;
