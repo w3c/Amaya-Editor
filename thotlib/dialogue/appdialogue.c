@@ -100,14 +100,6 @@ TBADDBITMAP tbStdLarge[] = {
             HINST_COMMCTRL, IDB_STD_SMALL_COLOR,
 };
 
-#ifdef __STDC__
-LRESULT CALLBACK WIN_HScrollProc (HWND, UINT, WPARAM, LPARAM) ;
-LRESULT CALLBACK WIN_VScrollProc (HWND, UINT, WPARAM, LPARAM) ;
-#else /* !__STDC__ */
-LRESULT CALLBACK WIN_HScrollProc () ;
-LRESULT CALLBACK WIN_VScrollProc () ;
-#endif /* __STDC__ */
-
 #endif /* _WINDOWS */
 
 #include "appli_f.h"
@@ -1968,8 +1960,8 @@ int                 doc;
 	     Main_Wd = CreateWindowEx (0L, tszAppName,	    /* window class name       */
 				       tszAppName,	    /* window caption          */
 				       WS_OVERLAPPEDWINDOW, /* window style            */
-				       CW_USEDEFAULT,	    /* initial x pos           */
-				       CW_USEDEFAULT,	    /* initial y pos           */
+				       0,	            /* initial x pos           */
+				       0,	            /* initial y pos           */
 				       large,	            /* initial x size          */
 				       haut,	            /* initial y size          */
 				       NULL,		    /* parent window handle    */
@@ -2161,7 +2153,7 @@ int                 doc;
 	     XtAddCallback (hscrl, XmNtoTopCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 	     XtAddCallback (hscrl, XmNtoBottomCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 #else  /* _WINDOWS */
-             hscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | WS_TABSTOP | SBS_HORZ,
+             hscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | SBS_HORZ,
                                    0, 0, 0, 0, Main_Wd, (HMENU) frame, hInstance, NULL) ;
 
              SetScrollRange (hscrl, SB_CTL, 0, 100, FALSE);
@@ -2188,7 +2180,7 @@ int                 doc;
 	     XtAddCallback (vscrl, XmNtoTopCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 	     XtAddCallback (vscrl, XmNtoBottomCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 #else  /* _WINDOWS */
-             vscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | WS_TABSTOP | SBS_VERT,
+             vscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | SBS_VERT,
                                    0, 0, 0, 0, Main_Wd, (HMENU) frame + 1, hInstance, NULL) ;
 
              SetScrollRange (vscrl, SB_CTL, 0, 100, FALSE);

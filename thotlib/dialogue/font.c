@@ -9,6 +9,7 @@
  * Module dedicated to font handling.
  *
  * Author: I. Vatton (INRIA)
+ *         R. Guetari (W3C/INRIA): Amaya porting on Windows NT and Window 95
  *
  */
 
@@ -56,21 +57,26 @@ static boolean      UseBitStreamFamily;
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
  *      WinLoadFont : Load a Windows font in a Device context.
-  ----------------------------------------------------------------------*/
-void                WinLoadFont (HDC hdc, ptrfont font)
+ *----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WinLoadFont (HDC hdc, ptrfont font)
+#else  /* !__STDC__ */
+void WinLoadFont (hdc, font)
+HDC     hdc; 
+ptrfont font;
+#endif /* __STDC__ */
 {
 #if 0
    int                 i;
    HFONT               hFont;
 
    for (i = 0; i < MAX_FONT; i++)
-      if (font == TtFonts[i])
-	{
-	   hFont = TtFonts[i];
-	   if (hFont != 0)
-	      SelectObject (hdc, hFont);
-	   return;
-	}
+       if (font == TtFonts[i]) {
+	  hFont = TtFonts[i];
+	  if (hFont != 0)
+	     SelectObject (hdc, hFont);
+	  return;
+       }
 #endif
    SelectObject (hdc, font);
 
@@ -118,7 +124,7 @@ ptrfont             font;
    else
      {
 #ifdef _WINDOWS
-	SIZE                size;
+	SIZE size;
 
 	WIN_GetDeviceContext (-1);
 	WinLoadFont (WIN_curHdc, font);
@@ -154,19 +160,18 @@ ptrfont             font;
    if (font == NULL)
       return (0);
 #ifdef _WINDOWS
-   else
-     {
-	SIZE                size;
+   else {
+	SIZE size;
 
 	WIN_GetDeviceContext (-1);
 	WinLoadFont (WIN_curHdc, font);
 	/* GetTextExtentPoint32(WIN_curHdc, ptcar, lg, &size); */
 	GetTextExtentPoint (WIN_curHdc, &c, 1, &size);
 	return (size.cy);
-     }
+   }
 #else  /* _WINDOWS */
    else if (((XFontStruct *) font)->per_char == NULL)
-      return FontHeight (font);
+        return FontHeight (font);
    else
       return ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].ascent
 	 + ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].descent;
@@ -187,10 +192,9 @@ ptrfont             font;
    if (font == NULL)
       return (0);
 #ifdef _WINDOWS
-   else
-     {
-	TEXTMETRIC          textMetric;
-	boolean             res;
+   else {
+	TEXTMETRIC textMetric;
+	boolean    res;
 
 	WIN_GetDeviceContext (-1);
 	WinLoadFont (WIN_curHdc, font);
@@ -199,7 +203,7 @@ ptrfont             font;
 	   return (textMetric.tmAscent);
 	else
 	   return (0);
-     }
+   }
 #else  /* _WINDOWS */
    else if (((XFontStruct *) font)->per_char == NULL)
       return ((XFontStruct *) font)->max_bounds.ascent;
@@ -222,10 +226,9 @@ ptrfont             font;
    if (font == NULL)
       return (0);
 #ifdef _WINDOWS
-   else
-     {
-	TEXTMETRIC          textMetric;
-	boolean             res;
+   else {
+	TEXTMETRIC textMetric;
+	boolean    res;
 
 	WIN_GetDeviceContext (-1);
 	WinLoadFont (WIN_curHdc, font);
@@ -234,10 +237,10 @@ ptrfont             font;
 	   return (textMetric.tmAscent);
 	else
 	   return (0);
-     }
+   }
 #else  /* _WINDOWS */
    else
-      return ((XFontStruct *) font)->ascent;
+       return ((XFontStruct *) font)->ascent;
 #endif /* !_WINDOWS */
 }
 
@@ -254,10 +257,9 @@ ptrfont             font;
    if (font == NULL)
       return (0);
 #ifdef _WINDOWS
-   else
-     {
-	TEXTMETRIC          textMetric;
-	boolean             res;
+   else {
+	TEXTMETRIC textMetric;
+	boolean    res;
 
 	WIN_GetDeviceContext (-1);
 	WinLoadFont (WIN_curHdc, font);
@@ -266,7 +268,7 @@ ptrfont             font;
 	   return (textMetric.tmAscent + textMetric.tmDescent);
 	else
 	   return (0);
-     }
+   }
 #else  /* _WINDOWS */
    else
       return ((XFontStruct *) font)->max_bounds.ascent + ((XFontStruct *) font)->max_bounds.descent;
@@ -624,10 +626,9 @@ TypeUnit            unit;
  *                    characteristics.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static HFONT        WIN_LoadFont (char alphabet, char family, int highlight,
-				  int size, TypeUnit unit, int frame)
+static HFONT WIN_LoadFont (char alphabet, char family, int highlight, int size, TypeUnit unit, int frame)
 #else  /* __STDC__ */
-static HFONT        WIN_LoadFont (alphabet, family, highlight, size, unit, frame)
+static HFONT WIN_LoadFont (alphabet, family, highlight, size, unit, frame)
 char                alphabet;
 char                family;
 int                 highlight;
@@ -649,74 +650,79 @@ int                 frame;
    fprintf (stderr, "WIN_LoadFont('%c','%c',%d,%d,%d,%d)\n",
 	    alphabet, family, highlight, size, unit, frame);
 
-   switch (alphabet)
-	 {
-	    case 'L':
+   switch (alphabet) {
+	  case 'L':
 	       /* Latin alphabet, Ok */
 	       fprintf (stderr, "Latin, ");
 	       break;
-	    case 'G':
+
+	  case 'G':
 	       /* Graphics character set */
-	       goto no_win;
-	       break;
-	    default:
+	       return (hFont);
+
+          default:
 	       fprintf (stderr, "unknown alphabet '%c'\n", alphabet);
-	       goto no_win;
-	 }
-   switch (family)
-	 {
-	    case 'T':
-	    case 't':
+	       return (hFont);
+   }
+
+   switch (family) {
+	  case 'T':
+	  case 't':
 	       WIN_lpszFace = "Times New Roman";
 	       break;
-	    case 'H':
-	    case 'h':
+
+	  case 'H':
+          case 'h':
 	       WIN_lpszFace = "Arial";
 	       break;
-	    case 'C':
-	    case 'c':
+
+	  case 'C':
+	  case 'c':
 	       WIN_lpszFace = "Courier New";
 	       break;
-	    default:
+
+	  default:
 	       fprintf (stderr, "unknown family '%c'\n", family);
-	       goto no_win;
-	 }
+	       return (hFont);
+   }
+
    fprintf (stderr, "'%s', ", WIN_lpszFace);
-   switch (StylesTable[highlight])
-	 {
-	    case 'r':
+   switch (StylesTable[highlight]) {
+	  case 'r':
 	       break;
-	    case 'i':
-	    case 'o':
+
+	  case 'i':
+	  case 'o':
 	       WIN_fdwItalic = TRUE;
 	       fprintf (stderr, "italic, ");
 	       break;
-	    case 'b':
-	    case 'g':
-	    case 'q':
+
+	  case 'b':
+	  case 'g':
+	  case 'q':
 	       WIN_fnWeight = FW_BOLD;
 	       fprintf (stderr, "bold, ");
 	       break;
-	    default:
+
+	  default:
 	       fprintf (stderr, "unknown highlight %d\n", highlight);
-	       goto no_win;
-	 }
+	       return (hFont);
+   }
+
    fprintf (stderr, "%d pt, ", size);
    WIN_nHeight = -MulDiv (size, DOT_PER_INCHE, 72);
 
    hFont = CreateFont (WIN_nHeight, WIN_nWidth, 0, 0, WIN_fnWeight,
 		       WIN_fdwItalic, WIN_fdwUnderline, WIN_fdwStrikeOut,
-		   DEFAULT_CHARSET, OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS,
+		       DEFAULT_CHARSET, OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS,
 		       PROOF_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
 		       WIN_lpszFace);
-   if (hFont == NULL)
-     {
-	fprintf (stderr, "Not found ...\n");
-	WinErrorBox ();
-     }
-   else
-      fprintf (stderr, "Loaded\n");
- no_win:
+   if (hFont == NULL) {
+      fprintf (stderr, "Not found ...\n");
+      WinErrorBox ();
+   } else
+         fprintf (stderr, "Loaded\n");
+
    return (hFont);
 }
 #endif /* _WINDOWS */
@@ -1070,13 +1076,10 @@ int                 frame;
 			  j++;
 		    }
 		  /* Shall we free this family ? */
+		  if (j == MAX_FONT)
 #ifdef _WINDOWS
-		  if (j == MAX_FONT)
-		    {
-		       DeleteObject (TtFonts[i]);
-		    }
+		     DeleteObject (TtFonts[i]);
 #else  /* _WINDOWS */
-		  if (j == MAX_FONT)
 		     XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
 #endif /* _WINDOWS */
 		  TtFonts[i] = NULL;

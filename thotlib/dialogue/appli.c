@@ -55,7 +55,6 @@ static XmString     null_string;
 #endif
 
 #ifdef _WINDOWS
-/* #include "wininc.h" */
 
 #define _MAX_PATH   500
 #define _MAX_FNAME  100
@@ -150,7 +149,7 @@ int                *view;
 
 
 /*----------------------------------------------------------------------
-   Evenement sur une frame document.                              
+   Evenement sur une frame document.                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FrameKilled (int *w, int frame, int *info)
@@ -284,8 +283,8 @@ int bottom_delta;
    /* need to recompute the content of the window */
    RebuildConcreteImage (frame);
 
-   /* recompute the scroll bars
-      UpdateScrollbars(frame); */
+   /* recompute the scroll bars */
+   UpdateScrollbars (frame);
 }
 #endif /* _WINDOWS */
 
@@ -385,26 +384,20 @@ void WIN_ChangeVScroll (frame, reason, value)
 int                 frame;
 int                 reason;
 int                 value;
-
 #endif /* __STDC__ */
-
 {
    int      delta;
+   /*
    int      n;
    int      h, y;
    int      start, end, total;
    float    charperpix;
    Document doc;
-
-   /* HDC      hdc = GetDC (FrameTable[frame].WdScrollV); */
-
+   */
    /* do not redraw it if in NoComputedDisplay mode */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
 
-   n = PositionAbsBox (frame, &start, &end, &total);
-
-   /* SetScrollRange (FrameTable[frame].WdScrollV, SB_CTL, 0, total, FALSE); */
    switch (reason) {
 	  case SB_TOP:
 	       JumpIntoView (frame, 0);
@@ -442,34 +435,39 @@ int                 value;
 
    /* get some information on the position of the displayed part
     * for this document. */
+   UpdateScrollbars (frame);
+}
 
-   SetScrollPos (FrameTable[frame].WdScrollV, SB_CTL, (start * 100) / total, TRUE) ;
+/*----------------------------------------------------------------------
+   Demande de scroll vertical.                                      
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_ChangeHScroll (int frame, int reason, int value)
+#else  /* __STDC__ */
+void WIN_ChangeHScroll (frame, reason, value)
+int                 frame;
+int                 reason;
+int                 value;
+#endif /* __STDC__ */
+{
+   int      delta;
 
-   /* n = PositionAbsBox (frame, &start, &end, &total); */
-#ifdef RAMZI
-   switch (n)
-	 {
-	    case -1:
-	       /* No abstract Picture, strange */
-	       SetScrollPos (FrameTable[frame].WdScrollV, SB_VERT, 0, TRUE);
-	       break;
-	    case 0:
-	       /* Abstract Picture fully shown */
-	    case 1:
-	       /* Abstract Picture at the top */
-	       SetScrollPos (FrameTable[frame].WdScrollV, SB_VERT, 0, TRUE);
-	       break;
-	    case 2:
-	       /* Abstract Picture at the end */
-	       SetScrollPos (FrameTable[frame].WdScrollV, SB_VERT, 100, TRUE);
-	       break;
-	    case 3:
-	       /* Abstract Picture at the end */
-	       SetScrollPos (FrameTable[frame].WdScrollV, SB_VERT, (100 * total) / start, TRUE);
-	       break;
-	 }
-#endif /* RAMZI */
-   /* ReleaseDC (FrameTable[frame].WdScrollV, hdc); */
+   /* do not redraw it if in NoComputedDisplay mode */
+   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+      return;
+
+   switch (reason) {
+   case SB_LINERIGHT:
+        delta = 13;
+        break;
+
+   case SB_LINELEFT:
+        delta = -13;
+        break;
+   }
+
+   HorizontalScroll (frame, delta, TRUE) ;
+   UpdateScrollbars (frame);
 }
 #endif /* _WINDOWS */
 
@@ -1070,10 +1068,13 @@ LPARAM      lParam;
                  return 0 ;
 	    }
 
-	   case WM_VSCROLL:
-	        WIN_ChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
-	        WIN_ReleaseDeviceContext ();
-	        return (0);
+	    case WM_VSCROLL:
+	         WIN_ChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
+	         return (0);
+
+	    case WM_HSCROLL:
+		 WIN_ChangeHScroll (frame, LOWORD (wParam), HIWORD (wParam));
+	         return (0);
 
 	    case WM_KEYDOWN:
                  SendMessage (FrRef [frame], WM_KEYDOWN, wParam, lParam);
@@ -1139,10 +1140,10 @@ LPARAM      lParam;
 	         } else
                        cyStatus = 0 ;
 
-		 /* ******* VERTICAL SCROLL BAR ******* */
+		 /* Adjust Vertical scroll bar */
                  MoveWindow (FrameTable[frame].WdScrollV, cx - 15, cyTxtZone, 15, cy - (cyStatus + cyTxtZone + 15), TRUE) ;
                 
-		 /* ******* HORIZENTAL SCROLL BAR ******* */
+		 /* Adjust Hoizontal scroll bar */
                  MoveWindow (FrameTable[frame].WdScrollH, 0, cy - (cyStatus + 15), cx - 15, 15, TRUE) ;
 
                 /* Adjust client window size. */
@@ -1157,8 +1158,9 @@ LPARAM      lParam;
                  cx = cx - cxVSB ;
                  cy = cy - (cyStatus + cyTxtZone + cyHSB) ;
                  MoveWindow (FrRef [frame], x, y, cx, cy, TRUE) ;
-                 /* WIN_ChangeTaille (frame, cx, cy, 0, 0) ; */
-                 /* PostMessage (FrRef [frame], WM_SIZE, 0, MAKELPARAM (cx, cy)); */
+
+                 SetScrollRange (FrameTable[frame].WdScrollV, SB_CTL, 0, cy, TRUE);
+                 SetScrollRange (FrameTable[frame].WdScrollH, SB_CTL, 0, cx, TRUE);
                  return 0;
 	    }
 
@@ -1439,63 +1441,6 @@ LPARAM lParam;
      }
 }
 
-#ifdef RAMZI
-/* -------------------------------------------------------------------
-   WIN_HScrollProc
-   ------------------------------------------------------------------- */
-#ifdef __STDC__
-LRESULT CALLBACK WIN_HScrollProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK WIN_HScrollProc (hwnd, mMsg, wParam, lParam)
-HWND   hwnd; 
-UINT   mMsg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
-{
-   int i = GetWindowLong (hwnd, GWL_ID) ;
-   int frame = GetHScrollParentNumber (hwnd) ;
-
-   if (frame != -1) {
-      switch (mMsg) {
-             case WM_SETFOCUS:
-                  iFocus = i;
-                  break ;
-      }
-   
-      return CallWindowProc (FrameTable[frame].fnOldHScroll, hwnd, mMsg, wParam, lParam) ;
-   }
-   return DefWindowProc (hwnd, mMsg, wParam, lParam) ;
-}
-
-/* -------------------------------------------------------------------
-   WIN_VScrollProc
-   ------------------------------------------------------------------- */
-#ifdef __STDC__
-LRESULT CALLBACK WIN_VScrollProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK WIN_VScrollProc (hwnd, mMsg, wParam, lParam)
-HWND   hwnd; 
-UINT   mMsg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
-{
-   int i = GetWindowLong (hwnd, GWL_ID) ;
-   int frame = GetVScrollParentNumber (hwnd) ;
-
-   if (frame != - 1) {
-      switch (mMsg) {
-             case WM_SETFOCUS:
-                  iFocus = i;
-                  break ;
-      }
-   
-      return CallWindowProc (FrameTable[frame].fnOldVScroll, hwnd, mMsg, wParam, lParam) ;
-   }
-   return DefWindowProc (hwnd, mMsg, wParam, lParam) ;
-}
-#endif /* RAMZI */
 #endif /* _WINDOWS */
 
 #ifndef _WINDOWS
@@ -2067,8 +2012,16 @@ int                *height;
 #endif /* __STDC__ */
 
 {
+#ifndef _WINDOWS
    *width = FrameTable[frame].FrWidth;
    *height = FrameTable[frame].FrHeight;
+#else  /* _WINDOWS */
+   RECT rWindow ;
+
+   GetClientRect (FrRef[frame], &rWindow) ;
+   *height = rWindow.bottom - rWindow.top ;
+   *width  = rWindow.right - rWindow.left ;
+#endif /* _WINDOWS */
 }
 
 
@@ -2189,17 +2142,21 @@ int                 frame;
 
 #ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
+#endif /* _WINDOWS */
 
+#ifdef _WINDOWS
+   RECT       rWindow ;
+   SCROLLINFO scrollInfo;
 #endif /* _WINDOWS */
 
    /* Demande le volume affiche dans la fenetre */
    ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
    hscroll = FrameTable[frame].WdScrollH;
    vscroll = FrameTable[frame].WdScrollV;
-   l = FrameTable[frame].FrWidth;
-   h = FrameTable[frame].FrHeight;
 
 #ifndef _WINDOWS
+   l = FrameTable[frame].FrWidth;
+   h = FrameTable[frame].FrHeight;
    n = 0;
    if (width + Xpos <= l)
      {
@@ -2227,6 +2184,27 @@ int                 frame;
 	n++;
 	XtSetValues (vscroll, args, n);
      }
+#else  /* _WINDOWS */
+   GetWindowRect (FrRef[frame], &rWindow) ;
+   h = rWindow.bottom - rWindow.top ;
+   l = rWindow.right - rWindow.left ;
+   scrollInfo.cbSize = sizeof (SCROLLINFO);
+   scrollInfo.fMask  = SIF_PAGE | SIF_POS | SIF_RANGE ;
+   scrollInfo.nMin   = 0;
+
+   if (width + Xpos <= l) {
+      scrollInfo.nMax   = l;
+      scrollInfo.nPage  = width ;
+      scrollInfo.nPos   = Xpos ;
+      SetScrollInfo (FrameTable[frame].WdScrollH, SB_CTL, &scrollInfo, TRUE);
+   }
+
+   if (height + Ypos <= h) {
+      scrollInfo.nMax   = h;
+      scrollInfo.nPage  = height ;
+      scrollInfo.nPos   = Ypos ;
+      SetScrollInfo (FrameTable[frame].WdScrollV, SB_CTL, &scrollInfo, TRUE);
+   }
 #endif /* _WINDOWS */
 }				/*UpdateScrollbars */
 

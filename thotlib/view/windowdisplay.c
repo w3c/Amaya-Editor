@@ -10,7 +10,7 @@
  *                   X-Window and MS-Windows (incomplete).
  *
  * Authors: I. Vatton (INRIA)
- *          D. Veillard (INRIA) - MS-Windows routines
+ *          R. Guetari and D. Veillard (W3C/INRIA) - MS-Windows routines
  *
  */
 
@@ -2856,17 +2856,16 @@ int                 y;
   from (xd,yd) to (xf,yf).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
+void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 #else  /* __STDC__ */
-void                Scroll (frame, width, height, xd, yd, xf, yf)
-int                 frame;
-int                 width;
-int                 height;
-int                 xd;
-int                 yd;
-int                 xf;
-int                 yf;
-
+void Scroll (frame, width, height, xd, yd, xf, yf)
+int frame;
+int width;
+int height;
+int xd;
+int yd;
+int xf;
+int yf;
 #endif /* __STDC__ */
 {
    ThotWindow          w;
@@ -2876,8 +2875,7 @@ int                 yf;
    if (w != None)
 #ifndef _WINDOWS
       XCopyArea (TtDisplay, w, w, TtWhiteGC, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, width, height, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin);
-#endif /* _WINDOWS */
-#ifdef _WINDOWS
+#else  /* _WINDOWS */
    WIN_GetDeviceContext (frame);
    BitBlt (WIN_curHdc, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin, width, height,
 	   WIN_curHdc, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, SRCCOPY);

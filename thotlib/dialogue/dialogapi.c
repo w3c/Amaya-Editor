@@ -331,7 +331,7 @@ ThotWindow vScroll ;
    int     frame = 0;
   
    while (frame < MAX_FRAME) {
-         if (FrameTable[frame].fnOldVScroll == vScroll)
+         if (FrameTable[frame].WdScrollV == vScroll)
             return frame ;
          frame++ ;
    }
@@ -352,7 +352,7 @@ ThotWindow hScroll ;
    int     frame = 0;
   
    while (frame < MAX_FRAME) {
-         if (FrameTable[frame].fnOldHScroll == hScroll)
+         if (FrameTable[frame].WdScrollH == hScroll)
             return frame ;
          frame++ ;
    }
@@ -474,6 +474,34 @@ struct Cat_Context* catalogue;
 #endif /* __STDC__ */
 {
    int frame = GetMenuParentNumber (parent) ;
+   /*
+   if (frame == - 1) {
+      int     frameIndex = 0 ;
+      boolean found      = FALSE ;
+
+      while (frameIndex < MAX_FRAME && !found) {
+            int catIndex = 0 ;
+            
+            while (catIndex < MAX_FRAMECAT && !found) {
+                  int twIndex = 0;
+
+                  while (twIndex < C_NUMBER && !found)
+		        if (FrameCatList[frameIndex].Cat_Table[catIndex] &&
+                            FrameCatList[frameIndex].Cat_Table[catIndex]->Cat_Entries->E_ThotWidget[twIndex] == parent) {
+                           found = TRUE ;
+                           frame = frameIndex ;
+                        } else
+                              twIndex++ ;
+		  
+		  if (!found)
+                     catIndex++ ;
+	    }
+
+            if (!found)
+               frameIndex++ ;
+      }
+   }
+   */
    if (frame != -1) {
       int found = FALSE ;
       int i = 0;
@@ -3465,6 +3493,7 @@ boolean             react;
 		  w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 
 #ifdef _WINDOWS
+                  menu = w ;
 #else  /* _WINDOWS */
 		  /*** Cree un sous-menu d'un formulaire ***/
 		  n = 0;
@@ -3631,6 +3660,7 @@ boolean             react;
 #endif /* !_WINDOWS */
 			 }
 #ifdef _WINDOWS
+                       WIN_AddFrameCatalogue (w, catalogue) ;
 #else  /* _WINDOWS */
 		       w = XmCreateToggleButton (row, &text[index + 1], args, n);
 		       XtManageChild (w);
@@ -3861,6 +3891,7 @@ boolean             react;
 			     /* w = adbloc->E_ThotWidget[ent]; */
                             AppendMenu (w, MF_STRING, ref + i, &text[index + 1]);
 			    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
+                            WIN_AddFrameCatalogue (w, catalogue) ;
 #else  /* _WINDOWS */
 			    w = XmCreatePushButton (menu, &text[index + 1], args, n);
 			    XtManageChild (w);
@@ -3874,6 +3905,7 @@ boolean             react;
 #ifdef _WINDOWS
                             AppendMenu (w, MF_STRING | MF_CHECKED, ref + i, &text[index + 1]);
 			    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
+                            WIN_AddFrameCatalogue (w, catalogue) ;
 #else  /* _WINDOWS */
 			    /* un toggle a faux */
 			    XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
