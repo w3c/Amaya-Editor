@@ -1736,7 +1736,84 @@ static char *ParseCSSVerticalAlign (Element element, PSchema tsch,
 				    PresentationContext context, char *cssRule,
 				    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (NULL, cssRule);
+  char                 *ptr;
+  PresentationValue    pval;
+
+  pval.typed_data.unit = UNIT_REL;
+  pval.typed_data.real = FALSE;
+  cssRule = SkipBlanksAndComments (cssRule);
+  if (!strncasecmp (cssRule, "baseline", 8))
+    {
+      pval.typed_data.value = 0;
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "sub", 3))
+    {
+      pval.typed_data.value = -3;
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "super", 5))
+    {
+      pval.typed_data.value = 4;
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "top", 3))
+    {
+      /* Not supported yet */
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "text-top", 8))
+    {
+      /* Not supported yet */
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "middle", 6))
+    {
+      /* Not supported yet */
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "bottom", 6))
+    {
+      /* Not supported yet */
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "text-bottom", 11))
+    {
+      /* Not supported yet */
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      cssRule = SkipWord (cssRule);
+    }
+  else
+    {
+      /* parse <percentage> or <length> */
+      ptr = cssRule;
+      cssRule = ParseCSSUnit (cssRule, &pval);
+      if (pval.typed_data.unit == UNIT_INVALID)
+	{
+	  pval.typed_data.value = 0;
+	  CSSParseError ("Invalid vertical-align value", ptr, cssRule);
+	}
+      else if (pval.typed_data.value == 0)
+	{
+	  pval.typed_data.unit = UNIT_PX;
+	}
+      else if (pval.typed_data.unit == UNIT_BOX)
+	{
+	  pval.typed_data.unit = UNIT_EM;
+	}
+      else if (pval.typed_data.unit == UNIT_PERCENT)
+	/* it's a percentage */
+	{
+	  /* convert it into a relative size */
+	  pval.typed_data.unit = UNIT_REL;
+	  pval.typed_data.value /= 10;
+	}
+    }
+  if (pval.typed_data.unit != UNIT_INVALID && DoApply)
+    TtaSetStylePresentation (PRHorizRef, element, tsch, context, pval);
   return (cssRule);
 }
 
@@ -2152,7 +2229,7 @@ static char *ParseCSSFontFamily (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFontWeight: parse a CSS font weight string   
+   ParseACSSFontWeight: parse a CSS font weight string   
    we expect the input string describing the attribute to be     
    normal, bold, bolder, lighter, 100, 200, 300, ... 900, inherit.
   ----------------------------------------------------------------------*/
