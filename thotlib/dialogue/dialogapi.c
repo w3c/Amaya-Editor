@@ -328,7 +328,7 @@ CONST WNDCLASS lpwc ;
    MS-Windows window.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int GetMainFrameNumber (ThotWindow win)
+int GetMainFrameNumber  (ThotWindow win)
 #else  /* !__STDC__ */
 int GetMainFrameNumber (win)
 ThotWindow win ;
@@ -2883,21 +2883,31 @@ char               *equiv;
 /*----------------------------------------------------------------------
    TtaSetPulldownOff suspend le pulldown                           
   ----------------------------------------------------------------------*/
+#ifdef _WINDOWS
+#ifdef __STDC__
+void                WIN_TtaSetPulldownOff (int ref, ThotWidget parent, HWND owner)
+#else  /* __STDC__ */
+void                WIN_TtaSetPulldownOff (ref, parent, owner)
+int                 ref;
+ThotWidget          parent;
+HWND                owner;
+#endif /* __STDC__ */
+#else  /* !_WINDOWS */
 #ifdef __STDC__
 void                TtaSetPulldownOff (int ref, ThotWidget parent)
 #else  /* __STDC__ */
 void                TtaSetPulldownOff (ref, parent)
 int                 ref;
 ThotWidget          parent;
-
 #endif /* __STDC__ */
+#endif /* _WINDOWS */
 {
    struct Cat_Context *catalogue;
 
 #  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
 #  else  /* _WINDOWS */
-   int nbItems, i;
+   int frame;
 #  endif /* _WINDOWS */
 
    if (ref == 0)
@@ -2909,40 +2919,50 @@ ThotWidget          parent;
 	catalogue = CatEntry (ref);
 	if (catalogue == NULL)
 	   TtaError (ERR_invalid_reference);
+#   ifndef _WINDOWS
 	else if (catalogue->Cat_Widget != 0)
 	  {
-#            ifndef _WINDOWS
-	     XtSetArg (args[0], XmNsubMenuId, NULL);
-	     XtSetValues (parent, args, 1);
-	     XtManageChild (parent);
-#            else  /* _WINDOWS */
-#            if 0
-             nbItems = GetMenuItemCount (parent);
-		     for (i = 0; i < nbItems; i ++)
-                  EnableMenuItem (parent, ref + i, MF_GRAYED);
-#            endif /* 0 */
-#            endif /* _WINDOWS */
+             XtSetArg (args[0], XmNsubMenuId, NULL);
+             XtSetValues (parent, args, 1);
+             XtManageChild (parent);
 	  }
+#   else  /* _WINDOWS */
+	frame = GetMainFrameNumber (owner);
+    EnableMenuItem (WinMenus[frame], parent, MF_GRAYED);
+	DrawMenuBar (FrMainRef[frame]); 
+#            endif /* _WINDOWS */
      }
 }
 
 /*----------------------------------------------------------------------
    TtaSetPulldownOn reactive le pulldown                           
   ----------------------------------------------------------------------*/
+#ifdef _WINDOWS
+#ifdef __STDC__
+void                WIN_TtaSetPulldownOn (int ref, ThotWidget parent, HWND owner)
+#else  /* __STDC__ */
+void                WIN_TtaSetPulldownOn (ref, parent, owner)
+int                 ref;
+ThotWidget          parent;
+HWND                owner;
+#endif /* __STDC__ */
+#else  /* !_WINDOWS */
 #ifdef __STDC__
 void                TtaSetPulldownOn (int ref, ThotWidget parent)
 #else  /* __STDC__ */
 void                TtaSetPulldownOn (ref, parent)
 int                 ref;
 ThotWidget          parent;
-
 #endif /* __STDC__ */
+#endif /* _WINDOWS */
 {
    struct Cat_Context *catalogue;
    ThotWidget          menu;
 
 #  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
+#  else  /* _WINDOWS */
+   int frame;
 #  endif /* _WINDOWS */
 
    if (ref == 0)
@@ -2958,9 +2978,13 @@ ThotWidget          parent;
 	  {
 	     menu = catalogue->Cat_Widget;
 #            ifndef _WINDOWS
-	     XtSetArg (args[0], XmNsubMenuId, menu);
-	     XtSetValues (parent, args, 1);
-	     XtManageChild (parent);
+             XtSetArg (args[0], XmNsubMenuId, menu);
+             XtSetValues (parent, args, 1);
+             XtManageChild (parent);
+#            else  /* _WINDOWS */
+			 frame = GetMainFrameNumber (owner);
+             EnableMenuItem (WinMenus[frame], parent, MF_ENABLED);
+			 DrawMenuBar (FrMainRef[frame]); 
 #            endif /* _WINDOWS */
 	  }
      }

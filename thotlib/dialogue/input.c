@@ -112,6 +112,10 @@ static KEY         *Automata_META    = NULL;
 static KEY         *Automata_ALT     = NULL;
 static KEY         *Automata_current = NULL;
 
+#ifdef _WINDOWS
+static BOOL specialKey;
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    NameCode
    translates the keynames not supported by the interpreter of
@@ -465,10 +469,16 @@ LPARAM lParam;
    if ((msg != WM_KEYDOWN) && (msg != WM_CHAR))
       return;
 
+   if (msg == WM_CHAR)
+      specialKey = FALSE;
+   else
+      specialKey = TRUE;
+
    if (frame < 0) {
 	fprintf (stderr, "unable to get frame of window %X\n", hWnd);
 	return;
    }
+
    status = GetKeyState (VK_SHIFT);
    if (HIBYTE (status))
       keyboard_mask |= THOT_MOD_SHIFT;
@@ -485,7 +495,23 @@ LPARAM lParam;
 	string[0] = (char) wParam;
 	len = 1;
 	ThotInput (frame, &string[0], len, keyboard_mask, wParam);
-   } else if ((msg == WM_KEYDOWN) && (wParam >= 32) && (wParam <= 46)) {
+   /* } else if ((msg == WM_KEYDOWN) && (wParam >= 32) && (wParam <= 46)) { */
+   } else if ((wParam == VK_CANCEL) ||
+			  (wParam == VK_BACK)   ||
+			  (wParam == VK_RETURN) ||
+			  (wParam == VK_ESCAPE) ||
+			  (wParam == VK_SPACE)  ||
+			  (wParam == VK_PRIOR)  ||
+			  (wParam == VK_NEXT)   ||
+			  (wParam == VK_END)    ||
+			  (wParam == VK_HOME)   ||
+			  (wParam == VK_LEFT)   ||
+			  (wParam == VK_UP)     ||
+			  (wParam == VK_RIGHT)  ||
+			  (wParam == VK_DOWN)   ||
+			  (wParam == VK_INSERT) ||
+			  (wParam == VK_DELETE))   
+   {
 	  string[0] = (char) wParam;
 	  len = 1;
 	  ThotInput (frame, &string[0], len, keyboard_mask, wParam);
@@ -659,7 +685,11 @@ int                 key;
 
 	     /* Recherche l'entree de 1er niveau */
 	     while (!found && ptr != NULL)
+#        ifdef _WINDOWS
+		if (specialKey && ptr->K_EntryCode == key)
+#        else  /* _WINDOWS */
 		if (ptr->K_EntryCode == key)
+#        endif /* _WINDOWS */
 		  {
 		     /* On entre dans un automate */
 		     found = TRUE;
@@ -676,7 +706,11 @@ int                 key;
 	  }
      }
 
+#  ifdef _WINDOWS
+   if (specialKey && !found)
+#  else  /* !_WINDOWS */
    if (!found)
+#  endif /* _WINDOWS */
       /* Traitement des cles speciales */
       switch (key)
 	    {

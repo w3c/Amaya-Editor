@@ -83,6 +83,7 @@ static BOOL         WIN_AtEnumAttr = FALSE;
 static BOOL         isForm         = FALSE ;
 static PtrAttribute WIN_currAttr;
 static char         formRange [100];
+static char         attr_text [500];
 static int          formValue;
 static int          nbDlgItems ;
 
@@ -443,7 +444,6 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 	HWND        deleteButton;
 	HWND        doneButton;
 	char*       pBuffer;
-	char        attr_text [500];
 	int         i, index;
 	static PSTR pWinBuffer;
 	static int  txtLength;

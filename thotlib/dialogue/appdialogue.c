@@ -2383,9 +2383,9 @@ int                 doc;
 		       else 
 			    BuildPopdown (ptrmenu, ref, w, frame);
 #                      ifdef _WINDOWS
-		       AppendMenu (menu_bar, MF_POPUP, (UINT) w, TtaGetMessage (THOT, ptrmenu->MenuID));
+                       AppendMenu (menu_bar, MF_POPUP, (UINT) w, TtaGetMessage (THOT, ptrmenu->MenuID));
 #                      else  /* !_WINDOWS */
-		       XtManageChild (w);
+                       XtManageChild (w);
 #                      endif /* !_WINDOWS */
 		       /* Enregistre les menus dynamiques */
 		       if (ptrmenu->MenuHelp)
@@ -3004,7 +3004,11 @@ int                 menuID;
 		  FrameTable[frame].ActifMenus[menu] = FALSE;
 		  ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
 		  /* Desactive */
+#         ifdef _WINDOWS
+		  WIN_TtaSetPulldownOff (ref, w, TtaGetViewFrame (document, view));
+#         else  /* !_WINDOWS */
 		  TtaSetPulldownOff (ref, w);
+#         endif /* _WINDOWS */
 
 #ifndef _WINDOWS
 		  /* Visualise le bouton inactif */
@@ -3084,7 +3088,11 @@ int                 menuID;
 		  FrameTable[frame].ActifMenus[menu] = TRUE;
 		  ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
 		  /* Desactive */
+#         ifdef _WINDOWS
+		  WIN_TtaSetPulldownOn (ref, w, TtaGetViewFrame (document, view));
+#         else /* !_WINDOWS */
 		  TtaSetPulldownOn (ref, w);
+#         endif /* _WINDOWS */
 
 #ifndef _WINDOWS
 		  /* Visualise le bouton actif */
