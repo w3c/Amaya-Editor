@@ -1256,7 +1256,7 @@ PtrPRule        RP;
 		    printf ("Foreground: ");
 		    wrnbherit (RP);
 		    break;
-		 case PtImDescr:
+		 case PtPictInfo:
 		    break;
 	      }
 	printf ("\n");		/* passe a la regle suivante */
