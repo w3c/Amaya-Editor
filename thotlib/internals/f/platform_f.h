@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int TtaFileExist ( CONST char* filename );
+extern int TtaFileExist ( CONST PathBuffer filename );
 extern int TtaFileUnlink ( CONST STRING filename );
 extern int ThotDirBrowse_first ( ThotDirBrowse * me,
                                  char* dir,

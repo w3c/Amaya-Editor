@@ -6264,11 +6264,11 @@ void                TtaWaitShowDialogue ()
 #  ifdef _WINDOWS
    while (ShowReturn == 1) {
          if (GetMessage (&event, NULL, 0, 0)) {			
-            frame = GetFrameNumber (event.hwnd);
+            /* frame = GetFrameNumber (event.hwnd);
             if (frame != -1) {
                if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &event))
                   TtaHandleOneWindowEvent (&event);
-			} else
+			} else */
                    TtaHandleOneWindowEvent (&event);
 	}
    }

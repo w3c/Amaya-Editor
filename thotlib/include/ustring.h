@@ -20,20 +20,12 @@ typedef unsigned int*   STRING;
 typedef unsigned int*   USTRING;
 
 #else  /* !__JIS__ */
-/*
 typedef unsigned short  CHAR_T;
 typedef unsigned short* PCHAR_T;
 typedef unsigned short  UCHAR_T;
 typedef unsigned short* PUCHAR_T;
 typedef unsigned short* STRING;
 typedef unsigned short* USTRING;
-*/
-typedef wchar_t  CHAR_T;
-typedef wchar_t* PCHAR_T;
-typedef wchar_t  UCHAR_T;
-typedef wchar_t* PUCHAR_T;
-typedef wchar_t* STRING;
-typedef wchar_t* USTRING;
 #endif /* __JIS__ */
 
 #else  /* _I18N_ */
@@ -46,6 +38,7 @@ typedef char*           STRING;
 typedef unsigned char*  USTRING;
 
 #endif /* _I18N_ */
+
 
 #ifdef __STDC__
 extern int          ustrcasecmp  (STRING, const STRING);

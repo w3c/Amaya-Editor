@@ -1538,6 +1538,7 @@ LPARAM lParam;
                  return 0;
             }
 
+            case WM_SYSKEYDOWN:
             case WM_KEYDOWN:
             case WM_CHAR:
                  TtaAbortShowDialogue ();
@@ -1545,6 +1546,8 @@ LPARAM lParam;
                  if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (STRING) &key))
                     /* WIN_CharTranslation (FrRef[frame], frame, mMsg, wParam, lParam); */
                     WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam);
+                 if (wParam == VK_MENU)
+                    break ;
                  return 0;
 
             case WM_LBUTTONDOWN:
@@ -1676,8 +1679,9 @@ LPARAM lParam;
                  return 0;
 	       
           default:
-               return (DefWindowProc (hwnd, mMsg, wParam, lParam));
+               break;
      }
+     return (DefWindowProc (hwnd, mMsg, wParam, lParam));
 }
 #endif /* _WINDOWS */
 
@@ -2149,10 +2153,11 @@ PtrAbstractBox     *pave;
 #        else /* _WINDOWS */
          GetMessage (&event, NULL, 0, 0);
          curFrame = GetFrameNumber (event.hwnd);
-         if (curFrame != -1) {
+		 /*@@@@@@@@@@@@@@@@@@@@*/
+         /* if (curFrame != -1) {
             if (!hAccel[curFrame] || !TranslateAccelerator (FrMainRef[curFrame], hAccel[curFrame], &event))
                TtaHandleOneWindowEvent (&event);
-		 } else
+		 } else */
                TtaHandleOneWindowEvent (&event);
          SetCursor (cursor);
 #        endif /* !_WINDOWS */

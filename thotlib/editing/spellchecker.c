@@ -1049,7 +1049,7 @@ int                 ParametrizeChecker ()
 	     /* Lecture du fichier parametres */
 	     ustrcpy (paramnom, corrpath);
 	     ustrcat (paramnom, TEXT("/param"));
-	     if ((fparam = ufopen (paramnom, _ReadMODE_)) != NULL)
+	     if ((fparam = fopen (paramnom, "r")) != NULL)
 	       /* Existence du fichier */
 		init_param (fparam);
 	     else
@@ -1061,7 +1061,7 @@ int                 ParametrizeChecker ()
 	     /* Lecture du  fichier clavier */
 	     ustrcpy (clavnom, corrpath);
 	     ustrcat (clavnom, TEXT("/clavier"));
-	     if ((ftsub = ufopen (clavnom, _ReadMODE_)) != NULL)
+	     if ((ftsub = fopen (clavnom, "r")) != NULL)
 	       /* Existence du fichier */
 	       {
 		  init_Tsub (ftsub);

@@ -501,61 +501,55 @@ CHAR_T     *key;
 
    pw = &word [0];
    pc = accelerator;
-   while (*pc)
-     {
-       while (*pc == SPACE || *pc == TAB)
-	 pc++;
-       while (*pc != SPACE && *pc != TAB)
-	 *pw++ = *pc++;
-       *pw = EOS;
+   while (*pc) {
+         while (*pc == SPACE || *pc == TAB)
+               pc++;
+         while (*pc != SPACE && *pc != TAB)
+               *pw++ = *pc++;
+         *pw = EOS;
        
          if (!ustrcmp (word, TEXT("Ctrl"))) 
-	   return FALSE;
+            return FALSE;
          else if (!ustrcmp (word, TEXT("Alt")))
-	   *fVirt |= FALT;
+              *fVirt |= FALT;
          else if (!ustrcmp (word, TEXT("Shift")))
-	   *fVirt |= FSHIFT;
+              *fVirt |= FSHIFT;
 	 
          while (*pc == SPACE || *pc == TAB)			  
-	   pc++;
+               pc++;
 	 
          pw = &word [0];
          while (*pc && *pc != SPACE && *pc != TAB)
-	   *pw++ = *pc++;
+               *pw++ = *pc++;
          *pw = EOS;
 	 
          if (!ustrcmp (word, TEXT("Ctrl"))) 
-	   return FALSE;
-         else if (!ustrcmp (word, TEXT("Alt")))
-	   {
-	     *fVirt |= FALT;
-	     getEquivChar = TRUE;
-	   }
-	 else if (!ustrcmp (word, TEXT("Shift")))
-	   {
-	     *fVirt |= FSHIFT;
-	     getEquivChar = TRUE;
-	   }
-	 else if (!GetKey (word, fVirt, key))
-	   return FALSE;
+            return FALSE;
+         else if (!ustrcmp (word, TEXT("Alt"))) {
+              *fVirt |= FALT;
+              getEquivChar = TRUE;
+		 } else if (!ustrcmp (word, TEXT("Shift"))) {
+                *fVirt |= FSHIFT;
+                getEquivChar = TRUE;
+		 } else if (!GetKey (word, fVirt, key)) 
+                return FALSE;
 	 
-         if (getEquivChar)
-	   {
-	     while (*pc && *pc == SPACE || *pc == TAB)			  
-	       pc++;
+         if (getEquivChar) {
+            while (*pc && *pc == SPACE || *pc == TAB)			  
+                  pc++;
 	     
-	     pw = &word [0];
-	     /* accept specifics characters + = - etc., but without shift */
-	     while (*pc >= '!' && *pc <= '~')
-	       *pw++ = *pc++;
-	     *pw = EOS;
-	     if (!GetKey (word, fVirt, key))	
-	       return FALSE;
-	   }
+            pw = &word [0];
+            /* accept specifics characters + = - etc., but without shift */
+            while (*pc >= '!' && *pc <= '~')
+                  *pw++ = *pc++;
+            *pw = EOS;
+            if (!GetKey (word, fVirt, key))	
+               return FALSE;
+		 } 
 
          while (*pc) 
-	   pc++;
-     }
+               pc++;
+   } 
    return TRUE;
 }
 
@@ -3014,8 +3008,9 @@ STRING              equiv;
 		       {
 #                         ifdef _WINDOWS
                           if (&equiv[eindex] != EOS) {
-                             if (parseAccelerator (&equiv[eindex], &fVirt, &key))
-                                addAccelerator (currentFrame, fVirt, key, ref + i);
+							  /*@@@@@@@@@@@@@@@@@@@@*/
+                             /* if (parseAccelerator (&equiv[eindex], &fVirt, &key))
+                                addAccelerator (currentFrame, fVirt, key, ref + i); */
                              usprintf (equiv_item, TEXT("%s"), &equiv[eindex]); 
                           }
                           eindex += ustrlen (&equiv[eindex]) + 1;

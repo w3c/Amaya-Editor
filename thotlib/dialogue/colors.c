@@ -703,15 +703,16 @@ int                 y;
 
    while (GetMessage (&msg, NULL, 0, 0)) {
          frame = GetFrameNumber (msg.hwnd);
-         if (frame != -1) {
+		 /*@@@@@@@@@@@@@@@@@@@@*/
+         /* if (frame != -1) {
             if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &msg)) {
                TranslateMessage (&msg);
                DispatchMessage (&msg);
 			}
-		 } else {
+		 } else { */
                 TranslateMessage (&msg);
                 DispatchMessage (&msg);
-		 }
+		 /* } */
    }
 #endif /* _WINDOWS */
 #endif /* _GTK */

@@ -36,7 +36,7 @@
 int                 TtaFileExist (CONST char* filename)
 #else  /* __STDC__ */
 int                 TtaFileExist (filename)
-CONST char*         filename;
+CONST char*    filename;
 
 #endif /* __STDC__ */
 {
@@ -174,7 +174,7 @@ int                 ThotDirBrowse_first (ThotDirBrowse * me, char* dir, char* na
 #else  /* __STDC__ */
 int                 ThotDirBrowse_first (me, dir, name, ext)
 ThotDirBrowse      *me;
-STRING              dir;
+PathBuffer          dir;
 STRING              name;
 STRING              ext;
 

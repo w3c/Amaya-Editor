@@ -74,7 +74,7 @@ int                *hif;
    *yif = 0;
    *wif = 590;
    *hif = 840;
-   fin = ufopen (fn, _ReadMODE_);
+   fin = fopen (fn, "r");
    if (fin)
      {
 	pt = buff;

@@ -635,10 +635,10 @@ void                TtaRemoveLanguage (language)
    identifier of that language or 0 if the language is unknown.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Language            TtaGetLanguageIdFromName (STRING languageName)
+Language            TtaGetLanguageIdFromName (char* languageName)
 #else  /* __STDC__ */
 Language            TtaGetLanguageIdFromName (languageName)
-STRING              languageName;
+char*               languageName;
 #endif /* __STDC__ */
 
 {
@@ -969,7 +969,7 @@ Language            langageId;
    lang = (int) langageId;
    ptPattern = LangTable[lang].LangPattern;
    ustrcat (patternFileName, ptPattern);
-   if ((in = ufopen (patternFileName, _ReadMODE_)) == NULL)
+   if ((in = fopen (patternFileName, "r")) == NULL)
      {
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_HYPHEN_FILE_NOT_OPEN), LangTable[lang].LangPattern);
 	return (FALSE);

@@ -1148,7 +1148,7 @@ RegistryLevel       level;
    STRING value;
 
    ustrcpy (appli, THOT_LIB_DEFAULTNAME);
-   input = ufopen (filename, _ReadMODE_);
+   input = fopen (filename, "r");
    if (input == NULL)
      {
 	fprintf (stderr, "Cannot read Registry from %s :\n", filename);

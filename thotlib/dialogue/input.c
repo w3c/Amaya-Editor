@@ -461,11 +461,12 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {   
-   int  keyboard_mask = 0;   int  status;
+   int  keyboard_mask = 0;   
+   int  status;
    CHAR_T string[2];
    int  len = 0;
 
-   if ((msg != WM_KEYDOWN) && (msg != WM_CHAR))
+   if ((msg != WM_SYSKEYDOWN) && (msg != WM_KEYDOWN) && (msg != WM_CHAR))
       return;
 
    if (msg == WM_CHAR)
@@ -513,7 +514,18 @@ LPARAM lParam;
    else
        len = 1;
 
-   if (msg == WM_CHAR){
+   if (msg == WM_SYSKEYDOWN || msg == WM_KEYDOWN)
+      len = 0;
+   else
+        len = 1;
+
+   if (wParam == VK_MENU || wParam == VK_CONTROL)
+      return;
+   string[0] = (CHAR_T) wParam;
+   ThotInput (frame, &string[0], len, keyboard_mask, wParam);
+
+#  if 0
+   if (msg == WM_CHAR) {
       len = 1;
       string[0] = (CHAR_T) wParam;
       ThotInput (frame, &string[0], len, keyboard_mask, wParam);
@@ -530,13 +542,15 @@ LPARAM lParam;
 			  (wParam == VK_DOWN)    ||
 			  (wParam == VK_INSERT)  ||
 			  (wParam == VK_F2)      ||
-			  (wParam == VK_DELETE))  
+			  (wParam == VK_DELETE)  ||
+			  (wParam >= 0x30 && wParam <= 0x39)) 
               /* (wParam == VK_SHIFT)  ||
 			  (wParam == VK_CONTROL))   */
    {
 	  string[0] = (CHAR_T) wParam;
 	  ThotInput (frame, &string[0], len, keyboard_mask, wParam);
    }
+#  endif /* 0 */
 }
 #endif /* _WINDOWS */
 
@@ -1070,7 +1084,7 @@ STRING              appliname;
    if (!SearchFile (home, 0, line))
      SearchFile (name, 2, line);
 
-   file = ufopen (line, _ReadMODE_);
+   file = fopen (line, "r");
    if (!file)
      {
 	/*Fichier inaccessible */

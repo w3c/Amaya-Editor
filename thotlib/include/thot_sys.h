@@ -79,10 +79,10 @@ and must be removed at the end of the debug */
 #endif
 
 /* Constants for PATHs */
-#define DIR_SEP '/'
-#define PATH_SEP ':'
-#define DIR_STR "/"
-#define PATH_STR ":"
+#define DIR_SEP  TEXT('/')
+#define PATH_SEP TEXT(':')
+#define DIR_STR  TEXT("/")
+#define PATH_STR TEXT(":")
 #else /* __GNUC__ */ /*---------------------------------GNUC--*/
 /* Ugly patches to cope with Visual C++ */
 /* preproccessor flags */
@@ -103,9 +103,9 @@ int                 _getpid (void);
 #define unlink(f) _unlink((f))
 
 /* Constants for PATHs */
-#define DIR_SEP '\\'
+#define DIR_SEP  '\\'
 #define PATH_SEP ';'
-#define DIR_STR "\\"
+#define DIR_STR  "\\"
 #define PATH_STR ";"
 #endif /* ! __GNUC__ */
 /*------------------------------------------------------GNUC--*/
@@ -148,10 +148,10 @@ typedef unsigned char   ThotBool;
 #define ThotPid		pid_t
 
 /* Constants for PATHs */
-#define DIR_SEP '/'
-#define DIR_STR "/"
-#define PATH_SEP ':'
-#define PATH_STR ":"
+#define DIR_SEP  TEXT('/')
+#define DIR_STR  TEXT("/")
+#define PATH_SEP TEXT(':')
+#define PATH_STR TEXT(":")
 
 #endif /* _WINDOWS */
 /********************************************************WINDOWS**/

@@ -431,7 +431,7 @@ Name                fileName;
 	MakeCompleteName (fileName, _EMPTYSTR_, directory, fullName, &i);
 	TtaDisplaySimpleMessage (INFO, LIB, TMSG_IMPORTING_FILE);
 	/* ouvre le fichier a importer */
-	file = ufopen (fullName, _ReadMODE_);
+	file = fopen (fullName, "r");
 	if (file != NULL)
 	   /* le fichier a importer est ouvert */
 	  {

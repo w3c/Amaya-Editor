@@ -23,7 +23,7 @@ typedef struct {
   ThotDirBrowse_mask	PicMask;
   char*  buf;
   size_t bufLen;
-  int dirLen;
+  int    dirLen;
 } ThotDirBrowse;
 
 

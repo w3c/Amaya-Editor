@@ -44,8 +44,8 @@
 int                 CurrentDialog;
 
 static char           NameDocToCreate[100];
-static char           ClassDocToCreate[100];
-static char           DirectoryDocToCreate[MAX_PATH];
+static Buffer         ClassDocToCreate;
+static PathBuffer     DirectoryDocToCreate;
 
 #include "actions_f.h"
 #include "appdialogue_f.h"
@@ -135,6 +135,9 @@ char*               data;
 	       /* le formulaire "Creer un document" lui-meme */
 	       if (NameDocToCreate[0] == EOS)
 		  /* le nom par defaut */
+          /* Here the is a problem: TtaGetMessage must return a Wide Character String. */
+          /* NameDocToCreate is of type char* We have to use another procedure then */
+          /* TtaGetMessage to get the name of the document to create */
 		  ustrcpy (NameDocToCreate, TtaGetMessage (LIB, TMSG_NO_NAME));
 	       CurrentDialog = NumFormCreateDoc;
 	       if (ClassDocToCreate[0] != EOS && ((int) data) == 1)
@@ -175,7 +178,7 @@ char*               data;
 	       break;
 	    case NumZoneDocNameToCreate:
 	       /* zone de saisie du nom du document a creer */
-	       if (TtaCheckDirectory (data) && data[strlen (data) - 1] != URL_DIR_SEP)
+	       if (TtaCheckDirectory (data) && data[ustrlen (data) - 1] != URL_DIR_SEP)
 		 {
 		    strcpy (DirectoryDocToCreate, data);
 		    NameDocToCreate[0] = EOS;
@@ -184,9 +187,9 @@ char*               data;
 		 {
 		    /* conserve le nom du document a ouvrir */
 		    TtaExtractName (data, DirectoryDocToCreate, docName);
-		    if (ustrlen (docName) >= MAX_NAME_LENGTH)
+		    if (strlen (docName) >= MAX_NAME_LENGTH)
 		       docName[MAX_NAME_LENGTH - 1] = EOS;	/* limite la longueur des noms */
-		    ustrcpy (NameDocToCreate, docName);
+		    strcpy (NameDocToCreate, docName);
 		 }
 	       if (TtaCheckDirectory (DirectoryDocToCreate))
 		 {
@@ -195,11 +198,11 @@ char*               data;
 		       if (TtaIsSuffixFileIn (DirectoryDocToCreate, ".PIV"))
 			 {
 			    /* il faut ajouter le directory au path */
-			    i = ustrlen (DocumentPath);
-			    if (i + ustrlen (DirectoryDocToCreate) + 2 < MAX_PATH)
+			    i = strlen (DocumentPath);
+			    if (i + strlen (DirectoryDocToCreate) + 2 < MAX_PATH)
 			      {
-				 ustrcat (DocumentPath, PATH_STR);
-				 ustrcat (DocumentPath, DirectoryDocToCreate);
+				 strcat (DocumentPath, PATH_STR);
+				 strcat (DocumentPath, DirectoryDocToCreate);
 				 BuildPathDocBuffer (BufDir, EOS, &i);
 				 TtaNewSelector (NumZoneDocDirToCreate, NumFormCreateDoc, TtaGetMessage (LIB, TMSG_DOC_DIR), i, BufDir, 9, NULL, FALSE, TRUE);
 			      }
@@ -208,15 +211,17 @@ char*               data;
 	       break;
 	    case NumZoneDocDirToCreate:
 	       /* zone de saisie du directory ou le document doit etre cree */
-	       ustrcpy (DirectoryDocToCreate, data);
-	       ustrcpy (docName, DirectoryDocToCreate);
-	       ustrcat (docName, DIR_STR);
-	       ustrcat (docName, NameDocToCreate);
+	       strcpy (DirectoryDocToCreate, data);
+	       strcpy (docName, DirectoryDocToCreate);
+	       strcat (docName, DIR_STR);
+	       strcat (docName, NameDocToCreate);
+           /* docName has to be encoded in Wide Character */
+           /* We have to use Multbyte to Wide Character String conversion */
 	       TtaSetTextForm (NumZoneDocNameToCreate, docName);
 	       break;
 	    case NumSelDocClassToCreate:
 	       /* selecteur classe du document a creer */
-	       ustrncpy (ClassDocToCreate, data, MAX_NAME_LENGTH);
+	       strncpy (ClassDocToCreate, data, MAX_NAME_LENGTH);
 	       break;
 	 }
 }
@@ -237,11 +242,11 @@ View                view;
 #endif /* __STDC__ */
 {
    PathBuffer          docName;
-   STRING              ptr;
+   char*               ptr;
    int                 i = 0, length, nbitem;
-   int		       entry = 0;
-   CHAR_T                BufMenu[MAX_TXT_LEN];
-   CHAR_T                BufDir[MAX_PATH];
+   int                 entry = 0;
+   char                BufMenu[MAX_TXT_LEN];
+   char                BufDir[MAX_PATH];
    ThotWidget	       parentWidget;
 
    if (ThotLocalActions[T_createdoc] == NULL)
@@ -259,28 +264,31 @@ View                view;
    /* zone de saisie des dossiers documents */
    BuildPathDocBuffer (BufDir, EOS, &nbitem);
    if (DirectoryDocToCreate[0]!=EOS)
-     entry=SearchStringInBuffer(BufDir,DirectoryDocToCreate,nbitem);
-   TtaNewSelector (NumZoneDocDirToCreate, NumFormCreateDoc,
-   TtaGetMessage (LIB, TMSG_DOC_DIR), nbitem, BufDir, 9, NULL, FALSE, TRUE);
+     entry = SearchStringInBuffer (BufDir, DirectoryDocToCreate, nbitem);
+   TtaNewSelector (NumZoneDocDirToCreate, NumFormCreateDoc, TtaGetMessage (LIB, TMSG_DOC_DIR), nbitem, BufDir, 9, NULL, FALSE, TRUE);
    if (nbitem >= 1 && entry!= -1)
       TtaSetSelector (NumZoneDocDirToCreate, entry, NULL);
    /* nom du document a creer */
    if (DocumentPath!=NULL && (DirectoryDocToCreate[i] == EOS || entry == -1))
      {
-	ptr = ustrstr (DocumentPath, PATH_STR);
+	ptr = strstr (DocumentPath, PATH_STR);
 	if (ptr == NULL)
-	   ustrcpy (DirectoryDocToCreate, DocumentPath);
+	   strcpy (DirectoryDocToCreate, DocumentPath);
 	else
 	  {
 	     i = (int) ptr - (int) DocumentPath;
-	     ustrncpy (DirectoryDocToCreate, DocumentPath, i);
+	     strncpy (DirectoryDocToCreate, DocumentPath, i);
 	     DirectoryDocToCreate[i] = EOS;
 	  }
      }
-   ustrcpy (NameDocToCreate, TtaGetMessage (LIB, TMSG_NO_NAME));
-   ustrcpy (docName, DirectoryDocToCreate);
-   ustrcat (docName, DIR_STR);
-   ustrcat (docName, NameDocToCreate);
+
+   /* Here the is a problem: TtaGetMessage must return a Wide Character String. */
+   /* NameDocToCreate is of type char* We have to use another procedure then */
+   /* TtaGetMessage to get the name of the document to create */
+   strcpy (NameDocToCreate, TtaGetMessage (LIB, TMSG_NO_NAME));
+   strcpy (docName, DirectoryDocToCreate);
+   strcat (docName, DIR_STR);
+   strcat (docName, NameDocToCreate);
    /* compose le selecteur des types de documents que l'utilisateur peut */
    /* creer */
    nbitem = ConfigMakeDocTypeMenu (BufMenu, &length, TRUE);
@@ -297,7 +305,7 @@ View                view;
 			TtaGetMessage (LIB, TMSG_DOC_TYPE), nbitem, BufMenu, length, NULL, TRUE, FALSE);
 	entry = 0;
 	if(ClassDocToCreate[0]!=EOS)
-	  entry=SearchStringInBuffer(BufMenu,ClassDocToCreate,nbitem);
+	  entry = SearchStringInBuffer (BufMenu, ClassDocToCreate, nbitem);
 	/* initialise le selecteur sur sa premiere entree */
 	
 	TtaSetSelector (NumSelDocClassToCreate, entry, ClassDocToCreate);

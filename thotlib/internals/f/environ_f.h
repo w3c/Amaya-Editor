@@ -7,7 +7,7 @@
 #if __STDC__
 
 extern ThotBool TtaCheckDirectory ( char* aDirectory );
-extern ThotBool TtaCheckPath ( PathBuffer path );
+extern ThotBool TtaCheckPath ( char* path );
 #else /* __STDC__ */
 
 extern ThotBool TtaCheckDirectory (/* char *aDirectory */);

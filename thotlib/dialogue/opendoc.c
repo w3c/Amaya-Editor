@@ -107,7 +107,7 @@ void                BuildPathDocBuffer (STRING bufDir, CHAR_T separator, int *nb
 #else  /* __STDC__ */
 void                BuildPathDocBuffer (bufDir, separator, nbItems)
 STRING              bufDir;
-CHAR_T                separator;
+CHAR_T              separator;
 int                *nbItems;
 
 #endif /* __STDC__ */
@@ -134,12 +134,12 @@ int                *nbItems;
    Returns the rank of s in buffer or -1 if s doesn't occur.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int SearchStringInBuffer(STRING buffer, STRING s,int nbStr)
+int SearchStringInBuffer(char* buffer, PathBuffer s,int nbStr)
 #else  /* __STDC__ */
 int  SearchStringInBuffer(buffer, s, nbStr)
-STRING buffer;
-STRING s;
-int nbStr;
+char*      buffer;
+PathBuffer s;
+int        nbStr;
 #endif /* __STDC__ */
 {
   int occ;

@@ -38,15 +38,15 @@
 #include "picture.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
-#define _MENU_IMAGE_FRAME	1
-#define _ZONE_DIR_IMAGE		2
-#define _IMAGE_FORM		3
-#define _ZONE_IMAGE_FILE	4
-#define _IMAGE_SEL		5
-#define _MENU_IMAGE_TYPE	6
-#define MAX_IMAGE_MENU		7
+#define _MENU_IMAGE_FRAME   1
+#define _ZONE_DIR_IMAGE     2
+#define _IMAGE_FORM         3
+#define _ZONE_IMAGE_FILE    4
+#define _IMAGE_SEL          5
+#define _MENU_IMAGE_TYPE    6
+#define MAX_IMAGE_MENU      7
 extern PathBuffer   DocumentPath;
-extern PathBuffer   SchemaPath;
+extern STRING       SchemaPath;
 extern STRING       FileExtension[];
 
 #undef THOT_EXPORT

@@ -174,7 +174,7 @@ PtrAttribute        currAttr;
    /* c'est l'attribut Langue, on initialise le formulaire Langue */
    languageValue[0] = EOS;
    if (currAttr != NULL && currAttr->AeAttrText != NULL)
-     ustrncpy (languageValue, currAttr->AeAttrText->BuContent, MAX_NAME_LENGTH);
+     strncpy (languageValue, currAttr->AeAttrText->BuContent, MAX_NAME_LENGTH);
 
    /* cree le formulaire avec les deux boutons Appliquer et Supprimer */
 #ifdef _WINDOWS
@@ -320,15 +320,16 @@ STRING title	;
          DispatchMessage (&msg) ;
 #        endif /* 0 */
          frame = GetFrameNumber (msg.hwnd);
-         if (frame != -1) {
+		 /*@@@@@@@@@@@@@@@@@@@@*/
+         /* if (frame != -1) {
             if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &msg)) {
                TranslateMessage (&msg) ;
                DispatchMessage (&msg) ;
 			}
-		 } else {
+		 } else { */
                 TranslateMessage (&msg) ;
                 DispatchMessage (&msg) ;
-		 }
+		 /* } */
    }
    return TRUE;
 }
@@ -480,15 +481,16 @@ STRING title	;
          DispatchMessage (&msg) ;
 #        endif /* 0 */
          frame = GetFrameNumber (msg.hwnd);
-         if (frame != -1) {
+		 /*@@@@@@@@@@@@@@@@@@@@*/
+         /* if (frame != -1) {
             if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &msg)) {
                TranslateMessage (&msg) ;
                DispatchMessage (&msg) ;
 			}
-		 } else {
+		 } else { */
                 TranslateMessage (&msg) ;
                 DispatchMessage (&msg) ;
-		 }
+		 /* } */
    }
    return TRUE;
 }
@@ -554,6 +556,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
 				 250, 170, 70, 30, hwnd, 
 				 (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+      SetFocus (hwnEdit);
       break;
       
     case WM_DESTROY :
@@ -671,16 +674,17 @@ STRING title	;
          TranslateMessage (&msg) ;
          DispatchMessage (&msg) ;
 #        endif /* 0 */
+		 /*@@@@@@@@@@@@@@@@@@@@*/
          frame = GetFrameNumber (msg.hwnd);
-         if (frame != -1) {
+         /* if (frame != -1) {
             if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &msg)) {
                TranslateMessage (&msg) ;
                DispatchMessage (&msg) ;
 			}
-		 } else {
+		 } else { */
                 TranslateMessage (&msg) ;
                 DispatchMessage (&msg) ;
-		 }
+		 /* } */
    }
    return TRUE;
 }

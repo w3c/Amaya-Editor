@@ -117,7 +117,7 @@ ThotBool            natureChoice;
 #endif /* __STDC__ */
 {
    int                 menu;
-   CHAR_T                bufMenuB[MAX_TXT_LEN];
+   CHAR_T              bufMenuB[MAX_TXT_LEN];
    STRING              src;
    STRING              dest;
    int                 k, l, nbitem, length;

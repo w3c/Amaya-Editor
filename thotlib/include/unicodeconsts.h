@@ -186,7 +186,6 @@
 
 #   define _ISO_ID1_                       L"iso_8859_1"
 
-#   define _ReadMODE_                      L"r" 
 #   define _RBinaryMODE_                   L"rb"
 #   define _WriteMODE_                     L"w" 
 #   define _WBinaryMODE_                   L"wb" 
@@ -382,7 +381,6 @@
 
 #      define _ISO_ID1_                       "iso_8859_1"
 
-#      define _ReadMODE_                      "r" 
 #      define _RBinaryMODE_                   "rb"
 #      define _RW_MODE_                       "rw"
 #      define _WBinaryMODE_                   "wb" 

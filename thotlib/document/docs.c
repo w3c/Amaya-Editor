@@ -307,7 +307,7 @@ STRING              fileName;
 	 {
 	   len = ustrlen (fileName);
 	   if (len > 4)
-	     if (ustrcmp (fileName + len - 4, ".PIV") == 0)
+	     if (ustrcmp (fileName + len - 4, TEXT(".PIV")) == 0)
 	       fileName[len - 4] = EOS;
 	   if (fileName[0] != URL_DIR_SEP)
 	     {
@@ -444,12 +444,12 @@ STRING              fileName;
    Au retour pDoc est NIL si le document n'a pas ete cree. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NewDocument (PtrDocument * pDoc, PtrBuffer SSchemaName, Name docName, PathBuffer directory)
+void                NewDocument (PtrDocument * pDoc, PtrBuffer SSchemaName, char* docName, PathBuffer directory)
 #else  /* __STDC__ */
 void                NewDocument (pDoc, SSchemaName, docName, directory)
 PtrDocument        *pDoc;
 PtrBuffer           SSchemaName;
-Name                docName;
+char*               docName;
 PathBuffer          directory;
 
 #endif /* __STDC__ */

@@ -1389,11 +1389,11 @@ void                  TtaMainLoop ()
       TtaHandleOneEvent (&ev);
 #else  /* !_WINDOWS */
       if (GetMessage (&msg, NULL, 0, 0)) {			
-         frame = GetFrameNumber (msg.hwnd);
+         /* frame = GetFrameNumber (msg.hwnd);
          if (frame != -1) {
             if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &msg))
                TtaHandleOneWindowEvent (&msg);
-		 } else
+		 } else */
                TtaHandleOneWindowEvent (&msg);
 	}
 #endif /* _WINDOWS */

@@ -194,7 +194,7 @@ typedef enum
 	LtPolyLine
 } LeafType;
 
-typedef CHAR_T    Buffer[THOT_MAX_CHAR];
+typedef char    Buffer[THOT_MAX_CHAR];
 
 /* a control point in a polyline (polygon or spline) */
 typedef struct _PolyLinePoint
@@ -206,7 +206,7 @@ typedef struct _PolyLinePoint
 #define MAX_POINT_POLY	THOT_MAX_CHAR / sizeof(PolyLinePoint)
 
 #ifndef AMAYA_H__	
-typedef char     PathBuffer[MAX_PATH];
+typedef char PathBuffer[MAX_PATH];
 #endif 
 
 /* Description of a text buffer */

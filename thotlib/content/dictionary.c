@@ -63,7 +63,7 @@ static void           LoadAlphabet ()
   ustrcat (alphaName, DIR_STR);
   ustrcat (alphaName, TEXT("alphabet"));
   
-  if ((falpha = ufopen (alphaName, _ReadMODE_)) != NULL)
+  if ((falpha = ufopen (alphaName, TEXT("r"))) != NULL)
     {
       for (i = 0; i < 256; i++)
 	Code[i] = (UCHAR_T) 100;
@@ -426,10 +426,10 @@ ThotBool            treated;
 ThotBool            toTreat;
 #endif /* __STDC__ */
 {
-  CHAR_T                tempbuffer[THOT_MAX_CHAR];
+  CHAR_T              tempbuffer[THOT_MAX_CHAR];
   ThotBool            new = FALSE;
   ThotBool            ret;
-  FILE               *dictFile;
+  FILE*               dictFile;
   PtrDict             pdict;
   int                 i, im, ic;
 
@@ -467,7 +467,7 @@ ThotBool            toTreat;
       if (treated == TRUE)
 	dictFile = TtaReadOpen (tempbuffer);
       else
-	dictFile = ufopen (tempbuffer, _ReadMODE_);
+	dictFile = ufopen (tempbuffer, TEXT("r"));
       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_DICO), dictName);
     }
   

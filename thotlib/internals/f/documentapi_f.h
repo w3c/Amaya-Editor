@@ -17,8 +17,8 @@ extern void UnloadTree ( Document document );
 extern void UnloadDocument ( PtrDocument * pDoc );
 extern void TtaCloseDocument ( Document document );
 extern void TtaSetDocumentPath ( STRING path );
-extern ThotBool TtaCheckPath ( PathBuffer path );
-extern ThotBool TtaIsInDocumentPath ( STRING directory );
+extern ThotBool TtaCheckPath ( char* path );
+extern ThotBool TtaIsInDocumentPath ( char* directory );
 extern void TtaAppendDocumentPath ( STRING directory );
 extern void TtaSetSchemaPath ( STRING path );
 extern SSchema TtaNewNature ( SSchema schema,

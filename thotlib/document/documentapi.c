@@ -405,11 +405,11 @@ STRING              path;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaCheckPath (PathBuffer path)
+ThotBool            TtaCheckPath (char* path)
 
 #else  /* __STDC__ */
 ThotBool            TtaCheckPath (path)
-PathBuffer          path;
+char*               path;
 
 #endif /* __STDC__ */
 
@@ -451,11 +451,11 @@ PathBuffer          path;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaIsInDocumentPath (STRING directory)
+ThotBool            TtaIsInDocumentPath (PathBuffer directory)
 
 #else  /* __STDC__ */
 ThotBool            TtaIsInDocumentPath (directory)
-STRING              directory;
+char*               directory;
 
 #endif /* __STDC__ */
 

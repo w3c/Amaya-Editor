@@ -79,7 +79,7 @@ extern void         TtaRemoveLanguage (Language language);
    Return value:
    identifier of that language or 0 if the language is unknown.
   ----------------------------------------------------------------------*/
-extern Language     TtaGetLanguageIdFromName (STRING languageName);
+extern Language     TtaGetLanguageIdFromName (char* languageName);
 
 /*----------------------------------------------------------------------
    TtaGetVarLANG

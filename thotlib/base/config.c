@@ -292,16 +292,16 @@ char*               word2;
 static void         namesOfDocType (char* fname, char** doctypeOrig, char** doctypeTrans, int *typ, ThotBool * import)
 #else  /* __STDC__ */
 static void         namesOfDocType (fname, doctypeOrig, doctypeTrans, typ, import)
-char*               fname;
+PathBuffer          fname;
 char**              doctypeOrig;
 char**              doctypeTrans;
-int                *typ;
-ThotBool           *import;
+int*                typ;
+ThotBool*           import;
 
 #endif /* __STDC__ */
 {
    int                 i, l, point, res;
-   FILE               *file;
+   FILE*               file;
    char                line[MAX_TXT_LEN];
    char                text[MAX_TXT_LEN];
    char                word[MAX_TXT_LEN];
@@ -314,7 +314,7 @@ ThotBool           *import;
    *import = FALSE;
 
    if (fname && strchr (fname, '/'))
-	  URL_DIR_SEP = TEXT('/');
+	  URL_DIR_SEP = '/';
    else 
 	   URL_DIR_SEP = DIR_SEP;
 
@@ -373,7 +373,7 @@ ThotBool           *import;
       /* ignore les fichiers dont le nom commence par "-" */
       return;
    l = strlen (&fname[i]) + 1;
-   *doctypeOrig = (char*) TtaGetMemory (l);
+   *doctypeOrig =	(char*) TtaGetMemory (l);
    if (point != 0)
       fname[point] = EOS;
    strcpy (*doctypeOrig, &fname[i]);
@@ -463,7 +463,7 @@ char*               aSchemaPath;
 #define NAME_LENGTH     100
 #define MAX_NAME         80
 #define SELECTOR_NB_ITEMS 5
-   char                fname[4 * NAME_LENGTH];
+   PathBuffer          fname;
    char*               suffix;
    char*               nameOrig;
    char*               nameTrans;
@@ -847,7 +847,7 @@ char*               BufMenu;
 
 {
    int                 nbitem, len, indmenu;
-   FILE               *file;
+   FILE*               file;
    ThotBool            stop;
    char                line[MAX_TXT_LEN];
    char                text[MAX_TXT_LEN];
@@ -2146,7 +2146,7 @@ int                 LgMax;
    int                 lgname;
    int                 max;
    char                name[80];
-   char*              ptr;
+   char*               ptr;
 
    nbentree = 0;
    if (BufMenu != NULL)

@@ -43,9 +43,9 @@ extern void TtaExtractName ( char* text,
                              char* aName );
 extern void MakeCompleteName ( char* fname,
                                char* fext,
-                               PathBuffer directory_list,
-                               PathBuffer completeName,
-                               int *length );
+                               char* directory_list,
+                               char* completeName,
+                               int* length );
 extern void GetPictureFileName ( STRING name,
                                  STRING fileName );
 extern void FindCompleteName ( STRING fileName,

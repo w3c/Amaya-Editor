@@ -45,17 +45,17 @@
    procedure commence par creer le descripteur.            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NewPictInfo (PtrAbstractBox pAb, STRING filename, int imagetype)
+void                NewPictInfo (PtrAbstractBox pAb, char* filename, int imagetype)
 #else  /* __STDC__ */
 void                NewPictInfo (pAb, filename, imagetype)
 PtrAbstractBox      pAb;
-STRING              filename;
+char*               filename;
 int                 imagetype;
 #endif /* __STDC__ */
 {
   PtrTextBuffer       pBuffer;
   PictInfo           *image = NULL;
-  STRING              ptr = NULL;
+  char*               ptr = NULL;
   int                 picPresent, len;
 
   if (imagetype == XBM_FORMAT || imagetype == XPM_FORMAT)
@@ -133,13 +133,13 @@ int                 imagetype;
 	}
       else
 	{
-	  len = ustrlen (filename) + 1;
-	  if (ptr == NULL || len > (int) ustrlen (ptr) + 1)
+	  len = strlen (filename) + 1;
+	  if (ptr == NULL || len > (int) strlen (ptr) + 1)
 	    {
 	      TtaFreeMemory (ptr);
-	      ptr = TtaAllocString (len);
+	      ptr = TtaGetMemory (len);
 	    }
-	  ustrcpy (ptr, filename);
+	   strcpy (ptr, filename);
 	}
      }
 

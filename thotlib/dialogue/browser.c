@@ -84,7 +84,7 @@ STRING              word;
 ThotBool            TtaIsSuffixFileIn (char* aDirectory, char* suffix)
 #else  /* __STDC__ */
 ThotBool            TtaIsSuffixFileIn (aDirectory, suffix)
-char*               aDirectory;
+PathBuffer          aDirectory;
 char*               suffix;
 
 #endif /* __STDC__ */

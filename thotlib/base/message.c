@@ -169,7 +169,7 @@ int                 msgNumber;
    fileName[2] = TEXT('-');
    ustrcpy (&fileName[3], msgName);
    SearchFile (fileName, 2, pBuffer);
-   file = ufopen (pBuffer, _ReadMODE_);
+   file = fopen (pBuffer, "r");
    if (file == NULL)
      {
 	printf ("WARNING: cannot open file %s\n", pBuffer);

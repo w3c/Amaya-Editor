@@ -42,7 +42,7 @@ extern void         TtaListDirectory (STRING aDirectory, int formRef, STRING dir
    returns TRUE if the directory contains any file with the requested
    suffix.
   ----------------------------------------------------------------------*/
-extern ThotBool     TtaIsSuffixFileIn (char *aDirectory, char *suffix);
+extern ThotBool     TtaIsSuffixFileIn (char* aDirectory, char *suffix);
 
 #else  /* __STDC__ */
 

@@ -199,7 +199,7 @@ extern ThotBool     TtaCheckPath (char* path );
    directory: the new directory name.
 
   ----------------------------------------------------------------------*/
-extern ThotBool     TtaIsInDocumentPath (STRING aDirectory);
+extern ThotBool     TtaIsInDocumentPath (char* aDirectory);
 
 /*----------------------------------------------------------------------
    TtaAppendDocumentPath

@@ -249,10 +249,10 @@ STRING              name;
    TtaReadOpen opens a file for reading.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-BinFile             TtaReadOpen (CONST char* filename)
+BinFile             TtaReadOpen (CONST PathBuffer filename)
 #else  /* __STDC__ */
 BinFile             TtaReadOpen (filename)
-CONST char*         filename;
+CONST PathBuffer    filename;
 
 #endif /* __STDC__ */
 {
@@ -260,7 +260,7 @@ CONST char*         filename;
 #     ifdef _WINDOWS
       return ufopen (filename, _RBinaryMODE_);
 #     else
-      return ufopen (filename, _ReadMODE_);
+      return fopen (filename, "r");
 #     endif
    else
 	   return (BinFile) NULL;
@@ -579,14 +579,14 @@ char*               aName;
    (MakeCompleteName est utilise pour la lecture)          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MakeCompleteName (char* fname, char* fext, PathBuffer directory_list, PathBuffer completeName, int *length)
+void                MakeCompleteName (char* fname, char* fext, char* directory_list, char* completeName, int *length)
 #else  /* __STDC__ */
 void                MakeCompleteName (fname, fext, directory_list, completeName, length)
 char*               fname;
 char*               fext;
-PathBuffer          directory_list;
-PathBuffer          completeName;
-int                *length;
+char*               directory_list;
+char*               completeName;
+int*                length;
 
 #endif /* __STDC__ */
 {

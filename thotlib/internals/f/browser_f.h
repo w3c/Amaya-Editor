@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern void ExtractFileName ( STRING word );
-extern ThotBool TtaIsSuffixFileIn ( STRING aDirectory,
-                                    STRING suffix );
+extern ThotBool TtaIsSuffixFileIn ( PathBuffer aDirectory,
+                                    char* suffix );
 extern void TtaListDirectory ( STRING aDirectory,
                                int formRef,
                                STRING dirTitle,
