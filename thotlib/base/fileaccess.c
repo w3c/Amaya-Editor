@@ -55,9 +55,10 @@ char         *bval;
    if (fread (bval, sizeof (char), 1, file) == 0)
      {
 	*bval = '\0';
-	return FALSE;
+	return (FALSE);
      }
-   return TRUE;
+   else
+     return (TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -77,10 +78,13 @@ boolean            *bval;
    if (!TtaReadByte (file, &b1))
      {
 	*bval = FALSE;
-	return FALSE;
+	return (FALSE);
      }
-   *bval = (b1 == 1);
-   return TRUE;
+   else
+     {
+       *bval = (b1 == 1);
+       return (TRUE);
+     }
 }
 
 
@@ -96,23 +100,28 @@ int                *sval;
 
 #endif /* __STDC__ */
 {
-char      car;
+  char      car;
  
-   *sval = 0;
- 
-   if (!TtaReadByte (file, &car)) {
+  *sval = 0; 
+  if (!TtaReadByte (file, &car))
+    {
       *sval = 0;
-      return FALSE;
-   }
-   *sval |= ((((int) car) & LMASK) << DECAL_1);
- 
-   if (!TtaReadByte (file, &car)) {
-      *sval = 0;
-      return FALSE;
-   }
-   *sval |= (((int) car) & LMASK);
-
-   return TRUE;
+      return (FALSE);
+    }
+  else
+    {
+      *sval |= ((((int) car) & LMASK) << DECAL_1);
+      if (!TtaReadByte (file, &car))
+	{
+	  *sval = 0;
+	  return (FALSE);
+	}
+      else
+	{
+	  *sval |= (((int) car) & LMASK);
+	  return (TRUE);
+	}
+    }
 }
 
 
@@ -128,25 +137,30 @@ int                *sval;
 
 #endif /* __STDC__ */
 {
-char      car;
+  char      car;
  
-   *sval = 0;
- 
-   if (!TtaReadByte (file, &car)) {
+  *sval = 0;
+  if (!TtaReadByte (file, &car))
+    {
       *sval = 0;
-      return FALSE;
-   };
-   if (car < 0)
-      *sval = SIGNED_SHORT_MASK;
-   *sval |= ((((int) car) & LMASK) << DECAL_1);
- 
-   if (!TtaReadByte (file, &car)) {
-      *sval = 0;
-      return FALSE;
-   };
-   *sval |= (((int) car) & LMASK);
-
-   return TRUE;
+      return (FALSE);
+    }
+  else
+    {
+      if ((int)car < 0)
+	*sval = SIGNED_SHORT_MASK;
+      *sval |= ((((int) car) & LMASK) << DECAL_1);
+      if (!TtaReadByte (file, &car))
+	{
+	  *sval = 0;
+	  return (FALSE);
+	}
+      else
+	{
+	  *sval |= (((int) car) & LMASK);
+	  return (TRUE);
+	}
+    }
 }
 
 
@@ -162,35 +176,43 @@ int                *sval;
 
 #endif /* __STDC__ */
 {
-char      car;
+  char      car;
  
-   *sval = 0;
- 
-   if (!TtaReadByte (file, &car)) {
-      *sval = 0;
-      return FALSE;
-   };
-   *sval |= ((((int) car) & LMASK) << DECAL_3);
- 
-   if (!TtaReadByte (file, &car)) {
-      *sval = 0;
-      return FALSE;
-   };
-   *sval |= ((((int) car) & LMASK) << DECAL_2);
- 
-   if (!TtaReadByte (file, &car)) {
-      *sval = 0;
-      return FALSE;
-   };
-   *sval |= ((((int) car) & LMASK) << DECAL_1);
- 
-   if (!TtaReadByte (file, &car)) {
-      *sval = 0;
-      return FALSE;
-   };
-   *sval |= (((int) car) & LMASK);
-
-   return TRUE;
+  *sval = 0;
+   if (!TtaReadByte (file, &car))
+     {
+       *sval = 0;
+       return FALSE;
+     }
+   else
+     {
+       *sval |= ((((int) car) & LMASK) << DECAL_3);
+       if (!TtaReadByte (file, &car))
+	 {
+	   *sval = 0;
+	   return FALSE;
+	 }
+       else
+	 {
+	   *sval |= ((((int) car) & LMASK) << DECAL_2);
+	   if (!TtaReadByte (file, &car))
+	     {
+	       *sval = 0;
+	       return FALSE;
+	     }
+	   else
+	     {
+	       *sval |= ((((int) car) & LMASK) << DECAL_1);
+	       if (!TtaReadByte (file, &car))
+		 {
+		   *sval = 0;
+		   return FALSE;
+		 }
+	     }
+	   *sval |= (((int) car) & LMASK);
+	   return TRUE;
+	 }
+     }
 }
 
 
