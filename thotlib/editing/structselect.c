@@ -898,7 +898,7 @@ void          ShowSelection (PtrAbstractBox pRootAb, ThotBool showBegin)
 	    For ghost elements or elements with the exception
 	    HighlightChildren, the selection is transmitted to children
 	  */
-	  while (pAb != NULL &&
+	  while (pAb && pAb->AbFirstEnclosed &&
 		 ((pAb->AbBox && pAb->AbBox->BxType == BoGhost) ||
 		  (FrameTable[frame].FrView == 1 &&
 		   TypeHasException (ExcHighlightChildren,
@@ -1065,7 +1065,7 @@ static void   DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist
 	For ghost elements or elements with the exception
 	HighlightChildren, the selection is transmitted to children
       */
-      while (pAb != NULL &&
+      while (pAb && pAb->AbFirstEnclosed &&
 	     ((pAb->AbBox && pAb->AbBox->BxType == BoGhost) ||
 	      (FrameTable[frame].FrView == 1 &&
 	       TypeHasException (ExcHighlightChildren,
@@ -1994,7 +1994,7 @@ static void ReverseSelect (PtrElement pEl, PtrDocument pDoc, ThotBool highlight)
 	    For ghost elements or elements with the exception
 	    HighlightChildren, the selection is transmitted to children
 	  */
-	  while (pAb != NULL &&
+	  while (pAb && pAb->AbFirstEnclosed &&
 		 ((pAb->AbBox && pAb->AbBox->BxType == BoGhost) ||
 		  (FrameTable[frame].FrView == 1 &&
 		   TypeHasException (ExcHighlightChildren,
