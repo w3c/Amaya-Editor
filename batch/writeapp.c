@@ -204,7 +204,7 @@ STRING              menuName;
 	if (subitem->AppItemActionName == NULL)
 	   fprintf (AppFile, ", NULL, TEXT('%c'));\n", subitem->AppItemType);
 	else
-	   fprintf (AppFile, ", TEXT(\"%s\"), TEXT('%c'));\n", subitem->AppItemActionName, subitem->AppItemType);
+	   fprintf (AppFile, ", \"%s\", '%c');\n", subitem->AppItemActionName, subitem->AppItemType);
 
 	/* item suivant */
 	subitem = subitem->AppNextItem;

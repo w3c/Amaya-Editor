@@ -2938,7 +2938,7 @@ char              **argv;
       else {
            /* provide the real source file */
            TtaFileUnlink (fname);
-           pwd = TtaGetEnvString (TEXT("PWD"));
+           pwd = TtaGetEnvString ("PWD");
 #          ifndef _WINDOWS
            i = ustrlen (cmd);
 #          endif /* _WINDOWS */
