@@ -1079,7 +1079,7 @@ void UpdateAttrMenu (PtrDocument pDoc)
 		  EventMenu[frame - 1] = 0;
 		}
 	      TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu], NULL,
-			      nbItemAttr, bufMenuAttr, 0, NULL);
+			      nbItemAttr, bufMenuAttr, NULL, 0);
 	      if (nbEvent != 0)
 		{
 		  /* there is a submenu of event attributes */

@@ -536,9 +536,9 @@ ThotBool TtaClosePage( int window_id, int page_id )
   if (p_window && page_id >= 0)
     return p_window->ClosePage( page_id );
   else
-    return false;
+    return FALSE;
 #else
-  return false;
+  return FALSE;
 #endif /* #ifdef _WX */
 }
 
