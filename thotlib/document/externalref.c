@@ -84,12 +84,12 @@ BinFile             file;
 	    case C_PIV_LABEL:
 	       j = 0;
 	       do
-		  {
+		 {
 		    BIOreadByte (file, &label[j]);
 		    /* drop last bytes if the label is too long */
 		    if (j < MAX_LABEL_LEN)
-			j++;
-		  }
+		       j++;
+		 }
 	       while (label[j - 1] != '\0');
 	       break;
 	    default:
@@ -235,12 +235,12 @@ void                LoadREFfile (BinFile file, PtrChangedReferredEl * Anchor)
 #else  /* __STDC__ */
 void                LoadREFfile (file, Anchor)
 BinFile             file;
-PtrChangedReferredEl     *Anchor;
+PtrChangedReferredEl *Anchor;
 
 #endif /* __STDC__ */
 
 {
-   PtrChangedReferredEl      pChnRef, pPrevChnRef;
+   PtrChangedReferredEl pChnRef, pPrevChnRef;
    char                c;
    boolean             error;
    LabelString         label;
@@ -324,13 +324,13 @@ void                UpdateREFdescriptors (PtrChangedReferredEl Anchor, PtrDocume
 
 #else  /* __STDC__ */
 void                UpdateREFdescriptors (Anchor, pDoc)
-PtrChangedReferredEl      Anchor;
+PtrChangedReferredEl Anchor;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrChangedReferredEl      pChnRef, pNextChnRef;
+   PtrChangedReferredEl pChnRef, pNextChnRef;
    PtrReferredDescr    pRefD;
    PtrReference        pRef, pRefSuiv;
    boolean             found;

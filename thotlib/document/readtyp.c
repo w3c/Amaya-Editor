@@ -384,7 +384,7 @@ int                 att;
 PtrRTypoAttribut   *pA;
 PtrRTypoAttribut   *nextA;
 PtrRegleTypo       *nextR;
-PtrSSchema       *SS;
+PtrSSchema         *SS;
 
 #endif /* __STDC__ */
 
@@ -453,8 +453,8 @@ PtrSchTypo          RdSchTypo (Name fname, PtrSSchema SS)
 
 #else  /* __STDC__ */
 PtrSchTypo          RdSchTypo (fname, SS)
-Name                 fname;
-PtrSSchema        SS;
+Name                fname;
+PtrSSchema          SS;
 
 #endif /* __STDC__ */
 
@@ -484,7 +484,7 @@ PtrSSchema        SS;
      {
 	strncpy (texte, fname, MAX_PATH);
 	strcat (texte, ".TYP");
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_MISSING_FILE), texte);
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), texte);
      }
    else
      {
@@ -509,7 +509,7 @@ PtrSSchema        SS;
 	  {
 	     TtaFreeMemory (pSchT);
 	     /* Schemas incompatibles */
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_OLD_SCH_TO_RECOMP), texte);
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_OLD_SCH_TO_RECOMP), texte);
 	     erreurTypo (1);
 	  }
 	else
@@ -554,7 +554,7 @@ PtrSSchema        SS;
      }
    if (erreurSchema)
      {
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_SCHEMA_NOT_FIND), fname);
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND), fname);
 	return NULL;
      }
    else

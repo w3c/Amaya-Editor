@@ -4,11 +4,11 @@
 
 /*
 
-  This module handles document translation.
-  It travels the abstract trees of a document and produces an
-  external representation according to a set of translation schemas.
+   This module handles document translation.
+   It travels the abstract trees of a document and produces an
+   external representation according to a set of translation schemas.
 
-*/
+ */
 
 #include "thot_sys.h"
 #include "message.h"
@@ -39,9 +39,9 @@
 typedef struct _AnOutputFile
   {
      char                OfFileName[MAX_PATH];	/* file name */
-     FILE               *OfFileDesc;		/* file descriptor */
+     FILE               *OfFileDesc;	/* file descriptor */
      int                 OfBufferLen;	/* current length of output buffer */
-     char                OfBuffer[MAX_BUFFER_LEN]; /* output buffer */
+     char                OfBuffer[MAX_BUFFER_LEN];	/* output buffer */
   }
 AnOutputFile;
 
@@ -49,7 +49,8 @@ AnOutputFile;
 static int          NOutputFiles = 0;
 
 /* the output files */
-static AnOutputFile   OutputFile[MAX_OUTPUT_FILES];
+static AnOutputFile OutputFile[MAX_OUTPUT_FILES];
+
 	/* entry 0: stdout    */
 	/* entry 1: main output file */
 	/* other entries: secondary output files */
@@ -117,8 +118,8 @@ PtrDocument         pDoc;
 	OutputFile[NOutputFiles].OfFileDesc = fopen (fName, "w");
 	if (OutputFile[NOutputFiles].OfFileDesc == NULL)
 	  {
-	     TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, TMSG_CREATE_FILE_IMP),
-					    fName);
+	     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP),
+				fName);
 	     return 0;
 	  }
 	else
@@ -143,7 +144,7 @@ PtrDocument         pDoc;
 
 #ifdef __STDC__
 static void         PutChar (char c, int fileNum, char *outBuffer, PtrDocument pDoc,
-			  boolean lineBreak)
+			     boolean lineBreak)
 
 #else  /* __STDC__ */
 static void         PutChar (c, fileNum, outBuffer, pDoc, lineBreak)
@@ -327,7 +328,7 @@ boolean             lineBreak;
 
 #ifdef __STDC__
 static void         TranslateLeaf (PtrElement pEl, boolean transChar, boolean lineBreak,
-				    int fileNum, PtrDocument pDoc)
+				   int fileNum, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 static void         TranslateLeaf (pEl, transChar, lineBreak, fileNum, pDoc)
@@ -340,16 +341,16 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   PtrTSchema        pTSch;
-   PtrSSchema        pSS;
-   PtrTextBuffer     pBufT, pNextBufT, pPrevBufT;
-   char              cs, c;
-   int               i, j, k, b, ft, lt;
-   boolean           continu, equal, stop, transExist;
-   PtrElement        pAncestor;
-   int               textTransBegin, TextTransEnd;
-   AlphabetTransl    *pTransAlph;
-   StringTransl      *pTrans;
+   PtrTSchema          pTSch;
+   PtrSSchema          pSS;
+   PtrTextBuffer       pBufT, pNextBufT, pPrevBufT;
+   char                cs, c;
+   int                 i, j, k, b, ft, lt;
+   boolean             continu, equal, stop, transExist;
+   PtrElement          pAncestor;
+   int                 textTransBegin, TextTransEnd;
+   AlphabetTransl     *pTransAlph;
+   StringTransl       *pTrans;
 
    textTransBegin = 0;
    TextTransEnd = 0;
@@ -428,7 +429,7 @@ PtrDocument         pDoc;
 			 {
 			    i = 0;
 			    while (pBufT->BuContent[i] != '\0')
-				 PutChar (pBufT->BuContent[i++], fileNum, NULL, pDoc, lineBreak);
+			       PutChar (pBufT->BuContent[i++], fileNum, NULL, pDoc, lineBreak);
 			    pBufT = pBufT->BuNext;
 			 }
 		    else if (pTSch != NULL)
@@ -438,7 +439,7 @@ PtrDocument         pDoc;
 			 b = 0;
 			 /* indice dans le buffer du caractere a traduire */
 			 i = 1;
-			 /* indice de la 1ere regle de traduction a appliquer*/
+			 /* indice de la 1ere regle de traduction a appliquer */
 			 ft = textTransBegin;
 			 /* indice de la derniere regle de traduction a appliquer */
 			 lt = TextTransEnd;
@@ -495,7 +496,7 @@ PtrDocument         pDoc;
 						do
 						  {
 						     if (cs != '\0')
-							  cs = pNextBufT->BuContent[k++];
+							cs = pNextBufT->BuContent[k++];
 						     if (cs == '\0')
 							/* passe au buffer suivant du meme texte */
 							if (pNextBufT->BuNext != NULL)
@@ -510,7 +511,7 @@ PtrDocument         pDoc;
 						       {
 							  continu = FALSE;
 							  if (cs == pTSch->TsCharTransl[ft].
-							    StSource[j])
+							      StSource[j])
 							    {
 							       stop = FALSE;
 							       continu = TRUE;
@@ -593,14 +594,14 @@ PtrDocument         pDoc;
 					i = pBufT->BuLength + i - b;
 				     }
 				   PutChar (pBufT->BuContent[i - 1], fileNum, NULL, pDoc,
-					 lineBreak);
+					    lineBreak);
 				   b = 0;
 				   ft = textTransBegin;
 				   lt = TextTransEnd;
 				}
 			      /* cherche le caractere suivant a traiter */
 			      if (c != '\0')
-				   c = pBufT->BuContent[i++];
+				 c = pBufT->BuContent[i++];
 			      if (c == '\0')
 				 /* passe au buffer suivant du meme element de texte */
 				 if (pBufT->BuNext != NULL)
@@ -617,7 +618,7 @@ PtrDocument         pDoc;
 			 /* on sort le debut de la sequence. */
 			 for (i = 0; i <= b - 1; i++)
 			    PutChar (pTSch->TsCharTransl[ft - 1].StSource[i], fileNum, NULL,
-				  pDoc, lineBreak);
+				     pDoc, lineBreak);
 		      }
 		 }
 	       break;
@@ -713,7 +714,7 @@ PtrDocument         pDoc;
 			      {
 				 i = 0;
 				 do
-				      pTSch->TsBuffer[b - 1][j++] = pBufT->BuContent[i++];
+				    pTSch->TsBuffer[b - 1][j++] = pBufT->BuContent[i++];
 				 while (pBufT->BuContent[i - 1] != '\0' &&
 					b < MAX_TRANSL_BUFFER_LEN);
 				 pBufT = pBufT->BuNext;
@@ -744,7 +745,7 @@ static char         PresRuleValue (PtrPRule pPRule)
 
 #else  /* __STDC__ */
 static char         PresRuleValue (pPRule)
-PtrPRule        pPRule;
+PtrPRule            pPRule;
 
 #endif /* __STDC__ */
 
@@ -867,7 +868,7 @@ PtrElement          pEl;
 
 #ifdef __STDC__
 static boolean      ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
-				    PtrAttribute pAttr, PtrDocument pDoc)
+				     PtrAttribute pAttr, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 static boolean      ConditionIsTrue (pBlock, pEl, pAttr, pDoc)
@@ -882,9 +883,9 @@ PtrDocument         pDoc;
    PtrAttribute        pAttrEl;
    PtrSSchema          pSS, pRefSS;
    PtrElement          pEl1, pElem, pSibling;
-   SRule               *pSRule;
+   SRule              *pSRule;
    PtrPRule            pPRule;
-   TranslCondition     *Cond;
+   TranslCondition    *Cond;
    PtrReference        pRef;
    DocumentIdentifier  docIdent;
    PtrDocument         pExtDoc;
@@ -911,7 +912,7 @@ PtrDocument         pDoc;
 	       {
 		  pElem = NULL;
 		  if (pAttr != NULL &&
-		  pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType ==
+		      pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType ==
 		      AtReferenceAttr)
 		     /* c'est un attribut reference */
 		     pRef = pAttr->AeAttrReference;
@@ -946,14 +947,14 @@ PtrDocument         pDoc;
 			       /* le type de l'ascendant est defini dans le meme schema de
 			          structure que l'element traite' */
 			       typeOK = EquivalentSRules (Cond->TcAscendType, pEl->ElStructSchema,
-						    pElem->ElTypeNumber, pElem->ElStructSchema, pElem->ElParent);
+							  pElem->ElTypeNumber, pElem->ElStructSchema, pElem->ElParent);
 			    else
 			       /* le type de l'ascendant est defini dans un autre schema */
 			       if (strcmp (Cond->TcAscendNature,
 					pElem->ElStructSchema->SsName) == 0)
 			       typeOK = EquivalentSRules (Cond->TcAscendType,
-					  pElem->ElStructSchema, pElem->ElTypeNumber,
-					 pElem->ElStructSchema, pElem->ElParent);
+				 pElem->ElStructSchema, pElem->ElTypeNumber,
+				    pElem->ElStructSchema, pElem->ElParent);
 			    pElem = pElem->ElParent;
 			 }
 		    }
@@ -966,7 +967,7 @@ PtrDocument         pDoc;
 			      case TcondFirst:
 				 pSibling = pElem->ElPrevious;
 				 /* on saute les marques de page precedentes */
-				 BackSkipPageBreak(&pSibling);
+				 BackSkipPageBreak (&pSibling);
 				 ret = (pSibling == NULL);
 				 break;
 
@@ -1059,7 +1060,7 @@ PtrDocument         pDoc;
 									  && EquivalentSRules (pRefSS->SsAttribute[i - 1].AttrTypeRef, pRefSS, pEl1->ElTypeNumber, pRefSS, pEl1->ElParent));
 						  }
 						while (!possibleRef &&
-						      i < pRefSS->SsNAttributes);
+						 i < pRefSS->SsNAttributes);
 					     }
 					   if (!possibleRef)
 					      /* l'element ne peut pas etre designe' par une reference
@@ -1123,12 +1124,12 @@ PtrDocument         pDoc;
 				 else
 				   {
 				      if (Cond->TcCondition == TcondFirstWithin)
-					 {
-					 pSibling = pElem->ElPrevious;
-					 /* on saute les marques de page precedentes */
-					 BackSkipPageBreak(&pSibling);
-					 ret = (pSibling == NULL);
-					 }
+					{
+					   pSibling = pElem->ElPrevious;
+					   /* on saute les marques de page precedentes */
+					   BackSkipPageBreak (&pSibling);
+					   ret = (pSibling == NULL);
+					}
 				      if (ret)
 					{
 					   if (Cond->TcElemNature[0] == '\0')
@@ -1148,10 +1149,10 @@ PtrDocument         pDoc;
 						{
 						   if (pSS != NULL)
 						      typeOK = EquivalentSRules (Cond->TcElemType, pSS,
-									   pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl1->ElParent);
+										 pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl1->ElParent);
 						   else if (strcmp (Cond->TcElemNature, pEl1->ElStructSchema->SsName) == 0)
 						      typeOK = EquivalentSRules (Cond->TcElemType,
-									   pEl1->ElStructSchema, pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl1->ElParent);
+										 pEl1->ElStructSchema, pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl1->ElParent);
 						   else
 						      typeOK = FALSE;
 						   if (typeOK)
@@ -1169,15 +1170,15 @@ PtrDocument         pDoc;
 						{
 						   if (pSS != NULL)
 						      typeOK = EquivalentSRules (Cond->TcElemType, pSS,
-									   pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl1->ElParent);
+										 pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl1->ElParent);
 						   else if (strcmp (Cond->TcElemNature, pEl1->ElStructSchema->SsName) == 0)
 						      typeOK = EquivalentSRules (Cond->TcElemType,
-									   pEl1->ElStructSchema, pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl1->ElParent);
+										 pEl1->ElStructSchema, pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl1->ElParent);
 						   else
 						      typeOK = FALSE;
 						   if (typeOK)
 						      i++;
-						   pEl1 = pEl1->ElParent;		/* passe a l'element ascendant */
+						   pEl1 = pEl1->ElParent;	/* passe a l'element ascendant */
 						}
 					   if (Cond->TcAscendRel == CondEquals)
 					      ret = i == Cond->TcAscendLevel;
@@ -1197,12 +1198,12 @@ PtrDocument         pDoc;
 				 pEl1 = pElem;
 				 while (pEl1 != NULL && !ret)
 				   {
-				      pAttrEl = pEl1->ElFirstAttr;		/* 1er attribut de l'element */
+				      pAttrEl = pEl1->ElFirstAttr;	/* 1er attribut de l'element */
 				      /* parcourt les attributs de l'element */
 				      while (pAttrEl != NULL && !ret)
 					{
 					   if (pAttrEl->AeAttrSSchema == pSS &&
-					   pAttrEl->AeAttrNum == Cond->TcAttr)
+					       pAttrEl->AeAttrNum == Cond->TcAttr)
 					      /* c'est l'attribut cherche', on teste sa valeur */
 					      switch (pSS->SsAttribute[pAttrEl->AeAttrNum - 1].AttrType)
 						    {
@@ -1232,7 +1233,7 @@ PtrDocument         pDoc;
 					}
 				      if (Cond->TcAscendRelLevel == -1)
 					 /* on peut poursuivre la recherche parmi les ascendants */
-					 pEl1 = pEl1->ElParent;	/* passe a l'element ascendant */
+					 pEl1 = pEl1->ElParent;		/* passe a l'element ascendant */
 				      else
 					 /* la recherche de l'attribut ne porte que sur l'element
 					    lui-meme. On arrete la. */
@@ -1250,8 +1251,8 @@ PtrDocument         pDoc;
 				      if (pPRule->PrType == Cond->TcAttr)
 					 /* c'est la presentation cherchee, on teste sa valeur */
 					 if (pPRule->PrType == PtSize || pPRule->PrType == PtIndent ||
-					     pPRule->PrType == PtLineSpacing ||
-					   pPRule->PrType == PtLineWeight)
+					  pPRule->PrType == PtLineSpacing ||
+					     pPRule->PrType == PtLineWeight)
 					    /* c'est une presentation a valeur numerique */
 					    ret = pPRule->PrMinValue <= Cond->TcUpperBound &&
 					       pPRule->PrMinValue >= Cond->TcLowerBound;
@@ -1346,8 +1347,8 @@ static int          CounterVal (int countNum, PtrTSchema pTSch, PtrSSchema pSS, 
 #else  /* __STDC__ */
 static int          CounterVal (countNum, pTSch, pSS, pElNum)
 int                 countNum;
-PtrTSchema        pTSch;
-PtrSSchema        pSS;
+PtrTSchema          pTSch;
+PtrSSchema          pSS;
 PtrElement          pElNum;
 
 #endif /* __STDC__ */
@@ -1397,7 +1398,7 @@ PtrElement          pElNum;
 		/* la racine porte bien l'attribut qui initialise le compteur */
 	       {
 		  initAttr = TRUE;
-		  valInit = pAttr->AeAttrValue;	/* on prend la valeur de l'attribut */
+		  valInit = pAttr->AeAttrValue;		/* on prend la valeur de l'attribut */
 	       }
 	  }
 	if (pCntr->TnOperation == TCntrRLevel)
@@ -1516,15 +1517,15 @@ PtrElement          pElNum;
 		  do
 		    {
 		       pEl = FwdSearchElem2Types (pEl, pCntr->TnElemType2, pElNum->ElTypeNumber, pSSch,
-					 pElNum->ElStructSchema);
+						  pElNum->ElStructSchema);
 		       if (pEl != NULL)
-			    if (EquivalentType (pEl, pCntr->TnElemType2, pSSch))
-			       /* on ignore les pages qui ne concernent */
-			       /* pas la vue 1 */
-			       if (pEl->ElTypeNumber != PageBreak + 1 ||
-				   (pEl->ElTypeNumber == PageBreak + 1 &&
-				    pEl->ElViewPSchema == 1))
-				  val += pCntr->TnParam2;
+			  if (EquivalentType (pEl, pCntr->TnElemType2, pSSch))
+			     /* on ignore les pages qui ne concernent */
+			     /* pas la vue 1 */
+			     if (pEl->ElTypeNumber != PageBreak + 1 ||
+				 (pEl->ElTypeNumber == PageBreak + 1 &&
+				  pEl->ElViewPSchema == 1))
+				val += pCntr->TnParam2;
 		    }
 		  while (pEl != NULL && pEl != pElNum);
 	       }
@@ -1605,7 +1606,7 @@ Name                schemaName;
 
 #ifdef __STDC__
 static void         PutContent (PtrElement pEl, boolean transChar, boolean lineBreak,
-				 int fileNum, PtrDocument pDoc)
+				int fileNum, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 static void         PutContent (pEl, transChar, lineBreak, fileNum, pDoc)
@@ -1638,12 +1639,14 @@ PtrDocument         pDoc;
 #ifdef __STDC__
 static void         ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch,
 			PtrSSchema pSSch, PtrElement pEl, boolean transChar,
-				 boolean lineBreak, boolean * removeEl,
-				 PtrPRule pRPres, PtrAttribute pAttr,
-				 PtrDocument pDoc);
+				boolean lineBreak, boolean * removeEl,
+				PtrPRule pRPres, PtrAttribute pAttr,
+				PtrDocument pDoc);
+
 #else  /* __STDC__ */
-static void         ApplyTRule (/* pTRule, pTSch, pSSch, pEl, transChar, lineBreak,
-				 removeEl, pRPres, pAttr, pDoc */);
+static void         ApplyTRule (	/* pTRule, pTSch, pSSch, pEl, transChar, lineBreak,
+					   removeEl, pRPres, pAttr, pDoc */ );
+
 #endif /* __STDC__ */
 
 
@@ -1655,12 +1658,12 @@ static void         ApplyTRule (/* pTRule, pTSch, pSSch, pEl, transChar, lineBre
 #ifdef __STDC__
 static void         ApplyAttrRulesToElem (TOrder position, PtrElement pEl,
 				     PtrAttribute pAttr, boolean * removeEl,
-				     boolean * transChar, boolean * lineBreak,
-				     PtrDocument pDoc)
+				   boolean * transChar, boolean * lineBreak,
+					  PtrDocument pDoc)
 
 #else  /* __STDC__ */
 static void         ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, transChar, lineBreak,
-				     pDoc)
+					  pDoc)
 TOrder              position;
 PtrElement          pEl;
 PtrAttribute        pAttr;
@@ -1675,8 +1678,8 @@ PtrDocument         pDoc;
    PtrTRuleBlock       pBlock;
    PtrTRule            pTRule;
    PtrTSchema          pTSchAttr;
-   AttributeTransl     *pAttrTrans;
-   TranslNumAttrCase   *pTCase;
+   AttributeTransl    *pAttrTrans;
+   TranslNumAttrCase  *pTCase;
    NotifyAttribute     notifyAttr;
    int                 i;
 
@@ -1774,7 +1777,7 @@ PtrDocument         pDoc;
 
 #ifdef __STDC__
 static void         ApplyAttrRules (TOrder position, PtrElement pEl, boolean * removeEl,
-		   boolean * transChar, boolean * lineBreak, PtrDocument pDoc)
+		 boolean * transChar, boolean * lineBreak, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 static void         ApplyAttrRules (position, pEl, removeEl, transChar, lineBreak, pDoc)
@@ -1792,6 +1795,7 @@ PtrDocument         pDoc;
    PtrAttribute        pAttr;
    PtrTSchema          pTSch;
    int                 att, nAttr;
+
 #define MAX_ATTR_TABLE 50
    PtrAttribute        AttrTable[MAX_ATTR_TABLE];
 
@@ -1817,7 +1821,7 @@ PtrDocument         pDoc;
 	      /* les regles de traduction de l'attribut s'appliquent a */
 	      /* n'importe quel type d'element, on les applique */
 	      ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, transChar, lineBreak,
-			       pDoc);
+				    pDoc);
 	if (position == TAfter)
 	   /* passe a l'attribut precedent de l'element */
 	  {
@@ -1861,7 +1865,7 @@ PtrDocument         pDoc;
 				/* applique les regles de traduction de */
 				/* l'attribut a l'element */
 				ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, transChar,
-						 lineBreak, pDoc);
+						      lineBreak, pDoc);
 				/* inutile de poursuivre la recherche */
 				pAttr = NULL;
 				pAsc = NULL;
@@ -1884,12 +1888,12 @@ PtrDocument         pDoc;
 
 #ifdef __STDC__
 static void         ApplyPresTRules (TOrder position, PtrElement pEl, boolean * removeEl,
-				 boolean * transChar, boolean * lineBreak,
-				 PtrAttribute pAttr, PtrDocument pDoc)
+				   boolean * transChar, boolean * lineBreak,
+				     PtrAttribute pAttr, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 static void         ApplyPresTRules (position, pEl, removeEl, transChar, lineBreak, pAttr,
-				 pDoc)
+				     pDoc)
 TOrder              position;
 PtrElement          pEl;
 boolean            *removeEl;
@@ -1901,16 +1905,17 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   PtrPRule          pPRule;
-   PtrTSchema        pTSch;
-   PtrTRule          pTRule;
-   PRuleTransl       *pPRuleTr;
-   PtrTRuleBlock     pBlock;
-   TranslNumAttrCase *pTCase;
-   int               i, nPRules;
-   char              val;
+   PtrPRule            pPRule;
+   PtrTSchema          pTSch;
+   PtrTRule            pTRule;
+   PRuleTransl        *pPRuleTr;
+   PtrTRuleBlock       pBlock;
+   TranslNumAttrCase  *pTCase;
+   int                 i, nPRules;
+   char                val;
+
 #define MAX_PRULE_TABLE 50
-   PtrPRule        PRuleTable[MAX_PRULE_TABLE];
+   PtrPRule            PRuleTable[MAX_PRULE_TABLE];
 
    pTSch = GetTranslationSchema (pEl->ElStructSchema);
    if (pTSch == NULL)
@@ -2040,9 +2045,9 @@ PtrDocument         pDoc;
 
 #ifdef __STDC__
 static void         PutVariable (PtrElement pEl, PtrAttribute pAttr,
-			 PtrTSchema pTSch, PtrSSchema pSS, int varNum,
+			       PtrTSchema pTSch, PtrSSchema pSS, int varNum,
 		boolean ref, char *outBuffer, int fileNum, PtrDocument pDoc,
-				     boolean lineBreak)
+				 boolean lineBreak)
 
 #else  /* __STDC__ */
 
@@ -2060,11 +2065,11 @@ boolean             lineBreak;
 
 #endif /* __STDC__ */
 {
-   TranslVariable      *varTrans;
-   TranslVarItem       *varItem;
+   TranslVariable     *varTrans;
+   TranslVarItem      *varItem;
    PtrElement          pRefEl, pAncest;
    PtrReference        pRef;
-   TtAttribute         *attrTrans;
+   TtAttribute        *attrTrans;
    PtrAttribute        pA;
    DocumentIdentifier  docIdent;
    PtrDocument         pExtDoc;
@@ -2091,7 +2096,7 @@ boolean             lineBreak;
 		    while (pTSch->TsConstant[i - 1] != '\0')
 		      {
 			 PutChar (pTSch->TsConstant[i - 1], fileNum, outBuffer,
-			       pDoc, lineBreak);
+				  pDoc, lineBreak);
 			 i++;
 		      }
 		    break;
@@ -2151,7 +2156,7 @@ boolean             lineBreak;
 		    while (pTSch->TsBuffer[varItem->TvItem - 1][i] != '\0')
 		      {
 			 PutChar (pTSch->TsBuffer[varItem->TvItem - 1][i],
-			       fileNum, outBuffer, pDoc, lineBreak);
+				  fileNum, outBuffer, pDoc, lineBreak);
 			 i++;
 		      }
 		    break;
@@ -2187,8 +2192,8 @@ boolean             lineBreak;
 				       {
 					  i = 0;
 					  while (i < pBuf->BuLength)
-					       PutChar (pBuf->BuContent[i++], fileNum, outBuffer,
-						     pDoc, lineBreak);
+					     PutChar (pBuf->BuContent[i++], fileNum, outBuffer,
+						      pDoc, lineBreak);
 					  pBuf = pBuf->BuNext;
 				       }
 				     break;
@@ -2201,9 +2206,9 @@ boolean             lineBreak;
 				     i = 0;
 				     attrTrans = &pA->AeAttrSSchema->SsAttribute[varItem->TvItem - 1];
 				     while (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i] != '\0')
-					  PutChar (attrTrans->AttrEnumValue[pA->AeAttrValue - 1]
-					  [i++], fileNum, outBuffer, pDoc,
-						lineBreak);
+					PutChar (attrTrans->AttrEnumValue[pA->AeAttrValue - 1]
+					    [i++], fileNum, outBuffer, pDoc,
+						 lineBreak);
 				     break;
 			       }
 		      }
@@ -2245,10 +2250,11 @@ boolean             lineBreak;
 
 #ifdef __STDC__
 static void         TranslateTree (PtrElement pEl, PtrDocument pDoc, boolean transChar,
-			     boolean lineBreak, boolean enforce);
+				   boolean lineBreak, boolean enforce);
 
 #else  /* __STDC__ */
-static void         TranslateTree (/* pEl, pDoc, transChar, lineBreak, enforce */);
+static void         TranslateTree ( /* pEl, pDoc, transChar, lineBreak, enforce */ );
+
 #endif /* __STDC__ */
 
 /*----------------------------------------------------------------------
@@ -2265,22 +2271,22 @@ static void         TranslateTree (/* pEl, pDoc, transChar, lineBreak, enforce *
 #ifdef __STDC__
 static void         ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch,
 			PtrSSchema pSSch, PtrElement pEl, boolean transChar,
-				 boolean lineBreak, boolean * removeEl,
-				 PtrPRule pRPres, PtrAttribute pAttr,
-				 PtrDocument pDoc)
+				boolean lineBreak, boolean * removeEl,
+				PtrPRule pRPres, PtrAttribute pAttr,
+				PtrDocument pDoc)
 #else  /* __STDC__ */
 static void         ApplyTRule (pTRule, pTSch, pSSch, pEl, transChar, lineBreak,
-				 removeEl, pRPres, pAttr, pDoc)
-PtrTRule          pTRule;
-PtrTSchema        pTSch;
-PtrSSchema        pSSch;
-PtrElement        pEl;
-PtrPRule          pRPres;
-PtrAttribute      pAttr;
-PtrDocument       pDoc;
-boolean           transChar;
-boolean           lineBreak;
-boolean           *removeEl;
+				removeEl, pRPres, pAttr, pDoc)
+PtrTRule            pTRule;
+PtrTSchema          pTSch;
+PtrSSchema          pSSch;
+PtrElement          pEl;
+PtrPRule            pRPres;
+PtrAttribute        pAttr;
+PtrDocument         pDoc;
+boolean             transChar;
+boolean             lineBreak;
+boolean            *removeEl;
 
 #endif /* __STDC__ */
 
@@ -2294,7 +2300,7 @@ boolean           *removeEl;
    PtrDocument         pExtDoc;
    PtrAttribute        pA;
    PtrTextBuffer       pBuf;
-   TtAttribute         *attrTrans;
+   TtAttribute        *attrTrans;
    BinFile             includedFile;
    PtrReference        pRef;
    int                 fileNum;
@@ -2345,8 +2351,8 @@ boolean           *removeEl;
 			   /* ecriture du contenu d'un buffer */
 			   i = 0;
 			   while (pTSch->TsBuffer[pTRule->TrObjectNum - 1][i] != '\0')
-				PutChar (pTSch->TsBuffer[pTRule->TrObjectNum - 1][i++], fileNum, NULL,
-				      pDoc, lineBreak);
+			      PutChar (pTSch->TsBuffer[pTRule->TrObjectNum - 1][i++], fileNum, NULL,
+				       pDoc, lineBreak);
 			   break;
 			case ToVariable:	/* creation d'une variable */
 			   PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrObjectNum, pTRule->TrReferredObj, NULL, fileNum, pDoc, lineBreak);
@@ -2362,47 +2368,47 @@ boolean           *removeEl;
 				pA = pEl->ElFirstAttr;	/* 1er attribut de l'element */
 				/* parcourt les attributs de l'element */
 				while (pA != NULL && !found)
-				     if (pA->AeAttrSSchema == pSS &&
-					 pA->AeAttrNum == pTRule->TrObjectNum)
-					found = TRUE;
-				     else
-					pA = pA->AeNext;
+				   if (pA->AeAttrSSchema == pSS &&
+				       pA->AeAttrNum == pTRule->TrObjectNum)
+				      found = TRUE;
+				   else
+				      pA = pA->AeNext;
 				if (!found)
-				   pEl = pEl->ElParent;	/* passe a l'element ascendant */
+				   pEl = pEl->ElParent;		/* passe a l'element ascendant */
 			     }
 			   /* si on a trouve' l'attribut, on sort sa valeur */
 			   if (found)
-				switch (pA->AeAttrType)
-				      {
-					 case AtNumAttr:
-					    /* ecrit la valeur numerique de l'attribut */
-					    PutInt (pA->AeAttrValue, fileNum, NULL, pDoc, lineBreak);
-					    break;
-					 case AtTextAttr:
-					    /* ecrit la valeur de l'attribut */
-					    pBuf = pA->AeAttrText;
-					    while (pBuf != NULL)
-					      {
-						 i = 0;
-						 while (i < pBuf->BuLength)
-						      PutChar (pBuf->BuContent[i++], fileNum, NULL, pDoc, lineBreak);
-						 pBuf = pBuf->BuNext;
-					      }
-					    break;
-					 case AtReferenceAttr:
-					    /* cas non traite' */
-					    break;
-					 case AtEnumAttr:
-					    /* ecrit le nom de la valeur de l'attribut */
-					    attrTrans = &pA->AeAttrSSchema->SsAttribute[pA->AeAttrNum - 1];
-					    i = 0;
-					    while (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i] != '\0')
-						 PutChar (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i++],
-						       fileNum, NULL, pDoc, lineBreak);
-					    break;
-					 default:
-					    break;
-				      }
+			      switch (pA->AeAttrType)
+				    {
+				       case AtNumAttr:
+					  /* ecrit la valeur numerique de l'attribut */
+					  PutInt (pA->AeAttrValue, fileNum, NULL, pDoc, lineBreak);
+					  break;
+				       case AtTextAttr:
+					  /* ecrit la valeur de l'attribut */
+					  pBuf = pA->AeAttrText;
+					  while (pBuf != NULL)
+					    {
+					       i = 0;
+					       while (i < pBuf->BuLength)
+						  PutChar (pBuf->BuContent[i++], fileNum, NULL, pDoc, lineBreak);
+					       pBuf = pBuf->BuNext;
+					    }
+					  break;
+				       case AtReferenceAttr:
+					  /* cas non traite' */
+					  break;
+				       case AtEnumAttr:
+					  /* ecrit le nom de la valeur de l'attribut */
+					  attrTrans = &pA->AeAttrSSchema->SsAttribute[pA->AeAttrNum - 1];
+					  i = 0;
+					  while (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i] != '\0')
+					     PutChar (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i++],
+					     fileNum, NULL, pDoc, lineBreak);
+					  break;
+				       default:
+					  break;
+				    }
 
 			   break;
 			case ToContent:
@@ -2471,14 +2477,14 @@ boolean           *removeEl;
 			     {
 				i = 0;
 				while (i < pBuf->BuLength)
-				     PutChar (pBuf->BuContent[i++], fileNum, NULL, pDoc, lineBreak);
+				   PutChar (pBuf->BuContent[i++], fileNum, NULL, pDoc, lineBreak);
 				pBuf = pBuf->BuNext;
 			     }
 			   break;
 			case ToAllAttr:
 			   /* produit la traduction de tous les attributs de l'element */
 			   ApplyAttrRules (pTRule->TrOrder, pEl, removeEl, &transChar, &lineBreak,
-					pDoc);
+					   pDoc);
 			   /* les regles des attributs ont ete appliquees */
 			   pEl->ElTransAttr = TRUE;
 			   break;
@@ -2486,7 +2492,7 @@ boolean           *removeEl;
 			   /* produit la traduction de toutes les regles de presentation */
 			   /* specifique portees par l'element */
 			   ApplyPresTRules (pTRule->TrOrder, pEl, removeEl, &transChar, &lineBreak,
-					pAttr, pDoc);
+					    pAttr, pDoc);
 			   /* marque dans l'element que sa presentation a ete traduite */
 			   pEl->ElTransPres = TRUE;
 			   break;
@@ -2615,7 +2621,7 @@ boolean           *removeEl;
 					   || (pSS == NULL &&
 					       strcmp (pTRule->TrObjectNature, pRefEl->ElStructSchema->SsName) == 0
 					       && EquivalentSRules (pTRule->TrObjectNum, pRefEl->ElStructSchema,
-							      pRefEl->ElTypeNumber, pRefEl->ElStructSchema, pRefEl->ElParent)
+								    pRefEl->ElTypeNumber, pRefEl->ElStructSchema, pRefEl->ElParent)
 					   )
 					 )
 					)
@@ -2678,7 +2684,7 @@ boolean           *removeEl;
 						   i = 0;
 						   while (pRef->RdReferred->ReReferredLabel[i] != '\0')
 						      PutChar (pRef->RdReferred->ReReferredLabel[i++], fileNum, NULL,
-							    pDoc, lineBreak);
+							   pDoc, lineBreak);
 						}
 				  }
 			     }
@@ -2760,7 +2766,7 @@ boolean           *removeEl;
 		 {
 		    newFile = fopen (currentFileName, "w");
 		    if (newFile == NULL)
-		       TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, TMSG_CREATE_FILE_IMP), currentFileName);
+		       TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP), currentFileName);
 		    else
 		       /* on a reussi a ouvrir le nouveau fichier */
 		      {
@@ -2800,13 +2806,13 @@ boolean           *removeEl;
 			   /* cherche ensuite parmi les freres successifs */
 			   found = FALSE;
 			   do
-				if ((pElGet->ElStructSchema == pEl->ElStructSchema ||
-				     (strcmp (pTRule->TrElemNature, pElGet->ElStructSchema->SsName) == 0))
-				    && EquivalentSRules (pTRule->TrElemType, pElGet->ElStructSchema,
-						   pElGet->ElTypeNumber, pElGet->ElStructSchema, pElGet->ElParent))
-				   found = TRUE;
-				else
-				   pElGet = pElGet->ElNext;
+			      if ((pElGet->ElStructSchema == pEl->ElStructSchema ||
+				   (strcmp (pTRule->TrElemNature, pElGet->ElStructSchema->SsName) == 0))
+				  && EquivalentSRules (pTRule->TrElemType, pElGet->ElStructSchema,
+						       pElGet->ElTypeNumber, pElGet->ElStructSchema, pElGet->ElParent))
+				 found = TRUE;
+			      else
+				 pElGet = pElGet->ElNext;
 			   while (!found && pElGet != NULL);
 			   break;
 			case RpDescend:
@@ -2851,7 +2857,7 @@ boolean           *removeEl;
 				      || (pSS == NULL &&
 					  strcmp (pTRule->TrElemNature, pElGet->ElStructSchema->SsName) == 0
 					  && EquivalentSRules (pTRule->TrElemType, pElGet->ElStructSchema,
-							 pElGet->ElTypeNumber, pElGet->ElStructSchema, pElGet->ElParent)
+							       pElGet->ElTypeNumber, pElGet->ElStructSchema, pElGet->ElParent)
 				      )
 				    )
 				   )
@@ -2886,7 +2892,7 @@ boolean           *removeEl;
 		  /* traduit l'element a prendre, sauf s'il a deja ete traduit et */
 		  /* qu'il s'agit d'une regle Get */
 		  TranslateTree (pElGet, pDocGet, transChar, lineBreak,
-			   pTRule->TrType == TCopy);
+				 pTRule->TrType == TCopy);
 	       break;
 	    case TUse:
 	       /* On ne fait rien. Cette regle est utilisee uniquement */
@@ -2910,7 +2916,7 @@ boolean           *removeEl;
 		    j = 0;
 		    i = pTSch->TsConstBegin[pTRule->TrInclFile - 1] - 1;
 		    while (pTSch->TsConstant[i] != '\0' && j < MAX_TXT_LEN - 1)
-			 fname[j++] = pTSch->TsConstant[i++];
+		       fname[j++] = pTSch->TsConstant[i++];
 		    fname[j] = '\0';
 		 }
 	       else if (pTRule->TrBufOrConst == ToBuffer)
@@ -2919,10 +2925,10 @@ boolean           *removeEl;
 		    i = 0;
 		    while (pTSch->TsBuffer[pTRule->TrInclFile - 1][i] != '\0' &&
 			   i < MAX_TXT_LEN - 1)
-		       {
+		      {
 			 fname[i] = pTSch->TsBuffer[pTRule->TrInclFile - 1][i];
 			 i++;
-		       }
+		      }
 		    fname[i] = '\0';
 		 }
 	       if (fname[0] == '\0')
@@ -2937,7 +2943,7 @@ boolean           *removeEl;
 	       /* ouvre le fichier a inclure */
 	       includedFile = BIOreadOpen (fullName);
 	       if (includedFile == 0)
-		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_INCLUDE_FILE_IMP), fname);
+		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCLUDE_FILE_IMP), fname);
 	       else
 		  /* le fichier a inclure est ouvert */
 		 {
@@ -2960,28 +2966,28 @@ boolean           *removeEl;
 
 #ifdef __STDC__
 static void         ApplyElTypeRules (TOrder position, boolean * transChar,
-				  boolean * lineBreak, boolean * removeEl,
-			     PtrElement pEl, int TypeEl, PtrTSchema pTSch,
-				  PtrSSchema pSS, PtrDocument pDoc)
+				    boolean * lineBreak, boolean * removeEl,
+			       PtrElement pEl, int TypeEl, PtrTSchema pTSch,
+				      PtrSSchema pSS, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 static void         ApplyElTypeRules (position, transChar, lineBreak, removeEl, pEl, TypeEl,
-				  pTSch, pSS, pDoc)
-TOrder             position;
+				      pTSch, pSS, pDoc)
+TOrder              position;
 boolean            *transChar;
 boolean            *lineBreak;
 boolean            *removeEl;
-PtrElement         pEl;
-int                TypeEl;
-PtrTSchema         pTSch;
-PtrSSchema         pSS;
-PtrDocument        pDoc;
+PtrElement          pEl;
+int                 TypeEl;
+PtrTSchema          pTSch;
+PtrSSchema          pSS;
+PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrTRuleBlock   pBlock;
-   PtrTRule        pTRule;
+   PtrTRuleBlock       pBlock;
+   PtrTRule            pTRule;
 
 
    /* premier bloc de regles correspondant au type de l'element */
@@ -3007,7 +3013,7 @@ PtrDocument        pDoc;
 		     else
 			/* on applique la regle */
 			ApplyTRule (pTRule, pTSch, pSS, pEl, *transChar, *lineBreak,
-				     removeEl, NULL, NULL, pDoc);
+				    removeEl, NULL, NULL, pDoc);
 		  /* passe a la regle suivante */
 		  pTRule = pTRule->TrNextTRule;
 	       }
@@ -3026,7 +3032,7 @@ PtrDocument        pDoc;
 
 #ifdef __STDC__
 static void         TranslateTree (PtrElement pEl, PtrDocument pDoc, boolean transChar,
-			     boolean lineBreak, boolean enforce)
+				   boolean lineBreak, boolean enforce)
 
 #else  /* __STDC__ */
 static void         TranslateTree (pEl, pDoc, transChar, lineBreak, enforce)
@@ -3039,14 +3045,14 @@ boolean             enforce;
 #endif /* __STDC__ */
 
 {
-   PtrElement        pChild;
-   PtrTSchema        pTSch, pTS;
-   PtrSSchema        pSS, pParentSS;
-   SRule             *pSRule;
-   NotifyElement     notifyEl;
-   int               elemType, i;
-   boolean           found;
-   boolean           removeEl;
+   PtrElement          pChild;
+   PtrTSchema          pTSch, pTS;
+   PtrSSchema          pSS, pParentSS;
+   SRule              *pSRule;
+   NotifyElement       notifyEl;
+   int                 elemType, i;
+   boolean             found;
+   boolean             removeEl;
 
    if (!pEl->ElTransContent || enforce)
      {
@@ -3116,7 +3122,7 @@ boolean             enforce;
 	     /* de l'element et qui doivent s'appliquer avant la traduction du */
 	     /* contenu de l'element */
 	     ApplyElTypeRules (TBefore, &transChar, &lineBreak, &removeEl, pEl, elemType,
-			   pTSch, pSS, pDoc);
+			       pTSch, pSS, pDoc);
 	     /* on ne traduit les attributs que si ce n'est pas deja fait par */
 	     /* une regle Create Attributes associee au type */
 	     if (!pEl->ElTransAttr)
@@ -3132,7 +3138,7 @@ boolean             enforce;
 		 * de traduction correspondantes qui doivent ^etre appliquees
 		 * avant la traduction du contenu de l'element */
 		ApplyPresTRules (TBefore, pEl, &removeEl, &transChar, &lineBreak, NULL,
-			     pDoc);
+				 pDoc);
 	     /* traduit le contenu de l'element, sauf si on a deja rencontre' */
 	     /* une regle Remove pour cet element. */
 	     if (!removeEl)
@@ -3164,7 +3170,7 @@ boolean             enforce;
 		 * de traduction correspondantes qui doivent ^etre appliquees
 		 * apres la traduction du contenu */
 		ApplyPresTRules (TAfter, pEl, &removeEl, &transChar, &lineBreak, NULL,
-			     pDoc);
+				 pDoc);
 	     if (!pEl->ElTransAttr)
 		/* Parcourt les attributs de l'element et applique les regles des
 		 * attributs qui doivent etre appliquees apres la traduction du
@@ -3173,7 +3179,7 @@ boolean             enforce;
 	     /* Cherche et applique les regles associees au type de l'element et
 	      * qui doivent s'appliquer apres la traduction du contenu */
 	     ApplyElTypeRules (TAfter, &transChar, &lineBreak, &removeEl, pEl, elemType,
-			   pTSch, pSS, pDoc);
+			       pTSch, pSS, pDoc);
 	     if (!enforce)
 		/* marque que l'element a ete traite' */
 		pEl->ElTransContent = TRUE;
@@ -3293,13 +3299,14 @@ char               *TSchemaName;
 
 {
    int                 i;
+
    /* fichier de sortie principal */
    FILE               *outputFile;
 
    /* cree le fichier de sortie principal */
    outputFile = fopen (fName, "w");
    if (outputFile == NULL)
-      TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, TMSG_CREATE_FILE_IMP), fName);
+      TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP), fName);
    else
       /* le fichier de sortie principal a ete cree' */
      {

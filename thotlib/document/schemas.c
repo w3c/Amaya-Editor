@@ -4,7 +4,7 @@
 
 
 /*
-	Chargement et liberation des schemas de structure et de presentation
+   Chargement et liberation des schemas de structure et de presentation
  */
 
 #include "thot_gui.h"
@@ -18,8 +18,8 @@
 typedef struct _APresentation
   {
      PtrPSchema          pPresSchema;	/* pointeur sur le schema */
-     int                 UsageCount;	/* nombre d'utilisations de ce schema*/
-     Name                PresSchemaName;/* nom du schema de presentation */
+     int                 UsageCount;	/* nombre d'utilisations de ce schema */
+     Name                PresSchemaName;	/* nom du schema de presentation */
   }
 APresentation;
 
@@ -30,10 +30,10 @@ APresentation;
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 
-extern PtrEventsSet  SchemasEvents;
+extern PtrEventsSet SchemasEvents;
 
 /* table des schemas de presentation charges */
-static APresentation   LoadedPSchema[MAX_PSCHEMAS];
+static APresentation LoadedPSchema[MAX_PSCHEMAS];
 
 #include "config_f.h"
 #include "memory_f.h"
@@ -51,11 +51,12 @@ static APresentation   LoadedPSchema[MAX_PSCHEMAS];
 void                InitApplicationSchema (PtrSSchema pSS)
 #else  /* __STDC__ */
 void                InitApplicationSchema (pSS)
-PtrSSchema        pSS;
+PtrSSchema          pSS;
+
 #endif /* __STDC__ */
 {
-   char          schemaName[MAX_NAME_LENGTH];
-   PtrEventsSet  schemaActions;
+   char                schemaName[MAX_NAME_LENGTH];
+   PtrEventsSet        schemaActions;
 
    strcpy (schemaName, pSS->SsName);
    pSS->SsActionList = NULL;
@@ -79,7 +80,7 @@ void                InitNatures ()
 
 #else  /* __STDC__ */
 void                InitNatures ()
-#endif	/* __STDC__ */
+#endif				/* __STDC__ */
 {
    int                 i;
 
@@ -171,12 +172,12 @@ static void         FreePRuleList (PtrPRule * firstPRule)
 
 #else  /* __STDC__ */
 static void         FreePRuleList (firstPRule)
-PtrPRule       *firstPRule;
+PtrPRule           *firstPRule;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pPRule, pNextPRule;
+   PtrPRule            pPRule, pNextPRule;
 
    pPRule = *firstPRule;
    while (pPRule != NULL)
@@ -207,15 +208,15 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
-   APresentation       *pPres;
-   AttributePres       *pAttrPres;
+   APresentation      *pPres;
+   AttributePres      *pAttrPres;
    int                 i, j;
    boolean             delete;
 
    delete = TRUE;
    /* parcourt la table des schemas de presentation pour trouver ce schema */
    i = 0;
-   while (i < MAX_PSCHEMAS -1 && LoadedPSchema[i].pPresSchema != pPSchema)
+   while (i < MAX_PSCHEMAS - 1 && LoadedPSchema[i].pPresSchema != pPSchema)
       i++;
    pPres = &LoadedPSchema[i];
    if (pPres->pPresSchema == pPSchema)
@@ -297,8 +298,8 @@ int                 rule;
 #endif /* __STDC__ */
 
 {
-   Name              schName;
-   PtrSSchema        pNatureSS;
+   Name                schName;
+   PtrSSchema          pNatureSS;
 
    /* utilise le nom de la nature comme nom de fichier. */
    /* copie le nom de nature dans schName */
@@ -308,7 +309,7 @@ int                 rule;
    if (!ReadStructureSchema (schName, pNatureSS))
       /* echec */
      {
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_SCHEMA_NOT_FIND), schName);
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND), schName);
 	FreeSchStruc (pNatureSS);
 	pSS->SsRule[rule - 1].SrSSchemaNat = NULL;
      }
@@ -340,13 +341,13 @@ int                 rule;
 		     (*ThotLocalActions[T_presentchoice]) (pNatureSS, schName);
 	       }
 	     /* cree un nouveau schema de presentation et le charge depuis le
-		fichier */
+	        fichier */
 	     pNatureSS->SsPSchema = LoadPresentationSchema (schName, pNatureSS);
 	  }
 	if (pNatureSS->SsPSchema == NULL)
 	   /* echec chargement schema */
 	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_SCHEMA_NOT_FIND),
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND),
 				schName);
 	     FreeSchStruc (pNatureSS);
 	     pSS->SsRule[rule - 1].SrSSchemaNat = NULL;
@@ -361,12 +362,12 @@ int                 rule;
    des regles.                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         AppendSRule (int * ret, PtrSSchema pSS)
+static void         AppendSRule (int *ret, PtrSSchema pSS)
 
 #else  /* __STDC__ */
 static void         AppendSRule (ret, pSS)
-int        *ret;
-PtrSSchema        pSS;
+int                *ret;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -402,13 +403,13 @@ PtrSSchema        pSS;
    structure, sauf si le premier octet de PSchName est nul.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int         CreateNature (Name SSchName, Name PSchName, PtrSSchema pSS)
+int                 CreateNature (Name SSchName, Name PSchName, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-int         CreateNature (SSchName, PSchName, pSS)
-Name        SSchName;
-Name        PSchName;
-PtrSSchema  pSS;
+int                 CreateNature (SSchName, PSchName, pSS)
+Name                SSchName;
+Name                PSchName;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -502,17 +503,17 @@ PtrSSchema  pSS;
 void                LoadSchemas (Name SSchName, Name PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, boolean extension)
 
 #else  /* __STDC__ */
-void              LoadSchemas (SSchName, PSchName, pSS, pLoadedSS, extension)
-Name              SSchName;
-Name              PSchName;
-PtrSSchema       *pSS;
-PtrSSchema        pLoadedSS;
-boolean           extension;
+void                LoadSchemas (SSchName, PSchName, pSS, pLoadedSS, extension)
+Name                SSchName;
+Name                PSchName;
+PtrSSchema         *pSS;
+PtrSSchema          pLoadedSS;
+boolean             extension;
 
 #endif /* __STDC__ */
 
 {
-   Name                 schName;
+   Name                schName;
 
    strncpy (schName, SSchName, MAX_NAME_LENGTH);
    /* cree le schema de structure et charge le fichier dedans */
@@ -521,7 +522,7 @@ boolean           extension;
 	GetSchStruct (pSS);
 	if (!ReadStructureSchema (schName, *pSS))
 	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_SCHEMA_NOT_FIND),
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND),
 				schName);
 	     FreeSchStruc (*pSS);
 	  }
@@ -575,7 +576,7 @@ boolean           extension;
 	if ((*pSS)->SsPSchema == NULL)
 	   /* echec chargement schema */
 	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_SCHEMA_NOT_FIND),
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND),
 				schName);
 	     FreeSchStruc (*pSS);
 	     *pSS = NULL;
@@ -590,19 +591,19 @@ boolean           extension;
    nom PSchName.                                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrSSchema        LoadExtension (Name SSchName, Name PSchName, PtrDocument pDoc)
+PtrSSchema          LoadExtension (Name SSchName, Name PSchName, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-PtrSSchema        LoadExtension (SSchName, PSchName, pDoc)
-Name              SSchName;
-Name              PSchName;
-PtrDocument       pDoc;
+PtrSSchema          LoadExtension (SSchName, PSchName, pDoc)
+Name                SSchName;
+Name                PSchName;
+PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrSSchema      pExtens, pPrevExtens;
-   boolean         extensionExist;
+   PtrSSchema          pExtens, pPrevExtens;
+   boolean             extensionExist;
 
    pExtens = NULL;
    if (pDoc->DocSSchema != NULL)
@@ -703,8 +704,8 @@ boolean             FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS)
 
 #else  /* __STDC__ */
 boolean             FreeNature (pSS, pNatureSS)
-PtrSSchema        pSS;
-PtrSSchema        pNatureSS;
+PtrSSchema          pSS;
+PtrSSchema          pNatureSS;
 
 #endif /* __STDC__ */
 
@@ -743,9 +744,9 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   PtrSSchema        pSS, pNextSS;
-   SRule             *pRule;
-   int               i;
+   PtrSSchema          pSS, pNextSS;
+   SRule              *pRule;
+   int                 i;
 
    pSS = pDoc->DocSSchema;
    /* libere le schema de structure du document et ses extensions */

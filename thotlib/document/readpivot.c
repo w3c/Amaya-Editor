@@ -117,13 +117,13 @@ PtrDocument         GetPtrDocument (DocumentIdentifier docIdent)
 
 #else  /* __STDC__ */
 PtrDocument         GetPtrDocument (docIdent)
-DocumentIdentifier     docIdent;
+DocumentIdentifier  docIdent;
 
 #endif /* __STDC__ */
 
 {
    int                 doc;
-   PtrDocument	       pDoc;
+   PtrDocument         pDoc;
 
    pDoc = NULL;
    for (doc = 0; doc < MAX_DOCUMENTS; doc++)
@@ -142,6 +142,7 @@ static void         FreeUnusedReferredElemDesc (PtrDocument pDoc)
 #else  /* __STDC__ */
 static void         FreeUnusedReferredElemDesc (pDoc)
 PtrDocument         pDoc;
+
 #endif /* __STDC__ */
 
 {
@@ -187,11 +188,11 @@ boolean             OpenDocument (Name docName, PtrDocument pDoc, boolean loadIn
 
 #else  /* __STDC__ */
 boolean             OpenDocument (docName, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent)
-Name                 docName;
+Name                docName;
 PtrDocument         pDoc;
 boolean             loadIncludedDoc;
 boolean             skeleton;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 boolean             withAppEvent;
 
 #endif /* __STDC__ */
@@ -200,8 +201,8 @@ boolean             withAppEvent;
    boolean             ret;
    int                 i;
    PathBuffer          directoryName;
-   PtrChangedReferredEl      pChngRef;
-   FILE             *pivotFile;
+   PtrChangedReferredEl pChngRef;
+   FILE               *pivotFile;
    char                text[MAX_TXT_LEN];
 
    ret = FALSE;
@@ -299,10 +300,10 @@ PtrDocument         pDoc;
 
 {
    int                 i;
-   PtrOutReference      pOutRef, pNextOutRef;
-   PtrChangedReferredEl      pChnRef, pNextChnRef;
-   PtrTextBuffer      pBuf, pNextBuf;
-   PtrExternalDoc       pExtDoc, pNextExtDoc;
+   PtrOutReference     pOutRef, pNextOutRef;
+   PtrChangedReferredEl pChnRef, pNextChnRef;
+   PtrTextBuffer       pBuf, pNextBuf;
+   PtrExternalDoc      pExtDoc, pNextExtDoc;
 
    if (pDoc != NULL)
      {
@@ -424,7 +425,7 @@ int                 view;
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pPRule;
+   PtrPRule            pPRule;
 
    GetPresentRule (&pPRule);
    /* initialise d'abord la nouvelle regle */
@@ -561,10 +562,10 @@ BinFile             file;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static BAlignment      ReadAlign (BinFile file)
+static BAlignment   ReadAlign (BinFile file)
 
 #else  /* __STDC__ */
-static BAlignment      ReadAlign (file)
+static BAlignment   ReadAlign (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -697,10 +698,10 @@ BinFile             file;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrTextBuffer      ReadComment (BinFile file, boolean store, boolean oldformat)
+PtrTextBuffer       ReadComment (BinFile file, boolean store, boolean oldformat)
 
 #else  /* __STDC__ */
-PtrTextBuffer      ReadComment (file, store, oldformat)
+PtrTextBuffer       ReadComment (file, store, oldformat)
 BinFile             file;
 boolean             store;
 boolean             oldformat;
@@ -708,9 +709,9 @@ boolean             oldformat;
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      firstBuf, pBuf;
-   int                n, len;
-   char               c;
+   PtrTextBuffer       firstBuf, pBuf;
+   int                 n, len;
+   char                c;
 
    len = 0;
    /* lit l'octet qui suit le tag commentaire */
@@ -879,17 +880,17 @@ int                *PicHArea;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static PictureScaling    ReadPicturePresentation (BinFile file)
+static PictureScaling ReadPicturePresentation (BinFile file)
 
 #else  /* __STDC__ */
-static PictureScaling    ReadPicturePresentation (file)
+static PictureScaling ReadPicturePresentation (file)
 BinFile             file;
 
 #endif /* __STDC__ */
 
 {
    char                c;
-   PictureScaling           scaling;
+   PictureScaling      scaling;
 
    if (!BIOreadByte (file, &c))
      {
@@ -979,10 +980,10 @@ static void         ReadReference (ReferenceType * refType, LabelString label, b
 
 #else  /* __STDC__ */
 static void         ReadReference (refType, label, refExt, docIdent, file)
-ReferenceType       *refType;
+ReferenceType      *refType;
 LabelString         label;
-boolean             *refExt;
-DocumentIdentifier  *docIdent;
+boolean            *refExt;
+DocumentIdentifier *docIdent;
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -1087,7 +1088,7 @@ BinFile             file;
 	/* lit la valeur du label */
 	ReadLabel (c, label, file);
 	if (*refExt && label[0] != '\0')
-	   /* lit l'identificateur du document contenant l'element reference'*/
+	   /* lit l'identificateur du document contenant l'element reference' */
 	   BIOreadDocIdent (file, docIdent);
 
      }
@@ -1179,10 +1180,10 @@ static void         CreateReference (PtrReference RefPtr, ReferenceType TRef, La
 #else  /* __STDC__ */
 static void         CreateReference (RefPtr, TRef, lab, RExt, I, pDoc)
 PtrReference        RefPtr;
-ReferenceType           TRef;
+ReferenceType       TRef;
 LabelString         lab;
 boolean             RExt;
-DocumentIdentifier     I;
+DocumentIdentifier  I;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -1274,14 +1275,14 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static int  ReadType (PtrDocument pDoc, PtrSSchema * pSS, BinFile pivFile, char *tag)
+static int          ReadType (PtrDocument pDoc, PtrSSchema * pSS, BinFile pivFile, char *tag)
 
 #else  /* __STDC__ */
-static int  ReadType (pDoc, pSS, pivFile, tag)
+static int          ReadType (pDoc, pSS, pivFile, tag)
 PtrDocument         pDoc;
-PtrSSchema          *pSS;
+PtrSSchema         *pSS;
 BinFile             pivFile;
-char                *tag;
+char               *tag;
 
 #endif /* __STDC__ */
 
@@ -1364,15 +1365,15 @@ char                *tag;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         ExportedContent (boolean * createAll, int * elType, PtrSSchema * pSS, PtrSSchema * pContSS, int * contentType)
+static void         ExportedContent (boolean * createAll, int *elType, PtrSSchema * pSS, PtrSSchema * pContSS, int *contentType)
 
 #else  /* __STDC__ */
 static void         ExportedContent (createAll, elType, pSS, pContSS, contentType)
-boolean          *createAll;
-int              *elType;
-PtrSSchema       *pSS;
-PtrSSchema       *pContSS;
-int		 *contentType;
+boolean            *createAll;
+int                *elType;
+PtrSSchema         *pSS;
+PtrSSchema         *pContSS;
+int                *contentType;
 
 #endif /* __STDC__ */
 
@@ -1459,34 +1460,34 @@ static void         CheckMandatAttrSRule (PtrElement pEl, SRule * pSRule, PtrSSc
 static void         CheckMandatAttrSRule (pEl, pSRule, pSS)
 PtrElement          pEl;
 SRule              *pSRule;
-PtrSSchema         pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
 {
-  PtrAttribute        pAttr;
-  int                 i, att;
-  boolean             found;
+   PtrAttribute        pAttr;
+   int                 i, att;
+   boolean             found;
 
-  /* parcourt tous les attributs locaux definis dans la regle */
-  for (i = 0; i < pSRule->SrNLocalAttrs; i++)
-    if (pSRule->SrRequiredAttr[i])
-      /* cet attribut local est requis */
-      {
-	att = pSRule->SrLocalAttr[i];
-	/* cherche si l'element possede cet attribut */
-	pAttr = pEl->ElFirstAttr;
-	found = FALSE;
-	while (pAttr != NULL && !found)
-	  if (pAttr->AeAttrNum == att &&
-	      pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
-	    found = TRUE;
-	  else
-	    pAttr = pAttr->AeNext;
-	if (!found)
-	  /* l'element ne possede pas cet attribut requis */
-	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ATTR_REQUIRED_FOR_EL), pSS->SsAttribute[att - 1].AttrName, pSRule->SrName);
-      }
+   /* parcourt tous les attributs locaux definis dans la regle */
+   for (i = 0; i < pSRule->SrNLocalAttrs; i++)
+      if (pSRule->SrRequiredAttr[i])
+	 /* cet attribut local est requis */
+	{
+	   att = pSRule->SrLocalAttr[i];
+	   /* cherche si l'element possede cet attribut */
+	   pAttr = pEl->ElFirstAttr;
+	   found = FALSE;
+	   while (pAttr != NULL && !found)
+	      if (pAttr->AeAttrNum == att &&
+		  pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
+		 found = TRUE;
+	      else
+		 pAttr = pAttr->AeNext;
+	   if (!found)
+	      /* l'element ne possede pas cet attribut requis */
+	      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ATTR_REQUIRED_FOR_EL), pSS->SsAttribute[att - 1].AttrName, pSRule->SrName);
+	}
 }
 
 
@@ -1501,11 +1502,12 @@ static void         CheckMandatoryAttr (PtrElement pEl, PtrDocument pDoc)
 static void         CheckMandatoryAttr (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
+
 #endif /* __STDC__ */
 {
 
-   SRule            *pSRule;
-   PtrSSchema        pSS;
+   SRule              *pSRule;
+   PtrSSchema          pSS;
 
    if (pEl != NULL)
      {
@@ -1560,24 +1562,24 @@ BinFile             pivFile;
 PtrElement          pEl;
 PtrDocument         pDoc;
 boolean             create;
-PtrAttribute        *pReadAttr;
-PtrAttribute        *pAttr;
+PtrAttribute       *pReadAttr;
+PtrAttribute       *pAttr;
 
 #endif /* __STDC__ */
 
 {
-   PtrSSchema        pSchAttr;
+   PtrSSchema          pSchAttr;
    int                 n;
    int                 attr;
    int                 val;
    boolean             signe;
-   ReferenceType           refType;
+   ReferenceType       refType;
    boolean             refExt;
-   DocumentIdentifier     I;
+   DocumentIdentifier  I;
    LabelString         label;
-   PtrTextBuffer      pBT, pPremBuff;
+   PtrTextBuffer       pBT, pPremBuff;
    char                c;
-   PtrAttribute         pA;
+   PtrAttribute        pA;
    PtrReference        pRef;
    boolean             found;
    boolean             stop;
@@ -1633,7 +1635,7 @@ PtrAttribute        *pAttr;
 			     PivotError (pivFile);
 			     DisplayPivotMessage ("A");
 			  }
-		     while (!error && c != '\0');
+		     while (!error && c != '\0') ;
 		  else
 		    {
 		       /* acquiert un premier buffer de texte */
@@ -1769,12 +1771,12 @@ BinFile             pivFile;
 PtrElement          pEl;
 PtrDocument         pDoc;
 boolean             create;
-PtrAttribute        *pReadAttr;
+PtrAttribute       *pReadAttr;
 
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr, pA;
+   PtrAttribute        pAttr, pA;
 
    ReadAttributePiv (pivFile, pEl, pDoc, create, pReadAttr, &pAttr);
    if (pAttr != NULL)
@@ -1821,7 +1823,7 @@ PtrDocument         pDoc;
 BinFile             pivFile;
 PtrElement          pEl;
 boolean             create;
-PtrPRule            *pRuleRead;
+PtrPRule           *pRuleRead;
 boolean             link;
 
 #endif /* __STDC__ */
@@ -1834,10 +1836,10 @@ boolean             link;
    PtrPSchema          pSPR;
    PtrSSchema          pSSR;
    PtrAttribute        pAttr;
-   DimensionRule       *pDimRule;
+   DimensionRule      *pDimRule;
    TypeUnit            unit;
    int                 pictureType, val, PicXArea, PicYArea, PicWArea,
-		       PicHArea, view, box;
+                       PicHArea, view, box;
    char                ch;
    boolean             absolute, sign, just;
 
@@ -2147,8 +2149,8 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
-   NotifyAttribute      notifyAttr;
+   PtrAttribute        pAttr;
+   NotifyAttribute     notifyAttr;
 
    pAttr = pEl->ElFirstAttr;
    while (pAttr != NULL)
@@ -2214,7 +2216,7 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrElement          ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc, char *tag, int assocNum, boolean createParam, boolean createAll, int * contentType, PtrSSchema * pContSS, int * typeRead, PtrSSchema * pSSRead, boolean createPage, PtrElement pParent, boolean createDesc)
+PtrElement          ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc, char *tag, int assocNum, boolean createParam, boolean createAll, int *contentType, PtrSSchema * pContSS, int *typeRead, PtrSSchema * pSSRead, boolean createPage, PtrElement pParent, boolean createDesc)
 
 #else  /* __STDC__ */
 PtrElement          ReadTreePiv (pivFile, pSSchema, pDoc, tag, assocNum, createParam, createAll, contentType, pContSS, typeRead, pSSRead, createPage, pParent, createDesc)
@@ -2242,7 +2244,7 @@ boolean             createDesc;
    PtrPRule            pPRule;
    PtrSSchema          pSS;
    PtrReferredDescr    pRefD;
-   SRule               *pSRule;
+   SRule              *pSRule;
    LabelString         label;
    DocumentIdentifier  docIdent;
    BasicType           leafType;
@@ -2252,7 +2254,7 @@ boolean             createDesc;
    int                 i, j, n, view, pictureType, elType, rule;
    char                ch, c, alphabet;
    boolean             create, inclusion, modif, parameter, findtype, refExt,
-		       found, withReferences;
+                       found, withReferences;
    NotifyElement       notifyEl;
 
    pSRule = NULL;
@@ -2321,7 +2323,7 @@ boolean             createDesc;
 			       do
 				  i++;
 			       while (pDoc->DocNatureName[i - 1] != pSRule->SrNatExpContent &&
-					i != pDoc->DocNNatures);
+				      i != pDoc->DocNNatures);
 			       if (pDoc->DocNatureName[i - 1] == pSRule->SrNatExpContent)
 				  /* trouve' */
 				  *pContSS = pDoc->DocNatureSSchema[i - 1];
@@ -2749,11 +2751,11 @@ boolean             createDesc;
 							     if (!BIOreadByte (pivFile, &ch))
 								PivotError (pivFile);
 							  }
-						     while (ch != '\0');
+						     while (ch != '\0') ;
 						     /* on suppose que le nom tient en entier dans un buffer */
 						     /* on normalise le nom */
 						     strcpy (pBuf->BuContent, NormalizeFileName (pBuf->BuContent, &pictureType,
-						       &pres, &findtype));
+							 &pres, &findtype));
 						     if (findtype)
 						       {
 							  /* on a trouve une image v1, on cree une regle */
@@ -2986,51 +2988,52 @@ boolean             AbstractTreeOK (PtrElement pEl, PtrDocument pDoc)
 boolean             AbstractTreeOK (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
+
 #endif /* __STDC__ */
 {
-  PtrElement          pChild;
-  boolean             ok, childOK;
+   PtrElement          pChild;
+   boolean             ok, childOK;
 
-  ok = TRUE;
-  if (pEl != NULL)
-    {
-      if (pEl->ElPrevious != NULL)
-	{
-	  if (!AllowedSibling (pEl->ElPrevious, pDoc, pEl->ElTypeNumber,
-			       pEl->ElStructSchema, FALSE, FALSE, TRUE))
-	    {
-	      ok = FALSE;
-	      TtaDisplayMessage (INFO,  TtaGetMessage (LIB, TMSG_INVALID_SIBLING),
-				 pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
-				 pEl->ElPrevious->ElStructSchema->SsRule[pEl->ElPrevious->ElTypeNumber - 1].SrName,
-				 pEl->ElLabel);
-	    }
-	}
-      else if (pEl->ElParent != NULL)
-	{
-	  if (!AllowedFirstChild (pEl->ElParent, pDoc, pEl->ElTypeNumber,
-				    pEl->ElStructSchema, FALSE, TRUE))
-	    {
-	      ok = FALSE;
-	      TtaDisplayMessage (INFO,  TtaGetMessage (LIB, TMSG_INVALID_CHILD),
-				 pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
-				 pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrName,
-				 pEl->ElLabel);
-	    }
-	}
+   ok = TRUE;
+   if (pEl != NULL)
+     {
+	if (pEl->ElPrevious != NULL)
+	  {
+	     if (!AllowedSibling (pEl->ElPrevious, pDoc, pEl->ElTypeNumber,
+				  pEl->ElStructSchema, FALSE, FALSE, TRUE))
+	       {
+		  ok = FALSE;
+		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INVALID_SIBLING),
+		  pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
+				     pEl->ElPrevious->ElStructSchema->SsRule[pEl->ElPrevious->ElTypeNumber - 1].SrName,
+				     pEl->ElLabel);
+	       }
+	  }
+	else if (pEl->ElParent != NULL)
+	  {
+	     if (!AllowedFirstChild (pEl->ElParent, pDoc, pEl->ElTypeNumber,
+				     pEl->ElStructSchema, FALSE, TRUE))
+	       {
+		  ok = FALSE;
+		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INVALID_CHILD),
+		  pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
+				     pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrName,
+				     pEl->ElLabel);
+	       }
+	  }
 
-      if (!pEl->ElTerminal)
-	{
-	  pChild = pEl->ElFirstChild;
-	  while (pChild != NULL)
-	    {
-	      childOK = AbstractTreeOK (pChild, pDoc);
-	      ok = ok && childOK;
-	      pChild = pChild->ElNext;
-	    }
-	}
-    }
-  return ok;
+	if (!pEl->ElTerminal)
+	  {
+	     pChild = pEl->ElFirstChild;
+	     while (pChild != NULL)
+	       {
+		  childOK = AbstractTreeOK (pChild, pDoc);
+		  ok = ok && childOK;
+		  pChild = pChild->ElNext;
+	       }
+	  }
+     }
+   return ok;
 }
 
 
@@ -3043,6 +3046,7 @@ void                AssociatePairs (PtrElement pRoot)
 #else  /* __STDC__ */
 void                AssociatePairs (pRoot)
 PtrElement          pRoot;
+
 #endif /* __STDC__ */
 {
    PtrElement          pEl1, pEl2;
@@ -3091,6 +3095,7 @@ static void         SetLabel (PtrElement pEl, PtrDocument pDoc)
 static void         SetLabel (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
+
 #endif /* __STDC__ */
 {
    PtrElement          pChild;
@@ -3099,7 +3104,7 @@ PtrDocument         pDoc;
      {
 	if (pEl->ElLabel[0] == '\0')
 	   /* l'element n'a pas de label, on lui en met un */
-	     LabelIntToString (NewLabel (pDoc), pEl->ElLabel);
+	   LabelIntToString (NewLabel (pDoc), pEl->ElLabel);
 	if (!pEl->ElTerminal)
 	   /* traite tous les fils de l'element */
 	  {
@@ -3126,8 +3131,9 @@ static void         PutNatureInTable (PtrDocument pDoc, Name SSName, int rank)
 #else  /* __STDC__ */
 static void         PutNatureInTable (pDoc, SSName, rank)
 PtrDocument         pDoc;
-Name                 SSName;
+Name                SSName;
 int                 rank;
+
 #endif /* __STDC__ */
 {
    int                 i;
@@ -3216,7 +3222,7 @@ PtrSSchema          pLoadedSS;
    do
       if (!BIOreadByte (file, &SSName[i++]))
 	 PivotError (file);
-   while (!error && SSName[i - 1] != '\0' && i != MAX_NAME_LENGTH);
+   while (!error && SSName[i - 1] != '\0' && i != MAX_NAME_LENGTH) ;
    if (SSName[i - 1] != '\0')
      {
 	PivotError (file);
@@ -3234,7 +3240,7 @@ PtrSSchema          pLoadedSS;
 	do
 	   if (!BIOreadByte (file, &PSchemaName[i++]))
 	      PivotError (file);
-	while (!error && PSchemaName[i - 1] != '\0' && i != MAX_NAME_LENGTH);
+	while (!error && PSchemaName[i - 1] != '\0' && i != MAX_NAME_LENGTH) ;
 
 	if (!BIOreadByte (file, tag))
 	   PivotError (file);
@@ -3250,7 +3256,7 @@ PtrSSchema          pLoadedSS;
 	   if (pDoc->DocSSchema->SsCode != versionSchema)
 	     {
 		pDoc->DocToBeChecked = TRUE;
-		TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_STR_SCH_CHANGED), pDoc->DocSSchema->SsName);
+		TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_STR_SCH_CHANGED), pDoc->DocSSchema->SsName);
 	     }
      }
    if (pDoc->DocNatureSSchema[rank - 1] == NULL)
@@ -3295,7 +3301,7 @@ PtrSSchema          pLoadedSS;
 	     do
 		if (!BIOreadByte (file, &PSchemaName[i++]))
 		   PivotError (file);
-	     while (!error && PSchemaName[i - 1] != '\0' && i != MAX_NAME_LENGTH);
+	     while (!error && PSchemaName[i - 1] != '\0' && i != MAX_NAME_LENGTH) ;
 
 	     if (!BIOreadByte (file, tag))
 		PivotError (file);
@@ -3328,7 +3334,7 @@ PtrSSchema          pLoadedSS;
 		if (pSS->SsCode != versionSchema)
 		  {
 		     pDoc->DocToBeChecked = TRUE;
-		     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_STR_SCH_CHANGED), pSS->SsName);
+		     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_STR_SCH_CHANGED), pSS->SsName);
 		  }
 	     pDoc->DocNatureSSchema[rank - 1] = pSS;
 	     strncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName, MAX_NAME_LENGTH);
@@ -3359,8 +3365,8 @@ char               *tag;
 #endif /* __STDC__ */
 
 {
-   Name         languageName;
-   int          i;
+   Name                languageName;
+   int                 i;
 
    /* lit la table des langues utilisees par le document */
    pDoc->DocNLanguages = 0;
@@ -3371,7 +3377,7 @@ char               *tag;
 	   do
 	      if (!BIOreadByte (file, &languageName[i++]))
 		 PivotError (file);
-	   while (!error && languageName[i - 1] != '\0' && i != MAX_NAME_LENGTH);
+	   while (!error && languageName[i - 1] != '\0' && i != MAX_NAME_LENGTH) ;
 	   if (languageName[i - 1] != '\0')
 	     {
 		PivotError (file);
@@ -3690,8 +3696,8 @@ boolean             withEvent;
 			  rule = 0;
 			  pNat = NULL;
 			  s = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, assoc,
-				     FALSE, !pDoc->DocExportStructure, &rule, &pNat,
-				    &typeRead, &pSS, createPages, NULL, TRUE);
+			     FALSE, !pDoc->DocExportStructure, &rule, &pNat,
+				  &typeRead, &pSS, createPages, NULL, TRUE);
 			  if (withEvent && pDoc->DocSSchema != NULL && !error)
 			     SendEventAttrRead (s, pDoc);
 			  if (s != NULL)
@@ -3717,7 +3723,7 @@ boolean             withEvent;
 			      {
 				 if (pSchS1->SsRule[j - 1].SrConstruct == CsList)
 				    if (EquivalentSRules (pSchS1->SsRule[j - 1].SrListItem,
-						 pSchS1, typeRead, pSS, NULL))
+					       pSchS1, typeRead, pSS, NULL))
 				       found = TRUE;
 				 if (!found)
 				    j--;
@@ -3738,7 +3744,7 @@ boolean             withEvent;
 			  /* cree l'element liste pour ce type d'elements associes */
 			 {
 			    pDoc->DocAssocRoot[assoc - 1] = NewSubtree (j, pSchS1,
-			      pDoc, assoc, FALSE, TRUE, FALSE, TRUE);
+				     pDoc, assoc, FALSE, TRUE, FALSE, TRUE);
 			    if (pFirst != NULL)
 			      {
 				 /* chaine le 1er elem. associe dans cette liste */
@@ -3756,9 +3762,9 @@ boolean             withEvent;
 		       rule = 0;
 		       pNat = NULL;
 		       s = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, assoc,
-				     FALSE, !pDoc->DocExportStructure, &rule, &pNat,
+			     FALSE, !pDoc->DocExportStructure, &rule, &pNat,
 					&typeRead, &pSS, createPages,
-				    pDoc->DocAssocRoot[assoc - 1], TRUE);
+					pDoc->DocAssocRoot[assoc - 1], TRUE);
 		       if (withEvent && pDoc->DocSSchema != NULL && !error)
 			  SendEventAttrRead (s, pDoc);
 		       if (s != NULL)
@@ -3806,8 +3812,8 @@ boolean             withEvent;
 			rule = 0;
 			pNat = NULL;
 			p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, 0,
-				     FALSE, !pDoc->DocExportStructure, &rule, &pNat,
-				    &typeRead, &pSS, createPages, NULL, TRUE);
+			     FALSE, !pDoc->DocExportStructure, &rule, &pNat,
+				  &typeRead, &pSS, createPages, NULL, TRUE);
 			if (withEvent && pDoc->DocSSchema != NULL && !error)
 			   SendEventAttrRead (p, pDoc);
 			/* force la creation d'un element racine */
@@ -3816,7 +3822,7 @@ boolean             withEvent;
 			   p = NewSubtree (pDoc->DocSSchema->SsRootElem, pDoc->DocSSchema, pDoc, 0,
 					   FALSE, TRUE, TRUE, TRUE);
 			else if (p->ElStructSchema != pDoc->DocSSchema
-				 || p->ElTypeNumber != pDoc->DocSSchema->SsRootElem)
+			 || p->ElTypeNumber != pDoc->DocSSchema->SsRootElem)
 			   /* ce n'est pas la racine attendue */
 			  {
 			     s = p;
@@ -3841,10 +3847,10 @@ boolean             withEvent;
 	   /* Le document n'est pas correct */
 	  {
 	     /* on previent l'utilisateur */
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_INCORRECT_DOC_STRUCTURE), pDoc->DocDName);
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_DOC_STRUCTURE), pDoc->DocDName);
 	     /* on met le document en Read-Only */
 	     pDoc->DocReadOnly = TRUE;
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LOCKED_DOC), pDoc->DocDName);
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LOCKED_DOC), pDoc->DocDName);
 	  }
 	/* libere les labels des elements reference's par d'autres */
 	/* documents */
@@ -3933,7 +3939,7 @@ boolean             withEvent;
 					    {
 					       extDocNum = 0;
 					       while (pExternalDoc[extDocNum] != NULL
-						   && extDocNum < MAX_EXT_DOC-1)
+						      && extDocNum < MAX_EXT_DOC - 1)
 						  extDocNum++;
 					       if (pExternalDoc[extDocNum] == NULL)
 						  /* on a trouve' une entree libre, on */
@@ -3944,8 +3950,8 @@ boolean             withEvent;
 						      {
 							 CopyDocIdent (&pExternalDoc[extDocNum]->DocIdent, docIdent);
 							 ok = OpenDocument (NULL, pExternalDoc[extDocNum],
-									FALSE, FALSE,
-									NULL, FALSE);
+							       FALSE, FALSE,
+							       NULL, FALSE);
 						      }
 						    if (pExternalDoc[extDocNum] != NULL)
 						      {
@@ -3953,7 +3959,7 @@ boolean             withEvent;
 							 if (!ok)
 							   {
 							      /* echec a l'ouverture du document */
-							      TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_MISSING_FILE), docIdent);
+							      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), docIdent);
 							      FreeDocument (pExternalDoc[extDocNum]);
 							      pExternalDoc[extDocNum] = NULL;
 							   }

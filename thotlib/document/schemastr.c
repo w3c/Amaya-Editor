@@ -4,8 +4,8 @@
 
 
 /* 
-	Chargement et liberation des schemas de structure sans schemas
-	de presentation
+   Chargement et liberation des schemas de structure sans schemas
+   de presentation
  */
 
 #include "thot_sys.h"
@@ -39,13 +39,13 @@ void                LoadNatureSchema (PtrSSchema pSS, Name PSchName, int rule)
 void                LoadNatureSchema (pSS, PSchName, rule)
 PtrSSchema          pSS;
 Name                PSchName;
-int         rule;
+int                 rule;
 
 #endif /* __STDC__ */
 
 {
-   PtrSSchema        pNatureSS;
-   Name              schName;
+   PtrSSchema          pNatureSS;
+   Name                schName;
 
    /* utilise le nom de la nature comme nom de fichier. */
    /* copie le nom de nature dans schName */
@@ -81,11 +81,11 @@ int         rule;
    des regles                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         AppendSRule (int * ret, PtrSSchema pSS)
+static void         AppendSRule (int *ret, PtrSSchema pSS)
 
 #else  /* __STDC__ */
 static void         AppendSRule (ret, pSS)
-int                 *ret;
+int                *ret;
 PtrSSchema          pSS;
 
 #endif /* __STDC__ */
@@ -117,10 +117,10 @@ PtrSSchema          pSS;
    creee ou 0 si echec creation.                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int         CreateNature (Name SSchName, Name PSchName, PtrSSchema pSS)
+int                 CreateNature (Name SSchName, Name PSchName, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-int         CreateNature (SSchName, PSchName, pSS)
+int                 CreateNature (SSchName, PSchName, pSS)
 Name                SSchName;
 Name                PSchName;
 PtrSSchema          pSS;
@@ -128,9 +128,9 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
-   SRule            *pRule;
-   int              ret;
-   boolean          found;
+   SRule              *pRule;
+   int                 ret;
+   boolean             found;
 
    /* schema de structure du document */
    /* cherche si le type existe deja dans le schema de structure */
@@ -217,7 +217,7 @@ boolean             Extension;
 #endif /* __STDC__ */
 
 {
-   Name                 schName;
+   Name                schName;
 
    strncpy (schName, SSchName, MAX_NAME_LENGTH);
    /* cree le schema de structure et charge le fichier dedans */
@@ -248,18 +248,18 @@ boolean             Extension;
    d'extension de nom SSchName.                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrSSchema        LoadExtension (Name SSchName, Name PSchName, PtrDocument pDoc)
+PtrSSchema          LoadExtension (Name SSchName, Name PSchName, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-PtrSSchema        LoadExtension (SSchName, PSchName, pDoc)
-Name              SSchName;
-Name              PSchName;
-PtrDocument       pDoc;
+PtrSSchema          LoadExtension (SSchName, PSchName, pDoc)
+Name                SSchName;
+Name                PSchName;
+PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrSSchema        pExtens, pPrevExtens;
+   PtrSSchema          pExtens, pPrevExtens;
 
    pExtens = NULL;
    if (pDoc->DocSSchema != NULL)
@@ -297,8 +297,8 @@ PtrDocument       pDoc;
 static boolean      FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS)
 #else  /* __STDC__ */
 static boolean      FreeNatureRules (pSS, pNatureSS)
-PtrSSchema        pSS;
-PtrSSchema        pNatureSS;
+PtrSSchema          pSS;
+PtrSSchema          pNatureSS;
 
 #endif /* __STDC__ */
 {
@@ -343,7 +343,7 @@ PtrSSchema          pNatureSS;
 #endif /* __STDC__ */
 
 {
-   boolean          ret;
+   boolean             ret;
 
    ret = FALSE;
    /* Cherche tous les schemas de structure qui utilisaient cette nature */
@@ -371,7 +371,7 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   PtrSSchema        pSS, pNextSS;
+   PtrSSchema          pSS, pNextSS;
 
    pSS = pDoc->DocSSchema;
    /* libere le schema de structure du document et ses extensions */

@@ -347,7 +347,7 @@ Attribute          *attribute;
 #endif /* __STDC__ */
 
 {
-   PtrAttribute		pAttr;
+   PtrAttribute        pAttr;
 
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -358,8 +358,8 @@ Attribute          *attribute;
    else
       /* parametre document correct */
       ReadAttributePiv (pivotFile, (PtrElement) element,
-		    LoadedDocument[document - 1], create,
-		    (PtrAttribute *) attribute, &pAttr);
+			LoadedDocument[document - 1], create,
+			(PtrAttribute *) attribute, &pAttr);
 }
 
 /*----------------------------------------------------------------------
@@ -405,7 +405,7 @@ PRule              *pRule;
    else
       /* parametre document correct */
       ReadPRulePiv (LoadedDocument[document - 1], pivotFile,
-		(PtrElement) element, create, (PtrPRule *) pRule, TRUE);
+		    (PtrElement) element, create, (PtrPRule *) pRule, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -442,12 +442,12 @@ Element            *elementRead;
 #endif /* __STDC__ */
 
 {
-   int         TypeCont;
-   PtrSSchema        pSchStrCont;
+   int                 TypeCont;
+   PtrSSchema          pSchStrCont;
    int                 NumAssoc;
-   PtrSSchema        pSS;
-   int         TypeLu;
-   PtrSSchema        SchStrLu;
+   PtrSSchema          pSS;
+   int                 TypeLu;
+   PtrSSchema          SchStrLu;
 
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -471,7 +471,7 @@ Element            *elementRead;
 	     pSS = ((PtrElement) element)->ElStructSchema;
 	  }
 	*elementRead = (Element) ReadTreePiv (pivotFile, pSS,
-				 LoadedDocument[document - 1], byte, NumAssoc,
+			       LoadedDocument[document - 1], byte, NumAssoc,
 			      FALSE, TRUE, &TypeCont, &pSchStrCont, &TypeLu,
 			       &SchStrLu, TRUE, (PtrElement) element, TRUE);
      }
@@ -803,12 +803,12 @@ char               *label;
    else
       /* parametre document correct */
       if (elemType.ElTypeNum < 1 ||
-   elemType.ElTypeNum > ((PtrSSchema) (elemType.ElSSchema))->SsNRules)
+	  elemType.ElTypeNum > ((PtrSSchema) (elemType.ElSSchema))->SsNRules)
       TtaError (ERR_invalid_element_type);
    else
      {
 	element = (Element) NewSubtree (elemType.ElTypeNum, (PtrSSchema) (elemType.ElSSchema),
-		    LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, (*label) == '\0');
+					LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, (*label) == '\0');
 	if (*label != '\0')
 	   strncpy (((PtrElement) element)->ElLabel, label, MAX_LABEL_LEN);
      }

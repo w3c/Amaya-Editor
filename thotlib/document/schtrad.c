@@ -25,9 +25,9 @@
 
 typedef struct _ATranslation
   {
-     PtrSSchema        pStructSchema;	/* pointeur sur le schema de struct. */
-     PtrTSchema        pTransSchema;	/* pointeur sur le schema de trad. */
-     Name              TransSchemaName;	/* nom du schema de traduction */
+     PtrSSchema          pStructSchema;		/* pointeur sur le schema de struct. */
+     PtrTSchema          pTransSchema;	/* pointeur sur le schema de trad. */
+     Name                TransSchemaName;	/* nom du schema de traduction */
   }
 ATranslation;
 
@@ -35,7 +35,7 @@ ATranslation;
 				   en meme temps */
 
 /* table des schemas de traduction charges */
-static ATranslation    LoadedTSchema[MAX_TSCHEMAS];
+static ATranslation LoadedTSchema[MAX_TSCHEMAS];
 
 /*----------------------------------------------------------------------
    InitTranslationSchemasTable initialise la table des schemas de	
@@ -93,12 +93,12 @@ void                ClearTranslationSchemasTable ()
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrTSchema        LoadTranslationSchema (Name schName, PtrSSchema pSS)
+PtrTSchema          LoadTranslationSchema (Name schName, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-PtrTSchema        LoadTranslationSchema (schName, pSS)
-Name              schName;
-PtrSSchema        pSS;
+PtrTSchema          LoadTranslationSchema (schName, pSS)
+Name                schName;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -165,8 +165,8 @@ Name                schName;
 #endif /* __STDC__ */
 
 {
-   PtrTRule        pTRule;
-   boolean         found;
+   PtrTRule            pTRule;
+   boolean             found;
 
    found = FALSE;
    if (pBlock != NULL)
@@ -206,7 +206,7 @@ static void         GetTransSchName (Name schName)
 
 #else  /* __STDC__ */
 static void         GetTransSchName (schName)
-Name                 schName;
+Name                schName;
 
 #endif /* __STDC__ */
 
@@ -237,18 +237,18 @@ Name                 schName;
 	   /* on a trouve la nature, on cherche une regle USE parmi les */
 	   /* regles de traduction de l'element nature */
 	   found = GetUSErule (LoadedTSchema[0].pTransSchema->TsElemTRule[i - 1],
-				schName);
+			       schName);
 	if (!found)
 	   /* on cherche une regle USE parmi les regles de traduction de */
 	   /* l'element racine du document */
 	   found = GetUSErule (LoadedTSchema[0].pTransSchema->
-	     TsElemTRule[LoadedTSchema[0].pStructSchema->SsRootElem - 1],
-				schName);
+		TsElemTRule[LoadedTSchema[0].pStructSchema->SsRootElem - 1],
+			       schName);
      }
    if (!found)
      {
 	/* on n'a pas trouve' de regle USE pour cette nature */
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_EL_NOT_TRANSLATED),
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_EL_NOT_TRANSLATED),
 			   schName);
 	schName[0] = '\0';
      }
@@ -260,11 +260,11 @@ Name                 schName;
    	appliquer aux elements appartenant au schema de structure pSS.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrTSchema        GetTranslationSchema (PtrSSchema pSS)
+PtrTSchema          GetTranslationSchema (PtrSSchema pSS)
 
 #else  /* __STDC__ */
-PtrTSchema        GetTranslationSchema (pSS)
-PtrSSchema        pSS;
+PtrTSchema          GetTranslationSchema (pSS)
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 

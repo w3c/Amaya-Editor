@@ -66,7 +66,7 @@
 #include "docs_f.h"
 #include "frame_f.h"
 
-static AvailableView    AllViews;
+static AvailableView AllViews;
 static int          ViewMenuItem[MAX_VIEW_OPEN];
 
 /*----------------------------------------------------------------------
@@ -237,18 +237,18 @@ boolean             nature;
 	     while (view < pPSchema->PsNViews)
 	       {
 		  if (pDoc->DocExportStructure)
-		       /* only Export view */
-		       viewOK = pPSchema->PsExportView[view];
+		     /* only Export view */
+		     viewOK = pPSchema->PsExportView[view];
 		  else
-		       /* no Export view */
-		       viewOK = !pPSchema->PsExportView[view];
+		     /* no Export view */
+		     viewOK = !pPSchema->PsExportView[view];
 		  if (viewOK)
 		    {
 		       /* verifie que la vue n'est pas encore dans la liste */
 		       present = FALSE;
 		       for (i = 0; i < *nViews && !present; i++)
-			    present = (viewList[i].VdView == view + 1
-				      && viewList[i].VdSSchema->SsCode == pSS->SsCode);
+			  present = (viewList[i].VdView == view + 1
+			   && viewList[i].VdSSchema->SsCode == pSS->SsCode);
 		       if (!present)
 			 {
 			    /* on met la vue dans la liste */
@@ -297,8 +297,8 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   SRule      *pSRule;
-   int         rule;
+   SRule              *pSRule;
+   int                 rule;
 
    /* parcourt les regles de structure */
    for (rule = 0; rule < pSS->SsNRules; rule++)
@@ -338,10 +338,10 @@ AvailableView       viewList;
 #endif /* __STDC__ */
 
 {
-   PtrSSchema        pSS;
-   SRule             *pSRule;
-   int               a, rule, nViews;
-   boolean           assocPres, present;
+   PtrSSchema          pSS;
+   SRule              *pSRule;
+   int                 a, rule, nViews;
+   boolean             assocPres, present;
 
    nViews = 0;
    if (pDoc->DocSSchema != NULL)
@@ -370,9 +370,9 @@ AvailableView       viewList;
 		   /* la nature est chargee */
 		   if (pSRule->SrSSchemaNat->SsNObjects > 0)
 		      /* il existe au moins un objet de cette nature dans
-			 le document */
+		         le document */
 		      BuildSSchemaViewList (pDoc, pSRule->SrSSchemaNat, viewList,
-					&nViews, TRUE);
+					    &nViews, TRUE);
 	  }
 
 	/* vues des elements associes */
@@ -424,16 +424,16 @@ AvailableView       viewList;
 				viewList[nViews].VdView = a;
 			     else
 				viewList[nViews].VdView = 0;
-			     viewList[nViews].VdAssocNum = rule+1;
+			     viewList[nViews].VdAssocNum = rule + 1;
 			     strncpy (viewList[nViews].VdViewName,
-				   pSS->SsRule[rule].SrName, MAX_NAME_LENGTH);
+				 pSS->SsRule[rule].SrName, MAX_NAME_LENGTH);
 			     viewList[nViews].VdSSchema = pSS;
 			     viewList[nViews].VdOpen = present;
 			     viewList[nViews].VdAssoc = TRUE;
 			     viewList[nViews].VdExist = assocPres;
 			     viewList[nViews].VdNature = FALSE;
 			     viewList[nViews].VdPaginated =
-				pSS->SsPSchema->PsAssocPaginated[rule+1];
+				pSS->SsPSchema->PsAssocPaginated[rule + 1];
 			     nViews++;
 			  }
 	       }
@@ -451,9 +451,9 @@ AvailableView       viewList;
    le document pDoc					
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int                 NumberOfOpenViews (PtrDocument pDoc)
+static int          NumberOfOpenViews (PtrDocument pDoc)
 #else  /* __STDC__ */
-static int                 NumberOfOpenViews (pDoc)
+static int          NumberOfOpenViews (pDoc)
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -481,7 +481,7 @@ void                FreeView (PtrDocument pDoc, DocViewNumber view)
 #else  /* __STDC__ */
 void                FreeView (pDoc, view)
 PtrDocument         pDoc;
-DocViewNumber           view;
+DocViewNumber       view;
 
 #endif /* __STDC__ */
 {
@@ -563,7 +563,7 @@ char               *newName;
 
 #endif /* __STDC__ */
 {
-   DocViewDescr        *pView;
+   DocViewDescr       *pView;
    int                 len, view;
    char                buffer[MAX_TXT_LEN];
 
@@ -662,7 +662,7 @@ PtrDocument         pDoc;
    PtrPSchema          pPSchema;
    NotifyDialog        notifyDoc;
    int                 view, i, X, Y, width, height, schView;
-   boolean	       bool, skeleton;
+   boolean             bool, skeleton;
 
    /* si le document a ete charge' sous le forme de ses seuls elements 
       exporte's, on ouvre la vue EXPORT, sinon, on ouvre la premiere vue. */
@@ -692,8 +692,8 @@ PtrDocument         pDoc;
      {
 	schView = pDoc->DocView[view - 1].DvPSchemaView;
 	pDoc->DocViewFrame[0] = CreateWindowWithTitle (pDoc, schView,
-			    pDoc->DocSSchema->SsPSchema->PsView[view - 1],
-			    &pDoc->DocViewVolume[0], X, Y, width, height);
+			      pDoc->DocSSchema->SsPSchema->PsView[view - 1],
+			      &pDoc->DocViewVolume[0], X, Y, width, height);
      }
    if (pDoc->DocViewFrame[0] == 0)
       /* echec creation fenetre */
@@ -773,12 +773,15 @@ PtrElement          viewRoot;
    PtrElement          firstSel, lastSel;
    PtrAbstractBox      pAb;
    NotifyElement       notifyEl;
-   int                 view, freeView, assoc, volume, firstChar, lastChar, ret;
+   int                 view, freeView, assoc, volume, firstChar, lastChar,
+                       ret;
    boolean             stop, sel, selInMainTree, bool;
    boolean             truncHead, assocPresent;
+
 #ifdef __COLPAGE__
    PtrPSchema          pPagePsch;
    FILE               *list;
+
 #endif /* __COLPAGE__ */
 
    ret = 0;
@@ -821,7 +824,7 @@ PtrElement          viewRoot;
    /* volume de l'image abstraite a creer */
    volume = 1000;
    if (v == 0)
-     /* on cree une vue d'elements associes */
+      /* on cree une vue d'elements associes */
      {
 	if (!assocPresent)
 	   /* il n'existe pas d'elements associes de ce type */
@@ -859,9 +862,9 @@ PtrElement          viewRoot;
 			    pDoc->DocAssocRoot[assoc - 1]->ElAccess = AccessReadWrite;
 			    CheckLanguageAttr (pDoc, pDoc->DocAssocRoot[assoc - 1]);
 			    /* traitement des exceptions */
-			    if (ThotLocalActions[T_createtable]!= NULL)
-			      (*ThotLocalActions[T_createtable])	
-				(pDoc->DocAssocRoot[assoc - 1], pDoc);  
+			    if (ThotLocalActions[T_createtable] != NULL)
+			       (*ThotLocalActions[T_createtable])
+				  (pDoc->DocAssocRoot[assoc - 1], pDoc);
 			    /* creation d'une table */
 			    /* traitement des attributs requis */
 			    AttachMandatoryAttributes (pDoc->DocAssocRoot[assoc - 1], pDoc);
@@ -872,7 +875,7 @@ PtrElement          viewRoot;
 			      {
 				 /* Ajoute un saut de page a la fin si necessaire */
 				 AddLastPageBreak (pDoc->DocAssocRoot[assoc - 1],
-						  1, pDoc, TRUE);
+						   1, pDoc, TRUE);
 			      }
 #endif /* __COLPAGE__ */
 			    /* envoie l'evenement ElemNew.Post */
@@ -912,7 +915,7 @@ PtrElement          viewRoot;
 	       }
 	     if (begin)
 		pAb = AbsBoxesCreate (pDoc->DocAssocRoot[assoc - 1], pDoc, 1,
-					TRUE, TRUE, &bool);
+				      TRUE, TRUE, &bool);
 	     else
 		/* on cree l'image abstraite autour du premier */
 		/* element selectionne' */
@@ -982,7 +985,7 @@ PtrElement          viewRoot;
 		     /* le debut du document */
 
 		     pDoc->DocViewRootAb[freeView - 1] = AbsBoxesCreate (pDoc->DocRootElement,
-				      pDoc, freeView, TRUE, TRUE, &bool);
+					 pDoc, freeView, TRUE, TRUE, &bool);
 
 		  else
 		    {
@@ -1135,20 +1138,20 @@ PtrSSchema         *pSS;
       non ouvertes */
    pPSch = pDoc->DocSSchema->SsPSchema;
    for (viewSch = 1; viewSch <= pPSch->PsNViews && !ret; viewSch++)
-      {
-      open = FALSE;
-      for (viewDoc = 0; viewDoc < MAX_VIEW_DOC && !open; viewDoc++)
-         if (pDoc->DocView[viewDoc].DvPSchemaView == viewSch)
-	    open = TRUE;
-      if (!open)
-	 if (strcmp (pPSch->PsView[viewSch - 1], viewName) == 0)
-	   {
-	      *view = viewSch;
-	      *assoc = FALSE;
-	      *pSS = pDoc->DocSSchema;
-	      ret = TRUE;
-	   }
-      }
+     {
+	open = FALSE;
+	for (viewDoc = 0; viewDoc < MAX_VIEW_DOC && !open; viewDoc++)
+	   if (pDoc->DocView[viewDoc].DvPSchemaView == viewSch)
+	      open = TRUE;
+	if (!open)
+	   if (strcmp (pPSch->PsView[viewSch - 1], viewName) == 0)
+	     {
+		*view = viewSch;
+		*assoc = FALSE;
+		*pSS = pDoc->DocSSchema;
+		ret = TRUE;
+	     }
+     }
    if (!ret)
      {
 	/* cherche parmi les vues des elements associes non ouvertes */
@@ -1158,13 +1161,13 @@ PtrSSchema         *pSS;
 	do
 	  {
 	     /* rule: derniere regle qui pourrait etre une liste d'elements
-		associes */
+	        associes */
 	     if (pSSch->SsFirstDynNature == 0)
 		rule = pSSch->SsNRules;
 	     else
 		rule = pSSch->SsFirstDynNature - 1;
 	     /* boucle sur les regles a la recherche des listes d'elements
-		associes */
+	        associes */
 	     while (rule > 1 && !ret)
 	       {
 		  rule--;
@@ -1182,7 +1185,7 @@ PtrSSchema         *pSS;
 			     do
 			       {
 				  if (pDoc->DocAssocRoot[ass] != NULL)
-				     if (pDoc->DocAssocRoot[ass]->ElTypeNumber == rule+1)
+				     if (pDoc->DocAssocRoot[ass]->ElTypeNumber == rule + 1)
 					if (pDoc->DocAssocFrame[ass] > 0)
 					   present = TRUE;
 				  ass++;
@@ -1193,7 +1196,7 @@ PtrSSchema         *pSS;
 				  pSRule = &pSSch->SsRule[rule];
 				  if (strcmp (pSRule->SrName, viewName) == 0)
 				    {
-				       *view = rule+1;
+				       *view = rule + 1;
 				       *assoc = TRUE;
 				       *pSS = pSSch;
 				       ret = TRUE;
@@ -1306,16 +1309,16 @@ DocViewNumber       selectedView;
 	     if (AllViews[theView - 1].VdAssoc)
 	       {
 		  view = CreateAbstractImage (pDoc, 0, AllViews[theView - 1].VdAssocNum,
-					    AllViews[theView - 1].VdSSchema, selectedView,
-					    TRUE, subTree);
+			      AllViews[theView - 1].VdSSchema, selectedView,
+					      TRUE, subTree);
 		  OpenCreatedView (pDoc, view, TRUE, X, Y, width, height);
 		  view += 100;
 	       }
 	     else
 	       {
 		  view = CreateAbstractImage (pDoc, AllViews[theView - 1].VdView, 0,
-					    AllViews[theView - 1].VdSSchema, selectedView,
-					    FALSE, subTree);
+			      AllViews[theView - 1].VdSSchema, selectedView,
+					      FALSE, subTree);
 		  OpenCreatedView (pDoc, view, FALSE, X, Y, width, height);
 	       }
 	     notifyDoc.event = TteViewOpen;
@@ -1363,8 +1366,8 @@ int                *nItems;
 	/* l'arbre principal */
 
 	/* cree le catalogue des vues qu'il est possible de creer */
-        /* i: index courant dans le buffer du menu */
-	i = 0;			
+	/* i: index courant dans le buffer du menu */
+	i = 0;
 	/* nItems: nombre d'entrees dans le menu */
 	*nItems = 0;
 	nViews = BuildDocumentViewList (pDoc, AllViews);
@@ -1380,7 +1383,7 @@ int                *nItems;
 		 || (!AllViews[j].VdAssoc && (freeView > 0)))
 	       {
 		  /* L'entree nItems du menu est l'entree j dans AllViews. */
-		  ViewMenuItem[(*nItems)++] = j+1;
+		  ViewMenuItem[(*nItems)++] = j + 1;
 		  longueur = strlen (AllViews[j].VdViewName) + 1;
 		  if (longueur + i < MAX_TXT_LEN)
 		    {

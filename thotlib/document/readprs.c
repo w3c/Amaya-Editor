@@ -137,9 +137,9 @@ BinFile             file;
    	ReadPresMode lit un mode de presentation et retourne sa valeur.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PresMode   ReadPresMode (BinFile file)
+static PresMode     ReadPresMode (BinFile file)
 #else  /* __STDC__ */
-static PresMode   ReadPresMode (file)
+static PresMode     ReadPresMode (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -216,9 +216,9 @@ BinFile             file;
    ReadInheritMode lit un mode d'heritage et retourne sa valeur.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static InheritMode ReadInheritMode (BinFile file)
+static InheritMode  ReadInheritMode (BinFile file)
 #else  /* __STDC__ */
-static InheritMode ReadInheritMode (file)
+static InheritMode  ReadInheritMode (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -260,9 +260,9 @@ BinFile             file;
    	retourne sa valeur.						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static FunctionType    ReadFunctionType (BinFile file, boolean * repeat)
+static FunctionType ReadFunctionType (BinFile file, boolean * repeat)
 #else  /* __STDC__ */
-static FunctionType    ReadFunctionType (file, repeat)
+static FunctionType ReadFunctionType (file, repeat)
 BinFile             file;
 boolean            *repeat;
 
@@ -352,9 +352,9 @@ boolean            *repeat;
    	sa valeur.							
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static BAlignment      ReadAlignment (BinFile file)
+static BAlignment   ReadAlignment (BinFile file)
 #else  /* __STDC__ */
-static BAlignment      ReadAlignment (file)
+static BAlignment   ReadAlignment (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -498,15 +498,15 @@ BinFile             file;
    	ReadArithRel     lit la relation d'une condition Within		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ArithRel   ReadArithRel (BinFile file)
+static ArithRel     ReadArithRel (BinFile file)
 #else  /* __STDC__ */
-static ArithRel   ReadArithRel (file)
-BinFile           file;
+static ArithRel     ReadArithRel (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 {
-   char              c;
-   ArithRel          rel;
+   char                c;
+   ArithRel            rel;
 
    if (!BIOreadByte (file, &c))
      {
@@ -531,15 +531,15 @@ BinFile           file;
    	ReadBoxEdge   lit un repere de boite et retourne sa valeur.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static BoxEdge  ReadBoxEdge (BinFile file)
+static BoxEdge      ReadBoxEdge (BinFile file)
 #else  /* __STDC__ */
-static BoxEdge  ReadBoxEdge (file)
-BinFile         file;
+static BoxEdge      ReadBoxEdge (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 {
-   char            c;
-   BoxEdge         edge;
+   char                c;
+   BoxEdge             edge;
 
    if (!BIOreadByte (file, &c))
      {
@@ -589,16 +589,16 @@ BinFile         file;
    	sa valeur.							
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Level       ReadLevel (BinFile file)
+static Level        ReadLevel (BinFile file)
 
 #else  /* __STDC__ */
-static Level       ReadLevel (file)
+static Level        ReadLevel (file)
 BinFile             file;
 
 #endif /* __STDC__ */
 {
    char                c;
-   Level              level;
+   Level               level;
 
    if (!BIOreadByte (file, &c))
      {
@@ -693,15 +693,15 @@ BinFile             file;
    	sa valeur.							
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static BasicType   ReadBasicType (BinFile file)
+static BasicType    ReadBasicType (BinFile file)
 #else  /* __STDC__ */
-static BasicType   ReadBasicType (file)
+static BasicType    ReadBasicType (file)
 BinFile             file;
 
 #endif /* __STDC__ */
 {
    char                c;
-   BasicType          basictyp;
+   BasicType           basictyp;
 
    if (!BIOreadByte (file, &c))
      {
@@ -741,11 +741,11 @@ BinFile             file;
    	ReadVariableType  lit un type de variable et retourne sa valeur	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static VariableType      ReadVariableType (BinFile file)
+static VariableType ReadVariableType (BinFile file)
 
 #else  /* __STDC__ */
-static VariableType      ReadVariableType (file)
-BinFile                  file;
+static VariableType ReadVariableType (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 {
@@ -803,10 +803,10 @@ BinFile                  file;
    	ReadCounterStyle lit un style de compteur et retourne sa valeur	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static CounterStyle   ReadCounterStyle (BinFile file)
+static CounterStyle ReadCounterStyle (BinFile file)
 #else  /* __STDC__ */
-static CounterStyle   ReadCounterStyle (file)
-BinFile               file;
+static CounterStyle ReadCounterStyle (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 {
@@ -857,7 +857,7 @@ BinFile             file;
 #endif /* __STDC__ */
 {
    char                c;
-   CounterValue      value;
+   CounterValue        value;
 
    if (!BIOreadByte (file, &c))
      {
@@ -932,12 +932,12 @@ BinFile             file;
    	s'il n'y a pas de regle suivante.				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrPRule        ReadPRulePtr (BinFile file, PtrPRule * pNextPRule)
+PtrPRule            ReadPRulePtr (BinFile file, PtrPRule * pNextPRule)
 
 #else  /* __STDC__ */
-PtrPRule        ReadPRulePtr (file, pNextPRule)
-BinFile         file;
-PtrPRule       *pNextPRule;
+PtrPRule            ReadPRulePtr (file, pNextPRule)
+BinFile             file;
+PtrPRule           *pNextPRule;
 
 #endif /* __STDC__ */
 {
@@ -1022,16 +1022,16 @@ void                ReadPRules (BinFile file, PtrPRule * pPRule, PtrPRule * pNex
 #else  /* __STDC__ */
 void                ReadPRules (file, pPRule, pNextPRule)
 BinFile             file;
-PtrPRule            *pPRule;
-PtrPRule            *pNextPRule;
+PtrPRule           *pPRule;
+PtrPRule           *pNextPRule;
 
 #endif /* __STDC__ */
 {
-   PtrPRule         pPR;
-   PtrCondition     pCond;
-   PresCondition    typeCond;
-   DimensionRule    *pDim;
-   int              i;
+   PtrPRule            pPR;
+   PtrCondition        pCond;
+   PresCondition       typeCond;
+   DimensionRule      *pDim;
+   int                 i;
 
    if (*pPRule != NULL && !error)
       /* pointeur sur la premiere regle qui va etre lue */
@@ -1204,7 +1204,7 @@ PtrPRule            *pNextPRule;
 	     if (pPR->PrNextPRule != NULL)
 		pPR->PrNextPRule = *pNextPRule;
 	  }
-	while (pPR->PrNextPRule != NULL && ! error);
+	while (pPR->PrNextPRule != NULL && !error);
      }
 }
 
@@ -1229,21 +1229,21 @@ PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 {
-   PtrPRule         pNextPRule;
-   PtrPSchema       pPSch;
-   Counter          *pCntr;
-   CntrItem         *pCntrItem;
-   PresConstant     *pConst;
-   PresVariable     *pVar;
-   PresVarItem      *pVarItem;
-   PresentationBox  *pBox;
-   AttributePres    *pAttrP;
-   NumAttrCase      *pCase;
-   PathBuffer       dirBuffer;
-   BinFile          file;
-   char             buf[MAX_TXT_LEN];
-   int              InitialNElems, i, j, l;
-   boolean          ret;
+   PtrPRule            pNextPRule;
+   PtrPSchema          pPSch;
+   Counter            *pCntr;
+   CntrItem           *pCntrItem;
+   PresConstant       *pConst;
+   PresVariable       *pVar;
+   PresVarItem        *pVarItem;
+   PresentationBox    *pBox;
+   AttributePres      *pAttrP;
+   NumAttrCase        *pCase;
+   PathBuffer          dirBuffer;
+   BinFile             file;
+   char                buf[MAX_TXT_LEN];
+   int                 InitialNElems, i, j, l;
+   boolean             ret;
 
    error = FALSE;
    pPSch = NULL;
@@ -1258,7 +1258,7 @@ PtrSSchema          pSS;
 	/* message 'Fichier inaccessible' */
 	strncpy (buf, fileName, MAX_NAME_LENGTH);
 	strcat (buf, ".PRS");
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_MISSING_FILE), buf);
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
      }
    else
      {
@@ -1310,7 +1310,7 @@ PtrSSchema          pSS;
 	     pNextPRule = NULL;
 	     pPSch = NULL;
 	     /* Schemas incompatibles */
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_OLD_SCH_TO_RECOMP),
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_OLD_SCH_TO_RECOMP),
 				buf);
 	  }
 	else
@@ -1379,7 +1379,7 @@ PtrSSchema          pSS;
 			do
 			   if (!BIOreadByte (file, &pConst->PdString[j++]))
 			      error = True;
-			while (pConst->PdString[j - 1] != '\0' && !error);
+			while (pConst->PdString[j - 1] != '\0' && !error) ;
 		  }
 
 	     /* lit les variables de presentation */
@@ -1638,11 +1638,10 @@ PtrSSchema          pSS;
    if (error)
      {
 	/* message 'Schema incorrect' */
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_INCORRECT_PRS_FILE),
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_PRS_FILE),
 			   fileName);
 	return NULL;
      }
    else
       return pPSch;
 }
-

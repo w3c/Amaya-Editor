@@ -148,17 +148,17 @@ BinFile             file;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static TRuleType ReadTRuleType (BinFile file)
+static TRuleType    ReadTRuleType (BinFile file)
 
 #else  /* __STDC__ */
-static TRuleType ReadTRuleType (file)
+static TRuleType    ReadTRuleType (file)
 BinFile             file;
 
 #endif /* __STDC__ */
 
 {
-   char            c;
-   TRuleType       ruleType;
+   char                c;
+   TRuleType           ruleType;
 
    ruleType = TRemove;
    if (!BIOreadByte (file, &c))
@@ -220,10 +220,10 @@ BinFile             file;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static RelatNAscend  ReadRelatNAscend (BinFile file)
+static RelatNAscend ReadRelatNAscend (BinFile file)
 
 #else  /* __STDC__ */
-static RelatNAscend  ReadRelatNAscend (file)
+static RelatNAscend ReadRelatNAscend (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -258,17 +258,17 @@ BinFile             file;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static TOrder   ReadTOrder (BinFile file)
+static TOrder       ReadTOrder (BinFile file)
 
 #else  /* __STDC__ */
-static TOrder   ReadTOrder (file)
-BinFile         file;
+static TOrder       ReadTOrder (file)
+BinFile             file;
 
 #endif /* __STDC__ */
 
 {
-   char            c;
-   TOrder          order;
+   char                c;
+   TOrder              order;
 
    order = TAfter;
    if (!BIOreadByte (file, &c))
@@ -298,10 +298,10 @@ BinFile         file;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static CreatedObject     ReadCreatedObject (BinFile file)
+static CreatedObject ReadCreatedObject (BinFile file)
 
 #else  /* __STDC__ */
-static CreatedObject     ReadCreatedObject (file)
+static CreatedObject ReadCreatedObject (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -391,10 +391,10 @@ BinFile             file;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static TRelatPosition     ReadTRelatPosition (BinFile file)
+static TRelatPosition ReadTRelatPosition (BinFile file)
 
 #else  /* __STDC__ */
-static TRelatPosition     ReadTRelatPosition (file)
+static TRelatPosition ReadTRelatPosition (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -435,17 +435,17 @@ BinFile             file;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static TCounterOp  ReadTCounterOp (BinFile file)
+static TCounterOp   ReadTCounterOp (BinFile file)
 
 #else  /* __STDC__ */
-static TCounterOp  ReadTCounterOp (file)
+static TCounterOp   ReadTCounterOp (file)
 BinFile             file;
 
 #endif /* __STDC__ */
 
 {
-   char               c;
-   TCounterOp         op;
+   char                c;
+   TCounterOp          op;
 
    op = TCntrNoOp;
    if (!BIOreadByte (file, &c))
@@ -480,10 +480,10 @@ BinFile             file;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static TranslVarType  ReadTranslVarType (BinFile file)
+static TranslVarType ReadTranslVarType (BinFile file)
 
 #else  /* __STDC__ */
-static TranslVarType  ReadTranslVarType (file)
+static TranslVarType ReadTranslVarType (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -540,10 +540,10 @@ BinFile             file;
    retourne sa valeur.                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static CounterStyle   ReadCounterStyle (BinFile file)
+static CounterStyle ReadCounterStyle (BinFile file)
 
 #else  /* __STDC__ */
-static CounterStyle   ReadCounterStyle (file)
+static CounterStyle ReadCounterStyle (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -588,18 +588,18 @@ BinFile             file;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static PtrTRule ReadPtrTRule (BinFile file, PtrTRule * pNextTRule)
+static PtrTRule     ReadPtrTRule (BinFile file, PtrTRule * pNextTRule)
 
 #else  /* __STDC__ */
-static PtrTRule ReadPtrTRule (file, pNextTRule)
+static PtrTRule     ReadPtrTRule (file, pNextTRule)
 BinFile             file;
-PtrTRule            *pNextTRule;
+PtrTRule           *pNextTRule;
 
 #endif /* __STDC__ */
 
 {
-   char             c;
-   PtrTRule         pTRule;
+   char                c;
+   PtrTRule            pTRule;
 
    if (!BIOreadByte (file, &c))
       TSchemaError (17);
@@ -622,12 +622,12 @@ static void         ReadTRules (BinFile file, PtrTRule * pFirstTRule, PtrTRule *
 #else  /* __STDC__ */
 static void         ReadTRules (file, pFirstTRule, pNextTRule)
 BinFile             file;
-PtrTRule            *pFirstTRule;
-PtrTRule            *pNextTRule;
+PtrTRule           *pFirstTRule;
+PtrTRule           *pNextTRule;
 
 #endif /* __STDC__ */
 {
-   PtrTRule        pTRule;
+   PtrTRule            pTRule;
 
    *pFirstTRule = *pNextTRule;
    /* lecture de la suite de regles */
@@ -703,12 +703,12 @@ static void         FreeTRules (PtrTRule pTRule)
 
 #else  /* __STDC__ */
 static void         FreeTRules (pTRule)
-PtrTRule        pTRule;
+PtrTRule            pTRule;
 
 #endif /* __STDC__ */
 
 {
-   PtrTRule        nextRule;
+   PtrTRule            nextRule;
 
    while (pTRule != NULL)
      {
@@ -754,16 +754,16 @@ static void         ReadBlocks (BinFile file, PtrTRuleBlock * pBlock, PtrTRule *
 #else  /* __STDC__ */
 static void         ReadBlocks (file, pBlock, pNextTRule, pSS, pNextBlock)
 BinFile             file;
-PtrTRuleBlock       *pBlock;
-PtrTRule            *pNextTRule;
-PtrSSchema          *pSS;
-PtrTRuleBlock       *pNextBlock;
+PtrTRuleBlock      *pBlock;
+PtrTRule           *pNextTRule;
+PtrSSchema         *pSS;
+PtrTRuleBlock      *pNextBlock;
 
 #endif /* __STDC__ */
 
 {
    PtrTRuleBlock       pBl;
-   TranslCondition     *pCond;
+   TranslCondition    *pCond;
    int                 cond;
 
    if (*pBlock != NULL && !error)
@@ -893,16 +893,16 @@ static void         ReadAttrTRules (BinFile file, int att, PtrTRuleBlock * pNext
 static void         ReadAttrTRules (file, att, pNextBlock, pNextTRule, pSS, pTSch)
 BinFile             file;
 int                 att;
-PtrTRuleBlock       *pNextBlock;
-PtrTRule            *pNextTRule;
-PtrSSchema          *pSS;
-PtrTSchema          *pTSch;
+PtrTRuleBlock      *pNextBlock;
+PtrTRule           *pNextTRule;
+PtrSSchema         *pSS;
+PtrTSchema         *pTSch;
 
 #endif /* __STDC__ */
 
 {
-   AttributeTransl     *pAttrT;
-   TranslNumAttrCase   *pCase;
+   AttributeTransl    *pAttrT;
+   TranslNumAttrCase  *pCase;
    int                 i;
 
    if (!error)
@@ -952,8 +952,8 @@ static void         FreeTRulesAttr (AttributeTransl * pAttrT, TtAttribute * pAtt
 
 #else  /* __STDC__ */
 static void         FreeTRulesAttr (pAttrT, pAttr)
-AttributeTransl     *pAttrT;
-TtAttribute         *pAttr;
+AttributeTransl    *pAttrT;
+TtAttribute        *pAttr;
 
 #endif /* __STDC__ */
 
@@ -993,16 +993,16 @@ static void         ReadPresTRules (BinFile file, int pres, PtrTRuleBlock * pNex
 static void         ReadPresTRules (file, pres, pNextBlock, pNextTRule, pSS, pTSch)
 BinFile             file;
 int                 pres;
-PtrTRuleBlock       *pNextBlock;
-PtrTRule            *pNextTRule;
-PtrSSchema          *pSS;
-PtrTSchema          *pTSch;
+PtrTRuleBlock      *pNextBlock;
+PtrTRule           *pNextTRule;
+PtrSSchema         *pSS;
+PtrTSchema         *pTSch;
 
 #endif /* __STDC__ */
 
 {
-   PRuleTransl         *pPruleTr;
-   TranslNumAttrCase   *pCase;
+   PRuleTransl        *pPruleTr;
+   TranslNumAttrCase  *pCase;
    int                 i;
 
    if (!error)
@@ -1047,7 +1047,7 @@ static void         FreeTRulesPres (int pres, PRuleTransl * pPruleTr)
 #else  /* __STDC__ */
 static void         FreeTRulesPres (pres, pPruleTr)
 int                 pres;
-PRuleTransl         *pPruleTr;
+PRuleTransl        *pPruleTr;
 
 #endif /* __STDC__ */
 
@@ -1078,12 +1078,12 @@ PRuleTransl         *pPruleTr;
    - pSS: schema de structure correspondant, deja rempli.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrTSchema        ReadTranslationSchema (Name fileName, PtrSSchema pSS)
+PtrTSchema          ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-PtrTSchema        ReadTranslationSchema (fileName, pSS)
-Name              fileName;
-PtrSSchema        pSS;
+PtrTSchema          ReadTranslationSchema (fileName, pSS)
+Name                fileName;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -1092,13 +1092,13 @@ PtrSSchema        pSS;
    PtrTRule            pNextTRule;
    PtrTRuleBlock       pNextBlock;
    PtrTSchema          pTSch;
-   TCounter            *pCntr;
-   TranslVariable      *pVar;
-   TranslVarItem       *pVarItem;
-   AttributeTransl     *pAttrTr;
-   AlphabetTransl      *pAlphTr;
-   StringTransl        *pStringTr;
-   PRuleTransl         *pPRuleTr;
+   TCounter           *pCntr;
+   TranslVariable     *pVar;
+   TranslVarItem      *pVarItem;
+   AttributeTransl    *pAttrTr;
+   AlphabetTransl     *pAlphTr;
+   StringTransl       *pStringTr;
+   PRuleTransl        *pPRuleTr;
    PathBuffer          dirBuffer;
    char                buf[MAX_TXT_LEN];
    int                 InitialNElems, i, j;
@@ -1115,25 +1115,25 @@ PtrSSchema        pSS;
      {
 	strncpy (buf, fileName, MAX_PATH);
 	strcat (buf, ".TRA");
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_MISSING_FILE), buf);
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
      }
    else
      {
 	if ((pTSch = (PtrTSchema) TtaGetMemory (sizeof (TranslSchema))) == NULL)
-	   {
-	   TSchemaError (20);
-	   return NULL;
-	   }
+	  {
+	     TSchemaError (20);
+	     return NULL;
+	  }
 	if ((pNextTRule = (PtrTRule) TtaGetMemory (sizeof (TranslRule))) == NULL)
-	   {
-	   TSchemaError (19);
-	   return NULL;
-	   }
+	  {
+	     TSchemaError (19);
+	     return NULL;
+	  }
 	if ((pNextBlock = (PtrTRuleBlock) TtaGetMemory (sizeof (TRuleBlock))) == NULL)
-	   {
-	   TSchemaError (21);
-	   return NULL;
-	   }
+	  {
+	     TSchemaError (21);
+	     return NULL;
+	  }
 
 	/* lit la partie fixe du schema de traduction */
 	BIOreadName (file, (char *) &pTSch->TsStructName);
@@ -1218,16 +1218,16 @@ PtrSSchema        pSS;
 			       break;
 			    case AtTextAttr:
 			       pAttrTr->AtrTxtTRuleBlock =
-					ReadPtrTRuleBlock (file, &pNextBlock);
+				  ReadPtrTRuleBlock (file, &pNextBlock);
 			       break;
 			    case AtReferenceAttr:
 			       pAttrTr->AtrRefTRuleBlock =
-					ReadPtrTRuleBlock (file, &pNextBlock);
+				  ReadPtrTRuleBlock (file, &pNextBlock);
 			       break;
 			    case AtEnumAttr:
 			       for (j = 0; j <= pSS->SsAttribute[i].AttrNEnumValues; j++)
 				  pAttrTr->AtrEnuTRuleBlock[j] =
-					ReadPtrTRuleBlock (file, &pNextBlock);
+				     ReadPtrTRuleBlock (file, &pNextBlock);
 			       break;
 			    default:
 			       break;
@@ -1240,7 +1240,7 @@ PtrSSchema        pSS;
 		   pPRuleTr = &pTSch->TsPresTRule[i];
 		   BIOreadBool (file, &pPRuleTr->RtExist);
 		   if (pPRuleTr->RtExist)
-		      if (i == PtSize || i == PtIndent || i == PtLineSpacing  ||
+		      if (i == PtSize || i == PtIndent || i == PtLineSpacing ||
 			  i == PtLineWeight || i == PtFillPattern ||
 			  i == PtBackground || i == PtForeground)
 			 /* presentation a valeur numerique */
@@ -1254,7 +1254,7 @@ PtrSSchema        pSS;
 		      else
 			 for (j = 0; j <= MAX_TRANSL_PRES_VAL; j++)
 			    pPRuleTr->RtPRuleValueBlock[j] =
-					ReadPtrTRuleBlock (file, &pNextBlock);
+			       ReadPtrTRuleBlock (file, &pNextBlock);
 		}
 	BIOreadShort (file, &pTSch->TsNTranslAlphabets);
 	if (!error)
@@ -1292,7 +1292,7 @@ PtrSSchema        pSS;
 	     {
 		j = pTSch->TsConstBegin[i] - 1;
 		do
-		     BIOreadByte (file, &pTSch->TsConstant[j++]);
+		   BIOreadByte (file, &pTSch->TsConstant[j++]);
 		while (pTSch->TsConstant[j - 1] != '\0');
 	     }
 	/* lit les blocs de regles des elements */
@@ -1318,10 +1318,10 @@ PtrSSchema        pSS;
      }
    if (error)
      {
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_TRA_FILE_INCORRECT),
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_TRA_FILE_INCORRECT),
 			   fileName);
 	if (pTSch != NULL)
-	    FreeTranslationSchema(pTSch, pSS);
+	   FreeTranslationSchema (pTSch, pSS);
 	pTSch = NULL;
      }
    return pTSch;
@@ -1336,8 +1336,8 @@ void                FreeTranslationSchema (PtrTSchema pTSch, PtrSSchema pSS)
 
 #else  /* __STDC__ */
 void                FreeTranslationSchema (pTSch, pSS)
-PtrTSchema        pTSch;
-PtrSSchema        pSS;
+PtrTSchema          pTSch;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -1361,4 +1361,3 @@ PtrSSchema        pSS;
    /* libere le schema de traduction lui-meme */
    TtaFreeMemory ((char *) pTSch);
 }
-

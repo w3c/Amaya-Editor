@@ -4,8 +4,8 @@
 
 /*
 
- This module writes in an output file the pivot representation of a
- document.
+   This module writes in an output file the pivot representation of a
+   document.
 
  */
 
@@ -161,9 +161,9 @@ BinFile             pivFile;
    PutShort   ecrit un entier court dans le fichier sur deux octets   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void                PutShort (BinFile pivFile, int n)
+static void         PutShort (BinFile pivFile, int n)
 #else  /* __STDC__ */
-static void                PutShort (pivFile, n)
+static void         PutShort (pivFile, n)
 BinFile             pivFile;
 int                 n;
 
@@ -293,7 +293,7 @@ static void         PutAlignment (BinFile pivFile, BAlignment c)
 #else  /* __STDC__ */
 static void         PutAlignment (pivFile, c)
 BinFile             pivFile;
-BAlignment             c;
+BAlignment          c;
 
 #endif /* __STDC__ */
 {
@@ -394,12 +394,12 @@ static void         PutComment (BinFile pivFile, PtrTextBuffer pBuf)
 #else  /* __STDC__ */
 static void         PutComment (pivFile, pBuf)
 BinFile             pivFile;
-PtrTextBuffer      pBuf;
+PtrTextBuffer       pBuf;
 
 #endif /* __STDC__ */
 {
-   int                i, len;
-   PtrTextBuffer      pBuf1;
+   int                 i, len;
+   PtrTextBuffer       pBuf1;
 
    /* ecrit la marque de commentaire */
    BIOwriteByte (pivFile, (char) C_PIV_COMMENT);
@@ -481,7 +481,7 @@ LabelString         label;
    BIOwriteByte (pivFile, (char) C_PIV_LABEL);
    i = 0;
    do
-	BIOwriteByte (pivFile, label[i++]);
+      BIOwriteByte (pivFile, label[i++]);
    while (label[i - 1] != '\0');
 }
 
@@ -497,7 +497,7 @@ int                *pictInfo;
 
 #endif /* __STDC__ */
 {
-   PictInfo    *pictDesc;
+   PictInfo           *pictDesc;
 
    pictDesc = (PictInfo *) pictInfo;
    PutShort (pivFile, PixelToPoint (pictDesc->PicXArea));
@@ -514,7 +514,7 @@ static void         PutPresentation (BinFile pivFile, PictureScaling PicPresent)
 #else  /* __STDC__ */
 static void         PutPresentation (pivFile, PicPresent)
 BinFile             pivFile;
-PictureScaling           PicPresent;
+PictureScaling      PicPresent;
 
 #endif /* __STDC__ */
 {
@@ -672,7 +672,7 @@ PtrDocument         pDoc;
 		      {
 			 i = 0;
 			 while (pBuf->BuContent[i] != '\0')
-			      BIOwriteByte (pivFile, pBuf->BuContent[i++]);
+			    BIOwriteByte (pivFile, pBuf->BuContent[i++]);
 			 pBuf = pBuf->BuNext;
 		      }
 		    BIOwriteByte (pivFile, '\0');
@@ -693,7 +693,7 @@ void                PutReglePres (BinFile pivFile, PtrPRule pPRule)
 #else  /* __STDC__ */
 void                PutReglePres (pivFile, pPRule)
 BinFile             pivFile;
-PtrPRule        pPRule;
+PtrPRule            pPRule;
 
 #endif /* __STDC__ */
 {
@@ -884,11 +884,11 @@ boolean             subTree;
 	/* si c'est une copie d'element inclus, ecrit la reference a */
 	/* l'element inclus */
 	if (pEl1->ElSource != NULL)
-	      /* ecrit la marque d'element inclus */
-	     {
-		BIOwriteByte (pivFile, (char) C_PIV_INCLUDED);
-		PutReference (pivFile, pEl1->ElSource);
-	     }
+	   /* ecrit la marque d'element inclus */
+	  {
+	     BIOwriteByte (pivFile, (char) C_PIV_INCLUDED);
+	     PutReference (pivFile, pEl1->ElSource);
+	  }
 	/* ecrit la marque "Element-reference'" si l'element est */
 	/* effectivement reference' */
 	if (pEl1->ElReferredDescr != NULL)
@@ -990,7 +990,7 @@ boolean             subTree;
 					  {
 					     i = 0;
 					     while (pBuf->BuContent[i] != '\0' && i < pBuf->BuLength)
-						  BIOwriteByte (pivFile, pBuf->BuContent[i++]);
+						BIOwriteByte (pivFile, pBuf->BuContent[i++]);
 					     c = c + i;
 					     /* buffer suivant du meme element */
 					     pBuf = pBuf->BuNext;
@@ -1135,13 +1135,13 @@ static void         PutName (BinFile pivFile, Name N)
 #else  /* __STDC__ */
 static void         PutName (pivFile, N)
 BinFile             pivFile;
-Name                 N;
+Name                N;
 
 #endif /* __STDC__ */
 {
    int                 j;
 
-   for (j = 0; j < MAX_NAME_LENGTH -1 && N[j] != '\0'; j++)
+   for (j = 0; j < MAX_NAME_LENGTH - 1 && N[j] != '\0'; j++)
       BIOwriteByte (pivFile, N[j]);
    BIOwriteByte (pivFile, '\0');
 }
@@ -1162,8 +1162,10 @@ PtrDocument         pDoc;
    int                 rule, nat, nObjects;
    boolean             present;
    SRule              *pSRule;
+
 #ifndef NODISPLAY
    PtrElement          pSaved;
+
 #endif
 
    for (rule = 0; rule < pSS->SsNRules; rule++)
@@ -1186,7 +1188,7 @@ PtrDocument         pDoc;
 				 && pSaved->ElTypeNumber == pSRule->SrSSchemaNat->SsRootElem)
 				nObjects--;
 			     pSaved = FwdSearchTypedElem (pSaved, pSRule->SrSSchemaNat->SsRootElem,
-						 pSRule->SrSSchemaNat);
+						      pSRule->SrSSchemaNat);
 			  }
 			while (pSaved != NULL);
 		     }
@@ -1211,9 +1213,9 @@ PtrDocument         pDoc;
 			     if (pDoc->DocNNatures < MAX_NATURES_DOC)
 			       {
 				  strncpy (pDoc->DocNatureName[pDoc->DocNNatures],
-				       pSRule->SrSSchemaNat->SsName, MAX_NAME_LENGTH);
+					   pSRule->SrSSchemaNat->SsName, MAX_NAME_LENGTH);
 				  strncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
-				      pSRule->SrSSchemaNat->SsDefaultPSchema, MAX_NAME_LENGTH);
+					   pSRule->SrSSchemaNat->SsDefaultPSchema, MAX_NAME_LENGTH);
 				  pDoc->DocNatureSSchema[pDoc->DocNNatures] =
 				     pSRule->SrSSchemaNat;
 				  pDoc->DocNNatures++;
@@ -1241,7 +1243,7 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   PtrSSchema        pSSExtens;
+   PtrSSchema          pSSExtens;
 
    /* met le schema de structure du document en tete de la table des */
    /* natures utilisees */
@@ -1603,7 +1605,7 @@ PtrDocument         pDoc;
 			    else
 			       /* ouverture fichier impossible */
 			      {
-				 TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_WRITING_IMP), fileName);
+				 TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_WRITING_IMP), fileName);
 				 pRefD = NULL;
 				 pRef = NULL;
 			      }
@@ -1639,13 +1641,13 @@ PtrDocument         pDoc;
 void                SauveRef (PtrChangedReferredEl firstChng, PathBuffer fileName)
 #else  /* __STDC__ */
 void                SauveRef (firstChng, fileName)
-PtrChangedReferredEl      firstChng;
+PtrChangedReferredEl firstChng;
 PathBuffer          fileName;
 
 #endif /* __STDC__ */
 {
    BinFile             refFile;
-   PtrChangedReferredEl      pChnRef, pNextChnRef;
+   PtrChangedReferredEl pChnRef, pNextChnRef;
 
    refFile = BIOwriteOpen (fileName);
    if (refFile != 0)
@@ -1720,8 +1722,8 @@ PathBuffer          fileName;
 		  else
 		     /* ouverture fichier impossible */
 		    {
-		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_WRITING_IMP),
-						      fileName);
+		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_WRITING_IMP),
+					  fileName);
 		       pRefD = NULL;
 		    }
 	       }
@@ -2019,18 +2021,18 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   PathBuffer            fileName;
-   PathBuffer            directoryName;
+   PathBuffer          fileName;
+   PathBuffer          directoryName;
    PtrEnteringReferences pExtFileD;
-   PtrChangedReferredEl  pChnRef, pNextChnRef;
-   PtrReferenceChange    pFirstFile, pFile, pNextFile;
-   PtrExternalDoc        pExtDoc, pNextExtDoc, pOriginExtDoc, pPrevExtDoc;
-   boolean               found;
-   BinFile               refFile;
-   BinFile               extFile;
-   int                   i;
-   PtrChangedReferredEl  pChnRefRead, pNewChnRef;
-   PtrReferredDescr      pRefD;
+   PtrChangedReferredEl pChnRef, pNextChnRef;
+   PtrReferenceChange  pFirstFile, pFile, pNextFile;
+   PtrExternalDoc      pExtDoc, pNextExtDoc, pOriginExtDoc, pPrevExtDoc;
+   boolean             found;
+   BinFile             refFile;
+   BinFile             extFile;
+   int                 i;
+   PtrChangedReferredEl pChnRefRead, pNewChnRef;
+   PtrReferredDescr    pRefD;
 
    if (pDoc->DocChangedReferredEl != NULL)
       /* des elements reference's ont effectivement ete touches */
@@ -2187,7 +2189,7 @@ PtrDocument         pDoc;
 					    strncpy (pChnRefRead->CrNewLabel,
 						     pChnRef->CrNewLabel, MAX_LABEL_LEN);
 					    CopyDocIdent (&pChnRefRead->CrNewDocument,
-							pChnRef->CrNewDocument);
+						    pChnRef->CrNewDocument);
 					 }
 				    }
 				  else
@@ -2211,7 +2213,7 @@ PtrDocument         pDoc;
 					  found = TRUE;
 					  strncpy (pChnRefRead->CrNewLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
 					  CopyDocIdent (&pChnRefRead->CrNewDocument,
-							pChnRef->CrNewDocument);
+						    pChnRef->CrNewDocument);
 				       }
 			    if (!found)
 			       pChnRefRead = pChnRefRead->CrNext;
@@ -2288,7 +2290,7 @@ boolean             copyDoc;
 #endif /* __STDC__ */
 {
    BinFile             extFile;
-   PtrEnteringReferences     pFirstInRef, pInRef, pNextInRef;
+   PtrEnteringReferences pFirstInRef, pInRef, pNextInRef;
    PtrReferredDescr    pRefD, pFirstRefD, pElemRefD;
    PathBuffer          fileName, directoryName;
    int                 i;
@@ -2373,7 +2375,7 @@ boolean             copyDoc;
 		  /* fichier .PIV */
 		  strncpy (directoryName, DocumentPath, MAX_PATH);
 		  MakeCompleteName (pRefD->ReExtDocument, "PIV", directoryName,
-				 fileName, &i);
+				    fileName, &i);
 		  /* cherche le fichier .EXT dans le meme directory */
 		  FindCompleteName (pRefD->ReExtDocument, "EXT", directoryName, fileName, &i);
 		  if (fileName[0] != '\0')
@@ -2459,15 +2461,15 @@ void                ChangeNomRef (PtrDocument pDoc, Name newName)
 #else  /* __STDC__ */
 void                ChangeNomRef (pDoc, newName)
 PtrDocument         pDoc;
-Name                 newName;
+Name                newName;
 
 #endif /* __STDC__ */
 {
    BinFile             refFile;
    PtrReferredDescr    pRefD, pElemRefD;
    PtrExternalDoc      pExtDoc;
-   PtrReferenceChange      pFirstREFfile, pFile, pNextFile;
-   PtrChangedReferredEl    pChnRef, pPrevChnRef;
+   PtrReferenceChange  pFirstREFfile, pFile, pNextFile;
+   PtrChangedReferredEl pChnRef, pPrevChnRef;
    PtrDocument         pDocExt;
    PathBuffer          fileName, directoryName;
    boolean             found;
@@ -2525,10 +2527,10 @@ Name                 newName;
    /* leurs fichiers .REF, on y ajoute un enregistrement indiquant */
    /* le changement de nom du document et on les ecrit */
    pFile = pFirstREFfile;
-   while (pFile != NULL)		/* parcourt la liste */
+   while (pFile != NULL)	/* parcourt la liste */
      {
 	/* ce document referencant est-il charge' ? */
-	pDocExt= GetPtrDocument (pFile->RcDocIdent);
+	pDocExt = GetPtrDocument (pFile->RcDocIdent);
 	if (pDocExt != NULL)
 	   /* le document referencant est charge' */
 	  {

@@ -82,7 +82,7 @@ static void         InitTypoLanguage ()
 
    FreeTypoEntry = 6;
 
-}				
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -320,7 +320,7 @@ char               *languageName;
 	while (again && i < FreeEntry)
 	  {
 	     if (!strcmp (languageName, LangTable[i].LangNom))
-	        /* The language is already defined */
+		/* The language is already defined */
 		again = FALSE;
 	     else
 		i++;
@@ -594,7 +594,7 @@ Language            langageId;
    if (dictPath == NULL)
      {
 	/* The environment variable DICOPAR does not exist */
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_MISSING_DICOPAR), "DICOPAR");
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MISSING_DICOPAR), "DICOPAR");
 	return (FALSE);
      }
 
@@ -605,10 +605,10 @@ Language            langageId;
    strcat (patternFileName, ptPattern);
    if ((in = fopen (patternFileName, "r")) == NULL)
      {
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_HYPHEN_FILE_NOT_OPEN), LangTable[lang].LangPattern);
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_HYPHEN_FILE_NOT_OPEN), LangTable[lang].LangPattern);
 	return (FALSE);
      }
-   TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_HYPHEN_FILE_OPEN), ptPattern);
+   TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_HYPHEN_FILE_OPEN), ptPattern);
    currentIndex = 0;
    previousLength = 0;
    i = 0;
@@ -696,7 +696,7 @@ char                wordToCut[MAX_CHAR];
    wordLength = strlen (wordToCut) + 2;
    if (wordLength > MAX_CHAR)
      {
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_HYPHEN_WORD_TOO_LONG), wordToCut);
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_HYPHEN_WORD_TOO_LONG), wordToCut);
 	return;
      }
    for (i = 0; i < MAX_CHAR; i++)

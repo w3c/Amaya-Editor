@@ -151,9 +151,11 @@ char               *fileName;
 #endif /* __STDC__ */
 {
    PathBuffer          directoryBuffer;
+
 #ifdef __COLPAGE__
    FILE               *list;
    PtrPSchema          pPagePsch;
+
 #endif /* __COLPAGE__ */
    int                 i, j, len;
    boolean             ok;
@@ -188,11 +190,11 @@ char               *fileName;
 		     j = i;
 		  i++;
 	       }
-	     (*pDoc)->DocDirectory[j+1] = '\0';
+	     (*pDoc)->DocDirectory[j + 1] = '\0';
 	     i = 0;
 	     while (fileName[i] != '\0' && i < MAX_NAME_LENGTH - 1)
 	       {
-		  DefaultDocumentName[i] = fileName[j+1];
+		  DefaultDocumentName[i] = fileName[j + 1];
 		  i++;
 		  j++;
 	       }
@@ -216,7 +218,7 @@ char               *fileName;
 	   strncpy (DocumentPath, directoryBuffer, MAX_PATH);
 	if (!ok)
 	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_OPEN_DOC_IMP), DefaultDocumentName);
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_OPEN_DOC_IMP), DefaultDocumentName);
 	     UnloadDocument (pDoc);
 	     *pDoc = NULL;
 	  }
@@ -254,17 +256,20 @@ Name                docName;
 PathBuffer          directory;
 
 #endif /* __STDC__ */
-{ 
+{
    PtrElement          pEl;
    NotifyDialog        notifyDoc;
    Name                PSchemaName, docNameBuffer, docType;
    PathBuffer          directoryBuffer;
    PathBuffer          fileNameBuffer;
+
 #ifdef __COLPAGE__
    PtrPSchema          pPagePsch;
+
 #else  /* __COLPAGE__ */
    PtrPSchema          pPSchema;
    int                 view;
+
 #endif /* __COLPAGE__ */
    int                 i;
 
@@ -298,7 +303,7 @@ PathBuffer          directory;
 	     {
 		strncpy (fileNameBuffer, docType, MAX_NAME_LENGTH);
 		strcat (fileNameBuffer, ".STR");
-		TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_SCHEMA_NOT_FIND), fileNameBuffer);
+		TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND), fileNameBuffer);
 	     }
 	   else
 	     {
@@ -324,8 +329,8 @@ PathBuffer          directory;
 			  {
 			     /* cree la representation interne d'un document vide */
 			     (*pDoc)->DocRootElement = NewSubtree ((*pDoc)->DocSSchema->SsRootElem,
-				(*pDoc)->DocSSchema, *pDoc, 0, TRUE, TRUE,
-				TRUE, TRUE);
+				  (*pDoc)->DocSSchema, *pDoc, 0, TRUE, TRUE,
+								TRUE, TRUE);
 			     /* supprime les elements exclus */
 			     RemoveExcludedElem (&((*pDoc)->DocRootElement));
 			  }
@@ -351,7 +356,7 @@ PathBuffer          directory;
 		for (view = 0; view < pPSchema->PsNViews; view++)
 		   if (pPSchema->PsPaginatedView[view])
 		      /* cette vue est mise en page */
-		      AddLastPageBreak ((*pDoc)->DocRootElement, view+1, *pDoc, TRUE);
+		      AddLastPageBreak ((*pDoc)->DocRootElement, view + 1, *pDoc, TRUE);
 #endif /* __COLPAGE__ */
 		/* le document appartient au directory courant */
 		if (directory[0] != '\0')
@@ -361,8 +366,8 @@ PathBuffer          directory;
 		     strncpy (directoryBuffer, DocumentPath, MAX_PATH);
 		     /* si c'est un path, retient seulement le 1er directory */
 		     i = 0;
-		     while (directoryBuffer[i ] != '\0' &&
-			    directoryBuffer[i] != PATH_SEP && i < MAX_PATH - 1)
+		     while (directoryBuffer[i] != '\0' &&
+			 directoryBuffer[i] != PATH_SEP && i < MAX_PATH - 1)
 			i++;
 		     directoryBuffer[i] = '\0';
 		  }
@@ -385,9 +390,9 @@ PathBuffer          directory;
 		   /* des attributs requis */
 		  {
 		     /* traitement des exceptions */
-		    if (ThotLocalActions[T_createtable]!= NULL)
-		      (*ThotLocalActions[T_createtable])
-			((*pDoc)->DocRootElement, *pDoc);
+		     if (ThotLocalActions[T_createtable] != NULL)
+			(*ThotLocalActions[T_createtable])
+			   ((*pDoc)->DocRootElement, *pDoc);
 		     /* ouvre les vues du document cree' */
 		     OpenDefaultViews (*pDoc);
 		     /* selectionne la 1ere feuille */
@@ -407,15 +412,15 @@ PathBuffer          directory;
 static void         SetAbsBoxAccessMode (PtrAbstractBox pAb, int accessMode)
 #else  /* __STDC__ */
 static void         SetAbsBoxAccessMode (pAb, accessMode)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 int                 accessMode;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAbChild;
+   PtrAbstractBox      pAbChild;
 
    if (accessMode == 0)
-     /* read only */
+      /* read only */
      {
 	pAb->AbCanBeModified = FALSE;
 	pAb->AbReadOnly = TRUE;
@@ -424,7 +429,7 @@ int                 accessMode;
    else
       /* read write */
       /* on laisse en read only si l'element est en read only */
-      if (!ElementIsReadOnly (pAb->AbElement))
+   if (!ElementIsReadOnly (pAb->AbElement))
      {
 	if (!pAb->AbPresentationBox)
 	   /* ce n'est pas un pave de presentation, il est donc modifiable */
@@ -550,14 +555,14 @@ PtrDocument         pDoc;
 		      /* cherche le numero de vue dans le document */
 		      found = FALSE;
 		      for (docView = 0; docView < MAX_VIEW_DOC && !found; docView++)
-			   if (pDoc->DocView[docView].DvPSchemaView ==
-			       viewList[i].VdView
-			       && pDoc->DocView[docView].DvSSchema ==
-			       viewList[i].VdSSchema)
-			      found = TRUE;
+			 if (pDoc->DocView[docView].DvPSchemaView ==
+			     viewList[i].VdView
+			     && pDoc->DocView[docView].DvSSchema ==
+			     viewList[i].VdSSchema)
+			    found = TRUE;
 		   }
 		 /* pagine la vue */
-		 PaginateView (pDoc, docView+1, viewList[i].VdAssoc);
+		 PaginateView (pDoc, docView + 1, viewList[i].VdAssoc);
 	      }
 }
 
@@ -664,12 +669,12 @@ PtrDocument         pDoc;
 	   if (ToCreate[view])
 	     {
 		pDoc->DocViewFreeVolume[view] = pDoc->DocViewVolume[view];
-		CreateNewAbsBoxes (pEl, pDoc, view+1);
+		CreateNewAbsBoxes (pEl, pDoc, view + 1);
 	     }
      }
    else
       /* vue d'elements associes */
-     if (ToCreate[0])
+   if (ToCreate[0])
      {
 	pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] =
 	   pDoc->DocAssocVolume[pEl->ElAssocNum - 1];
@@ -722,7 +727,7 @@ PtrDocument         pDoc;
 	       {
 
 		  pRef = NextReferenceToEl (pRefD->ReReferredElem, pDoc,
-				FALSE, pRef, &pRefDoc, &pExtDoc, TRUE);
+				     FALSE, pRef, &pRefDoc, &pExtDoc, TRUE);
 		  if (pRef != NULL)
 		     if (pRef->RdTypeRef == RefInclusion)
 			/* c'est une inclusion */
@@ -844,7 +849,7 @@ char               *extension;
      }
    else
      {
-	TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, TMSG_WRITING_IMP), buf);
+	TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_WRITING_IMP), buf);
 	return FALSE;
      }
 }
@@ -912,8 +917,8 @@ boolean             move;
 	  {
 	     /* on indique un nom connu de l'utilisateur... */
 	     FindCompleteName (docName, "PIV", dirName, buf, &i);
-	     TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, TMSG_WRITING_IMP),
-					    buf);
+	     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_WRITING_IMP),
+				buf);
 	     status = FALSE;
 	  }
 	else
@@ -936,8 +941,8 @@ boolean             move;
 		/* detruit l'ancienne sauvegarde */
 	       {
 		  RemoveFile (bakName);
-		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_DOC_WRITTEN),
-						 pivName);
+		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN),
+				     pivName);
 		  /* c'est trop tot pour perdre l'ancien nom du fichier et son */
 		  /* directory d'origine. */
 		  pDoc->DocModified = FALSE;
@@ -991,13 +996,13 @@ boolean             move;
 				 /* renomme le fichier .EXT du document qui change */
 				 /* de nom */
 				 FindCompleteName (pDoc->DocDName, "EXT", oldDir, buf,
-					     &i);
+						   &i);
 				 FindCompleteName (docName, "EXT", dirName,
-					     pivName, &i);
+						   pivName, &i);
 				 rename (buf, pivName);
 				 /* detruit l'ancien fichier .PIV */
 				 FindCompleteName (pDoc->DocDName, "PIV", oldDir, buf,
-					     &i);
+						   &i);
 				 RemoveFile (buf);
 			      }
 			 }
@@ -1055,10 +1060,10 @@ boolean             ask;
 	   status = StoreDocument (pDoc, docName, directory, FALSE, FALSE);
      }
    if (status && ask)
-	{
+     {
 	pDoc->DocModified = FALSE;
 	pDoc->DocNTypedChars = 0;
-	}
+     }
    return status;
 }
 
@@ -1098,7 +1103,7 @@ int                 mode;
 		  case 1:
 		     ok = saveWithExtension (pDoc, "BAK");
 		     if (ok)
-			TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_DOC_WRITTEN), pDoc->DocDName);
+			TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN), pDoc->DocDName);
 		     break;
 		  case 2:
 		     ok = saveWithExtension (pDoc, "BAK");

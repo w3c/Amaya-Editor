@@ -57,7 +57,7 @@
 #include "appdialogue_f.h"
 
 extern int          UserErrorCode;
-static Name          nameBuffer;
+static Name         nameBuffer;
 
 #ifdef __STDC__
 void                CreateWithException (PtrElement pEl, PtrDocument pDoc)
@@ -69,9 +69,9 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-        /* If table creation */
-    if (ThotLocalActions[T_createtable]!= NULL)
-       (*ThotLocalActions[T_createtable])(pEl, pDoc);
+   /* If table creation */
+   if (ThotLocalActions[T_createtable] != NULL)
+      (*ThotLocalActions[T_createtable]) (pEl, pDoc);
 }
 
 
@@ -134,7 +134,7 @@ char               *documentName;
 	     if (!ReadStructureSchema (structureSchema, pDoc->DocSSchema) ||
 		 pDoc->DocSSchema->SsExtension)
 		/* failure while reading the structure schema or while loading
-                   a schema extension */
+		   a schema extension */
 	       {
 		  FreeSchStruc (pDoc->DocSSchema);
 		  pDoc->DocSSchema = NULL;
@@ -151,7 +151,7 @@ char               *documentName;
 #endif
 		  /* One create the internal representation of an empty document */
 		  pDoc->DocRootElement = NewSubtree (pDoc->DocSSchema->SsRootElem,
-		    pDoc->DocSSchema, pDoc, 0, TRUE, TRUE, TRUE, TRUE);
+			 pDoc->DocSSchema, pDoc, 0, TRUE, TRUE, TRUE, TRUE);
 		  /* suppress excluded elements */
 		  RemoveExcludedElem (&pDoc->DocRootElement);
 		  if (pDoc->DocRootElement == NULL)
@@ -338,17 +338,17 @@ char               *documentName;
 		  SauveDoc (pivotFile, pDoc);
 		  BIOwriteClose (pivotFile);
 		  /* modifies files .EXT of new referenced documents or file which
-                     are no more referenced bu the document */
+		     are no more referenced bu the document */
 		  UpdateExt (pDoc);
 		  /* modifies files .REF of documents that reference elements which are
-                     no more in the document and updates the .EXT file relating to the document*/
+		     no more in the document and updates the .EXT file relating to the document */
 		  UpdateRef (pDoc);
 		  if (strcmp (documentName, pDoc->DocDName) != 0)
 		     /* The document is saved under a new name */
 		    {
 		       /* The application wants to create a copy of the document */
 		       /* The document copy will be in the .EXT files relating to the 
-                          referenced documents */
+		          referenced documents */
 		       ChangeNomExt (pDoc, documentName, TRUE);
 		       /* Puts the new name into the document descriptor */
 		       strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
@@ -620,17 +620,17 @@ char               *path;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             TtaCheckDirectory (char *directory)
- 
+
 #else  /* __STDC__ */
 boolean             TtaCheckDirectory (directory)
 char               *directory;
- 
+
 #endif /* __STDC__ */
- 
+
 {
 #ifdef WWW_MSWINDOWS
    DWORD               attribs;
- 
+
    /* NEW_WINDOWS - mark for furthur security stuff - EGP
       SECURITY_INFORMATION secInfo;
       SECURITY_DESCRIPTOR secDesc; */
@@ -640,21 +640,21 @@ char               *directory;
    return TRUE;
 #else  /* WWW_MSWINDOWS */
    struct stat         fileStat;
- 
+
    /* does the directory exist ? */
    if (strlen (directory) < 1)
       return (FALSE);
    else if (access (directory, 0) != 0)
       return (FALSE);
    else if (stat (directory, &fileStat) != 0)
-      return (FALSE); 
+      return (FALSE);
    else if (S_ISDIR (fileStat.st_mode))
       return (TRUE);
    else
       return (FALSE);
 #endif /* !WWW_MSWINDOWS */
 }
- 
+
 /*----------------------------------------------------------------------
    TtaCheckPath
 
@@ -670,36 +670,36 @@ char               *directory;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             TtaCheckPath (PathBuffer path)
- 
+
 #else  /* __STDC__ */
 boolean             TtaCheckPath (path)
 PathBuffer          path;
- 
+
 #endif /* __STDC__ */
- 
+
 {
    int                 i, j;
    PathBuffer          single_directory;
    boolean             OK;
- 
+
    i = 0;
    OK = TRUE;
    while (OK && path[i] != '\0')
      {
-        j = 0;
-        while (path[i] != PATH_SEP && path[i] != '\0' && i <= MAX_PATH)
-          {
-             /* The list is cutted up into single directories */
-             single_directory[j] = path[i];
-             i++;
-             j++;
-          }
-        single_directory[j] = '\0';
- 
-        OK = TtaCheckDirectory (single_directory);
-        /* We try with another directory by ignoring PATH_SEP */
-        if (path[i] == PATH_SEP)
-           i++;
+	j = 0;
+	while (path[i] != PATH_SEP && path[i] != '\0' && i <= MAX_PATH)
+	  {
+	     /* The list is cutted up into single directories */
+	     single_directory[j] = path[i];
+	     i++;
+	     j++;
+	  }
+	single_directory[j] = '\0';
+
+	OK = TtaCheckDirectory (single_directory);
+	/* We try with another directory by ignoring PATH_SEP */
+	if (path[i] == PATH_SEP)
+	   i++;
      }
    return (OK);
 }
@@ -848,8 +848,8 @@ char               *presentationName;
 #endif /* __STDC__ */
 
 {
-   int               natureRule;
-   PtrSSchema        natureSchema;
+   int                 natureRule;
+   PtrSSchema          natureSchema;
 
    UserErrorCode = 0;
    natureSchema = NULL;
@@ -860,7 +860,7 @@ char               *presentationName;
    else
      {
 	natureRule = CreateNature (natureName, presentationName,
-				  (PtrSSchema) schema);
+				   (PtrSSchema) schema);
 	if (natureRule == 0)
 	  {
 	     TtaError (ERR_invalid_parameter);
@@ -902,7 +902,7 @@ char               *presentationName;
 #endif /* __STDC__ */
 
 {
-   PtrSSchema        extension;
+   PtrSSchema          extension;
 
    UserErrorCode = 0;
    /* verifies the parameter document */
@@ -942,9 +942,9 @@ int                *removedAttributes;
 #endif /* __STDC__ */
 
 {
-   PtrDocument          pDoc;
-   PtrElement           child, nextChild;
-   PtrAttribute         attribute, nextAttribute;
+   PtrDocument         pDoc;
+   PtrElement          child, nextChild;
+   PtrAttribute        attribute, nextAttribute;
 
    if (*pEl != NULL)
      {
@@ -1169,7 +1169,7 @@ char               *presentationName;
 		/* to avoid that ReadPresentationSchema reloades the structure schema */
 		pDoc->DocSSchema->SsRootElem = 1;
 	     pDoc->DocSSchema->SsPSchema = LoadPresentationSchema (presentationName,
-							 pDoc->DocSSchema);
+							  pDoc->DocSSchema);
 	     if (pDoc->DocSSchema->SsPSchema == NULL)
 		/* Failure while loading schema */
 	       {
@@ -1741,7 +1741,7 @@ char               *name;
 #endif /* __STDC__ */
 
 {
-   int         nRegle;
+   int                 nRegle;
    SSchema             retour;
 
    retour = NULL;
@@ -1809,7 +1809,7 @@ Document            document;
      }
    else
       /* parameter document is correct */
-      /* One search from the main schema of the document o*/
+      /* One search from the main schema of the document o */
       schema = ChSchStruct (LoadedDocument[document - 1]->DocSSchema, name);
    return schema;
 }
@@ -1959,7 +1959,7 @@ char               *presentationName;
 	     if (!BIOreadByte (file, &charGotten))
 		error = TRUE;
 	  }
-	/* Gets the name of the schema structure which is at the begenning of the pivot file*/
+	/* Gets the name of the schema structure which is at the begenning of the pivot file */
 	if (!error && charGotten != (char) C_PIV_NATURE)
 	   error = TRUE;
 	if (!error)
@@ -2019,7 +2019,7 @@ SSchema            *extension;
 #endif /* __STDC__ */
 
 {
-   PtrSSchema        nextExtension;
+   PtrSSchema          nextExtension;
 
    UserErrorCode = 0;
    /* verifies the parameter document */
@@ -2076,7 +2076,7 @@ SSchema            *nature;
 #endif /* __STDC__ */
 
 {
-   PtrSSchema        nextNature;
+   PtrSSchema          nextNature;
    int                 n;
    PtrDocument         pDoc;
    boolean             found;
