@@ -44,6 +44,7 @@
 +tables
 +templates
 +views
++svg
 
 ################# AMAYA BROWSER
 <browser>
@@ -243,7 +244,7 @@ HelpMath
 
 ################# SVG
 [svg]
-&ShowGraphicsPalette
+ShowGraphicsPalette
 
 ########### STYLE
 [html-style]
