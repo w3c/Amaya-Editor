@@ -2720,7 +2720,7 @@
 	<message xml:lang="de">Neue Überschrift</message>
 </label>
 <label define="BAddSeparator">
-	<message xml:lang="en">New separator</message>
+	<message xml:lang="en">New Separator</message>
 </label>
 <label define="BViewBookmarks">
 	<message xml:lang="en">View Bookmarks</message>
@@ -2729,6 +2729,9 @@
 	<message xml:lang="de">Lesezeichen ansehen</message>
 	<message xml:lang="tr">kilitli bilgileri kopyala</message>
 	<message xml:lang="es">Ver marcadores</message>
+</label>
+<label define="BMoveItem">
+	<message xml:lang="en">Move Item</message>
 </label>
 <label define="BImportTopics">
 	<message xml:lang="en">Import a topic hierarchy</message>

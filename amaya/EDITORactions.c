@@ -3907,6 +3907,19 @@ void ViewBookmarks (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
+   MoveItem
+   Moves a previously copied bookmark item in the bookmark view
+  ----------------------------------------------------------------------*/
+void MoveItem (Document document, View view)
+{
+#ifdef BOOKMARKS
+#if 0
+  BM_MoveHandler (document, view);
+#endif
+#endif /* BOOKMARKS */
+}
+
+/*----------------------------------------------------------------------
    ImportTopics
    Imports a topic hierarchy
   ----------------------------------------------------------------------*/

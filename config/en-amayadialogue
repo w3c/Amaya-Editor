@@ -283,42 +283,43 @@
 281 Configure...
 282 New Bookmark
 283 New Topic
-284 New separator
+284 New Separator
 285 View Bookmarks
-286 Import a topic hierarchy
-287 Lock resource...
-288 Unlock resource...
-289 View resource properties...
-290 Copy lock information...
-291 Locked?
-292 Preferences...
-293 About Amaya
-294 About Amaya at W3C
-295 Index
-296 Browsing
-297 Views
-298 Selecting
-299 Document
-300 Creating elements
-301 Attributes
-302 Characters
-303 Restructuring
-304 Links
-305 Tables
-306 Image maps
-307 Math
-308 Graphics
-309 XML support
-310 Style sheets
-311 Searching
-312 Spell Checking
-313 Publishing
-314 WebDAV
-315 Printing
-316 Numbering
-317 Making books
-318 Annotations
-319 &Bookmarks
-320 Configuring Amaya
-321 ShortCuts
-322 Accessibility in Amaya
+286 Move Item
+287 Import a topic hierarchy
+288 Lock resource...
+289 Unlock resource...
+290 View resource properties...
+291 Copy lock information...
+292 Locked?
+293 Preferences...
+294 About Amaya
+295 About Amaya at W3C
+296 Index
+297 Browsing
+298 Views
+299 Selecting
+300 Document
+301 Creating elements
+302 Attributes
+303 Characters
+304 Restructuring
+305 Links
+306 Tables
+307 Image maps
+308 Math
+309 Graphics
+310 XML support
+311 Style sheets
+312 Searching
+313 Spell Checking
+314 Publishing
+315 WebDAV
+316 Printing
+317 Numbering
+318 Making books
+319 Annotations
+320 &Bookmarks
+321 Configuring Amaya
+322 ShortCuts
+323 Accessibility in Amaya
