@@ -129,6 +129,13 @@ static char         *CurNs_Prefix[MAX_NS_TABLE];
 static char         *CurNs_Uri[MAX_NS_TABLE]; 
 static int           CurNs_Level = 0;
 
+/* XML Style Sheets table */
+static char         *XML_CSS_Href[MAX_NS_TABLE]; 
+static Document      XML_CSS_Doc[MAX_NS_TABLE]; 
+static Element       XML_CSS_El[MAX_NS_TABLE]; 
+static CSSmedia      XML_CSS_Media[MAX_NS_TABLE];
+static int           XML_CSS_Level = 0;
+
 /* Parser Stack */
 	             /* maximum stack height */
 #define MAX_STACK_HEIGHT   100
@@ -2308,7 +2315,7 @@ void PutInXmlElement (char *data, int length)
 	   
 	   /* Filling of the element value */
 	   elType = TtaGetElementType (XMLcontext.lastElement);
-	   if (elType.ElSSchema == currentParserCtxt->XMLSSchema &&
+	   if (/* elType.ElSSchema == currentParserCtxt->XMLSSchema  && */
 	       elType.ElTypeNum == 1 && XMLcontext.mergeText)
 	     {
 	       if ((buffer[i1] == SPACE) && RemoveContiguousSpace)
@@ -2329,7 +2336,8 @@ void PutInXmlElement (char *data, int length)
 	   else
 	     {
 	       /* create a TEXT element */
-	       if (currentParserCtxt->XMLSSchema != NULL)
+	       if (currentParserCtxt->XMLSSchema != NULL &&
+		   currentParserCtxt != GenericXmlParserCtxt)
 		 elType.ElSSchema = currentParserCtxt->XMLSSchema;
 	       elType.ElTypeNum = 1;
 	       elText = TtaNewElement (XMLcontext.doc, elType);
@@ -3592,6 +3600,20 @@ static void      CreateXmlComment (char *commentValue)
 /*--------------------  Comments  (end)  ------------------------------*/
 
 /*--------------------  PI  (start)  ----------------------------------*/
+
+/*----------------------------------------------------------------------
+   LoadXmlStyleSheet
+  ---------------------------------------------------------------------*/
+void  LoadXmlStyleSheet  (Document doc)
+{
+  int           i;
+  
+  for (i = 0; i < XML_CSS_Level; i++)
+    LoadStyleSheet (XML_CSS_Href [i], XML_CSS_Doc [i],
+		    XML_CSS_El [i], NULL,
+		    XML_CSS_Media [i], FALSE);
+}
+
 /*----------------------------------------------------------------------
    XmlStyleSheetPi
   ---------------------------------------------------------------------*/
@@ -3605,6 +3627,7 @@ void      XmlStyleSheetPi (char *PiData, Element piEl)
    CSSmedia      css_media;
    CSSInfoPtr    css_info;
    ThotBool      ok;
+   ElementType   elType;
 
    length = strlen (PiData);
    buffer = TtaGetMemory (length + 1);
@@ -3713,8 +3736,21 @@ void      XmlStyleSheetPi (char *PiData, Element piEl)
 		   css_info = NULL;
 		   /* get the CSS URI in UTF-8 */
 		   css_href = ReallocUTF8String (css_href, XMLcontext.doc);
-		   LoadStyleSheet (css_href, XMLcontext.doc, piEl,
-				   css_info, css_media, FALSE);
+		   /* Don't applicate immediately the style sheet for XML schemas */
+		   elType = TtaGetElementType (piEl);
+		   if (((strcmp (TtaGetSSchemaName (elType.ElSSchema), "XML") == 0) ||
+		       TtaIsXmlSSchema (elType.ElSSchema)) &&
+		       XML_CSS_Level < MAX_NS_TABLE)
+		     {
+		       XML_CSS_Href [XML_CSS_Level] = TtaStrdup (css_href); 
+		       XML_CSS_Doc [XML_CSS_Level] = XMLcontext.doc; 
+		       XML_CSS_El [XML_CSS_Level] = piEl; 
+		       XML_CSS_Media [XML_CSS_Level] = css_media;
+		       XML_CSS_Level++;	       
+		     }
+		   else
+		     LoadStyleSheet (css_href, XMLcontext.doc, piEl,
+				     css_info, css_media, FALSE);
 		 }
 	       TtaFreeMemory (css_href);
 	     }
@@ -3794,7 +3830,7 @@ static void       CreateXmlPi (char *piTarget, char *piData)
 		  /* Put the current content into a text element */
 		  elTypeLeaf.ElSSchema = elType.ElSSchema;
 		  elTypeLeaf.ElTypeNum = 1;
-		  piLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
+ 		  piLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
 		  XmlSetElemLineNumber (piLeaf);
 		  if (lastChild == NULL)
 		    TtaInsertFirstChild (&piLeaf, piLineEl, XMLcontext.doc);
@@ -3828,8 +3864,8 @@ static void       CreateXmlPi (char *piTarget, char *piData)
        TtaFreeMemory (piValue);
      }
    
-   /* Call the treatment that correspond to that PI */
-   /* For the moment, Amaya supports only the "xml-stylesheet" PI */
+   /* Call the treatment associated to that PI */
+   /* For the moment, Amaya only supports the "xml-stylesheet" PI */
    if (!strcmp (piTarget, "xml-stylesheet"))
      XmlStyleSheetPi (piData, piEl);
    /* Warnings about PI are no longer reported */
@@ -4370,13 +4406,22 @@ void             FreeXmlParserContexts (void)
 	   Ns_Uri[i] = NULL;
 	 }
      }
-
+   
+   /* Free XML Style Sheets table */
+   for (i = 0; i < XML_CSS_Level; i++)
+     {
+       if (XML_CSS_Href[i])
+	 {
+	   TtaFreeMemory (XML_CSS_Href[i]);
+	   XML_CSS_Href[i] = NULL;
+	 }
+     }
+   
    if (XMLRootName != NULL)
      {
        TtaFreeMemory (XMLRootName);
        XMLRootName = NULL;
-     }
-
+     }  
 }
 
 /*----------------------------------------------------------------------
@@ -4594,7 +4639,8 @@ static void  InitializeXmlParsingContext (Document doc,
   stackLevel = 1;
   Ns_Level = 0;
   CurNs_Level = 0;
-  elementStack[0] = RootElement;
+  XML_CSS_Level = 0;
+ elementStack[0] = RootElement;
 }
 
 /*----------------------------------------------------------------------
@@ -5632,6 +5678,8 @@ void StartXmlParser (Document doc, char *fileName,
       InitializeExpatParser (charset);
       /* Parse the input file and build the Thot tree */
       XmlParse (stream, charset, &xmlDec, &xmlDoctype);
+      /* Load the style sheets for xml documents */
+      LoadXmlStyleSheet (doc);
       /* Completes all unclosed elements */
       if (currentParserCtxt != NULL)
 	{
