@@ -524,9 +524,6 @@ boolean                dst_is_local;
 
 		       /* save the new SRC attr */
 		       NormalizeURL (buf, SavingDocument, tempname, imgname);
-		       /*TtaExtractName (buf, url, imgname);*/
-
-		       /*TtaExtractName (buf, url, imgname);*/
 		       if (SaveImgsURL[0] != EOS)
 			 {
 			    strcpy (url, SaveImgsURL);
@@ -561,10 +558,25 @@ boolean                dst_is_local;
 			     }
 			   TtaFileCopy (tempname, tempfile);
 			 }
-		       else
+		       else if (!IsW3Path (tempname))
 			 {
 			   /* add the localfile to the list */
 			   AddLocalImage (tempname, imgname, url, SavingDocument, &pImage);
+			 }
+		       /* update the informations on the list */
+		       else if (!AddLoadedImage (imgname, tempname, SavingDocument,
+					    &pImage))
+			 {
+			    /* image was loaded */
+			    if (pImage->originalName != NULL)
+			       TtaFreeMemory (pImage->originalName);
+			    pImage->originalName = (char *) TtaStrdup (url);
+			    pImage->status = IMAGE_MODIFIED;
+			 }
+		       else
+			 {
+			    /* well, this should not occurs */
+			    pImage->status = IMAGE_NOT_LOADED;
 			 }
 
 		       TtaFreeMemory (buf);
@@ -587,16 +599,8 @@ void                DoSaveAs ()
    char                tempname[MAX_LENGTH];
    char                imgname[MAX_LENGTH];
    char                imgbase[MAX_LENGTH];
-   char                url[MAX_LENGTH];
-   char               *buf;
-   int                 buflen;
    boolean             src_is_local;
    boolean             dst_is_local;
-   LoadedImageDesc    *pImage;
-   AttributeType       attrType;
-   ElementType         elType;
-   Attribute           attrSRC;
-   Element             elSRC;
    int                 res;
 
    src_is_local = !IsW3Path (DocumentURLs[SavingDocument]);
@@ -820,71 +824,7 @@ void                DoSaveAs ()
 	 * change all Picture SRC to the new remote URL.
 	 * and update modifications to the list of remote images.
 	 */
-	if (CopyImages)
-	  {
-	     elSRC = TtaGetMainRoot (SavingDocument);
-	     attrType.AttrSSchema = TtaGetDocumentSSchema (SavingDocument);
-	     attrType.AttrTypeNum = HTML_ATTR_SRC;
-	     TtaSearchAttribute (attrType, SearchForward, elSRC, &elSRC, &attrSRC);
-	     while (elSRC != NULL)
-	       {
-		  elType = TtaGetElementType (elSRC);
-		  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-		    {
-		       buflen = TtaGetTextAttributeLength (attrSRC);
-		       buf = (char *) TtaGetMemory (buflen + 2);
-		       if (buf == NULL)
-			  break;
-		       TtaGiveTextAttributeValue (attrSRC, buf, &buflen);
-
-		       /* save the new SRC attr */
-		       NormalizeURL (buf, SavingDocument, tempname, imgname);
-		       if (SaveImgsURL[0] != EOS)
-			 {
-			    strcpy (url, SaveImgsURL);
-			    strcat (url, DIR_STR);
-			    strcat (url, imgname);
-			 }
-		       else
-			 {
-			    strcpy (url, imgname);
-			 }
-		       TtaSetAttributeText (attrSRC, url, elSRC, SavingDocument);
-
-		       /* create the new absolute url for the image */
-		       if (imgbase[0] != EOS)
-			 {
-			    strcpy (url, imgbase);
-			    strcat (url, DIR_STR);
-			    strcat (url, imgname);
-			 }
-		       else
-			 {
-			    strcpy (url, DirectoryName);
-			    strcat (url, DIR_STR);
-			    strcat (url, imgname);
-			 }
-
-		       /* update the informations on the list */
-		       if (!AddLoadedImage (imgname, tempname, SavingDocument,
-					    &pImage))
-			 {
-			    /* image was loaded */
-			    if (pImage->originalName != NULL)
-			       TtaFreeMemory (pImage->originalName);
-			    pImage->originalName = (char *) TtaStrdup (url);
-			    pImage->status = IMAGE_MODIFIED;
-			 }
-		       else
-			 {
-			    /* well, this should not occurs */
-			    pImage->status = IMAGE_NOT_LOADED;
-			 }
-		       TtaFreeMemory (buf);
-		    }
-		  TtaSearchAttribute (attrType, SearchForward, elSRC, &elSRC, &attrSRC);
-	       }
-	  }
+	SaveImages (imgbase, dst_is_local);
 	/*
 	 * update informations on the document.
 	 */

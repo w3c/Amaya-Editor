@@ -916,6 +916,50 @@ NotifyDialog       *event;
 
 
 /*----------------------------------------------------------------------
+   ViewToClose                                                      
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             ViewToClose (NotifyDialog * event)
+#else
+boolean             ViewToClose (event)
+NotifyDialog       *event;
+
+#endif
+{
+   Document            document;
+   View                view, structView, altView;
+
+   view = event->view;
+   document = event->document;
+   structView = TtaGetViewFromName (document, "Structure_view");
+   altView = TtaGetViewFromName (document, "Alternate_view");
+   if (view != 1)
+     {
+	if (view == structView)
+	  TtaSetToggleItem (document, 1, Views, TShowStructure, FALSE);
+	else if (view == altView)
+	  TtaSetToggleItem (document, 1, Views, TShowAlternate, FALSE);
+	return FALSE;		/* let Thot perform normal operation */
+     }
+   else if (TtaIsDocumentModified (document))
+     {
+	InitConfirm (document, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED));
+	if (UserAnswer)
+	   TtaSetDocumentUnmodified (document);
+	else
+	   /* abort the command */
+	  return TRUE;		/* don't let Thot perform normal operation */
+     }
+
+   if (structView != 0 && TtaIsViewOpened (document, structView))
+     TtaCloseView (document, structView);
+   if (altView != 0 && TtaIsViewOpened (document, altView))
+     TtaCloseView (document, altView);
+   return FALSE;		/* let Thot perform normal operation */
+}
+
+
+/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ShowMapAreas (Document document, View view)

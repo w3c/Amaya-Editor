@@ -10,6 +10,7 @@ DEFAULT
 	PRuleModify.Post -> ChangePRule;
 	PRuleDelete.Post -> ChangePRule;
 	ViewOpen.Pre -> ViewToOpen;
+	ViewClose.Pre -> ViewToClose;
 	ElemSelect.Post -> SelectionChanged;
 	ElemExtendSelect.Post -> SelectionChanged;
    END;
