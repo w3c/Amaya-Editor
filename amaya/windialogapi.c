@@ -329,9 +329,9 @@ void WinInitPrinterColors ()
  CreateAltDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateAltDlgWindow (int base_img, int form_alt, int img_alt, int img_label)
+void CreateAltDlgWindow (int base_img, int form_alt, int img_alt, int img_label, CHAR_T* title_text, CHAR_T* msg_text)
 #else  /* __STDC__ */
-void CreateAltDlgWindow (base_img, form_alt, img_alt, img_label)
+void CreateAltDlgWindow (base_img, form_alt, img_alt, img_label, title_text, msg_text)
 int base_img;
 int form_alt;
 int img_alt;
@@ -342,27 +342,21 @@ int img_label;
      formAlt    = form_alt;
      imgeAlt    = img_alt;
      imageLabel = img_label;
+     ustrcpy (wndTitle, title_text);
+     ustrcpy (message, msg_text);
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_GETALTERNATEDIALOG), NULL, (DLGPROC) AltDlgProc);
-				break;
-		   case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_GETALTERNATEDIALOG), NULL, (DLGPROC) AltDlgProc);
-				break;
-		   case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_GETALTERNATEDIALOG), NULL, (DLGPROC) AltDlgProc);
-				break;
-	}
+     DialogBox (hInstance, MAKEINTRESOURCE (GETALTERNATEDIALOG), NULL, (DLGPROC) AltDlgProc);
+     wndTitle[0] = 0;
+     message[0]  = 0;
 }
 
 /*-----------------------------------------------------------------------
  CreateCSSDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateCSSDlgWindow (HWND parent, int base_dlg, int css_select, int form_css, STRING msg, int nb_item, STRING buffer, STRING title)
+void CreateCSSDlgWindow (HWND parent, int base_dlg, int css_select, int form_css, STRING msg, int nb_item, STRING buffer, STRING title, CHAR_T* msg_text)
 #else  /* __STDC__ */
-void CreateCSSDlgWindow (parent, base_dlg, css_select, form_css, msg, nb_item, buffer, title)
+void CreateCSSDlgWindow (parent, base_dlg, css_select, form_css, msg, nb_item, buffer, title, msg_text)
 HWND   parent;
 int    base_dlg;
 int    css_select;
@@ -382,28 +376,18 @@ STRING title;
     usprintf (wndTitle, title);
 
     if (nbItem == 0)
-       MessageBox (parent, TEXT("No CSS file available"), wndTitle, MB_OK | MB_ICONWARNING);
+       MessageBox (parent, msg_text, wndTitle, MB_OK | MB_ICONWARNING);
     else 
-        switch (app_lang) {
-               case FR_LANG:
-                    DialogBox (hInstance, MAKEINTRESOURCE (FR_CSSDIALOG), parent, (DLGPROC) CSSDlgProc);
-				    break;
-               case EN_LANG:
-                    DialogBox (hInstance, MAKEINTRESOURCE (EN_CSSDIALOG), parent, (DLGPROC) CSSDlgProc);
-                    break;
-               case DE_LANG:
-                    DialogBox (hInstance, MAKEINTRESOURCE (DE_CSSDIALOG), parent, (DLGPROC) CSSDlgProc);
-				    break;
-	}
+		DialogBox (hInstance, MAKEINTRESOURCE (CSSDIALOG), parent, (DLGPROC) CSSDlgProc);
 }
 
 /*-----------------------------------------------------------------------
  CreateLinkDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateLinkDlgWindow (HWND parent, STRING attrHref, int base_dlg, int attr_HREFForm, int attr_HREFText)
+void CreateLinkDlgWindow (HWND parent, STRING attrHref, int base_dlg, int attr_HREFForm, int attr_HREFText, CHAR_T* title_text, CHAR_T* url_text)
 #else  /* !__STDC__ */
-void CreateLinkDlgWindow (parent, attrHref, base_dlg, attr_HREFForm, attr_HREFText)
+void CreateLinkDlgWindow (parent, attrHref, base_dlg, attr_HREFForm, attr_HREFText, title_text, url_text)
 HWND      parent;
 STRING     attrHref;
 int       base_dlg;
@@ -415,21 +399,13 @@ int       attr_HREFText;
     attrHRefForm = attr_HREFForm;
     attrHRefTxt  = attr_HREFText;
 	ustrcpy (urlToOpen, attrHref);
+	ustrcpy (wndTitle, title_text);
+    ustrcpy (message, url_text);
 
     ReleaseFocus = FALSE;
     text[0] = 0;
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_LINKDIALOG), NULL, (DLGPROC) LinkDlgProc);
-				break;
-		   case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_LINKDIALOG), NULL, (DLGPROC) LinkDlgProc);
-				break;
-		   case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_LINKDIALOG), NULL, (DLGPROC) LinkDlgProc);
-				break;
-	}
+    DialogBox (hInstance, MAKEINTRESOURCE (LINKDIALOG), parent, (DLGPROC) LinkDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -449,44 +425,25 @@ STRING     msg2;
     usprintf (message, msg1);
     usprintf (message2, msg2);
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_HELPDIALOG), parent, (DLGPROC) HelpDlgProc);
-				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_HELPDIALOG), parent, (DLGPROC) HelpDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_HELPDIALOG), parent, (DLGPROC) HelpDlgProc);
-				break;
-	}
+	DialogBox (hInstance, MAKEINTRESOURCE (HELPDIALOG), parent, (DLGPROC) HelpDlgProc);
 }
 
 /*-----------------------------------------------------------------------
  CreateMathDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateMathDlgWindow (HWND parent, int mathRef, HWND frame)
+void CreateMathDlgWindow (HWND parent, int mathRef, HWND frame, CHAR_T* math_button)
 #else  /* !__STDC__ */
-void CreateMathDlgWindow (parent, mathRef, frame)
+void CreateMathDlgWindow (parent, mathRef, frame, math_button)
 HWND      parent;
 int       mathRef;
 HWND      frame;
 #endif /* __STDC__ */
 {  
 	baseDlg = mathRef;
+	ustrcpy (wndTitle, math_button);
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_MATHDIALOG), NULL, (DLGPROC) MathDlgProc);
-				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_MATHDIALOG), NULL, (DLGPROC) MathDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_MATHDIALOG), NULL, (DLGPROC) MathDlgProc);
-				break;
-	}
+	DialogBox (hInstance, MAKEINTRESOURCE (MATHDIALOG), NULL, (DLGPROC) MathDlgProc);
 
     SetFocus (parent);
 }
@@ -518,17 +475,7 @@ int       num_form_print;
     numFormPrint       = num_form_print;
 	usprintf (currentFileToPrint, TEXT("%s"), ps_dir);
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_PRINTDIALOG), NULL, (DLGPROC) PrintDlgProc);
-				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_PRINTDIALOG), NULL, (DLGPROC) PrintDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_PRINTDIALOG), NULL, (DLGPROC) PrintDlgProc);
-				break;
-	}
+	DialogBox (hInstance, MAKEINTRESOURCE (PRINTDIALOG), NULL, (DLGPROC) PrintDlgProc);
 
     if (!gbAbort) {
        EnableWindow  (parent, TRUE);
@@ -563,17 +510,7 @@ int t_border;
 	numRows   = num_rows;
 	tBorder   = t_border;
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_TABLEDIALOG), NULL, (DLGPROC) TableDlgProc);
-				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_TABLEDIALOG), NULL, (DLGPROC) TableDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_TABLEDIALOG), NULL, (DLGPROC) TableDlgProc);
-				break;
-	}
+	DialogBox (hInstance, MAKEINTRESOURCE (TABLEDIALOG), NULL, (DLGPROC) TableDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -599,43 +536,25 @@ int num_rows;
 	numCols   = num_cols;
 	numRows   = num_rows;
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_MATRIXDIALOG), NULL, (DLGPROC) MatrixDlgProc);
-				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_MATRIXDIALOG), NULL, (DLGPROC) MatrixDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_MATRIXDIALOG), NULL, (DLGPROC) MatrixDlgProc);
-				break;
-	}
+	DialogBox (hInstance, MAKEINTRESOURCE (MATRIXDIALOG), NULL, (DLGPROC) MatrixDlgProc);
 }
 
 /*-----------------------------------------------------------------------
  CreateSearchDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateSearchDlgWindow (HWND parent, BOOL ok)
+void CreateSearchDlgWindow (HWND parent, BOOL ok, CHAR_T* title)
 #else  /* !__STDC__ */
-void CreateSearchDlgWindow (parent, ok)
+void CreateSearchDlgWindow (parent, ok, title)
 HWND      parent;
 BOOL      ok;
+CHAR_T*   title;
 #endif /* __STDC__ */
 {  
     selectionFound = ok;
+	ustrcpy (wndTitle, title);
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_SEARCHDIALOG), NULL, (DLGPROC) SearchDlgProc);
-				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_SEARCHDIALOG), NULL, (DLGPROC) SearchDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_SEARCHDIALOG), NULL, (DLGPROC) SearchDlgProc);
-				break;
-	}
+	DialogBox (hInstance, MAKEINTRESOURCE (SEARCHDIALOG), NULL, (DLGPROC) SearchDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -668,11 +587,11 @@ int   toggle_save;
            case FR_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (FR_SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
 				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
-				break;
            case DE_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (DE_SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
+				break;
+           default:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
 				break;
 	}
 }
@@ -715,11 +634,11 @@ int    doc_type;
            case FR_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (FR_OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
 				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
-				break;
            case DE_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (DE_OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
+				break;
+           default:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
 				break;
 	}
 
@@ -760,11 +679,11 @@ int   doc_type;
            case FR_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (FR_OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
 				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
-				break;
            case DE_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (DE_OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
+				break;
+           default:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
 				break;
 	}
 
@@ -792,11 +711,11 @@ HWND frame;
            case FR_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (FR_GRAPHICSDIALOG), NULL, (DLGPROC) GraphicsDlgProc);
 				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_GRAPHICSDIALOG), NULL, (DLGPROC) GraphicsDlgProc);
-				break;
            case DE_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (DE_GRAPHICSDIALOG), NULL, (DLGPROC) GraphicsDlgProc);
+				break;
+           default:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_GRAPHICSDIALOG), NULL, (DLGPROC) GraphicsDlgProc);
 				break;
 	}
 }
@@ -824,11 +743,11 @@ int   confirm_save;
            case FR_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (FR_SAVELISTDIALOG), parent, (DLGPROC) SaveListDlgProc);
 				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_SAVELISTDIALOG), parent, (DLGPROC) SaveListDlgProc);
-				break;
            case DE_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (DE_SAVELISTDIALOG), parent, (DLGPROC) SaveListDlgProc);
+				break;
+           default:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_SAVELISTDIALOG), parent, (DLGPROC) SaveListDlgProc);
 				break;
 	}
 }
@@ -978,24 +897,6 @@ STRING buffer;
                                 break;
 				} 
 				break;
-           case EN_LANG:
-                switch (attDlgNbItems) {
-                       case 2: DialogBox (hInstance, MAKEINTRESOURCE (EN_ATTR2ITEMSDIALOG), NULL, (DLGPROC) Attr2ItemsDlgProc);
-                               break;
-
-                       case 3: DialogBox (hInstance, MAKEINTRESOURCE (EN_ATTR3ITEMSDIALOG), NULL, (DLGPROC) Attr3ItemsDlgProc);
-                               break;
-
-                       case 4: DialogBox (hInstance, MAKEINTRESOURCE (EN_ATTR4ITEMSDIALOG), NULL, (DLGPROC) Attr4ItemsDlgProc);
-                               break;
-
-                       case 5: DialogBox (hInstance, MAKEINTRESOURCE (EN_ATTR5ITEMSDIALOG), NULL, (DLGPROC) Attr5ItemsDlgProc);
-                               break;
-
-                       default: /* MessageBox ();*/
-                                break;
-				} 
-				break;
            case DE_LANG:
                 switch (attDlgNbItems) {
                        case 2: DialogBox (hInstance, MAKEINTRESOURCE (DE_ATTR2ITEMSDIALOG), NULL, (DLGPROC) Attr2ItemsDlgProc);
@@ -1008,6 +909,24 @@ STRING buffer;
                                break;
 
                        case 5: DialogBox (hInstance, MAKEINTRESOURCE (DE_ATTR5ITEMSDIALOG), NULL, (DLGPROC) Attr5ItemsDlgProc);
+                               break;
+
+                       default: /* MessageBox ();*/
+                                break;
+				} 
+				break;
+           default:
+                switch (attDlgNbItems) {
+                       case 2: DialogBox (hInstance, MAKEINTRESOURCE (EN_ATTR2ITEMSDIALOG), NULL, (DLGPROC) Attr2ItemsDlgProc);
+                               break;
+
+                       case 3: DialogBox (hInstance, MAKEINTRESOURCE (EN_ATTR3ITEMSDIALOG), NULL, (DLGPROC) Attr3ItemsDlgProc);
+                               break;
+
+                       case 4: DialogBox (hInstance, MAKEINTRESOURCE (EN_ATTR4ITEMSDIALOG), NULL, (DLGPROC) Attr4ItemsDlgProc);
+                               break;
+
+                       case 5: DialogBox (hInstance, MAKEINTRESOURCE (EN_ATTR5ITEMSDIALOG), NULL, (DLGPROC) Attr5ItemsDlgProc);
                                break;
 
                        default: /* MessageBox ();*/
@@ -1213,11 +1132,11 @@ HWND  parent;
            case FR_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (FR_FORMATDIALOG), NULL, (DLGPROC) ChangeFormatDlgProc);
 				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_FORMATDIALOG), NULL, (DLGPROC) ChangeFormatDlgProc);
-				break;
            case DE_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (DE_FORMATDIALOG), NULL, (DLGPROC) ChangeFormatDlgProc);
+				break;
+           default:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_FORMATDIALOG), NULL, (DLGPROC) ChangeFormatDlgProc);
 				break;
 	}
 }
@@ -1236,11 +1155,11 @@ HWND  parent;
            case FR_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (FR_GALPHABETDIALOG), NULL, (DLGPROC) GreekKeyboardDlgProc);
 				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_GALPHABETDIALOG), NULL, (DLGPROC) GreekKeyboardDlgProc);
-				break;
            case DE_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (DE_GALPHABETDIALOG), NULL, (DLGPROC) GreekKeyboardDlgProc);
+				break;
+           default:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_GALPHABETDIALOG), NULL, (DLGPROC) GreekKeyboardDlgProc);
 				break;
 	}
 }
@@ -1264,11 +1183,11 @@ STRING server;
            case FR_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (FR_AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthentificationDlgProc);
 				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthentificationDlgProc);
-				break;
            case DE_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (DE_AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthentificationDlgProc);
+				break;
+           default:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthentificationDlgProc);
 				break;
 	}
 
@@ -1305,11 +1224,11 @@ STRING image_location;
            case FR_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (FR_BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
 				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
-				break;
            case DE_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (DE_BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
+				break;
+           default:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
 				break;
 	} 
 }
@@ -1337,6 +1256,10 @@ LPARAM lParam;
 {
     switch (msg) {
 	       case WM_INITDIALOG:
+                SetWindowText (hwnDlg, wndTitle);
+                SetWindowText (GetDlgItem (hwnDlg, IDC_ALTTEXT), wndTitle);
+                SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+                SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
 			    SetDlgItemText (hwnDlg, IDC_GETALT, TEXT(""));
                 break;
 
@@ -1350,14 +1273,11 @@ LPARAM lParam;
 
 			    switch (LOWORD (wParam)) {
                        case ID_CONFIRM:
+                       case ID_DONE:
                             if (!altText || altText [0] == 0)
-                               MessageBox (hwnDlg, TEXT("Attribute ALT is mandatory"), TEXT("Open Image"), MB_OK | MB_ICONERROR);
+                               MessageBox (hwnDlg, message, wndTitle, MB_OK | MB_ICONERROR);
                             else 
                                  EndDialog (hwnDlg, ID_CONFIRM);
-                            break;
-
-                       case ID_DONE:
-					        EndDialog (hwnDlg, ID_DONE);
                             break;
 				}
 				break;
@@ -1382,8 +1302,6 @@ LPARAM lParam;
 	int  index = 0;
 	UINT  i = 0;
 
-	HWND wndMessage;
-
 	static HWND   wndCSSList;
 	static UINT   itemIndex;
 	static CHAR_T szBuffer [MAX_BUFF];
@@ -1391,10 +1309,13 @@ LPARAM lParam;
     switch (msg) {
 	       case WM_INITDIALOG:
                 SetWindowText (hwnDlg, wndTitle);
+				SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+				SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_CSSFILES), message);
 
-                wndMessage = CreateWindow (TEXT("STATIC"), message, WS_CHILD | WS_VISIBLE | SS_LEFT,
+                /* wndMessage = CreateWindow (TEXT("STATIC"), message, WS_CHILD | WS_VISIBLE | SS_LEFT,
                                            10, 10, 200, 20, hwnDlg, (HMENU) 99, 
-                                           (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                                           (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL); */
 
 				wndCSSList = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 					                         10, 35, 400, 120, hwnDlg, (HMENU) 1, 
@@ -1454,8 +1375,14 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
+	HWND urlWnd;
     switch (msg) {
            case WM_INITDIALOG:
+			    urlWnd = GetDlgItem (hwnDlg, IDC_URL_TEXT);
+				SetWindowText (hwnDlg, wndTitle);
+				SetWindowText (urlWnd, message);
+				SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+				SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_CANCEL));
                 SetDlgItemText (hwnDlg, IDC_URLEDIT, urlToOpen);
 
                 SetFocus (GetDlgItem (hwnDlg, IDC_URLEDIT));
@@ -1504,9 +1431,10 @@ LPARAM lParam;
 {
     switch (msg) {
            case WM_INITDIALOG:
-	         SetDlgItemText (hwnDlg, IDC_VERSION, currentPathName);
-	         SetDlgItemText (hwnDlg, IDC_ABOUT1, message);
-	         SetDlgItemText (hwnDlg, IDC_ABOUT2, message2);
+	         SetWindowText (GetDlgItem (hwnDlg, IDC_VERSION), currentPathName);
+	         SetWindowText (GetDlgItem (hwnDlg, IDC_ABOUT1), message);
+	         SetWindowText (GetDlgItem (hwnDlg, IDC_ABOUT2), message2);
+			 SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
 			    break;
 
            case WM_COMMAND:
@@ -1541,6 +1469,9 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
     switch (msg) {
+           case WM_INITDIALOG:
+	            SetWindowText (hwnDlg, wndTitle);
+				SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
            case WM_COMMAND:
                 /* SetFocus (FrRef[currentFrame]); */
 	            switch (LOWORD (wParam)) {
@@ -1632,6 +1563,14 @@ LPARAM lParam;
 {
   switch (msg) {
          case WM_INITDIALOG:
+              SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_LIB_PRINT));
+			  SetWindowText (GetDlgItem (hwnDlg, ID_PRINT), TtaGetMessage (AMAYA, AM_BUTTON_PRINT));
+			  SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+			  SetWindowText (GetDlgItem (hwnDlg, IDC_OPTIONS), TtaGetMessage (LIB, TMSG_OPTIONS));
+			  SetWindowText (GetDlgItem (hwnDlg, IDC_TABOFCONTENTS), TtaGetMessage (AMAYA, AM_PRINT_TOC));
+			  SetWindowText (GetDlgItem (hwnDlg, IDC_LINKS), TtaGetMessage (AMAYA, AM_NUMBERED_LINKS));
+			  SetWindowText (GetDlgItem (hwnDlg, IDC_PRINTURL), TtaGetMessage (AMAYA, AM_PRINT_URL));
+			  SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE_CSS),  TtaGetMessage (AMAYA, AM_WITH_CSS));
               CheckDlgButton (hwnDlg, IDC_PRINTURL, PrintURL);
               CheckDlgButton (hwnDlg, IDC_IGNORE_CSS, IgnoreCSS);
               CheckDlgButton (hwnDlg, IDC_TABOFCONTENTS, WithToC);
@@ -1710,6 +1649,13 @@ LPARAM lParam;
 
     switch (msg) {
 	       case WM_INITDIALOG:
+			    SetWindowText (hwnDlg, TtaGetMessage (1, BTable));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_NUMCOL), TtaGetMessage (AMAYA, AM_COLS));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_NUMROWS), TtaGetMessage (AMAYA, AM_ROWS));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_BORDER), TtaGetMessage (AMAYA, AM_BORDER));
+				SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+				SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+
 			    SetDlgItemInt (hwnDlg, IDC_NUMCOLEDIT, numCols, FALSE);
 			    SetDlgItemInt (hwnDlg, IDC_NUMROWSEDIT, numRows, FALSE);
 			    SetDlgItemInt (hwnDlg, IDC_BORDEREDIT, tBorder, FALSE);
@@ -1767,7 +1713,13 @@ LPARAM lParam;
 
     switch (msg) {
 	       case WM_INITDIALOG:
-			    SetDlgItemInt (hwnDlg, IDC_NUMCOLEDIT, numCols, FALSE);
+			    SetWindowText (hwnDlg, TtaGetMessage (1, BMatrix));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_NUMCOL), TtaGetMessage (AMAYA, AM_COLS));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_NUMROWS), TtaGetMessage (AMAYA, AM_ROWS));
+				SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+				SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+
+				SetDlgItemInt (hwnDlg, IDC_NUMCOLEDIT, numCols, FALSE);
 			    SetDlgItemInt (hwnDlg, IDC_NUMROWSEDIT, numRows, FALSE);
                 break;
 
@@ -2256,6 +2208,22 @@ LPARAM lParam;
 
     switch (msg) {
 	       case WM_INITDIALOG:
+			    SetWindowText (hwnDlg, wndTitle);
+				SetWindowText (GetDlgItem (hwnDlg, IDC_SEARCHFOR), TtaGetMessage (LIB, TMSG_SEARCH_FOR));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_UPPERLOWER), TtaGetMessage (LIB, TMSG_UPPERCASE_EQ_LOWERCASE));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_REPLACEGROUP), TtaGetMessage (LIB, TMSG_REPLACE));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_REPLACEDBY), TtaGetMessage (LIB, TMSG_REPLACE_BY));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_NOREPLACE), TtaGetMessage (LIB, TMSG_NO_REPLACE));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_ONREQUEST), TtaGetMessage (LIB, TMSG_REPLACE_ON_REQU));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_AUTOMATIC), TtaGetMessage (LIB, TMSG_AUTO_REPLACE));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_WHEREGROUP), TtaGetMessage (LIB, TMSG_SEARCH_WHERE));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_BEFORE), TtaGetMessage (LIB, TMSG_BEFORE_SEL));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_WITHIN), TtaGetMessage (LIB, TMSG_WITHIN_SEL));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_AFTER), TtaGetMessage (LIB, TMSG_AFTER_SEL));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_WHOLEDOC), TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
+				SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+				SetWindowText (GetDlgItem (hwnDlg, ID_NOREPLACE), TtaGetMessage (LIB, TMSG_DO_NOT_REPLACE));
+				SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
 			    SetDlgItemText (hwnDlg, IDC_SEARCHEDIT, TEXT(""));
 			    SetDlgItemText (hwnDlg, IDC_REPLACEDIT, TEXT(""));
 

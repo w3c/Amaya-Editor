@@ -17,13 +17,13 @@
 
 extern HDC PASCAL GetPrinterDC (void);
 extern void WinInitPrinterColors (void);
-extern void CreateLinkDlgWindow (HWND, STRING, int, int, int);
+extern void CreateLinkDlgWindow (HWND, STRING, int, int, int, CHAR_T*, CHAR_T*);
 extern void CreateHelpDlgWindow (HWND, STRING, STRING, STRING);
-extern void CreateMathDlgWindow (HWND, int, HWND);
+extern void CreateMathDlgWindow (HWND, int, HWND, CHAR_T*);
 extern void CreatePrintDlgWindow (HWND, STRING, int, int, int, int, int, int);
 extern void CreateAlign1DlgWindow (HWND, int);
 extern void CreateAlign2DlgWindow (HWND, int);
-extern void CreateSearchDlgWindow (HWND);
+extern void CreateSearchDlgWindow (HWND, BOOL, CHAR_T*);
 extern void CreateSaveAsDlgWindow (HWND, STRING, STRING, int, int, int, int, int, int);
 extern void CreateOpenDocDlgWindow (HWND, STRING, STRING, STRING, int, int, int, int, int, int);
 extern void CreateSaveListDlgWindow (HWND, int, STRING, int, int);

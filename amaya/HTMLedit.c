@@ -511,7 +511,7 @@ ThotBool		    withUndo;
 #ifndef _WINDOWS
 	TtaShowDialogue (BaseDialog + AttrHREFForm, FALSE);
 #else  /* _WINDOWS */
-	CreateLinkDlgWindow (currentWindow, AttrHREFvalue, BaseDialog, AttrHREFForm, AttrHREFText);
+	CreateLinkDlgWindow (currentWindow, AttrHREFvalue, BaseDialog, AttrHREFForm, AttrHREFText, TtaGetMessage (AMAYA, AM_ATTRIBUTE), TtaGetMessage (AMAYA, AM_HREF_VALUE));
 #endif  /* _WINDOWS */
      }
 }

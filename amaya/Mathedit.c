@@ -1240,9 +1240,9 @@ View                view;
       TtaSetMenuForm (MathsDialogue + MenuMaths, 0);
       TtaSetDialoguePosition ();
     }
-  TtaShowDialogue (MathsDialogue + FormMaths, TRUE);
+  TtaShowDialogue (MathsDialogue + FormMaths, TRUE); 
 # else /* _WINDOWS */
-  CreateMathDlgWindow (TtaGetViewFrame (doc, view), MathsDialogue, TtaGetThotWindow (GetWindowNumber (doc, view)));
+  CreateMathDlgWindow (TtaGetViewFrame (doc, view), MathsDialogue, TtaGetThotWindow (GetWindowNumber (doc, view)), TtaGetMessage (AMAYA, AM_BUTTON_MATH));
 # endif /* _WINDOWS */
 }
 

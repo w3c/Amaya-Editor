@@ -398,7 +398,7 @@ View                view;
      }
    TtaDestroyDialogue (BaseImage + FormAlt);   
 #  else  /* _WINDOWS */
-   CreateAltDlgWindow (BaseImage, FormAlt, ImageAlt, ImageLabel4);
+   CreateAltDlgWindow (BaseImage, FormAlt, ImageAlt, ImageLabel4, TtaGetMessage (AMAYA, AM_ALT), TtaGetMessage (AMAYA, AM_ALT_MISSING));
 #  endif /* _WINDOWS */
 }
 

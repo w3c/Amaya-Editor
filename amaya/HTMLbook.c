@@ -763,7 +763,7 @@ View                view;
        TtaRedrawMenuEntry (BasePrint+NumMenuOptions, 2, NULL, -1, FALSE);	      
 	}
 #   else  /* _WINDOWS */
-    CreatePrintDlgWindow (TtaGetViewFrame (doc, view), PSdir, BasePrint, NumMenuSupport, NumMenuOptions, NumMenuPaperFormat, NumZonePrinterName, NumFormPrint); 
+    CreatePrintDlgWindow (TtaGetViewFrame (doc, view), PSdir, BasePrint, NumMenuSupport, NumMenuOptions, NumMenuPaperFormat, NumZonePrinterName, NumFormPrint);
 #   endif /* _WINDOWS */
 }
 

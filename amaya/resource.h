@@ -345,6 +345,7 @@
 #define FR_COLORMENU                    503
 #define DE_COLORMENU                    504
 #define EN_GETALTERNATEDIALOG           505
+#define GETALTERNATEDIALOG              505
 #define FR_GETALTERNATEDIALOG           506
 #define DE_GETALTERNATEDIALOG           507
 #define EN_LANNEGMENU                   509
@@ -776,6 +777,7 @@
 #define IDC_TPROFILESLOCA               1488
 #define IDC_TPROFILESELECT              1489
 #define IDC_TPROFILECHANGE              1490
+#define IDC_CSSFILES                    1491
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -811,6 +813,8 @@
 #define IDC_URL                         -1
 #define IDC_TLANNEG                     65535
 #define IDC_TTEMPLATESURL               65535
+#define IDC_URL_TEXT                    -1
+#define IDC_WHEREGROUP                  65535
 
 // Next default values for new objects
 // 
@@ -818,7 +822,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        536
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1491
+#define _APS_NEXT_CONTROL_VALUE         1492
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
