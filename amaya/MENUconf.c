@@ -2834,7 +2834,7 @@ static void GetDefaultBrowseConf ()
 		   BrowseBase + mToggleBrowse, 4);
   GetDefEnvToggle ("ENABLE_FTP", &EnableFTP,
 		   BrowseBase + mToggleBrowse, 5);
-  GetDefEnvString ("SCEEN_TYPE", ScreenType);
+  GetDefEnvString ("SCREEN_TYPE", ScreenType);
   TtaGetDefEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
 }
 
@@ -3031,7 +3031,7 @@ static void RefreshBrowseMenu ()
   TtaSetToggleMenu (BrowseBase + mToggleBrowse, 4, DoubleClick);
   TtaSetToggleMenu (BrowseBase + mToggleBrowse, 5, EnableFTP);
   /* preselect the screen matching the user preference */
-  TtaSetSelector (BrowseBase + mScreenSelector, CurrentScreen, NULL);
+  BuildScreenSelector ();
 }
 
 /*----------------------------------------------------------------------
