@@ -301,6 +301,10 @@ Section "Amaya" SecAmaya
   DetailPrint "Installing Amaya documentation"
   SetDetailsPrint listonly
 
+  SetOutPath "$INSTDIR\doc\WX"
+  File doc\WX\*
+  SetOutPath "$INSTDIR\doc\WX\HTML-elements"
+  File doc\WX\HTML-elements\*
   SetOutPath "$INSTDIR\doc\html"
   File doc\html\*
   SetOutPath "$INSTDIR\doc\html\accessibility_in_amaya"
@@ -349,7 +353,6 @@ Section "Amaya" SecAmaya
   File doc\html\using_xml\*
   SetOutPath "$INSTDIR\doc\html\viewing"
   File doc\html\viewing\*
-
   SetOutPath "$INSTDIR\doc\images"
   File doc\images\*
 
