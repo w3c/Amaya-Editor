@@ -5423,12 +5423,16 @@ static void   XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
      {
        /* read the XML file */
        res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);
+       if (res < 0)
+	 return;
+
        if (res < COPY_BUFFER_SIZE)
 	 {
 	   endOfFile = TRUE;
 	   /* add a null character at the end of the buffer by security */
 	   bufferRead[res] = EOS;
 	 }
+
        i = 0;
 
        if (beginning)

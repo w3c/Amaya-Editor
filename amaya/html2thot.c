@@ -4914,6 +4914,11 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
       while (!endOfSniffedFile)
 	{
 	  res = gzread (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE);
+	  if (res < 0)
+	    {
+	      gzclose (stream);
+	      return;
+	    }
 	  if (res >= 5)
 	    FileBuffer[res] = EOS;
 	  /* check if the file contains "<?xml ..." */
@@ -5276,6 +5281,11 @@ void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
       while (!endOfSniffedFile)
 	{
 	  res = gzread (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE);
+	  if (res < 0)
+	    {
+	      gzclose (stream);
+	      return;
+	    }
 	  if (res >= 5)
 	    FileBuffer[res] = EOS;
 	  i = 0;
