@@ -846,8 +846,15 @@ const char *prefix;
 
   /* create the tempname */
 #ifdef _WINDOWS
-  /* @@ this function is broken under windows :-/ */
-  name = _tempnam (dir, prefix);
+  /* Under Windows, _tempnam returns the same name until the file is created */
+  {
+    char *altprefix;
+    name = tmpnam (NULL);	/* get a possibly unique string */
+    altprefix = TtaGetMemory(ustrlen (prefix) + ustrlen(name) + 1);
+    sprintf (altprefix, "%s%s", prefix, name+ustrlen(_P_tmpdir));
+    name = _tempnam (dir, altprefix); /* get a name that isn't yet in use */
+    TtaFreeMemory (altprefix);
+  }
 #else
   name = tempnam (dir, prefix);
 #endif /* _WINDOWS */
