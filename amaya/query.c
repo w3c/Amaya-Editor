@@ -752,6 +752,7 @@ int                 status;
 	     if (ref)
 	       {
 		 HT_FREE (new_anchor->parent->address);
+		 new_anchor->parent->address = NULL;
 		 tmp = NULL;
 		 HTSACopy (&tmp, WideChar2ISO (ref));
 		 new_anchor->parent->address = tmp;
@@ -2270,7 +2271,9 @@ static void         AHTProfile_delete ()
   clear_cachelock ();
   HTCacheTerminate ();
 #endif /* AMAYA_WWW_CACHE */
-    
+  
+  /* remove bindings between suffixes, media types*/
+  HTBind_deleteAll ();
   /* Terminate libwww */
   HTLibTerminate ();
 }
