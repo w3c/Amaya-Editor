@@ -3136,7 +3136,7 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 			    sizeof(PresentationContextBlock));
 
 		  /* check if the image url is related to an external CSS */
-		  if (css && css->category == CSS_EXTERNAL_STYLE)
+		  if (css)
 		    {
 		      NormalizeURL (url, 0, tempname, imgname, css->url);
 		      /* fetch and display background image of element */
@@ -3144,7 +3144,7 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 				  ParseCSSBackgroundImageCallback, callblock);
 		    }
 		  else
-		    FetchImage (0, el, url, AMAYA_LOAD_IMAGE,
+		    FetchImage (context->doc, el, url, AMAYA_LOAD_IMAGE,
 				ParseCSSBackgroundImageCallback, callblock);
 		}
 	    }
