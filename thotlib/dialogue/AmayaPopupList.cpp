@@ -64,6 +64,7 @@ AmayaPopupList::AmayaPopupList ( int ref ) :  wxMenu()
 AmayaPopupList::~AmayaPopupList()
 {
   wxLogDebug( _T("AmayaPopupList::~AmayaPopupList") );
+  TtaDestroyDialogue( m_Ref );
 }
 
 /*

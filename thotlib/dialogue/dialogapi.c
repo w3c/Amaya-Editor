@@ -1824,6 +1824,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
   rebuilded = FALSE;
   if (catalogue->Cat_Widget)
     {
+#ifndef _WX
       if (catalogue->Cat_Type == CAT_SCRPOPUP)
 	{
 	  /* Modification du catalogue */
@@ -1831,6 +1832,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 	  rebuilded = TRUE;
 	}
       else
+#endif /* _WX */
 	TtaDestroyDialogue (ref);
     }
   if (!rebuilded)
