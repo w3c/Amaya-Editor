@@ -209,7 +209,9 @@ void AmayaTextGraber::OnKeyDown(wxKeyEvent& event)
 	     thot_keysym == WXK_UP     ||
 	     thot_keysym == WXK_DOWN   ||
 	     thot_keysym == WXK_ESCAPE ||
-	     thot_keysym == WXK_BACK
+	     thot_keysym == WXK_BACK   ||
+	     thot_keysym == WXK_RETURN ||
+	     thot_keysym == WXK_TAB
 	     )
     {
       wxLogDebug( _T("AmayaTextGraber::SpecialKey thot_keysym=%x"), thot_keysym );
