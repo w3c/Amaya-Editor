@@ -938,6 +938,7 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 			      if (selEl != NULL)
 				if (*selEl == textEl)
 				  *selEl = symbolEl;
+			      c = text[i];
 #ifdef _I18N_
 		              if (text[i] == 0x222B)
 				c = 'i';
@@ -951,14 +952,14 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 				c = '^';
 			      else if (text[i] == 0x2193)
 				c = 'V';
-#else
+#else /*_I18N_ */
 			      if (text[i] == 242)
 				c = 'i';
 			      else if (text[i] == 173)
 				c = '<';
 			      else if (text[i] == 175)
 				c = '>';
-#endif
+#endif /*_I18N_ */
 			      symbolEl = TtaNewElement (doc, elType);
 			      TtaInsertSibling (symbolEl, textEl, TRUE,doc);
 			      TtaSetGraphicsShape (symbolEl, c, doc);
@@ -996,11 +997,11 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 					  text[0] != 0x222E &&
 					  text[0] != 0x2191 &&
 					  text[0] != 0x2193)
-#else
+#else /*_I18N_ */
 				      if (script != 'G' ||
 					  (text[0] != 242 && text[0] != 173 &&
 					   text[0] != 175))
-#endif
+#endif /*_I18N_ */
 					/* not a stretchable symbol */
 					textEl = NULL;
 				    }
@@ -2963,6 +2964,8 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
 			}
 		      val = pval.typed_data.value / 2;
 		    }
+		  else
+		    val = pval.typed_data.value;
 		}
 	    }
 	}
