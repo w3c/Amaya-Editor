@@ -117,7 +117,10 @@ void CreateDoctype (Document doc, int profile)
   /* Check the Thot abstract tree against the structure schema. */
   TtaSetStructureChecking (0, doc);
 
-  language = TtaGetDefaultLanguage ();
+  /* We use the Latin_Script language to avoid */
+  /* the spell_chekcer to check the doctype */
+  language = Latin_Script;
+
   docEl = TtaGetMainRoot (doc);
   elType = TtaGetElementType (docEl);
 

@@ -3037,8 +3037,9 @@ static void       ParseDoctypeElement (char *data, int length)
 	      else
 		TtaInsertSibling (doctypeLeaf, lastChild,
 				  FALSE, XMLcontext.doc);
-	      TtaSetTextContent (doctypeLeaf, buffer,
-				 XMLcontext.language, XMLcontext.doc);
+	      /* We use the Latin_Script language to avoid the spell_chekcer */
+	      /* to check this element */
+	      TtaSetTextContent (doctypeLeaf, buffer, Latin_Script, XMLcontext.doc);
 	    }
 	  /* Create a new DOCTYPE_line element */
 	  elType.ElSSchema = NULL;
@@ -3069,10 +3070,10 @@ static void       ParseDoctypeElement (char *data, int length)
 	  if (lastChild == NULL)
 	    TtaInsertFirstChild (&doctypeLeaf, doctypeLine, XMLcontext.doc);
 	  else
-	    TtaInsertSibling (doctypeLeaf, lastChild,
-			      FALSE, XMLcontext.doc);
-	  TtaSetTextContent (doctypeLeaf, buffer,
-			     XMLcontext.language, XMLcontext.doc);
+	    TtaInsertSibling (doctypeLeaf, lastChild, FALSE, XMLcontext.doc);
+	  /* We use the Latin_Script language to avoid the spell_chekcer */
+	  /* to check this element */
+	  TtaSetTextContent (doctypeLeaf, buffer, Latin_Script, XMLcontext.doc);
 	}
     }
 
@@ -3551,9 +3552,10 @@ static void       CreateXmlPi (char *piTarget, char *piData)
 		    TtaInsertFirstChild (&piLeaf, piLineEl, XMLcontext.doc);
 		  else
 		    TtaInsertSibling (piLeaf, lastChild,
-				      FALSE, XMLcontext.doc);	     
-		  TtaSetTextContent (piLeaf, buffer,
-				     XMLcontext.language, XMLcontext.doc);
+				      FALSE, XMLcontext.doc);
+		  /* We use the Latin_Script language to avoid the spell_chekcer */
+		  /* to check this element */
+		  TtaSetTextContent (piLeaf, buffer, Latin_Script, XMLcontext.doc);
 		}
 	      TtaFreeMemory (buffer);
 	      j += l;

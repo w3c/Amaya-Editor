@@ -3753,7 +3753,10 @@ static void         EndOfDoctypeDecl (char c)
 		       TtaSetElementLineNumber (text, NumberOfLinesRead);
 		       /* get the position of the Doctype text */
 		       TtaInsertFirstChild (&text, doctypeLine, HTMLcontext.doc);
-		       TtaSetTextContent (text, buffer, TtaGetDefaultLanguage (), HTMLcontext.doc);
+
+		       /* We use the Latin_Script language to avoid the spell_chekcer */
+		       /* the spell_chekcer to check the doctype */
+		       TtaSetTextContent (text, buffer, Latin_Script, HTMLcontext.doc);
 		     }
 		   /* Create a new DOCTYPE_line element */
 		   elType.ElTypeNum = HTML_EL_DOCTYPE_line;
@@ -3778,7 +3781,9 @@ static void         EndOfDoctypeDecl (char c)
 		   TtaSetElementLineNumber (text, NumberOfLinesRead);
 		   /* get the position of the Doctype text */
 		   TtaInsertFirstChild (&text, doctypeLine, HTMLcontext.doc);
-		   TtaSetTextContent (text, buffer, TtaGetDefaultLanguage (), HTMLcontext.doc);
+		   /* We use the Latin_Script language to avoid the spell_chekcer */
+		   /* the spell_chekcer to check the doctype */
+		   TtaSetTextContent (text, buffer, Latin_Script, HTMLcontext.doc);
 		 }
 	     }
 	 }
