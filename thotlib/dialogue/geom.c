@@ -1419,6 +1419,7 @@ int                 percentH;
   int                 xref, yref;
   int                 warpx, warpy;
 #ifdef _WINDOWS
+  RECT                rect;
   POINT               cursorPos;
 #endif /* _WINDOWS */
   ThotBool           isEllipse;
@@ -1493,6 +1494,10 @@ int                 percentH;
       break;
     }  
 
+#ifdef _WINDOWS
+  GetWindowRect (w, &rect);
+#endif /* _WINDOWS */
+
   /* Shows the initial box size */
   if (isEllipse)
     InvertEllipse (frame, *x, *y, *width, *height, *x + xref, *y + yref);
@@ -1507,6 +1512,7 @@ int                 percentH;
       GetMessage (&event, NULL, 0, 0);
       switch (event.message)
 	{
+	case WM_LBUTTONUP:
 	case WM_MBUTTONUP:
 	case WM_RBUTTONUP:
 	  ret = 1;
@@ -1515,8 +1521,8 @@ int                 percentH;
 	case WM_MOUSEMOVE:
 	  GetCursorPos (&cursorPos);
 	  ScreenToClient (w, &cursorPos);
-	  dl = cursorPos.x - xm;
-	  dh = cursorPos.y - ym;
+	  dl = cursorPos.x - rect.left - xm;
+	  dh = cursorPos.y - rect.top - ym;
 	  if (percentW != 0)
 	    {
 	      /* keep the greater value */
@@ -1656,8 +1662,8 @@ int                 percentH;
 	      else
 		BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
 	      /* is there any dependence between height and width */
-	      *width += dl;
-	      *height += dh;
+	      *width = *width + dl;
+	      *height = d*height + h;
 	      if (percentW != 0)
 		{
 		  *width = *height * percentW / 100;
@@ -1711,9 +1717,9 @@ int                 percentH;
 	  if (warpx >= 0 || warpy >= 0)
 	    {
 	      if (warpx >= 0)
-		xm = warpx;
+		xm = warpx + rect.left;
 	      if (warpy >= 0)
-		ym = warpy;
+		ym = warpy + rect.top;
 	    }
 	  break;
 	default:  break;
@@ -2440,6 +2446,7 @@ int                 percentH;
   int                 xref, yref;
 #ifdef _WINDOWS
   RECT                rect;
+  POINT               cursorPos;
 #else  /* _WINDOWS */
   ThotWindow          wdum;
   int                 e, f;
@@ -2529,9 +2536,7 @@ int                 percentH;
   while (ret == 0)
     {
 #ifdef _WINDOWS
-      SetCursor (LoadCursor (NULL, IDC_CROSS));
-      /* ShowCursor (TRUE); */
-      GetMessage (&event, NULL, 0, 0);
+     GetMessage (&event, NULL, 0, 0);
       if (event.message == WM_MOUSEMOVE)
 	{
 	  GetCursorPos (&cursorPos);
