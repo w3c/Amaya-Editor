@@ -88,6 +88,7 @@ MENUS
 	Types.Form button:BToggle -> CreateToggle;
 	Types.Form button:BFileInput -> CreateFileInput;
 	Types.Form button:BHiddenInput -> CreateHiddenInput;
+	 Types.Form button:BImageInput -> CreateImageInput;
 	Types.Form button:BPasswordInput -> CreatePasswordInput;
 	Types.Form button:BRadio -> CreateRadio;
 	Types.Form button:BReset -> CreateReset;

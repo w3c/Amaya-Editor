@@ -2077,6 +2077,8 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
+   AttributeType       attrType;
+   Attribute           attr;
    ElementType         elType;
 
    elType = TtaGetElementType (event->element);
@@ -2085,6 +2087,17 @@ NotifyAttribute    *event;
       /* Attribute menu for an element Reset_Input or Submit_Input */
       /* prevent Thot from including an entry for that attribute */
       return TRUE;
+   else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+     {
+       /* check if it's an input element */
+       attrType.AttrSSchema = elType.ElSSchema;
+       attrType.AttrTypeNum = HTML_ATTR_IsInput;
+       attr = TtaGetAttribute (event->element, attrType);
+       if (attr)
+	 return FALSE;		/* let Thot perform normal operation */
+       else
+	 return TRUE;		/* not allowed on standard pictures */
+     }
    else
       return FALSE;		/* let Thot perform normal operation */
 }

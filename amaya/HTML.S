@@ -137,8 +137,10 @@ STRUCT
 		  Height_ = Integer; Width__ = Text;
 		{ height             width }
 		  IntWidthPercent = Integer; IntWidthPxl = Integer;
-		  USEMAP = Text; ISMAP = Yes_; IsInput = Yes_;
+		  USEMAP = Text; ISMAP = Yes_;
 		{ usemap         ismap }
+		 IsInput = Yes_;    NAME = Text;
+		{ input type=IMAGE  name }
 		  Alignment = Top_, Middle_, Bottom_, Left_, Right_;
 		{ align       top   middle   bottom   left   right }
 		  Img_border = Integer;
@@ -208,7 +210,7 @@ STRUCT
 		Font_, BaseFont);
 
   Anchor							{ A }
-     (ATTR charset; Link_type; NAME = Text;
+     (ATTR charset; Link_type; NAME;
 	 { charset  type       name }
 	   HREF_; hreflang; target_;
 	 { href   hreflang  target}

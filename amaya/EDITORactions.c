@@ -35,6 +35,7 @@
 #endif /* AMAYA_JAVA */
 #include "AHTURLTools_f.h"
 #include "EDITORactions_f.h"
+#include "EDITimage_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLtable_f.h"
@@ -1906,9 +1907,98 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   CreateInputElement (doc, view, HTML_EL_Text_Area);
+   CreateInputElement (doc, view, HTML_EL_Text_Input);
 }
 
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateImageInput (Document doc, View view)
+#else  /* __STDC__ */
+void                CreateImageInput (doc, view)
+Document            doc;
+View                view;
+
+#endif /* __STDC__ */
+{
+  AttributeType       attrType;
+  Attribute           attr;
+  ElementType         elType;
+  Element             el, input;
+  STRING              value;
+  int                 length;
+  int                 firstchar, lastchar;
+  ThotBool            withinP;
+
+  /* create the form if necessary */
+  el = InsertForm (doc, view, &withinP);
+  if (el != NULL)
+    {
+      /* the element can be created */
+      elType = TtaGetElementType (el);
+      if (!withinP)
+	{
+	  /* create the paragraph element */
+	  elType.ElTypeNum = HTML_EL_Paragraph;
+	  TtaInsertElement (elType, doc);
+	}
+      CreateImage (doc, view);
+      TtaGiveFirstSelectedElement (doc, &input, &firstchar, &lastchar);
+      if (input)
+	{
+	  elType = TtaGetElementType (input);
+	  while (elType.ElTypeNum != HTML_EL_PICTURE_UNIT)
+	    {
+	      input = TtaGetParent (input);
+	      elType = TtaGetElementType (input);
+	    }
+	  /* add the attribute isInput */
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = HTML_ATTR_IsInput;
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (input, attr, doc);
+	  
+	  /* use the ALT value to generate the attribute NAME */
+	  attrType.AttrTypeNum = HTML_ATTR_ALT;
+	  attr = TtaGetAttribute (input, attrType);
+	  if (attr)
+	    {
+	      length = TtaGetTextAttributeLength (attr) + 10;
+	      value = TtaAllocString (length);
+	      TtaGiveTextAttributeValue (attr, value, &length);
+	      attrType.AttrTypeNum = HTML_ATTR_NAME;
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (input, attr, doc);
+	      TtaSetAttributeText (attr, value, input, doc);
+	      TtaFreeMemory (value);
+	      /* Check attribute NAME or ID in order to make sure that its
+		 value unique in the document */
+	      MakeUniqueName (input, doc);
+	    }
+	  /* add a text before if needed */
+	  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	  el = input;
+	  TtaPreviousSibling (&el);
+	  if (el == NULL)
+	    {
+	      el = TtaNewElement (doc, elType);
+	      TtaInsertSibling (el, input, TRUE, doc);
+	    }
+	}
+      /* Insert a text element after */
+      el = input;
+      TtaNextSibling (&el);
+      if (el == NULL)
+	{
+	  el = TtaNewElement (doc, elType);
+	  TtaInsertSibling (el, input, FALSE, doc);
+	  /* if it's not a HTML_EL_BUTTON or a SELECT
+	     select the following text element */
+	  TtaSelectElement (doc, el);
+	}
+    }
+}
 
 /*----------------------------------------------------------------------
   CreateFileInput

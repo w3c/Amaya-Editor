@@ -1071,6 +1071,7 @@ View                view;
    TtaCreateElement (elType, document);
 }
 
+
 /*----------------------------------------------------------------------
    AddLocalImage adds a new local image into image descriptor table   
    with the purpose of having it saved through the Net later.    

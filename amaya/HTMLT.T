@@ -798,9 +798,18 @@ RULES
 	END;
 
  PICTURE_UNIT: BEGIN
+	if IsInput BEGIN
+		Create '<input type=image';
+		Create Attributes;
+#ifdef XML
+		Create ' />\12';
+#else
+		Create '>';
+#endif
+		END;
 	if Immediately within Object
 		Remove;
-	if NOT Immediately within Object BEGIN
+	if NOT Immediately within Object AND NOT IsInput BEGIN
 		Create '<img';
 		Create Attributes;
 #ifdef XML

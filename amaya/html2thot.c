@@ -3219,36 +3219,45 @@ STRING              val;
 
 #endif
 {
-   int                 value;
-   UCHAR_T       msgBuffer[MaxMsgLength];
-   ElementType         elType;
-   Element             newChild;
-   AttributeType       attrType;
+  ElementType         elType;
+  Element             newChild;
+  AttributeType       attrType;
+  Attribute           attr;
+  UCHAR_T             msgBuffer[MaxMsgLength];
+  int                 value;
 
-   value = MapAttrValue (DummyAttribute, val);
-   if (value < 0)
-     {
-	usprintf (msgBuffer, TEXT("Unknown attribute value \"TYPE = %s\""), val);
-	ParseHTMLError (theDocument, msgBuffer);
-	attrType.AttrSSchema = DocumentSSchema;
-	attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
-	usprintf (msgBuffer, TEXT("type=%s"),val);
-	CreateAttr (lastElement, attrType, msgBuffer, TRUE);
-     }
-   else
-     {
-	elType = TtaGetElementType (lastElement);
-	if (elType.ElTypeNum != HTML_EL_Input)
-	  usprintf (msgBuffer, TEXT("Duplicate attribute \"TYPE = %s\""),val);
-	else
-	  {
-	     elType.ElSSchema = DocumentSSchema;
-	     elType.ElTypeNum = value;
-	     newChild = TtaNewTree (theDocument, elType, _EMPTYSTR_);
-	     TtaSetElementLineNumber (newChild, NumberOfLinesRead);
-	     TtaInsertFirstChild (&newChild, lastElement, theDocument);
-	  }
-     }
+  value = MapAttrValue (DummyAttribute, val);
+  if (value < 0)
+    {
+      usprintf (msgBuffer, TEXT("Unknown attribute value \"TYPE = %s\""), val);
+      ParseHTMLError (theDocument, msgBuffer);
+      attrType.AttrSSchema = DocumentSSchema;
+      attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
+      usprintf (msgBuffer, TEXT("type=%s"),val);
+      CreateAttr (lastElement, attrType, msgBuffer, TRUE);
+    }
+  else
+    {
+      elType = TtaGetElementType (lastElement);
+      if (elType.ElTypeNum != HTML_EL_Input)
+	usprintf (msgBuffer, TEXT("Duplicate attribute \"TYPE = %s\""),val);
+      else
+	{
+	  elType.ElSSchema = DocumentSSchema;
+	  elType.ElTypeNum = value;
+	  newChild = TtaNewTree (theDocument, elType, _EMPTYSTR_);
+	  TtaSetElementLineNumber (newChild, NumberOfLinesRead);
+	  TtaInsertFirstChild (&newChild, lastElement, theDocument);
+	  if (value == HTML_EL_PICTURE_UNIT)
+	    {
+	      /* add the attribute IsInput to input pictures */
+	      attrType.AttrSSchema = elType.ElSSchema;
+	      attrType.AttrTypeNum = HTML_ATTR_IsInput;
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (newChild, attr, theDocument);
+	    }
+	}
+    }
 }
 
 
@@ -3411,114 +3420,112 @@ CHAR_T                c;
 
 #endif
 {
-   ElementType         elType;
-   AttributeType       attrType;
-   Attribute           attr;
-   int                 length;
-   STRING              text;
-   ThotBool	       math;
+  ElementType         elType;
+  AttributeType       attrType;
+  Attribute           attr;
+  int                 length;
+  STRING              text;
+  ThotBool	      math;
 
-   UnknownTag = FALSE;
-   if ((lastElement != NULL) && (lastElemEntry != -1))
-     {
-	math = FALSE;
-	if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("MATH")))
-	   /* a <MATH> tag has been read */
-	   math = TRUE;
-	else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("MATHDISP")))
-	   /* a <MATHDISP> tag has been read.  add an attribute "mode=display"
-	      (for compatibility with old MathML version WD-math-970704 */
-	   {
-	   math = TRUE;
-	   elType = TtaGetElementType (lastElement);
-	   attrType.AttrSSchema = elType.ElSSchema;
-	   attrType.AttrTypeNum = HTML_ATTR_mode;
-	   attr = TtaGetAttribute (lastElement, attrType);
-	   if (attr == NULL)
-	      /* create a new attribute and attach it to the element */
-	     {
-	     attr = TtaNewAttribute (attrType);
-	     TtaAttachAttribute (lastElement, attr, theDocument);
-	     }
-	   TtaSetAttributeValue (attr, HTML_ATTR_mode_VAL_display,
-	                         lastElement, theDocument);
-	   }
-        if (math)
-	   {
+  UnknownTag = FALSE;
+  if ((lastElement != NULL) && (lastElemEntry != -1))
+    {
+      math = FALSE;
+      if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("MATH")))
+	/* a <MATH> tag has been read */
+	math = TRUE;
+      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("MATHDISP")))
+	/* a <MATHDISP> tag has been read.  add an attribute "mode=display"
+	   (for compatibility with old MathML version WD-math-970704 */
+	{
+	  math = TRUE;
+	  elType = TtaGetElementType (lastElement);
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = HTML_ATTR_mode;
+	  attr = TtaGetAttribute (lastElement, attrType);
+	  if (attr == NULL)
+	    /* create a new attribute and attach it to the element */
+	    {
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (lastElement, attr, theDocument);
+	    }
+	  TtaSetAttributeValue (attr, HTML_ATTR_mode_VAL_display,
+				lastElement, theDocument);
+	}
+      if (math)
+	{
 #ifndef STANDALONE
-	   /* Parse the MathML structure */
-	   XMLparse (stream, &CurrentBufChar, TEXT("MathML"), theDocument, lastElement, FALSE,
+	  /* Parse the MathML structure */
+	  XMLparse (stream, &CurrentBufChar, TEXT("MathML"), theDocument, lastElement, FALSE,
 		    currentLanguage, pHTMLGIMapping[lastElemEntry].htmlGI);
 #endif /* STANDALONE */
-	   /* when returning from the XML parser, the end tag has already
-	      been read */
-	   (void) CloseElement (lastElemEntry, -1, FALSE);
-	   }
-	else 
-	if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("XMLGRAPHICS")))
-	   /* a <XMLGRAPHICS> tag has been read */
-	   {
-	   /* Parse the GraphML structure */
+	  /* when returning from the XML parser, the end tag has already
+	     been read */
+	  (void) CloseElement (lastElemEntry, -1, FALSE);
+	}
+      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("XMLGRAPHICS")))
+	/* a <XMLGRAPHICS> tag has been read */
+        {
+	  /* Parse the GraphML structure */
 #ifndef STANDALONE
-	   XMLparse (stream, &CurrentBufChar, TEXT("GraphML"), theDocument, lastElement, FALSE,
+	  XMLparse (stream, &CurrentBufChar, TEXT("GraphML"), theDocument, lastElement, FALSE,
 		    currentLanguage, pHTMLGIMapping[lastElemEntry].htmlGI);
 #endif /* STANDALONE */
-	   /* when returning from the XML parser, the end tag has already
-	      been read */
-	   (void) CloseElement (lastElemEntry, -1, FALSE);	   
-	   }
-	else
-	if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("PRE")) ||
-	    !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("STYLE")) ||
-	    !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("SCRIPT")) )
-	   /* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
-	   AfterTagPRE = TRUE;
-	else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("TABLE")))
-	   /* <TABLE> has been read */
-	   WithinTable++;
-	else if (pHTMLGIMapping[lastElemEntry].htmlContents == 'E')
-	   /* this is an empty element. Do not expect an end tag */
-	   {
-	     CloseElement (lastElemEntry, -1, TRUE);
-	     ElementComplete (lastElement);
-	   }
-
-	/* if it's a LI element, creates its IntItemStyle attribute
-	   according to surrounding elements */
-	SetAttrIntItemStyle (lastElement, theDocument);
-	/* if it's an AREA element, computes its position and size */
-	ParseAreaCoords (lastElement, theDocument);
-	/* if it's a STYLE element in CSS notation, activate the CSS */
-	/* parser for parsing the element content */
-	elType = TtaGetElementType (lastElement);
-	if (elType.ElTypeNum == HTML_EL_STYLE_)
-	  {
-	     /* Search the Notation attribute */
-	     attrType.AttrSSchema = elType.ElSSchema;
-	     attrType.AttrTypeNum = HTML_ATTR_Notation;
-	     attr = TtaGetAttribute (lastElement, attrType);
-	     if (attr == NULL)
-	       /* No Notation attribute. Assume CSS by default */
-	       ParsingCSS = TRUE;
-	     else
-	       /* the STYLE element has a Notation attribute */
-	       /* get its value */
-	       {
-		  length = TtaGetTextAttributeLength (attr);
-		  text = TtaAllocString (length + 1);
-		  TtaGiveTextAttributeValue (attr, text, &length);
-		  if (!ustrcasecmp (text, TEXT("text/css")))
-		     ParsingCSS = TRUE;
-		  TtaFreeMemory (text);
-	       }
-	  }
-	else if (elType.ElTypeNum == HTML_EL_Text_Area)
-	  {
-	    /* we have to read the content as a simple text unit */
-	    ParsingTextArea = TRUE;
-	  }
-
-     }
+	  /* when returning from the XML parser, the end tag has already
+	     been read */
+	  (void) CloseElement (lastElemEntry, -1, FALSE);	   
+	}
+      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("PRE")) ||
+	       !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("STYLE")) ||
+	       !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("SCRIPT")) )
+	/* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
+	AfterTagPRE = TRUE;
+      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("TABLE")))
+	/* <TABLE> has been read */
+	WithinTable++;
+      else if (pHTMLGIMapping[lastElemEntry].htmlContents == 'E')
+	/* this is an empty element. Do not expect an end tag */
+	{
+	  CloseElement (lastElemEntry, -1, TRUE);
+	  ElementComplete (lastElement);
+	}
+      
+      /* if it's a LI element, creates its IntItemStyle attribute
+	 according to surrounding elements */
+      SetAttrIntItemStyle (lastElement, theDocument);
+      /* if it's an AREA element, computes its position and size */
+      ParseAreaCoords (lastElement, theDocument);
+      /* if it's a STYLE element in CSS notation, activate the CSS */
+      /* parser for parsing the element content */
+      elType = TtaGetElementType (lastElement);
+      if (elType.ElTypeNum == HTML_EL_STYLE_)
+	{
+	  /* Search the Notation attribute */
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = HTML_ATTR_Notation;
+	  attr = TtaGetAttribute (lastElement, attrType);
+	  if (attr == NULL)
+	    /* No Notation attribute. Assume CSS by default */
+	    ParsingCSS = TRUE;
+	  else
+	    /* the STYLE element has a Notation attribute */
+	    /* get its value */
+	    {
+	      length = TtaGetTextAttributeLength (attr);
+	      text = TtaAllocString (length + 1);
+	      TtaGiveTextAttributeValue (attr, text, &length);
+	      if (!ustrcasecmp (text, TEXT("text/css")))
+		ParsingCSS = TRUE;
+	      TtaFreeMemory (text);
+	    }
+	}
+      else if (elType.ElTypeNum == HTML_EL_Text_Area)
+	{
+	  /* we have to read the content as a simple text unit */
+	  ParsingTextArea = TRUE;
+	}
+      
+    }
 }
 
 

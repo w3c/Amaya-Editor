@@ -103,8 +103,10 @@ extern void CreateTextInput ( Document doc,
                               View view );
 extern void CreatePasswordInput ( Document doc,
                                   View view );
-extern void CreateTextArea ( Document doc,
+extern void CreateTextArea ( Document document,
                              View view );
+extern void CreateImageInput ( Document doc,
+                               View view );
 extern void CreateFileInput ( Document doc,
                               View view );
 extern void CreateHiddenInput ( Document doc,
@@ -257,8 +259,10 @@ extern void CreateTextInput (/* Document doc,
                                 View view */);
 extern void CreatePasswordInput (/* Document doc,
                                     View view */);
-extern void CreateTextArea (/* Document doc,
+extern void CreateTextArea (/* Document document,
                                View view */);
+extern void CreateImageInput (/* Document doc,
+                                 View view */);
 extern void CreateFileInput (/* Document doc,
                                 View view */);
 extern void CreateHiddenInput (/* Document doc,

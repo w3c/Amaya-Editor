@@ -191,6 +191,7 @@ ShowMapAreas
 &CreateToggle
 &CreateFileInput
 &CreateHiddenInput
+&CreateImageInput
 &CreatePasswordInput
 &CreateRadio
 &CreateReset

@@ -1956,18 +1956,6 @@ BOXES
 		END;
 	END;
 
- ATTR_Image: BEGIN
-	Content: Text ' type=IMAGE';
-	HorizPos: Left = Previous . Right;
-	VertPos: HRef = Previous . HRef;
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
  Text_Space: BEGIN
 	Content: Graphics ' ';
 	If Immediately within Form
@@ -2233,7 +2221,17 @@ BOXES
 	END;
 
  IMG_S: BEGIN
-	Content: Text 'IMG';
+        Content: Text 'IMG';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Size: TAG_FONTSIZE;
+                Weight: TAG_Weight;
+                Visibility: TAG_Visibility;  Foreground: TAG_Color;
+                END;
+        END;
+
+ IMG_in_S: BEGIN
+	Content: Text 'INPUT type=IMAGE ';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -7720,7 +7718,10 @@ RULES
 
  PICTURE_UNIT: BEGIN
 	Depth: 5;
-	if NOT Immediately within Object BEGIN
+	if IsInput BEGIN
+		 CreateBefore(IMG_in_S);
+		END;
+	if NOT Immediately within Object AND NOT IsInput BEGIN
 		CreateBefore(IMG_S);
 		END;
 	LineBreak: No;

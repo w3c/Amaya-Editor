@@ -61,146 +61,147 @@
 60 Bouton bascule (INPUT)
 61 S\351lecteur fichier (INPUT)
 62 Controle cach\351 (INPUT)
-63 Mot de passe (INPUT)
-64 Bouton radio (INPUT)
-65 R\351initialisation (INPUT)
-66 Soumission (INPUT)
-67 Saisie de texte (INPUT)
-68 Groupe de champs (FIELDSET)
-69 Etiquette (LABEL)
-70 Menu (OPTION)
-71 Sous-menu (OPTGROUP)
-72 Zone de texte (TEXTAREA)
-73 Heading
-74 H1
-75 H2
-76 H3
-77 H4
-78 H5
-79 H6
-80 Trait horizontal (HR)
-81 Cadre en ligne (IFRAME)
-82 Image (IMG)...
-83 Liste
-84 Simple liste (UL)
-85 Liste numerot\351e (OL)
-86 Liste de d\351finitions (DL)
-87 Terme (DT)
-88 D\351finition (DD)
-89 Math
-90 MATH
-91 Racine (mroot)
-92 Racine carr\351e (msqrt)
-93 Fraction (mfrac)
-94 Indice et exposant (msubsup)
-95 Indice (msub)
-96 Exposant (msup)
-97 Dessous et dessus (munderover)
-98 Dessous (munder)
-99 Dessus (mover)
-100 Parenth\350ses (mf)
-101 Multiscripts (mmultiscripts)
-102 Matrice (mtable)
-103 D\351truire colonne de matrice
-104 NOSCRIPT
-105 Objet
-106 OBJECT
-107 Param\350tre (PARAM)
-108 Paragraphe (P)
-109 Pr\351format\351 (PRE)
-110 Table
-111 TABLE
-112 L\351gende (CAPTION)
-113 COLGROUP
-114 COL
-115 T\352ti\350re (THEAD)
-116 Corps (TBODY)
-117 Pied (TFOOT)
-118 Ligne (TR)
-119 Cellule (TD)
-120 Cellule de t\352te (TH)
-121 D\351truire colonne de table
-122 Lier la cible cr\351\351e
-123 Cr\351er/changer lien...
-124 Cr\351er cible
-125 D\351truire ancre
-126 Montrer boutons
-127 Montrer adresse et titre
-128 Montrer les zones actives
-129 Montrer les cibles
-130 Grossir
-131 R\351duire
-132 Montrer la structure
-133 Montrer la vue altern\351e
-134 Montrer les liens
-135 Montrer la table des mati\350res
-136 Montrer le source
-137 Style de caract\350res...
-138 Couleurs...
-139 Format...
-140 Image de fond...
-141 Cr\351er une r\350gle...
-142 Appliquer une classe...
-143 Feuilles de style
-144 Ajouter...
-145 Ouvrir...
-146 D\351sactiver...
-147 R\351activer...
-148 Retirer...
-149 Types information
-150 Emphase
-151 Strong
-152 Cite
-153 D\351finition
-154 Code
-155 Variable
-156 Sample
-157 Keyboard
-158 Abr\351viation
-159 Acronyme
-160 Insertion
-161 Suppression
-162 El\351ments caract\350res
-163 Italique
-164 Gras
-165 T\351l\351type
-166 Gros
-167 Petit
-168 Indice
-169 Exposant
-170 Citation (Q)
-171 BiDi (BDO)
-172 Num\351roter les sections
-173 Construire un livre
-174 Ouvrir fichier log
-175 Pr\351ferences
-176 G\351n\351rale...
-177 Publication...
-178 Cache...
-179 Proxy...
-180 Couleurs...
-181 G\351om\351trie...
-182 N\351gotiation de Langues...
-183 Profiles...
-184 Modèles de page
-185 A propos de Amaya
-186 A propos de Amaya au W3C
-187 Navigation
-188 S\351lection
-189 Chercher
-190 Vues
-191 Cr\351ation
-192 Liens
-193 Transformer
-194 Tables
-195 Math
-196 Zones actives
-197 Feuilles de style
-198 Attributs
-199 Corriger
-200 Publier
-201 Imprimer
-202 Num\351roter
-203 Construire un livre
-204 Configurer Amaya
-205 Accessibilit\351 d'Amaya
+63 Image (INPUT)...
+64 Mot de passe (INPUT)
+65 Bouton radio (INPUT)
+66 R\351initialisation (INPUT)
+67 Soumission (INPUT)
+68 Saisie de texte (INPUT)
+69 Groupe de champs (FIELDSET)
+70 Etiquette (LABEL)
+71 Menu (OPTION)
+72 Sous-menu (OPTGROUP)
+73 Zone de texte (TEXTAREA)
+74 Heading
+75 H1
+76 H2
+77 H3
+78 H4
+79 H5
+80 H6
+81 Trait horizontal (HR)
+82 Cadre en ligne (IFRAME)
+83 Image (IMG)...
+84 Liste
+85 Simple liste (UL)
+86 Liste numerot\351e (OL)
+87 Liste de d\351finitions (DL)
+88 Terme (DT)
+89 D\351finition (DD)
+90 Math
+91 MATH
+92 Racine (mroot)
+93 Racine carr\351e (msqrt)
+94 Fraction (mfrac)
+95 Indice et exposant (msubsup)
+96 Indice (msub)
+97 Exposant (msup)
+98 Dessous et dessus (munderover)
+99 Dessous (munder)
+100 Dessus (mover)
+101 Parenth\350ses (mf)
+102 Multiscripts (mmultiscripts)
+103 Matrice (mtable)
+104 D\351truire colonne de matrice
+105 NOSCRIPT
+106 Objet
+107 OBJECT
+108 Param\350tre (PARAM)
+109 Paragraphe (P)
+110 Pr\351format\351 (PRE)
+111 Table
+112 TABLE
+113 L\351gende (CAPTION)
+114 COLGROUP
+115 COL
+116 T\352ti\350re (THEAD)
+117 Corps (TBODY)
+118 Pied (TFOOT)
+119 Ligne (TR)
+120 Cellule (TD)
+121 Cellule de t\352te (TH)
+122 D\351truire colonne de table
+123 Lier la cible cr\351\351e
+124 Cr\351er/changer lien...
+125 Cr\351er cible
+126 D\351truire ancre
+127 Montrer boutons
+128 Montrer adresse et titre
+129 Montrer les zones actives
+130 Montrer les cibles
+131 Grossir
+132 R\351duire
+133 Montrer la structure
+134 Montrer la vue altern\351e
+135 Montrer les liens
+136 Montrer la table des mati\350res
+137 Montrer le source
+138 Style de caract\350res...
+139 Couleurs...
+140 Format...
+141 Image de fond...
+142 Cr\351er une r\350gle...
+143 Appliquer une classe...
+144 Feuilles de style
+145 Ajouter...
+146 Ouvrir...
+147 D\351sactiver...
+148 R\351activer...
+149 Retirer...
+150 Types information
+151 Emphase
+152 Strong
+153 Cite
+154 D\351finition
+155 Code
+156 Variable
+157 Sample
+158 Keyboard
+159 Abr\351viation
+160 Acronyme
+161 Insertion
+162 Suppression
+163 El\351ments caract\350res
+164 Italique
+165 Gras
+166 T\351l\351type
+167 Gros
+168 Petit
+169 Indice
+170 Exposant
+171 Citation (Q)
+172 BiDi (BDO)
+173 Num\351roter les sections
+174 Construire un livre
+175 Ouvrir fichier log
+176 Pr\351ferences
+177 G\351n\351rale...
+178 Publication...
+179 Cache...
+180 Proxy...
+181 Couleurs...
+182 G\351om\351trie...
+183 N\351gotiation de Langues...
+184 Profiles...
+185 Modèles de page
+186 A propos de Amaya
+187 A propos de Amaya au W3C
+188 Navigation
+189 S\351lection
+190 Chercher
+191 Vues
+192 Cr\351ation
+193 Liens
+194 Transformer
+195 Tables
+196 Math
+197 Zones actives
+198 Feuilles de style
+199 Attributs
+200 Corriger
+201 Publier
+202 Imprimer
+203 Num\351roter
+204 Construire un livre
+205 Configurer Amaya
+206 Accessibilit\351 d'Amaya
