@@ -1190,13 +1190,13 @@ void              CreateAttrIntSize (char *buffer, Element el, Document doc)
      {
        attrType.AttrTypeNum = HTML_ATTR_IntSizeIncr;
        ind++;
-       factor = 2;
+       factor = 1;
      }
    else if (buffer[0] == '-')
      {
        attrType.AttrTypeNum = HTML_ATTR_IntSizeDecr;
        ind++;
-       factor = 2;
+       factor = 1;
      }
    else
      {

@@ -189,6 +189,8 @@ extern void HelpSpellChecking ( Document document,
                                 View view );
 extern void HelpPublishing ( Document document,
                              View view );
+extern void HelpWebDAV ( Document document,
+                         View view );
 extern void HelpPrinting ( Document document,
                            View view );
 extern void HelpNumbering ( Document document,
@@ -197,6 +199,8 @@ extern void HelpMakeBook ( Document document,
                            View view );
 extern void HelpAnnotation ( Document document,
                              View view );
+extern void HelpBookmarks ( Document document,
+                            View view );
 extern void HelpConfigure ( Document document,
                             View view );
 extern void HelpShortCuts ( Document document,
@@ -398,6 +402,8 @@ extern void HelpSpellChecking (/* Document document,
                                   View view */);
 extern void HelpPublishing (/* Document document,
                                View view */);
+extern void HelpWebDAV (/* Document document,
+                           View view */);
 extern void HelpPrinting (/* Document document,
                              View view */);
 extern void HelpNumbering (/* Document document,
@@ -406,6 +412,8 @@ extern void HelpMakeBook (/* Document document,
                              View view */);
 extern void HelpAnnotation (/* Document document,
                                View view */);
+extern void HelpBookmarks (/* Document document,
+                              View view */);
 extern void HelpConfigure (/* Document document,
                               View view */);
 extern void HelpShortCuts (/* Document document,
