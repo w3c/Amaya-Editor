@@ -1076,7 +1076,7 @@ STRING              text;
 
 /*----------------------------------------------------------------------
    TextTitle
-   The Title text field in a document window has been modified by the user
+   The Title field in a document window has been modified by the user
    Update the TITLE element for the corresponding document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1115,14 +1115,62 @@ STRING              text;
 	       TtaInsertFirstChild  (&child, el, document);
 	     }
 	   TtaSetTextContent (child, text, TtaGetDefaultLanguage (), document);
-       TtaChangeWindowTitle (document, 1, text);
 	   TtaCloseUndoSequence (document);
 	   TtaSetDocumentModified (document);
+           TtaChangeWindowTitle (document, 0, text);
+	   if (DocumentSource[document])
+	      TtaChangeWindowTitle (DocumentSource[document], 0, text);
 	 }
      }
    else
      /* the document title cannot be changed */
      TtaSetTextZone (document, 1, 2, _EMPTYSTR_);
+}
+
+/*----------------------------------------------------------------------
+   SetWindowTitle
+   Change the title of all windows (if view == 0) of document targetDoc
+   or only the title of the window associated with the specified view.
+   if it's not 0.
+   The new title is the content of the TITLE element of document sourceDoc.
+   If document sourceDoc does not have any TITLE element, nothing happen.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         SetWindowTitle (Document sourceDoc, Document targetDoc, View view)
+#else
+void         SetWindowTitle (sourceDoc, targetDoc, view)
+Document            sourceDoc;
+Document            targetDoc;
+View                view;
+#endif
+{
+   ElementType         elType;
+   Element             el, child;
+   int                 length;
+   Language            lang;
+   STRING              text;
+
+   el = TtaGetMainRoot (sourceDoc);
+   elType.ElSSchema = TtaGetDocumentSSchema (sourceDoc);
+   if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+     /* sourceDoc is a HTML document */
+     {
+       /* search the Title element in sourceDoc */
+       elType.ElTypeNum = HTML_EL_TITLE;
+       el = TtaSearchTypedElement (elType, SearchForward, el);
+       if (el)
+	 {
+	   child = TtaGetFirstChild (el);
+	   if (child)
+	     {
+	       length = TtaGetTextLength (child) + 1;
+	       text = TtaAllocString (length);
+	       TtaGiveTextContent (child, text, &length, &lang);
+               TtaChangeWindowTitle (targetDoc, view, text);
+	       TtaFreeMemory (text);
+	     }
+	 }
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -2749,7 +2797,7 @@ View                view;
 	 DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
 	 StartParser (sourceDoc, tempdocument, documentname, tempdir,
 		      tempdocument, TRUE);
-
+	 SetWindowTitle (document, sourceDoc, 0);
 	 /* Set the document read-only when needed */
 	 if (DocumentTypes[document] == docHTMLRO)
 	   {
@@ -2883,6 +2931,7 @@ View                view;
 	 }
      }
 #endif /* GRAPHML */
+   SetWindowTitle (document, document, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -2911,6 +2960,7 @@ View                view;
 	altView = TtaOpenView (document, TEXT("Alternate_view"), x, y, w, h);
 	if (altView != 0)
 	  {
+	    SetWindowTitle (document, document, altView);
 	    TtcSwitchButtonBar (document, altView);
 	    TtcSwitchCommands (document, altView);
 	    if (DocumentTypes[document] == docHTMLRO ||
@@ -2954,6 +3004,7 @@ View                view;
 	linksView = TtaOpenView (document, TEXT("Links_view"), x, y, w, h);
 	if (linksView != 0)
 	  {
+	    SetWindowTitle (document, document, linksView);
 	    TtcSwitchButtonBar (document, linksView);
 	    TtcSwitchCommands (document, linksView);
 	    if (DocumentTypes[document] == docHTMLRO ||
@@ -2998,6 +3049,7 @@ View                view;
 	tocView = TtaOpenView (document, TEXT("Table_of_contents"), x, y, w, h);
 	if (tocView != 0)
 	  {
+	    SetWindowTitle (document, document, tocView);
 	    TtcSwitchButtonBar (document, tocView);
 	    TtcSwitchCommands (document, tocView);
 	    if (DocumentTypes[document] == docHTMLRO ||

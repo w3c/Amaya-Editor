@@ -778,6 +778,7 @@ Document          doc;
 	  event.document = doc;
 	  SynchronizeSourceView (&event);
 	  TtaSetDocumentName (DocumentSource[doc], documentname);
+	  SetWindowTitle (doc, DocumentSource[doc], 0);
 	  TtaFreeMemory (localFile);
        }
     }
@@ -832,7 +833,9 @@ STRING            documentName;
 	  ustrcpy (docname, documentName);
 	  /* Change the document name in all views */
 	  TtaSetDocumentName (doc, docname);
-
+	  SetWindowTitle (doc, doc, 0);
+	  if (DocumentSource[doc])
+	     SetWindowTitle (doc, DocumentSource[doc], 0);
 	  /* save a local copy of the current document */
 	  ptr = GetLocalPath (doc, tempname);
 	  TtaFileCopy (tempname, ptr);

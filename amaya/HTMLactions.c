@@ -1064,7 +1064,9 @@ Document            doc;
 	TtaGiveTextContent (textElem, text, &length, &lang);
 	TtaSetTextZone (doc, 1, 2, text);
 	UpdateAtom (doc, DocumentURLs[doc], text);
-    TtaChangeWindowTitle (doc, 1, text);
+        TtaChangeWindowTitle (doc, 0, text);
+    	if (DocumentSource[doc])
+    	   TtaChangeWindowTitle (DocumentSource[doc], 0, text);
 	TtaFreeMemory (text);
      }
 #endif /* _GTK */

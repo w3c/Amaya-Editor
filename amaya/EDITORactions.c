@@ -127,7 +127,8 @@ ThotBool            isHTML;
       text = TtaGetFirstChild (title);
       if (TtaGetTextLength (text) == 0)
 	TtaSetTextContent (text, TEXT("No title"), language, doc);
-      
+      UpdateTitle (title, doc);
+
       elType.ElTypeNum = HTML_EL_HEAD;
       head = TtaSearchTypedElement (elType, SearchInTree, root);
 

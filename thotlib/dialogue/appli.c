@@ -1139,7 +1139,9 @@ void                InitializeOtherThings ()
 }
 
 /*----------------------------------------------------------------------
-   TtaChangeWindowTitle: changes the title of a given window.                          
+   TtaChangeWindowTitle
+   if view == 0, changes the title of all windows of document
+   otherwise change the window title of the specified view.
   ----------------------------------------------------------------------*/
 #ifdef __STDC
 void     TtaChangeWindowTitle (Document document, View view, STRING title)
@@ -1150,10 +1152,28 @@ View     view;
 STRING   title;
 #endif /* __STDC__ */
 {
-    int idwindow = GetWindowNumber (document, view);
+    int idwindow, v;
+    PtrDocument pDoc;
 
-	if (idwindow != 0) 
-       ChangeFrameTitle (idwindow, title);
+    if (view > 0)
+      {
+       idwindow = GetWindowNumber (document, view);
+       if (idwindow > 0) 
+          ChangeFrameTitle (idwindow, title);
+      }
+    else
+      {
+	pDoc = LoadedDocument[document - 1];
+	/* traite les vues de l'arbre principal */
+	for (v = 0; v < MAX_VIEW_DOC; v++)
+	  if (pDoc->DocView[v].DvPSchemaView > 0)
+	    ChangeFrameTitle (pDoc->DocViewFrame[v], title);
+	/* traite les vues des elements associes */
+	for (v = 0; v < MAX_ASSOC_DOC; v++)
+	  if (pDoc->DocAssocRoot[v] != NULL)
+	    if (pDoc->DocAssocFrame[v] != 0)
+	       ChangeFrameTitle (pDoc->DocAssocFrame[v], title);
+      }
 }
 
 /*----------------------------------------------------------------------
