@@ -4341,7 +4341,29 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		  DoApply = FALSE;
 		else
 		  specificity += 10;
-		pseudoclasses[0]= deb;
+		if (!strncmp (deb, "lang", 4))
+		  /* it's the lang pseudo-class */
+		  {
+		    if (deb[4] != '(' || deb[strlen(deb)-1] != ')')
+		      /* at least one paranthesis is missing. Error */
+		      {
+			CSSPrintError ("Invalid :lang pseudoclass", deb);
+			DoApply = FALSE;
+		      }
+		    else
+		      /* simulate selector [lang|="xxx"] if there no
+		         attribute yet in the selector */
+		      if (!attrs[0])
+			{
+			  deb[strlen(deb)-1] = EOS;
+			  deb[4] = EOS;
+			  attrmatch[0] = Txtsubstring;
+			  attrs[0] = deb;
+			  attrvals[0] = &deb[5];
+			}
+		  }
+		else
+		  pseudoclasses[0] = deb;
 		if (names[0] && !strcmp (names[0], "*"))
 		  names[0] = NULL;
 	      }
@@ -4442,7 +4464,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 			    CSSPrintError ("No space allowed here: ", selector);
 			    DoApply = FALSE;
 			  }
-			*cur++ = tolower (*selector);
+			*cur++ = *selector;
 		      }
 		    selector++;
 		  }

@@ -1210,11 +1210,9 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 				    j = 0;
 				    found = FALSE;
 				    if (pCond->CoTextMatch == CoSubstring)
-				      /* compare strings up to the first
-					 hyphen in the attribute value */
+				      /* compare strings up to an hyphen */
 				      {
 					while (pCond->CoAttrTextValue[i] != EOS &&
-					       attrVal[i] != '-' &&
 					       attrVal[i] != EOS &&
 					       attrVal[i] == pCond->CoAttrTextValue[i])
 					  i++;
@@ -2177,10 +2175,9 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 			/* compare strings up to the first hyphen in the
 			   attribute value */
 			{
-			  while (pAPRule->ApString[j] != EOS &&
-				 attrValue[j] != '-' &&
-				 attrValue[j] != EOS &&
-				 attrValue[j] == pAPRule->ApString[j])
+			  while (attrValue[j] != EOS &&
+				 attrValue[j] == pAPRule->ApString[j] &&
+				 pAPRule->ApString[j] != EOS)
 			    j++;
 			  ok = (pAPRule->ApString[j] == EOS &&
 				(attrValue[j] == '-' || attrValue[j] == EOS));
