@@ -70,7 +70,7 @@ CHAR_T*    ThotPath;
 CHAR_T*    currentFile;
 CHAR_T*    currentDestFile;
 CHAR_T*    BinFiles [100];
-CHAR_T*    TbStrings [2] = {"Open (Ctrl+O"), "Build (F7")};
+CHAR_T*    TbStrings [2] = {"Open (Ctrl+O)", "Build (F7)"};
 
 DWORD      dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 
@@ -88,7 +88,7 @@ LRESULT CALLBACK CompilersWndProc ();
 #endif /* __STDC__ */
 
 static OPENFILENAME OpenFileName;
-static STRING       szFilter = "Amaya Makefiles (*.mkf\0*.mkf\0All files (*.*)\0*.*\0");
+static STRING       szFilter = "Amaya Makefiles (*.mkf)\0*.mkf\0All files (*.*)\0*.*\0";
 static CHAR_T       szFileName[256];
 static CHAR_T       fileToOpen [256];
 static int          iVscrollPos = 0, iVscrollMax, iVscrollInc; 
@@ -263,7 +263,7 @@ char* fileName;
     HINSTANCE  hLib;
     FARPROC ptrMainProc;
     CHAR_T  msg [1024];
-    CHAR_T  seps[]   = " \t=$(\n\r");
+    CHAR_T  seps[]   = " \t=$(\n\r)";
 	CHAR_T  string [1024];
     CHAR_T* args [100];
 	CHAR_T* token;
@@ -324,7 +324,7 @@ char* fileName;
                                command = DEST_DIR;
                           else {
                                command = ERROR_CMD;
-                               usprintf (msg, "%s (Line %3d: unknown command %s"), fileToOpen, line, token);
+                               sprintf (msg, "%s (Line %3d: unknown command %s)", fileToOpen, line, token);
                                MakeMessage (hwnd, msg, FATAL_EXIT_CODE);				   
 						  } 
 					   }
