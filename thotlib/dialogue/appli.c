@@ -2643,6 +2643,9 @@ ThotBool FrameButtonDClickCallback(
     int x, int y )
 {
 #ifdef _WX
+  Document   document;
+  View       view;
+
   switch (thot_button_id)
   {
     case THOT_LEFT_BUTTON:
@@ -2651,6 +2654,10 @@ ThotBool FrameButtonDClickCallback(
       ClickX = x;
       ClickY = y;
       LocateSelectionInView (frame, ClickX, ClickY, 3);
+      
+      /* a word is probably selected, copy it into clipboard */
+      FrameToView (frame, &document, &view);
+      TtcCopyToClipboard (document, view);
     }
     break;
     
