@@ -371,9 +371,9 @@ int                 status;
   char *tmp_char;
   CHAR_T tmp_wchar[MAX_LENGTH];
   HTParentAnchor *anchor;
-  ThotBool          use_anchor;
+  ThotBool  use_anchor = FALSE;
 
-  /* @@@ later I'll add a function here to specify which headers we
+  /* @@@ JK: we need a function here to specify which headers we
      want to copy */
 
   /* we have already forced a content type (what about a charset? */
@@ -385,6 +385,7 @@ int                 status;
      return type */
   unk_atom = HTAtom_for ("www/unknown");
   tmp_atom =  HTResponse_format (response);
+#if 0
   if (!tmp_atom || tmp_atom == unk_atom)
     {
       use_anchor = TRUE;
@@ -393,6 +394,7 @@ int                 status;
     }
   else
     use_anchor = FALSE;
+#endif
 
   if (tmp_atom)
     tmp_char = HTAtom_name (tmp_atom);
