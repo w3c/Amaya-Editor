@@ -52,23 +52,6 @@
 /* maximum length of a Thot structure schema name */
 #define MAX_SS_NAME_LENGTH 32
 
-/* Elements that cannot contain text as immediate children.
-   When some text is present in the HTML file it must be 
-   surrounded by a Pseudo_paragraph element */
-static int          NoTextChild[] =
-{
-   HTML_EL_HTML, HTML_EL_HEAD, HTML_EL_BODY,
-   HTML_EL_Definition_List, HTML_EL_Block_Quote, HTML_EL_Directory,
-   HTML_EL_Form, HTML_EL_Menu, HTML_EL_FIELDSET,
-   HTML_EL_Numbered_List, HTML_EL_Option_Menu,
-   HTML_EL_Unnumbered_List, HTML_EL_Definition, HTML_EL_List_Item,
-   HTML_EL_MAP, HTML_EL_map, HTML_EL_Applet,
-   HTML_EL_Object, HTML_EL_IFRAME, HTML_EL_NOFRAMES,
-   HTML_EL_Division, HTML_EL_Center, HTML_EL_NOSCRIPT,
-   HTML_EL_Data_cell, HTML_EL_Heading_cell,
-   0};
-
-
 /* ---------------------- static variables ---------------------- */
 
 /* Expat parser identifier */
@@ -794,31 +777,6 @@ static void  XmlGetFallbackCharacter (wchar_t wcharRead)
        bufName[i] = EOS;
        TtaSetAttributeText (attr, bufName, elLeaf, XMLcontext.doc);
      }
-}
-
-/*----------------------------------------------------------------------
-   XhtmlCannotContainText 
-   Return TRUE if element el is a block element.
-  ----------------------------------------------------------------------*/
-static ThotBool   XhtmlCannotContainText (ElementType elType)
-
-{
-   int            i;
-   ThotBool       ret;
-
-   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-      /* not an HTML element */
-      ret = TRUE;
-   else
-     {
-       ret = FALSE;
-       i = 0;
-       while (NoTextChild[i] > 0 && NoTextChild[i] != elType.ElTypeNum)
-           i++;
-       if (NoTextChild[i] == elType.ElTypeNum)
-           ret = TRUE;
-     }
-   return ret;
 }
 
 /*----------------------------------------------------------------------
@@ -1982,7 +1940,8 @@ void            PutInXmlElement (char *data)
 	   
 	   /* Filling of the element value */
 	   elType = TtaGetElementType (XMLcontext.lastElement);
-	   if (elType.ElTypeNum == 1 && XMLcontext.mergeText)
+	   if (elType.ElSSchema == currentParserCtxt->XMLSSchema &&
+	       elType.ElTypeNum == 1 && XMLcontext.mergeText)
 	     {
 	       if ((buffer[i1] == SPACE) && RemoveContiguousSpace)
 		 {

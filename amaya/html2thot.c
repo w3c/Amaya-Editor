@@ -267,23 +267,6 @@ typedef struct _ElemToBeChecked
   }
 ElemToBeChecked;
 
-
-/* elements that cannot contain text as immediate children.
-   When some text is present in the HTML file it must be surrounded
-   by a Thot Paragraph (or Pseudo_paragraph) element */
-static int          NoTextChild[] =
-{
-   HTML_EL_HTML, HTML_EL_HEAD, HTML_EL_BODY,
-   HTML_EL_Definition_List, HTML_EL_Block_Quote, HTML_EL_Directory,
-   HTML_EL_Form, HTML_EL_Menu, HTML_EL_FIELDSET,
-   HTML_EL_Numbered_List, HTML_EL_Option_Menu,
-   HTML_EL_Unnumbered_List, HTML_EL_Definition, HTML_EL_List_Item,
-   HTML_EL_MAP, HTML_EL_map, HTML_EL_Applet,
-   HTML_EL_Object, HTML_EL_IFRAME, HTML_EL_NOFRAMES,
-   HTML_EL_Division, HTML_EL_Center, HTML_EL_NOSCRIPT,
-   HTML_EL_Data_cell, HTML_EL_Heading_cell,
-   0};
-
 /* empty elements */
 static int          EmptyElement[] =
 {
@@ -1014,29 +997,6 @@ ThotBool         IsBlockElement (Element el)
 }
 
 /*----------------------------------------------------------------------
-   CannotContainText return TRUE if element el is a block element.
-  ----------------------------------------------------------------------*/
-static ThotBool     CannotContainText (ElementType elType)
-{
-   int              i;
-   ThotBool         ret;
-
-   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-      /* not an HTML element */
-      ret = TRUE;
-   else
-      {
-      ret = FALSE;
-      i = 0;
-      while (NoTextChild[i] > 0 && NoTextChild[i] != elType.ElTypeNum)
-         i++;
-      if (NoTextChild[i] == elType.ElTypeNum)
-         ret = TRUE;
-      }
-   return ret;
-}
-
-/*----------------------------------------------------------------------
    TextToDocument  Put the content of input buffer in the document.
   ----------------------------------------------------------------------*/
 static void         TextToDocument ()
@@ -1076,7 +1036,7 @@ static void         TextToDocument ()
 		 if ((strcmp (TtaGetSSchemaName (lastType.ElSSchema), "HTML") == 0) &&
 		     ((lastType.ElTypeNum == HTML_EL_Comment_) ||
 		      (lastType.ElTypeNum == HTML_EL_XMLPI)))
-		   ignoreLeadingSpaces = CannotContainText (elType);
+		   ignoreLeadingSpaces = XhtmlCannotContainText (elType);
 		 
 		 if (ignoreLeadingSpaces)
 		   {
@@ -1268,7 +1228,7 @@ static ThotBool     CheckSurrounding (Element * el, Element parent)
 	if (ancestor != NULL)
 	  {
 	   elType = TtaGetElementType (ancestor);
-	   if (CannotContainText (elType) &&
+	   if (XhtmlCannotContainText (elType) &&
 	       !Within (HTML_EL_Option_Menu, DocumentSSchema))
 	      /* Element ancestor cannot contain text directly. Create a */
 	      /* Pseudo_paragraph element as the parent of the text element */

@@ -12,6 +12,7 @@ extern void XhtmlEntityCreated ( int entityValue,
                                  char *entityName,
                                  ThotBool entityFound,
                                  ParserData *context );
+extern ThotBool XhtmlCannotContainText ( ElementType elType );
 extern void XhtmlElementComplete ( Element el,
                                    Document doc,
                                    int *error );
@@ -58,6 +59,7 @@ extern void XhtmlEntityCreated (/* int entityValue,
                                    char *entityName,
                                    ThotBool entityFound,
                                    ParserData *context */);
+extern ThotBool XhtmlCannotContainText (/* ElementType elType */);
 extern void XhtmlElementComplete (/* Element el,
                                      Document doc,
                                      int *error */);
