@@ -698,7 +698,7 @@ int                 flags;
 	if (DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
 	  return;
 #endif
-	else if (DocumentURLs[doc] == NULL || strcmp (currentURL, DocumentURLs[doc]))
+	if (DocumentURLs[doc] == NULL || strcmp (currentURL, DocumentURLs[doc]))
 	  /* the document has been removed */
 	  return;
 	/* search the next element having an attribute SRC */

@@ -41,11 +41,15 @@ typedef void (* ExternalInitMainLoop)(ThotAppContext app_ctxt);
 typedef void (* ExternalMainLoop)(void);
 typedef int (* ExternalFetchEvent)(ThotEvent *ev);
 typedef boolean (* ExternalFetchAvailableEvent)(ThotEvent *ev);
+typedef void (* ExternalLockMainLoop) (void);
+typedef void (* ExternalUnlockMainLoop) (void);
 #else
 typedef void (* ExternalInitMainLoop)();
 typedef void (* ExternalMainLoop)();
 typedef int (* ExternalFetchEvent)();
 typedef boolean (* ExternalFetchAvailableEvent)();
+typedef void (* ExternalLockMainLoop) ();
+typedef void (* ExternalUnlockMainLoop) ();
 #endif
 
 #ifndef __CEXTRACT__
@@ -54,7 +58,9 @@ typedef boolean (* ExternalFetchAvailableEvent)();
 extern void         TtaSetMainLoop (ExternalInitMainLoop init,
                                     ExternalMainLoop loop,
                                     ExternalFetchEvent fetch,
-				    ExternalFetchAvailableEvent fetchavail);
+				    ExternalFetchAvailableEvent fetchavail,
+				    ExternalLockMainLoop lock,
+				    ExternalUnlockMainLoop unlock);
 
 
 /*----------------------------------------------------------------------
@@ -217,11 +223,38 @@ extern ThotWidget   TtaGetViewFrame (Document document, View view);
    retrieve one X-Windows Event from the queue, this is a blocking call.
   ----------------------------------------------------------------------*/
 extern void         TtaFetchOneEvent (ThotEvent *ev);
+/*----------------------------------------------------------------------
+   TtaHandleOneEvent
+
+   process an X-Windows Event.
+  ----------------------------------------------------------------------*/
 extern void         TtaHandleOneEvent (ThotEvent * ev);
 extern int          TtaXLookupString (ThotKeyEvent * event, char *buffer, int nbytes,
 				  KeySym * keysym, ThotComposeStatus * status);
 
 #endif /* !_WINDOWS */
+/*----------------------------------------------------------------------
+   TtaLockMainLoop
+
+   Lock the access to the event loop (for multithreaded apps where event
+   processing is done outside of the main loop).
+  ----------------------------------------------------------------------*/
+extern void         TtaLockMainLoop (void);
+
+/*----------------------------------------------------------------------
+   TtaUnlockMainLoop
+
+   Unlock the access to the event loop (for multithreaded apps where event
+   processing is done outside of the main loop), hence normal processing
+   is resumed.
+  ----------------------------------------------------------------------*/
+extern void         TtaUnlockMainLoop (void);
+
+/*----------------------------------------------------------------------
+   TtaMainLoop
+
+   The application main event loop
+  ----------------------------------------------------------------------*/
 extern void         TtaMainLoop (void);
 
 /*----------------------------------------------------------------------
@@ -341,7 +374,9 @@ extern Pixmap       TtaGetImage ( char *name );
 extern void         TtaSetMainLoop ( /* ExternalInitMainLoop init,
                                     ExternalMainLoop loop,
                                     ExternalFetchEvent fetch,
-				    ExternalFetchAvailableEvent fetchavail */ );
+				    ExternalFetchAvailableEvent fetchavail,
+				    ExternalLockMainLoop lock,
+				    ExternalUnlockMainLoop unlock */ );
 
 extern int          TtaAddButton ( /*Document document, View view, Pixmap icon, void (*procedure) (), char *info */ );
 extern void        *TtaGetButtonCallback ( /*Document document, View view, int index */);
@@ -364,6 +399,8 @@ extern int          TtaXLookupString (	/* ThotKeyEvent *event, char *buffer, int
 					   KeySym *keysym, ThotComposeStatus *status */ );
 
 #endif /* !_WINDOWS */
+extern void         TtaLockMainLoop ( /* void */ );
+extern void         TtaUnlockMainLoop ( /* void */ );
 extern void         TtaMainLoop ( /* void */ );
 extern void         TtaHandlePendingEvents ();
 extern void         TtaClickElement ( /*Document *document, Element *element */ );

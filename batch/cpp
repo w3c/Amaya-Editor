@@ -1,2 +1,2 @@
 #!/bin/sh
-exec `gcc --print-prog-name=cpp` $*
+exec `gcc --print-prog-name=cpp` $@

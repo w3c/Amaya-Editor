@@ -134,26 +134,10 @@ org_w3c_amaya_HTTPRequest_Callback(struct Horg_w3c_amaya_HTTPRequest* request,
    The HTTP error code or zero in case of success.
 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int GetObjectWWW (int doc, char *url, char *postString,
                   char *outputfile, int mode, void *incremental,
                   void *context, void *terminate,
                   void *tcontext, boolean error_html, char *content_type)
-#else
-int GetObjectWWW (doc, url, postString, outputfile, mode, incremental,
-                  context, terminate, tcontext, error_html, content_type)
-int                 doc;
-char               *urlName;
-char               *postString;
-char               *outputfile;
-int                 mode;
-void               *incremental; /* unused */
-void               *context;     /* unused */
-void               *terminate;   /* unused */
-void               *tcontext;    /* unused */
-boolean             error_html;
-char               *content_type;
-#endif
 {
     struct Horg_w3c_amaya_HTTPRequest* request;
     static int req_nr = 0;
@@ -306,22 +290,9 @@ char               *content_type;
    HT_ERROR
    HT_OK
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int PutObjectWWW (int doc, char *fileName, char *url, int mode,
                   PicType contentType, void * terminate_cbf,
                   void *context_tcbf)
-#else
-int PutObjectWWW (doc, fileName, url, mode, contentType,
-                  terminate_cbf, context_tcbf)
-int                 doc;
-char               *fileName;
-char               *url;
-int                 mode;
-PicType             contentType;
-void               *terminate_cbf;
-void               *context_tcbf;
-
-#endif
 {
     struct Horg_w3c_amaya_HTTPRequest* request;
     struct Hjava_lang_String* urlName = NULL;
@@ -428,12 +399,7 @@ void               *context_tcbf;
   Stop Request
   stops (kills) all active requests associated with a document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                StopRequest (int doc)
-#else
-void                StopRequest (doc)
-int                 doc;
-#endif
 {
     JavaThotlibRelease();
     do_execute_java_class_method("org/w3c/amaya/HTTPRequest", "Stop", "(I)V",
@@ -444,12 +410,7 @@ int                 doc;
 /*----------------------------------------------------------------------
   Handle Link fields found in the HTTP headers.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                handleLinkHeaders (int doc)
-#else
-void                handleLinkHeaders (doc)
-int                 doc;
-#endif
 {
     JavaThotlibRelease();
     do_execute_java_class_method("org/w3c/amaya/HTTPAccess", "handleLinkHeaders",

@@ -565,14 +565,6 @@ if test "$build_amaya" = "yes" ; then
 	    with_java_sources="no"
 	fi 
 	#
-	# Verify that BISS AWT implemetation is available.
-	#
-	if test -f $srcdir/kaffe-$KAFFE_VER/packages/biss-net.com/APIawt/classes/biss.zip ; then
-	    java_awt_option="$java_awt_option"
-	else
-	    java_awt_option="$java_awt_option -DJAVA_NO_AWT"
-	fi 
-	#
 	# Then check for precompiled classes packages.
 	#
 	if test -f $srcdir/classes/thotlib.zip -a \
@@ -591,6 +583,11 @@ if test "$build_amaya" = "yes" ; then
 	then
 	    AC_MSG_WARN(Amaya Java classes not found : disabling Java!)
             with_java="no"
+	else
+	    #
+	    # kaffe may require libgmp ...
+	    #
+	    AC_CHECK_LIB(gmp,mpz_abs)
 	fi
     fi
 

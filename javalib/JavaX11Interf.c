@@ -46,12 +46,7 @@ ThotAppContext CurrentAppContext = NULL;
  *
  * This routine handle one event fetched from the X-Window socket.
  */
-#ifdef __STDC__
-void                JavaHandleOneEvent (ThotEvent *ev)
-#else
-void                JavaHandleOneEvent (ev)
-ThotEvent *ev;
-#endif
+void JavaHandleOneEvent (ThotEvent *ev)
 {
     TtaHandleOneEvent(ev);
 }
@@ -65,12 +60,7 @@ ThotEvent *ev;
  * the routine should fetch it from the queue in the ev argument and return.
  */
 
-#ifdef __STDC__
-int                 JavaFetchEvent (ThotEvent *ev)
-#else
-int                 JavaFetchEvent (ev)
-ThotEvent *ev;
-#endif
+int JavaFetchEvent (ThotEvent *ev)
 {
   int status;
 
@@ -98,12 +88,7 @@ ThotEvent *ev;
   return(0);
 }
 
-#ifdef __STDC__
-int                 OldJavaFetchEvent (ThotEvent *ev)
-#else
-int                 OldJavaFetchEvent (ev)
-ThotEvent *ev;
-#endif
+int OldJavaFetchEvent (ThotEvent *ev)
 {
   int status;
 
@@ -143,12 +128,7 @@ ThotEvent *ev;
  * if an X-Window event is available, the routine should fetch it from
  * the queue in the ev argument and return TRUE, it returns FALSE otherwise.
  */
-#ifdef __STDC__
-boolean             JavaFetchAvailableEvent (ThotEvent *ev)
-#else
-boolean             JavaFetchAvailableEvent (ev)
-ThotEvent *ev;
-#endif
+boolean  JavaFetchAvailableEvent (ThotEvent *ev)
 {
   int status;
 
@@ -169,11 +149,7 @@ ThotEvent *ev;
  * This routine check wether some XtEvent are to be fetched.
  * If yes, get it and handle it, and return once all have been consumed.
  */
-#ifdef __STDC__
-void             JavaHandleAvailableEvents (void)
-#else
-void             JavaHandleAvailableEvents ()
-#endif
+void JavaHandleAvailableEvents (void)
 {
   ThotEvent ev;
   int status;
@@ -213,15 +189,12 @@ void             JavaHandleAvailableEvents ()
  * Initialize the JavaEventLoop environment, including the network
  * interface, Java, etc...
  */
-#ifdef __STDC__
-void                InitJavaEventLoop (ThotAppContext app_ctx)
-#else
-void                InitJavaEventLoop (app_ctx)
-ThotAppContext app_ctx;
-#endif
+void InitJavaEventLoop (ThotAppContext app_ctx)
 {
     char *env_value;
     char  new_env[1024];
+
+    fprintf(stderr, "InitJavaEventLoop starting ...\n");
 
     CurrentAppContext = app_ctx;
     if (JavaEventLoopInitialized) return;
@@ -233,41 +206,15 @@ ThotAppContext app_ctx;
     JavaEventLoopInitialized = 1;
 
     /*
-     * set up the environment
-     */
-    strcpy(new_env,"CLASSPATH=");
-    env_value  = TtaGetEnvString("CLASSPATH");
-    if (env_value)
-       strcat(new_env, env_value);
-    env_value = getenv("CLASSPATH");
-    if (env_value) {
-       strcat(new_env,":");
-       strcat(new_env,env_value);
-    }
-    putenv(TtaStrdup(new_env));
-    strcpy(new_env,"KAFFEHOME=");
-    env_value  = TtaGetEnvString("KAFFEHOME");
-    if (env_value)
-       strcat(new_env, env_value);
-    putenv(TtaStrdup(new_env));
-
-    /* setup the CLASSPATH value for Kaffe. */
-    new_env[0] = '\0';
-    env_value = getenv("CLASSPATH");
-    if (env_value)
-       strcat(new_env, env_value);
-    realClassPath = TtaStrdup(new_env);
-
-    /*
      * Register the X-Window socket as an input channel
-     */
     x_window_socket = ConnectionNumber(TtaGetCurrentDisplay());
-    threadedFileDescriptor(x_window_socket);
+    (*Kaffe_SystemCallInterface._fixfd)(x_window_socket);
+     */
 
     /*
      * set up our own select call.
-     */
     Kaffe_SystemCallInterface._select = JavaSelect;
+     */
 
     /*
      * Startup the Java environment. We should never return
@@ -283,11 +230,7 @@ ThotAppContext app_ctx;
  *
  * Stop the poll loop (below).
  */
-#ifdef __STDC__
-int                 JavaStopPoll ()
-#else
-int                 JavaStopPoll ()
-#endif
+int JavaStopPoll ()
 {
    if (DoJavaSelectPoll)
        BreakJavaSelectPoll++;
@@ -300,11 +243,7 @@ int                 JavaStopPoll ()
  * This is the equivalent of the basic event loop except that it will
  * return after any interraction on the extra file descriptors.
  */
-#ifdef __STDC__
-int                 JavaPollLoop ()
-#else
-int                 JavaPollLoop ()
-#endif
+int JavaPollLoop ()
 {
    int status;
 #ifndef _WINDOWS
@@ -421,12 +360,7 @@ typedef struct stack_s {
 
 static StackFrame *run_stack = NULL;
 
-#ifdef __STDC__
-void                JavaEventLoop (int *stop)
-#else
-void                JavaEventLoop (stop)
-int *stop;
-#endif
+void JavaEventLoop (int *stop)
 {
    int status;
    StackFrame ours;
@@ -519,11 +453,7 @@ void JavaExitEventLoop(int *stop)
 
 int JavaEventLoopStop;
 
-#ifdef __STDC__
-void                JavaStartEventLoop ()
-#else
-void                JavaStartEventLoop ()
-#endif
+void JavaStartEventLoop ()
 {
     while (1) {
 	JavaEventLoop(&JavaEventLoopStop);
@@ -531,13 +461,28 @@ void                JavaStartEventLoop ()
 }
 
 /*
+ * JavaLockMainLoop() : prevent the main loop from grabbing events.
+ */
+void JavaLockMainLoop() {
+    fprintf(stderr, "JavaLockMainLoop()\n");
+}
+
+/*
+ * JavaUnlockMainLoop() : return from normal processing by the main loop
+ */
+void JavaUnlockMainLoop() {
+    fprintf(stderr, "JavaUnlockMainLoop()\n");
+}
+
+/*
  * JavaLoadResources 
  *
  * link in the Java stuff and initialize it.
  */
-void                JavaLoadResources ()
+void JavaLoadResources ()
 {
    TtaSetMainLoop (InitJavaEventLoop, JavaStartEventLoop,
-		   JavaFetchEvent, JavaFetchAvailableEvent);
+		   JavaFetchEvent, JavaFetchAvailableEvent,
+		   JavaLockMainLoop, JavaUnlockMainLoop);
 }
 

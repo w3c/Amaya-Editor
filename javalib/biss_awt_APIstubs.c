@@ -1,6 +1,10 @@
 #include "JavaTypes.h"
 #include "biss_awt_APIstubs.h"
 
+#ifndef JAVA_NO_AWT
+#define JAVA_NO_AWT
+#endif
+
 void register_biss_awt_API_stubs(void)
 {
 #ifndef JAVA_NO_AWT

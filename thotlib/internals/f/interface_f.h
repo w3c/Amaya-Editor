@@ -21,7 +21,9 @@ extern int TtaHandleMultiKeyEvent ( ThotEvent * event );
 extern void TtaSetMainLoop ( ExternalInitMainLoop init,
                              ExternalMainLoop loop,
                              ExternalFetchEvent fetch,
-                             ExternalFetchAvailableEvent fetchavail );
+                             ExternalFetchAvailableEvent fetchavail,
+			     ExternalLockMainLoop lock,
+			     ExternalUnlockMainLoop unlock );
 extern void TtaFetchOneEvent ( ThotEvent *ev );
 extern void TtaFetchOrWaitEvent ( ThotEvent *ev );
 extern boolean TtaFetchOneAvailableEvent ( ThotEvent *ev );
@@ -55,7 +57,9 @@ extern int TtaHandleMultiKeyEvent (/* ThotEvent * event */);
 extern void TtaSetMainLoop (/* ExternalInitMainLoop init,
                                ExternalMainLoop loop,
                                ExternalFetchEvent fetch,
-                               ExternalFetchAvailableEvent fetchavail */);
+                               ExternalFetchAvailableEvent fetchavail,
+			       ExternalLockMainLoop lock,
+			       ExternalUnlockMainLoop unlock */);
 extern void TtaFetchOneEvent (/* ThotEvent *ev */);
 extern void TtaFetchOrWaitEvent (/* ThotEvent *ev */);
 extern boolean TtaFetchOneAvailableEvent (/* ThotEvent *ev */);

@@ -1038,6 +1038,8 @@ static ExternalInitMainLoop NewInitMainLoop = NULL;
 static ExternalMainLoop NewMainLoop = NULL;
 static ExternalFetchEvent NewFetchEvent = NULL;
 static ExternalFetchAvailableEvent NewFetchAvailableEvent = NULL;
+static ExternalLockMainLoop NewLockMainLoop = NULL;
+static ExternalUnlockMainLoop NewUnlockMainLoop = NULL;
 
 /*----------------------------------------------------------------------
    TtaSetMainLoop
@@ -1046,19 +1048,57 @@ static ExternalFetchAvailableEvent NewFetchAvailableEvent = NULL;
 #ifdef __STDC
 void                TtaSetMainLoop (ExternalInitMainLoop init,
       ExternalMainLoop loop, ExternalFetchEvent fetch,
-      ExternalFetchAvailableEvent fetchavail)
+      ExternalFetchAvailableEvent fetchavail,
+      ExternalLockMainLoop lock,
+      ExternalUnlockMainLoop unlock)
 #else  /* __STDC__ */
-void                TtaSetMainLoop (init, loop, fetch, fetchavail)
+void                TtaSetMainLoop (init, loop, fetch, fetchavail, lock, unlock)
 ExternalInitMainLoop init;
 ExternalMainLoop    loop;
 ExternalFetchEvent fetch;
 ExternalFetchAvailableEvent fetchavail;
+ExternalLockMainLoop lock;
+ExternalUnlockMainLoop unlock;
 #endif /* __STDC__ */
 {
    NewInitMainLoop = init;
    NewMainLoop = loop;
    NewFetchEvent = fetch;
    NewFetchAvailableEvent = fetchavail;
+   NewLockMainLoop = lock;
+   NewUnlockMainLoop = unlock;
+}
+
+/*----------------------------------------------------------------------
+   TtaLockMainLoop
+
+   Used when events are to be handled outside of the application mainloop
+   e.g. dialogs callback. This is useful only in case of multithreaded
+   applications, so the default handling is empty.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaLockMainLoop (void)
+#else  /* __STDC__ */
+void                TtaLockMainLoop ()
+#endif /* __STDC__ */
+{
+    if (NewLockMainLoop) NewLockMainLoop();
+}
+
+/*----------------------------------------------------------------------
+   TtaUnlockMainLoop
+
+   Used when events are to be handled outside of the application mainloop
+   e.g. dialogs callback. This is useful only in case of multithreaded
+   applications, so the default handling is empty.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaUnlockMainLoop (void)
+#else  /* __STDC__ */
+void                TtaUnlockMainLoop ()
+#endif /* __STDC__ */
+{
+    if (NewUnlockMainLoop) NewUnlockMainLoop();
 }
 
 /*----------------------------------------------------------------------

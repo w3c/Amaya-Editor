@@ -234,11 +234,13 @@ kaffe_config :
 	  unset LANG; unset CC; unset CFLAGS; \
 	  if [ -x $$kaffedir/configure ] ; then \
 	      $$kaffedir/configure --prefix=$$localdir --libdir=$$localdir \
-	      --bindir=$$localdir/bin --enable-staticlib --with-x \
+	      --bindir=$$localdir/bin --with-staticlib \
+	      --with-threads=unix-internal \
 	      @KAFFE_ENGINE@ ; \
 	  else \
 	      ../$$kaffedir/configure --prefix=$$localdir --libdir=$$localdir \
-	      --bindir=$$localdir/bin --enable-staticlib --with-x \
+	      --bindir=$$localdir/bin --with-staticlib \
+	      --with-threads=unix-internal \
 	      @KAFFE_ENGINE@ ; \
 	  fi)
 
@@ -257,7 +259,7 @@ kaffe_install:
 	  fi)
 	@($(CP) -R share/kaffe/. $(THOTDIR)/classes)
 	@$(ECHO) Cleaning temp $(KAFFE) files
-	@($(RM) -r share man )
+	@($(RM) -r man )
 
 #	@($(CP) libagent* libkaffevm* libnative* libnet* libzip* bin)
 #	@($(RM) libagent* libkaffevm* libnative* libnet* libzip*)

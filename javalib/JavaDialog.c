@@ -60,14 +60,7 @@ static int            JavaDialogueInitialized = 0;
    Start a Java applet.
   ----------------------------------------------------------------------*/
 
-#ifdef __STDC__
-int                LaunchJavaApplet (char *appletclass, int doc, char *args)
-#else
-int                LaunchJavaApplet (appletclass, doc, args)
-char *appletclass;
-int doc;
-char *args;
-#endif
+int LaunchJavaApplet (char *appletclass, int doc, char *args)
 {
     char name[100];
     char directory[MAX_PATH];
@@ -154,12 +147,7 @@ char *args;
 
    Kill a Java applet, by it's name from the list.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                KillJavaApplet (char *appletname)
-#else
-int                KillJavaApplet (appletname)
-char *appletname;
-#endif
+int KillJavaApplet (char *appletname)
 {
     int thread_no;
 
@@ -175,12 +163,7 @@ char *appletname;
 
    Resumes a Java applet, by it's name from the list.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                ResumeJavaApplet (char *appletname)
-#else
-int                ResumeJavaApplet (appletname)
-char *appletname;
-#endif
+int ResumeJavaApplet (char *appletname)
 {
     int thread_no;
 
@@ -196,12 +179,7 @@ char *appletname;
 
    Suspends a Java applet, by it's name from the list.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                SuspendJavaApplet (char *appletname)
-#else
-int                SuspendJavaApplet (appletname)
-char *appletname;
-#endif
+int SuspendJavaApplet (char *appletname)
 {
     int thread_no;
 
@@ -218,13 +196,7 @@ char *appletname;
    List all the user's thread, store in the buffer and returns
    the actual number of threads found.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                ListJavaUserThreads(char *list, int len)
-#else
-int                ListJavaUserThreads (list, len)
-char *list;
-int len;
-#endif
+int ListJavaUserThreads(char *list, int len)
 {
    int i,t;
    int nb;
@@ -252,14 +224,7 @@ int len;
 /*
  * Callback for the Java applets selector.
  */
-#ifdef __STDC__
 static void CallbackFormJava (int ref, int dataType, char* data)
-#else  /* __STDC__ */
-static void CallbackFormJava (ref, dataType, data)
-int   ref; 
-int   dataType; 
-char* data;
-#endif /* __STDC__ */
 {
    int val = (int) data;
    char tempname[MAX_PATH];
@@ -426,11 +391,7 @@ char* data;
 /*
  * InitJavaDialogue.
  */
-#ifdef __STDC__
 void InitJavaDialogue (void)
-#else  /* __STDC__ */
-void InitJavaDialogue ()
-#endif /* __STDC__ */
 {
     char *s;
 
@@ -445,13 +406,7 @@ void InitJavaDialogue ()
 /*
  * the Java applets selector create routine.
  */
-#ifdef __STDC__ 
 void CreateFormJava (Document document, View view)
-#else  /* __STDC__ */
-void CreateFormJava (document, view) 
-Document document; 
-View     view;
-#endif /* __STDC__ */
 {
    int                 i;
    char               *s;
@@ -510,13 +465,7 @@ View     view;
 /*
  * the Java applets selector create routine.
  */
-#ifdef __STDC__ 
 void CreateTuningFormJava (Document document, View view)
-#else  /* __STDC__ */
-void CreateFormJava (document, view) 
-Document document; 
-View     view;
-#endif /* __STDC__ */
 {
    int                 i;
    char               *s;

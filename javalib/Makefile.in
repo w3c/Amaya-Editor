@@ -88,6 +88,7 @@ dirs : $(THOTDIR)/classes/org/w3c/thotlib $(THOTDIR)/classes/org/w3c/amaya
 #########################################################################
 
 THOT_JAVA_OBJ = \
+	main.o \
 	kaffeine.o \
 	JavaX11Interf.o \
 	events.o \
@@ -465,6 +466,13 @@ java_lang_StringBuffer.h : $(COMPILERS)
 #
 # end of stubs generation rules
 #
+
+#
+# rule to build the main.o coming from kaffe/kaffe/
+# We just remap main() to kaffe_main()
+#
+main.o: $(THOTDIR)/kaffe-$(KAFFE_VER)/kaffe/kaffe/main.c
+	$(CC) -I../kaffe-$(KAFFE_VER)/config  -I../kaffe-$(KAFFE_VER)/include -I$(THOTDIR)/kaffe-$(KAFFE_VER)/config -I$(THOTDIR)/kaffe-$(KAFFE_VER)/include -I$(THOTDIR)/kaffe-$(KAFFE_VER)/kaffe/kaffevm -Dmain=kaffe_main -c $(THOTDIR)/kaffe-$(KAFFE_VER)/kaffe/kaffe/main.c
 
 #
 # Rule to force the generation of the headers before compiling the C code

@@ -7696,11 +7696,13 @@ void                TtaWaitShowDialogue ()
    /* Un TtaWaitShowDialogue en cours */
    CurrentWait = 1;
 
+   TtaLockMainLoop();
    while (ShowReturn == 1)
      {
 	TtaFetchOneEvent (&event);
 	TtaHandleOneEvent (&event);
      }
+   TtaUnlockMainLoop();
 
    /* Fin de l'attente */
    CurrentWait = 0;

@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern boolean ExportDocument ( PtrDocument pDoc,
-				char *fName,
-				char *TSchemaName );
+                                char *fName,
+                                char *TSchemaName );
 extern void ExportTree ( PtrElement pEl,
                          PtrDocument pDoc,
                          char *fName,
@@ -17,8 +17,8 @@ extern void ExportTree ( PtrElement pEl,
 #else /* __STDC__ */
 
 extern boolean ExportDocument (/* PtrDocument pDoc,
-				  char *fName,
-				  char *TSchemaName */);
+                                  char *fName,
+                                  char *TSchemaName */);
 extern void ExportTree (/* PtrElement pEl,
                            PtrDocument pDoc,
                            char *fName,

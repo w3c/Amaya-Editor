@@ -13,6 +13,7 @@
 #include "registry.h"
 #include "events.h"
 #include "JavaX11Interf.h"
+#include "jsyscall.h"
 
 #include "org_w3c_thotlib_APIApplication_stubs.h"
 #include "org_w3c_thotlib_APIDocument_stubs.h"
@@ -49,11 +50,9 @@
 /*                         messages on extra channel uses               */
 /* DEBUG_LOCK     will print debug messages on Locks and Releases       */
 
-#ifdef __STDC__
-void             JavaHandleAvailableEvents (void);
-#else
-void             JavaHandleAvailableEvents ();
-#endif
+#define SYNC_DNS
+
+void JavaHandleAvailableEvents (void);
 
 #ifdef DEBUG_TIMING
 /************************************************************************
@@ -116,11 +115,7 @@ static char *GetJavaTimer(void)
 static int NbJavaSelect = 0;
 static int JavaSelectInitialized = 0;
 
-#ifdef __STDC__
 void               InitJavaSelect(void)
-#else
-void               InitJavaSelect()
-#endif
 {
     NbJavaSelect = 0;
     DoJavaSelectPoll = 0;
@@ -140,18 +135,12 @@ void               InitJavaSelect()
   the Java program.
   ----------------------------------------------------------------------*/
 
-#ifdef __STDC__
-int                JavaSelect (int  nb,  fd_set  *readfds,  fd_set  *writefds,
-       fd_set *exceptfds, struct timeval *timeout)
-#else
-int                JavaSelect (nb, readfds, writefds, exceptfds, timeout)
-int  nb;
-fd_set  *readfds;
-fd_set  *writefds;
-fd_set *exceptfds;
-struct timeval *timeout;
-ThotEvent *ev;
+#ifdef select
+#undef select
 #endif
+
+int JavaSelect (int  nb,  fd_set  *readfds,  fd_set  *writefds,
+                fd_set *exceptfds, struct timeval *timeout)
 {
     struct timeval tm;
     int res;
@@ -507,6 +496,12 @@ void JavaXWindowSocketRelease()
 }
 
 #ifndef SYNC_DNS
+/************************************************************************
+ *									*
+ *			Non-blocking DNS lookups.			*
+ *									*
+ ************************************************************************/
+
 void DNSserverLock()
 {
     while (1) {
@@ -550,15 +545,6 @@ void DNSserverRelease()
     fprintf(stderr,"DNSserverRelease(%d)\n", DNSLockValue);
 #endif
 }
-#endif /* !SYNC_DNS */
-
-
-#ifndef SYNC_DNS
-/************************************************************************
- *									*
- *			Non-blocking DNS lookups.			*
- *									*
- ************************************************************************/
 
 int dns_daemonRequestChannel[2];
 int dns_daemonResultChannel[2];
@@ -626,8 +612,8 @@ static void JavaInitDns(void) {
     /*
      * and register the two others as Input/Output channels.
      */
-    threadedFileDescriptor(dns_daemonRequestChannel[1]);
-    threadedFileDescriptor(dns_daemonResultChannel[0]);
+    (*Kaffe_SystemCallInterface._fixfd)(dns_daemonRequestChannel[1]);
+    (*Kaffe_SystemCallInterface._fixfd)(dns_daemonResultChannel[0]);
 
     /*
      * and register the two others as Input/Output channels.
@@ -728,100 +714,14 @@ io_failed:
 
 #endif /* !SYNC_DNS */
 
-/*----------------------------------------------------------------------
-   InitJava
-
-   Initialize the Java Interpreter.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InitJava (void)
-#else
-void                InitJava ()
-#endif
-{
-    struct Hjava_lang_String* str;
-    char initClass[MAX_PATH];
-
-    char *app_name = TtaGetEnvString ("appname");
-
-#ifndef SYNC_DNS
-    JavaInitDns();
-#endif
-
-    /* fprintf(stderr, "Initialize Java Runtime\n"); */
-
-    /* Initialise */
-    initialiseKaffe();
-    /* biss_awt_kernel_NativeLib_initialize(); */
-
-    /* Register Thotlib stubs */
-    register_stubs();
-
-    /* Initialize the type conversion unit */
-    initJavaTypes();
-
-    /* fprintf(stderr, "Java Runtime Initialized\n"); */
-
-    /* Build the init class name */
-    sprintf(initClass, "org.w3c.%s.%sInit", app_name, app_name);
-
-    /* Build each string and put into the array */
-    str = makeJavaString(app_name, strlen(app_name));
-
-    /* lauch the init class for the application */
-    do_execute_java_class_method(initClass, "main",
-                   "(Ljava/lang/String;)V", str);
-
-    /* Start the application loop of events */
-    do_execute_java_class_method("org.w3c.thotlib.Interface", "main",
-                   "(Ljava/lang/String;)V", str);
-}
-
-/*----------------------------------------------------------------------
-   CloseJava
-
-   Stops cleanly all the Java stuff.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CloseJava (void)
-#else
-void                CloseJava ()
-#endif
-{
-    char initClass[MAX_PATH];
-
-    char *app_name = TtaGetEnvString ("appname");
-
-    /* fprintf(stderr, "Stop Java Runtime\n"); */
-
-    /* Build the init class name */
-    sprintf(initClass, "org.w3c.%s.%sInit", app_name, app_name);
-
-    /* lauch the stop class for the application */
-    do_execute_java_class_method(initClass, "Stop", "()V");
-
-}
-
-#if 0
-/*
- * This method is needed by the Kaffe interpreter.
- * What's happening when the memory is too low ?
- */
-
-void
-throwOutOfMemory ()
-{
-/*************************
-        if (OutOfMemoryError != NULL)
-                throwException(OutOfMemoryError);
- *************************/
-        fprintf (stderr, "(Insufficient memory)\n");
-        exit (-1);
-}
-#endif
+/************************************************************************
+ *									*
+ *			Kaffe Java V.M. bootstrap			*
+ *									*
+ ************************************************************************/
 
 /*
- * Register the thotlib stuff.
+ * Register the Thot and Amaya native functions.
  */
 static void register_stubs(void)
 {
@@ -842,5 +742,109 @@ static void register_stubs(void)
    register_org_w3c_amaya_APIAmayaMsg_stubs();
    register_org_w3c_amaya_APIJavaAmaya_stubs();
    register_debug_stubs();
+}
+
+/*
+ * This is the bootstrap function called by the Java main.
+ * This contains the set of functions to call to set-up the environment
+ * once the Kaffe V.M. is started. It's called using a specific hook.
+ * See kaffe/kaffevm/support.h
+ */
+extern void (*nativeAppFunction)(void);
+extern char *nativeAppFunctionName;
+
+void org_w3c_thotlib_Extra_nativeAppBootstrap(void) {
+    fprintf(stderr, "Initialize Native Java Runtime\n"); 
+
+    /*
+     * set up our own select call.
+     */
+    Kaffe_SystemCallInterface._select = JavaSelect;
+
+#ifndef SYNC_DNS
+    JavaInitDns();
+#endif
+
+    /* Initialize the type conversion unit */
+    initJavaTypes();
+
+    /* Register Thotlib stubs */
+    register_stubs();
+
+    fprintf(stderr, "Native Java Runtime Initialized\n");
+}
+
+/*----------------------------------------------------------------------
+   InitJava
+
+   Launch the Kaffe Interpreter. We set-up the environment variables,
+   and launch the main() from kaffe with our class parameter.
+  ----------------------------------------------------------------------*/
+extern int kaffe_main(int argc, char* argv[]);
+
+void InitJava (void)
+{
+    int argc = 2;
+    char new_env[2000];
+    char initClass[500];
+    char *env_value;
+    char *argv[3] = { "kaffe", NULL, NULL };
+    char *app_name = TtaGetEnvString ("appname");
+
+    /*
+     * set up the environment
+     */
+    strcpy(new_env,"CLASSPATH=");
+    env_value  = TtaGetEnvString("CLASSPATH");
+    if (env_value)
+       strcat(new_env, env_value);
+    env_value = getenv("CLASSPATH");
+    if (env_value) {
+       strcat(new_env,":");
+       strcat(new_env,env_value);
+    }
+    putenv(TtaStrdup(new_env));
+
+    strcpy(new_env,"KAFFEHOME=");
+    env_value  = TtaGetEnvString("KAFFEHOME");
+    if (env_value)
+       strcat(new_env, env_value);
+    putenv(TtaStrdup(new_env));
+
+    /* prepare the handler for the second init phase */
+    nativeAppFunction = org_w3c_thotlib_Extra_nativeAppBootstrap;
+    nativeAppFunctionName = "org_w3c_thotlib_Extra_nativeAppBootstrap";
+
+    /* Build the init class name */
+    sprintf(initClass, "org.w3c.%s.%sInit", app_name, app_name);
+    argv[1] = initClass;
+
+    /* Launch the kaffe runtime on that class */
+    kaffe_main(argc, argv);
+
+    /* come back, should not occur */
+    fprintf(stderr, "InitJava : kaffe_main() finished\n");
+    exit(1);
+}
+
+
+/*----------------------------------------------------------------------
+   CloseJava
+
+   Stops cleanly all the Java stuff.
+  ----------------------------------------------------------------------*/
+void CloseJava (void)
+{
+    char initClass[MAX_PATH];
+
+    char *app_name = TtaGetEnvString ("appname");
+
+    /* fprintf(stderr, "Stop Java Runtime\n"); */
+
+    /* Build the init class name */
+    sprintf(initClass, "org.w3c.%s.%sInit", app_name, app_name);
+
+    /* lauch the stop class for the application */
+    do_execute_java_class_method(initClass, "Stop", "()V");
 }
 
