@@ -8,8 +8,6 @@
 #ifndef AMAYA_H 
 #define AMAYA_H
 
-#include <dmalloc.h>
-
 /* Thot interface */
 #include "thot_gui.h"
 #include "thot_sys.h"
