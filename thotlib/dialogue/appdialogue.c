@@ -2970,6 +2970,18 @@ void get_targets (GtkWidget *widget, gpointer data)
 }
 
 /*-----------------------------------------------------------------------
+  When user begins a new selection
+-------------------------------------------------------------------------*/
+void gtk_claim_selection()
+{
+  if (FrameTable[ActiveFrame].WdFrame)
+    /* but now we own the selection, so goodbye to the other app */
+    gtk_selection_owner_set (GTK_WIDGET (FrameTable[ActiveFrame].WdFrame),
+			     GDK_SELECTION_PRIMARY,
+			     GDK_CURRENT_TIME); 
+}
+
+/*-----------------------------------------------------------------------
   selection_received
   Signal handler called when the selections owner 
   (another application) returns the data 
@@ -2994,6 +3006,9 @@ void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
       Xbuffer = (unsigned char*)TtaGetMemory ((sel_data->length + 1) * sizeof (unsigned char));
       strcpy ((char *)Xbuffer, (char *)sel_data->data);
     }
+
+  gtk_claim_selection();
+
   return;
 } 
 
@@ -3011,7 +3026,7 @@ gint selection_clear (GtkWidget *widget, GdkEventSelection *event, gpointer data
   TtaClearViewSelections ();
   return TRUE;
 }
- 
+
 /*-----------------------------------------------------------------------
  selection_handle
  Supplies the Xbuffer as the selection. 
@@ -3032,17 +3047,6 @@ void selection_handle (GtkWidget        *widget,
 			    strlen ((char *)Xbuffer));
 }
 
-/*-----------------------------------------------------------------------
-  When user begin a new selection
--------------------------------------------------------------------------*/
-void gtk_claim_selection()
-{
-  if (FrameTable[ActiveFrame].WdFrame)
-    /* but now we own the selection, so goodbye to the other app */
-    gtk_selection_owner_set (GTK_WIDGET (FrameTable[ActiveFrame].WdFrame),
-			     GDK_SELECTION_PRIMARY,
-			     GDK_CURRENT_TIME);
-}
 #endif /* _GTK */
 
 /*----------------------------------------------------------------------
@@ -3684,7 +3688,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area), 
 			     "selection_received", 
 			     GTK_SIGNAL_FUNC (selection_received), 
-			     NULL);   
+			     NULL);
 	   /*
 	     When another app steal the clipboard handling
 	     recommanded by the GTK
