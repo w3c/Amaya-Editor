@@ -839,36 +839,34 @@ static ThotBool CallToggle (ThotWidget w, struct Cat_Context *catalogue, caddr_t
     }
   return TRUE;  
 }
-
+#ifdef _GTK
 /*----------------------------------------------------------------------
-  Callback pour un bouton du sous-menu de formulaire
+  Callback pour un bouton du sous-menu de formulaire a choix exclusif
   ----------------------------------------------------------------------*/
-static ThotBool CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+static ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
   register int        i;
   register int        index;
   register int        entry;
   struct E_List      *adbloc;
 
-#ifdef _GTK
-  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)) == FALSE)
-    {
-      /* Prevent to unselect an element directly...
-	 you must select another one to unselect others  */
-      index = (guint) gtk_object_get_data (GTK_OBJECT (w),
-					   "toggled");
-      gtk_signal_handler_block (GTK_OBJECT(w), 
-				index);
+    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)) == FALSE)
+      {
+	/* Prevent to unselect an element directly...
+	   you must select another one to unselect others  */
+	index = (guint) gtk_object_get_data (GTK_OBJECT (w),
+					     "toggled");
+	gtk_signal_handler_block (GTK_OBJECT(w), 
+				  index);
 		   
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), 
-				    TRUE);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), 
+				      TRUE);
       
-      gtk_signal_handler_unblock (GTK_OBJECT(w), 
-				  index); 
-      return TRUE;
-    }
+	gtk_signal_handler_unblock (GTK_OBJECT(w), 
+				    index); 
+	return TRUE;
+      }
   
-#endif /*_GTK*/
   /* Enregistre la selection d'un toggle button */
   if (catalogue->Cat_Widget != 0)
     {
@@ -889,37 +887,76 @@ static ThotBool CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t 
 	  adbloc = adbloc->E_Next;
 	  i = 0;
 	}
-#ifdef _GTK
-      /*Deactivate All other Radio Button*/
-      adbloc = catalogue->Cat_Entries;
-      i = 2;
-      while (adbloc != NULL)
-	{
-	   while (i < C_NUMBER && 
-		  adbloc->E_ThotWidget[i])
-	     {
-	       if (adbloc->E_ThotWidget[i] != w) 
-		 {
+	  /*Deactivate All other Radio Button*/
+	  adbloc = catalogue->Cat_Entries;
+	  i = 2;
+	  while (adbloc != NULL)
+	    {
+	      while (i < C_NUMBER && 
+		     adbloc->E_ThotWidget[i])
+		{
+		  if (adbloc->E_ThotWidget[i] != w) 
+		    {
 		   
-		   index = (guint) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]),
-							      "toggled");
-		   gtk_signal_handler_block (GTK_OBJECT(adbloc->E_ThotWidget[i]), 
-					     index);
+		      index = (guint) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]),
+							   "toggled");
+		      gtk_signal_handler_block (GTK_OBJECT(adbloc->E_ThotWidget[i]), 
+						index);
 		   
-		   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), 
-						 FALSE);
+		      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), 
+						    FALSE);
 		   
-		   gtk_signal_handler_unblock (GTK_OBJECT(adbloc->E_ThotWidget[i]), 
-					       index); 
+		      gtk_signal_handler_unblock (GTK_OBJECT(adbloc->E_ThotWidget[i]), 
+						  index); 
 		       
-		 }
-	       i++;	       
-	     }
-	  /* Go to next block */
-	   adbloc = adbloc->E_Next;
+		    }
+		  i++;	       
+		}
+	      /* Go to next block */
+	      adbloc = adbloc->E_Next;
+	      i = 0;
+	    }
+ 
+      /*** Sauve la valeur de la derniere selection ***/
+      catalogue->Cat_Data = entry;
+      /* retourne la valeur si le menu est reactif */
+      if (catalogue->Cat_React)
+	(*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, entry);
+    }
+  return TRUE;  
+}
+#endif /* _GTK */
+/*----------------------------------------------------------------------
+  Callback pour un bouton du sous-menu de formulaire
+  ----------------------------------------------------------------------*/
+static ThotBool CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+{
+  register int        i;
+  register int        index;
+  register int        entry;
+  struct E_List      *adbloc;
+
+
+  /* Enregistre la selection d'un toggle button */
+  if (catalogue->Cat_Widget != 0)
+    {
+      adbloc = catalogue->Cat_Entries;
+      entry = -1;
+      index = 0;
+      i = 2;			/* decalage de 2 pour le widget titre */
+      while ((entry == -1) && (adbloc != NULL))
+	{
+	  while ((entry == -1) && (i < C_NUMBER))
+	    {
+	      if (adbloc->E_ThotWidget[i] == w)
+		entry = index;
+	      i++;
+	      index++;
+	    }
+	  /* Passe au bloc suivant */
+	  adbloc = adbloc->E_Next;
 	  i = 0;
 	}
-#endif /* _GTK */
       /*** Sauve la valeur de la derniere selection ***/
       catalogue->Cat_Data = entry;
       /* retourne la valeur si le menu est reactif */
@@ -4477,7 +4514,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  gtk_container_add (GTK_CONTAINER(w), tmpw);
 		  gtk_object_set_data (GTK_OBJECT(w), "Label", (gpointer)tmpw);
 		  gtk_box_pack_start (GTK_BOX(row), GTK_WIDGET(w), FALSE, FALSE, 0);
-		  ConnectSignalGTK (GTK_OBJECT(w), "toggled", GTK_SIGNAL_FUNC(CallRadio), (gpointer)catalogue);
+		  ConnectSignalGTK (GTK_OBJECT(w), "toggled", GTK_SIGNAL_FUNC(CallRadioGTK), (gpointer)catalogue);
 		  adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
 #ifdef _WINDOWS
