@@ -47,7 +47,7 @@ RULES
 	indent +2;
 	indent -2 after;
 	create SCT after;
-	Create 'math>\12' after;
+	Create 'math>' after;
 	end;
 
    XMLcomment:
