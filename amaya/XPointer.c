@@ -388,7 +388,7 @@ static ThotBool TestElName (Element el, char *name)
 static Element AGetParent (Element el)
 {
   Element parent;
-
+  
   if (!el)
     return NULL;
 
@@ -398,6 +398,10 @@ static Element AGetParent (Element el)
       parent = TtaGetParent (parent);
     }
   while (parent && ElIsHidden (parent));
+
+  /* the document root doesn't have any parent */
+  if (parent && !TtaGetParent (parent))
+    parent = NULL;
 
   return parent;
 }
