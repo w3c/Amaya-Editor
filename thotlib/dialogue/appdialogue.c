@@ -3006,9 +3006,8 @@ void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
       Xbuffer = (unsigned char*)TtaGetMemory ((sel_data->length + 1) * sizeof (unsigned char));
       strcpy ((char *)Xbuffer, (char *)sel_data->data);
     }
-
-  gtk_claim_selection();
-
+  /* IV: remove this change because it breaks down copy/paste within Amaya */
+  /*gtk_claim_selection();*/
   return;
 } 
 
