@@ -37,6 +37,8 @@
 #include "amaya.h"
 #include "MENUconf.h"
 
+#define MAX_GEOMETRY_LENGTH 24
+
 /* Network menu options */
 static int NetworkBase;
 static boolean EnableCache;
@@ -67,6 +69,13 @@ static int AppearanceBase;
 static CHAR Lang [MAX_LENGTH+1];
 static int FontMenuSize;
 static CHAR ForegroundColor [MAX_LENGTH+1];
+static CHAR FormattedView [MAX_GEOMETRY_LENGTH+1];
+static CHAR StructureView [MAX_GEOMETRY_LENGTH+1];
+static CHAR MathStructureView [MAX_GEOMETRY_LENGTH+1];
+static CHAR GraphStructureView [MAX_GEOMETRY_LENGTH+1];
+static CHAR AlternateView [MAX_GEOMETRY_LENGTH+1];
+static CHAR LinksView [MAX_GEOMETRY_LENGTH+1];
+static CHAR TableOfContentsView [MAX_GEOMETRY_LENGTH+1];
 
 /* common local variables */
 CHAR s[300]; /* general purpose buffer */
@@ -88,6 +97,8 @@ static void         SetBrEdConf (void);
 static void         AppearanceCallbackDialog(int ref, int typedata, STRING data);
 static void         RefreshAppearanceMenu (void);
 static void         GetAppearanceConf (void);
+static void         GetDefaultAppearanceConf (void);
+static void         SetAppearanceConf (void);
 
 #else
 static void         GetEnvString (/* const STRING name, STRING value */);
@@ -107,6 +118,8 @@ static void         SetBrEdConf (/* void */);
 static void         AppearanceCallbackDialog(/* int ref, int typedata, STRING data */);
 static void         RefreshAppearanceMenu (/* void */);
 static void         GetAppearanceConf (/* void */);
+static void         GetDefaultAppearanceConf (/* void */);
+static void         SetAppearanceConf (/* void */);
 #endif
 
 /*
@@ -376,8 +389,7 @@ static void GetNetworkConf ()
 
 /*----------------------------------------------------------------------
   SetNetworkConf
-  Updates the registry network values and calls the network functions
-  to take into acocunt the changes
+  Updates the registry network values
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void SetNetworkConf (void)
@@ -466,7 +478,7 @@ View                view;
 
    TtaNewSheet (NetworkBase + NetworkMenu, 
 		TtaGetViewFrame (document, view),
-	       "Network Configuration", 2, s, FALSE, 4, 'L', D_DONE);
+	       "Network Configuration", 2, s, FALSE, 3, 'L', D_DONE);
 
    sprintf (s, "%s%c%s", "BEnable cache", EOS, 
 	    "BCache protected documents");
@@ -489,12 +501,6 @@ View                view;
 		     0,
 		     100,
 		     TRUE);
-   TtaNewNumberForm (NetworkBase + mMaxCacheFile,
-		     NetworkBase + NetworkMenu,
-		     "Cache entry size limit (Mb)",
-		     0,
-		     5,
-		     TRUE);
    TtaNewTextForm (NetworkBase + mHttpProxy,
 		   NetworkBase + NetworkMenu,
 		   "HTTP proxy",
@@ -507,6 +513,12 @@ View                view;
 		   20,
 		   1,
 		   TRUE);
+   TtaNewNumberForm (NetworkBase + mMaxCacheFile,
+		     NetworkBase + NetworkMenu,
+		     "Cache entry size limit (Mb)",
+		     0,
+		     5,
+		     TRUE);
 
    /* load and display the current values */
    GetNetworkConf ();
@@ -783,7 +795,7 @@ STRING              pathname;
    TtaNewNumberForm (BrEdBase + mZoom,
 		     BrEdBase + BrEdMenu,
 		     "Zoom",
-		     -10,
+		     0,
 		     10,
 		     FALSE);   
    TtaNewToggleMenu (BrEdBase + mMultikey,
@@ -872,20 +884,59 @@ STRING              data;
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
-	      /***
 	      SetAppearanceConf ();
-	      ***/
 	      break;
 	    case 2:
-	      /**
 	      GetDefaultAppearanceConf ();
 	      RefreshAppearanceMenu ();
-	      **/
 	      break;
 	    default:
 	      break;
 	    }
 	  break;
+	  
+	case mStructureView:
+	  if (data)
+	    ustrcpy (StructureView, data);
+	  else
+	    StructureView[0] = EOS;
+	  break;
+
+	case mMathStructureView:
+	  if (data)
+	    ustrcpy (MathStructureView, data);
+	  else
+	     MathStructureView[0] = EOS;
+	  break;
+
+	case mGraphStructureView:
+	  if (data)
+	    ustrcpy (GraphStructureView, data);
+	  else
+	     GraphStructureView[0] = EOS;
+	  break;
+
+	case mAlternateView:
+	  if (data)
+	    ustrcpy (AlternateView, data);
+	  else
+	     AlternateView[0] = EOS;
+	  break;
+
+	case mLinksView:
+	  if (data)
+	    ustrcpy (LinksView, data);
+	  else
+	     LinksView[0] = EOS;
+	  break;
+
+	case mTableOfContentsView:
+	  if (data)
+	    ustrcpy (TableOfContentsView, data);
+	  else
+	     TableOfContentsView[0] = EOS;
+	  break;
+
 	default:
 	  break;
 	}
@@ -935,6 +986,49 @@ STRING              pathname;
 		   20,
 		   1,
 		   FALSE);   
+   TtaNewTextForm (AppearanceBase + mFormattedView,
+		   AppearanceBase + AppearanceMenu,
+		   "Formatted view)",
+		   20,
+		   1,
+		   FALSE);   
+   TtaNewTextForm (AppearanceBase + mStructureView,
+		   AppearanceBase + AppearanceMenu,
+		   "Structure view",
+		   20,
+		   1,
+		   FALSE);
+   TtaNewTextForm (AppearanceBase + mMathStructureView,
+		   AppearanceBase + AppearanceMenu,
+		   "Math structure view",
+		   20,
+		   1,
+		   FALSE);
+   TtaNewTextForm (AppearanceBase + mGraphStructureView,
+		   AppearanceBase + AppearanceMenu,
+		   "Graph structure view",
+		   20,
+		   1,
+		   FALSE);
+   TtaNewTextForm (AppearanceBase + mAlternateView,
+		   AppearanceBase + AppearanceMenu,
+		   "Alternate View",
+		   20,
+		   1,
+		   FALSE);
+   TtaNewTextForm (AppearanceBase + mLinksView,
+		   AppearanceBase + AppearanceMenu,
+		   "Links View",
+		   20,
+		   1,
+		   FALSE);
+   TtaNewTextForm (AppearanceBase + mTableOfContentsView,
+		   AppearanceBase + AppearanceMenu,
+		   "Table of Contents view",
+		   20,
+		   1,
+		   FALSE);
+
    /* load and display the current values */
    GetAppearanceConf ();
    RefreshAppearanceMenu ();
@@ -955,6 +1049,13 @@ static void RefreshAppearanceMenu ()
   TtaSetNumberForm (AppearanceBase + mFontMenuSize, FontMenuSize);
   TtaSetTextForm (AppearanceBase + mForegroundColor, ForegroundColor);
   TtaSetTextForm (AppearanceBase + mDialogueLang, Lang);
+  TtaSetTextForm (AppearanceBase + mFormattedView, FormattedView);
+  TtaSetTextForm (AppearanceBase + mStructureView, StructureView);
+  TtaSetTextForm (AppearanceBase + mMathStructureView, MathStructureView);
+  TtaSetTextForm (AppearanceBase + mGraphStructureView, GraphStructureView);
+  TtaSetTextForm (AppearanceBase + mAlternateView, AlternateView);
+  TtaSetTextForm (AppearanceBase + mLinksView, LinksView);
+  TtaSetTextForm (AppearanceBase + mTableOfContentsView, TableOfContentsView);
 }
 
 /*----------------------------------------------------------------------
@@ -972,4 +1073,65 @@ static void GetAppearanceConf ()
   GetEnvString ("LANG", Lang);
   TtaGetEnvInt ("FontMenuSize", &FontMenuSize);
   GetEnvString ("ForegroundColor", ForegroundColor);
+  GetEnvString ("FormattedView", FormattedView);
+  GetEnvString ("StructureView", StructureView);
+  GetEnvString ("MathStructureView", MathStructureView);
+  GetEnvString ("GraphStructureView", GraphStructureView);
+  GetEnvString ("AlternateView", AlternateView);
+  GetEnvString ("LinksView", LinksView);
+  GetEnvString ("TableOfContentsView", TableOfContentsView);
 }
+
+/*----------------------------------------------------------------------
+  GetDefaultAppearanceConf
+  Makes a copy of the default registry appearance values
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void GetDefaultAppearanceConf (void)
+#else
+static void GetDefaultAppearanceConf ()
+#endif /* __STDC__ */
+{
+  char *ptr;
+
+  GetDefEnvString ("LANG", Lang);
+  TtaGetDefEnvInt ("FontMenuSize", &FontMenuSize);
+  GetDefEnvString ("ForegroundColor", ForegroundColor);
+  GetDefEnvString ("FormattedView", FormattedView);
+  GetDefEnvString ("StructureView", StructureView);
+  GetDefEnvString ("MathStructureView", MathStructureView);
+  GetDefEnvString ("GraphStructureView", GraphStructureView);
+  GetDefEnvString ("AlternateView", AlternateView);
+  GetDefEnvString ("LinksView", LinksView);
+  GetDefEnvString ("TableOfContentsView", TableOfContentsView);
+}
+
+
+/*----------------------------------------------------------------------
+  SetAppearanceConf
+  Updates the registry Appearance values
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void SetAppearanceConf (void)
+#else
+static void SetAppearanceConf ()
+#endif /* __STDC__ */
+{
+  TtaSetEnvString ("LANG", Lang, TRUE);
+  TtaSetEnvInt ("FontMenuSize", FontMenuSize, TRUE);
+  TtaSetEnvString ("ForegroundColor", ForegroundColor, TRUE);
+  TtaSetEnvString ("FormattedView", FormattedView, TRUE);
+  TtaSetEnvString ("StructureView", StructureView, TRUE);
+  TtaSetEnvString ("MathStructureView", MathStructureView, TRUE);
+  TtaSetEnvString ("GraphStructureView", GraphStructureView, TRUE);
+  TtaSetEnvString ("AlternateView", AlternateView, TRUE);
+  TtaSetEnvString ("LinksView", LinksView, TRUE);
+  TtaSetEnvString ("TableOfContentsView", TableOfContentsView, TRUE);
+}
+
+
+
+
+
+
+
