@@ -10,6 +10,10 @@ extern void *TtaGetMemory ( unsigned int n );
 extern void TtaFreeMemory ( void *ptr );
 extern void *TtaRealloc ( void *ptr,
                           unsigned int n );
+extern void *TtaNewTransform ( void );
+extern void TtaFreeTransform ( void *transform );
+extern void *TtaNewAnimation ( void );
+extern void TtaFreeAnimation ( void *void_a_list );
 extern void FreeAll ( void );
 extern char *TtaStrdup ( char* str );
 extern void InitEditorMemory ( void );
@@ -86,6 +90,10 @@ extern void *TtaGetMemory (/* unsigned int n */);
 extern void TtaFreeMemory (/* void *ptr */);
 extern void *TtaRealloc (/* void *ptr,
                             unsigned int n */);
+extern void *TtaNewTransform (/* void */);
+extern void TtaFreeTransform (/* void *transform */);
+extern void *TtaNewAnimation (/* void */);
+extern void TtaFreeAnimation (/* void *void_a_list */);
 extern void FreeAll (/* void */);
 extern char *TtaStrdup (/* char* str */);
 extern void InitEditorMemory (/* void */);

@@ -1538,7 +1538,6 @@ void InitClue (ThotWidget toplevel)
 
    Adds a new button entry in a document view.
    This function must specify a valid view of a valid document.
-
    Parameters:
    document: the concerned document.
    view: the concerned view.

@@ -2058,41 +2058,47 @@ void DisplayTransformation (PtrTransform Trans, int Width, int Height)
     }
 
 }
-/*---------------------------------------------------
+/*----------------------------------------------------------------------
   DisplayTransformationExit :
-----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void DisplayTransformationExit ()
 {
   
 }
-/*---------------------------------------------------
+/*----------------------------------------------------------------------
   ComputeBoundingBox :
-----------------------------------------------------*/
-void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
+  ----------------------------------------------------------------------*/
+void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax,
+			 int ymin, int ymax)
 {
 }
+
 /*----------------------------------------------------------------------
   ClearOpaqueGroup clear before display a translucent Group
   ----------------------------------------------------------------------*/
-void ClearOpaqueGroup (PtrAbstractBox     pAb, int frame, int xmin, int xmax, int ymin, int ymax)
+void ClearOpaqueGroup (PtrAbstractBox pAb, int frame, int xmin, int xmax,
+		       int ymin, int ymax)
 {
 }
+
 /*----------------------------------------------------------------------
   DisplayOpaqueGroup display a translucent Group
   ----------------------------------------------------------------------*/
-void DisplayOpaqueGroup (PtrAbstractBox     pAb, int frame, int xmin, int xmax, int ymin, int ymax)
+void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame, int xmin, int xmax,
+			 int ymin, int ymax)
 {
 }
 /*----------------------------------------------------------------------
   OpaqueGroupTextureFree
   ----------------------------------------------------------------------*/
-void OpaqueGroupTextureFree (PtrAbstractBox     pAb, int frame)
+void OpaqueGroupTextureFree (PtrAbstractBox pAb, int frame)
 {
 }
 /*----------------------------------------------------------------------
   DisplayOpaqueGroup display a translucent Group
   ----------------------------------------------------------------------*/
-void OpaqueGroupTexturize (PtrAbstractBox     pAb, int frame, int xmin, int xmax, int ymin, int ymax,
+void OpaqueGroupTexturize (PtrAbstractBox pAb, int frame, int xmin,
+			   int xmax, int ymin, int ymax,
                            ThotBool Is_Pre)
 {
 }
@@ -2101,7 +2107,8 @@ void OpaqueGroupTexturize (PtrAbstractBox     pAb, int frame, int xmin, int xmax
 /*----------------------------------------------------------------------
   GetBoundingBox : Get Bounding box of a group
   ----------------------------------------------------------------------*/
-static void GetRelativeBoundingBox (PtrAbstractBox pAb, int *x, int *y, int *width, int *height)
+static void GetRelativeBoundingBox (PtrAbstractBox pAb, int *x, int *y,
+				    int *width, int *height)
 {
   PtrBox              box;
   int xprime, yprime, w, h;
@@ -2244,6 +2251,7 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
       TtaFreeMemory (m);      
     }
 }
+
 /*----------------------------------------------------------------------
   OpaqueGroupTextureFree
   ----------------------------------------------------------------------*/
@@ -2284,6 +2292,7 @@ void ClearOpaqueGroup (PtrAbstractBox pAb, int frame,
 			widthprevclip, heightprevclip);
     }
 }
+
 /*----------------------------------------------------------------------
   OpaqueGroupTexturize display an non-opaque Group
   ----------------------------------------------------------------------*/
@@ -2313,6 +2322,8 @@ void OpaqueGroupTexturize (PtrAbstractBox pAb, int frame,
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static ThotBool DisplayGradient (PtrAbstractBox pAb,
 				 PtrBox box,
 				 int frame, 
@@ -2322,7 +2333,7 @@ static ThotBool DisplayGradient (PtrAbstractBox pAb,
   int x, y, width, height;
   unsigned char *pattern;
   
-  gradient = pAb->AbElement->ElParent->gradient;
+  gradient = pAb->AbElement->ElParent->ElGradient;
   if (gradient->next == NULL)
     return FALSE;
  
@@ -2494,7 +2505,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 	   pAb->AbLeafType == LtGraphics ||
 	   pAb->AbLeafType == LtPath) &&
 	  (pAb->AbElement->ElParent) &&
-	  (pAb->AbElement->ElParent->gradient))
+	  (pAb->AbElement->ElParent->ElGradient))
 	{
 	  if (DisplayGradient (pAb, box, frame, selected))
 	    return;          

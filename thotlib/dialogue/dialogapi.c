@@ -2118,8 +2118,10 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    /* redirect handler warnings */
    XtAppSetWarningHandler (*app_context, MyWarningHandler);
    /* Initialisation des options de dialogue */
-   DefaultFont = XmFontListCreate (XLoadQueryFont (GDp, "fixed"), XmSTRING_DEFAULT_CHARSET);
-   formFONT = XmFontListCreate (XLoadQueryFont (GDp, "fixed"), XmSTRING_DEFAULT_CHARSET);
+   DefaultFont = XmFontListCreate (XLoadQueryFont (GDp, "fixed"),
+				   XmSTRING_DEFAULT_CHARSET);
+   formFONT = XmFontListCreate (XLoadQueryFont (GDp, "fixed"),
+				XmSTRING_DEFAULT_CHARSET);
    XmSetColorCalculation ((XmColorProc) ThotXmColorProc);
 #else /* _GTK */
    DefaultFont = gdk_font_load ("fixed");
@@ -2149,18 +2151,20 @@ void TtaChangeDialogueFonts (char *menufont, char *formfont)
   if (menufont)
     {
       XmFontListFree (DefaultFont);
-      DefaultFont = XmFontListCreate (XLoadQueryFont (GDp, menufont), XmSTRING_DEFAULT_CHARSET);
+      DefaultFont = XmFontListCreate (XLoadQueryFont (GDp, menufont),
+				      XmSTRING_DEFAULT_CHARSET);
     }
   if (formfont)
     {
       XmFontListFree (formFONT);
-      formFONT = XmFontListCreate (XLoadQueryFont (GDp, formfont), XmSTRING_DEFAULT_CHARSET);
+      formFONT = XmFontListCreate (XLoadQueryFont (GDp, formfont),
+				   XmSTRING_DEFAULT_CHARSET);
     }
 #else /* _GTK */
   if (menufont != NULL)
-    DefaultFont = gdk_font_load(menufont);
+    DefaultFont = gdk_font_load (menufont);
   if (formfont != NULL)
-    formFONT = gdk_font_load(formfont);
+    formFONT = gdk_font_load (formfont);
 #endif /* _GTK */
 #endif /* _WINDOWS */
 }

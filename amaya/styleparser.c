@@ -243,11 +243,12 @@ static char *SkipProperty (char *ptr)
   deb = ptr;
   while (*ptr != EOS && *ptr != ';' && *ptr != '}')
     {
-      if (ptr[0] == '"' && (ptr == deb || ptr[-1] != '\\'))
+      if (*ptr == '"' && (ptr == deb || ptr[-1] != '\\'))
 	{
 	  /* skip to the end of the string "..." */
 	  ptr++;
-	  while (ptr[0] != '"' || (ptr[0] == '"' && ptr[-1] == '\\'))
+	  while (*ptr != EOS &&
+		 (*ptr != '"' || (*ptr == '"' && ptr[-1] == '\\')))
 	    ptr++;
 	}
       ptr++;
@@ -3077,10 +3078,11 @@ void ParseCSSBackgroundImageCallback (Document doc, Element element,
 	    /* Change the Display Mode to take into account the new presentation */
 	    dispMode = TtaGetDisplayMode (doc);
 	    if (dispMode == DisplayImmediately)
-	      TtaSetDisplayMode (doc, NoComputedDisplay);
-	    /* Restore the display mode */
-	    if (dispMode == DisplayImmediately)
-	      TtaSetDisplayMode (doc, dispMode);
+	      {
+		TtaSetDisplayMode (doc, NoComputedDisplay);
+		/* Restore the display mode */
+		TtaSetDisplayMode (doc, dispMode);
+	      }
 	  }
     }
 }
@@ -3736,7 +3738,7 @@ static void  ParseCSSRule (Element element, PSchema tsch,
       if (*cssRule < 0x41 || *cssRule > 0x7A ||
 	  (*cssRule > 0x5A && *cssRule < 0x60))
 	cssRule++;
-      else
+      else if (*cssRule != EOS)
 	{
 	  found = FALSE;
 	  /* look for the type of property */

@@ -1778,7 +1778,7 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	     
 #endif /* _GL */
 #ifdef _GL
-	     if (pAb->AbElement->gradient)
+	     if (pAb->AbElement->ElGradient)
 	       fprintf (fileDescriptor, " Holding Gradient");
 #endif /* _GL */
 	     fprintf (fileDescriptor, " Base:");

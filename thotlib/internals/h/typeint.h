@@ -507,8 +507,8 @@ typedef struct _ElementDescr
 					 coodinates system*/
  
   PtrTransform          ElTransform;    /* the element is transformed */
-  void                  *animation;
-  void                  *gradient;
+  void                 *ElAnimation;
+  void                 *ElGradient;
   
   union
   {

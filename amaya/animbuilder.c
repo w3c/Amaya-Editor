@@ -68,18 +68,18 @@ void SwitchIconAnimPlay (Document doc, View view, ThotBool state)
 }
 
 #ifdef _GL
-/*-----------------------------------------------
-  AnimPlay : Launch the timer needed to change time.
-  -----------------------------------------------*/
+/*----------------------------------------------------------------------
+  AnimPlay: Launch the timer needed to change time.
+  ----------------------------------------------------------------------*/
 void Anim_Play (Document document, View view)
 {
  TtaPlay (document, view);
 }
 #endif /*_GL*/
 
-/*-----------------------------------------------
-  AddAnimPlayButton : Add a play button
-  -----------------------------------------------*/
+/*----------------------------------------------------------------------
+  AddAnimPlayButton: Add a play button
+  ----------------------------------------------------------------------*/
 void AddAnimPlayButton (Document doc, View view)
 {
 #ifdef _GL
@@ -97,10 +97,10 @@ void AddAnimPlayButton (Document doc, View view)
 #endif /*_GL*/
 }
 
-/*-----------------------------------------------
-get_int_attribute_from_el : Get a int value from an xml attribute
-  -----------------------------------------------*/
-int get_int_attribute_from_el (Element el, int Attribut_Type)
+/*----------------------------------------------------------------------
+  get_int_attribute_from_el: Get a int value from an xml attribute
+  ----------------------------------------------------------------------*/
+static int get_int_attribute_from_el (Element el, int Attribut_Type)
 {
 #ifdef _SVGANIM
   AttributeType attrType;
@@ -118,11 +118,11 @@ int get_int_attribute_from_el (Element el, int Attribut_Type)
 #endif /* _SVGANIM */
 }
 
-/*-----------------------------------------------
-get_intptr_attribute_from_el : Get a int value from an xml attribute,
-but stored as an allocated ptr
-  -----------------------------------------------*/
-int *get_intptr_attribute_from_el (Element el, int Attribut_Type)
+/*----------------------------------------------------------------------
+  get_intptr_attribute_from_el: Get a int value from an xml attribute,
+  but stored as an allocated ptr
+  ----------------------------------------------------------------------*/
+static int *get_intptr_attribute_from_el (Element el, int Attribut_Type)
 {
 #ifdef _SVGANIM
   AttributeType attrType;
@@ -141,11 +141,10 @@ int *get_intptr_attribute_from_el (Element el, int Attribut_Type)
 #endif /* _SVGANIM */
 }
 
-/*-----------------------------------------------
-get_char_attribute_from_el : Get a string 
-value from an xml attribute,
-but stored as an allocated ptr
-  -----------------------------------------------*/
+/*----------------------------------------------------------------------
+  get_char_attribute_from_el: Get a string 
+  value from an xml attribute, but stored as an allocated ptr
+  ----------------------------------------------------------------------*/
 char *get_char_attribute_from_el (Element el, int Attribut_Type)
 {
 #ifdef _SVGANIM
@@ -176,9 +175,9 @@ char *get_char_attribute_from_el (Element el, int Attribut_Type)
 }
 
 
-/*-----------------------------------------------
-register_animated_element : store animation linked list in an element 
-  -----------------------------------------------*/
+/*----------------------------------------------------------------------
+  register_animated_element: store animation linked list in an element 
+  ----------------------------------------------------------------------*/
 void register_animated_element (Element animated)
 {
 #ifdef _SVGANIM
@@ -187,7 +186,7 @@ void register_animated_element (Element animated)
   double start, duration;
   int repeatcount;  
 
-  anim_info = TtaNewAnimInfo ();
+  anim_info = TtaNewAnimation ();
   Read_time_info (animated, &start, &duration);
   TtaSetAnimationTime (anim_info, start, duration);
   elType = TtaGetElementType (animated);

@@ -4752,14 +4752,13 @@ static Element  SetExternalElementType (Element el, Document doc,
   into the main document
   Return TRUE if the parsing of the external document doesn't detect errors.
   ---------------------------------------------------------------------------*/
-void        ParseExternalDocument (char     *fileName,
-				   char     *originalName,
-				   Element   el,
-				   ThotBool  isclosed,
-				   Document  doc,
-				   Language  lang,
-				   char     *typeName)
-  
+void ParseExternalDocument (char     *fileName,
+			    char     *originalName,
+			    Element   el,
+			    ThotBool  isclosed,
+			    Document  doc,
+			    Language  lang,
+			    char     *typeName)
 {
   char         *schemaName = NULL, *tempName = NULL, *ptr = NULL;
   ElementType   elType;
@@ -4848,9 +4847,7 @@ void        ParseExternalDocument (char     *fileName,
     DocumentSSchema = TtaGetDocumentSSchema (doc);
   
   /* Set document URL */
-  docURL = TtaGetMemory (strlen (originalName) + 1);
-  strcpy (docURL, originalName);
-
+  docURL = TtaStrdup (originalName);
   if (docURL)
     {
       s = TtaStrdup (docURL);

@@ -2139,7 +2139,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	}
      
 #ifdef _GL
-      if (pAb->AbElement->animation)
+      if (pAb->AbElement->ElAnimation)
 	{
 	  i = ActiveFrame;
 	  ActiveFrame = frame;

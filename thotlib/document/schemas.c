@@ -579,9 +579,9 @@ void SetElSchemasExtens (PtrElement pEl, PtrDocSchemasDescr pPfS)
 
   if (pEl && pEl->ElStructSchema)
     {
-      pEl->ElFirstSchDescr = pPfS;
       if (!pEl->ElTerminal)
 	{
+	  pEl->ElFirstSchDescr = pPfS;
 	  pChild = pEl->ElFirstChild;
 	  while (pChild)
 	    {

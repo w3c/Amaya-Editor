@@ -153,12 +153,9 @@ extern void TtaAddTransform ( Element element,
 extern void TtaInsertTransform ( Element element,
                                  void *transform,
                                  Document document );
-extern void TtaFreeTransform ( void *transform );
 extern void TtaSetElCoordinateSystem ( Element element );
-extern void TtaFreeAnimation ( void *void_a_list );
 extern void TtaAppendAnim ( Element element,
                             void *anim );
-extern void *TtaNewAnimInfo ( void );
 extern void *TtaCopyAnim ( void *void_src );
 extern void TtaSetAnimTypetoMotion ( void *anim );
 extern void TtaSetAnimTypetoTransform ( void *anim );
@@ -354,12 +351,9 @@ extern void TtaAddTransform (/* Element element,
 extern void TtaInsertTransform (/* Element element,
                                    void *transform,
                                    Document document */);
-extern void TtaFreeTransform (/* void *transform */);
 extern void TtaSetElCoordinateSystem (/* Element element */);
-extern void TtaFreeAnimation (/* void *void_a_list */);
 extern void TtaAppendAnim (/* Element element,
                               void *anim */);
-extern void *TtaNewAnimInfo (/* void */);
 extern void *TtaCopyAnim (/* void *void_src */);
 extern void TtaSetAnimTypetoMotion (/* void *anim */);
 extern void TtaSetAnimTypetoTransform (/* void *anim */);

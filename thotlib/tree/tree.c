@@ -3140,10 +3140,10 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 #ifdef _GL
 	      if (pSource->ElTransform)
 		pEl->ElTransform = TtaCopyTransform (pSource->ElTransform);
-	      if (pSource->animation)
-		pEl->animation = TtaCopyAnim (pSource->animation);
-	      /* if (pSource->gradient) */
-/* 		pEl->gradient = TtaCopyGradient (pSource->gradient); */
+	      if (pSource->ElAnimation)
+		pEl->ElAnimation = TtaCopyAnim (pSource->ElAnimation);
+	      /* if (pSource->ElGradient) */
+/* 		pEl->ElGradient = TtaCopyGradient (pSource->ElGradient); */
 #endif /* _GL */
 	      pEl->ElTerminal = pSource->ElTerminal;
 	      if (!pEl->ElTerminal)

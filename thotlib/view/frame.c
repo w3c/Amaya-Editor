@@ -240,6 +240,7 @@ static void AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
        pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
       *tocreate = pBox;
 }
+
 /*----------------------------------------------------------------------
   DrawFilledBox draws a box with background or borders.
    Clipping is done by xmin, xmax, ymin, ymax.
@@ -357,6 +358,8 @@ void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
 	}
       else
 	{
+	  /*if (!setWindow && pBox->BxFill)
+	    printf ("DrawBackground %s\n", pAb->AbElement->ElLabel);*/
 	  if (!setWindow && pBox->BxFill)
 	    /* draw the box background */
 	    DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height,
@@ -368,12 +371,15 @@ void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
 	      pres = imageDesc->PicPresent;
 	      if (pres == DefaultPres)
 		pres = FillFrame;
+	      /*if (pres == YRepeat || pres == FillFrame || !pAb->AbTruncatedHead)
+		printf ("DrawPicture %s\n", pAb->AbElement->ElLabel);*/
 	      if (pres == YRepeat || pres == FillFrame || !pAb->AbTruncatedHead)
 		DrawPicture (pBox, imageDesc, frame,  xd - x, yd - y, width, height);
 	    }
 	}
     }
 }
+
 /*----------------------------------------------------------------------
  OpacityAndTransformNext : Test before going on to a next Box
   ----------------------------------------------------------------------*/

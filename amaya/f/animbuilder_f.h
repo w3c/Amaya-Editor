@@ -11,10 +11,6 @@ extern void SwitchIconAnimPlay ( Document doc,
                                  ThotBool state );
 extern void AddAnimPlayButton ( Document doc,
                                 View view );
-extern int get_int_attribute_from_el ( Element el,
-                                       int Attribut_Type );
-extern int *get_intptr_attribute_from_el ( Element el,
-                                           int Attribut_Type );
 extern char *get_char_attribute_from_el ( Element el,
                                           int Attribut_Type );
 extern void register_animated_element ( Element animated );
@@ -26,10 +22,6 @@ extern void SwitchIconAnimPlay (/* Document doc,
                                    ThotBool state */);
 extern void AddAnimPlayButton (/* Document doc,
                                   View view */);
-extern int get_int_attribute_from_el (/* Element el,
-                                         int Attribut_Type */);
-extern int *get_intptr_attribute_from_el (/* Element el,
-                                             int Attribut_Type */);
 extern char *get_char_attribute_from_el (/* Element el,
                                             int Attribut_Type */);
 extern void register_animated_element (/* Element animated */);

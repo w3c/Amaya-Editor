@@ -354,7 +354,7 @@ void InitLanguage ()
    i = 5;
    strcpy (LangTable[i].LangName, "Finnish");
    strcpy (LangTable[i].LangCode, "fi");
-   LangTable[i].LangScript = 'L';
+   LangTable[i].LangScript = '4';
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
    strcpy (LangTable[i].LangPattern, "finish.ptn");

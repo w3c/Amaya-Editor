@@ -573,7 +573,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
       strcpy (pReplaceString, txt);
       /* convert the string if necessary */
       TtaFreeMemory (RString);
-      RString = TtaConvertByteToCHAR (pReplaceString, ISO_8859_1);
+      RString = TtaConvertByteToCHAR (pReplaceString, DialogCharset);
       RStringLen = ustrlen (RString);
       /* bascule automatiquement le remplacement */
       break;

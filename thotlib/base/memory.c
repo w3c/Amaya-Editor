@@ -187,6 +187,66 @@ void *TtaRealloc (void *ptr, unsigned int n)
 #endif /*_DEBUG*/
 
 /*----------------------------------------------------------------------
+   TtaNewTransform
+   ---------------------------------------------------------------------- */
+void *TtaNewTransform ()	   
+{
+   PtrTransform pPa;
+
+   pPa = TtaGetMemory (sizeof (Transform));
+   return (pPa);
+}
+
+/*----------------------------------------------------------------------
+   TtaFreeTransform
+  ----------------------------------------------------------------------*/
+void TtaFreeTransform (void *transform)
+{
+  PtrTransform       pPa = (PtrTransform) transform;
+  if (pPa == NULL)
+    return;
+  if (pPa->Next)
+    TtaFreeTransform (pPa->Next);
+  TtaFreeMemory (pPa);
+}
+
+/*----------------------------------------------------------------------
+   TtaNewAnimation
+  ----------------------------------------------------------------------*/
+void *TtaNewAnimation ()
+{
+  Animated_Element *anim_info;
+
+  anim_info = TtaGetMemory (sizeof (Animated_Element));
+  anim_info->next = NULL;
+  anim_info->duration = 0;
+  anim_info->start = 0;
+  anim_info->action_time = 0;
+  anim_info->from = NULL;
+  anim_info->to = NULL;
+  anim_info->AttrName = NULL;
+  anim_info->repeatCount = 1;
+  anim_info->Fill = Otherfill;
+  return anim_info;
+}
+
+/*----------------------------------------------------------------------
+   TtaFreeAnimation
+  ----------------------------------------------------------------------*/
+void TtaFreeAnimation (void *void_a_list)
+{  
+  Animated_Element *a_list = (Animated_Element *)void_a_list;
+  if (a_list == NULL)
+    /* empty list */
+    return;
+  TtaFreeAnimation (a_list->next);
+  TtaFreeMemory (a_list->from);
+  TtaFreeMemory (a_list->to);
+  TtaFreeMemory (a_list->AttrName);
+  TtaFreeMemory (a_list);
+}
+
+/*----------------------------------------------------------------------
    FreeAll frees all allocated memory
   ----------------------------------------------------------------------*/
 void                FreeAll ()
@@ -214,6 +274,18 @@ void                FreeAll ()
   while (PtFree_Element != NULL)
     {
       ptr = (void *)PtFree_Element;
+      if (PtFree_Element->ElTransform)
+	{
+	  /* free animation contexts */
+	  TtaFreeTransform (PtFree_Element->ElTransform);
+	  PtFree_Element->ElTransform = NULL;
+	}
+      if (PtFree_Element->ElAnimation)
+	{
+	  /* free animation contexts */
+	  TtaFreeAnimation (PtFree_Element->ElAnimation);
+	  PtFree_Element->ElAnimation = NULL;
+	}
       PtFree_Element = PtFree_Element->ElNext;
       TtaFreeMemory (ptr);
     }
@@ -638,7 +710,7 @@ void GetElement (PtrElement * pEl)
        pNewEl->ElTerminal = FALSE;
        pNewEl->ElSystemOrigin = FALSE;
        pNewEl->ElTransform = NULL;
-       pNewEl->animation = NULL;       
+       pNewEl->ElAnimation = NULL;       
        pNewEl->ElFirstChild = NULL;
 
        NbUsed_Element++;
@@ -652,12 +724,16 @@ void FreeElement (PtrElement pEl)
 {
    PtrPathSeg       pPa, pPaNext;
 
-#ifdef _GL
    if (pEl->ElTransform)
-     TtaFreeTransform (pEl->ElTransform);
-   if (pEl->animation)
-     TtaFreeAnimation (pEl->animation);
-#endif /*_GL*/
+     {
+       TtaFreeTransform (pEl->ElTransform);
+       pEl->ElTransform = NULL;
+     }
+   if (pEl->ElAnimation)
+     {
+       TtaFreeAnimation (pEl->ElAnimation);
+       pEl->ElAnimation = NULL;
+     }
    if (pEl->ElLeafType == LtText && pEl->ElText)
      {
        FreeTextBuffer (pEl->ElText);

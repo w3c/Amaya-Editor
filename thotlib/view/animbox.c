@@ -767,16 +767,15 @@ static ThotBool is_animated_now (Animated_Element *animated, AnimTime *current_t
 /*----------------------------------------------------------------------
   animate_box : animate a a box using all animation that apply on him
   ----------------------------------------------------------------------*/
-static void animate_box (PtrElement El,
-			 AnimTime current_time)
+static void animate_box (PtrElement El, AnimTime current_time)
 {
   Animated_Element *animated = NULL;
   AnimTime          rel_time;
 
   if (El)
-    if (El->animation)
+    if (El->ElAnimation)
       {      
-	animated = (Animated_Element *) El->animation;
+	animated = (Animated_Element *) El->ElAnimation;
 	while (animated)
 	  {
 	    rel_time = current_time;
@@ -860,7 +859,7 @@ void AnimatedBoxDel (PtrElement element)
   Animated_Cell *current, *previous;
   ThotBool not_found = TRUE;
   
-  if (element->animation)
+  if (element->ElAnimation)
     {
       if (FrameTable[ActiveFrame].Animated_Boxes != NULL)
 	{
