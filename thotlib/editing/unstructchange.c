@@ -153,16 +153,15 @@ PtrDocument         pDoc;
    int                 NSiblings, i, asc;
    boolean             stop, ok, possible;
 
-   pElem = pEl;
    pPasted = NULL;
    pAncest = NULL;
    pOrig = pSavedEl->PeElement;
    /* futur pere de l'element colle' */
-   pParent = pElem->ElParent;
+   pParent = pEl->ElParent;
    /* on calcule le nombre de freres qui precederont l'element */
    /* lorsqu'il sera mis dans l'arbre abstrait */
    NSiblings = 0;
-   pSibling = pElem;
+   pSibling = pEl;
    while (pSibling->ElPrevious != NULL)
      {
 	NSiblings++;
@@ -170,31 +169,34 @@ PtrDocument         pDoc;
      }
    if (!before)
       NSiblings++;
+   pElem = pEl;
    /* verifie si l'element peut etre colle' au meme niveau que pEl */
-   ok = AllowedSibling (pElem, pDoc, pOrig->ElTypeNumber,
+   ok = AllowedSibling (pEl, pDoc, pOrig->ElTypeNumber,
 			pOrig->ElStructSchema, before, TRUE, FALSE);
    if (!ok)
       /* l'element ne peut pas etre colle' au meme niveau */
       /* s'il faut coller en debut ou fin d'element, on essaie de remonter */
       /* d'un ou plusieurs niveaux */
-      while (!ok && pElem != NULL)
-	 if ((before && pElem->ElPrevious == NULL) ||
-	     (!before && pElem->ElNext == NULL))
-	   {
-	      pElem = pElem->ElParent;
-	      if (pElem != NULL)
-		 ok = AllowedSibling (pElem, pDoc, pOrig->ElTypeNumber,
-				pOrig->ElStructSchema, before, TRUE, FALSE);
-	   }
-	 else
-	    pElem = NULL;
+     {
+        pElem = pEl;
+        while (!ok && pElem != NULL)
+	   if ((before && pElem->ElPrevious == NULL) ||
+	       (!before && pElem->ElNext == NULL))
+	     {
+	        pElem = pElem->ElParent;
+	        if (pElem != NULL)
+		   ok = AllowedSibling (pElem, pDoc, pOrig->ElTypeNumber,
+				   pOrig->ElStructSchema, before, TRUE, FALSE);
+	     }
+	   else
+	     pElem = NULL;
+     }
 
    if (!ok)
      {
 	/* essaie de creer des elements englobants pour l'element a coller */
 	/* on se fonde pour cela sur le type des anciens elements ascendants */
 	/* de l'element a coller */
-	pElem = pEl;
 	stop = FALSE;
 	/* on commence par l'ancien element pere de l'element a coller */
 	asc = 0;
@@ -206,6 +208,7 @@ PtrDocument         pDoc;
 		stop = TRUE;
 	     else
 	       {
+		  pElem = pEl;
 		  possible = FALSE;
 		  /* l'element englobant de l'element a coller peut-il etre un
 		     voisin de l'element a cote' duquel on colle ? */
@@ -214,7 +217,7 @@ PtrDocument         pDoc;
 		     /* oui ! */
 		     possible = TRUE;
 		  else
-		     /* nom, on regarde s'il peut etre un voisin d'un ascendant
+		     /* non, on regarde s'il peut etre un voisin d'un ascendant
 		        de l'element a cote' duquel on colle */
 		    {
 		       while (!possible && pElem != NULL)
