@@ -198,7 +198,7 @@
 196 Lainaus/Siteeraus (q)
 197 BiDi syrjäyttävänä (bdo)
 198 Uusi kaava (math)
-199 **Basic &Elements
+199 **Basic math &Elements
 200 Teksti (mtext)
 201 Tunniste (mi)
 202 Numero (mn)
@@ -207,7 +207,7 @@
 205 Merkki (&&xxx;)
 206 InvisibleTimes
 207 Käytä funktiota
-208 **&Constructions
+208 **Math &Constructs
 209 Juuri (mroot)
 210 Neliöjuuri (msqrt)
 211 Sisällytä (menclose)

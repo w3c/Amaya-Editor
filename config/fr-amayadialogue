@@ -198,7 +198,7 @@
 196 Citation (q)
 197 BiDi (bdo)
 198 Nouvelle formule (math)
-199 &Eléments de base
+199 &Eléments math de base
 200 Texte (mtext)
 201 Identificateur (mi)
 202 Nombre (mn)
@@ -207,7 +207,7 @@
 205 Caractère (&&xxx;)
 206 InvisibleTimes
 207 ApplyFunction
-208 &Constructions
+208 &Constructions math
 209 Racine (mroot)
 210 Racine carrée (msqrt)
 211 Englobe (menclose)
