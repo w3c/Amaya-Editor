@@ -996,7 +996,8 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
 	      if (editOp->EoFirstSelectedEl == editOp->EoLastSelectedEl)
 		i = editOp->EoLastSelectedChar;
 	      else
-		i = TtaGetElementVolume ((Element)(editOp->EoFirstSelectedEl));
+		i = TtaGetElementVolume ((Element)(editOp->EoFirstSelectedEl))
+		    + 1;
 	      TtaSelectString (doc, (Element)(editOp->EoFirstSelectedEl),
 			       editOp->EoFirstSelectedChar, i);
 	    }

@@ -28,71 +28,53 @@
 /*----------------------------------------------------------------------
    CreateInheritedAttrTable
 
-   Allocate and initialize an InheritAttrTable for element pEl.
+   Allocate and initialize an InheritAttrTable for element pEl in presentation
+   schema pSP.
    This table indicates attributes that transmit presentation rules
    to element pEl.
-   table[attr] = TRUE if the presentation schema contains in its
+   table[attr] != '\0' if the presentation schema contains in its
    ATTRIBUTES section a rule of the form
 
       AttrName(ElType): ...
-
-   AttrName is the name of attribute attr (rank of attribute definition
-   in structure schema) and ElType is the type of element pEl.
   ----------------------------------------------------------------------*/
-void  CreateInheritedAttrTable (PtrElement pEl, PtrDocument pDoc)
+void  CreateInheritedAttrTable (PtrElement pEl, PtrPSchema pPS,
+				PtrDocument pDoc)
 {
   int                 attr;
   int                 rule;
   AttributePres      *pAttrPR;
   InheritAttrTable   *table;
-  PtrPSchema          pSchP, pSP;
-  PtrHandlePSchema    pHd;
 
-  pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
-  if (pSP != NULL)
+  if (pPS != NULL &&
+      pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1] == NULL)
     {
       /* table allocation and initialization */
       if ((table = (InheritAttrTable*) TtaGetMemory (pEl->ElStructSchema->SsNAttributes * sizeof (char))) == NULL)
         /* memory exhausted */
         return;
-      pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1] = table;
+      pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1] = table;
       /* for all attributes defined in the structure schema */
       for (attr = 0; attr < pEl->ElStructSchema->SsNAttributes; attr++)
 	{
-	  (*table)[attr] = '\0';
-	  /* check the main presentation schema and all its extensions */
-	  pSchP = pSP;
-	  pHd = NULL;
-	  while (pSchP)
-	    {
-	      pAttrPR = pSchP->PsAttrPRule->AttrPres[attr];
-	      if (pAttrPR != NULL)
-		/* check all presentation rules associated with that attr*/
-		for (rule = 0; rule < pSchP->PsNAttrPRule->Num[attr]; rule++)
+	  (*table)[attr] = '\0';  /* no inheritance by default */
+	  pAttrPR = pPS->PsAttrPRule->AttrPres[attr];
+	  if (pAttrPR != NULL)
+	    /* check all presentation rules associated with that attr */
+	    for (rule = 0; rule < pPS->PsNAttrPRule->Num[attr]; rule++)
+	      {
+		if (pAttrPR->ApElemType == pEl->ElTypeNumber)
 		  {
-		    if (pAttrPR->ApElemType == pEl->ElTypeNumber)
-		      {
-			if (pAttrPR->ApElemInherits)
-			  (*table)[attr] = 'S';
-			else
-			  (*table)[attr] = 'H';
-		      }
-		    pAttrPR = pAttrPR->ApNextAttrPres;
+		    if (pAttrPR->ApElemInherits)
+		      /* the element inherits some presentation properties
+			 from its ancestors or from itself */
+		      (*table)[attr] = 'S';
+		    else
+		      /* the element inherits some presentation properties
+			 from its ancestors */
+		      (*table)[attr] = 'H';
 		  }
-	      /* next P schema */
-	      if (pHd == NULL)
-		/* extension schemas have not been checked yet */
-		/* get the first extension schema */
-		pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc, pEl);
-	      else
-		/* get the next extension schema */
-		pHd = pHd->HdNextPSchema;
-	      if (pHd == NULL)
-		/* no more extension schemas. Stop */
-		pSchP = NULL;
-	      else
-		pSchP = pHd->HdPSchema;
-	    }
+		pAttrPR = pAttrPR->ApNextAttrPres;
+	      }
 	}
     }
 }

@@ -2146,15 +2146,11 @@ RULES
 	HorizPos: Left = Enclosing . Left;
 	Hyphenate: No;
 	Adjust: Left;
-	PaddingLeft: 0.5 cm;
-	PaddingRight: 0.5 cm;
 #endif
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		PaddingTop: 0;
-		PaddingLeft: 0;
-		PaddingRight: 0;
 #ifdef PAGE
 		Adjust: Left;
 #else

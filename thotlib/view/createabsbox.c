@@ -2663,7 +2663,9 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 	       /* traite les regles de creation dues a l'heritage des
 		  attributs */
 	       pSchP = PresentationSchema (pEl->ElStructSchema, pDoc);
-	       if (pSchP != NULL)
+	       pHd = NULL;
+	       while (pSchP)
+		 {
 		 if (pSchP->PsNInheritedAttrs->Num[pEl->ElTypeNumber -1])
 		   /* il y a heritage possible */
 		   {
@@ -2671,7 +2673,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 		     if (!inheritTable)
 		       {
 			 /* cette table n'existe pas on la genere */
-			 CreateInheritedAttrTable (pEl, pDoc);
+			 CreateInheritedAttrTable (pEl, pSchP, pDoc);
 			 inheritTable = pSchP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
 		       }
 		     for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
@@ -2686,50 +2688,43 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 			 if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l,
 			               pEl->ElStructSchema, &pElAttr)) != NULL)
 			   {
-			     /* on cherchera d'abord dans le schema de */
-			     /* presentation principal de l'attribut */
-			     pSchP = PresentationSchema (pAttr->AeAttrSSchema,
-							 pDoc);
-			     pHd = NULL;
-			     while (pSchP != NULL)
+			     /* process all values of the attribute, in case of
+				a text attribute with multiple values */
+			     valNum = 1;
+			     do
 			       {
-				 /* process all values of the attribute, in
-				    case of a text attribute with multiple
-				    values */
-				 valNum = 1;
-				 do
-				   {
-				     pRule = AttrPresRule (pAttr, pEl, TRUE,
-					     NULL, pSchP, &valNum, &attrBlock);
-				     if (pRule && !pRule->PrDuplicate)
-				        ApplCrPresRule (pAttr->AeAttrSSchema,
-						   pSchP, &pAbbCreated, pAttr,
-						   pDoc, pAb, head, pRule);
-				   }
-				 while (valNum > 0);
-				 if (pHd == NULL)
-				   /* on n'a pas encore cherche' dans les schemas
-				   de presentation additionnels. On prend le
-				   premier schema additionnel si on travaille
-				   pour la vue principale, sinon on ignore les
-				   schemas additionnels */
-				   {
-				     if (pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView == 1)
-				       pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc, pEl);
-				   }
-				 else
-				   /* passe au schema additionnel suivant */
-				   pHd = pHd->HdNextPSchema;
-				 if (pHd == NULL)
-				   /* il n'y a pas (ou plus) de schemas
-				      additionnels a prendre en compte */
-				   pSchP = NULL;
-				 else
-				   pSchP = pHd->HdPSchema;
+				 pRule = AttrPresRule (pAttr, pEl, TRUE, NULL,
+						   pSchP, &valNum, &attrBlock);
+				 if (pRule && !pRule->PrDuplicate)
+				   ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
+						   &pAbbCreated, pAttr, pDoc,
+						   pAb, head, pRule);
 			       }
+			     while (valNum > 0);
 			   }
 			 }
 		   }
+		 if (pHd == NULL)
+		   /* on n'a pas encore cherche' dans les schemas de
+		      presentation additionnels. On prend le premier schema
+		      additionnel si on travaille pour la vue principale,
+		      sinon on ignore les schemas additionnels */
+		   {
+		     if (pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView == 1)
+		       pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc,
+						    pEl);
+		   }
+		 else
+		   /* passe au schema additionnel suivant */
+		   pHd = pHd->HdNextPSchema;
+		 if (pHd == NULL)
+		   /* il n'y a pas (ou plus) de schemas
+		      additionnels a prendre en compte */
+		   pSchP = NULL;
+		 else
+		   pSchP = pHd->HdPSchema;
+		 }
+
 	       /* traite les regles de creation associees aux attributs de */
 	       /* l'element */
 	       pAttr = pEl->ElFirstAttr;
@@ -3210,6 +3205,7 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
                        pFirstAncest;
    PtrAttribute        pAttr;
    PtrPSchema          pSP;
+   PtrHandlePSchema    pHd;
    InheritAttrTable   *inheritTable;
    ThotBool            ok, stop;
    TypeUnit            unit;
@@ -3287,30 +3283,47 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
    /* cherche si les attributs herites par l'element modifient la */
    /* visibilite */
    pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
-   if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
+   pHd = NULL;
+   while (pSP)
      {
-	/* il y a heritage possible */
-	if ((inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
-	  {
-	     /* cette table n'existe pas on la genere */
-	     CreateInheritedAttrTable (pEl, pDoc);
-	     inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
-	  }
-	for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
-	   if ((*inheritTable)[l - 1])
-	     /* pEl inherits attribute l */
+       if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
+	 {
+	   /* il y a heritage possible */
+	   if ((inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
 	     {
-	       if ((*inheritTable)[l - 1] == 'S')
-		 pFirstAncest = pEl;
-	       else
-		 pFirstAncest = pEl->ElParent;	       
-	       if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l,
-						  pEl->ElStructSchema,
-						  &pElAttr)) != NULL)
-		 /* cherche si l existe au dessus */
-		 ApplyVisibRuleAttr (pEl, pAttr, pElAttr, pDoc, vis, viewNb,
-				     &ok, TRUE);
+	       /* cette table n'existe pas on la genere */
+	       CreateInheritedAttrTable (pEl, pSP, pDoc);
+	       inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
 	     }
+	   for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
+	     if ((*inheritTable)[l - 1])
+	       /* pEl inherits attribute l */
+	       {
+		 if ((*inheritTable)[l - 1] == 'S')
+		   pFirstAncest = pEl;
+		 else
+		   pFirstAncest = pEl->ElParent;	       
+		 if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l,
+						    pEl->ElStructSchema,
+						    &pElAttr)) != NULL)
+		   /* cherche si l existe au dessus */
+		   ApplyVisibRuleAttr (pEl, pAttr, pElAttr, pDoc, vis, viewNb,
+				       &ok, TRUE);
+	       }
+	 }
+       /* next P schema */
+       if (pHd == NULL)
+	 /* extension schemas have not been checked yet */
+	 /* get the first extension schema */
+	 pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc, pEl);
+       else
+	 /* get the next extension schema */
+	 pHd = pHd->HdNextPSchema;
+       if (pHd == NULL)
+	 /* no more extension schemas. Stop */
+	 pSP = NULL;
+       else
+	 pSP = pHd->HdPSchema;
      }
 
    /* cherche si les attributs de l'element modifient la visibilite */
@@ -3565,7 +3578,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
   int                i, view, l, valNum;
   PtrPRule           pRuleView, pRule, pR;
   PtrHandlePSchema   pHd;
-  PtrPSchema         pSchPres, pSchPattr, pSP;
+  PtrPSchema         pSchPres, pSchPattr;
   PtrAttribute       pAttr;
   PtrElement         pElAttr, pFirstAncest;
   PtrSSchema	     pSSattr;
@@ -3696,8 +3709,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
      get presentation rules associated with attributes */
   pHd = NULL;
   /* look at the main presentation schema first */
-  pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
-  pSchPres = pSP;
+  pSchPres = PresentationSchema (pEl->ElStructSchema, pDoc);
   while (pSchPres != NULL)
     {
       /* first, get rules associated with the element type only if it's not the
@@ -3752,15 +3764,15 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
          for view 1 if it's a P schema extension */
       if (viewSch == 1 || pHd == NULL)
 	{
-	  if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
+	  if (pSchPres->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
 	    /* the element type inherits some attributes */
 	    {
-	      inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
+	      inheritTable = pSchPres->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
 	      if (!inheritTable)
 		/* inheritance table does not exist. Create it */
 		{
-		  CreateInheritedAttrTable (pEl, pDoc);
-		  inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber-1];
+		  CreateInheritedAttrTable (pEl, pSchPres, pDoc);
+		  inheritTable = pSchPres->PsInheritedAttr->ElInherit[pEl->ElTypeNumber-1];
 		}
 	      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
 		if ((*inheritTable)[l - 1])

@@ -243,7 +243,7 @@ void TtaExtendSelection (Document document, Element element, int lastCharacter)
       ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection,
 				&firstChar, &lastChar);
       dispMode = TtaGetDisplayMode (document);
-      if (dispMode == DisplayImmediately || dispMode == DeferredDisplay)
+      if (dispMode == DisplayImmediately)
 	/* The command can be executed */
 	{
 	  if (ok)
@@ -259,7 +259,7 @@ void TtaExtendSelection (Document document, Element element, int lastCharacter)
       if (!ok)
 	/* Error: no selection */
 	TtaError (ERR_no_selection_in_document);
-      else if (dispMode == DisplayImmediately || dispMode == DeferredDisplay)
+      else if (dispMode == DisplayImmediately)
 	ExtendSelection ((PtrElement) element, lastCharacter, TRUE, FALSE, FALSE);
       else
 	NewSelectionExtension (document, element, lastCharacter);

@@ -464,7 +464,7 @@ void ApplyAttrPRulesToElem (PtrElement pEl, PtrDocument pDoc,
 
 
 /*----------------------------------------------------------------------
-   Applique au sous arbre pEl du document pDoc les     
+   Applique au sous-arbre pEl du document pDoc les     
    regles de presentation heritees de l'attribut pAttr		
    On arrete la recursion quand on rencontre un fils portant       
    lui-meme un attribut de meme type que pAttr			
@@ -472,42 +472,60 @@ void ApplyAttrPRulesToElem (PtrElement pEl, PtrDocument pDoc,
 void ApplyAttrPRulesToSubtree (PtrElement pEl, PtrDocument pDoc,
 			       PtrAttribute pAttr, PtrElement pElAttr)
 {
-   PtrElement          pChild;
-   PtrAttribute        pOldAttr;
-   PtrPSchema          pPS;
-   InheritAttrTable   *inheritedAttr;
+  PtrElement          pChild;
+  PtrAttribute        pOldAttr;
+  PtrPSchema          pPS;
+  InheritAttrTable   *inheritedAttr;
+  PtrHandlePSchema    pHd;
 
-   pOldAttr = GetAttributeOfElement (pEl, pAttr);
-   if (pOldAttr == NULL || pOldAttr == pAttr)
-     {
-	/* on traite d'abord tout le sous-arbre */
-	if (!pEl->ElTerminal)
-	   for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
-	      if (pChild->ElStructSchema == pEl->ElStructSchema)
-		 /* same structure schema */
-		 ApplyAttrPRulesToSubtree (pChild, pDoc, pAttr, pElAttr);
+  pOldAttr = GetAttributeOfElement (pEl, pAttr);
+  if (pOldAttr == NULL || pOldAttr == pAttr)
+    {
+      /* on traite d'abord tout le sous-arbre */
+      if (!pEl->ElTerminal)
+	for (pChild = pEl->ElFirstChild; pChild != NULL;
+	     pChild = pChild->ElNext)
+	  if (pChild->ElStructSchema == pEl->ElStructSchema)
+	    /* same structure schema */
+	    ApplyAttrPRulesToSubtree (pChild, pDoc, pAttr, pElAttr);
 
-	/* on traite l'element lui-meme */
-	/* on cherche d'abord si pEl herite de pAttr */
-	pPS = PresentationSchema (pEl->ElStructSchema, pDoc);
-	if (pPS != NULL)
-	   if (pPS->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
-	     {
-		/* pEl peut heriter d'un attribut */
-		if ((inheritedAttr = pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
-		  {
-		     /* la table d'heritage n'existe pas. On la cree */
-		     CreateInheritedAttrTable (pEl, pDoc);
-		     inheritedAttr = pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
-		  }
-		if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
-		  {
-		     /* pEl herite de l'attribut pAttr */
-		     /* on lui applique la presentation correspondante */
-		     ApplyAttrPRulesToElem (pEl, pDoc, pAttr, pElAttr, TRUE);
-		  }
-	     }
-     }
+      /* on traite l'element lui-meme */
+      /* on cherche d'abord si pEl herite de pAttr */
+      pPS = PresentationSchema (pEl->ElStructSchema, pDoc);
+      pHd = NULL;
+      while (pPS)
+	{
+	  if  (pPS->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1] > 0)
+	    {
+	      /* pEl peut heriter d'au moins un attribut */
+	      if ((inheritedAttr = pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
+		{
+		  /* la table d'heritage n'existe pas. On la cree */
+		  CreateInheritedAttrTable (pEl, pPS, pDoc);
+		  inheritedAttr = pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
+		}
+	      if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
+		{
+		  /* pEl herite de l'attribut pAttr */
+		  /* on lui applique la presentation correspondante */
+		  ApplyAttrPRulesToElem (pEl, pDoc, pAttr, pElAttr, TRUE);
+		}
+	    }
+	  /* next P schema */
+	  if (pHd == NULL)
+	    /* extension schemas have not been checked yet */
+	    /* get the first extension schema */
+	    pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc, pEl);
+	  else
+	    /* get the next extension schema */
+	    pHd = pHd->HdNextPSchema;
+	  if (pHd == NULL)
+	    /* no more extension schemas. Stop */
+	    pPS = NULL;
+	  else
+	    pPS = pHd->HdPSchema;	
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -714,32 +732,50 @@ void RemoveInheritedAttrPresent (PtrElement pEl, PtrDocument pDoc,
   PtrElement          pChild;
   PtrPSchema          pPS;
   InheritAttrTable   *inheritedAttr;
+  PtrHandlePSchema    pHd;
 
   if (GetAttributeOfElement (pEl, pAttr) == NULL)
     {
       /* pEl does not have an attribute of that type */
       /* process the subtree */
       if (!pEl->ElTerminal)
-	for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
+	for (pChild = pEl->ElFirstChild; pChild != NULL;
+	     pChild = pChild->ElNext)
 	  if (pChild->ElStructSchema == pEl->ElStructSchema)
 	    /* same structure schema */
 	    RemoveInheritedAttrPresent (pChild, pDoc, pAttr, pElAttr);
 
       /* process element pEl itself */
       pPS = PresentationSchema (pEl->ElStructSchema, pDoc);
-      if (pPS != NULL)
-	if (pPS->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
-	  {
-	    /* pEl can inherit some presentation rules from attributes */
-	    if ((inheritedAttr = pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
-	      {
-		/* la table d'heritage n'existe pas. On la cree */
-		CreateInheritedAttrTable (pEl, pDoc);
-		inheritedAttr = pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
-	      }
-	    if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
-	      RemoveAttrPresentation (pEl, pDoc, pAttr, pElAttr, TRUE, NULL);
-	  }
+      pHd = NULL;
+      while (pPS)
+	{
+	  if (pPS->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
+	    {
+	      /* pEl can inherit some presentation rules from attributes */
+	      if ((inheritedAttr = pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
+		{
+		  /* la table d'heritage n'existe pas. On la cree */
+		  CreateInheritedAttrTable (pEl, pPS, pDoc);
+		  inheritedAttr = pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
+		}
+	      if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
+		RemoveAttrPresentation (pEl, pDoc, pAttr, pElAttr, TRUE, NULL);
+	    }
+	  /* next P schema */
+	  if (pHd == NULL)
+	    /* extension schemas have not been checked yet */
+	    /* get the first extension schema */
+	    pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc, pEl);
+	  else
+	    /* get the next extension schema */
+	    pHd = pHd->HdNextPSchema;
+	  if (pHd == NULL)
+	    /* no more extension schemas. Stop */
+	    pPS = NULL;
+	  else
+	    pPS = pHd->HdPSchema;
+	}
     }
 }
 

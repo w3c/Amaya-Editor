@@ -338,17 +338,17 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	      /* look at the rules associated with attributes of ancestors
 		 that apply to the element, for all views if it's the main
 		 P schema, but only for view 1 if it's a P schema extension */
-	      /* presentation box do not inherit any rule from attributes */
+	      /* presentation boxes do not inherit any rule from attributes */
 	      if (presNum == 0)
 		{
-		  if (pSchP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
+		  if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
 		    /* this element inherits some attributes */
 		    {
-		      if ((inheritTable = pSchP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
+		      if ((inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
 			{
 			  /* inheritance table does not exist. Create it */
-			  CreateInheritedAttrTable (pEl, pDoc);
-			  inheritTable = pSchP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
+			  CreateInheritedAttrTable (pEl, pSP, pDoc);
+			  inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
 			}
 		      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
 			if ((*inheritTable)[l - 1])
@@ -488,6 +488,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	    /* no schema any more. stop */
 	    pSP = NULL;
 	}
+
       /* look at all specific presentation rules attached to the element */
       if (presNum == 0)
 	{
@@ -1469,6 +1470,7 @@ void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
 {
   PtrPRule            pRPres;
   PtrPSchema          pSchP, pSP;
+  PtrHandlePSchema    pHd;
   PtrAttribute        pAttr;
   PtrElement          pElAttr, pFirstAncest;
   int                 l, valNum;
@@ -1489,45 +1491,62 @@ void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
 	  /* l'element herite-t-il d'attributs qui ont des fonctions de */
 	  /* presentation */
 	  pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
-	  if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
+	  pHd = NULL;
+	  while (pSP)
 	    {
-	      /* il y a heritage possible */
-	      if ((inheritTable =
-		   pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
+	      if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
 		{
-		  /* cette table n'existe pas on la genere */
-		  CreateInheritedAttrTable (pEl, pDoc);
-		  inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
-		}
-	      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
-		if ((*inheritTable)[l - 1])
-		  /* pEl inherits attribute l */
-		  {
-		    /* is this attribute present on an ancestor? */
-		    if ((*inheritTable)[l - 1] == 'S')
-		      pFirstAncest = pEl;
-		    else
-		      pFirstAncest = pEl->ElParent;
-		    if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l,
-						       pEl->ElStructSchema,
-						       &pElAttr)) != NULL)
+		  /* il y a heritage possible */
+		  if ((inheritTable =
+		       pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
+		    {
+		      /* cette table n'existe pas on la genere */
+		      CreateInheritedAttrTable (pEl, pSP, pDoc);
+		      inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
+		    }
+		  for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
+		    if ((*inheritTable)[l - 1])
+		      /* pEl inherits attribute l */
 		      {
-		      pSchP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
-		      /* process all values of the attribute, in case of
-			 a text attribute with multiple values */
-		      valNum = 1;
-		      do
-			{
-			  pRPres = AttrPresRule (pAttr, pEl, TRUE, NULL,
-						 pSchP, &valNum, &attrBlock);
-			  /* traite les regles de creation associees a
-			     l'attribut*/
-			  ApplFunctionPresRules (pRPres, pSchP, pAttr, pDoc,
-						 pEl, change, first);
-			}
-		      while (valNum > 0);
+			/* is this attribute present on an ancestor? */
+			if ((*inheritTable)[l - 1] == 'S')
+			  pFirstAncest = pEl;
+			else
+			  pFirstAncest = pEl->ElParent;
+			if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l,
+							   pEl->ElStructSchema,
+							   &pElAttr)) != NULL)
+			  {
+			    pSchP = PresentationSchema (pAttr->AeAttrSSchema,
+							pDoc);
+			    /* process all values of the attribute, in case of
+			       a text attribute with multiple values */
+			    valNum = 1;
+			    do
+			      {
+				pRPres = AttrPresRule (pAttr, pEl, TRUE, NULL,
+						   pSchP, &valNum, &attrBlock);
+				/* traite les regles de creation associees a
+				   l'attribut*/
+				ApplFunctionPresRules (pRPres, pSchP, pAttr,
+						     pDoc, pEl, change, first);
+			      }
+			    while (valNum > 0);
+			  }
 		      }
-		  }
+		}
+	      if (pHd == NULL)
+		/* extension schemas have not been checked yet */
+		/* get the first extension schema */
+		pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc, pEl);
+	      else
+		/* get the next extension schema */
+		pHd = pHd->HdNextPSchema;
+	      if (pHd == NULL)
+		/* no more extension schemas. Stop */
+		pSP = NULL;
+	      else
+		pSP = pHd->HdPSchema;
 	    }
 
 	  /* l'element a-t-il des attributs qui ont des fonctions de */
