@@ -61,7 +61,7 @@
 #endif /*_GTK*/
 
 #ifdef _WX
-static ThotBool     ComputeScrollBar;
+static ThotBool     ComputeScrollBar = TRUE;
 #endif /* _WX */
 
 static char         OldMsgSelect[MAX_TXT_LEN];
