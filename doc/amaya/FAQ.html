@@ -4,7 +4,8 @@
 <head>
 <title>Amaya FAQ</title>
 </head>
-<body style="color: #000000;background-color: #FFFFFF" lang="en">
+<body style="color: #000000;background-color: #FFFBF0" lang="en"
+text="#000000" bgcolor="#FFFBF0">
 <p>
 <a href="../../"><img border="0" alt="W3C"
 src="../../Icons/WWW/w3c_home"></a><a href="../"><img border="0"
@@ -24,18 +25,18 @@ src="../Icons/amaya.gif" alt="Amaya"></a></p>
 <a href="#Amaya1">Is Amaya available for MacOS ?</a>
 </li>
 <li>
-<a href="#L147">Why is Amaya written in C?</a>
-</li>
-<li>
 <a href="#release">Can I release Amaya on a CD-ROM?</a>
 </li>
 <li>
 <a href="#make">Can I make some changes and re-release it?</a>
 </li>
+<li>
+<a href="#L147">Why is Amaya written in C?</a>
+</li>
 </ol>
 
 <h2>Using Amaya</h2>
-<ol>
+<ol start="7">
 <li>
 <a href="#Amaya">Is Amaya compliant with MathML?</a>
 </li>
@@ -49,12 +50,16 @@ src="../Icons/amaya.gif" alt="Amaya"></a></p>
 <a href="#want">How can I change the default window size?</a>
 </li>
 <li>
-<a href="#parsing">Can I see parsing errors detected by Amaya? </a>
+<a href="#parsing">Can I see parsing errors detected by Amaya?</a>
+</li>
+<li>
+<a href="#What">What is the reason for a very liberal structure
+enforcement?</a>
 </li>
 </ol>
 
 <h2>Compiling Amaya</h2>
-<ol>
+<ol start="13">
 <li>
 <a href="#Where3">Where can I get the developers documentation?</a>
 </li>
@@ -73,7 +78,7 @@ src="../Icons/amaya.gif" alt="Amaya"></a></p>
 <hr>
 
 
-<h3><a name="L125">Is <b>Amaya</b> an editor or a browser?</a></h3>
+<h2><a name="L125">1. Is <b>Amaya</b> an editor or a browser?</a></h2>
 <p>
 <b>Amaya</b> is mainly an authoring tool with browser features.  Link
 management and remote publishing are important features in a hypertext editor,
@@ -83,7 +88,7 @@ and these features require seamless integration with browsing features.</p>
 <hr>
 
 
-<h3><a name="Where">Where can I get <b>Amaya</b>?</a></h3>
+<h2><a name="Where">2. Where can I get <b>Amaya</b>?</a></h2>
 <p>
 You can download the <b>Amaya</b> distribution in various formats, and you can
 use either ftp or http:</p>
@@ -104,7 +109,7 @@ gives access to the source code.</p>
 <hr>
 
 
-<h3><a name="Amaya1">Is Amaya available for MacOS?</a></h3>
+<h2><a name="Amaya1">3. Is Amaya available for MacOS?</a></h2>
 <p>
 Currently, Amaya is available for various Unix and Windows platforms. We don't
 have the resources for supporting additional platforms, but the source code is
@@ -114,7 +119,7 @@ available and contributions to a port are welcome.</p>
 <hr>
 
 
-<h2><a name="release">Can I release Amaya on a CD-ROM?</a></h2>
+<h2><a name="release">4. Can I release Amaya on a CD-ROM?</a></h2>
 <p>
 Yes, and you can even charge for it, provided the copyright is preserved.</p>
 <p>
@@ -122,7 +127,7 @@ Yes, and you can even charge for it, provided the copyright is preserved.</p>
 <hr>
 
 
-<h2><a name="make">Can I make some changes and re-release it?</a></h2>
+<h2><a name="make">5. Can I make some changes and re-release it?</a></h2>
 <p>
 Yes, we encourage people to experiment with Amaya and to improve it. It can
 even be used in commercial software. If you make changes for the better, we
@@ -136,7 +141,7 @@ Specification of the W3C.</p>
 <hr>
 
 
-<h3><a name="L147">Why is <b>Amaya</b> written in C?</a></h3>
+<h2><a name="L147">6. Why is <b>Amaya</b> written in C?</a></h2>
 <p>
 C has a number of advantages that fit well with our purposes. It's a very
 portable and efficient language. Amaya is also based on a pre-existing editing
@@ -147,7 +152,7 @@ continue to develop the Amaya code in C.</p>
 <hr>
 
 
-<h2><a name="Amaya">Is Amaya compliant with MathML?</a></h2>
+<h2><a name="Amaya">7. Is Amaya compliant with MathML?</a></h2>
 <p>
 Yes, but the current implementation of MathML 1.0 in Amaya is not complete
 yet. The Amaya documentation clearly indicates what is available. See section
@@ -158,7 +163,7 @@ href="http://www.w3.org/Amaya/User/Math.html">http://www.w3.org/Amaya/User/Math.
 <hr>
 
 
-<h2><a name="edit">Can I edit tags directly?</a></h2>
+<h2><a name="edit">8. Can I edit tags directly?</a></h2>
 <p>
 Amaya has been built as a structured document editor.  This approach allows it
 to handle complex documents and highly structured objects such as tables,
@@ -171,7 +176,24 @@ you cannot edit tags.</p>
 <hr>
 
 
-<h2><a name="want">How can I change the default window size</a></h2>
+<h2><a name="Displayed">9. Fonts are too small. What can I do?</a></h2>
+<p>
+With Amaya you can zoom in and zoom out, document window by document window.
+So each document displayed in a zoomed window will be displayed larger or
+smaller than its normal size according of the current zoom factor. The Views
+menu allows you to change the zoom factor for a single window.</p>
+<p>
+You can also change the zoom factor permanently. By default the zoom factor is
+0 (documents are displayed with their own size). This default value can be
+modified in the registry file ($HOME/.thotrc (Unix) or Thot/config/thot.rc
+(Windows)). For example, you can add the following line in your registry:
+ZOOM=3.</p>
+<p>
+</p>
+<hr>
+
+
+<h2><a name="want">10. How can I change the default window size</a></h2>
 <p>
 Parameters related to the windows displaying HTML documents are stored in the
 <code>Thot/amaya/HTML.conf</code> file. In that file there are different
@@ -197,7 +219,7 @@ modifications won't be lost next time Amaya is updated.</p>
 <hr>
 
 
-<h2><a name="parsing">Can I see parsing errors detected by Amaya?</a></h2>
+<h2><a name="parsing">11. Can I see parsing errors detected by Amaya?</a></h2>
 <p>
 Amaya cannot be used to check documents validity. It accepts valid and invalid
 documents and tries to dynamically correct detected errors. For example it's
@@ -210,10 +232,48 @@ a log file which can be displayed by the command "Show log file" of the menu
 </p>
 <hr>
 
+
+<h2><a name="What">12. What is the reason</a> for a very liberal structure
+enforcement?</h2>
+<p>
+Amaya has to cope with existing Web pages, and very few of them validate
+against the HTML DTD. When designing Amaya, we were faced with a difficult
+choice:</p>
+<ol>
+<li>
+Adopt a strict position and reject all invalid pages. Most users would be very
+disapointed not to be able to see mainy pages that     other Web clients can
+display;
+</li>
+<li>
+Accept invalid pages and let Amaya fix the most common bugs.
+</li>
+</ol>
+<p>
+We took the latest position and decided that Amaya should try to fix bugs, but
+without losing information.  If an element is not valid in a given context,
+Amaya tries to change the structure locally to make that element valid, but it
+doesn't delete the element or move it to a different place, which could change
+its meaning.</p>
+<p>
+The issue is that a DTD only specifies the structure of a document class, not
+its semantics.  When you consider an invalid document, there are often several
+ways to transform its structure to make it valid, but each transformation may
+have a different impact on the document semantics. The DTD does not allow you
+to choose the right transformation.</p>
+<p>
+Another important design decision that has been made for Amaya is that, even
+if it accepts invalid documents, the structure and markup that it produces is
+always valid. Obviously, only elements created or changed by Amaya itself are
+concerned here. Some invalid parts of the original document may remain when
+the document is saved.</p>
 <p>
 </p>
+<hr>
 
-<h3><a name="Where3">Where can I get the developer's documentation</a></h3>
+
+<h2><a name="Where3">13. Where can I get the developer's
+documentation</a></h2>
 <p>
 Those who want to extend or change the Amaya application need to read the
 following documentation:</p>
@@ -239,7 +299,7 @@ manual</a>
 <hr>
 
 
-<h2><a name="Make">Make complains with missing files</a></h2>
+<h2><a name="Make">14. Make complains with missing files</a></h2>
 <p>
 You certainly missed to create the object subtree. As explained in the <a
 href="http://www.w3.org/Amaya/User/Autoconf.html">Autoconf page</a>, you have
@@ -252,7 +312,7 @@ configure to create the Makefile(s)</p>
 <hr>
 
 
-<h2><a name="Make1">Make fails when compiling the HTML schema</a></h2>
+<h2><a name="Make1">15. Make fails when compiling the HTML schema</a></h2>
 <p>
 Thot compilers need a <strong>cpp</strong> preprocessor:</p>
 <ul>
@@ -272,7 +332,7 @@ preprocessor is in your PATH.
 <hr>
 
 
-<h2><a name="don't">I don't have Motif</a></h2>
+<h2><a name="don't">16. I don't have Motif</a></h2>
 <p>
 The Amaya user interface is based on OSF/Motif, and Motif is not freely
 available on Linux. You can use <a href="http://www.lesstif.org/">Lesstif</a>
@@ -282,27 +342,10 @@ and later) of <a href="http://www.lesstif.org/">Lesstif</a>.</p>
 </p>
 <hr>
 
-
-<h2><a name="Displayed">Fonts are too small. What can I do?</a></h2>
-<p>
-With Amaya you can zoom in and zoom out, document window by document window.
-So each document displayed in a zoomed window will be displayed larger or
-smaller than its normal size according of the current zoom factor. The Views
-menu allows you to change the zoom factor for a single window.</p>
-<p>
-You can also change the zoom factor permanently. By default the zoom factor is
-0 (documents are displayed with their own size). This default value can be
-modified in the registry file ($HOME/.thotrc (Unix) or Thot/config/thot.rc
-(Windows)). For example, you can add the following line in your registry:
-ZOOM=3.</p>
-<p>
-</p>
-<hr>
 <p>
 <a href="http://validator.w3.org/"><img border="0"
 src="http://validator.w3.org/images/vh40.gif" alt="Valid HTML 4.0!"
 height="31" width="88"></a></p>
-
 <address>
 <a href="mailto:irene.vatton@w3.org">Ir&egrave;ne Vatton</a><br>
 $Date$</address>
@@ -329,5 +372,6 @@ href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Members">Member<
 privacy statements.</small></p>
 </address>
 <p>
+</p>
 </body>
 </html>
