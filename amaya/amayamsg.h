@@ -142,5 +142,7 @@ int                 AMAYA;
 #define AM_REPEAT_X                   130
 #define AM_REPEAT_Y                   131
 #define AM_NO_REPEAT                  132
-#define AMAYA_MSG_MAX                 133
+#define AM_ABOUT1                     133
+#define AM_ABOUT2                     134
+#define AMAYA_MSG_MAX                 136
 

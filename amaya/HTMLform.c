@@ -952,10 +952,10 @@ NotifyElement      *event;
 	length = TtaGetTextLength (el);
         TtaSelectString (event->document, el, length+1, length);
 	/* refuse to select the clicked element */
-        return True;
+        return TRUE;
      }
    else
-	return False;
+	return FALSE;
 }
 
 /*----------------------------------------------------------------------

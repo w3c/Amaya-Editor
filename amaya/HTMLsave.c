@@ -719,7 +719,7 @@ DBG(fprintf(stderr, "SaveDocument : local saving\n");)
        TtaExportDocument (document, tempname, "HTMLT");
        TtaSetDocumentUnmodified (document);
        TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[document]);
-       SavingDocument = (Document) None;
+       SavingDocument = 0;
      }
 }
 
@@ -735,7 +735,7 @@ NotifyDialog       *event;
 {
    SaveDocument (event->document, 1);
    /* This function has to be written */
-   return True;
+   return TRUE;
 }
 
 
@@ -816,7 +816,7 @@ DBG(fprintf(stderr, "     changing to new BASE %s\n", imgbase);)
 		   buf = AmayaParseUrl (newURL, "", AMAYA_PARSE_ALL);
 		   if (buf)
 		     {
-		       buf = AmayaSimplifyUrl (&buf);
+		       AmayaSimplifyUrl (&buf);
 		       TtaExtractName (buf, tempfile, tempname);
 		       strcat (tempfile, DIR_STR);
 

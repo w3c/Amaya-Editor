@@ -46,19 +46,10 @@
 #else
 #include "libwww.h"
 #endif
-
-#include "htplug.h"
+#include "amaya.h"
 
 #include "picture_tv.h"
 #include "frame_tv.h"
-
-#define DC_FALSE     0 
-#define DC_TRUE      1
-
-#define AMAYA_SYNC   1
-#define AMAYA_ASYNC  4
-#define AMAYA_IASYNC 8	/*0x001000 */
-
 extern ThotAppContext   app_cont;
 extern PluginInfo*      pluginTable [100];
 extern Document         currentDocument;
@@ -1088,6 +1079,10 @@ int       type;
     PtrElement  elem;
     Element     object;
     Element     param;
+    AttributeType attrTypeN, attrTypeV;
+    Attribute     attrN, attrV;
+    char*         attrValue;
+    int           length;
     NPStream*   stream;
     NPWindow*   pwindow;
     char        widthText[10], heightText[10];
@@ -1122,44 +1117,22 @@ int       type;
        elType.ElTypeNum = HTML_EL_Parameter ;
        param = TtaSearchTypedElement (elType, SearchInTree, object);
        if (param) {
-	  AttributeType attrType ;
-	  Attribute     attr ;
-	  char*         attrValue;
-	  int           length;
-
-	  attrType.AttrSSchema = elType.ElSSchema;
-	  attrType.AttrTypeNum = HTML_ATTR_Param_name;
-	  attr = TtaGetAttribute (param, attrType);
-	  /*
-	  argn[argc] = strdup (TtaGetAttributeName (attrType)) ;
-	  */
-	  length = TtaGetTextAttributeLength (attr) ;
-	  argn[argc] = (char*) TtaGetMemory (length + 1) ;
-	  TtaGiveTextAttributeValue (attr, argn[argc], &length) ;
-	  
-	  attrType.AttrTypeNum = HTML_ATTR_Param_value;
-	  attr = TtaGetAttribute (param, attrType);
-	  length = TtaGetTextAttributeLength (attr) ;
-	  argv[argc] = (char*) TtaGetMemory (length + 1) ;
-	  TtaGiveTextAttributeValue (attr, argv[argc], &length) ;
-	  argc++;
-	  param = TtaGetSuccessor (param);
-	  while (param) {
-	        if (TtaIsAncestor (param, object)) {
-		   attrType.AttrTypeNum = HTML_ATTR_Param_name;
-		   attr = TtaGetAttribute (param, attrType);
-		   length = TtaGetTextAttributeLength (attr) ;
-		   argn[argc] = (char*) TtaGetMemory (length + 1) ;
-		   TtaGiveTextAttributeValue (attr, argn[argc], &length) ;
-		   
-		   attrType.AttrTypeNum = HTML_ATTR_Param_value;
-		   attr = TtaGetAttribute (param, attrType);
-		   length = TtaGetTextAttributeLength (attr) ;
-		   argv[argc] = (char*) TtaGetMemory (length + 1) ;
-		   TtaGiveTextAttributeValue (attr, argv[argc], &length) ;
-		   argc++;
-		   param = TtaGetSuccessor (param);
-	        }
+	  attrTypeN.AttrSSchema = elType.ElSSchema;
+	  attrTypeN.AttrTypeNum = HTML_ATTR_Param_name;
+	  attrTypeV.AttrSSchema = elType.ElSSchema;
+	  attrTypeV.AttrTypeNum = HTML_ATTR_Param_value;
+	  while (param && TtaIsAncestor (param, object)) {
+	        attrN = TtaGetAttribute (param, attrTypeN);
+		length = TtaGetTextAttributeLength (attrN) ;
+		argn[argc] = (char*) TtaGetMemory (length + 1) ;
+		TtaGiveTextAttributeValue (attrN, argn[argc], &length) ;
+	    
+		attrV = TtaGetAttribute (param, attrTypeV);
+		length = TtaGetTextAttributeLength (attrV) ;
+		argv[argc] = (char*) TtaGetMemory (length + 1) ;
+		TtaGiveTextAttributeValue (attrV, argv[argc], &length) ;
+		argc++;
+	        param = TtaSearchTypedElement (elType, SearchForward, param);
 	  }
        }
     }

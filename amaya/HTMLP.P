@@ -3508,14 +3508,6 @@ BOXES
 		END;
 	END;
 
-#ifdef R_HTML
- Entity_flag: BEGIN
-	Content : Picture 'rcopy.xpm';
-	VertPos : Top = Enclosing . Top + 0.2;
-	Depth : 1;
-	END;
-#endif
-
 { ---- Pages ---- }
 
 #ifdef PAGE
@@ -3959,17 +3951,6 @@ RULES
 	IN Links_view
 		Visibility: 0;
 	END;
-#ifdef R_HTML
- Entity: BEGIN
-	CreateFirst(Entity_flag);
-	Height: Enclosed . Height;
-	Width: Enclosed . Width;
-	IN Structure_view
-	   Visibility: 0;
-	IN Links_view
-	   Visibility: 0;
-	END;
-#endif
 
  H1:	BEGIN
 	Line;
@@ -5192,8 +5173,8 @@ RULES
 		HorizPos: Left = Enclosing . Left;
 		END;
 	IN Alternate_view BEGIN
-		Height: 1 pt;
-		Width: 1 pt;
+		Height: 1 px;
+		Width: 1 px;
 #ifdef COUGAR
 		if NOT Immediately within Object
 		   Visibility: 1;
@@ -5915,6 +5896,8 @@ ATTRIBUTES
 	   END;
 	IN Alternate_view
 	   BEGIN
+	   If PICTURE_UNIT
+		Width: 1 px;
 #ifdef COUGAR
 	   If Object
 		Width: Enclosing . Width;
@@ -5947,6 +5930,8 @@ ATTRIBUTES
 	   END;
 	IN Alternate_view
 	   BEGIN
+	   If PICTURE_UNIT
+	        Height: 1 px;
 #ifdef COUGAR
 	   If Object
 		Height: Enclosed . Height;

@@ -136,5 +136,19 @@
 #define TSectionNumber  122
 #define BMakeBook  123
 #define BInformation  124
+#define BHelpBrowsing  125
+#define BHelpSelecting  126
+#define B  127
+#define BHelpViews  128
+#define BHelpCreating  129
+#define BHelpLinks  130
+#define BHelpChanging  131
+#define BHelpTables  132
+#define BHelpImageMaps  133
+#define BHelpStyleSheets  134
+#define BHelpAttributes  135
+#define BHelpPublishing  136
+#define BHelpPrinting  137
+#define BHelpMakeBook  138
 
-#define MAX_EDITOR_LABEL       126
+#define MAX_EDITOR_LABEL       140

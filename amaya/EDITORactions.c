@@ -942,7 +942,7 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   return True;			/* refuse to delete this attribute */
+   return TRUE;			/* refuse to delete this attribute */
 }
 
 

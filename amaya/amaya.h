@@ -34,7 +34,7 @@
 #define MAX_LENGTH     512
 #define NAME_LENGTH     32
 #define HTAppName "amaya"
-#define HTAppVersion "V1.0a Beta"
+#define HTAppVersion "V1.0b Beta"
 
 /* How are Network accesses provided ? */
 #ifdef AMAYA_JAVA
@@ -43,10 +43,7 @@
 #include "libwww.h"
 #endif
 
-typedef char        PathBuffer[MAX_PATH];
-
 /* The different events for a DoubleClick */
-
 typedef enum _DoubleClickEvent
   {
      DC_FALSE = 0,
@@ -97,6 +94,11 @@ typedef char        AmayaReadChar ();
 #define ConfirmSave     32
 #define ConfirmSaveList 33
 #define OptionMenu	34
+#define About1		35
+#define About2		36
+#define About3		37
+#define Version		38
+#define FormAbout      	39    
 #define MAX_REF         40
 
 /* The possible GET/POST/PUT request modes */

@@ -24,17 +24,17 @@ extern void NormalizeURL ( char *orgName,
                            char *docName );
 extern boolean IsSameHost ( char *url1,
                             char *url2 );
-extern char *AHTMakeRelativeName ( char *url,
-                                   char *base_url );
 extern boolean HasKnownFileSuffix ( char *path );
 extern void ChopURL ( char *outputURL,
                       char *inputURL );
-extern char * AmayaParseUrl ( const char *aName,
-                              const char *relatedName,
+extern char * AmayaParseUrl ( char *aName,
+                              char *relatedName,
                               int wanted );
-extern char *AmayaSimplifyUrl ( char ** url );
-extern char *AmayaRelativeUrl ( const char * aName,
-                                const char * relatedName );
+extern void AmayaSimplifyUrl ( char ** url );
+extern boolean NormalizeFile ( char *src,
+                               char *target );
+extern char *AmayaRelativeUrl ( char *aName,
+                                char *relatedName );
 
 #else /* __STDC__ */
 
@@ -56,17 +56,17 @@ extern void NormalizeURL (/* char *orgName,
                              char *docName */);
 extern boolean IsSameHost (/* char *url1,
                               char *url2 */);
-extern char *AHTMakeRelativeName (/* char *url,
-                                     char *base_url */);
 extern boolean HasKnownFileSuffix (/* char *path */);
 extern void ChopURL (/* char *outputURL,
                         char *inputURL */);
-extern char * AmayaParseUrl (/* const char *aName,
-                                const char *relatedName,
+extern char * AmayaParseUrl (/* char *aName,
+                                char *relatedName,
                                 int wanted */);
-extern char *AmayaSimplifyUrl (/* char ** url */);
-extern char *AmayaRelativeUrl (/* const char * aName,
-                                  const char * relatedName */);
+extern void AmayaSimplifyUrl (/* char ** url */);
+extern boolean NormalizeFile (/* char *src,
+                                 char *target */);
+extern char *AmayaRelativeUrl (/* char *aName,
+                                  char *relatedName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -253,7 +253,6 @@ static GIMapping    GIMappingTable[] =
    {"META", 'E', HTML_EL_META, NULL},
 #ifdef COUGAR
    {"OBJECT", SPACE, HTML_EL_Object, NULL},
-   {"PARAMETER", SPACE, HTML_EL_Parameter, NULL},
 #endif
    {"OL", SPACE, HTML_EL_Numbered_List, NULL},
    {"OPTION", SPACE, HTML_EL_Option, NULL},

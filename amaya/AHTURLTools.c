@@ -25,17 +25,31 @@
 
 #define MAX_PRINT_URL_LENGTH 50
 
-/* Private  functions */
+
+/*----------------------------------------------------------------------
+  ConvertToLowerCase
+  Converts a string to lowercase.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ConvertToLowerCase (char *string);
-#else
-static void         ConvertToLowerCase (/*char *string*/);
-#endif
+static void         ConvertToLowerCase (char *string)
+#else  /* __STDC__ */
+static void         ConvertToLowerCase (string)
+char                *string;
+
+#endif /* __STDC__ */
+{
+ int i;
+
+ if (!string)
+   return;
+
+ for (i = 0; string[i] != EOS; i++)
+   string[i] = tolower (string[i]);
+}
 
 /*----------------------------------------------------------------------
   ExplodeURL 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                ExplodeURL (char *url, char **proto, char **host, char **dir, char **file)
 #else
@@ -492,7 +506,7 @@ char               *docName;
 	       TtaGiveTextAttributeValue (attrHREF, basename, &length);
 	       /* base and orgName have to be separated by a DIR_SEP */
 	       length--;
-	       if (basename[0] != EOS && basename[length] != '/') 
+	       if (basename[0] != EOS && basename[length] != DIR_SEP) 
 		 /* verify if the base has the form "protocol://server:port" */
 		 {
 		   ptr = AmayaParseUrl (basename, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST |
@@ -581,7 +595,7 @@ char               *docName;
 
        if (ptr)
 	 {
-	   ptr = AmayaSimplifyUrl (&ptr);
+	   AmayaSimplifyUrl (&ptr);
 	   strcpy (newName, ptr);
 	   TtaFreeMemory (ptr);
 	 }
@@ -658,42 +672,38 @@ char               *path;
   The caller has to free the new URL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *AHTMakeRelativeName (char *url, char *base_url)
+char           *AHTMakeRelativeName (char *url, char *base_url)
 #else  /* __STDC__ */
-char               *AHTMakeRelativeName (url, base_url)
-char                url;
-char                base_url;
+char           *AHTMakeRelativeName (url, base_url)
+char            url;
+char            base_url;
 
 #endif /* __STDC__ */
 {
-   char               *base_ptr, *url_ptr;
-   char               *result;
+  char        *base_ptr, *url_ptr;
+  char        *result;
 
-   /* verify if we are in the same host */
-
-   base_ptr = AmayaParseUrl (base_url, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
-   url_ptr = AmayaParseUrl (url, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
-
-   if (!strcmp (base_ptr, url_ptr))
-     {
-	TtaFreeMemory (base_ptr);
-	TtaFreeMemory (url_ptr);
-
-	/* Normalize the URLs */
-
-	base_ptr = AmayaParseUrl (base_url, "", AMAYA_PARSE_ALL);
-	url_ptr = AmayaParseUrl (url, "", AMAYA_PARSE_ALL);
-
-	/* Use libwww to make relative name */
-
-	result = AmayaRelativeUrl (url_ptr, base_ptr);
-	TtaFreeMemory (base_ptr);
-	TtaFreeMemory (url_ptr);
-     }
-   else
-      result = (char *) NULL;
-
-   return (result);
+  /* verify if we are in the same host */
+  base_ptr = AmayaParseUrl (base_url, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
+  url_ptr = AmayaParseUrl (url, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
+  if (!strcmp (base_ptr, url_ptr))
+    {
+      TtaFreeMemory (base_ptr);
+      TtaFreeMemory (url_ptr);
+      
+      /* Normalize the URLs */
+      base_ptr = AmayaParseUrl (base_url, "", AMAYA_PARSE_ALL);
+      url_ptr = AmayaParseUrl (url, "", AMAYA_PARSE_ALL);
+      
+      /* Use libwww to make relative name */
+      result = AmayaRelativeUrl (url_ptr, base_ptr);
+      TtaFreeMemory (base_ptr);
+      TtaFreeMemory (url_ptr);
+    }
+  else
+    result = (char *) NULL;
+  
+  return (result);
 }
 /*----------------------------------------------------------------------
   HasKnownFileSuffix
@@ -759,28 +769,6 @@ char               *path;
 
 
 /*----------------------------------------------------------------------
-  ConvertToLowerCase
-  Converts a string to lowercase.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ConvertToLowerCase (char *string)
-#else  /* __STDC__ */
-static void         ConvertToLowerCase (string)
-char                *string;
-
-#endif /* __STDC__ */
-{
- int i;
-
- if (!string)
-   return;
-
- for (i = 0; string[i] != EOS; i++)
-   string[i] = tolower (string[i]);
-}
-
-
-/*----------------------------------------------------------------------
   ChopURL
   Gives back a URL no longer than MAX_PRINT_URL_LENGTH chars (outputURL). 
   If inputURL is  bigger than that size, outputURL receives
@@ -819,7 +807,7 @@ char *inputURL;
 
 /************************************************************************
  *									*
- *	Local Adaptation of the libWWW Library/src/AmayaParseUrl.c code.	*
+ *  Local Adaptation of the libWWW Library/src/AmayaParseUrl.c code.	*
  *									*
  ************************************************************************/
 
@@ -859,83 +847,90 @@ HTURI               *parts;
 
 #endif /* __STDC__ */
 {
-    char * p;
-    char * after_access = name;
-    memset(parts, '\0', sizeof(HTURI));
+  char * p;
+  char * after_access = name;
 
-    /* Look for fragment identifier */
-    if ((p = strrchr(name, '#')) != NULL) {
-	*p++ = '\0';
-	parts->fragment = p;
+  memset(parts, '\0', sizeof(HTURI));
+  /* Look for fragment identifier */
+  if ((p = strrchr(name, '#')) != NULL)
+    {
+      *p++ = '\0';
+      parts->fragment = p;
     }
     
-    for(p=name; *p; p++) {
-	if (*p=='/' || *p=='#' || *p=='?')
+  for (p=name; *p; p++)
+    {
+      if (*p==DIR_SEP || *p=='#' || *p=='?')
+	break;
+      if (*p==':')
+	{
+	  *p = 0;
+	  parts->access = after_access; /* Scheme has been specified */
+
+	  /* The combination of gcc, the "-O" flag and the HP platform is
+	     unhealthy. The following three lines is a quick & dirty fix, but is
+	     not recommended. Rather, turn off "-O". */
+
+	  /*		after_access = p;*/
+	  /*		while (*after_access == 0)*/
+	  /*		    after_access++;*/
+	  after_access = p+1;
+	  if (0==strcasecmp("URL", parts->access))
+	    /* Ignore IETF's URL: pre-prefix */
+	    parts->access = NULL;
+	  else
 	    break;
-	if (*p==':') {
-		*p = 0;
-		parts->access = after_access; /* Scheme has been specified */
-
-/* The combination of gcc, the "-O" flag and the HP platform is
-   unhealthy. The following three lines is a quick & dirty fix, but is
-   not recommended. Rather, turn off "-O". */
-
-/*		after_access = p;*/
-/*		while (*after_access == 0)*/
-/*		    after_access++;*/
-
-		after_access = p+1;
-
-		if (0==strcasecmp("URL", parts->access)) {
-		    parts->access = NULL;  /* Ignore IETF's URL: pre-prefix */
-		} else break;
 	}
     }
     
     p = after_access;
-    if (*p=='/'){
-	if (p[1]=='/') {
+    if (*p==DIR_SEP)
+      {
+	if (p[1]==DIR_SEP)
+	  {
 	    parts->host = p+2;		/* host has been specified 	*/
-	    *p=0;			/* Terminate access 		*/
-	    p=strchr(parts->host,'/');	/* look for end of host name if any */
-	    if(p) {
+	    *p = 0;			/* Terminate access 		*/
+	    /* look for end of host name if any */
+	    p = strchr(parts->host,DIR_SEP);
+	    if (p)
+	      {
 	        *p=0;			/* Terminate host */
 	        parts->absolute = p+1;		/* Root has been found */
-	    }
-	} else {
-	    parts->absolute = p+1;		/* Root found but no host */
-	}	    
-    } else {
+	      }
+	  }
+	else
+	  /* Root found but no host */
+	  parts->absolute = p+1;
+      }
+    else
+      {
         parts->relative = (*after_access) ? after_access : 0; /* zero for "" */
-    }
+      }
 }
 
 
 /*----------------------------------------------------------------------
-    AmayaParseUrl
-  	Parse a Name relative to another name
-  	-------------------------------------
+  AmayaParseUrl: parse a Name relative to another name
+
+  This returns those parts of a name which are given (and requested)
+  substituting bits from the related name where necessary.
   
-  	This returns those parts of a name which are given (and requested)
-  	substituting bits from the related name where necessary.
-  
-   On entry,
+  On entry,
   	aName		A filename given
         relatedName     A name relative to which aName is to be parsed. Give
                         it an empty string if aName is absolute.
         wanted          A mask for the bits which are wanted.
   
-   On exit,
+  On exit,
   	returns		A pointer to a malloc'd string which MUST BE FREED
-  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char * AmayaParseUrl (const char *aName, const char *relatedName, int wanted)
+char          *AmayaParseUrl (char *aName, char *relatedName, int wanted)
 #else  /* __STDC__ */
-char * AmayaParseUrl (aName, relatedName, wanted)
-const char          *aName;
-const char          *relatedName;
-int                  wanted;
+char          *AmayaParseUrl (aName, relatedName, wanted)
+char          *aName;
+char          *relatedName;
+int            wanted;
 
 #endif /* __STDC__ */
 {
@@ -999,12 +994,10 @@ int                  wanted;
 	    if (given.relative) {
 		p = strchr(result, '?');	/* Search part? */
 		if (!p) p=result+strlen(result)-1;
-		for (; *p!='/'; p--);	/* last / */
+		for (; *p!=DIR_SEP; p--);	/* last / */
 		p[1]=0;					/* Remove filename */
 		strcat(result, given.relative);		/* Add given one */
-#if 0
-		result = AmayaSimplifyUrl (&result);
-#endif
+		/*AmayaSimplifyUrl (&result);*/
 	    }
 	} else if(given.relative) {
 	    strcat(result, given.relative);		/* what we've got */
@@ -1048,11 +1041,11 @@ int                  wanted;
   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char * HTCanon (char ** filename, char * host)
+static char *HTCanon (char ** filename, char * host)
 #else  /* __STDC__ */
-static char * HTCanon (filename,host)
-char               **filename;
-char                *host;
+static char *HTCanon (filename, host)
+char       **filename;
+char        *host;
 #endif /* __STDC__ */
 {
     char *newname = NULL;
@@ -1061,9 +1054,9 @@ char                *host;
     char *path;
     char *access = host-3;
 
-    while (access>*filename && *(access-1)!='/')       /* Find access method */
+    while (access>*filename && *(access-1)!=DIR_SEP)       /* Find access method */
 	access--;
-    if ((path = strchr(host, '/')) == NULL)			/* Find path */
+    if ((path = strchr(host, DIR_SEP)) == NULL)			/* Find path */
 	path = host + strlen(host);
     if ((strptr = strchr(host, '@')) != NULL && strptr<path)	   /* UserId */
 	host = strptr;
@@ -1090,21 +1083,22 @@ char                *host;
     }
     /* Chop off port if `:', `:80' (http), `:70' (gopher), or `:21' (ftp) */
     if (port) {
-	if (!*(port+1) || *(port+1)=='/') {
+	if (!*(port+1) || *(port+1)==DIR_SEP) {
 	    if (!newname) {
 		char *orig=port, *dest=port+1;
 		while((*orig++ = *dest++));
 	    }
 	} else if ((!strncmp(access, "http", 4) &&
-	     (*(port+1)=='8'&&*(port+2)=='0'&&(*(port+3)=='/'||!*(port+3)))) ||
+	     (*(port+1)=='8'&&*(port+2)=='0'&&(*(port+3)==DIR_SEP||!*(port+3)))) ||
 	    (!strncmp(access, "gopher", 6) &&
-	     (*(port+1)=='7'&&*(port+2)=='0'&&(*(port+3)=='/'||!*(port+3)))) ||
+	     (*(port+1)=='7'&&*(port+2)=='0'&&(*(port+3)==DIR_SEP||!*(port+3)))) ||
 	    (!strncmp(access, "ftp", 3) &&
-	     (*(port+1)=='2'&&*(port+2)=='1'&&(*(port+3)=='/'||!*(port+3))))) {
+	     (*(port+1)=='2'&&*(port+2)=='1'&&(*(port+3)==DIR_SEP||!*(port+3))))) {
 	    if (!newname) {
 		char *orig=port, *dest=port+3;
 		while((*orig++ = *dest++));
-		path -= 3;   	       /* Update path position, Henry Minsky */
+		/* Update path position, Henry Minsky */
+		path -= 3;
 	    }
 	} else if (newname)
 	    strncat(newname, port, (int) (path-port));
@@ -1114,7 +1108,8 @@ char                *host;
 	char *newpath = newname+strlen(newname);
 	strcat(newname, path);
 	path = newpath;
-	TtaFreeMemory(*filename);				    /* Free old copy */
+	/* Free old copy */
+	TtaFreeMemory(*filename);
 	*filename = newname;
     }
     return path;
@@ -1122,135 +1117,208 @@ char                *host;
 
 
 /*----------------------------------------------------------------------
-    AmayaSimplifyUrl
-  	        Simplify a URI
-  		--------------
-   A URI is allowed to contain the seqeunce xxx/../ which may be
-   replaced by "" , and the seqeunce "/./" which may be replaced by "/".
-   Simplification helps us recognize duplicate URIs. 
+  AmayaSimplifyUrl: simplify a URI
+  A URI is allowed to contain the seqeunce xxx/../ which may be
+  replaced by "" , and the seqeunce "/./" which may be replaced by "/".
+  Simplification helps us recognize duplicate URIs. 
   
-  	Thus, 	/etc/junk/../fred 	becomes	/etc/fred
-  		/etc/junk/./fred	becomes	/etc/junk/fred
+  Thus, 	/etc/junk/../fred 	becomes	/etc/fred
+                /etc/junk/./fred	becomes	/etc/junk/fred
   
-        but we should NOT change
-  		http://fred.xxx.edu/../..
+  but we should NOT change
+                http://fred.xxx.edu/../..
   
   	or	../../albert.html
   
-   In order to avoid empty URLs the following URLs become:
+  In order to avoid empty URLs the following URLs become:
   
   		/fred/..		becomes /fred/..
   		/fred/././..		becomes /fred/..
   		/fred/.././junk/.././	becomes /fred/..
   
-   If more than one set of `://' is found (several proxies in cascade) then
-   only the part after the last `://' is simplified.
+  If more than one set of `://' is found (several proxies in cascade) then
+  only the part after the last `://' is simplified.
   
-   Returns: A string which might be the old one or a new one.
-  
+  Returns: A string which might be the old one or a new one.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char *AmayaSimplifyUrl (char ** url)
+void         AmayaSimplifyUrl (char ** url)
 #else  /* __STDC__ */
-char *AmayaSimplifyUrl (url)
-char               **url;
+void         AmayaSimplifyUrl (url)
+char        **url;
 #endif /* __STDC__ */
 {
-    char *path;
-    char *p;
-    if (!url || !*url) {
-	return *url;
-    }
+  char *path, *p;
+  char *newptr, *access;
+  char *orig, *dest, *end;
 
-    /* Find any scheme name */
-    if ((path = strstr(*url, "://")) != NULL) {		   /* Find host name */
-	char *newptr;
-	char *access = *url;
-	while (access<path && (*access=tolower(*access))) access++;
-	path += 3;
-	while ((newptr = strstr(path, "://")) != NULL)        /* For proxies */
-	    path = newptr+3;
-	path = HTCanon(url, path);       	      /* We have a host name */
-    } else if ((path = strstr(*url, ":/")) != NULL) {
-	path += 2;
-    } else
-	path = *url;
-    if (*path == '/' && *(path+1)=='/') {	  /* Some URLs start //<foo> */
-	path += 1;
-    } else if (!strncmp(path, "news:", 5)) {
-	char *ptr = strchr(path+5, '@');
-	if (!ptr) ptr = path+5;
-	while (*ptr) {			    /* Make group or host lower case */
-	    *ptr = tolower(*ptr);
-	    ptr++;
+  if (!url || !*url)
+    return;
+
+  /* Find any scheme name */
+  if ((path = strstr(*url, "://")) != NULL)
+    {		   /* Find host name */
+      access = *url;
+      while (access<path && (*access=tolower(*access)))
+	access++;
+      path += 3;
+      while ((newptr = strstr(path, "://")) != NULL)
+        /* For proxies */
+	path = newptr+3;
+      /* We have a host name */
+      path = HTCanon(url, path);
+    }
+  else if ((path = strstr(*url, ":/")) != NULL)
+    path += 2;
+  else
+    path = *url;
+
+  if (*path == DIR_SEP && *(path+1)==DIR_SEP)
+    /* Some URLs start //<foo> */
+    path += 1;
+  else if (!strncmp(path, "news:", 5))
+    {
+      newptr = strchr(path+5, '@');
+      if (!newptr)
+	newptr = path + 5;
+      while (*newptr)
+	{
+	  /* Make group or host lower case */
+	  *newptr = tolower (*newptr);
+	  newptr++;
 	}
-	return *url;		      /* Doesn't need to do any more */
+      /* Doesn't need to do any more */
+      return;
     }
-    if ((p = path)) {
-	char *end;
-	if (!((end = strchr(path, ';')) || (end = strchr(path, '?')) ||
-	      (end = strchr(path, '#'))))
-	    end = path+strlen(path);
 
-	/* Parse string second time to simplify */
-	p = path;
-	while(p<end) {
-	    if (*p=='/') {
-		if (p>*url && *(p+1)=='.' && (*(p+2)=='/' || !*(p+2))) {
-		    char *orig = p+1;
-		    char *dest = (*(p+2)!='/') ? p+2 : p+3;
-		    while ((*orig++ = *dest++)); /* Remove a slash and a dot */
-		    end = orig-1;
-		} else if (*(p+1)=='.' && *(p+2)=='.' && (*(p+3)=='/' || !*(p+3))) {
-		    char *q = p;
-		    while (q>path && *--q!='/');	       /* prev slash */
-		    if (strncmp(q, "/../", 4)) {
-			char *orig = q+1;
-			char *dest = (*(p+3)!='/') ? p+3 : p+4;
-			while ((*orig++ = *dest++));	   /* Remove /xxx/.. */
-			end = orig-1;
-			p = q;		      /* Start again with prev slash */
-		    } else
-			p++;
-		} else if (*(p+1)=='/') {
-		    while (*(p+1)=='/') {
-			char *orig=p, *dest=p+1;
-			while ((*orig++ = *dest++));  /* Remove multiple /'s */
-			end = orig-1;
+  if ((p = path))
+    {
+      if (!((end = strchr (path, ';')) || (end = strchr (path, '?')) ||
+	    (end = strchr (path, '#'))))
+	end = path + strlen (path);
+      
+      /* Parse string second time to simplify */
+      p = path;
+      while (p < end)
+	{
+	  if (*p==DIR_SEP)
+	    {
+	      if (p > *url && *(p+1) == '.' && (*(p+2) == DIR_SEP || !*(p+2)))
+		{
+		  orig = p + 1;
+		  dest = (*(p+2)!=DIR_SEP) ? p+2 : p+3;
+		  while ((*orig++ = *dest++)); /* Remove a slash and a dot */
+		  end = orig - 1;
+		}
+	      else if (*(p+1)=='.' && *(p+2)=='.' && (*(p+3)==DIR_SEP || !*(p+3)))
+		{
+		  newptr = p;
+		  while (newptr>path && *--newptr!=DIR_SEP); /* prev slash */
+		  if (strncmp(newptr, "/../", 4))
+		    {
+		      orig = newptr + 1;
+		      dest = (*(p+3)!=DIR_SEP) ? p+3 : p+4;
+		      while ((*orig++ = *dest++)); /* Remove /xxx/.. */
+		      end = orig-1;
+		      /* Start again with prev slash */
+		      p = newptr;
 		    }
-		} else
+		  else
 		    p++;
-	    } else
+		}
+	      else if (*(p+1) == DIR_SEP)
+		{
+		  while (*(p+1) == DIR_SEP)
+		    {
+		      orig = p;
+		      dest = p + 1;
+		      while ((*orig++ = *dest++));  /* Remove multiple /'s */
+		      end = orig-1;
+		    }
+		}
+	      else
 		p++;
+	    }
+	  else
+	    p++;
 	}
     }
-    return *url;
+  return;
 }
 
+
 /*----------------------------------------------------------------------
-     AmayaRelativeUrl
-  		Make Relative Name
-  		------------------
+   NormalizeFile normalizes  local names.                             
+   Return TRUE if target and src differ.                           
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             NormalizeFile (char *src, char *target)
+#else
+boolean             NormalizeFile (src, target)
+char               *src;
+char               *target;
+
+#endif
+{
+   char               *s;
+   boolean             change;
+
+   change = FALSE;
+   if (src[0] == '~')
+     {
+	/* replace ~ */
+	s = (char *) TtaGetEnvString ("HOME");
+	strcpy (target, s);
+	strcat (target, &src[1]);
+	change = TRUE;
+     }
+   else if (strncmp (src, "file:", 5) == 0)
+     {
+	/* remove the prefix file: */
+	if (src[5] == EOS)
+	   strcpy (target, DIR_STR);
+	else if (src[0] == '~')
+	  {
+	    /* replace ~ */
+	    s = (char *) TtaGetEnvString ("HOME");
+	    strcpy (target, s);
+	    strcat (target, &src[5]);
+	  }
+	else
+	   strcpy (target, &src[5]);
+	change = TRUE;
+     }
+   else
+      strcpy (target, src);
+
+   /* remove /../ and /./ */
+   AmayaSimplifyUrl (&target);
+   return (change);
+}
+
+
+/*----------------------------------------------------------------------
+  AmayaRelativeUrl: make Relative Name
   
-   This function creates and returns a string which gives an expression of
-   one address as related to another. Where there is no relation, an absolute
-   address is retured.
+  This function creates and returns a string which gives an expression of
+  one address as related to another. Where there is no relation, an absolute
+  address is retured.
   
-    On entry,
+  On entry,
   	Both names must be absolute, fully qualified names of nodes
   	(no fragment bits)
   
-    On exit,
+  On exit,
   	The return result points to a newly allocated name which, if
   	parsed by AmayaParseUrl relative to relatedName, will yield aName.
   	The caller is responsible for freeing the resulting name later.
-  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char *AmayaRelativeUrl (const char * aName, const char * relatedName)
+char            *AmayaRelativeUrl (char *aName, char *relatedName)
 #else  /* __STDC__ */
-char *AmayaRelativeUrl (const char * aName, const char * relatedName)
-const char            *aName;
+char            *AmayaRelativeUrl (aName, relatedName)
+char            *aName;
+char            *relatedName;
 #endif  /* __STDC__ */
 {
   char               *result = 0;
@@ -1260,14 +1328,14 @@ const char            *aName;
   const char         *last_slash = 0;
   int                 slashes = 0;
     
-  for(;*p; p++, q++)
+  for (;*p; p++, q++)
     {
       /* Find extent of match */
       if (*p != *q)
 	break;
       if (*p == ':')
 	after_access = p+1;
-      if (*p == '/')
+      if (*p == DIR_SEP)
 	{
 	  last_slash = p;
 	  slashes++;
@@ -1290,7 +1358,7 @@ const char            *aName;
 	/* Some path in common */
         int levels= 0;
         for (; *q && (*q!='#'); q++)
-	  if (*q=='/')
+	  if (*q==DIR_SEP)
 	    levels++;
 	result = (char  *) TtaGetMemory (3*levels + strlen(last_slash) + 1);
 	if (result == NULL)

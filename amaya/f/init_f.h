@@ -48,8 +48,6 @@ extern Document GetHTMLDocument ( char *documentPath,
                                   Document doc,
                                   Document baseDoc,
                                   DoubleClickEvent DC_event );
-extern boolean NormalizeFile ( char *src,
-                               char *target );
 extern void CallbackDialogue ( int ref,
                                int typedata,
                                char *data );
@@ -107,8 +105,6 @@ extern Document GetHTMLDocument (/* char *documentPath,
                                     Document doc,
                                     Document baseDoc,
                                     DoubleClickEvent DC_event */);
-extern boolean NormalizeFile (/* char *src,
-                                 char *target */);
 extern void CallbackDialogue (/* int ref,
                                  int typedata,
                                  char *data */);

@@ -56,7 +56,7 @@
 #ifdef WITH_SOCKS
 char                __res = 0;
 #endif
-#define AMAYA_PAGE "http://www.w3.org/pub/WWW/Amaya/User/Manual.html"
+#define AMAYA_PAGE "http://www.w3.org/pub/WWW/Amaya/User/"
 static int          AmayaInitialized = 0;
 static Pixmap       stopR;
 static Pixmap       stopN;
@@ -1446,54 +1446,6 @@ DoubleClickEvent    DC_event;
 
 
 /*----------------------------------------------------------------------
-   NormalizeFile normalizes  local names.                             
-   Return TRUE if target and src differ.                           
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-boolean             NormalizeFile (char *src, char *target)
-#else
-boolean             NormalizeFile (src, target)
-char               *src;
-char               *target;
-
-#endif
-{
-   char               *s;
-   boolean             change;
-
-   change = FALSE;
-   if (src[0] == '~')
-     {
-	/* replace ~ */
-	s = (char *) TtaGetEnvString ("HOME");
-	strcpy (target, s);
-	strcat (target, &src[1]);
-	change = TRUE;
-     }
-   else if (strncmp (src, "file:", 5) == 0)
-     {
-	/* remove the prefix file: */
-	if (src[5] == EOS)
-	   strcpy (target, DIR_STR);
-	else if (src[0] == '~')
-	  {
-	    /* replace ~ */
-	    s = (char *) TtaGetEnvString ("HOME");
-	    strcpy (target, s);
-	    strcat (target, &src[5]);
-	  }
-	else
-	   strcpy (target, &src[5]);
-	change = TRUE;
-     }
-   else
-      strcpy (target, src);
-
-   return (change);
-}
-
-
-/*----------------------------------------------------------------------
    Callback procedure for dialogue events.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2165,9 +2117,9 @@ View                view;
 
 #endif
 {
+   char                localname[MAX_LENGTH];
 #ifdef AMAYA_DEBUG
    Element             el;
-   char                localname[MAX_LENGTH];
    FILE               *list;
 
    /* get the root element */
@@ -2188,7 +2140,265 @@ View                view;
    TtaListBoxes (document, view, list);
    fclose (list);
 #endif /* AMAYA_DEBUG */
-   document = GetHTMLDocument (AMAYA_PAGE, NULL, 0, 0, DC_FALSE);
+  TtaNewDialogSheet (BaseDialog + FormAbout, TtaGetViewFrame (document, view), HTAppName, 1,TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
+  strcpy (localname, HTAppName);
+  strcat (localname, " - ");
+  strcat (localname, HTAppVersion);
+  TtaNewLabel(BaseDialog + Version, BaseDialog + FormAbout, localname);
+  TtaNewLabel(BaseDialog + About1, BaseDialog + FormAbout, TtaGetMessage(AMAYA, AM_ABOUT1));
+  TtaNewLabel(BaseDialog + About2, BaseDialog + FormAbout, TtaGetMessage(AMAYA, AM_ABOUT2));
+  TtaShowDialogue (BaseDialog + FormAbout, FALSE);
+}
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpBrowsing (Document document, View view)
+#else /* __STDC__*/
+void HelpBrowsing (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   char    localname[MAX_LENGTH];
+
+   strcpy (localname, AMAYA_PAGE);
+   strcat (localname, "Browsing.html");
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpSelecting (Document document, View view)
+#else /* __STDC__*/
+void HelpSelecting (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   char    localname[MAX_LENGTH];
+
+   strcpy (localname, AMAYA_PAGE);
+   strcat (localname, "Selecting.html");
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpSearching (Document document, View view)
+#else /* __STDC__*/
+void HelpSearching (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   char    localname[MAX_LENGTH];
+
+   strcpy (localname, AMAYA_PAGE);
+   strcat (localname, "Searching.html");
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpViews (Document document, View view)
+#else /* __STDC__*/
+void HelpViews (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   char    localname[MAX_LENGTH];
+
+   strcpy (localname, AMAYA_PAGE);
+   strcat (localname, "Views.html");
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpCreating (Document document, View view)
+#else /* __STDC__*/
+void HelpCreating (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   char    localname[MAX_LENGTH];
+
+   strcpy (localname, AMAYA_PAGE);
+   strcat (localname, "Creating.html");
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpLinks (Document document, View view)
+#else /* __STDC__*/
+void HelpLinks (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   char    localname[MAX_LENGTH];
+
+   strcpy (localname, AMAYA_PAGE);
+   strcat (localname, "Links.html");
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpChanging (Document document, View view)
+#else /* __STDC__*/
+void HelpChanging (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   char    localname[MAX_LENGTH];
+
+   strcpy (localname, AMAYA_PAGE);
+   strcat (localname, "Changing.html");
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpTables (Document document, View view)
+#else /* __STDC__*/
+void HelpTables (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   char    localname[MAX_LENGTH];
+
+   strcpy (localname, AMAYA_PAGE);
+   strcat (localname, "Tables.html");
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpImageMaps (Document document, View view)
+#else /* __STDC__*/
+void HelpImageMaps (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   char    localname[MAX_LENGTH];
+
+   strcpy (localname, AMAYA_PAGE);
+   strcat (localname, "ImageMaps.html");
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpStyleSheets (Document document, View view)
+#else /* __STDC__*/
+void HelpStyleSheets (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   char    localname[MAX_LENGTH];
+
+   strcpy (localname, AMAYA_PAGE);
+   strcat (localname, "StyleSheets.html");
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpAttributes (Document document, View view)
+#else /* __STDC__*/
+void HelpAttributes (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   char    localname[MAX_LENGTH];
+
+   strcpy (localname, AMAYA_PAGE);
+   strcat (localname, "Attributes.html");
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpPublishing (Document document, View view)
+#else /* __STDC__*/
+void HelpPublishing (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   char    localname[MAX_LENGTH];
+
+   strcpy (localname, AMAYA_PAGE);
+   strcat (localname, "Publishing.html");
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpPrinting (Document document, View view)
+#else /* __STDC__*/
+void HelpPrinting (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   char    localname[MAX_LENGTH];
+
+   strcpy (localname, AMAYA_PAGE);
+   strcat (localname, "Printing.html");
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpMakeBook (Document document, View view)
+#else /* __STDC__*/
+void HelpMakeBook (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   char    localname[MAX_LENGTH];
+
+   strcpy (localname, AMAYA_PAGE);
+   strcat (localname, "MakeBook.html");
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
 }
 
 
@@ -2209,7 +2419,7 @@ View                view;
    /* invalid current loading */
    W3Loading = 0;
 
-   documentClosed = True;
+   documentClosed = TRUE;
    /* free each loaded document */
    for (i = 1; i < DocumentTableLength; i++)
       if (DocumentURLs[i] != NULL)

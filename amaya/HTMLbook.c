@@ -208,7 +208,7 @@ void                PrintAs (document, view)
 Document            document;
 #endif /* __STDC__ */
 {
-   PathBuffer          viewsToPrint;
+   char             viewsToPrint[MAX_PATH];
 
    CheckPrintingDocument (document);
    strcpy (viewsToPrint, "Formatted_view ");

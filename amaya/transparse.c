@@ -28,7 +28,7 @@
 #endif
 
 
-extern PathBuffer   SchemaPath;
+extern char   SchemaPath[MAX_PATH];
 
 
 /* pattern and rules internal representation */

@@ -400,7 +400,7 @@ NotifyElement      *event;
 				    iName = i;
 				 }
 			       /* get the complete URL of the referred document */
-			       /* Add the  base content if ncessary */
+			       /* Add the  base content if necessary */
 			       NormalizeURL (documentURL, originDocument, tempURL, path);
 			    }
 			  if (value[iName] == '#')
