@@ -2834,14 +2834,17 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	}
 
       /* Get the box just after */
-      if (inLine &&
+      if (pParent &&
 	  pParent->AbAcceptLineBreak && pParent->AbFloat == 'N' &&
 	  pParent->AbEnclosing && pParent->AbEnclosing->AbBox &&
 	  (pParent->AbEnclosing->AbBox->BxType == BoBlock ||
 	   pParent->AbEnclosing->AbBox->BxType == BoFloatBlock ||
-	   pParent->AbEnclosing->AbBox->BxType == BoGhost) )
-	/* the parent was not set ghost because it was empty */
-	pParent->AbBox->BxType = BoGhost;
+	   pParent->AbEnclosing->AbBox->BxType == BoGhost))
+	{
+	  /* the parent was not set ghost because it was empty */
+	  pParent->AbBox->BxType = BoGhost;
+	  inLine = TRUE;
+	}
 
       if (pParent && pNextBox && pNextBox == pParent->AbBox)
 	/* the new box will replace the previous one */
