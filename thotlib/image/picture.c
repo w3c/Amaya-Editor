@@ -194,70 +194,6 @@ BOOL DibInfo (LPBITMAPINFOHEADER lpbi)
     }
   return FALSE;
 }
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-LPBITMAPINFO CreateBitmapInfoStruct(HWND hwnd, HBITMAP hBmp) 
-{ 
-  BITMAP       bmp;
-  LPBITMAPINFO pbmi;
-  WORD         cClrBits;
- 
-  /* Retrieve the bitmap's color format, width, and height. */ 
-  if (!GetObject (hBmp, sizeof(BITMAP), (LPSTR)&bmp))
-    WinErrorBox (hwnd, "CreateBitmapInfoStruct (1)");
-  /* Convert the color format to a count of bits. */ 
-  cClrBits = (WORD) (bmp.bmPlanes * bmp.bmBitsPixel);
-  if (cClrBits != 1)
-    { 
-      if (cClrBits <= 4) 
-	cClrBits = 4;
-      else if (cClrBits <= 8) 
-	cClrBits = 8;
-      else if (cClrBits <= 16) 
-	cClrBits = 16;
-      else if (cClrBits <= 24) 
-	cClrBits = 24;
-      else 
-	cClrBits = 32;
-    }
- 
-  /* 
-   * Allocate memory for the BITMAPINFO structure. (This structure 
-   * contains a BITMAPINFOHEADER structure and an array of RGBQUAD data 
-   * structures.) 
-   */ 
-  if (cClrBits != 24) 
-    pbmi = (LPBITMAPINFO) LocalAlloc (LPTR, sizeof (BITMAPINFOHEADER) + sizeof (RGBQUAD) * (2^cClrBits));
-  else 
-    /* There is no RGBQUAD array for the 24-bit-per-pixel format */ 
-    pbmi = (LPBITMAPINFO) LocalAlloc(LPTR, sizeof(BITMAPINFOHEADER));
- 
-  /* Initialize the fields in the BITMAPINFO structure. */
-  pbmi->bmiHeader.biSize     = sizeof (BITMAPINFOHEADER);
-  pbmi->bmiHeader.biWidth    = bmp.bmWidth;
-  pbmi->bmiHeader.biHeight   = bmp.bmHeight;
-  pbmi->bmiHeader.biPlanes   = bmp.bmPlanes;
-  pbmi->bmiHeader.biBitCount = bmp.bmBitsPixel;
-  if (cClrBits < 24)
-    pbmi->bmiHeader.biClrUsed = 2^cClrBits;
-
-  /* If the bitmap is not compressed, set the BI_RGB flag. */  
-  pbmi->bmiHeader.biCompression = BI_RGB;
- 
-  /* 
-   * Compute the number of bytes in the array of color 
-   * indices and store the result in biSizeImage. 
-   */
-  pbmi->bmiHeader.biSizeImage = (pbmi->bmiHeader.biWidth + 7) / 8 * pbmi->bmiHeader.biHeight * cClrBits;
- 
-  /* 
-   * Set biClrImportant to 0, indicating that all of the 
-   * device colors are important. 
-   */
-  pbmi->bmiHeader.biClrImportant = 0;
-  return pbmi;
-} 
 #endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
@@ -1217,11 +1153,10 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x,
   int                 xFrame, yFrame;
   ThotColor           BackGroundPixel;
 #ifdef _WIN_PRINT
-  BITMAPINFOHEADER    bi;
-  BITMAPINFOHEADER   *pbi;
-  RGBQUAD            *pquad;
-  HBITMAP             hBmp;
-  int                 i;
+  LPBITMAPINFO        pbmi;
+  LPBYTE              lpBits;
+  BITMAP              bmp;
+  WORD                cClrBits;
 #endif /* _WIN_PRINT */
   
   if (w == 0 && h == 0)
@@ -1314,69 +1249,80 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x,
 	    WinErrorBox (NULL, "DrawPicture (1)");
 	  else
 	  {
-	    /* Initialize BITMAPINFOHEADER structure */
-	    bi.biSize = sizeof (BITMAPINFOHEADER);
-	    bi.biWidth = imageDesc->PicWidth;
-	    bi.biHeight = imageDesc->PicHeight;
-	    bi.biPlanes = 1;
-	    bi.biCount = TtWDepth;
-	    bi.biCompression = BI_RGB;
-	    bi.biSizeImage = bi.bWidth * bi.bHeight / 2;
-	    bi.biXPelsPerMeter = 0;
-	    bi.biYPelsPerMeter = 0;
-	    bi.biClrUsed = 0;
-	    bibiClrImportant = 0;
-	    /* create the device independant bitmap */
-	    hBmp = CreateDIBitmap (TtDisplay, &bi, OL, NULL, NULL, 0);
-	    /* allocate memory for BITMAPINFOHEADER structure */
-	    pbi = (BITMAPINFOHEADER *) HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY,
-						  sizeof (BITMAPINFOHEADER) + 16 * sizeof (RGBQUAD));
-	    if (!pbi) 
-	      WinErrorBox (NULL, "DrawPicture (2)");
-	    else
-	      {
-		*pbi = bi;
-		pquad = &((LPBITMAPINFO *) pbi)->bmiColors[0];
-		for (i = 0; i < 16; i++)
-		  {
-		    pquad->rgbBlue = i * 16;
-		    pquad->rgbRed = 0;
-		    pquad->rgbGreen = 0;
-		  }
-		if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0,
-				imageDesc->PicHeight, NULL,
-				(LPBITMAPINFO)pbi, DIB_RGB_COLORS)) 
-		  WinErrorBox (NULL, "DrawPicture (3)");
-		else
-		  StretchDIBits (TtDisplay, x, y, w, h, 0, 0,
-				 imageDesc->PicWidth,
-				 imageDesc->PicHeight,
-				 NULL, (LPBITMAPINFO)pbi, DIB_RGB_COLORS, SRCCOPY);
-		HeapFree (GetProcessHeap (), TtDisplay);
-	      }
-#ifdef IV
-  LPBITMAPINFO        lpBmpInfo;
-  LPBYTE              lpBits;
-	    lpBmpInfo = CreateBitmapInfoStruct(TtPrinterDC, imageDesc->PicPixmap);
-	    lpBits = GlobalAlloc (GMEM_FIXED, lpBmpInfo->bmiHeader.biSizeImage);
+      /* Retrieve the bitmap's color format, width, and height. */ 
+      if (!GetObject ((HBITMAP)(imageDesc->PicPixmap), sizeof(BITMAP), (LPSTR)&bmp))
+        WinErrorBox (NULL, "DrawPicture (1)");
+      else
+	  {
+        /* Convert the color format to a count of bits. */ 
+        cClrBits = (WORD) (bmp.bmPlanes * bmp.bmBitsPixel);
+        if (cClrBits != 1)
+		{ 
+          if (cClrBits <= 4) 
+	        cClrBits = 4;
+          else if (cClrBits <= 8) 
+	        cClrBits = 8;
+          else if (cClrBits <= 16) 
+	        cClrBits = 16;
+          else if (cClrBits <= 24) 
+	        cClrBits = 24;
+          else 
+	        cClrBits = 32;
+		}
+      /* 
+       * Allocate memory for the BITMAPINFO structure. (This structure 
+       * contains a BITMAPINFOHEADER structure and an array of RGBQUAD data 
+       * structures.) 
+       */ 
+      if (cClrBits != 24) 
+	    pbmi = (LPBITMAPINFO) HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY,
+						  sizeof (BITMAPINFOHEADER) + (2^cClrBits) * sizeof (RGBQUAD));
+      else
+        /* There is no RGBQUAD array for the 24-bit-per-pixel format */ 
+        pbmi = (LPBITMAPINFO) LocalAlloc(LPTR, sizeof(BITMAPINFOHEADER));
+      if (pbmi)
+	  {
+        /* Initialize the fields in the BITMAPINFO structure. */
+        pbmi->bmiHeader.biSize     = sizeof (BITMAPINFOHEADER);
+        pbmi->bmiHeader.biWidth    = bmp.bmWidth;
+        pbmi->bmiHeader.biHeight   = bmp.bmHeight;
+        pbmi->bmiHeader.biPlanes   = bmp.bmPlanes;
+        pbmi->bmiHeader.biBitCount = bmp.bmBitsPixel;
+        if (cClrBits < 24)
+          pbmi->bmiHeader.biClrUsed = 2^cClrBits;
+        /* If the bitmap is not compressed, set the BI_RGB flag. */  
+        pbmi->bmiHeader.biCompression = BI_RGB;
+        /* 
+         * Compute the number of bytes in the array of color 
+         * indices and store the result in biSizeImage. 
+         */
+        pbmi->bmiHeader.biSizeImage = (pbmi->bmiHeader.biWidth + 7) / 8 * pbmi->bmiHeader.biHeight * cClrBits;
+        /* 
+         * Set biClrImportant to 0, indicating that all of the 
+         * device colors are important. 
+         */
+        pbmi->bmiHeader.biClrImportant = 0;
+ 	    lpBits = GlobalAlloc (GMEM_FIXED, pbmi->bmiHeader.biSizeImage);
 	    if (!lpBits) 
 	      WinErrorBox (NULL, "DrawPicture (2)");
 	    else
-	      {
-		if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0,
-				(UINT)lpBmpInfo->bmiHeader.biHeight,
-				lpBits, lpBmpInfo, DIB_RGB_COLORS)) 
-		  WinErrorBox (NULL, "DrawPicture (3)");
-		else
+		{
+		  if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0,
+				 (UINT)pbmi->bmiHeader.biHeight,
+				 lpBits, pbmi, DIB_RGB_COLORS)) 
+		    WinErrorBox (NULL, "DrawPicture (3)");
+		  else
 		  {
 		    StretchDIBits (TtPrinterDC, x, y, w, h, 0, 0,
-				   lpBmpInfo->bmiHeader.biWidth,
-				   lpBmpInfo->bmiHeader.biHeight,
-				   lpBits, lpBmpInfo, DIB_RGB_COLORS, SRCCOPY);
-		    GlobalFree (lpBits);
+				   pbmi->bmiHeader.biWidth,
+				   pbmi->bmiHeader.biHeight,
+				   lpBits, pbmi, DIB_RGB_COLORS, SRCCOPY);
 		  }
-	      }
-#endif /* IV */
+		  GlobalFree (lpBits);
+		}
+		LocalFree (pbmi);
+	  }
+  }
 	  }
 	  WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
@@ -1722,7 +1668,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       imageDesc->PicWArea = w;
       imageDesc->PicHArea = h;
     }
-  FreePixmap (imageDesc->PicPixmap);
   imageDesc->PicPixmap = drw;
 #ifdef _WIN_PRINT
   if (releaseDC)
