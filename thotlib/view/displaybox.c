@@ -1045,7 +1045,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   SpecFont            font;
   PtrFont             prevfont = NULL;
   PtrFont             nextfont = NULL;
-  CHAR_T              bchar;
+  CHAR_T              c;
   wchar_t            *wbuffer = NULL;
   unsigned char      *buffer = NULL;
   char                script;
@@ -1298,9 +1298,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	  while ((rtl && indbuff >= indmax) ||
 		 (!rtl && indbuff <= indmax))
 	    {
-	      bchar = adbuff->BuContent[indbuff];
-	      val = GetFontAndIndexFromSpec (bchar, font, &nextfont);
-	      if (val == INVISIBLE_CHAR)
+	      c = adbuff->BuContent[indbuff];
+	      val = GetFontAndIndexFromSpec (c, font, &nextfont);
+	      if (val == INVISIBLE_CHAR || c == ZERO_SPACE ||
+		  c == EOL || c == BREAK_LINE)
 		/* do nothing */;
 	      else if (nextfont == NULL && val == UNDISPLAYED_UNICODE)
 		{
@@ -1372,9 +1373,13 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      nbcar = 0;
 		      prevfont = nextfont;
 		    }
-		  if (bchar == SPACE || bchar == THIN_SPACE ||
-		      bchar == HALF_EM || bchar == UNBREAKABLE_SPACE || bchar == TAB ||
-		      bchar == EOL)
+		  if (c == SPACE || c == TAB ||
+		      c == THICK_SPACE || c == FIG_SPACE ||
+		      c == EM_SPACE || c == MID_SPACE ||
+		      c == NEW_LINE || c == UNBREAKABLE_SPACE ||
+		      c == THIN_SPACE || c == EN_SPACE ||
+		      c == SIX_PER_EM || c == HAIR_SPACE ||
+		      c == HALF_EM || c == PUNC_SPACE)
 		    {
 		      /* display previous chars handled */
 		      if (nbcar > 0)
@@ -1404,19 +1409,19 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      else if (!ShowSpace)
 			{
 			  /* Show the space chars */
-			  if (val == SPACE || val == TAB) 
+			  if (c == SPACE || c == TAB) 
 			    DrawChar ((char) SHOWN_SPACE, frame, x, y, nextfont, fg);
-			  else if (val == THIN_SPACE)
+			  else if (c == THIN_SPACE)
 			    DrawChar ((char) SHOWN_THIN_SPACE, frame, x, y, nextfont, fg);
-			  else if (val == HALF_EM)
+			  else if (c == HALF_EM)
 			    DrawChar ((char) SHOWN_HALF_EM, frame, x, y, nextfont, fg);
-			  else if (val == UNBREAKABLE_SPACE)
+			  else if (c == UNBREAKABLE_SPACE)
 			    DrawChar ((char) SHOWN_UNBREAKABLE_SPACE, frame, x, y,
 				      nextfont, fg);
 			}
 		 
 		      nbcar = 0;
-		      if (val == SPACE)
+		      if (c == SPACE)
 			{
 			  if (restbl > 0)
 			    {
@@ -1427,8 +1432,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			  else
 			    lg = lgspace;
 			}
-		      else if (val != EOS)
-			lg = CharacterWidth (val, nextfont);
+		      else if (c != EOS)
+			lg = CharacterWidth (c, nextfont);
 #ifdef _WINDOWS
 			x += lg;
 #else /* _WINDOWS */

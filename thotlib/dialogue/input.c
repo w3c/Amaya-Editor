@@ -1098,36 +1098,13 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 	    }
       
 	  /*** Sequence de traitement des espaces ***/
-	  if (value == BREAK_LINE || (InputSpace && value == SHOWN_BREAK_LINE))
+	  if (value == BREAK_LINE || value == THIN_SPACE ||
+	      value == HALF_EM || value == UNBREAKABLE_SPACE)
 	    {
 	      if (MenuActionList[0].Call_Action)
-		(*MenuActionList[0].Call_Action) (document, view, BREAK_LINE);
+		(*MenuActionList[0].Call_Action) (document, view, value);
 	    }
-	  else if (value == THIN_SPACE ||
-		   (InputSpace && value == SHOWN_THIN_SPACE))
-	    {
-	      if (MenuActionList[0].Call_Action)
-		(*MenuActionList[0].Call_Action) (document, view, THIN_SPACE);
-	    }
-	  else if (value == HALF_EM || (InputSpace && value == SHOWN_HALF_EM))
-	    {
-	      if (MenuActionList[0].Call_Action)
-		(*MenuActionList[0].Call_Action) (document, view, HALF_EM);
-	    }
-	  else if (value == UNBREAKABLE_SPACE ||
-		   (InputSpace && value == SHOWN_UNBREAKABLE_SPACE))
-	    {
-	      if (MenuActionList[0].Call_Action)
-		(*MenuActionList[0].Call_Action) (document, view,
-						  UNBREAKABLE_SPACE);
-	    }
-	  else if ((InputSpace && value == SHOWN_SPACE))
-	    {
-	      if (MenuActionList[0].Call_Action)
-		(*MenuActionList[0].Call_Action) (document, view, SPACE);
-	    }
-	  else if (value == 9 ||
-		   ( value >= 32))
+	  else if (value == 9 || value >= 32)
 	    {
 	      if (LoadedDocument[document - 1] == SelectedDocument &&
 		  value == TAB)

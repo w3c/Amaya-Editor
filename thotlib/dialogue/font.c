@@ -323,12 +323,14 @@ int CharacterWidth (int c, PtrFont font)
 
   if (font == NULL)
     return 0;
-  else if (c == INVISIBLE_CHAR)
+  else if (c == INVISIBLE_CHAR || c == ZERO_SPACE)
     return 1;
 
   if (c == START_ENTITY)
     c = '&';
-  else if (c == TAB || c == UNBREAKABLE_SPACE)
+  else if (c == TAB || c == UNBREAKABLE_SPACE ||
+	   c == THICK_SPACE || c == FIG_SPACE ||
+	   c == EM_SPACE || c == MID_SPACE)
     /* we use the SPACE width for the character TAB */
     c = SPACE;
 
@@ -338,12 +340,14 @@ int CharacterWidth (int c, PtrFont font)
   else
     {
 #ifdef _WINDOWS
-      if(c == THIN_SPACE || c == HALF_EM)
+      if (c == THIN_SPACE || c == EN_SPACE ||
+	  c == SIX_PER_EM || c == HAIR_SPACE ||
+	  c == HALF_EM || c == PUNC_SPACE)
 	{
 	  if (font->FiFirstChar <= 32 && font->FiLastChar >= 32)
 	  {
 	    l = font->FiWidths[32 - font->FiFirstChar] + 3;
-	    if (c == HALF_EM)
+	    if (c == HALF_EM || c == PUNC_SPACE)
 	      l = l / 2;
 	    else
 	      l = l / 4;
@@ -355,9 +359,10 @@ int CharacterWidth (int c, PtrFont font)
 	l = font->FiAscent; /* MJD: Simple hack, works only approximately */
 #else  /* _WINDOWS */
 #ifdef _GTK
-      if (c == THIN_SPACE)
+      if (c == THIN_SPACE || c == EN_SPACE ||
+	  c == SIX_PER_EM || c == HAIR_SPACE)
 	l = gdk_char_width (font, 32) / 4;
-      else if (c == HALF_EM)
+      else if (c == HALF_EM || c == PUNC_SPACE)
 	l = gdk_char_width (font, 32) / 2;
       else if (c > 256)
 	{
@@ -368,17 +373,20 @@ int CharacterWidth (int c, PtrFont font)
       else
 	l = gdk_char_width (font, c);
 #else /* _GTK */
-      if (c == THIN_SPACE || c == HALF_EM)
-	xc = CharacterStructure(32, xf);
+      if (c == THIN_SPACE || c == EN_SPACE ||
+	  c == SIX_PER_EM || c == HAIR_SPACE ||
+	  c == HALF_EM || c == PUNC_SPACE)
+	xc = CharacterStructure (32, xf);
       else
-	xc = CharacterStructure(c, xf);
+	xc = CharacterStructure (c, xf);
       if (xc == NULL)
 	l = xf->max_bounds.width;
       else
 	l = xc->width;
-      if (c == THIN_SPACE)
+      if (c == THIN_SPACE || c == EN_SPACE ||
+	  c == SIX_PER_EM || c == HAIR_SPACE)
 	l = (l + 3)/4;
-      else if (c == HALF_EM)
+      else if (c == HALF_EM || c == PUNC_SPACE)
 	l = (l + 1)/2;
 #endif  /* _GTK */
       if (c == 244)
@@ -1589,7 +1597,20 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
   car = EOS;
   if (fontset)
     {
-      if (c <= 0xFF)
+      if (c == ZERO_SPACE || c == EOL || c == SPACE ||
+	  c == TAB || c == UNBREAKABLE_SPACE ||
+	  c == THICK_SPACE || c == FIG_SPACE ||
+	  c == EM_SPACE || c == MID_SPACE ||
+	  c == NEW_LINE || c == BREAK_LINE ||
+	  c == THIN_SPACE || c == EN_SPACE ||
+	  c == SIX_PER_EM || c == HAIR_SPACE ||
+	  c == HALF_EM || c == PUNC_SPACE)
+	{
+	  /* various spaces */
+	  *font = fontset->FontIso_1;
+	  car = (int) c;
+	}
+      else if (c <= 0xFF)
 	{
 	  /* 0 -> FF */
 	  *font = fontset->FontIso_1;
@@ -1630,14 +1651,33 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 		  encoding = ISO_SYMBOL;
 		}
 	    }
+	  else if (c == 0x2148 /* imaginaryi */ ||
+		   c == 0x2146 /* DifferentialD */ ||
+		   c == 0x210E /* planckh */ ||
+		   c == 0x2147 /* ExponentialE */)
+	    {
+#ifdef _WINDOWS
+	      encoding = WINDOWS_1252;
+#else /* _WINDOWS */
+	      encoding = ISO_8859_1;
+#endif /* _WINDOWS */
+	      code = '1'; /* West Europe Latin */
+	      pfont = &(fontset->FontIso_1);
+	      if (c == 0x2148 /* imaginaryi */)
+		c = 105;
+	      else if (c == 0x2146 /* DifferentialD */)
+		c = 100;
+	      else if (c == 0x210E /* planckh */)
+		c = 104;
+	      else
+		c = 101;
+	    }
 	  else if (c == 0x152  /*oe*/     || c == 0x153  /*OE*/ ||
 		   c == 0x178  /*ydiaeresis*/ ||
 		   c == 0x2C6  /*circ*/   || c == 0x2DC  /*tilde*/ ||
-		   c == 0x2002 /*ensp*/   || c == 0x2003 /*emsp*/ ||
-		   c == 0x2009 /*thinsp*/ ||
 		   c == 0x2013 /*ndash*/  || c == 0x2014 /*mdash*/ ||
 		   (c >= 0x2018 && c <= 0x201E) /*quotes*/ ||
-		   c == 0x2026 /*hellip*/    ||
+		   c == 0x2026 /*hellip*/ ||
 		   c == 0x2039 /*inf*/    || c == 0x203A /*sup*/ ||
 		   c == 0x20AC /*euro*/)
 	    {
