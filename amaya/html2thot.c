@@ -6176,8 +6176,24 @@ Document            doc;
    elFrameset = NULL;
    elNoframes = NULL;
 
-   docSSchema = TtaGetDocumentSSchema (doc);
-   elRoot = TtaGetMainRoot (doc);
+#ifdef ANNOTATIONS
+   if (DocumentTypes[doc] == docAnnot
+       || DocumentTypes[doc] == docAnnotRO)
+     {
+       /* we search the start of HTML document in the annotation struct */
+       elRoot = TtaGetMainRoot (doc);
+       elType = TtaGetElementType (elRoot);
+       elType.ElTypeNum = Annot_EL_Body;
+       elRoot = TtaSearchTypedElement (elType, SearchInTree, elRoot);
+       elRoot = TtaGetFirstChild (elRoot);
+       docSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+     }
+   else
+#endif /* ANNOTATIONS */
+     {
+       elRoot = TtaGetMainRoot (doc);
+       docSSchema = TtaGetDocumentSSchema (doc);
+     }
    el = TtaGetFirstChild (elRoot);
    if (el != NULL)
      {
@@ -7050,7 +7066,7 @@ ThotBool            plainText;
 		TtaAttachAttribute (rootElement, attr, doc);
 	      }
 	  }
-	
+
 	TtaSetDisplayMode (doc, NoComputedDisplay);
 #ifdef ANNOTATIONS
 	if (DocumentTypes[doc] == docAnnot
