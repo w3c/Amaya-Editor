@@ -202,6 +202,10 @@ SOURCE=..\..\thotlib\image\gifhandler.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\base\global.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\view\glwindowdisplay.c
 # End Source File
 # Begin Source File
