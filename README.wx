@@ -1,5 +1,5 @@
   
-                       Amaya Opengl
+                       Amaya wxWidgets
 
 
 About this release
@@ -46,18 +46,10 @@ How to Compile The Amaya Opengl Version
 ===================================
 
 
-Download External Library : freetype
-------------------------------------
+Download External Library : wxWidgets and Mesa
+----------------------------------------------
 
-In order to render fonts, the opengl version use the Freetype library, 
-which can be found at www.freetype.org.
-You may download the latest source distribution
- and compile it on your system.
-On Linux platform, you can get the binary and the developpement package
-of you distribution instead.
-Make sure the library and its headers are in the library path and 
-the include path, so that the compilers can find them.
-
+http://www.w3.org/Amaya/User/SourceDist.html
 
 Compilation
 -----------
@@ -65,13 +57,10 @@ Compilation
 On Linux, apart that you must run specific option for the configure, 
 you must follow http://www.w3.org/Amaya/User/Autoconf.html instructions.
 run the configure like this
-#mkdir GL
-#cd GL
-#../configure --with-gl --with-gtk
-(you can use --with-mesa option instead of --with-gl to compile with mesa library)
+#mkdir WX
+#cd WX
+#../configure --with-wx
 
-On Windows, open the amaya.dsw that is in the "windowsGL" subdirectory 
+On Windows, open the amaya.dsw that is in the "WindowsWX" subdirectory 
 of source distribution, and follow the instructions at 
 http://www.w3.org/Amaya/User/Win-Compiling.html
-
-
