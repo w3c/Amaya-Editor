@@ -29,7 +29,7 @@
   GI is the input string
   gi is the output string
   ----------------------------------------------------------------------*/
-static void      LowercaseGI (char *GI, char *gi)
+static void LowercaseGI (char *GI, char *gi)
 {
   int        i;
 

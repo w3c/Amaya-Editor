@@ -4865,14 +4865,21 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    {
 	      if (elType.ElSSchema == NULL)
 		{
-		  /* Search in the list of loaded schemas */
+		  /* Selector not found: Search in the list of loaded schemas */
 		  TtaGetXmlElementType (names[i], &elType, NULL, doc);
 		  if (elType.ElSSchema)
 		    {
 		      /* the element type concerns an imported nature */
 		      schemaName = TtaGetSSchemaName(elType.ElSSchema);
 		      if (!strcmp (schemaName, "HTML"))
-			xmlType = XHTML_TYPE;
+			{
+			  if (xmlType == XHTML_TYPE &&
+			      DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
+			    /* the selector was found but the case is not correct */
+			    elType.ElSSchema = NULL;
+			  else
+			    xmlType = XHTML_TYPE;
+			}
 		      else if (!strcmp (schemaName, "MathML"))
 			xmlType = MATH_TYPE;
 		      else if (!strcmp (schemaName, "SVG"))

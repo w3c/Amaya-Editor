@@ -182,12 +182,16 @@ void MapXMLElementType (int XMLtype, char *XMLname, ElementType *elType,
   ElemMapping        *ptr;
   char                c;
   int                 i, profile;
+  ThotBool            xmlformat;
 
   /* Initialize variables */
   *mappedName = NULL;
   *checkProfile = TRUE;
   elType->ElTypeNum = 0;
   profile = TtaGetDocumentProfile (doc);
+  /* case sensitive comparison for xml documents */
+  xmlformat = (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat);
+
   /* Select the right table */
   if (XMLtype == XHTML_TYPE)
     ptr = XHTMLElemMappingTable;
@@ -221,7 +225,7 @@ void MapXMLElementType (int XMLtype, char *XMLname, ElementType *elType,
       /* search in the ElemMappingTable */
       i = 0;
       /* case insensitive for HTML */
-      if (ptr == XHTMLElemMappingTable)
+      if (!xmlformat && ptr == XHTMLElemMappingTable)
 	c = tolower (XMLname[0]);
       else
 	c = XMLname[0];
@@ -230,10 +234,12 @@ void MapXMLElementType (int XMLtype, char *XMLname, ElementType *elType,
 	i++;     
       /* look at all entries starting with the right character */
       do
-	if (ptr == XHTMLElemMappingTable && strcasecmp (ptr[i].XMLname, XMLname))
+	if (!xmlformat && ptr == XHTMLElemMappingTable &&
+	    strcasecmp (ptr[i].XMLname, XMLname))
 	  /* it's not the tag */
 	  i++;
-	else if (ptr != XHTMLElemMappingTable && strcmp (ptr[i].XMLname, XMLname))
+	else if ((xmlformat || ptr != XHTMLElemMappingTable) &&
+		 strcmp (ptr[i].XMLname, XMLname))
 	  /* it's not the tag */
 	  i++;
 	else if (profile != L_Other && !(ptr[i].Level & profile))
@@ -392,11 +398,14 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
   AttributeMapping   *ptr;
   char                c;
   int                 i, profile;
+  ThotBool            xmlformat;
 
   /* Initialization */
   *checkProfile = TRUE;
   i = 1;
   *thotType = 0;
+  /* case sensitive comparison for xml documents */
+  xmlformat = (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat);
   
   /* Select the right table */
   if (XMLtype == XHTML_TYPE)
@@ -409,10 +418,8 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
     ptr = XLinkAttributeMappingTable;
   else
     ptr = NULL;
-  
   if (ptr == NULL)
     return -1;
-  
   if (strcmp (attrName, "unknown_attr") == 0)
     {
       *thotType = ptr[0].ThotAttribute;
@@ -420,7 +427,7 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
     }
 
   /* case insensitive for HTML */
-  if (ptr == XHTMLAttributeMappingTable)
+  if (!xmlformat && ptr == XHTMLAttributeMappingTable)
     c = tolower (attrName[0]);
   else
     c = attrName[0];
@@ -431,12 +438,12 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
     i++;
   while (ptr[i].XMLattribute[0] == c)
     {
-      if (ptr == XHTMLAttributeMappingTable &&
+      if (!xmlformat && ptr == XHTMLAttributeMappingTable &&
 	  (strcasecmp (ptr[i].XMLattribute, attrName) ||
 	   (ptr[i].XMLelement[0] != EOS &&
 	    strcasecmp (ptr[i].XMLelement, elementName))))
 	i++;
-      else if (ptr != XHTMLAttributeMappingTable &&
+      else if ((xmlformat || ptr != XHTMLAttributeMappingTable) &&
 	  (strcmp (ptr[i].XMLattribute, attrName) ||
 	   (ptr[i].XMLelement[0] != EOS &&
 	    strcmp (ptr[i].XMLelement, elementName))))
