@@ -584,6 +584,13 @@ RULES
 
 ATTRIBUTES
 
+ Language:
+	BEGIN
+	    Create ' xml:lang="';
+	    Create Language;
+	    Create '"';
+	END;
+
    class:
 	begin
 	create SAN;

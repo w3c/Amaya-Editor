@@ -432,6 +432,13 @@ RULES
 
 ATTRIBUTES
 
+ Language:
+	BEGIN
+	    Create ' xml:lang="';
+	    Create Language;
+	    Create DoubleQuote;
+	END;
+
    id:
         begin
         create SAN;

@@ -91,6 +91,7 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {"height", "", 'A', MathML_ATTR_height_, L_OtherValue},
    {"id", "", 'A', MathML_ATTR_id, L_OtherValue},
    {"index", "", 'A', MathML_ATTR_index, L_OtherValue},
+   {"lang", "", 'A', MathML_ATTR_Language, L_OtherValue},
    {"largeop", "", 'A', MathML_ATTR_largeop, L_OtherValue},
    {"linebreak", "", 'A', MathML_ATTR_linebreak_, L_OtherValue},
    {"linethickness", "", 'A', MathML_ATTR_linethickness, L_OtherValue},

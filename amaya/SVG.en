@@ -28,7 +28,7 @@ target_: target
 style__: style
 title_: title
 
-Language: lang
+Language: xml:lang
 font_family: font-family
 font_size: font-size
 font_style: font-style

@@ -1456,6 +1456,12 @@ RULES
 
 ATTRIBUTES
 
+  Language:
+	BEGIN
+        CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;
+
   Unknown_attribute:
 	BEGIN
 	if TEXT_UNIT

@@ -57,6 +57,7 @@ static AttributeMapping SVGAttributeMappingTable[] =
    {"font-weight", "", 'A', SVG_ATTR_font_weight, L_OtherValue},
    {"height", "", 'A', SVG_ATTR_height_, L_OtherValue},
    {"id", "", 'A', SVG_ATTR_id, L_OtherValue},
+   {"lang", "", 'A', SVG_ATTR_Language, L_OtherValue},
    {"media", "", 'A', SVG_ATTR_media, L_OtherValue},
    {"pathLength", "", 'A', SVG_ATTR_pathLength, L_OtherValue},
    {"points", "", 'A', SVG_ATTR_points, L_OtherValue},
