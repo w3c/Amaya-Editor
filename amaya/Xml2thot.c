@@ -484,6 +484,10 @@ void XmlSetElemLineNumber (Element el)
   ----------------------------------------------------------------------*/
 void  XmlParseError (ErrorType type, unsigned char *msg, int line)
 {
+  int           pos, n;
+  const char         *c;
+  unsigned char       val;
+
   if (!ShowParsingErrors)
       return;
 
@@ -512,18 +516,24 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
 	{
 	  if (Parser != NULL)
 	    {
-	      fprintf (ErrFile, "@  line %d, char %d: %s\n",
-		       XML_GetCurrentLineNumber (Parser) + HtmlLineRead -  ExtraLineRead,
-		       XML_GetCurrentColumnNumber (Parser),
-		       msg);
+	      line = XML_GetCurrentLineNumber (Parser) + HtmlLineRead -  ExtraLineRead;
+	      /* check if expat found an invalid utf-8 character or an error
+		 in an attribute value or an invalid entity */
+	      c = XML_GetInputContext (Parser, &pos, &n);
+	      val = (unsigned char)(c[pos]);
+	      if (strstr ((char *)msg, "invalid token") && val > 127)
+		XMLInvalidToken = TRUE;
+	      else
+		XMLNotWellFormed = TRUE;
+	      fprintf (ErrFile, "@  line %d, char %d: %s\n", line,
+		       XML_GetCurrentColumnNumber (Parser), msg);
 	    }
 	}
       else
-	fprintf (ErrFile, "@  line %d: %s\n", line, msg);
-      if (strstr ((char *)msg, "invalid token"))
-	XMLInvalidToken = TRUE;
-      else
-	XMLNotWellFormed = TRUE;
+	{
+	  fprintf (ErrFile, "@  line %d: %s\n", line, msg);
+	  XMLNotWellFormed = TRUE;
+	}
       break;
     case errorCharacterNotSupported:
       if (line == 0)
