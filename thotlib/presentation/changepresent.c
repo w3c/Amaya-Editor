@@ -525,7 +525,7 @@ static boolean PRuleMessagePre(pEl, pPRule, pDoc, isNew)
 {
 	NotifyPresentation notifyPres;
 	PtrPRule	   pR, pRPrec;
-	boolean		   dontdoit;
+	boolean		   noApply;
 
 	if (isNew)
 	  {
@@ -540,8 +540,8 @@ static boolean PRuleMessagePre(pEl, pPRule, pDoc, isNew)
 	notifyPres.document = (Document)IdentDocument(pDoc);
 	notifyPres.element = (Element)pEl;
 	notifyPres.pRuleType = NumTypePRuleAPI(pPRule->PrType);
-	dontdoit = CallEventType((NotifyEvent *)&notifyPres, TRUE);
-	if (dontdoit)
+	noApply = CallEventType((NotifyEvent *)&notifyPres, TRUE);
+	if (noApply)
 	  /* l'application demande a l'editeur de ne rien faire */
 	  if (isNew)
 	     /* supprime la regle de presentation specifique ajoutee */
@@ -569,7 +569,7 @@ static boolean PRuleMessagePre(pEl, pPRule, pDoc, isNew)
 		 pR = NULL;
 		 }
 	     }
-	return dontdoit;
+	return noApply;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -608,15 +608,15 @@ static void PRuleMessagePost(pEl, pPRule, pDoc, isNew)
 /* |	RuleSetIn teste l'appartenance d'un element a` un ensemble.	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int RuleSetIn(register int N, RuleSet S1)
+int RuleSetIn(register int num, RuleSet RuleS1)
 #else /* __STDC__ */
-int RuleSetIn(N, S1)
-	register int N;
-	RuleSet S1;
+int RuleSetIn(num, RuleS1)
+	register int num;
+	RuleSet RuleS1;
 #endif /* __STDC__ */
 {
-  if (N >= 0 && N < SETSIZE*8)
-    return S1[N>>3] & (1 << (N & 7));
+  if (num >= 0 && num < SETSIZE*8)
+    return RuleS1[num>>3] & (1 << (num & 7));
   else 
     return 0;
 }
@@ -626,39 +626,39 @@ int RuleSetIn(N, S1)
 /* |	RuleSetPut ajoute un element a` un ensemble.			| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void RuleSetPut(RuleSet S1, int N)
+void RuleSetPut(RuleSet RuleS1, int num)
 #else /* __STDC__ */
-void RuleSetPut(S1, N)
-	RuleSet S1;
-	int N;
+void RuleSetPut(RuleS1, num)
+	RuleSet RuleS1;
+	int num;
 #endif /* __STDC__ */
 {
-  if (N >= 0 && N < SETSIZE*8)
-    S1[N>>3] |= (1 << (N & 7));
+  if (num >= 0 && num < SETSIZE*8)
+    RuleS1[num>>3] |= (1 << (num & 7));
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |	RuleSetClr met a` 0 l'ensemble S1.				| */
+/* |	RuleSetClr met a` 0 l'ensemble RuleS1.				| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void RuleSetClr(RuleSet S1)
+void RuleSetClr(RuleSet RuleS1)
 #else /* __STDC__ */
-void RuleSetClr(S1)
-	RuleSet S1;
+void RuleSetClr(RuleS1)
+	RuleSet RuleS1;
 #endif /* __STDC__ */
 {
   unsigned char	*s1;
-  int	N;
+  int	num;
   
-  s1 = S1;
-  for (N = SETSIZE; --N >= 0; )
+  s1 = RuleS1;
+  for (num = SETSIZE; --num >= 0; )
     *s1++ = 0;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |	MemesRegleSpecif retourne Vrai si les deux elements pointes par	| */
-/* |		pEl1 et pEl2 possedent les memes regles de presentation	| */
+/* |	MemesRegleSpecif retourne Vrai si aucun des deux elements pointes par	| */
+/* |		pEl1 et pEl2 possedent des regles de presentation	| */
 /* |		specifique.						| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
@@ -669,13 +669,13 @@ boolean MemesRegleSpecif(pEl1, pEl2)
 	PtrElement pEl2;
 #endif /* __STDC__ */
 {
-  boolean         egal;
+  boolean         equal;
   
-  egal = FALSE;
+  equal = FALSE;
   /*on peut faire mieux... */
   if (pEl1->ElFirstPRule == NULL && pEl2->ElFirstPRule == NULL)
-    egal = TRUE;
-  return egal;
+    equal = TRUE;
+  return equal;
 }
 
 
@@ -715,95 +715,6 @@ PtrAbstractBox PaveDeElem(pEl, view)
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	PavResizable  est appele' par le Mediateur, pour savoir si la	| */
-/* |		boite du pave' pAb peut etre retaillee horizontalement	| */
-/* |		ou verticalement (selon Horiz).				| */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-boolean  PavResizable(PtrAbstractBox pAb, boolean Horiz)
-#else /* __STDC__ */
-boolean  PavResizable(pAb, Horiz)
-	PtrAbstractBox pAb;
-	boolean Horiz;
-#endif /* __STDC__ */
-{
-  boolean  result;
-  PtrElement pEl;
-  PtrDocument pDoc;
-  
-  pEl = pAb->AbElement;
-  pDoc = DocumentOfElement(pEl); /* le document auquel appartient le pave */
-  if (pDoc->DocReadOnly)
-    {
-      TtaDisplaySimpleMessage (INFO, LIB,RO_DOC_FORBIDDEN);
-      result = FALSE;
-    }
-  else
-    if (pEl->ElIsCopy)
-      result = FALSE;
-    else
-      if (ElementIsReadOnly(pEl))
-	result = FALSE;
-      else
-        if (TypeHasException(ExcNoResize, pEl->ElTypeNumber, pEl->ElStructSchema))
-	  result = FALSE;
-        else
-	  if (Horiz)
-	    result = 
-	      !TypeHasException(ExcNoHResize, pEl->ElTypeNumber, pEl->ElStructSchema);
-	  else
-	    result = 
-	      !TypeHasException(ExcNoVResize, pEl->ElTypeNumber, pEl->ElStructSchema);
-  return result;
-}
-
-
-
-/* ---------------------------------------------------------------------- */
-/* |	PavMovable  est appele' par le Mediateur, pour savoir si la	| */
-/* |		boite du pave' pAb peut etre deplacee horizontalement	| */
-/* |		ou  verticalement (selon Horiz).			| */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-boolean PavMovable(PtrAbstractBox pAb, boolean Horiz)
-#else /* __STDC__ */
-boolean PavMovable(pAb, Horiz)
-	PtrAbstractBox pAb;
-	boolean Horiz;
-#endif /* __STDC__ */
-{
-  boolean  result;
-  PtrElement pEl;
-  PtrDocument pDoc;
-  
-  pEl = pAb->AbElement;
-  pDoc = DocumentOfElement(pEl); 
-  if (pDoc == NULL)
-     return FALSE;
-  if (pDoc->DocReadOnly)
-    {
-      TtaDisplaySimpleMessage (INFO, LIB, RO_DOC_FORBIDDEN);
-      result = FALSE;
-    }
-  else
-    if (pEl->ElIsCopy)
-      result = FALSE;
-    else
-      if (ElementIsReadOnly(pEl))
-	result = FALSE;
-      else
-        if (TypeHasException(ExcNoMove, pEl->ElTypeNumber, pEl->ElStructSchema))
-	  result = FALSE;
-        else
-	  if (Horiz)
-	    result = 
-	      !TypeHasException(ExcNoHMove, pEl->ElTypeNumber, pEl->ElStructSchema);
-	  else
-	    result = 
-	      !TypeHasException(ExcNoVMove, pEl->ElTypeNumber, pEl->ElStructSchema);
-  return result;
-}
 
 
 /* ---------------------------------------------------------------------- */
@@ -812,21 +723,21 @@ boolean PavMovable(pAb, Horiz)
 /* |		pAb est le pave deplace' et deltaX et deltaY		| */
 /* |		representent l'amplitude du deplacement en pixels	| */
 /* |		frame indique la fenetre.				| */
-/* |		Disp indique s'il faut reafficher ou simplement		| */
+/* |		display indique s'il faut reafficher ou simplement		| */
 /* |		recalculer l'image.					| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void NouvPosition(PtrAbstractBox pAb, int deltaX, int deltaY, int frame, boolean Disp)
+void NouvPosition(PtrAbstractBox pAb, int deltaX, int deltaY, int frame, boolean display)
 #else /* __STDC__ */
-void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
+void NouvPosition(pAb, deltaX, deltaY, frame, display)
 	PtrAbstractBox pAb;
 	int deltaX;
 	int deltaY;
 	int frame;
-	boolean Disp;
+	boolean display;
 #endif /* __STDC__ */
 {
-  boolean         isNew, reaff, lignes;
+  boolean         isNew, reDisp, isLined;
   PtrPRule    pPRule, pR, pRStd;
   PtrPSchema      pSPR;
   PtrSSchema	  pSSR;
@@ -850,20 +761,20 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
   /* nettoie la table des frames a reafficher */
   for (view = 1; view <= MAX_VIEW_DOC; view++)
     updateframe[view - 1] = 0;
-  reaff = FALSE;  		/* rien a reafficher */
+  reDisp = FALSE;  		/* rien a reafficher */
   pEl = pAb->AbElement;	/* l'element auquel correspond le pave */
   pDoc = DocumentOfElement(pEl);	/* le document auquel il appartient */ 
   /* numero de cette view */ 
   viewSch = AppliedView(pEl, NULL, pDoc, pAb->AbDocView);
   /* le pave est-il dans une mise en lignes ? */
-  lignes = FALSE;	/* a priori non */
+  isLined = FALSE;	/* a priori non */
   doit = FALSE;
   pAbbCur = pAb->AbEnclosing;
   /* on examine les paves englobants */
-  while (!lignes && pAbbCur != NULL)
+  while (!isLined && pAbbCur != NULL)
     {
       if (pAbbCur->AbLeafType == LtCompound && pAbbCur->AbInLine)
-	lignes = TRUE;	/* on est dans un pave mis en lignes */
+	isLined = TRUE;	/* on est dans un pave mis en lignes */
       else if (!pAbbCur->AbAcceptLineBreak)
 	pAbbCur = NULL;	/* on est dans un pave insecable, inutile */
       /* d'examiner les paves englobants */
@@ -881,7 +792,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
       /* sont dans une mise en ligne */
       if (pRStd->PrPosRule.PoPosDef != NoEdge 
 	  && pAb->AbVertPos.PosAbRef != NULL 
-	  && !lignes)
+	  && !isLined)
 	{
 	  if (pRStd->PrPosRule.PoDistUnit == UnPercent)
 	    {
@@ -921,7 +832,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 		/* fait reafficher les variables de presentation utilisant */
 		/* l'attribut */
 		RedisplayAttribute(pAttr, pEl, pDoc);
-		if (Disp)
+		if (display)
 		   /* la nouvelle valeur de l'attribut doit etre prise en */
 		   /* compte dans les copies-inclusions de l'element */
 		   RedisplayCopies(pEl, pDoc, TRUE);
@@ -1003,7 +914,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 			pAbbCur->AbVertPosChange = TRUE;
 			/* la position vert.du pave a change' */
 			RedispAbsBox(pAbbCur, pDoc);
-			reaff = TRUE;	
+			reDisp = TRUE;	
 			/* il faut reafficher le pave */
 			if (!AssocView(pEl))
 			  updateframe[view -1] = pDoc->DocViewFrame[view -1];
@@ -1027,7 +938,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
       /* sont mis en lignes */
       if (pRStd->PrPosRule.PoPosDef != NoEdge 
 	  && pAb->AbHorizPos.PosAbRef != NULL 
-	  && !lignes)
+	  && !isLined)
 	{
 	  if (pRStd->PrPosRule.PoDistUnit == UnPercent)
 	    {
@@ -1067,7 +978,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 		  /* fait reafficher les variables de presentation utilisant */
 		  /* l'attribut */
 		  RedisplayAttribute(pAttr,pEl,pDoc);
-		  if (Disp)
+		  if (display)
 		     /* la nouvelle valeur de l'attribut doit etre prise en */
 		     /* compte dans les copies-inclusions de l'element */
 		     RedisplayCopies(pEl, pDoc, TRUE);
@@ -1145,7 +1056,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 		      {
 			pAbbCur->AbHorizPosChange = TRUE;
 			RedispAbsBox(pAbbCur, pDoc); /* indique le pave a reafficher */
-			reaff = TRUE;	/* il faut reafficher le pave */
+			reDisp = TRUE;	/* il faut reafficher le pave */
 			if (!AssocView(pEl))
 			  updateframe[view -1] = pDoc->DocViewFrame[view -1];
 			else
@@ -1159,9 +1070,9 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	    }
 	}
     }
-  if (reaff)
+  if (reDisp)
     {
-      if (Disp)
+      if (display)
 	{
 	for (view = 1; view <= MAX_VIEW_DOC; view++)
 	  if (updateframe[view -1] > 0)
@@ -1184,28 +1095,28 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 /* |		et deltaX,deltaY representent l'amplitude de la		| */
 /* |		deformation en pixels.					| */
 /* |		frame indique la fenetre.				| */
-/* |		Disp indique s'il faut reafficher ou simplement		| */
+/* |		display indique s'il faut reafficher ou simplement		| */
 /* |		recalculer l'image.					| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void NouvDimension(PtrAbstractBox pAb, int deltaX, int deltaY, int frame, boolean Disp)
+void NouvDimension(PtrAbstractBox pAb, int deltaX, int deltaY, int frame, boolean display)
 #else /* __STDC__ */
-void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
+void NouvDimension(pAb, deltaX, deltaY, frame, display)
 	PtrAbstractBox pAb;
 	int deltaX;
 	int deltaY;
 	int frame;
-	boolean Disp;
+	boolean display;
 #endif /* __STDC__ */
 {
-  boolean         isNew, reaff, ok, imagetrick;
+  boolean         isNew, reDisp, ok;
   PtrPRule    pPRule, pR, pRStd;
   PtrPSchema      pSPR;
   PtrSSchema	  pSSR;
   PtrAttribute     pAttr;
   PtrDocument     pDoc;
   PtrElement      pEl;
-  int             hauteur, largeur, hauteurRef, largeurRef;
+  int             height, width, heightRef, widthRef;
   int             updateframe[MAX_VIEW_DOC];
   int             viewSch;
   boolean         attr;
@@ -1222,7 +1133,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
   /* nettoie la table des frames a reafficher */
   for (view = 1; view <= MAX_VIEW_DOC; view++)
     updateframe[view - 1] = 0;
-  reaff = FALSE;		/* rien a reafficher */
+  reDisp = FALSE;		/* rien a reafficher */
   pEl = pAb->AbElement;	/* l'element auquel correspond le pave */
   pDoc = DocumentOfElement(pEl);	/* le document auquel appartient le pave */ 
   /* numero de cette view dans le schema de presentation qui la definit */
@@ -1237,7 +1148,6 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
       /* on ne change pas la largeur si c'est celle du contenu ou si */
       /* c'est une boite elastique.  */
       ok = TRUE;
-      imagetrick = FALSE;
       if (!pRStd->PrDimRule.DrPosition)
 	{
 	if (pRStd->PrDimRule.DrRelation == RlEnclosed)
@@ -1245,8 +1155,6 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 	  if (pAb->AbLeafType != LtPicture)
 	    /* sauf si image */
 	    ok = FALSE;
-	  else
-	    imagetrick = TRUE;
 	}
       else
 	ok = FALSE;
@@ -1254,27 +1162,27 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
       if (ok)
 	{
 	  /* largeur courante de la boite */
-	  largeur =  pAb->AbBox->BxWidth;
+	  width =  pAb->AbBox->BxWidth;
 	  if (pRStd->PrDimRule.DrUnit == UnPercent)
 	    {
 	      if (!pRStd->PrDimRule.DrAbsolute)
 		/* la largeur de la boite est un pourcentage de la largeur */
 		/* d'une autre boite */
-		largeurRef = pAb->AbWidth.DimAbRef->AbBox->BxWidth;
+		widthRef = pAb->AbWidth.DimAbRef->AbBox->BxWidth;
 	      else if (pAb->AbEnclosing == NULL)
 		/* la largeur de la boite est un pourcentage de la largeur */
 		/* de la boite englobante */
-		GetSizesFrame(frame, &largeurRef, &hauteurRef);
+		GetSizesFrame(frame, &widthRef, &heightRef);
 	      else
 		/* la largeur de la boite est un pourcentage de la largeur */
 		/* de la boite englobante */
-		largeurRef = pAb->AbEnclosing->AbBox->BxWidth;
+		widthRef = pAb->AbEnclosing->AbBox->BxWidth;
 	      /* calcule le isNew rapport (pourcentage) de la boite */
-	      x = LogicalValue(deltaX+largeur, UnPercent, (PtrAbstractBox)largeurRef);
+	      x = LogicalValue(deltaX+width, UnPercent, (PtrAbstractBox)widthRef);
 	    }
 	  else
 	    /* calcule la nouvelle largeur en unite logique */
-	    x = LogicalValue(deltaX+largeur, pRStd->PrDimRule.DrUnit, pAb);
+	    x = LogicalValue(deltaX+width, pRStd->PrDimRule.DrUnit, pAb);
 
 	  /* cherche si la largeur de l'element est determinee par un */
 	  /* attribut auquel est associee l'exception NewWidth */
@@ -1305,7 +1213,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 		    /* fait reafficher les variables de presentation */
 		    /* utilisant l'attribut */
 		    RedisplayAttribute(pAttr, pEl, pDoc);
-		    if (Disp)
+		    if (display)
 		      /* la nouvelle valeur de l'attribut doit etre prise en */
 		      /* compte dans les copies-inclusions de l'element */
 		      RedisplayCopies(pEl, pDoc, TRUE);
@@ -1378,7 +1286,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 			    pAbbCur->AbWidthChange = TRUE;
 			    /* la position vert.du pave a change' */
 			    RedispAbsBox(pAbbCur, pDoc); /* indique le pave a reafficher */
-			    reaff = TRUE;   /* il faut reafficher le pave */
+			    reDisp = TRUE;   /* il faut reafficher le pave */
 			    if (!AssocView(pEl))
 			      updateframe[view -1] = pDoc->DocViewFrame[view -1];
 			    else
@@ -1401,15 +1309,12 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
       /* on ne change pas la hauteur si c'est celle du contenu ou si c'est */
       /* une boite elastique. */
       ok = TRUE;
-      imagetrick = FALSE;
       if (!pRStd->PrDimRule.DrPosition)
 	{
 	if (pRStd->PrDimRule.DrRelation == RlEnclosed)
 	  /* hauteur du contenu */ 
 	  if (pAb->AbLeafType != LtPicture)
 	    ok = FALSE;
-	  else
-	    imagetrick = TRUE;
 	}
       else
 	ok = FALSE;
@@ -1417,27 +1322,27 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
       if (ok)
 	{
 	  /* hauteur courante de la boite */
-	  hauteur =  pAb->AbBox->BxHeight;
+	  height =  pAb->AbBox->BxHeight;
 	  if (pRStd->PrDimRule.DrUnit == UnPercent)
 	    {
 	      if (!pRStd->PrDimRule.DrAbsolute)
 		/* la hauteur de la boite est un pourcentage de la hauteur */
 		/* d'une autre boite */
-		hauteurRef = pAb->AbWidth.DimAbRef->AbBox->BxHeight;
+		heightRef = pAb->AbWidth.DimAbRef->AbBox->BxHeight;
 	      else if (pAb->AbEnclosing == NULL)
 		/* la hauteur de la boite est un pourcentage de la hauteur */
 		/* de la boite englobante */
-		GetSizesFrame(frame, &largeurRef, &hauteurRef);
+		GetSizesFrame(frame, &widthRef, &heightRef);
 	      else
 		/* la largeur de la boite est un pourcentage de la largeur */
 		/* de la boite englobante */
-		hauteurRef = pAb->AbEnclosing->AbBox->BxHeight;
+		heightRef = pAb->AbEnclosing->AbBox->BxHeight;
 	      /* calcule le isNew rapport (pourcentage) de la boite */
-	      y = LogicalValue(deltaY+hauteur, UnPercent, (PtrAbstractBox)hauteurRef);
+	      y = LogicalValue(deltaY+height, UnPercent, (PtrAbstractBox)heightRef);
 	    }
 	  else
 	    /* calcule la nouvelle largeur en unite logique */
-	    y = LogicalValue(deltaY+hauteur, pRStd->PrDimRule.DrUnit, pAb);
+	    y = LogicalValue(deltaY+height, pRStd->PrDimRule.DrUnit, pAb);
 
 	  /* cherche si la hauteur de l'element est determinee par un */
 	  /* attribut auquel est associee l'exception NewHeight */
@@ -1467,7 +1372,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 		    /* fait reafficher les variables de presentation */
 		    /* utilisant l'attribut */
 		    RedisplayAttribute(pAttr,pEl,pDoc);
-		    if (Disp)
+		    if (display)
 		      /* la nouvelle valeur de l'attribut doit etre prise en */
 		      /* compte dans les copies-inclusions de l'element */
 		      RedisplayCopies(pEl, pDoc, TRUE);
@@ -1540,7 +1445,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 			  {
 			    pAbbCur->AbHeightChange = TRUE;
 			    RedispAbsBox(pAbbCur, pDoc); /* indique le pave a reafficher */
-			    reaff = TRUE;   /* il faut reafficher */
+			    reDisp = TRUE;   /* il faut reafficher */
 			    if (!AssocView(pEl))
 			      updateframe[view -1] = pDoc->DocViewFrame[view -1];
 			    else
@@ -1554,9 +1459,9 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 	    }
 	}
     }
-  if (reaff)
+  if (reDisp)
     {
-      if (Disp)
+      if (display)
 	{
 	  for (view = 1; view <= MAX_VIEW_DOC; view++)
 	    if (updateframe[view -1] > 0)
