@@ -585,11 +585,14 @@ RULES
 ATTRIBUTES
 
  Language:
-	BEGIN
+	begin
+	if not TEXT_UNIT
+	    begin
 	    Create ' xml:lang="';
 	    Create Language;
 	    Create '"';
-	END;
+	    end;
+	end;
 
    class:
 	begin
