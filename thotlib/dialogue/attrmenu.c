@@ -106,18 +106,12 @@ extern LPCTSTR   iconID;
 extern UINT      subMenuID [MAX_FRAME];
 #ifdef __STDC__
 extern BOOL RegisterWin95 (CONST WNDCLASS*);
-extern void CreateLanguageDlgWindow (HWND, STRING, STRING, int, STRING, STRING, int, STRING);
-extern void CreateAlign1DlgWindow (HWND, int);
-extern void CreateAlign2DlgWindow (HWND, int);
 
 LRESULT CALLBACK InitFormDialogWndProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK InitSheetDialogWndProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK InitNumAttrDialogWndProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* __STDC__ */
 extern BOOL RegisterWin95 ();
-extern void CreateLanguageDlgWindow ();
-extern void CreateAlign1DlgWindow ();
-extern void CreateAlign2DlgWindow ();
 
 LRESULT CALLBACK InitFormDialogWndProc ();
 LRESULT CALLBACK InitSheetDialogWndProc ();
