@@ -1108,11 +1108,21 @@ char               *fileName;
 
 #endif /* __STDC__ */
 {
-  int                 i;
-  int                 l = 0;
+   int                 i;
+   int                 l = 0;
 
-  i = 0 ;
-  l = strlen (fileName);
+   i = 0 ;
+   l = strlen (fileName);
+
+#  ifdef _WINDOWS
+   while (i < HandlersCounter) {
+         if (i >= InlineHandlers)
+            currentExtraHandler = i - InlineHandlers;
+         if (Match_Format (i, fileName))
+            return i ;
+         ++i ;
+   }
+# else  /* _WINDOWS */
   if (l > 4)
     {
       if (strcmp (fileName + l - 4, ".pic") == 0 || strcmp (fileName + l - 4, ".xbm") == 0)
@@ -1139,6 +1149,7 @@ char               *fileName;
             return i ;
          --i ;
      }
+#  endif /* _WINDOWS */
    return UNKNOWN_FORMAT;
 }
 
@@ -1301,15 +1312,6 @@ boolean             printing;
    PictureMenuType[HandlersCounter] = GIF_FORMAT;
    HandlersCounter++;
 
-   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, JpegName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = JpegCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = JpegPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = IsJpegFormat;
-
-   PictureIdType[HandlersCounter] = JPEG_FORMAT;
-   PictureMenuType[HandlersCounter] = JPEG_FORMAT;
-   HandlersCounter++;
-
    strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, PngName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[HandlersCounter].Produce_Picture = PngCreate;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = PngPrint;
@@ -1317,6 +1319,15 @@ boolean             printing;
 
    PictureIdType[HandlersCounter] = PNG_FORMAT;
    PictureMenuType[HandlersCounter] = PNG_FORMAT;
+   HandlersCounter++;
+
+   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, JpegName, MAX_FORMAT_NAMELENGHT);
+   PictureHandlerTable[HandlersCounter].Produce_Picture = JpegCreate;
+   PictureHandlerTable[HandlersCounter].Produce_Postscript = JpegPrint;
+   PictureHandlerTable[HandlersCounter].Match_Format = IsJpegFormat;
+
+   PictureIdType[HandlersCounter] = JPEG_FORMAT;
+   PictureMenuType[HandlersCounter] = JPEG_FORMAT;
    HandlersCounter++;
    InlineHandlers = HandlersCounter;
 }
@@ -1959,23 +1970,16 @@ PictInfo           *imageDesc;
 		 (fileName, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height, ViewFrameTable[frame - 1].FrMagnification);
 	       /* intrinsic width and height */
 #              ifdef _WINDOWS 
-	       if (TtPrinterDC)
-		 {
-		   imageDesc->PicWidth  = (width * PrinterDPI + PrinterDPI / 2) / ScreenDPI;
-		   imageDesc->PicHeight = (height * PrinterDPI + PrinterDPI / 2) / ScreenDPI;
-		 }
-	       else
-		 {
-		   imageDesc->PicWidth = width;
+#if 0
+		   imageDesc->PicWidth  = width;
 		   imageDesc->PicHeight = height;
-		 }
+#endif /* 0 */
 	       imageDesc->bgRed   = bgRed;
 	       imageDesc->bgGreen = bgGreen;
 	       imageDesc->bgBlue  = bgBlue;
-#              else  /* _WINDOWS */
-	       imageDesc->PicWidth = width;
-	       imageDesc->PicHeight = height;
 #              endif /* _WINDOWS */
+	       imageDesc->PicWidth  = width;
+	       imageDesc->PicHeight = height;
 	     }
 	 }
        

@@ -47,6 +47,9 @@ static char         ImgFilter[NAME_LENGTH];
 #include "init_f.h"
 #include "html2thot_f.h"
 
+#ifdef _WINDOWS
+#define APPIMGFILENAMEFILTER   "Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    CallbackImage manage returns of Picture form.                   
@@ -377,7 +380,7 @@ View                view;
    else
      return (LastURLImage);
 #  else /* _WINDOWS */
-   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), LastURLImage, BaseImage, FormImage, -1, -1) ;
+   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), LastURLImage, BaseImage, FormImage, -1, -1, 1) ;
    return (LastURLImage);
 #  endif /* _WINDOWS */
 }

@@ -208,6 +208,8 @@
 #define IDC_WINCURSOR                   376
 #define BGIMAGEDIALOG                   380
 #define PRINTPROGRESSDLG                389
+#define IDI_ICON1                       392
+#define IDD_DIALOG1                     393
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -563,7 +565,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        390
+#define _APS_NEXT_RESOURCE_VALUE        395
 #define _APS_NEXT_COMMAND_VALUE         40046
 #define _APS_NEXT_CONTROL_VALUE         1400
 #define _APS_NEXT_SYMED_VALUE           101

@@ -251,11 +251,11 @@ BEGIN
     CONTROL         "Before selection",IDC_BEFORE,"Button",
                     BS_AUTORADIOBUTTON,14,124,93,11
     CONTROL         "Within selection",IDC_WITHIN,"Button",
-                    BS_AUTORADIOBUTTON,14,134,93,13
+                    BS_AUTORADIOBUTTON,14,135,93,13
     CONTROL         "After selection",IDC_AFTER,"Button",BS_AUTORADIOBUTTON,
-                    14,148,92,13
+                    14,146,92,13
     CONTROL         "In whole document",IDC_WHOLEDOC,"Button",
-                    BS_AUTORADIOBUTTON,14,158,93,13
+                    BS_AUTORADIOBUTTON,14,158,94,10
     LTEXT           "Number of proposals",IDC_NBPROPOSALS,137,42,69,10
     LTEXT           "1..10",IDC_PROPOSALS,162,54,22,9
     EDITTEXT        IDC_EDITPROPOSALS,137,66,68,18,ES_AUTOHSCROLL
@@ -350,17 +350,17 @@ BEGIN
     EDITTEXT        IDC_EDITIMGSAVE,84,52,201,17,ES_AUTOHSCROLL
 END
 
-AUTHENTIFICATIONDIALOG DIALOG DISCARDABLE  100, 100, 218, 119
+AUTHENTIFICATIONDIALOG DIALOG DISCARDABLE  100, 100, 151, 94
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Authentification dialog"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Confirm",ID_CONFIRM,52,98,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,113,98,50,14
+    DEFPUSHBUTTON   "Confirm",ID_CONFIRM,22,72,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,77,72,50,14
     LTEXT           "Name",IDC_NAME,7,7,55,11
-    EDITTEXT        IDC_NAMEEDIT,7,21,204,17,ES_AUTOHSCROLL
-    LTEXT           "Password",IDC_PASSWD,7,54,79,11
-    EDITTEXT        IDC_PASSWDEDIT,7,70,204,18,ES_PASSWORD | ES_AUTOHSCROLL
+    EDITTEXT        IDC_NAMEEDIT,7,17,135,13,ES_AUTOHSCROLL
+    LTEXT           "Password",IDC_PASSWD,7,41,38,10
+    EDITTEXT        IDC_PASSWDEDIT,7,52,136,13,ES_PASSWORD | ES_AUTOHSCROLL
 END
 
 ALIGN1DIALOG DIALOG DISCARDABLE  100, 100, 152, 87
@@ -379,14 +379,13 @@ BEGIN
                     11
 END
 
-PRINTPROGRESSDLG DIALOG DISCARDABLE  0, 0, 122, 50
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+PRINTINPROGRESS DIALOG DISCARDABLE  100, 100, 131, 63
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "Printing ..."
 FONT 8, "MS Sans Serif"
 BEGIN
-    PUSHBUTTON      "Cancel",IDCANCEL,38,29,50,14
-    CTEXT           "Abort printing",IDC_ABORTPRNT,7,13,108,11,
-                    SS_CENTERIMAGE
+    PUSHBUTTON      "Cancel print job",IDCANCEL,32,28,67,14
+    LTEXT           "Printing in progress ...",IDC_STATIC,29,14,72,9
 END
 
 
@@ -464,8 +463,13 @@ BEGIN
 
     SPELLCHECKDIALOG, DIALOG
     BEGIN
+        VERTGUIDE, 14
         VERTGUIDE, 164
         BOTTOMMARGIN, 195
+        HORZGUIDE, 135
+        HORZGUIDE, 146
+        HORZGUIDE, 158
+        HORZGUIDE, 168
         HORZGUIDE, 174
     END
 
@@ -493,17 +497,18 @@ BEGIN
     AUTHENTIFICATIONDIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 211
+        RIGHTMARGIN, 144
+        VERTGUIDE, 143
         TOPMARGIN, 7
-        BOTTOMMARGIN, 112
+        BOTTOMMARGIN, 87
     END
 
-    PRINTPROGRESSDLG, DIALOG
+    "PRINTINPROGRESS", DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 115
+        RIGHTMARGIN, 124
         TOPMARGIN, 7
-        BOTTOMMARGIN, 43
+        BOTTOMMARGIN, 56
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -585,6 +590,15 @@ BEGIN
     BUTTON      ID_BUTTON40042
 END
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON1               ICON    DISCARDABLE     "icon1.ico"
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 
@@ -1432,19 +1446,19 @@ IDB_GKEY160             BITMAP  DISCARDABLE     "gkey160.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Cursor
-//
-
-IDC_WINCURSOR           CURSOR  DISCARDABLE     "wincurso.cur"
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // Icon
 //
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDI_APPICON             ICON    DISCARDABLE     "appicon.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_WINCURSOR           CURSOR  DISCARDABLE     "wincurso.cur"
 #endif    // French (France) resources
 /////////////////////////////////////////////////////////////////////////////
 

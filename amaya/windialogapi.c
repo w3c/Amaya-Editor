@@ -35,7 +35,9 @@
 #       define MAX_WORD_LEN 30
 #endif /* MAX_WORD_LEN */
 
-#define APPFILENAMEFILTER   "HTML Files (*.html)\0*.html\0HTML Files (*.htm)\0*.htm\0Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
+#define APPFILENAMEFILTER    "HTML Files (*.html)\0*.html\0HTML Files (*.htm)\0*.htm\0All files (*.*)\0*.*\0"
+#define APPIMAGENAMEFILTER   "Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
+#define APPALLFILESFILTER    "All files (*.*)\0*.*\0"
 #define MAX_BUFF 4096
 #define IDC_WORDBUTTON    20000
 #define IDC_EDITRULE      20001
@@ -46,6 +48,9 @@
 #define REPEAT_X              1
 #define REPEAT_Y              2
 #define NO_REPEAT             3
+
+#define IMG_FILE              1
+#define TEXT_FILE             2
 
 #define MenuMaths             1
 
@@ -130,7 +135,7 @@ static HFONT        hOldFont;
 static BOOL	        saveBeforeClose ;
 static BOOL         closeDontSave ;
 static OPENFILENAME OpenFileName;
-static TCHAR        szFilter[] = APPFILENAMEFILTER;
+static LPSTR        szFilter;
 static TCHAR        szFileName[256];
 static HWND         currentFrame;
 static HWND         currentDlg;
@@ -210,7 +215,7 @@ HDC PASCAL GetPrinterDC () {
     printDlg.hwndOwner   = GetCurrentWindow ();
     printDlg.hInstance   = (HANDLE) NULL;
 
-    // Display the PRINT dialog box. */
+    /* Display the PRINT dialog box. */
 
     if (PrintDlg (&printDlg) == TRUE) {
        if (lpPrintTemplateName) {
@@ -218,8 +223,6 @@ HDC PASCAL GetPrinterDC () {
 		  lpPrintTemplateName = (char*) 0;
 	   }
 
-/*       lpPrintTemplateName = (char*) TtaGetMemory (strlen (printDlg.lpPrintTemplateName) + 1);
-       strcpy (lpPrintTemplateName, printDlg.lpPrintTemplateName); */
        return (printDlg.hDC);        
     } else
           return( NULL );
@@ -418,21 +421,29 @@ int   toggle_save;
  CreateOPenDocDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateOpenDocDlgWindow (HWND parent, char* doc_to_open, int base_doc, int form_doc, int doc_select, int dir_select)
+void CreateOpenDocDlgWindow (HWND parent, char* doc_to_open, int base_doc, int form_doc, int doc_select, int dir_select, int doc_type)
 #else  /* !__STDC__ */
-void CreateOpenDocDlgWindow (parent, doc_to_open, base_doc, form_doc, doc_select, dir_select)
+void CreateOpenDocDlgWindow (parent, doc_to_open, base_doc, form_doc, doc_select, dir_select, doc_type)
 HWND  parent;
 char* doc_to_open;
 int   base_doc;
 int   for_doc;
 int   doc_select;
 int   dir_select;
+int   doc_type;
 #endif /* __STDC__ */
 {  
 	baseDoc   = base_doc;
 	formDoc   = form_doc;
 	docSelect = doc_select;
 	dirSelect = dir_select;
+    
+    if (doc_type == TEXT_FILE)
+       szFilter = APPFILENAMEFILTER;
+	else if (doc_type == IMG_FILE)
+         szFilter = APPIMAGENAMEFILTER;
+    else 
+        szFilter = APPALLFILESFILTER;
 
 	DialogBox (hInstance, MAKEINTRESOURCE (OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
 	strcpy (doc_to_open, urlToOpen);
@@ -693,6 +704,7 @@ char* image_location;
 	bgImageForm      = form_background;
 	imageURL         = image_URL;
 	imageSel         = image_sel;
+	szFilter         = APPIMAGENAMEFILTER;
 	repeatImage      = repeat_image;
 	currentParentRef = baseDlg + bgImageForm;
     sprintf (currentPathName, "%s", image_location);
@@ -734,7 +746,6 @@ LPARAM lParam;
 							strcpy (AttrHREFvalue, urlToOpen);
 							ThotCallback (baseDlg + attrHRefTxt, STRING_DATA, urlToOpen);
 							ThotCallback (baseDlg + attrHRefForm, INTEGER_DATA, (char*) 1);
-							/* CallbackDialogue (currentRef, INTEGER_DATA, (char*) 1); */
 							EndDialog (hwnDlg, ID_CONFIRM);
 					        break;
 
@@ -877,41 +888,6 @@ LPARAM lParam;
 	return TRUE;
 }
 	
-/*-----------------------------------------------------------------------*
- *
- * FUNCTION:    AbortDlgProc (standard dialog procedure INPUTS/RETURNS)
- *
- * COMMENTS:    Handles "Abort" dialog messages
- *
- *-----------------------------------------------------------------------*/
-#ifdef __STDC__
-LRESULT CALLBACK AbortDlgProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* __STDC__ */
-LRESULT CALLBACK AbortDlgProc (hwnd, msg, wParam, lParam)
-HWND   hwnd; 
-UINT   msg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* _WINDOWS */
-{
-   switch (msg) {
-          case WM_INITDIALOG: ghwndAbort = hwnd;
-                              EnableMenuItem (GetSystemMenu (ghwndMain, FALSE), SC_CLOSE, MF_GRAYED);
-                              break;
-
-          case WM_COMMAND:    
-               switch (LOWORD (wParam)) {
-                      case IDCANCEL: gbAbort = TRUE;
-                                     AbortDoc (TtPrinterDC);
-                                     EnableWindow  (hwnd, TRUE);
-                                     DestroyWindow (hwnd);
-                                     return TRUE;
-			   }
-               break;
-   }
-   return 0;
-}
-
 /*-----------------------------------------------------------------------
  PrintDlgProc
  ------------------------------------------------------------------------*/
@@ -925,9 +901,6 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-    /* static LPPRINTER_INFO_5 pInfo5;
-	DWORD                   dwNeeded, dwReturned; */
-
     switch (msg) {
 	       case WM_INITDIALOG:
                 if (manualFeed)
@@ -947,25 +920,13 @@ LPARAM lParam;
                 if (toPrinter) {
                    CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_PRINTER);
                    SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, "Printer ...");
-#                  if 0
-                   if (TtPrinterDC)
-                      DeleteDC (TtPrinterDC);
-
-                   CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_PRINTER);
-
-                   TtPrinterDC = GetPrinterDC ();
-                   if (TtPrinterDC) {
-                      SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, lpPrintTemplateName);
-                      WinInitPrinterColors ();
-                      ghwndAbort = CreateDialog (hInstance, MAKEINTRESOURCE (PRINTPROGRESSDLG), ghwndMain, (DLGPROC) AbortDlgProc);
-				   }
-#                  endif /* 0 */
                 } else if (toPostscript) {
                      CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_POSTSCRIPT);
                      SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, currentFileToPrint);
 					 TtPrinterDC = NULL;
 				}
 				break;
+
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
                        case IDC_MANUALFEED:
@@ -1007,24 +968,6 @@ LPARAM lParam;
 							if (TtPrinterDC)
                                SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, lpPrintTemplateName);
 
-#                           if 0 /**************************************************/
-                            EnumPrinters (PRINTER_ENUM_LOCAL, NULL, 5, (LPBYTE) "", 0, &dwNeeded, &dwReturned) ;
-
-                            // Alloue de l’espace pour le tableau PRINTER_INFO_5
-                            if (pInfo5)
-                               HeapFree (GetProcessHeap (), 0, pInfo5) ;
-
-                            pInfo5 = (LPPRINTER_INFO_5) HeapAlloc (GetProcessHeap (), HEAP_NO_SERIALIZE, dwNeeded);
-
-                            // Enfin, remplit le tableau PRINTER_INFO_5
-                            if (!pInfo5 || !EnumPrinters (PRINTER_ENUM_LOCAL, NULL, 5, (LPBYTE) pInfo5, dwNeeded, &dwNeeded, &dwReturned))
-                               MessageBox (hwnDlg, "No printer available !", NULL, MB_ICONSTOP);      
-                            else {
-                                SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, pInfo5->pPrinterName);
-                                TtPrinterDC = CreateDC (NULL, pInfo5->pPrinterName,  NULL, NULL);
-							}
-#                           endif /*0 **************************************************/
-
 						    ThotCallback (numMenuSupport + baseDlg, INTEGER_DATA, (char*)0);
                             break;
 
@@ -1049,7 +992,7 @@ LPARAM lParam;
                                TtPrinterDC = GetPrinterDC ();
                                if (TtPrinterDC) {
                                   WinInitPrinterColors ();
-                                  ghwndAbort = CreateDialog (hInstance, MAKEINTRESOURCE (PRINTPROGRESSDLG), ghwndMain, (DLGPROC) AbortDlgProc);
+                                  /* ghwndAbort = CreateDialog (hInstance, MAKEINTRESOURCE (PRINTPROGRESSDLG), ghwndMain, (DLGPROC) AbortDlgProc); */
 							   }
 							}
 
@@ -1374,6 +1317,7 @@ LPARAM lParam;
 				if (UpdateURLs)
 				   CheckRadioButton (hwnDlg, IDC_TRANSFORMURL, IDC_TRANSFORMURL, IDC_TRANSFORMURL);
 				break;
+
            case WM_DESTROY:
                 currentDlg = (HWND) 0;
                 EndDialog (hwnDlg, IDCANCEL);
@@ -1450,12 +1394,6 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-	/*
-	char* ptr;
-	char* docName;
-	int   ptrLen;
-	int   urlLen;
-    */
     switch (msg) {
 	       case WM_INITDIALOG:
 			    SetDlgItemText (hwnDlg, IDC_GETURL, "");
@@ -1465,27 +1403,10 @@ LPARAM lParam;
 			    switch (LOWORD (wParam)) {
 				       case ID_CONFIRM:
 						    GetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen, sizeof (urlToOpen) - 1);
-#                           if 0
-							if (dirSelect != -1 && docSelect != -1) {
-							   ptr = strrchr (urlToOpen, '\\');
-							   if (ptr) {
-                                  ptrLen = strlen (ptr);
-                                  urlLen = strlen (urlToOpen);
-                                  docName = (char*) TtaGetMemory (ptrLen);
-                                  strcpy (docName, &ptr[1]);
-                                  urlToOpen [urlLen - ptrLen] = 0;
-                                  ThotCallback (baseDoc + dirSelect, STRING_DATA, urlToOpen);
-                                  ThotCallback (baseDoc + docSelect, STRING_DATA, docName);
-							   } else 
-                                    ThotCallback (baseDoc + docSelect, STRING_DATA, urlToOpen);
-							   ThotCallback (baseDoc + formDoc, INTEGER_DATA, (char*)1);
-							}
-#                           endif /* 0 */
 					        EndDialog (hwnDlg, ID_CONFIRM);
 							break;
 
 				       case IDC_BROWSE:
-							/* WIN_ListOpenDirectory (hwnDlg, urlToOpen); */
                             OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
                             OpenFileName.hwndOwner         = hwnDlg; 
                             OpenFileName.hInstance         = hInstance ; 
@@ -1508,7 +1429,6 @@ LPARAM lParam;
 	                        }
 
                             SetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen);
-					        /* EndDialog (hwnDlg, IDC_BROWSE); */
 							break;
 
 				       case IDCANCEL:
@@ -1557,6 +1477,7 @@ LPARAM lParam;
 					  i++;
 				}
                 break;
+
 		   case WM_COMMAND:
 				if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE) {
 				   itemIndex = SendMessage (wndSaveList, LB_GETCURSEL, 0, 0);
@@ -1606,7 +1527,6 @@ LPARAM lParam;
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
 				       case ID_SAVEDOC:
-						    /* SaveDocument (currentDoc, currentView); */
 			                closeDontSave   = FALSE; 
 	                        saveBeforeClose = TRUE;
 							EndDialog (hwnDlg, ID_SAVEDOC);
@@ -2172,34 +2092,36 @@ LPARAM lParam;
 				       case IDC_BEFORE:
 						    iLocation = 0;
 						    break;
+
 					   case IDC_WITHIN:
 						    iLocation = 1;
 						    break;
+
 					   case IDC_AFTER:
 						    iLocation = 2;
 						    break;
+
 					   case IDC_WHOLEDOC:
 						    iLocation = 3;
 						    break;
+
 					   case IDC_IGNORE1:
                             ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (char*) 0);
 						    break;
+
 					   case IDC_IGNORE2:
                             ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (char*) 1);
 						    break;
+
 					   case IDC_IGNORE3: 
                             ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (char*) 2);
 						    break;
+
 					   case IDC_IGNORE4:
                             ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (char*) 3);
 						    break;
+
 					   case ID_SKIPNEXT:
-                            /*
-						    if (strcmp (ChkrCorrection[1], "$") != 0)
-						       ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, ChkrCorrection[1]);
-							else 
-						       ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, "");
-                            */
                             ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
 							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (char*) iLocation);
 							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (char*) 1);
@@ -2208,6 +2130,7 @@ LPARAM lParam;
 							   iLocation = 2;
 							}
 						    break;
+
 					   case ID_SKIPDIC:
                             ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
 							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (char*) iLocation);
@@ -2217,6 +2140,7 @@ LPARAM lParam;
 							   iLocation = 2;
 							}
 						    break;
+
 					   case ID_REPLACENEXT:
                             ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
 							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (char*) iLocation);
@@ -2226,6 +2150,7 @@ LPARAM lParam;
 							   iLocation = 2;
 							}
 						    break;
+
 					   case ID_REPLACEDIC:
                             ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
 							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (char*) iLocation);
@@ -2235,10 +2160,12 @@ LPARAM lParam;
 							   iLocation = 2;
 							}
 						    break;
+
 					   case IDC_WORDBUTTON:
                             GetWindowText (wordButton, currentWord, MAX_WORD_LEN) ;
                             SetWindowText (hwndCurrentWord, currentWord);
 						    break;
+
 					   case ID_DONE:
 						    EndDialog (hwnDlg, ID_DONE);
 							break;
@@ -3169,7 +3096,6 @@ LPARAM lParam;
 	                        }
 
 							SetDlgItemText (hwnDlg, IDC_BGLOCATION, urlToOpen);
-                            /* ThotCallback (baseDlg + imageSel, STRING_DATA, urlToOpen); */
 							break;
 
 		               case IDCANCEL:
