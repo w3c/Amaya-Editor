@@ -1011,9 +1011,11 @@ int                 hlogo;
    x += xFrame;
    y += yFrame;
    LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, frame, imageDesc);
+#  ifdef _WINDOWS
    DeleteDC (hDc);
    DeleteDC (hMemDc);
    DeleteObject (pixmap);
+#  endif /* _WINDOWS */ 
 #  ifndef _WINDOWS
    XFreePixmap (TtDisplay, pixmap);
    pixmap = None;
