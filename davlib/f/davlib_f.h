@@ -19,6 +19,8 @@ extern void DAVCopyLockInfo ( Document document,
                               View view );
 extern void DAVLockIndicator ( Document document,
                                View view );
+extern void DAVPreferences ( Document document,
+                             View view );
 
 #else /* __STDC__ */
 
@@ -35,6 +37,8 @@ extern void DAVCopyLockInfo (/* Document document,
                                 View view */);
 extern void DAVLockIndicator (/* Document document,
                                  View view */);
+extern void DAVPreferences (/* Document document,
+                               View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -31,6 +31,12 @@ extern void DAVShowInfo ( AHTReqContext *context );
 extern void DAVShowPropfindInfo ( AHTReqContext *context );
 extern AwList * GetPropfindInfoFromNode ( AwNode *propnode );
 extern void DAVShowMultiStatusInfo ( AHTReqContext *context );
+extern void DAVSetPreferences ( void );
+extern void DAVGetPreferences ( void );
+extern void DAVShowPreferencesDlg_callback ( int ref,
+                                             int typedata,
+                                             char *data );
+extern void DAVShowPreferencesDlg ( Document document );
 
 #else /* __STDC__ */
 
@@ -59,6 +65,12 @@ extern void DAVShowInfo (/* AHTReqContext *context */);
 extern void DAVShowPropfindInfo (/* AHTReqContext *context */);
 extern AwList * GetPropfindInfoFromNode (/* AwNode *propnode */);
 extern void DAVShowMultiStatusInfo (/* AHTReqContext *context */);
+extern void DAVSetPreferences (/* void */);
+extern void DAVGetPreferences (/* void */);
+extern void DAVShowPreferencesDlg_callback (/* int ref,
+                                               int typedata,
+                                               char *data */);
+extern void DAVShowPreferencesDlg (/* Document document */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -15,7 +15,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.8  2002-06-13 13:40:32  kahan
+ ** Revision 1.9  2002-06-13 16:10:13  kirschpi
+ ** New dialogue "WebDAV Preferences"
+ ** Corrections due last commit by JK
+ ** Manuele
+ **
+ ** Revision 1.8  2002/06/13 13:40:32  kahan
  ** JK: Changed MAX_LINE to DAV_MAX_LINE. MAX_LINE is a reserved macro and
  ** the code was generating a warning.
  **
@@ -60,12 +65,29 @@
 #define THOT_EXPORT extern
 
 #include "davlib.h"
+#include "davlib_f.h"
 #include "davlibUI_f.h"
 #include "davlibCommon_f.h"
 #include "davlibRequests_f.h"
 
 #include "init_f.h"
 #include "query_f.h"
+#include "MENUconf_f.h"
+
+
+/* ********************************************************************* *
+ *                         PRIVATE VARIABLES                             *
+ * ********************************************************************* */
+
+static char textUserReference[DAV_LINE_MAX];
+static char textUserResources[DAV_LINE_MAX];
+static char radioDepth[DAV_LINE_MAX];
+static char radioTimeout[DAV_LINE_MAX];
+static int  numberTimeout;
+static char radioLockScope[DAV_LINE_MAX];
+static ThotBool toggleAwareness1;
+static ThotBool toggleAwareness2;
+static int  DAVPreferencesBase;
 
 
 
@@ -809,3 +831,323 @@ void DAVShowMultiStatusInfo (AHTReqContext *context)
         
      }
 }
+
+
+
+
+/*----------------------------------------------------------------------
+  DAVSetPreferences: update the DAV preferences based on the 
+                     preference dialog options.         
+  ---------------------------------------------------------------------- */
+void DAVSetPreferences (void)
+{
+#ifndef _WINDOWS
+
+    /* ****** User reference -  DAVUserURL ***** */
+    /* if there's something in textUserReference, analise it*/    
+    if (verifyString(textUserReference)>0) 
+     {
+        /*remove first and last space */     
+        CleanFirstLastSpace (textUserReference);
+        /* copy the info */
+        strcpy (DAVUserURL,textUserReference);
+     }
+
+    /* ***** User's resource list - DAVResources  ***** */
+    /* it can be empty, so we don't verify it */
+    strcpy (DAVResources, textUserResources);
+
+    /* ***** Lock depth -  DAVDepth **** */
+    /* we control the radioDepth content in DAVShowPreferencesDlg_callback */
+    strcpy (DAVDepth,radioDepth);
+
+    /* ***** Lock scope -  DAVLockScope **** */
+    /* we control the radioLockScope content in DAVShowPreferencesDlg_callback */
+    strcpy (DAVLockScope,radioLockScope);
+
+    
+    /* ***** Lock timout -  DAVTimeout **** */
+    if (!strcmp(radioTimeout,"Infinite"))
+       strcpy (DAVTimeout,radioTimeout);
+    else
+     {
+       if (numberTimeout<300) numberTimeout = 300;
+       sprintf (DAVTimeout,"%s%d",radioTimeout,numberTimeout);
+     }
+     
+
+    /* ***** Awareness values - DAVAwareness, DAVAwarenessExit  **** */
+    DAVAwareness = (toggleAwareness1)?YES:NO;
+    DAVAwarenessExit= (toggleAwareness2)?YES:NO;
+    
+
+    /* ***** save registry ***** */
+    DAVSaveRegistry ();
+#endif /* _WINDOWS */    
+}
+  
+
+
+/*----------------------------------------------------------------------
+  DAVGetPreferences: set the DAV preferences dialog with the 
+                     active values.                     
+  ---------------------------------------------------------------------- */
+void DAVGetPreferences (void)
+{
+#ifndef _WINDOWS
+   char *ptr = NULL;
+
+   /* user reference */
+   strcpy (textUserReference, DAVUserURL);
+   TtaSetTextForm (DAVPreferencesBase + DAVtextUserReference,textUserReference);
+
+   /* user resource list */
+   strcpy (textUserResources, DAVResources);
+   TtaSetTextForm (DAVPreferencesBase + DAVtextUserResources,textUserResources);
+
+   /* lock depth */
+   strcpy (radioDepth,DAVDepth);
+   if (!strcmp(radioDepth,"infinity")) 
+       TtaSetMenuForm (DAVPreferencesBase + DAVradioDepth,1);
+   else 
+       TtaSetMenuForm (DAVPreferencesBase + DAVradioDepth,0);
+
+   /* lock scope */
+   strcpy (radioLockScope, DAVLockScope);
+   if (!strcmp(radioLockScope,"shared")) 
+       TtaSetMenuForm (DAVPreferencesBase + DAVradioLockScope,1);
+   else 
+       TtaSetMenuForm (DAVPreferencesBase + DAVradioLockScope,0);
+
+
+   /* lock timeout 
+    * timeout format: Infinite or Second-XXXX
+    */
+   ptr = strstr (DAVTimeout,"Second-");
+   if (!strcmp(DAVTimeout,"Infinite") || ptr==NULL || (ptr!=NULL && ptr!=DAVTimeout)) 
+    {
+       TtaSetMenuForm (DAVPreferencesBase + DAVradioTimeout,0);
+       strcpy (radioTimeout,"Infinite");
+    }
+   else 
+    {
+       strcpy (radioTimeout,"Second-");
+       TtaSetMenuForm (DAVPreferencesBase + DAVradioTimeout,1);
+       
+       ptr = strchr (DAVTimeout,'-');
+       if (ptr)        
+           numberTimeout = atoi (++ptr);
+       else 
+           numberTimeout = 300; /* 300s = 5min */
+
+       TtaSetNumberForm (DAVPreferencesBase + DAVnumberTimeout, numberTimeout);
+    }
+
+
+   /* awareness toggle */
+   toggleAwareness1 = (DAVAwareness)?TRUE:FALSE;
+   toggleAwareness2 = (DAVAwarenessExit)?TRUE:FALSE;
+   TtaSetToggleMenu (DAVPreferencesBase + DAVtoggleAwareness,0,toggleAwareness1);
+   TtaSetToggleMenu (DAVPreferencesBase + DAVtoggleAwareness,1,toggleAwareness2);
+   
+#endif /* _WINDOWS */    
+
+}
+
+
+
+
+/*----------------------------------------------------------------------
+  DAVShowPreferencesDlg_callback : callback for the DAV preferences dialog
+  ---------------------------------------------------------------------- */
+void DAVShowPreferencesDlg_callback (int ref, int typedata, char *data)
+{
+    
+#ifndef _WINDOWS
+    if (ref == -1)
+     {
+      /* removes the network conf menu */
+      TtaDestroyDialogue (DAVPreferencesBase + DAVPreferencesDlg);
+     }
+    else 
+     {       
+       switch (ref - DAVPreferencesBase)
+        {
+           case DAVPreferencesDlg:
+                   switch ((int)data) 
+                    {
+                       case 0:     
+                              TtaDestroyDialogue (DAVPreferencesBase + DAVPreferencesDlg);
+                              break;
+                       case 1:
+                              DAVSetPreferences();
+                              TtaDestroyDialogue (DAVPreferencesBase + DAVPreferencesDlg);
+                              break;
+
+                       case 2:
+                              /*reset to old values */
+                              DAVGetPreferences();
+                              break;
+       
+                    }
+                   break;
+                        
+           case DAVtextUserReference :
+                   strcpy (textUserReference, data);
+                   break;
+
+           case DAVtextUserResources :
+                   strcpy (textUserResources, data);
+                   break;
+
+           case DAVradioDepth :
+                   switch ((int)data) 
+                    {
+                       case 0:
+                               strcpy (radioDepth,"0");
+                               break;
+                       case 1:
+                               strcpy (radioDepth,"infinity");
+                               break;
+                    }
+                   break;
+                   
+           case DAVradioTimeout :
+                   switch ((int)data) 
+                    {
+                       case 0:
+                               strcpy (radioTimeout,"Infinite");
+                               break;
+                       case 1:
+                               strcpy (radioTimeout,"Second-");
+                               break;
+                    }
+                   break;
+                   
+           case DAVnumberTimeout :
+                   numberTimeout = (int)data;
+                   break;                   
+                   
+           case DAVradioLockScope :
+                   switch ((int)data) 
+                    {
+                       case 0:
+                               strcpy (radioLockScope,"exclusive");
+                               break;
+                       case 1:
+                               strcpy (radioLockScope,"shared");
+                               break;
+                    }
+                   break;
+                   
+           case DAVtoggleAwareness :
+                   switch ((int)data) 
+                    {
+                       case 0:
+                               toggleAwareness1 = !toggleAwareness1;
+                               break;
+                       case 1:
+                               toggleAwareness2 = !toggleAwareness2;
+                               break;
+                    }
+                   break;
+        }
+     }
+       
+#endif /* _WINDOWS */
+        
+}
+
+
+
+
+/*----------------------------------------------------------------------
+  DAVShowPreferencesDlg: shows the DAV preferences dialog
+  ---------------------------------------------------------------------- */
+void DAVShowPreferencesDlg (Document document)
+{
+#ifndef _WINDOWS
+        
+    char buf[DAV_LINE_MAX];
+    
+    DAVPreferencesBase = TtaSetCallback (DAVShowPreferencesDlg_callback,MAX_DAVPREF_DLG);
+
+    sprintf (buf,"%s%c%s%c",TtaGetMessage (AMAYA, AM_APPLY_BUTTON),EOS,
+                            TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON),EOS);
+
+
+    TtaNewSheet (DAVPreferencesBase + DAVPreferencesDlg, 
+		TtaGetViewFrame (document, DAV_VIEW),
+		TtaGetMessage (AMAYA, AM_DAV_PREFERENCES),
+		2, buf, TRUE, 3, 'L', D_DONE);
+    
+ 
+    /* first line */
+    TtaNewTextForm (DAVPreferencesBase + DAVtextUserReference,
+		   DAVPreferencesBase + DAVPreferencesDlg,
+		   TtaGetMessage (AMAYA, AM_DAV_USER_URL),
+		   40, 1, FALSE);
+    TtaNewLabel (DAVPreferencesBase + DAVlabelEmpty1,DAVPreferencesBase + DAVPreferencesDlg, " ");
+    TtaNewLabel (DAVPreferencesBase + DAVlabelEmpty2,DAVPreferencesBase + DAVPreferencesDlg, " ");
+
+
+    /* second line */
+    sprintf (buf, "B0%cB%s%c", EOS,TtaGetMessage (AMAYA, AM_DAV_DEPTH_INFINITY), EOS);
+    TtaNewSubmenu (DAVPreferencesBase + DAVradioDepth,
+		  DAVPreferencesBase + DAVPreferencesDlg,
+		  0, TtaGetMessage (AMAYA, AM_DAV_DEPTH), 2, buf, NULL, FALSE);               
+
+    sprintf (buf, "B%s%cB%s%c",TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_INFINITE),EOS,
+                               TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_OTHER), EOS);
+    TtaNewSubmenu (DAVPreferencesBase + DAVradioTimeout,
+		  DAVPreferencesBase + DAVPreferencesDlg,
+		  0,TtaGetMessage (AMAYA, AM_DAV_TIMEOUT), 2, buf, NULL, FALSE);               
+
+    TtaNewNumberForm (DAVPreferencesBase + DAVnumberTimeout,
+		      DAVPreferencesBase + DAVPreferencesDlg,
+                      TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_SECONDS), 300,9999, FALSE);  
+    
+            
+    /* third line */
+    sprintf (buf, "B%s%cB%s%c",TtaGetMessage (AMAYA, AM_DAV_LOCKSCOPE_EXCLUSIVE), EOS, 
+                               TtaGetMessage (AMAYA, AM_DAV_LOCKSCOPE_SHARED), EOS);
+    TtaNewSubmenu (DAVPreferencesBase + DAVradioLockScope,
+		   DAVPreferencesBase + DAVPreferencesDlg,
+		   0, TtaGetMessage (AMAYA, AM_DAV_LOCKSCOPE), 2, buf, NULL, FALSE);               
+
+    TtaNewLabel (DAVPreferencesBase + DAVlabelEmpty3,DAVPreferencesBase + DAVPreferencesDlg, " ");
+    TtaNewLabel (DAVPreferencesBase + DAVlabelEmpty4,DAVPreferencesBase + DAVPreferencesDlg, " ");
+
+
+    /* fourth line */
+    sprintf (buf, "B%s%cB%s%c", TtaGetMessage (AMAYA, AM_DAV_AWARENESS_GENERAL), EOS, 
+                               TtaGetMessage (AMAYA, AM_DAV_AWARENESS_ONEXIT), EOS);
+    TtaNewToggleMenu (DAVPreferencesBase + DAVtoggleAwareness,
+		      DAVPreferencesBase + DAVPreferencesDlg,
+		      TtaGetMessage (AMAYA, AM_DAV_AWARENESS), 2, buf, NULL, TRUE);
+    
+    TtaNewLabel (DAVPreferencesBase + DAVlabelEmpty5,DAVPreferencesBase + DAVPreferencesDlg, "    ");
+    TtaNewLabel (DAVPreferencesBase + DAVlabelEmpty6,DAVPreferencesBase + DAVPreferencesDlg, "    ");
+    
+
+    /* fifth line */
+    TtaNewTextForm (DAVPreferencesBase + DAVtextUserResources,
+		   DAVPreferencesBase + DAVPreferencesDlg,
+		   TtaGetMessage (AMAYA, AM_DAV_USER_RESOURCES),
+		   40, 1, FALSE);
+
+
+    /* get the active values and set the dialogue variables */
+    DAVGetPreferences();
+    
+    /* show the dialogue */
+    TtaSetDialoguePosition ();
+    TtaShowDialogue (DAVPreferencesBase + DAVPreferencesDlg, TRUE);
+
+#endif /* !_WINDOWS */
+        
+}
+
+
+
+

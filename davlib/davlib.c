@@ -14,7 +14,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.8  2002-06-13 13:40:32  kahan
+ ** Revision 1.9  2002-06-13 16:10:13  kirschpi
+ ** New dialogue "WebDAV Preferences"
+ ** Corrections due last commit by JK
+ ** Manuele
+ **
+ ** Revision 1.8  2002/06/13 13:40:32  kahan
  ** JK: Changed MAX_LINE to DAV_MAX_LINE. MAX_LINE is a reserved macro and
  ** the code was generating a warning.
  **
@@ -143,11 +148,12 @@ void InitDAV (void)
 
     
     /* getting depth option. If there is an entry DAV_DEPTH and
-     * it is valid, use it/ Otherwise, assuming 0 */
+     * it is valid, use it/ Otherwise, assuming 0 
+     * Note: for LOCK request, only the values 0 and infinity are accepted*/
     ptr = NULL;  
     ptr = TtaGetEnvString (DAV_DEPTH);
     if (ptr && (*ptr) &&\
-       (!strcmp (ptr,"0") || !strcmp(ptr,"1") || !strcmp(ptr,"infinity")))
+       (!strcmp (ptr,"0") || !strcmp(ptr,"infinity")))
         sprintf (DAVDepth,ptr); 
     else 
      {
@@ -565,5 +571,12 @@ void DAVLockIndicator (Document document, View view)
 
 
 
+/*----------------------------------------------------------------------
+   DAVPreferences: shows a dialogue with WebDAV user's preferences
+  ----------------------------------------------------------------------*/
+void DAVPreferences (Document document, View view) 
+{
+    DAVShowPreferencesDlg (document);
+}
 
 

@@ -15,7 +15,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.9  2002-06-13 13:40:32  kahan
+ ** Revision 1.10  2002-06-13 16:10:13  kirschpi
+ ** New dialogue "WebDAV Preferences"
+ ** Corrections due last commit by JK
+ ** Manuele
+ **
+ ** Revision 1.9  2002/06/13 13:40:32  kahan
  ** JK: Changed MAX_LINE to DAV_MAX_LINE. MAX_LINE is a reserved macro and
  ** the code was generating a warning.
  **
@@ -524,7 +529,7 @@ int FilterFindAndPut_handler (HTRequest * request, HTResponse * response,
                 /* add this url to the DAV Resources list */
                 if (DAVAllowResource (DAVResources,DocumentURLs[context->docid])!=YES) 
                  {           
-                    if (DAVAddResource (context->urlName, DAVResources, ' ', LINE_MAX))
+                    if (DAVAddResource (context->urlName, DAVResources, ' ', DAV_LINE_MAX))
                         DAVSaveRegistry();
                  }
 
@@ -914,7 +919,7 @@ int FilterLock_handler (HTRequest * request, HTResponse * response,
             /* add this url to the DAV Resources list */
             if (DAVAllowResource (DAVResources,DocumentURLs[context->docid])!=YES) 
              {           
-                if (DAVAddResource (context->urlName, DAVResources, ' ', LINE_MAX))
+                if (DAVAddResource (context->urlName, DAVResources, ' ', DAV_LINE_MAX))
                     DAVSaveRegistry();
              }
          
@@ -1577,7 +1582,7 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
                            if (DAVAllowResource (DAVResources,DocumentURLs[context->docid])!=YES) 
                             {
                                /* add this url to the DAV Resources list */
-                               if (DAVAddResource (context->urlName, DAVResources, ' ', LINE_MAX))
+                               if (DAVAddResource (context->urlName, DAVResources, ' ', DAV_LINE_MAX))
                                    DAVSaveRegistry();
                             }
 
@@ -1821,7 +1826,7 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,
             /* add this url to the DAV Resources list */
             if (DAVAllowResource (DAVResources,DocumentURLs[context->docid])!=YES) 
              {
-                if (DAVAddResource (context->urlName, DAVResources, ' ', LINE_MAX))
+                if (DAVAddResource (context->urlName, DAVResources, ' ', DAV_LINE_MAX))
                     DAVSaveRegistry();
              }
             

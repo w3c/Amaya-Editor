@@ -15,7 +15,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.4  2002-06-13 13:40:33  kahan
+ ** Revision 1.5  2002-06-13 16:11:16  kirschpi
+ ** New dialogue "WebDAV Preferences"
+ ** Corrections due last commit by JK
+ ** Manuele
+ **
+ ** Revision 1.4  2002/06/13 13:40:33  kahan
  ** JK: Changed MAX_LINE to DAV_MAX_LINE. MAX_LINE is a reserved macro and
  ** the code was generating a warning.
  **
@@ -147,6 +152,29 @@ typedef struct _AHTDAVContext {
      HTDAVHeaders *davheaders;  /* WebDAV headers */     
 } AHTDAVContext;
 
+
+
+
+/*----------------------------------------------------------------------
+   Definitions for the WebDAV preferences dialogue
+  ----------------------------------------------------------------------*/
+
+
+#define DAVPreferencesDlg       1
+#define DAVtextUserReference    2
+#define DAVtextUserResources    3
+#define DAVradioDepth           4
+#define DAVradioTimeout         5
+#define DAVnumberTimeout        6
+#define DAVradioLockScope       7
+#define DAVtoggleAwareness      8
+#define DAVlabelEmpty1          9
+#define DAVlabelEmpty2         10 
+#define DAVlabelEmpty3         11 
+#define DAVlabelEmpty4         12 
+#define DAVlabelEmpty5         13 
+#define DAVlabelEmpty6         14 
+#define MAX_DAVPREF_DLG        15
 
 
 

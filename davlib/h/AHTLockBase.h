@@ -32,7 +32,7 @@
 #include "sysdep.h"
 
 #define  BREAK_CHAR    '\t'
-#define  DAV_LINE_MAX      1024
+#define  DAV_LINE_MAX  1024
 
 #ifndef _WINDOWS
 #define PORT_CHAR      ':'
