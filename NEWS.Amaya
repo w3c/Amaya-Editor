@@ -9,17 +9,18 @@ Extensions 2.1:
 ---------------
 
 * User Interface:
-  - The entry menu Save and the button Save are disabled when the document
+  - The Save menu entry and the Save button are disabled when the document
     cannot be saved.
-  - like other entries Quotation, Subscript, Superscript, and BDO can be set
-    and unset from the menu "Character element".
-  - Button icons are redesigned and there is a new button Home now.
+  - Menu entries Quotation, Subscript, Superscript, and BDO can be set
+    and unset from the "Character element" menu.
+  - New colorful button bar
+  - New Home button
 
 * Thot API: Due to a conflict with the libjpeg definition the Thot type boolean
   has been renamed ThotBool.
 
-* MathML: the full presentation part of MathML is now supported, but only
-  some attributes are taken into account when formatting mathematical
+* MathML: the full presentation part of MathML is now supported, but not
+  all attributes are taken into account when formatting mathematical
   expressions.
 
 * LbWWW: 
@@ -29,7 +30,7 @@ Fixed bugs 2.1:
 
 * Amaya was not able to use the shared library libjpeg.so.
 
-* There were memory leaks in the previous version.
+* There were some memory leaks in the previous version.
 
 * CSS parser:
   - CSS comments were lost in the style element
@@ -41,12 +42,11 @@ Fixed bugs 2.1:
 * Amaya could crash after a copy/paste of a mathematical formula from one
   page to another.
 
-* Sometimes the paste command mixed the list of elements to be pasted.
+* Sometimes the paste command mixed the pasted elements.
 
 * It was impossible to set font-size to 20 in the preference menu.
 
-* Amaya didn't take care to the Shift in the keyboard configuration file. Now
-  it takes.
+* Amaya didn't take care to the Shift in the keyboard configuration file.
   
 =============================================================
 2.0
@@ -55,7 +55,7 @@ Fixed bugs 2.1:
 Extensions 2.0:
 ---------------
 
-* First implementation of a multi-document, multi-level Undo/Redo command.
+* Multi-document, multi-level Undo/Redo command.
 
 * WAI guidelines on Image and Maps.
 
