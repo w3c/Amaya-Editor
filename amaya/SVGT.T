@@ -1074,11 +1074,11 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 	
-   opacity:
+   opacity_:
 	BEGIN
 	create SAN;
 	create 'opacity="';
-	create opacity;
+	create opacity_;
 	create DoubleQuote;
 	END;
 

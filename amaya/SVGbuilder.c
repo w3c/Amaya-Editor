@@ -212,7 +212,7 @@ void   ParseCSSequivAttribute (int attrType,
     case SVG_ATTR_text_decoration:
       sprintf (css_command, "text-decoration: %s", text);
       break;
-    case SVG_ATTR_opacity:
+    case SVG_ATTR_opacity_:
       sprintf (css_command, "opacity: %s", text);
       break;
     case SVG_ATTR_stroke_opacity:
@@ -2965,7 +2965,7 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 
    switch (attrType.AttrTypeNum)
      {
-     case SVG_ATTR_opacity:
+     case SVG_ATTR_opacity_:
      case SVG_ATTR_stroke_opacity:
      case SVG_ATTR_fill_opacity:
          ParseCSSequivAttribute (attrType.AttrTypeNum, attr, el, doc, FALSE);

@@ -87,7 +87,6 @@ BOXES
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-		Foreground: ATTRVALUE_Color;
 		END;
 	END;
 
@@ -138,6 +137,8 @@ BOXES
 		Line;
 		VertPos: Top = Previous . Bottom;
 		HorizPos: Left = Enclosing . Left;
+		Height: Enclosed . Height;
+		Width: Enclosing . Width;
 		END;
 	END;
 
@@ -150,6 +151,8 @@ BOXES
         	Style: ATTR_Style;
 		Weight: ATTR_Weight;
 		Foreground: ATTR_Color;
+VertPos: Top = Previous . Bottom + 0.2;
+HorizPos: Left = Enclosing . Left;
 		END;
         END;
 
@@ -236,10 +239,10 @@ ATTRIBUTES
   href_ :
 	BEGIN
 	CreateEnclosing(ATTR_href_enclosing);
-	CreateFirst(AttrName);
-	CreateFirst(AttrValue);
-        CreateLast(ATTR_href_links_view);
-  	CreateLast(VALUE_href_links_view);
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+        CreateBefore(ATTR_href_links_view);
+  	CreateBefore(VALUE_href_links_view);
 	Foreground: Blue;
         {if AnnotIcon1
                 CreateFirst(Annot_gif1);}
@@ -247,7 +250,7 @@ ATTRIBUTES
 		Foreground: Enclosing =;
    	IN Links_view
 		BEGIN
-		Visibility: ATTR_Visibility;
+		Visibility: 1;
 		Foreground: Enclosing =;
   		VertPos: nil;
                 HorizPos: nil;

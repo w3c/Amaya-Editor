@@ -160,7 +160,7 @@ ATTRIBUTES
 	AttrCreate.Post -> AttrCSSequivModified;
 	AttrDelete.Pre ->  AttrCSSequivDelete;
 	END;	
-   opacity:
+   opacity_:
         BEGIN
 	AttrModify.Post -> AttrCSSequivModified;
 	AttrCreate.Post -> AttrCSSequivModified;

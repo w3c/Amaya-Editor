@@ -114,6 +114,9 @@ DEFAULT
 	Indent: Enclosing =;
 	Depth: Enclosing =;
 	FillPattern: nopattern;
+        Opacity: Enclosing =;
+        FillOpacity: Enclosing =;
+        StrokeOpacity: Enclosing =;
 	END;
 
 BOXES

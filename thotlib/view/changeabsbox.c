@@ -3136,7 +3136,7 @@ static void ApplyInheritPresRule (PtrAbstractBox pAb, PRuleType typeRule,
        || typeRule == PtLineStyle
        || typeRule == PtLineWeight
        || typeRule == PtFillPattern
-       /* || typeRule == PtOpacity */
+       || typeRule == PtOpacity
        || typeRule == PtStrokeOpacity
        || typeRule == PtFillOpacity
        || typeRule == PtBackground

@@ -70,6 +70,9 @@ DEFAULT
    Background: Enclosing =;
    Foreground: Enclosing =;
    FillPattern: Enclosing =;
+   Opacity: Enclosing =;
+   FillOpacity: Enclosing =;
+   StrokeOpacity: Enclosing =;
    IN Structure_view BEGIN
 	VertPos: Top = Previous . Bottom;
 	HorizPos: Left = Enclosing . Left;

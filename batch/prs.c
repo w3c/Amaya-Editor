@@ -2186,7 +2186,7 @@ static void         CheckDefaultRules ()
 	CreateDefaultRule ();
 	CurRule->PrType = PtOpacity;
 	CurRule->PrAttrValue = FALSE;
-	CurRule->PrIntValue = 1000;	
+	InheritRule (InheritParent);
      }
    if (GetTypedRule (PtFillOpacity, pPSchema->PsFirstDefaultPRule) == NULL)
      /*  pas de regle Opacity par defaut, on en cree une : */
@@ -5273,23 +5273,43 @@ static void ProcessInteger (SyntacticCode gCode, indLine wl, indLine wi)
       break;
     case RULE_PosInteger:
       /* PosInteger */
+      if (CurRule->PrType == PtOpacity || CurRule->PrType == PtFillOpacity ||
+	  CurRule->PrType == PtStrokeOpacity)
+	/* opacity is expressed in percentage in the P language source, but
+	   in thousandths in the internal representation */
+	n = n * 10;
       CurRule->PrInhDelta = n;
       CurRule->PrInhUnit = UnRelative;
       CurRule->PrInhAttr = False;
       break;
     case RULE_NegInteger:
       /* NegInteger */
+      if (CurRule->PrType == PtOpacity || CurRule->PrType == PtFillOpacity ||
+	  CurRule->PrType == PtStrokeOpacity)
+	/* opacity is expressed in percentage in the P language source, but
+	   in thousandths in the internal representation */
+	n = n * 10;
       CurRule->PrInhDelta = -n;
       CurRule->PrInhUnit = UnRelative;
       CurRule->PrInhAttr = False;
       break;
     case RULE_maximum:
       /* maximum */
+      if (CurRule->PrType == PtOpacity || CurRule->PrType == PtFillOpacity ||
+	  CurRule->PrType == PtStrokeOpacity)
+	/* opacity is expressed in percentage in the P language source, but
+	   in thousandths in the internal representation */
+	n = n * 10;
       CurRule->PrInhMinOrMax = n;
       CurRule->PrMinMaxAttr = False;
       break;
     case RULE_minimum:
       /* minimum */
+      if (CurRule->PrType == PtOpacity || CurRule->PrType == PtFillOpacity ||
+	  CurRule->PrType == PtStrokeOpacity)
+	/* opacity is expressed in percentage in the P language source, but
+	   in thousandths in the internal representation */
+	n = n * 10;
       CurRule->PrInhMinOrMax = n;
       CurRule->PrMinMaxAttr = False;
       break;

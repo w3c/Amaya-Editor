@@ -15,7 +15,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of Febuary 15, 2003</h4>
+<h4>Version of Febuary 17, 2003</h4>
 
 <p>© 1996-2003 INRIA</p>
 <hr />
@@ -188,6 +188,7 @@
           <li><a href="#sectc4230">Colors</a></li>
           <li><a href="#sectc4230a">Background color and border</a></li>
           <li><a href="#sectc4230b">Background pictures</a></li>
+          <li><a href="#sectc4230c">Opacity</a></li>
           <li><a href="#sectc4231">Presentation box content</a></li>
           <li><a href="#sectc4232">Presentation box creation</a></li>
           <li><a href="#sectc4233">Page layout</a></li>
@@ -3240,7 +3241,10 @@ following rules are considered to be the default rules:</p>
    LineWeight:        Enclosing =;
    FillPattern:       Enclosing =;
    Background:        Enclosing =;
-   Foreground:        Enclosing =;</pre>
+   Foreground:        Enclosing =;
+   Opacity:           Enclosing =;
+   FillOpacity:       Enclosing =;
+   StrokeOpacity:     Enclosing =;</pre>
 
 <p>If other values are desired for the default rules, they must be defined
 explicitly in the default rules section. In fact, it is only necessary to
@@ -3988,6 +3992,7 @@ function. The properties are:</p>
     thickness of lines, fill pattern for closed objects,</li>
   <li>the colors in text, graphics, pictures, and symbols contained in the
     box are displayed or printed,</li>
+  <li>the opacity of the element,</li>
   <li>for presentation boxes only, the contents of the box.</li>
 </ul>
 
@@ -4639,7 +4644,7 @@ SectionTitle :
 <div class="subsection">
 <h3><a name="sectc4220" id="sectc4220">Overflow</a></h3>
 
-<p>A boxes corresponding to a structural element normally contain all boxes
+<p>A box corresponding to a structural element normally contain all boxes
 corresponding to the elements of its subtree. However, in some cases, it
 could be necessary to allow a box to jut out from its parent box. Two
 presentation rules indicate that such an overflow is allowed, one for
@@ -4652,9 +4657,14 @@ keyword <tt>Yes</tt> or <tt>No</tt>.</p>
      Boolean = 'Yes' / 'No' .</pre>
 </div>
 
-<p>@@@@@ ******</p>
+<div>
+<h3><a name="Margins" id="Margins">Margins, Padding and Borders</a></h3>
 
-<p>Explain Margin, Padding and Border. Refer to CSS2.</p>
+<p>Boxes (element boxes and presentation boxes as well) may have margins,
+padding and borders, exactly as in CSS. A set of presentation rules allow to
+control the width of margins, padding and borders along the four edges of
+boxes. Other rules determine the color and style of borders. Refer to the
+CSS2 specification for more details.</p>
 <pre>                'MarginTop' ':' MarginWidth /
                 'MarginRight' ':' MarginWidth /
                 'MarginBottom' ':' MarginWidth /
@@ -4686,8 +4696,7 @@ BorderStyle   = InheritParent /
                 'Double' / 'Groove' / 'Ridge' / 'Inset' / 'Outset' .
 InheritParent = 'Enclosing' '=' / 'Creator' '=' .
 ColorName     =  NAME .</pre>
-
-<p>@@@@@ ******</p>
+</div>
 
 <div class="subsection">
 <h3><a name="sectc4221" id="sectc4221">Inheritance</a></h3>
@@ -5550,14 +5559,25 @@ transmitted to children elements.</p>
 <div class="subsection">
 <h3><a name="sectc4230c" id="sectc4230c">Opacity</a></h3>
 
-<p>To be written @@@@ </p>
+<p>The <tt>Opacity</tt>, <tt>FillOpacity</tt> and <tt>StrokeOpacity</tt>
+rules allow to set the opacity of the element(s) to which they apply. The
+<code>FillOpacity</code> rule controls the way the interior of the element is
+paint, while the <code>StrokeOpacity</code> rule concerns the outline. The
+<code>Opacity</code> rule concerns both the interior and the outline at the
+same time.</p>
 
-<pre>                  'Opacity' ':' OpacityInherit /
-                  'FillOpacity' ':' OpacityInherit /
-                  'StrokeOpacity' ':' OpacityInherit /
+<p>In the three rules, opacity is expressed as a percentage. It must be
+comprised between 0 (fully transparent) and 100% (fully opaque). In these
+rules, the opacity can be expressed as an integer (from 0 to 100) followed by
+the <code>%</code> character. It can also be expressed as the name of a
+numeric attribute. In that case, the attribute's value is interpreted as a
+percentage. It should then be comprised between 0 and 100 included. Finally,
+the opacity can be inherited from the parent element.</p>
+<pre>                  'Opacity' ':' OpacityInherit
+                  'FillOpacity' ':' OpacityInherit
+                  'StrokeOpacity' ':' OpacityInherit
 OpacityInherit  = OpPercent '%' / AttrID / Inheritance .
 OpPercent       = NUMBER .</pre>
-
 </div>
 
 <div class="subsection">

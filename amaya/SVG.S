@@ -52,7 +52,7 @@ STRUCT
               y = text; 
 	      width_ = text;
 	      height_ = text;
-	      opacity = text; 
+	      opacity_ = text; 
 	      RealLang = Yes_;
 	      Charset = text)
         = LIST OF (GraphicsElement) + (XMLcomment, XMLPI, CDATA,
@@ -62,7 +62,7 @@ STRUCT
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
 	      fill; stroke; stroke_width;
-	      opacity; 
+	      opacity_; 
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      transform = text)
@@ -96,7 +96,7 @@ STRUCT
         (ATTR xlink_href = text;
 	      requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired;
-	      opacity; fill; stroke; stroke_width;
+	      opacity_; fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      transform;
@@ -117,7 +117,7 @@ STRUCT
 	      requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
 	      transform;
-	      opacity; 
+	      opacity_; 
 	      x; 
 	      y;
               width_;
@@ -157,7 +157,7 @@ STRUCT
    path
 	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
-	      opacity; 
+	      opacity_; 
 	      fill_opacity=text; 
 	      stroke_opacity=text; 
 	      fill; stroke; stroke_width;
@@ -181,7 +181,7 @@ STRUCT
               y;
               width_;
               height_;
-	      opacity; fill_opacity; stroke_opacity;
+	      opacity_; fill_opacity; stroke_opacity;
 	      rx = text;
 	      ry = text)
         = AGGREGATE
@@ -198,7 +198,7 @@ STRUCT
 	      cx = text;
 	      cy = text;
               r = text;
-	      opacity; fill_opacity; stroke_opacity)
+	      opacity_; fill_opacity; stroke_opacity)
         = AGGREGATE
 	      desc; title; metadata;
 	      LIST OF (Anim);
@@ -214,7 +214,7 @@ STRUCT
 	      cy;
 	      rx;
 	      ry;
-	      opacity; fill_opacity; stroke_opacity)
+	      opacity_; fill_opacity; stroke_opacity)
         = AGGREGATE
 	      desc; title; metadata;
 	      LIST OF (Anim);
@@ -230,7 +230,7 @@ STRUCT
 	      y1 = text;
               x2 = text;
 	      y2 = text;
-	      opacity; fill_opacity; stroke_opacity)
+	      opacity_; fill_opacity; stroke_opacity)
         = AGGREGATE
 	      desc; title; metadata;
 	      LIST OF (Anim);
@@ -243,7 +243,7 @@ STRUCT
 	      fill; stroke; stroke_width;
 	      transform;
               points = text;
-	      opacity; fill_opacity; stroke_opacity)
+	      opacity_; fill_opacity; stroke_opacity)
         = AGGREGATE
 	      desc; title; metadata;
 	      LIST OF (Anim);
@@ -256,7 +256,7 @@ STRUCT
 	      fill; stroke; stroke_width;
 	      transform;
               points;
-	      opacity; fill_opacity; stroke_opacity)
+	      opacity_; fill_opacity; stroke_opacity)
         = AGGREGATE
 	      desc; title; metadata;
 	      LIST OF (Anim);
@@ -277,7 +277,7 @@ STRUCT
 	      y;
 	      dx = text;
 	      dy = text;
-	      opacity)
+	      opacity_)
         = LIST OF (CASE OF
 		   tspan;	{ must be the first option, to allow the Return key
 				  to create tspan elements }
@@ -298,7 +298,7 @@ STRUCT
               y;
 	      dx;
 	      dy;
-	      opacity)
+	      opacity_)
 	= LIST OF (SpanElement = CASE OF
 		      TEXT;
 		      desc; title; metadata;
@@ -319,7 +319,7 @@ STRUCT
               y;
 	      dx;
 	      dy;
-	      opacity)
+	      opacity_)
 	= LIST OF (CASE OF
 		   desc; title; metadata;
 	           animate; set_; animateColor;
@@ -584,7 +584,7 @@ STRUCT
    foreignObject  { not in SVG Tiny }
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
-	      opacity; fill_opacity; stroke_opacity; fill; stroke; stroke_width;
+	      opacity_; fill_opacity; stroke_opacity; fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      transform;
@@ -603,7 +603,7 @@ STRUCT
   Timeline_cross
 	(ATTR x; 
 	      y;
-	opacity; 
+	opacity_; 
           width_;
           height_)
         = PICTURE;

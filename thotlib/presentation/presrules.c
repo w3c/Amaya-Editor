@@ -665,8 +665,12 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 			  pPRule->PrType == PtBorderBottomWidth ||
 			  pPRule->PrType == PtBorderLeftWidth ||
 			  pPRule->PrType == PtXRadius ||
-			  pPRule->PrType == PtYRadius)
+			  pPRule->PrType == PtYRadius ||
+			  pPRule->PrType == PtOpacity ||
+			  pPRule->PrType == PtFillOpacity ||
+			  pPRule->PrType == PtStrokeOpacity)
 			/* convertit en 1/10 de caractere */
+			/* ou en milliemes pour l'opacite' */
 			i = 10 * i;
                   }
                 else
@@ -778,13 +782,25 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 		    val = pAbb->AbFillPattern;
 		    break;
 		  case PtOpacity:
-		    val = pAbb->AbOpacity;	    
+		    val = pAbb->AbOpacity + i;
+		    if (val > 1000)
+		      val = 1000;
+		    else if (val < 0)
+		      val = 0;
 		    break;
 		  case PtFillOpacity:
-		    val = pAbb->AbFillOpacity;	    
+		    val = pAbb->AbFillOpacity + i;
+		    if (val > 1000)
+		      val = 1000;
+		    else if (val < 0)
+		      val = 0;
 		    break;
 		  case PtStrokeOpacity:
-		    val = pAbb->AbStrokeOpacity;	    
+		    val = pAbb->AbStrokeOpacity + i;
+		    if (val > 1000)
+		      val = 1000;
+		    else if (val < 0)
+		      val = 0;
 		    break;
 		  case PtBackground:
 		    val = pAbb->AbBackground;
@@ -890,8 +906,12 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 			    pPRule->PrInhUnit == UnXHeight)
 			  if (pPRule->PrType == PtIndent ||
 			      pPRule->PrType == PtLineSpacing ||
-			      pPRule->PrType == PtLineWeight)
-                                /* convertit en 1/10 de caractere */
+			      pPRule->PrType == PtLineWeight ||
+			      pPRule->PrType == PtOpacity ||
+			      pPRule->PrType == PtFillOpacity ||
+			      pPRule->PrType == PtStrokeOpacity)
+                            /* convertit en 1/10 de caractere ou en milliemes
+			       pour l'opacite' */
 			    i = 10 * i;
 		      }
 		    else
@@ -903,7 +923,8 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 		      /* exprimees dans une echelle de valeurs entre 0 et */
 		      /* n-1, alors que dans les regles de presentation */
 		      /* l'echelle est entre 1 et n. */
-		      if (pPRule->PrType == PtSize && pAbb->AbSizeUnit == UnRelative)
+		      if (pPRule->PrType == PtSize &&
+			  pAbb->AbSizeUnit == UnRelative)
 			{
 			  if (val > i - 1)
 			    val = i - 1;
@@ -1043,17 +1064,13 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 		  /* c'est la valeur d'un attribut */
 		  {
 		    pAttr = GetEnclosingAttr (pEl, pPRule->PrIntValue, pAttr);
-		    if (pPRule->PrIntValue < 0)
-		      /* il faut inverser cette valeur */
-		      val = -AttrValue (pAttr);
-		    else
-		      val = AttrValue (pAttr);
-		    
+		    /* the attribute value is supposed to be a percentage, but
+		       the value in the abstract box is in thousandth */
+		    val = AttrValue (pAttr) * 10;
 		  }
 		else
 		  /* c'est la valeur elle meme qui est dans la regle */
 		  val = pPRule->PrIntValue;
-		
 	      }
 	    if (pPRule->PrType == PtSize && *unit == UnRelative)
 	      {

@@ -51,11 +51,17 @@ DEFAULT
    FillPattern: Enclosing =;
    Depth: Enclosing =;
    Font: Enclosing =;
+   Opacity: 100%;
+   FillOpacity: Enclosing =;
+   StrokeOpacity: Enclosing =;
    IN Structure_view
 	BEGIN
 	VertPos: Top = Previous . Bottom;
 	Width: Enclosed . Width;
 	HorizRef: Enclosed . HRef;
+        Opacity: 100%;
+        FillOpacity: 100%;
+        StrokeOpacity: 100%;
 	END;
    IN Alternate_view
 	BEGIN
@@ -64,6 +70,8 @@ DEFAULT
 	Height: Enclosed . Height;
 	HorizRef: Enclosed . HRef;
 	END;
+   IN Links_view
+	Visibility: 0;
    END;
 
 BOXES
@@ -277,6 +285,15 @@ RULES
 		PaddingLeft: 0.4;
 		Font: Helvetica;
 		END;
+        IN Links_view
+	        Visibility: 10;
+        IN Links_view BEGIN
+		Height: Enclosed . Height;
+		PaddingLeft: 0.4;
+		PaddingTop: 0.8;
+		PaddingBottom: 3;
+		Font: Helvetica;
+		END;	        
 	END;
 
    SVG:
@@ -317,7 +334,16 @@ RULES
 		Foreground: Enclosing =;
 	        Background: Enclosing =;
 	        FillPattern: nopattern;
-		END;		
+		END;
+        IN Links_view BEGIN
+		if not within SVG BEGIN
+	            Visibility: 10;
+                    VertPos: Top = Previous . Bottom;
+                    HorizPos: Left = Enclosing . Left;
+		    Width: Enclosing . Width;
+        	    Height: Enclosed . Height;
+                    END;
+                END;
 	END;
 
    g:
@@ -1177,7 +1203,7 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
-  opacity:
+  opacity_:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
