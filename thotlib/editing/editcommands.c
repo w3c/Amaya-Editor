@@ -3210,9 +3210,9 @@ void                PasteXClipboard (USTRING Xbuffer, int nbytes)
 
 
 /*----------------------------------------------------------------------
-   TtcInsertChar insert a character                                
+   TtcInsertChar insert a character
   ----------------------------------------------------------------------*/
-void                TtcInsertChar (Document document, View view, CHAR_T c)
+void                TtcInsertChar (Document doc, View view, CHAR_T c)
 {
   ViewSelection      *pViewSel;
   PtrAbstractBox      pAb;
@@ -3224,17 +3224,19 @@ void                TtcInsertChar (Document document, View view, CHAR_T c)
   int                 frame;
   ThotBool            lock = TRUE;
 
-  if (document != 0)
+  if (doc != 0)
     {
-      frame = GetWindowNumber (document, view);
-      pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
+      frame = GetWindowNumber (doc, view);
       /* Check if we are changing the active frame */
       if (frame != ActiveFrame)
 	{
 	  /* yes close the previous insertion */
 	  CloseTextInsertion ();
-	  ActiveFrame = frame;
+	  /* work in the right document */
+	  frame = ActiveFrame;
+	  doc =  FrameTable[ActiveFrame].FrDoc;
 	}
+      pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
       if (pViewSel->VsBox != NULL &&
 	  pViewSel->VsBox->BxAbstractBox != NULL &&
 	  pViewSel->VsBox->BxAbstractBox->AbReadOnly)
@@ -3250,12 +3252,12 @@ void                TtcInsertChar (Document document, View view, CHAR_T c)
 
       /* start the undo sequence */
       GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar, &lastChar);
-      if (pDoc && LoadedDocument[document - 1] == pDoc)
+      if (pDoc && pViewSel->VsBox != NULL)
 	{
 	  /* avoid to redisplay step by step */
-	  dispMode = TtaGetDisplayMode (document);
+	  dispMode = TtaGetDisplayMode (doc);
 	  if (dispMode == DisplayImmediately)
-	    TtaSetDisplayMode (document, DeferredDisplay);
+	    TtaSetDisplayMode (doc, DeferredDisplay);
 	  OpenHistorySequence (pDoc, firstEl, lastEl, firstChar, lastChar);
 	  /* lock tables formatting */
 	  if (ThotLocalActions[T_islock])
@@ -3296,17 +3298,17 @@ void                TtcInsertChar (Document document, View view, CHAR_T c)
 		      pViewSel->VsXPos = draw->AbBox->BxWidth;
 		      pViewSel->VsNSpaces = 0;
 		      pViewSel->VsLine = NULL;
-		      TtcInsertChar (document, view, c);
+		      TtcInsertChar (doc, view, c);
 		      /* restore the display mode */
 		      if (dispMode == DisplayImmediately)
-			TtaSetDisplayMode (document, DisplayImmediately);
+			TtaSetDisplayMode (doc, DisplayImmediately);
 		      return;
 		    }
 		  else if (pAb->AbLeafType == LtPicture ||
 			   pAb->AbLeafType == LtGraphics)
 		    ContentEditing (TEXT_SUP);
 		  else if (pAb->AbLeafType != LtCompound || pAb->AbVolume != 0)
-		    TtcPreviousChar (document, view);
+		    TtcPreviousChar (doc, view);
 		}
 	    }
 	  InsertChar (frame, c, -1);
@@ -3317,7 +3319,7 @@ void                TtcInsertChar (Document document, View view, CHAR_T c)
 	  /* close the undo sequence */
 	  CloseHistorySequence (pDoc);
 	  if (dispMode == DisplayImmediately)
-	    TtaSetDisplayMode (document, dispMode);
+	    TtaSetDisplayMode (doc, dispMode);
 	}
     }
 }
@@ -3326,7 +3328,7 @@ void                TtcInsertChar (Document document, View view, CHAR_T c)
 /*----------------------------------------------------------------------
    TtcCutSelection                                                    
   ----------------------------------------------------------------------*/
-void                TtcCutSelection (Document document, View view)
+void                TtcCutSelection (Document doc, View view)
 {
    DisplayMode         dispMode;
    int                 frame;
@@ -3339,12 +3341,12 @@ void                TtcCutSelection (Document document, View view)
    int                 ndx;
 #endif /* _WINDOWS */
 
-   if (document == 0)
+   if (doc == 0)
      return;
    /* avoid to redisplay step by step */
-   dispMode = TtaGetDisplayMode (document);
+   dispMode = TtaGetDisplayMode (doc);
    if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (document, DeferredDisplay);
+     TtaSetDisplayMode (doc, DeferredDisplay);
    /* lock tables formatting */
    if (ThotLocalActions[T_islock])
      {
@@ -3354,7 +3356,7 @@ void                TtcCutSelection (Document document, View view)
 	 (*ThotLocalActions[T_lock]) ();
      }
 
-   frame = GetWindowNumber (document, view);
+   frame = GetWindowNumber (doc, view);
    if (frame != ActiveFrame)
      {
        /* yes close the previous insertion */
@@ -3362,7 +3364,7 @@ void                TtcCutSelection (Document document, View view)
        ActiveFrame = frame;
      }
 #ifdef _WINDOWS
-   TtcCopyToClipboard (document, view);
+   TtcCopyToClipboard (doc, view);
 
    if (!OpenClipboard (FrRef[frame]))
      WinErrorBox (FrRef [frame], TEXT("TtcCutSelection (1)"));
@@ -3388,13 +3390,13 @@ void                TtcCutSelection (Document document, View view)
      /* unlock table formatting */
      (*ThotLocalActions[T_unlock]) ();
    if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (document, dispMode);
+     TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------
    TtcDeletePreviousChar                                           
   ----------------------------------------------------------------------*/
-void                TtcDeletePreviousChar (Document document, View view)
+void                TtcDeletePreviousChar (Document doc, View view)
 {
   ViewSelection      *pViewSel;
   DisplayMode         dispMode;
@@ -3402,14 +3404,16 @@ void                TtcDeletePreviousChar (Document document, View view)
   ThotBool            delPrev, moveAfter;
   ThotBool            lock = TRUE;
 
-  if (document != 0)
+  if (doc != 0)
     {
-      frame = GetWindowNumber (document, view);
+      frame = GetWindowNumber (doc, view);
       if (frame != ActiveFrame)
 	{
 	  /* yes close the previous insertion */
 	  CloseTextInsertion ();
-	  ActiveFrame = frame;
+	  /* work in the right document */
+	  frame = ActiveFrame;
+	  doc =  FrameTable[ActiveFrame].FrDoc;
 	}
       delPrev = (StructSelectionMode || ViewFrameTable[frame - 1].FrSelectOnePosition);
       pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
@@ -3423,9 +3427,9 @@ void                TtcDeletePreviousChar (Document document, View view)
 		   pViewSel->VsIndBox >= pViewSel->VsBox->BxNChars);
       
       /* avoid to redisplay step by step */
-      dispMode = TtaGetDisplayMode (document);
+      dispMode = TtaGetDisplayMode (doc);
       if (dispMode == DisplayImmediately)
-	TtaSetDisplayMode (document, DeferredDisplay);
+	TtaSetDisplayMode (doc, DeferredDisplay);
       /* lock tables formatting */
       if (ThotLocalActions[T_islock])
 	{
@@ -3461,14 +3465,14 @@ void                TtcDeletePreviousChar (Document document, View view)
 	  pViewSel = &ViewFrameTable[frame - 1].FrSelectionEnd;
 	  if (moveAfter &&
 	      pViewSel->VsBox && pViewSel->VsIndBox < pViewSel->VsBox->BxNChars)
-	    TtcPreviousChar (document, view);
+	    TtcPreviousChar (doc, view);
 	}
       
       if (!lock)
 	/* unlock table formatting */
 	(*ThotLocalActions[T_unlock]) ();
       if (dispMode == DisplayImmediately)
-	TtaSetDisplayMode (document, dispMode);
+	TtaSetDisplayMode (doc, dispMode);
     }
 }
 
@@ -3476,17 +3480,17 @@ void                TtcDeletePreviousChar (Document document, View view)
 /*----------------------------------------------------------------------
    TtcDeleteSelection                                                 
   ----------------------------------------------------------------------*/
-void                TtcDeleteSelection (Document document, View view)
+void                TtcDeleteSelection (Document doc, View view)
 {
    DisplayMode         dispMode;
    ThotBool            lock = TRUE;
 
-   if (document == 0)
+   if (doc == 0)
      return;
    /* avoid to redisplay step by step */
-   dispMode = TtaGetDisplayMode (document);
+   dispMode = TtaGetDisplayMode (doc);
    if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (document, DeferredDisplay);
+     TtaSetDisplayMode (doc, DeferredDisplay);
    /* lock tables formatting */
    if (ThotLocalActions[T_islock])
      {
@@ -3502,7 +3506,7 @@ void                TtcDeleteSelection (Document document, View view)
      /* unlock table formatting */
      (*ThotLocalActions[T_unlock]) ();
    if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (document, dispMode);
+     TtaSetDisplayMode (doc, dispMode);
 }
 
 
