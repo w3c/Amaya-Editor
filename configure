@@ -6199,7 +6199,7 @@ if test "$with_gtk" = "yes" ; then
 
 GTK_INCLUDES="`gtk-config --cflags`"
 
-GTK_LIBRARIES="`gtk-config --libs` -lgdk_imlib -ltiff -lgif"
+GTK_LIBRARIES="`gtk-config --libs` -lgdk_imlib"
 
 GTK_OPTIONS=-D_GTK
   no_motif=yes
