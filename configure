@@ -13552,7 +13552,12 @@ fi
 
 if test "$with_wx" = "yes" ; then
   # WX_SRCDIR is better to understand the code than with_wxsrcdir variable
-  WX_SRCDIR=$with_wxsrcdir
+  if test ! -f $with_wxsrcdir/Makefile.in ; then
+    $with_wxsrcdir = ../../wxWidgets
+  fi
+  cd $with_wxsrcdir
+  WX_SRCDIR=`pwd`
+  cd -
 
 
   # check that sources of wxWidgets exists
@@ -13620,7 +13625,7 @@ echo "$as_me: error: wxWidgets library sources not found. Please download wxWidg
   # launch the configure
   if test "$with_mesa" = "yes" ; then
     # use internal OpenGL (mesa) libraries
-    ../$WX_SRCDIR/configure CFLAGS="-I${GL_BUILDDIR}/include" CXXFLAGS="-I${GL_BUILDDIR}/include" CPPFLAGS="-I${GL_BUILDDIR}/include" $WXCONFIGURE_OPTION
+    $WX_SRCDIR/configure CFLAGS="-I${GL_BUILDDIR}/include" CXXFLAGS="-I${GL_BUILDDIR}/include" CPPFLAGS="-I${GL_BUILDDIR}/include" $WXCONFIGURE_OPTION
     #../$WX_SRCDIR/configure CFLAGS="-I${GL_BUILDDIR}/include" CXXFLAGS="-I${GL_BUILDDIR}/include" CPPFLAGS="-I${GL_BUILDDIR}/include" OPENGL_LIBS="-lGL -lGLU" $WXCONFIGURE_OPTION
     if test $? != 0 ; then
       { { echo "$as_me:$LINENO: error: A problem occurs durring wxWidgets library configuration. Please fix the problem and try again." >&5
@@ -13629,7 +13634,7 @@ echo "$as_me: error: A problem occurs durring wxWidgets library configuration. P
     fi
   else
     # use OpenGL system libraries
-    ../$WX_SRCDIR/configure $WXCONFIGURE_OPTION
+    $WX_SRCDIR/configure $WXCONFIGURE_OPTION
   fi
   cd $OLDDIR
   echo "---> Configuring wxWidgets library. - DONE"
@@ -13644,7 +13649,8 @@ echo "$as_me: error: Cannot find wx-config. Please download wxWidgets (http://ww
   fi
 
   # setup include paths
-  WX_INCLUDES="`$WXCONFIG --cxxflags`"
+  # "-I$WX_SRCDIR/src/png -I$WX_SRCDIR/src/jpeg -I$WX_SRCDIR/src/tiff" is a temporary patch to fix incorrect generated paths by wx-config --cxxflags (remove it when wxWidgets will be fixed)
+  WX_INCLUDES="-I$WX_SRCDIR/src/png -I$WX_SRCDIR/src/jpeg -I$WX_SRCDIR/src/tiff `$WXCONFIG --cxxflags`"
 
 
   # setup libraries paths

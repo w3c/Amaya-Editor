@@ -399,7 +399,12 @@ fi
 
 if test "$with_wx" = "yes" ; then
   # WX_SRCDIR is better to understand the code than with_wxsrcdir variable
-  WX_SRCDIR=$with_wxsrcdir
+  if test ! -f $with_wxsrcdir/Makefile.in ; then
+    $with_wxsrcdir = ../../wxWidgets
+  fi
+  cd $with_wxsrcdir
+  WX_SRCDIR=`pwd`
+  cd -
   AC_SUBST(WX_SRCDIR)
 
   # check that sources of wxWidgets exists
@@ -465,14 +470,14 @@ if test "$with_wx" = "yes" ; then
   # launch the configure
   if test "$with_mesa" = "yes" ; then
     # use internal OpenGL (mesa) libraries
-    ../$WX_SRCDIR/configure CFLAGS="-I${GL_BUILDDIR}/include" CXXFLAGS="-I${GL_BUILDDIR}/include" CPPFLAGS="-I${GL_BUILDDIR}/include" $WXCONFIGURE_OPTION
+    $WX_SRCDIR/configure CFLAGS="-I${GL_BUILDDIR}/include" CXXFLAGS="-I${GL_BUILDDIR}/include" CPPFLAGS="-I${GL_BUILDDIR}/include" $WXCONFIGURE_OPTION
     #../$WX_SRCDIR/configure CFLAGS="-I${GL_BUILDDIR}/include" CXXFLAGS="-I${GL_BUILDDIR}/include" CPPFLAGS="-I${GL_BUILDDIR}/include" OPENGL_LIBS="-lGL -lGLU" $WXCONFIGURE_OPTION
     if test $? != 0 ; then
       AC_MSG_ERROR(A problem occurs durring wxWidgets library configuration. Please fix the problem and try again.)
     fi
   else
     # use OpenGL system libraries
-    ../$WX_SRCDIR/configure $WXCONFIGURE_OPTION    
+    $WX_SRCDIR/configure $WXCONFIGURE_OPTION    
   fi
   cd $OLDDIR
   echo "---> Configuring wxWidgets library. - DONE"
@@ -485,7 +490,8 @@ if test "$with_wx" = "yes" ; then
   fi
 
   # setup include paths  
-  WX_INCLUDES="`$WXCONFIG --cxxflags`"
+  # "-I$WX_SRCDIR/src/png -I$WX_SRCDIR/src/jpeg -I$WX_SRCDIR/src/tiff" is a temporary patch to fix incorrect generated paths by wx-config --cxxflags (remove it when wxWidgets will be fixed)
+  WX_INCLUDES="-I$WX_SRCDIR/src/png -I$WX_SRCDIR/src/jpeg -I$WX_SRCDIR/src/tiff `$WXCONFIG --cxxflags`"
   AC_SUBST(WX_INCLUDES)
 
   # setup libraries paths
