@@ -950,16 +950,20 @@ PtrAbstractBox      pAb;
   else
     {
       pPreviousAb = pAb->AbPrevious;
-      /* don't take care of dead abstract box, not compound filled boxes */
+      /* don't take care of dead abstract boxes and not compound filled boxes */
       while (pPreviousAb != NULL &&
 	     (pPreviousAb->AbDead ||
 	      pPreviousAb->AbLeafType != LtCompound ||
 	      !pPreviousAb->AbFillBox))
 	pPreviousAb = pPreviousAb->AbPrevious;
 
-      if (pPreviousAb == NULL)
-	/* search at upper level */
-	pPreviousAb = SearchPreviousFilledBox (pAb->AbEnclosing);
+      if (pPreviousAb == NULL && pAb->AbEnclosing != NULL)
+        {
+	  /* search at parent level */
+          pPreviousAb = pAb->AbEnclosing;
+          if (!pPreviousAb->AbFillBox)
+	    pPreviousAb = SearchPreviousFilledBox (pAb->AbEnclosing);
+        }
       return (pPreviousAb);
     }
 }
