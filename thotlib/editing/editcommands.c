@@ -3113,7 +3113,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				  /* Reevaluation of the whole split box */
 				  pSelBox = pAb->AbBox;
 				  UpdateViewSelMarks (frame, xDelta, spacesDelta,
-						      charsDelta, pSelBox->BxScript);
+						      charsDelta, rtl);
 				}
 			      else if (previousChars == 0)
 				{
@@ -3126,7 +3126,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				}
 			      else
 				UpdateViewSelMarks (frame, xDelta, spacesDelta,
-						    charsDelta, pSelBox->BxScript);
+						    charsDelta, rtl);
 			      
 			    }
 			  /* ==> Les autres cas d'insertion */
@@ -3166,10 +3166,10 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			      /* Mise a jour de la selection dans la boite */
 			      if (adjust)
 				UpdateViewSelMarks (frame, adjust + pix, spacesDelta,
-						    charsDelta, pSelBox->BxScript);
+						    charsDelta, rtl);
 			      else
 				UpdateViewSelMarks (frame, xDelta, spacesDelta,
-						    charsDelta, pSelBox->BxScript);
+						    charsDelta, rtl);
 			    }
 			}
 		      
