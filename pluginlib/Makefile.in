@@ -31,12 +31,9 @@ clean :
 	$(RM) libThotPlugin.a
 	$(RM) *.o
 
-install : all
-	@(if test ! -d $(libdir) ; then $(MKDIR) $(libdir) ; fi)
-	$(INSTALL_DATA) libThotPlugin.a $(libdir)
+install :
 
 uninstall :
-	$(RM) -f $(libdir)/libThotPlugin.a
 
 include .depends
 
