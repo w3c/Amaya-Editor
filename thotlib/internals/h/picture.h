@@ -53,24 +53,21 @@ typedef struct
   char          *PicFileName; 
 #ifndef _GL
 #ifdef _GTK
-  GdkImlibImage     *im;
-  GdkPixmap      *PicPixmap;
-  Pixmap         PicAlpha;
+  GdkImlibImage *im;
+  GdkPixmap     *PicPixmap;
 #else /* _GTK*/
   Pixmap         PicPixmap;
-  Pixmap         PicAlpha;
 #endif /*_GTK*/
 #ifdef _WINDOWS
-  int            PicMask;        /* Mask color */
-#else /* _WINDOWS */
-  Pixmap         PicMask;        /* Mask bitmap */
+  int            PicBgMask;      /* Color Mask */
 #endif /* _WINDOWS */
+  Pixmap         PicMask;        /* Bitmap Mask */
 #else /*_GL*/
-  unsigned int         TextureBind;/* integer name of video card memory pointer*/
-  unsigned char        *PicPixmap;
-  ThotBool             RGBA;
-  float                TexCoordW;
-  float                TexCoordH;  
+  unsigned int   TextureBind; /* integer name of video card memory pointer*/
+  unsigned char *PicPixmap;
+  ThotBool       RGBA;
+  float          TexCoordW;
+  float          TexCoordH;  
 #endif /* _GL */
   ThotBool       mapped;         /* Used for ExtraHandlers */
   ThotBool       created;        /* Used for ExtraHandlers */

@@ -86,7 +86,7 @@ Pixmap TtaCreatePixmapLogo(char **d)
   return ((Pixmap) icon);
 #else /* _GTK */
    Pixmap              pixmap;
-   Pixmap              PicMask;
+   Pixmap              pmask;
    XpmAttributes       att;
    XpmColorSymbol      cs;
 
@@ -109,12 +109,12 @@ Pixmap TtaCreatePixmapLogo(char **d)
 	cs.name = "None";
 	cs.value = NULL;
 	cs.pixel = (Pixel) BgMenu_Color;
-	XpmCreatePixmapFromData (TtDisplay, TtRootWindow, d, &pixmap, &PicMask, &att);
+	XpmCreatePixmapFromData (TtDisplay, TtRootWindow, d, &pixmap, &pmask, &att);
 	if (att.pixels != NULL)
 	  XpmFree (att.pixels);
 
-	if (PicMask)
-	   XFreePixmap (TtDisplay, PicMask);
+	if (pmask)
+	   XFreePixmap (TtDisplay, pmask);
      }
    return (pixmap);
 #endif /* _GTK */

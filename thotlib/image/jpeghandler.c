@@ -314,21 +314,14 @@ Drawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   and already in the good format RGB, or RGBA*/
   pixmap = (Pixmap) data;
 #endif /*_GL*/
-  if (pixmap == None)
-    {
-#ifdef _WINDOWS
-      WinErrorBox (NULL, "JpegCreate(2)");
-#endif /* _WINDOWS */
-      return ((Drawable) NULL);
-    }
-  else
+  if (pixmap != None)
     {
       *wif = w;
       *hif = h;
       *xif = 0;
       *yif = 0;
-      return ((Drawable) pixmap);
     }
+  return ((Drawable) pixmap);
 }
 
 

@@ -30,6 +30,47 @@
 void FreeGlTexture (PictInfo  *imageDesc);
 #endif /*_GL*/
 
+
+/*----------------------------------------------------------------------
+  CleanPictInfo frees the picture information but not the structure itself
+  ----------------------------------------------------------------------*/
+void CleanPictInfo (PictInfo *imageDesc)
+{
+  if (imageDesc)
+    {
+      if (imageDesc->PicPixmap != None)
+	{
+#ifndef _GL
+#ifndef _GTK
+#ifdef _WINDOWS
+	  imageDesc->PicBgMask = -1;
+#endif /* _WINDOWS */
+	  FreePixmap (imageDesc->PicMask);
+	  FreePixmap (imageDesc->PicPixmap);
+#else /*_GTK*/
+	  /*Frees imlib struct that contains the real ref to pics */
+	  if (imageDesc->im)
+	    gdk_imlib_destroy_image (imageDesc->im);
+#endif /* _GTK */
+	  imageDesc->PicMask = None;
+	  imageDesc->PicPixmap = None;
+#else /*_GL*/
+	  FreeGlTexture (imageDesc);
+#endif /*_GL*/
+	  imageDesc->PicXArea = 0;
+	  imageDesc->PicYArea = 0;
+	  imageDesc->PicWArea = 0;
+	  imageDesc->PicHArea = 0;
+	  imageDesc->PicWidth = 0;
+	  imageDesc->PicHeight = 0;
+	}
+      if (imageDesc->PicType >= InlineHandlers &&
+	  PictureHandlerTable[imageDesc->PicType].FreePicture)
+	(*(PictureHandlerTable[imageDesc->PicType].FreePicture)) (imageDesc);
+    }
+}
+
+
 /*----------------------------------------------------------------------
    NewPictInfo cree un descripteur par element image.       
    Si le pointeur sur le descripteur existe deja (champ    
@@ -125,82 +166,13 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
 
   if (imageDesc && imageDesc->PicFileName != ptr)
     {
-      /* Initialize image descriptor */
-      /* use the buffer allocated by the picture content */
-#ifndef _GL
-#ifndef _GTK
-#ifdef _WINDOWS
-      imageDesc->PicMask = -1;
-#else /* _WINDOWS */
-      FreePixmap (imageDesc->PicMask);
-      imageDesc->PicMask = None;
-#endif /* _WINDOWS */
-      FreePixmap (imageDesc->PicPixmap);
-#else /*_GTK*/
-      /*Frees imlib struct that contains 
-       The real ref to pics */
-      if (imageDesc->im)
-	{
-	  gdk_imlib_destroy_image (imageDesc->im);
-	  imageDesc->PicMask = None;
-	  imageDesc->PicPixmap = None;
-	}      
-#endif /* !_GTK */
-#else /*_GL*/
-      FreeGlTexture (imageDesc);
-#endif /*_GL*/
+      /* reinitialize the image descriptor */
+      CleanPictInfo (imageDesc);
       imageDesc->PicFileName = ptr;
       imageDesc->PicType    = imagetype;
       imageDesc->PicPresent = picPresent;
     }
 }
-
-
-/*----------------------------------------------------------------------
-  CleanPictInfo  frees the picture information but not the structure itself
-  ----------------------------------------------------------------------*/
-void CleanPictInfo (PictInfo *imageDesc)
-{
-   if (imageDesc)
-     {
-       if (imageDesc->PicPixmap != None)
-	 {
-#ifndef _GL
-#ifndef _GTK
-#ifdef _WINDOWS
-      imageDesc->PicMask = -1;
-#else /* _WINDOWS */
-	   FreePixmap (imageDesc->PicMask);
-	   imageDesc->PicMask = None;
-#endif /* _WINDOWS */
-	   FreePixmap (imageDesc->PicPixmap);
-	   imageDesc->PicPixmap = None;
-#else /*_GTK*/
-	   /*Frees imlib struct that contains 
-	     The real ref to pics */
-	   if (imageDesc->im)
-	     {
-	       gdk_imlib_destroy_image (imageDesc->im);
-	       imageDesc->PicMask = None;
-	       imageDesc->PicPixmap = None;
-	     }
-#endif /* !_GTK */
-#else /*_GL*/
-	   FreeGlTexture (imageDesc);
-#endif /*_GL*/
-	   imageDesc->PicXArea = 0;
-	   imageDesc->PicYArea = 0;
-	   imageDesc->PicWArea = 0;
-	   imageDesc->PicHArea = 0;
-	   imageDesc->PicWidth = 0;
-	   imageDesc->PicHeight = 0;
-	 }
-       if (imageDesc->PicType >= InlineHandlers &&
-	   PictureHandlerTable[imageDesc->PicType].FreePicture)
-	 (*(PictureHandlerTable[imageDesc->PicType].FreePicture)) (imageDesc);
-     }
-}
-
 
 
 /*----------------------------------------------------------------------

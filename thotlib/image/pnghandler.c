@@ -116,8 +116,8 @@ char  *typecouleur[] = {"grayscale", "undefined type", "RGB",
   lib manual http://www.libpng.org/pub/png/libpng-manual.txt
   ----------------------------------------------------------------------*/
 static unsigned char *ReadPng (FILE *pfFile, unsigned int *width, unsigned int *height, 
-			            int *ncolors, int *cpp, ThotColorStruct **colrs,
-			            int *bg, ThotBool *withAlpha, ThotBool *grayScale)
+			       int *ncolors, int *cpp, ThotColorStruct **colrs,
+			       int *bg, ThotBool *withAlpha, ThotBool *grayScale)
 {
   png_structp png_ptr;
   png_infop info_ptr;
@@ -662,7 +662,7 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {
-  Pixmap           pixmap = (Pixmap) 0;
+  Pixmap           pixmap = (Pixmap) NULL, mask = (Pixmap) NULL;
   ThotColorStruct *colrs = NULL;
 #if defined (_WINDOWS) && !defined (_GL)
   unsigned short   red, green, blue;
@@ -745,16 +745,18 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 	}
       else
 	/* register the transparent color index */
-	bg = TtaGetThotColor (colrs[bg].red, colrs[bg].green,
-			      colrs[bg].blue);
-      imageDesc->PicMask = bg;
+	bg = TtaGetThotColor (colrs[bg].red, colrs[bg].green, colrs[bg].blue);
+      imageDesc->PicBgMask = bg;
 #else  /* _WINDOWS */
       /* register the transparent mask */
-      imageDesc->PicMask = MakeMask (TtDisplay, buffer, w, h, bg, bperpix);
+      mask = MakeMask (TtDisplay, buffer, w, h, bg, bperpix);
 #endif /* _WINDOWS */
     }
   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, withAlpha, grayScale);
-  TtaFreeMemory (buffer);
+  if (withAlpha)
+    mask = buffer;
+  else
+    TtaFreeMemory (buffer);
 #else /*_GL*/
   /* GL buffer are display independant, 
   and already in the good format RGB, or RGBA*/
@@ -762,21 +764,15 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #endif /*_GL*/
   /* free the table of colors */
   TtaFreeMemory (colrs);
-  if (pixmap == None)
-    {
-#ifdef _WINDOWS
-      WinErrorBox (NULL, "PngCreate: (2)");
-#endif /* _WINDOWS */
-      return ((Drawable) NULL); 
-    }
-  else
+  if (pixmap != None)
     { 
       *wif = w;
       *hif = h;      
       *xif = 0;
       *yif = 0;
-      return (Drawable) pixmap;
+      imageDesc->PicMask = mask;
     }
+  return (Drawable) pixmap;
 }
 
 

@@ -666,7 +666,7 @@ static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame,
 				int w, int h, int bg)
 {
    HDC            hMemDC, hOrDC;
-   HDC             hAndDC, hInvAndDC;
+   HDC            hAndDC, hInvAndDC;
    HDC            hDestDC;
    HBITMAP        bitmap, bitmapOr;
    HBITMAP        bitmapAnd, bitmapInvAnd;
@@ -1205,7 +1205,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 #endif /* !_GTK */
 #else /* _WINDOWS */
 	case RealSize:
-	  if (imageDesc->PicMask == -1 || imageDesc->PicType == -1)
+	  if (imageDesc->PicBgMask == -1 || imageDesc->PicType == -1)
 	    {
 	      /* No transparence */
 	      hMemDC = CreateCompatibleDC (TtDisplay);
@@ -1242,7 +1242,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	    {
 	      TransparentPicture (pixmap, xFrame, yFrame,
 				  imageDesc->PicWArea, imageDesc->PicHArea,
-				  imageDesc->PicMask);
+				  imageDesc->PicBgMask);
 	    }
 #endif /* _WINDOWS */
 	  break;
@@ -1450,11 +1450,11 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 #ifndef IV
           BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
 #else /* IV */
-	  if (imageDesc->PicMask == -1 || imageDesc->PicType == -1)
+	  if (imageDesc->PicBgMask == -1 || imageDesc->PicType == -1)
 	    BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
 	  else
 	    TransparentPicture (bitmapTiled, xFrame, yFrame, w, h,
-				imageDesc->PicMask);
+				imageDesc->PicBgMask);
 #endif /* IV */
 	  SelectObject (hOrigDC, bitmap);
 	  SelectObject (hMemDC, pBitmapTiled);

@@ -736,8 +736,8 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
   XImage             *newmask;
 #ifndef _GTK
   ThotGC              tmp_gc;
-#endif /* !_GTK */
-  Pixmap              PicMask;
+#endif /* _GTK */
+  Pixmap              pmask;
   unsigned short     *spixels;
   unsigned char      *data_ptr, *max_data;
   unsigned int        col;
@@ -909,24 +909,24 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
     }
 
 #ifndef _GTK
-  PicMask = XCreatePixmap (TtDisplay, TtRootWindow, w, h, 1);
-  if ((PicMask == (Pixmap) None) || (newmask == NULL))
+  pmask = XCreatePixmap (TtDisplay, TtRootWindow, w, h, 1);
+  if ((pmask == (Pixmap) None) || (newmask == NULL))
     {
       if (newmask != NULL)
 	XDestroyImage (newmask);
-      if (PicMask != (Pixmap) None)
-	XFreePixmap (TtDisplay, PicMask);
-      PicMask = None;
+      if (pmask != (Pixmap) None)
+	XFreePixmap (TtDisplay, pmask);
+      pmask = None;
     }
   else
     {
-      tmp_gc = XCreateGC (TtDisplay, PicMask, 0, NULL);
-      XPutImage (TtDisplay, PicMask, tmp_gc, newmask, 0, 0, 0, 0, w, h);
+      tmp_gc = XCreateGC (TtDisplay, pmask, 0, NULL);
+      XPutImage (TtDisplay, pmask, tmp_gc, newmask, 0, 0, 0, 0, w, h);
       XDestroyImage (newmask);
       XFreeGC (TtDisplay, tmp_gc);
     }
 #endif /* _GTK */
-  return (PicMask);
+  return (pmask);
 }
 
 
@@ -1160,19 +1160,19 @@ static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
     }
    return (newimage);
 }
-#endif /* !_GTK */
+#endif /* _GTK */
 #else /* _WINDOWS */
 /*----------------------------------------------------------------------
   Make an image of appropriate depth for display from image data.
   The parameter ncolors gives the number of colors in the image.
   ----------------------------------------------------------------------*/
-HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
-		       int depth, ThotColorStruct *colrs, int ncolors,
-		       ThotBool withAlpha, ThotBool grayScale)
+static HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width,
+			      int height, int depth, ThotColorStruct *colrs,
+			      int ncolors, ThotBool withAlpha, ThotBool grayScale)
 {
   HBITMAP             newimage;
   unsigned char      *bit_data, *bitp;
-  unsigned char       r, g, b, alpha;
+  unsigned char       r, g, b;
   unsigned int        col;
   int                 temp, w, h, ind;
   int                 linepad;
@@ -1181,6 +1181,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
   unsigned short      rmask, gmask, bmask;
 
   bit_data = NULL;
+  bit_mask = NULL;
   switch (depth)
     {
     case 1:
@@ -1217,6 +1218,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
     case 16:
       bit_data = (unsigned char *) TtaGetMemory (width * height * 2);
       bitp   = bit_data;
+      alpha = bit_mask;
       ind = 0; /* pixel index */
 	  if (depth == 15)
 	  {
@@ -1246,8 +1248,8 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 		  b = data[ind++];
 		}
 	      if (withAlpha)
-		    /* skip the alpha channel */
-		   alpha = data[ind++];
+		/* skip the alpha channel */
+		ind++;
 	    }
 	  else
 	    {
@@ -1351,6 +1353,12 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
   else
     SetBitmapBits (newimage, width * height * (depth / 8), bit_data);
   TtaFreeMemory (bit_data);
+  if (bit_mask)
+    {
+      *mask = CreateComatibleBitmap (hDC, width, height);
+      SetBitmapBits (newimage, width * height, bit_mask);
+      TtaFreeMemory (bit_mask);
+    }
   return (newimage);
 }
 #endif /* _WINDOWS */
@@ -1439,7 +1447,7 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {
-  Pixmap              pixmap = (Pixmap) 0;
+  Pixmap              pixmap = (Pixmap) NULL;
   ThotColorStruct     colrs[256];
 #ifdef _WINDOWS
 #ifndef _GL
@@ -1535,6 +1543,7 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   buffer = ptr;
   pixmap = (Pixmap) buffer;
 #else /* _GL */
+  pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, FALSE, FALSE);
   if (GifTransparent >= 0)
     {
 #ifdef _WINDOWS
@@ -1551,31 +1560,23 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 	/* register the Thot color index of the transparent color */
 	i = TtaGetThotColor (colrs[GifTransparent].red, colrs[GifTransparent].green,
 			     colrs[GifTransparent].blue);
-      imageDesc->PicMask = i;
+      imageDesc->PicBgMask = i;
 #else  /* _WINDOWS */
       /* register the transparent mask */
       imageDesc->PicMask = MakeMask (TtDisplay, buffer, w, h, GifTransparent, 1);
 #endif /* _WINDOWS */
     }
-  pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, FALSE, FALSE);
   TtaFreeMemory (buffer);
 #endif /*_GL*/
   
-  if (pixmap == None)
-    {
-#ifdef _WINDOWS
-      WinErrorBox (NULL, "GifCreate(2)");
-#endif /* _WINDOWS */
-      return ((Drawable) NULL);
-    }
-  else
+  if (pixmap != None)
     {
       *wif = w;
       *hif = h;
       *xif = 0;
       *yif = 0;
-      return (Drawable) pixmap;
     }
+  return (Drawable) pixmap;
 }
 
 
