@@ -220,9 +220,6 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
   cdate = annot->cdate;
   mdate = annot->mdate;
 
-  /* @@ JK: to remove a bug while testing */
-  annot->type = NULL;
-
   if (annot->type)
     {
       type = ANNOT_GetLabel(&annot_schema_list, annot->type);
