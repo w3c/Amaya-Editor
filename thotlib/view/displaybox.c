@@ -1233,8 +1233,8 @@ int                 ymax;
   int                xd, yd, width, height;
 
   pFrame = &ViewFrameTable[frame - 1];
-  x = box->BxXOrg - ViewFrameTable[frame - 1].FrXOrg;
-  y = box->BxYOrg - ViewFrameTable[frame - 1].FrYOrg;
+  x = ViewFrameTable[frame - 1].FrXOrg;
+  y = ViewFrameTable[frame - 1].FrYOrg;
   xd = box->BxXOrg + box->BxLMargin;
   yd = box->BxYOrg + box->BxTMargin;
   width = box->BxWidth - box->BxLMargin - box->BxRMargin;

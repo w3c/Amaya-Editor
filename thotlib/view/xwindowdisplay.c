@@ -1455,6 +1455,8 @@ int                 pattern;
 
    if (width <= 0 || height <= 0)
       return;
+   if (thick == 0 && pattern == 0)
+      return;
 
    if (width > thick + 1)
      width = width - thick - 1;

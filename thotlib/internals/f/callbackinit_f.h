@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void InitApplicationSchema ( PtrSSchema pSS );
-extern PtrAction FetchAction ( STRING actionName );
+extern PtrAction FetchAction ( char* actionName );
 extern void TteAddAction ( char* actionName,
                            Proc doIt );
 extern int TteAddUserAction ( STRING actionName,
@@ -25,7 +25,7 @@ extern void TteAddActionEvent ( PtrEventsSet eventsList,
 #else /* __STDC__ */
 
 extern void InitApplicationSchema (/* PtrSSchema pSS */);
-extern PtrAction FetchAction (/* STRING actionName */);
+extern PtrAction FetchAction (/* char* actionName */);
 extern void TteAddAction (/* char* actionName,
                              Proc doIt */);
 extern int TteAddUserAction (/* STRING actionName,

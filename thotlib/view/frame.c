@@ -227,16 +227,24 @@ int                 ymax;
   if (yd + height > ymax)
     height = ymax - yd;
   imageDesc = (PictInfo *) pAb->AbPictBackground;
-  if (imageDesc &&
-      (!pAb->AbTruncatedHead ||
-       (imageDesc->PicPresent != XRepeat &&
-	imageDesc->PicPresent != RealSize)))
-    DrawPicture (pBox, imageDesc, frame, xd - x, yd - y, width, height);
+  if (imageDesc)
+    {
+      if (imageDesc->PicPresent == YRepeat ||
+	  imageDesc->PicPresent == FillFrame ||
+	  (imageDesc->PicPresent == XRepeat && !pAb->AbTruncatedHead))
+	DrawPicture (pBox, imageDesc, frame, xd - x, yd - y, width, height);
+      else if (!pAb->AbTruncatedHead)
+	/* the clipping will work automatically */
+	DrawPicture (pBox, imageDesc, frame,
+		     pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - x,
+		     pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding + FrameTable[frame].FrTopMargin - y,
+		     pBox->BxW, pBox->BxH);
+    }
   else if (pAb->AbFillBox)
     {
       /* paint the whole window */
       /* todo: clip when backgroud will be printed */
-      DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
+      DrawRectangle (frame, 0, 0,
 		     xd - x, yd - y, width, height, 0, 0, pAb->AbForeground,
 		     pAb->AbBackground, pAb->AbFillPattern);
     }
@@ -312,16 +320,15 @@ int                 ymax;
 			if (yd + height > ymax)
 			  height = ymax - yd;
 			imageDesc = (PictInfo *) pAb->AbPictBackground;
-			if (pAb->AbPictBackground &&
-			    (!pAb->AbTruncatedHead ||
-			     (imageDesc->PicPresent != XRepeat &&
-			      imageDesc->PicPresent != RealSize)))
-			  DrawPicture (pBoxChild,
-				       (PictInfo *) pAb->AbPictBackground,
-				       frame, xd - x, yd - y,
-				       width, height);
+			if (imageDesc)
+			  {
+			    if (imageDesc->PicPresent == YRepeat ||
+				imageDesc->PicPresent == FillFrame ||
+				(imageDesc->PicPresent == XRepeat && !pAb->AbTruncatedHead))
+			      DrawPicture (pBoxChild, imageDesc, frame, xd - x, yd - y, width, height);
+			  }
 			else
-			  DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
+			  DrawRectangle (frame, 0, 0,
 					 xd - x, yd - y,
 					 width, height, 0, 0, pAb->AbForeground,
 					 pAb->AbBackground, pAb->AbFillPattern);
@@ -383,11 +390,22 @@ int                 ymax;
 		/* clipping on the height */
 		if (yd + height > ymax)
 		  height = ymax - yd + 1;
-		if (pAb->AbPictBackground)
-		  DrawPicture (pBox, (PictInfo *) pAb->AbPictBackground,
-			       frame,  xd - x, yd - y, width, height);
+		imageDesc = (PictInfo *) pAb->AbPictBackground;
+		if (imageDesc)
+		  {
+		    if (imageDesc->PicPresent == YRepeat ||
+			imageDesc->PicPresent == FillFrame ||
+			(imageDesc->PicPresent == XRepeat && !pAb->AbTruncatedHead))
+		      DrawPicture (pBox, imageDesc, frame,  xd - x, yd - y, width, height);
+		    else if (!pAb->AbTruncatedHead)
+		      /* the clipping will work automatically */
+		      DrawPicture (pBox, imageDesc, frame,
+				   pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - x,
+				   pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding + FrameTable[frame].FrTopMargin - y,
+				   pBox->BxW, pBox->BxH);
+		  }
 		else
-		  DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
+		  DrawRectangle (frame, 0, 0,
 				 xd - x, yd - y,
 				 width, height, 0, 0, pAb->AbForeground,
 				 pAb->AbBackground, pAb->AbFillPattern);

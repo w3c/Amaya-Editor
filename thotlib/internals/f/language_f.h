@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern STRING TtaGetLanguageNameFromCode ( STRING code );
-extern STRING TtaGetLanguageCodeFromName ( STRING name );
+extern char* TtaGetLanguageCodeFromName ( CharUnit* name );
 extern void InitLanguage ( void );
 extern Language TtaNewLanguage ( STRING languageName,
                                  char languageAlphabet,
@@ -31,10 +31,10 @@ extern ThotBool TtaExistPatternList ( Language languageId );
 #else /* __STDC__ */
 
 extern STRING TtaGetLanguageNameFromCode (/* STRING code */);
-extern STRING TtaGetLanguageCodeFromName (/* STRING name */);
+extern char* TtaGetLanguageCodeFromName (/* CharUnit* name */);
 extern void InitLanguage (/* void */);
 extern Language TtaNewLanguage (/* STRING languageName,
-                                   CHAR_T languageAlphabet,
+                                   char languageAlphabet,
                                    STRING principalDictionary,
                                    STRING secondDictionary */);
 extern void TtaRemoveLanguage (/* Language language */);

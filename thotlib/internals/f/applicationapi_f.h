@@ -18,7 +18,7 @@ extern ThotBool TtaIsPrinting ( void );
 extern ThotWidget TtaGetViewFrame ( Document document,
                                     View view );
 extern void InitErrorHandler ( void );
-extern void TtaInitialize ( STRING applicationName );
+extern void TtaInitialize ( CharUnit* applicationName );
 extern void TtaSetApplicationQuit ( Proc procedure );
 extern void TtaQuit ( void );
 extern void TtaSetErrorMessages ( int on );
@@ -41,7 +41,7 @@ extern ThotBool TtaIsPrinting (/* void */);
 extern ThotWidget TtaGetViewFrame (/* Document document,
                                       View view */);
 extern void InitErrorHandler (/* void */);
-extern void TtaInitialize (/* STRING applicationName */);
+extern void TtaInitialize (/* CharUnit* applicationName */);
 extern void TtaSetApplicationQuit (/* Proc procedure */);
 extern void TtaQuit (/* void */);
 extern void TtaSetErrorMessages (/* int on */);

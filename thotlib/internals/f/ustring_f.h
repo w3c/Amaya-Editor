@@ -8,8 +8,10 @@
 
 extern int ustrcasecmp ( const STRING str1,
                          const STRING str2 );
-extern int cus2iso_strcasecmp (const CharUnit*, const char*);
-extern int iso2cus_strcasecmp (const char*, const CharUnit*);
+extern int cus2iso_strcasecmp ( const CharUnit* str1,
+                                const char* str2 );
+extern int iso2cus_strcasecmp ( const char* str1,
+                                const CharUnit* str2 );
 extern STRING ustrcat ( STRING dest,
                         const STRING src );
 extern STRING ustrchr ( const STRING src,
@@ -86,8 +88,10 @@ extern CharUnit* StringSubstring ( const CharUnit* str,
 
 extern int ustrcasecmp (/* const STRING str1,
                            const STRING str2 */);
-extern int cus2iso_strcasecmp (/* const CharUnit*, const char* */);
-extern int iso2cus_strcasecmp (/* const char*, const CharUnit* */);
+extern int cus2iso_strcasecmp (/* const CharUnit* str1,
+                                  const char* str2 */);
+extern int iso2cus_strcasecmp (/* const char* str1,
+                                  const CharUnit* str2 */);
 extern STRING ustrcat (/* STRING dest,
                           const STRING src */);
 extern STRING ustrchr (/* const STRING src,
@@ -106,7 +110,7 @@ extern STRING ustrdup (/* const STRING str */);
 extern STRING iso2wc_strdup (/* const char* str */);
 extern char* wc2iso_strdup (/* const STRING str */);
 extern size_t ustrlen (/* const STRING str */);
-extern int ustrncasecmp (/* STRING str1,
+extern int ustrncasecmp (/* const STRING str1,
                             const STRING str2,
                             unsigned int count */);
 extern STRING ustrncat (/* STRING dest,
@@ -127,7 +131,7 @@ extern STRING ustrtok (/* STRING str,
                           const STRING delemiter */);
 extern STRING ustrstr (/* const STRING str,
                           const STRING strCharSet */);
-extern int StringCaseCompare (/* CharUnit* str1,
+extern int StringCaseCompare (/* const CharUnit* str1,
                                  const CharUnit* str2 */);
 extern CharUnit* StringConcat (/* CharUnit* dest,
                                   const CharUnit* src */);
@@ -141,7 +145,7 @@ extern CharUnit* StringCopy (/* CharUnit* dest,
                                 const CharUnit* src */);
 extern CharUnit* StringDuplicate (/* const CharUnit* str */);
 extern size_t StringLength (/* const CharUnit* str */);
-extern int StringNCaseCompare (/* CharUnit* str1,
+extern int StringNCaseCompare (/* const CharUnit* str1,
                                   const CharUnit* str2,
                                   unsigned int count */);
 extern CharUnit* StringNConcat (/* CharUnit* dest,

@@ -3086,8 +3086,6 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-  int                 val, width;
-  int                 x, i, j, k;
   PtrAbstractBox      pChildAb;
   PtrAbstractBox      pRelativeAb;
   PtrAbstractBox      pRefAb;
@@ -3096,6 +3094,8 @@ int                 frame;
   PtrBox              pBox;
   AbDimension        *pDimAb;
   AbPosition         *pPosAb;
+  int                 val, width;
+  int                 x, i, j, k;
   ThotBool            notEmpty;
   ThotBool            toMove;
   ThotBool            absoluteMove;
@@ -3202,7 +3202,7 @@ int                 frame;
 	GiveTextSize (pAb, &width, &x, &i);
       else
 	width -= x;
-      x = width - pBox->BxWidth; /* widths difference */
+      x = width - pBox->BxW; /* widths difference */
       
       /*
        * Now we move misplaced included boxes
@@ -3439,7 +3439,7 @@ int                 frame;
 	GiveTextSize (pAb, &y, &height, &i);
       else
 	height -= y;
-      y = height - pBox->BxHeight; /* heights ifference */
+      y = height - pBox->BxH; /* heights difference */
       
       /*
        * Now we move misplaced included boxes

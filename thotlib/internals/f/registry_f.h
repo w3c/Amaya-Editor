@@ -9,6 +9,7 @@
 extern char* TtaSkipBlanks ( char* ptr );
 extern ThotBool TtaIsBlank ( char* ptr );
 extern ThotBool TtaIsCUSBlank ( CharUnit* ptr );
+extern ThotBool TtaIsWCBlank ( CharUnit* ptr );
 extern ThotBool TtaGetEnvInt ( char* name,
                                int *value );
 extern ThotBool TtaGetEnvBoolean ( char* name,
@@ -44,6 +45,7 @@ extern int SearchFile ( CharUnit* fileName,
 extern char* TtaSkipBlanks (/* char* ptr */);
 extern ThotBool TtaIsBlank (/* char* ptr */);
 extern ThotBool TtaIsCUSBlank (/* CharUnit* ptr */);
+extern ThotBool TtaIsWCBlank (/* CharUnit* ptr */);
 extern ThotBool TtaGetEnvInt (/* char* name,
                                  int *value */);
 extern ThotBool TtaGetEnvBoolean (/* char* name,
