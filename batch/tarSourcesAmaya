@@ -8,8 +8,7 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tgz
 #
-AMAYAVERSION=3.0
-#THOTDIR=/tahiti/diffusion
+AMAYAVERSION=3.1
 THOTDIR=$PWD/../..
 DEST=/tahiti/thottape
 
@@ -31,15 +30,14 @@ Amaya/install-sh \
 Amaya/stamp-h.in \
 Amaya/Options.in \
 Amaya/batch/Makefile.in \
-Amaya/drawlib/Makefile.in \
-Amaya/indexlib/Makefile.in \
+Amaya/batch/tarAmaya \
 Amaya/libjpeg/Makefile.in \
 Amaya/libpng/Makefile.in \
+Amaya/libpng/zlib/Makefile.in \
 Amaya/tablelib/Makefile.in \
 Amaya/thotlib/Makefile.in \
-Amaya/tools/Makefile.in \
-Amaya/libpng/zlib/Makefile.in \
 Amaya/thotlib/include/Makefile.in \
+Amaya/tools/Makefile.in \
 Amaya/tools/cextract-1.7/Makefile.in \
 Amaya/tools/mkdep/Makefile.in \
 Amaya/amaya.spec \
