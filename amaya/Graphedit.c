@@ -746,7 +746,7 @@ ThotBool   GraphicsPRuleChange (event)
 	  unit = TtaGetPRuleUnit (presRule);
           if (presType == PRVertPos)
             {
-	      /* the new value is the old one plus the delta */
+	      /* the new value is the old one plus the difference */
 	      TtaGiveBoxPosition (el, doc, mainView, unit, &val, &i);
 	      val += TtaGetPRuleValue (presRule);
               attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
@@ -756,7 +756,7 @@ ThotBool   GraphicsPRuleChange (event)
             }
           else
             {
-	      /* the new value is the old one plus the delta */
+	      /* the new value is the old one plus the difference */
 	      TtaGiveBoxPosition (el, doc, mainView, unit, &i, &val);
 	      val += TtaGetPRuleValue (presRule);
               attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
@@ -770,7 +770,7 @@ ThotBool   GraphicsPRuleChange (event)
             {
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (el, attr, doc);
-              /* create also a IntPosX attribute is we are creating a IntPosY
+              /* create also a IntPosX attribute if we are creating a IntPosY
                  attribute, and conversely */
               otherAttrType.AttrSSchema = attrType.AttrSSchema;
               otherAttr = TtaNewAttribute (otherAttrType);

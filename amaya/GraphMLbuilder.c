@@ -398,7 +398,7 @@ ThotBoool       delete;
       TtaGiveTextAttributeValue (attr, text, &length);
       /* builds the equivalent CSS rule */
       if (attrType == GraphML_ATTR_fill)
-          usprintf (css_command, TEXT("fill: %s"), text);
+	  usprintf (css_command, TEXT("fill: %s"), text);
       else if (attrType == GraphML_ATTR_stroke)
           usprintf (css_command, TEXT("stroke: %s"), text);
       else if (attrType == GraphML_ATTR_stroke_width)

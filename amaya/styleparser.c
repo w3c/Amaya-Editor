@@ -21,6 +21,7 @@
 #include "undo.h"
 #include "registry.h"
 #include "fetchHTMLname.h"
+#include "GraphML.h"
 #include "uaccess.h"
 
 typedef struct _BackgroundImageCallbackBlock
@@ -3424,7 +3425,8 @@ ThotBool            isHTML;
   CHAR_T*             p = NULL;
   int                 lg;
   unsigned int        i;
-  ThotBool            found;
+  ElementType         elType;
+  ThotBool            found, done;
 
   /* avoid too many redisplay */
   dispMode = TtaGetDisplayMode (context->doc);
@@ -3459,10 +3461,27 @@ ThotBool            isHTML;
 	      cssRule++;
 	      cssRule = SkipWCBlanksAndComments (cssRule);
 	    }
-	  /* try to parse the attribute associated to this attribute */
+	  /* try to parse the value associated with this property */
 	  if (CSSProperties[i].parsing_function != NULL)
 	    {
-	      p = CSSProperties[i].parsing_function (element, tsch, context, cssRule, css, isHTML);
+	      done = FALSE;
+              /* if it's the "fill" SVG property applied to a SVG text element,
+		 generate a Foreground P rule */
+              if (!ustrcmp (CSSProperties[i].name, TEXT("fill")))
+		{
+		  elType = TtaGetElementType (element);
+		  if (elType.ElTypeNum == GraphML_EL_Text_)
+		    if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
+				  TEXT("GraphML")))
+		      {
+                      p = ParseCSSForeground (element, tsch, context, cssRule,
+					      css, isHTML);
+		      done = TRUE;
+		      }
+		}
+              if (!done)
+	         p = CSSProperties[i].parsing_function (element, tsch, context,
+                                                        cssRule, css, isHTML);
 	      /* update index and skip the ";" separator if present */
 	      cssRule = p;
 	    }

@@ -73,8 +73,9 @@ STRUCT
                   GRAPHICS;
                   END;
             RoundRect
-                (ATTR position;
-                                IntPosX; IntPosY;
+                (ATTR position;                      { OBSOLETE }
+                                IntPosX; IntPosY;    { OBSOLETE }
+	              x; y;                          { NEW }
                       width_;
                                 IntWidth;
                       height_;
@@ -94,8 +95,8 @@ STRUCT
                   GRAPHICS;
                   END;
             Circle
-                (ATTR position;
-                                IntPosX; IntPosY;
+                (ATTR position;                      { OBSOLETE }
+                                IntPosX; IntPosY;    { OBSOLETE }
                       width_;
                                 IntWidth;
                       linewidth;
@@ -113,8 +114,8 @@ STRUCT
                   GRAPHICS;
                   END;
             Oval
-                (ATTR position;
-                                IntPosX; IntPosY;
+                (ATTR position;                      { OBSOLETE }
+                                IntPosX; IntPosY;    { OBSOLETE }
                       width_;
                                 IntWidth;
                       height_;
@@ -216,8 +217,9 @@ STRUCT
                   GRAPHICS;
                   END;
             Text_
-                (ATTR position;
-                                IntPosX; IntPosY;
+                (ATTR position;                      { OBSOLETE }
+                                IntPosX; IntPosY;    { OBSOLETE }
+	              x; y;                          { NEW }
                       width_;
                                 IntWidth;
                       align;
@@ -239,8 +241,8 @@ STRUCT
 		= BEGIN CASE OF HTML; MathML; END; END;
 	              
             Group
-                (ATTR position;
-                                IntPosX; IntPosY;
+                (ATTR position;                      { OBSOLETE }
+                                IntPosX; IntPosY;    { OBSOLETE }
                       direction = left_, right_, up, down;
                       hspace = text;
                       vspace = text;
