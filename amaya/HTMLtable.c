@@ -1571,46 +1571,26 @@ void CellPasted (NotifyElement * event)
    ElementType         elType;
    Document            doc;
 
-  if (event->info == 1)
+  if (event->info != 4 && event->info != 3)
     return;
    cell = event->element;
    doc = event->document;
-   if (!ElementOKforProfile (cell, doc))
-     return;
    row = TtaGetParent (cell);
-   if (row == CurrentRow)
-     /* this cell is part of the pasted row */
-     {
-       elType = TtaGetElementType (cell);
-       nextcell = GetSiblingCell (cell, FALSE,TtaSameSSchemas(elType.ElSSchema,
-					       TtaGetSSchema ("MathML", doc)));
-       if (nextcell == NULL)
-	 /* this is the last cell in the pasted row */
-	 CurrentRow = NULL;
-     }
-   else
-     {
-       /* regenerate the corresponding ColumnHead except if it's called by
-	  undo for reinserting the cells deleted by a "Delete Column"
-	  command (only the first reinserted cell has to create a ColumnHead)
-          See function RemoveColumn above */
-       if (event->info == 4)
-	 /* undoing the deletion of the last cell in a "delete column"
-	    command. Regenerate the corresponding ColumnHead and link the
-	    restored cell with that ColumnHead, but do not generate empty
-	    cells in other rows */
-	 NewCell (cell, doc, TRUE, FALSE);
-       else if (event->info == 3)
-	 /* undoing the deletion of any other cell in a "delete column"
-	    command. Link the restored cell with the corresponding ColumnHead*/
-	 NewCell (cell, doc, FALSE, FALSE);
-       else
-	 /* usual case : regenerate the corresponding ColumnHead as well as
-	    empty cells in other rows */
-	 NewCell (cell, doc, TRUE, TRUE);
-       HandleColAndRowAlignAttributes (row, doc);
-       CurrentRow = NULL;
-     }
+   /* regenerate the corresponding ColumnHead except if it's called by
+      undo for reinserting the cells deleted by a "Delete Column"
+      command (only the first reinserted cell has to create a ColumnHead)
+      See function RemoveColumn above */
+   if (event->info == 4)
+     /* undoing the deletion of the last cell in a "delete column"
+	command. Regenerate the corresponding ColumnHead and link the
+	restored cell with that ColumnHead, but do not generate empty
+	cells in other rows */
+     NewCell (cell, doc, TRUE, FALSE);
+   else if (event->info == 3)
+     /* undoing the deletion of any other cell in a "delete column"
+	command. Link the restored cell with the corresponding ColumnHead*/
+     NewCell (cell, doc, FALSE, FALSE);
+   HandleColAndRowAlignAttributes (row, doc);
    /* Check attribute NAME or ID in order to make sure that its value */
    /* is unique in the document */
    MakeUniqueName (cell, doc);
@@ -1980,7 +1960,7 @@ void ColumnDeleted (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
-  ColumnDeleted                                             
+  ColumnPasted                                             
   ----------------------------------------------------------------------*/
 void ColumnPasted (NotifyElement * event)
 {
@@ -2253,7 +2233,6 @@ void RowPasted (NotifyElement * event)
     }
   HandleColAndRowAlignAttributes (row, doc);
   /* avoid processing the cells of the created row */
-  CurrentRow = row;
   CurrentCell = TtaGetLastChild (row);
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document */
