@@ -1525,7 +1525,9 @@ char               *attrstr;
     */
    PresentationValue   pval =
    {10, DRIVERP_UNIT_REL};
+#if 0
    GenericContext      blk = (GenericContext) context;
+#endif
 
    if (context->drv->SetBox)
       context->drv->SetBox (target, context, pval);
