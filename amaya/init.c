@@ -3269,7 +3269,14 @@ void*     context;
 	     NormalizeURL (pathname, 0, tempdocument, documentname, NULL);
 
 	   /* do we need to control the last slash here? */
-	   res = LoadHTMLDocument (newdoc, pathname, form_data, method, tempfile, documentname, http_headers->content_type, history);
+	   if (http_headers)
+	      res = LoadHTMLDocument (newdoc, pathname, form_data, method,
+				      tempfile, documentname,
+				      http_headers->content_type, history);
+	   else
+	      res = LoadHTMLDocument (newdoc, pathname, form_data, method,
+				      tempfile, documentname,
+				      NULL, history);
 	   W3Loading = 0;		/* loading is complete now */
 	   if (res == 0)
 	     {
