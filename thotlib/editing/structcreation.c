@@ -918,7 +918,7 @@ void NewContent (PtrAbstractBox pAb)
   PtrDocument         pDoc;
   PtrElement          pEl, pAncest;
   PtrAttribute        pAttr, pNewAttr;
-  unsigned char       text[10];
+  unsigned char       text[10], *name;
   int                 dVol, len, view;
   ThotBool            selInAttr;
 
@@ -950,6 +950,24 @@ void NewContent (PtrAbstractBox pAb)
 		GetTextBuffer (&pNewAttr->AeAttrText);
 	      else
 		ClearText (pNewAttr->AeAttrText);
+		  /* special treatments for id, name and accesskey attributes */
+		  name = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrName;
+		  if (!strcmp (name, "id") ||
+			  (!strcmp (name, "name") &&
+			   !strcmp (pAttr->AeAttrSSchema->SsName, "HTML")))
+			{
+			  if (pAb->AbText->BuContent[0] == '.' ||
+			      pAb->AbText->BuContent[0] == '_' ||
+			      pAb->AbText->BuContent[0] == '-' ||
+			      pAb->AbText->BuContent[0] == ' ' ||
+			      (pAb->AbText->BuContent[0] >= 48 && /*  '0'  */
+			       pAb->AbText->BuContent[0] <= 57))/*  '9'  */
+			    pAb->AbText->BuContent[0] = 'L';
+			}
+		  else if (!strcmp (name, "accesskey") &&
+			       !strcmp (pAttr->AeAttrSSchema->SsName, "HTML"))
+			/* only one character is allowed */
+			pAb->AbText->BuContent[1] = EOS;
 	      CopyTextToText (pAb->AbText, pNewAttr->AeAttrText, &len);
 	      /* the Abstract box will be regerated by AttachAttrWithValue */
 	      ClearText (pAb->AbText);
@@ -959,8 +977,8 @@ void NewContent (PtrAbstractBox pAb)
 	    }
 	  /* redisplay the attribute */
 	  AttachAttrWithValue (pEl, pDoc, pNewAttr, TRUE);
-	  if (pNewAttr->AeAttrType == AtTextAttr &&
-	      pNewAttr->AeAttrText->BuLength !=  pAb->AbText->BuLength)
+	  if (pNewAttr->AeAttrType == AtTextAttr && pAb->AbText &&
+	      pNewAttr->AeAttrText->BuLength != pAb->AbText->BuLength)
 	    {
 	      /* to be sure that the abstract box is updated */
 	      ClearText (pAb->AbText);
