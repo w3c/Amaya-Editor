@@ -115,6 +115,14 @@ XtInputId          *id;
    if (THD_TRACE)
      fprintf (stderr, "AHTBridge: Processing url %s \n", me->urlName);
 
+   /* verify if there's any callback associated with the request */
+   if (!cbf || !rqp || rqp->priority == HT_PRIORITY_OFF)
+     {
+	if (THD_TRACE)
+	   HTTrace ("Callback.... No callback found\n");
+	/* put some more code to correctly destroy this request ?*/
+	return (0);
+     }
 
 #ifdef WWW_XWINDOWS
    switch ((XtInputId) cd)
@@ -133,17 +141,8 @@ XtInputId          *id;
 	       ops = FD_READ;
 	       break;
 	 }			/* switch */
+
 #endif /* WWW_XWINDOWS */
-
-   /* verify if there's any callback associated with the request */
-   if (!cbf || !rqp || rqp->priority == HT_PRIORITY_OFF)
-     {
-	if (THD_TRACE)
-	   HTTrace ("Callback.... No callback found\n");
-	/* put some more code to correctly destroy this request */
-	return (0);
-     }
-
      /* Invokes the callback associated to the requests */
      
      /* first we change the status of the request, to say it

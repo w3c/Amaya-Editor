@@ -529,6 +529,7 @@ int                 status;
    boolean             error_flag;
    char                msg_status[10];
    HTError             *error;
+   HTList              *cur;
 
    if (!me)
       return HT_OK;		/* not an Amaya request */
@@ -687,15 +688,16 @@ int                 status;
 	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED), (char *) NULL);
        else if (status == -1)
 	 {
-	   HTError = HTRequest_error (request);
-	   if ((HTErrorElement) HTError->element == HTERR_INTERNAL)
+	   cur = HTRequest_error (request);
+	   error = (HTError *) HTList_nextObject (cur);
+	   if ((HTErrorElement) error->element == HTERR_INTERNAL)
 	     /* an error Henrik forgot :-/ */
 	     {
 	       TtaSetStatus (me->docid, 1, "Internal Server Error", (char *) NULL);
 	       status = -500; 
 	     }
 	 }
-       else if (status != -1)
+       else
 	 {
 	   sprintf (msg_status, "%d", status); 
 	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
