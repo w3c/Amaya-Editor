@@ -2958,7 +2958,8 @@ int                 frame;
    PtrAbstractBox      pAb;
    PtrAbstractBox      pCurrentAb;
 
-
+   if (!pOrginBox)
+     return;
    pAb = pOrginBox->BxAbstractBox;
    pCurrentAb = pAb->AbEnclosing;
    loop = FALSE;

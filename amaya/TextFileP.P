@@ -13,10 +13,14 @@ VIEWS
 #ifdef PAGE
 PRINT
    Formatted_view;
+#endif  { PAGE }
 
 COUNTERS
-   CptPage: Rank of Page(Formatted_view);
-#endif  { PAGE }
+#ifdef PAGE
+   PageCounter: Rank of Page(Formatted_view);
+#else
+   LineCounter: Rank of Line\240;
+#endif
 
 DEFAULT
 
@@ -90,7 +94,7 @@ BOXES
 	Foreground: Black;
 	Fillpattern: nopattern;
 	Underline: NoUnderline;
-	Content: (Value (CptPage, Arabic));
+	Content: (Value (PageCounter, Arabic));
 	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
 	HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
 	Height:   1.6 cm;
@@ -134,8 +138,8 @@ BOXES
 	CreateAfter (Spacehead);
 	if PrintURL
 	   CreateAfter (URLhead);
-	if NOT One(CptPage) CreateBefore (PageNum);
-	IF Not One(CptPage) CreateBefore (BottomSpace);
+	if NOT One(PageCounter) CreateBefore (PageNum);
+	IF Not One(PageCounter) CreateBefore (BottomSpace);
 	Underline: NoUnderline;
 	END;
 #else { PAGE }
@@ -156,7 +160,7 @@ BOXES
 	Weight: Normal;
 	END;
 
- IndexBox: BEGIN
+  IndexBox: BEGIN
         Content: Picture 'index.gif';
         HorizPos: Left = Root . Left;
         VertPos: Top = Enclosing . Top;
@@ -166,15 +170,21 @@ BOXES
         Visibility: Creator =;
         END;
 
+  LineNum:
+	BEGIN
+	Foreground: Blue;
+	Content: (Value (LineCounter, Arabic));
+	END;
+
 #endif { PAGE }
 
 RULES
 
- Document_URL:	BEGIN
+  Document_URL:	BEGIN
 	Visibility: 1;
 	END;
 
- TextFile: BEGIN
+  TextFile: BEGIN
 	Font: Courier;
 	Style: Roman;
 	Weight: Normal;
@@ -195,7 +205,7 @@ RULES
 	LineSpacing: 1;
 	END;
 
- BODY: BEGIN
+  BODY: BEGIN
 	HorizPos: Left = Enclosing . Left + 1;
 #ifdef PAGE
 	Width: Enclosing . Width - 2;
@@ -205,23 +215,26 @@ RULES
 #endif
 	END;
 
- Line\240: BEGIN
+  Line\240: BEGIN
 	Line;
 	LineBreak: Yes;
 #ifdef PAGE
 	Width: Enclosing . Width;
 #else
+	CreateBefore (LineNum);
+	VertPos: HRef = Previous LineNum . HRef;
+	HorizPos: Left = Enclosing . Left + 3;
 	Width: Enclosed . Width;
 #endif
 	END;
 
- TEXT_UNIT :
+  TEXT_UNIT :
 	 Width: Enclosed . Width;
 
 ATTRIBUTES
 
 #ifndef PAGE
- Highlight:
+  Highlight:
 	CreateFirst (IndexBox);
 #endif
 

@@ -45,7 +45,7 @@ DEFAULT
    HorizPos: Left = Previous . Right;
    LineBreak: No;
    Font: Enclosing =;
-   Style: Enclosing =;
+   Style: Roman;
    Weight: Enclosing =;
    Size: Enclosing =;
    Indent: 0;
@@ -2241,12 +2241,45 @@ BOXES
 
  OpeningQuote: BEGIN
  	Content: Text '"';
+	Style: Creator =;
+	Weight: Creator =;
+	Size: Creator =;
+	Foreground: Creator =;
+	Background: Creator =;
 	IN Math_Structure_view
 		Visibility: 0;
 	END;
 
  ClosingQuote: BEGIN
  	Content: Text '"';
+ 	Content: Text '"';
+	Style: Creator =;
+	Weight: Creator =;
+	Size: Creator =;
+	Foreground: Creator =;
+	Background: Creator =;
+	IN Math_Structure_view
+		Visibility: 0;
+	END;
+
+ LeftQuote: BEGIN
+ 	Content: (lquote);
+	Style: Creator =;
+	Weight: Creator =;
+	Size: Creator =;
+	Foreground: Creator =;
+	Background: Creator =;
+	IN Math_Structure_view
+		Visibility: 0;
+	END;
+
+ RightQuote: BEGIN
+ 	Content: (rquote);
+	Style: Creator =;
+	Weight: Creator =;
+	Size: Creator =;
+	Foreground: Creator =;
+	Background: Creator =;
 	IN Math_Structure_view
 		Visibility: 0;
 	END;
@@ -2423,7 +2456,7 @@ RULES
    	HorizPos: Left = Enclosing . Left;
    	VertPos: Top = Enclosing . Top;
 	Width: ROOT_OFFSET min;
-   	Size: Enclosing * 60 %;
+   	Size: Enclosing * 50 %;
 	IN Math_Structure_view BEGIN
 		Size: Enclosing =;
 		Width: Enclosing . Width;
@@ -2434,7 +2467,7 @@ RULES
    RootBase:	
         BEGIN
 	VertPos: Top = Enclosing . Top + 0.1;
-	HorizPos: Left = Index . Right;
+	HorizPos: Left = Index . Right + 0.2;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
@@ -2635,7 +2668,7 @@ RULES
 
    Superscript:
 	BEGIN
-	Size: Enclosing * 60 %;
+	Size: Enclosing * 70 %;
 	HorizRef: * . Top;
 	HorizPos: Left = Base . Right;
 	VertPos: Bottom = Base . Top + 0.9;
@@ -2648,7 +2681,7 @@ RULES
 
    Subscript:
 	BEGIN
-	Size: Enclosing * 60 %;
+	Size: Enclosing * 70 %;
 	HorizRef: * . Top;
 	HorizPos: Left = Base . Right;
 	VertPos: Top = Base . Bottom - 0.8;
@@ -2716,7 +2749,7 @@ RULES
 
    Underscript:
 	BEGIN
-	Size: Enclosing * 60 %;
+	Size: Enclosing * 70 %;
 	HorizRef: * . Top;
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	VertPos: Top = UnderOverBase . Bottom;
@@ -2729,7 +2762,7 @@ RULES
 
    Overscript:
 	BEGIN
-	Size: Enclosing * 60 %;
+	Size: Enclosing * 70 %;
 	HorizRef: * . Top;
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	VertPos: Bottom = UnderOverBase . Top;
@@ -2767,7 +2800,7 @@ RULES
 
    PostscriptPairs:
 	BEGIN
-	Size: Enclosing * 60 %;
+	Size: Enclosing * 70 %;
 	HorizRef: * . Top;
 	HorizPos: Left = MultiscriptBase . Right;
 	Height: MultiscriptBase . Height + 1;
@@ -2782,7 +2815,7 @@ RULES
    PrescriptPairs:
 	BEGIN
 	CreateBefore(MPRESCRIPTS_S);
-	Size: Enclosing * 60 %;
+	Size: Enclosing * 70 %;
 	HorizRef: * . Top;
 	HorizPos: Right = MultiscriptBase . Left;
 	Height: MultiscriptBase . Height + 1;
@@ -2967,6 +3000,7 @@ RULES
 	BEGIN
 	CreateBefore(MTEXT_S);
 	CreateWith(VerticalLine);
+	Style: Enclosing = ;
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -3034,8 +3068,8 @@ RULES
 	BEGIN
 	CreateBefore(MS_S);
 	CreateWith(VerticalLine);
-	CreateFirst (OpeningQuote);
-	CreateLast (ClosingQuote);
+	if not lquote CreateFirst (OpeningQuote);
+	if not rquote CreateLast (ClosingQuote);
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -3211,6 +3245,7 @@ RULES
 	BEGIN
 	VertRef: Enclosed . VRef;
 	LineBreak: Yes;
+	Style: Enclosing =;
 	IF immediately within MF
 	   VertPos: HMiddle = Enclosing . HMiddle;
 	IN Math_Structure_view BEGIN
@@ -3399,12 +3434,14 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_lquote);
 	CreateBefore(VALUE_lquote);
+	CreateFirst(LeftQuote);
 	END;
 
   rquote:
 	BEGIN
 	CreateBefore(ATTR_rquote);
 	CreateBefore(VALUE_rquote);
+	CreateLast(RightQuote);
 	END;
 
   width\240:

@@ -954,9 +954,16 @@ CHAR_T                c;
       else
 	 if (entityValue[0] != EOS)
 	   lang = TtaGetLanguageIdFromAlphabet(alphabet);
-
-      (*(currentParserCtxt->EntityCreated)) (entityValue, lang, entityName,
-					     currentDocument);
+      if (currentAttribute)
+	/* entity in an attribute value */
+	{
+	for (i = 0; entityValue[i] != EOS; i++)
+	  PutInBuffer (entityValue[i]);
+	}
+      else
+	/* entity in an element */
+	(*(currentParserCtxt->EntityCreated)) (entityValue, lang, entityName,
+					       currentDocument);
       }
    entityNameLength = 0;
 }
@@ -1025,8 +1032,13 @@ CHAR_T                c;
       ustrcpy (buffer, TEXT ("#"));
       ustrcat (buffer, entityName);
       entityValue[0] = EOS;
-      (*(currentParserCtxt->EntityCreated)) (entityValue, -1, buffer,
-					     currentDocument);
+      if (currentAttribute)
+	/* entity in an attribute value */
+	PutInBuffer ('?');
+      else
+	/* entity in an element */
+	(*(currentParserCtxt->EntityCreated)) (entityValue, -1, buffer,
+					       currentDocument);
       }
    entityNameLength = 0;
 }
@@ -1099,8 +1111,13 @@ CHAR_T                c;
       ustrcpy (buffer, TEXT ("#x"));
       ustrcat (buffer, entityName);
       entityValue[0] = EOS;
-      (*(currentParserCtxt->EntityCreated)) (entityValue, -1, buffer,
-					     currentDocument);
+      if (currentAttribute)
+	/* entity in an attribute value */
+	PutInBuffer ('?');
+      else
+	/* entity in an element */
+	(*(currentParserCtxt->EntityCreated)) (entityValue, -1, buffer,
+					       currentDocument);
       }
    entityNameLength = 0;
 }
