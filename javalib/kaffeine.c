@@ -32,6 +32,12 @@
 
 #include "debug_stubs_f.h"
 
+/******
+#define DEBUG_SELECT
+#define DEBUG_SELECT_CHANNELS
+#define DEBUG_TIMING
+ ******/
+
 /* DEBUG_KAFFE    will print lot of debug messages                      */
 /* DEBUG_SELECT   will print debug messages on Select and Poll use      */
 /* DEBUG_TIMING   add fine-tuned timing informations to debug messages  */
@@ -53,6 +59,12 @@ extern void reschedule();
 extern void sleepThread(jlong time);
 static void register_stubs(void);
 void register_biss_awt_API_stubs(void);
+
+#ifdef __STDC__
+void             JavaHandleAvailableEvents (void);
+#else
+void             JavaHandleAvailableEvents ();
+#endif
 
 #ifdef DEBUG_TIMING
 /************************************************************************
@@ -203,8 +215,14 @@ ThotEvent *ev;
 #ifdef DEBUG_SELECT_CHANNELS
     int fd;
 #endif
+    static int check_for_xt_events = 0;
 
     if (!JavaSelectInitialized) InitJavaSelect();
+
+    if (check_for_xt_events) {
+        check_for_xt_events = 0;
+	JavaHandleAvailableEvents();
+    }
 
     /*
      * Check for reentrancy, would be a Very Bad Thing (c)
@@ -236,34 +254,29 @@ ThotEvent *ev;
     }
 
 #ifdef DEBUG_SELECT
+    fprintf(stderr,"\n");
     TIMER
-    fprintf(stderr,"<");
 #endif
 
     /*
      * Do not block if there is a Poll Break requested.
+     * Otherwise do not block for more that 1/30 th of second
+     * without checking for XtEvents.
      */
     if ((DoJavaSelectPoll) && (BreakJavaSelectPoll)) {
        tm.tv_usec = 0;
        tm.tv_sec = 0;
-    } else if (timeout != NULL)
-       memcpy(&tm, timeout, sizeof(tm));
-
-    /*
-     * Do the select on the merged channels descriptors.
-     */
-    NbJavaSelect++;
-    if (((DoJavaSelectPoll) && (BreakJavaSelectPoll)) ||
-        (timeout != NULL))
-       res = select(n, readfds, writefds, exceptfds, &tm);
-    else
-       res = select(n, readfds, writefds, exceptfds, NULL);
+    } else if (timeout != NULL) {
+       if (timeout->tv_usec < 30000) tm.tv_usec = timeout->tv_usec;
+       else tm.tv_usec = 30000;
+       tm.tv_sec = 0;
+    }
 
 #ifdef DEBUG_SELECT_CHANNELS
     /*
      * shows the channel state.
      */
-    fprintf(stderr,"res:%d nb:%d rd:",res,n);
+    fprintf(stderr,"nb:%02d rd:",n);
     if (readfds != NULL)
       for (fd = 0;fd < n;fd++)
         if (FD_ISSET(fd, readfds)) fprintf(stderr,"r");
@@ -277,13 +290,44 @@ ThotEvent *ev;
 #endif
 
     /*
-     * Error !
+     * Do the select on the merged channels descriptors.
+     */
+    NbJavaSelect++;
+    if (((DoJavaSelectPoll) && (BreakJavaSelectPoll)) ||
+        (timeout != NULL))
+       res = select(n, readfds, writefds, exceptfds, &tm);
+    else {
+       res = select(n, readfds, writefds, exceptfds, NULL);
+    }
+    if (timeout != NULL)
+	memcpy(timeout, &tm, sizeof(tm));
+
+#ifdef DEBUG_SELECT_CHANNELS
+    /*
+     * shows the channel state.
+     */
+    TIMER
+    fprintf(stderr,"res:%02d nb:%02d rd:",res,n);
+    if (readfds != NULL)
+      for (fd = 0;fd < n;fd++)
+        if (FD_ISSET(fd, readfds)) fprintf(stderr,"r");
+        else fprintf(stderr,"-");
+    fprintf(stderr," wr:");
+    if (writefds != NULL)
+      for (fd = 0;fd < n;fd++)
+        if (FD_ISSET(fd, writefds)) fprintf(stderr,"w");
+        else fprintf(stderr,"-");
+    fprintf(stderr,"\n");
+#endif
+
+    /*
+     * Error or get interrupted.
      */
     if (res < 0) {
 	InJavaSelect = 0;
+	check_for_xt_events = 1;
 #ifdef DEBUG_SELECT
-	TIMER
-        fprintf(stderr,"X");
+        perror("select");
 #endif
         return(res);
     }
@@ -293,9 +337,9 @@ ThotEvent *ev;
      */
     if (res == 0) {
 	InJavaSelect = 0;
+	check_for_xt_events = 1;
 #ifdef DEBUG_SELECT
-	TIMER
-        fprintf(stderr,">");
+        fprintf(stderr,">\n");
 #endif
         return(0);
     }
@@ -306,7 +350,6 @@ ThotEvent *ev;
 
     if (DoJavaSelectPoll) {
 #ifdef DEBUG_SELECT
-	TIMER
         fprintf(stderr,"JavaSelect : Register Poll break\n");
 #endif
         BreakJavaSelectPoll++;
@@ -315,7 +358,7 @@ ThotEvent *ev;
     InJavaSelect = 0;
 #ifdef DEBUG_SELECT
     TIMER
-    fprintf(stderr,">");
+    fprintf(stderr,">\n");
 #endif
     return(res);
 }
@@ -789,6 +832,50 @@ ThotEvent *ev;
 }
 
 /*----------------------------------------------------------------------
+  JavaHandleAvailableEvents
+
+  This routine check wether some XtEvent are to be fetched.
+  If yes, get it and handle it, and return once all have been consumed.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void             JavaHandleAvailableEvents (void)
+#else
+void             JavaHandleAvailableEvents ()
+#endif
+{
+  ThotEvent ev;
+  int status;
+
+  if (ThotlibLockValue != 0) {
+#ifdef DEBUG_SELECT
+      fprintf(stderr,
+         "JavaHandleAvailableEvents called while ThotlibLockValue != 0\n");
+#endif
+      return;
+  }
+  if (XWindowSocketLockValue != 0) {
+#ifdef DEBUG_SELECT
+      fprintf(stderr,
+         "JavaHandleAvailableEvents called while XWindowSocketLockValue != 0\n");
+#endif
+      return;
+  }
+
+#ifdef _WINDOWS
+#else  /* !_WINDOWS */
+  do {
+      status = XtAppPending (CurrentAppContext);
+      if (status) {
+	 XtAppNextEvent (CurrentAppContext, &ev);
+	 JavaThotlibLock();
+	 JavaHandleOneEvent (&ev);
+	 JavaThotlibRelease();
+      }
+  } while (status);
+#endif /* _WINDOWS */
+}
+
+/*----------------------------------------------------------------------
    InitJava
 
    Initialize the Java Interpreter.
@@ -1063,6 +1150,7 @@ void                JavaEventLoop ()
 void                JavaEventLoop ()
 #endif
 {
+   int status;
 #ifndef _WINDOWS
    ThotEvent           ev;
 #endif /* _WINDOWS */
@@ -1082,6 +1170,7 @@ void                JavaEventLoop ()
     */
    DoJavaSelectPoll = 0;
    BreakJavaSelectPoll = 0;
+   JavaThotlibRelease();
 
    /* Loop waiting for the events */
    while (1)
@@ -1090,16 +1179,24 @@ void                JavaEventLoop ()
 	    /*
 	     * Don't block appplication thread reading events.
 	     */
-	    JavaThotlibRelease();
             sleepThread(30);
-	    JavaThotlibLock();
 	    continue;
 	}
-        while (JavaFetchEvent (&ev) < 0) {
-	    DoJavaSelectPoll = 0;
-	    BreakJavaSelectPoll = 0;
-	}
+        status = blockOnFile(x_window_socket, 0);
+	do {
+	    status = blockOnFile(x_window_socket, 0);
+	} while (status < 0);
+        status = XtAppPending (CurrentAppContext);
+        if (!status) {
+	    XFlush(TtaGetCurrentDisplay());
+	    continue;
+        }
+	JavaXWindowSocketLock();
+        XtAppNextEvent (CurrentAppContext, &ev);
+	JavaXWindowSocketRelease();
+	JavaThotlibLock();
         JavaHandleOneEvent (&ev);
+        JavaThotlibRelease();
      }
 }
 

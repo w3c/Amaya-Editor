@@ -4,6 +4,7 @@
 	javac $*.java
 
 CLASSROOT=`pwd`
+
 ZIP=zip -0
 COMPRESS=zip -9
 
@@ -16,7 +17,7 @@ debug :
 	@echo PATH=$$PATH
 
 http :
-	@(if [ -d w3c ] ; then cd w3c ; make MAKEDIR=`pwd` ; fi)
+	@(if [ -d w3c ] ; then cd w3c ; make ; fi)
 
 zips :
 	rm -f jigsaw.zip thotlib.zip amaya.zip sources.zip
@@ -37,7 +38,7 @@ subdir :
 	  fi ; done)
 
 clean :
-	@(if [ -d w3c ] ; then cd w3c ; make MAKEDIR=`pwd` clean ; fi)
+	@(if [ -d w3c ] ; then cd w3c ; make clean ; fi)
 	@(for subdir in $(SUBDIRS) ; do \
 	  if [ -d $$subdir ] ; \
 	  then \

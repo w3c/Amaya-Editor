@@ -13,7 +13,7 @@ PRINT
 
 #ifdef US_PAPER
 #define PAGE
-#endif /* US_PAPER */
+#endif { US_PAPER }
 
 #define STRUCT_INDENT 1.5
 #define TAG_FONTSIZE 10 pt
@@ -3670,7 +3670,7 @@ BOXES
 	Height: 25.9 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#endif /* US_PAPER */
+#endif { US_PAPER }
 	CreateAfter (TitleHead);
 	CreateAfter (URLhead);
 	if NOT One(CptLinksPage) CreateBefore (LinksPageNum);
@@ -3690,7 +3690,7 @@ BOXES
 	Height: 25.9 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#endif /* US_PAPER */
+#endif { US_PAPER }
 	CreateAfter (TitleHead);
 	CreateAfter (URLhead);
 	if NOT One(CptToCPage) CreateBefore (ToCPageNum);

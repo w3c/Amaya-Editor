@@ -143,4 +143,23 @@ extern int GetHTMLtypeNo(/* char *tag */);
 extern char *GetHTMLTag(/* ElementType elType */);
 
 #endif /* __STDC__ */
+
+/*
+ * Part of the interface for Style (CSS Syntax).
+ */
+
+#ifdef __STDC__
+extern void AddStyleSheet(char *url, int document);
+extern void AddAlternateStyleSheet(char *url, int document);
+extern char *GetElementStyle(Element el, int document);
+extern void SetElementStyle(char *style, Element el, int document);
+extern void AddElementStyle(char *style, Element el, int document);
+#else
+extern void AddStyleSheet(/* char *url, int document */);
+extern void AddAlternateStyleSheet(/* char *url, int document */);
+extern char *GetElementStyle(/* Element el, int document */);
+extern void SetElementStyle(/* char *style, Element el, int document */);
+extern void AddElementStyle(/* char *style, Element el, int document */);
+#endif
+
 #endif /* __AMAYA_API_H__ */

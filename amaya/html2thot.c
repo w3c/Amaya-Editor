@@ -7222,6 +7222,9 @@ char               *pathURL;
 #else  /* STANDALONE */
 	   /* check the Thot abstract tree */
 	   CheckAbstractTree (pathURL);
+#ifdef AMAYA_JAVA
+           handleLinkHeaders (theDocument);
+#endif /* AMAYA_JAVA */
 	   ApplyFinalStyle (theDocument);
 #ifndef INCR_DISPLAY
 	   TtaSetDisplayMode (theDocument, DisplayImmediately);

@@ -428,3 +428,19 @@ int                 doc;
     JavaThotlibLock();
 }
 
+/*----------------------------------------------------------------------
+  Handle Link fields found in the HTTP headers.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                handleLinkHeaders (int doc)
+#else
+void                handleLinkHeaders (doc)
+int                 doc;
+#endif
+{
+    JavaThotlibRelease();
+    do_execute_java_class_method("amaya/HTTPAccess", "handleLinkHeaders",
+                                 "(I)V", (jint) doc);
+    JavaThotlibLock();
+}
+

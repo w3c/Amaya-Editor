@@ -200,5 +200,101 @@ int type;
     return(NULL);
 }
 
+/*
+ * AddStyleSheet : Add a stylesheet for a document.
+ */
+#ifdef __STDC__
+void AddStyleSheet(char *url, int document)
+#else
+void AddStyleSheet(url, document)
+char *url
+int document;
+
+#endif
+{
+    char URL[MAX_LENGTH];
+
+    strcpy(URL, url);
+    LoadHTMLStyleSheet(&URL[0], document);
+}
+
+/*
+ * AddAlternateStyleSheet : load a stylesheet for a document.
+ */
+#ifdef __STDC__
+void AddAlternateStyleSheet(char *url, int document)
+#else
+void AddAlternateStyleSheet(url, document)
+char *url
+int document;
+
+#endif
+{
+    /*
+     * There is currently no support for alternate styles in Amaya.
+     */
+}
+
+/*
+ * GetElementStyle : Get the CSS syntax for the style applied to an element.
+ */
+#ifdef __STDC__
+char *GetElementStyle(Element el, int document)
+#else
+char *GetElementStyle(el, document)
+Element el;
+int document;
+
+#endif
+{
+    /*
+     * This is Ok to use a static variable, since it will be copied
+     * to a String object on the way back to the Java V.M..
+     * And since the Thot/Amaya access is available to only 1 thread
+     * at a time ...
+     */
+    static char css[5000];
+
+    GetHTML3StyleString (el, document, &css[0], sizeof(css));
+    return(&css[0]);
+}
+
+/*
+ * SetElementStyle : Set CSS style to an element. Remove any existing style
+ *            on the element.
+ */
+#ifdef __STDC__
+void SetElementStyle(char *style, Element el, int document)
+#else
+void SetElementStyle(style, el, document)
+char *style;
+Element el;
+int document;
+
+#endif
+{
+    /* direct mapping of an internal function */
+    RemoveStyle(el, document);
+    ParseHTMLSpecificStyle(el, style, document);
+}
+
+/*
+ * AddElementStyle : Add CSS style to an element. This enrich the existing style
+ */
+#ifdef __STDC__
+void AddElementStyle(char *style, Element el, int document)
+#else
+void AddElementStyle(style, el, document)
+char *style;
+Element el;
+int document;
+
+#endif
+{
+    /* direct mapping of an internal function */
+    ParseHTMLSpecificStyle(el, style, document);
+}
+
+
 #endif /* AMAYA_JAVA */
 
