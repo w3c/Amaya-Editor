@@ -2320,7 +2320,7 @@ int                *spacesNumber;
 	   /* BAlignment en fin de boite */
 	  {
 	     *x = dx;
-	     if (newIndex == 1)
+	     if (newIndex == 1 && (*pBuffer)->BuPrevious != NULL)
 		*pBuffer = (*pBuffer)->BuPrevious;
 	     (*index)++;
 	  }
