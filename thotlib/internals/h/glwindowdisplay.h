@@ -74,7 +74,7 @@ void GL_VideoInvert (int width, int height, int x, int y);
 
 
 /*Transformations...*/
-void DisplayTransformation (PtrTransform Trans, int Width, int Height);
+void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height);
 void DisplayTransformationExit ();
 
 void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax);

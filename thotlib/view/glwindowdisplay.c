@@ -1695,9 +1695,14 @@ static float ZoomedValue (float val, int zoom)
 {
   float dist;
 
-  dist = val + (val * zoom / 10);
-  if (dist == 0 && val > 0)
-    dist = 1;
+if (zoom != 0)
+    {
+      dist = val + (val * zoom / 10);
+      if (dist == 0 && val > 0)
+	dist = 1;
+    }
+  else
+    dist = val;
   return dist;
 }
 
@@ -1715,7 +1720,7 @@ static float ZoomedValue (float val, int zoom)
   |		    |
   |a3  a7  a11  a15|
   ----------------------------------------------------*/
-void DisplayTransformation (PtrTransform Trans, int Width, int Height)
+void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height)
 {
 #ifdef _GL
   double trans_matrix[16];
@@ -1736,9 +1741,9 @@ void DisplayTransformation (PtrTransform Trans, int Width, int Height)
 	    case PtElAnimTranslate:
 	    case PtElTranslate:
 	      glTranslatef (ZoomedValue (Trans->XScale,
-					 ViewFrameTable[ActiveFrame - 1].FrMagnification),
+					 ViewFrameTable[frame - 1].FrMagnification),
 			    ZoomedValue (Trans->YScale, 
-					 ViewFrameTable[ActiveFrame - 1].FrMagnification),
+					 ViewFrameTable[frame - 1].FrMagnification),
 			    0);
 	      break;
 	    case PtElAnimRotate:

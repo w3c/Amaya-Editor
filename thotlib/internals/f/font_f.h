@@ -71,6 +71,9 @@ extern void ThotFreeFont ( int frame );
 extern void ThotFreeAllFonts ( void );
 extern void LoadingArabicFont ( SpecFont fontset,
                                 PtrFont *font );
+extern int Char_Width ( int x );
+extern void Put_Char_Width ( int car,
+                             int l );
 extern int BoxArabicCharacterWidth ( CHAR_T c,
                                      PtrTextBuffer *adbuff,
                                      int *ind,
@@ -143,6 +146,9 @@ extern void ThotFreeFont (/* int frame */);
 extern void ThotFreeAllFonts (/* void */);
 extern void LoadingArabicFont (/* SpecFont fontset,
                                   PtrFont *font */);
+extern int Char_Width (/* int x */);
+extern void Put_Char_Width (/* int car,
+                               int l */);
 extern int BoxArabicCharacterWidth (/* CHAR_T c,
                                        PtrTextBuffer *adbuff,
                                        int *ind,

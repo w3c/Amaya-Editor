@@ -2121,7 +2121,7 @@ void DisplayViewBox (PtrTransform Trans, int Width, int Height)
 /*----------------------------------------------------------------------
   DisplayTransformation :
   ----------------------------------------------------------------------*/
-void DisplayTransformation (PtrTransform Trans, int Width, int Height)
+void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height)
 {
   while (Trans)
     {

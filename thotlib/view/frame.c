@@ -513,7 +513,8 @@ void GetBoxTransformedCoord  (PtrAbstractBox pAbSeeked, int frame,
 		      if (pAb->AbElement->ElTransform)
 			{
 			  is_transformed = TRUE;
-			  DisplayTransformation (pAb->AbElement->ElTransform, 
+			  DisplayTransformation (frame, 
+						 pAb->AbElement->ElTransform, 
 						 pBox->BxWidth, 
 						 pBox->BxHeight);
 			}
@@ -842,7 +843,8 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
 		    DisplayBoxTransformation (pAb->AbElement->ElTransform, 
 					      pFrame->FrXOrg, pFrame->FrYOrg);
 		  if (pAb->AbElement->ElTransform)
-		    DisplayTransformation (pAb->AbElement->ElTransform, 
+		    DisplayTransformation (frame,
+					   pAb->AbElement->ElTransform, 
 					   pBox->BxWidth, 
 					   pBox->BxHeight);     
 		}
@@ -1381,7 +1383,8 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 						  pFrame->FrXOrg, pFrame->FrYOrg);
 		      /* Normal transformation*/
 		      if (pAb->AbElement->ElTransform)
-			DisplayTransformation (pAb->AbElement->ElTransform, 
+			DisplayTransformation (frame,
+					       pAb->AbElement->ElTransform, 
 					       pBox->BxWidth, 
 					       pBox->BxHeight);
 		      if (pAb->AbElement->ElSystemOrigin)
@@ -1732,7 +1735,8 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
 						  pFrame->FrXOrg, pFrame->FrYOrg);
 		      /* Normal transformation*/
 		      if (pAb->AbElement->ElTransform)
-			DisplayTransformation (pAb->AbElement->ElTransform, 
+			DisplayTransformation (frame,
+					       pAb->AbElement->ElTransform, 
 					       pBox->BxWidth, 
 					       pBox->BxHeight);
 		      if (pAb->AbElement->ElSystemOrigin)
