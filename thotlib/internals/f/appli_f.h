@@ -57,7 +57,7 @@ extern void TtaSetCursorWatch ( Document document,
 extern void TtaResetCursor ( Document document,
                              View view );
 extern void GiveClickedAbsBox ( int *frame,
-                                int *pave );
+                                PtrAbstractBox *pave );
 extern void ChangeFrameTitle ( int frame,
                                char *text );
 extern void ChangeSelFrame ( int frame );
@@ -129,7 +129,7 @@ extern void TtaSetCursorWatch (/* Document document,
 extern void TtaResetCursor (/* Document document,
                                View view */);
 extern void GiveClickedAbsBox (/* int *frame,
-                                  int *pave */);
+                                  PtrAbstractBox *pave */);
 extern void ChangeFrameTitle (/* int frame,
                                  char *text */);
 extern void ChangeSelFrame (/* int frame */);
