@@ -109,7 +109,7 @@ PtrBox GetNextBox (PtrAbstractBox pAb, int frame)
 	else
 	  {
 	    result = pNextAb->AbBox;
-	    if (result->BxType == BoMulScript)
+	    if (result && result->BxType == BoMulScript)
 	      /* return the first script box */
 	      result = result->BxNexChild;
 	  }
@@ -153,7 +153,7 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb, int frame)
 	       pNextAb->AbBox->BxType == BoFloatGhost)
 	{
 	   /* descend la hierarchie */
-	   while (!pNextAb->AbDead &&
+	   while (!pNextAb->AbDead && pNextAb->AbBox &&
 		  (pNextAb->AbBox->BxType == BoGhost ||
 		   pNextAb->AbBox->BxType == BoFloatGhost))
 	     {
@@ -175,7 +175,8 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb, int frame)
    else
      {
        result = pNextAb->AbBox;
-       if (result->BxType == BoMulScript || result->BxType == BoSplit)
+       if (result &&
+	   (result->BxType == BoMulScript || result->BxType == BoSplit))
 	 /* return the last script box */
 	 while (result->BxNexChild)
 	   result = result->BxNexChild;
