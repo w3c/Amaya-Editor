@@ -3030,8 +3030,8 @@ void WIN_RefreshColorMenu (HWND hwnDlg)
 {
   SetDlgItemText (hwnDlg, IDC_FGCOLOR, FgColor);
   SetDlgItemText (hwnDlg, IDC_BGCOLOR, BgColor);
-  SetDlgItemText (hwnDlg, IDC_SECOLOR, SelColor);
-  SetDlgItemText (hwnDlg, IDC_INCOLOR, InsColor);
+  SetDlgItemText (hwnDlg, IDC_SECOLOR, BgSelColor);
+  SetDlgItemText (hwnDlg, IDC_INCOLOR, FgSelColor);
 }
 #else /* WINDOWS */
 /*----------------------------------------------------------------------
@@ -3090,11 +3090,11 @@ LRESULT CALLBACK WIN_ColorDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	      break;
 	    case IDC_SECOLOR:
 	      GetDlgItemText (hwnDlg, IDC_SECOLOR, BgSelColor,
-			      sizeof (SelColor) - 1);
+			      sizeof (BgSelColor) - 1);
 	      break;
 	    case IDC_INCOLOR:
 	      GetDlgItemText (hwnDlg, IDC_INCOLOR, FgSelColor,
-			      sizeof (InsColor) - 1);
+			      sizeof (FgSelColor) - 1);
 	      break;
 	    }
 	}
@@ -3115,7 +3115,7 @@ LRESULT CALLBACK WIN_ColorDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  if (fgcolor != -1)
 	    strcpy (FgSelColor, ColorName (fgcolor));
 	  if (bgcolor != -1)
-	    strcpy (FgSelColor, ColorName (bgcolor));
+	    strcpy (BgSelColor, ColorName (bgcolor));
 	  WIN_RefreshColorMenu (ColorHwnd);
 	  SetFocus (ColorHwnd);
 	  break;
