@@ -59,7 +59,7 @@ int msg;
 
 #endif
 {
-    char STRING = TtaGetMessage (AMAYA, msg);
+    STRING str = TtaGetMessage (AMAYA, msg);
     if (str == NULL) 
       {
         fprintf (stderr,"AmayaGetMessage(%d) failed\n", msg);
