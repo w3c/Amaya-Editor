@@ -202,10 +202,12 @@ static void         FirstFrame ()
 	FrRef[i] = 0;
      }
    /* Ouverture du serveur X-ThotWindow */
-   TtDisplay = XOpenDisplay (NULL);
-   if (!TtDisplay)
+   if (!TtDisplay) {
       /*Connexion au serveur X impossible */
-      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_UNABLE_TO_CONNECT_TO_X);
+      TtDisplay = XOpenDisplay (NULL);
+      if (!TtDisplay)
+         TtaDisplaySimpleMessage (FATAL, LIB, TMSG_UNABLE_TO_CONNECT_TO_X);
+   }
    TtScreen = DefaultScreen (TtDisplay);
    TtRootWindow = RootWindow (TtDisplay, TtScreen);
    TtWDepth = DefaultDepth (TtDisplay, TtScreen);
