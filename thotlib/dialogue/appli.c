@@ -282,7 +282,7 @@ LPTOOLTIPTEXT lpttt;
    STRING     pDest = lpttt->lpszText;
 
    /* Map command ID to string index */
-   for (i = 0; FrameTable[frame].ButtonId[i] != -1; i++) {
+   for (i = 1; FrameTable[frame].ButtonId[i] != -1; i++) {
        if (FrameTable[frame].ButtonId[i] == iButton) {
           iButton = i;
           break;

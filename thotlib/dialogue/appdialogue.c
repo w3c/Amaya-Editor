@@ -130,12 +130,9 @@ HWND  hwndClient;
 HWND  ToolBar;
 HWND  StatusBar;
 HWND  logoFrame;
-int   nCust[MAX_FRAME][30];
 
 static HWND               hwndTB;
 
-#define ToolBar_InsertButton(hwnd, idButton, lpButton) \
-    (BOOL)SendMessage((hwnd), TB_INSERTBUTTON, (WPARAM)idButton, (LPARAM)(LPTBBUTTON)lpButton)
 
 HMENU hmenu;
 int   menu_item;
@@ -162,11 +159,9 @@ LPARAM lParam;
    /* Provide details of allowable toolbar buttons */
    if (pnmh->code == TBN_GETBUTTONINFO) {
       LPTBNOTIFY ptbn = (LPTBNOTIFY) lParam;
-      int iButton = nCust[frame][ptbn->iItem];
-
-      if (iButton != -1) {
-         ustrcpy (ptbn->pszText, FrameTable[frame].TbStrings[ ptbn->iItem]);
-         memcpy (&ptbn->tbButton, FrameTable[frame].Button[iButton], sizeof (TBBUTTON));
+      if (ptbn->iItem > 0) {
+         ustrcpy (ptbn->pszText, FrameTable[frame].TbStrings[ptbn->iItem]);
+         memcpy (&ptbn->tbButton, FrameTable[frame].Button[ptbn->iItem], sizeof (TBBUTTON));
          return 1;
       }
    }
@@ -1461,7 +1456,7 @@ ThotBool   state;
 	TtaError (ERR_invalid_parameter);
       else if (FrameTable[frame].WdFrame != 0)
 	{
-	  i = 0;
+	  i = 1;
 	  while (i < MAX_BUTTON && FrameTable[frame].Button[i] != 0)
 	    i++;
 	  if (i < MAX_BUTTON)
@@ -1552,26 +1547,23 @@ ThotBool   state;
 		    {
 		      w->fsState      = TBSTATE_ENABLED;
 		      w->fsStyle      = type;
-		      if (procedure)
-			{
-			  w->iBitmap      = picture;
-			  w->idCommand    = TBBUTTONS_BASE + i; 
+			  FrameTable[frame].ButtonId[i] = TBBUTTONS_BASE + i;
+			  w->idCommand    = FrameTable[frame].ButtonId[i]; 
 			  w->bReserved[0] = 0;
 			  w->bReserved[1] = 0;
 			  w->dwData       = 0;
+		      if (procedure)
+			{
+			  w->iBitmap      = picture;
 			  w->iString      = -1;
-			  FrameTable[frame].ButtonId[i] = TBBUTTONS_BASE + i;
-			  nCust [frame][i] = i;
-			  ToolBar_InsertButton (WinToolBar[frame], i, w);
-			  SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) (index + TBBUTTONS_BASE), (LPARAM) MAKELONG (state, 0));
+			  SendMessage(WinToolBar[frame], TB_INSERTBUTTON, (WPARAM) FrameTable[frame].ButtonId[i], (LPARAM)(LPTBBUTTON)w);
+			  SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) FrameTable[frame].ButtonId[i], (LPARAM) MAKELONG (state, 0));
 			}
 		      else
 			{
-			  w->iBitmap   = 0;
-			  w->idCommand = 0; 
-			  w->dwData    = 0;
+			  w->iBitmap   = 3;
 			  w->iString   = 0;
-			  ToolBar_InsertButton (WinToolBar[frame], i, w);
+			  SendMessage(WinToolBar[frame], TB_INSERTBUTTON, (WPARAM) FrameTable[frame].ButtonId[i], (LPARAM)(LPTBBUTTON)w);
 			}
 		    }
 		  
@@ -1681,10 +1673,10 @@ int                 index;
 		  /* Change l'etat du bouton */
 #                 ifdef _WINDOWS
 		  if (doSwitchButton) {
-             if (!SendMessage (WinToolBar[frame], TB_ISBUTTONCHECKED, (WPARAM) (index + TBBUTTONS_BASE), (LPARAM) 0))
-                SendMessage (WinToolBar[frame], TB_CHECKBUTTON, (WPARAM) (index + TBBUTTONS_BASE), (LPARAM) MAKELONG (TRUE, 0));
+             if (!SendMessage (WinToolBar[frame], TB_ISBUTTONCHECKED, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) 0))
+                SendMessage (WinToolBar[frame], TB_CHECKBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (TRUE, 0));
 		     else
-                SendMessage (WinToolBar[frame], TB_CHECKBUTTON, (WPARAM) (index + TBBUTTONS_BASE), (LPARAM) MAKELONG (FALSE, 0));
+                SendMessage (WinToolBar[frame], TB_CHECKBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (FALSE, 0));
 		  }
 #                 else  /* !_WINDOWS */
 		  n = 0;
@@ -1751,17 +1743,13 @@ ThotBool            state;
 	TtaError (ERR_invalid_parameter);
       else if (FrameTable[frame].WdFrame != 0)
 	{
-#ifdef _WINDOWS
-	  if (index > MAX_BUTTON || index <= 0 || FrameTable[frame].Button[index - 1] == 0)
-#else  /* !_WINDOWS */
 	  if (index >= MAX_BUTTON || index <= 0 || FrameTable[frame].Button[index] == 0)
-#endif /* _WINDOWS */
 	    TtaError (ERR_invalid_parameter);
 	  else
 	    {
 	      /* Insere le nouvel icone */
 #ifdef _WINDOWS
-	      SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) (index + TBBUTTONS_BASE - 1), (LPARAM) MAKELONG (state, 0));
+	      SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (state, 0));
 #else  /* !_WINDOWS */
 	      n = 0;
 	      XtSetArg (args[n], XmNlabelPixmap, picture);
@@ -1807,7 +1795,7 @@ BOOL                state;
 	     else
 	       {
 		  /* Insere le nouvel icone */
-          SendMessage (WinToolBar[frame], bState, (WPARAM) (index + TBBUTTONS_BASE - 1), (LPARAM) MAKELONG (state, 0));
+          SendMessage (WinToolBar[frame], bState, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (state, 0));
 	       }
 	  }
      }
@@ -1841,7 +1829,7 @@ int                 index;
 	     else
 	       {
 		  /* Insere le nouvel icone */
-          SendMessage (WinToolBar[frame], TB_HIDEBUTTON, (WPARAM) (index + TBBUTTONS_BASE - 1), (LPARAM) MAKELONG (FALSE, 0));
+          SendMessage (WinToolBar[frame], TB_HIDEBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (FALSE, 0));
 	       }
 	  }
      }
@@ -1875,7 +1863,7 @@ int                 index;
 	     else
 	       {
 		  /* Insere le nouvel icone */
-          SendMessage (WinToolBar[frame], TB_HIDEBUTTON, (WPARAM) (index + TBBUTTONS_BASE - 1), (LPARAM) MAKELONG (TRUE, 0));
+          SendMessage (WinToolBar[frame], TB_HIDEBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (TRUE, 0));
 	       }
 	  }
      }
