@@ -305,6 +305,10 @@ int                 command;
 	       break;
 	    case THOT_MOD_CTRL:
 	       addFirst = &Automata_ctrl;
+#          ifdef _WINDOWS
+           if (key1 >= 'a' && key1 <= 'z')
+              key1 = key1 - 'a' + 1;
+#          endif /* _WINDOWS */
 	       break;
 	    case THOT_MOD_ALT:
 	       addFirst = &Automata_alt;
@@ -512,19 +516,19 @@ LPARAM lParam;
       len = 1;
       string[0] = (char) wParam;
       ThotInput (frame, &string[0], len, keyboard_mask, wParam);
-   } else if ((wParam == VK_CANCEL) ||
-			  (wParam == VK_RETURN) ||
-			  (wParam == VK_ESCAPE) ||
-			  (wParam == VK_SPACE)  || 
-			  (wParam == VK_PRIOR)  ||
-			  (wParam == VK_NEXT)   ||
-			  (wParam == VK_END)    ||
-			  (wParam == VK_HOME)   ||
-			  (wParam == VK_LEFT)   ||
-			  (wParam == VK_UP)     ||
-			  (wParam == VK_RIGHT)  ||
-			  (wParam == VK_DOWN)   ||
-			  (wParam == VK_INSERT) ||
+   } else if ((wParam == VK_CANCEL)  ||
+			  (wParam == VK_RETURN)  ||
+			  (wParam == VK_ESCAPE)  ||
+			  (wParam == VK_SPACE)   || 
+			  (wParam == VK_PRIOR)   ||
+			  (wParam == VK_NEXT)    ||
+			  (wParam == VK_END)     ||
+			  (wParam == VK_HOME)    ||
+			  (wParam == VK_LEFT)    ||
+			  (wParam == VK_UP)      ||
+			  (wParam == VK_RIGHT)   ||
+			  (wParam == VK_DOWN)    ||
+			  (wParam == VK_INSERT)  ||
 			  (wParam == VK_DELETE))   
    {
 	  string[0] = (char) wParam;
@@ -693,11 +697,7 @@ int                 key;
 
              /* Recherche l'entree de 1er niveau */
              while (!found && ptr != NULL)
-#                  ifdef _WINDOWS
-                   if (specialKey && ptr->K_EntryCode == key) {
-#                  else  /* _WINDOWS */
-                   if (ptr->K_EntryCode == key) {
-#                  endif /* _WINDOWS */
+                   if (ptr->K_EntryCode == key && !(specialKey == FALSE && key == 27)) {
                       /* On entre dans un automate */
                       found = TRUE;
                       Automata_current = ptr->K_Next;

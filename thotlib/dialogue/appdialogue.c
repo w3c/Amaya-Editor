@@ -92,9 +92,10 @@ static WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
 static BOOL    doSwitchButton = TRUE;
 int     currentFrame;
 
-HWND hwndClient ;
-HWND ToolBar ;
-HWND StatusBar;
+HWND  hwndClient ;
+HWND  ToolBar ;
+HWND  StatusBar;
+HMENU currentMenu;
 #ifdef AMAYA_TOOLTIPS
 int  nCust[MAX_FRAME][30];
 static HWND hwndTB;
@@ -186,7 +187,6 @@ LPARAM lParam;
            case WM_KEYDOWN: 
                 switch (wParam) { 
                        case VK_RETURN: 
-                            /* SendMessage(FrMainRef [currentFrame], WM_ENTER, 0, 0); */
                             SendMessage(GetParent (hwnd), WM_ENTER, 0, 0); 
                             return 0; 
 				} 
@@ -949,6 +949,9 @@ int                 frame;
    char               *ptr;
 
    /* Construit le sous-menu attache a l'item */
+#  ifdef _WINDOWS
+   currentFrame = frame;
+#  endif /* _WINDOWS */
    item = 0;
    i = 0;
    j = 0;
@@ -1032,6 +1035,9 @@ int                 frame;
    Item_Ctl           *ptritem;
    char               *ptr;
 
+#  ifdef _WINDOWS
+   currentFrame = frame;
+#  endif /* _WINDOWS */
    /* Construit le pulldown attache au bouton */
    item = 0;
    i = 0;
@@ -1086,6 +1092,9 @@ int                 frame;
 	item++;
      }
 
+#  ifdef _WINDOWS
+   currentMenu = button ;
+#  endif /* _WINDOWS */
 
    /* Creation du Pulldown avec ou sans equiv */
    if (withEquiv)
@@ -2811,6 +2820,9 @@ int                 frame;
    int                 item;
    Menu_Ctl           *ptrmenu;
    Item_Ctl           *ptr;
+#  ifdef _WINDOWS
+   int                 txtZoneIndex;
+#  endif /* _WINDOWS */
 
    if (ThotLocalActions[T_stopinsert] != NULL)
      (*ThotLocalActions[T_stopinsert]) ();
@@ -2867,6 +2879,13 @@ int                 frame;
             FrameTable[frame].Button[i] = 0;
 
 #       else  /* _WINDOWS */
+        for (txtZoneIndex = 0; txtZoneIndex < MAX_TEXTZONE; txtZoneIndex++) {
+            FrameTable[frame].Text_Zone[txtZoneIndex] = 0;
+        }
+        if (hAccel [frame]) {
+           DestroyAcceleratorTable (hAccel [frame]);
+		   hAccel [frame] = NULL;
+        }
         DestroyWindow (FrMainRef[frame]);
 		CleanFrameCatList (frame);
 

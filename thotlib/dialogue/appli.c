@@ -1356,8 +1356,7 @@ LPARAM lParam;
            ClickFrame = frame;
            ClickX = LOWORD (lParam);
            ClickY = HIWORD (lParam);
-		   /* if (!WIN_UserGeometry) */
-              return (DefWindowProc (hwnd, mMsg, wParam, lParam));
+           return (DefWindowProc (hwnd, mMsg, wParam, lParam));
         }
 		
      }
@@ -1405,47 +1404,11 @@ LPARAM lParam;
                       LocateSelectionInView (frame, ClickX, ClickY, 2);
                  }
                  fBlocking = TRUE;
-
-#                if 0		   
-                 if (!WIN_UserGeometry) {
-                    /* if the CTRL key is pressed this is a geometry change */
-                    status = GetKeyState (VK_CONTROL);
-                    if (HIBYTE (status)) {
-                       /* changes the box position */
-                       ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
-
-                       /* This is the beginning of a selection */
-                    } else {
-                         ClickFrame = frame;
-                         oldXPos = ClickX = LOWORD (lParam);
-                         oldYPos = ClickY = HIWORD (lParam);
-                         LocateSelectionInView (frame, ClickX, ClickY, 2);
-                    }
-                 } else {
-                      ClickFrame = frame;
-                      ClickX = LOWORD (lParam);
-                      ClickY = HIWORD (lParam);
-                      ptBegin.x = ptEnd.x = ClickX;
-                      ptBegin.y = ptEnd.y = ClickY;
-                      /* DrawBoxOutline (hwnd, ptBegin, ptEnd); */
-                      SetCursor (LoadCursor (NULL, IDC_CROSS));
-                 }
-                 fBlocking = TRUE;
-#                endif /* 0 */
-
                  return 0;
 
             case WM_LBUTTONUP:
-                 if (fBlocking) {
-#                   if 0
-                    if (WIN_UserGeometry) {
-                       /* DrawBoxOutline (hwnd, ptBegin, ptEnd); */
-                       SetCursor (LoadCursor (NULL, IDC_ARROW));
-                       WIN_UserGeometry = FALSE;
-                    }
-#                   endif /* 0 */
+                 if (fBlocking)
                     fBlocking = FALSE;
-                 }
                  return 0;
 
             case WM_LBUTTONDBLCLK:/* left double click handling */
@@ -1462,10 +1425,6 @@ LPARAM lParam;
                  ClickFrame = frame;
                  ClickX = LOWORD (lParam);
                  ClickY = HIWORD (lParam);
-#                if 0
-                 if (WIN_UserGeometry)
-                    WIN_UserGeometry = FALSE;
-#                endif /* 0 */
                  /* stop any current insertion of text */
                  CloseInsertion ();
 		    
@@ -1485,10 +1444,6 @@ LPARAM lParam;
                  ClickFrame = frame;
                  ClickX = LOWORD (lParam);
                  ClickY = HIWORD (lParam);
-#                if 0
-                 if (WIN_UserGeometry)
-                    WIN_UserGeometry = FALSE;
-#                 endif /* 0 */
 				 return 0;
 
             case WM_MOUSEMOVE:
@@ -1499,23 +1454,6 @@ LPARAM lParam;
                         ((oldYPos <= Y_Pos - 1) || (oldYPos >= Y_Pos + 1)))	  
                        LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
                  }
-#                if 0
-                 if (fBlocking) {
-                    if (!WIN_UserGeometry) { 
-                       if (((oldXPos <= X_Pos - 1) || (oldXPos >= X_Pos + 1)) && 
-		                   ((oldYPos <= Y_Pos - 1) || (oldYPos >= Y_Pos + 1)))	  
-                          LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
-                    } else {
-						/*
-                         SetCursor (LoadCursor (NULL, IDC_CROSS));
-                         DrawBoxOutline (hwnd, ptBegin, ptEnd);
-                         ptEnd.x = LOWORD (lParam);
-                         ptEnd.y = HIWORD (lParam);
-                         DrawBoxOutline (hwnd, ptBegin, ptEnd);
-						 */
-                    }
-                 }
-#                endif /* 0 */
 				 oldXPos = X_Pos;
 				 oldYPos = Y_Pos;
                  return 0;

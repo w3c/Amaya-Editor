@@ -62,6 +62,9 @@
 #include "viewapi_f.h"
 #include "applicationapi_f.h"
 
+#ifdef _WINDOWS
+#endif /* _WINDOWS */
+
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
    Handling of Multikey sequences used to produce ISO-Latin-1.
@@ -1259,6 +1262,7 @@ void                TtaMainLoop ()
 
 #  ifdef _WINDOWS
    MSG                 msg;
+   int                 frame;
 #  else /* ! _WINDOWS */
    ThotEvent              ev;
 #  endif /* _WINDOWS */
@@ -1279,22 +1283,22 @@ void                TtaMainLoop ()
    CallEventType (&notifyEvt, FALSE);
 
    /* Loop wainting for the events */
-   while (1)
-     {
-        if (NewMainLoop != NULL)
-	  {
-	    NewMainLoop();
-	    continue;
-	  }
-#       ifndef _WINDOWS
-        TtaFetchOneEvent(&ev);
-	TtaHandleOneEvent(&ev);
-#       else  /* !_WINDOWS */
-/*	WIN_ProcessSocketActivity ();*/	 /* Taking this out to see if it interferes. Should be erase? */
-	if (GetMessage (&msg, NULL, 0, 0))
-	   TtaHandleOneWindowEvent (&msg);
-#       endif /* _WINDOWS */
-     }
+   while (1) {
+         if (NewMainLoop != NULL) {
+            NewMainLoop();
+            continue;
+         }
+#        ifndef _WINDOWS
+         TtaFetchOneEvent(&ev);
+         TtaHandleOneEvent(&ev);
+#        else  /* !_WINDOWS */
+         if (GetMessage (&msg, NULL, 0, 0)) {			
+            frame = GetFrameNumber (msg.hwnd);
+            if (!hAccel [frame] || !TranslateAccelerator (FrRef [frame], hAccel [frame], &msg))
+               TtaHandleOneWindowEvent (&msg);
+		 }
+#        endif /* _WINDOWS */
+   }
 }				/*TtaMainLoop */
 
 /*----------------------------------------------------------------------

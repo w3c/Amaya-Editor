@@ -234,7 +234,8 @@ int                 WIN_DesReturn;	/* Selection indicator              */
 unsigned char*      WIN_buffer;	/* Buffer for exchanges with Window */
 int                 WIN_Lgbuffer;
 extern char         docToOpen [256];
-
+extern HMENU        currentMenu;
+extern int          currentFrame;
 #ifdef  APPFILENAMEFILTER
 #       undef  APPFILENAMEFILTER
 #endif  /* APPFILENAMEFILTER */
@@ -254,6 +255,11 @@ typedef struct WIN_Form {
 static int      bIndex   = 0;
 static int      bAbsBase = 60 ;
 static WIN_Form formulary ;
+static BYTE     fVirt;
+static char     key;
+
+#define EOS     '\0'
+#define SPACE   ' '
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -278,6 +284,116 @@ ThotWindow win;
 }
 
 #ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+BOOL parseAccelerator (char* accelerator)
+#else  /* !__STDC */
+BOOL parseAccelerator (accelrator)
+char* accelerator;
+#endif /* __STDC__ */
+{
+   char*   pc;
+   char*   pw;
+   char    word [1024];
+
+   fVirt = FNOINVERT;
+   if (!accelerator || accelerator [0] == EOS)
+      return FALSE;
+
+   pw = &word [0];
+   pc = accelerator;
+   while (*pc) {
+         while (*pc == SPACE)
+               pc++;
+         while ((*pc >= 'A' && *pc <= 'Z') || (*pc >= 'a' && *pc <= 'z'))
+               *pw++ = *pc++;
+         *pw = EOS;
+
+         if (!strcmp (word, "Ctrl")) 
+            fVirt |= FVIRTKEY;
+         else if (!strcmp (word, "Alt"))
+              fVirt |= FALT;
+         else if (!strcmp (word, "Shift"))
+              fVirt |= FSHIFT;
+
+         while (*pc == SPACE)			  
+               pc++;
+         if (*pc++ != '+')
+            return FALSE;
+         while (*pc == SPACE)			  
+               pc++;
+         if (!strcmp (word, "Ctrl"))
+            key = *pc - 'a' + 1;
+         else
+            key = *pc;
+         while (*pc++);			  
+   }
+   return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void addAccelerator (int frame, BYTE fVirt, char key, int cmd)
+#else  /* __STDC__ */
+void addAccelerator (fVirt, key, cmd)
+BYTE fVirt; 
+char key;
+int  cmd;
+#endif /* __STDC__ */
+{
+   ACCEL* pAccelData = NULL;
+   ACCEL* pCurAccel  = NULL;
+   HANDLE hAccelData = NULL;
+   int    nNumAccel  = 1;
+
+   int  i     = 0;
+   BOOL found = FALSE;
+
+   /* If accelerator table exists, get the number of items. */
+   if (hAccel [frame])
+      nNumAccel = CopyAcceleratorTable (hAccel [frame], NULL, 0) + 1;
+
+   /* Allocate an array of ACCEL structures. */
+   hAccelData = GlobalAlloc (GHND, sizeof (ACCEL) * nNumAccel);
+   if (hAccelData)
+      pAccelData = (ACCEL*) GlobalLock (hAccelData);
+
+   /* If an accelerator table exists, copy the items into the newly allocated array. */
+
+   if (hAccel [frame] && pAccelData) {
+      CopyAcceleratorTable (hAccel [frame], pAccelData, nNumAccel - 1);
+
+      DestroyAcceleratorTable (hAccel [frame]);
+      hAccel [frame] = NULL;
+   }
+
+   /* Add the new menu option and accelerator key */
+   if (pAccelData) {
+      /* Get a pointer to the new accelerator key in the array. */
+      pCurAccel = (ACCEL*) (pAccelData + nNumAccel - 1);
+
+      /* Set up a new accelerator for the the new menu option. */
+      /* pCurAccel->fVirt = FNOINVERT | FVIRTKEY; */
+      pCurAccel->fVirt = fVirt;
+      pCurAccel->cmd   = cmd;
+      pCurAccel->key   = (WORD) key;
+      /* pCurAccel->key   = ( nNum == 1 ? VK_F1 :
+                              nNum == 2 ? VK_F2 :
+                              nNum == 3 ? VK_F3 :
+                              VK_F4 ); */
+
+      /* Create the new accelerator table. */
+      hAccel [frame] = CreateAcceleratorTable (pAccelData, nNumAccel);
+
+      GlobalUnlock (hAccelData);
+
+   if (hAccelData)
+      GlobalFree (hAccelData);
+
+   }
+}
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -505,49 +621,55 @@ ThotWidget          parent;
 struct Cat_Context* catalogue;
 #endif /* __STDC__ */
 {
-   int frame = GetMainFrameNumber (parent);
+   int                 frameIndex;
+   int                 catIndex;
+   int                 twIndex;
+   int                 i;
+   int                 frame = GetMainFrameNumber (parent);
+   boolean             found;
+   struct Cat_Context* tmpCat;
 
    if (frame == -1) {
       frame = GetMenuParentNumber (parent) ;
    
       if (frame == - 1) {
-         int     frameIndex = 0 ;
-	 boolean found      = FALSE ;
+         frameIndex = 0 ;
+         found      = FALSE ;
 
-	 while (frameIndex < MAX_FRAME && !found) {
-	       int catIndex = 0 ;
+         while (frameIndex < MAX_FRAME && !found) {
+               catIndex = 0 ;
             
-	       while (catIndex < MAX_FRAMECAT && !found) {
-		     int twIndex = 0;
+               while (catIndex < MAX_FRAMECAT && !found) {
+                     twIndex = 0;
 
-		     while (twIndex < C_NUMBER && !found)
-		           if (FrameCatList[frameIndex].Cat_Table[catIndex] &&
-                              FrameCatList[frameIndex].Cat_Table[catIndex]->Cat_Entries->E_ThotWidget[twIndex] == parent) {
+                     while (twIndex < C_NUMBER && !found)
+                           if (FrameCatList[frameIndex].Cat_Table[catIndex] &&
+                               FrameCatList[frameIndex].Cat_Table[catIndex]->Cat_Entries->E_ThotWidget[twIndex] == parent) {
 			      
-				 found = TRUE ;
-			      frame = frameIndex ;
-			   } else
+                              found = TRUE ;
+                              frame = frameIndex ;
+                           } else
                                  twIndex++ ;
-		  
-		     if (!found)
-                        catIndex++ ;
-	       }
+ 
+                           if (!found)
+                              catIndex++ ;
+               }
 
-	       if (!found)
-		  frameIndex++ ;
-	 }
+               if (!found)
+                  frameIndex++ ;
+         }
       }
    }
    
    if (frame != -1) {
-      int found = FALSE ;
-      int i = 0;
+      found = FALSE ;
+      i = 0;
       while ((i < MAX_FRAMECAT) && (FrameCatList[frame].Cat_Table[i] != 0) && !found)
-	    if (FrameCatList[frame].Cat_Table[i]->Cat_Ref == catalogue->Cat_Ref) {
+            if (FrameCatList[frame].Cat_Table[i]->Cat_Ref == catalogue->Cat_Ref) {
                found = TRUE ;
                FrameCatList[frame].Cat_Table[i] = catalogue ;
-	    } else if (FrameCatList[frame].Cat_Table[i]->Cat_Ref > catalogue->Cat_Ref) {
-                   struct Cat_Context* tmpCat = FrameCatList[frame].Cat_Table[i] ;
+            } else if (FrameCatList[frame].Cat_Table[i]->Cat_Ref > catalogue->Cat_Ref) {
+                   tmpCat = FrameCatList[frame].Cat_Table[i] ;
                    do {
                        FrameCatList[frame].Cat_Table[i] = catalogue ;
                        catalogue = tmpCat ;
@@ -558,6 +680,7 @@ struct Cat_Context* catalogue;
                    found = TRUE ;
             } else
                   i++ ;
+
       if (i < MAX_FRAMECAT && !found) 
          FrameCatList[frame].Cat_Table[i] = catalogue ;
    }
@@ -2524,7 +2647,7 @@ struct Cat_Context *catalogue;
    Le parame`tre text contient la liste des intitule's du catalogue.  
    Chaque intitule' commence par un caracte`re qui donne le type de   
    l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    
-   S'il n'est pas nul, le parame`tre equiv donne les acce'le'rateurs  
+   S'il n'est pas nul, le parame`tre ] donne les acce'le'rateurs  
    des entre'es du menu.                                              
    Retourne un code d'erreur.                                         
   ----------------------------------------------------------------------*/
@@ -2551,14 +2674,17 @@ char               *equiv;
    struct Cat_Context *catalogue;
    struct E_List      *adbloc;
 
-#  ifndef _WINDOWS
-   Arg                 args[MAX_ARGS];
-#  endif /* _WINDOWS */
    ThotWidget          menu;
    ThotWidget          w;
    char                heading[200];
 
+#  ifdef _WINDOWS
+   struct Cat_Context *copyCat;
+   char   accelerator [1024];
+#  endif /* _WINDOWS */
+
 #  ifndef _WINDOWS
+   Arg                 args[MAX_ARGS];
    XmString            title_string;
 #  endif
 
@@ -2642,12 +2768,15 @@ char               *equiv;
 		  XtManageChild (parent);
 		  XtAddCallback (parent, XmNcascadingCallback, (XtCallbackProc) CallMenu, catalogue);
 #                 else  /* _WINDOWS */
-                  WIN_AddFrameCatalogue (parent, catalogue) ;
+                  copyCat = catalogue ;
+                  WIN_AddFrameCatalogue (parent, copyCat) ;
+                  /* WIN_AddFrameCatalogue (parent, catalogue) ; */
 #                 endif /* _WINDOWS */
 	       }
 #          ifdef _WINDOWS
            else	if (currentParent != 0)
-               WIN_AddFrameCatalogue (currentParent, catalogue) ;
+			   copyCat = catalogue;
+               WIN_AddFrameCatalogue (currentParent, copyCat) ;
 #          endif /* _WINDOWS */
 	     return;
 	  }
@@ -2760,7 +2889,14 @@ char               *equiv;
 		     /* Note l'accelerateur */
 		     if (equiv != NULL)
 		       {
-#                         ifndef _WINDOWS
+#                         ifdef _WINDOWS
+                          if (equiv[0] != '\0') {
+                             sprintf (accelerator, "%s", &equiv[eindex]);
+                             if (parseAccelerator (accelerator))
+                                addAccelerator (currentFrame, fVirt, key, ref + i);
+                             eindex += strlen (&equiv[eindex]) + 1;
+                          }
+#                         else  /* !_WINDOWS */
 			  title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
 			  eindex += strlen (&equiv[eindex]) + 1;
 			  XtSetArg (args[n - 1], XmNacceleratorText, title_string);
@@ -2773,7 +2909,8 @@ char               *equiv;
 #                         ifdef _WINDOWS
 			  AppendMenu (menu, MF_STRING, ref + i, &text[index + 1]);
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
-                          WIN_AddFrameCatalogue (parent, catalogue) ;
+                          copyCat = catalogue;
+                          WIN_AddFrameCatalogue (parent, copyCat) ;
 #                         else  /* _WINDOWS */
 			  w = XmCreatePushButton (menu, &text[index + 1], args, n);
 			  XtManageChild (w);
@@ -2791,7 +2928,8 @@ char               *equiv;
 			  else
 			      AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, &text[index + 1]);
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
-                          WIN_AddFrameCatalogue (parent, catalogue) ;
+                          copyCat = catalogue;
+                          WIN_AddFrameCatalogue (parent, copyCat) ;
 #                         else  /* _WINDOWS */
 			  XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
 			  XtSetArg (args[n + 1], XmNselectColor, White_Color);
@@ -2807,8 +2945,12 @@ char               *equiv;
 			  /* En attendant le sous-menu on cree un bouton */
 #                         ifdef _WINDOWS
                           w = (HMENU) CreateMenu ();
-			  AppendMenu (menu, MF_POPUP, (UINT) w, &text[index + 1]);
-			  adbloc->E_ThotWidget[ent] = w;
+                          AppendMenu (menu, MF_POPUP, (UINT) w, &text[index + 1]);
+                          adbloc->E_ThotWidget[ent] = w;
+						  /* *** T O    V E R I F Y *** */
+                          copyCat = catalogue;
+                          WIN_AddFrameCatalogue (parent, copyCat) ;
+						  /* *** T O    V E R I F Y  *** */
 #                         else  /* _WINDOWS */
 			  w = XmCreateCascadeButton (menu, &text[index + 1], args, n);
 			  adbloc->E_ThotWidget[ent] = w;
@@ -3028,6 +3170,8 @@ char                button;
 #  ifdef _WINDOWS
    HMENU               menu;
    int                 nbOldItems, ndx;
+   struct Cat_Context *copyCat;
+   char                accelerator [1024];
 #  else  /* _WINDOWS */
    Arg                 args[MAX_ARGS];
    ThotWidget          menu;
@@ -3148,8 +3292,10 @@ char                button;
 	catalogue->Cat_Data = -1;
 
 #   ifdef _WINDOWS
-    if (currentParent != 0)
-       WIN_AddFrameCatalogue (currentParent, catalogue) ;
+    if (currentParent != 0) {
+       copyCat = catalogue;
+       WIN_AddFrameCatalogue (currentParent, copyCat) ;
+    }
 #   endif /* _WINDOWS */
 
 /*** Cree le titre du menu ***/
@@ -3255,7 +3401,14 @@ char                button;
 		     /* Note l'accelerateur */
 		     if (equiv != NULL)
 		       {
-#                         ifndef _WINDOWS
+#                         ifdef _WINDOWS
+                          if (equiv[0] != '\0') {
+                             sprintf (accelerator, "%s", &equiv[eindex]);
+                             if (parseAccelerator (accelerator))
+                                addAccelerator (1, fVirt, key, ref + i);
+                             eindex += strlen (&equiv[eindex]) + 1;
+                          }
+#                         else  /* !_WINDOWS */
 			  title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
 			  eindex += strlen (&equiv[eindex]) + 1;
 			  XtSetArg (args[n - 1], XmNacceleratorText, title_string);
@@ -3713,6 +3866,8 @@ boolean             react;
 #  ifdef _WINDOWS
    HMENU               menu;
    char               *title_string;
+   struct Cat_Context *copyCat;
+   char                accelerator [1024];
 #  endif
 
    if (ref == 0)
@@ -3925,6 +4080,12 @@ boolean             react;
 		       if (equiv != NULL)
 			 {
 #                           ifdef _WINDOWS
+                            if (equiv[0] != '\0') {
+                               sprintf (accelerator, "%s", &equiv[eindex]);
+                               if (parseAccelerator (accelerator))
+                                  addAccelerator (1, fVirt, key, ref);
+                               eindex += strlen (&equiv[eindex]) + 1;
+                            }
 #                           else  /* _WINDOWS */
 			    title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
 			    XtSetArg (args[n + 1], XmNacceleratorText, title_string);
@@ -3932,7 +4093,8 @@ boolean             react;
 #                           endif /* !_WINDOWS */
 			 }
 #                      ifdef _WINDOWS
-                       WIN_AddFrameCatalogue (w, catalogue) ;
+                       copyCat = catalogue;
+                       WIN_AddFrameCatalogue (w, copyCat) ;
 #                      else  /* _WINDOWS */
 		       w = XmCreateToggleButton (row, &text[index + 1], args, n);
 		       XtManageChild (w);
@@ -4149,7 +4311,14 @@ boolean             react;
 		       /* Note l'accelerateur */
 		       if (equiv != NULL)
 			 {
-#                           ifndef _WINDOWS
+#                           ifdef _WINDOWS
+                            if (equiv[0] != '\0') {
+                               sprintf (accelerator, "%s", &equiv[eindex]);
+                               if (parseAccelerator (accelerator))
+                                  addAccelerator (currentFrame, fVirt, key, ref + i);
+                               eindex += strlen (&equiv[eindex]) + 1;
+                            }
+#                           else  /* !_WINDOWS */
 			    title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
 			    eindex += strlen (&equiv[eindex]) + 1;
 			    XtSetArg (args[n - 1], XmNacceleratorText, title_string);
@@ -4162,7 +4331,8 @@ boolean             react;
 #                           ifdef _WINDOWS
                             AppendMenu (w, MF_STRING, ref + i, &text[index + 1]);
 			    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
-                            WIN_AddFrameCatalogue (w, catalogue) ;
+                            copyCat = catalogue;
+                            WIN_AddFrameCatalogue (currentMenu, copyCat) ;
 #                           else  /* _WINDOWS */
 			    w = XmCreatePushButton (menu, &text[index + 1], args, n);
 			    XtManageChild (w);
@@ -4176,7 +4346,8 @@ boolean             react;
 #                           ifdef _WINDOWS
                             AppendMenu (w, MF_STRING | MF_CHECKED, ref + i, &text[index + 1]);
 			    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
-                            WIN_AddFrameCatalogue (w, catalogue) ;
+                            copyCat = catalogue;
+                            WIN_AddFrameCatalogue (currentMenu, copyCat) ;
 #                           else  /* _WINDOWS */
 			    /* un toggle a faux */
 			    XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
@@ -5302,6 +5473,7 @@ int                 cattype;
    char*               ptr = NULL;
 
 #  ifdef _WINDOWS
+   struct Cat_Context* copyCat;
    int                 strSize;
    int                 charWidth;
    TEXTMETRIC          tm;
@@ -5623,8 +5795,9 @@ int                 cattype;
 	fprintf (stderr, "Created ComboBox %X\n", form);
 #   endif /* AMAYA_DEBUG */
 
-	catalogue->Cat_Widget = form;
-        WIN_AddFrameCatalogue (parent, catalogue) ;
+        catalogue->Cat_Widget = form;
+        copyCat = catalogue;
+        WIN_AddFrameCatalogue (parent, copyCat) ;
         bIndex   =  0;
         bAbsBase = 60;
 #       endif /* _WINDOWS */
