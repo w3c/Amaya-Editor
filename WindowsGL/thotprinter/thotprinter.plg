@@ -1,0 +1,39 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: thotprinter - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\pcl\LOCALS~1\Temp\RSP2E5.tmp" with contents
+[
+user32.lib gdi32.lib advapi32.lib /nologo /subsystem:windows /dll /incremental:yes /pdb:"..\bin/thotprinter.pdb" /debug /machine:I386 /nodefaultlib:"libcd.lib" /out:"..\bin/thotprinter.dll" /implib:"..\bin/thotprinter.lib" /pdbtype:sept 
+.\Debug\css.obj
+.\Debug\fetchHTMLname.obj
+.\Debug\fetchXMLname.obj
+.\Debug\nodialog.obj
+.\Debug\paginate.obj
+.\Debug\print.obj
+.\Debug\psdisplay.obj
+.\Debug\styleparser.obj
+..\printlib.lib
+\cvs\Amaya\Windows\libThotTable.lib
+\cvs\Amaya\Windows\libjpeg.lib
+\cvs\Amaya\Windows\libpng.lib
+]
+Creating command line "link.exe @C:\DOCUME~1\pcl\LOCALS~1\Temp\RSP2E5.tmp"
+<h3>Output Window</h3>
+Linking...
+   Creating library ..\bin/thotprinter.lib and object ..\bin/thotprinter.exp
+printlib.lib(windowdisplay.obj) : error LNK2001: unresolved external symbol _EllipticSplit
+..\bin/thotprinter.dll : fatal error LNK1120: 1 unresolved externals
+Error executing link.exe.
+
+
+
+<h3>Results</h3>
+thotprinter.dll - 2 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
