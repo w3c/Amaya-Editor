@@ -3024,7 +3024,7 @@ int main (int argc, char **argv)
 
 #else /* _WINDOWS */
 #ifdef _WINDOWS_DLL
-   return 0;
+   return;
 #else /*_WINDOWS_DLL*/
 	ReleaseDC (NULL, TtPrinterDC);
 	closewgl (TtPrinterDC, 0);
