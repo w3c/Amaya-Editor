@@ -307,7 +307,10 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
 
 	case 'S': /* a separator */
 	  item_action  = -1;
-	  p_menu_item = new wxMenuItem(p_menu, wxID_SEPARATOR, _T(""), _T(""), wxITEM_SEPARATOR);
+	  if (item_nb+1<ptrmenu->ItemsNb)
+	    p_menu_item = new wxMenuItem(p_menu, wxID_SEPARATOR, _T(""), _T(""), wxITEM_SEPARATOR);
+	  else
+	    p_menu_item = NULL; /* do not add a separator if it's the last menu item */
 	  break;
 
 	case 'T': /* a toggle menu item (checkbox) */
@@ -367,9 +370,14 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
 #endif /* _MACOS */
  	}
 
-      if (p_menu_item && item_icon[0] != '\0' && item_action != -1 && item_type != 'T')
+      if ( p_menu_item &&
+	   item_icon[0] != '\0' &&
+	   item_action != -1 &&
+	   item_type != 'T' )
 	{
-	  p_menu_item->SetBitmap( wxBitmap(TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16,item_icon), wxBITMAP_TYPE_PNG) );
+	  wxBitmap menu_icon(TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16,item_icon), wxBITMAP_TYPE_PNG);
+	  if (menu_icon.Ok())
+	    p_menu_item->SetBitmap( menu_icon );
 	}
 
       if (p_menu_item)
