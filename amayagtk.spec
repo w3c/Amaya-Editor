@@ -8,12 +8,12 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 6.3
+%define version 6.4
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
 Name:         amaya_gtk
-Release:      3
+Release:      4
 Copyright:    Copyright 1995-2001 (MIT) (INRIA), (L)GPL compatible
 Group:        X11/Applications/Networking
 URL:          http://www.w3.org/Amaya/
@@ -42,6 +42,8 @@ Authors:
     Vincent.Quint@w3.org, Laurent.Carcone@w3.org
 
 %changelog
+* Jul 2002 Irene Vatton <Irene.Vatton@w3.org>
+  GTK options.
 * Fri Nov 9 2001  Irene Vatton <Irene.Vatton@w3.org>
   Integration of English and French dictionaries
 * Mon Feb 28 2001 Irene Vatton <Irene.Vatton@w3.org>
