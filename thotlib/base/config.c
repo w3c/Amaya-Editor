@@ -1908,7 +1908,7 @@ int           *height;
   args[1].name = "height";
   gtk_object_getv(GTK_OBJECT(widget), 2, args);
 #else /* !_GTK */
-  widget = XtParent (XtParent (widget));
+  widget = XtParent (XtParent (XtParent (widget)));
 
   /* Ask X what's the geometry of the frame */
   n = 0;
@@ -1924,7 +1924,8 @@ int           *height;
 #endif /* !_GTK */
   /* convert the result into mm */
   *xmm = pixeltomm ((int) x, TRUE);
-  *ymm = pixeltomm ((int) y, TRUE);
+  /* take into account the window manager headband */
+  *ymm = pixeltomm ((int) y - 18, TRUE);
   *width = pixeltomm ((int) w, TRUE);
   *height = pixeltomm ((int) h, TRUE);
 #else /* !_WINDOWS */

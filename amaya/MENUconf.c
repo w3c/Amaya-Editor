@@ -2007,9 +2007,9 @@ STRING              data;
 void         GeneralConfMenu (Document document, View view)
 #else
 void         GeneralConfMenu (document, view)
-Document            document;
-View                view;
-STRING              pathname;
+Document     document;
+View         view;
+STRING       pathname;
 
 #endif
 {
@@ -2025,7 +2025,7 @@ STRING              pathname;
    TtaNewSheet (GeneralBase + GeneralMenu, 
 		TtaGetViewFrame (document, view),
 		TtaGetMessage (AMAYA, AM_GENERAL_MENU),
-		2, s, TRUE, 2, 'L', D_DONE);
+		2, s, TRUE, 3, 'L', D_DONE);
    /* first line */
    TtaNewTextForm (GeneralBase + mHomePage,
 		   GeneralBase + GeneralMenu,
@@ -2034,14 +2034,24 @@ STRING              pathname;
 		   1,
 		   FALSE);
    TtaNewLabel (GeneralBase + mGeneralEmpty1, GeneralBase + GeneralMenu, " ");
+   TtaNewLabel (GeneralBase + mGeneralEmpty2, GeneralBase + GeneralMenu, " ");
    /* second line */
-   TtaNewNumberForm (GeneralBase + mDoubleClickDelay,
+   usprintf (s, "B%s%cB%s%cB%s%cB%s", 
+	     TtaGetMessage (AMAYA, AM_ENABLE_MULTIKEY), EOS, 
+	     TtaGetMessage (AMAYA, AM_SHOW_BG_IMAGES), EOS, 
+	     TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK), EOS,
+	     TtaGetMessage (AMAYA, AM_ENABLE_FTP));
+
+   TtaNewToggleMenu (GeneralBase + mToggleGeneral,
 		     GeneralBase + GeneralMenu,
-		     TtaGetMessage (AMAYA, AM_DOUBLECLICK_DELAY),
-		     0,
-		     65000,
-		     FALSE);   
+		     NULL,
+		     4,
+		     s,
+		     NULL,
+		     FALSE);
+   TtaNewLabel (GeneralBase + mGeneralEmpty3, GeneralBase + GeneralMenu, " ");
    TtaNewLabel (GeneralBase + mGeneralEmpty4, GeneralBase + GeneralMenu, " ");
+
    /* third line */
    TtaNewNumberForm (GeneralBase + mFontMenuSize,
 		     GeneralBase + GeneralMenu,
@@ -2056,28 +2066,19 @@ STRING              pathname;
 		     -10,
 		     10,
 		     FALSE);   
+   TtaNewNumberForm (GeneralBase + mDoubleClickDelay,
+		     GeneralBase + GeneralMenu,
+		     TtaGetMessage (AMAYA, AM_DOUBLECLICK_DELAY),
+		     0,
+		     65000,
+		     FALSE);   
    /* fourth line */
    TtaNewTextForm (GeneralBase + mDialogueLang,
 		   GeneralBase + GeneralMenu,
 		   TtaGetMessage (AMAYA, AM_DIALOGUE_LANGUAGE),
-		   10,
+		   3,
 		   1,
 		   FALSE);
-   TtaNewLabel (GeneralBase + mGeneralEmpty2, GeneralBase + GeneralMenu, " ");   
-   /* fifth line */
-   usprintf (s, "B%s%cB%s%cB%s%cB%s", 
-	     TtaGetMessage (AMAYA, AM_ENABLE_MULTIKEY), EOS, 
-	     TtaGetMessage (AMAYA, AM_SHOW_BG_IMAGES), EOS, 
-	     TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK), EOS,
-	     TtaGetMessage (AMAYA, AM_ENABLE_FTP));
-
-   TtaNewToggleMenu (GeneralBase + mToggleGeneral,
-		     GeneralBase + GeneralMenu,
-		     NULL,
-		     4,
-		     s,
-		     NULL,
-		     FALSE);
 #endif /* !_WINDOWS */
    /* load the current values */
    GetGeneralConf ();
@@ -2090,7 +2091,7 @@ STRING              pathname;
 #else /* !_WINDOWS */
    if (!GeneralHwnd)
      /* only activate the menu if it isn't active already */
-		   DialogBox (hInstance, MAKEINTRESOURCE (GENERALMENU), NULL, (DLGPROC) WIN_GeneralDlgProc);
+     DialogBox (hInstance, MAKEINTRESOURCE (GENERALMENU), NULL, (DLGPROC) WIN_GeneralDlgProc);
    else
      SetFocus (GeneralHwnd);
 #endif /* !_WINDOWS */
@@ -2741,7 +2742,7 @@ STRING              pathname;
 		TtaGetViewFrame (document, view),
 		TtaGetMessage (AMAYA, AM_COLOR_MENU),
 		2, s, TRUE, 2, 'L', D_DONE);
-   /* first line */
+   /* first col */
    TtaNewTextForm (ColorBase + mFgColor,
 		   ColorBase + ColorMenu,
 		   TtaGetMessage (AMAYA, AM_DOC_FG_COLOR),
@@ -2754,20 +2755,20 @@ STRING              pathname;
 		   20,
 		   1,
 		   FALSE);   
-   /* second line */
-   TtaNewTextForm (ColorBase + mSeColor,
-		   ColorBase + ColorMenu,
-		   TtaGetMessage (AMAYA, AM_DOC_SEL_COLOR),
-		   20,
-		   1,
-		   FALSE);   
+   /* second col */
    TtaNewTextForm (ColorBase + mInColor,
 		   ColorBase + ColorMenu,
 		   TtaGetMessage (AMAYA, AM_DOC_INS_COLOR),
 		   20,
 		   1,
 		   FALSE);   
-   /* third line */
+   TtaNewTextForm (ColorBase + mSeColor,
+		   ColorBase + ColorMenu,
+		   TtaGetMessage (AMAYA, AM_DOC_SEL_COLOR),
+		   20,
+		   1,
+		   FALSE);   
+   /* third col */
    TtaNewTextForm (ColorBase + mMenuFgColor,
 		   ColorBase + ColorMenu,
 		   TtaGetMessage (AMAYA, AM_MENU_FG_COLOR),
@@ -3006,10 +3007,10 @@ STRING              data;
 {
   int val;
 
+  TtaDestroyDialogue (GeometryBase + GeometryMenu);
   if (ref == -1)
     {
       /* removes the geometry conf menu */
-      TtaDestroyDialogue (GeometryBase + GeometryMenu);
       GeometryDoc = 0;
     }
   else
