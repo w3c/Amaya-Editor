@@ -878,10 +878,10 @@ char               *appArgv0;
 
 # ifdef _WINDOWS
   if (appArgv0[0] == DIR_SEP || (appArgv0[1] == ':' && appArgv0[2] == DIR_SEP))
-    strncpy (&execname[0], appArgv0, sizeof (execname));
+     strncpy (&execname[0], appArgv0, sizeof (execname));
 # else  /* 1_WINDOWS */
   if (appArgv0[0] == DIR_SEP)
-    strncpy (&execname[0], appArgv0, sizeof (execname));
+     strncpy (&execname[0], appArgv0, sizeof (execname));
 # endif /* _WINDOWS */
 
   /*
@@ -1086,6 +1086,7 @@ char               *appArgv0;
    else
      fprintf (stderr, "System wide %s not found at %s\n", THOT_INI_FILENAME, &filename[0]);
 
+#  ifndef _WINDOWS
    if (home_dir != NULL)
      {
 	strcpy (filename, home_dir);
@@ -1119,6 +1120,7 @@ char               *appArgv0;
      }
    else
       fprintf (stderr, "User's %s not found\n", THOT_INI_FILENAME);
+#  endif /* !_WINDOWS */
 
 #ifdef DEBUG_REGISTRY
    PrintEnv (stderr);
