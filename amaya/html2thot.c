@@ -3740,8 +3740,9 @@ static void         EndOfDoctypeDecl (char c)
   unsigned char  *buffer;
 
    CloseBuffer ();
-   buffer = TtaGetMemory (strlen (inputBuffer) + 1);
-
+   buffer = TtaGetMemory (strlen (inputBuffer) + 4);
+   strcpy (buffer, "<!DOCTYPE ");
+   j = strlen (buffer);
    /* process the Doctype declaration available in inputBuffer */
    if (!strncasecmp (inputBuffer, "doctype", 7))
      {
@@ -3767,14 +3768,10 @@ static void         EndOfDoctypeDecl (char c)
 	   TtaInsertFirstChild (&doctypeLine, doctype, HTMLcontext.doc);
 	   /* Look for line breaks in the input buffer  and create */
 	   /* as many DOCTYPE_line elements as needed */
-	   j = 0;
 	   while (inputBuffer[i] != EOS)
 	     {
 	       if (inputBuffer[i] != EOL && inputBuffer[i] != CR)
-		 {
-		   buffer[j] = inputBuffer[i];
-		   j++;
-		 }
+		 buffer[j++] = inputBuffer[i];
 	       else
 		 {
 		   buffer[j] = EOS;
@@ -3803,21 +3800,18 @@ static void         EndOfDoctypeDecl (char c)
 		 }
 	       i++;
 	     }
-	   
-	   if (j > 0)
+	   buffer [j++] = '>';
+	   buffer [j] = EOS;
+	   elType.ElTypeNum = 1;
+	   text = TtaNewElement (HTMLcontext.doc, elType);
+	   if (text)
 	     {
-	       buffer [j] = EOS;
-	       elType.ElTypeNum = 1;
-	       text = TtaNewElement (HTMLcontext.doc, elType);
-	       if (text != NULL)
-		 {
-		   TtaSetElementLineNumber (text, NumberOfLinesRead);
-		   /* get the position of the Doctype text */
-		   TtaInsertFirstChild (&text, doctypeLine, HTMLcontext.doc);
-		   /* We use the Latin_Script language to avoid the spell_chekcer */
-		   /* the spell_chekcer to check the doctype */
-		   TtaSetTextContent (text, buffer, Latin_Script, HTMLcontext.doc);
-		 }
+	       TtaSetElementLineNumber (text, NumberOfLinesRead);
+	       /* get the position of the Doctype text */
+	       TtaInsertFirstChild (&text, doctypeLine, HTMLcontext.doc);
+	       /* We use the Latin_Script language to avoid the spell_chekcer */
+	       /* the spell_chekcer to check the doctype */
+	       TtaSetTextContent (text, buffer, Latin_Script, HTMLcontext.doc);
 	     }
 	 }
      }
