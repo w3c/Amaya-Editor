@@ -1147,14 +1147,13 @@ ThotEvent             *ev;
 
 #ifndef _WINDOWS
    status = XtAppPending (app_cont);
-   if (status != 0)
+   if (status & XtIMXEvent)
      {
-       if (status & XtIMXEvent)
-	 XtAppNextEvent (app_cont, ev);
-       else
-	 XtAppProcessEvent (app_cont, XtIMAll);
+       XtAppNextEvent (app_cont, ev);
        return (TRUE);
      }
+   else if (status != 0)
+     XtAppProcessEvent (app_cont, XtIMAll);
 #endif /* ! _WINDOWS */
    return (FALSE);
 }

@@ -764,6 +764,7 @@ Document       doc;
 	  TtaFreeMemory (AttrHREFvalue);
 	  FreeHTMLParser ();
 	  FreeXMLParser ();
+	  FreeDocHistory ();
 	  TtaQuit ();
 	}
     }

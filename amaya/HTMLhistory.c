@@ -44,7 +44,6 @@ static int          DocHistoryIndex[DocumentTableLength];
    InitDocHistory
    Reset history for document doc
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                InitDocHistory (Document doc)
 #else
@@ -56,6 +55,24 @@ Document            document;
    DocHistoryIndex[doc] = -1;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void                FreeDocHistory ()
+{
+  int               doc, i;
+
+  for (doc = 0; doc < DocumentTableLength; doc++)
+    {
+      if (DocHistoryIndex[doc] > 0)
+	for (i = 0; i < DocHistoryIndex[doc]; i++)
+	  {
+	    if (DocHistory[doc][i].HistUrl != NULL)
+	      TtaFreeMemory (DocHistory[doc][i].HistUrl);
+	    if (DocHistory[doc][i].form_data != NULL)
+	      TtaFreeMemory (DocHistory[doc][i].form_data);
+	  }
+    }
+}
 /*----------------------------------------------------------------------
   ElementAtPosition
   Returns the element that is at position pos in document doc.
@@ -444,7 +461,6 @@ View                view;
    AddDocHistory
    Add a new URL in the history associated with the window of document doc.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                AddDocHistory (Document doc, char *url, char *form_data, ClickEvent method)
 #else  /* __STDC__ */
@@ -464,10 +480,13 @@ ClickEvent          method;
       return;
 
    /* initialize the history if it has not been done yet */
-   if ((DocHistoryIndex[doc] < 0) || (DocHistoryIndex[doc] >= DOC_HISTORY_SIZE))
+   if (DocHistoryIndex[doc] < 0 || DocHistoryIndex[doc] >= DOC_HISTORY_SIZE)
      {
 	for (i = 0; i < DOC_HISTORY_SIZE; i++)
-	   DocHistory[doc][i].HistUrl = NULL;
+	  {
+	    DocHistory[doc][i].HistUrl = NULL;
+	    DocHistory[doc][i].form_data = NULL;
+	  }
 	DocHistoryIndex[doc] = 0;
      }
 

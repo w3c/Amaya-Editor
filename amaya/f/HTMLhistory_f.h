@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern void InitDocHistory ( Document doc );
+extern void FreeDocHistory ();
 extern void GotoPreviousHTML_callback ( int newdoc,
                                         int status,
                                         char *urlName,
@@ -31,6 +32,7 @@ extern void AddDocHistory ( Document doc,
 #else /* __STDC__ */
 
 extern void InitDocHistory (/* Document doc */);
+extern void FreeDocHistory ();
 extern void GotoPreviousHTML_callback (/* int newdoc,
                                           int status,
                                           char *urlName,
