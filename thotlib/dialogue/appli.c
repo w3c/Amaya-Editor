@@ -114,8 +114,6 @@ static ThotBool  AutoScroll = FALSE;
 int         X_Pos;
 int         Y_Pos;
 int         cyToolBar;
-DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | CCS_TOP | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
-DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 TBADDBITMAP ThotTBBitmap;
 
 #include "wininclude.h"
@@ -1417,6 +1415,8 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
   int                 index = 0;
   int                 cyTxtZone;
   DWORD               dwStyle;
+  DWORD               dwToolBarStyles;
+  DWORD               dwStatusBarStyles;
 
   frame = GetMainFrameNumber (hwnd);
   if (frame != -1)
@@ -1427,7 +1427,10 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
   case WM_CREATE:
     /* Create toolbar  */
     ThotTBBitmap.hInst = hInstance;
-    ThotTBBitmap.nID   = IDR_TOOLBAR;    
+    ThotTBBitmap.nID  = IDR_TOOLBAR;
+    dwToolBarStyles = WS_CHILD | WS_VISIBLE | CCS_TOP | TBSTYLE_TOOLTIPS;
+    if (!IS_WIN95)
+      dwToolBarStyles = dwToolBarStyles | TBSTYLE_FLAT;
     ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, dwToolBarStyles,
 			    0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0);
     SendMessage (ToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM) sizeof (TBBUTTON), 0L);
@@ -1439,6 +1442,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
       InitToolTip (ToolBar);	
     
     /* Create status bar  */
+    dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
     StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2);
     ShowWindow (StatusBar, SW_SHOWNORMAL);
     UpdateWindow (StatusBar);
