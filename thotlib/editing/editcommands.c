@@ -1826,9 +1826,10 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 	       /* Termine la chaine de caracteres */
 	       pCurrentBuffer->BuContent[i] = EOS;
 	       pCurrentBuffer->BuLength = i;
-	       image->PicFileName = TtaGetMemory (100);
+	       i = 400;
+	       image->PicFileName = TtaGetMemory (i);
 	       /* i should be too short to store non ascii characters */
-	       l = CopyBuffer2MBs (clipboard, 0, image->PicFileName, 99);
+	       l = CopyBuffer2MBs (clipboard, 0, image->PicFileName, i - 1);
 	       SetCursorWatch (frame);
 	       LoadPicture (frame, pBox, image);
 	       ResetCursorWatch (frame);

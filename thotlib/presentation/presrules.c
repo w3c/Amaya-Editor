@@ -1542,7 +1542,7 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
 	    {
 	      /* initialize the new image context */
 	      lg = ustrlen (pEl->ElText->BuContent);
-	      text = TtaGetMemory (lg + 1);
+	      text = TtaGetMemory (lg * 2 + 1);
 	      CopyBuffer2MBs (pEl->ElText, 0, text, lg);
 	      NewPictInfo (pAb, text, UNKNOWN_FORMAT);
 	    }

@@ -2319,8 +2319,8 @@ static  LabelString         label;
 				  image = (PictInfo *)pEl->ElPictInfo;
 				  if (image != NULL)
 				    {
-				      l = ustrlen (pBuf->BuContent);
-				      image->PicFileName = TtaGetMemory (l);
+				      l = ustrlen (pBuf->BuContent) * 2;
+				      image->PicFileName = TtaGetMemory (l + 1);
 				      CopyBuffer2MBs (pBuf, 0, image->PicFileName, l);
 				    }
 				}

@@ -1876,7 +1876,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
   PtrElement          pElAttr;
   AttributePres      *pAPRule, *pPRdef, *pPRinherit;
   NumAttrCase        *pCase;
-  char                buffer[100];
+  char                buffer[400];
   char               *attrValue, *ptr;
   unsigned int        len;
   int                 i;
@@ -1900,7 +1900,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
     {
     if (pAttr->AeAttrText)
       {
-	CopyBuffer2MBs (pAttr->AeAttrText, 0, buffer, 99);
+	CopyBuffer2MBs (pAttr->AeAttrText, 0, buffer, 399);
 	attrValue = buffer;
       }
     else
