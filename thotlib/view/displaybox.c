@@ -1434,7 +1434,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      restbl = newbl;
 	      x += lg;
 	      c = adbuff->BuContent[indbuff];
-	      if ((c >= 0x0600 && c < 0x066E) || c == 0x06AF) /*arabic character */
+	      if (c >= 0x0600 && c <= 0x06B0 ) /*arabic character */
 		{
 		  /* index of the character in arabic font */
 		  nextChar = Previous_Char (&adbuff, &indbuff);
@@ -1452,7 +1452,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			prevChar = adbuff->BuContent[indbuff -2];
 		      else
 			prevChar = 0x0020;
-		    } 
+		    }
        		  val = GetArabFontAndIndex (c, prevChar, nextChar, font, &nextfont);
 		}
 	      else
@@ -1582,7 +1582,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 
       /* allocate a buffer to store converted characters */
 #ifndef _GL
-      if (script == 'Z')
+      if ((script == 'Z')||(script == 'A' ))
 	wbuffer = TtaGetMemory ((pBox->BxNChars + 1) * sizeof(wchar_t));
       else
 	buffer = TtaGetMemory (pBox->BxNChars + 1);
@@ -1598,7 +1598,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		 (!rtl && indbuff <= indmax))
 	    {
 	      c = adbuff->BuContent[indbuff];
-	      if ((c >= 0x0600 && c < 0x066E) || c ==0x06AF) /* arabic char */
+	      if ( c >= 0x0600 && c <= 0x06B0 ) /* arabic char */
 		{
 		  nextChar = Previous_Char (&adbuff, &indbuff);
 		  prevChar = Next_Char (&adbuff, &indbuff);
@@ -1615,7 +1615,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			prevChar = adbuff->BuContent[indbuff -2];
 		      else
 			prevChar = 0x0020;
-		    } 
+		    }  
 		  val = GetArabFontAndIndex (c ,prevChar, nextChar, font, &nextfont);
 		}
 	      else
@@ -1633,7 +1633,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      if (org == 0)
 			org = -1;
 #ifndef _GL
-		      if (script == 'Z')
+		      if ((script == 'Z')||(script == 'A'))
 			x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
 					 org, bl, x, blockbegin, fg, shadow);
 		      else
@@ -1669,7 +1669,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			  if (org == 0)
 			    org = -1;			  
 #ifndef _GL
-			  if (script == 'Z')
+			  if ((script == 'Z')||(script == 'A' ))
 			    x += WDrawString (wbuffer, nbcar, frame, x, y1,
 					      prevfont, org, bl, 0, blockbegin,
 					      fg, shadow);
@@ -1707,7 +1707,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      if (nbcar > 0)
 			{
 #ifndef _GL
-			  if (script == 'Z')
+			  if ((script == 'Z')||(script == 'A'))
 			    x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,  
 					      0, bl, 0, blockbegin, fg, shadow);
 			  else
@@ -1764,7 +1764,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      bl++;
 		    }
 #ifndef _GL
-		  else if (script == 'Z')
+		  else if ((script == 'Z')||(script == 'A'))
 		    /* add the new char */
 		    wbuffer[nbcar++] = val;
 		  else
@@ -1834,7 +1834,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		text of the box.
 	      */
 #ifndef _GL
-	      if (script == 'Z')
+	      if ((script == 'Z')||(script == 'A'))
 		x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont, width,
 				 bl, hyphen, blockbegin, fg, shadow);
 	      else
@@ -2724,69 +2724,68 @@ CHAR_T Unicode_Map[]={
     0x063A , 0x0640 , 0x0641 , 0x0642 , 0x0643 , 0x0644 , 
     0x0645 , 0x0646 , 0x0647 , 0x0648 , 0x0649 , 0x064A , 
     0x064B , 0x064C , 0x064D , 0x064E , 0x064F , 0x0650 , 
-    0x0651 , 0x0652 , 0x0653 , 0x0654 , 0x0655 , 0x06A4 
-      };
+    0x0651 , 0x0652 , 0x0653 , 0x0654 , 0x0655 , 0x06A4 ,
+    0x06AF };
 
 
-#define Arab_length 51
+#define Arab_length 52
 #define fields_nbre 5
-
 CHAR_T Arab_Map[Arab_length][fields_nbre]={
   /* arabweb positions for arabic characters with the possibility 
      to be joint with the previous and next char*/ 
 
-{0x00F4 , 0x00F4 , 0x00F4 , 0x00F4 , 1 },   /*hamza */
-{0x0045 , 0x0045 , 0x0046 , 0x0046 , 1 },   /*hamza on alif in top*/ 
-{0x00E2 , 0x00E2 , 0x00E3 , 0x00E3 , 1 },   /*hamza on waw*/
-{0x0047 , 0x0047 , 0x0048 , 0x0048 , 1 },   /*hamza on alif below*/
-{0x00EE , 0x00EF , 0x00F0 , 0x00F1 , 0 },   /*hamza on ya*/
-{0x0043 , 0x0043 , 0x0044 , 0x0044 , 1 },   /*alif*/
-{0x004B , 0x004C , 0x004D , 0x004E , 0 },   /*Ba*/    
-{0x00F5 , 0x00F5 , 0x00F5 , 0x00F6 , 1 },   /*ta marbouta*/
-{0x004F , 0x0050 , 0x0051 , 0x0052 , 0 },   /*Ta*/
-{0x0053 , 0x0054 , 0x0055 , 0x0056 , 0 },   /*THa*/
-{0x0057 , 0x0058 , 0x0059 , 0x005A , 0 },   /*jim*/ 
-{0x0061 , 0x0062 , 0x0063 , 0x0064 , 0 },   /*ha*/
-{0x0065 , 0x0066 , 0x0067 , 0x0068 , 0 },   /*kha*/
-{0x0069 , 0x0069 , 0x006A , 0x006A , 1 },   /*dal*/
-{0x006B , 0x006B , 0x006C , 0x006C , 1 },   /*dhal*/
-{0x006D , 0x006D , 0x006E , 0x006E , 1 },   /*ra*/
-{0x006F , 0x006F , 0x0070 , 0x0070 , 1 },   /*zay*/
-{0x0071 , 0x0072 , 0x0073 , 0x0074 , 0 },   /*sin*/
-{0x0075 , 0x0076 , 0x0077 , 0x0078 , 0 },   /*chin*/
-{0x0079 , 0x007A , 0x00A1 , 0x00A2 , 0 },   /*sad*/
-{0x00A3 , 0x00A4 , 0x00A5 , 0x00A6 , 0 },   /*dad*/
-{0x00A7 , 0x00A8 , 0x00A9 , 0x00AA , 0 },   /*ta :forced*/
-{0x00AB , 0x00AC , 0x00AE , 0x00AF , 0 },   /*zha*/
-{0x00B0 , 0x00B1 , 0x00B2 , 0x00B3 , 0 },   /*ain*/
-{0x00B4 , 0x00B5 , 0x00B7 , 0x00B8 , 0 },   /*rhain*/   
-{0x0040 , 0x0040 , 0x0040 , 0x0040 , 0 },   
-{0x00B9 , 0x00BA , 0x00BB , 0x00BC , 0 },   /*faa*/
-{0x00BD , 0x00BE , 0x00BF , 0x00C0 , 0 },   /*kaf:forced*/
-{0x00C1 , 0x00C2 , 0x00C3 , 0x00C4 , 0 },   /*kaf*/
-{0x00C5 , 0x00C6 , 0x00C7 , 0x00C8 , 0 },   /*lam*/
-{0x00D4 , 0x00D5 , 0x00D6 , 0x00D7 , 0 },   /*mim*/
-{0x00D8 , 0x00D9 , 0x00DA , 0x00DB , 0 },   /*noun*/
-{0x00E4 , 0x00E5 , 0x00E6 , 0x00E7 , 0 },   /*ha*/
-{0x00DC , 0x00DC , 0x00DD , 0x00DD , 1 },   /*waw*/
-{0x00E8 , 0x00E8 , 0x00EB , 0x00EB , 1 },   /*alif maksoura*/
-{0x00EC , 0x00E9 , 0x00EA , 0x00ED , 0 },   /*ya*/
-{0x00FA , 0x00FA , 0x00FA , 0x00FA , 0 },   /*fathatan*/
-{0x00FE , 0x00FE , 0x00FE , 0x00FE , 0 },   /*dammatan*/
-{0x005C , 0x005C , 0x005C , 0x005C , 0 },   /*kasratan*/
-{0x00F7 , 0x00F7 , 0x00F7 , 0x00F7 , 0 },   /*fatha*/
-{0x00F8 , 0x00F8 , 0x00F8 , 0x00F8 , 0 },   /*damma*/
-{0x00F9 , 0x00F9 , 0x00F9 , 0x00F9 , 0 },   /*kasra*/
-{0x00FB , 0x00FB , 0x00FB , 0x00FB , 0 },   /*chadda*/
-{0x00FC , 0x00FC , 0x00FC , 0x00FC , 0 },   /*soukoun*/
-{0x00FF , 0x00FF , 0x00FF , 0x00FF , 0 },   /*madda*/
-{0x00FD , 0x00FD , 0x00FD , 0x00FD , 0 },   /*hamza above*/
-{0x007E , 0x007E , 0x007E , 0x007E , 0 },   /*hamza below*/
-{0x00DE , 0x00DF , 0x00E0 , 0x00E1 , 0 },    /*va */
-{0x00CB , 0x00CB , 0x00CC , 0x00CC , 1 },   /*lam+alif*/
-{0x00CD , 0x00CD , 0x00CE , 0x00CE , 1 },   /*lam+hamza on alif in top*/
-{0x00CF , 0x00CF , 0x00D0 , 0x00D0 , 1 }    /*lam+hamza on alif below*/
-
+{0xFE80 , 0xFE80 , 0xFE80 , 0xFE80 , 1 },   /*hamza */
+{0xFE83 , 0xFE83 , 0xFE84 , 0xFE84 , 1 },   /*hamza on alif in top*/ 
+{0xFE85 , 0xFE85 , 0xFE86 , 0xFE86 , 1 },   /*hamza on waw*/
+{0xFE87 , 0xFE87 , 0xFE88 , 0xFE88 , 1 },   /*hamza on alif below*/
+{0xFE89 , 0xFE8B , 0xFE8C , 0xFE8A , 0 },   /*hamza on ya*/
+{0xFE8D , 0xFE8D , 0xFE8E , 0xFE8E , 1 },   /*alif*/
+{0xFE8F , 0xFE91 , 0xFE92 , 0xFE90 , 0 },   /*Ba*/    
+{0xFE93 , 0xFE93 , 0xFE94 , 0xFE94 , 1 },   /*ta marbouta*/
+{0xFE95 , 0xFE97 , 0xFE98 , 0xFE96 , 0 },   /*Ta*/
+{0xFE99 , 0xFE9B , 0xFE9C , 0xFE9A , 0 },   /*THa*/
+{0xFE9D , 0xFE9F , 0xFEA0 , 0xFE9E , 0 },   /*jim*/ 
+{0xFEA1 , 0xFEA3 , 0xFEA4 , 0xFEA2 , 0 },   /*ha*/
+{0xFEA5 , 0xFEA7 , 0xFEA8 , 0xFEA6 , 0 },   /*kha*/
+{0xFEA9 , 0xFEA9 , 0xFEAA , 0xFEAA , 1 },   /*dal*/
+{0xFEAB , 0xFEAB , 0xFEAC , 0xFEAC , 1 },   /*dhal*/
+{0xFEAD , 0xFEAD , 0xFEAE , 0xFEAE , 1 },   /*ra*/
+{0xFEAF , 0xFEAF , 0xFEAF , 0xFEAF , 1 },   /*zay*/
+{0xFEB1 , 0xFEB3 , 0xFEB4 , 0xFEB2 , 0 },   /*sin*/
+{0xFEB5 , 0xFEB7 , 0xFEB8 , 0xFEB6 , 0 },   /*chin*/
+{0xFEB9 , 0xFEBB , 0xFEBC , 0xFEBA , 0 },   /*sad*/
+{0xFEBD , 0xFEBF , 0xFEC0 , 0xFEBE , 0 },   /*dad*/
+{0xFEC1 , 0xFEC3 , 0xFEC4 , 0xFEC2 , 0 },   /*ta :forced*/
+{0xFEC5 , 0xFEC7 , 0xFEC8 , 0xFEC6 , 0 },   /*zha*/
+{0xFEC9 , 0xFECB , 0xFECC , 0xFECA , 0 },   /*ain*/
+{0xFECD , 0xFECF , 0xFED0 , 0xFECE , 0 },   /*rhain*/   
+{0x0640 , 0x0640 , 0x0640 , 0x0640 , 0 },   
+{0xFED1 , 0xFED3 , 0xFED4 , 0xFED2 , 0 },   /*faa*/
+{0xFED5 , 0xFED7 , 0xFED8 , 0xFED6 , 0 },   /*kaf:forced*/
+{0xFED9 , 0xFEDB , 0xFEDC , 0xFEDA , 0 },   /*kaf*/
+{0xFEDD , 0xFEDF , 0xFEE0 , 0xFEDE , 0 },   /*lam*/
+{0xFEE1 , 0xFEE3 , 0xFEE4 , 0xFEE2 , 0 },   /*mim*/
+{0xFEE5 , 0xFEE7 , 0xFEE8 , 0xFEE6 , 0 },   /*noun*/
+{0xFEE9 , 0xFEEB , 0xFEEC , 0xFEEA , 0 },   /*ha*/
+{0xFEED , 0xFEED , 0xFEEE , 0xFEEE , 1 },   /*waw*/
+{0xFEEF , 0xFEEF , 0xFEF0 , 0xFEF0 , 1 },   /*alif maksoura*/
+{0xFEF1 , 0xFEF3 , 0xFEF4 , 0xFEF2 , 0 },   /*ya*/
+{0x064B , 0x064B , 0x064B , 0x064B , 0 },   /*fathatan*/
+{0x064C , 0x064C , 0x064C , 0x064C , 0 },   /*dammatan*/
+{0x064D , 0x064D , 0x064D , 0x064D , 0 },   /*kasratan*/
+{0x064E , 0x064E , 0x064E , 0x064E , 0 },   /*fatha*/
+{0x064F , 0x064F , 0x064F , 0x064F , 0 },   /*damma*/
+{0x0650 , 0x0650 , 0x0650 , 0x0650 , 0 },   /*kasra*/
+{0x0651 , 0x0651 , 0x0651 , 0x0651 , 0 },   /*chadda*/
+{0x0652 , 0x0652 , 0x0652 , 0x0652 , 0 },   /*soukoun*/
+{0xFE76 , 0xFE76 , 0xFE76 , 0xFE76 , 0 },   /*madda*/
+{0xFE80 , 0xFE80 , 0xFE80 , 0xFE80 , 0 },   /*hamza above*/
+{0xFE80 , 0xFE80 , 0xFE80 , 0xFE80 , 0 },   /*hamza below*/
+{0xFB6A , 0xFB6C , 0xFB6D , 0xFB6B , 0 },    /*va */
+{0xFB92 , 0xFB94 , 0xFB95 , 0xFB93 , 0 },    /*ga */
+{0xFEFB , 0xFEFB , 0xFEFC , 0xFEFC , 1 },   /*lam+alif*/
+{0xFEF7 , 0xFEF7 , 0xFEF8 , 0xFEF8 , 1 },   /*lam+hamza on alif in top*/
+{0xFEF9 , 0xFEF9 , 0xFEFA , 0xFEFA , 1 }    /*lam+hamza on alif below*/
 };
 
 
@@ -2811,7 +2810,7 @@ static int FindIndex (CHAR_T c, int p, int q)
 
 /*---------------------------------------------------------------------
   GetArabFontAndIndex returns the glyph corresponding to the character
-  given c and it's load the arab font "arabweb".                       
+  given c and it's load the arab font.                       
   ---------------------------------------------------------------------*/
 int GetArabFontAndIndex (CHAR_T c, CHAR_T prev, CHAR_T next, 
 			 SpecFont fontset, PtrFont *font)
@@ -2819,31 +2818,23 @@ int GetArabFontAndIndex (CHAR_T c, CHAR_T prev, CHAR_T next,
   int    i, j, k;
  
   *font=NULL;
-  /* the arabic char 'ga' has the same glyph as 'ka' */
-  if (c == 0x06AF)
-    c=0x0643;
-  if (prev == 0x06AF)
-    prev=0x0643;
-  if (next == 0x06AF)
-    next=0x0643;
  
   LoadingArabicFont (fontset, font);
-  if (c == 0x060C || c == 0x066B) /*comma*/
-    return (0x002C);
-  if (c == 0x061F) /* question mark*/
-    return (0x003F);
-  if (c == 0x061B) /* semi-colon */
-    return(0x003B);
-  if (c >= 0x0660 && c <= 0x0669) /*digits */
-    return ((int)c -1584);
-
-  i = FindIndex (c, 0, Unicode_length-1); 
+  if ( c == 0x061F ) 
+    return 0x061F ;
+  if ( c == 0x060C ) 
+    return 0x060C ;
+  if ( c == 0x061B ) 
+    return 0x061B ;
+  i = FindIndex (c, 0, Unicode_length - 1); 
   if (i == -1)
-    return (-1);
+    return (c);
   else
     {
       k = FindIndex (prev, 0, Unicode_length-1);
       j = FindIndex (next, 0, Unicode_length-1);
+      
+      if ( c == 0x0621 ) return 0x0621;
       if (j == -1 && k == -1) 
  	return (Arab_Map[i][0]);  /* isolated char */
       else if (k == -1)
@@ -2926,4 +2917,48 @@ int GetArabFontAndIndex (CHAR_T c, CHAR_T prev, CHAR_T next,
 	    }
 	}
     }
+ 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -750,7 +750,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
 	    }
 	  else
 	    {
-	      if (character >= 0x060C && character <= 0x06AF) /* arabic char */
+	      if (character >= 0x060C && character <= 0x06B0) /* arabic char */
 		l = BoxArabicCharacterWidth (character, &pBuffer, &i, font);
 	      else
 		l = BoxCharacterWidth (character, font);
@@ -863,7 +863,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
       else if (character == SPACE || character == NEW_LINE)
 	carWidth = spaceAdjust;
       else
-	if (character >= 0x060C && character <= 0x06AF) /* arabic char */
+	if (character >= 0x060C && character <= 0x06B0) /* arabic char */
 	  carWidth = BoxArabicCharacterWidth (character, &pBuffer, &charIndex, font);
 	else
 	  carWidth = BoxCharacterWidth (character, font);
@@ -1143,7 +1143,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 		  return dummySpaces;
 	      else
 		(*newIndex)--;
-	if (character >= 0x060C && character <= 0x06AF) /* arabic char */
+	if (character >= 0x060C && character <= 0x06B0) /* arabic char */
 	  *boxWidth -= BoxArabicCharacterWidth (character, &pBuffer, &charIndex, font);
 	else      
 	  *boxWidth -= BoxCharacterWidth (character, font);
@@ -3545,7 +3545,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 			   pSelEnd->VsXPos += pSelBox->BxSpaceWidth;
 			 else
 			   
-			   if (c >= 0x060C && c <= 0x06AF) /* arabic char */
+			   if (c >= 0x060C && c <= 0x06B0) /* arabic char */
 			     pSelEnd->VsXPos += BoxArabicCharacterWidth (c, &(pSelEnd->VsBuffer), &(pSelEnd->VsIndBuf), pSelBox->BxFont);
 			   else
 			     pSelEnd->VsXPos += BoxCharacterWidth (c, pSelBox->BxFont);

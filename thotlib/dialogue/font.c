@@ -1134,14 +1134,14 @@ static void FontIdentifier (char script, int family, int highlight, int size,
     size = PixelToPoint (size);
   if (script == '1')
     script = 'L';
-  if ((script == '6')||(script == 'A'))  /* arabic */
+  if (script == 'A')  /* arabic */
     {
-      ffamily = "-macromedia-arabic web";
+      ffamily = "-monotype-arial";
       wght="medium";
       slant="r";
       size = 24;
       highlight=4;
-      sprintf (r_nameX, "%s-%s-%s-normal-*-%d-*-100-100-p-0-iso8859-1",
+      sprintf (r_nameX, "%s-%s-%s-normal-*-%d-173-100-100-p-106-iso10646-1",
 		 ffamily, wght, slant, size);
    GeneratePoscriptFont (r_name, script, family, highlight, size);
 #ifndef _WINDOWS
@@ -1446,7 +1446,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	      ptfont->FiHighlight = highlight;
 	      ptfont->FiSize = val;
 #ifdef VERYSLOW
-	      if (script != 'Z')
+	      if ((script != 'Z')&&(script != 'A'))
 	      {
 #endif /* VERYSLOW */
 	        if (GetTextMetrics (display, &textMetric))
@@ -1925,11 +1925,11 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	  else if (c < 0x65F)
 	    {
 	      code = '6'; /* Arabic */
-	      pfont = &(fontset->FontIso_6);
+	      pfont = &(fontset->FontUnicode);
 #ifdef _WINDOWS
 	      encoding = WINDOWS_1256;
 #else /* _WINDOWS */
-	      encoding = ISO_8859_6;
+	      encoding = UNICODE_1_1;
 #endif /* _WINDOWS */
 	    }
 	  else
@@ -1971,7 +1971,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	      car = UNDISPLAYED_UNICODE;
 	      *font = NULL;
 	    }
-	  else if (code == 'Z')
+	  else if ((code == 'Z')||(code == '6'))
 	    car = c;
 	  else
 	    car = (int)TtaGetCharFromWC (c, encoding);
@@ -2456,8 +2456,9 @@ void LoadingArabicFont (SpecFont fontset ,PtrFont *font)
   unsigned int mask;
 
   *font = NULL;
-  encoding = ISO_8859_1;
-  lfont = fontset->FontIso_6;
+
+  encoding = UNICODE_1_1;
+  lfont = fontset->FontUnicode;
   for (frame = 1 ; frame <= MAX_FRAME ; frame++)
     {
       mask = 1 << (frame - 1);
@@ -2469,7 +2470,7 @@ void LoadingArabicFont (SpecFont fontset ,PtrFont *font)
 
     }
   /* even if the font is not found avoid to retry later */
-  fontset->FontIso_6 = lfont;
+  fontset->FontUnicode = lfont;
   *font = lfont;
 #else /* _I18N_ */
   *font = fontset;
