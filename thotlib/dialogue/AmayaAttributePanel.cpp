@@ -336,6 +336,8 @@ void AmayaAttributePanel::SetupListValue( const char * p_attr_list, int nb_attr,
 {
   wxLogDebug(_T("AmayaAttributePanel::SetupListValue") );
 
+  bool listHasFocus = (wxWindow::FindFocus() == m_pAttrList);
+
   m_NbAttr     = nb_attr;
   m_NbAttr_evt = nb_attr_evt;
 
@@ -394,6 +396,10 @@ void AmayaAttributePanel::SetupListValue( const char * p_attr_list, int nb_attr,
 
   m_NbAttr     -= ignore_attr_item;
   m_NbAttr_evt -= ignore_attr_evt_item;
+  
+  // workaround for a wx bug : the list lost the focus when it is updated...
+  if (listHasFocus)
+    m_pAttrList->SetFocus();
 }
 
 
