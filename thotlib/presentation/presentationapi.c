@@ -307,11 +307,11 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 	      /* send the event message to the application */
 	      doitV = !PRuleMessagePre (pEl, pRuleV, dy, pDoc, isNew);
 	      if (doitV || isNew)
-		  {
-		/* store the new value in the specific rule */
-		pRuleV->PrPosRule.PoDistance = dy;
+		{
+		  /* store the new value in the specific rule */
+		  pRuleV->PrPosRule.PoDistance = dy;
 		  pRuleV->PrPosRule.PoDistUnit = unit;
-		  }
+		}
 	    }
 	   
 	  if (doitV)
@@ -457,11 +457,11 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 	      /* send the event message to the application */
 	      doitH = !PRuleMessagePre (pEl, pRuleH, dx, pDoc, isNew);
 	      if (doitH || isNew)
-		  {
-		/* store the new value in the specific rule */
-		pRuleH->PrPosRule.PoDistance = dx;
+		{
+		  /* store the new value in the specific rule */
+		  pRuleH->PrPosRule.PoDistance = dx;
 		  pRuleH->PrPosRule.PoDistUnit = unit;
-		  }
+		}
 	    }
 	  if (doitH)
 	    {

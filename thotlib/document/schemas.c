@@ -363,7 +363,7 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
 		  break;
 		case AtEnumAttr:
 		  for (j = 0;
-		       j < pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
+		       j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
 		    FreePRuleList (&pAttrPres->ApEnumFirstPRule[j], pSS);
 		  break;
 		default:
