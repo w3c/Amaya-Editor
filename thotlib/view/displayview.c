@@ -1094,10 +1094,9 @@ void   TtaSetDisplayMode (Document doc, DisplayMode newDisplayMode)
 		  if (NewDocSelection[doc - 1].SDElemExt != NULL)
 		    /* il y a une extension de selection a etablir */
 		    {
-		      if (ThotLocalActions[T_extendsel])
-			(*ThotLocalActions[T_extendsel]) ((PtrElement) (NewDocSelection[doc - 1].SDElemExt),
-				NewDocSelection[doc - 1].SDCarExt,
-				FALSE, FALSE, FALSE);
+		      ExtendSelection ((PtrElement) (NewDocSelection[doc - 1].SDElemExt),
+				       NewDocSelection[doc - 1].SDCarExt,
+				       FALSE, FALSE, FALSE);
 		      /* il n'y a plus d'extension de selection a etablir */
 		      NewDocSelection[doc - 1].SDElemExt = NULL;
 		    }

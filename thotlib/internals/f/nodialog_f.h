@@ -6,6 +6,15 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void ShowBox ( int frame,
+                      PtrBox pBox,
+                      int position,
+                      int percent );
+extern void ExtendSelection ( PtrElement pEl,
+                              int rank,
+                              ThotBool fixed,
+                              ThotBool begin,
+                              ThotBool drag );
 extern void ConfigFree ( void );
 extern void TtaFreeAllCatalogs ( void );
 extern void TteFreeAllEventsList ( void );
@@ -127,6 +136,15 @@ extern ThotBool OpenParsingErrors ( Document document );
 
 #else /* __STDC__ */
 
+extern void ShowBox (/* int frame,
+                        PtrBox pBox,
+                        int position,
+                        int percent */);
+extern void ExtendSelection (/* PtrElement pEl,
+                                int rank,
+                                ThotBool fixed,
+                                ThotBool begin,
+                                ThotBool drag */);
 extern void ConfigFree (/* void */);
 extern void TtaFreeAllCatalogs (/* void */);
 extern void TteFreeAllEventsList (/* void */);

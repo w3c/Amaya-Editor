@@ -6,20 +6,22 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void GetClickedBox ( PtrBox * result,
+extern void GetClickedBox ( PtrBox *result,
                             PtrAbstractBox pRootAb,
                             int frame,
                             int x,
                             int y,
+                            int ratio,
                             int *pointselect );
 
 #else /* __STDC__ */
 
-extern void GetClickedBox (/* PtrBox * result,
+extern void GetClickedBox (/* PtrBox *result,
                               PtrAbstractBox pRootAb,
                               int frame,
                               int x,
                               int y,
+                              int ratio,
                               int *pointselect */);
 
 #endif /* __STDC__ */

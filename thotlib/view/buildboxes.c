@@ -3692,12 +3692,9 @@ void RebuildConcreteImage (int frame)
 	   /* Traitement des englobements retardes */
 	   ComputeEnclosing (frame);
 
-	   /* Affiche la fenetre */
-	   if (pVisibleAb != NULL)
-	     {
-	       if (ThotLocalActions[T_showbox] != NULL)
-		 (*ThotLocalActions[T_showbox]) (frame, pVisibleAb->AbBox, 0, position);
-	     }
+	   /* redisplay the window */
+	   if (pVisibleAb)
+	     ShowBox (frame, pVisibleAb->AbBox, 0, position);
 	   else
 	     RedrawFrameBottom (frame, 0, NULL);
 	   /* if necessary show the selection */

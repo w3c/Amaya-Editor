@@ -220,7 +220,6 @@ EDITOR_OBJ = \
 	editing/scroll.o \
 	editing/spellchecker.o \
 	editing/selectionapi.o \
-	editing/structchange.o\
 	editing/structcommands.o \
 	editing/structcreation.o \
 	editing/structmodif.o \
@@ -243,7 +242,6 @@ EDITOR_OBJ = \
 	view/boxselection.o \
 	view/displayselect.o \
 	view/inites.o \
-	view/structlocate.o\
 	view/unstructlocate.o\
 	view/viewapi.o \
 	view/xwindowdisplay.o

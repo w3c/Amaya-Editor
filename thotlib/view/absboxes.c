@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2003
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1386,9 +1386,7 @@ void JumpIntoView (int frame, int distance)
 		}
 	      if (pAb)
 		{
-		  if (ThotLocalActions[T_showbox])
-		    (*ThotLocalActions[T_showbox]) (frame, pAb->AbBox, position, 0);
-		  
+		  ShowBox (frame, pAb->AbBox, position, 0);
 		  /* update the selection */
 		  if (pDoc == SelectedDocument)
 		    ShowSelection (SelectedDocument->DocViewRootAb[view], FALSE);

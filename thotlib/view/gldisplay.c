@@ -97,11 +97,8 @@
 #define P2(N) (N*N)
 
 
-#define Y_RATIO 200		/* penalisation en Y */
-#define ANCHOR_SIZE 3		/* taille des ancres */
 #define	MAX_STACK	50
 #define	MIDDLE_OF(v1, v2) (((v1)+(v2))/2.0)
-#define SEG_SPLINE      5
 #define ALLOC_POINTS    300
 
 

@@ -2187,15 +2187,12 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
   ----------------------------------------------------------------------*/
 void NoStructSelectLoadResources ()
 {
-   if (ThotLocalActions[T_selecbox] == NULL)
+   if (ThotLocalActions[T_selectsiblings] == NULL)
      {
-	TteConnectAction (T_selecbox, (Proc) GetClickedBox);
 	TteConnectAction (T_selectsiblings, (Proc) SelectSiblings);
 	TteConnectAction (T_checksel, (Proc) CheckSelectedElement);
 	TteConnectAction (T_resetsel, (Proc) ResetSelection);
 	TteConnectAction (T_selstring, (Proc) SelectString);
-	TteConnectAction (T_extendsel, (Proc) ExtendSelection);
-	TteConnectAction (T_showbox, (Proc) ShowBox);
 	TteConnectAction (T_deletenextchar, (Proc) DeleteNextChar);
 	TteConnectAction (T_cmdpaste, (Proc) PasteCommand);
 	TteConnectAction (T_enter, (Proc) TtcCreateElement);

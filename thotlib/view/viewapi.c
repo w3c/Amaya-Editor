@@ -404,23 +404,19 @@ Element TtaGetFirstElementShown (Document document, View view, int *position)
 	{
 	  charsNumber = 0;
 	  /* recupere la boite selectionnee */
-	  if (ThotLocalActions[T_selecbox] != NULL)
+	  GetClickedBox (&pBox, pRootAb, frame, x, y, 1, &charsNumber);
+	  if (pBox && pBox->BxAbstractBox)
 	    {
-	      (*ThotLocalActions[T_selecbox]) (&pBox, pRootAb, frame, x, y,
-					       &charsNumber);
-	      if (pBox != NULL && pBox->BxAbstractBox != NULL)
-		{
-		  if (pBox->BxType == BoPiece ||
-		      pBox->BxType == BoScript ||
-		      pBox->BxType == BoMulScript ||
-		      pBox->BxType == BoSplit)
-		    pBox = pBox->BxAbstractBox->AbBox->BxNexChild;
-		  pEl = pBox->BxAbstractBox->AbElement;
-		  /* width and height of the frame */
-		  GetSizesFrame (frame, &width, &height);
-		  /* position of the box top in the frame in % */
-		  *position = (pBox->BxYOrg - pFrame->FrYOrg) * 100 / height;
-		}
+	      if (pBox->BxType == BoPiece ||
+		  pBox->BxType == BoScript ||
+		  pBox->BxType == BoMulScript ||
+		  pBox->BxType == BoSplit)
+		pBox = pBox->BxAbstractBox->AbBox->BxNexChild;
+	      pEl = pBox->BxAbstractBox->AbElement;
+	      /* width and height of the frame */
+	      GetSizesFrame (frame, &width, &height);
+	      /* position of the box top in the frame in % */
+	      *position = (pBox->BxYOrg - pFrame->FrYOrg) * 100 / height;
 	    }
 	}
 

@@ -45,16 +45,14 @@
 #define MAX_DISTANCE 2000
 
 /*----------------------------------------------------------------------
-   GetClickedBox recherche recursivement le pave qui englobe le point 
-   designe' par x,y.                                       
-   La fonction regarde toute l'arborescence des paves      
-   pour trouver le dernier pave de plus petite profondeur  
-   couvrant le point designe.                              
-   Si un pave et son fils repondent a la condition, c'est  
-   le pave fils qui l'emporte.                             
+   GetClickedBox look for the abstract box that overlaps the point x,y
+   or the nearest abstract box.
+   The function checks all boxes in the tree and returns the best choice.
+   Between a box and its child the function choses the child.
+   The parameter ration fixes penalities of the vertical proximity.
   ----------------------------------------------------------------------*/
-void   GetClickedBox (PtrBox * result, PtrAbstractBox pRootAb, int frame,
-		      int x, int y, int *pointselect)
+void   GetClickedBox (PtrBox *result, PtrAbstractBox pRootAb, int frame,
+		      int x, int y, int ratio, int *pointselect)
 {
    PtrAbstractBox      pAb;
    PtrBox              pSelBox, pBox;
@@ -66,7 +64,8 @@ void   GetClickedBox (PtrBox * result, PtrAbstractBox pRootAb, int frame,
 
    pBox = NULL;
    pSelBox = NULL;
-   /* au-dela, on n'accepte pas la selection */
+   /* dist gives the previous distance of the selected box
+      MAX_DISTANCE when no box is selected */
    dist = MAX_DISTANCE;
    pFrame = &ViewFrameTable[frame - 1];
 
@@ -91,39 +90,40 @@ void   GetClickedBox (PtrBox * result, PtrAbstractBox pRootAb, int frame,
 		   graphicBox = GetEnclosingClickedBox (pAb, x, x, y, frame,
 							&pointIndex);
 		   if (graphicBox == NULL)
+		     /* eliminate this box */
 		     d = dist + 1;
 		   else
 		     d = 0;
 		 }
 	       else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
-		 /* glitch pour le symbole racine */
+		 /* glitch for the root symbol */
 		 d = GetShapeDistance (x, y, pBox, 1);
 	       else if (pAb->AbLeafType == LtText ||
 			pAb->AbLeafType == LtSymbol ||
 			pAb->AbLeafType == LtPicture ||
-			/* ou une boite composee vide */
+			/* or an empty compound box */
 			(pAb->AbLeafType == LtCompound && pAb->AbVolume == 0))
 		 {
 		   if (pAb->AbLeafType == LtPicture)
 		     {
-		       /* detecte si on selectionne la droite de l'image */
+		       /* check if the right side of the picture is selected */
 		       d = pBox->BxXOrg + (pBox->BxWidth / 2);
 		       if (x > d)
 			 pointIndex = 1;
-		       d = GetBoxDistance (x, y, pBox->BxXOrg, pBox->BxYOrg,
+		       d = GetBoxDistance (x, y, ratio, pBox->BxXOrg, pBox->BxYOrg,
 					   pBox->BxWidth, pBox->BxHeight);
 		     }
 		   else
-		     d = GetBoxDistance (x, y, pBox->BxXOrg, pBox->BxYOrg,
+		     d = GetBoxDistance (x, y, ratio, pBox->BxXOrg, pBox->BxYOrg,
 					 pBox->BxWidth, pBox->BxHeight);
-		   /* limit the distance to MAX_DISTANCE */
 		   if (d > dist && dist == MAX_DISTANCE)
+		     /* it's the first box selected */
 		     dist = d;
 		 }
 	       else
 		 d = dist + 1;
 	       
-	       /* Prend l'element le plus proche */
+	       /* select the nearest box */
 	       if (d < dist ||
 		   (d == dist &&
 		    (pSelBox == NULL ||

@@ -263,8 +263,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	{
 	  extend = (button == 0 || button == 1);
 	  /* get the selected box */
-	  if (ThotLocalActions[T_selecbox] != NULL)
-	    (*ThotLocalActions[T_selecbox]) (&pBox, pAb, frame, x, y, &nChars);
+	  GetClickedBox (&pBox, pAb, frame, x, y, Y_RATIO, &nChars);
 	  /* When it's an extended selection, avoid to extend to the
 	 enclosing box */
 	  if (extend)
@@ -466,18 +465,18 @@ static int GetDistance (int value, int delta)
   We apply a ratio to vertical distances to give a preference to the
   horizontal proximity.
   ----------------------------------------------------------------------*/
-int GetBoxDistance (int xRef, int yRef, int x, int y, int width, int height)
+int GetBoxDistance (int xRef, int yRef, int ratio, int x, int y,
+		    int width, int height)
 {
-   int                 value;
+  int                 value;
 
-   /* prend le centre de la boite */
-   width /= 2;
-   x += width;
-   height /= 2;
-   y += height;
-   value = GetDistance (xRef - x, width) +
-           Y_RATIO * GetDistance (yRef - y, height);
-   return (value);
+  /* get the middle of the box */
+  width /= 2;
+  x += width;
+  height /= 2;
+  y += height;
+  value = GetDistance (xRef - x, width) + ratio * GetDistance (yRef - y, height);
+  return (value);
 }
 
 /*----------------------------------------------------------------------
@@ -1646,10 +1645,8 @@ PtrAbstractBox      GetClickedAbsBox (int frame, int xRef, int yRef)
   pFrame = &ViewFrameTable[frame - 1];
   pBox = NULL;
   if (pFrame->FrAbstractBox != NULL)
-    if (ThotLocalActions[T_selecbox] != NULL)
-      (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame,
-				       xRef + pFrame->FrXOrg,
-				       yRef + pFrame->FrYOrg, &pointselect);
+    GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, xRef + pFrame->FrXOrg,
+		   yRef + pFrame->FrYOrg, Y_RATIO, &pointselect);
   if (pBox == NULL)
     return (NULL);
   else
@@ -2155,10 +2152,10 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef)
 		       (pAb->AbLeafType == LtCompound &&
 			pAb->AbVolume == 0))
 #ifndef _GLTRANSFORMATION
-		d = GetBoxDistance (xRef, yRef, pBox->BxXOrg, pBox->BxYOrg,
+		d = GetBoxDistance (xRef, yRef, Y_RATIO, pBox->BxXOrg, pBox->BxYOrg,
 				    pBox->BxWidth, pBox->BxHeight);
 #else /*_GLTRANSFORMATION */
-		d = GetBoxDistance (xRef, yRef, pBox->BxClipX, pBox->BxClipY,
+		d = GetBoxDistance (xRef, yRef, Y_RATIO, pBox->BxClipX, pBox->BxClipY,
 				    pBox->BxClipW, pBox->BxClipH);
 #endif /*_GLTRANSFORMATION */
 	      else
@@ -2463,9 +2460,7 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
       y = ym + pFrame->FrYOrg;
 
       /* Look for the box displayed at that point */
-      if (ThotLocalActions[T_selecbox] != NULL)
-	(*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox,
-					 frame, x, y, &pointselect);
+      GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, x, y, Y_RATIO, &pointselect);
       if (pBox)
 	{
 	  pAb = pBox->BxAbstractBox;
@@ -2744,7 +2739,7 @@ static ThotBool   CanBeResized (PtrAbstractBox pAb, int frame,
    ApplyDirectResize looks for a box that can be resized at the current
    position (xm, ym).
   ----------------------------------------------------------------------*/
-void                ApplyDirectResize (int frame, int xm, int ym)
+void ApplyDirectResize (int frame, int xm, int ym)
 {
   PtrBox              pBox;
   PtrAbstractBox      pAb;
@@ -2768,9 +2763,7 @@ void                ApplyDirectResize (int frame, int xm, int ym)
 
       /* On recherche la boite englobant le point designe */
       /* designation style Grenoble */
-      if (ThotLocalActions[T_selecbox] != NULL)
-	(*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame,
-					 x, y, &pointselect);
+      GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, x, y, Y_RATIO, &pointselect);
       if (pBox == NULL)
 	pAb = NULL;
       else
