@@ -29,6 +29,8 @@ XmlEntity  MathEntityTable[] =
    /* This table MUST be in alphabetical order */
    /* This table contains characters from the Symbol font plus some
       specific MathML entities */
+   {TEXT("Aacute"), 192, 'L'},
+   {TEXT("Acirc"), 194, 'L'},
    {TEXT("Agr"), 65, 'G'},
    {TEXT("And"), 217, 'G'},
    {TEXT("ApplyFunction"), 129, 'L'},   /* rendered as a thin space */
@@ -130,6 +132,9 @@ XmlEntity  MathEntityTable[] =
    {TEXT("VerticalBar"), 124, 'L'},
    {TEXT("Xi"), 88, 'G'},
    {TEXT("Zgr"), 90, 'G'},
+   {TEXT("aacute"), 224, 'L'},
+   {TEXT("acirc"), 226, 'L'},
+   {TEXT("acute"), 180, 'L'},
    {TEXT("af"), 129, 'L'},             /* rendered as thin space */
    {TEXT("aleph"), 192, 'G'},
    {TEXT("alpha"), 97, 'G'},
@@ -1794,6 +1799,7 @@ void SetIntAddSpaceAttr (el, doc)
 		  else if (text[0] == '+' ||
 			   text[0] == '&' ||
 			   text[0] == '*' ||
+			   text[0] == '/' ||
 			   text[0] == '<' ||
 			   text[0] == '=' ||
 			   text[0] == '>' ||
@@ -1808,7 +1814,7 @@ void SetIntAddSpaceAttr (el, doc)
 	       else if (alphabet == 'G')
 		  /* Symbol character set */
 		 if ((int)text[0] == 163 || /* less or equal */
-		     (int)text[0] == 177 ||	/* plus or minus */
+		     (int)text[0] == 177 || /* plus or minus */
 		     (int)text[0] == 179 || /* greater or equal */
 		     (int)text[0] == 180 || /* times */
 		     (int)text[0] == 184 || /* divide */
