@@ -126,8 +126,6 @@ static BOOL         tableOfContents = FALSE;
 static BOOL         numberedLinks   = FALSE;
 static BOOL         A4Format        = TRUE;
 static BOOL	        USFormat        = FALSE;
-static BOOL	        toPrinter       = TRUE;
-static BOOL	        toPostscript    = FALSE;
 static char*        classList;
 static char*        langList;
 static char*        saveList;
@@ -162,6 +160,7 @@ LRESULT CALLBACK AbortDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK PrintDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK Align1DlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK Align2DlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK Align3DlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SearchDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SaveAsDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK OpenDocDlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -186,6 +185,7 @@ LRESULT CALLBACK AbortDlgProc ();
 LRESULT CALLBACK PrintDlgProc ();
 LRESULT CALLBACK Align1DlgProc ();
 LRESULT CALLBACK Align2DlgProc ();
+LRESULT CALLBACK Align3DlgProc ();
 LRESULT CALLBACK SearchDlgProc ();
 LRESULT CALLBACK SaveAsDlgProc ();
 LRESULT CALLBACK OpenDocDlgProc ();
@@ -404,6 +404,21 @@ int       curr_val;
 {  
     currAttrVal = curr_val;
 	DialogBox (hInstance, MAKEINTRESOURCE (ALIGN2DIALOG), NULL, (DLGPROC) Align2DlgProc);
+}
+
+/*-----------------------------------------------------------------------
+ CreateAlign2DlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateAlign3DlgWindow (HWND parent, int curr_val)
+#else  /* !__STDC__ */
+void CreateAlign2DlgWindow (parent, curr_val)
+HWND      parent;
+int       curr_val;
+#endif /* __STDC__ */
+{  
+    currAttrVal = curr_val;
+	DialogBox (hInstance, MAKEINTRESOURCE (ALIGN3DIALOG), NULL, (DLGPROC) Align3DlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -814,6 +829,10 @@ LPARAM lParam;
 							/* ThotCallback (NumFormLanguage, INTEGER_DATA, (char*) 0); */
 					        EndDialog (hwnDlg, ID_DONE);
 							break;
+
+                       case WM_DESTROY:
+					        EndDialog (hwnDlg, ID_DONE);
+							break;
 				}
 				break;
 				default: return FALSE;
@@ -854,6 +873,11 @@ LPARAM lParam;
 							ThotCallback (baseDlg + attrHRefForm, INTEGER_DATA, (char*) 0);
 					        EndDialog (hwnDlg, ID_DONE);
 					        break;
+
+				       case WM_DESTROY:
+					        EndDialog (hwnDlg, ID_DONE);
+					        break;
+
 				}
 				break;
 
@@ -897,6 +921,10 @@ LPARAM lParam;
 				       case ID_CONFIRM:
 							EndDialog (hwnDlg, ID_CONFIRM);
 					        break;
+
+				       case WM_DESTROY:
+							EndDialog (hwnDlg, ID_CONFIRM);
+					        break;
 				}
 				break;
 
@@ -923,6 +951,10 @@ LPARAM lParam;
                 SetFocus (currentFrame);
 	            switch (LOWORD (wParam)) {
 				       case ID_DONE:
+							EndDialog (hwnDlg, ID_DONE);
+					        break;
+
+				       case WM_DESTROY:
 							EndDialog (hwnDlg, ID_DONE);
 					        break;
 
@@ -1008,37 +1040,14 @@ LPARAM lParam;
 {
     switch (msg) {
 	       case WM_INITDIALOG:
-                if (manualFeed)
-                   CheckDlgButton (hwnDlg, IDC_MANUALFEED, TRUE);
-
                 if (tableOfContents)
                    CheckDlgButton (hwnDlg, IDC_TABOFCONTENTS, TRUE);
 
                 if (numberedLinks)
                    CheckDlgButton (hwnDlg, IDC_LINKS, TRUE);
 
-                if (A4Format)
-                   CheckRadioButton (hwnDlg, IDC_A4, IDC_US, IDC_A4);
-                else if (USFormat)
-                     CheckRadioButton (hwnDlg, IDC_A4, IDC_US, IDC_US);
-
-                if (toPrinter) {
-                   CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_PRINTER);
-                   SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, "Printer ...");
-                } else if (toPostscript) {
-                     CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_POSTSCRIPT);
-                     SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, currentFileToPrint);
-					 TtPrinterDC = NULL;
-				}
-				break;
-
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
-                       case IDC_MANUALFEED:
-                            manualFeed = !manualFeed;
-							ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (char*)0);
-                            break;
-
                        case IDC_TABOFCONTENTS:
 						    tableOfContents = !tableOfContents;
 							ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (char*)1);
@@ -1049,65 +1058,25 @@ LPARAM lParam;
 							ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (char*)2);
                             break;
 
-                       case IDC_A4:
-                            CheckRadioButton (hwnDlg, IDC_A4, IDC_US, IDC_A4);
-                            A4Format = TRUE;
-							USFormat = FALSE;
-                            break;
-
-                       case IDC_US:
-                            CheckRadioButton (hwnDlg, IDC_A4, IDC_US, IDC_US);
-                            A4Format = FALSE;
-							USFormat = TRUE;
-                            break;
-
-                       case IDC_PRINTER:
+				       case ID_PRINT:
+						    ThotCallback (numMenuSupport + baseDlg, INTEGER_DATA, (char*)0);
+					        EndDialog (hwnDlg, ID_PRINT);
                             if (TtPrinterDC)
                                DeleteDC (TtPrinterDC);
-
-						    toPrinter = TRUE;
-							toPostscript = FALSE;
-                            CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_PRINTER);
 
                             TtPrinterDC = GetPrinterDC ();
-							if (TtPrinterDC)
-                               SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, lpPrintTemplateName);
-
-						    ThotCallback (numMenuSupport + baseDlg, INTEGER_DATA, (char*)0);
-                            break;
-
-                       case IDC_POSTSCRIPT:
-                            if (TtPrinterDC)
-                               DeleteDC (TtPrinterDC);
-
-							TtPrinterDC = NULL;
-						    toPrinter = FALSE;
-							toPostscript = TRUE;
-                            CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_POSTSCRIPT);
-                            SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, currentFileToPrint);
-						    ThotCallback (numMenuSupport + baseDlg, INTEGER_DATA, (char*)1);
-                            break;
-
-				       case ID_PRINT:
-					        EndDialog (hwnDlg, ID_PRINT);
-                            if (toPrinter) {
-                               if (TtPrinterDC)
-                                  DeleteDC (TtPrinterDC);
-
-                               TtPrinterDC = GetPrinterDC ();
-                               if (TtPrinterDC) {
-                                  WinInitPrinterColors ();
-                                  /* ghwndAbort = CreateDialog (hInstance, MAKEINTRESOURCE (PRINTPROGRESSDLG), ghwndMain, (DLGPROC) AbortDlgProc); */
-							   }
-							}
-
-							EnableWindow (ghwndMain, FALSE);
-						    ThotCallback (numMenuPaperFormat + baseDlg, INTEGER_DATA, (char*)0);
-							ThotCallback (numZonePrinterName + baseDlg, STRING_DATA, currentFileToPrint);
-							ThotCallback (numFormPrint + baseDlg, INTEGER_DATA, (char*)1);
                             if (TtPrinterDC) {
-                               DeleteDC (TtPrinterDC);
-                               TtPrinterDC = NULL;
+                               WinInitPrinterColors ();
+                               /* ghwndAbort = CreateDialog (hInstance, MAKEINTRESOURCE (PRINTPROGRESSDLG), ghwndMain, (DLGPROC) AbortDlgProc); */
+
+                               EnableWindow (ghwndMain, FALSE);
+                               ThotCallback (numMenuPaperFormat + baseDlg, INTEGER_DATA, (char*)0);
+                               ThotCallback (numZonePrinterName + baseDlg, STRING_DATA, currentFileToPrint);
+                               ThotCallback (numFormPrint + baseDlg, INTEGER_DATA, (char*)1);
+                               if (TtPrinterDC) {
+                                  DeleteDC (TtPrinterDC);
+                                  TtPrinterDC = NULL;
+							   }
 							}
 							break;
 
@@ -1187,6 +1156,10 @@ LPARAM lParam;
 							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0);
 					 	    EndDialog (hwnDlg, IDCANCEL);
 							break;
+
+					   case WM_DESTROY:
+					 	    EndDialog (hwnDlg, IDCANCEL);
+							break;
 				}
 				break;
 
@@ -1212,19 +1185,19 @@ LPARAM lParam;
     switch (msg) {
 	       case WM_INITDIALOG:
                 switch (currAttrVal) {
-                       case 1: CheckRadioButton (hwnDlg, IDC_LEFT, IDC_BOTTOM, IDC_TOP);
+                       case 1: CheckRadioButton (hwnDlg, IDC_TOP, IDC_BOTTOM, IDC_TOP);
                                break;
 
-                       case 2: CheckRadioButton (hwnDlg, IDC_LEFT, IDC_BOTTOM, IDC_MIDDLE);
+                       case 2: CheckRadioButton (hwnDlg, IDC_TOP, IDC_BOTTOM, IDC_MIDDLE);
                                break;
 
-                       case 3: CheckRadioButton (hwnDlg, IDC_LEFT, IDC_BOTTOM, IDC_BOTTOM);
+                       case 3: CheckRadioButton (hwnDlg, IDC_TOP, IDC_BOTTOM, IDC_BOTTOM);
                                break;
 
-                       case 4:CheckRadioButton (hwnDlg, IDC_LEFT, IDC_BOTTOM, IDC_LEFT);
+                       case 4: CheckRadioButton (hwnDlg, IDC_TOP, IDC_BOTTOM, IDC_LEFT);
                                break;
 
-                       case 5:CheckRadioButton (hwnDlg, IDC_LEFT, IDC_BOTTOM, IDC_RIGHT);
+                       case 5: CheckRadioButton (hwnDlg, IDC_TOP, IDC_BOTTOM, IDC_RIGHT);
                                break;
 
                        default: break;
@@ -1263,13 +1236,97 @@ LPARAM lParam;
 							break;
 
 					   case ID_DELETE:
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
 							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2);
 					 	    EndDialog (hwnDlg, ID_DELETE);
 							break;
 
 					   case ID_DONE:
 							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0);
+					 	    EndDialog (hwnDlg, IDCANCEL);
+							break;
+
+					   case WM_DESTROY:
+					 	    EndDialog (hwnDlg, IDCANCEL);
+							break;
+				}
+				break;
+
+				default: return FALSE;
+	}
+	return TRUE ;
+}
+/*-----------------------------------------------------------------------
+ Align2DlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK Align3DlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK Align3DlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+	static int iLocation;
+
+    switch (msg) {
+	       case WM_INITDIALOG:
+                switch (currAttrVal) {
+                       case 1: CheckRadioButton (hwnDlg, IDC_LEFT, IDC_JUSTIFY, IDC_LEFT);
+                               break;
+
+                       case 2: CheckRadioButton (hwnDlg, IDC_LEFT, IDC_JUSTIFY, IDC_CENTER);
+                               break;
+
+                       case 3: CheckRadioButton (hwnDlg, IDC_LEFT, IDC_JUSTIFY, IDC_RIGHT);
+                               break;
+
+                       case 4: CheckRadioButton (hwnDlg, IDC_LEFT, IDC_JUSTIFY, IDC_JUSTIFY);
+                               break;
+
+                       default: break;
+				}
+                break;
+
+		   case WM_COMMAND:
+			    switch (LOWORD (wParam)) {
+				       case IDC_LEFT:
+						    iLocation = 0;
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+							break;
+
+					   case IDC_CENTER:
+						    iLocation = 1;
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+							break;
+
+					   case IDC_RIGHT:
+						    iLocation = 2;
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+							break;
+
+					   case IDC_JUSTIFY:
+						    iLocation = 3;
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+							break;
+
+				       case ID_APPLY:
+							/* ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 1); */
+							break;
+
+					   case ID_DELETE:
+						    /* ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2); */
+					 	    EndDialog (hwnDlg, ID_DELETE);
+							break;
+
+					   case ID_DONE:
+							/* ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0); */
+					 	    EndDialog (hwnDlg, IDCANCEL);
+							break;
+
+					   case WM_DESTROY:
 					 	    EndDialog (hwnDlg, IDCANCEL);
 							break;
 				}
@@ -1342,6 +1399,10 @@ LPARAM lParam;
 							   iLocation = 2;
 							}
 						    break;
+
+				       case WM_DESTROY:
+					        EndDialog (hwnDlg, ID_DONE);
+							break;
 
 				       case ID_DONE:
 						    ThotCallback (120, 1, NULL);
@@ -1424,11 +1485,6 @@ LPARAM lParam;
 				   CheckRadioButton (hwnDlg, IDC_TRANSFORMURL, IDC_TRANSFORMURL, IDC_TRANSFORMURL);
 				break;
 
-           case WM_DESTROY:
-                currentDlg = (HWND) 0;
-                EndDialog (hwnDlg, IDCANCEL);
-				break;
-
 		   case WM_COMMAND:
 			    if (HIWORD (wParam) == EN_UPDATE) {
 				   if (LOWORD (wParam) == IDC_EDITDOCSAVE) {
@@ -1505,6 +1561,7 @@ LPARAM lParam;
 			    SetDlgItemText (hwnDlg, IDC_GETURL, "");
 				urlToOpen [0] = 0;
 				break;
+
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
 				       case ID_CONFIRM:
@@ -1778,6 +1835,10 @@ LPARAM lParam;
 							ThotCallback (NumFormLanguage, INTEGER_DATA, (char*) 0);
 					        EndDialog (hwnDlg, ID_DONE);
 							break;
+
+                       case WM_DESTROY:
+					        EndDialog (hwnDlg, ID_DONE);
+							break;
 				}
 				break;
 				default: return FALSE;
@@ -1870,6 +1931,10 @@ LPARAM lParam;
 			    switch (LOWORD (wParam)) {
 				       case ID_DONE:
 						    ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 0);
+						    EndDialog (hwnDlg, ID_DONE);
+							break;
+
+				       case WM_DESTROY:
 						    EndDialog (hwnDlg, ID_DONE);
 							break;
 
@@ -2056,6 +2121,9 @@ LPARAM lParam;
 						    EndDialog (hwnDlg, ID_DONE);
 							break;
 
+				       case WM_DESTROY:
+						    EndDialog (hwnDlg, ID_DONE);
+							break;
 				}
 				break;
 				default: return FALSE;
@@ -2116,6 +2184,9 @@ LPARAM lParam;
 						    EndDialog (hwnDlg, ID_DONE);
 							break;
 
+				       case WM_DESTROY:
+						    EndDialog (hwnDlg, ID_DONE);
+							break;
 				}
 				break;
 				default: return FALSE;
@@ -2274,6 +2345,10 @@ LPARAM lParam;
 					   case ID_DONE:
 						    EndDialog (hwnDlg, ID_DONE);
 							break;
+
+					   case WM_DESTROY:
+						    EndDialog (hwnDlg, ID_DONE);
+							break;
 				}
 				break;
 		   default: return FALSE;
@@ -2343,6 +2418,10 @@ LPARAM lParam;
 					   /* Alignement menu */
 				       case ID_APPLY:
 						    ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1);
+							break;
+
+					   case WM_DESTROY:
+						    EndDialog (hwnDlg, ID_DONE);
 							break;
 
 					   case ID_DONE:

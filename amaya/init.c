@@ -3066,7 +3066,12 @@ NotifyEvent        *event;
 
    TargetName = NULL;
    /* initialize temporary directory for loaded files */
+
+#  ifdef _WINDOWS 
+   s = NULL;
+#  else  /* !_WINDOWS */
    s = (char *) TtaGetEnvString ("HOME");
+#  endif /* _WINDOWS */
 
    if (s)
       strcpy (TempFileDirectory, s);

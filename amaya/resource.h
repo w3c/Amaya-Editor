@@ -212,6 +212,7 @@
 #define IDD_DIALOG1                     393
 #define CSSDIALOG                       395
 #define IDB_MATRIX                      397
+#define ALIGN3DIALOG                    398
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -536,6 +537,7 @@
 #define IDC_ISO_LATIN_9                 1389
 #define IDC_SYMBOL_ENCOD                1390
 #define IDC_ABORTPRNT                   1399
+#define IDC_JUSTIFY                     1405
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -568,9 +570,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        398
+#define _APS_NEXT_RESOURCE_VALUE        400
 #define _APS_NEXT_COMMAND_VALUE         40046
-#define _APS_NEXT_CONTROL_VALUE         1400
+#define _APS_NEXT_CONTROL_VALUE         1403
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -50,6 +50,10 @@ static int      GraphDialogue;
 static boolean  PaletteDisplayed = FALSE;
 #define BUFFER_LENGTH 100
 
+#ifdef _WINDOWS
+#define iconGraphics 22
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
  SetEmptyShapeAttrSubTree
  A GraphML drawing is about to be saved. Set the EmptyShape attribute
@@ -1300,8 +1304,9 @@ View                view;
     }
   TtaShowDialogue (GraphDialogue + FormGraph, TRUE);
 # else /* _WINDOWS */
+  /*
   CreateGraphDlgWindow (TtaGetViewFrame (doc, view), GraphDialogue,
-		       TtaGetThotWindow (GetWindowNumber (doc, view)));
+		       TtaGetThotWindow (GetWindowNumber (doc, view))); */
 # endif /* _WINDOWS */
 }
 

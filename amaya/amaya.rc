@@ -37,29 +37,18 @@ BEGIN
     LTEXT           "URL",IDC_URL,16,7,19,11
 END
 
-PRINTDIALOG DIALOG DISCARDABLE  100, 100, 245, 98
+PRINTDIALOG DIALOG DISCARDABLE  100, 100, 172, 60
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Print"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Print",ID_PRINT,118,77,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,188,77,50,14
-    GROUPBOX        "Options",IDC_OPTIONS,8,7,80,49,WS_GROUP
-    CONTROL         "Manual Feed",IDC_MANUALFEED,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,14,17,56,12
+    DEFPUSHBUTTON   "Print",ID_PRINT,104,13,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,104,30,50,14
+    GROUPBOX        "Options",IDC_OPTIONS,8,7,82,40,WS_GROUP
     CONTROL         "Table of Contents",IDC_TABOFCONTENTS,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,14,27,70,14
+                    BS_AUTOCHECKBOX | WS_TABSTOP,14,17,70,14
     CONTROL         "Numbered Links",IDC_LINKS,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,14,38,60,15
-    GROUPBOX        "Output",IDC_OUTPUT,95,7,143,49,WS_GROUP
-    CONTROL         "Printer",IDC_PRINTER,"Button",BS_AUTORADIOBUTTON,101,17,
-                    42,10
-    CONTROL         "Postscript",IDC_POSTSCRIPT,"Button",BS_AUTORADIOBUTTON,
-                    101,25,47,13
-    EDITTEXT        IDC_PRINTEREDIT,101,38,131,14,ES_AUTOHSCROLL
-    GROUPBOX        "Paper Format",IDC_PAPERFORMAT,9,59,57,32,WS_GROUP
-    CONTROL         "A4",IDC_A4,"Button",BS_AUTORADIOBUTTON,14,70,37,10
-    CONTROL         "US",IDC_US,"Button",BS_AUTORADIOBUTTON,14,80,33,11
+                    WS_TABSTOP,14,28,60,15
 END
 
 SEARCHDIALOG DIALOG DISCARDABLE  100, 100, 153, 194
@@ -181,13 +170,13 @@ BEGIN
                     151,138,42,14
 END
 
-INITCONFIRMDIALOG DIALOG DISCARDABLE  100, 100, 313, 90
+INITCONFIRMDIALOG DIALOG DISCARDABLE  100, 100, 265, 81
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Confirm"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Confirm",ID_CONFIRM,95,69,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,169,69,50,14
+    DEFPUSHBUTTON   "Confirm",ID_CONFIRM,76,60,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,139,60,50,14
 END
 
 FORMATDIALOG DIALOG DISCARDABLE  100, 100, 184, 215
@@ -397,6 +386,24 @@ BEGIN
     PUSHBUTTON      "Done",ID_DONE,145,117,50,14
 END
 
+ALIGN3DIALOG DIALOG DISCARDABLE  100, 100, 153, 106
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Attributes"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,85,45,14
+    PUSHBUTTON      "Delete",ID_DELETE,57,85,44,14
+    PUSHBUTTON      "Done",ID_DONE,105,85,39,14
+    GROUPBOX        "Align",-1,7,8,137,69,WS_GROUP
+    CONTROL         "Left",IDC_LEFT,"Button",BS_AUTORADIOBUTTON,25,18,76,14
+    CONTROL         "Center",IDC_CENTER,"Button",BS_AUTORADIOBUTTON,25,31,76,
+                    14
+    CONTROL         "Right",IDC_RIGHT,"Button",BS_AUTORADIOBUTTON,25,44,76,
+                    14
+    CONTROL         "Justify",IDC_JUSTIFY,"Button",BS_AUTORADIOBUTTON,25,58,
+                    76,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -416,11 +423,11 @@ BEGIN
 
     PRINTDIALOG, DIALOG
     BEGIN
-        RIGHTMARGIN, 238
+        RIGHTMARGIN, 165
         VERTGUIDE, 9
         VERTGUIDE, 14
         TOPMARGIN, 7
-        BOTTOMMARGIN, 91
+        BOTTOMMARGIN, 53
         HORZGUIDE, 7
         HORZGUIDE, 59
     END
@@ -449,9 +456,9 @@ BEGIN
     INITCONFIRMDIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 306
+        RIGHTMARGIN, 258
         TOPMARGIN, 7
-        BOTTOMMARGIN, 83
+        BOTTOMMARGIN, 74
     END
 
     FORMATDIALOG, DIALOG
@@ -526,6 +533,14 @@ BEGIN
         RIGHTMARGIN, 274
         TOPMARGIN, 7
         BOTTOMMARGIN, 131
+    END
+
+    ALIGN3DIALOG, DIALOG
+    BEGIN
+        RIGHTMARGIN, 144
+        VERTGUIDE, 7
+        VERTGUIDE, 144
+        BOTTOMMARGIN, 104
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -608,6 +623,15 @@ BEGIN
     BUTTON      ID_BUTTON40042
 END
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_APPICON             ICON    DISCARDABLE     "appicon.ico"
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 
@@ -639,7 +663,7 @@ MATHDIALOG DIALOGEX 400, 0, 55, 196
 STYLE DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CLIENTEDGE
 CAPTION "Math"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "Done",ID_DONE,11,178,35,16
     CONTROL         183,IDC_MATH,"Static",SS_BITMAP | SS_NOTIFY,4,6,23,21,
@@ -1455,15 +1479,6 @@ IDB_GKEY157             BITMAP  DISCARDABLE     "gkey157.bmp"
 IDB_GKEY158             BITMAP  DISCARDABLE     "gkey158.bmp"
 IDB_GKEY159             BITMAP  DISCARDABLE     "gkey159.bmp"
 IDB_GKEY160             BITMAP  DISCARDABLE     "gkey160.bmp"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDI_APPICON             ICON    DISCARDABLE     "appicon.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -423,7 +423,12 @@ Document            doc;
   if (css == NULL)
     {
       /* Load User preferences */
+#     ifdef _WINDOWS
+      home = NULL;
+#     else  /* !_WINDOWS */
       home = TtaGetEnvString ("HOME");
+#     endif /* _WINDOWS */
+
       tempfile[0] = EOS;
       /* try to load the user preferences */
       if (home)
