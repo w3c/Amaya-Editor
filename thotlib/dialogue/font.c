@@ -2120,7 +2120,11 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	  else if (code == 'Z' || code == '6')
 	    car = c;
 	  else if (code != 'E')
+#ifdef _GL
+	    car = c;
+#else /* _GL */
 	    car = (int)TtaGetCharFromWC (c, encoding);
+#endif /* _GL */
 	}
     }   
   if (car == EOS)

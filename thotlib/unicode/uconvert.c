@@ -489,9 +489,6 @@ wchar_t MACROMANCP [] = {
   ----------------------------------------------------------------------*/
 unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
 {
-#ifdef _GL
-	return (unsigned char) wc;
-#else /*_GL*/
   unsigned int  c, max, base;
   wchar_t      *table;
 
@@ -615,7 +612,6 @@ unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
         else
 	  return EOS;
     }
-#endif /* _GL */
 }
 
 
