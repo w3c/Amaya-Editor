@@ -13,19 +13,19 @@ Current state of CSS implementation</title>
 <caption></caption>
 <tbody>
 <tr>
-<td>
+<td width="24%">
 CSS 
 </td>
-<td>
+<td width="8%">
 parser 
 </td>
 <td>
 parser value 
 </td>
-<td>
+<td width="15%">
 driver itf 
 </td>
-<td>
+<td width="15%">
 driver internals 
 </td>
 </tr>
@@ -36,64 +36,64 @@ driver internals
 </tr>
 <tr>
 <td>
-ID
+ID 
 </td>
 <td>
-yes
+yes 
 </td>
 <td>
-#number should work Ok, need a way to create one (Create ID menu)
+#number should work Ok, need a way to create one (Create ID menu) 
 </td>
   </tr>
 <tr>
 <td>
-class
+class 
 </td>
 <td>
-yes
+yes 
 </td>
 <td>
 .classname ,Ok. Except that "LI.class P" and "LI P.class" are not
-distinguished
+distinguished 
 </td>
 <td>
-Max 1 class per selector
+Max 1 class per selector 
 </td>
  </tr>
 <tr>
 <td>
-pseudoclass
+pseudoclass 
 </td>
 <td>
-yes
+yes 
 </td>
 <td>
 Parsed Ok, but one need to add the pseudoclass value to the corresponding
 elements (e.g. anchors). Pseudoclass are also defined for first-line and
-first-letter, non structured entities and will be a real pain to implement !
+first-letter, non structured entities and will be a real pain to implement ! 
 </td>
 <td>
-Max 1 pseudoclass per selector
+Max 1 pseudoclass per selector 
 </td>
  </tr>
 <tr>
 <td>
-ancestors
+ancestors 
 </td>
 <td>
-yes
+yes 
 </td>
 <td>
 nearly. Any order given in the selector is lost. We only pass to the driver an
-array of the ancestors and a repeat number.
+array of the ancestors and a repeat number. 
 <p>
 LI UL LI &lt;=> UL LI LI &lt;=> UL(1) LI(2)</p>
 </td>
 <td>
-Max 10 different ancestors types.
+Max 10 different ancestors types. 
 </td>
 <td>
-Sorted by type number (PRule ordering w.r.t. conditions).
+Sorted by type number (PRule ordering w.r.t. conditions). 
 </td>
 </tr>
 <tr>
@@ -113,43 +113,37 @@ Color name lookup uses a 500+ name table
 <p>
 24 bits restricted to the Thot table (100 + values).</p>
 </td>
-<td>
- 
-</td>
-<td>
- 
-</td>
+<td></td>
+<td></td>
 </tr>
 <tr>
 <td>
-fonts
+fonts 
 </td>
 <td>
 not really 
 </td>
 <td>
-There is no mapping table between internal and external names
+There is no mapping table between internal and external names 
 <p>
 Only 3 fonts are available internally (+ Symbol and Greek ???)</p>
 <p>
-Boldness is true or false </p>
+Boldness is true or false</p>
 </td>
 <td><p>
- </p>
+</p>
 </td>
-<td>
- 
-</td>
+<td></td>
 </tr>
 <tr>
 <td>
-units
+units 
 </td>
 <td>
-yes
+yes 
 </td>
 <td>
-all units should be parsed Ok
+all units should be parsed Ok 
 </td>
 <td></td>
 <td><p>
@@ -275,17 +269,17 @@ limitation with colors. HTML/BODY mess.
 background-image 
 </td>
 <td>
-yes
+yes 
 </td>
 <td>
 Uses FillPattern and ShowBox, background image loading is async w.r.t. the
-parsing
+parsing 
 <p>
 HTML/BODY mess</p>
 <p>
 The file name corresponding to the image is stored in one of the constant
 string of the PSchema. Hence limited to a fixed # of chars and a limiter # of
-bg images. </p>
+bg images.</p>
 <p>
 If a background image is referenced in a CSS and not used in the document, it
 is fetched anyway !!! Should be loaded only when the abstract image need it
@@ -299,7 +293,7 @@ is fetched anyway !!! Should be loaded only when the abstract image need it
 background-repeat 
 </td>
 <td>
-yes
+yes 
 </td>
 <td></td>
 <td></td>
@@ -310,7 +304,7 @@ yes
 background-attachment 
 </td>
 <td>
-no
+no 
 </td>
 <td></td>
 <td></td>
@@ -321,7 +315,7 @@ no
 background-position 
 </td>
 <td>
-no
+no 
 </td>
 <td></td>
 <td></td>
@@ -332,10 +326,10 @@ no
 background 
 </td>
 <td>
-yes
+yes 
 </td>
 <td>
-Same limitations as the specific background attributes.
+Same limitations as the specific background attributes. 
 </td>
 <td></td>
 <td></td>
