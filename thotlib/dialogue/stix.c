@@ -735,8 +735,9 @@ int GetStixFontAndIndex (int c, SpecFont fontset, ThotFont **font)
 	  mask = 1 << (frame - 1);
 	  if (fontset->FontMask & mask)
 	    {
-	      LoadNearestFont ('E', face, 0, fontset->FontSize, fontset->FontSize, frame,
-			       FALSE, FALSE);
+	       lfont = LoadNearestFont ('E', face, 0, fontset->FontSize,
+					fontset->FontSize, frame,
+					FALSE, FALSE);
 	    }
 	}
       if (**font == NULL)
