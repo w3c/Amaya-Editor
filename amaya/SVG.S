@@ -173,6 +173,16 @@ STRUCT
         = LIST OF (GraphicsElement) + (XMLcomment, XMLPI, CDATA,
 	                               Unknown_namespace);
 
+   DOCTYPE = LIST OF (DOCTYPE_line = TEXT);	
+	
+   Unknown_namespace = TEXT;
+	
+   XMLcomment = LIST OF (XMLcomment_line = TEXT) - (XMLcomment);
+
+   XMLPI = LIST OF (XMLPI_line = TEXT);
+
+   CDATA = LIST OF (CDATA_line = TEXT);
+
    g
         (ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired;
@@ -2456,16 +2466,6 @@ STRUCT
 	      color_profile; font_face;
 	      Timeline_cross; 
 	      END;
-
-   DOCTYPE = LIST OF (DOCTYPE_line = TEXT);	
-	
-   XMLcomment = LIST OF (XMLcomment_line = TEXT) - (XMLcomment);
-
-   XMLPI = LIST OF (XMLPI_line = TEXT);
-
-   CDATA = LIST OF (CDATA_line = TEXT);
-
-   Unknown_namespace = TEXT;
 
 EXCEPT
 
