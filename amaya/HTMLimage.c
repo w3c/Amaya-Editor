@@ -529,16 +529,19 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
   char                charsetname[MAX_LENGTH];
   char               *imageName;
   char               *tempfile;
+  char               *originalName;
 
   if (desc)
     {
       imageName = desc->localName;
       tempfile = desc->tempfile;
+      originalName = desc->originalName;
     }
   else
     {
       imageName = localfile;
       tempfile = localfile;
+      originalName = localfile;
     }
 
   modified = TtaIsDocumentModified (doc);
@@ -605,7 +608,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 	    desc->imageType = svg_type;
 	  /* parse the SVG file and include the parsed tree at the
 	     position of the image element */
-	  ParseExternalDocument (tempfile, el, FALSE, doc, 
+	  ParseExternalDocument (tempfile, originalName, el, FALSE, doc, 
 				 TtaGetDefaultLanguage(), "SVG");
 	}
       else if (is_mml)
@@ -615,7 +618,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 	    desc->imageType = mathml_type;
 	  /* parse the MathML file and include the parsed tree at the
 	     position of the image element */
-	  ParseExternalDocument (tempfile, el, FALSE, doc, 
+	  ParseExternalDocument (tempfile, originalName, el, FALSE, doc, 
 				 TtaGetDefaultLanguage(), "MathML");
 	}
       else if (is_html)
@@ -625,7 +628,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 	    desc->imageType = html_type;
 	  /* parse the HTML file and include the parsed tree at the
 	     position of the image element */
-	  ParseExternalDocument (tempfile, el, FALSE, doc, 
+	  ParseExternalDocument (tempfile, originalName, el, FALSE, doc, 
 				 TtaGetDefaultLanguage(), "HTML");
 	}
       else
@@ -642,7 +645,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
     {
       /* parse the SVG file and include the parsed sub-tree at the
 	 position of the use element */
-      ParseExternalDocument (tempfile, el, FALSE, doc, 
+      ParseExternalDocument (tempfile, originalName, el, FALSE, doc, 
 			     TtaGetDefaultLanguage(), "SVG");
     }
   else  

@@ -24,6 +24,7 @@ extern void XmlStyleSheetPi ( char *PiData,
                               Element piEl );
 extern void FreeXmlParserContexts ( void );
 extern void ParseExternalDocument ( char *fileName,
+                                    char *originalName,
                                     Element el,
                                     ThotBool isclosed,
                                     Document doc,
@@ -79,6 +80,7 @@ extern void XmlStyleSheetPi (/* char *PiData,
                                 Element piEl */);
 extern void FreeXmlParserContexts (/* void */);
 extern void ParseExternalDocument (/* char *fileName,
+                                      char *originalName,
                                       Element el,
                                       ThotBool isclosed,
                                       Document doc,

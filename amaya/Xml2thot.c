@@ -4592,6 +4592,7 @@ static Element  SetExternalElementType (Element el, Document doc,
   Return TRUE if the parsing of the external document doesn't detect errors.
   ---------------------------------------------------------------------------*/
 void        ParseExternalDocument (char     *fileName,
+				   char     *originalName,
 				   Element   el,
 				   ThotBool  isclosed,
 				   Document  doc,
@@ -4599,7 +4600,7 @@ void        ParseExternalDocument (char     *fileName,
 				   char     *typeName)
   
 {
-  char         *schemaName = NULL;
+  char         *schemaName = NULL, *tempName = NULL;
   char         *ptr = NULL;
   ElementType   elType;
   Element       parent, oldel;
@@ -4686,7 +4687,21 @@ void        ParseExternalDocument (char     *fileName,
     DocumentSSchema = TtaGetDocumentSSchema (doc);
   
   /* Set document URL */
-  docURL = TtaGetMemory (strlen (fileName) + 1);
+  docURL = TtaGetMemory (strlen (originalName) + 1);
+  strcpy (docURL, originalName);
+
+  if (docURL)
+    {
+      s = TtaStrdup (docURL);
+      if (DocumentURLs[externalDoc])
+	{
+	  TtaFreeMemory (DocumentURLs[externalDoc]);
+	  DocumentURLs[externalDoc] = NULL;
+	}
+      DocumentURLs[externalDoc] = s;
+    }
+  
+  tempName = TtaGetMemory (strlen (fileName) + 1);
   if (use_ref)
     {
       /* We are parsing an external reference for a 'use' svg element */
@@ -4701,28 +4716,17 @@ void        ParseExternalDocument (char     *fileName,
 	  strcpy (extUseId, ptr);
 	}
       if (TtaFileExist (fileName))
-	strcpy (docURL, fileName);
+	strcpy (tempName, fileName);
       else if (TtaFileExist (extUseUri))
-	strcpy (docURL, extUseUri);
+	strcpy (tempName, extUseUri);
       else
 	{
-	  TtaFreeMemory (docURL);
-	  docURL = NULL;
+	  TtaFreeMemory (tempName);
+	  tempName = NULL;
 	}
     }
   else
-    strcpy (docURL, fileName);
-  
-  if (docURL)
-    {
-      s = TtaStrdup (docURL);
-      if (DocumentURLs[externalDoc])
-	{
-	  TtaFreeMemory (DocumentURLs[externalDoc]);
-	  DocumentURLs[externalDoc] = NULL;
-	}
-      DocumentURLs[externalDoc] = s;
-    }
+    strcpy (tempName, fileName);
   
   /* When we parse an external document, we ignore comments and PIs */
   /* (otherwise they are displayed in structure view) */
@@ -4736,15 +4740,15 @@ void        ParseExternalDocument (char     *fileName,
   if (charset == UNDEFINED_CHARSET && !DocumentMeta[doc]->xmlformat)
     charset = ISO_8859_1;
  
-  if (docURL)
+  if (tempName)
     {
       /* Parse the file and build the external document */
-      infile = gzopen (docURL, "r");
+      infile = gzopen (tempName, "r");
       if (infile != 0)
 	{
 	  /* Check if there is an xml declaration with a charset declaration */
-	  if (docURL[0] != EOS)
-	    CheckDocHeader (docURL, &xmlDec, &docType, &isXML, &isKnown,
+	  if (tempName != EOS)
+	    CheckDocHeader (tempName, &xmlDec, &docType, &isXML, &isKnown,
 			    &parsingLevel, &charset, charsetname, &thotType);
 	  
 	  /* Parse the external file */
@@ -4867,6 +4871,8 @@ void        ParseExternalDocument (char     *fileName,
       TtaFreeMemory (docURL);
       docURL = NULL;
     }
+  if (tempName != NULL)
+    TtaFreeMemory (tempName);
   if (extUseUri != NULL)
     TtaFreeMemory (extUseUri);
   if (extUseId != NULL)
