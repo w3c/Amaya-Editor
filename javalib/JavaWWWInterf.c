@@ -228,8 +228,16 @@ boolean             error_html;
 #endif
 {
     struct Hamaya_HTTPRequest* request;
+    static int req_nr = 0;
+    struct Hjava_lang_String* urlName = NULL;
+    struct Hjava_lang_String* postCmd = NULL;
+    struct Hjava_lang_String* filename = NULL;
     int result;
+    int type;
     int flag = 0;
+    jlong callback = 0;
+    jlong callback_f = 0;
+    jlong callback_arg = 0;
 
     if (mode & AMAYA_NOCACHE) {
         mode -= AMAYA_NOCACHE;
@@ -240,11 +248,19 @@ boolean             error_html;
 	flag += AMAYA_NOREDIR;
     }
 
-    /*
-     * Allocate and fill in a new HTTP Request instance.
-     */
-    outputfile[0] = '\0';
-    request = AllocHTTPRequest (doc, url, postString, outputfile);
+    if (outputfile[0] == '\0') {
+        sprintf(outputfile,"%s/amaya_req%d",&TempFileDirectory[0],req_nr++);
+    }
+
+    if (url != NULL) {
+        urlName = makeJavaString(url, strlen(url));
+    }
+    if (postString != NULL) {
+        postCmd = makeJavaString(postString, strlen(postString));
+    }
+    if (outputfile != NULL) {
+        filename = makeJavaString(outputfile, strlen(outputfile));
+    }
 
     /*
      * Call the Java WWW access implementation.
@@ -253,27 +269,25 @@ boolean             error_html;
     JavaThotlibRelease();
     switch (mode) {
         case AMAYA_SYNC:
-	    unhand(request)->callback = (jlong) 0;
-	    unhand(request)->callback_f = CPtr2JavaLong(0x12ABCDEF);
-	    unhand(request)->callback_arg = CPtr2JavaLong(0x12345678);
-	    do_execute_java_method(0, (void *) request, "Get", "(I)I",
-	                           0, 0, flag);
+	    type = amaya_HTTPRequest_GET_REQUEST;
 	    break;
         case AMAYA_ASYNC:
-	    unhand(request)->callback = CPtr2JavaLong(GetObjectWWWCallback);
-	    unhand(request)->callback_f = CPtr2JavaLong(terminate);
-	    unhand(request)->callback_arg = CPtr2JavaLong(tcontext);
-	    do_execute_java_method(0, (void *) request, "AsyncGet", "(I)I",
-	                           0, 0, flag);
+	    type = amaya_HTTPRequest_AGET_REQUEST;
+	    callback = CPtr2JavaLong(GetObjectWWWCallback);
+	    callback_f = CPtr2JavaLong(terminate);
+	    callback_arg = CPtr2JavaLong(tcontext);
 	    break;
 	case AMAYA_FORM_POST | AMAYA_SYNC:
-	    do_execute_java_method(0, (void *) request, "Post", "(I)I",
-	                           0, 0, flag);
+	    type = amaya_HTTPRequest_POST_REQUEST;
 	    break;
 	default:
 	    fprintf(stderr,"GetObjectWWW : unsupported mode %d\n", mode);
 	    exit(1);
     }
+    request = do_execute_java_class_method("amaya/HTTPRequest", "StartHTTPRequest",
+"(IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IJJJ)Lamaya/HTTPRequest;",
+		type, doc, urlName, NULL, postCmd, filename,
+                flag, callback, callback_f, callback_arg);
     JavaThotlibLock();
 
     /*
@@ -303,11 +317,6 @@ boolean             error_html;
 	    FreeHTTPRequest(request);
 	    fprintf(stderr,"GetObjectWWW : Protocol error %d\n", result);
 	    return(-1);
-    }
-    switch (mode) {
-        case AMAYA_SYNC:
-	    FreeHTTPRequest(request);
-	    break;
     }
 
     return(0);
@@ -359,7 +368,8 @@ int PutObjectWWW (int doc, char *fileName, char *url, int mode,
                   PicType contentType, void * terminate_cbf,
                   void *context_tcbf)
 #else
-int PutObjectWWW (doc, fileName, urlName, mode, contentType, terminate, context)
+int PutObjectWWW (doc, fileName, url, mode, contentType,
+                  terminate_cbf, context_tcbf)
 int                 doc;
 char               *fileName;
 char               *url;
@@ -371,6 +381,13 @@ void               *context_tcbf;
 #endif
 {
     struct Hamaya_HTTPRequest* request;
+    struct Hjava_lang_String* urlName = NULL;
+    struct Hjava_lang_String* filename = NULL;
+    struct Hjava_lang_String* mimetype = NULL;
+    int type;
+    jlong callback = 0;
+    jlong callback_f = 0;
+    jlong callback_arg = 0;
     int result;
     int flag = 0;
     char *mimeType;
@@ -384,11 +401,16 @@ void               *context_tcbf;
 	flag += AMAYA_NOREDIR;
     }
 
+    if (url != NULL) {
+        urlName = makeJavaString(url, strlen(url));
+    }
+    if (fileName != NULL) {
+        filename = makeJavaString(fileName, strlen(fileName));
+    }
+
     /*
-     * Allocate and fill in a new HTTP Request instance.
      * Set the ContentType ...
      */
-    request = AllocHTTPRequest (doc, url, NULL, fileName);
     switch (contentType) {
         case xbm_type:
 	    mimeType = "image/x-xbitmap"; break;
@@ -407,7 +429,7 @@ void               *context_tcbf;
 	default:
 	    mimeType = "text/html"; break;
     }
-    unhand(request)->mimeType = makeJavaString(mimeType, strlen(mimeType));
+    mimetype = makeJavaString(mimeType, strlen(mimeType));
 
     /*
      * Call the Java WWW access implementation.
@@ -416,13 +438,16 @@ void               *context_tcbf;
     JavaThotlibRelease();
     switch (mode) {
         case AMAYA_SYNC:
-	    do_execute_java_method(0, (void *) request, "Put", "(I)I",
-	                           0, 0, flag);
+	    type = amaya_HTTPRequest_PUT_REQUEST;
 	    break;
 	default:
 	    fprintf(stderr,"PutObjectWWW : unsupported mode %d\n", mode);
 	    exit(1);
     }
+    request = do_execute_java_class_method("amaya/HTTPRequest", "StartHTTPRequest",
+"(IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IJJJ)Lamaya/HTTPRequest;",
+		type, doc, urlName, mimetype, NULL, filename,
+                flag, callback, callback_f, callback_arg);
     JavaThotlibLock();
 
     /*
