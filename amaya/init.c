@@ -4394,8 +4394,6 @@ CHAR_T*             data;
 	       TtaFreeMemory (tempfile);
 	       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
 	     }
-	   
-  CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
 #endif /* !_WINDOWS */
 	 }
        else if (val == 2)
