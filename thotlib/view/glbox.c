@@ -916,8 +916,8 @@ void ComputeBoundingBox (PtrBox box, int frame,
       else
 	{
 	  pFrame = &ViewFrameTable[frame - 1];
-	  box->BxClipX = box->BxXOrg - pFrame->FrXOrg;
-	  box->BxClipY = box->BxYOrg - pFrame->FrYOrg;
+	  box->BxClipX = box->BxXOrg - (pFrame->FrXOrg?pFrame->FrXOrg:pFrame->OldFrXOrg);
+	  box->BxClipY = box->BxYOrg - (pFrame->FrYOrg?pFrame->FrYOrg:pFrame->OldFrYOrg);
 	  box->BxClipW = box->BxW;
 	  box->BxClipH = box->BxH;
 	  box->BxBoundinBoxComputed = FALSE; 

@@ -190,6 +190,7 @@ void GL_KillFrame (int frame);
 void SetSoftware_Mode (ThotBool value);
 
 void SetBadCard (ThotBool badbuffer);
+ThotBool GetBadCard ();
 
 #ifdef _WINDOWS
 void WinGL_Swap (HDC hDC);

@@ -941,7 +941,7 @@ static void GL_TextMap (float x, float y, int width, int height,
   glEnd ();	
 }
 
-#define MAX_STRING 128
+#define MAX_STRING 64
 #define MAX_BITMAP_ALLOC 4096
 /*--------------------------------------------------------
   UnicodeFontRender : Render an unicode string 
@@ -1104,6 +1104,7 @@ int UnicodeFontRender (void *gl_font,
     TtaFreeMemory (data);
   
   y -= SUPERSAMPLING (maxy + miny);
+
   GL_TextMap ((x - SUPERSAMPLING(shift)), 
 		 y, 
 		 width, 

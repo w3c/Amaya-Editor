@@ -214,7 +214,15 @@ void TtaSetDocumentCurrentTime (double current_time, Document doc)
   ----------------------------------------------------------------------*/
 void SetBadCard (ThotBool badbuffer)
 {
-  BadGLCard = !badbuffer;
+  BadGLCard = badbuffer;
+}
+/*----------------------------------------------------------------------
+  GetBadCard :  handle video cards that flush backbuffer after each
+  buffer swap
+  ----------------------------------------------------------------------*/
+ThotBool GetBadCard ()
+{
+  return BadGLCard;
 }
 /*----------------------------------------------------------------------
   GL_DrawAll : Really Draws opengl !!
@@ -270,9 +278,9 @@ ThotBool GL_DrawAll ()
 			  if (GL_prepare (frame))
 			    {
 			      if (BadGLCard)
-				DefClip (frame, -1, -1, -1, -1);
+				     DefClip (frame, -1, -1, -1, -1);
 
-			      RedrawFrameBottom (frame, 0, NULL); 
+			         RedrawFrameBottom (frame, 0, NULL); 
 
 			      if (was_animation)
 				{

@@ -2014,7 +2014,7 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    RootShell.hIcon = LoadIcon (hInstance, iconID);
    RootShell.hCursor = LoadCursor (NULL, IDC_ARROW);
 #ifndef _GL
-   RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
+   RootShell.hbrBackground = NULL;/*(HBRUSH) GetStockObject (LTGRAY_BRUSH);*/
 #else /*_GL*/
    RootShell.hbrBackground = 0;
 #endif /*_GL*/

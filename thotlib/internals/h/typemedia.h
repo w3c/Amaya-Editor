@@ -623,6 +623,10 @@ typedef struct _ViewFrame
   PtrAbstractBox         FrAbstractBox;	/* Pointer on the root abstract box of the View */
   int             FrXOrg;	/* X origin from root */
   int             FrYOrg;       /* Y origin from root */
+#ifdef _GL
+  int             OldFrXOrg;	   /* X origin from root for not opengl computed boxes*/
+  int             OldFrYOrg;       /* Y origin from root for not opengl computed boxes*/
+#endif /*_GL*/
   int             FrVolume;	/* Character volume in the window */
   int             FrClipXBegin;	/* X beginning of the display rectangle */
   int             FrClipXEnd;	/* X ending of the display rectangle */

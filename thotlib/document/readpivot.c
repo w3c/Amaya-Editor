@@ -1970,6 +1970,7 @@ static  LabelString         label;
   pPaPrev = NULL;
   withReferences = FALSE;
   create = FALSE;
+
   if (*tag != C_PIV_TYPE && *tag != C_PIV_NATURE)
     {
       i = 1;

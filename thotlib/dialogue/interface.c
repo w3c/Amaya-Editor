@@ -1396,6 +1396,7 @@ void TtaMainLoop ()
     {
 #ifdef _WINDOWS
       if (GetMessage (&ev, NULL, 0, 0))
+	  {
 #else  /* !_WINDOWS */
       TtaFetchOneEvent (&ev);
 #endif /* _WINDOWS */
@@ -1404,6 +1405,10 @@ void TtaMainLoop ()
       /* buffer swapping, when needed*/
       GL_DrawAll ();
 #endif/*  _GL */
+
+#ifdef _WINDOWS
+      }
+#endif  /* !_WINDOWS */
     }
 #ifdef _GTK
   gtk_exit (0);

@@ -471,6 +471,8 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
    }
 #else /*_GL*/
     hDC = BeginPaint (w, &ps);
+	if (GetBadCard())
+		DefClip (frame, -1, -1, -1, -1);
 	WinGL_Swap (hDC);
     EndPaint (w, &ps);
 	ReleaseDC (w, hDC);
@@ -768,13 +770,12 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
   /*    return TRUE; */
   if (GL_prepare (frame))
     {
-      if (glhard ()) 
+      if (glhard () || GetBadCard ()) 
 	{
 	  DefRegion (frame, 0, 0, 
 		     FrameTable[frame].FrWidth, FrameTable[frame].FrHeight); 
 	  RedrawFrameBottom (frame, 0, NULL);
 	}
-      else
 	GL_Swap (frame);
     }
 #else /* _GL */
@@ -1600,7 +1601,7 @@ static void Wnd_ResizeContent (HWND hwnd, int cx, int cy, int frame)
       else
 	ToolBar_AutoSize (WinToolBar[frame]);
 
-      InvalidateRect (WinToolBar[frame], NULL, TRUE);
+      InvalidateRect (WinToolBar[frame], NULL, FALSE);
       GetWindowRect (WinToolBar[frame], &rWindow);
       ScreenToClient (hwnd, (LPPOINT) &rWindow.left);
       ScreenToClient (hwnd, (LPPOINT) &rWindow.right);
@@ -2004,6 +2005,9 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
     }
   switch (mMsg)
     {
+	case WM_ERASEBKGND:
+      return 1;
+
     case WM_PAINT: 
       /* Some part of the Client Area has to be repaint. */	
       WIN_HandleExpose (hwnd, frame, wParam, lParam);	   
