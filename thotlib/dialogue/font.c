@@ -129,50 +129,47 @@ void *GL_LoadFont (char alphabet, int family,
   ----------------------------------------------------------------------*/
 static DWORD String_To_Charset (char *string)
 {
-	int int_charset;
+  int int_charset;
 
-	
-	int_charset = atoi (string);
-	
-	switch (int_charset)
-	{
-	case 1250:
-		return EASTEUROPE_CHARSET;/*FS_LATIN2*/
-	case 1251:
-		return RUSSIAN_CHARSET;/*FS_CYRILLIC*/	
-	case 1252:
-		return ANSI_CHARSET;/*FS_LATIN1*/
-	case 1253:
-		return GREEK_CHARSET;/*FS_GREEK*/
-	case 1254:
-		return TURKISH_CHARSET;/*FS_TURKISH*/
-	case 1255:
-		return HEBREW_CHARSET;/*FS_HEBREW*/
-	case 1256:
-		return ARABIC_CHARSET;/*FS_ARABIC*/
-	case 1257:
-		return BALTIC_CHARSET;/*FS_BALTIC*/
-	case 1361:
-		return JOHAB_CHARSET;/*FS_JOHAB*/
-	case 874:
-		return THAI_CHARSET;/*FS_THAI*/
-	case 932:
-		return SHIFTJIS_CHARSET;/*FS_JISJAPAN*/
-	case 936:
-		return GB2312_CHARSET;/*FS_CHINESESIMP*/
-	case 949:
-		return HANGEUL_CHARSET;/*FS_WANSUNG*/
-	case 950:
-		return CHINESEBIG5_CHARSET;/*FS_CHINESETRAD*/
-	default:
-		return ANSI_CHARSET;/*FS_LATIN1*/
-	}
+  int_charset = atoi (string);
+  switch (int_charset)
+    {
+    case 1250:
+      return EASTEUROPE_CHARSET;/*FS_LATIN2*/
+    case 1251:
+      return RUSSIAN_CHARSET;/*FS_CYRILLIC*/	
+    case 1252:
+      return ANSI_CHARSET;/*FS_LATIN1*/
+    case 1253:
+      return GREEK_CHARSET;/*FS_GREEK*/
+    case 1254:
+      return TURKISH_CHARSET;/*FS_TURKISH*/
+    case 1255:
+      return HEBREW_CHARSET;/*FS_HEBREW*/
+    case 1256:
+      return ARABIC_CHARSET;/*FS_ARABIC*/
+    case 1257:
+      return BALTIC_CHARSET;/*FS_BALTIC*/
+    case 1361:
+      return JOHAB_CHARSET;/*FS_JOHAB*/
+    case 874:
+      return THAI_CHARSET;/*FS_THAI*/
+    case 932:
+      return SHIFTJIS_CHARSET;/*FS_JISJAPAN*/
+    case 936:
+      return GB2312_CHARSET;/*FS_CHINESESIMP*/
+    case 949:
+      return HANGEUL_CHARSET;/*FS_WANSUNG*/
+    case 950:
+      return CHINESEBIG5_CHARSET;/*FS_CHINESETRAD*/
+    default:
+      return ANSI_CHARSET;/*FS_LATIN1*/
+    }
 }
 /*----------------------------------------------------------------------
   Win_Get_Charset Transcode Thot font attributes into Windows ones
   ----------------------------------------------------------------------*/
-static void Win_Get_Charset (char script, DWORD *charset, 
-			     int *family)
+static void Win_Get_Charset (char script, DWORD *charset, int *family)
 {
   switch (script)
      {
@@ -259,8 +256,7 @@ static void Win_Get_FontFace (char *lpszFace, int script,
 /*----------------------------------------------------------------------
   Win_Get_Highlight Transcode Thot font attributes into Windows ones
   ----------------------------------------------------------------------*/
-static void Win_Get_Highlight (int highlight, int *fdwItalic, 
-							   int *fnWeight)
+static void Win_Get_Highlight (int highlight, int *fdwItalic, int *fnWeight)
 {  
    switch (highlight)
      {
@@ -1089,7 +1085,8 @@ PtrFont LoadFont (char *name)
  GeneratePoscriptFont : 
  As poscript name serves also for the font cache
  ----------------------------------------------------------------------*/
-void GeneratePoscriptFont (char r_name[10], char script, int family, int highlight, int size)
+void GeneratePoscriptFont (char r_name[10], char script, int family,
+			   int highlight, int size)
 {
   
   char        *cfamily = "sthc";
@@ -1639,9 +1636,9 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   return (ptfont);
 }
 
-/*---------------------------------------------------------------
+/*----------------------------------------------------------------------
   ReadFont Load a stix font
----------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void *LoadStixFont (int family, int size)
 {
   return ((void *) LoadNearestFont ('E', family, 0, size, 
@@ -1681,7 +1678,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	  *font = fontset->FontIso_1;
 	  car = (int) c;
 	}
-      else if (c <= 0xFF)
+      else if (c <= 0xFF && c != 0xAC)
 	{
 	  /* 0 -> FF */
 	  *font = fontset->FontIso_1;
@@ -1696,12 +1693,12 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	car =  INVISIBLE_CHAR;
       else
 	{
-	  if (c >= 0x370 && c < 0x3FF)
+	  if (c == 0xAC || (c >= 0x370 && c < 0x3FF))
 	    {
 	      /* Greek characters */
 	      code = GreekFontScript;
 	      if (c == 0x3C2 || c == 0x3D1 ||
-		  c == 0x3D2 || c== 0x3D5 ||
+		  c == 0x3D2 || c == 0x3D5 ||
 		  c == 0x3D6)
 		/* final sigma, thetasym, upsih, phi, piv */
 		{
