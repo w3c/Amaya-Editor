@@ -17,7 +17,7 @@ echo "Generating binary tar files from " $THOTDIR
 
 for MACH in $PLATFORMS
 do
-echo "Plarform ------->" $MACH
+echo "Platform ------->" $MACH
  $TAR $DEST/amaya-$MACH-$AMAYAVERSION.tgz \
    Amaya/README.amaya \
    Amaya/config/XKeysymDB \
@@ -33,6 +33,7 @@ echo "Plarform ------->" $MACH
    Amaya/config/annot*rdf \
    Amaya/config/annot.schemas \
    Amaya/config/thread.rdf \
+   Amaya/config/replytypes.rdf \
    Amaya/dicopar/*.dic \
    Amaya/dicopar/*.ptn \
    Amaya/dicopar/alphabet \
