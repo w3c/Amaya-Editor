@@ -187,6 +187,8 @@ décrits.</p>
             attribut de style</a></li>
           <li><a href="StyleSheets.html.fr#Creating,">Créer un style générique
             pour un élément ou une classe</a></li>
+          <li><a href="StyleSheets.html.fr#feuilles">Les feuilles de style CSS
+            externes et les feuilles de style CSS utilisateur</a></li>
           <li><a href="StyleSheets.html.fr#Managing">Gérer des feuilles de
             style CSS externes</a></li>
           <li><a href="StyleSheets.html.fr#L1371">Mettre du style en utilisant

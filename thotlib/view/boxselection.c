@@ -268,9 +268,12 @@ void                TtaClearViewSelections ()
    int                 frame;
 
    /* manage all frames */
-   for (frame = 0; frame < MAX_FRAME; frame++)
-      if (ViewFrameTable[frame].FrAbstractBox != NULL)
-	 ClearViewSelection (frame + 1);
+   for (frame = 1; frame <= MAX_FRAME; frame++)
+      if (ViewFrameTable[frame - 1].FrAbstractBox != NULL)
+	{
+	  ClearViewSelection (frame);
+	  DisplayFrame (frame);
+	}
 }
 
 /*----------------------------------------------------------------------

@@ -66,6 +66,9 @@ void                DefClip (int frame, int xd, int yd, int xf, int yf)
    int                 width, height;
    ViewFrame          *pFrame;
 
+   if ((xd == xf && xd == 0 && (yd != yf || yd != 0)) ||
+       (yd == yf && yd == 0 && (xd != xf || xd != 0)))
+     return;
    if (frame > 0 && frame <= MAX_FRAME)
      {
 	pFrame = &ViewFrameTable[frame - 1];
@@ -83,7 +86,8 @@ void                DefClip (int frame, int xd, int yd, int xf, int yf)
 	     pFrame->FrClipXEnd = 0;
 	  }
 	/* Should we initalize the area redrawn */
-	else if (pFrame->FrClipXBegin == pFrame->FrClipXEnd && pFrame->FrClipXBegin == 0)
+	else if (pFrame->FrClipXBegin == pFrame->FrClipXEnd &&
+		 pFrame->FrClipXBegin == 0)
 	  {
 	     pFrame->FrClipXBegin = xd;
 	     pFrame->FrClipXEnd = xf;
@@ -110,7 +114,8 @@ void                DefClip (int frame, int xd, int yd, int xf, int yf)
 	     pFrame->FrClipYEnd = 0;
 	  }
 	/* Should we initalize the area redrawn */
-	else if (pFrame->FrClipYBegin == pFrame->FrClipYEnd && pFrame->FrClipYBegin == 0)
+	else if (pFrame->FrClipYBegin == pFrame->FrClipYEnd &&
+		 pFrame->FrClipYBegin == 0)
 	  {
 	     pFrame->FrClipYBegin = yd;
 	     pFrame->FrClipYEnd = yf;

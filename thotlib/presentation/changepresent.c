@@ -1,17 +1,8 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
- */
-
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
  */
  
 /*
@@ -69,18 +60,9 @@
 /*----------------------------------------------------------------------
   ApplyRuleSubTree
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ApplyRuleSubTree (PtrElement pE, PRuleType ruleType, PtrDocument pDoc, PtrPRule * pPRule, int view, ThotBool display)
-#else  /* __STDC__ */
-static void         ApplyRuleSubTree (pE, ruleType, pDoc, pPRule, view, display)
-PtrElement          pE;
-PRuleType           ruleType;
-PtrDocument         pDoc;
-PtrPRule           *pPRule;
-int                 view;
-ThotBool            display;
-
-#endif /* __STDC__ */
+static void   ApplyRuleSubTree (PtrElement pE, PRuleType ruleType,
+				PtrDocument pDoc, PtrPRule * pPRule,
+				int view, ThotBool display)
 {
    PtrAbstractBox      pAbb, pAbbF;
    PtrPSchema          pSPR;
@@ -170,18 +152,7 @@ ThotBool            display;
    		heritent de cette regle et si oui leur applique		
    		l'heritage et on les r'eaffiche si display est TRUE
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb, PtrDocument pDoc, ThotBool display)
-
-#else  /* __STDC__ */
-void         ApplyInherit (ruleType, pAb, pDoc, display)
-PRuleType           ruleType;
-PtrAbstractBox      pAb;
-PtrDocument         pDoc;
-ThotBool            display;
-
-#endif /* __STDC__ */
-
 {
    PtrElement          pEl;
    int                 view;
@@ -358,13 +329,7 @@ ThotBool            display;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int          NumTypePRuleAPI (PtrPRule pRule)
-#else  /* __STDC__ */
-int          NumTypePRuleAPI (pRule)
-PRuleType    pRule;
-
-#endif /* __STDC__ */
 {
    switch (pRule->PrType)
 	 {
@@ -530,14 +495,7 @@ PRuleType    pRule;
 /*----------------------------------------------------------------------
    	RuleSetIn teste l'appartenance d'un element a` un ensemble.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 RuleSetIn (register int num, RuleSet RuleS1)
-#else  /* __STDC__ */
-int                 RuleSetIn (num, RuleS1)
-register int        num;
-RuleSet             RuleS1;
-
-#endif /* __STDC__ */
 {
    if (num >= 0 && num < SETSIZE * 8)
       return RuleS1[num >> 3] & (1 << (num & 7));
@@ -549,14 +507,7 @@ RuleSet             RuleS1;
 /*----------------------------------------------------------------------
    	RuleSetPut ajoute un element a` un ensemble.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                RuleSetPut (RuleSet RuleS1, int num)
-#else  /* __STDC__ */
-void                RuleSetPut (RuleS1, num)
-RuleSet             RuleS1;
-int                 num;
-
-#endif /* __STDC__ */
 {
    if (num >= 0 && num < SETSIZE * 8)
       RuleS1[num >> 3] |= (1 << (num & 7));
@@ -566,13 +517,7 @@ int                 num;
 /*----------------------------------------------------------------------
    	RuleSetClr met a` 0 l'ensemble RuleS1.				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                RuleSetClr (RuleSet RuleS1)
-#else  /* __STDC__ */
-void                RuleSetClr (RuleS1)
-RuleSet             RuleS1;
-
-#endif /* __STDC__ */
 {
    USTRING s1;
    int     num;
@@ -587,14 +532,7 @@ RuleSet             RuleS1;
    		pEl1 et pEl2 possedent des regles de presentation	
    		specifique.						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            BothHaveNoSpecRules (PtrElement pEl1, PtrElement pEl2)
-#else  /* __STDC__ */
-ThotBool            BothHaveNoSpecRules (pEl1, pEl2)
-PtrElement          pEl1;
-PtrElement          pEl2;
-
-#endif /* __STDC__ */
 {
    ThotBool            equal;
 
@@ -610,14 +548,7 @@ PtrElement          pEl2;
    		qui appartient a la view view				
    		et qui n'est pas un pave de presentation.		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrAbstractBox      AbsBoxOfEl (PtrElement pEl, int view)
-#else  /* __STDC__ */
-PtrAbstractBox      AbsBoxOfEl (pEl, view)
-PtrElement          pEl;
-int                 view;
-
-#endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
    ThotBool            stop;
@@ -644,15 +575,7 @@ int                 view;
   ApplyNewRule applique au pave courant la regle de		
   presentation specifique qui vient d'etre creee.		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ApplyNewRule (PtrDocument pDoc, PtrPRule pPRule, PtrElement pEl)
-#else  /* __STDC__ */
-void                ApplyNewRule (pDoc, pPRule, pEl)
-PtrDocument         pDoc;
-PtrPRule            pPRule;
-PtrElement          pEl;
-
-#endif /* __STDC__ */
+void    ApplyNewRule (PtrDocument pDoc, PtrPRule pPRule, PtrElement pEl)
 {
   PtrAbstractBox      pAb;
   int                 view;
@@ -705,16 +628,7 @@ PtrElement          pEl;
   RemoveSpecifPres supprime toutes les regles de presentation specifiques
   associees a l'element pEl.				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         RemoveSpecifPres (PtrElement pEl, PtrDocument pDoc, RuleSet rules, int viewToApply)
-#else  /* __STDC__ */
-static void         RemoveSpecifPres (pEl, pDoc, rules, viewToApply)
-PtrElement          pEl;
-PtrDocument         pDoc;
-RuleSet             rules;
-int                 viewToApply;
-
-#endif /* __STDC__ */
+static void RemoveSpecifPres (PtrElement pEl, PtrDocument pDoc, RuleSet rules, int viewToApply)
 {
    PtrPRule            pPRule, pR, pRS;
    NotifyPresentation  notifyPres;
@@ -794,17 +708,9 @@ int                 viewToApply;
   ApplyPRuleAndRedisplay: apply a presentation rule, update the view
   and apply the inheritance of the rule.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ApplyPRuleAndRedisplay (PtrAbstractBox pAb, PtrDocument pDoc, PtrAttribute pAttr, PtrPRule pRP, PtrPSchema pSPR)
-#else  /* __STDC__ */
-static void         ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR)
-PtrAbstractBox      pAb;
-PtrDocument         pDoc;
-PtrAttribute        pAttr;
-PtrPRule            pRP;
-PtrPSchema          pSPR;
-
-#endif /* __STDC__ */
+static void ApplyPRuleAndRedisplay (PtrAbstractBox pAb, PtrDocument pDoc,
+				    PtrAttribute pAttr, PtrPRule pRP,
+				    PtrPSchema pSPR)
 {
   if (pRP == NULL)
      return;
@@ -833,17 +739,9 @@ PtrPSchema          pSPR;
   pDoc la regle de presentation standard de type ruleType	
   pour la view viewSch.						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ApplyStandardRule (PtrElement pEl, PtrDocument pDoc, PRuleType ruleType, FunctionType funcType, int viewSch)
-#else  /* __STDC__ */
-void                ApplyStandardRule (pEl, pDoc, ruleType, funcType, viewSch)
-PtrElement          pEl;
-PtrDocument         pDoc;
-PRuleType           ruleType;
-FunctionType        funcType;
-int                 viewSch;
-
-#endif /* __STDC__ */
+void  ApplyStandardRule (PtrElement pEl, PtrDocument pDoc,
+			 PRuleType ruleType, FunctionType funcType,
+			 int viewSch)
 {
   PtrPRule            pRP;
   PtrAbstractBox      pAb;
@@ -893,13 +791,7 @@ int                 viewSch;
 /*----------------------------------------------------------------------
   NextAbstractBox: search the next abstract box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrAbstractBox     NextAbstractBox (PtrAbstractBox pAb)
-#else  /* __STDC__ */
-static PtrAbstractBox     NextAbstractBox (pAb)
-PtrAbstractBox     pAb;
-#endif /* __STDC__ */
-
 {
   PtrAbstractBox      pNextAb;
 
@@ -928,15 +820,8 @@ PtrAbstractBox     pAb;
   The pPres function presentation rule has been removed for the element
   having abstract box pAb.  Undo that presentation rule for that abstract box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void       RemoveFunctionPRule (PtrPRule pPres, PtrAbstractBox pAb, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void       RemoveFunctionPRule (pPres, pAb, pDoc)
-PtrPRule pPres;
-PtrAbstractBox pAb;
-PtrDocument pDoc;
-#endif /* __STDC__ */
-
+static void RemoveFunctionPRule (PtrPRule pPres, PtrAbstractBox pAb,
+				 PtrDocument pDoc)
 {
    if (pPres->PrPresFunction == FnBackgroundPicture &&
        pAb->AbPictBackground != NULL)
@@ -962,17 +847,8 @@ PtrDocument pDoc;
   Redisplay boxes of element pEl that are concerned by removing the
   presentation function pRule
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void            ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl, PtrDocument pDoc, ThotBool remove)
-#else  /* __STDC__ */
-void            ApplyASpecificStyleRule (pRule, pEl, pDoc, remove)
-PtrPRule	pRule;
-PtrElement	pEl;
-PtrDocument	pDoc;
-ThotBool        remove;
-
-#endif /* __STDC__ */
-
+void  ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl,
+			       PtrDocument pDoc, ThotBool remove)
 {
   PtrAbstractBox  pAb, pParent;
   PtrPRule	  pCurrentRule, pRP;
@@ -984,10 +860,9 @@ ThotBool        remove;
   int             view;
   ThotBool	  done, enclosed;
 
-  TtaClearViewSelections ();
   enclosed = FALSE;
   /* do nothing if the document no longer exists */
-  if (pDoc != NULL)
+  if (pDoc)
     /* examine all abstract boxes of element */
     for (view = 0; view < MAX_VIEW_DOC; view++)
     {
@@ -1095,19 +970,9 @@ ThotBool        remove;
   For each displayed abstract box and each new presention rule
   check if it is concerned by this new pRule.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void               ApplyAGenericStyleRule (Document doc, PtrSSchema pSS, int elType, int attrType, int presBox, PtrPRule pRule, ThotBool remove)
-#else  /* __STDC__ */
-void               ApplyAGenericStyleRule (doc, pSS, elType, attrType, presBox, pRule, remove)
-Document           doc;
-PtrSSchema         pSS;
-int                elType;
-int                attrType;
-int                presBox;
-PtrPRule           pRule;
-ThotBool           remove;
-#endif /* __STDC__ */
-
+void  ApplyAGenericStyleRule (Document doc, PtrSSchema pSS, int elType,
+			      int attrType, int presBox, PtrPRule pRule,
+			      ThotBool remove)
 {
   PtrPRule        pCurrentRule, pRP;
   PtrPSchema      pSPR;
@@ -1125,8 +990,6 @@ ThotBool           remove;
   pDoc = LoadedDocument[doc - 1];
   selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel,
 				     &firstChar, &lastChar);
-  /* eteint la selection courante */
-  TtaClearViewSelections ();
   /* do nothing if the document no longer exists */
   if (pDoc != NULL)
     /* examine all abstract boxes of elements */
@@ -1210,7 +1073,7 @@ ThotBool           remove;
     }
   /* tente de fusionner les elements voisins et reaffiche les paves */
   /* modifie's et la selection */
-  if (pSelDoc != NULL && pSelDoc == pDoc)
+  if (pDoc && pSelDoc == pDoc)
     SelectRange (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar);
 }
 
@@ -1219,16 +1082,7 @@ ThotBool           remove;
   contenues dans 'RulesS' attachees aux elements du	
   sous-arbre de racine pElRoot				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RemoveSpecPresTree (PtrElement pElRoot, PtrDocument pDoc, RuleSet RulesS, int viewToApply)
-#else  /* __STDC__ */
-void                RemoveSpecPresTree (pElRoot, pDoc, RulesS, viewToApply)
-PtrElement          pElRoot;
-PtrDocument         pDoc;
-RuleSet             RulesS;
-int                 viewToApply;
-
-#endif /* __STDC__ */
+void  RemoveSpecPresTree (PtrElement pElRoot, PtrDocument pDoc, RuleSet RulesS, int viewToApply)
 {
    PtrElement          pEl, pNext;
 
@@ -1253,19 +1107,12 @@ int                 viewToApply;
    TtaIsCSSPRule
 
    Check whether a presentation rule is associated with a CSS rule
-
    Parameters:
    pRule: the presentation rule to be tested.
-
    Return value:
    TRUE if pRule is a CSS rule
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            TtaIsCSSPRule (PRule pRule)
-#else  /* __STDC__ */
-ThotBool            TtaIsCSSPRule (pRule)
-PRule               pRule;
-#endif /* __STDC__ */
 {
    ThotBool         ret;
 
@@ -1283,21 +1130,12 @@ PRule               pRule;
    TtaRemovePRule
 
    Removes a presentation rule from an element and release that rule.
-
    Parameters:
    element: the element with which the presentation rule is associated.
    pRule: the presentation rule to be removed.
    document: the document to which the element belongs.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaRemovePRule (Element element, PRule pRule, Document document)
-#else  /* __STDC__ */
-void                TtaRemovePRule (element, pRule, document)
-Element             element;
-PRule               pRule;
-Document            document;
-#endif /* __STDC__ */
+void    TtaRemovePRule (Element element, PRule pRule, Document document)
 {
    PtrPRule            pPres, pPreviousPres;
 
@@ -1347,28 +1185,15 @@ Document            document;
    Returns the first presentation rule associated with a given
    element (if pRule is NULL) or the presentation rule that
    follows a given rule of a given element.
-
    Parameters:
    element: the element of interest.
    pRule: a presentation rule of that element, or NULL
    if the first rule is asked.
-
    Return parameter:
    pRule: the next presentation rule, or NULL if
    pRule is the last rule of the element.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                TtaNextPRule (Element element, PRule * pRule)
-
-#else  /* __STDC__ */
-void                TtaNextPRule (element, pRule)
-Element             element;
-PRule              *pRule;
-
-#endif /* __STDC__ */
-
 {
    PtrPRule            nextPRule;
 
