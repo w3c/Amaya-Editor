@@ -3426,9 +3426,7 @@ char               *attrstr;
    Element             el;
    GenericContext        gblock;
    SpecificContextBlock *sblock;
-   SpecificTarget        elem;
    char                 *url;
-   char                 *name;
    BackgroundImageCallbackPtr callblock;
    char                 *no_bg_image;
 

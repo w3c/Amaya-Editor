@@ -314,7 +314,6 @@ NotifyPresentation *event;
    PRule	       presRule;
    Document	       doc;
 #define STYLELEN 1000
-   char                style[STYLELEN];
    int                 presType;
 
    elem = event->element;

@@ -46,6 +46,11 @@ extern boolean      TtaIsDocumentSelected (Document document);
 extern void         TtaSelectElement (Document document, Element selectedElement);
 
 /*----------------------------------------------------------------------
+   TtaSelectView posts the selected view in the document
+  ----------------------------------------------------------------------*/
+extern void         TtaSelectView (Document document, View view);
+
+/*----------------------------------------------------------------------
    TtaSelectString
 
    Selects a substring within a Text basic element. This substring is
@@ -189,7 +194,6 @@ extern void         TtaGiveLastSelectedElement (Document document, /*OUT*/ Eleme
 extern boolean      TtaIsDocumentSelected ( /*Document document */ );
 extern void         TtaSelectElement ( /* Document document, Element selectedElement */ );
 extern void         TtaSelectView (/*Document document, View view*/);
-extern void         TtaSelectView (Document document, View view);
 extern void         TtaSelectString ( /* Document document, Element textElement, int firstCharacter, int lastCharacter */ );
 extern void         TtaExtendSelection ( /* Document document, Element element, int lastCharacter */ );
 extern void         TtaSelectInterval ();

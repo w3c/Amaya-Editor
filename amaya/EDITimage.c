@@ -244,7 +244,7 @@ void ChangeBackgroundImage (document, view)
    Element             el, elStyle;
    Element             first, last;
    char                s[MAX_LENGTH];
-   int                 i, c1, cN;
+   int                 i, c1;
 
    /* get the first and last selected element */
    TtaGiveFirstSelectedElement (document, &first, &c1, &i);

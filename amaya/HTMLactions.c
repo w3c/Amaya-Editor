@@ -32,7 +32,7 @@
 #include "HTMLform_f.h"
 #include "HTMLimage_f.h"
 #include "trans_f.h"
-
+#include "selection.h"
 
 /*----------------------------------------------------------------------
    SetFontOrPhraseOnElement                                
