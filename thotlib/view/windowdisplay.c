@@ -1223,13 +1223,24 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
 	   break;
 	 }
      }
+
+#ifdef _WIN_PRINT
+   display = TtPrinterDC;
+#else /* _WIN_PRINT */
+   display = TtDisplay;
+   SelectClipRgn (display, clipRgn);
+#endif /* _WIN_PRINT */
+
    /* how to fill the polygone */
    if (pattern == 0)
-     logBrush.lbStyle = BS_NULL;
-   else if (pattern == 3)
+	 hBrush = NULL;
+   else if (pattern >= 3)
      {
-       logBrush.lbColor = ColorPixel (fg);
+       logBrush.lbColor = RGB (225, 225, 225);
        logBrush.lbStyle = BS_HATCHED;
+	   logBrush.lbHatch = HS_DIAGCROSS;
+       hBrush = CreateBrushIndirect (&logBrush);
+	   /*hBrush = GetStockObject (DKGRAY_BRUSH);*/
      }
    else
      {
@@ -1238,15 +1249,8 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
        else
 	 logBrush.lbColor = ColorPixel (bg);
        logBrush.lbStyle = BS_SOLID;
-     } 
-   hBrush = CreateBrushIndirect (&logBrush);
-
-#ifdef _WIN_PRINT
-   display = TtPrinterDC;
-#else /* _WIN_PRINT */
-   display = TtDisplay;
-   SelectClipRgn (display, clipRgn);
-#endif /* _WIN_PRINT */
+     hBrush = CreateBrushIndirect (&logBrush);
+     }
    /* fill the polygone */
    hOldPen = SelectObject (display, hPen) ;
    if (hBrush)
@@ -1254,7 +1258,8 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
        hOldBrush = SelectObject (display, hBrush);
        Rectangle (display, x, y, x + width, y + height);
        SelectObject (display, hOldBrush);
-       DeleteObject (hBrush);
+	   /*if (pattern < 3)*/
+         DeleteObject (hBrush);
      }
    SelectObject (display, hOldPen);
    DeleteObject (hPen);
