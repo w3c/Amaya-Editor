@@ -100,11 +100,6 @@ extern void UpdateNamespaceDeclaration ( PtrDocument pDoc,
                                          char *NsUri );
 extern char * GiveCurrentNsUri ( PtrDocument pDoc,
                                  PtrElement pEl );
-extern void ExportXmlDocument ( PtrDocument pDoc,
-                                PtrElement pNode,
-                                int indent,
-                                FILE *fileDescriptor,
-                                ThotBool premierfils );
 
 #else /* __STDC__ */
 
@@ -202,11 +197,6 @@ extern void UpdateNamespaceDeclaration (/* PtrDocument pDoc,
                                            char *NsUri */);
 extern char * GiveCurrentNsUri (/* PtrDocument pDoc,
                                    PtrElement pEl */);
-extern void ExportXmlDocument (/* PtrDocument pDoc,
-                                  PtrElement pNode,
-                                  int indent,
-                                  FILE *fileDescriptor,
-                                  ThotBool premierfils */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

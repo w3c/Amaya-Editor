@@ -1051,7 +1051,8 @@ int          CreateNature (char *SSchName, char *PSchName,
 	{
 	  ret = pSS->SsFirstDynNature;
 	  while (ret <= pSS->SsNRules &&
-		 pSS->SsRule->SrElem[ret - 1]->SrSSchemaNat != NULL)
+		 ((pSS->SsRule->SrElem[ret - 1]->SrName != NULL) ||
+		  (pSS->SsRule->SrElem[ret - 1]->SrSSchemaNat != NULL)))
 	    ret++;
 	  if (ret > pSS->SsNRules)
 	    /* pas de regle libre, on ajoute une regle a la fin de la */
@@ -2395,13 +2396,17 @@ void TtaSetUriSSchema (SSchema sSchema, char *sSchemaUri)
 /*----------------------------------------------------------------------
   TtaChangeGenericSchemaNames
   ----------------------------------------------------------------------*/
-void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, Document document)
+void TtaChangeGenericSchemaNames (char *sSchemaUri,
+				  char *sSchemaName,
+				  Document document)
 
 {
   PtrDocument         pDoc;
-  PtrSSchema          pSS;
+  PtrSSchema          pSS, docSS;
   PtrPSchema          pPSch;
   PtrDocSchemasDescr  pPfS;
+  PtrSRule            pRule;
+  ThotBool            found;
   int                 i;
 
   pDoc = LoadedDocument[document - 1];
@@ -2448,33 +2453,71 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, Document 
 		i = pSS->SsNRules;
 	      }
 	}
-
-      /* Update the LoadedSSchema table */
-      for (i = 0; i < MAX_SSCHEMAS &&
-	     strcmp ("XML", LoadedSSchema[i].StructSchemaName); i++);
-      if (i < MAX_SSCHEMAS)
-	{
-	  /* The generic schema is found in the table, modify its name */
-	  if (sSchemaName != NULL)
-	    strcpy (LoadedSSchema[i].StructSchemaName, sSchemaName);
-	  else
-	    LoadedSSchema[i].StructSchemaName[0] = EOS;
-	}
-
-      /* Update the LoadedPSchema table */
-#ifndef NODISPLAY
-      for (i = 0; i < MAX_SSCHEMAS &&
-	     strcmp ("XMLP", LoadedPSchema[i].PresSchemaName); i++);
-      if (i < MAX_SSCHEMAS)
-	{
-	  /* The generic schema is found in the table, modify its name */
-	  if (sSchemaName != NULL)
-	    strcpy (LoadedPSchema[i].PresSchemaName, sSchemaName);
-	  else
-	    LoadedPSchema[i].PresSchemaName[0] = EOS;
-	}
-#endif
     }
+  
+  if (pPSch != NULL)
+    {
+      /* Modify the name of the presentation schema */
+      if (sSchemaName == NULL)
+	{
+	  pPSch->PsPresentName[0] = EOS;
+	  strcpy (pPSch->PsPresentName, "Unknown");
+	  strcat (pPSch->PsPresentName, "P");
+	}
+      else
+	{
+	  strcpy (pPSch->PsPresentName, sSchemaName);
+	  strcat (pPSch->PsPresentName, "P");
+	  strcpy (pPSch->PsStructName, sSchemaName);
+	}
+    }
+  
+  /* Update the LoadedSSchema table */
+  for (i = 0; i < MAX_SSCHEMAS &&
+	 strcmp ("XML", LoadedSSchema[i].StructSchemaName); i++);
+  if (i < MAX_SSCHEMAS)
+    {
+      /* The generic schema is found in the table, modify its name */
+      if (sSchemaName != NULL)
+	  strcpy (LoadedSSchema[i].StructSchemaName, sSchemaName);
+      else
+	LoadedSSchema[i].StructSchemaName[0] = EOS;
+    }
+  
+  /* Update the LoadedPSchema table */
+#ifndef NODISPLAY
+  for (i = 0; i < MAX_SSCHEMAS &&
+	 strcmp ("XMLP", LoadedPSchema[i].PresSchemaName); i++);
+  if (i < MAX_SSCHEMAS)
+    {
+      /* The generic schema is found in the table, modify its name */
+      if (sSchemaName != NULL)
+	{
+	  strcpy (LoadedPSchema[i].PresSchemaName, sSchemaName);
+	  strcat (LoadedPSchema[i].PresSchemaName, "P");
+	}
+      else
+	LoadedPSchema[i].PresSchemaName[0] = EOS;
+    }
+#endif
+  
+  /* Update the XML Loaded nature */
+  docSS= pDoc->DocSSchema;
+  found = FALSE;
+  i = 0;
+  do
+    {
+      pRule = docSS->SsRule->SrElem[i++];
+      if (pRule->SrConstruct == CsNatureSchema)
+	if (strcmp (pRule->SrOrigNat, "XML") == 0)
+	  found = TRUE;
+    }
+  while (!found && i < docSS->SsNRules);
+  if (found)
+    {
+      strcpy (pRule->SrOrigNat, sSchemaName);
+      strcpy (pRule->SrName, sSchemaName);
+    } 
 }
 
 /*----------------------------------------------------------------------
@@ -2646,307 +2689,3 @@ char * GiveCurrentNsUri (PtrDocument pDoc, PtrElement pEl)
   return (ns_uri);
 }
 
-/*----------------------------------------------------------------------
-   ExportNsPrefix
-   Search if the element schema is associated with a namespace prefix
-  ----------------------------------------------------------------------*/
-static char* ExportNsPrefix (PtrDocument pDoc, PtrElement pNode)
-
-{
-  PtrNsUriDescr    uriDecl;
-  PtrNsPrefixDescr prefixDecl;
-  ThotBool         found;
-  int              i;
-  char            *ns_prefix = NULL;
-
-  if (pDoc->DocNsUriDecl == NULL)
-    /* There is no namespace declaration for this document */
-    return (ns_prefix);
-
-  if (pNode->ElStructSchema->SsUriName == NULL)
-    /* No URI refefence fot this schema */
-    return (ns_prefix);
-
-  i = 0;
-  /* Search all the namespace declarations declared for this element */
-  uriDecl = pDoc->DocNsUriDecl;
-  found = FALSE;
-  while (uriDecl != NULL && !found)
-    {
-      if (uriDecl->NsUriName != NULL &&
-	  (strcmp (uriDecl->NsUriName, pNode->ElStructSchema->SsUriName) == 0))
-	{
-	  /* The element schema uri has been found */
-	  /* Search the first associated prefix */
-	  found = TRUE;
-	  prefixDecl = uriDecl->NsPtrPrefix;
-	  while (prefixDecl != NULL)
-	    {
-	      if ((pNode == prefixDecl->NsPrefixElem) ||
-		  (ElemIsAnAncestor (prefixDecl->NsPrefixElem, pNode)))
-		{
-		  ns_prefix = prefixDecl->NsPrefixName;
-		  prefixDecl = NULL;
-		}
-	      else
-		prefixDecl = prefixDecl->NsNextPrefixDecl;
-	    }
-	}
-      uriDecl = uriDecl->NsNextUriDecl;
-    }
-  return (ns_prefix);
-}
-
-/*----------------------------------------------------------------------
-   ExportNsDeclaration
-   Export in the fileDescriptor file the namespace attributes
-   of the Element pNode.
-   length: max length to export.                         
-  ----------------------------------------------------------------------*/
-static void ExportNsDeclaration (PtrDocument pDoc, PtrElement pNode, 
-			    int length, FILE *fileDescriptor)
-{
-  PtrNsUriDescr    uriDecl;
-  PtrNsPrefixDescr prefixDecl;
-  int              i;
-
-  if (pDoc->DocNsUriDecl == NULL)
-    /* There is no namespace declaration for this document */
-    return;
-
-  i = 0;
-  /* Search all the namespace declarations declared for this element */
-  uriDecl = pDoc->DocNsUriDecl;
-  while (uriDecl != NULL)
-    {
-      prefixDecl = uriDecl->NsPtrPrefix;
-      while (prefixDecl != NULL)
-	{
-	  if (prefixDecl->NsPrefixElem == pNode)
-	    {
-	      if (i > 0)
-		  fprintf (fileDescriptor, "\n");
-	      /* A Namespace declaration has been found for this element */
-	      fprintf (fileDescriptor, " xmlns");
-	      if (prefixDecl->NsPrefixName != NULL)
-		fprintf (fileDescriptor, ":%s", prefixDecl->NsPrefixName);
-	      fprintf (fileDescriptor, "=\"%s\"", uriDecl->NsUriName);
-	      i++;
-	    }
-	    prefixDecl = prefixDecl->NsNextPrefixDecl;
-	}
-      uriDecl = uriDecl->NsNextUriDecl;
-    }
-
-  return;
-}
-
-/*----------------------------------------------------------------------
-   ExportText
-   Export in the fileDescriptor file the content of the text 
-   list buffer, pBT is the first one.
-   length: max length to export.                         
-  ----------------------------------------------------------------------*/
-static void ExportText (PtrTextBuffer pBT, int length, FILE *fileDescriptor)
-{
-   PtrTextBuffer       b;
-   int                 i, l;
-
-   l = 0;
-   b = pBT;
-
-   /* export the text buffer content */
-   while (b != NULL)
-     {
-       i = 0;
-       while (i < b->BuLength && b->BuContent[i] != EOS)
-	 {
-	   if (l > length)
-	     {
-	       /* generate a CR */
-	       putc (__CR__, fileDescriptor);
-	       l = 0;
-	     }
-	   if (b->BuContent[i] == START_ENTITY)
-	     putc ('&', fileDescriptor);
-	   else
-	     putc (b->BuContent[i], fileDescriptor);
-	   i++;
-	   l++;
-	 }
-       /* following the text buffer for the same element */
-       b = b->BuNext;
-     }
-   return;
-}
-
-/*----------------------------------------------------------------------
-   ExportXmlDocument
-   Produces in a file a human-readable form of an XML abstract tree.
-   Parameters:
-   pDoc: the root element of the tree to be exported.
-   fileDescriptor: file descriptor of the file that will contain the document.
-   This file must be open when calling the function.
-  ----------------------------------------------------------------------*/
-void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, int indent,
-			FILE *fileDescriptor, ThotBool premierfils)
-{
-  PtrElement          f;
-  PtrSRule            pRe1;
-  PtrAttribute        pAttr;
-  PtrTtAttribute      pAttr1;
-  char                text[100];
-  char                startName[MAX_NAME_LENGTH+1];
-  char                endName[MAX_NAME_LENGTH+3];
-  char               *ns_prefix;
-  int                 i;
-  ThotBool            specialTag;
-
-  if (pNode != NULL)
-    {
-      /* Indentation white-spaces */
-      for (i = 1; i <= indent; i++)
-	fprintf (fileDescriptor, " ");
-      i = 1;
-
-      if (!pNode->ElTerminal)
-	{
-	  /* Don't export the Document element */
-	  if (pNode == pDoc->DocDocElement)
-	    {
-	      fprintf (fileDescriptor, "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>");
-	    }
-	  else
-	    {
-	      specialTag = FALSE;
-	      /* Export the element name */
-	      pRe1 = pNode->ElStructSchema->SsRule->SrElem[pNode->ElTypeNumber - 1];
-	      if (strcmp (pRe1->SrName, "xmlcomment") == 0)
-		{
-		  strcpy (startName, "\n<!--");
-		  strcpy (endName, "-->");
-		  specialTag = TRUE;
-		}
-	      else if (strcmp (pRe1->SrName, "xmlpi") == 0)
-		{
-		  strcpy (startName, "\n<?");
-		  strcpy (endName, "?>");
-		  specialTag = TRUE;
-		}
-	      else if (strcmp (pRe1->SrName, "doctype") == 0)
-		{
-		  strcpy (startName, "\n<!DOCTYPE ");
-		  strcpy (endName, ">");
-		  specialTag = TRUE;
-		}
-	      else if (strcmp (pRe1->SrName, "cdata") == 0)
-		{
-		  strcpy (startName, "\n<![CDATA[");
-		  strcpy (endName, "]]>");
-		  specialTag = TRUE;
-		}
-	      else if ((strcmp (pRe1->SrName, "xmlcomment_line") == 0) ||
-		       (strcmp (pRe1->SrName, "xmlpi_line") == 0) ||
-		       (strcmp (pRe1->SrName, "cdata_line") == 0) ||
-		       (strcmp (pRe1->SrName, "doctype_line") == 0))
-		{
-		  startName[0] = EOS;
-		  f = pNode->ElNext;
-		  if (f != NULL)
-		    strcpy (endName, "\n");
-		  else
-		    endName[0] = EOS;
-		  specialTag = TRUE;
-		}
-	      else
-		{
-		  strcpy (startName, "\n<");
-		  strcpy (endName, "</");
-		  ns_prefix = ExportNsPrefix (pDoc, pNode);
-		  if (ns_prefix != NULL)
-		    {
-		      strcat (startName, ns_prefix);
-		      strcat (startName, ":");
-		      strcat (endName, ns_prefix);
-		      strcat (endName, ":");
-		    }
-		  strcat (startName, pRe1->SrName);
-		  strcat (endName, pRe1->SrName);
-		  strcat (endName, ">");
-		}
-	      fprintf (fileDescriptor, "%s", startName);
-	      
-	      /* Export the namespace declaration */
-	      if (!specialTag)
-		ExportNsDeclaration (pDoc, pNode, 72-indent, fileDescriptor);
-
-	      /* Export the attributes */
-	      pAttr = pNode->ElFirstAttr;
-	      if (pAttr != NULL)
-		fprintf (fileDescriptor, " ");
-	      while (pAttr != NULL)
-		{
-		  pAttr1 = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum-1];
-		  fprintf (fileDescriptor, "%s=", pAttr1->AttrName);
-		  switch (pAttr1->AttrType)
-		    {
-		    case AtNumAttr:
-		      fprintf (fileDescriptor, "\"%d\"", pAttr->AeAttrValue);
-		      break;
-		    case AtTextAttr:
-		      if (pAttr->AeAttrText)
-			{
-			  CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 99);
-			  fprintf (fileDescriptor, "\"%s\"", text);
-			}
-		      break;
-		    case AtEnumAttr:
-		      fprintf (fileDescriptor, "\"%s\"",
-			       pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1]);
-		      break;
-		    default:
-		      break;
-		    }
-                  if (pAttr->AeNext != NULL)
-                    fprintf (fileDescriptor, " ");
-		  pAttr = pAttr->AeNext;
-		}
-	      if ((startName[0] != EOS) && !specialTag)
-		fprintf (fileDescriptor, ">");
-	    }
-	  
-	  /* Recursive export */
-	  f = pNode->ElFirstChild;
-	  while (f != NULL)
-	    {
-	      ExportXmlDocument (pDoc, f, indent, fileDescriptor, premierfils);
-	      /* ExportXmlDocument (pDoc, f, indent+2, fileDescriptor, premierfils); */
-	      if (!premierfils)
-		f = f->ElNext;
-	      else
-		f = NULL;
-	    }
-
-	  /* Export End tag */
-	  if (pNode != pDoc->DocDocElement)
-	    fprintf (fileDescriptor, "%s", endName);
-	}
-      else
-	{
-	  /* It is a terminal element */
-	  for (i = 1; i <= indent; i++)
-	    fprintf (fileDescriptor, " ");
-	  switch (pNode->ElLeafType)
-	    {
-	    case LtPicture:
-	      ExportText (pNode->ElText, 72 - indent, fileDescriptor);
-	      break;
-	    case LtText:
-	      ExportText (pNode->ElText, 72 - indent, fileDescriptor);
-	      break;
-	    default:
-	      break;	
-	    }
-	}
-    }
-}
