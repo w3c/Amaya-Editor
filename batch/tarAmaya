@@ -12,7 +12,7 @@
 # default parameters
 AMAYAVERSION="8.6"
 DEST=$HOME
-PLATFORMS="GTK GL WX"
+PLATFORMS="GTK WX"
 
 # Check argument number on the command line
 ARGS=2
