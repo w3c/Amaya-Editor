@@ -883,10 +883,12 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
 	  /* save the previous fixed edge */
 	  oldHorizEdge = pBox->BxHorizEdge;
 	  /* Look for the horizontal fixed edge and the horizontal free edge */
+#ifdef IV
 	  if ((op == OpWidth/* && !pBox->BxHorizInverted) ||
 			       (op != OpWidth && pBox->BxHorizInverted*/))
 	    oldPosEdge = pAb->AbWidth.DimPosition.PosEdge;
 	  else
+#endif
 	    {
 	      oldPosEdge = pAb->AbHorizPos.PosEdge;
 	      /* Update the box history to avoid two moving of pSourceBox */
@@ -940,10 +942,12 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
 	  /* save the previous fixed edge */
 	  oldVertEdge = pBox->BxVertEdge;
 	  /* Look for the vertical fixed edge and the vertical free edge */
+#ifdef IV
 	  if ((op == OpHeight/* && !pBox->BxVertInverted) ||
 				(op != OpHeight && pBox->BxVertInverted*/))
 	    oldPosEdge = pAb->AbHeight.DimPosition.PosEdge;
 	  else
+#endif
 	    {
 	      oldPosEdge = pAb->AbVertPos.PosEdge;
 	      /* Update the box history to avoid two moving of pSourceBox */
@@ -2614,6 +2618,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      if (orgTrans)
 		{
 		  /* move also included boxes */
+		  YMoveAllEnclosed (pBox, orgTrans, frame);
+#ifdef IV
 		  pAb = pCurrentAb->AbFirstEnclosed;
 		  while (pAb)
 		    {
@@ -2621,6 +2627,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 			YMoveAllEnclosed (pAb->AbBox, orgTrans, frame);
 		      pAb = pAb->AbNext;
 		    }
+#endif
 		}
 	    }
 	  else if (pCurrentAb->AbLeafType == LtCompound &&

@@ -2750,7 +2750,7 @@ RULES
 	NoBreak2 : 2;
 #endif
 	Width: auto{Enclosing . Width};
-	Display: Block;
+	{Display: Block;}
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: PMargin;
 	MarginBottom: PMargin;
@@ -4503,7 +4503,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Width: auto{Enclosing . Width};
-	Display: Block;
+	{Display: Block;}
 	VertPos: Top = Previous not MAP . Bottom;
         MarginTop: 0;
 	IN Structure_view BEGIN

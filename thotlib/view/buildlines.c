@@ -1635,7 +1635,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
   PtrAbstractBox      pAb, pAbRef = NULL;
   PtrBox              box;
   int                 bottomL = 0, bottomR = 0, y;
-  int                 orgX, orgY, width;
+  int                 orgX, orgY, width, max;
   int                 t, b, l, r, lbmp, rbmp;
   ThotBool            clearL, clearR;
   ThotBool            variable, newFloat, still;
@@ -1778,7 +1778,8 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 	  if (pfloatL)
 	    {
 	      /* line at the right of a previous left float */
-	      pLine->LiXOrg = floatL->BxXOrg + floatL->BxWidth + indent - orgX;
+	      //pLine->LiXOrg = floatL->BxXOrg + floatL->BxWidth + indent - orgX;
+	      pLine->LiXOrg = floatL->BxXOrg + floatL->BxWidth - floatL->BxRMargin + indent - orgX;
 	      bottomL = floatL->BxYOrg + floatL->BxHeight - orgY;
 	    }
 	  else
@@ -3180,7 +3181,7 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
 void ComputeLines (PtrBox pBox, int frame, int *height)
 {
   PtrLine             prevLine, pLine;
-  PtrAbstractBox      pChildAb;
+  PtrAbstractBox      pChildAb, pCell;
   PtrAbstractBox      pAb, pRootAb, pParent;
   PtrBox              pBoxToBreak, pNextBox;
   PtrBox              floatL, floatR;
@@ -3224,17 +3225,24 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		pParent->AbBox->BxType == BoFloatGhost))
 	  pParent = pParent->AbEnclosing;
       if (pParent && pParent->AbBox &&
-	  (pParent->AbBox->BxType != BoCell || pParent->AbBox->BxW > 20))
+	  (pParent->AbBox->BxType != BoCell/* || pParent->AbBox->BxW > 20*/))
 	   /* keep the box width */
 	maxWidth = pParent->AbBox->BxW;
       else
 	{
-	  /* manage this box as an extensible box */
-	  maxWidth = 30 * DOT_PER_INCH;
-	  extensibleBox = TRUE;
-	  getMax = TRUE;
+	  pCell = GetParentCell (pBox);
+	  if (pCell && pCell->AbBox/* && pCell->AbBox->BxW > 20*/)
+	    /* keep the box width */
+	    maxWidth = pCell->AbBox->BxW;
+	  else
+	    {
+	      /* manage this box as an extensible box */
+	      maxWidth = 30 * DOT_PER_INCH;
+	      extensibleBox = TRUE;
+	    }
 	}
-      pBox->BxRuleWidth = width/*maxWidth*/;
+      //getMax = TRUE;
+      pBox->BxRuleWidth = maxWidth;
     }
   else
     maxWidth = 30 * DOT_PER_INCH;
@@ -4150,7 +4158,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 	if (width != 0 && width != pBox->BxW)
 	   ChangeDefaultWidth (pBox, ibox, width, 0, frame);
 	/* Faut-il conserver la hauteur ? */
-	if (height != 0)
+	if (height != 0 && height != pBox->BxH)
 	  {
 	     /* Il faut propager la modification de hauteur */
 	     propagateStatus = Propagate;
