@@ -72,5 +72,5 @@ EXCEPT
 	SeeAlso_content: NoSelect, Hidden;
 
        { Separator }
-       Separator_item: NoCut;
+       C_Empty:	       NoCut, Hidden;
 END

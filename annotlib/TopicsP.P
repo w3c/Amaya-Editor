@@ -117,14 +117,25 @@ Topic_icon_box: BEGIN
 	END;
 
  HR_Graph1: BEGIN
-	Content: Graphics 'h';
+	Content: Text ' ';
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top;
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
-	Foreground: Creator =;
 	LineWeight: Creator =;
 	Visibility: Creator =;
+BorderTopWidth: 1 px;
+	BorderLeftWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderRightWidth: 1 px;
+	BorderTopColor: DarkGrey2;
+	BorderLeftColor: DarkGrey2;
+	BorderBottomColor: LightGrey1;
+	BorderRightColor: LightGrey1;
+	BorderTopStyle: Solid;
+	BorderLeftStyle: Solid;
+	BorderBottomStyle: Solid;
+	BorderRightStyle: Solid;
 	END;
 RULES
 
@@ -225,14 +236,15 @@ RULES
         BEGIN
 	CreateLast(HR_Graph1);
 	Width: Enclosing . Width;
-	Height: 2 px;
+	Height:  2 px;
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	VertPos: Top = Previous . Bottom;
 	MarginTop: 0.2;
 	MarginBottom: 0.2;
 	Clear: Both;
-	LineWeight: 1 px;
-	Foreground: Black;
+	LineWeight: 3 px;
+        Foreground: RDF_FgColor;
+        Background: RDF_BgColor;
 	LineBreak: No;
 	END;
 
