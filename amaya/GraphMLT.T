@@ -27,7 +27,7 @@ RULES
         Use XLinkT for XLink;
         if Charset
            Create '<?xml version="1.0"';
-        if not Charset = 'unknown'
+        if Charset and not Charset = 'unknown'
            BEGIN
            Create ' encoding="';
 	   Create Charset;
