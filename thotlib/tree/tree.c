@@ -3762,7 +3762,11 @@ boolean             shareRef;
 				  }
 				if (!sameSSchema)
 				   /* climbs one level to the next ancestor element */
-				   pAsc = pAsc->ElParent;
+                                   if ((pAsc->ElParent == NULL) &&
+                                       (pAsc->ElStructSchema->SsExtension))
+                                     pAsc = pDocCopy->DocRootElement;
+                                   else
+				     pAsc = pAsc->ElParent;
 			     }
 			   while (pAsc != NULL && !sameSSchema);
 			if (!sameSSchema)
