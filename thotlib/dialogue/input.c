@@ -1643,8 +1643,7 @@ void InitTranslations (char *appliname)
   ThotBool            isSpecialKey1, isSpecialKey2;
 
   /* clean up the access key table */
-  for (i = 0; i < MAX_DOCUMENTS; i++)
-    DocAccessKey[i] = NULL;
+  memset(DocAccessKey, 0, sizeof(KEY *) * MAX_DOCUMENTS);
 
   appHome = TtaGetEnvString ("APP_HOME");
   strcpy (name, appliname);
