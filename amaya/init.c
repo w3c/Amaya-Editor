@@ -465,34 +465,51 @@ char               *text;
 
 #endif
 {
+  char              s[MAX_LENGTH];
+  boolean           change;
 
-   if (text)
-     {
-	if (IsW3Path (text) || TtaFileExist (text))
-	   strcpy (LastURLName, text);
-	else
-	  {
-	    /* It is not a valid URL */
-	    /*TtaSetTextZone (document, view, 1, DocumentURLs[document]);*/
-	    TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), text);
-	    return;
-	  }
-     }
-   if (TtaIsDocumentModified (document))
-     {
-	InitConfirm (document, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED));
-	if (UserAnswer)
-	   TtaSetDocumentUnmodified (document);
-	else
-	  {
-	     /* restore the previous value */
-	     strcpy (LastURLName, DocumentURLs[document]);
-	     TtaSetTextZone (document, view, 1, LastURLName);
-	     /* abort the command */
-	     return;
-	  }
-     }
-   document = GetHTMLDocument (LastURLName, NULL, document, document, DC_FALSE);
+  change = FALSE;
+  if (text)
+    {
+      if (!IsW3Path (text))
+	{
+	  change = NormalizeFile (text, s);
+	  if (!TtaFileExist (s))
+	    {
+	      /* It is not a valid URL */
+	      /*TtaSetTextZone (document, view, 1, DocumentURLs[document]);*/
+	      TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), text);
+	      return;
+	    }
+	}
+
+      if (TtaIsDocumentModified (document))
+	{
+	  InitConfirm (document, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED));
+	  if (UserAnswer)
+	    TtaSetDocumentUnmodified (document);
+	  else
+	    {
+	      /* restore the previous value */
+	      TtaSetTextZone (document, view, 1, DocumentURLs[document]);
+	      /* abort the command */
+	      return;
+	    }
+	}
+
+      /* do the same thing as a callback form open document form */
+      if (change)
+	{
+	  /* change the text value */
+	  TtaSetTextZone (document, view, 1, s);
+	  CallbackDialogue (BaseDialog + URLName, STRING_DATA, s);
+	}
+      else
+	CallbackDialogue (BaseDialog + URLName, STRING_DATA, text);
+      InNewWindow = FALSE;
+      CurrentDocument = document;
+      CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+    }
 }
 
 /*----------------------------------------------------------------------
