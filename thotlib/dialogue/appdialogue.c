@@ -3533,13 +3533,11 @@ int                *action;
    Item_Ctl           *ptr;
    int                 i, j, max;
    int                 m, sm;
-   int                 entries, sentries;
    ThotBool            found;
 
    j = 0;
    i = 0;
    sm = 0;
-   entries = 0;
    /* look for that menu in the menu list */
    m = FindMenu (frame, menuID, &ptrmenu);
    found = (m != -1);
@@ -3556,10 +3554,7 @@ int                *action;
 	     {
 	       j = ptr[i].ItemAction;
 	       if (j == -1)
-		 {
-		   i++;	/* separator */
-		   entries++;
-		 }
+		 i++;	/* separator */
 	       else if (ptr[i].ItemID == itemID)
 		 {
 		   /* the entry is found */
@@ -3576,7 +3571,6 @@ int                *action;
 		     {
 		       /* search in that submenu */
 		       sm = i + 1;
-		       sentries = entries;
 		       ptrsmenu = ptr[i].SubMenu;
 		       i = 0;
 		       ptr = ptrsmenu->ItemsList;
@@ -3584,11 +3578,8 @@ int                *action;
 		     }
 		 }
 	       else
-		 {
-		   /* it's not that one */
-		   i++;
-		   entries++;
-		 }
+		 /* it's not that one */
+		 i++;
 	     }
 	   
 	   /* do we close the search in a submenu? */
@@ -3596,7 +3587,6 @@ int                *action;
 	     {
 	       /* continue the search in the menu */
 	       i = sm;
-	       entries = sentries;
 	       sm = 0;
 	       ptrsmenu = NULL;
 	       ptr = ptrmenu->ItemsList;
@@ -3614,7 +3604,7 @@ int                *action;
        /* yes */
        *menu = m;
        *submenu = sm;
-       *item = entries;
+       *item = i;
        *action = j;
      }
    else
