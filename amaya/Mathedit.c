@@ -920,18 +920,22 @@ void MathSelectionChanged (NotifyElement *event)
 		{
 		  UnFrameMath ();
 		  /* associate an attribute IntSelected with the new <math>
-		     element */
-		  attrType.AttrSSchema = elType.ElSSchema;
-		  attrType.AttrTypeNum = MathML_ATTR_IntSelected;
-		  attr = TtaNewAttribute (attrType);
-		  if (attr)
+		     element, except if it's a MathML document (an isolated
+		     formula does not need a frame). */
+		  if (DocumentTypes[event->document] != docMath)
 		    {
-		      TtaSetAttributeValue (attr, MathML_ATTR_IntSelected_VAL_Yes_,
-					    el, event->document);
-		      TtaAttachAttribute (el, attr, event->document);
+		      attrType.AttrSSchema = elType.ElSSchema;
+		      attrType.AttrTypeNum = MathML_ATTR_IntSelected;
+		      attr = TtaNewAttribute (attrType);
+		      if (attr)
+			{
+			  TtaSetAttributeValue (attr, MathML_ATTR_IntSelected_VAL_Yes_,
+						el, event->document);
+			  TtaAttachAttribute (el, attr, event->document);
+			}
+		      MathElementSelected = el;
+		      DocMathElementSelected = event->document;
 		    }
-		  MathElementSelected = el;
-		  DocMathElementSelected = event->document;
 		}
 	    }
 	}
