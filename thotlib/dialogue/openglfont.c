@@ -21,7 +21,9 @@
 
 #include "openglfonts.h"
 
+#ifdef _GTK
 #define MESA
+#endif /*_GTK*/
 
 /* Memory state Var needed often*/
 static FT_Library FTlib = NULL;

@@ -412,7 +412,7 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
     UpdateScrollbars (frame);
 #ifdef _GL
     ActiveFrame = frame;
-    GLResize (width, height);
+    GLResize (width, height, 0 ,0);
 #endif/*_GL*/
 }
 #else /* _WINDOWS */
