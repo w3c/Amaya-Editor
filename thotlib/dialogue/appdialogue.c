@@ -3223,12 +3223,12 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     (gpointer)frame);
 	   
       	   hscrl = gtk_hscrollbar_new (GTK_ADJUSTMENT(tmpw)); 
-	   gtk_widget_show (hscrl);
+	   /*gtk_widget_show (hscrl);*/
 
 	   gtk_table_attach (GTK_TABLE (table2), hscrl, 0, 1, 1, 2,
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
-#ifdef o
+#ifdef _GTKRULERS
 	   {
 	     
 	     ThotWidget button;

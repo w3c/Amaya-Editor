@@ -1225,6 +1225,9 @@ void GL_DrawAll (ThotWidget widget, int frame)
     { 
       if (!(frame > 0 && frame <= MAX_FRAME)) 
 	frame = ActiveFrame;
+      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] 
+	  == NoComputedDisplay)
+	return;
 #ifdef _PCLDEBUG
       ftime(&before);
 #endif /*_PCLDEBUG*/

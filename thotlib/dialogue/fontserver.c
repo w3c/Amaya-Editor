@@ -52,12 +52,61 @@ int GetFontFilename (char script, int family, int highlight, int size,
   /*XftPatternAddBool (pat, XFT_CORE, True); */
 
   /*Selects whether glyphs are anti-aliased*/
-  /*XftPatternAddBool (pat, XFT_ANTIALIAS, True);*/
+  XftPatternAddBool (pat, XFT_ANTIALIAS, True);
+
+  /* One font contains multiple size*/
+  XftPatternAddBool (pat, XFT_SCALABLE, True);
 
   if (script != 'G' && script != 'L' 
       && script != 'Z' && script != 'E')
     {
-      if (script == 'F')
+      switch (script)
+	{
+	case '2':
+	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-2");
+	  break;
+	case '3':
+	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-3");
+	  break;
+	case '4':
+	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-4");
+	  break;
+	case '5':
+	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-5");
+	  break;
+	case '6':
+	  /*ARABIC_CHARSET*/
+	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-6");
+	  break;
+	case '7':
+	  /*  GREEK_CHARSET */
+	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-7");
+	  break;
+	case '8':
+	  /* HEBREW_CHARSET */
+	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-8");
+	  break;
+	case 'D':
+	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-13");
+	  break;
+	case 'F':
+	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-15");
+	  break;
+	}
+      if (highlight == 0)
+	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
+      else if (highlight == 2 || highlight == 3)
+	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
+	/* XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM); */
+      else
+	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);
+      if (highlight == 0 || highlight == 1)
+	XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN);
+      else
+	XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_OBLIQUE);
+
+      /*
+	if (script == 'F')
 	strcpy (encoding, "15");
       else if (script == 'D')
 	strcpy (encoding, "13");
@@ -65,27 +114,32 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	sprintf (encoding, "%c", script);
       sprintf (xftencoding, "iso8859-%s",  encoding);
       XftPatternAddString (pat, XFT_ENCODING, xftencoding);
-      
+
       if (highlight == 0 || highlight == 2 || highlight == 3)
 	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
       else
 	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);
-      
       if (highlight == 0 || highlight == 1)
 	XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN);
       else
 	XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_OBLIQUE);
+      */
       if (size < 0)
-	size = 13;
+	size = 12;
+
     }
   else if (script == 'G' || family == 0)
     {
 
-      XftPatternAddString (pat, XFT_FOUNDRY, "adobe"); 
-            
+      XftPatternAddString (pat, XFT_FOUNDRY, "adobe");
+      /*XftPatternAddString (pat, XFT_FOUNDRY, "microsoft"); */
+      /*XftPatternAddString (pat, XFT_FOUNDRY, "monotype");*/
+           
       XftPatternAddString (pat, XFT_FAMILY, "symbol");
-       
-      XftPatternAddString (pat, XFT_ENCODING, "adobe-fontspecific"); 
+      XftPatternAddString (pat, XFT_FAMILY, "Symbol");   
+      /* XftPatternAddString (pat, XFT_FAMILY, "Standard Symbols L");  */
+   
+      XftPatternAddString (pat, XFT_ENCODING, "fontspecific");
     }
   else if (script == 'E')
     {

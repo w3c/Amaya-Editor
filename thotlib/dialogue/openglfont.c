@@ -319,8 +319,9 @@ static int FontCharMap (GL_font *font, FT_Encoding encoding, char alphabet)
       {
 	   if (encoding == ft_encoding_symbol)
 	   {
-	     err = 0;
+	     /*err = 0;*/
 	     /*FT_Select_Charmap (*(font->face), ft_encoding_symbol);*/
+	     err = 1;
 		if (err)
 		  {	 
 		    if ((*(font->face))->num_charmaps > 0) 
@@ -392,7 +393,7 @@ void *gl_font_init (const char *font_filename, char alphabet, int size)
       if (err) 
  	{ 
  	  FT_Done_Face (*(gl_font->face)); 
- 	  free (gl_font); 
+ 	  TtaFreeMemory (gl_font); 
  	  return NULL; 
  	} 
       if (alphabet != 'E')
@@ -400,7 +401,7 @@ void *gl_font_init (const char *font_filename, char alphabet, int size)
       if (err)
 	{
 	  FT_Done_Face (*(gl_font->face));
-	  free (gl_font);
+	  TtaFreeMemory (gl_font);
 	  return NULL;
 	}
       if (FT_HAS_KERNING((*(gl_font->face))))
@@ -459,8 +460,8 @@ int gl_font_char_width (void *gl_void_font, wchar_t c)
 	{
 	  advance = (int) glyph->advance;
 	  if (glyph->data != NULL)
-	    free (glyph->data);
-	  free (glyph);
+	    TtaFreeMemory (glyph->data);
+	  TtaFreeMemory (glyph);
 	  return advance;
 	} 
       else 
@@ -565,8 +566,8 @@ static void FontBBox (GL_font *font,
 	    {
 	      bbox = glyph->bbox;
 	      if (glyph->data != NULL)
-		free (glyph->data);
-	      free (glyph); 
+		TtaFreeMemory (glyph->data);
+	      TtaFreeMemory (glyph); 
 	    }  
 	}
       bbox.yMin = bbox.yMin >> 6;
@@ -606,8 +607,8 @@ static void FontBBox (GL_font *font,
       if (glyph)
 	{
 	  if (glyph->data != NULL)
-	    free (glyph->data);
-	  free (glyph);
+	    TtaFreeMemory (glyph->data);
+	  TtaFreeMemory (glyph);
 	}
     }
   *urx += bbox.xMax >> 6;
@@ -746,16 +747,27 @@ int UnicodeFontRenderCharSize (void *gl_font, wchar_t c,
   GL_font* font;
   GL_glyph *glyph;
   int left, right, i;   
-  
+  unsigned char test = (unsigned char) c;
+
   i = 0;
   font = (GL_font *) gl_font;
-  i = FT_Get_Char_Index (*(font->face), c); 
+  
+  i = FT_Get_Char_Index (*(font->face), test); 
+  if (i == 0)
+    i = FT_Get_Char_Index (*(font->face), c); 
   if (i != 0)
     {
       if (size > 0)
-	FontFaceSize (font, size, 0);
-
-  glyph = MakeBitmapGlyph (font, i);
+	{
+	  FontFaceSize (font, size, 0);
+	  glyph = MakeBitmapGlyph (font, i);
+	}
+      else
+	{
+	  if (!font->glyphList[i])
+	    font->glyphList[i] = MakeBitmapGlyph (font, i);
+	  glyph = font->glyphList[i];
+	}
   /* If y > height or x < 0 
      Opengl doesn't draw bitmap 
      with his clipping mechanism
@@ -803,9 +815,14 @@ int UnicodeFontRenderCharSize (void *gl_font, wchar_t c,
 	        (float) left,
 	        NULL);
   i = (int) glyph->advance;
-  if (glyph->data != NULL)
-	free (glyph->data);
-  free (glyph);
+
+  if (size > 0)
+    {
+      if (glyph->data != NULL)
+	TtaFreeMemory (glyph->data);
+      TtaFreeMemory (glyph);
+    }
+
   return (i);
   }
   else
@@ -1179,7 +1196,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *text,
 	    (float) left,
 	    NULL);
   if (data)
-    free (data);
+    TtaFreeMemory (data);
 
   return (bitmaps[n-1]->pos.x);  
 }

@@ -498,7 +498,7 @@ void FrameRedraw (int frame, Dimension width, Dimension height)
 	   /* Il faut reevaluer le contenu de la fenetre */
 	   RebuildConcreteImage (frame);	   
 	   /* recompute the scroll bars */
-	   UpdateScrollbars (frame);
+	   /*UpdateScrollbars (frame);*/
 	   notifyDoc.event = TteViewResize;
 	   notifyDoc.document = doc;
 	   notifyDoc.view = view;
@@ -666,6 +666,9 @@ gboolean FrameResizedGTK (GtkWidget *widget,
   y = event->y;
   if ((width <= 0) || (height <= 0) || !(frame > 0 && frame <= MAX_FRAME))
     return TRUE;
+  if (FrameTable[frame].FrWidth == width
+      && FrameTable[frame].FrHeight == height)
+     return TRUE;
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return TRUE; 
   if (widget)
@@ -681,7 +684,7 @@ gboolean FrameResizedGTK (GtkWidget *widget,
 	GL_DrawAll (widget, frame);
 	while (gtk_events_pending ()) 
 	  gtk_main_iteration ();
-	UpdateScrollbars (frame);
+	/*UpdateScrollbars (frame);*/
       }
   return TRUE;
 }
@@ -697,10 +700,13 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
   frame = (int )data;
   width = event->width;
   height = event->height; 
+  if (FrameTable[frame].FrWidth == width
+      && FrameTable[frame].FrHeight == height)
+    return TRUE;
   FrameRedraw (frame, width, height);
   while (gtk_events_pending ()) 
      gtk_main_iteration ();
-  UpdateScrollbars (frame);
+  /*UpdateScrollbars (frame);*/
   return TRUE;
 }
 
@@ -3365,6 +3371,10 @@ void UpdateScrollbars (int frame)
   SCROLLINFO          scrollInfo;
 #endif /* _WINDOWS */
 
+  if (FrameUpdating ||
+    documentDisplayMode[FrameTable[frame].FrDoc - 1] 
+      == NoComputedDisplay)
+    return;
   /* Demande le volume affiche dans la fenetre */
   ComputeDisplayedChars (frame, &x, &y, &width, &height);
   hscroll = FrameTable[frame].WdScrollH;
@@ -3426,7 +3436,7 @@ void UpdateScrollbars (int frame)
   else
     gtk_widget_show (GTK_WIDGET (vscroll));
 #ifdef _GL
-  /*For mutliview synchonization*/
+  /*For multiview synchonization*/
   GL_DrawAll (NULL, frame);
 #endif /*_GL*/
 #endif /*_GTK*/  
@@ -3439,11 +3449,11 @@ void UpdateScrollbars (int frame)
   scrollInfo.nMin   = 0;
   if (width == l && x == 0 && width > 60)
     /*hide*/
-    ShowScrollBar(FrameTable[frame].WdScrollH, SB_CTL, FALSE);
+    ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, FALSE);
   else if (width + x <= l)
     {
       /*show*/
-      ShowScrollBar(FrameTable[frame].WdScrollH, SB_CTL, TRUE);
+      ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, TRUE);
       scrollInfo.nMax   = l;
       scrollInfo.nPage  = width;
       scrollInfo.nPos   = x;	 
@@ -3451,7 +3461,7 @@ void UpdateScrollbars (int frame)
     }
   else
     /*show*/
-    ShowScrollBar(FrameTable[frame].WdScrollH, SB_CTL, FALSE);
+    ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, FALSE);
    
   if (height == h && y == 0)
     /*hide*/
@@ -3459,7 +3469,7 @@ void UpdateScrollbars (int frame)
   else if (height + y <= h)
     {
       /*show*/
-      ShowScrollBar(FrameTable[frame].WdScrollV, SB_CTL, TRUE);
+      ShowScrollBar (FrameTable[frame].WdScrollV, SB_CTL, TRUE);
       scrollInfo.nMax   = h;
       scrollInfo.nPage  = height;
       scrollInfo.nPos   = y;
@@ -3467,6 +3477,6 @@ void UpdateScrollbars (int frame)
     }
   else
     /*show*/
-    ShowScrollBar(FrameTable[frame].WdScrollV, SB_CTL, TRUE);
+    ShowScrollBar (FrameTable[frame].WdScrollV, SB_CTL, TRUE);
 #endif /* _WINDOWS */
 }
