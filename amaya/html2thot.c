@@ -379,10 +379,7 @@ static int          StackLevel = 0;	     /* first free element on the
 /* information about the input file */
 #define INPUT_FILE_BUFFER_SIZE 2000
 static char         FileBuffer[INPUT_FILE_BUFFER_SIZE+1];
-#ifdef _I18N_
-static char         FileBufferA[INPUT_FILE_BUFFER_SIZE+1];
-static CHARSET      ParsingCharset;           /* encoding of the parsed document */
-#endif
+static char         PreviousFileBuffer[INPUT_FILE_BUFFER_SIZE+1];
 static int	    LastCharInFileBuffer = 0; /* last char. in the buffer */
 static int          CurrentBufChar;           /* current character read */
 static int          StartOfTagIndx;           /* last "<" read */
@@ -401,7 +398,6 @@ static ThotBool     AfterTagPRE = FALSE;  /* <PRE> has just been read */
 static CHAR_T*      docURL = NULL;	  /* path or URL of the document */
 
 /* Static variables used for the call to the XML parser */
-static char         PreviousFileBuffer[INPUT_FILE_BUFFER_SIZE+1];
 static ThotBool     NotToReadFile = FALSE;
 static int	    LastCharInPreviousFileBuffer = 0;
 static int          PreviousNumberOfLinesRead = 0;
@@ -1135,33 +1131,34 @@ static void         TextToDocument ()
 		   }
 		}
 	  }
-	if (ignoreLeadingSpaces)
-	   if (!Within (HTML_EL_Preformatted, DocumentSSchema) &&
-	       !Within (HTML_EL_STYLE_, DocumentSSchema) &&
-	       !Within (HTML_EL_SCRIPT, DocumentSSchema))
-	      /* suppress leading spaces */
-	      while (inputBuffer[i] <= WC_SPACE && inputBuffer[i] != WC_EOS)
-		 i++;
+	if (ignoreLeadingSpaces &&
+	    !Within (HTML_EL_Preformatted, DocumentSSchema) &&
+	    !Within (HTML_EL_STYLE_, DocumentSSchema) &&
+	    !Within (HTML_EL_SCRIPT, DocumentSSchema))
+	  /* suppress leading spaces */
+	  while (inputBuffer[i] <= WC_SPACE && inputBuffer[i] != WC_EOS)
+	    i++;
 	if (inputBuffer[i] != WC_EOS)
 	  {
-	     elType = TtaGetElementType (HTMLcontext.lastElement);
-	     if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && HTMLcontext.mergeText)
-		TtaAppendTextContent (HTMLcontext.lastElement, &(inputBuffer[i]), HTMLcontext.doc);
-	     else
-	       {
-		  /* create a TEXT element */
-		  elType.ElSSchema = DocumentSSchema;
-		  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-		  elText = TtaNewElement (HTMLcontext.doc, elType);
-		  TtaSetElementLineNumber (elText, BufferLineNumber);
-		  InsertElement (&elText);
-		  HTMLcontext.lastElementClosed = TRUE;
-		  HTMLcontext.mergeText = TRUE;
-		  /* put the content of the input buffer into the TEXT element */
-		  if (elText != NULL)
-		     TtaSetTextContent (elText, &(inputBuffer[i]), HTMLcontext.language,
-					HTMLcontext.doc);
-	       }
+	    elType = TtaGetElementType (HTMLcontext.lastElement);
+	    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && HTMLcontext.mergeText)
+	      TtaAppendTextContent (HTMLcontext.lastElement, &(inputBuffer[i]),
+				    HTMLcontext.doc);
+	    else
+	      {
+		/* create a TEXT element */
+		elType.ElSSchema = DocumentSSchema;
+		elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+		elText = TtaNewElement (HTMLcontext.doc, elType);
+		TtaSetElementLineNumber (elText, BufferLineNumber);
+		InsertElement (&elText);
+		HTMLcontext.lastElementClosed = TRUE;
+		HTMLcontext.mergeText = TRUE;
+		/* put the content of the input buffer into the TEXT element */
+		if (elText != NULL)
+		  TtaSetTextContent (elText, &(inputBuffer[i]), HTMLcontext.language,
+				     HTMLcontext.doc);
+	      }
 	  }
      }
    InitBuffer ();
@@ -1385,7 +1382,6 @@ static ThotBool     InsertElement (Element * el)
 #else
 static ThotBool     InsertElement (el)
 Element            *el;
-
 #endif
 {
    ThotBool            ret;
@@ -1435,7 +1431,6 @@ Element             el;
 AttributeType       attrType;
 CHAR_T*             text;
 ThotBool            invalid;
-
 #endif
 {
    int                 attrKind;
@@ -2004,9 +1999,7 @@ Element             el;
 
     case HTML_EL_META:
       ParseCharset (el, HTMLcontext.doc);
-#ifdef _I18N_
-      ParsingCharset = TtaGetDocumentCharset (HTMLcontext.doc);
-#endif /* _I18N_ */
+      HTMLcontext.encoding = TtaGetDocumentCharset (HTMLcontext.doc);
       break;
 
     case HTML_EL_STYLE_:	/* it's a STYLE element */
@@ -5030,7 +5023,7 @@ void                FreeHTMLParser ()
 }
 
 /*----------------------------------------------------------------------
-   GetNextChar     returns the next character in the imput file or buffer,
+   GetNextChar returns the next character in the imput file or buffer,
    whatever it is.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -5043,31 +5036,41 @@ int*            index;
 ThotBool*       endOfFile;
 #endif
 {
-  CHAR_T        charRead;
-  int           res;
-#ifdef _I18N_
-  int           nbBytes;
-#endif /* _I18N_ */
-
+  unsigned char *srcbuf;
+  wchar_t        wcharRead;
+  CHAR_T         charRead;
+  char           fallback[5];
+  char           extrabuf[7];
+  unsigned char *ptrextrabuf;
+  int            res;
+  int            nbBytes;
+  int  i;
+  Language       lang;
+  ElementType    elType;
+  Element        elLeaf;
+  ThotBool       isHTML;
+  wcharRead = 0;
   charRead = WC_EOS;
   *endOfFile = FALSE;
   if (buffer != NULL)
     {
-#ifdef _I18N_
-      nbBytes = TtaGetNextWideCharFromMultibyteString (&charRead, buffer[(*index)++], ParsingCharset);
+      /* read from a buffer */
+      ptrextrabuf = &buffer[*index];
+      nbBytes = TtaGetNextWideCharFromMultibyteString (&wcharRead, &ptrextrabuf,
+						       HTMLcontext.encoding);
       if (nbBytes > 0)
 	*endOfFile = 0;
+      else if (wcharRead != 0)
+	charRead = (CHAR_T) wcharRead;
       else
-	*endOfFile = (charRead == WC_EOS);
-#else  /* !_I18N_ */
-       charRead = buffer[(*index)++];
-       *endOfFile = (charRead == WC_EOS);
-#endif /* !_I18N_ */
+	*endOfFile = TRUE;
+      (*index) += nbBytes;
     }
   else if (infile == NULL)
     *endOfFile = TRUE;
   else
     {
+      /* read from a file */
       if (*index == 0)
 	{
 	  if (NotToReadFile)
@@ -5088,120 +5091,112 @@ ThotBool*       endOfFile;
 		LastCharInFileBuffer = res - 1;
 	    }
 	}
+	
       if (NotToReadFile)
 	{
 	  charRead = PreviousFileBuffer[(*index)++];
 	  if (*index > LastCharInPreviousFileBuffer)
 	    *index = 0;
 	}
-      else
+      else if (*endOfFile == FALSE)
 	{
-	  if (*endOfFile == FALSE)
+	  if (HTMLcontext.encoding == UTF_8)
 	    {
-	      if (currentState == 0 && HTMLcontext.encoding == UTF_8)
+	      /* We are reading a UTF8-coded character data */
+	      srcbuf = (unsigned char *) &FileBuffer[(*index)];
+	      nbBytes = TtaGetNumberOfBytesToRead (&srcbuf, UTF_8);
+	      if (nbBytes > 1 && (*index + nbBytes > LastCharInFileBuffer))
 		{
-		  /* We are reading a UTF8-coded character data */
-		  unsigned char *srcbuf;
-		  wchar_t        wcharRead;
-		  int            nbBytesRead = 0;
-		  char           fallback[5];
-		  Language       lang;
-		  ElementType    elType;
-		  Element        elLeaf;
-   
-		  srcbuf = (unsigned char *) &FileBuffer[(*index)];
-		  nbBytesRead=TtaGetNumberOfBytesToRead (&srcbuf, UTF_8);
-
-		  if (nbBytesRead > 1 &&
-		      ((*index + nbBytesRead) > LastCharInFileBuffer))
+		  for (i = 0; *index + i <= LastCharInFileBuffer; i++)
+		    extrabuf[i] = srcbuf[i];
+		  res = gzread (infile, &extrabuf[i], nbBytes - i);
+		  if (res <= 0)
 		    {
-		      char extrabuf[7];
-		      unsigned char *ptrextrabuf;
-		      int  i;
-		      for (i=0; (*index + i) <= LastCharInFileBuffer; i++)
-			{
-			  extrabuf[i] = FileBuffer[(*index + i)];
-			}
-		      while (i < nbBytesRead && !*endOfFile)
-			{
-			  res = gzread (infile, &extrabuf[i], nbBytesRead-i);
-			  if (res <= 0)
-			    {
-			      /* error or end of file */
-			      *endOfFile = TRUE;
-			      charRead = WC_EOS;
-			    }
-			  i++;
-			}
-		      ptrextrabuf = (unsigned char *) &extrabuf[0];
-		      nbBytesRead = TtaGetNextWideCharFromMultibyteString
-			(&wcharRead, &ptrextrabuf, UTF_8);
-		      *index = 0;
+		      /* error or end of file */
+		      *endOfFile = TRUE;
+		      charRead = WC_EOS;
 		    }
-		  else
-		    {
-		      nbBytesRead = TtaGetNextWideCharFromMultibyteString
-			(&wcharRead, &srcbuf, UTF_8);
-		      (*index) += nbBytesRead;
-		    }
-		  if (wcharRead < 0x100)
-		    {
-		      /* It's an 8bits character */
-		      charRead = (char) wcharRead;
-		    }
-		  else
-		    {
-		      /* It's not an 8bits character */
-		      /* Put the current content of the buffer */
-		      /* into the document */
-		      TextToDocument ();
-		      /* Try to find a fallback character */
-		      GetFallbackCharacter ((int) wcharRead, fallback, &lang);
-		      if (fallback[0] == '?')
-			{
-			  /* Character not found in the fallback table */
-			  /* Create a symbol leaf */
-			  elType = TtaGetElementType (HTMLcontext.lastElement);
-			  elType.ElTypeNum = 3;
-			  elLeaf = TtaNewElement (HTMLcontext.doc, elType);
-			  TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
-			  InsertElement (&elLeaf);
-			  HTMLcontext.lastElement = elLeaf;
-			  HTMLcontext.lastElementClosed = TRUE;
-			  /* Put the symbol '?' into the new symbol leaf */
-			  TtaSetGraphicsShape (elLeaf, fallback[0],
-					       HTMLcontext.doc);
-			  /* Change the wide char code associated with that symbol */
-			  TtaSetSymbolCode (elLeaf, wcharRead, HTMLcontext.doc);
-			  /* Make that leaf read-only */
-			  TtaSetAccessRight (elLeaf, ReadOnly, HTMLcontext.doc);
-			}
-		      else
-			{
-			  /* Character found in the fallback table */
-			  /* Create a new text leaf */
-			  elType = TtaGetElementType (HTMLcontext.lastElement);
-			  elType.ElTypeNum = 1;
-			  elLeaf = TtaNewElement (HTMLcontext.doc, elType);
-			  TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
-			  InsertElement (&elLeaf);
-			  HTMLcontext.lastElement = elLeaf;
-			  HTMLcontext.lastElementClosed = TRUE;
-			  /* Put the fallback character into the new text leaf */
-			  TtaSetTextContent (elLeaf, fallback,
-					     lang, HTMLcontext.doc);
-			  HTMLcontext.mergeText = FALSE;
-			}
-		    }
+		  ptrextrabuf = (unsigned char *) &extrabuf[0];
+		  nbBytes = TtaGetNextWideCharFromMultibyteString (&wcharRead,
+								   &ptrextrabuf,
+								   UTF_8);
+		  *index = 0;
 		}
 	      else
 		{
-		  charRead = FileBuffer[(*index)++];
+		  nbBytes = TtaGetNextWideCharFromMultibyteString (&wcharRead,
+								   &srcbuf, UTF_8);
+		  (*index) += nbBytes;
 		}
+	      if (wcharRead < 0x100)
+		/* It's an 8bits character */
+		charRead = (char) wcharRead;
+	      else
+		{
+		  /* It's not an 8bits character */
+		  /* Put the current content of the buffer into the last element */
+		  isHTML = DocumentTypes[HTMLcontext.doc] == docHTML;
+		  if (isHTML)
+		    TextToDocument ();
+		  else if (HTMLcontext.lastElement && LgBuffer != 0)
+		    {
+		      inputBuffer[LgBuffer] = WC_EOS;
+		      TtaSetTextContent (HTMLcontext.lastElement, inputBuffer,
+					 HTMLcontext.language,
+					 HTMLcontext.doc);
+		      InitBuffer ();
+		    }
+		  /* Try to find a fallback character */
+		  GetFallbackCharacter ((int) wcharRead, fallback, &lang);
+		  if (fallback[0] == '?')
+		    {
+		      /* Character not found in the fallback table */
+		      /* Create a symbol leaf */
+		      elType = TtaGetElementType (HTMLcontext.lastElement);
+		      elType.ElTypeNum = 3;
+		      elLeaf = TtaNewElement (HTMLcontext.doc, elType);
+		      TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
+		      if (isHTML)
+			InsertElement (&elLeaf);
+		      else
+			TtaInsertSibling (elLeaf, HTMLcontext.lastElement,
+					  FALSE, HTMLcontext.doc);
+		      HTMLcontext.lastElement = elLeaf;
+		      HTMLcontext.lastElementClosed = TRUE;
 
-	      if (*index > LastCharInFileBuffer)
-		*index = 0;
+		      /* Put the symbol '?' into the new symbol leaf */
+		      TtaSetGraphicsShape (elLeaf, fallback[0], HTMLcontext.doc);
+		      /* Change the wide char code associated with that symbol */
+		      TtaSetSymbolCode (elLeaf, wcharRead, HTMLcontext.doc);
+		      /* Make that leaf read-only */
+		      TtaSetAccessRight (elLeaf, ReadOnly, HTMLcontext.doc);
+		    }
+		  else
+		    {
+		      /* Character found in the fallback table */
+		      /* Create a new text leaf */
+		      elType = TtaGetElementType (HTMLcontext.lastElement);
+		      elType.ElTypeNum = 1;
+		      elLeaf = TtaNewElement (HTMLcontext.doc, elType);
+		      TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
+		      if (isHTML)
+			InsertElement (&elLeaf);
+		      else
+			TtaInsertSibling (elLeaf, HTMLcontext.lastElement,
+					  FALSE, HTMLcontext.doc);
+		      HTMLcontext.lastElement = elLeaf;
+		      HTMLcontext.lastElementClosed = TRUE;
+		      /* Put the fallback character into the new text leaf */
+		      TtaSetTextContent (elLeaf, fallback, lang, HTMLcontext.doc);
+		      HTMLcontext.mergeText = FALSE;
+		    }
+		}
 	    }
+	  else
+	    charRead = FileBuffer[(*index)++];
+	  
+	  if (*index > LastCharInFileBuffer)
+	    *index = 0;
 	}
     }
   return charRead;
@@ -5554,16 +5549,7 @@ STRING	           pathURL;
   ElementType      elType;
   UCHAR_T          charRead;
   ThotBool         endOfTextFile;
-  Document         htmlDoc;
-  ThotBool         isUTF8 = FALSE;
-  wchar_t          wcharRead;
-  unsigned char   *srcbuf;
-  int              nbBytesToRead, i;
-  unsigned char    extrabuf[7];
-  unsigned char   *ptrextrabuf;
-  char             fallback[5];
-  Language         lang;
-  Element          elLeaf, child, line;
+  Element          elLeaf;
 
   InputText = textbuf;
   LgBuffer = 0;
@@ -5572,9 +5558,6 @@ STRING	           pathURL;
   NumberOfLinesRead = 1; 
   CurrentBufChar = 0;
 
-  isUTF8 = (TtaGetDocumentCharset (doc) == UTF_8);
-  /* initialize input buffer */
-  charRead = GetNextInputChar (infile, &CurrentBufChar, &endOfTextFile);
   parent = TtaGetMainRoot (doc);
   elType = TtaGetElementType (parent);
   el = TtaGetLastChild (parent);
@@ -5600,7 +5583,15 @@ STRING	           pathURL;
       parent = el;
     }
   prev = el = NULL;
-
+  /* initialize the context */
+  HTMLcontext.encoding = TtaGetDocumentCharset (doc);
+  HTMLcontext.lastElement = NULL;
+  HTMLcontext.lastElementClosed = False;
+  HTMLcontext.doc = doc;
+  HTMLcontext.mergeText = FALSE;
+  HTMLcontext.language = TtaGetDefaultLanguage ();
+  /* initialize input buffer */
+  charRead = GetNextInputChar (infile, &CurrentBufChar, &endOfTextFile);
   /* read the text file sequentially */
   while (!endOfTextFile)
     {
@@ -5620,6 +5611,16 @@ STRING	           pathURL;
 	  /* get the text element */
 	  el = TtaGetFirstChild (el);
 	  TtaSetElementLineNumber (el, NumberOfLinesRead);      
+	  HTMLcontext.lastElement = el;
+	}
+      else if (HTMLcontext.lastElement && HTMLcontext.lastElement != el)
+	{
+	  /* one or more symbols were inserted */
+	  elType.ElTypeNum = TextFile_EL_TEXT_UNIT;
+	  el = TtaNewElement (doc, elType);
+	  TtaSetElementLineNumber (el, NumberOfLinesRead);      
+	  TtaInsertSibling (el, HTMLcontext.lastElement,  FALSE, doc);
+	  HTMLcontext.lastElement = el;
 	}
 
       /* Check the character read */
@@ -5635,9 +5636,9 @@ STRING	           pathURL;
 	  charRead = WC_EOS;
 	}
 #ifndef _I18N_
-      else if (((int)charRead < 32 ||
-	        ((int) charRead >= 127 && (int) charRead <= 143))
-	       && (int) charRead != WC_TAB)
+      else if (((int) charRead < 32 ||
+	        ((int) charRead >= 127 && (int) charRead <= 143)) &&
+	       (int) charRead != WC_TAB)
 	/* Ignore non printable characters except HT */
 	/* it's not a printable character, ignore it */
 	charRead = WC_EOS;
@@ -5671,106 +5672,6 @@ STRING	           pathURL;
 
       /* read next character from the source */
       charRead = GetNextInputChar (infile, &CurrentBufChar, &endOfTextFile);
-      if (isUTF8)
-	{	  
-	  srcbuf = (unsigned char*) &charRead;
-	  nbBytesToRead = TtaGetNumberOfBytesToRead (&srcbuf, UTF_8);
-	  while (nbBytesToRead > 1)
-	    {
-	      extrabuf[0] = charRead;
-	      i = 1;
-	      while (i < nbBytesToRead)
-		{
-		  charRead = GetNextInputChar (infile,
-					       &CurrentBufChar,
-					       &endOfTextFile);
-		  extrabuf[i] = charRead;
-		  i++;
-		}
-	      ptrextrabuf = (unsigned char *) &extrabuf[0];
-	      nbBytesToRead = TtaGetNextWideCharFromMultibyteString 
-		(&wcharRead, &ptrextrabuf, UTF_8);
-	      
-	      if (wcharRead < 0x100)
-		{
-		  charRead = (char) wcharRead;
-		  nbBytesToRead = 1;
-		}
-	      else
-		{
-		  /* It's not an 8bits character */
-		  /* Put the current content of the buffer */
-		  /* into the document */
-		  if (el == NULL)
-		    {
-		      /* create a new line */
-		      elType.ElTypeNum = TextFile_EL_Line_;
-		      line = TtaNewTree (doc, elType, "");
-		      TtaSetElementLineNumber (line, NumberOfLinesRead);      
-		      if (prev != NULL)
-			TtaInsertSibling (line, prev,  FALSE, doc);
-		      else
-			TtaInsertFirstChild (&line, parent, doc);
-		      prev = el;
-		      /* delete the first element */
-		      child = TtaGetFirstChild (line);
-		      if (child != NULL)
-			TtaDeleteTree (child, doc);      
-		    }
-		  else
-		    {
-		      inputBuffer[LgBuffer] = WC_EOS;
-		      if (LgBuffer != 0)
-			TtaAppendTextContent (el, inputBuffer, doc);
-		      LgBuffer = 0;
-		      line = TtaGetParent (el);
-		    }
-		  /* Try to find a fallback character */
-		  GetFallbackCharacter ((int) wcharRead, fallback, &lang);
-		  if (fallback[0] == '?')
-		    {
-		      /* Character not found in the fallback table */
-		      /* Create a symbol leaf */
-		      elType = TtaGetElementType (el);
-		      elType.ElTypeNum = 3;
-		      elLeaf = TtaNewElement (doc, elType);
-		      TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
-		      child = TtaGetLastChild (line);
-		      if (child == NULL)
-			TtaInsertFirstChild (&elLeaf, line, doc);
-		      else
-			TtaInsertSibling (elLeaf, child,  FALSE, doc);
-		      /* Put the symbol '?' into the new symbol leaf */
-		      TtaSetGraphicsShape (elLeaf, fallback[0], doc);
-		      /* Change the wide char code associated with that symbol */
-		      TtaSetSymbolCode (elLeaf, wcharRead, doc);
-		      /* Make that leaf read-only */
-		      TtaSetAccessRight (elLeaf, ReadOnly, doc);
-		    }
-		  else
-		    {
-		      /* Character found in the fallback table */
-		      /* Create a new text leaf */
-		      elType = TtaGetElementType (el);
-		      elType.ElTypeNum = 1;
-		      elLeaf = TtaNewElement (doc, elType);
-		      TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
-		      child = TtaGetLastChild (line);
-		      if (child == NULL)
-			TtaInsertFirstChild (&elLeaf, line, doc);
-		      else
-			TtaInsertSibling (elLeaf, child,  FALSE, doc);
-		      /* Put the fallback character into the new text leaf */
-		      TtaSetTextContent (elLeaf, fallback, lang, doc);
-		    }
-		  el = elLeaf;
-		  charRead = GetNextInputChar (infile, &CurrentBufChar,
-					       &endOfTextFile);
-		  srcbuf = (unsigned char*) &charRead;
-		  nbBytesToRead = TtaGetNumberOfBytesToRead (&srcbuf, UTF_8);
-		}
-	    }
-	}
     }
   /* close the document */
   if (LgBuffer != 0)
@@ -7278,7 +7179,7 @@ Document   doc;
    elType = TtaGetElementType (lastelem);
    schemaName = TtaGetSSchemaName(elType.ElSSchema);
 #ifdef _I18N_
-   TtaWCS2MBS (&HTMLbuf, &ptrHTMLbuf,  ParsingCharset);
+   TtaWCS2MBS (&HTMLbuf, &ptrHTMLbuf, HTMLcontext.encoding);
 #endif /* _I18N_ */
    if (ustrcmp (schemaName, TEXT("HTML")) == 0)
      /* parse an HTML subtree */
@@ -7352,7 +7253,6 @@ ThotBool            plainText;
   CharRank = 0;
 
   HTMLcontext.encoding = TtaGetDocumentCharset (doc);
-
   wc2iso_strcpy (www_file_name, htmlFileName);
   stream = gzopen (www_file_name, "r");
   if (stream != 0)
@@ -7393,12 +7293,6 @@ ThotBool            plainText;
 	TtaSetNotificationMode (doc, 1);
 	HTMLcontext.language = TtaGetDefaultLanguage ();
 	DocumentSSchema = TtaGetDocumentSSchema (doc);
-#ifdef _I18N_
-	/* Get the document encoding */
-	ParsingCharset = TtaGetDocumentCharset (HTMLcontext.doc);
-	if (ParsingCharset == UNDEFINED_CHARSET)
-	  ParsingCharset = UTF_8;
-#endif /* _I18N_ */
 	/* is the current document a HTML document */
 #ifdef ANNOTATIONS
 	if (DocumentTypes[doc] == docAnnot)
