@@ -337,7 +337,7 @@ static void    InitXmlParserContexts (void)
    ctxt->MapAttributeValue = (Proc) MapMathMLAttributeValue;
    ctxt->CheckContext = (Proc) XmlCheckContext;
    ctxt->CheckInsert = (Proc) XmlCheckInsert;
-   ctxt->ElementCreated = NULL;
+   ctxt->ElementCreated = (Proc) MathMLElementCreated;
    ctxt->ElementComplete = (Proc) MathMLElementComplete;
    ctxt->AttributeComplete = (Proc) MathMLAttributeComplete;
    ctxt->GetDTDName = (Proc) MathMLGetDTDName;

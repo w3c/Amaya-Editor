@@ -102,7 +102,7 @@ ATTRIBUTES
 	BEGIN
 	AttrCreate.Post -> MathDisplayAttrCreated;
 	AttrModify.Post -> MathDisplayAttrCreated;
-	AttrDelete.Pre ->  MathDisplayAttrDelete;
+	AttrDelete.Post -> MathDisplayAttrDeleted;
 	END;
 
    fontsize:
@@ -181,6 +181,13 @@ ATTRIBUTES
 	AttrCreate.Post -> AttrStretchyChanged;
 	AttrModify.Post -> AttrStretchyChanged;
 	AttrDelete.Post -> AttrStretchyChanged;	
+	END;
+
+   movablelimits:
+	BEGIN
+	AttrCreate.Post -> AttrMovablelimitsChanged;
+	AttrModify.Post -> AttrMovablelimitsChanged;
+	AttrDelete.Post -> AttrMovablelimitsChanged;
 	END;
 
    width\240:
@@ -332,6 +339,13 @@ ATTRIBUTES
 	AttrCreate.Post -> AttrFramespacingCreated;
 	AttrModify.Post -> AttrFramespacingCreated;
 	AttrDelete.Post -> AttrFramespacingDeleted;
+	END;
+
+   displaystyle:
+	BEGIN
+	AttrCreate.Post -> MathDisplaystyleAttrCreated;
+	AttrModify.Post -> MathDisplaystyleAttrCreated;
+	AttrDelete.Post -> MathDisplaystyleAttrDeleted;
 	END;
 
    columnspan:

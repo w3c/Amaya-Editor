@@ -19,12 +19,13 @@ ATTR
    xml_space = xml_space_default, xml_space_preserve;
 
    { generic attributes for internal use }
-   Highlight = Yes_;            { to show the MathML element corresponding to
-	                          the current selection in the source view }
-   Unknown_attribute = TEXT;	{ to store an unknown attribute }
-   EntityName = TEXT;		{ the content of the Thot element is the name
-				  of an entity }
-   Ghost_restruct = TEXT;	{ to help structure transformation }
+   Highlight = Yes_;              { to show the MathML element corresponding to
+	                            the current selection in the source view }
+   Unknown_attribute = TEXT;	  { to store an unknown attribute }
+   EntityName = TEXT;		  { the content of the Thot element is the name
+				    of an entity }
+   Ghost_restruct = TEXT;	  { to help structure transformation }
+   IntDisplaystyle = true, false; { for internal use }
 
 CONST
    C_Empty = ' ';
@@ -135,8 +136,8 @@ STRUCT
 		denomalign = left\240, center\240, right\240;
 		bevelled = true, false)
 	  = BEGIN
-	    Numerator = LIST OF (Construct);
-	    Denominator = LIST OF (Construct);
+	    Numerator = LIST OF (Construct) with IntDisplaystyle = false;
+	    Denominator = LIST OF (Construct) with IntDisplaystyle = false;
 	    END	;
 
       BevelledMFRAC
@@ -158,7 +159,7 @@ STRUCT
       MROOT
 	  = BEGIN
 	    RootBase = LIST OF (Construct);
-	    Index = LIST OF (Construct);
+	    Index = LIST OF (Construct) with IntDisplaystyle = false;
 	    END;
 
       MSTYLE
@@ -264,12 +265,13 @@ STRUCT
 		IntVertStretch)			{ for internal use }
 	  = BEGIN
 	    Base = LIST OF (Construct);
-	    Subscript = LIST OF (Construct);
-	    Superscript = LIST OF (Construct);
+	    Subscript = LIST OF (Construct) with IntDisplaystyle = false;
+	    Superscript = LIST OF (Construct) with IntDisplaystyle = false;
 	    END;
 
       MUNDER
-	  (ATTR accentunder; 
+	  (ATTR accentunder;
+		IntMovelimits = yes_;	        { for internal use }
 		IntVertStretch)			{ for internal use }
 	  = BEGIN
 	    UnderOverBase
@@ -277,22 +279,24 @@ STRUCT
 		= LIST OF (Construct);
 	    Underscript
 		(ATTR IntHorizStretch)		{ for internal use }
-		= LIST OF (Construct);
+		= LIST OF (Construct) with IntDisplaystyle = false;
 	    END;
 
       MOVER
 	  (ATTR accent;
+		IntMovelimits;	                { for internal use }
 		IntVertStretch)			{ for internal use }
 	  = BEGIN
 	    UnderOverBase;
 	    Overscript
 		(ATTR IntHorizStretch)		{ for internal use }
-		= LIST OF (Construct);
+		= LIST OF (Construct) with IntDisplaystyle = false;
 	    END;
 
       MUNDEROVER
 	  (ATTR accent;
 		accentunder;
+		IntMovelimits;	                { for internal use }
 		IntVertStretch)			{ for internal use }
 	  = BEGIN
 	    UnderOverBase;
@@ -309,13 +313,13 @@ STRUCT
 					BEGIN
 					MSubscript = LIST OF (Construct);
 					MSuperscript = LIST OF (Construct);
-					END);
+					END) with IntDisplaystyle = false;
 	    { pscreschema: mprescripts, none }
 	    PrescriptPairs = LIST OF (PrescriptPair =
 					BEGIN
 					MSubscript;
 					MSuperscript;
-					END);
+					END) with IntDisplaystyle = false;
 	    END;
 
       { ptabschema }
@@ -342,7 +346,7 @@ STRUCT
 	  = BEGIN
 	    MTable_head = LIST OF (MColumn_head = CONSTANT MC_Head);
 	    MTable_body = LIST OF (TableRow); 
-	    END;
+	    END with IntDisplaystyle = false;
 
       MGLYPH
 	  (ATTR alt = TEXT;
@@ -488,10 +492,12 @@ EXCEPT
    Unknown_attribute:	Invisible;
    EntityName:	        Invisible; 
    Ghost_restruct:	Invisible;
+   IntDisplaystyle:	Invisible;
    IntPlaceholder:   	Invisible;
    IntFontstyle:	Invisible;
    IntParseMe:	        Invisible;
    IntAddSpace:	  	Invisible;
+   IntMovelimits:	Invisible;
    IntHorizStretch:  	Invisible;
    IntVertStretch:  	Invisible;
    IntRowAlign:	        Invisible;

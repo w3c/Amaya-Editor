@@ -17,6 +17,7 @@
 #include "html2thot_f.h"
 #include "HTMLactions_f.h"
 #include "MathML.h"
+#include "HTML.h"
 #include "parser.h"
 #include "styleparser_f.h"
 #include "style.h"
@@ -998,6 +999,161 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 	    }
 	}
     }
+}
+
+/*----------------------------------------------------------------------
+   SetIntMovelimitsAttr
+   Put a IntMovelimits attribute on element el (which is a munder, mover
+   or munderover) if the current value of IntDisplaystyle is false and
+   if el contains a MO element that allows limits to be moved.
+ -----------------------------------------------------------------------*/
+void SetIntMovelimitsAttr (Element el, Document doc)
+{
+  Element	ancestor, child, base, operator, textEl;
+  int           value, len;
+  ElementType   elType;
+  AttributeType attrType;
+  Attribute     attr;
+  Language      lang;
+  CHAR_T        text[10];
+  char          buffer[20];
+  ThotBool      movable;
+#ifndef _I18N_
+  char          script;
+#endif
+
+  if (el == NULL || doc == 0)
+     return;
+  movable = FALSE;
+
+  /* first look for an IntDisplaystyle attribute on an ancestor */
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = MathML_ATTR_IntDisplaystyle;
+  ancestor = el;
+  do
+    {
+      attr = TtaGetAttribute (ancestor, attrType);
+      if (!attr)
+        ancestor = TtaGetParent(ancestor);
+    }
+  while (!attr && ancestor);
+  if (attr)
+    /* there is an ancestor with an attribute IntDisplaystyle */
+    {
+      value = TtaGetAttributeValue (attr);
+      if (value == MathML_ATTR_IntDisplaystyle_VAL_false)
+	/* an ancestor has an attribute IntDisplaystyle = false */
+	{
+	  /* Check the operator within the base */
+	  child = TtaGetFirstChild (el);
+	  base = NULL;
+	  do
+	    {
+	      elType = TtaGetElementType (child);
+	      if (elType.ElTypeNum == MathML_EL_UnderOverBase)
+		base = child;
+	      else
+		TtaNextSibling (&child);
+	    }
+	  while (child && !base);
+	  if (base)
+	    {
+	      child = TtaGetFirstChild (base);
+	      operator = NULL;
+	      do
+		{
+		  elType = TtaGetElementType (child);
+		  if (elType.ElTypeNum == MathML_EL_MO)
+		    operator = child;
+		  else
+		    TtaNextSibling (&child);
+		}
+	      while (child && !operator);
+	      if (operator)
+		{
+		  attrType.AttrTypeNum = MathML_ATTR_movablelimits;
+		  attr = TtaGetAttribute (operator, attrType);
+		  if (attr)
+		    /* the operator has an attribute movablelimits */
+		    {
+		      value = TtaGetAttributeValue (attr);
+		      if (value == MathML_ATTR_movablelimits_VAL_true)
+			movable = TRUE;
+		    }
+		  else
+		    /* no attribute movablelimits. Look at the content of the
+		       operator element */
+		    {
+		      textEl = TtaGetFirstChild (operator);
+		      if (textEl)
+			{
+			  elType = TtaGetElementType (textEl);
+			  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+			    {
+			      len = TtaGetElementVolume (textEl);
+			      if (len == 3)
+				{
+				  TtaGiveTextContent (textEl, buffer, &len, &lang);
+#ifndef _I18N_
+				  script = TtaGetScript (lang);
+				  if (script == 'L')
+#endif
+				    {
+				      if (!strcmp (buffer, "lim") ||
+					  !strcmp (buffer, "max") ||
+					  !strcmp (buffer, "min"))
+					movable = TRUE;
+				    }
+				}
+			      else if (len == 1)
+				{
+				  TtaGiveBufferContent (textEl, text, len+1, &lang);
+#ifdef _I18N_
+				  if (text[0] == 0x22C1 /* Vee */ ||
+				      text[0] == 0x2296 /* CircleMinus */ ||
+				      text[0] == 0x2295 /* CirclePlus */ ||
+				      text[0] == 0x2211 /* Sum */ ||
+				      text[0] == 0x22C3 /* Union */ ||
+				      text[0] == 0x228E /* UnionPlus */ ||
+				      text[0] == 0x22C0 /* Wedge */ ||
+				      text[0] == 0x2297 /* CircleTimes */ ||
+				      text[0] == 0x2210 /* Coproduct */ ||
+				      text[0] == 0x220F /* Product */ ||
+				      text[0] == 0x22C2 /* Intersection */ ||
+				      text[0] == 0x2299 /* CircleDot */ )
+				    movable = TRUE;
+#else
+				  script = TtaGetScript (lang);
+				  if (script == 'G')
+				    /* Adobe Symbol character set */
+				    if (text[0] == 197 || text[0] == 229 ||
+					text[0] == 200 || text[0] == 196 ||
+					text[0] == 213 || text[0] == 199)
+				      movable = TRUE;
+#endif
+				}
+			    }
+			}
+		    }
+		}
+	    }
+	}
+    }
+
+  attrType.AttrTypeNum = MathML_ATTR_IntMovelimits;
+  attr = TtaGetAttribute (el, attrType);
+  if (movable)
+    {
+      if (!attr)
+	{
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attr, doc);
+	}
+      TtaSetAttributeValue (attr, MathML_ATTR_IntMovelimits_VAL_yes_, el, doc);
+    }
+  else if (attr)
+    TtaRemoveAttribute (el, attr, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -3560,7 +3716,99 @@ void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
 }
 
 /*----------------------------------------------------------------------
+   SetDisplaystyleMathElement
+   Associate a IntDisplaystyle attribute with element el (which is a
+   <math> element), and set its value depending on the surrounding context.
+  ----------------------------------------------------------------------*/
+void   SetDisplaystyleMathElement (Element el, Document doc)
+{
+  Element               parent, sibling;
+  ElementType		elType, parentType;
+  Attribute             attr;
+  AttributeType         attrType;
+  int                   display, val;
+
+  display = MathML_ATTR_IntDisplaystyle_VAL_true;
+  /* is there an attribute display? */
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = MathML_ATTR_display;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr)
+    /* there is an attribute display. Take its value */
+    {
+      val = TtaGetAttributeValue (attr);
+      if (val == MathML_ATTR_display_VAL_block)
+	display = MathML_ATTR_IntDisplaystyle_VAL_true;
+      else
+	display = MathML_ATTR_IntDisplaystyle_VAL_false;
+    }
+  else
+    /* no attribute display. Look at the context */
+    {
+      parent = TtaGetParent (el);
+      parentType = TtaGetElementType (parent);
+      if (elType.ElSSchema == parentType.ElSSchema)
+	/* it's the only <math> element in a MathML document */
+	display = MathML_ATTR_IntDisplaystyle_VAL_true;
+      else
+	/* it's a MathML expression within another vocabulary */
+	{
+	  if (!strcmp (TtaGetSSchemaName (parentType.ElSSchema), "SVG"))
+	    /* a <math> element in a SVG element */
+	    display = MathML_ATTR_IntDisplaystyle_VAL_true;
+	  else if (!strcmp (TtaGetSSchemaName (parentType.ElSSchema), "HTML"))
+	    /* a <math> element in a HTML element */
+	    {
+	      display = MathML_ATTR_IntDisplaystyle_VAL_false;
+	      if (parentType.ElTypeNum == HTML_EL_BODY ||
+		  parentType.ElTypeNum == HTML_EL_Division)
+		display = MathML_ATTR_IntDisplaystyle_VAL_true;
+	      else if (parentType.ElTypeNum == HTML_EL_Pseudo_paragraph ||
+		       parentType.ElTypeNum == HTML_EL_Paragraph)
+		{
+		  sibling = el;
+		  TtaPreviousSibling (&sibling);
+		  if (!sibling)
+		    {
+		      sibling = el;
+		      TtaNextSibling (&sibling);
+		      if (!sibling)
+			display = MathML_ATTR_IntDisplaystyle_VAL_true;
+		    }
+		}
+	    }
+	}
+    }
+  /* create the IntDisplastyle attribute and set its value */
+  attrType.AttrTypeNum = MathML_ATTR_IntDisplaystyle;
+  attr = TtaGetAttribute (el, attrType);
+  if (!attr)
+    {
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+    }
+  TtaSetAttributeValue (attr, display, el, doc);
+}
+
+/*----------------------------------------------------------------------
+   MathMLElementCreated
+   The XML parser has just inserted a new element in the abstract tree.
+  ----------------------------------------------------------------------*/
+void      MathMLElementCreated (Element el, Document doc)
+{
+  ElementType		elType;
+
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == MathML_EL_MathML)
+    /* associate a IntDisplaystyle attribute with the element depending
+       on its context */
+    SetDisplaystyleMathElement (el, doc);    
+}
+
+/*----------------------------------------------------------------------
    MathMLElementComplete
+   Element el has just been completed by the XML parser.
    Check the Thot structure of the MathML element el.
   ----------------------------------------------------------------------*/
 void      MathMLElementComplete (ParserData *context, Element el, int *error)
@@ -3665,6 +3913,7 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
 					MathML_EL_Underscript, 0, doc);
 	  SetIntHorizStretchAttr (el, doc);
 	  SetIntVertStretchAttr (el, doc, MathML_EL_UnderOverBase, NULL);
+	  SetIntMovelimitsAttr (el, doc);
 	  break;
        case MathML_EL_MOVER:
 	  /* end of a MOVER. Create UnderOverBase, and Overscript */
@@ -3672,6 +3921,7 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
 					MathML_EL_Overscript, 0, doc);
 	  SetIntHorizStretchAttr (el, doc);
 	  SetIntVertStretchAttr (el, doc, MathML_EL_UnderOverBase, NULL);
+	  SetIntMovelimitsAttr (el, doc);
 	  break;
        case MathML_EL_MUNDEROVER:
 	  /* end of a MUNDEROVER. Create UnderOverBase, Underscript, and
@@ -3681,6 +3931,7 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
 					MathML_EL_Overscript, doc);
 	  SetIntHorizStretchAttr (el, doc);
 	  SetIntVertStretchAttr (el, doc, MathML_EL_UnderOverBase, NULL);
+	  SetIntMovelimitsAttr (el, doc);
 	  break;
        case MathML_EL_MMULTISCRIPTS:
 	  /* end of a MMULTISCRIPTS. Create all elements defined in the
@@ -3778,8 +4029,11 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
 		   TtaInsertSibling (child, prev, FALSE, doc);
 		   prev = child;
 		 }
+	       /* associate a IntDisplaystyle attribute with the element
+		  depending on its context */
+	       SetDisplaystyleMathElement (new, doc);
 	       /* Create placeholders within the MathML element */
-	       CreatePlaceholders (el, doc);
+	       CreatePlaceholders (new, doc);
 	     }
        }
      }
@@ -4034,20 +4288,89 @@ void MathMLSpacingAttr (Document doc, Element el, char *value, int attr)
 
 /*----------------------------------------------------------------------
    MathMLSetDisplayAttr
-   The MathML attribute display is associated  with element el.
-   Generate the corresponding Thot presentation rule for
-   the element.
+   The MathML attribute display is associated  with element el (which
+   should be a <math> element).
+   Generate the corresponding internal attribute.
   ----------------------------------------------------------------------*/
 void MathMLSetDisplayAttr (Element el, Attribute attr, Document doc,
 			   ThotBool delete)
 {
-  int val;
+  int            val, intVal, attrKind;
+  AttributeType  attrType;
+  Attribute      intAttr;
 
-  val = TtaGetAttributeValue (attr);
-  if (val == MathML_ATTR_display_VAL_block)
-    ParseHTMLSpecificStyle (el, "display: block", doc, 0, delete);
-  else if (val == MathML_ATTR_display_VAL_inline_)
-    ParseHTMLSpecificStyle (el, "display: inline", doc, 0, delete);
+  if (delete)
+    SetDisplaystyleMathElement (el, doc);
+  else
+    {
+      val = TtaGetAttributeValue (attr);
+      if (val == MathML_ATTR_display_VAL_block)
+	intVal = MathML_ATTR_IntDisplaystyle_VAL_true;
+      else
+	intVal = MathML_ATTR_IntDisplaystyle_VAL_false;
+      TtaGiveAttributeType (attr, &attrType, &attrKind);
+      attrType.AttrTypeNum = MathML_ATTR_IntDisplaystyle;
+      intAttr = TtaGetAttribute (el, attrType);
+      /* create the IntDisplaystyle attribute and set its value */
+      if (!intAttr)
+	{
+	  intAttr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, intAttr, doc);
+	}
+      TtaSetAttributeValue (intAttr, intVal, el, doc);
+    }
+}
+
+/*----------------------------------------------------------------------
+   MathMLSetDisplaystyleAttr
+   The attribute displaystyle is associated  with element el (which
+   should be a <mstyle> or a <mtable> element).
+   GenerateSet the corresponding internal attribute accordingly.
+  ----------------------------------------------------------------------*/
+void MathMLSetDisplaystyleAttr (Element el, Attribute attr, Document doc,
+				ThotBool delete)
+{
+  int            val, intVal;
+  ElementType    elType;
+  AttributeType  attrType;
+  Attribute      intAttr;
+
+  /* get the internal attribute */
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = MathML_ATTR_IntDisplaystyle;
+  intAttr = TtaGetAttribute (el, attrType);
+  if (delete)
+    /* attribute displaystyle has been deleted */
+    {
+      if (elType.ElTypeNum == MathML_EL_MSTYLE)
+	/* it's a mstyle element. Just remove the internal attribute */
+	{
+	  if (intAttr)
+	    TtaRemoveAttribute (el, intAttr, doc);
+          return;
+	}
+      else if (elType.ElTypeNum == MathML_EL_MTABLE)
+	/* it's a matable element, set the default value (false) */
+	intVal = MathML_ATTR_IntDisplaystyle_VAL_false;
+      else
+	return;
+    }
+  else
+    {
+      val = TtaGetAttributeValue (attr);
+      if (val == MathML_ATTR_displaystyle_VAL_true)
+	intVal = MathML_ATTR_IntDisplaystyle_VAL_true;
+      else
+	intVal = MathML_ATTR_IntDisplaystyle_VAL_false;
+    }
+  /* create the IntDisplaystyle attribute if needed and set its value */
+  if (!intAttr)
+    {
+      intAttr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, intAttr, doc);
+    }
+  TtaSetAttributeValue (intAttr, intVal, el, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -4063,7 +4386,7 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
    char             *value;
    int               val, length;
    Attribute         intAttr;
- 
+
    /* first get the type of that attribute */
    TtaGiveAttributeType (attr, &attrType, &attrKind);
 
@@ -4116,8 +4439,12 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
    */
 
    else if (attrType.AttrTypeNum == MathML_ATTR_display)
-     /* it's a display attribute */
+     /* it's a display attribute on element <math> */
      MathMLSetDisplayAttr (el, attr, doc, FALSE);
+
+   else if (attrType.AttrTypeNum == MathML_ATTR_displaystyle)
+     /* it's a displaystyle attribute */
+     MathMLSetDisplaystyleAttr (el, attr, doc, FALSE);
 
    else if (attrType.AttrTypeNum == MathML_ATTR_framespacing)
      /* it's a framespacing attribute */

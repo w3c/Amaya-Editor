@@ -26,6 +26,8 @@ extern void SetIntVertStretchAttr ( Element el,
                                     Document doc,
                                     int base,
                                     Element* selEl );
+extern void SetIntMovelimitsAttr ( Element el,
+                                   Document doc );
 extern void CheckMTable ( Element elMTABLE,
                           Document doc,
                           ThotBool placeholder );
@@ -72,6 +74,10 @@ extern void HandleFramespacingAttribute ( Attribute attr,
                                           Element el,
                                           Document doc,
                                           ThotBool delete );
+extern void SetDisplaystyleMathElement ( Element el,
+                                         Document doc );
+extern void MathMLElementCreated ( Element el,
+				   Document doc );
 extern void MathMLElementComplete ( ParserData *context,
                                     Element el,
                                     int *error );
@@ -99,6 +105,10 @@ extern void MathMLSetDisplayAttr ( Element el,
                                    Attribute attr,
                                    Document doc,
                                    ThotBool delete );
+extern void MathMLSetDisplaystyleAttr ( Element el,
+                                        Attribute attr,
+                                        Document doc,
+			                ThotBool delete );
 extern void MathMLAttributeComplete ( Attribute attr,
                                       Element el,
                                       Document doc );
@@ -127,6 +137,8 @@ extern void SetIntVertStretchAttr (/* Element el,
                                       Document doc,
                                       int base,
                                       Element* selEl */);
+extern void SetIntMovelimitsAttr (/* Element el,
+				     Document doc */);
 extern void CheckMTable (/* Element elMTABLE,
                             Document doc,
                             ThotBool placeholder */);
@@ -173,6 +185,10 @@ extern void HandleFramespacingAttribute (/* Attribute attr,
                                             Element el,
                                             Document doc,
                                             ThotBool delete */);
+extern void SetDisplaystyleMathElement (/* Element el,
+                                           Document doc */);
+extern void MathMLElementCreated (/* Element el,
+				     Document doc */);
 extern void MathMLElementComplete (/* ParserData *context,
                                       Element el,
                                       int *error */);
@@ -200,6 +216,10 @@ extern void MathMLSetDisplayAttr (/* Element el,
                                      Attribute attr,
                                      Document doc,
                                      ThotBool delete */);
+extern void MathMLSetDisplaystyleAttr (/* Element el,
+                                          Attribute attr,
+                                          Document doc,
+			                  ThotBool delete */);
 extern void MathMLAttributeComplete (/* Attribute attr,
                                         Element el,
                                         Document doc */);

@@ -1777,6 +1777,27 @@ ATTRIBUTES
 		Size: Enclosing =;
 	END;
 
+  IntMovelimits(UnderOverBase):
+	HorizPos: Left = Enclosing . Left;
+  IntMovelimits(Overscript):
+	BEGIN
+	VertPos: Bottom = UnderOverBase . Top + 0.9;
+	HorizPos: Left = UnderOverBase . Right + 0.1;
+	IN Structure_view BEGIN
+                VertPos: Top = Previous . Bottom;
+                HorizPos: Left = Enclosing . Left;
+		END;
+	END;
+  IntMovelimits(Underscript):
+	BEGIN
+	VertPos: Top = UnderOverBase . Bottom - 0.7;
+	HorizPos: Left = UnderOverBase . Right;
+	IN Structure_view BEGIN
+                VertPos: Top = Previous . Bottom;
+                HorizPos: Left = Enclosing . Left;
+		END;
+	END;
+
   overflow:
 	CreateBefore(AttrNameAndValue);
 

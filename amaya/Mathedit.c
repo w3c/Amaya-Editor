@@ -102,6 +102,7 @@ static  functName  functionName[] =
    "div",
    "gcd",
    "grad",
+   "lim",
    "log",
    "ln",
    "max",
@@ -166,8 +167,15 @@ static void MathSetAttributes (Element el, Document doc, Element* selEl)
 	   {
 	   grandParent = TtaGetParent (parent);
 	   if (grandParent != NULL)
+	     {
 	      SetIntVertStretchAttr (grandParent, doc, parentType.ElTypeNum,
 				     selEl);
+	      if (elType.ElTypeNum == MathML_EL_MO &&
+		  parentType.ElTypeNum == MathML_EL_UnderOverBase)
+		/* it's a MO element within a MunderOverBase, look at its
+		   content to check if it's an operator with movable limits */
+		SetIntMovelimitsAttr (grandParent, doc);
+	     }
 	   }
 	}
      }
@@ -744,6 +752,7 @@ static void         CreateMathConstruct (int construct)
 		  TtaInsertFirstChild (&child, sibling, doc);
 		  new = TtaNewElement (doc, newType);
 		  TtaInsertFirstChild (&new, child, doc);
+		  SetDisplaystyleMathElement (new, doc);
 		  TtaRegisterElementCreate (child, doc);
 		  TtaSetDocumentModified (doc);
 		  TtaSetDisplayMode (doc, dispMode);
@@ -753,6 +762,17 @@ static void         CreateMathConstruct (int construct)
 		}
 	    }
 	  TtaCreateElement (newType, doc);
+	  /* Get the <math> element that has been created */
+	  TtaGiveFirstSelectedElement (doc, &el, &c1, &i);
+	  elType = TtaGetElementType (el);
+	  if (elType.ElTypeNum != MathML_EL_MathML)
+	    {
+	      elType.ElTypeNum = MathML_EL_MathML;
+	      el = TtaGetTypedAncestor (el, elType);
+	    }
+	  /* associate an attribute IntDisplaystyle with the new <math> elem */
+	  if (el)
+	    SetDisplaystyleMathElement (el, doc);
 	}
       return;
     }
@@ -1022,6 +1042,8 @@ static void         CreateMathConstruct (int construct)
 	      else
 		/* insert the new Math element as a child element */
 		TtaInsertFirstChild (&el, sibling, doc);
+	      if (elType.ElTypeNum == MathML_EL_MathML)
+		SetDisplaystyleMathElement (el, doc);
 	      /* restore structure checking mode */
 	      TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
 	      sibling = TtaGetFirstChild (el);
@@ -2767,7 +2789,13 @@ static void SeparateFunctionNames (Element *firstEl, Element lastEl,
 					  }
 				    }
 				  /* create a MI for the function name itself*/
-				  elType.ElTypeNum = MathML_EL_MI;
+				  if (!strcmp(functionName[func], "lim") ||
+				      !strcmp(functionName[func], "min") ||
+				      !strcmp(functionName[func], "max"))
+				    /* create a MO for lim, min or max */
+				    elType.ElTypeNum = MathML_EL_MO;
+				  else
+				    elType.ElTypeNum = MathML_EL_MI;
 				  newEl = TtaNewElement (doc, elType);
 				  TtaInsertSibling (newEl, prevEl, FALSE, doc);
 				  prevEl = newEl;
@@ -3834,6 +3862,17 @@ void MathElementPasted (NotifyElement *event)
    XLinkPasted (event);
 
    elType = TtaGetElementType (event->element);
+   /* if it's a <math> element, set the IntDisplaystyle attribute according
+      to the context */
+   if (elType.ElTypeNum == MathML_EL_MathML)
+     SetDisplaystyleMathElement (event->element, event->document);
+
+   if (elType.ElTypeNum == MathML_EL_MUNDER ||
+       elType.ElTypeNum == MathML_EL_MOVER ||
+       elType.ElTypeNum == MathML_EL_MUNDEROVER)
+     /* move the limits if it's appropriate */
+     SetIntMovelimitsAttr (event->element, event->document);
+
    oldStructureChecking = TtaGetStructureChecking (event->document);
    TtaSetStructureChecking (0, event->document);
 
@@ -4228,7 +4267,7 @@ void MathEntityModified (NotifyAttribute *event)
 
 /*----------------------------------------------------------------------
  MathDisplayAttrCreated
- An attribute display has been created by the user.
+ An attribute display has been created or modified by the user.
  -----------------------------------------------------------------------*/
 void MathDisplayAttrCreated (NotifyAttribute *event)
 {
@@ -4237,14 +4276,33 @@ void MathDisplayAttrCreated (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
- MathDisplayAttrDelete
- The user is deleting an attribute display
+ MathDisplayAttrDeleted
+ The user has deleted an attribute display
  -----------------------------------------------------------------------*/
-ThotBool MathDisplayAttrDelete (NotifyAttribute *event)
+void MathDisplayAttrDeleted (NotifyAttribute *event)
 {
   ParseHTMLSpecificStyle (event->element, "display:inline", event->document,
-			  0, TRUE);
-  return FALSE; /* let Thot perform normal operation */
+                          0, TRUE);
+  MathMLSetDisplayAttr (event->element, NULL, event->document, TRUE);
+}
+
+/*----------------------------------------------------------------------
+ MathDisplaystyleAttrCreated
+ An attribute displaystyle has been created or modified by the user.
+ -----------------------------------------------------------------------*/
+void MathDisplaystyleAttrCreated (NotifyAttribute *event)
+{
+  MathMLSetDisplaystyleAttr (event->element, event->attribute, event->document,
+			     FALSE);
+}
+
+/*----------------------------------------------------------------------
+ MathDisplaystyleAttrDeleted
+ The user has deleted an attribute displaystyle
+ -----------------------------------------------------------------------*/
+void MathDisplaystyleAttrDeleted (NotifyAttribute *event)
+{
+  MathMLSetDisplaystyleAttr (event->element, NULL, event->document, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -4541,11 +4599,11 @@ void AttrStretchyChanged (NotifyAttribute *event)
   if (event->element)
     {
     if (event->attribute == NULL)
-	/* Attribute has been deleted */
-	val = MathML_ATTR_stretchy_VAL_true;
+      /* Attribute has been deleted */
+      val = MathML_ATTR_stretchy_VAL_true;
     else
-	/* attribute has been created or modified, get its new value */
-        val = TtaGetAttributeValue (event->attribute);
+      /* attribute has been created or modified, get its new value */
+      val = TtaGetAttributeValue (event->attribute);
     elType = TtaGetElementType (event->element);
     attrType.AttrSSchema = elType.ElSSchema;
     attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
@@ -4565,6 +4623,43 @@ void AttrStretchyChanged (NotifyAttribute *event)
     else
        if (attr)
 	  TtaRemoveAttribute (event->element, attr, event->document);
+    }
+}
+
+/*----------------------------------------------------------------------
+ AttrMovablelimitsChanged
+ Attribute movablelimits in a MO element has been modified or deleted
+ by the user.
+ It it is within a munderover, a munder or a mover, set attribute
+ IntMovelimits accordingly.
+ -----------------------------------------------------------------------*/
+void AttrMovablelimitsChanged (NotifyAttribute *event)
+{
+  ElementType   elType;
+  Element       el, parent, grandparent;
+
+  el = event->element;
+  if (el)
+    {
+      parent = TtaGetParent (el);
+      if (parent)
+	{
+	  elType = TtaGetElementType (parent);
+	  if (elType.ElTypeNum == MathML_EL_UnderOverBase &&
+	      !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+	    {
+	      grandparent = TtaGetParent (parent);
+	      if (grandparent)
+		{
+		  elType = TtaGetElementType (grandparent);
+		  if ((elType.ElTypeNum == MathML_EL_MUNDER ||
+		       elType.ElTypeNum == MathML_EL_MOVER ||
+		       elType.ElTypeNum == MathML_EL_MUNDEROVER) &&
+		      !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+		    SetIntMovelimitsAttr (grandparent, event->document);
+		}
+	    }
+	}
     }
 }
 
@@ -4594,7 +4689,7 @@ void AttrSpacingCreated (NotifyAttribute *event)
 
 /*----------------------------------------------------------------------
  AttrSpacingDelete
- The user is deleting an attribute scriptlevel.
+ The user is deleting an attribute width, height, or depth.
  -----------------------------------------------------------------------*/
 ThotBool AttrSpacingDelete (NotifyAttribute *event)
 {
