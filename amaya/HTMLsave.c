@@ -502,9 +502,10 @@ static void InitSaveForm (Document document, View view, char *pathname)
    else
      TtaNewLabel (BaseDialog + ToggleSave, BaseDialog + SaveForm, "");
 
+   /* Using a hard set value for the scan filter of *.* */
    TtaListDirectory (SavePath, BaseDialog + SaveForm,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
-		     BaseDialog + DirSave, ScanFilter,
+		     BaseDialog + DirSave, "",
 		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
    /* second line */
    TtaNewTextForm (BaseDialog + NameSave, BaseDialog + SaveForm,
