@@ -91,7 +91,7 @@
 90 Unknown color\n
 91 Invalid rule for a choice\n
 92 Only for presentation boxes\n
-93 Vue Unique\n
+93 Vue_Unique
 94 Invalid file suffix: %s\n
 95 cpp not found\n
 96 Use "CreateFirst" instead\n
