@@ -235,7 +235,9 @@ void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
   PictureScaling      pres;
   int                 x, y;
   int                 xd, yd;
+  int                 xbg, ybg;
   int                 width, height;
+  int                 wbg, hbg;
   int                 w, h;
   ThotBool            setWindow;
 
@@ -248,15 +250,39 @@ void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
   GetSizesFrame (frame, &w, &h);
   if (pBox == NULL)
     return;
+
+  /* values for the current box */
+  xd = pBox->BxXOrg + pBox->BxLMargin;
+  yd = pBox->BxYOrg + pBox->BxTMargin;
+  width = pBox->BxWidth - pBox->BxLMargin - pBox->BxRMargin;
+  height = pBox->BxHeight - pBox->BxTMargin - pBox->BxBMargin;
+  /* clipping on the origin */
+  if (xd < x)
+    {
+      width = width - x + xd;
+      xd = x;
+    }
+  if (yd < y)
+    {
+      height = height - y + yd;
+      yd = y;
+    }
+  /* clipping on the width */
+  if (xd + width > xmax)
+    width = xmax - xd + 1;
+  /* clipping on the height */
+  if (yd + height > ymax)
+    height = ymax - yd + 1;
+
   setWindow = (pAb == pFrame->FrAbstractBox);
   if (!setWindow &&
       TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
 			pAb->AbElement->ElStructSchema))
-    /* repaint the whole window when the fill applies to the document */
-    setWindow = (pAb->AbDocView == 1 &&
-		 (pAb->AbEnclosing == NULL || /* document */
-		  pAb->AbEnclosing->AbEnclosing == NULL || /* html */
-		  pAb->AbEnclosing->AbEnclosing->AbEnclosing == NULL) /* body */);
+  /* repaint the whole background window when the fill applies to the document */
+  setWindow = (pAb->AbDocView == 1 &&
+	       (pAb->AbEnclosing == NULL || /* document */
+		pAb->AbEnclosing->AbEnclosing == NULL || /* html */
+		pAb->AbEnclosing->AbEnclosing->AbEnclosing == NULL) /* body */);
   if (setWindow)
     {
       /* get the maximum of the window size and the root box size */
@@ -264,43 +290,27 @@ void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
 	w = pBox->BxWidth;
       if (pBox->BxHeight > h)
 	h = pBox->BxHeight;
-      width = w + 1;
-      height = h + 1;
-      xd = xmin;
-      yd = ymin;
+      wbg = w + 1;
+      hbg = h + 1;
+      xbg = xmin;
+      ybg = ymin;
       if (pBox->BxFill)
 	/* draw the box background */
-	DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height,
+	DrawRectangle (frame, 0, 0, xbg - x, ybg - y, wbg, hbg,
 		       pAb->AbForeground, pAb->AbBackground,
 		       pAb->AbFillPattern);
     }
   else
     {
-      xd = pBox->BxXOrg + pBox->BxLMargin;
-      yd = pBox->BxYOrg + pBox->BxTMargin;
-      width = pBox->BxWidth - pBox->BxLMargin - pBox->BxRMargin;
-      height = pBox->BxHeight - pBox->BxTMargin - pBox->BxBMargin;
-      /* clipping on the origin */
-      if (xd < x)
-	{
-	  width = width - x + xd;
-	  xd = x;
-	}
-      if (yd < y)
-	{
-	  height = height - y + yd;
-	  yd = y;
-	}
-      /* clipping on the width */
-      if (xd + width > xmax)
-	width = xmax - xd + 1;
-      /* clipping on the height */
-      if (yd + height > ymax)
-	height = ymax - yd + 1; 
+      xbg = xd;
+      ybg = yd;
+      wbg = width;
+      hbg = height;
     }
 
-  if (yd + height >= ymin && yd <= ymax &&
-      (setWindow || (xd + width >= xmin && xd <= xmax)))
+  if (setWindow ||
+      (yd + height >= ymin && yd <= ymax &&
+       xd + width >= xmin && xd <= xmax))
     {
       DisplayBorders (pBox, frame, xd - x, yd - y, width, height);
       /* draw over the padding */
@@ -328,6 +338,7 @@ void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
 	  if (yd + height > ymax)
 	    height = ymax - yd + 1;
 	}
+
       imageDesc = (PictInfo *) pAb->AbPictBackground;
       if (pAb->AbSelected)
 	{
@@ -351,7 +362,7 @@ void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
 	      if (pres == DefaultPres)
 		pres = FillFrame;
 	      if (pres == YRepeat || pres == FillFrame || !pAb->AbTruncatedHead)
-		DrawPicture (pBox, imageDesc, frame,  xd - x, yd - y, width, height);
+		DrawPicture (pBox, imageDesc, frame,  xbg - x, ybg - y, wbg, hbg);
 	    }
 	}
     }
