@@ -2012,7 +2012,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
   AttributePres      *pAPRule, *pPRdef, *pPRinherit;
   NumAttrCase        *pCase;
   char                buffer[400];
-  char               *attrValue, *ptr;
+  char               *attrValue, *ptr, *wordEnd;
   unsigned int        len;
   int                 i, j, k;
   ThotBool            found, ok;
@@ -2078,6 +2078,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 	        ptr++;
 		len++;
 	      }
+	    wordEnd = ptr;
 	    /* skip the spaces following this value */
 	    while (*ptr <= ' ' && *ptr != EOS)
 	      ptr++;
@@ -2087,6 +2088,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 	    else
 	      /* there is another value after that one */
 	      (*valueNum)++;
+	    *wordEnd = EOS;
 	  }
       }
     }
