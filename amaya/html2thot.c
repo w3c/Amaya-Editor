@@ -1402,7 +1402,7 @@ ElementType         elType;
 static void         TextToDocument ()
 {
    ElementType         elType;
-   Element             elText, parent;
+   Element             elText, parent, ancestor, prev;
    int                 i;
    boolean             first;
 
@@ -1423,7 +1423,17 @@ static void         TextToDocument ()
 	      element encountered */
 	  {
 	     parent = lastElement;
-	     first = !IsCharacterLevelElement (parent);
+	     first = TRUE;
+	     ancestor = parent;
+	     while (first && IsCharacterLevelElement (ancestor))
+		{
+		prev = ancestor;
+		TtaPreviousSibling (&prev);
+		if (prev == NULL)
+		   ancestor = TtaGetParent (ancestor);
+		else
+		   first = FALSE;
+		}
 	  }
 	elType = TtaGetElementType (parent);
 	if (elType.ElTypeNum == HTML_EL_Styles)
@@ -1436,7 +1446,7 @@ static void         TextToDocument ()
 	  }
 	if (first || LastTagIsBR || CannotContainText (elType))
 	   if (!Within (HTML_EL_Preformatted))
-	      /* suppress leading spaces */
+	      /*suppress leading spaces */
 	      while (inputBuffer[i] <= SPACE && inputBuffer[i] != EOS)
 		 i++;
 	if (inputBuffer[i] != EOS)
@@ -1962,7 +1972,6 @@ Element             el;
    Element             constElem, child, grandChild, desc, leaf;
    Attribute           attr;
    AttributeType       attrType;
-   int                 kind;
    int                 length;
    boolean             empty;
    char               *text;
