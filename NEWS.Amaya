@@ -32,7 +32,8 @@ Extensions 2.2:
   - The backspace deletes the current selection when that selection is not
     empty and delete the previous character in other cases.
   - If there is no selection in the document which receives the current focus
-    and the user hits an arrow.
+    and the user hits any arrow key, a selection is automatically generated
+    at the window top.
   - A new option in the Preferences/Publishing menu allows to declare a set
     of domains where a PUT may be redirected, and thus avoid having a popup
     asking a user to confirm each redirection.
