@@ -2594,7 +2594,7 @@ char                c;
    char               *text;
 
    UnknownTag = FALSE;
-   if (lastElement != NULL)
+   if ((lastElement != NULL) && (lastElemEntry != -1))
      {
 	if (!strcmp (GIMappingTable[lastElemEntry].htmlGI, "PRE"))
 	   /* <PRE> has been read */
