@@ -100,46 +100,14 @@ static ThotBool     FromKeyboard;
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
-#ifdef _WINDOWS
-#ifdef __STDC__
-static BOOL sameString (USTRING str1, USTRING str2)
-#else  /* __STDC__ */
-static BOOL sameString (str1, str2)
-USTRING str1;
-USTRING str2;
-#endif /* __STDC__ */
-{
-   int i;
-
-   int l1 = ustrlen (str1);
-   int l2 = ustrlen (str2);
-   if (l1 != l2)
-      return FALSE;
-   for (i = 0; i < l1; i++)
-       if ((unsigned int) str1[i] != (unsigned int) str2 [i])
-          return FALSE ;
-   return TRUE;
-}
-#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    CopyString computes the width of the source text and copies it into the
    target buffer if target parameter is not NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CopyString (Buffer source, Buffer target, int count, ptrfont font, int *sourceInd, int *targetInd, int *width, int *nSpaces, int *nChars)
-#else  /* __STDC__ */
-static void         CopyString (source, target, count, font, sourceInd, targetInd, width, nSpaces, nChars)
-PtrTextBuffer       source;
-PtrTextBuffer       target;
-int                 count;
-ptrfont             font;
-int                *sourceInd;
-int                *targetInd;
-int                *width;
-int                *nSpaces;
-int                *nChars;
-#endif /* __STDC__ */
+static void CopyString (Buffer source, Buffer target, int count, ptrfont font,
+			int *sourceInd, int *targetInd, int *width, int *nSpaces,
+			int *nChars)
 {
   int                 nb;
   CHAR_T              car;
@@ -171,17 +139,8 @@ int                *nChars;
    RegisterInHistory
    register element pEl in the editing history, to allow UNDO
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void     RegisterInHistory (PtrElement pEl, int frame,
-				   int firstCharIndex, int lastCharIndex)
-#else  /* __STDC__ */
-static void     RegisterInHistory (pEl, frame, firstCharIndex, lastCharIndex)
-PtrElement      pEl;
-int             frame;
-int		firstCharIndex;
-int		lastCharIndex
-
-#endif /* __STDC__ */
+static void RegisterInHistory (PtrElement pEl, int frame,
+			       int firstCharIndex, int lastCharIndex)
 {
    PtrDocument         pDoc;
    int                 view;
@@ -200,14 +159,7 @@ int		lastCharIndex
    APPtextModify envoie un message qui notifie qu'un texte est     
    modifie'.                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     APPtextModify (PtrElement pEl, int frame, ThotBool pre)
-#else  /* __STDC__ */
-static              APPtextModify (pEl, frame, pre)
-PtrElement          pEl;
-int                 frame;
-ThotBool            pre;
-#endif /* __STDC__ */
 {
    PtrElement          pParentEl;
    ThotBool            result;
@@ -238,15 +190,8 @@ ThotBool            pre;
    APPattrModify envoie un message qui notifie qu'un attribut est  
    modifie'.                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     APPattrModify (PtrAttribute pAttr, PtrElement pEl, int frame, ThotBool pre)
-#else  /* __STDC__ */
-static ThotBool     APPattrModify (pAttr, pEl, frame, pre)
-PtrAttribute        pAttr;
-PtrElement          pEl;
-int                 frame;
-ThotBool            pre;
-#endif /* __STDC__ */
+static ThotBool APPattrModify (PtrAttribute pAttr, PtrElement pEl,
+			       int frame, ThotBool pre)
 {
    ThotBool            result;
    PtrDocument         pDoc;
@@ -273,18 +218,9 @@ ThotBool            pre;
    - le de'calage x depuis le de'but de la boite,                  
    - et le nombre de caracteres pre'ce'dents dans la boite.        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         GiveInsertPoint (PtrAbstractBox pAb, int frame, PtrBox * pBox, PtrTextBuffer * pBuffer, int *ind, int *x, int *previousChars)
-#else  /* __STDC__ */
-static void         GiveInsertPoint (pAb, frame, pBox, pBuffer, ind, x, previousChars)
-PtrAbstractBox      pAb;
-PtrBox             *pBox;
-PtrTextBuffer      *pBuffer;
-int                 frame;
-int                *ind;
-int                *x;
-int                *previousChars;
-#endif /* __STDC__ */
+static void GiveInsertPoint (PtrAbstractBox pAb, int frame, PtrBox *pBox,
+			     PtrTextBuffer *pBuffer, int *ind, int *x,
+			     int *previousChars)
 {
    ViewSelection      *pViewSel;
    ThotBool            OK;
@@ -591,16 +527,7 @@ static ThotBool CloseTextInsertionWithControl ()
    la destruction de caractere peut s'appliquer au pave    
    precedent.                                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool del)
-#else  /* __STDC__ */
-static void         SetInsert (pAb, frame, nat, del)
-PtrAbstractBox     *pAb;
-int                *frame;
-LeafType            nat;
-ThotBool            del;
-
-#endif /* __STDC__ */
+static void SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool del)
 {
   PtrAbstractBox      pSelAb;
   PtrBox              pBox;
@@ -726,14 +653,7 @@ ThotBool            del;
    Met a jour les chainages et rend le pointeur sur le nouveau     
    buffer.                                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrTextBuffer GetNewBuffer (PtrTextBuffer pBuffer, int frame)
-#else  /* __STDC__ */
-static PtrTextBuffer GetNewBuffer (pBuffer, frame)
-PtrTextBuffer       pBuffer;
-int                 frame;
-
-#endif /* __STDC__ */
 {
    PtrTextBuffer       pNewBuffer;
    PtrTextBuffer       pCurrentBuffer;
@@ -784,27 +704,11 @@ int                 frame;
    - le pointeur sur le dernier buffer destination utilise.        
    - la largeur, le nombre de blancs et de caracteres copies.      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CopyBuffers (ptrfont font, int frame, int startInd, int endInd,
-				 int targetInd, PtrTextBuffer pSourceBuffer,
-				 PtrTextBuffer pEndBuffer,
-				 PtrTextBuffer * pTargetBuffer,
-				 int *width, int *nSpaces, int *nChars)
-#else  /* __STDC__ */
-static void         CopyBuffers (font, frame, startInd, endInd, targetInd, pSourceBuffer, pEndBuffer, pTargetBuffer, width, nSpaces, nChars)
-ptrfont             font;
-int                 frame;
-int                 startInd;
-int                 endInd;
-int                 targetInd;
-PtrTextBuffer       pSourceBuffer;
-PtrTextBuffer       pEndBuffer;
-PtrTextBuffer      *pTargetBuffer;
-int                *width;
-int                *nSpaces;
-int                *nChars;
-
-#endif /* __STDC__ */
+static void CopyBuffers (ptrfont font, int frame, int startInd, int endInd,
+			 int targetInd, PtrTextBuffer pSourceBuffer,
+			 PtrTextBuffer pEndBuffer,
+			 PtrTextBuffer *pTargetBuffer,
+			 int *width, int *nSpaces, int *nChars)
 {
    PtrTextBuffer       pBuffer;
    STRING              target;
@@ -872,17 +776,8 @@ int                *nChars;
 /*----------------------------------------------------------------------
    Debute l'insertion de caracteres dans une boite de texte.      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox, PtrTextBuffer pBuffer, int ind, int prev)
-#else  /* __STDC__ */
-static void         StartTextInsertion (pAb, frame, pSelBox, pBuffer, ind, prev)
-PtrAbstractBox      pAb;
-int                 frame;
-PtrBox              pSelBox;
-PtrTextBuffer       pBuffer;
-int                 ind;
-int                 prev;
-#endif /* __STDC__ */
+static void StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox,
+				PtrTextBuffer pBuffer, int ind, int prev)
 {
    PtrBox              pBox;
    PtrTextBuffer       pPreviousBuffer;
@@ -1008,15 +903,7 @@ int                 prev;
    Return TRUE if there is a notification to the application and the
    current selection could be modified.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     GiveAbsBoxForLanguage (int frame, PtrAbstractBox * pAb, int keyboard)
-#else  /* __STDC__ */
-static ThotBool    GiveAbsBoxForLanguage (frame, pAb, keyboard)
-int                 frame;
-PtrAbstractBox     *pAb;
-int                 keyboard;
-
-#endif /* __STDC__ */
+static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keyboard)
 {
   PtrAbstractBox      pSelAb;
   PtrBox              pBox;
@@ -1111,15 +998,7 @@ int                 keyboard;
    donne' en parame`tre (premier buffer, indice de de'but, longueur). 
    Si le parame`tre charWidth est nul, regarde tous les buffers.      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     IsLineBreakInside (PtrTextBuffer pBuffer, int ind, int charWidth)
-#else  /* __STDC__ */
-static ThotBool     IsLineBreakInside (pBuffer, ind, charWidth)
-PtrTextBuffer       pBuffer;
-int                 ind;
-int                 charWidth;
-
-#endif /* __STDC__ */
+static ThotBool IsLineBreakInside (PtrTextBuffer pBuffer, int ind, int charWidth)
 {
    int                 c;
    int                 nChars;
@@ -1169,15 +1048,7 @@ int                 charWidth;
 /*----------------------------------------------------------------------
    TtcInsertGraph insert a graphics                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtcInsertGraph (Document document, View view, CHAR_T c)
-#else  /* __STDC__ */
-void                TtcInsertGraph (document, view, c)
-Document            document;
-View                view;
-CHAR_T                c;
-
-#endif /* __STDC__ */
+void  TtcInsertGraph (Document document, View view, CHAR_T c)
 {
    DisplayMode         dispMode;
    int                 frame;
@@ -1228,13 +1099,7 @@ void CloseTextInsertion ()
    retirer les extensions/compressions de texte et couper  
    e'ventuellement les mots.                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CloseParagraphInsertion (PtrAbstractBox pAb, int frame)
-#else  /* __STDC__ */
-void                CloseParagraphInsertion (pAb, frame)
-PtrAbstractBox      pAb;
-int                 frame;
-#endif /* __STDC__ */
+void CloseParagraphInsertion (PtrAbstractBox pAb, int frame)
 {
   PtrBox              pBox;
 
@@ -1286,19 +1151,9 @@ int                 frame;
 /*----------------------------------------------------------------------
    insere dans la boite pBox.                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         LoadSymbol (char c, PtrLine pLine, ThotBool defaultHeight, ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
-#else  /* __STDC__ */
-static void         LoadSymbol (c, pLine, defaultHeight, defaultWidth, pBox, pAb, frame)
-char                c;
-PtrLine             pLine;
-ThotBool            defaultHeight;
-ThotBool            defaultWidth;
-PtrBox              pBox;
-PtrAbstractBox      pAb;
-int                 frame;
-
-#endif /* __STDC__ */
+static void LoadSymbol (char c, PtrLine pLine, ThotBool defaultHeight,
+			ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb,
+			int frame)
 {
    int                 xDelta, yDelta;
 
@@ -1332,19 +1187,9 @@ int                 frame;
 /*----------------------------------------------------------------------
    Charge un graphique ou une polyline.                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         LoadShape (char c, PtrLine pLine, ThotBool defaultHeight, ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
-#else  /* __STDC__ */
-static void         LoadShape (c, pLine, defaultHeight, defaultWidth, pBox, pAb, frame)
-char                c;
-PtrLine             pLine;
-ThotBool            defaultHeight;
-ThotBool            defaultWidth;
-PtrBox              pBox;
-PtrAbstractBox      pAb;
-int                 frame;
-
-#endif /* __STDC__ */
+static void LoadShape (char c, PtrLine pLine, ThotBool defaultHeight,
+		       ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb,
+		       int frame)
 {
   ViewFrame          *pFrame;
   PtrTextBuffer       pBuffer;
@@ -1490,18 +1335,9 @@ int                 frame;
 /*----------------------------------------------------------------------
    insere dans la boite pBox.                                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         LoadPictFile (PtrLine pLine, ThotBool defaultHeight, ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
-#else  /* __STDC__ */
-static void         LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb, frame)
-PtrLine             pLine;
-ThotBool            defaultHeight;
-ThotBool            defaultWidth;
-PtrBox              pBox;
-PtrAbstractBox      pAb;
-int                 frame;
-
-#endif /* __STDC__ */
+static void LoadPictFile (PtrLine pLine, ThotBool defaultHeight,
+			  ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb,
+			  int frame)
 {
    CHAR_T                buffer[FULL_BUFFER];
    STRING              ptr;
@@ -1596,13 +1432,7 @@ int                 frame;
 /*----------------------------------------------------------------------
    ClearClipboard vide le contenu du Clipboard X ou Thot.          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ClearClipboard (PtrTextBuffer clipboard)
-#else  /* __STDC__ */
-void                ClearClipboard (clipboard)
-PtrTextBuffer       clipboard;
-
-#endif /* __STDC__ */
 {
    PtrTextBuffer       pBuffer;
 
@@ -1633,20 +1463,9 @@ PtrTextBuffer       clipboard;
    - spacesDelta le nombre de blancs copie's                       
    - xDelta la largeur de la chaine copie'e                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SaveInClipboard (int *charsDelta, int *spacesDelta, int *xDelta, int ind, PtrTextBuffer pBuffer, PtrAbstractBox pAb, int frame, PtrTextBuffer clipboard)
-#else  /* __STDC__ */
-static void         SaveInClipboard (charsDelta, spacesDelta, xDelta, ind, pBuffer, pAb, frame, clipboard)
-int                *charsDelta;
-int                *spacesDelta;
-int                *xDelta;
-int                 ind;
-PtrTextBuffer       pBuffer;
-PtrAbstractBox      pAb;
-int                 frame;
-PtrTextBuffer       clipboard;
-
-#endif /* __STDC__ */
+static void SaveInClipboard (int *charsDelta, int *spacesDelta, int *xDelta,
+			     int ind, PtrTextBuffer pBuffer, PtrAbstractBox pAb,
+			     int frame, PtrTextBuffer clipboard)
 {
    PtrTextBuffer       pTargetBuffer;
    ViewFrame          *pFrame;
@@ -1717,21 +1536,10 @@ PtrTextBuffer       clipboard;
    - spacesDelta le nombre de blancs copies                        
    - xDelta la largeur de la chaine copiee                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         RemoveSelection (int charsDelta, int spacesDelta, int xDelta, ThotBool defaultHeight, ThotBool defaultWidth, PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb, int frame)
-#else  /* __STDC__ */
-static void         RemoveSelection (charsDelta, spacesDelta, xDelta, defaultHeight, defaultWidth, pLine, pBox, pAb, frame)
-int                 charsDelta;
-int                 spacesDelta;
-int                 xDelta;
-ThotBool            defaultHeight;
-ThotBool            defaultWidth;
-PtrLine             pLine;
-PtrBox              pBox;
-PtrAbstractBox      pAb;
-int                 frame;
-
-#endif /* __STDC__ */
+static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
+			     ThotBool defaultHeight, ThotBool defaultWidth,
+			     PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb,
+			     int frame)
 {
   PtrTextBuffer       pTargetBuffer;
   PtrTextBuffer       pSourceBuffer;
@@ -1942,50 +1750,45 @@ int                 frame;
 /*----------------------------------------------------------------------
    detruit sans sauver le contenu de la selection courante.        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         DeleteSelection (ThotBool defaultHeight, ThotBool defaultWidth, PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb, int frame)
-#else  /* __STDC__ */
-static void         DeleteSelection (defaultHeight, defaultWidth, pLine, pBox, pAb, frame)
-ThotBool            defaultHeight;
-ThotBool            defaultWidth;
-PtrLine             pLine;
-PtrBox              pBox;
-PtrAbstractBox      pAb;
-int                 frame;
-
-#endif /* __STDC__ */
+static void DeleteSelection (ThotBool defaultHeight, ThotBool defaultWidth,
+			     PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb,
+			     int frame)
 {
-   PtrTextBuffer       pTargetBuffer;
-   ViewFrame          *pFrame;
-   int                 i;
-   int                 xDelta, charsDelta;
-   int                 spacesDelta;
+  PtrTextBuffer       pTargetBuffer;
+  ViewFrame          *pFrame;
+  int                 i;
+  int                 xDelta, charsDelta;
+  int                 spacesDelta;
 
-   charsDelta = 0;
-   if (pAb != NULL)
-     {
-	if (pAb->AbLeafType == LtText)
-	  {
-	     pFrame = &ViewFrameTable[frame - 1];
-	     /* get values xDelta, spacesDelta, charsDelta */
-	     if (pFrame->FrSelectionBegin.VsIndBox == pAb->AbVolume)
-	       {
-		  xDelta = 0;
-		  spacesDelta = 0;
-	       }
-	     else
-	       {
-		  /* index of the beginning */
-		  i = 1;
-		  pTargetBuffer = NULL;
-		  CopyBuffers (pBox->BxFont, frame, pFrame->FrSelectionBegin.VsIndBuf, pFrame->FrSelectionEnd.VsIndBuf, i,
-			       pFrame->FrSelectionBegin.VsBuffer, pFrame->FrSelectionEnd.VsBuffer, &pTargetBuffer, &xDelta, &spacesDelta, &charsDelta);
-	       }
-	  }
-     }
-   /* remove the contents of the current selection */
-   if (charsDelta > 0)
-     RemoveSelection (charsDelta, spacesDelta, xDelta, defaultHeight, defaultWidth, pLine, pBox, pAb, frame);
+  charsDelta = 0;
+  if (pAb != NULL)
+    {
+      if (pAb->AbLeafType == LtText)
+	{
+	  pFrame = &ViewFrameTable[frame - 1];
+	  /* get values xDelta, spacesDelta, charsDelta */
+	  if (pFrame->FrSelectionBegin.VsIndBox == pAb->AbVolume)
+	    {
+	      xDelta = 0;
+	      spacesDelta = 0;
+	    }
+	  else
+	    {
+	      /* index of the beginning */
+	      i = 1;
+	      pTargetBuffer = NULL;
+	      CopyBuffers (pBox->BxFont, frame, pFrame->FrSelectionBegin.VsIndBuf,
+			   pFrame->FrSelectionEnd.VsIndBuf, i,
+			   pFrame->FrSelectionBegin.VsBuffer,
+			   pFrame->FrSelectionEnd.VsBuffer, &pTargetBuffer,
+			   &xDelta, &spacesDelta, &charsDelta);
+	    }
+	}
+    }
+  /* remove the contents of the current selection */
+  if (charsDelta > 0)
+    RemoveSelection (charsDelta, spacesDelta, xDelta, defaultHeight,
+		     defaultWidth, pLine, pBox, pAb, frame);
 }
 
 
@@ -1995,19 +1798,9 @@ int                 frame;
    - spacesDelta donne le nombre de blancs copies                  
    - xDelta donne la largeur de la chaine copiee                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth, PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb, int frame, PtrTextBuffer clipboard)
-#else  /* __STDC__ */
-static void         PasteClipboard (defaultHeight, defaultWidth, pLine, pBox, pAb, frame, clipboard)
-ThotBool            defaultHeight;
-ThotBool            defaultWidth;
-PtrLine             pLine;
-PtrBox              pBox;
-PtrAbstractBox      pAb;
-int                 frame;
-PtrTextBuffer       clipboard;
-
-#endif /* __STDC__ */
+static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
+			    PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb,
+			    int frame, PtrTextBuffer clipboard)
 {
    int                 ind, endInd;
    PtrTextBuffer       pBuffer;
@@ -2144,12 +1937,7 @@ PtrTextBuffer       clipboard;
    Traite les commandes TextInserting Cut Paste Copy Oops          
    ainsi que l'insertion des Graphiques Images et Symboles         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ContentEditing (int editType)
-#else  /* __STDC__ */
-static void         ContentEditing (editType)
-int                 editType;
-#endif /* __STDC__ */
 {
   PtrBox              pBox;
   PtrBox              pSelBox;
@@ -2662,14 +2450,7 @@ int                 editType;
 /*----------------------------------------------------------------------
    Insere un caractere dans une boite de texte.                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InsertChar (int frame, UCHAR_T c, int keyboard)
-#else  /* __STDC__ */
-void                InsertChar (frame, c, keyboard)
-int                 frame;
-UCHAR_T       c;
-int                 keyboard;
-#endif /* __STDC__ */
 {
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      pAb, pBlock;
@@ -3329,14 +3110,7 @@ int                 keyboard;
    PasteXClipboard lit les nbytes du buffer et appelle autant de   
    fois que necessaire Paste_X sur les caracteres lus.     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                PasteXClipboard (USTRING Xbuffer, int nbytes)
-#else  /* __STDC__ */
-void                PasteXClipboard (Xbuffer, nbytes)
-USTRING     Xbuffer;
-int                 nbytes;
-
-#endif /* __STDC__ */
 {
   PtrTextBuffer       clipboard;
   PtrAbstractBox      pAb;
@@ -3438,15 +3212,7 @@ int                 nbytes;
 /*----------------------------------------------------------------------
    TtcInsertChar insert a character                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcInsertChar (Document document, View view, CHAR_T c)
-#else  /* __STDC__ */
-void                TtcInsertChar (document, view, c)
-Document            document;
-View                view;
-CHAR_T                c;
-
-#endif /* __STDC__ */
 {
   ViewSelection      *pViewSel;
   PtrAbstractBox      pAb;
@@ -3560,14 +3326,7 @@ CHAR_T                c;
 /*----------------------------------------------------------------------
    TtcCutSelection                                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcCutSelection (Document document, View view)
-#else  /* __STDC__ */
-void                TtcCutSelection (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    DisplayMode         dispMode;
    int                 frame;
@@ -3635,14 +3394,7 @@ View                view;
 /*----------------------------------------------------------------------
    TtcDeletePreviousChar                                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcDeletePreviousChar (Document document, View view)
-#else  /* __STDC__ */
-void                TtcDeletePreviousChar (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
   ViewSelection      *pViewSel;
   DisplayMode         dispMode;
@@ -3724,14 +3476,7 @@ View                view;
 /*----------------------------------------------------------------------
    TtcDeleteSelection                                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcDeleteSelection (Document document, View view)
-#else  /* __STDC__ */
-void                TtcDeleteSelection (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    DisplayMode         dispMode;
    ThotBool            lock = TRUE;
@@ -3764,14 +3509,7 @@ View                view;
 /*----------------------------------------------------------------------
    TtcInclude                                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcInclude (Document document, View view)
-#else  /* __STDC__ */
-void                TtcInclude (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    DisplayMode         dispMode;
    ThotBool            lock = TRUE;
@@ -3804,14 +3542,7 @@ View                view;
 /*----------------------------------------------------------------------
    TtcPastefromX                                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcPasteFromClipboard (Document document, View view)
-#else  /* __STDC__ */
-void                TtcPasteFromClipboard (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    DisplayMode         dispMode;
    int                 frame;
@@ -3862,14 +3593,7 @@ View                view;
 /*----------------------------------------------------------------------
    TtcInsert                                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtcInsert (Document document, View view)
-#else  /* __STDC__ */
-void                TtcInsert (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
+void TtcInsert (Document document, View view)
 {
    ContentEditing (TEXT_INSERT);
 }
@@ -3878,72 +3602,58 @@ View                view;
 /*----------------------------------------------------------------------
    copy                                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtcCopySelection (Document document, View view)
-#else  /* __STDC__ */
-void                TtcCopySelection (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
+void TtcCopySelection (Document document, View view)
 {
 #ifdef _WINDOWS
-   HANDLE hMem   = 0;
-   CHAR_T* lpData = 0;
-   /* CHAR_T* ptrData; */
-   CHAR_T* pBuff;
-   int    frame;
+  HANDLE hMem   = 0;
+  CHAR_T* lpData = 0;
+  /* CHAR_T* ptrData; */
+  CHAR_T* pBuff;
+  int    frame;
+  HWND   activeWnd;
 
-   /* @@@@@ */
-   HWND   activeWnd;
-   /* @@@@@ */
-
-   frame = GetWindowNumber (document, view);
-
-   /* @@@@@ */
-   activeWnd = GetFocus ();
-   /* @@@@@ */
-
-   if (activeWnd != FrRef [frame]) {
+  frame = GetWindowNumber (document, view);
+  activeWnd = GetFocus ();
+  if (activeWnd != FrRef [frame])
+    {
       frame = -1;
       if (!OpenClipboard (activeWnd))
-         WinErrorBox (FrRef [frame], TEXT("TtcCopySelection (1)"));
+	WinErrorBox (FrRef [frame], TEXT("TtcCopySelection (1)"));
       else {
-           EmptyClipboard ();
-           SendMessage (activeWnd, WM_COPY, 0, 0);
-           CloseClipboard ();
-           SwitchPaste (NULL, TRUE);
-	  } 
-   } else {
-          TtcCopyToClipboard (document, view);
-
-          if (!OpenClipboard (FrRef[frame]))
-             WinErrorBox (FrRef [frame], TEXT("TtcCopySelection (2)"));
-          else {
-               EmptyClipboard ();
-
-			   /* if the clipboard buffer is empty, don't copy anything into it */
-			   if (Xbuffer)
-			   {
-                 hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
-                 lpData = GlobalLock (hMem);
-                 pBuff  = Xbuffer;
-			     lstrcpy (lpData, Xbuffer);
-                 /* 
-				     ptrData = lpData;
-				     for (ndx = 0; ndx < ClipboardLength; ndx++)
-                    *ptrData++ = *pBuff++;
-			        *ptrData = 0;
-				 */
-
-                 GlobalUnlock (hMem);
-
-                 if (!SetClipboardData (CF_TEXT, hMem))
-                    WinErrorBox (NULL, TEXT(""));
-                 CloseClipboard ();
-			   }
-		  } 
-   }
+	EmptyClipboard ();
+	SendMessage (activeWnd, WM_COPY, 0, 0);
+	CloseClipboard ();
+	SwitchPaste (NULL, TRUE);
+      } 
+    }
+  else
+    {
+      TtcCopyToClipboard (document, view);
+      if (!OpenClipboard (FrRef[frame]))
+	WinErrorBox (FrRef [frame], TEXT("TtcCopySelection (2)"));
+      else
+	{
+	  EmptyClipboard ();
+	  /* if the clipboard buffer is empty, don't copy anything into it */
+	  if (Xbuffer)
+	    {
+	      hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
+	      lpData = GlobalLock (hMem);
+	      pBuff  = Xbuffer;
+	      lstrcpy (lpData, Xbuffer);
+	      /* 
+		 ptrData = lpData;
+		 for (ndx = 0; ndx < ClipboardLength; ndx++)
+		 *ptrData++ = *pBuff++;
+		 *ptrData = 0;
+		 */
+	      GlobalUnlock (hMem);
+	      if (!SetClipboardData (CF_TEXT, hMem))
+		WinErrorBox (NULL, TEXT(""));
+	      CloseClipboard ();
+	    }
+	} 
+    }
 #endif /* _WINDOWS */
    ContentEditing (TEXT_COPY);
 }
@@ -3952,13 +3662,7 @@ View                view;
 /*----------------------------------------------------------------------
    TtcPaste                                                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcPaste (Document document, View view)
-#else  /* __STDC__ */
-void                TtcPaste (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
 {
   DisplayMode         dispMode;
   PtrAbstractBox      pAb;
@@ -4024,7 +3728,7 @@ View                view;
 	    {
 	      lpData = GlobalLock (hMem);
 	      lpDatalength = ustrlen (lpData);
-	      if ((Xbuffer == NULL) || !sameString (Xbuffer, (USTRING)lpData))
+	      if (Xbuffer == NULL || !ustrcmp (Xbuffer, (USTRING) lpData))
 		PasteXClipboard ((USTRING) lpData, lpDatalength);
 	      else  
 		ContentEditing (TEXT_PASTE);

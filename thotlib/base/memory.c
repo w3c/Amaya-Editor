@@ -1767,18 +1767,12 @@ PtrBox              FreeBox (PtrBox pBox)
      }
    pBox->BxHeightRelations = NULL;
    /* remove relations between boxes */
-   if (pBox->BxNext)
-     {
-       if (pBox->BxNext->BxPrevious == pBox)
-	 pBox->BxNext->BxPrevious = NULL;
-       pBox->BxNext = NULL;
-     }
-   if (pBox->BxPrevious)
-     {
-       if (pBox->BxPrevious->BxPrevious == pBox)
-	 pBox->BxPrevious->BxPrevious = NULL;
-       pBox->BxPrevious = NULL;
-     }
+   /*if (pBox->BxNext && pBox->BxNext->BxPrevious == pBox)
+     pBox->BxNext->BxPrevious =  pBox->BxPrevious;
+   if (pBox->BxPrevious && pBox->BxPrevious->BxNext == pBox)
+   pBox->BxPrevious->BxNext = pBox->BxNext;*/
+   pBox->BxPrevious = NULL;
+   pBox->BxNext = NULL;
 #ifdef DEBUG_MEMORY
    TtaFreeMemory (pBox);
 #else

@@ -1743,7 +1743,6 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
   int                 number;
   int                 lostPixels;
   int                 diff;
-  ThotBool            update;
 
   pFrame = &ViewFrameTable[frame - 1];
   if (pBox != NULL && pBox->BxAbstractBox != NULL)
@@ -1783,10 +1782,8 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
 		  pBox->BxYOrg = ibox2->BxYOrg;
 		  if (pBox->BxPrevious != NULL)
 		    pBox->BxPrevious->BxNext = pBox;
-		  /*else
-		    pFrame->FrAbstractBox->AbBox->BxNext = pBox;*/
-		  /* don't update BxPrevious and BxNext of pieces */
-		  update = FALSE;
+		  else
+		    pFrame->FrAbstractBox->AbBox->BxNext = pBox;
 		  width = 0;
 		  number = 0;
 		  lostPixels = 0;
@@ -1795,8 +1792,6 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
 		{
 		  /* merge one or more pieces */
 		  RemoveAdjustement (pBox, x);
-		  /* update BxPrevious and BxNext of pieces */
-		  update = TRUE;
 		  width = pBox->BxW;
 		  if (pBox->BxType == BoDotted)
 		    {
@@ -1875,15 +1870,12 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
 		      pBox->BxWidth = width + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
 		      pBox->BxNSpaces = number;
 		    }
-		  if (update)
-		    {
-		      /* Update the chain of leaf boxes */
-		      pBox->BxNext = pNextBox;
-		      if (pNextBox != NULL)
-			pNextBox->BxPrevious = pBox;
-		      else
-			pFrame->FrAbstractBox->AbBox->BxPrevious = pBox;
-		    }
+		  /* Update the chain of leaf boxes */
+		  pBox->BxNext = pNextBox;
+		  if (pNextBox != NULL)
+		    pNextBox->BxPrevious = pBox;
+		  else
+		    pFrame->FrAbstractBox->AbBox->BxPrevious = pBox;
 		}
 	    }
 	}

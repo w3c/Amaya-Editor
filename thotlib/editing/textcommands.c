@@ -812,7 +812,7 @@ void                TtcNextSelWord (Document document, View view)
    CopyXClipboard insere le contenu de la selection courante dans   
    le Xbuffer pour transmettre la selection X.             
   ----------------------------------------------------------------------*/
-static int          CopyXClipboard (USTRING* buffer, View view)
+static int          CopyXClipboard (USTRING *buffer, View view)
 {
    PtrTextBuffer       clipboard;
    PtrDocument         pDoc;
@@ -995,9 +995,9 @@ static int          CopyXClipboard (USTRING* buffer, View view)
   ----------------------------------------------------------------------*/
 void                TtcCopyToClipboard (Document document, View view)
 {
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    ClipboardLength = CopyXClipboard (&Xbuffer, view);
-#  else /* _WINDOWS */
+#else /* _WINDOWS */
    int                 frame;
 
    ThotWindow          w, wind;
@@ -1033,5 +1033,5 @@ void                TtcCopyToClipboard (Document document, View view)
    ClipboardLength = CopyXClipboard (&Xbuffer, view);
    /* Annule le cutbuffer courant */
    XStoreBuffer (TtDisplay, Xbuffer, ClipboardLength, 0);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
