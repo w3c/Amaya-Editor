@@ -2542,7 +2542,7 @@ int                 fg;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    DrawAngle trace deux bords de rectangle.                           | */
+/* |    DrawCorner trace deux bords de rectangle.                           | */
 /* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
 /* |            Read Only (1) ou non (0).                               | */
 /* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
@@ -2552,10 +2552,10 @@ int                 fg;
 
 
 #ifdef __STDC__
-void                DrawAngle (int frame, int epais, int style, int x, int y, int l, int h, int coin, int RO, int active, int fg)
+void                DrawCorner (int frame, int epais, int style, int x, int y, int l, int h, int coin, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-void                DrawAngle (frame, epais, style, x, y, l, h, coin, RO, active, fg)
+void                DrawCorner (frame, epais, style, x, y, l, h, coin, RO, active, fg)
 int                 frame;
 int                 epais;
 int                 style;

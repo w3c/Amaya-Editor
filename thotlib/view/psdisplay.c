@@ -1812,16 +1812,16 @@ int                 motif;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    DrawAngle trace deux bords de rectangle. func indique s'il s'agit  | */
+/* |    DrawCorner trace deux bords de rectangle. func indique s'il s'agit  | */
 /* |            d'une boite active (1) ou non (0).                      | */
 /* ---------------------------------------------------------------------- */
 /**CO*/
 
 #ifdef __STDC__
-void                DrawAngle (int frame, int epais, int style, int x, int y, int l, int h, int coin, int RO, int func, int fg)
+void                DrawCorner (int frame, int epais, int style, int x, int y, int l, int h, int coin, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                DrawAngle (frame, epais, style, x, y, l, h, coin, RO, func, fg)
+void                DrawCorner (frame, epais, style, x, y, l, h, coin, RO, func, fg)
 int                 frame;
 int                 epais;
 int                 style;
