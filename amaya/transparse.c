@@ -11,7 +11,6 @@
  *
  * Authors: I. Vatton (W3C/INRIA), S. Bonhomme
  *
- *
  */
 
 #define THOT_EXPORT extern
@@ -81,13 +80,7 @@ static State        returnState;	/* return state from subautomaton */
   Init all transformation of the transformation set to valid,
    sets the value  transSet.MaxDepth 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SetTransValid (strTransSet  * transSet)
-#else
-static void         SetTransValid (transSet)
-strTransSet          *transSet;
-
-#endif
 {
    strTransDesc          *td;
    strSymbDesc           *sd;
@@ -114,14 +107,7 @@ strTransSet          *transSet;
 /*----------------------------------------------------------------------
   Frees a transformtion descriptor
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         FreeTrans (strTransDesc * td)
-#else
-static void         FreeTrans (td)
-strTransDesc          *td;
-
-#endif
 {
    strListSymb           *ls, *ls2;
    strSymbDesc           *sd, *sd2;
@@ -246,13 +232,7 @@ strTransDesc          *td;
 /*----------------------------------------------------------------------
   Frees a list descriptor
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void            FreeList (strListSymb * pl)
-#else
-void            FreeList (pl)
-strListSymb           *pl;
-
-#endif
 {
    if (pl)
      {
@@ -264,13 +244,7 @@ strListSymb           *pl;
 /*----------------------------------------------------------------------
   Frees a forest descriptor
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         FreeForest (parForest * pf)
-#else
-static void         FreeForest (pf)
-parForest          *pf;
-
-#endif
 {
    if (pf)
      {
@@ -286,13 +260,7 @@ parForest          *pf;
 /*----------------------------------------------------------------------
   Frees a choice descriptor
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         FreeChoice (parChoice * pc)
-#else
-static void         FreeChoice (pc)
-parChoice          *pc;
-
-#endif
 {
    if (pc)
      {
@@ -304,13 +272,7 @@ parChoice          *pc;
 /*----------------------------------------------------------------------
    	ErrorMessage	print the error message msg on stderr.		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ErrorMessage (USTRING msg)
-#else
-static void         ErrorMessage (msg)
-USTRING     msg;
-
-#endif
 {
    CHAR_T                numline[5];
 
@@ -322,14 +284,7 @@ USTRING     msg;
 /*----------------------------------------------------------------------
   adds the pattern symbol symb to the plist symbol list 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         AddSymbToList (strListSymb ** pList, strSymbDesc * symb)
-#else
-static void         AddSymbToList (pList, symb)
-strListSymb          **pList;
-strSymbDesc           *symb;
-
-#endif
+static void  AddSymbToList (strListSymb ** pList, strSymbDesc * symb)
 {
    ThotBool            isjok, isnull, found;
    strListSymb           *pl, *plnext;
@@ -388,13 +343,7 @@ strSymbDesc           *symb;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         AddTerminal (parChoice * pc)
-#else
-static void         AddTerminal (pc)
-parChoice          *pc;
-
-#endif
 {
    strListSymb           *pl, *pl2;
    parForest          *pf;
@@ -434,11 +383,7 @@ parChoice          *pc;
 /*----------------------------------------------------------------------
   processes the previously read symbol
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ProcessSymbol (void)
-#else
-static void         ProcessSymbol ()
-#endif
 {
    strSymbDesc     *sd;
    CHAR_T             msgBuffer[MaxBufferLength];
@@ -497,11 +442,7 @@ static void         ProcessSymbol ()
 /*----------------------------------------------------------------------
   creates a new symbol descriptor and links it with the pattern representation
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         NewSymbol (void)
-#else
-static void         NewSymbol ()
-#endif
 {
    strSymbDesc           *ps;
    strListSymb           *pList;
@@ -564,13 +505,7 @@ static void         NewSymbol ()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SymbolName (UCHAR_T c)
-#else
-static void         SymbolName (c)
-UCHAR_T       c;
-
-#endif
 {
    if (ppLgBuffer == 0)
      {
@@ -583,15 +518,10 @@ UCHAR_T       c;
 }
 
 /*----------------------------------------------------------------------
-  a transformation name has been read, allocates a new trasformation descriptor
+  A transformation name has been read, allocates a new trasformation
+  descriptor
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndNameTrans (UCHAR_T c)
-#else
-static void         EndNameTrans (c)
-UCHAR_T       c;
-
-#endif
 {
 
    if (ppLgBuffer != 0)
@@ -631,13 +561,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         Option (UCHAR_T c)
-#else
-static void         Option (c)
-UCHAR_T       c;
-
-#endif
 {
    ppOptional = TRUE;
    if (ppForest->first == NULL)
@@ -646,13 +570,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         BeginExp (UCHAR_T c)
-#else
-static void         BeginExp (c)
-UCHAR_T       c;
-
-#endif
 {
    /*   ProcessSymbol(); */
    choiceStack[sizeStack] = ppChoice;
@@ -672,13 +590,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndExp (UCHAR_T c)
-#else
-static void         EndExp (c)
-UCHAR_T       c;
-
-#endif
 {
 
    parForest          *pf;
@@ -799,33 +711,23 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         IterationTag (UCHAR_T c)
-#else
-static void         IterationTag (c)
-UCHAR_T       c;
-
-#endif
 {
    ppIterTag = TRUE;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         Iteration (UCHAR_T c)
-#else
-static void         Iteration (c)
-UCHAR_T       c;
-
-#endif
 {
    parForest          *pf1, *pf2;
    strListSymb           *plfirst, *pllast;
    strSymbDesc           *ps;
 
    if (ppLastChoice)
-     { /* adds the first symbols of last choice descriptor as next possible of its last symbols */
+     {
+       /* adds the first symbols of last choice descriptor as next
+	  possible of its last symbols */
 	pf1 = ppLastChoice->forests;
 	while (pf1)
 	  {
@@ -856,13 +758,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         BeginChild (UCHAR_T c)
-#else
-static void         BeginChild (c)
-UCHAR_T       c;
-
-#endif
 {
    ProcessSymbol ();
    symbolStack[sizeStack] = ppSymb;
@@ -883,13 +779,7 @@ UCHAR_T       c;
 }
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndChild (UCHAR_T c)
-#else
-static void         EndChild (c)
-UCHAR_T       c;
-
-#endif
 {
    parChoice          *pc;
    parForest          *pf;
@@ -949,13 +839,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndChoice (UCHAR_T c)
-#else
-static void         EndChoice (c)
-UCHAR_T       c;
-
-#endif
 {
    ProcessSymbol ();
    NewSymbol ();
@@ -975,14 +859,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         EndPatNode (UCHAR_T c)
-#else
-static void         EndPatNode (c)
-UCHAR_T       c;
-
-#endif
 {
 
    ProcessSymbol ();
@@ -997,13 +874,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndPattern (UCHAR_T c)
-#else
-static void         EndPattern (c)
-UCHAR_T       c;
-
-#endif
 {
    parForest          *pf;
    strListSymb           *pl, *pl2;
@@ -1048,13 +919,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         BeginOfTag (UCHAR_T c)
-#else
-static void         BeginOfTag (c)
-UCHAR_T       c;
-
-#endif
 {
    if (ppLgBuffer != 0)
      {
@@ -1085,13 +950,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         BeginRuleTag (UCHAR_T c)
-#else
-static void         BeginRuleTag (c)
-UCHAR_T       c;
-
-#endif
 {
    if (ppLgBuffer != 0)
      {
@@ -1108,13 +967,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndOfTagName (UCHAR_T c)
-#else
-static void         EndOfTagName (c)
-UCHAR_T       c;
-
-#endif
 {
    if (ppLgBuffer != 0)
      {
@@ -1133,13 +986,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndRuleTagName (UCHAR_T c)
-#else
-static void         EndRuleTagName (c)
-UCHAR_T       c;
-
-#endif
 {
    if (ppLgBuffer != 0)
      {
@@ -1159,14 +1006,7 @@ UCHAR_T       c;
    search in AttributeMappingTable the entry for the attribute of name Attr
    and returns the Thot Attribute corresponding to the rank of that entry.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 MapThotAttr (CHAR_T* attrName, CHAR_T *elementName)
-#else
-int                 MapThotAttr (attrName, elementName)
-CHAR_T             *attrName;
-CHAR_T             *elementName;
-
-#endif
 {
   int        i, thotAttr;
   ThotBool   level;
@@ -1181,13 +1021,7 @@ CHAR_T             *elementName;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   ppEndOfAttrName (UCHAR_T c)
-#else
-static void   ppEndOfAttrName (c)
-UCHAR_T       c;
-
-#endif
 {
   int                 thotAttr;
   CHAR_T              msgBuffer[MaxBufferLength];
@@ -1245,13 +1079,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   ppEndRuleAttrName (UCHAR_T c)
-#else
-static void   ppEndRuleAttrName (c)
-UCHAR_T       c;
-
-#endif
 {
   int                 thotAttr;
   CHAR_T              msgBuffer[MaxBufferLength];
@@ -1312,13 +1140,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   ppTransAttr (UCHAR_T c)
-#else
-static void   ppTransAttr (c)
-UCHAR_T       c;
-
-#endif
 {
   int                 thotAttr;
 
@@ -1375,13 +1197,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ppTransAttrValue (UCHAR_T c)
-#else
-static void         ppTransAttrValue (c)
-UCHAR_T       c;
-
-#endif
 {
   if (ppLgBuffer != 0)
     {
@@ -1399,13 +1215,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ppEndTransAttr (UCHAR_T c)
-#else
-static void         ppEndTransAttr (c)
-UCHAR_T       c;
-
-#endif
 {
   if (ppLgBuffer != 0)
     {
@@ -1427,13 +1237,7 @@ UCHAR_T       c;
 /*----------------------------------------------------------------------
    	ppPutInBuffer	put character c in the input buffer.		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ppPutInBuffer (UCHAR_T c)
-#else
-static void         ppPutInBuffer (c)
-UCHAR_T       c;
-
-#endif
 {
   int                 len;
   
@@ -1477,13 +1281,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ppStartOfAttrValue (UCHAR_T c)
-#else
-static void         ppStartOfAttrValue (c)
-UCHAR_T       c;
-
-#endif
 {
   if (c == '\"' || c == '\'')
     ppPutInBuffer ('\"');
@@ -1491,13 +1289,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ppEndOfAttrValue (UCHAR_T c)
-#else
-static void         ppEndOfAttrValue (c)
-UCHAR_T       c;
-
-#endif
 {
    ThotBool            isText;
    int                 i, attrVal;
@@ -1544,13 +1336,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         BeginRules (UCHAR_T c)
-#else
-static void         BeginRules (c)
-UCHAR_T       c;
-
-#endif
 {
   selRuleFlag = FALSE;
 }
@@ -1558,13 +1344,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndLeftPartRule (UCHAR_T c)
-#else
-static void         EndLeftPartRule (c)
-UCHAR_T       c;
-
-#endif
 {
    if (ppLgBuffer != 0)
      {				/* allocates a new rule descriptor */
@@ -1592,13 +1372,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         DeleteElementRule(UCHAR_T c)
-#else
-static void          DeleteElementRule (c)
-UCHAR_T       c;
-
-#endif
 {
   if (ppLgBuffer != 0)
     {				/* allocates a new rule descriptor */
@@ -1622,13 +1396,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   EndNode (UCHAR_T c)
-#else
-static void   EndNode (c)
-UCHAR_T       c;
-
-#endif
 {
    CHAR_T              msgBuffer[MaxBufferLength];
    SSchema	       schema;
@@ -1658,12 +1426,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndOptNodes (UCHAR_T c)
-#else
-static void         EndOptNodes (c)
-UCHAR_T       c;
-#endif
 {
    strAttrDesc		*ad, *ad2;
    CHAR_T			msgBuffer[MaxBufferLength];
@@ -1713,12 +1476,7 @@ UCHAR_T       c;
 }
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SelectionRule (UCHAR_T c)
-#else
-static void         SelectionRule (c)
-UCHAR_T       c;
-#endif
 {
   CHAR_T                   msgBuffer[MaxBufferLength];
   strAttrDesc		*ppAttr;
@@ -1769,13 +1527,7 @@ UCHAR_T       c;
 }
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndRule (UCHAR_T c)
-#else
-static void         EndRule (c)
-UCHAR_T       c;
-
-#endif
 {
   ThotBool               ok;
   strRuleDesc           *prule;
@@ -1910,13 +1662,7 @@ UCHAR_T       c;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndTransformation (UCHAR_T c)
-#else
-static void         EndTransformation (c)
-UCHAR_T       c;
-
-#endif
 {
    strTransDesc          *td;
 
@@ -1951,13 +1697,7 @@ UCHAR_T       c;
 /*----------------------------------------------------------------------
    	Do_nothing	Do nothing.				       	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         Do_nothing (CHAR_T c)
-#else
-static void         Do_nothing (c)
-CHAR_T                c;
-
-#endif
 {
 }
 
@@ -1965,23 +1705,25 @@ CHAR_T                c;
 /* some type definitions for the automaton */
 typedef struct _Transition *PtrTransition;
 typedef struct _Transition
-  {				/* a transition of the automaton in   "executable" form */
-     char       trigger;	/* the imput character that triggers
-					   the transition */
-     Proc                action;	/* the procedure to be called when
-					   the transition occurs */
-     State               newState;	/* the new state of the automaton
-					   after the transition */
-     PtrTransition       nextTransition;	/* next transition from the same
-						   state */
-  }
+{
+  /* a transition of the automaton in   "executable" form */
+  char       trigger;	/* the imput character that triggers
+			   the transition */
+  Proc                action;	/* the procedure to be called when
+				   the transition occurs */
+  State               newState;	/* the new state of the automaton
+				   after the transition */
+  PtrTransition       nextTransition;	/* next transition from the same
+					   state */
+}
 Transition;
 
 typedef struct _StateDescr
-  {				/* a state of the automaton */
-     State               automatonState;	/* the state */
-     PtrTransition       firstTransition;	/* first transition from that state */
-  }
+{
+  /* a state of the automaton */
+  State               automatonState;	/* the state */
+  PtrTransition       firstTransition;	/* first transition from that state */
+}
 StateDescr;
 
 /* the automaton that drives the HTML parser */
@@ -1989,22 +1731,22 @@ StateDescr;
 static StateDescr   automaton[MaxState];
 
 typedef struct _sourceTransition
-  {				/* a transition of the automaton in
-				   "source" form */
-     State               initState;	/* initial state of transition */
-     char                trigger;	/* the imput character that triggers
-					   the transition */
-     Proc                transitionAction;	/* the procedure to be called when
-						   the transition occurs */
-     State               newState;	/* final state of the transition */
-  }
+{
+  /* a transition of the automaton in "source" form */
+  State               initState;	/* initial state of transition */
+  char                trigger;	/* the imput character that triggers
+				   the transition */
+  Proc                transitionAction;	/* the procedure to be called when
+					   the transition occurs */
+  State               newState;	/* final state of the transition */
+}
 sourceTransition;
 
 /* the automaton in "source" form */
 static sourceTransition ppsourceAutomaton[] =
 {
-/*
-   state        trigger     action              new state
+  /*
+   state   trigger  action  new state
  */
 /* state 0: */
    {0, ':', (Proc) EndNameTrans, 1},
@@ -2134,14 +1876,10 @@ static sourceTransition ppsourceAutomaton[] =
 };
 
 /*----------------------------------------------------------------------
-   	ppInitAutomaton	read the "source" form of the automaton and	
-   			build the "executable" form.			
+  ppInitAutomaton	read the "source" form of the automaton and	
+  build the "executable" form.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         ppInitAutomaton (void)
-#else
-void         ppInitAutomaton ()
-#endif
 {
    int                 entry;
    State               theState;
@@ -2184,13 +1922,9 @@ void         ppInitAutomaton ()
 }
 
 /*----------------------------------------------------------------------
-   	FreeTransform	free the automaton.
+  FreeTransform	free the automaton.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         FreeTransform (void)
-#else
-void         FreeTransform ()
-#endif
 {
    PtrTransition       trans, nextTrans;
    int		       entry;
@@ -2209,15 +1943,10 @@ void         FreeTransform ()
 }
 
 /*----------------------------------------------------------------------
-   	TRANSparse	parses the transformation file infile and builds the	
-   			equivalent matching environment.			
+  TRANSparse	parses the transformation file infile and builds the
+  equivalent matching environment.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         TRANSparse (BinFile infile)
-#else
-static void         TRANSparse (infile)
-BinFile             infile;
-#endif
 {
   unsigned char       charRead, oldcharRead;
   ThotBool            match, readOk;
@@ -2376,42 +2105,30 @@ BinFile             infile;
 }
 
 
-
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         initpparse (void)
-#else
-static void         initpparse ()
-#endif
 {
-   strTransDesc          *td, *td2;
+  strTransDesc          *td, *td2;
 
-   /* frees old transformation descriptors */
-   td = ppTransSet->Transformations;
-   while (td)
-     {
-	td2 = td->Next;
-	FreeTrans (td);
-	td = td2;
-     }
-   ppTransSet->NbTrans = 0;
-   ppTransSet->MaxDepth = 0;
-   ppTransSet->Transformations = NULL;
+  /* frees old transformation descriptors */
+  td = ppTransSet->Transformations;
+  while (td)
+    {
+      td2 = td->Next;
+      FreeTrans (td);
+      td = td2;
+    }
+  ppTransSet->NbTrans = 0;
+  ppTransSet->MaxDepth = 0;
+  ppTransSet->Transformations = NULL;
 }
 
 
 /*----------------------------------------------------------------------
-   	ppStartParser loads the file Directory/FileName for parsing	
+  ppStartParser loads the file Directory/FileName for parsing	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int             ppStartParser (STRING name,SSchema tStrSchema, strTransSet **resTrSet)
-#else
-int             ppStartParser (name, tStrSchema, resTrSet)
-STRING          name;
-SSchema         tStrSchema;
-strTransSet   **resTrSet;
-#endif
+int ppStartParser (STRING name,SSchema tStrSchema, strTransSet **resTrSet)
 {
    CHAR_T             msg[200];
    BinFile            infile = (BinFile)0;

@@ -349,6 +349,19 @@ static void         InitMenuWhereToSearch (int ref)
 
 
 /*----------------------------------------------------------------------
+  ActivateMenuWhereToSearch
+  activates the "Where to search" submenu.
+  ----------------------------------------------------------------------*/
+static void         ActivateMenuWhereToSearch ()
+{
+   TtaRedrawMenuEntry (NumMenuOrSearchText, 0, NULL, -1, 1);
+   TtaRedrawMenuEntry (NumMenuOrSearchText, 1, NULL, -1, 1);
+   TtaRedrawMenuEntry (NumMenuOrSearchText, 2, NULL, -1, 1);
+}
+#endif /* !_WINDOWS */
+
+
+/*----------------------------------------------------------------------
   ResetSearchInDocument
   cleans up the search domain if it refers a closed document.
   ----------------------------------------------------------------------*/
@@ -365,18 +378,6 @@ void         ResetSearchInDocument (PtrDocument pDoc)
 #endif /* _WINDOWS */
     }
 }
-
-/*----------------------------------------------------------------------
-  ActivateMenuWhereToSearch
-  activates the "Where to search" submenu.
-  ----------------------------------------------------------------------*/
-static void         ActivateMenuWhereToSearch ()
-{
-   TtaRedrawMenuEntry (NumMenuOrSearchText, 0, NULL, -1, 1);
-   TtaRedrawMenuEntry (NumMenuOrSearchText, 1, NULL, -1, 1);
-   TtaRedrawMenuEntry (NumMenuOrSearchText, 2, NULL, -1, 1);
-}
-#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   CallbackWhereToSearch
