@@ -169,7 +169,6 @@ typedef enum {
 
 #endif /* XP_UNIX */
 
-
 typedef struct _NPWindow 
 {
     void*	window;		/* Platform specific window handle */

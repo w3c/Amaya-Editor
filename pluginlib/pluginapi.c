@@ -5,12 +5,12 @@
  *
  */
 
-/* authors (alphabetical order):
- * - Ramzi GUETARI
+/* authors:
+ * - Ramzi GUETARI (W3C/INRIA)
  * - Nabil LAYAIDA
  * - Loay  SABRY-ISMAIL
  *
- * Last modification: Jan 09 1997
+ * Last modification: March 26 1997
  */
 
 /*----------------------------------------------------------------------
@@ -105,34 +105,44 @@ const char* pluginMimeType;
    int  endOfSuffixes;
    char token [800];
    char suffixes [800];
-   
+
    if (!pluginMimeType || pluginMimeType[0] ==  EOS)
       pluginTable [indexHandler]->fileExt = (char*) 0;
    
    while (pluginMimeType [index] == SPACE || pluginMimeType [index] == TAB)
          index++;
+
    if (pluginMimeType [index] == EOS) 
       pluginTable [indexHandler]->fileExt = (char*) 0;
+
    ndx = 0;
    while (isalpha (pluginMimeType [index]))
          token [ndx++] = pluginMimeType [index++];
    token [ndx] = EOS;
+
    if (strcmp (token, "Mime"))
       pluginTable [indexHandler]->fileExt = (char*) 0;
+
    while (pluginMimeType [index] == SPACE || pluginMimeType [index] == TAB)
          index++;
+
    if (pluginMimeType [index] == EOS) 
       pluginTable [indexHandler]->fileExt = (char*) 0;
+
    if (pluginMimeType [index] != ':')
       pluginTable [indexHandler]->fileExt = (char*) 0;
    index++;
+
    while (pluginMimeType [index] != EOS) {
          endOfSuffixes = FALSE;
          ndx = 0;
+
          while (pluginMimeType [index] == SPACE || pluginMimeType [index] == TAB)
                index++;
+
          while (pluginMimeType [index] != EOS && pluginMimeType [index] != ':')
                token [ndx++] = pluginMimeType [index++];
+
          token [ndx] = EOS;
          if (pluginMimeType [index] == EOS) {
 	    if (token) {
@@ -157,6 +167,7 @@ const char* pluginMimeType;
               else 
                   index ++;
               ndx = 0;
+
               while (!endOfSuffixes) {
                     while (pluginMimeType [index] == SPACE || pluginMimeType [index] == TAB)
 		          index++;
@@ -187,6 +198,8 @@ const char* pluginMimeType;
                  }
                  if (pluginMimeType [index] == ':')
                     index++;
+                 pluginTable [indexHandler]->pluginID = (char*) malloc (strlen (token) + 1);
+                 strcpy (pluginTable [indexHandler]->pluginID, token);
 #                ifdef PLUGIN_DEBUG
                  printf ("comment: %s\n", token);
 #                endif
@@ -227,9 +240,9 @@ uint32  Ap_MemFlush (size)
 uint32 size;
 #endif /* __STDC__ */
 {
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("***** Ap_MemFlush *****\n"); 
-#endif
+#   endif
     return (0);
 }
 
@@ -243,9 +256,9 @@ void  Ap_MemFree (ptr)
 void* ptr;
 #endif /* __STDC__ */
 {
-#ifdef PLUGIN_DEBUG
+#   ifdef PLUGIN_DEBUG
     printf ("***** Ap_MemFree *****\n");
-#endif
+#   endif
     free (ptr);
 }
 
@@ -697,6 +710,7 @@ NPBool reloadPages;
 #   endif
 }
 
+#ifdef XP_UNIX
 /*----------------------------------------------------------------------
   AM_getvalue
   ----------------------------------------------------------------------*/
@@ -727,6 +741,7 @@ void*       r_value;
     }
     return error;
 }
+#endif /* XP_UNIX */
 
 
 /*----------------------------------------------------------------------
