@@ -4,8 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Manual de Usuario de Amaya</title>
-  <meta name="GENERATOR"
-  content="amaya 8.7-pre, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.7, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -15,7 +14,7 @@
 <div id="page_body">
 <h1 style="text-align : center">Manual de Usuario de Amaya</h1>
 
-<h4 style="text-align:center">Versión 8.7 - Octubre de 2004<br />
+<h4 style="text-align:center">Versión 9.0 - Diciembre de 2004<br />
 <br />
 <img src="../images/amaya.gif" alt="Amaya" /></h4>
 <hr />

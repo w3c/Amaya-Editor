@@ -301,7 +301,9 @@ sub end_hndl { #	do the modification if necessary
 	if ($end_tag eq "label") {	
 		if ($found == 1) {
 			$found = 0;
-		}else { # there is no translation for this label within the base
+		}
+        else { # there is no translation for this label within the base
+# print 'label=' . "$labels{$current_label}";
 			if ($texts{ $labels{$current_label}}) {
 				print OUT "\t<message xml:lang=\"$language_code\">";
 				print OUT $texts{ $labels{$current_label}};

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Thu Dec 16 11:05:21 CET 2004" version="79">
+<base last_update="Wed Dec 22 11:21:30 CET 2004" version="80">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -139,6 +139,7 @@
 	<message xml:lang="it">Apri tab</message>
 	<message xml:lang="es">Abrir en pestaña nueva</message>
 	<message xml:lang="de">Öffnen (neues &amp;Registerkarte)</message>
+	<message xml:lang="ru">нРЙПШРЭ Б МНБНИ РЮАКХЖЕ</message>
 </label>
 <label define="AM_OPEN_IN_NEW_WINDOW">
 	<message xml:lang="en">Open in new window</message>
@@ -3957,36 +3958,42 @@
 	<message xml:lang="fr">Informations du document</message>
 	<message xml:lang="es">Propiedades del documento</message>
 	<message xml:lang="de">Dokumentinformation</message>
+	<message xml:lang="ru">хМТНПЛЮЖХЪ Н ДНЙСЛЕМРЕ</message>
 </label>
 <label define="AM_DOCINFO_TYPE">
 	<message xml:lang="en">Document Type</message>
 	<message xml:lang="fr">Type du document</message>
 	<message xml:lang="es">Tipo de documento:</message>
 	<message xml:lang="de">Documenttyp</message>
+	<message xml:lang="ru">рХО ДНЙСЛЕМРЮ</message>
 </label>
 <label define="AM_DOCINFO_TYPEMIME">
 	<message xml:lang="en">MIME Type</message>
 	<message xml:lang="fr">Type MIME</message>
 	<message xml:lang="es">Tipo MIME:</message>
 	<message xml:lang="de">MIME Type</message>
+	<message xml:lang="ru">рХО MIME</message>
 </label>
 <label define="AM_DOCINFO_CHARSET">
 	<message xml:lang="en">Charset</message>
 	<message xml:lang="fr">Code de caractère</message>
 	<message xml:lang="es">Juego de caracteres:</message>
 	<message xml:lang="de">Zeichensatz</message>
+	<message xml:lang="ru">йНДХПНБЙЮ</message>
 </label>
 <label define="AM_DOCINFO_CLENGTH">
 	<message xml:lang="en">Content Length</message>
 	<message xml:lang="fr">Taille du contenu</message>
 	<message xml:lang="es">Longitud del contenido:</message>
 	<message xml:lang="de">Content Length</message>
+	<message xml:lang="ru">дКХМЮ ЯНДЕПФЮМХЪ</message>
 </label>
 <label define="AM_DOCINFO_CLOCATION">
 	<message xml:lang="en">Content Location</message>
 	<message xml:lang="fr">Provenance</message>
 	<message xml:lang="es">Ubicación del contenido:</message>
 	<message xml:lang="de">Content Location</message>
+	<message xml:lang="ru">лЕЯРНОНКНФЕМХЕ ЯНДЕПФЮМХЪ</message>
 </label>
 <label define="AM_DLGPREFERENCE_TITLE">
 	<message xml:lang="en">Preferences</message>
@@ -4015,6 +4022,7 @@
 	<message xml:lang="fr">Création d'un objet</message>
 	<message xml:lang="es">Crear Objeto</message>
 	<message xml:lang="de">Objekt erzeugen</message>
+	<message xml:lang="ru">яНГДЮРЭ НАЗЕЙР</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

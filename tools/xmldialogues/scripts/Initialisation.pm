@@ -56,7 +56,7 @@ sub create_base {
 #	initialization of the base
 	open (OUT, ">$out_basename") || die "can't create $out_basename: $!";
 	print OUT "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n";
-	{my $date = `date`;# to execute the command shell
+	{my $date = `date -I`;# to execute the command shell
 	chomp ( $date );	
 	print OUT "<base version=\"0\" last_update=\"$date\">\n";}
 
