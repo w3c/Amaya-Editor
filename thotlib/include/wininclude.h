@@ -90,8 +90,10 @@ extern void       KbdCallbackHandler (ThotWidget w, unsigned int param, caddr_t 
 extern void       CheckTtCmap ();
 
 /* Override some functions for unicode support */
+#ifndef _WIN9X
 #undef  GetMessage
 #define GetMessage						GetMessageW
+#endif /* _WIN9X */
 
 /* The following macros override some other windows functions */
 /* Uncomment it to enable unicod but take care of side effect */
