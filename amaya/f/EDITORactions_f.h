@@ -100,6 +100,8 @@ extern void CreateAreaPoly ( Document doc,
                              View view );
 extern void CreateDivision ( Document document,
                              View view );
+extern void CreateNOSCRIPT ( Document document,
+                             View view );
 extern void CreateObject ( Document document,
                            View view );
 extern void CreateParameter ( Document document,
@@ -207,7 +209,7 @@ extern void CreateAreaCircle (/* Document doc,
                                  View view */);
 extern void CreateAreaPoly (/* Document doc,
                                View view */);
-extern void CreateDivision (/* Document document,
+extern void CreateNOSCRIPT (/* Document document,
                                View view */);
 extern void CreateObject (/* Document document,
                              View view */);

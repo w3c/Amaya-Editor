@@ -75,85 +75,86 @@
 74 Cercle
 75 Polygone
 76 Division
-77 Objet
+77 NoScript
 78 Objet
-79 Param\350tre
-80 Frame en ligne
-81 Math
-82 Math en ligne
-83 Equation
-84 Racine
-85 Racine carr\351e
-86 Fraction
-87 Indice et exposant
-88 Indice
-89 Exposant
-90 Dessous et dessus
-91 Dessous
-92 Dessus
-93 Parenth\350ses
-94 Multiscripts
-95 Matrice
-96 Cr\351er lien...
-97 Cr\351er cible
-98 Changer lien...
-99 D\351truire ancre
-100 Montrer boutons
-101 Montrer adresse et titre
-102 Montrer les zones actives
-103 Grossir
-104 R\351duire
-105 Montrer la structure
-106 Montrer la vue altern\351e
-107 Montrer les liens
-108 Montrer la table des mati\350res
-109 Style de caract\350res...
-110 Couleurs...
-111 Format...
-112 Image de fond...
-113 Cr\351er une r\350gle...
-114 Appliquer une classe...
-115 Feuilles de style
-116 Types information
-117 Emphase
-118 Strong
-119 Cite
-120 D\351finition
-121 Code
-122 Variable
-123 Sample
-124 Keyboard
-125 Abr\351viation
-126 Acronyme
-127 Insertion
-128 Suppression
-129 El\351ments caract\350res
-130 Italique
-131 Gras
-132 T\351l\351type
-133 Gros
-134 Petit
-135 Indice
-136 Exposant
-137 Citation (Q)
-138 BiDi (BDO)
-139 Transformer...
-140 Num\351roter les sections
-141 Construire un livre
-142 A propos de Amaya
-143 Naviguation
-144 S\351lection
-145 Chercher
-146 Vues
-147 Cr\351ation
-148 Liens
-149 Transformer
-150 Tables
-151 Math
-152 Zones actives
-153 Feuilles de style
-154 Attributs
-155 Publier
-156 Imprimer
-157 Construire un livre
-158 Configurer Amaya
+79 Objet
+80 Param\350tre
+81 Frame en ligne
+82 Math
+83 Math en ligne
+84 Equation
+85 Racine
+86 Racine carr\351e
+87 Fraction
+88 Indice et exposant
+89 Indice
+90 Exposant
+91 Dessous et dessus
+92 Dessous
+93 Dessus
+94 Parenth\350ses
+95 Multiscripts
+96 Matrice
+97 Cr\351er lien...
+98 Cr\351er cible
+99 Changer lien...
+100 D\351truire ancre
+101 Montrer boutons
+102 Montrer adresse et titre
+103 Montrer les zones actives
+104 Grossir
+105 R\351duire
+106 Montrer la structure
+107 Montrer la vue altern\351e
+108 Montrer les liens
+109 Montrer la table des mati\350res
+110 Style de caract\350res...
+111 Couleurs...
+112 Format...
+113 Image de fond...
+114 Cr\351er une r\350gle...
+115 Appliquer une classe...
+116 Feuilles de style
+117 Types information
+118 Emphase
+119 Strong
+120 Cite
+121 D\351finition
+122 Code
+123 Variable
+124 Sample
+125 Keyboard
+126 Abr\351viation
+127 Acronyme
+128 Insertion
+129 Suppression
+130 El\351ments caract\350res
+131 Italique
+132 Gras
+133 T\351l\351type
+134 Gros
+135 Petit
+136 Indice
+137 Exposant
+138 Citation (Q)
+139 BiDi (BDO)
+140 Transformer...
+141 Num\351roter les sections
+142 Construire un livre
+143 A propos de Amaya
+144 Naviguation
+145 S\351lection
+146 Chercher
+147 Vues
+148 Cr\351ation
+149 Liens
+150 Transformer
+151 Tables
+152 Math
+153 Zones actives
+154 Feuilles de style
+155 Attributs
+156 Publier
+157 Imprimer
+158 Construire un livre
+159 Configurer Amaya

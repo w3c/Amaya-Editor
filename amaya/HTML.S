@@ -42,6 +42,19 @@ STRUCT
 	BODY;
 	END + (Invalid_element, Comment\240);
 
+#ifdef FRAMES
+  FRAMESET (ATTR RowHeight = TEXT; ColWidth = TEXT) =		{ FRAMESET }
+	       { rows		   cols }
+	AGGREGATE
+	Frames = LIST [1, *] OF (CASE OF FRAMESET; FRAME; END);
+      ?	NOFRAMES = BODY;					{ NOFRAMES }
+	END;
+
+  FRAME (ATTR FrameName = TEXT; FrameSrc = TEXT) =		{ FRAME }
+	    { name		src }
+	CONSTANT C_Empty;
+#endif
+
   BODY								{ BODY }
 	(ATTR background_ = Text; BackgroundColor = Text; TextColor = Text;
 	   { background          bgcolor                 text }
@@ -92,6 +105,7 @@ STRUCT
 	Preformatted;						{ PRE preformatted }
 	Division;						{ DIV }
 	Center;							{ CENTER }
+	NOSCRIPT = LIST OF (Element);				{ NOSCRIPT }
 	Block_Quote (ATTR cite = TEXT;				{ BLOCKQUOTE }
 			{ cite }
 	        InternalLink = Reference(Any); ExternalLink = Yes_) =
@@ -358,7 +372,7 @@ STRUCT
 	    { selected                                  value }
 	TEXT;
 
-  Input = CASE OF					{ INPUT / InputType }
+  Input = CASE OF					{ formctrl }
 	Checkbox_Input					{ INPUT / CHECKBOX }
 		(ATTR !NAME; { name }
 		      Checked = Yes_, No_; DefaultChecked = Yes_, No_;
@@ -389,6 +403,10 @@ STRUCT
 		END with Value_ ?= 'Submit';
 	Option_Menu;					{ SELECT }
 	Text_Area;					{ TEXTAREA }
+{****
+        LABEL
+        BUTTON
+****}
 	END;
 
   Text_With_Frame = BEGIN

@@ -1785,6 +1785,27 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
+void                CreateNOSCRIPT (Document document, View view)
+#else  /* __STDC__ */
+void                CreateNOSCRIPT (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   ElementType         elType;
+
+   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_NOSCRIPT;
+       TtaCreateElement (elType, document);
+     }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
 void                CreateObject (Document document, View view)
 #else  /* __STDC__ */
 void                CreateObject (document, view)

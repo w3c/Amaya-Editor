@@ -263,6 +263,7 @@ static GIMapping    HTMLGIMappingTable[] =
 #endif
    {"MENU", SPACE, HTML_EL_Menu, NULL},
    {"META", 'E', HTML_EL_META, NULL},
+   {"NOSCRIPT", SPACE, HTML_EL_NOSCRIPT, NULL},
    {"OBJECT", SPACE, HTML_EL_Object, NULL},
    {"OL", SPACE, HTML_EL_Numbered_List, NULL},
    {"OPTION", SPACE, HTML_EL_Option, NULL},
@@ -314,7 +315,7 @@ static int          NoTextChild[] =
    HTML_EL_Unnumbered_List, HTML_EL_Definition, HTML_EL_List_Item,
    HTML_EL_MAP, HTML_EL_Applet,
    HTML_EL_Object, HTML_EL_IFRAME,
-   HTML_EL_Division, HTML_EL_Center,
+   HTML_EL_Division, HTML_EL_Center, HTML_EL_NOSCRIPT,
    HTML_EL_Table, HTML_EL_thead, HTML_EL_tbody, HTML_EL_tfoot, HTML_EL_Table_row,
    HTML_EL_Data_cell, HTML_EL_Heading_cell,
 #ifdef GRAPHML
@@ -411,6 +412,7 @@ static oneLine      StartTagEndingElem[] =
    "P closes P P* HEAD H1 H2 H3 H4 H5 H6",
    "P* closes P P* HEAD",
    "DIV closes P P* HEAD",
+   "NOSCRIPT closes P P* HEAD",
    "CENTER closes FONT B I P P* HEAD",
    "A closes A",
    "CAPTION closes P P*",

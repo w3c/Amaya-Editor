@@ -715,6 +715,13 @@ RULES
 	Create '</center>\12' After;
 	END;
 
+ NOSCRIPT: BEGIN
+	Create '\12<noscript';
+	Create Attributes;
+	Create '>\12';
+	Create '</noscript>\12' After;
+	END;
+
  Invalid_element:
 	BEGIN
 	if Error_type = BadPosition

@@ -542,6 +542,10 @@ RULES
 	If Empty
 	   Remove;
 
+ NOSCRIPT:
+	If Empty
+	   Remove;
+
  Invalid_element:
 	If Error_type = BadPosition
 	   Remove;

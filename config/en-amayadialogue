@@ -75,85 +75,86 @@
 74 Circle
 75 Polygon
 76 Division
-77 Object
+77 NoScript
 78 Object
-79 Parameter
-80 Inline frame
-81 Math
-82 Inline math
-83 Equation (display)
-84 Root
-85 sQuare root
-86 Fraction
-87 Subscript and superscript
-88 Subscript
-89 suPerscript
-90 Under and over
-91 Under
-92 Over
-93 Parentheses
-94 Multiscripts
-95 Matrix
-96 create Link...
-97 create Target
-98 Change link...
-99 Delete anchor
-100 Show buttonbar
-101 Show address & title
-102 Show map areas
-103 Zoom In
-104 Zoom Out
-105 Show structure
-106 Show alternate
-107 Show links
-108 Show table of contents
-109 Character style...
-110 Colors...
-111 Format...
-112 Background image...
-113 Create rule...
-114 Apply class...
-115 Style sheets
-116 Information type
-117 Emphasis
-118 Strong
-119 Cite
-120 Definition
-121 Code
-122 Variable
-123 Sample
-124 Keyboard
-125 Abbreviation
-126 Acronym
-127 Insertion
-128 Deletion
-129 Character element
-130 Italic
-131 Bold
-132 Teletype
-133 Big
-134 Small
-135 Subscript
-136 Superscript
-137 Quotation
-138 BiDi override
-139 Transform...
-140 Section numbering
-141 Make book
-142 About Amaya
-143 Browsing
-144 Selecting
-145 Searching
-146 Views
-147 Creating elements
-148 Links
-149 Restructuring
-150 Tables
-151 Math
-152 Image maps
-153 Style sheets
-154 Attributes
-155 Publishing
-156 Printing
-157 Making books
-158 Configuring Amaya
+79 Object
+80 Parameter
+81 Inline frame
+82 Math
+83 Inline math
+84 Equation (display)
+85 Root
+86 sQuare root
+87 Fraction
+88 Subscript and superscript
+89 Subscript
+90 suPerscript
+91 Under and over
+92 Under
+93 Over
+94 Parentheses
+95 Multiscripts
+96 Matrix
+97 create Link...
+98 create Target
+99 Change link...
+100 Delete anchor
+101 Show buttonbar
+102 Show address & title
+103 Show map areas
+104 Zoom In
+105 Zoom Out
+106 Show structure
+107 Show alternate
+108 Show links
+109 Show table of contents
+110 Character style...
+111 Colors...
+112 Format...
+113 Background image...
+114 Create rule...
+115 Apply class...
+116 Style sheets
+117 Information type
+118 Emphasis
+119 Strong
+120 Cite
+121 Definition
+122 Code
+123 Variable
+124 Sample
+125 Keyboard
+126 Abbreviation
+127 Acronym
+128 Insertion
+129 Deletion
+130 Character element
+131 Italic
+132 Bold
+133 Teletype
+134 Big
+135 Small
+136 Subscript
+137 Superscript
+138 Quotation
+139 BiDi override
+140 Transform...
+141 Section numbering
+142 Make book
+143 About Amaya
+144 Browsing
+145 Selecting
+146 Searching
+147 Views
+148 Creating elements
+149 Links
+150 Restructuring
+151 Tables
+152 Math
+153 Image maps
+154 Style sheets
+155 Attributes
+156 Publishing
+157 Printing
+158 Making books
+159 Configuring Amaya

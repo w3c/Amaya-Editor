@@ -75,85 +75,86 @@
 74 Kreis
 75 Polygon
 76 Gruppierung (DIV)
-77 Objekt (OBJECT)
-78 Objekt
-79 Parameter (PARAM)
-80 ** (IFRAME)
-81 Formel
-82 Formel im Text (MATH)
-83 Formel abgesetzt (MATH)
-84 Wurzel (MROOT)
-85 Quadratwurzel (MSQRT)
-86 Quotient (MFRAC)
-87 Term mit Index und Exponent (MSUBSUP)
-88 Term mit Index (MSUB)
-89 Term mit Exponent (MSUP)
-90 Term mit Unter- und Überschrift (MUNDEROVER)
-91 Term mit Unterschrift (MUNDER)
-92 Term mit Überschrift (MOVER)
-93 Term in Klammern (MFENCED)
-94 Term mit Indices links/rechts oben/unten (MMULTISCRIPT)
-95 **Matrix (MTABLE)
-96 Markierung als Verknüfung definieren...
-97 Markierung als Verknüpfungsziel definieren
-98 Verknüpfungsziel ändern...
-99 Verknüpfungsziel löschen
-100 Symbolleiste
-101 Dokumentadresse und -titel 
-102 Aktive Grafikbereiche markieren
-103 **Zoom In
-104 **Zoom Out
-105 Strukturfenster
-106 Textbrowserfenster
-107 Verknüpfungsfenster
-108 Inhaltsverzeichnisfenster
-109 Zeichen...
-110 Farben...
-111 Ausrichtung...
-112 Hintergrundbild...
-113 Format in Stylesheet übernehmen...
-114 Klasse anwenden...
-115 Stylesheets bearbeiten
-116 logische Formate
-117 Betont (EM)
-118 Hervorgehoben (STRONG)
-119 Zitat (CITE)
-120 Definition (DFN)
-121 Programmtext (CODE)
-122 Variablenwert (VAR)
-123 Beispiel (SAMP)
-124 Tastatureingabe (KBD)
-125 ** (ABBR)
-126 ** (ACRONYM)
-127 ** (INS)
-128 ** (DEL)
-129 direkte Zeichenformate
-130 kursiv (I)
-131 fett (B)
-132 Schreibmaschinenschrift (TT)
-133 größer (BIG)
-134 kleiner (SMALL)
-135 tiefgestellt (SUB)
-136 hochgestellt (SUP)
-137 ** (Q)
-138 ** (BDO)
-139 Umformatieren...
-140 Abschnittsnummern
-141 Buch zusammenfügen
-142 Info
-143 Verknüpfungen folgen/Dokumente öffnen
-144 Auswählen
-145 Suchen
-146 Ansichten
-147 Einfügen von Elementen
-148 Verknüpfungen bearbeiten
-149 Umformatieren
-150 Tabellen
-151 Formeln
-152 Aktive Grafikbereiche
-153 Formate/Stylesheets
-154 Attribute
-155 Speichern/Publizieren
-156 Drucken
-157 Buch zusammenfügen
-158 Konfiguration
+77 ** (NOSCRIPT)
+78 Objekt (OBJECT)
+79 Objekt
+80 Parameter (PARAM)
+81 ** (IFRAME)
+82 Formel
+83 Formel im Text (MATH)
+84 Formel abgesetzt (MATH)
+85 Wurzel (MROOT)
+86 Quadratwurzel (MSQRT)
+87 Quotient (MFRAC)
+88 Term mit Index und Exponent (MSUBSUP)
+89 Term mit Index (MSUB)
+90 Term mit Exponent (MSUP)
+91 Term mit Unter- und Überschrift (MUNDEROVER)
+92 Term mit Unterschrift (MUNDER)
+93 Term mit Überschrift (MOVER)
+94 Term in Klammern (MFENCED)
+95 Term mit Indices links/rechts oben/unten (MMULTISCRIPT)
+96 **Matrix (MTABLE)
+97 Markierung als Verknüfung definieren...
+98 Markierung als Verknüpfungsziel definieren
+99 Verknüpfungsziel ändern...
+100 Verknüpfungsziel löschen
+101 Symbolleiste
+102 Dokumentadresse und -titel 
+103 Aktive Grafikbereiche markieren
+104 **Zoom In
+105 **Zoom Out
+106 Strukturfenster
+107 Textbrowserfenster
+108 Verknüpfungsfenster
+109 Inhaltsverzeichnisfenster
+110 Zeichen...
+111 Farben...
+112 Ausrichtung...
+113 Hintergrundbild...
+114 Format in Stylesheet übernehmen...
+115 Klasse anwenden...
+116 Stylesheets bearbeiten
+117 logische Formate
+118 Betont (EM)
+119 Hervorgehoben (STRONG)
+120 Zitat (CITE)
+121 Definition (DFN)
+122 Programmtext (CODE)
+123 Variablenwert (VAR)
+124 Beispiel (SAMP)
+125 Tastatureingabe (KBD)
+126 ** (ABBR)
+127 ** (ACRONYM)
+128 ** (INS)
+129 ** (DEL)
+130 direkte Zeichenformate
+131 kursiv (I)
+132 fett (B)
+133 Schreibmaschinenschrift (TT)
+134 größer (BIG)
+135 kleiner (SMALL)
+136 tiefgestellt (SUB)
+137 hochgestellt (SUP)
+138 ** (Q)
+139 ** (BDO)
+140 Umformatieren...
+141 Abschnittsnummern
+142 Buch zusammenfügen
+143 Info
+144 Verknüpfungen folgen/Dokumente öffnen
+145 Auswählen
+146 Suchen
+147 Ansichten
+148 Einfügen von Elementen
+149 Verknüpfungen bearbeiten
+150 Umformatieren
+151 Tabellen
+152 Formeln
+153 Aktive Grafikbereiche
+154 Formate/Stylesheets
+155 Attribute
+156 Speichern/Publizieren
+157 Drucken
+158 Buch zusammenfügen
+159 Konfiguration

@@ -75,85 +75,86 @@
 74 Daire
 75 Çokgen
 76 Bölme
-77 Nesne
+77 **NoScript
 78 Nesne
-79 Parametre
-80 **IFrame
-81 Matematik
-82 Yazý içi matematik
-83 Denklem (göster)
-84 Kök
-85 Karekök
-86 Kesir
-87 Alt ve üstyazý
-88 altyazý
-89 üstyazý
-90 altýnda veya üstünde
-91 altýnda
-92 üstünde
-93 Parantezler
-94 Multiscripts
-95 Matris
-96 Baðlantý yarat...
-97 Hedef yarat
-98 Baðlantý yarat...
-99 <A> tanýmý sil
-100 Tuþlarý göster
-101 Adres ve baþlýðý göster
-102 Yakýnlaþtýr
-103 Uzaklaþtýr
-104 Harita alanlarýný göster
-105 Yapýyý göster
-106 Alternatif gösterim
-107 Baðlantýlarý göster
-108 Ýçindekileri göster
-109 Karakter tarzý...
-110 Renkler...
-111 Biçim...
-112 Arkaplan görüntüsü...
-113 Kural yarat...
-114 \'class\' uygula...
-115 Tarzý tanýmlarý
-116 Bilgi türü
-117 Vurgu
-118 Kuvvetli
-119 Cite
-120 Taným
-121 Kod
-122 Deðiþken
-123 Örnek
-124 Tuþtakýmý
-125 **Abbreviation
-126 **Acronym
-127 **Insertion
-128 **Deletion
-129 Karakter birimi
-130 Ýtalik
-131 Kalýn
-132 Teletype
-133 Büyük
-134 Küçük
-135 Alt
-136 Üst
-137 **Quotation
-138 **BDO
-139 Dönüþtür
-140 Bölüm numaralandýrmasý
-141 Kitap yap
-142 Amaya hakkýnda
-143 Tarama
-144 Seçme
-145 Arama
-146 Görünümler
-147 Birim yaratma
-148 Baðlantýlar
-149 Yeniden yapýlandýrma
-150 Tablolar
-151 Matematik
-152 Görüntü haritalarý
-153 Tarz tanýmlarý
-154 Özellikler
-155 Sayfa yerleþtirme
-156 Bastýrma
-157 Kitap oluþturma
-158 Amaya yapýlandýrmasý
+79 Nesne
+80 Parametre
+81 **IFrame
+82 Matematik
+83 Yazý içi matematik
+84 Denklem (göster)
+85 Kök
+86 Karekök
+87 Kesir
+88 Alt ve üstyazý
+89 altyazý
+90 üstyazý
+91 altýnda veya üstünde
+92 altýnda
+93 üstünde
+94 Parantezler
+95 Multiscripts
+96 Matris
+97 Baðlantý yarat...
+98 Hedef yarat
+99 Baðlantý yarat...
+100 <A> tanýmý sil
+101 Tuþlarý göster
+102 Adres ve baþlýðý göster
+103 Yakýnlaþtýr
+104 Uzaklaþtýr
+105 Harita alanlarýný göster
+106 Yapýyý göster
+107 Alternatif gösterim
+108 Baðlantýlarý göster
+109 Ýçindekileri göster
+110 Karakter tarzý...
+111 Renkler...
+112 Biçim...
+113 Arkaplan görüntüsü...
+114 Kural yarat...
+115 \'class\' uygula...
+116 Tarzý tanýmlarý
+117 Bilgi türü
+118 Vurgu
+119 Kuvvetli
+120 Cite
+121 Taným
+122 Kod
+123 Deðiþken
+124 Örnek
+125 Tuþtakýmý
+126 **Abbreviation
+127 **Acronym
+128 **Insertion
+129 **Deletion
+130 Karakter birimi
+131 Ýtalik
+132 Kalýn
+133 Teletype
+134 Büyük
+135 Küçük
+136 Alt
+137 Üst
+138 **Quotation
+139 **BDO
+140 Dönüþtür
+141 Bölüm numaralandýrmasý
+142 Kitap yap
+143 Amaya hakkýnda
+144 Tarama
+145 Seçme
+146 Arama
+147 Görünümler
+148 Birim yaratma
+149 Baðlantýlar
+150 Yeniden yapýlandýrma
+151 Tablolar
+152 Matematik
+153 Görüntü haritalarý
+154 Tarz tanýmlarý
+155 Özellikler
+156 Sayfa yerleþtirme
+157 Bastýrma
+158 Kitap oluþturma
+159 Amaya yapýlandýrmasý

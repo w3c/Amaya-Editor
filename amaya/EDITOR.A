@@ -103,6 +103,7 @@ MENUS
 	Types.AreaMap button:BPoly -> CreateAreaPoly;
 
 	Types button:BDivision -> CreateDivision;
+	Types button:BNoScript -> CreateNOSCRIPT;
 	Types.Object button:BObject -> CreateObject;
 	Types.Object button:BParameter -> CreateParameter;
 	Types button:BIFrame -> CreateIFrame;

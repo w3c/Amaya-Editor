@@ -4014,6 +4014,16 @@ BOXES
 		END;
 	END;
 
+ NOSCRIPT_S: BEGIN
+	Content: Text 'NOSCRIPT';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
 #ifdef MATHML
   ATTR_MODE_DISPLAY: BEGIN
 	Content: Text ' mode=display';
@@ -6261,6 +6271,21 @@ RULES
 		END;
 	IN Alternate_view
 		Adjust: Left;
+	IN Links_view
+		Visibility: 0;
+	END;
+
+  NOSCRIPT:
+	BEGIN
+	CreateBefore(NOSCRIPT_S);
+	CreateWith(VerticalLine);
+	Width: Enclosing . Width;
+	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
 	IN Links_view
 		Visibility: 0;
 	END;
