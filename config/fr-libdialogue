@@ -4,196 +4,184 @@
 2 Absence de fichier alphabet
 3 La nouvelle vue ne peut remplacer l\'ancienne.
 4 Schémas incompatibles. Recompiler %s
-5 Le numéro de fenêtre est incorrect.
-6 Erreur fatale : fontes Thot inaccessibles
-7 Manque de mémoire
-8 Erreur fatale : connexion au serveur X impossible
-9 La vue est modifiée avant création.
-10 Table des règles saturée.
-11 Fichier incorrect : %s.STR
-12 Fichier incorrect : %s.PRS
-13 Répertoire inaccessible : %s
-14 Impression impossible
-15 Type d'image
-16 Présentation
-17 Fichier image
-18 Impression terminée: %s
-19 Depuis la page...
-20 ...jusqu'à la page
-21 Nombre d'exemplaires
-22 Disposition
-23 1 page/feuille
-24 2 pages/feuille
-25 4 pages/feuille
-26 Pages par feuille
-27 Repaginer
-28 Vues à imprimer
-29 %s
-30 Pas assez de mémoire
-31 Cet élément ne peut être contracté
-32 Désigner l\'élément à référencer
-33 *** Thot: erreur irrécupérable ***\n
-34 les documents modifiés vont être sauvés \n
-35 Sans modification
-36 Zoomée
-37 Répétée
-38 Répétée en X
-39 Répétée en Y
-40 Fin de fichier prématurée
-41 Pixmap : erreur d'allocation de couleur
-42 Fichier .TRA incorrect : %s
-43 %s est un frère invalide pour %s (%s)
-44 %s est un fils invalide pour %s (%s%)
-45 %s, page %d
-46 Langue
-47 Attributs
-48 Recherche référence
-49 Présentation standard
-50 Appliquer
-51 Caractères
-52 Souligné
-53 Graphiques
-54 Format
-55 Défaut
-56 Alignement
-57 Renfoncement
-58 Imprimer
-59 Alimentation manuelle
-60 Options
-61 A4
-62 US
-63 Format du papier
-64 Terminer
-65 Répertoires
-66 Nom du document
-67 Le document %s existe déjà. Voulez-vous l'écraser ?
-68 Bouton gauche change la couleur du texte
-69 Bouton milieu ou droit change la couleur du fond
-70 Police
-71 Normal
-72 Gras
-73 Italique
-74 Oblique
-75 Normal
-76 Graisse
-77 Non souligné
-78 Souligné
-79 Biffé
-80 Corps (pt)
-81 Renfoncement (pt)
-82 Interligne (pt)
-83 Interligne
-84 Justification
-85 Oui
-86 Non
-87 Sauver le document
-88 Fermer sans sauver
-89 Style des caractères
-90 Couleurs
-91 Supprimer
-92 Destination
-93 Fichier PostScript
-94 Imprimante
-95 Texte à chercher
-96 MAJUSCULES = minuscules
-97 Texte de remplacement
-98 Remplacement
-99 Sans remplacement
-100 Remplacement à la demande
-101 Remplacement automatique
-102 Où rechercher
-103 Avant la sélection
-104 Dans la sélection
-105 Après la sélection
-106 Dans tout le document
-107 Sauter
-108 Couleurs par défaut
-109 avant de le fermer
-110 Fermer un document
-111 Sans_nom
-112 Créer un document
-113 Type de document
-114 Renommer
-115 Symboles mathématiques
-116 Graphiques
-117 Alphabet latin
-118 Alphabet grec
-119 Présentation
-120 Fichiers
-121 Ouvrir un document
-122 Vues
-123 Changer le filtre sur la vue
-124 Valeur inchangée
-125 Augmenter
-126 Diminuer
-127 Visibilité
-128 Écart sur la taille des caractères
-129 Zoom
-130 Sauver comme
-131 Sauver
-132 Thot
-133 Format
-134 Copier
-135 Texte
-136 Graphique
-137 Symbole
-138 Image
-139 Type d'élément
-140 après
-141 avant
-142 autour
-143 Inclure
-144 Coller
-145 à créer
-146 Insérer
-147 Saut de page
-148 (Lecture seule)
-149 Englober dans
-150 Changer en
-151 Langue de l'élément
-152 Langue héritée :
-153 Pas trouvé
-154 Recherche dans
-155 Recherche élément vide
-156 Recherche référence vide
-157 Recherche les références à l'élément
-158 Lien
-159 Référence dans le document\240
-160 Recherche
-161 Elément en lecture seule
-162 Plus de remplacements
-163 Ouvrir
-164 Caractères standard
-165 Graphiques standard
-166 Format standard
-167 Géométrie standard
-168 pt
-169 Style des traits
-170 Epaisseur des traits
-171 Motif de remplissage
-172 Diviser
-173 Type d'objet
-174 Aller page numéro :
-175 any
-176 Attribut à chercher
-177 Type à chercher
-178 Natures
-179 Valeur de l'attribut :
-180 Attribut inconnu
-181 Créer l\'élément à référencer
-182 Le désigner
-183 Mode d\'insertion
-184 Annuler
-185 Erreur dans la traduction en PostScript
-186 Commande refusée par le spooler : %s
-187 Création impossible : %s
-188 Présentation générale
-189 Impossible de lier le nouvel élément
-190 Alphabet
-191 Aucun
-192 Surligné
-193 Format de document
-194 Événements
-195 Retire l'attribut
-196 Bouton gauche change la couleur de sélection
-197 Bouton milieu ou droit change la couleur du curseur
+5 Erreur fatale : fontes Thot inaccessibles
+6 Manque de mémoire
+7 Erreur fatale : connexion au serveur X impossible
+8 La vue est modifiée avant création.
+9 Table des règles saturée.
+10 Fichier incorrect : %s.STR
+11 Fichier incorrect : %s.PRS
+12 Répertoire inaccessible : %s
+13 Type d'image
+14 Présentation
+15 Fichier image
+16 Impression terminée: %s
+17 Depuis la page...
+18 ...jusqu'à la page
+19 Nombre d'exemplaires
+20 Disposition
+21 1 page/feuille
+22 2 pages/feuille
+23 4 pages/feuille
+24 Pages par feuille
+25 Repaginer
+26 Vues à imprimer
+27 %s
+28 Pas assez de mémoire
+29 *** Thot: erreur irrécupérable ***\n
+30 les documents modifiés vont être sauvés \n
+31 Sans modification
+32 Zoomée
+33 Répétée
+34 Répétée en X
+35 Répétée en Y
+36 Fichier .TRA incorrect : %s
+37 %s est un frère invalide pour %s (%s)
+38 %s est un fils invalide pour %s (%s%)
+39 %s, page %d
+40 Langue
+41 Attributs
+42 Recherche référence
+43 Présentation standard
+44 Appliquer
+45 Caractères
+46 Souligné
+47 Graphiques
+48 Format
+49 Défaut
+50 Alignement
+51 Renfoncement
+52 Imprimer
+53 Alimentation manuelle
+54 Options
+55 A4
+56 US
+57 Format du papier
+58 Terminer
+59 Répertoires
+60 Nom du document
+61 Le document %s existe déjà. Voulez-vous l'écraser ?
+62 Bouton gauche change la couleur du texte
+63 Bouton milieu ou droit change la couleur du fond
+64 Police
+65 Normal
+66 Gras
+67 Italique
+68 Oblique
+69 Normal
+70 Graisse
+71 Non souligné
+72 Souligné
+73 Biffé
+74 Corps (pt)
+75 Renfoncement (pt)
+76 Interligne (pt)
+77 Interligne
+78 Sauver le document
+79 Fermer sans sauver
+80 Style des caractères
+81 Couleurs
+82 Supprimer
+83 Destination
+84 Fichier PostScript
+85 Imprimante
+86 Texte à chercher
+87 MAJUSCULES = minuscules
+88 Texte de remplacement
+89 Remplacement
+90 Sans remplacement
+91 Remplacement à la demande
+92 Remplacement automatique
+93 Où rechercher
+94 Avant la sélection
+95 Dans la sélection
+96 Après la sélection
+97 Dans tout le document
+98 Sauter
+99 Couleurs par défaut
+100 avant de le fermer
+101 Fermer un document
+102 Sans_nom
+103 Créer un document
+104 Type de document
+105 Renommer
+106 Symboles mathématiques
+107 Graphiques
+108 Alphabet latin
+109 Alphabet grec
+110 Présentation
+111 Fichiers
+112 Ouvrir un document
+113 Vues
+114 Changer le filtre sur la vue
+115 Valeur inchangée
+116 Augmenter
+117 Diminuer
+118 Visibilité
+119 Écart sur la taille des caractères
+120 Zoom
+121 Sauver comme
+122 Sauver
+123 Thot
+124 Format
+125 Copier
+126 Texte
+127 Graphique
+128 Symbole
+129 Image
+130 Type d'élément
+131 après
+132 avant
+133 autour
+134 Inclure
+135 Coller
+136 à créer
+137 Insérer
+138 Saut de page
+139 (Lecture seule)
+140 Englober dans
+141 Changer en
+142 Langue de l'élément
+143 Langue héritée :
+144 Pas trouvé
+145 Recherche dans
+146 Recherche élément vide
+147 Recherche référence vide
+148 Recherche les références à l'élément
+149 Lien
+150 Référence dans le document\240
+151 Recherche
+152 Elément en lecture seule
+153 Plus de remplacements
+154 Ouvrir
+155 Caractères standard
+156 Graphiques standard
+157 Format standard
+158 Géométrie standard
+159 pt
+160 Style des traits
+161 Epaisseur des traits
+162 Motif de remplissage
+163 Diviser
+164 Type d'objet
+165 Aller page numéro :
+166 any
+167 Attribut à chercher
+168 Type à chercher
+169 Natures
+170 Valeur de l'attribut :
+171 Attribut inconnu
+172 Créer l\'élément à référencer
+173 Le désigner
+174 Mode d\'insertion
+175 Annuler
+176 Erreur dans la traduction en PostScript
+177 Commande refusée par le spooler : %s
+178 Création impossible : %s
+179 Présentation générale
+180 Surligné
+181 Format de document
+182 Événements
+183 Retire l'attribut
+184 Bouton gauche change la couleur de sélection
+185 Bouton milieu ou droit change la couleur du curseur

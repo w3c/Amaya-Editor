@@ -4,196 +4,184 @@
 2 No alphabet file
 3 New view cannot replace the old one
 4 Incompatible schemas. Recompile %s
-5 Incorrect window number
-6 Fatal Error: Thot fonts not found
-7 Memory exhausted
-8 Fatal Error: Unable to connect to X
-9 View is modified before creation
-10 Rules table full.
-11 Incorrect file: %s.STR
-12 Incorrect file: %s.PRS
-13 Directory not found: %s
-14 Cannot print
-15 Image Type
-16 Image Presentation
-17 Image File
-18 Document %s printed
-19 From page ...
-20 ... to page
-21 Number of copies
-22 Disposition
-23 1 page/sheet
-24 2 pages/sheet
-25 4 pages/sheet
-26 Pages per sheet
-27 Pagination
-28 Views to print
-29 %s
-30 Not enough memory
-31 This element cannot be holophrasted
-32 Designate the element to be referred
-33 *** Thot: Irrecoverable error ***
-34 modified documents, if any, will be saved
-35 As it is
-36 Scaled
-37 Repeated
-38 X Repeated
-39 Y Repeated
-40 Premature EOF
-41 Pixmap : Color error
-42 Incorrect .TRA file: %s
-43 %s is not a valid sibling for %s (%s)
-44 %s is not a valid child for %s (%s)
-45 %s, page %d
-46 Language
-47 Attributes
-48 Search reference
-49 Standard presentation
-50 Apply
-51 Characters
-52 Underline
-53 Graphics
-54 Format
-55 Default
-56 Align
-57 Indent
-58 Print
-59 Manual feed
-60 Options
-61 A4
-62 US
-63 Paper format
-64 Done
-65 Directories
-66 Document name
-67 The document %s already exists. Do you want to overwrite it?
-68 Left button sets the text color
-69 Middle or Right button sets the background color
-70 Font family
+5 Fatal Error: Thot fonts not found
+6 Memory exhausted
+7 Fatal Error: Unable to connect to X
+8 View is modified before creation
+9 Rules table full.
+10 Incorrect file: %s.STR
+11 Incorrect file: %s.PRS
+12 Directory not found: %s
+13 Image Type
+14 Image Presentation
+15 Image File
+16 Document %s printed
+17 From page ...
+18 ... to page
+19 Number of copies
+20 Disposition
+21 1 page/sheet
+22 2 pages/sheet
+23 4 pages/sheet
+24 Pages per sheet
+25 Pagination
+26 Views to print
+27 %s
+28 Not enough memory
+29 *** Thot: Irrecoverable error ***
+30 modified documents, if any, will be saved
+31 As it is
+32 Scaled
+33 Repeated
+34 X Repeated
+35 Y Repeated
+36 Incorrect .TRA file: %s
+37 %s is not a valid sibling for %s (%s)
+38 %s is not a valid child for %s (%s)
+39 %s, page %d
+40 Language
+41 Attributes
+42 Search reference
+43 Standard presentation
+44 Apply
+45 Characters
+46 Underline
+47 Graphics
+48 Format
+49 Default
+50 Align
+51 Indent
+52 Print
+53 Manual feed
+54 Options
+55 A4
+56 US
+57 Paper format
+58 Done
+59 Directories
+60 Document name
+61 The document %s already exists. Do you want to overwrite it?
+62 Left button sets the text color
+63 Middle or Right button sets the background color
+64 Font family
+65 Normal
+66 Bold
+67 Italic
+68 Oblique
+69 Normal
+70 Boldness
 71 Normal
-72 Bold
-73 Italic
-74 Oblique
-75 Normal
-76 Boldness
-77 Normal
-78 Underline
-79 Cross out
-80 Body size (pt)
-81 Indent (pt)
-82 Line spacing (pt)
-83 Line spacing
-84 Justification
-85 Yes
-86 No
-87 Save document
-88 Close, don't save
-89 Character style
-90 Colors
-91 Delete
-92 Output
-93 PostScript file
-94 Printer
-95 Search for
-96 UPPERCASE = lowercase
-97 Replace by
-98 Replace
-99 No replace
-100 Replace on request
-101 Automatic replace
-102 Search where
-103 Before selection
-104 Within selection
-105 After selection
-106 In the whole document
-107 Do not replace
-108 Default colors
-109 before closing it
-110 Close a document
-111 No_name
-112 Create a document
-113 Document type
-114 Rename
-115 Math symbols
-116 Graphics
-117 Latin alphabet
-118 Greek alphabet
-119 Presentation
-120 Files
-121 Open a document
-122 Views
-123 Change filter
-124 Value not changed
-125 Increase
-126 Decrease
-127 Visibility
-128 Character size difference
-129 Zoom
-130 Save as
-131 Save
-132 Thot
-133 Format
-134 Copy
-135 Text
-136 Graphic
-137 Symbol
-138 Image
-139 Element type
-140 after
-141 before
-142 around
-143 Include
-144 Paste
-145 to create
-146 Insert
-147 Page break
-148 (Read only)
-149 Surround
-150 Change type
-151 Language of element
-152 Inherited language:
-153 Not found
-154 Search in
-155 Search empty elements
-156 Search empty references
-157 Search references to this element
-158 Link
-159 Reference in document
-160 Search
-161 Read only element
-162 Nothing to replace
-163 Open
-164 Standard characters
-165 Standard graphics
-166 Standard format
-167 Standard geometry
-168 pt
-169 Line style
-170 Line weight
-171 Fill pattern
-172 Split
-173 Object type
-174 Goto page number:
-175 Any
-176 Attribute to search
-177 Type to search
-178 Natures
-179 Attribute value:
-180 Unknown attribute
-181 Create referenced element
-182 Show referenced element
-183 Insertion mode
-184 Cancel
-185 Error in PostScript translation
-186 Command refused by the spooler "%s"
-187 Cannot create "%s"
-188 Global Layout
-189 Unable to link the new element
-190 Character encoding
-191 No language
-192 Overline
-193 Document format
-194 Events
-195 Remove attribute
-196 Left button sets the selection color
-197 Middle or Right button sets the caret color
+72 Underline
+73 Cross out
+74 Body size (pt)
+75 Indent (pt)
+76 Line spacing (pt)
+77 Line spacing
+78 Save document
+79 Close, don't save
+80 Character style
+81 Colors
+82 Delete
+83 Output
+84 PostScript file
+85 Printer
+86 Search for
+87 UPPERCASE = lowercase
+88 Replace by
+89 Replace
+90 No replace
+91 Replace on request
+92 Automatic replace
+93 Search where
+94 Before selection
+95 Within selection
+96 After selection
+97 In the whole document
+98 Do not replace
+99 Default colors
+100 before closing it
+101 Close a document
+102 No_name
+103 Create a document
+104 Document type
+105 Rename
+106 Math symbols
+107 Graphics
+108 Latin alphabet
+109 Greek alphabet
+110 Presentation
+111 Files
+112 Open a document
+113 Views
+114 Change filter
+115 Value not changed
+116 Increase
+117 Decrease
+118 Visibility
+119 Character size difference
+120 Zoom
+121 Save as
+122 Save
+123 Thot
+124 Format
+125 Copy
+126 Text
+127 Graphic
+128 Symbol
+129 Image
+130 Element type
+131 after
+132 before
+133 around
+134 Include
+135 Paste
+136 to create
+137 Insert
+138 Page break
+139 (Read only)
+140 Surround
+141 Change type
+142 Language of element
+143 Inherited language:
+144 Not found
+145 Search in
+146 Search empty elements
+147 Search empty references
+148 Search references to this element
+149 Link
+150 Reference in document
+151 Search
+152 Read only element
+153 Nothing to replace
+154 Open
+155 Standard characters
+156 Standard graphics
+157 Standard format
+158 Standard geometry
+159 pt
+160 Line style
+161 Line weight
+162 Fill pattern
+163 Split
+164 Object type
+165 Goto page number:
+166 Any
+167 Attribute to search
+168 Type to search
+169 Natures
+170 Attribute value:
+171 Unknown attribute
+172 Create referenced element
+173 Show referenced element
+174 Insertion mode
+175 Cancel
+176 Error in PostScript translation
+177 Command refused by the spooler "%s"
+178 Cannot create "%s"
+179 Global Layout
+180 Overline
+181 Document format
+182 Events
+183 Remove attribute
+184 Left button sets the selection color
+185 Middle or Right button sets the caret color

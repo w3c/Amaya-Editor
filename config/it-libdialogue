@@ -4,196 +4,184 @@
 2 Il file dell'alfabeto è inesistente
 3 La nuova vista non può rimpiazzare la vecchia
 4 Schemi incompatibili. Ricompila %s
-5 Numero di finestra non corretto
-6 Errore fatale: fonti di Thot non trovate
-7 Memoria esaurita
-8 Errore fatale: impossibile connettersi a X
-9 Vista modificata prima della creazione
-10 Tabella delle regole piena.
-11 File non corretto: %s.STR
-12 File non corretto: %s.PRS
-13 Directory non trovata: %s
-14 Impossibile stampare
-15 Tipo di immagine
-16 Presentazione dell\'immagine
-17 File dell'immagine
-18 Il documento %s è stato stampato
-19 Da pagina ...
-20 ... a pagina
-21 Numero di copie
-22 Scala (%)
-23 1 pagina per foglio
-24 2 pagine per foglio
-25 4 pagine per foglio
-26 Pagine per foglio
-27 Impaginazione
-28 Viste da stampare
-29 %s
-30 Memoria insufficiente
-31 Questo elemento non può essere incorporato
-32 Designa l\'elemento da riferire
-33 *** Thot: Errore non recuperabile ***
-34 i documenti modificati, se ve ne sono, saranno salvati
-35 Cosí com'è
-36 In scala
-37 Ripetuta
-38 Ripetuta in X
-39 Ripetuta in Y
-40 Fine del file prematura
-41 Pixmap : Errore di allocazione dei colori
-42 File .TRA incorretto: %s
-43 %s non è un fratello valido per %s (%s)
-44 %s non è un figlio valido per %s (%s)
-45 %s, pagina %d
-46 Lingua
-47 Attributi
-48 Cerca riferimento
-49 Presentazione standard
-50 Applica
-51 Caratteri
-52 Sottolineatura
-53 Grafica
-54 Formattazione
-55 Predefinito
-56 Allineamento
-57 Indentazione
-58 Stampa
-59 Alimentazione manuale
-60 Opzioni
-61 A4
-62 US
-63 Formato della carta
-64 Fatto
-65 Directory
-66 Nome del documento
-67 Il documento %s esiste già. Vuoi sovrascriverlo?
-68 Il pulsante sinistro cambia il colore del testo
-69 Il pulsante centrale e quello destro cambiano il colore dello sfondo
-70 Famiglia
+5 Errore fatale: fonti di Thot non trovate
+6 Memoria esaurita
+7 Errore fatale: impossibile connettersi a X
+8 Vista modificata prima della creazione
+9 Tabella delle regole piena.
+10 File non corretto: %s.STR
+11 File non corretto: %s.PRS
+12 Directory non trovata: %s
+13 Tipo di immagine
+14 Presentazione dell\'immagine
+15 File dell'immagine
+16 Il documento %s è stato stampato
+17 Da pagina ...
+18 ... a pagina
+19 Numero di copie
+20 Scala (%)
+21 1 pagina per foglio
+22 2 pagine per foglio
+23 4 pagine per foglio
+24 Pagine per foglio
+25 Impaginazione
+26 Viste da stampare
+27 %s
+28 Memoria insufficiente
+29 *** Thot: Errore non recuperabile ***
+30 i documenti modificati, se ve ne sono, saranno salvati
+31 Cosí com'è
+32 In scala
+33 Ripetuta
+34 Ripetuta in X
+35 Ripetuta in Y
+36 File .TRA incorretto: %s
+37 %s non è un fratello valido per %s (%s)
+38 %s non è un figlio valido per %s (%s)
+39 %s, pagina %d
+40 Lingua
+41 Attributi
+42 Cerca riferimento
+43 Presentazione standard
+44 Applica
+45 Caratteri
+46 Sottolineatura
+47 Grafica
+48 Formattazione
+49 Predefinito
+50 Allineamento
+51 Indentazione
+52 Stampa
+53 Alimentazione manuale
+54 Opzioni
+55 A4
+56 US
+57 Formato della carta
+58 Fatto
+59 Directory
+60 Nome del documento
+61 Il documento %s esiste già. Vuoi sovrascriverlo?
+62 Il pulsante sinistro cambia il colore del testo
+63 Il pulsante centrale e quello destro cambiano il colore dello sfondo
+64 Famiglia
+65 Normale
+66 Grassetto
+67 Italico
+68 Obliquo
+69 Normale
+70 Grassetto
 71 Normale
-72 Grassetto
-73 Italico
-74 Obliquo
-75 Normale
-76 Grassetto
-77 Normale
-78 Sottolineato
-79 Sbarrato
-80 Dimensione (pt)
-81 Indentazione (pt)
-82 Interlinea (pt)
-83 Interlinea
-84 Giustificazione
-85 Sí
-86 No
-87 Salva il documento
-88 Chiudi, non salvare
-89 Stile dei caratteri
-90 Colori
-91 Cancella
-92 Destinazione
-93 File PostScript
-94 Stampante
-95 Cerca
-96 MAIUSCOLE = minuscole
-97 Rimpiazza con
-98 Rimpiazza
-99 Non rimpiazzare
-100 Rimpiazza su richiesta
-101 Rimpiazzamento automatico
-102 Dove cercare
-103 Prima della selezione
-104 Nella selezione
-105 Dopo la selezione
-106 L\'intero documento
-107 Non rimpiazzare
-108 Colori di default
-109 prima di chiuderlo
-110 Chiudi un documento
-111 Senza_nome
-112 Crea un documento
-113 Tipo di documento
-114 Rinomina
-115 Simboli matematici
-116 Grafica
-117 Alfabeto latino
-118 Alfabeto greco
-119 Presentazione
-120 File
-121 Aprire un documento
-122 Viste
-123 Cambia filtro
-124 Valore non modificato
-125 Incrementa
-126 Decrementa
-127 Visibilità
-128 Scarto sulla dimensione dei caratteri
-129 Zoom
-130 Salva con nome
-131 Salva
-132 Thot
-133 Formattazione
-134 Copia
-135 Testo
-136 Grafica
-137 Simbolo
-138 Immagine
-139 Tipo di elemento
-140 dopo
-141 prima
-142 intorno
-143 Includi
-144 Incolla
-145 da creare
-146 Inserisci
-147 Salto pagina
-148 (Sola lettura)
-149 Ingloba
-150 Cambia tipo
-151 Lingua dell'elemento
-152 Lingua ereditata:
-153 Non trovato
-154 Cerca in
-155 Cerca gli elementi vuoti
-156 Cerca i riferimenti vuoti
-157 Cerca i riferimenti a questo elemento
-158 Collegamento
-159 Riferimento nel documento
-160 Cerca
-161 Elemento a sola lettura
-162 Nulla da rimpiazzare
-163 Apri
-164 Caratteri standard
-165 Grafica standard
-166 Formato standard
-167 Geometria standard
-168 pt
-169 Stile delle linee
-170 Spessore delle linee
-171 Motivo di riempimento
-172 Dividi
-173 Tipo di oggetto
-174 Vai a pagina numero:
-175 Any
-176 Attributo da cercare
-177 Tipo da cercare
-178 Nature
-179 Valore dell\'attributo:
-180 Attributo sconosciuto
-181 Crea l\'elemento riferito
-182 Mostra l\'elemento riferito
-183 Modo di inserzione
-184 Annulla
-185 Errore nella traduzione in PostScript
-186 Comando rifiutato dallo spooler "%s"
-187 Impossibile creare "%s"
-188 Presentazione generale
-189 Impossibile collegare il nuovo elemento
-190 Codifica dei caratteri
-191 Nessuna lingua
-192 Soprassegnato
-193 Formato del documento
-194 Eventi
-195 Rimuovi l\'attributo
-196 Il tasto di sinistra setta il colore della selezione
-197 l tasto centrale o di destra setta il colore del cursore
+72 Sottolineato
+73 Sbarrato
+74 Dimensione (pt)
+75 Indentazione (pt)
+76 Interlinea (pt)
+77 Interlinea
+78 Salva il documento
+79 Chiudi, non salvare
+80 Stile dei caratteri
+81 Colori
+82 Cancella
+83 Destinazione
+84 File PostScript
+85 Stampante
+86 Cerca
+87 MAIUSCOLE = minuscole
+88 Rimpiazza con
+89 Rimpiazza
+90 Non rimpiazzare
+91 Rimpiazza su richiesta
+92 Rimpiazzamento automatico
+93 Dove cercare
+94 Prima della selezione
+95 Nella selezione
+96 Dopo la selezione
+97 L\'intero documento
+98 Non rimpiazzare
+99 Colori di default
+100 prima di chiuderlo
+101 Chiudi un documento
+102 Senza_nome
+103 Crea un documento
+104 Tipo di documento
+105 Rinomina
+106 Simboli matematici
+107 Grafica
+108 Alfabeto latino
+109 Alfabeto greco
+110 Presentazione
+111 File
+112 Aprire un documento
+113 Viste
+114 Cambia filtro
+115 Valore non modificato
+116 Incrementa
+117 Decrementa
+118 Visibilità
+119 Scarto sulla dimensione dei caratteri
+120 Zoom
+121 Salva con nome
+122 Salva
+123 Thot
+124 Formattazione
+125 Copia
+126 Testo
+127 Grafica
+128 Simbolo
+129 Immagine
+130 Tipo di elemento
+131 dopo
+132 prima
+133 intorno
+134 Includi
+135 Incolla
+136 da creare
+137 Inserisci
+138 Salto pagina
+139 (Sola lettura)
+140 Ingloba
+141 Cambia tipo
+142 Lingua dell'elemento
+143 Lingua ereditata:
+144 Non trovato
+145 Cerca in
+146 Cerca gli elementi vuoti
+147 Cerca i riferimenti vuoti
+148 Cerca i riferimenti a questo elemento
+149 Collegamento
+150 Riferimento nel documento
+151 Cerca
+152 Elemento a sola lettura
+153 Nulla da rimpiazzare
+154 Apri
+155 Caratteri standard
+156 Grafica standard
+157 Formato standard
+158 Geometria standard
+159 pt
+160 Stile delle linee
+161 Spessore delle linee
+162 Motivo di riempimento
+163 Dividi
+164 Tipo di oggetto
+165 Vai a pagina numero:
+166 Any
+167 Attributo da cercare
+168 Tipo da cercare
+169 Nature
+170 Valore dell\'attributo:
+171 Attributo sconosciuto
+172 Crea l\'elemento riferito
+173 Mostra l\'elemento riferito
+174 Modo di inserzione
+175 Annulla
+176 Errore nella traduzione in PostScript
+177 Comando rifiutato dallo spooler "%s"
+178 Impossibile creare "%s"
+179 Presentazione generale
+180 Soprassegnato
+181 Formato del documento
+182 Eventi
+183 Rimuovi l\'attributo
+184 Il tasto di sinistra setta il colore della selezione
+185 l tasto centrale o di destra setta il colore del cursore

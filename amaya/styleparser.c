@@ -2023,7 +2023,7 @@ static char *ParseCSSBackgroundColor (Element element, PSchema tsch,
       else
 	{
 	  savedtype = context->type;
-	  context->type = HTML_EL_HTML;
+	  context->type = HTML_EL_Document;
 	}
     }
 
@@ -2251,7 +2251,7 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
       else
 	{
 	  savedtype = context->type;
-	  context->type = HTML_EL_HTML;
+	  context->type = HTML_EL_Document;
 	}
     }
   else if (element)
@@ -2372,7 +2372,7 @@ static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
       else
 	{
 	  savedtype = context->type;
-	  context->type = HTML_EL_HTML;
+	  context->type = HTML_EL_Document;
 	}
     }
 
@@ -2422,7 +2422,7 @@ static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
       else
 	{
 	  savedtype = context->type;
-	  context->type = HTML_EL_HTML;
+	  context->type = HTML_EL_Document;
 	}
     }
 
@@ -2461,7 +2461,7 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
       else
 	{
 	  savedtype = context->type;
-	  context->type = HTML_EL_HTML;
+	  context->type = HTML_EL_Document;
 	}
     }
 

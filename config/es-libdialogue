@@ -4,196 +4,184 @@
 2 No hay fichero de alfabeto
 3 La nueva vista no pede sustituir la previa
 4 Esquemas incompatibles. Recompile %s
-5 Número de ventana incorrecto
-6 Error Fatal: Las fuentes Thot no encontradas
-7 Memory agotada
-8 Error Fatal Error: No puedo conectar a X
-9 La vista está modificada entes de la creación
-10 Tabla de reglas completa.
-11 Fichero incorrecto: %s.STR
-12 Fichero incorrecto: %s.PRS
-13 Directorio no encontrado: %s
-14 No puedo imprimir
-15 Tipo de imagen
-16 Presentacion de imagen
-17 Fichero de imagen
-18 Documento %s imprimido
-19 De la página ...
-20 ... a la página
-21 Número de copias
-22 Disposicion
-23 1 pagina/hoja
-24 2 pagina/hoja
-25 4 pagina/hoja
-26 Paginas por hoja
-27 Paginacion
-28 Vistas para imprimir
-29 %s
-30 No hay suficiente memoria
-31 Este elemento no puede ser holophrasted
-32 Desige el elemento para ser referenciado
-33 *** Thot: Error Irrecuperable ***
-34 documentos modificados, si hay, serán guardados
-35 Como es
-36 En escala
-37 Repetido
-38 X Repetido
-39 Y Repetido
-40 Prematuro EOF
-41 Pixmap : Color error
-42 Incorrecto. Fichero TRA: %s
-43 %s no es un hermano válido para %s (%s)
-44 %s no es un hijo valido para %s (%s)
-45 %s, pagina %d
-46 Idioma
-47 Atributos
-48 Buscar referencia
-49 Presentación estandar
-50 Aplicar
-51 Caracteres
-52 Subrayado
-53 Grapicos
-54 Formato
-55 Por omisión
-56 Alineación
-57 Sangrar
-58 Imprimir
-59 Alimentación manual
-60 Opciones
-61 A4
-62 US
-63 Formato de papel
-64 Hecho
-65 Directorios
-66 Nombre de documento
-67 El documento %s ya existe. ¿Quiere sobreescribirlo?
-68 El botón izquierdo fija el color del texto
-69 El botón derecho o central fija el color del fondo
-70 Familia de fuentes
+5 Error Fatal: Las fuentes Thot no encontradas
+6 Memory agotada
+7 Error Fatal Error: No puedo conectar a X
+8 La vista está modificada entes de la creación
+9 Tabla de reglas completa.
+10 Fichero incorrecto: %s.STR
+11 Fichero incorrecto: %s.PRS
+12 Directorio no encontrado: %s
+13 Tipo de imagen
+14 Presentacion de imagen
+15 Fichero de imagen
+16 Documento %s imprimido
+17 De la página ...
+18 ... a la página
+19 Número de copias
+20 Disposicion
+21 1 pagina/hoja
+22 2 pagina/hoja
+23 4 pagina/hoja
+24 Paginas por hoja
+25 Paginacion
+26 Vistas para imprimir
+27 %s
+28 No hay suficiente memoria
+29 *** Thot: Error Irrecuperable ***
+30 documentos modificados, si hay, serán guardados
+31 Como es
+32 En escala
+33 Repetido
+34 X Repetido
+35 Y Repetido
+36 Incorrecto. Fichero TRA: %s
+37 %s no es un hermano válido para %s (%s)
+38 %s no es un hijo valido para %s (%s)
+39 %s, pagina %d
+40 Idioma
+41 Atributos
+42 Buscar referencia
+43 Presentación estandar
+44 Aplicar
+45 Caracteres
+46 Subrayado
+47 Grapicos
+48 Formato
+49 Por omisión
+50 Alineación
+51 Sangrar
+52 Imprimir
+53 Alimentación manual
+54 Opciones
+55 A4
+56 US
+57 Formato de papel
+58 Hecho
+59 Directorios
+60 Nombre de documento
+61 El documento %s ya existe. ¿Quiere sobreescribirlo?
+62 El botón izquierdo fija el color del texto
+63 El botón derecho o central fija el color del fondo
+64 Familia de fuentes
+65 Normal
+66 Negrita
+67 Cursiva
+68 Oblicua
+69 Normal
+70 Negrita
 71 Normal
-72 Negrita
-73 Cursiva
-74 Oblicua
-75 Normal
-76 Negrita
-77 Normal
-78 Subrayado
-79 Cross out
-80 Tamaño del cuerpo (pt)
-81 Sangrar (pt)
-82 Espacio de líneas (pt)
-83 Espaciado de líneas
-84 Justificacion
-85 Sí
-86 No
-87 Guardar documento
-88 Cerrar, no guardar
-89 Estilo de caracter
-90 Colores
-91 Borrar
-92 Output
-93 Fichero PostScript
-94 Impresora
-95 Buscar
-96 MAYÚSCULAS = minusculas
-97 Sustituir por
-98 Sustituir
-99 No sustituir
-100 Sustituir a solicitud
-101 Sustitución automatica
-102 Buscar donde
-103 Antes selección
-104 En seleccion
-105 Tras seleccion
-106 En todo el documento
-107 No sustituir
-108 Colores por omisión
-109 antes de cerrarlo
-110 Cierre un documento
-111 Anónimo
-112 Crear un documento
-113 Tipo de documento
-114 Renombrar
-115 Símbolos matemáticos
-116 Graficos
-117 Alfabeto latino
-118 Alfabet griego
-119 Presentacion
-120 Ficheros
-121 Abrir un documento
-122 Vistas
-123 Cambiar filtro
-124 Valor no modificado
-125 Incrementar
-126 Decrementar
-127 Visibilidad
-128 Diferencia de tamaño de caracter
-129 Zoom
-130 Guardar como
-131 Guardar
-132 Thot
-133 Formato
-134 Copiar
-135 Texto
-136 Grafico
-137 Símbolo
-138 Imagen
-139 Tipo de elemento
-140 después
-141 antes
-142 alrededor
-143 Incluir
-144 Pegar
-145 crear
-146 Insertar
-147 Fin de página
-148 (Sólo lectura)
-149 Surround
-150 Cambiar tipo
-151 Idioma de elemento
-152 Idioma heredado:
-153 No encontrado
-154 Buscar en
-155 Buscar elementos vacíos
-156 Buscar referencias vacías
-157 Buscar referencias para este elemento
-158 Enlace
-159 Referencia en documento
-160 Buscar
-161 Elemento de sólo lectura
-162 Nada que sustituir
-163 Abrir
-164 Caracteres estandar
-165 Graficos estandar
-166 Formato etandar
-167 Geometria estandar
-168 pt
-169 Estilo de línea
-170 Ancho de línea
-171 Rellenar modelo
-172 Dividir
-173 Tipo de objeto
-174 Ir a página número:
-175 Cualquiera
-176 Atributo para buscar
-177 Tipo para buscar
-178 Natures
-179 Valores de atributo:
-180 Atributo desconocido
-181 Crear elemento referenciado
-182 Mostrar elemento referenciado
-183 Modo insercion
-184 Cancelar
-185 Error in traducción PostScript
-186 Orden rechazada por el spooler "%s"
-187 No puedo crear "%s"
-188 Disposición global
-189 No puedo enlazar el nuevo elemento
-190 Codificacion de caracter
-191 Sin idioma
-192 Overline
-193 Formato de documento
-194 Eventos
-195 Eliminar atributos
-196 El botón izquierdo fija el color de la selección
-197 El botón central o derecho fija el color intercalado
+72 Subrayado
+73 Cross out
+74 Tamaño del cuerpo (pt)
+75 Sangrar (pt)
+76 Espacio de líneas (pt)
+77 Espaciado de líneas
+78 Guardar documento
+79 Cerrar, no guardar
+80 Estilo de caracter
+81 Colores
+82 Borrar
+83 Output
+84 Fichero PostScript
+85 Impresora
+86 Buscar
+87 MAYÚSCULAS = minusculas
+88 Sustituir por
+89 Sustituir
+90 No sustituir
+91 Sustituir a solicitud
+92 Sustitución automatica
+93 Buscar donde
+94 Antes selección
+95 En seleccion
+96 Tras seleccion
+97 En todo el documento
+98 No sustituir
+99 Colores por omisión
+100 antes de cerrarlo
+101 Cierre un documento
+102 Anónimo
+103 Crear un documento
+104 Tipo de documento
+105 Renombrar
+106 Símbolos matemáticos
+107 Graficos
+108 Alfabeto latino
+109 Alfabet griego
+110 Presentacion
+111 Ficheros
+112 Abrir un documento
+113 Vistas
+114 Cambiar filtro
+115 Valor no modificado
+116 Incrementar
+117 Decrementar
+118 Visibilidad
+119 Diferencia de tamaño de caracter
+120 Zoom
+121 Guardar como
+122 Guardar
+123 Thot
+124 Formato
+125 Copiar
+126 Texto
+127 Grafico
+128 Símbolo
+129 Imagen
+130 Tipo de elemento
+131 después
+132 antes
+133 alrededor
+134 Incluir
+135 Pegar
+136 crear
+137 Insertar
+138 Fin de página
+139 (Sólo lectura)
+140 Surround
+141 Cambiar tipo
+142 Idioma de elemento
+143 Idioma heredado:
+144 No encontrado
+145 Buscar en
+146 Buscar elementos vacíos
+147 Buscar referencias vacías
+148 Buscar referencias para este elemento
+149 Enlace
+150 Referencia en documento
+151 Buscar
+152 Elemento de sólo lectura
+153 Nada que sustituir
+154 Abrir
+155 Caracteres estandar
+156 Graficos estandar
+157 Formato etandar
+158 Geometria estandar
+159 pt
+160 Estilo de línea
+161 Ancho de línea
+162 Rellenar modelo
+163 Dividir
+164 Tipo de objeto
+165 Ir a página número:
+166 Cualquiera
+167 Atributo para buscar
+168 Tipo para buscar
+169 Natures
+170 Valores de atributo:
+171 Atributo desconocido
+172 Crear elemento referenciado
+173 Mostrar elemento referenciado
+174 Modo insercion
+175 Cancelar
+176 Error in traducción PostScript
+177 Orden rechazada por el spooler "%s"
+178 No puedo crear "%s"
+179 Disposición global
+180 Overline
+181 Formato de documento
+182 Eventos
+183 Eliminar atributos
+184 El botón izquierdo fija el color de la selección
+185 El botón central o derecho fija el color intercalado

@@ -4,196 +4,184 @@
 2 Keine Alphabetdatei
 3 Neues Ansichtsfenster kann das bisherige nicht ersetzen
 4 Inkompatible Schemen. Compiliere %s neu
-5 Fehlerhafte Fensternummer
-6 Gravierender Fehler: Thot-Schriften nicht gefunden
-7 Arbeitsspeicher erschöpft
-8 Gravierender Fehler: kein Zugriff zum X-Server
-9 Ansichtsfenster muß vor möglicher Änderung erzeugt werden
-10 Regeltabelle voll.
-11 Fehlerhafte Datei: %s.STR
-12 Fehlerhafte Datei: %s.PRS
-13 Verzeichnis nicht gefunden: %s
-14 Kann nicht drucken
-15 Grafikformat
-16 Grafikpräsentation
-17 Grafikdatei
-18 Dokument %s wurde gedruckt
-19 von Seite ...
-20 ... bis Seite
-21 Zahl der Kopien
-22 Größe (%)
-23 1 Seite/Blatt
-24 2 Seiten/Blatt
-25 4 Seiten/Blatt
-26 Seiten pro Blatt
-27 Seitenzahlen
-28 Ansichtsfenster zum drucken
-29 %s
-30 Nicht genügend Arbeitsspeicher
-31 Dieses Element kann nicht in Gliederungsansicht dargestellt werden
-32 Bitte das Bezugselement bestimmen
-33 *** Thot: Nicht behebbarer Fehler ***
-34 Geänderte Dokumente werden evtl. in \n
-35 wie momentan
-36 Skaliert
-37 Mehrfach
-38 X - Faktor
-39 Y - Faktor
-40 Datei abgeschnitten
-41 Pixmap : Fehler in Farben
-42 Fehlerhafte .TRA - Datei: %s
-43 %s entspricht nicht %s (%s)
-44 %s ist kein gültiges Kind von %s (%s)
-45 %s, Seite %d
-46 Sprache
-47 Attribut
-48 Suche Bezugsziel
-49 Standarddarstellung
-50 Anwenden
-51 Zeichen
-52 Unterstreichen
-53 Grafik
-54 Format
-55 Standard
-56 Ausrichten
-57 Einrücken
-58 Drucken
-59 manueller Papiereinzug
-60 Optionen
-61 A4
-62 US
-63 Papierformat
-64 Abbrechen
-65 Verzeichnisse
-66 Dokumentenname
-67 Das Dokument %s existiert bereits. Überschreiben ?
-68 Maustaste 1 setzt die Textfarbe
-69 Maustaste 2 setzt die Hintergrundfarbe
-70 Schriftart
+5 Gravierender Fehler: Thot-Schriften nicht gefunden
+6 Arbeitsspeicher erschöpft
+7 Gravierender Fehler: kein Zugriff zum X-Server
+8 Ansichtsfenster muß vor möglicher Änderung erzeugt werden
+9 Regeltabelle voll.
+10 Fehlerhafte Datei: %s.STR
+11 Fehlerhafte Datei: %s.PRS
+12 Verzeichnis nicht gefunden: %s
+13 Grafikformat
+14 Grafikpräsentation
+15 Grafikdatei
+16 Dokument %s wurde gedruckt
+17 von Seite ...
+18 ... bis Seite
+19 Zahl der Kopien
+20 Größe (%)
+21 1 Seite/Blatt
+22 2 Seiten/Blatt
+23 4 Seiten/Blatt
+24 Seiten pro Blatt
+25 Seitenzahlen
+26 Ansichtsfenster zum drucken
+27 %s
+28 Nicht genügend Arbeitsspeicher
+29 *** Thot: Nicht behebbarer Fehler ***
+30 Geänderte Dokumente werden evtl. in \n
+31 wie momentan
+32 Skaliert
+33 Mehrfach
+34 X - Faktor
+35 Y - Faktor
+36 Fehlerhafte .TRA - Datei: %s
+37 %s entspricht nicht %s (%s)
+38 %s ist kein gültiges Kind von %s (%s)
+39 %s, Seite %d
+40 Sprache
+41 Attribut
+42 Suche Bezugsziel
+43 Standarddarstellung
+44 Anwenden
+45 Zeichen
+46 Unterstreichen
+47 Grafik
+48 Format
+49 Standard
+50 Ausrichten
+51 Einrücken
+52 Drucken
+53 manueller Papiereinzug
+54 Optionen
+55 A4
+56 US
+57 Papierformat
+58 Abbrechen
+59 Verzeichnisse
+60 Dokumentenname
+61 Das Dokument %s existiert bereits. Überschreiben ?
+62 Maustaste 1 setzt die Textfarbe
+63 Maustaste 2 setzt die Hintergrundfarbe
+64 Schriftart
+65 Normal
+66 Fett
+67 Kursiv
+68 Geneigt
+69 Normal
+70 Fett
 71 Normal
-72 Fett
-73 Kursiv
-74 Geneigt
-75 Normal
-76 Fett
-77 Normal
-78 Unterstrichen
-79 Durchgestrichen
-80 Schriftgröße (pt)
-81 Einrückung (pt)
-82 Zeilenabstand (pt)
-83 Zeilenabstand
-84 Ausrichtung
-85 Ja
-86 Nein
-87 Dokument speichern
-88 Nicht Speichern
-89 Auszeichnung
-90 Farben
-91 Löschen
-92 Ausgabe
-93 PostScript-Datei
-94 Drucker
-95 Suche nach
-96 Groß-/Kleinschreibung ignorieren
-97 Ersetzen durch
-98 Ersetzen
-99 Nicht ersetzen
-100 Einzeln ersetzen
-101 Alle ersetzen
-102 Suche im Dokument
-103 Oberhalb der Markierung
-104 Innerhalb der Markierung
-105 Unterhalb der Markierung
-106 Im gesamten Dokument
-107 Nicht ersetzen
-108 Standardfarbe
-109 vorher?
-110 Schließe ein Dokument
-111 unbenannt
-112 Neues Dokument
-113 Dokumententyp
-114 Umbenennen
-115 Formelsatz
-116 Grafik
-117 Lateinisches Alphabet
-118 Griechiches Alphabet
-119 Ansicht
-120 Dateien
-121 Lade Dokument
-122 Ansichten
-123 Ändere Filter
-124 Wert nicht geändert
-125 Erhöhe
-126 Verringere
-127 Sichtbarkeit
-128 Schiftgrößenunterschied
-129 Vergrößern
-130 Speichern unter
-131 Speichern
-132 Thot
-133 Format
-134 Kopiere
-135 Text
-136 Zeichnung
-137 Symbol
-138 Grafik
-139 Art des Elements
-140 nach
-141 vor
-142 um
-143 Einfügen
-144 Einfügen
-145 erzeugen
-146 Einfügen
-147 Seitenumbruch
-148 (schreibgeschützt)
-149 Umgebung
-150 Typ ändern
-151 Sprache des Elements
-152 Sprachvoreinstellung:
-153 Nicht gefunden
-154 Suche in
-155 Suche nach leeren Elementen
-156 Suche nach leeren Verknüpfungen
-157 Suche nach Verknüpfungen zu diesem Dokument
-158 Verknüpfung
-159 Verknüpfungsziel im Dokument
-160 Suche
-161 Schreibgeschütztes Dokument
-162 Nichts zu ersetzen
-163 Öffne
-164 Standard Zeichensatz
-165 Standard Grafik
-166 Standard Format
-167 Standard Geometrie
-168 pt
-169 Linienart
-170 Linienstärke
-171 Füllmuster
-172 Teilen
-173 Objekttyp
-174 Gehe zu Seite Nr.:
-175 egal
-176 Attribut suchen
-177 Suche nach Typ
-178 Dokumententyp
-179 Wert des Attributs:
-180 Unbekanntes Attribut
-181 Erzeuge Verknüpfungsziel
-182 Zeige Verknüpfungsziel
-183 Einfügemodus
-184 Abbrechen
-185 Fehler in der PostScript-Erkennung
-186 Auftrag vom Druckspooler "%s" zurückgeweisen
-187 Kann "%s" nicht erzeugen
-188 Seitenformat
-189 Kann des erzeugte Element nicht verweisen
-190 Zeichensatz
-191 Keine Sprache
-192 Überstrichen
-193 Dokumentenformat
-194 Ereignisse (Events)
-195 Lösche Attribut
-196 Linke Maustaste: Auswahl der Farbe für markierten Text
-197 Mittlere oder rechte Maustaste: Auswahl der Cursorfarbe
+72 Unterstrichen
+73 Durchgestrichen
+74 Schriftgröße (pt)
+75 Einrückung (pt)
+76 Zeilenabstand (pt)
+77 Zeilenabstand
+78 Dokument speichern
+79 Nicht Speichern
+80 Auszeichnung
+81 Farben
+82 Löschen
+83 Ausgabe
+84 PostScript-Datei
+85 Drucker
+86 Suche nach
+87 Groß-/Kleinschreibung ignorieren
+88 Ersetzen durch
+89 Ersetzen
+90 Nicht ersetzen
+91 Einzeln ersetzen
+92 Alle ersetzen
+93 Suche im Dokument
+94 Oberhalb der Markierung
+95 Innerhalb der Markierung
+96 Unterhalb der Markierung
+97 Im gesamten Dokument
+98 Nicht ersetzen
+99 Standardfarbe
+100 vorher?
+101 Schließe ein Dokument
+102 unbenannt
+103 Neues Dokument
+104 Dokumententyp
+105 Umbenennen
+106 Formelsatz
+107 Grafik
+108 Lateinisches Alphabet
+109 Griechiches Alphabet
+110 Ansicht
+111 Dateien
+112 Lade Dokument
+113 Ansichten
+114 Ändere Filter
+115 Wert nicht geändert
+116 Erhöhe
+117 Verringere
+118 Sichtbarkeit
+119 Schiftgrößenunterschied
+120 Vergrößern
+121 Speichern unter
+122 Speichern
+123 Thot
+124 Format
+125 Kopiere
+126 Text
+127 Zeichnung
+128 Symbol
+129 Grafik
+130 Art des Elements
+131 nach
+132 vor
+133 um
+134 Einfügen
+135 Einfügen
+136 erzeugen
+137 Einfügen
+138 Seitenumbruch
+139 (schreibgeschützt)
+140 Umgebung
+141 Typ ändern
+142 Sprache des Elements
+143 Sprachvoreinstellung:
+144 Nicht gefunden
+145 Suche in
+146 Suche nach leeren Elementen
+147 Suche nach leeren Verknüpfungen
+148 Suche nach Verknüpfungen zu diesem Dokument
+149 Verknüpfung
+150 Verknüpfungsziel im Dokument
+151 Suche
+152 Schreibgeschütztes Dokument
+153 Nichts zu ersetzen
+154 Öffne
+155 Standard Zeichensatz
+156 Standard Grafik
+157 Standard Format
+158 Standard Geometrie
+159 pt
+160 Linienart
+161 Linienstärke
+162 Füllmuster
+163 Teilen
+164 Objekttyp
+165 Gehe zu Seite Nr.:
+166 egal
+167 Attribut suchen
+168 Suche nach Typ
+169 Dokumententyp
+170 Wert des Attributs:
+171 Unbekanntes Attribut
+172 Erzeuge Verknüpfungsziel
+173 Zeige Verknüpfungsziel
+174 Einfügemodus
+175 Abbrechen
+176 Fehler in der PostScript-Erkennung
+177 Auftrag vom Druckspooler "%s" zurückgeweisen
+178 Kann "%s" nicht erzeugen
+179 Seitenformat
+180 Überstrichen
+181 Dokumentenformat
+182 Ereignisse (Events)
+183 Lösche Attribut
+184 Linke Maustaste: Auswahl der Farbe für markierten Text
+185 Mittlere oder rechte Maustaste: Auswahl der Cursorfarbe

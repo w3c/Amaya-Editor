@@ -2431,7 +2431,8 @@ static Document  LoadDocument (Document doc, char *pathname,
 	      docType = docLog;
 	      newdoc = doc;
 	    }
-	  else if (method != CE_INIT || docType != DocumentTypes[doc])
+	  else if (method != CE_INIT || method != CE_CSS ||
+		   docType != DocumentTypes[doc])
 	    newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
 	  else
 	    newdoc = doc;

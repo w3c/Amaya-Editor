@@ -49,14 +49,6 @@
 	<message xml:lang="tr">Uyumsuz þemalar. %s yeniden derlenmeli</message>
 	<message xml:lang="es">Esquemas incompatibles. Recompile %s</message>
 </label>
-<label define="TMSG_BAD_FRAME_NB">
-	<message xml:lang="en">Incorrect window number</message>
-	<message xml:lang="fr">Le numéro de fenêtre est incorrect.</message>
-	<message xml:lang="de">Fehlerhafte Fensternummer</message>
-	<message xml:lang="it">Numero di finestra non corretto</message>
-	<message xml:lang="tr">Yanlýþ pencere numarasý</message>
-	<message xml:lang="es">Número de ventana incorrecto</message>
-</label>
 <label define="TMSG_MISSING_FONT">
 	<message xml:lang="en">Fatal Error: Thot fonts not found</message>
 	<message xml:lang="fr">Erreur fatale : fontes Thot inaccessibles</message>
@@ -120,14 +112,6 @@
 	<message xml:lang="it">Directory non trovata: %s</message>
 	<message xml:lang="tr">%s dizini bulunamadý</message>
 	<message xml:lang="es">Directorio no encontrado: %s</message>
-</label>
-<label define="TMSG_PRINT_IMP">
-	<message xml:lang="en">Cannot print</message>
-	<message xml:lang="fr">Impression impossible</message>
-	<message xml:lang="de">Kann nicht drucken</message>
-	<message xml:lang="it">Impossibile stampare</message>
-	<message xml:lang="tr">Yazdýrýlamýyor</message>
-	<message xml:lang="es">No puedo imprimir</message>
 </label>
 <label define="TMSG_PICT_TYPE">
 	<message xml:lang="en">Image Type</message>
@@ -257,22 +241,6 @@
 	<message xml:lang="tr">Bellek yetersiz</message>
 	<message xml:lang="es">No hay suficiente memoria</message>
 </label>
-<label define="TMSG_HOLOPHRAST_IMP">
-	<message xml:lang="en">This element cannot be holophrasted</message>
-	<message xml:lang="fr">Cet élément ne peut être contracté</message>
-	<message xml:lang="de">Dieses Element kann nicht in Gliederungsansicht dargestellt werden</message>
-	<message xml:lang="it">Questo elemento non può essere incorporato</message>
-	<message xml:lang="tr">Bu birim "holophrast" edilemez</message>
-	<message xml:lang="es">Este elemento no puede ser holophrasted</message>
-</label>
-<label define="TMSG_SEL_REFERRED_EL">
-	<message xml:lang="en">Designate the element to be referred</message>
-	<message xml:lang="fr">Désigner l\'élément à référencer</message>
-	<message xml:lang="de">Bitte das Bezugselement bestimmen</message>
-	<message xml:lang="it">Designa l\'elemento da riferire</message>
-	<message xml:lang="tr">Designate the element to be referred</message>
-	<message xml:lang="es">Desige el elemento para ser referenciado</message>
-</label>
 <label define="TMSG_DEBUG_ERROR">
 	<message xml:lang="en">*** Thot: Irrecoverable error ***</message>
 	<message xml:lang="fr">*** Thot: erreur irrécupérable ***\n</message>
@@ -328,22 +296,6 @@
 	<message xml:lang="it">Ripetuta in Y</message>
 	<message xml:lang="tr">Y Tekrarlý</message>
 	<message xml:lang="es">Y Repetido</message>
-</label>
-<label define="TMSG_PREMAT_EOF">
-	<message xml:lang="en">Premature EOF</message>
-	<message xml:lang="fr">Fin de fichier prématurée</message>
-	<message xml:lang="de">Datei abgeschnitten</message>
-	<message xml:lang="it">Fine del file prematura</message>
-	<message xml:lang="tr">Beklenmeyen EOF</message>
-	<message xml:lang="es">Prematuro EOF</message>
-</label>
-<label define="TMSG_COLOR_INCORRECT">
-	<message xml:lang="en">Pixmap : Color error</message>
-	<message xml:lang="fr">Pixmap : erreur d'allocation de couleur</message>
-	<message xml:lang="de">Pixmap : Fehler in Farben</message>
-	<message xml:lang="it">Pixmap : Errore di allocazione dei colori</message>
-	<message xml:lang="tr">Pixmap : Renk hatasý</message>
-	<message xml:lang="es">Pixmap : Color error</message>
 </label>
 <label define="TMSG_TRA_FILE_INCORRECT">
 	<message xml:lang="en">Incorrect .TRA file: %s</message>
@@ -680,30 +632,6 @@
 	<message xml:lang="it">Interlinea</message>
 	<message xml:lang="tr">Satýr aralýðý</message>
 	<message xml:lang="es">Espaciado de líneas</message>
-</label>
-<label define="TMSG_JUSTIFY">
-	<message xml:lang="en">Justification</message>
-	<message xml:lang="fr">Justification</message>
-	<message xml:lang="de">Ausrichtung</message>
-	<message xml:lang="it">Giustificazione</message>
-	<message xml:lang="tr">Justification</message>
-	<message xml:lang="es">Justificacion</message>
-</label>
-<label define="TMSG_LIB_YES">
-	<message xml:lang="en">Yes</message>
-	<message xml:lang="fr">Oui</message>
-	<message xml:lang="de">Ja</message>
-	<message xml:lang="it">Sí</message>
-	<message xml:lang="tr">Evet</message>
-	<message xml:lang="es">Sí</message>
-</label>
-<label define="TMSG_LIB_NO">
-	<message xml:lang="en">No</message>
-	<message xml:lang="fr">Non</message>
-	<message xml:lang="de">Nein</message>
-	<message xml:lang="it">No</message>
-	<message xml:lang="tr">Hayýr</message>
-	<message xml:lang="es">No</message>
 </label>
 <label define="TMSG_SAVE_DOC">
 	<message xml:lang="en">Save document</message>
@@ -1520,30 +1448,6 @@
 	<message xml:lang="it">Presentazione generale</message>
 	<message xml:lang="tr">Genel biçim</message>
 	<message xml:lang="es">Disposición global</message>
-</label>
-<label define="TMSG_UNABLE_LINK_NEW_ELEM">
-	<message xml:lang="en">Unable to link the new element</message>
-	<message xml:lang="fr">Impossible de lier le nouvel élément</message>
-	<message xml:lang="de">Kann des erzeugte Element nicht verweisen</message>
-	<message xml:lang="it">Impossibile collegare il nuovo elemento</message>
-	<message xml:lang="tr">Yeni birime baðlantý yapýlamadý</message>
-	<message xml:lang="es">No puedo enlazar el nuevo elemento</message>
-</label>
-<label define="TMSG_CHAR_ENCODING">
-	<message xml:lang="en">Character encoding</message>
-	<message xml:lang="fr">Alphabet</message>
-	<message xml:lang="de">Zeichensatz</message>
-	<message xml:lang="it">Codifica dei caratteri</message>
-	<message xml:lang="tr">Karakter kodlamasý</message>
-	<message xml:lang="es">Codificacion de caracter</message>
-</label>
-<label define="TMSG_NO_LANGUAGE">
-	<message xml:lang="en">No language</message>
-	<message xml:lang="fr">Aucun</message>
-	<message xml:lang="de">Keine Sprache</message>
-	<message xml:lang="it">Nessuna lingua</message>
-	<message xml:lang="tr">Dil yok</message>
-	<message xml:lang="es">Sin idioma</message>
 </label>
 <label define="TMSG_OVERLINE">
 	<message xml:lang="en">Overline</message>
