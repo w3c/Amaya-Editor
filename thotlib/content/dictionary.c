@@ -752,13 +752,11 @@ Language            languageId;
 {
    int                 lang;
    PtrDict             dictPtr;
-   int                 ret;
 
    /* If the variable dictPath is not loaded -> do nothig */
    if (dictPath == NULL)
       return FALSE;
 
-   ret = 1;
    lang = (int) languageId;
    /* Verifies if the main dictionary is already loaded */
    if (LangTable[lang].LangDict[0] == NULL)
@@ -766,7 +764,7 @@ Language            languageId;
 	/* Loading the main dictionary */
 	if (LangTable[lang].LangPrincipal[0] != '\0')
 	  {
-	     ret = LoadTreatedDict (&dictPtr, lang, NULL, LangTable[lang].LangPrincipal, dictPath, TRUE, FALSE);
+	     LoadTreatedDict (&dictPtr, lang, NULL, LangTable[lang].LangPrincipal, dictPath, TRUE, FALSE);
 	     if (dictPtr != NULL)
 		LangTable[lang].LangDict[0] = (Dictionary) dictPtr;
 	  }
@@ -778,7 +776,7 @@ Language            languageId;
 	/* Loading the secondary dictionary */
 	if (LangTable[lang].LangSecondary[0] != '\0')
 	  {
-	     ret = LoadTreatedDict (&dictPtr, lang, NULL, LangTable[lang].LangSecondary, dictPath, TRUE, FALSE);
+	     LoadTreatedDict (&dictPtr, lang, NULL, LangTable[lang].LangSecondary, dictPath, TRUE, FALSE);
 	     if (dictPtr != NULL)
 		LangTable[lang].LangDict[1] = (Dictionary) dictPtr;
 	  }

@@ -833,7 +833,6 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   PtrDocument      pDoc;
    int              i;
    char             bufMenu[MAX_TXT_LEN];
 
@@ -841,7 +840,6 @@ View                view;
      return;
 
    /* Print form */
-   pDoc = LoadedDocument[document - 1];
    InitPrintParameters (document);
    TtaNewSheet (NumFormPrint, TtaGetViewFrame (document, view), 
 		TtaGetMessage (LIB, TMSG_LIB_PRINT),

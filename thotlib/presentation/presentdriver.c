@@ -158,7 +158,7 @@ int                 specific;
 	       break;
 	    case PtHeight:
 	    case PtWidth:
-	       rule->PrDimRule.DrUnit = unit;
+	       rule->PrDimRule.DrUnit = int_unit;
 	       rule->PrDimRule.DrValue = value;
 	       break;
 	    case PtJustify:

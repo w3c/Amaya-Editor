@@ -139,11 +139,11 @@ PresentationValue   v;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static PtrPRule  InsertElementPRule (SpecificTarget el, int type, int extra)
+static PtrPRule  InsertElementPRule (SpecificTarget el, PRuleType type, int extra)
 #else
 static PtrPRule  InsertElementPRule (el, type, extra)
 SpecificTarget      el;
-int                 type;
+PRuleType           type;
 int                 extra;
 
 #endif
@@ -225,9 +225,8 @@ int                 extra;
 
 #endif
 {
-    PtrPRule cur, prev;
+    PtrPRule cur;
     
-    prev = NULL;
     cur = ((PtrElement) el)->ElFirstPRule;
 
     while (cur != NULL) {
@@ -242,18 +241,17 @@ int                 extra;
 	  }
 	
 	/* check for extra specification in case of function rule */
-	if ((type == PRFunction) && (cur->PrPresFunction != extra)) {
-	    prev = cur;
+	if ((type == PRFunction) && (cur->PrPresFunction != extra))
+	  {
 	    cur = cur->PrNextPRule;
 	    continue;
-	}
+	  }
 
 	/* check this rule */
 	if (type == cur->PrType)
 	   break;
 
 	/* jump to next and keep track of previous */
-	prev = cur;
 	cur = cur->PrNextPRule;
     }
     return (cur);
@@ -335,9 +333,9 @@ int SpecificSet##name(PresentationTarget t, PresentationContext c,	\
     SpecificContext cont = (SpecificContext) c;				\
     SpecificValue val = /* (SpecificValue) - EGP */ v;			\
 									\
-    prule = InsertElementPRule(el,PR##type,0);				\
+    prule = InsertElementPRule(el, PR##type, 0);			\
     if (prule == NULL) return(-1);					\
-    etoi_convert(el,PR##type,val,(PRule)prule,cont->doc,0);		\
+    etoi_convert(el, PR##type, val, (PRule)prule, cont->doc, 0);	\
     return(0);								\
 }									\
 									\
@@ -349,9 +347,9 @@ int SpecificGet##name(PresentationTarget t, PresentationContext c,	\
     SpecificContext cont = (SpecificContext) c;				\
     SpecificValue *val = /* (SpecificValue *) - EGP */ v;		\
 									\
-    prule = SearchElementPRule(el,PR##type,0);				\
+    prule = SearchElementPRule(el, PR##type, 0);			\
     if (prule == NULL) return(-1);					\
-    itoe_convert(el,PR##type,val,(PRule)prule,cont->doc);		\
+    itoe_convert(el, PR##type, val, (PRule)prule, cont->doc);		\
     return(0);								\
 }									\
 
@@ -365,9 +363,9 @@ int SpecificSet##name(PresentationTarget t, PresentationContext c,	\
     SpecificContext cont = (SpecificContext) c;				\
     SpecificValue val = /* (SpecificValue) - EGP */ v;			\
 									\
-    prule = InsertElementPRule(el,PR##type,category);			\
+    prule = InsertElementPRule(el, PR##type, category);			\
     if (prule == NULL) return(-1);					\
-    etoi_convert(el,PR##type,val,(PRule)prule,cont->doc,category);	\
+    etoi_convert(el, PR##type, val, (PRule)prule, cont->doc, category);	\
     return(0);								\
 }									\
 									\
@@ -397,9 +395,9 @@ int SpecificSet/**/name(PresentationTarget t, PresentationContext c,	\
     SpecificContext cont = (SpecificContext) c;				\
     SpecificValue val = /* (SpecificValue) - EGP */ v;			\
 									\
-    prule = InsertElementPRule(el,PR/**/type,0);			\
+    prule = InsertElementPRule(el, PR/**/type, 0);			\
     if (prule == NULL) return(-1);					\
-    etoi_convert(el,PR/**/type,val,(PRule)prule,cont->doc,0);		\
+    etoi_convert(el, PR/**/type, val, (PRule)prule, cont->doc, 0);	\
     return(0);								\
 }									\
 									\
@@ -411,9 +409,9 @@ int SpecificGet/**/name(PresentationTarget t, PresentationContext c,	\
     SpecificContext cont = (SpecificContext) c;				\
     SpecificValue *val = /* (SpecificValue *) - EGP */ v;		\
 									\
-    prule = SearchElementPRule(el,PR/**/type,0);			\
+    prule = SearchElementPRule(el, PR/**/type, 0);			\
     if (prule == NULL) return(-1);					\
-    itoe_convert(el,PR/**/type,val,(PRule)prule,cont->doc);		\
+    itoe_convert(el, PR/**/type, val, (PRule)prule, cont->doc);		\
     return(0);								\
 }									\
 
@@ -427,9 +425,9 @@ int SpecificSet/**/name(PresentationTarget t, PresentationContext c,	\
     SpecificContext cont = (SpecificContext) c;				\
     SpecificValue val = /* (SpecificValue) - EGP */ v;			\
 									\
-    prule = InsertElementPRule(el,PR/**/type,category);			\
+    prule = InsertElementPRule(el, PR/**/type, category);		\
     if (prule == NULL) return(-1);					\
-    etoi_convert(el,PR/**/type,val,(PRule)prule,cont->doc,category);	\
+    etoi_convert(el, PR/**/type, val,(PRule)prule, cont->doc, category);\
     return(0);								\
 }									\
 									\
@@ -441,9 +439,9 @@ int SpecificGet/**/name(PresentationTarget t, PresentationContext c,	\
     SpecificContext cont = (SpecificContext) c;				\
     SpecificValue *val = /* (SpecificValue *) - EGP */ v;		\
 									\
-    prule = SearchElementPRule(el,PR/**/type,category);			\
+    prule = SearchElementPRule(el, PR/**/type, category);		\
     if (prule == NULL) return(-1);					\
-    itoe_convert(el,PR/**/type,val,(PRule)prule,cont->doc,0);		\
+    itoe_convert(el, PR/**/type, val, (PRule)prule, cont->doc, 0);	\
     return(0);								\
 }									\
 

@@ -89,16 +89,15 @@ char               *suffix;
 {
    boolean             ret;
    char                command[200];
+   ThotDirBrowse       thotDir;
 
    ret = FALSE;
    /* S'il s'agit d'un directory accessible */
    if (TtaCheckDirectory (aDirectory))
      {
-	ThotDirBrowse       thotDir;
-
 	thotDir.buf = command;
 	thotDir.bufLen = sizeof (command);
-	thotDir.PicMask = ThotDirBrowse_FILES | ThotDirBrowse_DIRECTORIES;
+	thotDir.PicMask = (int)(ThotDirBrowse_FILES | ThotDirBrowse_DIRECTORIES);
 	ret = ThotDirBrowse_first (&thotDir, aDirectory, "*", suffix);
 	ThotDirBrowse_close (&thotDir);
      }

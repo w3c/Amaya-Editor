@@ -1247,49 +1247,58 @@ char               **url;
   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char * AmayaRelativeUrl (const char * aName, const char * relatedName)
+char *AmayaRelativeUrl (const char * aName, const char * relatedName)
 #else  /* __STDC__ */
-char * AmayaRelativeUrl (const char * aName, const char * relatedName)
-const char          *aName;
+char *AmayaRelativeUrl (const char * aName, const char * relatedName)
+const char            *aName;
 #endif  /* __STDC__ */
 {
-    char * result = 0;
-    const char *p = aName;
-    const char *q = relatedName;
-    const char * after_access = 0;
-    const char * path = 0;
-    const char * last_slash = 0;
-    int slashes = 0;
+  char               *result = 0;
+  const char         *p = aName;
+  const char         *q = relatedName;
+  const char         *after_access = 0;
+  const char         *last_slash = 0;
+  int                 slashes = 0;
     
-    for(;*p; p++, q++) {	/* Find extent of match */
-    	if (*p!=*q) break;
-	if (*p==':') after_access = p+1;
-	if (*p=='/') {
-	    last_slash = p;
-	    slashes++;
-	    if (slashes==3) path=p;
+  for(;*p; p++, q++)
+    {
+      /* Find extent of match */
+      if (*p != *q)
+	break;
+      if (*p == ':')
+	after_access = p+1;
+      if (*p == '/')
+	{
+	  last_slash = p;
+	  slashes++;
 	}
     }
     
     /* q, p point to the first non-matching character or zero */
-    
-    if (!after_access) {			/* Different access */
-        StringAllocCopy(result, aName);
-    } else if (slashes<3){			/* Different nodes */
+    if (!after_access)
+      {
+	/* Different access */
+        StringAllocCopy (result, aName);
+      }
+    else if (slashes < 3)
+      {
+	/* Different nodes */
     	StringAllocCopy(result, after_access);
-    } else {					/* Some path in common */
+      }
+    else
+      {
+	/* Some path in common */
         int levels= 0;
-        for(; *q && (*q!='#'); q++)  if (*q=='/') levels++;
-	if ((result = (char  *) TtaGetMemory(3*levels + strlen(last_slash) + 1)) == NULL)
-	    exit(1);
-	result[0]=0;
-	for(;levels; levels--)strcat(result, "../");
-	strcat(result, last_slash+1);
+        for (; *q && (*q!='#'); q++)
+	  if (*q=='/')
+	    levels++;
+	result = (char  *) TtaGetMemory (3*levels + strlen(last_slash) + 1);
+	if (result == NULL)
+	  exit(1);
+	result[0] = 0;
+	for (;levels; levels--)
+	  strcat (result, "../");
+	strcat (result, last_slash+1);
     }
     return result;
 }
-
-
-/*
-  end of Module AHTURLTools.c
-*/

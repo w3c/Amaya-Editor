@@ -261,7 +261,7 @@ ThotWindow win;
        if (FrRef[frame] == win)
 	  return (frame);
 
-   fprintf (stderr, "Could not get X-Window number for %X\n", win);
+   fprintf (stderr, "Could not get X-Window number for %X\n", (unsigned int)win);
    return (-1);
 }
 

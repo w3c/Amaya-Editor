@@ -31,6 +31,7 @@
 
 static BinFile      outfile;
 
+#include "memory_f.h"
 #include "fileaccess_f.h"
 #include "writeprs_f.h"
 
@@ -1095,7 +1096,7 @@ PtrPRule            pPRule;
 	      }
 
 	nextRule = currentRule->PrNextPRule;
-	free (currentRule);
+	FreePresentRuleCond (currentRule);
 	currentRule = nextRule;
      }
 }

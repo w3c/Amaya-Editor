@@ -98,7 +98,6 @@ PtrAttribute        currAttr;
    int                 i, defItem, nbItem, nbLanguages, length;
    char                bufMenu[MAX_TXT_LEN];
    char                string[MAX_TXT_LEN];
-   char                code[MAX_TXT_LEN];
    char               *ptr;
    Language            language;
    Name                languageValue;

@@ -3919,19 +3919,17 @@ PtrAttribute        pAttr;
 					 pAbb1->AbElement->ElLeafType == LtPicture)
 					{
 					if (pAbb1->AbElement->ElPictInfo != NULL)
-					   ((PictInfo *) (pAbb1->AbElement->ElPictInfo))->PicPresent = pPRule->PrPresBox[0];
+					   ((PictInfo *) (pAbb1->AbElement->ElPictInfo))->PicPresent = (PictureScaling)pPRule->PrPresBox[0];
 					}
 				     else if (pAbb1->AbPresentationBox)
 					{
 					if (pAbb1->AbPictInfo != NULL)
-					   ((PictInfo *) (pAbb1->AbPictInfo))->PicPresent =
-							pPRule->PrPresBox[0];
+					   ((PictInfo *) (pAbb1->AbPictInfo))->PicPresent = (PictureScaling)pPRule->PrPresBox[0];
 					}
 				     else if (pAbb1->AbLeafType == LtCompound)
 				        {
 					if (pAbb1->AbPictBackground != NULL)
-					   ((PictInfo *) (pAbb1->AbPictBackground))->PicPresent =
-							pPRule->PrPresBox[0];
+					   ((PictInfo *) (pAbb1->AbPictBackground))->PicPresent = (PictureScaling)pPRule->PrPresBox[0];
 					}
 				   break;
 				default:

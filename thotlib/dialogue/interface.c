@@ -1258,7 +1258,6 @@ void                TtaMainLoop ()
    MSG                 msg;
 #else /* ! _WINDOWS */
    ThotEvent              ev;
-   XtInputMask         status;
 #endif /* _WINDOWS */
 
    if (NewInitMainLoop) NewInitMainLoop(app_cont);
