@@ -61,7 +61,7 @@ extern void CreateSaveListDlgWindow ();
 extern void CreateCloseDocDlgWindow ();
 extern void CreateLanguageDlgWindow ();
 extern void CreateCharacterDlgWindow ();
-extern void CreateAttributeDlgWindow ();
+extern BOOL CreateAttributeDlgWindow ();
 extern void CreateCreateRuleDlgWindow ();
 extern void CreateApplyClassDlgWindow ();
 extern void CreateSpellCheckDlgWindow ();

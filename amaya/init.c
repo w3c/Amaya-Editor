@@ -3029,36 +3029,32 @@ static boolean        RestoreAmayaDocs ()
   sprintf (tempname, "%s%cCrash.amaya", TempFileDirectory, DIR_SEP);
   /* no document is opened */
   aDoc = FALSE;
-  if (TtaFileExist (tempname))
-    {
-      InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_RELOAD_FILES));
-      if (UserAnswer)
-	f = fopen (tempname, "r");
-      else
-	f = NULL;
-      if (f != NULL)
-	{
-	  InNewWindow = TRUE;
-	  tempdoc[0] = EOS;
-	  fscanf (f, "%s %s\n", tempdoc, docname);
-	  while (tempdoc[0] != EOS && TtaFileExist (tempdoc))
-	    {
-	      if (UserAnswer)
-		{
-		  if (RestoreOneAmayaDoc (0, tempdoc, docname))
-		      aDoc = TRUE;
+  if (TtaFileExist (tempname)) {
+     InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_RELOAD_FILES));
+     if (UserAnswer)
+        f = fopen (tempname, "r");
+     else
+         f = NULL;
+
+     if (f != NULL) {
+        InNewWindow = TRUE;
+        tempdoc[0] = EOS;
+        fscanf (f, "%s %s\n", tempdoc, docname);
+        while (tempdoc[0] != EOS && TtaFileExist (tempdoc)) {
+              if (UserAnswer) {
+                 if (RestoreOneAmayaDoc (0, tempdoc, docname))
+                    aDoc = TRUE;
+			  } else /* unlink this saved file */
+                     TtaFileUnlink (tempdoc);
+              /*next saved file */
+              tempdoc[0] = EOS;
+              fscanf (f, "%s %s\n", tempdoc, docname);
 		}
-	      else
-		/* unlink this saved file */
-		TtaFileUnlink (tempdoc);
-	      /*next saved file */
-	      tempdoc[0] = EOS;
-	      fscanf (f, "%s %s\n", tempdoc, docname);
-	    }
-	  InNewWindow = FALSE;	  
-	}
-      TtaFileUnlink (tempname);
-    }
+        InNewWindow = FALSE;	  
+        fclose (f);
+	 }
+     TtaFileUnlink (tempname);
+  }
   return (aDoc);
 }
 

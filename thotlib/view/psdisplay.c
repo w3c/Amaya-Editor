@@ -136,10 +136,13 @@ char               *s2;
 #endif /* __STDC__ */
 
 {
+#  ifdef _WINDOWS
+#  else  /* !_WINDOWS */
    if (encoding == 0)
       fputs (s1, fout);
    else
       fputs (s2, fout);
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -158,6 +161,8 @@ char                car;
 #endif /* __STDC__ */
 
 {
+#  ifdef _WINDOWS
+#  else  /* _WINDOWS */
    if (car >= ' ' && car <= '~' && car != '(' && car != ')' && car != '\\')
       fprintf (fout, "%c", car);
    else
@@ -178,6 +183,7 @@ char                car;
 	       default:
 		  fprintf (fout, "\\%o", (unsigned char) car);
 	    }
+#  endif /* _WINDOWS */
 }
 
 
@@ -305,6 +311,8 @@ int                 pattern;
    unsigned short      blue;
    float               fact;
 
+#  ifdef _WINDOWS
+#  else  /* !_WINDOWS */
    fact = 255;
    /* Do the current stroke need to be filled ? */
    if (pattern == 0)
@@ -335,6 +343,7 @@ int                 pattern;
    else
       /* Shade of grey */
       fprintf (fout, "%d\n", pattern - 2);
+#  endif /* _WINDOWS */
 }
 
 
@@ -384,7 +393,10 @@ ptrfont             font;
 
 	/* update the scaling factor */
 	Scale = &TtPsFontName[i + 3];
+#   ifdef _WINDOWS
+#   else  /* _WINDOWS */
 	fprintf (fout, "%c%c%c %s sf\n", TtPsFontName[i], c1, c2, Scale);
+#   endif /* _WINDOWS */
 	return retour;
      }
    /* returns the indicator for the family of fonts */
@@ -1132,6 +1144,8 @@ int                 func;
 int                 fg;
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS
+#  else  /* !_WINDOWS */
    int                 xm, ym, xf, yf, lg;
    FILE               *fout;
 
@@ -1203,6 +1217,7 @@ int                 fg;
 	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, yf, style, thick, 2);
 	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, x, y, xf, yf, thick, lg, lg);
      }
+#  endif /* _WINDOWS */
 }
 
 
@@ -1226,6 +1241,8 @@ int                 func;
 int                 fg;
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS
+#  else  /* !_WINDOWS */
    int                 ey, yf;
    FILE               *fout;
 
@@ -1265,6 +1282,7 @@ int                 fg;
 	else
 	   fprintf (fout, "%d -%d -%d %s (\\371) (\\372) (\\373) s3\n", x, yf, y, Scale);
      }
+#  endif /* _WINDOWS */
 }
 
 
@@ -1419,6 +1437,8 @@ int                 func;
 int                 fg;
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS 
+#  else  /* !_WINDOWS */
    int                 ey, yf;
    FILE               *fout;
 
@@ -1458,6 +1478,7 @@ int                 fg;
 	else
 	   fprintf (fout, "%d -%d -%d %s (\\374) (\\375) (\\376) (\\357) s4\n", x, yf, y, Scale);
      }
+#  endif /* _WINDOWS */
 }
 
 
@@ -1583,6 +1604,8 @@ int                 fg;
 int                 arrow;
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS
+#  else  /* !_WINDOWS */
    int                 i, j;
    float               xp, yp;
    int                 prevx, prevy;
@@ -1648,6 +1671,7 @@ int                 arrow;
    if (arrow == 1 || arrow == 3)
       fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, prevx, prevy,
 	       FloatToInt (xp), FloatToInt (yp), thick, lg, lg);
+#  endif /* _WINDOWS */
 }
 
 
@@ -1679,6 +1703,8 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS
+#  else  /* !_WINDOWS */
    int                 i, j;
    float               xp, yp;
    PtrTextBuffer       adbuff;
@@ -1716,6 +1742,7 @@ int                 pattern;
      }
    /* Extra characteristics for drawing */
    fprintf (fout, "%d %d %d  Poly\n", style, thick, nb - 1);
+#  endif /* _WINDOWS */
 }
 
 
@@ -1750,6 +1777,8 @@ int                 arrow;
 C_points           *controls;
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS
+#  else  /* !_WINDOWS */
    PtrTextBuffer       adbuff;
    int                 i, j;
    int                 lg;
@@ -1831,6 +1860,7 @@ C_points           *controls;
    /* forward arrow */
    if (arrow == 1 || arrow == 3)
       fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, FloatToInt (x3), FloatToInt (y3), FloatToInt (x1), FloatToInt (y1), thick, lg, lg);
+#  endif /* _WINDOWS */
 }
 
 
@@ -1864,6 +1894,8 @@ int                 pattern;
 C_points           *controls;
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS 
+#  else  /* !_WINDOWS */
    PtrTextBuffer       adbuff;
    int                 i, j;
    float               x0, y0, x1, y1, x2, y2, x3, y3;
@@ -1913,7 +1945,7 @@ C_points           *controls;
    y3 = (float) PixelToPoint ((int) ((controls[1].ly * 1000))) / 1000 + y;
    fprintf (fout, "%f -%f %f -%f %f -%f\n", x3, y3, x2, y2, x1, y1);
    fprintf (fout, "%f -%f %d %d %d Splin\n", x0, y0, style, thick, nb);
-
+#  endif /* _WINDOWS */
 }
 
 
@@ -1940,6 +1972,8 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS 
+#  else  /* !_WINDOWS */
    int                 xm, xf, ym, yf;
    FILE               *fout;
 
@@ -1959,6 +1993,7 @@ int                 pattern;
 
    FillWithPattern (fout, fg, bg, pattern);
    fprintf (fout, "%d -%d %d -%d %d -%d %d -%d %d %d %d Poly\n", xm, y, x, ym, xm, yf, xf, ym, style, thick, 4);
+#  endif /* _WINDOWS */
 }
 
 
@@ -1985,6 +2020,8 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS 
+#  else  /* !_WINDOWS */
    int                 arc, xf, yf;
    FILE               *fout;
 
@@ -2008,6 +2045,7 @@ int                 pattern;
 	    style, thick,
 	    /*5 */ x, y, /*4 */ x, yf, /*3 */ xf, yf, /*2 */ xf, y, /*1 */ x, y, /*o */ x, yf - arc,
 	    arc);
+#  endif /* _WINDOWS */
 }
 
 
@@ -2054,19 +2092,6 @@ int                 pattern;
    if (TtPrinterDC) {
         xm = x + larg;
         ym = y + height;
-
-#     if 0 /* Fill an ellipse */
-      pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
-      if (pat != 0) {
-         WinLoadGC (TtPrinterDC, fg, RO);
-         hBrush = CreateSolidBrush (Pix_Color[bg]);
-         hOldBrush = SelectObject (TtPrinterDC, hBrush);
-         PatBlt (TtPrinterDC, x, y, larg, height, PATCOPY);
-         SelectObject (TtPrinterDC, hOldBrush);
-         if (!DeleteObject (hBrush))
-            WinErrorBox (WIN_Main_Wd);
-	  }
-#     endif /* 0 */
 
       if (thick > 0) {
          if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
@@ -2241,6 +2266,8 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS
+#  else  /* !_WINDOWS */
    int                 arc, xf, yf;
    FILE               *fout;
 
@@ -2264,6 +2291,7 @@ int                 pattern;
 
    y += 2 * arc;
    fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, y, style, thick, 2);
+#  endif /* _WINDOWS */
 }
 
 
@@ -2290,6 +2318,8 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS
+#  else  /* !_WINDOWS */
    int                 px7mm, shiftX;
    int                 xm, ym;
    FILE               *fout;
@@ -2330,6 +2360,7 @@ int                 pattern;
 	fprintf (fout, "%d -%d  %d -%d %d %d %d Seg\n",
 		 xm - shiftX, y, xm + shiftX, y, style, thick, 2);
      }
+#  endif /* _WINDOWS */
 }
 
 
@@ -2553,6 +2584,8 @@ int                 func;
 int                 fg;
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS 
+#  else  /* !_WINDOWS */
    int                 xf, yf;
    FILE               *fout;
 
@@ -2577,6 +2610,7 @@ int                 fg;
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, yf, xf, y, style, thick, 2);
    else
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, yf, style, thick, 2);
+#  endif /* _WINDOWS */
 }
 
 
@@ -2611,6 +2645,8 @@ int                 width;
 int                 height;
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS
+#  else  /* !_WINDOWS */
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
@@ -2623,6 +2659,7 @@ int                 height;
    fprintf (fout, "%%%%BoundingBox: %d %d %d %d\n",
 	    50, 791 - PixelToPoint (height),
 	    50 + PixelToPoint (width), 791);
+#  endif /* _WINDOWS */
 }
 
 
@@ -2672,6 +2709,8 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS 
+#  else  /* !_WINDOWS */
    int                 xf, yf;
    FILE               *fout;
 
@@ -2690,4 +2729,5 @@ int                 pattern;
 	y = PixelToPoint (y);
 	fprintf (fout, "%d %d -%d %d -%d %d -%d %d -%d trm\n", pattern, x, yf, xf, yf, xf, y, x, y);
      }
+#  endif /* _WINDOWS */
 }

@@ -14,6 +14,7 @@
 #ifdef _WINDOWS
 #include <windows.h>
 #include "resource.h"
+#include "constmedia.h"
 
 #ifdef THOT_EXPORT
 #      undef THOT_EXPORT
@@ -45,6 +46,12 @@
 #define ICD_SPELLWORDEDIT 20003
 #define IDC_CSSEDIT       20004
 
+#define OPT1               1110
+#define OPT2               1111
+#define OPT3               1112
+#define OPT4               1113
+#define OPT5               1114
+
 #define REPEAT                0
 #define REPEAT_X              1
 #define REPEAT_Y              2
@@ -62,6 +69,7 @@ int                WIN_NormalLineSpacing;
 extern HINSTANCE    hInstance;
 extern HDC          TtPrinterDC;
 extern char*        AttrHREFvalue;
+extern char         WIN_buffMenu [MAX_TXT_LEN];
 extern char         ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
 extern BOOL         TtIsPrinterTrueColor;
 extern BOOL         bUserAbort;
@@ -77,6 +85,7 @@ static char         currentRejectedchars [100];
 static char         currentPathName [100];
 static char         winCurLang [100];
 static char         currentFileToPrint [MAX_PATH];
+static char         attDlgTitle [100];
 static char*        lpPrintTemplateName = (char*) 0;
 static int          currentDoc ;
 static int          currentView ;
@@ -136,6 +145,7 @@ static int          Indent_num;
 static int          Justification_num; 
 static int          Old_lineSp; 
 static int          Line_spacingNum;
+static int          attDlgNbItems;
 static BOOL         manualFeed      = FALSE;
 static BOOL         tableOfContents = FALSE;
 static BOOL         numberedLinks   = FALSE;
@@ -173,9 +183,6 @@ LRESULT CALLBACK HelpDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK MathDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK AbortDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK PrintDlgProc (HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK Align1DlgProc (HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK Align2DlgProc (HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK Align3DlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SearchDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SaveAsDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK OpenDocDlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -184,6 +191,10 @@ LRESULT CALLBACK SaveListDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK CloseDocDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK LanguageDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK CharacterDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK Attr2ItemsDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK Attr3ItemsDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK Attr4ItemsDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK Attr5ItemsDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK CreateRuleDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK ApplyClassDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SpellCheckDlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -200,9 +211,6 @@ LRESULT CALLBACK HelpDlgProc ();
 LRESULT CALLBACK MathDlgProc ();
 LRESULT CALLBACK AbortDlgProc ();
 LRESULT CALLBACK PrintDlgProc ();
-LRESULT CALLBACK Align1DlgProc ();
-LRESULT CALLBACK Align2DlgProc ();
-LRESULT CALLBACK Align3DlgProc ();
 LRESULT CALLBACK SearchDlgProc ();
 LRESULT CALLBACK SaveAsDlgProc ();
 LRESULT CALLBACK OpenDocDlgProc ();
@@ -211,6 +219,10 @@ LRESULT CALLBACK SaveListDlgProc ();
 LRESULT CALLBACK CloseDocDlgProc ();
 LRESULT CALLBACK LanguageDlgProc ();
 LRESULT CALLBACK CharacterDlgProc ();
+LRESULT CALLBACK Attr2ItemsDlgProc ();
+LRESULT CALLBACK Attr3ItemsDlgProc ();
+LRESULT CALLBACK Attr4ItemsDlgProc ();
+LRESULT CALLBACK Attr5ItemsDlgProc ();
 LRESULT CALLBACK CreateRuleDlgProc ();
 LRESULT CALLBACK ApplyClassDlgProc ();
 LRESULT CALLBACK SpellCheckDlgProc ();
@@ -250,7 +262,7 @@ HDC PASCAL GetPrinterDC () {
 
        return (printDlg.hDC);        
     } else
-          return( NULL );
+          return NULL;
 
 }
 
@@ -393,51 +405,6 @@ int       num_form_print;
        DestroyWindow (ghwndAbort);
 	}
 	TtPrinterDC = NULL;
-}
-
-/*-----------------------------------------------------------------------
- CreateAlign1DlgWindow
- ------------------------------------------------------------------------*/
-#ifdef __STDC__
-void CreateAlign1DlgWindow (HWND parent, int curr_val)
-#else  /* !__STDC__ */
-void CreateAlign1DlgWindow (parent, curr_val)
-HWND      parent;
-int       curr_val;
-#endif /* __STDC__ */
-{  
-    currAttrVal = curr_val;
-	DialogBox (hInstance, MAKEINTRESOURCE (ALIGN1DIALOG), NULL, (DLGPROC) Align1DlgProc);
-}
-
-/*-----------------------------------------------------------------------
- CreateAlign2DlgWindow
- ------------------------------------------------------------------------*/
-#ifdef __STDC__
-void CreateAlign2DlgWindow (HWND parent, int curr_val)
-#else  /* !__STDC__ */
-void CreateAlign2DlgWindow (parent, curr_val)
-HWND      parent;
-int       curr_val;
-#endif /* __STDC__ */
-{  
-    currAttrVal = curr_val;
-	DialogBox (hInstance, MAKEINTRESOURCE (ALIGN2DIALOG), NULL, (DLGPROC) Align2DlgProc);
-}
-
-/*-----------------------------------------------------------------------
- CreateAlign2DlgWindow
- ------------------------------------------------------------------------*/
-#ifdef __STDC__
-void CreateAlign3DlgWindow (HWND parent, int curr_val)
-#else  /* !__STDC__ */
-void CreateAlign2DlgWindow (parent, curr_val)
-HWND      parent;
-int       curr_val;
-#endif /* __STDC__ */
-{  
-    currAttrVal = curr_val;
-	DialogBox (hInstance, MAKEINTRESOURCE (ALIGN3DIALOG), NULL, (DLGPROC) Align3DlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -636,14 +603,35 @@ int   font_size;
  CreateCreateRuleDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateAttributeDlgWindow (int attr_val, int nb_items, char* buffer) 
+void CreateAttributeDlgWindow (char* title, int curr_val, int nb_items, char* buffer) 
 #else  /* __STDC__ */
-void CreateAttributeDlgWindow (attr_val, nb_items, buffer) 
+void CreateAttributeDlgWindow (title, curr_val, nb_items, buffer) 
+char* title;
 int   attr_val; 
 int   nb_items; 
 char* buffer; 
 #endif /* __STDC__ */
 {
+    sprintf (attDlgTitle, title);
+    currAttrVal = curr_val;
+	attDlgNbItems = nb_items;
+
+    switch (attDlgNbItems) {
+           case 2: 	DialogBox (hInstance, MAKEINTRESOURCE (ATTR2ITEMSDIALOG), NULL, (DLGPROC) Attr2ItemsDlgProc);
+                    break; 
+
+           case 3: 	DialogBox (hInstance, MAKEINTRESOURCE (ATTR3ITEMSDIALOG), NULL, (DLGPROC) Attr3ItemsDlgProc);
+                    break; 
+
+           case 4:  DialogBox (hInstance, MAKEINTRESOURCE (ATTR4ITEMSDIALOG), NULL, (DLGPROC) Attr4ItemsDlgProc);
+                    break;
+
+           case 5:  DialogBox (hInstance, MAKEINTRESOURCE (ATTR5ITEMSDIALOG), NULL, (DLGPROC) Attr5ItemsDlgProc);
+                    break;
+
+           default: /* MessageBox (); */
+                    break;
+	}
 }
 
 /*-----------------------------------------------------------------------
@@ -721,20 +709,6 @@ int   chkrSpecial;
 	sprintf (currentRejectedchars, rejectedChars);
 
 	DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
-}
-
-/*-----------------------------------------------------------------------
- CreateInitConfirmDlgWindow
- ------------------------------------------------------------------------*/
-#ifdef __STDC__
-void CreateMathAttribDlgWindow (int curr_val)
-#else  /* __STDC__ */
-void CreateMathAttribDlgWindow (curr_val)
-int attr_val;
-#endif /* __STDC__ */
-{
-    currAttrVal = curr_val;
-	DialogBox (hInstance, MAKEINTRESOURCE (MATHATTRIBDIALOG), NULL, (DLGPROC) MathAttribDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -1047,60 +1021,56 @@ LPARAM lParam;
 						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)0);
                             break;
 
-                       case IDC_MATHD:
+                       case IDC_ROOT:
 						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)1);
                             break;
 
-                       case IDC_ROOT:
+                       case IDC_SROOT:
 						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)2);
                             break;
 
-                       case IDC_SROOT:
+                       case IDC_DIV:
 						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)3);
                             break;
 
-                       case IDC_DIV:
+                       case IDC_POWIND:
 						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)4);
                             break;
 
-                       case IDC_POWIND:
+                       case IDC_IND:
 						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)5);
                             break;
 
-                       case IDC_IND:
+                       case IDC_POW:
 						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)6);
                             break;
 
-                       case IDC_POW:
+                       case IDC_UPDN:
 						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)7);
                             break;
 
-                       case IDC_UPDN:
+                       case IDC_UP:
 						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)8);
                             break;
 
-                       case IDC_UP:
+                       case IDC_DOWN:
 						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)9);
                             break;
 
-                       case IDC_DOWN:
+                       case IDC_PAREXP:
 						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)10);
                             break;
 
-                       case IDC_PAREXP:
+                       case IDC_UDLR:
 						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)11);
                             break;
 
-                       case IDC_UDLR:
+                       case IDC_MATRIX:
 						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)12);
                             break;
 
-                       case IDC_MATRIX:
-						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)13);
-                            break;
-
                        case IDC_SYM:
-						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)14);
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)13);
                             break;
 				}
 				break;
@@ -1184,9 +1154,9 @@ LPARAM lParam;
  Align1DlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-LRESULT CALLBACK Align1DlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Attr2ItemsDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 #else  /* !__STDC__ */
-LRESULT CALLBACK Align1DlgProc (hwnDlg, msg, wParam, lParam)
+LRESULT CALLBACK Attr2ItemsDlgProc (hwnDlg, msg, wParam, lParam)
 HWND   hwndParent; 
 UINT   msg; 
 WPARAM wParam; 
@@ -1194,16 +1164,37 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
 	static int iLocation;
+    static int cxChar;
+    static int cyChar;
+	int        ndx = 0;
+    int        i   = 0;
+    HDC        hDC;
+    RECT       rect;
+    HWND       radio1;
+    HWND       radio2;
+    HWND       groupBx;
+    TEXTMETRIC tm;
+
     switch (msg) {
 	       case WM_INITDIALOG:
-                switch (currAttrVal) {
-                       case 1: CheckRadioButton (hwnDlg, IDC_LEFT, IDC_CENTER, IDC_LEFT);
+                GetClientRect (hwnDlg, &rect);
+                hDC = GetDC (hwnDlg);
+                SelectObject (hDC, GetStockObject (SYSTEM_FIXED_FONT));
+                GetTextMetrics (hDC, &tm);
+                cxChar = tm.tmAveCharWidth;
+                cyChar = tm.tmHeight + tm.tmExternalLeading;
+                ReleaseDC (hwnDlg, hDC);
+
+                radio1 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+				i++;
+                radio2 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                i++;
+                groupBx = CreateWindow ("BUTTON", attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);                switch (currAttrVal) {
+                       case 1: CheckRadioButton (hwnDlg, OPT1, OPT2, OPT1);
                                break;
 
-                       case 2: CheckRadioButton (hwnDlg, IDC_LEFT, IDC_CENTER, IDC_RIGHT);
-                               break;
-
-                       case 3:CheckRadioButton (hwnDlg, IDC_LEFT, IDC_CENTER, IDC_CENTER);
+                       case 2: CheckRadioButton (hwnDlg, OPT1, OPT2, OPT2);
                                break;
 
                        default: break;
@@ -1212,17 +1203,113 @@ LPARAM lParam;
 
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
-					   case IDC_LEFT:
+					   case OPT1:
                             iLocation = 0;
 						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
 							break;
 
-					   case IDC_CENTER:
+					   case OPT2:
                             iLocation = 1;
 						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
 							break;
 
-					   case IDC_RIGHT:
+				       case ID_APPLY:
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 1);
+							break;
+
+					   case ID_DELETE:
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2);
+					 	    EndDialog (hwnDlg, ID_DELETE);
+							break;
+
+					   case ID_DONE:
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0);
+					 	    EndDialog (hwnDlg, IDCANCEL);
+							break;
+
+					   case WM_DESTROY:
+					 	    EndDialog (hwnDlg, IDCANCEL);
+							break;
+				}
+				break;
+
+				default: return FALSE;
+	}
+	return TRUE ;
+}
+/*-----------------------------------------------------------------------
+ Align1DlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK Attr3ItemsDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK Attr3ItemsDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+	static int iLocation;
+    static int cxChar;
+    static int cyChar;
+	int        ndx = 0;
+    int        i   = 0;
+    HDC        hDC;
+    RECT       rect;
+    HWND       radio1;
+    HWND       radio2;
+    HWND       radio3;
+    HWND       groupBx;
+    TEXTMETRIC tm;
+
+    switch (msg) {
+	       case WM_INITDIALOG:
+                GetClientRect (hwnDlg, &rect);
+                hDC = GetDC (hwnDlg);
+                SelectObject (hDC, GetStockObject (SYSTEM_FIXED_FONT));
+                GetTextMetrics (hDC, &tm);
+                cxChar = tm.tmAveCharWidth;
+                cyChar = tm.tmHeight + tm.tmExternalLeading;
+                ReleaseDC (hwnDlg, hDC);
+
+                radio1 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+				i++;
+                radio2 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+				i++;
+                radio3 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                i++;
+                groupBx = CreateWindow ("BUTTON", attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                switch (currAttrVal) {
+                       case 1: CheckRadioButton (hwnDlg, OPT1, OPT3, OPT1);
+                               break;
+
+                       case 2: CheckRadioButton (hwnDlg, OPT1, OPT3, OPT2);
+                               break;
+
+                       case 3: CheckRadioButton (hwnDlg, OPT1, OPT3, OPT3);
+                               break;
+
+                       default: break;
+				}
+                break;
+
+		   case WM_COMMAND:
+			    switch (LOWORD (wParam)) {
+					   case OPT1:
+                            iLocation = 0;
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+							break;
+
+					   case OPT2:
+                            iLocation = 1;
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+							break;
+
+					   case OPT3:
                             iLocation = 2;
 						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
 							break;
@@ -1257,9 +1344,9 @@ LPARAM lParam;
  Align2DlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-LRESULT CALLBACK Align2DlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Attr4ItemsDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 #else  /* !__STDC__ */
-LRESULT CALLBACK Align2DlgProc (hwnDlg, msg, wParam, lParam)
+LRESULT CALLBACK Attr4ItemsDlgProc (hwnDlg, msg, wParam, lParam)
 HWND   hwndParent; 
 UINT   msg; 
 WPARAM wParam; 
@@ -1267,22 +1354,52 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
 	static int iLocation;
+    static int cxChar;
+    static int cyChar;
+	int        ndx = 0;
+    int        i   = 0;
+    HDC        hDC;
+    RECT       rect;
+    HWND       hwndRadio1;
+    HWND       hwndRadio2;
+    HWND       hwndRadio3;
+    HWND       hwndRadio4;
+    HWND       groupBx;
+    TEXTMETRIC tm;
+
     switch (msg) {
 	       case WM_INITDIALOG:
+                GetClientRect (hwnDlg, &rect);
+                hDC = GetDC (hwnDlg);
+                SelectObject (hDC, GetStockObject (SYSTEM_FIXED_FONT));
+                GetTextMetrics (hDC, &tm);
+                cxChar = tm.tmAveCharWidth;
+                cyChar = tm.tmHeight + tm.tmExternalLeading;
+                ReleaseDC (hwnDlg, hDC);
+
+                hwndRadio1 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+				i++;
+                hwndRadio2 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+				i++;
+                hwndRadio3 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+				i++;
+                hwndRadio3 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+				i++;
+                groupBx = CreateWindow ("BUTTON", attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 switch (currAttrVal) {
-                       case 1: CheckRadioButton (hwnDlg, IDC_TOP, IDC_BOTTOM, IDC_TOP);
+                       case 1: CheckRadioButton (hwnDlg, OPT1, OPT4, OPT1);
                                break;
 
-                       case 2: CheckRadioButton (hwnDlg, IDC_TOP, IDC_BOTTOM, IDC_MIDDLE);
+                       case 2: CheckRadioButton (hwnDlg, OPT1, OPT4, OPT2);
                                break;
 
-                       case 3: CheckRadioButton (hwnDlg, IDC_TOP, IDC_BOTTOM, IDC_BOTTOM);
+                       case 3: CheckRadioButton (hwnDlg, OPT1, OPT4, OPT3);
                                break;
 
-                       case 4: CheckRadioButton (hwnDlg, IDC_TOP, IDC_BOTTOM, IDC_LEFT);
-                               break;
-
-                       case 5: CheckRadioButton (hwnDlg, IDC_TOP, IDC_BOTTOM, IDC_RIGHT);
+                       case 4: CheckRadioButton (hwnDlg, OPT1, OPT4, OPT4);
                                break;
 
                        default: break;
@@ -1291,28 +1408,23 @@ LPARAM lParam;
 
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
-				       case IDC_TOP:
-						    iLocation = 0;
+					   case OPT1:
+                            iLocation = 0;
 						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
 							break;
 
-					   case IDC_MIDDLE:
-						    iLocation = 1;
+					   case OPT2:
+                            iLocation = 1;
 						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
 							break;
 
-					   case IDC_BOTTOM:
-						    iLocation = 2;
+					   case OPT3:
+                            iLocation = 2;
 						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
 							break;
 
-					   case IDC_LEFT:
-						    iLocation = 3;
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
-							break;
-
-					   case IDC_RIGHT:
-						    iLocation = 4;
+					   case OPT4:
+                            iLocation = 3;
 						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
 							break;
 
@@ -1321,6 +1433,7 @@ LPARAM lParam;
 							break;
 
 					   case ID_DELETE:
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
 							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2);
 					 	    EndDialog (hwnDlg, ID_DELETE);
 							break;
@@ -1340,13 +1453,14 @@ LPARAM lParam;
 	}
 	return TRUE ;
 }
+
 /*-----------------------------------------------------------------------
  Align2DlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-LRESULT CALLBACK Align3DlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Attr5ItemsDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 #else  /* !__STDC__ */
-LRESULT CALLBACK Align3DlgProc (hwnDlg, msg, wParam, lParam)
+LRESULT CALLBACK Attr5ItemsDlgProc (hwnDlg, msg, wParam, lParam)
 HWND   hwndParent; 
 UINT   msg; 
 WPARAM wParam; 
@@ -1354,20 +1468,59 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
 	static int iLocation;
+    static int cxChar;
+    static int cyChar;
+	int        ndx = 0;
+    int        i   = 0;
+    HDC        hDC;
+    RECT       rect;
+    HWND       radio1;
+    HWND       radio2;
+    HWND       radio3;
+    HWND       radio4;
+    HWND       radio5;
+    HWND       groupBx;
+    TEXTMETRIC tm;
 
     switch (msg) {
 	       case WM_INITDIALOG:
+                GetClientRect (hwnDlg, &rect);
+                hDC = GetDC (hwnDlg);
+                SelectObject (hDC, GetStockObject (SYSTEM_FIXED_FONT));
+                GetTextMetrics (hDC, &tm);
+                cxChar = tm.tmAveCharWidth;
+                cyChar = tm.tmHeight + tm.tmExternalLeading;
+                ReleaseDC (hwnDlg, hDC);
+
+                radio1 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+				i++;
+                radio2 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+				i++;
+                radio3 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+				i++;
+                radio4 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                ndx += strlen (&WIN_buffMenu [ndx]) + 1;
+				i++;
+                radio5 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT5, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                i++;
+                groupBx = CreateWindow ("BUTTON", attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 switch (currAttrVal) {
-                       case 1: CheckRadioButton (hwnDlg, IDC_LEFT, IDC_JUSTIFY, IDC_LEFT);
+                       case 1: CheckRadioButton (hwnDlg, OPT1, OPT5, OPT1);
                                break;
 
-                       case 2: CheckRadioButton (hwnDlg, IDC_LEFT, IDC_JUSTIFY, IDC_CENTER);
+                       case 2: CheckRadioButton (hwnDlg, OPT1, OPT5, OPT2);
                                break;
 
-                       case 3: CheckRadioButton (hwnDlg, IDC_LEFT, IDC_JUSTIFY, IDC_RIGHT);
+                       case 3: CheckRadioButton (hwnDlg, OPT1, OPT5, OPT3);
                                break;
 
-                       case 4: CheckRadioButton (hwnDlg, IDC_LEFT, IDC_JUSTIFY, IDC_JUSTIFY);
+                       case 4: CheckRadioButton (hwnDlg, OPT1, OPT5, OPT4);
+                               break;
+
+                       case 5: CheckRadioButton (hwnDlg, OPT1, OPT5, OPT5);
                                break;
 
                        default: break;
@@ -1376,38 +1529,43 @@ LPARAM lParam;
 
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
-				       case IDC_LEFT:
-						    iLocation = 0;
+					   case OPT1:
+                            iLocation = 0;
 						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
 							break;
 
-					   case IDC_CENTER:
-						    iLocation = 1;
+					   case OPT2:
+                            iLocation = 1;
 						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
 							break;
 
-					   case IDC_RIGHT:
-						    iLocation = 2;
+					   case OPT3:
+                            iLocation = 2;
 						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
 							break;
 
-					   case IDC_JUSTIFY:
-						    iLocation = 3;
+					   case OPT4:
+                            iLocation = 3;
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+							break;
+
+					   case OPT5:
+                            iLocation = 4;
 						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
 							break;
 
 				       case ID_APPLY:
-							/* ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 1); */
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 1);
 							break;
 
 					   case ID_DELETE:
-						    /* ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2); */
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2);
 					 	    EndDialog (hwnDlg, ID_DELETE);
 							break;
 
 					   case ID_DONE:
-							/* ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0); */
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0);
 					 	    EndDialog (hwnDlg, IDCANCEL);
 							break;
 
@@ -1682,6 +1840,7 @@ LPARAM lParam;
 	                        }
 
                             SetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen);
+                            EndDialog (hwnDlg, ID_CONFIRM);
 							break;
 
 				       case IDCANCEL:
@@ -1952,6 +2111,39 @@ LPARAM lParam;
 				break;
 
 		   case WM_COMMAND:
+				if (LOWORD (wParam) == 1) {
+                   if (HIWORD (wParam) == LBN_SELCHANGE) {
+                      itemIndex = SendMessage (wndLangList, LB_GETCURSEL, 0, 0);
+                      itemIndex = SendMessage (wndLangList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
+				   } else if (HIWORD (wParam) == LBN_DBLCLK) {
+                          if (LB_ERR == (itemIndex = SendMessage (wndLangList, LB_GETCURSEL, 0, 0L)))
+                             break;
+                          itemIndex = SendMessage (wndLangList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
+				   }
+			       SetDlgItemText (hwnDlg, IDC_LANGEDIT, szBuffer);
+                   ThotCallback (NumSelectLanguage, STRING_DATA, szBuffer);
+                   switch (WIN_MenuAlphabet) {
+                          case 0: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_1);
+                                  break;
+
+                          case 1: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_2);
+                                  break;
+
+                          case 2: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_9);
+                                  break;
+
+                          case 3: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_SYMBOL_ENCOD);
+                                  break;
+
+                         default: break;
+				   }
+				   if (HIWORD (wParam) == LBN_DBLCLK) {
+                       ThotCallback (NumFormLanguage, INTEGER_DATA, (char*) 1);
+                       EndDialog (hwnDlg, ID_APPLY);
+                       return 0;
+				   }
+				}
+#               if 0
 				if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE) {
 				   itemIndex = SendMessage (wndLangList, LB_GETCURSEL, 0, 0);
 				   itemIndex = SendMessage (wndLangList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
@@ -1972,7 +2164,32 @@ LPARAM lParam;
 
                          default: break;
 				   }
+				} else if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_DBLCLK) {
+                       if (LB_ERR == (itemIndex = SendMessage (wndLangList, LB_GETCURSEL, 0, 0L)))
+                          break;
+                       itemIndex = SendMessage (wndLangList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
+                       SetDlgItemText (hwnDlg, IDC_LANGEDIT, szBuffer);
+                       ThotCallback (NumSelectLanguage, STRING_DATA, szBuffer);
+                       switch (WIN_MenuAlphabet) {
+                              case 0: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_1);
+                                      break;
+
+                              case 1: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_2);
+                                      break;
+
+                              case 2: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_9);
+                                      break;
+
+                              case 3: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_SYMBOL_ENCOD);
+                                      break;
+
+                              default: break;
+					   }
+                       ThotCallback (NumFormLanguage, INTEGER_DATA, (char*) 1);
+                       EndDialog (hwnDlg, ID_APPLY);
+                       return 0;
 				}
+#               endif /* 0 */
 
 			    switch (LOWORD (wParam)) {
                        case IDC_ISO_LATIN_1:
@@ -2339,6 +2556,15 @@ LPARAM lParam;
 				   itemIndex = SendMessage (wndListRule, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
 			       SetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer);
 				   ThotCallback (baseDlg + classSelect, STRING_DATA, szBuffer);
+				} else if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_DBLCLK) {
+                       if (LB_ERR == (itemIndex = SendMessage (wndListRule, LB_GETCURSEL, 0, 0L)))
+                          break;
+                       itemIndex = SendMessage (wndListRule, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
+                       SetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer);
+                       ThotCallback (baseDlg + classSelect, STRING_DATA, szBuffer);
+                       ThotCallback (baseDlg + classForm, INTEGER_DATA, (char*) 1);
+                       EndDialog (hwnDlg, ID_CONFIRM);
+                       return 0;
 				}
 
 			    switch (LOWORD (wParam)) {
@@ -2419,7 +2645,20 @@ LPARAM lParam;
 				   itemIndex = SendMessage (hwnListWords, LB_GETCURSEL, 0, 0);
 				   itemIndex = SendMessage (hwnListWords, LB_GETTEXT, itemIndex, (LPARAM) currentWord);
 			       SetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord);
-				}
+				} else if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_DBLCLK) {
+                       if (LB_ERR == (itemIndex = SendMessage (hwnListWords, LB_GETCURSEL, 0, 0L)))
+                          break;
+                       itemIndex = SendMessage (hwnListWords, LB_GETTEXT, itemIndex, (LPARAM) currentWord);
+                       SetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord);
+                       ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
+                       ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (char*) iLocation);
+                       ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (char*) 3);
+                       if (iLocation == 3) {
+                          CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+                          iLocation = 2;
+					   }
+                       return 0;
+				} 
                 if (HIWORD (wParam) == EN_UPDATE) {
 				   if (LOWORD (wParam) == IDC_EDITPROPOSALS) {
 					  val = GetDlgItemInt (hwnDlg, IDC_EDITPROPOSALS, &ok, TRUE);
@@ -2522,71 +2761,6 @@ LPARAM lParam;
 		   default: return FALSE;
 	}
 	return TRUE;
-}
-
-/*-----------------------------------------------------------------------
- MathAttribDlgProc
- ------------------------------------------------------------------------*/
-#ifdef __STDC__
-LRESULT CALLBACK MathAttribDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK MathAttribDlgProc (hwnDlg, msg, wParam, lParam)
-HWND   hwndParent; 
-UINT   msg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
-{
-	static int iLocation;
-    switch (msg) {
-	       case WM_INITDIALOG:
-                switch (currAttrVal) {
-                       case 1: CheckRadioButton (hwnDlg, IDC_DISPLAY, IDC_INLINEMATH, IDC_DISPLAY);
-                               break;
-
-                       case 2: CheckRadioButton (hwnDlg, IDC_DISPLAY, IDC_INLINEMATH, IDC_INLINEMATH);
-                               break;
-
-                       default: break;
-				}
-                break;
-
-		   case WM_COMMAND:
-			    switch (LOWORD (wParam)) {
-					   case IDC_DISPLAY:
-                            iLocation = 0;
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
-							break;
-
-					   case IDC_INLINEMATH:
-                            iLocation = 1;
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
-							break;
-
-				       case ID_APPLY:
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 1);
-							break;
-
-					   case ID_DELETE:
-						    /* ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation); */
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2);
-					 	    EndDialog (hwnDlg, ID_DELETE);
-							break;
-
-					   case ID_DONE:
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0);
-					 	    EndDialog (hwnDlg, IDCANCEL);
-							break;
-
-					   case WM_DESTROY:
-					 	    EndDialog (hwnDlg, IDCANCEL);
-							break;
-				}
-				break;
-
-				default: return FALSE;
-	}
-	return TRUE ;
 }
 
 /*-----------------------------------------------------------------------
@@ -3605,6 +3779,9 @@ LPARAM lParam;
 	                        }
 
 							SetDlgItemText (hwnDlg, IDC_BGLOCATION, urlToOpen);
+			                EndDialog (hwnDlg, ID_CONFIRM);
+                            ThotCallback (baseDlg + repeatImage, INTEGER_DATA, (char*)repeatMode);
+                            ThotCallback (baseDlg + bgImageForm, INTEGER_DATA, (char*)1);
 							break;
 
 		               case IDCANCEL:

@@ -22,9 +22,11 @@
 #define LANGUAGEDIALOG                  172
 #define ALIGNDIALOG                     173
 #define ALIGN2DIALOG                    173
+#define ATTR5ITEMSDIALOG                173
 #define SAVEASDIALOG                    174
 #define AUTHENTIFICATIONDIALOG          175
 #define ALIGN1DIALOG                    176
+#define ATTR3ITEMSDIALOG                176
 #define HELPDIALOG                      181
 #define IDB_AMAYALOGO                   182
 #define IDB_MATH                        183
@@ -213,6 +215,7 @@
 #define CSSDIALOG                       395
 #define IDB_MATRIX                      397
 #define ALIGN3DIALOG                    398
+#define ATTR4ITEMSDIALOG                398
 #define IDB_GLINE                       401
 #define IDB_GRECT                       402
 #define IDB_GRRECT                      403
@@ -226,7 +229,7 @@
 #define IDB_GALPHA2                     411
 #define IDB_GGROUP                      412
 #define GRAPHICSDIALOG                  413
-#define MATHATTRIBDIALOG                414
+#define ATTR2ITEMSDIALOG                415
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -556,11 +559,8 @@
 #define IDC_JUSTIFY                     1405
 #define IDC_GELLIPSE                    1405
 #define IDC_GLINE                       1406
-#define IDC_MODE                        1406
 #define IDC_GCPOLYLINE                  1407
-#define IDC_DISPLAY                     1407
 #define IDC_GCIRCLE                     1408
-#define IDC_INLINEMATH                  1408
 #define IDC_GCCURVE                     1409
 #define IDC_GCURVE                      1410
 #define IDC_GRECT                       1411
@@ -600,9 +600,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        415
+#define _APS_NEXT_RESOURCE_VALUE        416
 #define _APS_NEXT_COMMAND_VALUE         40046
-#define _APS_NEXT_CONTROL_VALUE         1408
+#define _APS_NEXT_CONTROL_VALUE         1409
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
