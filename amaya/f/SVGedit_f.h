@@ -17,7 +17,6 @@ extern void SwitchIconGraph ( Document doc,
 extern void SVGCreated ( NotifyElement * event );
 extern void TspanCreated ( NotifyElement * event );
 extern void UsePasted ( NotifyElement * event );
-extern ThotBool AttrXlinkHrefWillBeChanged ( NotifyAttribute * event );
 extern void AttrXlinkHrefChanged ( NotifyAttribute *event );
 extern ThotBool DeleteAttrXlinkHref ( NotifyAttribute *event );
 extern void AttrAnimTimeChanged ( NotifyAttribute *event );
@@ -36,7 +35,6 @@ extern void SwitchIconGraph (/* Document doc,
 extern void SVGCreated (/* NotifyElement * event */);
 extern void TspanCreated (/* NotifyElement * event */);
 extern void UsePasted (/* NotifyElement * event */);
-extern ThotBool AttrXlinkHrefWillBeChanged (/* NotifyAttribute * event */);
 extern void AttrXlinkHrefChanged (/* NotifyAttribute *event */);
 extern ThotBool DeleteAttrXlinkHref (/* NotifyAttribute *event */);
 extern void AttrAnimTimeChanged (/* NotifyAttribute *event */);
