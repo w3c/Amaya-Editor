@@ -519,7 +519,8 @@ int                 mode;
    Attribute           attr, attrS, def;
    AttributeType       attrType, attrTypeS;
    int                 length;
-   CHAR_T                name[MAX_LENGTH], value[MAX_LENGTH];
+   CHAR_T              name[MAX_LENGTH], value[MAX_LENGTH];
+   STRING              text;
    int                 modified = FALSE;
    Language            lang;
 
@@ -652,12 +653,14 @@ int                 mode;
 				  if (elForm)
 				     {
 					/* save the NAME attribute of the element el */
-					length = MAX_LENGTH - 1;
-					TtaGiveTextAttributeValue (attr, name, &length);
-					/* save the VALUE attribute of the element el */
-					length = MAX_LENGTH - 1;
-					TtaGiveTextContent (elForm, value, &length, &lang);
-					AddNameValue (name, value);
+				       length = MAX_LENGTH - 1;
+				       TtaGiveTextAttributeValue (attr, name, &length);
+				       /* save the VALUE attribute of the element el */
+				       length = TtaGetTextLength (elForm) + 1;
+				       text = TtaGetMemory (length);
+				       TtaGiveTextContent (elForm, text, &length, &lang);
+				       AddNameValue (name, text);
+				       TtaFreeMemory (text);
 				     }
 				}
 			      else if (mode == HTML_EL_Reset_Input)
