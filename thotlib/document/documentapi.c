@@ -577,8 +577,6 @@ char               *directory;
    /* does the directory exist ? */
    if (strlen (directory) < 1)
       return (FALSE);
-   else if (access (directory, 0) != 0)
-      return (FALSE);
    else if (stat (directory, &fileStat) != 0)
       return (FALSE);
    else if (S_ISDIR (fileStat.st_mode))
