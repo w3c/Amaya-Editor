@@ -2853,13 +2853,14 @@ char* view_name
   int x, y, w, h;
   
 
+  /* @@ I should be able to remove this line */
   TtaGetViewGeometryRegistry (GeometryDoc, view_name, &x, &y, &w, &h);
 
   view = TtaGetViewFromName (GeometryDoc, view_name);
   if (view != 0 && TtaIsViewOpened (GeometryDoc, view))
     {
       /* get current geometry */
-      TtaGetViewWH (GeometryDoc, view, &w, &h);
+      TtaGetViewXYWH (GeometryDoc, view, &x, &y, &w, &h);
       usprintf (s, TEXT("%d %d %d %d"), 
 	       x,
 	       y,

@@ -39,10 +39,12 @@ extern void ConfigGetViewGeometry ( PtrDocument pDoc,
                                     int *y,
                                     int *width,
                                     int *height );
-extern void TtaGetViewWH ( Document doc,
-                           int view,
-                           int *width,
-                           int *height );
+extern void TtaGetViewXYWH ( Document doc,
+                             int view,
+                             int *xmm,
+                             int *ymm,
+                             int *width,
+                             int *height );
 extern void TtaGetViewGeometryRegistry ( Document document,
                                          char* name,
                                          int *x,
@@ -113,10 +115,12 @@ extern void ConfigGetViewGeometry (/* PtrDocument pDoc,
                                       int *y,
                                       int *width,
                                       int *height */);
-extern void TtaGetViewWH (/* Document doc,
-                             int view,
-                             int *width,
-                             int *height */);
+extern void TtaGetViewXYWH (/* Document doc,
+                               int view,
+                               int *xmm,
+                               int *ymm,
+                               int *width,
+                               int *height */);
 extern void TtaGetViewGeometryRegistry (/* Document document,
                                            char* name,
                                            int *x,

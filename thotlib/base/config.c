@@ -1869,15 +1869,17 @@ ThotBool            motif_conversion;
 }
 
 /*----------------------------------------------------------------------
-   TtaGetViewWH returns the current width and height values associated
-   with the frame where a view is displayed
+   TtaGetViewXYWH returns the current geometry (x, y, width, and height)
+   values associated with the frame where a view is displayed
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaGetViewWH (Document doc, int view, int *width, int *height)
+void                TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width, int *height)
 #else  /* __STDC__ */
-void                TtaGetViewWH (doc, view, width, height)
+void                TtaGetViewXYWH (doc, view, xmm, ymm, width, height)
 Document       doc;
 int            view;
+int           *xmm;
+int           *ymm;
 int           *width;
 int           *height;
 #endif /* __STDC__ */
@@ -1891,6 +1893,7 @@ int           *height;
 #else /* ! _GTK */
   Arg                 args[20];
 #endif /* ! _GTK */
+  Position            x, y;
   Dimension           w, h;
 
   frame =  GetWindowNumber (doc, view);
@@ -1907,8 +1910,13 @@ int           *height;
 
 #else /* !_GTK */
   widget = XtParent (XtParent (widget));
+
   /* Ask X what's the geometry of the frame */
   n = 0;
+  XtSetArg (args[n], XmNx, &x);
+  n++;
+  XtSetArg (args[n], XmNy, &y);
+  n++;
   XtSetArg (args[n], XmNwidth, &w);
   n++;
   XtSetArg (args[n], XmNheight, &h);
@@ -1916,6 +1924,8 @@ int           *height;
   XtGetValues (widget, args, n);
 #endif /* !_GTK */
   /* convert the result into mm */
+  *xmm = pixeltomm ((int) x, 1, TRUE);
+  *ymm = pixeltomm ((int) y, 1, TRUE);
   *width = pixeltomm ((int) w, 1, TRUE);
   *height = pixeltomm ((int) h, 0, TRUE);
 #else /* !_WINDOWS */
@@ -1931,8 +1941,13 @@ int           *height;
   else 
     {
       /* convert the result into mm */
+      /* @@ JK to verify if X and Y should be taken as such ! */
+      *xmm = (int) (rect.top);
+      *ymm = (int) (rect.top);
       *width = (int) (rect.right - rect.left);
       *height = (int) (rect.bottom - rect.top);
+      *xmm = pixeltomm (*xmm, 1, TRUE);
+      *ymm = pixeltomm (*ymm, 1, TRUE);
       *width = pixeltomm (*width, 1, TRUE);
       *height = pixeltomm (*height, 0, TRUE);
     }
