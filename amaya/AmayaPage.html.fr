@@ -28,17 +28,33 @@ height="349">
          xlink:href="amaya.png">
     <desc>Leading the Web to its full potential</desc>
   </image>
-  <text y="38px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
+  <text y="218px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
   xlink:type="simple" xlink:href="http://www.w3.org"
   style="fill:#dc5b53; font: bold 16px">W3C
   </text>
-  <text y="66px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
+  <text y="38px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
   xlink:type="simple" xlink:href="http://www.w3.org/Amaya"
   style="fill:#dc5b53; font: bold 16px">Amaya au W3C
   </text>
-  <text y="96px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
+  <text y="68px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
   xlink:type="simple" xlink:href="../doc/amaya/Manual.html.fr"
-  style="fill:#dc5b53; font: bold 16px">Manual en ligne
+  style="fill:#dc5b53; font: bold 16px">Manuel en ligne
+  </text>
+  <text y="98px" x="477px" style="fill:#dc5b53; font: bold 16px"
+  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+  xlink:href="../doc/amaya/Index.html">Index
+  </text>
+  <text y="128px" x="477px" style="fill:#dc5b53; font: bold 16px"
+  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+  xlink:href="../doc/amaya/Annotations.html.fr">Annotations
+  </text>
+  <text y="158px" x="477px" style="fill:#dc5b53; font: bold 16px"
+  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+  xlink:href="../doc/amaya/Math.html.fr">MathML
+  </text>
+  <text y="188px" x="477px" style="fill:#dc5b53; font: bold 16px"
+  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+  xlink:href="../doc/amaya/SVG.html.fr">SVG
   </text>
   <defs>
     <symbol id="cube">
