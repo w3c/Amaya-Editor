@@ -59,11 +59,13 @@ use vars  qw(		$in_labelfile
 	my $english_text = "";
 	my $found = 0; #boolean used during the parse of a whole label to treat the new adds
 	my $modification_necessary = 0; #boolean used during the parse of a whole label to treat the updating
-	my @list_of_lang_occur = () ;
+	my @list_of_lang_occur = () ; #as is name
 	 	$encodage = ""; #to load the encoding type of the messages
-	
+	my $end_label = ""; #to now what the latest label used by Amaya
 # packages used
+
 use Read_label qw ( &init_label );
+use Read_text qw ( &init_text );
 
 ################################################################################
 ##							sub exported
@@ -78,6 +80,10 @@ use Read_label qw ( &init_label );
 #	the updated base  
 sub import_a_language {
 	$language_code = shift;
+	$end_label = shift;
+	if (shift) {
+		$debug = 1;
+	}
 	$in_textfile = $in_textdirectory . $language_code . $in_textsufix;
 	$newbasefile = $basefile . ".new";
 
@@ -101,20 +107,32 @@ sub import_a_language {
 			   Comment => \&comment_hndl,
 			   Default => \&default_hndl
 				);
+################first : read the two files
+
 # to load the label and their references
-	my @list = Read_label::init_label ($in_labelfile);
-	{
+	my @list = ();
+	do {
+		$_ = @list = Read_label::init_label ($in_labelfile);
+	}while ($_ == 0);	
+	{#to fill the hach %labels :
 		my $i = $list[0] + 1;
-		print	 "\n", $list[0] , "\n";	
+		#print	 "\n", $list[0] , "\n";	
 		do {
 			$labels{ $list[$i] } = $list[$i + 1];
 			$i += 2;
 		}while ( $i <= ($list [0] * 3) );
 	}
-#to load the messages and their references		
-	inittext ();
+	
+#to load the messages and their references
+	my $total = 0;		
+	if ($encodage) {
+		($_, $total, %texts) = Read_text::init_text ("$in_textfile", $encodage);
+	}
+	else {
+		($encodage, $total, %texts) = Read_text::init_text ("$in_textfile");
+	}	
 							
-#parsing now	
+###############then : parsing now	
 	open (IN,"<$basefile") || die "can't read $basefile because: $!\n";
 	open (OUT,">$newbasefile") || die "can't create $newbasefile because: $!\n";
 	debug ("\n\tBegin of the parse");
@@ -130,7 +148,7 @@ sub import_a_language {
 	print "\tEnd IMPORT\n";
 	
 	if ($debug) {
-		print "il y a ",$encodage = @list_of_lang_occur,"langues presentes:\n" ;
+		print "\tThere is ",$_ = @list_of_lang_occur,"langues presentes:\n\t" ;
 		foreach ( @list_of_lang_occur ) {
 			print $_ . " ";
 		}
@@ -150,134 +168,6 @@ sub debug { #wrote messages for debuging when necessary ($debug = 1)
 }#end debug
 
 #--------------------------------------------------------------------
-
-
-
-#--------------------------------------------------------------------
-#--------------------------------------------------------------------
-#--------------------------------------------------------------------
-
-
-
-
-sub addtext {
-use Unicode::String qw(utf8 latin1);
-# extract From a line (!="") given in parameter the elements and adds them in %text 
-	my $label_ref;
-	my $text = shift;
-	my $line = shift;
-	my @else; 
-	my $textunicode = Unicode::String->new ();
-
-	if ( $text ne "" ){
-		chomp ($text);
-		($label_ref,@else) = split (/\s+/, $text); # cut below to spaces		
-		#	group @else in $text with ' ' like character space beetween the elements
-		$text = join (' ', @else) ;
-#	tests if it not a false translate		
-		if ( 	!defined ($text) 
-				|| ($text =~ /^\*\*/ && $text !~ /^\*\*\*/ )
-			 	) {
-			print "the reference $label_ref don't have a text at line $line:$text\n";
-		}	
-		else {
-			#	OK but need translate for any html tags and the unicode
-			$text =~ s/&/&amp;/g;
-			$text	=~ s/</&lt;/g;
-			# imports an ISO-latin1 string into UTF-8 if necessary
-			if ($encodage eq "latin1") {
-				$textunicode = latin1($text);
-				$texts{"$label_ref"} = $textunicode;
-			}
-			else {
-				$texts{"$label_ref"} = $text;
-			}
-		}
-	}
-	else {
-	  print "message file $in_textfile not well-formed at line $line]\n";
-	}
-}#end addtext
-
-#--------------------------------------------------------------------
-
-sub inittext { 
-# fill the %text from $in_textfile that is the file source
-# and search into the (first)line (# encoding= ...) the encoding 
-	my $line;
-	my $line_count = 0;
-	my $diese;
-	my $define;
-	my @rest;
-	my $choice ;
-	
-# open $in_textlfile only if it exists and is readable
-	if (!(-r $in_textfile)) { print "fichier $in_textfile introuvable\n"}
-   else {open (TEXT, "<$in_textfile") || die "erreur de lecture de $in_textfile:$!\n";
-
-	
-#	reads and adds all the texts
-# reads and uses the first line used normaly for the encoding type
-		$line = <TEXT> ;
-		chomp ($line); 
-		$line_count++;
-		if ($line && $line =~ /^# encoding=/) {
-			($diese, $define, $encodage, @rest) = split( /\s/,$line);
-			if ( !defined ($encodage) 
-				||  ($encodage ne "utf8" && $encodage ne "latin1") ) { #no good encoding
-				ask_for_encoding ();				
-			}
-			else{ #it's OK
-			}
-		}
-		else { # there isn't a line that mention the encoding
-			if ( !defined ($encodage) #because encodage can be force when $encodage is exported
-				|| ($encodage ne "utf8" && $encodage ne "latin1") ) { #no good encoding
-				ask_for_encoding ();
-			}
-			addtext ($line, $line_count);
-		}	
-	
-#	warning, the file must be well-formed without errors and no comments	
-		while ( $line = <TEXT> ) {
-			chomp ($line);
-			$line_count++;
-			if ($line ne "") {
-				addtext ($line, $line_count);
-			}
-	  	}
-	
-		close (TEXT) || die "problem during text'file is closed: $!";
-	}
-# verification
-	if ($debug){
-		my $i;
-		for ($i = 0 ; $i <= 196 ; $i++) {
-			if (defined ($texts{$i})) { 
-				print "ref $i give the text:\t",$texts{$i},"\n";
-			}	
-		}
-	}
-	debug ( " % texts initialized ! \n");
-
-} #end inittext
-#--------------------------------------------------------------------
-sub ask_for_encoding {
-	my $choice = 0 ;
-	
-	do {
-     	print "\tIn what type of encoding are messages ?\n",
-   	  	"\tutf8 (default)=>1 or latin1=>2\n";
-     	chomp ($choice = <STDIN> );
-  	}
-  	while ($choice eq "" || $choice =~ /^\D/ || $choice <= 0 || $choice >= 3 );
-  	if ($choice == 2) {
-   	  $encodage = "latin1";
-  	}
-  	else {
-   	  $encodage = "utf8";
-  	}
-}
 #--------------------------------------------------------------------
 
 #------------------THE HANDLERS--------------------------------------
@@ -413,7 +303,7 @@ sub end_hndl { #	do the modification if necessary
 				print OUT $texts{ $labels{$current_label}};
 				print OUT "</message>\n";
 			}else {
-				if ( $current_label !~ /MSG_MAX/ && $current_label ne "MAX_EDITOR_LABEL") { # This label is always empty
+				if ( $current_label  ne $end_label) { # This label is always empty
 					print '==> ' . "the label $current_label (ref ";
 					print $labels{$current_label} ;
 					print ")don't have a translate in the message file\n";
@@ -435,6 +325,7 @@ sub end_hndl { #	do the modification if necessary
 			print OUT "\t<language encoding=\"$encodage\">$language_code</language>\n" ;
 		}
 	}	
+	### always
 	print OUT "</$end_tag>\n";
 }  # End endhndl
 
@@ -527,68 +418,6 @@ __END__
 
 
 ########################no more utility
-sub addlabel {
-# extract From a line (!="") given in parameter the elements and adds them in %labels 
-	my $label;
-	my $label_ref;
-	my @else; 
 
-	if ( $_[0] ne "" && $_[0] !~ /^\/\*/ && $_[0] =~ /^#define/i ) {
-		chomp ($_[0]);
-		($_,$label,$label_ref,@else) = split (/\s+/, $_[0]);
-		$labels{$label} = $label_ref;
-	}
-	elsif ( $_[0] eq "" || $_[0] =~ /^\/\*/) {} # it's normal
-	else {
-	   print "label file $in_labelfile not well-formed at line $_[1]\n";
-   }
-} #end addlabel
 
-#--------------------------------------------------------------------
 
-sub initlabel {# fill the %labels from $in_labelfile that is reading
-	my $line;
-	my $line_count = 0; # used to indicate the line of an error
-	
-# open $in_labelfile only if it exists and is readable
-unless (-r $in_labelfile)
-	{ 
-		print "fichier $in_labelfile introuvable";
-	}
-else {
-	open (LABEL, "<$in_labelfile") || die "erreur de lecture de $in_labelfile: $!";
-
-#	drop the comments at the beginning	
-#	comments have to be either empty lines either don't begin with "#define" 
-	do{
-		$line = <LABEL>;
-		$line_count++;
-	} 
-	while ($line eq "" || !($line =~ /^#define/i) );		
-#	the first line witch we are interested in have been already read	
-	if ($line ne "") {
-		addlabel ($line,$line_count);
-	}
-	
-#	reads and adds all the labels
-#	warning, the rest of the file must be well-formed without errors 	
-	while ($line = <LABEL>) {
-		$line_count++;	
-		if ($line ne "") {
-			addlabel ($line, $line_count);
-		}
-  	}
-	close (LABEL) || die "problem during LABEL'file is closed: $!";
-
-# verification
-#	if ($debug){
-#		my $i;my %otherside;
-#		%otherside = reverse %labels ;
-#		for ($i = 0 ; $i <= 198 ; $i++) {
-#			print "the label is ",$otherside{"$i"},"\t\tand the reference is $i\n";
-#		}
-#	}
-	
-	debug (" % labels initialized !");
-}	
-} #end initlabel

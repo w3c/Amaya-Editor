@@ -40,17 +40,20 @@ sub create_base {
 
 # to avoid pb with %label if 2 call to this function 	
 	%label = ();
-  
-	my $date = `date`;# to execute the command shell
-	chomp ( $date );
+# to avoid to erase the old base
+	if (-r $out_basename) {
+		rename ( $out_basename, $out_basename . ".old" )  || 	
+		 	die "can't rename the old $out_basename to $out_basename.old because of: $! \nthe old base still exist \n";
+		print "\tOld base ($out_basename) renames as $out_basename.old\n";
+	}  
 	
-	my $num_line = 0;	
-	$num_of_label =0;
 
 #	initialization of the base
 	open (OUT, ">$out_basename") || die "can't create $out_basename: $!";
 	print OUT "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n";
-	print OUT "<base version=\"0\" last_update=\"$date\">\n";
+	{my $date = `date`;# to execute the command shell
+	chomp ( $date );	
+	print OUT "<base version=\"0\" last_update=\"$date\">\n";}
 
 # 	indicates the languages that occur into the field <control>, 
 #	Engish is mandatory, beause it's the refference 
@@ -62,19 +65,17 @@ sub create_base {
 	
 #	read the file source only if it exists and is readable
 	my @list = ();
-	unless (-r $in_headfile ) {
-		print "fichier $in_headfile introuvable";
-		}
-   else {
-	 	@list = Read_label::init_label ($in_headfile);
-		my $i;
-		for ($i = 1,$i <= $list[0],$i++ ) {
-			push (@list_of_label, $list[$i]  );
-		}
-		for ($i,$i <= ($list[0] * 2 ),$i++ ) {
-			$label { $list[$i] }= $list[$i];
-		}		
-  	}
+	do {
+	 	$_ = @list = Read_label::init_label ($in_headfile);
+	}while ($_ == 0);
+	my $i;	
+	for ( $i = 1,$i <= $list[0],$i++ ) {
+		push (@list_of_label, $list[$i]  );
+	}
+# write the labels
+	foreach (@list_of_label){
+		print OUT "<label define=\"$_\"></label>\n";
+	}
    	
 #	ending 
 	print OUT "</messages>\n";
@@ -89,28 +90,6 @@ sub create_base {
 ### 											end sub exported
 ########################################################
 
-
-sub add { #	write the new label given in first parameter in 'OUT'  
- 	my $label = shift;
-	my $num_line = shift;
-	if (defined ($label { $label}) ) {
-		print "The label $label allredy exists\n";
-	}
-	else {
-		$label { $label} = $num_line;
-		print OUT "<label define=\"";
-		print OUT $label;
-		if ( $label =~ /MSG_MAX/ || $label =~ /MAX_EDITOR_LABEL/) {
-			print OUT "\">\n";
-			print OUT "<!--this label must still empty end the latest because it";
-			print OUT "shows the end of labels that are used for Amaya --></label>\n"
-		}
-		else {
-			print OUT "\"></label>\n";
-		}
-		$num_of_label++;
-	}
-}
 1;
 __END__
 # Below is the stub of documentation for your module. You better edit it!

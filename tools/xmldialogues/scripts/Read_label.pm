@@ -1,6 +1,5 @@
 #!/usr/bin/perl -w
 package Read_label;
-
 use strict;
 
 BEGIN {
@@ -16,6 +15,8 @@ BEGIN {
 						&init_label
 						)			
 }
+
+
 # global variables
 	my $num_of_label = 0 ; #how many are recognized
 	my @list_of_label = (); # to record the sequence
@@ -24,10 +25,18 @@ BEGIN {
 	my $in_labelfile = "";
 	
 ################################################################################
-##							sub exported (se how to use it in the end)
+##							sub exported (see how to use it at the end)
 ################################################################################
 
-sub init_label {# fill the %labels from $in_labelfile that is reading
+sub init_label {
+# fill the %labels from $in_labelfile that is reading
+#return (in one list):
+#1)the number of labels recognizerd
+#2)the list of the labels @list_of_label
+#3)the list of the hash variable %label_refs
+
+
+
 	 $in_labelfile  = shift; #name of the label file
 	
 	my $line = "";
@@ -114,13 +123,18 @@ sub addlabel {
 		{} # it's normal
 	elsif ( $line ne "" && $line !~ /^\/\*/ && $line =~ /^#define/i ) {
 		($_,$label,$label_ref,@else) = split (/\s+/, $line);
-		if (defined $label_ref) {
+		if (defined $label_ref &&  !(defined ( $label_refs{$label} )) ) {
 			$num_of_label += 1;
 			push (@list_of_label, $label );
 			$label_refs{$label} = $label_ref;
 		}
 		else {
-			print "label file $in_labelfile not well-formed at line $line_num\n";
+			if (defined ( $label_refs{$label}) ) {		
+				print "The label $label at line $line_num allredy exists (before)\n";
+			}
+			else { 	
+				print "label file $in_labelfile not well-formed at line $line_num\n";
+			}
 		}
 	}
 	else {
@@ -129,8 +143,6 @@ sub addlabel {
 } #end addlabel
 
 #--------------------------------------------------------------------
-
-
 
 
 1;

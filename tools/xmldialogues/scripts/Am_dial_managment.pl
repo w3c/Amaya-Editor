@@ -29,7 +29,7 @@ my %index =qw ( 	1	dia
 						2	msg
 						3	lib
 						4	corrd);
-# to store the particulary labels that ends the label files
+# to store the particulary labels that ends the label files used by Amaya
 my %ending_label = qw (	dia MAX_EDITOR_LABEL
 								msg AMAYA_MSG_MAX
 								lib TMSG_LIB_MSG_MAX
@@ -183,7 +183,7 @@ do { # to continue to treat the same type of dialogue
 			$Import_am_msg::in_textdirectory = $lang_dir { $index{ $last_choice}};
 			$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};
 			$Import_am_msg::encodage = "latin1";
-			Import_am_msg::import_a_language ("en") ;
+			Import_am_msg::import_a_language ("en", $ending_label{ $index{ $last_choice}}) ;
 		}
 
 	}
@@ -215,7 +215,7 @@ do { # to continue to treat the same type of dialogue
 		$Import_am_msg::in_textdirectory = "$home/$rep_amaya/Amaya/tools/xmldialogues/in/";
 		$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};				
 			}
-		Import_am_msg::import_a_language ($lang) ;		
+		Import_am_msg::import_a_language ($lang, $ending_label{ $index{$last_choice}} ) ;		
 	}	
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	elsif ($choice == 3) { # Export all dialogues files
