@@ -128,6 +128,7 @@ int GetFontFilename (char script, int family,
 		XftPatternAddString (pat, XFT_FAMILY, "lucidabright");
 		XftPatternAddString (pat, XFT_FAMILY, "new century schoolbook");
 		XftPatternAddString (pat, XFT_FAMILY, "utopia");
+	      XftPatternAddString (pat, XFT_FAMILY, "Utopia");
 		/* XftPatternAddString (pat, XFT_FAMILY, "charter"); */
 		XftPatternAddString (pat, XFT_FAMILY, "terminal");
 		XftPatternAddString (pat, XFT_FAMILY, "georgia");
@@ -146,6 +147,7 @@ int GetFontFilename (char script, int family,
 	      XftPatternAddString (pat, XFT_FAMILY, "lucidabright");
 	      XftPatternAddString (pat, XFT_FAMILY, "new century schoolbook");
 	      XftPatternAddString (pat, XFT_FAMILY, "utopia");
+	      XftPatternAddString (pat, XFT_FAMILY, "Utopia");
 	      /* XftPatternAddString (pat, XFT_FAMILY, "charter"); */
 	      XftPatternAddString (pat, XFT_FAMILY, "terminal");
 	      XftPatternAddString (pat, XFT_FAMILY, "trebuchet");
@@ -163,7 +165,8 @@ int GetFontFilename (char script, int family,
 	      XftPatternAddString (pat, XFT_FAMILY, "Andale Mono");
 	      XftPatternAddString (pat, XFT_FAMILY, "Nimbus Mono L");
 	      XftPatternAddString (pat, XFT_FAMILY, "Arial");
-	      XftPatternAddString (pat, XFT_FAMILY, "arial");	      	      
+	      XftPatternAddString (pat, XFT_FAMILY, "arial");
+	      XftPatternAddString (pat, XFT_FAMILY, "Utopia");	      	      
 	      break;
 	    }
 	}

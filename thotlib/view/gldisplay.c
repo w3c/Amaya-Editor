@@ -191,7 +191,7 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
       return;
    
    y = y + FrameTable[frame].FrTopMargin;
-   GL_DrawUnicodeChar(car, x, y, font, fg);
+   GL_DrawUnicodeChar((CHAR_T) car, x, y, font, fg);
 }
 
 /*----------------------------------------------------------------------
@@ -384,6 +384,8 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
   - double if type = 2.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
+#include "openglfonts.h"
+
 void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 		   int type, PtrFont font, int fg)
 {
@@ -391,41 +393,44 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
    int                 yend, delta;
    int                 wd, asc, hd;
 
+   GL_font *glfont;
+
+   glfont = (GL_font *) font;
    if (FontHeight (font) *1.2 >= h)
      /* display a single glyph */
      {
-     yf = y + ((h - CharacterHeight (242, font)) / 2) + CharacterAscent (242, font);
-     DrawChar ('\362', frame, x, yf, font, fg);
+       yf = y + ((h - CharacterHeight (242, font)) / 2) + CharacterAscent (242, font);
+       DrawChar ('\362', frame, x, yf, font, fg);
      }
    else
      {
-     /* Need more than one glyph */
-     yf = y + CharacterAscent (243, font);
-     DrawChar ('\363', frame, x, yf, font, fg);
-     yend = y + h - CharacterHeight (245, font) + CharacterAscent (245, font) - 1;
-     DrawChar ('\365', frame, x, yend, font, fg);
-     asc = CharacterAscent (244, font);
-     hd = CharacterHeight (244, font);
-     delta = yend - yf - asc;
-     yf += asc;
-     wd = (UnicodeCharacterWidth (243, font) - UnicodeCharacterWidth (244, font)) / 2;
-     if (delta > 0)
-       {
-	 while (yf < yend)
-	   {
-	     DrawChar ('\364', frame, x + wd, yf, font, fg);
-	     yf += hd;
-	   }
-       }
+       /* Need more than one glyph */
+       yf = y + CharacterAscent (243, font);
+       DrawChar ('\363', frame, x, yf, font, fg);
+       yend = y + h - CharacterHeight (245, font) + CharacterAscent (245, font) - 1;
+       DrawChar ('\365', frame, x, yend, font, fg);
+       asc = CharacterAscent (244, font);
+       hd = CharacterHeight (244, font);
+       delta = yend - yf - asc;
+       yf += asc;
+       wd = (UnicodeCharacterWidth (243, font) - UnicodeCharacterWidth (244, font)) / 2;
+       if (delta > 0)
+	 {
+	   while (yf < yend)
+	     {
+	       DrawChar ('\364', frame, x + wd, yf, font, fg);
+	       yf += hd;
+	     }
+	 }
      }
    if (type == 2)		/* double integral */
       DrawIntegral (frame, thick, x + (UnicodeCharacterWidth (244, font) / 2),
 		    y, l, h, -1, font, fg);
-
+   
    else if (type == 1)		/* contour integral */
-      DrawChar ('o', frame, x + ((l - UnicodeCharacterWidth (111, font)) / 2),
-		y + (h - CharacterHeight (111, font)) / 2 + CharacterAscent (111, font),
-		font, fg);
+     DrawChar ('o', frame, x + ((l - UnicodeCharacterWidth (111, font)) / 2),
+	       y + (h - CharacterHeight (111, font)) / 2 + CharacterAscent (111, font),
+	       font, fg);
 }
 
 /*----------------------------------------------------------------------

@@ -674,8 +674,8 @@ gboolean FrameResizedGTK (GtkWidget *widget,
 	Clear (frame, width, height, 0, 0);
 	GL_ActivateDrawing ();
 	DefRegion (frame, 
-		   x, y+FrameTable[frame].FrTopMargin, 
-		   width+x, y+height+FrameTable[frame].FrTopMargin);
+		   0, 0,
+		   FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
 	FrameRedraw (frame, width, height);
 	GL_DrawAll (widget, frame);
 	while (gtk_events_pending ()) 
@@ -3244,10 +3244,10 @@ void RemoveClipping (int frame)
 #endif /* _WINDOWS */
 #else /* _GL */
    glDisable (GL_SCISSOR_TEST);
-   glScissor ( 0,
-	       0,
-	       FrameTable[frame].FrWidth,
-	       FrameTable[frame].FrHeight);
+   /* glScissor ( 0, */
+/* 	       0, */
+/* 	       FrameTable[frame].FrWidth, */
+/* 	       FrameTable[frame].FrHeight); */
 #endif /*_GL*/
 }
 

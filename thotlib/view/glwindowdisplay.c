@@ -1622,7 +1622,7 @@ void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 			  int width, int height)
 {
    
-  if (1 || !Software_Mode)
+  if (!Software_Mode)
     DefRegion (frame, 
 	       xd, yd+FrameTable[frame].FrTopMargin, 
 	       width+xd, yd+height+FrameTable[frame].FrTopMargin);
@@ -1630,11 +1630,10 @@ void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
     {
       if (GL_MakeCurrent (frame))
       	return;
-
       if ((yf + height + FrameTable[frame].FrTopMargin) > FrameTable[frame].FrHeight) 
  	height += (yf + height + FrameTable[frame].FrTopMargin) - FrameTable[frame].FrHeight;
       if (xd + width > FrameTable[frame].FrWidth) 
- 	width += (xd + width) - FrameTable[frame].FrWidth;
+ 	width -= (xd + width) - FrameTable[frame].FrWidth;
       if (xf < 0)
 	{
 	  width -= xf;
@@ -1645,7 +1644,6 @@ void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 	  width -= xd;
 	  xd = 0;	
 	}
-
       if (width > 0 &&  height  > 0)
 	{
 	  /* Copy from backbuffer to backbuffer */
