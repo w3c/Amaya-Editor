@@ -798,16 +798,6 @@ void                SetupAndPrint (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  SectionNumbering
-  Execute the "Section Numbering" command
-  ----------------------------------------------------------------------*/
-void SectionNumbering (Document doc, View view)
-{
-  SNumbering[doc] = !SNumbering[doc];
-  ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
-}
-
-/*----------------------------------------------------------------------
   UpdateURLsInSubtree
   Update NAMEs and URLs in subtree of el element, to take into account
   the move from one document to another.

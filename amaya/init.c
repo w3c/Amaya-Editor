@@ -200,7 +200,6 @@ static ThotIcon       iconPlugin;
 
 extern int       menu_item;
 extern char      LostPicturePath [512];
-static ThotBool  itemChecked = FALSE;
 
 #include "wininclude.h"
 #endif /* _WINDOWS */
@@ -5642,30 +5641,64 @@ void         ChangeAttrOnRoot (Document document, int attrNum)
   ShowMapAreas
   Execute the "Show Map Areas" command
   ----------------------------------------------------------------------*/
-void ShowMapAreas (Document document, View view)
+void ShowMapAreas (Document doc, View view)
 {
 #ifdef _WINDOWS
-  int frame = GetWindowNumber (document, view);
+  int frame = GetWindowNumber (doc, view);
 
   if (frame == 0 || frame > 10)
     TtaError (ERR_invalid_parameter);
   else
     {
       HMENU hmenu = WIN_GetMenu (frame); 
-      if (!itemChecked)
+      if (!MapAreas[doc])
 	{
           CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
-          itemChecked = TRUE;
+          MapAreas[doc] = TRUE;
 	}
       else
 	{
 	  hmenu = WIN_GetMenu (frame); 
 	  CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
-	  itemChecked = FALSE;
+	  MapAreas[doc] = FALSE;
 	}
    }
+#else /* _WINDOWS */
+  MapAreas[doc] = !MapAreas[doc];
 #endif /* _WINDOWS */
-  ChangeAttrOnRoot (document, HTML_ATTR_ShowAreas);
+  ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
+}
+
+/*----------------------------------------------------------------------
+  SectionNumbering
+  Execute the "Section Numbering" command
+  ----------------------------------------------------------------------*/
+void SectionNumbering (Document doc, View view)
+{
+#ifdef _WINDOWS
+  int frame = GetWindowNumber (doc, view);
+
+  if (frame == 0 || frame > 10)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      HMENU hmenu = WIN_GetMenu (frame); 
+      if (!SNumbering[doc])
+	{
+          CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
+          SNumbering[doc] = TRUE;
+	}
+      else
+	{
+	  hmenu = WIN_GetMenu (frame); 
+	  CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
+	  SNumbering[doc] = FALSE;
+	}
+   }
+#else /* _WINDOWS */
+  SNumbering[doc] = !SNumbering[doc];
+#endif /* _WINDOWS */
+  ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
 }
 
 /*----------------------------------------------------------------------
