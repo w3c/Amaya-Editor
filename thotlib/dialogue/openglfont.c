@@ -1157,8 +1157,9 @@ int UnicodeFontRender (void *gl_font,
   
   n = sizeof (unsigned char)*Height*Width;
   data = TtaGetMemory (n); 
+  if (data == NULL)
+    return 0;
   memset (data, 0, n);
-  
   /* Load glyph image into the texture */
   for (n = 0; n < size; n++)
     {
@@ -1174,9 +1175,6 @@ int UnicodeFontRender (void *gl_font,
 	}
     }
   y -= (float) SUPERSAMPLING (miny + Height);
-
-  
-  
   glEnable (GL_TEXTURE_2D);
   if (FontBind == 0)
     glGenTextures (1, &(FontBind));

@@ -2091,31 +2091,18 @@ gboolean APP_TextCallbackGTK (GtkWidget *w, int frame)
      For a callback in the signal catching hierarchy*/
   return FALSE;
 }
-
 /*----------------------------------------------------------------------
-APP_TextEnterGTK : Callback to set url in box when clicked (as activate does)
+APP_PopWinSelect : Callback to set url in box when button release 
+over a selectable item (as activate does)
  ----------------------------------------------------------------------*/
-gboolean APP_TextEnterGTK (GtkWidget *w, GdkEvent *event, int frame)
+gboolean APP_PopWinSelect (GtkWidget *w)
 {
-  GtkWidget *entry, *scr_win;
+  GtkWidget *entry;
 
-  switch (event->type)
-    {
-    case GDK_BUTTON_RELEASE:
-      scr_win = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (w),  
-						   "scr_win");	
-      if (GTK_WIDGET_VISIBLE(scr_win))
-	{
-       	  gtk_widget_hide (scr_win);
-	  entry = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (w), 
-						     "entry");
-     	  gtk_signal_emit_by_name (GTK_OBJECT(entry),
-				   "activate");
-	  return FALSE;
-	}	
-  default:
-    break;
- }
+  entry = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (w), 
+					     "entry");
+  gtk_signal_emit_by_name (GTK_OBJECT(entry),
+			   "activate");
   return FALSE;
 }
 #endif /* _GTK */
@@ -2379,16 +2366,14 @@ int TtaAddTextZone (Document doc, View view, char *label,
 		  gtk_signal_connect_after (GTK_OBJECT (w), "activate",
 					    GTK_SIGNAL_FUNC (APP_TextCallbackGTK),
 					    (gpointer)frame);
-
-                  gtk_object_set_data (GTK_OBJECT (ComboList), 
-                                "entry", 
-                                (gpointer) w);
-		  gtk_object_set_data (GTK_OBJECT (ComboList), 
-                                "scr_win", 
-                                (gpointer) GTK_COMBO (combo)->popwin);
-		  gtk_signal_connect (GTK_OBJECT (ComboList), "event",
-				      GTK_SIGNAL_FUNC (APP_TextEnterGTK), 
-				      (void *)frame);
+		  /*(combo)->popwin is the window appearing when dopping
+		    the list...*/
+		  gtk_object_set_data (GTK_OBJECT (GTK_COMBO (combo)->popwin), 
+				       "entry", 
+				       (gpointer) w);
+		  gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->popwin), "hide",
+				      GTK_SIGNAL_FUNC (APP_PopWinSelect),
+				      (gpointer) NULL);
 		  
 		  FrameTable[frame].Call_Text = (Proc) procedure;
 		  gtk_widget_show_all (row->parent->parent);
