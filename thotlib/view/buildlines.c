@@ -2156,7 +2156,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   int                 x, lineSpacing, indentLine;
   int                 org, width, noWrappedWidth;
   int                 lostPixels, minWidth;
-  int                 top, left, rigth, spacing;
+  int                 top, left, right, spacing;
   ThotBool            toAdjust;
   ThotBool            breakLine;
   ThotBool            orgXComplete;
@@ -2175,7 +2175,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   full = TRUE;
   top = pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
   left = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
-  rigth = pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+  right = pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
   x = 0;
   pRootAb = ViewFrameTable[frame - 1].FrAbstractBox;
   /* check if the X, Y position is relative or absolute */
@@ -2375,7 +2375,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      if (pPreviousLine || pAb->AbTruncatedHead || indentLine >= width)
 		indentLine = 0;
 	      pLine->LiXOrg += indentLine;
-	      pLine->LiXMax = width - pLine->LiXOrg;
+	      pLine->LiXMax = width;
 	      pLine->LiFirstBox = pNextBox;
 	      pLine->LiFirstPiece = pBoxToBreak;
 	      /* Fill the line */
@@ -2434,7 +2434,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		  noWrappedWidth = 0;
 		}
 
-	      /* Teste le cadrage des lignes */
+	      /* Take into account the text-align */
 	      if (toAdjust &&
 		  (full || pAb->AbTruncatedTail || pLine->LiRealLength > pLine->LiXMax) &&
 		  pAb->AbAdjust == AlignJustify)
@@ -2450,7 +2450,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		      if (extensibleBox)
 			pLine->LiXMax = pBox->BxW;
 		      if (pAb->AbAdjust == AlignCenter)
-			x += (pLine->LiXMax - pLine->LiRealLength) / 2;
+			x = (pLine->LiXMax - pLine->LiRealLength) / 2;
 		      else if (pAb->AbAdjust == AlignRight)
 			x = x + pLine->LiXMax - pLine->LiRealLength;
 		    }
@@ -2584,8 +2584,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	}
     }
   /* now add margins, borders and paddings to min and max widths */
-  pBox->BxMinWidth += left + rigth;
-  pBox->BxMaxWidth += left + rigth;
+  pBox->BxMinWidth += left + right;
+  pBox->BxMaxWidth += left + right;
   *height = *height + spacing;
 }
 
