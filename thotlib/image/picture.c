@@ -2318,6 +2318,10 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		      /* if it's a background, dont rescale the picture */
 		      wBox = im->rgb_width;
 		      hBox = im->rgb_height;
+		      if (xBox == 0)
+			xBox = im->rgb_width;
+		      if (yBox == 0)
+			yBox = im->rgb_height;
 		    }
 		  else
 		    {
@@ -2331,7 +2335,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 			yBox = im->rgb_height;
 		    }
 #ifndef _GL
-		  gdk_imlib_render(im, (gint)wBox, (gint)hBox);
+		  gdk_imlib_render(im,
+				   (gint)xBox,
+				   (gint)yBox);
 		  drw = (GdkPixmap *) gdk_imlib_move_image (im);
 		  imageDesc->PicMask = (Pixmap) gdk_imlib_move_mask (im);
 #else /* _GL */
