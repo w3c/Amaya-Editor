@@ -2296,6 +2296,119 @@ ThotBool AM_UseXHTMLMimeType (void)
   return (xhtml_mimetype);
 }
 
+
+/********************************************
+ The following routines were adapted from the GNU libc functions
+ for generating a tmpnam.
+*********************************************/
+
+/* Return nonzero if DIR is an existent directory.  */
+static int
+direxists (const char *dir)
+{
+  struct stat buf;
+
+  return stat (dir, &buf) == 0 && S_ISDIR (buf.st_mode);
+}
+
+
+/* These are the characters used in temporary filenames.  */
+static const char letters[] =
+"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+/* Generate a temporary file name based on TMPL.  TMPL must match the
+   rules for mk[s]temp (i.e. end in "XXXXXX").  The name constructed
+   does not exist at the time of the call to __gen_tempname.  TMPL is
+   overwritten with the result.
+
+   We use a clever algorithm to get hard-to-predict names. */
+void
+AM_gen_tempname (char *tmpl)
+{
+  int len;
+  char *XXXXXX;
+  static uint64_t value;
+  uint64_t random_time_bits;
+  unsigned int count;
+  int save_errno = errno;
+  struct stat st;
+
+  /* A lower bound on the number of temporary files to attempt to
+     generate.  The maximum total number of temporary file names that
+     can exist for a given template is 62**6.  It should never be
+     necessary to try all these combinations.  Instead if a reasonable
+     number of names is tried (we define reasonable as 62**3) fail to
+     give the system administrator the chance to remove the problems.  */
+  unsigned int attempts_min = 62 * 62 * 62;
+
+  /* The number of times to attempt to generate a temporary file.  To
+     conform to POSIX, this must be no smaller than TMP_MAX.  */
+  unsigned int attempts = attempts_min < TMP_MAX ? TMP_MAX : attempts_min;
+
+  len = strlen (tmpl);
+  if (len < 6 || strcmp (&tmpl[len - 6], "XXXXXX"))
+    {
+      /* @@ JK ? */
+      errno = EINVAL;
+      return;
+    }
+
+  /* This is where the Xs start.  */
+  XXXXXX = &tmpl[len - 6];
+
+  /* Get some more or less random data.  */
+#ifdef RANDOM_BITS
+  RANDOM_BITS (random_time_bits);
+#else
+# if HAVE_GETTIMEOFDAY || _LIBC
+  {
+    struct timeval tv;
+    gettimeofday (&tv, NULL);
+    random_time_bits = ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec;
+  }
+# else
+  random_time_bits = time (NULL);
+# endif
+#endif
+  value += random_time_bits ^ getpid ();
+
+  for (count = 0; count < attempts; value += 7777, ++count)
+    {
+      uint64_t v = value;
+
+      /* Fill in the random bits.  */
+      XXXXXX[0] = letters[v % 62];
+      v /= 62;
+      XXXXXX[1] = letters[v % 62];
+      v /= 62;
+      XXXXXX[2] = letters[v % 62];
+      v /= 62;
+      XXXXXX[3] = letters[v % 62];
+      v /= 62;
+      XXXXXX[4] = letters[v % 62];
+      v /= 62;
+      XXXXXX[5] = letters[v % 62];
+
+      /* This case is backward from the other three.  AM_gen_tempname
+	 succeeds if __xstat fails because the name does not exist.
+	 Note the continue to bypass the common logic at the bottom
+	 of the loop.  */
+      if (stat (tmpl, &st) < 0)
+	  break;
+
+      continue;
+    }
+  
+  if (count == attempts || errno != ENOENT)
+    tmpl[0] = EOS;
+  else
+    errno = save_errno;
+
+  return;
+}
+
+#define JOSE 1
+
 /*-----------------------------------------------------------------------
   GetTempName
   Front end to the Unix tempnam function, which is independent of the
@@ -2305,6 +2418,58 @@ ThotBool AM_UseXHTMLMimeType (void)
   -----------------------------------------------------------------------*/
 char *GetTempName (const char *dir, const char *prefix)
 {
+#ifdef JOSE
+
+  static char tmpbufmem[FILENAME_MAX];
+  int len;
+  int count;
+  int i;
+
+  if (!dir || *dir == EOS || !direxists (dir))
+    return NULL;
+
+  /* make sure that the name is no bigger than FILENAME_MAX */
+
+  len = strlen (dir) + 8;
+  if (len > FILENAME_MAX)
+    return NULL;
+
+  /* copy the dir name, and add a DIR_SEP if it's missing */
+  if (dir[strlen (dir) - 1] == DIR_SEP)
+    strcpy (tmpbufmem, dir);
+  else
+    sprintf (tmpbufmem, "%s%c", dir, DIR_SEP);
+
+  /* copy the prefix (no more than L_tmpnam chars, to respect posix) */
+  if (prefix && (len + strlen (prefix) > FILENAME_MAX))
+    return NULL;
+
+  snprintf (&tmpbufmem[strlen (tmpbufmem)], L_tmpnam, "%s", prefix);
+
+  /* make sure that the prefix has at least 6 chars for the temporary name */
+  
+  len = strlen (prefix);
+  if (len < L_tmpnam)
+    {
+      i = strlen (tmpbufmem);
+      count = 0;
+      while (len < L_tmpnam && count < 6)
+	{
+	  tmpbufmem[i++] = 'X';
+	  len++;
+	  count++;
+	}
+    }
+  tmpbufmem[i] = EOS;
+
+  AM_gen_tempname (tmpbufmem);
+
+  if (tmpbufmem[0] == EOS)
+    return NULL;
+  else
+    return (TtaStrdup (tmpbufmem));
+
+#else
   char *tmpdir;
   char *tmp;
   char *name = NULL;
@@ -2358,4 +2523,5 @@ char *GetTempName (const char *dir, const char *prefix)
       /* TtaFreeMemory (tmpdir); */
     }
   return (name);
+#endif
 }
