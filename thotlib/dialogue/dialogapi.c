@@ -477,7 +477,11 @@ CHAR_T     *key;
       *key = VK_F16;
     }
   else if (ustrlen (word) == 1)
-    *key = word [0];
+    {
+      *key = word [0];
+      /* we must ignore the shift here */
+      *fVirt &= ~FSHIFT;
+    }
   else
     return FALSE;
   return TRUE;
@@ -498,7 +502,6 @@ CHAR_T     *key;
    STRING   pc;
    STRING   pw;
    CHAR_T   word [1024];
-   BYTE     k;
    BOOL     getEquivChar = FALSE;
 
    *fVirt = FNOINVERT;
@@ -552,16 +555,7 @@ CHAR_T     *key;
 	     
 	     pw = &word [0];
 	     /* accept specifics characters + = - etc., but without shift */
-	     if (*pc >= '!' && *pc <= '@')
-	       {
-			 k = ~FSHIFT;
-		 *fVirt &= k;
-		 *pw++ = *pc++;
-	       }
-	     else
-	       while ((*pc >= 'A' && *pc <= 'Z') ||
-		      (*pc >= 'a' && *pc <= 'z') ||
-		      (*pc >= '0' && *pc <= '9'))
+	     while (*pc >= '!' && *pc <= '~')
 	       *pw++ = *pc++;
 	     *pw = EOS;
 	     if (!GetKey (word, fVirt, key))	
