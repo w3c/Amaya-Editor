@@ -71,6 +71,7 @@ static AttSearch    URL_attr_tab[] = {
    {SVG_ATTR_xlink_href, SVG_TYPE}
 #endif
 };
+
 /* list of attributes checked for updating images */
 static AttSearch    SRC_attr_tab[] = {
    {HTML_ATTR_SRC, XHTML_TYPE},
@@ -83,8 +84,6 @@ static AttSearch    SRC_attr_tab[] = {
    {SVG_ATTR_xlink_href, SVG_TYPE}
 #endif
 };
-static char        *QuotedText;
-
 
 /* old generated doctype definitions */
 /*
