@@ -2769,7 +2769,6 @@ int                 frame;
 		      if (pAb->AbChange)
 			{
 			  /* Si transformation polyline en graphique simple */
-			  FreePolyline (pBox);
 			  pAb->AbRealShape = pAb->AbShape;
 			  
 			  /* remonte a la recherche d'un ancetre elastique */
