@@ -1000,6 +1000,7 @@ View                view;
 	 } 
 
        TtaSetDisplayMode (document, SuspendDisplay);
+       TtaLockTableFormatting ();
        elType.ElTypeNum = HTML_EL_Table;
        TtaCreateElement (elType, document);
        
@@ -1052,7 +1053,8 @@ View                view;
 		 }
 	     } 
 	   CheckAllRows (el, document);
-	 } 
+	 }
+       TtaUnlockTableFormatting ();
        TtaSetDisplayMode (document, DisplayImmediately);
      }
 }
