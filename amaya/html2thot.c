@@ -552,6 +552,8 @@ static GIMapping    HTMLGIMappingTable[] =
    {"CENTER", SPACE, HTML_EL_Center, NULL},
    {"CITE", SPACE, HTML_EL_Cite, NULL},
    {"CODE", SPACE, HTML_EL_Code, NULL},
+   {"COLGROUP", SPACE, HTML_EL_COLGROUP, NULL},
+   {"COL", SPACE, HTML_EL_COL, NULL},
    {"DD", SPACE, HTML_EL_Definition, NULL},
    {"DEL", SPACE, HTML_EL_DEL, NULL},
    {"DFN", SPACE, HTML_EL_Def, NULL},
@@ -663,6 +665,7 @@ static int          EmptyElement[] =
    HTML_EL_BASE,
    HTML_EL_BaseFont,
    HTML_EL_BR,
+   HTML_EL_COL,
    HTML_EL_FRAME,
    HTML_EL_Horizontal_Rule,
    HTML_EL_Input,
@@ -754,13 +757,15 @@ static oneLine      StartTagEndingElem[] =
    "CENTER closes FONT B I P P* HEAD",
    "A closes A",
    "CAPTION closes P P*",
+   "COLGROUP closes CAPTION COLGROUP COL P P*",
+   "COL closes CAPTION COL P P*",
    "TABLE closes P P* HEAD H1 H2 H3 H4 H5 H6 PRE LISTING XMP A",
    "TH closes TH TD",
    "TD closes TH TD",
-   "TR closes TH TD TR CAPTION",
-   "THEAD closes CAPTION",
-   "TFOOT closes TH TD TR CAPTION THEAD TBODY",
-   "TBODY closes TH TD TR CAPTION THEAD TFOOT TBODY",
+   "TR closes TH TD TR CAPTION COL COLGROUP",
+   "THEAD closes CAPTION COL COLGROUP",
+   "TFOOT closes TH TD TR CAPTION COL COLGROUP THEAD TBODY",
+   "TBODY closes TH TD TR CAPTION COL COLGROUP THEAD TFOOT TBODY",
    "OPTGROUP closes OPTION",
    "FIELDSET closes LEGEND P P* HEAD H1 H2 H3 H4 H5 H6 PRE LISTING XMP A",
    ""};
@@ -781,6 +786,8 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"ACTION", "", 'A', HTML_ATTR_Script_URL},
    {"ALIGN", "APPLET", 'A', HTML_ATTR_Alignment},
    {"ALIGN", "CAPTION", 'A', HTML_ATTR_Position},
+   {"ALIGN", "COL", 'A', HTML_ATTR_Cell_align},
+   {"ALIGN", "COLGROUP", 'A', HTML_ATTR_Cell_align},
    {"ALIGN", "DIV", 'A', HTML_ATTR_TextAlign},
    {"ALIGN", "H1", 'A', HTML_ATTR_TextAlign},
    {"ALIGN", "H2", 'A', HTML_ATTR_TextAlign},
@@ -932,6 +939,8 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"SIZE", "HR", 'A', HTML_ATTR_Size_},
    {"SIZE", "INPUT", 'A', HTML_ATTR_Area_Size},
    {"SIZE", "SELECT", 'A', HTML_ATTR_MenuSize},
+   {"SPAN", "COL", 'A', HTML_ATTR_span_},
+   {"SPAN", "COLGROUP", 'A', HTML_ATTR_span_},
    {"SRC", "FRAME", 'A', HTML_ATTR_FrameSrc},
    {"SRC", "IFRAME", 'A', HTML_ATTR_FrameSrc},
    {"SRC", "SCRIPT", 'A', HTML_ATTR_script_src},
@@ -3268,12 +3277,12 @@ Element el;
    described by entry start of HTMLGIMappingTable.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      CloseElement (int entry, int start)
+static boolean      CloseElement (int entry, int start, boolean onStartTag)
 #else
-static boolean      CloseElement (entry, start)
+static boolean      CloseElement (entry, start, onStartTag)
 int                 entry;
 int                 start;
-
+boolean             onStartTag;
 #endif
 {
    int                 i;
@@ -3296,9 +3305,30 @@ int                 start;
        if (start < 0)
 	 /* Explicit close */
 	 {
-	   /* looks in the stack for the element to be closed */
-	   while (i >= 0 && entry != GINumberStack[i])
-	     i--;
+	   /* If we meet the end tag of a FORM, FONT or CENTER
+	      looks for that element in the stack, but not at
+	      a higher level as a table element */
+	   if (!onStartTag &&
+	       (!strcmp (HTMLGIMappingTable[entry].htmlGI, "FORM") ||
+		!strcmp (HTMLGIMappingTable[entry].htmlGI, "FONT") ||
+		!strcmp (HTMLGIMappingTable[entry].htmlGI, "CENTER")))
+	     while (i > 0 && entry != GINumberStack[i] && !stop)
+	       if (!strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "TBODY") ||
+		   !strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "TR") ||
+		   !strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "TH") ||
+		   !strcmp (HTMLGIMappingTable[GINumberStack[i]].htmlGI, "TD"))
+		 {
+		   /* ignore this end tag */
+		   ret = FALSE;
+		   stop = TRUE;
+		   i = -1;
+		 }
+	       else
+		 i--;
+	   else
+	     /* looks in the stack for the element to be closed */
+	     while (i >= 0 && entry != GINumberStack[i])
+	       i--;
 	 }
        else
 	 /* Implicit close */
@@ -3338,6 +3368,7 @@ int                 start;
 	       else
 		 i--;
 	 }
+
        if (i >= 0 && entry == GINumberStack[i])
 	 /* element found in the stack */
 	 {
@@ -3381,6 +3412,7 @@ int                 start;
 	           }
 	       }
 	   }
+
        if (ret)
 	 /* successful close */
 	 {
@@ -3670,7 +3702,7 @@ char                c;
 		    currentLanguage, HTMLGIMappingTable[lastElemEntry].htmlGI);
 	   /* when returning from the XML parser, the end tag has already
 	      been read */
-	   (void) CloseElement (lastElemEntry, -1);
+	   (void) CloseElement (lastElemEntry, -1, FALSE);
 	   }
 	else 
 #endif /* MATHML */
@@ -3683,7 +3715,7 @@ char                c;
 		    currentLanguage, HTMLGIMappingTable[lastElemEntry].htmlGI);
 	   /* when returning from the XML parser, the end tag has already
 	      been read */
-	   (void) CloseElement (lastElemEntry, -1);	   
+	   (void) CloseElement (lastElemEntry, -1, FALSE);	   
 	   }
 	else
 #endif /* GRAPHML */
@@ -3698,7 +3730,7 @@ char                c;
 	else if (HTMLGIMappingTable[lastElemEntry].htmlContents == 'E')
 	   /* this is an empty element. Do not expect an end tag */
 	   {
-	     CloseElement (lastElemEntry, -1);
+	     CloseElement (lastElemEntry, -1, TRUE);
 	     ElementComplete (lastElement);
 	   }
 
@@ -3864,7 +3896,7 @@ int                 entry;
 		   elType = TtaGetElementType (ElementStack[StackLevel - 2]);
 		   if (elType.ElTypeNum != HTML_EL_Definition_List)
 		      /* DD in not within a DL. Close the DD element */
-		      CloseElement (GINumberStack[StackLevel - 1], entry);
+		      CloseElement (GINumberStack[StackLevel - 1], entry, FALSE);
 		}
 	   }
 }
@@ -3960,7 +3992,7 @@ char               *GIname;
       pClose = HTMLGIMappingTable[entry].firstClosedElem;
       while (pClose != NULL)
 	{
-	  CloseElement (pClose->tagNum, entry);
+	  CloseElement (pClose->tagNum, entry, TRUE);
 	  pClose = pClose->nextClosedElem;
 	}
       /* process some special cases... */
@@ -4107,6 +4139,7 @@ char                c;
 	   ok = TRUE;
 	   }
       }
+
    if (!ok)
       {
       /* search the HTML tag in the mapping table */
@@ -4120,7 +4153,7 @@ char                c;
 	sprintf (msgBuffer, "</%s", inputBuffer);
 	InsertInvalidEl (msgBuffer, FALSE);
         }
-      else if (!CloseElement (entry, -1))
+      else if (!CloseElement (entry, -1, FALSE))
         /* the end tag does not close any current element */
         {
 	/* print an error message... */
@@ -4140,33 +4173,33 @@ char                c;
 	       {
 		  schema = HTMLSSchema;
 		  entry = MapGI (msgBuffer, &schema, theDocument);
-		  ok = CloseElement (entry, -1);
+		  ok = CloseElement (entry, -1, FALSE);
 		  msgBuffer[1]++;
 		  i++;
 	       }
 	     while (i <= 6 && !ok);
 	  }
-	if (!ok)
-	   if (!strcasecmp (inputBuffer, "OL") ||
-	       !strcasecmp (inputBuffer, "UL") ||
-	       !strcasecmp (inputBuffer, "MENU") ||
-	       !strcasecmp (inputBuffer, "DIR"))
-	      /* the end tag is supposed to close a list */
-	      /* try to close another type of list */
-	     {
-		ok = TRUE;
-		schema = HTMLSSchema;
-		if (!CloseElement (MapGI ("OL", &schema, theDocument), -1))
-		   if (!CloseElement (MapGI ("UL", &schema, theDocument), -1))
-		      if (!CloseElement (MapGI ("MENU", &schema, theDocument), -1))
-			 if (!CloseElement (MapGI ("DIR", &schema, theDocument), -1))
-			    ok = FALSE;
-	     }
-	if (!ok)
-	   /* unrecoverable error. Create an Invalid_element */
+	if (!ok &&
+	    (!strcasecmp (inputBuffer, "OL") ||
+	     !strcasecmp (inputBuffer, "UL") ||
+	     !strcasecmp (inputBuffer, "MENU") ||
+	     !strcasecmp (inputBuffer, "DIR")))
+	  /* the end tag is supposed to close a list */
+	  /* try to close another type of list */
 	  {
-	     sprintf (msgBuffer, "</%s", inputBuffer);
-	     InsertInvalidEl (msgBuffer, TRUE);
+	    ok = TRUE;
+	    schema = HTMLSSchema;
+	    if (!CloseElement (MapGI ("OL", &schema, theDocument), -1, FALSE) &&
+		!CloseElement (MapGI ("UL", &schema, theDocument), -1, FALSE) &&
+		!CloseElement (MapGI ("MENU", &schema, theDocument), -1, FALSE) &&
+		!CloseElement (MapGI ("DIR", &schema, theDocument), -1, FALSE))
+	      ok = FALSE;
+	  }
+	if (!ok)
+	  /* unrecoverable error. Create an Invalid_element */
+	  {
+	    sprintf (msgBuffer, "</%s", inputBuffer);
+	    InsertInvalidEl (msgBuffer, TRUE);
 	  }
         }
       }

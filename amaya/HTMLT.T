@@ -791,6 +791,22 @@ RULES
 	Create '</caption>\12' after;
 	END;
 
+ COLGROUP:
+	BEGIN
+	Create '<colgroup';
+	Create Attributes;
+	Create '>';
+	Create '</caption>\12' after;
+	END;
+
+ COL:
+	BEGIN
+	Create '<col';
+	Create Attributes;
+	Create '>';
+	Create '</caption>\12' after;
+	END;
+
  Table_head:
 	Remove;
 
@@ -1787,6 +1803,12 @@ ATTRIBUTES
  scope: BEGIN
 	Create ' ="scope';
 	Create scope;
+	Create DoubleQuote;
+	END;
+
+ span_: BEGIN
+	Create ' span="';
+	Create span_;
 	Create DoubleQuote;
 	END;
 

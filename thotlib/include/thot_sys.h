@@ -21,6 +21,12 @@
 #ifndef THOT_SYS_H
 #define THOT_SYS_H
 
+#define EOS     '\0'
+#define EOL     '\n'
+#define TAB     '\t'
+#define SPACE    ' '
+
+
 #include <setjmp.h>
 #include <signal.h>
 #include <math.h>

@@ -29,6 +29,8 @@ MENUS
 	view:1 File button:BOpenDoc -> OpenDoc;
 	view:1 File button:BOpenInNewWindow -> OpenDocInNewWindow;
 	view:1 File button:BReload -> Reload;
+	view:1 File button:BBack -> GotoPreviousHTML;
+	view:1 File button:BForward -> GotoNextHTML;
 	view:1 File button:BSave -> SaveDocument;
 	view:1 File button:BSaveAs -> SaveDocumentAs;
 	view:1 File Separator;
@@ -133,6 +135,8 @@ MENUS
 	Types.Table button:BTable -> CreateTable;
 	Types.Table Separator;
 	Types.Table button:BCaption -> CreateCaption;
+	Types.Table button:BColgroup -> CreateColgroup;
+	Types.Table button:BCol -> CreateCol;
 	Types.Table button:BTHead -> CreateTHead;
 	Types.Table button:BTBody -> CreateTBody;
 	Types.Table button:BTFoot -> CreateTFoot;

@@ -985,9 +985,12 @@ boolean             genrateColumn;
 	  cell = newcell;
 	  TtaNextSibling (&cell);
 	  before = TRUE;
-	  attr = TtaGetAttribute (cell, attrType);
-	  if (attr != NULL)
-	    TtaGiveReferenceAttributeValue (attr, &colhead, ptr, &i);
+	  if (cell != NULL)
+	    {
+	      attr = TtaGetAttribute (cell, attrType);
+	      if (attr != NULL)
+		TtaGiveReferenceAttributeValue (attr, &colhead, ptr, &i);
+	    }
 	}
       else
 	{

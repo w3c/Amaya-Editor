@@ -1,4 +1,4 @@
-#override
+# personnal keyboard
 
 <Key>Delete:	TtcDeleteSelection()
 <Key>Escape:	TtcParentElement()
@@ -59,6 +59,8 @@ Shift Ctrl <Key>M:	CreateMTABLE()
 Shift Ctrl <Key>P:	CreateMROW()
 Shift Ctrl <Key>S:	CreateMSUBSUP()
 Shift Ctrl <Key>U:	CreateMUNDEROVER()
+
+# Alt commands
 
 Alt <Key>+:	ZoomIn()
 Alt <Key>-:	ZoomOut()

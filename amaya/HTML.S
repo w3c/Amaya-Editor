@@ -645,6 +645,10 @@ STRUCT
 	 { datapagesize }
 	BEGIN
 	CAPTION;						{ CAPTION }
+	Cols = LIST OF (Col_elem = CASE OF
+				COL;				{ COL }
+				COLGROUP;			{ COLGROUP }
+				END);
 	Table_head = LIST OF (Column_head);
       ? thead;							{ THEAD }
 	Table_body = LIST OF (tbody);
@@ -710,6 +714,16 @@ STRUCT
 	   Width__; Height_; IntWidthPxl; IntWidthPercent) =
 	 { width    height }
 	LIST OF (Element);
+
+  COLGROUP							{ COLGROUP }
+    (ATTR Cell_align; Cell_valign; Width__; span_ = Integer)
+	{ align       valign       width    span }
+	 = LIST OF (COL);
+
+  COL								{ COL }
+    (ATTR Cell_align; Cell_valign; Width__; span_)
+	{ align       valign       width    span }
+	 = CONSTANT C_Empty;
 
   MAP								{ MAP }
      (ATTR NAME; Ref_IMG = REFERENCE(Any)) =
@@ -847,6 +861,7 @@ EXCEPT
 	C_Head:		Hidden, NoSelect;
 	Table_foot:	NoCut, Hidden, NoSelect, PageBreakRepBefore;
 	C_Foot:		Hidden, NoSelect;
+	Cols:		Hidden, NoSelect;
 	Table_body:	PageBreakAllowed, Hidden;
 	Table_row:	IsRow, PageBreakPlace;
 	ColExt:		Invisible;

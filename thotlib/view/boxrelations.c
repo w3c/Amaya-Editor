@@ -740,18 +740,27 @@ boolean             horizRef;
       /* SRule explicite */
       else
 	{
-	  if (pCurrentAb->AbEnclosing == pAb && pBox->BxVertFlex &&
-	      pBox->BxType == BoCell &&
-	      (rule.PosDistance != 0 || rule.PosRefEdge != Top || rule.PosEdge != Top))
-	    {
-	      /* a specific patch for vertacally extended cells */
-	      pCurrentAb->AbVertPos.PosRefEdge = Top;
-	      pCurrentAb->AbVertPos.PosEdge = Top;
-	      pCurrentAb->AbVertPos.PosDistance = 0;
-	      rule.PosRefEdge = Top;
-	      rule.PosEdge = Top;
-	      rule.PosDistance = 0;
-	    }
+	  if (pCurrentAb->AbEnclosing == pAb && pBox->BxVertFlex && pBox->BxType == BoCell)
+	    if (!pBox->BxVertInverted &&
+	      (rule.PosRefEdge != Top || rule.PosEdge != Top))
+	      {
+		/* a specific patch for vertacally extended cells */
+		pCurrentAb->AbVertPos.PosRefEdge = Top;
+		pCurrentAb->AbVertPos.PosEdge = Top;
+		rule.PosRefEdge = Top;
+		rule.PosEdge = Top;
+	      }
+	    else if (pBox->BxVertInverted &&
+	      (rule.PosRefEdge != Top || rule.PosEdge != Bottom))
+	      {
+		/* a specific patch for vertacally extended cells */
+		pCurrentAb->AbVertPos.PosRefEdge = Bottom;
+		pCurrentAb->AbVertPos.PosEdge = Bottom;
+		pCurrentAb->AbVertPos.PosDistance = 0;
+		rule.PosRefEdge = Top;
+		rule.PosEdge = Bottom;
+		rule.PosDistance = 0;
+	      }
 
 	  /* La position d'une boite elastique est toujours traitee comme voisinage */
 	  if (pCurrentAb->AbEnclosing == pAb && !pBox->BxVertFlex)

@@ -295,11 +295,6 @@ LoadedImageDesc;
 THOT_EXPORT LoadedImageDesc *ImageURLs;
 THOT_EXPORT LoadedImageDesc *ImageLocal;
 
-#define EOS     '\0'
-#define EOL     '\n'
-#define TAB     '\t'
-#define SPACE    ' '
-
 #define BROWSING       0
 #define SELECTING      1
 #define SEARCHING      2

@@ -1297,7 +1297,14 @@ char               *appliname;
 		       strcpy (MenuActionList[i].ActionEquiv, equiv);
 		    }
 	       }
-	     strcpy (ch, "");
+	     else
+	       {
+		 /* skip this line */
+		 do
+		   i = fgetc (file);
+		 while (i != NEW_LINE);
+	       }
+	     ch[0] = EOS;
 	     fscanf (file, "%80s", ch);
 	  }
 	while (e != 0);

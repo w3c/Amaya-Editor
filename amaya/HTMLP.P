@@ -5365,6 +5365,26 @@ BOXES
 		END;
 	END;
 
+ COLGROUP_S: BEGIN
+	Content: Text 'COLGROUP';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ COL_S: BEGIN
+	Content: Text 'COL';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
  ATTR_ABBR: BEGIN
 	Content: Text ' abbr=';
 	Visibility: 0;
@@ -5451,6 +5471,30 @@ BOXES
 
  VALUE_SCOPE: BEGIN
 	Content: (scope);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ ATTR_SPAN: BEGIN
+	Content: Text ' span=';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ VALUE_SPAN: BEGIN
+	Content: (span_);
 	Visibility: 0;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -7858,6 +7902,42 @@ RULES
 		END;
 	END;
 
+ Cols:  BEGIN
+	Visibility: 0;
+	IN Structure_view BEGIN
+		VertPos: Top = Previous . Bottom;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Visibility: Enclosing =;
+		END;
+	END;
+
+ COLGROUP:
+	BEGIN
+	CreateBefore(COLGROUP_S);
+	CreateWith(VerticalLine);
+	IN Structure_view BEGIN
+		VertPos: Top = Previous . Bottom;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Adjust: Left;
+		Style: Enclosing =;
+		END;
+	END;
+
+ COL:
+	BEGIN
+	CreateBefore(COL_S);
+	CreateWith(VerticalLine);
+	IN Structure_view BEGIN
+		VertPos: Top = Previous . Bottom;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Adjust: Left;
+		Style: Enclosing =;
+		END;
+	END;
+
  Table_head:
 	BEGIN
 	HorizRef: * . Top;
@@ -9407,6 +9487,12 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_SCOPE);
 	CreateBefore(VALUE_SCOPE);
+	END;
+
+ span_:
+	BEGIN
+	CreateBefore(ATTR_SPAN);
+	CreateBefore(VALUE_SPAN);
 	END;
 
  rowspan_:
