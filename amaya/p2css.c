@@ -112,6 +112,17 @@ PRuleInfoPtr        list;
    if (rpi == NULL)
       return;
 
+   if (rpi->ctxt != NULL) {
+       int i;
+
+       if (rpi->ctxt->type == HTML_EL_BODY)
+	   rpi->ctxt->type = HTML_EL_HTML;
+       for (i = 0;i < MAX_ANCESTORS; i++)
+	   if (rpi->ctxt->ancestors[i] == HTML_EL_BODY)
+	       rpi->ctxt->ancestors[i] = HTML_EL_HTML;
+       if (rpi->ctxt->attrelem == HTML_EL_BODY)
+	   rpi->ctxt->attrelem = HTML_EL_HTML;
+   }
    rpi->NextRPI = *list;
    *list = rpi;
 }
@@ -394,13 +405,20 @@ void               *param;
 	new->pschema = target;
 	new->state = NormalRPI;
 	new->ctxt->type = local.ctxt->type;
+	if (new->ctxt->type == HTML_EL_HTML)
+	    new->ctxt->type = HTML_EL_BODY;
 	new->ctxt->attr = local.ctxt->attr;
 	new->ctxt->attrval = local.ctxt->attrval;
 	new->ctxt->attrelem = local.ctxt->attrelem;
+        if (new->ctxt->attrelem == HTML_EL_HTML)
+	    new->ctxt->attrelem = HTML_EL_BODY;
 	new->ctxt->class = local.ctxt->class;
 	new->ctxt->classattr = local.ctxt->classattr;
-	for (i = 0; i < MAX_ANCESTORS; i++)
+	for (i = 0; i < MAX_ANCESTORS; i++) {
 	   new->ctxt->ancestors[i] = local.ctxt->ancestors[i];
+	   if (new->ctxt->ancestors[i] == HTML_EL_HTML)
+	       new->ctxt->ancestors[i] = HTML_EL_BODY;
+	}
 	for (i = 0; i < MAX_ANCESTORS; i++)
 	   new->ctxt->ancestors_nb[i] = local.ctxt->ancestors_nb[i];
 	/*new_rule = 1; */
@@ -437,8 +455,6 @@ void               *param;
 		  {
 		     if (string[0] != 0)
 			strcat (string, " ");
-		     if (new->ctxt->ancestors[i] == HTML_EL_HTML)
-		         new->ctxt->ancestors[i] = HTML_EL_BODY;
 		     strcat (string, GITagNameByType (new->ctxt->ancestors[i]));
 		  }
 	     }
@@ -452,8 +468,6 @@ void               *param;
 	  {
 	     if (string[0] != 0)
 		strcat (string, " ");
-	     if (new->ctxt->type == HTML_EL_HTML)
-		 new->ctxt->type = HTML_EL_BODY;
 	     strcat (string, GITagNameByType (new->ctxt->type));
 	  }
 	if ((new->ctxt->class) && (new->ctxt->classattr == HTML_ATTR_Class))
@@ -462,8 +476,6 @@ void               *param;
 		strcat (string, " ");
 	     if (new->ctxt->attrelem)
 	       {
-		  if (new->ctxt->attrelem == HTML_EL_HTML)
-		      new->ctxt->attrelem = HTML_EL_BODY;
 		  strcat (string, GITagNameByType (new->ctxt->attrelem));
 	       }
 	     strcat (string, ".");
@@ -475,8 +487,6 @@ void               *param;
 		strcat (string, " ");
 	     if (new->ctxt->attrelem)
 	       {
-		  if (new->ctxt->attrelem == HTML_EL_HTML)
-		      new->ctxt->attrelem = HTML_EL_BODY;
 		  strcat (string, GITagNameByType (new->ctxt->attrelem));
 	       }
 	     strcat (string, ":");
