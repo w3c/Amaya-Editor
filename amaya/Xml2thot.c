@@ -2869,22 +2869,19 @@ static void       CreateXmlComment (char *commentValue)
 	      l = i - j;
 	      /* handles UTF-8 characters and entities in the subtree */
 	      buffer = HandleXMLstring (ptr, &l, commentLineEl, FALSE);
-	      if (buffer[0] != EOS)
-		{
-		  /* Put the current content into a text comment line */
-		  elTypeLeaf.ElSSchema = elType.ElSSchema;
-		  elTypeLeaf.ElTypeNum = 1;
-		  commentLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
-		  XmlSetElemLineNumber (commentLeaf);
-		  if (lastChild == NULL)
-		    TtaInsertFirstChild (&commentLeaf, commentLineEl,
-					 XMLcontext.doc);
-		  else
-		    TtaInsertSibling (commentLeaf, lastChild,
-				      FALSE, XMLcontext.doc);	     
-		  TtaSetTextContent (commentLeaf, buffer,
-				     XMLcontext.language, XMLcontext.doc);
-		}
+	      /* Put the current content into a text comment line */
+	      elTypeLeaf.ElSSchema = elType.ElSSchema;
+	      elTypeLeaf.ElTypeNum = 1;
+	      commentLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
+	      XmlSetElemLineNumber (commentLeaf);
+	      if (lastChild == NULL)
+		TtaInsertFirstChild (&commentLeaf, commentLineEl,
+				     XMLcontext.doc);
+	      else
+		TtaInsertSibling (commentLeaf, lastChild,
+				  FALSE, XMLcontext.doc);	     
+	      TtaSetTextContent (commentLeaf, buffer,
+				 XMLcontext.language, XMLcontext.doc);
 	      TtaFreeMemory (buffer);
 	      j += l;
 	      i = j;
